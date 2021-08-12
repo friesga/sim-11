@@ -1,0 +1,6 @@
+build
+lsi-11
+*.sw?
+
+# Ignore Visual Studio 2019 cache/options directory
+.vs/
