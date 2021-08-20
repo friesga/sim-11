@@ -9,17 +9,29 @@
 #define	U16B(x)			(x)
 #define	U32B(x)			(x)
 #define	U64B(x)			(x)
+#ifdef _WIN32
+#define	U16L(x)			_byteswap_ushort(x)
+#define	U32L(x)			_byteswap_ulong(x)
+#define	U64L(x)			_byteswap_uint64(x)
+#else	// _WIN32
 #define	U16L(x)			__builtin_bswap16(x)
 #define	U32L(x)			__builtin_bswap32(x)
 #define	U64L(x)			__builtin_bswap64(x)
+#endif
+#else	// __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__
+#ifdef _WIN32
+#define	U16B(x)			_byteswap_ushort(x)
+#define	U32B(x)			_byteswap_ulong(x)
+#define	U64B(x)			_byteswap_uint64(x)
 #else
 #define	U16B(x)			__builtin_bswap16(x)
 #define	U32B(x)			__builtin_bswap32(x)
 #define	U64B(x)			__builtin_bswap64(x)
+#endif	//_WIN32
 #define	U16L(x)			(x)
 #define	U32L(x)			(x)
 #define	U64L(x)			(x)
-#endif
+#endif	// __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__
 
 /* Main memory size: 32kW / 64kB */
 #define	MSV11D_SIZE		(65536 - 2 * 4096)

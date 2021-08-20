@@ -10,6 +10,12 @@
 #include <termios.h>
 #include <signal.h>
 
+#ifdef _WIN32
+#include <fcntl.h>
+#include <termio.h>
+#include <clock_gettime.h>
+#endif
+
 #include "lsi11.h"
 #include "trace.h"
 
@@ -93,8 +99,16 @@ void sigint_handler(int signum)
 	running = 0;
 }
 
-#define	READ(addr)		lsi.bus.read(lsi.bus.user, (addr))
+#define	READ(addr)			lsi.bus.read(lsi.bus.user, (addr))
 #define	WRITE(addr, val)	lsi.bus.write(lsi.bus.user, (addr), (val))
+
+#ifdef _WIN32
+#define tcsetattr(fd, act, tp)		setattr_stdin (hStdin)
+#define tcgetattr(fd, tp)			getattr_stdin (hStdin)
+#else
+#define	select_stdin(x)				select(1, &fds, NULL, NULL, &tv)
+#define read_stdin(x,buf,count)		read(0, buf, count)
+#endif
 
 int main(int argc, char** argv)
 {
@@ -114,7 +128,11 @@ int main(int argc, char** argv)
 	u8* floppy;
 
 	struct termios tio;
+#ifdef _WIN32
+	HANDLE hStdin = open_stdin();
+#else
 	struct sigaction sa;
+#endif // _WIN32
 
 	const char* floppy_filename = NULL;
 	const char* load_file = NULL;
@@ -124,7 +142,7 @@ int main(int argc, char** argv)
 	int compress = 0;
 
 #ifndef DEBUG
-	if(tcgetattr(0, &original_tio) == -1) {
+	if (tcgetattr (0, &original_tio) == -1) {
 		printf("Failed to retrieve TTY configuration\n");
 		return 1;
 	}
@@ -271,12 +289,16 @@ int main(int argc, char** argv)
 	}
 
 #ifndef DEBUG
+#ifdef _WIN32
+	signal (SIGINT, SIG_DFL);
+#else
 	sa.sa_handler = sigint_handler;
 	sigemptyset(&sa.sa_mask);
 	sa.sa_flags = SA_RESTART;
 	if(sigaction(SIGINT, &sa, NULL) == -1) {
 		printf("WARNING: failed to set SIGINT signal handler\n");
 	}
+#endif
 
 	/* set raw mode */
 	tio = original_tio;
@@ -295,20 +317,21 @@ int main(int argc, char** argv)
 		lsi.cpu.state = 1;
 	}
 
-	clock_gettime(CLOCK_MONOTONIC, &last);
+	clock_gettime (CLOCK_MONOTONIC, &last);
 
 	while(running) {
 		unsigned int i;
 		double dt;
+		char c;
 
 		FD_ZERO(&fds);
 		FD_SET(0, &fds);
 		tv.tv_sec = 0;
 		tv.tv_usec = 0;
 
-		if(select(1, &fds, NULL, NULL, &tv) == 1) {
-			char c;
-			read(0, &c, 1);
+		if (select_stdin (hStdin))
+		{		
+			read_stdin (hStdin, &c, 1);
 #ifdef DEBUG
 			if(c == '\n')
 				c = '\r';
