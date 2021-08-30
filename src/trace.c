@@ -11,10 +11,13 @@ TRACE trc = { 0 };
 int TRACEOpen(TRACE* trace, const char* filename)
 {
 	char header[6] = { 'X', 'T', 'R', 'C', 0, 65 };
-	trace->file = fopen(filename, "wb");
-	if(!trace->file) {
+
+	trace->file = fopen (filename, "wb");
+	if (!trace->file) {
+		printf ("Error: cannot open file %s\n", filename);
 		return -1;
 	}
+
 	trace->step = 0;
 	memset(trace->last_r, 0, 7 * sizeof(u16));
 	trace->last_psw = 0;
