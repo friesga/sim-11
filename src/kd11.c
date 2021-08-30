@@ -701,7 +701,7 @@ u16 KD11CPUGetAddr(KD11* kd11, QBUS* bus, u16 dst, u16 mode)
 				CHECK()
 #define CPUWRITEW(rn, mode, v)	KD11CPUWriteW(kd11, bus, rn, mode, v); \
 				CHECK()
-#define CPUWRITEB(rn, mode, v)	KD11CPUWriteB(kd11, bus, rn, mode, v); \
+#define CPUWRITEB(rn, mode, v)	KD11CPUWriteB(kd11, bus, rn, mode, (u8) v); \
 				CHECK()
 
 typedef union {

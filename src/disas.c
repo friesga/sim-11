@@ -177,12 +177,12 @@ int LSI11DisassembleBranch(s8 offset, u16 pc, char* buf, int pos)
 	return pos;
 }
 
-#define OP1()	insn = LSI11DisassembleOperand(insn1->rn, insn1->mode, \
+#define OP1()	insn = LSI11DisassembleOperand((u8) insn1->rn, (u8) insn1->mode, \
 		insn, &pc, buf, &pos)
-#define OP2()	insn = LSI11DisassembleOperand(insn2->src_rn, insn2->src_mode, \
+#define OP2()	insn = LSI11DisassembleOperand((u8) insn2->src_rn, (u8) insn2->src_mode, \
 		insn, &pc, buf, &pos), \
 		WRITEC(','), \
-		insn = LSI11DisassembleOperand(insn2->dst_rn, insn2->dst_mode, \
+		insn = LSI11DisassembleOperand((u8) insn2->dst_rn, (u8) insn2->dst_mode, \
 		insn, &pc, buf, &pos)
 #define BR()	pos = LSI11DisassembleBranch((s8) insnbr->offset, pc, buf, pos)
 #define	RET0()	return (int) (insn - start);
@@ -598,9 +598,9 @@ int LSI11Disassemble(const u16* insn, u16 pc, char* buf)
 	return 1;
 }
 
-#define OP1LEN()	LSI11OperandLength(insn1->rn, insn1->mode) + 1
-#define OP2LEN()	LSI11OperandLength(insn2->src_rn, insn2->src_mode) + \
-			LSI11OperandLength(insn2->dst_rn, insn2->dst_mode) + 1
+#define OP1LEN()	LSI11OperandLength((const u8) insn1->rn, (const u8) insn1->mode) + 1
+#define OP2LEN()	LSI11OperandLength((const u8) insn2->src_rn, (const u8) insn2->src_mode) + \
+			LSI11OperandLength((const u8) insn2->dst_rn, (const u8) insn2->dst_mode) + 1
 
 int LSI11OperandLength(const u8 rn, const u8 mode)
 {

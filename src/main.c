@@ -190,8 +190,8 @@ int main(int argc, char** argv)
 	}
 
 	if(floppy_filename) {
-		floppy_file = fopen(floppy_filename, "rb");
-		if(!floppy_file) {
+		floppy_file = fopen (floppy_filename, "rb");
+		if (!floppy_file) {
 			printf("Error: cannot open file %s\n", floppy_filename);
 			free(floppy);
 			return 1;
@@ -234,15 +234,16 @@ int main(int argc, char** argv)
 		u16 addr;
 		u8 cksum;
 		size_t bytes = 0;
-		FILE* f = fopen(filename, "rb");
-		if(!f) {
+
+		FILE* f = fopen (filename, "rb");
+		if (!f) {
 			printf("error opening file!\n");
 			return 1;
 		}
 		fseek(f, 0, SEEK_END);
 		size = ftell(f);
 		fseek(f, 0, SEEK_SET);
-		printf("loading %s [%ld bytes]...\n", filename, size);
+		printf("loading %s [%zu bytes]...\n", filename, size);
 		fflush(stdout);
 		while(bytes < size) {
 			int c;
@@ -343,10 +344,10 @@ int main(int argc, char** argv)
 			LSI11Step(&lsi);
 
 		clock_gettime(CLOCK_MONOTONIC, &now);
-		dt = (now.tv_sec - last.tv_sec) +
+		dt = (now.tv_sec - last.tv_sec) + 
 			(now.tv_nsec - last.tv_nsec) / 1e9;
 		last = now;
-		BDV11Step(&bdv11, dt);
+		BDV11Step(&bdv11, (float) dt);
 	}
 
 	free(floppy);
