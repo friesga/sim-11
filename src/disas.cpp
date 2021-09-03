@@ -43,7 +43,7 @@ typedef struct {
 #define	WRITEN(n)	pos = LSI11WriteN(buf, n, pos)
 #define	WRITEC(c)	buf[pos++] = c, buf[pos] = 0
 
-int LSI11Write(char* buf, char* str, int pos)
+int LSI11Write(char* buf, const char* str, int pos)
 {
 	int len = strlen(str);
 	memcpy(&buf[pos], str, len);

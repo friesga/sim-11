@@ -705,8 +705,8 @@ u16 KD11CPUGetAddr(KD11* kd11, QBUS* bus, u16 dst, u16 mode)
 				CHECK()
 
 typedef union {
-	float	f32;
-	u32	u32;
+	float	_f32;
+	u32		_u32;
 } FLOAT;
 
 void KD11CPUStep(KD11* kd11, QBUS* bus)
@@ -1301,68 +1301,68 @@ void KD11CPUStep(KD11* kd11, QBUS* bus)
 			kd11->r[6] += 2;
 			break;
 		case 0075000: /* FADD */
-			f1.u32 = (READ(kd11->r[insnrts->rn] + 4) << 16)
+			f1._u32 = (READ(kd11->r[insnrts->rn] + 4) << 16)
 				| READ(kd11->r[insnrts->rn] + 6);
-			f2.u32 = (READ(kd11->r[insnrts->rn]) << 16)
+			f2._u32 = (READ(kd11->r[insnrts->rn]) << 16)
 				| READ(kd11->r[insnrts->rn] + 2);
-			f3.f32 = f1.f32 + f2.f32;
+			f3._f32 = f1._f32 + f2._f32;
 			/* TODO: result <= 2**-128 -> result = 0 */
 			/* TODO: implement traps */
 			WRITE(kd11->r[insnrts->rn] + 4,
-					(u16) (f3.u32 >> 16));
-			WRITE(kd11->r[insnrts->rn] + 6, (u16) f3.u32);
-			PSW_EQ(PSW_N, f3.f32 < 0);
-			PSW_EQ(PSW_Z, f3.f32 == 0);
+					(u16) (f3._u32 >> 16));
+			WRITE(kd11->r[insnrts->rn] + 6, (u16) f3._u32);
+			PSW_EQ(PSW_N, f3._f32 < 0);
+			PSW_EQ(PSW_Z, f3._f32 == 0);
 			PSW_CLR(PSW_V);
 			PSW_CLR(PSW_C);
 			break;
 		case 0075010: /* FSUB */
-			f1.u32 = (READ(kd11->r[insnrts->rn] + 4) << 16)
+			f1._u32 = (READ(kd11->r[insnrts->rn] + 4) << 16)
 				| READ(kd11->r[insnrts->rn] + 6);
-			f2.u32 = (READ(kd11->r[insnrts->rn]) << 16)
+			f2._u32 = (READ(kd11->r[insnrts->rn]) << 16)
 				| READ(kd11->r[insnrts->rn] + 2);
-			f3.f32 = f1.f32 - f2.f32;
+			f3._f32 = f1._f32 - f2._f32;
 			/* TODO: result <= 2**-128 -> result = 0 */
 			/* TODO: implement traps */
 			WRITE(kd11->r[insnrts->rn] + 4,
-					(u16) (f3.u32 >> 16));
-			WRITE(kd11->r[insnrts->rn] + 6, (u16) f3.u32);
-			PSW_EQ(PSW_N, f3.f32 < 0);
-			PSW_EQ(PSW_Z, f3.f32 == 0);
+					(u16) (f3._u32 >> 16));
+			WRITE(kd11->r[insnrts->rn] + 6, (u16) f3._u32);
+			PSW_EQ(PSW_N, f3._f32 < 0);
+			PSW_EQ(PSW_Z, f3._f32 == 0);
 			PSW_CLR(PSW_V);
 			PSW_CLR(PSW_C);
 			break;
 		case 0075020: /* FMUL */
-			f1.u32 = (READ(kd11->r[insnrts->rn] + 4) << 16)
+			f1._u32 = (READ(kd11->r[insnrts->rn] + 4) << 16)
 				| READ(kd11->r[insnrts->rn] + 6);
-			f2.u32 = (READ(kd11->r[insnrts->rn]) << 16)
+			f2._u32 = (READ(kd11->r[insnrts->rn]) << 16)
 				| READ(kd11->r[insnrts->rn] + 2);
-			f3.f32 = f1.f32 * f2.f32;
+			f3._f32 = f1._f32 * f2._f32;
 			/* TODO: result <= 2**-128 -> result = 0 */
 			/* TODO: implement traps */
 			WRITE(kd11->r[insnrts->rn] + 4,
-					(u16) (f3.u32 >> 16));
-			WRITE(kd11->r[insnrts->rn] + 6, (u16) f3.u32);
-			PSW_EQ(PSW_N, f3.f32 < 0);
-			PSW_EQ(PSW_Z, f3.f32 == 0);
+					(u16) (f3._u32 >> 16));
+			WRITE(kd11->r[insnrts->rn] + 6, (u16) f3._u32);
+			PSW_EQ(PSW_N, f3._f32 < 0);
+			PSW_EQ(PSW_Z, f3._f32 == 0);
 			PSW_CLR(PSW_V);
 			PSW_CLR(PSW_C);
 			break;
 		case 0075030: /* FDIV */
-			f1.u32 = (READ(kd11->r[insnrts->rn] + 4) << 16)
+			f1._u32 = (READ(kd11->r[insnrts->rn] + 4) << 16)
 				| READ(kd11->r[insnrts->rn] + 6);
-			f2.u32 = (READ(kd11->r[insnrts->rn]) << 16)
+			f2._u32 = (READ(kd11->r[insnrts->rn]) << 16)
 				| READ(kd11->r[insnrts->rn] + 2);
-			if(f2.f32 != 0) {
-				f3.f32 = f1.f32 / f2.f32;
+			if(f2._f32 != 0) {
+				f3._f32 = f1._f32 / f2._f32;
 				/* TODO: result <= 2**-128 -> result = 0 */
 				/* TODO: implement traps */
 				WRITE(kd11->r[insnrts->rn] + 4,
-						(u16) (f3.u32 >> 16));
+						(u16) (f3._u32 >> 16));
 				WRITE(kd11->r[insnrts->rn] + 6,
-						(u16) f3.u32);
-				PSW_EQ(PSW_N, f3.f32 < 0);
-				PSW_EQ(PSW_Z, f3.f32 == 0);
+						(u16) f3._u32);
+				PSW_EQ(PSW_N, f3._f32 < 0);
+				PSW_EQ(PSW_Z, f3._f32 == 0);
 				PSW_CLR(PSW_V);
 				PSW_CLR(PSW_C);
 			}

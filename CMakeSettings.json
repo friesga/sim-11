@@ -20,6 +20,11 @@
                     "name": "CMAKE_VERBOSE_MAKEFILE",
                     "value": "True",
                     "type": "BOOL"
+                },
+                {
+                    "name": "CMAKE_CXX_FLAGS",
+                    "value": "/DWIN32 /D_WINDOWS /GR /EHsc /nologo",
+                    "type": "STRING"
                 }
             ]
         },
@@ -47,7 +52,14 @@
             "buildCommandArgs": "",
             "ctestCommandArgs": "",
             "inheritEnvironments": [ "linux_x64" ],
-            "wslPath": "${defaultWSLPath}"
+            "wslPath": "${defaultWSLPath}",
+            "variables": [
+                {
+                    "name": "CMAKE_VERBOSE_MAKEFILE",
+                    "value": "True",
+                    "type": "BOOL"
+                }
+            ]
         }
     ]
 }

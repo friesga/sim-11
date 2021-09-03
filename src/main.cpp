@@ -196,7 +196,7 @@ int main(int argc, char** argv)
 			free(floppy);
 			return 1;
 		}
-		fread(floppy, 77 * 26 * 256, 1, floppy_file);
+		(void) !fread(floppy, 77 * 26 * 256, 1, floppy_file);
 		fclose(floppy_file);
 	} else {
 		memset(floppy, 0, 77 * 26 * 256);
@@ -266,13 +266,13 @@ int main(int argc, char** argv)
 				free(floppy);
 				return 1;
 			}
-			fread(&len, 2, 1, f);
-			fread(&addr, 2, 1, f);
+			(void) !fread(&len, 2, 1, f);
+			(void) !fread(&addr, 2, 1, f);
 			bytes += len;
 			printf("%06o: %d bytes\n", addr, len - 6);
-			fread(&msv11.data[addr], len - 6, 1, f);
+			(void) !fread(&msv11.data[addr], len - 6, 1, f);
 			TRCMemoryDump(&msv11.data[addr], addr, len - 6);
-			fread(&cksum, 1, 1, f);
+			(void) !fread(&cksum, 1, 1, f);
 			if(len == 6) {
 				if((addr & 1) == 0) {
 					lsi.cpu.r[7] = addr;
@@ -332,7 +332,7 @@ int main(int argc, char** argv)
 
 		if (select_stdin (hStdin))
 		{		
-			read_stdin (hStdin, &c, 1);
+			(void) !read_stdin (hStdin, &c, 1);
 #ifdef DEBUG
 			if(c == '\n')
 				c = '\r';

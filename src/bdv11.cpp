@@ -25,8 +25,6 @@
 #define	BDV11_SWITCH	(BDV11_CPU_TEST | BDV11_MEM_TEST \
 		| BDV11_DIALOG | BDV11_RX02)
 
-extern const u16 bdv11_e53[2048];
-
 u16 BDV11GetWordLow(BDV11* bdv, u16 word)
 {
 	u16 page = bdv->pcr & 0xFF;

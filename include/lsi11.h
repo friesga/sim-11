@@ -31,7 +31,7 @@
 #define	U32L(x)			(x)
 #define	U64L(x)			(x)
 #endif	// __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__
-#endif WIN32
+#endif // WIN32
 
 /* Main memory size: 32kW / 64kB */
 #define	MSV11D_SIZE		(65536 - 2 * 4096)
@@ -157,36 +157,39 @@ typedef struct {
 	u8*	data;
 } RXV21;
 
-void MSV11DInit(MSV11D* msv);
-void MSV11DDestroy(MSV11D* msv);
 
-void DLV11JInit(DLV11J* dlv);
-void DLV11JDestroy(DLV11J* dlv);
-void DLV11JSend(DLV11J* dlv, int channel, unsigned char c);
+extern const u16 bdv11_e53[2048];
 
-void BDV11Init(BDV11* bdv);
-void BDV11Destroy(BDV11* bdv);
-void BDV11Step(BDV11* bdv, float dt);
+extern void MSV11DInit(MSV11D* msv);
+extern void MSV11DDestroy(MSV11D* msv);
 
-void RXV21Init(RXV21* rx);
-void RXV21Destroy(RXV21* rx);
-void RXV21SetData(RXV21* rx, u8* data);
+extern void DLV11JInit(DLV11J* dlv);
+extern void DLV11JDestroy(DLV11J* dlv);
+extern void DLV11JSend(DLV11J* dlv, int channel, unsigned char c);
+
+extern void BDV11Init(BDV11* bdv);
+extern void BDV11Destroy(BDV11* bdv);
+extern void BDV11Step(BDV11* bdv, float dt);
+
+extern void RXV21Init(RXV21* rx);
+extern void RXV21Destroy(RXV21* rx);
+extern void RXV21SetData(RXV21* rx, u8* data);
 
 /* KD11 subroutines */
-void KD11Init(KD11* kd11);
-void KD11Reset(KD11* kd11);
-void KD11Step(KD11* kd11, QBUS* bus);
-void KD11Trap(KD11* kd11, int n);
+extern void KD11Init(KD11* kd11);
+extern void KD11Reset(KD11* kd11);
+extern void KD11Step(KD11* kd11, QBUS* bus);
+extern void KD11Trap(KD11* kd11, int n);
 
 /* LSI-11 subroutines */
-void LSI11Init(LSI11* lsi);
-void LSI11Destroy(LSI11* lsi);
-void LSI11InstallModule(LSI11* lsi, int slot, QBUSMod* module);
-void LSI11Reset(LSI11* lsi);
-void LSI11Step(LSI11* lsi);
+extern void LSI11Init(LSI11* lsi);
+extern void LSI11Destroy(LSI11* lsi);
+extern void LSI11InstallModule(LSI11* lsi, int slot, QBUSMod* module);
+extern void LSI11Reset(LSI11* lsi);
+extern void LSI11Step(LSI11* lsi);
 
 /* LSI-11 disassembler */
-int  LSI11Disassemble(const u16* insn, u16 pc, char* buf);
-int  LSI11InstructionLength(const u16* insn);
+extern int  LSI11Disassemble(const u16* insn, u16 pc, char* buf);
+extern int  LSI11InstructionLength(const u16* insn);
 
 #endif

@@ -225,20 +225,20 @@ typedef struct {
 
 extern TRACE trc;
 
-int	TRACEOpen(TRACE* trace, const char* filename);
-void	TRACEClose(TRACE* trace);
-void	TRACEStep(TRACE* trace, u16* r, u16 psw, u16* insn);
-void	TRACECPUEvent(TRACE* trace, int type, u16 value);
-void	TRACEBus(TRACE* trace, u16 type, u16 address, u16 value);
-void	TRACEMemoryDump(TRACE* trace, u8* ptr, u16 address, u16 length);
-void	TRACETrap(TRACE* trace, int n, int cause);
-void	TRACEIrq(TRACE* trace, int n, int type);
-void	TRACERX02(TRACE* trace, u16 command, u16 status);
-void	TRACEDLV11(TRACE* trace, int channel, int type, u16 value);
-void	TRACERXV21Command(TRACE* trace, int commit, int type, u16 rx2cs);
-void	TRACERXV21Step(TRACE* trace, int type, int step, u16 rx2db);
-void	TRACERXV21DMA(TRACE* trace, int type, u16 rx2wc, u16 rx2ba);
-void	TRACERXV21Disk(TRACE* trace, int type, int drive, int density, u16 rx2sa, u16 rx2ta);
-void	TRACERXV21Error(TRACE* trace, int type, u16 info);
+extern int	TRACEOpen(TRACE* trace, const char* filename);
+extern void	TRACEClose(TRACE* trace);
+extern void	TRACEStep(TRACE* trace, u16* r, u16 psw, u16* insn);
+extern void	TRACECPUEvent(TRACE* trace, int type, u16 value);
+extern void	TRACEBus(TRACE* trace, u16 type, u16 address, u16 value);
+extern void	TRACEMemoryDump(TRACE* trace, u8* ptr, u16 address, u16 length);
+extern void	TRACETrap(TRACE* trace, int n, int cause);
+extern void	TRACEIrq(TRACE* trace, int n, int type);
+extern void	TRACERX02(TRACE* trace, u16 command, u16 status);
+extern void	TRACEDLV11(TRACE* trace, int channel, int type, u16 value);
+extern void	TRACERXV21Command(TRACE* trace, int commit, int type, u16 rx2cs);
+extern void	TRACERXV21Step(TRACE* trace, int type, int step, u16 rx2db);
+extern void	TRACERXV21DMA(TRACE* trace, int type, u16 rx2wc, u16 rx2ba);
+extern void	TRACERXV21Disk(TRACE* trace, int type, int drive, int density, u16 rx2sa, u16 rx2ta);
+extern void	TRACERXV21Error(TRACE* trace, int type, u16 info);
 
 #endif

@@ -69,7 +69,7 @@ int isValidKeyEvent (INPUT_RECORD* input_record)
     return 0;
 }
 
-int getattr_stdin ()
+int getattr_stdin (HANDLE hStdin)
 {
     return 0;
 }

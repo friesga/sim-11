@@ -11,25 +11,25 @@ set (TARGET sim-11)
 
 # Define source files
 set (SIM11_SRCS
-    src/bdv11.c 
-    src/bdv11_e53.c 
-    src/disas.c 
-    src/dlv11j.c 
-    src/kd11.c 
-    src/lsi11.c 
-    src/main.c 
-    src/msv11d.c 
-    src/rxv21.c 
-    src/trace.c)
+    src/bdv11.cpp
+    src/bdv11_e53.cpp
+    src/disas.cpp
+    src/dlv11j.cpp
+    src/kd11.cpp 
+    src/lsi11.cpp
+    src/main.cpp 
+    src/msv11d.cpp
+    src/rxv21.cpp 
+    src/trace.cpp)
 
 # Add source to this project's executable.
 add_executable (${TARGET} ${SIM11_SRCS})
-set_property(TARGET ${TARGET} PROPERTY C_STANDARD 90)
+#set_property(TARGET ${TARGET} PROPERTY C_STANDARD 90)
 
 # Add MSVC replacements for linux system calls
 if (MSVC)
-set (CLOCK_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/contrib/clock_gettime/src/clock_gettime.c)
-set (TERMIO_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/contrib/termio/src/termio.c)
+set (CLOCK_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/contrib/clock_gettime/src/clock_gettime.cpp)
+set (TERMIO_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/contrib/termio/src/termio.cpp)
 target_sources (${TARGET} PRIVATE ${CLOCK_SRCS} ${TERMIO_SRCS})
 endif ()
   
