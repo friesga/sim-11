@@ -34,7 +34,7 @@ void DLV11JReadChannel(DLV11J* dlv, int channel)
 			/* more date in the RX buffer... */
 			ch->rcsr |= RCSR_RCVR_DONE;
 			if(ch->rcsr & RCSR_RCVR_INT) {
-				QBUS* bus = dlv->module.bus;
+				QBUS* bus = dlv->bus;
 				bus->interrupt(bus, ch->vector);
 			}
 		} else {
@@ -57,7 +57,7 @@ void DLV11JWriteChannel(DLV11J* dlv, int channel)
 	}
 	ch->xcsr |= XCSR_TRANSMIT_READY;
 	if(ch->xcsr & XCSR_TRANSMIT_INT) {
-		QBUS* bus = dlv->module.bus;
+		QBUS* bus = dlv->bus;
 		bus->interrupt(bus, ch->vector + 4);
 	}
 }
@@ -88,7 +88,7 @@ void DLV11JWriteRCSR(DLV11J* dlv, int n, u16 value)
 	ch->rcsr = (ch->rcsr & ~RCSR_WR_MASK) | (value & RCSR_WR_MASK);
 	if((value & RCSR_RCVR_INT) && !(old & RCSR_RCVR_INT)
 			&& (ch->rcsr & RCSR_RCVR_DONE)) {
-		QBUS* bus = dlv->module.bus;
+		QBUS* bus = dlv->bus;
 		bus->interrupt(bus, ch->vector);
 	}
 }
@@ -100,7 +100,7 @@ void DLV11JWriteXCSR(DLV11J* dlv, int n, u16 value)
 	ch->xcsr = (ch->xcsr & ~XCSR_WR_MASK) | (value & XCSR_WR_MASK);
 	if((value & XCSR_TRANSMIT_INT) && !(old & XCSR_TRANSMIT_INT)
 			&& (ch->xcsr & XCSR_TRANSMIT_READY)) {
-		QBUS* bus = dlv->module.bus;
+		QBUS* bus = dlv->bus;
 		bus->interrupt(bus, ch->vector + 4);
 	}
 }
@@ -158,11 +158,11 @@ void DLV11JInit(DLV11J* dlv)
 {
 	int i;
 
-	dlv->module.self = (void*) dlv;
-	dlv->module.read = DLV11JRead;
-	dlv->module.write = DLV11JWrite;
-	dlv->module.responsible = DLV11JResponsible;
-	dlv->module.reset = DLV11JReset;
+	dlv->self = (void*) dlv;
+	dlv->read = DLV11JRead;
+	dlv->write = DLV11JWrite;
+	dlv->responsible = DLV11JResponsible;
+	dlv->reset = DLV11JReset;
 
 	/* factory configuration */
 	dlv->base = 0176500;
@@ -203,7 +203,7 @@ void DLV11JSend(DLV11J* dlv, int channel, unsigned char c)
 		ch->buf_size++;
 		ch->rcsr |= RCSR_RCVR_DONE;
 		if(ch->rcsr & RCSR_RCVR_INT) {
-			QBUS* bus = dlv->module.bus;
+			QBUS* bus = dlv->bus;
 			bus->interrupt(bus, ch->vector);
 		}
 	}

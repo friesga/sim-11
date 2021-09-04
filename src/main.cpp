@@ -215,10 +215,10 @@ int main(int argc, char** argv)
 	/* trc.flags |= TRACE_PRINT; */
 
 	LSI11Init(&lsi);
-	LSI11InstallModule(&lsi, 1, &msv11.module);
-	LSI11InstallModule(&lsi, 2, &rxv21.module);
-	LSI11InstallModule(&lsi, 3, &dlv11.module);
-	LSI11InstallModule(&lsi, 4, &bdv11.module);
+	LSI11InstallModule(&lsi, 1, &msv11);
+	LSI11InstallModule(&lsi, 2, &rxv21);
+	LSI11InstallModule(&lsi, 3, &dlv11);
+	LSI11InstallModule(&lsi, 4, &bdv11);
 	LSI11Reset(&lsi);
 
 	if(bootstrap) {

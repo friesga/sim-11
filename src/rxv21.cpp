@@ -62,7 +62,7 @@ void RXV21ClearErrors(RXV21* rx)
 
 void RXV21Done(RXV21* rx)
 {
-	QBUS* bus = rx->module.bus;
+	QBUS* bus = rx->bus;
 
 	rx->state = 0;
 	rx->rx2cs |= RX_DONE;
@@ -76,7 +76,7 @@ void RXV21Done(RXV21* rx)
 extern int trace;
 void RXV21FillBuffer(RXV21* rx)
 {
-	QBUS* bus = rx->module.bus;
+	QBUS* bus = rx->bus;
 	u16 limit = (rx->rx2cs & RX_DEN) ? 128 : 64;
 	u16 wc;
 	u16 ptr;
@@ -104,7 +104,7 @@ void RXV21FillBuffer(RXV21* rx)
 
 void RXV21EmptyBuffer(RXV21* rx)
 {
-	QBUS* bus = rx->module.bus;
+	QBUS* bus = rx->bus;
 	u16 limit = (rx->rx2cs & RX_DEN) ? 128 : 64;
 	u16 wc;
 	u16 ptr;
@@ -222,7 +222,7 @@ void RXV21ReadStatus(RXV21* rx)
 
 void RXV21ReadErrorCode(RXV21* rx)
 {
-	QBUS* bus = rx->module.bus;
+	QBUS* bus = rx->bus;
 
 	TRCRXV21CMDCommit((rx->rx2cs & RX_FUNCTION_MASK) >> 1, rx->rx2cs);
 
@@ -399,7 +399,7 @@ void RXV21Write(void* self, u16 address, u16 value)
 			RXV21ExecuteCommand(rx);
 		}
 		if(!intr && (value & RX_INTR_ENB) && (rx->rx2cs & RX_DONE)) {
-			QBUS* bus = rx->module.bus;
+			QBUS* bus = rx->bus;
 			bus->interrupt(bus, rx->vector);
 		}
 	} else if(address == rx->base + 2) { /* RX2DB */
@@ -427,11 +427,11 @@ void RXV21Reset(void* self)
 
 void RXV21Init(RXV21* rx)
 {
-	rx->module.self = (void*) rx;
-	rx->module.read = RXV21Read;
-	rx->module.write = RXV21Write;
-	rx->module.responsible = RXV21Responsible;
-	rx->module.reset = RXV21Reset;
+	rx->self = (void*) rx;
+	rx->read = RXV21Read;
+	rx->write = RXV21Write;
+	rx->responsible = RXV21Responsible;
+	rx->reset = RXV21Reset;
 
 	/* factory configuration */
 	rx->base = 0177170;

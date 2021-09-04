@@ -115,29 +115,29 @@ typedef struct {
 } DLV11Ch;
 
 /* peripherals */
-typedef struct {
-	QBUSMod	module;
+struct MSV11D : QBUSMod
+{
 	u8*	data;
-} MSV11D;
+};
 
-typedef struct {
-	QBUSMod	module;
+struct DLV11J : QBUSMod
+{
 	DLV11Ch	channel[4];
 	u16	base;
-} DLV11J;
+};
 
-typedef struct {
-	QBUSMod	module;
+struct BDV11 : QBUSMod
+{
 	u16	pcr;
 	u16	scratch;
 	u16	option;
 	u16	display;
 	u16	ltc;
 	float	time;
-} BDV11;
+};
 
-typedef struct {
-	QBUSMod	module;
+struct RXV21 : QBUSMod
+{
 	u16	base;
 	u16	vector;
 
@@ -154,9 +154,13 @@ typedef struct {
 	u16	error;
 
 	u16	buffer[128];
-	u8*	data;
-} RXV21;
+	u8* data;
+};
 
+typedef struct MSV11D MSV11D;
+typedef struct DLV11J DLV11J;
+typedef struct BDV11 BDV11;
+typedef struct RXV21 RXV21;
 
 extern const u16 bdv11_e53[2048];
 

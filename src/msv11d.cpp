@@ -30,11 +30,11 @@ void MSV11DReset(void* self)
 
 void MSV11DInit(MSV11D* msv)
 {
-	msv->module.self = (void*) msv;
-	msv->module.read = MSV11DRead;
-	msv->module.write = MSV11DWrite;
-	msv->module.responsible = MSV11DResponsible;
-	msv->module.reset = MSV11DReset;
+	msv->self = (void*) msv;
+	msv->read = MSV11DRead;
+	msv->write = MSV11DWrite;
+	msv->responsible = MSV11DResponsible;
+	msv->reset = MSV11DReset;
 
 	msv->data = (u8*) malloc(MSV11D_SIZE);
 	memset(msv->data, 0, MSV11D_SIZE);
