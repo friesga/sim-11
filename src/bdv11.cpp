@@ -25,121 +25,162 @@
 #define	BDV11_SWITCH	(BDV11_CPU_TEST | BDV11_MEM_TEST \
 		| BDV11_DIALOG | BDV11_RX02)
 
-u16 BDV11GetWordLow(BDV11* bdv, u16 word)
+BDV11::BDV11 ()
 {
-	u16 page = bdv->pcr & 0xFF;
-	if(page < 0x10) {
+	/* nothing */
+}
+
+BDV11::~BDV11 ()
+{
+	/* nothing */
+}
+
+u16 BDV11::GetWordLow (u16 word)
+{
+	u16 page = pcr & 0xFF;
+	if (page < 0x10)
+	{
 		u16 romword = page * 0200 + word;
 		return bdv11_e53[romword];
-	} else {
+	}
+	else
+	{
 		return 0177777;
 	}
 }
 
-u16 BDV11GetWordHigh(BDV11* bdv, u16 word)
+u16 BDV11::GetWordHigh (u16 word)
 {
-	u16 page = (bdv->pcr >> 8) & 0xFF;
-	if(page < 0x10) {
+	u16 page = (pcr >> 8) & 0xFF;
+	if (page < 0x10)
+	{
 		u16 romword = page * 0200 + word;
 		return bdv11_e53[romword];
-	} else {
+	} 
+	else 
+	{
 		return 0233;
 	}
 }
 
-void BDV11MemoryDump(BDV11* bdv, u16 pcr, int hi)
+void BDV11::MemoryDump (u16 pcr, int hi)
 {
 	const u16* data;
 	u16 addr;
 	u16 len = 0400;
-	if(hi) {
+	if (hi)
+	{
 		addr = 0173400;
 		u16 page = (pcr >> 8) & 0xFF;
-		if(page < 0x10) {
+		if (page < 0x10) 
+		{
 			u16 romword = page * 0200;
 			data = &bdv11_e53[romword];
-		} else {
+		} 
+		else 
+		{
 			data = NULL;
 		}
-	} else {
+	} 
+	else 
+	{
 		addr = 0173000;
 		u16 page = pcr & 0xFF;
-		if(page < 0x10) {
+		if (page < 0x10) 
+		{
 			u16 romword = page * 0200;
 			data = &bdv11_e53[romword];
-		} else {
+		} 
+		else 
+		{
 			data = NULL;
 		}
 	}
 
-	if(data) {
-		TRCMemoryDump((u8*) data, addr, len);
-	} else {
+	if (data) 
+	{
+		TRCMemoryDump ((u8*) data, addr, len);
+	} 
+	else 
+	{
 		u8 buf[0400];
-		memset(buf, 0xFF, sizeof(buf));
-		TRCMemoryDump((u8*) data, addr, len);
+		memset (buf, 0xFF, sizeof(buf));
+		TRCMemoryDump ((u8*) data, addr, len);
 	}
 }
 
-u16 BDV11Read(void* self, u16 address)
+u16 BDV11::Read (u16 address)
 {
-	BDV11* bdv = (BDV11*) self;
-
-	switch(address) {
+	switch (address) 
+	{
 		case 0177520:
-			return bdv->pcr;
+			return pcr;
+
 		case 0177522:
-			return bdv->scratch;
+			return scratch;
+
 		case 0177524:
 			return BDV11_SWITCH;
+
 		case 0177546:
-			return bdv->ltc;
+			return ltc;
+
 		default:
-			if(address >= 0173000 && address < 0173400) {
-				return BDV11GetWordLow(bdv,
-						(address - 0173000) / 2);
-			} else if(address >= 0173400 && address < 0173776) {
-				return BDV11GetWordHigh(bdv,
-						(address - 0173400) / 2);
+			if (address >= 0173000 && address < 0173400)
+			{
+				return GetWordLow ((address - 0173000) / 2);
+			} 
+			else if (address >= 0173400 && address < 0173776) 
+			{
+				return GetWordHigh ((address - 0173400) / 2);
 			}
 			return 0;
 	}
 }
 
-void BDV11Write(void* self, u16 address, u16 value)
+void BDV11::Write (u16 address, u16 value)
 {
-	BDV11* bdv = (BDV11*) self;
-
-	switch(address) {
+	switch (address)
+	{
 		case 0177520:
 			/* record new memory content in trace */
-			if(value != bdv->pcr) {
-				if((value & 0xFF) == (bdv->pcr & 0xFF)) {
-					BDV11MemoryDump(bdv, value, 1);
-				} else if((value & 0xFF00) == (bdv->pcr & 0xFF00)) {
-					BDV11MemoryDump(bdv, value, 0);
-				} else {
-					BDV11MemoryDump(bdv, value, 0);
-					BDV11MemoryDump(bdv, value, 1);
+			if (value != pcr)
+			{
+				if ((value & 0xFF) == (pcr & 0xFF)) 
+				{
+					MemoryDump (value, 1);
+				} 
+				else if ((value & 0xFF00) == (pcr & 0xFF00)) 
+				{
+					MemoryDump (value, 0);
+				} 
+				else 
+				{
+					MemoryDump (value, 0);
+					MemoryDump (value, 1);
 				}
 			}
-			bdv->pcr = value;
+			pcr = value;
 			break;
+
 		case 0177522:
-			bdv->scratch = value;
+			scratch = value;
 			break;
+
 		case 0177524:
-			bdv->display = value;
+			display = value;
 			break;
+
 		case 0177546:
-			bdv->ltc = value & 040;
+			ltc = value & 040;
 			break;
 	}
 }
 
-u8 BDV11Responsible(void* self, u16 address)
+u8 BDV11::Responsible (u16 address)
 {
-	switch(address) {
+	switch (address)
+	{
 		case 0177520:
 		case 0177522:
 		case 0177524:
@@ -150,46 +191,37 @@ u8 BDV11Responsible(void* self, u16 address)
 	}
 }
 
-void BDV11Reset(void* self)
+void BDV11::Reset ()
 {
-	BDV11* bdv = (BDV11*) self;
+	pcr = 0;
+	scratch = 0;
+	display = 0;
+	ltc = 0;
 
-	bdv->pcr = 0;
-	bdv->scratch = 0;
-	bdv->display = 0;
-	bdv->ltc = 0;
-
-	BDV11MemoryDump(bdv, bdv->pcr, 0);
-	BDV11MemoryDump(bdv, bdv->pcr, 1);
+	MemoryDump (pcr, 0);
+	MemoryDump (pcr, 1);
 }
 
-void BDV11Init(BDV11* bdv)
-{
-	bdv->self = (void*) bdv;
-	bdv->read = BDV11Read;
-	bdv->write = BDV11Write;
-	bdv->responsible = BDV11Responsible;
-	bdv->reset = BDV11Reset;
-}
 
-void BDV11Destroy(BDV11* bdv)
-{
-	/* nothing */
-}
 
-void BDV11Step(BDV11* bdv, float dt)
+void BDV11::Step (float dt)
 {
-	if(bdv->ltc & 040) {
-		bdv->time += dt;
-		if(bdv->time >= LTC_TIME) {
-			QBUS* bus = bdv->bus;
-			bus->interrupt(bus, 0100);
-			bdv->time -= LTC_TIME;
-			if(bdv->time >= LTC_TIME) {
-				bdv->time = 0;
+	if (ltc & 040) 
+	{
+		time += dt;
+		if (time >= LTC_TIME) 
+		{
+			QBUS* bus = this->bus;
+			bus->interrupt (bus, 0100);
+			time -= LTC_TIME;
+			if (time >= LTC_TIME) 
+			{
+				time = 0;
 			}
 		}
-	} else {
-		bdv->time = 0;
+	} 
+	else 
+	{
+		time = 0;
 	}
 }

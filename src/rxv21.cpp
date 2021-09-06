@@ -52,400 +52,443 @@
 #define	WRITE(addr, val)	(bus->write(bus->user, (addr), (val)))
 #define	CHECK()			{ if(bus->trap) return; }
 
-void RXV21Reset(void* self);
+void RXV21Reset ();
 
-void RXV21ClearErrors(RXV21* rx)
+RXV21::RXV21 ()
 {
-	rx->rx2cs &= ~RX_ERROR;
-	rx->rx2es &= ~RX2ES_ERRORS;
+	/* factory configuration */
+	base = 0177170;
+	vector = 0264;
+
+	Reset ();
 }
 
-void RXV21Done(RXV21* rx)
+RXV21::~RXV21 ()
 {
-	QBUS* bus = rx->bus;
+	/* nothing */
+}
 
-	rx->state = 0;
-	rx->rx2cs |= RX_DONE;
-	rx->rx2es |= RX2ES_DRV_DEN;
-	rx->rx2db = rx->rx2es;
-	if(rx->rx2cs & RX_INTR_ENB) {
-		bus->interrupt(bus, rx->vector);
+void RXV21::ClearErrors()
+{
+	rx2cs &= ~RX_ERROR;
+	rx2es &= ~RX2ES_ERRORS;
+}
+
+void RXV21::Done ()
+{
+	QBUS* bus = this->bus;
+
+	state = 0;
+	rx2cs |= RX_DONE;
+	rx2es |= RX2ES_DRV_DEN;
+	rx2db = rx2es;
+
+	if (rx2cs & RX_INTR_ENB) 
+	{
+		bus->interrupt (bus, vector);
 	}
 }
 
 extern int trace;
-void RXV21FillBuffer(RXV21* rx)
+void RXV21::FillBuffer ()
 {
-	QBUS* bus = rx->bus;
-	u16 limit = (rx->rx2cs & RX_DEN) ? 128 : 64;
+	QBUS* bus = this->bus;
+	u16 limit = (rx2cs & RX_DEN) ? 128 : 64;
 	u16 wc;
 	u16 ptr;
 
-	TRCRXV21DMA(TRC_RXV21_FILL, rx->rx2wc, rx->rx2ba);
-	if(rx->rx2wc > limit) {
-		TRCRXV21Error(TRC_RXV21_WC_OVFL, rx->rx2wc);
-		rx->error = 0230; /* Word count overflow */
-		rx->rx2es |= RX2ES_WC_OVFL;
-		rx->rx2cs |= RX_ERROR;
-		RXV21Done(rx);
+	TRCRXV21DMA (TRC_RXV21_FILL, rx2wc, rx2ba);
+
+	if (rx2wc > limit) 
+	{
+		TRCRXV21Error (TRC_RXV21_WC_OVFL, rx2wc);
+		error = 0230; /* Word count overflow */
+		rx2es |= RX2ES_WC_OVFL;
+		rx2cs |= RX_ERROR;
+		Done ();
 		return;
 	}
 
-	memset(rx->buffer, 0, 256);
+	memset(buffer, 0, 256);
 
-	for(wc = rx->rx2wc, ptr = 0; wc > 0; wc--, ptr++) {
-		/* transfer words */
-		rx->buffer[ptr] = READ(rx->rx2ba);
-		rx->rx2ba += 2;
+	for (wc = rx2wc, ptr = 0; wc > 0; wc--, ptr++) 
+	{
+		/* Transfer words */
+		buffer[ptr] = READ (rx2ba);
+		rx2ba += 2;
 	}
 
-	RXV21Done(rx);
+	Done ();
 }
 
-void RXV21EmptyBuffer(RXV21* rx)
+void RXV21::EmptyBuffer ()
 {
-	QBUS* bus = rx->bus;
-	u16 limit = (rx->rx2cs & RX_DEN) ? 128 : 64;
+	QBUS* bus = this->bus;
+	u16 limit = (rx2cs & RX_DEN) ? 128 : 64;
 	u16 wc;
 	u16 ptr;
 
-	TRCRXV21DMA(TRC_RXV21_EMPTY, rx->rx2wc, rx->rx2ba);
-	if(rx->rx2wc > limit) {
-		TRCRXV21Error(TRC_RXV21_WC_OVFL, rx->rx2wc);
-		rx->error = 0230; /* Word count overflow */
-		rx->rx2es |= RX2ES_WC_OVFL;
-		rx->rx2cs |= RX_ERROR;
-		RXV21Done(rx);
+	TRCRXV21DMA (TRC_RXV21_EMPTY, rx2wc, rx2ba);
+	if (rx2wc > limit) 
+	{
+		TRCRXV21Error (TRC_RXV21_WC_OVFL, rx2wc);
+		error = 0230; /* Word count overflow */
+		rx2es |= RX2ES_WC_OVFL;
+		rx2cs |= RX_ERROR;
+		Done ();
 		return;
 	}
 
-	for(wc = rx->rx2wc, ptr = 0; wc > 0; wc--, ptr++) {
-		/* transfer words */
-		WRITE(rx->rx2ba, rx->buffer[ptr]);
-		rx->rx2ba += 2;
+	for (wc = rx2wc, ptr = 0; wc > 0; wc--, ptr++) 
+	{
+		/* Transfer words */
+		WRITE (rx2ba, buffer[ptr]);
+		rx2ba += 2;
 	}
-	RXV21Done(rx);
+	Done ();
 }
 
-void RXV21WriteSector(RXV21* rx)
+void RXV21::WriteSector ()
 {
 	u32 offset;
 
-	rx->rx2sa &= 0037;
-	rx->rx2ta &= 0177;
+	rx2sa &= 0037;
+	rx2ta &= 0177;
 
-	offset = (rx->rx2sa - 1) * 256 + rx->rx2ta * (26 * 256);
+	offset = (rx2sa - 1) * 256 + rx2ta * (26 * 256);
 
-	TRCRXV21CMDCommit((rx->rx2cs & RX_FUNCTION_MASK) >> 1, rx->rx2cs);
-	TRCRXV21Disk(TRC_RXV21_WRITE, (rx->rx2cs & RX_UNIT_SEL) ? 1 : 0,
-			(rx->rx2cs & RX_DEN) ? 1 : 0, rx->rx2sa, rx->rx2ta);
+	TRCRXV21CMDCommit ((rx2cs & RX_FUNCTION_MASK) >> 1, rx2cs);
+	TRCRXV21Disk (TRC_RXV21_WRITE, (rx2cs & RX_UNIT_SEL) ? 1 : 0,
+			(rx2cs & RX_DEN) ? 1 : 0, rx2sa, rx2ta);
 
-	if(!(rx->rx2cs & RX_DEN)) {
-		TRCRXV21Error(TRC_RXV21_DEN_ERR, 0);
-		rx->error = 0240; /* Density Error */
-		rx->rx2cs |= RX_ERROR;
-		rx->rx2es |= RX2ES_DEN_ERR;
-		RXV21Done(rx);
+	if (!(rx2cs & RX_DEN)) 
+	{
+		TRCRXV21Error (TRC_RXV21_DEN_ERR, 0);
+		error = 0240; /* Density Error */
+		rx2cs |= RX_ERROR;
+		rx2es |= RX2ES_DEN_ERR;
+		Done ();
 		return;
 	}
 
-	if(rx->rx2sa == 0 || rx->rx2sa > 26 || rx->rx2ta > 76) {
-		if(rx->rx2ta > 76) {
-			rx->error = 0040; /* Tried to access a track greater than 76 */
-			TRCRXV21Error(TRC_RXV21_TRACK_NO, rx->rx2ta);
-		} else {
-			rx->error = 0070; /* Desired sector could not be found after looking at 52 headers (2 revolutions) */
-			TRCRXV21Error(TRC_RXV21_SECT_NO, rx->rx2sa);
+	if (rx2sa == 0 || rx2sa > 26 || rx2ta > 76) 
+	{
+		if (rx2ta > 76) 
+		{
+			error = 0040; /* Tried to access a track greater than 76 */
+			TRCRXV21Error (TRC_RXV21_TRACK_NO, rx2ta);
+		} 
+		else 
+		{
+			error = 0070; /* Desired sector could not be found after looking at 52 headers (2 revolutions) */
+			TRCRXV21Error (TRC_RXV21_SECT_NO, rx2sa);
 		}
-		rx->rx2cs |= RX_ERROR;
-	} else {
+		rx2cs |= RX_ERROR;
+	} 
+	else 
+	{
 		u16 i;
-		u16* sec = (u16*) &rx->data[offset];
-		memcpy(&rx->data[offset], rx->buffer, 256);
-		for(i = 0; i < 128; i++) {
+		u16* sec = (u16*) &data[offset];
+		memcpy(&data[offset], buffer, 256);
+		for(i = 0; i < 128; i++) 
+		{
 			sec[i] = U16L(sec[i]);
 		}
 	}
 
-	RXV21Done(rx);
+	Done ();
 }
 
-void RXV21ReadSector(RXV21* rx)
+void RXV21::ReadSector ()
 {
 	u32 offset;
 
-	rx->rx2sa &= 0037;
-	rx->rx2ta &= 0177;
+	rx2sa &= 0037;
+	rx2ta &= 0177;
 
-	offset = (rx->rx2sa - 1) * 256 + rx->rx2ta * (26 * 256);
+	offset = (rx2sa - 1) * 256 + rx2ta * (26 * 256);
 
-	TRCRXV21CMDCommit((rx->rx2cs & RX_FUNCTION_MASK) >> 1, rx->rx2cs);
-	TRCRXV21Disk(TRC_RXV21_READ, (rx->rx2cs & RX_UNIT_SEL) ? 1 : 0,
-			(rx->rx2cs & RX_DEN) ? 1 : 0, rx->rx2sa, rx->rx2ta);
+	TRCRXV21CMDCommit ((rx2cs & RX_FUNCTION_MASK) >> 1, rx2cs);
+	TRCRXV21Disk (TRC_RXV21_READ, (rx2cs & RX_UNIT_SEL) ? 1 : 0,
+			(rx2cs & RX_DEN) ? 1 : 0, rx2sa, rx2ta);
 
-	if(!(rx->rx2cs & RX_DEN)) {
-		TRCRXV21Error(TRC_RXV21_DEN_ERR, 0);
-		rx->error = 0240; /* Density Error */
-		rx->rx2cs |= RX_ERROR;
-		rx->rx2es |= RX2ES_DEN_ERR;
-		RXV21Done(rx);
+	if (!(rx2cs & RX_DEN)) 
+	{
+		TRCRXV21Error (TRC_RXV21_DEN_ERR, 0);
+		error = 0240; /* Density Error */
+		rx2cs |= RX_ERROR;
+		rx2es |= RX2ES_DEN_ERR;
+		Done ();
 		return;
 	}
 
-	if(rx->rx2sa == 0 || rx->rx2sa > 26 || rx->rx2ta > 76) {
-		if(rx->rx2ta > 76) {
-			rx->error = 0040; /* Tried to access a track greater than 76 */
-			TRCRXV21Error(TRC_RXV21_TRACK_NO, rx->rx2ta);
-		} else {
-			rx->error = 0070; /* Desired sector could not be found after looking at 52 headers (2 revolutions) */
-			TRCRXV21Error(TRC_RXV21_SECT_NO, rx->rx2ta);
+	if (rx2sa == 0 || rx2sa > 26 || rx2ta > 76) 
+	{
+		if (rx2ta > 76) 
+		{
+			error = 0040; /* Tried to access a track greater than 76 */
+			TRCRXV21Error (TRC_RXV21_TRACK_NO, rx2ta);
+		} 
+		else 
+		{
+			error = 0070; /* Desired sector could not be found after looking at 52 headers (2 revolutions) */
+			TRCRXV21Error (TRC_RXV21_SECT_NO, rx2ta);
 		}
-		rx->rx2cs |= RX_ERROR;
-	} else {
+		rx2cs |= RX_ERROR;
+	} 
+	else 
+	{
 		u16 i;
-		memcpy(rx->buffer, &rx->data[offset], 256);
-		for(i = 0; i < 128; i++) {
-			rx->buffer[i] = U16L(rx->buffer[i]);
+		memcpy (buffer, &data[offset], 256);
+		for(i = 0; i < 128; i++) 
+		{
+			buffer[i] = U16L(buffer[i]);
 		}
 	}
 
-	RXV21Done(rx);
+	Done ();
 }
 
-void RXV21ReadStatus(RXV21* rx)
+void RXV21::ReadStatus ()
 {
-	TRCRXV21CMDCommit((rx->rx2cs & RX_FUNCTION_MASK) >> 1, rx->rx2cs);
+	TRCRXV21CMDCommit ((rx2cs & RX_FUNCTION_MASK) >> 1, rx2cs);
 
-	rx->rx2es |= RX2ES_DRV_RDY | RX2ES_DRV_DEN;
-	RXV21Done(rx);
+	rx2es |= RX2ES_DRV_RDY | RX2ES_DRV_DEN;
+	Done ();
 }
 
-void RXV21ReadErrorCode(RXV21* rx)
+void RXV21::ReadErrorCode ()
 {
-	QBUS* bus = rx->bus;
+	QBUS* bus = this->bus;
 
-	TRCRXV21CMDCommit((rx->rx2cs & RX_FUNCTION_MASK) >> 1, rx->rx2cs);
+	TRCRXV21CMDCommit ((rx2cs & RX_FUNCTION_MASK) >> 1, rx2cs);
 
 	/* < 7:0> Definitive Error Codes */
 	/* <15:8> Word Count Register */
-	WRITE(rx->rx2ba, rx->error | (rx->rx2wc << 8));
+	WRITE (rx2ba, error | (rx2wc << 8));
 
 	/* < 7:0> Current Track Address of Drive 0 */
 	/* <15:8> Current Track Address of Drive 1 */
-	WRITE(rx->rx2ba + 2, rx->rx2ta | (rx->rx2ta << 8));
+	WRITE (rx2ba + 2, rx2ta | (rx2ta << 8));
 
 	/* < 7:0> Target Track of Current Disk Access */
 	/* <15:8> Target Sector of Current Disk Access */
-	WRITE(rx->rx2ba + 4, rx->rx2ta | (rx->rx2sa << 8));
+	WRITE (rx2ba + 4, rx2ta | (rx2sa << 8));
 
 	/* <7> Unit Select Bit */
 	/* <5> Head Load Bit */
 	/* <6> <4> Drive Density Bit of Both Drives */
 	/* <0> Density of Read Error Register Command */
 	/* <15:8> Track Address of Selected Drive */
-	WRITE(rx->rx2ba + 6, _BV(5) | _BV(6) | _BV(4) | _BV(0) | (rx->rx2ta << 8));
+	WRITE (rx2ba + 6, _BV(5) | _BV(6) | _BV(4) | _BV(0) | (rx2ta << 8));
 
-	RXV21Done(rx);
+	Done ();
 }
 
-void RXV21ExecuteCommand(RXV21* rx)
+void RXV21::ExecuteCommand ()
 {
-	TRCRXV21CMD((rx->rx2cs & RX_FUNCTION_MASK) >> 1, rx->rx2cs);
-	rx->rx2cs &= ~RX_GO;
-	rx->state = 1;
-	switch(rx->rx2cs & RX_FUNCTION_MASK) {
+	TRCRXV21CMD ((rx2cs & RX_FUNCTION_MASK) >> 1, rx2cs);
+	rx2cs &= ~RX_GO;
+	state = 1;
+	switch (rx2cs & RX_FUNCTION_MASK) 
+	{
 		case RX_FILL_BUFFER:
-			RXV21ClearErrors(rx);
-			rx->rx2cs &= ~RX_DONE;
-			rx->rx2cs |= RX_TR;
+			ClearErrors ();
+			rx2cs &= ~RX_DONE;
+			rx2cs |= RX_TR;
 			break;
+
 		case RX_EMPTY_BUFFER:
-			RXV21ClearErrors(rx);
-			rx->rx2cs &= ~RX_DONE;
-			rx->rx2cs |= RX_TR;
+			ClearErrors ();
+			rx2cs &= ~RX_DONE;
+			rx2cs |= RX_TR;
 			break;
+
 		case RX_WRITE_SECTOR:
-			RXV21ClearErrors(rx);
-			rx->rx2cs &= ~RX_DONE;
-			rx->rx2cs |= RX_TR;
-			rx->rx2es = RX2ES_DRV_RDY | RX2ES_DRV_DEN;
+			ClearErrors ();
+			rx2cs &= ~RX_DONE;
+			rx2cs |= RX_TR;
+			rx2es = RX2ES_DRV_RDY | RX2ES_DRV_DEN;
 			break;
+
 		case RX_READ_SECTOR:
-			RXV21ClearErrors(rx);
-			rx->rx2cs &= ~RX_DONE;
-			rx->rx2cs |= RX_TR;
-			rx->rx2es = RX2ES_DRV_RDY | RX2ES_DRV_DEN;
+			ClearErrors ();
+			rx2cs &= ~RX_DONE;
+			rx2cs |= RX_TR;
+			rx2es = RX2ES_DRV_RDY | RX2ES_DRV_DEN;
 			break;
+
 		case RX_SET_MEDIA_DENSITY:
-			RXV21ClearErrors(rx);
+			ClearErrors ();
 			printf("[RXV21] NOT IMPLEMENTED: Set Media Density\n");
 			fflush(stdout);
 			exit(1);
 			break;
+
 		case RX_READ_STATUS:
-			RXV21ReadStatus(rx);
+			ReadStatus ();
 			break;
+
 		case RX_WRITE_DELETED_DATA:
-			RXV21ClearErrors(rx);
+			ClearErrors ();
 			printf("[RXV21] NOT IMPLEMENTED: Write Deleted Data\n");
 			fflush(stdout);
 			exit(1);
 			break;
+
 		case RX_READ_ERROR_CODE:
-			rx->rx2cs &= ~RX_DONE;
-			rx->rx2cs |= RX_TR;
-			rx->rx2es = RX2ES_DRV_RDY | RX2ES_DRV_DEN;
+			rx2cs &= ~RX_DONE;
+			rx2cs |= RX_TR;
+			rx2es = RX2ES_DRV_RDY | RX2ES_DRV_DEN;
 			break;
 	}
 }
 
-void RXV21Process(RXV21* rx)
+void RXV21::Process ()
 {
-	TRCRXV21Step((rx->rx2cs & RX_FUNCTION_MASK) >> 1, rx->state, rx->rx2db);
+	TRCRXV21Step ((rx2cs & RX_FUNCTION_MASK) >> 1, state, rx2db);
 
-	if(rx->state == 0) {
+	if (state == 0) 
+	{
 		return;
 	}
 
-	switch(rx->rx2cs & RX_FUNCTION_MASK) {
+	switch (rx2cs & RX_FUNCTION_MASK) 
+	{
 		case RX_FILL_BUFFER:
-			switch(rx->state) {
+			switch(state) 
+			{
 				case 1: /* read RX2WC */
-					rx->rx2wc = rx->rx2db;
-					rx->state++;
+					rx2wc = rx2db;
+					state++;
 					break;
+
 				case 2: /* read RX2BA */
-					rx->rx2ba = rx->rx2db;
-					rx->rx2cs &= ~RX_TR;
-					RXV21FillBuffer(rx);
+					rx2ba = rx2db;
+					rx2cs &= ~RX_TR;
+					FillBuffer ();
 					break;
 			}
 			break;
+
 		case RX_EMPTY_BUFFER:
-			switch(rx->state) {
+			switch (state) 
+			{
 				case 1: /* read RX2WC */
-					rx->rx2wc = rx->rx2db;
-					rx->state++;
+					rx2wc = rx2db;
+					state++;
 					break;
+
 				case 2: /* read RX2BA */
-					rx->rx2ba = rx->rx2db;
-					rx->rx2cs &= ~RX_TR;
-					RXV21EmptyBuffer(rx);
+					rx2ba = rx2db;
+					rx2cs &= ~RX_TR;
+					EmptyBuffer ();
 					break;
 			}
 			break;
+
 		case RX_WRITE_SECTOR:
-			switch(rx->state) {
+			switch (state) 
+			{
 				case 1: /* read RX2SA */
-					rx->rx2sa = rx->rx2db;
-					rx->state++;
+					rx2sa = rx2db;
+					state++;
 					break;
+
 				case 2: /* read RX2TA */
-					rx->rx2ta = rx->rx2db;
-					rx->rx2cs &= ~RX_TR;
-					RXV21WriteSector(rx);
+					rx2ta = rx2db;
+					rx2cs &= ~RX_TR;
+					WriteSector ();
 					break;
 			}
 			break;
+
 		case RX_READ_SECTOR:
-			switch(rx->state) {
+			switch(state) 
+			{
 				case 1: /* read RX2SA */
-					rx->rx2sa = rx->rx2db;
-					rx->state++;
+					rx2sa = rx2db;
+					state++;
 					break;
+
 				case 2: /* read RX2TA */
-					rx->rx2ta = rx->rx2db;
-					rx->rx2cs &= ~RX_TR;
-					RXV21ReadSector(rx);
+					rx2ta = rx2db;
+					rx2cs &= ~RX_TR;
+					ReadSector ();
 					break;
 			}
 			break;
+
 		case RX_READ_ERROR_CODE:
-			rx->rx2ba = rx->rx2db;
-			rx->rx2cs &= ~RX_TR;
-			RXV21ReadErrorCode(rx);
+			rx2ba = rx2db;
+			rx2cs &= ~RX_TR;
+			ReadErrorCode ();
 			break;
 	}
 }
 
-u16 RXV21Read(void* self, u16 address)
+u16 RXV21::Read (u16 address)
 {
-	RXV21* rx = (RXV21*) self;
-
-	if(address == rx->base) { /* RX2CS */
-		return rx->rx2cs & RX_RMASK;
-	} else if(address == rx->base + 2) { /* RX2DB */
-		return rx->rx2db;
+	if(address == base) 
+	{ 
+		/* RX2CS */
+		return rx2cs & RX_RMASK;
+	} 
+	else if(address == base + 2) 
+	{ 
+		/* RX2DB */
+		return rx2db;
 	}
 
 	return 0;
 }
 
-void RXV21Write(void* self, u16 address, u16 value)
+void RXV21::Write (u16 address, u16 value)
 {
-	RXV21* rx = (RXV21*) self;
-
-	if(address == rx->base) { /* RX2CS */
-		int intr = rx->rx2cs & RX_INTR_ENB;
-		rx->rx2cs = (rx->rx2cs & ~RX_WMASK) | (value & RX_WMASK);
-		rx->rx2cs &= ~(RX_TR | RX_INIT | RX_ERROR);
-		rx->error = 0;
-		if(value & RX_INIT) {
-			RXV21Reset(rx);
+	if (address == base) 
+	{ 
+		/* RX2CS */
+		int intr = rx2cs & RX_INTR_ENB;
+		rx2cs = (rx2cs & ~RX_WMASK) | (value & RX_WMASK);
+		rx2cs &= ~(RX_TR | RX_INIT | RX_ERROR);
+		error = 0;
+		if (value & RX_INIT) 
+		{
+			Reset ();
 			return;
 		}
-		if(rx->rx2cs & RX_GO) {
+		if (rx2cs & RX_GO) 
+		{
 			/* initiate command */
-			RXV21ExecuteCommand(rx);
+			ExecuteCommand ();
 		}
-		if(!intr && (value & RX_INTR_ENB) && (rx->rx2cs & RX_DONE)) {
-			QBUS* bus = rx->bus;
-			bus->interrupt(bus, rx->vector);
+		if (!intr && (value & RX_INTR_ENB) && (rx2cs & RX_DONE)) 
+		{
+			QBUS* bus = this->bus;
+			bus->interrupt(bus, vector);
 		}
-	} else if(address == rx->base + 2) { /* RX2DB */
-		rx->rx2db = value;
-		RXV21Process(rx);
+	} else if (address == base + 2) 
+	{ 
+		/* RX2DB */
+		rx2db = value;
+		Process ();
 	}
 }
 
-u8 RXV21Responsible(void* self, u16 address)
+u8 RXV21::Responsible (u16 address)
 {
-	RXV21* rx = (RXV21*) self;
-
-	return ((address >= rx->base) && (address <= (rx->base + 2)));
+	return ((address >= base) && (address <= (base + 2)));
 }
 
-void RXV21Reset(void* self)
+void RXV21::Reset ()
 {
-	RXV21* rx = (RXV21*) self;
-
-	rx->state = 0;
-	rx->rx2cs = RX_RX02 | RX_DONE;
-	rx->rx2es = RX2ES_DEFAULT;
-	rx->rx2db = rx->rx2es;
+	state = 0;
+	rx2cs = RX_RX02 | RX_DONE;
+	rx2es = RX2ES_DEFAULT;
+	rx2db = rx2es;
 }
 
-void RXV21Init(RXV21* rx)
+void RXV21::SetData (u8* data)
 {
-	rx->self = (void*) rx;
-	rx->read = RXV21Read;
-	rx->write = RXV21Write;
-	rx->responsible = RXV21Responsible;
-	rx->reset = RXV21Reset;
-
-	/* factory configuration */
-	rx->base = 0177170;
-	rx->vector = 0264;
-
-	RXV21Reset(rx);
-}
-
-void RXV21Destroy(RXV21* rx)
-{
-	/* nothing */
-}
-
-void RXV21SetData(RXV21* rx, u8* data)
-{
-	rx->data = data;
+	this->data = data;
 }

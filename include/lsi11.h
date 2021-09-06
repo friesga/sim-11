@@ -83,14 +83,15 @@ struct QBUS {
 	void	(*write)(void* user, u16 addr, u16 value);
 };
 
-typedef struct {
+class QBUSMod
+{
+public:
 	QBUS*	bus;
-	void*	self;
-	u16	(*read)(void* self, u16 addr);
-	void	(*write)(void* self, u16 addr, u16 value);
-	u8	(*responsible)(void* self, u16 addr);
-	void	(*reset)(void* self);
-} QBUSMod;
+	u16		virtual Read (u16 addr) = 0;
+	void	virtual Write (u16 addr, u16 value) = 0;
+	u8		virtual Responsible (u16 addr) = 0;
+	void	virtual Reset () = 0;
+};
 
 typedef struct {
 	KD11	cpu;
@@ -114,20 +115,58 @@ typedef struct {
 	void	(*receive)(unsigned char c);
 } DLV11Ch;
 
-/* peripherals */
-struct MSV11D : QBUSMod
+/* Peripherals */
+class MSV11D : public QBUSMod
 {
+public:
+	MSV11D ();
+	~MSV11D ();
+	u16 Read (u16 address);
+	void Write (u16 address, u16 value);
+	u8 Responsible (u16 address);
+	void Reset ();
+
+// ToDo: Make data private (accessed from main())
 	u8*	data;
 };
 
-struct DLV11J : QBUSMod
+class DLV11J : public QBUSMod
 {
+public:
+	DLV11J ();
+	~DLV11J ();
+	u16 Read (u16 address);
+	void Write (u16 address, u16 value);
+	u8 Responsible (u16 address);
+	void Reset ();
+	void Send (int channel, unsigned char c);
+
+private:
+	void ReadChannel (int channelNr);
+	void WriteChannel (int channelNr);
+	void WriteRCSR (int n, u16 value);
+	void WriteXCSR (int n, u16 value);
+
 	DLV11Ch	channel[4];
 	u16	base;
 };
 
-struct BDV11 : QBUSMod
+class BDV11 : public QBUSMod
 {
+public:
+	BDV11 ();
+	~BDV11 ();
+	u16 Read (u16 address);
+	void Write (u16 address, u16 value);
+	u8 Responsible (u16 address);
+	void Reset ();
+	void Step (float dt);
+
+private:
+	u16 GetWordLow (u16 word);
+	u16 GetWordHigh (u16 word);
+	void MemoryDump (u16 pcr, int hi);
+
 	u16	pcr;
 	u16	scratch;
 	u16	option;
@@ -136,8 +175,29 @@ struct BDV11 : QBUSMod
 	float	time;
 };
 
-struct RXV21 : QBUSMod
+class RXV21 : public QBUSMod
 {
+public:
+	RXV21 ();
+	~RXV21 ();
+	u16 Read (u16 address);
+	void Write (u16 address, u16 value);
+	u8 Responsible (u16 address);
+	void Reset ();
+	void SetData (u8* data);
+
+private:
+	void ClearErrors ();
+	void Done ();
+	void FillBuffer ();
+	void EmptyBuffer ();
+	void WriteSector ();
+	void ReadSector ();
+	void ReadStatus ();
+	void ReadErrorCode ();
+	void ExecuteCommand ();
+	void Process ();
+
 	u16	base;
 	u16	vector;
 
@@ -157,27 +217,7 @@ struct RXV21 : QBUSMod
 	u8* data;
 };
 
-typedef struct MSV11D MSV11D;
-typedef struct DLV11J DLV11J;
-typedef struct BDV11 BDV11;
-typedef struct RXV21 RXV21;
-
 extern const u16 bdv11_e53[2048];
-
-extern void MSV11DInit(MSV11D* msv);
-extern void MSV11DDestroy(MSV11D* msv);
-
-extern void DLV11JInit(DLV11J* dlv);
-extern void DLV11JDestroy(DLV11J* dlv);
-extern void DLV11JSend(DLV11J* dlv, int channel, unsigned char c);
-
-extern void BDV11Init(BDV11* bdv);
-extern void BDV11Destroy(BDV11* bdv);
-extern void BDV11Step(BDV11* bdv, float dt);
-
-extern void RXV21Init(RXV21* rx);
-extern void RXV21Destroy(RXV21* rx);
-extern void RXV21SetData(RXV21* rx, u8* data);
 
 /* KD11 subroutines */
 extern void KD11Init(KD11* kd11);

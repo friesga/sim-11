@@ -3,44 +3,35 @@
 
 #include "lsi11.h"
 
-u16 MSV11DRead(void* self, u16 address)
+MSV11D::MSV11D ()
 {
-	MSV11D* msv = (MSV11D*) self;
-	u16* mem = (u16*) &msv->data[address];
+	data = (u8*) malloc (MSV11D_SIZE);
+	memset (data, 0, MSV11D_SIZE);
+}
 
+MSV11D::~MSV11D ()
+{
+	free (data);
+}
+
+u16 MSV11D::Read (u16 address)
+{
+	u16* mem = (u16*) &data[address];
 	return *mem;
 }
 
-void MSV11DWrite(void* self, u16 address, u16 value)
+void MSV11D::Write (u16 address, u16 value)
 {
-	MSV11D* msv = (MSV11D*) self;
-	u16* mem = (u16*) &msv->data[address];
+	u16* mem = (u16*) &data[address];
 	*mem = value;
 }
 
-u8 MSV11DResponsible(void* self, u16 address)
+u8 MSV11D::Responsible (u16 address)
 {
 	return address < MSV11D_SIZE;
 }
 
-void MSV11DReset(void* self)
+void MSV11D::Reset ()
 {
 	/* nothing */
-}
-
-void MSV11DInit(MSV11D* msv)
-{
-	msv->self = (void*) msv;
-	msv->read = MSV11DRead;
-	msv->write = MSV11DWrite;
-	msv->responsible = MSV11DResponsible;
-	msv->reset = MSV11DReset;
-
-	msv->data = (u8*) malloc(MSV11D_SIZE);
-	memset(msv->data, 0, MSV11D_SIZE);
-}
-
-void MSV11DDestroy(MSV11D* msv)
-{
-	free(msv->data);
 }

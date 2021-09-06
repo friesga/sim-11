@@ -76,25 +76,20 @@ const char* odt_input =
 	"2134/000000\r"
 	"2000G";
 
-void LSI11ConsoleSend(DLV11J* dlv, const char c)
+void LSI11ConsoleSend (DLV11J* dlv, const char c)
 {
-	DLV11JSend(dlv, 3, c);
+	dlv->Send (3, c);
 }
 
-void LSI11ConsoleSendString(DLV11J* dlv, const char* s)
+void LSI11ConsoleSendString (DLV11J* dlv, const char* s)
 {
-	for(; *s; s++) {
+	for(; *s; s++)
+	{
 		LSI11ConsoleSend(dlv, *s);
 	}
 }
 
-void console_print(unsigned char c)
-{
-	printf("%c", c);
-	fflush(stdout);
-}
-
-void sigint_handler(int signum)
+void sigint_handler (int signum)
 {
 	running = 0;
 }
@@ -110,7 +105,7 @@ void sigint_handler(int signum)
 #define read_stdin(x,buf,count)		read(0, buf, count)
 #endif
 
-int main(int argc, char** argv)
+int main (int argc, char** argv)
 {
 	LSI11 lsi;
 	MSV11D msv11;
@@ -148,83 +143,101 @@ int main(int argc, char** argv)
 	}
 #endif
 
-	MSV11DInit(&msv11);
-	DLV11JInit(&dlv11);
-	BDV11Init(&bdv11);
-	RXV21Init(&rxv21);
-
 	argc--;
 	argv++;
 
-	for(; argc; argc--, argv++) {
-		if(!strcmp("-h", *argv)) {
+	for (; argc; argc--, argv++)
+	{
+		if (!strcmp("-h", *argv))
+		{
 			halt = 1;
-		} else if(!strcmp("-b", *argv)) {
+		} 
+		else if(!strcmp("-b", *argv)) 
+		{
 			bootstrap = 1;
-		} else if(!strcmp("-z", *argv)) {
+		}
+		else if(!strcmp("-z", *argv)) 
+		{
 			compress = 1;
-		} else if(!strcmp("-l", *argv) && argc > 1) {
+		}
+		else if(!strcmp("-l", *argv) && argc > 1) 
+		{
 			load_file = argv[1];
 			argc--;
 			argv++;
-		} else if(!strcmp("-f", *argv) && argc > 1) {
+		} 
+		else if(!strcmp("-f", *argv) && argc > 1) 
+		{
 			floppy_filename = argv[1];
 			argc--;
 			argv++;
-		} else if(!strcmp("-t", *argv) && argc > 1) {
+		} 
+		else if(!strcmp("-t", *argv) && argc > 1) 
+		{
 			trace_file = argv[1];
 			argc--;
 			argv++;
-		} else if(**argv != '-') {
+		} 
+		else if(**argv != '-') 
+		{
 			load_file = *argv;
-		} else {
+		} 
+		else 
+		{
 			printf("Unknown option: %s\n", *argv);
 			return 1;
 		}
 	}
 
 	floppy = (u8*) malloc(77 * 26 * 256);
-	if(!floppy) {
+	if (!floppy) 
+	{
 		printf("Error: cannot allocate memory\n");
 		return 1;
 	}
 
-	if(floppy_filename) {
+	if (floppy_filename) 
+	{
 		floppy_file = fopen (floppy_filename, "rb");
-		if (!floppy_file) {
+		if (!floppy_file) 
+		{
 			printf("Error: cannot open file %s\n", floppy_filename);
 			free(floppy);
 			return 1;
 		}
-		(void) !fread(floppy, 77 * 26 * 256, 1, floppy_file);
-		fclose(floppy_file);
-	} else {
-		memset(floppy, 0, 77 * 26 * 256);
+		(void) !fread (floppy, 77 * 26 * 256, 1, floppy_file);
+		fclose (floppy_file);
+	} 
+	else 
+	{
+		memset (floppy, 0, 77 * 26 * 256);
 	}
 
-	RXV21SetData(&rxv21, floppy);
+	rxv21.SetData (floppy);
 
-	dlv11.channel[3].receive = console_print;
-
-	if(trace_file) {
+	if (trace_file) 
+	{
 		TRCINIT(trace_file);
-		if(compress) {
+		if (compress) 
+		{
 			trc.flags |= TRACE_COMPRESS;
 		}
 	}
 	/* trc.flags |= TRACE_PRINT; */
 
 	LSI11Init(&lsi);
-	LSI11InstallModule(&lsi, 1, &msv11);
-	LSI11InstallModule(&lsi, 2, &rxv21);
-	LSI11InstallModule(&lsi, 3, &dlv11);
-	LSI11InstallModule(&lsi, 4, &bdv11);
+	LSI11InstallModule (&lsi, 1, &msv11);
+	LSI11InstallModule (&lsi, 2, &rxv21);
+	LSI11InstallModule (&lsi, 3, &dlv11);
+	LSI11InstallModule (&lsi, 4, &bdv11);
 	LSI11Reset(&lsi);
 
-	if(bootstrap) {
-		LSI11ConsoleSendString(&dlv11, odt_input);
+	if (bootstrap) 
+	{
+		LSI11ConsoleSendString (&dlv11, odt_input);
 	}
-	if(load_file) {
+	if (load_file) 
+	{
 		/* execute absolute loader binary */
 		/* const char* filename = "VKAAC0.BIC"; */
 		/* const char* filename = "VKADC0.BIC"; */
@@ -236,49 +249,61 @@ int main(int argc, char** argv)
 		size_t bytes = 0;
 
 		FILE* f = fopen (filename, "rb");
-		if (!f) {
+		if (!f) 
+		{
 			printf("error opening file!\n");
 			return 1;
 		}
-		fseek(f, 0, SEEK_END);
-		size = ftell(f);
-		fseek(f, 0, SEEK_SET);
-		printf("loading %s [%zu bytes]...\n", filename, size);
-		fflush(stdout);
-		while(bytes < size) {
+		fseek (f, 0, SEEK_END);
+		size = ftell (f);
+		fseek (f, 0, SEEK_SET);
+		printf ("loading %s [%zu bytes]...\n", filename, size);
+		fflush (stdout);
+		while (bytes < size) 
+		{
 			int c;
-			while((c = fgetc(f)) != EOF) {
-				if(c == 1) {
+			while ((c = fgetc (f)) != EOF)
+			{
+				if (c == 1) 
+				{
 					break;
 				}
 			}
-			if(c == 1) {
-				c = fgetc(f);
+			if (c == 1) 
+			{
+				c = fgetc (f);
 			}
-			if(c == EOF) {
-				printf("error: unexpected EOF\n");
-				fclose(f);
-				free(floppy);
+			if (c == EOF) 
+			{
+				printf ("error: unexpected EOF\n");
+				fclose (f);
+				free (floppy);
 				return 1;
-			} else if(c != 0) {
-				printf("error: invalid signature! [%02x]\n", c);
-				fclose(f);
-				free(floppy);
+			} 
+			else if (c != 0) 
+			{
+				printf ("error: invalid signature! [%02x]\n", c);
+				fclose (f);
+				free (floppy);
 				return 1;
 			}
-			(void) !fread(&len, 2, 1, f);
-			(void) !fread(&addr, 2, 1, f);
+			(void) !fread (&len, 2, 1, f);
+			(void) !fread (&addr, 2, 1, f);
 			bytes += len;
-			printf("%06o: %d bytes\n", addr, len - 6);
-			(void) !fread(&msv11.data[addr], len - 6, 1, f);
-			TRCMemoryDump(&msv11.data[addr], addr, len - 6);
-			(void) !fread(&cksum, 1, 1, f);
-			if(len == 6) {
-				if((addr & 1) == 0) {
+			printf ("%06o: %d bytes\n", addr, len - 6);
+			(void) !fread (&msv11.data[addr], len - 6, 1, f);
+			TRCMemoryDump (&msv11.data[addr], addr, len - 6);
+			(void) !fread (&cksum, 1, 1, f);
+			if(len == 6)
+			{
+				if ((addr & 1) == 0) 
+				{
 					lsi.cpu.r[7] = addr;
 					/* LSI11ConsoleSendString(&dlv11, "P"); */
 					lsi.cpu.state = 1;
-				} else {
+				} 
+				else 
+				{
 					/* LSI11ConsoleSendString(&dlv11, "200G"); */
 					lsi.cpu.r[7] = 0200;
 					lsi.cpu.state = 1;
@@ -286,7 +311,7 @@ int main(int argc, char** argv)
 				break;
 			}
 		}
-		fclose(f);
+		fclose (f);
 	}
 
 #ifndef DEBUG
@@ -307,26 +332,30 @@ int main(int argc, char** argv)
 	tio.c_oflag &= ~OPOST;
 	tio.c_cflag |= CS8;
 	tio.c_lflag &= ~(ECHO | ICANON | IEXTEN);
-	tcsetattr(0, TCSANOW, &tio);
+	tcsetattr (0, TCSANOW, &tio);
 #endif
 
 	running = 1;
 
-	if(halt) {
+	if (halt) 
+	{
 		lsi.cpu.state = 0;
-	} else if(!bootstrap && !halt && !load_file) {
+	} 
+	else if (!bootstrap && !halt && !load_file) 
+	{
 		lsi.cpu.state = 1;
 	}
 
 	clock_gettime (CLOCK_MONOTONIC, &last);
 
-	while(running) {
+	while (running) 
+	{
 		unsigned int i;
 		double dt;
 		char c;
 
-		FD_ZERO(&fds);
-		FD_SET(0, &fds);
+		FD_ZERO (&fds);
+		FD_SET (0, &fds);
 		tv.tv_sec = 0;
 		tv.tv_usec = 0;
 
@@ -337,32 +366,36 @@ int main(int argc, char** argv)
 			if(c == '\n')
 				c = '\r';
 #endif
-			DLV11JSend(&dlv11, 3, c);
+			dlv11.Send (3, c);
 		}
 
 		for(i = 0; i < 1000; i++)
 			LSI11Step(&lsi);
 
-		clock_gettime(CLOCK_MONOTONIC, &now);
+		clock_gettime (CLOCK_MONOTONIC, &now);
 		dt = (now.tv_sec - last.tv_sec) + 
 			(now.tv_nsec - last.tv_nsec) / 1e9;
 		last = now;
-		BDV11Step(&bdv11, (float) dt);
+		bdv11.Step ((float) dt);
 	}
 
-	free(floppy);
+	free (floppy);
 
+#if 0
+	// ToDo: Call destructor
 	DLV11JDestroy(&dlv11);
 	BDV11Destroy(&bdv11);
 	RXV21Destroy(&rxv21);
 	MSV11DDestroy(&msv11);
-	LSI11Destroy(&lsi);
+#endif
+	LSI11Destroy (&lsi);
 
-	tcsetattr(0, TCSANOW, &original_tio);
+	tcsetattr (0, TCSANOW, &original_tio);
 
-	printf("\n");
+	printf ("\n");
 
-	if(trace_file) {
+	if(trace_file)
+	{
 		TRCFINISH();
 	}
 
