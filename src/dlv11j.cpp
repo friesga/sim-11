@@ -79,7 +79,7 @@ void DLV11J::ReadChannel (int channelNr)
 			ch->rcsr |= RCSR_RCVR_DONE;
 			if(ch->rcsr & RCSR_RCVR_INT) {
 				QBUS* bus = this->bus;
-				bus->interrupt(bus, ch->vector);
+				bus->Interrupt (ch->vector);
 			}
 		} else {
 			ch->rcsr &= ~RCSR_RCVR_DONE;
@@ -105,7 +105,7 @@ void DLV11J::WriteChannel(int channelNr)
 	if(ch->xcsr & XCSR_TRANSMIT_INT)
 	{
 		QBUS* bus = this->bus;
-		bus->interrupt(bus, ch->vector + 4);
+		bus->Interrupt (ch->vector + 4);
 	}
 }
 
@@ -137,7 +137,7 @@ void DLV11J::WriteRCSR(int n, u16 value)
 			&& (ch->rcsr & RCSR_RCVR_DONE))
 	{
 		QBUS* bus = this->bus;
-		bus->interrupt(bus, ch->vector);
+		bus->Interrupt (ch->vector);
 	}
 }
 
@@ -151,7 +151,7 @@ void DLV11J::WriteXCSR(int n, u16 value)
 			&& (ch->xcsr & XCSR_TRANSMIT_READY))
 	{
 		QBUS* bus = this->bus;
-		bus->interrupt(bus, ch->vector + 4);
+		bus->Interrupt (ch->vector + 4);
 	}
 }
 
@@ -211,7 +211,7 @@ void DLV11J::Send(int channelNr, unsigned char c)
 		if(ch->rcsr & RCSR_RCVR_INT)
 		{
 			QBUS* bus = this->bus;
-			bus->interrupt(bus, ch->vector);
+			bus->Interrupt (ch->vector);
 		}
 	}
 }

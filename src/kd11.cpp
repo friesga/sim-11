@@ -96,8 +96,8 @@ void KD11Reset(KD11* kd11)
 	kd11->odt.state = ODT_STATE_INIT;
 }
 
-#define	READ(addr)		(bus->read(bus->user, (addr)))
-#define	WRITE(addr, val)	(bus->write(bus->user, (addr), (val)))
+#define	READ(addr)			(bus->Read(bus->user, (addr)))
+#define	WRITE(addr, val)	(bus->Write(bus->user, (addr), (val)))
 #define	CHECK()			{ \
 	if(kd11->trap && kd11->trap <= 010) \
 		return; \
@@ -1509,7 +1509,7 @@ void KD11CPUStep(KD11* kd11, QBUS* bus)
 			kd11->state = STATE_WAIT;
 			break;
 		case 0000005: /* RESET */
-			bus->reset(bus);
+			bus->Reset();
 			break;
 		default:
 			unknown = 1;

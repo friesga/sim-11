@@ -48,8 +48,8 @@
 #define	RX2ES_ERRORS		(RX2ES_CRC | RX2ES_RX_AC_LO | RX2ES_DEN_ERR \
 		| RX2ES_WC_OVFL | RX2ES_NXM)
 
-#define	READ(addr)		(bus->read(bus->user, (addr)))
-#define	WRITE(addr, val)	(bus->write(bus->user, (addr), (val)))
+#define	READ(addr)			(bus->Read(bus->user, (addr)))
+#define	WRITE(addr, val)	(bus->Write(bus->user, (addr), (val)))
 #define	CHECK()			{ if(bus->trap) return; }
 
 void RXV21Reset ();
@@ -85,7 +85,7 @@ void RXV21::Done ()
 
 	if (rx2cs & RX_INTR_ENB) 
 	{
-		bus->interrupt (bus, vector);
+		bus->Interrupt (vector);
 	}
 }
 
@@ -465,7 +465,7 @@ void RXV21::Write (u16 address, u16 value)
 		if (!intr && (value & RX_INTR_ENB) && (rx2cs & RX_DONE)) 
 		{
 			QBUS* bus = this->bus;
-			bus->interrupt(bus, vector);
+			bus->Interrupt (vector);
 		}
 	} else if (address == base + 2) 
 	{ 

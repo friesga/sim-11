@@ -225,12 +225,12 @@ int main (int argc, char** argv)
 	}
 	/* trc.flags |= TRACE_PRINT; */
 
-	LSI11Init(&lsi);
-	LSI11InstallModule (&lsi, 1, &msv11);
-	LSI11InstallModule (&lsi, 2, &rxv21);
-	LSI11InstallModule (&lsi, 3, &dlv11);
-	LSI11InstallModule (&lsi, 4, &bdv11);
-	LSI11Reset(&lsi);
+	// *** LSI11Init(&lsi);
+	lsi.InstallModule (1, &msv11);
+	lsi.InstallModule (2, &rxv21);
+	lsi.InstallModule (3, &dlv11);
+	lsi.InstallModule (4, &bdv11);
+	lsi.Reset ();
 
 	if (bootstrap) 
 	{
@@ -370,7 +370,7 @@ int main (int argc, char** argv)
 		}
 
 		for(i = 0; i < 1000; i++)
-			LSI11Step(&lsi);
+			lsi.Step ();
 
 		clock_gettime (CLOCK_MONOTONIC, &now);
 		dt = (now.tv_sec - last.tv_sec) + 
@@ -387,8 +387,8 @@ int main (int argc, char** argv)
 	BDV11Destroy(&bdv11);
 	RXV21Destroy(&rxv21);
 	MSV11DDestroy(&msv11);
-#endif
 	LSI11Destroy (&lsi);
+#endif
 
 	tcsetattr (0, TCSANOW, &original_tio);
 

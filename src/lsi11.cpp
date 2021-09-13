@@ -4,7 +4,7 @@
 #include "lsi11.h"
 #include "trace.h"
 
-static u16 LSI11Read (void* user, u16 address)
+u16 LSI11::Read (void* user, u16 address)
 {
 	u8 i;
 	u16 addr = address;
@@ -28,11 +28,11 @@ static u16 LSI11Read (void* user, u16 address)
 	}
 
 	TRCBus (TRC_BUS_RDFAIL, addr, 0);
-	lsi->bus.interrupt (&lsi->bus, 004);
+	lsi->bus.Interrupt (004);
 	return 0;
 }
 
-static void LSI11Write (void* user, u16 address, u16 value)
+void LSI11::Write (void* user, u16 address, u16 value)
 {
 	u8 i;
 	LSI11* lsi = (LSI11*) user;
@@ -55,16 +55,16 @@ static void LSI11Write (void* user, u16 address, u16 value)
 	}
 
 	TRCBus (TRC_BUS_WRFAIL, address, value);
-	lsi->bus.interrupt (&lsi->bus, 004);
+	lsi->bus.Interrupt (004);
 }
 
 #define	IRCJITTER()	(rand() % QBUS_DELAY_JITTER)
 
-static int LSI11QBUSInterrupt (QBUS* bus, int n)
+int QBUS::Interrupt (int n)
 {
 	if (n != 004) 
 	{
-		if (bus->trap) 
+		if (trap) 
 		{
 			TRCIRQ(n, TRC_IRQ_FAIL);
 			return 0;
@@ -72,30 +72,30 @@ static int LSI11QBUSInterrupt (QBUS* bus, int n)
 		else 
 		{
 			TRCIRQ (n, TRC_IRQ_OK);
-			bus->irq = n;
-			bus->delay = IRCJITTER();
+			irq = n;
+			delay = IRCJITTER();
 			return 1;
 		}
 	} 
 	else 
 	{
 		TRCIRQ (n, TRC_IRQ_OK);
-		bus->trap = n;
+		trap = n;
 		return 1;
 	}
 }
 
-static void LSI11QBUSReset (QBUS* bus)
+void QBUS::Reset ()
 {
 	u8 i;
-	LSI11* lsi = (LSI11*) bus->user;
+	LSI11* lsi = (LSI11*) user;
 
 	TRCBus(TRC_BUS_RESET, 0, 0);
 
 	/* clear pending interrupts */
-	bus->trap = 0;
-	bus->irq = 0;
-	bus->delay = 0;
+	trap = 0;
+	irq = 0;
+	delay = 0;
 
 	for(i = 0; i < LSI11_SIZE; i++) 
 	{
@@ -108,57 +108,63 @@ static void LSI11QBUSReset (QBUS* bus)
 	}
 }
 
-static void LSI11QBUSStep (QBUS* bus)
+void QBUS::Step ()
 {
-	if (bus->delay >= QBUS_DELAY) 
+	if (delay >= QBUS_DELAY) 
 	{
 		/* wait until last trap was serviced */
-		if (!bus->trap) 
+		if (!trap) 
 		{
-			TRCIRQ(bus->irq, TRC_IRQ_SIG);
-			bus->trap = bus->irq;
-			bus->irq = 0;
-			bus->delay = 0;
+			TRCIRQ (irq, TRC_IRQ_SIG);
+			trap = irq;
+			irq = 0;
+			delay = 0;
 		}
 	} 
-	else if (bus->irq) 
+	else if (irq) 
 	{
-		bus->delay++;
+		delay++;
 	}
 }
 
-void LSI11Init (LSI11* lsi)
+LSI11::LSI11 ()
 {
-	KD11Init (&lsi->cpu);
-	lsi->bus.trap = 0;
-	lsi->bus.user = (void*) lsi;
-	lsi->bus.read = LSI11Read;
-	lsi->bus.write = LSI11Write;
-	lsi->bus.interrupt = LSI11QBUSInterrupt;
-	lsi->bus.reset = LSI11QBUSReset;
+	KD11Init (&cpu);
+	bus.trap = 0;
+	bus.user = (void*) this;
 
-	memset (lsi->backplane, 0, sizeof(lsi->backplane));
+	memset (backplane, 0, sizeof(backplane));
 }
 
-void LSI11Destroy (LSI11* lsi)
+LSI11::~LSI11 ()
 {
 	/* nothing */
 }
 
-void LSI11InstallModule (LSI11* lsi, int slot, QBUSMod* module)
+void LSI11::InstallModule (int slot, QBUSMod* module)
 {
-	lsi->backplane[slot] = module;
-	module->bus = &lsi->bus;
+	backplane[slot] = module;
+	module->bus = &bus;
 }
 
-void LSI11Reset (LSI11* lsi)
+void LSI11::Reset ()
 {
-	KD11Reset(&lsi->cpu);
-	lsi->bus.reset(&lsi->bus);
+	KD11Reset(&cpu);
+	bus.Reset();
 }
 
-void LSI11Step (LSI11* lsi)
+void LSI11::Step ()
 {
-	LSI11QBUSStep(&lsi->bus);
-	KD11Step(&lsi->cpu, &lsi->bus);
+	bus.Step ();
+	KD11Step (&cpu, &bus);
+}
+
+u16	QBUS::Read (void* user, u16 addr)
+{
+	return ((LSI11 *) user)->Read (user, addr);
+}
+
+void QBUS::Write (void* user, u16 addr, u16 value)
+{
+	((LSI11*)user)->Write (user, addr, value);
 }

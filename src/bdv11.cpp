@@ -212,7 +212,7 @@ void BDV11::Step (float dt)
 		if (time >= LTC_TIME) 
 		{
 			QBUS* bus = this->bus;
-			bus->interrupt (bus, 0100);
+			bus->Interrupt (0100);
 			time -= LTC_TIME;
 			if (time >= LTC_TIME) 
 			{

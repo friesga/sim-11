@@ -71,16 +71,24 @@ typedef struct {
 	u16	trap;
 } KD11;
 
-typedef struct QBUS QBUS;
-struct QBUS {
+class LSI11;
+
+class QBUS
+{
+public:
+	int		Interrupt (int n);
+	void	Reset ();
+	void	Step ();
+	u16		Read (void* user, u16 addr);
+	void	Write (void* user, u16 addr, u16 value);
+
 	void*	user;
-	u16	trap;
-	u16	delay;
-	u16	irq;
-	int	(*interrupt)(QBUS* self, int n);
-	void	(*reset)(QBUS* self);
-	u16	(*read)(void* user, u16 addr);
-	void	(*write)(void* user, u16 addr, u16 value);
+	u16		trap;
+	u16		delay;
+	u16		irq;
+
+
+
 };
 
 class QBUSMod
@@ -93,11 +101,21 @@ public:
 	void	virtual Reset () = 0;
 };
 
-typedef struct {
-	KD11	cpu;
-	QBUS	bus;
-	QBUSMod*backplane[LSI11_SIZE];
-} LSI11;
+class LSI11
+{
+public:
+	LSI11 ();
+	~LSI11 ();
+	u16 Read (void* user, u16 address);
+	void Write (void* user, u16 address, u16 value);
+	void Reset ();
+	void InstallModule (int slot, QBUSMod* module);
+	void Step ();
+
+	KD11	 cpu;
+	QBUS	 bus;
+	QBUSMod* backplane[LSI11_SIZE];
+};
 
 typedef struct {
 	u16	rcsr;
@@ -226,11 +244,11 @@ extern void KD11Step(KD11* kd11, QBUS* bus);
 extern void KD11Trap(KD11* kd11, int n);
 
 /* LSI-11 subroutines */
-extern void LSI11Init(LSI11* lsi);
+// *** extern void LSI11Init(LSI11* lsi);
 extern void LSI11Destroy(LSI11* lsi);
-extern void LSI11InstallModule(LSI11* lsi, int slot, QBUSMod* module);
-extern void LSI11Reset(LSI11* lsi);
-extern void LSI11Step(LSI11* lsi);
+// *** extern void LSI11InstallModule(LSI11* lsi, int slot, QBUSMod* module);
+// *** extern void LSI11Reset(LSI11* lsi);
+// *** extern void LSI11Step(LSI11* lsi);
 
 /* LSI-11 disassembler */
 extern int  LSI11Disassemble(const u16* insn, u16 pc, char* buf);
