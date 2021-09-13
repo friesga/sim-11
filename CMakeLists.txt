@@ -19,6 +19,7 @@ set (SIM11_SRCS
     src/lsi11.cpp
     src/main.cpp 
     src/msv11d.cpp
+    src/qbus.cpp
     src/rxv21.cpp 
     src/trace.cpp)
 

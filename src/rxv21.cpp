@@ -48,8 +48,8 @@
 #define	RX2ES_ERRORS		(RX2ES_CRC | RX2ES_RX_AC_LO | RX2ES_DEN_ERR \
 		| RX2ES_WC_OVFL | RX2ES_NXM)
 
-#define	READ(addr)			(bus->Read(bus->user, (addr)))
-#define	WRITE(addr, val)	(bus->Write(bus->user, (addr), (val)))
+#define	READ(addr)			(bus->Read((addr)))
+#define	WRITE(addr, val)	(bus->Write((addr), (val)))
 #define	CHECK()			{ if(bus->trap) return; }
 
 void RXV21Reset ();

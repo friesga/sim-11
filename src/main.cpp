@@ -225,11 +225,10 @@ int main (int argc, char** argv)
 	}
 	/* trc.flags |= TRACE_PRINT; */
 
-	// *** LSI11Init(&lsi);
-	lsi.InstallModule (1, &msv11);
-	lsi.InstallModule (2, &rxv21);
-	lsi.InstallModule (3, &dlv11);
-	lsi.InstallModule (4, &bdv11);
+	lsi.bus.InstallModule (1, &msv11);
+	lsi.bus.InstallModule (2, &rxv21);
+	lsi.bus.InstallModule (3, &dlv11);
+	lsi.bus.InstallModule (4, &bdv11);
 	lsi.Reset ();
 
 	if (bootstrap) 
