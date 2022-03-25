@@ -112,6 +112,7 @@ int main (int argc, char** argv)
 	RXV21 rxv21;
 	DLV11J dlv11;
 	BDV11 bdv11;
+	BA11_N ba11_n;
 
 	fd_set fds;
 	struct timeval tv;

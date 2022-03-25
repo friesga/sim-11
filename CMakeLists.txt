@@ -11,6 +11,7 @@ set (TARGET sim-11)
 
 # Define source files
 set (SIM11_SRCS
+    src/ba11_n.cpp
     src/bdv11.cpp
     src/bdv11_e53.cpp
     src/disas.cpp

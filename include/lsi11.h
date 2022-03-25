@@ -2,6 +2,7 @@
 #define __LSI_11_H__
 
 #include <stdlib.h>
+#include <thread>
 #include "types.h"
 
 #define	_BV(x)	(1 << (x))
@@ -229,6 +230,17 @@ private:
 
 	u16	buffer[128];
 	u8* data;
+};
+
+class BA11_N
+{
+public:
+	BA11_N ();
+
+private:
+	void Bezel ();
+
+	std::thread ba11_nThread;
 };
 
 extern const u16 bdv11_e53[2048];
