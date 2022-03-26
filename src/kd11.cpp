@@ -40,6 +40,53 @@
 
 #define	TRAP(n)		KD11Trap(kd11, n)
 
+#if __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__
+/* big endian host */
+typedef struct {
+	u16	opcode:10;
+	u16	mode:3;
+	u16	rn:3;
+} KD11INSN1;
+
+typedef struct {
+	u16	opcode:4;
+	u16	src_mode:3;
+	u16	src_rn:3;
+	u16	dst_mode:3;
+	u16	dst_rn:3;
+} KD11INSN2;
+
+typedef struct {
+	u16	opcode:8;
+	u16	offset:8;
+} KD11INSNBR;
+
+typedef struct {
+	u16	opcode:7;
+	u16	r:3;
+	u16	mode:3;
+	u16	rn:3;
+} KD11INSNJSR;
+
+typedef struct {
+	u16	opcode:13;
+	u16	rn:3;
+} KD11INSNRTS;
+
+typedef struct {
+	u16	opcode:10;
+	u16	nn:6;
+} KD11INSNMARK;
+
+typedef struct {
+	u16	opcode:7;
+	u16	rn:3;
+	u16	offset:6;
+} KD11INSNSOB;
+
+#else
+/* little endian host */
+
 typedef struct {
 	u16	rn:3;
 	u16	mode:3;
@@ -81,6 +128,8 @@ typedef struct {
 	u16	rn:3;
 	u16	opcode:7;
 } KD11INSNSOB;
+
+#endif // __BYTE_ORDER__
 
 void KD11Init(KD11* kd11)
 {
@@ -1311,6 +1360,7 @@ void KD11CPUStep(KD11* kd11, QBUS* bus)
 			WRITE(kd11->r[insnrts->rn] + 4,
 					(u16) (f3._u32 >> 16));
 			WRITE(kd11->r[insnrts->rn] + 6, (u16) f3._u32);
+			kd11->r[insnrts->rn] += 4;
 			PSW_EQ(PSW_N, f3._f32 < 0);
 			PSW_EQ(PSW_Z, f3._f32 == 0);
 			PSW_CLR(PSW_V);
@@ -1327,6 +1377,7 @@ void KD11CPUStep(KD11* kd11, QBUS* bus)
 			WRITE(kd11->r[insnrts->rn] + 4,
 					(u16) (f3._u32 >> 16));
 			WRITE(kd11->r[insnrts->rn] + 6, (u16) f3._u32);
+			kd11->r[insnrts->rn] += 4;
 			PSW_EQ(PSW_N, f3._f32 < 0);
 			PSW_EQ(PSW_Z, f3._f32 == 0);
 			PSW_CLR(PSW_V);
@@ -1343,6 +1394,7 @@ void KD11CPUStep(KD11* kd11, QBUS* bus)
 			WRITE(kd11->r[insnrts->rn] + 4,
 					(u16) (f3._u32 >> 16));
 			WRITE(kd11->r[insnrts->rn] + 6, (u16) f3._u32);
+			kd11->r[insnrts->rn] += 4;
 			PSW_EQ(PSW_N, f3._f32 < 0);
 			PSW_EQ(PSW_Z, f3._f32 == 0);
 			PSW_CLR(PSW_V);
@@ -1361,6 +1413,7 @@ void KD11CPUStep(KD11* kd11, QBUS* bus)
 						(u16) (f3._u32 >> 16));
 				WRITE(kd11->r[insnrts->rn] + 6,
 						(u16) f3._u32);
+				kd11->r[insnrts->rn] += 4;
 				PSW_EQ(PSW_N, f3._f32 < 0);
 				PSW_EQ(PSW_Z, f3._f32 == 0);
 				PSW_CLR(PSW_V);

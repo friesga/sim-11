@@ -100,6 +100,7 @@ public:
 	void	virtual Write (u16 addr, u16 value) = 0;
 	u8		virtual Responsible (u16 addr) = 0;
 	void	virtual Reset () = 0;
+	int		irq;
 };
 
 class LSI11
@@ -155,6 +156,7 @@ public:
 	u8 Responsible (u16 address);
 	void Reset ();
 	void Send (int channel, unsigned char c);
+	void Step();
 
 private:
 	void ReadChannel (int channelNr);
@@ -200,6 +202,7 @@ public:
 	u8 Responsible (u16 address);
 	void Reset ();
 	void SetData (u8* data);
+	void Step();
 
 private:
 	void ClearErrors ();

@@ -27,7 +27,7 @@
 
 BDV11::BDV11 ()
 {
-	/* nothing */
+	irq = 0;
 }
 
 BDV11::~BDV11 ()
@@ -193,6 +193,7 @@ u8 BDV11::Responsible (u16 address)
 
 void BDV11::Reset ()
 {
+	irq = 0;
 	pcr = 0;
 	scratch = 0;
 	display = 0;
@@ -209,10 +210,19 @@ void BDV11::Step (float dt)
 	if (ltc & 0100) 
 	{
 		time += dt;
+
+		if(irq) 
+		{
+			QBUS* bus = this->bus;
+			if (bus->Interrupt(irq))
+				irq = 0;
+		}
+
 		if (time >= LTC_TIME) 
 		{
 			QBUS* bus = this->bus;
-			bus->Interrupt (0100);
+			if (!bus->Interrupt (0100))
+				irq = 0100;
 			time -= LTC_TIME;
 			if (time >= LTC_TIME) 
 			{

@@ -8,6 +8,8 @@ LSI11::LSI11 ()
 {
 	KD11Init (&cpu);
 	bus.trap = 0;
+	bus.delay = 0;
+	bus.irq = 0;
 }
 
 LSI11::~LSI11 ()

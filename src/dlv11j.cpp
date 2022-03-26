@@ -22,6 +22,8 @@
 #define	RCSR_WR_MASK		(RCSR_RCVR_INT | RCSR_READER_ENABLE)
 #define	XCSR_WR_MASK		(XCSR_TRANSMIT_INT | XCSR_TRANSMIT_BREAK)
 
+#define	IRQ(x)			if(!bus->Interrupt(x)) irq = (x)
+
 void console_print (unsigned char c)
 {
 	printf ("%c", c);
@@ -37,6 +39,7 @@ DLV11J::DLV11J ()
 	base = 0176500;
 
 	memset (channel, 0, sizeof (channel));
+	irq = 0;
 
 	for (i = 0; i < 4; i++)
 	{
@@ -46,6 +49,7 @@ DLV11J::DLV11J ()
 		channel[i].buf_size = 0;
 		channel[i].base = base + 8 * i;
 		channel[i].vector = 300 + 8 * i;
+		channel[i].rcsr = 0;
 	}
 
 	channel[3].base = 0177560;
@@ -79,7 +83,7 @@ void DLV11J::ReadChannel (int channelNr)
 			ch->rcsr |= RCSR_RCVR_DONE;
 			if(ch->rcsr & RCSR_RCVR_INT) {
 				QBUS* bus = this->bus;
-				bus->Interrupt (ch->vector);
+				IRQ(ch->vector);
 			}
 		} else {
 			ch->rcsr &= ~RCSR_RCVR_DONE;
@@ -105,7 +109,7 @@ void DLV11J::WriteChannel(int channelNr)
 	if(ch->xcsr & XCSR_TRANSMIT_INT)
 	{
 		QBUS* bus = this->bus;
-		bus->Interrupt (ch->vector + 4);
+		IRQ(ch->vector + 4);
 	}
 }
 
@@ -138,6 +142,7 @@ void DLV11J::WriteRCSR(int n, u16 value)
 	{
 		QBUS* bus = this->bus;
 		bus->Interrupt (ch->vector);
+		IRQ(ch->vector);
 	}
 }
 
@@ -151,7 +156,7 @@ void DLV11J::WriteXCSR(int n, u16 value)
 			&& (ch->xcsr & XCSR_TRANSMIT_READY))
 	{
 		QBUS* bus = this->bus;
-		bus->Interrupt (ch->vector + 4);
+		IRQ(ch->vector + 4);
 	}
 }
 
@@ -192,6 +197,8 @@ void DLV11J::Reset ()
 {
 	u8 i;
 
+	irq = 0;
+
 	for(i = 0; i < 4; i++) {
 		channel[i].rcsr &= ~RCSR_RCVR_INT;
 		channel[i].xcsr = XCSR_TRANSMIT_READY;
@@ -211,7 +218,17 @@ void DLV11J::Send(int channelNr, unsigned char c)
 		if(ch->rcsr & RCSR_RCVR_INT)
 		{
 			QBUS* bus = this->bus;
-			bus->Interrupt (ch->vector);
+			IRQ(ch->vector);
 		}
+	}
+}
+
+void DLV11J::Step()
+{
+	if(irq)
+	{
+		QBUS* bus = this->bus;
+		if(bus->Interrupt(irq))
+			irq = 0;
 	}
 }

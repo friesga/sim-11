@@ -52,6 +52,9 @@
 #define	WRITE(addr, val)	(bus->Write((addr), (val)))
 #define	CHECK()			{ if(bus->trap) return; }
 
+#define	IRQ(x)			if(!bus->Interrupt(x)) irq = (x)
+
+// ToDo: Remove RXV21Reset declaration
 void RXV21Reset ();
 
 RXV21::RXV21 ()
@@ -85,7 +88,7 @@ void RXV21::Done ()
 
 	if (rx2cs & RX_INTR_ENB) 
 	{
-		bus->Interrupt (vector);
+		IRQ(vector);
 	}
 }
 
@@ -465,7 +468,7 @@ void RXV21::Write (u16 address, u16 value)
 		if (!intr && (value & RX_INTR_ENB) && (rx2cs & RX_DONE)) 
 		{
 			QBUS* bus = this->bus;
-			bus->Interrupt (vector);
+			IRQ(vector);
 		}
 	} else if (address == base + 2) 
 	{ 
@@ -486,9 +489,20 @@ void RXV21::Reset ()
 	rx2cs = RX_RX02 | RX_DONE;
 	rx2es = RX2ES_DEFAULT;
 	rx2db = rx2es;
+	irq = 0;
 }
 
 void RXV21::SetData (u8* data)
 {
 	this->data = data;
+}
+
+void RXV21::Step()
+{
+	if(irq)
+	{
+		QBUS* bus = this->bus;
+		if(bus->Interrupt(irq))
+			irq = 0;
+	}
 }

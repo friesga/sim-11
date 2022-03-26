@@ -120,6 +120,7 @@ int main (int argc, char** argv)
 	struct timespec now;
 	struct timespec last;
 
+	const char* self = *argv;
 	FILE* floppy_file;
 	u8* floppy;
 
@@ -136,6 +137,8 @@ int main (int argc, char** argv)
 	int bootstrap = 0;
 	const char* trace_file = NULL;
 	int compress = 0;
+
+	int exit_on_halt = 0;
 
 #ifndef DEBUG
 	if (tcgetattr (0, &original_tio) == -1) {
@@ -161,6 +164,10 @@ int main (int argc, char** argv)
 		{
 			compress = 1;
 		}
+		else if(!strcmp("-x", *argv))
+		{
+			exit_on_halt = 1;
+		}
 		else if(!strcmp("-l", *argv) && argc > 1) 
 		{
 			load_file = argv[1];
@@ -182,6 +189,22 @@ int main (int argc, char** argv)
 		else if(**argv != '-') 
 		{
 			load_file = *argv;
+		} 
+		else if(!strcmp("--help", *argv)) 
+		{
+			printf("Usage: %s [OPTIONS] [FILE]\n"
+					"\n"
+					"OPTIONS\n"
+					"  -h              Halt CPU\n"
+					"  -x              Exit on HALT\n"
+					"  -b              Enter RX02 double density bootstrap program\n"
+					"  -l file.bin     Load file.bin in absolute loader format\n"
+					"  -f file.rx2     Load RX02 floppy image from file.rx2\n"
+					"  -t file.trc     Record execution trace to file.trc\n"
+					"  -z              Use delta compression fo rexecution trace\n"
+					"\n"
+					"The optional last argument FILE is equivalent to -f file\n", self);
+			return 0;
 		} 
 		else 
 		{
@@ -372,11 +395,21 @@ int main (int argc, char** argv)
 		for(i = 0; i < 1000; i++)
 			lsi.Step ();
 
+		if(exit_on_halt && lsi.cpu.state == 0) {
+			/* make sure ODT finishes its prompt */
+			for(i = 0; i < 32; i++)
+				lsi.Step();
+
+			running = 0;
+		}
+
 		clock_gettime (CLOCK_MONOTONIC, &now);
 		dt = (now.tv_sec - last.tv_sec) + 
 			(now.tv_nsec - last.tv_nsec) / 1e9;
 		last = now;
 		bdv11.Step ((float) dt);
+		dlv11.Step();
+		rxv21.Step();
 	}
 
 	free (floppy);

@@ -65,7 +65,7 @@ int QBUS::Interrupt (int n)
 {
 	if (n != 004)
 	{
-		if (trap)
+		if (trap || irq)
 		{
 			TRCIRQ (n, TRC_IRQ_FAIL);
 			return 0;
