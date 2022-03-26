@@ -172,7 +172,7 @@ void BDV11::Write (u16 address, u16 value)
 			break;
 
 		case 0177546:
-			ltc = value & 040;
+			ltc = value & 0100;
 			break;
 	}
 }
@@ -206,7 +206,7 @@ void BDV11::Reset ()
 
 void BDV11::Step (float dt)
 {
-	if (ltc & 040) 
+	if (ltc & 0100) 
 	{
 		time += dt;
 		if (time >= LTC_TIME) 
