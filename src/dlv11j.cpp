@@ -141,7 +141,6 @@ void DLV11J::WriteRCSR(int n, u16 value)
 			&& (ch->rcsr & RCSR_RCVR_DONE))
 	{
 		QBUS* bus = this->bus;
-		bus->Interrupt (ch->vector);
 		IRQ(ch->vector);
 	}
 }

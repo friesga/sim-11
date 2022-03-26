@@ -40,51 +40,10 @@
 
 #define	TRAP(n)		KD11Trap(kd11, n)
 
-#if __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__
-/* big endian host */
-typedef struct {
-	u16	opcode:10;
-	u16	mode:3;
-	u16	rn:3;
-} KD11INSN1;
-
-typedef struct {
-	u16	opcode:4;
-	u16	src_mode:3;
-	u16	src_rn:3;
-	u16	dst_mode:3;
-	u16	dst_rn:3;
-} KD11INSN2;
-
-typedef struct {
-	u16	opcode:8;
-	u16	offset:8;
-} KD11INSNBR;
-
-typedef struct {
-	u16	opcode:7;
-	u16	r:3;
-	u16	mode:3;
-	u16	rn:3;
-} KD11INSNJSR;
-
-typedef struct {
-	u16	opcode:13;
-	u16	rn:3;
-} KD11INSNRTS;
-
-typedef struct {
-	u16	opcode:10;
-	u16	nn:6;
-} KD11INSNMARK;
-
-typedef struct {
-	u16	opcode:7;
-	u16	rn:3;
-	u16	offset:6;
-} KD11INSNSOB;
-
-#else
+// (Try to) determine the byte order. To that end gcc provides the __BYTE__ORDER__
+// definition. Msvc has no such definition but we can safely assume that all
+// win32 machines are little endian.
+#if _WIN32 || (__BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__)
 /* little endian host */
 
 typedef struct {
@@ -128,8 +87,50 @@ typedef struct {
 	u16	rn:3;
 	u16	opcode:7;
 } KD11INSNSOB;
+#else
+/* big endian host */
+typedef struct {
+	u16	opcode:10;
+	u16	mode:3;
+	u16	rn:3;
+} KD11INSN1;
 
-#endif // __BYTE_ORDER__
+typedef struct {
+	u16	opcode:4;
+	u16	src_mode:3;
+	u16	src_rn:3;
+	u16	dst_mode:3;
+	u16	dst_rn:3;
+} KD11INSN2;
+
+typedef struct {
+	u16	opcode:8;
+	u16	offset:8;
+} KD11INSNBR;
+
+typedef struct {
+	u16	opcode:7;
+	u16	r:3;
+	u16	mode:3;
+	u16	rn:3;
+} KD11INSNJSR;
+
+typedef struct {
+	u16	opcode:13;
+	u16	rn:3;
+} KD11INSNRTS;
+
+typedef struct {
+	u16	opcode:10;
+	u16	nn:6;
+} KD11INSNMARK;
+
+typedef struct {
+	u16	opcode:7;
+	u16	rn:3;
+	u16	offset:6;
+} KD11INSNSOB;
+#endif // _WIN32 || (__BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__)
 
 void KD11Init(KD11* kd11)
 {
