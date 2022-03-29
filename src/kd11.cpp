@@ -140,7 +140,7 @@ KD11::KD11()
 	:
 	r{0}, 
 	psw{0},
-	state{0},
+	runState{0},
 	trap{0}
 {}
 
@@ -149,7 +149,7 @@ void KD11::reset()
 	r[7] = 0173000;
 	psw = 0;
 	trap = 0;
-	state = STATE_HALT;
+	runState = STATE_HALT;
 	odt.state = ODT_STATE_INIT;
 }
 
@@ -239,7 +239,7 @@ void KD11::KD11ODTStep(QBUS* bus)
 						break;
 					case 'P':
 						odt.state = ODT_STATE_INIT;
-						state = STATE_RUN;
+						runState = STATE_RUN;
 						TRCCPUEvent(TRC_CPU_ODT_P, r[7]);
 						break;
 					default:
@@ -275,7 +275,7 @@ void KD11::KD11ODTStep(QBUS* bus)
 				} else if(c == 'G') {
 					odt.state = ODT_STATE_INIT;
 					r[7] = odt.addr;
-					state = STATE_RUN;
+					runState = STATE_RUN;
 					TRCCPUEvent(TRC_CPU_ODT_G, odt.addr);
 				} else {
 					KD11ODTInputError();
@@ -797,12 +797,12 @@ switch(insn >> 12) {
 					switch(insn) {
 						case 0000000: /* HALT */
 							TRCCPUEvent(TRC_CPU_HALT, r[7]);
-							state = STATE_HALT;
+							runState = STATE_HALT;
 							odt.state = ODT_STATE_INIT;
 							break;
 						case 0000001: /* WAIT */
 							TRCCPUEvent(TRC_CPU_WAIT, r[7]);
-							state = STATE_WAIT;
+							runState = STATE_WAIT;
 							break;
 						case 0000002: /* RTI */
 							r[7] = READ(r[6]);
@@ -830,7 +830,7 @@ switch(insn >> 12) {
 							psw = READ(r[6]);
 							r[6] += 2;
 							CHECK();
-							state = STATE_INHIBIT_TRACE;
+							runState = STATE_INHIBIT_TRACE;
 							break;
 						default: /* 00 00 07 - 00 00 77 */
 							/* unused opcodes */
@@ -1652,7 +1652,7 @@ void KD11::KD11HandleTraps(QBUS* bus)
 	}
 
 	/* ignore traps if in HALT mode */
-	if(state == STATE_HALT) {
+	if(runState == STATE_HALT) {
 		return;
 	}
 
@@ -1680,7 +1680,7 @@ void KD11::KD11HandleTraps(QBUS* bus)
 	if(bus->trap == 004 || bus->trap == 010) {
 		TRCCPUEvent(TRC_CPU_DBLBUS, r[6]);
 		bus->trap = 0;
-		state = STATE_HALT;
+		runState = STATE_HALT;
 		return;
 	}
 
@@ -1689,7 +1689,7 @@ void KD11::KD11HandleTraps(QBUS* bus)
 	if(bus->trap == 004 || bus->trap == 010) {
 		TRCCPUEvent(TRC_CPU_DBLBUS, r[6]);
 		bus->trap = 0;
-		state = STATE_HALT;
+		runState = STATE_HALT;
 		return;
 	}
 
@@ -1697,7 +1697,7 @@ void KD11::KD11HandleTraps(QBUS* bus)
 	if(bus->trap == 004 || bus->trap == 010) {
 		TRCCPUEvent(TRC_CPU_DBLBUS, trap);
 		bus->trap = 0;
-		state = STATE_HALT;
+		runState = STATE_HALT;
 		return;
 	}
 
@@ -1705,20 +1705,20 @@ void KD11::KD11HandleTraps(QBUS* bus)
 	if(bus->trap == 004 || bus->trap == 010) {
 		TRCCPUEvent(TRC_CPU_DBLBUS, trap + 2);
 		bus->trap = 0;
-		state = STATE_HALT;
+		runState = STATE_HALT;
 		return;
 	}
 
 	/* resume execution if in WAIT state */
-	if(state == STATE_WAIT) {
+	if(runState == STATE_WAIT) {
 		TRCCPUEvent(TRC_CPU_RUN, r[7]);
-		state = STATE_RUN;
+		runState = STATE_RUN;
 	}
 }
 
 void KD11::step(QBUS* bus)
 {
-	switch(state) {
+	switch(runState) {
 		case STATE_HALT:
 			KD11ODTStep(bus);
 			break;
@@ -1737,14 +1737,14 @@ void KD11::step(QBUS* bus)
 				TRCCLRIGNBUS();
 			}
 			KD11CPUStep(bus);
-			if(state == STATE_INHIBIT_TRACE) {
-				state = STATE_RUN;
+			if(runState == STATE_INHIBIT_TRACE) {
+				runState = STATE_RUN;
 			} else if(!trap && (psw & PSW_T)) {
 				TRCTrap(014, TRC_TRAP_T);
 				TRAP(014);
 			}
 			KD11HandleTraps(bus);
-			if(state == STATE_HALT) {
+			if(runState == STATE_HALT) {
 				odt.state = ODT_STATE_INIT;
 			}
 			break;

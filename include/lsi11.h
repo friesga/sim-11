@@ -107,8 +107,8 @@ public:
 	void step(QBUS* bus);
 	void setTrap(int n);
 
-	// ToDo: Make state and r[] private; accessed from main
-	u8	state;
+	// ToDo: Make runState and r[] private; accessed from main
+	u8	runState;
 	u16	r[8];
 
 private:

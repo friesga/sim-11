@@ -324,13 +324,14 @@ int main (int argc, char** argv)
 				{
 					lsi.cpu.r[7] = addr;
 					/* LSI11ConsoleSendString(&dlv11, "P"); */
-					lsi.cpu.state = 1;
+					// ToDo: Use symbolic constants for runState
+					lsi.cpu.runState = 1;
 				} 
 				else 
 				{
 					/* LSI11ConsoleSendString(&dlv11, "200G"); */
 					lsi.cpu.r[7] = 0200;
-					lsi.cpu.state = 1;
+					lsi.cpu.runState = 1;
 				}
 				break;
 			}
@@ -363,11 +364,11 @@ int main (int argc, char** argv)
 
 	if (halt) 
 	{
-		lsi.cpu.state = 0;
+		lsi.cpu.runState = 0;
 	} 
 	else if (!bootstrap && !halt && !load_file) 
 	{
-		lsi.cpu.state = 1;
+		lsi.cpu.runState = 1;
 	}
 
 	clock_gettime (CLOCK_MONOTONIC, &last);
@@ -396,7 +397,7 @@ int main (int argc, char** argv)
 		for(i = 0; i < 1000; i++)
 			lsi.step ();
 
-		if(exit_on_halt && lsi.cpu.state == 0) {
+		if(exit_on_halt && lsi.cpu.runState == 0) {
 			/* make sure ODT finishes its prompt */
 			for(i = 0; i < 32; i++)
 				lsi.step();
