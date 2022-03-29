@@ -237,7 +237,7 @@ int main (int argc, char** argv)
 		memset (floppy, 0, 77 * 26 * 256);
 	}
 
-	rxv21.SetData (floppy);
+	rxv21.setData (floppy);
 
 	if (trace_file) 
 	{
@@ -249,11 +249,11 @@ int main (int argc, char** argv)
 	}
 	/* trc.flags |= TRACE_PRINT; */
 
-	lsi.bus.InstallModule (1, &msv11);
-	lsi.bus.InstallModule (2, &rxv21);
-	lsi.bus.InstallModule (3, &dlv11);
-	lsi.bus.InstallModule (4, &bdv11);
-	lsi.Reset ();
+	lsi.bus.installModule (1, &msv11);
+	lsi.bus.installModule (2, &rxv21);
+	lsi.bus.installModule (3, &dlv11);
+	lsi.bus.installModule (4, &bdv11);
+	lsi.reset ();
 
 	if (bootstrap) 
 	{
@@ -393,12 +393,12 @@ int main (int argc, char** argv)
 		}
 
 		for(i = 0; i < 1000; i++)
-			lsi.Step ();
+			lsi.step ();
 
 		if(exit_on_halt && lsi.cpu.state == 0) {
 			/* make sure ODT finishes its prompt */
 			for(i = 0; i < 32; i++)
-				lsi.Step();
+				lsi.step();
 
 			running = 0;
 		}
@@ -407,9 +407,9 @@ int main (int argc, char** argv)
 		dt = (now.tv_sec - last.tv_sec) + 
 			(now.tv_nsec - last.tv_nsec) / 1e9;
 		last = now;
-		bdv11.Step ((float) dt);
-		dlv11.Step();
-		rxv21.Step();
+		bdv11.step ((float) dt);
+		dlv11.step();
+		rxv21.step();
 	}
 
 	free (floppy);

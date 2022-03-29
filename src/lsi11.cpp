@@ -17,14 +17,14 @@ LSI11::~LSI11 ()
 	/* nothing */
 }
 
-void LSI11::Reset ()
+void LSI11::reset ()
 {
 	KD11Reset(&cpu);
-	bus.Reset();
+	bus.reset();
 }
 
-void LSI11::Step ()
+void LSI11::step ()
 {
-	bus.Step ();
+	bus.step ();
 	KD11Step (&cpu, &bus);
 }

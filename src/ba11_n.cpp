@@ -10,10 +10,10 @@ using namespace std;
 
 BA11_N::BA11_N ()
 {
-    this->ba11_nThread = thread (&BA11_N::Bezel, this);
+    this->ba11_nThread = thread (&BA11_N::bezel, this);
 }
 
-void BA11_N::Bezel ()
+void BA11_N::bezel ()
 {
     cout << "Started bezel" << endl;
     while (1)

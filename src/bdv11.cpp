@@ -35,7 +35,7 @@ BDV11::~BDV11 ()
 	/* nothing */
 }
 
-u16 BDV11::GetWordLow (u16 word)
+u16 BDV11::getWordLow (u16 word)
 {
 	u16 page = pcr & 0xFF;
 	if (page < 0x10)
@@ -49,7 +49,7 @@ u16 BDV11::GetWordLow (u16 word)
 	}
 }
 
-u16 BDV11::GetWordHigh (u16 word)
+u16 BDV11::getWordHigh (u16 word)
 {
 	u16 page = (pcr >> 8) & 0xFF;
 	if (page < 0x10)
@@ -63,7 +63,7 @@ u16 BDV11::GetWordHigh (u16 word)
 	}
 }
 
-void BDV11::MemoryDump (u16 pcr, int hi)
+void BDV11::memoryDump (u16 pcr, int hi)
 {
 	const u16* data;
 	u16 addr;
@@ -109,7 +109,7 @@ void BDV11::MemoryDump (u16 pcr, int hi)
 	}
 }
 
-u16 BDV11::Read (u16 address)
+u16 BDV11::read (u16 address)
 {
 	switch (address) 
 	{
@@ -128,17 +128,17 @@ u16 BDV11::Read (u16 address)
 		default:
 			if (address >= 0173000 && address < 0173400)
 			{
-				return GetWordLow ((address - 0173000) / 2);
+				return getWordLow ((address - 0173000) / 2);
 			} 
 			else if (address >= 0173400 && address < 0173776) 
 			{
-				return GetWordHigh ((address - 0173400) / 2);
+				return getWordHigh ((address - 0173400) / 2);
 			}
 			return 0;
 	}
 }
 
-void BDV11::Write (u16 address, u16 value)
+void BDV11::write (u16 address, u16 value)
 {
 	switch (address)
 	{
@@ -148,16 +148,16 @@ void BDV11::Write (u16 address, u16 value)
 			{
 				if ((value & 0xFF) == (pcr & 0xFF)) 
 				{
-					MemoryDump (value, 1);
+					memoryDump (value, 1);
 				} 
 				else if ((value & 0xFF00) == (pcr & 0xFF00)) 
 				{
-					MemoryDump (value, 0);
+					memoryDump (value, 0);
 				} 
 				else 
 				{
-					MemoryDump (value, 0);
-					MemoryDump (value, 1);
+					memoryDump (value, 0);
+					memoryDump (value, 1);
 				}
 			}
 			pcr = value;
@@ -177,7 +177,7 @@ void BDV11::Write (u16 address, u16 value)
 	}
 }
 
-u8 BDV11::Responsible (u16 address)
+u8 BDV11::responsible (u16 address)
 {
 	switch (address)
 	{
@@ -191,7 +191,7 @@ u8 BDV11::Responsible (u16 address)
 	}
 }
 
-void BDV11::Reset ()
+void BDV11::reset ()
 {
 	irq = 0;
 	pcr = 0;
@@ -199,13 +199,13 @@ void BDV11::Reset ()
 	display = 0;
 	ltc = 0;
 
-	MemoryDump (pcr, 0);
-	MemoryDump (pcr, 1);
+	memoryDump (pcr, 0);
+	memoryDump (pcr, 1);
 }
 
 
 
-void BDV11::Step (float dt)
+void BDV11::step (float dt)
 {
 	if (ltc & 0100) 
 	{
@@ -214,14 +214,14 @@ void BDV11::Step (float dt)
 		if(irq) 
 		{
 			QBUS* bus = this->bus;
-			if (bus->Interrupt(irq))
+			if (bus->interrupt(irq))
 				irq = 0;
 		}
 
 		if (time >= LTC_TIME) 
 		{
 			QBUS* bus = this->bus;
-			if (!bus->Interrupt (0100))
+			if (!bus->interrupt (0100))
 				irq = 0100;
 			time -= LTC_TIME;
 			if (time >= LTC_TIME) 

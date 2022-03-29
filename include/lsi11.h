@@ -73,33 +73,33 @@ typedef struct {
 } KD11;
 
 class LSI11;
-class QBUSMod;
+class QBUSModule;
 
 class QBUS
 {
 public:
 	QBUS ();
-	int		Interrupt (int n);
-	void	Reset ();
-	void	Step ();
-	u16		Read (u16 addr);
-	void	Write (u16 addr, u16 value);
-	void	InstallModule (int slot, QBUSMod* module);
+	int		interrupt (int n);
+	void	reset ();
+	void	step ();
+	u16		read (u16 addr);
+	void	write (u16 addr, u16 value);
+	void	installModule (int slot, QBUSModule* module);
 
-	QBUSMod* slots[LSI11_SIZE];
+	QBUSModule* slots[LSI11_SIZE];
 	u16		trap;
 	u16		delay;
 	u16		irq;
 };
 
-class QBUSMod
+class QBUSModule
 {
 public:
 	QBUS*	bus;
-	u16		virtual Read (u16 addr) = 0;
-	void	virtual Write (u16 addr, u16 value) = 0;
-	u8		virtual Responsible (u16 addr) = 0;
-	void	virtual Reset () = 0;
+	u16		virtual read (u16 addr) = 0;
+	void	virtual write (u16 addr, u16 value) = 0;
+	u8		virtual responsible (u16 addr) = 0;
+	void	virtual reset () = 0;
 	int		irq;
 };
 
@@ -108,8 +108,8 @@ class LSI11
 public:
 	LSI11 ();
 	~LSI11 ();
-	void Reset ();
-	void Step ();
+	void reset ();
+	void step ();
 
 	KD11	 cpu;
 	QBUS	 bus;
@@ -132,57 +132,57 @@ typedef struct {
 } DLV11Ch;
 
 /* Peripherals */
-class MSV11D : public QBUSMod
+class MSV11D : public QBUSModule
 {
 public:
 	MSV11D ();
 	~MSV11D ();
-	u16 Read (u16 address);
-	void Write (u16 address, u16 value);
-	u8 Responsible (u16 address);
-	void Reset ();
+	u16 read (u16 address);
+	void write (u16 address, u16 value);
+	u8 responsible (u16 address);
+	void reset ();
 
 // ToDo: Make data private (accessed from main())
 	u8*	data;
 };
 
-class DLV11J : public QBUSMod
+class DLV11J : public QBUSModule
 {
 public:
 	DLV11J ();
 	~DLV11J ();
-	u16 Read (u16 address);
-	void Write (u16 address, u16 value);
-	u8 Responsible (u16 address);
-	void Reset ();
+	u16 read (u16 address);
+	void write (u16 address, u16 value);
+	u8 responsible (u16 address);
+	void reset ();
 	void Send (int channel, unsigned char c);
-	void Step();
+	void step();
 
 private:
-	void ReadChannel (int channelNr);
-	void WriteChannel (int channelNr);
-	void WriteRCSR (int n, u16 value);
-	void WriteXCSR (int n, u16 value);
+	void readChannel (int channelNr);
+	void writeChannel (int channelNr);
+	void writeRCSR (int n, u16 value);
+	void writeXCSR (int n, u16 value);
 
 	DLV11Ch	channel[4];
 	u16	base;
 };
 
-class BDV11 : public QBUSMod
+class BDV11 : public QBUSModule
 {
 public:
 	BDV11 ();
 	~BDV11 ();
-	u16 Read (u16 address);
-	void Write (u16 address, u16 value);
-	u8 Responsible (u16 address);
-	void Reset ();
-	void Step (float dt);
+	u16 read (u16 address);
+	void write (u16 address, u16 value);
+	u8 responsible (u16 address);
+	void reset ();
+	void step (float dt);
 
 private:
-	u16 GetWordLow (u16 word);
-	u16 GetWordHigh (u16 word);
-	void MemoryDump (u16 pcr, int hi);
+	u16 getWordLow (u16 word);
+	u16 getWordHigh (u16 word);
+	void memoryDump (u16 pcr, int hi);
 
 	u16	pcr;
 	u16	scratch;
@@ -192,29 +192,29 @@ private:
 	float	time;
 };
 
-class RXV21 : public QBUSMod
+class RXV21 : public QBUSModule
 {
 public:
 	RXV21 ();
 	~RXV21 ();
-	u16 Read (u16 address);
-	void Write (u16 address, u16 value);
-	u8 Responsible (u16 address);
-	void Reset ();
-	void SetData (u8* data);
-	void Step();
+	u16 read (u16 address);
+	void write (u16 address, u16 value);
+	u8 responsible (u16 address);
+	void reset ();
+	void setData (u8* data);
+	void step();
 
 private:
-	void ClearErrors ();
-	void Done ();
-	void FillBuffer ();
-	void EmptyBuffer ();
-	void WriteSector ();
-	void ReadSector ();
-	void ReadStatus ();
-	void ReadErrorCode ();
-	void ExecuteCommand ();
-	void Process ();
+	void clearErrors ();
+	void done ();
+	void fillBuffer ();
+	void emptyBuffer ();
+	void writeSector ();
+	void readSector ();
+	void readStatus ();
+	void readErrorCode ();
+	void executeCommand ();
+	void process ();
 
 	u16	base;
 	u16	vector;
@@ -241,7 +241,7 @@ public:
 	BA11_N ();
 
 private:
-	void Bezel ();
+	void bezel ();
 
 	std::thread ba11_nThread;
 };

@@ -148,8 +148,8 @@ void KD11Reset(KD11* kd11)
 	kd11->odt.state = ODT_STATE_INIT;
 }
 
-#define	READ(addr)			(bus->Read((addr)))
-#define	WRITE(addr, val)	(bus->Write((addr), (val)))
+#define	READ(addr)			(bus->read((addr)))
+#define	WRITE(addr, val)	(bus->write((addr), (val)))
 #define	CHECK()			{ \
 	if(kd11->trap && kd11->trap <= 010) \
 		return; \
@@ -816,7 +816,7 @@ switch(insn >> 12) {
 							TRAP(020);
 							break;
 						case 0000005: /* RESET */
-							bus->Reset();
+							bus->reset();
 							break;
 						case 0000006: /* RTT */
 							kd11->r[7] = READ(kd11->r[6]);

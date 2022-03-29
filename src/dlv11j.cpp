@@ -22,7 +22,7 @@
 #define	RCSR_WR_MASK		(RCSR_RCVR_INT | RCSR_READER_ENABLE)
 #define	XCSR_WR_MASK		(XCSR_TRANSMIT_INT | XCSR_TRANSMIT_BREAK)
 
-#define	IRQ(x)			if(!bus->Interrupt(x)) irq = (x)
+#define	IRQ(x)			if(!bus->interrupt(x)) irq = (x)
 
 void console_print (unsigned char c)
 {
@@ -56,7 +56,7 @@ DLV11J::DLV11J ()
 	channel[3].vector = 060;
 	channel[3].receive = console_print;
 
-	Reset ();
+	reset ();
 }
 
 DLV11J::~DLV11J ()
@@ -69,7 +69,7 @@ DLV11J::~DLV11J ()
 	}
 }
 
-void DLV11J::ReadChannel (int channelNr)
+void DLV11J::readChannel (int channelNr)
 {
 	DLV11Ch* ch = &channel[channelNr];
 	if(ch->buf_size > 0)
@@ -96,7 +96,7 @@ void DLV11J::ReadChannel (int channelNr)
 	}
 }
 
-void DLV11J::WriteChannel(int channelNr)
+void DLV11J::writeChannel(int channelNr)
 {
 	DLV11Ch* ch = &channel[channelNr];
 	TRCDLV11(TRC_DLV11_TX, channelNr, ch->xbuf);
@@ -113,14 +113,14 @@ void DLV11J::WriteChannel(int channelNr)
 	}
 }
 
-u16 DLV11J::Read (u16 address)
+u16 DLV11J::read (u16 address)
 {
 	switch(address)
 	{
 		case 0177560:
 			return channel[3].rcsr;
 		case 0177562:
-			ReadChannel(3);
+			readChannel(3);
 			return channel[3].rbuf;
 		case 0177564:
 			return channel[3].xcsr;
@@ -131,7 +131,7 @@ u16 DLV11J::Read (u16 address)
 	}
 }
 
-void DLV11J::WriteRCSR(int n, u16 value)
+void DLV11J::writeRCSR(int n, u16 value)
 {
 	DLV11Ch* ch = &channel[n];
 	u16 old = ch->rcsr;
@@ -145,7 +145,7 @@ void DLV11J::WriteRCSR(int n, u16 value)
 	}
 }
 
-void DLV11J::WriteXCSR(int n, u16 value)
+void DLV11J::writeXCSR(int n, u16 value)
 {
 	DLV11Ch* ch = &channel[n];
 	u16 old = ch->xcsr;
@@ -159,26 +159,26 @@ void DLV11J::WriteXCSR(int n, u16 value)
 	}
 }
 
-void DLV11J::Write (u16 address, u16 value)
+void DLV11J::write (u16 address, u16 value)
 {
 	switch(address) {
 		case 0177560:
-			WriteRCSR(3, value);
+			writeRCSR(3, value);
 			break;
 		case 0177562:
 			/* ignored */
 			break;
 		case 0177564:
-			WriteXCSR(3, value);
+			writeXCSR(3, value);
 			break;
 		case 0177566:
 			channel[3].xbuf = value;
-			WriteChannel(3);
+			writeChannel(3);
 			break;
 	}
 }
 
-u8 DLV11J::Responsible (u16 address)
+u8 DLV11J::responsible (u16 address)
 {
 	if(address >= base && address <= base + (3 * 8)) {
 		return 1;
@@ -192,7 +192,7 @@ u8 DLV11J::Responsible (u16 address)
 	return 0;
 }
 
-void DLV11J::Reset ()
+void DLV11J::reset ()
 {
 	u8 i;
 
@@ -222,12 +222,12 @@ void DLV11J::Send(int channelNr, unsigned char c)
 	}
 }
 
-void DLV11J::Step()
+void DLV11J::step()
 {
 	if(irq)
 	{
 		QBUS* bus = this->bus;
-		if(bus->Interrupt(irq))
+		if(bus->interrupt(irq))
 			irq = 0;
 	}
 }

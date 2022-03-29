@@ -11,7 +11,7 @@ QBUS::QBUS ()
 	memset (slots, 0, sizeof (slots));
 }
 
-u16	QBUS::Read (u16 address)
+u16	QBUS::read (u16 address)
 {
 	u8 i;
 	u16 addr = address;
@@ -20,24 +20,24 @@ u16	QBUS::Read (u16 address)
 
 	for (i = 0; i < LSI11_SIZE; i++)
 	{
-		QBUSMod* module = slots[i];
+		QBUSModule* module = slots[i];
 		if (!module)
 			continue;
 
-		if (module->Responsible (address))
+		if (module->responsible (address))
 		{
-			u16 value = module->Read (address);
+			u16 value = module->read (address);
 			TRCBus (TRC_BUS_RD, addr, value);
 			return value;
 		}
 	}
 
 	TRCBus (TRC_BUS_RDFAIL, addr, 0);
-	Interrupt (004);
+	interrupt (004);
 	return 0;
 }
 
-void QBUS::Write (u16 address, u16 value)
+void QBUS::write (u16 address, u16 value)
 {
 	u8 i;
 	
@@ -45,23 +45,23 @@ void QBUS::Write (u16 address, u16 value)
 
 	for (i = 0; i < LSI11_SIZE; i++)
 	{
-		QBUSMod* module = slots[i];
+		QBUSModule* module = slots[i];
 		if (!module)
 			continue;
 
-		if (module->Responsible (address))
+		if (module->responsible (address))
 		{
 			TRCBus (TRC_BUS_WR, address, value);
-			module->Write (address, value);
+			module->write (address, value);
 			return;
 		}
 	}
 
 	TRCBus (TRC_BUS_WRFAIL, address, value);
-	Interrupt (004);
+	interrupt (004);
 }
 
-int QBUS::Interrupt (int n)
+int QBUS::interrupt (int n)
 {
 	if (n != 004)
 	{
@@ -86,7 +86,7 @@ int QBUS::Interrupt (int n)
 	}
 }
 
-void QBUS::Reset ()
+void QBUS::reset ()
 {
 	u8 i;
 
@@ -99,15 +99,15 @@ void QBUS::Reset ()
 
 	for (i = 0; i < LSI11_SIZE; i++)
 	{
-		QBUSMod* module = slots[i];
+		QBUSModule* module = slots[i];
 		if (!module)
 			continue;
 
-		module->Reset ();
+		module->reset ();
 	}
 }
 
-void QBUS::Step ()
+void QBUS::step ()
 {
 	if (delay >= QBUS_DELAY)
 	{
@@ -124,7 +124,7 @@ void QBUS::Step ()
 		delay++;
 }
 
-void QBUS::InstallModule (int slot, QBUSMod* module)
+void QBUS::installModule (int slot, QBUSModule* module)
 {
 	slots[slot] = module;
 	module->bus = this;
