@@ -107,12 +107,13 @@ void sigint_handler (int signum)
 
 int main (int argc, char** argv)
 {
+	// ToDo: Replace module configuration by table
 	LSI11 lsi;
 	MSV11D msv11;
 	RXV21 rxv21;
 	DLV11J dlv11;
 	BDV11 bdv11;
-	BA11_N ba11_n;
+	// BA11_N ba11_n;
 
 	fd_set fds;
 	struct timeval tv;

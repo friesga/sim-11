@@ -64,13 +64,6 @@ typedef struct {
 	u8	buf_sz;
 } KD11ODT;
 
-typedef struct {
-	u16	r[8];
-	u16	psw;
-	KD11ODT	odt;
-	u8	state;
-	u16	trap;
-} KD11;
 
 class LSI11;
 class QBUSModule;
@@ -102,6 +95,41 @@ public:
 	void	virtual reset () = 0;
 	int		irq;
 };
+
+// ToDo: Make KD11 a QBUSModule
+// The module KD11 is now - different from the other QBUSModules - instantiated
+// within the LSI11 object, although it is also is a QBUS module.
+class KD11
+{
+public:
+	KD11();
+	void reset();
+	void step(QBUS* bus);
+	void setTrap(int n);
+
+	// ToDo: Make state and r[] private; accessed from main
+	u8	state;
+	u16	r[8];
+
+private:
+	void KD11ODTClear();
+	void KD11ODTWrite(u8 c);
+	void KD11ODTWriteOctal(u16 val);
+	void KD11ODTInputError();
+	void KD11ODTStep(QBUS* bus);
+	u16 KD11CPUReadW(QBUS* bus, u16 dst, u16 mode, int inc);
+	u8 KD11CPUReadB(QBUS* bus, u16 dst, u16 mode, int inc);
+	void KD11CPUWriteW(QBUS* bus, u16 dst, u16 mode, u16 val);
+	void KD11CPUWriteB(QBUS* bus, u16 dst, u16 mode, u8 val);
+	u16 KD11CPUGetAddr(QBUS* bus, u16 dst, u16 mode);
+	void KD11CPUStep(QBUS* bus);
+	void KD11HandleTraps(QBUS* bus);
+
+	u16	psw;
+	KD11ODT	odt;
+	u16	trap;
+};
+
 
 class LSI11
 {
@@ -249,10 +277,10 @@ private:
 extern const u16 bdv11_e53[2048];
 
 /* KD11 subroutines */
-extern void KD11Init(KD11* kd11);
-extern void KD11Reset(KD11* kd11);
-extern void KD11Step(KD11* kd11, QBUS* bus);
-extern void KD11Trap(KD11* kd11, int n);
+// extern void KD11Init(KD11* kd11);
+// extern void KD11Reset(KD11* kd11);
+// extern void KD11Step(KD11* kd11, QBUS* bus);
+// extern void KD11Trap(KD11* kd11, int n);
 
 /* LSI-11 disassembler */
 extern int  LSI11Disassemble(const u16* insn, u16 pc, char* buf);

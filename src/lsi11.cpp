@@ -6,7 +6,6 @@
 
 LSI11::LSI11 ()
 {
-	KD11Init (&cpu);
 	bus.trap = 0;
 	bus.delay = 0;
 	bus.irq = 0;
@@ -19,12 +18,12 @@ LSI11::~LSI11 ()
 
 void LSI11::reset ()
 {
-	KD11Reset(&cpu);
+	cpu.reset();
 	bus.reset();
 }
 
 void LSI11::step ()
 {
 	bus.step ();
-	KD11Step (&cpu, &bus);
+	cpu.step (&bus);
 }

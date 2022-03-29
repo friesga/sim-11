@@ -29,9 +29,9 @@
 #define	PSW_T			_BV(4)
 #define	PSW_PRIO		_BV(7)
 
-#define	PSW_GET(x)		(((kd11->psw) & (x)) ? 1 : 0)
-#define	PSW_SET(x)		((kd11->psw) |= (x))
-#define	PSW_CLR(x)		((kd11->psw) &= ~(x))
+#define	PSW_GET(x)		(((psw) & (x)) ? 1 : 0)
+#define	PSW_SET(x)		((psw) |= (x))
+#define	PSW_CLR(x)		((psw) &= ~(x))
 #define	PSW_EQ(x, v) { \
 	if(v) { \
 		PSW_SET(x); \
@@ -40,7 +40,7 @@
 	} \
 }
 
-#define	TRAP(n)		KD11Trap(kd11, n)
+#define	TRAP(n)		setTrap(n)
 
 // (Try to) determine the byte order. To that end gcc provides the __BYTE__ORDER__
 // definition. Msvc has no such definition but we can safely assume that all
@@ -134,75 +134,80 @@ typedef struct {
 } KD11INSNSOB;
 #endif // _WIN32 || (__BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__)
 
-void KD11Init(KD11* kd11)
-{
-	memset(kd11, 0, sizeof(KD11));
-}
+// Constructor
+// ToDo: Reinitialize K11ODT
+KD11::KD11()
+	:
+	r{0}, 
+	psw{0},
+	state{0},
+	trap{0}
+{}
 
-void KD11Reset(KD11* kd11)
+void KD11::reset()
 {
-	kd11->r[7] = 0173000;
-	kd11->psw = 0;
-	kd11->trap = 0;
-	kd11->state = STATE_HALT;
-	kd11->odt.state = ODT_STATE_INIT;
+	r[7] = 0173000;
+	psw = 0;
+	trap = 0;
+	state = STATE_HALT;
+	odt.state = ODT_STATE_INIT;
 }
 
 #define	READ(addr)			(bus->read((addr)))
 #define	WRITE(addr, val)	(bus->write((addr), (val)))
 #define	CHECK()			{ \
-	if(kd11->trap && kd11->trap <= 010) \
+	if(trap && trap <= 010) \
 		return; \
 	}
 
-static void KD11ODTClear(KD11ODT* odt)
+void KD11::KD11ODTClear()
 {
-	odt->buf_sz = 0;
+	odt.buf_sz = 0;
 }
 
-static void KD11ODTWrite(KD11ODT* odt, u8 c)
+void KD11::KD11ODTWrite(u8 c)
 {
-	odt->buf[odt->buf_sz++] = c;
-	odt->buf_r = 0;
+	odt.buf[odt.buf_sz++] = c;
+	odt.buf_r = 0;
 }
 
-static void KD11ODTWriteOctal(KD11ODT* odt, u16 val)
+void KD11::KD11ODTWriteOctal(u16 val)
 {
 	int i;
-	odt->buf[odt->buf_sz++] = ((val >> 15) & 0x7) + '0';
+	odt.buf[odt.buf_sz++] = ((val >> 15) & 0x7) + '0';
 	for(i = 0; i < 5; i++) {
-		odt->buf[odt->buf_sz++] = ((val >> 12) & 7) + '0';
+		odt.buf[odt.buf_sz++] = ((val >> 12) & 7) + '0';
 		val <<= 3;
 	}
 }
 
-static void KD11ODTInputError(KD11ODT* odt)
+void KD11::KD11ODTInputError()
 {
-	odt->state = ODT_STATE_WR;
-	odt->next = ODT_STATE_WAIT;
-	odt->buf[0] = '?';
-	odt->buf[1] = '\r';
-	odt->buf[2] = '\n';
-	odt->buf[3] = '@';
-	odt->buf_r = 0;
-	odt->buf_sz = 4;
+	odt.state = ODT_STATE_WR;
+	odt.next = ODT_STATE_WAIT;
+	odt.buf[0] = '?';
+	odt.buf[1] = '\r';
+	odt.buf[2] = '\n';
+	odt.buf[3] = '@';
+	odt.buf_r = 0;
+	odt.buf_sz = 4;
 }
 
-void KD11ODTStep(KD11* kd11, QBUS* bus)
+void KD11::KD11ODTStep(QBUS* bus)
 {
 	/* odt */
-	KD11ODT* odt = &kd11->odt;
-	switch(odt->state) {
+	// KD11ODT* odt = &odt;
+	switch(odt.state) {
 		case ODT_STATE_INIT:
-			KD11ODTClear(odt);
-			KD11ODTWrite(odt, '\r');
-			KD11ODTWrite(odt, '\n');
-			KD11ODTWriteOctal(odt, kd11->r[7]);
-			KD11ODTWrite(odt, '\r');
-			KD11ODTWrite(odt, '\n');
-			KD11ODTWrite(odt, '@');
-			odt->next = ODT_STATE_WAIT;
-			odt->state = ODT_STATE_WR;
+			KD11ODTClear();
+			KD11ODTWrite('\r');
+			KD11ODTWrite('\n');
+			KD11ODTWriteOctal(r[7]);
+			KD11ODTWrite('\r');
+			KD11ODTWrite('\n');
+			KD11ODTWrite('@');
+			odt.next = ODT_STATE_WAIT;
+			odt.state = ODT_STATE_WR;
 			break;
 		case ODT_STATE_WAIT:
 			if(READ(0177560) & 0x80) { /* ch available */
@@ -211,7 +216,7 @@ void KD11ODTStep(KD11* kd11, QBUS* bus)
 				switch((u8) c) {
 					case '$':
 					case 'R':
-						odt->state = ODT_STATE_REG;
+						odt.state = ODT_STATE_REG;
 						break;
 					case '0':
 					case '1':
@@ -221,33 +226,33 @@ void KD11ODTStep(KD11* kd11, QBUS* bus)
 					case '5':
 					case '6':
 					case '7':
-						odt->state = ODT_STATE_ADDR;
-						odt->addr = ((u8) c) - '0';
+						odt.state = ODT_STATE_ADDR;
+						odt.addr = ((u8) c) - '0';
 						break;
 					case 'G':
-						KD11ODTClear(odt);
-						KD11ODTWrite(odt, '\r');
-						KD11ODTWrite(odt, '\n');
-						KD11ODTWrite(odt, '@');
-						odt->next = ODT_STATE_WAIT;
-						odt->state = ODT_STATE_WR;
+						KD11ODTClear();
+						KD11ODTWrite('\r');
+						KD11ODTWrite('\n');
+						KD11ODTWrite('@');
+						odt.next = ODT_STATE_WAIT;
+						odt.state = ODT_STATE_WR;
 						break;
 					case 'P':
-						odt->state = ODT_STATE_INIT;
-						kd11->state = STATE_RUN;
-						TRCCPUEvent(TRC_CPU_ODT_P, kd11->r[7]);
+						odt.state = ODT_STATE_INIT;
+						state = STATE_RUN;
+						TRCCPUEvent(TRC_CPU_ODT_P, r[7]);
 						break;
 					default:
-						KD11ODTInputError(odt);
+						KD11ODTInputError();
 						break;
 				}
 			}
 			break;
 		case ODT_STATE_WR:
 			if(READ(0177564) & 0x80) {
-				WRITE(0177566, odt->buf[odt->buf_r++]);
-				if(odt->buf_r == odt->buf_sz) {
-					odt->state = odt->next;
+				WRITE(0177566, odt.buf[odt.buf_r++]);
+				if(odt.buf_r == odt.buf_sz) {
+					odt.state = odt.next;
 				}
 			}
 			break;
@@ -257,23 +262,23 @@ void KD11ODTStep(KD11* kd11, QBUS* bus)
 				u8 c = (u8) ch;
 				WRITE(0177566, c);
 				if((u8) c == '/') { /* delimit */
-					u16 val = READ(odt->addr);
-					KD11ODTClear(odt);
-					KD11ODTWriteOctal(odt, val);
-					KD11ODTWrite(odt, ' ');
-					odt->next = ODT_STATE_VAL;
-					odt->state = ODT_STATE_WR;
-					odt->input = 0;
+					u16 val = READ(odt.addr);
+					KD11ODTClear();
+					KD11ODTWriteOctal(val);
+					KD11ODTWrite(' ');
+					odt.next = ODT_STATE_VAL;
+					odt.state = ODT_STATE_WR;
+					odt.input = 0;
 				} else if(c >= '0' && c <= '7') {
-					odt->addr <<= 3;
-					odt->addr |= c - '0';
+					odt.addr <<= 3;
+					odt.addr |= c - '0';
 				} else if(c == 'G') {
-					odt->state = ODT_STATE_INIT;
-					kd11->r[7] = odt->addr;
-					kd11->state = STATE_RUN;
-					TRCCPUEvent(TRC_CPU_ODT_G, odt->addr);
+					odt.state = ODT_STATE_INIT;
+					r[7] = odt.addr;
+					state = STATE_RUN;
+					TRCCPUEvent(TRC_CPU_ODT_G, odt.addr);
 				} else {
-					KD11ODTInputError(odt);
+					KD11ODTInputError();
 				}
 			}
 			break;
@@ -282,13 +287,13 @@ void KD11ODTStep(KD11* kd11, QBUS* bus)
 				u16 ch = READ(0177562);
 				u8 c = (u8) ch;
 				WRITE(0177566, c);
-				odt->state = ODT_STATE_REG_WAIT;
+				odt.state = ODT_STATE_REG_WAIT;
 				if(c >= '0' && c <= '7') {
-					odt->addr = c - '0';
+					odt.addr = c - '0';
 				} else if(c == 'S') {
-					odt->addr = 8;
+					odt.addr = 8;
 				} else {
-					KD11ODTInputError(odt);
+					KD11ODTInputError();
 				}
 			}
 			break;
@@ -298,41 +303,41 @@ void KD11ODTStep(KD11* kd11, QBUS* bus)
 				u8 c = (u8) ch;
 				WRITE(0177566, c);
 				if(c == '\r' || c == '\n') {
-					if(odt->input) {
-						WRITE(odt->addr, odt->val);
+					if(odt.input) {
+						WRITE(odt.addr, odt.val);
 					}
 				} else if(c >= '0' && c <= '7') {
-					odt->val <<= 3;
-					odt->val |= c - '0';
-					odt->input = 1;
+					odt.val <<= 3;
+					odt.val |= c - '0';
+					odt.input = 1;
 				} else {
-					KD11ODTInputError(odt);
+					KD11ODTInputError();
 				}
 				if(c == '\r') {
-					KD11ODTClear(odt);
-					KD11ODTWrite(odt, '\r');
-					KD11ODTWrite(odt, '\n');
-					KD11ODTWrite(odt, '@');
-					odt->state = ODT_STATE_WR;
-					odt->next = ODT_STATE_WAIT;
+					KD11ODTClear();
+					KD11ODTWrite('\r');
+					KD11ODTWrite('\n');
+					KD11ODTWrite('@');
+					odt.state = ODT_STATE_WR;
+					odt.next = ODT_STATE_WAIT;
 				} else if(c == '\n') {
 					u16 val;
 
-					odt->addr += 2;
-					odt->val = 0;
-					val = READ(odt->addr);
+					odt.addr += 2;
+					odt.val = 0;
+					val = READ(odt.addr);
 
-					KD11ODTClear(odt);
-					KD11ODTWrite(odt, '\r');
-					KD11ODTWrite(odt, '\n');
-					KD11ODTWriteOctal(odt, odt->addr);
-					KD11ODTWrite(odt, '/');
-					KD11ODTWriteOctal(odt, val);
-					KD11ODTWrite(odt, ' ');
+					KD11ODTClear();
+					KD11ODTWrite('\r');
+					KD11ODTWrite('\n');
+					KD11ODTWriteOctal(odt.addr);
+					KD11ODTWrite('/');
+					KD11ODTWriteOctal(val);
+					KD11ODTWrite(' ');
 
-					odt->next = ODT_STATE_VAL;
-					odt->state = ODT_STATE_WR;
-					odt->input = 0;
+					odt.next = ODT_STATE_VAL;
+					odt.state = ODT_STATE_WR;
+					odt.input = 0;
 				}
 			}
 			break;
@@ -343,20 +348,20 @@ void KD11ODTStep(KD11* kd11, QBUS* bus)
 				WRITE(0177566, c);
 				if(c == '/') {
 					u16 val;
-					if(odt->addr < 8) {
-						val = kd11->r[odt->addr];
+					if(odt.addr < 8) {
+						val = r[odt.addr];
 					} else {
-						val = kd11->psw;
+						val = psw;
 					}
-					KD11ODTClear(odt);
-					KD11ODTWriteOctal(odt, val);
-					KD11ODTWrite(odt, ' ');
-					odt->val = 0;
-					odt->next = ODT_STATE_REG_VAL;
-					odt->state = ODT_STATE_WR;
-					odt->input = 0;
+					KD11ODTClear();
+					KD11ODTWriteOctal(val);
+					KD11ODTWrite(' ');
+					odt.val = 0;
+					odt.next = ODT_STATE_REG_VAL;
+					odt.state = ODT_STATE_WR;
+					odt.input = 0;
 				} else {
-					KD11ODTInputError(odt);
+					KD11ODTInputError();
 				}
 			}
 			break;
@@ -366,45 +371,45 @@ void KD11ODTStep(KD11* kd11, QBUS* bus)
 				u8 c = (u8) ch;
 				WRITE(0177566, c);
 				if(c == '\r' || c == '\n') {
-					if(odt->input) {
-						if(odt->addr == 8) {
-							kd11->psw = odt->val;
+					if(odt.input) {
+						if(odt.addr == 8) {
+							psw = odt.val;
 						} else {
-							kd11->r[odt->addr] = odt->val;
+							r[odt.addr] = odt.val;
 						}
 					}
 				} else if(c >= '0' && c <= '7') {
-					odt->val <<= 3;
-					odt->val |= c - '0';
-					odt->input = 1;
+					odt.val <<= 3;
+					odt.val |= c - '0';
+					odt.input = 1;
 				} else {
-					KD11ODTInputError(odt);
+					KD11ODTInputError();
 				}
-				if(c == '\r' || (c == '\n' && odt->addr == 7)) {
-					KD11ODTClear(odt);
-					KD11ODTWrite(odt, '\r');
-					KD11ODTWrite(odt, '\n');
-					KD11ODTWrite(odt, '@');
-					odt->state = ODT_STATE_WR;
-					odt->next = ODT_STATE_WAIT;
+				if(c == '\r' || (c == '\n' && odt.addr == 7)) {
+					KD11ODTClear();
+					KD11ODTWrite('\r');
+					KD11ODTWrite('\n');
+					KD11ODTWrite('@');
+					odt.state = ODT_STATE_WR;
+					odt.next = ODT_STATE_WAIT;
 				} else if(c == '\n') {
 					u16 val;
 
-					odt->addr++;
-					odt->val = 0;
-					val = kd11->r[odt->addr];
+					odt.addr++;
+					odt.val = 0;
+					val = r[odt.addr];
 
-					KD11ODTClear(odt);
-					KD11ODTWrite(odt, '\r');
-					KD11ODTWrite(odt, 'R');
-					KD11ODTWrite(odt, odt->addr + '0');
-					KD11ODTWrite(odt, '/');
-					KD11ODTWriteOctal(odt, val);
-					KD11ODTWrite(odt, ' ');
+					KD11ODTClear();
+					KD11ODTWrite('\r');
+					KD11ODTWrite('R');
+					KD11ODTWrite(odt.addr + '0');
+					KD11ODTWrite('/');
+					KD11ODTWriteOctal(val);
+					KD11ODTWrite(' ');
 
-					odt->next = ODT_STATE_REG_VAL;
-					odt->state = ODT_STATE_WR;
-					odt->input = 0;
+					odt.next = ODT_STATE_REG_VAL;
+					odt.state = ODT_STATE_WR;
+					odt.input = 0;
 				}
 			}
 			break;
@@ -412,73 +417,73 @@ void KD11ODTStep(KD11* kd11, QBUS* bus)
 }
 
 #define	CHECKREAD()		{ \
-	if(kd11->trap && kd11->trap <= 010) \
+	if(trap && trap <= 010) \
 		return 0; \
 	}
 
-u16 KD11CPUReadW(KD11* kd11, QBUS* bus, u16 dst, u16 mode, int inc)
+u16 KD11::KD11CPUReadW(QBUS* bus, u16 dst, u16 mode, int inc)
 {
 	u16 addr;
 	switch(mode) {
 		case 0: /* Register */
-			return kd11->r[dst];
+			return r[dst];
 		case 1: /* Register indirect */
-			return READ(kd11->r[dst]);
+			return READ(r[dst]);
 		case 2: /* Autoincrement */
-			addr = kd11->r[dst];
+			addr = r[dst];
 			if(inc) {
-				kd11->r[dst] += 2;
-				kd11->r[dst] &= 0xFFFE;
+				r[dst] += 2;
+				r[dst] &= 0xFFFE;
 			}
 			return READ(addr);
 		case 3: /* Autoincrement indirect */
-			addr = kd11->r[dst];
+			addr = r[dst];
 			if(inc) {
-				kd11->r[dst] += 2;
-				kd11->r[dst] &= 0xFFFE;
+				r[dst] += 2;
+				r[dst] &= 0xFFFE;
 			}
 			addr = READ(addr);
 			CHECKREAD();
 			return READ(addr);
 		case 4: /* Autodecrement */
 			if(inc) {
-				kd11->r[dst] -= 2;
-				addr = kd11->r[dst];
-				kd11->r[dst] &= 0xFFFE;
+				r[dst] -= 2;
+				addr = r[dst];
+				r[dst] &= 0xFFFE;
 			} else {
-				addr = kd11->r[dst] - 2;
+				addr = r[dst] - 2;
 			}
 			return READ(addr);
 		case 5: /* Autodecrement indirect */
 			if(inc) {
-				kd11->r[dst] -= 2;
-				addr = kd11->r[dst];
-				kd11->r[dst] &= 0xFFFE;
+				r[dst] -= 2;
+				addr = r[dst];
+				r[dst] &= 0xFFFE;
 			} else {
-				addr = kd11->r[dst] - 2;
+				addr = r[dst] - 2;
 			}
 			addr = READ(addr);
 			CHECKREAD();
 			return READ(addr);
 		case 6: /* Index */
-			addr = READ(kd11->r[7]);
+			addr = READ(r[7]);
 			CHECKREAD();
 			if(inc) {
-				kd11->r[7] += 2;
+				r[7] += 2;
 			} else if(dst == 7) {
 				addr += 2;
 			}
-			addr += kd11->r[dst];
+			addr += r[dst];
 			return READ(addr);
 		case 7: /* Index indirect */
-			addr = READ(kd11->r[7]);
+			addr = READ(r[7]);
 			CHECKREAD();
 			if(inc) {
-				kd11->r[7] += 2;
+				r[7] += 2;
 			} else if(dst == 7) {
 				addr += 2;
 			}
-			addr += kd11->r[dst];
+			addr += r[dst];
 			addr = READ(addr);
 			CHECKREAD();
 			return READ(addr);
@@ -490,28 +495,28 @@ u16 KD11CPUReadW(KD11* kd11, QBUS* bus, u16 dst, u16 mode, int inc)
 #define	READ8(addr) (((addr) & 1) ? (u8) (READ((addr) & 0xFFFE) >> 8) : \
 				((u8) READ(addr & 0xFFFE)))
 
-u8 KD11CPUReadB(KD11* kd11, QBUS* bus, u16 dst, u16 mode, int inc)
+u8 KD11::KD11CPUReadB(QBUS* bus, u16 dst, u16 mode, int inc)
 {
 	u16 addr;
 	switch(mode) {
 		case 0: /* Register */
-			return (u8) kd11->r[dst];
+			return (u8) r[dst];
 		case 1: /* Register indirect */
-			return READ8(kd11->r[dst]);
+			return READ8(r[dst]);
 		case 2: /* Autoincrement */
-			addr = kd11->r[dst];
+			addr = r[dst];
 			if(inc) {
 				if(dst == 6 || dst == 7) {
-					kd11->r[dst] += 2;
+					r[dst] += 2;
 				} else {
-					kd11->r[dst]++;
+					r[dst]++;
 				}
 			}
 			return READ8(addr);
 		case 3: /* Autoincrement indirect */
-			addr = kd11->r[dst];
+			addr = r[dst];
 			if(inc) {
-				kd11->r[dst] += 2;
+				r[dst] += 2;
 			}
 			addr = READ(addr);
 			CHECKREAD();
@@ -519,48 +524,48 @@ u8 KD11CPUReadB(KD11* kd11, QBUS* bus, u16 dst, u16 mode, int inc)
 		case 4: /* Autodecrement */
 			if(inc) {
 				if(dst == 6 || dst == 7) {
-					kd11->r[dst] -= 2;
+					r[dst] -= 2;
 				} else {
-					kd11->r[dst]--;
+					r[dst]--;
 				}
-				addr = kd11->r[dst];
+				addr = r[dst];
 			} else {
 				if(dst == 6 || dst == 7) {
-					addr = kd11->r[dst] - 2;
+					addr = r[dst] - 2;
 				} else {
-					addr = kd11->r[dst] - 1;
+					addr = r[dst] - 1;
 				}
 			}
 			return READ8(addr);
 		case 5: /* Autodecrement indirect */
 			if(inc) {
-				kd11->r[dst] -= 2;
-				addr = kd11->r[dst];
+				r[dst] -= 2;
+				addr = r[dst];
 			} else {
-				addr = kd11->r[dst] - 2;
+				addr = r[dst] - 2;
 			}
 			addr = READ(addr);
 			CHECKREAD();
 			return READ8(addr);
 		case 6: /* Index */
-			addr = READ(kd11->r[7]);
+			addr = READ(r[7]);
 			CHECKREAD();
 			if(inc) {
-				kd11->r[7] += 2;
+				r[7] += 2;
 			} else if(dst == 7) {
 				addr += 2;
 			}
-			addr += kd11->r[dst];
+			addr += r[dst];
 			return READ8(addr);
 		case 7: /* Index indirect */
-			addr = READ(kd11->r[7]);
+			addr = READ(r[7]);
 			CHECKREAD();
 			if(inc) {
-				kd11->r[7] += 2;
+				r[7] += 2;
 			} else if(dst == 7) {
 				addr += 2;
 			}
-			addr += kd11->r[dst];
+			addr += r[dst];
 			addr = READ(addr);
 			CHECKREAD();
 			return READ8(addr);
@@ -569,56 +574,56 @@ u8 KD11CPUReadB(KD11* kd11, QBUS* bus, u16 dst, u16 mode, int inc)
 	}
 }
 
-void KD11CPUWriteW(KD11* kd11, QBUS* bus, u16 dst, u16 mode, u16 val)
+void KD11::KD11CPUWriteW(QBUS* bus, u16 dst, u16 mode, u16 val)
 {
 	u16 addr;
 	switch(mode) {
 		case 0: /* Register */
-			kd11->r[dst] = val;
+			r[dst] = val;
 			break;
 		case 1: /* Register indirect */
-			WRITE(kd11->r[dst], val);
+			WRITE(r[dst], val);
 			break;
 		case 2: /* Autoincrement */
-			kd11->r[dst] &= 0xFFFE;
-			addr = kd11->r[dst];
-			kd11->r[dst] += 2;
+			r[dst] &= 0xFFFE;
+			addr = r[dst];
+			r[dst] += 2;
 			WRITE(addr, val);
 			break;
 		case 3: /* Autoincrement indirect */
-			kd11->r[dst] &= 0xFFFE;
-			addr = kd11->r[dst];
-			kd11->r[dst] += 2;
+			r[dst] &= 0xFFFE;
+			addr = r[dst];
+			r[dst] += 2;
 			addr = READ(addr);
 			CHECK();
 			WRITE(addr, val);
 			break;
 		case 4: /* Autodecrement */
-			kd11->r[dst] &= 0xFFFE;
-			kd11->r[dst] -= 2;
-			addr = kd11->r[dst];
+			r[dst] &= 0xFFFE;
+			r[dst] -= 2;
+			addr = r[dst];
 			WRITE(addr, val);
 			break;
 		case 5: /* Autodecrement indirect */
-			kd11->r[dst] &= 0xFFFE;
-			kd11->r[dst] -= 2;
-			addr = kd11->r[dst];
+			r[dst] &= 0xFFFE;
+			r[dst] -= 2;
+			addr = r[dst];
 			addr = READ(addr);
 			CHECK();
 			WRITE(addr, val);
 			break;
 		case 6: /* Index */
-			addr = READ(kd11->r[7]);
+			addr = READ(r[7]);
 			CHECK();
-			kd11->r[7] += 2;
-			addr += kd11->r[dst];
+			r[7] += 2;
+			addr += r[dst];
 			WRITE(addr, val);
 			break;
 		case 7: /* Index indirect */
-			addr = READ(kd11->r[7]);
+			addr = READ(r[7]);
 			CHECK();
-			kd11->r[7] += 2;
-			addr += kd11->r[dst];
+			r[7] += 2;
+			addr += r[dst];
 			addr = READ(addr);
 			CHECK();
 			WRITE(addr, val);
@@ -637,60 +642,60 @@ void KD11CPUWriteW(KD11* kd11, QBUS* bus, u16 dst, u16 mode, u16 val)
 	WRITE(aaddr, tmp); \
 }
 
-void KD11CPUWriteB(KD11* kd11, QBUS* bus, u16 dst, u16 mode, u8 val)
+void KD11::KD11CPUWriteB(QBUS* bus, u16 dst, u16 mode, u8 val)
 {
 	u16 addr;
 	switch(mode) {
 		case 0: /* Register */
-			kd11->r[dst] = (kd11->r[dst] & 0xFF00) | val;
+			r[dst] = (r[dst] & 0xFF00) | val;
 			break;
 		case 1: /* Register deferred */
-			WRITE8(kd11->r[dst], val);
+			WRITE8(r[dst], val);
 			break;
 		case 2: /* Autoincrement */
-			addr = kd11->r[dst];
+			addr = r[dst];
 			if(dst == 6 || dst == 7) {
-				kd11->r[dst] += 2;
+				r[dst] += 2;
 			} else {
-				kd11->r[dst]++;
+				r[dst]++;
 			}
 			WRITE8(addr, val);
 			break;
 		case 3: /* Autoincrement deferred */
-			addr = kd11->r[dst];
-			kd11->r[dst] += 2;
+			addr = r[dst];
+			r[dst] += 2;
 			addr = READ(addr);
 			CHECK();
 			WRITE8(addr, val);
 			break;
 		case 4: /* Autodecrement */
 			if(dst == 6 || dst == 7) {
-				kd11->r[dst] -= 2;
+				r[dst] -= 2;
 			} else {
-				kd11->r[dst]--;
+				r[dst]--;
 			}
-			addr = kd11->r[dst];
+			addr = r[dst];
 			WRITE8(addr, val);
 			break;
 		case 5: /* Autodecrement deferred */
-			kd11->r[dst] -= 2;
-			addr = kd11->r[dst];
+			r[dst] -= 2;
+			addr = r[dst];
 			addr = READ(addr);
 			CHECK();
 			WRITE8(addr, val);
 			break;
 		case 6: /* Index */
-			addr = READ(kd11->r[7]);
+			addr = READ(r[7]);
 			CHECK();
-			kd11->r[7] += 2;
-			addr += kd11->r[dst];
+			r[7] += 2;
+			addr += r[dst];
 			WRITE8(addr, val);
 			break;
 		case 7: /* Index deferred */
-			addr = READ(kd11->r[7]);
+			addr = READ(r[7]);
 			CHECK();
-			kd11->r[7] += 2;
-			addr += kd11->r[dst];
+			r[7] += 2;
+			addr += r[dst];
 			addr = READ(addr);
 			CHECK();
 			WRITE8(addr, val);
@@ -698,7 +703,7 @@ void KD11CPUWriteB(KD11* kd11, QBUS* bus, u16 dst, u16 mode, u8 val)
 	}
 }
 
-u16 KD11CPUGetAddr(KD11* kd11, QBUS* bus, u16 dst, u16 mode)
+u16 KD11::KD11CPUGetAddr(QBUS* bus, u16 dst, u16 mode)
 {
 	u16 addr;
 	switch(mode) {
@@ -706,36 +711,36 @@ u16 KD11CPUGetAddr(KD11* kd11, QBUS* bus, u16 dst, u16 mode)
 			TRCTrap(4, TRC_TRAP_RADDR);
 			TRAP(4); /* illegal instruction */
 		case 1: /* Register indirect */
-			return kd11->r[dst];
+			return r[dst];
 		case 2: /* Autoincrement */
-			addr = kd11->r[dst];
-			kd11->r[dst] += 2;
+			addr = r[dst];
+			r[dst] += 2;
 			return addr;
 		case 3: /* Autoincrement indirect */
-			addr = kd11->r[dst];
-			kd11->r[dst] += 2;
+			addr = r[dst];
+			r[dst] += 2;
 			addr = READ(addr);
 			return addr;
 		case 4: /* Autodecrement */
-			kd11->r[dst] -= 2;
-			addr = kd11->r[dst];
+			r[dst] -= 2;
+			addr = r[dst];
 			return addr;
 		case 5: /* Autodecrement indirect */
-			kd11->r[dst] -= 2;
-			addr = kd11->r[dst];
+			r[dst] -= 2;
+			addr = r[dst];
 			addr = READ(addr);
 			return addr;
 		case 6: /* Index */
-			addr = READ(kd11->r[7]);
+			addr = READ(r[7]);
 			CHECKREAD();
-			kd11->r[7] += 2;
-			addr += kd11->r[dst];
+			r[7] += 2;
+			addr += r[dst];
 			return addr;
 		case 7: /* Index indirect */
-			addr = READ(kd11->r[7]);
+			addr = READ(r[7]);
 			CHECKREAD();
-			kd11->r[7] += 2;
-			addr += kd11->r[dst];
+			r[7] += 2;
+			addr += r[dst];
 			addr = READ(addr);
 			return addr;
 		default:
@@ -743,17 +748,17 @@ u16 KD11CPUGetAddr(KD11* kd11, QBUS* bus, u16 dst, u16 mode)
 	}
 }
 
-#define	CPUREADW(rn, mode)	KD11CPUReadW(kd11, bus, rn, mode, 1); \
+#define	CPUREADW(rn, mode)	KD11CPUReadW(bus, rn, mode, 1); \
 				CHECK()
-#define	CPUREADB(rn, mode)	KD11CPUReadB(kd11, bus, rn, mode, 1); \
+#define	CPUREADB(rn, mode)	KD11CPUReadB(bus, rn, mode, 1); \
 				CHECK()
-#define	CPUREADNW(rn, mode)	KD11CPUReadW(kd11, bus, rn, mode, 0); \
+#define	CPUREADNW(rn, mode)	KD11CPUReadW(bus, rn, mode, 0); \
 				CHECK()
-#define	CPUREADNB(rn, mode)	KD11CPUReadB(kd11, bus, rn, mode, 0); \
+#define	CPUREADNB(rn, mode)	KD11CPUReadB(bus, rn, mode, 0); \
 				CHECK()
-#define CPUWRITEW(rn, mode, v)	KD11CPUWriteW(kd11, bus, rn, mode, v); \
+#define CPUWRITEW(rn, mode, v)	KD11CPUWriteW(bus, rn, mode, v); \
 				CHECK()
-#define CPUWRITEB(rn, mode, v)	KD11CPUWriteB(kd11, bus, rn, mode, (u8) v); \
+#define CPUWRITEB(rn, mode, v)	KD11CPUWriteB(bus, rn, mode, (u8) v); \
 				CHECK()
 
 typedef union {
@@ -761,7 +766,7 @@ typedef union {
 	u32		u32;
 } FLOAT;
 
-void KD11CPUStep(KD11* kd11, QBUS* bus)
+void KD11::KD11CPUStep(QBUS* bus)
 {
 	u16 tmp, tmp2;
 	u16 src, dst;
@@ -771,7 +776,7 @@ void KD11CPUStep(KD11* kd11, QBUS* bus)
 	u8 unknown = 0;
 #endif
 
-	u16 insn = READ(kd11->r[7]);
+	u16 insn = READ(r[7]);
 	KD11INSN1* insn1 = (KD11INSN1*) &insn;
 	KD11INSN2* insn2 = (KD11INSN2*) &insn;
 	KD11INSNBR* insnbr = (KD11INSNBR*) &insn;
@@ -780,7 +785,7 @@ void KD11CPUStep(KD11* kd11, QBUS* bus)
 	KD11INSNMARK* insnmark = (KD11INSNMARK*) &insn;
 	KD11INSNSOB* insnsob = (KD11INSNSOB*) &insn;
 
-	kd11->r[7] += 2;
+	r[7] += 2;
 
 	CHECK();
 
@@ -791,20 +796,20 @@ switch(insn >> 12) {
 				case 00000: /* 00 00 xx group */
 					switch(insn) {
 						case 0000000: /* HALT */
-							TRCCPUEvent(TRC_CPU_HALT, kd11->r[7]);
-							kd11->state = STATE_HALT;
-							kd11->odt.state = ODT_STATE_INIT;
+							TRCCPUEvent(TRC_CPU_HALT, r[7]);
+							state = STATE_HALT;
+							odt.state = ODT_STATE_INIT;
 							break;
 						case 0000001: /* WAIT */
-							TRCCPUEvent(TRC_CPU_WAIT, kd11->r[7]);
-							kd11->state = STATE_WAIT;
+							TRCCPUEvent(TRC_CPU_WAIT, r[7]);
+							state = STATE_WAIT;
 							break;
 						case 0000002: /* RTI */
-							kd11->r[7] = READ(kd11->r[6]);
-							kd11->r[6] += 2;
+							r[7] = READ(r[6]);
+							r[6] += 2;
 							CHECK();
-							kd11->psw = READ(kd11->r[6]);
-							kd11->r[6] += 2;
+							psw = READ(r[6]);
+							r[6] += 2;
 							CHECK();
 							break;
 						case 0000003: /* BPT */
@@ -819,13 +824,13 @@ switch(insn >> 12) {
 							bus->reset();
 							break;
 						case 0000006: /* RTT */
-							kd11->r[7] = READ(kd11->r[6]);
-							kd11->r[6] += 2;
+							r[7] = READ(r[6]);
+							r[6] += 2;
 							CHECK();
-							kd11->psw = READ(kd11->r[6]);
-							kd11->r[6] += 2;
+							psw = READ(r[6]);
+							r[6] += 2;
 							CHECK();
-							kd11->state = STATE_INHIBIT_TRACE;
+							state = STATE_INHIBIT_TRACE;
 							break;
 						default: /* 00 00 07 - 00 00 77 */
 							/* unused opcodes */
@@ -835,23 +840,23 @@ switch(insn >> 12) {
 					}
 					break;
 				case 00001: /* JMP */
-					tmp = KD11CPUGetAddr(kd11, bus, insn1->rn, insn1->mode);
+					tmp = KD11CPUGetAddr(bus, insn1->rn, insn1->mode);
 					CHECK();
-					kd11->r[7] = tmp;
+					r[7] = tmp;
 					break;
 				case 00002: /* 00 02 xx group */
 					/* mask=177740: CLN/CLZ/CLV/CLC/CCC/SEN/SEZ/SEV/SEC/SCC */
 					if((insn & 0177770) == 0000200) {
 						/* RTS */
-						kd11->r[7] = kd11->r[insnrts->rn];
-						kd11->r[insnrts->rn] = READ(kd11->r[6]);
-						kd11->r[6] += 2;
+						r[7] = r[insnrts->rn];
+						r[insnrts->rn] = READ(r[6]);
+						r[6] += 2;
 					} else if((insn & 0177740) == 0000240) {
 						tmp = insn & 017;
 						if(insn & 020) {
-							kd11->psw |= tmp;
+							psw |= tmp;
 						} else {
-							kd11->psw &= ~tmp;
+							psw &= ~tmp;
 						}
 					} else {
 						/* 00 02 10 - 00 02 27: unused */
@@ -872,14 +877,14 @@ switch(insn >> 12) {
 				case 00005:
 				case 00006:
 				case 00007:
-					kd11->r[7] += (s16) ((s8) insnbr->offset) * 2;
+					r[7] += (s16) ((s8) insnbr->offset) * 2;
 					break;
 				case 00010: /* BNE */
 				case 00011:
 				case 00012:
 				case 00013:
 					if(!PSW_GET(PSW_Z)) {
-						kd11->r[7] += (s16) ((s8) insnbr->offset) * 2;
+						r[7] += (s16) ((s8) insnbr->offset) * 2;
 					}
 					break;
 				case 00014: /* BEQ */
@@ -887,7 +892,7 @@ switch(insn >> 12) {
 				case 00016:
 				case 00017:
 					if(PSW_GET(PSW_Z)) {
-						kd11->r[7] += (s16) ((s8) insnbr->offset) * 2;
+						r[7] += (s16) ((s8) insnbr->offset) * 2;
 					}
 					break;
 				case 00020: /* BGE */
@@ -895,7 +900,7 @@ switch(insn >> 12) {
 				case 00022:
 				case 00023:
 					if((PSW_GET(PSW_N) ^ PSW_GET(PSW_V)) == 0) {
-						kd11->r[7] += (s16) ((s8) insnbr->offset) * 2;
+						r[7] += (s16) ((s8) insnbr->offset) * 2;
 					}
 					break;
 				case 00024: /* BLT */
@@ -903,7 +908,7 @@ switch(insn >> 12) {
 				case 00026:
 				case 00027:
 					if(PSW_GET(PSW_N) ^ PSW_GET(PSW_V)) {
-						kd11->r[7] += (s16) ((s8) insnbr->offset) * 2;
+						r[7] += (s16) ((s8) insnbr->offset) * 2;
 					}
 					break;
 				case 00030: /* BGT */
@@ -911,7 +916,7 @@ switch(insn >> 12) {
 				case 00032:
 				case 00033:
 					if((PSW_GET(PSW_Z) || (PSW_GET(PSW_N) ^ PSW_GET(PSW_V))) == 0) {
-						kd11->r[7] += (s16) ((s8) insnbr->offset) * 2;
+						r[7] += (s16) ((s8) insnbr->offset) * 2;
 					}
 					break;
 				case 00034: /* BLE */
@@ -919,7 +924,7 @@ switch(insn >> 12) {
 				case 00036:
 				case 00037:
 					if(PSW_GET(PSW_Z) || (PSW_GET(PSW_N) ^ PSW_GET(PSW_V))) {
-						kd11->r[7] += (s16) ((s8) insnbr->offset) * 2;
+						r[7] += (s16) ((s8) insnbr->offset) * 2;
 					}
 					break;
 				case 00040: /* JSR */
@@ -930,13 +935,13 @@ switch(insn >> 12) {
 				case 00045:
 				case 00046:
 				case 00047:
-					dst = KD11CPUGetAddr(kd11, bus, insnjsr->rn, insnjsr->mode);
-					src = kd11->r[insnjsr->r];
+					dst = KD11CPUGetAddr(bus, insnjsr->rn, insnjsr->mode);
+					src = r[insnjsr->r];
 					CHECK();
-					kd11->r[6] -= 2;
-					WRITE(kd11->r[6], src);
-					kd11->r[insnjsr->r] = kd11->r[7];
-					kd11->r[7] = dst;
+					r[6] -= 2;
+					WRITE(r[6], src);
+					r[insnjsr->r] = r[7];
+					r[7] = dst;
 					break;
 				case 00050: /* CLR */
 					CPUWRITEW(insn1->rn, insn1->mode, 0);
@@ -1057,10 +1062,10 @@ switch(insn >> 12) {
 					PSW_EQ(PSW_V, PSW_GET(PSW_N) ^ PSW_GET(PSW_C));
 					break;
 				case 00064: /* MARK */
-					kd11->r[6] = kd11->r[7] + 2 * insnmark->nn;
-					kd11->r[7] = kd11->r[5];
-					kd11->r[5] = READ(kd11->r[6]);
-					kd11->r[6] += 2;
+					r[6] = r[7] + 2 * insnmark->nn;
+					r[7] = r[5];
+					r[5] = READ(r[6]);
+					r[6] += 2;
 					break;
 				case 00067: /* SXT */
 					if(PSW_GET(PSW_N)) {
@@ -1135,19 +1140,19 @@ switch(insn >> 12) {
 		case 007: /* 07 xx xx group */
 			switch(insn >> 9) {
 				case 0070: /* MUL */
-					dst = kd11->r[insnjsr->r];
+					dst = r[insnjsr->r];
 					src = CPUREADW(insnjsr->rn, insnjsr->mode);
 					tmps32 = (s32) (s16) dst * (s16) src;
-					kd11->r[insnjsr->r] = (u16) (tmps32 >> 16);
-					kd11->r[insnjsr->r | 1] = (u16) tmps32;
+					r[insnjsr->r] = (u16) (tmps32 >> 16);
+					r[insnjsr->r | 1] = (u16) tmps32;
 					PSW_CLR(PSW_V);
 					PSW_EQ(PSW_N, tmps32 < 0);
 					PSW_EQ(PSW_Z, !tmps32);
 					PSW_EQ(PSW_C, (tmps32 >= 0x7FFF) || (tmps32 < -0x8000));
 					break;
 				case 0071: /* DIV */
-					tmps32 = (kd11->r[insnjsr->r] << 16)
-						| kd11->r[insnjsr->r | 1];
+					tmps32 = (r[insnjsr->r] << 16)
+						| r[insnjsr->r | 1];
 					src = CPUREADW(insnjsr->rn, insnjsr->mode);
 					if(src == 0) {
 						PSW_SET(PSW_C);
@@ -1159,15 +1164,15 @@ switch(insn >> 12) {
 						if((s16) quot != quot) {
 							PSW_SET(PSW_V);
 						} else {
-							kd11->r[insnjsr->r] = (u16) quot;
-							kd11->r[insnjsr->r | 1] = (u16) rem;
+							r[insnjsr->r] = (u16) quot;
+							r[insnjsr->r | 1] = (u16) rem;
 							PSW_EQ(PSW_Z, !quot);
 							PSW_EQ(PSW_N, quot < 0);
 						}
 					}
 					break;
 				case 0072: /* ASH */
-					dst = kd11->r[insnjsr->r];
+					dst = r[insnjsr->r];
 					src = CPUREADW(insnjsr->rn, insnjsr->mode);
 					if(src & 0x20) { /* negative; right */
 						s16 stmp, stmp2;
@@ -1200,14 +1205,14 @@ switch(insn >> 12) {
 							PSW_SET(PSW_V);
 						}
 					}
-					kd11->r[insnjsr->r] = tmp;
+					r[insnjsr->r] = tmp;
 					PSW_EQ(PSW_N, tmp & 0x8000);
 					PSW_EQ(PSW_Z, !tmp);
 					break;
 				case 0073: /* ASHC */
-					dst = kd11->r[insnjsr->r];
-					tmps32 = (kd11->r[insnjsr->r] << 16)
-						| kd11->r[insnjsr->r | 1];
+					dst = r[insnjsr->r];
+					tmps32 = (r[insnjsr->r] << 16)
+						| r[insnjsr->r | 1];
 					src = CPUREADW(insnjsr->rn, insnjsr->mode);
 					if((src & 0x3F) == 0x20) { /* negative; 32 right */
 						PSW_EQ(PSW_C, tmps32 & 0x80000000);
@@ -1236,13 +1241,13 @@ switch(insn >> 12) {
 						PSW_EQ(PSW_V, !!(dst & 0x8000)
 								!= !!(tmps32 & 0x80000000));
 					}
-					kd11->r[insnjsr->r] = (u16) (tmps32 >> 16);
-					kd11->r[insnjsr->r | 1] = (u16) tmps32;
+					r[insnjsr->r] = (u16) (tmps32 >> 16);
+					r[insnjsr->r | 1] = (u16) tmps32;
 					PSW_EQ(PSW_N, tmps32 & 0x80000000);
 					PSW_EQ(PSW_Z, !tmps32);
 					break;
 				case 0074: /* XOR */
-					src = kd11->r[insnjsr->r];
+					src = r[insnjsr->r];
 					dst = CPUREADNW(insnjsr->rn, insnjsr->mode);
 					tmp = src ^ dst;
 					CPUWRITEW(insnjsr->rn, insnjsr->mode, tmp);
@@ -1254,75 +1259,75 @@ switch(insn >> 12) {
 					switch(insn >> 3) {
 #ifdef USE_FLOAT
 						case 007500: /* FADD */
-							f1.u32 = (READ(kd11->r[insnrts->rn] + 4) << 16)
-								| READ(kd11->r[insnrts->rn] + 6);
-							f2.u32 = (READ(kd11->r[insnrts->rn]) << 16)
-								| READ(kd11->r[insnrts->rn] + 2);
+							f1.u32 = (READ(r[insnrts->rn] + 4) << 16)
+								| READ(r[insnrts->rn] + 6);
+							f2.u32 = (READ(r[insnrts->rn]) << 16)
+								| READ(r[insnrts->rn] + 2);
 							f3.f32 = f1.f32 + f2.f32;
 							/* TODO: result <= 2**-128 -> result = 0 */
 							/* TODO: implement traps */
-							WRITE(kd11->r[insnrts->rn] + 4,
+							WRITE(r[insnrts->rn] + 4,
 									(u16) (f3.u32 >> 16));
-							WRITE(kd11->r[insnrts->rn] + 6, (u16) f3.u32);
-							kd11->r[insnrts->rn] += 4;
+							WRITE(r[insnrts->rn] + 6, (u16) f3.u32);
+							r[insnrts->rn] += 4;
 							PSW_EQ(PSW_N, f3.f32 < 0);
 							PSW_EQ(PSW_Z, f3.f32 == 0);
 							PSW_CLR(PSW_V);
 							PSW_CLR(PSW_C);
 							break;
 						case 007501: /* FSUB */
-							f1.u32 = (READ(kd11->r[insnrts->rn] + 4) << 16)
-								| READ(kd11->r[insnrts->rn] + 6);
-							f2.u32 = (READ(kd11->r[insnrts->rn]) << 16)
-								| READ(kd11->r[insnrts->rn] + 2);
+							f1.u32 = (READ(r[insnrts->rn] + 4) << 16)
+								| READ(r[insnrts->rn] + 6);
+							f2.u32 = (READ(r[insnrts->rn]) << 16)
+								| READ(r[insnrts->rn] + 2);
 							f3.f32 = f1.f32 - f2.f32;
 							/* TODO: result <= 2**-128 -> result = 0 */
 							/* TODO: implement traps */
-							WRITE(kd11->r[insnrts->rn] + 4,
+							WRITE(r[insnrts->rn] + 4,
 									(u16) (f3.u32 >> 16));
-							WRITE(kd11->r[insnrts->rn] + 6, (u16) f3.u32);
-							kd11->r[insnrts->rn] += 4;
+							WRITE(r[insnrts->rn] + 6, (u16) f3.u32);
+							r[insnrts->rn] += 4;
 							PSW_EQ(PSW_N, f3.f32 < 0);
 							PSW_EQ(PSW_Z, f3.f32 == 0);
 							PSW_CLR(PSW_V);
 							PSW_CLR(PSW_C);
 							break;
 						case 007502: /* FMUL */
-							f1.u32 = (READ(kd11->r[insnrts->rn] + 4) << 16)
-								| READ(kd11->r[insnrts->rn] + 6);
-							f2.u32 = (READ(kd11->r[insnrts->rn]) << 16)
-								| READ(kd11->r[insnrts->rn] + 2);
+							f1.u32 = (READ(r[insnrts->rn] + 4) << 16)
+								| READ(r[insnrts->rn] + 6);
+							f2.u32 = (READ(r[insnrts->rn]) << 16)
+								| READ(r[insnrts->rn] + 2);
 							f3.f32 = f1.f32 * f2.f32;
 							/* TODO: result <= 2**-128 -> result = 0 */
 							/* TODO: implement traps */
-							WRITE(kd11->r[insnrts->rn] + 4,
+							WRITE(r[insnrts->rn] + 4,
 									(u16) (f3.u32 >> 16));
-							WRITE(kd11->r[insnrts->rn] + 6, (u16) f3.u32);
-							kd11->r[insnrts->rn] += 4;
+							WRITE(r[insnrts->rn] + 6, (u16) f3.u32);
+							r[insnrts->rn] += 4;
 							PSW_EQ(PSW_N, f3.f32 < 0);
 							PSW_EQ(PSW_Z, f3.f32 == 0);
 							PSW_CLR(PSW_V);
 							PSW_CLR(PSW_C);
 							break;
 						case 007503: /* FDIV */
-							f1.u32 = (READ(kd11->r[insnrts->rn] + 4) << 16)
-								| READ(kd11->r[insnrts->rn] + 6);
-							f2.u32 = (READ(kd11->r[insnrts->rn]) << 16)
-								| READ(kd11->r[insnrts->rn] + 2);
+							f1.u32 = (READ(r[insnrts->rn] + 4) << 16)
+								| READ(r[insnrts->rn] + 6);
+							f2.u32 = (READ(r[insnrts->rn]) << 16)
+								| READ(r[insnrts->rn] + 2);
 							if(f2.f32 != 0) {
 								f3.f32 = f1.f32 / f2.f32;
 								/* TODO: result <= 2**-128 -> result = 0 */
 								/* TODO: implement traps */
-								WRITE(kd11->r[insnrts->rn] + 4,
+								WRITE(r[insnrts->rn] + 4,
 										(u16) (f3.u32 >> 16));
-								WRITE(kd11->r[insnrts->rn] + 6,
+								WRITE(r[insnrts->rn] + 6,
 										(u16) f3.u32);
 								PSW_EQ(PSW_N, f3.f32 < 0);
 								PSW_EQ(PSW_Z, f3.f32 == 0);
 								PSW_CLR(PSW_V);
 								PSW_CLR(PSW_C);
 							}
-							kd11->r[insnrts->rn] += 4;
+							r[insnrts->rn] += 4;
 							break;
 #endif
 						default:
@@ -1333,9 +1338,9 @@ switch(insn >> 12) {
 					}
 					break;
 				case 0077: /* SOB */
-					kd11->r[insnsob->rn]--;
-					if(kd11->r[insnsob->rn]) {
-						kd11->r[7] -= 2 * insnsob->offset;
+					r[insnsob->rn]--;
+					if(r[insnsob->rn]) {
+						r[7] -= 2 * insnsob->offset;
 					}
 					break;
 				default:
@@ -1351,7 +1356,7 @@ switch(insn >> 12) {
 				case 01002:
 				case 01003:
 					if(!PSW_GET(PSW_N)) {
-						kd11->r[7] += (s16) ((s8) insnbr->offset) * 2;
+						r[7] += (s16) ((s8) insnbr->offset) * 2;
 					}
 					break;
 				case 01004: /* BMI */
@@ -1359,7 +1364,7 @@ switch(insn >> 12) {
 				case 01006:
 				case 01007:
 					if(PSW_GET(PSW_N)) {
-						kd11->r[7] += (s16) ((s8) insnbr->offset) * 2;
+						r[7] += (s16) ((s8) insnbr->offset) * 2;
 					}
 					break;
 				case 01010: /* BHI */
@@ -1367,7 +1372,7 @@ switch(insn >> 12) {
 				case 01012:
 				case 01013:
 					if(!PSW_GET(PSW_C) && !PSW_GET(PSW_Z)) {
-						kd11->r[7] += (s16) ((s8) insnbr->offset) * 2;
+						r[7] += (s16) ((s8) insnbr->offset) * 2;
 					}
 					break;
 				case 01014: /* BLOS */
@@ -1375,7 +1380,7 @@ switch(insn >> 12) {
 				case 01016:
 				case 01017:
 					if(PSW_GET(PSW_C) || PSW_GET(PSW_Z)) {
-						kd11->r[7] += (s16) ((s8) insnbr->offset) * 2;
+						r[7] += (s16) ((s8) insnbr->offset) * 2;
 					}
 					break;
 				case 01020: /* BVC */
@@ -1383,7 +1388,7 @@ switch(insn >> 12) {
 				case 01022:
 				case 01023:
 					if(!PSW_GET(PSW_V)) {
-						kd11->r[7] += (s16) ((s8) insnbr->offset) * 2;
+						r[7] += (s16) ((s8) insnbr->offset) * 2;
 					}
 					break;
 				case 01024: /* BVS */
@@ -1391,7 +1396,7 @@ switch(insn >> 12) {
 				case 01026:
 				case 01027:
 					if(PSW_GET(PSW_V)) {
-						kd11->r[7] += (s16) ((s8) insnbr->offset) * 2;
+						r[7] += (s16) ((s8) insnbr->offset) * 2;
 					}
 					break;
 				case 01030: /* BCC */
@@ -1399,7 +1404,7 @@ switch(insn >> 12) {
 				case 01032:
 				case 01033:
 					if(!PSW_GET(PSW_C)) {
-						kd11->r[7] += (s16) ((s8) insnbr->offset) * 2;
+						r[7] += (s16) ((s8) insnbr->offset) * 2;
 					}
 					break;
 				case 01034: /* BCS */
@@ -1407,7 +1412,7 @@ switch(insn >> 12) {
 				case 01036:
 				case 01037:
 					if(PSW_GET(PSW_C)) {
-						kd11->r[7] += (s16) ((s8) insnbr->offset) * 2;
+						r[7] += (s16) ((s8) insnbr->offset) * 2;
 					}
 					break;
 				case 01040: /* EMT */
@@ -1544,12 +1549,12 @@ switch(insn >> 12) {
 					break;
 				case 01064: /* MTPS */
 					tmp = CPUREADB(insn1->rn, insn1->mode);
-					kd11->psw = (kd11->psw & PSW_T) | (tmp & ~PSW_T);
+					psw = (psw & PSW_T) | (tmp & ~PSW_T);
 					break;
 				case 01067: /* MFPS */
-					tmp = (u8) kd11->psw;
+					tmp = (u8) psw;
 					if(insn1->mode == 0) {
-						kd11->r[insn1->rn] = (s8) kd11->psw;
+						r[insn1->rn] = (s8) psw;
 					} else {
 						CPUWRITEB(insn1->rn, insn1->mode, tmp);
 					}
@@ -1568,7 +1573,7 @@ switch(insn >> 12) {
 			tmp = CPUREADB(insn2->src_rn, insn2->src_mode);
 			tmp = (s8) tmp;
 			if(insn2->dst_mode == 0) {
-				kd11->r[insn2->dst_rn] = tmp;
+				r[insn2->dst_rn] = tmp;
 			} else {
 				CPUWRITEB(insn2->dst_rn, insn2->dst_mode, tmp);
 			}
@@ -1630,126 +1635,127 @@ switch(insn >> 12) {
 	}
 }
 
-void KD11HandleTraps(KD11* kd11, QBUS* bus)
+
+// ToDo: Resolve trap confusion
+void KD11::KD11HandleTraps(QBUS* bus)
 {
-	u16 trap = kd11->trap;
+	u16 trap = this->trap;
 
 	if(!PSW_GET(PSW_PRIO)) {
-		kd11->trap = bus->trap;
+		this->trap = bus->trap;
 		bus->trap = 0;
 	} else if(bus->trap == 004) {
-		kd11->trap = bus->trap;
+		this->trap = bus->trap;
 		bus->trap = 0;
 	} else {
-		kd11->trap = 0;
+		this->trap = 0;
 	}
 
 	/* ignore traps if in HALT mode */
-	if(kd11->state == STATE_HALT) {
+	if(state == STATE_HALT) {
 		return;
 	}
 
 	if(!trap) {
-		if(kd11->trap) {
-			trap = kd11->trap;
-			kd11->trap = 0;
+		if(this->trap) {
+			trap = this->trap;
+			this->trap = 0;
 		} else {
 			return;
 		}
 	}
 
 	/* trap instructions have highest priority */
-	if((kd11->trap == 030 || kd11->trap == 034)
+	if((this->trap == 030 || this->trap == 034)
 			&& !(trap == 030 || trap == 034)) {
-		u16 tmp = kd11->trap;
-		kd11->trap = trap;
+		u16 tmp = this->trap;
+		this->trap = trap;
 		trap = tmp;
 	}
 
 	TRCCPUEvent(TRC_CPU_TRAP, trap);
 
-	kd11->r[6] -= 2;
-	WRITE(kd11->r[6], kd11->psw);
+	r[6] -= 2;
+	WRITE(r[6], psw);
 	if(bus->trap == 004 || bus->trap == 010) {
-		TRCCPUEvent(TRC_CPU_DBLBUS, kd11->r[6]);
+		TRCCPUEvent(TRC_CPU_DBLBUS, r[6]);
 		bus->trap = 0;
-		kd11->state = STATE_HALT;
+		state = STATE_HALT;
 		return;
 	}
 
-	kd11->r[6] -= 2;
-	WRITE(kd11->r[6], kd11->r[7]);
+	r[6] -= 2;
+	WRITE(r[6], r[7]);
 	if(bus->trap == 004 || bus->trap == 010) {
-		TRCCPUEvent(TRC_CPU_DBLBUS, kd11->r[6]);
+		TRCCPUEvent(TRC_CPU_DBLBUS, r[6]);
 		bus->trap = 0;
-		kd11->state = STATE_HALT;
+		state = STATE_HALT;
 		return;
 	}
 
-	kd11->r[7] = READ(trap);
+	r[7] = READ(trap);
 	if(bus->trap == 004 || bus->trap == 010) {
 		TRCCPUEvent(TRC_CPU_DBLBUS, trap);
 		bus->trap = 0;
-		kd11->state = STATE_HALT;
+		state = STATE_HALT;
 		return;
 	}
 
-	kd11->psw = READ(trap + 2);
+	psw = READ(trap + 2);
 	if(bus->trap == 004 || bus->trap == 010) {
 		TRCCPUEvent(TRC_CPU_DBLBUS, trap + 2);
 		bus->trap = 0;
-		kd11->state = STATE_HALT;
+		state = STATE_HALT;
 		return;
 	}
 
 	/* resume execution if in WAIT state */
-	if(kd11->state == STATE_WAIT) {
-		TRCCPUEvent(TRC_CPU_RUN, kd11->r[7]);
-		kd11->state = STATE_RUN;
+	if(state == STATE_WAIT) {
+		TRCCPUEvent(TRC_CPU_RUN, r[7]);
+		state = STATE_RUN;
 	}
 }
 
-void KD11Step(KD11* kd11, QBUS* bus)
+void KD11::step(QBUS* bus)
 {
-	switch(kd11->state) {
+	switch(state) {
 		case STATE_HALT:
-			KD11ODTStep(kd11, bus);
+			KD11ODTStep(bus);
 			break;
 		case STATE_RUN:
 			IFTRC() {
 				TRCSETIGNBUS();
 				u16 bus_trap = bus->trap;
-				u16 cpu_trap = kd11->trap;
+				u16 cpu_trap = trap;
 				u16 code[3];
-				code[0] = READ(kd11->r[7] + 0);
-				code[1] = READ(kd11->r[7] + 2);
-				code[2] = READ(kd11->r[7] + 4);
-				TRCStep(kd11->r, kd11->psw, code);
+				code[0] = READ(r[7] + 0);
+				code[1] = READ(r[7] + 2);
+				code[2] = READ(r[7] + 4);
+				TRCStep(r, psw, code);
 				bus->trap = bus_trap;
-				kd11->trap = cpu_trap;
+				trap = cpu_trap;
 				TRCCLRIGNBUS();
 			}
-			KD11CPUStep(kd11, bus);
-			if(kd11->state == STATE_INHIBIT_TRACE) {
-				kd11->state = STATE_RUN;
-			} else if(!kd11->trap && (kd11->psw & PSW_T)) {
+			KD11CPUStep(bus);
+			if(state == STATE_INHIBIT_TRACE) {
+				state = STATE_RUN;
+			} else if(!trap && (psw & PSW_T)) {
 				TRCTrap(014, TRC_TRAP_T);
 				TRAP(014);
 			}
-			KD11HandleTraps(kd11, bus);
-			if(kd11->state == STATE_HALT) {
-				kd11->odt.state = ODT_STATE_INIT;
+			KD11HandleTraps(bus);
+			if(state == STATE_HALT) {
+				odt.state = ODT_STATE_INIT;
 			}
 			break;
 		case STATE_WAIT:
-			KD11HandleTraps(kd11, bus);
+			KD11HandleTraps(bus);
 			break;
 	}
 }
 
-void KD11Trap(KD11* kd11, int n)
+void KD11::setTrap(int n)
 {
-	if(kd11->trap == 0 || kd11->trap > n) {
-		kd11->trap = n;
-	}
+	if(trap == 0 || trap > n)
+		trap = n;
 }
