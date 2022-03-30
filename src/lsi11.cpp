@@ -18,12 +18,12 @@ LSI11::~LSI11 ()
 
 void LSI11::reset ()
 {
-	cpu.reset();
+	kd11.reset();
 	bus.reset();
 }
 
 void LSI11::step ()
 {
 	bus.step ();
-	cpu.step (&bus);
+	kd11.step (&bus);
 }

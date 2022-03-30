@@ -53,17 +53,6 @@
 #define	LTC_RATE		50
 #define	LTC_TIME		(1.0F / LTC_RATE)
 
-typedef struct {
-	u16	addr;
-	u16	val;
-	u8	input;
-	u8	state;
-	u8	next;
-	u8	buf[16];
-	u8	buf_r;
-	u8	buf_sz;
-} KD11ODT;
-
 
 class LSI11;
 class QBUSModule;
@@ -96,38 +85,74 @@ public:
 	int		irq;
 };
 
-// ToDo: Make KD11 a QBUSModule
-// The module KD11 is now - different from the other QBUSModules - instantiated
-// within the LSI11 object, although it is also is a QBUS module.
-class KD11
+
+class KD11CPU
 {
 public:
-	KD11();
+	friend class KD11ODT;
+
+	KD11CPU();
 	void reset();
 	void step(QBUS* bus);
-	void setTrap(int n);
+	void handleTraps(QBUS* bus);
 
 	// ToDo: Make runState and r[] private; accessed from main
 	u8	runState;
 	u16	r[8];
 
 private:
-	void KD11ODTClear();
-	void KD11ODTWrite(u8 c);
-	void KD11ODTWriteOctal(u16 val);
-	void KD11ODTInputError();
-	void KD11ODTStep(QBUS* bus);
-	u16 KD11CPUReadW(QBUS* bus, u16 dst, u16 mode, int inc);
-	u8 KD11CPUReadB(QBUS* bus, u16 dst, u16 mode, int inc);
-	void KD11CPUWriteW(QBUS* bus, u16 dst, u16 mode, u16 val);
-	void KD11CPUWriteB(QBUS* bus, u16 dst, u16 mode, u8 val);
-	u16 KD11CPUGetAddr(QBUS* bus, u16 dst, u16 mode);
-	void KD11CPUStep(QBUS* bus);
-	void KD11HandleTraps(QBUS* bus);
+	u16 readW(QBUS* bus, u16 dst, u16 mode, int inc);
+	u8 readB(QBUS* bus, u16 dst, u16 mode, int inc);
+	void writeW(QBUS* bus, u16 dst, u16 mode, u16 val);
+	void writeB(QBUS* bus, u16 dst, u16 mode, u8 val);
+	u16 getAddr(QBUS* bus, u16 dst, u16 mode);
+	void setTrap(int n);
+	void execInstr(QBUS* bus);
 
 	u16	psw;
-	KD11ODT	odt;
 	u16	trap;
+};
+
+// ODT functionality of the KD11
+class KD11ODT 
+{
+public:
+	KD11ODT(KD11CPU &cpu);
+	void reset();
+	void step(QBUS* bus);
+
+private:
+	void clear();
+	void write(u8 c);
+	void writeOctal(u16 val);
+	void inputError();
+
+	KD11CPU &cpu_;
+	u16	addr;
+	u16	val;
+	u8	input;
+	u8	state;
+	u8	next;
+	u8	buf[16];
+	u8	buf_r;
+	u8	buf_sz;
+};
+
+// The class KD11 is composed of the KD11 CPU and the KD11 ODT.
+// ToDo: Make KD11 a QBUSModule
+// The module KD11 is now - different from the other QBUSModules - instantiated
+// within the LSI11 object, although it is also a QBUS module.
+class KD11
+{
+public:
+	void reset();
+	void step(QBUS* bus);
+	// Give main() access to the CPU to set PC and runState
+	KD11CPU &cpu();
+
+private:
+	KD11CPU cpu_;
+	KD11ODT	odt{cpu_};
 };
 
 
@@ -139,7 +164,7 @@ public:
 	void reset ();
 	void step ();
 
-	KD11	 cpu;
+	KD11	 kd11;
 	QBUS	 bus;
 };
 
