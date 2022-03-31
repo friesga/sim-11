@@ -16,8 +16,13 @@
 #include <clock_gettime.h>
 #endif
 
-#include "lsi11.h"
 #include "trace.h"
+#include "ba11_n/ba11_n.h"
+#include "rxv21/rxv21.h"
+#include "bdv11/bdv11.h"
+#include "dlv11j/dlv11j.h"
+#include "msv11d/msv11d.h"
+#include "lsi11/lsi11.h"
 
 /* #define DEBUG */
 

@@ -11,17 +11,17 @@ set (TARGET sim-11)
 
 # Define source files
 set (SIM11_SRCS
-    src/ba11_n.cpp
-    src/bdv11.cpp
-    src/bdv11_e53.cpp
+    src/ba11_n/ba11_n.cpp
+    src/bdv11/bdv11.cpp
+    src/bdv11/bdv11_e53.cpp
     src/disas.cpp
-    src/dlv11j.cpp
-    src/kd11.cpp 
-    src/lsi11.cpp
+    src/dlv11j/dlv11j.cpp
+    src/kd11/kd11.cpp
+    src/lsi11/lsi11.cpp
     src/main.cpp 
-    src/msv11d.cpp
-    src/qbus.cpp
-    src/rxv21.cpp 
+    src/msv11d/msv11d.cpp
+    src/qbus/qbus.cpp
+    src/rxv21/rxv21.cpp
     src/trace.cpp)
 
 # Add source to this project's executable.

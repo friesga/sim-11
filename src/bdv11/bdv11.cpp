@@ -1,8 +1,8 @@
 #include <string.h>
 #include <stdlib.h>
 
-#include "lsi11.h"
 #include "trace.h"
+#include "bdv11.h"
 
 #define	_A(x)		(1 << ((x) - 1))
 #define	_B(x)		(1 << ((x) + 7))

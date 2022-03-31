@@ -1,8 +1,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "lsi11.h"
 #include "trace.h"
+#include "qbus.h"
 
 #define	IRCJITTER()	(rand() % QBUS_DELAY_JITTER)
 

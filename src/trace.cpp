@@ -1,8 +1,11 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "lsi11.h"
 #include "trace.h"
+
+/* LSI-11 disassembler */
+extern int  LSI11Disassemble(const u16* insn, u16 pc, char* buf);
+extern int  LSI11InstructionLength(const u16* insn);
 
 TRACE trc = { 0 };
 

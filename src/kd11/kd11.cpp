@@ -1,8 +1,8 @@
 #include <string.h>
 #include <stdlib.h>
 
-#include "lsi11.h"
 #include "trace.h"
+#include "kd11.h"
 
 #define USE_FLOAT
 

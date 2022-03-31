@@ -1,7 +1,8 @@
 #include <string.h>
 #include <stdlib.h>
 
-#include "lsi11.h"
+#include "types.h"
+#include "msv11d.h"
 
 MSV11D::MSV11D ()
 {

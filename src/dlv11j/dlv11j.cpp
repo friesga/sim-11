@@ -1,8 +1,8 @@
 #include <string.h>
 #include <stdlib.h>
 
-#include "lsi11.h"
 #include "trace.h"
+#include "dlv11j.h"
 
 #define	RCSR_READER_ENABLE	_BV(0)
 #define	RCSR_RCVR_INT		_BV(6)

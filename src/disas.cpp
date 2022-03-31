@@ -1,6 +1,6 @@
 #include <string.h>
 
-#include "lsi11.h"
+#include "types.h"
 
 typedef struct {
 	u16	rn:3;

@@ -1,8 +1,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "lsi11.h"
 #include "trace.h"
+#include "lsi11.h"
 
 LSI11::LSI11 ()
 {

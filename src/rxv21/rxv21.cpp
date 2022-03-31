@@ -1,8 +1,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "lsi11.h"
 #include "trace.h"
+#include "rxv21.h"
 
 /* RX2CS bits */
 #define	RX_GO			_BV(0)
@@ -54,8 +54,6 @@
 
 #define	IRQ(x)			if(!bus->interrupt(x)) irq = (x)
 
-// ToDo: Remove RXV21Reset declaration
-void RXV21Reset ();
 
 RXV21::RXV21 ()
 {
