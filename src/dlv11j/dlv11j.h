@@ -32,7 +32,7 @@ public:
 	void write (u16 address, u16 value);
 	u8 responsible (u16 address);
 	void reset ();
-	void Send (int channel, unsigned char c);
+	void send (int channel, unsigned char c);
 	void step();
 
 private:

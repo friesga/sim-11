@@ -1,6 +1,8 @@
 #ifndef _QBUS_H_
 #define _QBUS_H_
 
+#include "types.h"
+
 /* Backplane size */
 #define	LSI11_SIZE		8
 

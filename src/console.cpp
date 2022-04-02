@@ -8,16 +8,13 @@
 #include <signal.h>
 
 #ifdef _WIN32
-// #include <fcntl.h>
 #include <termio.h>
-// #include <clock_gettime.h>
 #endif
 
 #ifdef _WIN32
 #define tcsetattr(fd, act, tp)		setattr_stdin (hStdin)
 #define tcgetattr(fd, tp)			getattr_stdin (hStdin)
 #else
-#define	select_stdin(x)				select(1, &fds, NULL, NULL, &tv)
 #define read_stdin(x,buf,count)		read(0, buf, count)
 #endif
 
@@ -30,7 +27,6 @@ struct termios tio;
 
 struct termios original_tio;
 fd_set fds;
-struct timeval tv;
 
 extern volatile int running;
 
@@ -39,15 +35,13 @@ void sigint_handler (int signum)
 	running = 0;
 }
 
+// Read characters from the stdin. The reads are blocking and readStdin()
+// therefore must be started in a separate thread.
 void readStdin(DLV11J &dlv11)
 {
 #ifndef DEBUG
 	if (tcgetattr (0, &original_tio) == -1)
-	{
-		// printf("Failed to retrieve TTY configuration\n");
-		// return 1;
 		throw ("Failed to retrieve TTY configuration\n");
-	}
 #endif
 
 #ifndef DEBUG
@@ -74,23 +68,19 @@ void readStdin(DLV11J &dlv11)
 	FD_ZERO (&fds);
 	FD_SET (0, &fds);
 
-	// No timeout on select
-	tv.tv_sec = 0;
-	tv.tv_usec = 0;
-
 	while (running)
 	{
 		char c;
+		
+		// Read one character from the console
+		if (read_stdin (hStdin, &c, 1) != 1)
+			throw ("Read console error\n");
 
-		if (select_stdin (hStdin))
-		{		
-			(void) !read_stdin (hStdin, &c, 1);
 #ifdef DEBUG
-			if(c == '\n')
-				c = '\r';
+		if(c == '\n')
+			c = '\r';
 #endif
-			dlv11.Send (3, c);
-		}
+		dlv11.send (3, c);
 	}
 
 	tcsetattr (0, TCSANOW, &original_tio);

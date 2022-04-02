@@ -204,7 +204,7 @@ void DLV11J::reset ()
 	}
 }
 
-void DLV11J::Send(int channelNr, unsigned char c)
+void DLV11J::send(int channelNr, unsigned char c)
 {
 	DLV11Ch* ch = &channel[channelNr];
 	if(ch->buf_size < DLV11J_BUF)

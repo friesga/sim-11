@@ -10,6 +10,8 @@
 #include <termios.h>
 #include <signal.h>
 
+#include <thread>
+
 #ifdef _WIN32
 #include <fcntl.h>
 #include <termio.h>
@@ -25,8 +27,6 @@
 #include "lsi11/lsi11.h"
 
 /* #define DEBUG */
-
-struct termios original_tio;
 
 volatile int running;
 
@@ -81,9 +81,11 @@ const char* odt_input =
 	"2134/000000\r"
 	"2000G";
 
+extern void readStdin(DLV11J &dlv11);
+
 void LSI11ConsoleSend (DLV11J* dlv, const char c)
 {
-	dlv->Send (3, c);
+	dlv->send (3, c);
 }
 
 void LSI11ConsoleSendString (DLV11J* dlv, const char* s)
@@ -94,21 +96,9 @@ void LSI11ConsoleSendString (DLV11J* dlv, const char* s)
 	}
 }
 
-void sigint_handler (int signum)
-{
-	running = 0;
-}
-
 #define	READ(addr)			lsi.bus.read(lsi.bus.user, (addr))
 #define	WRITE(addr, val)	lsi.bus.write(lsi.bus.user, (addr), (val))
 
-#ifdef _WIN32
-#define tcsetattr(fd, act, tp)		setattr_stdin (hStdin)
-#define tcgetattr(fd, tp)			getattr_stdin (hStdin)
-#else
-#define	select_stdin(x)				select(1, &fds, NULL, NULL, &tv)
-#define read_stdin(x,buf,count)		read(0, buf, count)
-#endif
 
 int main (int argc, char** argv)
 {
@@ -120,22 +110,12 @@ int main (int argc, char** argv)
 	BDV11 bdv11;
 	// BA11_N ba11_n;
 
-	fd_set fds;
-	struct timeval tv;
-
 	struct timespec now;
 	struct timespec last;
 
 	const char* self = *argv;
 	FILE* floppy_file;
 	u8* floppy;
-
-	struct termios tio;
-#ifdef _WIN32
-	HANDLE hStdin = open_stdin();
-#else
-	struct sigaction sa;
-#endif // _WIN32
 
 	const char* floppy_filename = NULL;
 	const char* load_file = NULL;
@@ -145,13 +125,6 @@ int main (int argc, char** argv)
 	int compress = 0;
 
 	int exit_on_halt = 0;
-
-#ifndef DEBUG
-	if (tcgetattr (0, &original_tio) == -1) {
-		printf("Failed to retrieve TTY configuration\n");
-		return 1;
-	}
-#endif
 
 	argc--;
 	argv++;
@@ -349,26 +322,6 @@ int main (int argc, char** argv)
 		fclose (f);
 	}
 
-#ifndef DEBUG
-#ifdef _WIN32
-	signal (SIGINT, SIG_DFL);
-#else
-	sa.sa_handler = sigint_handler;
-	sigemptyset(&sa.sa_mask);
-	sa.sa_flags = SA_RESTART;
-	if(sigaction(SIGINT, &sa, NULL) == -1) {
-		printf("WARNING: failed to set SIGINT signal handler\n");
-	}
-#endif
-
-	/* set raw mode */
-	tio = original_tio;
-	tio.c_iflag &= ~(ICRNL | INPCK | ISTRIP);
-	tio.c_oflag &= ~OPOST;
-	tio.c_cflag |= CS8;
-	tio.c_lflag &= ~(ECHO | ICANON | IEXTEN);
-	tcsetattr (0, TCSANOW, &tio);
-#endif
 
 	running = 1;
 
@@ -383,27 +336,14 @@ int main (int argc, char** argv)
 
 	clock_gettime (CLOCK_MONOTONIC, &last);
 
+	// The consoleReader reads characters and sends them to the dlv11
+	std::thread consoleReader(readStdin, std::ref(dlv11));
+	
 	while (running) 
 	{
 		unsigned int i;
 		double dt;
-		char c;
-
-		FD_ZERO (&fds);
-		FD_SET (0, &fds);
-		tv.tv_sec = 0;
-		tv.tv_usec = 0;
-
-		if (select_stdin (hStdin))
-		{		
-			(void) !read_stdin (hStdin, &c, 1);
-#ifdef DEBUG
-			if(c == '\n')
-				c = '\r';
-#endif
-			dlv11.Send (3, c);
-		}
-
+		
 		for(i = 0; i < 1000; i++)
 			lsi.step ();
 
@@ -426,23 +366,15 @@ int main (int argc, char** argv)
 
 	free (floppy);
 
-#if 0
-	// ToDo: Call destructor
-	DLV11JDestroy(&dlv11);
-	BDV11Destroy(&bdv11);
-	RXV21Destroy(&rxv21);
-	MSV11DDestroy(&msv11);
-	LSI11Destroy (&lsi);
-#endif
-
-	tcsetattr (0, TCSANOW, &original_tio);
-
 	printf ("\n");
 
 	if(trace_file)
 	{
 		TRCFINISH();
 	}
+
+	// Wait for the consoleReader to finish
+	consoleReader.join();
 
 	return 0;
 }
