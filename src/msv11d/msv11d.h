@@ -20,4 +20,4 @@ public:
 	u8*	data;
 };
 
-#endif _MSV11D_H_
+#endif // _MSV11D_H_

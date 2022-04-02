@@ -138,9 +138,9 @@ typedef struct {
 // ToDo: Reinitialize K11ODT
 KD11CPU::KD11CPU()
 	:
+	runState{0},
 	r{0}, 
 	psw{0},
-	runState{0},
 	trap{0}
 {}
 
@@ -827,8 +827,8 @@ u16 KD11CPU::getAddr(QBUS* bus, u16 dst, u16 mode)
 				CHECK()
 
 typedef union {
-	float	f32;
-	u32		u32;
+	float	_f32;
+	u32		_u32;
 } FLOAT;
 
 void KD11CPU::step(QBUS* bus)
@@ -866,7 +866,6 @@ void KD11CPU::execInstr(QBUS* bus)
 	s32 tmps32;
 #ifdef USE_FLOAT
 	FLOAT f1, f2, f3;
-	u8 unknown = 0;
 #endif
 
 	u16 insn = READ(r[7]);
@@ -1354,71 +1353,71 @@ switch(insn >> 12) {
 					switch(insn >> 3) {
 #ifdef USE_FLOAT
 						case 007500: /* FADD */
-							f1.u32 = (READ(r[insnrts->rn] + 4) << 16)
+							f1._u32 = (READ(r[insnrts->rn] + 4) << 16)
 								| READ(r[insnrts->rn] + 6);
-							f2.u32 = (READ(r[insnrts->rn]) << 16)
+							f2._u32 = (READ(r[insnrts->rn]) << 16)
 								| READ(r[insnrts->rn] + 2);
-							f3.f32 = f1.f32 + f2.f32;
+							f3._f32 = f1._f32 + f2._f32;
 							/* TODO: result <= 2**-128 -> result = 0 */
 							/* TODO: implement traps */
 							WRITE(r[insnrts->rn] + 4,
-									(u16) (f3.u32 >> 16));
-							WRITE(r[insnrts->rn] + 6, (u16) f3.u32);
+									(u16) (f3._u32 >> 16));
+							WRITE(r[insnrts->rn] + 6, (u16) f3._u32);
 							r[insnrts->rn] += 4;
-							PSW_EQ(PSW_N, f3.f32 < 0);
-							PSW_EQ(PSW_Z, f3.f32 == 0);
+							PSW_EQ(PSW_N, f3._f32 < 0);
+							PSW_EQ(PSW_Z, f3._f32 == 0);
 							PSW_CLR(PSW_V);
 							PSW_CLR(PSW_C);
 							break;
 						case 007501: /* FSUB */
-							f1.u32 = (READ(r[insnrts->rn] + 4) << 16)
+							f1._u32 = (READ(r[insnrts->rn] + 4) << 16)
 								| READ(r[insnrts->rn] + 6);
-							f2.u32 = (READ(r[insnrts->rn]) << 16)
+							f2._u32 = (READ(r[insnrts->rn]) << 16)
 								| READ(r[insnrts->rn] + 2);
-							f3.f32 = f1.f32 - f2.f32;
+							f3._f32 = f1._f32 - f2._f32;
 							/* TODO: result <= 2**-128 -> result = 0 */
 							/* TODO: implement traps */
 							WRITE(r[insnrts->rn] + 4,
-									(u16) (f3.u32 >> 16));
-							WRITE(r[insnrts->rn] + 6, (u16) f3.u32);
+									(u16) (f3._u32 >> 16));
+							WRITE(r[insnrts->rn] + 6, (u16) f3._u32);
 							r[insnrts->rn] += 4;
-							PSW_EQ(PSW_N, f3.f32 < 0);
-							PSW_EQ(PSW_Z, f3.f32 == 0);
+							PSW_EQ(PSW_N, f3._f32 < 0);
+							PSW_EQ(PSW_Z, f3._f32 == 0);
 							PSW_CLR(PSW_V);
 							PSW_CLR(PSW_C);
 							break;
 						case 007502: /* FMUL */
-							f1.u32 = (READ(r[insnrts->rn] + 4) << 16)
+							f1._u32 = (READ(r[insnrts->rn] + 4) << 16)
 								| READ(r[insnrts->rn] + 6);
-							f2.u32 = (READ(r[insnrts->rn]) << 16)
+							f2._u32 = (READ(r[insnrts->rn]) << 16)
 								| READ(r[insnrts->rn] + 2);
-							f3.f32 = f1.f32 * f2.f32;
+							f3._f32 = f1._f32 * f2._f32;
 							/* TODO: result <= 2**-128 -> result = 0 */
 							/* TODO: implement traps */
 							WRITE(r[insnrts->rn] + 4,
-									(u16) (f3.u32 >> 16));
-							WRITE(r[insnrts->rn] + 6, (u16) f3.u32);
+									(u16) (f3._u32 >> 16));
+							WRITE(r[insnrts->rn] + 6, (u16) f3._u32);
 							r[insnrts->rn] += 4;
-							PSW_EQ(PSW_N, f3.f32 < 0);
-							PSW_EQ(PSW_Z, f3.f32 == 0);
+							PSW_EQ(PSW_N, f3._f32 < 0);
+							PSW_EQ(PSW_Z, f3._f32 == 0);
 							PSW_CLR(PSW_V);
 							PSW_CLR(PSW_C);
 							break;
 						case 007503: /* FDIV */
-							f1.u32 = (READ(r[insnrts->rn] + 4) << 16)
+							f1._u32 = (READ(r[insnrts->rn] + 4) << 16)
 								| READ(r[insnrts->rn] + 6);
-							f2.u32 = (READ(r[insnrts->rn]) << 16)
+							f2._u32 = (READ(r[insnrts->rn]) << 16)
 								| READ(r[insnrts->rn] + 2);
-							if(f2.f32 != 0) {
-								f3.f32 = f1.f32 / f2.f32;
+							if(f2._f32 != 0) {
+								f3._f32 = f1._f32 / f2._f32;
 								/* TODO: result <= 2**-128 -> result = 0 */
 								/* TODO: implement traps */
 								WRITE(r[insnrts->rn] + 4,
-										(u16) (f3.u32 >> 16));
+										(u16) (f3._u32 >> 16));
 								WRITE(r[insnrts->rn] + 6,
-										(u16) f3.u32);
-								PSW_EQ(PSW_N, f3.f32 < 0);
-								PSW_EQ(PSW_Z, f3.f32 == 0);
+										(u16) f3._u32);
+								PSW_EQ(PSW_N, f3._f32 < 0);
+								PSW_EQ(PSW_Z, f3._f32 == 0);
 								PSW_CLR(PSW_V);
 								PSW_CLR(PSW_C);
 							}
