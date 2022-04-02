@@ -219,6 +219,11 @@ int main (int argc, char** argv)
 		}
 	}
 
+	// Allocate memory for the floppy (RXV21) data, open the file with
+	// the floppy drive data (if given) and pass the data buffer address
+	// to the RXV21 controller.
+	// Note that the complete contents of the file is read into the data
+	// buffer.
 	floppy = (u8*) malloc(77 * 26 * 256);
 	if (!floppy) 
 	{

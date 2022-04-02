@@ -24,20 +24,28 @@ private:
 	void readSector ();
 	void readStatus ();
 	void readErrorCode ();
-	void executeCommand ();
+	void initiateCommand ();
 	void process ();
 
 	u16	base;
 	u16	vector;
 
-	u16	rx2cs;
-	u16	rx2db;
+	// All software control of the RX211/RXV21 is performed by means
+	// of two device registers: the command and status register (RX2CS)
+	// and a multipurpose data buffer register (RX2DB) which have been
+	// assigned bus addresses and can be read or loaded.
+	u16	rx2cs;	// Control and status register
+	u16	rx2db;	// Data Buffer register
 
-	u16	rx2ta;	/* RX Track Address */
-	u16	rx2sa;	/* RX Sector Address */
-	u16	rx2wc;	/* RX Word Count Register */
-	u16	rx2ba;	/* RX Bus Address Register */
-	u16	rx2es;	/* RX Error and Status */
+	// Contents of the RXV21's "virtual" registers.
+	// Note that the term "register" is a misnomer, the contents of
+	// these "registers" are read and written via the Data Buffer (RX2DB)
+	// register.
+	u16	rx2ta;	// RX Track Address
+	u16	rx2sa;	// RX Sector Address
+	u16	rx2wc;	// RX Word Count Register
+	u16	rx2ba;	// RX Bus Address Register
+	u16	rx2es;	// RX Error and Status
 
 	u16	state;
 	u16	error;
