@@ -10,6 +10,7 @@
 #include <termios.h>
 #include <signal.h>
 
+#include <iostream>
 #include <thread>
 
 #ifdef _WIN32
@@ -25,6 +26,7 @@
 #include "dlv11j/dlv11j.h"
 #include "msv11d/msv11d.h"
 #include "lsi11/lsi11.h"
+#include "cmdlineoptions/cmdlineoptions.h"
 
 /* #define DEBUG */
 
@@ -99,8 +101,8 @@ void LSI11ConsoleSendString (DLV11J* dlv, const char* s)
 #define	READ(addr)			lsi.bus.read(lsi.bus.user, (addr))
 #define	WRITE(addr, val)	lsi.bus.write(lsi.bus.user, (addr), (val))
 
-
 int main (int argc, char** argv)
+try
 {
 	// ToDo: Replace module configuration by table
 	LSI11 lsi;
@@ -113,84 +115,11 @@ int main (int argc, char** argv)
 	struct timespec now;
 	struct timespec last;
 
-	const char* self = *argv;
 	FILE* floppy_file;
 	u8* floppy;
 
-	const char* floppy_filename = NULL;
-	const char* load_file = NULL;
-	int halt = 0;
-	int bootstrap = 0;
-	const char* trace_file = NULL;
-	int compress = 0;
-
-	int exit_on_halt = 0;
-
-	argc--;
-	argv++;
-
-	for (; argc; argc--, argv++)
-	{
-		if (!strcmp("-h", *argv))
-		{
-			halt = 1;
-		} 
-		else if(!strcmp("-b", *argv)) 
-		{
-			bootstrap = 1;
-		}
-		else if(!strcmp("-z", *argv)) 
-		{
-			compress = 1;
-		}
-		else if(!strcmp("-x", *argv))
-		{
-			exit_on_halt = 1;
-		}
-		else if(!strcmp("-l", *argv) && argc > 1) 
-		{
-			load_file = argv[1];
-			argc--;
-			argv++;
-		} 
-		else if(!strcmp("-f", *argv) && argc > 1) 
-		{
-			floppy_filename = argv[1];
-			argc--;
-			argv++;
-		} 
-		else if(!strcmp("-t", *argv) && argc > 1) 
-		{
-			trace_file = argv[1];
-			argc--;
-			argv++;
-		} 
-		else if(**argv != '-') 
-		{
-			load_file = *argv;
-		} 
-		else if(!strcmp("--help", *argv)) 
-		{
-			printf("Usage: %s [OPTIONS] [FILE]\n"
-					"\n"
-					"OPTIONS\n"
-					"  -h              Halt CPU\n"
-					"  -x              Exit on HALT\n"
-					"  -b              Enter RX02 double density bootstrap program\n"
-					"  -l file.bin     Load file.bin in absolute loader format\n"
-					"  -f file.rx2     Load RX02 floppy image from file.rx2\n"
-					"  -t file.trc     Record execution trace to file.trc\n"
-					"  -z              Use delta compression fo rexecution trace\n"
-					"\n"
-					"The optional last argument FILE is equivalent to -f file\n", self);
-			return 0;
-		} 
-		else 
-		{
-			printf("Unknown option: %s\n", *argv);
-			return 1;
-		}
-	}
+	// Get command line options
+	CmdLineOptions cmdLineOptions(argc, argv);
 
 	// Allocate memory for the floppy (RXV21) data, open the file with
 	// the floppy drive data (if given) and pass the data buffer address
@@ -204,12 +133,12 @@ int main (int argc, char** argv)
 		return 1;
 	}
 
-	if (floppy_filename) 
+	if (cmdLineOptions.floppy_filename) 
 	{
-		floppy_file = fopen (floppy_filename, "rb");
+		floppy_file = fopen (cmdLineOptions.floppy_filename, "rb");
 		if (!floppy_file) 
 		{
-			printf("Error: cannot open file %s\n", floppy_filename);
+			printf("Error: cannot open file %s\n", cmdLineOptions.floppy_filename);
 			free(floppy);
 			return 1;
 		}
@@ -223,10 +152,10 @@ int main (int argc, char** argv)
 
 	rxv21.setData (floppy);
 
-	if (trace_file) 
+	if (cmdLineOptions.trace_file) 
 	{
-		TRCINIT(trace_file);
-		if (compress) 
+		TRCINIT(cmdLineOptions.trace_file);
+		if (cmdLineOptions.compress) 
 		{
 			trc.flags |= TRACE_COMPRESS;
 		}
@@ -239,16 +168,16 @@ int main (int argc, char** argv)
 	lsi.bus.installModule (4, &bdv11);
 	lsi.reset ();
 
-	if (bootstrap) 
+	if (cmdLineOptions.bootstrap) 
 	{
 		LSI11ConsoleSendString (&dlv11, odt_input);
 	}
-	if (load_file) 
+	if (cmdLineOptions.load_file) 
 	{
 		/* execute absolute loader binary */
 		/* const char* filename = "VKAAC0.BIC"; */
 		/* const char* filename = "VKADC0.BIC"; */
-		const char* filename = load_file;
+		const char* filename = cmdLineOptions.load_file;
 		size_t size;
 		u16 len;
 		u16 addr;
@@ -325,11 +254,12 @@ int main (int argc, char** argv)
 
 	running = 1;
 
-	if (halt) 
+	if (cmdLineOptions.halt) 
 	{
 		lsi.kd11.cpu().runState = 0;
 	} 
-	else if (!bootstrap && !halt && !load_file) 
+	else if (!cmdLineOptions.bootstrap && 
+		!cmdLineOptions.halt && !cmdLineOptions.load_file) 
 	{
 		lsi.kd11.cpu().runState = 1;
 	}
@@ -347,7 +277,8 @@ int main (int argc, char** argv)
 		for(i = 0; i < 1000; i++)
 			lsi.step ();
 
-		if(exit_on_halt && lsi.kd11.cpu().runState == 0) {
+		if (cmdLineOptions.exit_on_halt && lsi.kd11.cpu().runState == 0)
+		{
 			/* make sure ODT finishes its prompt */
 			for(i = 0; i < 32; i++)
 				lsi.step();
@@ -368,7 +299,7 @@ int main (int argc, char** argv)
 
 	printf ("\n");
 
-	if(trace_file)
+	if(cmdLineOptions.trace_file)
 	{
 		TRCFINISH();
 	}
@@ -377,4 +308,9 @@ int main (int argc, char** argv)
 	consoleReader.join();
 
 	return 0;
+}
+catch (std::string msg)
+{
+	std::cerr << msg << '\n';
+	return 1;
 }

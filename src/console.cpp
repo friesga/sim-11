@@ -7,6 +7,8 @@
 #include <termios.h>
 #include <signal.h>
 
+#include <string>
+
 #ifdef _WIN32
 #include <termio.h>
 #endif
@@ -41,7 +43,7 @@ void readStdin(DLV11J &dlv11)
 {
 #ifndef DEBUG
 	if (tcgetattr (0, &original_tio) == -1)
-		throw ("Failed to retrieve TTY configuration\n");
+		throw (std::string("Failed to retrieve TTY configuration"));
 #endif
 
 #ifndef DEBUG
@@ -74,7 +76,7 @@ void readStdin(DLV11J &dlv11)
 		
 		// Read one character from the console
 		if (read_stdin (hStdin, &c, 1) != 1)
-			throw ("Read console error\n");
+			throw (std::string("Read console error"));
 
 #ifdef DEBUG
 		if(c == '\n')

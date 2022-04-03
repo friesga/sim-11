@@ -23,7 +23,8 @@ set (SIM11_SRCS
     src/qbus/qbus.cpp
     src/rxv21/rxv21.cpp
     src/trace.cpp
-    src/console.cpp)
+    src/console.cpp
+    src/cmdlineoptions/cmdlineoptions.cpp)
 
 # Add source to this project's executable.
 add_executable (${TARGET} ${SIM11_SRCS})
