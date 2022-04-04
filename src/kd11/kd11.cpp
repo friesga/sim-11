@@ -835,6 +835,7 @@ void KD11CPU::step(QBUS* bus)
 {
     IFTRC()
     {
+		// ToDo: Remove save/restore of trap and bus->trap
         TRCSETIGNBUS();
         u16 bus_trap = bus->trap;
         u16 cpu_trap = trap;
@@ -1730,48 +1731,70 @@ switch(insn >> 12) {
 }
 
 
-// ToDo: Resolve trap confusion
+// This function is called on every KD11 step, whether or not a trap to
+// be handled is present. If a trap is present the current PC and PSW are
+// save on the stack and the PC and PSW of the trap vector are loaded.
+// If there is no trap to be handled the function simply returns.
 void KD11CPU::handleTraps(QBUS* bus)
 {
-	u16 trap = this->trap;
+	u16 trapToProcess = this->trap;
 
-	if(!PSW_GET(PSW_PRIO)) {
+	// Traps can be processed if the priority is less than 4 (i.e. the 
+	// PSW priority bit isn't set) or it is a trap 004 (bus time out).
+	if (!PSW_GET(PSW_PRIO))
+	{
 		this->trap = bus->trap;
 		bus->trap = 0;
-	} else if(bus->trap == 004) {
+	} 
+	else if (bus->trap == 004) 
+	{
 		this->trap = bus->trap;
 		bus->trap = 0;
-	} else {
+	} 
+	else
+		// Whether or not there is a trap (unequal to 004) to handle,
+		// the priority bit is set, so no traps can be handled.
 		this->trap = 0;
-	}
 
 	/* ignore traps if in HALT mode */
-	if(runState == STATE_HALT) {
+	if (runState == STATE_HALT)
 		return;
-	}
 
-	if(!trap) {
-		if(this->trap) {
-			trap = this->trap;
+	// If there was no cpu trap at the start and there is a cpu trap now,
+	// (i.e. there was a bus trap) handle that trap as the trap to process.
+	if (!trapToProcess) 
+	{
+		if (this->trap)
+		{
+			// A new trap arrived
+			trapToProcess = this->trap;
 			this->trap = 0;
-		} else {
+		} 
+		else 
+			// There is no trap to handle
 			return;
-		}
 	}
 
 	/* trap instructions have highest priority */
-	if((this->trap == 030 || this->trap == 034)
-			&& !(trap == 030 || trap == 034)) {
+	// Unclear when the condition below is fulfilled
+	if ((this->trap == 030 || this->trap == 034)
+		&& !(trapToProcess == 030 || trapToProcess == 034))
+	{
+		// Swap trap and this->trap
 		u16 tmp = this->trap;
-		this->trap = trap;
-		trap = tmp;
+		this->trap = trapToProcess;
+		trapToProcess = tmp;
 	}
 
-	TRCCPUEvent(TRC_CPU_TRAP, trap);
+	TRCCPUEvent(TRC_CPU_TRAP, trapToProcess);
 
+	// Save PC and PSW on the stack. Adressing the stack could result in a
+	// bus time out. In that case the CPU is halted.
+	// ToDo: Remove code duplication
 	r[6] -= 2;
 	WRITE(r[6], psw);
-	if(bus->trap == 004 || bus->trap == 010) {
+	if (bus->trap == 004 || bus->trap == 010)
+	{
 		TRCCPUEvent(TRC_CPU_DBLBUS, r[6]);
 		bus->trap = 0;
 		runState = STATE_HALT;
@@ -1780,31 +1803,37 @@ void KD11CPU::handleTraps(QBUS* bus)
 
 	r[6] -= 2;
 	WRITE(r[6], r[7]);
-	if(bus->trap == 004 || bus->trap == 010) {
+	if(bus->trap == 004 || bus->trap == 010)
+	{
 		TRCCPUEvent(TRC_CPU_DBLBUS, r[6]);
 		bus->trap = 0;
 		runState = STATE_HALT;
 		return;
 	}
 
-	r[7] = READ(trap);
-	if(bus->trap == 004 || bus->trap == 010) {
-		TRCCPUEvent(TRC_CPU_DBLBUS, trap);
+	// Read new PC and PSW from the trap vector. These read's could also
+	// result in a bus time out.
+	r[7] = READ(trapToProcess);
+	if(bus->trap == 004 || bus->trap == 010)
+	{
+		TRCCPUEvent(TRC_CPU_DBLBUS, trapToProcess);
 		bus->trap = 0;
 		runState = STATE_HALT;
 		return;
 	}
 
-	psw = READ(trap + 2);
-	if(bus->trap == 004 || bus->trap == 010) {
-		TRCCPUEvent(TRC_CPU_DBLBUS, trap + 2);
+	psw = READ(trapToProcess + 2);
+	if(bus->trap == 004 || bus->trap == 010)
+	{
+		TRCCPUEvent(TRC_CPU_DBLBUS, trapToProcess + 2);
 		bus->trap = 0;
 		runState = STATE_HALT;
 		return;
 	}
 
 	/* resume execution if in WAIT state */
-	if(runState == STATE_WAIT) {
+	if(runState == STATE_WAIT) 
+	{
 		TRCCPUEvent(TRC_CPU_RUN, r[7]);
 		runState = STATE_RUN;
 	}

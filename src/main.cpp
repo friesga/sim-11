@@ -286,6 +286,7 @@ try
 			running = 0;
 		}
 
+		// ToDo: Move clock use to BDV11
 		clock_gettime (CLOCK_MONOTONIC, &now);
 		dt = (now.tv_sec - last.tv_sec) + 
 			(now.tv_nsec - last.tv_nsec) / 1e9;

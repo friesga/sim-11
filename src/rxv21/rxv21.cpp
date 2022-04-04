@@ -91,6 +91,9 @@ void RXV21::done ()
 	rx2es |= RX2ES_DRV_DEN;
 	rx2db = rx2es;
 
+	// Try to request an interrupt. If an interrupt or trap currently is
+	// being processed, the request is held and on the next step the request
+	// is tried again.
 	if (rx2cs & RX_INTR_ENB) 
 		IRQ(vector);
 }
@@ -570,10 +573,13 @@ void RXV21::setData (u8* data)
 
 void RXV21::step()
 {
-	if(irq)
+	// Is a pending interrupt request available?
+	if (irq)
 	{
+		// Retry the interrupt request and if it succeeds
+		// clear the pending request.
 		QBUS* bus = this->bus;
-		if(bus->interrupt(irq))
+		if (bus->interrupt(irq))
 			irq = 0;
 	}
 }

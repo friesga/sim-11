@@ -61,27 +61,33 @@ void QBUS::write (u16 address, u16 value)
 	interrupt (004);
 }
 
-int QBUS::interrupt (int n)
+// (Try to) request an interrupt. Trap 004 interrupts always succeed,
+// other interrupts requests only succeed if no other traps or interrupts
+// are being processed.
+int QBUS::interrupt (int vector)
 {
-	if (n != 004)
+	if (vector != 004)
 	{
 		if (trap || irq)
 		{
-			TRCIRQ (n, TRC_IRQ_FAIL);
+			TRCIRQ (vector, TRC_IRQ_FAIL);
 			return 0;
 		}
 		else
 		{
-			TRCIRQ (n, TRC_IRQ_OK);
-			irq = n;
+			// No trap is being processed and no interrupt request is pending,
+			// so an interrupt request can be generated. Processing of the request
+			// is delayed by a random amount of steps.
+			TRCIRQ (vector, TRC_IRQ_OK);
+			irq = vector;
 			delay = IRCJITTER ();
 			return 1;
 		}
 	}
 	else
 	{
-		TRCIRQ (n, TRC_IRQ_OK);
-		trap = n;
+		TRCIRQ (vector, TRC_IRQ_OK);
+		trap = vector;
 		return 1;
 	}
 }
@@ -107,11 +113,13 @@ void QBUS::reset ()
 	}
 }
 
+// Wait a random number (max QBUS_DELAY) of steps till processing of an
+// interrupt request. 
 void QBUS::step ()
 {
 	if (delay >= QBUS_DELAY)
 	{
-		/* wait until last trap was serviced */
+		// Check that processing of the previous trap has finished
 		if (!trap)
 		{
 			TRCIRQ (irq, TRC_IRQ_SIG);

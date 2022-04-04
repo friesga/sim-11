@@ -123,6 +123,8 @@ u16 BDV11::read (u16 address)
 			return BDV11_SWITCH;
 
 		case 0177546:
+			// BEVNT register. According to the BDV11 technical manual
+			// (EK-BDV11-TM-001) this is a write-only register.
 			return ltc;
 
 		default:
@@ -172,6 +174,8 @@ void BDV11::write (u16 address, u16 value)
 			break;
 
 		case 0177546:
+			// BEVNT register. Bit 6 controls the line time clock (LTC)
+			// function.
 			ltc = value & 0100;
 			break;
 	}
@@ -204,34 +208,41 @@ void BDV11::reset ()
 }
 
 
-
+// Thus function is called on every step from main(). Passed is the
+// delta time since the last cycle of steps.
 void BDV11::step (float dt)
 {
+	// Check the line time clock (LTC) is enabled
 	if (ltc & 0100) 
 	{
+		// Keep track of the passed time
 		time += dt;
 
-		if(irq) 
+		// If a previously unhandled interrupt request is available then
+		// retry the interrupt request and if it succeeds clear the pending
+		// request.
+		if (irq) 
 		{
 			QBUS* bus = this->bus;
 			if (bus->interrupt(irq))
 				irq = 0;
 		}
 
+		// Generate LTC interrupts on the clock frequency. If the interrupt
+		// request cannot be granted keep it as a pending interrupt request.
 		if (time >= LTC_TIME) 
 		{
 			QBUS* bus = this->bus;
 			if (!bus->interrupt (0100))
 				irq = 0100;
+
+			// Determine time point for the next interrupt. If we missed a clock
+			// cycle reset the time point.
 			time -= LTC_TIME;
 			if (time >= LTC_TIME) 
-			{
 				time = 0;
-			}
 		}
 	} 
 	else 
-	{
 		time = 0;
-	}
 }

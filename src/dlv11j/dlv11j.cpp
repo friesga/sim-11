@@ -59,6 +59,9 @@ DLV11J::DLV11J ()
 	reset ();
 }
 
+// The class has a meaningful destructor so the "rule of five" applies
+// and copy and move constructors and copy and move assignment operators
+// have to be defined.
 DLV11J::~DLV11J ()
 {
 	u8 i;
