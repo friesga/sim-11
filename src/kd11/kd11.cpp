@@ -869,6 +869,11 @@ void KD11CPU::execInstr(QBUS* bus)
 	FLOAT f1, f2, f3;
 #endif
 
+	// If there is a pending bus interrupt that can be executed, process
+	// that interrupt first
+	if (bus->trap != 0 && !PSW_GET(PSW_PRIO))
+		return;
+
 	u16 insn = READ(r[7]);
 	KD11INSN1* insn1 = (KD11INSN1*) &insn;
 	KD11INSN2* insn2 = (KD11INSN2*) &insn;
@@ -880,7 +885,9 @@ void KD11CPU::execInstr(QBUS* bus)
 
 	r[7] += 2;
 
-	CHECK();
+	// The following check seems superfluous; all XXDP tests succeed with
+	// this check removed.
+	// CHECK();
 
 	/* single operand instructions */
 switch(insn >> 12) {
@@ -890,6 +897,7 @@ switch(insn >> 12) {
 					switch(insn) {
 						case 0000000: /* HALT */
 							TRCCPUEvent(TRC_CPU_HALT, r[7]);
+
 							runState = STATE_HALT;
 							// The ODT state is set to ODT_STATE_INIT in 
 							// KD11:step() when it detects the runState HALT.
@@ -1733,10 +1741,70 @@ switch(insn >> 12) {
 
 // This function is called on every KD11 step, whether or not a trap to
 // be handled is present. If a trap is present the current PC and PSW are
-// save on the stack and the PC and PSW of the trap vector are loaded.
+// saved on the stack and the PC and PSW of the trap vector are loaded.
 // If there is no trap to be handled the function simply returns.
+//
+// Trap priority order (from high to low) is defined as:
+// - Trace trap (PSW bit 4)
+// - Powerfail/HALT interrupt
+// - Event interrupt (LTC)
+// - Device interrupt
+// - Bus error
+// - Machine trap (BPT, IOT, EMT, TRAP instruction)
+// 
+// The event and device interrupts are only processed if the PSW priority bit
+// is cleared.
+// 
+// Refer to the LSI-11 WCS user's guide (EK-KUV11-TM-001) par 2.3.
+//
+
+#define NEW_TRAP_HANDLING 1
+
 void KD11CPU::handleTraps(QBUS* bus)
 {
+	
+#ifdef NEW_TRAP_HANDLING
+	u16 trapToProcess{0};
+
+	// Check if there is a trap to handle. This is the most common
+	// case so check this as first.
+	// Traps in HALT mode are ignored
+	if ((bus->trap == 0 && this->trap == 0) || runState == STATE_HALT)
+		return;
+
+	// Handle traps in order of their priority:
+	// - Event and device interrupts, only if the priority bit is clear,
+	// - Instruction traps,
+	// - Bus errors.
+	if (bus->trap != 0 && !PSW_GET(PSW_PRIO))
+	{
+		trapToProcess = bus->trap;
+		bus->trap = 0;
+	}
+	else if (this->trap != 0)
+	{
+		trapToProcess = this->trap;
+		this->trap = 0;
+	}
+	else if (bus->trap == 004)
+	{
+		trapToProcess = bus->trap;
+		bus->trap = 0;
+	}
+	else
+		// The trap cannot be handled at this moment
+		return;
+
+#else
+	// On entrance the following conditions can occur:
+	// - Both this->trap and bus->trap are zero. In that case there is
+	//   no trap to handle. This is the most common case as HandleTraps()
+	//   is called every KD11 step.
+	// - this->trap is set (as result of an instruction trap), irrespective
+	//   of the state of bus->trap.  The this->trap trap is handled.
+	// - bus->trap is set while this->trap is zero. The bus->trap trap is
+	//   handled when it is a bus time out (trap 004) or the priority bit
+	//   is clear.
 	u16 trapToProcess = this->trap;
 
 	// Traps can be processed if the priority is less than 4 (i.e. the 
@@ -1766,7 +1834,7 @@ void KD11CPU::handleTraps(QBUS* bus)
 	{
 		if (this->trap)
 		{
-			// A new trap arrived
+			// A new trap arrived.
 			trapToProcess = this->trap;
 			this->trap = 0;
 		} 
@@ -1785,6 +1853,7 @@ void KD11CPU::handleTraps(QBUS* bus)
 		this->trap = trapToProcess;
 		trapToProcess = tmp;
 	}
+#endif // NEW_TRAP_HANDLING
 
 	TRCCPUEvent(TRC_CPU_TRAP, trapToProcess);
 
