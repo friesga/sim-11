@@ -1744,13 +1744,14 @@ switch(insn >> 12) {
 // saved on the stack and the PC and PSW of the trap vector are loaded.
 // If there is no trap to be handled the function simply returns.
 //
-// Trap priority order (from high to low) is defined as:
-// - Trace trap (PSW bit 4)
-// - Powerfail/HALT interrupt
-// - Event interrupt (LTC)
+// Trap priority order from high to low (cf Fig. 2-13) is defined as (vectors
+// between brackets):
+// - Bus error (004)
+// - Trace trap (PSW bit 4) (014)
+// - Powerfail/HALT interrupt (024)
+// - Event interrupt (LTC) (100)
 // - Device interrupt
-// - Bus error
-// - Machine trap (BPT, IOT, EMT, TRAP instruction)
+// - Machine trap (BPT (014), IOT (020), EMT (030), TRAP (034) instruction)
 // 
 // The event and device interrupts are only processed if the PSW priority bit
 // is cleared.
@@ -1773,10 +1774,15 @@ void KD11CPU::handleTraps(QBUS* bus)
 		return;
 
 	// Handle traps in order of their priority:
+	// - Bus errors,
 	// - Event and device interrupts, only if the priority bit is clear,
-	// - Instruction traps,
-	// - Bus errors.
-	if (bus->trap != 0 && !PSW_GET(PSW_PRIO))
+	// - Instruction traps
+	if (bus->trap == 004)
+	{
+		trapToProcess = bus->trap;
+		bus->trap = 0;
+	}
+	else if (bus->trap != 0 && !PSW_GET(PSW_PRIO))
 	{
 		trapToProcess = bus->trap;
 		bus->trap = 0;
@@ -1785,11 +1791,6 @@ void KD11CPU::handleTraps(QBUS* bus)
 	{
 		trapToProcess = this->trap;
 		this->trap = 0;
-	}
-	else if (bus->trap == 004)
-	{
-		trapToProcess = bus->trap;
-		bus->trap = 0;
 	}
 	else
 		// The trap cannot be handled at this moment
