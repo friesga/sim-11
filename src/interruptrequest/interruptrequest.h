@@ -1,19 +1,18 @@
 #ifndef _INTERRUPTREQUEST_H_
 #define _INTERRUPTREQUEST_H_
 
-// Definition of trap priorities. The actual numbers are of no importance,
-// they just define the order of the priorities, leaving room for
-// extension.
+// Definition of trap priorities. The BR4-BR7 priorities concur with
+// the CPU priority as indicated in the PSW (bits 5-7).
 enum class TrapPriority
 {
-    BusError = 9,
-    TraceTrap = 8,
-    PowerFail = 7,
-    Event = 6,
-    BR7 = 5,
-    BR6 = 4,
-    BR5 = 3,
-    BR4 = 2,
+    BusError = 11,
+    TraceTrap = 10,
+    PowerFail = 9,
+    Event = 8,
+    BR7 = 7,
+    BR6 = 6,
+    BR5 = 5,
+    BR4 = 4,
     InstructionTrap = 1,
     None = 0
 };
