@@ -3,6 +3,43 @@
 
 #include "../qbus/qbus.h"
 
+#define USE_FLOAT
+
+/* ODT states */
+#define	ODT_STATE_INIT		0
+#define	ODT_STATE_WAIT		1
+#define	ODT_STATE_ADDR		2
+#define	ODT_STATE_REG		3
+#define	ODT_STATE_REG_WAIT	4
+#define	ODT_STATE_VAL		5
+#define	ODT_STATE_REG_VAL	6
+#define	ODT_STATE_WR		7
+
+/* CPU states */
+#define	STATE_HALT		0
+#define	STATE_RUN		1
+#define	STATE_WAIT		2
+#define	STATE_INHIBIT_TRACE	3
+
+#define	PSW_C			_BV(0)
+#define	PSW_V			_BV(1)
+#define	PSW_Z			_BV(2)
+#define	PSW_N			_BV(3)
+#define	PSW_T			_BV(4)
+#define	PSW_PRIO		_BV(7)
+#define	PSW_PRIORITY	_BV(7) | _BV(6) | _BV(5)
+
+#define	PSW_GET(x)		(((psw) & (x)) ? 1 : 0)
+#define	PSW_SET(x)		((psw) |= (x))
+#define	PSW_CLR(x)		((psw) &= ~(x))
+#define	PSW_EQ(x, v) { \
+	if(v) { \
+		PSW_SET(x); \
+	} else { \
+		PSW_CLR(x); \
+	} \
+}
+
 class KD11CPU
 {
 public:
@@ -25,9 +62,10 @@ private:
 	u16 getAddr(QBUS* bus, u16 dst, u16 mode);
 	void setTrap(InterruptRequest ir);
 	void execInstr(QBUS* bus);
+	u8 pswPriority();
 
 	u16	psw;
-	InterruptRequest trap;
+	// *** InterruptRequest trap;
 	InterruptRequest const emptyIntrptReq{TrapPriority::None, 0, 0};
 	InterruptRequest const busError{TrapPriority::BusError, 0, 004};
 	InterruptRequest const illegalInstructionTrap{TrapPriority::InstructionTrap, 0, 010};
