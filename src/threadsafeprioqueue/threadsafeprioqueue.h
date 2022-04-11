@@ -12,12 +12,27 @@ class ThreadSafePrioQueue
     Semaphore semaphore_{1};        // One available priority_queue
 
 public:
+    void clear();
+    bool empty() const;
     void pop();
     void push (T const &ir);
-    size_t size();
+    size_t size() const;
     T const &top();
 };
 
+// Clear the contents of the priority queue
+template <typename T>
+void ThreadSafePrioQueue<T>::clear()
+{
+    std::priority_queue<T> emptyQueue;
+    std::swap(queue_, emptyQueue);
+}
+
+template <typename T>
+void ThreadSafePrioQueue<T>::empty() const
+{
+    return queue_.empty();
+}
 
 template <typename T>
 void ThreadSafePrioQueue<T>::pop()
@@ -36,7 +51,7 @@ void ThreadSafePrioQueue<T>::push (T const &elem)
 }
 
 template <typename T>
-size_t ThreadSafePrioQueue<T>::size()
+size_t ThreadSafePrioQueue<T>::size() const
 {
     semaphore_.wait();
     size_t size = queue_.size();
