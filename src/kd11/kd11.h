@@ -65,7 +65,7 @@ private:
 	u8 pswPriority();
 
 	u16	psw;
-	// *** InterruptRequest trap;
+	InterruptRequest trap;
 	InterruptRequest const emptyIntrptReq{TrapPriority::None, 0, 0};
 	InterruptRequest const busError{TrapPriority::BusError, 0, 004};
 	InterruptRequest const illegalInstructionTrap{TrapPriority::InstructionTrap, 0, 010};
