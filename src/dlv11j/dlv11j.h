@@ -28,10 +28,13 @@ class DLV11J : public QBUSModule
 public:
 	DLV11J ();
 	~DLV11J ();
+
+	// Define the obligatory functions
 	u16 read (u16 address);
 	void write (u16 address, u16 value);
 	u8 responsible (u16 address);
 	void reset ();
+
 	void send (int channel, unsigned char c);
 	void step();
 
@@ -40,9 +43,11 @@ private:
 	void writeChannel (int channelNr);
 	void writeRCSR (int n, u16 value);
 	void writeXCSR (int n, u16 value);
+	InterruptRequest interruptRequest(unsigned char vector);
 
 	DLV11Ch	channel[4];
 	u16	base;
+	InterruptRequest const emptyIntrptReq{TrapPriority::None, 0, 0};
 };
 
 #endif // !_DLV11J_H_

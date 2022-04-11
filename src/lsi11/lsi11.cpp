@@ -6,9 +6,9 @@
 
 LSI11::LSI11 ()
 {
-	bus.trap = 0;
+	bus.trap = emptyIntrptReq;
 	bus.delay = 0;
-	bus.irq = 0;
+	bus.irq = emptyIntrptReq;
 }
 
 LSI11::~LSI11 ()

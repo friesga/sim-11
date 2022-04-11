@@ -23,11 +23,19 @@ private:
 	void writeW(QBUS* bus, u16 dst, u16 mode, u16 val);
 	void writeB(QBUS* bus, u16 dst, u16 mode, u8 val);
 	u16 getAddr(QBUS* bus, u16 dst, u16 mode);
-	void setTrap(int n);
+	void setTrap(InterruptRequest ir);
 	void execInstr(QBUS* bus);
 
 	u16	psw;
-	u16	trap;
+	InterruptRequest trap;
+	InterruptRequest const emptyIntrptReq{TrapPriority::None, 0, 0};
+	InterruptRequest const busError{TrapPriority::BusError, 0, 004};
+	InterruptRequest const illegalInstructionTrap{TrapPriority::InstructionTrap, 0, 010};
+	InterruptRequest const traceTrap{TrapPriority::TraceTrap, 0, 014};
+	InterruptRequest const BPT{TrapPriority::InstructionTrap, 0, 014};
+	InterruptRequest const IOT{TrapPriority::InstructionTrap, 0, 020};
+	InterruptRequest const EMT{TrapPriority::InstructionTrap, 0, 030};
+	InterruptRequest const TRP{TrapPriority::InstructionTrap, 0, 034};
 };
 
 // ODT functionality of the KD11

@@ -95,7 +95,7 @@ void RXV21::done ()
 	// being processed, the request is held and on the next step the request
 	// is tried again.
 	if (rx2cs & RX_INTR_ENB) 
-		IRQ(vector);
+		IRQ(interruptRequest(vector));
 }
 
 // This function fills the RX02 data buffer with the number of words
@@ -541,7 +541,7 @@ void RXV21::write (u16 address, u16 value)
 		if (!intr && (value & RX_INTR_ENB) && (rx2cs & RX_DONE)) 
 		{
 			QBUS* bus = this->bus;
-			IRQ(vector);
+			IRQ(interruptRequest(vector));
 		}
 	} 
 	else if (address == base + 2) 
@@ -563,7 +563,7 @@ void RXV21::reset ()
 	rx2cs = RX_RX02 | RX_DONE;
 	rx2es = RX2ES_DEFAULT;
 	rx2db = rx2es;
-	irq = 0;
+	irq = emptyIntrptReq;
 }
 
 void RXV21::setData (u8* data)
@@ -574,12 +574,12 @@ void RXV21::setData (u8* data)
 void RXV21::step()
 {
 	// Is a pending interrupt request available?
-	if (irq)
+	if (irq.vector() != 0)
 	{
 		// Retry the interrupt request and if it succeeds
 		// clear the pending request.
 		QBUS* bus = this->bus;
 		if (bus->interrupt(irq))
-			irq = 0;
+			irq = emptyIntrptReq;
 	}
 }

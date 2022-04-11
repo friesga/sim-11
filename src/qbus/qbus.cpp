@@ -3,6 +3,7 @@
 
 #include "trace.h"
 #include "qbus.h"
+#include "../interruptrequest/interruptrequest.h"
 
 #define	IRCJITTER()	(rand() % QBUS_DELAY_JITTER)
 
@@ -33,7 +34,7 @@ u16	QBUS::read (u16 address)
 	}
 
 	TRCBus (TRC_BUS_RDFAIL, addr, 0);
-	interrupt (004);
+	interrupt (busError);
 	return 0;
 }
 
@@ -58,19 +59,19 @@ void QBUS::write (u16 address, u16 value)
 	}
 
 	TRCBus (TRC_BUS_WRFAIL, address, value);
-	interrupt (004);
+	interrupt (busError);
 }
 
 // (Try to) request an interrupt. Trap 004 interrupts always succeed,
 // other interrupts requests only succeed if no other traps or interrupts
 // are being processed.
-int QBUS::interrupt (int vector)
+int QBUS::interrupt (InterruptRequest intrptReq)
 {
-	if (vector != 004)
+	if (intrptReq.vector() != 004)
 	{
-		if (trap || irq)
+		if (trap.vector() != 0 || irq.vector() != 0)
 		{
-			TRCIRQ (vector, TRC_IRQ_FAIL);
+			TRCIRQ (intrptReq.vector(), TRC_IRQ_FAIL);
 			return 0;
 		}
 		else
@@ -78,16 +79,16 @@ int QBUS::interrupt (int vector)
 			// No trap is being processed and no interrupt request is pending,
 			// so an interrupt request can be generated. Processing of the request
 			// is delayed by a random amount of steps.
-			TRCIRQ (vector, TRC_IRQ_OK);
-			irq = vector;
+			TRCIRQ (intrptReq.vector(), TRC_IRQ_OK);
+			irq = intrptReq;
 			delay = IRCJITTER ();
 			return 1;
 		}
 	}
 	else
 	{
-		TRCIRQ (vector, TRC_IRQ_OK);
-		trap = vector;
+		TRCIRQ (intrptReq.vector(), TRC_IRQ_OK);
+		trap = intrptReq;
 		return 1;
 	}
 }
@@ -99,8 +100,8 @@ void QBUS::reset ()
 	TRCBus (TRC_BUS_RESET, 0, 0);
 
 	/* clear pending interrupts */
-	trap = 0;
-	irq = 0;
+	trap = emptyIntrptReq;
+	irq = emptyIntrptReq;
 	delay = 0;
 
 	for (i = 0; i < LSI11_SIZE; i++)
@@ -120,15 +121,15 @@ void QBUS::step ()
 	if (delay >= QBUS_DELAY)
 	{
 		// Check that processing of the previous trap has finished
-		if (!trap)
+		if (trap.vector() == 0)
 		{
-			TRCIRQ (irq, TRC_IRQ_SIG);
+			TRCIRQ (irq.vector(), TRC_IRQ_SIG);
 			trap = irq;
-			irq = 0;
+			irq = emptyIntrptReq;
 			delay = 0;
 		}
 	}
-	else if (irq)
+	else if (irq.vector() != 0)
 		delay++;
 }
 

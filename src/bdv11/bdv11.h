@@ -29,6 +29,8 @@ private:
 	u16	display;
 	u16	ltc;
 	float	time;
+	InterruptRequest eventIntrptReq{TrapPriority::Event, 0, 0100};
+	InterruptRequest emptyIntrptReq{TrapPriority::None, 0, 0};
 };
 
 

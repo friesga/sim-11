@@ -16,15 +16,18 @@ set (SIM11_SRCS
     src/bdv11/bdv11_e53.cpp
     src/disas.cpp
     src/dlv11j/dlv11j.cpp
+    src/dlv11j/interruptrequest.cpp
     src/kd11/kd11.cpp
     src/lsi11/lsi11.cpp
     src/main.cpp 
     src/msv11d/msv11d.cpp
     src/qbus/qbus.cpp
     src/rxv21/rxv21.cpp
+    src/rxv21/interruptrequest.cpp
     src/trace.cpp
     src/console.cpp
-    src/cmdlineoptions/cmdlineoptions.cpp)
+    src/cmdlineoptions/cmdlineoptions.cpp
+    src/interruptrequest/interruptrequest.cpp)
 
 # Add source to this project's executable.
 add_executable (${TARGET} ${SIM11_SRCS})
