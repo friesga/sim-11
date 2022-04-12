@@ -27,7 +27,7 @@
 #define	PSW_N			_BV(3)
 #define	PSW_T			_BV(4)
 #define	PSW_PRIO		_BV(7)
-#define	PSW_PRIORITY	_BV(7) | _BV(6) | _BV(5)
+#define	PSW_PRIORITY	(_BV(7) | _BV(6) | _BV(5))
 
 #define	PSW_GET(x)		(((psw) & (x)) ? 1 : 0)
 #define	PSW_SET(x)		((psw) |= (x))
