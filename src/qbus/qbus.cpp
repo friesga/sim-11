@@ -12,7 +12,7 @@ QBUS::QBUS ()
 	memset (slots, 0, sizeof (slots));
 }
 
-u16	QBUS::read (u16 address)
+CondData<u16> QBUS::read (u16 address)
 {
 	u8 i;
 	u16 addr = address;
@@ -27,7 +27,7 @@ u16	QBUS::read (u16 address)
 
 		if (module->responsible (address))
 		{
-			u16 value = module->read (address);
+			CondData<u16> value = module->read (address);
 			TRCBus (TRC_BUS_RD, addr, value);
 			return value;
 		}
@@ -35,7 +35,7 @@ u16	QBUS::read (u16 address)
 
 	TRCBus (TRC_BUS_RDFAIL, addr, 0);
 	interrupt (busError);
-	return 0;
+	return {};
 }
 
 void QBUS::write (u16 address, u16 value)

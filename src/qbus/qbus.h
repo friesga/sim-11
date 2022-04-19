@@ -2,6 +2,7 @@
 #define _QBUS_H_
 
 #include "types.h"
+#include "../conddata/conddata.h"
 #include "../interruptrequest/interruptrequest.h"
 
 /* Backplane size */
@@ -22,7 +23,7 @@ public:
 	int		interrupt (InterruptRequest intrptReq);
 	void	reset ();
 	void	step ();
-	u16		read (u16 addr);
+	CondData<u16> read (u16 addr);
 	void	write (u16 addr, u16 value);
 	void	installModule (int slot, QBUSModule* module);
 

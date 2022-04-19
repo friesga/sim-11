@@ -44,12 +44,13 @@ endif ()
 # GCC specific compiler options
 if (CMAKE_C_COMPILER_ID STREQUAL "GNU")
 target_compile_options (${TARGET} PRIVATE 
-    -O3 -g -Wall -ffunction-sections -fdata-sections -DUNIX -fsanitize=address)
+    -O3 -g -Wall --std=c++20 -ffunction-sections -fdata-sections -DUNIX -fsanitize=address)
 endif ()
-
+    
 # MSVC specific compiler options
 if (CMAKE_C_COMPILER_ID STREQUAL "MSVC")
 target_compile_definitions (${TARGET} PRIVATE _CRT_SECURE_NO_WARNINGS)
+target_compile_options (${TARGET} PRIVATE /std:c++20)
 endif ()
 
 # Define directory with include files
