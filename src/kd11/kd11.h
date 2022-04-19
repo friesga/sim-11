@@ -59,7 +59,7 @@ private:
 	CondData<u8> readB(QBUS* bus, u16 dst, u16 mode, int inc);
 	void writeW(QBUS* bus, u16 dst, u16 mode, u16 val);
 	void writeB(QBUS* bus, u16 dst, u16 mode, u8 val);
-	u16 getAddr(QBUS* bus, u16 dst, u16 mode);
+	CondData<u16> getAddr(QBUS* bus, u16 dst, u16 mode);
 	void setTrap(InterruptRequest ir);
 	void execInstr(QBUS* bus);
 	u8 pswPriority();

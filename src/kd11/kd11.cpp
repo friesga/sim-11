@@ -444,11 +444,6 @@ void KD11ODT::step(QBUS* bus)
 	}
 }
 
-#define	CHECKREAD()		{ \
-	if(trap.vector() != 0 && trap.vector() <= 010) \
-		return 0; \
-	}
-
 #define CHECKADDR() \
 	if (!addr.hasValue()) \
 		return {};
@@ -779,14 +774,18 @@ void KD11CPU::writeB(QBUS* bus, u16 dst, u16 mode, u8 val)
 	}
 }
 
-u16 KD11CPU::getAddr(QBUS* bus, u16 dst, u16 mode)
+// ToDo: The result of all read() calls should be checked (instead of
+// returning zero.
+//u16 KD11CPU::getAddr(QBUS* bus, u16 dst, u16 mode)
+CondData<u16> KD11CPU::getAddr(QBUS* bus, u16 dst, u16 mode)
 {
-	u16 addr;
+	CondData<u16> addr;
 	switch(mode)
     {
 		case 0: /* Register */
 			TRCTrap(4, TRC_TRAP_RADDR);
 			TRAP(busError); /* illegal instruction */
+            return {};
 
 		case 1: /* Register indirect */
 			return r[dst];
@@ -815,21 +814,19 @@ u16 KD11CPU::getAddr(QBUS* bus, u16 dst, u16 mode)
 
 		case 6: /* Index */
 			addr = READ(r[7]);
-			CHECKREAD();
 			r[7] += 2;
 			addr += r[dst];
 			return addr;
 
 		case 7: /* Index indirect */
 			addr = READ(r[7]);
-			CHECKREAD();
 			r[7] += 2;
 			addr += r[dst];
 			addr = READ(addr);
 			return addr;
 
 		default:
-			return 0;
+            return {};
 	}
 }
 
@@ -839,6 +836,9 @@ u16 KD11CPU::getAddr(QBUS* bus, u16 dst, u16 mode)
 // returned. Subsequently the CondData object is used to check if
 // a valid value was returned and in that case the macro call executes
 // a return.
+
+#define	READCPU(addr)	\
+    (tmpValue = bus->read(addr)).value_or(0);
 
 #define	CPUREADW(rn, mode)	\
     (tmpValue = readW(bus, rn, mode, 1)).value_or(0); \
@@ -946,33 +946,38 @@ void KD11CPU::execInstr(QBUS* bus)
                             break;
 
                         case 0000002: /* RTI */
-                            r[7] = READ(r[6]);
+                            r[7] = READCPU(r[6]);
                             r[6] += 2;
-                            CHECK();
-                            psw = READ(r[6]);
+                            CHECKHASVALUE(tmpValue);
+                            psw = READCPU (r[6]);
                             r[6] += 2;
-                            CHECK();
+                            CHECKHASVALUE(tmpValue);
                             break;
+
                         case 0000003: /* BPT */
                             TRCTrap(014, TRC_TRAP);
                             TRAP(BPT);
                             break;
+
                         case 0000004: /* IOT */
                             TRCTrap(020, TRC_TRAP);
                             TRAP(IOT);
                             break;
+
                         case 0000005: /* RESET */
                             bus->reset();
                             break;
+
                         case 0000006: /* RTT */
-                            r[7] = READ(r[6]);
+                            r[7] = READCPU(r[6]);
                             r[6] += 2;
-                            CHECK();
-                            psw = READ(r[6]);
+                            CHECKHASVALUE(tmpValue);
+                            psw = READCPU(r[6]);
                             r[6] += 2;
-                            CHECK();
+                            CHECKHASVALUE(tmpValue);
                             runState = STATE_INHIBIT_TRACE;
                             break;
+
                         default: /* 00 00 07 - 00 00 77 */
                             /* unused opcodes */
                             TRCTrap(010, TRC_TRAP_ILL);
@@ -980,11 +985,13 @@ void KD11CPU::execInstr(QBUS* bus)
                             break;
                     }
                     break;
+
                 case 00001: /* JMP */
-                    tmp = getAddr(bus, insn1->rn, insn1->mode);
-                    CHECK();
-                    r[7] = tmp;
+                    tmpValue = getAddr(bus, insn1->rn, insn1->mode);
+                    CHECKHASVALUE(tmpValue);
+                    r[7] = tmpValue.value();
                     break;
+
                 case 00002: /* 00 02 xx group */
                     /* mask=177740: CLN/CLZ/CLV/CLC/CCC/SEN/SEZ/SEV/SEC/SCC */
                     if ((insn & 0177770) == 0000200)
@@ -1090,14 +1097,17 @@ void KD11CPU::execInstr(QBUS* bus)
                 case 00045:
                 case 00046:
                 case 00047:
-                    dst = getAddr(bus, insnjsr->rn, insnjsr->mode);
+                    tmpValue = getAddr(bus, insnjsr->rn, insnjsr->mode);
                     src = r[insnjsr->r];
-                    CHECK();
+                    CHECKHASVALUE(tmpValue);
+                    dst = tmpValue.value();
+
                     r[6] -= 2;
                     WRITE(r[6], src);
                     r[insnjsr->r] = r[7];
                     r[7] = dst;
                     break;
+
                 case 00050: /* CLR */
                     CPUWRITEW(insn1->rn, insn1->mode, 0);
                     PSW_CLR(PSW_N | PSW_V | PSW_C);
