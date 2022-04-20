@@ -24,7 +24,7 @@ public:
 	void	reset ();
 	void	step ();
 	CondData<u16> read (u16 addr);
-	void	write (u16 addr, u16 value);
+	bool	write (u16 addr, u16 value);
 	void	installModule (int slot, QBUSModule* module);
 
 	QBUSModule*	slots[LSI11_SIZE];

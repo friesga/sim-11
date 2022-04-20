@@ -25,17 +25,11 @@ public:
 
     // Conversion operator
     operator T() const;
-    template <typename V>
-        operator CondData<V>() const;
-
-    // Bitwise operators
-    // T operator& (T value) const;
-    // T operator>> (T value) const;
 
     // Accessors
     bool hasValue() const;
     T value() const;
-    T value_or(T value) const;
+    T valueOr(T value) const;
 };
 
 // The default constructor constructs an object without valid data.
@@ -46,7 +40,6 @@ inline CondData<T>::CondData()
     validValue_{false}
 {}
 
-
 // Construct an object with valid data.
 template <typename T>
 inline CondData<T>::CondData(T value)
@@ -54,7 +47,6 @@ inline CondData<T>::CondData(T value)
     value_{value},
     validValue_{true}
 {}
-
 
 // Construct an object with data and given validity.
 template <typename T>
@@ -72,7 +64,7 @@ template <typename T>
 template <typename V>
 inline CondData<T>::CondData(CondData<V> other)
 {
-    value_ = static_cast<V> (other.value_or(0));
+    value_ = static_cast<V> (other.valueOr(0));
     validValue_ = other.hasValue();
 }
 
@@ -107,9 +99,8 @@ inline CondData<T>& CondData<T>::operator-= (T value)
     return *this;
 }
 
-
-// Convert the class to the native type, returning either the value
-// or 0 if it isn't valid.
+// Try to convert the object to the native type, throwing an exception
+// if it doesn't contain a valid value.
 template <typename T>
 inline CondData<T>::operator T() const
 {
@@ -119,37 +110,6 @@ inline CondData<T>::operator T() const
     return value_;
 }
 
-// Convert the object to another CondData type
-template <typename T>
-template <typename V>
-inline CondData<T>::operator CondData<V>() const
-{
-    return CondData<V>{static_cast<V> (value_), validValue_};
-}
-
-/*
-// Bitwise and operator
-template <typename T>
-inline T CondData<T>::operator& (T value) const
-{
-    if (!validValue_)
-        throw (std::string("Bitwise and on invalid CondData object"));
-
-    return value_ & value;
-}
-
-
-
-// Bitwise shift right operator
-template <typename T>
-inline T CondData<T>::operator>> (T value) const
-{
-    if (!validValue_)
-        throw (std::string("Bitwise shift right on invalid CondData object"));
-
-    return value_ >> value;
-}
-*/
 
 // Return the valid value status to the caller
 template <typename T>
@@ -169,7 +129,7 @@ inline T CondData<T>::value() const
 
 // Return the value to the caller if it is valid or the given value otherwise
 template <typename T>
-inline T CondData<T>::value_or(T value) const
+inline T CondData<T>::valueOr(T value) const
 {
     if (!validValue_)
         return value;

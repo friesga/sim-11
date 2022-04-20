@@ -121,15 +121,10 @@ KD11CPU &KD11::cpu()
 
 #define	READ(addr)			(bus->read((addr)))
 #define	WRITE(addr, val)	(bus->write((addr), (val)))
-#define	CHECK()			{ \
-	if(trap.vector() != 0 && trap.vector() <= 010) \
-		return; \
-	}
 
-#define CHECKHASVALUE(var) \
+#define RETURN_IF_INVALID(var) \
     if (!var.hasValue())   \
         return;
-
 
 // Constructor
 KD11ODT::KD11ODT(KD11CPU &cpu)
@@ -262,7 +257,7 @@ void KD11ODT::step(QBUS* bus)
 					/* delimit */
                     // ToDo: The address might be invalid and in that case
                     // ODT should respond with a '?' instead of a zero.
-					u16 val = READ(addr).value_or(0);
+					u16 val = READ(addr).valueOr(0);
 					clear();
 					writeOctal(val);
 					write(' ');
@@ -630,93 +625,95 @@ CondData<u8> KD11CPU::readB(QBUS* bus, u16 dst, u16 mode, int inc)
 	}
 }
 
-void KD11CPU::writeW(QBUS* bus, u16 dst, u16 mode, u16 val)
+bool KD11CPU::writeW(QBUS* bus, u16 dst, u16 mode, u16 val)
 {
 	CondData<u16> addr;
-	switch(mode) {
+	switch(mode)
+    {
 		case 0: /* Register */
 			r[dst] = val;
-			break;
+            return true;
 
 		case 1: /* Register indirect */
-			WRITE(r[dst], val);
-			break;
+			return WRITE(r[dst], val);
 
 		case 2: /* Autoincrement */
 			r[dst] &= 0xFFFE;
 			addr = r[dst];
 			r[dst] += 2;
-			WRITE(addr, val);
-			break;
+			return WRITE(addr, val);
 
 		case 3: /* Autoincrement indirect */
 			r[dst] &= 0xFFFE;
 			addr = r[dst];
 			r[dst] += 2;
 			addr = READ(addr);
-            CHECKHASVALUE(addr);
-			WRITE(addr, val);
-			break;
+            if (!addr.hasValue())
+                return false;
+			return WRITE(addr, val);
 
 		case 4: /* Autodecrement */
 			r[dst] &= 0xFFFE;
 			r[dst] -= 2;
 			addr = r[dst];
-			WRITE(addr, val);
-			break;
+			return WRITE(addr, val);
 
 		case 5: /* Autodecrement indirect */
 			r[dst] &= 0xFFFE;
 			r[dst] -= 2;
 			addr = r[dst];
 			addr = READ(addr);
-            CHECKHASVALUE(addr);
-			WRITE(addr, val);
-			break;
+            if (!addr.hasValue())
+                return false;
+			return WRITE(addr, val);
 
 		case 6: /* Index */
 			addr = READ(r[7]);
-            CHECKHASVALUE(addr);
+            if (!addr.hasValue())
+                return false;
 			r[7] += 2;
 			addr += r[dst];
-			WRITE(addr, val);
-			break;
+			return WRITE(addr, val);
 
 		case 7: /* Index indirect */
 			addr = READ(r[7]);
-            CHECKHASVALUE(addr);
+            if (!addr.hasValue())
+                return false;
 			r[7] += 2;
 			addr += r[dst];
 			addr = READ(addr);
-            CHECKHASVALUE(addr);
-			WRITE(addr, val);
-			break;
+            if (!addr.hasValue())
+                return false;
+			return WRITE(addr, val);
+
+        default:
+            // Prevent compiler warning on not all paths returning a value
+            throw (std::string("Unexpected mode in writeW() call"));
 	}
 }
 
-#define	WRITE8(addr, val)	{ \
-	u16 aaddr = addr & 0xFFFE; \
-	u16 tmp = READ(aaddr); \
-	if(addr & 1) { \
-		tmp = (tmp & 0x00FF) | (val << 8); \
-	} else { \
-		tmp = (tmp & 0xFF00) | val; \
-	} \
-	WRITE(aaddr, tmp); \
+bool write8 (QBUS* bus, u16 addr, u8 val)
+{
+    u16 aaddr = addr & 0xFFFE;
+	u16 tmp = READ(aaddr);
+	if(addr & 1)
+		tmp = (tmp & 0x00FF) | (val << 8);
+	else
+		tmp = (tmp & 0xFF00) | val;
+	return WRITE(aaddr, tmp); 
 }
 
-void KD11CPU::writeB(QBUS* bus, u16 dst, u16 mode, u8 val)
+bool KD11CPU::writeB(QBUS* bus, u16 dst, u16 mode, u8 val)
 {
 	CondData<u16> addr;
 	switch(mode)
     {
 		case 0: /* Register */
 			r[dst] = (r[dst] & 0xFF00) | val;
-			break;
+			return true;
 
 		case 1: /* Register deferred */
-			WRITE8(r[dst], val);
-			break;
+			return write8(bus, r[dst], val);
 
 		case 2: /* Autoincrement */
 			addr = r[dst];
@@ -725,16 +722,15 @@ void KD11CPU::writeB(QBUS* bus, u16 dst, u16 mode, u8 val)
 			} else {
 				r[dst]++;
 			}
-			WRITE8(addr, val);
-			break;
+			return write8(bus, addr, val);
 
 		case 3: /* Autoincrement deferred */
 			addr = r[dst];
 			r[dst] += 2;
 			addr = READ(addr);
-            CHECKHASVALUE(addr);
-			WRITE8(addr, val);
-			break;
+            if (!addr.hasValue())
+                return false;
+			return write8(bus, addr, val);
 
 		case 4: /* Autodecrement */
 			if(dst == 6 || dst == 7) {
@@ -743,40 +739,43 @@ void KD11CPU::writeB(QBUS* bus, u16 dst, u16 mode, u8 val)
 				r[dst]--;
 			}
 			addr = r[dst];
-			WRITE8(addr, val);
-			break;
+			return write8(bus, addr, val);
 
 		case 5: /* Autodecrement deferred */
 			r[dst] -= 2;
 			addr = r[dst];
 			addr = READ(addr);
-            CHECKHASVALUE(addr);
-			WRITE8(addr, val);
-			break;
+            if (!addr.hasValue())
+                return false;
+			return write8(bus, addr, val);
 
 		case 6: /* Index */
 			addr = READ(r[7]);
-            CHECKHASVALUE(addr);
+            if (!addr.hasValue())
+                return false;
 			r[7] += 2;
 			addr += r[dst];
-			WRITE8(addr, val);
-			break;
+			return write8(bus, addr, val);
 
 		case 7: /* Index deferred */
 			addr = READ(r[7]);
-            CHECKHASVALUE(addr);
+            if (!addr.hasValue())
+                return false;
 			r[7] += 2;
 			addr += r[dst];
 			addr = READ(addr);
-            CHECKHASVALUE(addr);
-			WRITE8(addr, val);
-			break;
+            if (!addr.hasValue())
+                return false;
+			return write8(bus, addr, val);
+
+        default:
+            // Prevent compiler warning on not all paths returning a value
+            throw (std::string("Unexpected mode in writeB() call"));
 	}
 }
 
 // ToDo: The result of all read() calls should be checked (instead of
-// returning zero.
-//u16 KD11CPU::getAddr(QBUS* bus, u16 dst, u16 mode)
+// returning zero).
 CondData<u16> KD11CPU::getAddr(QBUS* bus, u16 dst, u16 mode)
 {
 	CondData<u16> addr;
@@ -838,25 +837,27 @@ CondData<u16> KD11CPU::getAddr(QBUS* bus, u16 dst, u16 mode)
 // a return.
 
 #define	READCPU(addr)	\
-    (tmpValue = bus->read(addr)).value_or(0);
+    (tmpValue = bus->read(addr)).valueOr(0);
 
 #define	CPUREADW(rn, mode)	\
-    (tmpValue = readW(bus, rn, mode, 1)).value_or(0); \
-	CHECKHASVALUE(tmpValue)
+    (tmpValue = readW(bus, rn, mode, 1)).valueOr(0); \
+	RETURN_IF_INVALID(tmpValue)
 #define	CPUREADB(rn, mode)	\
-    (tmpValue = static_cast<CondData<u16>> (readB(bus, rn, mode, 1))).value_or(0); \
-	CHECKHASVALUE(tmpValue)
+    (tmpValue = static_cast<CondData<u16>> (readB(bus, rn, mode, 1))).valueOr(0); \
+	RETURN_IF_INVALID(tmpValue)
 #define	CPUREADNW(rn, mode)	\
-    (tmpValue = readW(bus, rn, mode, 0)).value_or(0); \
-	CHECKHASVALUE(tmpValue)
+    (tmpValue = readW(bus, rn, mode, 0)).valueOr(0); \
+	RETURN_IF_INVALID(tmpValue)
 #define	CPUREADNB(rn, mode)	\
-    (tmpValue = static_cast<CondData<u16>> (readB(bus, rn, mode, 0))).value_or(0); \
-	CHECKHASVALUE(tmpValue)
+    (tmpValue = static_cast<CondData<u16>> (readB(bus, rn, mode, 0))).valueOr(0); \
+	RETURN_IF_INVALID(tmpValue)
 
-#define CPUWRITEW(rn, mode, v)	writeW(bus, rn, mode, v); \
-				CHECK()
-#define CPUWRITEB(rn, mode, v)	writeB(bus, rn, mode, (u8) v); \
-				CHECK()
+#define CPUWRITEW(rn, mode, v)	\
+    if (!writeW(bus, rn, mode, v)) \
+	    return;
+#define CPUWRITEB(rn, mode, v)	\
+    if (!writeB(bus, rn, mode, (u8) v)) \
+	    return;
 
 typedef union {
 	float	_f32;
@@ -918,10 +919,6 @@ void KD11CPU::execInstr(QBUS* bus)
 
     r[7] += 2;
 
-    // The following check seems superfluous; all XXDP tests succeed with
-    // this check removed.
-    // CHECK();
-
     /* single operand instructions */
     switch (insn >> 12)
     {
@@ -948,10 +945,10 @@ void KD11CPU::execInstr(QBUS* bus)
                         case 0000002: /* RTI */
                             r[7] = READCPU(r[6]);
                             r[6] += 2;
-                            CHECKHASVALUE(tmpValue);
+                            RETURN_IF_INVALID(tmpValue);
                             psw = READCPU (r[6]);
                             r[6] += 2;
-                            CHECKHASVALUE(tmpValue);
+                            RETURN_IF_INVALID(tmpValue);
                             break;
 
                         case 0000003: /* BPT */
@@ -971,10 +968,10 @@ void KD11CPU::execInstr(QBUS* bus)
                         case 0000006: /* RTT */
                             r[7] = READCPU(r[6]);
                             r[6] += 2;
-                            CHECKHASVALUE(tmpValue);
+                            RETURN_IF_INVALID(tmpValue);
                             psw = READCPU(r[6]);
                             r[6] += 2;
-                            CHECKHASVALUE(tmpValue);
+                            RETURN_IF_INVALID(tmpValue);
                             runState = STATE_INHIBIT_TRACE;
                             break;
 
@@ -988,7 +985,7 @@ void KD11CPU::execInstr(QBUS* bus)
 
                 case 00001: /* JMP */
                     tmpValue = getAddr(bus, insn1->rn, insn1->mode);
-                    CHECKHASVALUE(tmpValue);
+                    RETURN_IF_INVALID(tmpValue);
                     r[7] = tmpValue.value();
                     break;
 
@@ -1099,7 +1096,7 @@ void KD11CPU::execInstr(QBUS* bus)
                 case 00047:
                     tmpValue = getAddr(bus, insnjsr->rn, insnjsr->mode);
                     src = r[insnjsr->r];
-                    CHECKHASVALUE(tmpValue);
+                    RETURN_IF_INVALID(tmpValue);
                     dst = tmpValue.value();
 
                     r[6] -= 2;

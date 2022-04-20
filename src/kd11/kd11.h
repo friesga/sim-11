@@ -57,8 +57,8 @@ public:
 private:
 	CondData<u16> readW(QBUS* bus, u16 dst, u16 mode, int inc);
 	CondData<u8> readB(QBUS* bus, u16 dst, u16 mode, int inc);
-	void writeW(QBUS* bus, u16 dst, u16 mode, u16 val);
-	void writeB(QBUS* bus, u16 dst, u16 mode, u8 val);
+	bool writeW(QBUS* bus, u16 dst, u16 mode, u16 val);
+	bool writeB(QBUS* bus, u16 dst, u16 mode, u8 val);
 	CondData<u16> getAddr(QBUS* bus, u16 dst, u16 mode);
 	void setTrap(InterruptRequest ir);
 	void execInstr(QBUS* bus);
