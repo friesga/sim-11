@@ -4,7 +4,7 @@
 #include "trace.h"
 #include "kd11.h"
 
-#define	TRAP(n)		setTrap(n)
+#define	TRAP(trap)		setTrap(bus, &trap)
 
 // (Try to) determine the byte order. To that end gcc provides the __BYTE__ORDER__
 // definition. Msvc has no such definition but we can safely assume that all
@@ -105,7 +105,7 @@ KD11CPU::KD11CPU()
 	runState{0},
 	r{0}, 
 	psw{0},
-	trap{emptyIntrptReq}
+    trap_ {nullptr}
 {}
 
 void KD11::reset()
@@ -447,7 +447,7 @@ void KD11CPU::reset()
 {
 	r[7] = 0173000;
 	psw = 0;
-	trap = emptyIntrptReq;
+	trap_ = nullptr;
 	runState = STATE_HALT;
 }
 
@@ -864,27 +864,31 @@ typedef union {
 	u32		_u32;
 } FLOAT;
 
+// Perform a CPU step. The step mainly comprises three actions:
+// 1. Execution of an instruction,
+// 2. Handle the trace bit,
+// 3. Handling of traps and interrupts that might have arisen during execution
+//    of the instruction, either a trap as a result of an instruction, or an
+//    interrupt requested by a bus device.
 void KD11CPU::step(QBUS* bus)
 {
     IFTRC()
     {
-		// ToDo: Remove save/restore of trap and bus->trap
         TRCSETIGNBUS();
-        InterruptRequest bus_trap = bus->trap;
-        InterruptRequest cpu_trap = trap;
         u16 code[3];
         code[0] = READ(r[7] + 0);
         code[1] = READ(r[7] + 2);
         code[2] = READ(r[7] + 4);
         TRCStep(r, psw, code);
-        bus->trap = bus_trap;
-        trap = cpu_trap;
         TRCCLRIGNBUS();
     }
     execInstr(bus);
+
+    // Generate a Trace trap if the trace bit is set, unless the previous
+    // instruction was a RTT or another trap is pending.
     if (runState == STATE_INHIBIT_TRACE)
         runState = STATE_RUN;
-    else if (trap.vector() == 0 && (psw & PSW_T))
+    else if (!trap_ && (psw & PSW_T))
     {
         TRCTrap(014, TRC_TRAP_T);
         TRAP(traceTrap);
@@ -905,7 +909,7 @@ void KD11CPU::execInstr(QBUS* bus)
 
     // If there is a pending bus interrupt that can be executed, process
     // that interrupt first
-    if (bus->trap.vector() != 0 && !PSW_GET(PSW_PRIO))
+    if (bus->intrptReqAvailable() && bus->intrptPriority() > cpuPriority())
         return;
 
     u16 insn = READ(r[7]);
@@ -972,6 +976,8 @@ void KD11CPU::execInstr(QBUS* bus)
                             psw = READCPU(r[6]);
                             r[6] += 2;
                             RETURN_IF_INVALID(tmpValue);
+
+                            // Prevent a trace trap on the next instruction
                             runState = STATE_INHIBIT_TRACE;
                             break;
 
@@ -1762,7 +1768,9 @@ void KD11CPU::execInstr(QBUS* bus)
                     PSW_EQ(PSW_Z, !tmp);
                     PSW_EQ(PSW_V, PSW_GET(PSW_N) ^ PSW_GET(PSW_C));
                     break;
-                case 01064: /* MTPS */
+                case 01064: 
+                    // MTPS
+                    // Note that the T bit cannot be set with this instruction
                     tmp = CPUREADB(insn1->rn, insn1->mode);
                     psw = (psw & PSW_T) | (tmp & ~PSW_T);
                     break;
@@ -1865,11 +1873,11 @@ void KD11CPU::execInstr(QBUS* bus)
 // Trap priority order from high to low (cf Fig. 2-13) is defined as (vectors
 // between brackets):
 // - Bus error (004)
+// - Machine trap (BPT (014), IOT (020), EMT (030), TRAP (034) instruction)
 // - Trace trap (PSW bit 4) (014)
 // - Powerfail/HALT interrupt (024)
 // - Event interrupt (LTC) (100)
 // - Device interrupt
-// - Machine trap (BPT (014), IOT (020), EMT (030), TRAP (034) instruction)
 // 
 // The event and device interrupts are only processed if the PSW priority bit
 // is cleared.
@@ -1879,41 +1887,41 @@ void KD11CPU::execInstr(QBUS* bus)
 
 void KD11CPU::handleTraps(QBUS* bus)
 {
+    InterruptRequest intrptReq;
 	u16 trapToProcess{0};
+    CondData<u16> tmpValue;
 
-	// Check if there is a trap to handle. This is the most common
-	// case so check this as first.
-	// Traps in HALT mode are ignored
-	if ((bus->trap.vector() == 0 && this->trap.vector() == 0) || 
-		runState == STATE_HALT)
-		return;
-
-	// Handle traps in order of their priority:
+    // Traps are handled in order of their priority:
 	// - Bus errors,
+    // - Instruction traps
 	// - Event and device interrupts, only if the priority bit is clear,
-	// - Instruction traps
-	if (bus->trap.vector() == 004)
-	{
-		trapToProcess = bus->trap.vector();
-		bus->trap = emptyIntrptReq;
-	}
-	// else if (bus->trap.vector() != 0 && !PSW_GET(PSW_PRIO))
-	// Note that the numerical value of the TrapPriority enum is used
-	// as bus request level.
-	else if (bus->trap.vector() != 0 && 
-		pswPriority() < static_cast<int>(bus->trap.trapPriority()))
-	{
-		trapToProcess = bus->trap.vector();
-		bus->trap = emptyIntrptReq;
-	}
-	else if (this->trap.vector() != 0)
-	{
-		trapToProcess = this->trap.vector();
-		this->trap = emptyIntrptReq;
-	}
-	else
-		// The trap cannot be handled at this moment
-		return;
+	// 
+    // Interrupts are only processed if their priority is higher than the
+    // current CPU priority. (The LSI-11 has just two priority levels,
+    // zero and BR4.) Note that the numerical value of the TrapPriority enum
+    // is used as bus request level. Traps in HALT mode are ignored.
+    // 
+    // Check if there is a trap or interrupt request to handle and the CPU
+    // isn't halted. This is the most common
+	// case so check this as first.
+    if ((!trap_ && !bus->intrptReqAvailable()) || runState == STATE_HALT)
+        return;
+
+    // Traps have the highest priority, so first check if there is a trap
+    // to handle
+    if (trap_)
+    {
+        trapToProcess = trap_->vector();
+        trap_ = nullptr;
+    }
+    else if (bus->intrptPriority() > cpuPriority())
+    {
+        if (bus->getIntrptReq(intrptReq))
+            trapToProcess = intrptReq.vector();
+        else
+            return;
+    }
+    else return;
 
 
 	TRCCPUEvent(TRC_CPU_TRAP, trapToProcess);
@@ -1922,41 +1930,42 @@ void KD11CPU::handleTraps(QBUS* bus)
 	// bus time out. In that case the CPU is halted.
 	// ToDo: Remove code duplication
 	r[6] -= 2;
-	WRITE(r[6], psw);
-	if (bus->trap.vector() == 004 || bus->trap.vector() == 010)
+	if (!WRITE(r[6], psw))
 	{
 		TRCCPUEvent(TRC_CPU_DBLBUS, r[6]);
-		bus->trap = emptyIntrptReq;
+        // ToDo: All interrupts should be cleared?
+		trap_ = nullptr;
 		runState = STATE_HALT;
 		return;
 	}
 
 	r[6] -= 2;
-	WRITE(r[6], r[7]);
-	if(bus->trap.vector() == 004 || bus->trap.vector() == 010)
+	if (!WRITE(r[6], r[7]))
 	{
 		TRCCPUEvent(TRC_CPU_DBLBUS, r[6]);
-		bus->trap = emptyIntrptReq;
+		trap_ = nullptr;
 		runState = STATE_HALT;
 		return;
 	}
 
 	// Read new PC and PSW from the trap vector. These read's could also
 	// result in a bus time out.
-	r[7] = READ(trapToProcess);
-	if(bus->trap.vector() == 004 || bus->trap.vector() == 010)
+    tmpValue = READ(trapToProcess);
+    r[7] = tmpValue.valueOr(0);
+    if (!tmpValue.hasValue())
 	{
 		TRCCPUEvent(TRC_CPU_DBLBUS, trapToProcess);
-		bus->trap = emptyIntrptReq;
+		trap_ = nullptr;
 		runState = STATE_HALT;
 		return;
 	}
 
-	psw = READ(trapToProcess + 2);
-	if(bus->trap.vector() == 004 || bus->trap.vector() == 010)
+    tmpValue = READ(trapToProcess + 2);
+    psw = tmpValue.valueOr(0);
+    if (!tmpValue.hasValue())
 	{
 		TRCCPUEvent(TRC_CPU_DBLBUS, trapToProcess + 2);
-		bus->trap = emptyIntrptReq;
+		trap_ = nullptr;
 		runState = STATE_HALT;
 		return;
 	}
@@ -1990,8 +1999,8 @@ void KD11::step(QBUS* bus)
 	}
 }
 
-void KD11CPU::setTrap(InterruptRequest ir)
+// Generate the given trap using the interrupt request mechanism
+void KD11CPU::setTrap(QBUS *bus, InterruptRequest const *trap)
 {
-	if(trap.vector() == 0 || trap.vector() > ir.vector())
-		trap = ir;
+    trap_ = trap;
 }

@@ -29,12 +29,9 @@ private:
 	u16	display;
 	u16	ltc;
 	float	time;
-	InterruptRequest eventIntrptReq{TrapPriority::Event, 0, 0100};
-	InterruptRequest emptyIntrptReq{TrapPriority::None, 0, 0};
+	InterruptRequest eventIntrptReq{RequestType::IntrptReq, TrapPriority::Event, 0, 0100};
 };
 
-
 extern const u16 bdv11_e53[2048];
-
 
 #endif // !_BDV11_H_

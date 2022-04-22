@@ -22,7 +22,8 @@
 #define	RCSR_WR_MASK		(RCSR_RCVR_INT | RCSR_READER_ENABLE)
 #define	XCSR_WR_MASK		(XCSR_TRANSMIT_INT | XCSR_TRANSMIT_BREAK)
 
-#define	IRQ(x)			if(!bus->interrupt(x)) irq = (x)
+// #define	IRQ(x)			if(!bus->interrupt(x)) irq = (x)
+#define	IRQ(x)				bus->interrupt(x)
 
 void console_print (unsigned char c)
 {
@@ -39,7 +40,6 @@ DLV11J::DLV11J ()
 	base = 0176500;
 
 	memset (channel, 0, sizeof (channel));
-	irq = emptyIntrptReq;
 
 	for (i = 0; i < 4; i++)
 	{
@@ -199,9 +199,8 @@ void DLV11J::reset ()
 {
 	u8 i;
 
-	irq = emptyIntrptReq;
-
-	for(i = 0; i < 4; i++) {
+	for(i = 0; i < 4; i++)
+	{
 		channel[i].rcsr &= ~RCSR_RCVR_INT;
 		channel[i].xcsr = XCSR_TRANSMIT_READY;
 	}
@@ -225,12 +224,8 @@ void DLV11J::send(int channelNr, unsigned char c)
 	}
 }
 
+// Originally in this function missed interrupt requests were checked
+// and re-issued. This is now superfluous because of the introduction of
+// the interrupt request queue.
 void DLV11J::step()
-{
-	if(irq.vector() != 0)
-	{
-		QBUS* bus = this->bus;
-		if(bus->interrupt(irq))
-			irq = emptyIntrptReq;
-	}
-}
+{}

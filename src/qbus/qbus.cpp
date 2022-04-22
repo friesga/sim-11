@@ -68,8 +68,14 @@ bool QBUS::write (u16 address, u16 value)
 // (Try to) request an interrupt. Trap 004 interrupts always succeed,
 // other interrupts requests only succeed if no other traps or interrupts
 // are being processed.
+// ToDo: Requesting an interrupt always succeeds
 int QBUS::interrupt (InterruptRequest intrptReq)
 {
+	intrptReqQueue_.push(intrptReq);
+	TRCIRQ (intrptReq.vector(), TRC_IRQ_OK);
+	delay = IRCJITTER ();
+	return 1;
+/*
 	if (intrptReq.vector() != 004)
 	{
 		if (trap.vector() != 0 || irq.vector() != 0)
@@ -94,6 +100,7 @@ int QBUS::interrupt (InterruptRequest intrptReq)
 		trap = intrptReq;
 		return 1;
 	}
+*/
 }
 
 void QBUS::reset ()
@@ -102,9 +109,9 @@ void QBUS::reset ()
 
 	TRCBus (TRC_BUS_RESET, 0, 0);
 
-	/* clear pending interrupts */
-	trap = emptyIntrptReq;
-	irq = emptyIntrptReq;
+	/* Clear pending interrupts */
+	intrptReqQueue_.clear();
+
 	delay = 0;
 
 	for (i = 0; i < LSI11_SIZE; i++)
@@ -121,19 +128,37 @@ void QBUS::reset ()
 // interrupt request. 
 void QBUS::step ()
 {
-	if (delay >= QBUS_DELAY)
+	++delay;
+}
+
+// Check if there is an interrupt request available that can be processed.
+// Wait a random number (max QBUS_DELAY) of steps till processing of an
+// interrupt request. The delay counter is incremented every QBUS step.
+// Traps are handled internally in the CPU and are to be processed immediately.
+bool QBUS::intrptReqAvailable() 
+{
+	return (!intrptReqQueue_.empty() && 
+		(delay >= QBUS_DELAY || intrptReqQueue_.top().requestType() == RequestType::Trap));
+}
+
+// Return the priority of the interrupt request with the highest priority
+u8 QBUS::intrptPriority()
+{
+	return static_cast<u8> (intrptReqQueue_.top().priority());
+}
+
+// Get the interrupt request with the highest priority if one is available
+bool QBUS::getIntrptReq(InterruptRequest &intrptReq)
+{
+	if (intrptReqAvailable())
 	{
-		// Check that processing of the previous trap has finished
-		if (trap.vector() == 0)
-		{
-			TRCIRQ (irq.vector(), TRC_IRQ_SIG);
-			trap = irq;
-			irq = emptyIntrptReq;
-			delay = 0;
-		}
+		bool result = intrptReqQueue_.fetchTop (intrptReq);
+		TRCIRQ (intrptReq.vector(), TRC_IRQ_SIG);
+		delay = 0;
+		return result;
 	}
-	else if (irq.vector() != 0)
-		delay++;
+	else
+		return false;
 }
 
 void QBUS::installModule (int slot, QBUSModule* module)

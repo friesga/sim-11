@@ -30,7 +30,7 @@ private:
 
 	u16	base;
 	u16	vector;
-	InterruptRequest const emptyIntrptReq{TrapPriority::None, 0, 0};
+	InterruptRequest const emptyIntrptReq{RequestType::Trap, TrapPriority::None, 0, 0};
 
 	// All software control of the RX211/RXV21 is performed by means
 	// of two device registers: the command and status register (RX2CS)

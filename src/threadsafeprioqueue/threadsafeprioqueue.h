@@ -13,10 +13,11 @@ class ThreadSafePrioQueue
 
 public:
     void clear();
-    bool empty() const;
+    bool empty();
+    bool fetchTop(T &dest);
     void pop();
     void push (T const &ir);
-    size_t size() const;
+    size_t size();
     T const &top();
 };
 
@@ -29,9 +30,31 @@ void ThreadSafePrioQueue<T>::clear()
 }
 
 template <typename T>
-void ThreadSafePrioQueue<T>::empty() const
+bool ThreadSafePrioQueue<T>::empty()
 {
     return queue_.empty();
+}
+
+// To prevent an exception on the return of a T object, the top element is
+// moved to the destination and is then removed. This prevents the loss of
+// queue elements.
+template <typename T>
+bool ThreadSafePrioQueue<T>::fetchTop(T &dest)
+{
+    semaphore_.wait();
+
+    if (queue_.empty())
+        return false;
+
+    // If this throws, nothing has been removed
+    dest = std::move (queue_.top());
+
+    // Once we reach this point we own the queue's top element and
+    // can safely remove it
+    queue_.pop();
+
+    semaphore_.notify();
+    return true;
 }
 
 template <typename T>
@@ -51,7 +74,7 @@ void ThreadSafePrioQueue<T>::push (T const &elem)
 }
 
 template <typename T>
-size_t ThreadSafePrioQueue<T>::size() const
+size_t ThreadSafePrioQueue<T>::size()
 {
     semaphore_.wait();
     size_t size = queue_.size();

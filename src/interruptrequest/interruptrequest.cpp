@@ -3,17 +3,18 @@
 // Constructors
 InterruptRequest::InterruptRequest()
     :
-    trapPriority_{TrapPriority::None},
+    priority_{TrapPriority::None},
     busOrder_{0},
     vector_{0}
 {}
 
-InterruptRequest::InterruptRequest(TrapPriority trapPriority,
-    unsigned char busOrder, unsigned char vector)
+InterruptRequest::InterruptRequest(RequestType requestType, 
+    TrapPriority priority, unsigned char busOrder, unsigned char vector)
     :
-    trapPriority_{trapPriority},
-    busOrder_{busOrder},
-    vector_{vector}
+    requestType_ {requestType},
+    priority_ {priority},
+    busOrder_ {busOrder},
+    vector_ {vector}
 {}
 
 
@@ -22,11 +23,16 @@ InterruptRequest::InterruptRequest(TrapPriority trapPriority,
 // the order on the bus. The higher the number, the greater the priority.
 bool InterruptRequest::operator< (InterruptRequest const &ir) const
 {
-    return (static_cast<long>(trapPriority_) * 256) + busOrder_ <
-        (static_cast<long>(ir.trapPriority_) * 256) + ir.busOrder_;
+    return (static_cast<long>(priority_) * 256) + busOrder_ <
+        (static_cast<long>(ir.priority_) * 256) + ir.busOrder_;
 }
 
 // Accessors
+RequestType InterruptRequest::requestType() const
+{
+    return requestType_;
+}
+
 unsigned char InterruptRequest::busOrder() const
 {
     return busOrder_;
@@ -37,7 +43,7 @@ unsigned char InterruptRequest::vector() const
     return vector_;
 }
 
-TrapPriority InterruptRequest::trapPriority() const
+TrapPriority InterruptRequest::priority() const
 {
-    return trapPriority_;
+    return priority_;
 }

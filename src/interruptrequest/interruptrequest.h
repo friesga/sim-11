@@ -5,7 +5,8 @@
 // the CPU priority as indicated in the PSW (bits 5-7).
 enum class TrapPriority
 {
-    BusError = 11,
+    BusError = 12,
+    InstructionTrap = 11,
     TraceTrap = 10,
     PowerFail = 9,
     Event = 8,
@@ -13,11 +14,23 @@ enum class TrapPriority
     BR6 = 6,
     BR5 = 5,
     BR4 = 4,
-    InstructionTrap = 1,
     None = 0
 };
 
+// The interrupt and trap mechanism have much functionality in common,
+// such as the handling of interrupts and traps. Traps are handled internally
+// in the cpu while interrupt requests are processed via the bus. Handling
+// interrupt requests therefore introduce a (random) bus delay.
+// 
+// This enum defines whether a request is a trap or an interrupt request.
+enum class RequestType
+{
+    Trap,
+    IntrptReq
+};
+
 // This class comprises all information for an interrupt request:
+// - Whether the request is a trap or an interrupt,
 // - The trap priority,
 // - The bus order. With equal bus request levels, devices on the bus
 //   closer to the processor have higher priority,
@@ -28,34 +41,22 @@ enum class TrapPriority
 // PDP-11.
 class InterruptRequest
 {
-    TrapPriority trapPriority_;
+    RequestType requestType_;
+    TrapPriority priority_;
     unsigned char busOrder_;
     unsigned char vector_;
 
 public:
     InterruptRequest();
-    InterruptRequest(TrapPriority trapPriority,
+    InterruptRequest(RequestType requestType, TrapPriority priority,
         unsigned char prioLevel, unsigned char vector);
     bool operator< (InterruptRequest const &ir) const;
 
     // Accessors
-    TrapPriority trapPriority() const;
+    RequestType requestType() const;
+    TrapPriority priority() const;
     unsigned char busOrder() const;
     unsigned char vector() const;
-
-    /*
-    // Definitions of the possible interrupt requests
-    static InterruptRequest const busError;
-    static InterruptRequest const traceTrap;
-    static InterruptRequest const event;
-    static InterruptRequest const BPT;
-    static InterruptRequest const IOT;
-    static InterruptRequest const EMT;
-    static InterruptRequest const TRP;
-    static InterruptRequest const none;
-    */
 };
-
-
 
 #endif // !_INTERRUPTREQUEST_H_

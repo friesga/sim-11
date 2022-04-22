@@ -47,7 +47,6 @@ private:
 
 	DLV11Ch	channel[4];
 	u16	base;
-	InterruptRequest const emptyIntrptReq{TrapPriority::None, 0, 0};
 };
 
 #endif // !_DLV11J_H_

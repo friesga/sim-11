@@ -57,7 +57,7 @@ CmdLineOptions::CmdLineOptions(int argc, char **argv)
 					"  -l file.bin     Load file.bin in absolute loader format\n"
 					"  -f file.rx2     Load RX02 floppy image from file.rx2\n"
 					"  -t file.trc     Record execution trace to file.trc\n"
-					"  -z              Use delta compression fo rexecution trace\n"
+					"  -z              Use delta compression for execution trace\n"
 					"\n"
 					"The optional last argument FILE is equivalent to -f file";
 			 throw (msg.str());

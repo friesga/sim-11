@@ -6,9 +6,8 @@
 
 LSI11::LSI11 ()
 {
-	bus.trap = emptyIntrptReq;
+	// ToDo: Initialization of bus.delay belongs in class QBUS
 	bus.delay = 0;
-	bus.irq = emptyIntrptReq;
 }
 
 LSI11::~LSI11 ()

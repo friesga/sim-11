@@ -28,7 +28,11 @@ set (SIM11_SRCS
     src/trace.cpp
     src/console.cpp
     src/cmdlineoptions/cmdlineoptions.cpp
-    src/interruptrequest/interruptrequest.cpp)
+    src/interruptrequest/interruptrequest.cpp
+    src/semaphore/notify.cpp
+    src/semaphore/notifyall.cpp
+    src/semaphore/semaphore.cpp
+    src/semaphore/wait.cpp)
 
 # Add source to this project's executable.
 add_executable (${TARGET} ${SIM11_SRCS})

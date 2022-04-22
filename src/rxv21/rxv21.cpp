@@ -55,7 +55,7 @@
 #define	WRITE(addr, val)	(bus->write((addr), (val)))
 #define	CHECK()				{ if (bus->trap) return; }
 
-#define	IRQ(x)				if (!bus->interrupt(x)) irq = (x)
+#define	IRQ(x)				bus->interrupt(x)
 
 extern int trace;
 
@@ -563,7 +563,6 @@ void RXV21::reset ()
 	rx2cs = RX_RX02 | RX_DONE;
 	rx2es = RX2ES_DEFAULT;
 	rx2db = rx2es;
-	irq = emptyIntrptReq;
 }
 
 void RXV21::setData (u8* data)
@@ -571,15 +570,8 @@ void RXV21::setData (u8* data)
 	this->data = data;
 }
 
+// Originally in this function missed interrupt requests were checked
+// and re-issued. This is now superfluous because of the introduction of
+// the interrupt request queue.
 void RXV21::step()
-{
-	// Is a pending interrupt request available?
-	if (irq.vector() != 0)
-	{
-		// Retry the interrupt request and if it succeeds
-		// clear the pending request.
-		QBUS* bus = this->bus;
-		if (bus->interrupt(irq))
-			irq = emptyIntrptReq;
-	}
-}
+{}

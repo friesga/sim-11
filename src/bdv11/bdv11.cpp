@@ -26,9 +26,7 @@
 		| BDV11_DIALOG | BDV11_RX02)
 
 BDV11::BDV11 ()
-{
-	irq = emptyIntrptReq;
-}
+{}
 
 BDV11::~BDV11 ()
 {
@@ -197,7 +195,6 @@ u8 BDV11::responsible (u16 address)
 
 void BDV11::reset ()
 {
-	irq = emptyIntrptReq;
 	pcr = 0;
 	scratch = 0;
 	display = 0;
@@ -218,23 +215,12 @@ void BDV11::step (float dt)
 		// Keep track of the passed time
 		time += dt;
 
-		// If a previously unhandled interrupt request is available then
-		// retry the interrupt request and if it succeeds clear the pending
-		// request.
-		if (irq.vector() != 0) 
-		{
-			QBUS* bus = this->bus;
-			if (bus->interrupt(irq))
-				irq = emptyIntrptReq;
-		}
-
 		// Generate LTC interrupts on the clock frequency. If the interrupt
 		// request cannot be granted keep it as a pending interrupt request.
 		if (time >= LTC_TIME) 
 		{
 			QBUS* bus = this->bus;
-			if (!bus->interrupt (eventIntrptReq))
-				irq = eventIntrptReq;
+			bus->interrupt (eventIntrptReq);
 
 			// Determine time point for the next interrupt. If we missed a clock
 			// cycle reset the time point.

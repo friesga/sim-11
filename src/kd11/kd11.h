@@ -60,20 +60,23 @@ private:
 	bool writeW(QBUS* bus, u16 dst, u16 mode, u16 val);
 	bool writeB(QBUS* bus, u16 dst, u16 mode, u8 val);
 	CondData<u16> getAddr(QBUS* bus, u16 dst, u16 mode);
-	void setTrap(InterruptRequest ir);
+	void setTrap(QBUS *bus, InterruptRequest const *ir);
 	void execInstr(QBUS* bus);
-	u8 pswPriority();
+	u8 cpuPriority();
 
 	u16	psw;
-	InterruptRequest trap;
-	InterruptRequest const emptyIntrptReq{TrapPriority::None, 0, 0};
-	InterruptRequest const busError{TrapPriority::BusError, 0, 004};
-	InterruptRequest const illegalInstructionTrap{TrapPriority::InstructionTrap, 0, 010};
-	InterruptRequest const traceTrap{TrapPriority::TraceTrap, 0, 014};
-	InterruptRequest const BPT{TrapPriority::InstructionTrap, 0, 014};
-	InterruptRequest const IOT{TrapPriority::InstructionTrap, 0, 020};
-	InterruptRequest const EMT{TrapPriority::InstructionTrap, 0, 030};
-	InterruptRequest const TRP{TrapPriority::InstructionTrap, 0, 034};
+
+	// A trap is a special kind of interrupt, internal to the CPU. There
+	// can be only one trap serviced at the time.
+	InterruptRequest const *trap_;
+
+	InterruptRequest const busError{RequestType::Trap, TrapPriority::BusError, 0, 004};
+	InterruptRequest const traceTrap{RequestType::Trap, TrapPriority::TraceTrap, 0, 014};
+	InterruptRequest const BPT{RequestType::Trap, TrapPriority::InstructionTrap, 0, 014};
+	InterruptRequest const IOT{RequestType::Trap, TrapPriority::InstructionTrap, 0, 020};
+	InterruptRequest const EMT{RequestType::Trap, TrapPriority::InstructionTrap, 0, 030};
+	InterruptRequest const TRP{RequestType::Trap, TrapPriority::InstructionTrap, 0, 034};
+	InterruptRequest const illegalInstructionTrap{RequestType::Trap, TrapPriority::InstructionTrap, 0, 010};
 };
 
 // ODT functionality of the KD11
