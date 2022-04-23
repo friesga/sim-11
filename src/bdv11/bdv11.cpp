@@ -1,8 +1,13 @@
-#include <string.h>
-#include <stdlib.h>
-
 #include "trace.h"
 #include "bdv11.h"
+
+#include <string.h>
+#include <stdlib.h>
+#include <thread>
+#include <chrono>
+
+using namespace std;
+using namespace std::chrono;
 
 #define	_A(x)		(1 << ((x) - 1))
 #define	_B(x)		(1 << ((x) + 7))
@@ -26,11 +31,21 @@
 		| BDV11_DIALOG | BDV11_RX02)
 
 BDV11::BDV11 ()
+	:
+	pcr {0},
+	scratch {0},
+	option {0},
+	display {0},
+	ltc {0},
+	time {0.0},
+	running_ {true},
+	ltcThread_ {thread(&BDV11::tick, this)}
 {}
 
 BDV11::~BDV11 ()
 {
-	/* nothing */
+	running_ = false;
+	ltcThread_.join();
 }
 
 u16 BDV11::getWordLow (u16 word)
@@ -204,31 +219,24 @@ void BDV11::reset ()
 	memoryDump (pcr, 1);
 }
 
-
-// Thus function is called on every step from main(). Passed is the
-// delta time since the last cycle of steps.
-void BDV11::step (float dt)
+// Generate an Event interrupt on every clock tick To get accurate timing
+// the high_resolution_clock is used with an interval specified in
+// nanoseconds.
+void BDV11::tick()
 {
-	// Check the line time clock (LTC) is enabled
-	if (ltc & 0100) 
+	high_resolution_clock::time_point wakeupTime {high_resolution_clock::now()};
+	high_resolution_clock::time_point previousWakeupTime {wakeupTime};
+	duration<int, std::nano> const cycleTime {nanoseconds (1000000000 / LTC_RATE)};
+
+	while (running_)
 	{
-		// Keep track of the passed time
-		time += dt;
-
-		// Generate LTC interrupts on the clock frequency. If the interrupt
-		// request cannot be granted keep it as a pending interrupt request.
-		if (time >= LTC_TIME) 
+		// Check the line time clock (LTC) is enabled
+		if (ltc & 0100)
 		{
-			QBUS* bus = this->bus;
 			bus->interrupt (eventIntrptReq);
-
-			// Determine time point for the next interrupt. If we missed a clock
-			// cycle reset the time point.
-			time -= LTC_TIME;
-			if (time >= LTC_TIME) 
-				time = 0;
+			wakeupTime = previousWakeupTime + cycleTime;
+			previousWakeupTime = wakeupTime;
+			this_thread::sleep_until (wakeupTime);
 		}
-	} 
-	else 
-		time = 0;
+	}
 }

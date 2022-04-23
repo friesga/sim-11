@@ -4,8 +4,8 @@
 #include "../qbus/qbus.h"
 
 /* LTC rate */
-#define	LTC_RATE		50
-#define	LTC_TIME		(1.0F / LTC_RATE)
+// The default RT-11 line clock frequency is 60 Hz
+#define	LTC_RATE		60
 
 class BDV11 : public QBUSModule
 {
@@ -16,12 +16,12 @@ public:
 	void write (u16 address, u16 value);
 	u8 responsible (u16 address);
 	void reset ();
-	void step (float dt);
 
 private:
 	u16 getWordLow (u16 word);
 	u16 getWordHigh (u16 word);
 	void memoryDump (u16 pcr, int hi);
+	void tick();
 
 	u16	pcr;
 	u16	scratch;
@@ -29,6 +29,8 @@ private:
 	u16	display;
 	u16	ltc;
 	float	time;
+	std::thread ltcThread_;
+	bool running_;
 	InterruptRequest eventIntrptReq{RequestType::IntrptReq, TrapPriority::Event, 0, 0100};
 };
 
