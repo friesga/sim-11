@@ -224,9 +224,8 @@ void BDV11::reset ()
 // nanoseconds.
 void BDV11::tick()
 {
-	high_resolution_clock::time_point wakeupTime {high_resolution_clock::now()};
-	high_resolution_clock::time_point previousWakeupTime {wakeupTime};
-	duration<int, std::nano> const cycleTime {nanoseconds (1000000000 / LTC_RATE)};
+	high_resolution_clock::time_point nextWakeup {high_resolution_clock::now()};
+	constexpr duration<int, std::nano> cycleTime {nanoseconds (1000000000 / LTC_RATE)};
 
 	while (running_)
 	{
@@ -234,9 +233,8 @@ void BDV11::tick()
 		if (ltc & 0100)
 		{
 			bus->interrupt (eventIntrptReq);
-			wakeupTime = previousWakeupTime + cycleTime;
-			previousWakeupTime = wakeupTime;
-			this_thread::sleep_until (wakeupTime);
+			nextWakeup += cycleTime;
+			this_thread::sleep_until (nextWakeup);
 		}
 	}
 }
