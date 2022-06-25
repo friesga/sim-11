@@ -25,7 +25,7 @@ set (SIM11_SRCS
     src/qbus/qbus.cpp
     src/rxv21/rxv21.cpp
     src/rxv21/interruptrequest.cpp
-    src/rxv21/rxv21transitions.cpp
+    src/rxv21/initiatecommand.cpp
     src/rxv21/emptybuffer.cpp
     src/rxv21/fillbuffer.cpp
     src/rxv21/readerrorcode.cpp

@@ -8,6 +8,14 @@
 // 
 // Note that the TR bit is not deasserted and asserted in between
 // steps.
+void RXV21::entry (rxv21WriteSectorRx2sa)
+{
+	clearErrors();
+    rx2cs &= ~RX_DONE;
+    rx2cs |= RX_TR;
+    rx2es = RX2ES_DRV_RDY | RX2ES_DRV_DEN;
+}
+
 State RXV21::transition (rxv21WriteSectorRx2sa &&, rxv21Rx2dbFilled)
 {
 	TRCRXV21Step ((rx2cs & RX_FUNCTION_MASK) >> 1, 1, rx2db);

@@ -4,6 +4,13 @@
 // one additional step:
 // 1. Loading of the EX2DB register with the bus adress. This will
 //	  start the command.
+void RXV21::entry (rxv21ReadErrorCodeRx2ba)
+{
+	rx2cs &= ~RX_DONE;
+    rx2cs |= RX_TR;
+    rx2es = RX2ES_DRV_RDY | RX2ES_DRV_DEN;
+}
+
 State RXV21::transition (rxv21ReadErrorCodeRx2ba &&, rxv21Rx2dbFilled)
 {
 	rx2cs &= ~RX_TR;

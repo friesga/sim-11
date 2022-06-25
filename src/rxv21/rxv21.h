@@ -126,8 +126,6 @@ class RXV21 : public QBUSModule, public variantFsm::Fsm<RXV21, Event, State>
 
 	InterruptRequest interruptRequest(unsigned char vector);
 
-	
-
 public:
 	RXV21 ();
 	~RXV21 ();
@@ -140,20 +138,25 @@ public:
 
 	// Definition of state transitions
 	State transition (rxv21Idle &&, rxv21Go);
+
+	void entry (rxv21FillBufferRx2wc);
 	State transition (rxv21FillBufferRx2wc &&, rxv21Rx2dbFilled);
 	State transition (rxv21FillBufferRx2ba &&, rxv21Rx2dbFilled);
 
+	void entry (rxv21EmptyBufferRx2wc);
 	State transition (rxv21EmptyBufferRx2wc &&, rxv21Rx2dbFilled);
 	State transition (rxv21EmptyBufferRx2ba &&, rxv21Rx2dbFilled);
 
+	void entry (rxv21WriteSectorRx2sa);
 	State transition (rxv21WriteSectorRx2sa &&, rxv21Rx2dbFilled);
 	State transition (rxv21WriteSectorRx2ta &&, rxv21Rx2dbFilled);
 
+	void entry (rxv21ReadSectorRx2sa);
 	State transition (rxv21ReadSectorRx2sa &&, rxv21Rx2dbFilled);
 	State transition (rxv21ReadSectorRx2ta &&, rxv21Rx2dbFilled);
 
+	void entry (rxv21ReadErrorCodeRx2ba);
 	State transition (rxv21ReadErrorCodeRx2ba &&, rxv21Rx2dbFilled);
-
 
 	// Reaction to an rxv21Init is equal in all states
     template <typename S>
@@ -171,7 +174,9 @@ public:
 		return std::move (state);
     }
 
-
+	// As we make use of exit/entry functions, we must handle all cases
+    template <typename S> void exit(variantFsm::TagType<S>) {}
+    template <typename S> void entry(S&) {}
 };
 
 

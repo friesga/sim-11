@@ -8,6 +8,13 @@
 // 
 // Note that the TR bit is not deasserted and asserted in between
 // steps.
+void RXV21::entry (rxv21FillBufferRx2wc)
+{
+	clearErrors();
+    rx2cs &= ~RX_DONE;
+    rx2cs |= RX_TR;
+}
+
 State RXV21::transition (rxv21FillBufferRx2wc &&, rxv21Rx2dbFilled)
 {
     // ToDo: Provide useful state to TRCRXV21Step
