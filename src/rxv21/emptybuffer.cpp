@@ -55,8 +55,6 @@ void RXV21::emptyBuffer ()
 	for (wc = rx2wc, ptr = 0; wc > 0; wc--, ptr++) 
 	{
 		/* Transfer words */
-		// ToDo: Remove rx2ba access via bus
-		// WRITE (rx2ba, buffer[ptr]);
 		bus->write(rx2ba, buffer[ptr]);
 		rx2ba += 2;
 	}

@@ -58,7 +58,6 @@ void RXV21::fillBuffer ()
 	for (wc = rx2wc, ptr = 0; wc > 0; wc--, ptr++) 
 	{
 		/* Transfer words */
-		// ToDo: Remove rx2ba access via bus
 		buffer[ptr] = bus->read(rx2ba);
 		rx2ba += 2;
 	}
