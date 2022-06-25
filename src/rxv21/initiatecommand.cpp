@@ -31,13 +31,7 @@ State RXV21::transition (rxv21Idle&&, rxv21Go)
 
         case RX_SET_MEDIA_DENSITY:
             clearErrors();
-            printf("[RXV21] NOT IMPLEMENTED: Set Media Density\n");
-            fflush(stdout);
-            ::exit(1);
-
-            // Dummy return state to satisfy the compiler
-            // ToDo: Provide better alternative for exit call
-            return rxv21Idle {};
+            throw (std::string("[RXV21] NOT IMPLEMENTED: Set Media Density"));
             
         case RX_READ_STATUS:
             readStatus();
@@ -45,24 +39,12 @@ State RXV21::transition (rxv21Idle&&, rxv21Go)
 
         case RX_WRITE_DELETED_DATA:
             clearErrors();
-            printf("[RXV21] NOT IMPLEMENTED: Write Deleted Data\n");
-            fflush(stdout);
-            ::exit(1);
-
-            // Dummy return state to satisfy the compiler
-            // ToDo: Provide better alternative for exit call
-            return rxv21Idle {};
+            throw (std::string("[RXV21] NOT IMPLEMENTED: Write Deleted Data"));
             
         case RX_READ_ERROR_CODE:
             return rxv21ReadErrorCodeRx2ba {};
     }
 
-    // All possibilities are defined above, so this point cannot
-    // be reached.
-    printf ("[RXV21] Function code panic");
-    ::exit(1);
-
-    // Dummy return state to satisfy the compiler
-    // ToDo: Provide better alternative for exit call
-    return rxv21Idle {};
+    // All possibilities are defined above, so this "cannot happen"
+    throw ("[RXV21] Function code panic");
 }
