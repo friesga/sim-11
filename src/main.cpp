@@ -160,7 +160,9 @@ try
 			trc.flags |= TRACE_COMPRESS;
 		}
 	}
-	/* trc.flags |= TRACE_PRINT; */
+
+	// To enable debug print outs set TRACE_PRINT flag in trc.flags
+	// trc.flags |= TRACE_PRINT;
 
 	lsi.bus.installModule (1, &msv11);
 	lsi.bus.installModule (2, &rxv21);
