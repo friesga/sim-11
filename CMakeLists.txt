@@ -19,10 +19,13 @@ set (SIM11_SRCS
     src/dlv11j/interruptrequest.cpp
     src/kd11/kd11.cpp
     src/kd11/pswpriority.cpp
+    src/lib/getyn.cpp
     src/lsi11/lsi11.cpp
     src/main.cpp 
     src/msv11d/msv11d.cpp
     src/qbus/qbus.cpp
+    src/rlv12/rlv12.cpp
+    src/rlv12/rl012.cpp
     src/rxv21/rxv21.cpp
     src/rxv21/interruptrequest.cpp
     src/rxv21/initiatecommand.cpp
@@ -32,6 +35,13 @@ set (SIM11_SRCS
     src/rxv21/readsector.cpp
     src/rxv21/readstatus.cpp
     src/rxv21/writesector.cpp
+    src/sim_fio/sim_fopen.cpp
+    src/sim_fio/sim_fread.cpp
+    src/sim_fio/sim_fsize.cpp
+    src/sim_fio/sim_ftell.cpp
+    src/sim_fio/sim_fwrite.cpp
+    src/unit/unit.cpp
+    src/unit/createbadblocktable.cpp
     src/trace.cpp
     src/console.cpp
     src/cmdlineoptions/cmdlineoptions.cpp

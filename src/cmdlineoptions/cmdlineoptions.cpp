@@ -26,6 +26,14 @@ CmdLineOptions::CmdLineOptions(int argc, char **argv)
 			compress = 1;
 		else if(!strcmp("-x", *argv))
 			exit_on_halt = 1;
+		else if(!strcmp("-e", *argv))
+			openExistingFile = 1;
+		else if(!strcmp("-r", *argv))
+			readOnly = 1;
+		else if(!strcmp("-n", *argv))
+			createNewFile = 1;
+		else if(!strcmp("-q", *argv))
+			quiet = 1;
 		else if(!strcmp("-l", *argv) && argc > 1) 
 		{
 			load_file = argv[1];
@@ -58,6 +66,9 @@ CmdLineOptions::CmdLineOptions(int argc, char **argv)
 					"  -f file.rx2     Load RX02 floppy image from file.rx2\n"
 					"  -t file.trc     Record execution trace to file.trc\n"
 					"  -z              Use delta compression for execution trace\n"
+					"  -r			   Load image files read-only (only supported for RL01/02)\n"
+					"  -n              Create new file on attach (only RL01/02)"
+					"  -q              Quiet mode\n"
 					"\n"
 					"The optional last argument FILE is equivalent to -f file";
 			 throw (msg.str());
