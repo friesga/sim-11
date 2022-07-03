@@ -19,7 +19,7 @@ set (SIM11_SRCS
     src/dlv11j/interruptrequest.cpp
     src/kd11/kd11.cpp
     src/kd11/pswpriority.cpp
-    src/lib/getyn.cpp
+    src/lib/gotapproval.cpp
     src/lsi11/lsi11.cpp
     src/main.cpp 
     src/msv11d/msv11d.cpp
@@ -41,6 +41,7 @@ set (SIM11_SRCS
     src/sim_fio/sim_fsize.cpp
     src/sim_fio/sim_ftell.cpp
     src/sim_fio/sim_fwrite.cpp
+    src/unit/attach.cpp
     src/unit/unit.cpp
     src/unit/createbadblocktable.cpp
     src/trace.cpp

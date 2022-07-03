@@ -22,7 +22,7 @@
 #include "statuscodes.h"
 #include "../sim_fio/sim_fio.h"
 
-extern bool get_yn(std::string question, bool defaultAnswer);
+extern bool gotApproval(std::string question, bool defaultAnswer);
 
 StatusCode Unit::createBadBlockTable (int32_t sectorsPerSurface, 
     int32_t wordsPerSector)
@@ -40,7 +40,7 @@ StatusCode Unit::createBadBlockTable (int32_t sectorsPerSurface,
     if (flags_ & UNIT_RO)
         return StatusCode::ReadOnly;
 
-    if (!get_yn ("Overwrite last track? [N]", false))
+    if (!gotApproval ("Overwrite last track? [N]", false))
         return StatusCode::OK;
 
     da = (capacity_ - (sectorsPerSurface * wordsPerSector)) * sizeof(u16);

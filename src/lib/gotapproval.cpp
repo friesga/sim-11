@@ -1,5 +1,5 @@
 /* 
-   get_yn               yes/no question
+   gotApproval               yes/no question
 
    Inputs:
         cptr    =       pointer to question
@@ -10,7 +10,7 @@
 #include <iostream>
 #include <string>
 
-bool get_yn(std::string question, bool defaultAnswer)
+bool gotApproval(std::string question, bool defaultAnswer)
 {
     std::string answer;
 
