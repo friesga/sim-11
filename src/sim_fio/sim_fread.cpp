@@ -1,7 +1,7 @@
 #include "sim_fio.h"
 
 // ToDo: Calculate littleEndian variable (see finit)
-bool const littleEndian = true;
+extern bool const littleEndian = true;
 
 size_t sim_fread (void* bptr, size_t size, size_t count, FILE* fptr)
 {

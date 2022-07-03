@@ -119,7 +119,7 @@ try
 	u8* floppy;
 
 	// Get command line options
-	CmdLineOptions cmdLineOptions(argc, argv);
+	CmdLineOptions::processOptions (argc, argv);
 
 	// Allocate memory for the floppy (RXV21) data, open the file with
 	// the floppy drive data (if given) and pass the data buffer address
@@ -133,12 +133,13 @@ try
 		return 1;
 	}
 
-	if (cmdLineOptions.floppy_filename) 
+	if (CmdLineOptions::get().floppy_filename) 
 	{
-		floppy_file = fopen (cmdLineOptions.floppy_filename, "rb");
+		floppy_file = fopen (CmdLineOptions::get().floppy_filename, "rb");
 		if (!floppy_file) 
 		{
-			printf("Error: cannot open file %s\n", cmdLineOptions.floppy_filename);
+			printf("Error: cannot open file %s\n", 
+				CmdLineOptions::get().floppy_filename);
 			free(floppy);
 			return 1;
 		}
@@ -152,10 +153,10 @@ try
 
 	rxv21.setData (floppy);
 
-	if (cmdLineOptions.trace_file) 
+	if (CmdLineOptions::get().trace_file) 
 	{
-		TRCINIT(cmdLineOptions.trace_file);
-		if (cmdLineOptions.compress) 
+		TRCINIT(CmdLineOptions::get().trace_file);
+		if (CmdLineOptions::get().compress) 
 		{
 			trc.flags |= TRACE_COMPRESS;
 		}
@@ -170,16 +171,16 @@ try
 	lsi.bus.installModule (4, &bdv11);
 	lsi.reset ();
 
-	if (cmdLineOptions.bootstrap) 
+	if (CmdLineOptions::get().bootstrap) 
 	{
 		LSI11ConsoleSendString (&dlv11, odt_input);
 	}
-	if (cmdLineOptions.load_file) 
+	if (CmdLineOptions::get().load_file) 
 	{
 		/* execute absolute loader binary */
 		/* const char* filename = "VKAAC0.BIC"; */
 		/* const char* filename = "VKADC0.BIC"; */
-		const char* filename = cmdLineOptions.load_file;
+		const char* filename = CmdLineOptions::get().load_file;
 		size_t size;
 		u16 len;
 		u16 addr;
@@ -256,12 +257,12 @@ try
 
 	running = 1;
 
-	if (cmdLineOptions.halt) 
+	if (CmdLineOptions::get().halt) 
 	{
 		lsi.kd11.cpu().runState = 0;
 	} 
-	else if (!cmdLineOptions.bootstrap && 
-		!cmdLineOptions.halt && !cmdLineOptions.load_file) 
+	else if (!CmdLineOptions::get().bootstrap && 
+		!CmdLineOptions::get().halt && !CmdLineOptions::get().load_file) 
 	{
 		lsi.kd11.cpu().runState = 1;
 	}
@@ -279,7 +280,7 @@ try
 		for(i = 0; i < 1000; i++)
 			lsi.step ();
 
-		if (cmdLineOptions.exit_on_halt && lsi.kd11.cpu().runState == 0)
+		if (CmdLineOptions::get().exit_on_halt && lsi.kd11.cpu().runState == 0)
 		{
 			/* make sure ODT finishes its prompt */
 			for(i = 0; i < 32; i++)
@@ -296,7 +297,7 @@ try
 
 	printf ("\n");
 
-	if(cmdLineOptions.trace_file)
+	if(CmdLineOptions::get().trace_file)
 	{
 		TRCFINISH();
 	}

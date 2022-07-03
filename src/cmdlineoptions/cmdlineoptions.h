@@ -11,20 +11,42 @@
 // ToDo: readOnly, createNewFile and openExistingFile options should be per file
 struct CmdLineOptions
 {
-    const char* floppy_filename = nullptr;
-	const char* load_file = nullptr;
-	int halt = 0;
-	int bootstrap = 0;
-	const char* trace_file = nullptr;
-	int compress = 0;
-	int exit_on_halt = 0;
-	int readOnly = 0;
-	int quiet = 0;
-	int createNewFile = 0;
-	int openExistingFile = 0;
+    static const char *floppy_filename_;
+	static const char* load_file_;
+	static int halt_;
+	static int bootstrap_;
+	static const char* trace_file_;
+	static int compress_;
+	static int exit_on_halt_;
+	static int readOnly_;
+	static int quiet_;
+	static int createNewFile_;
+	static int openExistingFile_;
 
-	CmdLineOptions(int argc, char **argv);
+protected:
+	// CmdLineOptions(int argc, char **argv);
+	CmdLineOptions();
+
+public:
+	static CmdLineOptions &get();
+	static void processOptions (int argc, char **argv);
+
+	const char* const &floppy_filename;
+	const char*  const &load_file;
+	int const &halt;
+	int const &bootstrap;
+	const char* const &trace_file;
+	int const &compress;
+	int const &exit_on_halt;
+	int const &readOnly;
+	int const &quiet;
+	int const &createNewFile;
+	int const &openExistingFile;
+	
+	CmdLineOptions (CmdLineOptions const&) = delete;
+	CmdLineOptions (CmdLineOptions &&) = delete;
+	CmdLineOptions &operator= (CmdLineOptions const&) = delete;
+	CmdLineOptions &operator= (CmdLineOptions &&) = delete;
 };
-
 
 #endif // _CMDLINEOPTIONS_H_

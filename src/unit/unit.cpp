@@ -8,8 +8,6 @@
 extern FILE *sim_fopen (const char *file, const char *mode);
 extern size_t sim_fread (void* bptr, size_t size, size_t count, FILE* fptr);
 
-extern CmdLineOptions cmdLineOptions;
-
 // Unit constructor
 // Set default values for flags
 Unit::Unit (Device *owningDevice)
@@ -63,7 +61,7 @@ StatusCode Unit::attach_unit(std::string fileName)
             // so it cannot be attached to a pipe
             return StatusCode::FunctionNotImplemented;
     }
-    else if (cmdLineOptions.readOnly)
+    else if (CmdLineOptions::get().readOnly)
     {                 
         // Read only allowed?
         if ((flags_ & (UNIT_RO | UNIT_ROABLE)) == 0)
@@ -76,15 +74,15 @@ StatusCode Unit::attach_unit(std::string fileName)
 
         // Set unit read-only
         flags_ |= UNIT_RO;
-        if (!cmdLineOptions.quiet)
+        if (!CmdLineOptions::get().quiet)
             std::cout << owningDevice_->name() << ": unit is read only\n";
     }
-    else if (cmdLineOptions.createNewFile)
+    else if (CmdLineOptions::get().createNewFile)
     {                 
         filePtr_ = sim_fopen (fileName_.c_str(), "wb+");
         if (filePtr_ == NULL)
             return StatusCode::OpenError;
-        if (!cmdLineOptions.quiet)
+        if (!CmdLineOptions::get().quiet)
             std::cout << owningDevice_->name() << ": creating new file\n";
     }
     else
@@ -105,14 +103,14 @@ StatusCode Unit::attach_unit(std::string fileName)
                 if (filePtr_ == NULL)
                     return StatusCode::OpenError;
                 flags_ |= UNIT_RO;
-                if (!cmdLineOptions.quiet)
+                if (!CmdLineOptions::get().quiet)
                     std::cout << owningDevice_->name() << ": unit is read only\n";
             }
             else
             {
                 // The file doesn't exist
                 // Only allowed to open existing files?
-                if (cmdLineOptions.openExistingFile)
+                if (CmdLineOptions::get().openExistingFile)
                     return StatusCode::OpenError;
 
                 // Open new file with the specified name
@@ -120,7 +118,7 @@ StatusCode Unit::attach_unit(std::string fileName)
                 if (filePtr_ == NULL)
                     return StatusCode::OpenError;
 
-                if (!cmdLineOptions.quiet)
+                if (!CmdLineOptions::get().quiet)
                     std::cout << owningDevice_->name() << ": creating new file\n";
             }
         }
@@ -147,7 +145,7 @@ StatusCode Unit::attach_unit(std::string fileName)
         if (fileBuffer_ == NULL)
             throw ("Allocating memory for buffered I/O failed");
 
-        if (!cmdLineOptions.quiet)
+        if (!CmdLineOptions::get().quiet)
             std::cout << owningDevice_->name() << ": buffering file in memory\n";
             
         hwmark_ = sim_fread (fileBuffer_, sizeof (u16), capacity_ , filePtr_);

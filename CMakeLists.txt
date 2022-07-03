@@ -24,6 +24,7 @@ set (SIM11_SRCS
     src/main.cpp 
     src/msv11d/msv11d.cpp
     src/qbus/qbus.cpp
+    src/rlv12/attach.cpp
     src/rlv12/rlv12.cpp
     src/rlv12/rl012.cpp
     src/rxv21/rxv21.cpp
@@ -45,6 +46,9 @@ set (SIM11_SRCS
     src/trace.cpp
     src/console.cpp
     src/cmdlineoptions/cmdlineoptions.cpp
+    src/cmdlineoptions/data.cpp
+    src/cmdlineoptions/get.cpp
+    src/cmdlineoptions/processoptions.cpp
     src/interruptrequest/interruptrequest.cpp
     src/semaphore/notify.cpp
     src/semaphore/notifyall.cpp
