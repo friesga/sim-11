@@ -19,21 +19,21 @@ void CmdLineOptions::processOptions (int argc, char **argv)
 	for (; argc; --argc, ++argv)
 	{
 		if (!strcmp("-h", *argv))
-			halt_ = 1;
+			halt_ = true;
 		else if(!strcmp("-b", *argv)) 
-			bootstrap_ = 1;
+			bootstrap_ = true;
 		else if(!strcmp("-z", *argv)) 
-			compress_ = 1;
+			compress_ = true;
 		else if(!strcmp("-x", *argv))
-			exit_on_halt_ = 1;
+			exit_on_halt_ = true;
 		else if(!strcmp("-e", *argv))
-			openExistingFile_ = 1;
+			openExistingFile_ = true;
 		else if(!strcmp("-r", *argv))
-			readOnly_ = 1;
+			readOnly_ = true;
 		else if(!strcmp("-n", *argv))
-			createNewFile_ = 1;
+			createNewFile_ = true;
 		else if(!strcmp("-q", *argv))
-			quiet_ = 1;
+			quiet_ = true;
 		else if(!strcmp("-l", *argv) && argc > 1) 
 		{
 			load_file_ = argv[1];

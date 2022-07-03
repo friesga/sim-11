@@ -13,15 +13,15 @@ struct CmdLineOptions
 {
     static const char *floppy_filename_;
 	static const char* load_file_;
-	static int halt_;
-	static int bootstrap_;
+	static bool halt_;
+	static bool bootstrap_;
 	static const char* trace_file_;
-	static int compress_;
-	static int exit_on_halt_;
-	static int readOnly_;
-	static int quiet_;
-	static int createNewFile_;
-	static int openExistingFile_;
+	static bool compress_;
+	static bool exit_on_halt_;
+	static bool readOnly_;
+	static bool quiet_;
+	static bool createNewFile_;
+	static bool openExistingFile_;
 
 protected:
 	// CmdLineOptions(int argc, char **argv);
@@ -33,15 +33,15 @@ public:
 
 	const char* const &floppy_filename;
 	const char*  const &load_file;
-	int const &halt;
-	int const &bootstrap;
+	bool const &halt;
+	bool const &bootstrap;
 	const char* const &trace_file;
-	int const &compress;
-	int const &exit_on_halt;
-	int const &readOnly;
-	int const &quiet;
-	int const &createNewFile;
-	int const &openExistingFile;
+	bool const &compress;
+	bool const &exit_on_halt;
+	bool const &readOnly;
+	bool const &quiet;
+	bool const &createNewFile;
+	bool const &openExistingFile;
 	
 	CmdLineOptions (CmdLineOptions const&) = delete;
 	CmdLineOptions (CmdLineOptions &&) = delete;
