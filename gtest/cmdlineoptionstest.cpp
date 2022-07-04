@@ -33,7 +33,6 @@ TEST (CmdLineOptionsTest, optionsProcessed)
     EXPECT_FALSE (CmdLineOptions::get().readOnly);
     EXPECT_FALSE (CmdLineOptions::get().quiet);
     EXPECT_FALSE (CmdLineOptions::get().createNewFile);
-    EXPECT_FALSE (CmdLineOptions::get().openExistingFile);
 
     CmdLineOptions::processOptions (sizeof (argvSet0) /sizeof (argvSet0[0]), argvSet0);
 
