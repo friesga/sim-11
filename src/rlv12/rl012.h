@@ -2,7 +2,7 @@
 #define _RL012_H_
 
 #include "device.h"
-#include "../unit/unit.h"
+#include "unit/unit.h"
 #include "types.h"
 #include "statuscodes.h"
 

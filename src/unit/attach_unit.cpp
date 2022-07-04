@@ -1,5 +1,5 @@
 #include "unit.h"
-#include "../cmdlineoptions/cmdlineoptions.h"
+#include "cmdlineoptions/cmdlineoptions.h"
 
 #include <iostream>
 #include <sys/stat.h>

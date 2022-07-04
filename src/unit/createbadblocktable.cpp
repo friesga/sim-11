@@ -20,7 +20,7 @@
 
 #include "unit.h"
 #include "statuscodes.h"
-#include "../sim_fio/sim_fio.h"
+#include "sim_fio/sim_fio.h"
 
 extern bool gotApproval(std::string question, bool defaultAnswer);
 

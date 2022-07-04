@@ -2,9 +2,9 @@
 #define _QBUS_H_
 
 #include "types.h"
-#include "../conddata/conddata.h"
-#include "../interruptrequest/interruptrequest.h"
-#include "../threadsafeprioqueue/threadsafeprioqueue.h"
+#include "conddata/conddata.h"
+#include "interruptrequest/interruptrequest.h"
+#include "threadsafeprioqueue/threadsafeprioqueue.h"
 
 /* Backplane size */
 #define	LSI11_SIZE		8

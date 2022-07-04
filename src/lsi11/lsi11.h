@@ -1,8 +1,8 @@
 #ifndef _LSI11_H_
 #define _LSI11_H_
 
-#include "../kd11/kd11.h"
-#include "../qbus/qbus.h"
+#include "kd11/kd11.h"
+#include "qbus/qbus.h"
 
 class LSI11
 {

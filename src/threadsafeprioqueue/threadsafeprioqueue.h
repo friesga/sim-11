@@ -1,7 +1,7 @@
 #ifndef _INTERRUPTQUEUE_H_
 #define _INTERRUPTQUEUE_H_
 
-#include "../semaphore/semaphore.h"
+#include "semaphore/semaphore.h"
 
 #include <queue>
 

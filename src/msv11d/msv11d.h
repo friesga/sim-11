@@ -1,7 +1,7 @@
 #ifndef _MSV11D_H_
 #define _MSV11D_H_
 
-#include "../qbus/qbus.h"
+#include "qbus/qbus.h"
 
 /* Main memory size: 32kW / 64kB */
 #define	MSV11D_SIZE		(65536 - 2 * 4096)

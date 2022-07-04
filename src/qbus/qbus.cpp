@@ -3,7 +3,7 @@
 
 #include "trace.h"
 #include "qbus.h"
-#include "../interruptrequest/interruptrequest.h"
+#include "interruptrequest/interruptrequest.h"
 
 #define	IRCJITTER()	(rand() % QBUS_DELAY_JITTER)
 

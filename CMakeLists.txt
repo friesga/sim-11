@@ -86,7 +86,7 @@ target_compile_options (${TARGET} PRIVATE /std:c++20)
 endif ()
 
 # Define directory with include files
-target_include_directories (${TARGET} PRIVATE include)
+target_include_directories (${TARGET} PRIVATE include ${CMAKE_SOURCE_DIR}/src)
 
 # Windows-specific includes
 if (MSVC)

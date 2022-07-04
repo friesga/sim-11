@@ -1,7 +1,7 @@
 #ifndef _DLV11J_H_
 #define _DLV11J_H_
 
-#include "../qbus/qbus.h"
+#include "qbus/qbus.h"
 
 /* DLV11-J input buffer */
 #define	DLV11J_BUF		2048

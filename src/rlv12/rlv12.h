@@ -3,7 +3,7 @@
 
 #include "device.h"
 #include "rl012.h"
-#include "../qbus/qbus.h"
+#include "qbus/qbus.h"
 
 #include <array>
 #include <memory>       // for std::shared_ptr<>

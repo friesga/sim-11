@@ -1,8 +1,8 @@
 #ifndef _RXV21_H_
 #define _RXV21_H_
 
-#include "../qbus/qbus.h"
-#include "../variantfsm/fsm.h"
+#include "qbus/qbus.h"
+#include "variantfsm/fsm.h"
 #include "trace.h"
 
 /* RX2CS bits */
