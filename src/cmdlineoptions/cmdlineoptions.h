@@ -5,9 +5,7 @@
 // options.
 // The data members are public till processing of the options is merged
 // into this class.
-// ToDo: Merge option processing in class CmdLineOptions
-// ToDo: CmdLineOptions should be a singleton
-// ToDo: Change CmdLineOptions int's to bool's
+//
 // ToDo: readOnly, createNewFile and openExistingFile options should be per file
 struct CmdLineOptions
 {
