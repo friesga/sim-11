@@ -24,24 +24,21 @@ StatusCode Unit::attach_unit(std::string fileName)
     // if (dptr->flags & DEV_RAWONLY)
     //     return SCPE_NOFNC;
 
-    // Save filename
-    fileName_ = fileName;
-
     // Create a new file if specified
     if (CmdLineOptions::get().createNewFile)
-        statusCode = createFile ();
+        statusCode = createFile (fileName);
     else 
     {    
         // Check if file exists and is a pipe 
         if (isPipe (fileName_))
-            statusCode = openPipe ();
+            statusCode = openPipe (fileName);
 
         else if (CmdLineOptions::get().readOnly)
-            statusCode = openReadOnly ();
+            statusCode = openReadOnly (fileName);
         
         else 
             // Open existing file read/write 
-            statusCode = openReadWrite ();
+            statusCode = openReadWrite (fileName);
     }
 
     if (statusCode != StatusCode::OK)
@@ -51,6 +48,7 @@ StatusCode Unit::attach_unit(std::string fileName)
         setBuffered ();
 
     flags_ |= UNIT_ATT;
+    fileName_ = fileName;
     position_ = 0;
     return StatusCode::OK;
 }

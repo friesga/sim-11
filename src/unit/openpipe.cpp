@@ -5,7 +5,7 @@
 // Functions defined sim_fio library
 extern FILE* sim_fopen(const char* file, const char* mode);
 
-StatusCode Unit::openPipe()
+StatusCode Unit::openPipe(std::string fileName)
 {
     // Check the init is sequential
     if (flags_ & UNIT_SEQ)
@@ -13,10 +13,10 @@ StatusCode Unit::openPipe()
         // If the unit is readable,
         if (flags_ & (UNIT_RO | UNIT_ROABLE))
             // then open the pipe for reading,
-            filePtr_ = sim_fopen (fileName_.c_str(), "rb");
+            filePtr_ = sim_fopen (fileName.c_str(), "rb");
         else
             // open the pipe for writing
-            filePtr_ = sim_fopen (fileName_.c_str(), "wb");
+            filePtr_ = sim_fopen (fileName.c_str(), "wb");
 
         // If the file failed to open then report the error
         if (filePtr_ == NULL)

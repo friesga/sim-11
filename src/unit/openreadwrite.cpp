@@ -11,9 +11,9 @@ extern FILE* sim_fopen(const char* file, const char* mode);
 // Functions defined in lib
 extern bool gotApproval(std::string question, bool defaultAnswer);
 
-StatusCode Unit::openReadWrite()
+StatusCode Unit::openReadWrite (std::string fileName)
 {
-    filePtr_ = sim_fopen(fileName_.c_str(), "rb+");
+    filePtr_ = sim_fopen(fileName.c_str(), "rb+");
     if (filePtr_ == NULL)
     {
         // Open for read/write failed
@@ -32,7 +32,7 @@ StatusCode Unit::openReadWrite()
                 return StatusCode::OpenError;
 
             // Try to open the file read-only
-            filePtr_ = sim_fopen(fileName_.c_str(), "rb");
+            filePtr_ = sim_fopen(fileName.c_str(), "rb");
             if (filePtr_ == NULL)
                 return StatusCode::OpenError;
 

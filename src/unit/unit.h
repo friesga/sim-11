@@ -45,11 +45,11 @@ class Unit
     int32_t position_;          // File position
     u32 dynflags_;              // Dynamic flags
 
-    StatusCode createFile ();
-    StatusCode openPipe ();
+    StatusCode createFile (std::string fileName);
+    StatusCode openPipe (std::string fileName);
     bool isPipe (std::string fileName);
-    StatusCode openReadOnly ();
-    StatusCode openReadWrite ();
+    StatusCode openReadOnly (std::string fileName);
+    StatusCode openReadWrite (std::string fileName);
     void setBuffered ();
 
 protected:
