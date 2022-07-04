@@ -41,7 +41,13 @@ set (SIM11_SRCS
     src/sim_fio/sim_fsize.cpp
     src/sim_fio/sim_ftell.cpp
     src/sim_fio/sim_fwrite.cpp
-    src/unit/attach.cpp
+    src/unit/attach_unit.cpp
+    src/unit/createfile.cpp
+    src/unit/ispipe.cpp
+    src/unit/openpipe.cpp
+    src/unit/openreadonly.cpp
+    src/unit/openreadwrite.cpp
+    src/unit/setbuffered.cpp
     src/unit/unit.cpp
     src/unit/createbadblocktable.cpp
     src/trace.cpp

@@ -45,6 +45,13 @@ class Unit
     int32_t position_;          // File position
     u32 dynflags_;              // Dynamic flags
 
+    StatusCode createFile ();
+    StatusCode openPipe ();
+    bool isPipe (std::string fileName);
+    StatusCode openReadOnly ();
+    StatusCode openReadWrite ();
+    void setBuffered ();
+
 protected:
     FILE *filePtr_;             // The disk file
     u32 capacity_;              // Drive capacity in words
