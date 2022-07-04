@@ -1,10 +1,12 @@
 ﻿#
 # CMakeList.txt : CMake project for sim-11.
 #
-cmake_minimum_required (VERSION 3.15)
+cmake_minimum_required (VERSION 3.20)
+# cmake_policy(SET CMP0091 NEW)
 
 # Define project
 project ("sim-11")
+include (GoogleTest)
 
 # Define our target once
 set (TARGET sim-11)
@@ -73,6 +75,10 @@ set (TERMIO_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/contrib/termio/src/termio.cpp)
 target_sources (${TARGET} PRIVATE ${CLOCK_SRCS} ${TERMIO_SRCS})
 endif ()
   
+# At least C++17 is needed for use of std::variant in variantfsm.
+# set(CMAKE_CXX_STANDARD 20) is useless as that not translates to /std:c++20
+# but to std:c++latest
+
 # GCC specific compiler options
 if (CMAKE_C_COMPILER_ID STREQUAL "GNU")
 target_compile_options (${TARGET} PRIVATE 
@@ -101,3 +107,39 @@ endif ()
 if (CMAKE_C_COMPILER_ID STREQUAL "GNU")
 target_link_options (${TARGET} PRIVATE -Wl,-x -Wl,--gc-sections -fsanitize=address)
 endif ()
+
+#
+# Create sim-11 test executable
+#
+# N.B. This configuration on x64 only produces a correct executable using
+# the x64-Release configuration (in the folder x44-Release)!
+#
+# Define source files
+set (SIM11_TEST_SRCS
+    gtest/cmdlineoptionstest.cpp
+    src/cmdlineoptions/cmdlineoptions.cpp
+    src/cmdlineoptions/data.cpp
+    src/cmdlineoptions/get.cpp
+    src/cmdlineoptions/processoptions.cpp)
+
+add_executable (sim-11-test ${SIM11_TEST_SRCS})
+
+set(GTEST_INCLUDE_DIRS 
+    "G:/src/gtest-1.10.0/googletest/include")
+
+set (GTESTUNIT_LIBS
+    "G:/src/gtest-1.10.0/build/x64-Release/lib/gtest.lib"
+    "G:/src/gtest-1.10.0/build/x64-Release/lib/gtest_main.lib")
+
+target_include_directories (sim-11-test PUBLIC
+    include 
+    ${CMAKE_SOURCE_DIR}/src
+    ${GTEST_INCLUDE_DIRS})
+
+target_link_libraries(sim-11-test ${GTESTUNIT_LIBS})
+
+enable_testing ()
+
+gtest_add_tests (TARGET sim-11-test 
+                 SOURCES ${SIM11_TEST_SRCS}
+                 TEST_LIST CmdLineOptionsTest)
