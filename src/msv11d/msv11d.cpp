@@ -15,10 +15,13 @@ MSV11D::~MSV11D ()
 	free (data);
 }
 
-u16 MSV11D::read (u16 address)
+StatusCode MSV11D::read (u16 address, u16 *destAddress)
 {
+	// Get the contents of the specified address via a u16 pointer
+	// as data is an array of bytes.
 	u16* mem = (u16*) &data[address];
-	return *mem;
+	*destAddress = *mem;
+	return StatusCode::OK;
 }
 
 void MSV11D::write (u16 address, u16 value)

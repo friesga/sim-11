@@ -27,7 +27,9 @@ CondData<u16> QBUS::read (u16 address)
 
 		if (module->responsible (address))
 		{
-			CondData<u16> value = module->read (address);
+			// CondData<u16> value = module->read (address);
+			u16 value;
+			module->read (address, &value);
 			TRCBus (TRC_BUS_RD, addr, value);
 			return value;
 		}

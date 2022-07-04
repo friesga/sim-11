@@ -116,22 +116,31 @@ void DLV11J::writeChannel(int channelNr)
 	}
 }
 
-u16 DLV11J::read (u16 address)
+StatusCode DLV11J::read (u16 address, u16 *destAddress)
 {
 	switch(address)
 	{
 		case 0177560:
-			return channel[3].rcsr;
+			*destAddress = channel[3].rcsr;
+			break;
+
 		case 0177562:
 			readChannel(3);
-			return channel[3].rbuf;
+			*destAddress = channel[3].rbuf;
+			break;
+
 		case 0177564:
-			return channel[3].xcsr;
+			*destAddress = channel[3].xcsr;
+			break;
+
 		case 0177566:
-			return channel[3].xbuf;
+			*destAddress = channel[3].xbuf;
+			break;
+
 		default:
-			return 0;
+			return StatusCode::NonExistingMemory;
 	}
+	return StatusCode::OK;
 }
 
 void DLV11J::writeRCSR(int n, u16 value)

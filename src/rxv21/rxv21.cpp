@@ -44,16 +44,16 @@ void RXV21::done ()
 }
 
 // Read operation on either the RX2CS or RX2DB
-u16 RXV21::read (u16 address)
+StatusCode RXV21::read (u16 address, u16 *destAddress)
 {
 	if(address == base) 
 		/* Return value of the RX2CS */
-		return rx2cs & RX_RMASK;
+		*destAddress = rx2cs & RX_RMASK;
 	else if(address == base + 2) 
 		/* Return value of the RX2DB */
-		return rx2db;
+		*destAddress = rx2db;
 
-	return 0;
+	return StatusCode::OK;
 }
 
 // Write operation on either the RX2CS of RX2DB

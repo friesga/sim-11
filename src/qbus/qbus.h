@@ -2,6 +2,7 @@
 #define _QBUS_H_
 
 #include "types.h"
+#include "statuscodes.h"
 #include "conddata/conddata.h"
 #include "interruptrequest/interruptrequest.h"
 #include "threadsafeprioqueue/threadsafeprioqueue.h"
@@ -48,7 +49,7 @@ class QBUSModule
 {
 public:
 	QBUS*	bus;
-	u16		virtual read (u16 addr) = 0;
+	virtual StatusCode read (u16 addr, u16 *destination) = 0;
 	void	virtual write (u16 addr, u16 value) = 0;
 	u8		virtual responsible (u16 addr) = 0;
 	void	virtual reset () = 0;

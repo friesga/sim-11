@@ -10,6 +10,7 @@ enum class StatusCode
     ArgumentError,
     FunctionNotImplemented,
     IOError,
+    NonExistingMemory,
     NotAttachable,
     OpenError,
     ReadOnly,

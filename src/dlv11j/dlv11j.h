@@ -30,7 +30,7 @@ public:
 	~DLV11J ();
 
 	// Define the obligatory functions
-	u16 read (u16 address);
+	StatusCode read (u16 address, u16 *destAddress);
 	void write (u16 address, u16 value);
 	u8 responsible (u16 address);
 	void reset ();
