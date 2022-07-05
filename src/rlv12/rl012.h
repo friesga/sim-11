@@ -59,6 +59,8 @@
 // RLO1/RL02 unit
 class RL01_2 : public Unit
 {
+    friend class RLV12;
+
     int32_t currentTrack_;
     int32_t status_;
 
