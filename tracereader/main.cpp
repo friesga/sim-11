@@ -23,9 +23,6 @@ TRACE_RXV21ERR traceRxv21Err;
 TRACE_RXV21STEP traceRxv21Step;
 TRACE_DLV11 traceDlv11;
 
-// Let trace functions print to stdout
-#define	DST	stdout
-
 bool isHeader (char *buffer)
 {
 	char header[6] = { 'X', 'T', 'R', 'C', 0, 65 };
