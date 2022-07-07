@@ -2,7 +2,7 @@
 
 #include <iostream>
 #include <fstream>
-#include <string>
+#include <memory>
 
 using namespace std;
 
@@ -77,7 +77,6 @@ int main (int argc, char **argv)
 	}
 
 	// Allocate a buffer for memory dumps
-	// ToDo: Deallocate memory
 	u8 *memoryDump = new u8[maxMemorySize];
 
 	while (traceFile)
@@ -91,6 +90,7 @@ int main (int argc, char **argv)
 		if (!traceFile.good() || traceFile.gcount() != magicSize)
 		{
 			cout << "Read error on " << argv[1] << '\n';
+			delete memoryDump;
 			return 1;
 		}
 
@@ -246,7 +246,11 @@ int main (int argc, char **argv)
 
 			default:
 				cout << "Unknown magic: " << U32B(magic) << '\n';
+				delete memoryDump;
 				return 1;
 		}
 	}
+
+	delete memoryDump;
+	return 0;
 }
