@@ -144,3 +144,12 @@ enable_testing ()
 gtest_add_tests (TARGET sim-11-test 
                  SOURCES ${SIM11_TEST_SRCS}
                  TEST_LIST CmdLineOptionsTest)
+
+#
+# Create trace reader
+add_executable (tracereader tracereader/main.cpp
+    src/trace.cpp
+    src/disas.cpp)
+
+target_include_directories (tracereader PRIVATE include)
+
