@@ -40,7 +40,7 @@ CondData<u16> QBUS::read (u16 address)
 	return {};
 }
 
-bool QBUS::write (u16 address, u16 value)
+bool QBUS::writeWord (u16 address, u16 value)
 {
 	u8 i;
 	

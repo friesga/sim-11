@@ -11,6 +11,7 @@
  */
 StatusCode RLV12::read (u16 registerAddress, u16* data)
 {
+#if 0
     // Decode registerAddress<2:1>
     switch (registerAddress & 06)
     {                               
@@ -80,6 +81,6 @@ StatusCode RLV12::read (u16 registerAddress, u16* data)
         default:
             return (StatusCode::NonExistingMemory);
     }
-
+#endif
     return StatusCode::OK;
 }

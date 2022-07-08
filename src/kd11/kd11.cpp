@@ -120,7 +120,7 @@ KD11CPU &KD11::cpu()
 }
 
 #define	READ(addr)			(bus->read((addr)))
-#define	WRITE(addr, val)	(bus->write((addr), (val)))
+#define	WRITE(addr, val)	(bus->writeWord((addr), (val)))
 
 #define RETURN_IF_INVALID(var) \
     if (!var.hasValue())   \
