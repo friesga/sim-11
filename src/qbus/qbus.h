@@ -31,7 +31,7 @@ public:
 	void	step ();
 	CondData<u16> read (u16 addr);
 	bool	writeWord (u16 addr, u16 value);
-	bool	write8 (u16 addr, u8 val);
+	bool	writeByte (u16 addr, u8 val);
 	void	installModule (int slot, QBUSModule* module);
 
 	QBUSModule*	slots[LSI11_SIZE];
@@ -51,7 +51,7 @@ class QBUSModule
 public:
 	QBUS*	bus;
 	virtual StatusCode read (u16 addr, u16 *destination) = 0;
-	void	virtual write (u16 addr, u16 value) = 0;
+	void	virtual writeWord (u16 addr, u16 value) = 0;
 	u8		virtual responsible (u16 addr) = 0;
 	void	virtual reset () = 0;
 };

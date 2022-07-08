@@ -63,7 +63,7 @@ StatusCode RXV21::read (u16 address, u16 *destAddress)
 // 2. Writing parameters of the command to the RX2DB, such as the sector
 //	  and track address or the bus address.
 //
-void RXV21::write (u16 address, u16 value)
+void RXV21::writeWord (u16 address, u16 value)
 {
 	if (address == base) 
 	{ 

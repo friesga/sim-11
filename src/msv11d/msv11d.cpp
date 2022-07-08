@@ -24,7 +24,7 @@ StatusCode MSV11D::read (u16 address, u16 *destAddress)
 	return StatusCode::OK;
 }
 
-void MSV11D::write (u16 address, u16 value)
+void MSV11D::writeWord (u16 address, u16 value)
 {
 	u16* mem = (u16*) &data[address];
 	*mem = value;

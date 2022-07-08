@@ -1,6 +1,6 @@
 #include "qbus.h"
 
-bool QBUS::write8 (u16 addr, u8 val)
+bool QBUS::writeByte (u16 addr, u8 val)
 {
     u16 aaddr = addr & 0xFFFE;
 	u16 tmp = read (aaddr);

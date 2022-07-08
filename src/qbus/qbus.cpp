@@ -57,7 +57,7 @@ bool QBUS::writeWord (u16 address, u16 value)
 			// It is presumed that all writes on addresses for which a
 			// device is responsible succeed.
 			TRCBus (TRC_BUS_WR, address, value);
-			module->write (address, value);
+			module->writeWord (address, value);
 			return true;
 		}
 	}

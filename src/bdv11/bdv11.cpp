@@ -161,7 +161,7 @@ StatusCode BDV11::read (u16 address, u16 *destAddress)
 	return StatusCode::OK;
 }
 
-void BDV11::write (u16 address, u16 value)
+void BDV11::writeWord (u16 address, u16 value)
 {
 	switch (address)
 	{

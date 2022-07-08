@@ -13,7 +13,7 @@ public:
 	BDV11 ();
 	~BDV11 ();
 	StatusCode read (u16 address, u16 *destAddress);
-	void write (u16 address, u16 value);
+	void writeWord (u16 address, u16 value);
 	u8 responsible (u16 address);
 	void reset ();
 

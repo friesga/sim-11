@@ -171,7 +171,7 @@ void DLV11J::writeXCSR(int n, u16 value)
 	}
 }
 
-void DLV11J::write (u16 address, u16 value)
+void DLV11J::writeWord (u16 address, u16 value)
 {
 	switch(address) {
 		case 0177560:

@@ -703,7 +703,7 @@ bool KD11CPU::writeB(QBUS* bus, u16 dst, u16 mode, u8 val)
 			return true;
 
 		case 1: /* Register deferred */
-			return bus->write8 (r[dst], val);
+			return bus->writeByte (r[dst], val);
 
 		case 2: /* Autoincrement */
 			addr = r[dst];
@@ -712,7 +712,7 @@ bool KD11CPU::writeB(QBUS* bus, u16 dst, u16 mode, u8 val)
 			} else {
 				r[dst]++;
 			}
-			return bus->write8 (addr, val);
+			return bus->writeByte (addr, val);
 
 		case 3: /* Autoincrement deferred */
 			addr = r[dst];
@@ -720,7 +720,7 @@ bool KD11CPU::writeB(QBUS* bus, u16 dst, u16 mode, u8 val)
 			addr = READ(addr);
             if (!addr.hasValue())
                 return false;
-			return bus->write8 (addr, val);
+			return bus->writeByte (addr, val);
 
 		case 4: /* Autodecrement */
 			if(dst == 6 || dst == 7) {
@@ -729,7 +729,7 @@ bool KD11CPU::writeB(QBUS* bus, u16 dst, u16 mode, u8 val)
 				r[dst]--;
 			}
 			addr = r[dst];
-			return bus->write8 (addr, val);
+			return bus->writeByte (addr, val);
 
 		case 5: /* Autodecrement deferred */
 			r[dst] -= 2;
@@ -737,7 +737,7 @@ bool KD11CPU::writeB(QBUS* bus, u16 dst, u16 mode, u8 val)
 			addr = READ(addr);
             if (!addr.hasValue())
                 return false;
-			return bus->write8 (addr, val);
+			return bus->writeByte (addr, val);
 
 		case 6: /* Index */
 			addr = READ(r[7]);
@@ -745,7 +745,7 @@ bool KD11CPU::writeB(QBUS* bus, u16 dst, u16 mode, u8 val)
                 return false;
 			r[7] += 2;
 			addr += r[dst];
-			return bus->write8 (addr, val);
+			return bus->writeByte (addr, val);
 
 		case 7: /* Index deferred */
 			addr = READ(r[7]);
@@ -756,7 +756,7 @@ bool KD11CPU::writeB(QBUS* bus, u16 dst, u16 mode, u8 val)
 			addr = READ(addr);
             if (!addr.hasValue())
                 return false;
-			return bus->write8 (addr, val);
+			return bus->writeByte (addr, val);
 
         default:
             // Prevent compiler warning on not all paths returning a value
