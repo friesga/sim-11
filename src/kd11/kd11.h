@@ -2,6 +2,7 @@
 #define _KD11_H_
 
 #include "qbus/qbus.h"
+#include "qbusmodule/qbusmodule.h"
 
 #define USE_FLOAT
 

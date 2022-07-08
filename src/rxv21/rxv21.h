@@ -1,8 +1,9 @@
 #ifndef _RXV21_H_
 #define _RXV21_H_
 
-#include "conddata/conddata.h"
 #include "qbus/qbus.h"
+#include "qbusmodule/qbusmodule.h"
+#include "conddata/conddata.h"
 #include "variantfsm/fsm.h"
 #include "trace.h"
 

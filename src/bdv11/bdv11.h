@@ -2,6 +2,7 @@
 #define _BDV11_H_
 
 #include "qbus/qbus.h"
+#include "qbusmodule/qbusmodule.h"
 
 /* LTC rate */
 // The default RT-11 line clock frequency is 60 Hz

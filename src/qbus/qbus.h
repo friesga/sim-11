@@ -6,13 +6,13 @@
 #include "conddata/conddata.h"
 #include "interruptrequest/interruptrequest.h"
 #include "threadsafeprioqueue/threadsafeprioqueue.h"
+#include "qbusmodule/qbusmodule.h"
 
 /* Backplane size */
 #define	LSI11_SIZE		8
 
 /* QBUS interrupt request delay */
 #define	QBUS_DELAY		20
-
 
 /* QBUS interrupt request delay jitter */
 #define	QBUS_DELAY_JITTER	10
@@ -43,17 +43,6 @@ private:
 	IntrptReqQueue intrptReqQueue_;
 
 	InterruptRequest const busError{RequestType::Trap, TrapPriority::BusError, 0, 004};
-};
-
-// Define the functions every QBUS module should provide
-class QBUSModule
-{
-public:
-	QBUS*	bus;
-	virtual StatusCode read (u16 addr, u16 *destination) = 0;
-	void	virtual writeWord (u16 addr, u16 value) = 0;
-	u8		virtual responsible (u16 addr) = 0;
-	void	virtual reset () = 0;
 };
 
 #endif // !_QBUS_H_
