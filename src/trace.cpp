@@ -531,3 +531,28 @@ void TRACERXV21Disk(TRACE* trace, int type, int drive, int density, u16 rx2sa, u
 		fwrite(&rec, sizeof(rec), 1, trace->file);
 	}
 }
+
+void TRACERLV12Registers (TRACE* trace, u16 rlcs, u16 rlba, u16 rlda, 
+	u16 rlmpr, u16 rlbae)
+{
+	TRACE_RLV12REGS rec;
+
+	if(trace->flags & TRACE_PRINT)
+	{
+		fprintf (DST, 
+			"[RLV12] Registers:\nRLCS: %06o, RLBA: %06o, RLDA: %06o, RLMPR: %06o, RLBAE: %06o\n",
+			rlcs, rlba, rlda, rlmpr, rlbae);
+		fflush(DST);
+	}
+
+	if(trace->flags & TRACE_WRITE)
+	{
+		rec.magic = U32B (MAGIC_RL2A);
+		rec.rlcs = U16B (rlcs);
+		rec.rlba = U16B (rlba);
+		rec.rlda = U16B (rlda);
+		rec.rlmpr = U16B (rlmpr);
+		rec.rlbae = U16B (rlbae);
+		fwrite(&rec, sizeof(rec), 1, trace->file);
+	}
+}

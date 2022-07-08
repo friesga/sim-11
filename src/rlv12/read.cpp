@@ -48,8 +48,9 @@ StatusCode RLV12::read (u16 registerAddress, u16* data)
             if (rlcs & RLCS_ALLERR)
                 rlcs |= RLCS_ERR;
             *data = rlcs;
-            if (DEBUG_PRS(rl_dev))
-                fprintf(sim_deb, ">>RL rd: RLCS %06o\n", rlcs);
+
+            if(trc.flags)
+                TRACERLV12Registers (&trc, rlcs, rlba, rlda, rlmpr, rlbae);
             break;
 
         case BAR:
@@ -64,15 +65,15 @@ StatusCode RLV12::read (u16 registerAddress, u16* data)
 
         case MPR: 
             // Multipurpose register
-            *data = rlmp;
-            rlmp = rlmp1;                                   /* ripple data */
-            rlmp1 = rlmp2;
+            *data = rlmpr;
+            rlmpr = rlmpr1;         // ripple data
+            rlmpr1 = rlmpr2;
             break;
 
-        case 4:
+        case BAE:
             // RLBAE 
-            if (UNIBUS || (rl_dev.flags & DEV_RLV11))       /* not in RL11/RLV11 */
-                return SCPE_NXM;
+            if (UNIBUS || flags_ & DEV_RLV11)       /* not in RL11/RLV11 */
+                return StatusCode::NonExistingMemory;
             *data = rlbae & RLBAE_IMP;
             break;
 

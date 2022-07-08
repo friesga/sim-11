@@ -19,29 +19,30 @@
 #define	MAGIC_RX2E		0x52583245
 #define	MAGIC_RX2S		0x52583253
 #define	MAGIC_DLV1		0x444C5631
+#define MAGIC_RL2A		0x524C3241
 
 #define	TRC_CPU_TRAP		0
 #define	TRC_CPU_HALT		1
 #define	TRC_CPU_WAIT		2
-#define	TRC_CPU_RUN		3
+#define	TRC_CPU_RUN			3
 #define	TRC_CPU_DBLBUS		4
 #define	TRC_CPU_ODT_P		5
 #define	TRC_CPU_ODT_G		5
 
-#define	TRC_TRAP		0
+#define	TRC_TRAP			0
 #define	TRC_TRAP_ILL		1
 #define	TRC_TRAP_RADDR		2
-#define	TRC_TRAP_T		3
+#define	TRC_TRAP_T			3
 
-#define	TRC_BUS_RD		0
-#define	TRC_BUS_WR		1
+#define	TRC_BUS_RD			0
+#define	TRC_BUS_WR			1
 #define	TRC_BUS_RDFAIL		2
 #define	TRC_BUS_WRFAIL		3
 #define	TRC_BUS_RESET		4
 
-#define	TRC_IRQ_OK		0
+#define	TRC_IRQ_OK			0
 #define	TRC_IRQ_FAIL		1
-#define	TRC_IRQ_SIG		2
+#define	TRC_IRQ_SIG			2
 
 #define	TRC_DLV11_RX		0
 #define	TRC_DLV11_TX		1
@@ -63,9 +64,9 @@
 #define	TRC_RXV21_TRACK_NO	2
 #define	TRC_RXV21_SECT_NO	3
 
-#define	TRACE_WRITE		1
+#define	TRACE_WRITE			1
 #define	TRACE_IGNORE_BUS	2
-#define	TRACE_PRINT		4
+#define	TRACE_PRINT			4
 #define	TRACE_COMPRESS		8
 #define	TRACE_FIRST_Z		16
 
@@ -103,64 +104,73 @@
 #define	TRCINIT(name)	TRACEOpen(&trc, name);
 #define	TRCFINISH()	TRACEClose(&trc);
 
-typedef struct {
+struct TRACE_CPU
+{
 	u32	magic;
 	u16	r[8];
 	u16	psw;
 	u16	insn[3];
 	u32	pad;
 	u64	step;
-} TRACE_CPU;
+};
 
-typedef struct {
+struct TRACE_CPUZ
+{
 	u32	magic;
 	u16	pc;
 	u16	mask;
 	u64	step;
 	u16	data[11];
-} TRACE_CPUZ;
+};
 
-typedef struct {
+struct TRACE_CPUZS
+{
 	u32	magic;
 	u16	pc;
 	u16	mask;
 	u32	step;
 	u16	data[11];
-} TRACE_CPUZS;
+};
 
-typedef struct {
+struct TRACE_CPUEVT
+{
 	u32	magic;
 	u16	type;
 	u16	value;
-} TRACE_CPUEVT;
+};
 
-typedef struct {
+struct TRACE_BUS
+{
 	u32	magic;
 	u16	addr;
 	u16	value;
 	u16	type;
 	u16	pad;
-} TRACE_BUS;
+};
 
-typedef struct {
+struct TRACE_MEMDUMP
+{
 	u32	magic;
 	u16	addr;
 	u16	len;
-} TRACE_MEMDUMP;
+};
 
-typedef struct {
+struct TRACE_TRAP
+{
 	u32	magic;
 	u16	trap;
 	u16	cause;
-} TRACE_TRAP;
+};
 
-typedef struct {
+struct TRACE_IRQ
+{
 	u32	magic;
 	u16	trap;
 	u16	type;
-} TRACE_IRQ;
+};
 
-typedef struct {
+struct TRACE_RX02
+{
 	u32	magic;
 	u16	rx2cs;
 	u16	rx2ta;
@@ -170,60 +180,77 @@ typedef struct {
 	u16	rx2es;
 	u16	command;
 	u16	status;
-} TRACE_RX02;
+};
 
-typedef struct {
+struct TRACE_DLV11
+{
 	u32	magic;
 	u8	channel;
 	u8	type;
 	u16	value;
-} TRACE_DLV11;
+};
 
-typedef struct {
+struct TRACE_RXV21CMD
+{
 	u32	magic;
 	u8	type;
 	u8	commit;
 	u16	rx2cs;
-} TRACE_RXV21CMD;
+};
 
-typedef struct {
+struct TRACE_RXV21STEP
+{
 	u32	magic;
 	u8	type;
 	u8	step;
 	u16	rx2db;
-} TRACE_RXV21STEP;
+};
 
-typedef struct {
+struct TRACE_RXV21DMA
+{
 	u32	magic;
 	u16	type;
 	u16	rx2wc;
 	u16	rx2ba;
 	u16	pad;
-} TRACE_RXV21DMA;
+};
 
-typedef struct {
+struct TRACE_RXV21DISK
+{
 	u32	magic;
 	u16	type;
 	u8	drive;
 	u8	density;
 	u16	rx2sa;
 	u16	rx2ta;
-} TRACE_RXV21DISK;
+};
 
-typedef struct {
+struct TRACE_RXV21ERR
+{
 	u32	magic;
 	u16	type;
 	u16	info;
-} TRACE_RXV21ERR;
+};
 
-typedef struct {
+struct TRACE_RLV12REGS
+{
+	u32 magic;
+	u16 rlcs;
+    u16 rlba;
+    u16 rlda;
+    u16 rlmpr;
+    u16 rlbae;
+};
+
+
+struct TRACE
+{
 	FILE*	file;
 	u64	step;
 	int	flags;
 	u16	last_psw;
 	u16	last_r[7];
-} TRACE;
-
+};
 extern TRACE trc;
 
 extern int	TRACEOpen(TRACE* trace, const char* filename);
@@ -241,5 +268,7 @@ extern void	TRACERXV21Step(TRACE* trace, int type, int step, u16 rx2db);
 extern void	TRACERXV21DMA(TRACE* trace, int type, u16 rx2wc, u16 rx2ba);
 extern void	TRACERXV21Disk(TRACE* trace, int type, int drive, int density, u16 rx2sa, u16 rx2ta);
 extern void	TRACERXV21Error(TRACE* trace, int type, u16 info);
+extern void TRACERLV12Registers (TRACE* trace, u16 rlcs, u16 rlba, u16 rlda, 
+	u16 rlmpr, u16 rlbae);
 
 #endif

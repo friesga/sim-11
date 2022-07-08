@@ -2,6 +2,7 @@
 #define _RLV12_H_
 
 #include "device.h"
+#include "trace.h"
 #include "rl012.h"
 #include "qbus/qbus.h"
 
@@ -27,7 +28,6 @@
 #define RL02_SIZE       (RL01_SIZE * 2)                 // Words/cartridge
 
 // RLCS bits
-
 #define RLCS_DRDY       (0000001)                       // Drive ready 
 #define RLCS_M_FUNC     (0000007)                       // Function 
 #define  RLCS_NOP       (0)
@@ -60,12 +60,18 @@
 #define GET_DRIVE(x)    (((x) >> RLCS_V_DRIVE) & RLCS_M_DRIVE)
 
 // RLBA
-
 #define RLBA_IMP        (0177777)                       // Implemented bits
 
 // RLBAE 
-
 #define RLBAE_IMP       (0000077)                       // Implemented bits
+
+// Unibus and cpu_opt are currently unsupported
+#define UNIBUS          0
+
+// Device flags
+#define DEV_V_UF        16                              // User flags
+#define DEV_V_RLV11     (DEV_V_UF + 7)                  // RLV11
+#define DEV_RLV11       (1u << DEV_V_RLV11)
 
 // RLV12 controller
 class RLV12 : public Device, QBUSModule
@@ -87,8 +93,15 @@ class RLV12 : public Device, QBUSModule
     u16 rlmpr;      // Multi purpose regsister
     u16 rlbae;      // Bus Address Extension register
 
+    u16 rlmpr1 = 0; // MPR register queue
+    u16 rlmpr2 = 0;     
+
     // Define transfer buffer
     u16 *rlxb_;
+
+    // Define device flags
+    // ToDo: Refactor bit flags
+    uint32_t flags_;
     
     // A RLV12 can have a maximum of four units
     std::array<RL01_2, RL_NUMDRIVES> units_
