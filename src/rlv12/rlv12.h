@@ -5,6 +5,7 @@
 #include "trace.h"
 #include "rl012.h"
 #include "qbus/qbus.h"
+#include "qbusmodule/qbusmodule.h"
 
 #include <array>
 #include <memory>       // for std::shared_ptr<>
