@@ -1,14 +1,16 @@
 #include "qbus.h"
 #include "trace.h"
 
-bool QBUS::writeByte (u16 address, u8 value)
+bool QBUS::writeWord (u16 address, u16 value)
 {
 	QBUSModule* module;
+
+	address &= 0xFFFE;
 		
 	if ((module = responsibleModule(address)) != nullptr)
 	{
 		TRCBus (TRC_BUS_WR, address, value);
-		module->writeByte (address, value);
+		module->writeWord (address, value);
 		return true;
 	}
 

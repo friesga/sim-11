@@ -43,6 +43,8 @@ private:
 	IntrptReqQueue intrptReqQueue_;
 
 	InterruptRequest const busError{RequestType::Trap, TrapPriority::BusError, 0, 004};
+
+	QBUSModule *responsibleModule (u16 address);
 };
 
 #endif // !_QBUS_H_

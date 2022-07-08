@@ -27,6 +27,8 @@ set (SIM11_SRCS
     src/msv11d/msv11d.cpp
     src/qbus/qbus.cpp
     src/qbus/writebyte.cpp
+    src/qbus/writeword.cpp
+    src/qbus/responsiblemodule.cpp
     src/qbusmodule/writebyte.cpp
     src/rlv12/attach.cpp
     src/rlv12/rlv12.cpp

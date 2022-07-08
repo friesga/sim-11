@@ -40,32 +40,6 @@ CondData<u16> QBUS::read (u16 address)
 	return {};
 }
 
-bool QBUS::writeWord (u16 address, u16 value)
-{
-	u8 i;
-	
-	address &= 0xFFFE;
-
-	for (i = 0; i < LSI11_SIZE; i++)
-	{
-		QBUSModule* module = slots[i];
-		if (!module)
-			continue;
-
-		if (module->responsible (address))
-		{
-			// It is presumed that all writes on addresses for which a
-			// device is responsible succeed.
-			TRCBus (TRC_BUS_WR, address, value);
-			module->writeWord (address, value);
-			return true;
-		}
-	}
-
-	TRCBus (TRC_BUS_WRFAIL, address, value);
-	interrupt (busError);
-	return false;
-}
 
 // (Try to) request an interrupt. Trap 004 interrupts always succeed,
 // other interrupts requests only succeed if no other traps or interrupts
