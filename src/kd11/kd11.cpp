@@ -692,16 +692,6 @@ bool KD11CPU::writeW(QBUS* bus, u16 dst, u16 mode, u16 val)
 	}
 }
 
-bool write8 (QBUS* bus, u16 addr, u8 val)
-{
-    u16 aaddr = addr & 0xFFFE;
-	u16 tmp = READ(aaddr);
-	if(addr & 1)
-		tmp = (tmp & 0x00FF) | (val << 8);
-	else
-		tmp = (tmp & 0xFF00) | val;
-	return WRITE(aaddr, tmp); 
-}
 
 bool KD11CPU::writeB(QBUS* bus, u16 dst, u16 mode, u8 val)
 {
@@ -713,7 +703,7 @@ bool KD11CPU::writeB(QBUS* bus, u16 dst, u16 mode, u8 val)
 			return true;
 
 		case 1: /* Register deferred */
-			return write8(bus, r[dst], val);
+			return bus->write8 (r[dst], val);
 
 		case 2: /* Autoincrement */
 			addr = r[dst];
@@ -722,7 +712,7 @@ bool KD11CPU::writeB(QBUS* bus, u16 dst, u16 mode, u8 val)
 			} else {
 				r[dst]++;
 			}
-			return write8(bus, addr, val);
+			return bus->write8 (addr, val);
 
 		case 3: /* Autoincrement deferred */
 			addr = r[dst];
@@ -730,7 +720,7 @@ bool KD11CPU::writeB(QBUS* bus, u16 dst, u16 mode, u8 val)
 			addr = READ(addr);
             if (!addr.hasValue())
                 return false;
-			return write8(bus, addr, val);
+			return bus->write8 (addr, val);
 
 		case 4: /* Autodecrement */
 			if(dst == 6 || dst == 7) {
@@ -739,7 +729,7 @@ bool KD11CPU::writeB(QBUS* bus, u16 dst, u16 mode, u8 val)
 				r[dst]--;
 			}
 			addr = r[dst];
-			return write8(bus, addr, val);
+			return bus->write8 (addr, val);
 
 		case 5: /* Autodecrement deferred */
 			r[dst] -= 2;
@@ -747,7 +737,7 @@ bool KD11CPU::writeB(QBUS* bus, u16 dst, u16 mode, u8 val)
 			addr = READ(addr);
             if (!addr.hasValue())
                 return false;
-			return write8(bus, addr, val);
+			return bus->write8 (addr, val);
 
 		case 6: /* Index */
 			addr = READ(r[7]);
@@ -755,7 +745,7 @@ bool KD11CPU::writeB(QBUS* bus, u16 dst, u16 mode, u8 val)
                 return false;
 			r[7] += 2;
 			addr += r[dst];
-			return write8(bus, addr, val);
+			return bus->write8 (addr, val);
 
 		case 7: /* Index deferred */
 			addr = READ(r[7]);
@@ -766,7 +756,7 @@ bool KD11CPU::writeB(QBUS* bus, u16 dst, u16 mode, u8 val)
 			addr = READ(addr);
             if (!addr.hasValue())
                 return false;
-			return write8(bus, addr, val);
+			return bus->write8 (addr, val);
 
         default:
             // Prevent compiler warning on not all paths returning a value

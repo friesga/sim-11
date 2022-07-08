@@ -31,6 +31,7 @@ public:
 	void	step ();
 	CondData<u16> read (u16 addr);
 	bool	writeWord (u16 addr, u16 value);
+	bool	write8 (u16 addr, u8 val);
 	void	installModule (int slot, QBUSModule* module);
 
 	QBUSModule*	slots[LSI11_SIZE];
