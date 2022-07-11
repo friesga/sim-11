@@ -12,8 +12,8 @@ class QBUSModule
 public:
 	QBUS*	bus;
 	virtual StatusCode read (u16 addr, u16 *destination) = 0;
-	virtual void writeWord (u16 addr, u16 value) = 0;
-	void writeByte (u16 addr, u8 value);
+	virtual StatusCode writeWord (u16 addr, u16 value) = 0;
+	StatusCode writeByte (u16 addr, u8 value);
 	virtual u8 responsible (u16 addr) = 0;
 	virtual void reset () = 0;
 };

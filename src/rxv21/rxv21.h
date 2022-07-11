@@ -132,7 +132,7 @@ public:
 	RXV21 ();
 	~RXV21 ();
 	StatusCode read (u16 address, u16 *destAddress) override;
-	void writeWord (u16 address, u16 value);
+	StatusCode writeWord (u16 address, u16 value);
 	u8 responsible (u16 address);
 	void reset ();
 	void setData (u8* data);

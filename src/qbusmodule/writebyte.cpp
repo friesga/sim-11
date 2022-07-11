@@ -2,7 +2,7 @@
 
 // The defualt implementation of writeByte() for QBus modules. This
 // implementation can be overridden if needed.
-void QBUSModule::writeByte (u16 addr, u8 value)
+StatusCode QBUSModule::writeByte (u16 addr, u8 value)
 {
     u16 aaddr = addr & 0xFFFE;
 	u16 tmp;
@@ -12,5 +12,5 @@ void QBUSModule::writeByte (u16 addr, u8 value)
 	else
 		tmp = (tmp & 0xFF00) | value;
 
-	writeWord (aaddr, tmp); 
+	return writeWord (aaddr, tmp); 
 }

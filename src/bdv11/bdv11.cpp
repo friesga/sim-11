@@ -161,7 +161,7 @@ StatusCode BDV11::read (u16 address, u16 *destAddress)
 	return StatusCode::OK;
 }
 
-void BDV11::writeWord (u16 address, u16 value)
+StatusCode BDV11::writeWord (u16 address, u16 value)
 {
 	switch (address)
 	{
@@ -200,6 +200,8 @@ void BDV11::writeWord (u16 address, u16 value)
 			ltc = value & 0100;
 			break;
 	}
+
+	return StatusCode::OK;
 }
 
 u8 BDV11::responsible (u16 address)

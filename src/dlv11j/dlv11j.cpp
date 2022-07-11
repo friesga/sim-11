@@ -171,7 +171,7 @@ void DLV11J::writeXCSR(int n, u16 value)
 	}
 }
 
-void DLV11J::writeWord (u16 address, u16 value)
+StatusCode DLV11J::writeWord (u16 address, u16 value)
 {
 	switch(address) {
 		case 0177560:
@@ -188,6 +188,8 @@ void DLV11J::writeWord (u16 address, u16 value)
 			writeChannel(3);
 			break;
 	}
+
+	return StatusCode::OK;
 }
 
 u8 DLV11J::responsible (u16 address)
