@@ -15,6 +15,7 @@ class ThreadSafePrioQueue
 public:
     void clear();
     bool empty();
+    void erase (T const &elem);
     bool fetchTop(T &dest);
     void push (T const &ir);
     size_t size();
@@ -36,6 +37,13 @@ bool ThreadSafePrioQueue<T>::empty()
 {
     std::lock_guard<std::mutex> lock(guard);
     return queue_.empty();
+}
+
+template <typename T>
+void ThreadSafePrioQueue<T>::erase (T const &elem)
+{
+    std::lock_guard<std::mutex> lock(guard);
+    queue_.erase (elem);
 }
 
 // To prevent an exception on the return of a T object, the top element is
