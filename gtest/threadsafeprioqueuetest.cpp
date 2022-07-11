@@ -34,7 +34,6 @@ void fillQueue(PriorityQueue &queue, size_t nProducers, size_t nElements)
 }
 
 
-
 TEST (ThreadSafePrioQueue, PriorityQueueHandlesPushAndPop)
 {
     size_t req;
@@ -44,15 +43,21 @@ TEST (ThreadSafePrioQueue, PriorityQueueHandlesPushAndPop)
    
     PriorityQueue priorityQueue;
 
+    // Fill the queue by several threads running at the same time
     fillQueue (priorityQueue, nProducers, nRequestsPerProducer);
 
     // Verify all elements are pushed
     ASSERT_EQ (priorityQueue.size(), numReq);
 
+    // Verify all elements are retrieved in order of their priority
+    size_t previousReq = numReq;
     while (numReq--)
     {
         priorityQueue.fetchTop (req);
+        EXPECT_TRUE (req <= previousReq);
+        previousReq = req;
     }
 
+    // Verify all elements are retrieved
     EXPECT_EQ (priorityQueue.size(), 0);
 }

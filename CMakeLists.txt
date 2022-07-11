@@ -64,11 +64,7 @@ set (SIM11_SRCS
     src/cmdlineoptions/data.cpp
     src/cmdlineoptions/get.cpp
     src/cmdlineoptions/processoptions.cpp
-    src/interruptrequest/interruptrequest.cpp
-    src/semaphore/notify.cpp
-    src/semaphore/notifyall.cpp
-    src/semaphore/semaphore.cpp
-    src/semaphore/wait.cpp)
+    src/interruptrequest/interruptrequest.cpp)
 
 # Add source to this project's executable.
 add_executable (${TARGET} ${SIM11_SRCS})
@@ -127,11 +123,7 @@ set (SIM11_TEST_SRCS
     src/cmdlineoptions/data.cpp
     src/cmdlineoptions/get.cpp
     src/cmdlineoptions/processoptions.cpp
-    gtest/threadsafeprioqueuetest.cpp
-    src/semaphore/notify.cpp
-    src/semaphore/notifyall.cpp
-    src/semaphore/semaphore.cpp
-    src/semaphore/wait.cpp)
+    gtest/threadsafeprioqueuetest.cpp)
 
 add_executable (sim-11-test ${SIM11_TEST_SRCS})
 

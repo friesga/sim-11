@@ -1,16 +1,17 @@
-#ifndef _INTERRUPTQUEUE_H_
-#define _INTERRUPTQUEUE_H_
-
-#include "semaphore/semaphore.h"
+#ifndef _THREADSAFEPRIOQUEUE_H_
+#define _THREADSAFEPRIOQUEUE_H_
 
 #include <queue>
+#include <mutex>
+#include <condition_variable>
 
 template <typename T>
 class ThreadSafePrioQueue
 {
     std::priority_queue<T> queue_;
-    Semaphore semaphore_{1};        // One available priority_queue
-
+    mutable std::mutex guard;
+    std::condition_variable signal;
+ 
 public:
     void clear();
     bool empty();
@@ -26,12 +27,15 @@ template <typename T>
 void ThreadSafePrioQueue<T>::clear()
 {
     std::priority_queue<T> emptyQueue;
+
+    std::lock_guard<std::mutex> lock(guard);
     std::swap(queue_, emptyQueue);
 }
 
 template <typename T>
 bool ThreadSafePrioQueue<T>::empty()
 {
+    std::lock_guard<std::mutex> lock(guard);
     return queue_.empty();
 }
 
@@ -41,10 +45,10 @@ bool ThreadSafePrioQueue<T>::empty()
 template <typename T>
 bool ThreadSafePrioQueue<T>::fetchTop(T &dest)
 {
-    semaphore_.wait();
+    std::unique_lock<std::mutex> lock(guard);
 
     if (queue_.empty())
-        return false;
+        signal.wait(lock);
 
     // If this throws, nothing has been removed
     dest = std::move (queue_.top());
@@ -53,44 +57,36 @@ bool ThreadSafePrioQueue<T>::fetchTop(T &dest)
     // can safely remove it
     queue_.pop();
 
-    semaphore_.notify();
     return true;
 }
 
 template <typename T>
 void ThreadSafePrioQueue<T>::pop()
 {
-    semaphore_.wait();
+    std::lock_guard<std::mutex> lock(guard);
     queue_.pop();
-    semaphore_.notify();
 }
 
 template <typename T>
 void ThreadSafePrioQueue<T>::push (T const &elem)
 {
-    semaphore_.wait();
+    std::lock_guard<std::mutex> lock(guard);
     queue_.push (elem);
-    semaphore_.notify();
+
 }
 
 template <typename T>
 size_t ThreadSafePrioQueue<T>::size()
 {
-    semaphore_.wait();
-    size_t size = queue_.size();
-    semaphore_.notify();
-
-    return size;
+    std::lock_guard<std::mutex> lock(guard);
+    return queue_.size();
 }
 
 template <typename T>
 T const &ThreadSafePrioQueue<T>::top()
 {
-    semaphore_.wait();
-    T const &elem = queue_.top();
-    semaphore_.notify();
-
-    return elem;
+    std::lock_guard<std::mutex> lock(guard);
+    return queue_.top();
 }
 
-#endif // !_INTERRUPTQUEUE_H_
+#endif // !_THREADSAFEPRIOQUEUE_H_
