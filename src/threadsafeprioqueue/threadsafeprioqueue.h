@@ -8,7 +8,7 @@
 template <typename T>
 class ThreadSafePrioQueue
 {
-    std::multiset<T> queue_;
+    std::set<T> queue_;
     mutable std::mutex guard;
     std::condition_variable signal;
  
@@ -25,7 +25,7 @@ public:
 template <typename T>
 void ThreadSafePrioQueue<T>::clear()
 {
-    std::multiset<T> emptyQueue;
+    std::set<T> emptyQueue;
 
     std::lock_guard<std::mutex> lock(guard);
     std::swap(queue_, emptyQueue);

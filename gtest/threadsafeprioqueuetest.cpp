@@ -11,11 +11,11 @@ using namespace std;
 using PriorityQueue = ThreadSafePrioQueue<size_t>;
 
 // Fill a regular queue in ascending order
-void producer(PriorityQueue &queue, size_t numReq)
+void producer(PriorityQueue &queue, size_t index, size_t numReq)
 {
     for (size_t num = 0; num < numReq; ++num)
     {
-        queue.push(num);
+        queue.push(index * numReq + num);
     }
 }
 
@@ -26,7 +26,7 @@ void fillQueue(PriorityQueue &queue, size_t nProducers, size_t nElements)
     // Start n producers
     for (unsigned char index = 0; index < nProducers; ++index)
         producers.push_back (thread (producer, std::ref(queue), 
-            nElements));
+            index, nElements));
   
     // Wait till all producers have issued their requests
     for (size_t index = 0; index < nProducers; ++index)
