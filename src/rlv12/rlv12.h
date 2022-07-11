@@ -121,6 +121,8 @@ public:
     // Required functions
     void reset () override;
     StatusCode read (u16 registerAddress, u16* data) override;
+    StatusCode writeByte (u16 registerAddress, u8 data);
+    StatusCode writeWord (u16 registerAddress, u16 data);
 };
 
 

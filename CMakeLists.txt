@@ -34,6 +34,7 @@ set (SIM11_SRCS
     src/rlv12/rlv12.cpp
     src/rlv12/rl012.cpp
     src/rlv12/read.cpp
+    src/rlv12/writeword.cpp
     src/rxv21/rxv21.cpp
     src/rxv21/interruptrequest.cpp
     src/rxv21/initiatecommand.cpp
