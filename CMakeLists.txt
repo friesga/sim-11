@@ -126,12 +126,17 @@ set (SIM11_TEST_SRCS
     src/cmdlineoptions/cmdlineoptions.cpp
     src/cmdlineoptions/data.cpp
     src/cmdlineoptions/get.cpp
-    src/cmdlineoptions/processoptions.cpp)
+    src/cmdlineoptions/processoptions.cpp
+    gtest/threadsafeprioqueuetest.cpp
+    src/semaphore/notify.cpp
+    src/semaphore/notifyall.cpp
+    src/semaphore/semaphore.cpp
+    src/semaphore/wait.cpp)
 
 add_executable (sim-11-test ${SIM11_TEST_SRCS})
 
 set(GTEST_INCLUDE_DIRS 
-    "G:/src/gtest-1.10.0/googletest/include")
+    G:/src/gtest-1.10.0/googletest/include)
 
 set (GTESTUNIT_LIBS
     "G:/src/gtest-1.10.0/build/x64-Release/lib/gtest.lib"
@@ -148,7 +153,7 @@ enable_testing ()
 
 gtest_add_tests (TARGET sim-11-test 
                  SOURCES ${SIM11_TEST_SRCS}
-                 TEST_LIST CmdLineOptionsTest)
+                 TEST_LIST CmdLineOptionsTest ThreadSafePrioQueue)
 
 #
 # Create trace reader
