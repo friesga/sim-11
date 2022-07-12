@@ -68,6 +68,15 @@ void QBUS::pushInterruptRequest (InterruptRequest intrptReq)
 	delay = IRCJITTER ();
 }
 
+// Clear the specified interrupt request. The InterruptRequQueue will delete
+// the interrupt request equal to specified request. Equality is based on
+// priority and busorder (see InterruptRequest::operator==).
+void QBUS::clearInterrupt (TrapPriority priority, unsigned char busOrder)
+{
+	intrptReqQueue_.erase (InterruptRequest {RequestType::IntrptReq, 
+		priority, busOrder, 0});
+}
+
 void QBUS::reset ()
 {
 	u8 i;

@@ -23,8 +23,23 @@ InterruptRequest::InterruptRequest(RequestType requestType,
 // the order on the bus. The higher the number, the greater the priority.
 bool InterruptRequest::operator< (InterruptRequest const &ir) const
 {
-    return (static_cast<long>(priority_) * 256) + busOrder_ <
-        (static_cast<long>(ir.priority_) * 256) + ir.busOrder_;
+    return intrptPriority (priority_, busOrder_) <
+        intrptPriority (ir.priority_, ir.busOrder_);
+}
+
+bool InterruptRequest::operator== (InterruptRequest const &ir) const
+{
+    return intrptPriority (priority_, busOrder_) ==
+        intrptPriority (ir.priority_, ir.busOrder_);
+}
+
+// Calculate the interrupt priority, based on first the trap priority and if
+// these are equal by the order on the bus. The higher the number, the greater
+// the priority.
+long InterruptRequest::intrptPriority (TrapPriority trapPriority, 
+    unsigned char busOrder) const
+{
+    return (static_cast<long>(trapPriority) * 256) + busOrder;
 }
 
 // Accessors

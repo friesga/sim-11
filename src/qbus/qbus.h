@@ -24,7 +24,8 @@ class QBUS
 public:
 	QBUS ();
 	void	setInterrupt (TrapPriority priority, 
-		unsigned char busOrder, unsigned char vector);
+				unsigned char busOrder, unsigned char vector);
+	void	clearInterrupt (TrapPriority priority, 	unsigned char busOrder);
 	void	setTrap (TrapPriority priority, unsigned char vector);
 	bool	intrptReqAvailable();
 	u8		intrptPriority();

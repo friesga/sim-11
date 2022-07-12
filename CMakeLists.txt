@@ -121,7 +121,9 @@ set (SIM11_TEST_SRCS
     src/cmdlineoptions/data.cpp
     src/cmdlineoptions/get.cpp
     src/cmdlineoptions/processoptions.cpp
-    gtest/threadsafeprioqueuetest.cpp)
+    gtest/threadsafeprioqueuetest.cpp
+    gtest/interruptrequesttest.cpp
+    src/interruptrequest/interruptrequest.cpp)
 
 add_executable (sim-11-test ${SIM11_TEST_SRCS})
 
@@ -143,7 +145,7 @@ enable_testing ()
 
 gtest_add_tests (TARGET sim-11-test 
                  SOURCES ${SIM11_TEST_SRCS}
-                 TEST_LIST CmdLineOptionsTest ThreadSafePrioQueue)
+                 TEST_LIST CmdLineOptionsTest ThreadSafePrioQueue InterruptRequest)
 
 #
 # Create trace reader
