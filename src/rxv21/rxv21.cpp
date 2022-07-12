@@ -40,7 +40,7 @@ void RXV21::done ()
 	// being processed, the request is held and on the next step the request
 	// is tried again.
 	if (rx2cs & RX_INTR_ENB) 
-		IRQ(interruptRequest(vector));
+		bus->setInterrupt (TrapPriority::BR4, 0, vector);
 }
 
 // Read operation on either the RX2CS or RX2DB
@@ -90,7 +90,7 @@ StatusCode RXV21::writeWord (u16 address, u16 value)
 		if (!intr && (value & RX_INTR_ENB) && (rx2cs & RX_DONE)) 
 		{
 			QBUS* bus = this->bus;
-			IRQ(interruptRequest(vector));
+			bus->setInterrupt (TrapPriority::BR4, 0, vector);
 		}
 	} 
 	else if (address == base + 2) 

@@ -36,47 +36,36 @@ CondData<u16> QBUS::read (u16 address)
 	}
 
 	TRCBus (TRC_BUS_RDFAIL, addr, 0);
-	interrupt (busError);
+	setTrap (TrapPriority::BusError, 004);
 	return {};
 }
 
 
-// (Try to) request an interrupt. Trap 004 interrupts always succeed,
-// other interrupts requests only succeed if no other traps or interrupts
-// are being processed.
-// ToDo: Requesting an interrupt always succeeds
-int QBUS::interrupt (InterruptRequest intrptReq)
+// Set an interrupt request. The only reason this could fail is when
+// a device already has set an interrupt. That would be an error on the
+// part of the device and wouldn't harm.
+void QBUS::setInterrupt (TrapPriority priority, 
+		unsigned char busOrder, unsigned char vector)
 {
-	intrptReqQueue_.push(intrptReq);
+	InterruptRequest intrptReq {RequestType::IntrptReq, priority, busOrder, vector};
+	pushInterruptRequest (intrptReq);
+}
+
+
+// Set a trap
+void QBUS::setTrap (TrapPriority priority, unsigned char vector)
+{
+	InterruptRequest trap {RequestType::Trap, priority, 0, vector};
+	pushInterruptRequest (trap);
+}
+
+// Push the interrupt request created by setInterrupt or setTrap to the
+// interupt queue.
+void QBUS::pushInterruptRequest (InterruptRequest intrptReq)
+{
+	intrptReqQueue_.push (intrptReq);
 	TRCIRQ (intrptReq.vector(), TRC_IRQ_OK);
 	delay = IRCJITTER ();
-	return 1;
-/*
-	if (intrptReq.vector() != 004)
-	{
-		if (trap.vector() != 0 || irq.vector() != 0)
-		{
-			TRCIRQ (intrptReq.vector(), TRC_IRQ_FAIL);
-			return 0;
-		}
-		else
-		{
-			// No trap is being processed and no interrupt request is pending,
-			// so an interrupt request can be generated. Processing of the request
-			// is delayed by a random amount of steps.
-			TRCIRQ (intrptReq.vector(), TRC_IRQ_OK);
-			irq = intrptReq;
-			delay = IRCJITTER ();
-			return 1;
-		}
-	}
-	else
-	{
-		TRCIRQ (intrptReq.vector(), TRC_IRQ_OK);
-		trap = intrptReq;
-		return 1;
-	}
-*/
 }
 
 void QBUS::reset ()

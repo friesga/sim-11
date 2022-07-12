@@ -32,7 +32,6 @@ private:
 	float	time;
 	std::thread ltcThread_;
 	bool running_;
-	InterruptRequest eventIntrptReq{RequestType::IntrptReq, TrapPriority::Event, 0, 0100};
 };
 
 extern const u16 bdv11_e53[2048];

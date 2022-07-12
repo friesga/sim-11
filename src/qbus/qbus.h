@@ -23,7 +23,9 @@ class QBUS
 {
 public:
 	QBUS ();
-	int		interrupt (InterruptRequest intrptReq);
+	void	setInterrupt (TrapPriority priority, 
+		unsigned char busOrder, unsigned char vector);
+	void	setTrap (TrapPriority priority, unsigned char vector);
 	bool	intrptReqAvailable();
 	u8		intrptPriority();
 	bool	getIntrptReq(InterruptRequest &ir);
@@ -42,9 +44,8 @@ private:
 	using IntrptReqQueue = ThreadSafePrioQueue<InterruptRequest>;
 	IntrptReqQueue intrptReqQueue_;
 
-	InterruptRequest const busError{RequestType::Trap, TrapPriority::BusError, 0, 004};
-
 	QBUSModule *responsibleModule (u16 address);
+	void pushInterruptRequest (InterruptRequest interruptReq);
 };
 
 #endif // !_QBUS_H_

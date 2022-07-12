@@ -14,6 +14,6 @@ bool QBUS::writeByte (u16 address, u8 value)
 
 	// No responsible module found
 	TRCBus (TRC_BUS_WRFAIL, address, value);
-	interrupt (busError);
+	setTrap (TrapPriority::BusError, 004);
 	return false;
 }

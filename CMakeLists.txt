@@ -18,7 +18,6 @@ set (SIM11_SRCS
     src/bdv11/bdv11_e53.cpp
     src/disas.cpp
     src/dlv11j/dlv11j.cpp
-    src/dlv11j/interruptrequest.cpp
     src/kd11/kd11.cpp
     src/kd11/pswpriority.cpp
     src/lib/gotapproval.cpp
@@ -36,7 +35,6 @@ set (SIM11_SRCS
     src/rlv12/read.cpp
     src/rlv12/writeword.cpp
     src/rxv21/rxv21.cpp
-    src/rxv21/interruptrequest.cpp
     src/rxv21/initiatecommand.cpp
     src/rxv21/emptybuffer.cpp
     src/rxv21/fillbuffer.cpp
