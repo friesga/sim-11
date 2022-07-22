@@ -30,9 +30,13 @@ set (SIM11_SRCS
     src/qbus/responsiblemodule.cpp
     src/qbusmodule/writebyte.cpp
     src/rlv12/attach.cpp
+    src/rlv12/calccrc.cpp
+    src/rlv12/getcylinder.cpp
+    src/rlv12/maintenance.cpp
     src/rlv12/rlv12.cpp
     src/rlv12/rl012.cpp
     src/rlv12/read.cpp
+    src/rlv12/setdone.cpp
     src/rlv12/writeword.cpp
     src/rxv21/rxv21.cpp
     src/rxv21/initiatecommand.cpp
@@ -123,7 +127,8 @@ set (SIM11_TEST_SRCS
     src/cmdlineoptions/processoptions.cpp
     gtest/threadsafeprioqueuetest.cpp
     gtest/interruptrequesttest.cpp
-    src/interruptrequest/interruptrequest.cpp)
+    src/interruptrequest/interruptrequest.cpp
+    gtest/asynctimertest.cpp)
 
 add_executable (sim-11-test ${SIM11_TEST_SRCS})
 
