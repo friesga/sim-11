@@ -15,9 +15,10 @@
 // A class keeping the queue with TimerEvents. Processing of the
 // TimerEvents is performed in a seperate thread. The timer queue is 
 // maintained as a thread safe priority queue.
+template <typename T>
 class AsyncTimer
 {
-    using TimerQueue = ThreadSafePrioQueue<TimerEvent>;
+    using TimerQueue = ThreadSafePrioQueue<TimerEvent<T>>;
     TimerQueue timerQueue_;
 
     std::mutex mutex_;
@@ -32,34 +33,36 @@ class AsyncTimer
 public:
     AsyncTimer ();
     ~AsyncTimer ();
-    void start (std::function<void(void)> func, 
-        std::chrono::milliseconds fromNow, void *ptr);
-    void cancel (void *id);
+    void start (std::function<void(T)> func, T id,
+        std::chrono::milliseconds fromNow);
+    void cancel (T id);
     void handle ();
-    bool isRunning (void *id);
+    bool isRunning (T id);
 };
 
 // Constructor
-AsyncTimer::AsyncTimer ()
+template <typename T>
+AsyncTimer<T>::AsyncTimer ()
     :
     stop_ {false}
 {
     handleThread_ = std::thread (&AsyncTimer::handle, this);
 }
 
-AsyncTimer::~AsyncTimer ()
+template <typename T>
+AsyncTimer<T>::~AsyncTimer ()
 {
     stop_ = true;
     queueEvent_.notify_one ();
     handleThread_.join ();
 }
 
-
-void AsyncTimer::start (std::function<void(void)> func, 
-    std::chrono::milliseconds timeFromNow, void *id)
+template <typename T>
+void AsyncTimer<T>::start (std::function<void(T)> func, T id,
+    std::chrono::milliseconds timeFromNow)
 {
     // Create TimerEvent and push it in the timer queue
-    timerQueue_.push (TimerEvent (func, timeFromNow, id));
+    timerQueue_.push (TimerEvent (func, id, timeFromNow));
 
     // Notify the handler thread a TimerEvent has been pushed
     // ToDo: Lock the mutex??
@@ -67,7 +70,8 @@ void AsyncTimer::start (std::function<void(void)> func,
 }
 
 // Cancel all TimerEvents with the specified id
-void AsyncTimer::cancel (void *id)
+template <typename T>
+void AsyncTimer<T>::cancel (T id)
 {
     // Special care has to be taken with the handling of the iterator. Erasing
     // an element in the queue might invalidate the current iterator.
@@ -90,7 +94,8 @@ void AsyncTimer::cancel (void *id)
 }
 
 // Handle the TimerEvents
-void AsyncTimer::handle ()
+template <typename T>
+void AsyncTimer<T>::handle ()
 {
     std::unique_lock<std::mutex> lock (mutex_);
 
@@ -108,11 +113,11 @@ void AsyncTimer::handle ()
             // Awakened because of the specified time_point. The TimerEvent
             // we were waiting for should still be at the top of the queue
             // as we haven't been notified of a change in the queue
-            TimerEvent te;
+            TimerEvent<T> te;
             timerQueue_.fetchTop(te);
 
             // Call the function specified in the TimerEvent
-            (te.function ()) ();
+            (te.function ()) (te.id());
         }
         else
         {
@@ -126,7 +131,8 @@ void AsyncTimer::handle ()
 
 // Return the running status of the timer with the specified id. The timer
 // is running if it is in timer queue
-bool AsyncTimer::isRunning (void *id)
+template <typename T>
+bool AsyncTimer<T>::isRunning (T id)
 {
     std::unique_lock<std::mutex> lock (mutex_);
 

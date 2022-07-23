@@ -5,39 +5,43 @@
 #include <functional>
 
 // A TimerEvent specified a function to execute at the specified time point
+template <typename T>
 class TimerEvent
 {
     // The time point to execute the function
     std::chrono::high_resolution_clock::time_point startTime_;
 
     // Function to be executed at (or after) the specified start time.
-    std::function<void(void)> function_;
+    std::function<void(T)> function_;
 
     // Pointer identifying the current TimerEvent
-    void *id_;
+    T id_;
 
 public:
     TimerEvent ();
-    TimerEvent (std::function<void(void)> func, 
-        std::chrono::milliseconds period, void *id);
+    TimerEvent (std::function<void(T)> func, T id,
+        std::chrono::milliseconds period);
     bool operator< (TimerEvent const &te) const;
 
     // Accessors
     std::chrono::high_resolution_clock::time_point startTime() const;
-    std::function<void(void)> &function ();
-    void *id() const;
+    std::function<void(T)> &function ();
+    T id() const;
 };
 
 // Default constructor
-TimerEvent::TimerEvent ()
+template <typename T>
+TimerEvent<T>::TimerEvent ()
     :
     startTime_ {std::chrono::high_resolution_clock::time_point::max()},
-    function_ {nullptr}
+    function_ {nullptr},
+    id_ {}
 {}
 
 // Construct a TimerEvent from the specified function and given period
-TimerEvent::TimerEvent (std::function<void(void)> func, 
-    std::chrono::milliseconds period, void *id)
+template <typename T>
+TimerEvent<T>::TimerEvent (std::function<void(T)> func, T id,
+        std::chrono::milliseconds period)
     :
     startTime_ {std::chrono::high_resolution_clock::now() + period},
     function_ {func},
@@ -46,23 +50,27 @@ TimerEvent::TimerEvent (std::function<void(void)> func,
 
 // TimerEvents are ordered in increasing starttime; the earliest time point
 // is at the top of the queue
-bool TimerEvent::operator< (TimerEvent const &te) const
+template <typename T>
+bool TimerEvent<T>::operator< (TimerEvent const &te) const
 {
     return te.startTime_ < startTime_;
 }
 
 // Accessors
-std::chrono::high_resolution_clock::time_point TimerEvent::startTime() const
+template <typename T>
+std::chrono::high_resolution_clock::time_point TimerEvent<T>::startTime() const
 {
     return startTime_;
 }
 
-std::function<void(void)> &TimerEvent::function ()
+template <typename T>
+std::function<void(T)> &TimerEvent<T>::function ()
 {
     return function_;
 }
 
-void *TimerEvent::id () const
+template <typename T>
+T TimerEvent<T>::id () const
 {
     return id_;
 }

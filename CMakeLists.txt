@@ -159,4 +159,8 @@ add_executable (tracereader tracereader/main.cpp
     src/disas.cpp)
 
 target_include_directories (tracereader PRIVATE include)
-
+    
+# MSVC specific compiler options
+if (CMAKE_C_COMPILER_ID STREQUAL "MSVC")
+target_compile_options (sim-11-test PRIVATE /std:c++20)
+endif ()
