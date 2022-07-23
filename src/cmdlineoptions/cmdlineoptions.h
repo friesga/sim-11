@@ -26,7 +26,7 @@ protected:
 
 public:
 	static CmdLineOptions &get();
-	static void processOptions (int argc, char **argv);
+	static void processOptions (int argc, char const **argv);
 
 	const char* const &floppy_filename;
 	const char*  const &load_file;

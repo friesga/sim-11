@@ -3,7 +3,7 @@
 #include <gtest/gtest.h>
 
 // Define command line strings
-char *argvSet0[] =
+char const *argvSet0[] =
 {
     "sim-11",
     "-h",   // halt
