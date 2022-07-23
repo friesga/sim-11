@@ -7,7 +7,7 @@
 
 using namespace std;
 
-void CmdLineOptions::processOptions (int argc, char **argv)
+void CmdLineOptions::processOptions (int argc, char const **argv)
 {
 	stringstream msg;
 
