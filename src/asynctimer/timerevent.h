@@ -11,22 +11,17 @@ class TimerEvent
     // The time point to execute the function
     std::chrono::high_resolution_clock::time_point startTime_;
 
-    // Function to be executed at (or after) the specified start time.
-    std::function<void(T)> function_;
-
-    // Pointer identifying the current TimerEvent
-    T id_;
+    // Handler to be executed at (or after) the specified start time.
+    T *handler_;
 
 public:
     TimerEvent ();
-    TimerEvent (std::function<void(T)> func, T id,
-        std::chrono::milliseconds period);
+    TimerEvent (T *handler, std::chrono::milliseconds period);
     bool operator< (TimerEvent const &te) const;
 
     // Accessors
     std::chrono::high_resolution_clock::time_point startTime() const;
-    std::function<void(T)> &function ();
-    T id() const;
+    T *handler () const;
 };
 
 // Default constructor
@@ -34,18 +29,16 @@ template <typename T>
 TimerEvent<T>::TimerEvent ()
     :
     startTime_ {std::chrono::high_resolution_clock::time_point::max()},
-    function_ {nullptr},
-    id_ {}
+    handler_ {}
 {}
 
 // Construct a TimerEvent from the specified function and given period
 template <typename T>
-TimerEvent<T>::TimerEvent (std::function<void(T)> func, T id,
+TimerEvent<T>::TimerEvent (T *handler,
         std::chrono::milliseconds period)
     :
     startTime_ {std::chrono::high_resolution_clock::now() + period},
-    function_ {func},
-    id_ {id}
+    handler_ {handler}
 {}
 
 // TimerEvents are ordered in increasing starttime; the earliest time point
@@ -64,15 +57,9 @@ std::chrono::high_resolution_clock::time_point TimerEvent<T>::startTime() const
 }
 
 template <typename T>
-std::function<void(T)> &TimerEvent<T>::function ()
+T *TimerEvent<T>::handler () const
 {
-    return function_;
-}
-
-template <typename T>
-T TimerEvent<T>::id () const
-{
-    return id_;
+    return handler_;
 }
 
 #endif // !_TIMEREVENT_H_

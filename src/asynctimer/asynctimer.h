@@ -33,11 +33,10 @@ class AsyncTimer
 public:
     AsyncTimer ();
     ~AsyncTimer ();
-    void start (std::function<void(T)> func, T id,
-        std::chrono::milliseconds fromNow);
-    void cancel (T id);
+    void start (T *handler, std::chrono::milliseconds fromNow);
+    void cancel (T *handler);
     void handle ();
-    bool isRunning (T id);
+    bool isRunning (T *handler);
 };
 
 // Constructor
@@ -58,11 +57,10 @@ AsyncTimer<T>::~AsyncTimer ()
 }
 
 template <typename T>
-void AsyncTimer<T>::start (std::function<void(T)> func, T id,
-    std::chrono::milliseconds timeFromNow)
+void AsyncTimer<T>::start (T *handler, std::chrono::milliseconds timeFromNow)
 {
     // Create TimerEvent and push it in the timer queue
-    timerQueue_.push (TimerEvent (func, id, timeFromNow));
+    timerQueue_.push (TimerEvent (handler, timeFromNow));
 
     // Notify the handler thread a TimerEvent has been pushed
     // ToDo: Lock the mutex??
@@ -71,7 +69,7 @@ void AsyncTimer<T>::start (std::function<void(T)> func, T id,
 
 // Cancel all TimerEvents with the specified id
 template <typename T>
-void AsyncTimer<T>::cancel (T id)
+void AsyncTimer<T>::cancel (T *handler)
 {
     // Special care has to be taken with the handling of the iterator. Erasing
     // an element in the queue might invalidate the current iterator.
@@ -83,7 +81,7 @@ void AsyncTimer<T>::cancel (T id)
         auto nextIter = iter;
         ++nextIter;
 
-        if (iter->id() == id)
+        if (iter->handler() == handler)
           timerQueue_.erase (*iter);
         
         iter = nextIter;
@@ -116,8 +114,8 @@ void AsyncTimer<T>::handle ()
             TimerEvent<T> te;
             timerQueue_.fetchTop(te);
 
-            // Call the function specified in the TimerEvent
-            (te.function ()) (te.id());
+            // Call the handler specified in the TimerEvent
+            (*te.handler()) ();
         }
         else
         {
@@ -132,13 +130,13 @@ void AsyncTimer<T>::handle ()
 // Return the running status of the timer with the specified id. The timer
 // is running if it is in timer queue
 template <typename T>
-bool AsyncTimer<T>::isRunning (T id)
+bool AsyncTimer<T>::isRunning (T *handler)
 {
     std::unique_lock<std::mutex> lock (mutex_);
 
     for (auto iter = timerQueue_.cbegin(); iter != timerQueue_.cend(); ++iter)
     {
-        if (iter->id() == id)
+        if (iter->handler () == handler)
             return true;
     }
 
