@@ -1,7 +1,6 @@
 #ifndef _RLV12_H_
 #define _RLV12_H_
 
-#include "device.h"
 #include "trace.h"
 #include "rl01_02/rl012.h"
 #include "qbus/qbus.h"
@@ -99,7 +98,7 @@
 #define DEV_RLV11       (1u << DEV_V_RLV11)
 
 // Implementation of the RL11, RLV11 and RLV12 controllers.
-class RLV12 : public Device, QBUSModule
+class RLV12 : public QBUSModule
 {
     // Define RLV12 registers as offsets from the controllers bas address
     enum

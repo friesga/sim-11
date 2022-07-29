@@ -1,7 +1,6 @@
 #ifndef _RL012_H_
 #define _RL012_H_
 
-#include "device.h"
 #include "unit/unit.h"
 #include "types.h"
 #include "statuscodes.h"
@@ -67,7 +66,7 @@ class RL01_2 : public Unit
 
 public:
     // Constructor
-    RL01_2 (Device *owningDevice);
+    RL01_2 (QBUSModule *owningDevice);
 
     // Required functions
     StatusCode attach (std::string fileName) override;
