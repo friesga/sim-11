@@ -2,7 +2,7 @@
 #define _RXV21_H_
 
 #include "qbus/qbus.h"
-#include "qbusmodule/qbusmodule.h"
+#include "busdevice/busdevice.h"
 #include "conddata/conddata.h"
 #include "variantfsm/fsm.h"
 #include "trace.h"
@@ -87,7 +87,7 @@ using State = std::variant<rxv21Idle,
 	rxv21ReadSectorRx2sa,  rxv21ReadSectorRx2ta,
 	rxv21ReadErrorCodeRx2ba>;
 
-class RXV21 : public QBUSModule, public variantFsm::Fsm<RXV21, Event, State>
+class RXV21 : public BusDevice, public variantFsm::Fsm<RXV21, Event, State>
 {
 	u16	base;
 	u16	vector;

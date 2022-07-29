@@ -1,11 +1,11 @@
 #include "qbus.h"
 #include "trace.h"
 
-QBUSModule *QBUS::responsibleModule (u16 address)
+BusDevice *QBUS::responsibleModule (u16 address)
 {
 	for (size_t index = 0; index < LSI11_SIZE; ++index)
 	{
-		QBUSModule* module = slots[index];
+		BusDevice* module = slots[index];
 		if (!module)
 			continue;
 

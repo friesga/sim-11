@@ -2,7 +2,7 @@
 
 // Unit constructor
 // Set default values for flags
-Unit::Unit (QBUSModule *owningDevice)
+Unit::Unit (BusDevice *owningDevice)
     :
     owningDevice_ {owningDevice},
     flags_ {UNIT_ATTABLE}

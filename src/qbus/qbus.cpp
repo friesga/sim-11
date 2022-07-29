@@ -21,7 +21,7 @@ CondData<u16> QBUS::read (u16 address)
 
 	for (i = 0; i < LSI11_SIZE; i++)
 	{
-		QBUSModule* module = slots[i];
+		BusDevice* module = slots[i];
 		if (!module)
 			continue;
 
@@ -90,7 +90,7 @@ void QBUS::reset ()
 
 	for (i = 0; i < LSI11_SIZE; i++)
 	{
-		QBUSModule* module = slots[i];
+		BusDevice* module = slots[i];
 		if (!module)
 			continue;
 
@@ -135,7 +135,7 @@ bool QBUS::getIntrptReq(InterruptRequest &intrptReq)
 		return false;
 }
 
-void QBUS::installModule (int slot, QBUSModule* module)
+void QBUS::installModule (int slot, BusDevice* module)
 {
 	slots[slot] = module;
 	module->bus = this;

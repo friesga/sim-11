@@ -25,7 +25,7 @@ class QBUS;
 // Define the functions every QBUS module should provide.
 // 
 // The class integrates members of the simh-v312-2 Device struct.
-class QBUSModule
+class BusDevice
 {
 protected:
     std::string name_;          // Device name

@@ -1,7 +1,7 @@
 #ifndef _UNIT_H_
 #define _UNIT_H_
 
-#include "qbusmodule/qbusmodule.h"
+#include "busdevice/busdevice.h"
 #include "statuscodes.h"
 #include "types.h"
 
@@ -52,7 +52,7 @@ class Unit
     void setBuffered ();
 
 protected:
-    QBUSModule *owningDevice_;  // Pointer to the controller
+    BusDevice *owningDevice_;  // Pointer to the controller
     FILE *filePtr_;             // The disk file
     u32 capacity_;              // Drive capacity in words
     u32 flags_;                 // Bit flags
@@ -63,7 +63,7 @@ protected:
 
 public:
     // Constructor
-    Unit (QBUSModule *owningDevice);
+    Unit (BusDevice *owningDevice);
 
     // Functions to be implemented by concrete devices
     virtual StatusCode attach (std::string fileName) = 0;

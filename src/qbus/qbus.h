@@ -6,7 +6,7 @@
 #include "conddata/conddata.h"
 #include "interruptrequest/interruptrequest.h"
 #include "threadsafeprioqueue/threadsafeprioqueue.h"
-#include "qbusmodule/qbusmodule.h"
+#include "busdevice/busdevice.h"
 
 /* Backplane size */
 #define	LSI11_SIZE		8
@@ -17,7 +17,7 @@
 /* QBUS interrupt request delay jitter */
 #define	QBUS_DELAY_JITTER	10
 
-class QBUSModule;
+class BusDevice;
 
 class QBUS
 {
@@ -35,9 +35,9 @@ public:
 	CondData<u16> read (u16 addr);
 	bool	writeWord (u16 addr, u16 value);
 	bool	writeByte (u16 addr, u8 val);
-	void	installModule (int slot, QBUSModule* module);
+	void	installModule (int slot, BusDevice* module);
 
-	QBUSModule*	slots[LSI11_SIZE];
+	BusDevice*	slots[LSI11_SIZE];
 	u16	delay;
 
 private:
@@ -45,7 +45,7 @@ private:
 	using IntrptReqQueue = ThreadSafePrioQueue<InterruptRequest>;
 	IntrptReqQueue intrptReqQueue_;
 
-	QBUSModule *responsibleModule (u16 address);
+	BusDevice *responsibleModule (u16 address);
 	void pushInterruptRequest (InterruptRequest interruptReq);
 };
 

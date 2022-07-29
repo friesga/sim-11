@@ -3,7 +3,7 @@
 
 bool QBUS::writeByte (u16 address, u8 value)
 {
-	QBUSModule* module;
+	BusDevice* module;
 		
 	if ((module = responsibleModule(address)) != nullptr)
 	{

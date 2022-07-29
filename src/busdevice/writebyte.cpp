@@ -1,8 +1,8 @@
-#include "qbusmodule.h"
+#include "busdevice.h"
 
 // The defualt implementation of writeByte() for QBus modules. This
 // implementation can be overridden if needed.
-StatusCode QBUSModule::writeByte (u16 addr, u8 value)
+StatusCode BusDevice::writeByte (u16 addr, u8 value)
 {
     u16 aaddr = addr & 0xFFFE;
 	u16 tmp;

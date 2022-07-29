@@ -2,7 +2,7 @@
 #include "../rlv12.h"
 
 // Constructor
-RL01_2::RL01_2 (QBUSModule *owningDevice)
+RL01_2::RL01_2 (BusDevice *owningDevice)
     :
     Unit (owningDevice)
 {}

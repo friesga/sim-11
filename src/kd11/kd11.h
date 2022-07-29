@@ -2,7 +2,7 @@
 #define _KD11_H_
 
 #include "qbus/qbus.h"
-#include "qbusmodule/qbusmodule.h"
+#include "busdevice/busdevice.h"
 
 #define USE_FLOAT
 
@@ -106,7 +106,7 @@ private:
 };
 
 // The class KD11 is composed of the KD11 CPU and the KD11 ODT.
-// ToDo: Make KD11 a QBUSModule
+// ToDo: Make KD11 a BusDevice
 // The module KD11 is now - different from the other QBUSModules - instantiated
 // within the LSI11 object, although it is also a QBUS module.
 class KD11

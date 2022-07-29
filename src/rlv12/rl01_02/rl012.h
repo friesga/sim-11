@@ -66,7 +66,7 @@ class RL01_2 : public Unit
 
 public:
     // Constructor
-    RL01_2 (QBUSModule *owningDevice);
+    RL01_2 (BusDevice *owningDevice);
 
     // Required functions
     StatusCode attach (std::string fileName) override;

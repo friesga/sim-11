@@ -4,7 +4,7 @@
 #include "trace.h"
 #include "rl01_02/rl012.h"
 #include "qbus/qbus.h"
-#include "qbusmodule/qbusmodule.h"
+#include "busdevice/busdevice.h"
 #include "asynctimer/asynctimer.h"
 
 #include <array>
@@ -98,7 +98,7 @@
 #define DEV_RLV11       (1u << DEV_V_RLV11)
 
 // Implementation of the RL11, RLV11 and RLV12 controllers.
-class RLV12 : public QBUSModule
+class RLV12 : public BusDevice
 {
     // Define RLV12 registers as offsets from the controllers bas address
     enum
