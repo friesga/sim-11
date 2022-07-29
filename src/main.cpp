@@ -101,7 +101,7 @@ void LSI11ConsoleSendString (DLV11J* dlv, const char* s)
 #define	READ(addr)			lsi.bus.read(lsi.bus.user, (addr))
 #define	WRITE(addr, val)	lsi.bus.write(lsi.bus.user, (addr), (val))
 
-int main (int argc, char** argv)
+int main (int argc, char const **argv)
 try
 {
 	// ToDo: Replace module configuration by table
