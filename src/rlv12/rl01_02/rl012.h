@@ -63,6 +63,7 @@ class RL01_2 : public Unit
 
     int32_t currentTrack_;
     int32_t status_;
+    int32_t function_;
 
 public:
     // Constructor
@@ -70,6 +71,9 @@ public:
 
     // Required functions
     StatusCode attach (std::string fileName) override;
+
+    // Make the class a function object
+    void operator() ();
 };
 
 

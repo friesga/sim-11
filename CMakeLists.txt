@@ -33,8 +33,10 @@ set (SIM11_SRCS
     src/rlv12/calccrc.cpp
     src/rlv12/getcylinder.cpp
     src/rlv12/maintenance.cpp
+    src/rlv12/service.cpp
     src/rlv12/rlv12.cpp
-    src/rlv12/rl012.cpp
+    src/rlv12/rl01_02/rl012.cpp
+    src/rlv12/rl01_02/operator.cpp
     src/rlv12/read.cpp
     src/rlv12/setdone.cpp
     src/rlv12/writeword.cpp

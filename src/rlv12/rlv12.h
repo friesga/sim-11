@@ -3,9 +3,10 @@
 
 #include "device.h"
 #include "trace.h"
-#include "rl012.h"
+#include "rl01_02/rl012.h"
 #include "qbus/qbus.h"
 #include "qbusmodule/qbusmodule.h"
+#include "asynctimer/asynctimer.h"
 
 #include <array>
 #include <memory>       // for std::shared_ptr<>
@@ -60,6 +61,29 @@
 #define GET_FUNC(x)     (((x) >> RLCS_V_FUNC) & RLCS_M_FUNC)
 #define GET_DRIVE(x)    (((x) >> RLCS_V_DRIVE) & RLCS_M_DRIVE)
 
+// RLDA 
+#define RLDA_GS         (0000002)                       /* get status */
+#define RLDA_SK_DIR     (0000004)                       /* direction */
+#define RLDA_GS_CLR     (0000010)                       /* clear errors */
+#define RLDA_SK_HD      (0000020)                       /* head select */
+
+#define RLDA_V_SECT     (0)                             /* sector */
+#define RLDA_M_SECT     (077)
+#define RLDA_V_TRACK    (6)                             /* track */
+#define RLDA_M_TRACK    (01777)
+#define RLDA_HD0        (0 << RLDA_V_TRACK)
+#define RLDA_HD1        (1u << RLDA_V_TRACK)
+#define RLDA_V_CYL      (7)                             /* cylinder */
+#define RLDA_M_CYL      (0777)
+#define RLDA_TRACK      (RLDA_M_TRACK << RLDA_V_TRACK)
+#define RLDA_CYL        (RLDA_M_CYL << RLDA_V_CYL)
+
+// ToDo: Convert macro's to inline functions
+#define GET_SECT(x)     (((x) >> RLDA_V_SECT) & RLDA_M_SECT)
+#define GET_CYL(x)      (((x) >> RLDA_V_CYL) & RLDA_M_CYL)
+#define GET_TRACK(x)    (((x) >> RLDA_V_TRACK) & RLDA_M_TRACK)
+#define GET_DA(x)       ((GET_TRACK (x) * RL_NUMSC) + GET_SECT (x))
+
 // RLBA
 #define RLBA_IMP        (0177777)                       // Implemented bits
 
@@ -74,7 +98,7 @@
 #define DEV_V_RLV11     (DEV_V_UF + 7)                  // RLV11
 #define DEV_RLV11       (1u << DEV_V_RLV11)
 
-// RLV12 controller
+// Implementation of the RL11, RLV11 and RLV12 controllers.
 class RLV12 : public Device, QBUSModule
 {
     // Define RLV12 registers as offsets from the controllers bas address
@@ -95,7 +119,10 @@ class RLV12 : public Device, QBUSModule
     u16 rlbae;      // Bus Address Extension register
 
     u16 rlmpr1 = 0; // MPR register queue
-    u16 rlmpr2 = 0;     
+    u16 rlmpr2 = 0;
+
+    // Timing constants
+    int32_t const rl_swait = 10;    // Seek wait
 
     // Define transfer buffer
     u16 *rlxb_;
@@ -113,6 +140,15 @@ class RLV12 : public Device, QBUSModule
         RL01_2 (this)
     };
 
+    // ToDo: Make this a global timer to be used by all devices?!
+    AsyncTimer<RL01_2> timer{};
+
+    // Private function
+    void maintenance ();
+    u16 calcCRC (int const wc, u16 const *data);
+    void setDone (int32_t status);
+    inline int32_t getCylinder (int32_t track);
+
 public:
     // Constructor/destructor
     RLV12 ();
@@ -121,9 +157,9 @@ public:
     // Required functions
     void reset () override;
     StatusCode read (u16 registerAddress, u16* data) override;
-    StatusCode writeByte (u16 registerAddress, u8 data);
-    StatusCode writeWord (u16 registerAddress, u16 data);
+    StatusCode writeByte (u16 registerAddress, u8 data) override;
+    StatusCode writeWord (u16 registerAddress, u16 data) override;
+    void service (RL01_2 &unit);
 };
-
 
 #endif _RLV12_H_

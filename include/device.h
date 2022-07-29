@@ -28,8 +28,10 @@ protected:
     u32 vector_;                // Device vector
 
 public:
-    virtual void reset () = 0;
     std::string name() { return name_; }
+
+    // Functions to be defined by concrete devices
+    virtual void reset () = 0;
 };
 
 #if 0

@@ -13,6 +13,12 @@ RLV12::RLV12 ()
     name_ = "RL";
     baseAddress_ = IOBA_RL;
     vector_ = VEC_RL;
+
+    // Allocate the transfer buffer, initializing to zero
+    rlxb_ = new (std::nothrow) u16[RL_MAXFR]();
+
+    if (rlxb_ == nullptr)
+        throw ("Allocating memory for transfer buffer failed");
 }
 
 // Destructor to deallocate transfer buffer
@@ -47,11 +53,4 @@ void RLV12::reset ()
         // N.B. STAT == u4
         // uptr->STAT &= ~RLDS_ERR;
     }
-
-    if (rlxb_ == nullptr)
-        // Allocate the transfer buffer, initializing to zero
-        rlxb_ = new (std::nothrow) u16[RL_MAXFR]();
-
-    if (rlxb_ == nullptr)
-        throw ("Allocating memory for transfer buffer failed");
 }

@@ -37,7 +37,7 @@ StatusCode RLV12::read (u16 registerAddress, u16* data)
                 rlcs |= RLCS_DRE;
                 rlcs &= ~RLCS_DRDY;
             }
-            else if (sim_is_active(uptr) || (unit.flags_ & UNIT_DIS) ||
+            else if (timer.isRunning (&unit) || (unit.flags_ & UNIT_DIS) ||
                 ((unit.status_ & RLDS_M_STATE) != RLDS_LOCK))
                 rlcs &= ~RLCS_DRDY;
             else

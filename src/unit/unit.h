@@ -38,7 +38,6 @@
 // ToDo: Rename filePtr to something more meaningful
 class Unit
 {
-    Device *owningDevice_;      // Pointer to the controller
     std::string fileName_;      // Name of attached file
     u16 *fileBuffer_;           // Memory pointer for buffered I/O
     size_t hwmark_;             // High water mark
@@ -53,6 +52,7 @@ class Unit
     void setBuffered ();
 
 protected:
+    Device *owningDevice_;      // Pointer to the controller
     FILE *filePtr_;             // The disk file
     u32 capacity_;              // Drive capacity in words
     u32 flags_;                 // Bit flags
@@ -65,6 +65,7 @@ public:
     // Constructor
     Unit (Device *owningDevice);
 
+    // Functions to be implemented by concrete devices
     virtual StatusCode attach (std::string fileName) = 0;
 };
 

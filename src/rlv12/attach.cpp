@@ -1,4 +1,3 @@
-#include "rl012.h"
 #include "rlv12.h"
 #include "sim_fio/sim_fio.h"
 
