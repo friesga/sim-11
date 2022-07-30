@@ -14,9 +14,6 @@ void RLV12::maintenance()
 {
     u32  memoryAddress;
 
-    if(trc.flags)
-         TRACERLV12Registers (&trc, rlcs, rlba, rlda, rlmpr, rlbae);
-
     // Test 1: Check internal logic
     rlda = (rlda & ~0377) | ((rlda + 1) & 0377);
 
@@ -28,7 +25,7 @@ void RLV12::maintenance()
     memoryAddress = (rlbae << 16) | rlba;
                                                             
     if(trc.flags)
-        TRACERLV12Registers (&trc, rlcs, rlba, rlda, rlmpr, rlbae);
+         TRACERLV12Registers (&trc, "Maintenance", rlcs, rlba, rlda, rlmpr, rlbae);
 
     // Must be exactly -511
     if (rlmpr != 0177001)

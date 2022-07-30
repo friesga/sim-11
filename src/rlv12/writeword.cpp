@@ -37,9 +37,8 @@ StatusCode RLV12::writeWord (u16 registerAddress, u16 data)
             rlcs = (rlcs & ~RLCS_RW) | (data & RLCS_RW);
             rlbae = (rlbae & ~RLCS_M_MEX) | ((rlcs >> RLCS_V_MEX) & RLCS_M_MEX);
 
-            // ToDo: Add state to TRACERLV12Registers
             if(trc.flags)
-                TRACERLV12Registers (&trc, rlcs, rlba, rlda, rlmpr, rlbae); 
+                TRACERLV12Registers (&trc, "writeword", rlcs, rlba, rlda, rlmpr, rlbae); 
 
             // Commands to the controller are only executed with the CRDY (DONE)
             // bit is cleared by software.  If set, check for interrupts and return.

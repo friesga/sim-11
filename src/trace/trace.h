@@ -240,6 +240,7 @@ struct TRACE_RLV12REGS
     u16 rlda;
     u16 rlmpr;
     u16 rlbae;
+	u16 length;
 };
 
 
@@ -268,7 +269,7 @@ extern void	TRACERXV21Step(TRACE* trace, int type, int step, u16 rx2db);
 extern void	TRACERXV21DMA(TRACE* trace, int type, u16 rx2wc, u16 rx2ba);
 extern void	TRACERXV21Disk(TRACE* trace, int type, int drive, int density, u16 rx2sa, u16 rx2ta);
 extern void	TRACERXV21Error(TRACE* trace, int type, u16 info);
-extern void TRACERLV12Registers (TRACE* trace, u16 rlcs, u16 rlba, u16 rlda, 
+extern void TRACERLV12Registers (TRACE* trace, const char *msg, u16 rlcs, u16 rlba, u16 rlda, 
 	u16 rlmpr, u16 rlbae);
 
 #endif

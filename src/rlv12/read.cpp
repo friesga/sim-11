@@ -52,7 +52,7 @@ StatusCode RLV12::read (u16 registerAddress, u16* data)
             *data = rlcs;
 
             if(trc.flags)
-                TRACERLV12Registers (&trc, rlcs, rlba, rlda, rlmpr, rlbae);
+                TRACERLV12Registers (&trc, "read", rlcs, rlba, rlda, rlmpr, rlbae);
             break;
         }
 
