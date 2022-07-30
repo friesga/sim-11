@@ -32,9 +32,9 @@ StatusCode MSV11D::writeWord (u16 address, u16 value)
 	return StatusCode::OK;
 }
 
-u8 MSV11D::responsible (u16 address)
+bool MSV11D::responsible (u16 address)
 {
-	return address < MSV11D_SIZE;
+	return (address < MSV11D_SIZE) ? true : false;
 }
 
 void MSV11D::reset ()

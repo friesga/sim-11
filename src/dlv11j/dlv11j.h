@@ -31,9 +31,9 @@ public:
 	~DLV11J ();
 
 	// Define the obligatory functions
-	StatusCode read (u16 address, u16 *destAddress);
-	StatusCode writeWord (u16 address, u16 value);
-	u8 responsible (u16 address);
+	StatusCode read (u16 address, u16 *destAddress) override;
+	StatusCode writeWord (u16 address, u16 value) override;
+	bool responsible (u16 address) override;
 	void reset ();
 
 	void send (int channel, unsigned char c);

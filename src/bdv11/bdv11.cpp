@@ -204,7 +204,7 @@ StatusCode BDV11::writeWord (u16 address, u16 value)
 	return StatusCode::OK;
 }
 
-u8 BDV11::responsible (u16 address)
+bool BDV11::responsible (u16 address)
 {
 	switch (address)
 	{
@@ -212,9 +212,9 @@ u8 BDV11::responsible (u16 address)
 		case 0177522:
 		case 0177524:
 		case 0177546:
-			return 1;
+			return true;
 		default:
-			return address >= 0173000 && address <= 0173776;
+			return (address >= 0173000 && address <= 0173776) ? true : false;
 	}
 }
 

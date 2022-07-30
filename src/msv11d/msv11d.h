@@ -13,8 +13,8 @@ public:
 	MSV11D ();
 	~MSV11D ();
 	StatusCode read (u16 address, u16 *destAddress) override;
-	StatusCode writeWord (u16 address, u16 value);
-	u8 responsible (u16 address);
+	StatusCode writeWord (u16 address, u16 value) override;
+	bool responsible (u16 address) override;
 	void reset ();
 
 // ToDo: Make data private (accessed from main())

@@ -189,18 +189,16 @@ StatusCode DLV11J::writeWord (u16 address, u16 value)
 	return StatusCode::OK;
 }
 
-u8 DLV11J::responsible (u16 address)
+bool DLV11J::responsible (u16 address)
 {
-	if(address >= base && address <= base + (3 * 8)) {
-		return 1;
-	}
+	if (address >= base && address <= base + (3 * 8))
+		return true;
 
 	/* console device */
-	if(address >= 0177560 && address <= 0177566) {
-		return 1;
-	}
+	if (address >= 0177560 && address <= 0177566)
+		return true;
 
-	return 0;
+	return false;
 }
 
 void DLV11J::reset ()

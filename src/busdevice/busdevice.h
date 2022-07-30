@@ -39,7 +39,7 @@ public:
 	virtual StatusCode writeWord (u16 addr, u16 value) = 0;
 	virtual StatusCode writeByte (u16 addr, u8 value);
 	virtual void service (Unit &unit) {};
-	virtual u8 responsible (u16 addr) = 0;
+	virtual bool responsible (u16 addr) = 0;
 	virtual void reset () = 0;
 
 	std::string name() { return name_; }

@@ -103,9 +103,9 @@ StatusCode RXV21::writeWord (u16 address, u16 value)
 	return StatusCode::OK;
 }
 
-u8 RXV21::responsible (u16 address)
+bool RXV21::responsible (u16 address)
 {
-	return ((address >= base) && (address <= (base + 2)));
+	return address >= base && address <= (base + 2) ? true : false;
 }
 
 void RXV21::reset ()
