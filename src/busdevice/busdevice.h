@@ -1,5 +1,5 @@
-#ifndef _QBUSMODULE_H_
-#define _QBUSMODULE_H_
+#ifndef _BUSDEVICE_H_
+#define _BUSDEVICE_H_
 
 #include "types.h"
 #include "statuscodes.h"
@@ -21,6 +21,7 @@
 #define CSR_ERR         (1u << CSR_V_ERR)
 
 class QBUS;
+class Unit;
 
 // Define the functions every QBUS module should provide.
 // 
@@ -37,11 +38,11 @@ public:
 	virtual StatusCode read (u16 addr, u16 *destination) = 0;
 	virtual StatusCode writeWord (u16 addr, u16 value) = 0;
 	virtual StatusCode writeByte (u16 addr, u8 value);
-	// virtual void service (Unit &unit) = 0;
+	virtual void service (Unit &unit) {};
 	virtual u8 responsible (u16 addr) = 0;
 	virtual void reset () = 0;
 
 	std::string name() { return name_; }
 };
 
-#endif // _QBUSMODULE_H_
+#endif // _BUSDEVICE_H_

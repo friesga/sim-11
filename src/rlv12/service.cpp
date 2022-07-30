@@ -17,7 +17,7 @@
 //
 void RLV12::service (RL01_2 &unit)
 {
-#if 0
+
     int32_t err, wc, maxwc, t;
     int32_t i, da, awc;
     uint32_t ma;
@@ -61,7 +61,7 @@ void RLV12::service (RL01_2 &unit)
                 {
                     unit.status_ = (unit.status_ & ~RLDS_M_STATE) | RLDS_SPIN;
                     // Actual time is 45-50 seconds from press to Lock 
-                    timer.start (this, std::chrono::milliseconds (200 * rl_swait));
+                    timer.start (&unit, std::chrono::milliseconds (200 * rl_swait));
                     
                     unit.status_ &= ~RLDS_HDO;
                     unit.status_ |= RLDS_BHO;
@@ -83,19 +83,19 @@ void RLV12::service (RL01_2 &unit)
                     unit.status_ |= RLDS_BHO;
                     unit.status_ = (unit.status_ & ~RLDS_M_STATE) | RLDS_HLOAD;
                 }
-                timer.start (this, std::chrono::milliseconds (200 * rl_swait));
+                timer.start (&unit, std::chrono::milliseconds (200 * rl_swait));
                 break;
 
             case RLDS_BRUSH:
                 unit.status_ = (unit.status_ & ~RLDS_M_STATE) | RLDS_HLOAD;
                 unit.status_ |= RLDS_BHO;
-                timer.start (this, std::chrono::milliseconds (200 * rl_swait));
+                timer.start (&unit, std::chrono::milliseconds (200 * rl_swait));
                 break;
 
             case RLDS_HLOAD:
                 // Heads loaded, seek to home 
                 unit.status_ = (unit.status_ & ~RLDS_M_STATE) | RLDS_SEEK;
-                timer.start (this, std::chrono::milliseconds (200 * rl_swait));
+                timer.start (&unit, std::chrono::milliseconds (200 * rl_swait));
                 unit.status_ |= RLDS_BHO | RLDS_HDO;
                 unit.currentTrack_ = 0;
                 break;
@@ -122,7 +122,7 @@ void RLV12::service (RL01_2 &unit)
                 unit.status_ &= ~RLDS_HDO;    
 
                 // Actual time is ~30 seconds
-                timer.start (this, std::chrono::milliseconds (200 * rl_swait));
+                timer.start (&unit, std::chrono::milliseconds (200 * rl_swait));
                 break;
 
             case RLDS_DOWN:
@@ -350,6 +350,6 @@ void RLV12::service (RL01_2 &unit)
         perror("RL I/O error");
         clearerr(unit.filePtr_);
     }
-#endif
+
     return;
 }

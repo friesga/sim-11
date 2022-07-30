@@ -18,11 +18,14 @@ StatusCode RLV12::writeByte (u16 registerAddress, u8 data)
 
 StatusCode RLV12::writeWord (u16 registerAddress, u16 data)
 {
-#if 0
+
     int32_t currentCylinder;
     int32_t offset;
     int32_t newCylinder;
     int32_t maxCylinder, tim;
+
+    // Get reference to drive
+    RL01_2 &unit = units_[GET_DRIVE(data)];
 
     switch (registerAddress & 06)
     {
@@ -30,9 +33,6 @@ StatusCode RLV12::writeWord (u16 registerAddress, u16 data)
         case CSR:
             // Control/Status Register
             rlcs = (rlcs & ~RLCS_MEX) | ((rlbae & RLCS_M_MEX) << RLCS_V_MEX);
-
-            // Get reference to new drive
-            RL01_2 &unit = units_[GET_DRIVE(data)];
 
             rlcs = (rlcs & ~RLCS_RW) | (data & RLCS_RW);
             rlbae = (rlbae & ~RLCS_M_MEX) | ((rlcs >> RLCS_V_MEX) & RLCS_M_MEX);
@@ -190,7 +190,6 @@ StatusCode RLV12::writeWord (u16 registerAddress, u16 data)
                     {
                         timer.cancel (&unit);
                         unit ();
-                        service (unit);
                     }
 
                     unit.function_ = GET_FUNC(rlcs);
@@ -243,6 +242,6 @@ StatusCode RLV12::writeWord (u16 registerAddress, u16 data)
         default:
             return StatusCode::NonExistingMemory;
     }                                           
-#endif
+
     return StatusCode::OK;
 }

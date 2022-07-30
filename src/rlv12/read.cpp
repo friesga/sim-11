@@ -11,11 +11,12 @@
  */
 StatusCode RLV12::read (u16 registerAddress, u16* data)
 {
-#if 0
+
     // Decode registerAddress<2:1>
     switch (registerAddress & 06)
     {                               
-        case CSR: 
+        case CSR:
+        {
             // Control/Status Register
             rlcs = (rlcs & ~RLCS_MEX) | ((rlbae & RLCS_M_MEX) << RLCS_V_MEX);
             /*
@@ -53,6 +54,7 @@ StatusCode RLV12::read (u16 registerAddress, u16* data)
             if(trc.flags)
                 TRACERLV12Registers (&trc, rlcs, rlba, rlda, rlmpr, rlbae);
             break;
+        }
 
         case BAR:
             // Bus Address register
@@ -81,6 +83,6 @@ StatusCode RLV12::read (u16 registerAddress, u16* data)
         default:
             return (StatusCode::NonExistingMemory);
     }
-#endif
+
     return StatusCode::OK;
 }

@@ -142,7 +142,7 @@ class RLV12 : public BusDevice
     // ToDo: Make this a global timer to be used by all devices?!
     AsyncTimer<RL01_2> timer{};
 
-    // Private function
+    // Private functions
     void maintenance ();
     u16 calcCRC (int const wc, u16 const *data);
     void setDone (int32_t status);
@@ -160,5 +160,10 @@ public:
     StatusCode writeWord (u16 registerAddress, u16 data) override;
     void service (RL01_2 &unit);
 };
+
+inline int32_t RLV12::getCylinder (int32_t track)
+{
+    return (track >> RLDA_V_CYL) & RLDA_M_CYL;
+}
 
 #endif _RLV12_H_

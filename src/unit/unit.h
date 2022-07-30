@@ -52,7 +52,7 @@ class Unit
     void setBuffered ();
 
 protected:
-    BusDevice *owningDevice_;  // Pointer to the controller
+    BusDevice *owningDevice_;   // Pointer to the controller
     FILE *filePtr_;             // The disk file
     u32 capacity_;              // Drive capacity in words
     u32 flags_;                 // Bit flags

@@ -7,6 +7,5 @@
 
 void RL01_2::operator() ()
 {
-    // ToDo: Merge Device and QBUSModule classes?!
-    // owningDevice_->service (*this);
+    owningDevice_->service (*this);
 }

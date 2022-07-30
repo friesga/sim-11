@@ -30,8 +30,7 @@ set (SIM11_SRCS
     src/qbus/responsiblemodule.cpp
     src/busdevice/writebyte.cpp
     src/rlv12/attach.cpp
-    src/rlv12/calccrc.cpp
-    src/rlv12/getcylinder.cpp
+    src/rlv12/calccrc.cpp   
     src/rlv12/maintenance.cpp
     src/rlv12/service.cpp
     src/rlv12/rlv12.cpp
