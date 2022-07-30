@@ -6,6 +6,7 @@
 #include "qbus/qbus.h"
 #include "busdevice/busdevice.h"
 #include "asynctimer/asynctimer.h"
+#include "statuscodes.h"
 
 #include <array>
 #include <memory>       // for std::shared_ptr<>
@@ -155,6 +156,7 @@ public:
 
     // Required functions
     void reset () override;
+    bool responsible (u16 addr) override;
     StatusCode read (u16 registerAddress, u16* data) override;
     StatusCode writeByte (u16 registerAddress, u8 data) override;
     StatusCode writeWord (u16 registerAddress, u16 data) override;

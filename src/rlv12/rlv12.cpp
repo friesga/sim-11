@@ -54,3 +54,9 @@ void RLV12::reset ()
         // uptr->STAT &= ~RLDS_ERR;
     }
 }
+
+bool RLV12::responsible (u16 address)
+{
+    return address >= baseAddress_ && address <= (baseAddress_ + BAE) ?
+        true : false;
+}
