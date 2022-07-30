@@ -1,5 +1,5 @@
 #include "qbus.h"
-#include "trace.h"
+#include "trace/trace.h"
 
 bool QBUS::writeWord (u16 address, u16 value)
 {

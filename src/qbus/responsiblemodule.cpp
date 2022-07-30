@@ -1,5 +1,5 @@
 #include "qbus.h"
-#include "trace.h"
+#include "trace/trace.h"
 
 BusDevice *QBUS::responsibleModule (u16 address)
 {

@@ -61,7 +61,7 @@ set (SIM11_SRCS
     src/unit/setbuffered.cpp
     src/unit/unit.cpp
     src/unit/createbadblocktable.cpp
-    src/trace.cpp
+    src/trace/trace.cpp
     src/console.cpp
     src/cmdlineoptions/cmdlineoptions.cpp
     src/cmdlineoptions/data.cpp
@@ -156,10 +156,10 @@ gtest_add_tests (TARGET sim-11-test
 #
 # Create trace reader
 add_executable (tracereader tracereader/main.cpp
-    src/trace.cpp
+    src/trace/trace.cpp
     src/disas.cpp)
 
-target_include_directories (tracereader PRIVATE include)
+target_include_directories (tracereader PRIVATE include src)
     
 # MSVC specific compiler options
 if (CMAKE_C_COMPILER_ID STREQUAL "MSVC")

@@ -5,7 +5,7 @@
 #include "busdevice/busdevice.h"
 #include "conddata/conddata.h"
 #include "variantfsm/fsm.h"
-#include "trace.h"
+#include "trace/trace.h"
 
 /* RX2CS bits */
 #define	RX_GO				_BV(0)

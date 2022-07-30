@@ -1,7 +1,7 @@
 #include <string.h>
 #include <stdlib.h>
 
-#include "trace.h"
+#include "trace/trace.h"
 #include "kd11.h"
 
 #define	TRAP(trap)		setTrap(bus, &trap)

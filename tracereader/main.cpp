@@ -1,4 +1,4 @@
-#include "trace.h"
+#include "trace/trace.h"
 
 #include <iostream>
 #include <fstream>

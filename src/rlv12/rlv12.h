@@ -1,7 +1,7 @@
 #ifndef _RLV12_H_
 #define _RLV12_H_
 
-#include "trace.h"
+#include "trace/trace.h"
 #include "rl01_02/rl012.h"
 #include "qbus/qbus.h"
 #include "busdevice/busdevice.h"

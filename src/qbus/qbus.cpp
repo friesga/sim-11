@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "trace.h"
+#include "trace/trace.h"
 #include "qbus.h"
 #include "interruptrequest/interruptrequest.h"
 

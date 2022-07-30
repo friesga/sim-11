@@ -19,7 +19,7 @@
 #include <clock_gettime.h>
 #endif
 
-#include "trace.h"
+#include "trace/trace.h"
 #include "ba11_n/ba11_n.h"
 #include "rxv21/rxv21.h"
 #include "bdv11/bdv11.h"

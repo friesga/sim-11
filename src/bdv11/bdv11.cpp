@@ -1,4 +1,4 @@
-#include "trace.h"
+#include "trace/trace.h"
 #include "bdv11.h"
 
 #include <string.h>

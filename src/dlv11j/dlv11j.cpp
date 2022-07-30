@@ -1,7 +1,7 @@
 #include <string.h>
 #include <stdlib.h>
 
-#include "trace.h"
+#include "trace/trace.h"
 #include "dlv11j.h"
 
 #define	RCSR_READER_ENABLE	_BV(0)
