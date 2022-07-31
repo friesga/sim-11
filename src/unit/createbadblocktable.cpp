@@ -40,8 +40,10 @@ StatusCode Unit::createBadBlockTable (int32_t sectorsPerSurface,
     if (flags_ & UNIT_RO)
         return StatusCode::ReadOnly;
 
-    if (!gotApproval ("Overwrite last track? [N]", false))
-        return StatusCode::OK;
+    // Don't ask for approval to overwrite the last track as this function
+    // will only be executed for newly created files.
+    // if (!gotApproval ("Overwrite last track? [N]", false))
+    //     return StatusCode::OK;
 
     da = (capacity_ - (sectorsPerSurface * wordsPerSector)) * sizeof(u16);
 
