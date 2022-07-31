@@ -34,13 +34,18 @@ protected:
     u32 vector_;                // Device vector
 
 public:
+	// ToDo: Make QBUS* private
 	QBUS*	bus;
+
+	// Required functions
 	virtual StatusCode read (u16 addr, u16 *destination) = 0;
 	virtual StatusCode writeWord (u16 addr, u16 value) = 0;
 	virtual StatusCode writeByte (u16 addr, u8 value);
-	virtual void service (Unit &unit) {};
 	virtual bool responsible (u16 addr) = 0;
 	virtual void reset () = 0;
+
+	// Optional functions
+	virtual void service (Unit &unit) {};
 
 	std::string name() { return name_; }
 };
