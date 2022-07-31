@@ -3,11 +3,14 @@
 
 // Structure to encapsulate the storage and retrieval of command line
 // options.
-// The data members are public till processing of the options is merged
-// into this class.
 //
-// ToDo: readOnly, createNewFile and openExistingFile options should be per file
-struct CmdLineOptions
+// The class contains public const data members referencing the actual 
+// private data members. This way the private data members can be accessed as
+// public data members.
+//
+// ToDo: readOnly, createNewFile and openExistingFile options should be
+// per file
+class CmdLineOptions
 {
     static const char *floppy_filename_;
 	static const char* load_file_;
@@ -27,6 +30,7 @@ protected:
 public:
 	static CmdLineOptions &get();
 	static void processOptions (int argc, char const **argv);
+	static void reset ();
 
 	const char* const &floppy_filename;
 	const char*  const &load_file;
