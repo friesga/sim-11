@@ -18,7 +18,7 @@ StatusCode Unit::createFile(std::string fileName)
     // overwritten, so check if a file with the specified name already
     // exists and if that's the case ask the user if it is ok to overwrite
     // the file.
-    if (stat (fileName.c_str(), &info) &&
+    if (!stat (fileName.c_str(), &info) &&
         !gotApproval ("Overwrite existing file? [N]", false))
         return StatusCode::ArgumentError;
 
