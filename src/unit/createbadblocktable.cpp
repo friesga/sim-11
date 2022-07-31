@@ -52,7 +52,7 @@ StatusCode Unit::createBadBlockTable (int32_t sectorsPerSurface,
 
     // Allocate a buffer of wordsPerSector u16's
     // if ((buf = (uint16*) malloc(wordsPerSector * sizeof(uint16))) == NULL)
-    if (buf = new (std::nothrow) u16[wordsPerSector]())
+    if ((buf = new (std::nothrow) u16[wordsPerSector]()) == nullptr)
         throw ("Allocating memory for bad block table failed");
 
     buf[0] = buf[1] = 012345u;

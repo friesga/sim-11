@@ -60,10 +60,12 @@ TEST_F (RLV12Test, attachCreatesNewFile)
         argvSet0);
 
     // Remove a possibly existing file
-    char fileName[] = "sim-11-attach-test";
+    char fileName[] = "rl02.dsk";
     remove (fileName);
 
     // This creates a file in the default directory (out\build\<config>)
     ASSERT_EQ (rlv12Device.unit (0)->attach (fileName), 
         StatusCode::OK);
 }
+
+// ToDo: Create test for overwriting existing file
