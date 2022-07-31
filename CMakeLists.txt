@@ -11,6 +11,49 @@ include (GoogleTest)
 # Define our target once
 set (TARGET sim-11)
 
+set (CMDLINEOPTIONS_SRCS 
+    src/cmdlineoptions/cmdlineoptions.cpp
+    src/cmdlineoptions/data.cpp
+    src/cmdlineoptions/get.cpp
+    src/cmdlineoptions/processoptions.cpp
+    src/cmdlineoptions/reset.cpp)
+
+set (RLV12_SRCS
+    src/rlv12/attach.cpp
+    src/rlv12/calccrc.cpp   
+    src/rlv12/maintenance.cpp
+    src/rlv12/service.cpp
+    src/rlv12/rlv12.cpp
+    src/rlv12/rl01_02/rl012.cpp
+    src/rlv12/rl01_02/operator.cpp
+    src/rlv12/read.cpp
+    src/rlv12/setdone.cpp
+    src/rlv12/writeword.cpp)
+
+set (SIM_FIO_SRCS
+    src/sim_fio/sim_fopen.cpp
+    src/sim_fio/sim_fread.cpp
+    src/sim_fio/sim_fsize.cpp
+    src/sim_fio/sim_ftell.cpp
+    src/sim_fio/sim_fwrite.cpp)
+
+set (UNIT_SRCS     
+    src/unit/attach_unit.cpp
+    src/unit/createfile.cpp
+    src/unit/ispipe.cpp
+    src/unit/openpipe.cpp
+    src/unit/openreadonly.cpp
+    src/unit/openreadwrite.cpp
+    src/unit/setbuffered.cpp
+    src/unit/unit.cpp
+    src/unit/createbadblocktable.cpp)
+
+set (QBUS_SRCS     
+    src/qbus/qbus.cpp
+    src/qbus/writebyte.cpp
+    src/qbus/writeword.cpp
+    src/qbus/responsiblemodule.cpp)
+
 # Define source files
 set (SIM11_SRCS
     src/ba11_n/ba11_n.cpp
@@ -24,21 +67,9 @@ set (SIM11_SRCS
     src/lsi11/lsi11.cpp
     src/main.cpp 
     src/msv11d/msv11d.cpp
-    src/qbus/qbus.cpp
-    src/qbus/writebyte.cpp
-    src/qbus/writeword.cpp
-    src/qbus/responsiblemodule.cpp
+    ${QBUS_SRCS}
     src/busdevice/writebyte.cpp
-    src/rlv12/attach.cpp
-    src/rlv12/calccrc.cpp   
-    src/rlv12/maintenance.cpp
-    src/rlv12/service.cpp
-    src/rlv12/rlv12.cpp
-    src/rlv12/rl01_02/rl012.cpp
-    src/rlv12/rl01_02/operator.cpp
-    src/rlv12/read.cpp
-    src/rlv12/setdone.cpp
-    src/rlv12/writeword.cpp
+    ${RLV12_SRCS}
     src/rxv21/rxv21.cpp
     src/rxv21/initiatecommand.cpp
     src/rxv21/emptybuffer.cpp
@@ -47,26 +78,11 @@ set (SIM11_SRCS
     src/rxv21/readsector.cpp
     src/rxv21/readstatus.cpp
     src/rxv21/writesector.cpp
-    src/sim_fio/sim_fopen.cpp
-    src/sim_fio/sim_fread.cpp
-    src/sim_fio/sim_fsize.cpp
-    src/sim_fio/sim_ftell.cpp
-    src/sim_fio/sim_fwrite.cpp
-    src/unit/attach_unit.cpp
-    src/unit/createfile.cpp
-    src/unit/ispipe.cpp
-    src/unit/openpipe.cpp
-    src/unit/openreadonly.cpp
-    src/unit/openreadwrite.cpp
-    src/unit/setbuffered.cpp
-    src/unit/unit.cpp
-    src/unit/createbadblocktable.cpp
+    ${SIM_FIO_SRCS}
+    ${UNIT_SRCS}
     src/trace/trace.cpp
     src/console.cpp
-    src/cmdlineoptions/cmdlineoptions.cpp
-    src/cmdlineoptions/data.cpp
-    src/cmdlineoptions/get.cpp
-    src/cmdlineoptions/processoptions.cpp
+    ${CMDLINEOPTIONS_SRCS}
     src/interruptrequest/interruptrequest.cpp)
 
 # Add source to this project's executable.
@@ -122,14 +138,23 @@ endif ()
 # Define source files
 set (SIM11_TEST_SRCS
     gtest/cmdlineoptionstest.cpp
-    src/cmdlineoptions/cmdlineoptions.cpp
-    src/cmdlineoptions/data.cpp
-    src/cmdlineoptions/get.cpp
-    src/cmdlineoptions/processoptions.cpp
+    ${CMDLINEOPTIONS_SRCS}
     gtest/threadsafeprioqueuetest.cpp
     gtest/interruptrequesttest.cpp
     src/interruptrequest/interruptrequest.cpp
-    gtest/asynctimertest.cpp)
+    gtest/asynctimertest.cpp
+    gtest/rlv12test.cpp
+    ${QBUS_SRCS}
+    ${UNIT_SRCS}
+    ${SIM_FIO_SRCS}
+    ${RLV12_SRCS}
+    src/busdevice/writebyte.cpp
+    src/lib/gotapproval.cpp
+    src/lsi11/lsi11.cpp
+    src/kd11/kd11.cpp
+    src/kd11/pswpriority.cpp
+    src/trace/trace.cpp
+    src/disas.cpp)
 
 add_executable (sim-11-test ${SIM11_TEST_SRCS})
 
@@ -145,13 +170,18 @@ target_include_directories (sim-11-test PUBLIC
     ${CMAKE_SOURCE_DIR}/src
     ${GTEST_INCLUDE_DIRS})
 
+
 target_link_libraries(sim-11-test ${GTESTUNIT_LIBS})
 
 enable_testing ()
 
 gtest_add_tests (TARGET sim-11-test 
                  SOURCES ${SIM11_TEST_SRCS}
-                 TEST_LIST CmdLineOptionsTest ThreadSafePrioQueue InterruptRequest)
+                 TEST_LIST 
+                    CmdLineOptionsTest
+                    ThreadSafePrioQueue
+                    InterruptRequest
+                    RLV12)
 
 #
 # Create trace reader

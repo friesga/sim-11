@@ -40,6 +40,8 @@ StatusCode Unit::openReadWrite (std::string fileName)
             if (!CmdLineOptions::get().quiet)
                 std::cout << owningDevice_->name() << ": unit is read only\n";
         }
+
+        return StatusCode::OpenError;
     }
 
     return StatusCode::OK;

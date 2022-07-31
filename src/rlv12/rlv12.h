@@ -161,11 +161,26 @@ public:
     StatusCode writeByte (u16 registerAddress, u8 data) override;
     StatusCode writeWord (u16 registerAddress, u16 data) override;
     void service (RL01_2 &unit);
+
+    // RLV12 specific function
+    inline size_t numUnits ();
+    inline RL01_2  *unit (size_t unitNumber);
 };
 
 inline int32_t RLV12::getCylinder (int32_t track)
 {
     return (track >> RLDA_V_CYL) & RLDA_M_CYL;
 }
+
+inline size_t RLV12::numUnits ()
+{
+    return RL_NUMDRIVES;
+}
+ 
+inline RL01_2  *RLV12::unit (size_t unitNumber)
+{
+    return &units_[unitNumber];
+}
+
 
 #endif _RLV12_H_
