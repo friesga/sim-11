@@ -181,7 +181,7 @@ gtest_add_tests (TARGET sim-11-test
                     CmdLineOptionsTest
                     ThreadSafePrioQueue
                     InterruptRequest
-                    RLV12)
+                    RLV12Test)
 
 #
 # Create trace reader
