@@ -22,6 +22,7 @@ class CmdLineOptions
 	static bool readOnly_;
 	static bool quiet_;
 	static bool createNewFile_;
+	static bool overwrite_;
 
 protected:
 	// CmdLineOptions(int argc, char **argv);
@@ -42,6 +43,7 @@ public:
 	bool const &readOnly;
 	bool const &quiet;
 	bool const &createNewFile;
+	bool const &overwrite;
 	
 	CmdLineOptions (CmdLineOptions const&) = delete;
 	CmdLineOptions (CmdLineOptions &&) = delete;

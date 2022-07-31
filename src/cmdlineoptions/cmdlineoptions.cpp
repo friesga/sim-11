@@ -11,5 +11,6 @@ CmdLineOptions::CmdLineOptions()
     exit_on_halt {exit_on_halt_},
     readOnly {readOnly_},
     quiet {quiet_},
-    createNewFile {createNewFile_}
+    createNewFile {createNewFile_},
+    overwrite {overwrite_}
 {};

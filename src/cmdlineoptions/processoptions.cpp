@@ -32,6 +32,8 @@ void CmdLineOptions::processOptions (int argc, char const **argv)
 			createNewFile_ = true;
 		else if(!strcmp("-q", *argv))
 			quiet_ = true;
+		else if(!strcmp("-o", *argv))
+			overwrite_ = true;
 		else if(!strcmp("-l", *argv) && argc > 1) 
 		{
 			load_file_ = argv[1];
@@ -65,7 +67,8 @@ void CmdLineOptions::processOptions (int argc, char const **argv)
 					"  -t file.trc     Record execution trace to file.trc\n"
 					"  -z              Use delta compression for execution trace\n"
 					"  -r			   Load image files read-only (only supported for RL01/02)\n"
-					"  -n              Create new file on attach (only RL01/02)"
+					"  -n              Create new file on attach (only RL01/02)\n"
+				    "  -o			   Overwrite existing file (only RL01/02)\n"				
 					"  -q              Quiet mode\n"
 					"\n"
 					"The optional last argument FILE is equivalent to -f file";

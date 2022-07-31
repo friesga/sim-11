@@ -12,4 +12,5 @@ void CmdLineOptions::reset ()
     readOnly_ = false;
     quiet_ = false;
     createNewFile_ = false;
+    overwrite_ = false;
 }

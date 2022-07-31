@@ -10,3 +10,4 @@ bool CmdLineOptions::exit_on_halt_ = false;
 bool CmdLineOptions::readOnly_ = false;
 bool CmdLineOptions::quiet_ = false;
 bool CmdLineOptions::createNewFile_ = false;
+bool CmdLineOptions::overwrite_ = false;
