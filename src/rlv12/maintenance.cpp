@@ -8,7 +8,7 @@
 // fully described on pages 4-14 and 4-15 of EK-RL012-UG-006.
 // 
 // Note that the description of this in EK-RLV12-UG-002 (p.5-3) contains a
-// typo, the constant for -511 is incorrect.
+// typo, the octal representation for -511 (0117701) is incorrect.
 // 
 void RLV12::maintenance()
 {
@@ -45,7 +45,8 @@ void RLV12::maintenance()
         rlmpr++;
     }
 
-    // Transfer 255 words from FIFO
+    // Transfer 255 words from FIFO to the original memory address
+    // plus 512 (using memoryAddress from the previous loop).
     // Just as for the bus->read() operation, the success of the
     // bus->writeWord() operation is not tested as on failures it will
     // generate a bus error trap.
