@@ -17,7 +17,7 @@
 // These tests require that the unit flag UNIT_ATTABLE is set.
 // 
 // Definition of the test fixture
-class RLV12Test : public ::testing::Test
+class RLV12AttachTest : public ::testing::Test
 {
 protected:
     // Create bus structure, an RLV12 device and install the device
@@ -31,7 +31,7 @@ protected:
 };
 
 // Verify attaching a non-existing file returns the appropriate error
-TEST_F (RLV12Test, attachReturnsOpenError)
+TEST_F (RLV12AttachTest, attachReturnsOpenError)
 {
     // Create bus structure, an RLV12 device and install the device
     // LSI11 lsi;
@@ -42,7 +42,7 @@ TEST_F (RLV12Test, attachReturnsOpenError)
         StatusCode::OpenError);
 }
 
-TEST_F (RLV12Test, attachCreatesNewFile)
+TEST_F (RLV12AttachTest, attachCreatesNewFile)
 {
     // Set read-only option
     char const *argvSet0[] =
@@ -65,7 +65,7 @@ TEST_F (RLV12Test, attachCreatesNewFile)
 
 // This test requires the UNIT_ROABLE flag to be set and depends on the
 // file created in the previous test.
-TEST_F (RLV12Test, attachOpensReadOnly)
+TEST_F (RLV12AttachTest, attachOpensReadOnly)
 {
     // Set read-only option
     char const *argvSet0[] =
@@ -83,7 +83,7 @@ TEST_F (RLV12Test, attachOpensReadOnly)
 
 // Verify an existing file is not overwritten without specification of
 // the override option
-TEST_F (RLV12Test, existingFileIsNotOverwritten)
+TEST_F (RLV12AttachTest, existingFileIsNotOverwritten)
 {
     char const *argvSet0[] =
     {
@@ -99,7 +99,7 @@ TEST_F (RLV12Test, existingFileIsNotOverwritten)
 }
 
 // Verify an existing file is overwritten when the override option is sety
-TEST_F (RLV12Test, existingFileIsOverwritten)
+TEST_F (RLV12AttachTest, existingFileIsOverwritten)
 {
     char const *argvSet0[] =
     {
