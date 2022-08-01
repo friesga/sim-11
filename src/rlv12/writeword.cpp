@@ -141,9 +141,11 @@ StatusCode RLV12::writeWord (u16 registerAddress, u16 data)
                         return StatusCode::OK;
                     }
 
-                    // Reset errors?
+                    // Reset errors
+                    // According to Table 4-6 in EK-RL012-UG-005 this also resets the
+                    // Volume Check condition
                     if (rlda & RLDA_GS_CLR)
-                        unit.status_ &= ~RLDS_ERR;
+                        unit.status_ &= ~(RLDS_ERR | RLDS_VCK);
 
                     // Develop drive state
                     rlmpr = (u16) (unit.status_ | (unit.currentTrack_ & RLDS_HD));
