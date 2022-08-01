@@ -19,6 +19,9 @@ StatusCode RL01_2::attach (std::string fileName)
 
     // New volume
     status_ = RLDS_HDO | RLDS_BHO | RLDS_VCK | RLDS_LOCK;
+
+    // Set unit on-line
+    flags_ &= ~UNIT_OFFL;
     
     // Create a bad block table on a new disk image (if the 
     // image is not read-only)
