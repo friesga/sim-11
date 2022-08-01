@@ -138,12 +138,14 @@ endif ()
 # Define source files
 set (SIM11_TEST_SRCS
     gtest/cmdlineoptionstest.cpp
-    ${CMDLINEOPTIONS_SRCS}
     gtest/threadsafeprioqueuetest.cpp
     gtest/interruptrequesttest.cpp
-    src/interruptrequest/interruptrequest.cpp
     gtest/asynctimertest.cpp
-    gtest/rlv12test.cpp
+    gtest/rlv12attachtest.cpp
+    gtest/rlv12maintenancetest.cpp
+    gtest/rlv12getstatustest.cpp
+    ${CMDLINEOPTIONS_SRCS}
+    src/interruptrequest/interruptrequest.cpp
     ${QBUS_SRCS}
     ${UNIT_SRCS}
     ${SIM_FIO_SRCS}
@@ -153,6 +155,7 @@ set (SIM11_TEST_SRCS
     src/lsi11/lsi11.cpp
     src/kd11/kd11.cpp
     src/kd11/pswpriority.cpp
+    src/msv11d/msv11d.cpp
     src/trace/trace.cpp
     src/disas.cpp)
 
@@ -170,7 +173,7 @@ target_include_directories (sim-11-test PUBLIC
     ${CMAKE_SOURCE_DIR}/src
     ${GTEST_INCLUDE_DIRS})
 
-
+    
 target_link_libraries(sim-11-test ${GTESTUNIT_LIBS})
 
 enable_testing ()
@@ -181,7 +184,9 @@ gtest_add_tests (TARGET sim-11-test
                     CmdLineOptionsTest
                     ThreadSafePrioQueue
                     InterruptRequest
-                    RLV12AttachTest)
+                    RLV12AttachTest
+                    RLV12WriteTest
+                    RLV12GetStatusTest)
 
 #
 # Create trace reader
