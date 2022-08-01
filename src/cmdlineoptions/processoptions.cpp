@@ -11,6 +11,9 @@ void CmdLineOptions::processOptions (int argc, char const **argv)
 {
 	stringstream msg;
 
+	// Reset options in case a new set of options has to be processed
+	reset ();
+
 	// First argument is the executable's name
 	const char* self = *argv;
     --argc;
