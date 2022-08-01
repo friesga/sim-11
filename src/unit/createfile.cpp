@@ -18,8 +18,7 @@ StatusCode Unit::createFile(std::string fileName)
     // overwritten, so check if a file with the specified name already
     // exists and if that's the case ask the user if it is ok to overwrite
     // the file.
-    if (!stat (fileName.c_str(), &info) &&
-        !gotApproval ("Overwrite existing file? [N]", false))
+    if (!stat (fileName.c_str(), &info) && !CmdLineOptions::get().overwrite)
         return StatusCode::ArgumentError;
 
     filePtr_ = sim_fopen (fileName.c_str(), "wb+");
