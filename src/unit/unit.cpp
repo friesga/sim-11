@@ -5,5 +5,5 @@
 Unit::Unit (BusDevice *owningDevice)
     :
     owningDevice_ {owningDevice},
-    flags_ {UNIT_ATTABLE}
+    flags_ {UNIT_ATTABLE | UNIT_ROABLE}
 {}
