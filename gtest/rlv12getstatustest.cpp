@@ -12,22 +12,21 @@ class RLV12GetStatusTest : public ::testing::Test
 {
 protected:
     // Use our own set of definitions to avoid common cause issues
-    u16 const RLBASE = 0174400;
-    u16 const RLCSR = RLBASE;
-    u16 const RLBAR = RLBASE + 02;
-    u16 const RLDAR = RLBASE + 04;
-    u16 const RLMPR = RLBASE + 06;
+    static constexpr u16 RLBASE = 0174400;
+    static constexpr u16 RLCSR = RLBASE;
+    static constexpr u16 RLBAR = RLBASE + 02;
+    static constexpr u16 RLDAR = RLBASE + 04;
+    static constexpr u16 RLMPR = RLBASE + 06;
     // A 16 bit system has no BAE register
 
     // CSR bit definitions
-    u16 const CSR_GetStatusCommand = (02 << 01);
-    u16 const CSR_ControllerReady = (1 << 07);
+    static constexpr u16  CSR_GetStatusCommand = (02 << 01);
+    static constexpr u16 const CSR_ControllerReady = (1 << 07);
 
     // DAR bit definitions
-    u16 const DAR_Marker    = (1 << 00);
-    u16 const DAR_GetStatus = (1 << 01);
-    u16 const DAR_Reset     = (1 << 03);
-
+    static constexpr u16 DAR_Marker    = (1 << 00);
+    static constexpr u16 DAR_GetStatus = (1 << 01);
+    static constexpr u16 DAR_Reset     = (1 << 03);
 
     // Create bus structure, an RLV12 device and install the device
     LSI11 lsi;
