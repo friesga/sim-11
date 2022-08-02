@@ -135,41 +135,7 @@ StatusCode RLV12::writeWord (u16 registerAddress, u16 data)
 
                 case RLCS_GSTA:
                     // Get Status Command
-                    // The Get Status bit (and ToDo: the Marker Bit) in the DAR must
-                    // be set.
-                    if (!(rlda & RLDA_GS))
-                    {   
-                        // Operation incomplete; set error 
-                        setDone (RLCS_ERR | RLCS_INCMP);    
-                        return StatusCode::OK;
-                    }
-
-                    // Reset errors
-                    // According to Table 4-6 in EK-RL012-UG-005 this also resets the
-                    // Volume Check condition
-                    if (rlda & RLDA_GS_CLR)
-                        unit.status_ &= ~(RLDS_ERR | RLDS_VCK);
-
-                    // Develop drive state
-                    rlmpr = (u16) (unit.status_ | (unit.currentTrack_ & RLDS_HD));
-                    if (unit.flags_ & UNIT_RL02)
-                        rlmpr |= RLDS_RL02;
-
-                    if (unit.flags_ & UNIT_WPRT)
-                        rlmpr |= RLDS_WLK;
-
-                    if (unit.flags_ & (UNIT_DIS | UNIT_OFFL))
-                    {
-                        rlmpr |= RLDS_DSE;
-                        setDone(RLCS_DRE | RLCS_INCMP);
-                    }
-
-                    rlmpr2 = rlmpr1 = rlmpr;
-
-                    // if (DEBUG_PRS(rl_dev))
-                    //    fprintf(sim_deb, ">>RL GSTA: rlds=%06o drv=%ld\n",
-                    //        rlmp, (long)(uptr - rl_dev.units));
-                    setDone(0);
+                    getStatus (unit);
                     break;
 
                 default:

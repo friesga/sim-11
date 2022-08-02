@@ -20,7 +20,8 @@ set (CMDLINEOPTIONS_SRCS
 
 set (RLV12_SRCS
     src/rlv12/attach.cpp
-    src/rlv12/calccrc.cpp   
+    src/rlv12/calccrc.cpp
+    src/rlv12/getstatus.cpp
     src/rlv12/maintenance.cpp
     src/rlv12/service.cpp
     src/rlv12/rlv12.cpp
