@@ -12,8 +12,8 @@
 StatusCode RLV12::read (u16 registerAddress, u16* data)
 {
 
-    // Decode registerAddress<2:1>
-    switch (registerAddress & 06)
+    // Decode registerAddress<3:1>
+    switch (registerAddress & 016)
     {                               
         case CSR:
         {
