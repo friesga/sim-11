@@ -21,12 +21,12 @@ class RLV12AttachTest : public ::testing::Test
 {
 protected:
     // Create bus structure, an RLV12 device and install the device
-    LSI11 lsi;
+    QBUS bus;
     RLV12 rlv12Device {};
 
     void SetUp() override
     {
-        lsi.bus.installModule (1, &rlv12Device);
+        bus.installModule (1, &rlv12Device);
     }
 };
 

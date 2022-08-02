@@ -29,7 +29,7 @@ protected:
     static constexpr u16 DAR_Reset     = (1 << 03);
 
     // Create bus structure, an RLV12 device and install the device
-    LSI11 lsi;
+    QBUS bus;
     MSV11D msv11;
     RLV12 rlv12Device {};
 
@@ -37,8 +37,8 @@ protected:
     {
         // Create a minimal system, conisting of just the bus, memory
         // and the RLV12 device to be tested.
-        lsi.bus.installModule (1, &msv11);
-        lsi.bus.installModule (2, &rlv12Device);
+        bus.installModule (1, &msv11);
+        bus.installModule (2, &rlv12Device);
 
         char const *argvSet0[] =
         {
