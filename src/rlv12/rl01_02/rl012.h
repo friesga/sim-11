@@ -6,8 +6,8 @@
 #include "statuscodes.h"
 
 // Flags in the unit flags word
-// ToDo: Replace by enums or std::bitset
-
+// ToDo: Replace #define by static constexpr 
+// ToDo: The RLV12 device should have its own set of flags
 #define UNIT_V_UF       16                              // Device specific  unit flags 
 
 #define UNIT_V_WLK      (UNIT_V_UF + 0)                 // hwre write lock 
@@ -16,12 +16,14 @@
 #define UNIT_V_DUMMY    (UNIT_V_UF + 3)                 // dummy flag, for SET BADBLOCK 
 #define UNIT_V_OFFL     (UNIT_V_UF + 4)                 // unit off line 
 #define UNIT_V_BRUSH    (UNIT_V_UF + 5)                 // unit has brushes 
-#define UNIT_BRUSH      (1u << UNIT_V_BRUSH)
-#define UNIT_OFFL       (1u << UNIT_V_OFFL)
-#define UNIT_DUMMY      (1u << UNIT_V_DUMMY)
+
 #define UNIT_WLK        (1u << UNIT_V_WLK)
 #define UNIT_RL02       (1u << UNIT_V_RL02)
 #define UNIT_AUTO       (1u << UNIT_V_AUTO)
+#define UNIT_BRUSH      (1u << UNIT_V_BRUSH)
+#define UNIT_OFFL       (1u << UNIT_V_OFFL)
+#define UNIT_DUMMY      (1u << UNIT_V_DUMMY)
+
 #define UNIT_WPRT       (UNIT_WLK | UNIT_RO)            // write protected 
 
 // RLDS 
