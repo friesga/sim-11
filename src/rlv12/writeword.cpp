@@ -27,9 +27,9 @@ StatusCode RLV12::writeWord (u16 registerAddress, u16 data)
     // Get reference to drive
     RL01_2 &unit = units_[GET_DRIVE(data)];
 
-    switch (registerAddress & 06)
+    // Decode registerAddress<3:1>
+    switch (registerAddress & 016)
     {
-        // Decode registerAddress<2:1>
         case CSR:
             // Control/Status Register
             rlcs = (rlcs & ~RLCS_MEX) | ((rlbae & RLCS_M_MEX) << RLCS_V_MEX);
@@ -134,10 +134,13 @@ StatusCode RLV12::writeWord (u16 registerAddress, u16 data)
                     break;
 
                 case RLCS_GSTA:
+                    // Get Status Command
+                    // The Get Status bit (and ToDo: the Marker Bit) in the DAR must
+                    // be set.
                     if (!(rlda & RLDA_GS))
                     {   
-                        /* GS bit must be set */
-                        setDone (RLCS_ERR | RLCS_INCMP);    /* OPI; request error */
+                        // Operation incomplete; set error 
+                        setDone (RLCS_ERR | RLCS_INCMP);    
                         return StatusCode::OK;
                     }
 
