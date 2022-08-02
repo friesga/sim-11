@@ -19,6 +19,9 @@ RLV12::RLV12 ()
 
     if (rlxb_ == nullptr)
         throw ("Allocating memory for transfer buffer failed");
+
+    // Reset the controller
+    reset ();
 }
 
 // Destructor to deallocate transfer buffer
