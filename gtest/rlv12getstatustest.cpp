@@ -11,6 +11,24 @@
 class RLV12GetStatusTest : public ::testing::Test
 {
 protected:
+    // Use our own set of definitions to avoid common cause issues
+    u16 const RLBASE = 0174400;
+    u16 const RLCSR = RLBASE;
+    u16 const RLBAR = RLBASE + 02;
+    u16 const RLDAR = RLBASE + 04;
+    u16 const RLMPR = RLBASE + 06;
+    // A 16 bit system has no BAE register
+
+    // CSR bit definitions
+    u16 const CSR_GetStatusCommand = (02 << 01);
+    u16 const CSR_ControllerReady = (1 << 07);
+
+    // DAR bit definitions
+    u16 const DAR_Marker    = (1 << 00);
+    u16 const DAR_GetStatus = (1 << 01);
+    u16 const DAR_Reset     = (1 << 03);
+
+
     // Create bus structure, an RLV12 device and install the device
     LSI11 lsi;
     MSV11D msv11;
@@ -35,36 +53,30 @@ protected:
     }
 };
 
-
-TEST_F (RLV12GetStatusTest, getStatusSucceeds)
+// Verify the controller can be reset by means of the Get Status Command
+TEST_F (RLV12GetStatusTest, resetSucceeds)
 {
-    // Use our own set of definitions to avoid common cause issues
-    u16 const RLBASE = 0174400;
-    u16 const RLCSR = RLBASE;
-    u16 const RLBAR = RLBASE + 02;
-    u16 const RLDAR = RLBASE + 04;
-    u16 const RLMPR = RLBASE + 06;
-    // A 16 bit system has no BAE register
-
-    u16 const GetStatusCommand = 02;
-
     // Verify the controller is ready to perform an operation (the drive
     // does not have to be ready)
     u16 result;
     rlv12Device.read (RLCSR, &result);
-    ASSERT_EQ (result, 0200);
+    ASSERT_EQ (result & CSR_ControllerReady, CSR_ControllerReady);
 
     // Load DAR with ones in bits 01 and 00, reset bit cleared and
     // zeros in the other locations
-    rlv12Device.writeWord (RLDAR, 03);
+    rlv12Device.writeWord (RLDAR, DAR_Reset | DAR_GetStatus | DAR_Marker);
 
     // Load the CSR with drive-select bits for unit 0, a negative GO bit
     // (i.e. bit 7 cleared), interrups disabled and a Get Status Command (02)
     // in the function bits.
-    rlv12Device.writeWord (RLCSR, GetStatusCommand);
+    rlv12Device.writeWord (RLCSR, CSR_GetStatusCommand);
 
-    // Expected result in the MPR register: No errors, Drive type RL02
+    // Expected result in the MPR register: No errors, Drive type RL01
     u16 mpr;
     rlv12Device.read (RLMPR, &mpr);
-    ASSERT_EQ (result, 0200);
+    ASSERT_EQ (mpr, 00);
+
+    // Verify the controller is ready without error indications
+    rlv12Device.read (RLCSR, &result);
+    ASSERT_EQ (result, CSR_ControllerReady | CSR_GetStatusCommand);
 }
