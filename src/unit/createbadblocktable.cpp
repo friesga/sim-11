@@ -62,7 +62,7 @@ StatusCode Unit::createBadBlockTable (int32_t sectorsPerSurface,
     for (i = 0; (i < sectorsPerSurface) && (i < 10); i++)
         sim_fwrite(buf, sizeof(u16), wordsPerSector, filePtr_);
 
-    delete buf;
+    delete[] buf;
     if (ferror (filePtr_))
         return StatusCode::IOError;
 
