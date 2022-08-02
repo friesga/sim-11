@@ -20,8 +20,10 @@ protected:
     // A 16 bit system has no BAE register
 
     // CSR bit definitions
-    static constexpr u16  CSR_GetStatusCommand = (02 << 01);
-    static constexpr u16 const CSR_ControllerReady = (1 << 07);
+    static constexpr u16  CSR_GetStatusCommand    = (02 << 1);
+    static constexpr u16  CSR_ControllerReady     = (1 << 7);
+    static constexpr u16  CSR_OperationIncomplete = (1 << 10); 
+    static constexpr u16  CSR_CompositeError      = (1 << 15); 
 
     // DAR bit definitions
     static constexpr u16 DAR_Marker    = (1 << 00);
@@ -51,6 +53,30 @@ protected:
             argvSet0);
     }
 };
+
+// Verify a Get Status Command without the Get Status bit set fails
+TEST_F (RLV12GetStatusTest, getStatusFails)
+{
+    // Verify the controller is ready to perform an operation (the drive
+    // does not have to be ready)
+    u16 result;
+    rlv12Device.read (RLCSR, &result);
+    ASSERT_EQ (result & CSR_ControllerReady, CSR_ControllerReady);
+
+    // Load DAR without Reset and Get Status bits
+    // zeros in the other locations
+    rlv12Device.writeWord (RLDAR, 0);
+
+    // Load the CSR with drive-select bits for unit 0, a negative GO bit
+    // (i.e. bit 7 cleared), interrups disabled and a Get Status Command (02)
+    // in the function bits.
+    rlv12Device.writeWord (RLCSR, CSR_GetStatusCommand);
+
+    // Verify the controller reports an Operation Incomplete
+    rlv12Device.read (RLCSR, &result);
+    ASSERT_EQ (result, CSR_CompositeError |
+        CSR_OperationIncomplete | CSR_ControllerReady | CSR_GetStatusCommand);
+}
 
 // Verify the controller can be reset by means of the Get Status Command
 TEST_F (RLV12GetStatusTest, resetSucceeds)
