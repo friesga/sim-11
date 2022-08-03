@@ -4,6 +4,7 @@
 // Constructor
 RL01_2::RL01_2 (BusDevice *owningDevice)
     :
-    Unit (owningDevice)
+    Unit (owningDevice),
+    currentTrackHeadSector_ {0}
 {}
 
