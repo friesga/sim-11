@@ -161,7 +161,7 @@ public:
     StatusCode read (u16 registerAddress, u16* data) override;
     StatusCode writeByte (u16 registerAddress, u8 data) override;
     StatusCode writeWord (u16 registerAddress, u16 data) override;
-    void service (RL01_2 &unit);
+    void service (Unit &unit)  override;
 
     // RLV12 specific function
     inline size_t numUnits ();

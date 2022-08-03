@@ -15,12 +15,13 @@
 // in the main instruction loop. To maintain encapsulation RLV12 conditions
 // are to be handled in the RLV12 class.
 //
-void RLV12::service (RL01_2 &unit)
+void RLV12::service (Unit &unitRef)
 {
 
     int32_t err, wc, maxwc, t;
     int32_t i, da, awc;
     uint32_t ma;
+    RL01_2 &unit = static_cast<RL01_2&> (unitRef);
  
     const char* const funcname[] = {
         "NOP", "WCK", "GSTA", "SEEK",
