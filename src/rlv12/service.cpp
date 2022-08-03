@@ -98,7 +98,7 @@ void RLV12::service (Unit &unitRef)
                 unit.status_ = (unit.status_ & ~RLDS_M_STATE) | RLDS_SEEK;
                 timer.start (&unit, std::chrono::milliseconds (200 * rl_swait));
                 unit.status_ |= RLDS_BHO | RLDS_HDO;
-                unit.currentTrack_ = 0;
+                unit.currentTrackHeadSector_ = 0;
                 break;
 
             case RLDS_SEEK:
@@ -173,25 +173,26 @@ void RLV12::service (Unit &unitRef)
         // Read header?
         u16 hdr[2];
 
-        hdr[0] = rlmpr = unit.currentTrack_ & 0177777;
+        hdr[0] = rlmpr = unit.currentTrackHeadSector_ & 0177777;
         hdr[1] = rlmpr1 = 0;
         // Calculate header CRC
         rlmpr2 = calcCRC(2, &hdr[0]);
         setDone (0);
 
         // Simulate sequential rotation about the current track
-        unit.currentTrack_ = (unit.currentTrack_ & ~RLDA_M_SECT) |
-            ((unit.currentTrack_ + 1) & RLDA_M_SECT);
+        unit.currentTrackHeadSector_ = 
+            (unit.currentTrackHeadSector_ & ~RLDA_M_SECT) |
+            ((unit.currentTrackHeadSector_ + 1) & RLDA_M_SECT);
 
         // End of track?
-        if (GET_SECT (unit.currentTrack_) >= RL_NUMSC)
-            unit.currentTrack_ &= ~RLDA_M_SECT;                      /* wrap to 0 */
+        if (GET_SECT (unit.currentTrackHeadSector_) >= RL_NUMSC)
+            unit.currentTrackHeadSector_ &= ~RLDA_M_SECT;                      /* wrap to 0 */
         return;
     }
 
     if (unit.function_ == RLCS_RNOHDR)
     {
-        if (GET_SECT(unit.currentTrack_) >= RL_NUMSC)
+        if (GET_SECT(unit.currentTrackHeadSector_) >= RL_NUMSC)
         {
             // Wrong cylinder?
             setDone (RLCS_ERR | RLCS_HDE);
@@ -199,15 +200,15 @@ void RLV12::service (Unit &unitRef)
         }
 
         // Get disk addr
-        da = GET_DA(unit.currentTrack_) * RL_NUMWD;
+        da = GET_DA(unit.currentTrackHeadSector_) * RL_NUMWD;
 
         // Max transfer
-        maxwc = (RL_NUMSC - GET_SECT(unit.currentTrack_)) * RL_NUMWD;
+        maxwc = (RL_NUMSC - GET_SECT(unit.currentTrackHeadSector_)) * RL_NUMWD;
     }
     else
     {
         // Bad cyl or sector?
-        if (((unit.currentTrack_ & RLDA_CYL) != (rlda & RLDA_CYL)) ||
+        if (((unit.currentTrackHeadSector_ & RLDA_CYL) != (rlda & RLDA_CYL)) ||
             (GET_SECT(rlda) >= RL_NUMSC))
         {
             // Wrong cylinder?
@@ -337,12 +338,12 @@ void RLV12::service (Unit &unitRef)
 
     // Update head position
     if (unit.function_ == RLCS_RNOHDR)
-        unit.currentTrack_ = (unit.currentTrack_ & ~RLDA_M_SECT) |
-        ((unit.currentTrack_ + ((wc + (RL_NUMWD - 1)) / RL_NUMWD)) & RLDA_M_SECT);
+        unit.currentTrackHeadSector_ = (unit.currentTrackHeadSector_ & ~RLDA_M_SECT) |
+        ((unit.currentTrackHeadSector_ + ((wc + (RL_NUMWD - 1)) / RL_NUMWD)) & RLDA_M_SECT);
     else
-        unit.currentTrack_ = rlda;
-    if (GET_SECT(unit.currentTrack_) >= RL_NUMSC)
-        unit.currentTrack_ &= ~RLDA_M_SECT;                          /* wrap to 0 */
+        unit.currentTrackHeadSector_ = rlda;
+    if (GET_SECT(unit.currentTrackHeadSector_) >= RL_NUMSC)
+        unit.currentTrackHeadSector_ &= ~RLDA_M_SECT;                          /* wrap to 0 */
 
     setDone(0);
 

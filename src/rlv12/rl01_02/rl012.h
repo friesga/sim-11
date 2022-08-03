@@ -62,7 +62,8 @@ class RL01_2 : public Unit
 {
     friend class RLV12;
 
-    int32_t currentTrack_;
+    // ToDo: Split currentTrackHeadSector_ in three separate variables
+    int32_t currentTrackHeadSector_;
     int32_t status_;
     int32_t function_;
 

@@ -81,7 +81,7 @@ StatusCode RLV12::writeWord (u16 registerAddress, u16 data)
                         break;
                     }
 
-                    currentCylinder = getCylinder (unit.currentTrack_);
+                    currentCylinder = getCylinder (unit.currentTrackHeadSector_);
                     offset = getCylinder (rlda);
 
                     // Seek direction in or out?
@@ -108,7 +108,7 @@ StatusCode RLV12::writeWord (u16 registerAddress, u16 data)
 
                     // ToDo: If a head switch, sector should be RL_NUMSC/2?
                     // Put on track
-                    unit.currentTrack_ = (newCylinder << RLDA_V_CYL) |      
+                    unit.currentTrackHeadSector_ = (newCylinder << RLDA_V_CYL) |      
                         ((rlda & RLDA_SK_HD) ? RLDA_HD1 : RLDA_HD0);
 
                     // Real timing:

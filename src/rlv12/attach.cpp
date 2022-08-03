@@ -15,7 +15,7 @@ StatusCode RL01_2::attach (std::string fileName)
     // ToDo: Check if this behaviour is wanted
 
     // Position at cylinder 0
-    currentTrack_ = 0;
+    currentTrackHeadSector_ = 0;
 
     // New volume
     status_ = RLDS_HDO | RLDS_BHO | RLDS_VCK | RLDS_LOCK;
