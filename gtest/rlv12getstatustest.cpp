@@ -24,6 +24,10 @@ protected:
     static constexpr u16  CSR_ControllerReady     = (1 << 7);
     static constexpr u16  CSR_OperationIncomplete = (1 << 10); 
     static constexpr u16  CSR_CompositeError      = (1 << 15); 
+    static constexpr u16  CSR_Drive0              = 0;
+    static constexpr u16  CSR_Drive1              = (1 << 8);
+    static constexpr u16  CSR_Drive2              = (2 << 8);
+    static constexpr u16  CSR_Drive3              = (3 << 8);
 
     // DAR bit definitions
     static constexpr u16 DAR_Marker    = (1 << 00);
@@ -104,4 +108,33 @@ TEST_F (RLV12GetStatusTest, resetSucceeds)
     // Verify the controller is ready without error indications
     rlv12Device.read (RLCSR, &result);
     ASSERT_EQ (result, CSR_ControllerReady | CSR_GetStatusCommand);
+}
+
+
+// Verify the controller can be reset by means of the Get Status Command
+TEST_F (RLV12GetStatusTest, drive3CanBeSelected)
+{
+    // Verify the controller is ready to perform an operation (the drive
+    // does not have to be ready)
+    u16 result;
+    rlv12Device.read (RLCSR, &result);
+    ASSERT_EQ (result & CSR_ControllerReady, CSR_ControllerReady);
+
+    // Load DAR with ones in bits 01 and 00, reset bit cleared and
+    // zeros in the other locations
+    rlv12Device.writeWord (RLDAR, DAR_Reset | DAR_GetStatus | DAR_Marker);
+
+    // Load the CSR with drive-select bits for unit 1, a negative GO bit
+    // (i.e. bit 7 cleared), interrups disabled and a Get Status Command (02)
+    // in the function bits.
+    rlv12Device.writeWord (RLCSR, CSR_GetStatusCommand | CSR_Drive3);
+
+    // Expected result in the MPR register: No errors, Drive type RL01
+    u16 mpr;
+    rlv12Device.read (RLMPR, &mpr);
+    ASSERT_EQ (mpr, 00);
+
+    // Verify the controller is ready without error indications
+    rlv12Device.read (RLCSR, &result);
+    ASSERT_EQ (result, CSR_ControllerReady | CSR_GetStatusCommand | CSR_Drive3);
 }
