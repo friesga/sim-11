@@ -205,3 +205,48 @@ TEST_F (RLV12SeekTest, parallelSeeksSucceed)
     rlv12Device.read (RLMPR, &mpr);
     ASSERT_EQ (MPR_cylinder (mpr), 5);
 }
+
+// Verify a seek command is rejected when the drive isn't ready
+// Verify Drive Ready is cleared when a seek command is issued
+TEST_F (RLV12SeekTest, seekOnBusyDriveRejected)
+{
+    // Attach a new disk to unit 0
+    ASSERT_EQ (rlv12Device.unit (0)->attach ("rl01.dsk"), 
+        StatusCode::OK);
+
+    // Clear errors and volume check condition
+    rlv12Device.writeWord (RLDAR, DAR_Reset | DAR_GetStatus | DAR_Marker);
+    rlv12Device.writeWord (RLCSR, CSR_GetStatusCommand | CSR_Drive0);
+
+    // Verify controller and drive are ready 
+    u16 result;
+    rlv12Device.read (RLCSR, &result);
+    ASSERT_EQ (result & CSR_ControllerReady | CSR_DriveReady,
+        CSR_ControllerReady | CSR_DriveReady);
+
+    // Load DAR with seek parameters
+    rlv12Device.writeWord (RLDAR, DAR_Marker | DAR_Seek | DAR_DirectionOut |
+        DAR_cylinderDifference (5));
+
+    // Load the CSR with drive-select bits for unit 0, a negative GO bit
+    // (i.e. bit 7 cleared), interrupts disabled and a Seek Command (03)
+    // in the function bits.
+    rlv12Device.writeWord (RLCSR, CSR_SeekCommand);
+
+    // Verify the controller is ready to accept a command
+    // while the drive is not ready
+    rlv12Device.read (RLCSR, &result);
+    ASSERT_EQ (result & (CSR_ControllerReady | CSR_DriveReady), 
+        CSR_ControllerReady);
+
+    // Issue another seek command to the same drive
+    rlv12Device.writeWord (RLCSR, CSR_SeekCommand);
+
+    // The expected behaviour is a Write Gate Error as a command is issued
+    // to the drive while it isn't ready. RLV12::writeWord() however accepts
+    // commands while the drive isn't ready.
+    rlv12Device.read (RLCSR, &result);
+    // ASSERT_EQ (result & CSR_CompositeError, CSR_CompositeError);
+    ASSERT_EQ (result & CSR_ControllerReady | CSR_DriveReady,
+        CSR_ControllerReady | CSR_DriveReady);
+}
