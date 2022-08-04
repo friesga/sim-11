@@ -28,6 +28,7 @@ set (RLV12_SRCS
     src/rlv12/rl01_02/rl012.cpp
     src/rlv12/rl01_02/operator.cpp
     src/rlv12/read.cpp
+    src/rlv12/seek.cpp
     src/rlv12/setdone.cpp
     src/rlv12/writeword.cpp)
 
@@ -181,12 +182,16 @@ target_link_libraries(sim-11-test ${GTESTUNIT_LIBS})
 
 enable_testing ()
 
+# Define the order of the tests to be executed. This order
+# unfortunately is important as the tests leave the controller
+# in a certain state.
 gtest_add_tests (TARGET sim-11-test 
                  SOURCES ${SIM11_TEST_SRCS}
                  TEST_LIST 
                     CmdLineOptionsTest
                     ThreadSafePrioQueue
                     InterruptRequest
+                    RLV12MaintenanceTest
                     RLV12AttachTest
                     RLV12WriteTest
                     RLV12GetStatusTest

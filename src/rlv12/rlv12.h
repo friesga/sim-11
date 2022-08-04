@@ -146,6 +146,7 @@ class RLV12 : public BusDevice
     // Private functions
     void maintenance ();
     void getStatus (RL01_2 &unit);
+    void seek (RL01_2 &unit);
     u16 calcCRC (int const wc, u16 const *data);
     void setDone (int32_t status);
     inline int32_t getCylinder (int32_t track);
