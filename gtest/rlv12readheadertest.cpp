@@ -96,6 +96,15 @@ TEST_F (RLV12ReadHeaderTest, readHeaderSucceeds)
     u16 mpr;
     rlv12Device.read (RLMPR, &mpr);
     ASSERT_EQ (mpr, 00);
+
+    // The second MPR read should deliver all zero's
+    rlv12Device.read (RLMPR, &mpr);
+    ASSERT_EQ (mpr, 00);
+
+    // The third read should deliver the CRC of the header
+    // We presume the calculation is correct
+    rlv12Device.read (RLMPR, &mpr);
+    ASSERT_EQ (mpr, 00);
 }
 
 
