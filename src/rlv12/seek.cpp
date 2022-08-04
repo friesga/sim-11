@@ -12,9 +12,16 @@ void RLV12::seek (RL01_2& unit)
     int32_t maxCylinder;
     int32_t tim;
 
-    // The function now accepts Seek Commands while another
-    // seek is in progress and the drive isn't ready.
-    // ToDo: Correct behaviour on Seek Commands
+    // Note the function accepts Seek Commands for a drive while another
+    // seek is in progress and the Drive Ready bit isn't set. In this case
+    // the command is accepted and is executed after completion of the 
+    // previous seek command. (EK-ORL11-TD-001, p2-3: "If the CPU software
+    // initiates another operation on a drive that is busy seeking, the
+    // controller will suspend the operation until the seek is completed."
+    // 
+    // As in the service route for a seek just the Locked On bit is set,
+    // a following seek can be executed immediately.
+    //
     if ((unit.flags_ & (UNIT_DIS | UNIT_OFFL)) ||
         (!(unit.flags_ & UNIT_ATT)))
     {

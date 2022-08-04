@@ -206,9 +206,8 @@ TEST_F (RLV12SeekTest, parallelSeeksSucceed)
     ASSERT_EQ (MPR_cylinder (mpr), 5);
 }
 
-// Verify a seek command is rejected when the drive isn't ready
-// Verify Drive Ready is cleared when a seek command is issued
-TEST_F (RLV12SeekTest, seekOnBusyDriveRejected)
+// Verify a seek command command can be started while a seek is in progress.
+TEST_F (RLV12SeekTest, seekOnBusyDriveAccepted)
 {
     // Attach a new disk to unit 0
     ASSERT_EQ (rlv12Device.unit (0)->attach ("rl01.dsk"), 
@@ -242,11 +241,22 @@ TEST_F (RLV12SeekTest, seekOnBusyDriveRejected)
     // Issue another seek command to the same drive
     rlv12Device.writeWord (RLCSR, CSR_SeekCommand);
 
-    // The expected behaviour is a Write Gate Error as a command is issued
-    // to the drive while it isn't ready. RLV12::writeWord() however accepts
-    // commands while the drive isn't ready.
+    // Wait till both seeks are completed
+    std::this_thread::sleep_for (std::chrono::milliseconds (500));
+
+    // Verify both controller and drive are ready
     rlv12Device.read (RLCSR, &result);
-    // ASSERT_EQ (result & CSR_CompositeError, CSR_CompositeError);
-    ASSERT_EQ (result & CSR_ControllerReady | CSR_DriveReady,
+    ASSERT_EQ (result & (CSR_ControllerReady | CSR_DriveReady),
         CSR_ControllerReady | CSR_DriveReady);
+
+    // Get the current track, head and cylinder
+    rlv12Device.writeWord (RLCSR, CSR_ReadHeaderCommand);
+
+    // Wait for command completion
+    std::this_thread::sleep_for (std::chrono::milliseconds (500));
+
+    // Verify both seeks are executed
+    u16 mpr;
+    rlv12Device.read (RLMPR, &mpr);
+    ASSERT_EQ (MPR_cylinder (mpr), 10);
 }
