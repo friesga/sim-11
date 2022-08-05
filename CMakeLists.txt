@@ -149,6 +149,7 @@ set (SIM11_TEST_SRCS
     gtest/rlv12readheadertest.cpp
     gtest/rlv12readdatatest.cpp
     gtest/rlv12seektest.cpp
+    gtest/rlv12writechecktest.cpp
     gtest/rlv12writedatatest.cpp
     ${CMDLINEOPTIONS_SRCS}
     src/interruptrequest/interruptrequest.cpp
@@ -197,7 +198,8 @@ gtest_add_tests (TARGET sim-11-test
                     RLV12ReadHeaderTest
                     RLV12SeekTest
                     RLV12ReadDataTest
-                    RLV12WriteDataTest)
+                    RLV12WriteDataTest
+                    RLV12WriteCheckTest)
 
 #
 # Create trace reader
