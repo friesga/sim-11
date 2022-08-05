@@ -28,12 +28,17 @@ protected:
     static constexpr u16  CSR_WriteDataCommand    = (05 << 1);
     static constexpr u16  CSR_ReadDataCommand     = (06 << 1);
     static constexpr u16  CSR_ControllerReady     = (1 << 7);
-    static constexpr u16  CSR_OperationIncomplete = (1 << 10); 
+    
     static constexpr u16  CSR_CompositeError      = (1 << 15); 
     static constexpr u16  CSR_Drive0              = (0 << 8);
     static constexpr u16  CSR_Drive1              = (1 << 8);
     static constexpr u16  CSR_Drive2              = (2 << 8);
     static constexpr u16  CSR_Drive3              = (3 << 8);
+
+    // Define CSR Error codes
+    inline u16 CSR_ErrorCode (u16 csr) {return (csr >> 10) & 017;}
+    static constexpr u16  CSR_OperationIncomplete = 1;
+    static constexpr u16  CSR_WriteCheckEror      = 2;
 
     // DAR bit definitions
     static constexpr u16 DAR_Marker    = (1 << 00);
@@ -72,32 +77,31 @@ protected:
         };
         CmdLineOptions::processOptions (sizeof (argvSet0) /sizeof (argvSet0[0]),
             argvSet0);
+
+        // Attach a new disk to unit 0
+        ASSERT_EQ (rlv12Device.unit (0)->attach ("rl01.dsk"), 
+        StatusCode::OK);
+
+        // Clear errors and volume check condition
+        rlv12Device.writeWord (RLDAR, DAR_Reset | DAR_GetStatus | DAR_Marker);
+        rlv12Device.writeWord (RLCSR, CSR_GetStatusCommand | CSR_Drive0);
+
+        // Fill 512 bytes of memory with the values to be written and a marker
+        u16 address;
+        for (address = 0; address < 512; address += 2)
+            bus.writeWord (address, 0177777);
     }
 };
 
 // Verify the correct execution of Write Check command
 TEST_F (RLV12WriteCheckTest, writeCheckSucceeds)
 {
-    // Attach a new disk to unit 0
-    ASSERT_EQ (rlv12Device.unit (0)->attach ("rl01.dsk"), 
-        StatusCode::OK);
-
-    // Clear errors and volume check condition
-    rlv12Device.writeWord (RLDAR, DAR_Reset | DAR_GetStatus | DAR_Marker);
-    rlv12Device.writeWord (RLCSR, CSR_GetStatusCommand | CSR_Drive0);
-
-    // Fill 512 bytes of memory with the values to be written and a marker
-    u16 address;
-    for (address = 0; address < 512; address += 2)
-        bus.writeWord (address, 0177777);
-        
     // Verify controller and drive are ready
     u16 result;
     rlv12Device.read (RLCSR, &result);
     ASSERT_EQ (result & (CSR_ControllerReady | CSR_DriveReady), 
         CSR_ControllerReady | CSR_DriveReady);
 
-    
     // Write 256 words (i.e. 2 sectors)
     rlv12Device.writeWord (RLBAR, 0);
     rlv12Device.writeWord (RLDAR, 0);
@@ -128,4 +132,48 @@ TEST_F (RLV12WriteCheckTest, writeCheckSucceeds)
     ASSERT_EQ (result & 
         (CSR_CompositeError | CSR_ControllerReady | CSR_DriveReady),
         CSR_ControllerReady | CSR_DriveReady);
+}
+
+
+// Verify the write check detects and reports an error
+TEST_F (RLV12WriteCheckTest, writeCheckFails)
+{
+    // Verify controller and drive are ready
+    u16 result;
+    rlv12Device.read (RLCSR, &result);
+    ASSERT_EQ (result & (CSR_ControllerReady | CSR_DriveReady), 
+        CSR_ControllerReady | CSR_DriveReady);
+
+    // Write 256 words (i.e. 2 sectors)
+    rlv12Device.writeWord (RLBAR, 0);
+    rlv12Device.writeWord (RLDAR, 0);
+    rlv12Device.writeWord (RLMPR, 0xFF00);
+    rlv12Device.writeWord (RLCSR, CSR_WriteDataCommand);
+
+    // Wait for command completion
+    std::this_thread::sleep_for (std::chrono::milliseconds (500));
+
+    // Verify both controller and drive are ready and no error is
+    // indicated
+    rlv12Device.read (RLCSR, &result);
+    ASSERT_EQ (result & 
+        (CSR_CompositeError | CSR_ControllerReady | CSR_DriveReady),
+        CSR_ControllerReady | CSR_DriveReady);
+
+    // Poke a memory address to evoke a write check error
+    bus.writeWord (2, 1);
+
+    // Issue the Write Check command
+    rlv12Device.writeWord (RLBAR, 0);
+    rlv12Device.writeWord (RLDAR, 0);
+    rlv12Device.writeWord (RLMPR, 0xFF00);
+    rlv12Device.writeWord (RLCSR, CSR_WriteCheckCommand);
+
+    // Wait for command completion
+    std::this_thread::sleep_for (std::chrono::milliseconds (500));
+
+    // Verify the CSR indicates the appropriate errors
+    rlv12Device.read (RLCSR, &result);
+    ASSERT_EQ (result & CSR_CompositeError, CSR_CompositeError);
+    ASSERT_EQ (CSR_ErrorCode (result), CSR_WriteCheckEror);
 }
