@@ -74,7 +74,12 @@ StatusCode RLV12::writeWord (u16 registerAddress, u16 data)
                     break;
 
                 default:
-                    // Data transfer
+                    // Data transfer commands:
+                    // Write Check (Function Code 1),
+                    // Read Header (Function Code 4),
+                    // Write Data (Function Code 5),
+                    // Read Data (Function Code 6),
+                    // Read Data without Header Check (Function Code 7)
                     if ((unit.flags_ & (UNIT_DIS | UNIT_OFFL)) || (!(unit.flags_ & UNIT_ATT)))
                     {
                         setDone (RLCS_INCMP);
