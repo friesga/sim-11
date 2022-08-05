@@ -294,19 +294,19 @@ void RLV12::service (Unit &unitRef)
         else
             if ((unit.function_ == RLCS_WCHK) && (err == 0))
             {
+                // Write Check Command
                 CondData<u16> comp;
 
-                // Write check?
                 i = fread (rlxb_, sizeof(int16_t), wc, unit.filePtr_);
                 err = ferror(unit.filePtr_);
 
-                // Fill buffer
+                // Clear remainder of buffer
                 for (; i < wc; i++)                                
                     rlxb_[i] = 0;
 
                 // Save wc
                 awc = wc;
-                for (wc = 0; (err == 0) && (wc < awc); wc++)
+                for (wc = 0; (err == 0) && (wc < awc); ma += 2, ++wc)
                 {
                     // Loop through buffer
                     comp = bus->read (ma).valueOr(0);
@@ -317,6 +317,7 @@ void RLV12::service (Unit &unitRef)
                     }
 
                     // Check read word with buffer
+                    // ToDo: Quit for loop when an inequality is detected?
                     if (comp != rlxb_[wc])
                         rlcs = rlcs | RLCS_ERR | RLCS_CRC;
                 } 
