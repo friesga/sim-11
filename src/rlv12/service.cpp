@@ -216,8 +216,11 @@ void RLV12::service (Unit &unitRef)
             return;
         }
 
-        // Get disk addr and max transfer
+        // Get disk addr
         da = GET_DA(rlda) * RL_NUMWD;
+
+        // Detect spiral read/writes. Determine the maximum number of
+        // bytes on this track that can be transferred in this command.
         maxwc = (RL_NUMSC - GET_SECT(rlda)) * RL_NUMWD;
     }
 
@@ -320,10 +323,12 @@ void RLV12::service (Unit &unitRef)
             }
 
     // Complete Write Check, Write, Read, Read no header
-    // Final word count */
+    // Calculate the final word count (i.e. the remaining number of
+    // words to be transferred).
     rlmpr = (rlmpr + wc) & 0177777;
 
-    // Completed?
+    // If the specified transfer could not be completed indicate an error
+    // condition
     if (rlmpr != 0)
         rlcs |= RLCS_ERR | RLCS_INCMP | RLCS_HDE;
 
