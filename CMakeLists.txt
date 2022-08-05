@@ -148,6 +148,7 @@ set (SIM11_TEST_SRCS
     gtest/rlv12getstatustest.cpp
     gtest/rlv12readheadertest.cpp
     gtest/rlv12seektest.cpp
+    gtest/rlv12readdatatest.cpp
     ${CMDLINEOPTIONS_SRCS}
     src/interruptrequest/interruptrequest.cpp
     ${QBUS_SRCS}
