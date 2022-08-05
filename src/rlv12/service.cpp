@@ -239,7 +239,7 @@ void RLV12::service (Unit &unitRef)
 
     if ((unit.function_ >= RLCS_READ) && (err == 0))
     {
-        // Read (no hdr)?
+        // Read Data or Read Data Without Header Check command
         // Read wc * 2 bytes; returned is the number of words read 
         i = fread (rlxb_, sizeof(int16_t), wc, unit.filePtr_);
 
@@ -262,7 +262,7 @@ void RLV12::service (Unit &unitRef)
             CondData<u16> tmpValue;
 
             // Write?
-            for (i = 0; i < wc; ++i)
+            for (i = 0; i < wc; ma += 2, ++i)
             {
                 tmpValue = bus->read(ma).valueOr(0);
                 if (!tmpValue.hasValue())
