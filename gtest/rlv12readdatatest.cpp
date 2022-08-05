@@ -181,3 +181,56 @@ TEST_F (RLV12ReadDataTest, readDataFails)
     ASSERT_EQ (result & (CSR_CompositeError | CSR_OperationIncomplete),
         CSR_CompositeError | CSR_OperationIncomplete);
 }
+
+// Verify spiral reads result in an error
+TEST_F (RLV12ReadDataTest, spiralReadFails)
+{
+    // Attach a new disk to unit 0
+    ASSERT_EQ (rlv12Device.unit (0)->attach ("rl01.dsk"), 
+        StatusCode::OK);
+
+    // Clear errors and volume check condition
+    rlv12Device.writeWord (RLDAR, DAR_Reset | DAR_GetStatus | DAR_Marker);
+    rlv12Device.writeWord (RLCSR, CSR_GetStatusCommand | CSR_Drive0);
+
+    // Verify controller and drive are ready
+    u16 result;
+    rlv12Device.read (RLCSR, &result);
+    ASSERT_EQ (result & (CSR_ControllerReady | CSR_DriveReady), 
+        CSR_ControllerReady | CSR_DriveReady);
+
+    // Fill two sectors of memory to be able to verify exactly one
+    // sector is read
+    u16 address;
+    for (address = 0; address < 512; address += 2)
+        bus.writeWord (address, 0177777);
+
+    // Execute a read of two sectors (i.e. 256 words), starting at the last
+    // sector of the track (i.e. sector 39)
+    rlv12Device.writeWord (RLBAR, 0);
+    rlv12Device.writeWord (RLDAR, 39);
+    rlv12Device.writeWord (RLMPR, 0xFE00);
+    rlv12Device.writeWord (RLCSR, CSR_ReadDataCommand);
+
+    // Wait for command completion
+    std::this_thread::sleep_for (std::chrono::milliseconds (500));
+
+    // Verify an error is reported
+    rlv12Device.read (RLCSR, &result);
+    ASSERT_EQ (result & CSR_CompositeError, CSR_CompositeError);
+
+    // The first 256 bytes should be read from disk
+    u16 contents;
+    for (address = 0; address < 256; address += 2)
+    {
+        contents = bus.read (address);
+        ASSERT_EQ (contents, 0);
+    }
+
+    // The next 256 bytes should not be read
+    for (address = 256; address < 512; address += 2)
+    {
+        contents = bus.read (address);
+        ASSERT_EQ (contents, 0177777);
+    }
+}
