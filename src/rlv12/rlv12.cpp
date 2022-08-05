@@ -8,7 +8,12 @@
 // initializer list
 RLV12::RLV12 ()
     :
-    rlxb_ {nullptr}
+    rlxb_ {nullptr},
+    rlcs {0},
+    rlba {0},
+    rlda {0},
+    rlmpr {0},
+    rlbae {0}
 {
     name_ = "RL";
     baseAddress_ = IOBA_RL;
