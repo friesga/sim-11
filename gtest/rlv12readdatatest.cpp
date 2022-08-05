@@ -98,6 +98,9 @@ TEST_F (RLV12ReadDataTest, readDataSucceeds)
     rlv12Device.read (RLCSR, &result);
     ASSERT_EQ (result & CSR_ControllerReady, CSR_ControllerReady);
 
+    // Point at memory address 0
+    rlv12Device.writeWord (RLBAR, 0);
+
     // Load DAR with disk address zero
     rlv12Device.writeWord (RLDAR, 0);
 
@@ -155,6 +158,9 @@ TEST_F (RLV12ReadDataTest, readDataFails)
 
     // Wait for command completion
     std::this_thread::sleep_for (std::chrono::milliseconds (500));
+
+    // Point at memory address 0
+    rlv12Device.writeWord (RLBAR, 0);
 
     // Load DAR with disk address zero
     rlv12Device.writeWord (RLDAR, 0);
