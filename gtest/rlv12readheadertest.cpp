@@ -22,7 +22,10 @@ protected:
     // CSR bit definitions
     static constexpr u16  CSR_DriveReady          = 1;
     static constexpr u16  CSR_GetStatusCommand    = (02 << 1);
+    static constexpr u16  CSR_SeekCommand         = (03 << 1);
     static constexpr u16  CSR_ReadHeaderCommand   = (04 << 1);
+    static constexpr u16  CSR_WriteDataCommand    = (05 << 1);
+    static constexpr u16  CSR_ReadDataCommand     = (06 << 1);
     static constexpr u16  CSR_ControllerReady     = (1 << 7);
     static constexpr u16  CSR_OperationIncomplete = (1 << 10); 
     static constexpr u16  CSR_CompositeError      = (1 << 15); 
@@ -33,8 +36,19 @@ protected:
 
     // DAR bit definitions
     static constexpr u16 DAR_Marker    = (1 << 00);
+
+    // DAR bit definitions for a Get Status Command
     static constexpr u16 DAR_GetStatus = (1 << 01);
     static constexpr u16 DAR_Reset     = (1 << 03);
+
+    // DAR bit definitions for a Seek Command
+    static constexpr u16 DAR_Seek          = (0 << 01);
+    static constexpr u16 DAR_DirectionOut  = (1 << 02);
+    static constexpr u16 DAR_HeadSelect    = (1 << 04);
+    inline u16 DAR_cylinderDifference (u16 x) { return x << 07; }
+
+    // MPR bit definitions for a Seek Command
+    inline u16 MPR_cylinder (u16 x) { return x >> 07; }
 
     // Create bus structure, an RLV12 device and install the device
     QBUS bus;
@@ -57,6 +71,14 @@ protected:
         };
         CmdLineOptions::processOptions (sizeof (argvSet0) /sizeof (argvSet0[0]),
             argvSet0);
+
+        // Attach a new disk to unit 0
+        ASSERT_EQ (rlv12Device.unit (0)->attach ("rl01.dsk"), 
+        StatusCode::OK);
+
+        // Clear errors and volume check condition
+        rlv12Device.writeWord (RLDAR, DAR_Reset | DAR_GetStatus | DAR_Marker);
+        rlv12Device.writeWord (RLCSR, CSR_GetStatusCommand | CSR_Drive0);
     }
 };
 
@@ -64,14 +86,6 @@ protected:
 // the first header encountered on the current track of the selected drive.
 TEST_F (RLV12ReadHeaderTest, readHeaderSucceeds)
 {
-    // Attach a new disk to unit 0
-    ASSERT_EQ (rlv12Device.unit (0)->attach ("rl01.dsk"), 
-        StatusCode::OK);
-
-    // Clear errors and volume check condition
-    rlv12Device.writeWord (RLDAR, DAR_Reset | DAR_GetStatus | DAR_Marker);
-    rlv12Device.writeWord (RLCSR, CSR_GetStatusCommand | CSR_Drive0);
-
     // Verify the controller is ready to perform an operation (the drive
     // does not have to be ready)
     u16 result;
@@ -107,5 +121,55 @@ TEST_F (RLV12ReadHeaderTest, readHeaderSucceeds)
     ASSERT_EQ (mpr, 00);
 }
 
+// Verify a Read Header Command
+TEST_F (RLV12ReadHeaderTest, headerHasCorrectContents)
+{
+        // Attach a new disk to unit 0
+    ASSERT_EQ (rlv12Device.unit (0)->attach ("rl01.dsk"), 
+        StatusCode::OK);
 
+    // Clear errors and volume check condition
+    rlv12Device.writeWord (RLDAR, DAR_Reset | DAR_GetStatus | DAR_Marker);
+    rlv12Device.writeWord (RLCSR, CSR_GetStatusCommand | CSR_Drive0);
 
+    // Verify both controller and drive are ready
+    u16 result;
+    rlv12Device.read (RLCSR, &result);
+    ASSERT_EQ (result & (CSR_ControllerReady | CSR_DriveReady), 
+        CSR_ControllerReady | CSR_DriveReady);
+
+    // Seek to a cylinder to be able to verify the correct contents of
+    //the header
+    rlv12Device.writeWord (RLDAR, 
+        DAR_Marker | DAR_Seek | DAR_DirectionOut | DAR_cylinderDifference (10));
+    rlv12Device.writeWord (RLCSR, CSR_SeekCommand);
+
+    // Wait for command completion
+    std::this_thread::sleep_for (std::chrono::milliseconds (500));
+
+    // Verify both controller and drive are ready and no error is
+    // indicated
+    rlv12Device.read (RLCSR, &result);
+    ASSERT_EQ (result & 
+        (CSR_CompositeError | CSR_ControllerReady | CSR_DriveReady),
+        CSR_ControllerReady | CSR_DriveReady);
+
+    // Execute a Read Header command
+    rlv12Device.writeWord (RLCSR, CSR_ReadHeaderCommand);
+
+    // Wait for command completion
+    std::this_thread::sleep_for (std::chrono::milliseconds (500));
+
+    // Verify both controller and drive are ready again and no error is
+    // indicated
+    rlv12Device.read (RLCSR, &result);
+    ASSERT_EQ (result & 
+        (CSR_CompositeError | CSR_ControllerReady | CSR_DriveReady),
+        CSR_ControllerReady | CSR_DriveReady);
+
+    // Expected result in the MPR register: Sector Address, Head Select and
+    // Cylinder Address
+    u16 mpr;
+    rlv12Device.read (RLMPR, &mpr);
+    ASSERT_EQ (MPR_cylinder (mpr), 10);
+}

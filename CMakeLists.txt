@@ -147,8 +147,8 @@ set (SIM11_TEST_SRCS
     gtest/rlv12maintenancetest.cpp
     gtest/rlv12getstatustest.cpp
     gtest/rlv12readheadertest.cpp
-    gtest/rlv12seektest.cpp
     gtest/rlv12readdatatest.cpp
+    gtest/rlv12seektest.cpp
     gtest/rlv12writedatatest.cpp
     ${CMDLINEOPTIONS_SRCS}
     src/interruptrequest/interruptrequest.cpp
