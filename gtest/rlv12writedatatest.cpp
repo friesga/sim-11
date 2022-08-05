@@ -152,3 +152,78 @@ TEST_F (RLV12WriteDataTest, writeDataSucceeds)
     contents = bus.read (address);
     ASSERT_EQ (contents, 01);
 }
+
+
+// Verify the correct execution of Write Data command of less than 256 bytes
+TEST_F (RLV12WriteDataTest, partialWriteDataSucceeds)
+{
+    // Attach a new disk to unit 0
+    ASSERT_EQ (rlv12Device.unit (0)->attach ("rl01.dsk"), 
+        StatusCode::OK);
+
+    // Clear errors and volume check condition
+    rlv12Device.writeWord (RLDAR, DAR_Reset | DAR_GetStatus | DAR_Marker);
+    rlv12Device.writeWord (RLCSR, CSR_GetStatusCommand | CSR_Drive0);
+
+    // Fill 256 bytes of memory with the values to be written and a marker
+    u16 address;
+    for (address = 0; address < 256; address += 2)
+        bus.writeWord (address, 0177777);
+    
+    // Verify controller and drive are ready
+    u16 result;
+    rlv12Device.read (RLCSR, &result);
+    ASSERT_EQ (result & (CSR_ControllerReady | CSR_DriveReady), 
+        CSR_ControllerReady | CSR_DriveReady);
+
+    // Write 100 words
+    rlv12Device.writeWord (RLBAR, 0);
+    rlv12Device.writeWord (RLDAR, 0);
+    rlv12Device.writeWord (RLMPR, 0xFF9C);
+    rlv12Device.writeWord (RLCSR, CSR_WriteDataCommand);
+
+    // Wait for command completion
+    std::this_thread::sleep_for (std::chrono::milliseconds (500));
+
+    // Verify now both controller and drive are ready and no error is
+    // indicated
+    rlv12Device.read (RLCSR, &result);
+    ASSERT_EQ (result & 
+        (CSR_CompositeError | CSR_ControllerReady | CSR_DriveReady),
+        CSR_ControllerReady | CSR_DriveReady);
+
+    // Fill memory with a value other than the value to be returned by
+    // the controller (i.e. 0177777 and 0)
+    for (address = 0; address < 256; address += 2)
+        bus.writeWord (address, 1);
+
+    // Read the complete sector back from the disk
+    rlv12Device.writeWord (RLDAR, 0);
+    rlv12Device.writeWord (RLBAR, 0);
+    rlv12Device.writeWord (RLMPR, 0xFF00);
+    rlv12Device.writeWord (RLCSR, CSR_ReadDataCommand);
+
+    // Wait for command completion
+    std::this_thread::sleep_for (std::chrono::milliseconds (500));
+
+    // Verify Read Data is executed without errors
+    rlv12Device.read (RLCSR, &result);
+    ASSERT_EQ (result & 
+        (CSR_CompositeError | CSR_ControllerReady | CSR_DriveReady),
+        CSR_ControllerReady | CSR_DriveReady);
+
+    // The first 200 bytes should contain the value 017777, the remaining
+    // 56 bytes should have the value 0.
+    u16 contents;
+    for (address = 0; address < 200; address += 2)
+    {
+        contents = bus.read (address);
+        ASSERT_EQ (contents, 0177777);
+    }
+
+    for (address = 200; address < 256; address += 2)
+    {
+        contents = bus.read (address);
+        ASSERT_EQ (contents, 0);
+    }
+}
