@@ -251,7 +251,7 @@ void RLV12::service (Unit &unitRef)
             rlxb_[i] = 0;
 
         // Transfer words in buffer
-        for (i = 0; i < wc; ++i)
+        for (i = 0; i < wc; ma += 2, ++i)
             if (!bus->writeWord (ma, rlxb_[i]))
                 rlcs = rlcs | RLCS_ERR | RLCS_NXM;
     }
