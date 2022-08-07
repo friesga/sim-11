@@ -148,6 +148,7 @@ set (SIM11_TEST_SRCS
     gtest/rlv12getstatustest.cpp
     gtest/rlv12readheadertest.cpp
     gtest/rlv12readdatatest.cpp
+    gtest/rlv12readdatanochecktest.cpp
     gtest/rlv12seektest.cpp
     gtest/rlv12writechecktest.cpp
     gtest/rlv12writedatatest.cpp
@@ -199,7 +200,8 @@ gtest_add_tests (TARGET sim-11-test
                     RLV12SeekTest
                     RLV12ReadDataTest
                     RLV12WriteDataTest
-                    RLV12WriteCheckTest)
+                    RLV12WriteCheckTest
+                    RLV12ReadDataWithoutHeaderCheckTest)
 
 #
 # Create trace reader

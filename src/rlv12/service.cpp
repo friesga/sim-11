@@ -180,6 +180,8 @@ void RLV12::service (Unit &unitRef)
         setDone (0);
 
         // Simulate sequential rotation about the current track
+        // This functionality supports the Read Without Header Check
+        // procedure, refer to EK-RLV12-UG-002, par. 5.8.
         unit.currentTrackHeadSector_ = 
             (unit.currentTrackHeadSector_ & ~RLDA_M_SECT) |
             ((unit.currentTrackHeadSector_ + 1) & RLDA_M_SECT);
