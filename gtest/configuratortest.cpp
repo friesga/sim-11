@@ -1,4 +1,4 @@
-#include "configprocessor/configprocessor.h"
+#include "configurator/configprocessor/configprocessor.h"
 
 #include <sstream>	
 #include <gtest/gtest.h>

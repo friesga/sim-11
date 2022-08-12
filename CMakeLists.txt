@@ -56,6 +56,11 @@ set (QBUS_SRCS
     src/qbus/writeword.cpp
     src/qbus/responsiblemodule.cpp)
 
+set (CONFIGURATOR_SRCS
+    src/configurator/configprocessor/configprocessor.cpp
+    src/configurator/rlprocessor/rlprocessor.cpp
+    src/configurator/rlprocessor/rlunitprocessor/rlunitprocessor.cpp)
+
 # Define source files
 set (SIM11_SRCS
     src/ba11_n/ba11_n.cpp
@@ -85,6 +90,7 @@ set (SIM11_SRCS
     src/trace/trace.cpp
     src/console.cpp
     ${CMDLINEOPTIONS_SRCS}
+    ${CONFIGURATOR_SRCS}
     src/interruptrequest/interruptrequest.cpp)
 
 # Add source to this project's executable.
@@ -143,6 +149,7 @@ set (SIM11_TEST_SRCS
     gtest/threadsafeprioqueuetest.cpp
     gtest/interruptrequesttest.cpp
     gtest/asynctimertest.cpp
+    gtest/configuratortest.cpp
     gtest/rlv12attachtest.cpp
     gtest/rlv12maintenancetest.cpp
     gtest/rlv12getstatustest.cpp
@@ -153,6 +160,7 @@ set (SIM11_TEST_SRCS
     gtest/rlv12writechecktest.cpp
     gtest/rlv12writedatatest.cpp
     ${CMDLINEOPTIONS_SRCS}
+    ${CONFIGURATOR_SRCS}
     src/interruptrequest/interruptrequest.cpp
     ${QBUS_SRCS}
     ${UNIT_SRCS}
@@ -192,6 +200,7 @@ gtest_add_tests (TARGET sim-11-test
                     CmdLineOptionsTest
                     ThreadSafePrioQueue
                     InterruptRequest
+                    ConfigProcessorTest
                     RLV12MaintenanceTest
                     RLV12AttachTest
                     RLV12WriteTest
