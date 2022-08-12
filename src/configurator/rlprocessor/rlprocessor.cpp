@@ -1,6 +1,7 @@
 #include "rlprocessor.h"
 #include "rlunitprocessor/rlunitprocessor.h"
 
+#include <limits>
 // #include <iostream>
 
 // Process the given RL section
