@@ -1,5 +1,16 @@
 #define _POSIX_C_SOURCE 200809L
 
+#include "trace/trace.h"
+#include "ba11_n/ba11_n.h"
+#include "rxv21/rxv21.h"
+#include "rlv12/rlv12.h"
+#include "bdv11/bdv11.h"
+#include "dlv11j/dlv11j.h"
+#include "msv11d/msv11d.h"
+#include "lsi11/lsi11.h"
+#include "cmdlineoptions/cmdlineoptions.h"
+#include "configurator/configprocessor/configprocessor.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -18,16 +29,6 @@
 #include <termio.h>
 #include <clock_gettime.h>
 #endif
-
-#include "trace/trace.h"
-#include "ba11_n/ba11_n.h"
-#include "rxv21/rxv21.h"
-#include "bdv11/bdv11.h"
-#include "dlv11j/dlv11j.h"
-#include "msv11d/msv11d.h"
-#include "lsi11/lsi11.h"
-#include "cmdlineoptions/cmdlineoptions.h"
-#include "configurator/configprocessor/configprocessor.h"
 
 /* #define DEBUG */
 
@@ -166,7 +167,10 @@ try
 	// To enable debug print outs set TRACE_PRINT flag in trc.flags
 	// trc.flags |= TRACE_PRINT;
 
-	// Load configuration
+	// Load device configuration
+	DeviceConfig *deviceConfig {nullptr};
+	ConfigProcessor configProcessor;
+
 	if (CmdLineOptions::get().config_file)
 	{
 		iniparser::File ft;
@@ -176,12 +180,29 @@ try
 				CmdLineOptions::get().config_file << '\n';
 			return 1;
 		}
+
+		try
+		{
+			configProcessor.process (ft);
+		}
+		catch (std::invalid_argument const &except)
+		{
+			std::cout << "Error in configuration file: " << except.what() << '\n';
+			return 1;
+		}
 	}
 
+	deviceConfig = configProcessor.getConfig ();
+	// std::cout << "RL address: " << deviceConfig->rlConfig->address << '\n';
+
+	RLV12 rlv12 (deviceConfig->rlConfig->address, deviceConfig->rlConfig->vector,
+		deviceConfig->rlConfig->RLV11, deviceConfig->rlConfig->numUnits);
+
 	lsi.bus.installModule (1, &msv11);
-	lsi.bus.installModule (2, &rxv21);
-	lsi.bus.installModule (3, &dlv11);
-	lsi.bus.installModule (4, &bdv11);
+	lsi.bus.installModule (2, &rlv12);
+	lsi.bus.installModule (3, &rxv21);
+	lsi.bus.installModule (4, &dlv11);
+	lsi.bus.installModule (5, &bdv11);
 	lsi.reset ();
 
 	if (CmdLineOptions::get().bootstrap) 
