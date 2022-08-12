@@ -152,8 +152,9 @@ class RLV12 : public BusDevice
     inline int32_t getCylinder (int32_t track);
 
 public:
-    // Constructor/destructor
+    // Constructors/destructor
     RLV12 ();
+    RLV12 (u32 baseAddress, u32 vector, bool RLV11, size_t numUnits);
     ~RLV12 ();
 
     // Required functions

@@ -6,6 +6,7 @@
 // Set name and default base address and vector
 // The base class protected data members cannot be accessed in an
 // initializer list
+// ToDo: Remove default RLV12 constructor
 RLV12::RLV12 ()
     :
     rlxb_ {nullptr},
@@ -18,6 +19,29 @@ RLV12::RLV12 ()
     name_ = "RL";
     baseAddress_ = IOBA_RL;
     vector_ = VEC_RL;
+
+    // Allocate the transfer buffer, initializing to zero
+    rlxb_ = new (std::nothrow) u16[RL_MAXFR]();
+
+    if (rlxb_ == nullptr)
+        throw ("Allocating memory for transfer buffer failed");
+
+    // Reset the controller
+    reset ();
+}
+
+RLV12::RLV12 (u32 baseAddress, u32 vector, bool RLV11, size_t numUnits)
+    :
+    rlxb_ {nullptr},
+    rlcs {0},
+    rlba {0},
+    rlda {0},
+    rlmpr {0},
+    rlbae {0}
+{
+    name_ = "RL";
+    baseAddress_ = (baseAddress > 0) ? baseAddress : IOBA_RL;
+    vector_ = (vector > 0) ? vector : VEC_RL;
 
     // Allocate the transfer buffer, initializing to zero
     rlxb_ = new (std::nothrow) u16[RL_MAXFR]();
