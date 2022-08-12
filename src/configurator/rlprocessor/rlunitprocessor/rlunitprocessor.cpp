@@ -1,17 +1,17 @@
 #include "rlunitprocessor.h"
 
-// #include <iostream>
-
 void RlUnitProcessor::processSection (iniparser::Section* section)
 {
 	if (section->name().substr(0, 4) != "unit")
 		throw std::invalid_argument {"Unknown RL subsection: " + 
 			section->name()};
 
-	size_t unitNumber = unitNumberFromSectionName (section->name());
+	// Get the unit number from the subsection name. This will throw an
+	// exception if an incorrect unit number is specified. The unit number
+	// is stored in the RlUnitConfig struct so it is clear to which unit
+	// the configuration applies.
+	unitNumber_ = unitNumberFromSectionName (section->name());
 	
-	// std::cout << "Unit number: "  << unitNumber;
-
 	// Process section's Values (i.e. key/value pairs)
 	for (iniparser::Section::ValueIterator valueIterator = section->valuesBegin();
 			valueIterator != section->valuesEnd(); ++valueIterator)
@@ -30,13 +30,25 @@ void RlUnitProcessor::processSection (iniparser::Section* section)
 	}
 }
 
+// Return the unit number to which the current configuration applies
+size_t RlUnitProcessor::getUnitNumber()
+{
+	return unitNumber_;
+}
+
+// Copy the unit configuration to the caller to prevent a dangling
+// pointer to the result
+RlUnitConfig RlUnitProcessor::getConfig ()
+{
+	return rlUnitConfig;
+}
+
 void RlUnitProcessor::processType (iniparser::Value value)
 {
-    // std::cout << "type: " << value.asString() << '\n';
 	if (value.asString() == "RL01")
-		RL01 = true;
+		rlUnitConfig.RL01 = true;
 	else if (value.asString() == "RL02")
-		RL01 = false;
+		rlUnitConfig.RL01 = false;
 	else
 		throw std::invalid_argument {"Incorrect RL unit type: " + 
 			value.asString()};
@@ -44,20 +56,17 @@ void RlUnitProcessor::processType (iniparser::Value value)
 
 void RlUnitProcessor::processFileName (iniparser::Value value)
 {
-	// std::cout << "filename: " << value.asString() << '\n';
-	fileName = value.asString();
+	rlUnitConfig.fileName = value.asString();
 }
 
 void RlUnitProcessor::processNewFile (iniparser::Value value)
 {
-	// std::cout << "newfile: " << value.asBool() << '\n';
-	newFile = value.asBool();
+	rlUnitConfig.newFile = value.asBool();
 }
 
 void RlUnitProcessor::processReadOnly (iniparser::Value value)
 {
-	// std::cout << "read-only: " << value.asBool() << '\n';
-	readOnly = value.asBool();
+	rlUnitConfig.readOnly = value.asBool();
 }
 
 size_t RlUnitProcessor::unitNumberFromSectionName (std::string name)

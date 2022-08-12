@@ -187,13 +187,14 @@ try
 		}
 		catch (std::invalid_argument const &except)
 		{
-			std::cout << "Error in configuration file: " << except.what() << '\n';
+			std::cout << "Error in configuration file: " << 
+				except.what() << '\n';
 			return 1;
 		}
 	}
 
+	// Retrieve the configuration as specified in the configuration file
 	deviceConfig = configProcessor.getConfig ();
-	// std::cout << "RL address: " << deviceConfig->rlConfig->address << '\n';
 
 	RLV12 rlv12 (deviceConfig->rlConfig->address, deviceConfig->rlConfig->vector,
 		deviceConfig->rlConfig->RLV11, deviceConfig->rlConfig->numUnits);

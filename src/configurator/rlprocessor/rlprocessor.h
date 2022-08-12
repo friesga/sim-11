@@ -3,20 +3,22 @@
 
 #include "../iniparser.h"
 #include "../sectionprocessor/sectionprocessor.h"
+#include "rlunitprocessor/rlunitprocessor.h"
 
 struct RlConfig
 {
+	static constexpr size_t maxRlUnits = 4;
 	uint16_t address {0};
 	uint16_t vector {0};
 	size_t numUnits {0};
 	bool RLV11 {false};
+	RlUnitConfig rlUnitConfig[maxRlUnits];
 };
 
 // Processor for the RL section of a configuration file
 class RlProcessor : public SectionProcessor
 {
 	std::unique_ptr<RlConfig> rlConfigPtr = std::make_unique<RlConfig> ();
-	// RlConfig rlConfig;
 
 	// Define process as a pointer to a RlProcessor member function
 	// with a iniparser::Value argument and returning void.

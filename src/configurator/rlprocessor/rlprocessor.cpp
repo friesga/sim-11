@@ -2,7 +2,6 @@
 #include "rlunitprocessor/rlunitprocessor.h"
 
 #include <limits>
-// #include <iostream>
 
 // Process the given RL section
 void RlProcessor::processSection (iniparser::Section* section)
@@ -30,8 +29,12 @@ void RlProcessor::processSection (iniparser::Section* section)
 	{
 		RlUnitProcessor rlUnitProcessor;
 
-		// std::cout << "Sub level section: " << subSectionPtr->name() << '\n';
 		rlUnitProcessor.processSection (subSectionPtr);
+
+		// Get the configuration for this unit and store it in the RL
+		// configuration
+		rlConfigPtr->rlUnitConfig[rlUnitProcessor.getUnitNumber()] = 
+			rlUnitProcessor.getConfig();
 	}
 }
 
@@ -42,7 +45,6 @@ RlConfig *RlProcessor::getConfig()
 
 void RlProcessor::processController (iniparser::Value value)
 {
-	// std::cout << "controller: " << value.asString() << '\n';
 	if (value.asString() == "RLV11")
 		rlConfigPtr->RLV11 = true;
 	else if (value.asString() == "RLV12")
@@ -63,7 +65,6 @@ void RlProcessor::processAddress (iniparser::Value value)
 		throw std::invalid_argument {"Incorrect address in RL section specified: " + 
 			value.asString()};
 	}
-	// std::cout << "address: " << std::oct << address << '\n';
 }
 
 void RlProcessor::processVector (iniparser::Value value) 
@@ -77,7 +78,6 @@ void RlProcessor::processVector (iniparser::Value value)
 		throw std::invalid_argument {"Incorrect vector in RL section specified: " + 
 			value.asString()};
 	}
-	// std::cout << "vector: " << std::oct << vector << '\n';
 }
 
 void RlProcessor::processUnits (iniparser::Value value)

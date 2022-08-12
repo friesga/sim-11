@@ -10,6 +10,9 @@ struct DeviceConfig
 	RlConfig *rlConfig = nullptr;
 };
 
+// Process a configuration file. Processing the file and retrieving the
+// result of the processing is split to decouple the processing from the
+// definition of the device objects.
 class ConfigProcessor
 {
 	std::unique_ptr<DeviceConfig> deviceConfigPtr = 
@@ -18,8 +21,7 @@ class ConfigProcessor
 
 	std::map<std::string, SectionProcessor*> sectionProcessors =
 	{
-		{"RL", &rlProcessor}
-		
+		{"RL", &rlProcessor}	
 	};
 
 	void processSection (iniparser::Section* section);
