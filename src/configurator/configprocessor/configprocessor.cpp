@@ -11,6 +11,13 @@ void ConfigProcessor::process (iniparser::File iniFile)
 		processSection (sectionPtr);
 }
 
+// std::unique_ptr<DeviceConfig> ConfigProcessor::getConfig ()
+DeviceConfig *ConfigProcessor::getConfig ()
+{
+	deviceConfigPtr->rlConfig = rlProcessor.getConfig ();
+	return deviceConfigPtr.get();
+}
+
 void ConfigProcessor::processSection (iniparser::Section* section)
 {
 	try

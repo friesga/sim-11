@@ -35,13 +35,18 @@ void RlProcessor::processSection (iniparser::Section* section)
 	}
 }
 
+RlConfig *RlProcessor::getConfig()
+{
+	return rlConfigPtr.get();
+}
+
 void RlProcessor::processController (iniparser::Value value)
 {
 	// std::cout << "controller: " << value.asString() << '\n';
 	if (value.asString() == "RLV11")
-		RLV11 = true;
+		rlConfigPtr->RLV11 = true;
 	else if (value.asString() == "RLV12")
-		RLV11 = false;
+		rlConfigPtr->RLV11 = false;
 	else
 		throw std::invalid_argument {"Incorrect RL controller type: " + 
 			value.asString()};
@@ -51,7 +56,7 @@ void RlProcessor::processAddress (iniparser::Value value)
 {
 	try
 	{
-		address = touint16_t (value.asString());
+		rlConfigPtr->address = touint16_t (value.asString());
 	}
 	catch (std::invalid_argument)
 	{
@@ -65,7 +70,7 @@ void RlProcessor::processVector (iniparser::Value value)
 { 
 	try
 	{
-		vector = touint16_t (value.asString());
+		rlConfigPtr->vector = touint16_t (value.asString());
 	}
 	catch (std::invalid_argument)
 	{
@@ -77,7 +82,7 @@ void RlProcessor::processVector (iniparser::Value value)
 
 void RlProcessor::processUnits (iniparser::Value value)
 {
-	numUnits = value.asInt ();
+	rlConfigPtr->numUnits = value.asInt ();
 }
 
 // Return the number represented by the string as an uint16_t. The number's 

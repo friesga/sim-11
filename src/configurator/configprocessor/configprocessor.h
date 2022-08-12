@@ -3,8 +3,17 @@
 
 #include "../rlprocessor/rlprocessor.h"
 
+#include <memory>
+
+struct DeviceConfig
+{
+	RlConfig *rlConfig = nullptr;
+};
+
 class ConfigProcessor
 {
+	std::unique_ptr<DeviceConfig> deviceConfigPtr = 
+		std::make_unique<DeviceConfig> ();
 	RlProcessor rlProcessor;
 
 	std::map<std::string, SectionProcessor*> sectionProcessors =
@@ -17,6 +26,7 @@ class ConfigProcessor
 
 public:
 	void process (iniparser::File iniFile);
+	DeviceConfig *getConfig ();
 };
 
 #endif // _CONFIGPROCESSOR_H_

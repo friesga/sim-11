@@ -4,13 +4,19 @@
 #include "../iniparser.h"
 #include "../sectionprocessor/sectionprocessor.h"
 
+struct RlConfig
+{
+	uint16_t address {0};
+	uint16_t vector {0};
+	size_t numUnits {0};
+	bool RLV11 {false};
+};
+
 // Processor for the RL section of a configuration file
 class RlProcessor : public SectionProcessor
 {
-	uint16_t address {0174400};
-	uint16_t vector {0160};
-	size_t numUnits {1};
-	bool RLV11 {true};
+	std::unique_ptr<RlConfig> rlConfigPtr = std::make_unique<RlConfig> ();
+	// RlConfig rlConfig;
 
 	// Define process as a pointer to a RlProcessor member function
 	// with a iniparser::Value argument and returning void.
@@ -32,6 +38,7 @@ class RlProcessor : public SectionProcessor
 
 public:
 	void processSection (iniparser::Section* section) override;
+	RlConfig *getConfig();
 };
 
 #endif // _RLPROCESSOR_H_
