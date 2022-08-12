@@ -14,6 +14,7 @@ class CmdLineOptions
 {
     static const char *floppy_filename_;
 	static const char* load_file_;
+	static const char* config_file_;
 	static bool halt_;
 	static bool bootstrap_;
 	static const char* trace_file_;
@@ -35,6 +36,7 @@ public:
 
 	const char* const &floppy_filename;
 	const char*  const &load_file;
+	const char*  const &config_file;
 	bool const &halt;
 	bool const &bootstrap;
 	const char* const &trace_file;

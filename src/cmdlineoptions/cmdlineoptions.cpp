@@ -4,6 +4,7 @@ CmdLineOptions::CmdLineOptions()
     :
     floppy_filename {floppy_filename_},
     load_file {load_file_},
+    config_file {config_file_},
     halt {halt_} ,
     bootstrap {bootstrap_},
     trace_file {trace_file_},

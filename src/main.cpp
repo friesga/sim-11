@@ -27,6 +27,7 @@
 #include "msv11d/msv11d.h"
 #include "lsi11/lsi11.h"
 #include "cmdlineoptions/cmdlineoptions.h"
+#include "configurator/configprocessor/configprocessor.h"
 
 /* #define DEBUG */
 
@@ -164,6 +165,18 @@ try
 
 	// To enable debug print outs set TRACE_PRINT flag in trc.flags
 	// trc.flags |= TRACE_PRINT;
+
+	// Load configuration
+	if (CmdLineOptions::get().config_file)
+	{
+		iniparser::File ft;
+		if (!ft.load (CmdLineOptions::get().config_file))
+		{
+			std::cout << "Error: cannot open file " << 
+				CmdLineOptions::get().config_file << '\n';
+			return 1;
+		}
+	}
 
 	lsi.bus.installModule (1, &msv11);
 	lsi.bus.installModule (2, &rxv21);
