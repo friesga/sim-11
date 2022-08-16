@@ -5,6 +5,7 @@
 #include "statuscodes.h"
 #include "types.h"
 #include "bitmask.h"
+#include "attachflags.h"
 
 #include <cstdio>
 #include <string>
@@ -53,7 +54,7 @@ class Unit
     size_t hwmark_;             // High water mark
     int32_t position_;          // File position
 
-    StatusCode createFile (std::string fileName);
+    StatusCode createFile (std::string fileName, Bitmask<AttachFlags> flags);
     StatusCode openPipe (std::string fileName);
     bool isPipe (std::string fileName);
     StatusCode openReadOnly (std::string fileName);
@@ -65,10 +66,10 @@ protected:
     FILE *filePtr_;                 // The disk file
     u32 capacity_;                  // Drive capacity in words
     u32 flags_;                     // Bit flags
-    Bitmask<Status> unitStatus_;    // Naming discriminate 
-    
+    Bitmask<Status> unitStatus_;    // Naming discriminate
+
     // Helper functions for the concrete units
-    StatusCode attach_unit (std::string fileName);
+    StatusCode attach_unit (std::string fileName, Bitmask<AttachFlags> flags);
     StatusCode createBadBlockTable (int32_t sec, int32_t wds);
 
 public:
@@ -76,7 +77,8 @@ public:
     Unit (BusDevice *owningDevice);
 
     // Functions to be implemented by concrete devices
-    virtual StatusCode attach (std::string fileName) = 0;
+    virtual StatusCode attach (std::string fileName, 
+        Bitmask<AttachFlags> flags) = 0;
 };
 
 #endif // !_UNIT_H_

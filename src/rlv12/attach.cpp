@@ -1,13 +1,13 @@
 #include "rlv12.h"
 #include "sim_fio/sim_fio.h"
 
-StatusCode RL01_2::attach (std::string fileName)
+StatusCode RL01_2::attach (std::string fileName, Bitmask<AttachFlags> flags)
 {
     capacity_ = (rlStatus_ & RlStatus::UNIT_RL02) ? RL02_SIZE : RL01_SIZE;
 
     // Try to attach the specified file to this unit
     StatusCode result;
-    if ((result = attach_unit (fileName)) != StatusCode::OK)              
+    if ((result = attach_unit (fileName, flags)) != StatusCode::OK)
         return result;
 
     // For compatibility with existing SIMH behavior, set the drive state

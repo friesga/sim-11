@@ -49,9 +49,7 @@ protected:
         char const *argvSet0[] =
         {
             "sim-11",
-            "-q",   // quiet
-            "-n",   // createNewFile
-            "-o"    // ovewrite
+            "-q"    // quiet
         };
         CmdLineOptions::processOptions (sizeof (argvSet0) /sizeof (argvSet0[0]),
             argvSet0);

@@ -77,7 +77,8 @@ protected:
 TEST_F (RLV12ReadDataTest, readDataSucceeds)
 {
     // Attach a new disk to unit 0
-    ASSERT_EQ (rlv12Device.unit (0)->attach ("rl01.dsk"), 
+    ASSERT_EQ (rlv12Device.unit (0)->attach ("rl01.dsk",
+            Bitmask(AttachFlags::NewFile | AttachFlags::Overwrite)), 
         StatusCode::OK);
 
     // Clear errors and volume check condition
@@ -138,7 +139,8 @@ TEST_F (RLV12ReadDataTest, readDataSucceeds)
 TEST_F (RLV12ReadDataTest, readDataFails)
 {
     // Attach a new disk to unit 0
-    ASSERT_EQ (rlv12Device.unit (0)->attach ("rl01.dsk"), 
+    ASSERT_EQ (rlv12Device.unit (0)->attach ("rl01.dsk",
+            Bitmask(AttachFlags::NewFile | AttachFlags::Overwrite)), 
         StatusCode::OK);
 
     // Clear errors and volume check condition
@@ -186,7 +188,8 @@ TEST_F (RLV12ReadDataTest, readDataFails)
 TEST_F (RLV12ReadDataTest, spiralReadFails)
 {
     // Attach a new disk to unit 0
-    ASSERT_EQ (rlv12Device.unit (0)->attach ("rl01.dsk"), 
+    ASSERT_EQ (rlv12Device.unit (0)->attach ("rl01.dsk",
+            Bitmask(AttachFlags::NewFile | AttachFlags::Overwrite)), 
         StatusCode::OK);
 
     // Clear errors and volume check condition

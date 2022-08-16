@@ -11,7 +11,7 @@ extern size_t sim_fread (void* bptr, size_t size, size_t count, FILE* fptr);
 // Functions defined in lib
 extern bool gotApproval(std::string question, bool defaultAnswer);
 
-StatusCode Unit::attach_unit(std::string fileName)
+StatusCode Unit::attach_unit(std::string fileName, Bitmask<AttachFlags> flags)
 {
     struct stat info;
     StatusCode statusCode;
@@ -25,15 +25,14 @@ StatusCode Unit::attach_unit(std::string fileName)
     //     return SCPE_NOFNC;
 
     // Create a new file if specified
-    if (CmdLineOptions::get().createNewFile)
-        statusCode = createFile (fileName);
+    if (flags & AttachFlags::NewFile)
+        statusCode = createFile (fileName, flags);
     else 
     {    
         // Check if file exists and is a pipe 
         if (isPipe (fileName_))
             statusCode = openPipe (fileName);
-
-        else if (CmdLineOptions::get().readOnly)
+        else if (flags & AttachFlags::ReadOnly)
             statusCode = openReadOnly (fileName);
         
         else 

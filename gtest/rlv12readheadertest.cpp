@@ -65,15 +65,14 @@ protected:
         char const *argvSet0[] =
         {
             "sim-11",
-            "-q",   // quiet
-            "-n",   // createNewFile
-            "-o"    // ovewrite
+            "-q"    // quiet
         };
         CmdLineOptions::processOptions (sizeof (argvSet0) /sizeof (argvSet0[0]),
             argvSet0);
 
         // Attach a new disk to unit 0
-        ASSERT_EQ (rlv12Device.unit (0)->attach ("rl01.dsk"), 
+        ASSERT_EQ (rlv12Device.unit (0)->attach ("rl01.dsk",
+            Bitmask(AttachFlags::NewFile | AttachFlags::Overwrite)), 
         StatusCode::OK);
 
         // Clear errors and volume check condition
@@ -125,7 +124,8 @@ TEST_F (RLV12ReadHeaderTest, readHeaderSucceeds)
 TEST_F (RLV12ReadHeaderTest, headerHasCorrectContents)
 {
         // Attach a new disk to unit 0
-    ASSERT_EQ (rlv12Device.unit (0)->attach ("rl01.dsk"), 
+    ASSERT_EQ (rlv12Device.unit (0)->attach ("rl01.dsk",
+            Bitmask(AttachFlags::NewFile | AttachFlags::Overwrite)), 
         StatusCode::OK);
 
     // Clear errors and volume check condition

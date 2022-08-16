@@ -10,7 +10,7 @@ extern FILE* sim_fopen(const char* file, const char* mode);
 // Functions defined in lib
 extern bool gotApproval(std::string question, bool defaultAnswer);
 
-StatusCode Unit::createFile(std::string fileName)
+StatusCode Unit::createFile(std::string fileName, Bitmask<AttachFlags> flags)
 {
     struct stat info;
 
@@ -18,7 +18,7 @@ StatusCode Unit::createFile(std::string fileName)
     // overwritten, so check if a file with the specified name already
     // exists and if that's the case ask the user if it is ok to overwrite
     // the file.
-    if (!stat (fileName.c_str(), &info) && !CmdLineOptions::get().overwrite)
+    if (!stat (fileName.c_str(), &info) && !(flags & AttachFlags::Overwrite))
         return StatusCode::ArgumentError;
 
     filePtr_ = sim_fopen (fileName.c_str(), "wb+");

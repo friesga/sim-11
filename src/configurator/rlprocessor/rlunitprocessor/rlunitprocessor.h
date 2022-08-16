@@ -12,6 +12,7 @@ struct RlUnitConfig
 	std::string fileName;
 	bool newFile {false};
 	bool readOnly {false};
+	bool overwrite {false};
 };
 
 // Processor for the unit subsection of an RL section
@@ -31,13 +32,15 @@ class RlUnitProcessor
 		{"type", &RlUnitProcessor::processType},
 		{"filename", &RlUnitProcessor::processFileName},
 		{"newfile", &RlUnitProcessor::processNewFile},
-		{"read-only", &RlUnitProcessor::processReadOnly}
+		{"read-only", &RlUnitProcessor::processReadOnly},
+		{"overwrite", &RlUnitProcessor::processOverwrite}
 	};
 
 	void processType (iniparser::Value value);
 	void processFileName (iniparser::Value value);
 	void processNewFile (iniparser::Value value);
 	void processReadOnly (iniparser::Value value);
+	void processOverwrite (iniparser::Value value);
 	size_t unitNumberFromSectionName (std::string);
 
 public:

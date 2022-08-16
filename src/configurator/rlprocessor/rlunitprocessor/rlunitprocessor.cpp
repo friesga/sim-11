@@ -69,6 +69,11 @@ void RlUnitProcessor::processReadOnly (iniparser::Value value)
 	rlUnitConfig.readOnly = value.asBool();
 }
 
+void RlUnitProcessor::processOverwrite (iniparser::Value value)
+{
+	rlUnitConfig.overwrite = value.asBool();
+}
+
 size_t RlUnitProcessor::unitNumberFromSectionName (std::string name)
 {
 	size_t unitNumber;

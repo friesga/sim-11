@@ -14,7 +14,6 @@
 //
 // ToDo: Clean up unused flags
 //
-
 enum class RlStatus
 {
     UNIT_WLK,           // hwre write lock 
@@ -73,7 +72,8 @@ public:
     RL01_2 (BusDevice *owningDevice);
 
     // Required functions
-    StatusCode attach (std::string fileName) override;
+    StatusCode attach (std::string fileName, 
+        Bitmask<AttachFlags> flags) override;
 
     // Make the class a function object
     void operator() ();

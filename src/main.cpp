@@ -199,6 +199,28 @@ try
 	RLV12 rlv12 (deviceConfig->rlConfig->address, deviceConfig->rlConfig->vector,
 		deviceConfig->rlConfig->RLV11, deviceConfig->rlConfig->numUnits);
 
+	// Attach files to the RL units
+	for (size_t unitNumber = 0; 
+		unitNumber < deviceConfig->rlConfig->numUnits; ++unitNumber)
+	{
+		RlUnitConfig rlUnitConfig = 
+			deviceConfig->rlConfig->rlUnitConfig[unitNumber];
+		if (!rlUnitConfig.fileName.empty())
+		{
+			Bitmask<AttachFlags> attachFlags {AttachFlags::Default};
+
+			if (rlUnitConfig.readOnly)
+				attachFlags |= AttachFlags::ReadOnly;
+			if (rlUnitConfig.newFile) 
+				attachFlags |= AttachFlags::NewFile;
+			if (rlUnitConfig.overwrite)
+				attachFlags |= AttachFlags::Overwrite;
+
+			rlv12.unit(unitNumber)->attach (rlUnitConfig.fileName, 
+				attachFlags);
+		}
+	}
+
 	lsi.bus.installModule (1, &msv11);
 	lsi.bus.installModule (2, &rlv12);
 	lsi.bus.installModule (3, &rxv21);
