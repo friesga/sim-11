@@ -33,8 +33,15 @@ void RlProcessor::processSection (iniparser::Section* section)
 
 		// Get the configuration for this unit and store it in the RL
 		// configuration
-		rlConfigPtr->rlUnitConfig[rlUnitProcessor.getUnitNumber()] = 
-			rlUnitProcessor.getConfig();
+		size_t unitNumber = rlUnitProcessor.getUnitNumber();
+		rlConfigPtr->rlUnitConfig[unitNumber] = rlUnitProcessor.getConfig();
+
+		// If a unit number higher than the specified number of units is
+		// used generate an error
+		if (unitNumber >= rlConfigPtr->numUnits)
+			throw std::invalid_argument {"Unit number " + 
+			std::to_string(unitNumber) + " is higher than specified #units (" +
+			std::to_string(rlConfigPtr->numUnits) + ") in RL section"};
 	}
 }
 
