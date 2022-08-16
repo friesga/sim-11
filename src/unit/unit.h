@@ -4,35 +4,45 @@
 #include "busdevice/busdevice.h"
 #include "statuscodes.h"
 #include "types.h"
+#include "bitmask.h"
 
 #include <cstdio>
 #include <string>
 
-// Unit flags
-// ToDo: Replace Unit flags by enums or bitset
-#define UNIT_ATTABLE    000001                          /* attachable */
-#define UNIT_RO         000002                          /* read only */
-#define UNIT_FIX        000004                          /* fixed capacity */
-#define UNIT_SEQ        000010                          /* sequential */
-#define UNIT_ATT        000020                          /* attached */
-#define UNIT_BINK       000040                          /* K = power of 2 */
-#define UNIT_BUFABLE    000100                          /* bufferable */
-#define UNIT_MUSTBUF    000200                          /* must buffer */
-#define UNIT_BUF        000400                          /* buffered */
-#define UNIT_ROABLE     001000                          /* read only ok */
-#define UNIT_DISABLE    002000                          /* disable-able */
-#define UNIT_DIS        004000                          /* disabled */
-#define UNIT_RAW        010000                          /* raw mode */
-#define UNIT_TEXT       020000                          /* text mode */
-#define UNIT_IDLE       040000                          /* idle eligible */
+// Unit status flags. These flags are used in the definition of 
+// Bitmask<Status> and provide a compile-time type safety for the use
+// of these flags.
+// The flags are used for configuration and/or run-time status. This cannot
+// be separated easily as some configuration flags (e.g. UNIT_RO) are updated
+// run-time to reflect the actual situation.
+//
+// ToDo: Clean up unused flags
+//
+enum class Status
+{
+    UNIT_ATTABLE,       /* attachable */
+    UNIT_RO,            /* read only */
+    UNIT_FIX,           /* fixed capacity */
+    UNIT_SEQ,           /* sequential */
+    UNIT_ATT,           /* attached */
+    UNIT_BINK,          /* K = power of 2 */
+    UNIT_BUFABLE,       /* bufferable */
+    UNIT_MUSTBUF,       /* must buffer */
+    UNIT_BUF,           /* buffered */
+    UNIT_ROABLE,        /* read only ok */
+    UNIT_DISABLE,       /* disable-able */
+    UNIT_DIS,           /* disabled */
+    UNIT_RAW,           /* raw mode */
+    UNIT_TEXT,          /* text mode */
+    UNIT_IDLE,          /* idle eligible */
 
-// Unit dynamic flags (dynflags) (from simh 4.0)
-// These flags are only set dynamically
-// ToDo: Replace Unit dynamic flags by enums or bitset
-#define UNIT_ATTMULT    000001                          /* allow multiple ATT cmd */
-#define UNIT_PIPE       000002                          /* file is a pipe */
-#define UNIT_EXTEND     000004                          /* extended SIMH tape format is enabled */
-
+    // Unit dynamic flags (dynflags) (from simh 4.0)
+    // These flags are only set dynamically
+    UNIT_ATTMULT,       /* allow multiple ATT cmd */
+    UNIT_PIPE,          /* file is a pipe */
+    UNIT_EXTEND,        /* extended SIMH tape format is enabled */
+    _                   /* Required for Bitmask */
+};
 
 // Definition of an abstract base class for the units of a device
 // ToDo: Rename filePtr to something more meaningful
@@ -42,7 +52,6 @@ class Unit
     u16 *fileBuffer_;           // Memory pointer for buffered I/O
     size_t hwmark_;             // High water mark
     int32_t position_;          // File position
-    u32 dynflags_;              // Dynamic flags
 
     StatusCode createFile (std::string fileName);
     StatusCode openPipe (std::string fileName);
@@ -52,10 +61,11 @@ class Unit
     void setBuffered ();
 
 protected:
-    BusDevice *owningDevice_;   // Pointer to the controller
-    FILE *filePtr_;             // The disk file
-    u32 capacity_;              // Drive capacity in words
-    u32 flags_;                 // Bit flags
+    BusDevice *owningDevice_;       // Pointer to the controller
+    FILE *filePtr_;                 // The disk file
+    u32 capacity_;                  // Drive capacity in words
+    u32 flags_;                     // Bit flags
+    Bitmask<Status> unitStatus_;    // Naming discriminate 
     
     // Helper functions for the concrete units
     StatusCode attach_unit (std::string fileName);

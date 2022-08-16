@@ -34,10 +34,10 @@ StatusCode Unit::createBadBlockTable (int32_t sectorsPerSurface,
     if ((sectorsPerSurface < 2) || (wordsPerSector < 16))
         return StatusCode::ArgumentError;
 
-    if ((flags_ & UNIT_ATT) == 0)
+    if (!(unitStatus_ & Status::UNIT_ATT))
         return StatusCode::UnAttached;
 
-    if (flags_ & UNIT_RO)
+    if (unitStatus_ & Status::UNIT_RO)
         return StatusCode::ReadOnly;
 
     // Don't ask for approval to overwrite the last track as this function

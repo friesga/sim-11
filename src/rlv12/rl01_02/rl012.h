@@ -5,30 +5,30 @@
 #include "types.h"
 #include "statuscodes.h"
 
-// Flags in the unit flags word
-// ToDo: Replace #define by static constexpr 
-// ToDo: The RLV12 device should have its own set of flags
-#define UNIT_V_UF       16                              // Device specific  unit flags 
+// RL01/02 unit status flags. These flags are used in the definition of 
+// Bitmask<RlStatus> and provide a compile-time type safety for the use
+// of these flags.
+// The flags are used for configuration and/or run-time status. This cannot
+// be separated easily as some configuration flags (e.g. UNIT_RL02) are
+// updated run-time to reflect the actual situation.
+//
+// ToDo: Clean up unused flags
+//
 
-#define UNIT_V_WLK      (UNIT_V_UF + 0)                 // hwre write lock 
-#define UNIT_V_RL02     (UNIT_V_UF + 1)                 // RL01 vs RL02 
-#define UNIT_V_AUTO     (UNIT_V_UF + 2)                 // autosize enable 
-#define UNIT_V_DUMMY    (UNIT_V_UF + 3)                 // dummy flag, for SET BADBLOCK 
-#define UNIT_V_OFFL     (UNIT_V_UF + 4)                 // unit off line 
-#define UNIT_V_BRUSH    (UNIT_V_UF + 5)                 // unit has brushes 
-
-#define UNIT_WLK        (1u << UNIT_V_WLK)
-#define UNIT_RL02       (1u << UNIT_V_RL02)
-#define UNIT_AUTO       (1u << UNIT_V_AUTO)
-#define UNIT_BRUSH      (1u << UNIT_V_BRUSH)
-#define UNIT_OFFL       (1u << UNIT_V_OFFL)
-#define UNIT_DUMMY      (1u << UNIT_V_DUMMY)
-
-#define UNIT_WPRT       (UNIT_WLK | UNIT_RO)            // write protected 
+enum class RlStatus
+{
+    UNIT_WLK,           // hwre write lock 
+    UNIT_RL02,          // RL01 vs RL02 
+    UNIT_AUTO,          // autosize enable 
+    UNIT_DUMMY,         // dummy flag, for SET BADBLOCK 
+    UNIT_OFFL,          // unit off line 
+    UNIT_BRUSH,         // unit has brushes 
+    _                   // Required for Bitmask
+};
 
 // RLDS 
 // NI = not implemented,
-// * = kept in status_,
+// * = kept in driveStatus_,
 // ^ = kept in currentTrack_,
 // ! = kept in uptr
 
@@ -64,7 +64,8 @@ class RL01_2 : public Unit
 
     // ToDo: Split currentTrackHeadSector_ in three separate variables
     int32_t currentTrackHeadSector_;
-    int32_t status_;
+    Bitmask<RlStatus> rlStatus_;
+    int32_t driveStatus_;
     int32_t function_;
 
 public:

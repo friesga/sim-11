@@ -51,21 +51,21 @@ void RLV12::service (Unit &unitRef)
 
     if (unit.function_ == RLCS_SPECIAL)
     {
-        switch (unit.status_ & RLDS_M_STATE)
+        switch (unit.driveStatus_ & RLDS_M_STATE)
         {
             // The LOAD state is a little different.  We can stay in LOAD until
             // the user hits the RUN (LOAD) button, at which time we should come
             // here to transition to the next state and begin the startup process.
             case RLDS_LOAD:
                 // Load pressed, spinning up 
-                if (!(unit.status_ & RLDS_CVO))
+                if (!(unit.driveStatus_ & RLDS_CVO))
                 {
-                    unit.status_ = (unit.status_ & ~RLDS_M_STATE) | RLDS_SPIN;
+                    unit.driveStatus_ = (unit.driveStatus_ & ~RLDS_M_STATE) | RLDS_SPIN;
                     // Actual time is 45-50 seconds from press to Lock 
                     timer.start (&unit, std::chrono::milliseconds (200 * rl_swait));
                     
-                    unit.status_ &= ~RLDS_HDO;
-                    unit.status_ |= RLDS_BHO;
+                    unit.driveStatus_ &= ~RLDS_HDO;
+                    unit.driveStatus_ |= RLDS_BHO;
                 }
                 break;
                 
@@ -74,37 +74,37 @@ void RLV12::service (Unit &unitRef)
                 
             case RLDS_SPIN:     
                 // Spun up, load brushes or heads
-                if (unit.flags_ & UNIT_BRUSH)
+                if (unit.rlStatus_ & RlStatus::UNIT_BRUSH)
                 {
-                    unit.status_ &= ~RLDS_BHO;
-                    unit.status_ = (unit.status_ & ~RLDS_M_STATE) | RLDS_BRUSH;
+                    unit.driveStatus_ &= ~RLDS_BHO;
+                    unit.driveStatus_ = (unit.driveStatus_ & ~RLDS_M_STATE) | RLDS_BRUSH;
                 }
                 else
                 {
-                    unit.status_ |= RLDS_BHO;
-                    unit.status_ = (unit.status_ & ~RLDS_M_STATE) | RLDS_HLOAD;
+                    unit.driveStatus_ |= RLDS_BHO;
+                    unit.driveStatus_ = (unit.driveStatus_ & ~RLDS_M_STATE) | RLDS_HLOAD;
                 }
                 timer.start (&unit, std::chrono::milliseconds (200 * rl_swait));
                 break;
 
             case RLDS_BRUSH:
-                unit.status_ = (unit.status_ & ~RLDS_M_STATE) | RLDS_HLOAD;
-                unit.status_ |= RLDS_BHO;
+                unit.driveStatus_ = (unit.driveStatus_ & ~RLDS_M_STATE) | RLDS_HLOAD;
+                unit.driveStatus_ |= RLDS_BHO;
                 timer.start (&unit, std::chrono::milliseconds (200 * rl_swait));
                 break;
 
             case RLDS_HLOAD:
                 // Heads loaded, seek to home 
-                unit.status_ = (unit.status_ & ~RLDS_M_STATE) | RLDS_SEEK;
+                unit.driveStatus_ = (unit.driveStatus_ & ~RLDS_M_STATE) | RLDS_SEEK;
                 timer.start (&unit, std::chrono::milliseconds (200 * rl_swait));
-                unit.status_ |= RLDS_BHO | RLDS_HDO;
+                unit.driveStatus_ |= RLDS_BHO | RLDS_HDO;
                 unit.currentTrackHeadSector_ = 0;
                 break;
 
             case RLDS_SEEK:
                 // Home found, lock on 
                 // Enter postion mode
-                unit.status_ = (unit.status_ & ~RLDS_M_STATE) | RLDS_LOCK;
+                unit.driveStatus_ = (unit.driveStatus_ & ~RLDS_M_STATE) | RLDS_LOCK;
                 // Commented out in simhv312-2 version:
                 // sim_activate (uptr, rl_swait);
                 break;
@@ -117,10 +117,10 @@ void RLV12::service (Unit &unitRef)
             case RLDS_UNL:
                 // Initiated by depressing the Run (LOAD) switch.
                 // Unload pressed, heads unloaded, spin down
-                unit.status_ = (unit.status_ & ~RLDS_M_STATE) | RLDS_DOWN;
+                unit.driveStatus_ = (unit.driveStatus_ & ~RLDS_M_STATE) | RLDS_DOWN;
 
                 // Retract heads
-                unit.status_ &= ~RLDS_HDO;    
+                unit.driveStatus_ &= ~RLDS_HDO;    
 
                 // Actual time is ~30 seconds
                 timer.start (&unit, std::chrono::milliseconds (200 * rl_swait));
@@ -128,8 +128,8 @@ void RLV12::service (Unit &unitRef)
 
             case RLDS_DOWN:
                 // OK to open cover
-                unit.status_ = (unit.status_ & ~RLDS_M_STATE) | RLDS_LOAD;
-                unit.status_ |= RLDS_BHO | RLDS_VCK;
+                unit.driveStatus_ = (unit.driveStatus_ & ~RLDS_M_STATE) | RLDS_LOAD;
+                unit.driveStatus_ |= RLDS_BHO | RLDS_VCK;
                 break;
 
             default:
@@ -140,10 +140,10 @@ void RLV12::service (Unit &unitRef)
     }
 
     // Attached?
-    if ((unit.flags_ & UNIT_ATT) == 0)
+    if ( !(unit.unitStatus_ & Status::UNIT_ATT))
     {
         // Spin error
-        unit.status_ |= RLDS_SPE;                       
+        unit.driveStatus_ |= RLDS_SPE;                       
 
         // Flag error
         setDone (RLCS_ERR | RLCS_INCMP);                
@@ -151,10 +151,12 @@ void RLV12::service (Unit &unitRef)
         return;
     }
 
-    if ((unit.function_ == RLCS_WRITE) && (unit.flags_ & UNIT_WPRT))
+    if ((unit.function_ == RLCS_WRITE) && 
+        ((unit.unitStatus_ & Status::UNIT_RO) || 
+          unit.rlStatus_ & RlStatus::UNIT_WLK))
     {
         // Write and locked
-        unit.status_ |= RLDS_WGE;                     
+        unit.driveStatus_ |= RLDS_WGE;                     
         setDone (RLCS_ERR | RLCS_DRE);
         return;
     }
@@ -164,7 +166,7 @@ void RLV12::service (Unit &unitRef)
         // Seek?
         // Enter position mode
         // Heads locked on cyl
-        unit.status_ = (unit.status_ & ~RLDS_M_STATE) | RLDS_LOCK; 
+        unit.driveStatus_ = (unit.driveStatus_ & ~RLDS_M_STATE) | RLDS_LOCK; 
         return;
     }
 

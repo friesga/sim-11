@@ -17,7 +17,7 @@ StatusCode Unit::attach_unit(std::string fileName)
     StatusCode statusCode;
 
     // Check if a file can be attached to the unit
-    if (!(flags_ & UNIT_ATTABLE))
+    if (!(unitStatus_ & Status::UNIT_ATTABLE))
         return StatusCode::NotAttachable;
 
     // ToDo: Check raw mode only?
@@ -44,10 +44,10 @@ StatusCode Unit::attach_unit(std::string fileName)
     if (statusCode != StatusCode::OK)
         return statusCode;
 
-    if (flags_ & UNIT_BUFABLE)
+    if (unitStatus_ & Status::UNIT_BUFABLE)
         setBuffered ();
 
-    flags_ |= UNIT_ATT;
+    unitStatus_ |= Status::UNIT_ATT;
     fileName_ = fileName;
     position_ = 0;
     return StatusCode::OK;

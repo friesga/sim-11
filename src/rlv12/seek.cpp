@@ -22,12 +22,13 @@ void RLV12::seek (RL01_2& unit)
     // As in the service route for a seek just the Locked On bit is set,
     // a following seek can be executed immediately.
     //
-    if ((unit.flags_ & (UNIT_DIS | UNIT_OFFL)) ||
-        (!(unit.flags_ & UNIT_ATT)))
+    if (unit.unitStatus_ & Status::UNIT_DIS || 
+        unit.rlStatus_ & RlStatus::UNIT_OFFL || 
+        !(unit.unitStatus_ & Status::UNIT_ATT))
     {
         // No cartridge available to perform a seek on
         setDone (RLCS_ERR | RLCS_INCMP);
-        unit.status_ |= RLDS_STO;
+        unit.driveStatus_ |= RLDS_STO;
         return;
     }
 
@@ -39,7 +40,8 @@ void RLV12::seek (RL01_2& unit)
     {
         // Outwards
         newCylinder = currentCylinder + offset;
-        maxCylinder = (unit.flags_ & UNIT_RL02) ? RL_NUMCY * 2 : RL_NUMCY;
+        maxCylinder = (unit.rlStatus_ & RlStatus::UNIT_RL02) ? 
+            RL_NUMCY * 2 : RL_NUMCY;
         if (newCylinder >= maxCylinder)
             newCylinder = maxCylinder - 1;
     }
@@ -54,7 +56,7 @@ void RLV12::seek (RL01_2& unit)
     // Enter velocity mode? Only if a different cylinder
     if (newCylinder != currentCylinder)
         // Move the positioner 
-        unit.status_ = (unit.status_ & ~RLDS_M_STATE) | RLDS_SEEK;
+        unit.driveStatus_ = (unit.driveStatus_ & ~RLDS_M_STATE) | RLDS_SEEK;
 
     // ToDo: If a head switch, sector should be RL_NUMSC/2?
     // Put on track

@@ -33,20 +33,21 @@ StatusCode RLV12::read (u16 registerAddress, u16* data)
             // uptr = rl_dev.units + GET_DRIVE(rlcs);
             RL01_2 &unit = units_[GET_DRIVE(rlcs)];
 
-            if ((unit.flags_ & UNIT_OFFL) || (unit.status_ & RLDS_VCK))
+            if (unit.rlStatus_ & RlStatus::UNIT_OFFL || 
+                unit.driveStatus_ & RLDS_VCK)
             {
                 rlcs |= RLCS_DRE;
                 rlcs &= ~RLCS_DRDY;
             }
-            else if (timer.isRunning (&unit) || (unit.flags_ & UNIT_DIS) ||
-                ((unit.status_ & RLDS_M_STATE) != RLDS_LOCK))
+            else if (timer.isRunning (&unit) ||     // see if drive ready 
+                    unit.unitStatus_ & Status::UNIT_DIS ||
+                    ((unit.driveStatus_ & RLDS_M_STATE) != RLDS_LOCK))
                 rlcs &= ~RLCS_DRDY;
             else
-                rlcs |= RLCS_DRDY;                              /* see if ready */
-            /*
-            Make sure the error summary bit properly reflects the sum of other
-            errors.
-            */
+                rlcs |= RLCS_DRDY;                              
+            
+            // Make sure the error summary bit properly reflects the 
+            // sum of other errors.
             if (rlcs & RLCS_ALLERR)
                 rlcs |= RLCS_ERR;
             *data = rlcs;

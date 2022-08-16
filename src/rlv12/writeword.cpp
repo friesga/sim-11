@@ -80,7 +80,9 @@ StatusCode RLV12::writeWord (u16 registerAddress, u16 data)
                     // Write Data (Function Code 5),
                     // Read Data (Function Code 6),
                     // Read Data without Header Check (Function Code 7)
-                    if ((unit.flags_ & (UNIT_DIS | UNIT_OFFL)) || (!(unit.flags_ & UNIT_ATT)))
+                    if (unit.unitStatus_ & Status::UNIT_DIS || 
+                        unit.rlStatus_ & RlStatus::UNIT_OFFL || 
+                        !(unit.unitStatus_ & Status::UNIT_ATT))
                     {
                         setDone (RLCS_INCMP);
                         break;

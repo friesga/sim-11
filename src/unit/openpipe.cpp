@@ -8,10 +8,10 @@ extern FILE* sim_fopen(const char* file, const char* mode);
 StatusCode Unit::openPipe(std::string fileName)
 {
     // Check the init is sequential
-    if (flags_ & UNIT_SEQ)
+    if (unitStatus_ & Status::UNIT_SEQ)
     {
         // If the unit is readable,
-        if (flags_ & (UNIT_RO | UNIT_ROABLE))
+        if (unitStatus_ & Bitmask(Status::UNIT_RO | Status::UNIT_ROABLE))
             // then open the pipe for reading,
             filePtr_ = sim_fopen (fileName.c_str(), "rb");
         else
@@ -23,7 +23,7 @@ StatusCode Unit::openPipe(std::string fileName)
             return StatusCode::OpenError;
 
         // Otherwise set the pipe flag
-        dynflags_ |= UNIT_PIPE;
+        unitStatus_ |= Status::UNIT_PIPE;
         return StatusCode::OK;
     }
     else

@@ -149,6 +149,7 @@ set (SIM11_TEST_SRCS
     gtest/threadsafeprioqueuetest.cpp
     gtest/interruptrequesttest.cpp
     gtest/asynctimertest.cpp
+    gtest/bitmasktest.cpp
     gtest/configuratortest.cpp
     gtest/rlv12attachtest.cpp
     gtest/rlv12maintenancetest.cpp
@@ -197,6 +198,7 @@ enable_testing ()
 gtest_add_tests (TARGET sim-11-test 
                  SOURCES ${SIM11_TEST_SRCS}
                  TEST_LIST 
+                    BitmaskTest
                     CmdLineOptionsTest
                     ThreadSafePrioQueue
                     InterruptRequest

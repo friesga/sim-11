@@ -10,7 +10,7 @@ extern FILE* sim_fopen(const char* file, const char* mode);
 StatusCode Unit::openReadOnly(std::string fileName)
 {
     // Open regular file. Read only allowed?
-    if ((flags_ & (UNIT_RO | UNIT_ROABLE)) == 0)
+    if (!(unitStatus_ & Bitmask(Status::UNIT_RO | Status::UNIT_ROABLE)))
         return StatusCode::ReadOnlyNotAllowed;
 
     // Open file read-only
@@ -19,7 +19,7 @@ StatusCode Unit::openReadOnly(std::string fileName)
         return StatusCode::OpenError;
 
     // Set unit read-only
-    flags_ |= UNIT_RO;
+    unitStatus_ |= Status::UNIT_RO;
 
     if (!CmdLineOptions::get().quiet)
         std::cout << owningDevice_->name() << ": unit is read only\n";

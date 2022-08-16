@@ -3,7 +3,7 @@
 
 StatusCode RL01_2::attach (std::string fileName)
 {
-    capacity_ = (flags_ & UNIT_RL02) ? RL02_SIZE : RL01_SIZE;
+    capacity_ = (rlStatus_ & RlStatus::UNIT_RL02) ? RL02_SIZE : RL01_SIZE;
 
     // Try to attach the specified file to this unit
     StatusCode result;
@@ -18,10 +18,11 @@ StatusCode RL01_2::attach (std::string fileName)
     currentTrackHeadSector_ = 0;
 
     // New volume
-    status_ = RLDS_HDO | RLDS_BHO | RLDS_VCK | RLDS_LOCK;
+    driveStatus_ = RLDS_HDO | RLDS_BHO | RLDS_VCK | RLDS_LOCK;
 
     // Set unit on-line
-    flags_ &= ~UNIT_OFFL;
+    rlStatus_ &= ~Bitmask(RlStatus::UNIT_OFFL);
+
     
     // Create a bad block table on a new disk image (if the 
     // image is not read-only)
@@ -29,26 +30,25 @@ StatusCode RL01_2::attach (std::string fileName)
     if ((fileSize = sim_fsize (filePtr_)) == 0)
     {   
         // If read-only we're done
-        if (flags_ & UNIT_RO)
+        if (unitStatus_ & Status::UNIT_RO)
             return StatusCode::OK;
 
         return createBadBlockTable (RL_NUMSC, RL_NUMWD);
     }
 
     // If auto-sizing is set, determine drive type on the file size
-    if ((flags_ & UNIT_AUTO) == 0)
-        return StatusCode::OK;
-
-    if (fileSize > (RL01_SIZE * sizeof (u16)))
+    if (rlStatus_ & RlStatus::UNIT_AUTO)
     {
-        flags_ |= UNIT_RL02;
-        capacity_ = RL02_SIZE;
+        if (fileSize > (RL01_SIZE * sizeof (u16)))
+        {
+            rlStatus_ |= RlStatus::UNIT_RL02;
+            capacity_ = RL02_SIZE;
+        }
+        else
+        {
+            rlStatus_ &= ~Bitmask(RlStatus::UNIT_RL02);
+            capacity_ = RL01_SIZE;
+        }
     }
-    else
-    {
-        flags_ &= ~UNIT_RL02;
-        capacity_ = RL01_SIZE;
-    }
-
     return StatusCode::OK;
 }

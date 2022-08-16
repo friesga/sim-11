@@ -15,17 +15,20 @@ void RLV12::getStatus(RL01_2 &unit)
     // According to Table 4-6 in EK-RL012-UG-005 this also resets the
     // Volume Check condition
     if (rlda & RLDA_GS_CLR)
-        unit.status_ &= ~(RLDS_ERR | RLDS_VCK);
+        unit.driveStatus_ &= ~(RLDS_ERR | RLDS_VCK);
 
     // Develop drive state
-    rlmpr = (u16)(unit.status_ | (unit.currentTrackHeadSector_ & RLDS_HD));
-    if (unit.flags_ & UNIT_RL02)
+    rlmpr = (u16)(unit.driveStatus_ | (unit.currentTrackHeadSector_ & RLDS_HD));
+    if (unit.rlStatus_ & RlStatus::UNIT_RL02)
         rlmpr |= RLDS_RL02;
 
-    if (unit.flags_ & UNIT_WPRT)
+    // Chect if unit is write-protected
+    if (unit.rlStatus_ & RlStatus::UNIT_WLK || 
+            unit.unitStatus_ & Status::UNIT_RO)
         rlmpr |= RLDS_WLK;
 
-    if (unit.flags_ & (UNIT_DIS | UNIT_OFFL))
+    if (unit.unitStatus_ & Status::UNIT_DIS || 
+        unit.rlStatus_ & RlStatus::UNIT_OFFL)
     {
         rlmpr |= RLDS_DSE;
         setDone (RLCS_DRE | RLCS_INCMP);

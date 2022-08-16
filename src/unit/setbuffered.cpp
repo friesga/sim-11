@@ -18,7 +18,7 @@ void Unit::setBuffered()
      // uint32 cap = ((uint32)uptr->capac) / dptr->aincr;  /* effective size */
 
      // The I/O must be buffered?
-    if (flags_ & UNIT_MUSTBUF)
+    if (unitStatus_ & Status::UNIT_MUSTBUF)
         // Allocate memory for buffered I/O. SZ_D hides a complex
         // calculation of the word (?) size. For the RLV12 this 
         // comes down to 16, so we allocate the buffer in u16's.
@@ -34,5 +34,5 @@ void Unit::setBuffered()
     hwmark_ = sim_fread(fileBuffer_, sizeof(u16), capacity_, filePtr_);
 
     // Mark unit buffered
-    flags_ |= UNIT_BUF;
+    unitStatus_ |= Status::UNIT_BUF;
 }
