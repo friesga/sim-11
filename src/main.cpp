@@ -166,8 +166,8 @@ try
 
 	// Select the events to be traced and the way the trace output has
 	// to be generated
-	trc.flags |= TRACEF_RLV12;
-	trc.flags |= TRACEF_PRINT;
+	// trc.flags |= TRACEF_RLV12;
+	// trc.flags |= TRACEF_PRINT;
 	
 	// Load device configuration
 	DeviceConfig *deviceConfig {nullptr};
@@ -218,8 +218,13 @@ try
 			if (rlUnitConfig.overwrite)
 				attachFlags |= AttachFlags::Overwrite;
 
-			rlv12.unit(unitNumber)->attach (rlUnitConfig.fileName, 
-				attachFlags);
+			if (rlv12.unit(unitNumber)->attach (rlUnitConfig.fileName, 
+				attachFlags) != StatusCode::OK)
+			{
+				std::cout << "Error attaching " << 
+					rlUnitConfig.fileName << '\n';
+				return 1;
+			}
 		}
 	}
 
