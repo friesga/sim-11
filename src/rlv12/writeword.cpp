@@ -31,7 +31,7 @@ StatusCode RLV12::writeWord (u16 registerAddress, u16 data)
             rlcs = (rlcs & ~RLCS_RW) | (data & RLCS_RW);
             rlbae = (rlbae & ~RLCS_M_MEX) | ((rlcs >> RLCS_V_MEX) & RLCS_M_MEX);
 
-            if(trc.flags)
+            if(trc.flags & TRACEF_RLV12)
                 TRACERLV12Registers (&trc, "writeword", rlcs, rlba, rlda, rlmpr, rlbae); 
 
             // Commands to the controller are only executed with the CRDY (DONE)

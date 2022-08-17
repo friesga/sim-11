@@ -24,7 +24,7 @@ void RLV12::maintenance()
     // Get memory address
     memoryAddress = (rlbae << 16) | rlba;
                                                             
-    if(trc.flags)
+    if(trc.flags & TRACEF_RLV12)
          TRACERLV12Registers (&trc, "Maintenance", rlcs, rlba, rlda, rlmpr, rlbae);
 
     // Must be exactly -511

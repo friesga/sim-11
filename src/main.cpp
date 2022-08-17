@@ -160,13 +160,15 @@ try
 		TRCINIT(CmdLineOptions::get().trace_file);
 		if (CmdLineOptions::get().compress) 
 		{
-			trc.flags |= TRACE_COMPRESS;
+			trc.flags |= TRACEF_COMPRESS;
 		}
 	}
 
-	// To enable debug print outs set TRACE_PRINT flag in trc.flags
-	// trc.flags |= TRACE_PRINT;
-
+	// Select the events to be traced and the way the trace output has
+	// to be generated
+	trc.flags |= TRACEF_RLV12;
+	trc.flags |= TRACEF_PRINT;
+	
 	// Load device configuration
 	DeviceConfig *deviceConfig {nullptr};
 	ConfigProcessor configProcessor;
