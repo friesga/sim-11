@@ -20,6 +20,7 @@
 #define	MAGIC_RX2S		0x52583253
 #define	MAGIC_DLV1		0x444C5631
 #define MAGIC_RL2A		0x524C3241
+#define MAGIC_RL2C		0x524C3243
 
 #define	TRC_CPU_TRAP		0
 #define	TRC_CPU_HALT		1
@@ -74,6 +75,8 @@
 // TRACEF_BUS, TRACEF_MEMORYDUMP and TRACEF_IRQ flags.
 //
 // ToDo: Transform TRACEF flags to Bitmasks.
+// ToDo: Change category flags to constexpr's so the compiler can remove
+// the calls.
 //
 #define	TRACEF_WRITE			(1 << 0)
 #define	TRACEF_IGNORE_BUS		(1 << 1)
@@ -268,6 +271,12 @@ struct TRACE_RLV12REGS
 };
 
 
+struct TRACE_RLV12COMMAND
+{
+	u32 magic;
+	u16 command;
+};
+
 struct TRACE
 {
 	FILE*	file;
@@ -286,14 +295,15 @@ extern void	TRACEBus(TRACE* trace, u16 type, u16 address, u16 value);
 extern void	TRACEMemoryDump(TRACE* trace, u8* ptr, u16 address, u16 length);
 extern void	TRACETrap(TRACE* trace, int n, int cause);
 extern void	TRACEIrq(TRACE* trace, int n, int type);
-extern void	TRACERX02(TRACE* trace, u16 command, u16 status);
 extern void	TRACEDLV11(TRACE* trace, int channel, int type, u16 value);
 extern void	TRACERXV21Command(TRACE* trace, int commit, int type, u16 rx2cs);
 extern void	TRACERXV21Step(TRACE* trace, int type, int step, u16 rx2db);
 extern void	TRACERXV21DMA(TRACE* trace, int type, u16 rx2wc, u16 rx2ba);
-extern void	TRACERXV21Disk(TRACE* trace, int type, int drive, int density, u16 rx2sa, u16 rx2ta);
+extern void	TRACERXV21Disk(TRACE* trace, int type, int drive, int density,
+	u16 rx2sa, u16 rx2ta);
 extern void	TRACERXV21Error(TRACE* trace, int type, u16 info);
-extern void TRACERLV12Registers (TRACE* trace, const char *msg, u16 rlcs, u16 rlba, u16 rlda, 
-	u16 rlmpr, u16 rlbae);
+extern void TRACERLV12Registers (TRACE* trace, const char *msg, u16 rlcs, 
+	u16 rlba, u16 rlda, u16 rlmpr, u16 rlbae);
+extern void TRACERLV12Command (TRACE *trace, u16 command);
 
 #endif

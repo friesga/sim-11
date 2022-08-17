@@ -31,8 +31,7 @@ StatusCode RLV12::writeWord (u16 registerAddress, u16 data)
             rlcs = (rlcs & ~RLCS_RW) | (data & RLCS_RW);
             rlbae = (rlbae & ~RLCS_M_MEX) | ((rlcs >> RLCS_V_MEX) & RLCS_M_MEX);
 
-            if(trc.flags & TRACEF_RLV12)
-                TRACERLV12Registers (&trc, "writeword", rlcs, rlba, rlda, rlmpr, rlbae); 
+            TRACERLV12Registers (&trc, "writeWord", rlcs, rlba, rlda, rlmpr, rlbae); 
 
             // Commands to the controller are only executed with the CRDY (DONE)
             // bit is cleared by software.  If set, check for interrupts and return.
@@ -52,6 +51,7 @@ StatusCode RLV12::writeWord (u16 registerAddress, u16 data)
             // Clear errors
             rlcs &= ~RLCS_ALLERR;                   
 
+            TRACERLV12Command (&trc, GET_FUNC(rlcs));
             switch (GET_FUNC(rlcs))
             {
                 // Case on RLCS<3:1>
@@ -84,6 +84,8 @@ StatusCode RLV12::writeWord (u16 registerAddress, u16 data)
                         unit.rlStatus_ & RlStatus::UNIT_OFFL || 
                         !(unit.unitStatus_ & Status::UNIT_ATT))
                     {
+                        TRACERLV12Registers (&trc, "Command incomplete", 
+                            rlcs, rlba, rlda, rlmpr, rlbae); 
                         setDone (RLCS_INCMP);
                         break;
                     }
@@ -105,6 +107,7 @@ StatusCode RLV12::writeWord (u16 registerAddress, u16 data)
                     }
 
                     unit.function_ = GET_FUNC(rlcs);
+
                     // Activate unit
                     timer.start (&unit, std::chrono::milliseconds (rl_swait));              
                     break;

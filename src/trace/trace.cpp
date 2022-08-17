@@ -1,7 +1,8 @@
+#include "trace.h"
+#include "rlv12/rlv12.h"
+
 #include <stdio.h>
 #include <string.h>
-
-#include "trace.h"
 
 /* LSI-11 disassembler */
 extern int  LSI11Disassemble(const u16* insn, u16 pc, char* buf);
@@ -585,5 +586,42 @@ void TRACERLV12Registers (TRACE* trace, char const *msg, u16 rlcs, u16 rlba, u16
 		rec.length = U16B (msgLength);
 		fwrite (&rec, sizeof(rec), 1, trace->file);
 		fwrite (msg, msgLength, 1, trace->file);
+	}
+}
+
+static const char* rlv12GetCommandName (u16 command)
+{
+	const char *commandName[] =
+	{
+		"No-Op/Maintenance",
+		"Write Check",
+		"Get Status",
+		"Seek",
+		"Read Header",
+		"Write Data",
+		"Read Data",
+		"Read Data Without Header Check"
+	};
+
+	return commandName[command];
+}
+
+void TRACERLV12Command (TRACE* trace, u16 command)
+{
+	TRACE_RLV12COMMAND rec;
+
+	if (!(trace->flags & TRACEF_RLV12))
+		return;
+
+	if(trace->flags & TRACEF_PRINT)
+	{
+		fprintf (DST, "[RLV12] command: %s\n", rlv12GetCommandName(command));
+		fflush(DST);
+	}
+
+	if(trace->flags & TRACEF_WRITE)
+	{
+		rec.magic = U32B (MAGIC_RL2C);
+		rec.command = U16B (command);
 	}
 }
