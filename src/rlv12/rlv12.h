@@ -12,7 +12,11 @@
 #include <memory>       // for std::shared_ptr<>
 
 // From simh pdp11_defs.h
-#define IOPAGEBASE      017760000                       // 2**22 - 2**13
+// IOPAGEBASE for a 22-bit system
+// #define IOPAGEBASE      017760000                    // 2**22 - 2**13
+// IOPAGEBASE for a 16-bit system
+#define IOPAGEBASE      0160000 
+
 #define IOBA_RL         (IOPAGEBASE + 014400)           // RL11
 #define VEC_RL          0160
 
