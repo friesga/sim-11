@@ -24,7 +24,7 @@ int TRACEOpen(TRACE* trace, const char* filename)
 	trace->step = 0;
 	memset(trace->last_r, 0, 7 * sizeof(u16));
 	trace->last_psw = 0;
-	trace->flags = TRACE_WRITE | TRACE_FIRST_Z;
+	trace->flags = TRACEF_WRITE | TRACEF_FIRST_Z;
 	fwrite(&header, 6, 1, trace->file);
 	return 0;
 }
@@ -39,7 +39,10 @@ void TRACEStep(TRACE* trace, u16* r, u16 psw, u16* insn)
 	int i;
 	char buf[64];
 
-	if(trace->flags & TRACE_PRINT) {
+	if (!(trace->flags & TRACEF_STEP))
+		return;
+
+	if(trace->flags & TRACEF_PRINT) {
 #define	PSW_GET(x)	(psw & (x))
 #define	PSW_C		0x01
 #define	PSW_V		0x02
@@ -67,8 +70,8 @@ void TRACEStep(TRACE* trace, u16* r, u16 psw, u16* insn)
 #undef	PSW_PRIO
 	}
 
-	if(trace->flags & TRACE_WRITE) {
-		if((trace->flags & TRACE_COMPRESS) && !(trace->flags & TRACE_FIRST_Z)) {
+	if(trace->flags & TRACEF_WRITE) {
+		if((trace->flags & TRACEF_COMPRESS) && !(trace->flags & TRACEF_FIRST_Z)) {
 			int len = LSI11InstructionLength(insn);
 			int cnt = len;
 			int off = 0;
@@ -127,7 +130,7 @@ void TRACEStep(TRACE* trace, u16* r, u16 psw, u16* insn)
 			}
 		} else {
 			TRACE_CPU rec;
-			trace->flags &= ~TRACE_FIRST_Z;
+			trace->flags &= ~TRACEF_FIRST_Z;
 			rec.magic = U32B(MAGIC_CPU0);
 			rec.psw = U16B(psw);
 			rec.step = U64B(trace->step++);
@@ -148,7 +151,10 @@ void TRACECPUEvent(TRACE* trace, int type, u16 value)
 {
 	TRACE_CPUEVT rec;
 
-	if(trace->flags & TRACE_PRINT) {
+	if (!(trace->flags & TRACEF_CPUEVENT))
+		return;
+
+	if(trace->flags & TRACEF_PRINT) {
 		switch(type) {
 			case TRC_CPU_TRAP:
 				fprintf(DST, "[KD11] handling trap: %o\n", value);
@@ -169,7 +175,7 @@ void TRACECPUEvent(TRACE* trace, int type, u16 value)
 		fflush(DST);
 	}
 
-	if(trace->flags & TRACE_WRITE) {
+	if(trace->flags & TRACEF_WRITE) {
 		rec.magic = U32B(MAGIC_CPU1);
 		rec.type = U16B(type);
 		rec.value = U16B(value);
@@ -181,11 +187,10 @@ void TRACEBus(TRACE* trace, u16 type, u16 address, u16 value)
 {
 	TRACE_BUS rec;
 
-	if(trace->flags & TRACE_IGNORE_BUS) {
+	if (!(trace->flags & TRACEF_BUS) || trace->flags & TRACEF_IGNORE_BUS)
 		return;
-	}
 
-	if(trace->flags & TRACE_PRINT) {
+	if(trace->flags & TRACEF_PRINT) {
 		switch(type) {
 			case TRC_BUS_RD:
 				fprintf(DST, "[QBUS] read  %06o = %06o\n", address, value);
@@ -206,7 +211,7 @@ void TRACEBus(TRACE* trace, u16 type, u16 address, u16 value)
 		fflush(DST);
 	}
 
-	if(trace->flags & TRACE_WRITE) {
+	if(trace->flags & TRACEF_WRITE) {
 		rec.magic = U32B(MAGIC_BUS0);
 		rec.type = U16B(type);
 		rec.addr = U16B(address);
@@ -219,11 +224,10 @@ void TRACEMemoryDump(TRACE* trace, u8* ptr, u16 address, u16 length)
 {
 	TRACE_MEMDUMP rec;
 
-	if(trace->flags & TRACE_IGNORE_BUS) {
+	if (!(trace->flags & TRACEF_MEMORYDUMP) || trace->flags & TRACEF_IGNORE_BUS)
 		return;
-	}
 
-	if(trace->flags & TRACE_PRINT) {
+	if(trace->flags & TRACEF_PRINT) {
 		int i = 0;
 		fprintf(DST, "[MEM] dump %d from %06o:\n", length, address);
 		for(i = 0; i < length; i++) {
@@ -236,7 +240,7 @@ void TRACEMemoryDump(TRACE* trace, u8* ptr, u16 address, u16 length)
 		fflush(DST);
 	}
 
-	if(trace->flags & TRACE_WRITE) {
+	if(trace->flags & TRACEF_WRITE) {
 		rec.magic = U32B(MAGIC_BUS1);
 		rec.addr = U16B(address);
 		rec.len = U16B(length);
@@ -279,7 +283,10 @@ void TRACETrap(TRACE* trace, int n, int cause)
 {
 	TRACE_TRAP rec;
 
-	if(trace->flags & TRACE_PRINT) {
+	if (!(trace->flags & TRACEF_TRAP))
+		return;
+
+	if(trace->flags & TRACEF_PRINT) {
 		const char* name;
 		switch(cause) {
 			case TRC_TRAP:
@@ -303,7 +310,7 @@ void TRACETrap(TRACE* trace, int n, int cause)
 		fflush(DST);
 	}
 
-	if(trace->flags & TRACE_WRITE) {
+	if(trace->flags & TRACEF_WRITE) {
 		rec.magic = U32B(MAGIC_TRAP);
 		rec.trap = U16B(n);
 		rec.cause = U16B(cause);
@@ -315,11 +322,10 @@ void TRACEIrq(TRACE* trace, int n, int type)
 {
 	TRACE_IRQ rec;
 
-	if(trace->flags & TRACE_IGNORE_BUS) {
+	if (!(trace->flags & TRACEF_IRQ) || trace->flags & TRACEF_IGNORE_BUS)
 		return;
-	}
 
-	if(trace->flags & TRACE_PRINT) {
+	if(trace->flags & TRACEF_PRINT) {
 		switch(type) {
 			case TRC_IRQ_OK:
 				fprintf(DST, "[QBUS] interrupt request %o\n", n);
@@ -334,7 +340,7 @@ void TRACEIrq(TRACE* trace, int n, int type)
 		fflush(DST);
 	}
 
-	if(trace->flags & TRACE_WRITE) {
+	if(trace->flags & TRACEF_WRITE) {
 		rec.magic = U32B(MAGIC_IRQ0);
 		rec.trap = U16B(n);
 		rec.type = U16B(type);
@@ -346,7 +352,10 @@ void TRACEDLV11(TRACE* trace, int channel, int type, u16 value)
 {
 	TRACE_DLV11 rec;
 
-	if(trace->flags & TRACE_PRINT) {
+	if (!(trace->flags & TRACEF_DLV11))
+		return;
+
+	if(trace->flags & TRACEF_PRINT) {
 		switch(type) {
 			case TRC_DLV11_RX:
 				fprintf(DST, "[DLV11J] CH%d: receive %06o [%c]\n", channel, value, value >= 0x20 ? value : '.');
@@ -358,7 +367,7 @@ void TRACEDLV11(TRACE* trace, int channel, int type, u16 value)
 		fflush(DST);
 	}
 
-	if(trace->flags & TRACE_WRITE) {
+	if(trace->flags & TRACEF_WRITE) {
 		rec.magic = U32B(MAGIC_DLV1);
 		rec.channel = channel;
 		rec.type = type;
@@ -395,13 +404,16 @@ void TRACERXV21Command(TRACE* trace, int commit, int type, u16 rx2cs)
 {
 	TRACE_RXV21CMD rec;
 
-	if(trace->flags & TRACE_PRINT) {
+	if (!(trace->flags & TRACEF_RXV21CMD))
+		return;
+
+	if(trace->flags & TRACEF_PRINT) {
 		const char* name = rxv21_get_cmd_name(type);
 		fprintf(DST, "[RXV21] Execute command: %s\n", name);
 		fflush(DST);
 	}
 
-	if(trace->flags & TRACE_WRITE) {
+	if(trace->flags & TRACEF_WRITE) {
 		rec.magic = U32B(MAGIC_RX2C);
 		rec.type = type;
 		rec.commit = commit;
@@ -414,14 +426,17 @@ void TRACERXV21Step(TRACE* trace, int type, int step, u16 rx2db)
 {
 	TRACE_RXV21STEP rec;
 
-	if(trace->flags & TRACE_PRINT) {
+	if (!(trace->flags & TRACEF_RXV21STEP))
+		return;
+
+	if(trace->flags & TRACEF_PRINT) {
 		const char* name = rxv21_get_cmd_name(type);
 		fprintf(DST, "[RXV21] Processing command %s: step %d with data %06o\n",
 				name, step, rx2db);
 		fflush(DST);
 	}
 
-	if(trace->flags & TRACE_WRITE) {
+	if(trace->flags & TRACEF_WRITE) {
 		rec.magic = U32B(MAGIC_RX2S);
 		rec.type = type;
 		rec.step = step;
@@ -434,14 +449,17 @@ void TRACERXV21DMA(TRACE* trace, int type, u16 rx2wc, u16 rx2ba)
 {
 	TRACE_RXV21DMA rec;
 
-	if(trace->flags & TRACE_PRINT) {
+	if (!(trace->flags & TRACEF_RXV21DMA))
+		return;
+
+	if(trace->flags & TRACEF_PRINT) {
 		const char* name = rxv21_get_cmd_name(type);
 		fprintf(DST, "[RXV21] DMA transfer [%s]: %06o words to %06o\n",
 				name, rx2wc, rx2ba);
 		fflush(DST);
 	}
 
-	if(trace->flags & TRACE_WRITE) {
+	if(trace->flags & TRACEF_WRITE) {
 		rec.magic = U32B(MAGIC_RX2D);
 		rec.type = U16B(type);
 		rec.rx2wc = U16B(rx2wc);
@@ -470,7 +488,10 @@ void TRACERXV21Error(TRACE* trace, int type, u16 info)
 {
 	TRACE_RXV21ERR rec;
 
-	if(trace->flags & TRACE_PRINT) {
+	if (!(trace->flags & TRACEF_RXV21ERROR))
+		return;
+
+	if(trace->flags & TRACEF_PRINT) {
 		const char* name = rxv21_get_error_name(type);
 		switch(type) {
 			case TRC_RXV21_WC_OVFL:
@@ -487,7 +508,7 @@ void TRACERXV21Error(TRACE* trace, int type, u16 info)
 		fflush(DST);
 	}
 
-	if(trace->flags & TRACE_WRITE) {
+	if(trace->flags & TRACEF_WRITE) {
 		rec.magic = U32B(MAGIC_RX2E);
 		rec.type = U16B(type);
 		rec.info = U16B(info);
@@ -499,7 +520,10 @@ void TRACERXV21Disk(TRACE* trace, int type, int drive, int density, u16 rx2sa, u
 {
 	TRACE_RXV21DISK rec;
 
-	if(trace->flags & TRACE_PRINT) {
+	if (!(trace->flags & TRACEF_RXV21DISK))
+		return;
+
+	if(trace->flags & TRACEF_PRINT) {
 		const char* name;
 		switch(type) {
 			case TRC_RXV21_READ:
@@ -521,7 +545,7 @@ void TRACERXV21Disk(TRACE* trace, int type, int drive, int density, u16 rx2sa, u
 		fflush(DST);
 	}
 
-	if(trace->flags & TRACE_WRITE) {
+	if(trace->flags & TRACEF_WRITE) {
 		rec.magic = U32B(MAGIC_RX2A);
 		rec.type = U16B(type);
 		rec.drive = drive;
@@ -537,15 +561,18 @@ void TRACERLV12Registers (TRACE* trace, char const *msg, u16 rlcs, u16 rlba, u16
 {
 	TRACE_RLV12REGS rec;
 
-	if(trace->flags & TRACE_PRINT)
+	if (!(trace->flags & TRACEF_RLV12))
+		return;
+
+	if(trace->flags & TRACEF_PRINT)
 	{
 		fprintf (DST, 
-			"[RLV12] %s:\nRLCS: %06o, RLBA: %06o, RLDA: %06o, RLMPR: %06o, RLBAE: %06o\n",
+			"[RLV12] %s: RLCS: %06o, RLBA: %06o, RLDA: %06o, RLMPR: %06o, RLBAE: %06o\n",
 			msg, rlcs, rlba, rlda, rlmpr, rlbae);
 		fflush(DST);
 	}
 
-	if(trace->flags & TRACE_WRITE)
+	if(trace->flags & TRACEF_WRITE)
 	{
 		rec.magic = U32B (MAGIC_RL2A);
 		rec.rlcs = U16B (rlcs);

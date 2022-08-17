@@ -64,14 +64,38 @@
 #define	TRC_RXV21_TRACK_NO	2
 #define	TRC_RXV21_SECT_NO	3
 
-#define	TRACE_WRITE			1
-#define	TRACE_IGNORE_BUS	2
-#define	TRACE_PRINT			4
-#define	TRACE_COMPRESS		8
-#define	TRACE_FIRST_Z		16
+// Definition of trace flags. There are two sets of flags:
+// - Flags definining the way the trace is to be output
+//   (TRACEF_WRITE, TRACEF_PRINT, TRACE_COMPRESS and TRACEF_FIRST_Z).
+// - Flags defining the trace category. By defining the separate
+//   flags the trace output can be tuned.
+// 
+// TRACEF_IGNORE_BUS is a special flag; it temporarily overrides the
+// TRACEF_BUS, TRACEF_MEMORYDUMP and TRACEF_IRQ flags.
+//
+// ToDo: Transform TRACEF flags to Bitmasks.
+//
+#define	TRACEF_WRITE			(1 << 0)
+#define	TRACEF_IGNORE_BUS		(1 << 1)
+#define	TRACEF_PRINT			(1 << 2)
+#define	TRACEF_COMPRESS			(1 << 3)
+#define	TRACEF_FIRST_Z			(1 << 4)
+#define	TRACEF_STEP				(1 << 5)
+#define TRACEF_CPUEVENT			(1 << 6)
+#define TRACEF_BUS				(1 << 7)
+#define TRACEF_MEMORYDUMP		(1 << 8)
+#define TRACEF_TRAP				(1 << 9)
+#define TRACEF_IRQ				(1 << 10)
+#define TRACEF_DLV11			(1 << 11)
+#define TRACEF_RXV21CMD			(1 << 12)
+#define TRACEF_RXV21STEP		(1 << 13)
+#define TRACEF_RXV21DMA			(1 << 14)
+#define TRACEF_RXV21ERROR		(1 << 15)
+#define TRACEF_RXV21DISK		(1 << 16)
+#define TRACEF_RLV12			(1 << 17)
 
-#define	TRCSETIGNBUS()	(trc.flags |= TRACE_IGNORE_BUS)
-#define	TRCCLRIGNBUS()	(trc.flags &= ~TRACE_IGNORE_BUS)
+#define	TRCSETIGNBUS()	(trc.flags |= TRACEF_IGNORE_BUS)
+#define	TRCCLRIGNBUS()	(trc.flags &= ~TRACEF_IGNORE_BUS)
 #define	IFTRC()		if(trc.flags)
 #define	__IFTRC(x)	{ IFTRC() x; }
 #define	TRCStep(r, psw, insn) \
