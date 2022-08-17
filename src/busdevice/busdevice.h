@@ -23,9 +23,7 @@
 class QBUS;
 class Unit;
 
-// Define the functions every QBUS module should provide.
-// 
-// The class integrates members of the simh-v312-2 Device struct.
+// Definition of the functions every QBUS module should provide.
 class BusDevice
 {
 protected:
