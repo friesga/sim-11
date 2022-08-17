@@ -40,7 +40,7 @@ TEST_F (RLV12AttachTest, attachReturnsOpenError)
     // lsi.bus.installModule (1, &rlv12Device);
 
     ASSERT_EQ (rlv12Device.unit (0)->attach ("non-existingfile", 
-            Bitmask(AttachFlags::ReadWrite)), 
+            Bitmask(AttachFlags::Default)), 
         StatusCode::OpenError);
 }
 
@@ -103,9 +103,7 @@ TEST_F (RLV12AttachTest, existingFileIsOverwritten)
     char const *argvSet0[] =
     {
         "sim-11",
-        "-q",   // quiet
-        "-n",   // createNewFile
-        "-o"    // ovewrite
+        "-q"    // quiet
     };
     CmdLineOptions::processOptions (sizeof (argvSet0) /sizeof (argvSet0[0]),
         argvSet0);

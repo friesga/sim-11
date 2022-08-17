@@ -10,8 +10,5 @@ CmdLineOptions::CmdLineOptions()
     trace_file {trace_file_},
     compress {compress_},
     exit_on_halt {exit_on_halt_},
-    readOnly {readOnly_},
-    quiet {quiet_},
-    createNewFile {createNewFile_},
-    overwrite {overwrite_}
+    quiet {quiet_}
 {};

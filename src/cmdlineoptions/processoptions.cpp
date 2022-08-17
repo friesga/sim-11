@@ -29,14 +29,8 @@ void CmdLineOptions::processOptions (int argc, char const **argv)
 			compress_ = true;
 		else if(!strcmp("-x", *argv))
 			exit_on_halt_ = true;
-		else if(!strcmp("-r", *argv))
-			readOnly_ = true;
-		else if(!strcmp("-n", *argv))
-			createNewFile_ = true;
 		else if(!strcmp("-q", *argv))
 			quiet_ = true;
-		else if(!strcmp("-o", *argv))
-			overwrite_ = true;
 		else if(!strcmp("-l", *argv) && argc > 1) 
 		{
 			load_file_ = argv[1];
