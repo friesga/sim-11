@@ -31,6 +31,7 @@ void RLV12::maintenance()
     if (rlmpr != 0177001)
     {                              
         // HNF error
+        // ToDo: The status should be returned via SetDone() call?
         rlcs |= RLCS_ERR | RLCS_HDE;                    
         return;
     }
@@ -57,10 +58,11 @@ void RLV12::maintenance()
         rlmpr++;
     }
 
+    // Update DAR and bus address in BA and BAE
     rlda = (rlda & ~0377) | ((rlda + 1) & 0377);
-    rlbae = (memoryAddress >> 16) & RLBAE_IMP;   // Upper 6b
-    rlba = memoryAddress & RLBA_IMP;             // lower 16b */
-
+    rlbae = (memoryAddress >> 16) & RLBAE_IMP;   // Upper 6 bits
+    rlba = memoryAddress & RLBA_IMP;             // Lower 16 bits */
+    
     // Test 4: Check the CRC of (DAR + 3)
     u16 word = static_cast<u16> (rlda);
     rlxb_[0] = calcCRC (1, &word);

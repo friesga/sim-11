@@ -338,8 +338,8 @@ void RLV12::service (Unit &unitRef)
         rlcs |= RLCS_ERR | RLCS_INCMP | RLCS_HDE;
 
     ma += (wc << 1);                                        /* final byte addr */
-    rlbae = (ma >> 16) & RLBAE_IMP;                         /* upper 6b */
-    rlba = ma & RLBA_IMP;                                   /* lower 16b */
+    rlbae = (ma >> 16) & RLBAE_IMP;                         /* upper 6 bits */
+    rlba = ma & RLBA_IMP;                                   /* lower 16 bits */
     rlcs = (rlcs & ~RLCS_MEX) | ((rlbae & RLCS_M_MEX) << RLCS_V_MEX);
 
     // If we ran off the end of the track, return 40 in rlda, but keep
