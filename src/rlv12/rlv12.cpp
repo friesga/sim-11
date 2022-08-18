@@ -14,7 +14,8 @@ RLV12::RLV12 ()
     rlba {0},
     rlda {0},
     rlmpr {0},
-    rlbae {0}
+    rlbae {0},
+    flags_ {0}
 {
     name_ = "RL";
     baseAddress_ = IOBA_RL;
@@ -37,11 +38,15 @@ RLV12::RLV12 (u32 baseAddress, u32 vector, bool RLV11, size_t numUnits)
     rlba {0},
     rlda {0},
     rlmpr {0},
-    rlbae {0}
+    rlbae {0},
+    flags_ {0}
 {
     name_ = "RL";
     baseAddress_ = (baseAddress > 0) ? baseAddress : IOBA_RL;
     vector_ = (vector > 0) ? vector : VEC_RL;
+
+    if (RLV11)
+        flags_ |= DEV_RLV11;
 
     // Allocate the transfer buffer, initializing to zero
     rlxb_ = new (std::nothrow) u16[RL_MAXFR]();
