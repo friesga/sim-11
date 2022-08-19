@@ -169,9 +169,16 @@ public:
     StatusCode writeWord (u16 registerAddress, u16 data) override;
     void service (Unit &unit)  override;
 
-    // RLV12 specific function
+    // RLV1[12] specific function
     inline size_t numUnits ();
     inline RL01_2  *unit (size_t unitNumber);
+
+    // Functions to set and get memory adresses consistently for
+    // 16-, 18- and 22-bit systems
+    void memAddrToRegs (u32 memoryAddress);
+    u32 memAddrFromRegs ();
+    void updateBAE ();
+    constexpr u16 getBA16BA17 (u16 csr);
 };
 
 inline int32_t RLV12::getCylinder (int32_t track)

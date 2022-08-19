@@ -26,13 +26,16 @@ StatusCode RLV12::writeWord (u16 registerAddress, u16 data)
     {
         case CSR:
             // Control/Status Register
-            rlcs = (rlcs & ~RLCS_MEX) | ((rlbae & RLCS_M_MEX) << RLCS_V_MEX);
+            // The next statement is superfluous as the BA16 ans BA17 bits
+            // are immediately overwritten by the next statement
+            // rlcs = (rlcs & ~RLCS_MEX) | ((rlbae & RLCS_M_MEX) << RLCS_V_MEX);
 
             rlcs = (rlcs & ~RLCS_RW) | (data & RLCS_RW);
 
             // Load Bus Address Extension Bits (BA16 and BA17) into bits
             // 00 and 01 in the BAE register
-            rlbae = (rlbae & ~RLCS_M_MEX) | ((rlcs >> RLCS_V_MEX) & RLCS_M_MEX);
+            // rlbae = (rlbae & ~RLCS_M_MEX) | ((rlcs >> RLCS_V_MEX) & RLCS_M_MEX);
+            updateBAE ();
 
             TRACERLV12Registers (&trc, "writeWord", rlcs, rlba, rlda, rlmpr, rlbae); 
 
@@ -155,7 +158,9 @@ StatusCode RLV12::writeWord (u16 registerAddress, u16 data)
 
             // Load bits 00 and 01 (BA16 and BA17) into the corresponding
             // bits in the CSR.
+            // ToDo: This is an undocumented feature?
             rlcs = (rlcs & ~RLCS_MEX) | ((rlbae & RLCS_M_MEX) << RLCS_V_MEX);
+
             //if (DEBUG_PRS(rl_dev))
             //    fprintf(sim_deb, ">>RL wr: RLBAE %06o\n", rlbae);
             break;

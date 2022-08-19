@@ -21,8 +21,8 @@ void RLV12::maintenance()
     rlda = (rlda & ~0377) | ((rlda + 1) & 0377);
 
     // Test 3: Check DMA transfers
-    // Get memory address
-    memoryAddress = (rlbae << 16) | rlba;
+    // Get memory address from BAR, CSR and possibly BAE registers
+    memoryAddress = memAddrFromRegs ();
                                                             
     if(trc.flags & TRACEF_RLV12)
          TRACERLV12Registers (&trc, "Maintenance", rlcs, rlba, rlda, rlmpr, rlbae);
@@ -60,8 +60,9 @@ void RLV12::maintenance()
 
     // Update DAR and bus address in BA and BAE
     rlda = (rlda & ~0377) | ((rlda + 1) & 0377);
-    rlbae = (memoryAddress >> 16) & RLBAE_IMP;   // Upper 6 bits
-    rlba = memoryAddress & RLBA_IMP;             // Lower 16 bits */
+
+    // Load BAR, CSR and possibly BAE with the current address
+    memAddrToRegs (memoryAddress);
     
     // Test 4: Check the CRC of (DAR + 3)
     u16 word = static_cast<u16> (rlda);

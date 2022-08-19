@@ -228,8 +228,8 @@ void RLV12::service (Unit &unitRef)
         maxwc = (RL_NUMSC - GET_SECT(rlda)) * RL_NUMWD;
     }
 
-    // Get mem addr 
-    ma = (rlbae << 16) | rlba;                              
+    // Get memory address from BA, CSR and possibly BAE registers
+    ma = memAddrFromRegs ();
 
     // Get true wc
     wc = 0200000 - rlmpr;
@@ -338,9 +338,9 @@ void RLV12::service (Unit &unitRef)
         rlcs |= RLCS_ERR | RLCS_INCMP | RLCS_HDE;
 
     ma += (wc << 1);                                        /* final byte addr */
-    rlbae = (ma >> 16) & RLBAE_IMP;                         /* upper 6 bits */
-    rlba = ma & RLBA_IMP;                                   /* lower 16 bits */
-    rlcs = (rlcs & ~RLCS_MEX) | ((rlbae & RLCS_M_MEX) << RLCS_V_MEX);
+    
+    // Load BAR, CSR and possibly BAE registers with the current address
+    memAddrToRegs (ma);
 
     // If we ran off the end of the track, return 40 in rlda, but keep
     // track over a legitimate sector (0)?

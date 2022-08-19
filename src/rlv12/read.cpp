@@ -18,7 +18,10 @@ StatusCode RLV12::read (u16 registerAddress, u16* data)
         case CSR:
         {
             // Control/Status Register
-            rlcs = (rlcs & ~RLCS_MEX) | ((rlbae & RLCS_M_MEX) << RLCS_V_MEX);
+            // ToDo: Setting BA16/BA17 bits at this point should be 
+            // superfluous when the CSR is correctly maintained.
+            // rlcs = (rlcs & ~RLCS_MEX) | ((rlbae & RLCS_M_MEX) << RLCS_V_MEX);
+
             /*
             The DRDY signal is sent by the selected drive to indicate that it
             is ready to read or write or seek.  It is sent when the heads are
@@ -30,7 +33,7 @@ StatusCode RLV12::read (u16 registerAddress, u16* data)
             This seems to imply that only a Seek operation (not Read/Write)
             causes ready to be false.
             */
-            // uptr = rl_dev.units + GET_DRIVE(rlcs);
+
             RL01_2 &unit = units_[GET_DRIVE(rlcs)];
 
             if (unit.rlStatus_ & RlStatus::UNIT_OFFL || 
