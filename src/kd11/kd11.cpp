@@ -438,10 +438,6 @@ void KD11ODT::step(QBUS* bus)
 	}
 }
 
-#define CHECKADDR() \
-	if (!addr.hasValue()) \
-		return {};
-
 void KD11CPU::reset()
 {
 	r[7] = 0173000;
@@ -476,7 +472,7 @@ CondData<u16> KD11CPU::readW(QBUS* bus, u16 dst, u16 mode, int inc)
 				r[dst] &= 0xFFFE;
 			}
 			addr = READ(addr);
-			CHECKADDR();
+            if (!addr.hasValue()) return{};
 			return READ(addr);
 
 		case 4: /* Autodecrement */
@@ -498,12 +494,12 @@ CondData<u16> KD11CPU::readW(QBUS* bus, u16 dst, u16 mode, int inc)
 				addr = r[dst] - 2;
 			}
 			addr = READ(addr);
-			CHECKADDR();
+            if (!addr.hasValue()) return{};
 			return READ(addr);
 
 		case 6: /* Index */
 			addr = READ(r[7]);
-			CHECKADDR();
+            if (!addr.hasValue()) return{};
 			if(inc) {
 				r[7] += 2;
 			} else if(dst == 7) {
@@ -514,7 +510,7 @@ CondData<u16> KD11CPU::readW(QBUS* bus, u16 dst, u16 mode, int inc)
 
 		case 7: /* Index indirect */
 			addr = READ(r[7]);
-			CHECKADDR();
+            if (!addr.hasValue()) return{};
 			if(inc) {
 				r[7] += 2;
 			} else if(dst == 7) {
@@ -522,7 +518,7 @@ CondData<u16> KD11CPU::readW(QBUS* bus, u16 dst, u16 mode, int inc)
 			}
 			addr += r[dst];
 			addr = READ(addr);
-			CHECKADDR();
+            if (!addr.hasValue()) return{};
 			return READ(addr);
 
 		default:
@@ -563,7 +559,7 @@ CondData<u8> KD11CPU::readB(QBUS* bus, u16 dst, u16 mode, int inc)
 				r[dst] += 2;
 			}
 			addr = READ(addr);
-			CHECKADDR();
+            if (!addr.hasValue()) return{};
 			return READ8(addr);
 
 		case 4: /* Autodecrement */
@@ -591,12 +587,12 @@ CondData<u8> KD11CPU::readB(QBUS* bus, u16 dst, u16 mode, int inc)
 				addr = r[dst] - 2;
 			}
 			addr = READ(addr);
-			CHECKADDR();
+            if (!addr.hasValue()) return{};
 			return READ8(addr);
 
 		case 6: /* Index */
 			addr = READ(r[7]);
-            CHECKADDR();
+            if (!addr.hasValue()) return{};
 			if(inc) {
 				r[7] += 2;
 			} else if(dst == 7) {
@@ -607,7 +603,7 @@ CondData<u8> KD11CPU::readB(QBUS* bus, u16 dst, u16 mode, int inc)
 
 		case 7: /* Index indirect */
 			addr = READ(r[7]);
-			CHECKADDR();
+            if (!addr.hasValue()) return{};
 			if(inc) {
 				r[7] += 2;
 			} else if(dst == 7) {
@@ -615,7 +611,7 @@ CondData<u8> KD11CPU::readB(QBUS* bus, u16 dst, u16 mode, int inc)
 			}
 			addr += r[dst];
 			addr = READ(addr);
-			CHECKADDR();
+            if (!addr.hasValue()) return{};
 			return READ8(addr);
 
 		default:
