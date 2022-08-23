@@ -122,9 +122,8 @@ KD11CPU &KD11::cpu()
 #define	READ(addr)			(bus->read((addr)))
 #define	WRITE(addr, val)	(bus->writeWord((addr), (val)))
 
-#define RETURN_IF_INVALID(var) \
-    if (!var.hasValue())   \
-        return;
+#define RETURN_IF(cond) \
+    if (cond) return;
 
 // Constructor
 KD11ODT::KD11ODT(KD11CPU &cpu)
@@ -831,16 +830,16 @@ CondData<u16> KD11CPU::getAddr(QBUS* bus, u16 dst, u16 mode)
 
 #define	CPUREADW(rn, mode)	\
     (tmpValue = readW(bus, rn, mode, 1)).valueOr(0); \
-	RETURN_IF_INVALID(tmpValue)
+	RETURN_IF(!tmpValue.hasValue())
 #define	CPUREADB(rn, mode)	\
     (tmpValue = static_cast<CondData<u16>> (readB(bus, rn, mode, 1))).valueOr(0); \
-	RETURN_IF_INVALID(tmpValue)
+	RETURN_IF(!tmpValue.hasValue())
 #define	CPUREADNW(rn, mode)	\
     (tmpValue = readW(bus, rn, mode, 0)).valueOr(0); \
-	RETURN_IF_INVALID(tmpValue)
+	RETURN_IF(!tmpValue.hasValue())
 #define	CPUREADNB(rn, mode)	\
     (tmpValue = static_cast<CondData<u16>> (readB(bus, rn, mode, 0))).valueOr(0); \
-	RETURN_IF_INVALID(tmpValue)
+	RETURN_IF(!tmpValue.hasValue())
 
 #define CPUWRITEW(rn, mode, v)	\
     if (!writeW(bus, rn, mode, v)) \
@@ -939,10 +938,10 @@ void KD11CPU::execInstr(QBUS* bus)
                         case 0000002: /* RTI */
                             r[7] = READCPU(r[6]);
                             r[6] += 2;
-                            RETURN_IF_INVALID(tmpValue);
+                            RETURN_IF(!tmpValue.hasValue());
                             psw = READCPU (r[6]);
                             r[6] += 2;
-                            RETURN_IF_INVALID(tmpValue);
+                            RETURN_IF(!tmpValue.hasValue());
                             break;
 
                         case 0000003: /* BPT */
@@ -962,10 +961,10 @@ void KD11CPU::execInstr(QBUS* bus)
                         case 0000006: /* RTT */
                             r[7] = READCPU(r[6]);
                             r[6] += 2;
-                            RETURN_IF_INVALID(tmpValue);
+                            RETURN_IF(!tmpValue.hasValue());
                             psw = READCPU(r[6]);
                             r[6] += 2;
-                            RETURN_IF_INVALID(tmpValue);
+                            RETURN_IF(!tmpValue.hasValue());
 
                             // Prevent a trace trap on the next instruction
                             runState = STATE_INHIBIT_TRACE;
@@ -981,7 +980,7 @@ void KD11CPU::execInstr(QBUS* bus)
 
                 case 00001: /* JMP */
                     tmpValue = getAddr(bus, insn1->rn, insn1->mode);
-                    RETURN_IF_INVALID(tmpValue);
+                    RETURN_IF(!tmpValue.hasValue());
                     r[7] = tmpValue.value();
                     break;
 
@@ -1092,7 +1091,7 @@ void KD11CPU::execInstr(QBUS* bus)
                 case 00047:
                     tmpValue = getAddr(bus, insnjsr->rn, insnjsr->mode);
                     src = r[insnjsr->r];
-                    RETURN_IF_INVALID(tmpValue);
+                    RETURN_IF(!tmpValue.hasValue());
                     dst = tmpValue.value();
 
                     r[6] -= 2;
