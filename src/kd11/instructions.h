@@ -4,7 +4,8 @@
 #include "kd11.h"
 #include "bitmask.h"
 
-// Get operand flags, used in Bitmask<OperandOptions>
+// Options for the get and put operand functions, 
+// used in Bitmask<OperandOptions>
 enum class OperandOptions
 {
     Default,                    // Open existing file read/write
@@ -14,19 +15,21 @@ enum class OperandOptions
     _                           // Required for Bitmask
 };
 
+// The functions in this class get and put the operand, given the
+// instructions mode and register.
 class Instruction
 {
 protected:
-	bool getWordOperand (QBUS* bus, u16 (&reg)[8], Bitmask<OperandOptions> options, 
-		u16 mode, u16 regNr, u16 &retValue);
-	bool getByteOperand (QBUS* bus, u16 (&reg)[8], Bitmask<OperandOptions> options, 
-		u16 mode, u16 regNr, u16 &retValue);
-	bool getAddress (QBUS* bus, u16 (&reg)[8], 
-		u16 mode, u16 regNr, u16 &retValue);
+	bool getWordOperand (QBUS* bus, u16 (&reg)[8], 
+		Bitmask<OperandOptions> options, u16 mode, u16 regNr, u16 &retValue);
+	bool getByteOperand (QBUS* bus, u16 (&reg)[8], 
+		Bitmask<OperandOptions> options, u16 mode, u16 regNr, u16 &retValue);
+	bool getAddress (QBUS* bus, u16 (&reg)[8], u16 mode, 
+		u16 regNr, u16 &retValue);
 	bool putWordOperand (QBUS* bus, u16 (&reg)[8], u16 mode, 
-		u16 regNr, u16 val);
+		u16 regNr, u16 value);
 	bool putByteOperand (QBUS* bus, u16 (&reg)[8], u16 mode,
-		u16 regNr, u8 val);
+		u16 regNr, u8 value);
 };
 
 bool Instruction::getWordOperand (QBUS* bus, u16 (&reg)[8], 
@@ -116,7 +119,6 @@ bool Instruction::getWordOperand (QBUS* bus, u16 (&reg)[8],
 				addr += 2;
 			
 			addr += reg[regNr];
-
 			addr = bus->read (addr);
 			if (!addr.hasValue()) 
 				return false;
@@ -280,12 +282,13 @@ bool Instruction::getByteOperand (QBUS* bus, u16 (&reg)[8],
 // returning zero).
 bool Instruction::getAddress (QBUS* bus, u16 (&reg)[8], 
 	u16 mode, u16 regNr, u16 &retValue)
-// CondData<u16> KD11CPU::getAddr(QBUS* bus, u16 dst, u16 mode)
 {
 	CondData<u16> addr;
 	switch (mode)
     {
 		case 0: /* Register */
+			// This should generate an illegal instruction trap. This
+			// has to be performed by the caller.
 			// TRCTrap(4, TRC_TRAP_RADDR);
 			// TRAP(busError); /* illegal instruction */
             return false;
@@ -340,25 +343,24 @@ bool Instruction::getAddress (QBUS* bus, u16 (&reg)[8],
 	}
 }
 
-// bool KD11CPU::writeW(QBUS* bus, u16 dst, u16 mode, u16 val)
 bool Instruction::putWordOperand (QBUS* bus, u16 (&reg)[8], u16 mode, 
-	u16 regNr, u16 val)
+	u16 regNr, u16 value)
 {
 	CondData<u16> addr;
 	switch (mode)
     {
 		case 0: /* Register */
-			reg[regNr] = val;
+			reg[regNr] = value;
             return true;
 
 		case 1: /* Register indirect */
-			return bus->writeWord (reg[regNr], val);
+			return bus->writeWord (reg[regNr], value);
 
 		case 2: /* Autoincrement */
 			reg[regNr] &= 0xFFFE;
 			addr = reg[regNr];
 			reg[regNr] += 2;
-			return bus->writeWord (addr, val);
+			return bus->writeWord (addr, value);
 
 		case 3: /* Autoincrement indirect */
 			reg[regNr] &= 0xFFFE;
@@ -368,13 +370,13 @@ bool Instruction::putWordOperand (QBUS* bus, u16 (&reg)[8], u16 mode,
             if (!addr.hasValue())
                 return false;
 
-			return bus->writeWord (addr, val);
+			return bus->writeWord (addr, value);
 
 		case 4: /* Autodecrement */
 			reg[regNr] &= 0xFFFE;
 			reg[regNr] -= 2;
 			addr = reg[regNr];
-			return bus->writeWord (addr, val);
+			return bus->writeWord (addr, value);
 
 		case 5: /* Autodecrement indirect */
 			reg[regNr] &= 0xFFFE;
@@ -383,7 +385,7 @@ bool Instruction::putWordOperand (QBUS* bus, u16 (&reg)[8], u16 mode,
 			addr = bus->read (addr);
             if (!addr.hasValue())
                 return false;
-			return bus->writeWord (addr, val);
+			return bus->writeWord (addr, value);
 
 		case 6: /* Index */
 			addr = bus->read (reg[7]);
@@ -391,7 +393,7 @@ bool Instruction::putWordOperand (QBUS* bus, u16 (&reg)[8], u16 mode,
                 return false;
 			reg[7] += 2;
 			addr += reg[regNr];
-			return bus->writeWord (addr, val);
+			return bus->writeWord (addr, value);
 
 		case 7: /* Index indirect */
 			addr = bus->read (reg[7]);
@@ -402,7 +404,7 @@ bool Instruction::putWordOperand (QBUS* bus, u16 (&reg)[8], u16 mode,
 			addr = bus->read (addr);
             if (!addr.hasValue())
                 return false;
-			return bus->writeWord (addr, val);
+			return bus->writeWord (addr, value);
 
         default:
             // Prevent compiler warning on not all paths returning a value
@@ -410,8 +412,6 @@ bool Instruction::putWordOperand (QBUS* bus, u16 (&reg)[8], u16 mode,
 	}
 }
 
-
-// bool KD11CPU::writeB(QBUS* bus, u16 dst, u16 mode, u8 val)
 bool Instruction::putByteOperand (QBUS* bus, u16 (&reg)[8], u16 mode, u16 regNr, u8 val)
 {
 	CondData<u16> addr;
@@ -503,10 +503,6 @@ struct KD11INSN1 : public Instruction
 	u16	mode:3;
 	u16	opcode:10;
 
-	// bool getWordOperand (QBUS* bus, u16 (&reg)[8], u16 &retValue);
-	// bool getWordAutoIncOperand (QBUS* bus, u16 (&reg)[8], u16 &retValue);
-	// bool getByteOperand (QBUS* bus, u16 (&reg)[8], u16 &retValue);
-	//bool getByteAutoIncOperand (QBUS* bus, u16 (&reg)[8], u16 &retValue);
 	bool getOperand (QBUS* bus, u16 (&reg)[8], 
 		Bitmask<OperandOptions> options, u16 &retValue);
 	bool getAddress (QBUS* bus, u16 (&reg)[8], u16 &retValue);
@@ -654,6 +650,7 @@ struct KD11INSNSOB
 };
 #else
 /* big endian host */
+// ToDo: Add operand instructions to the KD11INS structs
 struct KD11INSN1
 {
 	u16	opcode:10;
