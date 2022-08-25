@@ -435,8 +435,21 @@ struct KD11INSNJSR : public Instruction
 	u16	r:3;
 	u16	opcode:7;
 
+	bool getOperand (QBUS* bus, u16 (&reg)[8], 
+		Bitmask<GetOperandOptions> options, u16 &retValue);
 	bool getAddress (QBUS* bus, u16 (&reg)[8], u16 &retValue);
 };
+
+bool KD11INSNJSR::getOperand (QBUS* bus, u16 (&reg)[8], 
+	Bitmask<GetOperandOptions> options, u16 &retValue)
+{
+	if (options & GetOperandOptions::Byte)
+		return Instruction::getByteOperand (bus, reg, options, mode, rn, retValue);
+	else if (options & GetOperandOptions::Word)
+		return Instruction::getWordOperand (bus, reg, options, mode, rn, retValue);
+	else
+		throw (std::string("Missing getOperand option"));
+}
 
 bool KD11INSNJSR::getAddress (QBUS* bus, u16 (&reg)[8], u16 &retValue)
 {

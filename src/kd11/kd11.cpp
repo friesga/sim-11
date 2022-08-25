@@ -356,6 +356,7 @@ void KD11CPU::reset()
 	runState = STATE_HALT;
 }
 
+#if 0
 CondData<u16> KD11CPU::readW(QBUS* bus, u16 dst, u16 mode, int inc)
 {
 	CondData<u16> addr;
@@ -529,6 +530,7 @@ CondData<u8> KD11CPU::readB(QBUS* bus, u16 dst, u16 mode, int inc)
 			return {};
 	}
 }
+#endif // 0
 
 bool KD11CPU::writeW(QBUS* bus, u16 dst, u16 mode, u16 val)
 {
@@ -736,6 +738,7 @@ CondData<u16> KD11CPU::getAddr(QBUS* bus, u16 dst, u16 mode)
 #define	READCPU(addr)	\
     (tmpValue = bus->read(addr)).valueOr(0);
 
+#if 0
 #define	CPUREADW(rn, mode)	\
     (tmpValue = readW(bus, rn, mode, 1)).valueOr(0); \
 	RETURN_IF(!tmpValue.hasValue())
@@ -748,6 +751,7 @@ CondData<u16> KD11CPU::getAddr(QBUS* bus, u16 dst, u16 mode)
 #define	CPUREADNB(rn, mode)	\
     (tmpValue = static_cast<CondData<u16>> (readB(bus, rn, mode, 0))).valueOr(0); \
 	RETURN_IF(!tmpValue.hasValue())
+#endif
 
 #define CPUWRITEW(rn, mode, v)	\
     if (!writeW(bus, rn, mode, v)) \
@@ -799,7 +803,7 @@ void KD11CPU::execInstr(QBUS* bus)
     u16 tmp, tmp2;
     u16 src, dst;
     s32 tmps32;
-    CondData<u16> tmpValue;     // Used in CPUREAD* macro's
+    CondData<u16> tmpValue;     // Used in READCPU macro
 #ifdef USE_FLOAT
     FLOAT f1, f2, f3;
 #endif
@@ -1343,7 +1347,12 @@ void KD11CPU::execInstr(QBUS* bus)
             {
                 case 0070: /* MUL */
                     dst = r[insnjsr->r];
-                    src = CPUREADW(insnjsr->rn, insnjsr->mode);
+                    // src = CPUREADW(insnjsr->rn, insnjsr->mode);
+                    if (!insnjsr->getOperand (bus, r, 
+                        Bitmask(GetOperandOptions::Word |
+                            GetOperandOptions::AutoIncr), src))
+                        return;
+
                     tmps32 = (s32)(s16)dst * (s16)src;
                     r[insnjsr->r] = (u16)(tmps32 >> 16);
                     r[insnjsr->r | 1] = (u16)tmps32;
@@ -1352,10 +1361,15 @@ void KD11CPU::execInstr(QBUS* bus)
                     PSW_EQ(PSW_Z, !tmps32);
                     PSW_EQ(PSW_C, (tmps32 >= 0x7FFF) || (tmps32 < -0x8000));
                     break;
+
                 case 0071: /* DIV */
-                    tmps32 = (r[insnjsr->r] << 16)
-                        | r[insnjsr->r | 1];
-                    src = CPUREADW(insnjsr->rn, insnjsr->mode);
+                    tmps32 = (r[insnjsr->r] << 16) | r[insnjsr->r | 1];
+                    // src = CPUREADW(insnjsr->rn, insnjsr->mode);
+                    if (!insnjsr->getOperand (bus, r, 
+                        Bitmask(GetOperandOptions::Word |
+                            GetOperandOptions::AutoIncr), src))
+                        return;
+
                     if (src == 0)
                     {
                         PSW_SET(PSW_C);
@@ -1381,7 +1395,12 @@ void KD11CPU::execInstr(QBUS* bus)
                     break;
                 case 0072: /* ASH */
                     dst = r[insnjsr->r];
-                    src = CPUREADW(insnjsr->rn, insnjsr->mode);
+                    // src = CPUREADW(insnjsr->rn, insnjsr->mode);
+                    if (!insnjsr->getOperand (bus, r, 
+                        Bitmask(GetOperandOptions::Word |
+                            GetOperandOptions::AutoIncr), src))
+                        return;
+
                     if (src & 0x20)
                     { /* negative; right */
                         s16 stmp, stmp2;
@@ -1428,9 +1447,13 @@ void KD11CPU::execInstr(QBUS* bus)
                     break;
                 case 0073: /* ASHC */
                     dst = r[insnjsr->r];
-                    tmps32 = (r[insnjsr->r] << 16)
-                        | r[insnjsr->r | 1];
-                    src = CPUREADW(insnjsr->rn, insnjsr->mode);
+                    tmps32 = (r[insnjsr->r] << 16) | r[insnjsr->r | 1];
+                    // src = CPUREADW(insnjsr->rn, insnjsr->mode);
+                    if (!insnjsr->getOperand (bus, r, 
+                        Bitmask(GetOperandOptions::Word |
+                            GetOperandOptions::AutoIncr), src))
+                        return;
+
                     if ((src & 0x3F) == 0x20)
                     { /* negative; 32 right */
                         PSW_EQ(PSW_C, tmps32 & 0x80000000);
@@ -1473,16 +1496,22 @@ void KD11CPU::execInstr(QBUS* bus)
                     PSW_EQ(PSW_N, tmps32 & 0x80000000);
                     PSW_EQ(PSW_Z, !tmps32);
                     break;
+
                 case 0074: /* XOR */
                     src = r[insnjsr->r];
-                    dst = CPUREADNW(insnjsr->rn, insnjsr->mode);
-                    RETURN_IF(!tmpValue.hasValue());
+                    // dst = CPUREADNW(insnjsr->rn, insnjsr->mode);
+                    // RETURN_IF(!tmpValue.hasValue());
+                    if (!insnjsr->getOperand (bus, r, 
+                            Bitmask(GetOperandOptions::Word), dst))
+                        return;
+
                     tmp = src ^ dst;
                     CPUWRITEW(insnjsr->rn, insnjsr->mode, tmp);
                     PSW_EQ(PSW_N, tmp & 0x8000);
                     PSW_EQ(PSW_Z, !tmp);
                     PSW_CLR(PSW_V);
                     break;
+
                 case 0075: /* FIS instructions */
                     switch (insn >> 3)
                     {
