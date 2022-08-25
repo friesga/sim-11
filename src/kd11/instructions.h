@@ -4,8 +4,8 @@
 #include "kd11.h"
 #include "bitmask.h"
 
-// Get operand flags, used in Bitmask<GetOperandOptions>
-enum class GetOperandOptions
+// Get operand flags, used in Bitmask<OperandOptions>
+enum class OperandOptions
 {
     Default,                    // Open existing file read/write
     Word,						// Get word operand
@@ -17,9 +17,9 @@ enum class GetOperandOptions
 class Instruction
 {
 protected:
-	bool getWordOperand (QBUS* bus, u16 (&reg)[8], Bitmask<GetOperandOptions> options, 
+	bool getWordOperand (QBUS* bus, u16 (&reg)[8], Bitmask<OperandOptions> options, 
 		u16 mode, u16 regNr, u16 &retValue);
-	bool getByteOperand (QBUS* bus, u16 (&reg)[8], Bitmask<GetOperandOptions> options, 
+	bool getByteOperand (QBUS* bus, u16 (&reg)[8], Bitmask<OperandOptions> options, 
 		u16 mode, u16 regNr, u16 &retValue);
 	bool getAddress (QBUS* bus, u16 (&reg)[8], 
 		u16 mode, u16 regNr, u16 &retValue);
@@ -30,7 +30,7 @@ protected:
 };
 
 bool Instruction::getWordOperand (QBUS* bus, u16 (&reg)[8], 
-	Bitmask<GetOperandOptions> options, u16 mode, u16 regNr, u16 &retValue)
+	Bitmask<OperandOptions> options, u16 mode, u16 regNr, u16 &retValue)
 {
 	CondData<u16> addr;
 	switch (mode)
@@ -48,7 +48,7 @@ bool Instruction::getWordOperand (QBUS* bus, u16 (&reg)[8],
 
 		case 2: /* Autoincrement */
 			addr = reg[regNr];
-			if (options & GetOperandOptions::AutoIncr) 
+			if (options & OperandOptions::AutoIncr) 
 			{
 				reg[regNr] += 2;
 				reg[regNr] &= 0xFFFE;
@@ -58,7 +58,7 @@ bool Instruction::getWordOperand (QBUS* bus, u16 (&reg)[8],
 
 		case 3: /* Autoincrement indirect */
 			addr = reg[regNr];
-			if (options & GetOperandOptions::AutoIncr) 
+			if (options & OperandOptions::AutoIncr) 
 			{
 				reg[regNr] += 2;
 				reg[regNr] &= 0xFFFE;
@@ -74,7 +74,7 @@ bool Instruction::getWordOperand (QBUS* bus, u16 (&reg)[8],
 			return true;
 
 		case 4: /* Autodecrement */
-			if (options & GetOperandOptions::AutoIncr) 
+			if (options & OperandOptions::AutoIncr) 
 			{
 				reg[regNr] -= 2;
 				addr = reg[regNr];
@@ -90,7 +90,7 @@ bool Instruction::getWordOperand (QBUS* bus, u16 (&reg)[8],
 			return true;
 
 		case 5: /* Autodecrement indirect */
-			if (options & GetOperandOptions::AutoIncr) 
+			if (options & OperandOptions::AutoIncr) 
 			{
 				reg[regNr] -= 2;
 				addr = reg[regNr];
@@ -110,7 +110,7 @@ bool Instruction::getWordOperand (QBUS* bus, u16 (&reg)[8],
             if (!addr.hasValue()) 
 				return false;
 
-			if (options & GetOperandOptions::AutoIncr) 
+			if (options & OperandOptions::AutoIncr) 
 				reg[7] += 2;
 			else if (regNr == 7) 
 				addr += 2;
@@ -127,7 +127,7 @@ bool Instruction::getWordOperand (QBUS* bus, u16 (&reg)[8],
 			addr = bus->read (reg[7]);
             if (!addr.hasValue()) 
 				return false;
-			if (options & GetOperandOptions::AutoIncr) 
+			if (options & OperandOptions::AutoIncr) 
 				reg[7] += 2;
 			else if (regNr == 7)
 				addr += 2;
@@ -153,7 +153,7 @@ bool Instruction::getWordOperand (QBUS* bus, u16 (&reg)[8],
 	static_cast<CondData<u8>> (bus->read(addr & 0xFFFE)))
 
 bool Instruction::getByteOperand (QBUS* bus, u16 (&reg)[8], 
-	Bitmask<GetOperandOptions> options, u16 mode, u16 regNr, u16 &retValue)
+	Bitmask<OperandOptions> options, u16 mode, u16 regNr, u16 &retValue)
 {
 	CondData<u16> addr;
 	CondData<u8> tmp;
@@ -175,7 +175,7 @@ bool Instruction::getByteOperand (QBUS* bus, u16 (&reg)[8],
 
 		case 2: /* Autoincrement */
 			addr = reg[regNr];
-			if (options & GetOperandOptions::AutoIncr)  
+			if (options & OperandOptions::AutoIncr)  
 			{
 				if(regNr == 6 || regNr == 7) {
 					reg[regNr] += 2;
@@ -191,7 +191,7 @@ bool Instruction::getByteOperand (QBUS* bus, u16 (&reg)[8],
 
 		case 3: /* Autoincrement indirect */
 			addr = reg[regNr];
-			if (options & GetOperandOptions::AutoIncr)  
+			if (options & OperandOptions::AutoIncr)  
 			{
 				reg[regNr] += 2;
 			}
@@ -205,7 +205,7 @@ bool Instruction::getByteOperand (QBUS* bus, u16 (&reg)[8],
 			return true;
 
 		case 4: /* Autodecrement */
-			if (options & GetOperandOptions::AutoIncr)  
+			if (options & OperandOptions::AutoIncr)  
 			{
 				if(regNr == 6 || regNr == 7) {
 					reg[regNr] -= 2;
@@ -224,7 +224,7 @@ bool Instruction::getByteOperand (QBUS* bus, u16 (&reg)[8],
 			return true;
 
 		case 5: /* Autodecrement indirect */
-			if (options & GetOperandOptions::AutoIncr)  
+			if (options & OperandOptions::AutoIncr)  
 			{
 				reg[regNr] -= 2;
 				addr = reg[regNr];
@@ -241,7 +241,7 @@ bool Instruction::getByteOperand (QBUS* bus, u16 (&reg)[8],
 			addr = bus->read (reg[7]);
             if (!addr.hasValue()) 
 				return false;
-			if (options & GetOperandOptions::AutoIncr)  
+			if (options & OperandOptions::AutoIncr)  
 			{
 				reg[7] += 2;
 			} else if(regNr == 7) {
@@ -258,7 +258,7 @@ bool Instruction::getByteOperand (QBUS* bus, u16 (&reg)[8],
 			addr = bus->read (reg[7]);
             if (!addr.hasValue()) 
 				return false;
-			if (options & GetOperandOptions::AutoIncr)  
+			if (options & OperandOptions::AutoIncr)  
 			{
 				reg[7] += 2;
 			} else if(regNr == 7) {
@@ -508,18 +508,18 @@ struct KD11INSN1 : public Instruction
 	// bool getByteOperand (QBUS* bus, u16 (&reg)[8], u16 &retValue);
 	//bool getByteAutoIncOperand (QBUS* bus, u16 (&reg)[8], u16 &retValue);
 	bool getOperand (QBUS* bus, u16 (&reg)[8], 
-		Bitmask<GetOperandOptions> options, u16 &retValue);
+		Bitmask<OperandOptions> options, u16 &retValue);
 	bool getAddress (QBUS* bus, u16 (&reg)[8], u16 &retValue);
 	bool putOperand (QBUS* bus, u16 (&reg)[8], 
-		Bitmask<GetOperandOptions> options, u16 val);
+		Bitmask<OperandOptions> options, u16 val);
 };
 
 bool KD11INSN1::getOperand (QBUS* bus, u16 (&reg)[8], 
-	Bitmask<GetOperandOptions> options, u16 &retValue)
+	Bitmask<OperandOptions> options, u16 &retValue)
 {
-	if (options & GetOperandOptions::Byte)
+	if (options & OperandOptions::Byte)
 		return Instruction::getByteOperand (bus, reg, options, mode, rn, retValue);
-	else if (options & GetOperandOptions::Word)
+	else if (options & OperandOptions::Word)
 		return Instruction::getWordOperand (bus, reg, options, mode, rn, retValue);
 	else
 		throw (std::string("Missing getOperand option"));
@@ -531,14 +531,14 @@ bool KD11INSN1::getAddress (QBUS* bus, u16 (&reg)[8], u16 &retValue)
 }
 
 bool KD11INSN1::putOperand (QBUS* bus, u16 (&reg)[8], 
-	Bitmask<GetOperandOptions> options, u16 value)
+	Bitmask<OperandOptions> options, u16 value)
 {
-	if (options & GetOperandOptions::Byte)
+	if (options & OperandOptions::Byte)
 		return Instruction::putByteOperand (bus, reg, mode, rn, value);
-	else if (options & GetOperandOptions::Word)
+	else if (options & OperandOptions::Word)
 		return Instruction::putWordOperand (bus, reg, mode, rn, value);
 	else
-		throw (std::string("Missing getOperand option"));
+		throw (std::string("Missing putOperand option"));
 }
 
 struct KD11INSN2 : public Instruction
@@ -550,20 +550,20 @@ struct KD11INSN2 : public Instruction
 	u16	opcode:4;
 
 	bool getSourceOperand (QBUS* bus, u16 (&reg)[8], 
-		Bitmask<GetOperandOptions> options, u16 &retValue);
+		Bitmask<OperandOptions> options, u16 &retValue);
 	bool getDestOperand (QBUS* bus, u16 (&reg)[8], 
-		Bitmask<GetOperandOptions> options, u16 &retValue);
+		Bitmask<OperandOptions> options, u16 &retValue);
 	bool putDestOperand (QBUS* bus, u16 (&reg)[8],
-		Bitmask<GetOperandOptions> options, u16 val);
+		Bitmask<OperandOptions> options, u16 val);
 };
 
 bool KD11INSN2::getSourceOperand (QBUS* bus, u16 (&reg)[8], 
-		Bitmask<GetOperandOptions> options, u16 &retValue)
+		Bitmask<OperandOptions> options, u16 &retValue)
 {
-	if (options & GetOperandOptions::Byte)
+	if (options & OperandOptions::Byte)
 		return Instruction::getByteOperand (bus, reg, options,
 			src_mode, src_rn, retValue);
-	else if (options & GetOperandOptions::Word)
+	else if (options & OperandOptions::Word)
 		return Instruction::getWordOperand (bus, reg, options, 
 			src_mode, src_rn, retValue);
 	else
@@ -571,12 +571,12 @@ bool KD11INSN2::getSourceOperand (QBUS* bus, u16 (&reg)[8],
 }
 
 bool KD11INSN2::getDestOperand (QBUS* bus, u16 (&reg)[8], 
-		Bitmask<GetOperandOptions> options, u16 &retValue)
+		Bitmask<OperandOptions> options, u16 &retValue)
 {
-	if (options & GetOperandOptions::Byte)
+	if (options & OperandOptions::Byte)
 		return Instruction::getByteOperand (bus, reg, options,
 			dst_mode, dst_rn, retValue);
-	else if (options & GetOperandOptions::Word)
+	else if (options & OperandOptions::Word)
 		return Instruction::getWordOperand (bus, reg, options, 
 			dst_mode, dst_rn, retValue);
 	else
@@ -584,12 +584,14 @@ bool KD11INSN2::getDestOperand (QBUS* bus, u16 (&reg)[8],
 }
 
 bool KD11INSN2::putDestOperand (QBUS* bus, u16 (&reg)[8], 
-	Bitmask<GetOperandOptions> options, u16 value)
+	Bitmask<OperandOptions> options, u16 value)
 {
-	if (options & GetOperandOptions::Byte)
+	if (options & OperandOptions::Byte)
 		return Instruction::putByteOperand (bus, reg, dst_mode, dst_rn, value);
-	else if (options & GetOperandOptions::Word)
+	else if (options & OperandOptions::Word)
 		return Instruction::putWordOperand (bus, reg, dst_mode, dst_rn, value);
+	else
+		throw (std::string("Missing putDestOperand option"));
 }
 
 struct KD11INSNBR
@@ -606,17 +608,17 @@ struct KD11INSNJSR : public Instruction
 	u16	opcode:7;
 
 	bool getOperand (QBUS* bus, u16 (&reg)[8], 
-		Bitmask<GetOperandOptions> options, u16 &retValue);
+		Bitmask<OperandOptions> options, u16 &retValue);
 	bool getAddress (QBUS* bus, u16 (&reg)[8], u16 &retValue);
 	bool putOperand (QBUS* bus, u16 (&reg)[8], u16 val);
 };
 
 bool KD11INSNJSR::getOperand (QBUS* bus, u16 (&reg)[8], 
-	Bitmask<GetOperandOptions> options, u16 &retValue)
+	Bitmask<OperandOptions> options, u16 &retValue)
 {
-	if (options & GetOperandOptions::Byte)
+	if (options & OperandOptions::Byte)
 		return Instruction::getByteOperand (bus, reg, options, mode, rn, retValue);
-	else if (options & GetOperandOptions::Word)
+	else if (options & OperandOptions::Word)
 		return Instruction::getWordOperand (bus, reg, options, mode, rn, retValue);
 	else
 		throw (std::string("Missing getOperand option"));
