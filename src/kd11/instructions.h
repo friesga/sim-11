@@ -23,6 +23,10 @@ protected:
 		u16 mode, u16 regNr, u16 &retValue);
 	bool getAddress (QBUS* bus, u16 (&reg)[8], 
 		u16 mode, u16 regNr, u16 &retValue);
+	bool putWordOperand (QBUS* bus, u16 (&reg)[8], u16 mode, 
+		u16 regNr, u16 val);
+	bool putByteOperand (QBUS* bus, u16 (&reg)[8], u16 mode,
+		u16 regNr, u8 val);
 };
 
 bool Instruction::getWordOperand (QBUS* bus, u16 (&reg)[8], 
@@ -336,6 +340,149 @@ bool Instruction::getAddress (QBUS* bus, u16 (&reg)[8],
 	}
 }
 
+// bool KD11CPU::writeW(QBUS* bus, u16 dst, u16 mode, u16 val)
+bool Instruction::putWordOperand (QBUS* bus, u16 (&reg)[8], u16 mode, 
+	u16 regNr, u16 val)
+{
+	CondData<u16> addr;
+	switch (mode)
+    {
+		case 0: /* Register */
+			reg[regNr] = val;
+            return true;
+
+		case 1: /* Register indirect */
+			return bus->writeWord (reg[regNr], val);
+
+		case 2: /* Autoincrement */
+			reg[regNr] &= 0xFFFE;
+			addr = reg[regNr];
+			reg[regNr] += 2;
+			return bus->writeWord (addr, val);
+
+		case 3: /* Autoincrement indirect */
+			reg[regNr] &= 0xFFFE;
+			addr = reg[regNr];
+			reg[regNr] += 2;
+			addr = bus->read (addr);
+            if (!addr.hasValue())
+                return false;
+
+			return bus->writeWord (addr, val);
+
+		case 4: /* Autodecrement */
+			reg[regNr] &= 0xFFFE;
+			reg[regNr] -= 2;
+			addr = reg[regNr];
+			return bus->writeWord (addr, val);
+
+		case 5: /* Autodecrement indirect */
+			reg[regNr] &= 0xFFFE;
+			reg[regNr] -= 2;
+			addr = reg[regNr];
+			addr = bus->read (addr);
+            if (!addr.hasValue())
+                return false;
+			return bus->writeWord (addr, val);
+
+		case 6: /* Index */
+			addr = bus->read (reg[7]);
+            if (!addr.hasValue())
+                return false;
+			reg[7] += 2;
+			addr += reg[regNr];
+			return bus->writeWord (addr, val);
+
+		case 7: /* Index indirect */
+			addr = bus->read (reg[7]);
+            if (!addr.hasValue())
+                return false;
+			reg[7] += 2;
+			addr += reg[regNr];
+			addr = bus->read (addr);
+            if (!addr.hasValue())
+                return false;
+			return bus->writeWord (addr, val);
+
+        default:
+            // Prevent compiler warning on not all paths returning a value
+            throw (std::string("Unexpected mode in writeW() call"));
+	}
+}
+
+
+// bool KD11CPU::writeB(QBUS* bus, u16 dst, u16 mode, u8 val)
+bool Instruction::putByteOperand (QBUS* bus, u16 (&reg)[8], u16 mode, u16 regNr, u8 val)
+{
+	CondData<u16> addr;
+	switch(mode)
+    {
+		case 0: /* Register */
+			reg[regNr] = (reg[regNr] & 0xFF00) | val;
+			return true;
+
+		case 1: /* Register deferred */
+			return bus->writeByte (reg[regNr], val);
+
+		case 2: /* Autoincrement */
+			addr = reg[regNr];
+			if(regNr == 6 || regNr == 7) {
+				reg[regNr] += 2;
+			} else {
+				reg[regNr]++;
+			}
+			return bus->writeByte (addr, val);
+
+		case 3: /* Autoincrement deferred */
+			addr = reg[regNr];
+			reg[regNr] += 2;
+			addr = bus->read (addr);
+            if (!addr.hasValue())
+                return false;
+			return bus->writeByte (addr, val);
+
+		case 4: /* Autodecrement */
+			if(regNr == 6 || regNr == 7) {
+				reg[regNr] -= 2;
+			} else {
+				reg[regNr]--;
+			}
+			addr = reg[regNr];
+			return bus->writeByte (addr, val);
+
+		case 5: /* Autodecrement deferred */
+			reg[regNr] -= 2;
+			addr = reg[regNr];
+			addr = bus->read (addr);
+            if (!addr.hasValue())
+                return false;
+			return bus->writeByte (addr, val);
+
+		case 6: /* Index */
+			addr = bus->read (reg[7]);
+            if (!addr.hasValue())
+                return false;
+			reg[7] += 2;
+			addr += reg[regNr];
+			return bus->writeByte (addr, val);
+
+		case 7: /* Index deferred */
+			addr = bus->read (reg[7]);
+            if (!addr.hasValue())
+                return false;
+			reg[7] += 2;
+			addr += reg[regNr];
+			addr = bus->read (addr);
+            if (!addr.hasValue())
+                return false;
+			return bus->writeByte (addr, val);
+
+        default:
+            // Prevent compiler warning on not all paths returning a value
+            throw (std::string("Unexpected mode in writeB() call"));
+	}
+}
+
 
 // (Try to) determine the byte order. To that end gcc provides the __BYTE__ORDER__
 // definition. Msvc has no such definition but we can safely assume that all
@@ -363,6 +510,8 @@ struct KD11INSN1 : public Instruction
 	bool getOperand (QBUS* bus, u16 (&reg)[8], 
 		Bitmask<GetOperandOptions> options, u16 &retValue);
 	bool getAddress (QBUS* bus, u16 (&reg)[8], u16 &retValue);
+	bool putOperand (QBUS* bus, u16 (&reg)[8], 
+		Bitmask<GetOperandOptions> options, u16 val);
 };
 
 bool KD11INSN1::getOperand (QBUS* bus, u16 (&reg)[8], 
@@ -381,6 +530,17 @@ bool KD11INSN1::getAddress (QBUS* bus, u16 (&reg)[8], u16 &retValue)
 	return Instruction::getAddress (bus, reg, mode, rn, retValue);
 }
 
+bool KD11INSN1::putOperand (QBUS* bus, u16 (&reg)[8], 
+	Bitmask<GetOperandOptions> options, u16 value)
+{
+	if (options & GetOperandOptions::Byte)
+		return Instruction::putByteOperand (bus, reg, mode, rn, value);
+	else if (options & GetOperandOptions::Word)
+		return Instruction::putWordOperand (bus, reg, mode, rn, value);
+	else
+		throw (std::string("Missing getOperand option"));
+}
+
 struct KD11INSN2 : public Instruction
 {
 	u16	dst_rn:3;
@@ -393,6 +553,8 @@ struct KD11INSN2 : public Instruction
 		Bitmask<GetOperandOptions> options, u16 &retValue);
 	bool getDestOperand (QBUS* bus, u16 (&reg)[8], 
 		Bitmask<GetOperandOptions> options, u16 &retValue);
+	bool putDestOperand (QBUS* bus, u16 (&reg)[8],
+		Bitmask<GetOperandOptions> options, u16 val);
 };
 
 bool KD11INSN2::getSourceOperand (QBUS* bus, u16 (&reg)[8], 
@@ -421,6 +583,14 @@ bool KD11INSN2::getDestOperand (QBUS* bus, u16 (&reg)[8],
 		throw (std::string("Missing getDestOperand option"));
 }
 
+bool KD11INSN2::putDestOperand (QBUS* bus, u16 (&reg)[8], 
+	Bitmask<GetOperandOptions> options, u16 value)
+{
+	if (options & GetOperandOptions::Byte)
+		return Instruction::putByteOperand (bus, reg, dst_mode, dst_rn, value);
+	else if (options & GetOperandOptions::Word)
+		return Instruction::putWordOperand (bus, reg, dst_mode, dst_rn, value);
+}
 
 struct KD11INSNBR
 {
@@ -438,6 +608,7 @@ struct KD11INSNJSR : public Instruction
 	bool getOperand (QBUS* bus, u16 (&reg)[8], 
 		Bitmask<GetOperandOptions> options, u16 &retValue);
 	bool getAddress (QBUS* bus, u16 (&reg)[8], u16 &retValue);
+	bool putOperand (QBUS* bus, u16 (&reg)[8], u16 val);
 };
 
 bool KD11INSNJSR::getOperand (QBUS* bus, u16 (&reg)[8], 
@@ -454,6 +625,11 @@ bool KD11INSNJSR::getOperand (QBUS* bus, u16 (&reg)[8],
 bool KD11INSNJSR::getAddress (QBUS* bus, u16 (&reg)[8], u16 &retValue)
 {
 	return Instruction::getAddress (bus, reg, mode, rn, retValue);
+}
+
+bool KD11INSNJSR::putOperand (QBUS* bus, u16 (&reg)[8], u16 value)
+{
+	return Instruction::putWordOperand (bus, reg, mode, rn, value);
 }
 
 struct KD11INSNRTS
