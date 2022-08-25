@@ -1,6 +1,7 @@
 #ifndef _INSTRUCTIONS_H_
 #define _INSTRUCTIONS_H_
 
+#include "kd11.h"
 #include "bitmask.h"
 
 // Get operand flags, used in Bitmask<GetOperandOptions>
@@ -15,16 +16,15 @@ enum class GetOperandOptions
 
 class Instruction
 {
-public:
+protected:
 	bool getWordOperand (QBUS* bus, u16 (&reg)[8], Bitmask<GetOperandOptions> options, 
 		u16 mode, u16 regNr, u16 &retValue);
 	bool getByteOperand (QBUS* bus, u16 (&reg)[8], Bitmask<GetOperandOptions> options, 
 		u16 mode, u16 regNr, u16 &retValue);
+	bool getAddress (QBUS* bus, u16 (&reg)[8], 
+		u16 mode, u16 regNr, u16 &retValue);
 };
 
-// getWordOperand is the most general version of the functions to get an
-// operand from an instruction. More specific versions use this generic
-// version to get their operand(s).
 bool Instruction::getWordOperand (QBUS* bus, u16 (&reg)[8], 
 	Bitmask<GetOperandOptions> options, u16 mode, u16 regNr, u16 &retValue)
 {
@@ -272,6 +272,71 @@ bool Instruction::getByteOperand (QBUS* bus, u16 (&reg)[8],
 	}
 }
 
+// ToDo: The result of all read() calls should be checked (instead of
+// returning zero).
+bool Instruction::getAddress (QBUS* bus, u16 (&reg)[8], 
+	u16 mode, u16 regNr, u16 &retValue)
+// CondData<u16> KD11CPU::getAddr(QBUS* bus, u16 dst, u16 mode)
+{
+	CondData<u16> addr;
+	switch (mode)
+    {
+		case 0: /* Register */
+			// TRCTrap(4, TRC_TRAP_RADDR);
+			// TRAP(busError); /* illegal instruction */
+            return false;
+
+		case 1: /* Register indirect */
+			retValue = reg[regNr];
+			return true;
+
+		case 2: /* Autoincrement */
+			addr = reg[regNr];
+			reg[regNr] += 2;
+			retValue = addr;
+			return true;
+
+		case 3: /* Autoincrement indirect */
+			addr = reg[regNr];
+			reg[regNr] += 2;
+			addr = bus->read (addr);
+			retValue = addr;
+			return true;
+
+		case 4: /* Autodecrement */
+			reg[regNr] -= 2;
+			addr = reg[regNr];
+			retValue = addr;
+			return true;
+
+		case 5: /* Autodecrement indirect */
+			reg[regNr] -= 2;
+			addr = reg[regNr];
+			addr = bus->read (addr);
+			retValue = addr;
+			return true;
+
+		case 6: /* Index */
+			addr = bus->read (reg[7]);
+			reg[7] += 2;
+			addr += reg[regNr];
+			retValue = addr;
+			return true;
+
+		case 7: /* Index indirect */
+			addr = bus->read (reg[7]);
+			reg[7] += 2;
+			addr += reg[regNr];
+			addr = bus->read (addr);
+			retValue = addr;
+			return true;
+
+		default:
+            return false;
+	}
+}
+
+
 // (Try to) determine the byte order. To that end gcc provides the __BYTE__ORDER__
 // definition. Msvc has no such definition but we can safely assume that all
 // win32 machines are little endian.
@@ -297,6 +362,7 @@ struct KD11INSN1 : public Instruction
 	//bool getByteAutoIncOperand (QBUS* bus, u16 (&reg)[8], u16 &retValue);
 	bool getOperand (QBUS* bus, u16 (&reg)[8], 
 		Bitmask<GetOperandOptions> options, u16 &retValue);
+	bool getAddress (QBUS* bus, u16 (&reg)[8], u16 &retValue);
 };
 
 bool KD11INSN1::getOperand (QBUS* bus, u16 (&reg)[8], 
@@ -310,6 +376,10 @@ bool KD11INSN1::getOperand (QBUS* bus, u16 (&reg)[8],
 		throw (std::string("Missing getOperand option"));
 }
 
+bool KD11INSN1::getAddress (QBUS* bus, u16 (&reg)[8], u16 &retValue)
+{
+	return Instruction::getAddress (bus, reg, mode, rn, retValue);
+}
 
 struct KD11INSN2 : public Instruction
 {
@@ -358,13 +428,20 @@ struct KD11INSNBR
 	u16	opcode:8;
 };
 
-struct KD11INSNJSR
+struct KD11INSNJSR : public Instruction
 {
 	u16	rn:3;
 	u16	mode:3;
 	u16	r:3;
 	u16	opcode:7;
+
+	bool getAddress (QBUS* bus, u16 (&reg)[8], u16 &retValue);
 };
+
+bool KD11INSNJSR::getAddress (QBUS* bus, u16 (&reg)[8], u16 &retValue)
+{
+	return Instruction::getAddress (bus, reg, mode, rn, retValue);
+}
 
 struct KD11INSNRTS
 {

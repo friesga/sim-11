@@ -669,6 +669,7 @@ bool KD11CPU::writeB(QBUS* bus, u16 dst, u16 mode, u8 val)
 	}
 }
 
+#if 0
 // ToDo: The result of all read() calls should be checked (instead of
 // returning zero).
 CondData<u16> KD11CPU::getAddr(QBUS* bus, u16 dst, u16 mode)
@@ -723,6 +724,7 @@ CondData<u16> KD11CPU::getAddr(QBUS* bus, u16 dst, u16 mode)
             return {};
 	}
 }
+#endif
 
 // The following macro's read a word or byte from the bus in the
 // form of a CondData object. If the object contains a valid value
@@ -889,9 +891,15 @@ void KD11CPU::execInstr(QBUS* bus)
                     break;
 
                 case 00001: /* JMP */
-                    tmpValue = getAddr(bus, insn1->rn, insn1->mode);
-                    RETURN_IF(!tmpValue.hasValue());
-                    r[7] = tmpValue.value();
+                    // tmpValue = getAddr(bus, insn1->rn, insn1->mode);
+                    // RETURN_IF(!tmpValue.hasValue());
+                    // r[7] = tmpValue.value();
+                    if (!insn1->getAddress (bus, r, r[7]))
+                    {
+                        // Illegal instruction
+                        TRCTrap(4, TRC_TRAP_RADDR);
+			            TRAP(busError); 
+                    }
                     break;
 
                 case 00002: /* 00 02 xx group */
@@ -1002,11 +1010,21 @@ void KD11CPU::execInstr(QBUS* bus)
                 case 00045:
                 case 00046:
                 case 00047:
-                    tmpValue = getAddr(bus, insnjsr->rn, insnjsr->mode);
-                    src = r[insnjsr->r];
-                    RETURN_IF(!tmpValue.hasValue());
-                    dst = tmpValue.value();
-
+                    // tmpValue = getAddr(bus, insnjsr->rn, insnjsr->mode);
+                    // src = r[insnjsr->r];
+                    // RETURN_IF(!tmpValue.hasValue());
+                    // dst = tmpValue.value();
+                    {
+                        bool ok = insn1->getAddress (bus, r, dst);
+                        src = r[insnjsr->r];
+                        if (!ok)
+                        {
+                            // Illegal instruction
+                            TRCTrap(4, TRC_TRAP_RADDR);
+			                TRAP(busError); 
+                            return;
+                        }
+                    }
                     r[6] -= 2;
                     WRITE(r[6], src);
                     r[insnjsr->r] = r[7];
