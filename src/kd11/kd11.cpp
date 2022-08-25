@@ -1862,7 +1862,7 @@ void KD11CPU::execInstr(QBUS* bus)
             // tmp = CPUREADB(insn2->src_rn, insn2->src_mode);
             if (!insn2->getSourceOperand (bus, r, 
                 Bitmask(GetOperandOptions::Byte |
-                    GetOperandOptions::AutoIncr),tmp))
+                    GetOperandOptions::AutoIncr), tmp))
                 return;
             tmp = (s8)tmp;
             if (insn2->dst_mode == 0)
@@ -1879,8 +1879,18 @@ void KD11CPU::execInstr(QBUS* bus)
             break;
 
         case 012: /* CMPB */
-            src = CPUREADB(insn2->src_rn, insn2->src_mode);
-            dst = CPUREADB(insn2->dst_rn, insn2->dst_mode);
+            // src = CPUREADB(insn2->src_rn, insn2->src_mode);
+            if (!insn2->getSourceOperand (bus, r, 
+                Bitmask(GetOperandOptions::Byte |
+                    GetOperandOptions::AutoIncr), src))
+                return;
+
+            // dst = CPUREADB(insn2->dst_rn, insn2->dst_mode);
+            if (!insn2->getDestOperand (bus, r, 
+                Bitmask(GetOperandOptions::Byte |
+                    GetOperandOptions::AutoIncr), dst))
+                return;
+
             tmp = (u8)(src - dst);
             PSW_EQ(PSW_N, tmp & 0x80);
             PSW_EQ(PSW_Z, !tmp);
@@ -1890,8 +1900,18 @@ void KD11CPU::execInstr(QBUS* bus)
             break;
 
         case 013: /* BITB */
-            src = CPUREADB(insn2->src_rn, insn2->src_mode);
-            dst = CPUREADB(insn2->dst_rn, insn2->dst_mode);
+            // src = CPUREADB(insn2->src_rn, insn2->src_mode);
+            if (!insn2->getSourceOperand (bus, r, 
+                Bitmask(GetOperandOptions::Byte |
+                    GetOperandOptions::AutoIncr), src))
+                return;
+
+            // dst = CPUREADB(insn2->dst_rn, insn2->dst_mode);
+            if (!insn2->getDestOperand (bus, r, 
+                Bitmask(GetOperandOptions::Byte |
+                    GetOperandOptions::AutoIncr), dst))
+                return;
+
             tmp = src & dst;
             PSW_EQ(PSW_N, tmp & 0x80);
             PSW_EQ(PSW_Z, !tmp);
@@ -1899,8 +1919,17 @@ void KD11CPU::execInstr(QBUS* bus)
             break;
 
         case 014: /* BICB */
-            src = CPUREADB(insn2->src_rn, insn2->src_mode);
-            dst = CPUREADNB(insn2->dst_rn, insn2->dst_mode);
+            // src = CPUREADB(insn2->src_rn, insn2->src_mode);
+            if (!insn2->getSourceOperand (bus, r, 
+                Bitmask(GetOperandOptions::Byte |
+                    GetOperandOptions::AutoIncr), src))
+                return;
+
+            // dst = CPUREADNB(insn2->dst_rn, insn2->dst_mode);
+            if (!insn2->getDestOperand (bus, r, 
+                Bitmask(GetOperandOptions::Byte), dst))
+                return;
+
             tmp = (u8)(~src & dst);
             CPUWRITEB(insn2->dst_rn, insn2->dst_mode, tmp);
             PSW_EQ(PSW_N, tmp & 0x80);
@@ -1909,8 +1938,17 @@ void KD11CPU::execInstr(QBUS* bus)
             break;
 
         case 015: /* BISB */
-            src = CPUREADB(insn2->src_rn, insn2->src_mode);
-            dst = CPUREADNB(insn2->dst_rn, insn2->dst_mode);
+            // src = CPUREADB(insn2->src_rn, insn2->src_mode);
+            if (!insn2->getSourceOperand (bus, r, 
+                Bitmask(GetOperandOptions::Byte |
+                    GetOperandOptions::AutoIncr), src))
+                return;
+
+            // dst = CPUREADNB(insn2->dst_rn, insn2->dst_mode);
+            if (!insn2->getDestOperand (bus, r, 
+                Bitmask(GetOperandOptions::Byte), dst))
+                return;
+
             tmp = src | dst;
             CPUWRITEB(insn2->dst_rn, insn2->dst_mode, tmp);
             PSW_EQ(PSW_N, tmp & 0x80);
@@ -1938,6 +1976,7 @@ void KD11CPU::execInstr(QBUS* bus)
                 && ((src & 0x8000) == (tmp & 0x8000)));
             PSW_EQ(PSW_C, ((u32)dst - (u32)src) & 0x10000);
             break;
+
         default: /* unused */
             TRCTrap(010, TRC_TRAP_ILL);
             TRAP(illegalInstructionTrap);
