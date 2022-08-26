@@ -8,14 +8,11 @@
 
 #define	TRAP(trap)		setTrap(bus, &trap)
 
-// Constructor
-// ToDo: Reinitialize K11ODT
-KD11CPU::KD11CPU()
-	:
-	runState{0},
-	r{0}, 
-	psw{0},
-    trap_ {nullptr}
+// KD11 functions
+
+KD11::KD11 (QBUS *bus)
+    :
+    bus_ {bus}
 {}
 
 void KD11::reset()
@@ -28,9 +25,6 @@ KD11CPU &KD11::cpu()
 {
 	return cpu_;
 }
-
-#define	READ(addr)			(bus->read((addr)))
-#define	WRITE(addr, val)	(bus->writeWord((addr), (val)))
 
 #define RETURN_IF(cond) \
     if (cond) return;
@@ -81,6 +75,7 @@ void KD11ODT::inputError()
 	buf_sz = 4;
 }
 
+// ToDo: Use bus->writeByte() as characters are written?
 void KD11ODT::step(QBUS* bus)
 {
 	/* odt */
@@ -100,11 +95,11 @@ void KD11ODT::step(QBUS* bus)
 			break;
 
 		case ODT_STATE_WAIT:
-			if (READ(0177560) & 0x80) 
+			if (bus->read (0177560) & 0x80) 
 			{
 				/* ch available */
-				u16 c = READ(0177562);
-				WRITE(0177566, (u8) c);
+				u16 c = bus->read (0177562);
+				bus->writeWord (0177566, (u8) c);
 				switch((u8) c) 
 				{
 					case '$':
@@ -146,27 +141,27 @@ void KD11ODT::step(QBUS* bus)
 			break;
 
 		case ODT_STATE_WR:
-			if (READ(0177564) & 0x80)
+			if (bus->read (0177564) & 0x80)
 			{
-				WRITE(0177566, buf[buf_r++]);
+				bus->writeWord (0177566, buf[buf_r++]);
 				if (buf_r == buf_sz)
 					state = next;
 			}
 			break;
 
 		case ODT_STATE_ADDR:
-			if (READ(0177560) & 0x80) 
+			if (bus->read (0177560) & 0x80) 
 			{ 
 				/* ch available */
-				u16 ch = READ(0177562);
+				u16 ch = bus->read (0177562);
 				u8 c = (u8) ch;
-				WRITE(0177566, c);
+				bus->writeWord (0177566, c);
 				if ((u8) c == '/') 
 				{ 
 					/* delimit */
                     // ToDo: The address might be invalid and in that case
                     // ODT should respond with a '?' instead of a zero.
-					u16 val = READ(addr).valueOr(0);
+					u16 val = bus->read (addr).valueOr(0);
 					clear();
 					writeOctal(val);
 					write(' ');
@@ -192,12 +187,12 @@ void KD11ODT::step(QBUS* bus)
 			break;
 
 		case ODT_STATE_REG:
-			if (READ(0177560) & 0x80) 
+			if (bus->read (0177560) & 0x80) 
 			{ 
 				/* ch available */
-				u16 ch = READ(0177562);
+				u16 ch = bus->read (0177562);
 				u8 c = (u8) ch;
-				WRITE(0177566, c);
+				bus->writeWord (0177566, c);
 				state = ODT_STATE_REG_WAIT;
 				if (c >= '0' && c <= '7') 
 					addr = c - '0'; 
@@ -209,16 +204,16 @@ void KD11ODT::step(QBUS* bus)
 			break;
 
 		case ODT_STATE_VAL:
-			if (READ(0177560) & 0x80)
+			if (bus->read (0177560) & 0x80)
 			{ 
 				/* ch available */
-				u16 ch = READ(0177562);
+				u16 ch = bus->read (0177562);
 				u8 c = (u8) ch;
-				WRITE(0177566, c);
+				bus->writeWord (0177566, c);
 				if (c == '\r' || c == '\n') 
 				{
 					if (input)
-						WRITE(addr, val);
+						bus->writeWord(addr, val);
 				} 
 				else if(c >= '0' && c <= '7') 
 				{
@@ -244,7 +239,7 @@ void KD11ODT::step(QBUS* bus)
 
 					addr += 2;
 					val = 0;
-					tmpValue = READ(addr);
+					tmpValue = bus->read (addr);
 
 					clear();
 					write('\r');
@@ -262,12 +257,12 @@ void KD11ODT::step(QBUS* bus)
 			break;
 
 		case ODT_STATE_REG_WAIT:
-			if (READ(0177560) & 0x80) 
+			if (bus->read (0177560) & 0x80) 
 			{ 
 				/* ch available */
-				u16 ch = READ(0177562);
+				u16 ch = bus->read (0177562);
 				u8 c = (u8) ch;
-				WRITE(0177566, c);
+				bus->writeWord (0177566, c);
 				if (c == '/') 
 				{
 					u16 val;
@@ -290,12 +285,12 @@ void KD11ODT::step(QBUS* bus)
 			break;
 
 		case ODT_STATE_REG_VAL:
-			if (READ(0177560) & 0x80) 
+			if (bus->read (0177560) & 0x80) 
 			{ 
 				/* ch available */
-				u16 ch = READ(0177562);
+				u16 ch = bus->read (0177562);
 				u8 c = (u8) ch;
-				WRITE(0177566, c);
+				bus->writeWord (0177566, c);
 				if (c == '\r' || c == '\n') 
 				{
 					if (input) 
@@ -348,6 +343,17 @@ void KD11ODT::step(QBUS* bus)
 	}
 }
 
+// Constructor
+// ToDo: Reinitialize K11ODT
+KD11CPU::KD11CPU(QBUS *bus)
+	:
+	runState{0},
+	r{0}, 
+	psw{0},
+    bus_ {bus},
+    trap_ {nullptr}
+{}
+
 void KD11CPU::reset()
 {
 	r[7] = 0173000;
@@ -356,8 +362,23 @@ void KD11CPU::reset()
 	runState = STATE_HALT;
 }
 
+CondData<u16> KD11CPU::fetchWord (u16 address)
+{
+    return bus_->read (address);
+}
+
+bool KD11CPU::putWord (u16 address, u16 value)
+{
+    return bus_->writeWord (address, value);
+}
+
+bool KD11CPU::putByte (u16 address, u8 value)
+{
+    return bus_->writeByte (address, value);
+}
+
 #define	READCPU(addr)	\
-    (tmpValue = bus->read(addr)).valueOr(0);
+    (tmpValue = fetchWord(addr)).valueOr(0);
 
 typedef union {
 	float	_f32;
@@ -376,9 +397,9 @@ void KD11CPU::step(QBUS* bus)
     {
         TRCSETIGNBUS();
         u16 code[3];
-        code[0] = READ(r[7] + 0);
-        code[1] = READ(r[7] + 2);
-        code[2] = READ(r[7] + 4);
+        code[0] = fetchWord(r[7] + 0);
+        code[1] = fetchWord(r[7] + 2);
+        code[2] = fetchWord(r[7] + 4);
         TRCStep(r, psw, code);
         TRCCLRIGNBUS();
     }
@@ -402,7 +423,7 @@ void KD11CPU::execInstr(QBUS* bus)
     u16 tmp, tmp2;
     u16 src, dst;
     s32 tmps32;
-    CondData<u16> tmpValue;     // Used in READCPU macro
+    CondData<u16> tmpValue;     // Used in fetchWordCPU macro
 #ifdef USE_FLOAT
     FLOAT f1, f2, f3;
 #endif
@@ -413,7 +434,7 @@ void KD11CPU::execInstr(QBUS* bus)
         return;
 
     // Get next instruction to execute and move PC forward
-    u16 insn = READ(r[7]);
+    u16 insn = fetchWord(r[7]);
     r[7] += 2;
 
     // Get pointers to the possible instruction formats
@@ -494,9 +515,6 @@ void KD11CPU::execInstr(QBUS* bus)
                     break;
 
                 case 00001: /* JMP */
-                    // tmpValue = getAddr(bus, insn1->rn, insn1->mode);
-                    // RETURN_IF(!tmpValue.hasValue());
-                    // r[7] = tmpValue.value();
                     if (!insn1->getAddress (bus, r, r[7]))
                     {
                         // Illegal instruction
@@ -511,7 +529,7 @@ void KD11CPU::execInstr(QBUS* bus)
                     {
                         /* RTS */
                         r[7] = r[insnrts->rn];
-                        r[insnrts->rn] = READ(r[6]);
+                        r[insnrts->rn] = fetchWord(r[6]);
                         r[6] += 2;
                     }
                     else if ((insn & 0177740) == 0000240)
@@ -618,10 +636,6 @@ void KD11CPU::execInstr(QBUS* bus)
                 case 00045:
                 case 00046:
                 case 00047:
-                    // tmpValue = getAddr(bus, insnjsr->rn, insnjsr->mode);
-                    // src = r[insnjsr->r];
-                    // RETURN_IF(!tmpValue.hasValue());
-                    // dst = tmpValue.value();
                     {
                         bool ok = insn1->getAddress (bus, r, dst);
                         src = r[insnjsr->r];
@@ -634,13 +648,12 @@ void KD11CPU::execInstr(QBUS* bus)
                         }
                     }
                     r[6] -= 2;
-                    WRITE(r[6], src);
+                    putWord (r[6], src);
                     r[insnjsr->r] = r[7];
                     r[7] = dst;
                     break;
 
                 case 00050: /* CLR */
-                    // CPUWRITEW(insn1->rn, insn1->mode, 0);
                     if (!insn1->putOperand (bus, r, 
                             Bitmask(OperandOptions::Word), 0))
                         return;
@@ -839,7 +852,7 @@ void KD11CPU::execInstr(QBUS* bus)
                 case 00064: /* MARK */
                     r[6] = r[7] + 2 * insnmark->nn;
                     r[7] = r[5];
-                    r[5] = READ(r[6]);
+                    r[5] = fetchWord(r[6]);
                     r[6] += 2;
                     break;
 
@@ -1161,16 +1174,16 @@ void KD11CPU::execInstr(QBUS* bus)
                     {
 #ifdef USE_FLOAT
                         case 007500: /* FADD */
-                            f1._u32 = (READ(r[insnrts->rn] + 4) << 16)
-                                | READ(r[insnrts->rn] + 6);
-                            f2._u32 = (READ(r[insnrts->rn]) << 16)
-                                | READ(r[insnrts->rn] + 2);
+                            f1._u32 = (fetchWord(r[insnrts->rn] + 4) << 16)
+                                | fetchWord(r[insnrts->rn] + 6);
+                            f2._u32 = (fetchWord(r[insnrts->rn]) << 16)
+                                | fetchWord(r[insnrts->rn] + 2);
                             f3._f32 = f1._f32 + f2._f32;
                             /* TODO: result <= 2**-128 -> result = 0 */
                             /* TODO: implement traps */
-                            WRITE(r[insnrts->rn] + 4,
+                            putWord (r[insnrts->rn] + 4,
                                 (u16)(f3._u32 >> 16));
-                            WRITE(r[insnrts->rn] + 6, (u16)f3._u32);
+                            putWord (r[insnrts->rn] + 6, (u16)f3._u32);
                             r[insnrts->rn] += 4;
                             PSW_EQ(PSW_N, f3._f32 < 0);
                             PSW_EQ(PSW_Z, f3._f32 == 0);
@@ -1178,16 +1191,16 @@ void KD11CPU::execInstr(QBUS* bus)
                             PSW_CLR(PSW_C);
                             break;
                         case 007501: /* FSUB */
-                            f1._u32 = (READ(r[insnrts->rn] + 4) << 16)
-                                | READ(r[insnrts->rn] + 6);
-                            f2._u32 = (READ(r[insnrts->rn]) << 16)
-                                | READ(r[insnrts->rn] + 2);
+                            f1._u32 = (fetchWord(r[insnrts->rn] + 4) << 16)
+                                | fetchWord(r[insnrts->rn] + 6);
+                            f2._u32 = (fetchWord(r[insnrts->rn]) << 16)
+                                | fetchWord(r[insnrts->rn] + 2);
                             f3._f32 = f1._f32 - f2._f32;
                             /* TODO: result <= 2**-128 -> result = 0 */
                             /* TODO: implement traps */
-                            WRITE(r[insnrts->rn] + 4,
+                            putWord (r[insnrts->rn] + 4,
                                 (u16)(f3._u32 >> 16));
-                            WRITE(r[insnrts->rn] + 6, (u16)f3._u32);
+                            putWord (r[insnrts->rn] + 6, (u16)f3._u32);
                             r[insnrts->rn] += 4;
                             PSW_EQ(PSW_N, f3._f32 < 0);
                             PSW_EQ(PSW_Z, f3._f32 == 0);
@@ -1195,16 +1208,16 @@ void KD11CPU::execInstr(QBUS* bus)
                             PSW_CLR(PSW_C);
                             break;
                         case 007502: /* FMUL */
-                            f1._u32 = (READ(r[insnrts->rn] + 4) << 16)
-                                | READ(r[insnrts->rn] + 6);
-                            f2._u32 = (READ(r[insnrts->rn]) << 16)
-                                | READ(r[insnrts->rn] + 2);
+                            f1._u32 = (fetchWord(r[insnrts->rn] + 4) << 16)
+                                | fetchWord(r[insnrts->rn] + 6);
+                            f2._u32 = (fetchWord(r[insnrts->rn]) << 16)
+                                | fetchWord(r[insnrts->rn] + 2);
                             f3._f32 = f1._f32 * f2._f32;
                             /* TODO: result <= 2**-128 -> result = 0 */
                             /* TODO: implement traps */
-                            WRITE(r[insnrts->rn] + 4,
+                            putWord (r[insnrts->rn] + 4,
                                 (u16)(f3._u32 >> 16));
-                            WRITE(r[insnrts->rn] + 6, (u16)f3._u32);
+                            putWord (r[insnrts->rn] + 6, (u16)f3._u32);
                             r[insnrts->rn] += 4;
                             PSW_EQ(PSW_N, f3._f32 < 0);
                             PSW_EQ(PSW_Z, f3._f32 == 0);
@@ -1212,18 +1225,18 @@ void KD11CPU::execInstr(QBUS* bus)
                             PSW_CLR(PSW_C);
                             break;
                         case 007503: /* FDIV */
-                            f1._u32 = (READ(r[insnrts->rn] + 4) << 16)
-                                | READ(r[insnrts->rn] + 6);
-                            f2._u32 = (READ(r[insnrts->rn]) << 16)
-                                | READ(r[insnrts->rn] + 2);
+                            f1._u32 = (fetchWord(r[insnrts->rn] + 4) << 16)
+                                | fetchWord(r[insnrts->rn] + 6);
+                            f2._u32 = (fetchWord(r[insnrts->rn]) << 16)
+                                | fetchWord(r[insnrts->rn] + 2);
                             if (f2._f32 != 0)
                             {
                                 f3._f32 = f1._f32 / f2._f32;
                                 /* TODO: result <= 2**-128 -> result = 0 */
                                 /* TODO: implement traps */
-                                WRITE(r[insnrts->rn] + 4,
+                                putWord (r[insnrts->rn] + 4,
                                     (u16)(f3._u32 >> 16));
-                                WRITE(r[insnrts->rn] + 6,
+                                putWord (r[insnrts->rn] + 6,
                                     (u16)f3._u32);
                                 PSW_EQ(PSW_N, f3._f32 < 0);
                                 PSW_EQ(PSW_Z, f3._f32 == 0);
@@ -1786,7 +1799,7 @@ void KD11CPU::handleTraps(QBUS* bus)
 	// bus time out. In that case the CPU is halted.
 	// ToDo: Remove code duplication
 	r[6] -= 2;
-	if (!WRITE(r[6], psw))
+	if (!putWord (r[6], psw))
 	{
 		TRCCPUEvent(TRC_CPU_DBLBUS, r[6]);
         // ToDo: All interrupts should be cleared?
@@ -1796,7 +1809,7 @@ void KD11CPU::handleTraps(QBUS* bus)
 	}
 
 	r[6] -= 2;
-	if (!WRITE(r[6], r[7]))
+	if (!putWord (r[6], r[7]))
 	{
 		TRCCPUEvent(TRC_CPU_DBLBUS, r[6]);
 		trap_ = nullptr;
@@ -1806,7 +1819,7 @@ void KD11CPU::handleTraps(QBUS* bus)
 
 	// Read new PC and PSW from the trap vector. These read's could also
 	// result in a bus time out.
-    tmpValue = READ(trapToProcess);
+    tmpValue = fetchWord(trapToProcess);
     r[7] = tmpValue.valueOr(0);
     if (!tmpValue.hasValue())
 	{
@@ -1816,7 +1829,7 @@ void KD11CPU::handleTraps(QBUS* bus)
 		return;
 	}
 
-    tmpValue = READ(trapToProcess + 2);
+    tmpValue = fetchWord(trapToProcess + 2);
     psw = tmpValue.valueOr(0);
     if (!tmpValue.hasValue())
 	{

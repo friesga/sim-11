@@ -46,7 +46,7 @@ class KD11CPU
 public:
 	friend class KD11ODT;
 
-	KD11CPU();
+	KD11CPU(QBUS *bus);
 	void reset();
 	void step(QBUS* bus);
 	void handleTraps(QBUS* bus);
@@ -56,15 +56,14 @@ public:
 	u16	r[8];
 
 private:
-	CondData<u16> readW(QBUS* bus, u16 dst, u16 mode, int inc);
-	CondData<u8> readB(QBUS* bus, u16 dst, u16 mode, int inc);
-	bool writeW(QBUS* bus, u16 dst, u16 mode, u16 val);
-	bool writeB(QBUS* bus, u16 dst, u16 mode, u8 val);
-	CondData<u16> getAddr(QBUS* bus, u16 dst, u16 mode);
 	void setTrap(QBUS *bus, InterruptRequest const *ir);
 	void execInstr(QBUS* bus);
 	u8 cpuPriority();
+	CondData<u16> fetchWord (u16 address);
+	bool putWord (u16 address, u16 value);
+	bool putByte (u16 address, u8 value);
 
+	QBUS *bus_;
 	u16	psw;
 
 	// A trap is a special kind of interrupt, internal to the CPU. There
@@ -112,14 +111,16 @@ private:
 class KD11
 {
 public:
+	KD11 (QBUS *bus);
 	void reset();
 	void step(QBUS* bus);
 	// Give main() access to the CPU to set PC and runState
 	KD11CPU &cpu();
 
 private:
-	KD11CPU cpu_;
-	KD11ODT	odt{cpu_};
+	QBUS *bus_;
+	KD11CPU cpu_ {bus_};
+	KD11ODT	odt {cpu_};
 };
 
 
