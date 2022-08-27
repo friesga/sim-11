@@ -515,7 +515,7 @@ void KD11CPU::execInstr(QBUS* bus)
                     break;
 
                 case 00001: /* JMP */
-                    if (!insn1->getAddress (bus, r, r[7]))
+                    if (!insn1->getAddress (this, r, r[7]))
                     {
                         // Illegal instruction
                         TRCTrap(4, TRC_TRAP_RADDR);
@@ -553,12 +553,12 @@ void KD11CPU::execInstr(QBUS* bus)
                     break;
 
                 case 00003: /* SWAB */
-                    if (!insn1->getOperand(bus, r, 
+                    if (!insn1->getOperand(this, r, 
                             Bitmask(OperandOptions::Word), tmp))
                         return;
                     tmp = ((tmp & 0x00FF) << 8) | ((tmp >> 8) & 0xFF);
                     
-                    if (!insn1->putOperand (bus, r, 
+                    if (!insn1->putOperand (this, r, 
                             Bitmask(OperandOptions::Word), tmp))
                         return;
 
@@ -637,7 +637,7 @@ void KD11CPU::execInstr(QBUS* bus)
                 case 00046:
                 case 00047:
                     {
-                        bool ok = insn1->getAddress (bus, r, dst);
+                        bool ok = insn1->getAddress (this, r, dst);
                         src = r[insnjsr->r];
                         if (!ok)
                         {
@@ -654,7 +654,7 @@ void KD11CPU::execInstr(QBUS* bus)
                     break;
 
                 case 00050: /* CLR */
-                    if (!insn1->putOperand (bus, r, 
+                    if (!insn1->putOperand (this, r, 
                             Bitmask(OperandOptions::Word), 0))
                         return;
                     PSW_CLR(PSW_N | PSW_V | PSW_C);
@@ -662,12 +662,12 @@ void KD11CPU::execInstr(QBUS* bus)
                     break;
 
                 case 00051: /* COM */
-                    if (!insn1->getOperand(bus, r, 
+                    if (!insn1->getOperand(this, r, 
                             Bitmask(OperandOptions::Word), tmp))
                         return;
                     tmp = ~tmp;
                     
-                    if (!insn1->putOperand (bus, r, 
+                    if (!insn1->putOperand (this, r, 
                             Bitmask(OperandOptions::Word), tmp))
                          return;
                     PSW_CLR(PSW_V);
@@ -677,12 +677,12 @@ void KD11CPU::execInstr(QBUS* bus)
                     break;
 
                 case 00052: /* INC */
-                    if (!insn1->getOperand(bus, r, 
+                    if (!insn1->getOperand(this, r, 
                             Bitmask(OperandOptions::Word), src))
                         return;
                     tmp = src + 1;
                     
-                    if (!insn1->putOperand (bus, r, 
+                    if (!insn1->putOperand (this, r, 
                             Bitmask(OperandOptions::Word), tmp))
                         return;
 
@@ -692,12 +692,12 @@ void KD11CPU::execInstr(QBUS* bus)
                     break;
 
                 case 00053: /* DEC */
-                    if (!insn1->getOperand(bus, r, 
+                    if (!insn1->getOperand (this, r, 
                             Bitmask(OperandOptions::Word), src))
                         return;
                     tmp = src - 1;
                     
-                    if (!insn1->putOperand (bus, r, 
+                    if (!insn1->putOperand (this, r, 
                             Bitmask(OperandOptions::Word), tmp))
                         return;
 
@@ -707,14 +707,14 @@ void KD11CPU::execInstr(QBUS* bus)
                     break;
 
                 case 00054: /* NEG */
-                    if (!insn1->getOperand(bus, r, 
+                    if (!insn1->getOperand(this, r, 
                             Bitmask(OperandOptions::Word), tmp))
                         return;
 
                     if (tmp != 0100000)
                         tmp = -tmp;
 
-                    if (!insn1->putOperand (bus, r, 
+                    if (!insn1->putOperand (this, r, 
                             Bitmask(OperandOptions::Word), tmp))
                         return;
 
@@ -725,14 +725,14 @@ void KD11CPU::execInstr(QBUS* bus)
                     break;
 
                 case 00055: /* ADC */
-                    if (!insn1->getOperand(bus, r, 
+                    if (!insn1->getOperand (this, r, 
                             Bitmask(OperandOptions::Word), src))
                         return;
 
                     tmp2 = PSW_GET(PSW_C) ? 1 : 0;
                     tmp = src + tmp2;
                     
-                    if (!insn1->putOperand (bus, r, 
+                    if (!insn1->putOperand (this, r, 
                             Bitmask(OperandOptions::Word), tmp))
                         return;
 
@@ -743,14 +743,14 @@ void KD11CPU::execInstr(QBUS* bus)
                     break;
 
                 case 00056: /* SBC */
-                    if (!insn1->getOperand(bus, r, 
+                    if (!insn1->getOperand (this, r, 
                             Bitmask(OperandOptions::Word), src))
                         return;
 
                     tmp2 = PSW_GET(PSW_C) ? 1 : 0;
                     tmp = src - tmp2;
                     
-                    if (!insn1->putOperand (bus, r, 
+                    if (!insn1->putOperand (this, r, 
                             Bitmask(OperandOptions::Word), tmp))
                         return;
 
@@ -761,7 +761,7 @@ void KD11CPU::execInstr(QBUS* bus)
                     break;
 
                 case 00057: /* TST */
-                    if (!insn1->getOperand(bus, r, 
+                    if (!insn1->getOperand (this, r, 
                         Bitmask(OperandOptions::Word |
                             OperandOptions::AutoIncr), tmp))
                         return;
@@ -773,7 +773,7 @@ void KD11CPU::execInstr(QBUS* bus)
                     break;
 
                 case 00060: /* ROR */
-                    if (!insn1->getOperand(bus, r, 
+                    if (!insn1->getOperand (this, r, 
                             Bitmask(OperandOptions::Word), src))
                         return;
                     tmp2 = PSW_GET(PSW_C);
@@ -781,7 +781,7 @@ void KD11CPU::execInstr(QBUS* bus)
                     if (tmp2)
                         tmp |= 0x8000;
 
-                    if (!insn1->putOperand (bus, r, 
+                    if (!insn1->putOperand (this, r, 
                             Bitmask(OperandOptions::Word), tmp))
                         return;
 
@@ -792,7 +792,7 @@ void KD11CPU::execInstr(QBUS* bus)
                     break;
 
                 case 00061: /* ROL */
-                    if (!insn1->getOperand(bus, r, 
+                    if (!insn1->getOperand (this, r, 
                             Bitmask(OperandOptions::Word), src))
                         return;
                     tmp2 = PSW_GET(PSW_C);
@@ -800,7 +800,7 @@ void KD11CPU::execInstr(QBUS* bus)
                     if (tmp2)
                         tmp |= 0x0001;
 
-                    if (!insn1->putOperand (bus, r, 
+                    if (!insn1->putOperand (this, r, 
                             Bitmask(OperandOptions::Word), tmp))
                         return;
 
@@ -811,7 +811,7 @@ void KD11CPU::execInstr(QBUS* bus)
                     break;
 
                 case 00062: /* ASR */
-                    if (!insn1->getOperand(bus, r, 
+                    if (!insn1->getOperand (this, r, 
                             Bitmask(OperandOptions::Word), src))
                         return;
                     tmp = src;
@@ -823,7 +823,7 @@ void KD11CPU::execInstr(QBUS* bus)
                     else
                         tmp >>= 1;
  
-                    if (!insn1->putOperand (bus, r, 
+                    if (!insn1->putOperand (this, r, 
                             Bitmask(OperandOptions::Word), tmp))
                         return;
 
@@ -834,12 +834,12 @@ void KD11CPU::execInstr(QBUS* bus)
                     break;
 
                 case 00063: /* ASL */
-                    if (!insn1->getOperand(bus, r, 
+                    if (!insn1->getOperand (this, r, 
                             Bitmask(OperandOptions::Word), src))
                         return;
                     tmp = src << 1;
                     
-                    if (!insn1->putOperand (bus, r, 
+                    if (!insn1->putOperand (this, r, 
                             Bitmask(OperandOptions::Word), tmp))
                         return;
 
@@ -866,7 +866,7 @@ void KD11CPU::execInstr(QBUS* bus)
                         tmp = 0;
                     }
                     
-                    if (!insn1->putOperand (bus, r, 
+                    if (!insn1->putOperand (this, r, 
                             Bitmask(OperandOptions::Word), tmp))
                         return;
 
@@ -882,12 +882,12 @@ void KD11CPU::execInstr(QBUS* bus)
             break;
 
         case 001: /* MOV */
-            if (!insn2->getSourceOperand (bus, r, 
+            if (!insn2->getSourceOperand (this, r, 
                 Bitmask(OperandOptions::Word | 
                     OperandOptions::AutoIncr), tmp))
                 return;
 
-            if (!insn2->putDestOperand (bus, r, 
+            if (!insn2->putDestOperand (this, r, 
                     Bitmask(OperandOptions::Word), tmp))
                 return;
 
@@ -897,12 +897,12 @@ void KD11CPU::execInstr(QBUS* bus)
             break;
 
         case 002: /* CMP */
-            if (!insn2->getSourceOperand (bus, r, 
+            if (!insn2->getSourceOperand (this, r, 
                 Bitmask(OperandOptions::Word |
                     OperandOptions::AutoIncr), src))
                 return;
 
-            if (!insn2->getDestOperand (bus, r, 
+            if (!insn2->getDestOperand (this, r, 
                 Bitmask(OperandOptions::Word |
                     OperandOptions::AutoIncr), dst))
                 return;
@@ -916,12 +916,12 @@ void KD11CPU::execInstr(QBUS* bus)
             break;
 
         case 003: /* BIT */
-            if (!insn2->getSourceOperand (bus, r, 
+            if (!insn2->getSourceOperand (this, r, 
                 Bitmask(OperandOptions::Word |
                     OperandOptions::AutoIncr), src))
                 return;
 
-            if (!insn2->getDestOperand (bus, r, 
+            if (!insn2->getDestOperand (this, r, 
                 Bitmask(OperandOptions::Word |
                     OperandOptions::AutoIncr), dst))
                 return;
@@ -933,18 +933,18 @@ void KD11CPU::execInstr(QBUS* bus)
             break;
 
         case 004: /* BIC */
-            if (!insn2->getSourceOperand (bus, r, 
+            if (!insn2->getSourceOperand (this, r, 
                 Bitmask(OperandOptions::Word |
                     OperandOptions::AutoIncr), src))
                 return;
 
-            if (!insn2->getDestOperand (bus, r, 
+            if (!insn2->getDestOperand (this, r, 
                 Bitmask(OperandOptions::Word), dst))
                 return;
 
             tmp = ~src & dst;
             
-            if (!insn2->putDestOperand (bus, r, 
+            if (!insn2->putDestOperand (this, r, 
                     Bitmask(OperandOptions::Word), tmp))
                 return;
 
@@ -954,18 +954,18 @@ void KD11CPU::execInstr(QBUS* bus)
             break;
 
         case 005: /* BIS */
-            if (!insn2->getSourceOperand (bus, r, 
+            if (!insn2->getSourceOperand (this, r, 
                 Bitmask(OperandOptions::Word |
                     OperandOptions::AutoIncr), src))
                 return;
 
-            if (!insn2->getDestOperand (bus, r, 
+            if (!insn2->getDestOperand (this, r, 
                     Bitmask(OperandOptions::Word), dst))
                 return;
 
             tmp = src | dst;
             
-            if (!insn2->putDestOperand (bus, r, 
+            if (!insn2->putDestOperand (this, r, 
                     Bitmask(OperandOptions::Word), tmp))
                 return;
 
@@ -975,18 +975,18 @@ void KD11CPU::execInstr(QBUS* bus)
             break;
 
         case 006: /* ADD */
-            if (!insn2->getSourceOperand (bus, r, 
+            if (!insn2->getSourceOperand (this, r, 
                 Bitmask(OperandOptions::Word |
                     OperandOptions::AutoIncr), src))
                 return;
 
-            if (!insn2->getDestOperand (bus, r, 
+            if (!insn2->getDestOperand (this, r, 
                     Bitmask(OperandOptions::Word), dst))
                 return;
 
             tmp = src + dst;
             
-            if (!insn2->putDestOperand (bus, r, 
+            if (!insn2->putDestOperand (this, r, 
                     Bitmask(OperandOptions::Word), tmp))
                 return;
 
@@ -1002,7 +1002,7 @@ void KD11CPU::execInstr(QBUS* bus)
             {
                 case 0070: /* MUL */
                     dst = r[insnjsr->r];
-                    if (!insnjsr->getOperand (bus, r, 
+                    if (!insnjsr->getOperand (this, r, 
                         Bitmask(OperandOptions::Word |
                             OperandOptions::AutoIncr), src))
                         return;
@@ -1019,7 +1019,7 @@ void KD11CPU::execInstr(QBUS* bus)
                 case 0071: /* DIV */
                     tmps32 = (r[insnjsr->r] << 16) | r[insnjsr->r | 1];
                     
-                    if (!insnjsr->getOperand (bus, r, 
+                    if (!insnjsr->getOperand (this, r, 
                         Bitmask(OperandOptions::Word | 
                             OperandOptions::AutoIncr), src))
                         return;
@@ -1050,7 +1050,7 @@ void KD11CPU::execInstr(QBUS* bus)
                 case 0072: /* ASH */
                     dst = r[insnjsr->r];
                     
-                    if (!insnjsr->getOperand (bus, r, 
+                    if (!insnjsr->getOperand (this, r, 
                         Bitmask(OperandOptions::Word |
                             OperandOptions::AutoIncr), src))
                         return;
@@ -1104,7 +1104,7 @@ void KD11CPU::execInstr(QBUS* bus)
                     dst = r[insnjsr->r];
                     tmps32 = (r[insnjsr->r] << 16) | r[insnjsr->r | 1];
                     
-                    if (!insnjsr->getOperand (bus, r, 
+                    if (!insnjsr->getOperand (this, r, 
                         Bitmask(OperandOptions::Word |
                             OperandOptions::AutoIncr), src))
                         return;
@@ -1155,13 +1155,13 @@ void KD11CPU::execInstr(QBUS* bus)
                 case 0074: /* XOR */
                     src = r[insnjsr->r];
                     
-                    if (!insnjsr->getOperand (bus, r, 
+                    if (!insnjsr->getOperand (this, r, 
                             Bitmask(OperandOptions::Word), dst))
                         return;
 
                     tmp = src ^ dst;
                     
-                    if (!insnjsr->putOperand (bus, r, tmp))
+                    if (!insnjsr->putOperand (this, r, tmp))
                         return;
 
                     PSW_EQ(PSW_N, tmp & 0x8000);
@@ -1266,6 +1266,7 @@ void KD11CPU::execInstr(QBUS* bus)
                     break;
             }
             break;
+
         case 010: /* 10 xx xx group */
             switch (insn >> 6)
             {
@@ -1278,6 +1279,7 @@ void KD11CPU::execInstr(QBUS* bus)
                         r[7] += (s16)((s8)insnbr->offset) * 2;
                     }
                     break;
+
                 case 01004: /* BMI */
                 case 01005:
                 case 01006:
@@ -1287,6 +1289,7 @@ void KD11CPU::execInstr(QBUS* bus)
                         r[7] += (s16)((s8)insnbr->offset) * 2;
                     }
                     break;
+
                 case 01010: /* BHI */
                 case 01011:
                 case 01012:
@@ -1296,6 +1299,7 @@ void KD11CPU::execInstr(QBUS* bus)
                         r[7] += (s16)((s8)insnbr->offset) * 2;
                     }
                     break;
+
                 case 01014: /* BLOS */
                 case 01015:
                 case 01016:
@@ -1305,6 +1309,7 @@ void KD11CPU::execInstr(QBUS* bus)
                         r[7] += (s16)((s8)insnbr->offset) * 2;
                     }
                     break;
+
                 case 01020: /* BVC */
                 case 01021:
                 case 01022:
@@ -1314,6 +1319,7 @@ void KD11CPU::execInstr(QBUS* bus)
                         r[7] += (s16)((s8)insnbr->offset) * 2;
                     }
                     break;
+
                 case 01024: /* BVS */
                 case 01025:
                 case 01026:
@@ -1323,6 +1329,7 @@ void KD11CPU::execInstr(QBUS* bus)
                         r[7] += (s16)((s8)insnbr->offset) * 2;
                     }
                     break;
+
                 case 01030: /* BCC */
                 case 01031:
                 case 01032:
@@ -1332,6 +1339,7 @@ void KD11CPU::execInstr(QBUS* bus)
                         r[7] += (s16)((s8)insnbr->offset) * 2;
                     }
                     break;
+
                 case 01034: /* BCS */
                 case 01035:
                 case 01036:
@@ -1341,6 +1349,7 @@ void KD11CPU::execInstr(QBUS* bus)
                         r[7] += (s16)((s8)insnbr->offset) * 2;
                     }
                     break;
+
                 case 01040: /* EMT */
                 case 01041:
                 case 01042:
@@ -1348,6 +1357,7 @@ void KD11CPU::execInstr(QBUS* bus)
                     TRCTrap(030, TRC_TRAP);
                     TRAP(EMT);
                     break;
+
                 case 01044: /* TRAP */
                 case 01045:
                 case 01046:
@@ -1357,7 +1367,7 @@ void KD11CPU::execInstr(QBUS* bus)
                     break;
 
                 case 01050: /* CLRB */
-                    if (!insn1->putOperand (bus, r, 
+                    if (!insn1->putOperand (this, r, 
                             Bitmask(OperandOptions::Byte), 0))
                         return;
 
@@ -1366,13 +1376,13 @@ void KD11CPU::execInstr(QBUS* bus)
                     break;
 
                 case 01051: /* COMB */
-                    if (!insn1->getOperand (bus, r, 
+                    if (!insn1->getOperand (this, r, 
                             Bitmask(OperandOptions::Byte), tmp))
                         return;
 
                     tmp = ~tmp;
                     
-                    if (!insn1->putOperand (bus, r, 
+                    if (!insn1->putOperand (this, r, 
                             Bitmask(OperandOptions::Byte), tmp))
                         return;
 
@@ -1383,13 +1393,13 @@ void KD11CPU::execInstr(QBUS* bus)
                     break;
 
                 case 01052: /* INCB */
-                    if (!insn1->getOperand (bus, r, 
+                    if (!insn1->getOperand (this, r, 
                             Bitmask(OperandOptions::Byte), src))
                         return;
 
                     tmp = (u8)(src + 1);
                     
-                    if (!insn1->putOperand (bus, r, 
+                    if (!insn1->putOperand (this, r, 
                             Bitmask(OperandOptions::Byte), tmp))
                         return;
 
@@ -1399,13 +1409,13 @@ void KD11CPU::execInstr(QBUS* bus)
                     break;
 
                 case 01053: /* DECB */
-                    if (!insn1->getOperand (bus, r, 
+                    if (!insn1->getOperand (this, r, 
                             Bitmask(OperandOptions::Byte), src))
                         return;
 
                     tmp = (u8)(src - 1);
                     
-                    if (!insn1->putOperand (bus, r, 
+                    if (!insn1->putOperand (this, r, 
                             Bitmask(OperandOptions::Byte), tmp))
                         return;
 
@@ -1415,7 +1425,7 @@ void KD11CPU::execInstr(QBUS* bus)
                     break;
 
                 case 01054: /* NEGB */
-                    if (!insn1->getOperand (bus, r, 
+                    if (!insn1->getOperand (this, r, 
                             Bitmask(OperandOptions::Byte), tmp))
                         return;
 
@@ -1423,7 +1433,7 @@ void KD11CPU::execInstr(QBUS* bus)
                     {
                         tmp = -tmp;
                     }
-                    if (!insn1->putOperand (bus, r, 
+                    if (!insn1->putOperand (this, r, 
                             Bitmask(OperandOptions::Byte), tmp))
                         return;
 
@@ -1434,14 +1444,14 @@ void KD11CPU::execInstr(QBUS* bus)
                     break;
 
                 case 01055: /* ADCB */
-                    if (!insn1->getOperand (bus, r, 
+                    if (!insn1->getOperand (this, r, 
                             Bitmask(OperandOptions::Byte), src))
                         return;
 
                     tmp2 = PSW_GET(PSW_C) ? 1 : 0;
                     tmp = (u8)(src + tmp2);
                     
-                    if (!insn1->putOperand (bus, r, 
+                    if (!insn1->putOperand (this, r, 
                             Bitmask(OperandOptions::Byte), tmp))
                         return;
 
@@ -1452,14 +1462,14 @@ void KD11CPU::execInstr(QBUS* bus)
                     break;
 
                 case 01056: /* SBCB */
-                    if (!insn1->getOperand (bus, r, 
+                    if (!insn1->getOperand (this, r, 
                             Bitmask(OperandOptions::Byte), src))
                         return;
 
                     tmp2 = PSW_GET(PSW_C) ? 1 : 0;
                     tmp = (u8)(src - tmp2);
                     
-                    if (!insn1->putOperand (bus, r, 
+                    if (!insn1->putOperand (this, r, 
                             Bitmask(OperandOptions::Byte), tmp))
                         return;
 
@@ -1470,7 +1480,7 @@ void KD11CPU::execInstr(QBUS* bus)
                     break;
 
                 case 01057: /* TSTB */
-                    if (!insn1->getOperand (bus, r, 
+                    if (!insn1->getOperand (this, r, 
                         Bitmask(OperandOptions::Byte |
                             OperandOptions::AutoIncr), tmp))
                         return;
@@ -1482,7 +1492,7 @@ void KD11CPU::execInstr(QBUS* bus)
                     break;
 
                 case 01060: /* RORB */
-                    if (!insn1->getOperand (bus, r, 
+                    if (!insn1->getOperand (this, r, 
                             Bitmask(OperandOptions::Byte), src))
                         return;
 
@@ -1493,7 +1503,7 @@ void KD11CPU::execInstr(QBUS* bus)
                         tmp |= 0x80;
                     }
                     
-                    if (!insn1->putOperand (bus, r, 
+                    if (!insn1->putOperand (this, r, 
                             Bitmask(OperandOptions::Byte), tmp))
                         return;
 
@@ -1504,7 +1514,7 @@ void KD11CPU::execInstr(QBUS* bus)
                     break;
 
                 case 01061: /* ROLB */
-                    if (!insn1->getOperand (bus, r, 
+                    if (!insn1->getOperand (this, r, 
                             Bitmask(OperandOptions::Byte), src))
                         return;
 
@@ -1515,7 +1525,7 @@ void KD11CPU::execInstr(QBUS* bus)
                         tmp |= 0x01;
                     }
                     
-                    if (!insn1->putOperand (bus, r, 
+                    if (!insn1->putOperand (this, r, 
                             Bitmask(OperandOptions::Byte), tmp))
                         return;
 
@@ -1526,7 +1536,7 @@ void KD11CPU::execInstr(QBUS* bus)
                     break;
 
                 case 01062: /* ASRB */
-                    if (!insn1->getOperand (bus, r, 
+                    if (!insn1->getOperand (this, r, 
                             Bitmask(OperandOptions::Byte), src))
                         return;
 
@@ -1541,7 +1551,7 @@ void KD11CPU::execInstr(QBUS* bus)
                         tmp >>= 1;
                     }
                     
-                    if (!insn1->putOperand (bus, r, 
+                    if (!insn1->putOperand (this, r, 
                             Bitmask(OperandOptions::Byte), tmp))
                         return;
 
@@ -1552,13 +1562,13 @@ void KD11CPU::execInstr(QBUS* bus)
                     break;
 
                 case 01063: /* ASLB */
-                    if (!insn1->getOperand (bus, r, 
+                    if (!insn1->getOperand (this, r, 
                             Bitmask(OperandOptions::Byte), src))
                         return;
 
                     tmp = (u8)(src << 1);
                     
-                    if (!insn1->putOperand (bus, r, 
+                    if (!insn1->putOperand (this, r, 
                             Bitmask(OperandOptions::Byte), tmp))
                         return;
 
@@ -1571,7 +1581,7 @@ void KD11CPU::execInstr(QBUS* bus)
                 case 01064: 
                     // MTPS
                     // Note that the T bit cannot be set with this instruction
-                    if (!insn1->getOperand (bus, r, 
+                    if (!insn1->getOperand (this, r, 
                         Bitmask(OperandOptions::Byte |
                             OperandOptions::AutoIncr), tmp))
                         return;
@@ -1587,7 +1597,7 @@ void KD11CPU::execInstr(QBUS* bus)
                     }
                     else
                     {
-                        if (!insn1->putOperand (bus, r, 
+                        if (!insn1->putOperand (this, r, 
                             Bitmask(OperandOptions::Byte), tmp))
                         return;
                     }
@@ -1605,7 +1615,7 @@ void KD11CPU::execInstr(QBUS* bus)
             break;
 
         case 011: /* MOVB */
-            if (!insn2->getSourceOperand (bus, r, 
+            if (!insn2->getSourceOperand (this, r, 
                 Bitmask(OperandOptions::Byte |
                     OperandOptions::AutoIncr), tmp))
                 return;
@@ -1616,7 +1626,7 @@ void KD11CPU::execInstr(QBUS* bus)
             }
             else
             {
-                if (!insn2->putDestOperand (bus, r, 
+                if (!insn2->putDestOperand (this, r, 
                     Bitmask(OperandOptions::Byte), tmp))
                 return;
             }
@@ -1626,12 +1636,12 @@ void KD11CPU::execInstr(QBUS* bus)
             break;
 
         case 012: /* CMPB */
-            if (!insn2->getSourceOperand (bus, r, 
+            if (!insn2->getSourceOperand (this, r, 
                 Bitmask(OperandOptions::Byte |
                     OperandOptions::AutoIncr), src))
                 return;
 
-            if (!insn2->getDestOperand (bus, r, 
+            if (!insn2->getDestOperand (this, r, 
                 Bitmask(OperandOptions::Byte |
                     OperandOptions::AutoIncr), dst))
                 return;
@@ -1645,12 +1655,12 @@ void KD11CPU::execInstr(QBUS* bus)
             break;
 
         case 013: /* BITB */
-            if (!insn2->getSourceOperand (bus, r, 
+            if (!insn2->getSourceOperand (this, r, 
                 Bitmask(OperandOptions::Byte |
                     OperandOptions::AutoIncr), src))
                 return;
 
-            if (!insn2->getDestOperand (bus, r, 
+            if (!insn2->getDestOperand (this, r, 
                 Bitmask(OperandOptions::Byte |
                     OperandOptions::AutoIncr), dst))
                 return;
@@ -1662,18 +1672,18 @@ void KD11CPU::execInstr(QBUS* bus)
             break;
 
         case 014: /* BICB */
-            if (!insn2->getSourceOperand (bus, r, 
+            if (!insn2->getSourceOperand (this, r, 
                 Bitmask(OperandOptions::Byte |
                     OperandOptions::AutoIncr), src))
                 return;
 
-            if (!insn2->getDestOperand (bus, r, 
+            if (!insn2->getDestOperand (this, r, 
                 Bitmask(OperandOptions::Byte), dst))
                 return;
 
             tmp = (u8)(~src & dst);
             
-            if (!insn2->putDestOperand (bus, r, 
+            if (!insn2->putDestOperand (this, r, 
                     Bitmask(OperandOptions::Byte), tmp))
                 return;
 
@@ -1683,18 +1693,18 @@ void KD11CPU::execInstr(QBUS* bus)
             break;
 
         case 015: /* BISB */
-            if (!insn2->getSourceOperand (bus, r, 
+            if (!insn2->getSourceOperand (this, r, 
                 Bitmask(OperandOptions::Byte |
                     OperandOptions::AutoIncr), src))
                 return;
 
-            if (!insn2->getDestOperand (bus, r, 
+            if (!insn2->getDestOperand (this, r, 
                 Bitmask(OperandOptions::Byte), dst))
                 return;
 
             tmp = src | dst;
             
-            if (!insn2->putDestOperand (bus, r, 
+            if (!insn2->putDestOperand (this, r, 
                     Bitmask(OperandOptions::Byte), tmp))
                 return;
 
@@ -1704,18 +1714,18 @@ void KD11CPU::execInstr(QBUS* bus)
             break;
 
         case 016: /* SUB */
-            if (!insn2->getSourceOperand (bus, r, 
+            if (!insn2->getSourceOperand (this, r, 
                 Bitmask(OperandOptions::Word | 
                     OperandOptions::AutoIncr), src))
                 return;
 
-            if (!insn2->getDestOperand (bus, r, 
+            if (!insn2->getDestOperand (this, r, 
                     Bitmask(OperandOptions::Word), dst))
                 return;
 
             tmp = dst - src;
             
-            if (!insn2->putDestOperand (bus, r, 
+            if (!insn2->putDestOperand (this, r, 
                     Bitmask(OperandOptions::Word), tmp))
                 return;
 

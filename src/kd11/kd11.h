@@ -51,6 +51,13 @@ public:
 	void step(QBUS* bus);
 	void handleTraps(QBUS* bus);
 
+	// These functions are defined public as they are used by the
+	// Instruction classes.
+	// ToDo: fetchWord(), putWord() and putByte() should be private?
+	CondData<u16> fetchWord (u16 address);
+	bool putWord (u16 address, u16 value);
+	bool putByte (u16 address, u8 value);
+
 	// ToDo: Make runState and r[] private; accessed from main
 	u8	runState;
 	u16	r[8];
@@ -59,9 +66,7 @@ private:
 	void setTrap(QBUS *bus, InterruptRequest const *ir);
 	void execInstr(QBUS* bus);
 	u8 cpuPriority();
-	CondData<u16> fetchWord (u16 address);
-	bool putWord (u16 address, u16 value);
-	bool putByte (u16 address, u8 value);
+
 
 	QBUS *bus_;
 	u16	psw;
