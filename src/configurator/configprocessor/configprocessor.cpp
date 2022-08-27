@@ -25,7 +25,7 @@ void ConfigProcessor::processSection (iniparser::Section* section)
 		SectionProcessor *sectionProcessor = sectionProcessors.at (section->name());
 		sectionProcessor->processSection (section);
 	}
-	catch (std::out_of_range)
+	catch (std::out_of_range const &)
 	{
 		throw std::invalid_argument {"Unknown section: " + section->name ()};
 	}

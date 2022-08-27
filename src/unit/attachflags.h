@@ -11,4 +11,4 @@ enum class AttachFlags
     _                           // Required for Bitmask
 };
 
-#endif _ATTACHFLAGS_H_
+#endif // _ATTACHFLAGS_H_

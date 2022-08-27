@@ -21,7 +21,7 @@ void RlUnitProcessor::processSection (iniparser::Section* section)
 			Process processFunction = processValue.at (valueIterator->first);
 			(this->*processFunction)(valueIterator->second);
 		}
-		catch (std::out_of_range)
+		catch (std::out_of_range const &)
 		{
 			 throw std::invalid_argument {"Unknown key: " + 
 				 valueIterator->second.asString() +
@@ -82,7 +82,7 @@ size_t RlUnitProcessor::unitNumberFromSectionName (std::string name)
 	{
 		unitNumber = stol (name.substr(4, 1));
 	}
-	catch (std::invalid_argument)
+	catch (std::invalid_argument const &)
 	{
 		throw std::invalid_argument {"RL invalid unit number"};
 	}

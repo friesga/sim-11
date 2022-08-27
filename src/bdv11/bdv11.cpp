@@ -38,8 +38,8 @@ BDV11::BDV11 ()
 	display {0},
 	ltc {0},
 	time {0.0},
-	running_ {true},
-	ltcThread_ {thread(&BDV11::tick, this)}
+	ltcThread_ {thread(&BDV11::tick, this)},
+	running_ {true}
 {}
 
 BDV11::~BDV11 ()

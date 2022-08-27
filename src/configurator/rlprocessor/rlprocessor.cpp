@@ -15,7 +15,7 @@ void RlProcessor::processSection (iniparser::Section* section)
 			Process processFunction = processValue.at (valueIterator->first);
 			(this->*processFunction)(valueIterator->second);
 		}
-		catch (std::out_of_range)
+		catch (std::out_of_range const &)
 		{
 			throw std::invalid_argument {"Unknown key in section RL: " +  
 				valueIterator->first};
@@ -67,7 +67,7 @@ void RlProcessor::processAddress (iniparser::Value value)
 	{
 		rlConfigPtr->address = touint16_t (value.asString());
 	}
-	catch (std::invalid_argument)
+	catch (std::invalid_argument const &)
 	{
 		throw std::invalid_argument {"Incorrect address in RL section specified: " + 
 			value.asString()};
@@ -80,7 +80,7 @@ void RlProcessor::processVector (iniparser::Value value)
 	{
 		rlConfigPtr->vector = touint16_t (value.asString());
 	}
-	catch (std::invalid_argument)
+	catch (std::invalid_argument const &)
 	{
 		throw std::invalid_argument {"Incorrect vector in RL section specified: " + 
 			value.asString()};

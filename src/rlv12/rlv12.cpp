@@ -9,12 +9,12 @@
 // ToDo: Remove default RLV12 constructor
 RLV12::RLV12 ()
     :
-    rlxb_ {nullptr},
     rlcs {0},
     rlba {0},
     rlda {0},
     rlmpr {0},
     rlbae {0},
+    rlxb_ {nullptr},
     flags_ {0}
 {
     name_ = "RL";
@@ -33,12 +33,12 @@ RLV12::RLV12 ()
 
 RLV12::RLV12 (u32 baseAddress, u32 vector, bool RLV11, size_t numUnits)
     :
-    rlxb_ {nullptr},
     rlcs {0},
     rlba {0},
     rlda {0},
     rlmpr {0},
     rlbae {0},
+    rlxb_ {nullptr},
     flags_ {0}
 {
     name_ = "RL";
@@ -62,7 +62,7 @@ RLV12::RLV12 (u32 baseAddress, u32 vector, bool RLV11, size_t numUnits)
 RLV12::~RLV12 ()
 {
     if (rlxb_ != nullptr)
-        delete rlxb_;
+        delete [] rlxb_;
 }
 
 //

@@ -6,7 +6,7 @@ RL01_2::RL01_2 (BusDevice *owningDevice)
     :
     Unit (owningDevice),
     currentTrackHeadSector_ {0},
-    driveStatus_ {0},
-    rlStatus_ {RlStatus::UNIT_AUTO}
+    rlStatus_ {RlStatus::UNIT_AUTO},
+    driveStatus_ {0}
 {}
 

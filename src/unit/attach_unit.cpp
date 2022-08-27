@@ -13,7 +13,6 @@ extern bool gotApproval(std::string question, bool defaultAnswer);
 
 StatusCode Unit::attach_unit(std::string fileName, Bitmask<AttachFlags> flags)
 {
-    struct stat info;
     StatusCode statusCode;
 
     // Check if a file can be attached to the unit

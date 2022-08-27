@@ -197,4 +197,4 @@ inline RL01_2  *RLV12::unit (size_t unitNumber)
 }
 
 
-#endif _RLV12_H_
+#endif // _RLV12_H_

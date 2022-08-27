@@ -114,7 +114,6 @@ try
 	BDV11 bdv11;
 	// BA11_N ba11_n;
 
-	struct timespec now;
 	struct timespec last;
 
 	FILE* floppy_file;
@@ -339,7 +338,6 @@ try
 	while (running) 
 	{
 		unsigned int i;
-		double dt;
 		
 		for(i = 0; i < 1000; i++)
 			lsi.step ();

@@ -623,5 +623,6 @@ void TRACERLV12Command (TRACE* trace, u16 command)
 	{
 		rec.magic = U32B (MAGIC_RL2C);
 		rec.command = U16B (command);
+		fwrite (&rec, sizeof(rec), 1, trace->file);
 	}
 }

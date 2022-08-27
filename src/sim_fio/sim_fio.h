@@ -24,7 +24,7 @@
 #include <cstdio>
 
 // We assume all supported systems provide large file support
-typedef int64_t        t_offset;
+typedef uint64_t        t_offset;
 
 // External references
 extern t_offset sim_ftell (FILE *st);

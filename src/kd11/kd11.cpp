@@ -349,8 +349,8 @@ KD11CPU::KD11CPU(QBUS *bus)
 	:
 	runState{0},
 	r{0}, 
-	psw{0},
     bus_ {bus},
+	psw {0},
     trap_ {nullptr}
 {}
 

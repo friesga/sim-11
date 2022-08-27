@@ -18,15 +18,17 @@
 void RLV12::service (Unit &unitRef)
 {
 
-    int32_t err, wc, maxwc, t;
+    int32_t err, wc, maxwc;
     int32_t i, da, awc;
     uint32_t ma;
     RL01_2 &unit = static_cast<RL01_2&> (unitRef);
  
+#if 0
     const char* const funcname[] = {
         "NOP", "WCK", "GSTA", "SEEK",
         "RHDR", "WT", "RD", "RNOHDR", "SPECIAL",
     };
+#endif //0
 
     // if (DEBUG_PRS(rl_dev))
     //{
