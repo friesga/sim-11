@@ -144,6 +144,7 @@ void TRACEStep(TRACE* trace, u16* r, u16 psw, u16* insn)
 				rec.r[i] = U16B(rec.r[i]);
 			}
 			fwrite(&rec, sizeof(rec), 1, trace->file);
+			fflush (trace->file);
 		}
 	}
 }
@@ -181,6 +182,7 @@ void TRACECPUEvent(TRACE* trace, int type, u16 value)
 		rec.type = U16B(type);
 		rec.value = U16B(value);
 		fwrite(&rec, sizeof(rec), 1, trace->file);
+		fflush (trace->file);
 	}
 }
 
@@ -218,6 +220,7 @@ void TRACEBus(TRACE* trace, u16 type, u16 address, u16 value)
 		rec.addr = U16B(address);
 		rec.value = U16B(value);
 		fwrite(&rec, sizeof(rec), 1, trace->file);
+		fflush (trace->file);
 	}
 }
 
@@ -247,6 +250,7 @@ void TRACEMemoryDump(TRACE* trace, u8* ptr, u16 address, u16 length)
 		rec.len = U16B(length);
 		fwrite(&rec, sizeof(rec), 1, trace->file);
 		fwrite(ptr, length, 1, trace->file);
+		fflush (trace->file);
 	}
 }
 
@@ -316,6 +320,7 @@ void TRACETrap(TRACE* trace, int n, int cause)
 		rec.trap = U16B(n);
 		rec.cause = U16B(cause);
 		fwrite(&rec, sizeof(rec), 1, trace->file);
+		fflush (trace->file);
 	}
 }
 
@@ -346,6 +351,7 @@ void TRACEIrq(TRACE* trace, int n, int type)
 		rec.trap = U16B(n);
 		rec.type = U16B(type);
 		fwrite(&rec, sizeof(rec), 1, trace->file);
+		fflush (trace->file);
 	}
 }
 
@@ -374,6 +380,7 @@ void TRACEDLV11(TRACE* trace, int channel, int type, u16 value)
 		rec.type = type;
 		rec.value = U16B(value);
 		fwrite(&rec, sizeof(rec), 1, trace->file);
+		fflush (trace->file);
 	}
 }
 
@@ -420,6 +427,7 @@ void TRACERXV21Command(TRACE* trace, int commit, int type, u16 rx2cs)
 		rec.commit = commit;
 		rec.rx2cs = U16B(rx2cs);
 		fwrite(&rec, sizeof(rec), 1, trace->file);
+		fflush (trace->file);
 	}
 }
 
@@ -443,6 +451,7 @@ void TRACERXV21Step(TRACE* trace, int type, int step, u16 rx2db)
 		rec.step = step;
 		rec.rx2db = U16B(rx2db);
 		fwrite(&rec, sizeof(rec), 1, trace->file);
+		fflush (trace->file);
 	}
 }
 
@@ -466,6 +475,7 @@ void TRACERXV21DMA(TRACE* trace, int type, u16 rx2wc, u16 rx2ba)
 		rec.rx2wc = U16B(rx2wc);
 		rec.rx2ba = U16B(rx2ba);
 		fwrite(&rec, sizeof(rec), 1, trace->file);
+		fflush (trace->file);
 	}
 }
 
@@ -514,6 +524,7 @@ void TRACERXV21Error(TRACE* trace, int type, u16 info)
 		rec.type = U16B(type);
 		rec.info = U16B(info);
 		fwrite(&rec, sizeof(rec), 1, trace->file);
+		fflush (trace->file);
 	}
 }
 
@@ -554,6 +565,7 @@ void TRACERXV21Disk(TRACE* trace, int type, int drive, int density, u16 rx2sa, u
 		rec.rx2sa = U16B(rx2sa);
 		rec.rx2ta = U16B(rx2ta);
 		fwrite(&rec, sizeof(rec), 1, trace->file);
+		fflush (trace->file);
 	}
 }
 
@@ -586,6 +598,7 @@ void TRACERLV12Registers (TRACE* trace, char const *msg, u16 rlcs, u16 rlba, u16
 		rec.length = U16B (msgLength);
 		fwrite (&rec, sizeof(rec), 1, trace->file);
 		fwrite (msg, msgLength, 1, trace->file);
+		fflush (trace->file);
 	}
 }
 
@@ -624,5 +637,6 @@ void TRACERLV12Command (TRACE* trace, u16 command)
 		rec.magic = U32B (MAGIC_RL2C);
 		rec.command = U16B (command);
 		fwrite (&rec, sizeof(rec), 1, trace->file);
+		fflush (trace->file);
 	}
 }
