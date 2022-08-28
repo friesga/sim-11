@@ -48,7 +48,7 @@ int main (int argc, char **argv)
 	TRACE trace;
 	size_t const maxMemorySize = 64_KB;
 	
-	trace.flags = TRACE_PRINT;
+	trace.flags = TRACEF_PRINT;
 
 	if (argc != 2)
 	{
