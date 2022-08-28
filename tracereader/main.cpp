@@ -48,7 +48,14 @@ int main (int argc, char **argv)
 	TRACE trace;
 	size_t const maxMemorySize = 64_KB;
 	
-	trace.flags = TRACEF_PRINT;
+	// Print all categories present in the trace file
+	trace.flags = 
+		TRACEF_STEP	      | TRACEF_CPUEVENT   | TRACEF_BUS | 
+		TRACEF_MEMORYDUMP | TRACEF_TRAP       | TRACEF_IRQ |
+		TRACEF_DLV11      | TRACEF_RXV21CMD   | TRACEF_RXV21STEP |
+		TRACEF_RXV21DMA   | TRACEF_RXV21ERROR | TRACEF_RXV21DISK | 
+		TRACEF_RLV12 |
+		TRACEF_PRINT;
 
 	if (argc != 2)
 	{
