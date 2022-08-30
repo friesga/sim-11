@@ -24,8 +24,14 @@
 
 void console_print (unsigned char c)
 {
-	printf ("%c", c);
-	fflush (stdout);
+	// Ignore unprintable ASCII characters. The XXDP diagnostic VKABB0 e.g.
+	// prints 0377 characters at the end of a string. Linux stdout stops
+	// outputting characters after it has received such a character.
+	if (c <= 0127)
+	{
+		printf ("%c", c);
+		fflush (stdout);
+	}
 }
 
 
