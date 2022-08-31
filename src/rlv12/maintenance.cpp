@@ -41,7 +41,15 @@ void RLV12::maintenance()
     // bus->read() will generate a bus error trap.
     for (size_t wordCount = 0; wordCount < 256; ++wordCount)
     {
-        rlxb_[wordCount] = bus->read (memoryAddress);
+        // rlxb_[wordCount] = bus->read (memoryAddress);
+        CondData<u16> value = bus->read (memoryAddress);
+        if (value.hasValue())
+            rlxb_[wordCount] = value;
+        else
+        {
+            rlcs |= RLCS_ERR | RLCS_NXM;
+            break;
+        }
         memoryAddress += 2;
         rlmpr++;
     }
