@@ -360,17 +360,37 @@ void KD11CPU::reset()
 
 CondData<u16> KD11CPU::fetchWord (u16 address)
 {
-    return bus_->read (address);
+    // return bus_->read (address);
+    CondData<u16> value =  bus_->read (address);
+    if (!value.hasValue ())
+    {
+        TRCBus (TRC_BUS_RDFAIL, address, 0);
+	    setTrap (&busError);
+	    return {};
+    }
+    return value;
 }
 
 bool KD11CPU::putWord (u16 address, u16 value)
 {
-    return bus_->writeWord (address, value);
+    if (!bus_->writeWord (address, value))
+    {
+        TRCBus (TRC_BUS_WRFAIL, address, value);
+	    setTrap (&busError);
+        return false;
+    }
+    return true;
 }
 
 bool KD11CPU::putByte (u16 address, u8 value)
 {
-    return bus_->writeByte (address, value);
+    if (!bus_->writeByte (address, value))
+    {
+        TRCBus (TRC_BUS_WRFAIL, address, value);
+	    setTrap (&busError);
+        return false;
+    }
+    return true;
 }
 
 #define	READCPU(addr)	\

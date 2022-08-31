@@ -26,7 +26,6 @@ public:
 	void	setInterrupt (TrapPriority priority, 
 				unsigned char busOrder, unsigned char vector);
 	void	clearInterrupt (TrapPriority priority, 	unsigned char busOrder);
-	void	setTrap (TrapPriority priority, unsigned char vector);
 	bool	intrptReqAvailable();
 	u8		intrptPriority();
 	bool	getIntrptReq(InterruptRequest &ir);

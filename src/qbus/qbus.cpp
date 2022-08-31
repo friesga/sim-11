@@ -27,7 +27,6 @@ CondData<u16> QBUS::read (u16 address)
 
 		if (module->responsible (address))
 		{
-			// CondData<u16> value = module->read (address);
 			u16 value;
 			module->read (address, &value);
 			TRCBus (TRC_BUS_RD, addr, value);
@@ -35,8 +34,6 @@ CondData<u16> QBUS::read (u16 address)
 		}
 	}
 
-	TRCBus (TRC_BUS_RDFAIL, addr, 0);
-	setTrap (TrapPriority::BusError, 004);
 	return {};
 }
 
@@ -49,14 +46,6 @@ void QBUS::setInterrupt (TrapPriority priority,
 {
 	InterruptRequest intrptReq {RequestType::IntrptReq, priority, busOrder, vector};
 	pushInterruptRequest (intrptReq);
-}
-
-
-// Set a trap
-void QBUS::setTrap (TrapPriority priority, unsigned char vector)
-{
-	InterruptRequest trap {RequestType::Trap, priority, 0, vector};
-	pushInterruptRequest (trap);
 }
 
 // Push the interrupt request created by setInterrupt or setTrap to the
