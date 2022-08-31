@@ -5,11 +5,7 @@
 #include <string.h>
 #include <stdlib.h>
 
-
-#define	TRAP(trap)		setTrap(bus, &trap)
-
 // KD11 functions
-
 KD11::KD11 (QBUS *bus)
     :
     bus_ {bus}
@@ -412,7 +408,7 @@ void KD11CPU::step(QBUS* bus)
     else if (!trap_ && (psw & PSW_T))
     {
         TRCTrap(014, TRC_TRAP_T);
-        TRAP(traceTrap);
+        setTrap (&traceTrap);
     }
     handleTraps(bus);
 }
@@ -482,12 +478,12 @@ void KD11CPU::execInstr(QBUS* bus)
 
                         case 0000003: /* BPT */
                             TRCTrap(014, TRC_TRAP);
-                            TRAP(BPT);
+                            setTrap (&BPT);
                             break;
 
                         case 0000004: /* IOT */
                             TRCTrap(020, TRC_TRAP);
-                            TRAP(IOT);
+                            setTrap (&IOT);
                             break;
 
                         case 0000005: /* RESET */
@@ -509,7 +505,7 @@ void KD11CPU::execInstr(QBUS* bus)
                         default: /* 00 00 07 - 00 00 77 */
                             /* unused opcodes */
                             TRCTrap(010, TRC_TRAP_ILL);
-                            TRAP(illegalInstructionTrap);
+                            setTrap (&illegalInstructionTrap);
                             break;
                     }
                     break;
@@ -519,7 +515,7 @@ void KD11CPU::execInstr(QBUS* bus)
                     {
                         // Illegal instruction
                         TRCTrap(4, TRC_TRAP_RADDR);
-			            TRAP(busError); 
+			            setTrap (&busError); 
                     }
                     break;
 
@@ -548,7 +544,7 @@ void KD11CPU::execInstr(QBUS* bus)
                     {
                         /* 00 02 10 - 00 02 27: unused */
                         TRCTrap(010, TRC_TRAP_ILL);
-                        TRAP(illegalInstructionTrap);
+                        setTrap (&illegalInstructionTrap);
                     }
                     break;
 
@@ -643,7 +639,7 @@ void KD11CPU::execInstr(QBUS* bus)
                         {
                             // Illegal instruction
                             TRCTrap(4, TRC_TRAP_RADDR);
-			                TRAP(busError); 
+			                setTrap (&busError); 
                             return;
                         }
                     }
@@ -876,7 +872,7 @@ void KD11CPU::execInstr(QBUS* bus)
 
                 default: /* 006500-006677, 007000-007777: unused */
                     TRCTrap(010, TRC_TRAP_ILL);
-                    TRAP(illegalInstructionTrap);
+                    setTrap (&illegalInstructionTrap);
                     break;
             }
             break;
@@ -1249,7 +1245,7 @@ void KD11CPU::execInstr(QBUS* bus)
                         default:
                             /* 075040-076777: unused */
                             TRCTrap(010, TRC_TRAP_ILL);
-                            TRAP(illegalInstructionTrap);
+                            setTrap (&illegalInstructionTrap);
                             break;
                     }
                     break;
@@ -1262,7 +1258,7 @@ void KD11CPU::execInstr(QBUS* bus)
                     break;
                 default:
                     TRCTrap(010, TRC_TRAP_ILL);
-                    TRAP(illegalInstructionTrap);
+                    setTrap (&illegalInstructionTrap);
                     break;
             }
             break;
@@ -1355,7 +1351,7 @@ void KD11CPU::execInstr(QBUS* bus)
                 case 01042:
                 case 01043:
                     TRCTrap(030, TRC_TRAP);
-                    TRAP(EMT);
+                    setTrap (&EMT);
                     break;
 
                 case 01044: /* TRAP */
@@ -1363,7 +1359,7 @@ void KD11CPU::execInstr(QBUS* bus)
                 case 01046:
                 case 01047:
                     TRCTrap(034, TRC_TRAP);
-                    TRAP(TRP);
+                    setTrap (&TRP);
                     break;
 
                 case 01050: /* CLRB */
@@ -1609,7 +1605,7 @@ void KD11CPU::execInstr(QBUS* bus)
                 default:
                     /* unused */
                     TRCTrap(010, TRC_TRAP_ILL);
-                    TRAP(illegalInstructionTrap);
+                    setTrap (&illegalInstructionTrap);
                     break;
             }
             break;
@@ -1738,7 +1734,7 @@ void KD11CPU::execInstr(QBUS* bus)
 
         default: /* unused */
             TRCTrap(010, TRC_TRAP_ILL);
-            TRAP(illegalInstructionTrap);
+            setTrap (&illegalInstructionTrap);
             break;
     }
 }
@@ -1879,7 +1875,7 @@ void KD11::step(QBUS* bus)
 }
 
 // Generate the given trap using the interrupt request mechanism
-void KD11CPU::setTrap(QBUS *bus, InterruptRequest const *trap)
+void KD11CPU::setTrap(InterruptRequest const *trap)
 {
     trap_ = trap;
 }

@@ -63,7 +63,7 @@ public:
 	u16	r[8];
 
 private:
-	void setTrap(QBUS *bus, InterruptRequest const *ir);
+	void setTrap(InterruptRequest const *ir);
 	void execInstr(QBUS* bus);
 	u8 cpuPriority();
 
