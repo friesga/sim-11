@@ -24,14 +24,11 @@
 
 void console_print (unsigned char c)
 {
-	// Ignore unprintable ASCII characters. The XXDP diagnostic VKABB0 e.g.
-	// prints 0377 characters at the end of a string. Linux stdout stops
-	// outputting characters after it has received such a character.
-	if (c <= 0127)
-	{
-		printf ("%c", c);
-		fflush (stdout);
-	}
+	// Just print 7-bit ASCII characters. The XXDP diagnostic VKABB0 e.g.
+	// prints characters 0377 at the end of a string which stops WSL from
+	// outputting further characters.
+	printf ("%c", c & 0177);
+	fflush (stdout);
 }
 
 
