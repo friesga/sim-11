@@ -141,6 +141,9 @@ void RLV12::service (Unit &unitRef)
         return;
     }
 
+
+    // The following condition isn't met as writeWord() only calls this
+    // service routine if the unit is attached.
     // Attached?
     if ( !(unit.unitStatus_ & Status::UNIT_ATT))
     {
@@ -163,6 +166,7 @@ void RLV12::service (Unit &unitRef)
         return;
     }
 
+
     if (unit.function_ == RLCS_SEEK)
     {
         // Seek?
@@ -171,6 +175,7 @@ void RLV12::service (Unit &unitRef)
         unit.driveStatus_ = (unit.driveStatus_ & ~RLDS_M_STATE) | RLDS_LOCK; 
         return;
     }
+
 
     if (unit.function_ == RLCS_RHDR)
     {
@@ -191,14 +196,16 @@ void RLV12::service (Unit &unitRef)
             ((unit.currentTrackHeadSector_ + 1) & RLDA_M_SECT);
 
         // End of track?
-        if (GET_SECT (unit.currentTrackHeadSector_) >= RL_NUMSC)
+        if (getSector (unit.currentTrackHeadSector_) >= RL_NUMSC)
             unit.currentTrackHeadSector_ &= ~RLDA_M_SECT;                      /* wrap to 0 */
         return;
     }
 
+
     if (unit.function_ == RLCS_RNOHDR)
     {
-        if (GET_SECT(unit.currentTrackHeadSector_) >= RL_NUMSC)
+        // if (GET_SECT(unit.currentTrackHeadSector_) >= RL_NUMSC)
+        if (getSector (unit.currentTrackHeadSector_) >= RL_NUMSC)
         {
             // Wrong cylinder?
             setDone (RLCS_ERR | RLCS_HDE);
@@ -206,16 +213,17 @@ void RLV12::service (Unit &unitRef)
         }
 
         // Get disk addr
-        da = GET_DA(unit.currentTrackHeadSector_) * RL_NUMWD;
+        da = getDiskAddress (unit.currentTrackHeadSector_) * RL_NUMWD;
 
         // Max transfer
-        maxwc = (RL_NUMSC - GET_SECT(unit.currentTrackHeadSector_)) * RL_NUMWD;
+        maxwc = (RL_NUMSC - getSector (unit.currentTrackHeadSector_)) *
+            RL_NUMWD;
     }
     else
     {
         // Bad cyl or sector?
-        if (((unit.currentTrackHeadSector_ & RLDA_CYL) != (rlda & RLDA_CYL)) ||
-            (GET_SECT(rlda) >= RL_NUMSC))
+        if (((unit.currentTrackHeadSector_ & RLDA_CYL) != 
+            (rlda & RLDA_CYL)) || (getSector (rlda) >= RL_NUMSC))
         {
             // Wrong cylinder?
             setDone (RLCS_ERR | RLCS_HDE | RLCS_INCMP); 
@@ -223,11 +231,11 @@ void RLV12::service (Unit &unitRef)
         }
 
         // Get disk addr
-        da = GET_DA(rlda) * RL_NUMWD;
+        da = getDiskAddress (rlda) * RL_NUMWD;
 
         // Detect spiral read/writes. Determine the maximum number of
         // bytes on this track that can be transferred in this command.
-        maxwc = (RL_NUMSC - GET_SECT(rlda)) * RL_NUMWD;
+        maxwc = (RL_NUMSC - getSector (rlda)) * RL_NUMWD;
     }
 
     // Get memory address from BA, CSR and possibly BAE registers
@@ -354,7 +362,7 @@ void RLV12::service (Unit &unitRef)
         ((unit.currentTrackHeadSector_ + ((wc + (RL_NUMWD - 1)) / RL_NUMWD)) & RLDA_M_SECT);
     else
         unit.currentTrackHeadSector_ = rlda;
-    if (GET_SECT(unit.currentTrackHeadSector_) >= RL_NUMSC)
+    if (getSector (unit.currentTrackHeadSector_) >= RL_NUMSC)
         unit.currentTrackHeadSector_ &= ~RLDA_M_SECT;                          /* wrap to 0 */
 
     setDone(0);

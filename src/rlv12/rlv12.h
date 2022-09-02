@@ -82,11 +82,17 @@
 #define RLDA_TRACK      (RLDA_M_TRACK << RLDA_V_TRACK)
 #define RLDA_CYL        (RLDA_M_CYL << RLDA_V_CYL)
 
-// ToDo: Convert macro's to inline functions
-#define GET_SECT(x)     (((x) >> RLDA_V_SECT) & RLDA_M_SECT)
-#define GET_CYL(x)      (((x) >> RLDA_V_CYL) & RLDA_M_CYL)
-#define GET_TRACK(x)    (((x) >> RLDA_V_TRACK) & RLDA_M_TRACK)
-#define GET_DA(x)       ((GET_TRACK (x) * RL_NUMSC) + GET_SECT (x))
+constexpr int32_t getTrack (int32_t trackHeadSector)
+    { return (trackHeadSector >> RLDA_V_TRACK) & RLDA_M_TRACK; }
+
+constexpr int32_t getSector (int32_t trackHeadSector) 
+    { return (trackHeadSector >> RLDA_V_SECT) & RLDA_M_SECT; }
+
+constexpr int32_t getDiskAddress (int32_t trackHeadSector)
+{ 
+    return ((getTrack (trackHeadSector) * RL_NUMSC) + 
+        getSector (trackHeadSector));
+}
 
 // RLBA
 #define RLBA_IMP        (0177777)                       // Implemented bits
