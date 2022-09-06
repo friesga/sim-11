@@ -7,9 +7,10 @@
 #include "busdevice/busdevice.h"
 #include "asynctimer/asynctimer.h"
 #include "statuscodes.h"
+#include "rlv12command/rlv12command.h"
 
 #include <array>
-#include <memory>       // for std::shared_ptr<>
+#include <memory>       // for std::unique_ptr<>
 
 // From simh pdp11_defs.h
 // IOPAGEBASE for a 22-bit system
@@ -82,13 +83,16 @@
 #define RLDA_TRACK      (RLDA_M_TRACK << RLDA_V_TRACK)
 #define RLDA_CYL        (RLDA_M_CYL << RLDA_V_CYL)
 
+constexpr int32_t getCylinder (int32_t trackHeadSector)
+    { return (trackHeadSector >> RLDA_V_CYL) & RLDA_M_CYL; }
+
 constexpr int32_t getTrack (int32_t trackHeadSector)
     { return (trackHeadSector >> RLDA_V_TRACK) & RLDA_M_TRACK; }
 
 constexpr int32_t getSector (int32_t trackHeadSector) 
     { return (trackHeadSector >> RLDA_V_SECT) & RLDA_M_SECT; }
 
-constexpr int32_t getDiskAddress (int32_t trackHeadSector)
+constexpr int32_t getBlockNumber (int32_t trackHeadSector)
 { 
     return ((getTrack (trackHeadSector) * RL_NUMSC) + 
         getSector (trackHeadSector));
@@ -159,7 +163,9 @@ class RLV12 : public BusDevice
     void seek (RL01_2 &unit);
     u16 calcCRC (int const wc, u16 const *data);
     void setDone (int32_t status);
-    inline int32_t getCylinder (int32_t track);
+    std::unique_ptr<RLV12Command> createCommand (int32_t function,
+        int32_t currentTrackHeadSector, int32_t newTrackHeadSector,
+        int32_t memoryAddress, int32_t wordCount);
 
 public:
     // Constructors/destructor
@@ -187,10 +193,6 @@ public:
     constexpr u16 getBA16BA17 (u16 csr);
 };
 
-inline int32_t RLV12::getCylinder (int32_t track)
-{
-    return (track >> RLDA_V_CYL) & RLDA_M_CYL;
-}
 
 inline size_t RLV12::numUnits ()
 {
