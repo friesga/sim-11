@@ -100,7 +100,7 @@ void RLV12::service (Unit &unitRef)
                 unit.driveStatus_ = (unit.driveStatus_ & ~RLDS_M_STATE) | RLDS_SEEK;
                 timer.start (&unit, std::chrono::milliseconds (200 * rl_swait));
                 unit.driveStatus_ |= RLDS_BHO | RLDS_HDO;
-                unit.currentTrackHeadSector_ = 0;
+                unit.currentDiskAddress_ = 0;
                 break;
 
             case RLDS_SEEK:
@@ -182,7 +182,7 @@ void RLV12::service (Unit &unitRef)
         // Read header?
         u16 hdr[2];
 
-        hdr[0] = rlmpr = unit.currentTrackHeadSector_ & 0177777;
+        hdr[0] = rlmpr = unit.currentDiskAddress_ & 0177777;
         hdr[1] = rlmpr1 = 0;
         // Calculate header CRC
         rlmpr2 = calcCRC(2, &hdr[0]);
@@ -191,19 +191,19 @@ void RLV12::service (Unit &unitRef)
         // Simulate sequential rotation about the current track
         // This functionality supports the Read Without Header Check
         // procedure, refer to EK-RLV12-UG-002, par. 5.8.
-        unit.currentTrackHeadSector_ = 
-            (unit.currentTrackHeadSector_ & ~RLDA_M_SECT) |
-            ((unit.currentTrackHeadSector_ + 1) & RLDA_M_SECT);
+        unit.currentDiskAddress_ = 
+            (unit.currentDiskAddress_ & ~RLDA_M_SECT) |
+            ((unit.currentDiskAddress_ + 1) & RLDA_M_SECT);
 
         // End of track?
-        if (getSector (unit.currentTrackHeadSector_) >= RL_NUMSC)
-            unit.currentTrackHeadSector_ &= ~RLDA_M_SECT;                      /* wrap to 0 */
+        if (getSector (unit.currentDiskAddress_) >= RL_NUMSC)
+            unit.currentDiskAddress_ &= ~RLDA_M_SECT;                      /* wrap to 0 */
         return;
     }
 
     // Create RLV12 command containing the required parameters
     std::unique_ptr<RLV12Command> rlv12Command = 
-        createCommand (unit.function_, unit.currentTrackHeadSector_, rlda,
+        createCommand (unit.function_, unit.currentDiskAddress_, rlda,
             memAddrFromRegs (), 0200000 - rlmpr);
 
     if (rlv12Command == nullptr)
@@ -247,12 +247,12 @@ void RLV12::service (Unit &unitRef)
 
     // Update head position
     if (unit.function_ == RLCS_RNOHDR)
-        unit.currentTrackHeadSector_ = (unit.currentTrackHeadSector_ & ~RLDA_M_SECT) |
-        ((unit.currentTrackHeadSector_ + ((wordCount + (RL_NUMWD - 1)) / RL_NUMWD)) & RLDA_M_SECT);
+        unit.currentDiskAddress_ = (unit.currentDiskAddress_ & ~RLDA_M_SECT) |
+        ((unit.currentDiskAddress_ + ((wordCount + (RL_NUMWD - 1)) / RL_NUMWD)) & RLDA_M_SECT);
     else
-        unit.currentTrackHeadSector_ = rlda;
-    if (getSector (unit.currentTrackHeadSector_) >= RL_NUMSC)
-        unit.currentTrackHeadSector_ &= ~RLDA_M_SECT;                          /* wrap to 0 */
+        unit.currentDiskAddress_ = rlda;
+    if (getSector (unit.currentDiskAddress_) >= RL_NUMSC)
+        unit.currentDiskAddress_ &= ~RLDA_M_SECT;                          /* wrap to 0 */
 
     // RLCSR status error bits are set in execute().
     setDone(0);

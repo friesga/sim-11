@@ -16,24 +16,24 @@ template <typename T>
 class CommandFactory
 {
 public:
-    static std::unique_ptr<T> create (int32_t currentTrackHeadSector, 
-        int32_t newTrackHeadSector, int32_t memoryAddress, int32_t wordCount);
+    static std::unique_ptr<T> create (int32_t currentDiskAddress, 
+        int32_t newDiskAddress, int32_t memoryAddress, int32_t wordCount);
 };
 
 // Create an object of another type than READNOHEADER
 template <typename T>
 std::unique_ptr<T> CommandFactory<T>::create 
-    (int32_t currentTrackHeadSector, int32_t newTrackHeadSector, 
+    (int32_t currentDiskAddress, int32_t newDiskAddress, 
      int32_t memoryAddress, int32_t wordCount)
 {
-    if (getCylinder (currentTrackHeadSector) != getCylinder (newTrackHeadSector) ||
-        getSector (currentTrackHeadSector) >= RL_NUMSC)
+    if (getCylinder (currentDiskAddress) != getCylinder (newDiskAddress) ||
+        getSector (currentDiskAddress) >= RL_NUMSC)
         // Bad cylinder or sector
         return {};
 
     return std::make_unique<T> (
-        getTrack (newTrackHeadSector),
-        getSector (newTrackHeadSector),
+        getTrack (newDiskAddress),
+        getSector (newDiskAddress),
         memoryAddress, wordCount);
 }
 
@@ -41,16 +41,16 @@ std::unique_ptr<T> CommandFactory<T>::create
 template <>
 std::unique_ptr<RLV12ReadNoHeaderCmd> 
     CommandFactory<RLV12ReadNoHeaderCmd>::create 
-        (int32_t currentTrackHeadSector, int32_t newTrackHeadSector,
+        (int32_t currentDiskAddress, int32_t newDiskAddress,
          int32_t memoryAddress, int32_t wordCount)
 {
-    if (getSector (currentTrackHeadSector) >= RL_NUMSC)
+    if (getSector (currentDiskAddress) >= RL_NUMSC)
         // Bad sector
         return {};
 
     return std::make_unique<RLV12ReadNoHeaderCmd> (
-        getTrack (currentTrackHeadSector),
-        getSector (currentTrackHeadSector),
+        getTrack (currentDiskAddress),
+        getSector (currentDiskAddress),
         memoryAddress, wordCount);
 }
 

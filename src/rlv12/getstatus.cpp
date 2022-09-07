@@ -18,7 +18,7 @@ void RLV12::getStatus(RL01_2 &unit)
         unit.driveStatus_ &= ~(RLDS_ERR | RLDS_VCK);
 
     // Develop drive state
-    rlmpr = (u16)(unit.driveStatus_ | (unit.currentTrackHeadSector_ & RLDS_HD));
+    rlmpr = (u16)(unit.driveStatus_ | (unit.currentDiskAddress_ & RLDS_HD));
     if (unit.rlStatus_ & RlStatus::UNIT_RL02)
         rlmpr |= RLDS_RL02;
 

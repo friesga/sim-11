@@ -15,7 +15,7 @@ StatusCode RL01_2::attach (std::string fileName, Bitmask<AttachFlags> flags)
     // ToDo: Check if this behaviour is wanted
 
     // Position at cylinder 0
-    currentTrackHeadSector_ = 0;
+    currentDiskAddress_ = 0;
 
     // New volume
     driveStatus_ = RLDS_HDO | RLDS_BHO | RLDS_VCK | RLDS_LOCK;

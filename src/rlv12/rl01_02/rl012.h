@@ -66,8 +66,8 @@ class RL01_2 : public Unit
     friend class RLV12WriteCmd;
     friend class RLV12WriteCheckCmd;
 
-    // ToDo: Split currentTrackHeadSector_ in three separate variables
-    int32_t currentTrackHeadSector_;
+    // ToDo: Split currentDiskAddress_ in three separate variables
+    int32_t currentDiskAddress_;
     Bitmask<RlStatus> rlStatus_;
     int32_t driveStatus_;
     int32_t function_;

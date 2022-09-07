@@ -83,19 +83,19 @@
 #define RLDA_TRACK      (RLDA_M_TRACK << RLDA_V_TRACK)
 #define RLDA_CYL        (RLDA_M_CYL << RLDA_V_CYL)
 
-constexpr int32_t getCylinder (int32_t trackHeadSector)
-    { return (trackHeadSector >> RLDA_V_CYL) & RLDA_M_CYL; }
+constexpr int32_t getCylinder (int32_t diskAddress)
+    { return (diskAddress >> RLDA_V_CYL) & RLDA_M_CYL; }
 
-constexpr int32_t getTrack (int32_t trackHeadSector)
-    { return (trackHeadSector >> RLDA_V_TRACK) & RLDA_M_TRACK; }
+constexpr int32_t getTrack (int32_t diskAddress)
+    { return (diskAddress >> RLDA_V_TRACK) & RLDA_M_TRACK; }
 
-constexpr int32_t getSector (int32_t trackHeadSector) 
-    { return (trackHeadSector >> RLDA_V_SECT) & RLDA_M_SECT; }
+constexpr int32_t getSector (int32_t diskAddress) 
+    { return (diskAddress >> RLDA_V_SECT) & RLDA_M_SECT; }
 
-constexpr int32_t getBlockNumber (int32_t trackHeadSector)
+constexpr int32_t getBlockNumber (int32_t diskAddress)
 { 
-    return ((getTrack (trackHeadSector) * RL_NUMSC) + 
-        getSector (trackHeadSector));
+    return ((getTrack (diskAddress) * RL_NUMSC) + 
+        getSector (diskAddress));
 }
 
 // RLBA

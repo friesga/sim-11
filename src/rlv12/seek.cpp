@@ -32,7 +32,7 @@ void RLV12::seek (RL01_2& unit)
         return;
     }
 
-    currentCylinder = getCylinder (unit.currentTrackHeadSector_);
+    currentCylinder = getCylinder (unit.currentDiskAddress_);
     offset = getCylinder (rlda);
 
     // Seek direction in or out?
@@ -60,7 +60,7 @@ void RLV12::seek (RL01_2& unit)
 
     // ToDo: If a head switch, sector should be RL_NUMSC/2?
     // Put on track
-    unit.currentTrackHeadSector_ = (newCylinder << RLDA_V_CYL) |
+    unit.currentDiskAddress_ = (newCylinder << RLDA_V_CYL) |
         ((rlda & RLDA_SK_HD) ? RLDA_HD1 : RLDA_HD0);
 
     // Real timing:

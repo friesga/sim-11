@@ -3,7 +3,7 @@
 
 std::unique_ptr<RLV12Command> 
     RLV12::createCommand (int32_t function, 
-        int32_t currentTrackHeadSector, int32_t newTrackHeadSector,
+        int32_t currentDiskAddress, int32_t newDiskAddress,
         int32_t memoryAddress, int32_t wordCount)
 {
     std::unique_ptr<RLV12Command> rlv12Command;
@@ -12,7 +12,7 @@ std::unique_ptr<RLV12Command>
     {
         case RLCS_WCHK:
              rlv12Command = CommandFactory<RLV12WriteCheckCmd>::create 
-                (currentTrackHeadSector, newTrackHeadSector, 
+                (currentDiskAddress, newDiskAddress, 
                  memoryAddress, wordCount);
             break;
 
@@ -23,26 +23,26 @@ std::unique_ptr<RLV12Command>
         case RLCS_RHDR:
             // ToDo: Correct Read Header functionality
             rlv12Command = CommandFactory<RLV12ReadHeaderCmd>::create 
-                (currentTrackHeadSector, newTrackHeadSector,
+                (currentDiskAddress, newDiskAddress,
                  memoryAddress, wordCount);
             break;
 
         case RLCS_WRITE:
             rlv12Command = CommandFactory<RLV12WriteCmd>::create 
-                (currentTrackHeadSector, newTrackHeadSector,
+                (currentDiskAddress, newDiskAddress,
                  memoryAddress, wordCount);
             break;
 
         case RLCS_READ:
             rlv12Command = CommandFactory<RLV12ReadCmd>::create 
-                (currentTrackHeadSector, newTrackHeadSector,
+                (currentDiskAddress, newDiskAddress,
                  memoryAddress, wordCount);
             break;
 
         case RLCS_RNOHDR:
             if ((rlv12Command = 
                 CommandFactory<RLV12ReadNoHeaderCmd>::create 
-                    (currentTrackHeadSector, newTrackHeadSector, 
+                    (currentDiskAddress, newDiskAddress, 
                      memoryAddress, wordCount)) == nullptr)
             {
                 // This RLCSR error status deviates from the status for the 
