@@ -219,7 +219,8 @@ void RLV12::service (Unit &unitRef)
         //if (DEBUG_PRS(rl_dev))
         //    fprintf(sim_deb, ">>RL svc: cyl %d, sect %d, wordCount %d, maxwc %d, err %d\n",
         //        GET_CYL(rlda), GET_SECT(rlda), wordCount, maxwc, err);
-        rlv12Command->execute (rlxb_, unit.filePtr_, &rlcs, bus);
+
+        rlv12Command->execute (this, &unit);
     }
 
     // WordCount and memoryAddress are changed in execute()!
@@ -253,6 +254,7 @@ void RLV12::service (Unit &unitRef)
     if (getSector (unit.currentTrackHeadSector_) >= RL_NUMSC)
         unit.currentTrackHeadSector_ &= ~RLDA_M_SECT;                          /* wrap to 0 */
 
+    // RLCSR status error bits are set in execute().
     setDone(0);
 
     /*

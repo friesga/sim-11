@@ -6,6 +6,9 @@
 
 #include <cstdint>      // For int32_t
 
+class RLV12;
+class RL01_2;
+
 class RLV12Command
 {
 protected:
@@ -28,7 +31,8 @@ public:
     // as an offset in the file
     int32_t filePosition () const;
 
-    virtual void execute (u16 *buffer, FILE *filePtr, u16 *rlcs, QBUS *bus) = 0;
+    // A RLV12Command is executed in the context of the controller and a unit
+    virtual void execute (RLV12 *controller, RL01_2 *unit) = 0;
 };
 
 #endif // !_RLV12COMMAND_H_

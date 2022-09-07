@@ -11,7 +11,7 @@ public:
     // Use base class constructor
     using RLV12Command::RLV12Command;
 
-    void execute (u16 *buffer, FILE *filePtr, u16 *rlcs, QBUS *bus) override;
+    void execute (RLV12 *controller, RL01_2 *unit) override;
 };
 
 #endif // !_RLV12READCMD_H_

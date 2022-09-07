@@ -115,7 +115,13 @@ constexpr int32_t getBlockNumber (int32_t trackHeadSector)
 // Implementation of the RL11, RLV11 and RLV12 controllers.
 class RLV12 : public BusDevice
 {
-    // Define RLV12 registers as offsets from the controllers bas address
+    // All RLV12Commands need access to registers and the transfer buffer
+    friend class RLV12ReadCmd;
+    friend class RLV12ReadNoHeaderCmd;
+    friend class RLV12WriteCmd;
+    friend class RLV12WriteCheckCmd;
+    
+    // Define RLV12 registers as offsets from the controllers base address
     enum
     { 
         CSR = 00,

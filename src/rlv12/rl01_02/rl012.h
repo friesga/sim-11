@@ -59,7 +59,12 @@ enum class RlStatus
 // RLO1/RL02 unit
 class RL01_2 : public Unit
 {
+    // All RLV12Commands need access to the file pointer and unit status
     friend class RLV12;
+    friend class RLV12ReadCmd;
+    friend class RLV12ReadNoHeaderCmd;
+    friend class RLV12WriteCmd;
+    friend class RLV12WriteCheckCmd;
 
     // ToDo: Split currentTrackHeadSector_ in three separate variables
     int32_t currentTrackHeadSector_;
