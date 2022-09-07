@@ -17,10 +17,6 @@
 //
 void RLV12::service (Unit &unitRef)
 {
-
-    int32_t err, wordCount, maxwc;
-    int32_t i, da, awc;
-    uint32_t memoryAddress;
     RL01_2 &unit = static_cast<RL01_2&> (unitRef);
  
 #if 0
