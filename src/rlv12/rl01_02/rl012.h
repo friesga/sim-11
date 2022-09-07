@@ -61,8 +61,10 @@ class RL01_2 : public Unit
 {
     // All RLV12Commands need access to the file pointer and unit status
     friend class RLV12;
+    friend class RLV12Command;
     friend class RLV12ReadCmd;
     friend class RLV12ReadNoHeaderCmd;
+    friend class RLV12SeekCmd;
     friend class RLV12WriteCmd;
     friend class RLV12WriteCheckCmd;
 

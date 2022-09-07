@@ -5,6 +5,7 @@
 #include "rlv12command.h"
 #include "rlv12readcmd.h"
 #include "rlv12readheadercmd.h"
+#include "rlv12seekcmd.h"
 #include "rlv12writecmd.h"
 #include "rlv12writecheckcmd.h"
 #include "rlv12readnoheadercmd.h"
@@ -37,7 +38,7 @@ std::unique_ptr<T> CommandFactory<T>::create
         memoryAddress, wordCount);
 }
 
-// Create an object of type READNOHEADER
+// Create an object of type RLV12ReadNoHeaderCmd
 template <>
 std::unique_ptr<RLV12ReadNoHeaderCmd> 
     CommandFactory<RLV12ReadNoHeaderCmd>::create 
@@ -50,6 +51,19 @@ std::unique_ptr<RLV12ReadNoHeaderCmd>
 
     return std::make_unique<RLV12ReadNoHeaderCmd> (
         getTrack (currentDiskAddress),
+        getSector (currentDiskAddress),
+        memoryAddress, wordCount);
+}
+
+// Create an object of type RLV12SeekCmd
+template <>
+std::unique_ptr<RLV12SeekCmd> 
+    CommandFactory<RLV12SeekCmd>::create 
+        (int32_t currentDiskAddress, int32_t newDiskAddress,
+         int32_t memoryAddress, int32_t wordCount)
+{
+    return std::make_unique<RLV12SeekCmd> 
+        (getTrack (currentDiskAddress),
         getSector (currentDiskAddress),
         memoryAddress, wordCount);
 }

@@ -213,47 +213,5 @@ void RLV12::service (Unit &unitRef)
         rlv12Command->execute (this, &unit);
     }
 
-    // WordCount and memoryAddress are changed in execute()!
-    wordCount = rlv12Command->wordCount ();
-
-    // Complete Write Check, Write, Read, Read no header
-    // Calculate the final word count (i.e. the remaining number of
-    // words to be transferred).
-    rlmpr = (rlmpr + wordCount) & 0177777;
-
-    // If the specified transfer could not be completed indicate an error
-    // condition
-    if (rlmpr != 0)
-        rlcs |= RLCS_ERR | RLCS_INCMP | RLCS_HDE;
-
-    memoryAddress += (wordCount << 1);                                        /* final byte addr */
-    
-    // Load BAR, CSR and possibly BAE registers with the current address
-    memAddrToRegs (memoryAddress);
-
-    // If we ran off the end of the track, return 40 in rlda, but keep
-    // track over a legitimate sector (0)?
-    rlda += ((wordCount + (RL_NUMWD - 1)) / RL_NUMWD);
-
-    // Update head position
-    if (unit.function_ == RLCS_RNOHDR)
-        unit.currentDiskAddress_ = (unit.currentDiskAddress_ & ~RLDA_M_SECT) |
-        ((unit.currentDiskAddress_ + ((wordCount + (RL_NUMWD - 1)) / RL_NUMWD)) & RLDA_M_SECT);
-    else
-        unit.currentDiskAddress_ = rlda;
-    if (getSector (unit.currentDiskAddress_) >= RL_NUMSC)
-        unit.currentDiskAddress_ &= ~RLDA_M_SECT;                          /* wrap to 0 */
-
-    // RLCSR status error bits are set in execute().
-    setDone(0);
-
-    /*
-    if (err != 0)
-    {
-        perror("RL I/O error");
-        clearerr(unit.filePtr_);
-    }
-    */
-
-    return;
+    rlv12Command->finish (this, &unit);
 }

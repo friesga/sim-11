@@ -31,8 +31,9 @@ public:
     // as an offset in the file
     int32_t filePosition () const;
 
-    // A RLV12Command is executed in the context of the controller and a unit
+    // RLV12Command's are executed in the context of the controller and a unit
     virtual void execute (RLV12 *controller, RL01_2 *unit) = 0;
+    virtual void finish (RLV12 *controller, RL01_2 *unit);
 };
 
 #endif // !_RLV12COMMAND_H_
