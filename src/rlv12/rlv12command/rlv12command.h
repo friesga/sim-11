@@ -1,10 +1,14 @@
 #ifndef _RLV12COMMAND_H_
 #define _RLV12COMMAND_H_
 
+#include "types.h"
+#include "qbus/qbus.h"
+
 #include <cstdint>      // For int32_t
 
 class RLV12Command
 {
+protected:
     int32_t trackNumber_;
     int32_t sectorNumber_;
     int32_t memoryAddress_;
@@ -24,7 +28,7 @@ public:
     // as an offset in the file
     int32_t filePosition () const;
 
-    virtual void execute () = 0;
+    virtual void execute (u16 *buffer, FILE *filePtr, u16 *rlcs, QBUS *bus) = 0;
 };
 
 #endif // !_RLV12COMMAND_H_

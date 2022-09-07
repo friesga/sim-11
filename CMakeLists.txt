@@ -29,6 +29,10 @@ set (RLV12_SRCS
     src/rlv12/rl01_02/rl012.cpp
     src/rlv12/rl01_02/operator.cpp
     src/rlv12/rlv12command/rlv12command.cpp
+    src/rlv12/rlv12command/rlv12readcmd.cpp
+    src/rlv12/rlv12command/rlv12readnoheadercmd.cpp
+    src/rlv12/rlv12command/rlv12writecmd.cpp
+    src/rlv12/rlv12command/rlv12writecheckcmd.cpp
     src/rlv12/read.cpp
     src/rlv12/seek.cpp
     src/rlv12/setdone.cpp

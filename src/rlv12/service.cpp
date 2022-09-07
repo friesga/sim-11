@@ -201,54 +201,6 @@ void RLV12::service (Unit &unitRef)
         return;
     }
 
-#if 0
-    if (unit.function_ == RLCS_RNOHDR)
-    {
-        // if (GET_SECT(unit.currentTrackHeadSector_) >= RL_NUMSC)
-        if (getSector (unit.currentTrackHeadSector_) >= RL_NUMSC)
-        {
-            // Wrong cylinder?
-            setDone (RLCS_ERR | RLCS_HDE);
-            return;
-        }
-
-        // Get disk addr
-        da = getBlockNumber (unit.currentTrackHeadSector_) * RL_NUMWD;
-
-        // Max transfer
-        maxwc = (RL_NUMSC - getSector (unit.currentTrackHeadSector_)) *
-            RL_NUMWD;
-    }
-    else
-    {
-        // Bad cyl or sector?
-        if (((unit.currentTrackHeadSector_ & RLDA_CYL) != 
-            (rlda & RLDA_CYL)) || (getSector (rlda) >= RL_NUMSC))
-        {
-            // Wrong cylinder?
-            setDone (RLCS_ERR | RLCS_HDE | RLCS_INCMP); 
-            return;
-        }
-
-        // Get disk addr
-        da = getBlockNumber (rlda) * RL_NUMWD;
-
-        // Detect spiral read/writes. Determine the maximum number of
-        // bytes on this track that can be transferred in this command.
-        maxwc = (RL_NUMSC - getSector (rlda)) * RL_NUMWD;
-    }
-
-    // Get memory address from BA, CSR and possibly BAE registers
-    memoryAddress = memAddrFromRegs ();
-
-    // Get true wordCount
-    wordCount = 0200000 - rlmpr;
-
-    // track overrun?
-    if (wordCount > maxwc)                                         
-        wordCount = maxwc;
-#endif
-
     // Create RLV12 command containing the required parameters
     std::unique_ptr<RLV12Command> rlv12Command = 
         createCommand (unit.function_, unit.currentTrackHeadSector_, rlda,
@@ -262,102 +214,16 @@ void RLV12::service (Unit &unitRef)
     memoryAddress = rlv12Command->memoryAddress ();
 
     // err = fseek (unit.filePtr_, da * sizeof(int16_t), SEEK_SET);
-    err = fseek (unit.filePtr_, rlv12Command->filePosition(), SEEK_SET);
-
-    if (err == 0)
+    if (!fseek (unit.filePtr_, rlv12Command->filePosition(), SEEK_SET))
     {
-
         //if (DEBUG_PRS(rl_dev))
         //    fprintf(sim_deb, ">>RL svc: cyl %d, sect %d, wordCount %d, maxwc %d, err %d\n",
         //        GET_CYL(rlda), GET_SECT(rlda), wordCount, maxwc, err);
-        switch (unit.function_)
-        {
-            case RLCS_READ:
-                [[fallthrough]];
-            case RLCS_RNOHDR:
-
-                // Read Data or Read Data Without Header Check command
-                // Read wordCount * 2 bytes; returned is the number of words read 
-                i = fread (rlxb_, sizeof (int16_t), wordCount, unit.filePtr_);
-
-                // ToDo: Check error
-                err = ferror (unit.filePtr_);
-
-                // Clear the part of the buffer not filled by the read
-                for (; i < wordCount; i++)
-                    rlxb_[i] = 0;
-
-                // Transfer words in buffer
-                for (i = 0; i < wordCount; memoryAddress += 2, ++i)
-                    if (!bus->writeWord (memoryAddress, rlxb_[i]))
-                        rlcs = rlcs | RLCS_ERR | RLCS_NXM;
-                break;
-
-            case RLCS_WRITE:
-            {
-                CondData<u16> tmpValue;
-
-                // Write?
-                for (i = 0; i < wordCount; memoryAddress += 2, ++i)
-                {
-                    tmpValue = bus->read (memoryAddress).valueOr (0);
-                    if (!tmpValue.hasValue ())
-                    {
-                        rlcs = rlcs | RLCS_ERR | RLCS_NXM;
-                        // Set adj xfer length
-                        wordCount -= i;
-                        break;
-                    }
-                    rlxb_[i] = tmpValue;
-                }
-
-                // Any xfer?
-                if (wordCount)
-                {
-                    // Clear to end of block
-                    awc = (wordCount + (RL_NUMWD - 1)) & ~(RL_NUMWD - 1);
-                    for (i = wordCount; i < awc; i++)
-                        rlxb_[i] = 0;
-
-                    fwrite (rlxb_, sizeof (int16_t), awc, unit.filePtr_);
-                    err = ferror (unit.filePtr_);
-                }
-            }
-            break;
-
-            case RLCS_WCHK:
-            {
-                // Write Check Command
-                CondData<u16> comp;
-
-                i = fread (rlxb_, sizeof (int16_t), wordCount, unit.filePtr_);
-                err = ferror (unit.filePtr_);
-
-                // Clear remainder of buffer
-                for (; i < wordCount; i++)
-                    rlxb_[i] = 0;
-
-                // Save wordCount
-                awc = wordCount;
-                for (wordCount = 0; (err == 0) && (wordCount < awc); 
-                    memoryAddress += 2, ++wordCount)
-                {
-                    // Loop through buffer
-                    comp = bus->read (memoryAddress).valueOr (0);
-                    if (!comp.hasValue ())
-                    {
-                        rlcs = rlcs | RLCS_ERR | RLCS_NXM;
-                        break;
-                    }
-
-                    // Check read word with buffer
-                    // ToDo: Quit for loop when an inequality is detected?
-                    if (comp != rlxb_[wordCount])
-                        rlcs = rlcs | RLCS_ERR | RLCS_CRC;
-                }
-            }
-        }
+        rlv12Command->execute (rlxb_, unit.filePtr_, &rlcs, bus);
     }
+
+    // WordCount and memoryAddress are changed in execute()!
+    wordCount = rlv12Command->wordCount ();
 
     // Complete Write Check, Write, Read, Read no header
     // Calculate the final word count (i.e. the remaining number of
@@ -389,11 +255,13 @@ void RLV12::service (Unit &unitRef)
 
     setDone(0);
 
+    /*
     if (err != 0)
     {
         perror("RL I/O error");
         clearerr(unit.filePtr_);
     }
+    */
 
     return;
 }

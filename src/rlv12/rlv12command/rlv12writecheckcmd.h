@@ -11,10 +11,7 @@ public:
     // Use base class constructor
     using RLV12Command::RLV12Command;
 
-    void execute () override
-    {
-        std::cout << "Execute RLV12WriteCheckCmd\n";
-    }
+    void execute (u16 *buffer, FILE *filePtr, u16 *rlcs, QBUS *bus) override;
 };
 
 #endif // !_RLV12WRITECHECKCMD_H_
