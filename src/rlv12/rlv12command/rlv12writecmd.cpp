@@ -1,12 +1,20 @@
 #include "rlv12writecmd.h"
 #include "rlv12/rlv12.h"
 
-
 void RLV12WriteCmd::execute (RLV12 *controller, RL01_2 *unit)
 {
     CondData<u16> tmpValue;
     // ToDo: Rename i
     int32_t i;
+
+    if (unit->unitStatus_ & Status::UNIT_RO || 
+        unit->rlStatus_ & RlStatus::UNIT_WLK)
+    {
+        // Write and locked
+        unit->driveStatus_ |= RLDS_WGE;                     
+        controller->setDone (RLCS_ERR | RLCS_DRE);
+        return;
+    }
 
     for (i = 0; i < wordCount_; memoryAddress_ += 2, ++i)
     {

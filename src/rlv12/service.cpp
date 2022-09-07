@@ -156,16 +156,6 @@ void RLV12::service (Unit &unitRef)
         return;
     }
 
-    if ((unit.function_ == RLCS_WRITE) && 
-        ((unit.unitStatus_ & Status::UNIT_RO) || 
-          unit.rlStatus_ & RlStatus::UNIT_WLK))
-    {
-        // Write and locked
-        unit.driveStatus_ |= RLDS_WGE;                     
-        setDone (RLCS_ERR | RLCS_DRE);
-        return;
-    }
-
 
     if (unit.function_ == RLCS_SEEK)
     {
