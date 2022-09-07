@@ -10,6 +10,7 @@ public:
     using RLV12Command::RLV12Command;
 
     void execute (RLV12 *controller, RL01_2 *unit) override;
+    void finish (RLV12 *controller, RL01_2 *unit) override;
 };
 
 #endif // !_RLV12READCMD_H_

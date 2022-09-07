@@ -8,3 +8,7 @@ void RLV12SeekCmd::execute (RLV12 *controller, RL01_2 *unit)
     unit->driveStatus_ = (unit->driveStatus_ & ~RLDS_M_STATE) | RLDS_LOCK; 
     return;
 }
+
+// No action to finish this command
+void RLV12SeekCmd::finish (RLV12 *controller, RL01_2 *unit)
+{}

@@ -156,17 +156,6 @@ void RLV12::service (Unit &unitRef)
         return;
     }
 
-
-    if (unit.function_ == RLCS_SEEK)
-    {
-        // Seek?
-        // Enter position mode
-        // Heads locked on cyl
-        unit.driveStatus_ = (unit.driveStatus_ & ~RLDS_M_STATE) | RLDS_LOCK; 
-        return;
-    }
-
-
     if (unit.function_ == RLCS_RHDR)
     {
         // Read header?

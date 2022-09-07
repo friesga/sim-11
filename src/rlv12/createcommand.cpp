@@ -17,7 +17,9 @@ std::unique_ptr<RLV12Command>
             break;
 
         case RLCS_SEEK:
-            // ToDo: Implement for Seek command
+            rlv12Command = CommandFactory<RLV12SeekCmd>::create 
+                (currentDiskAddress, newDiskAddress,
+                 memoryAddress, wordCount);
             break;
 
         case RLCS_RHDR:

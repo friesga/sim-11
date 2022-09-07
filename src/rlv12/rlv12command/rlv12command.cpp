@@ -37,10 +37,11 @@ int32_t RLV12Command::filePosition () const
         sizeof(int16_t);
 }
 
-// Default implementation of the finish command
+// Default implementation of the finish command for Read, Read no header,
+// Write and Write Check commands. This function finishes the execution
+// of these commands.
 void RLV12Command::finish (RLV12 *controller, RL01_2 *unit)
 {
-    // Complete Write Check, Write, Read, Read no header commands
     // Calculate the final word count (i.e. the remaining number of
     // words to be transferred).
     controller->rlmpr = (controller->rlmpr + wordCount_) & 0177777;
