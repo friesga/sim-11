@@ -118,6 +118,7 @@ class RLV12 : public BusDevice
     // All RLV12Commands need access to registers and the transfer buffer
     friend class RLV12Command;
     friend class RLV12ReadCmd;
+    friend class RLV12ReadHeaderCmd;
     friend class RLV12ReadNoHeaderCmd;
     friend class RLV12SeekCmd;
     friend class RLV12WriteCmd;

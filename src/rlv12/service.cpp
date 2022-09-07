@@ -156,30 +156,6 @@ void RLV12::service (Unit &unitRef)
         return;
     }
 
-    if (unit.function_ == RLCS_RHDR)
-    {
-        // Read header?
-        u16 hdr[2];
-
-        hdr[0] = rlmpr = unit.currentDiskAddress_ & 0177777;
-        hdr[1] = rlmpr1 = 0;
-        // Calculate header CRC
-        rlmpr2 = calcCRC(2, &hdr[0]);
-        setDone (0);
-
-        // Simulate sequential rotation about the current track
-        // This functionality supports the Read Without Header Check
-        // procedure, refer to EK-RLV12-UG-002, par. 5.8.
-        unit.currentDiskAddress_ = 
-            (unit.currentDiskAddress_ & ~RLDA_M_SECT) |
-            ((unit.currentDiskAddress_ + 1) & RLDA_M_SECT);
-
-        // End of track?
-        if (getSector (unit.currentDiskAddress_) >= RL_NUMSC)
-            unit.currentDiskAddress_ &= ~RLDA_M_SECT;                      /* wrap to 0 */
-        return;
-    }
-
     // Create RLV12 command containing the required parameters
     std::unique_ptr<RLV12Command> rlv12Command = 
         createCommand (unit.function_, unit.currentDiskAddress_, rlda,
@@ -189,10 +165,6 @@ void RLV12::service (Unit &unitRef)
         // setDone() has already been executed by createCommand()
         return;
 
-    wordCount = rlv12Command->wordCount ();
-    memoryAddress = rlv12Command->memoryAddress ();
-
-    // err = fseek (unit.filePtr_, da * sizeof(int16_t), SEEK_SET);
     if (!fseek (unit.filePtr_, rlv12Command->filePosition(), SEEK_SET))
     {
         //if (DEBUG_PRS(rl_dev))

@@ -30,6 +30,7 @@ set (RLV12_SRCS
     src/rlv12/rl01_02/operator.cpp
     src/rlv12/rlv12command/rlv12command.cpp
     src/rlv12/rlv12command/rlv12readcmd.cpp
+    src/rlv12/rlv12command/rlv12readheadercmd.cpp
     src/rlv12/rlv12command/rlv12readnoheadercmd.cpp
     src/rlv12/rlv12command/rlv12seekcmd.cpp
     src/rlv12/rlv12command/rlv12writecmd.cpp

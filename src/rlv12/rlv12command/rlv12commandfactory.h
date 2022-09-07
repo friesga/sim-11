@@ -21,7 +21,7 @@ public:
         int32_t newDiskAddress, int32_t memoryAddress, int32_t wordCount);
 };
 
-// Create an object of another type than READNOHEADER
+// Default creation of RLV12Command objects
 template <typename T>
 std::unique_ptr<T> CommandFactory<T>::create 
     (int32_t currentDiskAddress, int32_t newDiskAddress, 
@@ -63,6 +63,19 @@ std::unique_ptr<RLV12SeekCmd>
          int32_t memoryAddress, int32_t wordCount)
 {
     return std::make_unique<RLV12SeekCmd> 
+        (getTrack (currentDiskAddress),
+        getSector (currentDiskAddress),
+        memoryAddress, wordCount);
+}
+
+// Create an object of type RLV12ReadHeaderCmd
+template <>
+std::unique_ptr<RLV12ReadHeaderCmd> 
+    CommandFactory<RLV12ReadHeaderCmd>::create 
+        (int32_t currentDiskAddress, int32_t newDiskAddress,
+         int32_t memoryAddress, int32_t wordCount)
+{
+    return std::make_unique<RLV12ReadHeaderCmd> 
         (getTrack (currentDiskAddress),
         getSector (currentDiskAddress),
         memoryAddress, wordCount);

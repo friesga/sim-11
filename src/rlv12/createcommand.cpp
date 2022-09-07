@@ -23,7 +23,6 @@ std::unique_ptr<RLV12Command>
             break;
 
         case RLCS_RHDR:
-            // ToDo: Correct Read Header functionality
             rlv12Command = CommandFactory<RLV12ReadHeaderCmd>::create 
                 (currentDiskAddress, newDiskAddress,
                  memoryAddress, wordCount);
