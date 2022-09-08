@@ -142,8 +142,9 @@ class RLV12 : public BusDevice
     // Define transfer buffer
     u16 *rlxb_;
 
-    // True if this instance mimics an RLV11 controller
-    bool rlv11_;
+    
+    bool rlv11_;    // True if this instance mimics an RLV11 controller
+    bool _22bit_;   // 22-bit option of the RLV12 controller
     
     // A RLV12 can have a maximum of four units
     std::array<RL01_2, RL_NUMDRIVES> units_
@@ -170,7 +171,8 @@ class RLV12 : public BusDevice
 public:
     // Constructors/destructor
     RLV12 ();
-    RLV12 (u32 baseAddress, u32 vector, bool rlv11, size_t numUnits);
+    RLV12 (u32 baseAddress, u32 vector, bool rlv11, bool _22bit, 
+        size_t numUnits);
     ~RLV12 ();
 
     // Required functions

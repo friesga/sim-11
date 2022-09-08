@@ -11,7 +11,8 @@ struct RlConfig
 	uint16_t address {0};
 	uint16_t vector {0};
 	size_t numUnits {0};
-	bool RLV11 {false};
+	bool rlv11 {false};
+	bool _22bit {false};
 	RlUnitConfig rlUnitConfig[maxRlUnits];
 };
 
@@ -29,14 +30,18 @@ class RlProcessor : public SectionProcessor
 		{"controller", &RlProcessor::processController},
 		{"address", &RlProcessor::processAddress},
 		{"vector", &RlProcessor::processVector},
-		{"units", &RlProcessor::processUnits}
+		{"units", &RlProcessor::processUnits},
+		{"22-bit", &RlProcessor::process22Bit}
 	};
 
 	void processController (iniparser::Value value);
 	void processAddress (iniparser::Value value);
 	void processVector (iniparser::Value value);
 	void processUnits (iniparser::Value value);
+	void process22Bit (iniparser::Value value);
 	uint16_t touint16_t (std::string number);
+
+	void checkConsistency();
 
 public:
 	void processSection (iniparser::Section* section) override;

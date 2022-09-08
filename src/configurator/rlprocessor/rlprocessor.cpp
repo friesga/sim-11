@@ -22,6 +22,9 @@ void RlProcessor::processSection (iniparser::Section* section)
 		}
 	}
 
+	// Check the consistency of the specified RL options
+	checkConsistency();
+
 	// Process subsections
 	// A subsection name must start with the string "unit", followed by
 	// a unit number in the range 0-4.
@@ -67,9 +70,9 @@ RlConfig *RlProcessor::getConfig()
 void RlProcessor::processController (iniparser::Value value)
 {
 	if (value.asString() == "RLV11")
-		rlConfigPtr->RLV11 = true;
+		rlConfigPtr->rlv11 = true;
 	else if (value.asString() == "RLV12")
-		rlConfigPtr->RLV11 = false;
+		rlConfigPtr->rlv11 = false;
 	else
 		throw std::invalid_argument {"Incorrect RL controller type: " + 
 			value.asString()};
@@ -106,6 +109,19 @@ void RlProcessor::processUnits (iniparser::Value value)
 	rlConfigPtr->numUnits = value.asInt ();
 }
 
+// Explicitly test for "true" and "false" as AsBool() returns no error,
+// only checks the first character and returns false except for strings parsed
+// as true.
+void RlProcessor::process22Bit (iniparser::Value value)
+{
+	if (value.asString() == "true")
+		rlConfigPtr->_22bit = true;
+	else if (value.asString() == "false")
+		rlConfigPtr->_22bit = false;
+	else
+		throw std::invalid_argument {"22-bit must be either true or false"};
+}
+
 // Return the number represented by the string as an uint16_t. The number's 
 // base is determined by stoul. This allows for the specification of an
 // address as an octal numer.
@@ -119,4 +135,16 @@ uint16_t RlProcessor::touint16_t (std::string number)
 			throw std::invalid_argument{number};
 
 	return tmp;
+}
+
+// Check the consistency of the configuration of the RLV1[12] controller
+// 
+// The RLV12 controller contains a M1-M2 jumper which, when installed, enables
+// the 22-bit option. This option is not present on the RLV11, so allow this
+// option only if the controller type is RLV12. 
+void RlProcessor::checkConsistency ()
+{
+	if (rlConfigPtr->_22bit && rlConfigPtr->rlv11)
+		throw std::invalid_argument 
+			{"The 22-bit option is only allowed on an RLV12 controller"};
 }

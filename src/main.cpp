@@ -198,7 +198,8 @@ try
 	deviceConfig = configProcessor.getConfig ();
 
 	RLV12 rlv12 (deviceConfig->rlConfig->address, deviceConfig->rlConfig->vector,
-		deviceConfig->rlConfig->RLV11, deviceConfig->rlConfig->numUnits);
+		deviceConfig->rlConfig->rlv11, deviceConfig->rlConfig->_22bit, 
+		deviceConfig->rlConfig->numUnits);
 
 	// Attach files to the RL units
 	for (size_t unitNumber = 0; 

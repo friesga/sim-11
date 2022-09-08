@@ -31,7 +31,8 @@ RLV12::RLV12 ()
     reset ();
 }
 
-RLV12::RLV12 (u32 baseAddress, u32 vector, bool rlv11, size_t numUnits)
+RLV12::RLV12 (u32 baseAddress, u32 vector, bool rlv11, bool _22bit, 
+    size_t numUnits)
     :
     rlcs {0},
     rlba {0},
@@ -39,7 +40,8 @@ RLV12::RLV12 (u32 baseAddress, u32 vector, bool rlv11, size_t numUnits)
     rlmpr {0},
     rlbae {0},
     rlxb_ {nullptr},
-    rlv11_ {rlv11}
+    rlv11_ {rlv11},
+    _22bit_ {_22bit} 
 {
     name_ = "RL";
     baseAddress_ = (baseAddress > 0) ? baseAddress : IOBA_RL;
