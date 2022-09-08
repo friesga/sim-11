@@ -92,6 +92,10 @@ void RLV12::reset ()
     }
 }
 
+// An RLV11 controller or an RLV12 with the 22-bit option disabled has no
+// Bus Address Extension register. This function will return true for
+// an access to that register; following reads and writes to that register
+// however will return a non-existing memory error.
 bool RLV12::responsible (u16 address)
 {
     return address >= baseAddress_ && address <= (baseAddress_ + BAE) ?
@@ -111,7 +115,7 @@ void RLV12::memAddrToRegs (u32 memoryAddress)
     rlba = memoryAddress & RLBA_IMP;
     rlcs = (rlcs & ~RLCS_MEX) | ((upper6Bits & RLCS_M_MEX) << RLCS_V_MEX);
 
-    if (!rlv11_)
+    if (!rlv11_ || (!rlv11_ && !_22bit_))
         rlbae = upper6Bits & RLBAE_IMP; 
 }
 
@@ -121,7 +125,7 @@ void RLV12::memAddrToRegs (u32 memoryAddress)
 u32 RLV12::memAddrFromRegs ()
 {
     // if (flags_ & DEV_RLV11)
-    if (rlv11_)
+    if (rlv11_ || (!rlv11_ && !_22bit_))
         return (getBA16BA17 (rlcs) << (16 - RLCS_V_MEX)) | rlba;
     else
         return (rlbae << 16) | rlba;
@@ -131,7 +135,7 @@ u32 RLV12::memAddrFromRegs ()
 // and BA17 bits
 void RLV12::updateBAE ()
 {
-    if (!rlv11_)
+    if (!rlv11_ || (!rlv11_ && !_22bit_))
        rlbae = (rlbae & ~RLCS_M_MEX) | ((rlcs >> RLCS_V_MEX) & RLCS_M_MEX);
 }
 

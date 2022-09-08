@@ -146,8 +146,9 @@ StatusCode RLV12::writeWord (u16 registerAddress, u16 data)
 
         case BAE:
             // Bus Address Extension Register
-            // Not present in RL11/RLV11
-            if (rlv11_)
+            // Not present in RL11/RLV11 and on an RLV12 with the 22-bit
+            // option disabled.
+            if (rlv11_ || (!rlv11_ && !_22bit_))
                 return StatusCode::NonExistingMemory;
 
             if (registerAddress & 1)
