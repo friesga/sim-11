@@ -4,8 +4,6 @@
 void RLV12WriteCmd::execute (RLV12 *controller, RL01_2 *unit)
 {
     CondData<u16> tmpValue;
-    // ToDo: Rename i
-    int32_t i;
 
     if (unit->unitStatus_ & Status::UNIT_RO || 
         unit->rlStatus_ & RlStatus::UNIT_WLK)
@@ -16,17 +14,17 @@ void RLV12WriteCmd::execute (RLV12 *controller, RL01_2 *unit)
         return;
     }
 
-    for (i = 0; i < wordCount_; memoryAddress_ += 2, ++i)
+    for (size_t index = 0; index < wordCount_; memoryAddress_ += 2, ++index)
     {
         tmpValue = controller->bus->read (memoryAddress_).valueOr (0);
         if (!tmpValue.hasValue ())
         {
             controller->rlcs |= RLCS_ERR | RLCS_NXM;
             // Set adj xfer length
-            wordCount_ -= i;
+            wordCount_ -= index;
             break;
         }
-        controller->rlxb_[i] = tmpValue;
+        controller->rlxb_[index] = tmpValue;
     }
 
     // Any xfer?
@@ -35,8 +33,8 @@ void RLV12WriteCmd::execute (RLV12 *controller, RL01_2 *unit)
         // Clear to end of block
         // ToDo: Rename awc
         int32_t awc = (wordCount_ + (RL_NUMWD - 1)) & ~(RL_NUMWD - 1);
-        for (i = wordCount_; i < awc; i++)
-            controller->rlxb_[i] = 0;
+        for (size_t index = wordCount_; index < awc; ++index)
+            controller->rlxb_[index] = 0;
 
         fwrite (controller->rlxb_, sizeof (int16_t), awc, unit->filePtr_);
         // ToDo: Handle possible fwrite error

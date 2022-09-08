@@ -152,6 +152,14 @@ void RLV12::service (Unit &unitRef)
         return;
     }
 
+    // All commands are handled in three steps:
+    // 1. Creation of a command-specific RLV12Command object with the
+    //    parameters required for the command,
+    // 2. Execution of the command,
+    // 3. Finishing the execution of the command.
+    //
+    // Note that not all commands require all three steps.
+
     // Create RLV12 command containing the required parameters
     std::unique_ptr<RLV12Command> rlv12Command = 
         createCommand (unit.function_, unit.currentDiskAddress_, rlda,
