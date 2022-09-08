@@ -50,6 +50,20 @@ RlConfig *RlProcessor::getConfig()
 	return rlConfigPtr.get();
 }
 
+// Determine the controller type, either RLV11 or RLV12.
+// 
+// Three type of RL controllers exist:
+// - RL11. The RL11 controller is used to interface with the Unibus,
+// - RLV11. This controller interfaces the drive with the LSI-11 bus,
+//   i.e. the 18-bit Qbus,
+// - RLV12. It is used to interface the drive with the LSI-11 (18-bit) or
+//   Extended LSI-11 (22-bit) Qbus.
+// 
+// Source: RL01/RL02 User Guide (EK-RL012-UG-005)
+// 
+// Currently the simulator only supports the Qbus and therefore the RLV11 
+// and RLV12 controllers. When the Unibus is supported the configurator
+// should check the controller/bus type consistency.
 void RlProcessor::processController (iniparser::Value value)
 {
 	if (value.asString() == "RLV11")

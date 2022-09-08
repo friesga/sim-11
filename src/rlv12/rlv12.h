@@ -104,14 +104,6 @@ constexpr int32_t getBlockNumber (int32_t diskAddress)
 // RLBAE 
 #define RLBAE_IMP       (0000077)                       // Implemented bits
 
-// Unibus and cpu_opt are currently unsupported
-#define UNIBUS          0
-
-// Device flags
-#define DEV_V_UF        16                              // User flags
-#define DEV_V_RLV11     (DEV_V_UF + 7)                  // RLV11
-#define DEV_RLV11       (1u << DEV_V_RLV11)
-
 // Implementation of the RL11, RLV11 and RLV12 controllers.
 class RLV12 : public BusDevice
 {
@@ -150,9 +142,8 @@ class RLV12 : public BusDevice
     // Define transfer buffer
     u16 *rlxb_;
 
-    // Define device flags
-    // ToDo: Refactor bit flags
-    uint32_t flags_;
+    // True if this instance mimics an RLV11 controller
+    bool rlv11_;
     
     // A RLV12 can have a maximum of four units
     std::array<RL01_2, RL_NUMDRIVES> units_
@@ -179,7 +170,7 @@ class RLV12 : public BusDevice
 public:
     // Constructors/destructor
     RLV12 ();
-    RLV12 (u32 baseAddress, u32 vector, bool RLV11, size_t numUnits);
+    RLV12 (u32 baseAddress, u32 vector, bool rlv11, size_t numUnits);
     ~RLV12 ();
 
     // Required functions

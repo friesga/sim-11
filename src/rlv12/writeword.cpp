@@ -65,7 +65,7 @@ StatusCode RLV12::writeWord (u16 registerAddress, u16 data)
                     // NOP on the RL11 controller and Maintenance Mode on
                     // the RLV1[12]
                     // ToDo: The RL type test should be done on controller type
-                    if (!UNIBUS)
+                    if (!rlv11_)
                         maintenance ();
                     setDone (0);
                     break;
@@ -120,14 +120,12 @@ StatusCode RLV12::writeWord (u16 registerAddress, u16 data)
             }           
             break;
 
-            /*
-            Contrary to what the RL01/RL02 User Guide (EK-RL012-UG-006, p.4-5)
-            says, bit 0 can be written and read (as 1) on an RLV12 (verified
-            2011-01-05).  Not sure about the RLV11.
-            */
         case BAR:
             // Bus Address Register
-            rlba = data & (UNIBUS ? 0177776 : 0177777);
+            // Contrary to what the RL01/RL02 User Guide (EK-RL012-UG-006, 
+            // p.4-5) says, bit 0 can be written and read (as 1) on an RLV12
+            // (verified 2011-01-05).  Not sure about the RLV11.
+            rlba = data & (rlv11_ ? 0177776 : 0177777);
             // if (DEBUG_PRS(rl_dev))
             //    fprintf(sim_deb, ">>RL wr: RLBA %06o\n", rlba);
             break;
@@ -148,7 +146,8 @@ StatusCode RLV12::writeWord (u16 registerAddress, u16 data)
 
         case BAE:
             // Bus Address Extension Register
-            if (UNIBUS || (flags_ & DEV_RLV11))       /* not in RL11/RLV11 */
+            // Not present in RL11/RLV11
+            if (rlv11_)
                 return StatusCode::NonExistingMemory;
 
             if (registerAddress & 1)

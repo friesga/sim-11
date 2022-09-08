@@ -78,7 +78,8 @@ StatusCode RLV12::read (u16 registerAddress, u16* data)
 
         case BAE:
             // RLBAE 
-            if (UNIBUS || flags_ & DEV_RLV11)       /* not in RL11/RLV11 */
+            // Not present in RL11/RLV11      
+            if (rlv11_)
                 return StatusCode::NonExistingMemory;
             *data = rlbae & RLBAE_IMP;
             break;
