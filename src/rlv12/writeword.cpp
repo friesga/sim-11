@@ -62,12 +62,24 @@ StatusCode RLV12::writeWord (u16 registerAddress, u16 data)
             {
                 // Case on RLCS<3:1>
                 case RLCS_NOP:
-                    // NOP on the RL11 controller and Maintenance Mode on
-                    // the RLV1[12]
-                    // ToDo: The RL type test should be done on controller type
+                    // NOP on the RL(V)11 controller and Maintenance Mode on
+                    // the RLV12.
                     if (!rlv11_)
-                        maintenance ();
-                    setDone (0);
+                    {
+                        unit.function_ = GET_FUNC(rlcs);
+
+                        // Activate unit
+                        // The VRLBC0 diagnostic expects a reaction on a 
+                        // Maintenance command between 155 and 650 milli-
+                        // seconds. This time is determined by executing a
+                        // number of instructions. As the emulated instructions
+                        // are not timed (yet) the reaction time will vary per
+                        // host CPU and has to be determined by trial 
+                        // and error.
+                        timer.start (&unit, std::chrono::milliseconds (20));
+                    }
+                    else
+                        setDone (0);
                     break;
 
                 case RLCS_SEEK:

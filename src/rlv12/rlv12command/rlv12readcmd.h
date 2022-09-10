@@ -3,8 +3,6 @@
 
 #include "rlv12command.h"
 
-#include <iostream>
-
 class RLV12ReadCmd : public RLV12Command
 {
 public:

@@ -10,6 +10,13 @@ std::unique_ptr<RLV12Command>
 
     switch (function)
     {
+        case RLCS_NOP:
+            // Maintenance command
+            rlv12Command = CommandFactory<RLV12MaintenanceCmd>::create 
+                (currentDiskAddress, newDiskAddress,
+                 memoryAddress, wordCount);
+            break;
+
         case RLCS_WCHK:
              rlv12Command = CommandFactory<RLV12WriteCheckCmd>::create 
                 (currentDiskAddress, newDiskAddress, 

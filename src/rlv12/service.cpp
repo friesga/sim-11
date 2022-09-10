@@ -37,7 +37,7 @@ void RLV12::service (Unit &unitRef)
     //}
 
     // Really shouldn't happen...
-    if ((unit.function_ == RLCS_GSTA) || (unit.function_ == RLCS_NOP))
+    if (unit.function_ == RLCS_GSTA)
     {
         setDone (0);
         return;

@@ -3,6 +3,7 @@
 
 #include "rlv12/rlv12.h"
 #include "rlv12command.h"
+#include "rlv12maintenancecmd.h"
 #include "rlv12readcmd.h"
 #include "rlv12readheadercmd.h"
 #include "rlv12seekcmd.h"
@@ -76,6 +77,19 @@ std::unique_ptr<RLV12ReadHeaderCmd>
          int32_t memoryAddress, int32_t wordCount)
 {
     return std::make_unique<RLV12ReadHeaderCmd> 
+        (getTrack (currentDiskAddress),
+        getSector (currentDiskAddress),
+        memoryAddress, wordCount);
+}
+
+// Create an object of type RLV12MaintenanceCmd
+template <>
+std::unique_ptr<RLV12MaintenanceCmd> 
+    CommandFactory<RLV12MaintenanceCmd>::create 
+        (int32_t currentDiskAddress, int32_t newDiskAddress,
+         int32_t memoryAddress, int32_t wordCount)
+{
+    return std::make_unique<RLV12MaintenanceCmd> 
         (getTrack (currentDiskAddress),
         getSector (currentDiskAddress),
         memoryAddress, wordCount);
