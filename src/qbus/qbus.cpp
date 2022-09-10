@@ -91,7 +91,7 @@ void QBUS::reset ()
 	}
 }
 
-// Wait a random number (max QBUS_DELAY) of steps till processing of an
+// Wait a random number (max INTRPT_LATENCY) of steps till processing of an
 // interrupt request. 
 void QBUS::step ()
 {
@@ -99,13 +99,13 @@ void QBUS::step ()
 }
 
 // Check if there is an interrupt request available that can be processed.
-// Wait a random number (max QBUS_DELAY) of steps till processing of an
+// Wait a random number (max INTRPT_LATENCY) of steps till processing of an
 // interrupt request. The delay counter is incremented every QBUS step.
 // Traps are handled internally in the CPU and are to be processed immediately.
 bool QBUS::intrptReqAvailable() 
 {
 	return (!intrptReqQueue_.empty() && 
-		(delay >= QBUS_DELAY || intrptReqQueue_.top().requestType() == RequestType::Trap));
+		(delay >= INTRPT_LATENCY || intrptReqQueue_.top().requestType() == RequestType::Trap));
 }
 
 // Return the priority of the interrupt request with the highest priority
