@@ -12,20 +12,21 @@
 #define	LSI11_SIZE		8
 
 // QBUS interrupt latency, defined as the maximum number of instructions
-// after which the interrupt will be processed.
+// after which the interrupt will be processed. The INTRPT_LATENCY_JITTER
+// is a random number of instructions. The minimum latency will be
+// INTRPT_LATENCY - INTRPT_LATENCY_JITTER and the maximum latency is the
+// value of INTRPT_LATENCY.
 // 
-// According to the Microcomputer Processor Handbook, the maximum interrupt
-// latency (with KEV11 option present) is 44.1 microseconds +/- 20%, so 
-// roughly 50 micoseconds. The LSI-11 instruction time varies between 3.5
+// According to the Microcomputer Processor Handbook, the interrupt
+// latency lies between 35.05 and 44.1 +/- 20%, so roughly between 30 and
+// 50 microseconds. The LSI-11 instruction time varies between 3.5
 // and 15 microseconds. If we presume an averige execution time of 5 micro-
-// seconds, a maximum interrupt latency of 10 instructions would be 
+// seconds, an interrupt latency between 6 and 10 instructions would be 
 // appropriate. An interrupt latency of 20 instructions will result in
 // the VRLBC0 diagnostic reporting "NO INTERRUPT ON FUNCTION COMPLETE" errors.
 //  
-#define	INTRPT_LATENCY		10
-
-/* QBUS interrupt request delay jitter */
-#define	QBUS_DELAY_JITTER	10
+#define	INTRPT_LATENCY			11
+#define	INTRPT_LATENCY_JITTER	5
 
 class BusDevice;
 

@@ -5,7 +5,7 @@
 #include "qbus.h"
 #include "interruptrequest/interruptrequest.h"
 
-#define	IRCJITTER()	(rand() % QBUS_DELAY_JITTER)
+#define	IRCJITTER()	(rand() % INTRPT_LATENCY_JITTER)
 
 QBUS::QBUS ()
 {
