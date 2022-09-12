@@ -4,7 +4,6 @@
 #include "ba11_n/ba11_n.h"
 #include "rxv21/rxv21.h"
 #include "rlv12/rlv12.h"
-#include "rlv12/rlconfig.h"
 #include "bdv11/bdv11.h"
 #include "dlv11j/dlv11j.h"
 #include "msv11d/msv11d.h"
@@ -198,21 +197,7 @@ try
 	// Retrieve the configuration as specified in the configuration file
 	deviceConfig = configProcessor.getConfig ();
 
-	/*
-	RLV12 rlv12 (deviceConfig->rlConfig->address, 
-		deviceConfig->rlConfig->vector,
-		false,
-		deviceConfig->rlConfig->_22bit, 
-		deviceConfig->rlConfig->numUnits);
-	*/
-
-	RLV12 rlv12 (RLConfig(deviceConfig->rlConfig->address, 
-		deviceConfig->rlConfig->vector,
-		(deviceConfig->rlConfig->rlType == RlConfig::RLType::RL11)
-			? RLType::RLV11 : RLType::RLV11,
-		deviceConfig->rlConfig->_22bit, 
-		deviceConfig->rlConfig->numUnits
-	));
+	RLV12 rlv12 (deviceConfig->rlConfig);
 
 
 	// Attach files to the RL units

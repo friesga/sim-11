@@ -64,7 +64,8 @@ StatusCode RLV12::writeWord (u16 registerAddress, u16 data)
                 case RLCS_NOP:
                     // NOP on the RL11 controller and Maintenance Mode on
                     // the RLV11 and RLV12.
-                    if (rlType_ == RLType::RLV11 || rlType_ == RLType::RLV12)
+                    if (rlType_ == RlConfig::RLType::RLV11 || 
+                        rlType_ == RlConfig::RLType::RLV12)
                     {
                         unit.function_ = GET_FUNC(rlcs);
 
@@ -141,7 +142,8 @@ StatusCode RLV12::writeWord (u16 registerAddress, u16 data)
             //
             // The VRLBC0 diagnostics makes clear that bit 0 can be read and
             // written on the RLV11 and RLV12 and always reads as 0 on an RL11.
-            rlba = data & (rlType_ == RLType::RL11 ? 0177776 : 0177777);
+            rlba = data & (rlType_ == 
+                RlConfig::RLType::RL11 ? 0177776 : 0177777);
             // if (DEBUG_PRS(rl_dev))
             //    fprintf(sim_deb, ">>RL wr: RLBA %06o\n", rlba);
             break;
@@ -164,7 +166,7 @@ StatusCode RLV12::writeWord (u16 registerAddress, u16 data)
             // Bus Address Extension Register
             // Not present in RL11/RLV11 and on an RLV12 with the 22-bit
             // option disabled.
-            if (!(rlType_ == RLType::RLV12 && _22bit_))
+            if (!(rlType_ == RlConfig::RLType::RLV12 && _22bit_))
                 return StatusCode::NonExistingMemory;
 
             if (registerAddress & 1)

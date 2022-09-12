@@ -8,7 +8,7 @@
 #include "asynctimer/asynctimer.h"
 #include "statuscodes.h"
 #include "rlv12command/rlv12command.h"
-#include "rlconfig.h"
+#include "configdata/include/configdata.h"
 
 #include <array>
 #include <memory>       // for std::unique_ptr<>
@@ -146,7 +146,7 @@ class RLV12 : public BusDevice
 
     // Definition of the controller type and the presence of the 22-bit option
     // when configured as a RLV12 controller.
-    RLType rlType_;
+    RlConfig::RLType rlType_;
     bool _22bit_;
     
     // A RLV12 can have a maximum of four units
@@ -174,7 +174,7 @@ class RLV12 : public BusDevice
 public:
     // Constructors/destructor
     RLV12 ();
-    RLV12 (RLConfig rlConfig);
+    RLV12 (RlConfig *rlConfig);
     /*
         RLV12 (u32 baseAddress, u32 vector, bool rlv11, bool _22bit, 
         size_t numUnits);
