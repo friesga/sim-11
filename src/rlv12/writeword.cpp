@@ -61,7 +61,7 @@ StatusCode RLV12::writeWord (u16 registerAddress, u16 data)
             switch (GET_FUNC(rlcs))
             {
                 // Case on RLCS<3:1>
-                case RLCS_NOP:
+                case RLCS_MAINTENANCE:
                     // NOP on the RL11 controller and Maintenance Mode on
                     // the RLV11 and RLV12.
                     if (rlType_ == RlConfig::RLType::RLV11 || 

@@ -10,7 +10,7 @@ std::unique_ptr<RLV12Command>
 
     switch (function)
     {
-        case RLCS_NOP:
+        case RLCS_MAINTENANCE:
             // Maintenance command
             rlv12Command = CommandFactory<RLV12MaintenanceCmd>::create 
                 (currentDiskAddress, newDiskAddress,

@@ -36,17 +36,18 @@
 #define RL02_SIZE       (RL01_SIZE * 2)                 // Words/cartridge
 
 // RLCS bits
-#define RLCS_DRDY       (0000001)                       // Drive ready 
-#define RLCS_M_FUNC     (0000007)                       // Function 
-#define  RLCS_NOP       (0)
-#define  RLCS_WCHK      (1)
-#define  RLCS_GSTA      (2)
-#define  RLCS_SEEK      (3)
-#define  RLCS_RHDR      (4)
-#define  RLCS_WRITE     (5)
-#define  RLCS_READ      (6)
-#define  RLCS_RNOHDR    (7)
-#define  RLCS_SPECIAL   (8)                             // Internal function, drive state 
+#define RLCS_DRDY           (0000001)                   // Drive ready 
+#define RLCS_M_FUNC         (0000007)                   // Function 
+#define RLCS_MAINTENANCE    (0)
+#define RLCS_WCHK           (1)
+#define RLCS_GSTA           (2)
+#define RLCS_SEEK           (3)
+#define RLCS_RHDR           (4)
+#define RLCS_WRITE          (5)
+#define RLCS_READ           (6)
+#define RLCS_RNOHDR         (7)
+#define RLCS_SPECIAL        (8)                        // Internal function, drive state 
+
 #define RLCS_V_FUNC     (1)
 #define RLCS_M_MEX      (03)                            // Memory extension 
 #define RLCS_V_MEX      (4)
