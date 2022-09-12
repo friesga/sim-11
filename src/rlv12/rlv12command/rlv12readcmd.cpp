@@ -5,7 +5,7 @@ void RLV12ReadCmd::execute (RLV12 *controller, RL01_2 *unit)
 {
     // Read Data or Read Data Without Header Check command
     // Read wordCount * 2 bytes; returned is the number of bytes read 
-    int32_t numBytes = fread (controller->rlxb_, sizeof (int16_t), wordCount_,
+    size_t numBytes = fread (controller->rlxb_, sizeof (int16_t), wordCount_,
         unit->filePtr_);
 
     // ToDo: Check error

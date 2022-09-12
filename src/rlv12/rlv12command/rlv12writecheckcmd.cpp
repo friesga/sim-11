@@ -6,18 +6,18 @@ void RLV12WriteCheckCmd::execute (RLV12 *controller, RL01_2 *unit)
 {
     CondData<u16> comp;
 
-    int32_t numBytes = fread (controller->rlxb_, sizeof (int16_t), 
+    size_t numBytes = fread (controller->rlxb_, sizeof (int16_t), 
         wordCount_, unit->filePtr_);
 
     if (!ferror (unit->filePtr_))
     {
         // Clear remainder of buffer
-        for (int32_t index = numBytes; index < wordCount_; ++index)
+        for (size_t index = numBytes; index < wordCount_; ++index)
             controller->rlxb_[index] = 0;
 
         // Save wordCount
         // ToDo: Rename awc
-        int32_t awc = wordCount_;
+        size_t awc = wordCount_;
         for (wordCount_ = 0; wordCount_ < awc; 
                 memoryAddress_ += 2, ++wordCount_)
         {
