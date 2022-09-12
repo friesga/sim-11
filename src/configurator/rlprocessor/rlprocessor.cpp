@@ -55,24 +55,16 @@ RlConfig *RlProcessor::getConfig()
 
 // Determine the controller type, either RLV11 or RLV12.
 // 
-// Three type of RL controllers exist:
-// - RL11. The RL11 controller is used to interface with the Unibus,
-// - RLV11. This controller interfaces the drive with the LSI-11 bus,
-//   i.e. the 18-bit Qbus,
-// - RLV12. It is used to interface the drive with the LSI-11 (18-bit) or
-//   Extended LSI-11 (22-bit) Qbus.
 // 
-// Source: RL01/RL02 User Guide (EK-RL012-UG-005)
-// 
-// Currently the simulator only supports the Qbus and therefore the RLV11 
-// and RLV12 controllers. When the Unibus is supported the configurator
-// should check the controller/bus type consistency.
+
 void RlProcessor::processController (iniparser::Value value)
 {
-	if (value.asString() == "RLV11")
-		rlConfigPtr->rlv11 = true;
+	if (value.asString() == "RL11")
+		rlConfigPtr->rlType = RlConfig::RLType::RL11;
+	else if (value.asString() == "RLV11")
+		rlConfigPtr->rlType = RlConfig::RLType::RLV11;
 	else if (value.asString() == "RLV12")
-		rlConfigPtr->rlv11 = false;
+		rlConfigPtr->rlType = RlConfig::RLType::RLV12;
 	else
 		throw std::invalid_argument {"Incorrect RL controller type: " + 
 			value.asString()};
@@ -139,12 +131,20 @@ uint16_t RlProcessor::touint16_t (std::string number)
 
 // Check the consistency of the configuration of the RLV1[12] controller
 // 
+// Currently the simulator only supports the Qbus and therefore the RLV11 
+// and RLV12 controllers. When the Unibus is supported the configurator
+// should check the controller/bus type consistency.
+// 
 // The RLV12 controller contains a M1-M2 jumper which, when installed, enables
 // the 22-bit option. This option is not present on the RLV11, so allow this
 // option only if the controller type is RLV12. 
 void RlProcessor::checkConsistency ()
 {
-	if (rlConfigPtr->_22bit && rlConfigPtr->rlv11)
+	if (rlConfigPtr->rlType == RlConfig::RLType::RL11)
+		throw std::invalid_argument 
+			{"The RL11 can only be configured on Unibus systems"};
+
+	if (rlConfigPtr->_22bit && rlConfigPtr->rlType != RlConfig::RLType::RLV12)
 		throw std::invalid_argument 
 			{"The 22-bit option is only allowed on an RLV12 controller"};
 }

@@ -21,6 +21,7 @@ set (CMDLINEOPTIONS_SRCS
 set (RLV12_SRCS
     src/rlv12/attach.cpp
     src/rlv12/calccrc.cpp
+    src/rlv12/rlconfig.cpp
     src/rlv12/createcommand.cpp
     src/rlv12/getstatus.cpp
     src/rlv12/service.cpp

@@ -62,9 +62,9 @@ StatusCode RLV12::writeWord (u16 registerAddress, u16 data)
             {
                 // Case on RLCS<3:1>
                 case RLCS_NOP:
-                    // NOP on the RL(V)11 controller and Maintenance Mode on
-                    // the RLV12.
-                    if (!rlv11_)
+                    // NOP on the RL11 controller and Maintenance Mode on
+                    // the RLV11 and RLV12.
+                    if (rlType_ == RLType::RLV11 || rlType_ == RLType::RLV12)
                     {
                         unit.function_ = GET_FUNC(rlcs);
 
@@ -136,8 +136,12 @@ StatusCode RLV12::writeWord (u16 registerAddress, u16 data)
             // Bus Address Register
             // Contrary to what the RL01/RL02 User Guide (EK-RL012-UG-006, 
             // p.4-5) says, bit 0 can be written and read (as 1) on an RLV12
-            // (verified 2011-01-05).  Not sure about the RLV11.
-            rlba = data & (rlv11_ ? 0177776 : 0177777);
+            // (verified 2011-01-05).  Not sure about the RLV11. 
+            // Source: simh comment
+            //
+            // The VRLBC0 diagnostics makes clear that bit 0 can be read and
+            // written on the RLV11 and RLV12 and always reads as 0 on an RL11.
+            rlba = data & (rlType_ == RLType::RL11 ? 0177776 : 0177777);
             // if (DEBUG_PRS(rl_dev))
             //    fprintf(sim_deb, ">>RL wr: RLBA %06o\n", rlba);
             break;
@@ -160,7 +164,7 @@ StatusCode RLV12::writeWord (u16 registerAddress, u16 data)
             // Bus Address Extension Register
             // Not present in RL11/RLV11 and on an RLV12 with the 22-bit
             // option disabled.
-            if (rlv11_ || (!rlv11_ && !_22bit_))
+            if (!(rlType_ == RLType::RLV12 && _22bit_))
                 return StatusCode::NonExistingMemory;
 
             if (registerAddress & 1)

@@ -15,7 +15,8 @@ RLV12::RLV12 ()
     rlmpr {0},
     rlbae {0},
     rlxb_ {nullptr},
-    rlv11_ {false}
+    rlType_ {RLType::RLV12},
+    _22bit_ {false}
 {
     name_ = "RL";
     baseAddress_ = IOBA_RL;
@@ -31,6 +32,7 @@ RLV12::RLV12 ()
     reset ();
 }
 
+/*
 RLV12::RLV12 (u32 baseAddress, u32 vector, bool rlv11, bool _22bit, 
     size_t numUnits)
     :
@@ -46,6 +48,32 @@ RLV12::RLV12 (u32 baseAddress, u32 vector, bool rlv11, bool _22bit,
     name_ = "RL";
     baseAddress_ = (baseAddress > 0) ? baseAddress : IOBA_RL;
     vector_ = (vector > 0) ? vector : VEC_RL;
+
+    // Allocate the transfer buffer, initializing to zero
+    rlxb_ = new (std::nothrow) u16[RL_MAXFR]();
+
+    if (rlxb_ == nullptr)
+        throw ("Allocating memory for transfer buffer failed");
+
+    // Reset the controller
+    reset ();
+}
+*/
+
+RLV12::RLV12 (RLConfig rlConfig)
+    :
+    rlcs {0},
+    rlba {0},
+    rlda {0},
+    rlmpr {0},
+    rlbae {0},
+    rlxb_ {nullptr},
+    rlType_ {rlConfig.rlType_},
+    _22bit_ {rlConfig._22bit_} 
+{
+    name_ = "RL";
+    baseAddress_ = (rlConfig.baseAddress_ > 0) ? rlConfig.baseAddress_ : IOBA_RL;
+    vector_ = (rlConfig.vector_ > 0) ? rlConfig.vector_ : VEC_RL;
 
     // Allocate the transfer buffer, initializing to zero
     rlxb_ = new (std::nothrow) u16[RL_MAXFR]();
@@ -115,7 +143,7 @@ void RLV12::memAddrToRegs (u32 memoryAddress)
     rlba = memoryAddress & RLBA_IMP;
     rlcs = (rlcs & ~RLCS_MEX) | ((upper6Bits & RLCS_M_MEX) << RLCS_V_MEX);
 
-    if (!rlv11_ || (!rlv11_ && !_22bit_))
+    if (rlType_ == RLType::RLV12 && _22bit_)
         rlbae = upper6Bits & RLBAE_IMP; 
 }
 
@@ -124,8 +152,7 @@ void RLV12::memAddrToRegs (u32 memoryAddress)
 // are used, for 22-bit systems the BAE register is used.
 u32 RLV12::memAddrFromRegs ()
 {
-    // if (flags_ & DEV_RLV11)
-    if (rlv11_ || (!rlv11_ && !_22bit_))
+    if (!(rlType_ == RLType::RLV12 && _22bit_))
         return (getBA16BA17 (rlcs) << (16 - RLCS_V_MEX)) | rlba;
     else
         return (rlbae << 16) | rlba;
@@ -135,7 +162,7 @@ u32 RLV12::memAddrFromRegs ()
 // and BA17 bits
 void RLV12::updateBAE ()
 {
-    if (!rlv11_ || (!rlv11_ && !_22bit_))
+    if (rlType_ == RLType::RLV12 && _22bit_)
        rlbae = (rlbae & ~RLCS_M_MEX) | ((rlcs >> RLCS_V_MEX) & RLCS_M_MEX);
 }
 
