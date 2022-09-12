@@ -2,18 +2,7 @@
 #define _RLUNITPROCESSOR_H_
 
 #include "../../iniparser.h"
-#include <string>
-
-// Definition of the configuration result of the RL01/02 unit indicated
-// by unitNumber.
-struct RlUnitConfig
-{
-	bool RL01 {true};
-	std::string fileName;
-	bool newFile {false};
-	bool readOnly {false};
-	bool overwrite {false};
-};
+#include "../../include/configdata.h"
 
 // Processor for the unit subsection of an RL section
 class RlUnitProcessor 
