@@ -10,7 +10,7 @@
 #include "msv11d/msv11d.h"
 #include "lsi11/lsi11.h"
 #include "cmdlineoptions/cmdlineoptions.h"
-#include "configurator/configprocessor/configprocessor.h"
+#include "configdata/configprocessor/configprocessor.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -171,7 +171,7 @@ try
 	
 	// Load device configuration
 	DeviceConfig *deviceConfig {nullptr};
-	ConfigProcessor configProcessor;
+	ConfigData configProcessor;
 
 	if (CmdLineOptions::get().config_file)
 	{

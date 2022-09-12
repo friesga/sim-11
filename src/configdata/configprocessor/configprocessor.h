@@ -10,10 +10,15 @@ struct DeviceConfig
 	RlConfig *rlConfig = nullptr;
 };
 
-// Process a configuration file. Processing the file and retrieving the
-// result of the processing is split to decouple the processing from the
-// definition of the device objects.
-class ConfigProcessor
+//
+// Interface specification for the definition and retrieval of configuration
+// data. 
+// 
+// Processing the configuration file and retrieving the result of the
+// processing is split to decouple the processing from the definition of
+// the device objects.
+//
+class ConfigData
 {
 	std::unique_ptr<DeviceConfig> deviceConfigPtr = 
 		std::make_unique<DeviceConfig> ();

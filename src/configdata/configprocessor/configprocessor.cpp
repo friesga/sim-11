@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-void ConfigProcessor::process (iniparser::File iniFile)
+void ConfigData::process (iniparser::File iniFile)
 {
 	iniparser::SectionVector topLevelSections = 
 		iniFile.getTopLevelSections ();
@@ -11,14 +11,14 @@ void ConfigProcessor::process (iniparser::File iniFile)
 		processSection (sectionPtr);
 }
 
-// std::unique_ptr<DeviceConfig> ConfigProcessor::getConfig ()
-DeviceConfig *ConfigProcessor::getConfig ()
+// std::unique_ptr<DeviceConfig> ConfigData::getConfig ()
+DeviceConfig *ConfigData::getConfig ()
 {
 	deviceConfigPtr->rlConfig = rlProcessor.getConfig ();
 	return deviceConfigPtr.get();
 }
 
-void ConfigProcessor::processSection (iniparser::Section* section)
+void ConfigData::processSection (iniparser::Section* section)
 {
 	try
 	{

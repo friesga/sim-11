@@ -21,8 +21,8 @@ set (CMDLINEOPTIONS_SRCS
 set (RLV12_SRCS
     src/rlv12/attach.cpp
     src/rlv12/calccrc.cpp
-    src/rlv12/rlconfig.cpp
     src/rlv12/createcommand.cpp
+    src/rlv12/rlconfig.cpp
     src/rlv12/getstatus.cpp
     src/rlv12/service.cpp
     src/rlv12/rlv12.cpp
@@ -66,9 +66,9 @@ set (QBUS_SRCS
     src/qbus/responsiblemodule.cpp)
 
 set (CONFIGURATOR_SRCS
-    src/configurator/configprocessor/configprocessor.cpp
-    src/configurator/rlprocessor/rlprocessor.cpp
-    src/configurator/rlprocessor/rlunitprocessor/rlunitprocessor.cpp)
+    src/configdata/configprocessor/configprocessor.cpp
+    src/configdata/rlprocessor/rlprocessor.cpp
+    src/configdata/rlprocessor/rlunitprocessor/rlunitprocessor.cpp)
 
 # Define source files
 set (SIM11_SRCS
