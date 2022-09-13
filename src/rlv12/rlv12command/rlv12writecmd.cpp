@@ -32,7 +32,7 @@ void RLV12WriteCmd::execute (RLV12 *controller, RL01_2 *unit)
     {
         // Clear to end of block
         // ToDo: Rename awc
-        int32_t awc = (wordCount_ + (RL_NUMWD - 1)) & ~(RL_NUMWD - 1);
+        size_t awc = (wordCount_ + (RL_NUMWD - 1)) & ~(RL_NUMWD - 1);
         for (size_t index = wordCount_; index < awc; ++index)
             controller->rlxb_[index] = 0;
 
