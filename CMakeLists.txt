@@ -145,6 +145,12 @@ if (CMAKE_C_COMPILER_ID STREQUAL "GNU")
 target_link_options (${TARGET} PRIVATE -Wl,-x -Wl,--gc-sections -fsanitize=address)
 endif ()
 
+# The /PROFILE option is needed to be able to collect profiling data.
+# Unfortunately profiling doesn't function in Windows 10.
+#if (CMAKE_C_COMPILER_ID STREQUAL "MSVC")
+#target_link_options (${TARGET} PRIVATE /PROFILE)
+#endif ()
+
 #
 # Create sim-11 test executable
 #
