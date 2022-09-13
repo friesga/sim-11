@@ -1,4 +1,4 @@
-#include "configurator/configprocessor/configprocessor.h"
+#include "configdata/configprocessor/configprocessor.h"
 
 #include <sstream>	
 #include <gtest/gtest.h>
@@ -22,7 +22,7 @@ TEST (ConfigProcessorTest, configProcessed)
 		
 	stream >> ft;
 
-	ConfigProcessor configProcessor;
+	ConfigData configProcessor;
 	EXPECT_NO_THROW (configProcessor.process (ft));
 }
 
@@ -35,7 +35,7 @@ TEST (ConfigProcessorTest, configProcessorThrows)
 		
 	stream >> ft;
 
-	ConfigProcessor configProcessor;
+	ConfigData configProcessor;
 	try
 	{
 		configProcessor.process (ft);
