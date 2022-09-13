@@ -36,6 +36,8 @@ bool Instruction::getWordOperand (KD11CPU *cpu, u16 (&reg)[8],
 	Bitmask<OperandOptions> options, u16 mode, u16 regNr, u16 &retValue)
 {
 	CondData<u16> addr;
+	CondData<u16> tmp;
+
 	switch (mode)
 	{
 		case 0: /* Register */
@@ -56,7 +58,10 @@ bool Instruction::getWordOperand (KD11CPU *cpu, u16 (&reg)[8],
 				reg[regNr] += 2;
 				reg[regNr] &= 0xFFFE;
 			}
-			retValue = cpu->fetchWord (addr);
+			tmp = cpu->fetchWord (addr);
+			if (!tmp.hasValue()) 
+				return false;
+			retValue = tmp;
 			return true;
 
 		case 3: /* Autoincrement indirect */
@@ -105,7 +110,10 @@ bool Instruction::getWordOperand (KD11CPU *cpu, u16 (&reg)[8],
 			addr = cpu->fetchWord (addr);
             if (!addr.hasValue()) 
 				return false;
-			retValue = cpu->fetchWord (addr);
+			tmp = cpu->fetchWord (addr);
+			if (!tmp.hasValue()) 
+				return false;
+			retValue = tmp;
 			return true;
 
 		case 6: /* Index */
@@ -222,7 +230,11 @@ bool Instruction::getByteOperand (KD11CPU *cpu, u16 (&reg)[8],
 					addr = reg[regNr] - 1;
 				}
 			}
-			retValue = READ8(addr);
+			tmp = READ8(addr);
+			if (!tmp.hasValue())
+				return false;
+			retValue = tmp;
+
 			return true;
 
 		case 5: /* Autodecrement indirect */
@@ -236,7 +248,10 @@ bool Instruction::getByteOperand (KD11CPU *cpu, u16 (&reg)[8],
 			addr = cpu->fetchWord (addr);
             if (!addr.hasValue()) 
 				return false;
-			retValue = READ8(addr);
+			tmp = READ8(addr);
+			if (!tmp.hasValue())
+				return false;
+			retValue = tmp;
 			return true;
 
 		case 6: /* Index */
@@ -270,7 +285,10 @@ bool Instruction::getByteOperand (KD11CPU *cpu, u16 (&reg)[8],
 			addr = cpu->fetchWord (addr);
             if (!addr.hasValue()) 
 				return false;
-			retValue = READ8(addr);
+			tmp = READ8(addr);
+			if (!tmp.hasValue())
+				return false;
+			retValue = tmp;
 			return true;
 
 		default:
@@ -284,6 +302,8 @@ bool Instruction::getAddress (KD11CPU *cpu, u16 (&reg)[8],
 	u16 mode, u16 regNr, u16 &retValue)
 {
 	CondData<u16> addr;
+	CondData<u16> tmp;
+
 	switch (mode)
     {
 		case 0: /* Register */
@@ -307,6 +327,8 @@ bool Instruction::getAddress (KD11CPU *cpu, u16 (&reg)[8],
 			addr = reg[regNr];
 			reg[regNr] += 2;
 			addr = cpu->fetchWord (addr);
+			if (!addr.hasValue()) 
+				return false;
 			retValue = addr;
 			return true;
 
@@ -320,6 +342,8 @@ bool Instruction::getAddress (KD11CPU *cpu, u16 (&reg)[8],
 			reg[regNr] -= 2;
 			addr = reg[regNr];
 			addr = cpu->fetchWord (addr);
+			if (!addr.hasValue()) 
+				return false;
 			retValue = addr;
 			return true;
 
@@ -335,6 +359,8 @@ bool Instruction::getAddress (KD11CPU *cpu, u16 (&reg)[8],
 			reg[7] += 2;
 			addr += reg[regNr];
 			addr = cpu->fetchWord (addr);
+			if (!addr.hasValue()) 
+				return false;
 			retValue = addr;
 			return true;
 
