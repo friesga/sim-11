@@ -10,7 +10,7 @@ void RLV12::seek (RL01_2& unit)
     int32_t offset;
     int32_t newCylinder;
     int32_t maxCylinder;
-    int32_t tim;
+    int32_t seekTime;
 
     // Note the function accepts Seek Commands for a drive while another
     // seek is in progress and the Drive Ready bit isn't set. In this case
@@ -68,19 +68,17 @@ void RLV12::seek (RL01_2& unit)
     // max 17ms for 1 track seek w/head switch
     // 55ms avg seek
     // 100ms max seek
+    // Source: simh comment.
+    // 
+    // Try to simulate this timing by the following formula
+    seekTime = 17 + (0.4 * abs (newCylinder - currentCylinder));
 
-    tim = abs (newCylinder - currentCylinder);
-    if (tim == 0)
-        tim++;
-
-    tim *= rl_swait;
     // if (DEBUG_PRS(rl_dev))
-    //     fprintf(sim_deb, ">>RL SEEK: drv %d, dist %d, head sw %d, tim %d\n",
+    //     fprintf(sim_deb, ">>RL SEEK: drv %d, dist %d, head sw %d, seekTime %d\n",
     //        (int32)(uptr - rl_dev.units),
-    //         abs(newCylinder - currentCylinder), (rlda & RLDA_SK_HD), tim);
+    //         abs(newCylinder - currentCylinder), (rlda & RLDA_SK_HD), seekTime);
     // ToDo: Change RLCS_ macro's to enum
     unit.function_ = RLCS_SEEK;
-    // sim_activate(uptr, tim);               /* must be > 0 */
-    timer.start (&unit, std::chrono::milliseconds (tim));
+    timer.start (&unit, std::chrono::milliseconds (seekTime));
     setDone (0);
 }
