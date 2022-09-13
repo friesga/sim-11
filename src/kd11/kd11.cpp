@@ -419,7 +419,11 @@ void KD11CPU::step(QBUS* bus)
         TRCStep(r, psw, code);
         TRCCLRIGNBUS();
     }
-    execInstr(bus);
+
+    // If there is a pending bus interrupt that can be executed, process
+    // that interrupt first, else execute the next instruction
+    if (!bus->intrptReqAvailable() || cpuPriority() >= bus->intrptPriority())
+        execInstr(bus);
 
     // Generate a Trace trap if the trace bit is set, unless the previous
     // instruction was a RTT or another trap is pending.
@@ -446,8 +450,8 @@ void KD11CPU::execInstr(QBUS* bus)
 
     // If there is a pending bus interrupt that can be executed, process
     // that interrupt first
-    if (bus->intrptReqAvailable() && bus->intrptPriority() > cpuPriority())
-        return;
+    // if (bus->intrptReqAvailable() && bus->intrptPriority() > cpuPriority())
+    //    return;
 
     // Get next instruction to execute and move PC forward
     u16 insn = fetchWord(r[7]);
