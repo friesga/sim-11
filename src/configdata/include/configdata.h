@@ -4,8 +4,11 @@
 #include <cstdint>
 #include <string>
 
+struct UnitConfig
+{};
+
 // Definition of the configuration result of an RL01/02 unit.
-struct RlUnitConfig
+struct RlUnitConfig : public UnitConfig
 {
 	bool RL01 {true};
 	std::string fileName;

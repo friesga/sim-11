@@ -1,18 +1,31 @@
 #include "rlv12.h"
 #include "sim_fio/sim_fio.h"
 
-StatusCode RL01_2::attach (std::string fileName, Bitmask<AttachFlags> flags)
+StatusCode RL01_2::attach (UnitConfig &unitConfig)
 {
+    RlUnitConfig &rlUnitConfig = static_cast<RlUnitConfig &> (unitConfig);
+
     capacity_ = (rlStatus_ & RlStatus::UNIT_RL02) ? RL02_SIZE : RL01_SIZE;
+
+    if (rlUnitConfig.fileName.empty())
+        return StatusCode::ArgumentError;
+	
+	Bitmask<AttachFlags> attachFlags {AttachFlags::Default};
+
+	if (rlUnitConfig.readOnly)
+		attachFlags |= AttachFlags::ReadOnly;
+	if (rlUnitConfig.newFile) 
+		attachFlags |= AttachFlags::NewFile;
+	if (rlUnitConfig.overwrite)
+		attachFlags |= AttachFlags::Overwrite;
 
     // Try to attach the specified file to this unit
     StatusCode result;
-    if ((result = attach_unit (fileName, flags)) != StatusCode::OK)
-        return result;
+    if ((result = attach_unit (rlUnitConfig.fileName, attachFlags)) !=
+        StatusCode::OK)
+            return result;
 
-    // For compatibility with existing SIMH behavior, set the drive state
-    // as if the load procedure had already executed.
-    // ToDo: Check if this behaviour is wanted
+    // Set the drive state as if the load procedure had already executed.
 
     // Position at cylinder 0
     currentDiskAddress_ = 0;

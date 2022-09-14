@@ -199,31 +199,17 @@ try
 
 	RLV12 rlv12 (deviceConfig->rlConfig);
 
-
 	// Attach files to the RL units
 	for (size_t unitNumber = 0; 
 		unitNumber < deviceConfig->rlConfig->numUnits; ++unitNumber)
 	{
 		RlUnitConfig rlUnitConfig = 
 			deviceConfig->rlConfig->rlUnitConfig[unitNumber];
-		if (!rlUnitConfig.fileName.empty())
+
+		if (rlv12.unit(unitNumber)->attach (rlUnitConfig) != StatusCode::OK)
 		{
-			Bitmask<AttachFlags> attachFlags {AttachFlags::Default};
-
-			if (rlUnitConfig.readOnly)
-				attachFlags |= AttachFlags::ReadOnly;
-			if (rlUnitConfig.newFile) 
-				attachFlags |= AttachFlags::NewFile;
-			if (rlUnitConfig.overwrite)
-				attachFlags |= AttachFlags::Overwrite;
-
-			if (rlv12.unit(unitNumber)->attach (rlUnitConfig.fileName, 
-				attachFlags) != StatusCode::OK)
-			{
-				std::cout << "Error attaching " << 
-					rlUnitConfig.fileName << '\n';
-				return 1;
-			}
+			std::cout << "Error attaching " << rlUnitConfig.fileName << '\n';
+			return 1;
 		}
 	}
 

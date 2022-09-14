@@ -6,6 +6,7 @@
 #include "types.h"
 #include "bitmask.h"
 #include "attachflags.h"
+#include "configdata/include/configdata.h"
 
 #include <cstdio>
 #include <string>
@@ -77,8 +78,7 @@ public:
     Unit (BusDevice *owningDevice);
 
     // Functions to be implemented by concrete devices
-    virtual StatusCode attach (std::string fileName, 
-        Bitmask<AttachFlags> flags) = 0;
+    virtual StatusCode attach (UnitConfig &unitConfig) = 0;
 };
 
 #endif // !_UNIT_H_

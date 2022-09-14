@@ -4,6 +4,7 @@
 #include "unit/unit.h"
 #include "types.h"
 #include "statuscodes.h"
+#include "configdata/include/configdata.h"
 
 // RL01/02 unit status flags. These flags are used in the definition of 
 // Bitmask<RlStatus> and provide a compile-time type safety for the use
@@ -81,8 +82,7 @@ public:
     RL01_2 (BusDevice *owningDevice);
 
     // Required functions
-    StatusCode attach (std::string fileName, 
-        Bitmask<AttachFlags> flags) override;
+    StatusCode attach (UnitConfig &unitConfig) override;
 
     // Make the class a function object
     void operator() ();
