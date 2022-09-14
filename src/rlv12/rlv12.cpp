@@ -27,9 +27,6 @@ RLV12::RLV12 ()
 
     if (rlxb_ == nullptr)
         throw ("Allocating memory for transfer buffer failed");
-
-    // Reset the controller
-    reset ();
 }
 
 RLV12::RLV12 (RlConfig *rlConfig)
@@ -52,9 +49,6 @@ RLV12::RLV12 (RlConfig *rlConfig)
 
     if (rlxb_ == nullptr)
         throw ("Allocating memory for transfer buffer failed");
-
-    // Reset the controller
-    reset ();
 }
 
 // Destructor to deallocate transfer buffer
@@ -68,11 +62,21 @@ RLV12::~RLV12 ()
 //
 // RLV12 device reset
 //
-// Note that the RL11 does NOT recalibrate its drives on RESET
-//
+// The proper bits of the CSR have to be reset. Those bits are bits 1-6,
+// 8-13 and 15. Bit 15 has to be cleared only if bit 14 (Drive Error) is not
+// set. Bit 0 (Drive Ready) is a don't care. Source: ZRLGE0 test 14.
+// 
+// Note that the RL11 does NOT recalibrate its drives on RESET.
+// Source: simh comment.
 void RLV12::reset ()
 {
-    rlcs = CSR_DONE;
+    constexpr u16 properBits = 037576;
+
+    // Reset CRS
+    rlcs &= ~properBits;
+    if (!(rlcs & RLCS_DRE))
+        rlcs &= ~RLCS_ERR;
+
     rlba = 0;
     rlda = 0;
     rlmpr = 0;
