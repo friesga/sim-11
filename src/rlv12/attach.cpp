@@ -35,7 +35,6 @@ StatusCode RL01_2::attach (UnitConfig &unitConfig)
 
     // Set unit on-line
     rlStatus_ &= ~Bitmask(RlStatus::UNIT_OFFL);
-
     
     // Create a bad block table on a new disk image (if the 
     // image is not read-only)
@@ -46,6 +45,9 @@ StatusCode RL01_2::attach (UnitConfig &unitConfig)
         if (unitStatus_ & Status::UNIT_RO)
             return StatusCode::OK;
 
+        // Create a bad block table on the last track of the device.
+        // The position of the last track is also based on the unit's
+        // capacity!
         return createBadBlockTable (RL_NUMSC, RL_NUMWD);
     }
 

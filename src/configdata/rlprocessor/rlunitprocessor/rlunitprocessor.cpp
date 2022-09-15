@@ -46,9 +46,11 @@ RlUnitConfig RlUnitProcessor::getConfig ()
 void RlUnitProcessor::processType (iniparser::Value value)
 {
 	if (value.asString() == "RL01")
-		rlUnitConfig.RL01 = true;
+		rlUnitConfig.rlUnitType = RlUnitConfig::RLUnitType::RL01;
 	else if (value.asString() == "RL02")
-		rlUnitConfig.RL01 = false;
+		rlUnitConfig.rlUnitType = RlUnitConfig::RLUnitType::RL02;
+	else if (value.asString() == "Auto")
+		rlUnitConfig.rlUnitType = RlUnitConfig::RLUnitType::Auto;
 	else
 		throw std::invalid_argument {"Incorrect RL unit type: " + 
 			value.asString()};

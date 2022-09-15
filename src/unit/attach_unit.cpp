@@ -33,7 +33,6 @@ StatusCode Unit::attach_unit(std::string fileName, Bitmask<AttachFlags> flags)
             statusCode = openPipe (fileName);
         else if (flags & AttachFlags::ReadOnly)
             statusCode = openReadOnly (fileName);
-        
         else 
             // Open existing file read/write 
             statusCode = openReadWrite (fileName);

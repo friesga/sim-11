@@ -10,7 +10,14 @@ struct UnitConfig
 // Definition of the configuration result of an RL01/02 unit.
 struct RlUnitConfig : public UnitConfig
 {
-	bool RL01 {true};
+	enum class RLUnitType
+	{
+		RL01,
+		RL02,
+		Auto
+	};
+
+	RLUnitType rlUnitType;
 	std::string fileName;
 	bool newFile {false};
 	bool readOnly {false};
