@@ -17,8 +17,8 @@ struct RlUnitConfig : public UnitConfig
 		Auto
 	};
 
-	RLUnitType rlUnitType;
-	std::string fileName;
+	RLUnitType rlUnitType {RLUnitType::RL01};
+	std::string fileName {};
 	bool newFile {false};
 	bool readOnly {false};
 	bool overwrite {false};
