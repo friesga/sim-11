@@ -150,7 +150,9 @@ class RLV12 : public BusDevice
     RlConfig::RLType rlType_;
     bool _22bit_;
     
-    // A RLV12 can have a maximum of four units
+    // A RLV12 can have a maximum of four units. RL01_2 objects for
+    // which no unit is connected to the controller will have the status
+    // off-line.
     std::array<RL01_2, RL_NUMDRIVES> units_
     {
         RL01_2 (this),

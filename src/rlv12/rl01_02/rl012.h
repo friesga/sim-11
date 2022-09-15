@@ -82,7 +82,7 @@ public:
     RL01_2 (BusDevice *owningDevice);
 
     // Required functions
-    StatusCode attach (UnitConfig &unitConfig) override;
+    StatusCode configure (UnitConfig &unitConfig) override;
 
     // Make the class a function object
     void operator() ();

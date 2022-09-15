@@ -78,7 +78,7 @@ public:
     Unit (BusDevice *owningDevice);
 
     // Functions to be implemented by concrete devices
-    virtual StatusCode attach (UnitConfig &unitConfig) = 0;
+    virtual StatusCode configure (UnitConfig &unitConfig) = 0;
 };
 
 #endif // !_UNIT_H_

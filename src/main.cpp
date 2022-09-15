@@ -206,7 +206,7 @@ try
 		RlUnitConfig rlUnitConfig = 
 			deviceConfig->rlConfig->rlUnitConfig[unitNumber];
 
-		if (rlv12.unit(unitNumber)->attach (rlUnitConfig) != StatusCode::OK)
+		if (rlv12.unit(unitNumber)->configure (rlUnitConfig) != StatusCode::OK)
 		{
 			std::cout << "Error attaching " << rlUnitConfig.fileName << '\n';
 			return 1;

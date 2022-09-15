@@ -19,8 +19,8 @@ set (CMDLINEOPTIONS_SRCS
     src/cmdlineoptions/reset.cpp)
 
 set (RLV12_SRCS
-    src/rlv12/attach.cpp
     src/rlv12/calccrc.cpp
+    src/rlv12/configure.cpp
     src/rlv12/createcommand.cpp
     src/rlv12/getstatus.cpp
     src/rlv12/service.cpp

@@ -1,11 +1,30 @@
 #include "rlv12.h"
 #include "sim_fio/sim_fio.h"
 
-StatusCode RL01_2::attach (UnitConfig &unitConfig)
+StatusCode RL01_2::configure (UnitConfig &unitConfig)
 {
     RlUnitConfig &rlUnitConfig = static_cast<RlUnitConfig &> (unitConfig);
 
-    capacity_ = (rlStatus_ & RlStatus::UNIT_RL02) ? RL02_SIZE : RL01_SIZE;
+    // Set unit type and size from the given configuration. Note that if
+    // the unit type is Auto the unit's capacity is determined after
+    // attaching the file to the unit. The capacity is also needed for
+    // creation of the bad block table, but the combination of the newFile
+    // option and Auto unit type is excluded in the configuration data.
+    // ToDo: RL01_2::configure() needs a rewrite.
+    if (rlUnitConfig.rlUnitType == RlUnitConfig::RLUnitType::RL01)
+    {
+        capacity_ = RL01_SIZE;
+        rlStatus_ &= ~Bitmask(RlStatus::UNIT_RL02);
+    }
+    else if (rlUnitConfig.rlUnitType == RlUnitConfig::RLUnitType::RL02)
+    {
+        capacity_ = RL02_SIZE;
+        rlStatus_ |= Bitmask(RlStatus::UNIT_RL02);
+    }
+    else if (rlUnitConfig.rlUnitType == RlUnitConfig::RLUnitType::Auto)
+    {
+        rlStatus_ |= Bitmask(RlStatus::UNIT_AUTO);
+    }
 
     if (rlUnitConfig.fileName.empty())
         return StatusCode::ArgumentError;
