@@ -45,6 +45,9 @@ void RlProcessor::processSection (iniparser::Section* section)
 			throw std::invalid_argument {"Unit number " + 
 			std::to_string(unitNumber) + " is higher than specified #units (" +
 			std::to_string(rlConfigPtr->numUnits) + ") in RL section"};
+
+		// Check the consistency of this section
+		rlUnitProcessor.checkConsistency ();
 	}
 }
 

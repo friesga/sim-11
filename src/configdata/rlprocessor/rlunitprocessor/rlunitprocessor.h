@@ -34,6 +34,7 @@ class RlUnitProcessor
 
 public:
 	void processSection (iniparser::Section* section);
+	void checkConsistency ();
 	size_t getUnitNumber();
 	RlUnitConfig getConfig ();
 };

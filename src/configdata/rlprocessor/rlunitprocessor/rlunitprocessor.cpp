@@ -94,3 +94,14 @@ size_t RlUnitProcessor::unitNumberFromSectionName (std::string name)
 
 	return unitNumber;
 }
+
+// ToDo: Check that when newFile is false, the given file exists
+// ToDo: Add check that file size and unit type match
+void RlUnitProcessor::checkConsistency ()
+{
+	// A combination of RLUnitType Auto and option newFile true is illegal.
+	if (rlUnitConfig.rlUnitType == RlUnitConfig::RLUnitType::Auto &&
+		rlUnitConfig.newFile)
+			throw std::invalid_argument 
+			{"The RLUnitType Auto is only applicable to existing files"};
+}
