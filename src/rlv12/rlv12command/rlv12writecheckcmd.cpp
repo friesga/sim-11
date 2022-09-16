@@ -17,12 +17,13 @@ void RLV12WriteCheckCmd::execute (RLV12 *controller, RL01_2 *unit)
 
         // Save wordCount
         // ToDo: Rename awc
-        size_t awc = wordCount_;
+        int32_t awc = wordCount_;
+        int32_t memAddr = memoryAddress_;
         for (wordCount_ = 0; wordCount_ < awc; 
-                memoryAddress_ += 2, ++wordCount_)
+                memAddr += 2, ++wordCount_)
         {
             // Loop through buffer
-            comp = controller->bus->read (memoryAddress_).valueOr (0);
+            comp = controller->bus->read (memAddr).valueOr (0);
             if (!comp.hasValue ())
             {
                 controller->rlcs |= RLCS_ERR | RLCS_NXM;

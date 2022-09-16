@@ -14,9 +14,10 @@ void RLV12WriteCmd::execute (RLV12 *controller, RL01_2 *unit)
         return;
     }
 
-    for (size_t index = 0; index < wordCount_; memoryAddress_ += 2, ++index)
+    for (int32_t index = 0, memAddr = memoryAddress_;
+        index < wordCount_; memAddr += 2, ++index)
     {
-        tmpValue = controller->bus->read (memoryAddress_).valueOr (0);
+        tmpValue = controller->bus->read (memAddr).valueOr (0);
         if (!tmpValue.hasValue ())
         {
             controller->rlcs |= RLCS_ERR | RLCS_NXM;

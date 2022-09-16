@@ -16,9 +16,12 @@ void RLV12ReadCmd::execute (RLV12 *controller, RL01_2 *unit)
             controller->rlxb_[index] = 0;
 
         // Transfer words in buffer
-        for (size_t index = 0; index < wordCount_; memoryAddress_ += 2, ++index)
-            if (!controller->bus->writeWord (memoryAddress_, 
+        for (int32_t index = 0, memAddr = memoryAddress_;
+            index < wordCount_; memAddr += 2, ++index)
+        {
+            if (!controller->bus->writeWord (memAddr, 
                 controller->rlxb_[index]))
                     controller->rlcs |= RLCS_ERR | RLCS_NXM;
+        }
     }
 }

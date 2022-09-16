@@ -51,7 +51,9 @@ void RLV12Command::finish (RLV12 *controller, RL01_2 *unit)
     if (controller->rlmpr != 0)
         controller->rlcs |= RLCS_ERR | RLCS_INCMP | RLCS_HDE;
 
-    memoryAddress_ += (wordCount_ << 1);                                        /* final byte addr */
+    // Set memory address to be returned. The requires the memory address
+    // not to be changed in the execute functions.
+    memoryAddress_ += (wordCount_ << 1);
     
     // Load BAR, CSR and possibly BAE registers with the current address
     controller->memAddrToRegs (memoryAddress_);
