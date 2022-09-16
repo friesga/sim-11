@@ -92,6 +92,12 @@ StatusCode RLV12::writeWord (u16 registerAddress, u16 data)
                     getStatus (unit);
                     break;
 
+                case RLCS_RHDR:
+                    // Read Header Command
+                    unit.function_ = GET_FUNC(rlcs);
+                    timer.start (&unit, std::chrono::milliseconds (0));
+                    break;
+
                 default:
                     // Data transfer commands:
                     // Write Check (Function Code 1),
