@@ -36,6 +36,10 @@ void RLV12::seek (RL01_2& unit)
     offset = getCylinder (rlda);
 
     // Seek direction in or out?
+    // According to the RL01/RL02 User Guide (EK-RL012-UG-005), par 4.3.4: 
+    // If the difference word is large enough that the heads attempt to move
+    // past the innermost or outermost limits, the head will stop at the
+    // guard band and retreat to the first even-numbered data track.
     if (rlda & RLDA_SK_DIR)
     {
         // Outwards
@@ -43,7 +47,7 @@ void RLV12::seek (RL01_2& unit)
         maxCylinder = (unit.rlStatus_ & RlStatus::UNIT_RL02) ? 
             RL_NUMCY * 2 : RL_NUMCY;
         if (newCylinder >= maxCylinder)
-            newCylinder = maxCylinder - 1;
+            newCylinder = maxCylinder - 2;
     }
     else
     {
