@@ -33,7 +33,7 @@ void RLV12WriteCheckCmd::execute (RLV12 *controller, RL01_2 *unit)
             // Check read word with buffer
             // ToDo: Quit for loop when an inequality is detected?
             if (comp != controller->rlxb_[wordCount_])
-                controller->rlcs = RLCS_ERR | RLCS_CRC;
+                controller->rlcs |= RLCS_ERR | RLCS_CRC;
         }
     }
 }
