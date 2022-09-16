@@ -129,7 +129,7 @@ void RLV12::memAddrToRegs (u32 memoryAddress)
 u32 RLV12::memAddrFromRegs ()
 {
     if (!(rlType_ == RlConfig::RLType::RLV12 && _22bit_))
-        return (getBA16BA17 (rlcs) << (16 - RLCS_V_MEX)) | rlba;
+        return (getBA16BA17 (rlcs) << 16) | rlba;
     else
         return (rlbae << 16) | rlba;
 }
