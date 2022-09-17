@@ -242,7 +242,7 @@ void BDV11::tick()
 		// Check the line time clock (LTC) is enabled
 		if (ltc & 0100)
 		{
-			bus->setInterrupt (TrapPriority::Event, 0, 0100);
+			bus->setInterrupt (TrapPriority::BR4, 9, 0100);
 			nextWakeup += cycleTime;
 			this_thread::sleep_until (nextWakeup);
 		}

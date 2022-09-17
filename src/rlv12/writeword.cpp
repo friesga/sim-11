@@ -45,14 +45,14 @@ StatusCode RLV12::writeWord (u16 registerAddress, u16 data)
             {                              
                 // Ready set?
                 if ((data & CSR_IE) == 0)
-                    bus->clearInterrupt (TrapPriority::BR4, 2);
+                    bus->clearInterrupt (TrapPriority::BR4, 4);
                 else if ((rlcs & (CSR_DONE + CSR_IE)) == CSR_DONE)
-                    bus->setInterrupt (TrapPriority::BR4, 2, vector_);
+                    bus->setInterrupt (TrapPriority::BR4, 4, vector_);
 
                 return StatusCode::OK;
             }
 
-            bus->clearInterrupt (TrapPriority::BR4, 2);
+            bus->clearInterrupt (TrapPriority::BR4, 4);
 
             // Clear errors
             rlcs &= ~RLCS_ALLERR;                   

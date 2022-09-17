@@ -86,7 +86,7 @@ void DLV11J::readChannel (int channelNr)
 			ch->rcsr |= RCSR_RCVR_DONE;
 			if(ch->rcsr & RCSR_RCVR_INT) {
 				QBUS* bus = this->bus;
-				bus->setInterrupt (TrapPriority::BR4, 0, ch->vector);
+				bus->setInterrupt (TrapPriority::BR4, 6, ch->vector);
 			}
 		} else {
 			ch->rcsr &= ~RCSR_RCVR_DONE;
@@ -112,7 +112,7 @@ void DLV11J::writeChannel(int channelNr)
 	if(ch->xcsr & XCSR_TRANSMIT_INT)
 	{
 		QBUS* bus = this->bus;
-		bus->setInterrupt (TrapPriority::BR4, 0, ch->vector + 4);
+		bus->setInterrupt (TrapPriority::BR4, 6, ch->vector + 4);
 	}
 }
 
@@ -153,7 +153,7 @@ void DLV11J::writeRCSR(int n, u16 value)
 			&& (ch->rcsr & RCSR_RCVR_DONE))
 	{
 		QBUS* bus = this->bus;
-		bus->setInterrupt (TrapPriority::BR4, 0, ch->vector);
+		bus->setInterrupt (TrapPriority::BR4, 6, ch->vector);
 	}
 }
 
@@ -167,7 +167,7 @@ void DLV11J::writeXCSR(int n, u16 value)
 			&& (ch->xcsr & XCSR_TRANSMIT_READY))
 	{
 		QBUS* bus = this->bus;
-		bus->setInterrupt (TrapPriority::BR4, 0, ch->vector + 4);
+		bus->setInterrupt (TrapPriority::BR4, 6, ch->vector + 4);
 	}
 }
 
@@ -228,7 +228,7 @@ void DLV11J::send(int channelNr, unsigned char c)
 		if(ch->rcsr & RCSR_RCVR_INT)
 		{
 			QBUS* bus = this->bus;
-			bus->setInterrupt (TrapPriority::BR4, 0, ch->vector);
+			bus->setInterrupt (TrapPriority::BR4, 6, ch->vector);
 		}
 	}
 }
