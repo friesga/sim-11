@@ -56,7 +56,7 @@ std::unique_ptr<RLV12Command>
                 // This RLCSR error status deviates from the status for the 
                 // other commands. If they were equal the setDone() call could
                 // be combined with the call for the other commands.
-                setDone (RLCS_ERR | RLCS_HDE);
+                setDone (RLCS_ERR | RLCS_HNF);
                 return {};
             }
             break;
@@ -68,7 +68,7 @@ std::unique_ptr<RLV12Command>
     // Common return for create calls 
     if (rlv12Command == nullptr)
     {
-        setDone (RLCS_ERR | RLCS_HDE | RLCS_INCMP); 
+        setDone (RLCS_ERR | RLCS_HNF | RLCS_INCMP); 
         return {};
     }
 

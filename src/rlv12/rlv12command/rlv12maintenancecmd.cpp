@@ -36,8 +36,8 @@ void RLV12MaintenanceCmd::execute (RLV12 *controller, RL01_2 *unit)
     if (controller->rlmpr != 0177001)
     {                              
         // HNF error
-        // controller->rlcs |= RLCS_ERR | RLCS_HDE;
-        controller->setDone (RLCS_ERR | RLCS_HDE);
+        // controller->rlcs |= RLCS_ERR | RLCS_HNF;
+        controller->setDone (RLCS_ERR | RLCS_HNF);
         return;
     }
 

@@ -58,12 +58,12 @@
 #define RLCS_CRC        (0004000)                       // CRC error 
 #define RLCS_HCRC       (RLCS_CRC|RLCS_INCMP)           // Header CRC error 
 #define RLCS_DLT        (0010000)                       // Data late 
-#define RLCS_HDE        (RLCS_DLT|RLCS_INCMP)           // Header not found error 
+#define RLCS_HNF        (RLCS_DLT|RLCS_INCMP)           // Header not found error 
 #define RLCS_NXM        (0020000)                       // Non-existing memory 
 #define RLCS_PAR        (RLCS_NXM|RLCS_INCMP)           // Parity error 
 #define RLCS_DRE        (0040000)                       // Drive error 
 #define RLCS_ERR        (0100000)                       // Error summary 
-#define RLCS_ALLERR     (RLCS_ERR|RLCS_DRE|RLCS_NXM|RLCS_HDE|RLCS_CRC|RLCS_INCMP)
+#define RLCS_ALLERR     (RLCS_ERR|RLCS_DRE|RLCS_NXM|RLCS_HNF|RLCS_CRC|RLCS_INCMP)
 #define RLCS_RW         (0001776)                       // Read/write 
 #define GET_FUNC(x)     (((x) >> RLCS_V_FUNC) & RLCS_M_FUNC)
 #define GET_DRIVE(x)    (((x) >> RLCS_V_DRIVE) & RLCS_M_DRIVE)

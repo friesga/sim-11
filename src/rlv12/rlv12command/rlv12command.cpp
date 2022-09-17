@@ -49,7 +49,7 @@ void RLV12Command::finish (RLV12 *controller, RL01_2 *unit)
     // If the specified transfer could not be completed indicate an error
     // condition
     if (controller->rlmpr != 0)
-        controller->rlcs |= RLCS_ERR | RLCS_INCMP | RLCS_HDE;
+        controller->rlcs |= RLCS_ERR | RLCS_INCMP | RLCS_HNF;
 
     // Set memory address to be returned. The requires the memory address
     // not to be changed in the execute functions.
