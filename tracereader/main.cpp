@@ -21,6 +21,8 @@ TRACE_RXV21CMD traceRxv21Cmd;
 TRACE_RXV21DMA traceRxv21Dma;
 TRACE_RXV21ERR traceRxv21Err;
 TRACE_RXV21STEP traceRxv21Step;
+TRACE_RLV12REGS traceRlv12Regs;
+TRACE_RLV12COMMAND traceRlv12Cmd;
 TRACE_DLV11 traceDlv11;
 
 bool isHeader (char *buffer)
@@ -47,6 +49,7 @@ int main (int argc, char **argv)
 	ifstream traceFile;
 	TRACE trace;
 	size_t const maxMemorySize = 64_KB;
+	char msg[80];
 	
 	// Print all categories present in the trace file
 	trace.flags = 
@@ -248,8 +251,32 @@ int main (int argc, char **argv)
 					U16B(traceDlv11.value));
 				break;
 
+			case MAGIC_RL2A:
+				traceFile.read (
+					reinterpret_cast<char *> (&traceRlv12Regs) + magicSize,
+					sizeof (traceRlv12Regs) - magicSize);
+
+				traceFile.read (msg, U16B(traceRlv12Regs.length));
+				msg[U16B(traceRlv12Regs.length)] = 0;
+
+				TRACERLV12Registers (&trace, msg, 
+					U16B(traceRlv12Regs.rlcs),
+					U16B(traceRlv12Regs.rlba),
+					U16B(traceRlv12Regs.rlda),
+					U16B(traceRlv12Regs.rlmpr),
+					U16B(traceRlv12Regs.rlbae));
+				break;
+
+			case MAGIC_RL2C:
+				traceFile.read (
+					reinterpret_cast<char *> (&traceRlv12Cmd) + magicSize,
+					sizeof (traceRlv12Cmd) - magicSize);
+
+				TRACERLV12Command (&trace, U16B(traceRlv12Cmd.command));
+				break;
+
 			default:
-				cout << "Unknown magic: " << U32B(magic) << '\n';
+				cout << "Unknown magic: " << hex << U32B(magic) << '\n';
 				delete memoryDump;
 				return 1;
 		}
