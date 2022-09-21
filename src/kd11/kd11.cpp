@@ -413,9 +413,13 @@ void KD11CPU::step(QBUS* bus)
     {
         TRCSETIGNBUS();
         u16 code[3];
-        code[0] = fetchWord(r[7] + 0);
-        code[1] = fetchWord(r[7] + 2);
-        code[2] = fetchWord(r[7] + 4);
+        // The read of r[7]+2 and  r[7]+4 may access an invalid address as
+        // the instruction isn't decoded at this point. Therefore use the bus
+        // read function instead of fetchWord(). The latter will generate a
+        // bus error trap on access of an invalid address.
+        code[0] = bus_->read (r[7] + 0).valueOr (0);
+        code[1] = bus_->read (r[7] + 2).valueOr (0);
+        code[2] = bus_->read (r[7] + 4).valueOr (0);
         TRCStep(r, psw, code);
         TRCCLRIGNBUS();
     }
