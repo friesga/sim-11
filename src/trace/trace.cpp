@@ -3,12 +3,18 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <mutex>
+
+using std::mutex;
+using std::lock_guard;
 
 /* LSI-11 disassembler */
 extern int  LSI11Disassemble(const u16* insn, u16 pc, char* buf);
 extern int  LSI11InstructionLength(const u16* insn);
 
 TRACE trc = { 0 };
+
+static mutex traceFileMutex;
 
 #define	DST	stderr
 
@@ -42,6 +48,9 @@ void TRACEStep(TRACE* trace, u16* r, u16 psw, u16* insn)
 
 	if (!(trace->flags & TRACEF_STEP))
 		return;
+
+	// Guard against simultaneous trace file writes
+	lock_guard<mutex> guard{ traceFileMutex };
 
 	if(trace->flags & TRACEF_PRINT) {
 #define	PSW_GET(x)	(psw & (x))
@@ -156,6 +165,9 @@ void TRACECPUEvent(TRACE* trace, int type, u16 value)
 	if (!(trace->flags & TRACEF_CPUEVENT))
 		return;
 
+	// Guard against simultaneous trace file writes
+	lock_guard<mutex> guard{ traceFileMutex };
+
 	if(trace->flags & TRACEF_PRINT) {
 		switch(type) {
 			case TRC_CPU_TRAP:
@@ -192,6 +204,9 @@ void TRACEBus(TRACE* trace, u16 type, u16 address, u16 value)
 
 	if (!(trace->flags & TRACEF_BUS) || trace->flags & TRACEF_IGNORE_BUS)
 		return;
+
+	// Guard against simultaneous trace file writes
+	lock_guard<mutex> guard{ traceFileMutex };
 
 	if(trace->flags & TRACEF_PRINT) {
 		switch(type) {
@@ -230,6 +245,9 @@ void TRACEMemoryDump(TRACE* trace, u8* ptr, u16 address, u16 length)
 
 	if (!(trace->flags & TRACEF_MEMORYDUMP) || trace->flags & TRACEF_IGNORE_BUS)
 		return;
+
+	// Guard against simultaneous trace file writes
+	lock_guard<mutex> guard{ traceFileMutex };
 
 	if(trace->flags & TRACEF_PRINT) {
 		int i = 0;
@@ -291,6 +309,9 @@ void TRACETrap(TRACE* trace, int n, int cause)
 	if (!(trace->flags & TRACEF_TRAP))
 		return;
 
+	// Guard against simultaneous trace file writes
+	lock_guard<mutex> guard{ traceFileMutex };
+
 	if(trace->flags & TRACEF_PRINT) {
 		const char* name;
 		switch(cause) {
@@ -331,6 +352,9 @@ void TRACEIrq(TRACE* trace, int n, int type)
 	if (!(trace->flags & TRACEF_IRQ) || trace->flags & TRACEF_IGNORE_BUS)
 		return;
 
+	// Guard against simultaneous trace file writes
+	lock_guard<mutex> guard{ traceFileMutex };
+
 	if(trace->flags & TRACEF_PRINT) {
 		switch(type) {
 			case TRC_IRQ_OK:
@@ -361,6 +385,9 @@ void TRACEDLV11(TRACE* trace, int channel, int type, u16 value)
 
 	if (!(trace->flags & TRACEF_DLV11))
 		return;
+
+	// Guard against simultaneous trace file writes
+	lock_guard<mutex> guard{ traceFileMutex };
 
 	if(trace->flags & TRACEF_PRINT) {
 		switch(type) {
@@ -415,6 +442,9 @@ void TRACERXV21Command(TRACE* trace, int commit, int type, u16 rx2cs)
 	if (!(trace->flags & TRACEF_RXV21CMD))
 		return;
 
+	// Guard against simultaneous trace file writes
+	lock_guard<mutex> guard{ traceFileMutex };
+
 	if(trace->flags & TRACEF_PRINT) {
 		const char* name = rxv21_get_cmd_name(type);
 		fprintf(DST, "[RXV21] Execute command: %s\n", name);
@@ -437,6 +467,9 @@ void TRACERXV21Step(TRACE* trace, int type, int step, u16 rx2db)
 
 	if (!(trace->flags & TRACEF_RXV21STEP))
 		return;
+
+	// Guard against simultaneous trace file writes
+	lock_guard<mutex> guard{ traceFileMutex };
 
 	if(trace->flags & TRACEF_PRINT) {
 		const char* name = rxv21_get_cmd_name(type);
@@ -461,6 +494,9 @@ void TRACERXV21DMA(TRACE* trace, int type, u16 rx2wc, u16 rx2ba)
 
 	if (!(trace->flags & TRACEF_RXV21DMA))
 		return;
+
+	// Guard against simultaneous trace file writes
+	lock_guard<mutex> guard{ traceFileMutex };
 
 	if(trace->flags & TRACEF_PRINT) {
 		const char* name = rxv21_get_cmd_name(type);
@@ -502,6 +538,9 @@ void TRACERXV21Error(TRACE* trace, int type, u16 info)
 	if (!(trace->flags & TRACEF_RXV21ERROR))
 		return;
 
+	// Guard against simultaneous trace file writes
+	lock_guard<mutex> guard{ traceFileMutex };
+
 	if(trace->flags & TRACEF_PRINT) {
 		const char* name = rxv21_get_error_name(type);
 		switch(type) {
@@ -534,6 +573,9 @@ void TRACERXV21Disk(TRACE* trace, int type, int drive, int density, u16 rx2sa, u
 
 	if (!(trace->flags & TRACEF_RXV21DISK))
 		return;
+
+	// Guard against simultaneous trace file writes
+	lock_guard<mutex> guard{ traceFileMutex };
 
 	if(trace->flags & TRACEF_PRINT) {
 		const char* name;
@@ -576,6 +618,9 @@ void TRACERLV12Registers (TRACE* trace, char const *msg, u16 rlcs, u16 rlba, u16
 
 	if (!(trace->flags & TRACEF_RLV12))
 		return;
+
+	// Guard against simultaneous trace file writes
+	lock_guard<mutex> guard{ traceFileMutex };
 
 	if(trace->flags & TRACEF_PRINT)
 	{
@@ -625,6 +670,9 @@ void TRACERLV12Command (TRACE* trace, u16 command)
 
 	if (!(trace->flags & TRACEF_RLV12))
 		return;
+
+	// Guard against simultaneous trace file writes
+	lock_guard<mutex> guard{ traceFileMutex };
 
 	if(trace->flags & TRACEF_PRINT)
 	{
