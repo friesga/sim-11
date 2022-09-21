@@ -37,7 +37,7 @@ StatusCode RLV12::writeWord (u16 registerAddress, u16 data)
             // rlbae = (rlbae & ~RLCS_M_MEX) | ((rlcs >> RLCS_V_MEX) & RLCS_M_MEX);
             updateBAE ();
 
-            TRACERLV12Registers (&trc, "writeWord", rlcs, rlba, rlda, rlmpr, rlbae); 
+            TRACERLV12Registers (&trc, "write CSR", rlcs, rlba, rlda, rlmpr, rlbae);
 
             // Commands to the controller are only executed with the CRDY (DONE)
             // bit is cleared by software.  If set, check for interrupts and return.
@@ -58,6 +58,7 @@ StatusCode RLV12::writeWord (u16 registerAddress, u16 data)
             rlcs &= ~RLCS_ALLERR;                   
 
             TRACERLV12Command (&trc, GET_FUNC(rlcs));
+
             switch (GET_FUNC(rlcs))
             {
                 // Case on RLCS<3:1>
@@ -94,6 +95,7 @@ StatusCode RLV12::writeWord (u16 registerAddress, u16 data)
 
                 case RLCS_RHDR:
                     // Read Header Command
+                    // ToDo: Add test on running timer!
                     unit.function_ = GET_FUNC(rlcs);
                     timer.start (&unit, std::chrono::milliseconds (0));
                     break;
@@ -101,7 +103,6 @@ StatusCode RLV12::writeWord (u16 registerAddress, u16 data)
                 default:
                     // Data transfer commands:
                     // Write Check (Function Code 1),
-                    // Read Header (Function Code 4),
                     // Write Data (Function Code 5),
                     // Read Data (Function Code 6),
                     // Read Data without Header Check (Function Code 7)
@@ -131,9 +132,8 @@ StatusCode RLV12::writeWord (u16 registerAddress, u16 data)
                         unit ();
                     }
 
-                    unit.function_ = GET_FUNC(rlcs);
-
                     // Activate unit
+                    unit.function_ = GET_FUNC(rlcs);
                     timer.start (&unit, std::chrono::milliseconds (rl_swait));              
                     break;
             }           
@@ -150,22 +150,16 @@ StatusCode RLV12::writeWord (u16 registerAddress, u16 data)
             // written on the RLV11 and RLV12 and always reads as 0 on an RL11.
             rlba = data & (rlType_ == 
                 RlConfig::RLType::RL11 ? 0177776 : 0177777);
-            // if (DEBUG_PRS(rl_dev))
-            //    fprintf(sim_deb, ">>RL wr: RLBA %06o\n", rlba);
             break;
 
         case DAR:
             // Disk Address Register     
             rlda = data;
-            // if (DEBUG_PRS(rl_dev))
-            //    fprintf(sim_deb, ">>RL wr: RLDA %06o\n", rlda);
             break;
 
         case MPR:
             // Multipurpose Register
             rlmpr = rlmpr1 = rlmpr2 = (u16) data;
-            // if (DEBUG_PRS(rl_dev))
-            //    fprintf(sim_deb, ">>RL wr: RLMP %06o\n", rlmp);
             break;
 
         case BAE:
@@ -184,9 +178,6 @@ StatusCode RLV12::writeWord (u16 registerAddress, u16 data)
             // bits in the CSR.
             // ToDo: This is an undocumented feature?
             rlcs = (rlcs & ~RLCS_MEX) | ((rlbae & RLCS_M_MEX) << RLCS_V_MEX);
-
-            //if (DEBUG_PRS(rl_dev))
-            //    fprintf(sim_deb, ">>RL wr: RLBAE %06o\n", rlbae);
             break;
 
         default:

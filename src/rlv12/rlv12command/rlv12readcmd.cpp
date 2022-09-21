@@ -1,9 +1,9 @@
 #include "rlv12readcmd.h"
 #include "rlv12/rlv12.h"
  
+// Read Data command
 void RLV12ReadCmd::execute (RLV12 *controller, RL01_2 *unit)
-{
-    // Read Data or Read Data Without Header Check command
+{    
     // Read wordCount * 2 bytes; returned is the number of bytes read 
     size_t numBytes = fread (controller->rlxb_, sizeof (int16_t), wordCount_,
         unit->filePtr_);
