@@ -300,3 +300,65 @@ TEST_F (RLV12SeekTest, seekOnBusyDriveAccepted)
     rlv12Device.read (RLMPR, &mpr);
     ASSERT_EQ (MPR_cylinder (mpr), 10);
 }
+
+// Verify a Read Header command is accepted during execution of a Seek
+// command and is immediately executed after completion of the seek.
+TEST_F (RLV12SeekTest, readHeaderAfterSeekSucceeds)
+{
+    RlUnitConfig rlUnitConfig
+    {
+        .fileName = "rl01.dsk",
+        .newFile = true,
+        .overwrite = true
+    };
+
+    // Attach a new disk to unit 0
+    ASSERT_EQ (rlv12Device.unit (0)->configure (rlUnitConfig), 
+        StatusCode::OK);
+
+    // Clear errors and volume check condition
+    rlv12Device.writeWord (RLDAR, DAR_Reset | DAR_GetStatus | DAR_Marker);
+    rlv12Device.writeWord (RLCSR, CSR_GetStatusCommand | CSR_Drive0);
+
+    // Verify controller and drive are ready 
+    u16 result;
+    rlv12Device.read (RLCSR, &result);
+    ASSERT_EQ (result & CSR_ControllerReady | CSR_DriveReady,
+        CSR_ControllerReady | CSR_DriveReady);
+
+    // Load DAR with seek parameters
+    rlv12Device.writeWord (RLDAR, DAR_Marker | DAR_Seek | DAR_DirectionOut |
+        DAR_cylinderDifference (10));
+
+    // Load the CSR with drive-select bits for unit 0, a negative GO bit
+    // (i.e. bit 7 cleared), interrupts disabled and a Seek Command (03)
+    // in the function bits.
+    rlv12Device.writeWord (RLCSR, CSR_SeekCommand);
+
+    // Verify the controller is ready to accept a command
+    // while the drive is not ready
+    rlv12Device.read (RLCSR, &result);
+    ASSERT_EQ (result & (CSR_ControllerReady | CSR_DriveReady), 
+        CSR_ControllerReady);
+
+    // Issue a Read Header command for the same drive
+    rlv12Device.writeWord (RLCSR, CSR_ReadHeaderCommand);
+
+    // Assert execution of the Read Header command doesn't set the
+    // Controller Ready bit (because the seek is still in progress).
+    rlv12Device.read (RLCSR, &result);
+    ASSERT_EQ (result & (CSR_ControllerReady | CSR_DriveReady), 0);
+
+    // Wait till both Seek and Read Header command are completed
+    std::this_thread::sleep_for (std::chrono::milliseconds (500));
+
+    // Verify both controller and drive are ready
+    rlv12Device.read (RLCSR, &result);
+    ASSERT_EQ (result & (CSR_ControllerReady | CSR_DriveReady),
+        CSR_ControllerReady | CSR_DriveReady);
+
+    // Verify the Read Header confirms the head is at the correct cylinder
+    u16 mpr;
+    rlv12Device.read (RLMPR, &mpr);
+    ASSERT_EQ (MPR_cylinder (mpr), 10);
+}
