@@ -3,13 +3,14 @@
 #include "types.h"
 
 // RLV12 constructor
-// Set name and default base address and vector
+// Set name and default base address and vector. Set the controller
+// ready to accept a command.
 // The base class protected data members cannot be accessed in an
 // initializer list
 // ToDo: Remove default RLV12 constructor
 RLV12::RLV12 ()
     :
-    rlcs {0},
+    rlcs {CSR_DONE},
     rlba {0},
     rlda {0},
     rlmpr {0},
@@ -31,7 +32,7 @@ RLV12::RLV12 ()
 
 RLV12::RLV12 (RlConfig *rlConfig)
     :
-    rlcs {0},
+    rlcs {CSR_DONE},
     rlba {0},
     rlda {0},
     rlmpr {0},
