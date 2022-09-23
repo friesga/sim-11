@@ -20,11 +20,11 @@ set (CMDLINEOPTIONS_SRCS
 
 set (RLV12_SRCS
     src/rlv12/calccrc.cpp
-    src/rlv12/configure.cpp
     src/rlv12/createcommand.cpp
     src/rlv12/getstatus.cpp
     src/rlv12/service.cpp
     src/rlv12/rlv12.cpp
+    src/rlv12/rl01_02/configure.cpp
     src/rlv12/rl01_02/rl012.cpp
     src/rlv12/rl01_02/operator.cpp
     src/rlv12/rlv12command/rlv12command.cpp

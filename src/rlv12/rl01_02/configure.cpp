@@ -1,4 +1,4 @@
-#include "rlv12.h"
+#include "../rlv12.h"
 #include "sim_fio/sim_fio.h"
 
 StatusCode RL01_2::configure (UnitConfig &unitConfig)
