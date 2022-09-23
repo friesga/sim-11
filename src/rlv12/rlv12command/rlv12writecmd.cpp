@@ -6,7 +6,7 @@ void RLV12WriteCmd::execute (RLV12 *controller, RL01_2 *unit)
     CondData<u16> tmpValue;
 
     // Set position in file to the block to be written
-    if (!fseek (unit->filePtr_, filePosition(), SEEK_SET))
+    if (fseek (unit->filePtr_, filePosition(), SEEK_SET))
         return;
 
     if (unit->unitStatus_ & Status::UNIT_RO || 
