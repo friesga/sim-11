@@ -1,15 +1,13 @@
 #include "rlv12command.h"
 #include "rlv12/rlv12.h"
 
-RLV12Command::RLV12Command (int32_t trackNr, int32_t sectorNr,
-    int32_t memoryAddress, size_t wordCount)
+RLV12Command::RLV12Command (int32_t diskAddress, int32_t memoryAddress, size_t wordCount)
     : 
-    trackNumber_ {trackNr},
-    sectorNumber_ {sectorNr},
+    diskAddress_ {diskAddress},
     memoryAddress_ {memoryAddress},
     wordCount_ {wordCount}
 {
-    size_t maxWordCount = (RL_NUMSC - sectorNumber_) * RL_NUMWD;
+    size_t maxWordCount = (RL_NUMSC - getSector (diskAddress)) * RL_NUMWD;
 
     // Track overrun?
     if (wordCount_ > maxWordCount)                                         
@@ -17,11 +15,8 @@ RLV12Command::RLV12Command (int32_t trackNr, int32_t sectorNr,
 }
 
 // Accessors
-int32_t RLV12Command::trackNumber() const
-    { return trackNumber_; }
- 
-int32_t RLV12Command::sectorNumber() const
-    { return sectorNumber_; }
+ int32_t RLV12Command::diskAddress() const
+    { return diskAddress_; }
 
 int32_t RLV12Command::memoryAddress() const
     { return memoryAddress_; }
@@ -33,8 +28,8 @@ size_t RLV12Command::wordCount () const
 // as an offset in the file
 int32_t RLV12Command::filePosition () const
 {
-    return (trackNumber_ * RL_NUMSC + sectorNumber_) * RL_NUMWD * 
-        sizeof(int16_t);
+    return (getTrack (diskAddress_) * RL_NUMSC +
+        getSector(diskAddress_)) * RL_NUMWD * sizeof(int16_t);
 }
 
 // Default implementation of the finish command for Read, Read no header,

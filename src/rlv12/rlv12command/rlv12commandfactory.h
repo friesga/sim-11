@@ -23,6 +23,12 @@ public:
 };
 
 // Default creation of RLV12Command objects
+// 
+// Applicable to:
+// - Write Check (Function Code 1),
+// - Write Data (Function Code 5),
+// - Read Data (Function Code 6)
+//
 template <typename T>
 std::unique_ptr<T> CommandFactory<T>::create 
     (int32_t currentDiskAddress, int32_t newDiskAddress, 
@@ -33,9 +39,7 @@ std::unique_ptr<T> CommandFactory<T>::create
         // Bad cylinder or sector
         return {};
 
-    return std::make_unique<T> (
-        getTrack (newDiskAddress),
-        getSector (newDiskAddress),
+    return std::make_unique<T> (newDiskAddress,
         memoryAddress, wordCount);
 }
 
@@ -50,9 +54,7 @@ std::unique_ptr<RLV12ReadNoHeaderCmd>
         // Bad sector
         return {};
 
-    return std::make_unique<RLV12ReadNoHeaderCmd> (
-        getTrack (currentDiskAddress),
-        getSector (currentDiskAddress),
+    return std::make_unique<RLV12ReadNoHeaderCmd> (currentDiskAddress,
         memoryAddress, wordCount);
 }
 
@@ -63,9 +65,7 @@ std::unique_ptr<RLV12SeekCmd>
         (int32_t currentDiskAddress, int32_t newDiskAddress,
          int32_t memoryAddress, int32_t wordCount)
 {
-    return std::make_unique<RLV12SeekCmd> 
-        (getTrack (currentDiskAddress),
-        getSector (currentDiskAddress),
+    return std::make_unique<RLV12SeekCmd> (currentDiskAddress,
         memoryAddress, wordCount);
 }
 
@@ -76,9 +76,7 @@ std::unique_ptr<RLV12ReadHeaderCmd>
         (int32_t currentDiskAddress, int32_t newDiskAddress,
          int32_t memoryAddress, int32_t wordCount)
 {
-    return std::make_unique<RLV12ReadHeaderCmd> 
-        (getTrack (currentDiskAddress),
-        getSector (currentDiskAddress),
+    return std::make_unique<RLV12ReadHeaderCmd> (currentDiskAddress,
         memoryAddress, wordCount);
 }
 
@@ -89,9 +87,7 @@ std::unique_ptr<RLV12MaintenanceCmd>
         (int32_t currentDiskAddress, int32_t newDiskAddress,
          int32_t memoryAddress, int32_t wordCount)
 {
-    return std::make_unique<RLV12MaintenanceCmd> 
-        (getTrack (currentDiskAddress),
-        getSector (currentDiskAddress),
+    return std::make_unique<RLV12MaintenanceCmd> (currentDiskAddress,
         memoryAddress, wordCount);
 }
 

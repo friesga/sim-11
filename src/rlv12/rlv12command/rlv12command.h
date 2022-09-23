@@ -12,18 +12,16 @@ class RL01_2;
 class RLV12Command
 {
 protected:
-    int32_t trackNumber_;
-    int32_t sectorNumber_;
+    int32_t diskAddress_;
     int32_t memoryAddress_;
     size_t wordCount_;
 
 public:
-    RLV12Command (int32_t trackNr, int32_t sectorNr, 
-        int32_t memoryAddress, size_t wordCount);
+    RLV12Command (int32_t diskAddress, int32_t memoryAddress, 
+        size_t wordCount);
 
     // Accessors
-    int32_t trackNumber() const;
-    int32_t sectorNumber() const;
+    int32_t diskAddress() const;
     int32_t memoryAddress() const;
     size_t wordCount () const;
 
