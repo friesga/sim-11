@@ -1,5 +1,4 @@
-#include "threadsafecontainer/threadsafequeue.h"
-#include "threadsafecontainer/threadsafepriorityqueue.h"
+#include "threadsafecontainers/threadsafequeue.h"
 
 #include <thread>
 #include <vector>
@@ -9,7 +8,6 @@
 
 using namespace std;
 
-using PriorityQueue = ThreadSafePriorityQueue<size_t>;
 using RegularQueue = ThreadSafeQueue<size_t>;
 
 // Fill a regular queue in ascending order
@@ -58,26 +56,4 @@ TEST (ThreadSafeContainers, RegularQueueHandlesPushAndPop)
     }
 
     EXPECT_EQ (regularQueue.size(), 0);
-}
-
-TEST (ThreadSafeContainers, PriorityQueueHandlesPushAndPop)
-{
-    size_t req;
-    size_t const nProducers = 10;
-    size_t const nRequestsPerProducer = 10;
-    size_t numReq = nProducers * nRequestsPerProducer;
-   
-    PriorityQueue priorityQueue;
-
-    fillQueue<PriorityQueue> (priorityQueue, nProducers, nRequestsPerProducer);
-
-    // Verify all elements are pushed
-    ASSERT_EQ (priorityQueue.size(), numReq);
-
-    while (numReq--)
-    {
-        priorityQueue.waitAndPop (req);
-    }
-
-    EXPECT_EQ (priorityQueue.size(), 0);
 }

@@ -161,6 +161,7 @@ endif ()
 set (SIM11_TEST_SRCS
     gtest/cmdlineoptionstest.cpp
     gtest/threadsafeprioqueuetest.cpp
+    gtest/threadsafecontainertest.cpp
     gtest/interruptrequesttest.cpp
     gtest/asynctimertest.cpp
     gtest/bitmasktest.cpp
