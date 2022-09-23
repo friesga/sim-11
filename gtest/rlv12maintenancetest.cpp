@@ -54,6 +54,9 @@ TEST_F (RLV12MaintenanceTest, maintenance)
     rlv12Device.writeWord (RLMPR, 0177001);
     rlv12Device.writeWord (RLCSR, MaintenanceMode);
 
+    // Wait for command completion
+    std::this_thread::sleep_for (std::chrono::milliseconds (500));
+
     // Expected result: CSR CRDY (bit 7) set, all error bits cleared.
     u16 result;
     rlv12Device.read (RLCSR, &result);

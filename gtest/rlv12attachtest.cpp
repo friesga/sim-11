@@ -2,6 +2,7 @@
 #include "rlv12/rlv12.h"
 #include "cmdlineoptions/cmdlineoptions.h"
 #include "unit/attachflags.h"
+#include "configdata/include/configdata.h"
 
 #include <gtest/gtest.h>
 
@@ -31,18 +32,23 @@ protected:
     }
 };
 
+
 // Verify attaching a non-existing file returns the appropriate error
 TEST_F (RLV12AttachTest, attachReturnsOpenError)
 {
-    // Create bus structure, an RLV12 device and install the device
-    // LSI11 lsi;
-    // RLV12 rlv12Device {};
-    // lsi.bus.installModule (1, &rlv12Device);
+    RlUnitConfig rlUnitConfig
+    {
+        .fileName = "non-existingfile",
+        .newFile = false,
+        .readOnly = false
+    };
 
-    ASSERT_EQ (rlv12Device.unit (0)->attach ("non-existingfile", 
-            Bitmask(AttachFlags::Default)), 
+    // ASSERT_EQ (rlv12Device.unit (0)->attach ("non-existingfile", 
+    //         Bitmask(AttachFlags::Default)), 
+    ASSERT_EQ (rlv12Device.unit (0)->configure (rlUnitConfig), 
         StatusCode::OpenError);
 }
+
 
 TEST_F (RLV12AttachTest, attachCreatesNewFile)
 {
@@ -52,6 +58,13 @@ TEST_F (RLV12AttachTest, attachCreatesNewFile)
         "sim-11",
         "-q"    // quiet
     };
+
+    RlUnitConfig attachCreatesNewFileConfig
+    {
+        .fileName = "rl02.dsk",
+        .newFile = true
+    };
+
     CmdLineOptions::processOptions (sizeof (argvSet0) /sizeof (argvSet0[0]),
         argvSet0);
 
@@ -60,9 +73,13 @@ TEST_F (RLV12AttachTest, attachCreatesNewFile)
     remove (fileName);
 
     // This creates a file in the default directory (out\build\<config>)
-    ASSERT_EQ (rlv12Device.unit (0)->attach (fileName, Bitmask(AttachFlags::NewFile)),
+    // ASSERT_EQ (rlv12Device.unit (0)->attach (fileName, Bitmask(AttachFlags::NewFile)),
+    //     StatusCode::OK);
+    ASSERT_EQ (rlv12Device.unit (0)->configure (attachCreatesNewFileConfig),
         StatusCode::OK);
 }
+
+
 
 // This test requires the UNIT_ROABLE flag to be set and depends on the
 // file created in the previous test.
@@ -74,12 +91,20 @@ TEST_F (RLV12AttachTest, attachOpensReadOnly)
         "sim-11",
         "-q",   // quiet
     };
+
+    RlUnitConfig attachOpensReadOnlyConfig
+    {
+        .fileName = "rl02.dsk",
+        .readOnly = true
+    };
+
     CmdLineOptions::processOptions (sizeof (argvSet0) /sizeof (argvSet0[0]),
         argvSet0);
 
-    ASSERT_EQ (rlv12Device.unit (0)->attach ("rl02.dsk", Bitmask(AttachFlags::ReadOnly)), 
+    ASSERT_EQ (rlv12Device.unit (0)->configure (attachOpensReadOnlyConfig), 
         StatusCode::OK);
 }
+
 
 // Verify an existing file is not overwritten without specification of
 // the override option
@@ -90,10 +115,17 @@ TEST_F (RLV12AttachTest, existingFileIsNotOverwritten)
         "sim-11",
         "-q"    // quiet
     };
+
+    RlUnitConfig existingFileIsNotOverwrittenConfig
+    {
+        .fileName = "rl02.dsk",
+        .newFile = true
+    };
+
     CmdLineOptions::processOptions (sizeof (argvSet0) /sizeof (argvSet0[0]),
         argvSet0);
 
-    ASSERT_EQ (rlv12Device.unit (0)->attach ("rl02.dsk",Bitmask(AttachFlags::NewFile)), 
+    ASSERT_EQ (rlv12Device.unit (0)->configure (existingFileIsNotOverwrittenConfig), 
         StatusCode::ArgumentError);
 }
 
@@ -105,10 +137,17 @@ TEST_F (RLV12AttachTest, existingFileIsOverwritten)
         "sim-11",
         "-q"    // quiet
     };
+
+    RlUnitConfig existingFileIsOverwrittenConfig
+    {
+        .fileName = "rl02.dsk",
+        .overwrite = true
+    };
+
+
     CmdLineOptions::processOptions (sizeof (argvSet0) /sizeof (argvSet0[0]),
         argvSet0);
 
-    ASSERT_EQ (rlv12Device.unit (0)->attach ("rl02.dsk", 
-            Bitmask(AttachFlags::NewFile | AttachFlags::Overwrite)), 
+    ASSERT_EQ (rlv12Device.unit (0)->configure (existingFileIsOverwrittenConfig),
         StatusCode::OK);
 }

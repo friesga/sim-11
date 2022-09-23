@@ -73,9 +73,17 @@ protected:
 // Verify the correct execution of a Seek command
 TEST_F (RLV12SeekTest, seekSucceeds)
 {
+    RlUnitConfig seekSucceedsConfig
+    {
+        .fileName = "rl01.dsk",
+        .newFile = true,
+        .overwrite = true
+    };
+
     // Attach a new disk to unit 0
-    ASSERT_EQ (rlv12Device.unit (0)->attach ("rl01.dsk",
-            Bitmask(AttachFlags::NewFile | AttachFlags::Overwrite)), 
+    // ASSERT_EQ (rlv12Device.unit (0)->attach ("rl01.dsk",
+    //         Bitmask(AttachFlags::NewFile | AttachFlags::Overwrite)), 
+    ASSERT_EQ (rlv12Device.unit (0)->configure (seekSucceedsConfig), 
         StatusCode::OK);
 
     // Clear errors and volume check condition
@@ -132,16 +140,36 @@ TEST_F (RLV12SeekTest, seekSucceeds)
     ASSERT_EQ (MPR_cylinder (mpr), 5);
 }
 
+
 // Verify a seek command for a different unit can be performed during
 // execution of the first command
 TEST_F (RLV12SeekTest, parallelSeeksSucceed)
 {
+    RlUnitConfig parallelSeeksSucceedConfig0
+    {
+        .fileName = "rl01_0.dsk",
+        .newFile = true,
+        .overwrite = true
+    };
+
+    RlUnitConfig parallelSeeksSucceedConfig1
+    {
+        .fileName = "rl01_1.dsk",
+        .newFile = true,
+        .overwrite = true
+    };
+
     // Attach a new disk to unit 0 and unit 1
-    ASSERT_EQ (rlv12Device.unit (0)->attach ("rl01_0.dsk",
-            Bitmask(AttachFlags::NewFile | AttachFlags::Overwrite)), 
+    // ASSERT_EQ (rlv12Device.unit (0)->attach ("rl01_0.dsk",
+    //        Bitmask(AttachFlags::NewFile | AttachFlags::Overwrite)), 
+    //    StatusCode::OK);
+    // ASSERT_EQ (rlv12Device.unit (1)->attach ("rl01_1.dsk",
+    //        Bitmask(AttachFlags::NewFile | AttachFlags::Overwrite)), 
+    //    StatusCode::OK);
+
+    ASSERT_EQ (rlv12Device.unit (0)->configure (parallelSeeksSucceedConfig0), 
         StatusCode::OK);
-    ASSERT_EQ (rlv12Device.unit (1)->attach ("rl01_1.dsk",
-            Bitmask(AttachFlags::NewFile | AttachFlags::Overwrite)), 
+    ASSERT_EQ (rlv12Device.unit (1)->configure (parallelSeeksSucceedConfig1), 
         StatusCode::OK);
 
     // Clear errors and volume check condition for both units
@@ -210,9 +238,19 @@ TEST_F (RLV12SeekTest, parallelSeeksSucceed)
 // Verify a seek command command can be started while a seek is in progress.
 TEST_F (RLV12SeekTest, seekOnBusyDriveAccepted)
 {
+    RlUnitConfig seekOnBusyDriveAcceptedConfig
+    {
+        .fileName = "rl01.dsk",
+        .newFile = true,
+        .overwrite = true
+    };
+
     // Attach a new disk to unit 0
-    ASSERT_EQ (rlv12Device.unit (0)->attach ("rl01.dsk",
-            Bitmask(AttachFlags::NewFile | AttachFlags::Overwrite)), 
+    // ASSERT_EQ (rlv12Device.unit (0)->attach ("rl01.dsk",
+    //        Bitmask(AttachFlags::NewFile | AttachFlags::Overwrite)), 
+    //    StatusCode::OK);
+
+    ASSERT_EQ (rlv12Device.unit (0)->configure (seekOnBusyDriveAcceptedConfig), 
         StatusCode::OK);
 
     // Clear errors and volume check condition

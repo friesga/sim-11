@@ -82,9 +82,15 @@ protected:
 // Verify the correct execution of Read Data Without Header Check command
 TEST_F (RLV12ReadDataWithoutHeaderCheckTest, readDataWithoutHeaderCheckSucceeds)
 {
+    RlUnitConfig rlUnitConfig
+    {
+        .fileName = "rl01.dsk",
+        .newFile = true,
+        .overwrite = true
+    };
+
     // Attach a new disk to unit 0
-    ASSERT_EQ (rlv12Device.unit (0)->attach ("rl01.dsk", 
-            Bitmask(AttachFlags::NewFile | AttachFlags::Overwrite)), 
+    ASSERT_EQ (rlv12Device.unit (0)->configure (rlUnitConfig), 
         StatusCode::OK);
 
     // Clear errors and volume check condition

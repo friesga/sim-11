@@ -76,10 +76,16 @@ protected:
         CmdLineOptions::processOptions (sizeof (argvSet0) /sizeof (argvSet0[0]),
             argvSet0);
 
+        RlUnitConfig rlUnitConfig
+        {
+            .fileName = "rl01.dsk",
+            .newFile = true,
+            .overwrite = true
+        };
+
         // Attach a new disk to unit 0
-        ASSERT_EQ (rlv12Device.unit (0)->attach ("rl01.dsk",
-            Bitmask(AttachFlags::NewFile | AttachFlags::Overwrite)), 
-        StatusCode::OK);
+        ASSERT_EQ (rlv12Device.unit (0)->configure (rlUnitConfig), 
+            StatusCode::OK);
 
         // Clear errors and volume check condition
         rlv12Device.writeWord (RLDAR, DAR_Reset | DAR_GetStatus | DAR_Marker);

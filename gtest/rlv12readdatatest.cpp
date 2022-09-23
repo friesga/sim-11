@@ -74,9 +74,15 @@ protected:
 // Verify the correct execution of Read Data command
 TEST_F (RLV12ReadDataTest, readDataSucceeds)
 {
+    RlUnitConfig rlUnitConfig
+    {
+        .fileName = "rl01.dsk",
+        .newFile = true,
+        .overwrite = true
+    };
+
     // Attach a new disk to unit 0
-    ASSERT_EQ (rlv12Device.unit (0)->attach ("rl01.dsk",
-            Bitmask(AttachFlags::NewFile | AttachFlags::Overwrite)), 
+    ASSERT_EQ (rlv12Device.unit (0)->configure (rlUnitConfig), 
         StatusCode::OK);
 
     // Clear errors and volume check condition
@@ -136,9 +142,15 @@ TEST_F (RLV12ReadDataTest, readDataSucceeds)
 // at the correct cylinder
 TEST_F (RLV12ReadDataTest, readDataFails)
 {
+    RlUnitConfig rlUnitConfig
+    {
+        .fileName = "rl01.dsk",
+        .newFile = true,
+        .overwrite = true
+    };
+
     // Attach a new disk to unit 0
-    ASSERT_EQ (rlv12Device.unit (0)->attach ("rl01.dsk",
-            Bitmask(AttachFlags::NewFile | AttachFlags::Overwrite)), 
+    ASSERT_EQ (rlv12Device.unit (0)->configure (rlUnitConfig), 
         StatusCode::OK);
 
     // Clear errors and volume check condition
@@ -185,9 +197,15 @@ TEST_F (RLV12ReadDataTest, readDataFails)
 // Verify spiral reads result in an error
 TEST_F (RLV12ReadDataTest, spiralReadFails)
 {
+    RlUnitConfig rlUnitConfig
+    {
+        .fileName = "rl01.dsk",
+        .newFile = true,
+        .overwrite = true
+    };
+
     // Attach a new disk to unit 0
-    ASSERT_EQ (rlv12Device.unit (0)->attach ("rl01.dsk",
-            Bitmask(AttachFlags::NewFile | AttachFlags::Overwrite)), 
+    ASSERT_EQ (rlv12Device.unit (0)->configure (rlUnitConfig), 
         StatusCode::OK);
 
     // Clear errors and volume check condition
