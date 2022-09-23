@@ -1,9 +1,13 @@
 #include "rlv12readnoheadercmd.h"
 #include "rlv12/rlv12.h"
 
+// Read Data Without Header Check command
 void RLV12ReadNoHeaderCmd::execute (RLV12 *controller, RL01_2 *unit)
 {
-    // Read Data or Read Data Without Header Check command
+    // Set position in file to the block to be read
+    if (!fseek (unit->filePtr_, filePosition(), SEEK_SET))
+        return;
+
     // Read wordCount * 2 bytes; returned is the number of bytes read 
     int32_t numBytes = fread (controller->rlxb_, sizeof (int16_t), wordCount_,
         unit->filePtr_);

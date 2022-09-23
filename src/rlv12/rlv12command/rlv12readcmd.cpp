@@ -3,7 +3,11 @@
  
 // Read Data command
 void RLV12ReadCmd::execute (RLV12 *controller, RL01_2 *unit)
-{    
+{   
+    // Set position in file to the block to be read
+    if (!fseek (unit->filePtr_, filePosition(), SEEK_SET))
+        return;
+
     // Read wordCount * 2 bytes; returned is the number of bytes read 
     size_t numBytes = fread (controller->rlxb_, sizeof (int16_t), wordCount_,
         unit->filePtr_);

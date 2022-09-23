@@ -169,14 +169,7 @@ void RLV12::service (Unit &unitRef)
         // setDone() has already been executed by createCommand()
         return;
 
-    if (!fseek (unit.filePtr_, rlv12Command->filePosition(), SEEK_SET))
-    {
-        //if (DEBUG_PRS(rl_dev))
-        //    fprintf(sim_deb, ">>RL svc: cyl %d, sect %d, wordCount %d, maxwc %d, err %d\n",
-        //        GET_CYL(rlda), GET_SECT(rlda), wordCount, maxwc, err);
-
-        rlv12Command->execute (this, &unit);
-    }
+    rlv12Command->execute (this, &unit);
 
     rlv12Command->finish (this, &unit);
 }

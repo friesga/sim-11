@@ -6,6 +6,10 @@ void RLV12WriteCheckCmd::execute (RLV12 *controller, RL01_2 *unit)
 {
     CondData<u16> comp;
 
+    // Set position in file to the block to be read
+    if (!fseek (unit->filePtr_, filePosition(), SEEK_SET))
+        return;
+
     size_t numBytes = fread (controller->rlxb_, sizeof (int16_t), 
         wordCount_, unit->filePtr_);
 
