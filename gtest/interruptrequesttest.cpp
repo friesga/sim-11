@@ -1,5 +1,5 @@
 #include "interruptrequest/interruptrequest.h"
-#include "threadsafeprioqueue/threadsafeprioqueue.h"
+#include "threadsafecontainers/threadsafeprioqueue.h"
 
 #include <gtest/gtest.h>
 

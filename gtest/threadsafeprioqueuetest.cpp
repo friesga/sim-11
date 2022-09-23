@@ -1,4 +1,4 @@
-#include "threadsafeprioqueue/threadsafeprioqueue.h"
+#include "threadsafecontainers/threadsafeprioqueue.h"
 
 #include <thread>
 #include <vector>

@@ -1,7 +1,7 @@
 #ifndef _ASYNCTIMER_H_
 #define _ASYNCTIMER_H_
 
-#include "threadsafeprioqueue/threadsafeprioqueue.h"
+#include "threadsafecontainers/threadsafeprioqueue.h"
 #include "timerevent.h"
 
 #include <chrono>

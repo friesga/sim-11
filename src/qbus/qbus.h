@@ -5,7 +5,7 @@
 #include "statuscodes.h"
 #include "conddata/conddata.h"
 #include "interruptrequest/interruptrequest.h"
-#include "threadsafeprioqueue/threadsafeprioqueue.h"
+#include "threadsafecontainers/threadsafeprioqueue.h"
 #include "busdevice/busdevice.h"
 
 /* Backplane size */
