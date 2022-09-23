@@ -138,10 +138,10 @@ void RLV12::service (Unit &unitRef)
     }
 
 
-    // The following condition isn't met as writeWord() only calls this
-    // service routine if the unit is attached.
-    // Attached?
-    if ( !(unit.unitStatus_ & Status::UNIT_ATT))
+    // All commands require an attached unit, except the Maintenance and
+    // Get Status commands. The Get Status command doesn't reach this point.
+    if ( !(unit.unitStatus_ & Status::UNIT_ATT) && 
+        unit.function_ != RLCS_MAINTENANCE)
     {
         // Spin error
         unit.driveStatus_ |= RLDS_SPE;                       
