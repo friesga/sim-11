@@ -36,7 +36,7 @@ void fillQueue(T &queue, size_t nProducers, size_t nElements)
 }
 
 
-TEST (ThreadSafeContainers, RegularQueueHandlesPushAndPop)
+TEST (ThreadSafeContainers, regularQueueHandlesPushAndPop)
 {
     size_t req;
     size_t const nProducers = 10;
@@ -56,4 +56,57 @@ TEST (ThreadSafeContainers, RegularQueueHandlesPushAndPop)
     }
 
     EXPECT_EQ (regularQueue.size(), 0);
+}
+
+// A consumer started in a separate thread, reading from the given queue
+// until it is closed
+void consumer (RegularQueue &queue)
+{
+    size_t req;
+    size_t nextReq {0};
+
+    while (queue.waitAndPop(req))
+    {
+        // Verify a number is retrieved from the queue
+        ASSERT_EQ (req, nextReq);
+        ++nextReq;
+    }
+
+    // Queue is closed, return from the thread
+}
+
+TEST (ThreadSafeContainers, queueCanBeClosed)
+{
+    size_t req;
+   
+    RegularQueue queue;
+
+    // Start consumer thread
+    std::thread consumerThread = std::thread (consumer, std::ref(queue));
+
+    // Push some numbers onto the queue
+    for (size_t num = 0; num < 20; ++num)
+        queue.push(num);
+
+    // Now close the queue
+    queue.close ();
+
+    // Now the thread should be completed
+    consumerThread.join ();
+}
+
+
+TEST (ThreadSafeContainers, closedQueuecannnotBePushed)
+{
+    size_t req;
+   
+    RegularQueue queue;
+
+    EXPECT_TRUE (queue.push(0));
+
+    // Now close the queue
+    queue.close ();
+
+    // Push should be disallowed on a close queue
+    EXPECT_FALSE (queue.push(0));
 }
