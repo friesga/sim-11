@@ -65,11 +65,13 @@ bool ThreadSafeContainer<T, Cont>::waitAndPop(T& dest)
 {
     std::unique_lock<std::mutex> lock(guard);
 
+    while (queue_.empty() && !closed)
+        signal.wait(lock);
+
+    // We are awakened because either a element is pushed or the
+    // queue is closed.
     if (closed)
         return false;
-
-    while (queue_.empty())
-        signal.wait(lock);
 
     // If this throws, nothing has been removed
     dest = std::move (first ());
