@@ -19,7 +19,7 @@ template <typename T>
 class CommandFactory
 {
 public:
-    static std::unique_ptr<T> create (int32_t currentDiskAddress, 
+    static std::shared_ptr<T> create (int32_t currentDiskAddress, 
         int32_t newDiskAddress, int32_t memoryAddress, int32_t wordCount);
 };
 
@@ -31,7 +31,7 @@ public:
 // - Read Data (Function Code 6)
 //
 template <typename T>
-std::unique_ptr<T> CommandFactory<T>::create 
+std::shared_ptr<T> CommandFactory<T>::create 
     (int32_t currentDiskAddress, int32_t newDiskAddress, 
      int32_t memoryAddress, int32_t wordCount)
 {
@@ -40,13 +40,13 @@ std::unique_ptr<T> CommandFactory<T>::create
         // Bad cylinder or sector
         return {};
 
-    return std::make_unique<T> (newDiskAddress,
+    return std::make_shared<T> (newDiskAddress,
         memoryAddress, wordCount);
 }
 
 // Create an object of type RLV12ReadNoHeaderCmd
 template <>
-std::unique_ptr<RLV12ReadNoHeaderCmd> 
+std::shared_ptr<RLV12ReadNoHeaderCmd> 
     CommandFactory<RLV12ReadNoHeaderCmd>::create 
         (int32_t currentDiskAddress, int32_t newDiskAddress,
          int32_t memoryAddress, int32_t wordCount)
@@ -55,40 +55,40 @@ std::unique_ptr<RLV12ReadNoHeaderCmd>
         // Bad sector
         return {};
 
-    return std::make_unique<RLV12ReadNoHeaderCmd> (currentDiskAddress,
+    return std::make_shared<RLV12ReadNoHeaderCmd> (currentDiskAddress,
         memoryAddress, wordCount);
 }
 
 // Create an object of type RLV12SeekCmd
 template <>
-std::unique_ptr<RLV12SeekCmd> 
+std::shared_ptr<RLV12SeekCmd> 
     CommandFactory<RLV12SeekCmd>::create 
         (int32_t currentDiskAddress, int32_t newDiskAddress,
          int32_t memoryAddress, int32_t wordCount)
 {
-    return std::make_unique<RLV12SeekCmd> (currentDiskAddress,
+    return std::make_shared<RLV12SeekCmd> (currentDiskAddress,
         memoryAddress, wordCount);
 }
 
 // Create an object of type RLV12ReadHeaderCmd
 template <>
-std::unique_ptr<RLV12ReadHeaderCmd> 
+std::shared_ptr<RLV12ReadHeaderCmd> 
     CommandFactory<RLV12ReadHeaderCmd>::create 
         (int32_t currentDiskAddress, int32_t newDiskAddress,
          int32_t memoryAddress, int32_t wordCount)
 {
-    return std::make_unique<RLV12ReadHeaderCmd> (currentDiskAddress,
+    return std::make_shared<RLV12ReadHeaderCmd> (currentDiskAddress,
         memoryAddress, wordCount);
 }
 
 // Create an object of type RLV12MaintenanceCmd
 template <>
-std::unique_ptr<RLV12MaintenanceCmd> 
+std::shared_ptr<RLV12MaintenanceCmd> 
     CommandFactory<RLV12MaintenanceCmd>::create 
         (int32_t currentDiskAddress, int32_t newDiskAddress,
          int32_t memoryAddress, int32_t wordCount)
 {
-    return std::make_unique<RLV12MaintenanceCmd> (currentDiskAddress,
+    return std::make_shared<RLV12MaintenanceCmd> (currentDiskAddress,
         memoryAddress, wordCount);
 }
 

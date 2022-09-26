@@ -1,12 +1,12 @@
 #include "rlv12command/rlv12commandfactory.h"
 #include "rlv12/rlv12.h"
 
-std::unique_ptr<RLV12Command> 
+std::shared_ptr<RLV12Command> 
     RLV12::createCommand (int32_t function, 
         int32_t currentDiskAddress, int32_t newDiskAddress,
         int32_t memoryAddress, int32_t wordCount)
 {
-    std::unique_ptr<RLV12Command> rlv12Command;
+    std::shared_ptr<RLV12Command> rlv12Command;
 
     switch (function)
     {

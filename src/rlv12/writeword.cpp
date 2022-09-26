@@ -23,7 +23,7 @@ StatusCode RLV12::writeWord (u16 registerAddress, u16 data)
 {
     // Get reference to drive
     RL01_2 &unit = units_[GET_DRIVE(data)];
-    std::unique_ptr<RLV12Command> rlv12Command;
+    std::shared_ptr<RLV12Command> rlv12Command;
 
     // Guard against controller register access
 	lock_guard<mutex> guard{ controllerMutex_ };
@@ -81,7 +81,7 @@ StatusCode RLV12::writeWord (u16 registerAddress, u16 data)
                 return StatusCode::IOError;
 
             // Queue this command to the unit specific service thread
-            serviceQueues_[GET_DRIVE(data)].push (rlv12Command.get ());
+            serviceQueues_[GET_DRIVE(data)].push (rlv12Command);
             break;
 
         case BAR:

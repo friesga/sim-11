@@ -15,10 +15,10 @@ using std::lock_guard;
 // safeguarded by a mutex.
 //
 void RLV12::service (Unit& unitRef,
-    ThreadSafeQueue<RLV12Command *> &commandQueue)
+    ThreadSafeQueue<std::shared_ptr<RLV12Command>> &commandQueue)
 {
     RL01_2& unit = static_cast<RL01_2&> (unitRef);
-    RLV12Command  *rlv12Command;
+    std::shared_ptr<RLV12Command>  rlv12Command;
 
     // EK-0RL11-TD-001, p2-3: "If the CPU software initiates another
     // operation on a drive that is busy seeking, the controller will

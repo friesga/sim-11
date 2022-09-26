@@ -169,7 +169,7 @@ class RLV12 : public BusDevice
 
     // Definition of command queues to the service unit threads. The queues
     // are thread safe and contain pointers to RLV12Command objects.
-    std::array<ThreadSafeQueue<RLV12Command *>, RL_NUMDRIVES> serviceQueues_;
+    std::array<ThreadSafeQueue<std::shared_ptr<RLV12Command>>, RL_NUMDRIVES> serviceQueues_;
 
     // Safe guard against controller access from multiple service threads
     std::mutex controllerMutex_;
@@ -180,7 +180,7 @@ class RLV12 : public BusDevice
     void seek (RL01_2 &unit);
     u16 calcCRC (int const wc, u16 const *data);
     void setDone (int32_t status);
-    std::unique_ptr<RLV12Command> createCommand (int32_t function,
+    std::shared_ptr<RLV12Command> createCommand (int32_t function,
         int32_t currentTrackHeadSector, int32_t newTrackHeadSector,
         int32_t memoryAddress, int32_t wordCount);
 
@@ -205,7 +205,7 @@ public:
     inline size_t numUnits ();
     inline RL01_2  *unit (size_t unitNumber);
     void service (Unit &unit, 
-        ThreadSafeQueue<RLV12Command *> &commandQueue);
+        ThreadSafeQueue<std::shared_ptr<RLV12Command>> &commandQueue);
 
     // Functions to set and get memory adresses consistently for
     // 16-, 18- and 22-bit systems
