@@ -75,7 +75,7 @@ void consumer (RegularQueue &queue)
     // Queue is closed, return from the thread
 }
 
-TEST (ThreadSafeContainers, queueCanBeClosed)
+TEST (ThreadSafeContainers, nonEmptyQueueCanBeClosed)
 {
     size_t req;
    
@@ -89,6 +89,22 @@ TEST (ThreadSafeContainers, queueCanBeClosed)
         queue.push(num);
 
     // Now close the queue
+    queue.close ();
+
+    // Now the thread should be completed
+    consumerThread.join ();
+}
+
+TEST (ThreadSafeContainers, emptyQueueCanBeClosed)
+{
+    size_t req;
+   
+    RegularQueue queue;
+
+    // Start consumer thread
+    std::thread consumerThread = std::thread (consumer, std::ref(queue));
+
+    // Immediately close the queue
     queue.close ();
 
     // Now the thread should be completed
