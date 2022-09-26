@@ -68,30 +68,30 @@ protected:
         };
         CmdLineOptions::processOptions (sizeof (argvSet0) /sizeof (argvSet0[0]),
             argvSet0);
+
+        RlUnitConfig rlUnitConfig
+        {
+            .fileName = "rl01.dsk",
+            .newFile = true,
+            .overwrite = true
+        };
+
+        // Attach a new disk to unit 0
+        ASSERT_EQ (rlv12Device.unit (0)->configure (rlUnitConfig), 
+            StatusCode::OK);
+
+        // Clear errors and volume check condition
+        rlv12Device.writeWord (RLDAR, DAR_Reset | DAR_GetStatus | DAR_Marker);
+        rlv12Device.writeWord (RLCSR, CSR_GetStatusCommand | CSR_Drive0);
+
+        // Wait for command completion
+        std::this_thread::sleep_for (std::chrono::milliseconds (50));
     }
 };
 
 // Verify the correct execution of Read Data command
 TEST_F (RLV12ReadDataTest, readDataSucceeds)
 {
-    RlUnitConfig rlUnitConfig
-    {
-        .fileName = "rl01.dsk",
-        .newFile = true,
-        .overwrite = true
-    };
-
-    // Attach a new disk to unit 0
-    ASSERT_EQ (rlv12Device.unit (0)->configure (rlUnitConfig), 
-        StatusCode::OK);
-
-    // Clear errors and volume check condition
-    rlv12Device.writeWord (RLDAR, DAR_Reset | DAR_GetStatus | DAR_Marker);
-    rlv12Device.writeWord (RLCSR, CSR_GetStatusCommand | CSR_Drive0);
-
-    // Wait for command completion
-    std::this_thread::sleep_for (std::chrono::milliseconds (50));
-
     // Fill 512 bytes of memory with the value 0xff and write a mark at
     // address 512 to be able to verify the memory is overwritten by the
     // Read Data command
@@ -145,24 +145,6 @@ TEST_F (RLV12ReadDataTest, readDataSucceeds)
 // at the correct cylinder
 TEST_F (RLV12ReadDataTest, readDataFails)
 {
-    RlUnitConfig rlUnitConfig
-    {
-        .fileName = "rl01.dsk",
-        .newFile = true,
-        .overwrite = true
-    };
-
-    // Attach a new disk to unit 0
-    ASSERT_EQ (rlv12Device.unit (0)->configure (rlUnitConfig), 
-        StatusCode::OK);
-
-    // Clear errors and volume check condition
-    rlv12Device.writeWord (RLDAR, DAR_Reset | DAR_GetStatus | DAR_Marker);
-    rlv12Device.writeWord (RLCSR, CSR_GetStatusCommand | CSR_Drive0);
-
-    // Wait for command completion
-    std::this_thread::sleep_for (std::chrono::milliseconds (500));
-
     // Verify the controller and drive are ready
     u16 result;
     rlv12Device.read (RLCSR, &result);
@@ -203,24 +185,6 @@ TEST_F (RLV12ReadDataTest, readDataFails)
 // Verify spiral reads result in an error
 TEST_F (RLV12ReadDataTest, spiralReadFails)
 {
-    RlUnitConfig rlUnitConfig
-    {
-        .fileName = "rl01.dsk",
-        .newFile = true,
-        .overwrite = true
-    };
-
-    // Attach a new disk to unit 0
-    ASSERT_EQ (rlv12Device.unit (0)->configure (rlUnitConfig), 
-        StatusCode::OK);
-
-    // Clear errors and volume check condition
-    rlv12Device.writeWord (RLDAR, DAR_Reset | DAR_GetStatus | DAR_Marker);
-    rlv12Device.writeWord (RLCSR, CSR_GetStatusCommand | CSR_Drive0);
-
-    // Wait for command completion
-    std::this_thread::sleep_for (std::chrono::milliseconds (50));
-
     // Verify controller and drive are ready
     u16 result;
     rlv12Device.read (RLCSR, &result);
