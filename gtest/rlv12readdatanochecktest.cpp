@@ -97,6 +97,9 @@ TEST_F (RLV12ReadDataWithoutHeaderCheckTest, readDataWithoutHeaderCheckSucceeds)
     rlv12Device.writeWord (RLDAR, DAR_Reset | DAR_GetStatus | DAR_Marker);
     rlv12Device.writeWord (RLCSR, CSR_GetStatusCommand | CSR_Drive0);
 
+    // Wait for command completion
+    std::this_thread::sleep_for (std::chrono::milliseconds (50));
+
     // Verify both controller and drive are ready
     u16 result;
     rlv12Device.read (RLCSR, &result);

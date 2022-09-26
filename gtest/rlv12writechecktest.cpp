@@ -91,6 +91,9 @@ protected:
         rlv12Device.writeWord (RLDAR, DAR_Reset | DAR_GetStatus | DAR_Marker);
         rlv12Device.writeWord (RLCSR, CSR_GetStatusCommand | CSR_Drive0);
 
+        // Wait till Read Header command is completed
+        std::this_thread::sleep_for (std::chrono::milliseconds (10));
+
         // Fill 512 bytes of memory with the values to be written and a marker
         u16 address;
         for (address = 0; address < 512; address += 2)

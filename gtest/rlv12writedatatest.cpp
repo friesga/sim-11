@@ -85,16 +85,15 @@ TEST_F (RLV12WriteDataTest, writeDataSucceeds)
     };
 
     // Attach a new disk to unit 0
-    // ASSERT_EQ (rlv12Device.unit (0)->attach ("rl01.dsk", 
-    //        Bitmask(AttachFlags::NewFile | AttachFlags::Overwrite)), 
-    //    StatusCode::OK);
-
     ASSERT_EQ (rlv12Device.unit (0)->configure (writeDataSucceedsConfig), 
         StatusCode::OK);
 
     // Clear errors and volume check condition
     rlv12Device.writeWord (RLDAR, DAR_Reset | DAR_GetStatus | DAR_Marker);
     rlv12Device.writeWord (RLCSR, CSR_GetStatusCommand | CSR_Drive0);
+
+    // Wait till Read Header command is completed
+    std::this_thread::sleep_for (std::chrono::milliseconds (10));
 
     // Fill 512 bytes of memory with the values to be written and a marker
     u16 address;
@@ -164,27 +163,27 @@ TEST_F (RLV12WriteDataTest, writeDataSucceeds)
     ASSERT_EQ (contents, 01);
 }
 
-RlUnitConfig partialWriteDataSucceedsConfig
-{
-    .fileName = "rl01.dsk",
-    .newFile = true,
-    .overwrite = true
-};
 
 // Verify the correct execution of Write Data command of less than 256 bytes
 TEST_F (RLV12WriteDataTest, partialWriteDataSucceeds)
 {
-    // Attach a new disk to unit 0
-    // ASSERT_EQ (rlv12Device.unit (0)->attach ("rl01.dsk", 
-    //        Bitmask(AttachFlags::NewFile | AttachFlags::Overwrite)), 
-    //    StatusCode::OK);
+    RlUnitConfig partialWriteDataSucceedsConfig
+    {
+        .fileName = "rl01.dsk",
+        .newFile = true,
+        .overwrite = true
+    };
 
+    // Attach a new disk to unit 0
     ASSERT_EQ (rlv12Device.unit (0)->configure (partialWriteDataSucceedsConfig), 
         StatusCode::OK);
 
     // Clear errors and volume check condition
     rlv12Device.writeWord (RLDAR, DAR_Reset | DAR_GetStatus | DAR_Marker);
     rlv12Device.writeWord (RLCSR, CSR_GetStatusCommand | CSR_Drive0);
+
+    // Wait for command completion
+    std::this_thread::sleep_for (std::chrono::milliseconds (10));
 
     // Fill 256 bytes of memory with the values to be written and a marker
     u16 address;
