@@ -78,16 +78,15 @@ protected:
         };
 
         // Attach a new disk to unit 0
-        // ASSERT_EQ (rlv12Device.unit (0)->attach ("rl01.dsk",
-        //    Bitmask(AttachFlags::NewFile | AttachFlags::Overwrite)), 
-        // StatusCode::OK);
-
         ASSERT_EQ (rlv12Device.unit (0)->configure (rlUnitConfig), 
             StatusCode::OK);
 
         // Clear errors and volume check condition
         rlv12Device.writeWord (RLDAR, DAR_Reset | DAR_GetStatus | DAR_Marker);
         rlv12Device.writeWord (RLCSR, CSR_GetStatusCommand | CSR_Drive0);
+
+        // Wait for command completion
+        std::this_thread::sleep_for (std::chrono::milliseconds (50));
     }
 };
 
@@ -107,7 +106,7 @@ TEST_F (RLV12ReadHeaderTest, readHeaderSucceeds)
     rlv12Device.writeWord (RLCSR, CSR_ReadHeaderCommand);
 
     // Wait for command completion
-    std::this_thread::sleep_for (std::chrono::milliseconds (500));
+    std::this_thread::sleep_for (std::chrono::milliseconds (50));
 
     // Verify the controller is ready
     rlv12Device.read (RLCSR, &result);
@@ -133,25 +132,6 @@ TEST_F (RLV12ReadHeaderTest, readHeaderSucceeds)
 // Verify a Read Header Command
 TEST_F (RLV12ReadHeaderTest, headerHasCorrectContents)
 {
-    RlUnitConfig rlUnitConfig
-    {
-        .fileName = "rl01.dsk",
-        .newFile = true,
-        .overwrite = true
-    };
-
-    // Attach a new disk to unit 0
-    // ASSERT_EQ (rlv12Device.unit (0)->attach ("rl01.dsk",
-    //        Bitmask(AttachFlags::NewFile | AttachFlags::Overwrite)), 
-    //    StatusCode::OK);
-
-    ASSERT_EQ (rlv12Device.unit (0)->configure (rlUnitConfig), 
-        StatusCode::OK);
-
-    // Clear errors and volume check condition
-    rlv12Device.writeWord (RLDAR, DAR_Reset | DAR_GetStatus | DAR_Marker);
-    rlv12Device.writeWord (RLCSR, CSR_GetStatusCommand | CSR_Drive0);
-
     // Verify both controller and drive are ready
     u16 result;
     rlv12Device.read (RLCSR, &result);

@@ -89,6 +89,9 @@ TEST_F (RLV12ReadDataTest, readDataSucceeds)
     rlv12Device.writeWord (RLDAR, DAR_Reset | DAR_GetStatus | DAR_Marker);
     rlv12Device.writeWord (RLCSR, CSR_GetStatusCommand | CSR_Drive0);
 
+    // Wait for command completion
+    std::this_thread::sleep_for (std::chrono::milliseconds (50));
+
     // Fill 512 bytes of memory with the value 0xff and write a mark at
     // address 512 to be able to verify the memory is overwritten by the
     // Read Data command
@@ -157,6 +160,9 @@ TEST_F (RLV12ReadDataTest, readDataFails)
     rlv12Device.writeWord (RLDAR, DAR_Reset | DAR_GetStatus | DAR_Marker);
     rlv12Device.writeWord (RLCSR, CSR_GetStatusCommand | CSR_Drive0);
 
+    // Wait for command completion
+    std::this_thread::sleep_for (std::chrono::milliseconds (500));
+
     // Verify the controller and drive are ready
     u16 result;
     rlv12Device.read (RLCSR, &result);
@@ -186,7 +192,7 @@ TEST_F (RLV12ReadDataTest, readDataFails)
     rlv12Device.writeWord (RLCSR, CSR_ReadDataCommand);
 
     // Wait for command completion
-    std::this_thread::sleep_for (std::chrono::milliseconds (500));
+    std::this_thread::sleep_for (std::chrono::milliseconds (50));
 
     // Verify the CSR indicates an error
     rlv12Device.read (RLCSR, &result);
@@ -211,6 +217,9 @@ TEST_F (RLV12ReadDataTest, spiralReadFails)
     // Clear errors and volume check condition
     rlv12Device.writeWord (RLDAR, DAR_Reset | DAR_GetStatus | DAR_Marker);
     rlv12Device.writeWord (RLCSR, CSR_GetStatusCommand | CSR_Drive0);
+
+    // Wait for command completion
+    std::this_thread::sleep_for (std::chrono::milliseconds (50));
 
     // Verify controller and drive are ready
     u16 result;

@@ -20,9 +20,11 @@ protected:
     // A 16 bit system has no BAE register
 
     // CSR bit definitions
-    static constexpr u16  CSR_GetStatusCommand    = (02 << 1);
+    static constexpr u16  CSR_GetStatusCommand    = (2 << 1);
+    static constexpr u16  CSR_DriveReady          = (1 << 0);
     static constexpr u16  CSR_ControllerReady     = (1 << 7);
-    static constexpr u16  CSR_OperationIncomplete = (1 << 10); 
+    static constexpr u16  CSR_OperationIncomplete = (1 << 10);
+    static constexpr u16  CSR_DriveError          = (1 << 14); 
     static constexpr u16  CSR_CompositeError      = (1 << 15); 
     static constexpr u16  CSR_Drive0              = 0;
     static constexpr u16  CSR_Drive1              = (1 << 8);
@@ -30,9 +32,12 @@ protected:
     static constexpr u16  CSR_Drive3              = (3 << 8);
 
     // DAR bit definitions
-    static constexpr u16 DAR_Marker    = (1 << 00);
-    static constexpr u16 DAR_GetStatus = (1 << 01);
-    static constexpr u16 DAR_Reset     = (1 << 03);
+    static constexpr u16 DAR_Marker               = (1 << 0);
+    static constexpr u16 DAR_GetStatus            = (1 << 1);
+    static constexpr u16 DAR_Reset                = (1 << 3);
+
+    // MPR bit definitions
+    static constexpr u16 MPR_DriveSelectError     = (1 << 8);
 
     // Create bus structure, an RLV12 device and install the device
     QBUS bus;
@@ -74,15 +79,63 @@ TEST_F (RLV12GetStatusTest, getStatusFails)
     // in the function bits.
     rlv12Device.writeWord (RLCSR, CSR_GetStatusCommand);
 
+        // Wait for command completion
+    std::this_thread::sleep_for (std::chrono::milliseconds (50));
+
     // Verify the controller reports an Operation Incomplete
     rlv12Device.read (RLCSR, &result);
     ASSERT_EQ (result, CSR_CompositeError |
         CSR_OperationIncomplete | CSR_ControllerReady | CSR_GetStatusCommand);
 }
 
+// Verify a Get Status Command on a disconnected unit fails
+TEST_F (RLV12GetStatusTest, getStatusFailsOnDisconnectedUnit)
+{
+    // Verify the controller is ready to perform an operation 
+    u16 result;
+    rlv12Device.read (RLCSR, &result);
+    ASSERT_EQ (result & CSR_ControllerReady, CSR_ControllerReady);
+
+    // Load DAR with ones in bits 01 and 00, reset bit cleared and
+    // zeros in the other locations
+    rlv12Device.writeWord (RLDAR, DAR_Reset | DAR_GetStatus | DAR_Marker);
+
+    // Load the CSR with drive-select bits for unit 0, a negative GO bit
+    // (i.e. bit 7 cleared), interrups disabled and a Get Status Command (02)
+    // in the function bits.
+    rlv12Device.writeWord (RLCSR, CSR_GetStatusCommand);
+
+    // Wait for command completion
+    std::this_thread::sleep_for (std::chrono::milliseconds (50));
+
+    // Expected result in the MPR register: Drive Select Error
+    u16 mpr;
+    rlv12Device.read (RLMPR, &mpr);
+    ASSERT_EQ (mpr, MPR_DriveSelectError);
+
+    // Verify the controller is ready without error indications
+    rlv12Device.read (RLCSR, &result);
+    ASSERT_EQ (result, CSR_CompositeError | 
+        CSR_DriveError | 
+        CSR_OperationIncomplete | 
+        CSR_ControllerReady | 
+        CSR_GetStatusCommand);
+}
+
 // Verify the controller can be reset by means of the Get Status Command
 TEST_F (RLV12GetStatusTest, resetSucceeds)
 {
+    RlUnitConfig rlUnitConfig
+    {
+        .fileName = "rl01.dsk",
+        .newFile = true,
+        .overwrite = true
+    };
+
+    // Attach a new disk to unit 0
+    ASSERT_EQ (rlv12Device.unit (0)->configure (rlUnitConfig), 
+        StatusCode::OK);
+
     // Verify the controller is ready to perform an operation (the drive
     // does not have to be ready)
     u16 result;
@@ -98,6 +151,9 @@ TEST_F (RLV12GetStatusTest, resetSucceeds)
     // in the function bits.
     rlv12Device.writeWord (RLCSR, CSR_GetStatusCommand);
 
+    // Wait for command completion
+    std::this_thread::sleep_for (std::chrono::milliseconds (50));
+
     // Expected result in the MPR register: No errors, Drive type RL01
     u16 mpr;
     rlv12Device.read (RLMPR, &mpr);
@@ -105,13 +161,26 @@ TEST_F (RLV12GetStatusTest, resetSucceeds)
 
     // Verify the controller is ready without error indications
     rlv12Device.read (RLCSR, &result);
-    ASSERT_EQ (result, CSR_ControllerReady | CSR_GetStatusCommand);
+    ASSERT_EQ (result, CSR_ControllerReady |
+        CSR_GetStatusCommand | 
+        CSR_DriveReady);
 }
 
 
 // Verify the controller can be reset by means of the Get Status Command
 TEST_F (RLV12GetStatusTest, drive3CanBeSelected)
 {
+        RlUnitConfig rlUnitConfig
+    {
+        .fileName = "rl01.dsk",
+        .newFile = true,
+        .overwrite = true
+    };
+
+    // Attach a new disk to unit 3
+    ASSERT_EQ (rlv12Device.unit (3)->configure (rlUnitConfig), 
+        StatusCode::OK);
+
     // Verify the controller is ready to perform an operation (the drive
     // does not have to be ready)
     u16 result;
@@ -122,10 +191,13 @@ TEST_F (RLV12GetStatusTest, drive3CanBeSelected)
     // zeros in the other locations
     rlv12Device.writeWord (RLDAR, DAR_Reset | DAR_GetStatus | DAR_Marker);
 
-    // Load the CSR with drive-select bits for unit 1, a negative GO bit
+    // Load the CSR with drive-select bits for unit 3, a negative GO bit
     // (i.e. bit 7 cleared), interrups disabled and a Get Status Command (02)
     // in the function bits.
     rlv12Device.writeWord (RLCSR, CSR_GetStatusCommand | CSR_Drive3);
+
+    // Wait for command completion
+    std::this_thread::sleep_for (std::chrono::milliseconds (50));
 
     // Expected result in the MPR register: No errors, Drive type RL01
     u16 mpr;
@@ -134,5 +206,8 @@ TEST_F (RLV12GetStatusTest, drive3CanBeSelected)
 
     // Verify the controller is ready without error indications
     rlv12Device.read (RLCSR, &result);
-    ASSERT_EQ (result, CSR_ControllerReady | CSR_GetStatusCommand | CSR_Drive3);
+    ASSERT_EQ (result, CSR_ControllerReady |
+        CSR_GetStatusCommand | 
+        CSR_Drive3 |
+        CSR_DriveReady);
 }
