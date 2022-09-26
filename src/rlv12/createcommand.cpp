@@ -23,6 +23,12 @@ std::unique_ptr<RLV12Command>
                  memoryAddress, wordCount);
             break;
 
+        case RLCS_GSTA:
+             rlv12Command = CommandFactory<RLV12GetStatusCmd>::create 
+                (currentDiskAddress, newDiskAddress, 
+                 memoryAddress, wordCount);
+            break;
+
         case RLCS_SEEK:
             rlv12Command = CommandFactory<RLV12SeekCmd>::create 
                 (currentDiskAddress, newDiskAddress,

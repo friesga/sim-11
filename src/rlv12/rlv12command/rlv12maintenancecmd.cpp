@@ -1,5 +1,10 @@
 #include "rlv12maintenancecmd.h"
 #include "rlv12/rlv12.h"
+
+#include <mutex>
+
+using std::mutex;
+using std::lock_guard;
  
 //
 // Perform the maintenance function of the RLV1x. This function allows
@@ -14,6 +19,28 @@
 void RLV12MaintenanceCmd::execute (RLV12 *controller, RL01_2 *unit)
 {
     u32  memoryAddress;
+
+    // This command is a NOP on the RL11 controller
+    if (controller->rlType_ == RlConfig::RLType::RL11)
+    {
+        controller->setDone (0);
+        return;
+    }
+
+    // The VRLBC0 diagnostic expects a reaction on a 
+    // Maintenance command between 155 and 650 milli-
+    // seconds. This time is determined by executing a
+    // number of instructions. As the emulated instructions
+    // are not timed (yet) the reaction time will vary per
+    // host CPU and has to be determined by trial 
+    // and error.
+
+    // ToDo: Add wait interval
+    // timer.start (&unit, std::chrono::milliseconds (20));
+
+    // Guard against controller register access
+	lock_guard<mutex> guard{ controller->controllerMutex_ };
+
 
     // Test 1: Check internal logic
     controller->rlda = (controller->rlda & ~0377) | 

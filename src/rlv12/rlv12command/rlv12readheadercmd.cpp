@@ -1,9 +1,17 @@
 #include "rlv12readheadercmd.h"
 #include "rlv12/rlv12.h"
 
+#include <mutex>
+
+using std::mutex;
+using std::lock_guard;
+
 void RLV12ReadHeaderCmd::execute (RLV12 *controller, RL01_2 *unit)
 {
     u16 hdr[2];
+
+    // Safeguard against simultaneous access
+    lock_guard<mutex> guard{ controller->controllerMutex_ };
 
     hdr[0] = controller->rlmpr = unit->currentDiskAddress_ & 0177777;
     hdr[1] = controller->rlmpr1 = 0;

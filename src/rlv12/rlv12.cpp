@@ -1,6 +1,8 @@
 #include "rlv12.h"
-
 #include "types.h"
+
+#include <thread>
+#include <chrono>
 
 // RLV12 constructor
 // Set name and default base address and vector. Set the controller
@@ -28,6 +30,12 @@ RLV12::RLV12 ()
 
     if (rlxb_ == nullptr)
         throw ("Allocating memory for transfer buffer failed");
+
+    // Start service unit threads, passing a pointer to the queue to be
+    // serviced
+    for (size_t index = 0; index < RL_NUMDRIVES; ++index)
+        serviceThreads_[index] = std::thread (&RLV12::service, this,
+            std::ref(units_[index]), std::ref(serviceQueues_[index]));
 }
 
 RLV12::RLV12 (RlConfig *rlConfig)
@@ -50,6 +58,12 @@ RLV12::RLV12 (RlConfig *rlConfig)
 
     if (rlxb_ == nullptr)
         throw ("Allocating memory for transfer buffer failed");
+
+    // Start service unit threads, passing a pointer to the queue to be
+    // serviced
+    for (size_t index = 0; index < RL_NUMDRIVES; ++index)
+        serviceThreads_[index] = std::thread (&RLV12::service, this,
+            std::ref(units_[index]), std::ref(serviceQueues_[index]));
 }
 
 // Destructor to deallocate transfer buffer
@@ -58,6 +72,14 @@ RLV12::~RLV12 ()
 {
     if (rlxb_ != nullptr)
         delete [] rlxb_;
+
+    // Close the service unit queues in order to stop the service unit
+    // threads and we can wait for their completion
+    for (size_t index = 0; index < RL_NUMDRIVES; ++index)
+        serviceQueues_[index].close();
+
+    for (size_t index = 0; index < RL_NUMDRIVES; ++index)
+        serviceThreads_[index].join ();
 }
 
 //

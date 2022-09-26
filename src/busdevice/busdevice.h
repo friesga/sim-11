@@ -43,8 +43,6 @@ public:
 	virtual void reset () = 0;
 
 	// Optional functions
-	virtual void service (Unit &unit) {};
-
 	std::string name() { return name_; }
 };
 

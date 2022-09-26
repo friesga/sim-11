@@ -1,8 +1,11 @@
 #include "rlv12.h"
-
-#include "asynctimer/asynctimer.h"
+#include "threadsafecontainers/threadsafequeue.h"
 
 #include <chrono>
+#include <mutex>
+
+using std::mutex;
+using std::lock_guard;
 
 // The RLV12 registers are word-addressable (see RLV12 Disk Controller User's
 // Guide, EK-RLV12-UG-002) and DATOB cycles are not recognized. The 
@@ -20,6 +23,10 @@ StatusCode RLV12::writeWord (u16 registerAddress, u16 data)
 {
     // Get reference to drive
     RL01_2 &unit = units_[GET_DRIVE(data)];
+    std::unique_ptr<RLV12Command> rlv12Command;
+
+    // Guard against controller register access
+	lock_guard<mutex> guard{ controllerMutex_ };
 
     // Decode registerAddress<3:1>
     switch (registerAddress & 016)
@@ -59,84 +66,22 @@ StatusCode RLV12::writeWord (u16 registerAddress, u16 data)
 
             TRACERLV12Command (&trc, GET_FUNC(rlcs));
 
-            switch (GET_FUNC(rlcs))
-            {
-                // Case on RLCS<3:1>
-                case RLCS_MAINTENANCE:
-                    // NOP on the RL11 controller and Maintenance Mode on
-                    // the RLV11 and RLV12.
-                    if (rlType_ == RlConfig::RLType::RLV11 || 
-                        rlType_ == RlConfig::RLType::RLV12)
-                    {
-                        unit.function_ = GET_FUNC(rlcs);
+            // ToDo: Remove unit.function_
+            // The function to be executed is coded in the created RLV12command
+            unit.function_ = GET_FUNC(rlcs);
 
-                        // Activate unit
-                        // The VRLBC0 diagnostic expects a reaction on a 
-                        // Maintenance command between 155 and 650 milli-
-                        // seconds. This time is determined by executing a
-                        // number of instructions. As the emulated instructions
-                        // are not timed (yet) the reaction time will vary per
-                        // host CPU and has to be determined by trial 
-                        // and error.
-                        timer.start (&unit, std::chrono::milliseconds (20));
-                    }
-                    else
-                        setDone (0);
-                    break;
+            // Create RLV12 command containing the required parameters
+            rlv12Command = createCommand (unit.function_,
+                unit.currentDiskAddress_, rlda,
+                memAddrFromRegs (), 0200000 - rlmpr);
 
-                case RLCS_SEEK:
-                    seek (unit);
-                    break;
+            if (rlv12Command == nullptr)
+                // setDone() has already been executed by createCommand()
+                // ToDo: Check error return value
+                return StatusCode::IOError;
 
-                case RLCS_GSTA:
-                    // Get Status Command
-                    getStatus (unit);
-                    break;
-
-                case RLCS_RHDR:
-                    // Read Header Command
-                    // ToDo: Add test on running timer!
-                    unit.function_ = GET_FUNC(rlcs);
-                    timer.start (&unit, std::chrono::milliseconds (0));
-                    break;
-
-                default:
-                    // Data transfer commands:
-                    // Write Check (Function Code 1),
-                    // Write Data (Function Code 5),
-                    // Read Data (Function Code 6),
-                    // Read Data without Header Check (Function Code 7)
-                    if (unit.unitStatus_ & Status::UNIT_DIS || 
-                        unit.rlStatus_ & RlStatus::UNIT_OFFL || 
-                        !(unit.unitStatus_ & Status::UNIT_ATT))
-                    {
-                        TRACERLV12Registers (&trc, "Command incomplete", 
-                            rlcs, rlba, rlda, rlmpr, rlbae); 
-                        setDone (RLCS_INCMP);
-                        break;
-                    }
-
-                    /*
-                    EK-0RL11-TD-001, p2-3: "If the CPU software initiates another
-                    operation on a drive that is busy seeking, the controller will
-                    suspend the operation until the seek is completed."
-
-                    Check for the condition where there is an outstanding operation but
-                    the program is requesting another operation without waiting for
-                    drive ready.  If so, remove the previous queue entry, complete the
-                    operation now, and queue the next operation.
-                    */
-                    if (timer.isRunning (&unit))
-                    {
-                        timer.cancel (&unit);
-                        unit ();
-                    }
-
-                    // Activate unit
-                    unit.function_ = GET_FUNC(rlcs);
-                    timer.start (&unit, std::chrono::milliseconds (rl_swait));              
-                    break;
-            }           
+            // Queue this command to the unit specific service thread
+            serviceQueues_[GET_DRIVE(data)].push (rlv12Command.get ());
             break;
 
         case BAR:

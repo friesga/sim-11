@@ -1,5 +1,10 @@
 #include "rlv12readcmd.h"
 #include "rlv12/rlv12.h"
+
+#include <mutex>
+
+using std::mutex;
+using std::lock_guard;
  
 // Read Data command
 void RLV12ReadCmd::execute (RLV12 *controller, RL01_2 *unit)
@@ -25,7 +30,10 @@ void RLV12ReadCmd::execute (RLV12 *controller, RL01_2 *unit)
         {
             if (!controller->bus->writeWord (memAddr, 
                 controller->rlxb_[index]))
-                    controller->rlcs |= RLCS_ERR | RLCS_NXM;
+            {
+                lock_guard<mutex> guard{ controller->controllerMutex_ };
+                controller->rlcs |= RLCS_ERR | RLCS_NXM;
+            }
         }
     }
 }

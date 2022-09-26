@@ -3,6 +3,7 @@
 
 #include "rlv12/rlv12.h"
 #include "rlv12command.h"
+#include "rlv12getstatuscmd.h"
 #include "rlv12maintenancecmd.h"
 #include "rlv12readcmd.h"
 #include "rlv12readheadercmd.h"

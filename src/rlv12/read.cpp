@@ -36,18 +36,28 @@ StatusCode RLV12::read (u16 registerAddress, u16* data)
 
             RL01_2 &unit = units_[GET_DRIVE(rlcs)];
 
-            if (unit.rlStatus_ & RlStatus::UNIT_OFFL || 
-                unit.driveStatus_ & RLDS_VCK)
+
+            // DR RDY will be negated [i.e. cleared] when a drive error occurs
+            // except when an attempt has been made to write on a
+            // write-protected drive or if volume check is set. In either
+            // case, only DR ERR will be asserted. (EK-RLV12-TD-001)
+            // This means that on a write to a write-protected drive or if
+            // volume check is set DR ERR is set and DR RDY is cleared.
+            //
+            // ToDo: Drive Error should be set either in the service function
+            // or in read, but not in both
+            if (unit.driveStatus_ & RLDS_VCK)
             {
                 rlcs |= RLCS_DRE;
                 rlcs &= ~RLCS_DRDY;
             }
-            else if (timer.isRunning (&unit) ||     // see if drive ready 
-                    unit.unitStatus_ & Status::UNIT_DIS ||
-                    ((unit.driveStatus_ & RLDS_M_STATE) != RLDS_LOCK))
-                rlcs &= ~RLCS_DRDY;
+            // The drive is ready if is not disconnected and the heads are
+            // locked on a cylinder
+            else if ( !(unit.unitStatus_ & Status::UNIT_DIS) && 
+                       (unit.driveStatus_ & RLDS_M_STATE) == RLDS_LOCK)
+                rlcs |= RLCS_DRDY;
             else
-                rlcs |= RLCS_DRDY;                              
+                rlcs &= ~RLCS_DRDY;
             
             // Make sure the error summary bit properly reflects the 
             // sum of other errors.

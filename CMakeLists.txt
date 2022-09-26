@@ -21,13 +21,12 @@ set (CMDLINEOPTIONS_SRCS
 set (RLV12_SRCS
     src/rlv12/calccrc.cpp
     src/rlv12/createcommand.cpp
-    src/rlv12/getstatus.cpp
-    src/rlv12/service.cpp
+    src/rlv12/serviceunit.cpp
     src/rlv12/rlv12.cpp
     src/rlv12/rl01_02/configure.cpp
     src/rlv12/rl01_02/rl012.cpp
-    src/rlv12/rl01_02/operator.cpp
     src/rlv12/rlv12command/rlv12command.cpp
+    src/rlv12/rlv12command/rlv12getstatuscmd.cpp
     src/rlv12/rlv12command/rlv12readcmd.cpp
     src/rlv12/rlv12command/rlv12maintenancecmd.cpp
     src/rlv12/rlv12command/rlv12readheadercmd.cpp
@@ -36,7 +35,6 @@ set (RLV12_SRCS
     src/rlv12/rlv12command/rlv12writecmd.cpp
     src/rlv12/rlv12command/rlv12writecheckcmd.cpp
     src/rlv12/read.cpp
-    src/rlv12/seek.cpp
     src/rlv12/setdone.cpp
     src/rlv12/writeword.cpp)
 

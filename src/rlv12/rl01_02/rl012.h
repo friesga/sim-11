@@ -31,7 +31,8 @@ enum class RlStatus
 // * = kept in driveStatus_,
 // ^ = kept in currentTrack_,
 // ! = kept in uptr
-
+// The RLDS_M_STATE bits correspond with the status as returned in the MPR
+// after a Get Status command.
 #define RLDS_M_STATE    (07)
 #define RLDS_LOAD       (0)                             // no cartridge 
 #define RLDS_SPIN       (1)                             // spin-up 
@@ -63,6 +64,7 @@ class RL01_2 : public Unit
     // All RLV12Commands need access to the file pointer and unit status
     friend class RLV12;
     friend class RLV12Command;
+    friend class RLV12GetStatusCmd;
     friend class RLV12MaintenanceCmd;
     friend class RLV12ReadCmd;
     friend class RLV12ReadHeaderCmd;
@@ -83,9 +85,6 @@ public:
 
     // Required functions
     StatusCode configure (UnitConfig &unitConfig) override;
-
-    // Make the class a function object
-    void operator() ();
 };
 
 

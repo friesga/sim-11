@@ -5,13 +5,14 @@
 #include "rl01_02/rl012.h"
 #include "qbus/qbus.h"
 #include "busdevice/busdevice.h"
-#include "asynctimer/asynctimer.h"
+#include "threadsafecontainers/threadsafequeue.h"
 #include "statuscodes.h"
 #include "rlv12command/rlv12command.h"
 #include "configdata/include/configdata.h"
 
 #include <array>
 #include <memory>       // for std::unique_ptr<>
+#include <thread>       // for std::thread
 
 // From simh pdp11_defs.h
 // IOPAGEBASE for a 22-bit system
@@ -111,6 +112,7 @@ class RLV12 : public BusDevice
 {
     // All RLV12Commands need access to registers and the transfer buffer
     friend class RLV12Command;
+    friend class RLV12GetStatusCmd;
     friend class RLV12MaintenanceCmd;
     friend class RLV12ReadCmd;
     friend class RLV12ReadHeaderCmd;
@@ -161,8 +163,16 @@ class RLV12 : public BusDevice
         RL01_2 (this)
     };
 
-    // ToDo: Make this a global timer to be used by all devices?!
-    AsyncTimer<RL01_2> timer{};
+    // Definition of the service unit threads. Use a joining thread as on
+    // destruction it joins by default.
+    std::array<std::thread, RL_NUMDRIVES> serviceThreads_;
+
+    // Definition of command queues to the service unit threads. The queues
+    // are thread safe and contain pointers to RLV12Command objects.
+    std::array<ThreadSafeQueue<RLV12Command *>, RL_NUMDRIVES> serviceQueues_;
+
+    // Safe guard against controller access from multiple service threads
+    std::mutex controllerMutex_;
 
     // Private functions
     void maintenance ();
@@ -190,11 +200,12 @@ public:
     StatusCode read (u16 registerAddress, u16* data) override;
     StatusCode writeByte (u16 registerAddress, u8 data) override;
     StatusCode writeWord (u16 registerAddress, u16 data) override;
-    void service (Unit &unit)  override;
 
     // RLV1[12] specific function
     inline size_t numUnits ();
     inline RL01_2  *unit (size_t unitNumber);
+    void service (Unit &unit, 
+        ThreadSafeQueue<RLV12Command *> &commandQueue);
 
     // Functions to set and get memory adresses consistently for
     // 16-, 18- and 22-bit systems

@@ -1,6 +1,11 @@
 #include "rlv12writecheckcmd.h"
 #include "rlv12/rlv12.h"
 
+#include <mutex>
+
+using std::mutex;
+using std::lock_guard;
+
 // Write Check Command
 void RLV12WriteCheckCmd::execute (RLV12 *controller, RL01_2 *unit)
 {
@@ -30,6 +35,7 @@ void RLV12WriteCheckCmd::execute (RLV12 *controller, RL01_2 *unit)
             comp = controller->bus->read (memAddr).valueOr (0);
             if (!comp.hasValue ())
             {
+                lock_guard<mutex> guard{ controller->controllerMutex_ };
                 controller->rlcs |= RLCS_ERR | RLCS_NXM;
                 break;
             }
@@ -37,7 +43,10 @@ void RLV12WriteCheckCmd::execute (RLV12 *controller, RL01_2 *unit)
             // Check read word with buffer
             // ToDo: Quit for loop when an inequality is detected?
             if (comp != controller->rlxb_[wordCount_])
+            {
+                lock_guard<mutex> guard{ controller->controllerMutex_ };
                 controller->rlcs |= RLCS_ERR | RLCS_CRC;
+            }
         }
     }
 }

@@ -9,7 +9,7 @@ template <typename T>
 class ThreadSafeQueue : public ThreadSafeContainer<T, std::queue>
 {
 public:
-    T const &first() override;
+    T const &first();
 };
 
 // References to base class members is via the this pointer to make

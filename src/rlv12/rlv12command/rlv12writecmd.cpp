@@ -1,6 +1,11 @@
 #include "rlv12writecmd.h"
 #include "rlv12/rlv12.h"
 
+#include <mutex>
+
+using std::mutex;
+using std::lock_guard;
+
 void RLV12WriteCmd::execute (RLV12 *controller, RL01_2 *unit)
 {
     CondData<u16> tmpValue;
@@ -13,6 +18,7 @@ void RLV12WriteCmd::execute (RLV12 *controller, RL01_2 *unit)
         unit->rlStatus_ & RlStatus::UNIT_WLK)
     {
         // Write and locked
+        lock_guard<mutex> guard{ controller->controllerMutex_ };
         unit->driveStatus_ |= RLDS_WGE;                     
         controller->setDone (RLCS_ERR | RLCS_DRE);
         return;
@@ -24,6 +30,7 @@ void RLV12WriteCmd::execute (RLV12 *controller, RL01_2 *unit)
         tmpValue = controller->bus->read (memAddr).valueOr (0);
         if (!tmpValue.hasValue ())
         {
+            lock_guard<mutex> guard{ controller->controllerMutex_ };
             controller->rlcs |= RLCS_ERR | RLCS_NXM;
             // Set adj xfer length
             wordCount_ -= index;
