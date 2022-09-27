@@ -31,7 +31,7 @@ enum class RlStatus
 // * = kept in driveStatus_,
 // ^ = kept in currentTrack_,
 // ! = kept in uptr
-// The RLDS_M_STATE bits correspond with the status as returned in the MPR
+// The RLDS bits correspond with the status as returned in the MPR
 // after a Get Status command.
 #define RLDS_M_STATE    (07)
 #define RLDS_LOAD       (0)                             // no cartridge 
@@ -73,7 +73,6 @@ class RL01_2 : public Unit
     friend class RLV12WriteCmd;
     friend class RLV12WriteCheckCmd;
 
-    // ToDo: Split currentDiskAddress_ in three separate variables
     int32_t currentDiskAddress_;
     Bitmask<RlStatus> rlStatus_;
     int32_t driveStatus_;
