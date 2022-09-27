@@ -20,6 +20,13 @@ void RLV12MaintenanceCmd::execute (RLV12 *controller, RL01_2 *unit)
 {
     u32  memoryAddress;
 
+    // The VRLBC0 diagnostic expects a reaction on a Maintenance command
+    // between 155 and 650 milliseconds. This time is determined by executing
+    // a number of instructions. As the emulated instructions are not timed
+    // (yet) the reaction time will vary per host CPU and has to be determined
+    // by trial and error.
+    std::this_thread::sleep_for(std::chrono::milliseconds (20));
+
     // This command is a NOP on the RL11 controller
     if (controller->rlType_ == RlConfig::RLType::RL11)
     {
@@ -35,12 +42,8 @@ void RLV12MaintenanceCmd::execute (RLV12 *controller, RL01_2 *unit)
     // host CPU and has to be determined by trial 
     // and error.
 
-    // ToDo: Add wait interval
-    // timer.start (&unit, std::chrono::milliseconds (20));
-
     // Guard against controller register access
 	lock_guard<mutex> guard{ controller->controllerMutex_ };
-
 
     // Test 1: Check internal logic
     controller->rlda = (controller->rlda & ~0377) | 

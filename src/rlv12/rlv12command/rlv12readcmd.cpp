@@ -9,6 +9,11 @@ using std::lock_guard;
 // Read Data command
 void RLV12ReadCmd::execute (RLV12 *controller, RL01_2 *unit)
 {   
+    // Revolutional latency is 12.5ms average (EK-RLV-TD-001). 
+    // The time needed to execute this function is determined by trial
+    // and error.
+    std::this_thread::sleep_for (std::chrono::milliseconds (10));
+
     // Set position in file to the block to be read
     if (fseek (unit->filePtr_, filePosition(), SEEK_SET))
         return;
