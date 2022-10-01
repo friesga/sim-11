@@ -25,8 +25,8 @@ StatusCode RLV12::writeWord (u16 registerAddress, u16 data)
     RL01_2 &unit = units_[GET_DRIVE(data)];
     std::shared_ptr<RLV12Command> rlv12Command;
 
-    // Guard against controller register access
-	lock_guard<mutex> guard{ controllerMutex_ };
+    // Guard against controller register access from the command processor
+	std::unique_lock<std::mutex> lock {controllerMutex_};
 
     // Decode registerAddress<3:1>
     switch (registerAddress & 016)
@@ -70,18 +70,8 @@ StatusCode RLV12::writeWord (u16 registerAddress, u16 data)
             // The function to be executed is coded in the created RLV12command
             unit.function_ = GET_FUNC(rlcs);
 
-            // Create RLV12 command containing the required parameters
-            rlv12Command = createCommand (unit.function_,
-                unit.currentDiskAddress_, rlda,
-                memAddrFromRegs (), 0200000 - rlmpr);
-
-            if (rlv12Command == nullptr)
-                // setDone() has already been executed by createCommand()
-                // ToDo: Check error return value
-                return StatusCode::IOError;
-
-            // Queue this command to the unit specific service thread
-            serviceQueues_[GET_DRIVE(data)].push (rlv12Command);
+            // Notify the command processor a command has been issued
+            signal.notify_one ();
             break;
 
         case BAR:

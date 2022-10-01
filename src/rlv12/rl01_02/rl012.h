@@ -6,6 +6,8 @@
 #include "statuscodes.h"
 #include "configdata/include/configdata.h"
 
+#include <mutex>
+
 // RL01/02 unit status flags. These flags are used in the definition of 
 // Bitmask<RlStatus> and provide a compile-time type safety for the use
 // of these flags.
@@ -63,6 +65,7 @@ class RL01_2 : public Unit
 {
     // All RLV12Commands need access to the file pointer and unit status
     friend class RLV12;
+    friend class CmdProcessor;
     friend class RLV12Command;
     friend class RLV12GetStatusCmd;
     friend class RLV12MaintenanceCmd;
@@ -84,6 +87,9 @@ public:
 
     // Required functions
     StatusCode configure (UnitConfig &unitConfig) override;
+
+    // Safe guard against drive access while a seek is in progress
+    std::mutex driveMutex_;
 };
 
 

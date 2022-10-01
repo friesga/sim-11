@@ -30,12 +30,6 @@ RLV12::RLV12 ()
 
     if (rlxb_ == nullptr)
         throw ("Allocating memory for transfer buffer failed");
-
-    // Start service unit threads, passing a pointer to the queue to be
-    // serviced
-    for (size_t index = 0; index < RL_NUMDRIVES; ++index)
-        serviceThreads_[index] = std::thread (&RLV12::service, this,
-            std::ref(units_[index]), std::ref(serviceQueues_[index]));
 }
 
 RLV12::RLV12 (RlConfig *rlConfig)
@@ -58,12 +52,6 @@ RLV12::RLV12 (RlConfig *rlConfig)
 
     if (rlxb_ == nullptr)
         throw ("Allocating memory for transfer buffer failed");
-
-    // Start service unit threads, passing a pointer to the queue to be
-    // serviced
-    for (size_t index = 0; index < RL_NUMDRIVES; ++index)
-        serviceThreads_[index] = std::thread (&RLV12::service, this,
-            std::ref(units_[index]), std::ref(serviceQueues_[index]));
 }
 
 // Destructor to deallocate transfer buffer
@@ -72,14 +60,6 @@ RLV12::~RLV12 ()
 {
     if (rlxb_ != nullptr)
         delete [] rlxb_;
-
-    // Close the service unit queues in order to stop the service unit
-    // threads and we can wait for their completion
-    for (size_t index = 0; index < RL_NUMDRIVES; ++index)
-        serviceQueues_[index].close();
-
-    for (size_t index = 0; index < RL_NUMDRIVES; ++index)
-        serviceThreads_[index].join ();
 }
 
 //
@@ -108,15 +88,15 @@ void RLV12::reset ()
     // ToDo: Clear interrupt request
     // CLR_INT(RL);
 
-    for (RL01_2 unit : units_)
-    {
+    // for (RL01_2 unit : units_)
+    // {
         // ToDo: Cancel outstanding timer for this unit
         // sim_cancel(uptr);
 
         // ToDo: Clear unit error condition
         // N.B. STAT == u4
         // uptr->STAT &= ~RLDS_ERR;
-    }
+    // }
 }
 
 // An RLV11 controller or an RLV12 with the 22-bit option disabled has no

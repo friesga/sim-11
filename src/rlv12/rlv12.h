@@ -9,10 +9,13 @@
 #include "statuscodes.h"
 #include "rlv12command/rlv12command.h"
 #include "configdata/include/configdata.h"
+#include "cmdprocessor/cmdprocessor.h"
 
 #include <array>
-#include <memory>       // for std::unique_ptr<>
-#include <thread>       // for std::thread
+#include <memory>               // for std::unique_ptr<>
+#include <thread>               // for std::thread
+#include <mutex>                // for std::mutex
+#include <condition_variable>   // for std::condition_variable
 
 // From simh pdp11_defs.h
 // IOPAGEBASE for a 22-bit system
@@ -37,6 +40,7 @@
 #define RL02_SIZE       (RL01_SIZE * 2)                 // Words/cartridge
 
 // RLCS bits
+// ToDo: Change RLCS_ macro's to enum
 #define RLCS_DRDY           (0000001)                   // Drive ready 
 #define RLCS_M_FUNC         (0000007)                   // Function 
 #define RLCS_MAINTENANCE    (0)
@@ -110,6 +114,8 @@ constexpr int32_t getBlockNumber (int32_t diskAddress)
 // Implementation of the RL11, RLV11 and RLV12 controllers.
 class RLV12 : public BusDevice
 {
+    friend class CmdProcessor;
+
     // All RLV12Commands need access to registers and the transfer buffer
     friend class RLV12Command;
     friend class RLV12GetStatusCmd;
@@ -142,6 +148,7 @@ class RLV12 : public BusDevice
     u16 rlmpr2 = 0;
 
     // Timing constants
+    // ToDo: rl_swait is superfluous
     int32_t const rl_swait = 10;    // Seek wait
 
     // Define transfer buffer
@@ -163,26 +170,15 @@ class RLV12 : public BusDevice
         RL01_2 (this)
     };
 
-    // Definition of the service unit threads. Use a joining thread as on
-    // destruction it joins by default.
-    std::array<std::thread, RL_NUMDRIVES> serviceThreads_;
-
-    // Definition of command queues to the service unit threads. The queues
-    // are thread safe and contain pointers to RLV12Command objects.
-    std::array<ThreadSafeQueue<std::shared_ptr<RLV12Command>>, RL_NUMDRIVES> serviceQueues_;
-
     // Safe guard against controller access from multiple service threads
     std::mutex controllerMutex_;
 
+    // Condition variable to wake up the command processor
+    std::condition_variable signal;
+
     // Private functions
-    void maintenance ();
-    void getStatus (RL01_2 &unit);
-    void seek (RL01_2 &unit);
     u16 calcCRC (int const wc, u16 const *data);
     void setDone (int32_t status);
-    std::shared_ptr<RLV12Command> createCommand (int32_t function,
-        int32_t currentTrackHeadSector, int32_t newTrackHeadSector,
-        int32_t memoryAddress, int32_t wordCount);
 
 public:
     // Constructors/destructor

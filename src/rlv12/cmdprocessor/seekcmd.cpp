@@ -1,7 +1,10 @@
-#include "rlv12seekcmd.h"
-#include "rlv12/rlv12.h"
+#include "cmdprocessor.h"
 
-void RLV12SeekCmd::execute (RLV12 *controller, RL01_2 *unit)
+//
+// Perform a Seek command for the specified unit with the 
+// specified parameters.
+//
+u16 CmdProcessor::seekCmd (RL01_2 *unit, RLV12Command &rlv12Command)
 {
     int32_t currentCylinder;
     int32_t offset;
@@ -9,32 +12,35 @@ void RLV12SeekCmd::execute (RLV12 *controller, RL01_2 *unit)
     int32_t maxCylinder;
     int32_t seekTime;
 
+    // Verify the unit is available
+    if (!unitAvailable (unit))
+    {
+        // Set seek time-out. Note that this status differs from
+        // the status returned by data transfer commands if the
+        // unit is unavailable.
+        unit->driveStatus_ |= RLDS_STO;
+
+        // Flag error
+        return RLCS_ERR | RLCS_INCMP;
+    }
+
     //
     // EK-ORL11-TD-001, p2-3: "If the CPU software initiates another
     // operation on a drive that is busy seeking, the controller will
     // suspend the operation until the seek is completed."
     // 
-    if (unit->unitStatus_ & Status::UNIT_DIS || 
-        unit->rlStatus_ & RlStatus::UNIT_OFFL || 
-        !(unit->unitStatus_ & Status::UNIT_ATT))
-    {
-        // No cartridge available to perform a seek on
-        controller->setDone (RLCS_ERR | RLCS_INCMP);
-        unit->driveStatus_ |= RLDS_STO;
-        return;
-    }
 
     currentCylinder = getCylinder (unit->currentDiskAddress_);
 
     // ToDo: offset to be passed in command
-    offset = getCylinder (controller->rlda);
+    offset = getCylinder (controller_->rlda);
 
     // Seek direction in or out?
     // According to the RL01/RL02 User Guide (EK-RL012-UG-005), par 4.3.4: 
     // If the difference word is large enough that the heads attempt to move
     // past the innermost or outermost limits, the head will stop at the
     // guard band and retreat to the first even-numbered data track.
-    if (controller->rlda & RLDA_SK_DIR)
+    if (controller_->rlda & RLDA_SK_DIR)
     {
         // Outwards
         newCylinder = currentCylinder + offset;
@@ -59,7 +65,7 @@ void RLV12SeekCmd::execute (RLV12 *controller, RL01_2 *unit)
     // ToDo: If a head switch, sector should be RL_NUMSC/2?
     // Put on track
     unit->currentDiskAddress_ = (newCylinder << RLDA_V_CYL) |
-        ((controller->rlda & RLDA_SK_HD) ? RLDA_HD1 : RLDA_HD0);
+        ((controller_->rlda & RLDA_SK_HD) ? RLDA_HD1 : RLDA_HD0);
 
     // Real timing (EK-RLV12-TD-001 and EK-RL012-UG-005):
     // minimum 6.5ms, maximum 15ms for head switch,
@@ -69,16 +75,13 @@ void RLV12SeekCmd::execute (RLV12 *controller, RL01_2 *unit)
     // Try to simulate this timing by the following formula
     seekTime = 17 + (0.4 * abs (newCylinder - currentCylinder));
     
-    controller->setDone (0);
+    // ToDo: The following statements have to be executed in a unit specific
+    // thread, including a lock/unlock of the cmdprocessor thread
+    // controller->setDone (0);
     std::this_thread::sleep_for (std::chrono::milliseconds (seekTime));  
 
     // After wait interval enter position mode with heads locked on
     // cylinder (i.e. seek completed)
     unit->driveStatus_ = (unit->driveStatus_ & ~RLDS_M_STATE) | RLDS_LOCK; 
-    return;
-}
-
-// No action to finish this command
-void RLV12SeekCmd::finish (RLV12 *controller, RL01_2 *unit)
-{
+    return 0;
 }

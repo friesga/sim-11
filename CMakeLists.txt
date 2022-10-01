@@ -20,20 +20,24 @@ set (CMDLINEOPTIONS_SRCS
 
 set (RLV12_SRCS
     src/rlv12/calccrc.cpp
-    src/rlv12/createcommand.cpp
-    src/rlv12/serviceunit.cpp
     src/rlv12/rlv12.cpp
     src/rlv12/rl01_02/configure.cpp
     src/rlv12/rl01_02/rl012.cpp
     src/rlv12/rlv12command/rlv12command.cpp
-    src/rlv12/rlv12command/rlv12getstatuscmd.cpp
-    src/rlv12/rlv12command/rlv12readcmd.cpp
-    src/rlv12/rlv12command/rlv12maintenancecmd.cpp
-    src/rlv12/rlv12command/rlv12readheadercmd.cpp
-    src/rlv12/rlv12command/rlv12readnoheadercmd.cpp
-    src/rlv12/rlv12command/rlv12seekcmd.cpp
-    src/rlv12/rlv12command/rlv12writecmd.cpp
-    src/rlv12/rlv12command/rlv12writecheckcmd.cpp
+    src/rlv12/cmdprocessor/finishdatatransfercmd.cpp
+    src/rlv12/cmdprocessor/cmdprocessor.cpp
+    src/rlv12/cmdprocessor/diskaddressok.cpp
+    src/rlv12/cmdprocessor/getstatuscmd.cpp
+    src/rlv12/cmdprocessor/maintenancecmd.cpp
+    src/rlv12/cmdprocessor/readdatacmd.cpp
+    src/rlv12/cmdprocessor/readdatawithoutheadercheckcmd.cpp
+    src/rlv12/cmdprocessor/readheadercmd.cpp
+    src/rlv12/cmdprocessor/run.cpp
+    src/rlv12/cmdprocessor/seekcmd.cpp
+    src/rlv12/cmdprocessor/unitavailable.cpp
+    src/rlv12/cmdprocessor/updateheadposition.cpp
+    src/rlv12/cmdprocessor/writecheckcmd.cpp
+    src/rlv12/cmdprocessor/writedatacmd.cpp
     src/rlv12/read.cpp
     src/rlv12/setdone.cpp
     src/rlv12/writeword.cpp)
@@ -161,7 +165,6 @@ set (SIM11_TEST_SRCS
     gtest/threadsafeprioqueuetest.cpp
     gtest/threadsafecontainertest.cpp
     gtest/interruptrequesttest.cpp
-    gtest/asynctimertest.cpp
     gtest/bitmasktest.cpp
     gtest/configuratortest.cpp
     gtest/rlv12attachtest.cpp
