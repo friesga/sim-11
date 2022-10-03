@@ -45,9 +45,10 @@ protected:
 
     void waitForControllerReady ()
     {
-        u16 result;
+        u16 result {0};
         do
         {
+            // std::this_thread::sleep_for (std::chrono::milliseconds (300));
             std::this_thread::yield ();
             rlv12Device.read (RLCSR, &result);
         }
@@ -58,9 +59,10 @@ protected:
 
 TEST_F (RLV12MaintenanceTest, maintenance)
 {
-
-
     u16 const MaintenanceMode = 0;
+
+    // Make sure the controller has started
+    waitForControllerReady ();
 
     // Set memory address, word count (-511) and issue maintenance
     // command.

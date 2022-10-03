@@ -87,6 +87,9 @@ protected:
         CmdLineOptions::processOptions (sizeof (argvSet0) /sizeof (argvSet0[0]),
             argvSet0);
 
+        // Make sure the controller has started
+        waitForControllerReady ();
+
         RlUnitConfig rlUnitConfig
         {
             .fileName = "rl01.dsk",

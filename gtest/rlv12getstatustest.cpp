@@ -44,6 +44,17 @@ protected:
     MSV11D msv11;
     RLV12 rlv12Device {};
 
+    void waitForControllerReady ()
+    {
+        u16 result;
+        do
+        {
+            std::this_thread::yield();
+            rlv12Device.read (RLCSR, &result);
+        }
+        while (!(result & CSR_ControllerReady));
+    }
+
     void SetUp() override
     {
         // Create a minimal system, conisting of just the bus, memory
@@ -58,17 +69,9 @@ protected:
         };
         CmdLineOptions::processOptions (sizeof (argvSet0) /sizeof (argvSet0[0]),
             argvSet0);
-    }
 
-    void waitForControllerReady ()
-    {
-        u16 result;
-        do
-        {
-            std::this_thread::yield ();
-            rlv12Device.read (RLCSR, &result);
-        }
-        while (!(result & CSR_ControllerReady));
+        // Make sure the controller has started
+        waitForControllerReady ();
     }
 };
 
