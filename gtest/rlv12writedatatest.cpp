@@ -55,6 +55,17 @@ protected:
     MSV11D msv11;
     RLV12 rlv12Device {};
 
+    void waitForControllerReady ()
+    {
+        u16 result;
+        do
+        {
+            std::this_thread::yield ();
+            rlv12Device.read (RLCSR, &result);
+        }
+        while (!(result & CSR_ControllerReady));
+    }
+
     void SetUp() override
     {
         // Create a minimal system, conisting of just the bus, memory
@@ -92,8 +103,7 @@ TEST_F (RLV12WriteDataTest, writeDataSucceeds)
     rlv12Device.writeWord (RLDAR, DAR_Reset | DAR_GetStatus | DAR_Marker);
     rlv12Device.writeWord (RLCSR, CSR_GetStatusCommand | CSR_Drive0);
 
-    // Wait till Read Header command is completed
-    std::this_thread::sleep_for (std::chrono::milliseconds (10));
+    waitForControllerReady ();
 
     // Fill 512 bytes of memory with the values to be written and a marker
     u16 address;
@@ -121,8 +131,7 @@ TEST_F (RLV12WriteDataTest, writeDataSucceeds)
     // in the function bits.
     rlv12Device.writeWord (RLCSR, CSR_WriteDataCommand);
 
-    // Wait for command completion
-    std::this_thread::sleep_for (std::chrono::milliseconds (500));
+    waitForControllerReady ();
 
     // Verify now both controller and drive are ready and no error is
     // indicated
@@ -141,8 +150,7 @@ TEST_F (RLV12WriteDataTest, writeDataSucceeds)
     rlv12Device.writeWord (RLMPR, 0xFF00);
     rlv12Device.writeWord (RLCSR, CSR_ReadDataCommand);
 
-    // Wait for command completion
-    std::this_thread::sleep_for (std::chrono::milliseconds (500));
+    waitForControllerReady ();
 
     // Verify Read Data is executed without errors
     rlv12Device.read (RLCSR, &result);
@@ -182,8 +190,7 @@ TEST_F (RLV12WriteDataTest, partialWriteDataSucceeds)
     rlv12Device.writeWord (RLDAR, DAR_Reset | DAR_GetStatus | DAR_Marker);
     rlv12Device.writeWord (RLCSR, CSR_GetStatusCommand | CSR_Drive0);
 
-    // Wait for command completion
-    std::this_thread::sleep_for (std::chrono::milliseconds (10));
+    waitForControllerReady ();
 
     // Fill 256 bytes of memory with the values to be written and a marker
     u16 address;
@@ -202,8 +209,7 @@ TEST_F (RLV12WriteDataTest, partialWriteDataSucceeds)
     rlv12Device.writeWord (RLMPR, 0xFF9C);
     rlv12Device.writeWord (RLCSR, CSR_WriteDataCommand);
 
-    // Wait for command completion
-    std::this_thread::sleep_for (std::chrono::milliseconds (500));
+    waitForControllerReady ();
 
     // Verify now both controller and drive are ready and no error is
     // indicated
@@ -223,8 +229,7 @@ TEST_F (RLV12WriteDataTest, partialWriteDataSucceeds)
     rlv12Device.writeWord (RLMPR, 0xFF00);
     rlv12Device.writeWord (RLCSR, CSR_ReadDataCommand);
 
-    // Wait for command completion
-    std::this_thread::sleep_for (std::chrono::milliseconds (500));
+    waitForControllerReady ();
 
     // Verify Read Data is executed without errors
     rlv12Device.read (RLCSR, &result);

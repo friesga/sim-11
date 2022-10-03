@@ -77,6 +77,17 @@ protected:
         CmdLineOptions::processOptions (sizeof (argvSet0) /sizeof (argvSet0[0]),
             argvSet0);
     }
+
+    void waitForControllerReady ()
+    {
+        u16 result;
+        do
+        {
+            std::this_thread::yield ();
+            rlv12Device.read (RLCSR, &result);
+        }
+        while (!(result & CSR_ControllerReady));
+    }
 };
 
 // Verify the correct execution of Read Data Without Header Check command
@@ -97,8 +108,7 @@ TEST_F (RLV12ReadDataWithoutHeaderCheckTest, readDataWithoutHeaderCheckSucceeds)
     rlv12Device.writeWord (RLDAR, DAR_Reset | DAR_GetStatus | DAR_Marker);
     rlv12Device.writeWord (RLCSR, CSR_GetStatusCommand | CSR_Drive0);
 
-    // Wait for command completion
-    std::this_thread::sleep_for (std::chrono::milliseconds (50));
+    waitForControllerReady ();
 
     // Verify both controller and drive are ready
     u16 result;
@@ -112,8 +122,7 @@ TEST_F (RLV12ReadDataWithoutHeaderCheckTest, readDataWithoutHeaderCheckSucceeds)
     rlv12Device.writeWord (RLMPR, 0xFF00);
     rlv12Device.writeWord (RLCSR, CSR_ReadDataNoCheckCommand);
 
-    // Wait for command completion
-    std::this_thread::sleep_for (std::chrono::milliseconds (500));
+    waitForControllerReady ();
 
     // Verify now both controller and drive are ready and no error is
     // indicated

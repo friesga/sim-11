@@ -55,6 +55,17 @@ protected:
     MSV11D msv11;
     RLV12 rlv12Device {};
 
+    void waitForControllerReady ()
+    {
+        u16 result;
+        do
+        {
+            std::this_thread::yield ();
+            rlv12Device.read (RLCSR, &result);
+        }
+        while (!(result & CSR_ControllerReady));
+    }
+
     void SetUp() override
     {
         // Create a minimal system, conisting of just the bus, memory
@@ -85,8 +96,7 @@ protected:
         rlv12Device.writeWord (RLDAR, DAR_Reset | DAR_GetStatus | DAR_Marker);
         rlv12Device.writeWord (RLCSR, CSR_GetStatusCommand | CSR_Drive0);
 
-        // Wait for command completion
-        std::this_thread::sleep_for (std::chrono::milliseconds (50));
+        waitForControllerReady ();
     }
 };
 
@@ -105,8 +115,7 @@ TEST_F (RLV12ReadHeaderTest, readHeaderSucceeds)
     // in the function bits.
     rlv12Device.writeWord (RLCSR, CSR_ReadHeaderCommand);
 
-    // Wait for command completion
-    std::this_thread::sleep_for (std::chrono::milliseconds (50));
+    waitForControllerReady ();
 
     // Verify the controller is ready
     rlv12Device.read (RLCSR, &result);
@@ -144,8 +153,7 @@ TEST_F (RLV12ReadHeaderTest, headerHasCorrectContents)
         DAR_Marker | DAR_Seek | DAR_DirectionOut | DAR_cylinderDifference (10));
     rlv12Device.writeWord (RLCSR, CSR_SeekCommand);
 
-    // Wait for command completion
-    std::this_thread::sleep_for (std::chrono::milliseconds (500));
+    waitForControllerReady ();
 
     // Verify both controller and drive are ready and no error is
     // indicated

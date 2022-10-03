@@ -54,6 +54,17 @@ protected:
     MSV11D msv11;
     RLV12 rlv12Device {};
 
+    void waitForControllerReady ()
+    {
+        u16 result;
+        do
+        {
+            std::this_thread::yield ();
+            rlv12Device.read (RLCSR, &result);
+        }
+        while (!(result & CSR_ControllerReady));
+    }
+
     void SetUp() override
     {
         // Create a minimal system, conisting of just the bus, memory
@@ -84,8 +95,7 @@ protected:
         rlv12Device.writeWord (RLDAR, DAR_Reset | DAR_GetStatus | DAR_Marker);
         rlv12Device.writeWord (RLCSR, CSR_GetStatusCommand | CSR_Drive0);
 
-        // Wait for command completion
-        std::this_thread::sleep_for (std::chrono::milliseconds (50));
+        waitForControllerReady ();
     }
 };
 
@@ -120,8 +130,7 @@ TEST_F (RLV12ReadDataTest, readDataSucceeds)
     // in the function bits.
     rlv12Device.writeWord (RLCSR, CSR_ReadDataCommand);
 
-    // Wait for command completion
-    std::this_thread::sleep_for (std::chrono::milliseconds (500));
+    waitForControllerReady ();
 
     // Verify now both controller and drive are ready
     rlv12Device.read (RLCSR, &result);
@@ -156,8 +165,7 @@ TEST_F (RLV12ReadDataTest, readDataFails)
         DAR_cylinderDifference (5));
     rlv12Device.writeWord (RLCSR, CSR_SeekCommand);
 
-    // Wait for command completion
-    std::this_thread::sleep_for (std::chrono::milliseconds (500));
+    waitForControllerReady ();
 
     // Point at memory address 0
     rlv12Device.writeWord (RLBAR, 0);
@@ -173,8 +181,7 @@ TEST_F (RLV12ReadDataTest, readDataFails)
     // in the function bits.
     rlv12Device.writeWord (RLCSR, CSR_ReadDataCommand);
 
-    // Wait for command completion
-    std::this_thread::sleep_for (std::chrono::milliseconds (50));
+    waitForControllerReady ();
 
     // Verify the CSR indicates an error
     rlv12Device.read (RLCSR, &result);
@@ -204,8 +211,7 @@ TEST_F (RLV12ReadDataTest, spiralReadFails)
     rlv12Device.writeWord (RLMPR, 0xFE00);
     rlv12Device.writeWord (RLCSR, CSR_ReadDataCommand);
 
-    // Wait for command completion
-    std::this_thread::sleep_for (std::chrono::milliseconds (500));
+    waitForControllerReady ();
 
     // Verify an error is reported
     rlv12Device.read (RLCSR, &result);

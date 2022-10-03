@@ -59,6 +59,17 @@ protected:
         CmdLineOptions::processOptions (sizeof (argvSet0) /sizeof (argvSet0[0]),
             argvSet0);
     }
+
+    void waitForControllerReady ()
+    {
+        u16 result;
+        do
+        {
+            std::this_thread::yield ();
+            rlv12Device.read (RLCSR, &result);
+        }
+        while (!(result & CSR_ControllerReady));
+    }
 };
 
 // Verify a Get Status Command without the Get Status bit set fails
@@ -79,8 +90,7 @@ TEST_F (RLV12GetStatusTest, getStatusFails)
     // in the function bits.
     rlv12Device.writeWord (RLCSR, CSR_GetStatusCommand);
 
-        // Wait for command completion
-    std::this_thread::sleep_for (std::chrono::milliseconds (50));
+    waitForControllerReady ();
 
     // Verify the controller reports an Operation Incomplete
     rlv12Device.read (RLCSR, &result);
@@ -105,8 +115,7 @@ TEST_F (RLV12GetStatusTest, getStatusFailsOnDisconnectedUnit)
     // in the function bits.
     rlv12Device.writeWord (RLCSR, CSR_GetStatusCommand);
 
-    // Wait for command completion
-    std::this_thread::sleep_for (std::chrono::milliseconds (50));
+    waitForControllerReady ();
 
     // Expected result in the MPR register: Drive Select Error
     u16 mpr;
@@ -151,8 +160,7 @@ TEST_F (RLV12GetStatusTest, resetSucceeds)
     // in the function bits.
     rlv12Device.writeWord (RLCSR, CSR_GetStatusCommand);
 
-    // Wait for command completion
-    std::this_thread::sleep_for (std::chrono::milliseconds (50));
+    waitForControllerReady ();
 
     // Expected result in the MPR register: No errors, Drive type RL01
     u16 mpr;
@@ -196,8 +204,7 @@ TEST_F (RLV12GetStatusTest, drive3CanBeSelected)
     // in the function bits.
     rlv12Device.writeWord (RLCSR, CSR_GetStatusCommand | CSR_Drive3);
 
-    // Wait for command completion
-    std::this_thread::sleep_for (std::chrono::milliseconds (50));
+    waitForControllerReady ();
 
     // Expected result in the MPR register: No errors, Drive type RL01
     u16 mpr;

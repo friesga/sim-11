@@ -11,6 +11,17 @@
 class RLV12MaintenanceTest : public ::testing::Test
 {
 protected:
+    // Use our own set of definitions to avoid common cause issues
+    static constexpr u16 RLBASE = 0174400;
+    static constexpr u16 RLCSR = RLBASE;
+    static constexpr u16 RLBAR = RLBASE + 02;
+    static constexpr u16 RLDAR = RLBASE + 04;
+    static constexpr u16 RLMPR = RLBASE + 06;
+    // A 16 bit system has no BAE register
+
+    // CSR bit definitions
+    static constexpr u16  CSR_ControllerReady     = (1 << 7);
+
     // Create bus structure, an RLV12 device and install the device
     QBUS bus;
     MSV11D msv11;
@@ -31,17 +42,23 @@ protected:
         CmdLineOptions::processOptions (sizeof (argvSet0) /sizeof (argvSet0[0]),
             argvSet0);
     }
+
+    void waitForControllerReady ()
+    {
+        u16 result;
+        do
+        {
+            std::this_thread::yield ();
+            rlv12Device.read (RLCSR, &result);
+        }
+        while (!(result & CSR_ControllerReady));
+    }
 };
 
 
 TEST_F (RLV12MaintenanceTest, maintenance)
 {
-    // Use our own set of definitions to avoid common cause issues
-    u16 const RLBASE = 0174400;
-    u16 const RLCSR = RLBASE;
-    u16 const RLBAR = RLBASE + 02;
-    u16 const RLMPR = RLBASE + 06;
-    // A 16 bit system has no BAE register
+
 
     u16 const MaintenanceMode = 0;
 
@@ -54,8 +71,7 @@ TEST_F (RLV12MaintenanceTest, maintenance)
     rlv12Device.writeWord (RLMPR, 0177001);
     rlv12Device.writeWord (RLCSR, MaintenanceMode);
 
-    // Wait for command completion
-    std::this_thread::sleep_for (std::chrono::milliseconds (500));
+    waitForControllerReady ();
 
     // Expected result: CSR CRDY (bit 7) set, all error bits cleared.
     u16 result;

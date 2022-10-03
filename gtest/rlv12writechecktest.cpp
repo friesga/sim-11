@@ -61,6 +61,17 @@ protected:
     MSV11D msv11;
     RLV12 rlv12Device {};
 
+    void waitForControllerReady ()
+    {
+        u16 result;
+        do
+        {
+            std::this_thread::yield ();
+            rlv12Device.read (RLCSR, &result);
+        }
+        while (!(result & CSR_ControllerReady));
+    }
+
     void SetUp() override
     {
         // Create a minimal system, conisting of just the bus, memory
@@ -92,7 +103,7 @@ protected:
         rlv12Device.writeWord (RLCSR, CSR_GetStatusCommand | CSR_Drive0);
 
         // Wait till Read Header command is completed
-        std::this_thread::sleep_for (std::chrono::milliseconds (10));
+        waitForControllerReady ();
 
         // Fill 512 bytes of memory with the values to be written and a marker
         u16 address;
@@ -116,8 +127,7 @@ TEST_F (RLV12WriteCheckTest, writeCheckSucceeds)
     rlv12Device.writeWord (RLMPR, 0xFF00);
     rlv12Device.writeWord (RLCSR, CSR_WriteDataCommand);
 
-    // Wait for command completion
-    std::this_thread::sleep_for (std::chrono::milliseconds (500));
+    waitForControllerReady ();
 
     // Verify both controller and drive are ready and no error is
     // indicated
@@ -132,8 +142,7 @@ TEST_F (RLV12WriteCheckTest, writeCheckSucceeds)
     rlv12Device.writeWord (RLMPR, 0xFF00);
     rlv12Device.writeWord (RLCSR, CSR_WriteCheckCommand);
 
-    // Wait for command completion
-    std::this_thread::sleep_for (std::chrono::milliseconds (500));
+    waitForControllerReady ();
 
     // Verify the Write Check indicates no error
     rlv12Device.read (RLCSR, &result);
@@ -158,8 +167,7 @@ TEST_F (RLV12WriteCheckTest, writeCheckFails)
     rlv12Device.writeWord (RLMPR, 0xFF00);
     rlv12Device.writeWord (RLCSR, CSR_WriteDataCommand);
 
-    // Wait for command completion
-    std::this_thread::sleep_for (std::chrono::milliseconds (500));
+    waitForControllerReady ();
 
     // Verify both controller and drive are ready and no error is
     // indicated
@@ -177,8 +185,7 @@ TEST_F (RLV12WriteCheckTest, writeCheckFails)
     rlv12Device.writeWord (RLMPR, 0xFF00);
     rlv12Device.writeWord (RLCSR, CSR_WriteCheckCommand);
 
-    // Wait for command completion
-    std::this_thread::sleep_for (std::chrono::milliseconds (500));
+    waitForControllerReady ();
 
     // Verify the CSR indicates the appropriate errors
     rlv12Device.read (RLCSR, &result);
