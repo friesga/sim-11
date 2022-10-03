@@ -12,7 +12,7 @@
 // ToDo: Remove default RLV12 constructor
 RLV12::RLV12 ()
     :
-    rlcs {CSR_DONE},
+    rlcs {0},
     rlba {0},
     rlda {0},
     rlmpr {0},
@@ -37,7 +37,7 @@ RLV12::RLV12 ()
 
 RLV12::RLV12 (RlConfig *rlConfig)
     :
-    rlcs {CSR_DONE},
+    rlcs {0},
     rlba {0},
     rlda {0},
     rlmpr {0},

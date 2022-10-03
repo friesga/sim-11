@@ -9,6 +9,9 @@ void CmdProcessor::run ()
     // Guard against controller register access from writeWord()
     std::unique_lock<std::mutex> lock {controller_->controllerMutex_};
 
+    // Report the controller is ready to receive command
+    controller_->rlcs |= CSR_DONE;
+
     while (running_)
     {
         // Wait to be signalled by writeWord() that a command has been
