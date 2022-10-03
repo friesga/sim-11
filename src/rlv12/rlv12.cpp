@@ -30,6 +30,9 @@ RLV12::RLV12 ()
 
     if (rlxb_ == nullptr)
         throw ("Allocating memory for transfer buffer failed");
+
+    // Start the command processor
+    cmdProcessor = std::make_unique<CmdProcessor> (this);
 }
 
 RLV12::RLV12 (RlConfig *rlConfig)
@@ -52,6 +55,9 @@ RLV12::RLV12 (RlConfig *rlConfig)
 
     if (rlxb_ == nullptr)
         throw ("Allocating memory for transfer buffer failed");
+
+    // Start the command processor
+    cmdProcessor = std::make_unique<CmdProcessor> (this);
 }
 
 // Destructor to deallocate transfer buffer

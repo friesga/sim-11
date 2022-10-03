@@ -170,6 +170,9 @@ class RLV12 : public BusDevice
         RL01_2 (this)
     };
 
+    // Definition of the pointer to the command processor
+    std::unique_ptr<CmdProcessor> cmdProcessor;
+
     // Safe guard against controller access from multiple service threads
     std::mutex controllerMutex_;
 

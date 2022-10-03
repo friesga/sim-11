@@ -15,9 +15,9 @@
 // of the specific commands.
 class CmdProcessor
 {
-    std::thread cmdProcessorThread_;
     bool running_;
     RLV12 *controller_;
+    std::thread cmdProcessorThread_;
 
     u16 maintenanceCmd (RL01_2 *unit, RLV12Command &rlv12Command);
     u16 writeCheckCmd (RL01_2 *unit, RLV12Command &rlv12Command);

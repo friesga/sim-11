@@ -6,7 +6,7 @@
 //
 u16 CmdProcessor::readDataCmd (RL01_2 *unit, RLV12Command &rlv12Command)
 {
-    u16 rlcsValue;
+    u16 rlcsValue {0};
 
     // Verify the unit is available
     if (!unitAvailable (unit))

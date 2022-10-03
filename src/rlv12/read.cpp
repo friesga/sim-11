@@ -11,6 +11,8 @@
  */
 StatusCode RLV12::read (u16 registerAddress, u16* data)
 {
+    // Guard against controller register updates from the command processor
+	std::unique_lock<std::mutex> lock {controllerMutex_};
 
     // Decode registerAddress<3:1>
     switch (registerAddress & 016)
@@ -22,27 +24,21 @@ StatusCode RLV12::read (u16 registerAddress, u16* data)
             // superfluous when the CSR is correctly maintained.
             // rlcs = (rlcs & ~RLCS_MEX) | ((rlbae & RLCS_M_MEX) << RLCS_V_MEX);
 
-            /*
-            The DRDY signal is sent by the selected drive to indicate that it
-            is ready to read or write or seek.  It is sent when the heads are
-            not moving and are locked onto a cylinder.  This is continuously
-            monitored by the drive and controller. [EK-0RL11-TD-001, p. 3-8]
-            Use the DS bits to determine if the drive has any outstanding I/O
-            operations and set DRDY as appropriate.
-
-            This seems to imply that only a Seek operation (not Read/Write)
-            causes ready to be false.
-            */
-
             RL01_2 &unit = units_[GET_DRIVE(rlcs)];
 
-
-            // DR RDY will be negated [i.e. cleared] when a drive error occurs
-            // except when an attempt has been made to write on a
+            // The DRDY signal is sent by the selected drive to indicate that
+            // it is ready to read or write or seek.  It is sent when the
+            // heads are not moving and are locked onto a cylinder.  This is
+            // continuously monitored by the drive and controller.
+            // (EK-0RL11-TD-001, p. 3-8)
+            //
+            // DR RDY will [also] be negated [i.e. cleared] when a drive error
+            // occurs except when an attempt has been made to write on a
             // write-protected drive or if volume check is set. In either
             // case, only DR ERR will be asserted. (EK-RLV12-TD-001)
+            // 
             // This means that on a write to a write-protected drive or if
-            // volume check is set DR ERR is set and DR RDY is cleared.
+            // volume check is set, DR ERR is set and DR RDY is cleared.
             //
             // ToDo: Drive Error should be set either in the service function
             // or in read, but not in both

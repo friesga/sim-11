@@ -3,9 +3,10 @@
 // The constructor starts the command processor in a separate thread
 CmdProcessor::CmdProcessor (RLV12 *controller)
     :
-    cmdProcessorThread_ {std::thread(&CmdProcessor::run, this)},
-	running_ {true},
-    controller_ {controller}
+    running_ {true},
+    controller_ {controller},
+    cmdProcessorThread_ {std::thread(&CmdProcessor::run, this)}
+
 {}
 
 // The destructor indicates the running command processor to stop and
