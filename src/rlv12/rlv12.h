@@ -181,7 +181,7 @@ class RLV12 : public BusDevice
 
     // Private functions
     u16 calcCRC (int const wc, u16 const *data);
-    void setDone (int32_t status);
+    void setDone (u16 status);
 
 public:
     // Constructors/destructor

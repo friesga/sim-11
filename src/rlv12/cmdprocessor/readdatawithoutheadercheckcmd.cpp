@@ -23,6 +23,13 @@ u16 CmdProcessor::readDataWithoutHeaderCheckCmd (RL01_2 *unit,
 	    // Bad sector
 	    return RLCS_ERR | RLCS_HNF;
 
+    // Check for sector overflow
+    int32_t maxWordCount = 
+        (RL_NUMSC - getSector (unit->currentDiskAddress_)) * RL_NUMWD;
+
+    if (rlv12Command.wordCount_ > maxWordCount)
+        rlv12Command.wordCount_ = maxWordCount;
+
     // Revolutional latency is 12.5ms average (EK-RLV-TD-001). 
     // The time needed to execute this function is determined by trial
     // and error.
@@ -62,7 +69,8 @@ u16 CmdProcessor::readDataWithoutHeaderCheckCmd (RL01_2 *unit,
         (CmdProcessor::HeadPositionProcedure::Increment, 
          unit, rlv12Command.wordCount_);
 
-    finishDataTransferCmd (unit, rlv12Command);
+    // Catch errors together in rlcsValue
+    rlcsValue |= finishDataTransferCmd (unit, rlv12Command);
 
-    return 0;
+    return rlcsValue;
 }

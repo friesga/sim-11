@@ -33,9 +33,7 @@ void CmdProcessor::run ()
 
         // Execute the command
         // ToDo: Merge the command pointer with the function pointer?
-        u16 rlcsValue;
-
-        rlcsValue = (this->*commands_[rlv12Command.function_])
+        u16 rlcsValue = (this->*commands_[rlv12Command.function_])
             (&unit, rlv12Command);
 
         // Set Controller Ready for the next command.

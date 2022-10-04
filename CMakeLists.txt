@@ -28,6 +28,7 @@ set (RLV12_SRCS
     src/rlv12/cmdprocessor/cmdprocessor.cpp
     src/rlv12/cmdprocessor/diskaddressok.cpp
     src/rlv12/cmdprocessor/getstatuscmd.cpp
+    src/rlv12/cmdprocessor/limitwordcount.cpp
     src/rlv12/cmdprocessor/maintenancecmd.cpp
     src/rlv12/cmdprocessor/readdatacmd.cpp
     src/rlv12/cmdprocessor/readdatawithoutheadercheckcmd.cpp

@@ -31,6 +31,9 @@ u16 CmdProcessor::writeDataCmd (RL01_2 *unit, RLV12Command &rlv12Command)
     if (!diskAddressOk (unit, rlv12Command))
         return RLCS_ERR | RLCS_HNF | RLCS_INCMP;
 
+    // Check for sector overflow
+    limitWordCount (rlv12Command);
+
     // Revolutional latency is 12.5ms average (EK-RLV-TD-001). 
     // The time needed to execute this function is determined by trial
     // and error.
@@ -77,7 +80,8 @@ u16 CmdProcessor::writeDataCmd (RL01_2 *unit, RLV12Command &rlv12Command)
         (CmdProcessor::HeadPositionProcedure::DiskAddressRegister, 
             unit, rlv12Command.wordCount_);
 
-    finishDataTransferCmd (unit, rlv12Command);
+    // Catch erors together in rlcsValue
+    rlcsValue |= finishDataTransferCmd (unit, rlv12Command);
 
     return rlcsValue;
 }

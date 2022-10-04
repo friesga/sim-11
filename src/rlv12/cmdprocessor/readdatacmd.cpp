@@ -11,16 +11,17 @@ u16 CmdProcessor::readDataCmd (RL01_2 *unit, RLV12Command &rlv12Command)
     // Verify the unit is available
     if (!unitAvailable (unit))
     {
-        // Set spin error
+        // Set spin error and return OPI
         unit->driveStatus_ |= RLDS_SPE;
-
-        // Flag error
-        return RLCS_ERR | RLCS_INCMP;
+        return RLCS_INCMP;
     }
 
     // Check the validity of cylinder and sector address
     if (!diskAddressOk (unit, rlv12Command))
-        return RLCS_ERR | RLCS_HNF | RLCS_INCMP;
+        return RLCS_HNF | RLCS_INCMP;
+
+    // Check for sector overflow
+    limitWordCount (rlv12Command);
 
     // Revolutional latency is 12.5ms average (EK-RLV-TD-001). 
     // The time needed to execute this function is determined by trial
@@ -59,7 +60,8 @@ u16 CmdProcessor::readDataCmd (RL01_2 *unit, RLV12Command &rlv12Command)
         (CmdProcessor::HeadPositionProcedure::DiskAddressRegister, 
             unit, rlv12Command.wordCount_);
 
-    finishDataTransferCmd (unit, rlv12Command);
+    // Catch errors together in rlcsValue
+    rlcsValue |= finishDataTransferCmd (unit, rlv12Command);
 
     return rlcsValue;
 }
