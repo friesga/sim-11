@@ -26,7 +26,7 @@ u16 CmdProcessor::getStatusCmd (RL01_2 *unit, RLV12Command &rlv12Command)
     if (unit->rlStatus_ & RlStatus::UNIT_RL02)
         controller_->rlmpr |= RLDS_RL02;
 
-    // Chect if unit is write-protected
+    // Check if unit is write-protected
     if (unit->rlStatus_ & RlStatus::UNIT_WLK || 
             unit->unitStatus_ & Status::UNIT_RO)
         controller_->rlmpr |= RLDS_WLK;
@@ -35,7 +35,8 @@ u16 CmdProcessor::getStatusCmd (RL01_2 *unit, RLV12Command &rlv12Command)
         unit->rlStatus_ & RlStatus::UNIT_OFFL)
     {
         controller_->rlmpr |= RLDS_DSE;
-        return RLCS_DRE | RLCS_INCMP;
+        unit->driveStatus_ |= RLDS_DSE;
+        return RLCS_INCMP;
     }
 
     controller_->rlmpr2 = controller_->rlmpr1 = controller_->rlmpr;

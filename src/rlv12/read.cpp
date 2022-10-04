@@ -35,22 +35,23 @@ StatusCode RLV12::read (u16 registerAddress, u16* data)
             // DR RDY will [also] be negated [i.e. cleared] when a drive error
             // occurs except when an attempt has been made to write on a
             // write-protected drive or if volume check is set. In either
-            // case, only DR ERR will be asserted. (EK-RLV12-TD-001)
+            // case, only DR ERR will be asserted. (EK-RLV12-TD-001, p3-7)
             // 
             // This means that on a write to a write-protected drive or if
             // volume check is set, DR ERR is set and DR RDY is cleared.
             //
-            // ToDo: Drive Error should be set either in the service function
-            // or in read, but not in both
-            if (unit.driveStatus_ & RLDS_VCK)
-            {
+            // The Drive Ready and Drive Error bits are taken over from the
+            // currently selected drive.
+            if (unit.driveStatus_ & RLDS_ERR)
                 rlcs |= RLCS_DRE;
-                rlcs &= ~RLCS_DRDY;
-            }
-            // The drive is ready if is not disconnected and the heads are
-            // locked on a cylinder
-            else if ( !(unit.unitStatus_ & Status::UNIT_DIS) && 
-                       (unit.driveStatus_ & RLDS_M_STATE) == RLDS_LOCK)
+            else
+                rlcs &= ~RLCS_DRE;
+
+            // The drive is ready if it is not disconnected, no error is
+            // reported by the drive and the heads are locked on a cylinder.
+            if ( !(unit.unitStatus_ & Status::UNIT_DIS) && 
+                  !(unit.driveStatus_ & RLDS_DRRDY_NEGATE) &&
+                    (unit.driveStatus_ & RLDS_M_STATE) == RLDS_LOCK)
                 rlcs |= RLCS_DRDY;
             else
                 rlcs &= ~RLCS_DRDY;
@@ -59,6 +60,8 @@ StatusCode RLV12::read (u16 registerAddress, u16* data)
             // sum of other errors.
             if (rlcs & RLCS_ALLERR)
                 rlcs |= RLCS_ERR;
+            else
+                rlcs &= ~RLCS_ERR;
             *data = rlcs;
 
             TRACERLV12Registers (&trc, "read CSR", rlcs, rlba, rlda, rlmpr, rlbae);

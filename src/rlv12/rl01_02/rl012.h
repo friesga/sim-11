@@ -35,6 +35,10 @@ enum class RlStatus
 // ! = kept in uptr
 // The RLDS bits correspond with the status as returned in the MPR
 // after a Get Status command.
+// 
+// ToDo: Move RLDS bit definitions to rlv12.h
+//
+// These bits define the state of the drive (STA, STB and STC).
 #define RLDS_M_STATE    (07)
 #define RLDS_LOAD       (0)                             // no cartridge 
 #define RLDS_SPIN       (1)                             // spin-up 
@@ -44,6 +48,7 @@ enum class RlStatus
 #define RLDS_LOCK       (5)                             // lock on * 
 #define RLDS_UNL        (6)                             // unload heads 
 #define RLDS_DOWN       (7)                             // spin-down 
+// Definition of MPR bits 3:15
 #define RLDS_BHO        (0000010)                       // brushes home * 
 #define RLDS_HDO        (0000020)                       // heads out * 
 #define RLDS_CVO        (0000040)                       // cover open * 
@@ -56,9 +61,17 @@ enum class RlStatus
 #define RLDS_STO        (0010000)                       // seek time out * 
 #define RLDS_WLK        (0020000)                       // wr locked ! 
 #define RLDS_HCE        (0040000)                       // hd curr err NI 
-#define RLDS_WDE        (0100000)                       // wr data err NI 
-#define RLDS_ERR        (RLDS_WDE|RLDS_HCE|RLDS_STO|RLDS_SPE|RLDS_WGE| \
-                         RLDS_VCK|RLDS_DSE)             // errors bits 
+#define RLDS_WDE        (0100000)                       // wr data err NI
+#define RLDS_ERR        (RLDS_WDE|RLDS_HCE|RLDS_WLK| \
+                         RLDS_STO|RLDS_SPE|RLDS_WGE| \
+                         RLDS_VCK|RLDS_DSE)             // Error bits
+
+// DR RDY will be negated [i.e. cleared] when a drive error
+// occurs except when an attempt has been made to write on a
+// write-protected drive or if volume check is set.
+// (EK-RLV12-TD-001, p3-7)
+#define RLDS_DRRDY_NEGATE (RLDS_WDE|RLDS_HCE|RLDS_STO| \
+                           RLDS_SPE|RLDS_WGE|RLDS_DSE)
 
 // RLO1/RL02 unit
 class RL01_2 : public Unit

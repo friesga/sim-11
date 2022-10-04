@@ -9,7 +9,7 @@ u16 CmdProcessor::writeDataCmd (RL01_2 *unit, RLV12Command &rlv12Command)
     CondData<u16> tmpValue;
     u16 rlcsValue {0};
 
-    // Verify the unit is available
+    // Check the unit is available
     if (!unitAvailable (unit))
     {
         // Set spin error
@@ -17,6 +17,14 @@ u16 CmdProcessor::writeDataCmd (RL01_2 *unit, RLV12Command &rlv12Command)
 
         // Flag error
         return RLCS_ERR | RLCS_INCMP;
+    }
+
+    // Check the unit is not write-protected
+    if (unit->unitStatus_ & Status::UNIT_RO || 
+        unit->rlStatus_ & RlStatus::UNIT_WLK)
+    {
+        unit->driveStatus_ |= RLDS_WGE;                     
+        return RLCS_ERR;
     }
 
     // Check the validity of cylinder and sector address
@@ -35,13 +43,6 @@ u16 CmdProcessor::writeDataCmd (RL01_2 *unit, RLV12Command &rlv12Command)
     if (fseek (unit->filePtr_, 
             filePosition (rlv12Command.diskAddress_), SEEK_SET))
         return RLCS_ERR | RLCS_INCMP;
-
-    if (unit->unitStatus_ & Status::UNIT_RO || 
-        unit->rlStatus_ & RlStatus::UNIT_WLK)
-    {
-        unit->driveStatus_ |= RLDS_WGE;                     
-        return RLCS_ERR | RLCS_DRE;
-    }
 
     for (int32_t index = 0, memAddr = rlv12Command.memoryAddress_;
         index < rlv12Command.wordCount_; memAddr += 2, ++index)

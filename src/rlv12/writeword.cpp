@@ -61,7 +61,9 @@ StatusCode RLV12::writeWord (u16 registerAddress, u16 data)
 
             bus->clearInterrupt (TrapPriority::BR4, 4);
 
-            // At the start of every command errors are cleared
+            // At the start of every command errors are cleared. Note that
+            // Composite Error is cleared (or set) in read(), based on the
+            // setting of the other error bits.
             rlcs &= ~RLCS_ALLERR;                   
 
             TRACERLV12Command (&trc, GET_FUNC(rlcs));
