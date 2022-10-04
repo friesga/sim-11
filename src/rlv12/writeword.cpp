@@ -61,7 +61,7 @@ StatusCode RLV12::writeWord (u16 registerAddress, u16 data)
 
             bus->clearInterrupt (TrapPriority::BR4, 4);
 
-            // Clear errors
+            // At the start of every command errors are cleared
             rlcs &= ~RLCS_ALLERR;                   
 
             TRACERLV12Command (&trc, GET_FUNC(rlcs));
