@@ -150,9 +150,7 @@ TEST_F (RLV12GetStatusTest, resetSucceeds)
 
     // Verify the controller is ready to perform an operation (the drive
     // does not have to be ready)
-    u16 result;
-    rlv12Device.read (RLCSR, &result);
-    ASSERT_EQ (result & CSR_ControllerReady, CSR_ControllerReady);
+    waitForControllerReady ();
 
     // Load DAR with ones in bits 01 and 00, reset bit cleared and
     // zeros in the other locations
@@ -171,6 +169,7 @@ TEST_F (RLV12GetStatusTest, resetSucceeds)
     ASSERT_EQ (mpr, 00);
 
     // Verify the controller is ready without error indications
+    u16 result;
     rlv12Device.read (RLCSR, &result);
     ASSERT_EQ (result, CSR_ControllerReady |
         CSR_GetStatusCommand | 
@@ -194,9 +193,7 @@ TEST_F (RLV12GetStatusTest, drive3CanBeSelected)
 
     // Verify the controller is ready to perform an operation (the drive
     // does not have to be ready)
-    u16 result;
-    rlv12Device.read (RLCSR, &result);
-    ASSERT_EQ (result & CSR_ControllerReady, CSR_ControllerReady);
+    waitForControllerReady ();
 
     // Load DAR with ones in bits 01 and 00, reset bit cleared and
     // zeros in the other locations
@@ -215,6 +212,7 @@ TEST_F (RLV12GetStatusTest, drive3CanBeSelected)
     ASSERT_EQ (mpr, 00);
 
     // Verify the controller is ready without error indications
+    u16 result;
     rlv12Device.read (RLCSR, &result);
     ASSERT_EQ (result, CSR_ControllerReady |
         CSR_GetStatusCommand | 
