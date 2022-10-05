@@ -1,5 +1,8 @@
 #include "cmdprocessor.h"
 
+#include <chrono>
+#include <future>
+
 //
 // Perform a Seek command for the specified unit with the 
 // specified parameters.
@@ -29,6 +32,8 @@ u16 CmdProcessor::seekCmd (RL01_2 *unit, RLV12Command &rlv12Command)
     // operation on a drive that is busy seeking, the controller will
     // suspend the operation until the seek is completed."
     // 
+    // Guard against drive access while the seek is running
+	std::unique_lock<std::mutex> lock {unit->driveMutex_};
 
     currentCylinder = getCylinder (unit->currentDiskAddress_);
 
@@ -58,9 +63,12 @@ u16 CmdProcessor::seekCmd (RL01_2 *unit, RLV12Command &rlv12Command)
     }
 
     // Enter velocity mode? Only if a different cylinder
-    if (newCylinder != currentCylinder)
-        // Move the positioner 
-        unit->driveStatus_ = (unit->driveStatus_ & ~RLDS_M_STATE) | RLDS_SEEK;
+    // The Seek status has already been set in writeWord() as it cannot
+    // be guaranteed the status will be set at this point before the
+    // host software reads the CSR
+    // if (newCylinder != currentCylinder)
+    //    // Move the positioner 
+    //    unit->driveStatus_ = (unit->driveStatus_ & ~RLDS_M_STATE) | RLDS_SEEK;
 
     // ToDo: If a head switch, sector should be RL_NUMSC/2?
     // Put on track
@@ -74,14 +82,20 @@ u16 CmdProcessor::seekCmd (RL01_2 *unit, RLV12Command &rlv12Command)
     // 
     // Try to simulate this timing by the following formula
     seekTime = 17 + (0.4 * abs (newCylinder - currentCylinder));
-    
-    // ToDo: The following statements have to be executed in a unit specific
-    // thread, including a lock/unlock of the cmdprocessor thread
-    // controller->setDone (0);
-    std::this_thread::sleep_for (std::chrono::milliseconds (seekTime));  
 
+    // Start a thread simulating the drive seek
     // After wait interval enter position mode with heads locked on
     // cylinder (i.e. seek completed)
-    unit->driveStatus_ = (unit->driveStatus_ & ~RLDS_M_STATE) | RLDS_LOCK; 
+    std::future<void> noFuture = std::async ([&] 
+        {
+            // Guard against controller register access from the
+            // command processor
+	        std::unique_lock<std::mutex> lock {unit->driveMutex_};
+
+            std::this_thread::sleep_for(std::chrono::milliseconds (seekTime));
+            unit->driveStatus_ = 
+                (unit->driveStatus_ & ~RLDS_M_STATE) | RLDS_LOCK; 
+        });
+        
     return 0;
 }
