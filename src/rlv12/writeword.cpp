@@ -23,7 +23,6 @@ StatusCode RLV12::writeWord (u16 registerAddress, u16 data)
 {
     // Get reference to drive
     RL01_2 &unit = units_[GET_DRIVE(data)];
-    std::shared_ptr<RLV12Command> rlv12Command;
 
     // Guard against controller register access from the command processor
 	std::unique_lock<std::mutex> lock {controllerMutex_};
@@ -37,7 +36,18 @@ StatusCode RLV12::writeWord (u16 registerAddress, u16 data)
             // are immediately overwritten by the next statement
             // rlcs = (rlcs & ~RLCS_MEX) | ((rlbae & RLCS_M_MEX) << RLCS_V_MEX);
 
+            // Set the writable bits in the CSR. CRDY will be cleared by the
+            // host software to execute the command specified in the CSR.
             rlcs = (rlcs & ~RLCS_RW) | (data & RLCS_RW);
+
+            // The [DRDY] bit is cleared when a seek or head-select operation
+            // is initiated [...] (EK-RLV12-TD-001, Table 3-3).
+            // The DRDY bit has to be cleared at this point as we cannot
+            // guarantee it will be cleared by the command processor before
+            // the CSR is read by the host software.
+            if (GET_FUNC(rlcs) == RLCS_SEEK)
+                unit.driveStatus_ = 
+                    (unit.driveStatus_ & ~RLDS_M_STATE) | RLDS_SEEK;
 
             // Load Bus Address Extension Bits (BA16 and BA17) into bits
             // 00 and 01 in the BAE register
