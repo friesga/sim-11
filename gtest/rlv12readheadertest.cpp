@@ -156,7 +156,8 @@ TEST_F (RLV12ReadHeaderTest, headerHasCorrectContents)
         DAR_Marker | DAR_Seek | DAR_DirectionOut | DAR_cylinderDifference (10));
     rlv12Device.writeWord (RLCSR, CSR_SeekCommand);
 
-    waitForControllerReady ();
+    // Wait for the seek to be completed
+    std::this_thread::sleep_for (std::chrono::milliseconds (300));
 
     // Verify both controller and drive are ready and no error is
     // indicated

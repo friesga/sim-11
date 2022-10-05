@@ -114,7 +114,7 @@ TEST_F (RLV12SeekTest, seekSucceeds)
 
     // Load DAR with seek parameters
     rlv12Device.writeWord (RLDAR, DAR_Marker | DAR_Seek | DAR_DirectionOut |
-        DAR_cylinderDifference (5));
+        DAR_cylinderDifference (20));
 
     // Load the CSR with drive-select bits for unit 0, a negative GO bit
     // (i.e. bit 7 cleared), interrupts disabled and a Seek Command (03)
@@ -129,7 +129,8 @@ TEST_F (RLV12SeekTest, seekSucceeds)
     ASSERT_EQ (result & (CSR_ControllerReady | CSR_DriveReady), 
         CSR_ControllerReady);
 
-    waitForControllerReady ();
+    // Wait for Drive Ready
+    std::this_thread::sleep_for (std::chrono::milliseconds (100));
 
     // Verify now both controller and drive are ready
     rlv12Device.read (RLCSR, &result);
@@ -153,7 +154,7 @@ TEST_F (RLV12SeekTest, seekSucceeds)
     // Cylinder Address
     u16 mpr;
     rlv12Device.read (RLMPR, &mpr);
-    ASSERT_EQ (MPR_cylinder (mpr), 5);
+    ASSERT_EQ (MPR_cylinder (mpr), 20);
 }
 
 
@@ -289,11 +290,10 @@ TEST_F (RLV12SeekTest, seekOnBusyDriveAccepted)
     // in the function bits.
     rlv12Device.writeWord (RLCSR, CSR_SeekCommand);
 
-    // Wait for command completion
-    std::this_thread::sleep_for (std::chrono::milliseconds (10));
+    // Verify the controller is now ready to accept a command...
+    waitForControllerReady ();
 
-    // Verify the controller is ready to accept a command
-    // while the drive is not ready
+    // ...while the drive is not ready
     rlv12Device.read (RLCSR, &result);
     ASSERT_EQ (result & (CSR_ControllerReady | CSR_DriveReady), 
         CSR_ControllerReady);
@@ -359,7 +359,7 @@ TEST_F (RLV12SeekTest, readHeaderAfterSeekSucceeds)
     rlv12Device.writeWord (RLCSR, CSR_SeekCommand);
 
     // Wait for command completion
-    std::this_thread::sleep_for (std::chrono::milliseconds (10));
+    waitForControllerReady ();
 
     // Verify the controller is ready to accept a command
     // while the drive is not ready
@@ -369,9 +369,6 @@ TEST_F (RLV12SeekTest, readHeaderAfterSeekSucceeds)
 
     // Issue a Read Header command for the same drive
     rlv12Device.writeWord (RLCSR, CSR_ReadHeaderCommand);
-
-    // Wait till Read Header command is completed
-    std::this_thread::sleep_for (std::chrono::milliseconds (10));
 
     // Assert execution of the Read Header command doesn't set the
     // Controller Ready bit (because the seek is still in progress).
