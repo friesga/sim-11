@@ -93,17 +93,30 @@ class RL01_2 : public Unit
     Bitmask<RlStatus> rlStatus_;
     int32_t driveStatus_;
     int32_t function_;
+    bool running_;
 
-public:
-    // Constructor
-    RL01_2 (BusDevice *owningDevice);
-
-    // Required functions
-    StatusCode configure (UnitConfig &unitConfig) override;
+    // Thread simulating seek timing
+    std::thread seekTimerThread_;
 
     // Safe guard against drive access while a seek is in progress
     std::mutex driveMutex_;
-};
 
+    // Condition variable to wake up the seek timer
+    std::condition_variable startSeek_;
+
+    // Calculated seek time
+    int32_t seekTime_;
+
+public:
+    // Constructor and destructor
+    RL01_2 (BusDevice *owningDevice);
+    ~RL01_2 ();
+
+    // Seek timer, started in a separate thread
+    void seekTimer ();
+
+    // Required functions
+    StatusCode configure (UnitConfig &unitConfig) override;
+};
 
 #endif // _RL012_H_

@@ -13,7 +13,6 @@ u16 CmdProcessor::seekCmd (RL01_2 *unit, RLV12Command &rlv12Command)
     int32_t offset;
     int32_t newCylinder;
     int32_t maxCylinder;
-    int32_t seekTime;
 
     // Verify the unit is available
     if (!unitAvailable (unit))
@@ -81,21 +80,13 @@ u16 CmdProcessor::seekCmd (RL01_2 *unit, RLV12Command &rlv12Command)
     // 55ms average seek, 100ms maximum seek
     // 
     // Try to simulate this timing by the following formula
-    seekTime = 17 + (0.4 * abs (newCylinder - currentCylinder));
+    unit->seekTime_ = 17 + (0.4 * abs (newCylinder - currentCylinder));
 
-    // Start a thread simulating the drive seek
-    // After wait interval enter position mode with heads locked on
-    // cylinder (i.e. seek completed)
-    std::future<void> noFuture = std::async ([&] 
-        {
-            // Guard against controller register access from the
-            // command processor
-	        std::unique_lock<std::mutex> lock {unit->driveMutex_};
-
-            std::this_thread::sleep_for(std::chrono::milliseconds (seekTime));
-            unit->driveStatus_ = 
-                (unit->driveStatus_ & ~RLDS_M_STATE) | RLDS_LOCK; 
-        });
+    // Wakeup the seekTimer thread for the unit. After the specified seek
+    // time enter position mode with heads locked on cylinder (i.e. seek
+    // completed).
+    lock.unlock ();
+    unit->startSeek_.notify_one ();
         
     return 0;
 }

@@ -23,6 +23,7 @@ set (RLV12_SRCS
     src/rlv12/rlv12.cpp
     src/rlv12/rl01_02/configure.cpp
     src/rlv12/rl01_02/rl012.cpp
+    src/rlv12/rl01_02/seektimer.cpp
     src/rlv12/rlv12command/rlv12command.cpp
     src/rlv12/cmdprocessor/finishdatatransfercmd.cpp
     src/rlv12/cmdprocessor/cmdprocessor.cpp
