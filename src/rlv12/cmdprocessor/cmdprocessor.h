@@ -8,6 +8,8 @@
 #include <vector>
 #include <functional>
 
+class RLV12;
+
 // This function processes RLV12 commands. It forms the core of the
 // RLV12 controller. The function is executed in a separate thread.
 // This allows the processor to wait till a drive for which a command

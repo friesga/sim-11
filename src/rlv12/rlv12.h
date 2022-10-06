@@ -111,6 +111,9 @@ constexpr int32_t getBlockNumber (int32_t diskAddress)
 // RLBAE 
 #define RLBAE_IMP       (0000077)                       // Implemented bits
 
+// Forward declaration
+class CmdProcessor;
+
 // Implementation of the RL11, RLV11 and RLV12 controllers.
 class RLV12 : public BusDevice
 {
@@ -181,7 +184,7 @@ class RLV12 : public BusDevice
 
     // Private functions
     u16 calcCRC (int const wc, u16 const *data);
-    void setDone (u16 status);
+    void setDone (RL01_2 &unit, u16 status);
 
 public:
     // Constructors/destructor
@@ -211,6 +214,8 @@ public:
     void memAddrToRegs (u32 memoryAddress);
     u32 memAddrFromRegs ();
     void updateBAE ();
+    void adjustDriveStatus (RL01_2 &unit);
+    void adjustCompositeErrorBit ();
     constexpr u16 getBA16BA17 (u16 csr);
 };
 

@@ -13,6 +13,7 @@
 u16 CmdProcessor::maintenanceCmd (RL01_2 *unit, RLV12Command &rlv12Command)
 {
     u32  memoryAddress;
+    u16 rlcsValue {0};
 
     // The VRLBC0 diagnostic expects a reaction on a Maintenance command
     // between 155 and 650 milliseconds. This time is determined by executing
@@ -52,9 +53,10 @@ u16 CmdProcessor::maintenanceCmd (RL01_2 *unit, RLV12Command &rlv12Command)
 
     // Must be exactly -511
     if (controller_->rlmpr != 0177001)
+    {
         // HNF error
-        // controller->rlcs |= RLCS_ERR | RLCS_HNF;
-        return RLCS_ERR | RLCS_HNF;
+        return RLCS_ERR | RLCS_HNF | RLCS_INCMP;
+    }
 
     // Transfer 256 words to FIFO
     // The success of the bus->read() operation is not tested as on failures
@@ -66,7 +68,7 @@ u16 CmdProcessor::maintenanceCmd (RL01_2 *unit, RLV12Command &rlv12Command)
             controller_->rlxb_[wordCount] = value;
         else
         {
-            controller_->rlcs |= RLCS_ERR | RLCS_NXM;
+            rlcsValue = RLCS_ERR | RLCS_NXM;
             break;
         }
         memoryAddress += 2;
@@ -113,5 +115,5 @@ u16 CmdProcessor::maintenanceCmd (RL01_2 *unit, RLV12Command &rlv12Command)
     controller_->rlda = (controller_->rlda & ~0377) | 
         ((controller_->rlda + 1) & 0377);
 
-    return 0;
+    return rlcsValue;
 }

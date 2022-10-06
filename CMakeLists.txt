@@ -40,6 +40,7 @@ set (RLV12_SRCS
     src/rlv12/cmdprocessor/updateheadposition.cpp
     src/rlv12/cmdprocessor/writecheckcmd.cpp
     src/rlv12/cmdprocessor/writedatacmd.cpp
+    src/rlv12/adjustcsr.cpp
     src/rlv12/read.cpp
     src/rlv12/setdone.cpp
     src/rlv12/writeword.cpp)

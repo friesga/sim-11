@@ -4,6 +4,7 @@
 #include "types.h"
 
 #include <cstdint>
+#include <cstddef>
 
 struct RLV12Command
 {

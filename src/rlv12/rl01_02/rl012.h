@@ -7,6 +7,8 @@
 #include "configdata/include/configdata.h"
 
 #include <mutex>
+#include <thread>
+#include <condition_variable>
 
 // RL01/02 unit status flags. These flags are used in the definition of 
 // Bitmask<RlStatus> and provide a compile-time type safety for the use

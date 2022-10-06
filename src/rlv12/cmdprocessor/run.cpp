@@ -37,6 +37,6 @@ void CmdProcessor::run ()
             (&unit, rlv12Command);
 
         // Set Controller Ready for the next command.
-        controller_->setDone (rlcsValue);
+        controller_->setDone (unit, rlcsValue);
     }
 }
