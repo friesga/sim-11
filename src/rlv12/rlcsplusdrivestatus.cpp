@@ -1,5 +1,11 @@
 #include "rlv12.h"
 
+//
+// This function determines the Drive Ready and Drive Status bits from
+// the given unit and combines these bits with the current CSR to a 
+// value to be returned to the caller. In case Drive Error is set,
+// Composite Error is also set.
+// 
 // The DRDY signal is sent by the selected drive to indicate that
 // it is ready to read or write or seek.  It is sent when the
 // heads are not moving and are locked onto a cylinder.  This is
@@ -16,29 +22,30 @@
 //
 // The Drive Ready (and Drive Error) bits are taken over from the
 // currently selected drive.
-void RLV12::adjustDriveStatus (RL01_2 &unit)
+u16 RLV12::rlcsPlusDriveStatus (RL01_2 &unit)
 {
+    u16 rlcsCombined {rlcs};
+
     if (unit.driveStatus_ & RLDS_ERR)
-        rlcs |= RLCS_DRE;
+        rlcsCombined |= RLCS_DRE;
     else
-        rlcs &= ~RLCS_DRE;
+        rlcsCombined &= ~RLCS_DRE;
 
     // The drive is ready if it is not disconnected, no error is
     // reported by the drive and the heads are locked on a cylinder.
     if (!(unit.unitStatus_ & Status::UNIT_DIS) && 
         !(unit.driveStatus_ & RLDS_DRRDY_NEGATE) &&
         (unit.driveStatus_ & RLDS_M_STATE) == RLDS_LOCK)
-        rlcs |= RLCS_DRDY;
+        rlcsCombined |= RLCS_DRDY;
     else
-        rlcs &= ~RLCS_DRDY;
-}
+        rlcsCombined &= ~RLCS_DRDY;
 
-// Make sure the error summary bit properly reflects the 
-// sum of other errors.
-void RLV12::adjustCompositeErrorBit ()
-{
-    if (rlcs & RLCS_ALLERR)
-        rlcs |= RLCS_ERR;
+    // Make sure the error summary bit properly reflects the 
+    // sum of other errors.
+    if (rlcsCombined & RLCS_ALLERR)
+        rlcsCombined |= RLCS_ERR;
     else
-        rlcs &= ~RLCS_ERR;
+        rlcsCombined &= ~RLCS_ERR;
+
+    return rlcsCombined;
 }

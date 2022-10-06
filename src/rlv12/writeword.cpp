@@ -66,10 +66,6 @@ StatusCode RLV12::writeWord (u16 registerAddress, u16 data)
                 else if ((rlcs & (CSR_DONE + CSR_IE)) == CSR_DONE)
                     bus->setInterrupt (TrapPriority::BR4, 4, vector_);
 
-                // Set/clear the Drive Ready and Drive Error bits from the currently
-                // selected unit and set/clear the Composite Error bit.
-                adjustDriveStatus (unit);
-                adjustCompositeErrorBit ();
                 return StatusCode::OK;
             }
 

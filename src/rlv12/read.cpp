@@ -11,16 +11,17 @@
  */
 StatusCode RLV12::read (u16 registerAddress, u16* data)
 {
-    // Guard against controller register updates from the command processor
-	std::unique_lock<std::mutex> lock {controllerMutex_};
-
     // Decode registerAddress<3:1>
     switch (registerAddress & 016)
     {
         case CSR:
             // Control/Status Register
-            TRACERLV12Registers (&trc, "read CSR", rlcs, rlba, rlda, rlmpr, rlbae);
-            *data = rlcs;
+            // Add the Drive Ready and Drive Error bits to the CSR be 
+            // returned. This avoids having to change the actual CSR and
+            // having to lock the controller mutex.
+            *data = rlcsPlusDriveStatus (units_[GET_DRIVE(rlcs)]);
+            TRACERLV12Registers (&trc, "read CSR", *data, rlba,
+                rlda, rlmpr, rlbae);
             break;
 
         case BAR:

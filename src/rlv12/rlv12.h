@@ -214,8 +214,7 @@ public:
     void memAddrToRegs (u32 memoryAddress);
     u32 memAddrFromRegs ();
     void updateBAE ();
-    void adjustDriveStatus (RL01_2 &unit);
-    void adjustCompositeErrorBit ();
+    u16 rlcsPlusDriveStatus (RL01_2 &unit);
     constexpr u16 getBA16BA17 (u16 csr);
 };
 
