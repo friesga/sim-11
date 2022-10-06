@@ -21,8 +21,9 @@ u16 CmdProcessor::getStatusCmd (RL01_2 *unit, RLV12Command &rlv12Command)
         unit->driveStatus_ &= ~(RLDS_ERR | RLDS_VCK);
 
     // Develop drive state
-    // controller->rlmpr = 
-    //     (u16)(unit->driveStatus_ | (unit->currentDiskAddress_ & RLDS_HD));
+    controller_->rlmpr = 
+        (u16)(unit->driveStatus_ | (unit->currentDiskAddress_ & RLDS_HD));
+
     if (unit->rlStatus_ & RlStatus::UNIT_RL02)
         controller_->rlmpr |= RLDS_RL02;
 
