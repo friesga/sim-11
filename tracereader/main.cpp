@@ -12,6 +12,7 @@ static int const headerSize = 6;
 TRACE_CPU traceCpu;
 TRACE_CPUZ traceCpuZ;
 TRACE_CPUEVT traceCpuEvt;
+TRACE_DURATION traceDuration;
 TRACE_BUS traceBus;
 TRACE_MEMDUMP traceMemDump;
 TRACE_TRAP traceTrap;
@@ -57,7 +58,7 @@ int main (int argc, char **argv)
 		TRACEF_MEMORYDUMP | TRACEF_TRAP       | TRACEF_IRQ |
 		TRACEF_DLV11      | TRACEF_RXV21CMD   | TRACEF_RXV21STEP |
 		TRACEF_RXV21DMA   | TRACEF_RXV21ERROR | TRACEF_RXV21DISK | 
-		TRACEF_RLV12 |
+		TRACEF_RLV12      | TRACEF_DURATION   |
 		TRACEF_PRINT;
 
 	if (argc != 2)
@@ -273,6 +274,17 @@ int main (int argc, char **argv)
 					sizeof (traceRlv12Cmd) - magicSize);
 
 				TRACERLV12Command (&trace, U16B(traceRlv12Cmd.command));
+				break;
+
+			case MAGIC_DURA:
+				traceFile.read (
+					reinterpret_cast<char *> (&traceDuration) + magicSize,
+					sizeof (traceDuration) - magicSize);
+
+				traceFile.read (msg, U16B(traceDuration.length));
+				msg[U16B(traceDuration.length)] = 0;
+
+				TRACEDuration (&trace, msg, U32B (traceDuration.durationCount));
 				break;
 
 			default:

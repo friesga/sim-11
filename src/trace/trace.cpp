@@ -687,3 +687,32 @@ void TRACERLV12Command (TRACE* trace, u16 command)
 		fflush (trace->file);
 	}
 }
+
+void TRACEDuration (TRACE* trace, const char *msg, u32 duration)
+{
+	TRACE_DURATION rec;
+
+	if (!(trace->flags & TRACEF_DURATION))
+		return;
+
+	// Guard against simultaneous trace file writes
+	lock_guard<mutex> guard{ traceFileMutex };
+
+	if(trace->flags & TRACEF_PRINT)
+	{
+		fprintf (DST, "[DURATION] %s: %u nanoseconds\n", msg, duration);
+		fflush(DST);
+	}
+
+	if(trace->flags & TRACEF_WRITE)
+	{
+		rec.magic = U32B (MAGIC_DURA);
+		rec.durationCount = U32B(duration);
+
+		u16 msgLength = strlen (msg);
+		rec.length = U16B (msgLength);
+		fwrite (&rec, sizeof(rec), 1, trace->file);
+		fwrite (msg, msgLength, 1, trace->file);
+		fflush (trace->file);
+	}
+}

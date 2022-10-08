@@ -165,7 +165,8 @@ try
 
 	// Select the events to be traced and the way the trace output has
 	// to be generated
-	trc.flags |= TRACEF_RLV12;
+	// trc.flags |= TRACEF_RLV12;
+	trc.flags |= TRACEF_DURATION;
 	// trc.flags |= TRACEF_PRINT;
 	
 	// Load device configuration

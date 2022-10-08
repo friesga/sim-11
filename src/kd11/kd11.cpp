@@ -4,6 +4,7 @@
 
 #include <string.h>
 #include <stdlib.h>
+#include <chrono>
 
 // KD11 functions
 KD11::KD11 (QBUS *bus)
@@ -427,7 +428,15 @@ void KD11CPU::step(QBUS* bus)
     // If there is a pending bus interrupt that can be executed, process
     // that interrupt first, else execute the next instruction
     if (!bus->intrptReqAvailable() || cpuPriority() >= bus->intrptPriority())
+    {
+        std::chrono::high_resolution_clock::time_point start =
+            std::chrono::high_resolution_clock::now();
         execInstr(bus);
+        std::chrono::high_resolution_clock::time_point end =
+            std::chrono::high_resolution_clock::now();
+        TRACEDuration (&trc, "Instruction", 
+            (duration_cast<std::chrono::nanoseconds> (end - start)).count());
+    }
 
     // Generate a Trace trap if the trace bit is set, unless the previous
     // instruction was a RTT or another trap is pending.

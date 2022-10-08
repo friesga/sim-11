@@ -9,6 +9,7 @@
 #define	MAGIC_CPU0		0x43505530
 #define	MAGIC_CPUZ		0x4350555a
 #define	MAGIC_CPU1		0x43505531
+#define MAGIC_DURA		0x44555241		// Duration
 #define	MAGIC_BUS0		0x42555330
 #define	MAGIC_BUS1		0x42555331
 #define	MAGIC_TRAP		0x54524150
@@ -19,8 +20,8 @@
 #define	MAGIC_RX2E		0x52583245
 #define	MAGIC_RX2S		0x52583253
 #define	MAGIC_DLV1		0x444C5631
-#define MAGIC_RL2A		0x524C3241
-#define MAGIC_RL2C		0x524C3243
+#define MAGIC_RL2A		0x524C3241		// RLV12 register
+#define MAGIC_RL2C		0x524C3243		// RLV12 command
 
 #define	TRC_CPU_TRAP		0
 #define	TRC_CPU_HALT		1
@@ -96,6 +97,7 @@
 #define TRACEF_RXV21ERROR		(1 << 15)
 #define TRACEF_RXV21DISK		(1 << 16)
 #define TRACEF_RLV12			(1 << 17)
+#define TRACEF_DURATION			(1 << 18)
 
 #define	TRCSETIGNBUS()	(trc.flags |= TRACEF_IGNORE_BUS)
 #define	TRCCLRIGNBUS()	(trc.flags &= ~TRACEF_IGNORE_BUS)
@@ -277,6 +279,13 @@ struct TRACE_RLV12COMMAND
 	u16 command;
 };
 
+struct TRACE_DURATION
+{
+	u32 magic;
+	u32 durationCount;		// in microseconds
+	u16 length;				// length of remaing chars
+};
+
 struct TRACE
 {
 	FILE*	file;
@@ -305,5 +314,6 @@ extern void	TRACERXV21Error(TRACE* trace, int type, u16 info);
 extern void TRACERLV12Registers (TRACE* trace, const char *msg, u16 rlcs, 
 	u16 rlba, u16 rlda, u16 rlmpr, u16 rlbae);
 extern void TRACERLV12Command (TRACE *trace, u16 command);
+extern void TRACEDuration (TRACE* trace, const char *msg, u32 duration);
 
 #endif
