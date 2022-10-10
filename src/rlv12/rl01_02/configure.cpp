@@ -26,10 +26,10 @@ StatusCode RL01_2::configure (UnitConfig &unitConfig)
         rlStatus_ |= Bitmask(RlStatus::UNIT_AUTO);
     }
 
-    if (rlUnitConfig.fileName.empty())
+    if (rlUnitConfig.fileName.empty()) 
         return StatusCode::ArgumentError;
 	
-	Bitmask<AttachFlags> attachFlags {AttachFlags::Default};
+    Bitmask<AttachFlags> attachFlags {AttachFlags::Default};
 
 	if (rlUnitConfig.readOnly)
 		attachFlags |= AttachFlags::ReadOnly;

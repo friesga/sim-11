@@ -47,7 +47,7 @@ u16 CmdProcessor::readDataCmd (RL01_2 *unit, RLV12Command &rlv12Command)
             controller_->rlxb_[index] = 0;
 
         // Transfer words in buffer
-        for (int32_t index = 0, memAddr = rlv12Command.memoryAddress_;
+        for (size_t index = 0, memAddr = rlv12Command.memoryAddress_;
             index < rlv12Command.wordCount_; memAddr += 2, ++index)
         {
             if (!controller_->bus->writeWord (memAddr, 

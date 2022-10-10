@@ -51,7 +51,7 @@ u16 CmdProcessor::writeCheckCmd (RL01_2 *unit, RLV12Command &rlv12Command)
 
         // Save wordCount
         // ToDo: Rename awc
-        int32_t awc = rlv12Command.wordCount_;
+        size_t awc = rlv12Command.wordCount_;
         int32_t memAddr = rlv12Command.memoryAddress_;
         for (rlv12Command.wordCount_ = 0; rlv12Command.wordCount_ < awc;
             memAddr += 2, ++rlv12Command.wordCount_)

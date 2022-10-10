@@ -47,7 +47,7 @@ u16 CmdProcessor::writeDataCmd (RL01_2 *unit, RLV12Command &rlv12Command)
             filePosition (rlv12Command.diskAddress_), SEEK_SET))
         return RLCS_ERR | RLCS_INCMP;
 
-    for (int32_t index = 0, memAddr = rlv12Command.memoryAddress_;
+    for (size_t index = 0, memAddr = rlv12Command.memoryAddress_;
         index < rlv12Command.wordCount_; memAddr += 2, ++index)
     {
         tmpValue = controller_->bus->read (memAddr).valueOr (0);

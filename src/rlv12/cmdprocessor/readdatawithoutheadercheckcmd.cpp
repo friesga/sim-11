@@ -24,7 +24,7 @@ u16 CmdProcessor::readDataWithoutHeaderCheckCmd (RL01_2 *unit,
 	    return RLCS_ERR | RLCS_HNF;
 
     // Check for sector overflow
-    int32_t maxWordCount = 
+    size_t maxWordCount = 
         (RL_NUMSC - getSector (unit->currentDiskAddress_)) * RL_NUMWD;
 
     if (rlv12Command.wordCount_ > maxWordCount)
@@ -56,7 +56,7 @@ u16 CmdProcessor::readDataWithoutHeaderCheckCmd (RL01_2 *unit,
             controller_->rlxb_[index] = 0;
 
         // Transfer words in buffer
-        for (int32_t index = 0, memAddr = rlv12Command.memoryAddress_;
+        for (size_t index = 0, memAddr = rlv12Command.memoryAddress_;
             index < rlv12Command.wordCount_; memAddr += 2, ++index)
         {
             if (!controller_->bus->writeWord (memAddr, 

@@ -39,8 +39,8 @@ StatusCode Unit::createBadBlockTable (int32_t sectorsPerSurface,
     u16 *badSectorInfo;
     // Each block written to the bad block file comprises two 256-word
     // sectors
-    static size_t const badSectorFileBlockSize = 256 * 2;
-    static size_t const physSectorsPerInfoBlock = 
+    static int32_t const badSectorFileBlockSize = 256 * 2;
+    static int32_t const physSectorsPerInfoBlock = 
         badSectorFileBlockSize / physWordsPerSector;
 
     if ((sectorsPerSurface < 2) || (physWordsPerSector < 16))
@@ -74,7 +74,7 @@ StatusCode Unit::createBadBlockTable (int32_t sectorsPerSurface,
         badSectorInfo[wordNr] = 0177777u;
 
     // Write the bad block tables
-    for (size_t blockNr = 0; 
+    for (int32_t blockNr = 0; 
         blockNr < 10 && blockNr * physSectorsPerInfoBlock < sectorsPerSurface;
         ++blockNr)
             sim_fwrite(badSectorInfo, sizeof(u16), 
