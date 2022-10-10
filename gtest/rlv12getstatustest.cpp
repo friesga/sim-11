@@ -37,7 +37,11 @@ protected:
     static constexpr u16 DAR_Reset                = (1 << 3);
 
     // MPR bit definitions
+    static constexpr u16 MPR_BrushHome            = (1 << 3);
+    static constexpr u16 MPR_HeadsOut             = (1 << 4);
     static constexpr u16 MPR_DriveSelectError     = (1 << 8);
+    static const u16 MPR_LockOn                   = 5;
+    
 
     // Create bus structure, an RLV12 device and install the device
     QBUS bus;
@@ -163,10 +167,11 @@ TEST_F (RLV12GetStatusTest, resetSucceeds)
 
     waitForControllerReady ();
 
-    // Expected result in the MPR register: No errors, Drive type RL01
+    // Expected result in the MPR register: heads locked on a cylinder,
+    // no errors, Drive Type RL01
     u16 mpr;
     rlv12Device.read (RLMPR, &mpr);
-    ASSERT_EQ (mpr, 00);
+    ASSERT_EQ (mpr, MPR_LockOn | MPR_BrushHome | MPR_HeadsOut);
 
     // Verify the controller is ready without error indications
     u16 result;
@@ -206,11 +211,11 @@ TEST_F (RLV12GetStatusTest, drive3CanBeSelected)
 
     waitForControllerReady ();
 
-    // Expected result in the MPR register: No errors, Drive type RL01
+    // Expected result in the MPR register: heads locked on a cylinder,
+    // no errors, Drive Type RL01
     u16 mpr;
     rlv12Device.read (RLMPR, &mpr);
-    ASSERT_EQ (mpr, 00);
-
+    
     // Verify the controller is ready without error indications
     u16 result;
     rlv12Device.read (RLCSR, &result);
