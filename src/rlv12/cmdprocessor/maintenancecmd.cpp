@@ -48,11 +48,11 @@ u16 CmdProcessor::maintenanceCmd (RL01_2 *unit, RLV12Command &rlv12Command)
                                                             
     if(trc.flags & TRACEF_RLV12)
          TRACERLV12Registers (&trc, "Maintenance", controller_->rlcs,
-             controller_->rlba, controller_->rlda, controller_->rlmpr,
+             controller_->rlba, controller_->rlda, controller_->rlxb_[0],
              controller_->rlbae);
 
     // Must be exactly -511
-    if (controller_->rlmpr != 0177001)
+    if (controller_->wordCounter_ != 0177001)
     {
         // HNF error
         return RLCS_ERR | RLCS_HNF | RLCS_INCMP;
@@ -72,7 +72,7 @@ u16 CmdProcessor::maintenanceCmd (RL01_2 *unit, RLV12Command &rlv12Command)
             break;
         }
         memoryAddress += 2;
-        controller_->rlmpr++;
+        ++controller_->wordCounter_;
     }
 
     // Transfer 255 words from FIFO to the original memory address
@@ -85,7 +85,7 @@ u16 CmdProcessor::maintenanceCmd (RL01_2 *unit, RLV12Command &rlv12Command)
         controller_->bus->writeWord (memoryAddress, 
             controller_->rlxb_[wordCount]);
         memoryAddress += 2;
-        controller_->rlmpr++;
+        ++controller_->wordCounter_;
     }
 
     // Update DAR and bus address in BA and BAE
@@ -110,8 +110,6 @@ u16 CmdProcessor::maintenanceCmd (RL01_2 *unit, RLV12Command &rlv12Command)
     // Test 6: Check the CRC of (CRC of DAR + 4)
     word = controller_->rlxb_[1];
     controller_->rlxb_[1] = controller_->calcCRC (1, &word);
-    controller_->rlmpr = controller_->rlxb_[0];
-    controller_->rlmpr1 = controller_->rlxb_[1];
     controller_->rlda = (controller_->rlda & ~0377) | 
         ((controller_->rlda + 1) & 0377);
 

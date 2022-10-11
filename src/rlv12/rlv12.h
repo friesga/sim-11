@@ -141,14 +141,13 @@ class RLV12 : public BusDevice
     };
 
     // Define controller registers
+    // The MPR is not a single physical entity like the other registers. It
+    // consists of two separate registers, the word counter and the FIFO output
+    // buffer, both bearing the same base address. (EK-RLV12-TD-001 pg. 3-4)
     u16 rlcs;       // Control/status register
     u16 rlba;       // Bus Address register
     u16 rlda;       // Disk address register
-    u16 rlmpr;      // Multi purpose regsister
     u16 rlbae;      // Bus Address Extension register
-
-    u16 rlmpr1 = 0; // MPR register queue
-    u16 rlmpr2 = 0;
 
     // Timing constants
     // ToDo: rl_swait is superfluous
@@ -181,6 +180,20 @@ class RLV12 : public BusDevice
 
     // Condition variable to wake up the command processor
     std::condition_variable signal;
+
+    // The MPR consists of two separate registers, the word counter and the
+    // FIFO output buffer, both bearing the same base address. The word
+    // counter is a write-only register, while the output buffer is a read-only
+    // register.
+    // When writing the MPR, the data word is loaded into the word counter (WC)
+    // register. [...] When reading the MPR, the data word is read from the
+    // FIFO output buffer. (EK-RLV-12-TD-001, pg. 4-3)
+
+    // Word counter
+    u16 wordCounter_;
+
+    // Index into the FIFO buffer for reading the FIFO via the MPR
+    size_t fifoIndex_;
 
     // Private functions
     u16 calcCRC (int const wc, u16 const *data);

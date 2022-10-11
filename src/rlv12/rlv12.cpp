@@ -15,11 +15,12 @@ RLV12::RLV12 ()
     rlcs {0},
     rlba {0},
     rlda {0},
-    rlmpr {0},
     rlbae {0},
     rlxb_ {nullptr},
     rlType_ {RlConfig::RLType::RLV12},
-    _22bit_ {false}
+    _22bit_ {false},
+    wordCounter_ {0},
+    fifoIndex_ {0}
 {
     name_ = "RL";
     baseAddress_ = IOBA_RL;
@@ -40,11 +41,12 @@ RLV12::RLV12 (RlConfig *rlConfig)
     rlcs {0},
     rlba {0},
     rlda {0},
-    rlmpr {0},
     rlbae {0},
     rlxb_ {nullptr},
     rlType_ {rlConfig->rlType},
-    _22bit_ {rlConfig->_22bit} 
+    _22bit_ {rlConfig->_22bit},
+    wordCounter_ {0},
+    fifoIndex_ {0}
 {
     name_ = "RL";
     baseAddress_ = (rlConfig->address > 0) ? rlConfig->address : IOBA_RL;
@@ -88,7 +90,6 @@ void RLV12::reset ()
 
     rlba = 0;
     rlda = 0;
-    rlmpr = 0;
     rlbae = 0;
     
     // ToDo: Clear interrupt request

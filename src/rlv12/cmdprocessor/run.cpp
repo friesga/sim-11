@@ -29,7 +29,8 @@ void CmdProcessor::run ()
         // parameters in the other registers
         // ToDo: Assemble command in the constructor?!
         RLV12Command rlv12Command (GET_FUNC(controller_->rlcs), controller_->rlda,
-             controller_->memAddrFromRegs (), 0200000 - controller_->rlmpr);
+            controller_->memAddrFromRegs (), 
+            0200000 - controller_->wordCounter_);
 
         // Execute the command
         // ToDo: Merge the command pointer with the function pointer?

@@ -21,7 +21,7 @@ StatusCode RLV12::read (u16 registerAddress, u16* data)
             // having to lock the controller mutex.
             *data = rlcsPlusDriveStatus (units_[GET_DRIVE(rlcs)]);
             TRACERLV12Registers (&trc, "read CSR", *data, rlba,
-                rlda, rlmpr, rlbae);
+                rlda, rlxb_[0], rlbae);
             break;
 
         case BAR:
@@ -36,9 +36,10 @@ StatusCode RLV12::read (u16 registerAddress, u16* data)
 
         case MPR: 
             // Multipurpose register
-            *data = rlmpr;
-            rlmpr = rlmpr1;         // ripple data
-            rlmpr1 = rlmpr2;
+            // *data = rlmpr;
+            // rlmpr = rlmpr1;         // ripple data
+            // rlmpr1 = rlmpr2;
+            *data = rlxb_[fifoIndex_++];
             break;
 
         case BAE:

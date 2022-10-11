@@ -20,27 +20,25 @@ u16 CmdProcessor::getStatusCmd (RL01_2 *unit, RLV12Command &rlv12Command)
     if (controller_->rlda & RLDA_GS_CLR)
         unit->driveStatus_ &= ~(RLDS_ERR | RLDS_VCK);
 
-    // Develop drive state
-    controller_->rlmpr = 
+    // Develop drive state. The result is put in the output buffer, to be
+    // retrieved via the MPR.
+    controller_->rlxb_[0] = 
         (u16)(unit->driveStatus_ | (unit->currentDiskAddress_ & RLDS_HD));
 
     if (unit->rlStatus_ & RlStatus::UNIT_RL02)
-        controller_->rlmpr |= RLDS_RL02;
+        controller_->rlxb_[0] |= RLDS_RL02;
 
     // Check if unit is write-protected
     if (unit->rlStatus_ & RlStatus::UNIT_WLK || 
             unit->unitStatus_ & Status::UNIT_RO)
-        controller_->rlmpr |= RLDS_WLK;
+        controller_->rlxb_[0] |= RLDS_WLK;
 
     if (unit->unitStatus_ & Status::UNIT_DIS || 
         unit->rlStatus_ & RlStatus::UNIT_OFFL)
     {
-        controller_->rlmpr |= RLDS_DSE;
+        controller_->rlxb_[0] |= RLDS_DSE;
         unit->driveStatus_ |= RLDS_DSE;
         return RLCS_INCMP;
     }
-
-    controller_->rlmpr2 = controller_->rlmpr1 = controller_->rlmpr;
-
     return 0;
 }

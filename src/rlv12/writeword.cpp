@@ -27,6 +27,9 @@ StatusCode RLV12::writeWord (u16 registerAddress, u16 data)
     // Guard against controller register access from the command processor
 	std::unique_lock<std::mutex> lock {controllerMutex_};
 
+    // Any write to a register resets the FIFO buffer index
+    fifoIndex_ = 0;
+
     // Decode registerAddress<3:1>
     switch (registerAddress & 016)
     {
@@ -51,10 +54,10 @@ StatusCode RLV12::writeWord (u16 registerAddress, u16 data)
 
             // Load Bus Address Extension Bits (BA16 and BA17) into bits
             // 00 and 01 in the BAE register
-            // rlbae = (rlbae & ~RLCS_M_MEX) | ((rlcs >> RLCS_V_MEX) & RLCS_M_MEX);
             updateBAE ();
 
-            TRACERLV12Registers (&trc, "write CSR", rlcs, rlba, rlda, rlmpr, rlbae);
+            TRACERLV12Registers (&trc, "write CSR", rlcs, rlba, rlda, 
+                rlxb_[0], rlbae);
 
             // Commands to the controller are only executed with the CRDY (DONE)
             // bit is cleared by software.  If set, check for interrupts and return.
@@ -108,7 +111,7 @@ StatusCode RLV12::writeWord (u16 registerAddress, u16 data)
 
         case MPR:
             // Multipurpose Register
-            rlmpr = rlmpr1 = rlmpr2 = (u16) data;
+            wordCounter_ = data;
             break;
 
         case BAE:
