@@ -41,6 +41,10 @@ void TRACEClose(TRACE* trace)
 	fclose(trace->file);
 }
 
+// Generate the trace file in chunks of 10^6 records to be able to inspect
+// large traces (in the order of more than 100*10^6 records). The name of
+// the new trace file is the original file name, appended with an underscore
+// and a sequence number.
 void limitFileSize (TRACE* trace)
 {
 	static size_t fileSequenceNumber {0};
