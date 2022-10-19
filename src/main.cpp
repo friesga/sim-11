@@ -164,11 +164,14 @@ try
 	}
 
 	// Select the events to be traced and the way the trace output has
-	// to be generated
-	// trc.flags |= TRACEF_RLV12;
-	trc.flags |= TRACEF_DURATION;
-	// trc.flags |= TRACEF_PRINT;
-	
+	// to be generated. The flags can only be specified if tracing has been
+	// enabled.
+	if (trc.file != nullptr)
+	{
+		trc.flags |= TRACEF_RLV12;
+		trc.flags |= TRACEF_STEP;
+	}
+
 	// Load device configuration
 	DeviceConfig *deviceConfig {nullptr};
 	ConfigData configProcessor;
