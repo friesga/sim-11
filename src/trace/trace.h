@@ -1,10 +1,11 @@
 #ifndef __TRACE_H__
 #define __TRACE_H__
 
+#include "types.h"
+
 #include <stdio.h>
 #include <stdlib.h>
-
-#include "types.h"
+#include <string>
 
 #define	MAGIC_CPU0		0x43505530
 #define	MAGIC_CPUZ		0x4350555a
@@ -288,12 +289,30 @@ struct TRACE_DURATION
 
 struct TRACE
 {
-	FILE*	file;
-	u64	step;
-	int	flags;
-	u16	last_psw;
-	u16	last_r[7];
+	std::string baseFileName {};
+	FILE*	file {};
+	u64	step {};
+	int	flags {TRACEF_WRITE | TRACEF_FIRST_Z};
+	u16	last_psw {};
+	u16	last_r[7] {};
+
+	// TRACE ();
 };
+
+// Constructor for the TRACE struct
+/*
+TRACE::TRACE ()
+	:
+	baseFileName {},
+	file {0},
+	step {0},
+	flags {0},
+	last_psw {0},
+	last_r {0}
+{}
+*/
+
+
 extern TRACE trc;
 
 extern int	TRACEOpen(TRACE* trace, const char* filename);

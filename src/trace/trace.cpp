@@ -11,7 +11,7 @@ using std::lock_guard;
 extern int  LSI11Disassemble(const u16* insn, u16 pc, char* buf);
 extern int  LSI11InstructionLength(const u16* insn);
 
-TRACE trc = { 0 };
+TRACE trc;
 
 static mutex traceFileMutex;
 
@@ -27,10 +27,11 @@ int TRACEOpen(TRACE* trace, const char* filename)
 		return -1;
 	}
 
+	if (trace->baseFileName.empty())
+		trace->baseFileName = std::string (filename);
 	trace->step = 0;
 	memset(trace->last_r, 0, 7 * sizeof(u16));
 	trace->last_psw = 0;
-	trace->flags = TRACEF_WRITE | TRACEF_FIRST_Z;
 	fwrite(&header, 6, 1, trace->file);
 	return 0;
 }
@@ -38,6 +39,22 @@ int TRACEOpen(TRACE* trace, const char* filename)
 void TRACEClose(TRACE* trace)
 {
 	fclose(trace->file);
+}
+
+void limitFileSize (TRACE* trace)
+{
+	static size_t fileSequenceNumber {0};
+	static size_t recordCounter {0};
+
+	if (recordCounter++ > 1'000'000)
+	{
+		// Change to next file
+		TRACEClose (trace);
+		std::string fileName = trace->baseFileName + "_" + 
+			std::to_string(fileSequenceNumber++);
+		TRACEOpen (trace, fileName.c_str ());
+		recordCounter = 0;
+	}
 }
 
 void TRACEStep(TRACE* trace, u16* r, u16 psw, u16* insn)
@@ -152,7 +169,11 @@ void TRACEStep(TRACE* trace, u16* r, u16 psw, u16* insn)
 				rec.r[i] = U16B(rec.r[i]);
 			}
 			fwrite(&rec, sizeof(rec), 1, trace->file);
-			fflush (trace->file);
+			
+			// Don't flush instruction trace records as flushing slows tracing down
+			// to an unacceptable level
+			// fflush (trace->file);
+			limitFileSize (trace);
 		}
 	}
 }
@@ -194,6 +215,7 @@ void TRACECPUEvent(TRACE* trace, int type, u16 value)
 		rec.value = U16B(value);
 		fwrite(&rec, sizeof(rec), 1, trace->file);
 		fflush (trace->file);
+		limitFileSize (trace);
 	}
 }
 
@@ -235,6 +257,7 @@ void TRACEBus(TRACE* trace, u16 type, u16 address, u16 value)
 		rec.value = U16B(value);
 		fwrite(&rec, sizeof(rec), 1, trace->file);
 		fflush (trace->file);
+		limitFileSize (trace);
 	}
 }
 
@@ -268,6 +291,7 @@ void TRACEMemoryDump(TRACE* trace, u8* ptr, u16 address, u16 length)
 		fwrite(&rec, sizeof(rec), 1, trace->file);
 		fwrite(ptr, length, 1, trace->file);
 		fflush (trace->file);
+		limitFileSize (trace);
 	}
 }
 
@@ -341,6 +365,7 @@ void TRACETrap(TRACE* trace, int n, int cause)
 		rec.cause = U16B(cause);
 		fwrite(&rec, sizeof(rec), 1, trace->file);
 		fflush (trace->file);
+		limitFileSize (trace);
 	}
 }
 
@@ -375,6 +400,7 @@ void TRACEIrq(TRACE* trace, int n, int type)
 		rec.type = U16B(type);
 		fwrite(&rec, sizeof(rec), 1, trace->file);
 		fflush (trace->file);
+		limitFileSize (trace);
 	}
 }
 
@@ -407,6 +433,7 @@ void TRACEDLV11(TRACE* trace, int channel, int type, u16 value)
 		rec.value = U16B(value);
 		fwrite(&rec, sizeof(rec), 1, trace->file);
 		fflush (trace->file);
+		limitFileSize (trace);
 	}
 }
 
@@ -457,6 +484,7 @@ void TRACERXV21Command(TRACE* trace, int commit, int type, u16 rx2cs)
 		rec.rx2cs = U16B(rx2cs);
 		fwrite(&rec, sizeof(rec), 1, trace->file);
 		fflush (trace->file);
+		limitFileSize (trace);
 	}
 }
 
@@ -484,6 +512,7 @@ void TRACERXV21Step(TRACE* trace, int type, int step, u16 rx2db)
 		rec.rx2db = U16B(rx2db);
 		fwrite(&rec, sizeof(rec), 1, trace->file);
 		fflush (trace->file);
+		limitFileSize (trace);
 	}
 }
 
@@ -511,6 +540,7 @@ void TRACERXV21DMA(TRACE* trace, int type, u16 rx2wc, u16 rx2ba)
 		rec.rx2ba = U16B(rx2ba);
 		fwrite(&rec, sizeof(rec), 1, trace->file);
 		fflush (trace->file);
+		limitFileSize (trace);
 	}
 }
 
@@ -563,6 +593,7 @@ void TRACERXV21Error(TRACE* trace, int type, u16 info)
 		rec.info = U16B(info);
 		fwrite(&rec, sizeof(rec), 1, trace->file);
 		fflush (trace->file);
+		limitFileSize (trace);
 	}
 }
 
@@ -607,6 +638,7 @@ void TRACERXV21Disk(TRACE* trace, int type, int drive, int density, u16 rx2sa, u
 		rec.rx2ta = U16B(rx2ta);
 		fwrite(&rec, sizeof(rec), 1, trace->file);
 		fflush (trace->file);
+		limitFileSize (trace);
 	}
 }
 
@@ -643,6 +675,7 @@ void TRACERLV12Registers (TRACE* trace, char const *msg, u16 rlcs, u16 rlba, u16
 		fwrite (&rec, sizeof(rec), 1, trace->file);
 		fwrite (msg, msgLength, 1, trace->file);
 		fflush (trace->file);
+		limitFileSize (trace);
 	}
 }
 
@@ -685,6 +718,7 @@ void TRACERLV12Command (TRACE* trace, u16 command)
 		rec.command = U16B (command);
 		fwrite (&rec, sizeof(rec), 1, trace->file);
 		fflush (trace->file);
+		limitFileSize (trace);
 	}
 }
 
@@ -714,5 +748,6 @@ void TRACEDuration (TRACE* trace, const char *msg, u32 duration)
 		fwrite (&rec, sizeof(rec), 1, trace->file);
 		fwrite (msg, msgLength, 1, trace->file);
 		fflush (trace->file);
+		limitFileSize (trace);
 	}
 }
