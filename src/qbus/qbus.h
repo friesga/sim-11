@@ -20,13 +20,15 @@
 // According to the Microcomputer Processor Handbook, the interrupt
 // latency lies between 35.05 and 44.1 +/- 20%, so roughly between 30 and
 // 50 microseconds. The LSI-11 instruction time varies between 3.5
-// and 15 microseconds. If we presume an averige execution time of 5 micro-
-// seconds, an interrupt latency between 6 and 10 instructions would be 
-// appropriate. An interrupt latency of 20 instructions will result in
-// the VRLBC0 diagnostic reporting "NO INTERRUPT ON FUNCTION COMPLETE" errors.
-//  
-#define	INTRPT_LATENCY			11
-#define	INTRPT_LATENCY_JITTER	5
+// and 15 microseconds.
+// 
+// At least a few instructions are necessary to satify the VKAAC0 and 
+// VKADC1 diagnostics. An interrupt latency of 20 instructions will result
+// in the VRLBC0 diagnostic reporting "NO INTERRUPT ON FUNCTION COMPLETE"
+// errors. The XRLKB3 diagnostic expects an interrupt within five instructions
+// after Controller Ready becomes true.
+#define	INTRPT_LATENCY			5
+#define	INTRPT_LATENCY_JITTER	2
 
 class BusDevice;
 
