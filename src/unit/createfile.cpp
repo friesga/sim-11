@@ -1,5 +1,6 @@
 #include "unit.h"
 #include "cmdlineoptions/cmdlineoptions.h"
+#include "logger/logger.h"
 
 #include <iostream>
 #include <sys/stat.h>
@@ -25,8 +26,7 @@ StatusCode Unit::createFile(std::string fileName, Bitmask<AttachFlags> flags)
     if (filePtr_ == NULL)
         return StatusCode::OpenError;
 
-    if (!CmdLineOptions::get().quiet)
-        std::cout << owningDevice_->name() << ": creating new file\n";
+     Logger::instance() << owningDevice_->name() + ": creating new file\n";
 
     return StatusCode::OK;
 }

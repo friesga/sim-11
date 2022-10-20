@@ -10,6 +10,7 @@
 #include "lsi11/lsi11.h"
 #include "cmdlineoptions/cmdlineoptions.h"
 #include "configdata/configprocessor/configprocessor.h"
+#include "logger/logger.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -118,6 +119,9 @@ try
 
 	FILE* floppy_file;
 	u8* floppy;
+
+	// Open log file
+	Logger::init ("sim-11.log");
 
 	// Get command line options
 	CmdLineOptions::processOptions (argc, argv);

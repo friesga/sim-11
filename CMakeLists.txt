@@ -101,6 +101,8 @@ set (SIM11_SRCS
     ${SIM_FIO_SRCS}
     ${UNIT_SRCS}
     src/trace/trace.cpp
+    src/logger/logger.cpp
+    src/logger/data.cpp
     src/console.cpp
     ${CMDLINEOPTIONS_SRCS}
     ${CONFIGURATOR_SRCS}
@@ -193,6 +195,8 @@ set (SIM11_TEST_SRCS
     src/kd11/pswpriority.cpp
     src/msv11d/msv11d.cpp
     src/trace/trace.cpp
+    src/logger/logger.cpp
+    src/logger/data.cpp
     src/disas.cpp)
 
 add_executable (sim-11-test ${SIM11_TEST_SRCS})

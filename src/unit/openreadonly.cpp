@@ -1,5 +1,6 @@
 #include "unit.h"
 #include "cmdlineoptions/cmdlineoptions.h"
+#include "logger/logger.h"
 
 #include <iostream>
 #include <sys/stat.h>
@@ -21,8 +22,7 @@ StatusCode Unit::openReadOnly(std::string fileName)
     // Set unit read-only
     unitStatus_ |= Status::UNIT_RO;
 
-    if (!CmdLineOptions::get().quiet)
-        std::cout << owningDevice_->name() << ": unit is read only\n";
+    Logger::instance() << owningDevice_->name() + ": unit is read only\n";
 
     return StatusCode::OK;
 }
