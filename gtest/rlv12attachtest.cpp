@@ -52,21 +52,11 @@ TEST_F (RLV12AttachTest, attachReturnsOpenError)
 
 TEST_F (RLV12AttachTest, attachCreatesNewFile)
 {
-    // Set read-only option
-    char const *argvSet0[] =
-    {
-        "sim-11",
-        "-q"    // quiet
-    };
-
     RlUnitConfig attachCreatesNewFileConfig
     {
         .fileName = "rl02.dsk",
         .newFile = true
     };
-
-    CmdLineOptions::processOptions (sizeof (argvSet0) /sizeof (argvSet0[0]),
-        argvSet0);
 
     // Remove a possibly existing file
     char fileName[] = "rl02.dsk";
@@ -85,21 +75,11 @@ TEST_F (RLV12AttachTest, attachCreatesNewFile)
 // file created in the previous test.
 TEST_F (RLV12AttachTest, attachOpensReadOnly)
 {
-    // Set read-only option
-    char const *argvSet0[] =
-    {
-        "sim-11",
-        "-q",   // quiet
-    };
-
     RlUnitConfig attachOpensReadOnlyConfig
     {
         .fileName = "rl02.dsk",
         .readOnly = true
     };
-
-    CmdLineOptions::processOptions (sizeof (argvSet0) /sizeof (argvSet0[0]),
-        argvSet0);
 
     ASSERT_EQ (rlv12Device.unit (0)->configure (attachOpensReadOnlyConfig), 
         StatusCode::OK);
@@ -110,20 +90,11 @@ TEST_F (RLV12AttachTest, attachOpensReadOnly)
 // the override option
 TEST_F (RLV12AttachTest, existingFileIsNotOverwritten)
 {
-    char const *argvSet0[] =
-    {
-        "sim-11",
-        "-q"    // quiet
-    };
-
     RlUnitConfig existingFileIsNotOverwrittenConfig
     {
         .fileName = "rl02.dsk",
         .newFile = true
     };
-
-    CmdLineOptions::processOptions (sizeof (argvSet0) /sizeof (argvSet0[0]),
-        argvSet0);
 
     ASSERT_EQ (rlv12Device.unit (0)->configure (existingFileIsNotOverwrittenConfig), 
         StatusCode::ArgumentError);
@@ -132,21 +103,11 @@ TEST_F (RLV12AttachTest, existingFileIsNotOverwritten)
 // Verify an existing file is overwritten when the override option is sety
 TEST_F (RLV12AttachTest, existingFileIsOverwritten)
 {
-    char const *argvSet0[] =
-    {
-        "sim-11",
-        "-q"    // quiet
-    };
-
     RlUnitConfig existingFileIsOverwrittenConfig
     {
         .fileName = "rl02.dsk",
         .overwrite = true
     };
-
-
-    CmdLineOptions::processOptions (sizeof (argvSet0) /sizeof (argvSet0[0]),
-        argvSet0);
 
     ASSERT_EQ (rlv12Device.unit (0)->configure (existingFileIsOverwrittenConfig),
         StatusCode::OK);

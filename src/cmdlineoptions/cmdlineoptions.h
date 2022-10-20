@@ -20,7 +20,6 @@ class CmdLineOptions
 	static const char* trace_file_;
 	static bool compress_;
 	static bool exit_on_halt_;
-	static bool quiet_;
 
 protected:
 	// CmdLineOptions(int argc, char **argv);
@@ -39,7 +38,6 @@ public:
 	const char* const &trace_file;
 	bool const &compress;
 	bool const &exit_on_halt;
-	bool const &quiet;
 	
 	CmdLineOptions (CmdLineOptions const&) = delete;
 	CmdLineOptions (CmdLineOptions &&) = delete;

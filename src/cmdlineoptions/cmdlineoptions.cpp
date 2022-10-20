@@ -9,6 +9,5 @@ CmdLineOptions::CmdLineOptions()
     bootstrap {bootstrap_},
     trace_file {trace_file_},
     compress {compress_},
-    exit_on_halt {exit_on_halt_},
-    quiet {quiet_}
+    exit_on_halt {exit_on_halt_}
 {};

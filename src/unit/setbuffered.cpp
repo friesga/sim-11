@@ -1,5 +1,6 @@
 #include "unit.h"
 #include "cmdlineoptions/cmdlineoptions.h"
+#include "logger/logger.h"
 
 #include <iostream>
 #include <sys/stat.h>
@@ -28,8 +29,7 @@ void Unit::setBuffered()
     if (fileBuffer_ == NULL)
         throw ("Allocating memory for buffered I/O failed");
 
-    if (!CmdLineOptions::get().quiet)
-        std::cout << owningDevice_->name() << ": buffering file in memory\n";
+    Logger::instance() << owningDevice_->name() + ": buffering file in memory\n";
 
     hwmark_ = sim_fread(fileBuffer_, sizeof(u16), capacity_, filePtr_);
 

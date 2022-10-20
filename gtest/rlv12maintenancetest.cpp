@@ -33,14 +33,6 @@ protected:
         // and the RLV12 device to be tested.
         bus.installModule (1, &msv11);
         bus.installModule (2, &rlv12Device);
-
-        char const *argvSet0[] =
-        {
-            "sim-11",
-            "-q"    // quiet
-        };
-        CmdLineOptions::processOptions (sizeof (argvSet0) /sizeof (argvSet0[0]),
-            argvSet0);
     }
 
     void waitForControllerReady ()

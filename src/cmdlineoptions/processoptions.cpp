@@ -29,8 +29,6 @@ void CmdLineOptions::processOptions (int argc, char const **argv)
 			compress_ = true;
 		else if(!strcmp("-x", *argv))
 			exit_on_halt_ = true;
-		else if(!strcmp("-q", *argv))
-			quiet_ = true;
 		else if(!strcmp("-l", *argv) && argc > 1) 
 		{
 			load_file_ = argv[1];

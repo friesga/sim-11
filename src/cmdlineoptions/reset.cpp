@@ -9,5 +9,4 @@ void CmdLineOptions::reset ()
     trace_file_ = nullptr;
     compress_ = false;
     exit_on_halt_ = false;
-    quiet_ = false;
 }
