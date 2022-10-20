@@ -81,15 +81,6 @@ class RL01_2 : public Unit
     // All RLV12Commands need access to the file pointer and unit status
     friend class RLV12;
     friend class CmdProcessor;
-    friend class RLV12Command;
-    friend class RLV12GetStatusCmd;
-    friend class RLV12MaintenanceCmd;
-    friend class RLV12ReadCmd;
-    friend class RLV12ReadHeaderCmd;
-    friend class RLV12ReadNoHeaderCmd;
-    friend class RLV12SeekCmd;
-    friend class RLV12WriteCmd;
-    friend class RLV12WriteCheckCmd;
 
     int32_t currentDiskAddress_;
     Bitmask<RlStatus> rlStatus_;
