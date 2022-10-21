@@ -69,13 +69,14 @@ u16 CmdProcessor::writeDataCmd (RL01_2 *unit, RLV12Command &rlv12Command)
     if (rlv12Command.wordCount_)
     {
         // Clear to end of block
-        // ToDo: Rename awc
-        size_t awc = (rlv12Command.wordCount_ + 
+        size_t numWordsToWrite = (rlv12Command.wordCount_ + 
             (RL_NUMWD - 1)) & ~(RL_NUMWD - 1);
-        for (size_t index = rlv12Command.wordCount_; index < awc; ++index)
+
+        for (size_t index = rlv12Command.wordCount_; 
+                index < numWordsToWrite; ++index)
             controller_->rlxb_[index] = 0;
 
-        fwrite (controller_->rlxb_, sizeof (int16_t), awc, unit->filePtr_);
+        fwrite (controller_->rlxb_, sizeof (int16_t), numWordsToWrite, unit->filePtr_);
         
         if (ferror (unit->filePtr_))
         {
