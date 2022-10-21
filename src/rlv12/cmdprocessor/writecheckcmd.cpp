@@ -1,4 +1,5 @@
 #include "cmdprocessor.h"
+#include "logger/logger.h"
 
 //
 // Perform a Write Check command for the specified unit with the 
@@ -37,8 +38,10 @@ u16 CmdProcessor::writeCheckCmd (RL01_2 *unit, RLV12Command &rlv12Command)
     // Set position in file to the block to be read
     if (fseek (unit->filePtr_, 
         filePosition (rlv12Command.diskAddress_), SEEK_SET))
-        // ToDo: Return I/O error
-        return 0;
+    {
+        Logger::instance() << "Seek error in writeCheckCmd";
+        return RLCS_ERR | RLCS_INCMP;
+    }
 
     size_t numBytes = fread (controller_->rlxb_, sizeof (int16_t), 
         rlv12Command.wordCount_, unit->filePtr_);
@@ -69,6 +72,11 @@ u16 CmdProcessor::writeCheckCmd (RL01_2 *unit, RLV12Command &rlv12Command)
             if (comp != controller_->rlxb_[rlv12Command.wordCount_])
                 rlcsValue = RLCS_ERR | RLCS_CRC;
         }
+    }
+    else
+    {
+        Logger::instance() << "Seek error in writeCheckCmd";
+        return RLCS_ERR | RLCS_INCMP;
     }
 
     updateHeadPosition 

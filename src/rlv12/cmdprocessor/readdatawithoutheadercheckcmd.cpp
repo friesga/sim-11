@@ -1,4 +1,5 @@
 #include "cmdprocessor.h"
+#include "logger/logger.h"
 
 //
 // Perform a Read Data Without Header Check command for the specified unit with the 
@@ -41,14 +42,15 @@ u16 CmdProcessor::readDataWithoutHeaderCheckCmd (RL01_2 *unit,
     // Set position in file to the block to be read
     if (fseek (unit->filePtr_, filePosition (rlv12Command.diskAddress_),
             SEEK_SET))
-        // ToDo: Return I/O error
-        return 0;
+    {
+        Logger::instance() << "Seek error in readDataWithoutHeaderCheckCmd";
+        return RLCS_ERR | RLCS_INCMP;
+    }
 
     // Read wordCount * 2 bytes; returned is the number of bytes read 
     int32_t numBytes = fread (controller_->rlxb_, sizeof (int16_t), 
         rlv12Command.wordCount_, unit->filePtr_);
 
-    // ToDo: Check error
     if (!ferror (unit->filePtr_))
     {
         // Clear the part of the buffer not filled by the read
@@ -63,6 +65,11 @@ u16 CmdProcessor::readDataWithoutHeaderCheckCmd (RL01_2 *unit,
                    controller_->rlxb_[index]))
                 rlcsValue = RLCS_ERR | RLCS_NXM;
         }
+    }
+    else
+    {
+        Logger::instance() << "Read error in readDataWithoutHeaderCheckCmd";
+        return RLCS_ERR | RLCS_INCMP;
     }
 
     updateHeadPosition 

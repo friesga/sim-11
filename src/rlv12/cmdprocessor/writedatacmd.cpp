@@ -1,4 +1,5 @@
 #include "cmdprocessor.h"
+#include "logger/logger.h"
 
 //
 // Perform a Write Data command for the specified unit with the 
@@ -45,7 +46,10 @@ u16 CmdProcessor::writeDataCmd (RL01_2 *unit, RLV12Command &rlv12Command)
     // Set position in file to the block to be written
     if (fseek (unit->filePtr_, 
             filePosition (rlv12Command.diskAddress_), SEEK_SET))
+    {
+        Logger::instance() << "Seek error in writeDataCmd";
         return RLCS_ERR | RLCS_INCMP;
+    }
 
     for (size_t index = 0, memAddr = rlv12Command.memoryAddress_;
         index < rlv12Command.wordCount_; memAddr += 2, ++index)
@@ -72,8 +76,12 @@ u16 CmdProcessor::writeDataCmd (RL01_2 *unit, RLV12Command &rlv12Command)
             controller_->rlxb_[index] = 0;
 
         fwrite (controller_->rlxb_, sizeof (int16_t), awc, unit->filePtr_);
-        // ToDo: Handle possible fwrite error
-        // err = ferror (filePtr_);
+        
+        if (ferror (unit->filePtr_))
+        {
+            Logger::instance() << "Write error in writeDataCmd";
+            return RLCS_ERR | RLCS_INCMP;
+        }
     }
 
     updateHeadPosition 
