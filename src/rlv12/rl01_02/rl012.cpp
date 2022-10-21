@@ -10,7 +10,6 @@ RL01_2::RL01_2 (BusDevice *owningDevice)
     currentDiskAddress_ {0},
     rlStatus_ {RlStatus::UNIT_OFFL},
     driveStatus_ {0},
-    function_ {0},
     running_ {true},
     seekTime_ {0}
 {

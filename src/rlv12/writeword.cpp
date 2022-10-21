@@ -81,10 +81,6 @@ StatusCode RLV12::writeWord (u16 registerAddress, u16 data)
 
             TRACERLV12Command (&trc, GET_FUNC(rlcs));
 
-            // ToDo: Remove unit.function_
-            // The function to be executed is coded in the created RLV12command
-            unit.function_ = GET_FUNC(rlcs);
-
             // We're done using the registers this call. Notify the command
             // processor a command has been issued.
             lock.unlock ();

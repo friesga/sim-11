@@ -85,7 +85,6 @@ class RL01_2 : public Unit
     int32_t currentDiskAddress_;
     Bitmask<RlStatus> rlStatus_;
     int32_t driveStatus_;
-    int32_t function_;
     bool running_;
 
     // Thread simulating seek timing
