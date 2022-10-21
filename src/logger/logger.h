@@ -4,6 +4,7 @@
 #include <fstream>
 #include <string>
 #include <mutex>
+#include <chrono>
 #include <time.h>
 #include <stdio.h>
 
@@ -15,6 +16,7 @@ private:
     static std::mutex logMutex_;
     static Logger logger_;
 
+    inline std::tm localtime_xp (std::time_t timer);
     const std::string currentDateTime ();
 
 protected:
@@ -41,7 +43,7 @@ Logger &Logger::operator<< (T objectToLog)
         // Guard against log file writes from different threads
 	    std::lock_guard<std::mutex> guard{ logMutex_ };
 
-        logFile_ << "[ INFO ][ " << currentDateTime () << "]: " << 
+        logFile_ << "[ INFO ][ " << currentDateTime () << "] " << 
             objectToLog << std::endl;
     }
     return logger_;
