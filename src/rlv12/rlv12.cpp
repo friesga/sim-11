@@ -129,8 +129,8 @@ void RLV12::memAddrToRegs (u32 memoryAddress)
     u16 upper6Bits = memoryAddress >> 16;
     rlba = memoryAddress & BAR_Bits;
     // rlcs = (rlcs & ~RLCS_MEX) | ((upper6Bits & RLCS_M_MEX) << RLCS_V_MEX);
-    rlcs = (rlcs & ~CSR_AddressExtField) | 
-        ((upper6Bits & CSR_AddressExtBits) << CSR_AddressExtPosition);
+    rlcs = (rlcs & ~CSR_AddressExtension) | 
+        ((upper6Bits & CSR_AddressExtMask) << CSR_AddressExtPosition);
 
     if (rlType_ == RlConfig::RLType::RLV12 && _22bit_)
         rlbae = upper6Bits & BAE_Bits; 
@@ -152,12 +152,12 @@ u32 RLV12::memAddrFromRegs ()
 void RLV12::updateBAE ()
 {
     if (rlType_ == RlConfig::RLType::RLV12 && _22bit_)
-        rlbae = (rlbae & ~CSR_AddressExtBits) | 
-            ((rlcs >> CSR_AddressExtPosition) & CSR_AddressExtBits);
+        rlbae = (rlbae & ~CSR_AddressExtMask) | 
+            ((rlcs >> CSR_AddressExtPosition) & CSR_AddressExtMask);
 }
 
 // Get the BA16 and BA17 bits from the given csr
 constexpr u16 RLV12::getBA16BA17 (u16 csr)
 {
-    return (csr >> CSR_AddressExtPosition) & CSR_AddressExtBits;
+    return (csr >> CSR_AddressExtPosition) & CSR_AddressExtMask;
 }

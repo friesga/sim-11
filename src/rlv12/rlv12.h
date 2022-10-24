@@ -76,22 +76,22 @@ class RLV12 : public BusDevice
     static constexpr u16 CSR_Special      = 8;  
 
     static constexpr u16 CSR_AddressExtPosition = 4;
-    static constexpr u16 CSR_AddressExtBits = 3;
-    static constexpr u16 CSR_AddressExtField = 
-        CSR_AddressExtBits << CSR_AddressExtPosition;
+    static constexpr u16 CSR_AddressExtMask = 3;
+    static constexpr u16 CSR_AddressExtension = 
+        CSR_AddressExtMask << CSR_AddressExtPosition;
 
     static constexpr u16 getFunction (u16 csr)
     {
         constexpr u16 CSR_FunctionPosition = 1;
-        constexpr u16 CSR_FunctionBits     = 7;
-        return (csr >> CSR_FunctionPosition) & CSR_FunctionBits;
+        constexpr u16 CSR_FunctionMask     = 7;
+        return (csr >> CSR_FunctionPosition) & CSR_FunctionMask;
     }
 
     static constexpr u16 getDrive (u16 csr)
     {
         constexpr u16 CSR_DrivePosition = 8;
-        constexpr u16 CSR_DriveBits  = 3;
-        return (csr >> CSR_DrivePosition) & CSR_DriveBits;
+        constexpr u16 CSR_DriveMask  = 3;
+        return (csr >> CSR_DrivePosition) & CSR_DriveMask;
     }
 
     static constexpr u16 CSR_InterruptEnable = 1u << 6;
@@ -121,32 +121,32 @@ class RLV12 : public BusDevice
     static constexpr u16 DAR_HeadSelect = 0000020;
 
     static constexpr u16 DAR_SectorPosition   = 0;
-    static constexpr u16 DAR_SectorBits       = 077;
+    static constexpr u16 DAR_SectorMask       = 077;
     static constexpr u16 DAR_Sector = 
-        DAR_SectorBits << DAR_SectorPosition;
+        DAR_SectorMask << DAR_SectorPosition;
     
     static constexpr u16 DAR_TrackPosition    = 6;
-    static constexpr u16 DAR_TrackBits        = 01777;
+    static constexpr u16 DAR_TrackMask        = 01777;
     static constexpr u16 DAR_Track = 
-        DAR_TrackBits << DAR_TrackPosition;
+        DAR_TrackMask << DAR_TrackPosition;
     
     static constexpr u16 DAR_Head0 = 0 << DAR_TrackPosition;
     static constexpr u16 DAR_Head1 = 1u << DAR_TrackPosition;
 
     static constexpr u16 DAR_CylinderPosition = 7;
-    static constexpr u16 DAR_CylinderBits     = 0777;
+    static constexpr u16 DAR_CylinderMask     = 0777;
     static constexpr u16 DAR_Cylinder = 
-        DAR_CylinderBits << DAR_CylinderPosition;
+        DAR_CylinderMask << DAR_CylinderPosition;
 
 
     static constexpr int32_t getCylinder (int32_t diskAddress)
-    { return (diskAddress >> DAR_CylinderPosition) & DAR_CylinderBits; }
+    { return (diskAddress >> DAR_CylinderPosition) & DAR_CylinderMask; }
 
     static constexpr int32_t getTrack (int32_t diskAddress)
-    { return (diskAddress >> DAR_TrackPosition) & DAR_TrackBits; }
+    { return (diskAddress >> DAR_TrackPosition) & DAR_TrackMask; }
 
     static constexpr int32_t getSector (int32_t diskAddress) 
-    { return (diskAddress >> DAR_SectorPosition) & DAR_SectorBits; }
+    { return (diskAddress >> DAR_SectorPosition) & DAR_SectorMask; }
 
     static constexpr int32_t getBlockNumber (int32_t diskAddress)
     { 
@@ -211,11 +211,6 @@ class RLV12 : public BusDevice
     u16 rlba;       // Bus Address register
     u16 rlda;       // Disk address register
     u16 rlbae;      // Bus Address Extension register
-
-
-    // Timing constants
-    // ToDo: rl_swait is superfluous
-    int32_t const rl_swait = 10;    // Seek wait
 
     // Define transfer buffer
     u16 *rlxb_;

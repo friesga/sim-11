@@ -127,8 +127,8 @@ StatusCode RLV12::writeWord (u16 registerAddress, u16 data)
             // bits in the CSR.
             // ToDo: This is an undocumented feature?
             // rlcs = (rlcs & ~RLCS_MEX) | ((rlbae & RLCS_M_MEX) << RLCS_V_MEX);
-            rlcs = (rlcs & ~CSR_AddressExtField) | 
-                    ((rlbae & CSR_AddressExtBits) << CSR_AddressExtPosition);
+            rlcs = (rlcs & ~CSR_AddressExtension) | 
+                    ((rlbae & CSR_AddressExtMask) << CSR_AddressExtPosition);
             break;
 
         default:
