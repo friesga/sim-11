@@ -7,19 +7,6 @@
 #include <string>
 #include <memory>
 
-/* Generic Device CSR bits */
-
-#define CSR_V_GO        0                               // Go 
-#define CSR_V_IE        6                               // Interrupt Enable
-#define CSR_V_DONE      7                               // Done 
-#define CSR_V_BUSY      11                              // Busy
-#define CSR_V_ERR       15                              // Error
-#define CSR_GO          (1u << CSR_V_GO)
-#define CSR_IE          (1u << CSR_V_IE)
-#define CSR_DONE        (1u << CSR_V_DONE)
-#define CSR_BUSY        (1u << CSR_V_BUSY)
-#define CSR_ERR         (1u << CSR_V_ERR)
-
 class QBUS;
 class Unit;
 

@@ -17,85 +17,6 @@
 #include <mutex>                // for std::mutex
 #include <condition_variable>   // for std::condition_variable
 
-// From simh pdp11_defs.h
-// IOPAGEBASE for a 22-bit system
-// #define IOPAGEBASE      017760000                    // 2**22 - 2**13
-// IOPAGEBASE for a 16-bit system
-// #define IOPAGEBASE      0160000 
-
-// #define IOBA_RL         (IOPAGEBASE + 014400)           // RL11
-// #define VEC_RL          0160
-
-// RLV12 constants
-// N.B. RL_NUMCY is the value for a RL01; a RL02 contains 512 cylinders per
-// cartridge.
-// ToDo: Replace definitions by constants (or enums)
-// #define RL_NUMWD        (128)                           // Words/sector
-// #define RL_NUMSC        (40)                            // Sectors/surface
-// #define RL_NUMSF        (2)                             // Surfaces/cylinder
-// #define RL_NUMCY        (256)                           // Cylinders/cartridge
-// #define RL_NUMDRIVES    (4)                             // Drives/controller
-// #define RL_MAXFR        (RL_NUMSC * RL_NUMWD)           // Max transfer
-// #define RL01_SIZE (RL_NUMCY * RL_NUMSF * RL_NUMSC * RL_NUMWD) // Words/cartridge
-// #define RL02_SIZE       (RL01_SIZE * 2)                 // Words/cartridge
-
-// RLCS bits
-// ToDo: Change RLCS_ macro's to enum
-// #define RLCS_DRDY           (0000001)                   // Drive ready 
-// #define RLCS_M_FUNC         (0000007)                   // Function 
-// #define RLCS_MAINTENANCE    (0)
-// #define RLCS_WCHK           (1)
-// #define RLCS_GSTA           (2)
-// #define RLCS_SEEK           (3)
-// #define RLCS_RHDR           (4)
-// #define RLCS_WRITE          (5)
-// #define RLCS_READ           (6)
-// #define RLCS_RNOHDR         (7)
-// #define RLCS_SPECIAL        (8)                        // Internal function, drive state 
-
-// #define RLCS_V_FUNC     (1)
-// #define RLCS_M_MEX      (03)                            // Memory extension 
-// #define RLCS_V_MEX      (4)
-// #define RLCS_MEX        (RLCS_M_MEX << RLCS_V_MEX)
-// #define RLCS_M_DRIVE    (03)
-// #define RLCS_V_DRIVE    (8)
-// #define RLCS_INCMP      (0002000)                       // Incomplete 
-// #define RLCS_CRC        (0004000)                       // CRC error 
-// #define RLCS_HCRC       (RLCS_CRC|RLCS_INCMP)           // Header CRC error 
-// #define RLCS_DLT        (0010000)                       // Data late 
-// #define RLCS_HNF        (RLCS_DLT|RLCS_INCMP)           // Header not found error 
-// #define RLCS_NXM        (0020000)                       // Non-existing memory 
-// #define RLCS_PAR        (RLCS_NXM|RLCS_INCMP)           // Parity error 
-// #define RLCS_DRE        (0040000)                       // Drive error 
-// #define RLCS_ERR        (0100000)                       // Error summary 
-// #define RLCS_ALLERR     (RLCS_DRE|RLCS_NXM|RLCS_HNF|RLCS_CRC|RLCS_INCMP)
-// #define RLCS_RW         (0001776)                       // Read/write 
-// #define GET_FUNC(x)     (((x) >> RLCS_V_FUNC) & RLCS_M_FUNC)
-// #define GET_DRIVE(x)    (((x) >> RLCS_V_DRIVE) & RLCS_M_DRIVE)
-
-// RLDA 
-// #define RLDA_GS         (0000002)                       /* get status */
-// #define RLDA_SK_DIR     (0000004)                       /* direction */
-// #define RLDA_GS_CLR     (0000010)                       /* clear errors */
-// #define RLDA_SK_HD      (0000020)                       /* head select */
-
-// #define RLDA_V_SECT     (0)                             /* sector */
-// #define RLDA_M_SECT     (077)
-// #define RLDA_V_TRACK    (6)                             /* track */
-// #define RLDA_M_TRACK    (01777)
-// #define RLDA_HD0        (0 << RLDA_V_TRACK)
-// #define RLDA_HD1        (1u << RLDA_V_TRACK)
-// #define RLDA_V_CYL      (7)                             /* cylinder */
-// #define RLDA_M_CYL      (0777)
-// #define RLDA_TRACK      (RLDA_M_TRACK << RLDA_V_TRACK)
-// #define RLDA_CYL        (RLDA_M_CYL << RLDA_V_CYL)
-
-// RLBA
-// #define RLBA_IMP        (0177777)                       // Implemented bits
-
-// RLBAE 
-// #define RLBAE_IMP       (0000077)                       // Implemented bits
-
 // Forward declaration
 class CmdProcessor;
 
@@ -107,27 +28,27 @@ class RLV12 : public BusDevice
 
     // RL01 Recording Capacity definitions
     // An RL02 drive has 512 cylinders per cartridge
-    static constexpr int32_t wordsPerSector        = 128; // RL_NUMWD
-    static constexpr int32_t sectorsPerSurface     = 40;  // RL_NUMSC
-    static constexpr int32_t surfacesPerCylinder   = 2;   // RL_NUMSF
-    static constexpr int32_t cylindersPerCartridge = 256; // RL_NUMCY
+    static constexpr int32_t wordsPerSector        = 128;
+    static constexpr int32_t sectorsPerSurface     = 40;
+    static constexpr int32_t surfacesPerCylinder   = 2;
+    static constexpr int32_t cylindersPerCartridge = 256;
 
-    static constexpr int32_t maxDrivesPerController = 4;  // RL_NUMDRIVES
-    static constexpr int32_t maxTransfer = sectorsPerSurface * wordsPerSector; // RL_MAXFR
+    static constexpr int32_t maxDrivesPerController = 4;
+    static constexpr int32_t maxTransfer = sectorsPerSurface * wordsPerSector;
 
     static constexpr int32_t RL01_WordsPerCartridge = 
         cylindersPerCartridge * surfacesPerCylinder * sectorsPerSurface *
-        wordsPerSector;                                 // RL01_SIZE
+        wordsPerSector;
     static constexpr int32_t RL02_WordsPerCartridge = 
-        RL01_WordsPerCartridge * 2;                     // RL02_SIZE
+        RL01_WordsPerCartridge * 2;
 
     // Define the address of the IOPage for a 16-bit system. The definition
     // for a 22-bit system woule be 017760000 (i.e. 2**22 - 2**13).
     static constexpr u32 IOPageBase = 0160000;          // IOPAGEBASE
 
     // Define the default base address and vector of the device
-    static constexpr u32 RLV_BaseAddress = IOPageBase + 014400; // IOBA_RL
-    static constexpr u32 RLV_Vector = 0160;                     // VEC_RL
+    static constexpr u32 RLV_BaseAddress = IOPageBase + 014400;
+    static constexpr u32 RLV_Vector = 0160;
     
     // Define RLV12 registers as offsets from the controllers base address
     enum
@@ -173,49 +94,49 @@ class RLV12 : public BusDevice
         return (csr >> CSR_DrivePosition) & CSR_DriveBits;
     }
 
-    static constexpr u16 CSR_InterruptEnable = 1u << 6;     // CSR_IE
-    static constexpr u16 CSR_ControllerReady = 1u << 7;     // CSR_DONE
+    static constexpr u16 CSR_InterruptEnable = 1u << 6;
+    static constexpr u16 CSR_ControllerReady = 1u << 7;
     // CSR Error bit definitions. Not all error codes are actually used.
     static constexpr u16 CSR_ErrorCodePosition   = 10;
-    static constexpr u16 CSR_OperationIncomplete = 1 << CSR_ErrorCodePosition; // RLCS_INCMP
-    static constexpr u16 CSR_ReadDataCRC         = 2 << CSR_ErrorCodePosition; // RLCS_CRC
-    static constexpr u16 CSR_HeaderCRC           = 3 << CSR_ErrorCodePosition; // RLCS_HCRC
-    static constexpr u16 CSR_DataLate            = 4 << CSR_ErrorCodePosition; // RLCS_DLT
-    static constexpr u16 CSR_HeaderNotFound      = 5 << CSR_ErrorCodePosition; // RLCS_HNF
-    static constexpr u16 CSR_NonExistentMemory   = 8 << CSR_ErrorCodePosition; // RLCS_NXM
-    static constexpr u16 CSR_MemoryParityError   = 9 << CSR_ErrorCodePosition; // RLCS_PAR
-    static constexpr u16 CSR_DriveError          = 1u << 14;                   // RLCS_DRE
-    static constexpr u16 CSR_CompositeError      = 1u << 15;                   // RLCS_ERR
+    static constexpr u16 CSR_OperationIncomplete = 1 << CSR_ErrorCodePosition;
+    static constexpr u16 CSR_ReadDataCRC         = 2 << CSR_ErrorCodePosition;
+    static constexpr u16 CSR_HeaderCRC           = 3 << CSR_ErrorCodePosition;
+    static constexpr u16 CSR_DataLate            = 4 << CSR_ErrorCodePosition;
+    static constexpr u16 CSR_HeaderNotFound      = 5 << CSR_ErrorCodePosition;
+    static constexpr u16 CSR_NonExistentMemory   = 8 << CSR_ErrorCodePosition;
+    static constexpr u16 CSR_MemoryParityError   = 9 << CSR_ErrorCodePosition;
+    static constexpr u16 CSR_DriveError          = 1u << 14;
+    static constexpr u16 CSR_CompositeError      = 1u << 15;
     static constexpr u16 CSR_AnyError            = 
         CSR_DriveError  | CSR_NonExistentMemory | CSR_HeaderNotFound |
-        CSR_ReadDataCRC | CSR_OperationIncomplete;                             // RLCS_ALLERR
-    static constexpr u16 CSR_ReadWriteBits       = 0001776;                    // RLCS_RW
+        CSR_ReadDataCRC | CSR_OperationIncomplete;
+    static constexpr u16 CSR_ReadWriteBits       = 0001776;
 
     // Disk Address Register bit definitions
     // Note that the registers contents can have different meanings depending
     // on the function being performed.
-    static constexpr u16 DAR_GetStatus  = 0000002;   // RLDA_GS
-    static constexpr u16 DAR_Direction  = 0000004;   // RLDA_SK_DIR
-    static constexpr u16 DAR_Reset      = 0000010;   // RLDA_GS_CLR
-    static constexpr u16 DAR_HeadSelect = 0000020;   // RLDA_SK_HD
+    static constexpr u16 DAR_GetStatus  = 0000002;
+    static constexpr u16 DAR_Direction  = 0000004;
+    static constexpr u16 DAR_Reset      = 0000010;
+    static constexpr u16 DAR_HeadSelect = 0000020;
 
-    static constexpr u16 DAR_SectorPosition   = 0;            // RLDA_V_SECT
-    static constexpr u16 DAR_SectorBits       = 077;          // RLDA_M_SECT
+    static constexpr u16 DAR_SectorPosition   = 0;
+    static constexpr u16 DAR_SectorBits       = 077;
     static constexpr u16 DAR_Sector = 
         DAR_SectorBits << DAR_SectorPosition;
     
-    static constexpr u16 DAR_TrackPosition    = 6;            // RLDA_V_TRACK
-    static constexpr u16 DAR_TrackBits        = 01777;        // RLDA_M_TRACK
+    static constexpr u16 DAR_TrackPosition    = 6;
+    static constexpr u16 DAR_TrackBits        = 01777;
     static constexpr u16 DAR_Track = 
-        DAR_TrackBits << DAR_TrackPosition;                   // RLDA_TRACK
+        DAR_TrackBits << DAR_TrackPosition;
     
-    static constexpr u16 DAR_Head0 = 0 << DAR_TrackPosition;  // RLDA_HD0
-    static constexpr u16 DAR_Head1 = 1u << DAR_TrackPosition; // RLDA_HD1
+    static constexpr u16 DAR_Head0 = 0 << DAR_TrackPosition;
+    static constexpr u16 DAR_Head1 = 1u << DAR_TrackPosition;
 
-    static constexpr u16 DAR_CylinderPosition = 7;            // RLDA_V_CYL
-    static constexpr u16 DAR_CylinderBits     = 0777;         // RLDA_M_CYL
+    static constexpr u16 DAR_CylinderPosition = 7;
+    static constexpr u16 DAR_CylinderBits     = 0777;
     static constexpr u16 DAR_Cylinder = 
-        DAR_CylinderBits << DAR_CylinderPosition;             // RLDA_CYL
+        DAR_CylinderBits << DAR_CylinderPosition;
 
 
     static constexpr int32_t getCylinder (int32_t diskAddress)
@@ -239,34 +160,34 @@ class RLV12 : public BusDevice
     // are also used in the units drive status.
     // 
     // Bits 0:2 define the state of the drive (STA, STB and STC).
-    static constexpr u16 MPR_GS_State         = 07;     // RLDS_M_STATE
-    static constexpr u16 MPR_GS_LoadCartridge = 0;      // RLDS_LOAD
-    static constexpr u16 MPR_GS_SpinUp        = 1;      // RLDS_SPIN
-    static constexpr u16 MPR_GS_BrushCycle    = 2;      // RLDS_BRUSH
-    static constexpr u16 MPR_GS_LoadHeads     = 3;      // RLDS_HLOAD
-    static constexpr u16 MPR_GS_Seek          = 4;      // RLDS_SEEK
-    static constexpr u16 MPR_GS_LockOn        = 5;      // RLDS_LOCK
-    static constexpr u16 MPR_GS_UnloadHeads   = 6;      // RLDS_UNL
-    static constexpr u16 MPR_GS_SpinDown      = 7;      // RLDS_DOWN
+    static constexpr u16 MPR_GS_State         = 07;
+    static constexpr u16 MPR_GS_LoadCartridge = 0;
+    static constexpr u16 MPR_GS_SpinUp        = 1;
+    static constexpr u16 MPR_GS_BrushCycle    = 2;
+    static constexpr u16 MPR_GS_LoadHeads     = 3;
+    static constexpr u16 MPR_GS_Seek          = 4;
+    static constexpr u16 MPR_GS_LockOn        = 5;
+    static constexpr u16 MPR_GS_UnloadHeads   = 6;
+    static constexpr u16 MPR_GS_SpinDown      = 7;
     // Definition of MPR bits 3:15
-    static constexpr u16 MPR_GS_BrushHome        = 0000010; // RLDS_BHO
-    static constexpr u16 MPR_GS_HeadsOut         = 0000020; // RLDS_HDO
-    static constexpr u16 MPR_GS_CoverOpen        = 0000040; // RLDS_CVO
-    static constexpr u16 MPR_GS_HeadSelect       = 0000100; // RLDS_HD
-    static constexpr u16 MPR_GS_DriveType        = 0000200; // RLDS_RL02
-    static constexpr u16 MPR_GS_DriveSelectError = 0000400; // RLDS_DSE
-    static constexpr u16 MPR_GS_VolumeCheck      = 0001000; // RLDS_VCK
-    static constexpr u16 MPR_GS_WriteGateError   = 0002000; // RLDS_WGE
-    static constexpr u16 MPR_GS_SpinError        = 0004000; // RLDS_SPE
-    static constexpr u16 MPR_GS_SeekTimeOut      = 0010000; // RLDS_STO
-    static constexpr u16 MPR_GS_WriteLock        = 0020000; // RLDS_WLK
-    static constexpr u16 MPR_GS_CurrentHeadError = 0040000; // RLDS_HCE
-    static constexpr u16 MPR_GS_WriteDataError   = 0100000; // RLDS_WDE
+    static constexpr u16 MPR_GS_BrushHome        = 0000010;
+    static constexpr u16 MPR_GS_HeadsOut         = 0000020;
+    static constexpr u16 MPR_GS_CoverOpen        = 0000040;
+    static constexpr u16 MPR_GS_HeadSelect       = 0000100;
+    static constexpr u16 MPR_GS_DriveType        = 0000200;
+    static constexpr u16 MPR_GS_DriveSelectError = 0000400;
+    static constexpr u16 MPR_GS_VolumeCheck      = 0001000;
+    static constexpr u16 MPR_GS_WriteGateError   = 0002000;
+    static constexpr u16 MPR_GS_SpinError        = 0004000;
+    static constexpr u16 MPR_GS_SeekTimeOut      = 0010000;
+    static constexpr u16 MPR_GS_WriteLock        = 0020000;
+    static constexpr u16 MPR_GS_CurrentHeadError = 0040000;
+    static constexpr u16 MPR_GS_WriteDataError   = 0100000;
     static constexpr u16 MPR_GS_AnyError = 
         MPR_GS_WriteDataError | MPR_GS_CurrentHeadError | 
         MPR_GS_WriteLock      | MPR_GS_SeekTimeOut      |
         MPR_GS_SpinError      | MPR_GS_WriteGateError   | 
-        MPR_GS_VolumeCheck    | MPR_GS_DriveSelectError;    // RLDS_ERR
+        MPR_GS_VolumeCheck    | MPR_GS_DriveSelectError;
 
     // DR RDY will be negated [i.e. cleared] when a drive error
     // occurs except when an attempt has been made to write on a
@@ -277,10 +198,10 @@ class RLV12 : public BusDevice
         MPR_GS_SpinError      |MPR_GS_WriteGateError   |MPR_GS_DriveSelectError;
 
     // Bus Address Register
-    static constexpr u16 BAR_Bits = 0177777;           // RLBA_IMP
+    static constexpr u16 BAR_Bits = 0177777;
 
     // Bus Address Extension register
-    static constexpr u16 BAE_Bits = 0000077;           // RLBAE_IMP
+    static constexpr u16 BAE_Bits = 0000077;
 
     // Define controller registers
     // The MPR is not a single physical entity like the other registers. It
