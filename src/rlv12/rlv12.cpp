@@ -12,11 +12,11 @@
 // ToDo: Remove default RLV12 constructor
 RLV12::RLV12 ()
     :
-    rlcs {0},
-    rlba {0},
-    rlda {0},
-    rlbae {0},
-    rlxb_ {nullptr},
+    csr_ {0},
+    bar_ {0},
+    dar_ {0},
+    bae_ {0},
+    dataBuffer_ {nullptr},
     rlType_ {RlConfig::RLType::RLV12},
     _22bit_ {false},
     wordCounter_ {0},
@@ -27,22 +27,22 @@ RLV12::RLV12 ()
     vector_ = RLV_Vector;
 
     // Allocate the transfer buffer, initializing to zero
-    rlxb_ = new (std::nothrow) u16[maxTransfer]();
+    dataBuffer_ = new (std::nothrow) u16[maxTransfer]();
 
-    if (rlxb_ == nullptr)
+    if (dataBuffer_ == nullptr)
         throw ("Allocating memory for transfer buffer failed");
 
     // Start the command processor
-    cmdProcessor = std::make_unique<CmdProcessor> (this);
+    cmdProcessor_ = std::make_unique<CmdProcessor> (this);
 }
 
 RLV12::RLV12 (RlConfig *rlConfig)
     :
-    rlcs {0},
-    rlba {0},
-    rlda {0},
-    rlbae {0},
-    rlxb_ {nullptr},
+    csr_ {0},
+    bar_ {0},
+    dar_ {0},
+    bae_ {0},
+    dataBuffer_ {nullptr},
     rlType_ {rlConfig->rlType},
     _22bit_ {rlConfig->_22bit},
     wordCounter_ {0},
@@ -54,21 +54,21 @@ RLV12::RLV12 (RlConfig *rlConfig)
     vector_ = (rlConfig->vector > 0) ? rlConfig->vector : RLV_Vector;
 
     // Allocate the transfer buffer, initializing to zero
-    rlxb_ = new (std::nothrow) u16[maxTransfer]();
+    dataBuffer_ = new (std::nothrow) u16[maxTransfer]();
 
-    if (rlxb_ == nullptr)
+    if (dataBuffer_ == nullptr)
         throw ("Allocating memory for transfer buffer failed");
 
     // Start the command processor
-    cmdProcessor = std::make_unique<CmdProcessor> (this);
+    cmdProcessor_ = std::make_unique<CmdProcessor> (this);
 }
 
 // Destructor to deallocate transfer buffer
 // ToDo: Delete copy constructor and copy assignment operator
 RLV12::~RLV12 ()
 {
-    if (rlxb_ != nullptr)
-        delete [] rlxb_;
+    if (dataBuffer_ != nullptr)
+        delete [] dataBuffer_;
 }
 
 //
@@ -85,13 +85,13 @@ void RLV12::reset ()
     constexpr u16 properBits = 037576;
 
     // Reset CRS
-    rlcs &= ~properBits;
-    if (!(rlcs & CSR_DriveError))
-        rlcs &= ~CSR_CompositeError;
+    csr_ &= ~properBits;
+    if (!(csr_ & CSR_DriveError))
+        csr_ &= ~CSR_CompositeError;
 
-    rlba = 0;
-    rlda = 0;
-    rlbae = 0;
+    bar_ = 0;
+    dar_ = 0;
+    bae_ = 0;
     
     // ToDo: Clear interrupt request
     // CLR_INT(RL);
@@ -127,13 +127,13 @@ void RLV12::memAddrToRegs (u32 memoryAddress)
     // Load the lower 16 bits in the BAR, the upper two bits in the RLCS
     // and the upper 6 bits in the BAE
     u16 upper6Bits = memoryAddress >> 16;
-    rlba = memoryAddress & BAR_Bits;
+    bar_ = memoryAddress & BAR_Mask;
     // rlcs = (rlcs & ~RLCS_MEX) | ((upper6Bits & RLCS_M_MEX) << RLCS_V_MEX);
-    rlcs = (rlcs & ~CSR_AddressExtension) | 
+    csr_ = (csr_ & ~CSR_AddressExtension) | 
         ((upper6Bits & CSR_AddressExtMask) << CSR_AddressExtPosition);
 
     if (rlType_ == RlConfig::RLType::RLV12 && _22bit_)
-        rlbae = upper6Bits & BAE_Bits; 
+        bae_ = upper6Bits & BAE_Mask; 
 }
 
 // Get a 16-, 18- or 22-bit address from the BA, CSR and (in case of 22-bit
@@ -142,9 +142,9 @@ void RLV12::memAddrToRegs (u32 memoryAddress)
 u32 RLV12::memAddrFromRegs ()
 {
     if (!(rlType_ == RlConfig::RLType::RLV12 && _22bit_))
-        return (getBA16BA17 (rlcs) << 16) | rlba;
+        return (getBA16BA17 (csr_) << 16) | bar_;
     else
-        return (rlbae << 16) | rlba;
+        return (bae_ << 16) | bar_;
 }
 
 // Update the BAE register bits 00 and 01 from the contents of the CSR BA16
@@ -152,12 +152,12 @@ u32 RLV12::memAddrFromRegs ()
 void RLV12::updateBAE ()
 {
     if (rlType_ == RlConfig::RLType::RLV12 && _22bit_)
-        rlbae = (rlbae & ~CSR_AddressExtMask) | 
-            ((rlcs >> CSR_AddressExtPosition) & CSR_AddressExtMask);
+        bae_ = (bae_ & ~CSR_AddressExtMask) | 
+            ((csr_ >> CSR_AddressExtPosition) & CSR_AddressExtMask);
 }
 
-// Get the BA16 and BA17 bits from the given csr
-constexpr u16 RLV12::getBA16BA17 (u16 csr)
+// Get the BA16 and BA17 bits from the given csr_
+constexpr u16 RLV12::getBA16BA17 (u16 csr_)
 {
-    return (csr >> CSR_AddressExtPosition) & CSR_AddressExtMask;
+    return (csr_ >> CSR_AddressExtPosition) & CSR_AddressExtMask;
 }

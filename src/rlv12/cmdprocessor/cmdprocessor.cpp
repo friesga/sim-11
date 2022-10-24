@@ -16,7 +16,7 @@ CmdProcessor::~CmdProcessor()
     running_ = false;
 
     // Wake up the command processor
-    controller_->signal.notify_one ();
+    controller_->signal_.notify_one ();
 
 	cmdProcessorThread_.join();
 }

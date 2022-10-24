@@ -80,18 +80,18 @@ class RLV12 : public BusDevice
     static constexpr u16 CSR_AddressExtension = 
         CSR_AddressExtMask << CSR_AddressExtPosition;
 
-    static constexpr u16 getFunction (u16 csr)
+    static constexpr u16 getFunction (u16 csr_)
     {
         constexpr u16 CSR_FunctionPosition = 1;
         constexpr u16 CSR_FunctionMask     = 7;
-        return (csr >> CSR_FunctionPosition) & CSR_FunctionMask;
+        return (csr_ >> CSR_FunctionPosition) & CSR_FunctionMask;
     }
 
-    static constexpr u16 getDrive (u16 csr)
+    static constexpr u16 getDrive (u16 csr_)
     {
         constexpr u16 CSR_DrivePosition = 8;
         constexpr u16 CSR_DriveMask  = 3;
-        return (csr >> CSR_DrivePosition) & CSR_DriveMask;
+        return (csr_ >> CSR_DrivePosition) & CSR_DriveMask;
     }
 
     static constexpr u16 CSR_InterruptEnable = 1u << 6;
@@ -198,22 +198,22 @@ class RLV12 : public BusDevice
         MPR_GS_SpinError      |MPR_GS_WriteGateError   |MPR_GS_DriveSelectError;
 
     // Bus Address Register
-    static constexpr u16 BAR_Bits = 0177777;
+    static constexpr u16 BAR_Mask = 0177777;
 
     // Bus Address Extension register
-    static constexpr u16 BAE_Bits = 0000077;
+    static constexpr u16 BAE_Mask = 0000077;
 
     // Define controller registers
     // The MPR is not a single physical entity like the other registers. It
     // consists of two separate registers, the word counter and the FIFO output
     // buffer, both bearing the same base address. (EK-RLV12-TD-001 pg. 3-4)
-    u16 rlcs;       // Control/status register
-    u16 rlba;       // Bus Address register
-    u16 rlda;       // Disk address register
-    u16 rlbae;      // Bus Address Extension register
+    u16 csr_;       // Control/status register
+    u16 bar_;       // Bus Address register
+    u16 dar_;       // Disk address register
+    u16 bae_;       // Bus Address Extension register
 
     // Define transfer buffer
-    u16 *rlxb_;
+    u16 *dataBuffer_;
 
     // Definition of the controller type and the presence of the 22-bit option
     // when configured as a RLV12 controller.
@@ -232,13 +232,13 @@ class RLV12 : public BusDevice
     };
 
     // Definition of the pointer to the command processor
-    std::unique_ptr<CmdProcessor> cmdProcessor;
+    std::unique_ptr<CmdProcessor> cmdProcessor_;
 
     // Safe guard against controller access from multiple service threads
     std::mutex controllerMutex_;
 
     // Condition variable to wake up the command processor
-    std::condition_variable signal;
+    std::condition_variable signal_;
 
     // The MPR consists of two separate registers, the word counter and the
     // FIFO output buffer, both bearing the same base address. The word
@@ -287,7 +287,7 @@ public:
     u32 memAddrFromRegs ();
     void updateBAE ();
     u16 rlcsPlusDriveStatus (RL01_2 &unit);
-    constexpr u16 getBA16BA17 (u16 csr);
+    constexpr u16 getBA16BA17 (u16 csr_);
 };
 
 

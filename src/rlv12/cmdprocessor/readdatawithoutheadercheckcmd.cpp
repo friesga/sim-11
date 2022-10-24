@@ -51,21 +51,21 @@ u16 CmdProcessor::readDataWithoutHeaderCheckCmd (RL01_2 *unit,
     }
 
     // Read wordCount * 2 bytes; returned is the number of bytes read 
-    int32_t numBytes = fread (controller_->rlxb_, sizeof (int16_t), 
+    int32_t numBytes = fread (controller_->dataBuffer_, sizeof (int16_t), 
         rlv12Command.wordCount_, unit->filePtr_);
 
     if (!ferror (unit->filePtr_))
     {
         // Clear the part of the buffer not filled by the read
         for (size_t index = numBytes; index < rlv12Command.wordCount_; ++index)
-            controller_->rlxb_[index] = 0;
+            controller_->dataBuffer_[index] = 0;
 
         // Transfer words in buffer
         for (size_t index = 0, memAddr = rlv12Command.memoryAddress_;
             index < rlv12Command.wordCount_; memAddr += 2, ++index)
         {
             if (!controller_->bus->writeWord (memAddr, 
-                   controller_->rlxb_[index]))
+                   controller_->dataBuffer_[index]))
                 rlcsValue = RLV12::CSR_CompositeError | 
                     RLV12::CSR_NonExistentMemory;
         }

@@ -44,14 +44,14 @@ u16 CmdProcessor::writeCheckCmd (RL01_2 *unit, RLV12Command &rlv12Command)
         return RLV12::CSR_CompositeError | RLV12::CSR_OperationIncomplete;
     }
 
-    size_t numBytes = fread (controller_->rlxb_, sizeof (int16_t), 
+    size_t numBytes = fread (controller_->dataBuffer_, sizeof (int16_t), 
         rlv12Command.wordCount_, unit->filePtr_);
 
     if (!ferror (unit->filePtr_))
     {
         // Clear remainder of buffer
         for (size_t index = numBytes; index < rlv12Command.wordCount_; ++index)
-            controller_->rlxb_[index] = 0;
+            controller_->dataBuffer_[index] = 0;
 
         // Save wordCount
         size_t numWordsToCheck = rlv12Command.wordCount_;
@@ -72,7 +72,7 @@ u16 CmdProcessor::writeCheckCmd (RL01_2 *unit, RLV12Command &rlv12Command)
 
             // Check read word with buffer
             // ToDo: Quit for loop when an inequality is detected?
-            if (comp != controller_->rlxb_[rlv12Command.wordCount_])
+            if (comp != controller_->dataBuffer_[rlv12Command.wordCount_])
                 rlcsValue = RLV12::CSR_CompositeError | RLV12::CSR_ReadDataCRC;
         }
     }

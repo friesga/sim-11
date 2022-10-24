@@ -6,7 +6,7 @@
 // value to be returned to the caller. In case Drive Error is set,
 // Composite Error is also set.
 // 
-// The DRDY signal is sent by the selected drive to indicate that
+// The DRDY signal_ is sent by the selected drive to indicate that
 // it is ready to read or write or seek.  It is sent when the
 // heads are not moving and are locked onto a cylinder.  This is
 // continuously monitored by the drive and controller.
@@ -24,7 +24,7 @@
 // currently selected drive.
 u16 RLV12::rlcsPlusDriveStatus (RL01_2 &unit)
 {
-    u16 rlcsCombined {rlcs};
+    u16 rlcsCombined {csr_};
 
     if (unit.driveStatus_ & MPR_GS_AnyError)
         rlcsCombined |= CSR_DriveError;

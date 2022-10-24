@@ -19,19 +19,19 @@ StatusCode RLV12::read (u16 registerAddress, u16* data)
             // Add the Drive Ready and Drive Error bits to the CSR be 
             // returned. This avoids having to change the actual CSR and
             // having to lock the controller mutex.
-            *data = rlcsPlusDriveStatus (units_[getDrive (rlcs)]);
-            TRACERLV12Registers (&trc, "read CSR", *data, rlba,
-                rlda, rlxb_[0], rlbae);
+            *data = rlcsPlusDriveStatus (units_[getDrive (csr_)]);
+            TRACERLV12Registers (&trc, "read CSR", *data, bar_,
+                dar_, dataBuffer_[0], bae_);
             break;
 
         case BAR:
             // Bus Address register
-            *data = rlba & BAR_Bits;
+            *data = bar_ & BAR_Mask;
             break;
 
         case DAR:
             // Disk Address register
-            *data = rlda;
+            *data = dar_;
             break;
 
         case MPR: 
@@ -39,7 +39,7 @@ StatusCode RLV12::read (u16 registerAddress, u16* data)
             // *data = rlmpr;
             // rlmpr = rlmpr1;         // ripple data
             // rlmpr1 = rlmpr2;
-            *data = rlxb_[fifoIndex_++];
+            *data = dataBuffer_[fifoIndex_++];
             break;
 
         case BAE:
@@ -49,7 +49,7 @@ StatusCode RLV12::read (u16 registerAddress, u16* data)
             if (!(rlType_ == RlConfig::RLType::RLV12 && _22bit_))
                return StatusCode::NonExistingMemory;
 
-            *data = rlbae & BAE_Bits;
+            *data = bae_ & BAE_Mask;
             break;
 
         default:

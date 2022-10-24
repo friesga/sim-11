@@ -37,14 +37,14 @@ u16 CmdProcessor::seekCmd (RL01_2 *unit, RLV12Command &rlv12Command)
     currentCylinder = RLV12::getCylinder (unit->currentDiskAddress_);
 
     // ToDo: offset to be passed in command
-    offset = RLV12::getCylinder (controller_->rlda);
+    offset = RLV12::getCylinder (controller_->dar_);
 
     // Seek direction in or out?
     // According to the RL01/RL02 User Guide (EK-RL012-UG-005), par 4.3.4: 
     // If the difference word is large enough that the heads attempt to move
     // past the innermost or outermost limits, the head will stop at the
     // guard band and retreat to the first even-numbered data track.
-    if (controller_->rlda & RLV12::DAR_Direction)
+    if (controller_->dar_ & RLV12::DAR_Direction)
     {
         // Outwards
         newCylinder = currentCylinder + offset;
@@ -72,7 +72,7 @@ u16 CmdProcessor::seekCmd (RL01_2 *unit, RLV12Command &rlv12Command)
     // ToDo: If a head switch, sector should be sectorsPerSurface/2?
     // Put on track
     unit->currentDiskAddress_ = (newCylinder << RLV12::DAR_CylinderPosition) |
-        ((controller_->rlda & RLV12::DAR_HeadSelect) ? 
+        ((controller_->dar_ & RLV12::DAR_HeadSelect) ? 
             RLV12::DAR_Head1 : RLV12::DAR_Head0);
 
     // Real timing (EK-RLV12-TD-001 and EK-RL012-UG-005):

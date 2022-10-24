@@ -35,7 +35,7 @@ void CmdProcessor::updateHeadPosition
             break;
 
         case CmdProcessor::HeadPositionProcedure::DiskAddressRegister:
-            unit->currentDiskAddress_ = controller_->rlda;
+            unit->currentDiskAddress_ = controller_->dar_;
             break;
     }
 

@@ -37,18 +37,18 @@ StatusCode RLV12::writeWord (u16 registerAddress, u16 data)
             // Control/Status Register
             // The next statement is superfluous as the BA16 ans BA17 bits
             // are immediately overwritten by the next statement
-            // rlcs = (rlcs & ~RLCS_MEX) | ((rlbae & RLCS_M_MEX) << RLCS_V_MEX);
+            // rlcs = (rlcs & ~RLCS_MEX) | ((bae_ & RLCS_M_MEX) << RLCS_V_MEX);
 
             // Set the writable bits in the CSR. CRDY will be cleared by the
             // host software to execute the command specified in the CSR.
-            rlcs = (rlcs & ~CSR_ReadWriteBits) | (data & CSR_ReadWriteBits);
+            csr_ = (csr_ & ~CSR_ReadWriteBits) | (data & CSR_ReadWriteBits);
 
             // The [DRDY] bit is cleared when a seek or head-select operation
             // is initiated [...] (EK-RLV12-TD-001, Table 3-3).
             // The DRDY bit has to be cleared at this point as we cannot
             // guarantee it will be cleared by the command processor before
             // the CSR is read by the host software.
-            if (getFunction (rlcs) == CSR_Seek)
+            if (getFunction (csr_) == CSR_Seek)
                 unit.driveStatus_ = 
                     (unit.driveStatus_ & ~MPR_GS_State) | MPR_GS_Seek;
 
@@ -56,8 +56,8 @@ StatusCode RLV12::writeWord (u16 registerAddress, u16 data)
             // 00 and 01 in the BAE register
             updateBAE ();
 
-            TRACERLV12Registers (&trc, "write CSR", rlcs, rlba, rlda, 
-                rlxb_[0], rlbae);
+            TRACERLV12Registers (&trc, "write CSR", csr_, bar_, dar_, 
+                dataBuffer_[0], bae_);
 
             // Commands to the controller are only executed with the CRDY (DONE)
             // bit is cleared by software.  If set, check for interrupts and return.
@@ -66,7 +66,7 @@ StatusCode RLV12::writeWord (u16 registerAddress, u16 data)
                 // Ready set?
                 if ((data & CSR_InterruptEnable) == 0)
                     bus->clearInterrupt (TrapPriority::BR4, 4);
-                else if ((rlcs & (CSR_ControllerReady + CSR_InterruptEnable))
+                else if ((csr_ & (CSR_ControllerReady + CSR_InterruptEnable))
                         == CSR_ControllerReady)
                     bus->setInterrupt (TrapPriority::BR4, 4, vector_);
 
@@ -78,14 +78,14 @@ StatusCode RLV12::writeWord (u16 registerAddress, u16 data)
             // At the start of every command errors are cleared. Note that
             // Composite Error is cleared (or set) in read(), based on the
             // setting of the other error bits.
-            rlcs &= ~CSR_AnyError;                   
+            csr_ &= ~CSR_AnyError;                   
 
-            TRACERLV12Command (&trc, getFunction (rlcs));
+            TRACERLV12Command (&trc, getFunction (csr_));
 
             // We're done using the registers this call. Notify the command
             // processor a command has been issued.
             lock.unlock ();
-            signal.notify_one ();
+            signal_.notify_one ();
             break;
 
         case BAR:
@@ -97,13 +97,13 @@ StatusCode RLV12::writeWord (u16 registerAddress, u16 data)
             //
             // The VRLBC0 diagnostics makes clear that bit 0 can be read and
             // written on the RLV11 and RLV12 and always reads as 0 on an RL11.
-            rlba = data & (rlType_ == 
+            bar_ = data & (rlType_ == 
                 RlConfig::RLType::RL11 ? 0177776 : 0177777);
             break;
 
         case DAR:
             // Disk Address Register     
-            rlda = data;
+            dar_ = data;
             break;
 
         case MPR:
@@ -121,14 +121,14 @@ StatusCode RLV12::writeWord (u16 registerAddress, u16 data)
             if (registerAddress & 1)
                 return StatusCode::OK;
 
-            rlbae = data & BAE_Bits;
+            bae_ = data & BAE_Mask;
 
             // Load bits 00 and 01 (BA16 and BA17) into the corresponding
             // bits in the CSR.
             // ToDo: This is an undocumented feature?
-            // rlcs = (rlcs & ~RLCS_MEX) | ((rlbae & RLCS_M_MEX) << RLCS_V_MEX);
-            rlcs = (rlcs & ~CSR_AddressExtension) | 
-                    ((rlbae & CSR_AddressExtMask) << CSR_AddressExtPosition);
+            // rlcs = (rlcs & ~RLCS_MEX) | ((bae_ & RLCS_M_MEX) << RLCS_V_MEX);
+            csr_ = (csr_ & ~CSR_AddressExtension) | 
+                    ((bae_ & CSR_AddressExtMask) << CSR_AddressExtPosition);
             break;
 
         default:

@@ -64,7 +64,7 @@ u16 CmdProcessor::writeDataCmd (RL01_2 *unit, RLV12Command &rlv12Command)
             rlv12Command.wordCount_ -= index;
             break;
         }
-        controller_->rlxb_[index] = tmpValue;
+        controller_->dataBuffer_[index] = tmpValue;
     }
 
     // Any xfer?
@@ -76,9 +76,9 @@ u16 CmdProcessor::writeDataCmd (RL01_2 *unit, RLV12Command &rlv12Command)
 
         for (size_t index = rlv12Command.wordCount_; 
                 index < numWordsToWrite; ++index)
-            controller_->rlxb_[index] = 0;
+            controller_->dataBuffer_[index] = 0;
 
-        fwrite (controller_->rlxb_, sizeof (int16_t), numWordsToWrite, unit->filePtr_);
+        fwrite (controller_->dataBuffer_, sizeof (int16_t), numWordsToWrite, unit->filePtr_);
         
         if (ferror (unit->filePtr_))
         {

@@ -32,7 +32,7 @@ u16 CmdProcessor::finishDataTransferCmd (RL01_2 *unit,
 
     // If we ran off the end of the track, return 40 in rlda, but keep
     // track over a legitimate sector (0)?
-    controller_->rlda += 
+    controller_->dar_ += 
         ((rlv12Command.wordCount_ + 
             (RLV12::wordsPerSector - 1)) / RLV12::wordsPerSector);
 
