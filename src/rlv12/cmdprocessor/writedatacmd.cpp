@@ -14,23 +14,24 @@ u16 CmdProcessor::writeDataCmd (RL01_2 *unit, RLV12Command &rlv12Command)
     if (!unitAvailable (unit))
     {
         // Set spin error
-        unit->driveStatus_ |= RLDS_SPE;
+        unit->driveStatus_ |= RLV12::MPR_GS_SpinError;
 
         // Flag error
-        return RLCS_ERR | RLCS_INCMP;
+        return RLV12::CSR_CompositeError | RLV12::CSR_OperationIncomplete;
     }
 
     // Check the unit is not write-protected
     if (unit->unitStatus_ & Status::UNIT_RO || 
         unit->rlStatus_ & RlStatus::UNIT_WLK)
     {
-        unit->driveStatus_ |= RLDS_WGE;                     
-        return RLCS_ERR;
+        unit->driveStatus_ |= RLV12::MPR_GS_WriteGateError;                     
+        return RLV12::CSR_CompositeError;
     }
 
     // Check the validity of cylinder and sector address
     if (!diskAddressOk (unit, rlv12Command))
-        return RLCS_ERR | RLCS_HNF | RLCS_INCMP;
+        return RLV12::CSR_CompositeError | RLV12::CSR_HeaderNotFound | 
+               RLV12::CSR_OperationIncomplete;
 
     // Check for sector overflow
     limitWordCount (rlv12Command);
@@ -48,7 +49,7 @@ u16 CmdProcessor::writeDataCmd (RL01_2 *unit, RLV12Command &rlv12Command)
             filePosition (rlv12Command.diskAddress_), SEEK_SET))
     {
         Logger::instance() << "Seek error in writeDataCmd";
-        return RLCS_ERR | RLCS_INCMP;
+        return RLV12::CSR_CompositeError | RLV12::CSR_OperationIncomplete;
     }
 
     for (size_t index = 0, memAddr = rlv12Command.memoryAddress_;
@@ -57,7 +58,8 @@ u16 CmdProcessor::writeDataCmd (RL01_2 *unit, RLV12Command &rlv12Command)
         tmpValue = controller_->bus->read (memAddr).valueOr (0);
         if (!tmpValue.hasValue ())
         {
-            rlcsValue = RLCS_ERR | RLCS_NXM;
+            rlcsValue = RLV12::CSR_CompositeError | 
+                RLV12::CSR_NonExistentMemory;
             // Set adj xfer length
             rlv12Command.wordCount_ -= index;
             break;
@@ -70,7 +72,7 @@ u16 CmdProcessor::writeDataCmd (RL01_2 *unit, RLV12Command &rlv12Command)
     {
         // Clear to end of block
         size_t numWordsToWrite = (rlv12Command.wordCount_ + 
-            (RL_NUMWD - 1)) & ~(RL_NUMWD - 1);
+            (RLV12::wordsPerSector - 1)) & ~(RLV12::wordsPerSector - 1);
 
         for (size_t index = rlv12Command.wordCount_; 
                 index < numWordsToWrite; ++index)
@@ -81,7 +83,7 @@ u16 CmdProcessor::writeDataCmd (RL01_2 *unit, RLV12Command &rlv12Command)
         if (ferror (unit->filePtr_))
         {
             Logger::instance() << "Write error in writeDataCmd";
-            return RLCS_ERR | RLCS_INCMP;
+            return RLV12::CSR_CompositeError | RLV12::CSR_OperationIncomplete;
         }
     }
 

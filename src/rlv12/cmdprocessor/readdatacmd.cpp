@@ -13,13 +13,13 @@ u16 CmdProcessor::readDataCmd (RL01_2 *unit, RLV12Command &rlv12Command)
     if (!unitAvailable (unit))
     {
         // Set spin error and return OPI
-        unit->driveStatus_ |= RLDS_SPE;
-        return RLCS_INCMP;
+        unit->driveStatus_ |=  RLV12::MPR_GS_SpinError;
+        return RLV12::CSR_OperationIncomplete;
     }
 
     // Check the validity of cylinder and sector address
     if (!diskAddressOk (unit, rlv12Command))
-        return RLCS_HNF | RLCS_INCMP;
+        return RLV12::CSR_HeaderNotFound | RLV12::CSR_OperationIncomplete;
 
     // Check for sector overflow
     limitWordCount (rlv12Command);
@@ -33,10 +33,11 @@ u16 CmdProcessor::readDataCmd (RL01_2 *unit, RLV12Command &rlv12Command)
 	std::lock_guard<std::mutex> guard{ unit->driveMutex_ };
 
     // Set position in file to the block to be read
-    if (fseek (unit->filePtr_, filePosition (rlv12Command.diskAddress_), SEEK_SET))
+    if (fseek (unit->filePtr_, filePosition (rlv12Command.diskAddress_), 
+        SEEK_SET))
     {
         Logger::instance() << "Seek error in readDataCmd";
-        return RLCS_ERR | RLCS_INCMP;
+        return RLV12::CSR_CompositeError | RLV12::CSR_OperationIncomplete;
     }
 
     // Read wordCount * 2 bytes; returned is the number of bytes read 
@@ -55,13 +56,14 @@ u16 CmdProcessor::readDataCmd (RL01_2 *unit, RLV12Command &rlv12Command)
         {
             if (!controller_->bus->writeWord (memAddr, 
                     controller_->rlxb_[index]))
-                rlcsValue = RLCS_ERR | RLCS_NXM;
+                rlcsValue = RLV12::CSR_CompositeError | 
+                    RLV12::CSR_NonExistentMemory;
         }
     }
     else
     {
         Logger::instance() << "Read error in readDataCmd";
-        return RLCS_ERR | RLCS_INCMP;
+        return RLV12::CSR_CompositeError | RLV12::CSR_OperationIncomplete;
     }
 
     updateHeadPosition 

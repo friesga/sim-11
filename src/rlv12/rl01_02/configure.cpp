@@ -13,12 +13,12 @@ StatusCode RL01_2::configure (UnitConfig &unitConfig)
     // ToDo: RL01_2::configure() needs a rewrite.
     if (rlUnitConfig.rlUnitType == RlUnitConfig::RLUnitType::RL01)
     {
-        capacity_ = RL01_SIZE;
+        capacity_ = RLV12::RL01_WordsPerCartridge;
         rlStatus_ &= ~Bitmask(RlStatus::UNIT_RL02);
     }
     else if (rlUnitConfig.rlUnitType == RlUnitConfig::RLUnitType::RL02)
     {
-        capacity_ = RL02_SIZE;
+        capacity_ = RLV12::RL02_WordsPerCartridge;
         rlStatus_ |= Bitmask(RlStatus::UNIT_RL02);
     }
     else if (rlUnitConfig.rlUnitType == RlUnitConfig::RLUnitType::Auto)
@@ -50,7 +50,8 @@ StatusCode RL01_2::configure (UnitConfig &unitConfig)
     currentDiskAddress_ = 0;
 
     // New volume
-    driveStatus_ = RLDS_HDO | RLDS_BHO | RLDS_VCK | RLDS_LOCK;
+    driveStatus_ = RLV12::MPR_GS_HeadsOut | 
+        RLV12::MPR_GS_BrushHome | RLV12::MPR_GS_VolumeCheck | RLV12::MPR_GS_LockOn;
 
     // Set unit on-line
     rlStatus_ &= ~Bitmask(RlStatus::UNIT_OFFL);
@@ -67,21 +68,22 @@ StatusCode RL01_2::configure (UnitConfig &unitConfig)
         // Create a bad block table on the last track of the device.
         // The position of the last track is also based on the unit's
         // capacity!
-        return createBadBlockTable (RL_NUMSC, RL_NUMWD);
+        return createBadBlockTable (RLV12::sectorsPerSurface, 
+            RLV12::wordsPerSector);
     }
 
     // If auto-sizing is set, determine drive type on the file size
     if (rlStatus_ & RlStatus::UNIT_AUTO)
     {
-        if (fileSize > (RL01_SIZE * sizeof (u16)))
+        if (fileSize > (RLV12::RL01_WordsPerCartridge * sizeof (u16)))
         {
             rlStatus_ |= RlStatus::UNIT_RL02;
-            capacity_ = RL02_SIZE;
+            capacity_ = RLV12::RL02_WordsPerCartridge;
         }
         else
         {
             rlStatus_ &= ~Bitmask(RlStatus::UNIT_RL02);
-            capacity_ = RL01_SIZE;
+            capacity_ = RLV12::RL01_WordsPerCartridge;
         }
     }
     return StatusCode::OK;

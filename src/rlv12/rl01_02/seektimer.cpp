@@ -1,4 +1,5 @@
 #include "rl012.h"
+#include "rlv12/rlv12.h"
 
 // Simulate the execution (of the head movement) of a Seek command
 void RL01_2::seekTimer ()
@@ -15,6 +16,6 @@ void RL01_2::seekTimer ()
 
         std::this_thread::sleep_for (std::chrono::milliseconds (seekTime_));
         driveStatus_ =
-            (driveStatus_ & ~RLDS_M_STATE) | RLDS_LOCK;
+            (driveStatus_ & ~RLV12::MPR_GS_State) | RLV12::MPR_GS_LockOn;
     }
 }

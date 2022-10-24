@@ -26,26 +26,26 @@ u16 RLV12::rlcsPlusDriveStatus (RL01_2 &unit)
 {
     u16 rlcsCombined {rlcs};
 
-    if (unit.driveStatus_ & RLDS_ERR)
-        rlcsCombined |= RLCS_DRE;
+    if (unit.driveStatus_ & MPR_GS_AnyError)
+        rlcsCombined |= CSR_DriveError;
     else
-        rlcsCombined &= ~RLCS_DRE;
+        rlcsCombined &= ~CSR_DriveError;
 
     // The drive is ready if it is not disconnected, no error is
     // reported by the drive and the heads are locked on a cylinder.
     if (!(unit.unitStatus_ & Status::UNIT_DIS) && 
-        !(unit.driveStatus_ & RLDS_DRRDY_NEGATE) &&
-        (unit.driveStatus_ & RLDS_M_STATE) == RLDS_LOCK)
-        rlcsCombined |= RLCS_DRDY;
+        !(unit.driveStatus_ & DriveReadyNegate) &&
+        (unit.driveStatus_ & MPR_GS_State) == MPR_GS_LockOn)
+        rlcsCombined |= CSR_DriveReady;
     else
-        rlcsCombined &= ~RLCS_DRDY;
+        rlcsCombined &= ~CSR_DriveReady;
 
     // Make sure the error summary bit properly reflects the 
     // sum of other errors.
-    if (rlcsCombined & RLCS_ALLERR)
-        rlcsCombined |= RLCS_ERR;
+    if (rlcsCombined & CSR_AnyError)
+        rlcsCombined |= CSR_CompositeError;
     else
-        rlcsCombined &= ~RLCS_ERR;
+        rlcsCombined &= ~CSR_CompositeError;
 
     return rlcsCombined;
 }

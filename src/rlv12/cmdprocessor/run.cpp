@@ -23,12 +23,12 @@ void CmdProcessor::run ()
             break;
 
         // Get a  reference to the unit for which the command is destined.
-        RL01_2 &unit = controller_->units_[GET_DRIVE(controller_->rlcs)];
+        RL01_2 &unit = controller_->units_[RLV12::getDrive (controller_->rlcs)];
 
         // Assemble a command from the command given in the CSR and the
         // parameters in the other registers
         // ToDo: Assemble command in the constructor?!
-        RLV12Command rlv12Command (GET_FUNC(controller_->rlcs), controller_->rlda,
+        RLV12Command rlv12Command (RLV12::getFunction (controller_->rlcs), controller_->rlda,
             controller_->memAddrFromRegs (), 
             0200000 - controller_->wordCounter_);
 

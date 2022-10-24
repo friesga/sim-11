@@ -54,8 +54,8 @@ u16 CmdProcessor::maintenanceCmd (RL01_2 *unit, RLV12Command &rlv12Command)
     // Must be exactly -511
     if (controller_->wordCounter_ != 0177001)
     {
-        // HNF error
-        return RLCS_ERR | RLCS_HNF | RLCS_INCMP;
+        return RLV12::CSR_CompositeError | RLV12::CSR_HeaderNotFound | 
+            RLV12::CSR_OperationIncomplete;
     }
 
     // Transfer 256 words to FIFO
@@ -68,7 +68,7 @@ u16 CmdProcessor::maintenanceCmd (RL01_2 *unit, RLV12Command &rlv12Command)
             controller_->rlxb_[wordCount] = value;
         else
         {
-            rlcsValue = RLCS_ERR | RLCS_NXM;
+            rlcsValue = RLV12::CSR_CompositeError | RLV12::CSR_NonExistentMemory;
             break;
         }
         memoryAddress += 2;

@@ -17,12 +17,12 @@ void CmdProcessor::updateHeadPosition
 {
     switch (procedure)
     {
-
         case CmdProcessor::HeadPositionProcedure::Increment:
             unit->currentDiskAddress_ = 
-                (unit->currentDiskAddress_ & ~RLDA_M_SECT) |
+                (unit->currentDiskAddress_ & ~RLV12::DAR_Sector) |
                 ((unit->currentDiskAddress_ + 
-                    ((wordCount + (RL_NUMWD - 1)) / RL_NUMWD)) & RLDA_M_SECT);
+                ((wordCount + (RLV12::wordsPerSector - 1)) / 
+                    RLV12::wordsPerSector)) & RLV12::DAR_Sector);
             break;
 
         case CmdProcessor::HeadPositionProcedure::Rotate:
@@ -30,8 +30,8 @@ void CmdProcessor::updateHeadPosition
             // This functionality supports the Read Without Header Check
             // procedure, refer to EK-RLV12-UG-002, par. 5.8.
             unit->currentDiskAddress_ =
-                (unit->currentDiskAddress_ & ~RLDA_M_SECT) |
-                ((unit->currentDiskAddress_ + 1) & RLDA_M_SECT);
+                (unit->currentDiskAddress_ & ~RLV12::DAR_Sector) |
+                ((unit->currentDiskAddress_ + 1) & RLV12::DAR_Sector);
             break;
 
         case CmdProcessor::HeadPositionProcedure::DiskAddressRegister:
@@ -39,7 +39,8 @@ void CmdProcessor::updateHeadPosition
             break;
     }
 
-    if (getSector (unit->currentDiskAddress_) >= RL_NUMSC)
+    if (RLV12::getSector (unit->currentDiskAddress_) >= 
+            RLV12::sectorsPerSurface)
         // Wrap to sector 0 
-        unit->currentDiskAddress_ &= ~RLDA_M_SECT;
+        unit->currentDiskAddress_ &= ~RLV12::DAR_Sector;
 }

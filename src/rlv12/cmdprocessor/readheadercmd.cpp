@@ -12,10 +12,10 @@ u16 CmdProcessor::readHeaderCmd (RL01_2 *unit, RLV12Command &rlv12Command)
     if (!unitAvailable (unit))
     {
         // Set spin error
-        unit->driveStatus_ |= RLDS_SPE;
+        unit->driveStatus_ |= RLV12::MPR_GS_SpinError;
 
         // Flag error
-        return RLCS_ERR | RLCS_INCMP;
+        return RLV12::CSR_CompositeError | RLV12::CSR_OperationIncomplete;
     }
 
     // Guard against drive access while a seek is running

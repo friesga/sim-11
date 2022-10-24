@@ -21,7 +21,7 @@ u16 CmdProcessor::finishDataTransferCmd (RL01_2 *unit,
     // Refer to EK-RLV12-TD-001, pg. 3-26. XXDP diagnostic XRLHB0 test 22
     // will test this situation and expects a Header Not Found error.
     if (controller_->wordCounter_ != 0)
-        rlcsValue = RLCS_INCMP | RLCS_HNF;
+        rlcsValue = RLV12::CSR_OperationIncomplete | RLV12::CSR_HeaderNotFound;
 
     // Set memory address to be returned. The requires the memory address
     // not to be changed in the execute functions.
@@ -33,15 +33,8 @@ u16 CmdProcessor::finishDataTransferCmd (RL01_2 *unit,
     // If we ran off the end of the track, return 40 in rlda, but keep
     // track over a legitimate sector (0)?
     controller_->rlda += 
-        ((rlv12Command.wordCount_ + (RL_NUMWD - 1)) / RL_NUMWD);
-
-    /*
-    if (err != 0)
-    {
-        perror("RL I/O error");
-        clearerr(unit.filePtr_);
-    }
-    */
+        ((rlv12Command.wordCount_ + 
+            (RLV12::wordsPerSector - 1)) / RLV12::wordsPerSector);
 
     return rlcsValue;
 }

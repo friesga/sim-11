@@ -14,15 +14,16 @@ u16 CmdProcessor::writeCheckCmd (RL01_2 *unit, RLV12Command &rlv12Command)
     if (!unitAvailable (unit))
     {
         // Set spin error
-        unit->driveStatus_ |= RLDS_SPE;
+        unit->driveStatus_ |= RLV12::MPR_GS_SpinError;
 
         // Flag error
-        return RLCS_ERR | RLCS_INCMP;
+        return RLV12::CSR_CompositeError | RLV12::CSR_OperationIncomplete;
     }
 
     // Check the validity of cylinder and sector address
     if (!diskAddressOk (unit, rlv12Command))
-        return RLCS_ERR | RLCS_HNF | RLCS_INCMP;
+        return RLV12::CSR_CompositeError | RLV12::CSR_HeaderNotFound | 
+               RLV12::CSR_OperationIncomplete;
 
     // Check for sector overflow
     limitWordCount (rlv12Command);
@@ -40,7 +41,7 @@ u16 CmdProcessor::writeCheckCmd (RL01_2 *unit, RLV12Command &rlv12Command)
         filePosition (rlv12Command.diskAddress_), SEEK_SET))
     {
         Logger::instance() << "Seek error in writeCheckCmd";
-        return RLCS_ERR | RLCS_INCMP;
+        return RLV12::CSR_CompositeError | RLV12::CSR_OperationIncomplete;
     }
 
     size_t numBytes = fread (controller_->rlxb_, sizeof (int16_t), 
@@ -64,20 +65,21 @@ u16 CmdProcessor::writeCheckCmd (RL01_2 *unit, RLV12Command &rlv12Command)
             comp = controller_->bus->read (memAddr).valueOr (0);
             if (!comp.hasValue ())
             {
-                rlcsValue = RLCS_ERR | RLCS_NXM;
+                rlcsValue = RLV12::CSR_CompositeError | 
+                    RLV12::CSR_NonExistentMemory;
                 break;
             }
 
             // Check read word with buffer
             // ToDo: Quit for loop when an inequality is detected?
             if (comp != controller_->rlxb_[rlv12Command.wordCount_])
-                rlcsValue = RLCS_ERR | RLCS_CRC;
+                rlcsValue = RLV12::CSR_CompositeError | RLV12::CSR_ReadDataCRC;
         }
     }
     else
     {
         Logger::instance() << "Seek error in writeCheckCmd";
-        return RLCS_ERR | RLCS_INCMP;
+        return RLV12::CSR_CompositeError | RLV12::CSR_OperationIncomplete;
     }
 
     updateHeadPosition 

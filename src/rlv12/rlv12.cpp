@@ -23,11 +23,11 @@ RLV12::RLV12 ()
     fifoIndex_ {0}
 {
     name_ = "RL";
-    baseAddress_ = IOBA_RL;
-    vector_ = VEC_RL;
+    baseAddress_ = RLV_BaseAddress;
+    vector_ = RLV_Vector;
 
     // Allocate the transfer buffer, initializing to zero
-    rlxb_ = new (std::nothrow) u16[RL_MAXFR]();
+    rlxb_ = new (std::nothrow) u16[maxTransfer]();
 
     if (rlxb_ == nullptr)
         throw ("Allocating memory for transfer buffer failed");
@@ -49,11 +49,12 @@ RLV12::RLV12 (RlConfig *rlConfig)
     fifoIndex_ {0}
 {
     name_ = "RL";
-    baseAddress_ = (rlConfig->address > 0) ? rlConfig->address : IOBA_RL;
-    vector_ = (rlConfig->vector > 0) ? rlConfig->vector : VEC_RL;
+    baseAddress_ = (rlConfig->address > 0) ? 
+        rlConfig->address : RLV_BaseAddress;
+    vector_ = (rlConfig->vector > 0) ? rlConfig->vector : RLV_Vector;
 
     // Allocate the transfer buffer, initializing to zero
-    rlxb_ = new (std::nothrow) u16[RL_MAXFR]();
+    rlxb_ = new (std::nothrow) u16[maxTransfer]();
 
     if (rlxb_ == nullptr)
         throw ("Allocating memory for transfer buffer failed");
@@ -85,8 +86,8 @@ void RLV12::reset ()
 
     // Reset CRS
     rlcs &= ~properBits;
-    if (!(rlcs & RLCS_DRE))
-        rlcs &= ~RLCS_ERR;
+    if (!(rlcs & CSR_DriveError))
+        rlcs &= ~CSR_CompositeError;
 
     rlba = 0;
     rlda = 0;
@@ -126,11 +127,13 @@ void RLV12::memAddrToRegs (u32 memoryAddress)
     // Load the lower 16 bits in the BAR, the upper two bits in the RLCS
     // and the upper 6 bits in the BAE
     u16 upper6Bits = memoryAddress >> 16;
-    rlba = memoryAddress & RLBA_IMP;
-    rlcs = (rlcs & ~RLCS_MEX) | ((upper6Bits & RLCS_M_MEX) << RLCS_V_MEX);
+    rlba = memoryAddress & BAR_Bits;
+    // rlcs = (rlcs & ~RLCS_MEX) | ((upper6Bits & RLCS_M_MEX) << RLCS_V_MEX);
+    rlcs = (rlcs & ~CSR_AddressExtField) | 
+        ((upper6Bits & CSR_AddressExtBits) << CSR_AddressExtPosition);
 
     if (rlType_ == RlConfig::RLType::RLV12 && _22bit_)
-        rlbae = upper6Bits & RLBAE_IMP; 
+        rlbae = upper6Bits & BAE_Bits; 
 }
 
 // Get a 16-, 18- or 22-bit address from the BA, CSR and (in case of 22-bit
@@ -149,11 +152,12 @@ u32 RLV12::memAddrFromRegs ()
 void RLV12::updateBAE ()
 {
     if (rlType_ == RlConfig::RLType::RLV12 && _22bit_)
-       rlbae = (rlbae & ~RLCS_M_MEX) | ((rlcs >> RLCS_V_MEX) & RLCS_M_MEX);
+        rlbae = (rlbae & ~CSR_AddressExtBits) | 
+            ((rlcs >> CSR_AddressExtPosition) & CSR_AddressExtBits);
 }
 
 // Get the BA16 and BA17 bits from the given csr
 constexpr u16 RLV12::getBA16BA17 (u16 csr)
 {
-    return (csr >> RLCS_V_MEX) & RLCS_M_MEX;
+    return (csr >> CSR_AddressExtPosition) & CSR_AddressExtBits;
 }

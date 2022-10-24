@@ -22,7 +22,7 @@ StatusCode RLV12::writeByte (u16 registerAddress, u8 data)
 StatusCode RLV12::writeWord (u16 registerAddress, u16 data)
 {
     // Get reference to drive
-    RL01_2 &unit = units_[GET_DRIVE(data)];
+    RL01_2 &unit = units_[getDrive (data)];
 
     // Guard against controller register access from the command processor
 	std::unique_lock<std::mutex> lock {controllerMutex_};
@@ -41,16 +41,16 @@ StatusCode RLV12::writeWord (u16 registerAddress, u16 data)
 
             // Set the writable bits in the CSR. CRDY will be cleared by the
             // host software to execute the command specified in the CSR.
-            rlcs = (rlcs & ~RLCS_RW) | (data & RLCS_RW);
+            rlcs = (rlcs & ~CSR_ReadWriteBits) | (data & CSR_ReadWriteBits);
 
             // The [DRDY] bit is cleared when a seek or head-select operation
             // is initiated [...] (EK-RLV12-TD-001, Table 3-3).
             // The DRDY bit has to be cleared at this point as we cannot
             // guarantee it will be cleared by the command processor before
             // the CSR is read by the host software.
-            if (GET_FUNC(rlcs) == RLCS_SEEK)
+            if (getFunction (rlcs) == CSR_Seek)
                 unit.driveStatus_ = 
-                    (unit.driveStatus_ & ~RLDS_M_STATE) | RLDS_SEEK;
+                    (unit.driveStatus_ & ~MPR_GS_State) | MPR_GS_Seek;
 
             // Load Bus Address Extension Bits (BA16 and BA17) into bits
             // 00 and 01 in the BAE register
@@ -77,9 +77,9 @@ StatusCode RLV12::writeWord (u16 registerAddress, u16 data)
             // At the start of every command errors are cleared. Note that
             // Composite Error is cleared (or set) in read(), based on the
             // setting of the other error bits.
-            rlcs &= ~RLCS_ALLERR;                   
+            rlcs &= ~CSR_AnyError;                   
 
-            TRACERLV12Command (&trc, GET_FUNC(rlcs));
+            TRACERLV12Command (&trc, getFunction (rlcs));
 
             // We're done using the registers this call. Notify the command
             // processor a command has been issued.
@@ -120,12 +120,14 @@ StatusCode RLV12::writeWord (u16 registerAddress, u16 data)
             if (registerAddress & 1)
                 return StatusCode::OK;
 
-            rlbae = data & RLBAE_IMP;
+            rlbae = data & BAE_Bits;
 
             // Load bits 00 and 01 (BA16 and BA17) into the corresponding
             // bits in the CSR.
             // ToDo: This is an undocumented feature?
-            rlcs = (rlcs & ~RLCS_MEX) | ((rlbae & RLCS_M_MEX) << RLCS_V_MEX);
+            // rlcs = (rlcs & ~RLCS_MEX) | ((rlbae & RLCS_M_MEX) << RLCS_V_MEX);
+            rlcs = (rlcs & ~CSR_AddressExtField) | 
+                    ((rlbae & CSR_AddressExtBits) << CSR_AddressExtPosition);
             break;
 
         default:

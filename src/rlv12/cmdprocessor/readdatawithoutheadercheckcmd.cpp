@@ -14,19 +14,22 @@ u16 CmdProcessor::readDataWithoutHeaderCheckCmd (RL01_2 *unit,
     if (!unitAvailable (unit))
     {
         // Set spin error
-        unit->driveStatus_ |= RLDS_SPE;
+        unit->driveStatus_ |= RLV12::MPR_GS_SpinError;
 
         // Flag error
-        return RLCS_ERR | RLCS_INCMP;
+        return RLV12::CSR_CompositeError | RLV12::CSR_OperationIncomplete;
     }
 
-    if (getSector (unit->currentDiskAddress_) >= RL_NUMSC)
+    if (RLV12::getSector (unit->currentDiskAddress_) >= 
+            RLV12::sectorsPerSurface)
 	    // Bad sector
-	    return RLCS_ERR | RLCS_HNF;
+	    return RLV12::CSR_CompositeError | RLV12::CSR_HeaderNotFound;
 
     // Check for sector overflow
     size_t maxWordCount = 
-        (RL_NUMSC - getSector (unit->currentDiskAddress_)) * RL_NUMWD;
+        (RLV12::sectorsPerSurface - 
+            RLV12::getSector (unit->currentDiskAddress_)) * 
+            RLV12::wordsPerSector;
 
     if (rlv12Command.wordCount_ > maxWordCount)
         rlv12Command.wordCount_ = maxWordCount;
@@ -44,7 +47,7 @@ u16 CmdProcessor::readDataWithoutHeaderCheckCmd (RL01_2 *unit,
             SEEK_SET))
     {
         Logger::instance() << "Seek error in readDataWithoutHeaderCheckCmd";
-        return RLCS_ERR | RLCS_INCMP;
+        return RLV12::CSR_CompositeError | RLV12::CSR_OperationIncomplete;
     }
 
     // Read wordCount * 2 bytes; returned is the number of bytes read 
@@ -63,13 +66,14 @@ u16 CmdProcessor::readDataWithoutHeaderCheckCmd (RL01_2 *unit,
         {
             if (!controller_->bus->writeWord (memAddr, 
                    controller_->rlxb_[index]))
-                rlcsValue = RLCS_ERR | RLCS_NXM;
+                rlcsValue = RLV12::CSR_CompositeError | 
+                    RLV12::CSR_NonExistentMemory;
         }
     }
     else
     {
         Logger::instance() << "Read error in readDataWithoutHeaderCheckCmd";
-        return RLCS_ERR | RLCS_INCMP;
+        return RLV12::CSR_CompositeError | RLV12::CSR_OperationIncomplete;
     }
 
     updateHeadPosition 

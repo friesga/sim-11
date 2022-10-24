@@ -20,10 +20,10 @@ u16 CmdProcessor::seekCmd (RL01_2 *unit, RLV12Command &rlv12Command)
         // Set seek time-out. Note that this status differs from
         // the status returned by data transfer commands if the
         // unit is unavailable.
-        unit->driveStatus_ |= RLDS_STO;
+        unit->driveStatus_ |= RLV12::MPR_GS_SeekTimeOut;
 
         // Flag error
-        return RLCS_ERR | RLCS_INCMP;
+        return RLV12::CSR_CompositeError | RLV12::CSR_OperationIncomplete;
     }
 
     //
@@ -34,22 +34,22 @@ u16 CmdProcessor::seekCmd (RL01_2 *unit, RLV12Command &rlv12Command)
     // Guard against drive access while the seek is running
 	std::unique_lock<std::mutex> lock {unit->driveMutex_};
 
-    currentCylinder = getCylinder (unit->currentDiskAddress_);
+    currentCylinder = RLV12::getCylinder (unit->currentDiskAddress_);
 
     // ToDo: offset to be passed in command
-    offset = getCylinder (controller_->rlda);
+    offset = RLV12::getCylinder (controller_->rlda);
 
     // Seek direction in or out?
     // According to the RL01/RL02 User Guide (EK-RL012-UG-005), par 4.3.4: 
     // If the difference word is large enough that the heads attempt to move
     // past the innermost or outermost limits, the head will stop at the
     // guard band and retreat to the first even-numbered data track.
-    if (controller_->rlda & RLDA_SK_DIR)
+    if (controller_->rlda & RLV12::DAR_Direction)
     {
         // Outwards
         newCylinder = currentCylinder + offset;
         maxCylinder = (unit->rlStatus_ & RlStatus::UNIT_RL02) ? 
-            RL_NUMCY * 2 : RL_NUMCY;
+            RLV12::cylindersPerCartridge * 2 : RLV12::cylindersPerCartridge;
         if (newCylinder >= maxCylinder)
             newCylinder = maxCylinder - 2;
     }
@@ -67,12 +67,13 @@ u16 CmdProcessor::seekCmd (RL01_2 *unit, RLV12Command &rlv12Command)
     // host software reads the CSR
     // if (newCylinder != currentCylinder)
     //    // Move the positioner 
-    //    unit->driveStatus_ = (unit->driveStatus_ & ~RLDS_M_STATE) | RLDS_SEEK;
+    //    unit->driveStatus_ = (unit->driveStatus_ & ~MPR_GS_State) | RLDS_SEEK;
 
-    // ToDo: If a head switch, sector should be RL_NUMSC/2?
+    // ToDo: If a head switch, sector should be sectorsPerSurface/2?
     // Put on track
-    unit->currentDiskAddress_ = (newCylinder << RLDA_V_CYL) |
-        ((controller_->rlda & RLDA_SK_HD) ? RLDA_HD1 : RLDA_HD0);
+    unit->currentDiskAddress_ = (newCylinder << RLV12::DAR_CylinderPosition) |
+        ((controller_->rlda & RLV12::DAR_HeadSelect) ? 
+            RLV12::DAR_Head1 : RLV12::DAR_Head0);
 
     // Real timing (EK-RLV12-TD-001 and EK-RL012-UG-005):
     // minimum 6.5ms, maximum 15ms for head switch,

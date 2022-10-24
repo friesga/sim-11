@@ -25,6 +25,7 @@ CmdProcessor::~CmdProcessor()
 // the specified diskAddress
 int32_t CmdProcessor::filePosition (int32_t diskAddress) const
 {
-    return (getTrack (diskAddress) * RL_NUMSC +
-        getSector(diskAddress)) * RL_NUMWD * sizeof(int16_t);
+    return (RLV12::getTrack (diskAddress) * RLV12::sectorsPerSurface +
+        RLV12::getSector(diskAddress)) * RLV12::wordsPerSector * 
+        sizeof(int16_t);
 }
