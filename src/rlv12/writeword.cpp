@@ -61,12 +61,13 @@ StatusCode RLV12::writeWord (u16 registerAddress, u16 data)
 
             // Commands to the controller are only executed with the CRDY (DONE)
             // bit is cleared by software.  If set, check for interrupts and return.
-            if (data & CSR_DONE)
+            if (data & CSR_ControllerReady)
             {                              
                 // Ready set?
-                if ((data & CSR_IE) == 0)
+                if ((data & CSR_InterruptEnable) == 0)
                     bus->clearInterrupt (TrapPriority::BR4, 4);
-                else if ((rlcs & (CSR_DONE + CSR_IE)) == CSR_DONE)
+                else if ((rlcs & (CSR_ControllerReady + CSR_InterruptEnable))
+                        == CSR_ControllerReady)
                     bus->setInterrupt (TrapPriority::BR4, 4, vector_);
 
                 return StatusCode::OK;

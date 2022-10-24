@@ -10,7 +10,7 @@ void CmdProcessor::run ()
     std::unique_lock<std::mutex> lock {controller_->controllerMutex_};
 
     // Report the controller is ready to receive command
-    controller_->rlcs |= CSR_DONE;
+    controller_->rlcs |= RLV12::CSR_ControllerReady;
 
     while (running_)
     {

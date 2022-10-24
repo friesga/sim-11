@@ -173,6 +173,8 @@ class RLV12 : public BusDevice
         return (csr >> CSR_DrivePosition) & CSR_DriveBits;
     }
 
+    static constexpr u16 CSR_InterruptEnable = 1u << 6;     // CSR_IE
+    static constexpr u16 CSR_ControllerReady = 1u << 7;     // CSR_DONE
     // CSR Error bit definitions. Not all error codes are actually used.
     static constexpr u16 CSR_ErrorCodePosition   = 10;
     static constexpr u16 CSR_OperationIncomplete = 1 << CSR_ErrorCodePosition; // RLCS_INCMP
@@ -182,8 +184,8 @@ class RLV12 : public BusDevice
     static constexpr u16 CSR_HeaderNotFound      = 5 << CSR_ErrorCodePosition; // RLCS_HNF
     static constexpr u16 CSR_NonExistentMemory   = 8 << CSR_ErrorCodePosition; // RLCS_NXM
     static constexpr u16 CSR_MemoryParityError   = 9 << CSR_ErrorCodePosition; // RLCS_PAR
-    static constexpr u16 CSR_DriveError          = 0040000;                    // RLCS_DRE
-    static constexpr u16 CSR_CompositeError      = 0100000;                    // RLCS_ERR
+    static constexpr u16 CSR_DriveError          = 1u << 14;                   // RLCS_DRE
+    static constexpr u16 CSR_CompositeError      = 1u << 15;                   // RLCS_ERR
     static constexpr u16 CSR_AnyError            = 
         CSR_DriveError  | CSR_NonExistentMemory | CSR_HeaderNotFound |
         CSR_ReadDataCRC | CSR_OperationIncomplete;                             // RLCS_ALLERR
