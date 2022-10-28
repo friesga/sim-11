@@ -1614,12 +1614,14 @@ void KD11CPU::execInstr(QBUS* bus)
                 case 01064: 
                     // MTPS
                     // Note that the T bit cannot be set with this instruction
+                    // and that bits 5 and 6 are reserved.
                     if (!insn1->getOperand (this, r, 
                         Bitmask(OperandOptions::Byte |
                             OperandOptions::AutoIncr), tmp))
                         return;
 
-                    psw = (psw & PSW_T) | (tmp & ~PSW_T);
+                    psw = (psw & PSW_T) | 
+                        (tmp & (PSW_C | PSW_V | PSW_Z | PSW_N | PSW_PRIO));
                     break;
 
                 case 01067: /* MFPS */
