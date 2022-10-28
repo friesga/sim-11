@@ -3,21 +3,46 @@
 
 // Structure to encapsulate the storage and retrieval of command line
 // options.
-// The data members are public till processing of the options is merged
-// into this class.
-// ToDo: Merge option processing in class CmdLineOptions
-struct CmdLineOptions
+//
+// The class contains public const data members referencing the actual 
+// private data members. This way the private data members can be accessed as
+// public data members.
+//
+// ToDo: readOnly, createNewFile and openExistingFile options should be
+// per file
+class CmdLineOptions
 {
-    const char* floppy_filename = nullptr;
-	const char* load_file = nullptr;
-	int halt = 0;
-	int bootstrap = 0;
-	const char* trace_file = nullptr;
-	int compress = 0;
-	int exit_on_halt = 0;
+    static const char *floppy_filename_;
+	static const char* load_file_;
+	static const char* config_file_;
+	static bool halt_;
+	static bool bootstrap_;
+	static const char* trace_file_;
+	static bool compress_;
+	static bool exit_on_halt_;
 
-	CmdLineOptions(int argc, char **argv);
+protected:
+	// CmdLineOptions(int argc, char **argv);
+	CmdLineOptions();
+
+public:
+	static CmdLineOptions &get();
+	static void processOptions (int argc, char const **argv);
+	static void reset ();
+
+	const char* const &floppy_filename;
+	const char*  const &load_file;
+	const char*  const &config_file;
+	bool const &halt;
+	bool const &bootstrap;
+	const char* const &trace_file;
+	bool const &compress;
+	bool const &exit_on_halt;
+	
+	CmdLineOptions (CmdLineOptions const&) = delete;
+	CmdLineOptions (CmdLineOptions &&) = delete;
+	CmdLineOptions &operator= (CmdLineOptions const&) = delete;
+	CmdLineOptions &operator= (CmdLineOptions &&) = delete;
 };
-
 
 #endif // _CMDLINEOPTIONS_H_

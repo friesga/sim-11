@@ -1,7 +1,8 @@
 #ifndef _DLV11J_H_
 #define _DLV11J_H_
 
-#include "../qbus/qbus.h"
+#include "qbus/qbus.h"
+#include "busdevice/busdevice.h"
 
 /* DLV11-J input buffer */
 #define	DLV11J_BUF		2048
@@ -23,16 +24,16 @@ struct DLV11Ch
 	void	(*receive)(unsigned char c);
 };
 
-class DLV11J : public QBUSModule
+class DLV11J : public BusDevice
 {
 public:
 	DLV11J ();
 	~DLV11J ();
 
 	// Define the obligatory functions
-	u16 read (u16 address);
-	void write (u16 address, u16 value);
-	u8 responsible (u16 address);
+	StatusCode read (u16 address, u16 *destAddress) override;
+	StatusCode writeWord (u16 address, u16 value) override;
+	bool responsible (u16 address) override;
 	void reset ();
 
 	void send (int channel, unsigned char c);

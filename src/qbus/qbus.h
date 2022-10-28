@@ -2,37 +2,54 @@
 #define _QBUS_H_
 
 #include "types.h"
-#include "../conddata/conddata.h"
-#include "../interruptrequest/interruptrequest.h"
-#include "../threadsafeprioqueue/threadsafeprioqueue.h"
+#include "statuscodes.h"
+#include "conddata/conddata.h"
+#include "interruptrequest/interruptrequest.h"
+#include "threadsafecontainers/threadsafeprioqueue.h"
+#include "busdevice/busdevice.h"
 
 /* Backplane size */
 #define	LSI11_SIZE		8
 
-/* QBUS interrupt request delay */
-#define	QBUS_DELAY		20
+// QBUS interrupt latency, defined as the maximum number of instructions
+// after which the interrupt will be processed. The INTRPT_LATENCY_JITTER
+// is a random number of instructions. The minimum latency will be
+// INTRPT_LATENCY - INTRPT_LATENCY_JITTER and the maximum latency is the
+// value of INTRPT_LATENCY.
+// 
+// According to the Microcomputer Processor Handbook, the interrupt
+// latency lies between 35.05 and 44.1 +/- 20%, so roughly between 30 and
+// 50 microseconds. The LSI-11 instruction time varies between 3.5
+// and 15 microseconds.
+// 
+// At least a few instructions are necessary to satify the VKAAC0 and 
+// VKADC1 diagnostics. An interrupt latency of 20 instructions will result
+// in the VRLBC0 diagnostic reporting "NO INTERRUPT ON FUNCTION COMPLETE"
+// errors. The XRLKB3 diagnostic expects an interrupt within five instructions
+// after Controller Ready becomes true.
+#define	INTRPT_LATENCY			5
+#define	INTRPT_LATENCY_JITTER	2
 
-
-/* QBUS interrupt request delay jitter */
-#define	QBUS_DELAY_JITTER	10
-
-class QBUSModule;
+class BusDevice;
 
 class QBUS
 {
 public:
 	QBUS ();
-	int		interrupt (InterruptRequest intrptReq);
+	void	setInterrupt (TrapPriority priority, 
+				unsigned char busOrder, unsigned char vector);
+	void	clearInterrupt (TrapPriority priority, 	unsigned char busOrder);
 	bool	intrptReqAvailable();
 	u8		intrptPriority();
 	bool	getIntrptReq(InterruptRequest &ir);
 	void	reset ();
 	void	step ();
 	CondData<u16> read (u16 addr);
-	bool	write (u16 addr, u16 value);
-	void	installModule (int slot, QBUSModule* module);
+	bool	writeWord (u16 addr, u16 value);
+	bool	writeByte (u16 addr, u8 val);
+	void	installModule (int slot, BusDevice* module);
 
-	QBUSModule*	slots[LSI11_SIZE];
+	BusDevice*	slots[LSI11_SIZE];
 	u16	delay;
 
 private:
@@ -40,18 +57,8 @@ private:
 	using IntrptReqQueue = ThreadSafePrioQueue<InterruptRequest>;
 	IntrptReqQueue intrptReqQueue_;
 
-	InterruptRequest const busError{RequestType::Trap, TrapPriority::BusError, 0, 004};
-};
-
-// Define the functions every QBUS module should provide
-class QBUSModule
-{
-public:
-	QBUS*	bus;
-	u16		virtual read (u16 addr) = 0;
-	void	virtual write (u16 addr, u16 value) = 0;
-	u8		virtual responsible (u16 addr) = 0;
-	void	virtual reset () = 0;
+	BusDevice *responsibleModule (u16 address);
+	void pushInterruptRequest (InterruptRequest interruptReq);
 };
 
 #endif // !_QBUS_H_

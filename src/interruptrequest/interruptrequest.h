@@ -46,11 +46,14 @@ class InterruptRequest
     unsigned char busOrder_;
     unsigned char vector_;
 
+    long intrptPriority (TrapPriority trapPriority, unsigned char busOrder) const;
+
 public:
     InterruptRequest();
     InterruptRequest(RequestType requestType, TrapPriority priority,
         unsigned char prioLevel, unsigned char vector);
     bool operator< (InterruptRequest const &ir) const;
+    bool operator== (InterruptRequest const &ir) const;
 
     // Accessors
     RequestType requestType() const;

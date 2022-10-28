@@ -1,5 +1,17 @@
 #define _POSIX_C_SOURCE 200809L
 
+#include "trace/trace.h"
+#include "ba11_n/ba11_n.h"
+#include "rxv21/rxv21.h"
+#include "rlv12/rlv12.h"
+#include "bdv11/bdv11.h"
+#include "dlv11j/dlv11j.h"
+#include "msv11d/msv11d.h"
+#include "lsi11/lsi11.h"
+#include "cmdlineoptions/cmdlineoptions.h"
+#include "configdata/configprocessor/configprocessor.h"
+#include "logger/logger.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -18,15 +30,6 @@
 #include <termio.h>
 #include <clock_gettime.h>
 #endif
-
-#include "trace.h"
-#include "ba11_n/ba11_n.h"
-#include "rxv21/rxv21.h"
-#include "bdv11/bdv11.h"
-#include "dlv11j/dlv11j.h"
-#include "msv11d/msv11d.h"
-#include "lsi11/lsi11.h"
-#include "cmdlineoptions/cmdlineoptions.h"
 
 /* #define DEBUG */
 
@@ -101,7 +104,7 @@ void LSI11ConsoleSendString (DLV11J* dlv, const char* s)
 #define	READ(addr)			lsi.bus.read(lsi.bus.user, (addr))
 #define	WRITE(addr, val)	lsi.bus.write(lsi.bus.user, (addr), (val))
 
-int main (int argc, char** argv)
+int main (int argc, char const **argv)
 try
 {
 	// ToDo: Replace module configuration by table
@@ -112,14 +115,16 @@ try
 	BDV11 bdv11;
 	// BA11_N ba11_n;
 
-	struct timespec now;
 	struct timespec last;
 
 	FILE* floppy_file;
 	u8* floppy;
 
+	// Open log file
+	Logger::init ("sim-11.log");
+
 	// Get command line options
-	CmdLineOptions cmdLineOptions(argc, argv);
+	CmdLineOptions::processOptions (argc, argv);
 
 	// Allocate memory for the floppy (RXV21) data, open the file with
 	// the floppy drive data (if given) and pass the data buffer address
@@ -133,12 +138,13 @@ try
 		return 1;
 	}
 
-	if (cmdLineOptions.floppy_filename) 
+	if (CmdLineOptions::get().floppy_filename) 
 	{
-		floppy_file = fopen (cmdLineOptions.floppy_filename, "rb");
+		floppy_file = fopen (CmdLineOptions::get().floppy_filename, "rb");
 		if (!floppy_file) 
 		{
-			printf("Error: cannot open file %s\n", cmdLineOptions.floppy_filename);
+			printf("Error: cannot open file %s\n", 
+				CmdLineOptions::get().floppy_filename);
 			free(floppy);
 			return 1;
 		}
@@ -152,34 +158,86 @@ try
 
 	rxv21.setData (floppy);
 
-	if (cmdLineOptions.trace_file) 
+	if (CmdLineOptions::get().trace_file) 
 	{
-		TRCINIT(cmdLineOptions.trace_file);
-		if (cmdLineOptions.compress) 
+		TRCINIT(CmdLineOptions::get().trace_file);
+		if (CmdLineOptions::get().compress) 
 		{
-			trc.flags |= TRACE_COMPRESS;
+			trc.flags |= TRACEF_COMPRESS;
 		}
 	}
 
-	// To enable debug print outs set TRACE_PRINT flag in trc.flags
-	// trc.flags |= TRACE_PRINT;
+	// Select the events to be traced and the way the trace output has
+	// to be generated. The flags can only be specified if tracing has been
+	// enabled.
+	if (trc.file != nullptr)
+	{
+		trc.flags |= TRACEF_RLV12;
+		trc.flags |= TRACEF_STEP;
+	}
+
+	// Load device configuration
+	DeviceConfig *deviceConfig {nullptr};
+	ConfigData configProcessor;
+
+	if (CmdLineOptions::get().config_file)
+	{
+		iniparser::File ft;
+		if (!ft.load (CmdLineOptions::get().config_file))
+		{
+			std::cout << "Error: cannot open file " << 
+				CmdLineOptions::get().config_file << '\n';
+			return 1;
+		}
+
+		try
+		{
+			configProcessor.process (ft);
+		}
+		catch (std::invalid_argument const &except)
+		{
+			std::cout << "Error in configuration file: " << 
+				except.what() << '\n';
+			return 1;
+		}
+	}
+
+	// Retrieve the configuration as specified in the configuration file
+	deviceConfig = configProcessor.getConfig ();
+
+	RLV12 rlv12 (deviceConfig->rlConfig);
+
+	// Attach files to the RL units
+	for (size_t unitNumber = 0; 
+		unitNumber < deviceConfig->rlConfig->numUnits; ++unitNumber)
+	{
+		RlUnitConfig rlUnitConfig = 
+			deviceConfig->rlConfig->rlUnitConfig[unitNumber];
+
+		if (rlv12.unit(unitNumber)->configure (rlUnitConfig) != StatusCode::OK)
+		{
+			std::cout << "Error attaching " << rlUnitConfig.fileName << '\n';
+			return 1;
+		}
+	}
 
 	lsi.bus.installModule (1, &msv11);
-	lsi.bus.installModule (2, &rxv21);
-	lsi.bus.installModule (3, &dlv11);
-	lsi.bus.installModule (4, &bdv11);
+	lsi.bus.installModule (2, &rlv12);
+	lsi.bus.installModule (3, &rxv21);
+	lsi.bus.installModule (4, &dlv11);
+	lsi.bus.installModule (5, &bdv11);
 	lsi.reset ();
 
-	if (cmdLineOptions.bootstrap) 
+	if (CmdLineOptions::get().bootstrap) 
 	{
 		LSI11ConsoleSendString (&dlv11, odt_input);
 	}
-	if (cmdLineOptions.load_file) 
+	if (CmdLineOptions::get().load_file) 
 	{
 		/* execute absolute loader binary */
 		/* const char* filename = "VKAAC0.BIC"; */
 		/* const char* filename = "VKADC0.BIC"; */
-		const char* filename = cmdLineOptions.load_file;
+		const char* filename = CmdLineOptions::get().load_file;
 		size_t size;
 		u16 len;
 		u16 addr;
@@ -256,12 +314,12 @@ try
 
 	running = 1;
 
-	if (cmdLineOptions.halt) 
+	if (CmdLineOptions::get().halt) 
 	{
 		lsi.kd11.cpu().runState = 0;
 	} 
-	else if (!cmdLineOptions.bootstrap && 
-		!cmdLineOptions.halt && !cmdLineOptions.load_file) 
+	else if (!CmdLineOptions::get().bootstrap && 
+		!CmdLineOptions::get().halt && !CmdLineOptions::get().load_file) 
 	{
 		lsi.kd11.cpu().runState = 1;
 	}
@@ -274,12 +332,11 @@ try
 	while (running) 
 	{
 		unsigned int i;
-		double dt;
 		
 		for(i = 0; i < 1000; i++)
 			lsi.step ();
 
-		if (cmdLineOptions.exit_on_halt && lsi.kd11.cpu().runState == 0)
+		if (CmdLineOptions::get().exit_on_halt && lsi.kd11.cpu().runState == 0)
 		{
 			/* make sure ODT finishes its prompt */
 			for(i = 0; i < 32; i++)
@@ -296,7 +353,7 @@ try
 
 	printf ("\n");
 
-	if(cmdLineOptions.trace_file)
+	if(CmdLineOptions::get().trace_file)
 	{
 		TRCFINISH();
 	}

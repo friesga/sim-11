@@ -1,11 +1,11 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "trace.h"
+#include "trace/trace.h"
 #include "qbus.h"
-#include "../interruptrequest/interruptrequest.h"
+#include "interruptrequest/interruptrequest.h"
 
-#define	IRCJITTER()	(rand() % QBUS_DELAY_JITTER)
+#define	IRCJITTER()	(rand() % INTRPT_LATENCY_JITTER)
 
 QBUS::QBUS ()
 {
@@ -21,86 +21,53 @@ CondData<u16> QBUS::read (u16 address)
 
 	for (i = 0; i < LSI11_SIZE; i++)
 	{
-		QBUSModule* module = slots[i];
+		BusDevice* module = slots[i];
 		if (!module)
 			continue;
 
 		if (module->responsible (address))
 		{
-			CondData<u16> value = module->read (address);
-			TRCBus (TRC_BUS_RD, addr, value);
-			return value;
+			u16 value;
+			if (module->read (address, &value) == StatusCode::OK)
+			{
+				TRCBus (TRC_BUS_RD, addr, value);
+				return value;
+			}
+			else
+				return {};
 		}
 	}
 
-	TRCBus (TRC_BUS_RDFAIL, addr, 0);
-	interrupt (busError);
 	return {};
 }
 
-bool QBUS::write (u16 address, u16 value)
+
+// Set an interrupt request. The only reason this could fail is when
+// a device already has set an interrupt. That would be an error on the
+// part of the device and wouldn't harm.
+void QBUS::setInterrupt (TrapPriority priority, 
+		unsigned char busOrder, unsigned char vector)
 {
-	u8 i;
-	
-	address &= 0xFFFE;
-
-	for (i = 0; i < LSI11_SIZE; i++)
-	{
-		QBUSModule* module = slots[i];
-		if (!module)
-			continue;
-
-		if (module->responsible (address))
-		{
-			// It is presumed that all writes on addresses for which a
-			// device is responsible succeed.
-			TRCBus (TRC_BUS_WR, address, value);
-			module->write (address, value);
-			return true;
-		}
-	}
-
-	TRCBus (TRC_BUS_WRFAIL, address, value);
-	interrupt (busError);
-	return false;
+	InterruptRequest intrptReq {RequestType::IntrptReq, priority, busOrder, vector};
+	pushInterruptRequest (intrptReq);
 }
 
-// (Try to) request an interrupt. Trap 004 interrupts always succeed,
-// other interrupts requests only succeed if no other traps or interrupts
-// are being processed.
-// ToDo: Requesting an interrupt always succeeds
-int QBUS::interrupt (InterruptRequest intrptReq)
+// Push the interrupt request created by setInterrupt or setTrap to the
+// interupt queue.
+void QBUS::pushInterruptRequest (InterruptRequest intrptReq)
 {
-	intrptReqQueue_.push(intrptReq);
+	intrptReqQueue_.push (intrptReq);
 	TRCIRQ (intrptReq.vector(), TRC_IRQ_OK);
 	delay = IRCJITTER ();
-	return 1;
-/*
-	if (intrptReq.vector() != 004)
-	{
-		if (trap.vector() != 0 || irq.vector() != 0)
-		{
-			TRCIRQ (intrptReq.vector(), TRC_IRQ_FAIL);
-			return 0;
-		}
-		else
-		{
-			// No trap is being processed and no interrupt request is pending,
-			// so an interrupt request can be generated. Processing of the request
-			// is delayed by a random amount of steps.
-			TRCIRQ (intrptReq.vector(), TRC_IRQ_OK);
-			irq = intrptReq;
-			delay = IRCJITTER ();
-			return 1;
-		}
-	}
-	else
-	{
-		TRCIRQ (intrptReq.vector(), TRC_IRQ_OK);
-		trap = intrptReq;
-		return 1;
-	}
-*/
+}
+
+// Clear the specified interrupt request. The InterruptRequQueue will delete
+// the interrupt request equal to specified request. Equality is based on
+// priority and busorder (see InterruptRequest::operator==).
+void QBUS::clearInterrupt (TrapPriority priority, unsigned char busOrder)
+{
+	intrptReqQueue_.erase (InterruptRequest {RequestType::IntrptReq, 
+		priority, busOrder, 0});
 }
 
 void QBUS::reset ()
@@ -116,7 +83,7 @@ void QBUS::reset ()
 
 	for (i = 0; i < LSI11_SIZE; i++)
 	{
-		QBUSModule* module = slots[i];
+		BusDevice* module = slots[i];
 		if (!module)
 			continue;
 
@@ -124,7 +91,7 @@ void QBUS::reset ()
 	}
 }
 
-// Wait a random number (max QBUS_DELAY) of steps till processing of an
+// Wait a random number (max INTRPT_LATENCY) of steps till processing of an
 // interrupt request. 
 void QBUS::step ()
 {
@@ -132,13 +99,13 @@ void QBUS::step ()
 }
 
 // Check if there is an interrupt request available that can be processed.
-// Wait a random number (max QBUS_DELAY) of steps till processing of an
+// Wait a random number (max INTRPT_LATENCY) of steps till processing of an
 // interrupt request. The delay counter is incremented every QBUS step.
 // Traps are handled internally in the CPU and are to be processed immediately.
 bool QBUS::intrptReqAvailable() 
 {
 	return (!intrptReqQueue_.empty() && 
-		(delay >= QBUS_DELAY || intrptReqQueue_.top().requestType() == RequestType::Trap));
+		(delay >= INTRPT_LATENCY || intrptReqQueue_.top().requestType() == RequestType::Trap));
 }
 
 // Return the priority of the interrupt request with the highest priority
@@ -161,7 +128,7 @@ bool QBUS::getIntrptReq(InterruptRequest &intrptReq)
 		return false;
 }
 
-void QBUS::installModule (int slot, QBUSModule* module)
+void QBUS::installModule (int slot, BusDevice* module)
 {
 	slots[slot] = module;
 	module->bus = this;

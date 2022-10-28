@@ -1,9 +1,11 @@
 #ifndef _RXV21_H_
 #define _RXV21_H_
 
-#include "../qbus/qbus.h"
-#include "../variantfsm/fsm.h"
-#include "trace.h"
+#include "qbus/qbus.h"
+#include "busdevice/busdevice.h"
+#include "conddata/conddata.h"
+#include "variantfsm/fsm.h"
+#include "trace/trace.h"
 
 /* RX2CS bits */
 #define	RX_GO				_BV(0)
@@ -52,8 +54,6 @@
 #define	RX2ES_ERRORS		(RX2ES_CRC | RX2ES_RX_AC_LO | RX2ES_DEN_ERR \
 		| RX2ES_WC_OVFL | RX2ES_NXM)
 
-#define	IRQ(x)				bus->interrupt(x)
-
 // Define RXV21 events
 // ToDo: RXV21 events shouldn't be in the global scope
 struct rxv21Init {};
@@ -87,7 +87,7 @@ using State = std::variant<rxv21Idle,
 	rxv21ReadSectorRx2sa,  rxv21ReadSectorRx2ta,
 	rxv21ReadErrorCodeRx2ba>;
 
-class RXV21 : public QBUSModule, public variantFsm::Fsm<RXV21, Event, State>
+class RXV21 : public BusDevice, public variantFsm::Fsm<RXV21, Event, State>
 {
 	u16	base;
 	u16	vector;
@@ -129,9 +129,9 @@ class RXV21 : public QBUSModule, public variantFsm::Fsm<RXV21, Event, State>
 public:
 	RXV21 ();
 	~RXV21 ();
-	u16 read (u16 address);
-	void write (u16 address, u16 value);
-	u8 responsible (u16 address);
+	StatusCode read (u16 address, u16 *destAddress) override;
+	StatusCode writeWord (u16 address, u16 value) override;
+	bool responsible (u16 address) override;
 	void reset ();
 	void setData (u8* data);
 	void step();

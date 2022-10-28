@@ -1,7 +1,8 @@
 #ifndef _KD11_H_
 #define _KD11_H_
 
-#include "../qbus/qbus.h"
+#include "qbus/qbus.h"
+#include "busdevice/busdevice.h"
 
 #define USE_FLOAT
 
@@ -45,25 +46,29 @@ class KD11CPU
 public:
 	friend class KD11ODT;
 
-	KD11CPU();
+	KD11CPU(QBUS *bus);
 	void reset();
 	void step(QBUS* bus);
 	void handleTraps(QBUS* bus);
+
+	// These functions are defined public as they are used by the
+	// Instruction classes.
+	// ToDo: fetchWord(), putWord() and putByte() should be private?
+	CondData<u16> fetchWord (u16 address);
+	bool putWord (u16 address, u16 value);
+	bool putByte (u16 address, u8 value);
 
 	// ToDo: Make runState and r[] private; accessed from main
 	u8	runState;
 	u16	r[8];
 
 private:
-	CondData<u16> readW(QBUS* bus, u16 dst, u16 mode, int inc);
-	CondData<u8> readB(QBUS* bus, u16 dst, u16 mode, int inc);
-	bool writeW(QBUS* bus, u16 dst, u16 mode, u16 val);
-	bool writeB(QBUS* bus, u16 dst, u16 mode, u8 val);
-	CondData<u16> getAddr(QBUS* bus, u16 dst, u16 mode);
-	void setTrap(QBUS *bus, InterruptRequest const *ir);
+	void setTrap(InterruptRequest const *ir);
 	void execInstr(QBUS* bus);
 	u8 cpuPriority();
 
+
+	QBUS *bus_;
 	u16	psw;
 
 	// A trap is a special kind of interrupt, internal to the CPU. There
@@ -105,20 +110,22 @@ private:
 };
 
 // The class KD11 is composed of the KD11 CPU and the KD11 ODT.
-// ToDo: Make KD11 a QBUSModule
+// ToDo: Make KD11 a BusDevice
 // The module KD11 is now - different from the other QBUSModules - instantiated
 // within the LSI11 object, although it is also a QBUS module.
 class KD11
 {
 public:
+	KD11 (QBUS *bus);
 	void reset();
 	void step(QBUS* bus);
 	// Give main() access to the CPU to set PC and runState
 	KD11CPU &cpu();
 
 private:
-	KD11CPU cpu_;
-	KD11ODT	odt{cpu_};
+	QBUS *bus_;
+	KD11CPU cpu_ {bus_};
+	KD11ODT	odt {cpu_};
 };
 
 

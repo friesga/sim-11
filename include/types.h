@@ -12,6 +12,16 @@ using s32	= int32_t;
 using u64	= uint64_t;
 using s64	= int64_t;
 
+#if defined (USE_INT64) && defined (USE_ADDR64)         // 64 bit addresses
+typedef uint64_t        t_addr;
+#define T_ADDR_W        64
+#define T_ADDR_FMT      LL_FMT
+#else                                                   // 32 bit addresses
+typedef uint32_t        t_addr;
+#define T_ADDR_W        32
+#define T_ADDR_FMT      ""
+#endif 
+
 #define	_BV(x)	(1 << (x))
 
 #ifdef WIN32

@@ -1,20 +1,21 @@
 #ifndef _BDV11_H_
 #define _BDV11_H_
 
-#include "../qbus/qbus.h"
+#include "qbus/qbus.h"
+#include "busdevice/busdevice.h"
 
 /* LTC rate */
 // The default RT-11 line clock frequency is 60 Hz
 #define	LTC_RATE		60
 
-class BDV11 : public QBUSModule
+class BDV11 : public BusDevice
 {
 public:
 	BDV11 ();
 	~BDV11 ();
-	u16 read (u16 address);
-	void write (u16 address, u16 value);
-	u8 responsible (u16 address);
+	StatusCode read (u16 address, u16 *destAddress) override;
+	StatusCode writeWord (u16 address, u16 value) override;
+	bool responsible (u16 address) override;
 	void reset ();
 
 private:
@@ -31,7 +32,6 @@ private:
 	float	time;
 	std::thread ltcThread_;
 	bool running_;
-	InterruptRequest eventIntrptReq{RequestType::IntrptReq, TrapPriority::Event, 0, 0100};
 };
 
 extern const u16 bdv11_e53[2048];

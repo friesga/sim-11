@@ -40,20 +40,20 @@ void RXV21::done ()
 	// being processed, the request is held and on the next step the request
 	// is tried again.
 	if (rx2cs & RX_INTR_ENB) 
-		IRQ(interruptRequest(vector));
+		bus->setInterrupt (TrapPriority::BR4, 5, vector);
 }
 
 // Read operation on either the RX2CS or RX2DB
-u16 RXV21::read (u16 address)
+StatusCode RXV21::read (u16 address, u16 *destAddress)
 {
 	if(address == base) 
 		/* Return value of the RX2CS */
-		return rx2cs & RX_RMASK;
+		*destAddress = rx2cs & RX_RMASK;
 	else if(address == base + 2) 
 		/* Return value of the RX2DB */
-		return rx2db;
+		*destAddress = rx2db;
 
-	return 0;
+	return StatusCode::OK;
 }
 
 // Write operation on either the RX2CS of RX2DB
@@ -63,7 +63,7 @@ u16 RXV21::read (u16 address)
 // 2. Writing parameters of the command to the RX2DB, such as the sector
 //	  and track address or the bus address.
 //
-void RXV21::write (u16 address, u16 value)
+StatusCode RXV21::writeWord (u16 address, u16 value)
 {
 	if (address == base) 
 	{ 
@@ -77,7 +77,7 @@ void RXV21::write (u16 address, u16 value)
 		{
 			// Initialize command given
 			dispatch (rxv21Init {});
-			return;
+			return StatusCode::OK;
 		}
 
 		if (rx2cs & RX_GO) 
@@ -90,7 +90,7 @@ void RXV21::write (u16 address, u16 value)
 		if (!intr && (value & RX_INTR_ENB) && (rx2cs & RX_DONE)) 
 		{
 			QBUS* bus = this->bus;
-			IRQ(interruptRequest(vector));
+			bus->setInterrupt (TrapPriority::BR4, 5, vector);
 		}
 	} 
 	else if (address == base + 2) 
@@ -99,11 +99,13 @@ void RXV21::write (u16 address, u16 value)
 		rx2db = value;
 		dispatch (rxv21Rx2dbFilled {});
 	}
+
+	return StatusCode::OK;
 }
 
-u8 RXV21::responsible (u16 address)
+bool RXV21::responsible (u16 address)
 {
-	return ((address >= base) && (address <= (base + 2)));
+	return address >= base && address <= (base + 2) ? true : false;
 }
 
 void RXV21::reset ()

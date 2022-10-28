@@ -1,111 +1,15 @@
+#include "trace/trace.h"
+#include "kd11.h"
+#include "instructions.h"
+
 #include <string.h>
 #include <stdlib.h>
+#include <chrono>
 
-#include "trace.h"
-#include "kd11.h"
-
-#define	TRAP(trap)		setTrap(bus, &trap)
-
-// (Try to) determine the byte order. To that end gcc provides the __BYTE__ORDER__
-// definition. Msvc has no such definition but we can safely assume that all
-// win32 machines are little endian.
-#if _WIN32 || (__BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__)
-/* little endian host */
-
-typedef struct {
-	u16	rn:3;
-	u16	mode:3;
-	u16	opcode:10;
-} KD11INSN1;
-
-typedef struct {
-	u16	dst_rn:3;
-	u16	dst_mode:3;
-	u16	src_rn:3;
-	u16	src_mode:3;
-	u16	opcode:4;
-} KD11INSN2;
-
-typedef struct {
-	u16	offset:8;
-	u16	opcode:8;
-} KD11INSNBR;
-
-typedef struct {
-	u16	rn:3;
-	u16	mode:3;
-	u16	r:3;
-	u16	opcode:7;
-} KD11INSNJSR;
-
-typedef struct {
-	u16	rn:3;
-	u16	opcode:13;
-} KD11INSNRTS;
-
-typedef struct {
-	u16	nn:6;
-	u16	opcode:10;
-} KD11INSNMARK;
-
-typedef struct {
-	u16	offset:6;
-	u16	rn:3;
-	u16	opcode:7;
-} KD11INSNSOB;
-#else
-/* big endian host */
-typedef struct {
-	u16	opcode:10;
-	u16	mode:3;
-	u16	rn:3;
-} KD11INSN1;
-
-typedef struct {
-	u16	opcode:4;
-	u16	src_mode:3;
-	u16	src_rn:3;
-	u16	dst_mode:3;
-	u16	dst_rn:3;
-} KD11INSN2;
-
-typedef struct {
-	u16	opcode:8;
-	u16	offset:8;
-} KD11INSNBR;
-
-typedef struct {
-	u16	opcode:7;
-	u16	r:3;
-	u16	mode:3;
-	u16	rn:3;
-} KD11INSNJSR;
-
-typedef struct {
-	u16	opcode:13;
-	u16	rn:3;
-} KD11INSNRTS;
-
-typedef struct {
-	u16	opcode:10;
-	u16	nn:6;
-} KD11INSNMARK;
-
-typedef struct {
-	u16	opcode:7;
-	u16	rn:3;
-	u16	offset:6;
-} KD11INSNSOB;
-#endif // _WIN32 || (__BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__)
-
-// Constructor
-// ToDo: Reinitialize K11ODT
-KD11CPU::KD11CPU()
-	:
-	runState{0},
-	r{0}, 
-	psw{0},
-    trap_ {nullptr}
+// KD11 functions
+KD11::KD11 (QBUS *bus)
+    :
+    bus_ {bus}
 {}
 
 void KD11::reset()
@@ -119,12 +23,8 @@ KD11CPU &KD11::cpu()
 	return cpu_;
 }
 
-#define	READ(addr)			(bus->read((addr)))
-#define	WRITE(addr, val)	(bus->write((addr), (val)))
-
-#define RETURN_IF_INVALID(var) \
-    if (!var.hasValue())   \
-        return;
+#define RETURN_IF(cond) \
+    if (cond) return;
 
 // Constructor
 KD11ODT::KD11ODT(KD11CPU &cpu)
@@ -172,6 +72,7 @@ void KD11ODT::inputError()
 	buf_sz = 4;
 }
 
+// ToDo: Use bus->writeByte() as characters are written?
 void KD11ODT::step(QBUS* bus)
 {
 	/* odt */
@@ -191,11 +92,11 @@ void KD11ODT::step(QBUS* bus)
 			break;
 
 		case ODT_STATE_WAIT:
-			if (READ(0177560) & 0x80) 
+			if (bus->read (0177560) & 0x80) 
 			{
 				/* ch available */
-				u16 c = READ(0177562);
-				WRITE(0177566, (u8) c);
+				u16 c = bus->read (0177562);
+				bus->writeWord (0177566, (u8) c);
 				switch((u8) c) 
 				{
 					case '$':
@@ -237,27 +138,27 @@ void KD11ODT::step(QBUS* bus)
 			break;
 
 		case ODT_STATE_WR:
-			if (READ(0177564) & 0x80)
+			if (bus->read (0177564) & 0x80)
 			{
-				WRITE(0177566, buf[buf_r++]);
+				bus->writeWord (0177566, buf[buf_r++]);
 				if (buf_r == buf_sz)
 					state = next;
 			}
 			break;
 
 		case ODT_STATE_ADDR:
-			if (READ(0177560) & 0x80) 
+			if (bus->read (0177560) & 0x80) 
 			{ 
 				/* ch available */
-				u16 ch = READ(0177562);
+				u16 ch = bus->read (0177562);
 				u8 c = (u8) ch;
-				WRITE(0177566, c);
+				bus->writeWord (0177566, c);
 				if ((u8) c == '/') 
 				{ 
 					/* delimit */
                     // ToDo: The address might be invalid and in that case
                     // ODT should respond with a '?' instead of a zero.
-					u16 val = READ(addr).valueOr(0);
+					u16 val = bus->read (addr).valueOr(0);
 					clear();
 					writeOctal(val);
 					write(' ');
@@ -283,12 +184,12 @@ void KD11ODT::step(QBUS* bus)
 			break;
 
 		case ODT_STATE_REG:
-			if (READ(0177560) & 0x80) 
+			if (bus->read (0177560) & 0x80) 
 			{ 
 				/* ch available */
-				u16 ch = READ(0177562);
+				u16 ch = bus->read (0177562);
 				u8 c = (u8) ch;
-				WRITE(0177566, c);
+				bus->writeWord (0177566, c);
 				state = ODT_STATE_REG_WAIT;
 				if (c >= '0' && c <= '7') 
 					addr = c - '0'; 
@@ -300,16 +201,16 @@ void KD11ODT::step(QBUS* bus)
 			break;
 
 		case ODT_STATE_VAL:
-			if (READ(0177560) & 0x80)
+			if (bus->read (0177560) & 0x80)
 			{ 
 				/* ch available */
-				u16 ch = READ(0177562);
+				u16 ch = bus->read (0177562);
 				u8 c = (u8) ch;
-				WRITE(0177566, c);
+				bus->writeWord (0177566, c);
 				if (c == '\r' || c == '\n') 
 				{
 					if (input)
-						WRITE(addr, val);
+						bus->writeWord(addr, val);
 				} 
 				else if(c >= '0' && c <= '7') 
 				{
@@ -335,7 +236,7 @@ void KD11ODT::step(QBUS* bus)
 
 					addr += 2;
 					val = 0;
-					tmpValue = READ(addr);
+					tmpValue = bus->read (addr);
 
 					clear();
 					write('\r');
@@ -353,12 +254,12 @@ void KD11ODT::step(QBUS* bus)
 			break;
 
 		case ODT_STATE_REG_WAIT:
-			if (READ(0177560) & 0x80) 
+			if (bus->read (0177560) & 0x80) 
 			{ 
 				/* ch available */
-				u16 ch = READ(0177562);
+				u16 ch = bus->read (0177562);
 				u8 c = (u8) ch;
-				WRITE(0177566, c);
+				bus->writeWord (0177566, c);
 				if (c == '/') 
 				{
 					u16 val;
@@ -381,12 +282,12 @@ void KD11ODT::step(QBUS* bus)
 			break;
 
 		case ODT_STATE_REG_VAL:
-			if (READ(0177560) & 0x80) 
+			if (bus->read (0177560) & 0x80) 
 			{ 
 				/* ch available */
-				u16 ch = READ(0177562);
+				u16 ch = bus->read (0177562);
 				u8 c = (u8) ch;
-				WRITE(0177566, c);
+				bus->writeWord (0177566, c);
 				if (c == '\r' || c == '\n') 
 				{
 					if (input) 
@@ -439,9 +340,16 @@ void KD11ODT::step(QBUS* bus)
 	}
 }
 
-#define CHECKADDR() \
-	if (!addr.hasValue()) \
-		return {};
+// Constructor
+// ToDo: Reinitialize K11ODT
+KD11CPU::KD11CPU(QBUS *bus)
+	:
+	runState{0},
+	r{0}, 
+    bus_ {bus},
+	psw {0},
+    trap_ {nullptr}
+{}
 
 void KD11CPU::reset()
 {
@@ -451,413 +359,43 @@ void KD11CPU::reset()
 	runState = STATE_HALT;
 }
 
-CondData<u16> KD11CPU::readW(QBUS* bus, u16 dst, u16 mode, int inc)
+CondData<u16> KD11CPU::fetchWord (u16 address)
 {
-	CondData<u16> addr;
-	switch(mode)
-	{
-		case 0: /* Register */
-			return r[dst];
-
-		case 1: /* Register indirect */
-			return READ(r[dst]);
-
-		case 2: /* Autoincrement */
-			addr = r[dst];
-			if(inc) {
-				r[dst] += 2;
-				r[dst] &= 0xFFFE;
-			}
-			return READ(addr);
-
-		case 3: /* Autoincrement indirect */
-			addr = r[dst];
-			if(inc) {
-				r[dst] += 2;
-				r[dst] &= 0xFFFE;
-			}
-			addr = READ(addr);
-			CHECKADDR();
-			return READ(addr);
-
-		case 4: /* Autodecrement */
-			if(inc) {
-				r[dst] -= 2;
-				addr = r[dst];
-				r[dst] &= 0xFFFE;
-			} else {
-				addr = r[dst] - 2;
-			}
-			return READ(addr);
-
-		case 5: /* Autodecrement indirect */
-			if(inc) {
-				r[dst] -= 2;
-				addr = r[dst];
-				r[dst] &= 0xFFFE;
-			} else {
-				addr = r[dst] - 2;
-			}
-			addr = READ(addr);
-			CHECKADDR();
-			return READ(addr);
-
-		case 6: /* Index */
-			addr = READ(r[7]);
-			CHECKADDR();
-			if(inc) {
-				r[7] += 2;
-			} else if(dst == 7) {
-				addr += 2;
-			}
-			addr += r[dst];
-			return READ(addr);
-
-		case 7: /* Index indirect */
-			addr = READ(r[7]);
-			CHECKADDR();
-			if(inc) {
-				r[7] += 2;
-			} else if(dst == 7) {
-				addr += 2;
-			}
-			addr += r[dst];
-			addr = READ(addr);
-			CHECKADDR();
-			return READ(addr);
-
-		default:
-			// return 0;
-			return {};
-	}
-}
-
-#define	READ8(addr) (((addr) & 1) ? \
-    static_cast<CondData<u8>> (READ((addr) & 0xFFFE) >> 8) : \
-	static_cast<CondData<u8>> (READ(addr & 0xFFFE)))
-
-CondData<u8> KD11CPU::readB(QBUS* bus, u16 dst, u16 mode, int inc)
-{
-	CondData<u16> addr;
-	switch(mode)
-	{
-		case 0: /* Register */
-			return (u8) r[dst];
-
-		case 1: /* Register indirect */
-			return READ8(r[dst]);
-
-		case 2: /* Autoincrement */
-			addr = r[dst];
-			if(inc) {
-				if(dst == 6 || dst == 7) {
-					r[dst] += 2;
-				} else {
-					r[dst]++;
-				}
-			}
-			return READ8(addr);
-
-		case 3: /* Autoincrement indirect */
-			addr = r[dst];
-			if(inc) {
-				r[dst] += 2;
-			}
-			addr = READ(addr);
-			CHECKADDR();
-			return READ8(addr);
-
-		case 4: /* Autodecrement */
-			if(inc) {
-				if(dst == 6 || dst == 7) {
-					r[dst] -= 2;
-				} else {
-					r[dst]--;
-				}
-				addr = r[dst];
-			} else {
-				if(dst == 6 || dst == 7) {
-					addr = r[dst] - 2;
-				} else {
-					addr = r[dst] - 1;
-				}
-			}
-			return READ8(addr);
-
-		case 5: /* Autodecrement indirect */
-			if(inc) {
-				r[dst] -= 2;
-				addr = r[dst];
-			} else {
-				addr = r[dst] - 2;
-			}
-			addr = READ(addr);
-			CHECKADDR();
-			return READ8(addr);
-
-		case 6: /* Index */
-			addr = READ(r[7]);
-            CHECKADDR();
-			if(inc) {
-				r[7] += 2;
-			} else if(dst == 7) {
-				addr += 2;
-			}
-			addr += r[dst];
-			return READ8(addr);
-
-		case 7: /* Index indirect */
-			addr = READ(r[7]);
-			CHECKADDR();
-			if(inc) {
-				r[7] += 2;
-			} else if(dst == 7) {
-				addr += 2;
-			}
-			addr += r[dst];
-			addr = READ(addr);
-			CHECKADDR();
-			return READ8(addr);
-
-		default:
-			// return 0;
-			return {};
-	}
-}
-
-bool KD11CPU::writeW(QBUS* bus, u16 dst, u16 mode, u16 val)
-{
-	CondData<u16> addr;
-	switch(mode)
+    // return bus_->read (address);
+    CondData<u16> value =  bus_->read (address);
+    if (!value.hasValue ())
     {
-		case 0: /* Register */
-			r[dst] = val;
-            return true;
-
-		case 1: /* Register indirect */
-			return WRITE(r[dst], val);
-
-		case 2: /* Autoincrement */
-			r[dst] &= 0xFFFE;
-			addr = r[dst];
-			r[dst] += 2;
-			return WRITE(addr, val);
-
-		case 3: /* Autoincrement indirect */
-			r[dst] &= 0xFFFE;
-			addr = r[dst];
-			r[dst] += 2;
-			addr = READ(addr);
-            if (!addr.hasValue())
-                return false;
-			return WRITE(addr, val);
-
-		case 4: /* Autodecrement */
-			r[dst] &= 0xFFFE;
-			r[dst] -= 2;
-			addr = r[dst];
-			return WRITE(addr, val);
-
-		case 5: /* Autodecrement indirect */
-			r[dst] &= 0xFFFE;
-			r[dst] -= 2;
-			addr = r[dst];
-			addr = READ(addr);
-            if (!addr.hasValue())
-                return false;
-			return WRITE(addr, val);
-
-		case 6: /* Index */
-			addr = READ(r[7]);
-            if (!addr.hasValue())
-                return false;
-			r[7] += 2;
-			addr += r[dst];
-			return WRITE(addr, val);
-
-		case 7: /* Index indirect */
-			addr = READ(r[7]);
-            if (!addr.hasValue())
-                return false;
-			r[7] += 2;
-			addr += r[dst];
-			addr = READ(addr);
-            if (!addr.hasValue())
-                return false;
-			return WRITE(addr, val);
-
-        default:
-            // Prevent compiler warning on not all paths returning a value
-            throw (std::string("Unexpected mode in writeW() call"));
-	}
+        TRCBus (TRC_BUS_RDFAIL, address, 0);
+	    setTrap (&busError);
+	    return {};
+    }
+    return value;
 }
 
-bool write8 (QBUS* bus, u16 addr, u8 val)
+bool KD11CPU::putWord (u16 address, u16 value)
 {
-    u16 aaddr = addr & 0xFFFE;
-	u16 tmp = READ(aaddr);
-	if(addr & 1)
-		tmp = (tmp & 0x00FF) | (val << 8);
-	else
-		tmp = (tmp & 0xFF00) | val;
-	return WRITE(aaddr, tmp); 
-}
-
-bool KD11CPU::writeB(QBUS* bus, u16 dst, u16 mode, u8 val)
-{
-	CondData<u16> addr;
-	switch(mode)
+    if (!bus_->writeWord (address, value))
     {
-		case 0: /* Register */
-			r[dst] = (r[dst] & 0xFF00) | val;
-			return true;
-
-		case 1: /* Register deferred */
-			return write8(bus, r[dst], val);
-
-		case 2: /* Autoincrement */
-			addr = r[dst];
-			if(dst == 6 || dst == 7) {
-				r[dst] += 2;
-			} else {
-				r[dst]++;
-			}
-			return write8(bus, addr, val);
-
-		case 3: /* Autoincrement deferred */
-			addr = r[dst];
-			r[dst] += 2;
-			addr = READ(addr);
-            if (!addr.hasValue())
-                return false;
-			return write8(bus, addr, val);
-
-		case 4: /* Autodecrement */
-			if(dst == 6 || dst == 7) {
-				r[dst] -= 2;
-			} else {
-				r[dst]--;
-			}
-			addr = r[dst];
-			return write8(bus, addr, val);
-
-		case 5: /* Autodecrement deferred */
-			r[dst] -= 2;
-			addr = r[dst];
-			addr = READ(addr);
-            if (!addr.hasValue())
-                return false;
-			return write8(bus, addr, val);
-
-		case 6: /* Index */
-			addr = READ(r[7]);
-            if (!addr.hasValue())
-                return false;
-			r[7] += 2;
-			addr += r[dst];
-			return write8(bus, addr, val);
-
-		case 7: /* Index deferred */
-			addr = READ(r[7]);
-            if (!addr.hasValue())
-                return false;
-			r[7] += 2;
-			addr += r[dst];
-			addr = READ(addr);
-            if (!addr.hasValue())
-                return false;
-			return write8(bus, addr, val);
-
-        default:
-            // Prevent compiler warning on not all paths returning a value
-            throw (std::string("Unexpected mode in writeB() call"));
-	}
+        TRCBus (TRC_BUS_WRFAIL, address, value);
+	    setTrap (&busError);
+        return false;
+    }
+    return true;
 }
 
-// ToDo: The result of all read() calls should be checked (instead of
-// returning zero).
-CondData<u16> KD11CPU::getAddr(QBUS* bus, u16 dst, u16 mode)
+bool KD11CPU::putByte (u16 address, u8 value)
 {
-	CondData<u16> addr;
-	switch(mode)
+    if (!bus_->writeByte (address, value))
     {
-		case 0: /* Register */
-			TRCTrap(4, TRC_TRAP_RADDR);
-			TRAP(busError); /* illegal instruction */
-            return {};
-
-		case 1: /* Register indirect */
-			return r[dst];
-
-		case 2: /* Autoincrement */
-			addr = r[dst];
-			r[dst] += 2;
-			return addr;
-
-		case 3: /* Autoincrement indirect */
-			addr = r[dst];
-			r[dst] += 2;
-			addr = READ(addr);
-			return addr;
-
-		case 4: /* Autodecrement */
-			r[dst] -= 2;
-			addr = r[dst];
-			return addr;
-
-		case 5: /* Autodecrement indirect */
-			r[dst] -= 2;
-			addr = r[dst];
-			addr = READ(addr);
-			return addr;
-
-		case 6: /* Index */
-			addr = READ(r[7]);
-			r[7] += 2;
-			addr += r[dst];
-			return addr;
-
-		case 7: /* Index indirect */
-			addr = READ(r[7]);
-			r[7] += 2;
-			addr += r[dst];
-			addr = READ(addr);
-			return addr;
-
-		default:
-            return {};
-	}
+        TRCBus (TRC_BUS_WRFAIL, address, value);
+	    setTrap (&busError);
+        return false;
+    }
+    return true;
 }
-
-// The following macro's read a word or byte from the bus in the
-// form of a CondData object. If the object contains a valid value
-// that value is returned by the macro, otherwise the value 0 is
-// returned. Subsequently the CondData object is used to check if
-// a valid value was returned and in that case the macro call executes
-// a return.
 
 #define	READCPU(addr)	\
-    (tmpValue = bus->read(addr)).valueOr(0);
-
-#define	CPUREADW(rn, mode)	\
-    (tmpValue = readW(bus, rn, mode, 1)).valueOr(0); \
-	RETURN_IF_INVALID(tmpValue)
-#define	CPUREADB(rn, mode)	\
-    (tmpValue = static_cast<CondData<u16>> (readB(bus, rn, mode, 1))).valueOr(0); \
-	RETURN_IF_INVALID(tmpValue)
-#define	CPUREADNW(rn, mode)	\
-    (tmpValue = readW(bus, rn, mode, 0)).valueOr(0); \
-	RETURN_IF_INVALID(tmpValue)
-#define	CPUREADNB(rn, mode)	\
-    (tmpValue = static_cast<CondData<u16>> (readB(bus, rn, mode, 0))).valueOr(0); \
-	RETURN_IF_INVALID(tmpValue)
-
-#define CPUWRITEW(rn, mode, v)	\
-    if (!writeW(bus, rn, mode, v)) \
-	    return;
-#define CPUWRITEB(rn, mode, v)	\
-    if (!writeB(bus, rn, mode, (u8) v)) \
-	    return;
+    (tmpValue = fetchWord(addr)).valueOr(0);
 
 typedef union {
 	float	_f32;
@@ -876,13 +414,29 @@ void KD11CPU::step(QBUS* bus)
     {
         TRCSETIGNBUS();
         u16 code[3];
-        code[0] = READ(r[7] + 0);
-        code[1] = READ(r[7] + 2);
-        code[2] = READ(r[7] + 4);
+        // The read of r[7]+2 and  r[7]+4 may access an invalid address as
+        // the instruction isn't decoded at this point. Therefore use the bus
+        // read function instead of fetchWord(). The latter will generate a
+        // bus error trap on access of an invalid address.
+        code[0] = bus_->read (r[7] + 0).valueOr (0);
+        code[1] = bus_->read (r[7] + 2).valueOr (0);
+        code[2] = bus_->read (r[7] + 4).valueOr (0);
         TRCStep(r, psw, code);
         TRCCLRIGNBUS();
     }
-    execInstr(bus);
+
+    // If there is a pending bus interrupt that can be executed, process
+    // that interrupt first, else execute the next instruction
+    if (!bus->intrptReqAvailable() || cpuPriority() >= bus->intrptPriority())
+    {
+        std::chrono::high_resolution_clock::time_point start =
+            std::chrono::high_resolution_clock::now();
+        execInstr(bus);
+        std::chrono::high_resolution_clock::time_point end =
+            std::chrono::high_resolution_clock::now();
+        TRACEDuration (&trc, "Instruction", 
+            (duration_cast<std::chrono::nanoseconds> (end - start)).count());
+    }
 
     // Generate a Trace trap if the trace bit is set, unless the previous
     // instruction was a RTT or another trap is pending.
@@ -891,7 +445,7 @@ void KD11CPU::step(QBUS* bus)
     else if (!trap_ && (psw & PSW_T))
     {
         TRCTrap(014, TRC_TRAP_T);
-        TRAP(traceTrap);
+        setTrap (&traceTrap);
     }
     handleTraps(bus);
 }
@@ -902,26 +456,30 @@ void KD11CPU::execInstr(QBUS* bus)
     u16 tmp, tmp2;
     u16 src, dst;
     s32 tmps32;
-    CondData<u16> tmpValue;     // Used in CPUREAD* macro's
+    CondData<u16> tmpValue;     // Used in fetchWordCPU macro
 #ifdef USE_FLOAT
     FLOAT f1, f2, f3;
 #endif
 
     // If there is a pending bus interrupt that can be executed, process
     // that interrupt first
-    if (bus->intrptReqAvailable() && bus->intrptPriority() > cpuPriority())
-        return;
+    // if (bus->intrptReqAvailable() && bus->intrptPriority() > cpuPriority())
+    //    return;
 
-    u16 insn = READ(r[7]);
-    KD11INSN1* insn1 = (KD11INSN1*)&insn;
-    KD11INSN2* insn2 = (KD11INSN2*)&insn;
-    KD11INSNBR* insnbr = (KD11INSNBR*)&insn;
-    KD11INSNJSR* insnjsr = (KD11INSNJSR*)&insn;
-    KD11INSNRTS* insnrts = (KD11INSNRTS*)&insn;
-    KD11INSNMARK* insnmark = (KD11INSNMARK*)&insn;
-    KD11INSNSOB* insnsob = (KD11INSNSOB*)&insn;
-
+    // Get next instruction to execute and move PC forward
+    u16 insn = fetchWord(r[7]);
     r[7] += 2;
+
+    // Get pointers to the possible instruction formats
+    KD11INSN1* insn1 = (KD11INSN1*) &insn;
+    KD11INSN2* insn2 = (KD11INSN2*) &insn;
+    KD11INSNBR* insnbr = (KD11INSNBR*) &insn;
+    KD11INSNJSR* insnjsr = (KD11INSNJSR*) &insn;
+    KD11INSNRTS* insnrts = (KD11INSNRTS*) &insn;
+    KD11INSNMARK* insnmark = (KD11INSNMARK*) &insn;
+    KD11INSNSOB* insnsob = (KD11INSNSOB*) &insn;
+
+
 
     /* single operand instructions */
     switch (insn >> 12)
@@ -949,20 +507,20 @@ void KD11CPU::execInstr(QBUS* bus)
                         case 0000002: /* RTI */
                             r[7] = READCPU(r[6]);
                             r[6] += 2;
-                            RETURN_IF_INVALID(tmpValue);
+                            RETURN_IF(!tmpValue.hasValue());
                             psw = READCPU (r[6]);
                             r[6] += 2;
-                            RETURN_IF_INVALID(tmpValue);
+                            RETURN_IF(!tmpValue.hasValue());
                             break;
 
                         case 0000003: /* BPT */
                             TRCTrap(014, TRC_TRAP);
-                            TRAP(BPT);
+                            setTrap (&BPT);
                             break;
 
                         case 0000004: /* IOT */
                             TRCTrap(020, TRC_TRAP);
-                            TRAP(IOT);
+                            setTrap (&IOT);
                             break;
 
                         case 0000005: /* RESET */
@@ -972,10 +530,10 @@ void KD11CPU::execInstr(QBUS* bus)
                         case 0000006: /* RTT */
                             r[7] = READCPU(r[6]);
                             r[6] += 2;
-                            RETURN_IF_INVALID(tmpValue);
+                            RETURN_IF(!tmpValue.hasValue());
                             psw = READCPU(r[6]);
                             r[6] += 2;
-                            RETURN_IF_INVALID(tmpValue);
+                            RETURN_IF(!tmpValue.hasValue());
 
                             // Prevent a trace trap on the next instruction
                             runState = STATE_INHIBIT_TRACE;
@@ -984,15 +542,18 @@ void KD11CPU::execInstr(QBUS* bus)
                         default: /* 00 00 07 - 00 00 77 */
                             /* unused opcodes */
                             TRCTrap(010, TRC_TRAP_ILL);
-                            TRAP(illegalInstructionTrap);
+                            setTrap (&illegalInstructionTrap);
                             break;
                     }
                     break;
 
                 case 00001: /* JMP */
-                    tmpValue = getAddr(bus, insn1->rn, insn1->mode);
-                    RETURN_IF_INVALID(tmpValue);
-                    r[7] = tmpValue.value();
+                    if (!insn1->getAddress (this, r, r[7]))
+                    {
+                        // Illegal instruction
+                        TRCTrap(4, TRC_TRAP_RADDR);
+			            setTrap (&busError); 
+                    }
                     break;
 
                 case 00002: /* 00 02 xx group */
@@ -1001,7 +562,7 @@ void KD11CPU::execInstr(QBUS* bus)
                     {
                         /* RTS */
                         r[7] = r[insnrts->rn];
-                        r[insnrts->rn] = READ(r[6]);
+                        r[insnrts->rn] = fetchWord(r[6]);
                         r[6] += 2;
                     }
                     else if ((insn & 0177740) == 0000240)
@@ -1020,18 +581,26 @@ void KD11CPU::execInstr(QBUS* bus)
                     {
                         /* 00 02 10 - 00 02 27: unused */
                         TRCTrap(010, TRC_TRAP_ILL);
-                        TRAP(illegalInstructionTrap);
+                        setTrap (&illegalInstructionTrap);
                     }
                     break;
+
                 case 00003: /* SWAB */
-                    tmp = CPUREADNW(insn1->rn, insn1->mode);
+                    if (!insn1->getOperand(this, r, 
+                            Bitmask(OperandOptions::Word), tmp))
+                        return;
                     tmp = ((tmp & 0x00FF) << 8) | ((tmp >> 8) & 0xFF);
-                    CPUWRITEW(insn1->rn, insn1->mode, tmp);
+                    
+                    if (!insn1->putOperand (this, r, 
+                            Bitmask(OperandOptions::Word), tmp))
+                        return;
+
                     PSW_EQ(PSW_N, tmp & 0x80);
                     PSW_EQ(PSW_Z, !((u8)tmp));
                     PSW_CLR(PSW_V);
                     PSW_CLR(PSW_C);
                     break;
+
                 case 00004: /* BR */
                 case 00005:
                 case 00006:
@@ -1100,116 +669,184 @@ void KD11CPU::execInstr(QBUS* bus)
                 case 00045:
                 case 00046:
                 case 00047:
-                    tmpValue = getAddr(bus, insnjsr->rn, insnjsr->mode);
-                    src = r[insnjsr->r];
-                    RETURN_IF_INVALID(tmpValue);
-                    dst = tmpValue.value();
-
+                    {
+                        bool ok = insn1->getAddress (this, r, dst);
+                        src = r[insnjsr->r];
+                        if (!ok)
+                        {
+                            // Illegal instruction
+                            TRCTrap(4, TRC_TRAP_RADDR);
+			                setTrap (&busError); 
+                            return;
+                        }
+                    }
                     r[6] -= 2;
-                    WRITE(r[6], src);
+                    putWord (r[6], src);
                     r[insnjsr->r] = r[7];
                     r[7] = dst;
                     break;
 
                 case 00050: /* CLR */
-                    CPUWRITEW(insn1->rn, insn1->mode, 0);
+                    if (!insn1->putOperand (this, r, 
+                            Bitmask(OperandOptions::Word), 0))
+                        return;
                     PSW_CLR(PSW_N | PSW_V | PSW_C);
                     PSW_SET(PSW_Z);
                     break;
+
                 case 00051: /* COM */
-                    tmp = CPUREADNW(insn1->rn, insn1->mode);
+                    if (!insn1->getOperand(this, r, 
+                            Bitmask(OperandOptions::Word), tmp))
+                        return;
                     tmp = ~tmp;
-                    CPUWRITEW(insn1->rn, insn1->mode, tmp);
+                    
+                    if (!insn1->putOperand (this, r, 
+                            Bitmask(OperandOptions::Word), tmp))
+                         return;
                     PSW_CLR(PSW_V);
                     PSW_SET(PSW_C);
                     PSW_EQ(PSW_N, tmp & 0x8000);
                     PSW_EQ(PSW_Z, !tmp);
                     break;
+
                 case 00052: /* INC */
-                    src = CPUREADNW(insn1->rn, insn1->mode);
+                    if (!insn1->getOperand(this, r, 
+                            Bitmask(OperandOptions::Word), src))
+                        return;
                     tmp = src + 1;
-                    CPUWRITEW(insn1->rn, insn1->mode, tmp);
+                    
+                    if (!insn1->putOperand (this, r, 
+                            Bitmask(OperandOptions::Word), tmp))
+                        return;
+
                     PSW_EQ(PSW_V, src == 077777)
                         PSW_EQ(PSW_N, tmp & 0x8000);
                     PSW_EQ(PSW_Z, !tmp);
                     break;
+
                 case 00053: /* DEC */
-                    src = CPUREADNW(insn1->rn, insn1->mode);
+                    if (!insn1->getOperand (this, r, 
+                            Bitmask(OperandOptions::Word), src))
+                        return;
                     tmp = src - 1;
-                    CPUWRITEW(insn1->rn, insn1->mode, tmp);
+                    
+                    if (!insn1->putOperand (this, r, 
+                            Bitmask(OperandOptions::Word), tmp))
+                        return;
+
                     PSW_EQ(PSW_V, src == 0100000)
                         PSW_EQ(PSW_N, tmp & 0x8000);
                     PSW_EQ(PSW_Z, !tmp);
                     break;
+
                 case 00054: /* NEG */
-                    tmp = CPUREADNW(insn1->rn, insn1->mode);
+                    if (!insn1->getOperand(this, r, 
+                            Bitmask(OperandOptions::Word), tmp))
+                        return;
+
                     if (tmp != 0100000)
-                    {
                         tmp = -tmp;
-                    }
-                    CPUWRITEW(insn1->rn, insn1->mode, tmp);
+
+                    if (!insn1->putOperand (this, r, 
+                            Bitmask(OperandOptions::Word), tmp))
+                        return;
+
                     PSW_EQ(PSW_V, tmp == 0100000)
                         PSW_EQ(PSW_N, tmp & 0x8000);
                     PSW_EQ(PSW_Z, !tmp);
                     PSW_EQ(PSW_C, tmp);
                     break;
+
                 case 00055: /* ADC */
-                    src = CPUREADNW(insn1->rn, insn1->mode);
+                    if (!insn1->getOperand (this, r, 
+                            Bitmask(OperandOptions::Word), src))
+                        return;
+
                     tmp2 = PSW_GET(PSW_C) ? 1 : 0;
                     tmp = src + tmp2;
-                    CPUWRITEW(insn1->rn, insn1->mode, tmp);
+                    
+                    if (!insn1->putOperand (this, r, 
+                            Bitmask(OperandOptions::Word), tmp))
+                        return;
+
                     PSW_EQ(PSW_V, src == 0077777 && PSW_GET(PSW_C));
                     PSW_EQ(PSW_C, src == 0177777 && PSW_GET(PSW_C));
                     PSW_EQ(PSW_N, tmp & 0x8000);
                     PSW_EQ(PSW_Z, !tmp);
                     break;
+
                 case 00056: /* SBC */
-                    src = CPUREADNW(insn1->rn, insn1->mode);
+                    if (!insn1->getOperand (this, r, 
+                            Bitmask(OperandOptions::Word), src))
+                        return;
+
                     tmp2 = PSW_GET(PSW_C) ? 1 : 0;
                     tmp = src - tmp2;
-                    CPUWRITEW(insn1->rn, insn1->mode, tmp);
+                    
+                    if (!insn1->putOperand (this, r, 
+                            Bitmask(OperandOptions::Word), tmp))
+                        return;
+
                     PSW_EQ(PSW_V, src == 0100000);
                     PSW_EQ(PSW_C, !src && PSW_GET(PSW_C));
                     PSW_EQ(PSW_N, tmp & 0x8000);
                     PSW_EQ(PSW_Z, !tmp);
                     break;
+
                 case 00057: /* TST */
-                    tmp = CPUREADW(insn1->rn, insn1->mode);
+                    if (!insn1->getOperand (this, r, 
+                        Bitmask(OperandOptions::Word |
+                            OperandOptions::AutoIncr), tmp))
+                        return;
+
                     PSW_CLR(PSW_V);
                     PSW_CLR(PSW_C);
                     PSW_EQ(PSW_N, tmp & 0x8000);
                     PSW_EQ(PSW_Z, !tmp);
                     break;
+
                 case 00060: /* ROR */
-                    src = CPUREADNW(insn1->rn, insn1->mode);
+                    if (!insn1->getOperand (this, r, 
+                            Bitmask(OperandOptions::Word), src))
+                        return;
                     tmp2 = PSW_GET(PSW_C);
                     tmp = src >> 1;
                     if (tmp2)
-                    {
                         tmp |= 0x8000;
-                    }
-                    CPUWRITEW(insn1->rn, insn1->mode, tmp);
+
+                    if (!insn1->putOperand (this, r, 
+                            Bitmask(OperandOptions::Word), tmp))
+                        return;
+
                     PSW_EQ(PSW_C, src & 0x0001);
                     PSW_EQ(PSW_N, tmp & 0x8000);
                     PSW_EQ(PSW_Z, !tmp);
                     PSW_EQ(PSW_V, PSW_GET(PSW_N) ^ PSW_GET(PSW_C));
                     break;
+
                 case 00061: /* ROL */
-                    src = CPUREADNW(insn1->rn, insn1->mode);
+                    if (!insn1->getOperand (this, r, 
+                            Bitmask(OperandOptions::Word), src))
+                        return;
                     tmp2 = PSW_GET(PSW_C);
                     tmp = src << 1;
                     if (tmp2)
-                    {
                         tmp |= 0x0001;
-                    }
-                    CPUWRITEW(insn1->rn, insn1->mode, tmp);
+
+                    if (!insn1->putOperand (this, r, 
+                            Bitmask(OperandOptions::Word), tmp))
+                        return;
+
                     PSW_EQ(PSW_C, src & 0x8000);
                     PSW_EQ(PSW_N, tmp & 0x8000);
                     PSW_EQ(PSW_Z, !tmp);
                     PSW_EQ(PSW_V, PSW_GET(PSW_N) ^ PSW_GET(PSW_C));
                     break;
+
                 case 00062: /* ASR */
-                    src = CPUREADNW(insn1->rn, insn1->mode);
+                    if (!insn1->getOperand (this, r, 
+                            Bitmask(OperandOptions::Word), src))
+                        return;
                     tmp = src;
                     if (tmp & 0x8000)
                     {
@@ -1217,30 +854,41 @@ void KD11CPU::execInstr(QBUS* bus)
                         tmp |= 0x8000;
                     }
                     else
-                    {
                         tmp >>= 1;
-                    }
-                    CPUWRITEW(insn1->rn, insn1->mode, tmp);
+ 
+                    if (!insn1->putOperand (this, r, 
+                            Bitmask(OperandOptions::Word), tmp))
+                        return;
+
                     PSW_EQ(PSW_C, src & 1);
                     PSW_EQ(PSW_N, tmp & 0x8000);
                     PSW_EQ(PSW_Z, !tmp);
                     PSW_EQ(PSW_V, PSW_GET(PSW_N) ^ PSW_GET(PSW_C));
                     break;
+
                 case 00063: /* ASL */
-                    src = CPUREADNW(insn1->rn, insn1->mode);
+                    if (!insn1->getOperand (this, r, 
+                            Bitmask(OperandOptions::Word), src))
+                        return;
                     tmp = src << 1;
-                    CPUWRITEW(insn1->rn, insn1->mode, tmp);
+                    
+                    if (!insn1->putOperand (this, r, 
+                            Bitmask(OperandOptions::Word), tmp))
+                        return;
+
                     PSW_EQ(PSW_C, src & 0x8000);
                     PSW_EQ(PSW_N, tmp & 0x8000);
                     PSW_EQ(PSW_Z, !tmp);
                     PSW_EQ(PSW_V, PSW_GET(PSW_N) ^ PSW_GET(PSW_C));
                     break;
+
                 case 00064: /* MARK */
                     r[6] = r[7] + 2 * insnmark->nn;
                     r[7] = r[5];
-                    r[5] = READ(r[6]);
+                    r[5] = fetchWord(r[6]);
                     r[6] += 2;
                     break;
+
                 case 00067: /* SXT */
                     if (PSW_GET(PSW_N))
                     {
@@ -1250,26 +898,48 @@ void KD11CPU::execInstr(QBUS* bus)
                     {
                         tmp = 0;
                     }
-                    CPUWRITEW(insn1->rn, insn1->mode, tmp);
+                    
+                    if (!insn1->putOperand (this, r, 
+                            Bitmask(OperandOptions::Word), tmp))
+                        return;
+
                     PSW_EQ(PSW_Z, !PSW_GET(PSW_N));
                     PSW_CLR(PSW_V);
                     break;
+
                 default: /* 006500-006677, 007000-007777: unused */
                     TRCTrap(010, TRC_TRAP_ILL);
-                    TRAP(illegalInstructionTrap);
+                    setTrap (&illegalInstructionTrap);
                     break;
             }
             break;
+
         case 001: /* MOV */
-            tmp = CPUREADW(insn2->src_rn, insn2->src_mode);
-            CPUWRITEW(insn2->dst_rn, insn2->dst_mode, tmp);
+            if (!insn2->getSourceOperand (this, r, 
+                Bitmask(OperandOptions::Word | 
+                    OperandOptions::AutoIncr), tmp))
+                return;
+
+            if (!insn2->putDestOperand (this, r, 
+                    Bitmask(OperandOptions::Word), tmp))
+                return;
+
             PSW_EQ(PSW_N, tmp & 0x8000);
             PSW_EQ(PSW_Z, !tmp);
             PSW_CLR(PSW_V);
             break;
+
         case 002: /* CMP */
-            src = CPUREADW(insn2->src_rn, insn2->src_mode);
-            dst = CPUREADW(insn2->dst_rn, insn2->dst_mode);
+            if (!insn2->getSourceOperand (this, r, 
+                Bitmask(OperandOptions::Word |
+                    OperandOptions::AutoIncr), src))
+                return;
+
+            if (!insn2->getDestOperand (this, r, 
+                Bitmask(OperandOptions::Word |
+                    OperandOptions::AutoIncr), dst))
+                return;
+
             tmp = src - dst;
             PSW_EQ(PSW_N, tmp & 0x8000);
             PSW_EQ(PSW_Z, !tmp);
@@ -1277,49 +947,99 @@ void KD11CPU::execInstr(QBUS* bus)
                 && ((dst & 0x8000) == (tmp & 0x8000)));
             PSW_EQ(PSW_C, ((u32)src - (u32)dst) & 0x10000);
             break;
+
         case 003: /* BIT */
-            src = CPUREADW(insn2->src_rn, insn2->src_mode);
-            dst = CPUREADW(insn2->dst_rn, insn2->dst_mode);
+            if (!insn2->getSourceOperand (this, r, 
+                Bitmask(OperandOptions::Word |
+                    OperandOptions::AutoIncr), src))
+                return;
+
+            if (!insn2->getDestOperand (this, r, 
+                Bitmask(OperandOptions::Word |
+                    OperandOptions::AutoIncr), dst))
+                return;
+
             tmp = src & dst;
             PSW_EQ(PSW_N, tmp & 0x8000);
             PSW_EQ(PSW_Z, !tmp);
             PSW_CLR(PSW_V);
             break;
+
         case 004: /* BIC */
-            src = CPUREADW(insn2->src_rn, insn2->src_mode);
-            dst = CPUREADNW(insn2->dst_rn, insn2->dst_mode);
+            if (!insn2->getSourceOperand (this, r, 
+                Bitmask(OperandOptions::Word |
+                    OperandOptions::AutoIncr), src))
+                return;
+
+            if (!insn2->getDestOperand (this, r, 
+                Bitmask(OperandOptions::Word), dst))
+                return;
+
             tmp = ~src & dst;
-            CPUWRITEW(insn2->dst_rn, insn2->dst_mode, tmp);
+            
+            if (!insn2->putDestOperand (this, r, 
+                    Bitmask(OperandOptions::Word), tmp))
+                return;
+
             PSW_EQ(PSW_N, tmp & 0x8000);
             PSW_EQ(PSW_Z, !tmp);
             PSW_CLR(PSW_V);
             break;
+
         case 005: /* BIS */
-            src = CPUREADW(insn2->src_rn, insn2->src_mode);
-            dst = CPUREADNW(insn2->dst_rn, insn2->dst_mode);
+            if (!insn2->getSourceOperand (this, r, 
+                Bitmask(OperandOptions::Word |
+                    OperandOptions::AutoIncr), src))
+                return;
+
+            if (!insn2->getDestOperand (this, r, 
+                    Bitmask(OperandOptions::Word), dst))
+                return;
+
             tmp = src | dst;
-            CPUWRITEW(insn2->dst_rn, insn2->dst_mode, tmp);
+            
+            if (!insn2->putDestOperand (this, r, 
+                    Bitmask(OperandOptions::Word), tmp))
+                return;
+
             PSW_EQ(PSW_N, tmp & 0x8000);
             PSW_EQ(PSW_Z, !tmp);
             PSW_CLR(PSW_V);
             break;
+
         case 006: /* ADD */
-            src = CPUREADW(insn2->src_rn, insn2->src_mode);
-            dst = CPUREADNW(insn2->dst_rn, insn2->dst_mode);
+            if (!insn2->getSourceOperand (this, r, 
+                Bitmask(OperandOptions::Word |
+                    OperandOptions::AutoIncr), src))
+                return;
+
+            if (!insn2->getDestOperand (this, r, 
+                    Bitmask(OperandOptions::Word), dst))
+                return;
+
             tmp = src + dst;
-            CPUWRITEW(insn2->dst_rn, insn2->dst_mode, tmp);
+            
+            if (!insn2->putDestOperand (this, r, 
+                    Bitmask(OperandOptions::Word), tmp))
+                return;
+
             PSW_EQ(PSW_N, tmp & 0x8000);
             PSW_EQ(PSW_Z, !tmp);
             PSW_EQ(PSW_V, ((src & 0x8000) == (dst & 0x8000)) \
                 && ((dst & 0x8000) != (tmp & 0x8000)));
             PSW_EQ(PSW_C, ((u32)src + (u32)dst) & 0x10000);
             break;
+
         case 007: /* 07 xx xx group */
             switch (insn >> 9)
             {
                 case 0070: /* MUL */
                     dst = r[insnjsr->r];
-                    src = CPUREADW(insnjsr->rn, insnjsr->mode);
+                    if (!insnjsr->getOperand (this, r, 
+                        Bitmask(OperandOptions::Word |
+                            OperandOptions::AutoIncr), src))
+                        return;
+
                     tmps32 = (s32)(s16)dst * (s16)src;
                     r[insnjsr->r] = (u16)(tmps32 >> 16);
                     r[insnjsr->r | 1] = (u16)tmps32;
@@ -1328,10 +1048,15 @@ void KD11CPU::execInstr(QBUS* bus)
                     PSW_EQ(PSW_Z, !tmps32);
                     PSW_EQ(PSW_C, (tmps32 >= 0x7FFF) || (tmps32 < -0x8000));
                     break;
+
                 case 0071: /* DIV */
-                    tmps32 = (r[insnjsr->r] << 16)
-                        | r[insnjsr->r | 1];
-                    src = CPUREADW(insnjsr->rn, insnjsr->mode);
+                    tmps32 = (r[insnjsr->r] << 16) | r[insnjsr->r | 1];
+                    
+                    if (!insnjsr->getOperand (this, r, 
+                        Bitmask(OperandOptions::Word | 
+                            OperandOptions::AutoIncr), src))
+                        return;
+
                     if (src == 0)
                     {
                         PSW_SET(PSW_C);
@@ -1357,7 +1082,12 @@ void KD11CPU::execInstr(QBUS* bus)
                     break;
                 case 0072: /* ASH */
                     dst = r[insnjsr->r];
-                    src = CPUREADW(insnjsr->rn, insnjsr->mode);
+                    
+                    if (!insnjsr->getOperand (this, r, 
+                        Bitmask(OperandOptions::Word |
+                            OperandOptions::AutoIncr), src))
+                        return;
+
                     if (src & 0x20)
                     { /* negative; right */
                         s16 stmp, stmp2;
@@ -1402,11 +1132,16 @@ void KD11CPU::execInstr(QBUS* bus)
                     PSW_EQ(PSW_N, tmp & 0x8000);
                     PSW_EQ(PSW_Z, !tmp);
                     break;
+
                 case 0073: /* ASHC */
                     dst = r[insnjsr->r];
-                    tmps32 = (r[insnjsr->r] << 16)
-                        | r[insnjsr->r | 1];
-                    src = CPUREADW(insnjsr->rn, insnjsr->mode);
+                    tmps32 = (r[insnjsr->r] << 16) | r[insnjsr->r | 1];
+                    
+                    if (!insnjsr->getOperand (this, r, 
+                        Bitmask(OperandOptions::Word |
+                            OperandOptions::AutoIncr), src))
+                        return;
+
                     if ((src & 0x3F) == 0x20)
                     { /* negative; 32 right */
                         PSW_EQ(PSW_C, tmps32 & 0x80000000);
@@ -1449,30 +1184,39 @@ void KD11CPU::execInstr(QBUS* bus)
                     PSW_EQ(PSW_N, tmps32 & 0x80000000);
                     PSW_EQ(PSW_Z, !tmps32);
                     break;
+
                 case 0074: /* XOR */
                     src = r[insnjsr->r];
-                    dst = CPUREADNW(insnjsr->rn, insnjsr->mode);
+                    
+                    if (!insnjsr->getOperand (this, r, 
+                            Bitmask(OperandOptions::Word), dst))
+                        return;
+
                     tmp = src ^ dst;
-                    CPUWRITEW(insnjsr->rn, insnjsr->mode, tmp);
+                    
+                    if (!insnjsr->putOperand (this, r, tmp))
+                        return;
+
                     PSW_EQ(PSW_N, tmp & 0x8000);
                     PSW_EQ(PSW_Z, !tmp);
                     PSW_CLR(PSW_V);
                     break;
+
                 case 0075: /* FIS instructions */
                     switch (insn >> 3)
                     {
 #ifdef USE_FLOAT
                         case 007500: /* FADD */
-                            f1._u32 = (READ(r[insnrts->rn] + 4) << 16)
-                                | READ(r[insnrts->rn] + 6);
-                            f2._u32 = (READ(r[insnrts->rn]) << 16)
-                                | READ(r[insnrts->rn] + 2);
+                            f1._u32 = (fetchWord(r[insnrts->rn] + 4) << 16)
+                                | fetchWord(r[insnrts->rn] + 6);
+                            f2._u32 = (fetchWord(r[insnrts->rn]) << 16)
+                                | fetchWord(r[insnrts->rn] + 2);
                             f3._f32 = f1._f32 + f2._f32;
                             /* TODO: result <= 2**-128 -> result = 0 */
                             /* TODO: implement traps */
-                            WRITE(r[insnrts->rn] + 4,
+                            putWord (r[insnrts->rn] + 4,
                                 (u16)(f3._u32 >> 16));
-                            WRITE(r[insnrts->rn] + 6, (u16)f3._u32);
+                            putWord (r[insnrts->rn] + 6, (u16)f3._u32);
                             r[insnrts->rn] += 4;
                             PSW_EQ(PSW_N, f3._f32 < 0);
                             PSW_EQ(PSW_Z, f3._f32 == 0);
@@ -1480,16 +1224,16 @@ void KD11CPU::execInstr(QBUS* bus)
                             PSW_CLR(PSW_C);
                             break;
                         case 007501: /* FSUB */
-                            f1._u32 = (READ(r[insnrts->rn] + 4) << 16)
-                                | READ(r[insnrts->rn] + 6);
-                            f2._u32 = (READ(r[insnrts->rn]) << 16)
-                                | READ(r[insnrts->rn] + 2);
+                            f1._u32 = (fetchWord(r[insnrts->rn] + 4) << 16)
+                                | fetchWord(r[insnrts->rn] + 6);
+                            f2._u32 = (fetchWord(r[insnrts->rn]) << 16)
+                                | fetchWord(r[insnrts->rn] + 2);
                             f3._f32 = f1._f32 - f2._f32;
                             /* TODO: result <= 2**-128 -> result = 0 */
                             /* TODO: implement traps */
-                            WRITE(r[insnrts->rn] + 4,
+                            putWord (r[insnrts->rn] + 4,
                                 (u16)(f3._u32 >> 16));
-                            WRITE(r[insnrts->rn] + 6, (u16)f3._u32);
+                            putWord (r[insnrts->rn] + 6, (u16)f3._u32);
                             r[insnrts->rn] += 4;
                             PSW_EQ(PSW_N, f3._f32 < 0);
                             PSW_EQ(PSW_Z, f3._f32 == 0);
@@ -1497,16 +1241,16 @@ void KD11CPU::execInstr(QBUS* bus)
                             PSW_CLR(PSW_C);
                             break;
                         case 007502: /* FMUL */
-                            f1._u32 = (READ(r[insnrts->rn] + 4) << 16)
-                                | READ(r[insnrts->rn] + 6);
-                            f2._u32 = (READ(r[insnrts->rn]) << 16)
-                                | READ(r[insnrts->rn] + 2);
+                            f1._u32 = (fetchWord(r[insnrts->rn] + 4) << 16)
+                                | fetchWord(r[insnrts->rn] + 6);
+                            f2._u32 = (fetchWord(r[insnrts->rn]) << 16)
+                                | fetchWord(r[insnrts->rn] + 2);
                             f3._f32 = f1._f32 * f2._f32;
                             /* TODO: result <= 2**-128 -> result = 0 */
                             /* TODO: implement traps */
-                            WRITE(r[insnrts->rn] + 4,
+                            putWord (r[insnrts->rn] + 4,
                                 (u16)(f3._u32 >> 16));
-                            WRITE(r[insnrts->rn] + 6, (u16)f3._u32);
+                            putWord (r[insnrts->rn] + 6, (u16)f3._u32);
                             r[insnrts->rn] += 4;
                             PSW_EQ(PSW_N, f3._f32 < 0);
                             PSW_EQ(PSW_Z, f3._f32 == 0);
@@ -1514,18 +1258,18 @@ void KD11CPU::execInstr(QBUS* bus)
                             PSW_CLR(PSW_C);
                             break;
                         case 007503: /* FDIV */
-                            f1._u32 = (READ(r[insnrts->rn] + 4) << 16)
-                                | READ(r[insnrts->rn] + 6);
-                            f2._u32 = (READ(r[insnrts->rn]) << 16)
-                                | READ(r[insnrts->rn] + 2);
+                            f1._u32 = (fetchWord(r[insnrts->rn] + 4) << 16)
+                                | fetchWord(r[insnrts->rn] + 6);
+                            f2._u32 = (fetchWord(r[insnrts->rn]) << 16)
+                                | fetchWord(r[insnrts->rn] + 2);
                             if (f2._f32 != 0)
                             {
                                 f3._f32 = f1._f32 / f2._f32;
                                 /* TODO: result <= 2**-128 -> result = 0 */
                                 /* TODO: implement traps */
-                                WRITE(r[insnrts->rn] + 4,
+                                putWord (r[insnrts->rn] + 4,
                                     (u16)(f3._u32 >> 16));
-                                WRITE(r[insnrts->rn] + 6,
+                                putWord (r[insnrts->rn] + 6,
                                     (u16)f3._u32);
                                 PSW_EQ(PSW_N, f3._f32 < 0);
                                 PSW_EQ(PSW_Z, f3._f32 == 0);
@@ -1538,7 +1282,7 @@ void KD11CPU::execInstr(QBUS* bus)
                         default:
                             /* 075040-076777: unused */
                             TRCTrap(010, TRC_TRAP_ILL);
-                            TRAP(illegalInstructionTrap);
+                            setTrap (&illegalInstructionTrap);
                             break;
                     }
                     break;
@@ -1551,10 +1295,11 @@ void KD11CPU::execInstr(QBUS* bus)
                     break;
                 default:
                     TRCTrap(010, TRC_TRAP_ILL);
-                    TRAP(illegalInstructionTrap);
+                    setTrap (&illegalInstructionTrap);
                     break;
             }
             break;
+
         case 010: /* 10 xx xx group */
             switch (insn >> 6)
             {
@@ -1567,6 +1312,7 @@ void KD11CPU::execInstr(QBUS* bus)
                         r[7] += (s16)((s8)insnbr->offset) * 2;
                     }
                     break;
+
                 case 01004: /* BMI */
                 case 01005:
                 case 01006:
@@ -1576,6 +1322,7 @@ void KD11CPU::execInstr(QBUS* bus)
                         r[7] += (s16)((s8)insnbr->offset) * 2;
                     }
                     break;
+
                 case 01010: /* BHI */
                 case 01011:
                 case 01012:
@@ -1585,6 +1332,7 @@ void KD11CPU::execInstr(QBUS* bus)
                         r[7] += (s16)((s8)insnbr->offset) * 2;
                     }
                     break;
+
                 case 01014: /* BLOS */
                 case 01015:
                 case 01016:
@@ -1594,6 +1342,7 @@ void KD11CPU::execInstr(QBUS* bus)
                         r[7] += (s16)((s8)insnbr->offset) * 2;
                     }
                     break;
+
                 case 01020: /* BVC */
                 case 01021:
                 case 01022:
@@ -1603,6 +1352,7 @@ void KD11CPU::execInstr(QBUS* bus)
                         r[7] += (s16)((s8)insnbr->offset) * 2;
                     }
                     break;
+
                 case 01024: /* BVS */
                 case 01025:
                 case 01026:
@@ -1612,6 +1362,7 @@ void KD11CPU::execInstr(QBUS* bus)
                         r[7] += (s16)((s8)insnbr->offset) * 2;
                     }
                     break;
+
                 case 01030: /* BCC */
                 case 01031:
                 case 01032:
@@ -1621,6 +1372,7 @@ void KD11CPU::execInstr(QBUS* bus)
                         r[7] += (s16)((s8)insnbr->offset) * 2;
                     }
                     break;
+
                 case 01034: /* BCS */
                 case 01035:
                 case 01036:
@@ -1630,119 +1382,197 @@ void KD11CPU::execInstr(QBUS* bus)
                         r[7] += (s16)((s8)insnbr->offset) * 2;
                     }
                     break;
+
                 case 01040: /* EMT */
                 case 01041:
                 case 01042:
                 case 01043:
                     TRCTrap(030, TRC_TRAP);
-                    TRAP(EMT);
+                    setTrap (&EMT);
                     break;
+
                 case 01044: /* TRAP */
                 case 01045:
                 case 01046:
                 case 01047:
                     TRCTrap(034, TRC_TRAP);
-                    TRAP(TRP);
+                    setTrap (&TRP);
                     break;
+
                 case 01050: /* CLRB */
-                    CPUWRITEB(insn1->rn, insn1->mode, 0);
+                    if (!insn1->putOperand (this, r, 
+                            Bitmask(OperandOptions::Byte), 0))
+                        return;
+
                     PSW_CLR(PSW_N | PSW_V | PSW_C);
                     PSW_SET(PSW_Z);
                     break;
+
                 case 01051: /* COMB */
-                    tmp = CPUREADNB(insn1->rn, insn1->mode);
+                    if (!insn1->getOperand (this, r, 
+                            Bitmask(OperandOptions::Byte), tmp))
+                        return;
+
                     tmp = ~tmp;
-                    CPUWRITEB(insn1->rn, insn1->mode, tmp);
+                    
+                    if (!insn1->putOperand (this, r, 
+                            Bitmask(OperandOptions::Byte), tmp))
+                        return;
+
                     PSW_CLR(PSW_V);
                     PSW_SET(PSW_C);
                     PSW_EQ(PSW_N, tmp & 0x80);
                     PSW_EQ(PSW_Z, !((u8)tmp));
                     break;
+
                 case 01052: /* INCB */
-                    src = CPUREADNB(insn1->rn, insn1->mode);
+                    if (!insn1->getOperand (this, r, 
+                            Bitmask(OperandOptions::Byte), src))
+                        return;
+
                     tmp = (u8)(src + 1);
-                    CPUWRITEB(insn1->rn, insn1->mode, tmp);
+                    
+                    if (!insn1->putOperand (this, r, 
+                            Bitmask(OperandOptions::Byte), tmp))
+                        return;
+
                     PSW_EQ(PSW_V, src == 000177)
                         PSW_EQ(PSW_N, tmp & 0x80);
                     PSW_EQ(PSW_Z, !tmp);
                     break;
+
                 case 01053: /* DECB */
-                    src = CPUREADNB(insn1->rn, insn1->mode);
+                    if (!insn1->getOperand (this, r, 
+                            Bitmask(OperandOptions::Byte), src))
+                        return;
+
                     tmp = (u8)(src - 1);
-                    CPUWRITEB(insn1->rn, insn1->mode, tmp);
+                    
+                    if (!insn1->putOperand (this, r, 
+                            Bitmask(OperandOptions::Byte), tmp))
+                        return;
+
                     PSW_EQ(PSW_V, src == 0000200)
                         PSW_EQ(PSW_N, tmp & 0x80);
                     PSW_EQ(PSW_Z, !tmp);
                     break;
+
                 case 01054: /* NEGB */
-                    tmp = CPUREADNB(insn1->rn, insn1->mode);
+                    if (!insn1->getOperand (this, r, 
+                            Bitmask(OperandOptions::Byte), tmp))
+                        return;
+
                     if (tmp != 0200)
                     {
                         tmp = -tmp;
                     }
-                    CPUWRITEB(insn1->rn, insn1->mode, tmp);
+                    if (!insn1->putOperand (this, r, 
+                            Bitmask(OperandOptions::Byte), tmp))
+                        return;
+
                     PSW_EQ(PSW_V, tmp == 0200)
                         PSW_EQ(PSW_N, tmp & 0x80);
                     PSW_EQ(PSW_Z, !tmp);
                     PSW_EQ(PSW_C, tmp);
                     break;
+
                 case 01055: /* ADCB */
-                    src = CPUREADNB(insn1->rn, insn1->mode);
+                    if (!insn1->getOperand (this, r, 
+                            Bitmask(OperandOptions::Byte), src))
+                        return;
+
                     tmp2 = PSW_GET(PSW_C) ? 1 : 0;
                     tmp = (u8)(src + tmp2);
-                    CPUWRITEB(insn1->rn, insn1->mode, tmp);
+                    
+                    if (!insn1->putOperand (this, r, 
+                            Bitmask(OperandOptions::Byte), tmp))
+                        return;
+
                     PSW_EQ(PSW_V, src == 0177 && PSW_GET(PSW_C));
                     PSW_EQ(PSW_C, src == 0377 && PSW_GET(PSW_C));
                     PSW_EQ(PSW_N, tmp & 0x80);
                     PSW_EQ(PSW_Z, !tmp);
                     break;
+
                 case 01056: /* SBCB */
-                    src = CPUREADNB(insn1->rn, insn1->mode);
+                    if (!insn1->getOperand (this, r, 
+                            Bitmask(OperandOptions::Byte), src))
+                        return;
+
                     tmp2 = PSW_GET(PSW_C) ? 1 : 0;
                     tmp = (u8)(src - tmp2);
-                    CPUWRITEB(insn1->rn, insn1->mode, tmp);
+                    
+                    if (!insn1->putOperand (this, r, 
+                            Bitmask(OperandOptions::Byte), tmp))
+                        return;
+
                     PSW_EQ(PSW_V, src == 0200);
                     PSW_EQ(PSW_C, !src && PSW_GET(PSW_C));
                     PSW_EQ(PSW_N, tmp & 0x80);
                     PSW_EQ(PSW_Z, !tmp);
                     break;
+
                 case 01057: /* TSTB */
-                    tmp = CPUREADB(insn1->rn, insn1->mode);
+                    if (!insn1->getOperand (this, r, 
+                        Bitmask(OperandOptions::Byte |
+                            OperandOptions::AutoIncr), tmp))
+                        return;
+
                     PSW_CLR(PSW_V);
                     PSW_CLR(PSW_C);
                     PSW_EQ(PSW_N, tmp & 0x80);
                     PSW_EQ(PSW_Z, !tmp);
                     break;
+
                 case 01060: /* RORB */
-                    src = CPUREADNB(insn1->rn, insn1->mode);
+                    if (!insn1->getOperand (this, r, 
+                            Bitmask(OperandOptions::Byte), src))
+                        return;
+
                     tmp2 = PSW_GET(PSW_C);
                     tmp = src >> 1;
                     if (tmp2)
                     {
                         tmp |= 0x80;
                     }
-                    CPUWRITEB(insn1->rn, insn1->mode, tmp);
+                    
+                    if (!insn1->putOperand (this, r, 
+                            Bitmask(OperandOptions::Byte), tmp))
+                        return;
+
                     PSW_EQ(PSW_C, src & 0x01);
                     PSW_EQ(PSW_N, tmp & 0x80);
                     PSW_EQ(PSW_Z, !tmp);
                     PSW_EQ(PSW_V, PSW_GET(PSW_N) ^ PSW_GET(PSW_C));
                     break;
+
                 case 01061: /* ROLB */
-                    src = CPUREADNB(insn1->rn, insn1->mode);
+                    if (!insn1->getOperand (this, r, 
+                            Bitmask(OperandOptions::Byte), src))
+                        return;
+
                     tmp2 = PSW_GET(PSW_C);
                     tmp = (u8)(src << 1);
                     if (tmp2)
                     {
                         tmp |= 0x01;
                     }
-                    CPUWRITEB(insn1->rn, insn1->mode, tmp);
+                    
+                    if (!insn1->putOperand (this, r, 
+                            Bitmask(OperandOptions::Byte), tmp))
+                        return;
+
                     PSW_EQ(PSW_C, src & 0x80);
                     PSW_EQ(PSW_N, tmp & 0x80);
                     PSW_EQ(PSW_Z, !tmp);
                     PSW_EQ(PSW_V, PSW_GET(PSW_N) ^ PSW_GET(PSW_C));
                     break;
+
                 case 01062: /* ASRB */
-                    src = CPUREADNB(insn1->rn, insn1->mode);
+                    if (!insn1->getOperand (this, r, 
+                            Bitmask(OperandOptions::Byte), src))
+                        return;
+
                     tmp = src;
                     if (tmp & 0x80)
                     {
@@ -1753,27 +1583,45 @@ void KD11CPU::execInstr(QBUS* bus)
                     {
                         tmp >>= 1;
                     }
-                    CPUWRITEB(insn1->rn, insn1->mode, tmp);
+                    
+                    if (!insn1->putOperand (this, r, 
+                            Bitmask(OperandOptions::Byte), tmp))
+                        return;
+
                     PSW_EQ(PSW_C, src & 1);
                     PSW_EQ(PSW_N, tmp & 0x80);
                     PSW_EQ(PSW_Z, !tmp);
                     PSW_EQ(PSW_V, PSW_GET(PSW_N) ^ PSW_GET(PSW_C));
                     break;
+
                 case 01063: /* ASLB */
-                    src = CPUREADNB(insn1->rn, insn1->mode);
+                    if (!insn1->getOperand (this, r, 
+                            Bitmask(OperandOptions::Byte), src))
+                        return;
+
                     tmp = (u8)(src << 1);
-                    CPUWRITEB(insn1->rn, insn1->mode, tmp);
+                    
+                    if (!insn1->putOperand (this, r, 
+                            Bitmask(OperandOptions::Byte), tmp))
+                        return;
+
                     PSW_EQ(PSW_C, src & 0x80);
                     PSW_EQ(PSW_N, tmp & 0x80);
                     PSW_EQ(PSW_Z, !tmp);
                     PSW_EQ(PSW_V, PSW_GET(PSW_N) ^ PSW_GET(PSW_C));
                     break;
+
                 case 01064: 
                     // MTPS
                     // Note that the T bit cannot be set with this instruction
-                    tmp = CPUREADB(insn1->rn, insn1->mode);
+                    if (!insn1->getOperand (this, r, 
+                        Bitmask(OperandOptions::Byte |
+                            OperandOptions::AutoIncr), tmp))
+                        return;
+
                     psw = (psw & PSW_T) | (tmp & ~PSW_T);
                     break;
+
                 case 01067: /* MFPS */
                     tmp = (u8)psw;
                     if (insn1->mode == 0)
@@ -1782,21 +1630,28 @@ void KD11CPU::execInstr(QBUS* bus)
                     }
                     else
                     {
-                        CPUWRITEB(insn1->rn, insn1->mode, tmp);
+                        if (!insn1->putOperand (this, r, 
+                            Bitmask(OperandOptions::Byte), tmp))
+                        return;
                     }
                     PSW_EQ(PSW_N, tmp & 0x80);
                     PSW_EQ(PSW_Z, !(tmp & 0xFF));
                     PSW_CLR(PSW_V);
                     break;
+
                 default:
                     /* unused */
                     TRCTrap(010, TRC_TRAP_ILL);
-                    TRAP(illegalInstructionTrap);
+                    setTrap (&illegalInstructionTrap);
                     break;
             }
             break;
+
         case 011: /* MOVB */
-            tmp = CPUREADB(insn2->src_rn, insn2->src_mode);
+            if (!insn2->getSourceOperand (this, r, 
+                Bitmask(OperandOptions::Byte |
+                    OperandOptions::AutoIncr), tmp))
+                return;
             tmp = (s8)tmp;
             if (insn2->dst_mode == 0)
             {
@@ -1804,15 +1659,26 @@ void KD11CPU::execInstr(QBUS* bus)
             }
             else
             {
-                CPUWRITEB(insn2->dst_rn, insn2->dst_mode, tmp);
+                if (!insn2->putDestOperand (this, r, 
+                    Bitmask(OperandOptions::Byte), tmp))
+                return;
             }
             PSW_EQ(PSW_N, tmp & 0x80);
             PSW_EQ(PSW_Z, !tmp);
             PSW_CLR(PSW_V);
             break;
+
         case 012: /* CMPB */
-            src = CPUREADB(insn2->src_rn, insn2->src_mode);
-            dst = CPUREADB(insn2->dst_rn, insn2->dst_mode);
+            if (!insn2->getSourceOperand (this, r, 
+                Bitmask(OperandOptions::Byte |
+                    OperandOptions::AutoIncr), src))
+                return;
+
+            if (!insn2->getDestOperand (this, r, 
+                Bitmask(OperandOptions::Byte |
+                    OperandOptions::AutoIncr), dst))
+                return;
+
             tmp = (u8)(src - dst);
             PSW_EQ(PSW_N, tmp & 0x80);
             PSW_EQ(PSW_Z, !tmp);
@@ -1820,46 +1686,92 @@ void KD11CPU::execInstr(QBUS* bus)
                 && ((dst & 0x80) == (tmp & 0x80)));
             PSW_EQ(PSW_C, (src - dst) & 0x100);
             break;
+
         case 013: /* BITB */
-            src = CPUREADB(insn2->src_rn, insn2->src_mode);
-            dst = CPUREADB(insn2->dst_rn, insn2->dst_mode);
+            if (!insn2->getSourceOperand (this, r, 
+                Bitmask(OperandOptions::Byte |
+                    OperandOptions::AutoIncr), src))
+                return;
+
+            if (!insn2->getDestOperand (this, r, 
+                Bitmask(OperandOptions::Byte |
+                    OperandOptions::AutoIncr), dst))
+                return;
+
             tmp = src & dst;
             PSW_EQ(PSW_N, tmp & 0x80);
             PSW_EQ(PSW_Z, !tmp);
             PSW_CLR(PSW_V);
             break;
+
         case 014: /* BICB */
-            src = CPUREADB(insn2->src_rn, insn2->src_mode);
-            dst = CPUREADNB(insn2->dst_rn, insn2->dst_mode);
+            if (!insn2->getSourceOperand (this, r, 
+                Bitmask(OperandOptions::Byte |
+                    OperandOptions::AutoIncr), src))
+                return;
+
+            if (!insn2->getDestOperand (this, r, 
+                Bitmask(OperandOptions::Byte), dst))
+                return;
+
             tmp = (u8)(~src & dst);
-            CPUWRITEB(insn2->dst_rn, insn2->dst_mode, tmp);
+            
+            if (!insn2->putDestOperand (this, r, 
+                    Bitmask(OperandOptions::Byte), tmp))
+                return;
+
             PSW_EQ(PSW_N, tmp & 0x80);
             PSW_EQ(PSW_Z, !tmp);
             PSW_CLR(PSW_V);
             break;
+
         case 015: /* BISB */
-            src = CPUREADB(insn2->src_rn, insn2->src_mode);
-            dst = CPUREADNB(insn2->dst_rn, insn2->dst_mode);
+            if (!insn2->getSourceOperand (this, r, 
+                Bitmask(OperandOptions::Byte |
+                    OperandOptions::AutoIncr), src))
+                return;
+
+            if (!insn2->getDestOperand (this, r, 
+                Bitmask(OperandOptions::Byte), dst))
+                return;
+
             tmp = src | dst;
-            CPUWRITEB(insn2->dst_rn, insn2->dst_mode, tmp);
+            
+            if (!insn2->putDestOperand (this, r, 
+                    Bitmask(OperandOptions::Byte), tmp))
+                return;
+
             PSW_EQ(PSW_N, tmp & 0x80);
             PSW_EQ(PSW_Z, !tmp);
             PSW_CLR(PSW_V);
             break;
+
         case 016: /* SUB */
-            src = CPUREADW(insn2->src_rn, insn2->src_mode);
-            dst = CPUREADNW(insn2->dst_rn, insn2->dst_mode);
+            if (!insn2->getSourceOperand (this, r, 
+                Bitmask(OperandOptions::Word | 
+                    OperandOptions::AutoIncr), src))
+                return;
+
+            if (!insn2->getDestOperand (this, r, 
+                    Bitmask(OperandOptions::Word), dst))
+                return;
+
             tmp = dst - src;
-            CPUWRITEW(insn2->dst_rn, insn2->dst_mode, tmp);
+            
+            if (!insn2->putDestOperand (this, r, 
+                    Bitmask(OperandOptions::Word), tmp))
+                return;
+
             PSW_EQ(PSW_N, tmp & 0x8000);
             PSW_EQ(PSW_Z, !tmp);
             PSW_EQ(PSW_V, ((src & 0x8000) != (dst & 0x8000)) \
                 && ((src & 0x8000) == (tmp & 0x8000)));
             PSW_EQ(PSW_C, ((u32)dst - (u32)src) & 0x10000);
             break;
+
         default: /* unused */
             TRCTrap(010, TRC_TRAP_ILL);
-            TRAP(illegalInstructionTrap);
+            setTrap (&illegalInstructionTrap);
             break;
     }
 }
@@ -1930,7 +1842,7 @@ void KD11CPU::handleTraps(QBUS* bus)
 	// bus time out. In that case the CPU is halted.
 	// ToDo: Remove code duplication
 	r[6] -= 2;
-	if (!WRITE(r[6], psw))
+	if (!putWord (r[6], psw))
 	{
 		TRCCPUEvent(TRC_CPU_DBLBUS, r[6]);
         // ToDo: All interrupts should be cleared?
@@ -1940,7 +1852,7 @@ void KD11CPU::handleTraps(QBUS* bus)
 	}
 
 	r[6] -= 2;
-	if (!WRITE(r[6], r[7]))
+	if (!putWord (r[6], r[7]))
 	{
 		TRCCPUEvent(TRC_CPU_DBLBUS, r[6]);
 		trap_ = nullptr;
@@ -1950,7 +1862,7 @@ void KD11CPU::handleTraps(QBUS* bus)
 
 	// Read new PC and PSW from the trap vector. These read's could also
 	// result in a bus time out.
-    tmpValue = READ(trapToProcess);
+    tmpValue = fetchWord(trapToProcess);
     r[7] = tmpValue.valueOr(0);
     if (!tmpValue.hasValue())
 	{
@@ -1960,7 +1872,7 @@ void KD11CPU::handleTraps(QBUS* bus)
 		return;
 	}
 
-    tmpValue = READ(trapToProcess + 2);
+    tmpValue = fetchWord(trapToProcess + 2);
     psw = tmpValue.valueOr(0);
     if (!tmpValue.hasValue())
 	{
@@ -2000,7 +1912,7 @@ void KD11::step(QBUS* bus)
 }
 
 // Generate the given trap using the interrupt request mechanism
-void KD11CPU::setTrap(QBUS *bus, InterruptRequest const *trap)
+void KD11CPU::setTrap(InterruptRequest const *trap)
 {
     trap_ = trap;
 }

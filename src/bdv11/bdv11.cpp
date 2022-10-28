@@ -1,4 +1,4 @@
-#include "trace.h"
+#include "trace/trace.h"
 #include "bdv11.h"
 
 #include <string.h>
@@ -38,8 +38,8 @@ BDV11::BDV11 ()
 	display {0},
 	ltc {0},
 	time {0.0},
-	running_ {true},
-	ltcThread_ {thread(&BDV11::tick, this)}
+	ltcThread_ {thread(&BDV11::tick, this)},
+	running_ {true}
 {}
 
 BDV11::~BDV11 ()
@@ -122,38 +122,46 @@ void BDV11::memoryDump (u16 pcr, int hi)
 	}
 }
 
-u16 BDV11::read (u16 address)
+StatusCode BDV11::read (u16 address, u16 *destAddress)
 {
 	switch (address) 
 	{
 		case 0177520:
-			return pcr;
+			*destAddress = pcr;
+			break;
 
 		case 0177522:
-			return scratch;
+			*destAddress = scratch;
+			break;
 
 		case 0177524:
-			return BDV11_SWITCH;
+			*destAddress = BDV11_SWITCH;
+			break;
 
 		case 0177546:
 			// BEVNT register. According to the BDV11 technical manual
 			// (EK-BDV11-TM-001) this is a write-only register.
-			return ltc;
+			*destAddress = ltc;
+			break;
 
 		default:
 			if (address >= 0173000 && address < 0173400)
 			{
-				return getWordLow ((address - 0173000) / 2);
+				*destAddress = getWordLow ((address - 0173000) / 2);
+				break;
 			} 
 			else if (address >= 0173400 && address < 0173776) 
 			{
-				return getWordHigh ((address - 0173400) / 2);
+				*destAddress = getWordHigh ((address - 0173400) / 2);
+				break;
 			}
-			return 0;
+			else
+				return StatusCode::NonExistingMemory;
 	}
+	return StatusCode::OK;
 }
 
-void BDV11::write (u16 address, u16 value)
+StatusCode BDV11::writeWord (u16 address, u16 value)
 {
 	switch (address)
 	{
@@ -192,9 +200,11 @@ void BDV11::write (u16 address, u16 value)
 			ltc = value & 0100;
 			break;
 	}
+
+	return StatusCode::OK;
 }
 
-u8 BDV11::responsible (u16 address)
+bool BDV11::responsible (u16 address)
 {
 	switch (address)
 	{
@@ -202,9 +212,9 @@ u8 BDV11::responsible (u16 address)
 		case 0177522:
 		case 0177524:
 		case 0177546:
-			return 1;
+			return true;
 		default:
-			return address >= 0173000 && address <= 0173776;
+			return (address >= 0173000 && address <= 0173776) ? true : false;
 	}
 }
 
@@ -232,7 +242,7 @@ void BDV11::tick()
 		// Check the line time clock (LTC) is enabled
 		if (ltc & 0100)
 		{
-			bus->interrupt (eventIntrptReq);
+			bus->setInterrupt (TrapPriority::BR4, 9, 0100);
 			nextWakeup += cycleTime;
 			this_thread::sleep_until (nextWakeup);
 		}

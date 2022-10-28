@@ -1,7 +1,7 @@
 #include <string.h>
 #include <stdlib.h>
 
-#include "trace.h"
+#include "trace/trace.h"
 #include "dlv11j.h"
 
 #define	RCSR_READER_ENABLE	_BV(0)
@@ -22,12 +22,12 @@
 #define	RCSR_WR_MASK		(RCSR_RCVR_INT | RCSR_READER_ENABLE)
 #define	XCSR_WR_MASK		(XCSR_TRANSMIT_INT | XCSR_TRANSMIT_BREAK)
 
-// #define	IRQ(x)			if(!bus->interrupt(x)) irq = (x)
-#define	IRQ(x)				bus->interrupt(x)
-
 void console_print (unsigned char c)
 {
-	printf ("%c", c);
+	// Just print 7-bit ASCII characters. The XXDP diagnostic VKABB0 e.g.
+	// prints characters 0377 at the end of a string which stops WSL from
+	// outputting further characters.
+	printf ("%c", c & 0177);
 	fflush (stdout);
 }
 
@@ -86,7 +86,7 @@ void DLV11J::readChannel (int channelNr)
 			ch->rcsr |= RCSR_RCVR_DONE;
 			if(ch->rcsr & RCSR_RCVR_INT) {
 				QBUS* bus = this->bus;
-				IRQ(interruptRequest(ch->vector));
+				bus->setInterrupt (TrapPriority::BR4, 6, ch->vector);
 			}
 		} else {
 			ch->rcsr &= ~RCSR_RCVR_DONE;
@@ -112,26 +112,35 @@ void DLV11J::writeChannel(int channelNr)
 	if(ch->xcsr & XCSR_TRANSMIT_INT)
 	{
 		QBUS* bus = this->bus;
-		IRQ(interruptRequest(ch->vector + 4));
+		bus->setInterrupt (TrapPriority::BR4, 6, ch->vector + 4);
 	}
 }
 
-u16 DLV11J::read (u16 address)
+StatusCode DLV11J::read (u16 address, u16 *destAddress)
 {
 	switch(address)
 	{
 		case 0177560:
-			return channel[3].rcsr;
+			*destAddress = channel[3].rcsr;
+			break;
+
 		case 0177562:
 			readChannel(3);
-			return channel[3].rbuf;
+			*destAddress = channel[3].rbuf;
+			break;
+
 		case 0177564:
-			return channel[3].xcsr;
+			*destAddress = channel[3].xcsr;
+			break;
+
 		case 0177566:
-			return channel[3].xbuf;
+			*destAddress = channel[3].xbuf;
+			break;
+
 		default:
-			return 0;
+			return StatusCode::NonExistingMemory;
 	}
+	return StatusCode::OK;
 }
 
 void DLV11J::writeRCSR(int n, u16 value)
@@ -144,7 +153,7 @@ void DLV11J::writeRCSR(int n, u16 value)
 			&& (ch->rcsr & RCSR_RCVR_DONE))
 	{
 		QBUS* bus = this->bus;
-		IRQ(interruptRequest(ch->vector));
+		bus->setInterrupt (TrapPriority::BR4, 6, ch->vector);
 	}
 }
 
@@ -158,11 +167,11 @@ void DLV11J::writeXCSR(int n, u16 value)
 			&& (ch->xcsr & XCSR_TRANSMIT_READY))
 	{
 		QBUS* bus = this->bus;
-		IRQ(interruptRequest(ch->vector + 4));
+		bus->setInterrupt (TrapPriority::BR4, 6, ch->vector + 4);
 	}
 }
 
-void DLV11J::write (u16 address, u16 value)
+StatusCode DLV11J::writeWord (u16 address, u16 value)
 {
 	switch(address) {
 		case 0177560:
@@ -179,20 +188,20 @@ void DLV11J::write (u16 address, u16 value)
 			writeChannel(3);
 			break;
 	}
+
+	return StatusCode::OK;
 }
 
-u8 DLV11J::responsible (u16 address)
+bool DLV11J::responsible (u16 address)
 {
-	if(address >= base && address <= base + (3 * 8)) {
-		return 1;
-	}
+	if (address >= base && address <= base + (3 * 8))
+		return true;
 
 	/* console device */
-	if(address >= 0177560 && address <= 0177566) {
-		return 1;
-	}
+	if (address >= 0177560 && address <= 0177566)
+		return true;
 
-	return 0;
+	return false;
 }
 
 void DLV11J::reset ()
@@ -219,7 +228,7 @@ void DLV11J::send(int channelNr, unsigned char c)
 		if(ch->rcsr & RCSR_RCVR_INT)
 		{
 			QBUS* bus = this->bus;
-			IRQ(interruptRequest(ch->vector));
+			bus->setInterrupt (TrapPriority::BR4, 6, ch->vector);
 		}
 	}
 }

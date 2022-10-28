@@ -1,5 +1,7 @@
 #include "rxv21.h"
 
+#include <cstring>
+
 // After function selection the Write Sector command requires
 // two additional steps:
 // 1. Loading of the EX2DB register with the desired sector address (RX2SA),
