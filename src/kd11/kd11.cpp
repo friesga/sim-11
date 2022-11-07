@@ -1208,7 +1208,9 @@ void KD11CPU::execInstr(QBUS* bus)
                             Float f3 = f1 + f2;
 
                             u16 high, low;
-                            if (f3.pdp11Dword (&high, &low))
+                            Float::Result conversionResult = 
+                                f3.pdp11Dword (&high, &low);
+                            if (conversionResult == Float::Result::OK)
                             {
                                 putWord (r[insnrts->rn] + 4, high);
                                 putWord (r[insnrts->rn] + 6, low);
@@ -1216,15 +1218,25 @@ void KD11CPU::execInstr(QBUS* bus)
                                 PSW_EQ(PSW_N, f3.value() < 0);
                                 PSW_EQ(PSW_Z, f3.value() == 0);
                                 PSW_CLR(PSW_V);
+                                PSW_CLR(PSW_C);
+                            }
+                            else if (conversionResult == Float::Result::Underflow)
+                            {
+                                PSW_SET(PSW_N);
+                                PSW_SET(PSW_V);
+                                PSW_CLR(PSW_Z);
+                                PSW_CLR(PSW_C);
+                                setTrap (&FIS);
                             }
                             else
                             {
-                                // ToDo: Indicate overflow/underflow in PSW N-bit
-                                PSW_SET(PSW_N);
+                                // Overflow or Nan
+                                PSW_CLR(PSW_N);
                                 PSW_SET(PSW_V);
+                                PSW_CLR(PSW_Z);
+                                PSW_CLR(PSW_C);
                                 setTrap (&FIS);
                             }
-                            PSW_CLR(PSW_C);
                             break;
                         }
 
@@ -1237,7 +1249,10 @@ void KD11CPU::execInstr(QBUS* bus)
                             Float f3 = f1 - f2;
                             
                             u16 high, low;
-                            if (f3.pdp11Dword (&high, &low))
+                            Float::Result conversionResult = 
+                                f3.pdp11Dword (&high, &low);
+
+                            if (conversionResult == Float::Result::OK)
                             {
                                 putWord (r[insnrts->rn] + 4, high);
                                 putWord (r[insnrts->rn] + 6, low);
@@ -1247,8 +1262,23 @@ void KD11CPU::execInstr(QBUS* bus)
                                 PSW_CLR(PSW_V);
                                 PSW_CLR(PSW_C);
                             }
-                            else
+                            else if (conversionResult == Float::Result::Underflow)
+                            {
+                                PSW_SET(PSW_N);
+                                PSW_SET(PSW_V);
+                                PSW_CLR(PSW_Z);
+                                PSW_CLR(PSW_C);
                                 setTrap (&FIS);
+                            }
+                            else
+                            {
+                                // Overflow or Nan
+                                PSW_CLR(PSW_N);
+                                PSW_SET(PSW_V);
+                                PSW_CLR(PSW_Z);
+                                PSW_CLR(PSW_C);
+                                setTrap (&FIS);
+                            }
                             break;
                         }
 
@@ -1261,7 +1291,10 @@ void KD11CPU::execInstr(QBUS* bus)
                             Float f3 = f1 * f2;
 
                             u16 high, low;
-                            if (f3.pdp11Dword (&high, &low))
+                            Float::Result conversionResult = 
+                                f3.pdp11Dword (&high, &low);
+
+                            if (conversionResult == Float::Result::OK)
                             {
                                 putWord (r[insnrts->rn] + 4, high);
                                 putWord (r[insnrts->rn] + 6, low);
@@ -1270,11 +1303,27 @@ void KD11CPU::execInstr(QBUS* bus)
                                 PSW_EQ(PSW_Z, f3.value() == 0);
                                 PSW_CLR(PSW_V);
                                 PSW_CLR(PSW_C);
-                                break;
+                            }
+                            else if (conversionResult == Float::Result::Underflow)
+                            {
+                                PSW_SET(PSW_N);
+                                PSW_SET(PSW_V);
+                                PSW_CLR(PSW_Z);
+                                PSW_CLR(PSW_C);
+                                setTrap (&FIS);
                             }
                             else
+                            {
+                                // Overflow or Nan
+                                PSW_CLR(PSW_N);
+                                PSW_SET(PSW_V);
+                                PSW_CLR(PSW_Z);
+                                PSW_CLR(PSW_C);
                                 setTrap (&FIS);
+                            }
+                            break;
                         }
+
 
                         case 007503: /* FDIV */
                         {
@@ -1285,7 +1334,10 @@ void KD11CPU::execInstr(QBUS* bus)
                             Float f3 = f1 / f2;
 
                             u16 high, low;
-                            if (f3.pdp11Dword (&high, &low))
+                            Float::Result conversionResult = 
+                                f3.pdp11Dword (&high, &low);
+
+                            if (conversionResult == Float::Result::OK)
                             {
                                 putWord (r[insnrts->rn] + 4, high);
                                 putWord (r[insnrts->rn] + 6, low);
@@ -1295,8 +1347,23 @@ void KD11CPU::execInstr(QBUS* bus)
                                 PSW_CLR(PSW_V);
                                 PSW_CLR(PSW_C);
                             }
-                            else
+                            else if (conversionResult == Float::Result::Underflow)
+                            {
+                                PSW_SET(PSW_N);
+                                PSW_SET(PSW_V);
+                                PSW_CLR(PSW_Z);
+                                PSW_CLR(PSW_C);
                                 setTrap (&FIS);
+                            }
+                            else
+                            {
+                                // Overflow or Nan
+                                PSW_CLR(PSW_N);
+                                PSW_SET(PSW_V);
+                                PSW_CLR(PSW_Z);
+                                PSW_CLR(PSW_C);
+                                setTrap (&FIS);
+                            }
                             break;
                         }
 #endif

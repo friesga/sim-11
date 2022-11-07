@@ -15,6 +15,33 @@
 //
 class Float
 {
+public:
+
+    enum class Result
+    {
+        OK,
+        Underflow,
+        Overflow,
+        NaN
+    };
+
+    // Construct a Float from two words in PDP-11 FIS format
+    Float (uint16_t high, uint16_t low);
+
+    // Get the result as a IEEE 754 float
+    float value ();
+    operator float ();
+
+    // Calculation operators
+    Float operator+=(Float const &other);
+    Float operator-=(Float const &other);
+    Float operator*=(Float const &other);
+    Float operator/=(Float const &other);
+
+    // Get the result as two words in PDP-11 FIS format
+    Result pdp11Dword(uint16_t *high, uint16_t *low);
+
+private:
     friend Float operator+ (Float &left, Float const &right);
     friend Float operator- (Float &left, Float const &right);
     friend Float operator* (Float &left, Float const &right);
@@ -35,7 +62,7 @@ class Float
     // format and vice versa.
     bool PDP11toIEEE (uint16_t const high, uint16_t const low, 
         uint32_t *ieeeOut);
-    bool IEEEtoPDP11 (uint32_t const ieeeIn,
+    Result IEEEtoPDP11 (uint32_t const ieeeIn,
         uint16_t *high, uint16_t *low);
 
 #if 0
@@ -44,23 +71,6 @@ class Float
     // the additions.
     float single_precision_pdp11_to_ieee754 (uint16_t const high, uint16_t const low);
 #endif
-
-public:
-    // Construct a Float from two words in PDP-11 FIS format
-    Float (uint16_t high, uint16_t low);
-
-    // Get the result as a IEEE 754 float
-    float value ();
-    operator float ();
-
-    // Calculation operators
-    Float operator+=(Float const &other);
-    Float operator-=(Float const &other);
-    Float operator*=(Float const &other);
-    Float operator/=(Float const &other);
-
-    // Get the result as two words in PDP-11 FIS format
-    bool pdp11Dword(uint16_t *high, uint16_t *low);
 };
 
 #endif // _FLOAT_H_

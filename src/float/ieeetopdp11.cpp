@@ -5,7 +5,7 @@
 
 // Convert a IEEE 754 32-bit unsigned integet to a double word in
 // PDP-11 FIS format.
-bool Float::IEEEtoPDP11 (uint32_t const ieeeIn, 
+Float::Result Float::IEEEtoPDP11 (uint32_t const ieeeIn, 
     uint16_t *high, uint16_t *low)
 {
     union
@@ -30,7 +30,7 @@ bool Float::IEEEtoPDP11 (uint32_t const ieeeIn,
         // Fixup to PDP-11 +-extrema [exponent_=all-1's] with zero mantissa_ 
         pdp11part.l = (ieeeIn & SIGN_BIT) | PDP11_F_EXPONENT_MASK;
 
-        return false;
+        return Result::NaN;
     }
     else
     {
@@ -58,14 +58,14 @@ bool Float::IEEEtoPDP11 (uint32_t const ieeeIn,
         {
             // Silent underflow_
             pdp11part.l = 0;
-            return false;
+            return Result::Underflow;
         }
         else if (exponent_ > (2 * PDP11_F_EXPONENT_BIAS - 1))
         {
             // Overflow; fixup to PDP-11 +-extrema [exponent_=mantisse=all-1's]
             // raise (SIGFPE);
             pdp11part.l = (ieeeIn & SIGN_BIT) | ~SIGN_BIT;
-            return false;
+            return Result::Overflow;
         }
         else
         {
@@ -77,5 +77,5 @@ bool Float::IEEEtoPDP11 (uint32_t const ieeeIn,
 
     *high = pdp11part.i[1];
     *low  = pdp11part.i[0];
-    return true;
+    return Result::OK;
 }

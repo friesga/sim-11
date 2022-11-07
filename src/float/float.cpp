@@ -45,7 +45,7 @@ Float Float::operator/=(Float const &other)
     return *this;
 }
 
-bool Float::pdp11Dword(uint16_t *high, uint16_t *low)
+Float::Result Float::pdp11Dword(uint16_t *high, uint16_t *low)
 {
     return IEEEtoPDP11 (IEEEfloat1_.u32_, high, low);
 }
