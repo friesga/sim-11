@@ -1,6 +1,7 @@
 #include "trace/trace.h"
 #include "kd11.h"
 #include "instructions.h"
+#include "float/float.h"
 
 #include <string.h>
 #include <stdlib.h>
@@ -397,11 +398,6 @@ bool KD11CPU::putByte (u16 address, u8 value)
 #define	READCPU(addr)	\
     (tmpValue = fetchWord(addr)).valueOr(0);
 
-typedef union {
-	float	_f32;
-	u32		_u32;
-} FLOAT;
-
 // Perform a CPU step. The step mainly comprises three actions:
 // 1. Execution of an instruction,
 // 2. Handle the trace bit,
@@ -457,9 +453,6 @@ void KD11CPU::execInstr(QBUS* bus)
     u16 src, dst;
     s32 tmps32;
     CondData<u16> tmpValue;     // Used in fetchWordCPU macro
-#ifdef USE_FLOAT
-    FLOAT f1, f2, f3;
-#endif
 
     // If there is a pending bus interrupt that can be executed, process
     // that interrupt first
@@ -1207,77 +1200,105 @@ void KD11CPU::execInstr(QBUS* bus)
                     {
 #ifdef USE_FLOAT
                         case 007500: /* FADD */
-                            f1._u32 = (fetchWord(r[insnrts->rn] + 4) << 16)
-                                | fetchWord(r[insnrts->rn] + 6);
-                            f2._u32 = (fetchWord(r[insnrts->rn]) << 16)
-                                | fetchWord(r[insnrts->rn] + 2);
-                            f3._f32 = f1._f32 + f2._f32;
-                            /* TODO: result <= 2**-128 -> result = 0 */
-                            /* TODO: implement traps */
-                            putWord (r[insnrts->rn] + 4,
-                                (u16)(f3._u32 >> 16));
-                            putWord (r[insnrts->rn] + 6, (u16)f3._u32);
-                            r[insnrts->rn] += 4;
-                            PSW_EQ(PSW_N, f3._f32 < 0);
-                            PSW_EQ(PSW_Z, f3._f32 == 0);
-                            PSW_CLR(PSW_V);
-                            PSW_CLR(PSW_C);
-                            break;
-                        case 007501: /* FSUB */
-                            f1._u32 = (fetchWord(r[insnrts->rn] + 4) << 16)
-                                | fetchWord(r[insnrts->rn] + 6);
-                            f2._u32 = (fetchWord(r[insnrts->rn]) << 16)
-                                | fetchWord(r[insnrts->rn] + 2);
-                            f3._f32 = f1._f32 - f2._f32;
-                            /* TODO: result <= 2**-128 -> result = 0 */
-                            /* TODO: implement traps */
-                            putWord (r[insnrts->rn] + 4,
-                                (u16)(f3._u32 >> 16));
-                            putWord (r[insnrts->rn] + 6, (u16)f3._u32);
-                            r[insnrts->rn] += 4;
-                            PSW_EQ(PSW_N, f3._f32 < 0);
-                            PSW_EQ(PSW_Z, f3._f32 == 0);
-                            PSW_CLR(PSW_V);
-                            PSW_CLR(PSW_C);
-                            break;
-                        case 007502: /* FMUL */
-                            f1._u32 = (fetchWord(r[insnrts->rn] + 4) << 16)
-                                | fetchWord(r[insnrts->rn] + 6);
-                            f2._u32 = (fetchWord(r[insnrts->rn]) << 16)
-                                | fetchWord(r[insnrts->rn] + 2);
-                            f3._f32 = f1._f32 * f2._f32;
-                            /* TODO: result <= 2**-128 -> result = 0 */
-                            /* TODO: implement traps */
-                            putWord (r[insnrts->rn] + 4,
-                                (u16)(f3._u32 >> 16));
-                            putWord (r[insnrts->rn] + 6, (u16)f3._u32);
-                            r[insnrts->rn] += 4;
-                            PSW_EQ(PSW_N, f3._f32 < 0);
-                            PSW_EQ(PSW_Z, f3._f32 == 0);
-                            PSW_CLR(PSW_V);
-                            PSW_CLR(PSW_C);
-                            break;
-                        case 007503: /* FDIV */
-                            f1._u32 = (fetchWord(r[insnrts->rn] + 4) << 16)
-                                | fetchWord(r[insnrts->rn] + 6);
-                            f2._u32 = (fetchWord(r[insnrts->rn]) << 16)
-                                | fetchWord(r[insnrts->rn] + 2);
-                            if (f2._f32 != 0)
+                        {
+                            Float f1 (fetchWord(r[insnrts->rn] + 4), 
+                                fetchWord(r[insnrts->rn] + 6));
+                            Float f2 (fetchWord(r[insnrts->rn]),
+                                fetchWord(r[insnrts->rn] + 2));
+                            Float f3 = f1 + f2;
+
+                            u16 high, low;
+                            if (f3.pdp11Dword (&high, &low))
                             {
-                                f3._f32 = f1._f32 / f2._f32;
-                                /* TODO: result <= 2**-128 -> result = 0 */
-                                /* TODO: implement traps */
-                                putWord (r[insnrts->rn] + 4,
-                                    (u16)(f3._u32 >> 16));
-                                putWord (r[insnrts->rn] + 6,
-                                    (u16)f3._u32);
-                                PSW_EQ(PSW_N, f3._f32 < 0);
-                                PSW_EQ(PSW_Z, f3._f32 == 0);
+                                putWord (r[insnrts->rn] + 4, high);
+                                putWord (r[insnrts->rn] + 6, low);
+                                r[insnrts->rn] += 4;
+                                PSW_EQ(PSW_N, f3.value() < 0);
+                                PSW_EQ(PSW_Z, f3.value() == 0);
+                                PSW_CLR(PSW_V);
+                            }
+                            else
+                            {
+                                // ToDo: Indicate overflow/underflow in PSW N-bit
+                                PSW_SET(PSW_N);
+                                PSW_SET(PSW_V);
+                                setTrap (&FIS);
+                            }
+                            PSW_CLR(PSW_C);
+                            break;
+                        }
+
+                        case 007501: /* FSUB */
+                        {
+                            Float f1 (fetchWord(r[insnrts->rn] + 4),
+                                fetchWord(r[insnrts->rn] + 6));
+                            Float f2 (fetchWord(r[insnrts->rn]), 
+                                fetchWord(r[insnrts->rn] + 2));
+                            Float f3 = f1 - f2;
+                            
+                            u16 high, low;
+                            if (f3.pdp11Dword (&high, &low))
+                            {
+                                putWord (r[insnrts->rn] + 4, high);
+                                putWord (r[insnrts->rn] + 6, low);
+                                r[insnrts->rn] += 4;
+                                PSW_EQ(PSW_N, f3.value() < 0);
+                                PSW_EQ(PSW_Z, f3.value() == 0);
                                 PSW_CLR(PSW_V);
                                 PSW_CLR(PSW_C);
                             }
-                            r[insnrts->rn] += 4;
+                            else
+                                setTrap (&FIS);
                             break;
+                        }
+
+                        case 007502: /* FMUL */
+                        {
+                            Float f1 (fetchWord(r[insnrts->rn] + 4),
+                                fetchWord(r[insnrts->rn] + 6));
+                            Float f2 (fetchWord(r[insnrts->rn]),
+                                fetchWord(r[insnrts->rn] + 2));
+                            Float f3 = f1 * f2;
+
+                            u16 high, low;
+                            if (f3.pdp11Dword (&high, &low))
+                            {
+                                putWord (r[insnrts->rn] + 4, high);
+                                putWord (r[insnrts->rn] + 6, low);
+                                r[insnrts->rn] += 4;
+                                PSW_EQ(PSW_N, f3.value() < 0);
+                                PSW_EQ(PSW_Z, f3.value() == 0);
+                                PSW_CLR(PSW_V);
+                                PSW_CLR(PSW_C);
+                                break;
+                            }
+                            else
+                                setTrap (&FIS);
+                        }
+
+                        case 007503: /* FDIV */
+                        {
+                            Float f1 (fetchWord(r[insnrts->rn] + 4),
+                                fetchWord(r[insnrts->rn] + 6));
+                            Float f2 (fetchWord(r[insnrts->rn]),
+                                fetchWord(r[insnrts->rn] + 2));
+                            Float f3 = f1 / f2;
+
+                            u16 high, low;
+                            if (f3.pdp11Dword (&high, &low))
+                            {
+                                putWord (r[insnrts->rn] + 4, high);
+                                putWord (r[insnrts->rn] + 6, low);
+                                r[insnrts->rn] += 4;
+                                PSW_EQ(PSW_N, f3.value() < 0);
+                                PSW_EQ(PSW_Z, f3.value() == 0);
+                                PSW_CLR(PSW_V);
+                                PSW_CLR(PSW_C);
+                            }
+                            else
+                                setTrap (&FIS);
+                            break;
+                        }
 #endif
                         default:
                             /* 075040-076777: unused */

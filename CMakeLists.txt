@@ -103,6 +103,9 @@ set (SIM11_SRCS
     src/trace/trace.cpp
     src/logger/logger.cpp
     src/logger/data.cpp
+    src/float/float.cpp
+    src/float/ieeetopdp11.cpp
+    src/float/pdp11toieee.cpp
     src/console.cpp
     ${CMDLINEOPTIONS_SRCS}
     ${CONFIGURATOR_SRCS}
