@@ -41,7 +41,7 @@ Float Float::operator*=(Float const &other)
 
 Float Float::operator/=(Float const &other)
 {
-    IEEEfloat1_.f32_ *= other.IEEEfloat1_.f32_;
+    IEEEfloat1_.f32_ /= other.IEEEfloat1_.f32_;
     return *this;
 }
 
