@@ -105,7 +105,7 @@ template <typename T>
 inline CondData<T>::operator T() const
 {
     if (!validValue_)
-        throw (std::string("Subtraction on invalid CondData object"));
+        throw (std::string("Conversion on invalid CondData object"));
 
     return value_;
 }
