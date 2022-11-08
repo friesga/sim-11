@@ -3,6 +3,7 @@
 
 #include "qbus/qbus.h"
 #include "busdevice/busdevice.h"
+#include "float/float.h"
 
 #define USE_FLOAT
 
@@ -76,7 +77,7 @@ private:
 	void setTrap(InterruptRequest const *ir);
 	void execInstr(QBUS* bus);
 	u8 cpuPriority();
-
+	void returnFISresult (Float result, u16 registerNumber);
 
 	QBUS *bus_;
 	u16	psw;
