@@ -1276,8 +1276,19 @@ void KD11CPU::execInstr (QBUS* bus)
                                 fetchWord (r[insnrts->rn] + 6));
                             Float f2 (fetchWord (r[insnrts->rn]),
                                 fetchWord (r[insnrts->rn] + 2));
-                            Float f3 = f1 / f2;
 
+                            // Check division by zero
+                            if (f2.value() == 0)
+                            {
+                                PSW_SET (PSW_N);
+                                PSW_CLR (PSW_Z);
+                                PSW_SET (PSW_V);
+                                PSW_SET (PSW_C);
+                                setTrap (&FIS);
+                                break;
+                            }
+
+                            Float f3 = f1 / f2;
                             returnFISresult (f3, insnrts->rn);
                             break;
                         }
