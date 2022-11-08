@@ -74,6 +74,11 @@ set (CONFIGURATOR_SRCS
     src/configdata/rlprocessor/rlprocessor.cpp
     src/configdata/rlprocessor/rlunitprocessor/rlunitprocessor.cpp)
 
+set (FLOAT_SRCS
+    src/float/float.cpp
+    src/float/ieeetopdp11.cpp
+    src/float/pdp11toieee.cpp)
+
 # Define source files
 set (SIM11_SRCS
     src/ba11_n/ba11_n.cpp
@@ -103,9 +108,7 @@ set (SIM11_SRCS
     src/trace/trace.cpp
     src/logger/logger.cpp
     src/logger/data.cpp
-    src/float/float.cpp
-    src/float/ieeetopdp11.cpp
-    src/float/pdp11toieee.cpp
+    ${FLOAT_SRCS}
     src/console.cpp
     ${CMDLINEOPTIONS_SRCS}
     ${CONFIGURATOR_SRCS}
@@ -175,6 +178,7 @@ set (SIM11_TEST_SRCS
     gtest/interruptrequesttest.cpp
     gtest/bitmasktest.cpp
     gtest/configuratortest.cpp
+    gtest/fistest.cpp
     gtest/rlv12attachtest.cpp
     gtest/rlv12maintenancetest.cpp
     gtest/rlv12getstatustest.cpp
@@ -191,6 +195,7 @@ set (SIM11_TEST_SRCS
     ${UNIT_SRCS}
     ${SIM_FIO_SRCS}
     ${RLV12_SRCS}
+    ${FLOAT_SRCS}
     src/busdevice/writebyte.cpp
     src/lib/gotapproval.cpp
     src/lsi11/lsi11.cpp
@@ -229,6 +234,7 @@ gtest_add_tests (TARGET sim-11-test
                     ThreadSafePrioQueue
                     InterruptRequest
                     ConfigProcessorTest
+                    FISTest
                     RLV12MaintenanceTest
                     RLV12AttachTest
                     RLV12WriteTest
