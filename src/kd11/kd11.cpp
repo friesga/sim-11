@@ -1235,61 +1235,89 @@ void KD11CPU::execInstr (QBUS* bus)
 #ifdef USE_FLOAT
                         case 007500: /* FADD */
                         {
-                            Float f1 (fetchWord (r[insnrts->rn] + 4),
-                                fetchWord (r[insnrts->rn] + 6));
-                            Float f2 (fetchWord (r[insnrts->rn]),
-                                fetchWord (r[insnrts->rn] + 2));
-                            Float f3 = f1 + f2;
+                            CondData<u16> f1High = fetchWord (r[insnrts->rn] + 4);
+                            CondData<u16> f1Low = fetchWord (r[insnrts->rn] + 6);
+                            CondData<u16> f2High = fetchWord (r[insnrts->rn]);
+                            CondData<u16> f2Low = fetchWord (r[insnrts->rn] + 2);
 
-                            returnFISresult (f3, insnrts->rn);
+                            if (f1High.hasValue() && f1Low.hasValue() && 
+                                f2High.hasValue() && f2Low.hasValue())
+                            {
+                                Float f1 (f1High, f1Low);
+                                Float f2 (f2High, f2Low);
+                                Float f3 = f1 + f2;
+
+                                returnFISresult (f3, insnrts->rn);
+                            }
                             break;
                         }
 
                         case 007501: /* FSUB */
                         {
-                            Float f1 (fetchWord (r[insnrts->rn] + 4),
-                                fetchWord (r[insnrts->rn] + 6));
-                            Float f2 (fetchWord (r[insnrts->rn]),
-                                fetchWord (r[insnrts->rn] + 2));
-                            Float f3 = f1 - f2;
+                            CondData<u16> f1High = fetchWord (r[insnrts->rn] + 4);
+                            CondData<u16> f1Low = fetchWord (r[insnrts->rn] + 6);
+                            CondData<u16> f2High = fetchWord (r[insnrts->rn]);
+                            CondData<u16> f2Low = fetchWord (r[insnrts->rn] + 2);
 
-                            returnFISresult (f3, insnrts->rn);
+                            if (f1High.hasValue() && f1Low.hasValue() && 
+                                f2High.hasValue() && f2Low.hasValue())
+                            {
+                                Float f1 (f1High, f1Low);
+                                Float f2 (f2High, f2Low);
+                                Float f3 = f1 - f2;
+
+                                returnFISresult (f3, insnrts->rn);
+                            }
                             break;
                         }
 
                         case 007502: /* FMUL */
                         {
-                            Float f1 (fetchWord (r[insnrts->rn] + 4),
-                                fetchWord (r[insnrts->rn] + 6));
-                            Float f2 (fetchWord (r[insnrts->rn]),
-                                fetchWord (r[insnrts->rn] + 2));
-                            Float f3 = f1 * f2;
+                            CondData<u16> f1High = fetchWord (r[insnrts->rn] + 4);
+                            CondData<u16> f1Low = fetchWord (r[insnrts->rn] + 6);
+                            CondData<u16> f2High = fetchWord (r[insnrts->rn]);
+                            CondData<u16> f2Low = fetchWord (r[insnrts->rn] + 2);
 
-                            returnFISresult (f3, insnrts->rn);
+                            if (f1High.hasValue() && f1Low.hasValue() && 
+                                f2High.hasValue() && f2Low.hasValue())
+                            {
+                                Float f1 (f1High, f1Low);
+                                Float f2 (f2High, f2Low);
+                                Float f3 = f1 * f2;
+
+                                returnFISresult (f3, insnrts->rn);
+                            }
                             break;
                         }
 
 
                         case 007503: /* FDIV */
                         {
-                            Float f1 (fetchWord (r[insnrts->rn] + 4),
-                                fetchWord (r[insnrts->rn] + 6));
-                            Float f2 (fetchWord (r[insnrts->rn]),
-                                fetchWord (r[insnrts->rn] + 2));
+                            CondData<u16> f1High = fetchWord (r[insnrts->rn] + 4);
+                            CondData<u16> f1Low = fetchWord (r[insnrts->rn] + 6);
+                            CondData<u16> f2High = fetchWord (r[insnrts->rn]);
+                            CondData<u16> f2Low = fetchWord (r[insnrts->rn] + 2);
 
-                            // Check division by zero
-                            if (f2.value() == 0)
+                            if (f1High.hasValue() && f1Low.hasValue() && 
+                                f2High.hasValue() && f2Low.hasValue())
                             {
-                                PSW_SET (PSW_N);
-                                PSW_CLR (PSW_Z);
-                                PSW_SET (PSW_V);
-                                PSW_SET (PSW_C);
-                                setTrap (&FIS);
-                                break;
-                            }
+                                Float f1 (f1High, f1Low);
+                                Float f2 (f2High, f2Low);
 
-                            Float f3 = f1 / f2;
-                            returnFISresult (f3, insnrts->rn);
+                                // Check division by zero
+                                if (f2.value() == 0)
+                                {
+                                    PSW_SET (PSW_N);
+                                    PSW_CLR (PSW_Z);
+                                    PSW_SET (PSW_V);
+                                    PSW_SET (PSW_C);
+                                    setTrap (&FIS);
+                                    break;
+                                }
+
+                                Float f3 = f1 / f2;
+                                returnFISresult (f3, insnrts->rn);
+                            }
                             break;
                         }
 #endif
