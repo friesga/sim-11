@@ -1780,7 +1780,7 @@ void KD11CPU::executeFISinstruction (u16 stackPointer,
         else
         {
             // The arguments are invalid. This is notably a division
-            // by z.ero
+            // by zero
             PSW_SET (PSW_N);
             PSW_CLR (PSW_Z);
             PSW_SET (PSW_V);
