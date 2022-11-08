@@ -5,6 +5,8 @@
 #include "busdevice/busdevice.h"
 #include "float/float.h"
 
+#include <functional>
+
 #define USE_FLOAT
 
 /* ODT states */
@@ -78,6 +80,9 @@ private:
 	void execInstr(QBUS* bus);
 	u8 cpuPriority();
 	void returnFISresult (Float result, u16 registerNumber);
+	void executeFISinstruction (u16 stackPointer, 
+		std::function<bool(Float, Float)> argumentsValid,
+		std::function<Float(Float, Float)>);
 
 	QBUS *bus_;
 	u16	psw;

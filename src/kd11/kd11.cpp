@@ -1234,92 +1234,28 @@ void KD11CPU::execInstr (QBUS* bus)
                     {
 #ifdef USE_FLOAT
                         case 007500: /* FADD */
-                        {
-                            CondData<u16> f1High = fetchWord (r[insnrts->rn] + 4);
-                            CondData<u16> f1Low = fetchWord (r[insnrts->rn] + 6);
-                            CondData<u16> f2High = fetchWord (r[insnrts->rn]);
-                            CondData<u16> f2Low = fetchWord (r[insnrts->rn] + 2);
-
-                            if (f1High.hasValue() && f1Low.hasValue() && 
-                                f2High.hasValue() && f2Low.hasValue())
-                            {
-                                Float f1 (f1High, f1Low);
-                                Float f2 (f2High, f2Low);
-                                Float f3 = f1 + f2;
-
-                                returnFISresult (f3, insnrts->rn);
-                            }
+                            executeFISinstruction (insnrts->rn,
+                                [] (Float f1, Float f2) {return true;},
+                                [] (Float f1, Float f2) {return f1 + f2;});
                             break;
-                        }
 
                         case 007501: /* FSUB */
-                        {
-                            CondData<u16> f1High = fetchWord (r[insnrts->rn] + 4);
-                            CondData<u16> f1Low = fetchWord (r[insnrts->rn] + 6);
-                            CondData<u16> f2High = fetchWord (r[insnrts->rn]);
-                            CondData<u16> f2Low = fetchWord (r[insnrts->rn] + 2);
-
-                            if (f1High.hasValue() && f1Low.hasValue() && 
-                                f2High.hasValue() && f2Low.hasValue())
-                            {
-                                Float f1 (f1High, f1Low);
-                                Float f2 (f2High, f2Low);
-                                Float f3 = f1 - f2;
-
-                                returnFISresult (f3, insnrts->rn);
-                            }
+                            executeFISinstruction (insnrts->rn,
+                                [] (Float f1, Float f2) {return true;},
+                                [] (Float f1, Float f2) {return f1 - f2;});
                             break;
-                        }
 
                         case 007502: /* FMUL */
-                        {
-                            CondData<u16> f1High = fetchWord (r[insnrts->rn] + 4);
-                            CondData<u16> f1Low = fetchWord (r[insnrts->rn] + 6);
-                            CondData<u16> f2High = fetchWord (r[insnrts->rn]);
-                            CondData<u16> f2Low = fetchWord (r[insnrts->rn] + 2);
-
-                            if (f1High.hasValue() && f1Low.hasValue() && 
-                                f2High.hasValue() && f2Low.hasValue())
-                            {
-                                Float f1 (f1High, f1Low);
-                                Float f2 (f2High, f2Low);
-                                Float f3 = f1 * f2;
-
-                                returnFISresult (f3, insnrts->rn);
-                            }
+                            executeFISinstruction (insnrts->rn,
+                                [] (Float f1, Float f2) {return true;},
+                                [] (Float f1, Float f2) {return f1 * f2;});
                             break;
-                        }
-
 
                         case 007503: /* FDIV */
-                        {
-                            CondData<u16> f1High = fetchWord (r[insnrts->rn] + 4);
-                            CondData<u16> f1Low = fetchWord (r[insnrts->rn] + 6);
-                            CondData<u16> f2High = fetchWord (r[insnrts->rn]);
-                            CondData<u16> f2Low = fetchWord (r[insnrts->rn] + 2);
-
-                            if (f1High.hasValue() && f1Low.hasValue() && 
-                                f2High.hasValue() && f2Low.hasValue())
-                            {
-                                Float f1 (f1High, f1Low);
-                                Float f2 (f2High, f2Low);
-
-                                // Check division by zero
-                                if (f2.value() == 0)
-                                {
-                                    PSW_SET (PSW_N);
-                                    PSW_CLR (PSW_Z);
-                                    PSW_SET (PSW_V);
-                                    PSW_SET (PSW_C);
-                                    setTrap (&FIS);
-                                    break;
-                                }
-
-                                Float f3 = f1 / f2;
-                                returnFISresult (f3, insnrts->rn);
-                            }
+                            executeFISinstruction (insnrts->rn,
+                                [] (Float f1, Float f2) {return f2.value() != 0;},
+                                [] (Float f1, Float f2) {return f1 / f2;});
                             break;
-                        }
 #endif
                         default:
                             /* 075040-076777: unused */
@@ -1817,6 +1753,40 @@ void KD11CPU::execInstr (QBUS* bus)
             TRCTrap (010, TRC_TRAP_ILL);
             setTrap (&illegalInstructionTrap);
             break;
+    }
+}
+
+// Execute a FADD, FSUB, FMUL or FDIV instruction.
+void KD11CPU::executeFISinstruction (u16 stackPointer,
+    std::function<bool(Float, Float)> argumentsValid,
+    std::function<Float(Float, Float)> instruction)
+{
+    CondData<u16> f1High = fetchWord (r[stackPointer] + 4);
+    CondData<u16> f1Low = fetchWord (r[stackPointer] + 6);
+    CondData<u16> f2High = fetchWord (r[stackPointer]);
+    CondData<u16> f2Low = fetchWord (r[stackPointer] + 2);
+
+    if (f1High.hasValue () && f1Low.hasValue () &&
+        f2High.hasValue () && f2Low.hasValue ())
+    {
+        Float f1 (f1High, f1Low);
+        Float f2 (f2High, f2Low);
+
+        if (argumentsValid (f1, f2))
+        {
+            Float f3 = instruction (f1, f2);
+            returnFISresult (f3, stackPointer);
+        }
+        else
+        {
+            // The arguments are invalid. This is notably a division
+            // by z.ero
+            PSW_SET (PSW_N);
+            PSW_CLR (PSW_Z);
+            PSW_SET (PSW_V);
+            PSW_SET (PSW_C);
+            setTrap (&FIS);
+        }
     }
 }
 
