@@ -79,9 +79,15 @@ set (FLOAT_SRCS
     src/float/ieeetopdp11.cpp
     src/float/pdp11toieee.cpp)
 
+set (BA11_N_SRCS
+    src/ba11_n/ba11_n.cpp
+    src/ba11_n/handleevents.cpp
+    src/ba11_n/loadimage.cpp
+    src/ba11_n/render.cpp)
+
 # Define source files
 set (SIM11_SRCS
-    src/ba11_n/ba11_n.cpp
+    ${BA11_N_SRCS}
     src/bdv11/bdv11.cpp
     src/bdv11/bdv11_e53.cpp
     src/disas.cpp
@@ -156,6 +162,23 @@ endif ()
 # GCC specific linker options
 if (CMAKE_C_COMPILER_ID STREQUAL "GNU")
 target_link_options (${TARGET} PRIVATE -Wl,-x -Wl,--gc-sections -fsanitize=address)
+endif ()
+
+# Build against SDL2 libraries
+if (MSVC)
+target_include_directories (${TARGET} PRIVATE 
+    C:/Libraries/SDL2-2.24.2/include
+    C:/Libraries/SDL2_image-2.6.2/include)
+
+target_link_libraries (${TARGET}
+    C:/Libraries/SDL2-2.24.2/lib/x64/SDL2.lib
+    C:/Libraries/SDL2_image-2.6.2/lib/x64/SDL2_image.lib)
+
+elseif (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+target_include_directories (${TARGET} PRIVATE 
+    /usr/include/SDL2)
+
+target_link_libraries (${TARGET} SDL2 SDL2_image)
 endif ()
 
 # The /PROFILE option is needed to be able to collect profiling data.

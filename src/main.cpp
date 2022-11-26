@@ -31,6 +31,9 @@
 #include <clock_gettime.h>
 #endif
 
+// Get rid of SDL's main function
+#undef main
+
 /* #define DEBUG */
 
 volatile int running;
@@ -113,7 +116,12 @@ try
 	RXV21 rxv21;
 	DLV11J dlv11;
 	BDV11 bdv11;
-	// BA11_N ba11_n;
+	
+	// Create the BA11-N bezel at the specified position, width and height.
+	// Width and height are dependent on the image dimensions and should
+	// be retrieved before the window is created.
+    std::unique_ptr<BA11_N> ba11_n = 
+        std::make_unique<BA11_N> ("BA11-N", 100, 100, 300, 500, false);
 
 	struct timespec last;
 
