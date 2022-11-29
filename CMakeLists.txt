@@ -82,6 +82,7 @@ set (FLOAT_SRCS
 set (BA11_N_SRCS
     src/ba11_n/ba11_n.cpp
     src/ba11_n/handleevents.cpp
+    src/ba11_n/init.cpp
     src/ba11_n/loadimage.cpp
     src/ba11_n/render.cpp)
 

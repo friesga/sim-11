@@ -117,11 +117,8 @@ try
 	DLV11J dlv11;
 	BDV11 bdv11;
 	
-	// Create the BA11-N bezel at the specified position, width and height.
-	// Width and height are dependent on the image dimensions and should
-	// be retrieved before the window is created.
-    std::unique_ptr<BA11_N> ba11_n = 
-        std::make_unique<BA11_N> ("BA11-N", 100, 100, 300, 500, false);
+	// Create the BA11-N bezel
+    std::unique_ptr<BA11_N> ba11_n = std::make_unique<BA11_N> ();
 
 	struct timespec last;
 
@@ -344,7 +341,9 @@ try
 		for(i = 0; i < 1000; i++)
 			lsi.step ();
 
-		if (CmdLineOptions::get().exit_on_halt && lsi.kd11.cpu().runState == 0)
+		if ((lsi.kd11.cpu().runState == 0 && 
+				CmdLineOptions::get().exit_on_halt) ||
+			!ba11_n->isRunning ())
 		{
 			/* make sure ODT finishes its prompt */
 			for(i = 0; i < 32; i++)
