@@ -8,6 +8,7 @@
 #include "dlv11j/dlv11j.h"
 #include "msv11d/msv11d.h"
 #include "lsi11/lsi11.h"
+#include "console/console.h"
 #include "cmdlineoptions/cmdlineoptions.h"
 #include "configdata/configprocessor/configprocessor.h"
 #include "logger/logger.h"
@@ -332,8 +333,9 @@ try
 	clock_gettime (CLOCK_MONOTONIC, &last);
 
 	// The consoleReader reads characters and sends them to the dlv11
-	std::thread consoleReader(readStdin, std::ref(dlv11));
-	
+	// std::thread consoleReader(readStdin, std::ref(dlv11));
+	std::unique_ptr<Console> console = Console::create (std::ref(dlv11));
+		
 	while (running) 
 	{
 		unsigned int i;
@@ -350,6 +352,7 @@ try
 				lsi.step();
 
 			running = 0;
+			console->finish ();
 		}
 
 		dlv11.step();
@@ -366,7 +369,7 @@ try
 	}
 
 	// Wait for the consoleReader to finish
-	consoleReader.join();
+	// consoleReader.join();
 
 	return 0;
 }

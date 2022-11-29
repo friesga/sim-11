@@ -86,9 +86,27 @@ set (BA11_N_SRCS
     src/ba11_n/loadimage.cpp
     src/ba11_n/render.cpp)
 
+# Handling of the console is system-specific
+if (MSVC)
+set (CONSOLE_SRCS
+    src/console/console.cpp
+    src/console/windowsconsole/windowsconsole.cpp
+    src/console/windowsconsole/reader.cpp
+    src/console/windowsconsole/readcharacter.cpp
+    src/console/windowsconsole/isvalidkeyevent.cpp)
+endif ()
+
+if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+set (CONSOLE_SRCS
+    src/console/console.cpp
+    src/console/linuxconsole/linuxconsole.cpp
+    src/console/linuxconsole/reader.cpp)
+endif ()
+
 # Define source files
 set (SIM11_SRCS
     ${BA11_N_SRCS}
+    ${CONSOLE_SRCS}
     src/bdv11/bdv11.cpp
     src/bdv11/bdv11_e53.cpp
     src/disas.cpp
