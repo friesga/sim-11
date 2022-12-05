@@ -20,13 +20,10 @@ bool Float::PDP11toIEEE (uint16_t const high, uint16_t const low,
 
     unsigned int pdp11part1;
     int exponent;
-    uint32_t mantissa;
 
     pdp11part.i[1] = high;
     pdp11part.i[0] = low;
     pdp11part1 = pdp11part.l;
-
-    mantissa = pdp11part1 & MANTISSA_MASK;
 
     if ((exponent = (pdp11part1 & PDP11_F_EXPONENT_MASK)) == 0)
     {
