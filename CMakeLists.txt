@@ -137,7 +137,6 @@ set (SIM11_SRCS
     src/logger/logger.cpp
     src/logger/data.cpp
     ${FLOAT_SRCS}
-    src/console.cpp
     ${CMDLINEOPTIONS_SRCS}
     ${CONFIGURATOR_SRCS}
     src/interruptrequest/interruptrequest.cpp)
@@ -149,8 +148,7 @@ add_executable (${TARGET} ${SIM11_SRCS})
 # Add MSVC replacements for linux system calls
 if (MSVC)
 set (CLOCK_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/contrib/clock_gettime/src/clock_gettime.cpp)
-set (TERMIO_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/contrib/termio/src/termio.cpp)
-target_sources (${TARGET} PRIVATE ${CLOCK_SRCS} ${TERMIO_SRCS})
+target_sources (${TARGET} PRIVATE ${CLOCK_SRCS})
 endif ()
   
 # At least C++17 is needed for use of std::variant in variantfsm.

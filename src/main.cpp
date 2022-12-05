@@ -19,8 +19,6 @@
 #include <time.h>
 #include <sys/time.h>
 #include <sys/types.h>
-#include <unistd.h>
-#include <termios.h>
 #include <signal.h>
 
 #include <iostream>
@@ -28,7 +26,6 @@
 
 #ifdef _WIN32
 #include <fcntl.h>
-#include <termio.h>
 #include <clock_gettime.h>
 #endif
 
@@ -89,8 +86,6 @@ const char* odt_input =
 	"2132/005007\r"
 	"2134/000000\r"
 	"2000G";
-
-extern void readStdin(DLV11J &dlv11);
 
 void LSI11ConsoleSend (DLV11J* dlv, const char c)
 {
@@ -331,8 +326,7 @@ try
 
 	clock_gettime (CLOCK_MONOTONIC, &last);
 
-	// The consoleReader reads characters and sends them to the dlv11
-	// std::thread consoleReader(readStdin, std::ref(dlv11));
+	// The Console class reads characters and sends them to the dlv11
 	std::unique_ptr<Console> console = Console::create (std::ref(dlv11));
 		
 	while (running) 
@@ -365,9 +359,6 @@ try
 	{
 		TRCFINISH();
 	}
-
-	// Wait for the consoleReader to finish
-	// consoleReader.join();
 
 	return 0;
 }
