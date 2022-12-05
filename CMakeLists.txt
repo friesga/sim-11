@@ -144,12 +144,6 @@ set (SIM11_SRCS
 # Add source to this project's executable.
 add_executable (${TARGET} ${SIM11_SRCS})
 #set_property(TARGET ${TARGET} PROPERTY C_STANDARD 90)
-
-# Add MSVC replacements for linux system calls
-if (MSVC)
-set (CLOCK_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/contrib/clock_gettime/src/clock_gettime.cpp)
-target_sources (${TARGET} PRIVATE ${CLOCK_SRCS})
-endif ()
   
 # At least C++17 is needed for use of std::variant in variantfsm.
 # set(CMAKE_CXX_STANDARD 20) is useless as that not translates to /std:c++20

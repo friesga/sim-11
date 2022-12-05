@@ -17,17 +17,11 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-#include <sys/time.h>
 #include <sys/types.h>
 #include <signal.h>
 
 #include <iostream>
 #include <thread>
-
-#ifdef _WIN32
-#include <fcntl.h>
-#include <clock_gettime.h>
-#endif
 
 // Get rid of SDL's main function
 #undef main
@@ -115,8 +109,6 @@ try
 	
 	// Create the BA11-N bezel
     std::unique_ptr<BA11_N> ba11_n = std::make_unique<BA11_N> ();
-
-	struct timespec last;
 
 	FILE* floppy_file;
 	u8* floppy;
@@ -323,8 +315,6 @@ try
 	{
 		lsi.kd11.cpu().runState = 1;
 	}
-
-	clock_gettime (CLOCK_MONOTONIC, &last);
 
 	// The Console class reads characters and sends them to the dlv11
 	std::unique_ptr<Console> console = Console::create (std::ref(dlv11));
