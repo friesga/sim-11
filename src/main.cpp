@@ -317,7 +317,6 @@ try
 		fclose (f);
 	}
 
-
 	running = 1;
 
 	if (CmdLineOptions::get().halt) 
@@ -352,7 +351,6 @@ try
 				lsi.step();
 
 			running = 0;
-			console->finish ();
 		}
 
 		dlv11.step();

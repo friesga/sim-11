@@ -25,13 +25,8 @@ Console::Console (DLV11J &dlv11)
 
 Console::~Console ()
 {
-    readerThread_.join ();
-}
-
-// Finish reading the console
-void Console::finish ()
-{
     consoleRunning_ = false;
+    readerThread_.join ();
 }
 
 bool Console::isRunning ()

@@ -25,7 +25,6 @@ public:
     Console (DLV11J &dlv11);
     ~Console ();
     virtual void reader() = 0;
-    void finish();
     bool isRunning();
 
     static std::unique_ptr<Console> create (DLV11J &dlv11);
