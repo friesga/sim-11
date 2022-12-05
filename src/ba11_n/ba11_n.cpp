@@ -24,6 +24,9 @@ BA11_N::~BA11_N ()
     SDL_DestroyTexture (texture_);
     SDL_Quit ();
 
+    // Signal thread to stop running
+    running_ = false;
+
     // Wait till the thread has finished
     ba11_nThread_.join ();
 }
