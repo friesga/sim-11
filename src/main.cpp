@@ -81,19 +81,6 @@ const char* odt_input =
 	"2134/000000\r"
 	"2000G";
 
-void LSI11ConsoleSend (DLV11J* dlv, const char c)
-{
-	dlv->send (3, c);
-}
-
-void LSI11ConsoleSendString (DLV11J* dlv, const char* s)
-{
-	for(; *s; s++)
-	{
-		LSI11ConsoleSend(dlv, *s);
-	}
-}
-
 #define	READ(addr)			lsi.bus.read(lsi.bus.user, (addr))
 #define	WRITE(addr, val)	lsi.bus.write(lsi.bus.user, (addr), (val))
 
@@ -214,6 +201,9 @@ try
 		}
 	}
 
+	// The Console class reads characters and sends them to the dlv11
+	std::unique_ptr<Console> console = Console::create (std::ref(dlv11));
+
 	lsi.bus.installModule (1, &msv11);
 	lsi.bus.installModule (2, &rlv12);
 	lsi.bus.installModule (3, &rxv21);
@@ -222,9 +212,8 @@ try
 	lsi.reset ();
 
 	if (CmdLineOptions::get().bootstrap) 
-	{
-		LSI11ConsoleSendString (&dlv11, odt_input);
-	}
+		console->sendString (odt_input);
+
 	if (CmdLineOptions::get().load_file) 
 	{
 		/* execute absolute loader binary */
@@ -288,13 +277,13 @@ try
 				if ((addr & 1) == 0) 
 				{
 					lsi.kd11.cpu().r[7] = addr;
-					/* LSI11ConsoleSendString(&dlv11, "P"); */
+					/* console->sendString("P"); */
 					// ToDo: Use symbolic constants for runState
 					lsi.kd11.cpu().runState = 1;
 				} 
 				else 
 				{
-					/* LSI11ConsoleSendString(&dlv11, "200G"); */
+					/* console->sendString("200G"); */
 					lsi.kd11.cpu().r[7] = 0200;
 					lsi.kd11.cpu().runState = 1;
 				}
@@ -315,9 +304,6 @@ try
 	{
 		lsi.kd11.cpu().runState = 1;
 	}
-
-	// The Console class reads characters and sends them to the dlv11
-	std::unique_ptr<Console> console = Console::create (std::ref(dlv11));
 		
 	while (running) 
 	{

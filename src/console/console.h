@@ -26,6 +26,8 @@ public:
     ~Console ();
     virtual void reader() = 0;
     bool isRunning();
+    void send (const char c);
+    void sendString (const char* s);
 
     static std::unique_ptr<Console> create (DLV11J &dlv11);
 };

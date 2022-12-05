@@ -34,3 +34,16 @@ bool Console::isRunning ()
     return consoleRunning_;
 }
 
+void Console::send (const char c)
+{
+	dlv11_.send (3, c);
+}
+
+void Console::sendString (const char* s)
+{
+	for(; *s; s++)
+	{
+		send(*s);
+	}
+}
+
