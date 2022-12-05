@@ -67,6 +67,11 @@ RLV12::RLV12 (RlConfig *rlConfig)
 // ToDo: Delete copy constructor and copy assignment operator
 RLV12::~RLV12 ()
 {
+    // Explicitly signal the command processor to stop. This is necessary
+    // to prevent Linux pthread scheduling to block on the cmdProcessor
+    // thread.
+    cmdProcessor_->finish ();
+
     if (dataBuffer_ != nullptr)
         delete [] dataBuffer_;
 }

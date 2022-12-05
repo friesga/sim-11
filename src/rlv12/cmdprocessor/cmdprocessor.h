@@ -70,6 +70,7 @@ public:
 
     // The function running in the separate thread
     void run ();
+    void finish ();
 };
 
 #endif // !_CMDPROCESSOR_H_
