@@ -8,6 +8,9 @@ cmake_minimum_required (VERSION 3.16)
 project ("sim-11")
 include (GoogleTest)
 
+# Define our build options
+option (BUILD_WITH_ASAN "Build with Address Sanitizer" OFF)
+
 # Define our target once
 set (TARGET sim-11)
 
@@ -157,8 +160,15 @@ endif ()
 # GCC specific compiler options
 if (CMAKE_C_COMPILER_ID STREQUAL "GNU")
 target_compile_options (${TARGET} PRIVATE 
-    -O3 -g -Wall --std=c++20 -ffunction-sections -fdata-sections -DUNIX -fsanitize=address)
-endif ()
+    -Wall --std=c++20 -ffunction-sections -fdata-sections -DUNIX)
+
+if (BUILD_WITH_ASAN)
+target_compile_options (${TARGET} PRIVATE -fsanitize=address)
+endif () # BUILD_WITH_ASAN
+
+# Add pthread for gcc
+set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread")
+endif () # GCC-specific
     
 # MSVC specific compiler options
 if (CMAKE_C_COMPILER_ID STREQUAL "MSVC")
@@ -180,7 +190,11 @@ endif ()
 
 # GCC specific linker options
 if (CMAKE_C_COMPILER_ID STREQUAL "GNU")
-target_link_options (${TARGET} PRIVATE -Wl,-x -Wl,--gc-sections -fsanitize=address)
+target_link_options (${TARGET} PRIVATE -Wl,-x -Wl,--gc-sections)
+
+if (BUILD_WITH_ASAN)
+target_link_options (${TARGET} PRIVATE -fsanitize=address)
+endif () # BUILD_WITH_ASAN
 endif ()
 
 # Build against SDL2 libraries

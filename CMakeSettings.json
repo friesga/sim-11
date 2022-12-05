@@ -58,6 +58,11 @@
                     "name": "CMAKE_VERBOSE_MAKEFILE",
                     "value": "True",
                     "type": "BOOL"
+                },
+                {
+                    "name": "BUILD_WITH_ASAN",
+                    "value": "False",
+                    "type": "BOOL"
                 }
             ]
         },
@@ -70,8 +75,7 @@
             "cmakeCommandArgs": "",
             "buildCommandArgs": "",
             "ctestCommandArgs": "",
-            "inheritEnvironments": [ "msvc_x64_x64" ],
-            "variables": []
+            "inheritEnvironments": [ "msvc_x64_x64" ]
         }
     ]
 }
