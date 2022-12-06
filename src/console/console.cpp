@@ -21,6 +21,8 @@ std::unique_ptr<Console> Console::create (DLV11J &dlv11)
 Console::Console (DLV11J &dlv11)
     : dlv11_ {dlv11}
 {
+    // Create a thread running the event handler and rendering
+    readerThread_ = std::thread (&Console::reader, this);
 }
 
 Console::~Console ()
