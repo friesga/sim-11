@@ -40,7 +40,7 @@ void BA11_N::bezel ()
 	// be retrieved before the window is created. At least for Windows, event
     // handling has to be performed in the same thread as in which the window
     // has been created.
-    init ("BA11-N", 100, 100, 300, 500, false);
+    init ("BA11-N", 100, 100, 560, 960, false);
 
     while (running_)
 	{

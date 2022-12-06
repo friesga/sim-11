@@ -30,7 +30,8 @@ void BA11_N::init (char const* title, int xpos, int ypos,
     SDL_SetRenderDrawColor (renderer_, backGroundRed, backGroundGreen,
         backGroundBlue, backGroundAlpha);
 
-    SDL_Surface *tempSurface = loadImage ("assets/pdp11-03-front.png");
+    // The image has to be placed in the direcory out/assets.
+    SDL_Surface *tempSurface = loadImage ("../../assets/pdp11-03-front.png");
     texture_ = SDL_CreateTextureFromSurface (renderer_, tempSurface);
     SDL_FreeSurface (tempSurface);
 
