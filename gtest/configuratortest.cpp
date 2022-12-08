@@ -50,3 +50,43 @@ TEST (ConfigProcessorTest, configProcessorThrows)
 		FAIL();
 	}
 }
+
+#ifdef _WIN32
+static const std::string expectedFileNameUnit1 {"windowsFileName"};
+static const std::string expectedFileNameUnit2 {"unqualifiedName"};
+static const std::string expectedFileNameUnit3 {"windowsFileName"};
+#else
+static const std::string expectedFileNameUnit1 {"linuxFileName"};
+static const std::string expectedFileNameUnit2 {"linuxFileName"};
+static const std::string expectedFileNameUnit3 {"unqualifiedName"};
+#endif
+
+TEST (ConfigProcessorTest, fileName)
+{
+    iniparser::File ft;
+	std::stringstream stream;
+	stream << "[RL]\n"
+		"units = 4\n"
+		"[RL.unit0]\n"
+		"filename = somefile\n"
+		"[RL.unit1]\n"
+		"filename = Windows:windowsFileName, Linux:linuxFileName\n"
+		"[RL.unit2]\n"
+		"filename = Linux:linuxFileName, unqualifiedName\n"
+		"[RL.unit3]\n"
+		"filename = Windows:windowsFileName, unqualifiedName\n";
+		
+	stream >> ft;
+
+	ConfigData configProcessor;
+	configProcessor.process (ft);
+
+	EXPECT_STREQ (configProcessor.getConfig()->rlConfig->rlUnitConfig[0].fileName.c_str(),
+		"somefile");
+	EXPECT_STREQ (configProcessor.getConfig()->rlConfig->rlUnitConfig[1].fileName.c_str(),
+		expectedFileNameUnit1.c_str());
+	EXPECT_STREQ (configProcessor.getConfig()->rlConfig->rlUnitConfig[2].fileName.c_str(),
+		expectedFileNameUnit2.c_str());
+	EXPECT_STREQ (configProcessor.getConfig()->rlConfig->rlUnitConfig[3].fileName.c_str(),
+		expectedFileNameUnit3.c_str());
+}

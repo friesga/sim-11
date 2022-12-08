@@ -56,9 +56,24 @@ void RlUnitProcessor::processType (iniparser::Value value)
 			value.asString()};
 }
 
+#ifdef _WIN32
+static const std::string systemType {"Windows"};
+#else
+static const std::string systemType {"Linux"};
+#endif
+
+// Get filename as a string from the given Value.
+// The file name has to be specified as a system-independent string or
+// as a map in the format "Windows:filename, Linux:filename".
 void RlUnitProcessor::processFileName (iniparser::Value value)
 {
-	rlUnitConfig.fileName = value.asString();
+	iniparser::Map aMap = value.asMap ();
+
+	// If no system-specific filename is found in the given value map,
+    // the unqualified name is returned
+	rlUnitConfig.fileName = 
+		aMap.getValue (iniparser::Value(systemType),
+        aMap.getValue (iniparser::Value(""))).asString();
 }
 
 void RlUnitProcessor::processNewFile (iniparser::Value value)
