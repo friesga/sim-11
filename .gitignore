@@ -1,5 +1,4 @@
-build
-assets
+out/
 lsi-11
 *.sw?
 

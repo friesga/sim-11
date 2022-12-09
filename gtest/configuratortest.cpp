@@ -52,11 +52,13 @@ TEST (ConfigProcessorTest, configProcessorThrows)
 }
 
 #ifdef _WIN32
-static const std::string expectedFileNameUnit1 {"windowsFileName"};
+static const std::string expectedFileNameUnit0 {"\\somefile"};
+static const std::string expectedFileNameUnit1 {"G:\\windowsFileName"};
 static const std::string expectedFileNameUnit2 {"unqualifiedName"};
 static const std::string expectedFileNameUnit3 {"windowsFileName"};
 #else
-static const std::string expectedFileNameUnit1 {"linuxFileName"};
+static const std::string expectedFileNameUnit0 {"\\somefile"};
+static const std::string expectedFileNameUnit1 {"/mnt/g/sim-11/linuxFileName"};
 static const std::string expectedFileNameUnit2 {"linuxFileName"};
 static const std::string expectedFileNameUnit3 {"unqualifiedName"};
 #endif
@@ -68,9 +70,9 @@ TEST (ConfigProcessorTest, fileName)
 	stream << "[RL]\n"
 		"units = 4\n"
 		"[RL.unit0]\n"
-		"filename = somefile\n"
+		"filename = \\somefile\n"
 		"[RL.unit1]\n"
-		"filename = Windows:windowsFileName, Linux:linuxFileName\n"
+		"filename = Windows:{G:\\windowsFileName}, Linux:{/mnt/g/sim-11/linuxFileName\n"
 		"[RL.unit2]\n"
 		"filename = Linux:linuxFileName, unqualifiedName\n"
 		"[RL.unit3]\n"

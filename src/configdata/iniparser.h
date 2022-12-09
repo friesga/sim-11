@@ -808,7 +808,10 @@ namespace iniparser
                     if (segm_cnt)
                         cur_str.push_back(str[i]);
                 }
-                else if (str[i] == esc)
+                else if (str[i] == esc && !segm_cnt)
+                    // Escape characters in a string between curly braces
+                    // aren't processed as using curly braces is a way to
+                    // define strings with escape characters.
                     escaped = true;
                 else
                     cur_str.push_back(str[i]);
