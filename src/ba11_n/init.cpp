@@ -31,7 +31,7 @@ void BA11_N::init (char const* title, int xpos, int ypos,
         backGroundBlue, backGroundAlpha);
 
     // The image has to be placed in the direcory out/assets.
-    SDL_Surface *tempSurface = loadImage ("../../assets/pdp11-03-front.png");
+    SDL_Surface *tempSurface = loadImage ("../../assets/pdp-11_03.png");
     texture_ = SDL_CreateTextureFromSurface (renderer_, tempSurface);
     SDL_FreeSurface (tempSurface);
 
@@ -43,8 +43,8 @@ void BA11_N::init (char const* title, int xpos, int ypos,
 
     sourceRectangle_.x = 0;
     sourceRectangle_.y = 0;
-    destinationRectangle_.x = 10;
-    destinationRectangle_.y = 10;
+    destinationRectangle_.x = 0;
+    destinationRectangle_.y = 0;
     destinationRectangle_.w = width;
     destinationRectangle_.h = height;
 }
