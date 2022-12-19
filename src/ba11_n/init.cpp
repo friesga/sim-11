@@ -45,6 +45,6 @@ void BA11_N::init (char const* title, int xpos, int ypos,
     sourceRectangle_.y = 0;
     destinationRectangle_.x = 10;
     destinationRectangle_.y = 10;
-    destinationRectangle_.w = sourceRectangle_.w;
-    destinationRectangle_.h = sourceRectangle_.h;
+    destinationRectangle_.w = width;
+    destinationRectangle_.h = height;
 }
