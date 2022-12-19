@@ -20,8 +20,10 @@ BA11_N::BA11_N ()
 BA11_N::~BA11_N ()
 {
     SDL_DestroyWindow (window_);
-    SDL_DestroyRenderer (renderer_);
-    SDL_DestroyTexture (texture_);
+    if (renderer_ != nullptr)
+        SDL_DestroyRenderer (renderer_);
+    if (texture_ != nullptr)
+        SDL_DestroyTexture (texture_);
     SDL_Quit ();
 
     // Signal thread to stop running
