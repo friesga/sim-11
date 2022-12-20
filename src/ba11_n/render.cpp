@@ -2,12 +2,15 @@
 
 void BA11_N::render()
 {
-	// Clear the renderer to the draw color
-	SDL_RenderClear (renderer_);
+    renderer_->setDrawColor (0xFF, 0xFF, 0xFF, 0xFF);
+    renderer_->clear ();
 
-	SDL_RenderCopy (renderer_, texture_, &sourceRectangle_, 
-		&destinationRectangle_);
+    // Render background texture to the window
+    pdp11_03_frontTexture->render (0, 0);
 
-	// Draw to the screen
-	SDL_RenderPresent (renderer_); 
+    // Render scaled PWR OK light on the front
+    pwrOkTexture_->render (240, 100, 20, 20);
+
+    //Update screen
+    renderer_->update (); 
 }
