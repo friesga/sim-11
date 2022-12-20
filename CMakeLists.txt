@@ -89,6 +89,12 @@ set (BA11_N_SRCS
     src/ba11_n/loadimage.cpp
     src/ba11_n/render.cpp)
 
+set (SDLWRAP_SRCS
+    src/sdl/renderer/renderer.cpp
+    src/sdl/sdlwrap/sdlwrap.cpp
+    src/sdl/texture/texture.cpp
+    src/sdl/window/window.cpp)
+
 # Handling of the console is system-specific
 if (MSVC)
 set (CONSOLE_SRCS
@@ -123,6 +129,7 @@ set (SIM11_SRCS
     ${QBUS_SRCS}
     src/busdevice/writebyte.cpp
     ${RLV12_SRCS}
+    ${SDLWRAP_SRCS}
     src/rxv21/rxv21.cpp
     src/rxv21/initiatecommand.cpp
     src/rxv21/emptybuffer.cpp

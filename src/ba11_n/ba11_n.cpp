@@ -1,10 +1,14 @@
+#include "ba11_n.h"
+#include "../sdl/sdlwrap/sdlwrap.h"
+#include "../sdl/texture/texture.h"
+#include "../sdl/window/window.h"
+#include "../sdl/renderer/renderer.h"
+
 //
 // Support for the BA11-N Mounting Box
 //
 #include <iostream>
 #include <thread>
-
-#include "ba11_n.h"
 
 // Constructor
 // Create a window showing the BA11-N and devices and then start a thread
@@ -42,13 +46,40 @@ void BA11_N::bezel ()
 	// be retrieved before the window is created. At least for Windows, event
     // handling has to be performed in the same thread as in which the window
     // has been created.
-    init ("BA11-N", 100, 100, 560, 149, false);
+
+    // init ("BA11-N", 100, 100, 560, 149, false);
+    // Start up SDL
+    SDLwrap sdlWrap {};
+
+    //Create window
+    Window myWindow ("BA11-N", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
+        560, 149, SDL_WINDOW_SHOWN);
+
+    //Create renderer for window
+    Renderer myRenderer (myWindow);
+
+    //Initialize renderer color
+    myRenderer.setDrawColor (0xFF, 0xFF, 0xFF, 0xFF);
+
+    Texture fooTexture {myRenderer, "../../assets/red-light-icon.png"};
+    Texture backgroundTexture {myRenderer, "../../assets/pdp-11_03.png"};
 
     while (running_)
 	{
 		handleEvents();
 		// update();
-		render();
-        std::this_thread::sleep_for (std::chrono::milliseconds (33));
+		// render();
+        // std::this_thread::sleep_for (std::chrono::milliseconds (33));
+        myRenderer.setDrawColor (0xFF, 0xFF, 0xFF, 0xFF);
+        myRenderer.clear ();
+
+        // Render background texture to the window
+        backgroundTexture.render (0, 0);
+
+        // Render scaled fooTexture to the window
+        fooTexture.render (240, 100, 20, 20);
+
+        //Update screen
+        myRenderer.update ();
 	}
 }
