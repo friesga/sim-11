@@ -16,11 +16,11 @@
 // ToDo: Reinitialize K11ODT
 KD11CPU::KD11CPU (QBUS* bus)
     :
-    runState{ 0 },
-    r{ 0 },
-    bus_{ bus },
-    psw{ 0 },
-    trap_{ nullptr }
+    runState {STATE_HALT},
+    r {0},
+    bus_ {bus},
+    psw {0},
+    trap_ {nullptr}
 {}
 
 void KD11CPU::reset ()
@@ -29,6 +29,7 @@ void KD11CPU::reset ()
     psw = 0;
     trap_ = nullptr;
     runState = STATE_HALT;
+    bus_->setProcessorRunning (false);
 }
 
 CondData<u16> KD11CPU::fetchWord (u16 address)
@@ -142,7 +143,10 @@ void KD11CPU::step (QBUS* bus)
     // Generate a Trace trap if the trace bit is set, unless the previous
     // instruction was a RTT or another trap is pending.
     if (runState == STATE_INHIBIT_TRACE)
+    {
         runState = STATE_RUN;
+        bus_->setProcessorRunning (true);
+    }
     else if (!trap_ && (psw & PSW_T))
     {
         TRCTrap (014, TRC_TRAP_T);
@@ -192,6 +196,7 @@ void KD11CPU::execInstr (QBUS* bus)
                             TRCCPUEvent (TRC_CPU_HALT, r[7]);
 
                             runState = STATE_HALT;
+                            bus_->setProcessorRunning (false);
                             // The ODT state is set to ODT_STATE_INIT in 
                             // KD11:step() when it detects the runState HALT.
                             // odt.state = ODT_STATE_INIT;
@@ -1533,6 +1538,7 @@ void KD11CPU::handleTraps (QBUS* bus)
         // ToDo: All interrupts should be cleared?
         trap_ = nullptr;
         runState = STATE_HALT;
+        bus_->setProcessorRunning (false);
         return;
     }
 
@@ -1542,6 +1548,7 @@ void KD11CPU::handleTraps (QBUS* bus)
         TRCCPUEvent (TRC_CPU_DBLBUS, r[6]);
         trap_ = nullptr;
         runState = STATE_HALT;
+        bus_->setProcessorRunning (false);
         return;
     }
 
@@ -1554,6 +1561,7 @@ void KD11CPU::handleTraps (QBUS* bus)
         TRCCPUEvent (TRC_CPU_DBLBUS, trapToProcess);
         trap_ = nullptr;
         runState = STATE_HALT;
+        bus_->setProcessorRunning (false);
         return;
     }
 
@@ -1564,6 +1572,7 @@ void KD11CPU::handleTraps (QBUS* bus)
         TRCCPUEvent (TRC_CPU_DBLBUS, trapToProcess + 2);
         trap_ = nullptr;
         runState = STATE_HALT;
+        bus_->setProcessorRunning (false);
         return;
     }
 
@@ -1572,6 +1581,7 @@ void KD11CPU::handleTraps (QBUS* bus)
     {
         TRCCPUEvent (TRC_CPU_RUN, r[7]);
         runState = STATE_RUN;
+        bus_->setProcessorRunning (true);
     }
 }
 

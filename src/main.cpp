@@ -95,7 +95,7 @@ try
 	BDV11 bdv11;
 	
 	// Create the BA11-N bezel
-    std::unique_ptr<BA11_N> ba11_n = std::make_unique<BA11_N> ();
+    std::unique_ptr<BA11_N> ba11_n = std::make_unique<BA11_N> (lsi.bus);
 
 	FILE* floppy_file;
 	u8* floppy;
@@ -280,12 +280,14 @@ try
 					/* console->sendString("P"); */
 					// ToDo: Use symbolic constants for runState
 					lsi.kd11.cpu().runState = 1;
+					lsi.bus.setProcessorRunning (true);
 				} 
 				else 
 				{
 					/* console->sendString("200G"); */
 					lsi.kd11.cpu().r[7] = 0200;
 					lsi.kd11.cpu().runState = 1;
+					lsi.bus.setProcessorRunning (true);
 				}
 				break;
 			}
@@ -298,11 +300,13 @@ try
 	if (CmdLineOptions::get().halt) 
 	{
 		lsi.kd11.cpu().runState = 0;
+		lsi.bus.setProcessorRunning (false);
 	} 
 	else if (!CmdLineOptions::get().bootstrap && 
 		!CmdLineOptions::get().halt && !CmdLineOptions::get().load_file) 
 	{
 		lsi.kd11.cpu().runState = 1;
+		lsi.bus.setProcessorRunning (true);
 	}
 		
 	while (running) 

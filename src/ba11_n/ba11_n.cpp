@@ -11,7 +11,9 @@ using std::make_unique;
 // Constructor
 // Create a window showing the BA11-N and devices and then start a thread
 // handling the events and render the lamps and switches.
-BA11_N::BA11_N ()
+BA11_N::BA11_N (QBUS &bus)
+    :
+    bus_ {bus}
 {
     // Create a thread running the event handler and rendering
     ba11_nThread_ = std::thread (&BA11_N::bezel, this);
@@ -51,7 +53,7 @@ void BA11_N::bezel ()
 
     pdp11_03_frontTexture = make_unique<Texture> (*renderer_, "../../assets/pdp-11_03.png");
     pwrOkTexture_ = make_unique<Texture> (*renderer_, "../../assets/red-light-icon.png");
-
+    runLightTexture_ = make_unique<Texture> (*renderer_, "../../assets/red-light-icon.png");
 
     while (running_)
 	{

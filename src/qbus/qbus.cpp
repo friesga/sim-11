@@ -8,6 +8,8 @@
 #define	IRCJITTER()	(rand() % INTRPT_LATENCY_JITTER)
 
 QBUS::QBUS ()
+	:
+	processorRunning_ {false}
 {
 	memset (slots, 0, sizeof (slots));
 }
@@ -132,4 +134,19 @@ void QBUS::installModule (int slot, BusDevice* module)
 {
 	slots[slot] = module;
 	module->bus = this;
+}
+
+// The functions setProcessorRunning and processorIsRunning abstract the
+// SRUN L signal. SRUN L, a non-bused, backplane signal, is a series of
+// pulses which occur at 3-5",s intervals whenever the processor is in
+// the Run mode.
+void QBUS::setProcessorRunning (bool running)
+{
+	processorRunning_ = running;
+}
+
+
+bool QBUS::processorIsRunning ()
+{
+	return processorRunning_;
 }

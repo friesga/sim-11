@@ -48,6 +48,8 @@ public:
 	bool	writeWord (u16 addr, u16 value);
 	bool	writeByte (u16 addr, u8 val);
 	void	installModule (int slot, BusDevice* module);
+	void setProcessorRunning (bool running);
+	bool processorIsRunning ();
 
 	BusDevice*	slots[LSI11_SIZE];
 	u16	delay;
@@ -56,6 +58,7 @@ private:
 	// This queue keeps all interrupt requests, ordered in interrupt priority
 	using IntrptReqQueue = ThreadSafePrioQueue<InterruptRequest>;
 	IntrptReqQueue intrptReqQueue_;
+	bool processorRunning_;
 
 	BusDevice *responsibleModule (u16 address);
 	void pushInterruptRequest (InterruptRequest interruptReq);

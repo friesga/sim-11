@@ -102,6 +102,7 @@ void KD11ODT::step (QBUS* bus)
                     case 'P':
                         state = ODT_STATE_INIT;
                         cpu_.runState = STATE_RUN;
+                        cpu_.bus_->setProcessorRunning (true);
                         TRCCPUEvent (TRC_CPU_ODT_P, cpu_.r[7]);
                         break;
 
@@ -151,6 +152,7 @@ void KD11ODT::step (QBUS* bus)
                     state = ODT_STATE_INIT;
                     cpu_.r[7] = addr;
                     cpu_.runState = STATE_RUN;
+                    cpu_.bus_->setProcessorRunning (true);
                     TRCCPUEvent (TRC_CPU_ODT_G, addr);
                 }
                 else
