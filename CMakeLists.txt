@@ -119,7 +119,8 @@ set (SIM11_SRCS
     src/disas.cpp
     src/dlv11j/dlv11j.cpp
     src/kd11/kd11.cpp
-    src/kd11/pswpriority.cpp
+    src/kd11/cpu/kd11cpu.cpp
+    src/kd11/odt/kd11odt.cpp
     src/lib/gotapproval.cpp
     src/lsi11/lsi11.cpp
     src/main.cpp 
@@ -253,7 +254,8 @@ set (SIM11_TEST_SRCS
     src/lib/gotapproval.cpp
     src/lsi11/lsi11.cpp
     src/kd11/kd11.cpp
-    src/kd11/pswpriority.cpp
+    src/kd11/cpu/kd11cpu.cpp
+    src/kd11/odt/kd11odt.cpp
     src/msv11d/msv11d.cpp
     src/trace/trace.cpp
     src/logger/logger.cpp

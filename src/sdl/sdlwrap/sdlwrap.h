@@ -10,5 +10,4 @@ public:
     ~SDLwrap ();
 };
 
-
-#endif _SDL_H_
+#endif // _SDL_H_
