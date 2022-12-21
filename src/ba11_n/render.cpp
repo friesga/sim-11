@@ -9,7 +9,7 @@ void BA11_N::render()
     pdp11_03_frontTexture->render (0, 0);
 
     // Render scaled PWR OK light on the front
-    pwrOkTexture_->render (240, 100, 20, 20);
+    pwrOkTexture_->render (385, 86, 9, 9);
 
     //Update screen
     renderer_->update (); 
