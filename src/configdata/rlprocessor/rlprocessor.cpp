@@ -56,10 +56,9 @@ RlConfig *RlProcessor::getConfig()
 	return rlConfigPtr.get();
 }
 
+// 
 // Determine the controller type, either RLV11 or RLV12.
 // 
-// 
-
 void RlProcessor::processController (iniparser::Value value)
 {
 	if (value.asString() == "RL11")

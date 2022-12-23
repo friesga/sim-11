@@ -36,7 +36,7 @@ State RXV21::transition (rxv21ReadSectorRx2ta &&, rxv21Rx2dbFilled)
 	return rxv21Idle {};
 }
 
-// This function is locates the desired sector and transfers the contents
+// This function locates the desired sector and transfers the contents
 // of the data field to the internal buffer in the control. This function may
 // also be used to retrieve rapidly (5 ms) the current status of the drive
 // selected.

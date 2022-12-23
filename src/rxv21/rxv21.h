@@ -77,7 +77,7 @@ struct rxv21ReadSectorRx2ta {};
 struct rxv21ReadErrorCodeRx2ba {};
 
 
-// Define events and states to use. The first state mmember of the variant
+// Define events and states to use. The first state member of the variant
 // is the initial state.
 using Event = std::variant<rxv21Init, rxv21Go, rxv21Rx2dbFilled>;
 using State = std::variant<rxv21Idle, 

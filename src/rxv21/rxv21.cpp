@@ -56,7 +56,7 @@ StatusCode RXV21::read (u16 address, u16 *destAddress)
 	return StatusCode::OK;
 }
 
-// Write operation on either the RX2CS of RX2DB
+// Write operation on either the RX2CS or RX2DB
 // A command to the RXV21 will be executed in two or more steps:
 // 1. The selection and initiation of the command to be executed by
 //	  writing the RX2CS,
@@ -86,7 +86,7 @@ StatusCode RXV21::writeWord (u16 address, u16 value)
 
 		// Generate an interrupt for the last succesfully completed command
 		// if interrupts were not enabled and Interrupt Enable is set in this
-		// register write
+		// register write action.
 		if (!intr && (value & RX_INTR_ENB) && (rx2cs & RX_DONE)) 
 		{
 			QBUS* bus = this->bus;

@@ -1504,8 +1504,7 @@ void KD11CPU::handleTraps (QBUS* bus)
     // is used as bus request level. Traps in HALT mode are ignored.
     // 
     // Check if there is a trap or interrupt request to handle and the CPU
-    // isn't halted. This is the most common
-    // case so check this as first.
+    // isn't halted. This is the most common case so check this as first.
     if ((!trap_ && !bus->intrptReqAvailable ()) || runState == STATE_HALT)
         return;
 
