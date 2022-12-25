@@ -19,6 +19,7 @@ void ConfigData::process (iniparser::File iniFile)
 DeviceConfig *ConfigData::getConfig ()
 {
 	deviceConfigPtr->rlConfig = rlProcessor.getConfig ();
+	deviceConfigPtr->rxConfig = rxProcessor.getConfig ();
 	return deviceConfigPtr.get();
 }
 

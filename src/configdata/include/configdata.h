@@ -51,12 +51,27 @@ struct RlConfig
 	RlUnitConfig rlUnitConfig[maxRlUnits];
 };
 
+// Definition of the configuration result of an RXV21 unit.
+struct RxUnitConfig : public UnitConfig
+{
+	std::string fileName {};
+};
+
+struct RxConfig
+{
+	static constexpr size_t numRxUnits = 2;
+	uint16_t address {0};
+	uint16_t vector {0};
+	RxUnitConfig rxUnitConfig[numRxUnits];
+};
+
 //
 // Definition of the configuration data for the devices in the simulator.
 // 
 struct DeviceConfig
 {
 	RlConfig *rlConfig = nullptr;
+	RxConfig *rxConfig = nullptr;
 };
 
 #endif // !_CONFIGDATA_H_

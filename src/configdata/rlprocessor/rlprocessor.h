@@ -29,7 +29,6 @@ class RlProcessor : public SectionProcessor
 	void processVector (iniparser::Value value);
 	void processUnits (iniparser::Value value);
 	void process22Bit (iniparser::Value value);
-	uint16_t touint16_t (std::string number);
 
 	void checkConsistency();
 

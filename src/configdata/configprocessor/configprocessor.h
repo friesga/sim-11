@@ -3,6 +3,7 @@
 
 #include "../include/configdata.h"
 #include "../rlprocessor/rlprocessor.h"
+#include "../rxprocessor/rxprocessor.h"
 
 #include <memory>
 
@@ -11,10 +12,12 @@ class ConfigData
 	std::unique_ptr<DeviceConfig> deviceConfigPtr = 
 		std::make_unique<DeviceConfig> ();
 	RlProcessor rlProcessor;
+	RxProcessor rxProcessor;
 
 	std::map<std::string, SectionProcessor*> sectionProcessors =
 	{
-		{"RL", &rlProcessor}	
+		{"RL", &rlProcessor},
+		{"RX", &rxProcessor}
 	};
 
 	void processSection (iniparser::Section* section);

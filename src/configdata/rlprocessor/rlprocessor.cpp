@@ -116,21 +116,6 @@ void RlProcessor::process22Bit (iniparser::Value value)
 		throw std::invalid_argument {"22-bit must be either true or false"};
 }
 
-// Return the number represented by the string as an uint16_t. The number's 
-// base is determined by stoul. This allows for the specification of an
-// address as an octal numer.
-uint16_t RlProcessor::touint16_t (std::string number)
-{
-	size_t numConvertedChars;
-	uint32_t tmp = stoul (number, &numConvertedChars, 0);
-
-	if (numConvertedChars != number.size() || 
-		tmp > std::numeric_limits<uint16_t>::max())
-			throw std::invalid_argument{number};
-
-	return tmp;
-}
-
 // Check the consistency of the configuration of the RLV1[12] controller
 // 
 // Currently the simulator only supports the Qbus and therefore the RLV11 

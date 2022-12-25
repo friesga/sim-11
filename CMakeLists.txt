@@ -75,7 +75,10 @@ set (QBUS_SRCS
 set (CONFIGURATOR_SRCS
     src/configdata/configprocessor/configprocessor.cpp
     src/configdata/rlprocessor/rlprocessor.cpp
-    src/configdata/rlprocessor/rlunitprocessor/rlunitprocessor.cpp)
+    src/configdata/rlprocessor/rlunitprocessor/rlunitprocessor.cpp
+    src/configdata/rxprocessor/rxprocessor.cpp
+    src/configdata/rxprocessor/rxunitprocessor/rxunitprocessor.cpp
+    src/configdata/sectionprocessor/sectionprocessor.cpp)
 
 set (FLOAT_SRCS
     src/float/float.cpp
@@ -242,6 +245,7 @@ set (SIM11_TEST_SRCS
     gtest/rlv12seektest.cpp
     gtest/rlv12writechecktest.cpp
     gtest/rlv12writedatatest.cpp
+    gtest/rxconfiguratortest.cpp
     ${CMDLINEOPTIONS_SRCS}
     ${CONFIGURATOR_SRCS}
     src/interruptrequest/interruptrequest.cpp
@@ -299,7 +303,8 @@ gtest_add_tests (TARGET sim-11-test
                     RLV12ReadDataTest
                     RLV12WriteDataTest
                     RLV12WriteCheckTest
-                    RLV12ReadDataWithoutHeaderCheckTest)
+                    RLV12ReadDataWithoutHeaderCheckTest
+                    RxConfiguratorTest)
 
 #
 # Create trace reader
