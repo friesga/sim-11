@@ -17,12 +17,12 @@ void RxProcessor::processSection (iniparser::Section* section)
 		}
 		catch (std::out_of_range const &)
 		{
-			throw std::invalid_argument {"Unknown key in section RL: " +  
+			throw std::invalid_argument {"Unknown key in section RX: " +  
 				section->fullName()};
 		}
 	}
 
-	// Check the consistency of the specified RL options
+	// Check the consistency of the specified RX options
 	checkConsistency();
 
 	// Process subsections
@@ -44,7 +44,7 @@ void RxProcessor::processSection (iniparser::Section* section)
 		if (unitNumber >= rxConfigPtr->numRxUnits)
 			throw std::invalid_argument {"Unit number " + 
 			std::to_string(unitNumber) + " is higher than maximum #units (" +
-			std::to_string(rxConfigPtr->numRxUnits) + ") in RL section"};
+			std::to_string(rxConfigPtr->numRxUnits) + ") in RX section"};
 
 		// Check the consistency of this section
 		rxUnitProcessor.checkConsistency ();
@@ -64,7 +64,7 @@ void RxProcessor::processAddress (iniparser::Value value)
 	}
 	catch (std::invalid_argument const &)
 	{
-		throw std::invalid_argument {"Incorrect address in RL section specified: " + 
+		throw std::invalid_argument {"Incorrect address in RX section specified: " + 
 			value.asString()};
 	}
 }

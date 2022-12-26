@@ -3,7 +3,7 @@
 void RxUnitProcessor::processSection (iniparser::Section* section)
 {
 	if (section->name().substr(0, 4) != "unit")
-		throw std::invalid_argument {"Unknown RL subsection: " + 
+		throw std::invalid_argument {"Unknown RX subsection: " + 
 			section->name()};
 
 	// Get the unit number from the subsection name. This will throw an
