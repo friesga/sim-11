@@ -4,6 +4,7 @@
 #include "cmdlineoptions/cmdlineoptions.h"
 
 #include <gtest/gtest.h>
+#include <memory>
 
 // Write to unit tests.
 
@@ -45,8 +46,8 @@ protected:
 
     // Create bus structure, an RLV12 device and install the device
     QBUS bus;
-    MSV11D msv11;
-    RLV12 rlv12Device {};
+    std::shared_ptr<MSV11D> msv11 = std::make_shared<MSV11D> ();
+    std::shared_ptr<RLV12> rlv12Device = std::make_shared<RLV12> ();
 
     void waitForControllerReady ()
     {
@@ -54,7 +55,7 @@ protected:
         do
         {
             std::this_thread::yield();
-            rlv12Device.read (RLCSR, &result);
+            rlv12Device->read (RLCSR, &result);
         }
         while (!(result & CSR_ControllerReady));
     }
@@ -63,8 +64,8 @@ protected:
     {
         // Create a minimal system, conisting of just the bus, memory
         // and the RLV12 device to be tested.
-        bus.installModule (1, &msv11);
-        bus.installModule (2, &rlv12Device);
+        bus.installModule (1, msv11);
+        bus.installModule (2, rlv12Device);
 
         // Make sure the controller has started
         waitForControllerReady ();
@@ -77,22 +78,22 @@ TEST_F (RLV12GetStatusTest, getStatusFails)
     // Verify the controller is ready to perform an operation (the drive
     // does not have to be ready)
     u16 result;
-    rlv12Device.read (RLCSR, &result);
+    rlv12Device->read (RLCSR, &result);
     ASSERT_EQ (result & CSR_ControllerReady, CSR_ControllerReady);
 
     // Load DAR without Reset and Get Status bits
     // zeros in the other locations
-    rlv12Device.writeWord (RLDAR, 0);
+    rlv12Device->writeWord (RLDAR, 0);
 
     // Load the CSR with drive-select bits for unit 0, a negative GO bit
     // (i.e. bit 7 cleared), interrups disabled and a Get Status Command (02)
     // in the function bits.
-    rlv12Device.writeWord (RLCSR, CSR_GetStatusCommand);
+    rlv12Device->writeWord (RLCSR, CSR_GetStatusCommand);
 
     waitForControllerReady ();
 
     // Verify the controller reports an Operation Incomplete
-    rlv12Device.read (RLCSR, &result);
+    rlv12Device->read (RLCSR, &result);
     ASSERT_EQ (result, CSR_CompositeError |
         CSR_OperationIncomplete | CSR_ControllerReady | CSR_GetStatusCommand);
 }
@@ -102,27 +103,27 @@ TEST_F (RLV12GetStatusTest, getStatusFailsOnDisconnectedUnit)
 {
     // Verify the controller is ready to perform an operation 
     u16 result;
-    rlv12Device.read (RLCSR, &result);
+    rlv12Device->read (RLCSR, &result);
     ASSERT_EQ (result & CSR_ControllerReady, CSR_ControllerReady);
 
     // Load DAR with ones in bits 01 and 00, reset bit cleared and
     // zeros in the other locations
-    rlv12Device.writeWord (RLDAR, DAR_Reset | DAR_GetStatus | DAR_Marker);
+    rlv12Device->writeWord (RLDAR, DAR_Reset | DAR_GetStatus | DAR_Marker);
 
     // Load the CSR with drive-select bits for unit 0, a negative GO bit
     // (i.e. bit 7 cleared), interrups disabled and a Get Status Command (02)
     // in the function bits.
-    rlv12Device.writeWord (RLCSR, CSR_GetStatusCommand);
+    rlv12Device->writeWord (RLCSR, CSR_GetStatusCommand);
 
     waitForControllerReady ();
 
     // Expected result in the MPR register: Drive Select Error
     u16 mpr;
-    rlv12Device.read (RLMPR, &mpr);
+    rlv12Device->read (RLMPR, &mpr);
     ASSERT_EQ (mpr, MPR_DriveSelectError);
 
     // Verify the controller is ready without error indications
-    rlv12Device.read (RLCSR, &result);
+    rlv12Device->read (RLCSR, &result);
     ASSERT_EQ (result, CSR_CompositeError | 
         CSR_DriveError | 
         CSR_OperationIncomplete | 
@@ -141,7 +142,7 @@ TEST_F (RLV12GetStatusTest, resetSucceeds)
     };
 
     // Attach a new disk to unit 0
-    ASSERT_EQ (rlv12Device.unit (0)->configure (rlUnitConfig), 
+    ASSERT_EQ (rlv12Device->unit (0)->configure (rlUnitConfig), 
         StatusCode::OK);
 
     // Verify the controller is ready to perform an operation (the drive
@@ -150,24 +151,24 @@ TEST_F (RLV12GetStatusTest, resetSucceeds)
 
     // Load DAR with ones in bits 01 and 00, reset bit cleared and
     // zeros in the other locations
-    rlv12Device.writeWord (RLDAR, DAR_Reset | DAR_GetStatus | DAR_Marker);
+    rlv12Device->writeWord (RLDAR, DAR_Reset | DAR_GetStatus | DAR_Marker);
 
     // Load the CSR with drive-select bits for unit 0, a negative GO bit
     // (i.e. bit 7 cleared), interrups disabled and a Get Status Command (02)
     // in the function bits.
-    rlv12Device.writeWord (RLCSR, CSR_GetStatusCommand);
+    rlv12Device->writeWord (RLCSR, CSR_GetStatusCommand);
 
     waitForControllerReady ();
 
     // Expected result in the MPR register: heads locked on a cylinder,
     // no errors, Drive Type RL01
     u16 mpr;
-    rlv12Device.read (RLMPR, &mpr);
+    rlv12Device->read (RLMPR, &mpr);
     ASSERT_EQ (mpr, MPR_LockOn | MPR_BrushHome | MPR_HeadsOut);
 
     // Verify the controller is ready without error indications
     u16 result;
-    rlv12Device.read (RLCSR, &result);
+    rlv12Device->read (RLCSR, &result);
     ASSERT_EQ (result, CSR_ControllerReady |
         CSR_GetStatusCommand | 
         CSR_DriveReady);
@@ -185,7 +186,7 @@ TEST_F (RLV12GetStatusTest, drive3CanBeSelected)
     };
 
     // Attach a new disk to unit 3
-    ASSERT_EQ (rlv12Device.unit (3)->configure (rlUnitConfig), 
+    ASSERT_EQ (rlv12Device->unit (3)->configure (rlUnitConfig), 
         StatusCode::OK);
 
     // Verify the controller is ready to perform an operation (the drive
@@ -194,23 +195,23 @@ TEST_F (RLV12GetStatusTest, drive3CanBeSelected)
 
     // Load DAR with ones in bits 01 and 00, reset bit cleared and
     // zeros in the other locations
-    rlv12Device.writeWord (RLDAR, DAR_Reset | DAR_GetStatus | DAR_Marker);
+    rlv12Device->writeWord (RLDAR, DAR_Reset | DAR_GetStatus | DAR_Marker);
 
     // Load the CSR with drive-select bits for unit 3, a negative GO bit
     // (i.e. bit 7 cleared), interrups disabled and a Get Status Command (02)
     // in the function bits.
-    rlv12Device.writeWord (RLCSR, CSR_GetStatusCommand | CSR_Drive3);
+    rlv12Device->writeWord (RLCSR, CSR_GetStatusCommand | CSR_Drive3);
 
     waitForControllerReady ();
 
     // Expected result in the MPR register: heads locked on a cylinder,
     // no errors, Drive Type RL01
     u16 mpr;
-    rlv12Device.read (RLMPR, &mpr);
+    rlv12Device->read (RLMPR, &mpr);
     
     // Verify the controller is ready without error indications
     u16 result;
-    rlv12Device.read (RLCSR, &result);
+    rlv12Device->read (RLCSR, &result);
     ASSERT_EQ (result, CSR_ControllerReady |
         CSR_GetStatusCommand | 
         CSR_Drive3 |

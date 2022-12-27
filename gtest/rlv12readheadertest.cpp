@@ -4,6 +4,7 @@
 #include "cmdlineoptions/cmdlineoptions.h"
 
 #include <gtest/gtest.h>
+#include <memory>
 
 // Write to unit tests.
 
@@ -52,8 +53,8 @@ protected:
 
     // Create bus structure, an RLV12 device and install the device
     QBUS bus;
-    MSV11D msv11;
-    RLV12 rlv12Device {};
+    std::shared_ptr<MSV11D> msv11 = std::make_shared<MSV11D> ();
+    std::shared_ptr<RLV12> rlv12Device = std::make_shared<RLV12> ();
 
     void waitForControllerReady ()
     {
@@ -61,7 +62,7 @@ protected:
         do
         {
             std::this_thread::yield ();
-            rlv12Device.read (RLCSR, &result);
+            rlv12Device->read (RLCSR, &result);
         }
         while (!(result & CSR_ControllerReady));
     }
@@ -70,8 +71,8 @@ protected:
     {
         // Create a minimal system, conisting of just the bus, memory
         // and the RLV12 device to be tested.
-        bus.installModule (1, &msv11);
-        bus.installModule (2, &rlv12Device);
+        bus.installModule (1, msv11);
+        bus.installModule (2, rlv12Device);
 
         RlUnitConfig rlUnitConfig
         {
@@ -84,12 +85,12 @@ protected:
         waitForControllerReady ();
 
         // Attach a new disk to unit 0
-        ASSERT_EQ (rlv12Device.unit (0)->configure (rlUnitConfig), 
+        ASSERT_EQ (rlv12Device->unit (0)->configure (rlUnitConfig), 
             StatusCode::OK);
 
         // Clear errors and volume check condition
-        rlv12Device.writeWord (RLDAR, DAR_Reset | DAR_GetStatus | DAR_Marker);
-        rlv12Device.writeWord (RLCSR, CSR_GetStatusCommand | CSR_Drive0);
+        rlv12Device->writeWord (RLDAR, DAR_Reset | DAR_GetStatus | DAR_Marker);
+        rlv12Device->writeWord (RLCSR, CSR_GetStatusCommand | CSR_Drive0);
 
         waitForControllerReady ();
     }
@@ -102,34 +103,34 @@ TEST_F (RLV12ReadHeaderTest, readHeaderSucceeds)
     // Verify the controller is ready to perform an operation (the drive
     // does not have to be ready)
     u16 result;
-    rlv12Device.read (RLCSR, &result);
+    rlv12Device->read (RLCSR, &result);
     ASSERT_EQ (result & CSR_ControllerReady, CSR_ControllerReady);
 
     // Load the CSR with drive-select bits for unit 0, a negative GO bit
     // (i.e. bit 7 cleared), interrupts disabled and a Read Header Command (04)
     // in the function bits.
-    rlv12Device.writeWord (RLCSR, CSR_ReadHeaderCommand);
+    rlv12Device->writeWord (RLCSR, CSR_ReadHeaderCommand);
 
     waitForControllerReady ();
 
     // Verify the controller is ready
-    rlv12Device.read (RLCSR, &result);
+    rlv12Device->read (RLCSR, &result);
     ASSERT_EQ (result, CSR_ControllerReady | CSR_ReadHeaderCommand | 
         CSR_DriveReady);
 
     // Expected result in the MPR register: Sector Address, Head Select and
     // Cylinder Address
     u16 mpr;
-    rlv12Device.read (RLMPR, &mpr);
+    rlv12Device->read (RLMPR, &mpr);
     ASSERT_EQ (mpr, 00);
 
     // The second MPR read should deliver all zero's
-    rlv12Device.read (RLMPR, &mpr);
+    rlv12Device->read (RLMPR, &mpr);
     ASSERT_EQ (mpr, 00);
 
     // The third read should deliver the CRC of the header
     // We presume the calculation is correct
-    rlv12Device.read (RLMPR, &mpr);
+    rlv12Device->read (RLMPR, &mpr);
     ASSERT_EQ (mpr, 00);
 }
 
@@ -138,35 +139,35 @@ TEST_F (RLV12ReadHeaderTest, headerHasCorrectContents)
 {
     // Verify both controller and drive are ready
     u16 result;
-    rlv12Device.read (RLCSR, &result);
+    rlv12Device->read (RLCSR, &result);
     ASSERT_EQ (result & (CSR_ControllerReady | CSR_DriveReady), 
         CSR_ControllerReady | CSR_DriveReady);
 
     // Seek to a cylinder to be able to verify the correct contents of
     //the header
-    rlv12Device.writeWord (RLDAR, 
+    rlv12Device->writeWord (RLDAR, 
         DAR_Marker | DAR_Seek | DAR_DirectionOut | DAR_cylinderDifference (10));
-    rlv12Device.writeWord (RLCSR, CSR_SeekCommand);
+    rlv12Device->writeWord (RLCSR, CSR_SeekCommand);
 
     // Wait for the seek to be completed
     std::this_thread::sleep_for (std::chrono::milliseconds (300));
 
     // Verify both controller and drive are ready and no error is
     // indicated
-    rlv12Device.read (RLCSR, &result);
+    rlv12Device->read (RLCSR, &result);
     ASSERT_EQ (result & 
         (CSR_CompositeError | CSR_ControllerReady | CSR_DriveReady),
         CSR_ControllerReady | CSR_DriveReady);
 
     // Execute a Read Header command
-    rlv12Device.writeWord (RLCSR, CSR_ReadHeaderCommand);
+    rlv12Device->writeWord (RLCSR, CSR_ReadHeaderCommand);
 
     // Wait for command completion
     std::this_thread::sleep_for (std::chrono::milliseconds (500));
 
     // Verify both controller and drive are ready again and no error is
     // indicated
-    rlv12Device.read (RLCSR, &result);
+    rlv12Device->read (RLCSR, &result);
     ASSERT_EQ (result & 
         (CSR_CompositeError | CSR_ControllerReady | CSR_DriveReady),
         CSR_ControllerReady | CSR_DriveReady);
@@ -174,6 +175,6 @@ TEST_F (RLV12ReadHeaderTest, headerHasCorrectContents)
     // Expected result in the MPR register: Sector Address, Head Select and
     // Cylinder Address
     u16 mpr;
-    rlv12Device.read (RLMPR, &mpr);
+    rlv12Device->read (RLMPR, &mpr);
     ASSERT_EQ (MPR_cylinder (mpr), 10);
 }

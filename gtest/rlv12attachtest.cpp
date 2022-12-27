@@ -5,6 +5,7 @@
 #include "configdata/include/configdata.h"
 
 #include <gtest/gtest.h>
+#include <memory>
 
 // Attach file to unit tests.
 // 
@@ -24,11 +25,11 @@ class RLV12AttachTest : public ::testing::Test
 protected:
     // Create bus structure, an RLV12 device and install the device
     QBUS bus;
-    RLV12 rlv12Device {};
+    std::shared_ptr<RLV12> rlv12Device = std::make_shared<RLV12> ();
 
     void SetUp() override
     {
-        bus.installModule (1, &rlv12Device);
+        bus.installModule (1, rlv12Device);
     }
 };
 
@@ -45,7 +46,7 @@ TEST_F (RLV12AttachTest, attachReturnsOpenError)
 
     // ASSERT_EQ (rlv12Device.unit (0)->attach ("non-existingfile", 
     //         Bitmask(AttachFlags::Default)), 
-    ASSERT_EQ (rlv12Device.unit (0)->configure (rlUnitConfig), 
+    ASSERT_EQ (rlv12Device->unit (0)->configure (rlUnitConfig), 
         StatusCode::OpenError);
 }
 
@@ -65,7 +66,7 @@ TEST_F (RLV12AttachTest, attachCreatesNewFile)
     // This creates a file in the default directory (out\build\<config>)
     // ASSERT_EQ (rlv12Device.unit (0)->attach (fileName, Bitmask(AttachFlags::NewFile)),
     //     StatusCode::OK);
-    ASSERT_EQ (rlv12Device.unit (0)->configure (attachCreatesNewFileConfig),
+    ASSERT_EQ (rlv12Device->unit (0)->configure (attachCreatesNewFileConfig),
         StatusCode::OK);
 }
 
@@ -81,7 +82,7 @@ TEST_F (RLV12AttachTest, attachOpensReadOnly)
         .readOnly = true
     };
 
-    ASSERT_EQ (rlv12Device.unit (0)->configure (attachOpensReadOnlyConfig), 
+    ASSERT_EQ (rlv12Device->unit (0)->configure (attachOpensReadOnlyConfig), 
         StatusCode::OK);
 }
 
@@ -96,7 +97,7 @@ TEST_F (RLV12AttachTest, existingFileIsNotOverwritten)
         .newFile = true
     };
 
-    ASSERT_EQ (rlv12Device.unit (0)->configure (existingFileIsNotOverwrittenConfig), 
+    ASSERT_EQ (rlv12Device->unit (0)->configure (existingFileIsNotOverwrittenConfig), 
         StatusCode::ArgumentError);
 }
 
@@ -109,6 +110,6 @@ TEST_F (RLV12AttachTest, existingFileIsOverwritten)
         .overwrite = true
     };
 
-    ASSERT_EQ (rlv12Device.unit (0)->configure (existingFileIsOverwrittenConfig),
+    ASSERT_EQ (rlv12Device->unit (0)->configure (existingFileIsOverwrittenConfig),
         StatusCode::OK);
 }

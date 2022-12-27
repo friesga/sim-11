@@ -8,6 +8,8 @@
 #include "threadsafecontainers/threadsafeprioqueue.h"
 #include "busdevice/busdevice.h"
 
+#include <memory>
+
 /* Backplane size */
 #define	LSI11_SIZE		8
 
@@ -47,11 +49,11 @@ public:
 	CondData<u16> read (u16 addr);
 	bool	writeWord (u16 addr, u16 value);
 	bool	writeByte (u16 addr, u8 val);
-	void	installModule (int slot, BusDevice* module);
+	void	installModule (int slot, std::shared_ptr<BusDevice> module);
 	void setProcessorRunning (bool running);
 	bool processorIsRunning ();
 
-	BusDevice*	slots[LSI11_SIZE];
+	std::shared_ptr<BusDevice>	slots[LSI11_SIZE];
 	u16	delay;
 
 private:
@@ -60,7 +62,7 @@ private:
 	IntrptReqQueue intrptReqQueue_;
 	bool processorRunning_;
 
-	BusDevice *responsibleModule (u16 address);
+	std::shared_ptr<BusDevice> responsibleModule (u16 address);
 	void pushInterruptRequest (InterruptRequest interruptReq);
 };
 

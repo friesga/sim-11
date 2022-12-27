@@ -25,6 +25,6 @@ void WindowsConsole::reader ()
         // Read one character from the console
 		if (readCharacter (stdInputHandle, &c, 1))
             // std::cout << '<' << c << ">\n";
-            dlv11_.send (3, c);
+            dlv11_->send (3, c);
     }
 }

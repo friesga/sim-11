@@ -1,5 +1,7 @@
 #include "sectionprocessor.h"
 
+#include <limits>
+
 // Return the number represented by the string as an uint16_t. The number's 
 // base is determined by stoul. This allows for the specification of an
 // address as an octal numer.

@@ -4,6 +4,7 @@
 #include "cmdlineoptions/cmdlineoptions.h"
 
 #include <gtest/gtest.h>
+#include <memory>
 
 // Write to unit tests.
 
@@ -24,15 +25,15 @@ protected:
 
     // Create bus structure, an RLV12 device and install the device
     QBUS bus;
-    MSV11D msv11;
-    RLV12 rlv12Device {};
+    std::shared_ptr<MSV11D> msv11 = std::make_shared<MSV11D> ();
+    std::shared_ptr<RLV12> rlv12Device = std::make_shared<RLV12> ();
 
     void SetUp() override
     {
         // Create a minimal system, conisting of just the bus, memory
         // and the RLV12 device to be tested.
-        bus.installModule (1, &msv11);
-        bus.installModule (2, &rlv12Device);
+        bus.installModule (1, msv11);
+        bus.installModule (2, rlv12Device);
     }
 
     void waitForControllerReady ()
@@ -42,7 +43,7 @@ protected:
         {
             // std::this_thread::sleep_for (std::chrono::milliseconds (300));
             std::this_thread::yield ();
-            rlv12Device.read (RLCSR, &result);
+            rlv12Device->read (RLCSR, &result);
         }
         while (!(result & CSR_ControllerReady));
     }
@@ -61,14 +62,14 @@ TEST_F (RLV12MaintenanceTest, maintenance)
     // The command is executed with no units attached as attaching a
     // unit will cause a Volume Check condition which results in error
     // bits set.
-    rlv12Device.writeWord (RLBAR, 0);
-    rlv12Device.writeWord (RLMPR, 0177001);
-    rlv12Device.writeWord (RLCSR, MaintenanceMode);
+    rlv12Device->writeWord (RLBAR, 0);
+    rlv12Device->writeWord (RLMPR, 0177001);
+    rlv12Device->writeWord (RLCSR, MaintenanceMode);
 
     waitForControllerReady ();
 
     // Expected result: CSR CRDY (bit 7) set, all error bits cleared.
     u16 result;
-    rlv12Device.read (RLCSR, &result);
+    rlv12Device->read (RLCSR, &result);
     ASSERT_EQ (result, 0200);
 }

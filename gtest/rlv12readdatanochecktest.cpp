@@ -4,6 +4,7 @@
 #include "cmdlineoptions/cmdlineoptions.h"
 
 #include <gtest/gtest.h>
+#include <memory>
 
 // Write to unit tests.
 
@@ -59,8 +60,8 @@ protected:
 
     // Create bus structure, an RLV12 device and install the device
     QBUS bus;
-    MSV11D msv11;
-    RLV12 rlv12Device {};
+    std::shared_ptr<MSV11D> msv11 = std::make_shared<MSV11D> ();
+    std::shared_ptr<RLV12> rlv12Device  = std::make_shared<RLV12> ();
 
     void waitForControllerReady ()
     {
@@ -68,7 +69,7 @@ protected:
         do
         {
             std::this_thread::yield ();
-            rlv12Device.read (RLCSR, &result);
+            rlv12Device->read (RLCSR, &result);
         }
         while (!(result & CSR_ControllerReady));
     }
@@ -77,8 +78,8 @@ protected:
     {
         // Create a minimal system, conisting of just the bus, memory
         // and the RLV12 device to be tested.
-        bus.installModule (1, &msv11);
-        bus.installModule (2, &rlv12Device);
+        bus.installModule (1, msv11);
+        bus.installModule (2, rlv12Device);
 
         // Make sure the controller has started
         waitForControllerReady ();
@@ -96,32 +97,32 @@ TEST_F (RLV12ReadDataWithoutHeaderCheckTest, readDataWithoutHeaderCheckSucceeds)
     };
 
     // Attach a new disk to unit 0
-    ASSERT_EQ (rlv12Device.unit (0)->configure (rlUnitConfig), 
+    ASSERT_EQ (rlv12Device->unit (0)->configure (rlUnitConfig), 
         StatusCode::OK);
 
     // Clear errors and volume check condition
-    rlv12Device.writeWord (RLDAR, DAR_Reset | DAR_GetStatus | DAR_Marker);
-    rlv12Device.writeWord (RLCSR, CSR_GetStatusCommand | CSR_Drive0);
+    rlv12Device->writeWord (RLDAR, DAR_Reset | DAR_GetStatus | DAR_Marker);
+    rlv12Device->writeWord (RLCSR, CSR_GetStatusCommand | CSR_Drive0);
 
     waitForControllerReady ();
 
     // Verify both controller and drive are ready
     u16 result;
-    rlv12Device.read (RLCSR, &result);
+    rlv12Device->read (RLCSR, &result);
     ASSERT_EQ (result & (CSR_ControllerReady | CSR_DriveReady), 
         CSR_ControllerReady | CSR_DriveReady);
 
     // Read a sector from disk. The DAR is not loaded as the next
     // sector passing the head is read.
-    rlv12Device.writeWord (RLBAR, 0);
-    rlv12Device.writeWord (RLMPR, 0xFF00);
-    rlv12Device.writeWord (RLCSR, CSR_ReadDataNoCheckCommand);
+    rlv12Device->writeWord (RLBAR, 0);
+    rlv12Device->writeWord (RLMPR, 0xFF00);
+    rlv12Device->writeWord (RLCSR, CSR_ReadDataNoCheckCommand);
 
     waitForControllerReady ();
 
     // Verify now both controller and drive are ready and no error is
     // indicated
-    rlv12Device.read (RLCSR, &result);
+    rlv12Device->read (RLCSR, &result);
     ASSERT_EQ (result &
         (CSR_CompositeError | CSR_ControllerReady | CSR_DriveReady), 
         CSR_ControllerReady | CSR_DriveReady);

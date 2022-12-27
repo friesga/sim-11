@@ -4,6 +4,7 @@
 #include "cmdlineoptions/cmdlineoptions.h"
 
 #include <gtest/gtest.h>
+#include <memory>
 
 // Write to unit tests.
 
@@ -52,8 +53,8 @@ protected:
 
     // Create bus structure, an RLV12 device and install the device
     QBUS bus;
-    MSV11D msv11;
-    RLV12 rlv12Device {};
+    std::shared_ptr<MSV11D> msv11 = std::make_shared<MSV11D> ();
+    std::shared_ptr<RLV12> rlv12Device = std::make_shared<RLV12> ();
 
     void waitForControllerReady ()
     {
@@ -61,7 +62,7 @@ protected:
         do
         {
             std::this_thread::yield ();
-            rlv12Device.read (RLCSR, &result);
+            rlv12Device->read (RLCSR, &result);
         }
         while (!(result & CSR_ControllerReady));
     }
@@ -70,8 +71,8 @@ protected:
     {
         // Create a minimal system, conisting of just the bus, memory
         // and the RLV12 device to be tested.
-        bus.installModule (1, &msv11);
-        bus.installModule (2, &rlv12Device);
+        bus.installModule (1, msv11);
+        bus.installModule (2, rlv12Device);
 
         // Make sure the controller has started
         waitForControllerReady ();
@@ -91,12 +92,12 @@ TEST_F (RLV12WriteDataTest, writeDataSucceeds)
     };
 
     // Attach a new disk to unit 0
-    ASSERT_EQ (rlv12Device.unit (0)->configure (writeDataSucceedsConfig), 
+    ASSERT_EQ (rlv12Device->unit (0)->configure (writeDataSucceedsConfig), 
         StatusCode::OK);
 
     // Clear errors and volume check condition
-    rlv12Device.writeWord (RLDAR, DAR_Reset | DAR_GetStatus | DAR_Marker);
-    rlv12Device.writeWord (RLCSR, CSR_GetStatusCommand | CSR_Drive0);
+    rlv12Device->writeWord (RLDAR, DAR_Reset | DAR_GetStatus | DAR_Marker);
+    rlv12Device->writeWord (RLCSR, CSR_GetStatusCommand | CSR_Drive0);
 
     waitForControllerReady ();
 
@@ -108,29 +109,29 @@ TEST_F (RLV12WriteDataTest, writeDataSucceeds)
     
     // Verify controller and drive are ready
     u16 result;
-    rlv12Device.read (RLCSR, &result);
+    rlv12Device->read (RLCSR, &result);
     ASSERT_EQ (result & (CSR_ControllerReady | CSR_DriveReady), 
         CSR_ControllerReady | CSR_DriveReady);
 
     // Point at memory address 0
-    rlv12Device.writeWord (RLBAR, 0);
+    rlv12Device->writeWord (RLBAR, 0);
 
     // Load DAR with disk address zero
-    rlv12Device.writeWord (RLDAR, 0);
+    rlv12Device->writeWord (RLDAR, 0);
 
     // Load MPR with two's complement for 256 words
-    rlv12Device.writeWord (RLMPR, 0xFF00);
+    rlv12Device->writeWord (RLMPR, 0xFF00);
 
     // Load the CSR with drive-select bits for unit 0, a negative GO bit
     // (i.e. bit 7 cleared), interrupts disabled and a Read Data Command (06)
     // in the function bits.
-    rlv12Device.writeWord (RLCSR, CSR_WriteDataCommand);
+    rlv12Device->writeWord (RLCSR, CSR_WriteDataCommand);
 
     waitForControllerReady ();
 
     // Verify now both controller and drive are ready and no error is
     // indicated
-    rlv12Device.read (RLCSR, &result);
+    rlv12Device->read (RLCSR, &result);
     ASSERT_EQ (result & 
         (CSR_CompositeError | CSR_ControllerReady | CSR_DriveReady),
         CSR_ControllerReady | CSR_DriveReady);
@@ -140,15 +141,15 @@ TEST_F (RLV12WriteDataTest, writeDataSucceeds)
         bus.writeWord (address, 0);
 
     // Read back the block from disk
-    rlv12Device.writeWord (RLDAR, 0);
-    rlv12Device.writeWord (RLBAR, 0);
-    rlv12Device.writeWord (RLMPR, 0xFF00);
-    rlv12Device.writeWord (RLCSR, CSR_ReadDataCommand);
+    rlv12Device->writeWord (RLDAR, 0);
+    rlv12Device->writeWord (RLBAR, 0);
+    rlv12Device->writeWord (RLMPR, 0xFF00);
+    rlv12Device->writeWord (RLCSR, CSR_ReadDataCommand);
 
     waitForControllerReady ();
 
     // Verify Read Data is executed without errors
-    rlv12Device.read (RLCSR, &result);
+    rlv12Device->read (RLCSR, &result);
     ASSERT_EQ (result & 
         (CSR_CompositeError | CSR_ControllerReady | CSR_DriveReady),
         CSR_ControllerReady | CSR_DriveReady);
@@ -178,12 +179,12 @@ TEST_F (RLV12WriteDataTest, partialWriteDataSucceeds)
     };
 
     // Attach a new disk to unit 0
-    ASSERT_EQ (rlv12Device.unit (0)->configure (partialWriteDataSucceedsConfig), 
+    ASSERT_EQ (rlv12Device->unit (0)->configure (partialWriteDataSucceedsConfig), 
         StatusCode::OK);
 
     // Clear errors and volume check condition
-    rlv12Device.writeWord (RLDAR, DAR_Reset | DAR_GetStatus | DAR_Marker);
-    rlv12Device.writeWord (RLCSR, CSR_GetStatusCommand | CSR_Drive0);
+    rlv12Device->writeWord (RLDAR, DAR_Reset | DAR_GetStatus | DAR_Marker);
+    rlv12Device->writeWord (RLCSR, CSR_GetStatusCommand | CSR_Drive0);
 
     waitForControllerReady ();
 
@@ -194,21 +195,21 @@ TEST_F (RLV12WriteDataTest, partialWriteDataSucceeds)
     
     // Verify controller and drive are ready
     u16 result;
-    rlv12Device.read (RLCSR, &result);
+    rlv12Device->read (RLCSR, &result);
     ASSERT_EQ (result & (CSR_ControllerReady | CSR_DriveReady), 
         CSR_ControllerReady | CSR_DriveReady);
 
     // Write 100 words
-    rlv12Device.writeWord (RLBAR, 0);
-    rlv12Device.writeWord (RLDAR, 0);
-    rlv12Device.writeWord (RLMPR, 0xFF9C);
-    rlv12Device.writeWord (RLCSR, CSR_WriteDataCommand);
+    rlv12Device->writeWord (RLBAR, 0);
+    rlv12Device->writeWord (RLDAR, 0);
+    rlv12Device->writeWord (RLMPR, 0xFF9C);
+    rlv12Device->writeWord (RLCSR, CSR_WriteDataCommand);
 
     waitForControllerReady ();
 
     // Verify now both controller and drive are ready and no error is
     // indicated
-    rlv12Device.read (RLCSR, &result);
+    rlv12Device->read (RLCSR, &result);
     ASSERT_EQ (result & 
         (CSR_CompositeError | CSR_ControllerReady | CSR_DriveReady),
         CSR_ControllerReady | CSR_DriveReady);
@@ -219,15 +220,15 @@ TEST_F (RLV12WriteDataTest, partialWriteDataSucceeds)
         bus.writeWord (address, 1);
 
     // Read the complete sector back from the disk
-    rlv12Device.writeWord (RLDAR, 0);
-    rlv12Device.writeWord (RLBAR, 0);
-    rlv12Device.writeWord (RLMPR, 0xFF00);
-    rlv12Device.writeWord (RLCSR, CSR_ReadDataCommand);
+    rlv12Device->writeWord (RLDAR, 0);
+    rlv12Device->writeWord (RLBAR, 0);
+    rlv12Device->writeWord (RLMPR, 0xFF00);
+    rlv12Device->writeWord (RLCSR, CSR_ReadDataCommand);
 
     waitForControllerReady ();
 
     // Verify Read Data is executed without errors
-    rlv12Device.read (RLCSR, &result);
+    rlv12Device->read (RLCSR, &result);
     ASSERT_EQ (result & 
         (CSR_CompositeError | CSR_ControllerReady | CSR_DriveReady),
         CSR_ControllerReady | CSR_DriveReady);

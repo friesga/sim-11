@@ -22,6 +22,10 @@
 
 #include <iostream>
 #include <thread>
+#include <memory>
+
+using std::shared_ptr;
+using std::make_shared;
 
 // Get rid of SDL's main function
 #undef main
@@ -89,10 +93,10 @@ try
 {
 	// ToDo: Replace module configuration by table
 	LSI11 lsi;
-	MSV11D msv11;
-	RXV21 rxv21;
-	DLV11J dlv11;
-	BDV11 bdv11;
+	auto msv11 = make_shared<MSV11D> ();
+	auto rxv21 = make_shared<RXV21> ();
+	auto dlv11 = make_shared<DLV11J> ();
+	auto bdv11 = make_shared<BDV11> ();
 	
 	// Create the BA11-N bezel
     std::unique_ptr<BA11_N> ba11_n = std::make_unique<BA11_N> (lsi.bus);
@@ -136,7 +140,7 @@ try
 		memset (floppy, 0, 77 * 26 * 256);
 	}
 
-	rxv21.setData (floppy);
+	rxv21->setData (floppy);
 
 	if (CmdLineOptions::get().trace_file) 
 	{
@@ -185,7 +189,8 @@ try
 	// Retrieve the configuration as specified in the configuration file
 	deviceConfig = configProcessor.getConfig ();
 
-	RLV12 rlv12 (deviceConfig->rlConfig);
+	// RLV12 rlv12 (deviceConfig->rlConfig);
+	shared_ptr<RLV12> rlv12 = make_shared<RLV12> (deviceConfig->rlConfig);
 
 	// Attach files to the RL units
 	for (size_t unitNumber = 0; 
@@ -194,7 +199,7 @@ try
 		RlUnitConfig rlUnitConfig = 
 			deviceConfig->rlConfig->rlUnitConfig[unitNumber];
 
-		if (rlv12.unit(unitNumber)->configure (rlUnitConfig) != StatusCode::OK)
+		if (rlv12->unit(unitNumber)->configure (rlUnitConfig) != StatusCode::OK)
 		{
 			std::cout << "Error attaching " << rlUnitConfig.fileName << '\n';
 			return 1;
@@ -202,13 +207,13 @@ try
 	}
 
 	// The Console class reads characters and sends them to the dlv11
-	std::unique_ptr<Console> console = Console::create (std::ref(dlv11));
+	std::unique_ptr<Console> console = Console::create (dlv11);
 
-	lsi.bus.installModule (1, &msv11);
-	lsi.bus.installModule (2, &rlv12);
-	lsi.bus.installModule (3, &rxv21);
-	lsi.bus.installModule (4, &dlv11);
-	lsi.bus.installModule (5, &bdv11);
+	lsi.bus.installModule (1, msv11);
+	lsi.bus.installModule (2, rlv12);
+	lsi.bus.installModule (3, rxv21);
+	lsi.bus.installModule (4, dlv11);
+	lsi.bus.installModule (5, bdv11);
 	lsi.reset ();
 
 	if (CmdLineOptions::get().bootstrap) 
@@ -269,8 +274,8 @@ try
 			(void) !fread (&addr, 2, 1, f);
 			bytes += len;
 			printf ("%06o: %d bytes\n", addr, len - 6);
-			(void) !fread (&msv11.data[addr], len - 6, 1, f);
-			TRCMemoryDump (&msv11.data[addr], addr, len - 6);
+			(void) !fread (&msv11->data[addr], len - 6, 1, f);
+			TRCMemoryDump (&msv11->data[addr], addr, len - 6);
 			(void) !fread (&cksum, 1, 1, f);
 			if(len == 6)
 			{
@@ -327,8 +332,8 @@ try
 			running = 0;
 		}
 
-		dlv11.step();
-		rxv21.step();
+		dlv11->step();
+		rxv21->step();
 	}
 
 	free (floppy);

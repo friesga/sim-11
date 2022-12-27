@@ -19,17 +19,17 @@ class Console
 protected:
     std::thread readerThread_;
     bool consoleRunning_ {false};
-    DLV11J &dlv11_;
+    std::shared_ptr<DLV11J> dlv11_;
 
 public:
-    Console (DLV11J &dlv11);
+    Console (std::shared_ptr<DLV11J> dlv11);
     ~Console ();
     virtual void reader() = 0;
     bool isRunning();
     void send (const char c);
     void sendString (const char* s);
 
-    static std::unique_ptr<Console> create (DLV11J &dlv11);
+    static std::unique_ptr<Console> create (std::shared_ptr<DLV11J> dlv11);
 };
 
 #endif // !_CONSOLE_H_
