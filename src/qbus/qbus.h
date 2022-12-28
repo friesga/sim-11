@@ -9,6 +9,7 @@
 #include "busdevice/busdevice.h"
 
 #include <memory>
+#include <string>
 
 /* Backplane size */
 #define	LSI11_SIZE		8
@@ -38,22 +39,23 @@ class QBUS
 {
 public:
 	QBUS ();
-	void	setInterrupt (TrapPriority priority, 
-				unsigned char busOrder, unsigned char vector);
-	void	clearInterrupt (TrapPriority priority, 	unsigned char busOrder);
-	bool	intrptReqAvailable();
-	u8		intrptPriority();
-	bool	getIntrptReq(InterruptRequest &ir);
-	void	reset ();
-	void	step ();
+	void setInterrupt (TrapPriority priority, 
+		unsigned char busOrder, unsigned char vector);
+	void clearInterrupt (TrapPriority priority, 	unsigned char busOrder);
+	bool intrptReqAvailable();
+	u8 intrptPriority();
+	bool getIntrptReq(InterruptRequest &ir);
+	void reset ();
+	void step ();
 	CondData<u16> read (u16 addr);
-	bool	writeWord (u16 addr, u16 value);
-	bool	writeByte (u16 addr, u8 val);
-	void	installModule (int slot, std::shared_ptr<BusDevice> module);
+	bool writeWord (u16 addr, u16 value);
+	bool writeByte (u16 addr, u8 val);
+	void installModule (int slot, std::shared_ptr<BusDevice> module);
+	std::shared_ptr<BusDevice> findModuleByName (std::string moduleName);
 	void setProcessorRunning (bool running);
 	bool processorIsRunning ();
 
-	std::shared_ptr<BusDevice>	slots[LSI11_SIZE];
+	std::shared_ptr<BusDevice> slots[LSI11_SIZE];
 	u16	delay;
 
 private:

@@ -140,6 +140,14 @@ void QBUS::installModule (int slot, shared_ptr<BusDevice> module)
 	module->bus = this;
 }
 
+std::shared_ptr<BusDevice> QBUS::findModuleByName (std::string moduleName)
+{
+	for (auto module : slots)
+		if (module->name() == moduleName)
+			return module;
+	return nullptr;
+}
+
 // The functions setProcessorRunning and processorIsRunning abstract the
 // SRUN L signal. SRUN L, a non-bused, backplane signal, is a series of
 // pulses which occur at 3-5",s intervals whenever the processor is in

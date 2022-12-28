@@ -126,7 +126,11 @@ set (SIM11_SRCS
     src/kd11/odt/kd11odt.cpp
     src/lib/gotapproval.cpp
     src/lsi11/lsi11.cpp
-    src/main.cpp 
+    src/main/main.cpp
+    src/main/configure.cpp
+    src/main/init.cpp
+    src/main/loadfile.cpp
+    src/main/run.cpp
     src/msv11d/msv11d.cpp
     ${QBUS_SRCS}
     src/busdevice/writebyte.cpp
