@@ -21,45 +21,14 @@ using std::string;
 
 // Configure the devices specfied in the given configuration file
 // on the given lsi.
-// ToDo: floppyFileName to be specified in configurati
-void Main::configureDevices (char const *configurationFile, 
-	char const *floppyFilename)
+void Main::configureDevices (char const *configurationFile)
 {
 	msv11_ = make_shared<MSV11D> ();
-	rxv21_ = make_shared<RXV21> ();
 	dlv11_ = make_shared<DLV11J> ();
 	bdv11_ = make_shared<BDV11> ();
 	
 	// Create the BA11-N bezel
     ba11_n_ = std::make_unique<BA11_N> (lsi11_.bus);
-
-	FILE* floppy_file;
-
-	// Allocate memory for the floppy (RXV21) data, open the file with
-	// the floppy drive data (if given) and pass the data buffer address
-	// to the RXV21 controller.
-	// Note that the complete contents of the file is read into the data
-	// buffer.
-	floppy_ = (u8*) malloc(77 * 26 * 256);
-	if (!floppy_) 
-		throw "Error: cannot allocate memory for rxv21";
-
-	// Check if a floppy has to be configured
-	if (floppyFilename) 
-	{
-		floppy_file = fopen (floppyFilename, "rb");
-		if (!floppy_file) 
-		{
-			free(floppy_);
-			throw "Error: cannot open file " + string(floppyFilename);
-		}
-		(void) !fread (floppy_, 77 * 26 * 256, 1, floppy_file);
-		fclose (floppy_file);
-	} 
-	else 
-		memset (floppy_, 0, 77 * 26 * 256);
-
-	rxv21_->setData (floppy_);
 
 	// Load device configuration
 	DeviceConfig *deviceConfig {nullptr};
@@ -85,6 +54,11 @@ void Main::configureDevices (char const *configurationFile,
 	// Retrieve the configuration as specified in the configuration file
 	deviceConfig = configProcessor.getConfig ();
 
+	// Configure the RXV21
+	if (deviceConfig->rxConfig != nullptr)
+		rxv21_ = make_shared<RXV21> (deviceConfig->rxConfig);
+
+	// ToDo: Presence of RLV12 is optional
 	// RLV12 rlv12 (deviceConfig->rlConfig);
 	shared_ptr<RLV12> rlv12 = make_shared<RLV12> (deviceConfig->rlConfig);
 

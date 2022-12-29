@@ -41,7 +41,4 @@ void Main::run ()
 		dlv11_->step();
 		rxv21_->step();
 	}
-
-	// ToDo: Get rid of floppy
-	free (floppy_);
 }

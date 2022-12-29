@@ -5,18 +5,47 @@
 
 extern int trace;
 
-RXV21::RXV21 ()
+RXV21::RXV21 (RxConfig *rxConfig)
 {
+	name_ = "RX";
+
 	/* factory configuration */
 	base = 0177170;
 	vector = 0264;
+
+	// Allocate memory for the floppy (RXV21) data, open the file with
+	// the floppy drive data (if given) and pass the data buffer address
+	// to the RXV21 controller.
+	// Note that the complete contents of the file is read into the data
+	// buffer.
+	data = (u8*) malloc(77 * 26 * 256);
+	if (!data) 
+		throw "Error: cannot allocate memory for rxv21";
+
+	// Check if a filename is given in the configuration. If so, read the
+	// contents of the file.
+	if (!rxConfig->rxUnitConfig[0].fileName.empty()) 
+	{
+		FILE* floppy_file = 
+			fopen (rxConfig->rxUnitConfig[0].fileName.c_str(), "rb");
+		if (!floppy_file) 
+		{
+			free(data);
+			throw "Error: cannot open file " + rxConfig->rxUnitConfig[0].fileName;
+		}
+		(void) !fread (data, 77 * 26 * 256, 1, floppy_file);
+		fclose (floppy_file);
+	} 
+	else 
+		memset (data, 0, 77 * 26 * 256);
 
 	reset ();
 }
 
 RXV21::~RXV21 ()
 {
-	/* nothing */
+	if (data)
+		free(data);
 }
 
 void RXV21::clearErrors()
@@ -113,11 +142,6 @@ void RXV21::reset ()
 	rx2cs = RX_RX02 | RX_DONE;
 	rx2es = RX2ES_DEFAULT;
 	rx2db = rx2es;
-}
-
-void RXV21::setData (u8* data)
-{
-	this->data = data;
 }
 
 // Originally in this function missed interrupt requests were checked

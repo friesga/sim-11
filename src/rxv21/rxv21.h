@@ -4,6 +4,7 @@
 #include "qbus/qbus.h"
 #include "busdevice/busdevice.h"
 #include "conddata/conddata.h"
+#include "configdata/include/configdata.h"
 #include "variantfsm/fsm.h"
 #include "trace/trace.h"
 
@@ -127,13 +128,12 @@ class RXV21 : public BusDevice, public variantFsm::Fsm<RXV21, Event, State>
 	InterruptRequest interruptRequest(unsigned char vector);
 
 public:
-	RXV21 ();
+	RXV21 (RxConfig *rxConfig);
 	~RXV21 ();
 	StatusCode read (u16 address, u16 *destAddress) override;
 	StatusCode writeWord (u16 address, u16 value) override;
 	bool responsible (u16 address) override;
 	void reset ();
-	void setData (u8* data);
 	void step();
 
 	// Definition of state transitions

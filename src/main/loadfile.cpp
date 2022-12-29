@@ -40,13 +40,11 @@ void Main::loadFile (char const* filename)
         if (c == EOF)
         {
             fclose (f);
-            free (floppy_);
             throw "Error: unexpected EOF in load file";
         }
         else if (c != 0)
         {
             fclose (f);
-            free (floppy_);
             std::stringstream errorText;
             errorText << "Error: invalid signature [0x" <<
                 std::hex << c << "] in load file";
