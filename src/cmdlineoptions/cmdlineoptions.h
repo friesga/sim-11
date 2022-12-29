@@ -12,7 +12,6 @@
 // per file
 class CmdLineOptions
 {
-    static const char *floppy_filename_;
 	static const char* load_file_;
 	static const char* config_file_;
 	static bool halt_;
@@ -30,7 +29,6 @@ public:
 	static void processOptions (int argc, char const **argv);
 	static void reset ();
 
-	const char* const &floppy_filename;
 	const char*  const &load_file;
 	const char*  const &config_file;
 	bool const &halt;

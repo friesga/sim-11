@@ -18,13 +18,12 @@ Usage
 -----
 
 ```
-lsi-11 [-t trace.trc] [-f floppy.bin] [-h] [program.bin]
+lsi-11 [-t trace.trc] [-h] [program.bin]
 ```
 
 Options:
 - `-t`: saves the complete execution trace of the LSI-11 system in the
   given file. This is useful for offline analysis.
-- `-f`: floppy disk image for the first floppy disk drive.
 - `-h`: Halt. If this option is given, the system will immediately halt.
 - `program.bin`: the last argument is an optional program file in
   standard absolute loader format. If it is specified, the emulator will

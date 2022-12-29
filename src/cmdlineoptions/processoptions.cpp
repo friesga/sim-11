@@ -40,12 +40,6 @@ void CmdLineOptions::processOptions (int argc, char const **argv)
 			config_file_ = argv[1];
 			--argc;
 			++argv;
-		}
-		else if(!strcmp("-f", *argv) && argc > 1) 
-		{
-			floppy_filename_ = argv[1];
-			--argc;
-			++argv;
 		} 
 		else if(!strcmp("-t", *argv) && argc > 1) 
 		{
@@ -65,7 +59,6 @@ void CmdLineOptions::processOptions (int argc, char const **argv)
 					"  -b              Enter RX02 double density bootstrap program\n"
 					"  -l file.bin     Load file.bin in absolute loader format\n"
 					"  -c file		   Use configuration from specified ini file\n"
-					"  -f file.rx2     Load RX02 floppy image from file.rx2\n"
 					"  -t file.trc     Record execution trace to file.trc\n"
 					"  -z              Use delta compression for execution trace\n"
 					"  -r			   Load image files read-only (only supported for RL01/02)\n"
