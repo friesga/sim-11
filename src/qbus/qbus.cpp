@@ -136,8 +136,11 @@ bool QBUS::getIntrptReq(InterruptRequest &intrptReq)
 
 void QBUS::installModule (int slot, shared_ptr<BusDevice> module)
 {
-	slots[slot] = module;
-	module->bus = this;
+	if (module)
+	{
+		slots[slot] = module;
+		module->bus = this;
+	}
 }
 
 std::shared_ptr<BusDevice> QBUS::findModuleByName (std::string moduleName)

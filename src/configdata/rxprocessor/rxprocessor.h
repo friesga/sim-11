@@ -9,7 +9,7 @@
 // Processor for the RX section of a configuration file
 class RxProcessor : public SectionProcessor
 {
-	std::unique_ptr<RxConfig> rxConfigPtr = std::make_unique<RxConfig> ();
+	std::unique_ptr<RxConfig> rxConfigPtr {nullptr};
 
 	// Define process as a pointer to a RlProcessor member function
 	// with a iniparser::Value argument and returning void.

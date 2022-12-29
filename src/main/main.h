@@ -20,6 +20,7 @@ class Main
 	LSI11 lsi11_;
 	std::shared_ptr<MSV11D> msv11_;
 	std::shared_ptr<RXV21> rxv21_;
+	std::shared_ptr<RLV12> rlv12_;
 	std::shared_ptr<DLV11J> dlv11_;
 	std::shared_ptr<BDV11> bdv11_;
 	std::unique_ptr<BA11_N> ba11_n_;
@@ -78,7 +79,11 @@ class Main
 		"2134/000000\r"
 		"2000G";
 
+	void configureRXV21 (RxConfig *rxConfig);
+	void configureRLV12 (RlConfig *rlConfig);
+
 public:
+	Main ();
 	void init (int argc, char const **argv);
 	void configureDevices (char const *configurationFile);
 	void loadFile (char const *fileToBeLoaded);

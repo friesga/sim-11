@@ -6,6 +6,10 @@
 // Process the given RL section
 void RlProcessor::processSection (iniparser::Section* section)
 {
+	// rlConfigPtr only is a valid pointer if the configuration file contains
+	// an RX section, it's a null pointer otherwise
+	rlConfigPtr = std::make_unique<RlConfig> ();
+
 	// Process section's Values (i.e. key/value pairs)
 	for (iniparser::Section::ValueIterator valueIterator = section->valuesBegin();
 			valueIterator != section->valuesEnd(); ++valueIterator)

@@ -9,6 +9,18 @@
 // Get rid of SDL's main function
 #undef main
 
+// Definition of Main constructor to initialize the data members
+Main::Main ()
+	: 
+	msv11_ {nullptr},
+	rxv21_ {nullptr},
+	rlv12_ {nullptr},
+	dlv11_ {nullptr},
+	bdv11_ {nullptr},
+	ba11_n_ {nullptr},
+	console_ {nullptr}
+{}
+
 int main (int argc, char const **argv)
 try
 {
