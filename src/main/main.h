@@ -17,7 +17,6 @@
 // loader format and run the simulator.
 class Main
 {
-	// ToDo: Replace module configuration by table
 	LSI11 lsi11_;
 	std::shared_ptr<MSV11D> msv11_;
 	std::shared_ptr<RXV21> rxv21_;
@@ -27,7 +26,6 @@ class Main
 	std::unique_ptr<Console> console_;
 
 	bool running_;
-	u8* floppy_;
 
 	/* RX02 double density bootstrap */
 	const char* odt_input =
@@ -82,8 +80,7 @@ class Main
 
 public:
 	void init (int argc, char const **argv);
-	void configureDevices (char const *configurationFile,
-		char const *floppyFilename);
+	void configureDevices (char const *configurationFile);
 	void loadFile (char const *fileToBeLoaded);
 	void run ();
 };
