@@ -83,8 +83,8 @@ class Main
 	void configureRLV12 (RlConfig *rlConfig);
 
 public:
-	Main ();
-	void init (int argc, char const **argv);
+	Main (int argc, char const **argv);
+	~Main ();
 	void configureDevices (char const *configurationFile);
 	void loadFile (char const *fileToBeLoaded);
 	void run ();
