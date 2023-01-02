@@ -60,10 +60,7 @@ void CmdLineOptions::processOptions (int argc, char const **argv)
 					"  -l file.bin     Load file.bin in absolute loader format\n"
 					"  -c file		   Use configuration from specified ini file\n"
 					"  -t file.trc     Record execution trace to file.trc\n"
-					"  -z              Use delta compression for execution trace\n"
-					"  -r			   Load image files read-only (only supported for RL01/02)\n"
-					"  -n              Create new file on attach (only RL01/02)\n"
-				    "  -o			   Overwrite existing file (only RL01/02)\n"				
+					"  -z              Use delta compression for execution trace\n"				
 					"  -q              Quiet mode\n"
 					"\n"
 					"The optional last argument FILE is equivalent to -f file";
