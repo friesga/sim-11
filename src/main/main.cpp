@@ -10,7 +10,7 @@
 #undef main
 
 // Definition of Main constructor to initialize the data members
-Main::Main (int argc, char const **argv)
+Main::Main (CmdLineOptions const &cmdLineOptions)
 	: 
 	msv11_ {nullptr},
 	rxv21_ {nullptr},
@@ -19,18 +19,16 @@ Main::Main (int argc, char const **argv)
 	bdv11_ {nullptr},
 	ba11_n_ {nullptr},
 	console_ {nullptr},
-	running_ {false}
+	running_ {false},
+	cmdLineOptions_ {cmdLineOptions}
 {
 	// Open log file
 	Logger::init ("sim-11.log");
 
-	// Get command line options
-	CmdLineOptions::processOptions (argc, argv);
-
-	if (CmdLineOptions::get().trace_file) 
+	if (cmdLineOptions_.trace_file) 
 	{
-		TRCINIT(CmdLineOptions::get().trace_file);
-		if (CmdLineOptions::get().compress) 
+		TRCINIT(cmdLineOptions_.trace_file);
+		if (cmdLineOptions_.compress) 
 		{
 			trc.flags |= TRACEF_COMPRESS;
 		}
@@ -48,24 +46,25 @@ Main::Main (int argc, char const **argv)
 
 Main::~Main ()
 {
-	if(CmdLineOptions::get().trace_file)
-	{
+	if (trc.file)
 		TRCFINISH();
-	}
 }
 
-int main (int argc, char const **argv)
+int main (int argc, char **argv)
 try
 {
-	Main simulator (argc, argv);
+	// Get command line options
+	CmdLineOptions cmdLineOptions (argc, argv);
+
+	// Create a simulator
+	Main simulator {cmdLineOptions};
 
 	// Configure the devices with the parameters specified in the
 	// configuration file
-	// ToDo: Change CmdLineOptions singleton to a Main class data member
-	simulator.configureDevices (CmdLineOptions::get().config_file);
+	simulator.configureDevices ();
 	
-	if (CmdLineOptions::get().load_file) 
-		simulator.loadFile (CmdLineOptions::get().load_file);
+	if (cmdLineOptions.load_file) 
+		simulator.loadFile ();
 
 	// Run the simulator
 	simulator.run();

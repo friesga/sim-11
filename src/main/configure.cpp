@@ -19,20 +19,20 @@ using std::string;
 // Configure the devices and install them on the bus.
 // Accessing a non-configured device will result in a bus time-out
 // and the BDV11 boot will halt at address 000010.
-void Main::configureDevices (char const *configurationFile)
+void Main::configureDevices ()
 {
 	msv11_ = make_shared<MSV11D> ();
 	dlv11_ = make_shared<DLV11J> ();
 	bdv11_ = make_shared<BDV11> ();
 
 	// Load device configuration from the configuration file
-	if (configurationFile)
+	if (cmdLineOptions_.config_file)
 	{
 		ConfigData configProcessor;
 		iniparser::File ft;
 
-		if (!ft.load (configurationFile))
-			throw "Error: cannot open file " + string(configurationFile);
+		if (!ft.load (cmdLineOptions_.config_file))
+			throw "Error: cannot open file " + string(cmdLineOptions_.config_file);
 
 		try
 		{

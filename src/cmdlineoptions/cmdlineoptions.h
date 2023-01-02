@@ -20,14 +20,8 @@ class CmdLineOptions
 	static bool compress_;
 	static bool exit_on_halt_;
 
-protected:
-	// CmdLineOptions(int argc, char **argv);
-	CmdLineOptions();
-
 public:
-	static CmdLineOptions &get();
-	static void processOptions (int argc, char const **argv);
-	static void reset ();
+	CmdLineOptions(int argc, char **argv);
 
 	const char*  const &load_file;
 	const char*  const &config_file;
@@ -36,11 +30,6 @@ public:
 	const char* const &trace_file;
 	bool const &compress;
 	bool const &exit_on_halt;
-	
-	CmdLineOptions (CmdLineOptions const&) = delete;
-	CmdLineOptions (CmdLineOptions &&) = delete;
-	CmdLineOptions &operator= (CmdLineOptions const&) = delete;
-	CmdLineOptions &operator= (CmdLineOptions &&) = delete;
 };
 
 #endif // _CMDLINEOPTIONS_H_

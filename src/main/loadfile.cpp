@@ -7,7 +7,7 @@
 using std::string;
 
 // Load the given file in absolute loader format
-void Main::loadFile (char const* filename)
+void Main::loadFile ()
 {
     /* execute absolute loader binary */
     /* const char* filename = "VKAAC0.BIC"; */
@@ -18,9 +18,9 @@ void Main::loadFile (char const* filename)
     u8 cksum;
     size_t bytes = 0;
 
-    FILE* f = fopen (filename, "rb");
+    FILE* f = fopen (cmdLineOptions_.load_file, "rb");
     if (!f)
-        throw "Error opening load file" + string (filename);
+        throw "Error opening load file" + string (cmdLineOptions_.load_file);
 
     fseek (f, 0, SEEK_END);
     size = ftell (f);

@@ -16,10 +16,7 @@ set (TARGET sim-11)
 
 set (CMDLINEOPTIONS_SRCS 
     src/cmdlineoptions/cmdlineoptions.cpp
-    src/cmdlineoptions/data.cpp
-    src/cmdlineoptions/get.cpp
-    src/cmdlineoptions/processoptions.cpp
-    src/cmdlineoptions/reset.cpp)
+    src/cmdlineoptions/data.cpp)
 
 set (RLV12_SRCS
     src/rlv12/calccrc.cpp

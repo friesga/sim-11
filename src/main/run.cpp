@@ -3,18 +3,18 @@
 
 void Main::run ()
 {
-	if (CmdLineOptions::get().bootstrap)
+	if (cmdLineOptions_.bootstrap)
 		console_->sendString (odt_input);
 
     running_ = true;
 
-	if (CmdLineOptions::get().halt) 
+	if (cmdLineOptions_.halt) 
 	{
 		lsi11_.kd11.cpu().runState = 0;
 		lsi11_.bus.setProcessorRunning (false);
 	} 
-	else if (!CmdLineOptions::get().bootstrap && 
-		!CmdLineOptions::get().halt && !CmdLineOptions::get().load_file) 
+	else if (!cmdLineOptions_.bootstrap && 
+		!cmdLineOptions_.halt && !cmdLineOptions_.load_file) 
 	{
 		lsi11_.kd11.cpu().runState = 1;
 		lsi11_.bus.setProcessorRunning (true);
@@ -28,7 +28,7 @@ void Main::run ()
 			lsi11_.step ();
 
 		if ((lsi11_.kd11.cpu().runState == 0 && 
-				CmdLineOptions::get().exit_on_halt) ||
+				cmdLineOptions_.exit_on_halt) ||
 			!ba11_n_->isRunning ())
 		{
 			/* make sure ODT finishes its prompt */

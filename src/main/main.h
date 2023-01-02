@@ -8,6 +8,7 @@
 #include "dlv11j/dlv11j.h"
 #include "msv11d/msv11d.h"
 #include "lsi11/lsi11.h"
+#include "cmdlineoptions/cmdlineoptions.h"
 
 #include "console/console.h"
 #include <memory>
@@ -26,6 +27,7 @@ class Main
 	std::unique_ptr<BA11_N> ba11_n_;
 	std::unique_ptr<Console> console_;
 
+	CmdLineOptions const &cmdLineOptions_;
 	bool running_;
 
 	/* RX02 double density bootstrap */
@@ -83,10 +85,10 @@ class Main
 	void configureRLV12 (RlConfig *rlConfig);
 
 public:
-	Main (int argc, char const **argv);
+	Main (CmdLineOptions const &cmdLineOptions);
 	~Main ();
-	void configureDevices (char const *configurationFile);
-	void loadFile (char const *fileToBeLoaded);
+	void configureDevices ();
+	void loadFile ();
 	void run ();
 };
 
