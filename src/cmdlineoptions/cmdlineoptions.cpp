@@ -50,8 +50,6 @@ CmdLineOptions::CmdLineOptions(int argc, char **argv)
 			--argc;
 			++argv;
 		} 
-		else if(**argv != '-') 
-			load_file_ = *argv;
 		else if(!strcmp("--help", *argv)) 
 		{
 			 msg << "Usage: " << self << " [OPTIONS] [FILE]\n"
@@ -71,9 +69,8 @@ CmdLineOptions::CmdLineOptions(int argc, char **argv)
 		} 
 		else 
 		{
-			std::cout << "Unknown option\n";
-			// msg << "Unknown option: " << *argv;
-			// throw (msg.str());
+			msg << "Unknown option: " << *argv;
+			throw (msg.str());
 		}
 	}
 };
