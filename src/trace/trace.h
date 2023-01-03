@@ -105,34 +105,34 @@
 #define	IFTRC()		if(trc.flags)
 #define	__IFTRC(x)	{ IFTRC() x; }
 #define	TRCStep(r, psw, insn) \
-		__IFTRC(TRACEStep(&trc, r, psw, insn))
+		__IFTRC(trc.TRACEStep(r, psw, insn))
 #define	TRCCPUEvent(event, info) \
-		__IFTRC(TRACECPUEvent(&trc, event, info))
+		__IFTRC(trc.TRACECPUEvent(event, info))
 #define	TRCBus(type, addr, val) \
-		__IFTRC(TRACEBus(&trc, type, addr, val))
+		__IFTRC(trc.TRACEBus(type, addr, val))
 #define	TRCMemoryDump(ptr, addr, val) \
-		__IFTRC(TRACEMemoryDump(&trc, ptr, addr, len))
+		__IFTRC(trc.TRACEMemoryDump(ptr, addr, len))
 #define	TRCIRQ(n, type) \
-		__IFTRC(TRACEIrq(&trc, n, type))
+		__IFTRC(trc.TRACEIrq(n, type))
 #define	TRCTrap(n, cause) \
-		__IFTRC(TRACETrap(&trc, n, cause))
+		__IFTRC(trc.TRACETrap(n, cause))
 #define	TRCDLV11(type, channel, value) \
-		__IFTRC(TRACEDLV11(&trc, channel, type, value))
+		__IFTRC(trc.TRACEDLV11(channel, type, value))
 #define	TRCRXV21CMD(type, rx2cs) \
-		__IFTRC(TRACERXV21Command(&trc, 0, type, rx2cs))
+		__IFTRC(trc.TRACERXV21Command(0, type, rx2cs))
 #define	TRCRXV21CMDCommit(type, rx2cs) \
-		__IFTRC(TRACERXV21Command(&trc, 1, type, rx2cs))
+		__IFTRC(trc.TRACERXV21Command(1, type, rx2cs))
 #define	TRCRXV21Step(type, step, rx2db) \
-		__IFTRC(TRACERXV21Step(&trc, type, step, rx2db))
+		__IFTRC(trc.TRACERXV21Step(type, step, rx2db))
 #define	TRCRXV21DMA(type, rx2wc, rx2ba) \
-		__IFTRC(TRACERXV21DMA(&trc, type, rx2wc, rx2ba))
+		__IFTRC(trc.TRACERXV21DMA(type, rx2wc, rx2ba))
 #define	TRCRXV21Disk(type, drive, density, rx2sa, rx2ta) \
-		__IFTRC(TRACERXV21Disk(&trc, type, drive, density, rx2sa, rx2ta))
+		__IFTRC(trc.TRACERXV21Disk(type, drive, density, rx2sa, rx2ta))
 #define	TRCRXV21Error(type, info) \
-		__IFTRC(TRACERXV21Error(&trc, type, info))
+		__IFTRC(trc.TRACERXV21Error(type, info))
 
-#define	TRCINIT(name)	TRACEOpen(&trc, name);
-#define	TRCFINISH()	TRACEClose(&trc);
+#define	TRCINIT(name)	trc.TRACEOpen(name);
+#define	TRCFINISH()	trc.TRACEClose();
 
 struct TRACE_CPU
 {
@@ -287,8 +287,16 @@ struct TRACE_DURATION
 	u16 length;				// length of remaing chars
 };
 
-struct TRACE
+class TRACE
 {
+private:
+
+	void limitFileSize ();
+	const char* rxv21_get_cmd_name(int func);
+	const char* rxv21_get_error_name(int type);
+	const char* rlv12GetCommandName (u16 command);
+
+public:
 	std::string baseFileName {};
 	FILE*	file {};
 	u64	step {};
@@ -297,7 +305,28 @@ struct TRACE
 	u16	last_r[7] {};
 
 	// TRACE ();
+	int	TRACEOpen (const char* filename);
+	void TRACEClose ();
+	void TRACEStep (u16* r, u16 psw, u16* insn);
+	void TRACECPUEvent (int type, u16 value);
+	void TRACEBus (u16 type, u16 address, u16 value);
+	void TRACEMemoryDump (u8* ptr, u16 address, u16 length);
+	void TRACETrap (int n, int cause);
+	void TRACEIrq (int n, int type);
+	void TRACEDLV11 (int channel, int type, u16 value);
+	void TRACERXV21Command (int commit, int type, u16 rx2cs);
+	void TRACERXV21Step (int type, int step, u16 rx2db);
+	void TRACERXV21DMA (int type, u16 rx2wc, u16 rx2ba);
+	void TRACERXV21Disk (int type, int drive, int density,
+			u16 rx2sa, u16 rx2ta);
+	void TRACERXV21Error (int type, u16 info);
+	void TRACERLV12Registers (const char *msg, u16 rlcs, 
+			u16 rlba, u16 rlda, u16 rlmpr, u16 rlbae);
+	void TRACERLV12Command (u16 command);
+	void TRACEDuration (const char *msg, u32 duration);
 };
+
+extern TRACE trc;
 
 // Constructor for the TRACE struct
 /*
@@ -311,28 +340,5 @@ TRACE::TRACE ()
 	last_r {0}
 {}
 */
-
-
-extern TRACE trc;
-
-extern int	TRACEOpen(TRACE* trace, const char* filename);
-extern void	TRACEClose(TRACE* trace);
-extern void	TRACEStep(TRACE* trace, u16* r, u16 psw, u16* insn);
-extern void	TRACECPUEvent(TRACE* trace, int type, u16 value);
-extern void	TRACEBus(TRACE* trace, u16 type, u16 address, u16 value);
-extern void	TRACEMemoryDump(TRACE* trace, u8* ptr, u16 address, u16 length);
-extern void	TRACETrap(TRACE* trace, int n, int cause);
-extern void	TRACEIrq(TRACE* trace, int n, int type);
-extern void	TRACEDLV11(TRACE* trace, int channel, int type, u16 value);
-extern void	TRACERXV21Command(TRACE* trace, int commit, int type, u16 rx2cs);
-extern void	TRACERXV21Step(TRACE* trace, int type, int step, u16 rx2db);
-extern void	TRACERXV21DMA(TRACE* trace, int type, u16 rx2wc, u16 rx2ba);
-extern void	TRACERXV21Disk(TRACE* trace, int type, int drive, int density,
-	u16 rx2sa, u16 rx2ta);
-extern void	TRACERXV21Error(TRACE* trace, int type, u16 info);
-extern void TRACERLV12Registers (TRACE* trace, const char *msg, u16 rlcs, 
-	u16 rlba, u16 rlda, u16 rlmpr, u16 rlbae);
-extern void TRACERLV12Command (TRACE *trace, u16 command);
-extern void TRACEDuration (TRACE* trace, const char *msg, u32 duration);
 
 #endif

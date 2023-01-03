@@ -47,7 +47,7 @@ u16 CmdProcessor::maintenanceCmd (RL01_2 *unit, RLV12Command &rlv12Command)
     memoryAddress = controller_->memAddrFromRegs ();
                                                             
     if(trc.flags & TRACEF_RLV12)
-         TRACERLV12Registers (&trc, "Maintenance", controller_->csr_,
+         trc.TRACERLV12Registers ("Maintenance", controller_->csr_,
              controller_->bar_, controller_->dar_,
              controller_->dataBuffer_[0], controller_->bae_);
 

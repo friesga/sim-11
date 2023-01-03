@@ -136,7 +136,7 @@ void KD11CPU::step (QBUS* bus)
         execInstr (bus);
         std::chrono::high_resolution_clock::time_point end =
             std::chrono::high_resolution_clock::now ();
-        TRACEDuration (&trc, "Instruction",
+        trc.TRACEDuration ("Instruction",
             (duration_cast<std::chrono::nanoseconds> (end - start)).count ());
     }
 

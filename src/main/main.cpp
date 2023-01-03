@@ -19,8 +19,8 @@ Main::Main (CmdLineOptions const &cmdLineOptions)
 	bdv11_ {nullptr},
 	ba11_n_ {nullptr},
 	console_ {nullptr},
-	running_ {false},
-	cmdLineOptions_ {cmdLineOptions}
+	cmdLineOptions_ {cmdLineOptions},
+	running_ {false}
 {
 	// Open log file
 	Logger::init ("sim-11.log");
