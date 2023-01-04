@@ -30,7 +30,7 @@ Main::Main (CmdLineOptions const &cmdLineOptions)
 		TRCOpen (cmdLineOptions_.trace_file);
 		if (cmdLineOptions_.compress) 
 		{
-			trc.flags |= TRACEF_COMPRESS;
+			trc.flags |= TRACE::Compress;
 		}
 	}
 
@@ -39,8 +39,8 @@ Main::Main (CmdLineOptions const &cmdLineOptions)
 	// enabled.
 	if (trc.file != nullptr)
 	{
-		trc.flags |= TRACEF_RLV12;
-		trc.flags |= TRACEF_STEP;
+		trc.flags |= TRACE::RLV12;
+		trc.flags |= TRACE::Step;
 	}
 }
 

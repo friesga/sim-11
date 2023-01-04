@@ -75,39 +75,8 @@ using std::lock_guard;
 #define	TRC_RXV21_TRACK_NO	2
 #define	TRC_RXV21_SECT_NO	3
 
-// Definition of trace flags. There are two sets of flags:
-// - Flags definining the way the trace is to be output
-//   (TRACEF_WRITE, TRACEF_PRINT, TRACE_COMPRESS and TRACEF_FIRST_Z).
-// - Flags defining the trace category. By defining the separate
-//   flags the trace output can be tuned.
-// 
-// TRACEF_IGNORE_BUS is a special flag; it temporarily overrides the
-// TRACEF_BUS, TRACEF_MEMORYDUMP and TRACEF_IRQ flags.
-//
-// ToDo: Transform TRACEF flags to Bitmasks.
-//
-#define	TRACEF_WRITE			(1 << 0)
-#define	TRACEF_IGNORE_BUS		(1 << 1)
-#define	TRACEF_PRINT			(1 << 2)
-#define	TRACEF_COMPRESS			(1 << 3)
-#define	TRACEF_FIRST_Z			(1 << 4)
-#define	TRACEF_STEP				(1 << 5)
-#define TRACEF_CPUEVENT			(1 << 6)
-#define TRACEF_BUS				(1 << 7)
-#define TRACEF_MEMORYDUMP		(1 << 8)
-#define TRACEF_TRAP				(1 << 9)
-#define TRACEF_IRQ				(1 << 10)
-#define TRACEF_DLV11			(1 << 11)
-#define TRACEF_RXV21CMD			(1 << 12)
-#define TRACEF_RXV21STEP		(1 << 13)
-#define TRACEF_RXV21DMA			(1 << 14)
-#define TRACEF_RXV21ERROR		(1 << 15)
-#define TRACEF_RXV21DISK		(1 << 16)
-#define TRACEF_RLV12			(1 << 17)
-#define TRACEF_DURATION			(1 << 18)
-
-#define	TRCSETIGNBUS()	(trc.flags |= TRACEF_IGNORE_BUS)
-#define	TRCCLRIGNBUS()	(trc.flags &= ~TRACEF_IGNORE_BUS)
+#define	TRCSETIGNBUS()	(trc.flags |= TRACE::IgnoreBus)
+#define	TRCCLRIGNBUS()	(trc.flags &= ~TRACE::IgnoreBus)
 
 // Setting traceEnabled to false will optimize out all calls to trace
 // functions.
@@ -286,8 +255,40 @@ private:
     const char* get_trap_name (int n);
 
 public:
+    // Definition of trace flags. There are two sets of flags:
+    // - Flags definining the way the trace is to be output
+    //   (Write, Print, Compress and FirstZ).
+    // - Flags defining the trace category. By defining the separate
+    //   flags the trace output can be tuned.
+    // 
+    // IgnoreBus is a special flag; it temporarily overrides the
+    // Bus, MemoryDump and Irq flags.
+    //
+    enum Category
+    {
+        Write      = (1 << 0),
+        IgnoreBus  = (1 << 1),
+        Print	   = (1 << 2),
+        Compress   = (1 << 3),
+        FirstZ     = (1 << 4),
+        Step	   = (1 << 5),
+        CpuEvent   = (1 << 6),
+        Bus		   = (1 << 7),
+        MemoryDump = (1 << 8),
+        Trap	   = (1 << 9),
+        Irq		   = (1 << 10),
+        Dlv11	   = (1 << 11),
+        RXV21Cmd   = (1 << 12),
+        RXV21Step  = (1 << 13),
+        RXV21Dma   = (1 << 14),
+        RXV21Error = (1 << 15),
+        RXV21Disk  = (1 << 16),
+        RLV12	   = (1 << 17),
+        Duration   = (1 << 18)
+    };
+
 	FILE* file {};
-	int	flags {TRACEF_WRITE | TRACEF_FIRST_Z};
+	int flags {Write | FirstZ};
 
 	// Definition of the public member functions as templates with a boolean
 	// non-type member with default value false and a default empty body. 
@@ -381,13 +382,13 @@ inline void TRACE::TRACEStep<true> (u16* r, u16 psw, u16* insn)
     int i;
     char buf[64];
 
-    if (!(flags & TRACEF_STEP))
+    if (!(flags & Step))
         return;
 
     // Guard against simultaneous trace file writes
     lock_guard<mutex> guard{ traceFileMutex };
 
-    if (flags & TRACEF_PRINT)
+    if (flags & Print)
     {
         LSI11Disassemble (insn, r[7], buf);
         fprintf (DST, "PC=%06o PSW [%c%c%c%c%c%c] SP=%06o [R0=%06o R1=%06o R2=%06o R3=%06o R4=%06o R5=%06o] %06o => %s\n",
@@ -402,9 +403,9 @@ inline void TRACE::TRACEStep<true> (u16* r, u16 psw, u16* insn)
             *insn, buf);
     }
 
-    if (flags & TRACEF_WRITE)
+    if (flags & Write)
     {
-        if ((flags & TRACEF_COMPRESS) && !(flags & TRACEF_FIRST_Z))
+        if ((flags & Compress) && !(flags & FirstZ))
         {
             int len = LSI11InstructionLength (insn);
             int cnt = len;
@@ -478,7 +479,7 @@ inline void TRACE::TRACEStep<true> (u16* r, u16 psw, u16* insn)
         else
         {
             TRACE_CPU rec;
-            flags &= ~TRACEF_FIRST_Z;
+            flags &= ~FirstZ;
             rec.magic = U32B (MAGIC_CPU0);
             rec.psw = U16B (psw);
             rec.step = U64B (step++);
@@ -507,13 +508,13 @@ inline void TRACE::TRACECPUEvent<true> (int type, u16 value)
 {
     TRACE_CPUEVT rec;
 
-    if (!(flags & TRACEF_CPUEVENT))
+    if (!(flags & CpuEvent))
         return;
 
     // Guard against simultaneous trace file writes
     lock_guard<mutex> guard{ traceFileMutex };
 
-    if (flags & TRACEF_PRINT)
+    if (flags & Print)
     {
         switch (type)
         {
@@ -536,7 +537,7 @@ inline void TRACE::TRACECPUEvent<true> (int type, u16 value)
         fflush (DST);
     }
 
-    if (flags & TRACEF_WRITE)
+    if (flags & Write)
     {
         rec.magic = U32B (MAGIC_CPU1);
         rec.type = U16B (type);
@@ -552,13 +553,13 @@ inline void TRACE::TRACEBus<true> (u16 type, u16 address, u16 value)
 {
     TRACE_BUS rec;
 
-    if (!(flags & TRACEF_BUS) || flags & TRACEF_IGNORE_BUS)
+    if (!(flags & Bus) || flags & IgnoreBus)
         return;
 
     // Guard against simultaneous trace file writes
     lock_guard<mutex> guard{ traceFileMutex };
 
-    if (flags & TRACEF_PRINT)
+    if (flags & Print)
     {
         switch (type)
         {
@@ -581,7 +582,7 @@ inline void TRACE::TRACEBus<true> (u16 type, u16 address, u16 value)
         fflush (DST);
     }
 
-    if (flags & TRACEF_WRITE)
+    if (flags & Write)
     {
         rec.magic = U32B (MAGIC_BUS0);
         rec.type = U16B (type);
@@ -598,13 +599,13 @@ inline void TRACE::TRACEMemoryDump<true> (u8* ptr, u16 address, u16 length)
 {
     TRACE_MEMDUMP rec;
 
-    if (!(flags & TRACEF_MEMORYDUMP) || flags & TRACEF_IGNORE_BUS)
+    if (!(flags & MemoryDump) || flags & IgnoreBus)
         return;
 
     // Guard against simultaneous trace file writes
     lock_guard<mutex> guard{ traceFileMutex };
 
-    if (flags & TRACEF_PRINT)
+    if (flags & Print)
     {
         int i = 0;
         fprintf (DST, "[MEM] dump %d from %06o:\n", length, address);
@@ -619,7 +620,7 @@ inline void TRACE::TRACEMemoryDump<true> (u8* ptr, u16 address, u16 length)
         fflush (DST);
     }
 
-    if (flags & TRACEF_WRITE)
+    if (flags & Write)
     {
         rec.magic = U32B (MAGIC_BUS1);
         rec.addr = U16B (address);
@@ -637,13 +638,13 @@ inline void TRACE::TRACETrap<true> (int n, int cause)
 {
     TRACE_TRAP rec;
 
-    if (!(flags & TRACEF_TRAP))
+    if (!(flags & Trap))
         return;
 
     // Guard against simultaneous trace file writes
     lock_guard<mutex> guard{ traceFileMutex };
 
-    if (flags & TRACEF_PRINT)
+    if (flags & Print)
     {
         const char* name;
         switch (cause)
@@ -671,7 +672,7 @@ inline void TRACE::TRACETrap<true> (int n, int cause)
         fflush (DST);
     }
 
-    if (flags & TRACEF_WRITE)
+    if (flags & Write)
     {
         rec.magic = U32B (MAGIC_TRAP);
         rec.trap = U16B (n);
@@ -687,13 +688,13 @@ inline void TRACE::TRACEIrq<true> (int n, int type)
 {
     TRACE_IRQ rec;
 
-    if (!(flags & TRACEF_IRQ) || flags & TRACEF_IGNORE_BUS)
+    if (!(flags & Irq) || flags & IgnoreBus)
         return;
 
     // Guard against simultaneous trace file writes
     lock_guard<mutex> guard{ traceFileMutex };
 
-    if (flags & TRACEF_PRINT)
+    if (flags & Print)
     {
         switch (type)
         {
@@ -710,7 +711,7 @@ inline void TRACE::TRACEIrq<true> (int n, int type)
         fflush (DST);
     }
 
-    if (flags & TRACEF_WRITE)
+    if (flags & Write)
     {
         rec.magic = U32B (MAGIC_IRQ0);
         rec.trap = U16B (n);
@@ -726,13 +727,13 @@ inline void TRACE::TRACEDLV11<true> (int channel, int type, u16 value)
 {
     TRACE_DLV11 rec;
 
-    if (!(flags & TRACEF_DLV11))
+    if (!(flags & Dlv11))
         return;
 
     // Guard against simultaneous trace file writes
     lock_guard<mutex> guard{ traceFileMutex };
 
-    if (flags & TRACEF_PRINT)
+    if (flags & Print)
     {
         switch (type)
         {
@@ -747,7 +748,7 @@ inline void TRACE::TRACEDLV11<true> (int channel, int type, u16 value)
         fflush (DST);
     }
 
-    if (flags & TRACEF_WRITE)
+    if (flags & Write)
     {
         rec.magic = U32B (MAGIC_DLV1);
         rec.channel = channel;
@@ -765,20 +766,20 @@ inline void TRACE::TRACERXV21Command<true> (int commit, int type, u16 rx2cs)
 {
     TRACE_RXV21CMD rec;
 
-    if (!(flags & TRACEF_RXV21CMD))
+    if (!(flags & RXV21Cmd))
         return;
 
     // Guard against simultaneous trace file writes
     lock_guard<mutex> guard{ traceFileMutex };
 
-    if (flags & TRACEF_PRINT)
+    if (flags & Print)
     {
         const char* name = rxv21_get_cmd_name (type);
         fprintf (DST, "[RXV21] Execute command: %s\n", name);
         fflush (DST);
     }
 
-    if (flags & TRACEF_WRITE)
+    if (flags & Write)
     {
         rec.magic = U32B (MAGIC_RX2C);
         rec.type = type;
@@ -795,13 +796,13 @@ inline void TRACE::TRACERXV21Step<true> (int type, int step, u16 rx2db)
 {
     TRACE_RXV21STEP rec;
 
-    if (!(flags & TRACEF_RXV21STEP))
+    if (!(flags & RXV21Step))
         return;
 
     // Guard against simultaneous trace file writes
     lock_guard<mutex> guard{ traceFileMutex };
 
-    if (flags & TRACEF_PRINT)
+    if (flags & Print)
     {
         const char* name = rxv21_get_cmd_name (type);
         fprintf (DST, "[RXV21] Processing command %s: step %d with data %06o\n",
@@ -809,7 +810,7 @@ inline void TRACE::TRACERXV21Step<true> (int type, int step, u16 rx2db)
         fflush (DST);
     }
 
-    if (flags & TRACEF_WRITE)
+    if (flags & Write)
     {
         rec.magic = U32B (MAGIC_RX2S);
         rec.type = type;
@@ -826,13 +827,13 @@ inline void TRACE::TRACERXV21DMA<true> (int type, u16 rx2wc, u16 rx2ba)
 {
     TRACE_RXV21DMA rec;
 
-    if (!(flags & TRACEF_RXV21DMA))
+    if (!(flags & RXV21Dma))
         return;
 
     // Guard against simultaneous trace file writes
     lock_guard<mutex> guard{ traceFileMutex };
 
-    if (flags & TRACEF_PRINT)
+    if (flags & Print)
     {
         const char* name = rxv21_get_cmd_name (type);
         fprintf (DST, "[RXV21] DMA transfer [%s]: %06o words to %06o\n",
@@ -840,7 +841,7 @@ inline void TRACE::TRACERXV21DMA<true> (int type, u16 rx2wc, u16 rx2ba)
         fflush (DST);
     }
 
-    if (flags & TRACEF_WRITE)
+    if (flags & Write)
     {
         rec.magic = U32B (MAGIC_RX2D);
         rec.type = U16B (type);
@@ -857,13 +858,13 @@ inline void TRACE::TRACERXV21Error<true> (int type, u16 info)
 {
     TRACE_RXV21ERR rec;
 
-    if (!(flags & TRACEF_RXV21ERROR))
+    if (!(flags & RXV21Error))
         return;
 
     // Guard against simultaneous trace file writes
     lock_guard<mutex> guard{ traceFileMutex };
 
-    if (flags & TRACEF_PRINT)
+    if (flags & Print)
     {
         const char* name = rxv21_get_error_name (type);
         switch (type)
@@ -883,7 +884,7 @@ inline void TRACE::TRACERXV21Error<true> (int type, u16 info)
         fflush (DST);
     }
 
-    if (flags & TRACEF_WRITE)
+    if (flags & Write)
     {
         rec.magic = U32B (MAGIC_RX2E);
         rec.type = U16B (type);
@@ -899,13 +900,13 @@ inline void TRACE::TRACERXV21Disk<true> (int type, int drive, int density, u16 r
 {
     TRACE_RXV21DISK rec;
 
-    if (!(flags & TRACEF_RXV21DISK))
+    if (!(flags & RXV21Disk))
         return;
 
     // Guard against simultaneous trace file writes
     lock_guard<mutex> guard{ traceFileMutex };
 
-    if (flags & TRACEF_PRINT)
+    if (flags & Print)
     {
         const char* name;
         switch (type)
@@ -932,7 +933,7 @@ inline void TRACE::TRACERXV21Disk<true> (int type, int drive, int density, u16 r
         fflush (DST);
     }
 
-    if (flags & TRACEF_WRITE)
+    if (flags & Write)
     {
         rec.magic = U32B (MAGIC_RX2A);
         rec.type = U16B (type);
@@ -952,13 +953,13 @@ inline void TRACE::TRACERLV12Registers<true> (char const* msg, u16 rlcs, u16 rlb
 {
     TRACE_RLV12REGS rec;
 
-    if (!(flags & TRACEF_RLV12))
+    if (!(flags & RLV12))
         return;
 
     // Guard against simultaneous trace file writes
     lock_guard<mutex> guard{ traceFileMutex };
 
-    if (flags & TRACEF_PRINT)
+    if (flags & Print)
     {
         fprintf (DST,
             "[RLV12] %s: RLCS: %06o, RLBA: %06o, RLDA: %06o, RLMPR: %06o, RLBAE: %06o\n",
@@ -966,7 +967,7 @@ inline void TRACE::TRACERLV12Registers<true> (char const* msg, u16 rlcs, u16 rlb
         fflush (DST);
     }
 
-    if (flags & TRACEF_WRITE)
+    if (flags & Write)
     {
         rec.magic = U32B (MAGIC_RL2A);
         rec.rlcs = U16B (rlcs);
@@ -989,19 +990,19 @@ inline void TRACE::TRACERLV12Command<true> (u16 command)
 {
     TRACE_RLV12COMMAND rec;
 
-    if (!(flags & TRACEF_RLV12))
+    if (!(flags & RLV12))
         return;
 
     // Guard against simultaneous trace file writes
     lock_guard<mutex> guard{ traceFileMutex };
 
-    if (flags & TRACEF_PRINT)
+    if (flags & Print)
     {
         fprintf (DST, "[RLV12] command: %s\n", rlv12GetCommandName (command));
         fflush (DST);
     }
 
-    if (flags & TRACEF_WRITE)
+    if (flags & Write)
     {
         rec.magic = U32B (MAGIC_RL2C);
         rec.command = U16B (command);
@@ -1016,19 +1017,19 @@ inline void TRACE::TRACEDuration<true> (const char* msg, u32 duration)
 {
     TRACE_DURATION rec;
 
-    if (!(flags & TRACEF_DURATION))
+    if (!(flags & Duration))
         return;
 
     // Guard against simultaneous trace file writes
     lock_guard<mutex> guard{ traceFileMutex };
 
-    if (flags & TRACEF_PRINT)
+    if (flags & Print)
     {
         fprintf (DST, "[DURATION] %s: %u nanoseconds\n", msg, duration);
         fflush (DST);
     }
 
-    if (flags & TRACEF_WRITE)
+    if (flags & Write)
     {
         rec.magic = U32B (MAGIC_DURA);
         rec.durationCount = U32B (duration);
