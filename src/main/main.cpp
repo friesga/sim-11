@@ -27,7 +27,7 @@ Main::Main (CmdLineOptions const &cmdLineOptions)
 
 	if (cmdLineOptions_.trace_file) 
 	{
-		TRCINIT(cmdLineOptions_.trace_file);
+		TRCOpen (cmdLineOptions_.trace_file);
 		if (cmdLineOptions_.compress) 
 		{
 			trc.flags |= TRACEF_COMPRESS;

@@ -116,7 +116,7 @@ int main (int argc, char **argv)
 				for (size_t index = 0; index < 3; ++index)
 					traceCpu.insn[index] = U16B(traceCpu.insn[index]);
 
-				trace.TRACEStep (traceCpu.r, 
+				trace.TRACEStep<true> (traceCpu.r, 
 					U16B(traceCpu.psw), 
 					traceCpu.insn);
 				break;
@@ -134,7 +134,7 @@ int main (int argc, char **argv)
 					reinterpret_cast<char *> (&traceCpuEvt) + magicSize,
 					sizeof (traceCpuEvt) - magicSize);
 
-				trace.TRACECPUEvent (U16B(traceCpuEvt.type), U16B(traceCpuEvt.value));
+				trace.TRACECPUEvent<true> (U16B(traceCpuEvt.type), U16B(traceCpuEvt.value));
 				break;
 
 			case MAGIC_BUS0:
@@ -142,7 +142,7 @@ int main (int argc, char **argv)
 					reinterpret_cast<char *> (&traceBus) + magicSize,
 					sizeof (traceBus) - magicSize);
 
-				trace.TRACEBus (U16B(traceBus.type), 
+				trace.TRACEBus<true> (U16B(traceBus.type), 
 					U16B(traceBus.addr),
 					U16B(traceBus.value));
 				break;
@@ -157,7 +157,7 @@ int main (int argc, char **argv)
 				traceFile.read (reinterpret_cast<char *> (memoryDump),
 					U16B(traceMemDump.len));
 
-				trace.TRACEMemoryDump (memoryDump, 
+				trace.TRACEMemoryDump<true> (memoryDump, 
 					U16B(traceMemDump.addr),
 					U16B(traceMemDump.len));
 				break;
@@ -167,7 +167,7 @@ int main (int argc, char **argv)
 					reinterpret_cast<char *> (&traceTrap) + magicSize,
 					sizeof (traceTrap) - magicSize);
 
-				trace.TRACETrap (U16B(traceTrap.trap), 
+				trace.TRACETrap<true> (U16B(traceTrap.trap), 
 					U16B(traceTrap.cause));
 				break;
 
@@ -176,7 +176,7 @@ int main (int argc, char **argv)
 					reinterpret_cast<char *> (&traceIrq) + magicSize,
 					sizeof (traceIrq) - magicSize);
 
-				trace.TRACEIrq (U16B(traceIrq.trap), 
+				trace.TRACEIrq<true> (U16B(traceIrq.trap), 
 					U16B(traceIrq.type));
 				break;
 
@@ -185,7 +185,7 @@ int main (int argc, char **argv)
 					reinterpret_cast<char *> (&traceRxv21Disk) + magicSize,
 					sizeof (traceRxv21Disk) - magicSize);
 
-				trace.TRACERXV21Disk (U16B(traceRxv21Disk.type),
+				trace.TRACERXV21Disk<true> (U16B(traceRxv21Disk.type),
 					U16B(traceRxv21Disk.drive),
 					U16B(traceRxv21Disk.density),
 					U16B(traceRxv21Disk.rx2sa),
@@ -197,7 +197,7 @@ int main (int argc, char **argv)
 					reinterpret_cast<char *> (&traceRxv21Cmd) + magicSize,
 					sizeof (traceRxv21Cmd) - magicSize);
 
-				trace.TRACERXV21Command (traceRxv21Cmd.commit, 
+				trace.TRACERXV21Command<true> (traceRxv21Cmd.commit, 
 					traceRxv21Cmd.type, 
 					U16B(traceRxv21Cmd.rx2cs));
 				break;
@@ -207,7 +207,7 @@ int main (int argc, char **argv)
 					reinterpret_cast<char *> (&traceRxv21Dma) + magicSize,
 					sizeof (traceRxv21Dma) - magicSize);
 
-				trace.TRACERXV21DMA (U16B(traceRxv21Dma.type),
+				trace.TRACERXV21DMA<true> (U16B(traceRxv21Dma.type),
 					U16B(traceRxv21Dma.rx2wc),
 					U16B(traceRxv21Dma.rx2ba));
 				break;
@@ -217,7 +217,7 @@ int main (int argc, char **argv)
 					reinterpret_cast<char *> (&traceRxv21Err) + magicSize,
 					sizeof (traceRxv21Err) - magicSize);
 
-				trace.TRACERXV21Error (U16B(traceRxv21Err.type),
+				trace.TRACERXV21Error<true> (U16B(traceRxv21Err.type),
 					U16B(traceRxv21Err.info));
 				break;
 
@@ -226,7 +226,7 @@ int main (int argc, char **argv)
 					reinterpret_cast<char *> (&traceRxv21Step) + magicSize,
 					sizeof (traceRxv21Step) - magicSize);
 
-				trace.TRACERXV21Step (traceRxv21Step.type, 
+				trace.TRACERXV21Step<true> (traceRxv21Step.type, 
 					traceRxv21Step.step, 
 					U16B(traceRxv21Step.rx2db));
 				break;
@@ -236,7 +236,7 @@ int main (int argc, char **argv)
 					reinterpret_cast<char *> (&traceDlv11) + magicSize,
 					sizeof (traceDlv11) - magicSize);
 
-				trace.TRACEDLV11 (traceDlv11.channel, 
+				trace.TRACEDLV11<true> (traceDlv11.channel, 
 					traceDlv11.type,
 					U16B(traceDlv11.value));
 				break;
@@ -249,7 +249,7 @@ int main (int argc, char **argv)
 				traceFile.read (msg, U16B(traceRlv12Regs.length));
 				msg[U16B(traceRlv12Regs.length)] = 0;
 
-				trace.TRACERLV12Registers (msg, 
+				trace.TRACERLV12Registers<true> (msg, 
 					U16B(traceRlv12Regs.rlcs),
 					U16B(traceRlv12Regs.rlba),
 					U16B(traceRlv12Regs.rlda),
@@ -262,7 +262,7 @@ int main (int argc, char **argv)
 					reinterpret_cast<char *> (&traceRlv12Cmd) + magicSize,
 					sizeof (traceRlv12Cmd) - magicSize);
 
-				trace.TRACERLV12Command (U16B(traceRlv12Cmd.command));
+				trace.TRACERLV12Command<true> (U16B(traceRlv12Cmd.command));
 				break;
 
 			case MAGIC_DURA:
@@ -273,15 +273,15 @@ int main (int argc, char **argv)
 				traceFile.read (msg, U16B(traceDuration.length));
 				msg[U16B(traceDuration.length)] = 0;
 
-				trace.TRACEDuration (msg, U32B (traceDuration.durationCount));
+				trace.TRACEDuration<true> (msg, U32B (traceDuration.durationCount));
 				break;
 
 			default:
 				cout << "Unknown magic: " << hex << U32B(magic) << '\n';
-				delete memoryDump;
+				delete[] memoryDump;
 				return 1;
 		}
 	}
 
-	delete memoryDump;
+	delete[] memoryDump;
 }

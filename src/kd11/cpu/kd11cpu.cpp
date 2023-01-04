@@ -112,7 +112,7 @@ void KD11CPU::returnFISresult (Float result, u16 registerNumber)
 //    interrupt requested by a bus device.
 void KD11CPU::step (QBUS* bus)
 {
-    IFTRC ()
+    if(trc.flags)
     {
         TRCSETIGNBUS ();
         u16 code[3];
