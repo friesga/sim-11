@@ -110,39 +110,40 @@ using std::lock_guard;
 #define	TRCSETIGNBUS()	(trc.flags |= TRACEF_IGNORE_BUS)
 #define	TRCCLRIGNBUS()	(trc.flags &= ~TRACEF_IGNORE_BUS)
 
-// ToDo: Make debugEnabled a static data member
-static constexpr bool debugEnabled = true;
+// Setting traceEnabled to false will optimize out all calls to trace
+// functions.
+static constexpr bool traceEnabled = true;
 
 #define	TRCOpen(f) \
-		trc.TRACEOpen<debugEnabled> (f)
+		trc.TRACEOpen<traceEnabled> (f)
+#define	TRCClose() \
+		trc.TRACEClose<traceEnabled> ()
 #define	TRCStep(r, psw, insn) \
-		trc.TRACEStep<debugEnabled> (r, psw, insn)
+		trc.TRACEStep<traceEnabled> (r, psw, insn)
 #define	TRCCPUEvent(event, info) \
-		trc.TRACECPUEvent<debugEnabled> (event, info)
+		trc.TRACECPUEvent<traceEnabled> (event, info)
 #define	TRCBus(type, addr, val) \
-		trc.TRACEBus<debugEnabled> (type, addr, val)
+		trc.TRACEBus<traceEnabled> (type, addr, val)
 #define	TRCMemoryDump(ptr, addr, val) \
-		trc.TRACEMemoryDump<debugEnabled> (ptr, addr, len)
+		trc.TRACEMemoryDump<traceEnabled> (ptr, addr, len)
 #define	TRCIRQ(n, type) \
-		trc.TRACEIrq<debugEnabled> (n, type)
+		trc.TRACEIrq<traceEnabled> (n, type)
 #define	TRCTrap(n, cause) \
-		trc.TRACETrap<debugEnabled> (n, cause)
+		trc.TRACETrap<traceEnabled> (n, cause)
 #define	TRCDLV11(type, channel, value) \
-		trc.TRACEDLV11<debugEnabled> (channel, type, value)
+		trc.TRACEDLV11<traceEnabled> (channel, type, value)
 #define	TRCRXV21CMD(type, rx2cs) \
-		trc.TRACERXV21Command<debugEnabled> (0, type, rx2cs)
+		trc.TRACERXV21Command<traceEnabled> (0, type, rx2cs)
 #define	TRCRXV21CMDCommit(type, rx2cs) \
-		trc.TRACERXV21Command<debugEnabled> (1, type, rx2cs)
+		trc.TRACERXV21Command<traceEnabled> (1, type, rx2cs)
 #define	TRCRXV21Step(type, step, rx2db) \
-		trc.TRACERXV21Step<debugEnabled> (type, step, rx2db)
+		trc.TRACERXV21Step<traceEnabled> (type, step, rx2db)
 #define	TRCRXV21DMA(type, rx2wc, rx2ba) \
-		trc.TRACERXV21DMA<debugEnabled> (type, rx2wc, rx2ba)
+		trc.TRACERXV21DMA<traceEnabled> (type, rx2wc, rx2ba)
 #define	TRCRXV21Disk(type, drive, density, rx2sa, rx2ta) \
-		trc.TRACERXV21Disk<debugEnabled> (type, drive, density, rx2sa, rx2ta)
+		trc.TRACERXV21Disk<traceEnabled> (type, drive, density, rx2sa, rx2ta)
 #define	TRCRXV21Error(type, info) \
-		trc.TRACERXV21Error<debugEnabled> (type, info)
-
-#define	TRCFINISH()	trc.TRACEClose();
+		trc.TRACERXV21Error<traceEnabled> (type, info)
 
 struct TRACE_CPU
 {
@@ -324,41 +325,41 @@ public:
 	// When called without template parameter or with the parameter false,
 	// calls to these functions will be optimized out by the compiler. Only
 	// calls withe the parameter set to true will result in a function call.
-	template <bool debugEnabled = false>
+	template <bool traceEnabled = false>
 		void TRACEOpen (const char* filename) {}
-	template <bool debugEnabled = false>
+	template <bool traceEnabled = false>
 		void TRACEClose () {}
-	template <bool debugEnabled = false>
+	template <bool traceEnabled = false>
 		void TRACEStep (u16* r, u16 psw, u16* insn) {}
-	template <bool debugEnabled = false>
+	template <bool traceEnabled = false>
 		void TRACECPUEvent (int type, u16 value) {}
-	template <bool debugEnabled = false>
+	template <bool traceEnabled = false>
 		void TRACEBus (u16 type, u16 address, u16 value) {}
-	template <bool debugEnabled = false>
+	template <bool traceEnabled = false>
 		void TRACEMemoryDump (u8* ptr, u16 address, u16 length) {}
-	template <bool debugEnabled = false>
+	template <bool traceEnabled = false>
 		void TRACETrap (int n, int cause) {}
-	template <bool debugEnabled = false>
+	template <bool traceEnabled = false>
 		void TRACEIrq (int n, int type) {}
-	template <bool debugEnabled = false>
+	template <bool traceEnabled = false>
 		void TRACEDLV11 (int channel, int type, u16 value) {}
-	template <bool debugEnabled = false>
+	template <bool traceEnabled = false>
 		void TRACERXV21Command (int commit, int type, u16 rx2cs) {}
-	template <bool debugEnabled = false>
+	template <bool traceEnabled = false>
 		void TRACERXV21Step (int type, int step, u16 rx2db) {}
-	template <bool debugEnabled = false>
+	template <bool traceEnabled = false>
 		void TRACERXV21DMA (int type, u16 rx2wc, u16 rx2ba) {}
-	template <bool debugEnabled = false>
+	template <bool traceEnabled = false>
 		void TRACERXV21Disk (int type, int drive, int density,
 		u16 rx2sa, u16 rx2ta) {}
-	template <bool debugEnabled = false>
+	template <bool traceEnabled = false>
 		void TRACERXV21Error (int type, u16 info) {}
-	template <bool debugEnabled = false>
+	template <bool traceEnabled = false>
 		void TRACERLV12Registers (const char *msg, u16 rlcs, 
 		u16 rlba, u16 rlda, u16 rlmpr, u16 rlbae) {}
-	template <bool debugEnabled = false>
+	template <bool traceEnabled = false>
 		void TRACERLV12Command (u16 command) {}
-	template <bool debugEnabled = false>
+	template <bool traceEnabled = false>
 		void TRACEDuration (const char *msg, u32 duration) {}
 
 	// TRACE ();

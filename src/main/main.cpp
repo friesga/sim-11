@@ -47,7 +47,7 @@ Main::Main (CmdLineOptions const &cmdLineOptions)
 Main::~Main ()
 {
 	if (trc.file)
-		TRCFINISH();
+		TRCClose ();
 }
 
 int main (int argc, char **argv)
