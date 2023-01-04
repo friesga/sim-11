@@ -5,6 +5,38 @@
 
 TRACE trc;
 
+// Convenience functions
+void TRCOpen (const char* f)
+    { trc.TRACEOpen<traceEnabled> (f); }
+void TRCClose()
+    { trc.TRACEClose<traceEnabled> (); }
+void TRCStep(u16* r, u16 psw, u16* insn) 
+    { trc.TRACEStep<traceEnabled> (r, psw, insn); }
+void TRCCPUEvent(int type, u16 value) 
+    { trc.TRACECPUEvent<traceEnabled> (type, value); }
+void TRCBus(u16 type, u16 address, u16 value) 
+    { trc.TRACEBus<traceEnabled> (type, address, value); }
+void TRCMemoryDump(u8* ptr, u16 address, u16 length) 
+    { trc.TRACEMemoryDump<traceEnabled> (ptr, address, length); }
+void TRCIRQ(int n, int type) 
+    { trc.TRACEIrq<traceEnabled> (n, type); }
+void TRCTrap(int n, int cause) 
+    { trc.TRACETrap<traceEnabled> (n, cause); }
+void TRCDLV11(int channel, int type, u16 value) 
+    { trc.TRACEDLV11<traceEnabled> (channel, type, value); }
+void TRCRXV21CMD(int type, u16 rx2cs) 
+    { trc.TRACERXV21Command<traceEnabled> (0, type, rx2cs); }
+void TRCRXV21CMDCommit(int type, u16 rx2cs) 
+    { trc.TRACERXV21Command<traceEnabled> (1, type, rx2cs); }
+void TRCRXV21Step(int type, int step, u16 rx2db) 
+    { trc.TRACERXV21Step<traceEnabled> (type, step, rx2db); }
+void TRCRXV21DMA(int type, u16 rx2wc, u16 rx2ba) 
+    { trc.TRACERXV21DMA<traceEnabled> (type, rx2wc, rx2ba); }
+void TRCRXV21Disk(int type, int drive, int density, u16 rx2sa, u16 rx2ta) 
+    { trc.TRACERXV21Disk<traceEnabled> (type, drive, density, rx2sa, rx2ta); }
+void TRCRXV21Error(int type, u16 info) 
+    { trc.TRACERXV21Error<traceEnabled> (type, info); }
+
 // Generate the trace file in chunks of 10^6 records to be able to inspect
 // large traces (in the order of more than 100*10^6 records). The name of
 // the new trace file is the original file name, appended with an underscore

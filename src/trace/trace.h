@@ -6,6 +6,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <cstring>
 #include <string>
 #include <mutex>
 
@@ -113,37 +114,6 @@ using std::lock_guard;
 // Setting traceEnabled to false will optimize out all calls to trace
 // functions.
 static constexpr bool traceEnabled = true;
-
-#define	TRCOpen(f) \
-		trc.TRACEOpen<traceEnabled> (f)
-#define	TRCClose() \
-		trc.TRACEClose<traceEnabled> ()
-#define	TRCStep(r, psw, insn) \
-		trc.TRACEStep<traceEnabled> (r, psw, insn)
-#define	TRCCPUEvent(event, info) \
-		trc.TRACECPUEvent<traceEnabled> (event, info)
-#define	TRCBus(type, addr, val) \
-		trc.TRACEBus<traceEnabled> (type, addr, val)
-#define	TRCMemoryDump(ptr, addr, val) \
-		trc.TRACEMemoryDump<traceEnabled> (ptr, addr, len)
-#define	TRCIRQ(n, type) \
-		trc.TRACEIrq<traceEnabled> (n, type)
-#define	TRCTrap(n, cause) \
-		trc.TRACETrap<traceEnabled> (n, cause)
-#define	TRCDLV11(type, channel, value) \
-		trc.TRACEDLV11<traceEnabled> (channel, type, value)
-#define	TRCRXV21CMD(type, rx2cs) \
-		trc.TRACERXV21Command<traceEnabled> (0, type, rx2cs)
-#define	TRCRXV21CMDCommit(type, rx2cs) \
-		trc.TRACERXV21Command<traceEnabled> (1, type, rx2cs)
-#define	TRCRXV21Step(type, step, rx2db) \
-		trc.TRACERXV21Step<traceEnabled> (type, step, rx2db)
-#define	TRCRXV21DMA(type, rx2wc, rx2ba) \
-		trc.TRACERXV21DMA<traceEnabled> (type, rx2wc, rx2ba)
-#define	TRCRXV21Disk(type, drive, density, rx2sa, rx2ta) \
-		trc.TRACERXV21Disk<traceEnabled> (type, drive, density, rx2sa, rx2ta)
-#define	TRCRXV21Error(type, info) \
-		trc.TRACERXV21Error<traceEnabled> (type, info)
 
 struct TRACE_CPU
 {
@@ -361,30 +331,27 @@ public:
 		void TRACERLV12Command (u16 command) {}
 	template <bool traceEnabled = false>
 		void TRACEDuration (const char *msg, u32 duration) {}
-
-	// TRACE ();
-	template<> void TRACEOpen<true> (const char* filename);
-	template<> void TRACEClose<true> ();
-	template<> void TRACEStep<true> (u16* r, u16 psw, u16* insn);
-	template<> void TRACECPUEvent<true> (int type, u16 value);
-	template<> void TRACEBus<true> (u16 type, u16 address, u16 value);
-	template<> void TRACEMemoryDump<true> (u8* ptr, u16 address, u16 length);
-	template<> void TRACETrap<true> (int n, int cause);
-	template<> void TRACEIrq<true> (int n, int type);
-	template<> void TRACEDLV11<true> (int channel, int type, u16 value);
-	template<> void TRACERXV21Command<true> (int commit, int type, u16 rx2cs);
-	template<> void TRACERXV21Step<true> (int type, int step, u16 rx2db);
-	template<> void TRACERXV21DMA<true> (int type, u16 rx2wc, u16 rx2ba);
-	template<> void TRACERXV21Disk<true> (int type, int drive, int density,
-		u16 rx2sa, u16 rx2ta);
-	template<> void TRACERXV21Error<true> (int type, u16 info);
-	template<> void TRACERLV12Registers<true> (const char *msg, u16 rlcs, 
-		u16 rlba, u16 rlda, u16 rlmpr, u16 rlbae);
-	template<> void TRACERLV12Command<true> (u16 command);
-	template<> void TRACEDuration<true> (const char *msg, u32 duration);
 };
 
 extern TRACE trc;
+
+// Convenience functions. Calls to these functions are optimized out by
+// the compiler if traceEnabled is set to false.
+extern void TRCOpen (const char* f);
+extern void TRCClose();
+extern void TRCStep(u16* r, u16 psw, u16* insn);
+extern void TRCCPUEvent(int type, u16 value);
+extern void TRCBus(u16 type, u16 address, u16 value);
+extern void TRCMemoryDump(u8* ptr, u16 address, u16 length);
+extern void TRCIRQ(int n, int type);
+extern void TRCTrap(int n, int cause);
+extern void TRCDLV11(int channel, int type, u16 value);
+extern void TRCRXV21CMD(int type, u16 rx2cs);
+extern void TRCRXV21CMDCommit(int type, u16 rx2cs);
+extern void TRCRXV21Step(int type, int step, u16 rx2db);
+extern void TRCRXV21DMA(int type, u16 rx2wc, u16 rx2ba);
+extern void TRCRXV21Disk(int type, int drive, int density, u16 rx2sa, u16 rx2ta);
+extern void TRCRXV21Error(int type, u16 info);
 
 template <> 
 inline void TRACE::TRACEOpen<true> (const char* filename)
