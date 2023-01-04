@@ -85,8 +85,6 @@ using std::lock_guard;
 // TRACEF_BUS, TRACEF_MEMORYDUMP and TRACEF_IRQ flags.
 //
 // ToDo: Transform TRACEF flags to Bitmasks.
-// ToDo: Change category flags to constexpr's so the compiler can remove
-// the calls.
 //
 #define	TRACEF_WRITE			(1 << 0)
 #define	TRACEF_IGNORE_BUS		(1 << 1)
@@ -275,6 +273,11 @@ extern int  LSI11InstructionLength (const u16* insn);
 class TRACE
 {
 private:
+    std::string baseFileName {};
+    u64	step {};
+    u16	last_psw {};
+	u16	last_r[7] {};
+
     mutex traceFileMutex;
 	void limitFileSize ();
 	const char* rxv21_get_cmd_name(int func);
@@ -283,12 +286,8 @@ private:
     const char* get_trap_name (int n);
 
 public:
-	std::string baseFileName {};
-	FILE*	file {};
-	u64	step {};
+	FILE* file {};
 	int	flags {TRACEF_WRITE | TRACEF_FIRST_Z};
-	u16	last_psw {};
-	u16	last_r[7] {};
 
 	// Definition of the public member functions as templates with a boolean
 	// non-type member with default value false and a default empty body. 

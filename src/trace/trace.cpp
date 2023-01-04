@@ -3,6 +3,11 @@
 #include <stdio.h>
 #include <string.h>
 
+
+// The following variable and functions are defined in the global namespace. 
+// This not ideal, but the alternatives - e.g. a singleton class or definition
+// in a separate namespace - are even worse as it clobbers all source files
+// with class or namespace references.
 TRACE trc;
 
 // Convenience functions
