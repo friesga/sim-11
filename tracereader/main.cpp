@@ -54,11 +54,11 @@ int main (int argc, char **argv)
 	
 	// Print all categories present in the trace file
 	trace.flags = 
-		TRACE::TRACEF_STEP       | TRACE::TRACEF_CPUEVENT   | TRACE::TRACEF_BUS | 
-		TRACE::TRACEF_MEMORYDUMP | TRACE::TRACEF_TRAP       | TRACE::TRACEF_IRQ |
-		TRACE::TRACEF_DLV11      | TRACE::TRACEF_RXV21CMD   | TRACE::TRACEF_RXV21STEP |
-		TRACE::TRACEF_RXV21DMA   | TRACE::TRACEF_RXV21ERROR | TRACE::TRACEF_RXV21DISK | 
-		TRACE::TRACEF_RLV12      | TRACE::TRACEF_DURATION   | TRACE::TRACEF_PRINT;
+		TRACE::Step       | TRACE::CpuEvent   | TRACE::Bus       | 
+		TRACE::MemoryDump | TRACE::Trap       | TRACE::Irq       |
+		TRACE::DLV11      | TRACE::RXV21Cmd   | TRACE::RXV21Step |
+		TRACE::RXV21Dma   | TRACE::RXV21Error | TRACE::RXV21Disk | 
+		TRACE::RLV12      | TRACE::Duration   | TRACE::Print;
 
 	if (argc != 2)
 	{

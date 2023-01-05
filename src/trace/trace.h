@@ -235,10 +235,6 @@ struct TRACE_DURATION
 	u16 length;				// length of remaing chars
 };
 
-/* LSI-11 disassembler */
-extern int  LSI11Disassemble (const u16* insn, u16 pc, char* buf);
-extern int  LSI11InstructionLength (const u16* insn);
-
 class TRACE
 {
 private:
@@ -253,6 +249,16 @@ private:
 	const char* rxv21_get_error_name(int type);
 	const char* rlv12GetCommandName (u16 command);
     const char* get_trap_name (int n);
+    int LSI11Disassemble (const u16* insn, u16 pc, char* buf);
+    int LSI11Write (char* buf, const char* str, int pos);
+    int LSI11WriteN (char* buf, u16 val, int pos);
+    const u16* LSI11DisassemblePCOperand (u8 rn, u8 mode, const u16* x,
+        u16* pc, char* buf, int* p);
+    const u16* LSI11DisassembleOperand(u8 rn, u8 mode, const u16* x,
+        u16* pc, char* buf, int* p);
+    int LSI11DisassembleBranch(s8 offset, u16 pc, char* buf, int pos);
+    int LSI11OperandLength(const u8 rn, const u8 mode);
+    int LSI11InstructionLength(const u16* insn);
 
 public:
     // Definition of trace flags. There are two sets of flags:
@@ -277,7 +283,7 @@ public:
         MemoryDump = (1 << 8),
         Trap	   = (1 << 9),
         Irq		   = (1 << 10),
-        Dlv11	   = (1 << 11),
+        DLV11	   = (1 << 11),
         RXV21Cmd   = (1 << 12),
         RXV21Step  = (1 << 13),
         RXV21Dma   = (1 << 14),
@@ -727,7 +733,7 @@ inline void TRACE::TRACEDLV11<true> (int channel, int type, u16 value)
 {
     TRACE_DLV11 rec;
 
-    if (!(flags & Dlv11))
+    if (!(flags & DLV11))
         return;
 
     // Guard against simultaneous trace file writes

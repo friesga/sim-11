@@ -1,6 +1,8 @@
+#include "types.h"
+#include "trace.h"
+
 #include <string.h>
 
-#include "types.h"
 
 typedef struct {
 	u16	rn:3;
@@ -43,7 +45,7 @@ typedef struct {
 #define	WRITEN(n)	pos = LSI11WriteN(buf, n, pos)
 #define	WRITEC(c)	buf[pos++] = c, buf[pos] = 0
 
-int LSI11Write(char* buf, const char* str, int pos)
+int TRACE::LSI11Write(char* buf, const char* str, int pos)
 {
 	int len = strlen(str);
 	memcpy(&buf[pos], str, len);
@@ -51,7 +53,7 @@ int LSI11Write(char* buf, const char* str, int pos)
 	return pos + len;
 }
 
-int LSI11WriteN(char* buf, u16 val, int pos)
+int TRACE::LSI11WriteN(char* buf, u16 val, int pos)
 {
 	int i;
 	int start = pos;
@@ -73,7 +75,7 @@ int LSI11WriteN(char* buf, u16 val, int pos)
 	return pos;
 }
 
-const u16* LSI11DisassemblePCOperand(u8 rn, u8 mode, const u16* x, u16* pc, char* buf, int* p)
+const u16* TRACE::LSI11DisassemblePCOperand(u8 rn, u8 mode, const u16* x, u16* pc, char* buf, int* p)
 {
 	int pos = *p;
 	switch(mode) {
@@ -113,7 +115,7 @@ const u16* LSI11DisassemblePCOperand(u8 rn, u8 mode, const u16* x, u16* pc, char
 	} \
 }
 
-const u16* LSI11DisassembleOperand(u8 rn, u8 mode, const u16* x, u16* pc, char* buf, int* p)
+const u16* TRACE::LSI11DisassembleOperand(u8 rn, u8 mode, const u16* x, u16* pc, char* buf, int* p)
 {
 	int pos = *p;
 	if(rn == 7 && ((mode & 6) == 2 || (mode & 6) == 6)) {
@@ -158,7 +160,7 @@ const u16* LSI11DisassembleOperand(u8 rn, u8 mode, const u16* x, u16* pc, char* 
 	return x;
 }
 
-int LSI11DisassembleBranch(s8 offset, u16 pc, char* buf, int pos)
+int TRACE::LSI11DisassembleBranch(s8 offset, u16 pc, char* buf, int pos)
 {
 	s16 off = offset * 2;
 	if(pc == 0xFFFF) {
@@ -189,7 +191,7 @@ int LSI11DisassembleBranch(s8 offset, u16 pc, char* buf, int pos)
 #define	RET1()	return (int) (insn - start);
 #define	RET2()	return (int) (insn - start);
 
-int LSI11Disassemble(const u16* insn, u16 pc, char* buf)
+int TRACE::LSI11Disassemble(const u16* insn, u16 pc, char* buf)
 {
 	int pos = 0;
 	u16 opcd = *insn;
@@ -602,7 +604,7 @@ int LSI11Disassemble(const u16* insn, u16 pc, char* buf)
 #define OP2LEN()	LSI11OperandLength((const u8) insn2->src_rn, (const u8) insn2->src_mode) + \
 			LSI11OperandLength((const u8) insn2->dst_rn, (const u8) insn2->dst_mode) + 1
 
-int LSI11OperandLength(const u8 rn, const u8 mode)
+int TRACE::LSI11OperandLength(const u8 rn, const u8 mode)
 {
 	if(rn == 7 && ((mode & 6) == 2 || (mode & 6) == 6)) {
 		return 1;
@@ -622,7 +624,7 @@ int LSI11OperandLength(const u8 rn, const u8 mode)
 	}
 }
 
-int LSI11InstructionLength(const u16* insn)
+int TRACE::LSI11InstructionLength(const u16* insn)
 {
 	u16 opcd = *insn;
 	KD11INSN1* insn1 = (KD11INSN1*) insn;

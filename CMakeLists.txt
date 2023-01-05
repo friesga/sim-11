@@ -116,7 +116,6 @@ set (SIM11_SRCS
     ${CONSOLE_SRCS}
     src/bdv11/bdv11.cpp
     src/bdv11/bdv11_e53.cpp
-    src/disas.cpp
     src/dlv11j/dlv11j.cpp
     src/kd11/kd11.cpp
     src/kd11/cpu/kd11cpu.cpp
@@ -143,6 +142,7 @@ set (SIM11_SRCS
     ${SIM_FIO_SRCS}
     ${UNIT_SRCS}
     src/trace/trace.cpp
+    src/trace/disas.cpp
     src/logger/logger.cpp
     src/logger/data.cpp
     ${FLOAT_SRCS}
@@ -264,7 +264,7 @@ set (SIM11_TEST_SRCS
     src/trace/trace.cpp
     src/logger/logger.cpp
     src/logger/data.cpp
-    src/disas.cpp)
+    src/trace/disas.cpp)
 
 add_executable (sim-11-test ${SIM11_TEST_SRCS})
 
@@ -310,7 +310,7 @@ gtest_add_tests (TARGET sim-11-test
 # Create trace reader
 add_executable (tracereader tracereader/main.cpp
     src/trace/trace.cpp
-    src/disas.cpp)
+    src/trace/disas.cpp)
 
 target_include_directories (tracereader PRIVATE include src)
     
