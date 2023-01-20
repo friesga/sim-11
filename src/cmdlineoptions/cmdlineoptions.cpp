@@ -5,7 +5,7 @@
 #include <cstring>
 #include <iostream>
 
-CmdLineOptions::CmdLineOptions(int argc, char **argv) 
+CmdLineOptions::CmdLineOptions(int argc, char const **argv) 
     :
     load_file {load_file_},
     config_file {config_file_},

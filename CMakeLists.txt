@@ -255,10 +255,10 @@ endif ()
 # Create sim-11 test executable
 #
 # N.B. This configuration on x64 only produces a correct executable using
-# the x64-Release configuration (in the folder x44-Release)!
+# the x64-Release configuration (in the folder x64-Release)!
 #
 # Define source files
-set (SIM11_TEST_SRCS
+set (GTEST_SRCS
     gtest/cmdlineoptionstest.cpp
     gtest/threadsafeprioqueuetest.cpp
     gtest/threadsafecontainertest.cpp
@@ -276,6 +276,10 @@ set (SIM11_TEST_SRCS
     gtest/rlv12writechecktest.cpp
     gtest/rlv12writedatatest.cpp
     gtest/rxconfiguratortest.cpp
+    gtest/tracetest.cpp)
+    
+set (SIM11_TEST_SRCS
+    ${GTEST_SRCS}
     ${CMDLINEOPTIONS_SRCS}
     ${CONFIGURATOR_SRCS}
     src/interruptrequest/interruptrequest.cpp
@@ -333,7 +337,8 @@ gtest_add_tests (TARGET sim-11-test
                     RLV12WriteDataTest
                     RLV12WriteCheckTest
                     RLV12ReadDataWithoutHeaderCheckTest
-                    RxConfiguratorTest)
+                    RxConfiguratorTest
+                    TraceTest)
 
 #
 # Create trace reader

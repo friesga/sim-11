@@ -21,7 +21,7 @@ class CmdLineOptions
 	static bool exit_on_halt_;
 
 public:
-	CmdLineOptions(int argc, char **argv);
+	CmdLineOptions(int argc, char const **argv);
 
 	const char*  const &load_file;
 	const char*  const &config_file;
