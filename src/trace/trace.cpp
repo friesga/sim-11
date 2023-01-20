@@ -17,13 +17,13 @@ Trace trc;
 // ToDo: Functions to be merged with Trace class
 void TRCOpen (const char* f)
 {
-    if (traceEnabled && trc.flags)
+    if (traceEnabled)
         trc.tracefileOut.open (f);
 }
 
 void TRCClose ()
 {
-    if (traceEnabled && trc.flags)
+    if (traceEnabled && trc.tracefileOut.is_open ())
         trc.tracefileOut.close ();
 }
 
