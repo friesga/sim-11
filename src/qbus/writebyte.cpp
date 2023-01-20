@@ -7,7 +7,7 @@ bool QBUS::writeByte (u16 address, u8 value)
 		
 	if ((module = responsibleModule(address)) != nullptr)
 	{
-		TRCBus (TRC_BUS_WR, address, value);
+		TRCBus (TraceBusType::Write, address, value);
 		module->writeByte (address, value);
 		return true;
 	}

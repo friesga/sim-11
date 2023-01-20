@@ -1,5 +1,6 @@
 #include "types.h"
-#include "trace.h"
+#include "../tracerecord.h"
+#include "tracecpu.h"
 
 #include <string.h>
 
@@ -45,15 +46,17 @@ typedef struct {
 #define	WRITEN(n)	pos = LSI11WriteN(buf, n, pos)
 #define	WRITEC(c)	buf[pos++] = c, buf[pos] = 0
 
-int TRACE::LSI11Write(char* buf, const char* str, int pos)
+int TraceRecord<TraceCpu>::LSI11Write(char* buf, const char* str, int pos)
 {
-	int len = strlen(str);
+	// ToDo: the int should really be a size_t
+	// Changing this must lead to a necessary overhaul of this module.
+	int len = static_cast<int> (strlen (str));
 	memcpy(&buf[pos], str, len);
 	buf[pos + len] = 0;
 	return pos + len;
 }
 
-int TRACE::LSI11WriteN(char* buf, u16 val, int pos)
+int TraceRecord<TraceCpu>::LSI11WriteN(char* buf, u16 val, int pos)
 {
 	int i;
 	int start = pos;
@@ -75,7 +78,7 @@ int TRACE::LSI11WriteN(char* buf, u16 val, int pos)
 	return pos;
 }
 
-const u16* TRACE::LSI11DisassemblePCOperand(u8 rn, u8 mode, const u16* x, u16* pc, char* buf, int* p)
+const u16* TraceRecord<TraceCpu>::LSI11DisassemblePCOperand(u8 rn, u8 mode, const u16* x, u16* pc, char* buf, int* p)
 {
 	int pos = *p;
 	switch(mode) {
@@ -115,7 +118,7 @@ const u16* TRACE::LSI11DisassemblePCOperand(u8 rn, u8 mode, const u16* x, u16* p
 	} \
 }
 
-const u16* TRACE::LSI11DisassembleOperand(u8 rn, u8 mode, const u16* x, u16* pc, char* buf, int* p)
+const u16* TraceRecord<TraceCpu>::LSI11DisassembleOperand(u8 rn, u8 mode, const u16* x, u16* pc, char* buf, int* p)
 {
 	int pos = *p;
 	if(rn == 7 && ((mode & 6) == 2 || (mode & 6) == 6)) {
@@ -160,7 +163,7 @@ const u16* TRACE::LSI11DisassembleOperand(u8 rn, u8 mode, const u16* x, u16* pc,
 	return x;
 }
 
-int TRACE::LSI11DisassembleBranch(s8 offset, u16 pc, char* buf, int pos)
+int TraceRecord<TraceCpu>::LSI11DisassembleBranch(s8 offset, u16 pc, char* buf, int pos)
 {
 	s16 off = offset * 2;
 	if(pc == 0xFFFF) {
@@ -191,7 +194,9 @@ int TRACE::LSI11DisassembleBranch(s8 offset, u16 pc, char* buf, int pos)
 #define	RET1()	return (int) (insn - start);
 #define	RET2()	return (int) (insn - start);
 
-int TRACE::LSI11Disassemble(const u16* insn, u16 pc, char* buf)
+// ToDo: As LSI11Disassemble is part of the TraceRecord<TraceCpu> class the 
+// parameters insn and pc can be retrieved from the object.
+int TraceRecord<TraceCpu>::LSI11Disassemble(const u16* insn, u16 pc, char* buf)
 {
 	int pos = 0;
 	u16 opcd = *insn;
@@ -604,7 +609,7 @@ int TRACE::LSI11Disassemble(const u16* insn, u16 pc, char* buf)
 #define OP2LEN()	LSI11OperandLength((const u8) insn2->src_rn, (const u8) insn2->src_mode) + \
 			LSI11OperandLength((const u8) insn2->dst_rn, (const u8) insn2->dst_mode) + 1
 
-int TRACE::LSI11OperandLength(const u8 rn, const u8 mode)
+int TraceRecord<TraceCpu>::LSI11OperandLength(const u8 rn, const u8 mode)
 {
 	if(rn == 7 && ((mode & 6) == 2 || (mode & 6) == 6)) {
 		return 1;
@@ -624,7 +629,7 @@ int TRACE::LSI11OperandLength(const u8 rn, const u8 mode)
 	}
 }
 
-int TRACE::LSI11InstructionLength(const u16* insn)
+int TraceRecord<TraceCpu>::LSI11InstructionLength(const u16* insn)
 {
 	u16 opcd = *insn;
 	KD11INSN1* insn1 = (KD11INSN1*) insn;

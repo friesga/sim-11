@@ -30,23 +30,24 @@ Main::Main (CmdLineOptions const &cmdLineOptions)
 		TRCOpen (cmdLineOptions_.trace_file);
 		if (cmdLineOptions_.compress) 
 		{
-			trc.flags |= TRACE::Compress;
+			trc.flags |= Trace::Category::Compress;
 		}
 	}
 
 	// Select the events to be traced and the way the trace output has
 	// to be generated. The flags can only be specified if tracing has been
 	// enabled.
-	if (trc.file != nullptr)
+	// ToDo: Add an isOpen function somewhere
+	if (trc.tracefileOut.is_open ())
 	{
-		trc.flags |= TRACE::RLV12;
-		trc.flags |= TRACE::Step;
+		trc.flags |= Trace::Category::RLV12;
+		trc.flags |= Trace::Category::Step;
 	}
 }
 
 Main::~Main ()
 {
-	if (trc.file)
+	if (trc.tracefileOut.is_open ())
 		TRCClose ();
 }
 

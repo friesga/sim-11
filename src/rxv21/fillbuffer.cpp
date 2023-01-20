@@ -19,8 +19,6 @@ void RXV21::entry (rxv21FillBufferRx2wc)
 
 State RXV21::transition (rxv21FillBufferRx2wc &&, rxv21Rx2dbFilled)
 {
-    // ToDo: Provide useful state to TRCRXV21Step
-    TRCRXV21Step ((rx2cs & RX_FUNCTION_MASK) >> 1, 1, rx2db);
     rx2wc = rx2db;
     return rxv21FillBufferRx2ba {};
 }
@@ -43,11 +41,11 @@ void RXV21::fillBuffer ()
 	u16 wc;
 	u16 ptr;
 
-	TRCRXV21DMA (TRC_RXV21_FILL, rx2wc, rx2ba);
+	TRCRXV21DMA (RXV21DiskCmd::RXV21_FILL, rx2wc, rx2ba);
 
 	if (rx2wc > limit) 
 	{
-		TRCRXV21Error (TRC_RXV21_WC_OVFL, rx2wc);
+		TRCRXV21Error (RXV21ErrorType::RXV21_WC_OVFL, rx2wc);
 		error = 0230; /* Word count overflow */
 		rx2es |= RX2ES_WC_OVFL;
 		rx2cs |= RX_ERROR;

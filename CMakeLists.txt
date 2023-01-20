@@ -93,6 +93,37 @@ set (SDLWRAP_SRCS
     src/sdl/texture/texture.cpp
     src/sdl/window/window.cpp)
 
+set (TRACE_SRCS
+    src/trace/trace.cpp
+    src/trace/tracefileoutstream/tracefileoutstream.cpp 
+    src/trace/tracefileoutstream/header.cpp
+    src/trace/tracefileinstream/tracefileinstream.cpp
+    src/trace/cpuevent/operator.cpp
+    src/trace/tracecpu/disas.cpp
+    src/trace/tracecpu/operator.cpp
+    src/trace/tracebus/operator.cpp
+    src/trace/tracetrap/gettrapname.cpp 
+    src/trace/tracetrap/operator.cpp
+    src/trace/traceirq/operator.cpp 
+    src/trace/rxv21disk/operator.cpp 
+    src/trace/rxv21command/getcommandname.cpp
+    src/trace/rxv21command/operator.cpp
+    src/trace/rxv21dma/operator.cpp 
+    src/trace/rxv21error/geterrorname.cpp 
+    src/trace/rxv21error/operator.cpp 
+    src/trace/tracedlv11/operator.cpp 
+    src/trace/rlv12registers/tracefileinsertoperator.cpp
+    src/trace/rlv12registers/extractionoperator.cpp
+    src/trace/rlv12registers/ostreaminsertopreator.cpp 
+    src/trace/rlv12command/operator.cpp
+    src/trace/rlv12command/getcommandname.cpp
+    src/trace/traceduration/tracefileinsertoperator.cpp
+    src/trace/traceduration/extractionoperator.cpp
+    src/trace/traceduration/ostreaminsertoperator.cpp
+    src/trace/memorydump/tracefileinsertoperator.cpp 
+    src/trace/memorydump/extractionoperator.cpp
+    src/trace/memorydump/ostreaminsertoperator.cpp)
+
 # Handling of the console is system-specific
 if (MSVC)
 set (CONSOLE_SRCS
@@ -141,8 +172,7 @@ set (SIM11_SRCS
     src/rxv21/writesector.cpp
     ${SIM_FIO_SRCS}
     ${UNIT_SRCS}
-    src/trace/trace.cpp
-    src/trace/disas.cpp
+    ${TRACE_SRCS}
     src/logger/logger.cpp
     src/logger/data.cpp
     ${FLOAT_SRCS}
@@ -261,10 +291,9 @@ set (SIM11_TEST_SRCS
     src/kd11/cpu/kd11cpu.cpp
     src/kd11/odt/kd11odt.cpp
     src/msv11d/msv11d.cpp
-    src/trace/trace.cpp
+    ${TRACE_SRCS}
     src/logger/logger.cpp
-    src/logger/data.cpp
-    src/trace/disas.cpp)
+    src/logger/data.cpp)
 
 add_executable (sim-11-test ${SIM11_TEST_SRCS})
 
@@ -309,8 +338,8 @@ gtest_add_tests (TARGET sim-11-test
 #
 # Create trace reader
 add_executable (tracereader tracereader/main.cpp
-    src/trace/trace.cpp
-    src/trace/disas.cpp)
+    
+    )
 
 target_include_directories (tracereader PRIVATE include src)
     

@@ -5,6 +5,7 @@
 #include "busdevice/busdevice.h"
 #include "float/float.h"
 #include "trace/trace.h"
+#include "bitmask.h"
 
 #include <functional>
 #include <chrono>
@@ -38,7 +39,7 @@ CondData<u16> KD11CPU::fetchWord (u16 address)
     CondData<u16> value = bus_->read (address);
     if (!value.hasValue ())
     {
-        TRCBus (TRC_BUS_RDFAIL, address, 0);
+        TRCBus (TraceBusType::ReadFail, address, 0);
         setTrap (&busError);
         return {};
     }
@@ -49,7 +50,7 @@ bool KD11CPU::putWord (u16 address, u16 value)
 {
     if (!bus_->writeWord (address, value))
     {
-        TRCBus (TRC_BUS_WRFAIL, address, value);
+        TRCBus (TraceBusType::WriteFail, address, value);
         setTrap (&busError);
         return false;
     }
@@ -60,7 +61,7 @@ bool KD11CPU::putByte (u16 address, u8 value)
 {
     if (!bus_->writeByte (address, value))
     {
-        TRCBus (TRC_BUS_WRFAIL, address, value);
+        TRCBus (TraceBusType::WriteFail, address, value);
         setTrap (&busError);
         return false;
     }
@@ -136,8 +137,8 @@ void KD11CPU::step (QBUS* bus)
         execInstr (bus);
         std::chrono::high_resolution_clock::time_point end =
             std::chrono::high_resolution_clock::now ();
-        trc.TRACEDuration ("Instruction",
-            (duration_cast<std::chrono::nanoseconds> (end - start)).count ());
+        TRCDuration ("Instruction",
+            (std::chrono::duration_cast<std::chrono::nanoseconds> (end - start)).count ());
     }
 
     // Generate a Trace trap if the trace bit is set, unless the previous
@@ -149,7 +150,7 @@ void KD11CPU::step (QBUS* bus)
     }
     else if (!trap_ && (psw & PSW_T))
     {
-        TRCTrap (014, TRC_TRAP_T);
+        TRCTrap (014, TraceTrapCause::TRAP_T);
         setTrap (&traceTrap);
     }
     handleTraps (bus);
@@ -193,7 +194,7 @@ void KD11CPU::execInstr (QBUS* bus)
                     switch (insn)
                     {
                         case 0000000: /* HALT */
-                            TRCCPUEvent (TRC_CPU_HALT, r[7]);
+                            TRCCPUEvent (CpuEventType::CPU_HALT, r[7]);
 
                             runState = STATE_HALT;
                             bus_->setProcessorRunning (false);
@@ -203,7 +204,7 @@ void KD11CPU::execInstr (QBUS* bus)
                             break;
 
                         case 0000001: /* WAIT */
-                            TRCCPUEvent (TRC_CPU_WAIT, r[7]);
+                            TRCCPUEvent (CpuEventType::CPU_WAIT, r[7]);
                             runState = STATE_WAIT;
                             break;
 
@@ -217,12 +218,12 @@ void KD11CPU::execInstr (QBUS* bus)
                             break;
 
                         case 0000003: /* BPT */
-                            TRCTrap (014, TRC_TRAP);
+                            TRCTrap (014, TraceTrapCause::TRAP);
                             setTrap (&BPT);
                             break;
 
                         case 0000004: /* IOT */
-                            TRCTrap (020, TRC_TRAP);
+                            TRCTrap (020, TraceTrapCause::TRAP);
                             setTrap (&IOT);
                             break;
 
@@ -244,7 +245,7 @@ void KD11CPU::execInstr (QBUS* bus)
 
                         default: /* 00 00 07 - 00 00 77 */
                             /* unused opcodes */
-                            TRCTrap (010, TRC_TRAP_ILL);
+                            TRCTrap (010, TraceTrapCause::TRAP_ILL);
                             setTrap (&illegalInstructionTrap);
                             break;
                     }
@@ -254,7 +255,7 @@ void KD11CPU::execInstr (QBUS* bus)
                     if (!insn1->getAddress (this, r, r[7]))
                     {
                         // Illegal instruction
-                        TRCTrap (4, TRC_TRAP_RADDR);
+                        TRCTrap (4, TraceTrapCause::TRAP_RADDR);
                         setTrap (&busError);
                     }
                     break;
@@ -283,7 +284,7 @@ void KD11CPU::execInstr (QBUS* bus)
                     else
                     {
                         /* 00 02 10 - 00 02 27: unused */
-                        TRCTrap (010, TRC_TRAP_ILL);
+                        TRCTrap (010, TraceTrapCause::TRAP_ILL);
                         setTrap (&illegalInstructionTrap);
                     }
                     break;
@@ -378,7 +379,7 @@ void KD11CPU::execInstr (QBUS* bus)
                     if (!ok)
                     {
                         // Illegal instruction
-                        TRCTrap (4, TRC_TRAP_RADDR);
+                        TRCTrap (4, TraceTrapCause::TRAP_RADDR);
                         setTrap (&busError);
                         return;
                     }
@@ -611,7 +612,7 @@ void KD11CPU::execInstr (QBUS* bus)
                     break;
 
                 default: /* 006500-006677, 007000-007777: unused */
-                    TRCTrap (010, TRC_TRAP_ILL);
+                    TRCTrap (010, TraceTrapCause::TRAP_ILL);
                     setTrap (&illegalInstructionTrap);
                     break;
             }
@@ -935,7 +936,7 @@ void KD11CPU::execInstr (QBUS* bus)
 #endif
                         default:
                             /* 075040-076777: unused */
-                            TRCTrap (010, TRC_TRAP_ILL);
+                            TRCTrap (010, TraceTrapCause::TRAP_ILL);
                             setTrap (&illegalInstructionTrap);
                             break;
                     }
@@ -948,7 +949,7 @@ void KD11CPU::execInstr (QBUS* bus)
                     }
                     break;
                 default:
-                    TRCTrap (010, TRC_TRAP_ILL);
+                    TRCTrap (010, TraceTrapCause::TRAP_ILL);
                     setTrap (&illegalInstructionTrap);
                     break;
             }
@@ -1041,7 +1042,7 @@ void KD11CPU::execInstr (QBUS* bus)
                 case 01041:
                 case 01042:
                 case 01043:
-                    TRCTrap (030, TRC_TRAP);
+                    TRCTrap (030, TraceTrapCause::TRAP);
                     setTrap (&EMT);
                     break;
 
@@ -1049,7 +1050,7 @@ void KD11CPU::execInstr (QBUS* bus)
                 case 01045:
                 case 01046:
                 case 01047:
-                    TRCTrap (034, TRC_TRAP);
+                    TRCTrap (034, TraceTrapCause::TRAP);
                     setTrap (&TRP);
                     break;
 
@@ -1297,7 +1298,7 @@ void KD11CPU::execInstr (QBUS* bus)
 
                 default:
                     /* unused */
-                    TRCTrap (010, TRC_TRAP_ILL);
+                    TRCTrap (010, TraceTrapCause::TRAP_ILL);
                     setTrap (&illegalInstructionTrap);
                     break;
             }
@@ -1426,7 +1427,7 @@ void KD11CPU::execInstr (QBUS* bus)
             break;
 
         default: /* unused */
-            TRCTrap (010, TRC_TRAP_ILL);
+            TRCTrap (010, TraceTrapCause::TRAP_ILL);
             setTrap (&illegalInstructionTrap);
             break;
     }
@@ -1525,7 +1526,7 @@ void KD11CPU::handleTraps (QBUS* bus)
     else return;
 
 
-    TRCCPUEvent (TRC_CPU_TRAP, trapToProcess);
+    TRCCPUEvent (CpuEventType::CPU_TRAP, trapToProcess);
 
     // Save PC and PSW on the stack. Adressing the stack could result in a
     // bus time out. In that case the CPU is halted.
@@ -1533,7 +1534,7 @@ void KD11CPU::handleTraps (QBUS* bus)
     r[6] -= 2;
     if (!putWord (r[6], psw))
     {
-        TRCCPUEvent (TRC_CPU_DBLBUS, r[6]);
+        TRCCPUEvent (CpuEventType::CPU_DBLBUS, r[6]);
         // ToDo: All interrupts should be cleared?
         trap_ = nullptr;
         runState = STATE_HALT;
@@ -1544,7 +1545,7 @@ void KD11CPU::handleTraps (QBUS* bus)
     r[6] -= 2;
     if (!putWord (r[6], r[7]))
     {
-        TRCCPUEvent (TRC_CPU_DBLBUS, r[6]);
+        TRCCPUEvent (CpuEventType::CPU_DBLBUS, r[6]);
         trap_ = nullptr;
         runState = STATE_HALT;
         bus_->setProcessorRunning (false);
@@ -1557,7 +1558,7 @@ void KD11CPU::handleTraps (QBUS* bus)
     r[7] = tmpValue.valueOr (0);
     if (!tmpValue.hasValue ())
     {
-        TRCCPUEvent (TRC_CPU_DBLBUS, trapToProcess);
+        TRCCPUEvent (CpuEventType::CPU_DBLBUS, trapToProcess);
         trap_ = nullptr;
         runState = STATE_HALT;
         bus_->setProcessorRunning (false);
@@ -1568,7 +1569,7 @@ void KD11CPU::handleTraps (QBUS* bus)
     psw = tmpValue.valueOr (0);
     if (!tmpValue.hasValue ())
     {
-        TRCCPUEvent (TRC_CPU_DBLBUS, trapToProcess + 2);
+        TRCCPUEvent (CpuEventType::CPU_DBLBUS, trapToProcess + 2);
         trap_ = nullptr;
         runState = STATE_HALT;
         bus_->setProcessorRunning (false);
@@ -1578,7 +1579,7 @@ void KD11CPU::handleTraps (QBUS* bus)
     /* resume execution if in WAIT state */
     if (runState == STATE_WAIT)
     {
-        TRCCPUEvent (TRC_CPU_RUN, r[7]);
+        TRCCPUEvent (CpuEventType::CPU_RUN, r[7]);
         runState = STATE_RUN;
         bus_->setProcessorRunning (true);
     }

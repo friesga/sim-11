@@ -46,10 +46,9 @@ u16 CmdProcessor::maintenanceCmd (RL01_2 *unit, RLV12Command &rlv12Command)
     // Get memory address from BAR, CSR and possibly BAE registers
     memoryAddress = controller_->memAddrFromRegs ();
                                                             
-    if(trc.flags & TRACE::RLV12)
-         trc.TRACERLV12Registers ("Maintenance", controller_->csr_,
-             controller_->bar_, controller_->dar_,
-             controller_->dataBuffer_[0], controller_->bae_);
+    TRCRLV12Registers ("Maintenance", controller_->csr_,
+        controller_->bar_, controller_->dar_,
+        controller_->dataBuffer_[0], controller_->bae_);
 
     // Must be exactly -511
     if (controller_->wordCounter_ != 0177001)

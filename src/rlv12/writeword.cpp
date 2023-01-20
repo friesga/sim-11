@@ -56,7 +56,7 @@ StatusCode RLV12::writeWord (u16 registerAddress, u16 data)
             // 00 and 01 in the BAE register
             updateBAE ();
 
-            trc.TRACERLV12Registers ("write CSR", csr_, bar_, dar_, 
+            TRCRLV12Registers ("write CSR", csr_, bar_, dar_, 
                 dataBuffer_[0], bae_);
 
             // Commands to the controller are only executed with the CRDY (DONE)
@@ -80,7 +80,7 @@ StatusCode RLV12::writeWord (u16 registerAddress, u16 data)
             // setting of the other error bits.
             csr_ &= ~CSR_AnyError;                   
 
-            trc.TRACERLV12Command (getFunction (csr_));
+            TRCRLV12Command (getFunction (csr_));
 
             // We're done using the registers this call. Notify the command
             // processor a command has been issued.

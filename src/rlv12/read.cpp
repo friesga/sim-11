@@ -20,8 +20,8 @@ StatusCode RLV12::read (u16 registerAddress, u16* data)
             // returned. This avoids having to change the actual CSR and
             // having to lock the controller mutex.
             *data = rlcsPlusDriveStatus (units_[getDrive (csr_)]);
-            trc.TRACERLV12Registers ("read CSR", *data, bar_,
-                dar_, dataBuffer_[0], bae_);
+            TRCRLV12Registers ("read CSR", *data, bar_, dar_, 
+                dataBuffer_[0], bae_);
             break;
 
         case BAR:

@@ -9,7 +9,7 @@ bool QBUS::writeWord (u16 address, u16 value)
 		
 	if ((module = responsibleModule(address)) != nullptr)
 	{
-		TRCBus (TRC_BUS_WR, address, value);
+		TRCBus (TraceBusType::Write, address, value);
 		module->writeWord (address, value);
 		return true;
 	}
