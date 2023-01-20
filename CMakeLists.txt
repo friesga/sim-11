@@ -342,9 +342,9 @@ gtest_add_tests (TARGET sim-11-test
 
 #
 # Create trace reader
-add_executable (tracereader tracereader/main.cpp
-    
-    )
+add_executable (tracereader 
+    tracereader/main.cpp
+    ${TRACE_SRCS})
 
 target_include_directories (tracereader PRIVATE include src)
     
