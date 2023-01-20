@@ -73,8 +73,13 @@ TracefileOutStream& operator<< (TracefileOutStream& tos, TraceRecord<T> record)
 			sizeof(TraceRecord<T>));
 
 	// Flush the buffer immediately so when the application crashes the trace
-	// file is accurate.
-	tos.flush ();
+	// file is accurate, except for CpuStep recors as flushing these records
+	// on every write slows down the simulator speed to an unacceptable level.
+	// This is a bit of a hack but the alternative is to create another 
+	// operator<<() overload which results in duplicate code.
+	if (record.magic () != Magic::CPU0)
+		tos.flush ();
+
 	tos.limitFileSize ();
     return tos;
 }
