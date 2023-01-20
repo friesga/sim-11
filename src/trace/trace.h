@@ -1,38 +1,6 @@
 #ifndef _TRACE_H_
 #define _TRACE_H_
 
-#if 0
-// Definition of functions to write the trace file in big endian order.
-// Currently not used.
-#ifdef WIN32
-// We can safely asseume that all Win32 systems are little endian.
-// The following functions will be inlined by the compiler.
-u16 U16B (u16 x) {return _byteswap_ushort (x);}
-u32 U32B (u32 x) {return _byteswap_ulong (x);}
-u64 U64B (u64 x) {return _byteswap_uint64 (x);}
-u16 U16L (u16 x) {return x;}
-u32 U32L (u32 x) {return x;}
-u64 U64L (u64 x) {return x;}
-#else // WIN32
-// Use byte order as defined by gcc
-#if __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__
-constexpr u16 U16B (u16 x) {return x;}
-constexpr u32 U32B (u32 x) {return x;}
-constexpr u64 U64B (u64 x) {return x;}
-constexpr u16 U16L (u16 x) {return __builtin_bswap16(x);}
-constexpr u32 U32L (u32 x) {return __builtin_bswap32(x);}
-constexpr u64 U64L (u64 x) {return __builtin_bswap64(x);}
-#else	// __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__
-constexpr u16 U16B (u16 x) {return __builtin_bswap16(x);}
-constexpr u32 U32B (u32 x) {return __builtin_bswap32(x);}
-constexpr u64 U64B (u64 x) {return __builtin_bswap64(x);}
-constexpr u16 U16L (u16 x) {return x;}
-constexpr u32 U32L (u32 x) {return x;}
-constexpr u64 U64L (u64 x) {return x;}
-#endif	// __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__
-#endif // WIN32
-#endif // 0
-
 #include "types.h"
 #include "cpuevent/cpuevent.h"
 #include "tracebus/tracebus.h"
