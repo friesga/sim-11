@@ -98,31 +98,31 @@ set (TRACE_SRCS
     src/trace/tracefileoutstream/tracefileoutstream.cpp 
     src/trace/tracefileoutstream/header.cpp
     src/trace/tracefileinstream/tracefileinstream.cpp
-    src/trace/cpuevent/operator.cpp
-    src/trace/tracecpu/disas.cpp
-    src/trace/tracecpu/operator.cpp
-    src/trace/tracebus/operator.cpp
-    src/trace/tracetrap/gettrapname.cpp 
-    src/trace/tracetrap/operator.cpp
-    src/trace/traceirq/operator.cpp 
-    src/trace/rxv21disk/operator.cpp 
-    src/trace/rxv21command/getcommandname.cpp
-    src/trace/rxv21command/operator.cpp
-    src/trace/rxv21dma/operator.cpp 
-    src/trace/rxv21error/geterrorname.cpp 
-    src/trace/rxv21error/operator.cpp 
-    src/trace/tracedlv11/operator.cpp 
-    src/trace/rlv12registers/tracefileinsertoperator.cpp
-    src/trace/rlv12registers/extractionoperator.cpp
-    src/trace/rlv12registers/ostreaminsertopreator.cpp 
-    src/trace/rlv12command/operator.cpp
-    src/trace/rlv12command/getcommandname.cpp
-    src/trace/traceduration/tracefileinsertoperator.cpp
-    src/trace/traceduration/extractionoperator.cpp
-    src/trace/traceduration/ostreaminsertoperator.cpp
-    src/trace/memorydump/tracefileinsertoperator.cpp 
-    src/trace/memorydump/extractionoperator.cpp
-    src/trace/memorydump/ostreaminsertoperator.cpp)
+    src/trace/cpueventrecord/operator.cpp
+    src/trace/cpurecord/disas.cpp
+    src/trace/cpurecord/operator.cpp
+    src/trace/busrecord/operator.cpp
+    src/trace/traprecord/gettrapname.cpp 
+    src/trace/traprecord/operator.cpp
+    src/trace/irqrecord/operator.cpp 
+    src/trace/rxv21diskrecord/operator.cpp 
+    src/trace/rxv21commandrecord/getcommandname.cpp
+    src/trace/rxv21commandrecord/operator.cpp
+    src/trace/rxv21dmarecord/operator.cpp 
+    src/trace/rxv21errorrecord/geterrorname.cpp 
+    src/trace/rxv21errorrecord/operator.cpp 
+    src/trace/dlv11record/operator.cpp 
+    src/trace/rlv12registersrecord/tracefileinsertoperator.cpp
+    src/trace/rlv12registersrecord/extractionoperator.cpp
+    src/trace/rlv12registersrecord/ostreaminsertopreator.cpp 
+    src/trace/rlv12commandrecord/operator.cpp
+    src/trace/rlv12commandrecord/getcommandname.cpp
+    src/trace/durationrecord/tracefileinsertoperator.cpp
+    src/trace/durationrecord/extractionoperator.cpp
+    src/trace/durationrecord/ostreaminsertoperator.cpp
+    src/trace/memorydumprecord/tracefileinsertoperator.cpp 
+    src/trace/memorydumprecord/extractionoperator.cpp
+    src/trace/memorydumprecord/ostreaminsertoperator.cpp)
 
 # Handling of the console is system-specific
 if (MSVC)

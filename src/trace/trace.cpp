@@ -31,27 +31,27 @@ void TRCClose ()
 void TRCStep (u16* r, u16 psw, u16* insn)
 {
     if (traceEnabled && (trc.flags & Trace::Category::Step))
-        trc.tracefileOut << TraceRecord<TraceCpu> (r, psw, insn);
+        trc.tracefileOut << TraceRecord<CpuRecord> (r, psw, insn);
 }
 
 void TRCCPUEvent (CpuEventType type, u16 value) 
 {
     if (traceEnabled && (trc.flags & Trace::Category::CpuEvent))
-        trc.tracefileOut << TraceRecord<CpuEvent> (type, value);
+        trc.tracefileOut << TraceRecord<CpuEventRecord> (type, value);
 }
 
 void TRCBus (TraceBusType type, u16 address, u16 value) 
 {
     if (traceEnabled && (trc.flags & Trace::Category::Bus) && 
             !(trc.flags & Trace::Category::IgnoreBus))
-        trc.tracefileOut << TraceRecord<TraceBus> (type, address, value);
+        trc.tracefileOut << TraceRecord<BusRecord> (type, address, value);
 }
 
 void TRCMemoryDump (u8* ptr, u16 address, u16 length) 
 {
     if (traceEnabled && (trc.flags & Trace::Category::MemoryDump) && 
             !(trc.flags & Trace::Category::IgnoreBus))
-        trc.tracefileOut << TraceRecord<MemoryDump> (ptr, address, length);
+        trc.tracefileOut << TraceRecord<MemoryDumpRecord> (ptr, address, length);
 }
 
 // Note: parameters are reversed!
@@ -65,13 +65,13 @@ void TRCIRQ (int vector, TraceIrqType type)
 void TRCTrap (int vector, TraceTrapCause cause) 
 {
     if (traceEnabled && (trc.flags & Trace::Category::Trap))
-        trc.tracefileOut << TraceRecord<TraceTrap> (cause, vector);
+        trc.tracefileOut << TraceRecord<TrapRecord> (cause, vector);
 }
 
 void TRCDLV11 (TraceDLV11Type type, int channel, u16 value) 
 {
     if (traceEnabled && (trc.flags & Trace::Category::DLV11))
-        trc.tracefileOut << TraceRecord<TraceDLV11> (type, channel, value);
+        trc.tracefileOut << TraceRecord<DLV11Record> (type, channel, value);
 }
 
 // This function takes a value take from the RX2CS register and casts it
@@ -80,12 +80,12 @@ void TRCRXV21CMD (int command, u16 rx2cs)
 {
     if (traceEnabled && (trc.flags & Trace::Category::RXV21Cmd))
         trc.tracefileOut << 
-            TraceRecord<RXV21Command> (static_cast<RXV21DiskCmd> (command), rx2cs);
+            TraceRecord<RXV21CommandRecord> (static_cast<RXV21DiskCmd> (command), rx2cs);
 }
 
 // TRCRXV21CMDCommit calls can be replaced by calls to TRCRXV21CMD
 //void TRCRXV21CMDCommit (int type, u16 rx2cs) 
-//    { tracefileOut << TraceRecord<RXV21Command> (1, type, rx2cs); }
+//    { tracefileOut << TraceRecord<RXV21CommandRecord> (1, type, rx2cs); }
 // The should be no TRCRXV21Step calls anymore
 // void TRCRXV21Step (int type, int step, u16 rx2db) 
 //    { throw "Unsupported trace record"; }
@@ -93,13 +93,13 @@ void TRCRXV21CMD (int command, u16 rx2cs)
 void TRCRXV21DMA (RXV21DiskCmd type, u16 rx2wc, u16 rx2ba) 
 {
     if (traceEnabled && (trc.flags & Trace::Category::RXV21Dma))
-        trc.tracefileOut << TraceRecord<RXV21Dma> (type, rx2wc, rx2ba);
+        trc.tracefileOut << TraceRecord<RXV21DmaRecord> (type, rx2wc, rx2ba);
 }
 
 void TRCRXV21Disk (RXV21DiskCmd type, int drive, int density, u16 rx2sa, u16 rx2ta) 
 {
     if (traceEnabled && (trc.flags & Trace::Category::RXV21Disk))
-        trc.tracefileOut << TraceRecord<RXV21Disk> (type, drive, density, rx2sa, rx2ta);
+        trc.tracefileOut << TraceRecord<RXV21DiskRecord> (type, drive, density, rx2sa, rx2ta);
 }
 
 void TRCRXV21Error (RXV21ErrorType type, u16 info) 
@@ -112,19 +112,19 @@ void TRCRLV12Registers (string msg, u16 rlcs, u16 rlba, u16 rlda,
         u16 rlmpr, u16 rlbae)
 {
     if (traceEnabled && (trc.flags & Trace::Category::RLV12))
-        trc.tracefileOut << TraceRecord<RLV12Registers> (msg, rlcs, rlba, rlda, rlmpr, rlbae);
+        trc.tracefileOut << TraceRecord<RLV12RegistersRecord> (msg, rlcs, rlba, rlda, rlmpr, rlbae);
 }
 
 void TRCRLV12Command (u16 command)
 {
     if (traceEnabled && (trc.flags & Trace::Category::RLV12))
-        trc.tracefileOut << TraceRecord<TraceRLV12Command> (command);
+        trc.tracefileOut << TraceRecord<RLV12CommandRecord> (command);
 }
 
 void TRCDuration (string msg, u32 durationCount) 
 {
     if (traceEnabled && (trc.flags & Trace::Category::Duration))
-        trc.tracefileOut << TraceRecord<TraceDuration> (msg, durationCount);
+        trc.tracefileOut << TraceRecord<DurationRecord> (msg, durationCount);
 }
 
 // ToDo: Merge IGNBUS functions with class Trace.

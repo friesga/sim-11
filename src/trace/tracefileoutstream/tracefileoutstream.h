@@ -16,9 +16,9 @@ using std::lock_guard;
 template <typename T>
 class TraceRecord;
 
-struct MemoryDump;
-struct RLV12Registers;
-struct TraceDuration;
+struct MemoryDumpRecord;
+struct RLV12RegistersRecord;
+struct DurationRecord;
 
 // Definition of an overloaded ofstream class to be used for writing
 // TraceRecords to the tracefile. To this purpose a separate class is
@@ -31,11 +31,11 @@ class TracefileOutStream : public ofstream
 	friend TracefileOutStream& operator<< (TracefileOutStream& tos, 
 		TraceRecord<T> record);
 	friend TracefileOutStream& operator<< (TracefileOutStream& tos, 
-		TraceRecord<MemoryDump> record);
+		TraceRecord<MemoryDumpRecord> record);
 	friend TracefileOutStream& operator<< (TracefileOutStream& tos, 
-        TraceRecord<RLV12Registers> record);
+        TraceRecord<RLV12RegistersRecord> record);
 	friend TracefileOutStream& operator<< (TracefileOutStream& tos, 
-		TraceRecord<TraceDuration> record);
+		TraceRecord<DurationRecord> record);
 
 	static char const header_[6];
 	std::string baseFileName {};
