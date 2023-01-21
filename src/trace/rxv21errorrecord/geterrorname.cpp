@@ -1,6 +1,6 @@
 #include "rxv21errorrecord.h"
 
-const char* TraceRecord<RXV21Error>::getErrorName ()
+const char* TraceRecord<RXV21ErrorRecord>::getErrorName ()
 {
     switch (type_)
     {

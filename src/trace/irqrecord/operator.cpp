@@ -7,7 +7,7 @@ using std::setw;
 using std::setfill;
 
 // Print the given record to the given output stream
-std::ostream& operator<< (std::ostream& os, TraceRecord<TraceIrq> record)
+std::ostream& operator<< (std::ostream& os, TraceRecord<IrqRecord> record)
 {
     switch (record.type_)
     {

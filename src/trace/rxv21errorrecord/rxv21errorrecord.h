@@ -9,7 +9,7 @@
 
 // Definition of the type to discriminate the trace records in the template
 // classes.
-struct RXV21Error {};
+struct RXV21ErrorRecord {};
 
 enum class RXV21ErrorType
 {
@@ -21,10 +21,10 @@ enum class RXV21ErrorType
 
 // Specialization of the TraceRecord for the RXV21Error record
 template <>
-class TraceRecord<RXV21Error>
+class TraceRecord<RXV21ErrorRecord>
 {
     friend std::ostream& operator<< (std::ostream& os, 
-        TraceRecord<RXV21Error> record);
+        TraceRecord<RXV21ErrorRecord> record);
 
 	RXV21ErrorType type_;
 	u16	info_;
@@ -37,13 +37,13 @@ public:
     Magic magic () {return Magic::RX2E;}
 };
 
-inline TraceRecord<RXV21Error>::TraceRecord ()
+inline TraceRecord<RXV21ErrorRecord>::TraceRecord ()
 	:
 	type_ {RXV21ErrorType::RXV21_DEN_ERR},
 	info_ {0}
 {}
 
-inline TraceRecord<RXV21Error>::TraceRecord (RXV21ErrorType type, u16 info)
+inline TraceRecord<RXV21ErrorRecord>::TraceRecord (RXV21ErrorType type, u16 info)
 	:
 	type_ {type},
 	info_ {info}

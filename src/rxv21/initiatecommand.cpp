@@ -9,7 +9,7 @@
 // parameters into the RX2DB before they can be executed.
 State RXV21::transition (rxv21Idle&&, rxv21Go)
 {
-    TRCRXV21CMD((rx2cs & RX_FUNCTION_MASK) >> 1, rx2cs);
+    trc.TRCRXV21CMD((rx2cs & RX_FUNCTION_MASK) >> 1, rx2cs);
     rx2cs &= ~RX_GO;
 
     // Perform the selected function, either by executing a transition to

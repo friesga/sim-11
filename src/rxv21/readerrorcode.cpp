@@ -28,7 +28,7 @@ void RXV21::readErrorCode ()
 {
 	QBUS* bus = this->bus;
 
-	TRCRXV21CMD ((rx2cs & RX_FUNCTION_MASK) >> 1, rx2cs);
+	trc.TRCRXV21CMD ((rx2cs & RX_FUNCTION_MASK) >> 1, rx2cs);
 
 	/* < 7:0> Definitive Error Codes */
 	/* <15:8> Word Count Register */

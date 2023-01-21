@@ -9,7 +9,7 @@
 
 // Definition of the type to discriminate the trace records in the template
 // classes.
-struct TraceIrq {};
+struct IrqRecord {};
 
 enum class TraceIrqType
 {
@@ -20,10 +20,10 @@ enum class TraceIrqType
 
 // Specialization of the TraceRecord for the TraceIrq record
 template <>
-class TraceRecord<TraceIrq>
+class TraceRecord<IrqRecord>
 {
     friend std::ostream& operator<< (std::ostream& os, 
-        TraceRecord<TraceIrq> record);
+        TraceRecord<IrqRecord> record);
 
 	TraceIrqType type_;
 	u16	vector_;
@@ -34,14 +34,14 @@ public:
     Magic magic () {return Magic::IRQ0;}
 };
 
-// Constructors for the TraceRecord<TraceIrq> type
-inline TraceRecord<TraceIrq>::TraceRecord ()
+// Constructors for the TraceRecord<IrqRecord> type
+inline TraceRecord<IrqRecord>::TraceRecord ()
 	:
 	type_ {TraceIrqType::IRQ_OK},
 	vector_ {0}
 {}
 
-inline TraceRecord<TraceIrq>::TraceRecord (TraceIrqType type, u16 vector)
+inline TraceRecord<IrqRecord>::TraceRecord (TraceIrqType type, u16 vector)
 	:
 	type_ {type},
 	vector_ {vector}

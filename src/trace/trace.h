@@ -59,33 +59,29 @@ public:
     // ToDo: int flags to be changed to a Category
     // ToDo: flags to be made private 
     int flags {};
+
+    void TRCOpen (const char* f);
+    void TRCClose ();
+    void TRCStep (u16* r, u16 psw, u16* insn);
+    void TRCCPUEvent (CpuEventType type, u16 value);
+    void TRCBus (TraceBusType type, u16 address, u16 value);
+    void TRCMemoryDump (u8* ptr, u16 address, u16 length);
+    void TRCIRQ (int vector, TraceIrqType type);
+    void TRCTrap (int vector, TraceTrapCause cause);
+    void TRCDLV11 (TraceDLV11Type type, int channel, u16 value);
+    void TRCRXV21CMD (int command, u16 rx2cs);
+    void TRCRXV21DMA (RXV21DiskCmd type, u16 rx2wc, u16 rx2ba);
+    void TRCRXV21Disk (RXV21DiskCmd type, int drive, int density, u16 rx2sa, u16 rx2ta);
+    void TRCRXV21Error (RXV21ErrorType type, u16 info);
+    void TRCRLV12Registers (string msg, u16 rlcs, u16 rlba, u16 rlda, u16 rlmpr, u16 rlbae);
+    void TRCRLV12Command (u16 command);
+    void TRCDuration (string msg, u32 durationCount);
+    void TRCSETIGNBUS ();
+    void TRCCLRIGNBUS();
 };
 
 
-// External declaration for the Trace global object and the tracefile
-// writing functions used in the simulator.
-// ToDo: These functions should be defined as members of a Trace class.
-
+// External declaration for the Trace global object.
 extern Trace trc;
-
-extern void TRCOpen (const char* f);
-extern void TRCClose ();
-extern void TRCStep (u16* r, u16 psw, u16* insn);
-extern void TRCCPUEvent (CpuEventType type, u16 value);
-extern void TRCBus (TraceBusType type, u16 address, u16 value);
-extern void TRCMemoryDump (u8* ptr, u16 address, u16 length);
-extern void TRCIRQ (int vector, TraceIrqType type);
-extern void TRCTrap (int vector, TraceTrapCause cause);
-extern void TRCDLV11 (TraceDLV11Type type, int channel, u16 value);
-extern void TRCRXV21CMD (int command, u16 rx2cs);
-extern void TRCRXV21DMA (RXV21DiskCmd type, u16 rx2wc, u16 rx2ba);
-extern void TRCRXV21Disk (RXV21DiskCmd type, int drive, int density, u16 rx2sa, u16 rx2ta);
-extern void TRCRXV21Error (RXV21ErrorType type, u16 info);
-extern void TRCRLV12Registers (string msg, u16 rlcs, u16 rlba, u16 rlda, u16 rlmpr, u16 rlbae);
-extern void TRCRLV12Command (u16 command);
-extern void TRCDuration (string msg, u32 durationCount);
-
-extern void TRCSETIGNBUS ();
-extern void TRCCLRIGNBUS();
 
 #endif // !_TRACE_H_

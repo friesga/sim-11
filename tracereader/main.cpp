@@ -16,50 +16,50 @@ void processTraceRecord(Magic magic, TracefileInStream &tracefile)
     switch (magic)
     {
        	case Magic::CPU0:
-            readAndPrintRecord<TraceCpu> (tracefile);
+            readAndPrintRecord<CpuRecord> (tracefile);
             break;
 
 	    case Magic::CPUZ:
             throw "Unsupported record: MAGIC_CPUZ\n";
 
 	    case Magic::CPU1:
-            readAndPrintRecord<CpuEvent> (tracefile);
+            readAndPrintRecord<CpuEventRecord> (tracefile);
             break;
 
 	    case Magic::DURA:
-            readAndPrintRecord<TraceDuration> (tracefile);
+            readAndPrintRecord<DurationRecord> (tracefile);
             break;
 
         case Magic::BUS0:
-            readAndPrintRecord<TraceBus> (tracefile);
+            readAndPrintRecord<BusRecord> (tracefile);
             break;
 
         case Magic::BUS1:
-            readAndPrintRecord<MemoryDump> (tracefile);
+            readAndPrintRecord<MemoryDumpRecord> (tracefile);
             break;
 
         case Magic::TRAP:
-            readAndPrintRecord<TraceTrap> (tracefile);
+            readAndPrintRecord<TrapRecord> (tracefile);
             break;
 
         case Magic::IRQ0:
-            readAndPrintRecord<TraceIrq> (tracefile);
+            readAndPrintRecord<IrqRecord> (tracefile);
             break;
 
         case Magic::RX2A:
-            readAndPrintRecord<RXV21Disk> (tracefile);
+            readAndPrintRecord<RXV21DiskRecord> (tracefile);
             break;
 
         case Magic::RX2C:
-            readAndPrintRecord<RXV21Command> (tracefile);
+            readAndPrintRecord<RXV21CommandRecord> (tracefile);
             break;
 
         case Magic::RX2D:
-            readAndPrintRecord<RXV21Dma> (tracefile);
+            readAndPrintRecord<RXV21DmaRecord> (tracefile);
             break;
 
         case Magic::RX2E:
-            readAndPrintRecord<RXV21Error> (tracefile);
+            readAndPrintRecord<RXV21ErrorRecord> (tracefile);
             break;
 
         case Magic::RX2S:
@@ -67,15 +67,15 @@ void processTraceRecord(Magic magic, TracefileInStream &tracefile)
             throw "Unsupported record: MAGIC_RX2S\n";
 
         case Magic::DLV1:
-            readAndPrintRecord<TraceDLV11> (tracefile);
+            readAndPrintRecord<DLV11Record> (tracefile);
             break;
 
         case Magic::RL2A:
-            readAndPrintRecord<RLV12Registers> (tracefile);
+            readAndPrintRecord<RLV12RegistersRecord> (tracefile);
             break;
 
         case Magic::RL2C:
-            readAndPrintRecord<TraceRLV12Command> (tracefile);
+            readAndPrintRecord<RLV12CommandRecord> (tracefile);
             break;
 
         default:
