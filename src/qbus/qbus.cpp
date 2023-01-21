@@ -36,7 +36,7 @@ CondData<u16> QBUS::read (u16 address)
 			u16 value;
 			if (module->read (address, &value) == StatusCode::OK)
 			{
-				trc.TRCBus (TraceBusType::Read, addr, value);
+				trc.TRCBus (BusRecordType::Read, addr, value);
 				return value;
 			}
 			else
@@ -63,7 +63,7 @@ void QBUS::setInterrupt (TrapPriority priority,
 void QBUS::pushInterruptRequest (InterruptRequest intrptReq)
 {
 	intrptReqQueue_.push (intrptReq);
-	trc.TRCIRQ (intrptReq.vector(), TraceIrqType::IRQ_OK);
+	trc.TRCIRQ (intrptReq.vector(), IrqRecordType::IRQ_OK);
 	delay = IRCJITTER ();
 }
 
@@ -80,7 +80,7 @@ void QBUS::reset ()
 {
 	u8 i;
 
-	trc.TRCBus (TraceBusType::BusReset, 0, 0);
+	trc.TRCBus (BusRecordType::BusReset, 0, 0);
 
 	/* Clear pending interrupts */
 	intrptReqQueue_.clear();
@@ -126,7 +126,7 @@ bool QBUS::getIntrptReq(InterruptRequest &intrptReq)
 	if (intrptReqAvailable())
 	{
 		bool result = intrptReqQueue_.fetchTop (intrptReq);
-		trc.TRCIRQ (intrptReq.vector(), TraceIrqType::IRQ_SIG);
+		trc.TRCIRQ (intrptReq.vector(), IrqRecordType::IRQ_SIG);
 		delay = 0;
 		return result;
 	}

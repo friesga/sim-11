@@ -10,7 +10,7 @@
 using std::oct;
 
 // Note: TRC_CPU_ODT_P and TRC_CPU_ODT_G originally had the same value
-enum class CpuEventType
+enum class CpuEventRecordType
 {
     CPU_VOID,
     CPU_TRAP,
@@ -37,29 +37,29 @@ class TraceRecord<CpuEventRecord>
     friend std::ostream& operator<< (std::ostream& os, 
         TraceRecord<CpuEventRecord> record);
 
-	CpuEventType type_;
+	CpuEventRecordType type_;
 	u16	value_;
 
 public:
 	TraceRecord ();
-	TraceRecord (CpuEventType type, u16 value);
+	TraceRecord (CpuEventRecordType type, u16 value);
 
 	Magic magic () {return Magic::CPU1;}
 
     // Definition of accessors to be used in unit tests
-    CpuEventType type() { return type_;}
+    CpuEventRecordType type() { return type_;}
     u16	value() {return value_;}
 };
 
 // Default constructor for the CpuEvent record
 inline TraceRecord<CpuEventRecord>::TraceRecord ()
 	:
-    type_ {CpuEventType::CPU_VOID},
+    type_ {CpuEventRecordType::CPU_VOID},
     value_ {0}
 {}
 
 
-inline TraceRecord<CpuEventRecord>::TraceRecord (CpuEventType type, u16 value)
+inline TraceRecord<CpuEventRecord>::TraceRecord (CpuEventRecordType type, u16 value)
 	:
 	type_ {type},
     value_ {value}

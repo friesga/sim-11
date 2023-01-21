@@ -33,13 +33,13 @@ void Trace::TRCStep (u16* r, u16 psw, u16* insn)
         tracefileOut << TraceRecord<CpuRecord> (r, psw, insn);
 }
 
-void Trace::TRCCPUEvent (CpuEventType type, u16 value) 
+void Trace::TRCCPUEvent (CpuEventRecordType type, u16 value) 
 {
     if (traceEnabled && (flags & Trace::Category::CpuEvent))
         tracefileOut << TraceRecord<CpuEventRecord> (type, value);
 }
 
-void Trace::TRCBus (TraceBusType type, u16 address, u16 value) 
+void Trace::TRCBus (BusRecordType type, u16 address, u16 value) 
 {
     if (traceEnabled && (flags & Trace::Category::Bus) && 
             !(flags & Trace::Category::IgnoreBus))
@@ -54,20 +54,20 @@ void Trace::TRCMemoryDump (u8* ptr, u16 address, u16 length)
 }
 
 // Note: parameters are reversed!
-void Trace::TRCIRQ (int vector, TraceIrqType type) 
+void Trace::TRCIRQ (int vector, IrqRecordType type) 
 {
     if (traceEnabled && (flags & Trace::Category::Irq) && 
             !(flags & Trace::Category::IgnoreBus))
         tracefileOut << TraceRecord<IrqRecord> (type, vector);
 }
 // Note: parameters are reversed!
-void Trace::TRCTrap (int vector, TraceTrapCause cause) 
+void Trace::TRCTrap (int vector, TrapRecordType cause) 
 {
     if (traceEnabled && (flags & Trace::Category::Trap))
         tracefileOut << TraceRecord<TrapRecord> (cause, vector);
 }
 
-void Trace::TRCDLV11 (TraceDLV11Type type, int channel, u16 value) 
+void Trace::TRCDLV11 (DLV11RecordType type, int channel, u16 value) 
 {
     if (traceEnabled && (flags & Trace::Category::DLV11))
         tracefileOut << TraceRecord<DLV11Record> (type, channel, value);
@@ -101,7 +101,7 @@ void Trace::TRCRXV21Disk (RXV21DiskCmd type, int drive, int density, u16 rx2sa, 
         tracefileOut << TraceRecord<RXV21DiskRecord> (type, drive, density, rx2sa, rx2ta);
 }
 
-void Trace::TRCRXV21Error (RXV21ErrorType type, u16 info) 
+void Trace::TRCRXV21Error (RXV21ErrorRecordType type, u16 info) 
 {
     if (traceEnabled && (flags & Trace::Category::RXV21Error))
         tracefileOut << TraceRecord<RXV21ErrorRecord> (type, info);

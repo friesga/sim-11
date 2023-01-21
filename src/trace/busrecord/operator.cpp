@@ -4,26 +4,26 @@ std::ostream& operator<< (std::ostream& os, TraceRecord<BusRecord> record)
 {
     switch (record.type_)
     {
-        case TraceBusType::Read:
+        case BusRecordType::Read:
             os << std::oct << "[QBUS] read " << 
                 record.address_ << " = " << record.value_ << '\n';
             break;
 
-        case TraceBusType::Write:
+        case BusRecordType::Write:
             os << std::oct << "[QBUS] write " << 
                 record.address_ << " =  " << record.value_ << '\n';
             break;
 
-        case TraceBusType::ReadFail:
+        case BusRecordType::ReadFail:
             os << std::oct << "[QBUS] read " << record.address_ << " timed out\n";
             break;
 
-        case TraceBusType::WriteFail:
+        case BusRecordType::WriteFail:
             os << std::oct << "[QBUS] write " 
                 << record.address_ << " = " << record.value_ << "timed out\n";
             break;
 
-        case TraceBusType::BusReset:
+        case BusRecordType::BusReset:
             os << std::oct << "[QBUS] reset\n";
             break;
     }

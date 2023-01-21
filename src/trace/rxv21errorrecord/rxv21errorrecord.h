@@ -11,7 +11,7 @@
 // classes.
 struct RXV21ErrorRecord {};
 
-enum class RXV21ErrorType
+enum class RXV21ErrorRecordType
 {
 	RXV21_WC_OVFL,
 	RXV21_DEN_ERR,
@@ -26,24 +26,24 @@ class TraceRecord<RXV21ErrorRecord>
     friend std::ostream& operator<< (std::ostream& os, 
         TraceRecord<RXV21ErrorRecord> record);
 
-	RXV21ErrorType type_;
+	RXV21ErrorRecordType type_;
 	u16	info_;
 
 	const char* getErrorName ();
 
 public:
 	TraceRecord ();
-	TraceRecord (RXV21ErrorType type, u16 info);
+	TraceRecord (RXV21ErrorRecordType type, u16 info);
     Magic magic () {return Magic::RX2E;}
 };
 
 inline TraceRecord<RXV21ErrorRecord>::TraceRecord ()
 	:
-	type_ {RXV21ErrorType::RXV21_DEN_ERR},
+	type_ {RXV21ErrorRecordType::RXV21_DEN_ERR},
 	info_ {0}
 {}
 
-inline TraceRecord<RXV21ErrorRecord>::TraceRecord (RXV21ErrorType type, u16 info)
+inline TraceRecord<RXV21ErrorRecord>::TraceRecord (RXV21ErrorRecordType type, u16 info)
 	:
 	type_ {type},
 	info_ {info}

@@ -11,19 +11,19 @@ std::ostream& operator<< (std::ostream& os, TraceRecord<IrqRecord> record)
 {
     switch (record.type_)
     {
-        case TraceIrqType::IRQ_OK:
+        case IrqRecordType::IRQ_OK:
             // fprintf (DST, "[QBUS] interrupt request %o\n", n);
             os << "[QBUS] interrupt request " << oct << 
                 setw(4) << setfill('0') << record.vector_ << '\n';
             break;
 
-        case TraceIrqType::IRQ_FAIL:
+        case IrqRecordType::IRQ_FAIL:
             // fprintf (DST, "[QBUS] interrupt request %o denied\n", n);
             os << "[QBUS] interrupt request " << oct << 
                 setw(4) << setfill('0') << record.vector_ << "denied\n";
             break;
 
-        case TraceIrqType::IRQ_SIG:
+        case IrqRecordType::IRQ_SIG:
             // fprintf (DST, "[QBUS] signaling irq %o\n", n);
             os << "[QBUS] signaling irq " << oct << 
                 setw(4) << setfill('0') << record.vector_ << " denied\n";

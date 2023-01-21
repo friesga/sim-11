@@ -54,7 +54,7 @@ void RXV21::writeSector ()
 
 	if (!(rx2cs & RX_DEN)) 
 	{
-		trc.TRCRXV21Error (RXV21ErrorType::RXV21_DEN_ERR, 0);
+		trc.TRCRXV21Error (RXV21ErrorRecordType::RXV21_DEN_ERR, 0);
 		error = 0240; /* Density Error */
 		rx2cs |= RX_ERROR;
 		rx2es |= RX2ES_DEN_ERR;
@@ -67,12 +67,12 @@ void RXV21::writeSector ()
 		if (rx2ta > 76) 
 		{
 			error = 0040; /* Tried to access a track greater than 76 */
-			trc.TRCRXV21Error (RXV21ErrorType::RXV21_TRACK_NO, rx2ta);
+			trc.TRCRXV21Error (RXV21ErrorRecordType::RXV21_TRACK_NO, rx2ta);
 		} 
 		else 
 		{
 			error = 0070; /* Desired sector could not be found after looking at 52 headers (2 revolutions) */
-			trc.TRCRXV21Error (RXV21ErrorType::RXV21_SECT_NO, rx2sa);
+			trc.TRCRXV21Error (RXV21ErrorRecordType::RXV21_SECT_NO, rx2sa);
 		}
 		rx2cs |= RX_ERROR;
 	} 

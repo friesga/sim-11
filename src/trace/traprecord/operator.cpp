@@ -12,7 +12,7 @@ std::ostream& operator<< (std::ostream& os, TraceRecord<TrapRecord> record)
     const char* name;
     switch (record.cause_)
     {
-        case TraceTrapCause::TRAP:
+        case TrapRecordType::TRAP:
             name = record.getTrapName (record.vector_);
             if (name)
                 // fprintf (DST, "[KD11] TRAP %o: %s\n", n, name);
@@ -24,19 +24,19 @@ std::ostream& operator<< (std::ostream& os, TraceRecord<TrapRecord> record)
                     record.vector_ << '\n';
             break;
 
-        case TraceTrapCause::TRAP_T:
+        case TrapRecordType::TRAP_T:
             // fprintf (DST, "[KD11] TRAP %o: T bit\n", n);
             os << "[KD11] TRAP " << setw (4) << setfill('0') <<
                     record.vector_ << " T bit\n";
             break;
 
-        case TraceTrapCause::TRAP_RADDR:
+        case TrapRecordType::TRAP_RADDR:
             // fprintf (DST, "[KD11] TRAP %o: get address on mode 0\n", n);
             os << "[KD11] TRAP " << setw (4) << setfill('0') <<
                     record.vector_ << ": get address on mode 0\n";
             break;
 
-        case TraceTrapCause::TRAP_ILL:
+        case TrapRecordType::TRAP_ILL:
             // fprintf (DST, "[KD11] TRAP %o: illegal instruction\n", n);
             os << "[KD11] TRAP " << setw (4) << setfill('0') <<
                     record.vector_ << ": illegal instruction\n";

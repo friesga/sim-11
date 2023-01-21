@@ -35,12 +35,12 @@ std::ostream& operator<< (std::ostream& os, TraceRecord<DLV11Record> record)
 
     switch (record.type_)
     {
-        case TraceDLV11Type::DLV11_RX:
+        case DLV11RecordType::DLV11_RX:
             // fprintf (DST, "[DLV11J] CH%d: receive %06o [%c]\n", channel, value, value >= 0x20 ? value : '.');
             os << record.createMessage ("receive").str ();
             break;
 
-        case TraceDLV11Type::DLV11_TX:
+        case DLV11RecordType::DLV11_TX:
             // fprintf (DST, "[DLV11J] CH%d: transmit %06o [%c]\n", channel, value, value >= 0x20 ? value : '.');
             os << record.createMessage ("transmit").str ();
             break;

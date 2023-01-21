@@ -12,7 +12,7 @@
 // classes.
 struct TrapRecord {};
 
-enum class TraceTrapCause
+enum class TrapRecordType
 {
 	TRAP,
 	TRAP_ILL,
@@ -27,25 +27,25 @@ class TraceRecord<TrapRecord>
     friend std::ostream& operator<< (std::ostream& os, 
         TraceRecord<TrapRecord> record);
 
-	TraceTrapCause cause_;
+	TrapRecordType cause_;
 	u16	vector_;
 
     const char* getTrapName (int vector);
 
 public:
 	TraceRecord ();
-	TraceRecord (TraceTrapCause type, u16 vector);
+	TraceRecord (TrapRecordType type, u16 vector);
     Magic magic () {return Magic::TRAP;}
 };
 
 // Constructors for the TraceRecord<TrapRecord> type
 inline TraceRecord<TrapRecord>::TraceRecord ()
 	:
-	cause_ {TraceTrapCause::TRAP},
+	cause_ {TrapRecordType::TRAP},
 	vector_ {0}
 {}
 
-inline TraceRecord<TrapRecord>::TraceRecord (TraceTrapCause cause, u16 vector)
+inline TraceRecord<TrapRecord>::TraceRecord (TrapRecordType cause, u16 vector)
 	:
 	cause_ {cause},
 	vector_ {vector}

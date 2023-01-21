@@ -10,7 +10,7 @@
 // classes.
 struct BusRecord {};
 
-enum class TraceBusType
+enum class BusRecordType
 {
     Read,
     Write,
@@ -26,28 +26,28 @@ class TraceRecord<BusRecord>
     friend std::ostream& operator<< (std::ostream& os, 
         TraceRecord<BusRecord> record);
 
-	TraceBusType type_;
+	BusRecordType type_;
 	u16	address_;
 	u16	value_;
 	u16	pad_;
 
 public:
 	TraceRecord ();
-	TraceRecord (TraceBusType type, u16 address, u16 value);
+	TraceRecord (BusRecordType type, u16 address, u16 value);
     Magic magic () {return Magic::BUS0;}
 };
 
 // Default constructor for the TraceBus record
 inline TraceRecord<BusRecord>::TraceRecord ()
 	:
-    type_ {TraceBusType::Read},
+    type_ {BusRecordType::Read},
 	address_ {0},
     value_ {0},
 	pad_ {0}
 {}
 
 
-inline TraceRecord<BusRecord>::TraceRecord (TraceBusType type,
+inline TraceRecord<BusRecord>::TraceRecord (BusRecordType type,
     u16 address, u16 value)
 	:
     type_ {type},

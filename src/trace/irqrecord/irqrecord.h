@@ -11,7 +11,7 @@
 // classes.
 struct IrqRecord {};
 
-enum class TraceIrqType
+enum class IrqRecordType
 {
     IRQ_OK,
     IRQ_FAIL,
@@ -25,23 +25,23 @@ class TraceRecord<IrqRecord>
     friend std::ostream& operator<< (std::ostream& os, 
         TraceRecord<IrqRecord> record);
 
-	TraceIrqType type_;
+	IrqRecordType type_;
 	u16	vector_;
 
 public:
 	TraceRecord ();
-	TraceRecord (TraceIrqType type, u16 vector);
+	TraceRecord (IrqRecordType type, u16 vector);
     Magic magic () {return Magic::IRQ0;}
 };
 
 // Constructors for the TraceRecord<IrqRecord> type
 inline TraceRecord<IrqRecord>::TraceRecord ()
 	:
-	type_ {TraceIrqType::IRQ_OK},
+	type_ {IrqRecordType::IRQ_OK},
 	vector_ {0}
 {}
 
-inline TraceRecord<IrqRecord>::TraceRecord (TraceIrqType type, u16 vector)
+inline TraceRecord<IrqRecord>::TraceRecord (IrqRecordType type, u16 vector)
 	:
 	type_ {type},
 	vector_ {vector}

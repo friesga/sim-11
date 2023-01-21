@@ -16,7 +16,7 @@ using std::stringstream;
 // classes.
 struct DLV11Record {};
 
-enum class TraceDLV11Type
+enum class DLV11RecordType
 {
 	DLV11_RX,
 	DLV11_TX,
@@ -32,7 +32,7 @@ class TraceRecord<DLV11Record>
     friend std::ostream& operator<< (std::ostream& os, 
         TraceRecord<DLV11Record> record);
 
-	TraceDLV11Type type_;
+	DLV11RecordType type_;
 	u8 channel_;
 	char value_;
 
@@ -40,18 +40,18 @@ class TraceRecord<DLV11Record>
 
 public:
 	TraceRecord ();
-	TraceRecord (TraceDLV11Type type, u8 channel, char value);
+	TraceRecord (DLV11RecordType type, u8 channel, char value);
     Magic magic () {return Magic::DLV1;}
 };
 
 inline TraceRecord<DLV11Record>::TraceRecord ()
 	:
-	type_ {TraceDLV11Type::DLV11_RX},
+	type_ {DLV11RecordType::DLV11_RX},
 	channel_ {0},
 	value_ {0}
 {}
 
-inline TraceRecord<DLV11Record>::TraceRecord (TraceDLV11Type type, u8 channel, char value)
+inline TraceRecord<DLV11Record>::TraceRecord (DLV11RecordType type, u8 channel, char value)
 	:
 	type_ {type},
 	channel_ {channel},
