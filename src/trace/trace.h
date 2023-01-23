@@ -33,29 +33,23 @@ public:
     // IgnoreBus is a special flag; it temporarily overrides the
     // Bus, MemoryDump and Irq flags.
     //
-    // ToDo: Change Catgeory to enum Class
-    // ToDo: Remove obsolete Category flags
     enum Category
     {
-        Write      = (1 << 0),
-        IgnoreBus  = (1 << 1),
-        Print	   = (1 << 2),
-        Compress   = (1 << 3),
-        FirstZ     = (1 << 4),
-        Step	   = (1 << 5),
-        CpuEvent   = (1 << 6),
-        Bus		   = (1 << 7),
-        MemoryDump = (1 << 8),
-        Trap	   = (1 << 9),
-        Irq		   = (1 << 10),
-        DLV11	   = (1 << 11),
-        RXV21Cmd   = (1 << 12),
-        RXV21Step  = (1 << 13),
-        RXV21Dma   = (1 << 14),
-        RXV21Error = (1 << 15),
-        RXV21Disk  = (1 << 16),
-        RLV12	   = (1 << 17),
-        Duration   = (1 << 18)
+        IgnoreBus  = (1 << 0),
+        Step	   = (1 << 1),
+        CpuEvent   = (1 << 2),
+        Bus		   = (1 << 3),
+        MemoryDump = (1 << 4),
+        Trap	   = (1 << 5),
+        Irq		   = (1 << 6),
+        DLV11	   = (1 << 7),
+        RXV21Cmd   = (1 << 8),
+        RXV21Step  = (1 << 9),
+        RXV21Dma   = (1 << 10),
+        RXV21Error = (1 << 11),
+        RXV21Disk  = (1 << 12),
+        RLV12	   = (1 << 13),
+        Duration   = (1 << 14)
     };
 
     Trace ();
