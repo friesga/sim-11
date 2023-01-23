@@ -25,30 +25,10 @@ Main::Main (CmdLineOptions const &cmdLineOptions)
 	// Open log file
 	Logger::init ("sim-11.log");
 
+	// Activate the tracing facility when specified on the command line
 	if (cmdLineOptions_.trace_file) 
-	{
-		trace.open (cmdLineOptions_.trace_file);
-		if (cmdLineOptions_.compress) 
-		{
-			trace.flags |= Trace::Category::Compress;
-		}
-	}
-
-	// Select the events to be traced and the way the trace output has
-	// to be generated. The flags can only be specified if tracing has been
-	// enabled.
-	// ToDo: Add an isOpen function somewhere
-	if (trace.tracefileOut.is_open ())
-	{
-		trace.flags |= Trace::Category::RLV12;
-		trace.flags |= Trace::Category::Step;
-	}
-}
-
-Main::~Main ()
-{
-	if (trace.tracefileOut.is_open ())
-		trace.close ();
+		trace.activate (cmdLineOptions_.trace_file, 
+			Trace::Category::RLV12 | Trace::Category::Step);
 }
 
 int main (int argc, char const **argv)

@@ -22,6 +22,10 @@
 
 class Trace
 {
+    // ToDo: int flags to be changed to a Category
+    int flags_ {};
+    TracefileOutStream tracefileOut_;
+
 public:
     // Definition of trace flags. These flags define the records to
     // be written to the tracefile.
@@ -54,14 +58,14 @@ public:
         Duration   = (1 << 18)
     };
 
-    TracefileOutStream tracefileOut;
+    Trace ();
+    ~Trace ();
 
-    // ToDo: int flags to be changed to a Category
-    // ToDo: flags to be made private 
-    int flags {};
-
-    void open (const char* f);
-    void close ();
+    // These functions are used in the simulator to write trace records to
+    // the tracefile. These are kept in order not having to rewrite them
+    // to the new-style trace file insertion operator calls.
+    void activate (const char* filename, int flags);
+    bool isActive ();
     void step (u16* r, u16 psw, u16* insn);
     void cpuEvent (CpuEventRecordType type, u16 value);
     void bus (BusRecordType type, u16 address, u16 value);

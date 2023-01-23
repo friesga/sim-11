@@ -113,7 +113,7 @@ void KD11CPU::returnFISresult (Float result, u16 registerNumber)
 //    interrupt requested by a bus device.
 void KD11CPU::step (QBUS* bus)
 {
-    if(trace.flags)
+    if(trace.isActive ())
     {
         trace.setIgnoreBus ();
         u16 code[3];

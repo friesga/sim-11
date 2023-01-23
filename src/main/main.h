@@ -86,7 +86,6 @@ class Main
 
 public:
 	Main (CmdLineOptions const &cmdLineOptions);
-	~Main ();
 	void configureDevices ();
 	void loadFile ();
 	void run ();
