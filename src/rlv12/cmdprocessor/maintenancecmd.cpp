@@ -46,7 +46,7 @@ u16 CmdProcessor::maintenanceCmd (RL01_2 *unit, RLV12Command &rlv12Command)
     // Get memory address from BAR, CSR and possibly BAE registers
     memoryAddress = controller_->memAddrFromRegs ();
                                                             
-    trc.TRCRLV12Registers ("Maintenance", controller_->csr_,
+    trc.rlv12Registers ("Maintenance", controller_->csr_,
         controller_->bar_, controller_->dar_,
         controller_->dataBuffer_[0], controller_->bae_);
 

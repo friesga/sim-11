@@ -40,10 +40,10 @@ void RXV21::emptyBuffer ()
 	u16 wc;
 	u16 ptr;
 
-	trc.TRCRXV21DMA (RXV21DiskCmd::RXV21_EMPTY, rx2wc, rx2ba);
+	trc.rxv21Dma (RXV21DiskCmd::RXV21_EMPTY, rx2wc, rx2ba);
 	if (rx2wc > limit) 
 	{
-		trc.TRCRXV21Error (RXV21ErrorRecordType::RXV21_WC_OVFL, rx2wc);
+		trc.rxv21Error (RXV21ErrorRecordType::RXV21_WC_OVFL, rx2wc);
 		error = 0230; /* Word count overflow */
 		rx2es |= RX2ES_WC_OVFL;
 		rx2cs |= RX_ERROR;

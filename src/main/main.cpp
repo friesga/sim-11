@@ -27,7 +27,7 @@ Main::Main (CmdLineOptions const &cmdLineOptions)
 
 	if (cmdLineOptions_.trace_file) 
 	{
-		trc.TRCOpen (cmdLineOptions_.trace_file);
+		trc.open (cmdLineOptions_.trace_file);
 		if (cmdLineOptions_.compress) 
 		{
 			trc.flags |= Trace::Category::Compress;
@@ -48,7 +48,7 @@ Main::Main (CmdLineOptions const &cmdLineOptions)
 Main::~Main ()
 {
 	if (trc.tracefileOut.is_open ())
-		trc.TRCClose ();
+		trc.close ();
 }
 
 int main (int argc, char const **argv)

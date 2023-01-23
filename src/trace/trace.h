@@ -60,24 +60,19 @@ public:
     // ToDo: flags to be made private 
     int flags {};
 
-    void TRCOpen (const char* f);
-    void TRCClose ();
-    void TRCStep (u16* r, u16 psw, u16* insn);
-    void TRCCPUEvent (CpuEventRecordType type, u16 value);
-    void TRCBus (BusRecordType type, u16 address, u16 value);
-    void TRCMemoryDump (u8* ptr, u16 address, u16 length);
-    void TRCIRQ (int vector, IrqRecordType type);
-    void TRCTrap (int vector, TrapRecordType cause);
-    void TRCDLV11 (DLV11RecordType type, int channel, u16 value);
-    void TRCRXV21CMD (int command, u16 rx2cs);
-    void TRCRXV21DMA (RXV21DiskCmd type, u16 rx2wc, u16 rx2ba);
-    void TRCRXV21Disk (RXV21DiskCmd type, int drive, int density, u16 rx2sa, u16 rx2ta);
-    void TRCRXV21Error (RXV21ErrorRecordType type, u16 info);
-    void TRCRLV12Registers (string msg, u16 rlcs, u16 rlba, u16 rlda, u16 rlmpr, u16 rlbae);
-    void TRCRLV12Command (u16 command);
-    void TRCDuration (string msg, u32 durationCount);
-    void TRCSETIGNBUS ();
-    void TRCCLRIGNBUS();
+    void open (const char* f);
+    void close ();
+    void step (u16* r, u16 psw, u16* insn);
+    void cpuEvent (CpuEventRecordType type, u16 value);
+    void bus (BusRecordType type, u16 address, u16 value);
+    void memoryDump (u8* ptr, u16 address, u16 length);
+    void irq (int vector, IrqRecordType type);
+    void trap (int vector, TrapRecordType cause);
+    void dlv11 (DLV11RecordType type, int channel, u16 value);
+    void rxv21Command (int command, u16 rx2cs);
+    void rxv21Dma (RXV21DiskCmd type, u16 rx2wc, u16 rx2ba);
+    void rxv21Disk (RXV21DiskCmd type, int drive, int density, u16 rx2sa, u16 rx2ta);
+    void rxv21Error (RXV21ErrorRecordType type, u16 info);
 };
 
 

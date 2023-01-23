@@ -102,7 +102,7 @@ void DLV11J::readChannel (int channelNr)
 void DLV11J::writeChannel(int channelNr)
 {
 	DLV11Ch* ch = &channel[channelNr];
-	trc.TRCDLV11 (DLV11RecordType::DLV11_TX, channelNr, ch->xbuf);
+	trc.dlv11 (DLV11RecordType::DLV11_TX, channelNr, ch->xbuf);
 
 	if(ch->receive)
 	{
@@ -220,7 +220,7 @@ void DLV11J::send(int channelNr, unsigned char c)
 	DLV11Ch* ch = &channel[channelNr];
 	if(ch->buf_size < DLV11J_BUF)
 	{
-		trc.TRCDLV11(DLV11RecordType::DLV11_RX, channelNr, c);
+		trc.dlv11(DLV11RecordType::DLV11_RX, channelNr, c);
 		ch->buf[ch->buf_w++] = c;
 		ch->buf_w %= DLV11J_BUF;
 		ch->buf_size++;

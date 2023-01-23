@@ -47,13 +47,13 @@ void RXV21::readSector ()
 
 	offset = (rx2sa - 1) * 256 + rx2ta * (26 * 256);
 
-	trc.TRCRXV21CMD ((rx2cs & RX_FUNCTION_MASK) >> 1, rx2cs);
-	trc.TRCRXV21Disk (RXV21DiskCmd::RXV21_READ, (rx2cs & RX_UNIT_SEL) ? 1 : 0,
+	trc.rxv21Command ((rx2cs & RX_FUNCTION_MASK) >> 1, rx2cs);
+	trc.rxv21Disk (RXV21DiskCmd::RXV21_READ, (rx2cs & RX_UNIT_SEL) ? 1 : 0,
 			(rx2cs & RX_DEN) ? 1 : 0, rx2sa, rx2ta);
 
 	if (!(rx2cs & RX_DEN)) 
 	{
-		trc.TRCRXV21Error (RXV21ErrorRecordType::RXV21_DEN_ERR, 0);
+		trc.rxv21Error (RXV21ErrorRecordType::RXV21_DEN_ERR, 0);
 		error = 0240; /* Density Error */
 		rx2cs |= RX_ERROR;
 		rx2es |= RX2ES_DEN_ERR;
@@ -66,12 +66,12 @@ void RXV21::readSector ()
 		if (rx2ta > 76) 
 		{
 			error = 0040; /* Tried to access a track greater than 76 */
-			trc.TRCRXV21Error (RXV21ErrorRecordType::RXV21_TRACK_NO, rx2ta);
+			trc.rxv21Error (RXV21ErrorRecordType::RXV21_TRACK_NO, rx2ta);
 		} 
 		else 
 		{
 			error = 0070; /* Desired sector could not be found after looking at 52 headers (2 revolutions) */
-			trc.TRCRXV21Error (RXV21ErrorRecordType::RXV21_SECT_NO, rx2ta);
+			trc.rxv21Error (RXV21ErrorRecordType::RXV21_SECT_NO, rx2ta);
 		}
 		rx2cs |= RX_ERROR;
 	} 

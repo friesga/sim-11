@@ -309,7 +309,7 @@ bool Instruction::getAddress (KD11CPU *cpu, u16 (&reg)[8],
 		case 0: /* Register */
 			// This should generate an illegal instruction trap. This
 			// has to be performed by the caller.
-			// TRCTrap(4, TRC_TRAP_RADDR);
+			// trap(4, TRC_TRAP_RADDR);
 			// TRAP(busError); /* illegal instruction */
             return false;
 
