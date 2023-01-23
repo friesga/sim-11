@@ -27,10 +27,10 @@ Main::Main (CmdLineOptions const &cmdLineOptions)
 
 	if (cmdLineOptions_.trace_file) 
 	{
-		trc.open (cmdLineOptions_.trace_file);
+		trace.open (cmdLineOptions_.trace_file);
 		if (cmdLineOptions_.compress) 
 		{
-			trc.flags |= Trace::Category::Compress;
+			trace.flags |= Trace::Category::Compress;
 		}
 	}
 
@@ -38,17 +38,17 @@ Main::Main (CmdLineOptions const &cmdLineOptions)
 	// to be generated. The flags can only be specified if tracing has been
 	// enabled.
 	// ToDo: Add an isOpen function somewhere
-	if (trc.tracefileOut.is_open ())
+	if (trace.tracefileOut.is_open ())
 	{
-		trc.flags |= Trace::Category::RLV12;
-		trc.flags |= Trace::Category::Step;
+		trace.flags |= Trace::Category::RLV12;
+		trace.flags |= Trace::Category::Step;
 	}
 }
 
 Main::~Main ()
 {
-	if (trc.tracefileOut.is_open ())
-		trc.close ();
+	if (trace.tracefileOut.is_open ())
+		trace.close ();
 }
 
 int main (int argc, char const **argv)

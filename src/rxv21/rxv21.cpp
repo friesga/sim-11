@@ -3,8 +3,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-extern int trace;
-
 RXV21::RXV21 (RxConfig *rxConfig)
 {
 	name_ = "RX";

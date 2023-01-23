@@ -4,11 +4,11 @@
 // functions.
 static constexpr bool traceEnabled = true;
 
-// The following objects and functions are defined in the global namespace. 
-// This not ideal, but the alternatives - e.g. a singleton class or definition
-// in a separate namespace - are even worse as it clobbers all source files
-// with class or namespace references.
-Trace trc;
+// The Trace object is defined in the global namespace. This not ideal, but
+// the alternatives - e.g. a singleton class or definition in a separate
+// namespace - are even worse as it clobbers all source files with class or
+// namespace references.
+Trace trace;
 
 // These functions are used in the simulator to write trace records to the
 // tracefile. These are kept in order not having to rewrite them to the

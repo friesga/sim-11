@@ -111,12 +111,12 @@ void BDV11::memoryDump (u16 pcr, int hi)
 	}
 
 	if (data) 
-		trc.memoryDump ((u8*) data, addr, len);
+		trace.memoryDump ((u8*) data, addr, len);
 	else 
 	{
 		u8 buf[0400];
 		memset (buf, 0xFF, sizeof(buf));
-		trc.memoryDump ((u8*) data, addr, len);
+		trace.memoryDump ((u8*) data, addr, len);
 	}
 }
 

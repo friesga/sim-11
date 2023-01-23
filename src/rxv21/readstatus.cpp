@@ -9,7 +9,7 @@
 // - The RX2ES is moved into the RX2DB.
 void RXV21::readStatus ()
 {
-	trc.rxv21Command ((rx2cs & RX_FUNCTION_MASK) >> 1, rx2cs);
+	trace.rxv21Command ((rx2cs & RX_FUNCTION_MASK) >> 1, rx2cs);
 
 	rx2es |= RX2ES_DRV_RDY | RX2ES_DRV_DEN;
 	done ();

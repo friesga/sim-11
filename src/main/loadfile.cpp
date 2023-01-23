@@ -54,7 +54,7 @@ void Main::loadFile ()
         (void)!fread (&addr, 2, 1, f);
         bytes += len;
         (void)!fread (&msv11_->data[addr], len - 6, 1, f);
-        trc.memoryDump (&msv11_->data[addr], addr, len - 6);
+        trace.memoryDump (&msv11_->data[addr], addr, len - 6);
         (void)!fread (&cksum, 1, 1, f);
         if (len == 6)
         {

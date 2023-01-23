@@ -41,11 +41,11 @@ void RXV21::fillBuffer ()
 	u16 wc;
 	u16 ptr;
 
-	trc.rxv21Dma (RXV21DiskCmd::RXV21_FILL, rx2wc, rx2ba);
+	trace.rxv21Dma (RXV21DiskCmd::RXV21_FILL, rx2wc, rx2ba);
 
 	if (rx2wc > limit) 
 	{
-		trc.rxv21Error (RXV21ErrorRecordType::RXV21_WC_OVFL, rx2wc);
+		trace.rxv21Error (RXV21ErrorRecordType::RXV21_WC_OVFL, rx2wc);
 		error = 0230; /* Word count overflow */
 		rx2es |= RX2ES_WC_OVFL;
 		rx2cs |= RX_ERROR;

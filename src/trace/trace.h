@@ -82,6 +82,6 @@ public:
 
 
 // External declaration for the Trace global object.
-extern Trace trc;
+extern Trace trace;
 
 #endif // !_TRACE_H_
