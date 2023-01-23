@@ -73,6 +73,11 @@ public:
     void rxv21Dma (RXV21DiskCmd type, u16 rx2wc, u16 rx2ba);
     void rxv21Disk (RXV21DiskCmd type, int drive, int density, u16 rx2sa, u16 rx2ta);
     void rxv21Error (RXV21ErrorRecordType type, u16 info);
+    void rlv12Registers (string msg, u16 rlcs, u16 rlba, u16 rlda, u16 rlmpr, u16 rlbae);
+    void rlv12Command (u16 command);
+    void duration (string msg, u32 durationCount);
+    void setIgnoreBus ();
+    void clearIgnoreBus();
 };
 
 
