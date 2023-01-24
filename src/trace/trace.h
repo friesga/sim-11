@@ -5,7 +5,7 @@
 #include "cpueventrecord/cpueventrecord.h"
 #include "busrecord/busrecord.h"
 #include "memorydumprecord/memorydumprecord.h"
-#include "cpurecord/cpurecord.h"
+#include "cpusteprecord/cpusteprecord.h"
 #include "traprecord/traprecord.h"
 #include "irqrecord/irqrecord.h"
 #include "rxv21diskrecord/rxv21diskrecord.h"
@@ -36,20 +36,19 @@ public:
     enum Category
     {
         IgnoreBus  = (1 << 0),
-        Step	   = (1 << 1),
-        CpuEvent   = (1 << 2),
-        Bus		   = (1 << 3),
-        MemoryDump = (1 << 4),
-        Trap	   = (1 << 5),
-        Irq		   = (1 << 6),
-        DLV11	   = (1 << 7),
-        RXV21Cmd   = (1 << 8),
-        RXV21Step  = (1 << 9),
-        RXV21Dma   = (1 << 10),
-        RXV21Error = (1 << 11),
-        RXV21Disk  = (1 << 12),
-        RLV12	   = (1 << 13),
-        Duration   = (1 << 14)
+        CpuStep    = (1 << 1),      // CpuStepRecord
+        CpuEvent   = (1 << 2),      // CpuEventRecord
+        Bus		   = (1 << 3),      // BusRecord
+        MemoryDump = (1 << 4),      // MemoryDumpRecord
+        Trap	   = (1 << 5),      // TrapRecord
+        Irq		   = (1 << 6),      // IrqRecord
+        DLV11	   = (1 << 7),      // DLV11Record
+        RXV21Cmd   = (1 << 8),      // RXV21DiskCmd
+        RXV21Dma   = (1 << 9),      // RXV21DmaRecord
+        RXV21Error = (1 << 10),     // RXV21ErrorRecord
+        RXV21Disk  = (1 << 11),     // RXV21DiskRecord
+        RLV12	   = (1 << 12),     // RLV12RegistersRecord, RLV12CommandRecord
+        Duration   = (1 << 13)      // DurationRecord
     };
 
     Trace ();
@@ -60,7 +59,7 @@ public:
     // to the new-style trace file insertion operator calls.
     void activate (const char* filename, int flags);
     bool isActive ();
-    void step (u16* r, u16 psw, u16* insn);
+    void cpuStep (u16* r, u16 psw, u16* insn);
     void cpuEvent (CpuEventRecordType type, u16 value);
     void bus (BusRecordType type, u16 address, u16 value);
     void memoryDump (u8* ptr, u16 address, u16 length);

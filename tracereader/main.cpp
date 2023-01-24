@@ -16,7 +16,7 @@ void processTraceRecord(Magic magic, TracefileInStream &tracefile)
     switch (magic)
     {
        	case Magic::CPU0:
-            readAndPrintRecord<CpuRecord> (tracefile);
+            readAndPrintRecord<CpuStepRecord> (tracefile);
             break;
 
 	    case Magic::CPUZ:

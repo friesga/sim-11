@@ -1,6 +1,6 @@
-#include "cpurecord.h"
+#include "cpusteprecord.h"
 
-std::ostream& operator<< (std::ostream& os, TraceRecord<CpuRecord> record)
+std::ostream& operator<< (std::ostream& os, TraceRecord<CpuStepRecord> record)
 {
 	char buf[64];
     record.LSI11Disassemble (record.insn_, record.r_[7], buf);

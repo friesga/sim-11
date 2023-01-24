@@ -28,7 +28,7 @@ Main::Main (CmdLineOptions const &cmdLineOptions)
 	// Activate the tracing facility when specified on the command line
 	if (cmdLineOptions_.trace_file) 
 		trace.activate (cmdLineOptions_.trace_file, 
-			Trace::Category::RLV12 | Trace::Category::Step);
+			Trace::Category::RLV12 | Trace::Category::CpuStep);
 }
 
 int main (int argc, char const **argv)

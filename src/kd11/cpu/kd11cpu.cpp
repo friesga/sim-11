@@ -124,7 +124,7 @@ void KD11CPU::step (QBUS* bus)
         code[0] = bus_->read (r[7] + 0).valueOr (0);
         code[1] = bus_->read (r[7] + 2).valueOr (0);
         code[2] = bus_->read (r[7] + 4).valueOr (0);
-        trace.step (r, psw, code);
+        trace.cpuStep (r, psw, code);
         trace.clearIgnoreBus ();
     }
 

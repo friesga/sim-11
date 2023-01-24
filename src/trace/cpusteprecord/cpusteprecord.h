@@ -1,5 +1,5 @@
-#ifndef _CPURECORD_H_
-#define _CPURECORD_H_
+#ifndef _CPUSTEPRECORD_H_
+#define _CPUSTEPRECORD_H_
 
 #include "types.h"
 #include "../recordheader.h"
@@ -28,14 +28,14 @@ using std::setfill;
 
 // Definition of the type to discriminate the trace records in the template
 // classes.
-struct CpuRecord {};
+struct CpuStepRecord {};
 
 // Specialization of the TraceRecord for the TraceCpu record
 template <>
-class TraceRecord<CpuRecord>
+class TraceRecord<CpuStepRecord>
 {
 	friend std::ostream& operator<< (std::ostream& os, 
-		TraceRecord<CpuRecord> record);
+		TraceRecord<CpuStepRecord> record);
 
 	// Define constants to be used in this class as enums as that's the only
 	// C++ way to define class scope (non-static) constants.
@@ -73,14 +73,14 @@ public:
 };
 
 // Default constructor for the TraceCpu record
-inline TraceRecord<CpuRecord>::TraceRecord ()
+inline TraceRecord<CpuStepRecord>::TraceRecord ()
 	:
 	r_ {},
 	psw_ {0},
 	insn_ {0}
 {}
 
-inline TraceRecord<CpuRecord>::TraceRecord (u16 r[], u16 psw, u16 insn[])
+inline TraceRecord<CpuStepRecord>::TraceRecord (u16 r[], u16 psw, u16 insn[])
 	:
 	psw_ {psw}
 {
@@ -89,4 +89,4 @@ inline TraceRecord<CpuRecord>::TraceRecord (u16 r[], u16 psw, u16 insn[])
 }
 
 
-#endif // _CPURECORD_H_
+#endif // _CPUSTEPRECORD_H_

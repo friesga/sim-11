@@ -38,10 +38,10 @@ bool Trace::isActive ()
     return flags_ != 0;
 }
 
-void Trace::step (u16* r, u16 psw, u16* insn)
+void Trace::cpuStep (u16* r, u16 psw, u16* insn)
 {
-    if (traceEnabled && (flags_ & Trace::Category::Step))
-        tracefileOut_ << TraceRecord<CpuRecord> (r, psw, insn);
+    if (traceEnabled && (flags_ & Trace::Category::CpuStep))
+        tracefileOut_ << TraceRecord<CpuStepRecord> (r, psw, insn);
 }
 
 void Trace::cpuEvent (CpuEventRecordType type, u16 value) 

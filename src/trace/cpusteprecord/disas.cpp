@@ -1,6 +1,6 @@
 #include "types.h"
 #include "../tracerecord.h"
-#include "cpurecord.h"
+#include "cpusteprecord.h"
 
 #include <string.h>
 
@@ -46,7 +46,7 @@ typedef struct {
 #define	WRITEN(n)	pos = LSI11WriteN(buf, n, pos)
 #define	WRITEC(c)	buf[pos++] = c, buf[pos] = 0
 
-int TraceRecord<CpuRecord>::LSI11Write(char* buf, const char* str, int pos)
+int TraceRecord<CpuStepRecord>::LSI11Write(char* buf, const char* str, int pos)
 {
 	// ToDo: the int should really be a size_t
 	// Changing this must lead to a necessary overhaul of this module.
@@ -56,7 +56,7 @@ int TraceRecord<CpuRecord>::LSI11Write(char* buf, const char* str, int pos)
 	return pos + len;
 }
 
-int TraceRecord<CpuRecord>::LSI11WriteN(char* buf, u16 val, int pos)
+int TraceRecord<CpuStepRecord>::LSI11WriteN(char* buf, u16 val, int pos)
 {
 	int i;
 	int start = pos;
@@ -78,7 +78,7 @@ int TraceRecord<CpuRecord>::LSI11WriteN(char* buf, u16 val, int pos)
 	return pos;
 }
 
-const u16* TraceRecord<CpuRecord>::LSI11DisassemblePCOperand(u8 rn, u8 mode, const u16* x, u16* pc, char* buf, int* p)
+const u16* TraceRecord<CpuStepRecord>::LSI11DisassemblePCOperand(u8 rn, u8 mode, const u16* x, u16* pc, char* buf, int* p)
 {
 	int pos = *p;
 	switch(mode) {
@@ -118,7 +118,7 @@ const u16* TraceRecord<CpuRecord>::LSI11DisassemblePCOperand(u8 rn, u8 mode, con
 	} \
 }
 
-const u16* TraceRecord<CpuRecord>::LSI11DisassembleOperand(u8 rn, u8 mode, const u16* x, u16* pc, char* buf, int* p)
+const u16* TraceRecord<CpuStepRecord>::LSI11DisassembleOperand(u8 rn, u8 mode, const u16* x, u16* pc, char* buf, int* p)
 {
 	int pos = *p;
 	if(rn == 7 && ((mode & 6) == 2 || (mode & 6) == 6)) {
@@ -163,7 +163,7 @@ const u16* TraceRecord<CpuRecord>::LSI11DisassembleOperand(u8 rn, u8 mode, const
 	return x;
 }
 
-int TraceRecord<CpuRecord>::LSI11DisassembleBranch(s8 offset, u16 pc, char* buf, int pos)
+int TraceRecord<CpuStepRecord>::LSI11DisassembleBranch(s8 offset, u16 pc, char* buf, int pos)
 {
 	s16 off = offset * 2;
 	if(pc == 0xFFFF) {
@@ -196,7 +196,7 @@ int TraceRecord<CpuRecord>::LSI11DisassembleBranch(s8 offset, u16 pc, char* buf,
 
 // ToDo: As LSI11Disassemble is part of the TraceRecord<TraceCpu> class the 
 // parameters insn and pc can be retrieved from the object.
-int TraceRecord<CpuRecord>::LSI11Disassemble(const u16* insn, u16 pc, char* buf)
+int TraceRecord<CpuStepRecord>::LSI11Disassemble(const u16* insn, u16 pc, char* buf)
 {
 	int pos = 0;
 	u16 opcd = *insn;
@@ -609,7 +609,7 @@ int TraceRecord<CpuRecord>::LSI11Disassemble(const u16* insn, u16 pc, char* buf)
 #define OP2LEN()	LSI11OperandLength((const u8) insn2->src_rn, (const u8) insn2->src_mode) + \
 			LSI11OperandLength((const u8) insn2->dst_rn, (const u8) insn2->dst_mode) + 1
 
-int TraceRecord<CpuRecord>::LSI11OperandLength(const u8 rn, const u8 mode)
+int TraceRecord<CpuStepRecord>::LSI11OperandLength(const u8 rn, const u8 mode)
 {
 	if(rn == 7 && ((mode & 6) == 2 || (mode & 6) == 6)) {
 		return 1;
@@ -629,7 +629,7 @@ int TraceRecord<CpuRecord>::LSI11OperandLength(const u8 rn, const u8 mode)
 	}
 }
 
-int TraceRecord<CpuRecord>::LSI11InstructionLength(const u16* insn)
+int TraceRecord<CpuStepRecord>::LSI11InstructionLength(const u16* insn)
 {
 	u16 opcd = *insn;
 	KD11INSN1* insn1 = (KD11INSN1*) insn;

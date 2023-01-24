@@ -99,8 +99,8 @@ set (TRACE_SRCS
     src/trace/tracefileoutstream/header.cpp
     src/trace/tracefileinstream/tracefileinstream.cpp
     src/trace/cpueventrecord/operator.cpp
-    src/trace/cpurecord/disas.cpp
-    src/trace/cpurecord/operator.cpp
+    src/trace/cpusteprecord/disas.cpp
+    src/trace/cpusteprecord/operator.cpp
     src/trace/busrecord/operator.cpp
     src/trace/traprecord/gettrapname.cpp 
     src/trace/traprecord/operator.cpp
