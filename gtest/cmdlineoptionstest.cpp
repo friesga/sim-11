@@ -8,7 +8,6 @@ char const *argvSet0[] =
     "sim-11",
     "-h",   // halt
     "-b",   // bootstrap
-    "-z",   // compress
     "-x",   // exit_on_halt
     "-l",   // load_file
     "loadfile",
@@ -22,7 +21,6 @@ TEST (CmdLineOptionsTest, optionsProcessed)
 
     EXPECT_TRUE (cmdLineOptions.halt);
     EXPECT_TRUE (cmdLineOptions.bootstrap);
-    EXPECT_TRUE (cmdLineOptions.compress);
     EXPECT_TRUE (cmdLineOptions.exit_on_halt);
     EXPECT_FALSE (strcmp(cmdLineOptions.load_file, "loadfile"));
     EXPECT_FALSE (strcmp(cmdLineOptions.trace_file, "tracefile"));

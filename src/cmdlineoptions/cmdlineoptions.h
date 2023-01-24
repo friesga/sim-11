@@ -17,7 +17,6 @@ class CmdLineOptions
 	static bool halt_;
 	static bool bootstrap_;
 	static const char* trace_file_;
-	static bool compress_;
 	static bool exit_on_halt_;
 
 public:
@@ -28,7 +27,6 @@ public:
 	bool const &halt;
 	bool const &bootstrap;
 	const char* const &trace_file;
-	bool const &compress;
 	bool const &exit_on_halt;
 };
 

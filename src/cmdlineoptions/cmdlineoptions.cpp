@@ -12,7 +12,6 @@ CmdLineOptions::CmdLineOptions(int argc, char const **argv)
     halt {halt_} ,
     bootstrap {bootstrap_},
     trace_file {trace_file_},
-    compress {compress_},
     exit_on_halt {exit_on_halt_}
 {
    	std::stringstream msg;
@@ -28,8 +27,6 @@ CmdLineOptions::CmdLineOptions(int argc, char const **argv)
 			halt_ = true;
 		else if(!strcmp("-b", *argv)) 
 			bootstrap_ = true;
-		else if(!strcmp("-z", *argv)) 
-			compress_ = true;
 		else if(!strcmp("-x", *argv))
 			exit_on_halt_ = true;
 		else if(!strcmp("-l", *argv) && argc > 1) 
@@ -60,8 +57,7 @@ CmdLineOptions::CmdLineOptions(int argc, char const **argv)
 					"  -b              Enter RX02 double density bootstrap program\n"
 					"  -l file.bin     Load file.bin in absolute loader format\n"
 					"  -c file		   Use configuration from specified ini file\n"
-					"  -t file.trc     Record execution trace to file.trc\n"
-					"  -z              Use delta compression for execution trace\n"				
+					"  -t file.trc     Record execution trace to file.trc\n"			
 					"  -q              Quiet mode\n"
 					"\n"
 					"The optional last argument FILE is equivalent to -f file";
