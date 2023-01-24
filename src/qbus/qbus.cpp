@@ -63,7 +63,7 @@ void QBUS::setInterrupt (TrapPriority priority,
 void QBUS::pushInterruptRequest (InterruptRequest intrptReq)
 {
 	intrptReqQueue_.push (intrptReq);
-	trace.irq (intrptReq.vector(), IrqRecordType::IRQ_OK);
+	trace.irq (IrqRecordType::IRQ_OK, intrptReq.vector());
 	delay = IRCJITTER ();
 }
 
@@ -126,7 +126,7 @@ bool QBUS::getIntrptReq(InterruptRequest &intrptReq)
 	if (intrptReqAvailable())
 	{
 		bool result = intrptReqQueue_.fetchTop (intrptReq);
-		trace.irq (intrptReq.vector(), IrqRecordType::IRQ_SIG);
+		trace.irq (IrqRecordType::IRQ_SIG, intrptReq.vector());
 		delay = 0;
 		return result;
 	}

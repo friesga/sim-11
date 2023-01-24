@@ -150,7 +150,7 @@ void KD11CPU::step (QBUS* bus)
     }
     else if (!trap_ && (psw & PSW_T))
     {
-        trace.trap (014, TrapRecordType::TRAP_T);
+        trace.trap (TrapRecordType::TRAP_T, 014);
         setTrap (&traceTrap);
     }
     handleTraps (bus);
@@ -218,12 +218,12 @@ void KD11CPU::execInstr (QBUS* bus)
                             break;
 
                         case 0000003: /* BPT */
-                            trace.trap (014, TrapRecordType::TRAP);
+                            trace.trap (TrapRecordType::TRAP, 014);
                             setTrap (&BPT);
                             break;
 
                         case 0000004: /* IOT */
-                            trace.trap (020, TrapRecordType::TRAP);
+                            trace.trap (TrapRecordType::TRAP, 020);
                             setTrap (&IOT);
                             break;
 
@@ -245,7 +245,7 @@ void KD11CPU::execInstr (QBUS* bus)
 
                         default: /* 00 00 07 - 00 00 77 */
                             /* unused opcodes */
-                            trace.trap (010, TrapRecordType::TRAP_ILL);
+                            trace.trap (TrapRecordType::TRAP_ILL, 010);
                             setTrap (&illegalInstructionTrap);
                             break;
                     }
@@ -255,7 +255,7 @@ void KD11CPU::execInstr (QBUS* bus)
                     if (!insn1->getAddress (this, r, r[7]))
                     {
                         // Illegal instruction
-                        trace.trap (4, TrapRecordType::TRAP_RADDR);
+                        trace.trap (TrapRecordType::TRAP_RADDR, 04);
                         setTrap (&busError);
                     }
                     break;
@@ -284,7 +284,7 @@ void KD11CPU::execInstr (QBUS* bus)
                     else
                     {
                         /* 00 02 10 - 00 02 27: unused */
-                        trace.trap (010, TrapRecordType::TRAP_ILL);
+                        trace.trap (TrapRecordType::TRAP_ILL, 010);
                         setTrap (&illegalInstructionTrap);
                     }
                     break;
@@ -379,7 +379,7 @@ void KD11CPU::execInstr (QBUS* bus)
                     if (!ok)
                     {
                         // Illegal instruction
-                        trace.trap (4, TrapRecordType::TRAP_RADDR);
+                        trace.trap (TrapRecordType::TRAP_RADDR, 04);
                         setTrap (&busError);
                         return;
                     }
@@ -612,7 +612,7 @@ void KD11CPU::execInstr (QBUS* bus)
                     break;
 
                 default: /* 006500-006677, 007000-007777: unused */
-                    trace.trap (010, TrapRecordType::TRAP_ILL);
+                    trace.trap (TrapRecordType::TRAP_ILL, 010);
                     setTrap (&illegalInstructionTrap);
                     break;
             }
@@ -936,7 +936,7 @@ void KD11CPU::execInstr (QBUS* bus)
 #endif
                         default:
                             /* 075040-076777: unused */
-                            trace.trap (010, TrapRecordType::TRAP_ILL);
+                            trace.trap (TrapRecordType::TRAP_ILL, 010);
                             setTrap (&illegalInstructionTrap);
                             break;
                     }
@@ -949,7 +949,7 @@ void KD11CPU::execInstr (QBUS* bus)
                     }
                     break;
                 default:
-                    trace.trap (010, TrapRecordType::TRAP_ILL);
+                    trace.trap (TrapRecordType::TRAP_ILL, 010);
                     setTrap (&illegalInstructionTrap);
                     break;
             }
@@ -1042,7 +1042,7 @@ void KD11CPU::execInstr (QBUS* bus)
                 case 01041:
                 case 01042:
                 case 01043:
-                    trace.trap (030, TrapRecordType::TRAP);
+                    trace.trap (TrapRecordType::TRAP, 030);
                     setTrap (&EMT);
                     break;
 
@@ -1050,7 +1050,7 @@ void KD11CPU::execInstr (QBUS* bus)
                 case 01045:
                 case 01046:
                 case 01047:
-                    trace.trap (034, TrapRecordType::TRAP);
+                    trace.trap (TrapRecordType::TRAP, 034);
                     setTrap (&TRP);
                     break;
 
@@ -1298,7 +1298,7 @@ void KD11CPU::execInstr (QBUS* bus)
 
                 default:
                     /* unused */
-                    trace.trap (010, TrapRecordType::TRAP_ILL);
+                    trace.trap (TrapRecordType::TRAP_ILL, 010);
                     setTrap (&illegalInstructionTrap);
                     break;
             }
@@ -1427,7 +1427,7 @@ void KD11CPU::execInstr (QBUS* bus)
             break;
 
         default: /* unused */
-            trace.trap (010, TrapRecordType::TRAP_ILL);
+            trace.trap (TrapRecordType::TRAP_ILL, 010);
             setTrap (&illegalInstructionTrap);
             break;
     }

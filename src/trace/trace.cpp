@@ -64,15 +64,14 @@ void Trace::memoryDump (u8* ptr, u16 address, u16 length)
         tracefileOut_ << TraceRecord<MemoryDumpRecord> (ptr, address, length);
 }
 
-// Note: parameters are reversed!
-void Trace::irq (int vector, IrqRecordType type) 
+void Trace::irq (IrqRecordType type, int vector) 
 {
     if (traceEnabled && (flags_ & Trace::Category::Irq) && 
             !(flags_ & Trace::Category::IgnoreBus))
         tracefileOut_ << TraceRecord<IrqRecord> (type, vector);
 }
-// Note: parameters are reversed!
-void Trace::trap (int vector, TrapRecordType cause) 
+
+void Trace::trap (TrapRecordType cause, int vector) 
 {
     if (traceEnabled && (flags_ & Trace::Category::Trap))
         tracefileOut_ << TraceRecord<TrapRecord> (cause, vector);
@@ -92,13 +91,6 @@ void Trace::rxv21Command (int command, u16 rx2cs)
         tracefileOut_ << 
             TraceRecord<RXV21CommandRecord> (static_cast<RXV21DiskCmd> (command), rx2cs);
 }
-
-// TRCRXV21CMDCommit calls can be replaced by calls to rxv21Command
-//void TRCRXV21CMDCommit (int type, u16 rx2cs) 
-//    { tracefileOut_ << TraceRecord<RXV21CommandRecord> (1, type, rx2cs); }
-// The should be no TRCRXV21Step calls anymore
-// void TRCRXV21Step (int type, int step, u16 rx2db) 
-//    { throw "Unsupported trace record"; }
 
 void Trace::rxv21Dma (RXV21DiskCmd type, u16 rx2wc, u16 rx2ba) 
 {

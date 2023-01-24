@@ -64,8 +64,8 @@ public:
     void cpuEvent (CpuEventRecordType type, u16 value);
     void bus (BusRecordType type, u16 address, u16 value);
     void memoryDump (u8* ptr, u16 address, u16 length);
-    void irq (int vector, IrqRecordType type);
-    void trap (int vector, TrapRecordType cause);
+    void irq (IrqRecordType type, int vector);
+    void trap (TrapRecordType cause, int vector);
     void dlv11 (DLV11RecordType type, int channel, u16 value);
     void rxv21Command (int command, u16 rx2cs);
     void rxv21Dma (RXV21DiskCmd type, u16 rx2wc, u16 rx2ba);
