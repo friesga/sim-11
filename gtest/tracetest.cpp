@@ -14,9 +14,9 @@ class TraceTest : public ::testing::Test
 TEST_F (TraceTest, CpuEventExtractEqualsInsertion)
 {
     TracefileOutStream tracefileOutStream ("tracefile");
-    CpuEventType const cpuEventType {CpuEventType::CPU_HALT};
+    CpuEventRecordType const cpuEventType {CpuEventRecordType::CPU_HALT};
     u16 value {1};
-    tracefileOutStream << TraceRecord<CpuEvent> (cpuEventType, value);
+    tracefileOutStream << TraceRecord<CpuEventRecord> (cpuEventType, value);
     tracefileOutStream.close ();
 
     TracefileInStream tracefileInStream ("tracefile");
@@ -24,7 +24,7 @@ TEST_F (TraceTest, CpuEventExtractEqualsInsertion)
     tracefileInStream >> recordHeader;
     EXPECT_EQ (recordHeader.magic(), Magic::CPU1);
 
-    TraceRecord<CpuEvent> cpuEvent;
+    TraceRecord<CpuEventRecord> cpuEvent;
     tracefileInStream >> cpuEvent;
 
     EXPECT_EQ (cpuEvent.type(), cpuEventType);
@@ -38,7 +38,7 @@ TEST_F (TraceTest, RLV12RegistersExtractEqualsInsertion)
     TracefileOutStream tracefileOutStream ("tracefile");
 
     string msg ("message");
-    tracefileOutStream << TraceRecord<RLV12Registers> (msg, 0, 1, 2, 3, 4);
+    tracefileOutStream << TraceRecord<RLV12RegistersRecord> (msg, 0, 1, 2, 3, 4);
     tracefileOutStream.close ();
 
     TracefileInStream tracefileInStream ("tracefile");
@@ -46,7 +46,7 @@ TEST_F (TraceTest, RLV12RegistersExtractEqualsInsertion)
     tracefileInStream >> recordHeader;
     EXPECT_EQ (recordHeader.magic(), Magic::RL2A);
 
-    TraceRecord<RLV12Registers> rlv12Registers;
+    TraceRecord<RLV12RegistersRecord> rlv12Registers;
     tracefileInStream >> rlv12Registers;
 
     EXPECT_EQ (rlv12Registers.rlcs(), 0);
@@ -66,7 +66,7 @@ TEST_F (TraceTest, MemoryDump)
 
     u8 memory[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
     size_t const memSize {sizeof (memory)};
-    tracefileOutStream << TraceRecord<MemoryDump> (memory, 3, memSize);
+    tracefileOutStream << TraceRecord<MemoryDumpRecord> (memory, 3, memSize);
     tracefileOutStream.close ();
 
     TracefileInStream tracefileInStream ("tracefile");
@@ -74,7 +74,7 @@ TEST_F (TraceTest, MemoryDump)
     tracefileInStream >> recordHeader;
     EXPECT_EQ (recordHeader.magic(), Magic::BUS1);
 
-    TraceRecord<MemoryDump> memoryDump;
+    TraceRecord<MemoryDumpRecord> memoryDump;
     tracefileInStream >> memoryDump;
 
     EXPECT_EQ (memoryDump.address (), 3);
