@@ -17,7 +17,7 @@ RLV12::RLV12 ()
     dar_ {0},
     bae_ {0},
     dataBuffer_ {nullptr},
-    rlType_ {RlConfig::RLType::RLV12},
+    rlType_ {RLConfig::RLType::RLV12},
     _22bit_ {false},
     wordCounter_ {0},
     fifoIndex_ {0}
@@ -36,7 +36,7 @@ RLV12::RLV12 ()
     cmdProcessor_ = std::make_unique<CmdProcessor> (this);
 }
 
-RLV12::RLV12 (RlConfig *rlConfig)
+RLV12::RLV12 (shared_ptr<RLConfig> rlConfig)
     :
     csr_ {0},
     bar_ {0},
@@ -58,6 +58,17 @@ RLV12::RLV12 (RlConfig *rlConfig)
 
     if (dataBuffer_ == nullptr)
         throw ("Allocating memory for transfer buffer failed");
+
+    // Attach files to the RL units
+	for (size_t unitNumber = 0; 
+		unitNumber < rlConfig->numUnits; ++unitNumber)
+	{
+		shared_ptr<RLUnitConfig> rlUnitConfig = 
+            static_pointer_cast<RLUnitConfig> (rlConfig->rlUnitConfig[unitNumber]);
+
+		if (unit(unitNumber)->configure (rlUnitConfig) != StatusCode::OK)
+			throw "Error attaching " + rlUnitConfig->fileName;
+	}
 
     // Start the command processor
     cmdProcessor_ = std::make_unique<CmdProcessor> (this);
@@ -137,7 +148,7 @@ void RLV12::memAddrToRegs (u32 memoryAddress)
     csr_ = (csr_ & ~CSR_AddressExtension) | 
         ((upper6Bits & CSR_AddressExtMask) << CSR_AddressExtPosition);
 
-    if (rlType_ == RlConfig::RLType::RLV12 && _22bit_)
+    if (rlType_ == RLConfig::RLType::RLV12 && _22bit_)
         bae_ = upper6Bits & BAE_Mask; 
 }
 
@@ -146,7 +157,7 @@ void RLV12::memAddrToRegs (u32 memoryAddress)
 // are used, for 22-bit systems the BAE register is used.
 u32 RLV12::memAddrFromRegs ()
 {
-    if (!(rlType_ == RlConfig::RLType::RLV12 && _22bit_))
+    if (!(rlType_ == RLConfig::RLType::RLV12 && _22bit_))
         return (getBA16BA17 (csr_) << 16) | bar_;
     else
         return (bae_ << 16) | bar_;
@@ -156,7 +167,7 @@ u32 RLV12::memAddrFromRegs ()
 // and BA17 bits
 void RLV12::updateBAE ()
 {
-    if (rlType_ == RlConfig::RLType::RLV12 && _22bit_)
+    if (rlType_ == RLConfig::RLType::RLV12 && _22bit_)
         bae_ = (bae_ & ~CSR_AddressExtMask) | 
             ((csr_ >> CSR_AddressExtPosition) & CSR_AddressExtMask);
 }

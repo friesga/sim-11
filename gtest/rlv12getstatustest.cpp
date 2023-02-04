@@ -6,6 +6,8 @@
 #include <gtest/gtest.h>
 #include <memory>
 
+using std::make_shared;
+
 // Write to unit tests.
 
 // Definition of the test fixture
@@ -134,15 +136,15 @@ TEST_F (RLV12GetStatusTest, getStatusFailsOnDisconnectedUnit)
 // Verify the controller can be reset by means of the Get Status Command
 TEST_F (RLV12GetStatusTest, resetSucceeds)
 {
-    RlUnitConfig rlUnitConfig
-    {
+    RLUnitConfig rlUnitConfig
+    ({
         .fileName = "rl01.dsk",
         .newFile = true,
         .overwrite = true
-    };
+    });
 
     // Attach a new disk to unit 0
-    ASSERT_EQ (rlv12Device->unit (0)->configure (rlUnitConfig), 
+    ASSERT_EQ (rlv12Device->unit (0)->configure (make_shared<RLUnitConfig> (rlUnitConfig)), 
         StatusCode::OK);
 
     // Verify the controller is ready to perform an operation (the drive
@@ -178,15 +180,15 @@ TEST_F (RLV12GetStatusTest, resetSucceeds)
 // Verify the controller can be reset by means of the Get Status Command
 TEST_F (RLV12GetStatusTest, drive3CanBeSelected)
 {
-        RlUnitConfig rlUnitConfig
-    {
+    RLUnitConfig rlUnitConfig
+    ({
         .fileName = "rl01.dsk",
         .newFile = true,
         .overwrite = true
-    };
+    });
 
     // Attach a new disk to unit 3
-    ASSERT_EQ (rlv12Device->unit (3)->configure (rlUnitConfig), 
+    ASSERT_EQ (rlv12Device->unit (3)->configure (make_shared<RLUnitConfig> (rlUnitConfig)), 
         StatusCode::OK);
 
     // Verify the controller is ready to perform an operation (the drive

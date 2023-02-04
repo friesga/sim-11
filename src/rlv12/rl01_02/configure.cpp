@@ -1,9 +1,13 @@
 #include "../rlv12.h"
 #include "sim_fio/sim_fio.h"
 
-StatusCode RL01_2::configure (UnitConfig &unitConfig)
+using std::shared_ptr;
+using std::static_pointer_cast;
+
+StatusCode RL01_2::configure (shared_ptr<DeviceConfig> deviceConfig)
 {
-    RlUnitConfig &rlUnitConfig = static_cast<RlUnitConfig &> (unitConfig);
+    shared_ptr<RLUnitConfig> rlUnitConfig = 
+        static_pointer_cast<RLUnitConfig> (deviceConfig);
 
     // Set unit type and size from the given configuration. Note that if
     // the unit type is Auto the unit's capacity is determined after
@@ -11,36 +15,36 @@ StatusCode RL01_2::configure (UnitConfig &unitConfig)
     // creation of the bad block table, but the combination of the newFile
     // option and Auto unit type is excluded in the configuration data.
     // ToDo: RL01_2::configure() needs a rewrite.
-    if (rlUnitConfig.rlUnitType == RlUnitConfig::RLUnitType::RL01)
+    if (rlUnitConfig->rlUnitType == RLUnitConfig::RLUnitType::RL01)
     {
         capacity_ = RLV12::RL01_WordsPerCartridge;
         rlStatus_ &= ~Bitmask(RlStatus::UNIT_RL02);
     }
-    else if (rlUnitConfig.rlUnitType == RlUnitConfig::RLUnitType::RL02)
+    else if (rlUnitConfig->rlUnitType == RLUnitConfig::RLUnitType::RL02)
     {
         capacity_ = RLV12::RL02_WordsPerCartridge;
         rlStatus_ |= Bitmask(RlStatus::UNIT_RL02);
     }
-    else if (rlUnitConfig.rlUnitType == RlUnitConfig::RLUnitType::Auto)
+    else if (rlUnitConfig->rlUnitType == RLUnitConfig::RLUnitType::Auto)
     {
         rlStatus_ |= Bitmask(RlStatus::UNIT_AUTO);
     }
 
-    if (rlUnitConfig.fileName.empty()) 
+    if (rlUnitConfig->fileName.empty()) 
         return StatusCode::ArgumentError;
 	
     Bitmask<AttachFlags> attachFlags {AttachFlags::Default};
 
-	if (rlUnitConfig.readOnly)
+	if (rlUnitConfig->readOnly)
 		attachFlags |= AttachFlags::ReadOnly;
-	if (rlUnitConfig.newFile) 
+	if (rlUnitConfig->newFile) 
 		attachFlags |= AttachFlags::NewFile;
-	if (rlUnitConfig.overwrite)
+	if (rlUnitConfig->overwrite)
 		attachFlags |= AttachFlags::Overwrite;
 
     // Try to attach the specified file to this unit
     StatusCode result;
-    if ((result = attach_unit (rlUnitConfig.fileName, attachFlags)) !=
+    if ((result = attach_unit (rlUnitConfig->fileName, attachFlags)) !=
         StatusCode::OK)
             return result;
 

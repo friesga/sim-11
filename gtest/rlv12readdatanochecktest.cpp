@@ -6,6 +6,8 @@
 #include <gtest/gtest.h>
 #include <memory>
 
+using std::make_shared;
+
 // Write to unit tests.
 
 // Definition of the test fixture
@@ -89,15 +91,15 @@ protected:
 // Verify the correct execution of Read Data Without Header Check command
 TEST_F (RLV12ReadDataWithoutHeaderCheckTest, readDataWithoutHeaderCheckSucceeds)
 {
-    RlUnitConfig rlUnitConfig
-    {
+    RLUnitConfig rlUnitConfig
+    ({
         .fileName = "rl01.dsk",
         .newFile = true,
         .overwrite = true
-    };
+    });
 
     // Attach a new disk to unit 0
-    ASSERT_EQ (rlv12Device->unit (0)->configure (rlUnitConfig), 
+    ASSERT_EQ (rlv12Device->unit (0)->configure (make_shared<RLUnitConfig> (rlUnitConfig)), 
         StatusCode::OK);
 
     // Clear errors and volume check condition

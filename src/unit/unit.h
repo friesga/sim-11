@@ -6,10 +6,13 @@
 #include "types.h"
 #include "bitmask.h"
 #include "attachflags.h"
-#include "configdata/include/configdata.h"
+#include "configdata/deviceconfig/deviceconfig.h"
 
 #include <cstdio>
 #include <string>
+#include <memory>
+
+using std::shared_ptr;
 
 // Unit status flags. These flags are used in the definition of 
 // Bitmask<Status> and provide a compile-time type safety for the use
@@ -78,7 +81,7 @@ public:
     Unit (BusDevice *owningDevice);
 
     // Functions to be implemented by concrete devices
-    virtual StatusCode configure (UnitConfig &unitConfig) = 0;
+    virtual StatusCode configure (shared_ptr<DeviceConfig> deviceConfig) = 0;
 };
 
 #endif // !_UNIT_H_

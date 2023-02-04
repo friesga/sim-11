@@ -2,10 +2,11 @@
 #include "rlv12/rlv12.h"
 #include "cmdlineoptions/cmdlineoptions.h"
 #include "unit/attachflags.h"
-#include "configdata/include/configdata.h"
 
 #include <gtest/gtest.h>
 #include <memory>
+
+using std::make_shared;
 
 // Attach file to unit tests.
 // 
@@ -37,36 +38,32 @@ protected:
 // Verify attaching a non-existing file returns the appropriate error
 TEST_F (RLV12AttachTest, attachReturnsOpenError)
 {
-    RlUnitConfig rlUnitConfig
-    {
+    RLUnitConfig rlUnitConfig
+    ({
         .fileName = "non-existingfile",
         .newFile = false,
         .readOnly = false
-    };
-
-    // ASSERT_EQ (rlv12Device.unit (0)->attach ("non-existingfile", 
-    //         Bitmask(AttachFlags::Default)), 
-    ASSERT_EQ (rlv12Device->unit (0)->configure (rlUnitConfig), 
+    });
+ 
+    ASSERT_EQ (rlv12Device->unit (0)->configure (make_shared<RLUnitConfig> (rlUnitConfig)), 
         StatusCode::OpenError);
 }
 
 
 TEST_F (RLV12AttachTest, attachCreatesNewFile)
 {
-    RlUnitConfig attachCreatesNewFileConfig
-    {
+    RLUnitConfig attachCreatesNewFileConfig
+    ({
         .fileName = "rl02.dsk",
         .newFile = true
-    };
+    });
 
     // Remove a possibly existing file
     char fileName[] = "rl02.dsk";
     remove (fileName);
 
     // This creates a file in the default directory (out\build\<config>)
-    // ASSERT_EQ (rlv12Device.unit (0)->attach (fileName, Bitmask(AttachFlags::NewFile)),
-    //     StatusCode::OK);
-    ASSERT_EQ (rlv12Device->unit (0)->configure (attachCreatesNewFileConfig),
+    ASSERT_EQ (rlv12Device->unit (0)->configure (make_shared<RLUnitConfig> (attachCreatesNewFileConfig)),
         StatusCode::OK);
 }
 
@@ -76,13 +73,13 @@ TEST_F (RLV12AttachTest, attachCreatesNewFile)
 // file created in the previous test.
 TEST_F (RLV12AttachTest, attachOpensReadOnly)
 {
-    RlUnitConfig attachOpensReadOnlyConfig
-    {
+    RLUnitConfig attachOpensReadOnlyConfig
+    ({
         .fileName = "rl02.dsk",
         .readOnly = true
-    };
+    });
 
-    ASSERT_EQ (rlv12Device->unit (0)->configure (attachOpensReadOnlyConfig), 
+    ASSERT_EQ (rlv12Device->unit (0)->configure (make_shared<RLUnitConfig> (attachOpensReadOnlyConfig)), 
         StatusCode::OK);
 }
 
@@ -91,25 +88,25 @@ TEST_F (RLV12AttachTest, attachOpensReadOnly)
 // the override option
 TEST_F (RLV12AttachTest, existingFileIsNotOverwritten)
 {
-    RlUnitConfig existingFileIsNotOverwrittenConfig
-    {
+    RLUnitConfig existingFileIsNotOverwrittenConfig
+    ({
         .fileName = "rl02.dsk",
         .newFile = true
-    };
+    });
 
-    ASSERT_EQ (rlv12Device->unit (0)->configure (existingFileIsNotOverwrittenConfig), 
+    ASSERT_EQ (rlv12Device->unit (0)->configure (make_shared<RLUnitConfig> (existingFileIsNotOverwrittenConfig)), 
         StatusCode::ArgumentError);
 }
 
 // Verify an existing file is overwritten when the override option is sety
 TEST_F (RLV12AttachTest, existingFileIsOverwritten)
 {
-    RlUnitConfig existingFileIsOverwrittenConfig
-    {
+    RLUnitConfig existingFileIsOverwrittenConfig
+    ({
         .fileName = "rl02.dsk",
         .overwrite = true
-    };
+    });
 
-    ASSERT_EQ (rlv12Device->unit (0)->configure (existingFileIsOverwrittenConfig),
+    ASSERT_EQ (rlv12Device->unit (0)->configure (make_shared<RLUnitConfig> (existingFileIsOverwrittenConfig)),
         StatusCode::OK);
 }

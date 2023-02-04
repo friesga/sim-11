@@ -1,82 +1,41 @@
 #include "rlprocessor.h"
-#include "rlunitprocessor/rlunitprocessor.h"
+#include "../rlunitconfig/rlunitconfig.h"
+#include "../rlunitprocessor/rlunitprocessor.h"
 
-#include <limits>
+#include <utility>
 
-// Process the given RL section
-void RlProcessor::processSection (iniparser::Section* section)
+using std::make_unique;
+using std::move;
+
+RLProcessor::RLProcessor ()
 {
-	// rlConfigPtr only is a valid pointer if the configuration file contains
-	// an RX section, it's a null pointer otherwise
-	rlConfigPtr = std::make_unique<RlConfig> ();
-
-	// Process section's Values (i.e. key/value pairs)
-	for (iniparser::Section::ValueIterator valueIterator = section->valuesBegin();
-			valueIterator != section->valuesEnd(); ++valueIterator)
-	{
-		try
-		{
-			Process processFunction = processValue.at (valueIterator->first);
-			(this->*processFunction)(valueIterator->second);
-		}
-		catch (std::out_of_range const &)
-		{
-			throw std::invalid_argument {"Unknown key in section RL: " +  
-				valueIterator->first};
-		}
-	}
-
-	// Check the consistency of the specified RL options
-	checkConsistency();
-
-	// Process subsections
-	// A subsection name must start with the string "unit", followed by
-	// a unit number in the range 0-4.
-	for (iniparser::Section* subSectionPtr : section->findSubSections())
-	{
-		RlUnitProcessor rlUnitProcessor;
-
-		rlUnitProcessor.processSection (subSectionPtr);
-
-		// Get the configuration for this unit and store it in the RL
-		// configuration
-		size_t unitNumber = rlUnitProcessor.getUnitNumber();
-		rlConfigPtr->rlUnitConfig[unitNumber] = rlUnitProcessor.getConfig();
-
-		// If a unit number higher than the specified number of units is
-		// used generate an error
-		if (unitNumber >= rlConfigPtr->numUnits)
-			throw std::invalid_argument {"Unit number " + 
-			std::to_string(unitNumber) + " is higher than specified #units (" +
-			std::to_string(rlConfigPtr->numUnits) + ") in RL section"};
-
-		// Check the consistency of this section
-		rlUnitProcessor.checkConsistency ();
-	}
+	rlConfigPtr = make_unique<RLConfig> ();
 }
 
-RlConfig *RlProcessor::getConfig()
+void RLProcessor::processValue (iniparser::Section::ValueIterator valueIterator)
 {
-	return rlConfigPtr.get();
+    // Throw exception for non-existing key?
+    Process processFunction = valueProcessors[valueIterator->first];
+    (this->*processFunction)(valueIterator->second);
 }
 
 // 
 // Determine the controller type, either RLV11 or RLV12.
 // 
-void RlProcessor::processController (iniparser::Value value)
+void RLProcessor::processController (iniparser::Value value)
 {
 	if (value.asString() == "RL11")
-		rlConfigPtr->rlType = RlConfig::RLType::RL11;
+		rlConfigPtr->rlType = RLConfig::RLType::RL11;
 	else if (value.asString() == "RLV11")
-		rlConfigPtr->rlType = RlConfig::RLType::RLV11;
+		rlConfigPtr->rlType = RLConfig::RLType::RLV11;
 	else if (value.asString() == "RLV12")
-		rlConfigPtr->rlType = RlConfig::RLType::RLV12;
+		rlConfigPtr->rlType = RLConfig::RLType::RLV12;
 	else
 		throw std::invalid_argument {"Incorrect RL controller type: " + 
 			value.asString()};
 }
 
-void RlProcessor::processAddress (iniparser::Value value)
+void RLProcessor::processAddress (iniparser::Value value)
 {
 	try
 	{
@@ -89,7 +48,7 @@ void RlProcessor::processAddress (iniparser::Value value)
 	}
 }
 
-void RlProcessor::processVector (iniparser::Value value) 
+void RLProcessor::processVector (iniparser::Value value) 
 { 
 	try
 	{
@@ -102,7 +61,7 @@ void RlProcessor::processVector (iniparser::Value value)
 	}
 }
 
-void RlProcessor::processUnits (iniparser::Value value)
+void RLProcessor::processUnits (iniparser::Value value)
 {
 	rlConfigPtr->numUnits = value.asInt ();
 }
@@ -110,7 +69,7 @@ void RlProcessor::processUnits (iniparser::Value value)
 // Explicitly test for "true" and "false" as AsBool() returns no error,
 // only checks the first character and returns false except for strings parsed
 // as true.
-void RlProcessor::process22Bit (iniparser::Value value)
+void RLProcessor::process22Bit (iniparser::Value value)
 {
 	if (value.asString() == "true")
 		rlConfigPtr->_22bit = true;
@@ -129,13 +88,44 @@ void RlProcessor::process22Bit (iniparser::Value value)
 // The RLV12 controller contains a M1-M2 jumper which, when installed, enables
 // the 22-bit option. This option is not present on the RLV11, so allow this
 // option only if the controller type is RLV12. 
-void RlProcessor::checkConsistency ()
+void RLProcessor::checkConsistency ()
 {
-	if (rlConfigPtr->rlType == RlConfig::RLType::RL11)
+	if (rlConfigPtr->rlType == RLConfig::RLType::RL11)
 		throw std::invalid_argument 
 			{"The RL11 can only be configured on Unibus systems"};
 
-	if (rlConfigPtr->_22bit && rlConfigPtr->rlType != RlConfig::RLType::RLV12)
+	if (rlConfigPtr->_22bit && rlConfigPtr->rlType != RLConfig::RLType::RLV12)
 		throw std::invalid_argument 
 			{"The 22-bit option is only allowed on an RLV12 controller"};
+}
+
+// A RL Section can have zero to four subsections, one for each unit.
+void RLProcessor::processSubsection (iniparser::Section *subSection)
+{
+	if (subSection->name().substr(0, 4) != "unit")
+		throw std::invalid_argument {"Unknown RL subsection: " + 
+			subSection->name()};
+
+	// Get the unit number from the subsection name. This will throw an
+	// exception if an incorrect unit number is specified. The unit number
+	// is stored in the RlUnitConfig struct so it is clear to which unit
+	// the configuration applies.
+	size_t unitNumber = unitNumberFromSectionName (subSection->name());
+
+	// Check that the configuration for this unit has not already been
+	// specified.
+	if (rlConfigPtr->rlUnitConfig[unitNumber] != nullptr)
+		throw std::invalid_argument {"Double specification for RL subsection: " + 
+			subSection->name()};
+
+	RLUnitProcessor rlUnitProcessor {};
+	rlUnitProcessor.processSection (subSection);
+
+	// Add the unit configuration to the Rl device configuration
+	rlConfigPtr->rlUnitConfig[unitNumber] = rlUnitProcessor.getConfig ();
+}
+
+unique_ptr<DeviceConfig> RLProcessor::getConfig ()
+{
+	return move (rlConfigPtr);
 }

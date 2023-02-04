@@ -1,7 +1,6 @@
 #include "main.h"
 #include "trace/trace.h"
 #include "cmdlineoptions/cmdlineoptions.h"
-#include "configdata/configprocessor/configprocessor.h"
 #include "logger/logger.h"
 
 #include <iostream>

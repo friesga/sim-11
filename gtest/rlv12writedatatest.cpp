@@ -1,10 +1,13 @@
 #include "lsi11/lsi11.h"
 #include "msv11d/msv11d.h"
 #include "rlv12/rlv12.h"
+#include "configdata/rlunitconfig/rlunitconfig.h"
 #include "cmdlineoptions/cmdlineoptions.h"
 
 #include <gtest/gtest.h>
 #include <memory>
+
+using std::make_shared;
 
 // Write to unit tests.
 
@@ -79,20 +82,18 @@ protected:
     }
 };
 
-
-
 // Verify the correct execution of Write Data command
 TEST_F (RLV12WriteDataTest, writeDataSucceeds)
 {
-    RlUnitConfig writeDataSucceedsConfig
-    {
+    RLUnitConfig writeDataSucceedsConfig
+    ({
         .fileName = "rl01.dsk",
         .newFile = true,
         .overwrite = true
-    };
+    });
 
     // Attach a new disk to unit 0
-    ASSERT_EQ (rlv12Device->unit (0)->configure (writeDataSucceedsConfig), 
+    ASSERT_EQ (rlv12Device->unit (0)->configure (make_shared<RLUnitConfig> (writeDataSucceedsConfig)), 
         StatusCode::OK);
 
     // Clear errors and volume check condition
@@ -171,15 +172,15 @@ TEST_F (RLV12WriteDataTest, writeDataSucceeds)
 // Verify the correct execution of Write Data command of less than 256 bytes
 TEST_F (RLV12WriteDataTest, partialWriteDataSucceeds)
 {
-    RlUnitConfig partialWriteDataSucceedsConfig
-    {
+    RLUnitConfig partialWriteDataSucceedsConfig
+    ({
         .fileName = "rl01.dsk",
-        .newFile = true,
+        .newFile = true, 
         .overwrite = true
-    };
+    });
 
     // Attach a new disk to unit 0
-    ASSERT_EQ (rlv12Device->unit (0)->configure (partialWriteDataSucceedsConfig), 
+    ASSERT_EQ (rlv12Device->unit (0)->configure (make_shared<RLUnitConfig> (partialWriteDataSucceedsConfig)), 
         StatusCode::OK);
 
     // Clear errors and volume check condition

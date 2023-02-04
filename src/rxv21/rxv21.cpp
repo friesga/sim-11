@@ -1,13 +1,24 @@
 #include "rxv21.h"
+#include "../configdata/rxv21unitconfig/rxv21unitconfig.h"
 
 #include <stdlib.h>
 #include <string.h>
 
-RXV21::RXV21 (RxConfig *rxConfig)
+// Constructor for a default RXV21 device without attached files
+RXV21::RXV21 ()
 {
 	name_ = "RX";
 
-	/* factory configuration */
+	// Factory configuration
+	base = 0177170;
+	vector = 0264;
+}
+
+RXV21::RXV21 (shared_ptr<RXV21Config> rxConfig)
+{
+	name_ = "RX";
+
+	// Factory configuration
 	base = 0177170;
 	vector = 0264;
 
@@ -22,14 +33,17 @@ RXV21::RXV21 (RxConfig *rxConfig)
 
 	// Check if a filename is given in the configuration. If so, read the
 	// contents of the file.
-	if (!rxConfig->rxUnitConfig[0].fileName.empty()) 
+	if (!static_pointer_cast<RXV21UnitConfig> 
+			(rxConfig->rxv21UnitConfig[0])->fileName.empty ())
 	{
 		FILE* floppy_file = 
-			fopen (rxConfig->rxUnitConfig[0].fileName.c_str(), "rb");
+			fopen (static_pointer_cast<RXV21UnitConfig> 
+				(rxConfig->rxv21UnitConfig[0])->fileName.c_str(), "rb");
 		if (!floppy_file) 
 		{
 			free(data);
-			throw "Error: cannot open file " + rxConfig->rxUnitConfig[0].fileName;
+			throw "Error: cannot open file " + static_pointer_cast<RXV21UnitConfig> 
+				(rxConfig->rxv21UnitConfig[0])->fileName;
 		}
 		(void) !fread (data, 77 * 26 * 256, 1, floppy_file);
 		fclose (floppy_file);

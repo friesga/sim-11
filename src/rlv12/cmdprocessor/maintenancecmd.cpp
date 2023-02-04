@@ -23,7 +23,7 @@ u16 CmdProcessor::maintenanceCmd (RL01_2 *unit, RLV12Command &rlv12Command)
     std::this_thread::sleep_for(std::chrono::milliseconds (20));
 
     // This command is a NOP on the RL11 controller
-    if (controller_->rlType_ == RlConfig::RLType::RL11)
+    if (controller_->rlType_ == RLConfig::RLType::RL11)
         return 0;
 
     // The VRLBC0 diagnostic expects a reaction on a 

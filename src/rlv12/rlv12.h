@@ -8,7 +8,7 @@
 #include "threadsafecontainers/threadsafequeue.h"
 #include "statuscodes.h"
 #include "rlv12command/rlv12command.h"
-#include "configdata/include/configdata.h"
+#include "configdata/rlconfig/rlconfig.h"
 #include "cmdprocessor/cmdprocessor.h"
 
 #include <array>
@@ -217,7 +217,7 @@ class RLV12 : public BusDevice
 
     // Definition of the controller type and the presence of the 22-bit option
     // when configured as a RLV12 controller.
-    RlConfig::RLType rlType_;
+    RLConfig::RLType rlType_;
     bool _22bit_;
     
     // A RLV12 can have a maximum of four units. RL01_2 objects for
@@ -261,7 +261,7 @@ class RLV12 : public BusDevice
 public:
     // Constructors/destructor
     RLV12 ();
-    RLV12 (RlConfig *rlConfig);
+    RLV12 (shared_ptr<RLConfig> rlConfig);
     /*
         RLV12 (u32 baseAddress, u32 vector, bool rlv11, bool _22bit, 
         size_t numUnits);

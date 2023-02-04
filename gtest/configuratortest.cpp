@@ -1,13 +1,26 @@
-#include "configdata/configprocessor/configprocessor.h"
+#include "configdata/iniprocessor/iniprocessor.h"
+#include "configdata/devicetype/devicetype.h"
+#include "configdata/rlconfig/rlconfig.h"
 
-#include <sstream>	
+#include <fstream>	
 #include <gtest/gtest.h>
+#include <memory>
+#include <set>
+#include <vector>
+#include <string>
+
+using std::shared_ptr;
+using std::static_pointer_cast;
+using std::set;
+using std::vector;
+using std::string;
 
 // Minimal tests for the ConfigProcessor class
 TEST (ConfigProcessorTest, configProcessed)
 {
-    iniparser::File ft;
 	std::stringstream stream;
+	iniparser::File ft;
+
 	stream << "[RL]\n"
 		"controller = RLV12\n"
 		"address = 0174400\n"
@@ -22,8 +35,25 @@ TEST (ConfigProcessorTest, configProcessed)
 		
 	stream >> ft;
 
-	ConfigData configProcessor;
-	EXPECT_NO_THROW (configProcessor.process (ft));
+	IniProcessor iniProcessor;
+
+	// Verify the configuration is processed without errors
+	EXPECT_NO_THROW (iniProcessor.process (ft));
+
+	// Verify the device is present in the configuration with all attributes
+	// having their correct value.
+	vector<shared_ptr<DeviceConfig>> &configuration = 
+		iniProcessor.getSystemConfig ();
+
+	EXPECT_EQ (configuration[0]->deviceType_, DeviceType::RLV12);
+	EXPECT_EQ (static_pointer_cast<RLConfig> 
+			(configuration[0])->rlType, RLConfig::RLType::RLV12);
+	EXPECT_EQ (static_pointer_cast<RLConfig> 
+			(configuration[0])->address, 0174400);
+	EXPECT_EQ (static_pointer_cast<RLConfig> 
+			(configuration[0])->vector, 0160);
+	EXPECT_EQ (static_pointer_cast<RLConfig> 
+			(configuration[0])->numUnits, 1);
 }
 
 TEST (ConfigProcessorTest, configProcessorThrows)
@@ -35,10 +65,10 @@ TEST (ConfigProcessorTest, configProcessorThrows)
 		
 	stream >> ft;
 
-	ConfigData configProcessor;
+	IniProcessor iniProcessor;
 	try
 	{
-		configProcessor.process (ft);
+		iniProcessor.process (ft);
 		FAIL();
 	}
 	catch (std::invalid_argument const &except)
@@ -50,6 +80,7 @@ TEST (ConfigProcessorTest, configProcessorThrows)
 		FAIL();
 	}
 }
+
 
 #ifdef _WIN32
 static const std::string expectedFileNameUnit0 {"\\somefile"};
@@ -80,15 +111,124 @@ TEST (ConfigProcessorTest, fileName)
 		
 	stream >> ft;
 
-	ConfigData configProcessor;
-	configProcessor.process (ft);
+	IniProcessor iniProcessor;
+	iniProcessor.process (ft);
 
-	EXPECT_STREQ (configProcessor.getConfig()->rlConfig->rlUnitConfig[0].fileName.c_str(),
-		"somefile");
-	EXPECT_STREQ (configProcessor.getConfig()->rlConfig->rlUnitConfig[1].fileName.c_str(),
-		expectedFileNameUnit1.c_str());
-	EXPECT_STREQ (configProcessor.getConfig()->rlConfig->rlUnitConfig[2].fileName.c_str(),
-		expectedFileNameUnit2.c_str());
-	EXPECT_STREQ (configProcessor.getConfig()->rlConfig->rlUnitConfig[3].fileName.c_str(),
-		expectedFileNameUnit3.c_str());
+	for (shared_ptr<DeviceConfig> device : iniProcessor.getSystemConfig ())
+    {
+		// The only device type in this testset is the RLV12 so if that's
+		// not corrected the following tests will fail too.
+		ASSERT_EQ (device->deviceType_, DeviceType::RLV12);
+
+		// The device's type is RLV12 so the configuration is a RLConfig
+		shared_ptr<RLConfig> rlConfig = 
+			static_pointer_cast<RLConfig> (device);
+
+		// Now we can check the unit's filenames. The devices in the 
+		// units are of type RLUnitConfig.
+		EXPECT_STREQ (static_pointer_cast<RLUnitConfig> 
+			(rlConfig->rlUnitConfig[0])->fileName.c_str(), "somefile");
+		EXPECT_STREQ (static_pointer_cast<RLUnitConfig> 
+			(rlConfig->rlUnitConfig[1])->fileName.c_str(), 
+			expectedFileNameUnit1.c_str());
+		EXPECT_STREQ (static_pointer_cast<RLUnitConfig> 
+			(rlConfig->rlUnitConfig[2])->fileName.c_str(),
+			expectedFileNameUnit2.c_str());
+		EXPECT_STREQ (static_pointer_cast<RLUnitConfig> 
+			(rlConfig->rlUnitConfig[3])->fileName.c_str(),
+			expectedFileNameUnit3.c_str());
+    }
+}
+
+// Verify all sections in the testset are processed once and can be retrieved
+TEST (ConfigProcessorTest, allSectionsProcessedOnce)
+{
+	std::stringstream stream;
+	iniparser::File ft;
+
+	stream << "[RL]\n"
+		"[MSV11]\n"
+		"[DLV11-J]\n"
+		"[BDV11]\n"
+		"[RXV21]\n"
+		"[BA11-N]\n";
+		
+	stream >> ft;
+
+	set<DeviceType> allDevices
+	{
+		DeviceType::MSV11,
+		DeviceType::DLV11_J,
+		DeviceType::BDV11,
+		DeviceType::RXV21,
+		DeviceType::RLV12,
+		DeviceType::BA11_N
+	};
+
+	IniProcessor iniProcessor;
+	EXPECT_NO_THROW (iniProcessor.process (ft));
+
+	for (shared_ptr<DeviceConfig> device : iniProcessor.getSystemConfig ())
+    {
+		// The only device type in this testset is the RLV12 so if that's
+		// not corrected the following tests will fail too.
+		// ASSERT_EQ (device->deviceType_, DeviceType::RLV12);
+		
+		// Verify the section has not already been processed
+		EXPECT_TRUE (allDevices.find (device->deviceType_) != allDevices.end());
+
+		// Mark the device types processed
+		allDevices.erase (device->deviceType_);
+	}
+
+	// Verify all devices are processed
+	EXPECT_TRUE (allDevices.empty ());
+}
+
+TEST (ConfigProcessorTest, unsupportedSectionThrows)
+{
+    iniparser::File ft;
+	std::stringstream stream;
+	stream << "[UNKNOWN]\n";
+	stream >> ft;
+
+	IniProcessor iniProcessor;
+	try
+	{
+		iniProcessor.process (ft);
+		FAIL();
+	}
+	catch (string const &msg)
+	{
+		EXPECT_STREQ (msg.c_str(), "Unsupported section: UNKNOWN");
+	}
+	catch (...)
+	{
+		FAIL();
+	}
+}
+
+
+TEST (ConfigProcessorTest, outOfRangeUnitNumberThrows)
+{
+    iniparser::File ft;
+	std::stringstream stream;
+	stream << "[RL]\n"
+		"[RL.unit4]\n";
+	stream >> ft;
+
+	IniProcessor iniProcessor;
+	try
+	{
+		iniProcessor.process (ft);
+		FAIL();
+	}
+	catch (std::invalid_argument const &except)
+	{
+		EXPECT_STREQ (except.what(), "RL unit number out of range 0-3");
+	}
+	catch (...)
+	{
+		FAIL();
+	}
 }

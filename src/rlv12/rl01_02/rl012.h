@@ -4,11 +4,13 @@
 #include "unit/unit.h"
 #include "types.h"
 #include "statuscodes.h"
-#include "configdata/include/configdata.h"
 
 #include <mutex>
 #include <thread>
 #include <condition_variable>
+
+using std::shared_ptr;
+
 
 // RL01/02 unit status flags. These flags are used in the definition of 
 // Bitmask<RlStatus> and provide a compile-time type safety for the use
@@ -63,7 +65,7 @@ public:
     void seekTimer ();
 
     // Required functions
-    StatusCode configure (UnitConfig &unitConfig) override;
+    StatusCode configure (shared_ptr<DeviceConfig> deviceConfig) override;
 };
 
 #endif // _RL012_H_

@@ -7,13 +7,15 @@
 #include "msv11d/msv11d.h"
 #include "lsi11/lsi11.h"
 #include "console/console.h"
-#include "configdata/configprocessor/configprocessor.h"
+#include "configdata/iniprocessor/iniprocessor.h"
+#include "configdata/rxv21config/rxv21config.h"
 
 #include <memory>		// For make_unique
 #include <cstring>		// For memset()
 
 using std::shared_ptr;
 using std::make_shared;
+using std::static_pointer_cast;
 using std::string;
 
 // Configure the devices and install them on the bus.
@@ -21,14 +23,10 @@ using std::string;
 // and the BDV11 boot will halt at address 000010.
 void Main::configureDevices ()
 {
-	msv11_ = make_shared<MSV11D> ();
-	dlv11_ = make_shared<DLV11J> ();
-	bdv11_ = make_shared<BDV11> ();
-
 	// Load device configuration from the configuration file
 	if (cmdLineOptions_.config_file)
 	{
-		ConfigData configProcessor;
+		IniProcessor configProcessor;
 		iniparser::File ft;
 
 		if (!ft.load (cmdLineOptions_.config_file))
@@ -43,16 +41,54 @@ void Main::configureDevices ()
 			throw "Error in configuration file: " + string(except.what());
 		}
 
-		// Retrieve the configuration as specified in the configuration file
-		DeviceConfig *deviceConfig = configProcessor.getConfig ();
+		// Get the device configurations and populate the LSI bus with these devices.
+		for (shared_ptr<DeviceConfig> device : configProcessor.getSystemConfig ())
+		{
+			switch (device->deviceType_)
+			{
+				case DeviceType::MSV11:
+					msv11_ = make_shared<MSV11D> ();
+					break;
 
-		// Configure the devices specified in the configuration file
-		configureRXV21 (deviceConfig->rxConfig);
-		configureRLV12 (deviceConfig->rlConfig);
+				case DeviceType::DLV11_J:
+					dlv11_ = make_shared<DLV11J> ();
+					break;
+
+				case DeviceType::BDV11:
+					bdv11_ = make_shared<BDV11> ();
+					break;
+
+				case DeviceType::RXV21:
+					rxv21_ = make_shared<RXV21> 
+						(static_pointer_cast<RXV21Config> (device));
+					break;
+
+				case DeviceType::RLV12:
+					rlv12_ = make_shared<RLV12>
+						(static_pointer_cast<RLConfig> (device));
+					break;
+
+				case DeviceType::BA11_N:
+					ba11_n_ = std::make_unique<BA11_N> (lsi11_.bus);
+					break;
+
+				default:
+					throw "Unknown device type in configuration";
+			}
+		}
+
 	}
-	// Create the BA11-N bezel after configuration of the devices to prevent
-	// the BA11 window popping up and closing if the system is misconfigured
-    ba11_n_ = std::make_unique<BA11_N> (lsi11_.bus);
+	else
+	{
+		// No configuration file specified; create a bare system with a
+		// default configuration and without any files attached.
+		msv11_ = make_shared<MSV11D> ();
+		dlv11_ = make_shared<DLV11J> ();
+		bdv11_ = make_shared<BDV11> ();
+		rxv21_ = make_shared<RXV21> ();
+		rlv12_ = make_shared<RLV12> ();
+		ba11_n_ = std::make_unique<BA11_N> (lsi11_.bus);
+	}
 
 	// The Console class reads characters and sends them to the dlv11
 	console_ = Console::create (dlv11_);
@@ -63,31 +99,4 @@ void Main::configureDevices ()
 	lsi11_.bus.installModule (4, dlv11_);
 	lsi11_.bus.installModule (5, bdv11_);
 	lsi11_.reset ();
-}
-
-// Configure the RXV21 if it is specified in the configuration file
-void Main::configureRXV21 (RxConfig *rxConfig)
-{
-	if (rxConfig != nullptr)
-		rxv21_ = make_shared<RXV21> (rxConfig);
-}
-
-// Configure the RLV12 and attached units if specified in the
-// configuration file
-void Main::configureRLV12 (RlConfig *rlConfig)
-{
-	if (rlConfig)
-	{
-		rlv12_ = make_shared<RLV12> (rlConfig);
-
-		// Attach files to the RL units
-		for (size_t unitNumber = 0; 
-			unitNumber < rlConfig->numUnits; ++unitNumber)
-		{
-			RlUnitConfig rlUnitConfig = rlConfig->rlUnitConfig[unitNumber];
-
-			if (rlv12_->unit(unitNumber)->configure (rlUnitConfig) != StatusCode::OK)
-				throw "Error attaching " + rlUnitConfig.fileName;
-		}
-	}
 }

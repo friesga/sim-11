@@ -81,9 +81,6 @@ class Main
 		"2134/000000\r"
 		"2000G";
 
-	void configureRXV21 (RxConfig *rxConfig);
-	void configureRLV12 (RlConfig *rlConfig);
-
 public:
 	Main (CmdLineOptions const &cmdLineOptions);
 	void configureDevices ();

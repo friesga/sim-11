@@ -1,40 +1,47 @@
-#ifndef _RL_PROCESSOR_H_
-#define _RL_PROCESSOR_H_
+#ifndef _RLPROCESSOR_H_
+#define _RLPROCESSOR_H_
 
-#include "../include/configdata.h"
-#include "../iniparser.h"
 #include "../sectionprocessor/sectionprocessor.h"
-#include "rlunitprocessor/rlunitprocessor.h"
+#include "../rlconfig/rlconfig.h"
 
-// Processor for the RL section of a configuration file
-class RlProcessor : public SectionProcessor
+#include <memory>
+#include <map>
+#include <string>
+
+using std::unique_ptr;
+using std::map;
+using std::string;
+
+class RLProcessor : public SectionProcessor
 {
-	std::unique_ptr<RlConfig> rlConfigPtr {nullptr};
+	unique_ptr<RLConfig> rlConfigPtr {nullptr};
 
-	// Define process as a pointer to a RlProcessor member function
+    // Define process as a pointer to a RlProcessor member function
 	// with a iniparser::Value argument and returning void.
-	typedef void (RlProcessor::*Process)(iniparser::Value);
+	typedef void (RLProcessor::*Process)(iniparser::Value);
 	
-	std::map<std::string, Process> processValue =
+	map<string, Process> valueProcessors =
 	{
-		{"controller", &RlProcessor::processController},
-		{"address", &RlProcessor::processAddress},
-		{"vector", &RlProcessor::processVector},
-		{"units", &RlProcessor::processUnits},
-		{"22-bit", &RlProcessor::process22Bit}
+		{"controller", &RLProcessor::processController},
+		{"address", &RLProcessor::processAddress},
+		{"vector", &RLProcessor::processVector},
+		{"units", &RLProcessor::processUnits},
+		{"22-bit", &RLProcessor::process22Bit}
 	};
 
+    void processValue (iniparser::Section::ValueIterator valueIterator);
 	void processController (iniparser::Value value);
 	void processAddress (iniparser::Value value);
 	void processVector (iniparser::Value value);
 	void processUnits (iniparser::Value value);
 	void process22Bit (iniparser::Value value);
-
-	void checkConsistency();
+	void checkConsistency ();
+	void processSubsection (iniparser::Section *subSection);
 
 public:
-	void processSection (iniparser::Section* section) override;
-	RlConfig *getConfig();
+	RLProcessor ();
+	unique_ptr<DeviceConfig> getConfig ();
 };
 
-#endif // _RLPROCESSOR_H_
+
+#endif // !_RLPROCESSOR_H_

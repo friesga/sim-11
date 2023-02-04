@@ -70,12 +70,28 @@ set (QBUS_SRCS
     src/qbus/responsiblemodule.cpp)
 
 set (CONFIGURATOR_SRCS
-    src/configdata/configprocessor/configprocessor.cpp
+    src/configdata/iniprocessor/iniprocessor.cpp
+    src/configdata/iniprocessor/process.cpp
+    src/configdata/iniprocessor/processsection.cpp
+    src/configdata/iniprocessor/getsystemconfig.cpp
+    src/configdata/sectionprocessor/sectionprocessor.cpp
     src/configdata/rlprocessor/rlprocessor.cpp
-    src/configdata/rlprocessor/rlunitprocessor/rlunitprocessor.cpp
-    src/configdata/rxprocessor/rxprocessor.cpp
-    src/configdata/rxprocessor/rxunitprocessor/rxunitprocessor.cpp
-    src/configdata/sectionprocessor/sectionprocessor.cpp)
+    src/configdata/deviceconfig/deviceconfig.cpp
+    src/configdata/rlconfig/rlconfig.cpp
+    src/configdata/rxv21config/rxv21config.cpp
+    src/configdata/rxv21processor/rxv21processor.cpp
+    src/configdata/rxv21unitconfig/rxv21unitconfig.cpp
+    src/configdata/rxv21unitprocessor/rxv21unitprocessor.cpp
+    src/configdata/ba11nprocessor/ba11nprocessor.cpp
+    src/configdata/ba11nconfig/ba11nconfig.cpp 
+    src/configdata/bdv11config/bdv11config.cpp
+    src/configdata/bdv11processor/bdv11processor.cpp
+    src/configdata/dlv11config/dlv11config.cpp 
+    src/configdata/dlv11processor/dlv11processor.cpp
+    src/configdata/msv11config/msv11config.cpp 
+    src/configdata/msv11processor/msv11processor.cpp
+    src/configdata/rlunitconfig/rlunitconfig.cpp
+    src/configdata/rlunitprocessor/rlunitprocessor.cpp)
 
 set (FLOAT_SRCS
     src/float/float.cpp
