@@ -81,6 +81,8 @@ class Main
 		"2134/000000\r"
 		"2000G";
 
+	void checkConsistency (vector<shared_ptr<DeviceConfig>> systemConfig);
+
 public:
 	Main (CmdLineOptions const &cmdLineOptions);
 	void configureDevices ();

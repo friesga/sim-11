@@ -173,6 +173,7 @@ set (SIM11_SRCS
     src/main/configure.cpp
     src/main/loadfile.cpp
     src/main/run.cpp
+    src/main/checkconsistency.cpp
     src/msv11d/msv11d.cpp
     ${QBUS_SRCS}
     src/busdevice/writebyte.cpp

@@ -41,6 +41,9 @@ void Main::configureDevices ()
 			throw "Error in configuration file: " + string(except.what());
 		}
 
+		// Check for presence of devices
+		checkConsistency (configProcessor.getSystemConfig ());
+
 		// Get the device configurations and populate the LSI bus with these devices.
 		for (shared_ptr<DeviceConfig> device : configProcessor.getSystemConfig ())
 		{
