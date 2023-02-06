@@ -158,8 +158,3 @@ void RXV21::reset ()
 	rx2db = rx2es;
 }
 
-// Originally in this function missed interrupt requests were checked
-// and re-issued. This is now superfluous because of the introduction of
-// the interrupt request queue.
-void RXV21::step()
-{}

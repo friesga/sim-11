@@ -39,6 +39,5 @@ void Main::run ()
 		}
 
 		dlv11_->step();
-		rxv21_->step();
 	}
 }

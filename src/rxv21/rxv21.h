@@ -135,7 +135,6 @@ public:
 	StatusCode writeWord (u16 address, u16 value) override;
 	bool responsible (u16 address) override;
 	void reset ();
-	void step();
 
 	// Definition of state transitions
 	State transition (rxv21Idle &&, rxv21Go);
