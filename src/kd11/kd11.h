@@ -5,17 +5,26 @@
 #include "odt//kd11odt.h"
 
 // The class KD11 is composed of the KD11 CPU and the KD11 ODT.
-// ToDo: Make KD11 a BusDevice
-// The module KD11 is now - different from the other QBUSModules - instantiated
-// within the LSI11 object, although it is also a QBUS module.
-class KD11
+class KD11 : public BusDevice
 {
 public:
 	KD11 (QBUS *bus);
-	void reset();
-	void step(QBUS* bus);
+	void step (QBUS* bus);
+	
 	// Give main() access to the CPU to set PC and runState
 	KD11CPU &cpu();
+
+	// The KDV11 is a BusDevice without registers so the read and write 
+	// register functions are dummies. The reset functie is called on a
+	// bus reset and has no function for the KDV11 either.
+	StatusCode read (u16 addr, u16 *destination) override 
+		{ return StatusCode::FunctionNotImplemented; };
+	StatusCode writeWord (u16 addr, u16 value) override
+		{ return StatusCode::FunctionNotImplemented; };
+	StatusCode writeByte (u16 addr, u8 value) override
+		{ return StatusCode::FunctionNotImplemented; };
+	bool responsible (u16 addr) override { return false; }
+	void reset() override {};
 
 private:
 	QBUS *bus_;

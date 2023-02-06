@@ -14,7 +14,6 @@
     if (cond) return;
 
 // Constructor
-// ToDo: Reinitialize K11ODT
 KD11CPU::KD11CPU (QBUS* bus)
     :
     runState {STATE_HALT},
@@ -22,14 +21,8 @@ KD11CPU::KD11CPU (QBUS* bus)
     bus_ {bus},
     psw {0},
     trap_ {nullptr}
-{}
-
-void KD11CPU::reset ()
 {
     r[7] = 0173000;
-    psw = 0;
-    trap_ = nullptr;
-    runState = STATE_HALT;
     bus_->setProcessorRunning (false);
 }
 

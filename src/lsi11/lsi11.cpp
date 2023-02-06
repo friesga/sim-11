@@ -15,14 +15,13 @@ LSI11::~LSI11 ()
 	/* nothing */
 }
 
+// Reset all devices on the bus
 void LSI11::reset ()
 {
-	kd11.reset();
 	bus.reset();
 }
 
 void LSI11::step ()
 {
 	bus.step ();
-	kd11.step (&bus);
 }

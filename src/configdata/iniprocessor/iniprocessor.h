@@ -53,7 +53,8 @@ class IniProcessor
 		{"DLV11-J", &IniProcessor::createDLV11Processor},
 		{"MSV11",   &IniProcessor::createMSV11Processor},
 		{"RL",      &IniProcessor::createRLProcessor},
-		{"RXV21",   &IniProcessor::createRXProcessor}
+		{"RXV21",   &IniProcessor::createRXProcessor},
+		{"KDV11",   &IniProcessor::createKDV11Processor}
 	};
 
     void processSection (iniparser::Section* section);
@@ -63,6 +64,7 @@ class IniProcessor
 	unique_ptr<SectionProcessor> createMSV11Processor ();
 	unique_ptr<SectionProcessor> createRLProcessor ();
 	unique_ptr<SectionProcessor> createRXProcessor ();
+	unique_ptr<SectionProcessor> createKDV11Processor ();
 
 public:
     void process (string filename);

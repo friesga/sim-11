@@ -49,6 +49,10 @@ void Main::configureDevices ()
 		{
 			switch (device->deviceType_)
 			{
+				case DeviceType::KDV11:
+					kdv11_ = make_shared<KD11> (&lsi11_.bus);
+					break;
+
 				case DeviceType::MSV11:
 					msv11_ = make_shared<MSV11D> ();
 					break;
@@ -85,6 +89,7 @@ void Main::configureDevices ()
 	{
 		// No configuration file specified; create a bare system with a
 		// default configuration and without any files attached.
+		kdv11_ = make_shared<KD11> (&lsi11_.bus);
 		msv11_ = make_shared<MSV11D> ();
 		dlv11_ = make_shared<DLV11J> ();
 		bdv11_ = make_shared<BDV11> ();
@@ -96,10 +101,11 @@ void Main::configureDevices ()
 	// The Console class reads characters and sends them to the dlv11
 	console_ = Console::create (dlv11_);
 
-	lsi11_.bus.installModule (1, msv11_);
-	lsi11_.bus.installModule (2, rlv12_);
-	lsi11_.bus.installModule (3, rxv21_);
-	lsi11_.bus.installModule (4, dlv11_);
-	lsi11_.bus.installModule (5, bdv11_);
+	lsi11_.bus.installModule (1, kdv11_);
+	lsi11_.bus.installModule (2, msv11_);
+	lsi11_.bus.installModule (3, rlv12_);
+	lsi11_.bus.installModule (4, rxv21_);
+	lsi11_.bus.installModule (5, dlv11_);
+	lsi11_.bus.installModule (6, bdv11_);
 	lsi11_.reset ();
 }

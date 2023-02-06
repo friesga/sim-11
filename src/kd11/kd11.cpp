@@ -7,11 +7,6 @@ KD11::KD11 (QBUS* bus)
     bus_{ bus }
 {}
 
-void KD11::reset ()
-{
-    cpu_.reset ();
-    odt.reset ();
-}
 
 KD11CPU& KD11::cpu ()
 {

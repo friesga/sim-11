@@ -10,7 +10,8 @@
 
 // Definition of Main constructor to initialize the data members
 Main::Main (CmdLineOptions const &cmdLineOptions)
-	: 
+	:
+	kdv11_ {nullptr},
 	msv11_ {nullptr},
 	rxv21_ {nullptr},
 	rlv12_ {nullptr},

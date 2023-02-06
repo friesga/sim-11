@@ -13,19 +13,24 @@
 #include "console/console.h"
 #include <memory>
 
+using std::shared_ptr;
+using std::unique_ptr;
+
+
 // This is the main class of the simulator. It provides functionality to
 // initialize the configurator, configure its devices, load a file in absolute
 // loader format and run the simulator.
 class Main
 {
 	LSI11 lsi11_;
-	std::shared_ptr<MSV11D> msv11_;
-	std::shared_ptr<RXV21> rxv21_;
-	std::shared_ptr<RLV12> rlv12_;
-	std::shared_ptr<DLV11J> dlv11_;
-	std::shared_ptr<BDV11> bdv11_;
-	std::unique_ptr<BA11_N> ba11_n_;
-	std::unique_ptr<Console> console_;
+	shared_ptr<KD11> kdv11_;
+	shared_ptr<MSV11D> msv11_;
+	shared_ptr<RXV21> rxv21_;
+	shared_ptr<RLV12> rlv12_;
+	shared_ptr<DLV11J> dlv11_;
+	shared_ptr<BDV11> bdv11_;
+	unique_ptr<BA11_N> ba11_n_;
+	unique_ptr<Console> console_;
 
 	CmdLineOptions const &cmdLineOptions_;
 	bool running_;

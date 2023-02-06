@@ -60,17 +60,17 @@ void Main::loadFile ()
         {
             if ((addr & 1) == 0)
             {
-                lsi11_.kd11.cpu ().r[7] = addr;
+                kdv11_->cpu ().r[7] = addr;
                 /* console->sendString("P"); */
                 // ToDo: Use symbolic constants for runState
-                lsi11_.kd11.cpu ().runState = 1;
+                kdv11_->cpu ().runState = 1;
                 lsi11_.bus.setProcessorRunning (true);
             }
             else
             {
                 /* console->sendString("200G"); */
-                lsi11_.kd11.cpu ().r[7] = 0200;
-                lsi11_.kd11.cpu ().runState = 1;
+                kdv11_->cpu ().r[7] = 0200;
+                kdv11_->cpu ().runState = 1;
                 lsi11_.bus.setProcessorRunning (true);
             }
             break;

@@ -91,7 +91,9 @@ set (CONFIGURATOR_SRCS
     src/configdata/msv11config/msv11config.cpp 
     src/configdata/msv11processor/msv11processor.cpp
     src/configdata/rlunitconfig/rlunitconfig.cpp
-    src/configdata/rlunitprocessor/rlunitprocessor.cpp)
+    src/configdata/rlunitprocessor/rlunitprocessor.cpp
+    src/configdata/kdv11config/kdv11config.cpp
+    src/configdata/kdv11processor/kdv11processor.cpp)
 
 set (FLOAT_SRCS
     src/float/float.cpp

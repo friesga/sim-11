@@ -6,6 +6,7 @@
 #include "../bdv11processor/bdv11processor.h"
 #include "../dlv11processor/dlv11processor.h"
 #include "../msv11processor/msv11processor.h"
+#include "../kdv11processor/kdv11processor.h"
 
 using std::make_unique;
 
@@ -41,4 +42,9 @@ unique_ptr<SectionProcessor> IniProcessor::createDLV11Processor ()
 unique_ptr<SectionProcessor> IniProcessor::createMSV11Processor ()
 {
     return make_unique<MSV11Processor> ();
+}
+
+unique_ptr<SectionProcessor> IniProcessor::createKDV11Processor ()
+{
+    return make_unique<KDV11Processor> ();
 }

@@ -13,7 +13,6 @@ public:
 	void step ();
 
 	QBUS	 bus;
-	KD11	 kd11 {&bus};
 };
 
 #endif // !_LSI11_H_
