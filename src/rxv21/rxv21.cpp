@@ -6,12 +6,13 @@
 
 // Constructor for a default RXV21 device without attached files
 RXV21::RXV21 ()
+	:
+	// Factory configuration
+	base {0177170},
+	vector {0264},
+	data {nullptr}
 {
 	name_ = "RX";
-
-	// Factory configuration
-	base = 0177170;
-	vector = 0264;
 }
 
 RXV21::RXV21 (shared_ptr<RXV21Config> rxConfig)
