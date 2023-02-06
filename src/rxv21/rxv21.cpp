@@ -32,9 +32,10 @@ RXV21::RXV21 (shared_ptr<RXV21Config> rxConfig)
 	if (!data) 
 		throw "Error: cannot allocate memory for rxv21";
 
-	// Check if a filename is given in the configuration. If so, read the
-	// contents of the file.
-	if (!static_pointer_cast<RXV21UnitConfig> 
+	// Check if unit 0 is configured and a filename is given in the 
+	// configuration. If so, read the contents of the file into memory.
+	if (rxConfig->rxv21UnitConfig[0] != nullptr &&
+		!static_pointer_cast<RXV21UnitConfig> 
 			(rxConfig->rxv21UnitConfig[0])->fileName.empty ())
 	{
 		FILE* floppy_file = 
