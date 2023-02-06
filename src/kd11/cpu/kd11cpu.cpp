@@ -162,7 +162,7 @@ void KD11CPU::execInstr (QBUS* bus)
     u16 tmp, tmp2;
     u16 src, dst;
     s32 tmps32;
-    CondData<u16> tmpValue;     // Used in fetchWordCPU macro
+    // CondData<u16> tmpValue;     // Used in fetchWordCPU macro
 
     // If there is a pending bus interrupt that can be executed, process
     // that interrupt first
@@ -170,7 +170,11 @@ void KD11CPU::execInstr (QBUS* bus)
     //    return;
 
     // Get next instruction to execute and move PC forward
-    u16 insn = fetchWord (r[7]);
+    // u16 insn = fetchWord (r[7]);
+    CondData<u16> tmpValue = fetchWord (r[7]);
+    if (!tmpValue.hasValue())
+        return;
+    u16 insn = tmpValue;
     r[7] += 2;
 
     // Get pointers to the possible instruction formats
