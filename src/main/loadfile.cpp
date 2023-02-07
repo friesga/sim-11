@@ -20,7 +20,7 @@ void Main::loadFile ()
 
     FILE* f = fopen (cmdLineOptions_.load_file, "rb");
     if (!f)
-        throw "Error opening load file" + string (cmdLineOptions_.load_file);
+        throw "Error opening load file " + string (cmdLineOptions_.load_file);
 
     fseek (f, 0, SEEK_END);
     size = ftell (f);
