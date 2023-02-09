@@ -47,6 +47,8 @@ class TraceRecord<CpuStepRecord>
 	u16	insn_[maxInstructionSize];
 
 	char priorityBit () { return (psw_ & PSW_PRIO) ? 'P' : '-'; }
+	char bit6 () { return (psw_ & _BV(6)) ? 'p' : '-'; }
+	char bit5 () { return (psw_ & _BV(5)) ? 'p' : '-'; }
 	char traceBit ()    { return (psw_ & PSW_T) ? 'T' : '-'; }
 	char negativeBit () { return (psw_ & PSW_N) ? 'N' : '-'; }
 	char zeroBit ()     { return (psw_ & PSW_Z) ? 'Z' : '-'; }
