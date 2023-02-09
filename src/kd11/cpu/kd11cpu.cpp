@@ -1272,15 +1272,18 @@ void KD11CPU::execInstr (QBUS* bus)
                             OperandOptions::AutoIncr), tmp))
                         return;
 
-                    psw = (psw & PSW_T) |
-                        (tmp & (PSW_C | PSW_V | PSW_Z | PSW_N | PSW_PRIO));
+
+                    // Allow bits 5/6/7 to be set and cleared
+                    psw = (psw & PSW_T) | (tmp & ~PSW_T);
                     break;
 
                 case 01067: /* MFPS */
                     tmp = (u8)psw;
                     if (insn1->mode == 0)
                     {
-                        r[insn1->rn] = (s8)psw;
+                        // If destination is mode 0, PS bit 7 is sign
+                        // extended through upper byte of the register.
+                        r[insn1->rn] = (s8) psw;
                     }
                     else
                     {
@@ -1435,6 +1438,9 @@ void KD11CPU::executeFISinstruction (u16 stackPointer,
     std::function<bool(Float, Float)> argumentsValid,
     std::function<Float(Float, Float)> instruction)
 {
+    // Clear PSW bits 5 and 6
+    psw &= ~(_BV(5) | _BV(6));
+
     CondData<u16> f1High = fetchWord (r[stackPointer] + 4);
     CondData<u16> f1Low = fetchWord (r[stackPointer] + 6);
     CondData<u16> f2High = fetchWord (r[stackPointer]);

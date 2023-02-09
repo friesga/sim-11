@@ -14,15 +14,13 @@
 #define	STATE_INHIBIT_TRACE	3
 
 // The processor status word in the LSI-11 is a composite of (1) the 4 PDP-11
-// Status Flags (N,Z,V,C) [bits 0:3] and (2) the Trace Bit [bit 4] and (3)
+// condition codes (N,Z,V,C) [bits 0:3] and (2) the Trace Bit [bit 4] and (3)
 // the Interrupt Enable bit [bit 7]. (EK-KUV11-TM-001 pg. 1-9). 
-// Processor Status Word bits 5 and 6 are reserved
-// (EK-KUV11-TM-001 Figure 2-5). This implies that these bits cannot
-// be set by the MTPS instruction and are read as zero by the MFPS
-// instruction. This behaviour is confirmed by the VKACC1 FIS diagnostic.
-// The diagnostic sets the PSW to the value 040 and then compares the
-// PSW's contents with the value 010.
-
+// Processor Status Word bits 5 and 6 are reserved (EK-KUV11-TM-001
+// Figure 2-5). These bits can be set and cleared by the MTPS instruction
+// however. At least every FIS instruction resets bits 5 and 6. This
+// behaviour is confirmed by the VKAAC0 (Basic Intruction Tests) and VKACC0
+// diagnostics.
 #define	PSW_C			_BV(0)
 #define	PSW_V			_BV(1)
 #define	PSW_Z			_BV(2)
