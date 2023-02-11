@@ -13,6 +13,10 @@ RXV21::RXV21 ()
 	data {nullptr}
 {
 	name_ = "RX";
+
+	data = (u8*) malloc(77 * 26 * 256);
+	if (!data) 
+		throw "Error: cannot allocate memory for rxv21";
 }
 
 RXV21::RXV21 (shared_ptr<RXV21Config> rxConfig)
