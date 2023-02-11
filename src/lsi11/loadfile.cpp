@@ -1,4 +1,4 @@
-#include "main.h"
+#include "lsi11.h"
 #include "cmdlineoptions/cmdlineoptions.h"
 
 #include <string>
@@ -7,7 +7,7 @@
 using std::string;
 
 // Load the given file in absolute loader format
-void Main::loadFile ()
+void LSI11::loadFile ()
 {
     /* execute absolute loader binary */
     /* const char* filename = "VKAAC0.BIC"; */
@@ -64,14 +64,14 @@ void Main::loadFile ()
                 /* console->sendString("P"); */
                 // ToDo: Use symbolic constants for runState
                 kdv11_->cpu ().runState = 1;
-                lsi11_.bus.setProcessorRunning (true);
+                bus.setProcessorRunning (true);
             }
             else
             {
                 /* console->sendString("200G"); */
                 kdv11_->cpu ().r[7] = 0200;
                 kdv11_->cpu ().runState = 1;
-                lsi11_.bus.setProcessorRunning (true);
+                bus.setProcessorRunning (true);
             }
             break;
         }
