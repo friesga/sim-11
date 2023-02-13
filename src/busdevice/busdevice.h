@@ -23,6 +23,7 @@ public:
 	QBUS*	bus;
 
 	// Required functions
+	virtual ~BusDevice () {};
 	virtual StatusCode read (u16 addr, u16 *destination) = 0;
 	virtual StatusCode writeWord (u16 addr, u16 value) = 0;
 	virtual StatusCode writeByte (u16 addr, u8 value);

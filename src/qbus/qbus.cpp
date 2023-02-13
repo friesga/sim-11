@@ -5,9 +5,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-using std::shared_ptr;
-
-
 #define	IRCJITTER()	(rand() % INTRPT_LATENCY_JITTER)
 
 QBUS::QBUS ()
@@ -15,7 +12,10 @@ QBUS::QBUS ()
 	processorRunning_ {false}
 {
 	for (auto device : slots)
-		device.reset ();
+	{
+		if (device != nullptr)
+			device->reset ();
+	}
 }
 
 CondData<u16> QBUS::read (u16 address)
@@ -27,7 +27,7 @@ CondData<u16> QBUS::read (u16 address)
 
 	for (i = 0; i < LSI11_SIZE; i++)
 	{
-		shared_ptr<BusDevice> module = slots[i];
+		BusDevice *module = slots[i];
 		if (!module)
 			continue;
 
@@ -89,7 +89,7 @@ void QBUS::reset ()
 
 	for (i = 0; i < LSI11_SIZE; i++)
 	{
-		shared_ptr<BusDevice> module = slots[i];
+		BusDevice *module = slots[i];
 		if (!module)
 			continue;
 
@@ -134,7 +134,7 @@ bool QBUS::getIntrptReq(InterruptRequest &intrptReq)
 		return false;
 }
 
-void QBUS::installModule (int slot, shared_ptr<BusDevice> module)
+void QBUS::installModule (int slot, BusDevice *module)
 {
 	if (module)
 	{
@@ -143,10 +143,10 @@ void QBUS::installModule (int slot, shared_ptr<BusDevice> module)
 	}
 }
 
-std::shared_ptr<BusDevice> QBUS::findModuleByName (std::string moduleName)
+BusDevice *QBUS::findModuleByName (std::string moduleName)
 {
 	for (auto module : slots)
-		if (module->name() == moduleName)
+		if (module != nullptr && module->name() == moduleName)
 			return module;
 	return nullptr;
 }

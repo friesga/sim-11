@@ -13,7 +13,7 @@ class WindowsConsole : public Console
     bool isValidKeyEvent (INPUT_RECORD* input_record);
 
 public:
-    WindowsConsole (std::shared_ptr<DLV11J> dlv11);
+    WindowsConsole (DLV11J *dlv11);
     void reader ();
 };
 

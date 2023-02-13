@@ -7,7 +7,7 @@
 class LinuxConsole : public Console
 {
 public:
-    LinuxConsole (std::shared_ptr<DLV11J> dlv11);
+    LinuxConsole (DLV11J *dlv11);
     void reader ();
 };
 

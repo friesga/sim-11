@@ -7,7 +7,6 @@ KD11::KD11 (QBUS* bus)
     bus_{ bus }
 {}
 
-
 KD11CPU& KD11::cpu ()
 {
     return cpu_;

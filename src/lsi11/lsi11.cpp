@@ -23,7 +23,12 @@ LSI11::LSI11 (CmdLineOptions const &cmdLineOptions)
 
 LSI11::~LSI11 ()
 {
-	/* nothing */
+	delete kdv11_;
+	delete msv11_;
+	delete dlv11_;
+	delete bdv11_;
+	delete rxv21_;
+	delete rlv12_;
 }
 
 // Reset all devices on the bus

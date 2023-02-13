@@ -6,6 +6,8 @@
 #include <memory>
 #include <thread>
 
+using std::unique_ptr;
+
 // // A class handling the simulator's console. As this requires unbuffered
 // input the class is highly system dependent. Therefore a Windows and a
 // Linux variant of this class have to be defined. All system dependent code
@@ -19,17 +21,17 @@ class Console
 protected:
     std::thread readerThread_;
     bool consoleRunning_ {false};
-    std::shared_ptr<DLV11J> dlv11_;
+    DLV11J *dlv11_;
 
 public:
-    Console (std::shared_ptr<DLV11J> dlv11);
+    Console (DLV11J *dlv11);
     ~Console ();
     virtual void reader() = 0;
     bool isRunning();
     void send (const char c);
     void sendString (const char* s);
 
-    static std::unique_ptr<Console> create (std::shared_ptr<DLV11J> dlv11);
+    static unique_ptr<Console> create (DLV11J *dlv11);
 };
 
 #endif // !_CONSOLE_H_

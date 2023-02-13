@@ -42,28 +42,28 @@ void LSI11::configureDevices ()
 			switch (device->deviceType_)
 			{
 				case DeviceType::KDV11:
-					kdv11_ = make_shared<KD11> (&bus);
+					kdv11_ = new KD11 (&bus);
 					break;
 
 				case DeviceType::MSV11:
-					msv11_ = make_shared<MSV11D> ();
+					msv11_ = new MSV11D ();
 					break;
 
 				case DeviceType::DLV11_J:
-					dlv11_ = make_shared<DLV11J> ();
+					dlv11_ = new DLV11J ();
 					break;
 
 				case DeviceType::BDV11:
-					bdv11_ = make_shared<BDV11> ();
+					bdv11_ = new BDV11 ();
 					break;
 
 				case DeviceType::RXV21:
-					rxv21_ = make_shared<RXV21> 
+					rxv21_ = new RXV21 
 						(static_pointer_cast<RXV21Config> (device));
 					break;
 
 				case DeviceType::RLV12:
-					rlv12_ = make_shared<RLV12>
+					rlv12_ = new RLV12
 						(static_pointer_cast<RLConfig> (device));
 					break;
 
@@ -75,18 +75,17 @@ void LSI11::configureDevices ()
 					throw "Unknown device type in configuration";
 			}
 		}
-
 	}
 	else
 	{
 		// No configuration file specified; create a bare system with a
 		// default configuration and without any files attached.
-		kdv11_ = make_shared<KD11> (&bus);
-		msv11_ = make_shared<MSV11D> ();
-		dlv11_ = make_shared<DLV11J> ();
-		bdv11_ = make_shared<BDV11> ();
-		rxv21_ = make_shared<RXV21> ();
-		rlv12_ = make_shared<RLV12> ();
+		kdv11_ = new KD11 (&bus);
+		msv11_ = new MSV11D ();
+		dlv11_ = new DLV11J ();
+		bdv11_ = new BDV11 ();
+		rxv21_ = new RXV21 ();
+		rlv12_ = new RLV12 ();
 		ba11_n_ = std::make_unique<BA11_N> (bus);
 	}
 

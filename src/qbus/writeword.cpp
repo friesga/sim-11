@@ -3,7 +3,7 @@
 
 bool QBUS::writeWord (u16 address, u16 value)
 {
-	std::shared_ptr<BusDevice> module;
+	BusDevice *module;
 
 	address &= 0xFFFE;
 		

@@ -20,12 +20,17 @@ using std::unique_ptr;
 class LSI11
 {
 	QBUS	 bus;
-	shared_ptr<KD11> kdv11_;
-	shared_ptr<MSV11D> msv11_;
-	shared_ptr<RXV21> rxv21_;
-	shared_ptr<RLV12> rlv12_;
-	shared_ptr<DLV11J> dlv11_;
-	shared_ptr<BDV11> bdv11_;
+	// We would prefer using shared_ptr's as pointers to the devices but the
+	// use of shared_ptr's makes debugging in MSVC terrribly slow. The use
+	// of unique_ptr's for the decice pointers results in complicated code
+	// and the use of raw pointers in e.g. QBUS::responsibleModule() as these
+	// pointers are used in loadFile() and in run().
+	KD11 *kdv11_;
+	MSV11D *msv11_;
+	RXV21 *rxv21_;
+	RLV12 *rlv12_;
+	DLV11J *dlv11_;
+	BDV11 *bdv11_;
 	unique_ptr<BA11_N> ba11_n_;
 	unique_ptr<Console> console_;
 	CmdLineOptions const &cmdLineOptions_;

@@ -8,8 +8,9 @@
 #include "threadsafecontainers/threadsafeprioqueue.h"
 #include "busdevice/busdevice.h"
 
-#include <memory>
 #include <string>
+
+using std::string;
 
 /* Backplane size */
 #define	LSI11_SIZE		8
@@ -41,7 +42,7 @@ public:
 	QBUS ();
 	void setInterrupt (TrapPriority priority, 
 		unsigned char busOrder, unsigned char vector);
-	void clearInterrupt (TrapPriority priority, 	unsigned char busOrder);
+	void clearInterrupt (TrapPriority priority, unsigned char busOrder);
 	bool intrptReqAvailable();
 	u8 intrptPriority();
 	bool getIntrptReq(InterruptRequest &ir);
@@ -50,21 +51,23 @@ public:
 	CondData<u16> read (u16 addr);
 	bool writeWord (u16 addr, u16 value);
 	bool writeByte (u16 addr, u8 val);
-	void installModule (int slot, std::shared_ptr<BusDevice> module);
-	std::shared_ptr<BusDevice> findModuleByName (std::string moduleName);
+	void installModule (int slot, BusDevice *module);
+	BusDevice *findModuleByName (string moduleName);
 	void setProcessorRunning (bool running);
 	bool processorIsRunning ();
 
-	std::shared_ptr<BusDevice> slots[LSI11_SIZE];
+
 	u16	delay;
 
 private:
+	BusDevice *slots[LSI11_SIZE] {nullptr};
+
 	// This queue keeps all interrupt requests, ordered in interrupt priority
 	using IntrptReqQueue = ThreadSafePrioQueue<InterruptRequest>;
 	IntrptReqQueue intrptReqQueue_;
 	bool processorRunning_;
 
-	std::shared_ptr<BusDevice> responsibleModule (u16 address);
+	BusDevice *responsibleModule (u16 address);
 	void pushInterruptRequest (InterruptRequest interruptReq);
 };
 
