@@ -13,31 +13,16 @@ using std::string;
 // Configure the devices and install them on the bus.
 // Accessing a non-configured device will result in a bus time-out
 // and the BDV11 boot will halt at address 000010.
-void LSI11::configureDevices ()
+void LSI11::configureDevices (vector<shared_ptr<DeviceConfig>> systemConfig)
 {
-	// Load device configuration from the configuration file
-	if (cmdLineOptions_.config_file)
+	// Is a configuration specified?
+	if (systemConfig.size () > 0)
 	{
-		IniProcessor configProcessor;
-		iniparser::File ft;
-
-		if (!ft.load (cmdLineOptions_.config_file))
-			throw "Error: cannot open file " + string(cmdLineOptions_.config_file);
-
-		try
-		{
-			configProcessor.process (ft);
-		}
-		catch (std::invalid_argument const &except)
-		{
-			throw "Error in configuration file: " + string(except.what());
-		}
-
-		// Check for presence of devices
-		checkConsistency (configProcessor.getSystemConfig ());
+		// Check for presence of necessary devices
+		checkConsistency (systemConfig);
 
 		// Get the device configurations and populate the LSI bus with these devices.
-		for (shared_ptr<DeviceConfig> device : configProcessor.getSystemConfig ())
+		for (shared_ptr<DeviceConfig> device : systemConfig)
 		{
 			switch (device->deviceType_)
 			{

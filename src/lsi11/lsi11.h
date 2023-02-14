@@ -19,7 +19,7 @@ using std::unique_ptr;
 
 class LSI11
 {
-	Qbus	 bus;
+	Qbus bus;
 	// We would prefer using shared_ptr's as pointers to the devices but the
 	// use of shared_ptr's makes debugging in MSVC terrribly slow. The use
 	// of unique_ptr's for the decice pointers results in complicated code
@@ -93,7 +93,7 @@ class LSI11
 public:
 	LSI11 (CmdLineOptions const &cmdLineOptions);
 	~LSI11 ();
-	void configureDevices ();
+	void configureDevices (vector<shared_ptr<DeviceConfig>> systemConfig);
 	void run ();
 	void reset ();
 	void step ();
