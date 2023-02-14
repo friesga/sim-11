@@ -9,7 +9,8 @@
 
 Qbus::Qbus ()
 	:
-	processorRunning_ {false}
+	processorRunning_ {false},
+	delay_ {0}
 {
 	for (auto device : slots)
 	{
@@ -64,7 +65,7 @@ void Qbus::pushInterruptRequest (InterruptRequest intrptReq)
 {
 	intrptReqQueue_.push (intrptReq);
 	trace.irq (IrqRecordType::IRQ_OK, intrptReq.vector());
-	delay = IRCJITTER ();
+	delay_ = IRCJITTER ();
 }
 
 // Clear the specified interrupt request. The InterruptRequQueue will delete
@@ -85,7 +86,7 @@ void Qbus::reset ()
 	/* Clear pending interrupts */
 	intrptReqQueue_.clear();
 
-	delay = 0;
+	delay_ = 0;
 
 	for (i = 0; i < LSI11_SIZE; i++)
 	{
@@ -101,7 +102,7 @@ void Qbus::reset ()
 // interrupt request. 
 void Qbus::step ()
 {
-	++delay;
+	++delay_;
 }
 
 // Check if there is an interrupt request available that can be processed.
@@ -111,7 +112,7 @@ void Qbus::step ()
 bool Qbus::intrptReqAvailable() 
 {
 	return (!intrptReqQueue_.empty() && 
-		(delay >= INTRPT_LATENCY || intrptReqQueue_.top().requestType() == RequestType::Trap));
+		(delay_ >= INTRPT_LATENCY || intrptReqQueue_.top().requestType() == RequestType::Trap));
 }
 
 // Return the priority of the interrupt request with the highest priority
@@ -127,7 +128,7 @@ bool Qbus::getIntrptReq(InterruptRequest &intrptReq)
 	{
 		bool result = intrptReqQueue_.fetchTop (intrptReq);
 		trace.irq (IrqRecordType::IRQ_SIG, intrptReq.vector());
-		delay = 0;
+		delay_ = 0;
 		return result;
 	}
 	else

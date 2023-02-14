@@ -16,10 +16,7 @@ LSI11::LSI11 (CmdLineOptions const &cmdLineOptions)
 	console_ {nullptr},
 	cmdLineOptions_ {cmdLineOptions},
 	running_ {false}
-{
-	// ToDo: Initialization of bus.delay belongs in class Qbus
-	bus_.delay = 0;
-}
+{}
 
 LSI11::~LSI11 ()
 {

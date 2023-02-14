@@ -56,9 +56,6 @@ public:
 	void setProcessorRunning (bool running);
 	bool processorIsRunning ();
 
-
-	u16	delay;
-
 private:
 	BusDevice *slots[LSI11_SIZE] {nullptr};
 
@@ -66,6 +63,7 @@ private:
 	using IntrptReqQueue = ThreadSafePrioQueue<InterruptRequest>;
 	IntrptReqQueue intrptReqQueue_;
 	bool processorRunning_;
+	u16	delay_;
 
 	BusDevice *responsibleModule (u16 address);
 	void pushInterruptRequest (InterruptRequest interruptReq);
