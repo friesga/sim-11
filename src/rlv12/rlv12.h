@@ -260,12 +260,8 @@ class RLV12 : public BusDevice
 
 public:
     // Constructors/destructor
-    RLV12 ();
-    RLV12 (shared_ptr<RLConfig> rlConfig);
-    /*
-        RLV12 (u32 baseAddress, u32 vector, bool rlv11, bool _22bit, 
-        size_t numUnits);
-    */
+    RLV12 (QBUS *bus);
+    RLV12 (QBUS *bus, shared_ptr<RLConfig> rlConfig);
     ~RLV12 ();
 
     // Required functions

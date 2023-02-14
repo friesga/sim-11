@@ -31,8 +31,9 @@ void console_print (unsigned char c)
 	fflush (stdout);
 }
 
-
-DLV11J::DLV11J ()
+DLV11J::DLV11J (QBUS *bus)
+	:
+	BusDevice (bus)
 {
 	int i;
 
@@ -81,39 +82,35 @@ void DLV11J::readChannel (int channelNr)
 		ch->buf_r %= DLV11J_BUF;
 		ch->buf_size--;
 
-		if(ch->buf_size) {
+		if(ch->buf_size)
+		{
 			/* more date in the RX buffer... */
 			ch->rcsr |= RCSR_RCVR_DONE;
-			if(ch->rcsr & RCSR_RCVR_INT) {
-				QBUS* bus = this->bus;
-				bus->setInterrupt (TrapPriority::BR4, 6, ch->vector);
-			}
-		} else {
+			if(ch->rcsr & RCSR_RCVR_INT)
+				bus_->setInterrupt (TrapPriority::BR4, 6, ch->vector);
+		} 
+		else
 			ch->rcsr &= ~RCSR_RCVR_DONE;
-		}
-	} else {
+	} 
+	else
+	{
 		ch->rbuf = RBUF_OVERRUN;
-		if(ch->rbuf & RBUF_ERROR_MASK) {
+		if (ch->rbuf & RBUF_ERROR_MASK)
 			ch->rbuf |= RBUF_ERROR;
-		}
 	}
 }
 
-void DLV11J::writeChannel(int channelNr)
+void DLV11J::writeChannel (int channelNr)
 {
 	DLV11Ch* ch = &channel[channelNr];
 	trace.dlv11 (DLV11RecordType::DLV11_TX, channelNr, ch->xbuf);
 
 	if(ch->receive)
-	{
 		ch->receive((unsigned char) ch->xbuf);
-	}
+	
 	ch->xcsr |= XCSR_TRANSMIT_READY;
 	if(ch->xcsr & XCSR_TRANSMIT_INT)
-	{
-		QBUS* bus = this->bus;
-		bus->setInterrupt (TrapPriority::BR4, 6, ch->vector + 4);
-	}
+		bus_->setInterrupt (TrapPriority::BR4, 6, ch->vector + 4);
 }
 
 StatusCode DLV11J::read (u16 address, u16 *destAddress)
@@ -143,7 +140,7 @@ StatusCode DLV11J::read (u16 address, u16 *destAddress)
 	return StatusCode::OK;
 }
 
-void DLV11J::writeRCSR(int n, u16 value)
+void DLV11J::writeRCSR (int n, u16 value)
 {
 	DLV11Ch* ch = &channel[n];
 	u16 old = ch->rcsr;
@@ -151,13 +148,10 @@ void DLV11J::writeRCSR(int n, u16 value)
 	
 	if((value & RCSR_RCVR_INT) && !(old & RCSR_RCVR_INT)
 			&& (ch->rcsr & RCSR_RCVR_DONE))
-	{
-		QBUS* bus = this->bus;
-		bus->setInterrupt (TrapPriority::BR4, 6, ch->vector);
-	}
+		bus_->setInterrupt (TrapPriority::BR4, 6, ch->vector);
 }
 
-void DLV11J::writeXCSR(int n, u16 value)
+void DLV11J::writeXCSR (int n, u16 value)
 {
 	DLV11Ch* ch = &channel[n];
 	u16 old = ch->xcsr;
@@ -165,15 +159,13 @@ void DLV11J::writeXCSR(int n, u16 value)
 	
 	if((value & XCSR_TRANSMIT_INT) && !(old & XCSR_TRANSMIT_INT)
 			&& (ch->xcsr & XCSR_TRANSMIT_READY))
-	{
-		QBUS* bus = this->bus;
-		bus->setInterrupt (TrapPriority::BR4, 6, ch->vector + 4);
-	}
+		bus_->setInterrupt (TrapPriority::BR4, 6, ch->vector + 4);
 }
 
 StatusCode DLV11J::writeWord (u16 address, u16 value)
 {
-	switch(address) {
+	switch(address)
+	{
 		case 0177560:
 			writeRCSR(3, value);
 			break;
@@ -215,7 +207,7 @@ void DLV11J::reset ()
 	}
 }
 
-void DLV11J::send(int channelNr, unsigned char c)
+void DLV11J::send (int channelNr, unsigned char c)
 {
 	DLV11Ch* ch = &channel[channelNr];
 	if(ch->buf_size < DLV11J_BUF)
@@ -226,15 +218,7 @@ void DLV11J::send(int channelNr, unsigned char c)
 		ch->buf_size++;
 		ch->rcsr |= RCSR_RCVR_DONE;
 		if(ch->rcsr & RCSR_RCVR_INT)
-		{
-			QBUS* bus = this->bus;
-			bus->setInterrupt (TrapPriority::BR4, 6, ch->vector);
-		}
+			bus_->setInterrupt (TrapPriority::BR4, 6, ch->vector);
 	}
 }
 
-// Originally in this function missed interrupt requests were checked
-// and re-issued. This is now superfluous because of the introduction of
-// the interrupt request queue.
-void DLV11J::step()
-{}

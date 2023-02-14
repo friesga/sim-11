@@ -36,7 +36,6 @@ State RXV21::transition (rxv21FillBufferRx2ba &&, rxv21Rx2dbFilled)
 // by the RX2BA register.
 void RXV21::fillBuffer ()
 {
-	QBUS* bus = this->bus;
 	u16 limit = (rx2cs & RX_DEN) ? 128 : 64;
 	u16 wc;
 	u16 ptr;
@@ -58,7 +57,7 @@ void RXV21::fillBuffer ()
 	for (wc = rx2wc, ptr = 0; wc > 0; wc--, ptr++) 
 	{
 		/* Transfer words */
-		buffer[ptr] = bus->read(rx2ba);
+		buffer[ptr] = bus_->read(rx2ba);
 		rx2ba += 2;
 	}
 

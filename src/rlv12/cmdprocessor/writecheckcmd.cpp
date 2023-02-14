@@ -62,7 +62,7 @@ u16 CmdProcessor::writeCheckCmd (RL01_2 *unit, RLV12Command &rlv12Command)
             memAddr += 2, ++rlv12Command.wordCount_)
         {
             // Loop through buffer
-            comp = controller_->bus->read (memAddr).valueOr (0);
+            comp = controller_->bus_->read (memAddr).valueOr (0);
             if (!comp.hasValue ())
             {
                 rlcsValue = RLV12::CSR_CompositeError | 

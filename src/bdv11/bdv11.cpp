@@ -30,8 +30,9 @@ using namespace std::chrono;
 #define	BDV11_SWITCH	(BDV11_CPU_TEST | BDV11_MEM_TEST \
 		| BDV11_DIALOG | BDV11_RX02)
 
-BDV11::BDV11 ()
+BDV11::BDV11 (QBUS *bus)
 	:
+	BusDevice (bus),
 	pcr {0},
 	scratch {0},
 	option {0},
@@ -240,7 +241,7 @@ void BDV11::tick()
 		// Check the line time clock (LTC) is enabled
 		if (ltc & 0100)
 		{
-			bus->setInterrupt (TrapPriority::BR4, 9, 0100);
+			bus_->setInterrupt (TrapPriority::BR4, 9, 0100);
 			nextWakeup += cycleTime;
 			this_thread::sleep_until (nextWakeup);
 		}

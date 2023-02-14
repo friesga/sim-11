@@ -30,7 +30,7 @@ void LSI11::run ()
 		for(i = 0; i < 1000; i++)
 		{
 			step ();
-			kdv11_->step (&bus);
+			kdv11_->step ();
 		}
 
 		if ((kdv11_->cpu().runState == 0 && 
@@ -41,12 +41,10 @@ void LSI11::run ()
 			for(i = 0; i < 32; i++)
 			{
 				step();
-				kdv11_->step (&bus);
+				kdv11_->step ();
 			}
 
 			running_ = false;
 		}
-
-		dlv11_->step();
 	}
 }

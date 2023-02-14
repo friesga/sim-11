@@ -104,7 +104,7 @@ void KD11CPU::returnFISresult (Float result, u16 registerNumber)
 // 3. Handling of traps and interrupts that might have arisen during execution
 //    of the instruction, either a trap as a result of an instruction, or an
 //    interrupt requested by a bus device.
-void KD11CPU::step (QBUS* bus)
+void KD11CPU::step ()
 {
     if(trace.isActive ())
     {
@@ -123,11 +123,11 @@ void KD11CPU::step (QBUS* bus)
 
     // If there is a pending bus interrupt that can be executed, process
     // that interrupt first, else execute the next instruction
-    if (!bus->intrptReqAvailable () || cpuPriority () >= bus->intrptPriority ())
+    if (!bus_->intrptReqAvailable () || cpuPriority () >= bus_->intrptPriority ())
     {
         std::chrono::high_resolution_clock::time_point start =
             std::chrono::high_resolution_clock::now ();
-        execInstr (bus);
+        execInstr ();
         std::chrono::high_resolution_clock::time_point end =
             std::chrono::high_resolution_clock::now ();
         trace.duration ("Instruction",
@@ -146,11 +146,11 @@ void KD11CPU::step (QBUS* bus)
         trace.trap (TrapRecordType::TRAP_T, 014);
         setTrap (&traceTrap);
     }
-    handleTraps (bus);
+    handleTraps ();
 }
 
 // Execute one instruction
-void KD11CPU::execInstr (QBUS* bus)
+void KD11CPU::execInstr ()
 {
     u16 tmp, tmp2;
     u16 src, dst;
@@ -225,7 +225,7 @@ void KD11CPU::execInstr (QBUS* bus)
                             break;
 
                         case 0000005: /* RESET */
-                            bus->reset ();
+                            bus_->reset ();
                             break;
 
                         case 0000006: /* RTT */
@@ -1491,7 +1491,7 @@ void KD11CPU::executeFISinstruction (u16 stackPointer,
 // Refer to the LSI-11 WCS user's guide (EK-KUV11-TM-001) par 2.3.
 //
 
-void KD11CPU::handleTraps (QBUS* bus)
+void KD11CPU::handleTraps ()
 {
     InterruptRequest intrptReq;
     u16 trapToProcess{ 0 };
@@ -1509,7 +1509,7 @@ void KD11CPU::handleTraps (QBUS* bus)
     // 
     // Check if there is a trap or interrupt request to handle and the CPU
     // isn't halted. This is the most common case so check this as first.
-    if ((!trap_ && !bus->intrptReqAvailable ()) || runState == STATE_HALT)
+    if ((!trap_ && !bus_->intrptReqAvailable ()) || runState == STATE_HALT)
         return;
 
     // Traps have the highest priority, so first check if there is a trap
@@ -1519,9 +1519,9 @@ void KD11CPU::handleTraps (QBUS* bus)
         trapToProcess = trap_->vector ();
         trap_ = nullptr;
     }
-    else if (bus->intrptPriority () > cpuPriority ())
+    else if (bus_->intrptPriority () > cpuPriority ())
     {
-        if (bus->getIntrptReq (intrptReq))
+        if (bus_->getIntrptReq (intrptReq))
             trapToProcess = intrptReq.vector ();
         else
             return;

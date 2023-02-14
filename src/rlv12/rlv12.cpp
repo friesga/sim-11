@@ -10,8 +10,9 @@
 // The base class protected data members cannot be accessed in an
 // initializer list
 // ToDo: Remove default RLV12 constructor
-RLV12::RLV12 ()
+RLV12::RLV12 (QBUS *bus)
     :
+    BusDevice (bus),
     csr_ {0},
     bar_ {0},
     dar_ {0},
@@ -36,8 +37,9 @@ RLV12::RLV12 ()
     cmdProcessor_ = std::make_unique<CmdProcessor> (this);
 }
 
-RLV12::RLV12 (shared_ptr<RLConfig> rlConfig)
+RLV12::RLV12 (QBUS *bus, shared_ptr<RLConfig> rlConfig)
     :
+    BusDevice (bus),
     csr_ {0},
     bar_ {0},
     dar_ {0},

@@ -46,29 +46,29 @@ void LSI11::configureDevices ()
 					break;
 
 				case DeviceType::MSV11:
-					msv11_ = new MSV11D ();
+					msv11_ = new MSV11D (&bus);
 					break;
 
 				case DeviceType::DLV11_J:
-					dlv11_ = new DLV11J ();
+					dlv11_ = new DLV11J (&bus);
 					break;
 
 				case DeviceType::BDV11:
-					bdv11_ = new BDV11 ();
+					bdv11_ = new BDV11 (&bus);
 					break;
 
 				case DeviceType::RXV21:
-					rxv21_ = new RXV21 
-						(static_pointer_cast<RXV21Config> (device));
+					rxv21_ = new RXV21 (&bus,
+						static_pointer_cast<RXV21Config> (device));
 					break;
 
 				case DeviceType::RLV12:
 					rlv12_ = new RLV12
-						(static_pointer_cast<RLConfig> (device));
+						(&bus, static_pointer_cast<RLConfig> (device));
 					break;
 
 				case DeviceType::BA11_N:
-					ba11_n_ = std::make_unique<BA11_N> (bus);
+					ba11_n_ = std::make_unique<BA11_N> (&bus);
 					break;
 
 				default:
@@ -81,12 +81,12 @@ void LSI11::configureDevices ()
 		// No configuration file specified; create a bare system with a
 		// default configuration and without any files attached.
 		kdv11_ = new KD11 (&bus);
-		msv11_ = new MSV11D ();
-		dlv11_ = new DLV11J ();
-		bdv11_ = new BDV11 ();
-		rxv21_ = new RXV21 ();
-		rlv12_ = new RLV12 ();
-		ba11_n_ = std::make_unique<BA11_N> (bus);
+		msv11_ = new MSV11D (&bus);
+		dlv11_ = new DLV11J (&bus);
+		bdv11_ = new BDV11 (&bus);
+		rxv21_ = new RXV21 (&bus);
+		rlv12_ = new RLV12 (&bus);
+		ba11_n_ = std::make_unique<BA11_N> (&bus);
 	}
 
 	// The Console class reads characters and sends them to the dlv11

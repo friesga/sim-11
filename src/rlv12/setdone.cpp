@@ -7,7 +7,7 @@ void RLV12::setDone (RL01_2 &unit, u16 status)
     // ToDo: clearInterrupt should not be necessary at this point?
     csr_ |= status | CSR_ControllerReady;
     if (csr_ & CSR_InterruptEnable)
-        bus->setInterrupt (TrapPriority::BR4, 4, vector_);
+        bus_->setInterrupt (TrapPriority::BR4, 4, vector_);
     else
-        bus->clearInterrupt (TrapPriority::BR4, 4);
+        bus_->clearInterrupt (TrapPriority::BR4, 4);
 }

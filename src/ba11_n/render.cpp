@@ -12,7 +12,7 @@ void BA11_N::render()
     pwrOkTexture_->render (385, 86, 9, 9);
 
     // Render RUN light on the front
-    if (bus_.processorIsRunning ())
+    if (bus_->processorIsRunning ())
         runLightTexture_->render (400, 86, 9, 9);
 
     //Update screen

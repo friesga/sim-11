@@ -4,7 +4,9 @@
 #include "types.h"
 #include "msv11d.h"
 
-MSV11D::MSV11D ()
+MSV11D::MSV11D (QBUS *bus)
+	:
+	BusDevice (bus)
 {
 	data = (u8*) malloc (MSV11D_SIZE);
 	memset (data, 0, MSV11D_SIZE);

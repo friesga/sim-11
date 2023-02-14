@@ -62,7 +62,7 @@ u16 CmdProcessor::maintenanceCmd (RL01_2 *unit, RLV12Command &rlv12Command)
     // bus->read() will generate a bus error trap.
     for (size_t wordCount = 0; wordCount < 256; ++wordCount)
     {
-        CondData<u16> value = controller_->bus->read (memoryAddress);
+        CondData<u16> value = controller_->bus_->read (memoryAddress);
         if (value.hasValue())
             controller_->dataBuffer_[wordCount] = value;
         else
@@ -81,7 +81,7 @@ u16 CmdProcessor::maintenanceCmd (RL01_2 *unit, RLV12Command &rlv12Command)
     // generate a bus error trap.
     for (size_t wordCount = 0; wordCount < 255; wordCount++)
     {
-        controller_->bus->writeWord (memoryAddress, 
+        controller_->bus_->writeWord (memoryAddress, 
             controller_->dataBuffer_[wordCount]);
         memoryAddress += 2;
         ++controller_->wordCounter_;

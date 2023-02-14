@@ -9,7 +9,7 @@ class KD11 : public BusDevice
 {
 public:
 	KD11 (QBUS *bus);
-	void step (QBUS* bus);
+	void step ();
 	
 	// Give main() access to the CPU to set PC and runState
 	KD11CPU &cpu();
@@ -27,9 +27,8 @@ public:
 	void reset() override {};
 
 private:
-	QBUS *bus_;
 	KD11CPU cpu_ {bus_};
-	KD11ODT	odt {cpu_};
+	KD11ODT	odt_ {bus_, cpu_};
 };
 
 #endif // !_KD11_H_

@@ -125,11 +125,9 @@ class RXV21 : public BusDevice, public variantFsm::Fsm<RXV21, Event, State>
 	void readStatus ();
 	void readErrorCode ();
 
-	InterruptRequest interruptRequest(unsigned char vector);
-
 public:
-	RXV21 ();
-	RXV21 (shared_ptr<RXV21Config> rxConfig);
+	RXV21 (QBUS *bus);
+	RXV21 (QBUS* bus, shared_ptr<RXV21Config> rxConfig);
 	~RXV21 ();
 	StatusCode read (u16 address, u16 *destAddress) override;
 	StatusCode writeWord (u16 address, u16 value) override;

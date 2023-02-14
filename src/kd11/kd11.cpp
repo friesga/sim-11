@@ -4,7 +4,7 @@
 // KD11 functions
 KD11::KD11 (QBUS* bus)
     :
-    bus_{ bus }
+    BusDevice (bus)
 {}
 
 KD11CPU& KD11::cpu ()
@@ -12,23 +12,23 @@ KD11CPU& KD11::cpu ()
     return cpu_;
 }
 
-void KD11::step (QBUS* bus)
+void KD11::step ()
 {
     switch (cpu_.runState)
     {
         case STATE_HALT:
-            odt.step (bus);
+            odt_.step ();
             break;
 
         case STATE_RUN:
-            cpu_.step (bus);
+            cpu_.step ();
             if (cpu_.runState == STATE_HALT)
                 // Reset the ODT state to ODT_STATE_INIT
-                odt.reset ();
+                odt_.reset ();
             break;
 
         case STATE_WAIT:
-            cpu_.handleTraps (bus);
+            cpu_.handleTraps ();
             break;
     }
 }

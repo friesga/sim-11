@@ -2,10 +2,11 @@
 #include "trace/trace.h"
 
 // Constructor
-KD11ODT::KD11ODT (KD11CPU& cpu)
+KD11ODT::KD11ODT (QBUS *bus, KD11CPU& cpu)
     :
-    cpu_{ cpu },
-    state{ ODT_STATE_INIT }
+    bus_ {bus},
+    cpu_ {cpu},
+    state {ODT_STATE_INIT}
 {}
 
 void KD11ODT::reset ()
@@ -48,7 +49,7 @@ void KD11ODT::inputError ()
 }
 
 // ToDo: Use bus->writeByte() as characters are written?
-void KD11ODT::step (QBUS* bus)
+void KD11ODT::step ()
 {
     /* odt */
     // KD11ODT* odt = &odt;
@@ -67,11 +68,11 @@ void KD11ODT::step (QBUS* bus)
             break;
 
         case ODT_STATE_WAIT:
-            if (bus->read (0177560) & 0x80)
+            if (bus_->read (0177560) & 0x80)
             {
                 /* ch available */
-                u16 c = bus->read (0177562);
-                bus->writeWord (0177566, (u8)c);
+                u16 c = bus_->read (0177562);
+                bus_->writeWord (0177566, (u8)c);
                 switch ((u8)c)
                 {
                     case '$':
@@ -102,7 +103,7 @@ void KD11ODT::step (QBUS* bus)
                     case 'P':
                         state = ODT_STATE_INIT;
                         cpu_.runState = STATE_RUN;
-                        cpu_.bus_->setProcessorRunning (true);
+                        bus_->setProcessorRunning (true);
                         trace.cpuEvent (CpuEventRecordType::CPU_ODT_P, cpu_.r[7]);
                         break;
 
@@ -114,27 +115,27 @@ void KD11ODT::step (QBUS* bus)
             break;
 
         case ODT_STATE_WR:
-            if (bus->read (0177564) & 0x80)
+            if (bus_->read (0177564) & 0x80)
             {
-                bus->writeWord (0177566, buf[buf_r++]);
+                bus_->writeWord (0177566, buf[buf_r++]);
                 if (buf_r == buf_sz)
                     state = next;
             }
             break;
 
         case ODT_STATE_ADDR:
-            if (bus->read (0177560) & 0x80)
+            if (bus_->read (0177560) & 0x80)
             {
                 /* ch available */
-                u16 ch = bus->read (0177562);
+                u16 ch = bus_->read (0177562);
                 u8 c = (u8)ch;
-                bus->writeWord (0177566, c);
+                bus_->writeWord (0177566, c);
                 if ((u8)c == '/')
                 {
                     /* delimit */
                     // ToDo: The address might be invalid and in that case
                     // ODT should respond with a '?' instead of a zero.
-                    u16 val = bus->read (addr).valueOr (0);
+                    u16 val = bus_->read (addr).valueOr (0);
                     clear ();
                     writeOctal (val);
                     write (' ');
@@ -152,7 +153,7 @@ void KD11ODT::step (QBUS* bus)
                     state = ODT_STATE_INIT;
                     cpu_.r[7] = addr;
                     cpu_.runState = STATE_RUN;
-                    cpu_.bus_->setProcessorRunning (true);
+                    bus_->setProcessorRunning (true);
                     trace.cpuEvent (CpuEventRecordType::CPU_ODT_G, addr);
                 }
                 else
@@ -161,12 +162,12 @@ void KD11ODT::step (QBUS* bus)
             break;
 
         case ODT_STATE_REG:
-            if (bus->read (0177560) & 0x80)
+            if (bus_->read (0177560) & 0x80)
             {
                 /* ch available */
-                u16 ch = bus->read (0177562);
+                u16 ch = bus_->read (0177562);
                 u8 c = (u8)ch;
-                bus->writeWord (0177566, c);
+                bus_->writeWord (0177566, c);
                 state = ODT_STATE_REG_WAIT;
                 if (c >= '0' && c <= '7')
                     addr = c - '0';
@@ -178,16 +179,16 @@ void KD11ODT::step (QBUS* bus)
             break;
 
         case ODT_STATE_VAL:
-            if (bus->read (0177560) & 0x80)
+            if (bus_->read (0177560) & 0x80)
             {
                 /* ch available */
-                u16 ch = bus->read (0177562);
+                u16 ch = bus_->read (0177562);
                 u8 c = (u8)ch;
-                bus->writeWord (0177566, c);
+                bus_->writeWord (0177566, c);
                 if (c == '\r' || c == '\n')
                 {
                     if (input)
-                        bus->writeWord (addr, val);
+                        bus_->writeWord (addr, val);
                 }
                 else if (c >= '0' && c <= '7')
                 {
@@ -213,7 +214,7 @@ void KD11ODT::step (QBUS* bus)
 
                     addr += 2;
                     val = 0;
-                    tmpValue = bus->read (addr);
+                    tmpValue = bus_->read (addr);
 
                     clear ();
                     write ('\r');
@@ -231,12 +232,12 @@ void KD11ODT::step (QBUS* bus)
             break;
 
         case ODT_STATE_REG_WAIT:
-            if (bus->read (0177560) & 0x80)
+            if (bus_->read (0177560) & 0x80)
             {
                 /* ch available */
-                u16 ch = bus->read (0177562);
+                u16 ch = bus_->read (0177562);
                 u8 c = (u8)ch;
-                bus->writeWord (0177566, c);
+                bus_->writeWord (0177566, c);
                 if (c == '/')
                 {
                     u16 val;
@@ -259,12 +260,12 @@ void KD11ODT::step (QBUS* bus)
             break;
 
         case ODT_STATE_REG_VAL:
-            if (bus->read (0177560) & 0x80)
+            if (bus_->read (0177560) & 0x80)
             {
                 /* ch available */
-                u16 ch = bus->read (0177562);
+                u16 ch = bus_->read (0177562);
                 u8 c = (u8)ch;
-                bus->writeWord (0177566, c);
+                bus_->writeWord (0177566, c);
                 if (c == '\r' || c == '\n')
                 {
                     if (input)

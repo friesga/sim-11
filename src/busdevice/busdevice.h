@@ -14,13 +14,13 @@ class Unit;
 class BusDevice
 {
 protected:
+	QBUS* bus_;
     std::string name_;          // Device name
     u32 baseAddress_;           // Device registers base address
     u32 vector_;                // Device vector
 
 public:
-	// ToDo: Make QBUS* private
-	QBUS*	bus;
+	BusDevice (QBUS *bus);
 
 	// Required functions
 	virtual ~BusDevice () {};

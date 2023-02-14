@@ -47,10 +47,10 @@ class KD11CPU
 public:
 	friend class KD11ODT;
 
-	KD11CPU(QBUS *bus);
+	KD11CPU (QBUS *bus);
 	void reset();
-	void step(QBUS* bus);
-	void handleTraps(QBUS* bus);
+	void step ();
+	void handleTraps();
 
 	// These functions are defined public as they are used by the
 	// Instruction classes.
@@ -64,9 +64,9 @@ public:
 	u16	r[8];
 
 private:
-	void setTrap(InterruptRequest const *ir);
-	void execInstr(QBUS* bus);
-	u8 cpuPriority();
+	void setTrap (InterruptRequest const *ir);
+	void execInstr ();
+	u8 cpuPriority ();
 	void returnFISresult (Float result, u16 registerNumber);
 	void executeFISinstruction (u16 stackPointer, 
 		std::function<bool(Float, Float)> argumentsValid,

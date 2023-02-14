@@ -178,6 +178,7 @@ set (SIM11_SRCS
     src/main/main.cpp
     src/msv11d/msv11d.cpp
     ${QBUS_SRCS}
+    src/busdevice/busdevice.cpp
     src/busdevice/writebyte.cpp
     ${RLV12_SRCS}
     ${SDLWRAP_SRCS}

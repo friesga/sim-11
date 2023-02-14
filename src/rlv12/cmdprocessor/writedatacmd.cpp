@@ -55,7 +55,7 @@ u16 CmdProcessor::writeDataCmd (RL01_2 *unit, RLV12Command &rlv12Command)
     for (size_t index = 0, memAddr = rlv12Command.memoryAddress_;
         index < rlv12Command.wordCount_; memAddr += 2, ++index)
     {
-        tmpValue = controller_->bus->read (memAddr).valueOr (0);
+        tmpValue = controller_->bus_->read (memAddr).valueOr (0);
         if (!tmpValue.hasValue ())
         {
             rlcsValue = RLV12::CSR_CompositeError | 

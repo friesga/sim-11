@@ -5,8 +5,10 @@
 #include <string.h>
 
 // Constructor for a default RXV21 device without attached files
-RXV21::RXV21 ()
+RXV21::RXV21 (QBUS *bus)
 	:
+	BusDevice (bus),
+
 	// Factory configuration
 	base {0177170},
 	vector {0264},
@@ -19,7 +21,9 @@ RXV21::RXV21 ()
 		throw "Error: cannot allocate memory for rxv21";
 }
 
-RXV21::RXV21 (shared_ptr<RXV21Config> rxConfig)
+RXV21::RXV21 (QBUS *bus, shared_ptr<RXV21Config> rxConfig)
+	:
+	BusDevice (bus)
 {
 	name_ = "RX";
 
@@ -77,8 +81,6 @@ void RXV21::clearErrors()
 // interrupts an interrupt will occur.
 void RXV21::done ()
 {
-	QBUS* bus = this->bus;
-
 	rx2cs |= RX_DONE;
 	rx2es |= RX2ES_DRV_DEN;
 	rx2db = rx2es;
@@ -87,7 +89,7 @@ void RXV21::done ()
 	// being processed, the request is held and on the next step the request
 	// is tried again.
 	if (rx2cs & RX_INTR_ENB) 
-		bus->setInterrupt (TrapPriority::BR4, 5, vector);
+		bus_->setInterrupt (TrapPriority::BR4, 5, vector);
 }
 
 // Read operation on either the RX2CS or RX2DB
@@ -135,10 +137,7 @@ StatusCode RXV21::writeWord (u16 address, u16 value)
 		// if interrupts were not enabled and Interrupt Enable is set in this
 		// register write action.
 		if (!intr && (value & RX_INTR_ENB) && (rx2cs & RX_DONE)) 
-		{
-			QBUS* bus = this->bus;
-			bus->setInterrupt (TrapPriority::BR4, 5, vector);
-		}
+			bus_->setInterrupt (TrapPriority::BR4, 5, vector);
 	} 
 	else if (address == base + 2) 
 	{ 

@@ -35,7 +35,6 @@ State RXV21::transition (rxv21EmptyBufferRx2ba &&, rxv21Rx2dbFilled)
 // previous Fill Buffer or Read Sector command.
 void RXV21::emptyBuffer ()
 {
-	QBUS* bus = this->bus;
 	u16 limit = (rx2cs & RX_DEN) ? 128 : 64;
 	u16 wc;
 	u16 ptr;
@@ -54,7 +53,7 @@ void RXV21::emptyBuffer ()
 	for (wc = rx2wc, ptr = 0; wc > 0; wc--, ptr++) 
 	{
 		/* Transfer words */
-		bus->writeWord (rx2ba, buffer[ptr]);
+		bus_->writeWord (rx2ba, buffer[ptr]);
 		rx2ba += 2;
 	}
 	done ();

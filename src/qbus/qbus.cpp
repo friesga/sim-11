@@ -134,13 +134,15 @@ bool QBUS::getIntrptReq(InterruptRequest &intrptReq)
 		return false;
 }
 
+// Install the given device in the given slot. Every BusDevice contains a
+// pointer to the bus it is installed on. This pointer has to be specified
+// in the device's constructor. There is something to be said for setting
+// the pointer in the installModule function but in e.g. the KD11 device
+// the pointer is already used in the constructor.
 void QBUS::installModule (int slot, BusDevice *module)
 {
-	if (module)
-	{
+	if (slot < LSI11_SIZE && module != nullptr)
 		slots[slot] = module;
-		module->bus = this;
-	}
 }
 
 BusDevice *QBUS::findModuleByName (std::string moduleName)

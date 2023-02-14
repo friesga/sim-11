@@ -16,7 +16,7 @@ using std::unique_ptr;
 
 class BA11_N
 {
-    QBUS &bus_;
+    QBUS *bus_;
 
     // SDL_Texture *texture_;
     SDL_Rect sourceRectangle_;
@@ -34,13 +34,13 @@ class BA11_N
     void init (char const *title, int xpos, int ypos, 
         int width, int height, bool fullscreen);
 	void bezel ();
-    void render();
-	void update();
+    void render ();
+	void update ();
 	void handleEvents();
 	SDL_Surface *loadImage (std::string image);
 
 public:
-    BA11_N (QBUS &bus);
+    BA11_N (QBUS *bus);
     ~BA11_N();
 
     bool isRunning ();
