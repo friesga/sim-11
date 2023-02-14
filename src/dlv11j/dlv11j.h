@@ -37,14 +37,12 @@ public:
 	void reset ();
 
 	void send (int channel, unsigned char c);
-	void step();
 
 private:
 	void readChannel (int channelNr);
 	void writeChannel (int channelNr);
 	void writeRCSR (int n, u16 value);
 	void writeXCSR (int n, u16 value);
-	InterruptRequest interruptRequest(unsigned char vector);
 
 	DLV11Ch	channel[4];
 	u16	base;
