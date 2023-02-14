@@ -308,9 +308,9 @@ set (SIM11_TEST_SRCS
     ${SIM_FIO_SRCS}
     ${RLV12_SRCS}
     ${FLOAT_SRCS}
+    src/busdevice/busdevice.cpp
     src/busdevice/writebyte.cpp
     src/lib/gotapproval.cpp
-    src/lsi11/lsi11.cpp
     src/kd11/kd11.cpp
     src/kd11/cpu/kd11cpu.cpp
     src/kd11/odt/kd11odt.cpp
@@ -328,11 +328,15 @@ set (GTESTUNIT_LIBS
     "G:/src/gtest-1.10.0/build/x64-Release/lib/gtest.lib"
     "G:/src/gtest-1.10.0/build/x64-Release/lib/gtest_main.lib")
 
+set (SDL_INCLUDE_DIRS
+    C:/Libraries/SDL2-2.24.2/include
+    C:/Libraries/SDL2_image-2.6.2/include)
+
 target_include_directories (sim-11-test PUBLIC
     include 
     ${CMAKE_SOURCE_DIR}/src
-    ${GTEST_INCLUDE_DIRS})
-
+    ${GTEST_INCLUDE_DIRS}
+    ${SDL_INCLUDE_DIRS})
     
 target_link_libraries(sim-11-test ${GTESTUNIT_LIBS})
 

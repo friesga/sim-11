@@ -25,8 +25,8 @@ class RLV12AttachTest : public ::testing::Test
 {
 protected:
     // Create bus structure, an RLV12 device and install the device
-    QBUS bus;
-    std::shared_ptr<RLV12> rlv12Device = std::make_shared<RLV12> ();
+    Qbus bus;
+    RLV12 *rlv12Device = new RLV12 (&bus);
 
     void SetUp() override
     {

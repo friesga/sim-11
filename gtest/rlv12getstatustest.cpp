@@ -47,9 +47,9 @@ protected:
     
 
     // Create bus structure, an RLV12 device and install the device
-    QBUS bus;
-    std::shared_ptr<MSV11D> msv11 = std::make_shared<MSV11D> ();
-    std::shared_ptr<RLV12> rlv12Device = std::make_shared<RLV12> ();
+    Qbus bus;
+    MSV11D *msv11 = new MSV11D (&bus);
+    RLV12 *rlv12Device = new RLV12 (&bus);
 
     void waitForControllerReady ()
     {
