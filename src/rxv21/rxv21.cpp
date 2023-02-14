@@ -5,7 +5,7 @@
 #include <string.h>
 
 // Constructor for a default RXV21 device without attached files
-RXV21::RXV21 (QBUS *bus)
+RXV21::RXV21 (Qbus *bus)
 	:
 	BusDevice (bus),
 
@@ -21,7 +21,7 @@ RXV21::RXV21 (QBUS *bus)
 		throw "Error: cannot allocate memory for rxv21";
 }
 
-RXV21::RXV21 (QBUS *bus, shared_ptr<RXV21Config> rxConfig)
+RXV21::RXV21 (Qbus *bus, shared_ptr<RXV21Config> rxConfig)
 	:
 	BusDevice (bus)
 {

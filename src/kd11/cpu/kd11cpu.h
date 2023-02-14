@@ -47,7 +47,7 @@ class KD11CPU
 public:
 	friend class KD11ODT;
 
-	KD11CPU (QBUS *bus);
+	KD11CPU (Qbus *bus);
 	void reset();
 	void step ();
 	void handleTraps();
@@ -72,7 +72,7 @@ private:
 		std::function<bool(Float, Float)> argumentsValid,
 		std::function<Float(Float, Float)>);
 
-	QBUS *bus_;
+	Qbus *bus_;
 	u16	psw;
 
 	// A trap is a special kind of interrupt, internal to the CPU. There

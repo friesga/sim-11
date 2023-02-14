@@ -2,7 +2,7 @@
 #include "trace/trace.h"
 
 // Constructor
-KD11ODT::KD11ODT (QBUS *bus, KD11CPU& cpu)
+KD11ODT::KD11ODT (Qbus *bus, KD11CPU& cpu)
     :
     bus_ {bus},
     cpu_ {cpu},

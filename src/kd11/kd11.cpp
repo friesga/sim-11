@@ -2,7 +2,7 @@
 #include "qbus/qbus.h"
 
 // KD11 functions
-KD11::KD11 (QBUS* bus)
+KD11::KD11 (Qbus* bus)
     :
     BusDevice (bus)
 {}

@@ -1,6 +1,6 @@
 #include "busdevice.h"
 
-BusDevice::BusDevice (QBUS *bus)
+BusDevice::BusDevice (Qbus *bus)
     :
     bus_ {bus},
     baseAddress_ {0},

@@ -7,7 +7,7 @@
 
 #define	IRCJITTER()	(rand() % INTRPT_LATENCY_JITTER)
 
-QBUS::QBUS ()
+Qbus::Qbus ()
 	:
 	processorRunning_ {false}
 {
@@ -18,7 +18,7 @@ QBUS::QBUS ()
 	}
 }
 
-CondData<u16> QBUS::read (u16 address)
+CondData<u16> Qbus::read (u16 address)
 {
 	u8 i;
 	u16 addr = address;
@@ -51,7 +51,7 @@ CondData<u16> QBUS::read (u16 address)
 // Set an interrupt request. The only reason this could fail is when
 // a device already has set an interrupt. That would be an error on the
 // part of the device and wouldn't harm.
-void QBUS::setInterrupt (TrapPriority priority, 
+void Qbus::setInterrupt (TrapPriority priority, 
 		unsigned char busOrder, unsigned char vector)
 {
 	InterruptRequest intrptReq {RequestType::IntrptReq, priority, busOrder, vector};
@@ -60,7 +60,7 @@ void QBUS::setInterrupt (TrapPriority priority,
 
 // Push the interrupt request created by setInterrupt or setTrap to the
 // interupt queue.
-void QBUS::pushInterruptRequest (InterruptRequest intrptReq)
+void Qbus::pushInterruptRequest (InterruptRequest intrptReq)
 {
 	intrptReqQueue_.push (intrptReq);
 	trace.irq (IrqRecordType::IRQ_OK, intrptReq.vector());
@@ -70,13 +70,13 @@ void QBUS::pushInterruptRequest (InterruptRequest intrptReq)
 // Clear the specified interrupt request. The InterruptRequQueue will delete
 // the interrupt request equal to specified request. Equality is based on
 // priority and busorder (see InterruptRequest::operator==).
-void QBUS::clearInterrupt (TrapPriority priority, unsigned char busOrder)
+void Qbus::clearInterrupt (TrapPriority priority, unsigned char busOrder)
 {
 	intrptReqQueue_.erase (InterruptRequest {RequestType::IntrptReq, 
 		priority, busOrder, 0});
 }
 
-void QBUS::reset ()
+void Qbus::reset ()
 {
 	u8 i;
 
@@ -99,29 +99,29 @@ void QBUS::reset ()
 
 // Wait a random number (max INTRPT_LATENCY) of steps till processing of an
 // interrupt request. 
-void QBUS::step ()
+void Qbus::step ()
 {
 	++delay;
 }
 
 // Check if there is an interrupt request available that can be processed.
 // Wait a random number (max INTRPT_LATENCY) of steps till processing of an
-// interrupt request. The delay counter is incremented every QBUS step.
+// interrupt request. The delay counter is incremented every Qbus step.
 // Traps are handled internally in the CPU and are to be processed immediately.
-bool QBUS::intrptReqAvailable() 
+bool Qbus::intrptReqAvailable() 
 {
 	return (!intrptReqQueue_.empty() && 
 		(delay >= INTRPT_LATENCY || intrptReqQueue_.top().requestType() == RequestType::Trap));
 }
 
 // Return the priority of the interrupt request with the highest priority
-u8 QBUS::intrptPriority()
+u8 Qbus::intrptPriority()
 {
 	return static_cast<u8> (intrptReqQueue_.top().priority());
 }
 
 // Get the interrupt request with the highest priority if one is available
-bool QBUS::getIntrptReq(InterruptRequest &intrptReq)
+bool Qbus::getIntrptReq(InterruptRequest &intrptReq)
 {
 	if (intrptReqAvailable())
 	{
@@ -139,13 +139,13 @@ bool QBUS::getIntrptReq(InterruptRequest &intrptReq)
 // in the device's constructor. There is something to be said for setting
 // the pointer in the installModule function but in e.g. the KD11 device
 // the pointer is already used in the constructor.
-void QBUS::installModule (int slot, BusDevice *module)
+void Qbus::installModule (int slot, BusDevice *module)
 {
 	if (slot < LSI11_SIZE && module != nullptr)
 		slots[slot] = module;
 }
 
-BusDevice *QBUS::findModuleByName (std::string moduleName)
+BusDevice *Qbus::findModuleByName (std::string moduleName)
 {
 	for (auto module : slots)
 		if (module != nullptr && module->name() == moduleName)
@@ -157,13 +157,13 @@ BusDevice *QBUS::findModuleByName (std::string moduleName)
 // SRUN L signal. SRUN L, a non-bused, backplane signal, is a series of
 // pulses which occur at 3-5",s intervals whenever the processor is in
 // the Run mode.
-void QBUS::setProcessorRunning (bool running)
+void Qbus::setProcessorRunning (bool running)
 {
 	processorRunning_ = running;
 }
 
 
-bool QBUS::processorIsRunning ()
+bool Qbus::processorIsRunning ()
 {
 	return processorRunning_;
 }

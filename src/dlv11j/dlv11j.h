@@ -27,7 +27,7 @@ struct DLV11Ch
 class DLV11J : public BusDevice
 {
 public:
-	DLV11J (QBUS *bus);
+	DLV11J (Qbus *bus);
 	~DLV11J ();
 
 	// Define the obligatory functions

@@ -4,7 +4,7 @@
 #include "types.h"
 #include "msv11d.h"
 
-MSV11D::MSV11D (QBUS *bus)
+MSV11D::MSV11D (Qbus *bus)
 	:
 	BusDevice (bus)
 {

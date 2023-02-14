@@ -15,7 +15,7 @@ using std::string;
 /* Backplane size */
 #define	LSI11_SIZE		8
 
-// QBUS interrupt latency, defined as the maximum number of instructions
+// Qbus interrupt latency, defined as the maximum number of instructions
 // after which the interrupt will be processed. The INTRPT_LATENCY_JITTER
 // is a random number of instructions. The minimum latency will be
 // INTRPT_LATENCY - INTRPT_LATENCY_JITTER and the maximum latency is the
@@ -36,10 +36,10 @@ using std::string;
 
 class BusDevice;
 
-class QBUS
+class Qbus
 {
 public:
-	QBUS ();
+	Qbus ();
 	void setInterrupt (TrapPriority priority, 
 		unsigned char busOrder, unsigned char vector);
 	void clearInterrupt (TrapPriority priority, unsigned char busOrder);

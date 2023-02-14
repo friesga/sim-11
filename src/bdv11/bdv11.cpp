@@ -30,7 +30,7 @@ using namespace std::chrono;
 #define	BDV11_SWITCH	(BDV11_CPU_TEST | BDV11_MEM_TEST \
 		| BDV11_DIALOG | BDV11_RX02)
 
-BDV11::BDV11 (QBUS *bus)
+BDV11::BDV11 (Qbus *bus)
 	:
 	BusDevice (bus),
 	pcr {0},

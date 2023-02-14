@@ -8,7 +8,7 @@
 class KD11 : public BusDevice
 {
 public:
-	KD11 (QBUS *bus);
+	KD11 (Qbus *bus);
 	void step ();
 	
 	// Give main() access to the CPU to set PC and runState

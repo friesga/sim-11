@@ -19,11 +19,11 @@ using std::unique_ptr;
 
 class LSI11
 {
-	QBUS	 bus;
+	Qbus	 bus;
 	// We would prefer using shared_ptr's as pointers to the devices but the
 	// use of shared_ptr's makes debugging in MSVC terrribly slow. The use
 	// of unique_ptr's for the decice pointers results in complicated code
-	// and the use of raw pointers in e.g. QBUS::responsibleModule() as these
+	// and the use of raw pointers in e.g. Qbus::responsibleModule() as these
 	// pointers are used in loadFile() and in run().
 	KD11 *kdv11_;
 	MSV11D *msv11_;

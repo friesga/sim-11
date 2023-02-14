@@ -31,7 +31,7 @@ void console_print (unsigned char c)
 	fflush (stdout);
 }
 
-DLV11J::DLV11J (QBUS *bus)
+DLV11J::DLV11J (Qbus *bus)
 	:
 	BusDevice (bus)
 {

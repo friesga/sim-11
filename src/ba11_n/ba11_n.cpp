@@ -11,7 +11,7 @@ using std::make_unique;
 // Constructor
 // Create a window showing the BA11-N and devices and then start a thread
 // handling the events and render the lamps and switches.
-BA11_N::BA11_N (QBUS *bus)
+BA11_N::BA11_N (Qbus *bus)
     :
     bus_ {bus}
 {

@@ -10,7 +10,7 @@
 class MSV11D : public BusDevice
 {
 public:
-	MSV11D (QBUS* bus);
+	MSV11D (Qbus* bus);
 	~MSV11D ();
 	StatusCode read (u16 address, u16 *destAddress) override;
 	StatusCode writeWord (u16 address, u16 value) override;

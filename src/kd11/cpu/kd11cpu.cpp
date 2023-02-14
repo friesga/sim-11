@@ -14,7 +14,7 @@
     if (cond) return;
 
 // Constructor
-KD11CPU::KD11CPU (QBUS* bus)
+KD11CPU::KD11CPU (Qbus* bus)
     :
     runState {STATE_HALT},
     r {0},

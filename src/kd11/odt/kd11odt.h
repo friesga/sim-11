@@ -19,7 +19,7 @@
 class KD11ODT 
 {
 public:
-	KD11ODT (QBUS *bus, KD11CPU &cpu);
+	KD11ODT (Qbus *bus, KD11CPU &cpu);
 	void reset ();
 	void step ();
 
@@ -29,7 +29,7 @@ private:
 	void writeOctal (u16 val);
 	void inputError ();
 
-	QBUS *bus_;
+	Qbus *bus_;
 	KD11CPU &cpu_;
 	u16	addr;
 	u16	val;

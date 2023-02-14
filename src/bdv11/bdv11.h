@@ -11,7 +11,7 @@
 class BDV11 : public BusDevice
 {
 public:
-	BDV11 (QBUS *bus);
+	BDV11 (Qbus *bus);
 	~BDV11 ();
 	StatusCode read (u16 address, u16 *destAddress) override;
 	StatusCode writeWord (u16 address, u16 value) override;

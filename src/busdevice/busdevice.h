@@ -7,20 +7,20 @@
 #include <string>
 #include <memory>
 
-class QBUS;
+class Qbus;
 class Unit;
 
-// Definition of the functions every QBUS module should provide.
+// Definition of the functions every Qbus module should provide.
 class BusDevice
 {
 protected:
-	QBUS* bus_;
+	Qbus* bus_;
     std::string name_;          // Device name
     u32 baseAddress_;           // Device registers base address
     u32 vector_;                // Device vector
 
 public:
-	BusDevice (QBUS *bus);
+	BusDevice (Qbus *bus);
 
 	// Required functions
 	virtual ~BusDevice () {};

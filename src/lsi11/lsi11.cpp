@@ -17,7 +17,7 @@ LSI11::LSI11 (CmdLineOptions const &cmdLineOptions)
 	cmdLineOptions_ {cmdLineOptions},
 	running_ {false}
 {
-	// ToDo: Initialization of bus.delay belongs in class QBUS
+	// ToDo: Initialization of bus.delay belongs in class Qbus
 	bus.delay = 0;
 }
 
