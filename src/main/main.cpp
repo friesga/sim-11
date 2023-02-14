@@ -32,18 +32,11 @@ vector<shared_ptr<DeviceConfig>> createSystemConfig (const char* const &configFi
 int main (int argc, char const **argv)
 try
 {
-	// The default is no system configuration specified
-	vector<shared_ptr<DeviceConfig>> systemConfig {};
-
 	// Open log file
 	Logger::init ("sim-11.log");
 
 	// Get command line options
 	CmdLineOptions cmdLineOptions (argc, argv);
-
-	// Get the system configuration from the specified configuration file
-	if (cmdLineOptions.config_file)
-		systemConfig = createSystemConfig (cmdLineOptions.config_file);
 
 	// Activate the tracing facility when specified on the command line
 	if (cmdLineOptions.trace_file) 
@@ -53,9 +46,14 @@ try
 	// Create a lsi11
 	LSI11 lsi11 {cmdLineOptions};
 
-	// Configure the devices with the parameters specified in the
-	// configuration file
-	lsi11.configureDevices (systemConfig);
+	// If a configuration file is specified create the system configuration from
+	// that file and configure the lsi11 with the devices and parameters as
+	// specified in that file. If no file is specified use the default
+	// configuration.
+	if (cmdLineOptions.config_file)
+		lsi11.configureDevices (createSystemConfig (cmdLineOptions.config_file));
+	else
+		lsi11.configureDevices ();
 
 	// Run the lsi11
 	lsi11.run();

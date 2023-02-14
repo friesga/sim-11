@@ -89,10 +89,12 @@ class LSI11
 
 	void checkConsistency (vector<shared_ptr<DeviceConfig>> systemConfig);
 	void loadFile ();
+	void installModules ();
 
 public:
 	LSI11 (CmdLineOptions const &cmdLineOptions);
 	~LSI11 ();
+	void configureDevices ();
 	void configureDevices (vector<shared_ptr<DeviceConfig>> systemConfig);
 	void run ();
 	void reset ();

@@ -173,6 +173,7 @@ set (SIM11_SRCS
     src/lsi11/lsi11.cpp
     src/lsi11/configure.cpp
     src/lsi11/checkconsistency.cpp
+    src/lsi11/installmodules.cpp
     src/lsi11/loadfile.cpp
     src/lsi11/run.cpp
     src/main/main.cpp
