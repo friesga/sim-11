@@ -14,7 +14,7 @@ using std::string;
 // without any files attached.
 void LSI11::configureDevices ()
 {
-    kdv11_ = new KD11 (&bus_);
+    kd11_ = new KD11 (&bus_);
     msv11_ = new MSV11D (&bus_);
     dlv11_ = new DLV11J (&bus_);
     bdv11_ = new BDV11 (&bus_);
@@ -39,8 +39,8 @@ void LSI11::configureDevices (vector<shared_ptr<DeviceConfig>> systemConfig)
     {
         switch (device->deviceType_)
         {
-            case DeviceType::KDV11:
-                kdv11_ = new KD11 (&bus_);
+            case DeviceType::KD11:
+                kd11_ = new KD11 (&bus_);
                 break;
 
             case DeviceType::MSV11:

@@ -27,7 +27,7 @@ void LSI11::checkConsistency (vector<shared_ptr<DeviceConfig>> systemConfig)
     if (presentDevices.count(DeviceType::MSV11) == 0)
         cout << "Warning: No memory configured. This will halt the system.\n";
 
-    if (presentDevices.count(DeviceType::KDV11) == 0)
+    if (presentDevices.count(DeviceType::KD11) == 0)
         throw string("No processor configured, this system cannot run.");
 
     if (presentDevices.count(DeviceType::DLV11_J) == 0)

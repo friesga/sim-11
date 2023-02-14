@@ -25,7 +25,7 @@ class LSI11
 	// of unique_ptr's for the decice pointers results in complicated code
 	// and the use of raw pointers in e.g. Qbus::responsibleModule() as these
 	// pointers are used in loadFile() and in run().
-	KD11 *kdv11_;
+	KD11 *kd11_;
 	MSV11D *msv11_;
 	RXV21 *rxv21_;
 	RLV12 *rlv12_;

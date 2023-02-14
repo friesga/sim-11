@@ -3,7 +3,7 @@
 
 enum class DeviceType
 {
-    KDV11,
+    KD11,
     MSV11,
     DLV11_J,
     BDV11,

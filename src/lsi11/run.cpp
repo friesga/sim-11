@@ -13,13 +13,13 @@ void LSI11::run ()
 
 	if (cmdLineOptions_.halt) 
 	{
-		kdv11_->cpu().runState = 0;
+		kd11_->cpu().runState = 0;
 		bus_.setProcessorRunning (false);
 	} 
 	else if (!cmdLineOptions_.bootstrap && 
 		!cmdLineOptions_.halt && !cmdLineOptions_.load_file) 
 	{
-		kdv11_->cpu().runState = 1;
+		kd11_->cpu().runState = 1;
 		bus_.setProcessorRunning (true);
 	}
 		
@@ -30,10 +30,10 @@ void LSI11::run ()
 		for(i = 0; i < 1000; i++)
 		{
 			step ();
-			kdv11_->step ();
+			kd11_->step ();
 		}
 
-		if ((kdv11_->cpu().runState == 0 && 
+		if ((kd11_->cpu().runState == 0 && 
 				cmdLineOptions_.exit_on_halt) ||
 			!ba11_n_->isRunning ())
 		{
@@ -41,7 +41,7 @@ void LSI11::run ()
 			for(i = 0; i < 32; i++)
 			{
 				step();
-				kdv11_->step ();
+				kd11_->step ();
 			}
 
 			running_ = false;

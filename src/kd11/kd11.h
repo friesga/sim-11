@@ -14,9 +14,9 @@ public:
 	// Give main() access to the CPU to set PC and runState
 	KD11CPU &cpu();
 
-	// The KDV11 is a BusDevice without registers so the read and write 
+	// The KD11 is a BusDevice without registers so the read and write 
 	// register functions are dummies. The reset functie is called on a
-	// bus reset and has no function for the KDV11 either.
+	// bus reset and has no function for the KD11 either.
 	StatusCode read (u16 addr, u16 *destination) override 
 		{ return StatusCode::FunctionNotImplemented; };
 	StatusCode writeWord (u16 addr, u16 value) override
