@@ -14,13 +14,13 @@ void LSI11::run ()
 	if (cmdLineOptions_.halt) 
 	{
 		kdv11_->cpu().runState = 0;
-		bus.setProcessorRunning (false);
+		bus_.setProcessorRunning (false);
 	} 
 	else if (!cmdLineOptions_.bootstrap && 
 		!cmdLineOptions_.halt && !cmdLineOptions_.load_file) 
 	{
 		kdv11_->cpu().runState = 1;
-		bus.setProcessorRunning (true);
+		bus_.setProcessorRunning (true);
 	}
 		
 	while (running_) 

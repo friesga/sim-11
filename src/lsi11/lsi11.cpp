@@ -18,7 +18,7 @@ LSI11::LSI11 (CmdLineOptions const &cmdLineOptions)
 	running_ {false}
 {
 	// ToDo: Initialization of bus.delay belongs in class Qbus
-	bus.delay = 0;
+	bus_.delay = 0;
 }
 
 LSI11::~LSI11 ()
@@ -34,10 +34,10 @@ LSI11::~LSI11 ()
 // Reset all devices on the bus
 void LSI11::reset ()
 {
-	bus.reset();
+	bus_.reset();
 }
 
 void LSI11::step ()
 {
-	bus.step ();
+	bus_.step ();
 }

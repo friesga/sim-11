@@ -14,13 +14,13 @@ using std::string;
 // without any files attached.
 void LSI11::configureDevices ()
 {
-    kdv11_ = new KD11 (&bus);
-    msv11_ = new MSV11D (&bus);
-    dlv11_ = new DLV11J (&bus);
-    bdv11_ = new BDV11 (&bus);
-    rxv21_ = new RXV21 (&bus);
-    rlv12_ = new RLV12 (&bus);
-    ba11_n_ = std::make_unique<BA11_N> (&bus);
+    kdv11_ = new KD11 (&bus_);
+    msv11_ = new MSV11D (&bus_);
+    dlv11_ = new DLV11J (&bus_);
+    bdv11_ = new BDV11 (&bus_);
+    rxv21_ = new RXV21 (&bus_);
+    rlv12_ = new RLV12 (&bus_);
+    ba11_n_ = std::make_unique<BA11_N> (&bus_);
 
     installModules ();
     reset ();
@@ -40,33 +40,33 @@ void LSI11::configureDevices (vector<shared_ptr<DeviceConfig>> systemConfig)
         switch (device->deviceType_)
         {
             case DeviceType::KDV11:
-                kdv11_ = new KD11 (&bus);
+                kdv11_ = new KD11 (&bus_);
                 break;
 
             case DeviceType::MSV11:
-                msv11_ = new MSV11D (&bus);
+                msv11_ = new MSV11D (&bus_);
                 break;
 
             case DeviceType::DLV11_J:
-                dlv11_ = new DLV11J (&bus);
+                dlv11_ = new DLV11J (&bus_);
                 break;
 
             case DeviceType::BDV11:
-                bdv11_ = new BDV11 (&bus);
+                bdv11_ = new BDV11 (&bus_);
                 break;
 
             case DeviceType::RXV21:
-                rxv21_ = new RXV21 (&bus,
+                rxv21_ = new RXV21 (&bus_,
                     static_pointer_cast<RXV21Config> (device));
                 break;
 
             case DeviceType::RLV12:
                 rlv12_ = new RLV12
-                (&bus, static_pointer_cast<RLConfig> (device));
+                (&bus_, static_pointer_cast<RLConfig> (device));
                 break;
 
             case DeviceType::BA11_N:
-                ba11_n_ = std::make_unique<BA11_N> (&bus);
+                ba11_n_ = std::make_unique<BA11_N> (&bus_);
                 break;
 
             default:
