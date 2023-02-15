@@ -18,6 +18,31 @@ void DLV11Processor::processValue (iniparser::Section::ValueIterator valueIterat
     (this->*processFunction)(valueIterator->second);
 }
 
+// Find the specified value for the channel 3 break response in the valid
+// values.
+void DLV11Processor::processBreakResponse (iniparser::Value value)
+{
+    map<string, DLV11Config::Ch3BreakResponse>::iterator iter;
+
+    if ((iter = validBreakResponses.find (value.asString ())) != 
+            validBreakResponses.end ())
+        dlv11ConfigPtr->ch3BreakResponse = iter->second;
+    else
+        throw std::invalid_argument {"Incorrect ch3_break_response value"};
+}
+
+void DLV11Processor::processBreakKey (iniparser::Value value)
+{
+    // dlv11ConfigPtr->breakKey = static_cast<unsigned char> (value.asInt ());
+    if (value.asString () == "esc")
+        dlv11ConfigPtr->breakKey = 27;
+    else if (value.asString().starts_with ('^') &&
+            value.asString ().size () == 2)
+        dlv11ConfigPtr->breakKey = value.asString ().at (1) & ~11100000;
+    else
+            throw std::invalid_argument {"Incorrect break key specification"};
+}
+
 // Check the consistency of the configuration of the DLV11 controller. Currently
 // this is a void.
 void DLV11Processor::checkConsistency ()

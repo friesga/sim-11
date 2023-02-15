@@ -286,6 +286,7 @@ set (GTEST_SRCS
     gtest/interruptrequesttest.cpp
     gtest/bitmasktest.cpp
     gtest/configuratortest.cpp
+    gtest/dlv11configuratortest.cpp
     gtest/fistest.cpp
     gtest/rlv12attachtest.cpp
     gtest/rlv12maintenancetest.cpp
@@ -351,6 +352,7 @@ gtest_add_tests (TARGET sim-11-test
                     ThreadSafePrioQueue
                     InterruptRequest
                     ConfigProcessorTest
+                    DLV11ConfiguratorTest
                     FISTest
                     RLV12MaintenanceTest
                     RLV12AttachTest

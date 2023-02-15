@@ -22,10 +22,20 @@ class DLV11Processor : public SectionProcessor
 	
 	map<string, Process> valueProcessors =
 	{
-		// {"22-bit", &RLProcessor::process22Bit}
+		{"ch3_break_response", &DLV11Processor::processBreakResponse},
+		{"break_key", &DLV11Processor::processBreakKey}
+	};
+
+	map<string, DLV11Config::Ch3BreakResponse> validBreakResponses =
+	{
+		{"boot", DLV11Config::Ch3BreakResponse::Boot},
+		{"halt", DLV11Config::Ch3BreakResponse::Halt},
+		{"none", DLV11Config::Ch3BreakResponse::None}
 	};
 
     void processValue (iniparser::Section::ValueIterator valueIterator);
+	void processBreakResponse (iniparser::Value value);
+	void processBreakKey (iniparser::Value value);
 	void checkConsistency ();
 	void processSubsection (iniparser::Section *subSection);
 
