@@ -21,33 +21,25 @@ Qbus::Qbus ()
 
 CondData<u16> Qbus::read (u16 address)
 {
-	u8 i;
+	BusDevice *module;
 	u16 addr = address;
 
 	address &= 0xFFFE;
 
-	for (i = 0; i < LSI11_SIZE; i++)
+	if ((module = responsibleModule (address)) != nullptr)
 	{
-		BusDevice *module = slots[i];
-		if (!module)
-			continue;
-
-		if (module->responsible (address))
+		u16 value;
+		if (module->read (address, &value) == StatusCode::OK)
 		{
-			u16 value;
-			if (module->read (address, &value) == StatusCode::OK)
-			{
-				trace.bus (BusRecordType::Read, addr, value);
-				return value;
-			}
-			else
-				return {};
+			trace.bus (BusRecordType::Read, addr, value);
+			return value;
 		}
+		else
+			return {};
 	}
 
 	return {};
 }
-
 
 // Set an interrupt request. The only reason this could fail is when
 // a device already has set an interrupt. That would be an error on the
