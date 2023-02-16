@@ -67,7 +67,8 @@ set (QBUS_SRCS
     src/qbus/qbus.cpp
     src/qbus/writebyte.cpp
     src/qbus/writeword.cpp
-    src/qbus/responsiblemodule.cpp)
+    src/qbus/responsiblemodule.cpp
+    src/qbus/signals.cpp)
 
 set (CONFIGURATOR_SRCS
     src/configdata/iniprocessor/iniprocessor.cpp
@@ -194,7 +195,6 @@ set (SIM11_SRCS
     ${SIM_FIO_SRCS}
     ${UNIT_SRCS}
     ${TRACE_SRCS}
-    src/signalset/signalset.cpp
     src/logger/logger.cpp
     src/logger/data.cpp
     ${FLOAT_SRCS}
@@ -320,7 +320,6 @@ set (SIM11_TEST_SRCS
     src/kd11/odt/kd11odt.cpp
     src/msv11d/msv11d.cpp
     ${TRACE_SRCS}
-    src/signalset/signalset.cpp
     src/logger/logger.cpp
     src/logger/data.cpp)
 

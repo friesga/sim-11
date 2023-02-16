@@ -9,8 +9,10 @@
 #include "busdevice/busdevice.h"
 
 #include <string>
+#include <array>
 
 using std::string;
+using std::array;
 
 /* Backplane size */
 #define	LSI11_SIZE		8
@@ -39,13 +41,29 @@ class BusDevice;
 class Qbus
 {
 public:
+	// This enumeration defines a set of Qbus control signals that can be
+	// set and cleared.
+	//
+	// The SRUN L signal is actually not a bus signal, but a non-bused, backplane
+	// signal. The signal is a series of pulses which occur at 3-5" intervals
+	// whenever the processor is in the Run mode.
+	enum class Signal
+    {
+        SRUN,
+        BDCOK,
+        BHALT,
+        Count
+    };
+
 	Qbus ();
 	void setInterrupt (TrapPriority priority, 
 		unsigned char busOrder, unsigned char vector);
 	void clearInterrupt (TrapPriority priority, unsigned char busOrder);
-	bool intrptReqAvailable();
-	u8 intrptPriority();
-	bool getIntrptReq(InterruptRequest &ir);
+	bool intrptReqAvailable ();
+	u8 intrptPriority ();
+	void setSignal (Signal signal, bool value);
+	bool signalIsSet (Signal signal);
+	bool getIntrptReq (InterruptRequest &ir);
 	void reset ();
 	void step ();
 	CondData<u16> read (u16 addr);
@@ -62,6 +80,7 @@ private:
 	// This queue keeps all interrupt requests, ordered in interrupt priority
 	using IntrptReqQueue = ThreadSafePrioQueue<InterruptRequest>;
 	IntrptReqQueue intrptReqQueue_;
+	array<bool, static_cast<size_t> (Signal::Count)> controlSignals_ {false};
 	bool processorRunning_;
 	u16	delay_;
 

@@ -155,7 +155,6 @@ void Qbus::setProcessorRunning (bool running)
 	processorRunning_ = running;
 }
 
-
 bool Qbus::processorIsRunning ()
 {
 	return processorRunning_;
