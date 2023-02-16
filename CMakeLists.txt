@@ -194,6 +194,7 @@ set (SIM11_SRCS
     ${SIM_FIO_SRCS}
     ${UNIT_SRCS}
     ${TRACE_SRCS}
+    src/signalset/signalset.cpp
     src/logger/logger.cpp
     src/logger/data.cpp
     ${FLOAT_SRCS}
@@ -298,6 +299,7 @@ set (GTEST_SRCS
     gtest/rlv12writechecktest.cpp
     gtest/rlv12writedatatest.cpp
     gtest/rxconfiguratortest.cpp
+    gtest/signalsettest.cpp
     gtest/tracetest.cpp)
     
 set (SIM11_TEST_SRCS
@@ -318,6 +320,7 @@ set (SIM11_TEST_SRCS
     src/kd11/odt/kd11odt.cpp
     src/msv11d/msv11d.cpp
     ${TRACE_SRCS}
+    src/signalset/signalset.cpp
     src/logger/logger.cpp
     src/logger/data.cpp)
 
@@ -365,6 +368,7 @@ gtest_add_tests (TARGET sim-11-test
                     RLV12WriteCheckTest
                     RLV12ReadDataWithoutHeaderCheckTest
                     RxConfiguratorTest
+                    SignalSetTest
                     TraceTest)
 
 #
