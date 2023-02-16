@@ -48,7 +48,8 @@ void LSI11::configureDevices (vector<shared_ptr<DeviceConfig>> systemConfig)
                 break;
 
             case DeviceType::DLV11_J:
-                dlv11_ = new DLV11J (&bus_);
+                dlv11_ = new DLV11J (&bus_, 
+                    static_pointer_cast<DLV11Config> (device));
                 break;
 
             case DeviceType::BDV11:

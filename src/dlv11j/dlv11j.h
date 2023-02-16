@@ -3,6 +3,9 @@
 
 #include "qbus/qbus.h"
 #include "busdevice/busdevice.h"
+#include "configdata/dlv11config/dlv11config.h"
+
+using std::shared_ptr;
 
 /* DLV11-J input buffer */
 #define	DLV11J_BUF		2048
@@ -21,13 +24,15 @@ struct DLV11Ch
 	u16	buf_r;
 	u16	buf_w;
 	u16	buf_size;
-	void	(*receive)(unsigned char c);
+
+	void (*receive)(unsigned char c);
 };
 
 class DLV11J : public BusDevice
 {
 public:
 	DLV11J (Qbus *bus);
+	DLV11J (Qbus *bus, shared_ptr<DLV11Config> dlv11Config);
 	~DLV11J ();
 
 	// Define the obligatory functions
@@ -39,13 +44,15 @@ public:
 	void send (int channel, unsigned char c);
 
 private:
+	DLV11Ch	channel[4];
+	u16	base;
+	DLV11Config::Ch3BreakResponse ch3BreakResponse_;
+    unsigned char breakKey_;
+
 	void readChannel (int channelNr);
 	void writeChannel (int channelNr);
 	void writeRCSR (int n, u16 value);
 	void writeXCSR (int n, u16 value);
-
-	DLV11Ch	channel[4];
-	u16	base;
 };
 
 #endif // !_DLV11J_H_
