@@ -71,8 +71,6 @@ public:
 	bool writeByte (u16 addr, u8 val);
 	void installModule (int slot, BusDevice *module);
 	BusDevice *findModuleByName (string moduleName);
-	void setProcessorRunning (bool running);
-	bool processorIsRunning ();
 
 private:
 	BusDevice *slots[LSI11_SIZE] {nullptr};

@@ -23,7 +23,7 @@ KD11CPU::KD11CPU (Qbus* bus)
     trap_ {nullptr}
 {
     r[7] = 0173000;
-    bus_->setProcessorRunning (false);
+    bus_->setSignal (Qbus::Signal::SRUN, false);
 }
 
 CondData<u16> KD11CPU::fetchWord (u16 address)
@@ -139,7 +139,7 @@ void KD11CPU::step ()
     if (runState == STATE_INHIBIT_TRACE)
     {
         runState = STATE_RUN;
-        bus_->setProcessorRunning (true);
+        bus_->setSignal (Qbus::Signal::SRUN, true);
     }
     else if (!trap_ && (psw & PSW_T))
     {
@@ -194,7 +194,7 @@ void KD11CPU::execInstr ()
                             trace.cpuEvent (CpuEventRecordType::CPU_HALT, r[7]);
 
                             runState = STATE_HALT;
-                            bus_->setProcessorRunning (false);
+                            bus_->setSignal (Qbus::Signal::SRUN, false);
                             // The ODT state is set to ODT_STATE_INIT in 
                             // KD11:step() when it detects the runState HALT.
                             // odt.state = ODT_STATE_INIT;
@@ -1541,7 +1541,7 @@ void KD11CPU::handleTraps ()
         // ToDo: All interrupts should be cleared?
         trap_ = nullptr;
         runState = STATE_HALT;
-        bus_->setProcessorRunning (false);
+        bus_->setSignal (Qbus::Signal::SRUN, false);
         return;
     }
 
@@ -1551,7 +1551,7 @@ void KD11CPU::handleTraps ()
         trace.cpuEvent (CpuEventRecordType::CPU_DBLBUS, r[6]);
         trap_ = nullptr;
         runState = STATE_HALT;
-        bus_->setProcessorRunning (false);
+        bus_->setSignal (Qbus::Signal::SRUN, false);
         return;
     }
 
@@ -1564,7 +1564,7 @@ void KD11CPU::handleTraps ()
         trace.cpuEvent (CpuEventRecordType::CPU_DBLBUS, trapToProcess);
         trap_ = nullptr;
         runState = STATE_HALT;
-        bus_->setProcessorRunning (false);
+        bus_->setSignal (Qbus::Signal::SRUN, false);
         return;
     }
 
@@ -1575,7 +1575,7 @@ void KD11CPU::handleTraps ()
         trace.cpuEvent (CpuEventRecordType::CPU_DBLBUS, trapToProcess + 2);
         trap_ = nullptr;
         runState = STATE_HALT;
-        bus_->setProcessorRunning (false);
+        bus_->setSignal (Qbus::Signal::SRUN, false);
         return;
     }
 
@@ -1584,7 +1584,7 @@ void KD11CPU::handleTraps ()
     {
         trace.cpuEvent (CpuEventRecordType::CPU_RUN, r[7]);
         runState = STATE_RUN;
-        bus_->setProcessorRunning (true);
+        bus_->setSignal (Qbus::Signal::SRUN, true);
     }
 }
 

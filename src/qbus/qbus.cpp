@@ -145,17 +145,3 @@ BusDevice *Qbus::findModuleByName (std::string moduleName)
 			return module;
 	return nullptr;
 }
-
-// The functions setProcessorRunning and processorIsRunning abstract the
-// SRUN L signal. SRUN L, a non-bused, backplane signal, is a series of
-// pulses which occur at 3-5",s intervals whenever the processor is in
-// the Run mode.
-void Qbus::setProcessorRunning (bool running)
-{
-	processorRunning_ = running;
-}
-
-bool Qbus::processorIsRunning ()
-{
-	return processorRunning_;
-}

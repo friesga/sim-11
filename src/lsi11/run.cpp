@@ -14,13 +14,13 @@ void LSI11::run ()
 	if (cmdLineOptions_.halt) 
 	{
 		kd11_->cpu().runState = 0;
-		bus_.setProcessorRunning (false);
+		bus_.setSignal (Qbus::Signal::SRUN, false);
 	} 
 	else if (!cmdLineOptions_.bootstrap && 
 		!cmdLineOptions_.halt && !cmdLineOptions_.load_file) 
 	{
 		kd11_->cpu().runState = 1;
-		bus_.setProcessorRunning (true);
+		bus_.setSignal (Qbus::Signal::SRUN, true);
 	}
 		
 	while (running_) 

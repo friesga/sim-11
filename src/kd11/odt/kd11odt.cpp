@@ -103,7 +103,8 @@ void KD11ODT::step ()
                     case 'P':
                         state = ODT_STATE_INIT;
                         cpu_.runState = STATE_RUN;
-                        bus_->setProcessorRunning (true);
+                        // bus_->setProcessorRunning (true);
+                        bus_->setSignal (Qbus::Signal::SRUN, true);
                         trace.cpuEvent (CpuEventRecordType::CPU_ODT_P, cpu_.r[7]);
                         break;
 
@@ -153,7 +154,8 @@ void KD11ODT::step ()
                     state = ODT_STATE_INIT;
                     cpu_.r[7] = addr;
                     cpu_.runState = STATE_RUN;
-                    bus_->setProcessorRunning (true);
+                    // bus_->setProcessorRunning (true);
+                    bus_->setSignal (Qbus::Signal::SRUN, true);
                     trace.cpuEvent (CpuEventRecordType::CPU_ODT_G, addr);
                 }
                 else

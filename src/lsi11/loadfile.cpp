@@ -64,14 +64,14 @@ void LSI11::loadFile ()
                 /* console->sendString("P"); */
                 // ToDo: Use symbolic constants for runState
                 kd11_->cpu ().runState = 1;
-                bus_.setProcessorRunning (true);
+                bus_.setSignal (Qbus::Signal::SRUN, true);
             }
             else
             {
                 /* console->sendString("200G"); */
                 kd11_->cpu ().r[7] = 0200;
                 kd11_->cpu ().runState = 1;
-                bus_.setProcessorRunning (true);
+                bus_.setSignal (Qbus::Signal::SRUN, true);
             }
             break;
         }
