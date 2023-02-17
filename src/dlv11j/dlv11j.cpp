@@ -39,8 +39,8 @@ DLV11J::DLV11J (Qbus *bus)
 	:
 	BusDevice (bus),
 	base {0176500},		// Factory configuration
-	ch3BreakResponse_ {DLV11Config::Ch3BreakResponse::None},
-	breakKey_ {0}
+	ch3BreakResponse_ {DLV11Config::Ch3BreakResponse::Halt},
+	breakKey_ {27}		// Default break key is esc
 {
 	memset (channel, 0, sizeof (channel));
 
@@ -177,7 +177,7 @@ void DLV11J::writeXCSR (int n, u16 value)
 		bus_->setInterrupt (TrapPriority::BR4, 6, ch->vector + 4);
 }
 
-// This function allows the host system to wriite a word to one of the
+// This function allows the host system to write a word to one of the
 // DLV11-J's registers.
 StatusCode DLV11J::writeWord (u16 address, u16 value)
 {
@@ -230,6 +230,22 @@ void DLV11J::reset ()
 // Send a character from outside the system to the DLV11-J
 void DLV11J::send (int channelNr, unsigned char c)
 {
+	if (c == breakKey_)
+	{
+		if (ch3BreakResponse_ == DLV11Config::Ch3BreakResponse::Halt)
+		{
+			bus_->setSignal (Qbus::Signal::BHALT, true);
+			return;
+		}
+	}
+	else
+		// Setting BHALT false allows the processor to restart running
+		// if it previous was halted by hitting the BREAK key.
+		// ToDo: This assumes the DLV11-J is the only device controlling
+		// the BHALT signal and that assumption is incorrect when the
+		// BA11-N HALT button is implemented.
+		bus_->setSignal (Qbus::Signal::BHALT, false);
+
 	DLV11Ch* ch = &channel[channelNr];
 	if(ch->buf_size < DLV11J_BUF)
 	{

@@ -9,6 +9,7 @@
 
 Qbus::Qbus ()
 	:
+	controlSignals_ {false},
 	processorRunning_ {false},
 	delay_ {0}
 {

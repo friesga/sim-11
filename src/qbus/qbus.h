@@ -78,7 +78,7 @@ private:
 	// This queue keeps all interrupt requests, ordered in interrupt priority
 	using IntrptReqQueue = ThreadSafePrioQueue<InterruptRequest>;
 	IntrptReqQueue intrptReqQueue_;
-	array<bool, static_cast<size_t> (Signal::Count)> controlSignals_ {false};
+	array<bool, static_cast<size_t> (Signal::Count)> controlSignals_;
 	bool processorRunning_;
 	u16	delay_;
 
