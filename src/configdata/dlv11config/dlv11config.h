@@ -15,7 +15,7 @@ struct DLV11Config : public DeviceConfig
 
     uint16_t baseAddress {0};
 	uint16_t vector {0};
-    bool ch3ConsoleEnabled {false};
+    bool ch3ConsoleEnabled {true};
     Ch3BreakResponse ch3BreakResponse {Ch3BreakResponse::None};
     unsigned char breakKey {0};
 

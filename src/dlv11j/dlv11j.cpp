@@ -38,26 +38,20 @@ void console_print (unsigned char c)
 DLV11J::DLV11J (Qbus *bus)
 	:
 	BusDevice (bus),
-	base_ {0176500},		// Factory configuration
+	// Set factory configuration for base address, vector and BREAK key response.
+	// The default break key is set to the esc key.
+	baseAddress_ {defaultBaseAddress_},
+	baseVector_ {defaultBaseVector_},
 	ch3BreakResponse_ {DLV11Config::Ch3BreakResponse::Halt},
-	breakKey_ {27}		// Default break key is esc
+	breakKey_ {27}		
 {
-	memset (channel_, 0, sizeof (channel_));
+	initializeChannels ();
 
-	int channelNr;
-	for (channelNr = 0; channelNr < 4; ++channelNr)
-	{
-		channel_[channelNr].buf = (u8*) malloc (DLV11J_BUF);
-		channel_[channelNr].buf_r = 0;
-		channel_[channelNr].buf_w = 0;
-		channel_[channelNr].buf_size = 0;
-		channel_[channelNr].base = base_ + 8 * channelNr;
-		channel_[channelNr].vector = 300 + 8 * channelNr;
-		channel_[channelNr].rcsr = 0;
-	}
-
-	channel_[3].base = 0177560;
-	channel_[3].vector = 060;
+	// Factory configuration is for channel 3 to be used as console and the
+	// channel's base address and vector have to be set to the appropriate
+	// values.
+	channel_[3].base = defaultCh3Address_;
+	channel_[3].vector = defaultCh3Vector_;
 	channel_[3].receive = console_print;
 
 	reset ();
@@ -67,10 +61,24 @@ DLV11J::DLV11J (Qbus *bus)
 // the user.
 DLV11J::DLV11J (Qbus *bus, shared_ptr<DLV11Config> dlv11Config)
 	:
-	DLV11J (bus)
+	BusDevice (bus),
+	baseAddress_ {dlv11Config->baseAddress},
+	baseVector_ {dlv11Config->vector},
+	ch3BreakResponse_ {dlv11Config->ch3BreakResponse},
+	breakKey_ {dlv11Config->breakKey}
 {
-	ch3BreakResponse_ = dlv11Config->ch3BreakResponse;
-	breakKey_ = dlv11Config->breakKey;
+	initializeChannels ();
+
+	// if channel 3 is to be used as console the channel's base address
+	// and vector have to be set to the appropriate values.
+	if (dlv11Config->ch3ConsoleEnabled)
+	{
+		channel_[3].base = dlv11Config->baseAddress + 060;
+		channel_[3].vector = dlv11Config->vector + 060;
+		channel_[3].receive = console_print;
+	}
+
+	reset ();
 }
 
 // The class has a meaningful destructor so the "rule of five" applies
@@ -83,6 +91,26 @@ DLV11J::~DLV11J ()
 	for (channelNr = 0; channelNr < 4; ++channelNr)
 	{
 		free (channel_[channelNr].buf);
+	}
+}
+
+// Initialize the channels and set the channe's base address and vector
+// to their default values. The value for channel 3 has to be overwritten
+// if channel 3 is configured for console operation.
+void DLV11J::initializeChannels ()
+{
+	memset (channel_, 0, sizeof (channel_));
+
+	int channelNr;
+	for (channelNr = 0; channelNr < 4; ++channelNr)
+	{
+		channel_[channelNr].buf = (u8*) malloc (DLV11J_BUF);
+		channel_[channelNr].buf_r = 0;
+		channel_[channelNr].buf_w = 0;
+		channel_[channelNr].buf_size = 0;
+		channel_[channelNr].base = baseAddress_ + 8 * channelNr;
+		channel_[channelNr].vector = baseVector_ + 8 * channelNr;
+		channel_[channelNr].rcsr = 0;
 	}
 }
 
@@ -206,7 +234,7 @@ StatusCode DLV11J::writeWord (u16 address, u16 value)
 
 bool DLV11J::responsible (u16 address)
 {
-	if (address >= base_ && address <= base_ + (3 * 8))
+	if (address >= baseAddress_ && address <= baseAddress_ + (3 * 8))
 		return true;
 
 	/* console device */

@@ -44,11 +44,18 @@ public:
 	void send (int channel, unsigned char c);
 
 private:
+	enum {defaultBaseAddress_ = 0176500};
+	enum {defaultBaseVector_ = 0300};
+	enum {defaultCh3Address_ = 0177560};
+	enum {defaultCh3Vector_ = 060};
+
 	DLV11Ch	channel_[4];
-	u16	base_;
+	u16	baseAddress_;
+	u16 baseVector_;
 	DLV11Config::Ch3BreakResponse ch3BreakResponse_;
     unsigned char breakKey_;
 
+	void initializeChannels ();
 	void readChannel (int channelNr);
 	void writeChannel (int channelNr);
 	void writeRCSR (int n, u16 value);
