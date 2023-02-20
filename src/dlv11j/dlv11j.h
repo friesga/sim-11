@@ -46,6 +46,7 @@ public:
 	void receive (int channel, unsigned char c);
 
 private:
+	enum {numChannels = 4};
 	enum {defaultBaseAddress_ = 0176500};
 	enum {defaultBaseVector_ = 0300};
 	enum {defaultCh3Address_ = 0177560};

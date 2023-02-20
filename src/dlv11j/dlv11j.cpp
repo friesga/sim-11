@@ -88,7 +88,7 @@ DLV11J::~DLV11J ()
 {
 	u8 channelNr;
 
-	for (channelNr = 0; channelNr < 4; ++channelNr)
+	for (channelNr = 0; channelNr < numChannels; ++channelNr)
 	{
 		free (channel_[channelNr].buf);
 	}
@@ -102,7 +102,7 @@ void DLV11J::initializeChannels ()
 	memset (channel_, 0, sizeof (channel_));
 
 	int channelNr;
-	for (channelNr = 0; channelNr < 4; ++channelNr)
+	for (channelNr = 0; channelNr < numChannels; ++channelNr)
 	{
 		channel_[channelNr].buf = (u8*) malloc (DLV11J_BUF);
 		channel_[channelNr].buf_r = 0;
@@ -248,7 +248,7 @@ void DLV11J::reset ()
 {
 	u8 channelNr;
 
-	for (channelNr = 0; channelNr < 4; ++channelNr)
+	for (channelNr = 0; channelNr < numChannels; ++channelNr)
 	{
 		channel_[channelNr].rcsr &= ~RCSR_RCVR_INT;
 		channel_[channelNr].xcsr = XCSR_TRANSMIT_READY;
