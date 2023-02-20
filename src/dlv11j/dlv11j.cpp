@@ -38,27 +38,27 @@ void console_print (unsigned char c)
 DLV11J::DLV11J (Qbus *bus)
 	:
 	BusDevice (bus),
-	base {0176500},		// Factory configuration
+	base_ {0176500},		// Factory configuration
 	ch3BreakResponse_ {DLV11Config::Ch3BreakResponse::Halt},
 	breakKey_ {27}		// Default break key is esc
 {
-	memset (channel, 0, sizeof (channel));
+	memset (channel_, 0, sizeof (channel_));
 
 	int channelNr;
 	for (channelNr = 0; channelNr < 4; ++channelNr)
 	{
-		channel[channelNr].buf = (u8*) malloc (DLV11J_BUF);
-		channel[channelNr].buf_r = 0;
-		channel[channelNr].buf_w = 0;
-		channel[channelNr].buf_size = 0;
-		channel[channelNr].base = base + 8 * channelNr;
-		channel[channelNr].vector = 300 + 8 * channelNr;
-		channel[channelNr].rcsr = 0;
+		channel_[channelNr].buf = (u8*) malloc (DLV11J_BUF);
+		channel_[channelNr].buf_r = 0;
+		channel_[channelNr].buf_w = 0;
+		channel_[channelNr].buf_size = 0;
+		channel_[channelNr].base = base_ + 8 * channelNr;
+		channel_[channelNr].vector = 300 + 8 * channelNr;
+		channel_[channelNr].rcsr = 0;
 	}
 
-	channel[3].base = 0177560;
-	channel[3].vector = 060;
-	channel[3].receive = console_print;
+	channel_[3].base = 0177560;
+	channel_[3].vector = 060;
+	channel_[3].receive = console_print;
 
 	reset ();
 }
@@ -82,13 +82,13 @@ DLV11J::~DLV11J ()
 
 	for (channelNr = 0; channelNr < 4; ++channelNr)
 	{
-		free (channel[channelNr].buf);
+		free (channel_[channelNr].buf);
 	}
 }
 
 void DLV11J::readChannel (int channelNr)
 {
-	DLV11Ch* ch = &channel[channelNr];
+	DLV11Ch* ch = &channel_[channelNr];
 	if (ch->buf_size > 0)
 	{
 		ch->rbuf = (u8) ch->buf[ch->buf_r++];
@@ -115,7 +115,7 @@ void DLV11J::readChannel (int channelNr)
 
 void DLV11J::writeChannel (int channelNr)
 {
-	DLV11Ch* ch = &channel[channelNr];
+	DLV11Ch* ch = &channel_[channelNr];
 	trace.dlv11 (DLV11RecordType::DLV11_TX, channelNr, ch->xbuf);
 
 	if (ch->receive)
@@ -133,20 +133,20 @@ StatusCode DLV11J::read (u16 address, u16 *destAddress)
 	switch (address)
 	{
 		case 0177560:
-			*destAddress = channel[3].rcsr;
+			*destAddress = channel_[3].rcsr;
 			break;
 
 		case 0177562:
 			readChannel(3);
-			*destAddress = channel[3].rbuf;
+			*destAddress = channel_[3].rbuf;
 			break;
 
 		case 0177564:
-			*destAddress = channel[3].xcsr;
+			*destAddress = channel_[3].xcsr;
 			break;
 
 		case 0177566:
-			*destAddress = channel[3].xbuf;
+			*destAddress = channel_[3].xbuf;
 			break;
 
 		default:
@@ -157,7 +157,7 @@ StatusCode DLV11J::read (u16 address, u16 *destAddress)
 
 void DLV11J::writeRCSR (int n, u16 value)
 {
-	DLV11Ch* ch = &channel[n];
+	DLV11Ch* ch = &channel_[n];
 	u16 old = ch->rcsr;
 	ch->rcsr = (ch->rcsr & ~RCSR_WR_MASK) | (value & RCSR_WR_MASK);
 	
@@ -168,7 +168,7 @@ void DLV11J::writeRCSR (int n, u16 value)
 
 void DLV11J::writeXCSR (int n, u16 value)
 {
-	DLV11Ch* ch = &channel[n];
+	DLV11Ch* ch = &channel_[n];
 	u16 old = ch->xcsr;
 	ch->xcsr = (ch->xcsr & ~XCSR_WR_MASK) | (value & XCSR_WR_MASK);
 	
@@ -196,7 +196,7 @@ StatusCode DLV11J::writeWord (u16 address, u16 value)
 			break;
 
 		case 0177566:
-			channel[3].xbuf = value;
+			channel_[3].xbuf = value;
 			writeChannel (3);
 			break;
 	}
@@ -206,7 +206,7 @@ StatusCode DLV11J::writeWord (u16 address, u16 value)
 
 bool DLV11J::responsible (u16 address)
 {
-	if (address >= base && address <= base + (3 * 8))
+	if (address >= base_ && address <= base_ + (3 * 8))
 		return true;
 
 	/* console device */
@@ -222,8 +222,8 @@ void DLV11J::reset ()
 
 	for (channelNr = 0; channelNr < 4; ++channelNr)
 	{
-		channel[channelNr].rcsr &= ~RCSR_RCVR_INT;
-		channel[channelNr].xcsr = XCSR_TRANSMIT_READY;
+		channel_[channelNr].rcsr &= ~RCSR_RCVR_INT;
+		channel_[channelNr].xcsr = XCSR_TRANSMIT_READY;
 	}
 }
 
@@ -232,10 +232,16 @@ void DLV11J::send (int channelNr, unsigned char c)
 {
 	// Hitting the BREAK key on the console initiates a Channel 3 Break Reponse.
 	// The response is either cycling the BHALT signal, cycling the BDCOK signal
-	// or ignoring the key press.
-	// Cycling the BHALT signal reults in haltimg the processor and cycling the
+	// or a no-operation.
+	// 
+	// Cycling the BHALT signal reults in halting the processor and cycling the
 	// BDCOK signal results in the execution of the boot sequence. The signals
 	// are cycled as the key presses have to be treated as triggers.
+	// 
+	// As we don't have a real BREAK key at our disposal and a BREAK key press
+	// is replaced by a (configurable) regular key press, the no-operation
+	// response has to result in passing the received character on to the host
+	// system.
 	if (channelNr == 3 && c == breakKey_)
 	{
 		if (ch3BreakResponse_ == DLV11Config::Ch3BreakResponse::Halt)
@@ -250,7 +256,7 @@ void DLV11J::send (int channelNr, unsigned char c)
 		}
 	}
 
-	DLV11Ch* ch = &channel[channelNr];
+	DLV11Ch* ch = &channel_[channelNr];
 	if(ch->buf_size < DLV11J_BUF)
 	{
 		trace.dlv11 (DLV11RecordType::DLV11_RX, channelNr, c);

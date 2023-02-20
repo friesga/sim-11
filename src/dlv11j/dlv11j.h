@@ -44,8 +44,8 @@ public:
 	void send (int channel, unsigned char c);
 
 private:
-	DLV11Ch	channel[4];
-	u16	base;
+	DLV11Ch	channel_[4];
+	u16	base_;
 	DLV11Config::Ch3BreakResponse ch3BreakResponse_;
     unsigned char breakKey_;
 
