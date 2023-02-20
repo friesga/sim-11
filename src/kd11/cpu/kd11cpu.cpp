@@ -22,7 +22,7 @@ KD11CPU::KD11CPU (Qbus* bus)
     psw {0},
     trap_ {nullptr}
 {
-    r[7] = 0173000;
+    r[7] = bootAddress;
     bus_->setSignal (Qbus::Signal::SRUN, Qbus::SignalValue::False);
 }
 
@@ -116,10 +116,10 @@ void KD11CPU::step ()
 
     if (bus_->signalIsSet (Qbus::Signal::BDCOK))
     {
-        r[7] = 0173000;
+        r[7] = bootAddress;
         psw = 0;
         bus_->clearInterrupts ();
-        trace.cpuEvent (CpuEventRecordType::CPU_ODT_G, 0173000);
+        trace.cpuEvent (CpuEventRecordType::CPU_ODT_G, bootAddress);
     }
 
     if(trace.isActive ())

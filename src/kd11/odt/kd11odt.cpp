@@ -54,7 +54,7 @@ void KD11ODT::step ()
     if (bus_->signalIsSet (Qbus::Signal::BDCOK))
     {
         state = ODT_STATE_INIT;
-        cpu_.r[7] = 0173000;
+        cpu_.r[7] = cpu_.bootAddress;
         cpu_.runState = STATE_RUN;
         bus_->setSignal (Qbus::Signal::SRUN, Qbus::SignalValue::True);
         trace.cpuEvent (CpuEventRecordType::CPU_ODT_G, addr);

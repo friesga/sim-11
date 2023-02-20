@@ -62,6 +62,8 @@ public:
 	u8	runState;
 	u16	r[8];
 
+	enum {bootAddress = 0173000};
+
 private:
 	void setTrap (InterruptRequest const *ir);
 	void execInstr ();
