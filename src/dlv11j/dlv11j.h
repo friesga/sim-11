@@ -25,7 +25,8 @@ struct DLV11Ch
 	u16	buf_w;
 	u16	buf_size;
 
-	void (*receive)(unsigned char c);
+	// Send a character from the DLV11-J to the outside world.
+	void (*send)(unsigned char c);
 };
 
 class DLV11J : public BusDevice
@@ -41,7 +42,8 @@ public:
 	bool responsible (u16 address) override;
 	void reset ();
 
-	void send (int channel, unsigned char c);
+	// Receive a character from the outside world
+	void receive (int channel, unsigned char c);
 
 private:
 	enum {defaultBaseAddress_ = 0176500};

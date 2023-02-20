@@ -52,7 +52,7 @@ DLV11J::DLV11J (Qbus *bus)
 	// values.
 	channel_[3].base = defaultCh3Address_;
 	channel_[3].vector = defaultCh3Vector_;
-	channel_[3].receive = console_print;
+	channel_[3].send = console_print;
 
 	reset ();
 }
@@ -75,7 +75,7 @@ DLV11J::DLV11J (Qbus *bus, shared_ptr<DLV11Config> dlv11Config)
 	{
 		channel_[3].base = dlv11Config->baseAddress + 060;
 		channel_[3].vector = dlv11Config->vector + 060;
-		channel_[3].receive = console_print;
+		channel_[3].send = console_print;
 	}
 
 	reset ();
@@ -146,8 +146,8 @@ void DLV11J::writeChannel (int channelNr)
 	DLV11Ch* ch = &channel_[channelNr];
 	trace.dlv11 (DLV11RecordType::DLV11_TX, channelNr, ch->xbuf);
 
-	if (ch->receive)
-		ch->receive ((unsigned char) ch->xbuf);
+	if (ch->send)
+		ch->send ((unsigned char) ch->xbuf);
 	
 	ch->xcsr |= XCSR_TRANSMIT_READY;
 	if (ch->xcsr & XCSR_TRANSMIT_INT)
@@ -255,8 +255,8 @@ void DLV11J::reset ()
 	}
 }
 
-// Send a character from outside the system to the DLV11-J
-void DLV11J::send (int channelNr, unsigned char c)
+// Receive a character from outside the system in the DLV11-J
+void DLV11J::receive (int channelNr, unsigned char c)
 {
 	// Hitting the BREAK key on the console initiates a Channel 3 Break Reponse.
 	// The response is either cycling the BHALT signal, cycling the BDCOK signal

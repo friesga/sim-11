@@ -38,7 +38,7 @@ bool Console::isRunning ()
 
 void Console::send (const char c)
 {
-	dlv11_->send (3, c);
+	dlv11_->receive (3, c);
 }
 
 void Console::sendString (const char* s)
