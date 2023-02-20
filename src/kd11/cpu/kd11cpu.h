@@ -48,7 +48,6 @@ public:
 	friend class KD11ODT;
 
 	KD11CPU (Qbus *bus);
-	void reset();
 	void step ();
 	void handleTraps();
 

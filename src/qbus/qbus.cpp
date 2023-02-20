@@ -9,7 +9,7 @@
 
 Qbus::Qbus ()
 	:
-	controlSignals_ {false},
+	controlSignals_ {SignalValue::False},
 	processorRunning_ {false},
 	delay_ {0}
 {
@@ -68,6 +68,12 @@ void Qbus::clearInterrupt (TrapPriority priority, unsigned char busOrder)
 {
 	intrptReqQueue_.erase (InterruptRequest {RequestType::IntrptReq, 
 		priority, busOrder, 0});
+}
+
+// Clear all pending interrupts
+void Qbus::clearInterrupts ()
+{
+	intrptReqQueue_.clear ();
 }
 
 void Qbus::reset ()

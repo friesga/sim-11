@@ -23,7 +23,7 @@ KD11CPU::KD11CPU (Qbus* bus)
     trap_ {nullptr}
 {
     r[7] = 0173000;
-    bus_->setSignal (Qbus::Signal::SRUN, false);
+    bus_->setSignal (Qbus::Signal::SRUN, Qbus::SignalValue::False);
 }
 
 CondData<u16> KD11CPU::fetchWord (u16 address)
@@ -110,8 +110,16 @@ void KD11CPU::step ()
     {
         trace.cpuEvent (CpuEventRecordType::CPU_HALT, r[7]);
         runState = STATE_HALT;
-        bus_->setSignal (Qbus::Signal::SRUN, false);
+        bus_->setSignal (Qbus::Signal::SRUN, Qbus::SignalValue::False);
         return;
+    }
+
+    if (bus_->signalIsSet (Qbus::Signal::BDCOK))
+    {
+        r[7] = 0173000;
+        psw = 0;
+        bus_->clearInterrupts ();
+        trace.cpuEvent (CpuEventRecordType::CPU_ODT_G, 0173000);
     }
 
     if(trace.isActive ())
@@ -147,7 +155,7 @@ void KD11CPU::step ()
     if (runState == STATE_INHIBIT_TRACE)
     {
         runState = STATE_RUN;
-        bus_->setSignal (Qbus::Signal::SRUN, true);
+        bus_->setSignal (Qbus::Signal::SRUN, Qbus::SignalValue::True);
     }
     else if (!trap_ && (psw & PSW_T))
     {
@@ -163,12 +171,6 @@ void KD11CPU::execInstr ()
     u16 tmp, tmp2;
     u16 src, dst;
     s32 tmps32;
-    // CondData<u16> tmpValue;     // Used in fetchWordCPU macro
-
-    // If there is a pending bus interrupt that can be executed, process
-    // that interrupt first
-    // if (bus->intrptReqAvailable() && bus->intrptPriority() > cpuPriority())
-    //    return;
 
     // Get next instruction to execute and move PC forward
     // u16 insn = fetchWord (r[7]);
@@ -187,8 +189,6 @@ void KD11CPU::execInstr ()
     KD11INSNMARK* insnmark = (KD11INSNMARK*)&insn;
     KD11INSNSOB* insnsob = (KD11INSNSOB*)&insn;
 
-
-
     /* single operand instructions */
     switch (insn >> 12)
     {
@@ -202,7 +202,7 @@ void KD11CPU::execInstr ()
                             trace.cpuEvent (CpuEventRecordType::CPU_HALT, r[7]);
 
                             runState = STATE_HALT;
-                            bus_->setSignal (Qbus::Signal::SRUN, false);
+                            bus_->setSignal (Qbus::Signal::SRUN, Qbus::SignalValue::False);
                             // The ODT state is set to ODT_STATE_INIT in 
                             // KD11:step() when it detects the runState HALT.
                             // odt.state = ODT_STATE_INIT;
@@ -1549,7 +1549,7 @@ void KD11CPU::handleTraps ()
         // ToDo: All interrupts should be cleared?
         trap_ = nullptr;
         runState = STATE_HALT;
-        bus_->setSignal (Qbus::Signal::SRUN, false);
+        bus_->setSignal (Qbus::Signal::SRUN, Qbus::SignalValue::False);
         return;
     }
 
@@ -1559,7 +1559,7 @@ void KD11CPU::handleTraps ()
         trace.cpuEvent (CpuEventRecordType::CPU_DBLBUS, r[6]);
         trap_ = nullptr;
         runState = STATE_HALT;
-        bus_->setSignal (Qbus::Signal::SRUN, false);
+        bus_->setSignal (Qbus::Signal::SRUN, Qbus::SignalValue::False);
         return;
     }
 
@@ -1572,7 +1572,7 @@ void KD11CPU::handleTraps ()
         trace.cpuEvent (CpuEventRecordType::CPU_DBLBUS, trapToProcess);
         trap_ = nullptr;
         runState = STATE_HALT;
-        bus_->setSignal (Qbus::Signal::SRUN, false);
+        bus_->setSignal (Qbus::Signal::SRUN, Qbus::SignalValue::False);
         return;
     }
 
@@ -1583,7 +1583,7 @@ void KD11CPU::handleTraps ()
         trace.cpuEvent (CpuEventRecordType::CPU_DBLBUS, trapToProcess + 2);
         trap_ = nullptr;
         runState = STATE_HALT;
-        bus_->setSignal (Qbus::Signal::SRUN, false);
+        bus_->setSignal (Qbus::Signal::SRUN, Qbus::SignalValue::False);
         return;
     }
 
@@ -1592,7 +1592,7 @@ void KD11CPU::handleTraps ()
     {
         trace.cpuEvent (CpuEventRecordType::CPU_RUN, r[7]);
         runState = STATE_RUN;
-        bus_->setSignal (Qbus::Signal::SRUN, true);
+        bus_->setSignal (Qbus::Signal::SRUN, Qbus::SignalValue::True);
     }
 }
 

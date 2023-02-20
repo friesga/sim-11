@@ -51,8 +51,16 @@ void KD11ODT::inputError ()
 // ToDo: Use bus->writeByte() as characters are written?
 void KD11ODT::step ()
 {
-    /* odt */
-    // KD11ODT* odt = &odt;
+    if (bus_->signalIsSet (Qbus::Signal::BDCOK))
+    {
+        state = ODT_STATE_INIT;
+        cpu_.r[7] = 0173000;
+        cpu_.runState = STATE_RUN;
+        bus_->setSignal (Qbus::Signal::SRUN, Qbus::SignalValue::True);
+        trace.cpuEvent (CpuEventRecordType::CPU_ODT_G, addr);
+        return;
+    }
+
     switch (state)
     {
         case ODT_STATE_INIT:
@@ -103,8 +111,7 @@ void KD11ODT::step ()
                     case 'P':
                         state = ODT_STATE_INIT;
                         cpu_.runState = STATE_RUN;
-                        // bus_->setProcessorRunning (true);
-                        bus_->setSignal (Qbus::Signal::SRUN, true);
+                        bus_->setSignal (Qbus::Signal::SRUN, Qbus::SignalValue::True);
                         trace.cpuEvent (CpuEventRecordType::CPU_ODT_P, cpu_.r[7]);
                         break;
 
@@ -154,8 +161,7 @@ void KD11ODT::step ()
                     state = ODT_STATE_INIT;
                     cpu_.r[7] = addr;
                     cpu_.runState = STATE_RUN;
-                    // bus_->setProcessorRunning (true);
-                    bus_->setSignal (Qbus::Signal::SRUN, true);
+                    bus_->setSignal (Qbus::Signal::SRUN, Qbus::SignalValue::True);
                     trace.cpuEvent (CpuEventRecordType::CPU_ODT_G, addr);
                 }
                 else

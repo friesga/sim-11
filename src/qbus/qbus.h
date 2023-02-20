@@ -41,8 +41,8 @@ class BusDevice;
 class Qbus
 {
 public:
-	// This enumeration defines a set of Qbus control signals that can be
-	// set and cleared.
+	// The enumeration Signal defines a set of Qbus control signals that can
+	// be given the value of the enumeration SignalValue.
 	//
 	// The SRUN L signal is actually not a bus signal, but a non-bused, backplane
 	// signal. The signal is a series of pulses which occur at 3-5" intervals
@@ -55,15 +55,25 @@ public:
         Count
     };
 
+	enum class SignalValue
+	{
+		False,
+		True,
+		Cycle
+	};
+
 	Qbus ();
 	void setInterrupt (TrapPriority priority, 
 		unsigned char busOrder, unsigned char vector);
 	void clearInterrupt (TrapPriority priority, unsigned char busOrder);
+	void clearInterrupts ();
 	bool intrptReqAvailable ();
 	u8 intrptPriority ();
-	void setSignal (Signal signal, bool value);
-	bool signalIsSet (Signal signal);
 	bool getIntrptReq (InterruptRequest &ir);
+
+	void setSignal (Signal signal, SignalValue value);
+	bool signalIsSet (Signal signal);
+	
 	void reset ();
 	void step ();
 	CondData<u16> read (u16 addr);
@@ -78,7 +88,7 @@ private:
 	// This queue keeps all interrupt requests, ordered in interrupt priority
 	using IntrptReqQueue = ThreadSafePrioQueue<InterruptRequest>;
 	IntrptReqQueue intrptReqQueue_;
-	array<bool, static_cast<size_t> (Signal::Count)> controlSignals_;
+	array<SignalValue, static_cast<size_t> (Signal::Count)> controlSignals_;
 	bool processorRunning_;
 	u16	delay_;
 

@@ -230,21 +230,26 @@ void DLV11J::reset ()
 // Send a character from outside the system to the DLV11-J
 void DLV11J::send (int channelNr, unsigned char c)
 {
-	if (c == breakKey_)
+	// Hitting the BREAK key on the console initiates a Channel 3 Break Reponse.
+	// The response is either cycling the BHALT signal, cycling the BDCOK signal
+	// or ignoring the key press.
+	// Cycling the BHALT signal reults in haltimg the processor and cycling the
+	// BDCOK signal results in the execution of the boot sequence. The signals
+	// are cycled as these events are triggers.
+	if (channelNr == 3 && c == breakKey_)
 	{
 		if (ch3BreakResponse_ == DLV11Config::Ch3BreakResponse::Halt)
 		{
-			bus_->setSignal (Qbus::Signal::BHALT, true);
+			bus_->setSignal (Qbus::Signal::BHALT, Qbus::SignalValue::Cycle);
+			return;
+		}
+		else if (ch3BreakResponse_ == DLV11Config::Ch3BreakResponse::Boot)
+		{
+			bus_->setSignal (Qbus::Signal::BDCOK, Qbus::SignalValue::Cycle);
 			return;
 		}
 	}
-	else
-		// Setting BHALT false allows the processor to restart running
-		// if it previous was halted by hitting the BREAK key.
-		// ToDo: This assumes the DLV11-J is the only device controlling
-		// the BHALT signal and that assumption is incorrect when the
-		// BA11-N HALT button is implemented.
-		bus_->setSignal (Qbus::Signal::BHALT, false);
+
 
 	DLV11Ch* ch = &channel[channelNr];
 	if(ch->buf_size < DLV11J_BUF)
