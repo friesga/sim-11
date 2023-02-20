@@ -22,6 +22,8 @@ class DLV11Processor : public SectionProcessor
 	
 	map<string, Process> valueProcessors =
 	{
+		{"address", &DLV11Processor::processAddress},
+		{"vector", &DLV11Processor::processVector},
 		{"ch3_break_response", &DLV11Processor::processBreakResponse},
 		{"break_key", &DLV11Processor::processBreakKey}
 	};
@@ -34,6 +36,8 @@ class DLV11Processor : public SectionProcessor
 	};
 
     void processValue (iniparser::Section::ValueIterator valueIterator);
+	void processAddress (iniparser::Value value);
+	void processVector (iniparser::Value value);
 	void processBreakResponse (iniparser::Value value);
 	void processBreakKey (iniparser::Value value);
 	void checkConsistency ();

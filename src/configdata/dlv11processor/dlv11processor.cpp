@@ -18,6 +18,32 @@ void DLV11Processor::processValue (iniparser::Section::ValueIterator valueIterat
     (this->*processFunction)(valueIterator->second);
 }
 
+void DLV11Processor::processAddress (iniparser::Value value)
+{
+	try
+	{
+		dlv11ConfigPtr->baseAddress = touint16_t (value.asString());
+	}
+	catch (std::invalid_argument const &)
+	{
+		throw std::invalid_argument {"Incorrect address in DLV11-J section specified: " + 
+			value.asString()};
+	}
+}
+
+void DLV11Processor::processVector (iniparser::Value value) 
+{ 
+	try
+	{
+		dlv11ConfigPtr->vector = touint16_t (value.asString());
+	}
+	catch (std::invalid_argument const &)
+	{
+		throw std::invalid_argument {"Incorrect vector in DLV11-J section specified: " + 
+			value.asString()};
+	}
+}
+
 // Find the specified value for the channel 3 break response in the valid
 // values.
 void DLV11Processor::processBreakResponse (iniparser::Value value)

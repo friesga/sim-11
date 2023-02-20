@@ -1,6 +1,7 @@
 #ifndef _RLCONFIG_H_
 #define _RLCONFIG_H_
 
+#include "types.h"
 #include "../deviceconfig/deviceconfig.h"
 #include "../rlunitconfig/rlunitconfig.h"
 
@@ -9,10 +10,6 @@
 
 using std::vector;
 using std::shared_ptr;
-
-// ToDo: Replace by inclusion of types.h
-#include <cstddef>
-#include <cstdint>
 
 // Definition of the configuration of an RL controller.
 // 

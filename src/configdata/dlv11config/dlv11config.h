@@ -1,6 +1,7 @@
 #ifndef _DLV11CONFIG_H_
 #define _DLV11CONFIG_H_
 
+#include "types.h"
 #include "../deviceconfig/deviceconfig.h"
 
 struct DLV11Config : public DeviceConfig
@@ -12,6 +13,8 @@ struct DLV11Config : public DeviceConfig
         None
     };
 
+    uint16_t baseAddress {0};
+	uint16_t vector {0};
     Ch3BreakResponse ch3BreakResponse {Ch3BreakResponse::None};
     unsigned char breakKey {0};
 
