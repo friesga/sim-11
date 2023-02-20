@@ -51,6 +51,8 @@ void KD11ODT::inputError ()
 // ToDo: Use bus->writeByte() as characters are written?
 void KD11ODT::step ()
 {
+    // Check if the BDCOK signal is set. In that case a reboot must be
+    // performed.
     if (bus_->signalIsSet (Qbus::Signal::BDCOK))
     {
         state = ODT_STATE_INIT;

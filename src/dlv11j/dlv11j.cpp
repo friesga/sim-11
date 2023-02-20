@@ -235,7 +235,7 @@ void DLV11J::send (int channelNr, unsigned char c)
 	// or ignoring the key press.
 	// Cycling the BHALT signal reults in haltimg the processor and cycling the
 	// BDCOK signal results in the execution of the boot sequence. The signals
-	// are cycled as these events are triggers.
+	// are cycled as the key presses have to be treated as triggers.
 	if (channelNr == 3 && c == breakKey_)
 	{
 		if (ch3BreakResponse_ == DLV11Config::Ch3BreakResponse::Halt)
@@ -249,7 +249,6 @@ void DLV11J::send (int channelNr, unsigned char c)
 			return;
 		}
 	}
-
 
 	DLV11Ch* ch = &channel[channelNr];
 	if(ch->buf_size < DLV11J_BUF)

@@ -98,10 +98,13 @@ void KD11CPU::returnFISresult (Float result, u16 registerNumber)
 #define	READCPU(addr)	\
     (tmpValue = fetchWord(addr)).valueOr(0);
 
-// Perform a CPU step. The step mainly comprises three actions:
-// 1. Execution of an instruction,
-// 2. Handle the trace bit,
-// 3. Handling of traps and interrupts that might have arisen during execution
+// Perform a CPU step. The step mainly comprises four actions:
+// 1. Check the state of the BHALT and BDCOK bus signals. If one of these
+//    signals is true, the normal instruction flow is interrupted and the
+//    corresponding action is performed,
+// 2. Execution of an instruction,
+// 3. Handle the trace bit,
+// 4. Handling of traps and interrupts that might have arisen during execution
 //    of the instruction, either a trap as a result of an instruction, or an
 //    interrupt requested by a bus device.
 void KD11CPU::step ()
