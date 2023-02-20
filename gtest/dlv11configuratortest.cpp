@@ -257,3 +257,29 @@ TEST (DLV11ProcessorTest, consoleSelectionAccepted)
 
 	EXPECT_TRUE (dlv11Config->ch3ConsoleEnabled);
 }
+
+TEST (DLV11ProcessorTest, consoleEnabledinvalidBaseAddressThrows)
+{
+    iniparser::File ft;
+	std::stringstream stream;
+	stream << "[DLV11-J]\n"
+		"ch3_console_enabled = true\n"
+		"address = 0176520\n";
+	stream >> ft;
+
+	IniProcessor iniProcessor;
+
+	try
+	{
+		iniProcessor.process (ft);
+		FAIL();
+	}
+	catch (std::invalid_argument const &except)
+	{
+		EXPECT_STREQ (except.what(), "DLV11-J base address must be 0176500, 0176540 or 177500");
+	}
+	catch (...)
+	{
+		FAIL();
+	}
+}

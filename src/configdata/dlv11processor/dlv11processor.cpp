@@ -85,12 +85,24 @@ void DLV11Processor::processBreakKey (iniparser::Value value)
 // Check the consistency of the configuration of the DLV11 controller.
 void DLV11Processor::checkConsistency ()
 {
-	// Id a base address is specified, check it is in the valid range
+	// If a base address is specified, check it is in the valid range
 	if (dlv11ConfigPtr->baseAddress > 0)
 	{
 		if (dlv11ConfigPtr->baseAddress < 0160000 ||
 			dlv11ConfigPtr->baseAddress > 0177770)
 			throw invalid_argument {"DLV11-J base address must be in range 0160000 - 0177770"};
+	}
+
+	// if channel 3 is to function as the console device, the base address
+	// must be configured for one of three addresses: 176500 (factory
+	// configuration), 176540 or 177500 (EK-DLV1J-UG-001). 
+	if (dlv11ConfigPtr->ch3ConsoleEnabled  &&
+		!(dlv11ConfigPtr->baseAddress == 0 || 
+		  dlv11ConfigPtr->baseAddress == 0176500 ||
+		  dlv11ConfigPtr->baseAddress == 0176540 ||
+		  dlv11ConfigPtr->baseAddress == 0177500))
+	{
+		throw invalid_argument {"DLV11-J base address must be 0176500, 0176540 or 177500"};
 	}
 }
 
