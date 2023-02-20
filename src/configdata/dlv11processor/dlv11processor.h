@@ -24,6 +24,7 @@ class DLV11Processor : public SectionProcessor
 	{
 		{"address", &DLV11Processor::processAddress},
 		{"vector", &DLV11Processor::processVector},
+		{"ch3_console_enabled", &DLV11Processor::processConsoleEnabled},
 		{"ch3_break_response", &DLV11Processor::processBreakResponse},
 		{"break_key", &DLV11Processor::processBreakKey}
 	};
@@ -38,6 +39,7 @@ class DLV11Processor : public SectionProcessor
     void processValue (iniparser::Section::ValueIterator valueIterator);
 	void processAddress (iniparser::Value value);
 	void processVector (iniparser::Value value);
+	void processConsoleEnabled (iniparser::Value value);
 	void processBreakResponse (iniparser::Value value);
 	void processBreakKey (iniparser::Value value);
 	void checkConsistency ();

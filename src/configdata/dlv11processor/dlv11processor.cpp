@@ -5,6 +5,7 @@
 
 using std::make_unique;
 using std::move;
+using std::invalid_argument;
 
 DLV11Processor::DLV11Processor ()
 {
@@ -26,7 +27,7 @@ void DLV11Processor::processAddress (iniparser::Value value)
 	}
 	catch (std::invalid_argument const &)
 	{
-		throw std::invalid_argument {"Incorrect address in DLV11-J section specified: " + 
+		throw invalid_argument {"Incorrect address in DLV11-J section specified: " + 
 			value.asString()};
 	}
 }
@@ -37,10 +38,22 @@ void DLV11Processor::processVector (iniparser::Value value)
 	{
 		dlv11ConfigPtr->vector = touint16_t (value.asString());
 	}
-	catch (std::invalid_argument const &)
+	catch (invalid_argument const &)
 	{
-		throw std::invalid_argument {"Incorrect vector in DLV11-J section specified: " + 
+		throw invalid_argument {"Incorrect vector in DLV11-J section specified: " + 
 			value.asString()};
+	}
+}
+
+void DLV11Processor::processConsoleEnabled (iniparser::Value value)
+{
+	try
+	{
+		dlv11ConfigPtr->ch3ConsoleEnabled = value.asBool ();
+	}
+	catch (invalid_argument const &)
+	{
+		throw invalid_argument {"Value of ch3_console_enabled must be \'true\' or \'false\'"};
 	}
 }
 
@@ -54,7 +67,7 @@ void DLV11Processor::processBreakResponse (iniparser::Value value)
             validBreakResponses.end ())
         dlv11ConfigPtr->ch3BreakResponse = iter->second;
     else
-        throw std::invalid_argument {"Incorrect ch3_break_response value"};
+        throw invalid_argument {"Incorrect ch3_break_response value"};
 }
 
 void DLV11Processor::processBreakKey (iniparser::Value value)
@@ -66,13 +79,19 @@ void DLV11Processor::processBreakKey (iniparser::Value value)
             value.asString ().size () == 2)
         dlv11ConfigPtr->breakKey = value.asString ().at (1) & ~11100000;
     else
-            throw std::invalid_argument {"Incorrect break key specification"};
+            throw invalid_argument {"Incorrect break key specification"};
 }
 
-// Check the consistency of the configuration of the DLV11 controller. Currently
-// this is a void.
+// Check the consistency of the configuration of the DLV11 controller.
 void DLV11Processor::checkConsistency ()
 {
+	// Id a base address is specified, check it is in the valid range
+	if (dlv11ConfigPtr->baseAddress > 0)
+	{
+		if (dlv11ConfigPtr->baseAddress < 0160000 ||
+			dlv11ConfigPtr->baseAddress > 0177770)
+			throw invalid_argument {"DLV11-J base address must be in range 0160000 - 0177770"};
+	}
 }
 
 void DLV11Processor::processSubsection (iniparser::Section *subSection)
