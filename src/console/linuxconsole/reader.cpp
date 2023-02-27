@@ -59,7 +59,7 @@ void LinuxConsole::reader ()
 				throw std::string("Read console error");
 
 			// std::cout << '<' << c << ">\n";
-			dlv11_->send (3, c);
+			dlv11_->receive (3, c);
 		}
 	}
 
