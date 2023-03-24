@@ -1,6 +1,10 @@
 #include "kd11.h"
 #include "qbus/qbus.h"
 
+#include <memory>
+
+using std::make_unique;
+
 // KD11 functions
 KD11::KD11 (Qbus* bus)
     :
@@ -17,16 +21,17 @@ void KD11::step ()
     switch (cpu_.runState)
     {
         case STATE_HALT:
-            odt_.step ();
+            // On every entry to ODT a new KD11ODT object is created to make
+            // sure it is initialized properly. The Microcomputer and Memories
+            // Handbook states: "A / issued immediately after the processor
+            // enters ODT mode causes a ?<CR><LF> to be printed because a
+            // location has not yet been opened.
+            odt_ = make_unique<KD11ODT> (bus_, cpu_);
+            odt_->step ();
             break;
 
         case STATE_RUN:
             cpu_.step ();
-            /* ***
-            if (cpu_.runState == STATE_HALT)
-                // Reset the ODT state to ODT_STATE_INIT
-                odt_.reset ();
-            */
             break;
 
         case STATE_WAIT:

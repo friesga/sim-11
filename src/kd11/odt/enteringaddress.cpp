@@ -1,4 +1,5 @@
 #include "kd11odt.h"
+#include "trace/trace.h"
 
 using namespace KD11_F;
 
@@ -67,7 +68,10 @@ State KD11ODT::transition (EnteringAddress_5 &&, GoCmdEntered)
     // consequently the processor will trap on a bus error.
     if (u16 address; stringTou16 (digitSeries_, 8, &address))
     {
+        // Set the CPU into the running state with the specified address
+        // as the PC and exit ODT
         cpu_.r[7] = address;
+        trace.cpuEvent (CpuEventRecordType::CPU_ODT_P, cpu_.r[7]);
         return ExitPoint {};
     }
 

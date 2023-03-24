@@ -364,34 +364,6 @@ target_link_libraries(sim-11-test ${GTESTUNIT_LIBS})
 
 enable_testing ()
 
-# gtest_add_tests (TARGET sim-11-test 
-#                 SOURCES ${SIM11_TEST_SRCS}
-#                 TEST_LIST 
-#                    BitmaskTest
-#                    CmdLineOptionsTest
-#                    ThreadSafePrioQueue
-#                    InterruptRequest
-#                    ConfigProcessorTest
-#                    DLV11ConfiguratorTest
-#                    FISTest
-#                    KD11ODTTest
-#                    LocationTest
-#                    RLV12MaintenanceTest
-#                    RLV12AttachTest
-#                    RLV12WriteTest
-#                    RLV12GetStatusTest
-#                    RLV12ReadHeaderTest
-#                    RLV12SeekTest
-#                    RLV12ReadDataTest
-#                    RLV12WriteDataTest
-#                    RLV12WriteCheckTest
-#                    RLV12ReadDataWithoutHeaderCheckTest
-#                    RxConfiguratorTest
-#                    SignalSetTest
-#                    TraceTest
-#                    VariantFsmTest)
-
-#
 # Create trace reader
 add_executable (tracereader 
     tracereader/main.cpp

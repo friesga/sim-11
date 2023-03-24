@@ -6,6 +6,10 @@
 
 using namespace KD11_F;
 
+#include <memory>
+
+using std::unique_ptr;
+
 // The class KD11 is composed of the KD11 CPU and the KD11 ODT.
 class KD11 : public BusDevice
 {
@@ -30,7 +34,7 @@ public:
 
 private:
 	KD11CPU cpu_ {bus_};
-	KD11ODT	odt_ {bus_, cpu_};
+	unique_ptr<KD11ODT>	odt_ {};
 };
 
 #endif // !_KD11_H_

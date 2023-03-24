@@ -6,6 +6,8 @@ using namespace KD11_F;
 // the state ExitPoint. Entering this state signifies that ODT has to exit. 
 void KD11ODT::entry (ExitPoint)
 {
-    // Indicate an exit of the state machine
+    // Set the CPU in the running state and exit the ODT state machine
+    cpu_.runState = STATE_RUN;
+    bus_->setSignal (Qbus::Signal::SRUN, Qbus::SignalValue::True);
     odtRunning_ = false;
 }

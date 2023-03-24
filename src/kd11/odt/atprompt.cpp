@@ -1,4 +1,5 @@
 #include "kd11odt.h"
+#include "trace/trace.h"
 
 using namespace KD11_F;
 
@@ -63,7 +64,9 @@ State KD11ODT::transition (AtPrompt_1 && currentState, OpenLocationCmdEntered)
     throw "Cannot happen";
 }
 
+// On a Proceed command set the CPU into the running state and exit ODT
 State KD11ODT::transition (AtPrompt_1 &&, ProceedCmdEntered)
 {
+    trace.cpuEvent (CpuEventRecordType::CPU_ODT_P, cpu_.r[7]);
     return ExitPoint {};
 }
