@@ -300,7 +300,8 @@ set (GTEST_SRCS
     gtest/rlv12writedatatest.cpp
     gtest/rxconfiguratortest.cpp
     gtest/signalsettest.cpp
-    gtest/tracetest.cpp)
+    gtest/tracetest.cpp
+    gtest/variantfsmtest.cpp)
     
 set (SIM11_TEST_SRCS
     ${GTEST_SRCS}
@@ -368,7 +369,8 @@ gtest_add_tests (TARGET sim-11-test
                     RLV12ReadDataWithoutHeaderCheckTest
                     RxConfiguratorTest
                     SignalSetTest
-                    TraceTest)
+                    TraceTest
+                    VariantFsmTest)
 
 #
 # Create trace reader
