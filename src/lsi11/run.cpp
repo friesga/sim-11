@@ -6,9 +6,6 @@ void LSI11::run ()
 	if (cmdLineOptions_.load_file) 
 		loadFile ();
 
-	if (cmdLineOptions_.bootstrap)
-		console_->sendString (odt_input);
-
     running_ = true;
 
 	if (cmdLineOptions_.halt) 
@@ -16,8 +13,7 @@ void LSI11::run ()
 		kd11_->cpu().runState = 0;
 		bus_.setSignal (Qbus::Signal::SRUN, Qbus::SignalValue::False);
 	} 
-	else if (!cmdLineOptions_.bootstrap && 
-		!cmdLineOptions_.halt && !cmdLineOptions_.load_file) 
+	else if (!cmdLineOptions_.halt && !cmdLineOptions_.load_file) 
 	{
 		kd11_->cpu().runState = 1;
 		bus_.setSignal (Qbus::Signal::SRUN, Qbus::SignalValue::True);

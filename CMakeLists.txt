@@ -146,11 +146,10 @@ set (TRACE_SRCS
 # Handling of the console is system-specific
 if (MSVC)
 set (CONSOLE_SRCS
-    src/console/console.cpp
-    src/console/windowsconsole/windowsconsole.cpp
-    src/console/windowsconsole/reader.cpp
-    src/console/windowsconsole/readcharacter.cpp
-    src/console/windowsconsole/isvalidkeyevent.cpp)
+    src/console/operatorconsole/operatorconsole.cpp
+    src/console/operatorconsole/windowsconsole/sender.cpp
+    src/console/operatorconsole/windowsconsole/readcharacter.cpp
+    src/console/operatorconsole/windowsconsole/isvalidkeyevent.cpp)
 endif ()
 
 if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")

@@ -18,7 +18,7 @@
                 },
                 {
                     "name": "CMAKE_VERBOSE_MAKEFILE",
-                    "value": "True",
+                    "value": "False",
                     "type": "BOOL"
                 },
                 {

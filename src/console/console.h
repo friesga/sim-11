@@ -1,37 +1,19 @@
 #ifndef _CONSOLE_H_
 #define _CONSOLE_H_
 
-#include "dlv11j/dlv11j.h"
+#include <functional>
 
-#include <memory>
-#include <thread>
+using std::function;
 
-using std::unique_ptr;
-
-// // A class handling the simulator's console. As this requires unbuffered
-// input the class is highly system dependent. Therefore a Windows and a
-// Linux variant of this class have to be defined. All system dependent code
-// is in WindowsConsole and LinuxConsole; the common code is in this Console
-// class. Both console implementations provide the same interface, as defined
-// in the Console class. 
-// The create() functions creates a WindowConsole or a LinuxConsole,
-// depending on the platform used.
+// This class defines the Console interface to be passed to and used by DLV11J.
 class Console
 {
-protected:
-    std::thread readerThread_;
-    bool consoleRunning_ {false};
-    DLV11J *dlv11_;
-
 public:
-    Console (DLV11J *dlv11);
-    ~Console ();
-    virtual void reader() = 0;
-    bool isRunning();
-    void send (const char c);
-    void sendString (const char* s);
-
-    static unique_ptr<Console> create (DLV11J *dlv11);
+    virtual void setReceiver (function<void(int, char)>) = 0;
+    virtual void send (char) = 0;
+    virtual void print (char const c) = 0;
+    virtual bool isActive() = 0;
+    virtual ~Console () {};
 };
 
-#endif // !_CONSOLE_H_
+#endif // _CONSOLE_H_

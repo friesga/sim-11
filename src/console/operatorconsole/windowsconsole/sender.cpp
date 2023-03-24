@@ -3,7 +3,7 @@
 #include <string>
 #include <iostream>
 
-void WindowsConsole::reader ()
+void WindowsConsole::sender ()
 {
     HANDLE stdInputHandle;
 
@@ -22,9 +22,9 @@ void WindowsConsole::reader ()
     {
         char c;
 
-        // Read one character from the console
+        // Read one character from the console and pass it to the DLV11J's
+        // receiver
 		if (readCharacter (stdInputHandle, &c, 1))
-            // std::cout << '<' << c << ">\n";
-            dlv11_->receive (3, c);
+            send (c);
     }
 }

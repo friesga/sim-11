@@ -1,8 +1,13 @@
 #include <string.h>
 #include <stdlib.h>
+#include <functional>
 
 #include "trace/trace.h"
 #include "dlv11j.h"
+
+using std::bind;
+using std::placeholders::_1;
+using std::placeholders::_2;
 
 #define	RCSR_READER_ENABLE	_BV(0)
 #define	RCSR_RCVR_INT		_BV(6)
@@ -22,20 +27,9 @@
 #define	RCSR_WR_MASK		(RCSR_RCVR_INT | RCSR_READER_ENABLE)
 #define	XCSR_WR_MASK		(XCSR_TRANSMIT_INT | XCSR_TRANSMIT_BREAK)
 
-// Print a character from the DLV11-J to the outside world (i.e. the
-// console in this case).
-void console_print (unsigned char c)
-{
-	// Just print 7-bit ASCII characters. The XXDP diagnostic VKABB0 e.g.
-	// prints characters 0377 at the end of a string which stops WSL from
-	// outputting further characters.
-	printf ("%c", c & 0177);
-	fflush (stdout);
-}
-
 // Construct a default DLV11-J object, i.e. without a user-specified
 // configuration.
-DLV11J::DLV11J (Qbus *bus)
+DLV11J::DLV11J (Qbus *bus, unique_ptr<Console> console)
 	:
 	BusDevice (bus),
 	// Set factory configuration for base address, vector and BREAK key response.
@@ -43,7 +37,8 @@ DLV11J::DLV11J (Qbus *bus)
 	baseAddress_ {defaultBaseAddress_},
 	baseVector_ {defaultBaseVector_},
 	ch3BreakResponse_ {DLV11Config::Ch3BreakResponse::Halt},
-	breakKey_ {27}		
+	breakKey_ {27},
+	console_ {move (console)}
 {
 	initializeChannels ();
 
@@ -52,34 +47,44 @@ DLV11J::DLV11J (Qbus *bus)
 	// values.
 	channel_[3].base = defaultCh3Address_;
 	channel_[3].vector = defaultCh3Vector_;
-	channel_[3].send = console_print;
+	channel_[3].send = std::bind (&DLV11J::console_print, this, std::placeholders::_1);
+
+	// Pass the console the function we want to receive the characters on
+	console_->setReceiver (bind (&DLV11J::receive, this, _1, _2));
 
 	reset ();
 }
 
 // Construct a DLV11-J object with the configuration as specified by
 // the user.
-DLV11J::DLV11J (Qbus *bus, shared_ptr<DLV11Config> dlv11Config)
+// ToDo: The code in these two constructors should be merged
+DLV11J::DLV11J (Qbus *bus, unique_ptr<Console> console, 
+		shared_ptr<DLV11Config> dlv11Config)
 	:
 	BusDevice (bus),
 	baseAddress_ {dlv11Config->baseAddress},
 	baseVector_ {dlv11Config->vector},
 	ch3BreakResponse_ {dlv11Config->ch3BreakResponse},
-	breakKey_ {dlv11Config->breakKey}
+	breakKey_ {dlv11Config->breakKey},
+	console_ {move (console)}
 {
 	initializeChannels ();
 
-	// if channel 3 is to be used as console the channel's base address
+	// If channel 3 is to be used as console the channel's base address
 	// and vector have to be set to the appropriate values.
 	if (dlv11Config->ch3ConsoleEnabled)
 	{
 		channel_[3].base = dlv11Config->baseAddress + 060;
 		channel_[3].vector = dlv11Config->vector + 060;
-		channel_[3].send = console_print;
+		channel_[3].send = std::bind (&DLV11J::console_print, this, std::placeholders::_1);
 	}
+
+	// Pass the console the function we want to receive the characters on
+	console_->setReceiver (bind (&DLV11J::receive, this, _1, _2));
 
 	reset ();
 }
+
 
 // The class has a meaningful destructor so the "rule of five" applies
 // and copy and move constructors and copy and move assignment operators
@@ -99,8 +104,6 @@ DLV11J::~DLV11J ()
 // if channel 3 is configured for console operation.
 void DLV11J::initializeChannels ()
 {
-	memset (channel_, 0, sizeof (channel_));
-
 	int channelNr;
 	for (channelNr = 0; channelNr < numChannels; ++channelNr)
 	{
@@ -295,5 +298,12 @@ void DLV11J::receive (int channelNr, unsigned char c)
 		if (ch->rcsr & RCSR_RCVR_INT)
 			bus_->setInterrupt (TrapPriority::BR4, 6, ch->vector);
 	}
+}
+
+// Print a character from the DLV11-J to the outside world (i.e. the
+// console in this case).
+void DLV11J::console_print (unsigned char c)
+{
+	console_->print (c);
 }
 

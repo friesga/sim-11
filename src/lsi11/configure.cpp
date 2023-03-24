@@ -1,6 +1,7 @@
 #include "lsi11.h"
 #include "configdata/iniprocessor/iniprocessor.h"
 #include "configdata/rxv21config/rxv21config.h"
+#include "console/operatorconsole/operatorconsolefactory.h"
 
 #include <memory>		// For make_unique
 #include <cstring>		// For memset()
@@ -14,9 +15,12 @@ using std::string;
 // without any files attached.
 void LSI11::configureDevices ()
 {
+    // The Console class reads characters and sends them to the dlv11
+    unique_ptr<Console> console =  OperatorConsoleFactory::create ();
+
     kd11_ = new KD11 (&bus_);
     msv11_ = new MSV11D (&bus_);
-    dlv11_ = new DLV11J (&bus_);
+    dlv11_ = new DLV11J (&bus_, move (console));
     bdv11_ = new BDV11 (&bus_);
     rxv21_ = new RXV21 (&bus_);
     rlv12_ = new RLV12 (&bus_);
@@ -48,7 +52,9 @@ void LSI11::configureDevices (vector<shared_ptr<DeviceConfig>> systemConfig)
                 break;
 
             case DeviceType::DLV11_J:
+                // The Console class reads characters and sends them to the dlv11
                 dlv11_ = new DLV11J (&bus_, 
+                    move (OperatorConsoleFactory::create ()),
                     static_pointer_cast<DLV11Config> (device));
                 break;
 

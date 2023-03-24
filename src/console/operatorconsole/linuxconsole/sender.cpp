@@ -6,7 +6,7 @@
 #include <termios.h>
 #include <iostream>
 
-void LinuxConsole::reader ()
+void LinuxConsole::sender ()
 {
     struct termios original_tio;
 	struct termios tio;
@@ -39,11 +39,13 @@ void LinuxConsole::reader ()
 		// for every select call as Linux modifies timeout to reflect the
 		// amount of time not slept.
 		timeout.tv_sec = 0;
-		timeout.tv_usec = 0;
+		timeout.tv_usec = 50;
 
 		static const int highestFileDescriptor = STDIN_FILENO + 1;
 
 		// Check if stdin (fd 0) is ready for reading
+		// The select() will time-out regurarly to check the value of
+		// consoleRunning_. 
 		int numFileDescriptors = 
 			select (highestFileDescriptor, &fds, NULL, NULL, &timeout);
 		if (numFileDescriptors == -1)
@@ -58,8 +60,7 @@ void LinuxConsole::reader ()
 			if (read (0, &c, 1) != 1)
 				throw std::string("Read console error");
 
-			// std::cout << '<' << c << ">\n";
-			dlv11_->receive (3, c);
+			send (c);
 		}
 	}
 
