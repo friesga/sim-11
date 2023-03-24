@@ -22,9 +22,11 @@ void KD11::step ()
 
         case STATE_RUN:
             cpu_.step ();
+            /* ***
             if (cpu_.runState == STATE_HALT)
                 // Reset the ODT state to ODT_STATE_INIT
                 odt_.reset ();
+            */
             break;
 
         case STATE_WAIT:

@@ -2,7 +2,9 @@
 #define _KD11_H_
 
 #include "cpu/kd11cpu.h"
-#include "odt//kd11odt.h"
+#include "odt/kd11odt.h"
+
+using namespace KD11_F;
 
 // The class KD11 is composed of the KD11 CPU and the KD11 ODT.
 class KD11 : public BusDevice

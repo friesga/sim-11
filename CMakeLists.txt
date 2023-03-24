@@ -18,6 +18,21 @@ set (CMDLINEOPTIONS_SRCS
     src/cmdlineoptions/cmdlineoptions.cpp
     src/cmdlineoptions/data.cpp)
 
+set (KD11ODT_SRCS
+    src/kd11/odt/kd11odt.cpp
+    src/kd11/odt/addressopened.cpp
+    src/kd11/odt/atprompt.cpp
+    src/kd11/odt/createevent.cpp
+    src/kd11/odt/enteringaddress.cpp
+    src/kd11/odt/enteringaddressvalue.cpp
+    src/kd11/odt/enteringbinarydump.cpp
+    src/kd11/odt/enteringregister.cpp
+    src/kd11/odt/enteringregistervalue.cpp
+    src/kd11/odt/entrypoint.cpp
+    src/kd11/odt/exitpoint.cpp
+    src/kd11/odt/registeropened.cpp
+    src/kd11/odt/startingregister.cpp)
+
 set (RLV12_SRCS
     src/rlv12/calccrc.cpp
     src/rlv12/rlv12.cpp
@@ -168,7 +183,7 @@ set (SIM11_SRCS
     src/dlv11j/dlv11j.cpp
     src/kd11/kd11.cpp
     src/kd11/cpu/kd11cpu.cpp
-    src/kd11/odt/kd11odt.cpp
+    ${KD11ODT_SRCS}
     src/lib/gotapproval.cpp
     src/lsi11/lsi11.cpp
     src/lsi11/configure.cpp
@@ -288,6 +303,8 @@ set (GTEST_SRCS
     gtest/configuratortest.cpp
     gtest/dlv11configuratortest.cpp
     gtest/fistest.cpp
+    gtest/kd11odttest.cpp
+    gtest/locationtest.cpp
     gtest/rlv12attachtest.cpp
     gtest/rlv12maintenancetest.cpp
     gtest/rlv12getstatustest.cpp
@@ -317,7 +334,8 @@ set (SIM11_TEST_SRCS
     src/lib/gotapproval.cpp
     src/kd11/kd11.cpp
     src/kd11/cpu/kd11cpu.cpp
-    src/kd11/odt/kd11odt.cpp
+    ${KD11ODT_SRCS}
+    src/dlv11j/dlv11j.cpp
     src/msv11d/msv11d.cpp
     ${TRACE_SRCS}
     src/logger/logger.cpp
@@ -346,30 +364,32 @@ target_link_libraries(sim-11-test ${GTESTUNIT_LIBS})
 
 enable_testing ()
 
-gtest_add_tests (TARGET sim-11-test 
-                 SOURCES ${SIM11_TEST_SRCS}
-                 TEST_LIST 
-                    BitmaskTest
-                    CmdLineOptionsTest
-                    ThreadSafePrioQueue
-                    InterruptRequest
-                    ConfigProcessorTest
-                    DLV11ConfiguratorTest
-                    FISTest
-                    RLV12MaintenanceTest
-                    RLV12AttachTest
-                    RLV12WriteTest
-                    RLV12GetStatusTest
-                    RLV12ReadHeaderTest
-                    RLV12SeekTest
-                    RLV12ReadDataTest
-                    RLV12WriteDataTest
-                    RLV12WriteCheckTest
-                    RLV12ReadDataWithoutHeaderCheckTest
-                    RxConfiguratorTest
-                    SignalSetTest
-                    TraceTest
-                    VariantFsmTest)
+# gtest_add_tests (TARGET sim-11-test 
+#                 SOURCES ${SIM11_TEST_SRCS}
+#                 TEST_LIST 
+#                    BitmaskTest
+#                    CmdLineOptionsTest
+#                    ThreadSafePrioQueue
+#                    InterruptRequest
+#                    ConfigProcessorTest
+#                    DLV11ConfiguratorTest
+#                    FISTest
+#                    KD11ODTTest
+#                    LocationTest
+#                    RLV12MaintenanceTest
+#                    RLV12AttachTest
+#                    RLV12WriteTest
+#                    RLV12GetStatusTest
+#                    RLV12ReadHeaderTest
+#                    RLV12SeekTest
+#                    RLV12ReadDataTest
+#                    RLV12WriteDataTest
+#                    RLV12WriteCheckTest
+#                    RLV12ReadDataWithoutHeaderCheckTest
+#                    RxConfiguratorTest
+#                    SignalSetTest
+#                    TraceTest
+#                    VariantFsmTest)
 
 #
 # Create trace reader

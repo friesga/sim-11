@@ -7,6 +7,12 @@
 
 #include <functional>
 
+// Forward declaration to be able to declare it a friend function
+namespace KD11_F
+{
+	class KD11ODT;
+}
+
 /* CPU states */
 #define	STATE_HALT		0
 #define	STATE_RUN		1
@@ -45,7 +51,7 @@
 class KD11CPU
 {
 public:
-	friend class KD11ODT;
+	friend class KD11_F::KD11ODT;
 
 	KD11CPU (Qbus *bus);
 	void step ();
