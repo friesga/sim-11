@@ -89,8 +89,7 @@ State KD11ODT::transition (EnteringRegisterValue_8 &&, AtSignCmdEntered)
         else
             addressToOpen = cpu_.r[location_.previousRegisterNr ()];
     }
-    openNextAddress ([=] () {return addressToOpen;});
-    return AddressOpened_3 {};
+    return openNextAddress ([=] () {return addressToOpen;});
 }
 
 // Note that this [back arrow] command cannot be used if a GPR or the PS is

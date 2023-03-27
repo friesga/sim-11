@@ -66,12 +66,11 @@ State KD11ODT::transition (RegisterOpened_4 &&currentState, OpenPreviousLocation
 
 State KD11ODT::transition (RegisterOpened_4 &&currentState, AtSignCmdEntered)
 {
-    openNextAddress ([this] () 
+    return openNextAddress ([this] () 
     {
         return location_.isA<RegisterLocation> () ?
             cpu_.r[location_.registerNr ()] : cpu_.psw;
     });
-    return AddressOpened_3 {};
 }
 
 // Note that this [back arrow] command cannot be used if a GPR or the PS is

@@ -160,7 +160,13 @@ TEST_F (KD11ODTTest, KDF11PlusKD11_FCommands)
         {"GP",               "@G?\n@",
             "Error on Go command without address"},
         {"200G",             "@200G",
-            "Go command with address accepted"}
+            "Go command with address accepted"},
+        {"177774/P",         "@177774/?\n@",
+            "Error on opening invalid address"},
+        {"0/2\r177774//\rP", "@0/000000 2\r\n@177774/?\n@/000002 \r\n@",
+            "Last opened location not set on opening invalid address"},
+        {"157776/\nP",       "@157776/000000 \n@160000/?\n@",
+            "Error on next opened invalid address"}
     };
 
     for (TestSequence testSequence : testSequences)

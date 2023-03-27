@@ -118,14 +118,14 @@ namespace KD11_F
         CondData<u8> readAndEchoCharacter ();
         void writeCharacter (u8 c);
         void writeString (string str);
-        void writeOpenAddress ();
+        State writeAddressContents (u16 address);
         string octalNumberToString (u16 number);
         u32 stringToOctalNumber (string str);
         bool stringTou16 (string str, size_t nDigits, u16* value);
         Event createEvent (CondData<u8> c);
         State openAddress ();
         void setAddressValue ();
-        void openNextAddress (std::function<u16 (void)> getNextRegister);
+        State openNextAddress (std::function<u16 (void)> getNextRegister);
         State openNextRegister (State&& currentState,
             std::function<u8 (void)> getNextRegister);
         bool registerSeriesEndsWith (string);

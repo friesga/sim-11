@@ -35,8 +35,7 @@ State KD11ODT::transition (AddressOpened_3 &&, CloseLocationCmdEntered)
 // (Microcomputer and Memories Chapter 7)
 State KD11ODT::transition (AddressOpened_3 &&, OpenNextLocationCmdEntered)
 {
-    openNextAddress ([this] () {return location_.address () + 2;});
-    return AddressOpened_3 {};
+    return openNextAddress ([this] () {return location_.address () + 2;});
 }
 
 // The "up arrow" command is also used to close an open location or GPR.
@@ -47,8 +46,7 @@ State KD11ODT::transition (AddressOpened_3 &&, OpenNextLocationCmdEntered)
 // (Microcomputer and Memories Chapter 7)
 State KD11ODT::transition (AddressOpened_3 &&, OpenPreviousLocationCmdEntered)
 {
-    openNextAddress ([this] () {return location_.address () - 2;});
-    return AddressOpened_3 {};
+    return openNextAddress ([this] () {return location_.address () - 2;});
 }
 
 // Once a location has been opened, the @ command is used to close
@@ -59,8 +57,7 @@ State KD11ODT::transition (AddressOpened_3 &&, OpenPreviousLocationCmdEntered)
 // is used. (Microcomputer and Memories Chapter 7)
 State KD11ODT::transition (AddressOpened_3 &&, AtSignCmdEntered)
 {
-    openNextAddress ([this] () {return bus_->read (location_.address ());});
-    return AddressOpened_3 {};
+    return openNextAddress ([this] () {return bus_->read (location_.address ());});
 }
 
 // This command is used once a location has been opened to open
@@ -69,8 +66,7 @@ State KD11ODT::transition (AddressOpened_3 &&, AtSignCmdEntered)
 // (LSI11 PDP11/03 Processor Handbook)
  State KD11ODT::transition (AddressOpened_3 &&, BackArrowCmdEntered)
  {
-    openNextAddress ([this] () 
+    return openNextAddress ([this] () 
         {return location_.address () + bus_->read (location_.address ()) + 2;});
-    return AddressOpened_3 {};
  }
 

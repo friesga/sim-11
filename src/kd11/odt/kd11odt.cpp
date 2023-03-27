@@ -98,12 +98,21 @@ void KD11ODT::writeString (string str)
     }
 }
 
-// Write the prompt character plus opened address
-void KD11ODT::writeOpenAddress ()
+// Read the contents from the given address and write it to the console,
+// indicating an error if the address could not be opened.
+State KD11ODT::writeAddressContents (u16 address)
 {
-    // ToDo: Adapt bus_->read to return of CondData
-    writeString ("\n@" + octalNumberToString (location_.address ()) + '/' +
-        octalNumberToString (bus_->read (location_.address ())) + ' ');
+    if (bus_->read (address).hasValue ())
+    {
+        location_ = AddressLocation{ static_cast<u16> (address) };
+        writeString (octalNumberToString (bus_->read (location_.address ())) + ' ');
+        return AddressOpened_3{};
+    }
+    else
+    {
+        writeString ("?\n");
+        return AtPrompt_1{};
+    }
 }
 
 // The computer always prints six numeric characters [i.e. prints leading
@@ -159,14 +168,11 @@ State KD11ODT::openAddress ()
     // to an address larger than the available memory, but currently the
     // address is a 16 bit unsigned integer and the maximum amount of memory
     // in a LSI-11 is 32Kw.
-    // ToDo: Adapt bus_->read to return of CondData
     if (u16 address; stringTou16 (digitSeries_, 8, &address))
     {
         // Clear the least significant bit in case an odd address is
         // specified
-        location_ = AddressLocation {static_cast<u16> (address & 0177776)};
-        writeString (octalNumberToString (bus_->read (location_.address ())) + ' ');
-        return AddressOpened_3 {};
+        return writeAddressContents (address & 0177776);
     }
 
     // Invalid address entered
@@ -200,12 +206,11 @@ void KD11ODT::setAddressValue ()
 // getNextAddress as there are a number of commands only differing on the
 // calculation of the address.
 // 
-// ToDo: Implement roll-over behaviour for addresses
-//
-void KD11ODT::openNextAddress (std::function<u16(void)> getNextAddress)
+State KD11ODT::openNextAddress (std::function<u16(void)> getNextAddress)
 {
-    location_ = AddressLocation {getNextAddress ()};
-    writeOpenAddress ();
+    u16 address = getNextAddress ();
+    writeString ("\n@" + octalNumberToString (address) + '/');
+    return writeAddressContents (address);
 }
 
 // The processor registers will be incremented by one. If the PS is open when
