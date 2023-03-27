@@ -237,6 +237,9 @@ State KD11ODT::openNextRegister (State &&currentState,
     return move (currentState);
 }
 
+// Note that the contents of the PSW can be changed using the CR
+// command but bit 4 (the T bit) cannot be set using any of the
+// commands. (LSI11 PDP11/03 Processor Handbook)
 void KD11ODT::setRegisterValue ()
 {
     // Convert the last six digits entered to the new value. If this value
@@ -247,7 +250,9 @@ void KD11ODT::setRegisterValue ()
         if (location_.isA<RegisterLocation> ())
             cpu_.r[location_.registerNr ()] = newValue_;
         else
-            cpu_.psw = newValue_;
+            // Disallow changing the PSW T-bit
+            cpu_.psw = (cpu_.psw & PSW_T) | (newValue_ & ~PSW_T);
+
     }
     else
         writeString ("?\n");
