@@ -34,14 +34,14 @@ KD11ODT::KD11ODT (Qbus *bus, KD11CPU &cpu)
 // Read a word from the given address. If dlv11j_.read() returns a
 // StatusCode other than OK, the value 0 will be returned which will
 // lead to an error transition in the command parser.
-u16 KD11ODT::readDLV11J (u16 address)
+CondData<u16> KD11ODT::readDLV11J (u16 address)
 {
     return bus_->read (address);
 }
 
 // The console terminal addresses 17777560 through 17777566 are generated
 // in microcode and cannot be changed (EK-KDJ1A-UG-001).
-u8 KD11ODT::readCharacter ()
+CondData<u8> KD11ODT::readCharacter ()
 {
     // Wait till a character is available
     while ((readDLV11J (0177560) & 0x80) == 0)
@@ -51,12 +51,10 @@ u8 KD11ODT::readCharacter ()
     return (readDLV11J (0177562));
 }
 
-// The console terminal addresses 17777560 through 17777566 are generated
-// in microcode and cannot be changed (EK-KDJ1A-UG-001).
-u8 KD11ODT::readAndEchoCharacter ()
+CondData<u8> KD11ODT::readAndEchoCharacter ()
 {
     // Read the character
-    u8 c = readCharacter ();
+    CondData<u8> c = readCharacter ();
 
     // All characters (except ASCII codes 0, 2, 010 and 012 <LF>) are to be
     // echoed (EK-KDJ1A-UG-001).

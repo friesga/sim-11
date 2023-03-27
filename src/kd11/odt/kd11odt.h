@@ -5,6 +5,7 @@
 #include "kd11/cpu/kd11cpu.h"
 #include "variantfsm/fsm.h"
 #include "location/location.h"
+#include "conddata/conddata.h"
 
 #include <string>
 
@@ -110,16 +111,16 @@ namespace KD11_F
         string registerSeries_;
         Location location_;
 
-        u16 readDLV11J (u16 address);
-        u8 readCharacter ();
-        u8 readAndEchoCharacter ();
+        CondData<u16> readDLV11J (u16 address);
+        CondData<u8> readCharacter ();
+        CondData<u8> readAndEchoCharacter ();
         void writeCharacter (u8 c);
         void writeString (string str);
         void writeOpenAddress ();
         string octalNumberToString (u16 number);
         u32 stringToOctalNumber (string str);
         bool stringTou16 (string str, size_t nDigits, u16* value);
-        Event createEvent (u8 c);
+        Event createEvent (CondData<u8> c);
         State openAddress ();
         void setAddressValue ();
         void openNextAddress (std::function<u16 (void)> getNextRegister);

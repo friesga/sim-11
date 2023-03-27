@@ -10,7 +10,7 @@ using namespace KD11_F;
 // handbook, chapter 7: "Console ODT will recognize uppercase and lowercase
 // characters as commands". We presume the latter statement is accurate for
 // a KD11-F processor.
-Event KD11ODT::createEvent (u8 c)
+Event KD11ODT::createEvent (CondData<u8> c)
 {
     switch (c)
     {
