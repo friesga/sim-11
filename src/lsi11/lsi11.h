@@ -33,7 +33,6 @@ class LSI11
 	BDV11 *bdv11_;
 	unique_ptr<BA11_N> ba11_n_;
 	CmdLineOptions const &cmdLineOptions_;
-	bool running_;
 
 	void checkConsistency (vector<shared_ptr<DeviceConfig>> systemConfig);
 	void loadFile ();

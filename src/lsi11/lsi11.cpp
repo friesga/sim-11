@@ -13,8 +13,7 @@ LSI11::LSI11 (CmdLineOptions const &cmdLineOptions)
 	dlv11_ {nullptr},
 	bdv11_ {nullptr},
 	ba11_n_ {nullptr},
-	cmdLineOptions_ {cmdLineOptions},
-	running_ {false}
+	cmdLineOptions_ {cmdLineOptions}
 {}
 
 LSI11::~LSI11 ()
