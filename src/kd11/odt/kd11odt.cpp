@@ -43,9 +43,14 @@ CondData<u16> KD11ODT::readDLV11J (u16 address)
 // in microcode and cannot be changed (EK-KDJ1A-UG-001).
 CondData<u8> KD11ODT::readCharacter ()
 {
-    // Wait till a character is available
+    // Wait till a character is available or return an empty object
+    // if the exit signal is set.
     while ((readDLV11J (0177560) & 0x80) == 0)
+    {
+        if (bus_->signalIsSet (Qbus::Signal::EXIT))
+            return {};
         sleep_for (std::chrono::milliseconds (50));
+    }
 
     // Read the character
     return (readDLV11J (0177562));
@@ -59,10 +64,14 @@ CondData<u8> KD11ODT::readAndEchoCharacter ()
     // All characters (except ASCII codes 0, 2, 010 and 012 <LF>) are to be
     // echoed (EK-KDJ1A-UG-001).
     // According to micro note 050 a <CR> has to be echoed as <CR><LF>.
-    if (c != 0 && c != 2 && c != 010 && c != 012)
-        writeCharacter (c);
-    if (c == '\r')
-        writeCharacter ('\n');
+    // An empty object is returned if the exit signal is set.
+    if (c.hasValue ())
+    {
+        if (c != 0 && c != 2 && c != 010 && c != 012)
+            writeCharacter (c);
+        if (c == '\r')
+            writeCharacter ('\n');
+    }
 
     return c;
 }

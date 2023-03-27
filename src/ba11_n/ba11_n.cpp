@@ -62,4 +62,8 @@ void BA11_N::bezel ()
 		render();
         std::this_thread::sleep_for (std::chrono::milliseconds (33));
 	}
+
+    // The user clicked the close button. Set the bus EXIT signal to indicate
+    // the simulator has to stop
+    bus_->setSignal (Qbus::Signal::EXIT, Qbus::SignalValue::True);
 }

@@ -47,11 +47,15 @@ public:
 	// The SRUN L signal is actually not a bus signal, but a non-bused, backplane
 	// signal. The signal is a series of pulses which occur at 3-5" intervals
 	// whenever the processor is in the Run mode.
+	//
+	// The Qbus defines a number of (not bused) spare signals. Analoguously
+	// we define an exit signal indicating the simulator has to exit.
 	enum class Signal
     {
         SRUN,
         BDCOK,
         BHALT,
+		EXIT,
         Count
     };
 

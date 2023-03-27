@@ -29,9 +29,8 @@ void LSI11::run ()
 			kd11_->step ();
 		}
 
-		if ((kd11_->cpu().runState == 0 && 
-				cmdLineOptions_.exit_on_halt) ||
-			!ba11_n_->isRunning ())
+		if ((kd11_->cpu().runState == 0 && cmdLineOptions_.exit_on_halt) ||
+			bus_.signalIsSet (Qbus::Signal::EXIT))
 		{
 			/* make sure ODT finishes its prompt */
 			for(i = 0; i < 32; i++)

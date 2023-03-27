@@ -30,6 +30,7 @@ namespace KD11_F
     struct RegisterCmdEntered {};               // R or $
     struct PswDesignatorEntered {};             // S
     struct BinaryDumpCmdEntered {};             // Cntrl-shift-s
+    struct ExitCmdGiven {};                     // BA11_N close button clicked
 
     // The following commands are only implemented in the LSI-11 (KD11-F
     // processor) ODT and are not implemented in the PDP-11/23 (KDF11 processor).
@@ -79,6 +80,7 @@ namespace KD11_F
         RegisterCmdEntered,
         PswDesignatorEntered,
         BinaryDumpCmdEntered,
+        ExitCmdGiven,
         OpenPreviousLocationCmdEntered,
         AtSignCmdEntered,
         BackArrowCmdEntered,
@@ -192,6 +194,14 @@ namespace KD11_F
         State transition (EnteringRegisterValue_8&&, BackArrowCmdEntered);             // -> AtPrompt_1
 
         void entry (ExitPoint);
+
+        // Define a transition from all states to the ExitPoint state on an
+        // ExitCmdGiven event
+        template <typename S>
+        State transition (S&&, ExitCmdGiven)
+        {
+            return ExitPoint {};
+        }
 
         // Define the default transition for transitions not explicitly
         // defined above. The default transition implies a question mark is

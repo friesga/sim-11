@@ -2,16 +2,21 @@
 
 using namespace KD11_F;
 
-// Create the appropriate event from the given character.
+// Create the appropriate event from the given character. We receive either
+// a character or an empty object. In the latter case we create an
+// ExitCmdGiven event to make the state machine transition to the exit point.
 // 
-// All ODT commands must be types with the CAPS LOCK key depressed. Lower
-// case letters are not legal for ODT commands. (EK-11V03-TM-002)
+// "All ODT commands must be typed with the CAPS LOCK key depressed. Lower
+// case letters are not legal for ODT commands". (EK-11V03-TM-002)
 // This contradicts the following statement in the MicroComputer and Memories
 // handbook, chapter 7: "Console ODT will recognize uppercase and lowercase
 // characters as commands". We presume the latter statement is accurate for
 // a KD11-F processor.
 Event KD11ODT::createEvent (CondData<u8> c)
 {
+    if (!c.hasValue ())
+        return ExitCmdGiven {};
+
     switch (c)
     {
         case '\r':

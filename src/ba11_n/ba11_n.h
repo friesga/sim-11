@@ -42,13 +42,6 @@ class BA11_N
 public:
     BA11_N (Qbus *bus);
     ~BA11_N();
-
-    bool isRunning ();
 };
-
-inline bool BA11_N::isRunning ()
-{
-    return running_;
-}
 
 #endif // _BA11_N_H_
