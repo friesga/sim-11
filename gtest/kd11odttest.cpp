@@ -56,7 +56,7 @@ protected:
 
         // Let ODT process the input sequence
         KD11ODT kd11odt {&bus, kd11cpu};
-        kd11odt.step ();
+        kd11odt.run ();
 
         // Compare result from the DLV11J with the expected characters
         for (char c : sequence.expectedOutput)

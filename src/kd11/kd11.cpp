@@ -27,7 +27,7 @@ void KD11::step ()
             // enters ODT mode causes a ?<CR><LF> to be printed because a
             // location has not yet been opened.
             odt_ = make_unique<KD11ODT> (bus_, cpu_);
-            odt_->step ();
+            odt_->run ();
             break;
 
         case STATE_RUN:

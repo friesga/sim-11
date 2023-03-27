@@ -264,7 +264,7 @@ void KD11ODT::setRegisterValue ()
 }
 
 // Execute the ODT command parser
-void KD11ODT::step ()
+void KD11ODT::run ()
 {
     while (odtRunning_)
     {
