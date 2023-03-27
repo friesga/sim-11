@@ -169,9 +169,8 @@ endif ()
 
 if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
 set (CONSOLE_SRCS
-    src/console/console.cpp
-    src/console/linuxconsole/linuxconsole.cpp
-    src/console/linuxconsole/reader.cpp)
+    src/console/operatorconsole/operatorconsole.cpp
+    src/console/operatorconsole/linuxconsole/sender.cpp)
 endif ()
 
 # Define source files
