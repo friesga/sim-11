@@ -300,6 +300,7 @@ set (GTEST_SRCS
     gtest/threadsafecontainertest.cpp
     gtest/interruptrequesttest.cpp
     gtest/bitmasktest.cpp
+    gtest/conddatatest.cpp
     gtest/configuratortest.cpp
     gtest/dlv11configuratortest.cpp
     gtest/fistest.cpp
