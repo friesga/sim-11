@@ -44,7 +44,8 @@ void LSI11::configureDevices (vector<shared_ptr<DeviceConfig>> systemConfig)
         switch (device->deviceType_)
         {
             case DeviceType::KD11:
-                kd11_ = new KD11 (&bus_);
+                kd11_ = new KD11 (&bus_,
+                    static_pointer_cast<KD11Config> (device));
                 break;
 
             case DeviceType::MSV11:

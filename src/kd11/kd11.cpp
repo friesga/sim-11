@@ -4,11 +4,21 @@
 #include <memory>
 
 using std::make_unique;
+using std::shared_ptr;
 
-// KD11 functions
+// The factory power-up mode configuration is mode 0 (get vector at address
+// 24 and 26), but we'll set it to Bootstrap as that's more convenient for
+// the user.
 KD11::KD11 (Qbus* bus)
     :
-    BusDevice (bus)
+    BusDevice (bus),
+    powerUpMode {KD11Config::PowerUpMode::Bootstrap}
+{}
+
+KD11::KD11 (Qbus *bus, shared_ptr<KD11Config> kd11Config)
+    :
+    BusDevice (bus),
+    powerUpMode {kd11Config->powerUpMode}
 {}
 
 KD11CPU& KD11::cpu ()

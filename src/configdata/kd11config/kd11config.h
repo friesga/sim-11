@@ -26,8 +26,9 @@ struct KD11Config : public DeviceConfig
         Bootstrap
     };
 
-    // Factory configuration is mode 0
-    PowerUpMode powerUpMode {PowerUpMode::Vector};
+    // Poer-up mode factory configuration is mode 0, but we'll set it to
+    // Bootstrap as that's more convenient for the user.
+    PowerUpMode powerUpMode {PowerUpMode::Bootstrap};
 
     KD11Config ();
 };

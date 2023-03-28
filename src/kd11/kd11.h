@@ -3,18 +3,21 @@
 
 #include "cpu/kd11cpu.h"
 #include "odt/kd11odt.h"
+#include "configdata/kd11config/kd11config.h"
 
 using namespace KD11_F;
 
 #include <memory>
 
 using std::unique_ptr;
+using std::shared_ptr;
 
 // The class KD11 is composed of the KD11 CPU and the KD11 ODT.
 class KD11 : public BusDevice
 {
 public:
 	KD11 (Qbus *bus);
+	KD11 (Qbus *bus, shared_ptr<KD11Config> kd11Config);
 	void step ();
 	
 	// Give main() access to the CPU to set PC and runState
@@ -35,6 +38,7 @@ public:
 private:
 	KD11CPU cpu_ {bus_};
 	unique_ptr<KD11ODT>	odt_ {};
+	KD11Config::PowerUpMode powerUpMode;
 };
 
 #endif // !_KD11_H_
