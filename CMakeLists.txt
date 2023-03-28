@@ -303,6 +303,7 @@ set (GTEST_SRCS
     gtest/configuratortest.cpp
     gtest/dlv11configuratortest.cpp
     gtest/fistest.cpp
+    gtest/kd11configuratortest.cpp
     gtest/kd11odttest.cpp
     gtest/locationtest.cpp
     gtest/rlv12attachtest.cpp

@@ -5,7 +5,7 @@
 #include <fstream>	
 #include <gtest/gtest.h>
 
-TEST (DLV11ProcessorTest, breakResponseAccepted)
+TEST (DLV11ConfiguratorTest, breakResponseAccepted)
 {
     iniparser::File ft;
 	std::stringstream stream;
@@ -23,14 +23,14 @@ TEST (DLV11ProcessorTest, breakResponseAccepted)
 	// not correct the following tests will fail too.
 	ASSERT_EQ (systemConfig[0]->deviceType_, DeviceType::DLV11_J);
 
-	// The device's type is DLV11J so the configuration is a 
+	// The device's type is DLV11J so the configuration is a DLV11Config object
 	shared_ptr<DLV11Config> dlv11Config = 
 		static_pointer_cast<DLV11Config> (systemConfig[0]);
 
 	EXPECT_EQ (dlv11Config->ch3BreakResponse, DLV11Config::Ch3BreakResponse::Boot);
 }
 
-TEST (DLV11ProcessorTest, escCharAccepted)
+TEST (DLV11ConfiguratorTest, escCharAccepted)
 {
     iniparser::File ft;
 	std::stringstream stream;
@@ -55,7 +55,7 @@ TEST (DLV11ProcessorTest, escCharAccepted)
 	EXPECT_EQ (dlv11Config->breakKey, 27);
 }
 
-TEST (DLV11ProcessorTest, upperCaseControlCharAccepted)
+TEST (DLV11ConfiguratorTest, upperCaseControlCharAccepted)
 {
     iniparser::File ft;
 	std::stringstream stream;
@@ -80,7 +80,7 @@ TEST (DLV11ProcessorTest, upperCaseControlCharAccepted)
 	EXPECT_EQ (dlv11Config->breakKey, 8);
 }
 
-TEST (DLV11ProcessorTest, lowerCaseControlCharAccepted)
+TEST (DLV11ConfiguratorTest, lowerCaseControlCharAccepted)
 {
     iniparser::File ft;
 	std::stringstream stream;
@@ -105,7 +105,7 @@ TEST (DLV11ProcessorTest, lowerCaseControlCharAccepted)
 	EXPECT_EQ (dlv11Config->breakKey, 8);
 }
 
-TEST (DLV11ProcessorTest, invalidBreakResponseThrows)
+TEST (DLV11ConfiguratorTest, invalidBreakResponseThrows)
 {
     iniparser::File ft;
 	std::stringstream stream;
@@ -131,7 +131,7 @@ TEST (DLV11ProcessorTest, invalidBreakResponseThrows)
 	}
 }
 
-TEST (DLV11ProcessorTest, unknownBreakKeyThrows)
+TEST (DLV11ConfiguratorTest, unknownBreakKeyThrows)
 {
     iniparser::File ft;
 	std::stringstream stream;
@@ -156,7 +156,7 @@ TEST (DLV11ProcessorTest, unknownBreakKeyThrows)
 	}
 }
 
-TEST (DLV11ProcessorTest, invalidBreakKeyThrows)
+TEST (DLV11ConfiguratorTest, invalidBreakKeyThrows)
 {
     iniparser::File ft;
 	std::stringstream stream;
@@ -181,7 +181,7 @@ TEST (DLV11ProcessorTest, invalidBreakKeyThrows)
 	}
 }
 
-TEST (DLV11ProcessorTest, baseAddressAndVectorAccepted)
+TEST (DLV11ConfiguratorTest, baseAddressAndVectorAccepted)
 {
     iniparser::File ft;
 	std::stringstream stream;
@@ -208,7 +208,7 @@ TEST (DLV11ProcessorTest, baseAddressAndVectorAccepted)
 	EXPECT_EQ (dlv11Config->vector, 300);
 }
 
-TEST (DLV11ProcessorTest, invalidBaseAddressThrows)
+TEST (DLV11ConfiguratorTest, invalidBaseAddressThrows)
 {
     iniparser::File ft;
 	std::stringstream stream;
@@ -233,7 +233,7 @@ TEST (DLV11ProcessorTest, invalidBaseAddressThrows)
 	}
 }
 
-TEST (DLV11ProcessorTest, consoleSelectionAccepted)
+TEST (DLV11ConfiguratorTest, consoleSelectionAccepted)
 {
     iniparser::File ft;
 	std::stringstream stream;
@@ -258,7 +258,7 @@ TEST (DLV11ProcessorTest, consoleSelectionAccepted)
 	EXPECT_TRUE (dlv11Config->ch3ConsoleEnabled);
 }
 
-TEST (DLV11ProcessorTest, consoleEnabledinvalidBaseAddressThrows)
+TEST (DLV11ConfiguratorTest, consoleEnabledinvalidBaseAddressThrows)
 {
     iniparser::File ft;
 	std::stringstream stream;

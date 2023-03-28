@@ -16,7 +16,7 @@ class DLV11Processor : public SectionProcessor
 {
 	unique_ptr<DLV11Config> dlv11ConfigPtr {nullptr};
 
-    // Define process as a pointer to a BDV11Processor member function
+    // Define process as a pointer to a DLV11Processor member function
 	// with a iniparser::Value argument and returning void.
 	typedef void (DLV11Processor::*Process)(iniparser::Value);
 	

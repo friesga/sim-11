@@ -3,6 +3,7 @@
 
 using std::make_unique;
 using std::move;
+using std::invalid_argument;
 
 KD11Processor::KD11Processor ()
 {
@@ -10,7 +11,21 @@ KD11Processor::KD11Processor ()
 }
 
 void KD11Processor::processValue (iniparser::Section::ValueIterator valueIterator)
-{}
+{
+	Process processFunction = valueProcessors[valueIterator->first];
+    (this->*processFunction)(valueIterator->second);
+}
+
+void KD11Processor::processPowerUpMode (iniparser::Value value)
+{
+	map<string, KD11Config::PowerUpMode>::iterator iter;
+
+    if ((iter = validPowerUpModes.find (value.asString ())) != 
+            validPowerUpModes.end ())
+        kd11ConfigPtr->powerUpMode = iter->second;
+    else
+        throw invalid_argument {"Incorrect KD11 power-up_mode value"};
+}
 
 // Check the consistency of the configuration of the KD11. Currently
 // this is a void.
