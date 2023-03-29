@@ -22,7 +22,7 @@ void LSI11::run ()
 		step ();
 		kd11_->step ();
 
-		if ((kd11_->cpu().currentRunState () == STATE_HALT && 
+		if ((kd11_->cpu().currentRunState () == CpuState::HALT && 
 				cmdLineOptions_.exit_on_halt) ||
 			bus_.signalIsSet (Qbus::Signal::EXIT))
 		{

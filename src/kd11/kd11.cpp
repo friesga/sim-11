@@ -30,7 +30,7 @@ void KD11::step ()
 {
     switch (cpu_.currentRunState ())
     {
-        case STATE_HALT:
+        case CpuState::HALT:
             // On every entry to ODT a new KD11ODT object is created to make
             // sure it is initialized properly. The Microcomputer and Memories
             // Handbook states: "A / issued immediately after the processor
@@ -40,11 +40,11 @@ void KD11::step ()
             odt_->run ();
             break;
 
-        case STATE_RUN:
+        case CpuState::RUN:
             cpu_.step ();
             break;
 
-        case STATE_WAIT:
+        case CpuState::WAIT:
             cpu_.handleTraps ();
             break;
     }

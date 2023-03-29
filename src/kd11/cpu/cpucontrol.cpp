@@ -4,7 +4,7 @@
 // Halt the processor
 void KD11CPU::halt ()
 {
-    runState = STATE_HALT;
+    runState = CpuState::HALT;
     bus_->setSignal (Qbus::Signal::SRUN, Qbus::SignalValue::False);
 }
 
@@ -12,14 +12,14 @@ void KD11CPU::halt ()
 void KD11CPU::start (u16 address)
 {
     register_[7] = address;
-    runState = STATE_RUN;
+    runState = CpuState::RUN;
     bus_->setSignal (Qbus::Signal::SRUN, Qbus::SignalValue::True);
 }
 
 // Continue execution at the current PC
 void KD11CPU::proceed ()
 {
-    runState = STATE_RUN;
+    runState = CpuState::RUN;
     bus_->setSignal (Qbus::Signal::SRUN, Qbus::SignalValue::True);
 }
 

@@ -14,11 +14,14 @@ namespace KD11_F
 	class KD11ODT;
 }
 
-/* CPU states */
-#define	STATE_HALT		0
-#define	STATE_RUN		1
-#define	STATE_WAIT		2
-#define	STATE_INHIBIT_TRACE	3
+// Definition of CPU states
+enum class CpuState
+{
+	HALT,
+	RUN,
+	WAIT,
+	INHIBIT_TRACE
+};
 
 // The processor status word in the LSI-11 is a composite of (1) the 4 PDP-11
 // condition codes (N,Z,V,C) [bits 0:3] and (2) the Trace Bit [bit 4] and (3)
@@ -63,7 +66,7 @@ public:
 	KD11CPU (Qbus *bus);
 	void step ();
 	void handleTraps();
-	u8 currentRunState ();
+	CpuState currentRunState ();
 
 private:
 	enum {bootAddress = 0173000};
@@ -71,7 +74,7 @@ private:
 	Qbus *bus_;
 	u16	register_[8];
 	u16	psw;
-	u8	runState;
+	CpuState runState;
 
 	// A trap is a special kind of interrupt, internal to the CPU. There
 	// can be only one trap serviced at the time.
