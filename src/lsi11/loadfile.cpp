@@ -59,20 +59,9 @@ void LSI11::loadFile ()
         if (len == 6)
         {
             if ((addr & 1) == 0)
-            {
-                kd11_->cpu ().r[7] = addr;
-                /* console->sendString("P"); */
-                // ToDo: Use symbolic constants for runState
-                kd11_->cpu ().runState = 1;
-                bus_.setSignal (Qbus::Signal::SRUN, Qbus::SignalValue::True);
-            }
+                kd11_->cpu ().start (addr);
             else
-            {
-                /* console->sendString("200G"); */
-                kd11_->cpu ().r[7] = 0200;
-                kd11_->cpu ().runState = 1;
-                bus_.setSignal (Qbus::Signal::SRUN, Qbus::SignalValue::True);
-            }
+                kd11_->cpu ().start (0200);
             break;
         }
     }

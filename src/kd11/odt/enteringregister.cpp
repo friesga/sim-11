@@ -52,7 +52,7 @@ State KD11ODT::transition (EnteringRegister_6 &&, OpenLocationCmdEntered)
         // multiple times. This is used in the processing of the at sign
         // command for an opened PSW (see the gtransition from
         // EnteringRegisterValue_8 for the AtSignCmdEntered event).
-        writeString (octalNumberToString (cpu_.psw) + ' ');
+        writeString (octalNumberToString (cpu_.pswValue ()) + ' ');
         if (!location_.isA<PSWLocation> ())
             location_ = PSWLocation {};
     }
@@ -60,7 +60,7 @@ State KD11ODT::transition (EnteringRegister_6 &&, OpenLocationCmdEntered)
     {
         // Open register
         location_ = RegisterLocation {static_cast<u8> (registerSeries_.back() - '0')};
-        writeString (octalNumberToString (cpu_.r[location_.registerNr ()]) + ' ');
+        writeString (octalNumberToString (cpu_.registerValue (location_.registerNr ())) + ' ');
     }
 
     return RegisterOpened_4 {};

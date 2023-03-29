@@ -8,13 +8,13 @@ void LSI11::run ()
 
 	if (cmdLineOptions_.halt) 
 	{
-		kd11_->cpu().runState = 0;
-		bus_.setSignal (Qbus::Signal::SRUN, Qbus::SignalValue::False);
+		kd11_->cpu ().halt ();
 	} 
 	else if (!cmdLineOptions_.halt && !cmdLineOptions_.load_file) 
 	{
-		kd11_->cpu().runState = 1;
-		bus_.setSignal (Qbus::Signal::SRUN, Qbus::SignalValue::True);
+		// Hm, this smells. Start running with a loaded file via a proceed
+		// seems odd. This should be (and is?) handled in load_file().
+		kd11_->cpu().proceed ();
 	}
 		
 	while (true) 
@@ -22,7 +22,8 @@ void LSI11::run ()
 		step ();
 		kd11_->step ();
 
-		if ((kd11_->cpu().runState == 0 && cmdLineOptions_.exit_on_halt) ||
+		if ((kd11_->cpu().currentRunState () == STATE_HALT && 
+				cmdLineOptions_.exit_on_halt) ||
 			bus_.signalIsSet (Qbus::Signal::EXIT))
 		{
 			break;

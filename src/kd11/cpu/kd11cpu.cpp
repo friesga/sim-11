@@ -26,6 +26,11 @@ KD11CPU::KD11CPU (Qbus* bus)
     bus_->setSignal (Qbus::Signal::SRUN, Qbus::SignalValue::False);
 }
 
+u8 KD11CPU::currentRunState ()
+{
+    return runState;
+}
+
 CondData<u16> KD11CPU::fetchWord (u16 address)
 {
     // return bus_->read (address);

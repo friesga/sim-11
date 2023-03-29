@@ -50,13 +50,13 @@ State KD11ODT::transition (AtPrompt_1 && currentState, OpenLocationCmdEntered)
 
     if (location_.isA<RegisterLocation> ())
     {
-        writeString (octalNumberToString (cpu_.r[location_.registerNr ()]) + ' ');
+        writeString (octalNumberToString (cpu_.registerValue (location_.registerNr ())) + ' ');
         return RegisterOpened_4 {};
     }
 
     if (location_.isA<PSWLocation> ())
     {
-        writeString (octalNumberToString (cpu_.psw) + ' ');
+        writeString (octalNumberToString (cpu_.pswValue ()) + ' ');
         return RegisterOpened_4 {};
     }
 
@@ -67,6 +67,7 @@ State KD11ODT::transition (AtPrompt_1 && currentState, OpenLocationCmdEntered)
 // On a Proceed command set the CPU into the running state and exit ODT
 State KD11ODT::transition (AtPrompt_1 &&, ProceedCmdEntered)
 {
-    trace.cpuEvent (CpuEventRecordType::CPU_ODT_P, cpu_.r[7]);
+    cpu_.proceed ();
+    trace.cpuEvent (CpuEventRecordType::CPU_ODT_P, cpu_.registerValue (7));
     return ExitPoint {};
 }

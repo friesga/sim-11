@@ -1,6 +1,7 @@
 #ifndef _KD11CPU_H_
 #define _KD11CPU_H_
 
+#include "cpucontrol.h"
 #include "qbus/qbus.h"
 #include "float/float.h"
 #include "types.h"
@@ -48,39 +49,29 @@ namespace KD11_F
 
 #define USE_FLOAT
 
-class KD11CPU
+class KD11CPU : public CpuControl
 {
 public:
+	// KD11ODT and LSI11 need access to the CpuControl functions. The class
+	// Instruction needs access to fetchWord(), putWord() and putByte().
+	// I prefer to declare these classes friends to making these functions
+	// public.
 	friend class KD11_F::KD11ODT;
+	friend class LSI11;
+	friend class Instruction;
 
 	KD11CPU (Qbus *bus);
 	void step ();
 	void handleTraps();
-
-	// These functions are defined public as they are used by the
-	// Instruction classes.
-	// ToDo: fetchWord(), putWord() and putByte() should be private?
-	CondData<u16> fetchWord (u16 address);
-	bool putWord (u16 address, u16 value);
-	bool putByte (u16 address, u8 value);
-
-	// ToDo: Make runState and r[] private; accessed from main
-	u8	runState;
-	u16	r[8];
-
-	enum {bootAddress = 0173000};
+	u8 currentRunState ();
 
 private:
-	void setTrap (InterruptRequest const *ir);
-	void execInstr ();
-	u8 cpuPriority ();
-	void returnFISresult (Float result, u16 registerNumber);
-	void executeFISinstruction (u16 stackPointer, 
-		std::function<bool(Float, Float)> argumentsValid,
-		std::function<Float(Float, Float)>);
+	enum {bootAddress = 0173000};
 
 	Qbus *bus_;
+	u16	r[8];
 	u16	psw;
+	u8	runState;
 
 	// A trap is a special kind of interrupt, internal to the CPU. There
 	// can be only one trap serviced at the time.
@@ -94,6 +85,30 @@ private:
 	InterruptRequest const TRP{RequestType::Trap, TrapPriority::InstructionTrap, 0, 034};
 	InterruptRequest const FIS{RequestType::Trap, TrapPriority::InstructionTrap, 0, 0244};
 	InterruptRequest const illegalInstructionTrap{RequestType::Trap, TrapPriority::InstructionTrap, 0, 010};
+
+	// Definition of CpuControl functions. The intention is that these
+	// functions are to be used by K11ODT and the reset function.
+	void setTrap (InterruptRequest const *ir);
+	void halt ();
+    void start (u16 address);
+	void proceed ();
+    u16 registerValue (u8 registerNr);
+    void setRegister (u8 registerNr, u16 value);
+    u16 pswValue ();
+    void setPSW (u16 value);
+
+	// These functions are used by the
+	// Instruction classes.
+	CondData<u16> fetchWord (u16 address);
+	bool putWord (u16 address, u16 value);
+	bool putByte (u16 address, u8 value);
+
+	void execInstr ();
+	u8 cpuPriority ();
+	void returnFISresult (Float result, u16 registerNumber);
+	void executeFISinstruction (u16 stackPointer, 
+		std::function<bool(Float, Float)> argumentsValid,
+		std::function<Float(Float, Float)>);
 };
 
 

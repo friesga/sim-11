@@ -238,7 +238,7 @@ State KD11ODT::openNextRegister (State &&currentState,
     u8 registerNr = getNextRegister ();
     location_ = RegisterLocation {registerNr};
     writeString ("\n@R" + to_string(registerNr) + '/' + 
-        octalNumberToString (cpu_.r[registerNr]) + ' ');
+        octalNumberToString (cpu_.registerValue (registerNr)) + ' ');
     return move (currentState);
 }
 
@@ -253,11 +253,11 @@ void KD11ODT::setRegisterValue ()
     {
         // Either a register or the PSW has to be set to the new value.
         if (location_.isA<RegisterLocation> ())
-            cpu_.r[location_.registerNr ()] = newValue_;
+            cpu_.setRegister (location_.registerNr (), newValue_);
         else
-            // Disallow changing the PSW T-bit
-            cpu_.psw = (cpu_.psw & PSW_T) | (newValue_ & ~PSW_T);
-
+            // Setting or clearing the PSW T-bit will be prohibited
+            // by setPSW()
+            cpu_.setPSW (newValue_);
     }
     else
         writeString ("?\n");

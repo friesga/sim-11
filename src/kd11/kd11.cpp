@@ -28,7 +28,7 @@ KD11CPU& KD11::cpu ()
 
 void KD11::step ()
 {
-    switch (cpu_.runState)
+    switch (cpu_.currentRunState ())
     {
         case STATE_HALT:
             // On every entry to ODT a new KD11ODT object is created to make
