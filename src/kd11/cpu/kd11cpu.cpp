@@ -26,7 +26,7 @@ KD11CPU::KD11CPU (Qbus* bus)
     bus_->setSignal (Qbus::Signal::SRUN, Qbus::SignalValue::False);
 }
 
-CpuState KD11CPU::currentRunState ()
+CpuState KD11CPU::currentCpuState ()
 {
     return runState;
 }

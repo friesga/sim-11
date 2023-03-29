@@ -66,7 +66,7 @@ public:
 	KD11CPU (Qbus *bus);
 	void step ();
 	void handleTraps();
-	CpuState currentRunState ();
+	CpuState currentCpuState ();
 
 private:
 	enum {bootAddress = 0173000};
