@@ -67,7 +67,7 @@ State KD11ODT::transition (EnteringRegisterValue_8 &&, AtSignCmdEntered)
     setRegisterValue ();
     u16 addressToOpen {0};
     if (location_.isA<RegisterLocation> ())
-        addressToOpen = cpu_.r[location_.registerNr ()];
+        addressToOpen = cpu_.register_[location_.registerNr ()];
     else
     {
         // The PSW is opened
@@ -87,7 +87,7 @@ State KD11ODT::transition (EnteringRegisterValue_8 &&, AtSignCmdEntered)
         if (location_.previousIsA<AddressLocation> ())
             addressToOpen = location_.previousAddress ();
         else
-            addressToOpen = cpu_.r[location_.previousRegisterNr ()];
+            addressToOpen = cpu_.register_[location_.previousRegisterNr ()];
     }
     return openNextAddress ([=] () {return addressToOpen;});
 }

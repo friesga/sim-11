@@ -69,7 +69,7 @@ private:
 	enum {bootAddress = 0173000};
 
 	Qbus *bus_;
-	u16	r[8];
+	u16	register_[8];
 	u16	psw;
 	u8	runState;
 

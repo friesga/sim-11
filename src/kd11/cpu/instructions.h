@@ -702,7 +702,7 @@ struct KD11INSNBR
 struct KD11INSNJSR
 {
 	u16	opcode:7;
-	u16	r:3;
+	u16	register_:3;
 	u16	mode:3;
 	u16	rn:3;
 };

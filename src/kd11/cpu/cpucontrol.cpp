@@ -11,7 +11,7 @@ void KD11CPU::halt ()
 // Start the processor at the given address
 void KD11CPU::start (u16 address)
 {
-    r[7] = address;
+    register_[7] = address;
     runState = STATE_RUN;
     bus_->setSignal (Qbus::Signal::SRUN, Qbus::SignalValue::True);
 }
@@ -27,13 +27,13 @@ void KD11CPU::proceed ()
 // provided via special functions as the KD11 has no registers to access them.
 u16 KD11CPU::registerValue (u8 registerNr)
 {
-    return r[registerNr];
+    return register_[registerNr];
 }
 
 // Set the given register to the given value
 void KD11CPU::setRegister (u8 registerNr, u16 value)
 {
-    r[registerNr] = value;
+    register_[registerNr] = value;
 }
 
 // Return the value of the Processor Status Word

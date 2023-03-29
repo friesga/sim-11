@@ -16,13 +16,13 @@
 // Constructor
 KD11CPU::KD11CPU (Qbus* bus)
     :
-    runState {STATE_HALT},
-    r {0},
     bus_ {bus},
+    register_ {0},
     psw {0},
+    runState {STATE_HALT},
     trap_ {nullptr}
 {
-    r[7] = bootAddress;
+    register_[7] = bootAddress;
     bus_->setSignal (Qbus::Signal::SRUN, Qbus::SignalValue::False);
 }
 
@@ -73,9 +73,9 @@ void KD11CPU::returnFISresult (Float result, u16 registerNumber)
     Float::Result conversionResult = result.pdp11Dword (&high, &low);
     if (conversionResult == Float::Result::OK)
     {
-        putWord (r[registerNumber] + 4, high);
-        putWord (r[registerNumber] + 6, low);
-        r[registerNumber] += 4;
+        putWord (register_[registerNumber] + 4, high);
+        putWord (register_[registerNumber] + 6, low);
+        register_[registerNumber] += 4;
         PSW_EQ (PSW_N, result.value () < 0);
         PSW_EQ (PSW_Z, result.value () == 0);
         PSW_CLR (PSW_V);
@@ -116,7 +116,7 @@ void KD11CPU::step ()
 {
     if (bus_->signalIsSet (Qbus::Signal::BHALT))
     {
-        trace.cpuEvent (CpuEventRecordType::CPU_HALT, r[7]);
+        trace.cpuEvent (CpuEventRecordType::CPU_HALT, register_[7]);
         runState = STATE_HALT;
         bus_->setSignal (Qbus::Signal::SRUN, Qbus::SignalValue::False);
         return;
@@ -124,7 +124,7 @@ void KD11CPU::step ()
 
     if (bus_->signalIsSet (Qbus::Signal::BDCOK))
     {
-        r[7] = bootAddress;
+        register_[7] = bootAddress;
         psw = 0;
         bus_->clearInterrupts ();
         trace.cpuEvent (CpuEventRecordType::CPU_ODT_G, bootAddress);
@@ -134,14 +134,14 @@ void KD11CPU::step ()
     {
         trace.setIgnoreBus ();
         u16 code[3];
-        // The read of r[7]+2 and  r[7]+4 may access an invalid address as
+        // The read of register_[7]+2 and  register_[7]+4 may access an invalid address as
         // the instruction isn't decoded at this point. Therefore use the bus
         // read function instead of fetchWord(). The latter will generate a
         // bus error trap on access of an invalid address.
-        code[0] = bus_->read (r[7] + 0).valueOr (0);
-        code[1] = bus_->read (r[7] + 2).valueOr (0);
-        code[2] = bus_->read (r[7] + 4).valueOr (0);
-        trace.cpuStep (r, psw, code);
+        code[0] = bus_->read (register_[7] + 0).valueOr (0);
+        code[1] = bus_->read (register_[7] + 2).valueOr (0);
+        code[2] = bus_->read (register_[7] + 4).valueOr (0);
+        trace.cpuStep (register_, psw, code);
         trace.clearIgnoreBus ();
     }
 
@@ -181,12 +181,12 @@ void KD11CPU::execInstr ()
     s32 tmps32;
 
     // Get next instruction to execute and move PC forward
-    // u16 insn = fetchWord (r[7]);
-    CondData<u16> tmpValue = fetchWord (r[7]);
+    // u16 insn = fetchWord (register_[7]);
+    CondData<u16> tmpValue = fetchWord (register_[7]);
     if (!tmpValue.hasValue())
         return;
     u16 insn = tmpValue;
-    r[7] += 2;
+    register_[7] += 2;
 
     // Get pointers to the possible instruction formats
     KD11INSN1* insn1 = (KD11INSN1*)&insn;
@@ -207,7 +207,7 @@ void KD11CPU::execInstr ()
                     switch (insn)
                     {
                         case 0000000: /* HALT */
-                            trace.cpuEvent (CpuEventRecordType::CPU_HALT, r[7]);
+                            trace.cpuEvent (CpuEventRecordType::CPU_HALT, register_[7]);
 
                             runState = STATE_HALT;
                             bus_->setSignal (Qbus::Signal::SRUN, Qbus::SignalValue::False);
@@ -217,16 +217,16 @@ void KD11CPU::execInstr ()
                             break;
 
                         case 0000001: /* WAIT */
-                            trace.cpuEvent (CpuEventRecordType::CPU_WAIT, r[7]);
+                            trace.cpuEvent (CpuEventRecordType::CPU_WAIT, register_[7]);
                             runState = STATE_WAIT;
                             break;
 
                         case 0000002: /* RTI */
-                            r[7] = READCPU (r[6]);
-                            r[6] += 2;
+                            register_[7] = READCPU (register_[6]);
+                            register_[6] += 2;
                             RETURN_IF (!tmpValue.hasValue ());
-                            psw = READCPU (r[6]);
-                            r[6] += 2;
+                            psw = READCPU (register_[6]);
+                            register_[6] += 2;
                             RETURN_IF (!tmpValue.hasValue ());
                             break;
 
@@ -245,11 +245,11 @@ void KD11CPU::execInstr ()
                             break;
 
                         case 0000006: /* RTT */
-                            r[7] = READCPU (r[6]);
-                            r[6] += 2;
+                            register_[7] = READCPU (register_[6]);
+                            register_[6] += 2;
                             RETURN_IF (!tmpValue.hasValue ());
-                            psw = READCPU (r[6]);
-                            r[6] += 2;
+                            psw = READCPU (register_[6]);
+                            register_[6] += 2;
                             RETURN_IF (!tmpValue.hasValue ());
 
                             // Prevent a trace trap on the next instruction
@@ -265,7 +265,7 @@ void KD11CPU::execInstr ()
                     break;
 
                 case 00001: /* JMP */
-                    if (!insn1->getAddress (this, r, r[7]))
+                    if (!insn1->getAddress (this, register_, register_[7]))
                     {
                         // Illegal instruction
                         trace.trap (TrapRecordType::TRAP_RADDR, 04);
@@ -278,9 +278,9 @@ void KD11CPU::execInstr ()
                     if ((insn & 0177770) == 0000200)
                     {
                         /* RTS */
-                        r[7] = r[insnrts->rn];
-                        r[insnrts->rn] = fetchWord (r[6]);
-                        r[6] += 2;
+                        register_[7] = register_[insnrts->rn];
+                        register_[insnrts->rn] = fetchWord (register_[6]);
+                        register_[6] += 2;
                     }
                     else if ((insn & 0177740) == 0000240)
                     {
@@ -303,12 +303,12 @@ void KD11CPU::execInstr ()
                     break;
 
                 case 00003: /* SWAB */
-                    if (!insn1->getOperand (this, r,
+                    if (!insn1->getOperand (this, register_,
                         Bitmask (OperandOptions::Word), tmp))
                         return;
                     tmp = ((tmp & 0x00FF) << 8) | ((tmp >> 8) & 0xFF);
 
-                    if (!insn1->putOperand (this, r,
+                    if (!insn1->putOperand (this, register_,
                         Bitmask (OperandOptions::Word), tmp))
                         return;
 
@@ -322,7 +322,7 @@ void KD11CPU::execInstr ()
                 case 00005:
                 case 00006:
                 case 00007:
-                    r[7] += (s16)((s8)insnbr->offset) * 2;
+                    register_[7] += (s16)((s8)insnbr->offset) * 2;
                     break;
                 case 00010: /* BNE */
                 case 00011:
@@ -330,7 +330,7 @@ void KD11CPU::execInstr ()
                 case 00013:
                     if (!PSW_GET (PSW_Z))
                     {
-                        r[7] += (s16)((s8)insnbr->offset) * 2;
+                        register_[7] += (s16)((s8)insnbr->offset) * 2;
                     }
                     break;
                 case 00014: /* BEQ */
@@ -339,7 +339,7 @@ void KD11CPU::execInstr ()
                 case 00017:
                     if (PSW_GET (PSW_Z))
                     {
-                        r[7] += (s16)((s8)insnbr->offset) * 2;
+                        register_[7] += (s16)((s8)insnbr->offset) * 2;
                     }
                     break;
                 case 00020: /* BGE */
@@ -348,7 +348,7 @@ void KD11CPU::execInstr ()
                 case 00023:
                     if ((PSW_GET (PSW_N) ^ PSW_GET (PSW_V)) == 0)
                     {
-                        r[7] += (s16)((s8)insnbr->offset) * 2;
+                        register_[7] += (s16)((s8)insnbr->offset) * 2;
                     }
                     break;
                 case 00024: /* BLT */
@@ -357,7 +357,7 @@ void KD11CPU::execInstr ()
                 case 00027:
                     if (PSW_GET (PSW_N) ^ PSW_GET (PSW_V))
                     {
-                        r[7] += (s16)((s8)insnbr->offset) * 2;
+                        register_[7] += (s16)((s8)insnbr->offset) * 2;
                     }
                     break;
                 case 00030: /* BGT */
@@ -366,7 +366,7 @@ void KD11CPU::execInstr ()
                 case 00033:
                     if ((PSW_GET (PSW_Z) || (PSW_GET (PSW_N) ^ PSW_GET (PSW_V))) == 0)
                     {
-                        r[7] += (s16)((s8)insnbr->offset) * 2;
+                        register_[7] += (s16)((s8)insnbr->offset) * 2;
                     }
                     break;
                 case 00034: /* BLE */
@@ -375,7 +375,7 @@ void KD11CPU::execInstr ()
                 case 00037:
                     if (PSW_GET (PSW_Z) || (PSW_GET (PSW_N) ^ PSW_GET (PSW_V)))
                     {
-                        r[7] += (s16)((s8)insnbr->offset) * 2;
+                        register_[7] += (s16)((s8)insnbr->offset) * 2;
                     }
                     break;
                 case 00040: /* JSR */
@@ -387,8 +387,8 @@ void KD11CPU::execInstr ()
                 case 00046:
                 case 00047:
                 {
-                    bool ok = insn1->getAddress (this, r, dst);
-                    src = r[insnjsr->r];
+                    bool ok = insn1->getAddress (this, register_, dst);
+                    src = register_[insnjsr->r];
                     if (!ok)
                     {
                         // Illegal instruction
@@ -397,14 +397,14 @@ void KD11CPU::execInstr ()
                         return;
                     }
                 }
-                r[6] -= 2;
-                putWord (r[6], src);
-                r[insnjsr->r] = r[7];
-                r[7] = dst;
+                register_[6] -= 2;
+                putWord (register_[6], src);
+                register_[insnjsr->r] = register_[7];
+                register_[7] = dst;
                 break;
 
                 case 00050: /* CLR */
-                    if (!insn1->putOperand (this, r,
+                    if (!insn1->putOperand (this, register_,
                         Bitmask (OperandOptions::Word), 0))
                         return;
                     PSW_CLR (PSW_N | PSW_V | PSW_C);
@@ -412,12 +412,12 @@ void KD11CPU::execInstr ()
                     break;
 
                 case 00051: /* COM */
-                    if (!insn1->getOperand (this, r,
+                    if (!insn1->getOperand (this, register_,
                         Bitmask (OperandOptions::Word), tmp))
                         return;
                     tmp = ~tmp;
 
-                    if (!insn1->putOperand (this, r,
+                    if (!insn1->putOperand (this, register_,
                         Bitmask (OperandOptions::Word), tmp))
                         return;
                     PSW_CLR (PSW_V);
@@ -427,12 +427,12 @@ void KD11CPU::execInstr ()
                     break;
 
                 case 00052: /* INC */
-                    if (!insn1->getOperand (this, r,
+                    if (!insn1->getOperand (this, register_,
                         Bitmask (OperandOptions::Word), src))
                         return;
                     tmp = src + 1;
 
-                    if (!insn1->putOperand (this, r,
+                    if (!insn1->putOperand (this, register_,
                         Bitmask (OperandOptions::Word), tmp))
                         return;
 
@@ -442,12 +442,12 @@ void KD11CPU::execInstr ()
                     break;
 
                 case 00053: /* DEC */
-                    if (!insn1->getOperand (this, r,
+                    if (!insn1->getOperand (this, register_,
                         Bitmask (OperandOptions::Word), src))
                         return;
                     tmp = src - 1;
 
-                    if (!insn1->putOperand (this, r,
+                    if (!insn1->putOperand (this, register_,
                         Bitmask (OperandOptions::Word), tmp))
                         return;
 
@@ -457,14 +457,14 @@ void KD11CPU::execInstr ()
                     break;
 
                 case 00054: /* NEG */
-                    if (!insn1->getOperand (this, r,
+                    if (!insn1->getOperand (this, register_,
                         Bitmask (OperandOptions::Word), tmp))
                         return;
 
                     if (tmp != 0100000)
                         tmp = -tmp;
 
-                    if (!insn1->putOperand (this, r,
+                    if (!insn1->putOperand (this, register_,
                         Bitmask (OperandOptions::Word), tmp))
                         return;
 
@@ -475,14 +475,14 @@ void KD11CPU::execInstr ()
                     break;
 
                 case 00055: /* ADC */
-                    if (!insn1->getOperand (this, r,
+                    if (!insn1->getOperand (this, register_,
                         Bitmask (OperandOptions::Word), src))
                         return;
 
                     tmp2 = PSW_GET (PSW_C) ? 1 : 0;
                     tmp = src + tmp2;
 
-                    if (!insn1->putOperand (this, r,
+                    if (!insn1->putOperand (this, register_,
                         Bitmask (OperandOptions::Word), tmp))
                         return;
 
@@ -493,14 +493,14 @@ void KD11CPU::execInstr ()
                     break;
 
                 case 00056: /* SBC */
-                    if (!insn1->getOperand (this, r,
+                    if (!insn1->getOperand (this, register_,
                         Bitmask (OperandOptions::Word), src))
                         return;
 
                     tmp2 = PSW_GET (PSW_C) ? 1 : 0;
                     tmp = src - tmp2;
 
-                    if (!insn1->putOperand (this, r,
+                    if (!insn1->putOperand (this, register_,
                         Bitmask (OperandOptions::Word), tmp))
                         return;
 
@@ -511,7 +511,7 @@ void KD11CPU::execInstr ()
                     break;
 
                 case 00057: /* TST */
-                    if (!insn1->getOperand (this, r,
+                    if (!insn1->getOperand (this, register_,
                         Bitmask (OperandOptions::Word |
                             OperandOptions::AutoIncr), tmp))
                         return;
@@ -523,7 +523,7 @@ void KD11CPU::execInstr ()
                     break;
 
                 case 00060: /* ROR */
-                    if (!insn1->getOperand (this, r,
+                    if (!insn1->getOperand (this, register_,
                         Bitmask (OperandOptions::Word), src))
                         return;
                     tmp2 = PSW_GET (PSW_C);
@@ -531,7 +531,7 @@ void KD11CPU::execInstr ()
                     if (tmp2)
                         tmp |= 0x8000;
 
-                    if (!insn1->putOperand (this, r,
+                    if (!insn1->putOperand (this, register_,
                         Bitmask (OperandOptions::Word), tmp))
                         return;
 
@@ -542,7 +542,7 @@ void KD11CPU::execInstr ()
                     break;
 
                 case 00061: /* ROL */
-                    if (!insn1->getOperand (this, r,
+                    if (!insn1->getOperand (this, register_,
                         Bitmask (OperandOptions::Word), src))
                         return;
                     tmp2 = PSW_GET (PSW_C);
@@ -550,7 +550,7 @@ void KD11CPU::execInstr ()
                     if (tmp2)
                         tmp |= 0x0001;
 
-                    if (!insn1->putOperand (this, r,
+                    if (!insn1->putOperand (this, register_,
                         Bitmask (OperandOptions::Word), tmp))
                         return;
 
@@ -561,7 +561,7 @@ void KD11CPU::execInstr ()
                     break;
 
                 case 00062: /* ASR */
-                    if (!insn1->getOperand (this, r,
+                    if (!insn1->getOperand (this, register_,
                         Bitmask (OperandOptions::Word), src))
                         return;
                     tmp = src;
@@ -573,7 +573,7 @@ void KD11CPU::execInstr ()
                     else
                         tmp >>= 1;
 
-                    if (!insn1->putOperand (this, r,
+                    if (!insn1->putOperand (this, register_,
                         Bitmask (OperandOptions::Word), tmp))
                         return;
 
@@ -584,12 +584,12 @@ void KD11CPU::execInstr ()
                     break;
 
                 case 00063: /* ASL */
-                    if (!insn1->getOperand (this, r,
+                    if (!insn1->getOperand (this, register_,
                         Bitmask (OperandOptions::Word), src))
                         return;
                     tmp = src << 1;
 
-                    if (!insn1->putOperand (this, r,
+                    if (!insn1->putOperand (this, register_,
                         Bitmask (OperandOptions::Word), tmp))
                         return;
 
@@ -600,10 +600,10 @@ void KD11CPU::execInstr ()
                     break;
 
                 case 00064: /* MARK */
-                    r[6] = r[7] + 2 * insnmark->nn;
-                    r[7] = r[5];
-                    r[5] = fetchWord (r[6]);
-                    r[6] += 2;
+                    register_[6] = register_[7] + 2 * insnmark->nn;
+                    register_[7] = register_[5];
+                    register_[5] = fetchWord (register_[6]);
+                    register_[6] += 2;
                     break;
 
                 case 00067: /* SXT */
@@ -616,7 +616,7 @@ void KD11CPU::execInstr ()
                         tmp = 0;
                     }
 
-                    if (!insn1->putOperand (this, r,
+                    if (!insn1->putOperand (this, register_,
                         Bitmask (OperandOptions::Word), tmp))
                         return;
 
@@ -632,12 +632,12 @@ void KD11CPU::execInstr ()
             break;
 
         case 001: /* MOV */
-            if (!insn2->getSourceOperand (this, r,
+            if (!insn2->getSourceOperand (this, register_,
                 Bitmask (OperandOptions::Word |
                     OperandOptions::AutoIncr), tmp))
                 return;
 
-            if (!insn2->putDestOperand (this, r,
+            if (!insn2->putDestOperand (this, register_,
                 Bitmask (OperandOptions::Word), tmp))
                 return;
 
@@ -647,12 +647,12 @@ void KD11CPU::execInstr ()
             break;
 
         case 002: /* CMP */
-            if (!insn2->getSourceOperand (this, r,
+            if (!insn2->getSourceOperand (this, register_,
                 Bitmask (OperandOptions::Word |
                     OperandOptions::AutoIncr), src))
                 return;
 
-            if (!insn2->getDestOperand (this, r,
+            if (!insn2->getDestOperand (this, register_,
                 Bitmask (OperandOptions::Word |
                     OperandOptions::AutoIncr), dst))
                 return;
@@ -666,12 +666,12 @@ void KD11CPU::execInstr ()
             break;
 
         case 003: /* BIT */
-            if (!insn2->getSourceOperand (this, r,
+            if (!insn2->getSourceOperand (this, register_,
                 Bitmask (OperandOptions::Word |
                     OperandOptions::AutoIncr), src))
                 return;
 
-            if (!insn2->getDestOperand (this, r,
+            if (!insn2->getDestOperand (this, register_,
                 Bitmask (OperandOptions::Word |
                     OperandOptions::AutoIncr), dst))
                 return;
@@ -683,18 +683,18 @@ void KD11CPU::execInstr ()
             break;
 
         case 004: /* BIC */
-            if (!insn2->getSourceOperand (this, r,
+            if (!insn2->getSourceOperand (this, register_,
                 Bitmask (OperandOptions::Word |
                     OperandOptions::AutoIncr), src))
                 return;
 
-            if (!insn2->getDestOperand (this, r,
+            if (!insn2->getDestOperand (this, register_,
                 Bitmask (OperandOptions::Word), dst))
                 return;
 
             tmp = ~src & dst;
 
-            if (!insn2->putDestOperand (this, r,
+            if (!insn2->putDestOperand (this, register_,
                 Bitmask (OperandOptions::Word), tmp))
                 return;
 
@@ -704,18 +704,18 @@ void KD11CPU::execInstr ()
             break;
 
         case 005: /* BIS */
-            if (!insn2->getSourceOperand (this, r,
+            if (!insn2->getSourceOperand (this, register_,
                 Bitmask (OperandOptions::Word |
                     OperandOptions::AutoIncr), src))
                 return;
 
-            if (!insn2->getDestOperand (this, r,
+            if (!insn2->getDestOperand (this, register_,
                 Bitmask (OperandOptions::Word), dst))
                 return;
 
             tmp = src | dst;
 
-            if (!insn2->putDestOperand (this, r,
+            if (!insn2->putDestOperand (this, register_,
                 Bitmask (OperandOptions::Word), tmp))
                 return;
 
@@ -725,18 +725,18 @@ void KD11CPU::execInstr ()
             break;
 
         case 006: /* ADD */
-            if (!insn2->getSourceOperand (this, r,
+            if (!insn2->getSourceOperand (this, register_,
                 Bitmask (OperandOptions::Word |
                     OperandOptions::AutoIncr), src))
                 return;
 
-            if (!insn2->getDestOperand (this, r,
+            if (!insn2->getDestOperand (this, register_,
                 Bitmask (OperandOptions::Word), dst))
                 return;
 
             tmp = src + dst;
 
-            if (!insn2->putDestOperand (this, r,
+            if (!insn2->putDestOperand (this, register_,
                 Bitmask (OperandOptions::Word), tmp))
                 return;
 
@@ -751,15 +751,15 @@ void KD11CPU::execInstr ()
             switch (insn >> 9)
             {
                 case 0070: /* MUL */
-                    dst = r[insnjsr->r];
-                    if (!insnjsr->getOperand (this, r,
+                    dst = register_[insnjsr->r];
+                    if (!insnjsr->getOperand (this, register_,
                         Bitmask (OperandOptions::Word |
                             OperandOptions::AutoIncr), src))
                         return;
 
                     tmps32 = (s32)(s16)dst * (s16)src;
-                    r[insnjsr->r] = (u16)(tmps32 >> 16);
-                    r[insnjsr->r | 1] = (u16)tmps32;
+                    register_[insnjsr->r] = (u16)(tmps32 >> 16);
+                    register_[insnjsr->r | 1] = (u16)tmps32;
                     PSW_CLR (PSW_V);
                     PSW_EQ (PSW_N, tmps32 < 0);
                     PSW_EQ (PSW_Z, !tmps32);
@@ -767,9 +767,9 @@ void KD11CPU::execInstr ()
                     break;
 
                 case 0071: /* DIV */
-                    tmps32 = (r[insnjsr->r] << 16) | r[insnjsr->r | 1];
+                    tmps32 = (register_[insnjsr->r] << 16) | register_[insnjsr->r | 1];
 
-                    if (!insnjsr->getOperand (this, r,
+                    if (!insnjsr->getOperand (this, register_,
                         Bitmask (OperandOptions::Word |
                             OperandOptions::AutoIncr), src))
                         return;
@@ -790,17 +790,17 @@ void KD11CPU::execInstr ()
                         }
                         else
                         {
-                            r[insnjsr->r] = (u16)quot;
-                            r[insnjsr->r | 1] = (u16)rem;
+                            register_[insnjsr->r] = (u16)quot;
+                            register_[insnjsr->r | 1] = (u16)rem;
                             PSW_EQ (PSW_Z, !quot);
                             PSW_EQ (PSW_N, quot < 0);
                         }
                     }
                     break;
                 case 0072: /* ASH */
-                    dst = r[insnjsr->r];
+                    dst = register_[insnjsr->r];
 
-                    if (!insnjsr->getOperand (this, r,
+                    if (!insnjsr->getOperand (this, register_,
                         Bitmask (OperandOptions::Word |
                             OperandOptions::AutoIncr), src))
                         return;
@@ -845,16 +845,16 @@ void KD11CPU::execInstr ()
                             PSW_SET (PSW_V);
                         }
                     }
-                    r[insnjsr->r] = tmp;
+                    register_[insnjsr->r] = tmp;
                     PSW_EQ (PSW_N, tmp & 0x8000);
                     PSW_EQ (PSW_Z, !tmp);
                     break;
 
                 case 0073: /* ASHC */
-                    dst = r[insnjsr->r];
-                    tmps32 = (r[insnjsr->r] << 16) | r[insnjsr->r | 1];
+                    dst = register_[insnjsr->r];
+                    tmps32 = (register_[insnjsr->r] << 16) | register_[insnjsr->r | 1];
 
-                    if (!insnjsr->getOperand (this, r,
+                    if (!insnjsr->getOperand (this, register_,
                         Bitmask (OperandOptions::Word |
                             OperandOptions::AutoIncr), src))
                         return;
@@ -896,22 +896,22 @@ void KD11CPU::execInstr ()
                         PSW_EQ (PSW_V, !!(dst & 0x8000)
                             != !!(tmps32 & 0x80000000));
                     }
-                    r[insnjsr->r] = (u16)(tmps32 >> 16);
-                    r[insnjsr->r | 1] = (u16)tmps32;
+                    register_[insnjsr->r] = (u16)(tmps32 >> 16);
+                    register_[insnjsr->r | 1] = (u16)tmps32;
                     PSW_EQ (PSW_N, tmps32 & 0x80000000);
                     PSW_EQ (PSW_Z, !tmps32);
                     break;
 
                 case 0074: /* XOR */
-                    src = r[insnjsr->r];
+                    src = register_[insnjsr->r];
 
-                    if (!insnjsr->getOperand (this, r,
+                    if (!insnjsr->getOperand (this, register_,
                         Bitmask (OperandOptions::Word), dst))
                         return;
 
                     tmp = src ^ dst;
 
-                    if (!insnjsr->putOperand (this, r, tmp))
+                    if (!insnjsr->putOperand (this, register_, tmp))
                         return;
 
                     PSW_EQ (PSW_N, tmp & 0x8000);
@@ -955,10 +955,10 @@ void KD11CPU::execInstr ()
                     }
                     break;
                 case 0077: /* SOB */
-                    r[insnsob->rn]--;
-                    if (r[insnsob->rn])
+                    register_[insnsob->rn]--;
+                    if (register_[insnsob->rn])
                     {
-                        r[7] -= 2 * insnsob->offset;
+                        register_[7] -= 2 * insnsob->offset;
                     }
                     break;
                 default:
@@ -977,7 +977,7 @@ void KD11CPU::execInstr ()
                 case 01003:
                     if (!PSW_GET (PSW_N))
                     {
-                        r[7] += (s16)((s8)insnbr->offset) * 2;
+                        register_[7] += (s16)((s8)insnbr->offset) * 2;
                     }
                     break;
 
@@ -987,7 +987,7 @@ void KD11CPU::execInstr ()
                 case 01007:
                     if (PSW_GET (PSW_N))
                     {
-                        r[7] += (s16)((s8)insnbr->offset) * 2;
+                        register_[7] += (s16)((s8)insnbr->offset) * 2;
                     }
                     break;
 
@@ -997,7 +997,7 @@ void KD11CPU::execInstr ()
                 case 01013:
                     if (!PSW_GET (PSW_C) && !PSW_GET (PSW_Z))
                     {
-                        r[7] += (s16)((s8)insnbr->offset) * 2;
+                        register_[7] += (s16)((s8)insnbr->offset) * 2;
                     }
                     break;
 
@@ -1007,7 +1007,7 @@ void KD11CPU::execInstr ()
                 case 01017:
                     if (PSW_GET (PSW_C) || PSW_GET (PSW_Z))
                     {
-                        r[7] += (s16)((s8)insnbr->offset) * 2;
+                        register_[7] += (s16)((s8)insnbr->offset) * 2;
                     }
                     break;
 
@@ -1017,7 +1017,7 @@ void KD11CPU::execInstr ()
                 case 01023:
                     if (!PSW_GET (PSW_V))
                     {
-                        r[7] += (s16)((s8)insnbr->offset) * 2;
+                        register_[7] += (s16)((s8)insnbr->offset) * 2;
                     }
                     break;
 
@@ -1027,7 +1027,7 @@ void KD11CPU::execInstr ()
                 case 01027:
                     if (PSW_GET (PSW_V))
                     {
-                        r[7] += (s16)((s8)insnbr->offset) * 2;
+                        register_[7] += (s16)((s8)insnbr->offset) * 2;
                     }
                     break;
 
@@ -1037,7 +1037,7 @@ void KD11CPU::execInstr ()
                 case 01033:
                     if (!PSW_GET (PSW_C))
                     {
-                        r[7] += (s16)((s8)insnbr->offset) * 2;
+                        register_[7] += (s16)((s8)insnbr->offset) * 2;
                     }
                     break;
 
@@ -1047,7 +1047,7 @@ void KD11CPU::execInstr ()
                 case 01037:
                     if (PSW_GET (PSW_C))
                     {
-                        r[7] += (s16)((s8)insnbr->offset) * 2;
+                        register_[7] += (s16)((s8)insnbr->offset) * 2;
                     }
                     break;
 
@@ -1068,7 +1068,7 @@ void KD11CPU::execInstr ()
                     break;
 
                 case 01050: /* CLRB */
-                    if (!insn1->putOperand (this, r,
+                    if (!insn1->putOperand (this, register_,
                         Bitmask (OperandOptions::Byte), 0))
                         return;
 
@@ -1077,13 +1077,13 @@ void KD11CPU::execInstr ()
                     break;
 
                 case 01051: /* COMB */
-                    if (!insn1->getOperand (this, r,
+                    if (!insn1->getOperand (this, register_,
                         Bitmask (OperandOptions::Byte), tmp))
                         return;
 
                     tmp = ~tmp;
 
-                    if (!insn1->putOperand (this, r,
+                    if (!insn1->putOperand (this, register_,
                         Bitmask (OperandOptions::Byte), tmp))
                         return;
 
@@ -1094,13 +1094,13 @@ void KD11CPU::execInstr ()
                     break;
 
                 case 01052: /* INCB */
-                    if (!insn1->getOperand (this, r,
+                    if (!insn1->getOperand (this, register_,
                         Bitmask (OperandOptions::Byte), src))
                         return;
 
                     tmp = (u8)(src + 1);
 
-                    if (!insn1->putOperand (this, r,
+                    if (!insn1->putOperand (this, register_,
                         Bitmask (OperandOptions::Byte), tmp))
                         return;
 
@@ -1110,13 +1110,13 @@ void KD11CPU::execInstr ()
                     break;
 
                 case 01053: /* DECB */
-                    if (!insn1->getOperand (this, r,
+                    if (!insn1->getOperand (this, register_,
                         Bitmask (OperandOptions::Byte), src))
                         return;
 
                     tmp = (u8)(src - 1);
 
-                    if (!insn1->putOperand (this, r,
+                    if (!insn1->putOperand (this, register_,
                         Bitmask (OperandOptions::Byte), tmp))
                         return;
 
@@ -1126,7 +1126,7 @@ void KD11CPU::execInstr ()
                     break;
 
                 case 01054: /* NEGB */
-                    if (!insn1->getOperand (this, r,
+                    if (!insn1->getOperand (this, register_,
                         Bitmask (OperandOptions::Byte), tmp))
                         return;
 
@@ -1134,7 +1134,7 @@ void KD11CPU::execInstr ()
                     {
                         tmp = -tmp;
                     }
-                    if (!insn1->putOperand (this, r,
+                    if (!insn1->putOperand (this, register_,
                         Bitmask (OperandOptions::Byte), tmp))
                         return;
 
@@ -1145,14 +1145,14 @@ void KD11CPU::execInstr ()
                     break;
 
                 case 01055: /* ADCB */
-                    if (!insn1->getOperand (this, r,
+                    if (!insn1->getOperand (this, register_,
                         Bitmask (OperandOptions::Byte), src))
                         return;
 
                     tmp2 = PSW_GET (PSW_C) ? 1 : 0;
                     tmp = (u8)(src + tmp2);
 
-                    if (!insn1->putOperand (this, r,
+                    if (!insn1->putOperand (this, register_,
                         Bitmask (OperandOptions::Byte), tmp))
                         return;
 
@@ -1163,14 +1163,14 @@ void KD11CPU::execInstr ()
                     break;
 
                 case 01056: /* SBCB */
-                    if (!insn1->getOperand (this, r,
+                    if (!insn1->getOperand (this, register_,
                         Bitmask (OperandOptions::Byte), src))
                         return;
 
                     tmp2 = PSW_GET (PSW_C) ? 1 : 0;
                     tmp = (u8)(src - tmp2);
 
-                    if (!insn1->putOperand (this, r,
+                    if (!insn1->putOperand (this, register_,
                         Bitmask (OperandOptions::Byte), tmp))
                         return;
 
@@ -1181,7 +1181,7 @@ void KD11CPU::execInstr ()
                     break;
 
                 case 01057: /* TSTB */
-                    if (!insn1->getOperand (this, r,
+                    if (!insn1->getOperand (this, register_,
                         Bitmask (OperandOptions::Byte |
                             OperandOptions::AutoIncr), tmp))
                         return;
@@ -1193,7 +1193,7 @@ void KD11CPU::execInstr ()
                     break;
 
                 case 01060: /* RORB */
-                    if (!insn1->getOperand (this, r,
+                    if (!insn1->getOperand (this, register_,
                         Bitmask (OperandOptions::Byte), src))
                         return;
 
@@ -1204,7 +1204,7 @@ void KD11CPU::execInstr ()
                         tmp |= 0x80;
                     }
 
-                    if (!insn1->putOperand (this, r,
+                    if (!insn1->putOperand (this, register_,
                         Bitmask (OperandOptions::Byte), tmp))
                         return;
 
@@ -1215,7 +1215,7 @@ void KD11CPU::execInstr ()
                     break;
 
                 case 01061: /* ROLB */
-                    if (!insn1->getOperand (this, r,
+                    if (!insn1->getOperand (this, register_,
                         Bitmask (OperandOptions::Byte), src))
                         return;
 
@@ -1226,7 +1226,7 @@ void KD11CPU::execInstr ()
                         tmp |= 0x01;
                     }
 
-                    if (!insn1->putOperand (this, r,
+                    if (!insn1->putOperand (this, register_,
                         Bitmask (OperandOptions::Byte), tmp))
                         return;
 
@@ -1237,7 +1237,7 @@ void KD11CPU::execInstr ()
                     break;
 
                 case 01062: /* ASRB */
-                    if (!insn1->getOperand (this, r,
+                    if (!insn1->getOperand (this, register_,
                         Bitmask (OperandOptions::Byte), src))
                         return;
 
@@ -1252,7 +1252,7 @@ void KD11CPU::execInstr ()
                         tmp >>= 1;
                     }
 
-                    if (!insn1->putOperand (this, r,
+                    if (!insn1->putOperand (this, register_,
                         Bitmask (OperandOptions::Byte), tmp))
                         return;
 
@@ -1263,13 +1263,13 @@ void KD11CPU::execInstr ()
                     break;
 
                 case 01063: /* ASLB */
-                    if (!insn1->getOperand (this, r,
+                    if (!insn1->getOperand (this, register_,
                         Bitmask (OperandOptions::Byte), src))
                         return;
 
                     tmp = (u8)(src << 1);
 
-                    if (!insn1->putOperand (this, r,
+                    if (!insn1->putOperand (this, register_,
                         Bitmask (OperandOptions::Byte), tmp))
                         return;
 
@@ -1283,7 +1283,7 @@ void KD11CPU::execInstr ()
                     // MTPS
                     // Note that the T bit cannot be set with this instruction
                     // and that bits 5 and 6 are reserved.
-                    if (!insn1->getOperand (this, r,
+                    if (!insn1->getOperand (this, register_,
                         Bitmask (OperandOptions::Byte |
                             OperandOptions::AutoIncr), tmp))
                         return;
@@ -1299,11 +1299,11 @@ void KD11CPU::execInstr ()
                     {
                         // If destination is mode 0, PS bit 7 is sign
                         // extended through upper byte of the register.
-                        r[insn1->rn] = (s8) psw;
+                        register_[insn1->rn] = (s8) psw;
                     }
                     else
                     {
-                        if (!insn1->putOperand (this, r,
+                        if (!insn1->putOperand (this, register_,
                             Bitmask (OperandOptions::Byte), tmp))
                             return;
                     }
@@ -1321,18 +1321,18 @@ void KD11CPU::execInstr ()
             break;
 
         case 011: /* MOVB */
-            if (!insn2->getSourceOperand (this, r,
+            if (!insn2->getSourceOperand (this, register_,
                 Bitmask (OperandOptions::Byte |
                     OperandOptions::AutoIncr), tmp))
                 return;
             tmp = (s8)tmp;
             if (insn2->dst_mode == 0)
             {
-                r[insn2->dst_rn] = tmp;
+                register_[insn2->dst_rn] = tmp;
             }
             else
             {
-                if (!insn2->putDestOperand (this, r,
+                if (!insn2->putDestOperand (this, register_,
                     Bitmask (OperandOptions::Byte), tmp))
                     return;
             }
@@ -1342,12 +1342,12 @@ void KD11CPU::execInstr ()
             break;
 
         case 012: /* CMPB */
-            if (!insn2->getSourceOperand (this, r,
+            if (!insn2->getSourceOperand (this, register_,
                 Bitmask (OperandOptions::Byte |
                     OperandOptions::AutoIncr), src))
                 return;
 
-            if (!insn2->getDestOperand (this, r,
+            if (!insn2->getDestOperand (this, register_,
                 Bitmask (OperandOptions::Byte |
                     OperandOptions::AutoIncr), dst))
                 return;
@@ -1361,12 +1361,12 @@ void KD11CPU::execInstr ()
             break;
 
         case 013: /* BITB */
-            if (!insn2->getSourceOperand (this, r,
+            if (!insn2->getSourceOperand (this, register_,
                 Bitmask (OperandOptions::Byte |
                     OperandOptions::AutoIncr), src))
                 return;
 
-            if (!insn2->getDestOperand (this, r,
+            if (!insn2->getDestOperand (this, register_,
                 Bitmask (OperandOptions::Byte |
                     OperandOptions::AutoIncr), dst))
                 return;
@@ -1378,18 +1378,18 @@ void KD11CPU::execInstr ()
             break;
 
         case 014: /* BICB */
-            if (!insn2->getSourceOperand (this, r,
+            if (!insn2->getSourceOperand (this, register_,
                 Bitmask (OperandOptions::Byte |
                     OperandOptions::AutoIncr), src))
                 return;
 
-            if (!insn2->getDestOperand (this, r,
+            if (!insn2->getDestOperand (this, register_,
                 Bitmask (OperandOptions::Byte), dst))
                 return;
 
             tmp = (u8)(~src & dst);
 
-            if (!insn2->putDestOperand (this, r,
+            if (!insn2->putDestOperand (this, register_,
                 Bitmask (OperandOptions::Byte), tmp))
                 return;
 
@@ -1399,18 +1399,18 @@ void KD11CPU::execInstr ()
             break;
 
         case 015: /* BISB */
-            if (!insn2->getSourceOperand (this, r,
+            if (!insn2->getSourceOperand (this, register_,
                 Bitmask (OperandOptions::Byte |
                     OperandOptions::AutoIncr), src))
                 return;
 
-            if (!insn2->getDestOperand (this, r,
+            if (!insn2->getDestOperand (this, register_,
                 Bitmask (OperandOptions::Byte), dst))
                 return;
 
             tmp = src | dst;
 
-            if (!insn2->putDestOperand (this, r,
+            if (!insn2->putDestOperand (this, register_,
                 Bitmask (OperandOptions::Byte), tmp))
                 return;
 
@@ -1420,18 +1420,18 @@ void KD11CPU::execInstr ()
             break;
 
         case 016: /* SUB */
-            if (!insn2->getSourceOperand (this, r,
+            if (!insn2->getSourceOperand (this, register_,
                 Bitmask (OperandOptions::Word |
                     OperandOptions::AutoIncr), src))
                 return;
 
-            if (!insn2->getDestOperand (this, r,
+            if (!insn2->getDestOperand (this, register_,
                 Bitmask (OperandOptions::Word), dst))
                 return;
 
             tmp = dst - src;
 
-            if (!insn2->putDestOperand (this, r,
+            if (!insn2->putDestOperand (this, register_,
                 Bitmask (OperandOptions::Word), tmp))
                 return;
 
@@ -1457,10 +1457,10 @@ void KD11CPU::executeFISinstruction (u16 stackPointer,
     // Clear PSW bits 5 and 6
     psw &= ~(_BV(5) | _BV(6));
 
-    CondData<u16> f1High = fetchWord (r[stackPointer] + 4);
-    CondData<u16> f1Low = fetchWord (r[stackPointer] + 6);
-    CondData<u16> f2High = fetchWord (r[stackPointer]);
-    CondData<u16> f2Low = fetchWord (r[stackPointer] + 2);
+    CondData<u16> f1High = fetchWord (register_[stackPointer] + 4);
+    CondData<u16> f1Low = fetchWord (register_[stackPointer] + 6);
+    CondData<u16> f2High = fetchWord (register_[stackPointer]);
+    CondData<u16> f2Low = fetchWord (register_[stackPointer] + 2);
 
     if (f1High.hasValue () && f1Low.hasValue () &&
         f2High.hasValue () && f2Low.hasValue ())
@@ -1550,10 +1550,10 @@ void KD11CPU::handleTraps ()
     // Save PC and PSW on the stack. Adressing the stack could result in a
     // bus time out. In that case the CPU is halted.
     // ToDo: Remove code duplication
-    r[6] -= 2;
-    if (!putWord (r[6], psw))
+    register_[6] -= 2;
+    if (!putWord (register_[6], psw))
     {
-        trace.cpuEvent (CpuEventRecordType::CPU_DBLBUS, r[6]);
+        trace.cpuEvent (CpuEventRecordType::CPU_DBLBUS, register_[6]);
         // ToDo: All interrupts should be cleared?
         trap_ = nullptr;
         runState = STATE_HALT;
@@ -1561,10 +1561,10 @@ void KD11CPU::handleTraps ()
         return;
     }
 
-    r[6] -= 2;
-    if (!putWord (r[6], r[7]))
+    register_[6] -= 2;
+    if (!putWord (register_[6], register_[7]))
     {
-        trace.cpuEvent (CpuEventRecordType::CPU_DBLBUS, r[6]);
+        trace.cpuEvent (CpuEventRecordType::CPU_DBLBUS, register_[6]);
         trap_ = nullptr;
         runState = STATE_HALT;
         bus_->setSignal (Qbus::Signal::SRUN, Qbus::SignalValue::False);
@@ -1574,7 +1574,7 @@ void KD11CPU::handleTraps ()
     // Read new PC and PSW from the trap vector. These read's could also
     // result in a bus time out.
     tmpValue = fetchWord (trapToProcess);
-    r[7] = tmpValue.valueOr (0);
+    register_[7] = tmpValue.valueOr (0);
     if (!tmpValue.hasValue ())
     {
         trace.cpuEvent (CpuEventRecordType::CPU_DBLBUS, trapToProcess);
@@ -1598,7 +1598,7 @@ void KD11CPU::handleTraps ()
     /* resume execution if in WAIT state */
     if (runState == STATE_WAIT)
     {
-        trace.cpuEvent (CpuEventRecordType::CPU_RUN, r[7]);
+        trace.cpuEvent (CpuEventRecordType::CPU_RUN, register_[7]);
         runState = STATE_RUN;
         bus_->setSignal (Qbus::Signal::SRUN, Qbus::SignalValue::True);
     }

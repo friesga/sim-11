@@ -23,4 +23,4 @@ class CpuControl
 };
 
 
-#endif _CPUCONTROL_H_
+#endif // _CPUCONTROL_H_
