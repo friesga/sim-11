@@ -10,9 +10,13 @@
 
 #include <string>
 #include <array>
+#include <functional>
+#include <vector>
 
 using std::string;
 using std::array;
+using std::function;
+using std::vector;
 
 /* Backplane size */
 #define	LSI11_SIZE		8
@@ -66,6 +70,8 @@ public:
 		Cycle
 	};
 
+	using Subscriber = function<void(Signal, SignalValue)>;
+
 	Qbus ();
 	void setInterrupt (TrapPriority priority, 
 		unsigned char busOrder, unsigned char vector);
@@ -75,6 +81,8 @@ public:
 	u8 intrptPriority ();
 	bool getIntrptReq (InterruptRequest &ir);
 
+	// Signal handling functions
+	void subscribe (Signal signal, Subscriber subscriber);
 	void setSignal (Signal signal, SignalValue value);
 	bool signalIsSet (Signal signal);
 	
@@ -92,7 +100,11 @@ private:
 	// This queue keeps all interrupt requests, ordered in interrupt priority
 	using IntrptReqQueue = ThreadSafePrioQueue<InterruptRequest>;
 	IntrptReqQueue intrptReqQueue_;
-	array<SignalValue, static_cast<size_t> (Signal::Count)> controlSignals_;
+
+	// Signal administration
+	array<SignalValue, static_cast<size_t> (Signal::Count)> signalValues_;
+	array<vector<Subscriber>, static_cast<size_t> (Signal::Count)> signalSubscribers_;
+
 	bool processorRunning_;
 	u16	delay_;
 
