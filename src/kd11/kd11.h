@@ -35,10 +35,15 @@ public:
 	bool responsible (u16 addr) override { return false; }
 	void reset() override {};
 
+	// Declare the signal receivers
+	void BHALTReceiver (Qbus::Signal signal, Qbus::SignalValue signalValue);
+	void BDCOKReceiver (Qbus::Signal signal, Qbus::SignalValue signalValue);
+
 private:
 	KD11CPU cpu_ {bus_};
 	unique_ptr<KD11ODT>	odt_ {};
 	KD11Config::PowerUpMode powerUpMode;
+	void subscribeToSignals ();
 };
 
 #endif // !_KD11_H_

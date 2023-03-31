@@ -103,33 +103,18 @@ void KD11CPU::returnFISresult (Float result, u16 registerNumber)
 #define	READCPU(addr)	\
     (tmpValue = fetchWord(addr)).valueOr(0);
 
-// Perform a CPU step. The step mainly comprises four actions:
-// 1. Check the state of the BHALT and BDCOK bus signals. If one of these
-//    signals is true, the normal instruction flow is interrupted and the
-//    corresponding action is performed,
-// 2. Execution of an instruction,
-// 3. Handle the trace bit,
-// 4. Handling of traps and interrupts that might have arisen during execution
+// Perform a CPU step. The step mainly comprises three actions:
+// 1. Execution of an instruction,
+// 2. Handle the trace bit,
+// 3. Handling of traps and interrupts that might have arisen during execution
 //    of the instruction, either a trap as a result of an instruction, or an
 //    interrupt requested by a bus device.
+//
+// The normal instruction flow can be interrupted by the setting of the BHALT
+// or BDCOK bus signal. These signals are handled in their corresponding KD11
+// receivers which then calls a KD11CPU control function.
 void KD11CPU::step ()
 {
-    if (bus_->signalIsSet (Qbus::Signal::BHALT))
-    {
-        trace.cpuEvent (CpuEventRecordType::CPU_HALT, register_[7]);
-        runState = CpuState::HALT;
-        bus_->setSignal (Qbus::Signal::SRUN, Qbus::SignalValue::False);
-        return;
-    }
-
-    if (bus_->signalIsSet (Qbus::Signal::BDCOK))
-    {
-        register_[7] = bootAddress;
-        psw = 0;
-        bus_->clearInterrupts ();
-        trace.cpuEvent (CpuEventRecordType::CPU_ODT_G, bootAddress);
-    }
-
     if(trace.isActive ())
     {
         trace.setIgnoreBus ();

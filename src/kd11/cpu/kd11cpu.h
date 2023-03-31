@@ -59,6 +59,7 @@ public:
 	// Instruction needs access to fetchWord(), putWord() and putByte().
 	// I prefer to declare these classes friends to making these functions
 	// public.
+	friend class KD11;
 	friend class KD11_F::KD11ODT;
 	friend class LSI11;
 	friend class Instruction;

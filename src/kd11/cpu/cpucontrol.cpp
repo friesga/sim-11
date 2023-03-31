@@ -1,11 +1,13 @@
 #include "kd11cpu.h"
 #include "cpucontrol.h"
+#include "trace/trace.h"
 
 // Halt the processor
 void KD11CPU::halt ()
 {
     runState = CpuState::HALT;
     bus_->setSignal (Qbus::Signal::SRUN, Qbus::SignalValue::False);
+    trace.cpuEvent (CpuEventRecordType::CPU_HALT, register_[7]);
 }
 
 // Start the processor at the given address
@@ -14,6 +16,7 @@ void KD11CPU::start (u16 address)
     register_[7] = address;
     runState = CpuState::RUN;
     bus_->setSignal (Qbus::Signal::SRUN, Qbus::SignalValue::True);
+    trace.cpuEvent (CpuEventRecordType::CPU_ODT_G, bootAddress);
 }
 
 // Continue execution at the current PC
@@ -21,6 +24,7 @@ void KD11CPU::proceed ()
 {
     runState = CpuState::RUN;
     bus_->setSignal (Qbus::Signal::SRUN, Qbus::SignalValue::True);
+    trace.cpuEvent (CpuEventRecordType::CPU_ODT_P, register_[7]);
 }
 
 // Return the value of a register. Access to the registers and PSW has to be
