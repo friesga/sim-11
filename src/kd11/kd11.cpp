@@ -42,6 +42,8 @@ KD11CPU& KD11::cpu ()
     return cpu_;
 }
 
+// The BHALT signals halts the processor. If the processor already is in
+// ODT mode the signal is ignored.
 void KD11::BHALTReceiver (Qbus::Signal signal, 
 		Qbus::SignalValue signalValue)
 {
@@ -49,16 +51,51 @@ void KD11::BHALTReceiver (Qbus::Signal signal,
     return;
 }
 
-// When the BDCOK signal is cycled the power-up function has to be executed
+// The BDCOK signal triggers a bus and therefore a KD11 reset.
+// 
+// The reset is executed when either:
+// - The system has been powered up,
+// - The user hits the BREAK key and the boot response is configured,
+// - A RESET instruction is executed.
+//
+// The reaction on a reset is configured by the power-up mode. Three power-up
+// modes can be selected:
+// 1. Trap to location 24/26,
+// 2. Place the processor in ODT mode,
+// 3. Start the system at the boot address.
+// 
+// These modes can be selected in the KD11 section of the configuration file.
+
 void KD11::BDCOKReceiver (Qbus::Signal signal, Qbus::SignalValue signalValue)
 {
-    cpu_.start (KD11CPU::bootAddress);
+    switch (powerUpMode)
+    {
+        case KD11Config::PowerUpMode::Vector:
+            break;
 
-    // ToDo: Clearing the PSW should be part of the KD11CPU reset?
-    cpu_.setPSW (0);
+        case KD11Config::PowerUpMode::ODT:
+            // Halt the processor (if it isn't already halted). This will
+            // place the processor in ODT mode on the next execution of
+            // KD11::step(). If the processor already is in ODT mode the
+            // signal is ignored and this is a no-operation.
+            cpu_.halt ();
+            break;
 
-    // Clearing the interrupts belongs in the Qbus reset
-    bus_->clearInterrupts ();
+        case KD11Config::PowerUpMode::Bootstrap:
+            // If an ODT instance is running stop it. Then start the processor
+            // at the standard boot address
+            if (odt_ != nullptr)
+                odt_->stop ();
+            cpu_.start (KD11CPU::bootAddress);
+
+            // ToDo: Clearing the PSW should be part of the KD11CPU reset?
+            cpu_.setPSW (0);
+
+            // Clearing the interrupts belongs in the Qbus reset
+            bus_->clearInterrupts ();
+            break;
+    }
+
 }
 
 void KD11::step ()

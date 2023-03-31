@@ -47,7 +47,7 @@ CondData<u8> KD11ODT::readCharacter ()
     // if the exit signal is set.
     while ((readDLV11J (0177560) & 0x80) == 0)
     {
-        if (bus_->signalIsSet (Qbus::Signal::EXIT))
+        if (bus_->signalIsSet (Qbus::Signal::EXIT) || !odtRunning_)
             return {};
         sleep_for (std::chrono::milliseconds (50));
     }
@@ -272,4 +272,10 @@ void KD11ODT::run ()
         // from it and process that event
         dispatch (createEvent (readAndEchoCharacter ()));
     }
+}
+
+// Stop execution of ODT
+void KD11ODT::stop ()
+{
+    odtRunning_ = false;
 }

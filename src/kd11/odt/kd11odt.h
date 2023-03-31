@@ -221,6 +221,7 @@ namespace KD11_F
         // Definition of public functions.
         KD11ODT (Qbus* bus, KD11CPU& cpu);
         void run ();
+        void stop ();
     };
 }
 #endif // _K11ODT_H_
