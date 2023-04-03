@@ -15,7 +15,7 @@ using std::placeholders::_2;
 KD11::KD11 (Qbus* bus)
     :
     BusDevice (bus),
-    powerUpMode {KD11Config::PowerUpMode::Bootstrap}
+    powerUpMode_ {KD11Config::PowerUpMode::Bootstrap}
 {
     subscribeToSignals ();
 }
@@ -23,7 +23,7 @@ KD11::KD11 (Qbus* bus)
 KD11::KD11 (Qbus *bus, shared_ptr<KD11Config> kd11Config)
     :
     BusDevice (bus),
-    powerUpMode {kd11Config->powerUpMode}
+    powerUpMode_ {kd11Config->powerUpMode}
 {
     subscribeToSignals ();   
 }
@@ -68,7 +68,7 @@ void KD11::BHALTReceiver (Qbus::Signal signal,
 
 void KD11::BDCOKReceiver (Qbus::Signal signal, Qbus::SignalValue signalValue)
 {
-    switch (powerUpMode)
+    switch (powerUpMode_)
     {
         case KD11Config::PowerUpMode::Vector:
             break;

@@ -42,7 +42,7 @@ public:
 private:
 	KD11CPU cpu_ {bus_, bdcokSubscriptionKey_};
 	unique_ptr<KD11ODT>	odt_ {};
-	KD11Config::PowerUpMode powerUpMode;
+	KD11Config::PowerUpMode powerUpMode_;
 	Qbus::SubscriberKey bdcokSubscriptionKey_;
 
 	void subscribeToSignals ();
