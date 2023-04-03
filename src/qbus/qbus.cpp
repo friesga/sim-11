@@ -5,6 +5,10 @@
 #include <stdlib.h>
 #include <string.h>
 
+using std::bind;
+using std::placeholders::_1;
+using std::placeholders::_2;
+
 #define	IRCJITTER()	(rand() % INTRPT_LATENCY_JITTER)
 
 Qbus::Qbus ()
@@ -13,11 +17,8 @@ Qbus::Qbus ()
 	processorRunning_ {false},
 	delay_ {0}
 {
-	for (auto device : slots)
-	{
-		if (device != nullptr)
-			device->reset ();
-	}
+	ourKey_ = 
+		subscribe (Signal::BDCOK, bind (&Qbus::BDCOKReceiver, this, _1, _2));
 }
 
 CondData<u16> Qbus::read (u16 address)
@@ -76,6 +77,14 @@ void Qbus::clearInterrupts ()
 	intrptReqQueue_.clear ();
 }
 
+// The bus itself is defined as a BDCOK signal receiver too as it has it not
+// only has to pass on the signal too all subscribed devices, but has to
+// perform actions itself too.
+void Qbus::BDCOKReceiver (Qbus::Signal signal, Qbus::SignalValue signalValue)
+{
+	reset ();
+}
+
 void Qbus::reset ()
 {
 	u8 i;
@@ -86,15 +95,6 @@ void Qbus::reset ()
 	intrptReqQueue_.clear();
 
 	delay_ = 0;
-
-	for (i = 0; i < LSI11_SIZE; i++)
-	{
-		BusDevice *module = slots[i];
-		if (!module)
-			continue;
-
-		module->reset ();
-	}
 }
 
 // Wait a random number (max INTRPT_LATENCY) of steps till processing of an

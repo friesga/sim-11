@@ -87,7 +87,7 @@ public:
 	void setSignal (Signal signal, SignalValue value, SubscriberKey sender = 0);
 	bool signalIsSet (Signal signal);
 	
-	void reset ();
+
 	void step ();
 	CondData<u16> read (u16 addr);
 	bool writeWord (u16 addr, u16 value);
@@ -105,12 +105,15 @@ private:
 	// Signal administration
 	array<SignalValue, static_cast<size_t> (Signal::Count)> signalValues_;
 	array<vector<Subscriber>, static_cast<size_t> (Signal::Count)> signalSubscribers_;
+	SubscriberKey ourKey_;
 
 	bool processorRunning_;
 	u16	delay_;
 
+	void reset ();
 	BusDevice *responsibleModule (u16 address);
 	void pushInterruptRequest (InterruptRequest interruptReq);
+	void BDCOKReceiver (Qbus::Signal signal, Qbus::SignalValue signalValue);
 };
 
 #endif // !_QBUS_H_

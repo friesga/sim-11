@@ -26,7 +26,9 @@ LSI11::~LSI11 ()
 	delete rlv12_;
 }
 
-// Reset all devices on the bus
+// Reset the bus and all devices on the bus. The bus will forward the BDCOK
+// signal to all devices on the bus subscribed to that signal, including
+// the bus itself.
 void LSI11::reset ()
 {
 	bus_.setSignal (Qbus::Signal::BDCOK, Qbus::SignalValue::Cycle);
