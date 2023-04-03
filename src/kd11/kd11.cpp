@@ -113,6 +113,7 @@ void KD11::step ()
             break;
 
         case CpuState::RUN:
+        case CpuState::INHIBIT_TRACE:
             cpu_.step ();
             break;
 
