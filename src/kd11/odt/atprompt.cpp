@@ -8,9 +8,11 @@ using std::to_string;
 
 // This file contains the entry actions and state transitions for
 // the state AtPrompt_1.
+// 
+
+//
 void KD11ODT::entry (AtPrompt_1)
 {
-    // Issue the prompt character
     writeCharacter ('@');
 }
 
