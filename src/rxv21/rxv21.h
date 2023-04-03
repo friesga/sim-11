@@ -134,6 +134,9 @@ public:
 	bool responsible (u16 address) override;
 	void reset ();
 
+	// Declare the signal receivers
+	void BDCOKReceiver (Qbus::Signal signal, Qbus::SignalValue signalValue);
+
 	// Definition of state transitions
 	State transition (rxv21Idle &&, rxv21Go);
 

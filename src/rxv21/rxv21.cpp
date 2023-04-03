@@ -4,6 +4,10 @@
 #include <stdlib.h>
 #include <string.h>
 
+using std::bind;
+using std::placeholders::_1;
+using std::placeholders::_2;
+
 // Constructor for a default RXV21 device without attached files
 RXV21::RXV21 (Qbus *bus)
 	:
@@ -19,6 +23,9 @@ RXV21::RXV21 (Qbus *bus)
 	data = (u8*) malloc(77 * 26 * 256);
 	if (!data) 
 		throw "Error: cannot allocate memory for rxv21";
+
+	bus_->subscribe (Qbus::Signal::BDCOK, 
+        bind (&RXV21::BDCOKReceiver, this, _1, _2));
 }
 
 RXV21::RXV21 (Qbus *bus, shared_ptr<RXV21Config> rxConfig)
@@ -39,6 +46,9 @@ RXV21::RXV21 (Qbus *bus, shared_ptr<RXV21Config> rxConfig)
 	data = (u8*) malloc(77 * 26 * 256);
 	if (!data) 
 		throw "Error: cannot allocate memory for rxv21";
+
+	bus_->subscribe (Qbus::Signal::BDCOK, 
+        bind (&RXV21::BDCOKReceiver, this, _1, _2));
 
 	// Check if unit 0 is configured and a filename is given in the 
 	// configuration. If so, read the contents of the file into memory.
@@ -152,6 +162,11 @@ StatusCode RXV21::writeWord (u16 address, u16 value)
 bool RXV21::responsible (u16 address)
 {
 	return address >= base && address <= (base + 2) ? true : false;
+}
+
+void RXV21::BDCOKReceiver (Qbus::Signal signal, Qbus::SignalValue signalValue)
+{
+	reset ();
 }
 
 void RXV21::reset ()

@@ -50,6 +50,9 @@ public:
 	bool responsible (u16 address) override;
 	void reset ();
 
+	// Declare the signal receivers
+	void BDCOKReceiver (Qbus::Signal signal, Qbus::SignalValue signalValue);
+
 	// Receive a character from the outside world
 	void receive (int channel, unsigned char c);
 
@@ -67,7 +70,7 @@ private:
     unsigned char breakKey_;
 	unique_ptr<Console> console_;
 
-	void initializeChannels ();
+	void initialize ();
 	void readChannel (int channelNr);
 	void writeChannel (int channelNr);
 	void writeRCSR (int n, u16 value);

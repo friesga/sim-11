@@ -4,6 +4,10 @@
 #include <thread>
 #include <chrono>
 
+using std::bind;
+using std::placeholders::_1;
+using std::placeholders::_2;
+
 // RLV12 constructor
 // Set name and default base address and vector. Set the controller
 // ready to accept a command.
@@ -32,6 +36,9 @@ RLV12::RLV12 (Qbus *bus)
 
     if (dataBuffer_ == nullptr)
         throw ("Allocating memory for transfer buffer failed");
+
+    bus_->subscribe (Qbus::Signal::BDCOK, 
+        bind (&RLV12::BDCOKReceiver, this, _1, _2));
 
     // Start the command processor
     cmdProcessor_ = std::make_unique<CmdProcessor> (this);
@@ -72,6 +79,9 @@ RLV12::RLV12 (Qbus *bus, shared_ptr<RLConfig> rlConfig)
 			throw "Error attaching " + rlUnitConfig->fileName;
 	}
 
+    bus_->subscribe (Qbus::Signal::BDCOK, 
+        bind (&RLV12::BDCOKReceiver, this, _1, _2));
+
     // Start the command processor
     cmdProcessor_ = std::make_unique<CmdProcessor> (this);
 }
@@ -87,6 +97,12 @@ RLV12::~RLV12 ()
 
     if (dataBuffer_ != nullptr)
         delete [] dataBuffer_;
+}
+
+// Execute a device reset on the BDCOK signal
+void RLV12::BDCOKReceiver (Qbus::Signal signal, Qbus::SignalValue signalValue)
+{
+    reset ();
 }
 
 //

@@ -226,7 +226,8 @@ void KD11CPU::execInstr ()
                             break;
 
                         case 0000005: /* RESET */
-                            bus_->reset ();
+                            bus_->setSignal (Qbus::Signal::BDCOK, 
+                                Qbus::SignalValue::Cycle);
                             break;
 
                         case 0000006: /* RTT */

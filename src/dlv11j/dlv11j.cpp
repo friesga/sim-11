@@ -40,7 +40,7 @@ DLV11J::DLV11J (Qbus *bus, unique_ptr<Console> console)
 	breakKey_ {27},
 	console_ {move (console)}
 {
-	initializeChannels ();
+	initialize ();
 
 	// Factory configuration is for channel 3 to be used as console and the
 	// channel's base address and vector have to be set to the appropriate
@@ -48,9 +48,6 @@ DLV11J::DLV11J (Qbus *bus, unique_ptr<Console> console)
 	channel_[3].base = defaultCh3Address_;
 	channel_[3].vector = defaultCh3Vector_;
 	channel_[3].send = std::bind (&DLV11J::console_print, this, std::placeholders::_1);
-
-	// Pass the console the function we want to receive the characters on
-	console_->setReceiver (bind (&DLV11J::receive, this, _1, _2));
 
 	reset ();
 }
@@ -68,7 +65,7 @@ DLV11J::DLV11J (Qbus *bus, unique_ptr<Console> console,
 	breakKey_ {dlv11Config->breakKey},
 	console_ {move (console)}
 {
-	initializeChannels ();
+	initialize ();
 
 	// If channel 3 is to be used as console the channel's base address
 	// and vector have to be set to the appropriate values.
@@ -78,9 +75,6 @@ DLV11J::DLV11J (Qbus *bus, unique_ptr<Console> console,
 		channel_[3].vector = dlv11Config->vector + 060;
 		channel_[3].send = std::bind (&DLV11J::console_print, this, std::placeholders::_1);
 	}
-
-	// Pass the console the function we want to receive the characters on
-	console_->setReceiver (bind (&DLV11J::receive, this, _1, _2));
 
 	reset ();
 }
@@ -99,10 +93,10 @@ DLV11J::~DLV11J ()
 	}
 }
 
-// Initialize the channels and set the channe's base address and vector
-// to their default values. The value for channel 3 has to be overwritten
-// if channel 3 is configured for console operation.
-void DLV11J::initializeChannels ()
+// Initialize the DLV11J and its channels and set the channel's base address
+// and vector to their default values. The value for channel 3 has to be
+// overwritten if channel 3 is configured for console operation.
+void DLV11J::initialize ()
 {
 	int channelNr;
 	for (channelNr = 0; channelNr < numChannels; ++channelNr)
@@ -115,6 +109,12 @@ void DLV11J::initializeChannels ()
 		channel_[channelNr].vector = baseVector_ + 8 * channelNr;
 		channel_[channelNr].rcsr = 0;
 	}
+
+	// Pass the console the function we want to receive the characters on
+	console_->setReceiver (bind (&DLV11J::receive, this, _1, _2));
+
+	bus_->subscribe (Qbus::Signal::BDCOK, 
+        bind (&DLV11J::BDCOKReceiver, this, _1, _2));
 }
 
 void DLV11J::readChannel (int channelNr)
@@ -245,6 +245,12 @@ bool DLV11J::responsible (u16 address)
 		return true;
 
 	return false;
+}
+
+// Execute a reset on the BDCOK signal
+void DLV11J::BDCOKReceiver (Qbus::Signal signal, Qbus::SignalValue signalValue)
+{
+	reset ();
 }
 
 void DLV11J::reset ()

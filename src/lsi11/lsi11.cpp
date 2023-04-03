@@ -29,7 +29,7 @@ LSI11::~LSI11 ()
 // Reset all devices on the bus
 void LSI11::reset ()
 {
-	bus_.reset();
+	bus_.setSignal (Qbus::Signal::BDCOK, Qbus::SignalValue::Cycle);
 }
 
 void LSI11::step ()

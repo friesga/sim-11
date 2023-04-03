@@ -13,6 +13,10 @@ void Qbus::setSignal (Signal signal, SignalValue value)
     // Notify all subscribers to the signal
     for (Subscriber subscriber : signalSubscribers_[static_cast<size_t> (signal)])
         subscriber (signal, value);
+
+    // A Cycle signal value is reset after all subscribers have been notified
+    if (value == SignalValue::Cycle)
+        signalValues_[static_cast<size_t> (signal)] = SignalValue::False;
 }
 
 // Return the Signal's value.
@@ -27,10 +31,7 @@ bool Qbus::signalIsSet (Signal signal)
             return false;
 
         case SignalValue::True:
-            return true;
-
         case SignalValue::Cycle:
-            signalValues_[static_cast<size_t> (signal)] = SignalValue::False;
             return true;
     }
 

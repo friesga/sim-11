@@ -271,11 +271,12 @@ public:
     StatusCode writeByte (u16 registerAddress, u8 data) override;
     StatusCode writeWord (u16 registerAddress, u16 data) override;
 
+    // Declare the signal receivers
+	void BDCOKReceiver (Qbus::Signal signal, Qbus::SignalValue signalValue);
+
     // RLV1[12] specific function
     inline size_t numUnits ();
     inline RL01_2  *unit (size_t unitNumber);
-    void service (Unit &unit, 
-        ThreadSafeQueue<std::shared_ptr<RLV12Command>> &commandQueue);
 
     // Functions to set and get memory adresses consistently for
     // 16-, 18- and 22-bit systems

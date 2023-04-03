@@ -8,6 +8,9 @@
 
 using namespace std;
 using namespace std::chrono;
+using std::bind;
+using std::placeholders::_1;
+using std::placeholders::_2;
 
 #define	_A(x)		(1 << ((x) - 1))
 #define	_B(x)		(1 << ((x) + 7))
@@ -41,7 +44,10 @@ BDV11::BDV11 (Qbus *bus)
 	time {0.0},
 	ltcThread_ {thread(&BDV11::tick, this)},
 	running_ {true}
-{}
+{
+	bus_->subscribe (Qbus::Signal::BDCOK, 
+		bind (&BDV11::BDCOKReceiver, this, _1, _2));
+}
 
 BDV11::~BDV11 ()
 {
@@ -215,6 +221,12 @@ bool BDV11::responsible (u16 address)
 		default:
 			return (address >= 0173000 && address <= 0173776) ? true : false;
 	}
+}
+
+// Execute a reset on the BDCOK signal
+void BDV11::BDCOKReceiver (Qbus::Signal signal, Qbus::SignalValue signalValue)
+{
+	reset ();
 }
 
 void BDV11::reset ()
