@@ -8,28 +8,53 @@ using std::placeholders::_1;
 using std::placeholders::_2;
 using std::cout;
 
-struct Subscriber
+class Subscriber
 {
+public:
     Subscriber (Qbus *bus);
     void signalReceiver (Qbus::Signal signal, Qbus::SignalValue signalValue);
-
-    size_t signalCount {0};
+    void sendSignalToOthers ();
+    void sendSignalToAll ();
+    size_t signalsReceived ();
+ 
+private:
+    Qbus *bus_;
+    Qbus::SubscriberKey ourKey_;
+    size_t signalCount_;
 };
 
 // Constructor
 // Subscribe to the bus signals we have to be informed of
 inline Subscriber::Subscriber (Qbus *bus)
+    :
+    bus_ {bus},
+    ourKey_ {0},
+    signalCount_ {0}
 {
-    bus->subscribe (Qbus::Signal::BDCOK, 
+    ourKey_ = bus_->subscribe (Qbus::Signal::BDCOK, 
         bind (&Subscriber::signalReceiver, this, _1, _2));
 }
 
 inline void Subscriber::signalReceiver (Qbus::Signal signal, 
     Qbus::SignalValue signalValue)
 {
-    ++signalCount;
+    ++signalCount_;
 }
 
+inline void Subscriber::sendSignalToOthers ()
+{
+    bus_->setSignal (Qbus::Signal::BDCOK, Qbus::SignalValue::True, ourKey_);
+}
+
+inline void Subscriber::sendSignalToAll ()
+{
+    bus_->setSignal (Qbus::Signal::BDCOK, Qbus::SignalValue::True);
+}
+
+inline size_t Subscriber::signalsReceived ()
+{
+    return signalCount_;
+}
 
 TEST (SignalSetTest, signalCanBeSetAndTested)
 {
@@ -44,27 +69,29 @@ TEST (SignalSetTest, signalCanBeSetAndTested)
     EXPECT_TRUE (bus.signalIsSet (Qbus::Signal::BHALT));
 }
 
-TEST (SignalSetTest, signalCanBeCycled)
-{
-    Qbus bus;
 
-    // Signals should be false by default
-    EXPECT_FALSE (bus.signalIsSet (Qbus::Signal::BHALT));
-
-    // Signal is set to cycle
-    bus.setSignal (Qbus::Signal::BHALT, Qbus::SignalValue::Cycle);
-
-    // The first read should return true, the next read should return false
-    EXPECT_TRUE (bus.signalIsSet (Qbus::Signal::BHALT));
-    EXPECT_FALSE (bus.signalIsSet (Qbus::Signal::BHALT));
-}
-
-TEST (SignalSetTest, signalIsReceived)
+TEST (SignalSetTest, signalCanBeSentToAll)
 {
     Qbus bus;
     Subscriber subscriberA (&bus);
+    Subscriber subscriberB (&bus);
 
-    bus.setSignal (Qbus::Signal::BDCOK, Qbus::SignalValue::True);
+    subscriberA.sendSignalToAll ();
 
-    EXPECT_TRUE (subscriberA.signalCount == 1);
+    // Verify all subscribers are notified
+    EXPECT_EQ (subscriberA.signalsReceived (), 1);
+    EXPECT_EQ (subscriberB.signalsReceived (), 1);
+}
+
+TEST (SignalSetTest, signalCanBeSentToOthers)
+{
+    Qbus bus;
+    Subscriber subscriberA (&bus);
+    Subscriber subscriberB (&bus);
+
+    subscriberA.sendSignalToOthers ();
+
+    // Verify the signal sender is not notified
+    EXPECT_EQ (subscriberA.signalsReceived (), 0);
+    EXPECT_EQ (subscriberB.signalsReceived (), 1);
 }

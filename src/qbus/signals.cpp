@@ -1,18 +1,34 @@
 #include "qbus.h"
 
-// Add the given subscriber to the subscribs for the given signal
-void Qbus::subscribe (Signal signal, Subscriber subscriber)
+// Add the given subscriber to the subscribers for the given signal. Return
+// a subscriber key (i.e. an index into the vector of subscribers). This key
+// can be used to supress sending a signal to its originator. The first
+// subscriber will receive the SubscriberKey 1, so SubscriberKey 0 can be used
+// to indicate that no supression has to take place and the signal should also
+// be send to its originator.
+Qbus::SubscriberKey Qbus::subscribe (Signal signal, Subscriber subscriber)
 {
     signalSubscribers_[static_cast<size_t> (signal)].push_back (subscriber);
+
+    vector<Subscriber> &subscriberVector = 
+        signalSubscribers_[static_cast<size_t> (signal)];
+    return subscriberVector.end () - subscriberVector.begin ();
 }
 
-void Qbus::setSignal (Signal signal, SignalValue value)
+void Qbus::setSignal (Signal signal, SignalValue value, SubscriberKey sender)
 {
     signalValues_[static_cast<size_t> (signal)] = value;
 
-    // Notify all subscribers to the signal
-    for (Subscriber subscriber : signalSubscribers_[static_cast<size_t> (signal)])
-        subscriber (signal, value);
+    // Notify the subscribers to the signal except for the sender if one is
+    // specified
+    vector<Subscriber> &subscriberVector = 
+        signalSubscribers_[static_cast<size_t> (signal)];
+    for (auto iter = subscriberVector.begin(); iter < subscriberVector.end (); ++iter)
+    {
+        SubscriberKey thisKey = iter - subscriberVector.begin() + 1;
+        if (sender == 0 || sender != thisKey)
+            (*iter) (signal, value);
+    }
 
     // A Cycle signal value is reset after all subscribers have been notified
     if (value == SignalValue::Cycle)

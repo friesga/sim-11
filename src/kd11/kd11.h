@@ -40,9 +40,11 @@ public:
 	void BDCOKReceiver (Qbus::Signal signal, Qbus::SignalValue signalValue);
 
 private:
-	KD11CPU cpu_ {bus_};
+	KD11CPU cpu_ {bus_, bdcokSubscriptionKey_};
 	unique_ptr<KD11ODT>	odt_ {};
 	KD11Config::PowerUpMode powerUpMode;
+	Qbus::SubscriberKey bdcokSubscriptionKey_;
+
 	void subscribeToSignals ();
 };
 

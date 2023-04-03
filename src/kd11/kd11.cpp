@@ -33,7 +33,7 @@ void KD11::subscribeToSignals ()
 {
     bus_->subscribe (Qbus::Signal::BHALT, 
         bind (&KD11::BHALTReceiver, this, _1, _2));
-    bus_->subscribe (Qbus::Signal::BDCOK, 
+    bdcokSubscriptionKey_ = bus_->subscribe (Qbus::Signal::BDCOK, 
         bind (&KD11::BDCOKReceiver, this, _1, _2));
 }
 

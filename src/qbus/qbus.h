@@ -71,6 +71,7 @@ public:
 	};
 
 	using Subscriber = function<void(Signal, SignalValue)>;
+	using SubscriberKey = ptrdiff_t;
 
 	Qbus ();
 	void setInterrupt (TrapPriority priority, 
@@ -82,8 +83,8 @@ public:
 	bool getIntrptReq (InterruptRequest &ir);
 
 	// Signal handling functions
-	void subscribe (Signal signal, Subscriber subscriber);
-	void setSignal (Signal signal, SignalValue value);
+	SubscriberKey subscribe (Signal signal, Subscriber subscriber);
+	void setSignal (Signal signal, SignalValue value, SubscriberKey sender = 0);
 	bool signalIsSet (Signal signal);
 	
 	void reset ();

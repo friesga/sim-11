@@ -64,7 +64,7 @@ public:
 	friend class LSI11;
 	friend class Instruction;
 
-	KD11CPU (Qbus *bus);
+	KD11CPU (Qbus *bus, Qbus::SubscriberKey &bdcokSubscriptionKey);
 	void step ();
 	void handleTraps();
 	CpuState currentCpuState ();
@@ -80,6 +80,11 @@ private:
 	// A trap is a special kind of interrupt, internal to the CPU. There
 	// can be only one trap serviced at the time.
 	InterruptRequest const *trap_;
+
+	// This is the key with which we are subscribed to the BDCOK signal. The
+	// key is passed on to KD11CPU to be used in setting BDCOK on a RESET
+	// (see comment there).
+	Qbus::SubscriberKey &bdcokSubscriptionKey_;
 
 	InterruptRequest const busError{RequestType::Trap, TrapPriority::BusError, 0, 004};
 	InterruptRequest const traceTrap{RequestType::Trap, TrapPriority::TraceTrap, 0, 014};

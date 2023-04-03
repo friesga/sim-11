@@ -14,13 +14,14 @@
     if (cond) return;
 
 // Constructor
-KD11CPU::KD11CPU (Qbus* bus)
+KD11CPU::KD11CPU (Qbus* bus, Qbus::SubscriberKey &bdcokSubscriptionKey)
     :
     bus_ {bus},
     register_ {0},
     psw {0},
     runState {CpuState::HALT},
-    trap_ {nullptr}
+    trap_ {nullptr},
+    bdcokSubscriptionKey_ {bdcokSubscriptionKey}
 {
     register_[7] = bootAddress;
     bus_->setSignal (Qbus::Signal::SRUN, Qbus::SignalValue::False);
@@ -225,9 +226,25 @@ void KD11CPU::execInstr ()
                             setTrap (&IOT);
                             break;
 
-                        case 0000005: /* RESET */
+                        case 0000005: // RESET 
+                            // Sends INIT on the BUS for 10 micro seconds.
+                            // All devices on the BUS are reset to their
+                            // state at power-up. The processor remains in an
+                            // idle state for 90 microseconds following
+                            // issuance of INIT.
+                            // (LSI11 PDP11/03 Processor Handbook)
+                            //
+                            // Setting the BDCOK signal will cause a reset of
+                            // all devices on the bus, including the processor
+                            // itself. That would cause an endless loop if the
+                            // processor is configured in the power-up mode to
+                            // bootstrap the system. This is presumably the
+                            // reason for the processor to remain idle while
+                            // the initialization is being performed. We prevent
+                            // this endless loop by excluding ourselves as
+                            // receiver of the BDCOK signal.
                             bus_->setSignal (Qbus::Signal::BDCOK, 
-                                Qbus::SignalValue::Cycle);
+                                Qbus::SignalValue::Cycle, bdcokSubscriptionKey_);
                             break;
 
                         case 0000006: /* RTT */
