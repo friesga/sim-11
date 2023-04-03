@@ -45,6 +45,8 @@ private:
 	KD11Config::PowerUpMode powerUpMode_;
 	Qbus::SubscriberKey bdcokSubscriptionKey_;
 
+	InterruptRequest const powerFail {RequestType::Trap, TrapPriority::PowerFail, 0, 024};
+
 	void subscribeToSignals ();
 };
 

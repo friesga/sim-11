@@ -110,12 +110,29 @@ void KD11CPU::returnFISresult (Float result, u16 registerNumber)
 // 3. Handling of traps and interrupts that might have arisen during execution
 //    of the instruction, either a trap as a result of an instruction, or an
 //    interrupt requested by a bus device.
+// 
+// As the power-up mode can be set to trap to the vector at address 024, the
+// presence of traps is checked before an instruction is executed.
 //
 // The normal instruction flow can be interrupted by the setting of the BHALT
 // or BDCOK bus signal. These signals are handled in their corresponding KD11
 // receivers which then calls a KD11CPU control function.
 void KD11CPU::step ()
 {
+    // Generate a Trace trap if the trace bit is set, unless the previous
+    // instruction was a RTT or another trap is pending.
+    if (runState == CpuState::INHIBIT_TRACE)
+    {
+        runState = CpuState::RUN;
+        bus_->setSignal (Qbus::Signal::SRUN, Qbus::SignalValue::True);
+    }
+    else if (!trap_ && (psw & PSW_T))
+    {
+        trace.trap (TrapRecordType::TRAP_T, 014);
+        setTrap (&traceTrap);
+    }
+    handleTraps ();
+
     if(trace.isActive ())
     {
         trace.setIgnoreBus ();
@@ -143,20 +160,6 @@ void KD11CPU::step ()
         trace.duration ("Instruction",
             (std::chrono::duration_cast<std::chrono::nanoseconds> (end - start)).count ());
     }
-
-    // Generate a Trace trap if the trace bit is set, unless the previous
-    // instruction was a RTT or another trap is pending.
-    if (runState == CpuState::INHIBIT_TRACE)
-    {
-        runState = CpuState::RUN;
-        bus_->setSignal (Qbus::Signal::SRUN, Qbus::SignalValue::True);
-    }
-    else if (!trap_ && (psw & PSW_T))
-    {
-        trace.trap (TrapRecordType::TRAP_T, 014);
-        setTrap (&traceTrap);
-    }
-    handleTraps ();
 }
 
 // Execute one instruction

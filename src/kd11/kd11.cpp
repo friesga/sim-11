@@ -65,12 +65,13 @@ void KD11::BHALTReceiver (Qbus::Signal signal,
 // 3. Start the system at the boot address.
 // 
 // These modes can be selected in the KD11 section of the configuration file.
-
+//
 void KD11::BDCOKReceiver (Qbus::Signal signal, Qbus::SignalValue signalValue)
 {
     switch (powerUpMode_)
     {
         case KD11Config::PowerUpMode::Vector:
+            cpu_.setTrap (&powerFail);
             break;
 
         case KD11Config::PowerUpMode::ODT:
