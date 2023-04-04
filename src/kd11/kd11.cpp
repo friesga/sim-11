@@ -70,8 +70,17 @@ void KD11::BDCOKReceiver (Qbus::Signal signal, Qbus::SignalValue signalValue)
 // 
 // These modes can be selected in the KD11 section of the configuration file.
 //
+// During the power-up sequence, the processor asserts BINIT L in response to
+// a passive (low) power supply-generated BDCOK H signal. When BDCOK H goes
+// active (high), the processor terminates BINIT L and the jumper-selected
+// power-up sequence is executed.
+// (EK-LSI11-TM-003)
+//
 void KD11::powerUpRoutine ()
 {
+    cpu_.reset ();
+    bus_->setSignal (Qbus::Signal::BINIT, Qbus::SignalValue::Cycle);
+
     switch (powerUpMode_)
     {
         case KD11Config::PowerUpMode::Vector:
@@ -92,12 +101,6 @@ void KD11::powerUpRoutine ()
             if (odt_ != nullptr)
                 odt_->stop ();
             cpu_.start (KD11CPU::bootAddress);
-
-            // ToDo: Clearing the PSW should be part of the KD11CPU reset?
-            cpu_.setPSW (0);
-
-            // Clearing the interrupts belongs in the Qbus reset
-            bus_->clearInterrupts ();
             break;
     }
 }

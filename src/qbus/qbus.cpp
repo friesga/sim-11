@@ -87,12 +87,10 @@ void Qbus::BINITReceiver (Qbus::Signal signal, Qbus::SignalValue signalValue)
 
 void Qbus::reset ()
 {
-	u8 i;
-
 	trace.bus (BusRecordType::BusReset, 0, 0);
 
-	/* Clear pending interrupts */
-	intrptReqQueue_.clear();
+	// Clear pending interrupts
+	clearInterrupts ();
 
 	delay_ = 0;
 }

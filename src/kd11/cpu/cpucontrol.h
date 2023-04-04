@@ -11,6 +11,7 @@ class CpuControl
     // The setTrap function is needed for the execution of a reset in power-up
     // mode 0 (start via vector at address 24/26).
     virtual void setTrap (InterruptRequest const *ir) = 0;
+    virtual void reset () = 0;
     virtual void halt () = 0;
     virtual void start (u16 address) = 0;
     virtual void proceed () = 0;

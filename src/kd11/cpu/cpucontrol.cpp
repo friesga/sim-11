@@ -2,6 +2,18 @@
 #include "cpucontrol.h"
 #include "trace/trace.h"
 
+// Reset the processor
+// 
+// Clear the registers and the PSW
+void KD11CPU::reset ()
+{
+    // Initialize the registers except for the PC
+    for (u16 regNr = 0; regNr <= 6; ++regNr)
+        register_[regNr] = 0;
+
+    psw = 0;
+}
+
 // Halt the processor
 void KD11CPU::halt ()
 {

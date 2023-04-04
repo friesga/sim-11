@@ -93,6 +93,7 @@ private:
 	// Definition of CpuControl functions. The intention is that these
 	// functions are to be used by K11ODT and the reset function.
 	void setTrap (InterruptRequest const *ir);
+	void reset ();
 	void halt ();
     void start (u16 address);
 	void proceed ();
