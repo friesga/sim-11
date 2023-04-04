@@ -45,8 +45,8 @@ BDV11::BDV11 (Qbus *bus)
 	ltcThread_ {thread(&BDV11::tick, this)},
 	running_ {true}
 {
-	bus_->subscribe (Qbus::Signal::BDCOK, 
-		bind (&BDV11::BDCOKReceiver, this, _1, _2));
+	bus_->subscribe (Qbus::Signal::BINIT, 
+		bind (&BDV11::BINITReceiver, this, _1, _2));
 }
 
 BDV11::~BDV11 ()
@@ -223,8 +223,8 @@ bool BDV11::responsible (u16 address)
 	}
 }
 
-// Execute a reset on the BDCOK signal
-void BDV11::BDCOKReceiver (Qbus::Signal signal, Qbus::SignalValue signalValue)
+// On assertion of the BINIT signal initialize the device.
+void BDV11::BINITReceiver (Qbus::Signal signal, Qbus::SignalValue signalValue)
 {
 	reset ();
 }

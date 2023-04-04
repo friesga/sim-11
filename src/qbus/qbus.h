@@ -52,13 +52,27 @@ public:
 	// signal. The signal is a series of pulses which occur at 3-5" intervals
 	// whenever the processor is in the Run mode.
 	//
+	// The BDCOK signal is triggered:
+	// - On power up or,
+	// - When the console BREAK key is hit and the boot response is configured.
+	// On assertion of this signal the processor executes the power up routine.
+	// 
+	// The BINIT signal is triggered:
+	// - When the processor executes the power up routine,
+	// - On a RESET instruction,
+	// - On a ODT Go command.
+	// On assertion of this signal all bus devices - including the bus itself -
+	// are initialized.
+	// 
 	// The Qbus defines a number of (not bused) spare signals. Analoguously
 	// we define an exit signal indicating the simulator has to exit.
+	//
 	enum class Signal
     {
         SRUN,
         BDCOK,
         BHALT,
+		BINIT,
 		EXIT,
         Count
     };
@@ -113,7 +127,7 @@ private:
 	void reset ();
 	BusDevice *responsibleModule (u16 address);
 	void pushInterruptRequest (InterruptRequest interruptReq);
-	void BDCOKReceiver (Qbus::Signal signal, Qbus::SignalValue signalValue);
+	void BINITReceiver (Qbus::Signal signal, Qbus::SignalValue signalValue);
 };
 
 #endif // !_QBUS_H_

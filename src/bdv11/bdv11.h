@@ -19,7 +19,7 @@ public:
 	void reset ();
 
 	// Declare the signal receivers
-	void BDCOKReceiver (Qbus::Signal signal, Qbus::SignalValue signalValue);
+	void BINITReceiver (Qbus::Signal signal, Qbus::SignalValue signalValue);
 
 private:
 	u16 getWordLow (u16 word);

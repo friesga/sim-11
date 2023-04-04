@@ -33,7 +33,7 @@ void KD11::subscribeToSignals ()
 {
     bus_->subscribe (Qbus::Signal::BHALT, 
         bind (&KD11::BHALTReceiver, this, _1, _2));
-    bdcokSubscriptionKey_ = bus_->subscribe (Qbus::Signal::BDCOK, 
+    bus_->subscribe (Qbus::Signal::BDCOK, 
         bind (&KD11::BDCOKReceiver, this, _1, _2));
 }
 
@@ -51,12 +51,11 @@ void KD11::BHALTReceiver (Qbus::Signal signal,
     return;
 }
 
-// The BDCOK signal triggers a bus and therefore a KD11 reset.
+// The BDCOK signal triggers the procesor power-up routine
 // 
 // The reset is executed when either:
 // - The system has been powered up,
-// - The user hits the BREAK key and the boot response is configured,
-// - A RESET instruction is executed.
+// - The user hits the BREAK key and the boot response is configured.
 //
 // The reaction on a reset is configured by the power-up mode. Three power-up
 // modes can be selected:

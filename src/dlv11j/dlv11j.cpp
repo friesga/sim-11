@@ -113,8 +113,8 @@ void DLV11J::initialize ()
 	// Pass the console the function we want to receive the characters on
 	console_->setReceiver (bind (&DLV11J::receive, this, _1, _2));
 
-	bus_->subscribe (Qbus::Signal::BDCOK, 
-        bind (&DLV11J::BDCOKReceiver, this, _1, _2));
+	bus_->subscribe (Qbus::Signal::BINIT, 
+        bind (&DLV11J::BINITReceiver, this, _1, _2));
 }
 
 void DLV11J::readChannel (int channelNr)
@@ -247,8 +247,8 @@ bool DLV11J::responsible (u16 address)
 	return false;
 }
 
-// Execute a reset on the BDCOK signal
-void DLV11J::BDCOKReceiver (Qbus::Signal signal, Qbus::SignalValue signalValue)
+// On assertion of the BINIT signal initialize the device.
+void DLV11J::BINITReceiver (Qbus::Signal signal, Qbus::SignalValue signalValue)
 {
 	reset ();
 }
@@ -272,7 +272,7 @@ void DLV11J::receive (int channelNr, unsigned char c)
 	// or a no-operation.
 	// 
 	// Cycling the BHALT signal reults in halting the processor and cycling the
-	// BDCOK signal results in the execution of the boot sequence. The signals
+	// BDCOK signal results in the execution of the power up routine. The signals
 	// are cycled as the key presses have to be treated as triggers.
 	// 
 	// As we don't have a real BREAK key at our disposal and a BREAK key press

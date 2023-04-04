@@ -18,7 +18,7 @@ Qbus::Qbus ()
 	delay_ {0}
 {
 	ourKey_ = 
-		subscribe (Signal::BDCOK, bind (&Qbus::BDCOKReceiver, this, _1, _2));
+		subscribe (Signal::BINIT, bind (&Qbus::BINITReceiver, this, _1, _2));
 }
 
 CondData<u16> Qbus::read (u16 address)
@@ -77,10 +77,10 @@ void Qbus::clearInterrupts ()
 	intrptReqQueue_.clear ();
 }
 
-// The bus itself is defined as a BDCOK signal receiver too as it has it not
+// The bus itself is defined as a BINIT signal receiver too as it not
 // only has to pass on the signal too all subscribed devices, but has to
 // perform actions itself too.
-void Qbus::BDCOKReceiver (Qbus::Signal signal, Qbus::SignalValue signalValue)
+void Qbus::BINITReceiver (Qbus::Signal signal, Qbus::SignalValue signalValue)
 {
 	reset ();
 }

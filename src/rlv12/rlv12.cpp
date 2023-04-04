@@ -37,8 +37,8 @@ RLV12::RLV12 (Qbus *bus)
     if (dataBuffer_ == nullptr)
         throw ("Allocating memory for transfer buffer failed");
 
-    bus_->subscribe (Qbus::Signal::BDCOK, 
-        bind (&RLV12::BDCOKReceiver, this, _1, _2));
+    bus_->subscribe (Qbus::Signal::BINIT, 
+        bind (&RLV12::BINITReceiver, this, _1, _2));
 
     // Start the command processor
     cmdProcessor_ = std::make_unique<CmdProcessor> (this);
@@ -79,8 +79,8 @@ RLV12::RLV12 (Qbus *bus, shared_ptr<RLConfig> rlConfig)
 			throw "Error attaching " + rlUnitConfig->fileName;
 	}
 
-    bus_->subscribe (Qbus::Signal::BDCOK, 
-        bind (&RLV12::BDCOKReceiver, this, _1, _2));
+    bus_->subscribe (Qbus::Signal::BINIT, 
+        bind (&RLV12::BINITReceiver, this, _1, _2));
 
     // Start the command processor
     cmdProcessor_ = std::make_unique<CmdProcessor> (this);
@@ -99,8 +99,8 @@ RLV12::~RLV12 ()
         delete [] dataBuffer_;
 }
 
-// Execute a device reset on the BDCOK signal
-void RLV12::BDCOKReceiver (Qbus::Signal signal, Qbus::SignalValue signalValue)
+// On assertion of the BINIT signal initialize the device.
+void RLV12::BINITReceiver (Qbus::Signal signal, Qbus::SignalValue signalValue)
 {
     reset ();
 }
