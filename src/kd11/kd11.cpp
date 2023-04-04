@@ -57,15 +57,20 @@ void KD11::BHALTReceiver (Qbus::Signal signal,
 // - The system has been powered up,
 // - The user hits the BREAK key and the boot response is configured.
 //
-// The reaction on a reset is configured by the power-up mode. Three power-up
-// modes can be selected:
+void KD11::BDCOKReceiver (Qbus::Signal signal, Qbus::SignalValue signalValue)
+{
+    powerUpRoutine ();
+}
+
+// The reaction on a power-up is configured by the power-up mode. Three
+// power-up modes can be selected:
 // 1. Trap to location 24/26,
 // 2. Place the processor in ODT mode,
 // 3. Start the system at the boot address.
 // 
 // These modes can be selected in the KD11 section of the configuration file.
 //
-void KD11::BDCOKReceiver (Qbus::Signal signal, Qbus::SignalValue signalValue)
+void KD11::powerUpRoutine ()
 {
     switch (powerUpMode_)
     {
@@ -95,7 +100,6 @@ void KD11::BDCOKReceiver (Qbus::Signal signal, Qbus::SignalValue signalValue)
             bus_->clearInterrupts ();
             break;
     }
-
 }
 
 void KD11::step ()

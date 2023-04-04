@@ -47,6 +47,7 @@ private:
 	InterruptRequest const powerFail {RequestType::Trap, TrapPriority::PowerFail, 0, 024};
 
 	void subscribeToSignals ();
+	void powerUpRoutine ();
 };
 
 #endif // !_KD11_H_
