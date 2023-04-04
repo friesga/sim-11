@@ -54,6 +54,10 @@ State KD11ODT::transition (EnteringAddress_5 &&, OpenLocationCmdEntered)
 
 // Transform the now complete address string to an address and use it in
 // The GO command. The address string is entered as on octal number.
+// 
+// Before starting execution, a BUS INIT is issued for 10 microseconds
+// followed by 90 microseconds of idle time.
+// (LSI11 PDP11/03 Processor Handbook)
 //
 // Note that a semicolon character (ASCII 073) can be used to separate the
 // address from the G and this is done for PDP-11 ODT compatibility.
@@ -70,6 +74,7 @@ State KD11ODT::transition (EnteringAddress_5 &&, GoCmdEntered)
     {
         // Set the CPU into the running state with the specified address
         // as the PC and exit ODT
+        bus_->setSignal (Qbus::Signal::BINIT, Qbus::SignalValue::Cycle);
         cpu_.start (address);
         trace.cpuEvent (CpuEventRecordType::CPU_ODT_P, address);
         return ExitPoint {};
