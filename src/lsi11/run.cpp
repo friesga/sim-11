@@ -5,17 +5,8 @@ void LSI11::run ()
 {
 	if (cmdLineOptions_.load_file) 
 		loadFile ();
-
-	if (cmdLineOptions_.halt) 
-	{
-		kd11_->cpu ().halt ();
-	} 
-	else if (!cmdLineOptions_.halt && !cmdLineOptions_.load_file) 
-	{
-		// Hm, this smells. Start running with a loaded file via a proceed
-		// seems odd. This should be (and is?) handled in load_file().
-		kd11_->cpu().proceed ();
-	}
+	else
+		kd11_->powerUpRoutine ();
 		
 	while (true) 
 	{

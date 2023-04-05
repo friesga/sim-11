@@ -59,6 +59,9 @@ void KD11::BHALTReceiver (Qbus::Signal signal,
 // - The system has been powered up,
 // - The user hits the BREAK key and the boot response is configured.
 //
+// Note that this function will be executed in a different thread from the
+// thread in which the CPU is running. Access to the CPU data therefore
+// has to be synchronized between the two threads.
 void KD11::BDCOKReceiver (Qbus::Signal signal, Qbus::SignalValue signalValue)
 {
     // Guard against CPU access while an instruction is executed

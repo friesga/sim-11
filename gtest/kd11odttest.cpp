@@ -44,8 +44,7 @@ protected:
         TestConsole *testConsole = static_cast<TestConsole*> (console.get ());
 
         Qbus bus;
-        Qbus::SubscriberKey key_ {};
-        KD11CPU kd11cpu (&bus, key_);
+        KD11CPU kd11cpu (&bus);
         DLV11J dlv11j {&bus, std::move (console)};
         MSV11D msv11d (&bus);
         bus.installModule (0, &dlv11j);

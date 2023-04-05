@@ -9,7 +9,6 @@ CmdLineOptions::CmdLineOptions(int argc, char const **argv)
     :
     load_file {load_file_},
     config_file {config_file_},
-    halt {halt_} ,
     trace_file {trace_file_},
     exit_on_halt {exit_on_halt_}
 {
@@ -22,9 +21,7 @@ CmdLineOptions::CmdLineOptions(int argc, char const **argv)
 
 	for (; argc; --argc, ++argv)
 	{
-		if (!strcmp("-h", *argv))
-			halt_ = true;
-		else if(!strcmp("-x", *argv))
+		if(!strcmp("-x", *argv))
 			exit_on_halt_ = true;
 		else if(!strcmp("-l", *argv) && argc > 1) 
 		{
@@ -49,7 +46,6 @@ CmdLineOptions::CmdLineOptions(int argc, char const **argv)
 			 msg << "Usage: " << self << " [OPTIONS] [FILE]\n"
 					"\n"
 					"OPTIONS\n"
-					"  -h              Halt CPU\n"
 					"  -x              Exit on HALT\n"
 					"  -l file.bin     Load file.bin in absolute loader format\n"
 					"  -c file		   Use configuration from specified ini file\n"

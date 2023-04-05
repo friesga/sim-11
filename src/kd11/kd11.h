@@ -42,6 +42,8 @@ public:
 	void BHALTReceiver (Qbus::Signal signal, Qbus::SignalValue signalValue);
 	void BDCOKReceiver (Qbus::Signal signal, Qbus::SignalValue signalValue);
 
+	void powerUpRoutine ();
+
 private:
 	KD11CPU cpu_ {bus_};
 	unique_ptr<KD11ODT>	odt_ {};
@@ -54,7 +56,6 @@ private:
 	InterruptRequest const powerFail {RequestType::Trap, TrapPriority::PowerFail, 0, 024};
 
 	void subscribeToSignals ();
-	void powerUpRoutine ();
 };
 
 #endif // !_KD11_H_
