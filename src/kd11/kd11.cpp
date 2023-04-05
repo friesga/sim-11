@@ -8,6 +8,8 @@ using std::shared_ptr;
 using std::bind;
 using std::placeholders::_1;
 using std::placeholders::_2;
+using std::lock_guard;
+using std::mutex;
 
 // The factory power-up mode configuration is mode 0 (get vector at address
 // 24 and 26), but we'll set it to Bootstrap as that's more convenient for
@@ -59,6 +61,9 @@ void KD11::BHALTReceiver (Qbus::Signal signal,
 //
 void KD11::BDCOKReceiver (Qbus::Signal signal, Qbus::SignalValue signalValue)
 {
+    // Guard against CPU access while an instruction is executed
+	lock_guard<mutex> guard {cpuMutex_};
+
     powerUpRoutine ();
 }
 
@@ -121,12 +126,22 @@ void KD11::step ()
 
         case CpuState::RUN:
         case CpuState::INHIBIT_TRACE:
+        {
+            // Guard against CPU access while a BDCOK is received and the power-up
+            // is performed.
+	        lock_guard<mutex> guard {cpuMutex_};
             cpu_.step ();
             break;
+        }
 
         case CpuState::WAIT:
+        {
+            // Guard against CPU access while a BDCOK is received and the power-up
+            // is performed.
+            lock_guard<mutex> guard {cpuMutex_};
             cpu_.handleTraps ();
             break;
+        }
     }
 }
 

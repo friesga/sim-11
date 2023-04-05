@@ -11,6 +11,9 @@ using namespace KD11_F;
 
 using std::unique_ptr;
 using std::shared_ptr;
+using std::mutex;
+using std::unique_lock;
+using std::defer_lock;
 
 // The class KD11 is composed of the KD11 CPU and the KD11 ODT.
 class KD11 : public BusDevice
@@ -43,6 +46,10 @@ private:
 	KD11CPU cpu_ {bus_};
 	unique_ptr<KD11ODT>	odt_ {};
 	KD11Config::PowerUpMode powerUpMode_;
+
+	// Safe guard against simultaneous CPU access
+    mutex cpuMutex_;
+	unique_lock<mutex> cpuLock {cpuMutex_, defer_lock};
 
 	InterruptRequest const powerFail {RequestType::Trap, TrapPriority::PowerFail, 0, 024};
 
