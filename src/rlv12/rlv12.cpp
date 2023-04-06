@@ -102,6 +102,9 @@ RLV12::~RLV12 ()
 // On assertion of the BINIT signal initialize the device.
 void RLV12::BINITReceiver (Qbus::Signal signal, Qbus::SignalValue signalValue)
 {
+    // Guard against controller register access from writeWord()
+    std::unique_lock<std::mutex> lock {controllerMutex_};
+
     reset ();
 }
 
