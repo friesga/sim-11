@@ -45,7 +45,6 @@ public:
 	void configureDevices (vector<shared_ptr<DeviceConfig>> systemConfig);
 	void run ();
 	void reset ();
-	void step ();
 };
 
 #endif // !_LSI11_H_

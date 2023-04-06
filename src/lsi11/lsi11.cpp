@@ -34,7 +34,3 @@ void LSI11::reset ()
 	bus_.setSignal (Qbus::Signal::BDCOK, Qbus::SignalValue::Cycle);
 }
 
-void LSI11::step ()
-{
-	bus_.step ();
-}

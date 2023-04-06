@@ -10,7 +10,7 @@ void LSI11::run ()
 		
 	while (true) 
 	{
-		step ();
+		bus_.step ();
 		kd11_->step ();
 
 		if ((kd11_->cpu().currentCpuState () == CpuState::HALT && 
