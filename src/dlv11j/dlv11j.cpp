@@ -69,10 +69,16 @@ DLV11J::DLV11J (Qbus *bus, unique_ptr<Console> console,
 
 	// If channel 3 is to be used as console the channel's base address
 	// and vector have to be set to the appropriate values.
+	//
+	// When channel 3 is configured as the console device interface [...]
+	// the interrupt vectors of the channel become 60 and 64. This is true
+	// regardless of the configured base vector of the module.
+	// (EK-DLV1J-UG-001)
+
 	if (dlv11Config->ch3ConsoleEnabled)
 	{
 		channel_[3].base = dlv11Config->baseAddress + 060;
-		channel_[3].vector = dlv11Config->vector + 060;
+		channel_[3].vector = defaultCh3Vector_;
 		channel_[3].send = std::bind (&DLV11J::console_print, this, std::placeholders::_1);
 	}
 
