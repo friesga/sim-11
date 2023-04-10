@@ -8,9 +8,7 @@ using std::to_string;
 
 // This file contains the entry actions and state transitions for
 // the state AtPrompt_1.
-// 
 
-//
 void KD11ODT::entry (AtPrompt_1)
 {
     writeCharacter ('@');
@@ -72,4 +70,13 @@ State KD11ODT::transition (AtPrompt_1 &&, ProceedCmdEntered)
     cpu_.proceed ();
     trace.cpuEvent (CpuEventRecordType::CPU_ODT_P, cpu_.registerValue (7));
     return ExitPoint {};
+}
+
+// The "M" (Maintenance) command is used for maintenance purposes and prints
+// the contents of an internal CPU register. This data reflects how the
+// machine got to the console mode.
+State KD11ODT::transition (AtPrompt_1&&, MaintenanceCmdEntered)
+{
+    writeString (' ' + octalNumberToString (static_cast<u16> (cpu_.haltReason_)) + '\n');
+    return AtPrompt_1 {};
 }

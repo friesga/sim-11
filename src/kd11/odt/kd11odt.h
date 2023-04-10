@@ -38,6 +38,7 @@ namespace KD11_F
     struct AtSignCmdEntered {};                 // @
     struct BackArrowCmdEntered {};              // Back arrow (ASCII 137)
     struct RuboutEntered {};                    // Rubout (ASCII 177)
+    struct MaintenanceCmdEntered {};            // M
 
     // OOT has 10 internal states, with each state having its own set of valid
     // input characters. Some commands are allowed only when in certain states
@@ -84,7 +85,8 @@ namespace KD11_F
         OpenPreviousLocationCmdEntered,
         AtSignCmdEntered,
         BackArrowCmdEntered,
-        RuboutEntered>;
+        RuboutEntered,
+        MaintenanceCmdEntered>;
 
     using State = std::variant<EntryPoint,
         AtPrompt_1,
@@ -145,6 +147,7 @@ namespace KD11_F
         State transition (AtPrompt_1&&, OpenLocationCmdEntered);                       // -> AddressOpenend__3/RegisterOpened_4
         State transition (AtPrompt_1&&, ProceedCmdEntered);                            // -> ExitPoint
         State transition (AtPrompt_1&&, BinaryDumpCmdEntered);                         // -> EnteringBinaryDump_10
+        State transition (AtPrompt_1&&, MaintenanceCmdEntered);                        // -> AtPrompt_1
 
         State transition (EnteringAddress_5&&, DigitEntered);                          // -> EnteringAddress_5
         State transition (EnteringAddress_5&&, RuboutEntered);                         // -> EnteringAddress_5

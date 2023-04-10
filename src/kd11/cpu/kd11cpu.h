@@ -90,6 +90,20 @@ private:
 	InterruptRequest const FIS{RequestType::Trap, TrapPriority::InstructionTrap, 0, 0244};
 	InterruptRequest const illegalInstructionTrap{RequestType::Trap, TrapPriority::InstructionTrap, 0, 010};
 
+	// This enum holds the reason for halting the system. This data is printed
+	// by the ODT Maintenance command.
+	// (LSI11 PDP11/03 Processor Handbook)
+	enum class HaltReason
+	{
+		HaltInstruction			= 0,	// Halt instruction or B Halt line
+		BusErrorOnIntrptVector  = 1,	// Bus Error occurred while getting device interrupt vector
+		BusErrorOnMemoryRefresh = 2,	// Not used
+		DoubleBusError			= 3,	// Double Bus Error occurred (stack was non-existent value)
+		NonExistentMicroAddress = 4		// Not used
+	};
+
+	HaltReason haltReason_;
+
 	// Definition of CpuControl functions. The intention is that these
 	// functions are to be used by K11ODT and the reset function.
 	void setTrap (InterruptRequest const *ir);

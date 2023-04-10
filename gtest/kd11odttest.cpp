@@ -276,7 +276,9 @@ TEST_F (KD11ODTTest, KD11FOnlyCommands)
         {"rs/\rP",                      "\n173000\n@rs/000000 \r\n@",
             "Lowercase PSW designator accepted"},
         {"200g",                        "\n173000\n@200g",
-            "Lowercase Go command accepted"}
+            "Lowercase Go command accepted"},
+        {"MP",                          "\n173000\n@M 000000\n@",
+            "Maintenance command accepted"}
     };
 
     for (TestSequence testSequence : testSequences)

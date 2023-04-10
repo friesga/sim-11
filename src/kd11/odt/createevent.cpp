@@ -49,6 +49,11 @@ Event KD11ODT::createEvent (CondData<u8> c)
             // Go command
             return GoCmdEntered {};
 
+        case 'M':
+        case 'm':
+            // Maintenance command
+            return MaintenanceCmdEntered {};
+
         case 'P':
         case 'p':
             // Proceed command

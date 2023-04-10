@@ -20,7 +20,8 @@ KD11CPU::KD11CPU (Qbus* bus)
     register_ {0},
     psw {0},
     runState {CpuState::HALT},
-    trap_ {nullptr}
+    trap_ {nullptr},
+    haltReason_ {HaltReason::HaltInstruction}
 {
     register_[7] = bootAddress;
     bus_->setSignal (Qbus::Signal::SRUN, Qbus::SignalValue::False);
@@ -198,6 +199,7 @@ void KD11CPU::execInstr ()
                             trace.cpuEvent (CpuEventRecordType::CPU_HALT, register_[7]);
 
                             runState = CpuState::HALT;
+                            haltReason_ = HaltReason::HaltInstruction;
                             bus_->setSignal (Qbus::Signal::SRUN, Qbus::SignalValue::False);
                             // The ODT state is set to ODT_STATE_INIT in 
                             // KD11:step() when it detects the runState HALT.
@@ -1550,6 +1552,7 @@ void KD11CPU::handleTraps ()
         // ToDo: All interrupts should be cleared?
         trap_ = nullptr;
         runState = CpuState::HALT;
+        haltReason_ = HaltReason::DoubleBusError;
         bus_->setSignal (Qbus::Signal::SRUN, Qbus::SignalValue::False);
         return;
     }
@@ -1560,6 +1563,7 @@ void KD11CPU::handleTraps ()
         trace.cpuEvent (CpuEventRecordType::CPU_DBLBUS, register_[6]);
         trap_ = nullptr;
         runState = CpuState::HALT;
+        haltReason_ = HaltReason::DoubleBusError;
         bus_->setSignal (Qbus::Signal::SRUN, Qbus::SignalValue::False);
         return;
     }
@@ -1573,6 +1577,7 @@ void KD11CPU::handleTraps ()
         trace.cpuEvent (CpuEventRecordType::CPU_DBLBUS, trapToProcess);
         trap_ = nullptr;
         runState = CpuState::HALT;
+        haltReason_ = HaltReason::BusErrorOnIntrptVector;
         bus_->setSignal (Qbus::Signal::SRUN, Qbus::SignalValue::False);
         return;
     }
@@ -1584,6 +1589,7 @@ void KD11CPU::handleTraps ()
         trace.cpuEvent (CpuEventRecordType::CPU_DBLBUS, trapToProcess + 2);
         trap_ = nullptr;
         runState = CpuState::HALT;
+        haltReason_ = HaltReason::BusErrorOnIntrptVector;
         bus_->setSignal (Qbus::Signal::SRUN, Qbus::SignalValue::False);
         return;
     }

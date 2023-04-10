@@ -18,6 +18,7 @@ void KD11CPU::reset ()
 void KD11CPU::halt ()
 {
     runState = CpuState::HALT;
+    haltReason_ = HaltReason::HaltInstruction;
     bus_->setSignal (Qbus::Signal::SRUN, Qbus::SignalValue::False);
     trace.cpuEvent (CpuEventRecordType::CPU_HALT, register_[7]);
 }
