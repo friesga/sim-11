@@ -1,12 +1,15 @@
 #include "rl012.h"
 #include "rlv12/rlv12.h"
 
+using std::mutex;
+using std::unique_lock;
+
 // Simulate the execution (of the head movement) of a Seek command
 void RL01_2::seekTimer ()
 {
     // Guard against controller register access from the
     // command processor
-    std::unique_lock<std::mutex> lock{ driveMutex_ };
+    unique_lock<mutex> lock {driveMutex_};
 
     while (running_)
     {

@@ -51,7 +51,6 @@ private:
 
 	// Safe guard against simultaneous CPU access
     mutex cpuMutex_;
-	unique_lock<mutex> cpuLock {cpuMutex_, defer_lock};
 
 	InterruptRequest const powerFail {RequestType::Trap, TrapPriority::PowerFail, 0, 024};
 

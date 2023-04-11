@@ -20,19 +20,11 @@ u16 CmdProcessor::maintenanceCmd (RL01_2 *unit, RLV12Command &rlv12Command)
     // a number of instructions. As the emulated instructions are not timed
     // (yet) the reaction time will vary per host CPU and has to be determined
     // by trial and error.
-    std::this_thread::sleep_for(std::chrono::milliseconds (20));
+    std::this_thread::sleep_for(std::chrono::milliseconds (55));
 
     // This command is a NOP on the RL11 controller
     if (controller_->rlType_ == RLConfig::RLType::RL11)
         return 0;
-
-    // The VRLBC0 diagnostic expects a reaction on a 
-    // Maintenance command between 155 and 650 milli-
-    // seconds. This time is determined by executing a
-    // number of instructions. As the emulated instructions
-    // are not timed (yet) the reaction time will vary per
-    // host CPU and has to be determined by trial 
-    // and error.
 
     // Test 1: Check internal logic
     controller_->dar_ = (controller_->dar_ & ~0377) | 
