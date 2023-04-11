@@ -4,6 +4,8 @@
 #include <thread>
 #include <chrono>
 
+using std::mutex;
+using std::lock_guard;
 using std::bind;
 using std::placeholders::_1;
 using std::placeholders::_2;
@@ -103,7 +105,7 @@ RLV12::~RLV12 ()
 void RLV12::BINITReceiver (Qbus::Signal signal, Qbus::SignalValue signalValue)
 {
     // Guard against controller register access from writeWord()
-    std::unique_lock<std::mutex> lock {controllerMutex_};
+    lock_guard<mutex> lock {controllerMutex_};
 
     reset ();
 }
