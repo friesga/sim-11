@@ -13,11 +13,7 @@ void LSI11::run ()
 		bus_.step ();
 		kd11_->step ();
 
-		if ((kd11_->cpu().currentCpuState () == CpuState::HALT && 
-				cmdLineOptions_.exit_on_halt) ||
-			bus_.signalIsSet (Qbus::Signal::EXIT))
-		{
+		if (bus_.signalIsSet (Qbus::Signal::EXIT))
 			break;
-		}
 	}
 }

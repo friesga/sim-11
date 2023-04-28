@@ -9,8 +9,7 @@ CmdLineOptions::CmdLineOptions(int argc, char const **argv)
     :
     load_file {load_file_},
     config_file {config_file_},
-    trace_file {trace_file_},
-    exit_on_halt {exit_on_halt_}
+    trace_file {trace_file_}
 {
    	std::stringstream msg;
 
@@ -21,9 +20,7 @@ CmdLineOptions::CmdLineOptions(int argc, char const **argv)
 
 	for (; argc; --argc, ++argv)
 	{
-		if(!strcmp("-x", *argv))
-			exit_on_halt_ = true;
-		else if(!strcmp("-l", *argv) && argc > 1) 
+		if(!strcmp("-l", *argv) && argc > 1) 
 		{
 			load_file_ = argv[1];
 			--argc;

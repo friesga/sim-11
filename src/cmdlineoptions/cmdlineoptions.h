@@ -15,7 +15,6 @@ class CmdLineOptions
 	static const char* load_file_;
 	static const char* config_file_;
 	static const char* trace_file_;
-	static bool exit_on_halt_;
 
 public:
 	CmdLineOptions(int argc, char const **argv);
@@ -23,7 +22,6 @@ public:
 	const char*  const &load_file;
 	const char*  const &config_file;
 	const char* const &trace_file;
-	bool const &exit_on_halt;
 };
 
 #endif // _CMDLINEOPTIONS_H_
