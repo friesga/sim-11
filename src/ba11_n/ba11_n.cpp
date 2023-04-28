@@ -72,7 +72,7 @@ void BA11_N::render ()
     do
 	{
 		myWindow->render();
-        sleep_for (std::chrono::milliseconds (33));
+        sleep_for (std::chrono::milliseconds (10));
 	}
     while (!myWindow->handleEvents ());
 }
