@@ -1,22 +1,22 @@
-#ifndef _RENDERER_H_
-#define _RENDERER_H_
+#ifndef _SDLRENDERER_H_
+#define _SDLRENDERER_H_
 
-#include "../window/window.h"
+#include <SDL.h>
 
-class Renderer
+class SDLRenderer
 {
-    // The Texture class needs access to the SDL_Renderer to be able to
-    // render the texture.
-    friend class Texture;
+    // SDLFigure needs access to the SDL_Renderer
+    friend class SDLWindow;
+    friend class SDLFigure;
 
     // The SDL renderer to use in rendering in the given window
-    SDL_Renderer *sdlRenderer_;
+    SDL_Renderer *sdl_Renderer_;
 
 public:
-    Renderer (Window &window, 
+    SDLRenderer (SDL_Window *sdlWindow, 
         int index = -1, 
         unsigned long flags = SDL_RENDERER_ACCELERATED);
-    ~Renderer ();
+    ~SDLRenderer ();
 
     void setDrawColor (unsigned char red, unsigned char green,
         unsigned char blue, unsigned char alpha = 0xff);
@@ -24,4 +24,4 @@ public:
     void update ();
 };
 
-#endif // _RENDERER_H_
+#endif // _SDLRENDERER_H_

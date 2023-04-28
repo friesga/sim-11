@@ -2,12 +2,8 @@
 #define _BA11_N_H_
 
 #include "qbus/qbus.h"
-#include "../sdl/sdlwrap/sdlwrap.h"
-#include "../sdl/texture/texture.h"
-#include "../sdl/window/window.h"
-#include "../sdl/renderer/renderer.h"
+#include "../sdl/sdlpanel/sdlpanel.h"
 
-#include <SDL.h>
 #include <thread>
 #include <memory>
 #include <string>
@@ -16,32 +12,27 @@ using std::unique_ptr;
 
 class BA11_N
 {
-    Qbus *bus_;
-
-    // SDL_Texture *texture_;
-    SDL_Rect sourceRectangle_;
-	SDL_Rect destinationRectangle_;
-
-    bool running_ {false};
-	std::thread ba11_nThread_;
-
-    unique_ptr<Window> window_;
-    unique_ptr<Renderer> renderer_;
-    unique_ptr<Texture> pdp11_03_frontTexture;
-    unique_ptr<Texture> pwrOkTexture_;
-    unique_ptr<Texture> runLightTexture_;
-
-    void init (char const *title, int xpos, int ypos, 
-        int width, int height, bool fullscreen);
-	void bezel ();
-    void render ();
-	void update ();
-	void handleEvents();
-	SDL_Surface *loadImage (std::string image);
-
 public:
     BA11_N (Qbus *bus);
-    ~BA11_N();
+    ~BA11_N ();
+    void render ();
+    void button1Clicked (Button::State state);
+
+private:
+    Qbus *bus_;
+
+	std::thread ba11_nThread_;
+
+    SDLPanel sdlPanel_;
+    unique_ptr<Window> myWindow;
+    Indicator *frontFigure_;
+    Indicator *indicator1_;
+    Indicator *indicator2_;
+    Button *button1_;
+    Button *button2_;
+    Button *button3_;
+
+    void bezel ();
 };
 
 #endif // _BA11_N_H_

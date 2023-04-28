@@ -117,15 +117,18 @@ set (FLOAT_SRCS
     src/float/pdp11toieee.cpp)
 
 set (BA11_N_SRCS
-    src/ba11_n/ba11_n.cpp
-    src/ba11_n/handleevents.cpp
-    src/ba11_n/render.cpp)
+    src/ba11_n/ba11_n.cpp)
 
-set (SDLWRAP_SRCS
-    src/sdl/renderer/renderer.cpp
-    src/sdl/sdlwrap/sdlwrap.cpp
-    src/sdl/texture/texture.cpp
-    src/sdl/window/window.cpp)
+set (SDL_SRCS
+    src/sdl/sdlpanel/sdlpanel.cpp
+    src/sdl/sdlwindow/sdlwindow.cpp
+    src/sdl/sdlindicator/sdlindicator.cpp
+    src/sdl/sdlfront/sdlfront.cpp
+    src/sdl/sdlbutton/sdlbutton.cpp
+    src/sdl/sdlrenderer/sdlrenderer.cpp
+    src/sdl/sdltexture/sdltexture.cpp
+    src/sdl/sdlmomentarybutton/sdlmomentarybutton.cpp
+    src/sdl/sdllatchingbutton/sdllatchingbutton.cpp)
 
 set (TRACE_SRCS
     src/trace/trace.cpp
@@ -197,7 +200,7 @@ set (SIM11_SRCS
     src/busdevice/busdevice.cpp
     src/busdevice/writebyte.cpp
     ${RLV12_SRCS}
-    ${SDLWRAP_SRCS}
+    ${SDL_SRCS}
     src/rxv21/rxv21.cpp
     src/rxv21/initiatecommand.cpp
     src/rxv21/emptybuffer.cpp
