@@ -16,7 +16,10 @@ public:
     BA11_N (Qbus *bus);
     ~BA11_N ();
     void render ();
-    void button1Clicked (Button::State state);
+    void restartSwitchClicked (Button::State state);
+    void haltSwitchToggled (Button::State state);
+    void auxOnOffSwitchToggled (Button::State state);
+    void SRUNReceiver (Qbus::Signal signal, Qbus::SignalValue signalValue);
 
 private:
     Qbus *bus_;
@@ -24,13 +27,13 @@ private:
 	std::thread ba11_nThread_;
 
     SDLPanel sdlPanel_;
-    unique_ptr<Window> myWindow;
+    unique_ptr<Window> frontWindow_;
     Indicator *frontFigure_;
-    Indicator *indicator1_;
-    Indicator *indicator2_;
-    Button *button1_;
-    Button *button2_;
-    Button *button3_;
+    Indicator *pwrOkLed_;
+    Indicator *runLed_;
+    Button *restartSwitch_;
+    Button *haltSwitch_;
+    Button *auxOnOffSwitch_;
 
     void bezel ();
 };

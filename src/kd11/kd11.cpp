@@ -49,7 +49,8 @@ KD11CPU& KD11::cpu ()
 void KD11::BHALTReceiver (Qbus::Signal signal, 
 		Qbus::SignalValue signalValue)
 {
-    cpu_.halt ();
+    if (signalValue == Qbus::SignalValue::True)
+        cpu_.halt ();
     return;
 }
 
@@ -134,6 +135,10 @@ void KD11::step ()
             // is performed.
 	        lock_guard<mutex> guard {cpuMutex_};
             cpu_.step ();
+
+            // If BHALT is true the CPU must be single stepped
+            if (bus_->signalIsSet (Qbus::Signal::BHALT))
+                cpu_.halt ();
             break;
         }
 

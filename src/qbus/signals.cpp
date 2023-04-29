@@ -15,9 +15,16 @@ Qbus::SubscriberKey Qbus::subscribe (Signal signal, Subscriber subscriber)
     return subscriberVector.end () - subscriberVector.begin ();
 }
 
+// A Signal will be in either one of the two states: False or True. The default
+// signal state is false. The value parameter can have an additional value:
+// Cycle. When that value is given, the signal is set True and when all
+// subsribers are notified the signal is set False again.
 void Qbus::setSignal (Signal signal, SignalValue value, SubscriberKey sender)
 {
-    signalValues_[static_cast<size_t> (signal)] = value;
+    if (value == SignalValue::Cycle)
+        signalValues_[static_cast<size_t> (signal)] = SignalValue::True;
+    else
+        signalValues_[static_cast<size_t> (signal)] = value;
 
     // Notify the subscribers to the signal except for the sender if one is
     // specified
@@ -27,7 +34,7 @@ void Qbus::setSignal (Signal signal, SignalValue value, SubscriberKey sender)
     {
         SubscriberKey thisKey = iter - subscriberVector.begin() + 1;
         if (sender == 0 || sender != thisKey)
-            (*iter) (signal, value);
+            (*iter) (signal, signalValues_[static_cast<size_t> (signal)]);
     }
 
     // A Cycle signal value is reset after all subscribers have been notified

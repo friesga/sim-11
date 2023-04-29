@@ -277,7 +277,7 @@ void DLV11J::receive (int channelNr, unsigned char c)
 	// The response is either cycling the BHALT signal, cycling the BDCOK signal
 	// or a no-operation.
 	// 
-	// Cycling the BHALT signal reults in halting the processor and cycling the
+	// Cycling the BHALT signal results in halting the processor and cycling the
 	// BDCOK signal results in the execution of the power up routine. The signals
 	// are cycled as the key presses have to be treated as triggers.
 	// 
