@@ -7,18 +7,15 @@
 
 using std::bind;
 using std::placeholders::_1;
-using std::placeholders::_2;
 
 #define	IRCJITTER()	(rand() % INTRPT_LATENCY_JITTER)
 
 Qbus::Qbus ()
 	:
-	signalValues_ {SignalValue::False},
 	processorRunning_ {false},
 	delay_ {0}
 {
-	ourKey_ = 
-		subscribe (Signal::BINIT, bind (&Qbus::BINITReceiver, this, _1, _2));
+	ourKey_ = BINIT.subscribe (bind (&Qbus::BINITReceiver, this, _1));
 }
 
 CondData<u16> Qbus::read (u16 address)
@@ -78,11 +75,12 @@ void Qbus::clearInterrupts ()
 }
 
 // The bus itself is defined as a BINIT signal receiver too as it not
-// only has to pass on the signal too all subscribed devices, but has to
+// only has to pass on the signal to all subscribed devices, but has to
 // perform actions itself too.
-void Qbus::BINITReceiver (Qbus::Signal signal, Qbus::SignalValue signalValue)
+void Qbus::BINITReceiver (bool signalValue)
 {
-	reset ();
+	if (signalValue)
+		reset ();
 }
 
 void Qbus::reset ()

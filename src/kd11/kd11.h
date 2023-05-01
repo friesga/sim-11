@@ -39,8 +39,8 @@ public:
 	void reset() override {};
 
 	// Declare the signal receivers
-	void BHALTReceiver (Qbus::Signal signal, Qbus::SignalValue signalValue);
-	void BDCOKReceiver (Qbus::Signal signal, Qbus::SignalValue signalValue);
+	void BHALTReceiver (bool signalValue);
+	void BDCOKReceiver (bool signalValue);
 
 	void powerUpRoutine ();
 

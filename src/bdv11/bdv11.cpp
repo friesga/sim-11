@@ -10,7 +10,6 @@ using namespace std;
 using namespace std::chrono;
 using std::bind;
 using std::placeholders::_1;
-using std::placeholders::_2;
 
 #define	_A(x)		(1 << ((x) - 1))
 #define	_B(x)		(1 << ((x) + 7))
@@ -45,8 +44,7 @@ BDV11::BDV11 (Qbus *bus)
 	ltcThread_ {thread(&BDV11::tick, this)},
 	running_ {true}
 {
-	bus_->subscribe (Qbus::Signal::BINIT, 
-		bind (&BDV11::BINITReceiver, this, _1, _2));
+	bus_->BINIT.subscribe (bind (&BDV11::BINITReceiver, this, _1));
 }
 
 BDV11::~BDV11 ()
@@ -224,9 +222,10 @@ bool BDV11::responsible (u16 address)
 }
 
 // On assertion of the BINIT signal initialize the device.
-void BDV11::BINITReceiver (Qbus::Signal signal, Qbus::SignalValue signalValue)
+void BDV11::BINITReceiver (bool signalValue)
 {
-	reset ();
+	if (signalValue)
+		reset ();
 }
 
 void BDV11::reset ()

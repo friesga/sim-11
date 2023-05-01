@@ -24,7 +24,7 @@ KD11CPU::KD11CPU (Qbus* bus)
     haltReason_ {HaltReason::HaltInstruction}
 {
     register_[7] = bootAddress;
-    bus_->setSignal (Qbus::Signal::SRUN, Qbus::SignalValue::False);
+    bus_->SRUN.set (false);
 }
 
 CpuState KD11CPU::currentCpuState ()
@@ -124,7 +124,7 @@ void KD11CPU::step ()
     if (runState == CpuState::INHIBIT_TRACE)
     {
         runState = CpuState::RUN;
-        bus_->setSignal (Qbus::Signal::SRUN, Qbus::SignalValue::True);
+        bus_->SRUN.set (true);
     }
     else if (!trap_ && (psw & PSW_T))
     {
@@ -200,10 +200,7 @@ void KD11CPU::execInstr ()
 
                             runState = CpuState::HALT;
                             haltReason_ = HaltReason::HaltInstruction;
-                            bus_->setSignal (Qbus::Signal::SRUN, Qbus::SignalValue::False);
-                            // The ODT state is set to ODT_STATE_INIT in 
-                            // KD11:step() when it detects the runState HALT.
-                            // odt.state = ODT_STATE_INIT;
+                            bus_->SRUN.set (false);
                             break;
 
                         case 0000001: /* WAIT */
@@ -235,8 +232,7 @@ void KD11CPU::execInstr ()
                             // All devices on the BUS are reset to their
                             // state at power-up.
                             // (LSI11 PDP11/03 Processor Handbook)
-                            bus_->setSignal (Qbus::Signal::BINIT, 
-                                Qbus::SignalValue::Cycle);
+                            bus_->BINIT.cycle ();
                             break;
 
                         case 0000006: /* RTT */
@@ -1553,7 +1549,7 @@ void KD11CPU::handleTraps ()
         trap_ = nullptr;
         runState = CpuState::HALT;
         haltReason_ = HaltReason::DoubleBusError;
-        bus_->setSignal (Qbus::Signal::SRUN, Qbus::SignalValue::False);
+        bus_->SRUN.set (false);
         return;
     }
 
@@ -1564,7 +1560,7 @@ void KD11CPU::handleTraps ()
         trap_ = nullptr;
         runState = CpuState::HALT;
         haltReason_ = HaltReason::DoubleBusError;
-        bus_->setSignal (Qbus::Signal::SRUN, Qbus::SignalValue::False);
+        bus_->SRUN.set (false);
         return;
     }
 
@@ -1578,7 +1574,7 @@ void KD11CPU::handleTraps ()
         trap_ = nullptr;
         runState = CpuState::HALT;
         haltReason_ = HaltReason::BusErrorOnIntrptVector;
-        bus_->setSignal (Qbus::Signal::SRUN, Qbus::SignalValue::False);
+        bus_->SRUN.set (false);
         return;
     }
 
@@ -1590,7 +1586,7 @@ void KD11CPU::handleTraps ()
         trap_ = nullptr;
         runState = CpuState::HALT;
         haltReason_ = HaltReason::BusErrorOnIntrptVector;
-        bus_->setSignal (Qbus::Signal::SRUN, Qbus::SignalValue::False);
+        bus_->SRUN.set (false);
         return;
     }
 
@@ -1599,7 +1595,7 @@ void KD11CPU::handleTraps ()
     {
         trace.cpuEvent (CpuEventRecordType::CPU_RUN, register_[7]);
         runState = CpuState::RUN;
-        bus_->setSignal (Qbus::Signal::SRUN, Qbus::SignalValue::True);
+        bus_->SRUN.set (true);
     }
 }
 

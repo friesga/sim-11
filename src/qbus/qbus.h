@@ -7,6 +7,7 @@
 #include "interruptrequest/interruptrequest.h"
 #include "threadsafecontainers/threadsafeprioqueue.h"
 #include "busdevice/busdevice.h"
+#include "signal/signal.h"
 
 #include <string>
 #include <array>
@@ -45,8 +46,8 @@ class BusDevice;
 class Qbus
 {
 public:
-	// The enumeration Signal defines a set of Qbus control signals that can
-	// be given the value of the enumeration SignalValue.
+	// The Qbus contains a set of control signals that can be set, cycled
+	// and tested.
 	//
 	// The SRUN L signal is actually not a bus signal, but a non-bused, backplane
 	// signal. The signal is a series of pulses which occur at 3-5" intervals
@@ -67,25 +68,11 @@ public:
 	// The Qbus defines a number of (not bused) spare signals. Analoguously
 	// we define an exit signal indicating the simulator has to exit.
 	//
-	enum class Signal
-    {
-        SRUN,
-        BDCOK,
-        BHALT,
-		BINIT,
-		EXIT,
-        Count
-    };
-
-	enum class SignalValue
-	{
-		False,
-		True,
-		Cycle
-	};
-
-	using Subscriber = function<void(Signal, SignalValue)>;
-	using SubscriberKey = ptrdiff_t;
+	 Signal SRUN;
+	 Signal BDCOK;
+	 Signal BHALT;
+	 Signal BINIT;
+	 Signal EXIT;
 
 	Qbus ();
 	void setInterrupt (TrapPriority priority, 
@@ -95,12 +82,6 @@ public:
 	bool intrptReqAvailable ();
 	u8 intrptPriority ();
 	bool getIntrptReq (InterruptRequest &ir);
-
-	// Signal handling functions
-	SubscriberKey subscribe (Signal signal, Subscriber subscriber);
-	void setSignal (Signal signal, SignalValue value, SubscriberKey sender = 0);
-	bool signalIsSet (Signal signal);
-	
 
 	void step ();
 	CondData<u16> read (u16 addr);
@@ -117,9 +98,7 @@ private:
 	IntrptReqQueue intrptReqQueue_;
 
 	// Signal administration
-	array<SignalValue, static_cast<size_t> (Signal::Count)> signalValues_;
-	array<vector<Subscriber>, static_cast<size_t> (Signal::Count)> signalSubscribers_;
-	SubscriberKey ourKey_;
+	Signal::SubscriberKey ourKey_;
 
 	bool processorRunning_;
 	u16	delay_;
@@ -127,7 +106,7 @@ private:
 	void reset ();
 	BusDevice *responsibleModule (u16 address);
 	void pushInterruptRequest (InterruptRequest interruptReq);
-	void BINITReceiver (Qbus::Signal signal, Qbus::SignalValue signalValue);
+	void BINITReceiver (bool signalValue);
 };
 
 #endif // !_QBUS_H_

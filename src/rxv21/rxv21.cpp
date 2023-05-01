@@ -24,8 +24,7 @@ RXV21::RXV21 (Qbus *bus)
 	if (!data) 
 		throw "Error: cannot allocate memory for rxv21";
 
-	bus_->subscribe (Qbus::Signal::BINIT, 
-        bind (&RXV21::BINITReceiver, this, _1, _2));
+	bus_->BINIT.subscribe (bind (&RXV21::BINITReceiver, this, _1));
 }
 
 RXV21::RXV21 (Qbus *bus, shared_ptr<RXV21Config> rxConfig)
@@ -47,8 +46,7 @@ RXV21::RXV21 (Qbus *bus, shared_ptr<RXV21Config> rxConfig)
 	if (!data) 
 		throw "Error: cannot allocate memory for rxv21";
 
-	bus_->subscribe (Qbus::Signal::BINIT, 
-        bind (&RXV21::BINITReceiver, this, _1, _2));
+	bus_->BINIT.subscribe (bind (&RXV21::BINITReceiver, this, _1));
 
 	// Check if unit 0 is configured and a filename is given in the 
 	// configuration. If so, read the contents of the file into memory.
@@ -165,9 +163,10 @@ bool RXV21::responsible (u16 address)
 }
 
 // On assertion of the BINIT signal initialize the device.
-void RXV21::BINITReceiver (Qbus::Signal signal, Qbus::SignalValue signalValue)
+void RXV21::BINITReceiver (bool signalValue)
 {
-	reset ();
+	if (signalValue)
+		reset ();
 }
 
 void RXV21::reset ()

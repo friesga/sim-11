@@ -119,8 +119,7 @@ void DLV11J::initialize ()
 	// Pass the console the function we want to receive the characters on
 	console_->setReceiver (bind (&DLV11J::receive, this, _1, _2));
 
-	bus_->subscribe (Qbus::Signal::BINIT, 
-        bind (&DLV11J::BINITReceiver, this, _1, _2));
+	bus_->BINIT.subscribe (bind (&DLV11J::BINITReceiver, this, _1));
 }
 
 void DLV11J::readChannel (int channelNr)
@@ -254,9 +253,10 @@ bool DLV11J::responsible (u16 address)
 }
 
 // On assertion of the BINIT signal initialize the device.
-void DLV11J::BINITReceiver (Qbus::Signal signal, Qbus::SignalValue signalValue)
+void DLV11J::BINITReceiver (bool signalValue)
 {
-	reset ();
+	if (signalValue)
+		reset ();
 }
 
 void DLV11J::reset ()
@@ -289,12 +289,12 @@ void DLV11J::receive (int channelNr, unsigned char c)
 	{
 		if (ch3BreakResponse_ == DLV11Config::Ch3BreakResponse::Halt)
 		{
-			bus_->setSignal (Qbus::Signal::BHALT, Qbus::SignalValue::Cycle);
+			bus_->BHALT.cycle ();
 			return;
 		}
 		else if (ch3BreakResponse_ == DLV11Config::Ch3BreakResponse::Boot)
 		{
-			bus_->setSignal (Qbus::Signal::BDCOK, Qbus::SignalValue::Cycle);
+			bus_->BDCOK.cycle ();
 			return;
 		}
 	}

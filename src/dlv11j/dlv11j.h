@@ -51,7 +51,7 @@ public:
 	void reset ();
 
 	// Declare the signal receivers
-	void BINITReceiver (Qbus::Signal signal, Qbus::SignalValue signalValue);
+	void BINITReceiver (bool signalValue);
 
 	// Receive a character from the outside world
 	void receive (int channel, unsigned char c);

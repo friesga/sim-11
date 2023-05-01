@@ -135,7 +135,7 @@ public:
 	void reset ();
 
 	// Declare the signal receivers
-	void BINITReceiver (Qbus::Signal signal, Qbus::SignalValue signalValue);
+	void BINITReceiver (bool signalValue);
 
 	// Definition of state transitions
 	State transition (rxv21Idle &&, rxv21Go);

@@ -13,7 +13,7 @@ void LSI11::run ()
 		bus_.step ();
 		kd11_->step ();
 
-		if (bus_.signalIsSet (Qbus::Signal::EXIT))
+		if (bus_.EXIT.isTrue ())
 			break;
 	}
 }

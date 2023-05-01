@@ -25,7 +25,7 @@ int32_t CmdProcessor::filePosition (int32_t diskAddress) const
         sizeof(int16_t);
 }
 
-// Signal the command processor to stop processing
+// SignalX the command processor to stop processing
 void CmdProcessor::finish ()
 {
     running_ = false;

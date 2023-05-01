@@ -10,7 +10,6 @@ using std::unique_ptr;
 using std::this_thread::sleep_for;
 using std::bind;
 using std::placeholders::_1;
-using std::placeholders::_2;
 
 // Constructor
 // Create a window showing the BA11-N and devices and then start a thread
@@ -93,15 +92,14 @@ void BA11_N::bezel ()
 
     // Now the RUN led is created when can subscribe to the signal indicating
     // the state to be shown.
-    bus_->subscribe (Qbus::Signal::SRUN, 
-        bind (&BA11_N::SRUNReceiver, this, _1, _2));
+    bus_->SRUN.subscribe (bind (&BA11_N::SRUNReceiver, this, _1));
 
     // Start rendering the panel
     render ();
 
     // The user clicked the close button. Set the bus EXIT signal to indicate
     // the simulator has to stop
-    bus_->setSignal (Qbus::Signal::EXIT, Qbus::SignalValue::True);
+    bus_->EXIT.set (true);
 }
 
 void BA11_N::render ()
@@ -117,7 +115,7 @@ void BA11_N::render ()
 void BA11_N::restartSwitchClicked (Button::State state)
 {
     if (state == Button::State::Up)
-        bus_->setSignal (Qbus::Signal::BDCOK, Qbus::SignalValue::Cycle);
+        bus_->BDCOK.cycle ();
 }
 
 void BA11_N::haltSwitchToggled (Button::State state)
@@ -125,11 +123,11 @@ void BA11_N::haltSwitchToggled (Button::State state)
     switch (state)
     {
         case Button::State::Down:
-            bus_->setSignal (Qbus::Signal::BHALT, Qbus::SignalValue::False);
+            bus_->BHALT.set (false);
             break;
 
         case Button::State::Up:
-            bus_->setSignal (Qbus::Signal::BHALT, Qbus::SignalValue::True);
+            bus_->BHALT.set (true);
             break;
     }
 }
@@ -143,8 +141,7 @@ void BA11_N::auxOnOffSwitchToggled (Button::State state)
 // This function is called from another thread so possible run conditions
 // might occur. As long as this is the only call ro runLed_->show() this
 // should be fine.
-void BA11_N::SRUNReceiver (Qbus::Signal signal, Qbus::SignalValue signalValue)
+void BA11_N::SRUNReceiver (bool signalValue)
 {
-    runLed_->show (signalValue == Qbus::SignalValue::True ?
-        Indicator::State::On : Indicator::State::Off);
+    runLed_->show (signalValue ? Indicator::State::On : Indicator::State::Off);
 }

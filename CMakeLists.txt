@@ -82,8 +82,7 @@ set (QBUS_SRCS
     src/qbus/qbus.cpp
     src/qbus/writebyte.cpp
     src/qbus/writeword.cpp
-    src/qbus/responsiblemodule.cpp
-    src/qbus/signals.cpp)
+    src/qbus/responsiblemodule.cpp)
 
 set (CONFIGURATOR_SRCS
     src/configdata/iniprocessor/iniprocessor.cpp
@@ -209,6 +208,7 @@ set (SIM11_SRCS
     src/rxv21/readsector.cpp
     src/rxv21/readstatus.cpp
     src/rxv21/writesector.cpp
+    src/signal/signal.cpp
     ${SIM_FIO_SRCS}
     ${UNIT_SRCS}
     ${TRACE_SRCS}
@@ -320,7 +320,7 @@ set (GTEST_SRCS
     gtest/rlv12writechecktest.cpp
     gtest/rlv12writedatatest.cpp
     gtest/rxconfiguratortest.cpp
-    gtest/signalsettest.cpp
+    gtest/signaltest.cpp
     gtest/tracetest.cpp
     gtest/variantfsmtest.cpp)
     
@@ -343,6 +343,7 @@ set (SIM11_TEST_SRCS
     ${KD11ODT_SRCS}
     src/dlv11j/dlv11j.cpp
     src/msv11d/msv11d.cpp
+    src/signal/signal.cpp
     ${TRACE_SRCS}
     src/logger/logger.cpp
     src/logger/data.cpp)

@@ -31,6 +31,6 @@ LSI11::~LSI11 ()
 // the bus itself.
 void LSI11::reset ()
 {
-	bus_.setSignal (Qbus::Signal::BDCOK, Qbus::SignalValue::Cycle);
+	bus_.BDCOK.cycle ();
 }
 

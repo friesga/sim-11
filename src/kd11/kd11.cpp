@@ -7,7 +7,6 @@ using std::make_unique;
 using std::shared_ptr;
 using std::bind;
 using std::placeholders::_1;
-using std::placeholders::_2;
 using std::lock_guard;
 using std::mutex;
 
@@ -33,10 +32,8 @@ KD11::KD11 (Qbus *bus, shared_ptr<KD11Config> kd11Config)
 // Get notifications on the state of the BHALT and BDCOK signals
 void KD11::subscribeToSignals ()
 {
-    bus_->subscribe (Qbus::Signal::BHALT, 
-        bind (&KD11::BHALTReceiver, this, _1, _2));
-    bus_->subscribe (Qbus::Signal::BDCOK, 
-        bind (&KD11::BDCOKReceiver, this, _1, _2));
+    bus_->BHALT.subscribe (bind (&KD11::BHALTReceiver, this, _1));
+    bus_->BDCOK.subscribe (bind (&KD11::BDCOKReceiver, this, _1));
 }
 
 KD11CPU& KD11::cpu ()
@@ -46,10 +43,9 @@ KD11CPU& KD11::cpu ()
 
 // The BHALT signals halts the processor. If the processor already is in
 // ODT mode the signal is ignored.
-void KD11::BHALTReceiver (Qbus::Signal signal, 
-		Qbus::SignalValue signalValue)
+void KD11::BHALTReceiver (bool signalValue)
 {
-    if (signalValue == Qbus::SignalValue::True)
+    if (signalValue)
         cpu_.halt ();
     return;
 }
@@ -63,12 +59,15 @@ void KD11::BHALTReceiver (Qbus::Signal signal,
 // Note that this function will be executed in a different thread from the
 // thread in which the CPU is running. Access to the CPU data therefore
 // has to be synchronized between the two threads.
-void KD11::BDCOKReceiver (Qbus::Signal signal, Qbus::SignalValue signalValue)
+void KD11::BDCOKReceiver (bool signalValue)
 {
-    // Guard against CPU access while an instruction is executed
-	lock_guard<mutex> guard {cpuMutex_};
+    if (signalValue)
+    {
+        // Guard against CPU access while an instruction is executed
+	    lock_guard<mutex> guard {cpuMutex_};
 
-    powerUpRoutine ();
+        powerUpRoutine ();
+    }
 }
 
 // The reaction on a power-up is configured by the power-up mode. Three
@@ -88,7 +87,7 @@ void KD11::BDCOKReceiver (Qbus::Signal signal, Qbus::SignalValue signalValue)
 void KD11::powerUpRoutine ()
 {
     cpu_.reset ();
-    bus_->setSignal (Qbus::Signal::BINIT, Qbus::SignalValue::Cycle);
+    bus_->BINIT.cycle ();
 
     switch (powerUpMode_)
     {
@@ -137,7 +136,7 @@ void KD11::step ()
             cpu_.step ();
 
             // If BHALT is true the CPU must be single stepped
-            if (bus_->signalIsSet (Qbus::Signal::BHALT))
+            if (bus_->BHALT.isTrue ())
                 cpu_.halt ();
             break;
         }

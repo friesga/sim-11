@@ -272,7 +272,7 @@ public:
     StatusCode writeWord (u16 registerAddress, u16 data) override;
 
     // Declare the signal receivers
-	void BINITReceiver (Qbus::Signal signal, Qbus::SignalValue signalValue);
+	void BINITReceiver (bool signalValue);
 
     // RLV1[12] specific function
     inline size_t numUnits ();

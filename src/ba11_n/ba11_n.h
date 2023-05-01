@@ -19,7 +19,7 @@ public:
     void restartSwitchClicked (Button::State state);
     void haltSwitchToggled (Button::State state);
     void auxOnOffSwitchToggled (Button::State state);
-    void SRUNReceiver (Qbus::Signal signal, Qbus::SignalValue signalValue);
+    void SRUNReceiver (bool signalValue);
 
 private:
     Qbus *bus_;

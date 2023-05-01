@@ -8,7 +8,6 @@ using std::mutex;
 using std::lock_guard;
 using std::bind;
 using std::placeholders::_1;
-using std::placeholders::_2;
 
 // RLV12 constructor
 // Set name and default base address and vector. Set the controller
@@ -39,8 +38,7 @@ RLV12::RLV12 (Qbus *bus)
     if (dataBuffer_ == nullptr)
         throw ("Allocating memory for transfer buffer failed");
 
-    bus_->subscribe (Qbus::Signal::BINIT, 
-        bind (&RLV12::BINITReceiver, this, _1, _2));
+    bus_->BINIT.subscribe (bind (&RLV12::BINITReceiver, this, _1));
 
     // Start the command processor
     cmdProcessor_ = std::make_unique<CmdProcessor> (this);
@@ -81,8 +79,7 @@ RLV12::RLV12 (Qbus *bus, shared_ptr<RLConfig> rlConfig)
 			throw "Error attaching " + rlUnitConfig->fileName;
 	}
 
-    bus_->subscribe (Qbus::Signal::BINIT, 
-        bind (&RLV12::BINITReceiver, this, _1, _2));
+    bus_->BINIT.subscribe (bind (&RLV12::BINITReceiver, this, _1));
 
     // Start the command processor
     cmdProcessor_ = std::make_unique<CmdProcessor> (this);
@@ -102,12 +99,15 @@ RLV12::~RLV12 ()
 }
 
 // On assertion of the BINIT signal initialize the device.
-void RLV12::BINITReceiver (Qbus::Signal signal, Qbus::SignalValue signalValue)
+void RLV12::BINITReceiver (bool signalValue)
 {
-    // Guard against controller register access from writeWord()
-    lock_guard<mutex> lock {controllerMutex_};
+    if (signalValue)
+    {
+        // Guard against controller register access from writeWord()
+        lock_guard<mutex> lock {controllerMutex_};
 
-    reset ();
+        reset ();
+    }
 }
 
 //
