@@ -82,7 +82,8 @@ set (QBUS_SRCS
     src/qbus/qbus.cpp
     src/qbus/writebyte.cpp
     src/qbus/writeword.cpp
-    src/qbus/responsiblemodule.cpp)
+    src/qbus/responsiblemodule.cpp
+    src/qbus/signals.cpp)
 
 set (CONFIGURATOR_SRCS
     src/configdata/iniprocessor/iniprocessor.cpp

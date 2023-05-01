@@ -15,7 +15,7 @@ Qbus::Qbus ()
 	processorRunning_ {false},
 	delay_ {0}
 {
-	ourKey_ = BINIT.subscribe (bind (&Qbus::BINITReceiver, this, _1));
+	ourKey_ = BINIT().subscribe (bind (&Qbus::BINITReceiver, this, _1));
 }
 
 CondData<u16> Qbus::read (u16 address)

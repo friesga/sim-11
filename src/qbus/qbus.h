@@ -68,11 +68,11 @@ public:
 	// The Qbus defines a number of (not bused) spare signals. Analoguously
 	// we define an exit signal indicating the simulator has to exit.
 	//
-	 Signal SRUN;
-	 Signal BDCOK;
-	 Signal BHALT;
-	 Signal BINIT;
-	 Signal EXIT;
+	Signal &SRUN ();
+	Signal &BDCOK ();
+	Signal &BHALT ();
+	Signal &BINIT ();
+	Signal &EXIT ();
 
 	Qbus ();
 	void setInterrupt (TrapPriority priority, 
@@ -97,6 +97,13 @@ private:
 	using IntrptReqQueue = ThreadSafePrioQueue<InterruptRequest>;
 	IntrptReqQueue intrptReqQueue_;
 
+	// Definition of the bus signals
+	Signal SRUN_;
+	Signal BDCOK_;
+	Signal BHALT_;
+	Signal BINIT_;
+	Signal EXIT_;
+
 	// Signal administration
 	Signal::SubscriberKey ourKey_;
 
@@ -108,5 +115,6 @@ private:
 	void pushInterruptRequest (InterruptRequest interruptReq);
 	void BINITReceiver (bool signalValue);
 };
+
 
 #endif // !_QBUS_H_

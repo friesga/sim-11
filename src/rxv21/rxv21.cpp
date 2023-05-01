@@ -24,7 +24,7 @@ RXV21::RXV21 (Qbus *bus)
 	if (!data) 
 		throw "Error: cannot allocate memory for rxv21";
 
-	bus_->BINIT.subscribe (bind (&RXV21::BINITReceiver, this, _1));
+	bus_->BINIT().subscribe (bind (&RXV21::BINITReceiver, this, _1));
 }
 
 RXV21::RXV21 (Qbus *bus, shared_ptr<RXV21Config> rxConfig)
@@ -46,7 +46,7 @@ RXV21::RXV21 (Qbus *bus, shared_ptr<RXV21Config> rxConfig)
 	if (!data) 
 		throw "Error: cannot allocate memory for rxv21";
 
-	bus_->BINIT.subscribe (bind (&RXV21::BINITReceiver, this, _1));
+	bus_->BINIT().subscribe (bind (&RXV21::BINITReceiver, this, _1));
 
 	// Check if unit 0 is configured and a filename is given in the 
 	// configuration. If so, read the contents of the file into memory.

@@ -32,8 +32,8 @@ KD11::KD11 (Qbus *bus, shared_ptr<KD11Config> kd11Config)
 // Get notifications on the state of the BHALT and BDCOK signals
 void KD11::subscribeToSignals ()
 {
-    bus_->BHALT.subscribe (bind (&KD11::BHALTReceiver, this, _1));
-    bus_->BDCOK.subscribe (bind (&KD11::BDCOKReceiver, this, _1));
+    bus_->BHALT().subscribe (bind (&KD11::BHALTReceiver, this, _1));
+    bus_->BDCOK().subscribe (bind (&KD11::BDCOKReceiver, this, _1));
 }
 
 KD11CPU& KD11::cpu ()
@@ -87,7 +87,7 @@ void KD11::BDCOKReceiver (bool signalValue)
 void KD11::powerUpRoutine ()
 {
     cpu_.reset ();
-    bus_->BINIT.cycle ();
+    bus_->BINIT().cycle ();
 
     switch (powerUpMode_)
     {
@@ -136,7 +136,7 @@ void KD11::step ()
             cpu_.step ();
 
             // If BHALT is true the CPU must be single stepped
-            if (bus_->BHALT.isTrue ())
+            if (bus_->BHALT().isTrue ())
                 cpu_.halt ();
             break;
         }

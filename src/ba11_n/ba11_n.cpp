@@ -92,14 +92,14 @@ void BA11_N::bezel ()
 
     // Now the RUN led is created when can subscribe to the signal indicating
     // the state to be shown.
-    bus_->SRUN.subscribe (bind (&BA11_N::SRUNReceiver, this, _1));
+    bus_->SRUN().subscribe (bind (&BA11_N::SRUNReceiver, this, _1));
 
     // Start rendering the panel
     render ();
 
     // The user clicked the close button. Set the bus EXIT signal to indicate
     // the simulator has to stop
-    bus_->EXIT.set (true);
+    bus_->EXIT().set (true);
 }
 
 void BA11_N::render ()
@@ -115,7 +115,7 @@ void BA11_N::render ()
 void BA11_N::restartSwitchClicked (Button::State state)
 {
     if (state == Button::State::Up)
-        bus_->BDCOK.cycle ();
+        bus_->BDCOK().cycle ();
 }
 
 void BA11_N::haltSwitchToggled (Button::State state)
@@ -123,11 +123,11 @@ void BA11_N::haltSwitchToggled (Button::State state)
     switch (state)
     {
         case Button::State::Down:
-            bus_->BHALT.set (false);
+            bus_->BHALT().set (false);
             break;
 
         case Button::State::Up:
-            bus_->BHALT.set (true);
+            bus_->BHALT().set (true);
             break;
     }
 }

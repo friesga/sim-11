@@ -74,7 +74,7 @@ State KD11ODT::transition (EnteringAddress_5 &&, GoCmdEntered)
     {
         // Set the CPU into the running state with the specified address
         // as the PC and exit ODT
-        bus_->BINIT.cycle ();
+        bus_->BINIT().cycle ();
         cpu_.start (address);
         trace.cpuEvent (CpuEventRecordType::CPU_ODT_P, address);
         return ExitPoint {};

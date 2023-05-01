@@ -38,7 +38,7 @@ RLV12::RLV12 (Qbus *bus)
     if (dataBuffer_ == nullptr)
         throw ("Allocating memory for transfer buffer failed");
 
-    bus_->BINIT.subscribe (bind (&RLV12::BINITReceiver, this, _1));
+    bus_->BINIT().subscribe (bind (&RLV12::BINITReceiver, this, _1));
 
     // Start the command processor
     cmdProcessor_ = std::make_unique<CmdProcessor> (this);
@@ -79,7 +79,7 @@ RLV12::RLV12 (Qbus *bus, shared_ptr<RLConfig> rlConfig)
 			throw "Error attaching " + rlUnitConfig->fileName;
 	}
 
-    bus_->BINIT.subscribe (bind (&RLV12::BINITReceiver, this, _1));
+    bus_->BINIT().subscribe (bind (&RLV12::BINITReceiver, this, _1));
 
     // Start the command processor
     cmdProcessor_ = std::make_unique<CmdProcessor> (this);

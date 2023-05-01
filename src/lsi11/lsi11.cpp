@@ -31,6 +31,6 @@ LSI11::~LSI11 ()
 // the bus itself.
 void LSI11::reset ()
 {
-	bus_.BDCOK.cycle ();
+	bus_.BDCOK().cycle ();
 }
 

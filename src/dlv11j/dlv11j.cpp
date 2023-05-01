@@ -119,7 +119,7 @@ void DLV11J::initialize ()
 	// Pass the console the function we want to receive the characters on
 	console_->setReceiver (bind (&DLV11J::receive, this, _1, _2));
 
-	bus_->BINIT.subscribe (bind (&DLV11J::BINITReceiver, this, _1));
+	bus_->BINIT().subscribe (bind (&DLV11J::BINITReceiver, this, _1));
 }
 
 void DLV11J::readChannel (int channelNr)
@@ -289,12 +289,12 @@ void DLV11J::receive (int channelNr, unsigned char c)
 	{
 		if (ch3BreakResponse_ == DLV11Config::Ch3BreakResponse::Halt)
 		{
-			bus_->BHALT.cycle ();
+			bus_->BHALT().cycle ();
 			return;
 		}
 		else if (ch3BreakResponse_ == DLV11Config::Ch3BreakResponse::Boot)
 		{
-			bus_->BDCOK.cycle ();
+			bus_->BDCOK().cycle ();
 			return;
 		}
 	}

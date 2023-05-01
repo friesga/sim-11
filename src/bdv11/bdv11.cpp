@@ -44,7 +44,7 @@ BDV11::BDV11 (Qbus *bus)
 	ltcThread_ {thread(&BDV11::tick, this)},
 	running_ {true}
 {
-	bus_->BINIT.subscribe (bind (&BDV11::BINITReceiver, this, _1));
+	bus_->BINIT().subscribe (bind (&BDV11::BINITReceiver, this, _1));
 }
 
 BDV11::~BDV11 ()

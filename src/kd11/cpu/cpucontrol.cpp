@@ -19,7 +19,7 @@ void KD11CPU::halt ()
 {
     runState = CpuState::HALT;
     haltReason_ = HaltReason::HaltInstruction;
-    bus_->SRUN.set (false);
+    bus_->SRUN().set (false);
     trace.cpuEvent (CpuEventRecordType::CPU_HALT, register_[7]);
 }
 
@@ -28,7 +28,7 @@ void KD11CPU::start (u16 address)
 {
     register_[7] = address;
     runState = CpuState::RUN;
-    bus_->SRUN.set (true);
+    bus_->SRUN().set (true);
     trace.cpuEvent (CpuEventRecordType::CPU_ODT_G, bootAddress);
 }
 
@@ -36,7 +36,7 @@ void KD11CPU::start (u16 address)
 void KD11CPU::proceed ()
 {
     runState = CpuState::RUN;
-    bus_->SRUN.set (true);
+    bus_->SRUN().set (true);
     trace.cpuEvent (CpuEventRecordType::CPU_ODT_P, register_[7]);
 }
 
