@@ -20,7 +20,7 @@ public:
     Signal ();
     ~Signal () = default;
     void set (bool value, SubscriberKey sender = 0);
-    bool isTrue ();
+    operator bool ();
     void cycle (SubscriberKey sender = 0);
     SubscriberKey subscribe (Subscriber);
 

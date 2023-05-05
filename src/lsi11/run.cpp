@@ -13,7 +13,7 @@ void LSI11::run ()
 		bus_.step ();
 		kd11_->step ();
 
-		if (bus_.EXIT().isTrue ())
+		if (bus_.EXIT())
 			break;
 	}
 }

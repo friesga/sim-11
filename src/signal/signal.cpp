@@ -22,9 +22,9 @@ void Signal::set (bool value, SubscriberKey sender)
     notifyObservers (sender);
 }
 
-bool Signal::isTrue ()
+Signal::operator bool ()
 {
-    return value_ == true;
+    return value_;
 }
 
 // Cycle the signal. The current value is inverted, all subscribers are
