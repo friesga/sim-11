@@ -2,6 +2,8 @@
 #include "qbus/qbus.h"
 
 #include <memory>
+#include <thread>
+#include <chrono>
 
 using std::make_unique;
 using std::shared_ptr;
@@ -9,6 +11,8 @@ using std::bind;
 using std::placeholders::_1;
 using std::lock_guard;
 using std::mutex;
+using std::this_thread::sleep_for;
+using std::chrono::milliseconds;
 
 // The factory power-up mode configuration is mode 0 (get vector at address
 // 24 and 26), but we'll set it to Bootstrap as that's more convenient for
@@ -137,7 +141,7 @@ void KD11::step ()
             cpu_.step ();
 
             // If BHALT is true the CPU must be single stepped
-            if (bus_->BHALT().isTrue ())
+            if (bus_->BHALT())
                 cpu_.halt ();
             break;
         }
@@ -155,10 +159,16 @@ void KD11::step ()
     }
 }
 
+void KD11::waitForBDCOK ()
+{
+    while (!bus_->BDCOK())
+        sleep_for (milliseconds (10));
+}
+
 void KD11::run ()
 {
     /*
-    while (!bus_->EXIT().isTrue())
+    while (!bus_->EXIT())
     {
         switch (kd11State_)
         {
@@ -175,17 +185,17 @@ void KD11::run ()
                 // false otherwise.
                 // Traps are to be handled inside the CPU and therefore within
                 // the step() function.
-                while (bus_->BDCOK().isTrue() && !bus_->BHALT().isTrue() &&
+                while (bus_->BDCOK() && !bus_->BHALT() &&
                     cpu_.step ());
 
-                if (bus_->BHALT().isTrue())
+                if (bus_->BHALT())
                 {
                     cpu_.halt ();
                     kd11State_ = KD11State::Halt;
                 }
-                else if (!bus_->BDCOK().isTrue())
+                else if (!bus_->BDCOK())
                     kd11State_ = KD11State::Restart;
-                else if (!bus_->BDCOK().isTrue ())
+                else if (!bus_->BDCOK())
                     kd11State_ = KD11State::Powerfail;
                 break;
 

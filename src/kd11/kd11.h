@@ -67,6 +67,7 @@ private:
 	InterruptRequest const powerFail {RequestType::Trap, TrapPriority::PowerFail, 0, 024};
 
 	void subscribeToSignals ();
+	void waitForBDCOK ();
 };
 
 #endif // !_KD11_H_
