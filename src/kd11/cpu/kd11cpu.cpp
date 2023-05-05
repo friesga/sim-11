@@ -133,6 +133,9 @@ void KD11CPU::step ()
     }
     handleTraps ();
 
+    if (runState != CpuState::RUN)
+        return;
+
     if(trace.isActive ())
     {
         trace.setIgnoreBus ();

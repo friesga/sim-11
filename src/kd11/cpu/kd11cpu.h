@@ -66,7 +66,6 @@ public:
 
 	KD11CPU (Qbus *bus);
 	void step ();
-	void handleTraps();
 	CpuState currentCpuState ();
 
 private:
@@ -123,6 +122,7 @@ private:
 	bool putByte (u16 address, u8 value);
 
 	void execInstr ();
+	void handleTraps();
 	u8 cpuPriority ();
 	void returnFISresult (Float result, u16 registerNumber);
 	void executeFISinstruction (u16 stackPointer, 

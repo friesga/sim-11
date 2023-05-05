@@ -129,6 +129,7 @@ void KD11::step ()
 
         case CpuState::RUN:
         case CpuState::INHIBIT_TRACE:
+        case CpuState::WAIT:
         {
             // Guard against CPU access while a BDCOK is received and the power-up
             // is performed.
@@ -141,6 +142,7 @@ void KD11::step ()
             break;
         }
 
+        /*
         case CpuState::WAIT:
         {
             // Guard against CPU access while a BDCOK is received and the power-up
@@ -149,6 +151,59 @@ void KD11::step ()
             cpu_.handleTraps ();
             break;
         }
+        */
     }
+}
+
+void KD11::run ()
+{
+    /*
+    while (!bus_->EXIT().isTrue())
+    {
+        switch (kd11State_)
+        {
+            case KD11State::PowerOff:
+                waitForBDCOK ();
+                break;
+
+            case KD11State::Restart:
+                kd11State = powerUpRoutine ();
+                break;
+
+		    case KD11State::Running:
+                // ToDo: KD11CPU::step() returns true when state is RUN,
+                // false otherwise.
+                // Traps are to be handled inside the CPU and therefore within
+                // the step() function.
+                while (bus_->BDCOK().isTrue() && !bus_->BHALT().isTrue() &&
+                    cpu_.step ());
+
+                if (bus_->BHALT().isTrue())
+                {
+                    cpu_.halt ();
+                    kd11State_ = KD11State::Halt;
+                }
+                else if (!bus_->BDCOK().isTrue())
+                    kd11State_ = KD11State::Restart;
+                else if (!bus_->BDCOK().isTrue ())
+                    kd11State_ = KD11State::Powerfail;
+                break;
+
+            case KD11State::Halt:
+                // On every entry to ODT a new KD11ODT object is created to make
+                // sure it is initialized properly. The Microcomputer and Memories
+                // Handbook states: "A / issued immediately after the processor
+                // enters ODT mode causes a ?<CR><LF> to be printed because a
+                // location has not yet been opened.
+                odt_ = make_unique<KD11ODT> (bus_, cpu_);
+                odt_->run ();
+                // ToDo: cpu_.proceed() hier aanroepen?
+                break;
+
+            case KD11State::Powerfail:
+                break;
+        }
+    }
+    */
 }
 

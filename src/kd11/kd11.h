@@ -22,6 +22,7 @@ public:
 	KD11 (Qbus *bus);
 	KD11 (Qbus *bus, shared_ptr<KD11Config> kd11Config);
 	void step ();
+	void run ();
 	
 	// Give main() access to the CPU to set PC and runState
 	KD11CPU &cpu();
@@ -45,9 +46,20 @@ public:
 	void powerUpRoutine ();
 
 private:
+	enum class KD11State
+	{
+		PowerOff,
+		Restart,
+		Running,
+		Halt,
+		Powerfail
+	};
+
 	KD11CPU cpu_ {bus_};
 	unique_ptr<KD11ODT>	odt_ {};
 	KD11Config::PowerUpMode powerUpMode_;
+	KD11State kd11State_;
+
 
 	// Safe guard against simultaneous CPU access
     mutex cpuMutex_;
