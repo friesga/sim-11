@@ -1,5 +1,7 @@
 #include "rxv21.h"
 
+using namespace rxv21;
+
 // After function selection the Empty Buffer command requires
 // two additional steps:
 // 1. Loading of the EX2DB register with the word count (RX2WC),

@@ -8,6 +8,8 @@ using std::bind;
 using std::placeholders::_1;
 using std::placeholders::_2;
 
+using namespace rxv21;
+
 // Constructor for a default RXV21 device without attached files
 RXV21::RXV21 (Qbus *bus)
 	:

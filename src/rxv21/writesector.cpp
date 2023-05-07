@@ -2,6 +2,8 @@
 
 #include <cstring>
 
+using namespace rxv21;
+
 // After function selection the Write Sector command requires
 // two additional steps:
 // 1. Loading of the EX2DB register with the desired sector address (RX2SA),

@@ -1,5 +1,7 @@
 #include "rxv21.h"
 
+using namespace rxv21;
+
 // After function selection the Write Sector command requires
 // one additional step:
 // 1. Loading of the EX2DB register with the bus adress. This will

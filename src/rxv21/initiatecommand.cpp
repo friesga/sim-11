@@ -1,5 +1,7 @@
 #include "rxv21.h"
 
+using namespace rxv21;
+
 // Initiate the command given in the RX2CS register
 
 // On the receipt of a rxv21Go event a command to the RX02 is initiated.

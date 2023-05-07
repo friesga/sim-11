@@ -1,5 +1,7 @@
 #include "rxv21.h"
 
+using namespace rxv21;
+
 // The Maintenance Read Status command has the following effect:
 // - Done is cleared. 
 // - The Drive Ready bit (bit 7 RX2ES) is updated by counting index pulses in
