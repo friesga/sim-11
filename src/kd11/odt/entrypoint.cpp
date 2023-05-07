@@ -1,6 +1,6 @@
 #include "kd11odt.h"
 
-using namespace KD11_F;
+using namespace KD11_ODT;
 
 // The EntryPoint is a pseudo-state at which the state machine is entered.
 // In this state no actions are performed. The transition to the first real

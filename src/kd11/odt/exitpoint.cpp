@@ -1,6 +1,6 @@
 #include "kd11odt.h"
 
-using namespace KD11_F;
+using namespace KD11_ODT;
 
 // This file contains the entry actions and state transitions for
 // the state ExitPoint. Entering this state signifies that ODT has to exit. 

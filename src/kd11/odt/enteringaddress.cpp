@@ -1,7 +1,7 @@
 #include "kd11odt.h"
 #include "trace/trace.h"
 
-using namespace KD11_F;
+using namespace KD11_ODT;
 
 // This file contains the state transitions for the state EnteringAddress_5.
 State KD11ODT::transition (EnteringAddress_5 &&, DigitEntered digitEntered)

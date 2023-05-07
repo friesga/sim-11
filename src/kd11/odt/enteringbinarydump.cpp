@@ -1,6 +1,6 @@
 #include "kd11odt.h"
 
-using namespace KD11_F;
+using namespace KD11_ODT;
 
 // This command is used for manufacturing test purposes and is not a normal
 // user command. [...] The protocol is as follows:

@@ -5,7 +5,7 @@
 #include "odt/kd11odt.h"
 #include "configdata/kd11config/kd11config.h"
 
-using namespace KD11_F;
+using namespace KD11_ODT;
 
 #include <memory>
 
@@ -14,6 +14,7 @@ using std::shared_ptr;
 using std::mutex;
 using std::unique_lock;
 using std::defer_lock;
+
 
 // The class KD11 is composed of the KD11 CPU and the KD11 ODT.
 class KD11 : public BusDevice

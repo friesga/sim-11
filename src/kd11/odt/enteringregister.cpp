@@ -1,6 +1,6 @@
 #include "kd11odt.h"
 
-using namespace KD11_F;
+using namespace KD11_ODT;
 
 // This file contains all transition for the state EnteringRegister_6.
 // In this state two cases have to be treated: the entry and display of

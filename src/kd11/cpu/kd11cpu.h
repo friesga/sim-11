@@ -9,7 +9,7 @@
 #include <functional>
 
 // Forward declaration to be able to declare it a friend function
-namespace KD11_F
+namespace KD11_ODT
 {
 	class KD11ODT;
 }
@@ -60,7 +60,7 @@ public:
 	// I prefer to declare these classes friends to making these functions
 	// public.
 	friend class KD11;
-	friend class KD11_F::KD11ODT;
+	friend class KD11_ODT::KD11ODT;
 	friend class LSI11;
 	friend class Instruction;
 

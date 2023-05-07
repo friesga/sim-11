@@ -1,6 +1,6 @@
 #include "kd11odt.h"
 
-using namespace KD11_F;
+using namespace KD11_ODT;
 
 // Create the appropriate event from the given character. We receive either
 // a character or an empty object. In the latter case we create an

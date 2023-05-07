@@ -12,7 +12,7 @@
 using std::unique_ptr;
 using std::string;
 
-namespace KD11_F
+namespace KD11_ODT
 {
     // Definition of the events to be processed by the ODT command parser
     struct StartFsm {};

@@ -1,6 +1,6 @@
 #include "kd11odt.h"
 
-using namespace KD11_F;
+using namespace KD11_ODT;
 
 State KD11ODT::transition (StartingRegister_2 &&, DigitEntered digitEntered)
 {
