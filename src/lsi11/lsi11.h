@@ -18,6 +18,7 @@ using std::shared_ptr;
 using std::unique_ptr;
 
 using namespace rxv21;
+using namespace kd11_f;
 
 class LSI11
 {

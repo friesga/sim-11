@@ -14,6 +14,8 @@ using std::mutex;
 using std::this_thread::sleep_for;
 using std::chrono::milliseconds;
 
+using namespace kd11_f;
+
 // The factory power-up mode configuration is mode 0 (get vector at address
 // 24 and 26), but we'll set it to Bootstrap as that's more convenient for
 // the user.

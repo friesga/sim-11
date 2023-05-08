@@ -8,11 +8,9 @@
 
 #include <functional>
 
-// Forward declaration to be able to declare it a friend function
-namespace KD11_ODT
-{
-	class KD11ODT;
-}
+// Forward declarations to be able to declare these classes as friends
+namespace KD11_ODT { class KD11ODT; }
+namespace kd11_f { class KD11; }
 
 // Definition of CPU states
 enum class CpuState
@@ -59,7 +57,7 @@ public:
 	// Instruction needs access to fetchWord(), putWord() and putByte().
 	// I prefer to declare these classes friends to making these functions
 	// public.
-	friend class KD11;
+	friend class kd11_f::KD11;
 	friend class KD11_ODT::KD11ODT;
 	friend class LSI11;
 	friend class Instruction;

@@ -11,6 +11,8 @@ using std::make_shared;
 using std::static_pointer_cast;
 using std::string;
 
+using namespace kd11_f;
+
 // Configure the LSI-11 with a default configuration. Create a bare system
 // without any files attached.
 void LSI11::configureDevices ()
