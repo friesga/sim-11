@@ -186,6 +186,7 @@ set (SIM11_SRCS
     src/kd11/kd11.cpp
     src/kd11/cpu/kd11cpu.cpp
     src/kd11/cpu/cpucontrol.cpp
+    src/kd11/character/character.cpp
     ${KD11ODT_SRCS}
     src/lib/gotapproval.cpp
     src/lsi11/lsi11.cpp
@@ -341,6 +342,7 @@ set (SIM11_TEST_SRCS
     src/kd11/kd11.cpp
     src/kd11/cpu/kd11cpu.cpp
     src/kd11/cpu/cpucontrol.cpp
+    src/kd11/character/character.cpp
     ${KD11ODT_SRCS}
     src/dlv11j/dlv11j.cpp
     src/msv11d/msv11d.cpp

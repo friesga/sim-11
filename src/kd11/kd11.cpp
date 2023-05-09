@@ -1,5 +1,6 @@
 #include "kd11.h"
 #include "qbus/qbus.h"
+#include "character/character.h"
 
 #include <memory>
 #include <thread>
@@ -124,13 +125,7 @@ void KD11::step ()
     switch (cpu_.currentCpuState ())
     {
         case CpuState::HALT:
-            // On every entry to ODT a new KD11ODT object is created to make
-            // sure it is initialized properly. The Microcomputer and Memories
-            // Handbook states: "A / issued immediately after the processor
-            // enters ODT mode causes a ?<CR><LF> to be printed because a
-            // location has not yet been opened.
-            odt_ = make_unique<KD11ODT> (bus_, cpu_);
-            odt_->run ();
+            runODT ();
             break;
 
         case CpuState::RUN:
@@ -217,5 +212,32 @@ void KD11::run ()
         }
     }
     */
+}
+
+// On every entry to ODT a new KD11ODT object is created to make
+// sure it is initialized properly. The Microcomputer and Memories
+// Handbook states: "A / issued immediately after the processor
+// enters ODT mode causes a ?<CR><LF> to be printed because a
+// location has not yet been opened.
+void KD11::runODT ()
+{
+    Character character {bus_};
+
+    odt_ = make_unique<KD11ODT> (bus_, cpu_);
+
+    while (true)
+    {
+        if (character.available ())
+        {
+            if (!odt_->processCharacter (character.read ()))
+                return;
+        }
+
+        // if (signalAvailable ())
+        //     return createEventFromSignal ();
+
+        // Neither a character nor a bus signal available
+        sleep_for (std::chrono::milliseconds (50));
+    }
 }
 

@@ -32,7 +32,7 @@ State KD11ODT::transition (EnteringAddressValue_7 &&currentState, RuboutEntered)
 
     // Echo a backslash and remove the last entered character. If the 
     // digitSeries_ is now empty replace it with a '0'.
-    writeCharacter ('\\');
+    character.write ('\\');
     digitSeries_.pop_back ();
     if (digitSeries_.empty ())
         digitSeries_.push_back ('0');

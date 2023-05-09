@@ -6,6 +6,7 @@
 #include "variantfsm/fsm.h"
 #include "location/location.h"
 #include "conddata/conddata.h"
+#include "../character/character.h"
 
 #include <string>
 
@@ -109,16 +110,14 @@ namespace KD11_ODT
 
         Qbus* bus_;
         KD11CPU& cpu_;
+        Character character {bus_};
         bool odtRunning_;
         string digitSeries_;
         u16 newValue_;
         string registerSeries_;
         Location location_;
 
-        CondData<u16> readDLV11J (u16 address);
-        CondData<u8> readCharacter ();
-        CondData<u8> readAndEchoCharacter ();
-        void writeCharacter (u8 c);
+        CondData<u8> echoCharacter (CondData<u8> c);
         void writeString (string str);
         State writeAddressContents (u16 address);
         string octalNumberToString (u16 number);
@@ -223,8 +222,8 @@ namespace KD11_ODT
 
         // Definition of public functions.
         KD11ODT (Qbus* bus, KD11CPU& cpu);
-        void run ();
         void stop ();
+        bool processCharacter (u8 character);
     };
 }
 #endif // _K11ODT_H_

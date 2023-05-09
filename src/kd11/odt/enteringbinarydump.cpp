@@ -23,12 +23,12 @@ using namespace KD11_ODT;
 State KD11ODT::transition (AtPrompt_1 &&, BinaryDumpCmdEntered)
 {
     // Expect two bytes and transform it into the starting address
-    u16 startAddress = readCharacter () << 8 | readCharacter ();
+    u16 startAddress = character.read () << 8 | character.read ();
 
     // Dump 10 bytes i.e. 5 words as binaries
     for (size_t numWords = 0; numWords < 5; ++numWords)
     {
-        writeCharacter (bus_->read (startAddress));
+        character.write (bus_->read (startAddress));
         startAddress += 2;
     }
 

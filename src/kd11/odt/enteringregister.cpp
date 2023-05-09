@@ -26,7 +26,7 @@ State KD11ODT::transition (EnteringRegister_6 &&, DigitEntered digitEntered)
 // This implies that on a RUBOUT a transition to the AddressOpened_3 state.
 State KD11ODT::transition (EnteringRegister_6 &&, RuboutEntered)
 {
-    writeCharacter ('\\');
+    character.write ('\\');
     return EnteringAddress_5 {};
 }
 

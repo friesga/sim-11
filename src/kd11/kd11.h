@@ -70,6 +70,7 @@ namespace kd11_f
 
 		void subscribeToSignals ();
 		void waitForBDCOK ();
+		void runODT ();
 	};
 }
 #endif // !_KD11_H_

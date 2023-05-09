@@ -31,36 +31,10 @@ KD11ODT::KD11ODT (Qbus *bus, KD11CPU &cpu)
     dispatch (StartFsm {});
 }
 
-// Read a word from the given address. If dlv11j_.read() returns a
-// StatusCode other than OK, the value 0 will be returned which will
-// lead to an error transition in the command parser.
-CondData<u16> KD11ODT::readDLV11J (u16 address)
+
+
+CondData<u8> KD11ODT::echoCharacter (CondData<u8> c)
 {
-    return bus_->read (address);
-}
-
-// The console terminal addresses 17777560 through 17777566 are generated
-// in microcode and cannot be changed (EK-KDJ1A-UG-001).
-CondData<u8> KD11ODT::readCharacter ()
-{
-    // Wait till a character is available or return an empty object
-    // if the exit signal is set.
-    while ((readDLV11J (0177560) & 0x80) == 0)
-    {
-        if (bus_->EXIT() || !odtRunning_)
-            return {};
-        sleep_for (std::chrono::milliseconds (50));
-    }
-
-    // Read the character
-    return (readDLV11J (0177562));
-}
-
-CondData<u8> KD11ODT::readAndEchoCharacter ()
-{
-    // Read the character
-    CondData<u8> c = readCharacter ();
-
     // All characters (except ASCII codes 0, 2, 010 and 012 <LF>) are to be
     // echoed (EK-KDJ1A-UG-001).
     // According to micro note 050 a <CR> has to be echoed as <CR><LF>.
@@ -68,19 +42,15 @@ CondData<u8> KD11ODT::readAndEchoCharacter ()
     if (c.hasValue ())
     {
         if (c != 0 && c != 2 && c != 010 && c != 012)
-            writeCharacter (c);
+            character.write (c);
         if (c == '\r')
-            writeCharacter ('\n');
+            character.write ('\n');
     }
 
     return c;
 }
 
-void KD11ODT::writeCharacter (u8 c)
-{
-    // ToDo: Check for transmit ready?
-    bus_->writeWord (0177566, static_cast<u8> (c));
-}
+
 
 // Printing a new-line (\n) on a window in raw mode results for Windows
 // in a <CR><LF> sequence and for Linux in just a <LF>. So to get the same
@@ -92,9 +62,9 @@ void KD11ODT::writeString (string str)
     {
 #ifdef __linux__
         if (c == '\n')
-            writeCharacter ('\r');
+            write ('\r');
 #endif // __linux__
-        writeCharacter (c);
+        character.write (c);
     }
 }
 
@@ -263,19 +233,16 @@ void KD11ODT::setRegisterValue ()
         writeString ("?\n");
 }
 
-// Execute the ODT command parser
-void KD11ODT::run ()
-{
-    while (odtRunning_)
-    {
-        // Read a character from the console, create the appropriate event
-        // from it and process that event
-        dispatch (createEvent (readAndEchoCharacter ()));
-    }
-}
-
 // Stop execution of ODT
 void KD11ODT::stop ()
 {
     odtRunning_ = false;
+}
+
+// Process the given character in the state machine, returning true if we can
+// accept another character, i.e. the state machine is still running.
+bool KD11ODT::processCharacter (u8 character)
+{
+    dispatch (createEvent (echoCharacter (character)));
+    return odtRunning_;
 }

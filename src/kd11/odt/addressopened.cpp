@@ -16,7 +16,7 @@ State KD11ODT::transition (AddressOpened_3 &&, DigitEntered digitEntered)
 // EnteringAddressValue_7 state.
 State KD11ODT::transition (AddressOpened_3 &&, RuboutEntered)
 {
-    writeCharacter ('\\');
+    character.write ('\\');
     digitSeries_ = '0';
     return EnteringAddressValue_7 {};
 }
