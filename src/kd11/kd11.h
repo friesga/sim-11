@@ -75,17 +75,18 @@ namespace kd11_f
 		void BHALTReceiver (bool signalValue);
 		void BDCOKReceiver (bool signalValue);
 		void ExitReceiver (bool signalValue);
+		void RestartReceiver (bool signalValue);
 
 		State powerUpRoutine ();
 
 		// Definition of the KD11 state machine
 		State transition (PowerOff&&, PowerOk);			// -> Halted/Running
 		void entry (Running);
-		State transition (Running&&, Reset);			// -> Running
+		State transition (Running&&, Reset);			// -> Halted/Running
 		State transition (Running&&, Halt);				// -> Halted
 		void entry (Halted);
 		State transition (Halted&&, Start);				// -> Running
-		State transition (Halted&&, Reset);				// -> Running
+		State transition (Halted&&, Reset);				// -> Halted/Running
 
 		template <typename S>
         State transition (S&& state, Exit)

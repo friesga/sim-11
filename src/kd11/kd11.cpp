@@ -46,6 +46,7 @@ void KD11::subscribeToSignals ()
     bus_->BHALT().subscribe (bind (&KD11::BHALTReceiver, this, _1));
     bus_->BDCOK().subscribe (bind (&KD11::BDCOKReceiver, this, _1));
     bus_->EXIT().subscribe (bind (&KD11::ExitReceiver, this, _1));
+    bus_->RESTART().subscribe (bind (&KD11::RestartReceiver, this, _1));
 }
 
 KD11CPU& KD11::cpu ()
@@ -78,6 +79,12 @@ void KD11::BDCOKReceiver (bool signalValue)
 void KD11::ExitReceiver (bool signalValue)
 {
     signalEventQueue_.push (Exit {});
+}
+
+void KD11::RestartReceiver (bool signalValue)
+{
+    if (signalValue)
+        signalEventQueue_.push (Reset {});
 }
 
 // The reaction on a power-up is configured by the power-up mode. Three
@@ -194,17 +201,29 @@ bool KD11::signalIsOfType ()
 void KD11::runODT ()
 {
     Character character {bus_};
+    Event haltEvent {};
 
     odt_ = make_unique<KD11ODT> (bus_, cpu_);
 
-    while (!signalAvailable () || signalIsOfType<Halt> ())
+    while (true)
     {
+        if (signalAvailable ())
+        {
+            // If the signal is a HALT remove the event and ignore it
+            // so we don't leave the Halted state.
+            if (signalIsOfType<Halt> ())
+                signalEventQueue_.tryPop (haltEvent);
+            else
+                return;
+        }
+
         if (character.available ())
         {
             if (!odt_->processCharacter (character.read ()))
             {
+                // The user issued a Proceed or Go command so start the CPU
                 signalEventQueue_.push (Start {});
-                break;
+                return;
             }
         }
 

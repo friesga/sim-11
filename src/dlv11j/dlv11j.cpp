@@ -289,12 +289,12 @@ void DLV11J::receive (int channelNr, unsigned char c)
 	{
 		if (ch3BreakResponse_ == DLV11Config::Ch3BreakResponse::Halt)
 		{
-			bus_->BHALT().cycle ();
+			bus_->BHALT ().cycle ();
 			return;
 		}
 		else if (ch3BreakResponse_ == DLV11Config::Ch3BreakResponse::Boot)
 		{
-			bus_->BDCOK().cycle ();
+			bus_->RESTART ().cycle ();
 			return;
 		}
 	}

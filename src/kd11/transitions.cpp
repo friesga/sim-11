@@ -4,6 +4,7 @@ using namespace kd11_f;
 using namespace KD11_ODT;
 
 using std::make_unique;
+using std::monostate;
 
 kd11_f::State KD11::transition (PowerOff&&, PowerOk)
 {
@@ -50,7 +51,7 @@ kd11_f::State KD11::transition (Halted&&, Start)
 
 kd11_f::State KD11::transition (Halted&&, Reset)
 {
-    return Running {};
+    return powerUpRoutine ();
 }
 
 void KD11::entry (ExitPoint)

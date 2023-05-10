@@ -118,7 +118,7 @@ void BA11_N::render ()
 void BA11_N::restartSwitchClicked (Button::State state)
 {
     if (state == Button::State::Up)
-        bus_->BDCOK().cycle ();
+        bus_->RESTART ().cycle ();
 }
 
 void BA11_N::haltSwitchToggled (Button::State state)

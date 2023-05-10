@@ -10,6 +10,11 @@ Signal &Qbus::BDCOK ()
     return BDCOK_;
 }
 
+Signal &Qbus::RESTART ()
+{
+    return RESTART_;
+}
+
 Signal &Qbus::BHALT ()
 {
     return BHALT_;
