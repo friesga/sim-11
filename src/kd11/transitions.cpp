@@ -52,3 +52,8 @@ kd11_f::State KD11::transition (Halted&&, Reset)
 {
     return Running {};
 }
+
+void KD11::entry (ExitPoint)
+{
+    kd11Running_ = false;
+}

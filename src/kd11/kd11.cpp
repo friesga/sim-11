@@ -25,7 +25,8 @@ using namespace kd11_f;
 KD11::KD11 (Qbus* bus)
     :
     BusDevice (bus),
-    powerUpMode_ {KD11Config::PowerUpMode::Bootstrap}
+    powerUpMode_ {KD11Config::PowerUpMode::Bootstrap},
+    kd11Running_ {true}
 {
     subscribeToSignals ();
 }
@@ -33,7 +34,8 @@ KD11::KD11 (Qbus* bus)
 KD11::KD11 (Qbus *bus, shared_ptr<KD11Config> kd11Config)
     :
     BusDevice (bus),
-    powerUpMode_ {kd11Config->powerUpMode}
+    powerUpMode_ {kd11Config->powerUpMode},
+    kd11Running_ {true}
 {
     subscribeToSignals ();   
 }
@@ -43,6 +45,7 @@ void KD11::subscribeToSignals ()
 {
     bus_->BHALT().subscribe (bind (&KD11::BHALTReceiver, this, _1));
     bus_->BDCOK().subscribe (bind (&KD11::BDCOKReceiver, this, _1));
+    bus_->EXIT().subscribe (bind (&KD11::ExitReceiver, this, _1));
 }
 
 KD11CPU& KD11::cpu ()
@@ -69,6 +72,12 @@ void KD11::BHALTReceiver (bool signalValue)
 void KD11::BDCOKReceiver (bool signalValue)
 {
     signalQueue_.push (PowerOk {});
+}
+
+
+void KD11::ExitReceiver (bool signalValue)
+{
+    signalQueue_.push (Exit {});
 }
 
 // The reaction on a power-up is configured by the power-up mode. Three
@@ -152,8 +161,7 @@ void KD11::run ()
 {
     Event event;
 
-    // ToDo: Replace by transition to ExitPoint?
-    while (!bus_->EXIT())
+    while (kd11Running_)
     {
         // Read a character from the console, create the appropriate event
         // from it and process that event

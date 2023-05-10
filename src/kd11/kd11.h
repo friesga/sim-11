@@ -26,21 +26,25 @@ namespace kd11_f
 	struct Start {};
 	struct Reset {};
 	struct PowerDown {};
+	struct Exit {};
 
 	using Event = std::variant<PowerOk,
 		Halt,
 		Start,
 		Reset,
-		PowerDown>;
+		PowerDown,
+		Exit>;
 
 	// Definition of the states
 	struct PowerOff {};
 	struct Running {};
 	struct Halted {};
+	struct ExitPoint {};
 
 	using State = std::variant<PowerOff,
 		Running,
 		Halted,
+		ExitPoint,
 		monostate>;
 
 	// The class KD11 is composed of the KD11 CPU and the KD11 ODT.
@@ -70,6 +74,7 @@ namespace kd11_f
 		// Declare the signal receivers
 		void BHALTReceiver (bool signalValue);
 		void BDCOKReceiver (bool signalValue);
+		void ExitReceiver (bool signalValue);
 
 		State powerUpRoutine ();
 
@@ -81,6 +86,13 @@ namespace kd11_f
 		void entry (Halted);
 		State transition (Halted&&, Start);				// -> Running
 		State transition (Halted&&, Reset);				// -> Running
+
+		template <typename S>
+        State transition (S&& state, Exit)
+        {
+			return ExitPoint {};
+		}
+		void entry (ExitPoint);
 
 		// Define the default transition for transitions not explicitly
         // defined above. The default transition implies the event is ignored.
@@ -99,6 +111,7 @@ namespace kd11_f
 		KD11CPU cpu_ {bus_};
 		unique_ptr<KD11ODT>	odt_ {};
 		KD11Config::PowerUpMode powerUpMode_;
+		bool kd11Running_;
 
 		// Definition of a queue for the processing of bus signals
 		ThreadSafeQueue<Event> signalQueue_;
