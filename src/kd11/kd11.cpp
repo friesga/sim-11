@@ -5,6 +5,7 @@
 #include <memory>
 #include <thread>
 #include <chrono>
+#include <string>
 
 using std::make_unique;
 using std::shared_ptr;
@@ -14,6 +15,7 @@ using std::lock_guard;
 using std::mutex;
 using std::this_thread::sleep_for;
 using std::chrono::milliseconds;
+using std::string;
 
 using namespace kd11_f;
 
@@ -52,9 +54,7 @@ KD11CPU& KD11::cpu ()
 // ODT mode the signal is ignored.
 void KD11::BHALTReceiver (bool signalValue)
 {
-    if (signalValue)
-        cpu_.halt ();
-    return;
+    signalQueue_.push (Halt {});
 }
 
 // The BDCOK signal triggers the procesor power-up routine
@@ -68,13 +68,7 @@ void KD11::BHALTReceiver (bool signalValue)
 // has to be synchronized between the two threads.
 void KD11::BDCOKReceiver (bool signalValue)
 {
-    if (signalValue)
-    {
-        // Guard against CPU access while an instruction is executed
-	    lock_guard<mutex> guard {cpuMutex_};
-
-        powerUpRoutine ();
-    }
+    signalQueue_.push (PowerOk {});
 }
 
 // The reaction on a power-up is configured by the power-up mode. Three
@@ -88,10 +82,13 @@ void KD11::BDCOKReceiver (bool signalValue)
 // During the power-up sequence, the processor asserts BINIT L in response to
 // a passive (low) power supply-generated BDCOK H signal. When BDCOK H goes
 // active (high), the processor terminates BINIT L and the jumper-selected
-// power-up sequence is executed.
-// (EK-LSI11-TM-003)
+// power-up sequence is executed. (EK-LSI11-TM-003)
+// 
+// The BDCOK and BPOK signals are replaced by the PowerOk Signal. 
 //
-void KD11::powerUpRoutine ()
+// The function will return the state to transition to.
+//
+kd11_f::State KD11::powerUpRoutine ()
 {
     cpu_.reset ();
     bus_->BINIT().cycle ();
@@ -100,7 +97,7 @@ void KD11::powerUpRoutine ()
     {
         case KD11Config::PowerUpMode::Vector:
             cpu_.setTrap (&powerFail);
-            break;
+            return Running {};
 
         case KD11Config::PowerUpMode::ODT:
             // Halt the processor (if it isn't already halted). This will
@@ -108,16 +105,16 @@ void KD11::powerUpRoutine ()
             // KD11::step(). If the processor already is in ODT mode the
             // signal is ignored and this is a no-operation.
             cpu_.halt ();
-            break;
+            return Halted {};
 
         case KD11Config::PowerUpMode::Bootstrap:
-            // If an ODT instance is running stop it. Then start the processor
-            // at the standard boot address
-            if (odt_ != nullptr)
-                odt_->stop ();
+            // Start the processor at the standard boot address
             cpu_.start (KD11CPU::bootAddress);
-            break;
+            return Running {};
     }
+
+    // Satisfying the compiler
+    throw string ("Unknown PowerUpMode");
 }
 
 void KD11::step ()
@@ -142,17 +139,6 @@ void KD11::step ()
                 cpu_.halt ();
             break;
         }
-
-        /*
-        case CpuState::WAIT:
-        {
-            // Guard against CPU access while a BDCOK is received and the power-up
-            // is performed.
-            lock_guard<mutex> guard {cpuMutex_};
-            cpu_.handleTraps ();
-            break;
-        }
-        */
     }
 }
 
@@ -164,54 +150,21 @@ void KD11::waitForBDCOK ()
 
 void KD11::run ()
 {
-    /*
+    Event event;
+
+    // ToDo: Replace by transition to ExitPoint?
     while (!bus_->EXIT())
     {
-        switch (kd11State_)
-        {
-            case KD11State::PowerOff:
-                waitForBDCOK ();
-                break;
-
-            case KD11State::Restart:
-                kd11State = powerUpRoutine ();
-                break;
-
-		    case KD11State::Running:
-                // ToDo: KD11CPU::step() returns true when state is RUN,
-                // false otherwise.
-                // Traps are to be handled inside the CPU and therefore within
-                // the step() function.
-                while (bus_->BDCOK() && !bus_->BHALT() &&
-                    cpu_.step ());
-
-                if (bus_->BHALT())
-                {
-                    cpu_.halt ();
-                    kd11State_ = KD11State::Halt;
-                }
-                else if (!bus_->BDCOK())
-                    kd11State_ = KD11State::Restart;
-                else if (!bus_->BDCOK())
-                    kd11State_ = KD11State::Powerfail;
-                break;
-
-            case KD11State::Halt:
-                // On every entry to ODT a new KD11ODT object is created to make
-                // sure it is initialized properly. The Microcomputer and Memories
-                // Handbook states: "A / issued immediately after the processor
-                // enters ODT mode causes a ?<CR><LF> to be printed because a
-                // location has not yet been opened.
-                odt_ = make_unique<KD11ODT> (bus_, cpu_);
-                odt_->run ();
-                // ToDo: cpu_.proceed() hier aanroepen?
-                break;
-
-            case KD11State::Powerfail:
-                break;
-        }
+        // Read a character from the console, create the appropriate event
+        // from it and process that event
+        signalQueue_.waitAndPop (event);
+        dispatch (event);
     }
-    */
+}
+
+bool KD11::signalAvailable ()
+{
+    return signalQueue_.size () > 0;
 }
 
 // On every entry to ODT a new KD11ODT object is created to make
@@ -219,22 +172,25 @@ void KD11::run ()
 // Handbook states: "A / issued immediately after the processor
 // enters ODT mode causes a ?<CR><LF> to be printed because a
 // location has not yet been opened.
+//
+// processCharacter() will return false when it cannot process characters
+// anymore because either a Proceed or Go command was entered.
 void KD11::runODT ()
 {
     Character character {bus_};
 
     odt_ = make_unique<KD11ODT> (bus_, cpu_);
 
-    while (true)
+    while (!signalAvailable ())
     {
         if (character.available ())
         {
             if (!odt_->processCharacter (character.read ()))
-                return;
+            {
+                signalQueue_.push (Start {});
+                break;
+            }
         }
-
-        // if (signalAvailable ())
-        //     return createEventFromSignal ();
 
         // Neither a character nor a bus signal available
         sleep_for (std::chrono::milliseconds (50));

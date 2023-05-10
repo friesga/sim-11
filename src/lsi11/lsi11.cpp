@@ -26,11 +26,11 @@ LSI11::~LSI11 ()
 	delete rlv12_;
 }
 
-// Reset the bus and all devices on the bus. The bus will forward the BDCOK
+// Reset the bus and all devices on the bus. The bus will forward the BINIT
 // signal to all devices on the bus subscribed to that signal, including
 // the bus itself.
 void LSI11::reset ()
 {
-	bus_.BDCOK().cycle ();
+	bus_.BINIT().cycle ();
 }
 

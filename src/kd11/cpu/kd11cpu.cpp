@@ -117,7 +117,11 @@ void KD11CPU::returnFISresult (Float result, u16 registerNumber)
 // The normal instruction flow can be interrupted by the setting of the BHALT
 // or BDCOK bus signal. These signals are handled in their corresponding KD11
 // receivers which then calls a KD11CPU control function.
-void KD11CPU::step ()
+//
+// This function will return if the CPU is in the state RUN and another
+// instruction can be executed, false otherwise. In the latter case a HALT
+// instruction was executed.
+bool KD11CPU::step ()
 {
     // Generate a Trace trap if the trace bit is set, unless the previous
     // instruction was a RTT or another trap is pending.
@@ -134,7 +138,7 @@ void KD11CPU::step ()
     handleTraps ();
 
     if (runState != CpuState::RUN)
-        return;
+        return false;
 
     if(trace.isActive ())
     {
@@ -163,6 +167,8 @@ void KD11CPU::step ()
         trace.duration ("Instruction",
             (std::chrono::duration_cast<std::chrono::nanoseconds> (end - start)).count ());
     }
+
+    return (runState != CpuState::HALT);
 }
 
 // Execute one instruction

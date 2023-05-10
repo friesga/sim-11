@@ -94,6 +94,9 @@ void BA11_N::bezel ()
     // the state to be shown.
     bus_->SRUN().subscribe (bind (&BA11_N::SRUNReceiver, this, _1));
 
+    // Set DC power ok
+    bus_->BDCOK().set (true);
+
     // Start rendering the panel
     render ();
 

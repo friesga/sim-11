@@ -184,6 +184,7 @@ set (SIM11_SRCS
     src/bdv11/bdv11_e53.cpp
     src/dlv11j/dlv11j.cpp
     src/kd11/kd11.cpp
+    src/kd11/transitions.cpp
     src/kd11/cpu/kd11cpu.cpp
     src/kd11/cpu/cpucontrol.cpp
     src/kd11/character/character.cpp
@@ -340,6 +341,7 @@ set (SIM11_TEST_SRCS
     src/busdevice/writebyte.cpp
     src/lib/gotapproval.cpp
     src/kd11/kd11.cpp
+    src/kd11/transitions.cpp
     src/kd11/cpu/kd11cpu.cpp
     src/kd11/cpu/cpucontrol.cpp
     src/kd11/character/character.cpp

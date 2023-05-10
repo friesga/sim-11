@@ -63,7 +63,7 @@ public:
 	friend class Instruction;
 
 	KD11CPU (Qbus *bus);
-	void step ();
+	bool step ();
 	CpuState currentCpuState ();
 
 private:

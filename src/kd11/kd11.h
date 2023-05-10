@@ -4,6 +4,8 @@
 #include "cpu/kd11cpu.h"
 #include "odt/kd11odt.h"
 #include "configdata/kd11config/kd11config.h"
+#include "variantfsm/fsm.h"
+#include "threadsafecontainers/threadsafequeue.h"
 
 using namespace KD11_ODT;
 
@@ -17,8 +19,30 @@ using std::defer_lock;
 
 namespace kd11_f
 {
+	// Definition of the events to be processed by the KD11
+	struct PowerOk {};
+	struct Halt {};
+	struct Start {};
+	struct Reset {};
+	struct PowerDown {};
+
+	using Event = std::variant<PowerOk,
+		Halt,
+		Start,
+		Reset,
+		PowerDown>;
+
+	// Definition of the states
+	struct PowerOff {};
+	struct Running {};
+	struct Halted {};
+
+	using State = std::variant<PowerOff,
+		Running,
+		Halted>;
+
 	// The class KD11 is composed of the KD11 CPU and the KD11 ODT.
-	class KD11 : public BusDevice
+	class KD11 : public BusDevice, public variantFsm::Fsm<KD11, Event, State>
 	{
 	public:
 		KD11 (Qbus *bus);
@@ -45,25 +69,40 @@ namespace kd11_f
 		void BHALTReceiver (bool signalValue);
 		void BDCOKReceiver (bool signalValue);
 
-		void powerUpRoutine ();
+		State powerUpRoutine ();
+
+		// Definition of the KD11 state machine
+		State transition (PowerOff&&, PowerOk);			// -> Halted/Running
+		void entry (Running);
+		State transition (Running&&, Reset);			// -> Running
+		State transition (Running&&, Halt);				// -> Halted
+		void entry (Halted);
+		State transition (Halted&&, Start);				// -> Running
+		State transition (Halted&&, Reset);				// -> Running
+
+		// Define the default transition for transitions not explicitly
+        // defined above. The default transition implies the event is ignored.
+        template <typename S, typename E>
+        State transition (S&& state, E)
+        {
+			return std::move (state);
+		}
+
+        // As we make use of exit/entry functions, we must handle all cases.
+        // The default entry/exit action is an immediate return.
+        template <typename S> void exit (variantFsm::TagType<S>) {}
+        template <typename S> void entry (S&) {}
 
 	private:
-		enum class KD11State
-		{
-			PowerOff,
-			Restart,
-			Running,
-			Halt,
-			Powerfail
-		};
-
 		KD11CPU cpu_ {bus_};
 		unique_ptr<KD11ODT>	odt_ {};
 		KD11Config::PowerUpMode powerUpMode_;
-		KD11State kd11State_;
 
+		// Definition of a queue for the processing of bus signals
+		ThreadSafeQueue<Event> signalQueue_;
 
 		// Safe guard against simultaneous CPU access
+		// ToDo: To be deleted!
 		mutex cpuMutex_;
 
 		InterruptRequest const powerFail {RequestType::Trap, TrapPriority::PowerFail, 0, 024};
@@ -71,6 +110,7 @@ namespace kd11_f
 		void subscribeToSignals ();
 		void waitForBDCOK ();
 		void runODT ();
+		bool signalAvailable ();
 	};
 }
 #endif // !_KD11_H_
