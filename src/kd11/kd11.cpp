@@ -15,7 +15,7 @@ using std::lock_guard;
 using std::mutex;
 using std::this_thread::sleep_for;
 using std::chrono::milliseconds;
-using std::string;
+using std::holds_alternative;
 
 using namespace kd11_f;
 
@@ -50,11 +50,11 @@ KD11CPU& KD11::cpu ()
     return cpu_;
 }
 
-// The BHALT signals halts the processor. If the processor already is in
-// ODT mode the signal is ignored.
+// The BHALT signal halts the processor. 
 void KD11::BHALTReceiver (bool signalValue)
 {
-    signalQueue_.push (Halt {});
+    if (signalValue)
+        signalQueue_.push (Halt {});
 }
 
 // The BDCOK signal triggers the procesor power-up routine
@@ -64,8 +64,8 @@ void KD11::BHALTReceiver (bool signalValue)
 // - The user hits the BREAK key and the boot response is configured.
 //
 // Note that this function will be executed in a different thread from the
-// thread in which the CPU is running. Access to the CPU data therefore
-// has to be synchronized between the two threads.
+// thread in which the CPU is running. Access to the signal event is 
+// synchronized via the ThreadSafeQueue.
 void KD11::BDCOKReceiver (bool signalValue)
 {
     signalQueue_.push (PowerOk {});
@@ -167,6 +167,14 @@ bool KD11::signalAvailable ()
     return signalQueue_.size () > 0;
 }
 
+// This function returns true if the first element in the signal queue is
+// a variant holding an Event of the specified type.
+template <typename T>
+bool KD11::signalIsOfType ()
+{
+    return holds_alternative<T> (signalQueue_.first ());
+}
+
 // On every entry to ODT a new KD11ODT object is created to make
 // sure it is initialized properly. The Microcomputer and Memories
 // Handbook states: "A / issued immediately after the processor
@@ -181,7 +189,7 @@ void KD11::runODT ()
 
     odt_ = make_unique<KD11ODT> (bus_, cpu_);
 
-    while (!signalAvailable ())
+    while (!signalAvailable () || signalIsOfType<Halt> ())
     {
         if (character.available ())
         {

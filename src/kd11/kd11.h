@@ -16,6 +16,7 @@ using std::shared_ptr;
 using std::mutex;
 using std::unique_lock;
 using std::defer_lock;
+using std::monostate;
 
 namespace kd11_f
 {
@@ -39,7 +40,8 @@ namespace kd11_f
 
 	using State = std::variant<PowerOff,
 		Running,
-		Halted>;
+		Halted,
+		monostate>;
 
 	// The class KD11 is composed of the KD11 CPU and the KD11 ODT.
 	class KD11 : public BusDevice, public variantFsm::Fsm<KD11, Event, State>
@@ -85,7 +87,7 @@ namespace kd11_f
         template <typename S, typename E>
         State transition (S&& state, E)
         {
-			return std::move (state);
+			return monostate {};
 		}
 
         // As we make use of exit/entry functions, we must handle all cases.
@@ -111,6 +113,7 @@ namespace kd11_f
 		void waitForBDCOK ();
 		void runODT ();
 		bool signalAvailable ();
+		template <typename T> bool signalIsOfType ();
 	};
 }
 #endif // !_KD11_H_
