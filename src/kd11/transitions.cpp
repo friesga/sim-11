@@ -18,7 +18,7 @@ void KD11::entry (Running)
         // latter case one instruction is executed and thus the CPU is single
         // stepped.
         if (!cpu_.step () || bus_->BHALT())
-            signalQueue_.push (Halt {});
+            signalEventQueue_.push (Halt {});
     }
     bus_->SRUN ().set (false);
 }

@@ -113,8 +113,8 @@ namespace kd11_f
 		KD11Config::PowerUpMode powerUpMode_;
 		bool kd11Running_;
 
-		// Definition of a queue for the processing of bus signals
-		ThreadSafeQueue<Event> signalQueue_;
+		// Definition of a queue for the processing of bus signal events
+		ThreadSafeQueue<Event> signalEventQueue_;
 
 		// Safe guard against simultaneous CPU access
 		// ToDo: To be deleted!

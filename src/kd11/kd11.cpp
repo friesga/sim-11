@@ -57,7 +57,7 @@ KD11CPU& KD11::cpu ()
 void KD11::BHALTReceiver (bool signalValue)
 {
     if (signalValue)
-        signalQueue_.push (Halt {});
+        signalEventQueue_.push (Halt {});
 }
 
 // The BDCOK signal triggers the procesor power-up routine
@@ -71,13 +71,13 @@ void KD11::BHALTReceiver (bool signalValue)
 // synchronized via the ThreadSafeQueue.
 void KD11::BDCOKReceiver (bool signalValue)
 {
-    signalQueue_.push (PowerOk {});
+    signalEventQueue_.push (PowerOk {});
 }
 
 
 void KD11::ExitReceiver (bool signalValue)
 {
-    signalQueue_.push (Exit {});
+    signalEventQueue_.push (Exit {});
 }
 
 // The reaction on a power-up is configured by the power-up mode. Three
@@ -165,14 +165,14 @@ void KD11::run ()
     {
         // Read a character from the console, create the appropriate event
         // from it and process that event
-        signalQueue_.waitAndPop (event);
+        signalEventQueue_.waitAndPop (event);
         dispatch (event);
     }
 }
 
 bool KD11::signalAvailable ()
 {
-    return signalQueue_.size () > 0;
+    return signalEventQueue_.size () > 0;
 }
 
 // This function returns true if the first element in the signal queue is
@@ -180,7 +180,7 @@ bool KD11::signalAvailable ()
 template <typename T>
 bool KD11::signalIsOfType ()
 {
-    return holds_alternative<T> (signalQueue_.first ());
+    return holds_alternative<T> (signalEventQueue_.first ());
 }
 
 // On every entry to ODT a new KD11ODT object is created to make
@@ -203,7 +203,7 @@ void KD11::runODT ()
         {
             if (!odt_->processCharacter (character.read ()))
             {
-                signalQueue_.push (Start {});
+                signalEventQueue_.push (Start {});
                 break;
             }
         }
