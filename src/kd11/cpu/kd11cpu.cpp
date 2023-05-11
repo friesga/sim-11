@@ -137,8 +137,18 @@ bool KD11CPU::step ()
     }
     handleTraps ();
 
-    if (runState != CpuState::RUN)
+    // The continutaion of the step depends on the run state:
+    // - HALT: the CPU is halted and cannot execute the step, return false,
+	// - RUN: the CPU will execute the next instruction,
+	// - WAIT: the CPU is running but is still waiting for an interrupt, return true
+	// - INHIBIT_TRACE: the CPU is running but no trace trap has to be
+    //   executed on this instruction. At this point in the step the cpu cannot
+    //   be in this state.
+    if (runState == CpuState::HALT)
         return false;
+
+    if (runState == CpuState::WAIT)
+        return true;
 
     if(trace.isActive ())
     {
