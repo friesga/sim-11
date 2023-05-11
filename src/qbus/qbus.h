@@ -53,7 +53,7 @@ public:
 	// signal. The signal is a series of pulses which occur at 3-5" intervals
 	// whenever the processor is in the Run mode.
 	//
-	// The BDCOK signal is triggered:
+	// The BPOK signal is triggered:
 	// - On power up or,
 	// - When the console BREAK key is hit and the boot response is configured.
 	// On assertion of this signal the processor executes the power up routine.
@@ -73,7 +73,7 @@ public:
 	// we define an exit signal indicating the simulator has to exit.
 	//
 	Signal &SRUN ();
-	Signal &BDCOK ();
+	Signal &BPOK ();
 	Signal &RESTART ();
 	Signal &BHALT ();
 	Signal &BINIT ();
@@ -104,7 +104,7 @@ private:
 
 	// Definition of the bus signals
 	Signal SRUN_;
-	Signal BDCOK_;
+	Signal BPOK_;
 	Signal RESTART_;
 	Signal BHALT_;
 	Signal BINIT_;

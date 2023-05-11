@@ -21,29 +21,33 @@ using std::monostate;
 namespace kd11_f
 {
 	// Definition of the events to be processed by the KD11
-	struct PowerOk {};
+	struct BPOK_high {};
 	struct Halt {};
 	struct Start {};
 	struct Reset {};
-	struct PowerDown {};
+	struct BPOK_low {};
+	struct BDCOK_low {};
 	struct Exit {};
 
-	using Event = std::variant<PowerOk,
+	using Event = std::variant<BPOK_high,
 		Halt,
 		Start,
 		Reset,
-		PowerDown,
+		BPOK_low,
+		BDCOK_low,
 		Exit>;
 
 	// Definition of the states
 	struct PowerOff {};
 	struct Running {};
 	struct Halted {};
+	struct PowerFail {};
 	struct ExitPoint {};
 
 	using State = std::variant<PowerOff,
 		Running,
 		Halted,
+		PowerFail,
 		ExitPoint,
 		monostate>;
 
@@ -53,7 +57,6 @@ namespace kd11_f
 	public:
 		KD11 (Qbus *bus);
 		KD11 (Qbus *bus, shared_ptr<KD11Config> kd11Config);
-		void step ();
 		void run ();
 	
 		// Give main() access to the CPU to set PC and runState
@@ -73,20 +76,24 @@ namespace kd11_f
 
 		// Declare the signal receivers
 		void BHALTReceiver (bool signalValue);
-		void BDCOKReceiver (bool signalValue);
+		void BPOKReceiver (bool signalValue);
 		void ExitReceiver (bool signalValue);
 		void RestartReceiver (bool signalValue);
 
 		State powerUpRoutine ();
 
 		// Definition of the KD11 state machine
-		State transition (PowerOff&&, PowerOk);			// -> Halted/Running
+		State transition (PowerOff&&, BPOK_high);		// -> Halted/Running
 		void entry (Running);
 		State transition (Running&&, Reset);			// -> Halted/Running
 		State transition (Running&&, Halt);				// -> Halted
+		// State transition (Running&&, BPOK_low);			// -> PowerFail
 		void entry (Halted);
 		State transition (Halted&&, Start);				// -> Running
 		State transition (Halted&&, Reset);				// -> Halted/Running
+		State transition (Halted&&, BPOK_low);			// -> PowerOff
+		// void entry (PowerFail);
+		// State transition (PowerFail&&, BDCOK_low);	// -> PowerOff
 
 		template <typename S>
         State transition (S&& state, Exit)
@@ -124,7 +131,6 @@ namespace kd11_f
 		InterruptRequest const powerFail {RequestType::Trap, TrapPriority::PowerFail, 0, 024};
 
 		void subscribeToSignals ();
-		void waitForBDCOK ();
 		void runODT ();
 		bool signalAvailable ();
 		template <typename T> bool signalIsOfType ();

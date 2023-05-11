@@ -274,11 +274,11 @@ void DLV11J::reset ()
 void DLV11J::receive (int channelNr, unsigned char c)
 {
 	// Hitting the BREAK key on the console initiates a Channel 3 Break Reponse.
-	// The response is either cycling the BHALT signal, cycling the BDCOK signal
+	// The response is either cycling the BHALT signal, cycling the RESTART signal
 	// or a no-operation.
 	// 
 	// Cycling the BHALT signal results in halting the processor and cycling the
-	// BDCOK signal results in the execution of the power up routine. The signals
+	// RESTART signal results in the execution of the power up routine. The signals
 	// are cycled as the key presses have to be treated as triggers.
 	// 
 	// As we don't have a real BREAK key at our disposal and a BREAK key press

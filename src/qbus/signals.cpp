@@ -5,9 +5,9 @@ Signal &Qbus::SRUN ()
     return SRUN_;
 }
 
-Signal &Qbus::BDCOK ()
+Signal &Qbus::BPOK ()
 {
-    return BDCOK_;
+    return BPOK_;
 }
 
 Signal &Qbus::RESTART ()

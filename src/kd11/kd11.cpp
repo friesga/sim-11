@@ -40,11 +40,11 @@ KD11::KD11 (Qbus *bus, shared_ptr<KD11Config> kd11Config)
     subscribeToSignals ();   
 }
 
-// Get notifications on the state of the BHALT and BDCOK signals
+// Get notifications on the state of the signals
 void KD11::subscribeToSignals ()
 {
     bus_->BHALT().subscribe (bind (&KD11::BHALTReceiver, this, _1));
-    bus_->BDCOK().subscribe (bind (&KD11::BDCOKReceiver, this, _1));
+    bus_->BPOK().subscribe (bind (&KD11::BPOKReceiver, this, _1));
     bus_->EXIT().subscribe (bind (&KD11::ExitReceiver, this, _1));
     bus_->RESTART().subscribe (bind (&KD11::RestartReceiver, this, _1));
 }
@@ -61,7 +61,7 @@ void KD11::BHALTReceiver (bool signalValue)
         signalEventQueue_.push (Halt {});
 }
 
-// The BDCOK signal triggers the procesor power-up routine
+// The BPOK signal triggers the procesor power-up routine
 // 
 // The reset is executed when either:
 // - The system has been powered up,
@@ -70,9 +70,12 @@ void KD11::BHALTReceiver (bool signalValue)
 // Note that this function will be executed in a different thread from the
 // thread in which the CPU is running. Access to the signal event is 
 // synchronized via the ThreadSafeQueue.
-void KD11::BDCOKReceiver (bool signalValue)
+void KD11::BPOKReceiver (bool signalValue)
 {
-    signalEventQueue_.push (PowerOk {});
+    if (signalValue)
+        signalEventQueue_.push (BPOK_high {});
+    else
+        signalEventQueue_.push (BPOK_low {});
 }
 
 
@@ -99,8 +102,6 @@ void KD11::RestartReceiver (bool signalValue)
 // a passive (low) power supply-generated BDCOK H signal. When BDCOK H goes
 // active (high), the processor terminates BINIT L and the jumper-selected
 // power-up sequence is executed. (EK-LSI11-TM-003)
-// 
-// The BDCOK and BPOK signals are replaced by the PowerOk Signal. 
 //
 // The function will return the state to transition to.
 //
@@ -131,37 +132,6 @@ kd11_f::State KD11::powerUpRoutine ()
 
     // Satisfying the compiler
     throw string ("Unknown PowerUpMode");
-}
-
-void KD11::step ()
-{
-    switch (cpu_.currentCpuState ())
-    {
-        case CpuState::HALT:
-            runODT ();
-            break;
-
-        case CpuState::RUN:
-        case CpuState::INHIBIT_TRACE:
-        case CpuState::WAIT:
-        {
-            // Guard against CPU access while a BDCOK is received and the power-up
-            // is performed.
-	        lock_guard<mutex> guard {cpuMutex_};
-            cpu_.step ();
-
-            // If BHALT is true the CPU must be single stepped
-            if (bus_->BHALT())
-                cpu_.halt ();
-            break;
-        }
-    }
-}
-
-void KD11::waitForBDCOK ()
-{
-    while (!bus_->BDCOK())
-        sleep_for (milliseconds (10));
 }
 
 void KD11::run ()

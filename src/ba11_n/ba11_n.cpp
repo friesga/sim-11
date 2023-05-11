@@ -73,9 +73,9 @@ void BA11_N::bezel ()
 
     frontWindow_->createFront ("../../assets/11_03 front.png", 0, 0);
     pwrOkLed_ = frontWindow_->createIndicator ("../../assets/red led.png", 
-        Indicator::State::On, 515, 114, 12, 12);
+        Indicator::State::Off, 515, 114, 12, 12);
     runLed_ = frontWindow_->createIndicator ("../../assets/red led.png", 
-        Indicator::State::On, 534, 114, 12, 12);
+        Indicator::State::Off, 534, 114, 12, 12);
 
     restartSwitch_ = frontWindow_->createMomentaryButton ("../../assets/switch down.png",
         "../../assets/switch up.png", 
@@ -93,9 +93,6 @@ void BA11_N::bezel ()
     // Now the RUN led is created when can subscribe to the signal indicating
     // the state to be shown.
     bus_->SRUN().subscribe (bind (&BA11_N::SRUNReceiver, this, _1));
-
-    // Set DC power ok
-    bus_->BDCOK().set (true);
 
     // Start rendering the panel
     render ();
@@ -135,9 +132,22 @@ void BA11_N::haltSwitchToggled (Button::State state)
     }
 }
 
-// ToDo: Implement AUX ON/OFF switch behaviour
 void BA11_N::auxOnOffSwitchToggled (Button::State state)
-{}
+{
+    switch (state)
+    {
+        case Button::State::Down:
+            pwrOkLed_->show (Indicator::State::Off);
+            bus_->BPOK ().set (false);
+            break;
+
+        case Button::State::Up:
+            // Set DC power ok
+            pwrOkLed_->show (Indicator::State::On);
+            bus_->BPOK ().set (true);
+            break;
+    }
+}
 
 // The RUN led reflects the state of the SRUN signal.
 //
