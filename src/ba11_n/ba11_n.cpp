@@ -142,7 +142,7 @@ void BA11_N::auxOnOffSwitchToggled (Button::State state)
             break;
 
         case Button::State::Up:
-            // Set DC power ok
+            // Set Power OK
             pwrOkLed_->show (Indicator::State::On);
             bus_->BPOK ().set (true);
             break;

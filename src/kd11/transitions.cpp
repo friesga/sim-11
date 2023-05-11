@@ -34,6 +34,13 @@ kd11_f::State KD11::transition (Running&&, Halt)
     return Halted {};
 }
 
+
+kd11_f::State KD11::transition (Running&&, BPOK_low)
+{
+    return PowerFail {};
+}
+
+
 // On every entry to ODT a new KD11ODT object is created to make
 // sure it is initialized properly. The Microcomputer and Memories
 // Handbook states: "A / issued immediately after the processor
@@ -56,6 +63,44 @@ kd11_f::State KD11::transition (Halted&&, Reset)
  
 kd11_f::State KD11::transition (Halted&&, BPOK_low)
 {
+    bus_->SRUN ().set (false);
+    return PowerOff {};
+}
+
+// Execute the powerfail routine until either a HALT is executed
+// or the DC runs out. The latter is simulated by executing a maximum of
+// 1000 instructions (presuming an avering instruction exeution time of
+// 4 microseconds and 4 milliseconds DC power available). The powerfail
+// routine cannot be single stepped.
+void KD11::entry (PowerFail)
+{
+    size_t maxInstructions {1000};
+
+    // On a powerfail trap to the vector at address 24/26
+    cpu_.setTrap (&powerFail);
+
+    while (!signalAvailable () && maxInstructions-- > 0)
+    {
+        if (!cpu_.step ())
+        {
+            signalEventQueue_.push (Halt {});
+            return;
+        }
+    }
+
+    if (maxInstructions == 0)
+        signalEventQueue_.push (BDCOK_low {});
+}
+
+kd11_f::State KD11::transition (PowerFail&&, BDCOK_low)
+{
+    bus_->SRUN ().set (false);
+    return PowerOff {};
+}
+
+kd11_f::State KD11::transition (PowerFail&&, Halt)
+{
+    bus_->SRUN ().set (false);
     return PowerOff {};
 }
 

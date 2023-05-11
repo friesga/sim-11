@@ -87,13 +87,14 @@ namespace kd11_f
 		void entry (Running);
 		State transition (Running&&, Reset);			// -> Halted/Running
 		State transition (Running&&, Halt);				// -> Halted
-		// State transition (Running&&, BPOK_low);			// -> PowerFail
+		State transition (Running&&, BPOK_low);			// -> PowerFail
 		void entry (Halted);
 		State transition (Halted&&, Start);				// -> Running
 		State transition (Halted&&, Reset);				// -> Halted/Running
 		State transition (Halted&&, BPOK_low);			// -> PowerOff
-		// void entry (PowerFail);
-		// State transition (PowerFail&&, BDCOK_low);	// -> PowerOff
+		void entry (PowerFail);
+		State transition (PowerFail&&, BDCOK_low);		// -> PowerOff
+		State transition (PowerFail&&, Halt);			// -> PowerOff
 
 		template <typename S>
         State transition (S&& state, Exit)
