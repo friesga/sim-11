@@ -15,6 +15,11 @@ void KD11::entry (Running)
 {
     while (!signalAvailable ())
     {
+        // Increment the bus delay timer. This really should be solved
+        // otherwise, but as the CPU steps are performed in this fumction
+        // the bus steps have to be executed here too.
+        bus_->step ();
+
         // If the CPU is halted or BHALT is true ODT must be started. In the
         // latter case one instruction is executed and thus the CPU is single
         // stepped.
