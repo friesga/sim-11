@@ -10,13 +10,6 @@ void LSI11::run ()
 		kd11_->powerUpRoutine ();
 	*/
 		
-	while (true) 
-	{
-		// bus_.step ();
-		// kd11_->step ();
-		kd11_->run ();
-
-		if (bus_.EXIT())
-			break;
-	}
+	// Start the CPU state machine
+	kd11_->run ();
 }
