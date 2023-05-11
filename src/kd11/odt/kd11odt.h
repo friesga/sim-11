@@ -222,7 +222,6 @@ namespace KD11_ODT
 
         // Definition of public functions.
         KD11ODT (Qbus* bus, KD11CPU& cpu);
-        void stop ();
         bool processCharacter (u8 character);
     };
 }

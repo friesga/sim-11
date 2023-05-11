@@ -233,12 +233,6 @@ void KD11ODT::setRegisterValue ()
         writeString ("?\n");
 }
 
-// Stop execution of ODT
-void KD11ODT::stop ()
-{
-    odtRunning_ = false;
-}
-
 // Process the given character in the state machine, returning true if we can
 // accept another character, i.e. the state machine is still running.
 bool KD11ODT::processCharacter (u8 character)
