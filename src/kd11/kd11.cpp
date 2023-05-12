@@ -97,6 +97,9 @@ void KD11::RestartReceiver (bool signalValue)
 // 3. Start the system at the boot address.
 // 
 // These modes can be selected in the KD11 section of the configuration file.
+// See Table 11-4 (Console Power-Up Printout (or Display) in the LSI-11,
+// PDP-11/03 user's manual (EK-LSI11-TM-003) for the expected reaction on
+// power-up.
 //
 // During the power-up sequence, the processor asserts BINIT L in response to
 // a passive (low) power supply-generated BDCOK H signal. When BDCOK H goes
@@ -113,7 +116,8 @@ kd11_f::State KD11::powerUpRoutine ()
     switch (powerUpMode_)
     {
         case KD11Config::PowerUpMode::Vector:
-            cpu_.setTrap (&powerFail);
+            cpu_.loadTrapVector (&powerFail);
+            cpu_.proceed ();
             return Running {};
 
         case KD11Config::PowerUpMode::ODT:

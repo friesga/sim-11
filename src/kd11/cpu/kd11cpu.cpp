@@ -1618,6 +1618,14 @@ void KD11CPU::handleTraps ()
     }
 }
 
+// Load PC and PSW with the vector from the given trap
+void KD11CPU::loadTrapVector (InterruptRequest const* trap)
+{
+    unsigned char trapVector = trap->vector ();
+    register_[7] = fetchWord (trapVector).valueOr (0);
+    psw = fetchWord (trapVector + 2).valueOr (0);
+}
+
 // Generate the given trap using the interrupt request mechanism
 void KD11CPU::setTrap (InterruptRequest const* trap)
 {
