@@ -3,13 +3,10 @@
 
 void LSI11::run ()
 {
-	/*
+	// Start the CPU state machine, with the CPU starting either at the
+	// address specified in the loaded file or at the standard boot address.
 	if (cmdLineOptions_.load_file) 
-		loadFile ();
+		kd11_->run (loadFile ());
 	else
-		kd11_->powerUpRoutine ();
-	*/
-		
-	// Start the CPU state machine
-	kd11_->run ();
+		kd11_->run ();
 }

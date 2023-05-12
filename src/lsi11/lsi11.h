@@ -38,7 +38,7 @@ class LSI11
 	CmdLineOptions const &cmdLineOptions_;
 
 	void checkConsistency (vector<shared_ptr<DeviceConfig>> systemConfig);
-	void loadFile ();
+	u16 loadFile ();
 	void installModules ();
 
 public:

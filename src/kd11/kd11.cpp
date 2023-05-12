@@ -25,18 +25,29 @@ KD11::KD11 (Qbus* bus)
     :
     BusDevice (bus),
     powerUpMode_ {KD11Config::PowerUpMode::Bootstrap},
-    kd11Running_ {true}
+    kd11Running_ {true},
+    startAddress_ {stdBootAddress}
 {
     subscribeToSignals ();
 }
 
+/*
 KD11::KD11 (Qbus *bus, shared_ptr<KD11Config> kd11Config)
     :
     BusDevice (bus),
     powerUpMode_ {kd11Config->powerUpMode},
-    kd11Running_ {true}
+    kd11Running_ {true},
+    startAddress_ {stdBootAddress}
 {
     subscribeToSignals ();   
+}
+*/
+
+KD11::KD11 (Qbus *bus, shared_ptr<KD11Config> kd11Config)
+    :
+    KD11 (bus)
+{
+    powerUpMode_ = kd11Config->powerUpMode;
 }
 
 // Get notifications on the state of the signals
@@ -134,8 +145,10 @@ kd11_f::State KD11::powerUpRoutine ()
             return Halted {};
 
         case KD11Config::PowerUpMode::Bootstrap:
-            // Start the processor at the standard boot address
-            cpu_.start (KD11CPU::bootAddress);
+            // Start the processor at the start address. This address is
+            // either the standard boot address or an address determined by
+            // a loaded file in absolute loader format.
+            cpu_.start (startAddress_);
 
             // If BHALT is set immediately transition to the Halted state,
             // before even one instruction is executed cf Table 11-4.
@@ -149,6 +162,7 @@ kd11_f::State KD11::powerUpRoutine ()
     throw string ("Unknown PowerUpMode");
 }
 
+// Run the KD11 state machine
 void KD11::run ()
 {
     Event event;
@@ -160,6 +174,14 @@ void KD11::run ()
         signalEventQueue_.waitAndPop (event);
         dispatch (event);
     }
+}
+
+// Run the KD11 state machine, starting the CPU at the given address. This
+// address supersedes the standard boot address.
+void KD11::run (u16 startAddress)
+{
+    startAddress_ = startAddress;
+    run ();
 }
 
 bool KD11::signalAvailable ()

@@ -6,8 +6,9 @@
 
 using std::string;
 
-// Load the given file in absolute loader format
-void LSI11::loadFile ()
+// Load the given file in absolute loader format, returning the start address
+// of the loaded binary.
+u16 LSI11::loadFile ()
 {
     /* execute absolute loader binary */
     /* const char* filename = "VKAAC0.BIC"; */
@@ -17,6 +18,7 @@ void LSI11::loadFile ()
     u16 addr;
     u8 cksum;
     size_t bytes = 0;
+    u16 startAddress {0};
 
     FILE* f = fopen (cmdLineOptions_.load_file, "rb");
     if (!f)
@@ -59,11 +61,12 @@ void LSI11::loadFile ()
         if (len == 6)
         {
             if ((addr & 1) == 0)
-                kd11_->cpu ().start (addr);
+                startAddress = addr;
             else
-                kd11_->cpu ().start (0200);
+                startAddress = 0200;
             break;
         }
     }
     fclose (f);
+    return startAddress;
 }

@@ -29,7 +29,7 @@ void KD11CPU::start (u16 address)
     register_[7] = address;
     runState = CpuState::RUN;
     bus_->SRUN().set (true);
-    trace.cpuEvent (CpuEventRecordType::CPU_ODT_G, bootAddress);
+    trace.cpuEvent (CpuEventRecordType::CPU_ODT_G, address);
 }
 
 // Continue execution at the current PC

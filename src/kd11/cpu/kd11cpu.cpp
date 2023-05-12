@@ -23,7 +23,7 @@ KD11CPU::KD11CPU (Qbus* bus)
     trap_ {nullptr},
     haltReason_ {HaltReason::HaltInstruction}
 {
-    register_[7] = bootAddress;
+    register_[7] = 0;
     bus_->SRUN().set (false);
 }
 
