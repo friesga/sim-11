@@ -68,7 +68,6 @@ kd11_f::State KD11::transition (Halted&&, Reset)
  
 kd11_f::State KD11::transition (Halted&&, BPOK_low)
 {
-    bus_->SRUN ().set (false);
     return PowerOff {};
 }
 
