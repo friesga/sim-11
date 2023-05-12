@@ -35,7 +35,9 @@ set (KD11ODT_SRCS
 
  set (KD11_SRCS
     src/kd11/kd11.cpp
+    src/kd11/poweruproutine.cpp
     src/kd11/runodt.cpp
+    src/kd11/signalreceivers.cpp
     src/kd11/statemachine.cpp
     src/kd11/cpu/kd11cpu.cpp
     src/kd11/cpu/cpucontrol.cpp
