@@ -137,6 +137,12 @@ kd11_f::State KD11::powerUpRoutine ()
         case KD11Config::PowerUpMode::Bootstrap:
             // Start the processor at the standard boot address
             cpu_.start (KD11CPU::bootAddress);
+
+            // If BHALT is set immediately transition to the Halted state,
+            // before even one instruction is executed cf Table 11-4.
+            if (bus_->BHALT ())
+                return Halted {};
+
             return Running {};
     }
 
