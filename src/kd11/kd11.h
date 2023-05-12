@@ -135,5 +135,14 @@ namespace kd11_f
 		bool signalAvailable ();
 		template <typename T> bool signalIsOfType ();
 	};
+
+	// This function returns true if the first element in the signal queue is
+	// a variant holding an Event of the specified type.
+	template <typename T>
+	bool KD11::signalIsOfType ()
+	{
+		return holds_alternative<T> (signalEventQueue_.first ());
+	}
 }
+
 #endif // !_KD11_H_
