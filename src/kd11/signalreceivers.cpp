@@ -11,7 +11,7 @@ void KD11::subscribeToSignals ()
     bus_->BHALT().subscribe (bind (&KD11::BHALTReceiver, this, _1));
     bus_->BPOK().subscribe (bind (&KD11::BPOKReceiver, this, _1));
     bus_->EXIT().subscribe (bind (&KD11::ExitReceiver, this, _1));
-    bus_->RESTART().subscribe (bind (&KD11::RestartReceiver, this, _1));
+    bus_->RESET().subscribe (bind (&KD11::ResetReceiver, this, _1));
 }
 
 // The BHALT signal halts the processor. 
@@ -38,13 +38,12 @@ void KD11::BPOKReceiver (bool signalValue)
         signalEventQueue_.push (BPOK_low {});
 }
 
-
 void KD11::ExitReceiver (bool signalValue)
 {
     signalEventQueue_.push (Exit {});
 }
 
-void KD11::RestartReceiver (bool signalValue)
+void KD11::ResetReceiver (bool signalValue)
 {
     if (signalValue)
         signalEventQueue_.push (Reset {});

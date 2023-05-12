@@ -115,7 +115,7 @@ void KD11CPU::returnFISresult (Float result, u16 registerNumber)
 // presence of traps is checked before an instruction is executed.
 //
 // The normal instruction flow can be interrupted by the setting of the BHALT
-// or RESTART bus signal. These signals are handled in their corresponding KD11
+// or RESET bus signal. These signals are handled in their corresponding KD11
 // receivers which then calls a KD11CPU control function.
 //
 // This function will return if the CPU is in the state RUN and another

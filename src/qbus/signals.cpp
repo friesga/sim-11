@@ -10,9 +10,9 @@ Signal &Qbus::BPOK ()
     return BPOK_;
 }
 
-Signal &Qbus::RESTART ()
+Signal &Qbus::RESET ()
 {
-    return RESTART_;
+    return RESET_;
 }
 
 Signal &Qbus::BHALT ()

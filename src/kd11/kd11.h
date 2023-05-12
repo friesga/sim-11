@@ -78,7 +78,7 @@ namespace kd11_f
 		void BHALTReceiver (bool signalValue);
 		void BPOKReceiver (bool signalValue);
 		void ExitReceiver (bool signalValue);
-		void RestartReceiver (bool signalValue);
+		void ResetReceiver (bool signalValue);
 
 		State powerUpRoutine ();
 

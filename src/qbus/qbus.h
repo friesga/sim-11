@@ -60,7 +60,7 @@ public:
 	// 
 	// The PDP Bus Handbook states that "BOCOK H may be pulsed low for a minimum
 	// of 1 microsecond to cause the CPU to restart" while BPOK is high. This
-	// pulse of BDCOK is replaced by a separate RESTART signal.
+	// pulse of BDCOK is replaced by a separate RESET signal.
 	// 
 	// The BINIT signal is triggered:
 	// - When the processor executes the power up routine,
@@ -74,7 +74,7 @@ public:
 	//
 	Signal &SRUN ();
 	Signal &BPOK ();
-	Signal &RESTART ();
+	Signal &RESET ();
 	Signal &BHALT ();
 	Signal &BINIT ();
 	Signal &EXIT ();
@@ -105,7 +105,7 @@ private:
 	// Definition of the bus signals
 	Signal SRUN_;
 	Signal BPOK_;
-	Signal RESTART_;
+	Signal RESET_;
 	Signal BHALT_;
 	Signal BINIT_;
 	Signal EXIT_;
