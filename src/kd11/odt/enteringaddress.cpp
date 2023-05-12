@@ -29,7 +29,7 @@ State KD11ODT::transition (EnteringAddress_5 &&currentState, RuboutEntered)
     if (!digitSeries_.empty ())
         digitSeries_.pop_back ();
 
-    character.write ('\\');
+    console_.write ('\\');
     return move (currentState);
 }
 

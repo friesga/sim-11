@@ -6,7 +6,7 @@
 #include "variantfsm/fsm.h"
 #include "location/location.h"
 #include "conddata/conddata.h"
-#include "../character/character.h"
+#include "../consoleaccess/consoleaccess.h"
 
 #include <string>
 
@@ -110,7 +110,7 @@ namespace KD11_ODT
 
         Qbus* bus_;
         KD11CPU& cpu_;
-        Character character {bus_};
+        ConsoleAccess console_ {bus_};
         bool odtRunning_;
         string digitSeries_;
         u16 newValue_;

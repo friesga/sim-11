@@ -42,9 +42,9 @@ CondData<u8> KD11ODT::echoCharacter (CondData<u8> c)
     if (c.hasValue ())
     {
         if (c != 0 && c != 2 && c != 010 && c != 012)
-            character.write (c);
+            console_.write (c);
         if (c == '\r')
-            character.write ('\n');
+            console_.write ('\n');
     }
 
     return c;
@@ -62,9 +62,9 @@ void KD11ODT::writeString (string str)
     {
 #ifdef __linux__
         if (c == '\n')
-            character.write ('\r');
+            console_.write ('\r');
 #endif // __linux__
-        character.write (c);
+        console_.write (c);
     }
 }
 

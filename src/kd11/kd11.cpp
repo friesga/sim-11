@@ -1,6 +1,6 @@
 #include "kd11.h"
 #include "qbus/qbus.h"
-#include "character/character.h"
+#include "consoleaccess/consoleaccess.h"
 
 #include <memory>
 #include <thread>
@@ -195,7 +195,7 @@ bool KD11::signalIsOfType ()
 // anymore because either a Proceed or Go command was entered.
 void KD11::runODT ()
 {
-    Character character {bus_};
+    ConsoleAccess console_ {bus_};
     Event haltEvent {};
 
     odt_ = make_unique<KD11ODT> (bus_, cpu_);
@@ -212,9 +212,9 @@ void KD11::runODT ()
                 return;
         }
 
-        if (character.available ())
+        if (console_.available ())
         {
-            if (!odt_->processCharacter (character.read ()))
+            if (!odt_->processCharacter (console_.read ()))
             {
                 // The user issued a Proceed or Go command so start the CPU
                 signalEventQueue_.push (Start {});
