@@ -31,18 +31,6 @@ KD11::KD11 (Qbus* bus)
     subscribeToSignals ();
 }
 
-/*
-KD11::KD11 (Qbus *bus, shared_ptr<KD11Config> kd11Config)
-    :
-    BusDevice (bus),
-    powerUpMode_ {kd11Config->powerUpMode},
-    kd11Running_ {true},
-    startAddress_ {stdBootAddress}
-{
-    subscribeToSignals ();   
-}
-*/
-
 KD11::KD11 (Qbus *bus, shared_ptr<KD11Config> kd11Config)
     :
     KD11 (bus)

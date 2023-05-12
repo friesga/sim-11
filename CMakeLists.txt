@@ -33,6 +33,14 @@ set (KD11ODT_SRCS
     src/kd11/odt/registeropened.cpp
     src/kd11/odt/startingregister.cpp)
 
+ set (KD11_SRCS
+    src/kd11/kd11.cpp
+    src/kd11/statemachine.cpp
+    src/kd11/cpu/kd11cpu.cpp
+    src/kd11/cpu/cpucontrol.cpp
+    src/kd11/character/character.cpp
+    ${KD11ODT_SRCS})
+
 set (RLV12_SRCS
     src/rlv12/calccrc.cpp
     src/rlv12/rlv12.cpp
@@ -183,12 +191,7 @@ set (SIM11_SRCS
     src/bdv11/bdv11.cpp
     src/bdv11/bdv11_e53.cpp
     src/dlv11j/dlv11j.cpp
-    src/kd11/kd11.cpp
-    src/kd11/transitions.cpp
-    src/kd11/cpu/kd11cpu.cpp
-    src/kd11/cpu/cpucontrol.cpp
-    src/kd11/character/character.cpp
-    ${KD11ODT_SRCS}
+    ${KD11_SRCS}
     src/lib/gotapproval.cpp
     src/lsi11/lsi11.cpp
     src/lsi11/configure.cpp
@@ -340,12 +343,7 @@ set (SIM11_TEST_SRCS
     src/busdevice/busdevice.cpp
     src/busdevice/writebyte.cpp
     src/lib/gotapproval.cpp
-    src/kd11/kd11.cpp
-    src/kd11/transitions.cpp
-    src/kd11/cpu/kd11cpu.cpp
-    src/kd11/cpu/cpucontrol.cpp
-    src/kd11/character/character.cpp
-    ${KD11ODT_SRCS}
+    ${KD11_SRCS}
     src/dlv11j/dlv11j.cpp
     src/msv11d/msv11d.cpp
     src/signal/signal.cpp
