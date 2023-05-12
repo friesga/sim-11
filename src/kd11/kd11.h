@@ -80,8 +80,6 @@ namespace kd11_f
 		void ExitReceiver (bool signalValue);
 		void ResetReceiver (bool signalValue);
 
-		State powerUpRoutine ();
-
 		// Definition of the KD11 state machine
 		State transition (PowerOff&&, BPOK_high);		// -> Halted/Running
 		void entry (Running);
@@ -130,6 +128,7 @@ namespace kd11_f
 
 		InterruptRequest const powerFail {RequestType::Trap, TrapPriority::PowerFail, 0, 024};
 
+		State powerUpRoutine ();
 		void subscribeToSignals ();
 		void runODT ();
 		bool signalAvailable ();
