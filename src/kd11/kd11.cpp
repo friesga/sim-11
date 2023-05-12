@@ -12,7 +12,6 @@ using std::shared_ptr;
 using std::bind;
 using std::placeholders::_1;
 using std::lock_guard;
-using std::mutex;
 using std::this_thread::sleep_for;
 using std::chrono::milliseconds;
 using std::holds_alternative;

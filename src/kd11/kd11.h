@@ -13,7 +13,6 @@ using namespace KD11_ODT;
 
 using std::unique_ptr;
 using std::shared_ptr;
-using std::mutex;
 using std::unique_lock;
 using std::defer_lock;
 using std::monostate;
@@ -124,10 +123,6 @@ namespace kd11_f
 
 		// Definition of a queue for the processing of bus signal events
 		ThreadSafeQueue<Event> signalEventQueue_;
-
-		// Safe guard against simultaneous CPU access
-		// ToDo: To be deleted!
-		mutex cpuMutex_;
 
 		InterruptRequest const powerFail {RequestType::Trap, TrapPriority::PowerFail, 0, 024};
 
