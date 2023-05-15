@@ -40,16 +40,12 @@ CmdLineOptions::CmdLineOptions(int argc, char const **argv)
 		} 
 		else if(!strcmp("--help", *argv)) 
 		{
-			 msg << "Usage: " << self << " [OPTIONS] [FILE]\n"
+			 msg << "Usage: " << self << " [OPTIONS]\n"
 					"\n"
-					"OPTIONS\n"
-					"  -x              Exit on HALT\n"
+					"OPTIONS:\n"
 					"  -l file.bin     Load file.bin in absolute loader format\n"
 					"  -c file		   Use configuration from specified ini file\n"
-					"  -t file.trc     Record execution trace to file.trc\n"			
-					"  -q              Quiet mode\n"
-					"\n"
-					"The optional last argument FILE is equivalent to -f file";
+					"  -t file.trc     Record execution trace to file.trc\n";			
 			 throw (msg.str());
 		} 
 		else 
