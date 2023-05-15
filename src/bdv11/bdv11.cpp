@@ -69,6 +69,7 @@ BDV11::BDV11 (Qbus *bus)
 	running_ {true}
 {
 	bus_->BINIT().subscribe (bind (&BDV11::BINITReceiver, this, _1));
+	bus_->BPOK().subscribe (bind (&BDV11::BPOKReceiver, this, _1));
 }
 
 BDV11::~BDV11 ()
@@ -250,6 +251,13 @@ void BDV11::BINITReceiver (bool signalValue)
 {
 	if (signalValue)
 		reset ();
+}
+
+// On power down switch off the line time clock.
+void BDV11::BPOKReceiver (bool signalValue)
+{
+	if (!signalValue)
+		ltc = 0;
 }
 
 void BDV11::reset ()

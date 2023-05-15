@@ -20,6 +20,7 @@ public:
 
 	// Declare the signal receivers
 	void BINITReceiver (bool signalValue);
+	void BPOKReceiver (bool signalValue);
 
 private:
 	u16 getWordLow (u16 word);
