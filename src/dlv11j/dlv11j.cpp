@@ -319,18 +319,22 @@ void DLV11J::processBreak ()
 	}
 }
 
-// Receive a character from outside the system in the DLV11-J
+// Receive a character from outside the system in the DLV11-J. If the
+// system is powered on the received character is processed, else it is
+// ignored.
 void DLV11J::receive (int channelNr, unsigned char c)
 {
-	
-	if (channelNr == 3 && c == breakKey_)
-		processBreak ();
-
-	DLV11Ch* ch = &channel_[channelNr];
-	if (queueCharacter (ch, c))
+	if (bus_->BPOK ())
 	{
-		trace.dlv11 (DLV11RecordType::DLV11_RX, channelNr, c);
-		receiveDone (ch);
+		if (channelNr == 3 && c == breakKey_)
+			processBreak ();
+
+		DLV11Ch* ch = &channel_[channelNr];
+		if (queueCharacter (ch, c))
+		{
+			trace.dlv11 (DLV11RecordType::DLV11_RX, channelNr, c);
+			receiveDone (ch);
+		}
 	}
 }
 
