@@ -11,6 +11,30 @@ using namespace std::chrono;
 using std::bind;
 using std::placeholders::_1;
 
+// Definition of the Switch Register lay-out.
+// The switch register is used for maintenance and system configuration
+// (selects diagnostic and/or bootstrap programs for execution). Bits 0-11
+// of the register corresponding with switches E15-1 through E15-8 (hereafter
+// named A1 through A8 and B1 through B8 respectively).
+//
+// Switches A 1 through B4 are defined as follows:
+// A1 0N	Execute CPU tests on power-up or restart.
+// A2 ON	Execute memory test on power-up or restart.
+// A3 ON	DECNET BOOT - A4, A5, A6, A7 are used as arguments.
+// A4 ON	Console test and dialog (A3 OFF).
+// A4 OFF	Turnkey BOOT dispatched by switch setting (A3 OFF).
+//			Switches A5, A6, A7, A8, B1 are used as arguments.
+// 
+//			Device			A5	A6	A7	A8	B1
+//			Loop on Error	OFF OFF OFF OFF ON
+//			RK05			OFF	OFF OFF ON	OFF
+//			RL01			OFF OFF ON	OFF	OFF
+//			RX01			OFF ON	OFF OFF OFF
+//			RX02			OFF ON	ON	OFF OFF
+//			BDV11 ROM		ON	OFF	OFF	OFF OFF
+//
+// Source: LSI-11 Systems Service Manual, 3rd Edition, module M8012.
+//
 #define	_A(x)		(1 << ((x) - 1))
 #define	_B(x)		(1 << ((x) + 7))
 

@@ -24,7 +24,7 @@ The simulator supports the followingh modules:
 - RXV21 (M8029) RX02 floppy disk controller
 - RLV11/RLV12 (M8061) RL01/RL02 hard disk controller
 - DLV11-J (M8043) 4x Serial line interface
-- BDV11 bus terminator, bootstrap, and diagnostic ROM
+- BDV11 (M8012) bus terminator, bootstrap, and diagnostic ROM
 
 This emulator passes the following XXDP diagnostics:
 - VKAAC0 (Basic instruction test),
