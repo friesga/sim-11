@@ -23,12 +23,19 @@ class MSV11Processor : public SectionProcessor
 	
 	map<string, Process> valueProcessors =
 	{
-		// {"22-bit", &RLProcessor::process22Bit}
+		{"power_source", &MSV11Processor::processPowerSource}
+	};
+
+	map<string, MSV11Config::PowerSource> validPowerSources =
+	{
+		{"system",         MSV11Config::PowerSource::System},
+		{"battery_backup", MSV11Config::PowerSource::BatteryBackup},
 	};
 
     void processValue (iniparser::Section::ValueIterator valueIterator);
 	void checkConsistency ();
 	void processSubsection (iniparser::Section *subSection);
+	void processPowerSource (iniparser::Value value);
 
 public:
 	MSV11Processor ();

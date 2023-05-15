@@ -6,10 +6,12 @@
 
 using std::bind;
 using std::placeholders::_1;
+using std::shared_ptr;
 
 MSV11D::MSV11D (Qbus *bus)
 	:
-	BusDevice (bus)
+	BusDevice (bus),
+	powerSource_ {MSV11Config::PowerSource::System}
 {
 	data = (u8*) malloc (MSV11D_SIZE);
 	if (data != nullptr)
@@ -17,6 +19,13 @@ MSV11D::MSV11D (Qbus *bus)
 
 	// Subscribe to the BPOK signal
 	bus_->BPOK().subscribe (bind (&MSV11D::BPOKReceiver, this, _1));
+}
+
+MSV11D::MSV11D (Qbus* bus, shared_ptr<MSV11Config> msv11Config)
+	:
+	MSV11D (bus)
+{
+	powerSource_ = msv11Config->powerSource;
 }
 
 MSV11D::~MSV11D ()
@@ -52,10 +61,10 @@ void MSV11D::reset ()
 }
 
 // When the system is powered down the contents of the memory are lost, unless
-// a battery backup is available.
-// The memory is initialized when the power is switched on.
+// a battery backup is available. This means that when the power is switched
+// on the memory is cleared when battery backup is not configured.
 void MSV11D::BPOKReceiver (bool signalValue)
 {
-	if (signalValue)
+	if (signalValue && powerSource_ != MSV11Config::PowerSource::BatteryBackup)
 		memset (data, 0, MSV11D_SIZE);
 }

@@ -4,6 +4,7 @@
 
 using std::make_unique;
 using std::move;
+using std::invalid_argument;
 
 MSV11Processor::MSV11Processor ()
 {
@@ -15,6 +16,17 @@ void MSV11Processor::processValue (iniparser::Section::ValueIterator valueIterat
     // Throw exception for non-existing key?
     Process processFunction = valueProcessors[valueIterator->first];
     (this->*processFunction)(valueIterator->second);
+}
+
+void MSV11Processor::processPowerSource (iniparser::Value value)
+{
+	map<string, MSV11Config::PowerSource>::iterator iter;
+
+    if ((iter = validPowerSources.find (value.asString ())) != 
+            validPowerSources.end ())
+        msv11ConfigPtr->powerSource = iter->second;
+    else
+        throw invalid_argument {"Incorrect MSV11 power_source value"};
 }
 
 // Check the consistency of the configuration of the MSV11 memory. Currently

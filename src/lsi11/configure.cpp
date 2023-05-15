@@ -1,6 +1,7 @@
 #include "lsi11.h"
 #include "configdata/iniprocessor/iniprocessor.h"
 #include "configdata/rxv21config/rxv21config.h"
+#include "configdata/msv11config/msv11config.h"
 #include "console/operatorconsole/operatorconsolefactory.h"
 
 #include <memory>		// For make_unique
@@ -51,7 +52,8 @@ void LSI11::configureDevices (vector<shared_ptr<DeviceConfig>> systemConfig)
                 break;
 
             case DeviceType::MSV11:
-                msv11_ = new MSV11D (&bus_);
+                msv11_ = new MSV11D (&bus_,
+                    static_pointer_cast<MSV11Config> (device));
                 break;
 
             case DeviceType::DLV11_J:
