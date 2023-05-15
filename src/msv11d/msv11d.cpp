@@ -1,15 +1,22 @@
+#include "types.h"
+#include "msv11d.h"
+
 #include <string.h>
 #include <stdlib.h>
 
-#include "types.h"
-#include "msv11d.h"
+using std::bind;
+using std::placeholders::_1;
 
 MSV11D::MSV11D (Qbus *bus)
 	:
 	BusDevice (bus)
 {
 	data = (u8*) malloc (MSV11D_SIZE);
-	memset (data, 0, MSV11D_SIZE);
+	if (data != nullptr)
+		memset (data, 0, MSV11D_SIZE);
+
+	// Subscribe to the BPOK signal
+	bus_->BPOK().subscribe (bind (&MSV11D::BPOKReceiver, this, _1));
 }
 
 MSV11D::~MSV11D ()
@@ -42,4 +49,13 @@ bool MSV11D::responsible (u16 address)
 void MSV11D::reset ()
 {
 	/* nothing */
+}
+
+// When the system is powered down the contents of the memory are lost, unless
+// a battery backup is available.
+// The memory is initialized when the power is switched on.
+void MSV11D::BPOKReceiver (bool signalValue)
+{
+	if (signalValue)
+		memset (data, 0, MSV11D_SIZE);
 }
