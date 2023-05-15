@@ -76,6 +76,9 @@ private:
 	void writeRCSR (int n, u16 value);
 	void writeXCSR (int n, u16 value);
 	void console_print (unsigned char c);
+	bool queueCharacter (DLV11Ch* channel, unsigned char c);
+	void receiveDone (DLV11Ch* channel);
+	void processBreak ();
 };
 
 #endif // !_DLV11J_H_
