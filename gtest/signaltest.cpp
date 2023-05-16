@@ -71,8 +71,8 @@ inline bool Subscriber::receivedSignalValues (vector<bool> expectedSignalValues)
 
 TEST_F (SignalTest, defaultValueIsSet)
 {
-    EXPECT_FALSE (initFalseSignal.isTrue ());
-    EXPECT_TRUE (initTrueSignal.isTrue ());
+    EXPECT_FALSE (static_cast<bool> (initFalseSignal));
+    EXPECT_TRUE (static_cast<bool> (initTrueSignal));
 }
 
 TEST_F (SignalTest, signalCanBeSetAndTested)
@@ -80,7 +80,7 @@ TEST_F (SignalTest, signalCanBeSetAndTested)
     // Signals can be set and tested
     initFalseSignal.set (true);
 
-    EXPECT_TRUE (initFalseSignal.isTrue ());
+    EXPECT_TRUE (static_cast<bool> (initFalseSignal));
 }
 
 TEST_F (SignalTest, signalCanBeSentToAll)
