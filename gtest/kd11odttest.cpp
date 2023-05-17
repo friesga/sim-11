@@ -1,7 +1,7 @@
 #include "dlv11j/dlv11j.h"
 #include "msv11d/msv11d.h"
 #include "kd11/odt/kd11odt.h"
-#include "testconsole.h"
+#include "testconsoleaccess.h"
 
 using namespace KD11_ODT;
 
@@ -37,34 +37,28 @@ protected:
 
     void executeSequence (TestSequence sequence)
     {
-        unique_ptr<Console> console = make_unique<TestConsole> ();
+        unique_ptr<ConsoleAccess> console = 
+            make_unique<TestConsoleAccess> (sequence.input);
 
         // 'Steal' a raw pointer from the unique_ptr to be able to send and
-        // receive characters to and from the TestConsole.
-        TestConsole *testConsole = static_cast<TestConsole*> (console.get ());
+        // receive characters to and from the TestConsole as the unique_ptr
+        // will be invalid after being moved to KD11ODT.
+        TestConsoleAccess *testConsole = static_cast<TestConsoleAccess*> (console.get ());
 
         Qbus bus;
         KD11CPU kd11cpu (&bus);
-        DLV11J dlv11j {&bus, std::move (console)};
         MSV11D msv11d (&bus);
-        bus.installModule (0, &dlv11j);
         bus.installModule (1, &msv11d);
 
-        /*
-        // Send characters to the DLV11J
-        for (char c : sequence.input)
-            testConsole->send (c);
-
-        // Let ODT process the input sequence
-        KD11ODT kd11odt {&bus, kd11cpu};
-        kd11odt.run ();
-        */
-
         // Create a KD11ODt instance and let it process a character sequence
-        KD11ODT kd11odt {&bus, kd11cpu};
+        KD11ODT kd11odt {&bus, kd11cpu, move (console)};
 
-        for (unsigned char c : sequence.input)
-            kd11odt.processCharacter (c);
+        // Read the characters from the input sequence and feed them to ODT.
+        // The characters could be retrieved from the input sequence directly,
+        // but the detour via the test console is necessary as KD11ODT in the
+        // binary dump command accesses the console.
+        while (testConsole->available ())
+            kd11odt.processCharacter (testConsole->read ());
 
         // Compare result from the DLV11J with the expected characters
         for (char c : sequence.expectedOutput)

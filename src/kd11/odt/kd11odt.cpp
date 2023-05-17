@@ -17,8 +17,9 @@ using std::numeric_limits;
 using std::min;
 using std::move;
 using std::to_string;
+using std::make_unique;
 
-KD11ODT::KD11ODT (Qbus *bus, KD11CPU &cpu)
+KD11ODT::KD11ODT (Qbus *bus, KD11CPU &cpu, unique_ptr<ConsoleAccess> consoleAccess)
     : 
     bus_ {bus},
     cpu_ {cpu},
@@ -27,6 +28,11 @@ KD11ODT::KD11ODT (Qbus *bus, KD11CPU &cpu)
     registerSeries_ {},
     location_ {}
 {
+    if (consoleAccess == nullptr)
+        console_ = make_unique<OperatorConsoleAccess> (bus_);
+    else
+        console_ = move (consoleAccess);
+
     // Start the fsm by a transition to the AtPrompt_1 state
     dispatch (StartFsm {});
 }
@@ -42,9 +48,9 @@ CondData<u8> KD11ODT::echoCharacter (CondData<u8> c)
     if (c.hasValue ())
     {
         if (c != 0 && c != 2 && c != 010 && c != 012)
-            console_.write (c);
+            console_->write (c);
         if (c == '\r')
-            console_.write ('\n');
+            console_->write ('\n');
     }
 
     return c;
@@ -64,7 +70,7 @@ void KD11ODT::writeString (string str)
         if (c == '\n')
             console_.write ('\r');
 #endif // __linux__
-        console_.write (c);
+        console_->write (c);
     }
 }
 

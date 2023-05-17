@@ -15,7 +15,7 @@ using std::this_thread::sleep_for;
 // anymore because either a Proceed or Go command was entered.
 void KD11::runODT ()
 {
-    ConsoleAccess console_ {bus_};
+    OperatorConsoleAccess console_ {bus_};
     Event haltEvent {};
 
     odt_ = make_unique<KD11ODT> (bus_, cpu_);

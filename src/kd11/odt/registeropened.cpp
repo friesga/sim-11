@@ -17,7 +17,7 @@ State KD11ODT::transition (RegisterOpened_4 &&, DigitEntered digitEntered)
 
 State KD11ODT::transition (RegisterOpened_4 &&, RuboutEntered)
 {
-    console_.write ('\\');
+    console_->write ('\\');
     digitSeries_ = '0';
     return EnteringRegisterValue_8 {};
 }

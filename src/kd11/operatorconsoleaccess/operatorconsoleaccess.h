@@ -1,14 +1,15 @@
-#ifndef _CONSOLEACCESS_H_
-#define _CONSOLEACCESS_H_
+#ifndef _OPERATORCONSOLEACCESS_H_
+#define _OPERATORCONSOLEACCESS_H_
 
+#include "../consoleaccess.h"
 #include "qbus/qbus.h"
 #include "conddata/conddata.h"
 
 // This class handles character reads and writes to the console DLV11-J
-class ConsoleAccess
+class OperatorConsoleAccess : public ConsoleAccess
 {
 public:
-    ConsoleAccess (Qbus* bus);
+    OperatorConsoleAccess (Qbus* bus);
     bool available ();
 	CondData<u8> read ();
     void write (u8 c);
@@ -20,4 +21,4 @@ private:
 };
 
 
-#endif // !_CONSOLEACCESS_H_
+#endif // !_OPERATORCONSOLEACCESS_H_

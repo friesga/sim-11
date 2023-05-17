@@ -11,7 +11,7 @@ using std::to_string;
 
 void KD11ODT::entry (AtPrompt_1)
 {
-    console_.write ('@');
+    console_->write ('@');
 }
 
 State KD11ODT::transition (AtPrompt_1 &&, DigitEntered digitEntered)

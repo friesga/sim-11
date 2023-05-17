@@ -41,7 +41,7 @@ set (KD11ODT_SRCS
     src/kd11/statemachine.cpp
     src/kd11/cpu/kd11cpu.cpp
     src/kd11/cpu/cpucontrol.cpp
-    src/kd11/consoleaccess/consoleaccess.cpp
+    src/kd11/operatorconsoleaccess/operatorconsoleaccess.cpp
     ${KD11ODT_SRCS})
 
 set (RLV12_SRCS

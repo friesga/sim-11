@@ -22,13 +22,16 @@ using namespace KD11_ODT;
 //
 State KD11ODT::transition (AtPrompt_1 &&, BinaryDumpCmdEntered)
 {
-    // Expect two bytes and transform it into the starting address
-    u16 startAddress = console_.read () << 8 | console_.read ();
+    // Expect two bytes and transform it into the starting address.
+    // The two bytes forming the address have to be read in two separate
+    // statements to make sure the high byte of the address is read first.
+    u16 highByte = console_->read () << 8;
+    u16 startAddress = highByte | console_->read ();
 
     // Dump 10 bytes i.e. 5 words as binaries
     for (size_t numWords = 0; numWords < 5; ++numWords)
     {
-        console_.write (bus_->read (startAddress));
+        console_->write (bus_->read (startAddress));
         startAddress += 2;
     }
 

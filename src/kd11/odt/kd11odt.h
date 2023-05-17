@@ -6,7 +6,8 @@
 #include "variantfsm/fsm.h"
 #include "location/location.h"
 #include "conddata/conddata.h"
-#include "../consoleaccess/consoleaccess.h"
+#include "../consoleaccess.h"
+#include "../operatorconsoleaccess/operatorconsoleaccess.h"
 
 #include <string>
 
@@ -110,7 +111,7 @@ namespace KD11_ODT
 
         Qbus* bus_;
         KD11CPU& cpu_;
-        ConsoleAccess console_ {bus_};
+        unique_ptr<ConsoleAccess> console_;
         bool odtRunning_;
         string digitSeries_;
         u16 newValue_;
@@ -221,7 +222,7 @@ namespace KD11_ODT
         template <typename S> void entry (S&) {}
 
         // Definition of public functions.
-        KD11ODT (Qbus* bus, KD11CPU& cpu);
+        KD11ODT (Qbus* bus, KD11CPU& cpu, unique_ptr<ConsoleAccess> consoleAccess = nullptr);
         bool processCharacter (u8 character);
     };
 }

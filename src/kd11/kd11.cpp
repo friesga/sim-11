@@ -1,6 +1,6 @@
 #include "kd11.h"
 #include "qbus/qbus.h"
-#include "consoleaccess/consoleaccess.h"
+#include "operatorconsoleaccess/operatorconsoleaccess.h"
 
 #include <memory>
 #include <thread>
