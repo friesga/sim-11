@@ -62,7 +62,7 @@ void KD11ODT::writeString (string str)
     {
 #ifdef __linux__
         if (c == '\n')
-            console_.write ('\r');
+            console_->write ('\r');
 #endif // __linux__
         console_->write (c);
     }
