@@ -18,7 +18,8 @@ void KD11::runODT ()
     OperatorConsoleAccess console_ {bus_};
     Event haltEvent {};
 
-    odt_ = make_unique<KD11ODT> (bus_, cpu_);
+    odt_ = make_unique<KD11ODT> (bus_, cpu_, 
+        make_unique<OperatorConsoleAccess> (bus_));
 
     while (true)
     {

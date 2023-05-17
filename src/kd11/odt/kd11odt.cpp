@@ -23,21 +23,15 @@ KD11ODT::KD11ODT (Qbus *bus, KD11CPU &cpu, unique_ptr<ConsoleAccess> consoleAcce
     : 
     bus_ {bus},
     cpu_ {cpu},
+    console_ {move (consoleAccess)},
     odtRunning_ {true},
     newValue_ {0},
     registerSeries_ {},
     location_ {}
 {
-    if (consoleAccess == nullptr)
-        console_ = make_unique<OperatorConsoleAccess> (bus_);
-    else
-        console_ = move (consoleAccess);
-
     // Start the fsm by a transition to the AtPrompt_1 state
     dispatch (StartFsm {});
 }
-
-
 
 CondData<u8> KD11ODT::echoCharacter (CondData<u8> c)
 {

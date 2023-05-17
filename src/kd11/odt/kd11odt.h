@@ -222,7 +222,7 @@ namespace KD11_ODT
         template <typename S> void entry (S&) {}
 
         // Definition of public functions.
-        KD11ODT (Qbus* bus, KD11CPU& cpu, unique_ptr<ConsoleAccess> consoleAccess = nullptr);
+        KD11ODT (Qbus* bus, KD11CPU& cpu, unique_ptr<ConsoleAccess> consoleAccess);
         bool processCharacter (u8 character);
     };
 }
