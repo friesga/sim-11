@@ -327,7 +327,11 @@ void DLV11J::receive (int channelNr, unsigned char c)
 	if (bus_->BPOK ())
 	{
 		if (channelNr == 3 && c == breakKey_)
+		{
+			// Process the BREAK, not queueing it as a received character
 			processBreak ();
+			return;
+		}
 
 		DLV11Ch* ch = &channel_[channelNr];
 		if (queueCharacter (ch, c))
