@@ -1,12 +1,17 @@
 #include "sdlwindow.h"
+#include "../sdlpanel/sdlpanel.h"
 
 #include <SDL_image.h>
 #include <string>
+#include <thread>
 
 using std::string;
 using std::make_unique;
+using std::this_thread::sleep_for;
 
 SDLWindow::SDLWindow (char const *title, int x, int y, int width, int height)
+    :
+    SDLInit ()
 {
     // Create window
     sdlWindow_ = SDL_CreateWindow (title, x, y, width, height, SDL_WINDOW_SHOWN);
@@ -25,57 +30,17 @@ SDLWindow::~SDLWindow ()
     SDL_DestroyWindow (sdlWindow_);
 }
 
-void SDLWindow::createFront (string imageFile, 
-        int x, int y, int width, int height)
+Panel *SDLWindow::createPanel ()
 {
-    fronts_.push_back (make_unique<SDLFront> (imageFile, 
-        sdlRenderer_->sdl_Renderer_, x, y, width, height));
+    panels_.push_back (make_unique<SDLPanel> (sdlRenderer_));
+    return panels_.back ().get ();
 }
 
-Indicator *SDLWindow::createIndicator (string imageFile, Indicator::State showFigure,
-    int x, int y, int width, int height)
-{
-    indicators_.push_back (make_unique<SDLIndicator> (imageFile, 
-        sdlRenderer_->sdl_Renderer_, showFigure, x, y, width, height));
-    return indicators_.back ().get ();
-}
-
-// Add a Button to the Window, returning a pointer to the added Button.
-//
-// It's the user's responsibility not to use this pointer when the Window
-// the Button belongs to is destroyed. Not following this instruction will
-// lead to undefined behaviour.
-//
-Button *SDLWindow::createLatchingButton (string buttonDownImage, string buttonUpImage,
-    Button::State initialState, Button::EventCallback buttonClicked,
-    int x, int y, int width, int height)
-{
-    buttons_.push_back (make_unique<SDLLatchingButton> (buttonDownImage, buttonUpImage,
-        initialState, sdlRenderer_->sdl_Renderer_, buttonClicked, x, y, width, height));
-    return buttons_.back ().get ();
-}
-
-Button *SDLWindow::createMomentaryButton (string buttonDownImage, string buttonUpImage, 
-        Button::State initialState, Button::EventCallback buttonClicked,
-        int x, int y, int width, int height)
-{
-    buttons_.push_back (make_unique<SDLMomentaryButton> (buttonDownImage, buttonUpImage,
-        initialState, sdlRenderer_->sdl_Renderer_, buttonClicked, x, y, width, height));
-    return buttons_.back ().get ();
-}
-
-// Render all Figure's in this window
 void SDLWindow::render ()
-{
-    // Render all fronts, indicators and buttons
-    for (auto& sdlFront : fronts_)
-        sdlFront->render ();
-
-    for (auto& indicator : indicators_)
-        indicator->render ();
-
-    for (auto& button : buttons_)
-        button->render ();
+{    
+    // Render all Panels in the window
+    for (auto& sdlPanel : panels_)
+        sdlPanel->render ();
 
     sdlRenderer_->update ();
 }
@@ -88,9 +53,20 @@ bool SDLWindow::handleEvents ()
 		if (event.type == SDL_QUIT)
 				return true;
         
-        for (auto& button : buttons_)
-            button->handleEvent (&event);
+        for (auto& sdlPanel : panels_)
+            sdlPanel->handleEvent (&event);
 	}
 
     return false;
 }
+
+// This function renders the window and process the events for the window. The
+// function returns when the window is closed.
+void SDLWindow::handler ()
+{
+    do
+	{
+		render();
+        sleep_for (std::chrono::milliseconds (10));
+	}
+    while (!handleEvents ());}

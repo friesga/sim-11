@@ -1,39 +1,72 @@
 #include "sdlpanel.h"
-#include "../sdlwindow/sdlwindow.h"
-
-#include <SDL.h>
-#include <SDL_image.h>
 
 using std::make_unique;
 using std::string;
 
-SDLPanel::SDLPanel ()
-{
-    // Initialize SDL
-    if (SDL_Init (SDL_INIT_VIDEO) < 0)
-        throw "SDL could not be initialized SDL error: " +
-            string (SDL_GetError ());
-
-    // Set texture filtering to linear
-    if (!SDL_SetHint (SDL_HINT_RENDER_SCALE_QUALITY, "1"))
-        throw "Linear texture filtering not enabled";
-
-    // Initialize PNG loading
-    int imgFlags = IMG_INIT_PNG;
-    if (!(IMG_Init (imgFlags) & imgFlags))
-        throw "SDL_image could not be initialized. SDL_image error: " +
-            string (IMG_GetError ());
-}
+SDLPanel::SDLPanel (unique_ptr<SDLRenderer> &sdlRenderer)
+    :
+    sdlRenderer_ {sdlRenderer}
+{}
 
 SDLPanel::~SDLPanel ()
+{}
+
+void SDLPanel::createFront (string imageFile, 
+        int x, int y, int width, int height)
 {
-    // Quit SDL subsystems
-    IMG_Quit ();
-    SDL_Quit ();
+    fronts_.push_back (make_unique<SDLFront> (imageFile, 
+        sdlRenderer_, x, y, width, height));
 }
 
-unique_ptr<Window> SDLPanel::createWindow (char const *title, 
+Indicator *SDLPanel::createIndicator (string imageFile, Indicator::State showFigure,
     int x, int y, int width, int height)
 {
-    return make_unique<SDLWindow> (title, x,y, width, height);
+    indicators_.push_back (make_unique<SDLIndicator> (imageFile, 
+        sdlRenderer_, showFigure, x, y, width, height));
+    return indicators_.back ().get ();
+}
+
+// Add a Button to the Panel, returning a pointer to the added Button.
+//
+// It's the user's responsibility not to use this pointer when the Window
+// the Panel and Button belong to is destroyed. Not following this instruction
+// will lead to undefined behaviour.
+//
+Button *SDLPanel::createLatchingButton (string buttonDownImage, string buttonUpImage,
+    Button::State initialState, Button::EventCallback buttonClicked,
+    int x, int y, int width, int height)
+{
+    buttons_.push_back (make_unique<SDLLatchingButton> (buttonDownImage, buttonUpImage,
+        initialState, sdlRenderer_, buttonClicked, x, y, width, height));
+    return buttons_.back ().get ();
+}
+
+Button *SDLPanel::createMomentaryButton (string buttonDownImage, string buttonUpImage, 
+        Button::State initialState, Button::EventCallback buttonClicked,
+        int x, int y, int width, int height)
+{
+    buttons_.push_back (make_unique<SDLMomentaryButton> (buttonDownImage, buttonUpImage,
+        initialState, sdlRenderer_, buttonClicked, x, y, width, height));
+    return buttons_.back ().get ();
+}
+
+// Render all Figure's in this window
+void SDLPanel::render ()
+{
+    // Render all fronts, indicators and buttons
+    for (auto& sdlFront : fronts_)
+        sdlFront->render ();
+
+    for (auto& indicator : indicators_)
+        indicator->render ();
+
+    for (auto& button : buttons_)
+        button->render ();
+}
+
+// Events for a Panel are destined for a button on the panel
+void SDLPanel::handleEvent (SDL_Event const *event)
+{
+    for (auto& button : buttons_)
+        button->handleEvent (event);
 }

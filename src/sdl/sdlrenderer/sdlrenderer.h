@@ -6,7 +6,7 @@
 class SDLRenderer
 {
     // SDLFigure needs access to the SDL_Renderer
-    friend class SDLWindow;
+    friend class SDLPanel;
     friend class SDLFigure;
 
     // The SDL renderer to use in rendering in the given window
@@ -22,6 +22,7 @@ public:
         unsigned char blue, unsigned char alpha = 0xff);
     void clear ();
     void update ();
+    SDL_Renderer *getSDL_Renderer ();
 };
 
 #endif // _SDLRENDERER_H_

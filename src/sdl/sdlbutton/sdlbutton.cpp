@@ -1,18 +1,19 @@
 #include "sdlbutton.h"
+#include "../sdlrenderer/sdlrenderer.h"
 
 using std::make_unique;
 
 SDLButton::SDLButton (string buttonDownImage, string buttonUpImage,
-    Button::State initialState, SDL_Renderer *renderer,
+    Button::State initialState, unique_ptr<SDLRenderer> &sdlRenderer,
     EventCallback buttonClicked, int x, int y, int width, int height)
     :
     buttonClicked_ {buttonClicked},
     buttonState_ {initialState}
 {
-    buttonDownTexture_ = make_unique<SDLTexture> (buttonDownImage, renderer,
-        x, y, width, height);
-    buttonUpTexture_   = make_unique<SDLTexture> (buttonUpImage, renderer,
-        x, y, width, height);
+    buttonDownTexture_ = make_unique<SDLTexture> (buttonDownImage, 
+        sdlRenderer->getSDL_Renderer(), x, y, width, height);
+    buttonUpTexture_   = make_unique<SDLTexture> (buttonUpImage, 
+        sdlRenderer->getSDL_Renderer (), x, y, width, height);
 }
 
 SDLButton::~SDLButton ()

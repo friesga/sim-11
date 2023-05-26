@@ -3,6 +3,7 @@
 
 #include "panel.h"
 #include "../sdlbutton/sdlbutton.h"
+#include "../sdlrenderer/sdlrenderer.h"
 
 #include <SDL.h>
 #include <string>
@@ -14,7 +15,7 @@ class SDLMomentaryButton : public SDLButton
 {
 public:
     SDLMomentaryButton (string buttonDownImage, string buttonUpImage,
-        Button::State initialState, SDL_Renderer *renderer, 
+        Button::State initialState, unique_ptr<SDLRenderer> &sdlRenderer, 
         EventCallback buttonClicked,
         int x, int y, int width, int height);
     ~SDLMomentaryButton ();

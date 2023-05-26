@@ -4,33 +4,28 @@
 // Support for the BA11-N Mounting Box
 //
 #include <functional>
-#include <thread>
 
 using std::unique_ptr;
-using std::this_thread::sleep_for;
 using std::bind;
 using std::placeholders::_1;
 
 // Constructor
 // Create a window showing the BA11-N and devices and then start a thread
 // handling the events and render the lamps and switches.
-BA11_N::BA11_N (Qbus *bus)
+BA11_N::BA11_N (Qbus *bus, Window *window)
     :
-    bus_ {bus}
+    bus_ {bus},
+    frontWindow_ {window}
 {
-    // Create a thread running the event handler and rendering
-    ba11_nThread_ = std::thread (&BA11_N::bezel, this);
+    createBezel ();
 }
 
 // Destructor
 BA11_N::~BA11_N ()
-{
-    // Wait till the thread has finished
-    ba11_nThread_.join ();
-}
+{}
 
 // 
-void BA11_N::bezel ()
+void BA11_N::createBezel ()
 {
     // Create the BA11-N panel at the specified position, width and height
     // and then start a loop handling the events and rendering lamps and
@@ -68,24 +63,23 @@ void BA11_N::bezel ()
     // At least for Windows, event handling has to be performed in the same
     // thread as in which the window has been created.
     //
-    frontWindow_ = sdlPanel_.createWindow ("PDP-11/03",
-        100, 100, 750, 200);
+    Panel *panel = frontWindow_->createPanel ();
 
-    frontWindow_->createFront ("../../assets/11_03 front.png", 0, 0);
-    pwrOkLed_ = frontWindow_->createIndicator ("../../assets/red led.png", 
+    panel->createFront ("../../assets/11_03 front.png", 0, 0);
+    pwrOkLed_ = panel->createIndicator ("../../assets/red led.png", 
         Indicator::State::Off, 515, 114, 12, 12);
-    runLed_ = frontWindow_->createIndicator ("../../assets/red led.png", 
+    runLed_ = panel->createIndicator ("../../assets/red led.png", 
         Indicator::State::Off, 534, 114, 12, 12);
 
-    restartSwitch_ = frontWindow_->createMomentaryButton ("../../assets/switch down.png",
+    restartSwitch_ = panel->createMomentaryButton ("../../assets/switch down.png",
         "../../assets/switch up.png", 
         Button::State::Down, bind (&BA11_N::restartSwitchClicked, this, _1), 
         600, 111, 20, 20);
-    haltSwitch_ = frontWindow_->createLatchingButton ("../../assets/switch down.png",
+    haltSwitch_ = panel->createLatchingButton ("../../assets/switch down.png",
         "../../assets/switch up.png", 
         Button::State::Down, bind (&BA11_N::haltSwitchToggled, this, _1),
         625, 111, 20, 20);
-    auxOnOffSwitch_ = frontWindow_->createLatchingButton ("../../assets/switch down.png",
+    auxOnOffSwitch_ = panel->createLatchingButton ("../../assets/switch down.png",
         "../../assets/switch up.png", 
         Button::State::Down, bind (&BA11_N::auxOnOffSwitchToggled, this, _1),
         650, 111, 20, 20);
@@ -93,23 +87,6 @@ void BA11_N::bezel ()
     // Now the RUN led is created when can subscribe to the signal indicating
     // the state to be shown.
     bus_->SRUN().subscribe (bind (&BA11_N::SRUNReceiver, this, _1));
-
-    // Start rendering the panel
-    render ();
-
-    // The user clicked the close button. Set the bus EXIT signal to indicate
-    // the simulator has to stop
-    bus_->EXIT().set (true);
-}
-
-void BA11_N::render ()
-{
-    do
-	{
-		frontWindow_->render();
-        sleep_for (std::chrono::milliseconds (10));
-	}
-    while (!frontWindow_->handleEvents ());
 }
 
 void BA11_N::restartSwitchClicked (Button::State state)

@@ -11,6 +11,7 @@
 #include "qbus/qbus.h"
 #include "console/console.h"
 #include "cmdlineoptions/cmdlineoptions.h"
+#include "panel.h"
 
 #include <memory>
 
@@ -44,8 +45,9 @@ class LSI11
 public:
 	LSI11 (CmdLineOptions const &cmdLineOptions);
 	~LSI11 ();
-	void configureDevices ();
-	void configureDevices (vector<shared_ptr<DeviceConfig>> systemConfig);
+	void configureDevices (Window *window);
+	void configureDevices (vector<shared_ptr<DeviceConfig>> systemConfig,
+		Window *window);
 	void run ();
 	void reset ();
 };

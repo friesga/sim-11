@@ -2,7 +2,7 @@
 #define _BA11_N_H_
 
 #include "qbus/qbus.h"
-#include "../sdl/sdlpanel/sdlpanel.h"
+#include "panel.h"
 
 #include <thread>
 #include <memory>
@@ -13,9 +13,8 @@ using std::unique_ptr;
 class BA11_N
 {
 public:
-    BA11_N (Qbus *bus);
+    BA11_N (Qbus *bus, Window *window);
     ~BA11_N ();
-    void render ();
     void restartSwitchClicked (Button::State state);
     void haltSwitchToggled (Button::State state);
     void auxOnOffSwitchToggled (Button::State state);
@@ -23,11 +22,7 @@ public:
 
 private:
     Qbus *bus_;
-
-	std::thread ba11_nThread_;
-
-    SDLPanel sdlPanel_;
-    unique_ptr<Window> frontWindow_;
+    Window *frontWindow_;
     Indicator *frontFigure_;
     Indicator *pwrOkLed_;
     Indicator *runLed_;
@@ -35,7 +30,7 @@ private:
     Button *haltSwitch_;
     Button *auxOnOffSwitch_;
 
-    void bezel ();
+    void createBezel ();
 };
 
 #endif // _BA11_N_H_

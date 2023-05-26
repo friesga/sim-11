@@ -33,3 +33,8 @@ void SDLRenderer::update ()
 {
     SDL_RenderPresent (sdl_Renderer_);
 }
+
+SDL_Renderer *SDLRenderer::getSDL_Renderer ()
+{
+    return sdl_Renderer_;
+}

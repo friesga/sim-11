@@ -16,7 +16,7 @@ using namespace kd11_f;
 
 // Configure the LSI-11 with a default configuration. Create a bare system
 // without any files attached.
-void LSI11::configureDevices ()
+void LSI11::configureDevices (Window *window)
 {
     // The Console class reads characters and sends them to the dlv11
     unique_ptr<Console> console =  OperatorConsoleFactory::create ();
@@ -27,7 +27,7 @@ void LSI11::configureDevices ()
     bdv11_ = new BDV11 (&bus_);
     rxv21_ = new RXV21 (&bus_);
     rlv12_ = new RLV12 (&bus_);
-    ba11_n_ = std::make_unique<BA11_N> (&bus_);
+    ba11_n_ = std::make_unique<BA11_N> (&bus_, window);
 
     installModules ();
     reset ();
@@ -36,7 +36,8 @@ void LSI11::configureDevices ()
 // Configure the devices and install them on the bus.
 // Accessing a non-configured device will result in a bus time-out
 // and the BDV11 boot will halt at address 000010.
-void LSI11::configureDevices (vector<shared_ptr<DeviceConfig>> systemConfig)
+void LSI11::configureDevices (vector<shared_ptr<DeviceConfig>> systemConfig,
+    Window *window)
 {
     // Check for presence of necessary devices
     checkConsistency (systemConfig);
@@ -78,7 +79,7 @@ void LSI11::configureDevices (vector<shared_ptr<DeviceConfig>> systemConfig)
                 break;
 
             case DeviceType::BA11_N:
-                ba11_n_ = std::make_unique<BA11_N> (&bus_);
+                ba11_n_ = std::make_unique<BA11_N> (&bus_, window);
                 break;
 
             default:

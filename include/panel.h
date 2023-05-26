@@ -13,8 +13,9 @@ using std::function;
 // This header file defines an interface for a panel for the sim-11 GUI.
 // The interface hides the GUI library used from the sim-11 classes.
 // 
-// A Panel comprises a Window, which on its turn comprises a front,
-// and one or more Indicators and Buttons.
+// A Window comprises one or more Panels (presumably one for each device),
+// which on their turn comprise a front and one or more Indicators and
+// Buttons.
 //
 class Indicator
 {
@@ -40,7 +41,7 @@ public:
     using EventCallback = function<void(State)>;
 };
 
-class Window
+class Panel
 {
 public:
     // A default value (0) may be specified for the width and height of
@@ -57,15 +58,14 @@ public:
     virtual Button *createMomentaryButton (string buttonDownImage, string buttonUpImage,
         Button::State initialState, Button::EventCallback buttonClicked,
         int x, int y, int width = 0, int height = 0) = 0;
-    virtual void render () = 0;
-    virtual bool handleEvents () = 0;
 };
 
-class Panel
+class Window
 {
 public:
-    virtual unique_ptr<Window> createWindow (char const *title, 
-        int x, int y, int width, int height) = 0;
+    virtual Panel *createPanel () = 0;
+    virtual void render () = 0;
+    virtual bool handleEvents () = 0;
 };
 
 #endif // !_PANEL_H_

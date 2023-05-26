@@ -131,6 +131,7 @@ set (BA11_N_SRCS
     src/ba11_n/ba11_n.cpp)
 
 set (SDL_SRCS
+    src/sdl/sdlinit/sdlinit.cpp
     src/sdl/sdlpanel/sdlpanel.cpp
     src/sdl/sdlwindow/sdlwindow.cpp
     src/sdl/sdlindicator/sdlindicator.cpp

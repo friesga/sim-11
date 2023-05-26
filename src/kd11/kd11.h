@@ -56,9 +56,10 @@ namespace kd11_f
 	public:
 		KD11 (Qbus *bus);
 		KD11 (Qbus *bus, shared_ptr<KD11Config> kd11Config);
-		void run ();
-		void run (u16 startAddress);
-	
+		~KD11 ();
+		void start (u16 startAddress);
+		void start ();
+		
 		// Give main() access to the CPU to set PC and runState
 		KD11CPU &cpu();
 
@@ -123,6 +124,9 @@ namespace kd11_f
 
 		enum {stdBootAddress = 0173000};
 
+		// The KD11 is started in its own thread
+		std::thread kd11Thread_;
+
 		// Definition of a queue for the processing of bus signal events
 		ThreadSafeQueue<Event> signalEventQueue_;
 
@@ -130,6 +134,7 @@ namespace kd11_f
 
 		State powerUpRoutine ();
 		void subscribeToSignals ();
+		void run ();
 		void runODT ();
 		bool signalAvailable ();
 		template <typename T> bool signalIsOfType ();

@@ -31,6 +31,12 @@ KD11::KD11 (Qbus *bus, shared_ptr<KD11Config> kd11Config)
     powerUpMode_ = kd11Config->powerUpMode;
 }
 
+KD11::~KD11 ()
+{
+    signalEventQueue_.push (Exit {});
+    kd11Thread_.join ();
+}
+
 
 KD11CPU& KD11::cpu ()
 {
@@ -52,12 +58,17 @@ void KD11::run ()
     }
 }
 
-// Run the KD11 state machine, starting the CPU at the given address. This
+void KD11::start ()
+{
+    kd11Thread_ = std::thread ([=] {this->run ();});
+}
+
+// Start the KD11 state machine, starting the CPU at the given address. This
 // address supersedes the standard boot address.
-void KD11::run (u16 startAddress)
+void KD11::start (u16 startAddress)
 {
     startAddress_ = startAddress;
-    run ();
+    start ();
 }
 
 bool KD11::signalAvailable ()

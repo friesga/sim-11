@@ -3,6 +3,7 @@
 
 #include "panel.h"
 #include "../sdltexture/sdltexture.h"
+#include "../sdlrenderer/sdlrenderer.h"
 
 #include <SDL.h>
 #include <string>
@@ -17,7 +18,7 @@ class SDLButton : public Button
 {
 public:
     SDLButton (string buttonDownImage, string buttonUpImage, 
-        Button::State initialState, SDL_Renderer *renderer,
+        Button::State initialState, unique_ptr<SDLRenderer> &sdlRenderer,
         EventCallback buttonClicked, int x, int y, int width, int height);
     ~SDLButton ();
 

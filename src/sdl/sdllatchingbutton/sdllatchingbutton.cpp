@@ -3,10 +3,10 @@
 using std::make_unique;
 
 SDLLatchingButton::SDLLatchingButton (string buttonDownImage, string buttonUpImage,
-    Button::State initialState, SDL_Renderer *renderer, EventCallback buttonClicked,
-    int x, int y, int width, int height)
+    Button::State initialState, unique_ptr<SDLRenderer> &sdlRenderer,
+    EventCallback buttonClicked, int x, int y, int width, int height)
     :
-    SDLButton (buttonDownImage, buttonUpImage, initialState, renderer,
+    SDLButton (buttonDownImage, buttonUpImage, initialState, sdlRenderer,
         buttonClicked, x, y, width, height)
 {}
 

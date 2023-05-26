@@ -3,6 +3,7 @@
 
 #include "panel.h"
 #include "../sdltexture/sdltexture.h"
+#include "../sdlrenderer/sdlrenderer.h"
 
 #include <SDL.h>
 
@@ -12,7 +13,7 @@ using std::unique_ptr;
 class SDLIndicator : public Indicator
 {
 public:
-    SDLIndicator (string imageFile, SDL_Renderer *renderer,
+    SDLIndicator (string imageFile, unique_ptr<SDLRenderer> &sdlRenderer,
         State showIndicator, int x, int y, int width, int height);
     ~SDLIndicator ();
     void render ();

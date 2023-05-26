@@ -3,6 +3,7 @@
 #include "cmdlineoptions/cmdlineoptions.h"
 #include "logger/logger.h"
 #include "configdata/iniprocessor/iniprocessor.h"
+#include "sdl/sdlwindow/sdlwindow.h"
 
 #include <iostream>
 
@@ -46,17 +47,24 @@ try
 	// Create a lsi11
 	LSI11 lsi11 {cmdLineOptions};
 
+	// Create the window for the panels
+	SDLWindow sdlWindow {"PDP-11/03", 100, 100, 750, 200};
+
 	// If a configuration file is specified create the system configuration from
 	// that file and configure the lsi11 with the devices and parameters as
 	// specified in that file. If no file is specified use the default
 	// configuration.
 	if (cmdLineOptions.config_file)
-		lsi11.configureDevices (createSystemConfig (cmdLineOptions.config_file));
+		lsi11.configureDevices (createSystemConfig (cmdLineOptions.config_file),
+			&sdlWindow);
 	else
-		lsi11.configureDevices ();
+		lsi11.configureDevices (&sdlWindow);
 
-	// Run the lsi11
+	// Start the lsi11. This starts the processor
 	lsi11.run();
+
+	// Start rendering the window and processing events
+	sdlWindow.handler ();
 
 	// Necessary for linux to get the command line prompt on the next line
 	std::cout << std::endl;

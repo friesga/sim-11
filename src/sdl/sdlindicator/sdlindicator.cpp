@@ -4,13 +4,14 @@
 
 using std::make_unique;
 
-SDLIndicator::SDLIndicator (string imageFile, SDL_Renderer *renderer,
-    State showIndicator, int x, int y, int width, int height)
+SDLIndicator::SDLIndicator (string imageFile,
+    unique_ptr<SDLRenderer> &sdlRenderer, State showIndicator, 
+    int x, int y, int width, int height)
         :
     showIndicator_ {showIndicator}
 {
-    sdlTtexture_ = make_unique<SDLTexture> (imageFile, renderer, x, y,
-        width, height);
+    sdlTtexture_ = make_unique<SDLTexture> (imageFile, 
+        sdlRenderer->getSDL_Renderer (), x, y, width, height);
 }
 
 SDLIndicator::~SDLIndicator ()
