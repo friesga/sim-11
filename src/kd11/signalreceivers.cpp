@@ -10,7 +10,6 @@ void KD11::subscribeToSignals ()
 {
     bus_->BHALT().subscribe (bind (&KD11::BHALTReceiver, this, _1));
     bus_->BPOK().subscribe (bind (&KD11::BPOKReceiver, this, _1));
-    bus_->EXIT().subscribe (bind (&KD11::ExitReceiver, this, _1));
     bus_->RESET().subscribe (bind (&KD11::ResetReceiver, this, _1));
 }
 

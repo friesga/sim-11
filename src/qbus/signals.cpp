@@ -24,8 +24,3 @@ Signal &Qbus::BINIT ()
 {
     return BINIT_;
 }
-
-Signal &Qbus::EXIT ()
-{
-    return EXIT_;
-}

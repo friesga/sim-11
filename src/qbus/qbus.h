@@ -77,7 +77,6 @@ public:
 	Signal &RESET ();
 	Signal &BHALT ();
 	Signal &BINIT ();
-	Signal &EXIT ();
 
 	Qbus ();
 	void setInterrupt (TrapPriority priority, 
@@ -108,7 +107,6 @@ private:
 	Signal RESET_;
 	Signal BHALT_;
 	Signal BINIT_;
-	Signal EXIT_;
 
 	// Signal administration
 	Signal::SubscriberKey ourKey_;
