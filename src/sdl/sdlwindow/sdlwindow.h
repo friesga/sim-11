@@ -22,8 +22,7 @@ public:
     ~SDLWindow ();
     Panel *createPanel () override;
     void handler ();
-    void render () override;
-    bool handleEvents () override;
+
 
 private:
     SDL_Window* sdlWindow_;
@@ -32,6 +31,9 @@ private:
     unique_ptr<SDLRenderer> sdlRenderer_; 
 
     vector<unique_ptr<SDLPanel>> panels_;
+
+    void render () override;
+    bool handleEvents () override;
 };
 
 #endif // _SDLWINDOW_H_
