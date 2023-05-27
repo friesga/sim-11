@@ -127,10 +127,6 @@ void BA11_N::auxOnOffSwitchToggled (Button::State state)
 }
 
 // The RUN led reflects the state of the SRUN signal.
-//
-// This function is called from another thread so possible run conditions
-// might occur. As long as this is the only call ro runLed_->show() this
-// should be fine.
 void BA11_N::SRUNReceiver (bool signalValue)
 {
     runLed_->show (signalValue ? Indicator::State::On : Indicator::State::Off);

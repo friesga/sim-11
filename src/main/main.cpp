@@ -44,11 +44,15 @@ try
 		trace.activate (cmdLineOptions.trace_file, 
 			Trace::Category::RLV12 | Trace::Category::CpuStep);
 
-	// Create a lsi11
-	LSI11 lsi11 {cmdLineOptions};
-
 	// Create the window for the panels
 	SDLWindow sdlWindow {"PDP-11/03", 100, 100, 750, 200};
+
+	// Create a lsi11 with configured (or default) devices.
+	// The devices are created after creation of the window to make sure the
+	// devices are destructed befor destruction of the SDLWindow. This prevents
+	// a segmentation fault that can occur if the devices access the window's
+	// panels.
+	LSI11 lsi11 {cmdLineOptions};
 
 	// If a configuration file is specified create the system configuration from
 	// that file and configure the lsi11 with the devices and parameters as
