@@ -271,14 +271,6 @@ TEST_F (KD11ODTTest, KD11FOnlyCommands)
             "New register value is zero if more digits erased than available"},
         {"2/177777\r0/2/\rP",       "\n000000\n@2/000000 177777\r\n@0/000000 2/177777 \r\n@", 
             "Address location can be opened without closing first location"},
-        {"p",                           "\n000000\n@p",
-            "Lowercase proceed command accepted"},
-        {"r0/\rP",                      "\n000000\n@r0/000000 \r\n@",
-            "Lowercase register designator accepted"},
-        {"rs/\rP",                      "\n000000\n@rs/000000 \r\n@",
-            "Lowercase PSW designator accepted"},
-        {"200g",                        "\n000000\n@200g",
-            "Lowercase Go command accepted"},
         {"MP",                          "\n000000\n@M 000000\n@",
             "Maintenance command accepted"}
     };

@@ -10,8 +10,9 @@ using namespace KD11_ODT;
 // case letters are not legal for ODT commands". (EK-11V03-TM-002)
 // This contradicts the following statement in the MicroComputer and Memories
 // handbook, chapter 7: "Console ODT will recognize uppercase and lowercase
-// characters as commands". We presume the latter statement is accurate for
-// a KD11-F processor.
+// characters as commands". The test runs conducted at a real LSI-11/2
+// demonstrated that lower case characters are not accepted.
+//
 Event KD11ODT::createEvent (CondData<u8> c)
 {
     if (!c.hasValue ())
@@ -45,27 +46,22 @@ Event KD11ODT::createEvent (CondData<u8> c)
             return AtSignCmdEntered {};
 
         case 'G':
-        case 'g':
             // Go command
             return GoCmdEntered {};
 
         case 'M':
-        case 'm':
             // Maintenance command
             return MaintenanceCmdEntered {};
 
         case 'P':
-        case 'p':
             // Proceed command
             return ProceedCmdEntered {};
 
         case 'R':
-        case 'r':
         case '$':
             return RegisterCmdEntered {};
 
         case 'S':
-        case 's':
             return PswDesignatorEntered {};
 
         case ']':
