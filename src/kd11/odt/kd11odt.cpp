@@ -38,13 +38,15 @@ CondData<u8> KD11ODT::echoCharacter (CondData<u8> c)
     // All characters (except ASCII codes 0, 2, 010 and 012 <LF>) are to be
     // echoed (EK-KDJ1A-UG-001).
     // According to micro note 050 a <CR> has to be echoed as <CR><LF>.
+    // Test runs conducted at a real LSI-11/2 demonstrated that <CR> is echoed
+    // as just <CR> without a <LF> and that echoing of a <LF> is not
+    // suppressed.
+    // 
     // An empty object is returned if the exit signal is set.
     if (c.hasValue ())
     {
-        if (c != 0 && c != 2 && c != 010 && c != 012)
+        if (c != 0 && c != 2 && c != 010)
             console_->write (c);
-        if (c == '\r')
-            console_->write ('\n');
     }
 
     return c;
@@ -179,7 +181,7 @@ void KD11ODT::setAddressValue ()
 State KD11ODT::openNextAddress (std::function<u16(void)> getNextAddress)
 {
     u16 address = getNextAddress ();
-    writeString ("\n@" + octalNumberToString (address) + '/');
+    writeString ("@" + octalNumberToString (address) + '/');
     return writeAddressContents (address);
 }
 
@@ -197,17 +199,11 @@ State KD11ODT::openNextRegister (State &&currentState,
     std::function<u8(void)> getNextRegister)
 {
     if (location_.isA<PSWLocation> ())
-    {
-        // As the <LF> isn't echoed the cursor is still at the end of the
-        // line so move it to the start of the next line for the prompt to be
-        // printed at the start of that line.
-        writeString ("\n");
         return AtPrompt_1 {};
-    }
 
     u8 registerNr = getNextRegister ();
     location_ = RegisterLocation {registerNr};
-    writeString ("\n@R" + to_string(registerNr) + '/' + 
+    writeString ("@R" + to_string(registerNr) + '/' + 
         octalNumberToString (cpu_.registerValue (registerNr)) + ' ');
     return move (currentState);
 }

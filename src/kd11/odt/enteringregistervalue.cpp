@@ -34,6 +34,7 @@ State KD11ODT::transition (EnteringRegisterValue_8 &&currentState, RuboutEntered
 State KD11ODT::transition (EnteringRegisterValue_8 &&, CloseLocationCmdEntered)
 {   
     setRegisterValue ();
+    console_->write ('\n');
     return AtPrompt_1 {};
 }
 
@@ -46,6 +47,7 @@ State KD11ODT::transition (EnteringRegisterValue_8 &&, OpenNextLocationCmdEntere
 
 State KD11ODT::transition (EnteringRegisterValue_8 &&, OpenPreviousLocationCmdEntered)
 {
+    console_->write ('\n');
     setRegisterValue ();
     return move (openNextRegister (RegisterOpened_4 {},
         [this] () {return static_cast<u8> (location_.registerNr () - 1) % 8;}));
@@ -64,6 +66,7 @@ State KD11ODT::transition (EnteringRegisterValue_8 &&, OpenPreviousLocationCmdEn
 // opening the location.
 State KD11ODT::transition (EnteringRegisterValue_8 &&, AtSignCmdEntered)
 {
+    writeString ("\n"); 
     setRegisterValue ();
     u16 addressToOpen {0};
     if (location_.isA<RegisterLocation> ())
@@ -76,7 +79,7 @@ State KD11ODT::transition (EnteringRegisterValue_8 &&, AtSignCmdEntered)
         // In case there is no currently open location print the error indication
         if (location_.previousIsA<monostate> ())
         {
-            writeString ("\n@/?\n");
+            writeString ("@/?\n");
             return AtPrompt_1 {};
         }
 

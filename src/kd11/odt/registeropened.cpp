@@ -6,6 +6,7 @@ using std::move;
 
 State KD11ODT::transition (RegisterOpened_4 &&, CloseLocationCmdEntered)
 {
+    console_->write ('\n');
     return AtPrompt_1 {};
 }
 
@@ -60,12 +61,14 @@ State KD11ODT::transition (RegisterOpened_4 &&currentState, OpenNextLocationCmdE
 // either to the current state or to atPrompt_1 in case the PSW is openend.
 State KD11ODT::transition (RegisterOpened_4 &&currentState, OpenPreviousLocationCmdEntered)
 {
+    console_->write ('\n');
     return move (openNextRegister (move (currentState),
         [this] () {return static_cast<u8> (location_.registerNr () - 1) % 8;}));
 }
 
 State KD11ODT::transition (RegisterOpened_4 &&currentState, AtSignCmdEntered)
 {
+    console_->write ('\n');
     return openNextAddress ([this] () 
     {
         return location_.isA<RegisterLocation> () ?
