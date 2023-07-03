@@ -104,8 +104,8 @@ u32 KD11ODT::stringToOctalNumber (string str)
     return returnValue;
 }
 
-// Convert the last n digits from the given octal number string to a u16
-// and report the success or failure of this conversion.
+// Convert the least significant 16 bits from the given octal number
+// string to a u16 and report the success or failure of this conversion.
 //
 // With the implementation of the RUBOUT the passed string can be empty. In 
 // that case the string cannot be converted to a integer and an error is
@@ -115,12 +115,8 @@ bool KD11ODT::stringTou16 (string str, size_t nDigits, u16 *value)
     if (str.empty ())
         return false;
 
-    string lastNDigits = str.substr(str.size() - min (str.size(), nDigits));
-    u32 tmp = stringToOctalNumber (lastNDigits);
-    if (tmp > numeric_limits<u16>::max())
-        return false;
-    
-    *value = static_cast<u16> (tmp);
+    u32 tmp = stringToOctalNumber (str);
+    *value = static_cast<u16> (tmp & 0177777);
     return true;
 }
 
