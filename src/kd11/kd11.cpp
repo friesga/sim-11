@@ -60,7 +60,7 @@ void KD11::run ()
 
 void KD11::start ()
 {
-    kd11Thread_ = std::thread ([=] {this->run ();});
+    kd11Thread_ = std::thread ([&, this] {this->run ();});
 }
 
 // Start the KD11 state machine, starting the CPU at the given address. This
