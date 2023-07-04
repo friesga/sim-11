@@ -83,12 +83,12 @@ State KD11ODT::transition (EnteringRegisterValue_8 &&, AtSignCmdEntered)
             return AtPrompt_1 {};
         }
 
-        //  In case the previously opened location was an
+        // In case the previously opened location was an
         // address, the address to open is that address; in case the
         // previously openend location was a register the contents of that
         // address is the location to open.
         if (location_.previousIsA<AddressLocation> ())
-            addressToOpen = location_.previousAddress ();
+            addressToOpen = location_.previousInputAddress ();
         else
             addressToOpen = cpu_.register_[location_.previousRegisterNr ()];
     }

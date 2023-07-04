@@ -36,7 +36,7 @@ State KD11ODT::transition (AddressOpened_3 &&, CloseLocationCmdEntered)
 // (Microcomputer and Memories Chapter 7)
 State KD11ODT::transition (AddressOpened_3 &&, OpenNextLocationCmdEntered)
 {
-    return openNextAddress ([this] () {return location_.address () + 2;});
+    return openNextAddress ([this] () {return location_.inputAddress () + 2;});
 }
 
 // The "up arrow" command is also used to close an open location or GPR.
@@ -48,7 +48,7 @@ State KD11ODT::transition (AddressOpened_3 &&, OpenNextLocationCmdEntered)
 State KD11ODT::transition (AddressOpened_3 &&, OpenPreviousLocationCmdEntered)
 {
     console_->write ('\n');
-    return openNextAddress ([this] () {return location_.address () - 2;});
+    return openNextAddress ([this] () {return location_.inputAddress () - 2;});
 }
 
 // Once a location has been opened, the @ command is used to close
@@ -60,17 +60,23 @@ State KD11ODT::transition (AddressOpened_3 &&, OpenPreviousLocationCmdEntered)
 State KD11ODT::transition (AddressOpened_3 &&, AtSignCmdEntered)
 {
     console_->write ('\n');
-    return openNextAddress ([this] () {return bus_->read (location_.address ());});
+    return openNextAddress ([this] () {return bus_->read (location_.inputAddress ());});
 }
 
 // This command is used once a location has been opened to open
 // the location that is the address of the contents of the open location
 // plus the address of the open location plus 2. 
 // (LSI11 PDP11/03 Processor Handbook)
+//
+// ODT interprets the contents of the currently open *word* as an address
+// indexed by the PC and opens the addressed location. (MicroProcessor
+// Computers Handbook).
+// The last sentence seems to indicate the word address has to be used
+// instead of the input address (which might be a byte address).
  State KD11ODT::transition (AddressOpened_3 &&, BackArrowCmdEntered)
  {
     console_->write ('\n');
     return openNextAddress ([this] () 
-        {return location_.address () + bus_->read (location_.address ()) + 2;});
+        {return location_.wordAddress () + bus_->read (location_.wordAddress ()) + 2;});
  }
 

@@ -44,7 +44,7 @@ State KD11ODT::transition (AtPrompt_1 && currentState, OpenLocationCmdEntered)
     if (location_.isA<AddressLocation> ())
     {
         // Print last address and it's value
-        writeString (octalNumberToString (bus_->read (location_.address ())) + ' ');
+        writeString (octalNumberToString (bus_->read (location_.wordAddress ())) + ' ');
         return AddressOpened_3 {};
     }
 

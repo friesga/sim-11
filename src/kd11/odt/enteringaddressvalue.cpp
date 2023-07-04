@@ -50,14 +50,14 @@ State KD11ODT::transition (EnteringAddressValue_7 &&, CloseLocationCmdEntered)
 State KD11ODT::transition (EnteringAddressValue_7 &&, OpenNextLocationCmdEntered)
 {
     setAddressValue ();
-    return openNextAddress ([this] () {return location_.address () + 2;});
+    return openNextAddress ([this] () {return location_.inputAddress () + 2;});
 }
 
 State KD11ODT::transition (EnteringAddressValue_7 &&, OpenPreviousLocationCmdEntered)
 {
     console_->write ('\n');
     setAddressValue ();
-    return openNextAddress ([this] () {return location_.address () - 2;});
+    return openNextAddress ([this] () {return location_.inputAddress () - 2;});
 }
 
 // Also the open location can be optionally modified similar to other commands
@@ -75,7 +75,7 @@ State KD11ODT::transition (EnteringAddressValue_7 &&, BackArrowCmdEntered)
     console_->write ('\n');
     setAddressValue ();
     return openNextAddress ([this] () 
-        {return location_.address () + bus_->read (location_.address ()) + 2;});
+        {return location_.wordAddress () + bus_->read (location_.wordAddress ()) + 2;});
 }
 
 // When an address location is open, another location can be opened without

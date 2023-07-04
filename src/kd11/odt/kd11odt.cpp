@@ -76,8 +76,8 @@ State KD11ODT::writeAddressContents (u16 address)
 {
     if (bus_->read (address).hasValue ())
     {
-        location_ = AddressLocation{ static_cast<u16> (address) };
-        writeString (octalNumberToString (bus_->read (location_.address ())) + ' ');
+        location_ = AddressLocation {static_cast<u16> (address)};
+        writeString (octalNumberToString (bus_->read (location_.wordAddress ())) + ' ');
         return AddressOpened_3{};
     }
     else
@@ -135,12 +135,12 @@ State KD11ODT::openAddress ()
     // Convert the last eight digits entered to an address. This can lead
     // to an address larger than the available memory, but currently the
     // address is a 16 bit unsigned integer and the maximum amount of memory
-    // in a LSI-11 is 32Kw.
+    // in a LSI-11 is 32kW.
     if (u16 address; stringTou16 (digitSeries_, 8, &address))
     {
-        // Clear the least significant bit in case an odd address is
-        // specified
-        return writeAddressContents (address & 0177776);
+        // The specified address might be a byte or a word address. This is
+        // dealt with in the Location class.
+        return writeAddressContents (address);
     }
 
     // Invalid address entered
@@ -148,12 +148,12 @@ State KD11ODT::openAddress ()
     return AtPrompt_1 {};
 }
 
-// Convert the last six digits entered to the new value. If this value
-// exceeds the maximal value of a 16 bit word display an error.
+// Convert the least significant 16 bits of the value entered to the new
+// value. If this value exceeds the maximal value of a 16 bit word display an error.
 void KD11ODT::setAddressValue ()
 {
     if (stringTou16 (digitSeries_, 6, &newValue_))
-        bus_->writeWord (location_.address (), newValue_);
+        bus_->writeWord (location_.wordAddress (), newValue_);
     else
         writeString ("?\n");
 }

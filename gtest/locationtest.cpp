@@ -9,9 +9,23 @@ TEST (LocationTest, AddressLocationCanBeSetAndExamined)
     testLocation = AddressLocation {10};
     testLocation = AddressLocation {20};
 
-    EXPECT_TRUE (testLocation.opened<AddressLocation> ().address () == 20);
-    EXPECT_TRUE (testLocation.previous<AddressLocation> ().address () == 10);
+    EXPECT_TRUE (testLocation.opened<AddressLocation> ().wordAddress () == 20);
+    EXPECT_TRUE (testLocation.previous<AddressLocation> ().wordAddress () == 10);
 }
+
+TEST (LocationTest, ByteAddressLocationCanBeSetAndExamined)
+{
+    Location testLocation {};
+
+    testLocation = AddressLocation {11};
+    testLocation = AddressLocation {21};
+
+    EXPECT_TRUE (testLocation.opened<AddressLocation> ().inputAddress () == 21);
+    EXPECT_TRUE (testLocation.opened<AddressLocation> ().wordAddress () == 20);
+    EXPECT_TRUE (testLocation.previous<AddressLocation> ().inputAddress () == 11);
+    EXPECT_TRUE (testLocation.previous<AddressLocation> ().wordAddress () == 10);
+}
+
 
 TEST (LocationTest, RegisterLocationCanBeSetAndExamined)
 {
@@ -70,13 +84,13 @@ TEST (LocationTest, AddressAndRegisterCanBeAccessed)
 {
     Location testLocation {};
     testLocation = AddressLocation {100};
-    EXPECT_TRUE  (testLocation.address () == 100);
+    EXPECT_TRUE  (testLocation.wordAddress () == 100);
     EXPECT_THROW (testLocation.registerNr (), std::bad_variant_access);
 
     testLocation = RegisterLocation {1};
     EXPECT_TRUE  (testLocation.registerNr () == 1);
-    EXPECT_THROW (testLocation.address (), std::bad_variant_access);
+    EXPECT_THROW (testLocation.wordAddress (), std::bad_variant_access);
 
-    EXPECT_TRUE  (testLocation.previousAddress () == 100);
+    EXPECT_TRUE  (testLocation.previousWordAddress () == 100);
     EXPECT_THROW (testLocation.previousRegisterNr (), std::bad_variant_access);
 }

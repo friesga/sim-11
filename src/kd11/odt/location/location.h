@@ -28,9 +28,11 @@ public:
     template <typename T> bool isA ();
     template <typename T> bool previousIsA ();
     Location &operator= (const LocationType &location);
-    u16 address ();
+    u16 inputAddress ();
+    u16 wordAddress ();
     u8 registerNr ();
-    u16 previousAddress ();
+    u16 previousInputAddress ();
+    u16 previousWordAddress ();
     u8 previousRegisterNr ();
 
 private:
@@ -78,11 +80,18 @@ inline bool Location::previousIsA ()
 }
 
 
+// Return the input address, presuming the current location is
+// an AddressLocation
+inline u16 Location::inputAddress ()
+{
+    return get<AddressLocation> (openedLocation_).inputAddress ();
+}
+
 // Return the currently opened address, presuming the current location is
 // an AddressLocation
-inline u16 Location::address ()
+inline u16 Location::wordAddress ()
 {
-    return get<AddressLocation> (openedLocation_).address ();
+    return get<AddressLocation> (openedLocation_).wordAddress ();
 }
 
 // Return the currently opened register, presuming the current location is
@@ -92,11 +101,18 @@ inline u8 Location::registerNr ()
     return get<RegisterLocation> (openedLocation_).registerNr ();
 }
 
+// Return the previous input address, presuming the previous location is
+// an AddressLocation
+inline u16 Location::previousInputAddress ()
+{
+    return get<AddressLocation> (previousLocation_).inputAddress ();
+}
+
 // Return the previously opened address, presuming the previous location is
 // an AddressLocation
-inline u16 Location::previousAddress ()
+inline u16 Location::previousWordAddress ()
 {
-    return get<AddressLocation> (previousLocation_).address ();
+    return get<AddressLocation> (previousLocation_).wordAddress ();
 }
 
 // Return the previously opened register, presuming the previous location is
