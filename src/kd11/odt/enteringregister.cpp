@@ -14,8 +14,18 @@ State KD11ODT::transition (EnteringRegister_6 &&, DigitEntered digitEntered)
 {
     // Append the entered digit to series of digits entered. See comment
     // on the transition in the StartingRegister_5 state.
-    registerSeries_.push_back (digitEntered.digit);
-    return EnteringRegister_6 {};
+    if (registerSeries_.empty ())
+    {
+        registerSeries_.push_back (digitEntered.digit);
+        return EnteringRegister_6 {};
+    }
+    else
+    {
+        digitSeries_ = registerSeries_;
+        digitSeries_.push_back (digitEntered.digit);
+        registerSeries_.clear ();
+        return EnteringAddress_5 {};
+    }
 }
 
 // The RUBOUT command cannot be used while entering a register number.
@@ -23,10 +33,17 @@ State KD11ODT::transition (EnteringRegister_6 &&, DigitEntered digitEntered)
 // cause ODT to revert to memory mode and open location 4.
 // (LSI11 PDP11/03 Processor Handbook)
 //
-// This implies that on a RUBOUT a transition to the AddressOpened_3 state.
+// This implies that on a RUBOUT a transition to the AddressOpened_3 state
+// has to performed. A RuboutEntered event can only be triggered when one
+// digit has been entered as a second digit will already have caused a
+// transition to the EnteringAddress_5 state. So on a RuboutEntered event
+// in this (i.e. the EnteringRegister_6) state, both registerSeries_ and
+// digitSeries_ have to be cleared.
 State KD11ODT::transition (EnteringRegister_6 &&, RuboutEntered)
 {
     console_->write ('\\');
+    registerSeries_.clear ();
+    digitSeries_.clear ();
     return EnteringAddress_5 {};
 }
 
@@ -36,15 +53,15 @@ State KD11ODT::transition (EnteringRegister_6 &&, PswDesignatorEntered)
     return EnteringRegister_6 {};
 }
 
+// According to EK-KDJ1A-UG-001 the last three digits indicates whether
+// a register or the PSW has to be opened. At least for a LSI-11/2 this
+// is not correct. If more than one register digit is entered the digits
+// are interpreted as an address to be opened.
 State KD11ODT::transition (EnteringRegister_6 &&, OpenLocationCmdEntered)
 {
     // The last character in the registerSeries indicates whether a register
-    // and in that case which register or the PSW has to be openend. An
-    // exception has to be made when the last three digits entered are 077
-    // or 477; in that case the PSW has to be opened. (EK-KDJ1A-UG-001)
-    if (registerSeries_.back() == PswDesignator || 
-        registerSeriesEndsWith ("077") ||
-        registerSeriesEndsWith ("477"))
+    // and in that case which register or the PSW has to be openend.
+    if (registerSeries_.back() == PswDesignator)
     {
         // Open PSW. Only set it as a new open location if it wasn't already
         // the open location. This way the previously opened memory or
