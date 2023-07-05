@@ -35,16 +35,28 @@ KD11ODT::KD11ODT (Qbus *bus, KD11CPU &cpu, unique_ptr<ConsoleAccess> consoleAcce
 
 CondData<u8> KD11ODT::echoCharacter (CondData<u8> c)
 {
-    // All characters (except ASCII codes 0, 2, 010 and 012 <LF>) are to be
-    // echoed (EK-KDJ1A-UG-001).
+    // All characters (except ASCII codes 0, 2, 010 <BS> and 012 <LF>) are
+    // to be echoed (EK-KDJ1A-UG-001).
+    // 
     // According to micro note 050 a <CR> has to be echoed as <CR><LF>.
     // Test runs conducted at a real LSI-11/2 demonstrated that <CR> is echoed
     // as just <CR> without a <LF> and that echoing of a <LF> is not
     // suppressed.
     // 
     // An empty object is returned if the exit signal is set.
+    //
+    // For the echoing of characters applies the same as for printing
+    // characters: writing a new-line on Linux results in the output
+    // of just <LF>, while on Windows it results in the  of <CR><LF>.
+    // Therefore writing a new-line on Linux is preceded by a <CR>.
+    //
     if (c.hasValue ())
     {
+#ifdef __linux__
+        if (c == '\n')
+            console_->write ('\r');
+#endif // __linux__
+
         if (c != 0 && c != 2 && c != 010)
             console_->write (c);
     }

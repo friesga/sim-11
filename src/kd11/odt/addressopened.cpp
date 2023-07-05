@@ -24,7 +24,7 @@ State KD11ODT::transition (AddressOpened_3 &&, RuboutEntered)
 // This file contains the state transitions for the state AddressOpened_3.
 State KD11ODT::transition (AddressOpened_3 &&, CloseLocationCmdEntered)
 {
-    console_->write ('\n');
+    writeString ("\n");
     return AtPrompt_1 {};
 }
 
@@ -47,7 +47,7 @@ State KD11ODT::transition (AddressOpened_3 &&, OpenNextLocationCmdEntered)
 // (Microcomputer and Memories Chapter 7)
 State KD11ODT::transition (AddressOpened_3 &&, OpenPreviousLocationCmdEntered)
 {
-    console_->write ('\n');
+    writeString ("\n");
     return openNextAddress ([this] () {return location_.inputAddress () - 2;});
 }
 
@@ -59,7 +59,7 @@ State KD11ODT::transition (AddressOpened_3 &&, OpenPreviousLocationCmdEntered)
 // is used. (Microcomputer and Memories Chapter 7)
 State KD11ODT::transition (AddressOpened_3 &&, AtSignCmdEntered)
 {
-    console_->write ('\n');
+    writeString ("\n");
     return openNextAddress ([this] () {return bus_->read (location_.inputAddress ());});
 }
 
@@ -75,7 +75,7 @@ State KD11ODT::transition (AddressOpened_3 &&, AtSignCmdEntered)
 // instead of the input address (which might be a byte address).
  State KD11ODT::transition (AddressOpened_3 &&, BackArrowCmdEntered)
  {
-    console_->write ('\n');
+    writeString ("\n");
     return openNextAddress ([this] () 
         {return location_.wordAddress () + bus_->read (location_.wordAddress ()) + 2;});
  }

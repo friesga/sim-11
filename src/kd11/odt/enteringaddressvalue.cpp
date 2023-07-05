@@ -43,7 +43,7 @@ State KD11ODT::transition (EnteringAddressValue_7 &&currentState, RuboutEntered)
 State KD11ODT::transition (EnteringAddressValue_7 &&, CloseLocationCmdEntered)
 {
     setAddressValue ();
-    console_->write ('\n');
+    writeString ("\n");
     return AtPrompt_1 {};
 }
 
@@ -55,7 +55,7 @@ State KD11ODT::transition (EnteringAddressValue_7 &&, OpenNextLocationCmdEntered
 
 State KD11ODT::transition (EnteringAddressValue_7 &&, OpenPreviousLocationCmdEntered)
 {
-    console_->write ('\n');
+    writeString ("\n");
     setAddressValue ();
     return openNextAddress ([this] () {return location_.inputAddress () - 2;});
 }
@@ -65,14 +65,14 @@ State KD11ODT::transition (EnteringAddressValue_7 &&, OpenPreviousLocationCmdEnt
 // (LSI11 PDP11/03 Processor Handbook)
 State KD11ODT::transition (EnteringAddressValue_7 &&, AtSignCmdEntered)
 {
-    console_->write ('\n');
+    writeString ("\n");
     setAddressValue ();
     return openNextAddress ([this] () {return newValue_;});
 }
 
 State KD11ODT::transition (EnteringAddressValue_7 &&, BackArrowCmdEntered)
 {
-    console_->write ('\n');
+    writeString ("\n");
     setAddressValue ();
     return openNextAddress ([this] () 
         {return location_.wordAddress () + bus_->read (location_.wordAddress ()) + 2;});
