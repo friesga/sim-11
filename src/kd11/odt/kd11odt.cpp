@@ -189,7 +189,7 @@ void KD11ODT::setAddressValue ()
 State KD11ODT::openNextAddress (std::function<u16(void)> getNextAddress)
 {
     u16 address = getNextAddress ();
-    writeString ("@" + octalNumberToString (address) + '/');
+    writeString (octalNumberToString (address) + '/');
     return writeAddressContents (address);
 }
 
@@ -211,7 +211,7 @@ State KD11ODT::openNextRegister (State &&currentState,
 
     u8 registerNr = getNextRegister ();
     location_ = RegisterLocation {registerNr};
-    writeString ("@R" + to_string(registerNr) + '/' + 
+    writeString ("R" + to_string(registerNr) + '/' + 
         octalNumberToString (cpu_.registerValue (registerNr)) + ' ');
     return move (currentState);
 }
