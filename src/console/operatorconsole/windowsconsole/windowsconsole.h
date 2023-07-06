@@ -9,8 +9,10 @@
 // Implementation of the Console reader function for Windows.
 class WindowsConsole : public OperatorConsole
 {
+    bool shiftKeyPressed {false};
+
     bool readCharacter (HANDLE hStdin, char* buffer, int count);
-    bool isValidKeyEvent (INPUT_RECORD* input_record);
+    bool getAsciiChar (INPUT_RECORD* input_record, char *c);
 
 public:
     void sender () override;

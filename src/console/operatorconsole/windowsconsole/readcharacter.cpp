@@ -19,11 +19,8 @@ bool WindowsConsole::readCharacter (HANDLE hStdin, char* buffer, int count)
                 if (!ReadConsoleInput (hStdin, irBuffer, 1, &cNumRead))
                     return false;
 
-                if (isValidKeyEvent (&irBuffer[0]))
-                {
-                    *buffer = irBuffer[0].Event.KeyEvent.uChar.AsciiChar;
+                if (getAsciiChar (&irBuffer[0], buffer))
                     return true;
-                }
                 break;
 
             case WAIT_TIMEOUT:

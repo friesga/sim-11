@@ -179,7 +179,7 @@ set (CONSOLE_SRCS
     src/console/operatorconsole/operatorconsole.cpp
     src/console/operatorconsole/windowsconsole/sender.cpp
     src/console/operatorconsole/windowsconsole/readcharacter.cpp
-    src/console/operatorconsole/windowsconsole/isvalidkeyevent.cpp)
+    src/console/operatorconsole/windowsconsole/getasciichar.cpp)
 endif ()
 
 if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")

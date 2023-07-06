@@ -64,8 +64,13 @@ Event KD11ODT::createEvent (CondData<u8> c)
         case 'S':
             return PswDesignatorEntered {};
 
-        case ']':
-            // ASCII 135 up arrow
+        case '^':
+            // ASCII 136 up arrow
+            // Descriptions of the Up Arrow command in the "Microprocessor
+            // Computers" and "Microcomputer and Memories" handbooks define
+            // ASCII character 0135 as the up arrow command. Tests executed
+            // on a LSI-11/2 show that this is a mistake and that the actual
+            // up arrow command is ASCII character 0136 (^).
             return OpenPreviousLocationCmdEntered {};
 
         case '_':
