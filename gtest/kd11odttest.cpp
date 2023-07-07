@@ -289,7 +289,7 @@ TEST_F (KD11ODTTest, KD11FOnlyCommands)
             "New register value is zero if more digits erased than available"},
         {"2/177777\r0/2/\rP",       "\n000000\n@2/000000 177777\r\n@0/000000 2/177777 \r\n@", 
             "Address location can be opened without closing first location"},
-        {"MP",                          "\n000000\n@M 000000\n@",
+        {"MP",                          "\n000000\n@M000010\n@",
             "Maintenance command accepted"}
     };
 

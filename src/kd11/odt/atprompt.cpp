@@ -82,8 +82,9 @@ State KD11ODT::transition (AtPrompt_1 &&, GoCmdEntered)
 // The "M" (Maintenance) command is used for maintenance purposes and prints
 // the contents of an internal CPU register. This data reflects how the
 // machine got to the console mode.
+// The value is or'ed with 010 as a real LSI-11/2 prints that value.
 State KD11ODT::transition (AtPrompt_1&&, MaintenanceCmdEntered)
 {
-    writeString (' ' + octalNumberToString (static_cast<u16> (cpu_.haltReason_)) + '\n');
+    writeString (octalNumberToString (static_cast<u16> (cpu_.haltReason_) | 010) + '\n');
     return AtPrompt_1 {};
 }
