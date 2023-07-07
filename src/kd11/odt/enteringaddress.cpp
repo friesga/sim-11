@@ -1,5 +1,4 @@
 #include "kd11odt.h"
-#include "trace/trace.h"
 
 using namespace KD11_ODT;
 
@@ -68,15 +67,15 @@ State KD11ODT::transition (EnteringAddress_5 &&, OpenLocationCmdEntered)
 //
 State KD11ODT::transition (EnteringAddress_5 &&, GoCmdEntered)
 {
-    // Presumably odd and other illegal addresses can be specified and
-    // consequently the processor will trap on a bus error.
+    // A byte address can be specified as start address. Bit 0 of the start
+    // address will be ignored and the CPU will start at the specified
+    // address minus 1. When the CPU then halts bit 0 of the printed address
+    // will be set so the printed address is the halt address plus 1.
     if (u16 address; stringTou16 (digitSeries_, 8, &address))
     {
         // Set the CPU into the running state with the specified address
         // as the PC and exit ODT
-        bus_->BINIT().cycle ();
-        cpu_.start (address);
-        trace.cpuEvent (CpuEventRecordType::CPU_ODT_P, address);
+        startCPU (address);
         return ExitPoint {};
     }
 

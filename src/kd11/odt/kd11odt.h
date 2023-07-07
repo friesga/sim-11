@@ -136,6 +136,7 @@ namespace KD11_ODT
             std::function<u8 (void)> getNextRegister);
         bool registerSeriesEndsWith (string);
         void setRegisterValue ();
+        void startCPU (u16 address);
 
     public:
         // Definition of entry actions and state transitions for valid characters.
@@ -150,6 +151,7 @@ namespace KD11_ODT
         State transition (AtPrompt_1&&, RegisterCmdEntered);                           // -> StartingRegister_2
         State transition (AtPrompt_1&&, OpenLocationCmdEntered);                       // -> AddressOpenend__3/RegisterOpened_4
         State transition (AtPrompt_1&&, ProceedCmdEntered);                            // -> ExitPoint
+        State transition (AtPrompt_1&&, GoCmdEntered);                                 // -> ExitPoint
         State transition (AtPrompt_1&&, BinaryDumpCmdEntered);                         // -> EnteringBinaryDump_10
         State transition (AtPrompt_1&&, MaintenanceCmdEntered);                        // -> AtPrompt_1
 

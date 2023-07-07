@@ -18,6 +18,9 @@ using namespace KD11_ODT;
 //
 // The @ prompt is issued on the entry of the AtPrompt_1 state.
 //
+// If the CPU is started on a byte address the halt address will be a byte
+// adress too, namely the halt address plus 1.
+//
 State KD11ODT::transition (EntryPoint &&, StartFsm)
 {
     writeString ("\n" + octalNumberToString (cpu_.registerValue (7)) + "\n");

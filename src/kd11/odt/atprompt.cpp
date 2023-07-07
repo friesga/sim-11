@@ -72,6 +72,13 @@ State KD11ODT::transition (AtPrompt_1 &&, ProceedCmdEntered)
     return ExitPoint {};
 }
 
+// On a Go command start the CPU at the default address (000000).
+State KD11ODT::transition (AtPrompt_1 &&, GoCmdEntered)
+{
+    startCPU (000000);
+    return ExitPoint {};
+}
+
 // The "M" (Maintenance) command is used for maintenance purposes and prints
 // the contents of an internal CPU register. This data reflects how the
 // machine got to the console mode.

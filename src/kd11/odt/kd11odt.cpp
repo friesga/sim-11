@@ -1,4 +1,5 @@
 #include "kd11odt.h"
+#include "trace/trace.h"
 
 using namespace KD11_ODT;
 
@@ -63,8 +64,6 @@ CondData<u8> KD11ODT::echoCharacter (CondData<u8> c)
 
     return c;
 }
-
-
 
 // Printing a new-line (\n) on a window in raw mode results for Windows
 // in a <CR><LF> sequence and for Linux in just a <LF>. So to get the same
@@ -235,6 +234,14 @@ void KD11ODT::setRegisterValue ()
     }
     else
         writeString ("?\n");
+}
+
+// Set the CPU into the running state with the specified address as the PC
+void KD11ODT::startCPU (u16 address)
+{
+    bus_->BINIT().cycle ();
+    cpu_.start (address);
+    trace.cpuEvent (CpuEventRecordType::CPU_ODT_P, address);
 }
 
 // Process the given character in the state machine, returning true if we can
