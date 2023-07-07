@@ -169,8 +169,10 @@ TEST_F (KD11ODTTest, KDF11PlusKD11_FCommands)
             "<LF> on byte location opens next byte location"},
         {"10;/2;\r10/\rP",     "\n000000\n@10;/000000 2;\r\n@10/000002 \r\n@",
             "Semicolon character is ignored"},
-         {"R0/2/\rP",          "\n000000\n@R0/000000 2/000000 \r\n@",
+        {"R0/2/\rP",          "\n000000\n@R0/000000 2/000000 \r\n@",
             "Address can be opened on entering register value"},
+        {"R0/R1/\rP",          "\n000000\n@R0/000000 R1/000000 \r\n@",
+            "Register can be opened on entering register value"},
     };
 
     for (TestSequence testSequence : testSequences)

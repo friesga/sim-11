@@ -193,6 +193,7 @@ namespace KD11_ODT
         State transition (RegisterOpened_4&&, OpenPreviousLocationCmdEntered);         // -> RegisterOpened_4/AtPrompt_1
         State transition (RegisterOpened_4&&, AtSignCmdEntered);                       // -> AddressOpened_3
         State transition (RegisterOpened_4&&, BackArrowCmdEntered);                    // -> AtPrompt_1
+        State transition (RegisterOpened_4&&, RegisterCmdEntered);                     // -> StartingRegister_2
 
         State transition (EnteringRegisterValue_8&&, DigitEntered);                    // -> EnteringRegisterValue_8
         State transition (EnteringRegisterValue_8&&, RuboutEntered);                   // -> EnteringRegisterValue_8
@@ -202,7 +203,7 @@ namespace KD11_ODT
         State transition (EnteringRegisterValue_8&&, OpenPreviousLocationCmdEntered);  // -> EnteringRegisterValue_8/AtPrompt_1
         State transition (EnteringRegisterValue_8&&, AtSignCmdEntered);                // -> AddressOpened_3
         State transition (EnteringRegisterValue_8&&, BackArrowCmdEntered);             // -> AtPrompt_1
-
+        
         void entry (ExitPoint);
 
         // Define a transition from all states to the ExitPoint state on an
