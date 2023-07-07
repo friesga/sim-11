@@ -167,6 +167,8 @@ TEST_F (KD11ODTTest, KDF11PlusKD11_FCommands)
             "Byte address value can be opened and value can be set"},
         {"11/\n\rP",           "\n000000\n@11/000000 \n000013/000000 \r\n@",
             "<LF> on byte location opens next byte location"},
+        {"10;/2;\r10/\rP",     "\n000000\n@10;/000000 2;\r\n@10/000002 \r\n@",
+            "Semicolon character is ignored"},
     };
 
     for (TestSequence testSequence : testSequences)

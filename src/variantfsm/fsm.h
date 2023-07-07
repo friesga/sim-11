@@ -38,7 +38,7 @@
 //! The default transition type is external. An internal transition can be
 //! executed by adding the type std::monostate to the state variant and
 //! returning that type from the transition.
-//! Note: std::monotype should not be defined as the first type of the variant
+//! Note: std::monostate should not be defined as the first type of the variant
 //! as that implies that it is the initial state and no entry actions will
 //! be performed.
 //! 

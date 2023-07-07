@@ -13,6 +13,7 @@
 
 using std::unique_ptr;
 using std::string;
+using std::monostate;
 
 namespace KD11_ODT
 {
@@ -24,6 +25,7 @@ namespace KD11_ODT
     };
 
     struct InvalidCharEntered {};
+    struct DiscardCharEntered {};               // ;
     struct ProceedCmdEntered {};                // P
     struct GoCmdEntered {};                     // G
     struct OpenLocationCmdEntered {};           // /
@@ -75,6 +77,7 @@ namespace KD11_ODT
     using Event = std::variant<StartFsm,
         DigitEntered,
         InvalidCharEntered,
+        DiscardCharEntered,
         ProceedCmdEntered,
         GoCmdEntered,
         OpenLocationCmdEntered,
@@ -100,7 +103,8 @@ namespace KD11_ODT
         EnteringAddressValue_7,
         EnteringRegisterValue_8,
         EnteringBinaryDump_10,
-        ExitPoint>;
+        ExitPoint,
+        monostate>;
 
     class KD11ODT : public variantFsm::Fsm<KD11ODT, Event, State>
     {
@@ -204,6 +208,15 @@ namespace KD11_ODT
         State transition (S&&, ExitCmdGiven)
         {
             return ExitPoint {};
+        }
+
+        // Define a transition to the same state on characters to be
+        // discarded. The transition is defined as an internal transition
+        // to prevent exit and entry actions to be executed.
+        template <typename S>
+        State transition (S&&, DiscardCharEntered)
+        {
+            return monostate {};
         }
 
         // Define the default transition for transitions not explicitly

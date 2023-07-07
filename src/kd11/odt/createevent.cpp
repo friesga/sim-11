@@ -84,6 +84,13 @@ Event KD11ODT::createEvent (CondData<u8> c)
             // (https://www.asciihex.com/character/control/127/0x7F/del-delete-character)
             return RuboutEntered {};
 
+        case ';':
+            // The semicolon is accepted for PDP-11 ODT compatibility. If the
+            // semicolon character is received during any character sequence,
+            // the console ignores it. (Microprocessor Computers Handbook,
+            // page 6-7).
+            return DiscardCharEntered {};
+
         default:
             // An invalid character was entered
             return InvalidCharEntered {};
