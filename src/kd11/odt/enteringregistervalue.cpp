@@ -38,6 +38,13 @@ State KD11ODT::transition (EnteringRegisterValue_8 &&, CloseLocationCmdEntered)
     return AtPrompt_1 {};
 }
 
+// When the user enters an Open location command (/) the given value has to be
+// used as an address to open.
+State KD11ODT::transition (EnteringRegisterValue_8&&, OpenLocationCmdEntered)
+{
+    return move (openAddress ());
+}
+
 State KD11ODT::transition (EnteringRegisterValue_8 &&, OpenNextLocationCmdEntered)
 {
     setRegisterValue ();
