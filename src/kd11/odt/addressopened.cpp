@@ -80,3 +80,13 @@ State KD11ODT::transition (AddressOpened_3 &&, AtSignCmdEntered)
         {return location_.wordAddress () + bus_->read (location_.wordAddress ()) + 2;});
  }
 
+// Micronote 050 (Micro ODT Differences - LSI-11 vs. LSI-11/23) states that
+// when an address location is open, another location can be opened without
+// explicitly closing the first location. Tests conducted at a real LSi-11/2
+// show that the same holds for register locations, i.e. when an address
+// location is open a register location can be opened and when a register
+// location is open an address or register location can be opened.
+State KD11ODT::transition (AddressOpened_3&&, RegisterCmdEntered)
+{
+    return StartingRegister_2 {};
+}

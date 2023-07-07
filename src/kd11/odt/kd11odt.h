@@ -167,6 +167,7 @@ namespace KD11_ODT
         State transition (AddressOpened_3&&, OpenPreviousLocationCmdEntered);          // -> AddressOpened_3
         State transition (AddressOpened_3&&, AtSignCmdEntered);                        // -> AddressOpened_3
         State transition (AddressOpened_3&&, BackArrowCmdEntered);                     // -> AddressOpened_3
+        State transition (AddressOpened_3&&, RegisterCmdEntered);                      // -> StartingRegister_2
 
         State transition (EnteringAddressValue_7&&, DigitEntered);                     // -> EnteringAddressValue_7
         State transition (EnteringAddressValue_7&&, RuboutEntered);                    // -> EnteringAddressValue_7
