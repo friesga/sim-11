@@ -83,3 +83,11 @@ State KD11ODT::transition (EnteringAddress_5 &&, GoCmdEntered)
     writeString ("?\n");
     return AtPrompt_1 {};
 }
+
+// Test runs on a real LSI-11/2 showed that a location can be closed before
+// it is opened.
+State KD11ODT::transition (EnteringAddress_5&&, CloseLocationCmdEntered)
+{
+    writeString ("\n");
+    return AtPrompt_1 {};
+}

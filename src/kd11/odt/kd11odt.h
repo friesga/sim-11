@@ -159,6 +159,7 @@ namespace KD11_ODT
         State transition (EnteringAddress_5&&, RuboutEntered);                         // -> EnteringAddress_5
         State transition (EnteringAddress_5&&, OpenLocationCmdEntered);                // -> AddressOpened_3
         State transition (EnteringAddress_5&&, GoCmdEntered);                          // -> ExitPoint
+        State transition (EnteringAddress_5&&, CloseLocationCmdEntered);               // -> AtPrompt_1
 
         State transition (AddressOpened_3&&, DigitEntered);                            // -> EnteringAddressValue_7
         State transition (AddressOpened_3&&, RuboutEntered);                           // -> EnteringAddressValue_7
@@ -186,6 +187,7 @@ namespace KD11_ODT
         State transition (EnteringRegister_6&&, RuboutEntered);                        // -> EnteringAddress_5
         State transition (EnteringRegister_6&&, PswDesignatorEntered);                 // -> EnteringRegister_6
         State transition (EnteringRegister_6&&, OpenLocationCmdEntered);               // -> RegisterOpenend_4
+        State transition (EnteringRegister_6&&, CloseLocationCmdEntered);              // -> AtPrompt_1
 
         State transition (RegisterOpened_4&&, CloseLocationCmdEntered);                // -> AtPrompt_1
         State transition (RegisterOpened_4&&, DigitEntered);                           // -> EnteringRegisterValue_8

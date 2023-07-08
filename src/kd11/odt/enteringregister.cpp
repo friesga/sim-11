@@ -82,3 +82,11 @@ State KD11ODT::transition (EnteringRegister_6 &&, OpenLocationCmdEntered)
 
     return RegisterOpened_4 {};
 }
+
+// Test runs on a real LSI-11/2 showed that an address location can be closed
+// before it is opened. Presumably the same holds for a register location.
+State KD11ODT::transition (EnteringRegister_6 &&, CloseLocationCmdEntered)
+{
+    writeString ("\n");
+    return AtPrompt_1 {};
+}
