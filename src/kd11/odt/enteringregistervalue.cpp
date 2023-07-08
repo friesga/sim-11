@@ -64,12 +64,11 @@ State KD11ODT::transition (EnteringRegisterValue_8 &&, OpenPreviousLocationCmdEn
 // been typed and close it; however, the last GPR or memory location
 // contents will be used as a pointer. (LSI11 PDP11/03 Processor Handbook)
 // 
-// This wording doesn't make exactly clear what is to be openend when the
-// previously openend location was a GPR. Should that register be opened or
-// the contents of that register? I presume the last.
-//
-// The description also doesn't make clear what the reaction should be in case
-// there is no previously opened location. I presume an error is retuned on
+// Test runs on a real LSI-11/2 show that the last sentence has to be read
+// as: "the last GPR contents or memory location contents will be used as a
+// pointer".
+// 
+// In case there is no previously opened location an error is retuned on
 // opening the location.
 State KD11ODT::transition (EnteringRegisterValue_8 &&, AtSignCmdEntered)
 {
