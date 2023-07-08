@@ -83,11 +83,14 @@ void KD11ODT::writeString (string str)
 
 // Read the contents from the given address and write it to the console,
 // indicating an error if the address could not be opened.
+//
+// Test runs conducted on a real LSI-11/2 show the last opened location
+// is set too on opening an invalid address.
 State KD11ODT::writeAddressContents (u16 address)
 {
+    location_ = AddressLocation {static_cast<u16> (address)};
     if (bus_->read (address).hasValue ())
     {
-        location_ = AddressLocation {static_cast<u16> (address)};
         writeString (octalNumberToString (bus_->read (location_.wordAddress ())) + ' ');
         return AddressOpened_3{};
     }
