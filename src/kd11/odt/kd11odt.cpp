@@ -150,16 +150,12 @@ State KD11ODT::openAddress ()
     // to an address larger than the available memory, but currently the
     // address is a 16 bit unsigned integer and the maximum amount of memory
     // in a LSI-11 is 32kW.
-    if (u16 address; stringTou16 (digitSeries_, 8, &address))
-    {
-        // The specified address might be a byte or a word address. This is
-        // dealt with in the Location class.
-        return writeAddressContents (address);
-    }
-
-    // Invalid address entered
-    writeString ("?\n");
-    return AtPrompt_1 {};
+    u16 address {0};
+    stringTou16 (digitSeries_, 8, &address);
+    
+    // The specified address might be a byte or a word address. This is
+    // dealt with in the Location class.
+    return writeAddressContents (address);
 }
 
 // Convert the least significant 16 bits of the value entered to the new
