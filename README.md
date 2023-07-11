@@ -19,8 +19,8 @@ additions:
 - Added unit tests.
 
 The simulator supports the followingh modules:
-- KD11-NA (M7270) CPU
-- MSV11 (M8044) 32KW RAM
+- KD11-NA (M7270) CPU (containing EIS and FIS support)
+- MSV11 (M8044) 32kW RAM
 - RXV21 (M8029) RX02 floppy disk controller
 - RLV11/RLV12 (M8061) RL01/RL02 hard disk controller
 - DLV11-J (M8043) 4x Serial line interface

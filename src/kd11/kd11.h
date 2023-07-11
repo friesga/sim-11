@@ -17,7 +17,7 @@ using std::unique_lock;
 using std::defer_lock;
 using std::monostate;
 
-namespace kd11_f
+namespace kd11_na
 {
 	// Definition of the events to be processed by the KD11
 	struct BPOK_high {};

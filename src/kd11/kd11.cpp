@@ -9,7 +9,7 @@
 
 using std::shared_ptr;
 
-using namespace kd11_f;
+using namespace kd11_na;
 
 // The factory power-up mode configuration is mode 0 (get vector at address
 // 24 and 26), but we'll set it to Bootstrap as that's more convenient for

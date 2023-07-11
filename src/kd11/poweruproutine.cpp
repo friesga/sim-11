@@ -1,6 +1,6 @@
 #include "kd11.h"
 
-using namespace kd11_f;
+using namespace kd11_na;
 
 // The reaction on a power-up is configured by the power-up mode. Three
 // power-up modes can be selected:
@@ -20,7 +20,7 @@ using namespace kd11_f;
 //
 // The function will return the state to transition to.
 //
-kd11_f::State KD11::powerUpRoutine ()
+kd11_na::State KD11::powerUpRoutine ()
 {
     cpu_.reset ();
     bus_->BINIT().cycle ();

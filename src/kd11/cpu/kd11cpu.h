@@ -10,7 +10,7 @@
 
 // Forward declarations to be able to declare these classes as friends
 namespace KD11_ODT { class KD11ODT; }
-namespace kd11_f { class KD11; }
+namespace kd11_na { class KD11; }
 
 // Definition of CPU states
 enum class CpuState
@@ -50,6 +50,14 @@ enum class CpuState
 
 #define USE_FLOAT
 
+// Two different LSI-models exist, the LSI-11 and the LSI-11/2. The LSI-11
+// comprises the M7264 module in one of its variations. The LSI-11/2
+// consists of a M7270 module with a KD11-HA or KD11-NA processor. These
+// processors differ in the availability of the EIS and FIS options.
+// See http://web.frainresearch.org:8080/projects/pdp-11/lsi-11.php for
+// an overview of the different variations. 
+// This class simulates a KD11-NA, i.e. a KD11-H base version including EIS
+// and FIS support.
 class KD11CPU : public CpuControl
 {
 public:
@@ -57,7 +65,7 @@ public:
 	// Instruction needs access to fetchWord(), putWord() and putByte().
 	// I prefer to declare these classes friends to making these functions
 	// public.
-	friend class kd11_f::KD11;
+	friend class kd11_na::KD11;
 	friend class KD11_ODT::KD11ODT;
 	friend class LSI11;
 	friend class Instruction;

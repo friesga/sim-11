@@ -1,12 +1,12 @@
 #include "kd11.h"
 
-using namespace kd11_f;
+using namespace kd11_na;
 using namespace KD11_ODT;
 
 using std::make_unique;
 using std::monostate;
 
-kd11_f::State KD11::transition (PowerOff&&, BPOK_high)
+kd11_na::State KD11::transition (PowerOff&&, BPOK_high)
 {
     return powerUpRoutine ();
 }
@@ -29,18 +29,18 @@ void KD11::entry (Running)
     bus_->SRUN ().set (false);
 }
 
-kd11_f::State KD11::transition (Running&&, Reset)
+kd11_na::State KD11::transition (Running&&, Reset)
 {
     return powerUpRoutine ();
 }
 
-kd11_f::State KD11::transition (Running&&, Halt)
+kd11_na::State KD11::transition (Running&&, Halt)
 {
     return Halted {};
 }
 
 
-kd11_f::State KD11::transition (Running&&, BPOK_low)
+kd11_na::State KD11::transition (Running&&, BPOK_low)
 {
     return PowerFail {};
 }
@@ -56,17 +56,17 @@ void KD11::entry (Halted)
     runODT ();
 }
 
-kd11_f::State KD11::transition (Halted&&, Start)
+kd11_na::State KD11::transition (Halted&&, Start)
 {
     return Running {};
 }
 
-kd11_f::State KD11::transition (Halted&&, Reset)
+kd11_na::State KD11::transition (Halted&&, Reset)
 {
     return powerUpRoutine ();
 }
  
-kd11_f::State KD11::transition (Halted&&, BPOK_low)
+kd11_na::State KD11::transition (Halted&&, BPOK_low)
 {
     return PowerOff {};
 }
@@ -96,13 +96,13 @@ void KD11::entry (PowerFail)
         signalEventQueue_.push (BDCOK_low {});
 }
 
-kd11_f::State KD11::transition (PowerFail&&, BDCOK_low)
+kd11_na::State KD11::transition (PowerFail&&, BDCOK_low)
 {
     bus_->SRUN ().set (false);
     return PowerOff {};
 }
 
-kd11_f::State KD11::transition (PowerFail&&, Halt)
+kd11_na::State KD11::transition (PowerFail&&, Halt)
 {
     bus_->SRUN ().set (false);
     return PowerOff {};
