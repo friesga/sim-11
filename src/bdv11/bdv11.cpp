@@ -10,6 +10,7 @@ using namespace std;
 using namespace std::chrono;
 using std::bind;
 using std::placeholders::_1;
+using std::shared_ptr;
 
 // Definition of the Switch Register lay-out.
 // The switch register is used for maintenance and system configuration
@@ -53,6 +54,8 @@ using std::placeholders::_1;
 #define	BDV11_2780	_B(3)
 #define	BDV11_PROG_ROM	_B(4)
 
+// Definition of the default contents of the switch register in case no
+// configuration options are specified
 #define	BDV11_SWITCH	(BDV11_CPU_TEST | BDV11_MEM_TEST \
 		| BDV11_DIALOG | BDV11_RX02)
 
@@ -64,12 +67,52 @@ BDV11::BDV11 (Qbus *bus)
 	option {0},
 	display {0},
 	ltc {0},
+	switchRegister_ {BDV11_SWITCH},
 	time {0.0},
 	ltcThread_ {thread(&BDV11::tick, this)},
 	running_ {true}
 {
 	bus_->BINIT().subscribe (bind (&BDV11::BINITReceiver, this, _1));
 	bus_->BPOK().subscribe (bind (&BDV11::BPOKReceiver, this, _1));
+}
+
+
+BDV11::BDV11 (Qbus *bus, shared_ptr<BDV11Config> bdv11Config)
+	:
+	BDV11 (bus)
+{
+	switchRegister_ = 0;
+	if (bdv11Config->cpuTests)
+		switchRegister_ |= BDV11_CPU_TEST;
+	if (bdv11Config->memoryTests)
+		switchRegister_ |= BDV11_MEM_TEST;
+	if (bdv11Config->decnetBoot)
+		switchRegister_ |= BDV11_DECNET;
+	if (bdv11Config->consoleDialog)
+		switchRegister_ |= BDV11_DIALOG;
+	
+	switch (bdv11Config->bootDevice)
+	{
+		case BDV11Config::BootDevice::RK05:
+			switchRegister_ |= BDV11_RK05;
+			break;
+
+		case BDV11Config::BootDevice::RL01:
+			switchRegister_ |= BDV11_RL01;
+			break;
+
+		case BDV11Config::BootDevice::RX01:
+			switchRegister_ |= BDV11_RX01;
+			break;
+
+		case BDV11Config::BootDevice::RX02:
+			switchRegister_ |= BDV11_RX02;
+			break;
+
+		case BDV11Config::BootDevice::BDV11ROM:
+			switchRegister_ |= BDV11_ROM;
+			break;
+	}
 }
 
 BDV11::~BDV11 ()
@@ -163,7 +206,7 @@ StatusCode BDV11::read (u16 address, u16 *destAddress)
 			break;
 
 		case 0177524:
-			*destAddress = BDV11_SWITCH;
+			*destAddress = switchRegister_;
 			break;
 
 		case 0177546:

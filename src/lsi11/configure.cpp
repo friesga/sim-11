@@ -2,6 +2,7 @@
 #include "configdata/iniprocessor/iniprocessor.h"
 #include "configdata/rxv21config/rxv21config.h"
 #include "configdata/msv11config/msv11config.h"
+#include "configdata/bdv11config/bdv11config.h"
 #include "console/operatorconsole/operatorconsolefactory.h"
 
 #include <memory>		// For make_unique
@@ -65,7 +66,8 @@ void LSI11::configureDevices (vector<shared_ptr<DeviceConfig>> systemConfig,
                 break;
 
             case DeviceType::BDV11:
-                bdv11_ = new BDV11 (&bus_);
+                bdv11_ = new BDV11 (&bus_,
+                    static_pointer_cast<BDV11Config> (device));
                 break;
 
             case DeviceType::RXV21:
