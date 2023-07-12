@@ -33,15 +33,26 @@ set (KD11ODT_SRCS
     src/kd11/odt/registeropened.cpp
     src/kd11/odt/startingregister.cpp)
 
+set (KD11CPU_SRCS
+    src/kd11/cpu/kd11cpu.cpp
+    src/kd11/cpu/cpucontrol.cpp
+    src/kd11/cpu/instruction/getaddress.cpp
+    src/kd11/cpu/instruction/getbyteoperand.cpp
+    src/kd11/cpu/instruction/getwordoperand.cpp
+    src/kd11/cpu/instruction/putbyteoperand.cpp
+    src/kd11/cpu/instruction/putwordoperand.cpp
+    src/kd11/cpu/kd11insn1/kd11insn1.cpp
+    src/kd11/cpu/kd11insn2/kd11insn2.cpp
+    src/kd11/cpu/kd11insnjsr/kd11insnjsr.cpp)
+
  set (KD11_SRCS
     src/kd11/kd11.cpp
     src/kd11/poweruproutine.cpp
     src/kd11/runodt.cpp
     src/kd11/signalreceivers.cpp
     src/kd11/statemachine.cpp
-    src/kd11/cpu/kd11cpu.cpp
-    src/kd11/cpu/cpucontrol.cpp
     src/kd11/operatorconsoleaccess/operatorconsoleaccess.cpp
+    ${KD11CPU_SRCS}
     ${KD11ODT_SRCS})
 
 set (RLV12_SRCS
