@@ -222,11 +222,7 @@ void KD11CPU::execInstr ()
                     switch (insn)
                     {
                         case 0000000: /* HALT */
-                            trace.cpuEvent (CpuEventRecordType::CPU_HALT, register_[7]);
-
-                            runState = CpuState::HALT;
-                            haltReason_ = HaltReason::HaltInstruction;
-                            bus_->SRUN().set (false);
+                            HALT ();
                             break;
 
                         case 0000001: /* WAIT */
@@ -282,12 +278,15 @@ void KD11CPU::execInstr ()
                     break;
 
                 case 00001: /* JMP */
+                    /*
                     if (!insn1->getAddress (this, register_, register_[7]))
                     {
                         // Illegal instruction
                         trace.trap (TrapRecordType::TRAP_RADDR, 04);
                         setTrap (&busError);
                     }
+                    */
+                    JMP (this, register_, insn);
                     break;
 
                 case 00002: /* 00 02 xx group */

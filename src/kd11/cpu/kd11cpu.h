@@ -69,6 +69,7 @@ public:
 	friend class KD11_ODT::KD11ODT;
 	friend class LSI11;
 	friend class Instruction;
+	friend class SingleOperandInstruction;
 
 	KD11CPU (Qbus *bus);
 	bool step ();
@@ -133,6 +134,9 @@ private:
 	void executeFISinstruction (u16 stackPointer, 
 		std::function<bool(Float, Float)> argumentsValid,
 		std::function<Float(Float, Float)>);
+
+	void HALT ();
+	void JMP (KD11CPU *cpu, u16 (&reg)[8], u16 instruction);
 };
 
 
