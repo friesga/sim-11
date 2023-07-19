@@ -57,3 +57,23 @@ void KD11CPU::BEQ (u16 instruction)
         register_[7] += (s16) branchInstruction.getOffset () * 2;
     }
 }
+
+// BGE - branch if greater than or equal (to zero)
+// 
+// Operation:
+//  PC <- PC + (2 * offset) if N xor V = 0
+//
+// Causes a branch if N and V are either both clear or both set. BGE is the
+// complementary operation to BLT. Thus BGE will always cause a branch when it
+// follows an operation that caused addition of two positive numbers. BGE will
+// also cause a branch on a zero result.
+//
+void KD11CPU::BGE (u16 instruction)
+{
+    if ((PSW_GET (PSW_N) ^ PSW_GET (PSW_V)) == 0)
+    {
+        BranchInstruction branchInstruction {instruction};
+
+        register_[7] += (s16)branchInstruction.getOffset () * 2;
+    }
+}
