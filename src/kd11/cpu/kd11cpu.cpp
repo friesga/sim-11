@@ -278,44 +278,23 @@ void KD11CPU::execInstr ()
                     break;
 
                 case 00001: /* JMP */
-                    /*
-                    if (!insn1->getAddress (this, register_, register_[7]))
-                    {
-                        // Illegal instruction
-                        trace.trap (TrapRecordType::TRAP_RADDR, 04);
-                        setTrap (&busError);
-                    }
-                    */
                     JMP (this, register_, insn);
                     break;
 
-                case 00002: /* 00 02 xx group */
-                    /* mask=177740: CLN/CLZ/CLV/CLC/CCC/SEN/SEZ/SEV/SEC/SCC */
+                case 00002:
+                    // 00 02 xx group
                     if ((insn & 0177770) == 0000200)
-                    {
-                        /* RTS */
-                        register_[7] = register_[insnrts->rn];
-                        register_[insnrts->rn] = fetchWord (register_[6]);
-                        register_[6] += 2;
-                    }
+                        RTS (this, register_, insn);
                     else if ((insn & 0177740) == 0000240)
                     {
-                        tmp = insn & 017;
                         if (insn & 020)
-                        {
-                            psw |= tmp;
-                        }
+                            SCC (psw, insn);
                         else
-                        {
-                            psw &= ~tmp;
-                        }
+                            CCC (psw, insn);
                     }
                     else
-                    {
-                        /* 00 02 10 - 00 02 27: unused */
-                        trace.trap (TrapRecordType::TRAP_ILL, 010);
-                        setTrap (&illegalInstructionTrap);
-                    }
+                        // 00 02 10 - 00 02 27
+                        unused ();
                     break;
 
                 case 00003: /* SWAB */
