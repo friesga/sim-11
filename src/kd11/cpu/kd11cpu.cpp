@@ -358,22 +358,8 @@ void KD11CPU::execInstr ()
                 case 00045:
                 case 00046:
                 case 00047:
-                {
-                    bool ok = insn1->getAddress (this, register_, dst);
-                    src = register_[insnjsr->r];
-                    if (!ok)
-                    {
-                        // Illegal instruction
-                        trace.trap (TrapRecordType::TRAP_RADDR, 04);
-                        setTrap (&busError);
-                        return;
-                    }
-                }
-                register_[6] -= 2;
-                putWord (register_[6], src);
-                register_[insnjsr->r] = register_[7];
-                register_[7] = dst;
-                break;
+                    JSR (this, register_, insn);
+                    break;
 
                 case 00050: /* CLR */
                     if (!insn1->putOperand (this, register_,

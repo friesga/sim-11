@@ -70,6 +70,7 @@ public:
 	friend class LSI11;
 	friend class Instruction;
 	friend class SingleOperandInstruction;
+	friend class JsrInstruction;
 	friend class OperandLocation;
 
 	KD11CPU (Qbus *bus);
@@ -151,6 +152,7 @@ private:
 	void BLT (u16 instruction);
 	void BGT (u16 instruction);
 	void BLE (u16 instruction);
+	void JSR (KD11CPU *cpu, u16 (&reg)[8], u16 instruction);
 };
 
 
