@@ -48,10 +48,12 @@ set (KD11CPU_SRCS
     src/kd11/cpu/singleoperandinstruction/singleoperandinstruction.cpp
     src/kd11/cpu/rtsfisinstruction/rtsfisinstruction.cpp
     src/kd11/cpu/ccinstruction/ccinstruction.cpp
+    src/kd11/cpu/branchinstruction/branchinstruction.cpp
     src/kd11/cpu/nooperandinstructions.cpp
     src/kd11/cpu/singleoperandinstructions.cpp
     src/kd11/cpu/rtsfisinstructions.cpp
-    src/kd11/cpu/ccinstructions.cpp)
+    src/kd11/cpu/ccinstructions.cpp
+    src/kd11/cpu/branchinstructions.cpp)
 
  set (KD11_SRCS
     src/kd11/kd11.cpp

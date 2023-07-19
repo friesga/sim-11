@@ -301,12 +301,13 @@ void KD11CPU::execInstr ()
                     SWAB (this, register_, insn);
                     break;
 
-                case 00004: /* BR */
+                case 00004: 
                 case 00005:
                 case 00006:
                 case 00007:
-                    register_[7] += (s16)((s8)insnbr->offset) * 2;
+                    BR (this, insn);
                     break;
+
                 case 00010: /* BNE */
                 case 00011:
                 case 00012:
