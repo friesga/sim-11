@@ -150,6 +150,7 @@ private:
 	void BGE (u16 instruction);
 	void BLT (u16 instruction);
 	void BGT (u16 instruction);
+	void BLE (u16 instruction);
 };
 
 

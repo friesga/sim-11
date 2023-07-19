@@ -118,3 +118,21 @@ void KD11CPU::BGT (u16 instruction)
         register_[7] += (s16)branchInstruction.getOffset () * 2;
     }
 }
+
+// BLE - branch if less than or equal (to zero)
+//
+// Operation:
+//  PC <- PC + (2 * offset) if Z or (N xor V) = 1
+//
+// Operation is similar to BLT but in addition will cause a branch if the
+// result of the previous operation was zero.
+//
+void KD11CPU::BLE (u16 instruction)
+{
+    if (PSW_GET (PSW_Z) || (PSW_GET (PSW_N) ^ PSW_GET (PSW_V)))
+    {
+        BranchInstruction branchInstruction {instruction};
+
+        register_[7] += (s16)branchInstruction.getOffset () * 2;
+    }
+}
