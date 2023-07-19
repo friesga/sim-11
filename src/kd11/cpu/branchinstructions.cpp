@@ -101,3 +101,20 @@ void KD11CPU::BLT (u16 instruction)
         register_[7] += (s16)branchInstruction.getOffset () * 2;
     }
 }
+
+// BGT - branch if greater than (zero)
+//
+// Operation:
+//  PC <- PC + (2 * offset) if Z or (N xor V) = 0
+//
+// Operation of BGT is similar to BGE, except BGT will not cause a branch on
+// a zero result.
+void KD11CPU::BGT (u16 instruction)
+{
+    if ((PSW_GET (PSW_Z) || (PSW_GET (PSW_N) ^ PSW_GET (PSW_V))) == 0)
+    {
+        BranchInstruction branchInstruction {instruction};
+
+        register_[7] += (s16)branchInstruction.getOffset () * 2;
+    }
+}
