@@ -298,19 +298,7 @@ void KD11CPU::execInstr ()
                     break;
 
                 case 00003: /* SWAB */
-                    if (!insn1->getOperand (this, register_,
-                        Bitmask (OperandOptions::Word), tmp))
-                        return;
-                    tmp = ((tmp & 0x00FF) << 8) | ((tmp >> 8) & 0xFF);
-
-                    if (!insn1->putOperand (this, register_,
-                        Bitmask (OperandOptions::Word), tmp))
-                        return;
-
-                    PSW_EQ (PSW_N, tmp & 0x80);
-                    PSW_EQ (PSW_Z, !((u8)tmp));
-                    PSW_CLR (PSW_V);
-                    PSW_CLR (PSW_C);
+                    SWAB (this, register_, insn);
                     break;
 
                 case 00004: /* BR */

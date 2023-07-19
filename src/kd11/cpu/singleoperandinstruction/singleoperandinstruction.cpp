@@ -19,12 +19,13 @@ OperandLocation SingleOperandInstruction::getOperandLocation (u16 (&reg)[8])
 		case 0:
 			// Register mode. The operand is contained in the instruction
 			// specified register.
-			return instr_.decoded.registerNr;
+			return OperandLocation (cpu_, instr_.decoded.registerNr);
 
 		case 1:
 			// Register deferred (indirect) mode. The register contains
 			// the address of the operand.
-			return CondData<u16> (reg[instr_.decoded.registerNr]);
+			return OperandLocation (cpu_, 
+				CondData<u16> (reg[instr_.decoded.registerNr]));
 
 		case 2:
 			// Auto-increment mode. Register is used as a pointer to
@@ -34,7 +35,7 @@ OperandLocation SingleOperandInstruction::getOperandLocation (u16 (&reg)[8])
 			addr = reg[instr_.decoded.registerNr];
 			reg[instr_.decoded.registerNr] += 2;
 			reg[instr_.decoded.registerNr] &= 0xFFFE;
-			return CondData<u16> (addr);
+			return OperandLocation (cpu_, CondData<u16> (addr));
 
 		case 3: 
 			// Auto-increment deferred (indirect) mode. Register is first used
@@ -43,7 +44,7 @@ OperandLocation SingleOperandInstruction::getOperandLocation (u16 (&reg)[8])
 			addr = reg[instr_.decoded.registerNr];
 			reg[instr_.decoded.registerNr] += 2;
 			reg[instr_.decoded.registerNr] &= 0xFFFE;
-			return CondData<u16> (cpu_->fetchWord (addr));
+			return OperandLocation (cpu_, CondData<u16> (cpu_->fetchWord (addr)));
 
 		case 4:
 			// Auto-decrement mode. Register is decremented and then used as a
@@ -51,7 +52,7 @@ OperandLocation SingleOperandInstruction::getOperandLocation (u16 (&reg)[8])
 			reg[instr_.decoded.registerNr] -= 2;
 			addr = reg[instr_.decoded.registerNr];
 			reg[instr_.decoded.registerNr] &= 0xFFFE;
-			return CondData<u16> (addr);
+			return OperandLocation (cpu_, CondData<u16> (addr));
 
 		case 5:
 			// Auto-decrement deferred (indirect) mode. Register is
@@ -61,7 +62,7 @@ OperandLocation SingleOperandInstruction::getOperandLocation (u16 (&reg)[8])
 			reg[instr_.decoded.registerNr] -= 2;
 			addr = reg[instr_.decoded.registerNr];
 			reg[instr_.decoded.registerNr] &= 0xFFFE;
-			return CondData<u16> (cpu_->fetchWord (addr));
+			return OperandLocation (cpu_, CondData<u16> (cpu_->fetchWord (addr)));
 
 		case 6:
 			// Index mode. The contents of the in the instruction specified
@@ -73,7 +74,8 @@ OperandLocation SingleOperandInstruction::getOperandLocation (u16 (&reg)[8])
 			// undesirable side effect of this function.
 			index = cpu_->fetchWord (reg[7]);
 			reg[7] += 2;
-			return CondData<u16> (reg[instr_.decoded.registerNr] + index);
+			return OperandLocation (cpu_, 
+				CondData<u16> (reg[instr_.decoded.registerNr] + index));
 			
 		case 7: 
 			// Index deferred (indirect) mode. The value stored in the word
@@ -84,7 +86,7 @@ OperandLocation SingleOperandInstruction::getOperandLocation (u16 (&reg)[8])
 			index = cpu_->fetchWord (reg[7]);
 			reg[7] += 2;
 			addr = reg[instr_.decoded.registerNr] + index;
-			return CondData<u16> (cpu_->fetchWord (addr));
+			return OperandLocation (cpu_, CondData<u16> (cpu_->fetchWord (addr)));
 
 		default:
 			// Satisfy the compiler. This cannot happen as the mode bit field

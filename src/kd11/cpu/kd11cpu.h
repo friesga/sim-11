@@ -70,6 +70,7 @@ public:
 	friend class LSI11;
 	friend class Instruction;
 	friend class SingleOperandInstruction;
+	friend class OperandLocation;
 
 	KD11CPU (Qbus *bus);
 	bool step ();
@@ -137,11 +138,12 @@ private:
 
 	bool popWord (u16 *destination);
 	void HALT ();
+	void unused ();
 	void JMP (KD11CPU *cpu, u16 (&reg)[8], u16 instruction);
+	void SWAB (KD11CPU* cpu, u16 (&reg)[8], u16 instruction);
 	void RTS (KD11CPU *cpu, u16 (&reg)[8], u16 instruction);
 	void CCC (u16 &psw, u16 instruction);
 	void SCC (u16 &psw, u16 instruction);
-	void unused ();
 };
 
 
