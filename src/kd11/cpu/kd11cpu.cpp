@@ -329,15 +329,13 @@ void KD11CPU::execInstr ()
                     BGE (insn);
                     break;
 
-                case 00024: /* BLT */
+                case 00024:
                 case 00025:
                 case 00026:
                 case 00027:
-                    if (PSW_GET (PSW_N) ^ PSW_GET (PSW_V))
-                    {
-                        register_[7] += (s16)((s8)insnbr->offset) * 2;
-                    }
+                    BLT (insn);
                     break;
+
                 case 00030: /* BGT */
                 case 00031:
                 case 00032:

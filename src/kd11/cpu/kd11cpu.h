@@ -148,6 +148,7 @@ private:
 	void BNE (u16 instruction);
 	void BEQ (u16 instruction);
 	void BGE (u16 instruction);
+	void BLT (u16 instruction);
 };
 
 
