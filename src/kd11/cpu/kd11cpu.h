@@ -145,6 +145,7 @@ private:
 	void CCC (u16 &psw, u16 instruction);
 	void SCC (u16 &psw, u16 instruction);
 	void BR (KD11CPU *cpu, u16 instruction);
+	void BNE (KD11CPU *cpu, u16 instruction);
 };
 
 

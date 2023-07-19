@@ -308,15 +308,13 @@ void KD11CPU::execInstr ()
                     BR (this, insn);
                     break;
 
-                case 00010: /* BNE */
+                case 00010:
                 case 00011:
                 case 00012:
                 case 00013:
-                    if (!PSW_GET (PSW_Z))
-                    {
-                        register_[7] += (s16)((s8)insnbr->offset) * 2;
-                    }
+                    BNE (this, insn);
                     break;
+
                 case 00014: /* BEQ */
                 case 00015:
                 case 00016:
