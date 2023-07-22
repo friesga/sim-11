@@ -66,3 +66,29 @@ void KD11CPU::SWAB (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
     PSW_CLR (PSW_V);
     PSW_CLR (PSW_C);
 }
+
+// CLR - clear destination
+//
+// Operation:
+//  (dst) <- 0
+//
+// Condition Codes:
+//  N: cleared
+//  Z: set
+//  V: cleared
+//  C: cleared
+//
+// Contents of specified destination are replaced with zeroes.
+//
+void KD11CPU::CLR (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
+{
+    SingleOperandInstruction soi {cpu, instruction};
+
+    OperandLocation operandLocation = soi.getOperandLocation (reg);
+    if (!operandLocation.isValid ())
+        return;
+
+    operandLocation.write (0);
+    PSW_CLR (PSW_N | PSW_V | PSW_C);
+    PSW_SET (PSW_Z);
+}

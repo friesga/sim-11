@@ -361,12 +361,8 @@ void KD11CPU::execInstr ()
                     JSR (this, register_, insn);
                     break;
 
-                case 00050: /* CLR */
-                    if (!insn1->putOperand (this, register_,
-                        Bitmask (OperandOptions::Word), 0))
-                        return;
-                    PSW_CLR (PSW_N | PSW_V | PSW_C);
-                    PSW_SET (PSW_Z);
+                case 00050:
+                    CLR (this, register_, insn);
                     break;
 
                 case 00051: /* COM */
