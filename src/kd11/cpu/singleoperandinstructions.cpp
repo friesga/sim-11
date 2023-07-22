@@ -298,3 +298,29 @@ void KD11CPU::SBC (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
     PSW_EQ (PSW_N, result & 0x8000);
     PSW_EQ (PSW_Z, !result);
 }
+
+// TST - test destination
+//
+// Operation
+// (dst) <- (dst)
+//
+// Condition Codes:
+//  N: set if the result is < 0; cleared otherwise
+//  Z: set if result is 0; cleared otherwise
+//  V: cleared
+//  C: cleared
+void KD11CPU::TST (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
+{
+    SingleOperandInstruction soi {cpu, instruction};
+
+    OperandLocation operandLocation = soi.getOperandLocation (reg);
+    if (!operandLocation.isValid ())
+        return;
+
+    u16 contents = operandLocation.contents ();
+
+    PSW_CLR (PSW_V);
+    PSW_CLR (PSW_C);
+    PSW_EQ (PSW_N, contents & 0100000);
+    PSW_EQ (PSW_Z, !contents);
+}

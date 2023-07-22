@@ -16,12 +16,13 @@ OperandLocation::OperandLocation (KD11CPU *cpu, CondData<u16> memoryAddress)
     cpu_ {cpu}
 {}
 
-// Return whether or not the OperandLocation is a valid address
+// Return whether or not the OperandLocation points to a valid address
 bool OperandLocation::isValid ()
 {
     return holds_alternative<u8> (location_) ||
         (holds_alternative<CondData <u16>> (location_) &&
-            get<CondData<u16>> (location_).hasValue ());
+            get<CondData<u16>> (location_).hasValue () &&
+            cpu_->fetchWord (get<CondData<u16>> (location_)).hasValue ());
 }
 
 // Return the memory address held in the location assuming the variant

@@ -389,16 +389,8 @@ void KD11CPU::execInstr ()
                     SBC (this, register_, insn);
                     break;
 
-                case 00057: /* TST */
-                    if (!insn1->getOperand (this, register_,
-                        Bitmask (OperandOptions::Word |
-                            OperandOptions::AutoIncr), tmp))
-                        return;
-
-                    PSW_CLR (PSW_V);
-                    PSW_CLR (PSW_C);
-                    PSW_EQ (PSW_N, tmp & 0x8000);
-                    PSW_EQ (PSW_Z, !tmp);
+                case 00057:
+                    TST (this, register_, insn);
                     break;
 
                 case 00060: /* ROR */
