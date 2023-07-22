@@ -126,3 +126,35 @@ void KD11CPU::COM (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
     PSW_EQ (PSW_N, operand & 0x8000);
     PSW_EQ (PSW_Z, !operand);
 }
+
+// INC - increment destination
+//
+// Operation:
+//  (dst) <- (dst) + 1
+//
+// Condition Codes:
+//  N: set if result is <0; cleared otherwise
+//  Z: set if result is O; cleared otherwise
+//  V: set if (dst) held 077777; cleared otherwise
+//  C: not affected
+//
+// Add one to contents of destination
+//
+void KD11CPU::INC (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
+{
+    SingleOperandInstruction soi {cpu, instruction};
+
+    OperandLocation operandLocation = soi.getOperandLocation (reg);
+    if (!operandLocation.isValid ())
+        return;
+
+    u16 contents = operandLocation.contents ();
+
+    // Increment the operand and write it to the operand location
+    u16 result = contents + 1;
+    operandLocation.write (result);
+
+    PSW_EQ (PSW_V, contents == 077777)
+    PSW_EQ (PSW_N, result & 0x8000);
+    PSW_EQ (PSW_Z, !result);
+}
