@@ -381,22 +381,8 @@ void KD11CPU::execInstr ()
                     NEG (this, register_, insn);
                     break;
 
-                case 00055: /* ADC */
-                    if (!insn1->getOperand (this, register_,
-                        Bitmask (OperandOptions::Word), src))
-                        return;
-
-                    tmp2 = PSW_GET (PSW_C) ? 1 : 0;
-                    tmp = src + tmp2;
-
-                    if (!insn1->putOperand (this, register_,
-                        Bitmask (OperandOptions::Word), tmp))
-                        return;
-
-                    PSW_EQ (PSW_V, src == 0077777 && PSW_GET (PSW_C));
-                    PSW_EQ (PSW_C, src == 0177777 && PSW_GET (PSW_C));
-                    PSW_EQ (PSW_N, tmp & 0x8000);
-                    PSW_EQ (PSW_Z, !tmp);
+                case 00055:
+                    ADC (this, register_, insn);
                     break;
 
                 case 00056: /* SBC */

@@ -227,3 +227,39 @@ void KD11CPU::NEG (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
     PSW_EQ (PSW_Z, !operand);
     PSW_EQ (PSW_C, operand);
 }
+
+// ADC - add carry
+//
+// Operation:
+//  (dst) <- (dst) + (C bit)
+//
+// Condition Codes:
+//  N: set if result <0; cleared otherwise
+//  Z: set if result = O; cleared otherwise
+//  V: set if (dst) was 077777 and (C) was l; cleared otherwise
+//  C: set if (dst) was 177777 and (C) was l; cleared otherwise
+//
+// Adds the contents of the C-bit into the destination. This permits the
+// carry from the addition of the low-order words to be carried into the
+// high-order result.
+//
+void KD11CPU::ADC (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
+{
+    SingleOperandInstruction soi {cpu, instruction};
+
+    OperandLocation operandLocation = soi.getOperandLocation (reg);
+    if (!operandLocation.isValid ())
+        return;
+
+    u16 contents = operandLocation.contents ();
+
+    u16 cBit = PSW_GET (PSW_C) ? 1 : 0;
+    u16 result = contents + cBit;
+
+    operandLocation.write (result);
+
+    PSW_EQ (PSW_V, contents == 0077777 && PSW_GET (PSW_C));
+    PSW_EQ (PSW_C, contents == 0177777 && PSW_GET (PSW_C));
+    PSW_EQ (PSW_N, result & 0x8000);
+    PSW_EQ (PSW_Z, !result);
+}
