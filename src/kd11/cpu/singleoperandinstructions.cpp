@@ -190,3 +190,40 @@ void KD11CPU::DEC (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
     PSW_EQ (PSW_N, result & 0100000);
     PSW_EQ (PSW_Z, !result);
 }
+
+// NEG - negate destination
+//
+// Operation:
+//  (dst) <- -(dst)
+//
+// Condition Codes:
+//  N: set if the result is < 0; cleared otherwise
+//  Z: set if result is O: cleared otherwise
+//  V: set if the result is 100000; cleared otherwise
+//  C: cleared if the result is O; set otherwise
+//
+// Replaces the contents of the destination address by its two's complement.
+// Note that 100000 is replaced by itself (in two's complement notation the
+// most negative number has no positive counterpart).
+//
+void KD11CPU::NEG (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
+{
+    SingleOperandInstruction soi {cpu, instruction};
+
+    OperandLocation operandLocation = soi.getOperandLocation (reg);
+    if (!operandLocation.isValid ())
+        return;
+    
+    u16 operand = operandLocation.contents ();
+
+    // Negate the operand and write it to the operand location
+    if (operand != 0100000)
+        operand = -operand;
+    
+    operandLocation.write (operand);
+
+    PSW_EQ (PSW_V, operand == 0100000)
+    PSW_EQ (PSW_N, operand & 0100000);
+    PSW_EQ (PSW_Z, !operand);
+    PSW_EQ (PSW_C, operand);
+}
