@@ -404,3 +404,47 @@ void KD11CPU::ROL (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
     PSW_EQ (PSW_Z, !result);
     PSW_EQ (PSW_V, PSW_GET (PSW_N) ^ PSW_GET (PSW_C));
 }
+
+// ASR - arithmetic shift right
+// 
+// Operation:
+//  (dst) <- (dst) shifted one place to the right
+//
+// Condition Codes:
+//  N: set if the high-order bit of the result is set (result < 0);
+//     cleared otherwise
+//  Z: set if the result - O; cleared otherwise
+//  V: loaded from the Exclusive OR of the N-bit and C-.bit (as set by the
+//     completion of the shift operation)
+//  C: loaded from low-order bit of the destination
+//
+// Shifts all bits of the destination right one place. Bit 15 is reproduced.
+// The C-bit is loaded from bit 0 of the destination. ASR performs signed
+// division of the destination by two.
+//
+void KD11CPU::ASR (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
+{
+    SingleOperandInstruction soi {cpu, instruction};
+
+    OperandLocation operandLocation = soi.getOperandLocation (reg);
+    if (!operandLocation.isValid ())
+        return;
+
+    u16 contents = operandLocation.contents ();
+
+    u16 result = contents;
+    if (result & 0100000)
+    {
+        result >>= 1;
+        result |= 0100000;
+    }
+    else
+        result >>= 1;
+
+    operandLocation.write (result);
+
+    PSW_EQ (PSW_C, contents & 1);
+    PSW_EQ (PSW_N, result & 0100000);
+    PSW_EQ (PSW_Z, !result);
+    PSW_EQ (PSW_V, PSW_GET (PSW_N) ^ PSW_GET (PSW_C));
+}
