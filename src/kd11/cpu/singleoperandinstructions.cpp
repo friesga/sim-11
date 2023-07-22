@@ -364,3 +364,43 @@ void KD11CPU::ROR (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
     PSW_EQ (PSW_Z, !result);
     PSW_EQ (PSW_V, PSW_GET (PSW_N) ^ PSW_GET (PSW_C));
 }
+
+// ROL - rotate left
+// 
+// Operation:
+//  (dst) <- (dst) rotated left one place
+//
+// Condition Codes:
+//  N: set if the high-order bit of the result word is set (result < 0);
+//     cleared otherwise
+//  Z: set if all bits of the result word = O; cleared otherwise
+//  V: loaded with the Exclusive OR of the N-bit and C-bit (as set by the
+//     completion of the rotate operation)
+//  C: loaded with the high-order bit of the destination
+//
+// Rotate all bits of the destination left one place. Bit 15 is loaded into
+// the C-bit of the status word and the previous contents of the C-bit are
+// loaded into Bit 0 of the destination.
+//
+void KD11CPU::ROL (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
+{
+    SingleOperandInstruction soi {cpu, instruction};
+
+    OperandLocation operandLocation = soi.getOperandLocation (reg);
+    if (!operandLocation.isValid ())
+        return;
+
+    u16 contents = operandLocation.contents ();
+
+    u16 cBit = PSW_GET (PSW_C);
+    u16 result = contents << 1;
+    if (cBit)
+        result |= 01;
+
+    operandLocation.write (result);
+
+    PSW_EQ (PSW_C, contents & 0100000);
+    PSW_EQ (PSW_N, result & 0100000);
+    PSW_EQ (PSW_Z, !result);
+    PSW_EQ (PSW_V, PSW_GET (PSW_N) ^ PSW_GET (PSW_C));
+}
