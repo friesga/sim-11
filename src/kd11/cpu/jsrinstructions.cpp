@@ -18,13 +18,16 @@
 // (if accessed in random order). These addressing modes may also be deferred,
 // @(reg) + and @X(reg) if the parameters are operand addresses rather than
 // the operands themselves.
+// 
+// JMP and JSR with register mode destinations are illegal instructions, and
+// trap to vector address 4.
 //
 void KD11CPU::JSR (KD11CPU* cpu, u16 (&registers)[8], u16 instruction)
 {
     JsrInstruction jsrInstruction {cpu, instruction};
     OperandLocation destination = jsrInstruction.getOperandLocation (registers);
 
-    if (!destination.isValid ())
+    if (!destination.isA<CondData<u16>> ())
     {
         // Illegal instruction
         trace.trap (TrapRecordType::TRAP_RADDR, 04);

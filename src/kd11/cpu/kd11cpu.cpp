@@ -350,7 +350,7 @@ void KD11CPU::execInstr ()
                     BLE (insn);
                     break;
 
-                case 00040: /* JSR */
+                case 00040:
                 case 00041:
                 case 00042:
                 case 00043:
