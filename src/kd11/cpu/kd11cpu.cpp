@@ -365,19 +365,8 @@ void KD11CPU::execInstr ()
                     CLR (this, register_, insn);
                     break;
 
-                case 00051: /* COM */
-                    if (!insn1->getOperand (this, register_,
-                        Bitmask (OperandOptions::Word), tmp))
-                        return;
-                    tmp = ~tmp;
-
-                    if (!insn1->putOperand (this, register_,
-                        Bitmask (OperandOptions::Word), tmp))
-                        return;
-                    PSW_CLR (PSW_V);
-                    PSW_SET (PSW_C);
-                    PSW_EQ (PSW_N, tmp & 0x8000);
-                    PSW_EQ (PSW_Z, !tmp);
+                case 00051:
+                    COM (this, register_, insn);
                     break;
 
                 case 00052: /* INC */

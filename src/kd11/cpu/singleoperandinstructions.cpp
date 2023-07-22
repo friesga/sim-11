@@ -92,3 +92,37 @@ void KD11CPU::CLR (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
     PSW_CLR (PSW_N | PSW_V | PSW_C);
     PSW_SET (PSW_Z);
 }
+
+// COM - complement destination
+//
+// Operation:
+//  (dst) <- ~(dst)
+//
+// Condition Codes:
+//  N: set if most significant bit of result is set; cleared otherwise
+//  Z: set if result is 0; cleared otherwise
+//  V: cleared
+//  C: set
+//
+// Replaces the contents of the destination address by their logical
+// complement (each bit equal to 0 is set and each bit equal to 1 is cleared).
+//
+void KD11CPU::COM (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
+{
+    SingleOperandInstruction soi {cpu, instruction};
+
+    OperandLocation operandLocation = soi.getOperandLocation (reg);
+    if (!operandLocation.isValid ())
+        return;
+
+    u16 operand = operandLocation.contents ();
+
+    // Complement the operand and write it to the operand location
+    operand = ~operand;
+    operandLocation.write (operand);
+
+    PSW_CLR (PSW_V);
+    PSW_SET (PSW_C);
+    PSW_EQ (PSW_N, operand & 0x8000);
+    PSW_EQ (PSW_Z, !operand);
+}

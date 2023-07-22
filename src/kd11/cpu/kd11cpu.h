@@ -143,6 +143,7 @@ private:
 	void JMP (KD11CPU *cpu, u16 (&reg)[8], u16 instruction);
 	void SWAB (KD11CPU* cpu, u16 (&reg)[8], u16 instruction);
 	void CLR (KD11CPU* cpu, u16 (&reg)[8], u16 instruction);
+	void COM (KD11CPU* cpu, u16 (&reg)[8], u16 instruction);
 	void RTS (KD11CPU *cpu, u16 (&reg)[8], u16 instruction);
 	void CCC (u16 &psw, u16 instruction);
 	void SCC (u16 &psw, u16 instruction);
