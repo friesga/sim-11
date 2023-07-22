@@ -393,23 +393,8 @@ void KD11CPU::execInstr ()
                     TST (this, register_, insn);
                     break;
 
-                case 00060: /* ROR */
-                    if (!insn1->getOperand (this, register_,
-                        Bitmask (OperandOptions::Word), src))
-                        return;
-                    tmp2 = PSW_GET (PSW_C);
-                    tmp = src >> 1;
-                    if (tmp2)
-                        tmp |= 0x8000;
-
-                    if (!insn1->putOperand (this, register_,
-                        Bitmask (OperandOptions::Word), tmp))
-                        return;
-
-                    PSW_EQ (PSW_C, src & 0x0001);
-                    PSW_EQ (PSW_N, tmp & 0x8000);
-                    PSW_EQ (PSW_Z, !tmp);
-                    PSW_EQ (PSW_V, PSW_GET (PSW_N) ^ PSW_GET (PSW_C));
+                case 00060:
+                    ROR (this, register_, insn);
                     break;
 
                 case 00061: /* ROL */

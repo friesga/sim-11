@@ -324,3 +324,43 @@ void KD11CPU::TST (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
     PSW_EQ (PSW_N, contents & 0100000);
     PSW_EQ (PSW_Z, !contents);
 }
+
+// ROR - rotate right
+//
+// Operation:
+//  (dst) <- (dst) rotated right one place
+//
+// Condition Codes:
+//  N: set if the high-order bit of the result is set (result < 0);
+//     cleared otherwise
+//  Z: set if all bits of result - 0; cleared otherwise
+//  V: loaded with the Exclusive OR of the N-bit and C-bi.t (as set by the
+//     completion of the rotate operation)
+//  C: loaded with the low-order bit of the destination
+//
+// Rotates all bits of the destination right one place. Bit 0 is loaded into
+// the C-bit and the previous contents of the C-bit are loaded into bit 15 of
+// the destination.
+//
+void KD11CPU::ROR (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
+{
+    SingleOperandInstruction soi {cpu, instruction};
+
+    OperandLocation operandLocation = soi.getOperandLocation (reg);
+    if (!operandLocation.isValid ())
+        return;
+
+    u16 contents = operandLocation.contents ();
+
+    u16 cBit = PSW_GET (PSW_C);
+    u16 result = contents >> 1;
+    if (cBit)
+        result |= 0100000;
+
+    operandLocation.write (result);
+
+    PSW_EQ (PSW_C, contents & 0000001);
+    PSW_EQ (PSW_N, result & 0100000);
+    PSW_EQ (PSW_Z, !result);
+    PSW_EQ (PSW_V, PSW_GET (PSW_N) ^ PSW_GET (PSW_C));
+}
