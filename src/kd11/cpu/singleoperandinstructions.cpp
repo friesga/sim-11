@@ -263,3 +263,38 @@ void KD11CPU::ADC (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
     PSW_EQ (PSW_N, result & 0x8000);
     PSW_EQ (PSW_Z, !result);
 }
+
+// SBC - subtract carry
+//
+// Operation
+//  (dst) <- (dst) - (C)
+//
+// Condition Codes:
+//  N: set if result <O; cleared otherwise
+//  Z: set if result O; cleared otherwise
+//  V: set if (dst) was 100000; cleared otherwise
+//  C: set if (dst) was 0 and C was 1; cleared otherwise
+//
+// Subtracts the contents of the C-bit from the destination. This permits the
+// carry from the subtraction of two low-order words to be subtracted from the
+// high order part of the result.
+void KD11CPU::SBC (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
+{
+    SingleOperandInstruction soi {cpu, instruction};
+
+    OperandLocation operandLocation = soi.getOperandLocation (reg);
+    if (!operandLocation.isValid ())
+        return;
+
+    u16 contents = operandLocation.contents ();
+
+    u16 cBit = PSW_GET (PSW_C) ? 1 : 0;
+    u16 result = contents - cBit;
+
+    operandLocation.write (result);
+
+    PSW_EQ (PSW_V, contents == 0100000);
+    PSW_EQ (PSW_C, !contents && PSW_GET (PSW_C));
+    PSW_EQ (PSW_N, result & 0x8000);
+    PSW_EQ (PSW_Z, !result);
+}
