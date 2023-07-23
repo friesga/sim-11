@@ -31,6 +31,7 @@ class SingleOperandInstruction
 public:
 	SingleOperandInstruction (KD11CPU *cpu, u16 instruction);
 	OperandLocation getOperandLocation (u16 (&reg)[8]);
+	OperandLocation decodeOperand (Operand operand, u16 (&reg)[8]);
 };
 
 
