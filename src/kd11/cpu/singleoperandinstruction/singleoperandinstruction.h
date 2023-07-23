@@ -6,13 +6,20 @@
 
 class SingleOperandInstruction
 {
+	struct Operand
+	{
+		u16	registerNr:3;
+		u16	mode:3;
+	};
+
+	// Single operand instruction format comprises the operation code and
+	// one operand
 	union instr
 	{
 		u16 word;
 		struct
 		{
-			u16	registerNr:3;
-			u16	mode:3;
+			Operand operand;
 			u16	opcode:10;
 		} 
 		decoded;
