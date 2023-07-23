@@ -50,12 +50,14 @@ set (KD11CPU_SRCS
     src/kd11/cpu/ccinstruction/ccinstruction.cpp
     src/kd11/cpu/branchinstruction/branchinstruction.cpp
     src/kd11/cpu/jsrinstruction/jsrinstruction.cpp
+    src/kd11/cpu/markinstruction/markinstruction.cpp
     src/kd11/cpu/nooperandinstructions.cpp
     src/kd11/cpu/singleoperandinstructions.cpp
     src/kd11/cpu/rtsfisinstructions.cpp
     src/kd11/cpu/ccinstructions.cpp
     src/kd11/cpu/branchinstructions.cpp
-    src/kd11/cpu/jsrinstructions.cpp)
+    src/kd11/cpu/jsrinstructions.cpp
+    src/kd11/cpu/markinstructions.cpp)
 
  set (KD11_SRCS
     src/kd11/kd11.cpp

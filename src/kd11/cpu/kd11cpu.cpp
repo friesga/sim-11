@@ -409,11 +409,8 @@ void KD11CPU::execInstr ()
                     ASL (this, register_, insn);
                     break;
 
-                case 00064: /* MARK */
-                    register_[6] = register_[7] + 2 * insnmark->nn;
-                    register_[7] = register_[5];
-                    register_[5] = fetchWord (register_[6]);
-                    register_[6] += 2;
+                case 00064:
+                    MARK (this, register_, insn);
                     break;
 
                 case 00067: /* SXT */
