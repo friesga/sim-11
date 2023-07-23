@@ -417,9 +417,9 @@ void KD11CPU::execInstr ()
                     SXT (this, register_, insn);
                     break;
 
-                default: /* 006500-006677, 007000-007777: unused */
-                    trace.trap (TrapRecordType::TRAP_ILL, 010);
-                    setTrap (&illegalInstructionTrap);
+                default:
+                    // 006500-006677, 007000-007777
+                    unused ();
                     break;
             }
             break;
