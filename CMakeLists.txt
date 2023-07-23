@@ -44,6 +44,7 @@ set (KD11CPU_SRCS
     src/kd11/cpu/kd11insn1/kd11insn1.cpp
     src/kd11/cpu/kd11insn2/kd11insn2.cpp
     src/kd11/cpu/kd11insnjsr/kd11insnjsr.cpp
+    src/kd11/cpu/lsi11instruction/lsi11instruction.cpp
     src/kd11/cpu/operandlocation/operandlocation.cpp
     src/kd11/cpu/singleoperandinstruction/singleoperandinstruction.cpp
     src/kd11/cpu/rtsfisinstruction/rtsfisinstruction.cpp

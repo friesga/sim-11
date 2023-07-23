@@ -69,7 +69,7 @@ public:
 	friend class KD11_ODT::KD11ODT;
 	friend class LSI11;
 	friend class Instruction;
-	friend class SingleOperandInstruction;
+	friend class LSI11Instruction;
 	friend class JsrInstruction;
 	friend class OperandLocation;
 
