@@ -405,20 +405,8 @@ void KD11CPU::execInstr ()
                     ASR (this, register_, insn);
                     break;
 
-                case 00063: /* ASL */
-                    if (!insn1->getOperand (this, register_,
-                        Bitmask (OperandOptions::Word), src))
-                        return;
-                    tmp = src << 1;
-
-                    if (!insn1->putOperand (this, register_,
-                        Bitmask (OperandOptions::Word), tmp))
-                        return;
-
-                    PSW_EQ (PSW_C, src & 0x8000);
-                    PSW_EQ (PSW_N, tmp & 0x8000);
-                    PSW_EQ (PSW_Z, !tmp);
-                    PSW_EQ (PSW_V, PSW_GET (PSW_N) ^ PSW_GET (PSW_C));
+                case 00063:
+                    ASL (this, register_, insn);
                     break;
 
                 case 00064: /* MARK */

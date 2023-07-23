@@ -448,3 +448,41 @@ void KD11CPU::ASR (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
     PSW_EQ (PSW_Z, !result);
     PSW_EQ (PSW_V, PSW_GET (PSW_N) ^ PSW_GET (PSW_C));
 }
+
+// ASL - arithmetic shift left
+//
+// Operation:
+//  (dst) <- (dst) shifted one place to the left
+//
+// Condition Codes:
+//  N: set if high-order bit of the result is set (result < 0); cleared
+//     otherwise
+//  Z: set if the result = O; cleared otherwise
+//  V: loaded with the exclusive OR of the N-bit and C-bit (as set by the
+//     completion of the shift operation)
+//  C: loaded with the high-order bit of the destination
+//
+// Shifts all bits of the destination left one place. Bit 0 is loaded with
+// an 0. The C-bit of the status word is loaded from the most significant bit
+// of the destination. ASL performs a signed multiplication of the destination
+// by 2 with overflow indication.
+//
+void KD11CPU::ASL (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
+{
+    SingleOperandInstruction soi {cpu, instruction};
+
+    OperandLocation operandLocation = soi.getOperandLocation (reg);
+    if (!operandLocation.isValid ())
+        return;
+
+    u16 contents = operandLocation.contents ();
+
+    u16 result = contents << 1;
+
+    operandLocation.write (result);
+
+    PSW_EQ (PSW_C, contents & 0100000);
+    PSW_EQ (PSW_N, result & 0100000);
+    PSW_EQ (PSW_Z, !result);
+    PSW_EQ (PSW_V, PSW_GET (PSW_N) ^ PSW_GET (PSW_C));
+}
