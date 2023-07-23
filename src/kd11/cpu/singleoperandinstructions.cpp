@@ -486,3 +486,34 @@ void KD11CPU::ASL (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
     PSW_EQ (PSW_Z, !result);
     PSW_EQ (PSW_V, PSW_GET (PSW_N) ^ PSW_GET (PSW_C));
 }
+
+// SXT - sign extend
+//
+// Operation:
+//  (dst) <- 0 if N bit is clear
+//  (dst) <- 1 if N bit is set
+//
+// Condition Codes:
+//  N: unaffected
+//  Z: set if N bit clear
+//  V: cleared
+//  C: unaffected
+//
+// If the condition code bit N is set then a -1 is placed in the destination
+// operand: if N bit is clear, then a 0 is placed in the destination operand.
+//
+void KD11CPU::SXT (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
+{
+    SingleOperandInstruction soi {cpu, instruction};
+
+    OperandLocation operandLocation = soi.getOperandLocation (reg);
+    if (!operandLocation.isValid ())
+        return;
+
+    u16 result = PSW_GET (PSW_N) ? 0177777 : 0;
+
+    operandLocation.write (result);
+
+    PSW_EQ (PSW_Z, !PSW_GET (PSW_N));
+    PSW_CLR (PSW_V);
+}

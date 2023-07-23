@@ -413,22 +413,8 @@ void KD11CPU::execInstr ()
                     MARK (this, register_, insn);
                     break;
 
-                case 00067: /* SXT */
-                    if (PSW_GET (PSW_N))
-                    {
-                        tmp = 0xFFFF;
-                    }
-                    else
-                    {
-                        tmp = 0;
-                    }
-
-                    if (!insn1->putOperand (this, register_,
-                        Bitmask (OperandOptions::Word), tmp))
-                        return;
-
-                    PSW_EQ (PSW_Z, !PSW_GET (PSW_N));
-                    PSW_CLR (PSW_V);
+                case 00067:
+                    SXT (this, register_, insn);
                     break;
 
                 default: /* 006500-006677, 007000-007777: unused */
