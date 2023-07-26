@@ -455,37 +455,10 @@ void KD11CPU::execInstr ()
                     MUL (this, register_, insn);
                     break;
 
-                case 0071: /* DIV */
-                    tmps32 = (register_[insnjsr->r] << 16) | register_[insnjsr->r | 1];
-
-                    if (!insnjsr->getOperand (this, register_,
-                        Bitmask (OperandOptions::Word |
-                            OperandOptions::AutoIncr), src))
-                        return;
-
-                    if (src == 0)
-                    {
-                        PSW_SET (PSW_C);
-                        PSW_SET (PSW_V);
-                    }
-                    else
-                    {
-                        s32 quot = tmps32 / (s16)src;
-                        s32 rem = tmps32 % (s16)src;
-                        PSW_CLR (PSW_C);
-                        if ((s16)quot != quot)
-                        {
-                            PSW_SET (PSW_V);
-                        }
-                        else
-                        {
-                            register_[insnjsr->r] = (u16)quot;
-                            register_[insnjsr->r | 1] = (u16)rem;
-                            PSW_EQ (PSW_Z, !quot);
-                            PSW_EQ (PSW_N, quot < 0);
-                        }
-                    }
+                case 0071:
+                    DIV (this, register_, insn);
                     break;
+
                 case 0072: /* ASH */
                     dst = register_[insnjsr->r];
 

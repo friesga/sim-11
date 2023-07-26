@@ -1,6 +1,9 @@
 #include "eisinstruction/eisinstruction.h"
 #include "trace/trace.h"
 
+#include "bitmask.h"
+#include "kd11insnjsr/kd11insnjsr.h"
+
 // JSR - jump to subroutine
 //
 // Operation:
@@ -77,4 +80,60 @@ void KD11CPU::MUL (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
     PSW_EQ (PSW_N, tmps32 < 0);
     PSW_EQ (PSW_Z, !tmps32);
     PSW_EQ (PSW_C, (tmps32 >= 0x7FFF) || (tmps32 < -0x8000));
+}
+
+// DIV - divide
+//
+// Operation:
+//  R,R+1 <- R,R+1 / (src)
+//
+// Condition Codes:
+//  N: set if quotient <0: cleared otherwise
+//  Z: set if quotient = 0: cleared otherwise
+//  V: set if source = 0 or if the absolute value of the register is larger
+//     than the absolute value of the source. (In this case the instruction
+//     is aborted because the quotient would exceed 15 bits.)
+//  C: set if divide 0 attempted; cleared otherwise
+//
+// The 32-bit two's complement integer in R and R+1 is divided by the source
+// operand. The quotient is left in R: the remainder in R+1. Division will be
+// performed so that the remainder is of the same sign as the dividend. R must
+// be even.
+//
+void KD11CPU::DIV (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
+{
+    EisInstruction divInstruction (cpu, instruction);
+    u16 regNr = divInstruction.getRegisterNr ();
+
+    s32 tmps32 = (register_[regNr] << 16) | register_[regNr| 1];
+
+    OperandLocation sourceOperandLocation = 
+        divInstruction.getOperandLocation (reg);
+    CondData<u16> source = sourceOperandLocation.contents ();
+    if (!source.hasValue ())
+        return;
+
+    if (source == 0)
+    {
+        PSW_SET (PSW_C);
+        PSW_SET (PSW_V);
+    }
+    else
+    {
+        s32 quotient = tmps32 / (s16) source;
+        s32 remainder = tmps32 % (s16) source;
+        PSW_CLR (PSW_C);
+
+        if ((s16) quotient != quotient)
+        {
+            PSW_SET (PSW_V);
+        }
+        else
+        {
+            register_[regNr] = (u16) quotient;
+            register_[regNr | 1] = (u16) remainder;
+            PSW_EQ (PSW_Z, !quotient);
+            PSW_EQ (PSW_N, quotient < 0);
+        }
+    }
 }
