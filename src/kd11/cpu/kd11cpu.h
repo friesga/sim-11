@@ -157,6 +157,7 @@ private:
 	void SXT (KD11CPU* cpu, u16 (&reg)[8], u16 instruction);
 	void MOV (KD11CPU* cpu, u16 (&reg)[8], u16 instruction);
 	void CMP (KD11CPU* cpu, u16 (&reg)[8], u16 instruction);
+	void BIT (KD11CPU* cpu, u16 (&reg)[8], u16 instruction);
 	void MARK (KD11CPU* cpu, u16 (&reg)[8], u16 instruction);
 	void RTS (KD11CPU *cpu, u16 (&reg)[8], u16 instruction);
 	void CCC (u16 &psw, u16 instruction);

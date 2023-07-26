@@ -79,3 +79,40 @@ void KD11CPU::CMP (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
         && ((destination & 0x8000) == (tmp & 0x8000)));
     PSW_EQ (PSW_C, ((u32)source - (u32)destination) & 0x10000);
 }
+
+// BIT - bit test
+//
+// Operation:
+//  (src) ^ (dst)
+//
+// Condition Codes:
+//  N: set if high-order bit of result set: cleared otherwise
+//  Z: set if result = O: cleared otherwise
+//  V: cleared
+//  C: not affected
+//
+// Performs logical "and"comparison of the source and destination operands
+// and modifies condition codes accordingly. Neither the source nor
+// destination operands are affected.
+//
+void KD11CPU::BIT (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
+{
+    DoubleOperandInstruction doubleOperandInstruction (cpu, instruction);
+
+    OperandLocation sourceOperandLocation = 
+            doubleOperandInstruction.getSourceOperandLocation (reg);
+    CondData<u16> source = sourceOperandLocation.contents ();
+    if (!source.hasValue ())
+        return;
+
+    OperandLocation destinationOperandLocation = 
+            doubleOperandInstruction.getDestinationOperandLocation (reg);
+    CondData<u16> destination = destinationOperandLocation.contents ();
+    if (!destination.hasValue ())
+        return;
+
+    u16 tmp = source & destination;
+    PSW_EQ (PSW_N, tmp & 0x8000);
+    PSW_EQ (PSW_Z, !tmp);
+    PSW_CLR (PSW_V);
+}
