@@ -166,13 +166,14 @@ private:
 	void BIS (KD11CPU* cpu, u16 (&reg)[8], u16 instruction);
 	void ADD (KD11CPU* cpu, u16 (&reg)[8], u16 instruction);
 
-	// EIS and JSR instructions. These instructions share the same
+	// EIS, JSR and XOR instructions. These instructions share the same
 	// instruction format
 	void JSR (KD11CPU *cpu, u16 (&reg)[8], u16 instruction);
 	void MUL (KD11CPU *cpu, u16 (&reg)[8], u16 instruction);
 	void DIV (KD11CPU *cpu, u16 (&reg)[8], u16 instruction);
 	void ASH (KD11CPU *cpu, u16 (&reg)[8], u16 instruction);
 	void ASHC (KD11CPU *cpu, u16 (&reg)[8], u16 instruction);
+	void XOR (KD11CPU *cpu, u16 (&reg)[8], u16 instruction);
 
 	void MARK (KD11CPU* cpu, u16 (&reg)[8], u16 instruction);
 	void RTS (KD11CPU *cpu, u16 (&reg)[8], u16 instruction);

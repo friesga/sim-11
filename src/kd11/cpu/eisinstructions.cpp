@@ -302,3 +302,39 @@ void KD11CPU::ASHC (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
     PSW_EQ (PSW_N, tmps32 & 0x80000000);
     PSW_EQ (PSW_Z, !tmps32);
 }
+
+// XOR - exclusive OR
+//
+// Operation:
+//  (dst) <- R v (dst)
+//
+// Condition Codes:
+//  N: set if the result <0: cleared otherwise
+//  Z: set if result = O: cleared otherwise
+//  V: cleared
+//  C: unaffected
+//
+// The exclusive OR of the register and destination operand is stored in the
+// destination address. Contents of register are unaffected.
+//
+void KD11CPU::XOR (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
+{
+    EisInstruction ashcInstruction (cpu, instruction);
+    u16 regNr = ashcInstruction.getRegisterNr ();
+
+    u16 source = register_[regNr];
+
+    OperandLocation destinationOperandLocation = 
+        ashcInstruction.getOperandLocation (reg);
+    CondData<u16> destination = destinationOperandLocation.contents ();
+    if (!destination.hasValue ())
+        return;
+
+    u16 result = source ^ destination;
+
+    destinationOperandLocation.write (result);
+
+    PSW_EQ (PSW_N, result & 0x8000);
+    PSW_EQ (PSW_Z, !result);
+    PSW_CLR (PSW_V);
+}

@@ -5,7 +5,7 @@
 #include "../operandlocation/operandlocation.h"
 
 // The EIS instruction format is used by the EIS instructions MUL, DIV, ASH
-// and ASH and ASHC and additionally by the JSR instructions.
+// and ASHC instruction and additionally by the JSR and XOR instructions.
 class EisInstruction
 {
 	union instr

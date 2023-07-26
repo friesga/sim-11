@@ -467,21 +467,8 @@ void KD11CPU::execInstr ()
                     ASHC (this, register_, insn);
                     break;
 
-                case 0074: /* XOR */
-                    src = register_[insnjsr->r];
-
-                    if (!insnjsr->getOperand (this, register_,
-                        Bitmask (OperandOptions::Word), dst))
-                        return;
-
-                    tmp = src ^ dst;
-
-                    if (!insnjsr->putOperand (this, register_, tmp))
-                        return;
-
-                    PSW_EQ (PSW_N, tmp & 0x8000);
-                    PSW_EQ (PSW_Z, !tmp);
-                    PSW_CLR (PSW_V);
+                case 0074:
+                    XOR (this, register_, insn);
                     break;
 
                 case 0075: /* FIS instructions */
