@@ -156,3 +156,44 @@ void KD11CPU::BIC (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
     PSW_EQ (PSW_Z, !tmp);
     PSW_CLR (PSW_V);
 }
+
+// BIS - bit set
+//
+// Operation:
+//  (dst) <- (src) v (dst)
+//
+// Condition Codes:
+//  N: set if high-order bit of result set. cleared otherwise
+//  Z: set if result = O: cleared otherwise
+//  V: cleared
+//  C: not affected
+//
+// Performs "Inclusive OR"operation between the source and destination
+// operands and leaves the result at the destination address: that is,
+// corresponding bits set in the source are set in the destination. The
+// contents of the destination are lost.
+//
+void KD11CPU::BIS (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
+{
+    DoubleOperandInstruction doubleOperandInstruction (cpu, instruction);
+
+    OperandLocation sourceOperandLocation = 
+            doubleOperandInstruction.getSourceOperandLocation (reg);
+    CondData<u16> source = sourceOperandLocation.contents ();
+    if (!source.hasValue ())
+        return;
+
+    OperandLocation destinationOperandLocation = 
+            doubleOperandInstruction.getDestinationOperandLocation (reg);
+    CondData<u16> destination = destinationOperandLocation.contents ();
+    if (!destination.hasValue ())
+        return;
+
+    u16 tmp = source | destination;
+
+    destinationOperandLocation.write (tmp);
+
+    PSW_EQ (PSW_N, tmp & 0x8000);
+    PSW_EQ (PSW_Z, !tmp);
+    PSW_CLR (PSW_V);
+}
