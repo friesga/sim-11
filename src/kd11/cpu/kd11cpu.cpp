@@ -424,41 +424,12 @@ void KD11CPU::execInstr ()
             }
             break;
 
-        case 001: /* MOV */
+        case 001:
             MOV (this, register_, insn);
-            /*
-            if (!insn2->getSourceOperand (this, register_,
-                Bitmask (OperandOptions::Word |
-                    OperandOptions::AutoIncr), tmp))
-                return;
-
-            if (!insn2->putDestOperand (this, register_,
-                Bitmask (OperandOptions::Word), tmp))
-                return;
-
-            PSW_EQ (PSW_N, tmp & 0x8000);
-            PSW_EQ (PSW_Z, !tmp);
-            PSW_CLR (PSW_V);
-            */
             break;
 
-        case 002: /* CMP */
-            if (!insn2->getSourceOperand (this, register_,
-                Bitmask (OperandOptions::Word |
-                    OperandOptions::AutoIncr), src))
-                return;
-
-            if (!insn2->getDestOperand (this, register_,
-                Bitmask (OperandOptions::Word |
-                    OperandOptions::AutoIncr), dst))
-                return;
-
-            tmp = src - dst;
-            PSW_EQ (PSW_N, tmp & 0x8000);
-            PSW_EQ (PSW_Z, !tmp);
-            PSW_EQ (PSW_V, ((src & 0x8000) != (dst & 0x8000)) \
-                && ((dst & 0x8000) == (tmp & 0x8000)));
-            PSW_EQ (PSW_C, ((u32)src - (u32)dst) & 0x10000);
+        case 002:
+            CMP (this, register_, insn);
             break;
 
         case 003: /* BIT */
