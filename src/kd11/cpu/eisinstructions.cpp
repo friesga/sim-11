@@ -216,3 +216,89 @@ void KD11CPU::ASH (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
     PSW_EQ (PSW_N, tmp & 0x8000);
     PSW_EQ (PSW_Z, !tmp);
 }
+
+// ASHC - arithemetic shift combined
+//
+// Operation:
+//  R, R+1 <- R, R+1 The double word is shifted NN places to the right or
+//  left, where NN =low order six bits of source
+//
+// Condition Codes:
+//  N: set if result <0; cleared otherwise
+//  Z: set if result = O; cleared otherwise
+//  V: set if sign bit changes during the shift; cleared otherwise
+//  C: loaded with high order bit when left shift; loaded with low order bit
+//     when right shift (loaded with the last bit shifted out of the 32-bit
+//     operand)
+//
+// The contents of the register and the register ORed with one are treated as
+// one 32 bit word, R + 1 (bits 0-15) and R (bits 16-31) are shifted right or
+// left the number of times specified by the shift count. The shift count is
+// taken as the low order 6 bits of the source operand. This number ranges
+// from -32 to +31. Negative is a right shift and positive is a left shift.
+// 
+// When the register chosen is an odd number the register and the register
+// OR'ed with one are the same. In this case the right shift becomes a rotate
+// (for up to a shift of 16). The 16 bit word is rotated right the number of
+// bits specified by the shift count.
+//
+void KD11CPU::ASHC (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
+{
+    EisInstruction ashcInstruction (cpu, instruction);
+    u16 regNr = ashcInstruction.getRegisterNr ();
+    u16 tmp {0};
+    u16 dst = register_[regNr];
+
+    s32 tmps32 = (register_[regNr] << 16) | register_[regNr | 1];
+
+    OperandLocation sourceOperandLocation = 
+        ashcInstruction.getOperandLocation (reg);
+    CondData<u16> source = sourceOperandLocation.contents ();
+    if (!source.hasValue ())
+        return;
+
+    if ((source & 0x3F) == 0x20)
+    {
+        // Negative; 32 right
+        PSW_EQ (PSW_C, tmps32 & 0x80000000);
+        PSW_CLR (PSW_V);
+        if (PSW_GET (PSW_C))
+        {
+            tmps32 = 0xFFFFFFFF;
+        }
+        else
+        {
+            tmps32 = 0;
+        }
+    }
+    else if (source & 0x20)
+    {
+        // Negative - shift right
+        s32 stmp2;
+        source = (~source & 0x1F) + 1;
+        stmp2 = tmps32 >> (source - 1);
+        tmps32 >>= source;
+        PSW_EQ (PSW_C, stmp2 & 1);
+    }
+    else if ((source & 0x1F) == 0)
+    {
+        // Zero - don't shift
+        PSW_CLR (PSW_V);
+        PSW_CLR (PSW_C);
+    }
+    else
+    {
+        // Positive - shift left
+        s32 stmp2;
+        source = source & 0x1F;
+        stmp2 = tmps32 << (source - 1);
+        tmps32 <<= source;
+        PSW_EQ (PSW_C, stmp2 & 0x80000000);
+        PSW_EQ (PSW_V, !!(dst & 0x8000)
+            != !!(tmps32 & 0x80000000));
+    }
+    register_[regNr] = (u16)(tmps32 >> 16);
+    register_[regNr | 1] = (u16)tmps32;
+    PSW_EQ (PSW_N, tmps32 & 0x80000000);
+    PSW_EQ (PSW_Z, !tmps32);
+}

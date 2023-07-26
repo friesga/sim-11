@@ -463,56 +463,8 @@ void KD11CPU::execInstr ()
                     ASH (this, register_, insn);
                     break;
 
-                case 0073: /* ASHC */
-                    dst = register_[insnjsr->r];
-                    tmps32 = (register_[insnjsr->r] << 16) | register_[insnjsr->r | 1];
-
-                    if (!insnjsr->getOperand (this, register_,
-                        Bitmask (OperandOptions::Word |
-                            OperandOptions::AutoIncr), src))
-                        return;
-
-                    if ((src & 0x3F) == 0x20)
-                    { /* negative; 32 right */
-                        PSW_EQ (PSW_C, tmps32 & 0x80000000);
-                        PSW_CLR (PSW_V);
-                        if (PSW_GET (PSW_C))
-                        {
-                            tmps32 = 0xFFFFFFFF;
-                        }
-                        else
-                        {
-                            tmps32 = 0;
-                        }
-                    }
-                    else if (src & 0x20)
-                    { /* negative; right */
-                        s32 stmp2;
-                        src = (~src & 0x1F) + 1;
-                        stmp2 = tmps32 >> (src - 1);
-                        tmps32 >>= src;
-                        PSW_EQ (PSW_C, stmp2 & 1);
-                    }
-                    else if ((src & 0x1F) == 0)
-                    {
-                        /* nothing */
-                        PSW_CLR (PSW_V);
-                        PSW_CLR (PSW_C);
-                    }
-                    else
-                    { /* positive, left */
-                        s32 stmp2;
-                        src &= 0x1F;
-                        stmp2 = tmps32 << (src - 1);
-                        tmps32 <<= src;
-                        PSW_EQ (PSW_C, stmp2 & 0x80000000);
-                        PSW_EQ (PSW_V, !!(dst & 0x8000)
-                            != !!(tmps32 & 0x80000000));
-                    }
-                    register_[insnjsr->r] = (u16)(tmps32 >> 16);
-                    register_[insnjsr->r | 1] = (u16)tmps32;
-                    PSW_EQ (PSW_N, tmps32 & 0x80000000);
-                    PSW_EQ (PSW_Z, !tmps32);
+                case 0073:
+                    ASHC (this, register_, insn);
                     break;
 
                 case 0074: /* XOR */
