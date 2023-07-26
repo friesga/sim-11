@@ -52,10 +52,9 @@ void KD11CPU::SWAB (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
     SingleOperandInstruction soi {cpu, instruction};
 
     OperandLocation operandLocation = soi.getOperandLocation (reg);
-    if (!operandLocation.isValid ())
+    CondData<u16> operand = operandLocation.contents ();
+    if (!operand.hasValue ())
         return;
-
-    u16 operand = operandLocation.contents ();
 
     // Swap bytes in the operand and write it to the operand location
     operand = ((operand & 0x00FF) << 8) | ((operand >> 8) & 0xFF);
@@ -85,10 +84,8 @@ void KD11CPU::CLR (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
     SingleOperandInstruction soi {cpu, instruction};
 
     OperandLocation operandLocation = soi.getOperandLocation (reg);
-    if (!operandLocation.isValid ())
-        return;
-
     operandLocation.write (0);
+
     PSW_CLR (PSW_N | PSW_V | PSW_C);
     PSW_SET (PSW_Z);
 }
@@ -112,10 +109,9 @@ void KD11CPU::COM (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
     SingleOperandInstruction soi {cpu, instruction};
 
     OperandLocation operandLocation = soi.getOperandLocation (reg);
-    if (!operandLocation.isValid ())
+    CondData<u16> operand = operandLocation.contents ();
+    if (!operand.hasValue ())
         return;
-
-    u16 operand = operandLocation.contents ();
 
     // Complement the operand and write it to the operand location
     operand = ~operand;
@@ -145,10 +141,9 @@ void KD11CPU::INC (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
     SingleOperandInstruction soi {cpu, instruction};
 
     OperandLocation operandLocation = soi.getOperandLocation (reg);
-    if (!operandLocation.isValid ())
+    CondData<u16> contents = operandLocation.contents ();
+    if (!contents.hasValue ())
         return;
-
-    u16 contents = operandLocation.contents ();
 
     // Increment the operand and write it to the operand location
     u16 result = contents + 1;
@@ -177,10 +172,9 @@ void KD11CPU::DEC (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
     SingleOperandInstruction soi {cpu, instruction};
 
     OperandLocation operandLocation = soi.getOperandLocation (reg);
-    if (!operandLocation.isValid ())
+    CondData<u16> contents = operandLocation.contents ();
+    if (!contents.hasValue ())
         return;
-
-    u16 contents = operandLocation.contents ();
 
     // Increment the operand and write it to the operand location
     u16 result = contents - 1;
@@ -211,10 +205,9 @@ void KD11CPU::NEG (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
     SingleOperandInstruction soi {cpu, instruction};
 
     OperandLocation operandLocation = soi.getOperandLocation (reg);
-    if (!operandLocation.isValid ())
+    CondData<u16> operand = operandLocation.contents ();
+    if (!operand.hasValue ())
         return;
-    
-    u16 operand = operandLocation.contents ();
 
     // Negate the operand and write it to the operand location
     if (operand != 0100000)
@@ -248,10 +241,9 @@ void KD11CPU::ADC (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
     SingleOperandInstruction soi {cpu, instruction};
 
     OperandLocation operandLocation = soi.getOperandLocation (reg);
-    if (!operandLocation.isValid ())
+    CondData<u16> contents = operandLocation.contents ();
+    if (!contents.hasValue ())
         return;
-
-    u16 contents = operandLocation.contents ();
 
     u16 cBit = PSW_GET (PSW_C) ? 1 : 0;
     u16 result = contents + cBit;
@@ -283,10 +275,9 @@ void KD11CPU::SBC (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
     SingleOperandInstruction soi {cpu, instruction};
 
     OperandLocation operandLocation = soi.getOperandLocation (reg);
-    if (!operandLocation.isValid ())
+    CondData<u16> contents = operandLocation.contents ();
+    if (!contents.hasValue ())
         return;
-
-    u16 contents = operandLocation.contents ();
 
     u16 cBit = PSW_GET (PSW_C) ? 1 : 0;
     u16 result = contents - cBit;
@@ -314,10 +305,9 @@ void KD11CPU::TST (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
     SingleOperandInstruction soi {cpu, instruction};
 
     OperandLocation operandLocation = soi.getOperandLocation (reg);
-    if (!operandLocation.isValid ())
+    CondData<u16> contents = operandLocation.contents ();
+    if (!contents.hasValue ())
         return;
-
-    u16 contents = operandLocation.contents ();
 
     PSW_CLR (PSW_V);
     PSW_CLR (PSW_C);
@@ -347,10 +337,9 @@ void KD11CPU::ROR (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
     SingleOperandInstruction soi {cpu, instruction};
 
     OperandLocation operandLocation = soi.getOperandLocation (reg);
-    if (!operandLocation.isValid ())
+    CondData<u16> contents = operandLocation.contents ();
+    if (!contents.hasValue ())
         return;
-
-    u16 contents = operandLocation.contents ();
 
     u16 cBit = PSW_GET (PSW_C);
     u16 result = contents >> 1;
@@ -387,10 +376,9 @@ void KD11CPU::ROL (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
     SingleOperandInstruction soi {cpu, instruction};
 
     OperandLocation operandLocation = soi.getOperandLocation (reg);
-    if (!operandLocation.isValid ())
+    CondData<u16> contents = operandLocation.contents ();
+    if (!contents.hasValue ())
         return;
-
-    u16 contents = operandLocation.contents ();
 
     u16 cBit = PSW_GET (PSW_C);
     u16 result = contents << 1;
@@ -427,10 +415,9 @@ void KD11CPU::ASR (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
     SingleOperandInstruction soi {cpu, instruction};
 
     OperandLocation operandLocation = soi.getOperandLocation (reg);
-    if (!operandLocation.isValid ())
-        return;
-
-    u16 contents = operandLocation.contents ();
+    CondData<u16> contents = operandLocation.contents ();
+    if (!contents.hasValue ())
+        return;;
 
     u16 result = contents;
     if (result & 0100000)
@@ -472,10 +459,9 @@ void KD11CPU::ASL (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
     SingleOperandInstruction soi {cpu, instruction};
 
     OperandLocation operandLocation = soi.getOperandLocation (reg);
-    if (!operandLocation.isValid ())
+    CondData<u16> contents = operandLocation.contents ();
+    if (!contents.hasValue ())
         return;
-
-    u16 contents = operandLocation.contents ();
 
     u16 result = contents << 1;
 
@@ -507,9 +493,6 @@ void KD11CPU::SXT (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
     SingleOperandInstruction soi {cpu, instruction};
 
     OperandLocation operandLocation = soi.getOperandLocation (reg);
-    if (!operandLocation.isValid ())
-        return;
-
     u16 result = PSW_GET (PSW_N) ? 0177777 : 0;
 
     operandLocation.write (result);

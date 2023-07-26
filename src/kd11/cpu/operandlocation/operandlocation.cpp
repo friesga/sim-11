@@ -21,8 +21,7 @@ bool OperandLocation::isValid ()
 {
     return holds_alternative<u8> (location_) ||
         (holds_alternative<CondData <u16>> (location_) &&
-            get<CondData<u16>> (location_).hasValue () &&
-            cpu_->fetchWord (get<CondData<u16>> (location_)).hasValue ());
+            get<CondData<u16>> (location_).hasValue ());
 }
 
 // Return the memory address held in the location assuming the variant
@@ -37,17 +36,17 @@ OperandLocation::operator u16 ()
 // location is either a register number or a memory address. In the first case
 // the contents of the register are returned, in the second case the contents
 // of the memory address.
-u16 OperandLocation::contents ()
+CondData<u16> OperandLocation::contents ()
 {
     if (holds_alternative<u8> (location_))
     {
         // The variant holds a register number
-        return cpu_->register_[get<u8> (location_)];
+        return CondData<u16> {cpu_->register_[get<u8> (location_)]};
     }
     else
     {
         // The variant holds a memory address
-        return cpu_->fetchWord (get<CondData<u16>> (location_).valueOr (0));
+        return cpu_->fetchWord (get<CondData<u16>> (location_));
     }
 }
 

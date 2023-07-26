@@ -22,7 +22,7 @@ public:
     template <typename T> bool isA ();
     bool isValid ();
     operator u16 ();
-    u16 contents ();
+    CondData<u16> contents ();
     void write (u16 contents);
 
 private:
