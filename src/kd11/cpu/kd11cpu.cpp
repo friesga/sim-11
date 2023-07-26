@@ -444,27 +444,8 @@ void KD11CPU::execInstr ()
             BIS (this, register_, insn);
             break;
 
-        case 006: /* ADD */
-            if (!insn2->getSourceOperand (this, register_,
-                Bitmask (OperandOptions::Word |
-                    OperandOptions::AutoIncr), src))
-                return;
-
-            if (!insn2->getDestOperand (this, register_,
-                Bitmask (OperandOptions::Word), dst))
-                return;
-
-            tmp = src + dst;
-
-            if (!insn2->putDestOperand (this, register_,
-                Bitmask (OperandOptions::Word), tmp))
-                return;
-
-            PSW_EQ (PSW_N, tmp & 0x8000);
-            PSW_EQ (PSW_Z, !tmp);
-            PSW_EQ (PSW_V, ((src & 0x8000) == (dst & 0x8000)) \
-                && ((dst & 0x8000) != (tmp & 0x8000)));
-            PSW_EQ (PSW_C, ((u32)src + (u32)dst) & 0x10000);
+        case 006:
+            ADD (this, register_, insn);
             break;
 
         case 007: /* 07 xx xx group */

@@ -197,3 +197,49 @@ void KD11CPU::BIS (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
     PSW_EQ (PSW_Z, !tmp);
     PSW_CLR (PSW_V);
 }
+
+// ADD - add source to destination
+//
+// Operation:
+//  (dst) <- (src) + (dst)
+//
+// Condition Codes:
+//  N: set if result <0; cleared otherwise
+//  Z: set if result = O; cleared otherwise
+//  V: set if there was arithmetic overflow as a result of the operation;
+//     that is both operands were of the same sign and the result was of the
+//     opposite sign; cleared otherwise
+//  C: set if there was a carry from the most significant bit of the result;
+//     cleared otherwise
+//
+// Adds the source operand to the destinatign operand and stores the result at
+// the destination address. The original contents of the destination are lost.
+// The contents of the source are not affected. Two's complement addition is
+// performed.
+//
+void KD11CPU::ADD (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
+{
+    DoubleOperandInstruction doubleOperandInstruction (cpu, instruction);
+
+    OperandLocation sourceOperandLocation = 
+            doubleOperandInstruction.getSourceOperandLocation (reg);
+    CondData<u16> source = sourceOperandLocation.contents ();
+    if (!source.hasValue ())
+        return;
+
+    OperandLocation destinationOperandLocation = 
+            doubleOperandInstruction.getDestinationOperandLocation (reg);
+    CondData<u16> destination = destinationOperandLocation.contents ();
+    if (!destination.hasValue ())
+        return;
+
+    u16 result = source + destination;
+
+    destinationOperandLocation.write (result);
+
+    PSW_EQ (PSW_N, result & 0x8000);
+    PSW_EQ (PSW_Z, !result);
+    PSW_EQ (PSW_V, ((source & 0x8000) == (destination & 0x8000)) \
+        && ((destination & 0x8000) != (result & 0x8000)));
+    PSW_EQ (PSW_C, ((u32)source + (u32)destination) & 0x10000);
+}
