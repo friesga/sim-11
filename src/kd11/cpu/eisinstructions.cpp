@@ -1,4 +1,4 @@
-#include "jsrinstruction/jsrinstruction.h"
+#include "eisinstruction/eisinstruction.h"
 #include "trace/trace.h"
 
 // JSR - jump to subroutine
@@ -24,7 +24,7 @@
 //
 void KD11CPU::JSR (KD11CPU* cpu, u16 (&registers)[8], u16 instruction)
 {
-    JsrInstruction jsrInstruction {cpu, instruction};
+    EisInstruction jsrInstruction {cpu, instruction};
     OperandLocation destination = jsrInstruction.getOperandLocation (registers);
 
     if (!destination.isA<CondData<u16>> ())

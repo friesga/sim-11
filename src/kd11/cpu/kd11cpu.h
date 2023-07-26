@@ -70,7 +70,7 @@ public:
 	friend class LSI11;
 	friend class Instruction;
 	friend class LSI11Instruction;
-	friend class JsrInstruction;
+	friend class EisInstruction;
 	friend class OperandLocation;
 
 	KD11CPU (Qbus *bus);
