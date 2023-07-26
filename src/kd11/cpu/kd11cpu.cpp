@@ -436,25 +436,8 @@ void KD11CPU::execInstr ()
             BIT (this, register_, insn);
             break;
 
-        case 004: /* BIC */
-            if (!insn2->getSourceOperand (this, register_,
-                Bitmask (OperandOptions::Word |
-                    OperandOptions::AutoIncr), src))
-                return;
-
-            if (!insn2->getDestOperand (this, register_,
-                Bitmask (OperandOptions::Word), dst))
-                return;
-
-            tmp = ~src & dst;
-
-            if (!insn2->putDestOperand (this, register_,
-                Bitmask (OperandOptions::Word), tmp))
-                return;
-
-            PSW_EQ (PSW_N, tmp & 0x8000);
-            PSW_EQ (PSW_Z, !tmp);
-            PSW_CLR (PSW_V);
+        case 004:
+            BIC (this, register_, insn);
             break;
 
         case 005: /* BIS */
