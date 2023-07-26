@@ -459,57 +459,8 @@ void KD11CPU::execInstr ()
                     DIV (this, register_, insn);
                     break;
 
-                case 0072: /* ASH */
-                    dst = register_[insnjsr->r];
-
-                    if (!insnjsr->getOperand (this, register_,
-                        Bitmask (OperandOptions::Word |
-                            OperandOptions::AutoIncr), src))
-                        return;
-
-                    if (src & 0x20)
-                    { /* negative; right */
-                        s16 stmp, stmp2;
-                        src = (~src & 0x1F) + 1;
-                        stmp = (s16)dst;
-                        stmp2 = stmp >> (src - 1);
-                        stmp >>= src;
-                        tmp = (u16)stmp;
-                        PSW_EQ (PSW_C, stmp2 & 1);
-                        PSW_CLR (PSW_V);
-                    }
-                    else if ((src & 0x1F) == 0)
-                    {
-                        /* nothing */
-                        PSW_CLR (PSW_V);
-                        PSW_CLR (PSW_C);
-                        tmp = dst;
-                    }
-                    else
-                    { /* positive, left */
-                        s16 mask = 0;
-                        src &= 0x1F;
-                        tmp = dst << src;
-                        if (src > 0)
-                        {
-                            mask = 0x8000;
-                            mask >>= src;
-                            tmp2 = dst & mask;
-                            PSW_EQ (PSW_V, !((tmp2 == 0) || (((tmp2 & mask) | ~mask) == 0xFFFF)));
-                        }
-                        else
-                        {
-                            PSW_CLR (PSW_V);
-                        }
-                        PSW_EQ (PSW_C, (dst << (src - 1)) & 0x8000);
-                        if ((dst & 0x8000) != (tmp & 0x8000))
-                        {
-                            PSW_SET (PSW_V);
-                        }
-                    }
-                    register_[insnjsr->r] = tmp;
-                    PSW_EQ (PSW_N, tmp & 0x8000);
-                    PSW_EQ (PSW_Z, !tmp);
+                case 0072:
+                    ASH (this, register_, insn);
                     break;
 
                 case 0073: /* ASHC */

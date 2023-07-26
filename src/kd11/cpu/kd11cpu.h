@@ -171,6 +171,7 @@ private:
 	void JSR (KD11CPU *cpu, u16 (&reg)[8], u16 instruction);
 	void MUL (KD11CPU *cpu, u16 (&reg)[8], u16 instruction);
 	void DIV (KD11CPU *cpu, u16 (&reg)[8], u16 instruction);
+	void ASH (KD11CPU *cpu, u16 (&reg)[8], u16 instruction);
 
 	void MARK (KD11CPU* cpu, u16 (&reg)[8], u16 instruction);
 	void RTS (KD11CPU *cpu, u16 (&reg)[8], u16 instruction);

@@ -137,3 +137,82 @@ void KD11CPU::DIV (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
         }
     }
 }
+
+// ASH - shift arithmetically
+//
+// Operation:
+//  R <- R shifted arithmetically NN places to right or left where
+//  NN = low order 6 bits of source
+//
+// Condition Codes:
+//  N: set if result <O; cleared otherwise
+//  Z: set if result = 0; cleared otherwise
+//  V: set if sign of register changed during shift; cleared otherwise
+//  C: loaded from last bit shifted out of register
+//
+// The contents of the register are shifted right or left the number of times
+// specified by the shift count. The shift count is taken as the low order
+// 6 bits of the source operand. This number ranges from -32 to + 31. Negative
+// is a a right shift and positive is a left shift.
+//
+void KD11CPU::ASH (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
+{
+    EisInstruction ashInstruction (cpu, instruction);
+    u16 regNr = ashInstruction.getRegisterNr ();
+    u16 tmp {0};
+    u16 dst = register_[regNr];
+
+    OperandLocation sourceOperandLocation = 
+        ashInstruction.getOperandLocation (reg);
+    CondData<u16> source = sourceOperandLocation.contents ();
+    if (!source.hasValue ())
+        return;
+
+    if (source & 0x20)
+    { 
+        // Negative - shift right
+        s16 stmp, stmp2;
+        source = (~source & 0x1F) + 1;
+        stmp = (s16) dst;
+        stmp2 = stmp >> (source - 1);
+        stmp >>= source;
+        tmp = (u16) stmp;
+        PSW_EQ (PSW_C, stmp2 & 1);
+        PSW_CLR (PSW_V);
+    }
+    else if ((source & 0x1F) == 0)
+    {
+        // Zero - don't shift
+        PSW_CLR (PSW_V);
+        PSW_CLR (PSW_C);
+        tmp = dst;
+    }
+    else
+    {
+        // Positive - shift left
+        s16 mask = 0;
+        // Note that the bitwise and/assignment operator can't be used on
+        // CondData objects.
+        source = source & 0x1F;
+        tmp = dst << source;
+        if (source > 0)
+        {
+            mask = 0x8000;
+            mask >>= source;
+            u16 tmp2 = dst & mask;
+            PSW_EQ (PSW_V, !((tmp2 == 0) || (((tmp2 & mask) | ~mask) == 0xFFFF)));
+        }
+        else
+        {
+            PSW_CLR (PSW_V);
+        }
+        PSW_EQ (PSW_C, (dst << (source - 1)) & 0x8000);
+        if ((dst & 0x8000) != (tmp & 0x8000))
+        {
+            PSW_SET (PSW_V);
+        }
+    }
+    register_[regNr] = tmp;
+    PSW_EQ (PSW_N, tmp & 0x8000);
+    PSW_EQ (PSW_Z, !tmp);
+}
