@@ -48,7 +48,7 @@ set (KD11CPU_SRCS
     src/kd11/cpu/operandlocation/operandlocation.cpp
     src/kd11/cpu/singleoperandinstruction/singleoperandinstruction.cpp
     src/kd11/cpu/doubleoperandinstruction/doubleoperandinstruction.cpp
-    src/kd11/cpu/rtsfisinstruction/rtsfisinstruction.cpp
+    src/kd11/cpu/arithmeticinstruction/arithmeticinstruction.cpp
     src/kd11/cpu/ccinstruction/ccinstruction.cpp
     src/kd11/cpu/branchinstruction/branchinstruction.cpp
     src/kd11/cpu/jsrinstruction/jsrinstruction.cpp

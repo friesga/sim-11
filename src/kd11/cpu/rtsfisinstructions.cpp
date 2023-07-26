@@ -1,5 +1,5 @@
 #include "kd11cpu.h"
-#include "rtsfisinstruction/rtsfisinstruction.h"
+#include "arithmeticinstruction/arithmeticinstruction.h"
 
 // Pop a word from the processor stack returning true if this succeeds
 // or false when a bus error occurs.
@@ -24,7 +24,7 @@ bool KD11CPU::popWord (u16 *destination)
 //
 void KD11CPU::RTS (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
 {
-    RtsFisInstruction rtsInstruction (cpu, instruction);
+    ArithmeticInstruction rtsInstruction (cpu, instruction);
     u16 regNr = rtsInstruction.getRegister ();
 
     register_[7] = register_[regNr];
