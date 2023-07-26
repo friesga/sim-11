@@ -94,7 +94,7 @@ OperandLocation EisInstruction::getOperandLocation (u16 (&reg)[8])
 	}
 }
 
-u16 EisInstruction::getLinkageRegister ()
+u16 EisInstruction::getRegisterNr ()
 {
 	return instr_.decoded.registerNr;
 }

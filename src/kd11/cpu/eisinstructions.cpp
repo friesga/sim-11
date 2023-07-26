@@ -35,10 +35,46 @@ void KD11CPU::JSR (KD11CPU* cpu, u16 (&registers)[8], u16 instruction)
         return;
     }
 
-    u16 reg = register_[jsrInstruction.getLinkageRegister ()];
+    u16 reg = register_[jsrInstruction.getRegisterNr ()];
 
     register_[6] -= 2;
     putWord (register_[6], reg);
-    register_[jsrInstruction.getLinkageRegister ()] = register_[7];
+    register_[jsrInstruction.getRegisterNr ()] = register_[7];
     register_[7] = destination;
+}
+// MUL - multiply
+//
+// Operation:
+//  R, R+1 <- R x (src)
+//
+//  Condition Codes:
+//  N: set if product is <0: cleared otherwise
+//  Z: set if product is O: cleared otherwise
+//  V: cleared
+//  C: set if the result is less than-215 or greater than or equal to 2^15 - 1
+//
+// The contents of the destination register and source taken as two's complement
+// integers are multiplied and stored in the destination register and the
+// succeeding register (if R is even). If R is odd only the low order product
+// is stored.
+//
+void KD11CPU::MUL (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
+{
+    EisInstruction mulInstruction (cpu, instruction);
+    u16 regNr = mulInstruction.getRegisterNr ();
+
+    u16 dst = register_[regNr];
+
+    OperandLocation sourceOperandLocation = 
+        mulInstruction.getOperandLocation (reg);
+    CondData<u16> source = sourceOperandLocation.contents ();
+    
+    s32 tmps32 = (s32)(s16)dst * (s16) source;
+    register_[regNr] = (u16) (tmps32 >> 16);
+    register_[regNr | 1] = (u16) tmps32;
+
+    PSW_CLR (PSW_V);
+    PSW_EQ (PSW_N, tmps32 < 0);
+    PSW_EQ (PSW_Z, !tmps32);
+    PSW_EQ (PSW_C, (tmps32 >= 0x7FFF) || (tmps32 < -0x8000));
 }

@@ -451,20 +451,8 @@ void KD11CPU::execInstr ()
         case 007: /* 07 xx xx group */
             switch (insn >> 9)
             {
-                case 0070: /* MUL */
-                    dst = register_[insnjsr->r];
-                    if (!insnjsr->getOperand (this, register_,
-                        Bitmask (OperandOptions::Word |
-                            OperandOptions::AutoIncr), src))
-                        return;
-
-                    tmps32 = (s32)(s16)dst * (s16)src;
-                    register_[insnjsr->r] = (u16)(tmps32 >> 16);
-                    register_[insnjsr->r | 1] = (u16)tmps32;
-                    PSW_CLR (PSW_V);
-                    PSW_EQ (PSW_N, tmps32 < 0);
-                    PSW_EQ (PSW_Z, !tmps32);
-                    PSW_EQ (PSW_C, (tmps32 >= 0x7FFF) || (tmps32 < -0x8000));
+                case 0070:
+                    MUL (this, register_, insn);
                     break;
 
                 case 0071: /* DIV */

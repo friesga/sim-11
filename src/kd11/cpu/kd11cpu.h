@@ -140,6 +140,8 @@ private:
 	bool popWord (u16 *destination);
 	void HALT ();
 	void unused ();
+
+	// Single operand instructions
 	void JMP (KD11CPU *cpu, u16 (&reg)[8], u16 instruction);
 	void SWAB (KD11CPU* cpu, u16 (&reg)[8], u16 instruction);
 	void CLR (KD11CPU* cpu, u16 (&reg)[8], u16 instruction);
@@ -155,12 +157,20 @@ private:
 	void ASR (KD11CPU* cpu, u16 (&reg)[8], u16 instruction);
 	void ASL (KD11CPU* cpu, u16 (&reg)[8], u16 instruction);
 	void SXT (KD11CPU* cpu, u16 (&reg)[8], u16 instruction);
+
+	// Double operand instructions
 	void MOV (KD11CPU* cpu, u16 (&reg)[8], u16 instruction);
 	void CMP (KD11CPU* cpu, u16 (&reg)[8], u16 instruction);
 	void BIT (KD11CPU* cpu, u16 (&reg)[8], u16 instruction);
 	void BIC (KD11CPU* cpu, u16 (&reg)[8], u16 instruction);
 	void BIS (KD11CPU* cpu, u16 (&reg)[8], u16 instruction);
 	void ADD (KD11CPU* cpu, u16 (&reg)[8], u16 instruction);
+
+	// EIS and JSR instructions. These instructions share the same
+	// instruction format
+	void JSR (KD11CPU *cpu, u16 (&reg)[8], u16 instruction);
+	void MUL (KD11CPU *cpu, u16 (&reg)[8], u16 instruction);
+
 	void MARK (KD11CPU* cpu, u16 (&reg)[8], u16 instruction);
 	void RTS (KD11CPU *cpu, u16 (&reg)[8], u16 instruction);
 	void CCC (u16 &psw, u16 instruction);
@@ -172,7 +182,7 @@ private:
 	void BLT (u16 instruction);
 	void BGT (u16 instruction);
 	void BLE (u16 instruction);
-	void JSR (KD11CPU *cpu, u16 (&reg)[8], u16 instruction);
+	
 };
 
 
