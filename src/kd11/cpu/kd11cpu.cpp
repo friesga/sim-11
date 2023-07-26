@@ -425,6 +425,8 @@ void KD11CPU::execInstr ()
             break;
 
         case 001: /* MOV */
+            MOV (this, register_, insn);
+            /*
             if (!insn2->getSourceOperand (this, register_,
                 Bitmask (OperandOptions::Word |
                     OperandOptions::AutoIncr), tmp))
@@ -437,6 +439,7 @@ void KD11CPU::execInstr ()
             PSW_EQ (PSW_N, tmp & 0x8000);
             PSW_EQ (PSW_Z, !tmp);
             PSW_CLR (PSW_V);
+            */
             break;
 
         case 002: /* CMP */

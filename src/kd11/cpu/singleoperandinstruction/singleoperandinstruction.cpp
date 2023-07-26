@@ -1,4 +1,5 @@
 #include "singleoperandinstruction.h"
+#include "../operand/operand.h"
 
 // Initialize the instr struct with the first member
 SingleOperandInstruction::SingleOperandInstruction (KD11CPU *cpu, u16 instruction)
@@ -11,5 +12,5 @@ SingleOperandInstruction::SingleOperandInstruction (KD11CPU *cpu, u16 instructio
 // register in the instruction and possibly the index and a memory address.
 OperandLocation SingleOperandInstruction::getOperandLocation (u16 (&reg)[8])
 {
-	return decodeOperand (instr_.decoded.operand, reg);
+	return decodeOperand (Operand {instr_.decoded.rn, instr_.decoded.mode}, reg);
 }

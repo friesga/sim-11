@@ -2,32 +2,27 @@
 #define _DOUBLEINSTRUCTIONFORMAT_H_
 
 #include "../kd11cpu.h"
-#include "../operandlocation/operandlocation.h"
+#include "../lsi11instruction/lsi11instruction.h"
 
-class DoubleOperandInstruction
+class DoubleOperandInstruction : public LSI11Instruction
 {
-	struct Operand
-	{
-		u16	registerNr:3;
-		u16	mode:3;
-	};
-
-	// Single operand instruction format comprises the operation code and
-	// one operand
+	// The double operand instruction format comprises the operation code, the
+	// source operand and the destination operand.
+	// 
 	union instr
 	{
 		u16 word;
 		struct
 		{
-			Operand source;
-			Operand destination;
+			u16	dst_rn:3;
+			u16	dst_mode:3;
+			u16	src_rn:3;
+			u16	src_mode:3;
 			u16	opcode:4;
 		} 
 		decoded;
 	} 
 	instr_;
-
-	KD11CPU *cpu_;
 
 public:
 	DoubleOperandInstruction (KD11CPU *cpu, u16 instruction);

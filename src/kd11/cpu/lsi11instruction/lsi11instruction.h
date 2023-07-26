@@ -2,16 +2,11 @@
 #define _LSI11INSTRUCTION_H_
 
 #include "../operandlocation/operandlocation.h"
+#include "../operand/operand.h"
 
 class LSI11Instruction
 {
 protected:
-    struct Operand
-	{
-		u16	registerNr:3;
-		u16	mode:3;
-	};
-
 	KD11CPU *cpu_;
 
 	LSI11Instruction (KD11CPU *cpu);

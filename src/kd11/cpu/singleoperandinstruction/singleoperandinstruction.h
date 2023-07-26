@@ -13,7 +13,8 @@ class SingleOperandInstruction : public LSI11Instruction
 		u16 word;
 		struct
 		{
-			LSI11Instruction::Operand operand;
+			u16	rn:3;
+			u16	mode:3;
 			u16	opcode:10;
 		} 
 		decoded;

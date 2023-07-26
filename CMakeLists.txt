@@ -47,6 +47,7 @@ set (KD11CPU_SRCS
     src/kd11/cpu/lsi11instruction/lsi11instruction.cpp
     src/kd11/cpu/operandlocation/operandlocation.cpp
     src/kd11/cpu/singleoperandinstruction/singleoperandinstruction.cpp
+    src/kd11/cpu/doubleoperandinstruction/doubleoperandinstruction.cpp
     src/kd11/cpu/rtsfisinstruction/rtsfisinstruction.cpp
     src/kd11/cpu/ccinstruction/ccinstruction.cpp
     src/kd11/cpu/branchinstruction/branchinstruction.cpp
@@ -54,6 +55,7 @@ set (KD11CPU_SRCS
     src/kd11/cpu/markinstruction/markinstruction.cpp
     src/kd11/cpu/nooperandinstructions.cpp
     src/kd11/cpu/singleoperandinstructions.cpp
+    src/kd11/cpu/doubleoperandinstructions.cpp
     src/kd11/cpu/rtsfisinstructions.cpp
     src/kd11/cpu/ccinstructions.cpp
     src/kd11/cpu/branchinstructions.cpp
