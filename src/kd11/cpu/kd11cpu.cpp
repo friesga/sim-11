@@ -483,10 +483,8 @@ void KD11CPU::execInstr ()
                             FSUB (this, register_, insn);
                             break;
 
-                        case 007502: /* FMUL */
-                            executeFISinstruction (insnrts->rn,
-                                [] (Float f1, Float f2) {return true;},
-                                [] (Float f1, Float f2) {return f1 * f2;});
+                        case 007502:
+                            FMUL (this, register_, insn);
                             break;
 
                         case 007503: /* FDIV */
