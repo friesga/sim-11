@@ -205,6 +205,7 @@ private:
 	void BVC (u16 instruction);
 	void BVS (u16 instruction);
 	void BCC (u16 instruction);
+	void BCS (u16 instruction);
 };
 
 

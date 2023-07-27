@@ -258,7 +258,7 @@ void KD11CPU::BVS (u16 instruction)
 // BCC - branch if carry is clear
 //
 // Operation:
-// PC <- PC + (2 * offset) if C = 0
+//  PC <- PC + (2 * offset) if C = 0
 //  
 // Condition Codes: Unaffected
 // 
@@ -268,6 +268,25 @@ void KD11CPU::BVS (u16 instruction)
 void KD11CPU::BCC (u16 instruction)
 {
     if (!PSW_GET (PSW_C))
+    {
+        BranchInstruction branchInstruction {instruction};
+        register_[7] += (s16)((s8) branchInstruction.getOffset ()) * 2;
+    }
+}
+
+// BCS - branch if carry is set
+//
+// Operation:
+//  PC <- PC + (2 * offset) if C = 1
+//  
+// Condition Codes: Unaffected
+// 
+// Tests the state of the C-bit and causes a branch if C is set. It is used
+// to test for a carry in the result of a previous operation.
+//
+void KD11CPU::BCS (u16 instruction)
+{
+    if (PSW_GET (PSW_C))
     {
         BranchInstruction branchInstruction {instruction};
         register_[7] += (s16)((s8) branchInstruction.getOffset ()) * 2;

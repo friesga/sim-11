@@ -561,14 +561,11 @@ void KD11CPU::execInstr ()
                     BCC (insn);
                     break;
 
-                case 01034: /* BCS */
+                case 01034:
                 case 01035:
                 case 01036:
                 case 01037:
-                    if (PSW_GET (PSW_C))
-                    {
-                        register_[7] += (s16)((s8)insnbr->offset) * 2;
-                    }
+                    BCS (insn);
                     break;
 
                 case 01040: /* EMT */
