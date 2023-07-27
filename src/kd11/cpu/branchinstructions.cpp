@@ -254,3 +254,22 @@ void KD11CPU::BVS (u16 instruction)
         register_[7] += (s16)((s8) branchInstruction.getOffset ()) * 2;
     }
 }
+
+// BCC - branch if carry is clear
+//
+// Operation:
+// PC <- PC + (2 * offset) if C = 0
+//  
+// Condition Codes: Unaffected
+// 
+// Tests the state of the C-bit and causes a branch if C is clear. BCC is
+// the complementary operation to BCS.
+//
+void KD11CPU::BCC (u16 instruction)
+{
+    if (!PSW_GET (PSW_C))
+    {
+        BranchInstruction branchInstruction {instruction};
+        register_[7] += (s16)((s8) branchInstruction.getOffset ()) * 2;
+    }
+}
