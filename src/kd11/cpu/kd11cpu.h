@@ -179,6 +179,7 @@ private:
 	// format.
 	void RTS (KD11CPU *cpu, u16 (&reg)[8], u16 instruction);
 	void FADD (KD11CPU *cpu, u16 (&reg)[8], u16 instruction);
+	void FSUB (KD11CPU *cpu, u16 (&reg)[8], u16 instruction);
 
 	void MARK (KD11CPU* cpu, u16 (&reg)[8], u16 instruction);
 	void CCC (u16 &psw, u16 instruction);

@@ -45,7 +45,7 @@ void KD11CPU::executeFISinstruction (u16 stackPointer,
 //  if result >= 2^-128; else [(R)+4, (R)+6] <- 0
 //
 // Condition Codes:
-//  N; set if result < O; cleared otherwise
+//  N: set if result < O; cleared otherwise
 //  Z: set if result = O: cleared otherwise
 //  V: cleared
 //  C: cleared
@@ -62,6 +62,31 @@ void KD11CPU::FADD (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
     executeFISinstruction (fisInstruction.getRegister (),
         [] (Float f1, Float f2) {return true;},
         [] (Float f1, Float f2) {return f1 + f2;});
+}
+
+// FSUB - floating subtract
+//
+// Operation:
+//  [(R)+4, (R)+6] <- [(R)+4, (R)+6] - [(R), (R)+2],
+//  if result >= 2^-128; else [(R)+4, (R)+6] <- 0
+//
+// Condition Codes:
+//  N: set if result < O; cleared otherwise
+//  Z: set if result = O; cleared otherwise
+//  V: cleared
+//  C: cleared
+//
+// Sutracts the B Argument from the A Argument and stores the result in
+// the A Argument position on the stack.
+//
+// A <- A - B
+//
+void KD11CPU::FSUB (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
+{
+    FISInstruction fisInstruction (cpu, instruction);
+    executeFISinstruction (fisInstruction.getRegister (),
+        [] (Float f1, Float f2) {return true;},
+        [] (Float f1, Float f2) {return f1 - f2;});
 }
 
 // Pop a word from the processor stack returning true if this succeeds
