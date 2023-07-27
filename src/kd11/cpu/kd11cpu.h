@@ -91,7 +91,7 @@ private:
 	InterruptRequest const traceTrap{RequestType::Trap, TrapPriority::TraceTrap, 0, 014};
 	InterruptRequest const BPT{RequestType::Trap, TrapPriority::InstructionTrap, 0, 014};
 	InterruptRequest const IOT{RequestType::Trap, TrapPriority::InstructionTrap, 0, 020};
-	InterruptRequest const EMT{RequestType::Trap, TrapPriority::InstructionTrap, 0, 030};
+	InterruptRequest const EmulatorTrap {RequestType::Trap, TrapPriority::InstructionTrap, 0, 030};
 	InterruptRequest const TRP{RequestType::Trap, TrapPriority::InstructionTrap, 0, 034};
 	InterruptRequest const FIS{RequestType::Trap, TrapPriority::InstructionTrap, 0, 0244};
 	InterruptRequest const illegalInstructionTrap{RequestType::Trap, TrapPriority::InstructionTrap, 0, 010};
@@ -138,7 +138,11 @@ private:
 		std::function<Float(Float, Float)>);
 
 	bool popWord (u16 *destination);
+
+	// Instruction in the Program Control Group Traps and Operate Group.
+	// These instruction have no operands.
 	void HALT ();
+	void EMT ();
 	void unused ();
 
 	// Single operand instructions

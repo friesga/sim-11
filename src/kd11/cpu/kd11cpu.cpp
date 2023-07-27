@@ -568,12 +568,11 @@ void KD11CPU::execInstr ()
                     BCS (insn);
                     break;
 
-                case 01040: /* EMT */
+                case 01040:
                 case 01041:
                 case 01042:
                 case 01043:
-                    trace.trap (TrapRecordType::TRAP, 030);
-                    setTrap (&EMT);
+                    EMT ();
                     break;
 
                 case 01044: /* TRAP */
