@@ -114,6 +114,32 @@ void KD11CPU::FMUL (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
         [] (Float f1, Float f2) {return f1 * f2;});
 }
 
+// FDIV - floating divide
+//
+// Operation:
+//  [(R)+4, (R)+6] <- [(R)+4, (R)+6] / [(R),(R)+2 ]
+//  if result >= 2^-128; else [(R)+4, (R)+6)] <- 0
+//
+// Condition Codes:
+//  N: set if result < O; cleared otherwise
+//  Z: set if result = 0; cleared otherwise
+//  V: cleared
+//  C: cleared
+//
+// Divides the A Argument by the B Argument and stores the result in the
+// A Argument position on the stack. If the divisor (B Argument) is equal to
+// zero, the stack is left untouched.
+//
+// A <- A / B
+//
+void KD11CPU::FDIV (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
+{
+    FISInstruction fisInstruction (cpu, instruction);
+    executeFISinstruction (fisInstruction.getRegister (),
+        [] (Float f1, Float f2) {return f2.value() != 0;},
+        [] (Float f1, Float f2) {return f1 / f2;});
+}
+
 // Pop a word from the processor stack returning true if this succeeds
 // or false when a bus error occurs.
 bool KD11CPU::popWord (u16 *destination)

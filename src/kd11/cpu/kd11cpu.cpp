@@ -487,10 +487,8 @@ void KD11CPU::execInstr ()
                             FMUL (this, register_, insn);
                             break;
 
-                        case 007503: /* FDIV */
-                            executeFISinstruction (insnrts->rn,
-                                [] (Float f1, Float f2) {return f2.value() != 0;},
-                                [] (Float f1, Float f2) {return f1 / f2;});
+                        case 007503:
+                            FDIV (this, register_, insn);
                             break;
 #endif
                         default:
