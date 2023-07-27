@@ -1,6 +1,69 @@
 #include "kd11cpu.h"
 #include "fisinstruction/fisinstruction.h"
 
+// Execute a FADD, FSUB, FMUL or FDIV instruction.
+void KD11CPU::executeFISinstruction (u16 stackPointer,
+    std::function<bool(Float, Float)> argumentsValid,
+    std::function<Float(Float, Float)> instruction)
+{
+    // Clear PSW bits 5 and 6
+    psw &= ~(_BV(5) | _BV(6));
+
+    CondData<u16> f1High = fetchWord (register_[stackPointer] + 4);
+    CondData<u16> f1Low = fetchWord (register_[stackPointer] + 6);
+    CondData<u16> f2High = fetchWord (register_[stackPointer]);
+    CondData<u16> f2Low = fetchWord (register_[stackPointer] + 2);
+
+    if (f1High.hasValue () && f1Low.hasValue () &&
+        f2High.hasValue () && f2Low.hasValue ())
+    {
+        Float f1 (f1High, f1Low);
+        Float f2 (f2High, f2Low);
+
+        if (argumentsValid (f1, f2))
+        {
+            Float f3 = instruction (f1, f2);
+            returnFISresult (f3, stackPointer);
+        }
+        else
+        {
+            // The arguments are invalid. This is notably a division
+            // by zero
+            PSW_SET (PSW_N);
+            PSW_CLR (PSW_Z);
+            PSW_SET (PSW_V);
+            PSW_SET (PSW_C);
+            setTrap (&FIS);
+        }
+    }
+}
+
+// FADD - floating add
+//
+// Operation:
+//  [(R)+4, (R)+6] <- [(R)+4, (R)+6]+[(R),(R)+2],
+//  if result >= 2^-128; else [(R)+4, (R)+6] <- 0
+//
+// Condition Codes:
+//  N; set if result < O; cleared otherwise
+//  Z: set if result = O: cleared otherwise
+//  V: cleared
+//  C: cleared
+//
+// Adds the A argument to the B argument and stores the result in the
+// A Argument position on the stack. General register R is used as the stack
+// pointer for the operation.
+// 
+// A <- A + B
+//
+void KD11CPU::FADD (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
+{
+    FISInstruction fisInstruction (cpu, instruction);
+    executeFISinstruction (fisInstruction.getRegister (),
+        [] (Float f1, Float f2) {return true;},
+        [] (Float f1, Float f2) {return f1 + f2;});
+}
+
 // Pop a word from the processor stack returning true if this succeeds
 // or false when a bus error occurs.
 bool KD11CPU::popWord (u16 *destination)

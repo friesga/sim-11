@@ -475,10 +475,8 @@ void KD11CPU::execInstr ()
                     switch (insn >> 3)
                     {
 #ifdef USE_FLOAT
-                        case 007500: /* FADD */
-                            executeFISinstruction (insnrts->rn,
-                                [] (Float f1, Float f2) {return true;},
-                                [] (Float f1, Float f2) {return f1 + f2;});
+                        case 007500:
+                            FADD (this, register_, insn);
                             break;
 
                         case 007501: /* FSUB */
@@ -998,43 +996,6 @@ void KD11CPU::execInstr ()
             trace.trap (TrapRecordType::TRAP_ILL, 010);
             setTrap (&illegalInstructionTrap);
             break;
-    }
-}
-
-// Execute a FADD, FSUB, FMUL or FDIV instruction.
-void KD11CPU::executeFISinstruction (u16 stackPointer,
-    std::function<bool(Float, Float)> argumentsValid,
-    std::function<Float(Float, Float)> instruction)
-{
-    // Clear PSW bits 5 and 6
-    psw &= ~(_BV(5) | _BV(6));
-
-    CondData<u16> f1High = fetchWord (register_[stackPointer] + 4);
-    CondData<u16> f1Low = fetchWord (register_[stackPointer] + 6);
-    CondData<u16> f2High = fetchWord (register_[stackPointer]);
-    CondData<u16> f2Low = fetchWord (register_[stackPointer] + 2);
-
-    if (f1High.hasValue () && f1Low.hasValue () &&
-        f2High.hasValue () && f2Low.hasValue ())
-    {
-        Float f1 (f1High, f1Low);
-        Float f2 (f2High, f2Low);
-
-        if (argumentsValid (f1, f2))
-        {
-            Float f3 = instruction (f1, f2);
-            returnFISresult (f3, stackPointer);
-        }
-        else
-        {
-            // The arguments are invalid. This is notably a division
-            // by zero
-            PSW_SET (PSW_N);
-            PSW_CLR (PSW_Z);
-            PSW_SET (PSW_V);
-            PSW_SET (PSW_C);
-            setTrap (&FIS);
-        }
     }
 }
 
