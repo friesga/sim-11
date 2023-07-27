@@ -203,6 +203,7 @@ private:
 	void BHI (u16 instruction);
 	void BLOS (u16 instruction);
 	void BVC (u16 instruction);
+	void BVS (u16 instruction);
 };
 
 

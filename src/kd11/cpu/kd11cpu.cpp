@@ -547,14 +547,11 @@ void KD11CPU::execInstr ()
                     BVC (insn);
                     break;
 
-                case 01024: /* BVS */
+                case 01024:
                 case 01025:
                 case 01026:
                 case 01027:
-                    if (PSW_GET (PSW_V))
-                    {
-                        register_[7] += (s16)((s8)insnbr->offset) * 2;
-                    }
+                    BVS (insn);
                     break;
 
                 case 01030: /* BCC */

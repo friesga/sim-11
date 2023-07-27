@@ -235,3 +235,22 @@ void KD11CPU::BVC (u16 instruction)
         register_[7] += (s16)((s8) branchInstruction.getOffset ()) * 2;
     }
 }
+
+// BVS - branch if overflow is set
+//
+// Operation:
+// PC <- PC + (2 * offset) if V = 1
+//  
+// Condition Codes: Unaffected
+//
+// Tests the state of V bit (overflow) and causes a branch if the V bit is
+// set. BVS is used to detect arithmetic overflow in the previous operation.
+//
+void KD11CPU::BVS (u16 instruction)
+{
+    if (PSW_GET (PSW_V))
+    {
+        BranchInstruction branchInstruction {instruction};
+        register_[7] += (s16)((s8) branchInstruction.getOffset ()) * 2;
+    }
+}
