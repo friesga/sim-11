@@ -216,3 +216,22 @@ void KD11CPU::BLOS (u16 instruction)
         register_[7] += (s16)((s8) branchInstruction.getOffset ()) * 2;
     }
 }
+
+// BVC - branch if overflow is clear
+//
+// Operation:
+//  PC <- PC + (2 * offset) if V = 0
+// 
+// Condition Codes: Unaffected
+//
+// Tests the state of the V bit and causes a branch if the V bit is clear.
+// BVC is complementary operation to BVS.
+//
+void KD11CPU::BVC (u16 instruction)
+{
+    if (!PSW_GET (PSW_V))
+    {
+        BranchInstruction branchInstruction {instruction};
+        register_[7] += (s16)((s8) branchInstruction.getOffset ()) * 2;
+    }
+}
