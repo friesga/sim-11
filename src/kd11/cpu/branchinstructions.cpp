@@ -136,3 +136,22 @@ void KD11CPU::BLE (u16 instruction)
         register_[7] += (s16)branchInstruction.getOffset () * 2;
     }
 }
+
+// BPL - brnach if plus
+//
+// Operation:
+//  PC <- PC + (2 * offset) if N = 0
+//
+// Condition Codes: Unaffected
+//
+// Tests the state of the N-bit and causes a branch if N is clear, (positive
+// result). BPL is the complementary operation of BMI.
+//
+void KD11CPU::BPL (u16 instruction)
+{
+    if (!PSW_GET (PSW_N))
+    {
+        BranchInstruction branchInstruction {instruction};
+        register_[7] += (s16)((s8) branchInstruction.getOffset ()) * 2;
+    }
+}

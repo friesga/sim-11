@@ -508,17 +508,15 @@ void KD11CPU::execInstr ()
             }
             break;
 
-        case 010: /* 10 xx xx group */
+        case 010: 
+            // 10 xx xx group 
             switch (insn >> 6)
             {
-                case 01000: /* BPL */
+                case 01000:
                 case 01001:
                 case 01002:
                 case 01003:
-                    if (!PSW_GET (PSW_N))
-                    {
-                        register_[7] += (s16)((s8)insnbr->offset) * 2;
-                    }
+                    BPL (insn);
                     break;
 
                 case 01004: /* BMI */

@@ -189,6 +189,8 @@ private:
 	void MARK (KD11CPU* cpu, u16 (&reg)[8], u16 instruction);
 	void CCC (u16 &psw, u16 instruction);
 	void SCC (u16 &psw, u16 instruction);
+
+	// Branch instructions
 	void BR (u16 instruction);
 	void BNE (u16 instruction);
 	void BEQ (u16 instruction);
@@ -196,6 +198,7 @@ private:
 	void BLT (u16 instruction);
 	void BGT (u16 instruction);
 	void BLE (u16 instruction);
+	void BPL (u16 instruction);
 	
 };
 
