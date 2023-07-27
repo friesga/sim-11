@@ -137,7 +137,7 @@ void KD11CPU::BLE (u16 instruction)
     }
 }
 
-// BPL - brnach if plus
+// BPL - branch if plus
 //
 // Operation:
 //  PC <- PC + (2 * offset) if N = 0
@@ -150,6 +150,26 @@ void KD11CPU::BLE (u16 instruction)
 void KD11CPU::BPL (u16 instruction)
 {
     if (!PSW_GET (PSW_N))
+    {
+        BranchInstruction branchInstruction {instruction};
+        register_[7] += (s16)((s8) branchInstruction.getOffset ()) * 2;
+    }
+}
+
+// BMI - branch if minus
+//
+// Operation:
+//  PC <- PC + (2 * offset) if N = 1
+//
+// Condition Codes: Unaffected
+//
+// Tests the state of the N-bit and causes a branch if N is set. It is used
+// to test the sign (most significant bit) of the result of the previous
+// operation), branching if negative. BMI is the complementary function of BPL.
+//
+void KD11CPU::BMI (u16 instruction)
+{
+    if (PSW_GET (PSW_N))
     {
         BranchInstruction branchInstruction {instruction};
         register_[7] += (s16)((s8) branchInstruction.getOffset ()) * 2;

@@ -199,6 +199,7 @@ private:
 	void BGT (u16 instruction);
 	void BLE (u16 instruction);
 	void BPL (u16 instruction);
+	void BMI (u16 instruction);
 	
 };
 
