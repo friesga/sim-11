@@ -200,7 +200,7 @@ private:
 	void BLE (u16 instruction);
 	void BPL (u16 instruction);
 	void BMI (u16 instruction);
-	
+	void BHI (u16 instruction);
 };
 
 

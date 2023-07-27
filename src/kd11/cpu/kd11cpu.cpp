@@ -526,14 +526,11 @@ void KD11CPU::execInstr ()
                     BMI (insn);
                     break;
 
-                case 01010: /* BHI */
+                case 01010:
                 case 01011:
                 case 01012:
                 case 01013:
-                    if (!PSW_GET (PSW_C) && !PSW_GET (PSW_Z))
-                    {
-                        register_[7] += (s16)((s8)insnbr->offset) * 2;
-                    }
+                    BHI (insn);
                     break;
 
                 case 01014: /* BLOS */
