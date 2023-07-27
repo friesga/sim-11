@@ -575,12 +575,11 @@ void KD11CPU::execInstr ()
                     EMT ();
                     break;
 
-                case 01044: /* TRAP */
+                case 01044:
                 case 01045:
                 case 01046:
                 case 01047:
-                    trace.trap (TrapRecordType::TRAP, 034);
-                    setTrap (&TRP);
+                    TRAP ();
                     break;
 
                 case 01050: /* CLRB */

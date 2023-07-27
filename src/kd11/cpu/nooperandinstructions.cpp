@@ -44,6 +44,30 @@ void KD11CPU::EMT ()
     setTrap (&EmulatorTrap);
 }
 
+// TRAP - trap
+//
+// Operation:
+//  v(SP) <- PS
+//  v(SP) <- PC
+//  PC <- (34)
+//  PS <- (36)
+//
+// Condition Codes:
+//  N: loaded from trap vector
+//  Z: loaded from trap vector
+//  V: loaded from trap vector
+//  C: loaded from trap vector 
+//
+// Operation codes from 104400 to 104777 are TRAP instructions. TRAPs and EMTs
+// are identical in operation, except that the trap vector for TRAP is at
+// address 34.
+//
+void KD11CPU::TRAP ()
+{
+    trace.trap (TrapRecordType::TRAP, 034);
+    setTrap (&TRP);
+}
+
 // Unused/reserved operation codes
 void KD11CPU::unused ()
 {
