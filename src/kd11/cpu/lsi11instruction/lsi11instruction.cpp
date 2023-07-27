@@ -26,11 +26,8 @@ OperandLocation LSI11Instruction::decodeOperand (Operand operand, u16 (&reg)[8])
 		case 2:
 			// Auto-increment mode. Register is used as a pointer to
 			// sequential data then incremented.
-			// After incrementing, the address in the register is made even,
-			// ToDo: is that correct?
 			addr = reg[operand.registerNr_];
 			reg[operand.registerNr_] += 2;
-			reg[operand.registerNr_] &= 0xFFFE;
 			return OperandLocation (cpu_, CondData<u16> (addr));
 
 		case 3: 
@@ -39,7 +36,6 @@ OperandLocation LSI11Instruction::decodeOperand (Operand operand, u16 (&reg)[8])
 			// incremented (always by 2; even for byte instructions).
 			addr = reg[operand.registerNr_];
 			reg[operand.registerNr_] += 2;
-			reg[operand.registerNr_] &= 0xFFFE;
 			return OperandLocation (cpu_, CondData<u16> (cpu_->fetchWord (addr)));
 
 		case 4:
@@ -47,7 +43,6 @@ OperandLocation LSI11Instruction::decodeOperand (Operand operand, u16 (&reg)[8])
 			// pointer
 			reg[operand.registerNr_] -= 2;
 			addr = reg[operand.registerNr_];
-			reg[operand.registerNr_] &= 0xFFFE;
 			return OperandLocation (cpu_, CondData<u16> (addr));
 
 		case 5:
@@ -57,7 +52,6 @@ OperandLocation LSI11Instruction::decodeOperand (Operand operand, u16 (&reg)[8])
 			// operand.
 			reg[operand.registerNr_] -= 2;
 			addr = reg[operand.registerNr_];
-			reg[operand.registerNr_] &= 0xFFFE;
 			return OperandLocation (cpu_, CondData<u16> (cpu_->fetchWord (addr)));
 
 		case 6:
@@ -89,4 +83,18 @@ OperandLocation LSI11Instruction::decodeOperand (Operand operand, u16 (&reg)[8])
 			// is three bits wide.
 			throw "Cannot happen";
 	}
+}
+
+// Determine if the given opCode is for a byte instruction. Two ranges of byte
+// instructions are defined 01050DD (MOVB) - 01067DD (MFPS) and 
+// 011SSDD (MOVB) - 015SSDD (BISB).
+//
+// The opcode cannot be passed in the LSI11Instruction constructor as that
+// constructor is called before the instruction is decoded and therefore has
+// to be passed to this function.
+//
+bool LSI11Instruction::isByteInstruction (u16 opCode)
+{
+	return (opCode >= 01050 && opCode <= 01067) || 
+		(opCode >= 011 && opCode <= 015) ? true : false;
 }

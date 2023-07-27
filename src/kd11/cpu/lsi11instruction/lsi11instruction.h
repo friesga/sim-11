@@ -11,6 +11,7 @@ protected:
 
 	LSI11Instruction (KD11CPU *cpu);
 	OperandLocation decodeOperand (Operand operand, u16 (&reg)[8]);
+	bool isByteInstruction (u16 opCode);
 };
 
 #endif _LSI11INSTRUCTION_H_
