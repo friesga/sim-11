@@ -533,14 +533,11 @@ void KD11CPU::execInstr ()
                     BHI (insn);
                     break;
 
-                case 01014: /* BLOS */
+                case 01014:
                 case 01015:
                 case 01016:
                 case 01017:
-                    if (PSW_GET (PSW_C) || PSW_GET (PSW_Z))
-                    {
-                        register_[7] += (s16)((s8)insnbr->offset) * 2;
-                    }
+                    BLOS (insn);
                     break;
 
                 case 01020: /* BVC */

@@ -201,6 +201,7 @@ private:
 	void BPL (u16 instruction);
 	void BMI (u16 instruction);
 	void BHI (u16 instruction);
+	void BLOS (u16 instruction);
 };
 
 

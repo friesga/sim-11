@@ -195,3 +195,24 @@ void KD11CPU::BHI (u16 instruction)
         register_[7] += (s16)((s8) branchInstruction.getOffset ()) * 2;
     }
 }
+
+// BLOS - branch if lower or same
+//
+// Operation:
+//  PC <- PC + (2 * offset) if C v Z = 1
+//
+// Condition Codes: Unaffected
+//
+// Causes a branch if the previous operation caused either a carry or a zero
+// result. BLOS is the complementary operation to BHI. The branch will occur
+// in comparison operations as long as the source is equal to, or has a lower
+// unsigned value than the destination.
+//
+void KD11CPU::BLOS (u16 instruction)
+{
+    if (PSW_GET (PSW_C) || PSW_GET (PSW_Z))
+    {
+        BranchInstruction branchInstruction {instruction};
+        register_[7] += (s16)((s8) branchInstruction.getOffset ()) * 2;
+    }
+}
