@@ -492,22 +492,18 @@ void KD11CPU::execInstr ()
                             break;
 #endif
                         default:
-                            /* 075040-076777: unused */
-                            trace.trap (TrapRecordType::TRAP_ILL, 010);
-                            setTrap (&illegalInstructionTrap);
+                            // 075040-076777: unused 
+                            unused ();
                             break;
                     }
                     break;
-                case 0077: /* SOB */
-                    register_[insnsob->rn]--;
-                    if (register_[insnsob->rn])
-                    {
-                        register_[7] -= 2 * insnsob->offset;
-                    }
+
+                case 0077:
+                    SOB (this, register_, insn);
                     break;
+
                 default:
-                    trace.trap (TrapRecordType::TRAP_ILL, 010);
-                    setTrap (&illegalInstructionTrap);
+                    unused ();
                     break;
             }
             break;
