@@ -52,7 +52,7 @@ void KD11CPU::SWAB (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
     SingleOperandInstruction soi {cpu, instruction};
 
     OperandLocation operandLocation = soi.getOperandLocation (reg);
-    CondData<u16> operand = operandLocation.contents ();
+    CondData<u16> operand = operandLocation.wordContents ();
     if (!operand.hasValue ())
         return;
 
@@ -109,7 +109,7 @@ void KD11CPU::COM (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
     SingleOperandInstruction soi {cpu, instruction};
 
     OperandLocation operandLocation = soi.getOperandLocation (reg);
-    CondData<u16> operand = operandLocation.contents ();
+    CondData<u16> operand = operandLocation.wordContents ();
     if (!operand.hasValue ())
         return;
 
@@ -141,7 +141,7 @@ void KD11CPU::INC (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
     SingleOperandInstruction soi {cpu, instruction};
 
     OperandLocation operandLocation = soi.getOperandLocation (reg);
-    CondData<u16> contents = operandLocation.contents ();
+    CondData<u16> contents = operandLocation.wordContents ();
     if (!contents.hasValue ())
         return;
 
@@ -172,7 +172,7 @@ void KD11CPU::DEC (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
     SingleOperandInstruction soi {cpu, instruction};
 
     OperandLocation operandLocation = soi.getOperandLocation (reg);
-    CondData<u16> contents = operandLocation.contents ();
+    CondData<u16> contents = operandLocation.wordContents ();
     if (!contents.hasValue ())
         return;
 
@@ -205,7 +205,7 @@ void KD11CPU::NEG (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
     SingleOperandInstruction soi {cpu, instruction};
 
     OperandLocation operandLocation = soi.getOperandLocation (reg);
-    CondData<u16> operand = operandLocation.contents ();
+    CondData<u16> operand = operandLocation.wordContents ();
     if (!operand.hasValue ())
         return;
 
@@ -241,7 +241,7 @@ void KD11CPU::ADC (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
     SingleOperandInstruction soi {cpu, instruction};
 
     OperandLocation operandLocation = soi.getOperandLocation (reg);
-    CondData<u16> contents = operandLocation.contents ();
+    CondData<u16> contents = operandLocation.wordContents ();
     if (!contents.hasValue ())
         return;
 
@@ -275,7 +275,7 @@ void KD11CPU::SBC (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
     SingleOperandInstruction soi {cpu, instruction};
 
     OperandLocation operandLocation = soi.getOperandLocation (reg);
-    CondData<u16> contents = operandLocation.contents ();
+    CondData<u16> contents = operandLocation.wordContents ();
     if (!contents.hasValue ())
         return;
 
@@ -305,7 +305,7 @@ void KD11CPU::TST (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
     SingleOperandInstruction soi {cpu, instruction};
 
     OperandLocation operandLocation = soi.getOperandLocation (reg);
-    CondData<u16> contents = operandLocation.contents ();
+    CondData<u16> contents = operandLocation.wordContents ();
     if (!contents.hasValue ())
         return;
 
@@ -337,7 +337,7 @@ void KD11CPU::ROR (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
     SingleOperandInstruction soi {cpu, instruction};
 
     OperandLocation operandLocation = soi.getOperandLocation (reg);
-    CondData<u16> contents = operandLocation.contents ();
+    CondData<u16> contents = operandLocation.wordContents ();
     if (!contents.hasValue ())
         return;
 
@@ -376,7 +376,7 @@ void KD11CPU::ROL (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
     SingleOperandInstruction soi {cpu, instruction};
 
     OperandLocation operandLocation = soi.getOperandLocation (reg);
-    CondData<u16> contents = operandLocation.contents ();
+    CondData<u16> contents = operandLocation.wordContents ();
     if (!contents.hasValue ())
         return;
 
@@ -415,7 +415,7 @@ void KD11CPU::ASR (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
     SingleOperandInstruction soi {cpu, instruction};
 
     OperandLocation operandLocation = soi.getOperandLocation (reg);
-    CondData<u16> contents = operandLocation.contents ();
+    CondData<u16> contents = operandLocation.wordContents ();
     if (!contents.hasValue ())
         return;;
 
@@ -459,7 +459,7 @@ void KD11CPU::ASL (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
     SingleOperandInstruction soi {cpu, instruction};
 
     OperandLocation operandLocation = soi.getOperandLocation (reg);
-    CondData<u16> contents = operandLocation.contents ();
+    CondData<u16> contents = operandLocation.wordContents ();
     if (!contents.hasValue ())
         return;
 

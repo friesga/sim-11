@@ -5,6 +5,16 @@ LSI11Instruction::LSI11Instruction (KD11CPU *cpu)
 	cpu_ {cpu}
 {}
 
+// Get the location of the operand by decoding the adressing mode of the
+// operand.
+//
+// The autoincrement and autodecrement modes (modes 2 and 4) provide for
+// automatic stepping of a pointer through sequential elements of a table
+// of operands. It assumes the contents of the selected general register to
+// be the address of the operand. Contents of registers are stepped (by one
+// for bytes, by two for words, always by two for R6 and R7) to address the
+// next sequential location.
+//
 OperandLocation LSI11Instruction::decodeOperand (Operand operand, u16 (&reg)[8])
 {
 	CondData<u16> addr;
@@ -27,7 +37,12 @@ OperandLocation LSI11Instruction::decodeOperand (Operand operand, u16 (&reg)[8])
 			// Auto-increment mode. Register is used as a pointer to
 			// sequential data then incremented.
 			addr = reg[operand.registerNr_];
-			reg[operand.registerNr_] += 2;
+			if (isByteInstruction () && operand.registerNr_ != 6 &&
+					operand.registerNr_ != 7)
+				++reg[operand.registerNr_];
+			else
+				reg[operand.registerNr_] += 2;
+
 			return OperandLocation (cpu_, CondData<u16> (addr));
 
 		case 3: 
@@ -41,7 +56,11 @@ OperandLocation LSI11Instruction::decodeOperand (Operand operand, u16 (&reg)[8])
 		case 4:
 			// Auto-decrement mode. Register is decremented and then used as a
 			// pointer
-			reg[operand.registerNr_] -= 2;
+			if (isByteInstruction () && operand.registerNr_ != 6 &&
+					operand.registerNr_ != 7)
+				--reg[operand.registerNr_];
+			else
+				reg[operand.registerNr_] -= 2;
 			addr = reg[operand.registerNr_];
 			return OperandLocation (cpu_, CondData<u16> (addr));
 
@@ -89,12 +108,12 @@ OperandLocation LSI11Instruction::decodeOperand (Operand operand, u16 (&reg)[8])
 // instructions are defined 01050DD (MOVB) - 01067DD (MFPS) and 
 // 011SSDD (MOVB) - 015SSDD (BISB).
 //
-// The opcode cannot be passed in the LSI11Instruction constructor as that
-// constructor is called before the instruction is decoded and therefore has
-// to be passed to this function.
+// The instruction's operation code is retrieved from the derived instruction
+// class.
 //
-bool LSI11Instruction::isByteInstruction (u16 opCode)
+bool LSI11Instruction::isByteInstruction ()
 {
+	u16 opCode = getOperationCode ();
 	return (opCode >= 01050 && opCode <= 01067) || 
-		(opCode >= 011 && opCode <= 015) ? true : false;
+		   (opCode >= 011 && opCode <= 015) ? true : false;
 }

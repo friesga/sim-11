@@ -28,6 +28,7 @@ public:
 	DoubleOperandInstruction (KD11CPU *cpu, u16 instruction);
 	OperandLocation getSourceOperandLocation (u16 (&reg)[8]);
 	OperandLocation getDestinationOperandLocation (u16 (&reg)[8]);
+	u16 getOperationCode ();
 };
 
 #endif // _DOUBLEINSTRUCTIONFORMAT_H_

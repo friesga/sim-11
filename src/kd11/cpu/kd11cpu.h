@@ -123,9 +123,9 @@ private:
     u16 pswValue ();
     void setPSW (u16 value);
 
-	// These functions are used by the
-	// Instruction classes.
+	// These functions are used by the Instruction classes.
 	CondData<u16> fetchWord (u16 address);
+	CondData<u8> fetchByte (u16 address);
 	bool putWord (u16 address, u16 value);
 	bool putByte (u16 address, u8 value);
 
@@ -165,6 +165,7 @@ private:
 
 	// Double operand instructions
 	void MOV (KD11CPU* cpu, u16 (&reg)[8], u16 instruction);
+	void MOVB (KD11CPU* cpu, u16 (&reg)[8], u16 instruction);
 	void CMP (KD11CPU* cpu, u16 (&reg)[8], u16 instruction);
 	void BIT (KD11CPU* cpu, u16 (&reg)[8], u16 instruction);
 	void BIC (KD11CPU* cpu, u16 (&reg)[8], u16 instruction);

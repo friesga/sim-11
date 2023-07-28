@@ -22,8 +22,10 @@ public:
     template <typename T> bool isA ();
     bool isValid ();
     operator u16 ();
-    CondData<u16> contents ();
-    void write (u16 contents);
+    CondData<u16> wordContents ();
+    CondData<u8> byteContents ();
+    bool write (u16 contents);
+    bool writeByte (u8 contents);
 
 private:
     variant <u8, CondData <u16>> location_;

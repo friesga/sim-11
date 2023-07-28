@@ -24,11 +24,14 @@ bool OperandLocation::isValid ()
             get<CondData<u16>> (location_).hasValue ());
 }
 
-// Return the memory address held in the location assuming the variant
-// holds a CondData<u16> object and that object contains a valid address.
-// ToDo: Check these conditions
+// Return, depending on (the type of) the value held in the location, either
+// the register number or the memory address held in the location. The type
+// of the value can be determined by means of the isA<> function.
 OperandLocation::operator u16 ()
 {
+    if (holds_alternative<u8> (location_))
+        return get<u8> (location_);
+     
     return get<CondData <u16>> (location_).valueOr (0);
 }
 
@@ -36,7 +39,7 @@ OperandLocation::operator u16 ()
 // location is either a register number or a memory address. In the first case
 // the contents of the register are returned, in the second case the contents
 // of the memory address.
-CondData<u16> OperandLocation::contents ()
+CondData<u16> OperandLocation::wordContents ()
 {
     if (holds_alternative<u8> (location_))
     {
@@ -50,17 +53,53 @@ CondData<u16> OperandLocation::contents ()
     }
 }
 
-// Write the given contents to the operand location
-void OperandLocation::write (u16 contents)
+// Return the byte at the location pointed to by this OperandLocation. The
+// location is either a register number or a memory address. In the first case
+// the bits 0-7 of the register are returned, in the second case the byte at
+// the memory address.
+CondData<u8> OperandLocation::byteContents ()
+{
+    if (holds_alternative<u8> (location_))
+    {
+        // The variant holds a register number
+        return CondData<u8> {static_cast<u8> 
+            (cpu_->register_[get<u8> (location_)] & 0377)};
+    }
+    else
+    {
+        // The variant holds a memory address
+        return cpu_->fetchByte (get<CondData<u16>> (location_));
+    }
+}
+
+// Write the given word contents to the operand location
+bool OperandLocation::write (u16 contents)
 {
     if (holds_alternative<u8> (location_))
     {
         // The variant holds a register number
         cpu_->register_[get<u8> (location_)] = contents;
+        return true;
     }
     else
     {
         // The variant holds a memory address
-        cpu_->putWord (get<CondData<u16>> (location_), contents);
+        return cpu_->putWord (get<CondData<u16>> (location_), contents);
+    }
+}
+
+// Write the given byte to the operand location
+bool OperandLocation::writeByte (u8 contents)
+{
+    if (holds_alternative<u8> (location_))
+    {
+        // The variant holds a register number
+        cpu_->register_[get<u8> (location_)] = contents;
+        return true;
+    }
+    else
+    {
+        // The variant holds a memory address
+        return cpu_->putByte (get<CondData<u16>> (location_), contents);
     }
 }

@@ -70,7 +70,7 @@ void KD11CPU::MUL (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
 
     OperandLocation sourceOperandLocation = 
         mulInstruction.getOperandLocation (reg);
-    CondData<u16> source = sourceOperandLocation.contents ();
+    CondData<u16> source = sourceOperandLocation.wordContents ();
     
     s32 tmps32 = (s32)(s16)dst * (s16) source;
     register_[regNr] = (u16) (tmps32 >> 16);
@@ -109,7 +109,7 @@ void KD11CPU::DIV (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
 
     OperandLocation sourceOperandLocation = 
         divInstruction.getOperandLocation (reg);
-    CondData<u16> source = sourceOperandLocation.contents ();
+    CondData<u16> source = sourceOperandLocation.wordContents ();
     if (!source.hasValue ())
         return;
 
@@ -164,7 +164,7 @@ void KD11CPU::ASH (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
 
     OperandLocation sourceOperandLocation = 
         ashInstruction.getOperandLocation (reg);
-    CondData<u16> source = sourceOperandLocation.contents ();
+    CondData<u16> source = sourceOperandLocation.wordContents ();
     if (!source.hasValue ())
         return;
 
@@ -253,7 +253,7 @@ void KD11CPU::ASHC (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
 
     OperandLocation sourceOperandLocation = 
         ashcInstruction.getOperandLocation (reg);
-    CondData<u16> source = sourceOperandLocation.contents ();
+    CondData<u16> source = sourceOperandLocation.wordContents ();
     if (!source.hasValue ())
         return;
 
@@ -326,7 +326,7 @@ void KD11CPU::XOR (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
 
     OperandLocation destinationOperandLocation = 
         ashcInstruction.getOperandLocation (reg);
-    CondData<u16> destination = destinationOperandLocation.contents ();
+    CondData<u16> destination = destinationOperandLocation.wordContents ();
     if (!destination.hasValue ())
         return;
 

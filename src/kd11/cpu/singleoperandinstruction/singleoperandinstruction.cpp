@@ -14,3 +14,9 @@ OperandLocation SingleOperandInstruction::getOperandLocation (u16 (&reg)[8])
 {
 	return decodeOperand (Operand {instr_.decoded.rn, instr_.decoded.mode}, reg);
 }
+
+// Return the instruction's operation code
+u16 SingleOperandInstruction::getOperationCode ()
+{
+	return instr_.decoded.opcode;
+}

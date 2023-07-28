@@ -24,7 +24,7 @@ void KD11CPU::MOV (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
 
     OperandLocation sourceOperandLocation = 
             doubleOperandInstruction.getSourceOperandLocation (reg);
-    CondData<u16> source = sourceOperandLocation.contents ();
+    CondData<u16> source = sourceOperandLocation.wordContents ();
     if (!source.hasValue ())
         return;
 
@@ -35,6 +35,41 @@ void KD11CPU::MOV (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
 
     PSW_EQ (PSW_N, source & 0100000);
     PSW_EQ (PSW_Z, !source);
+    PSW_CLR (PSW_V);
+}
+
+// MOVB - same as MOV
+//
+// The MOVB to a register (unique among byte instructions) extends the most
+// significant bit of the low order byte (sign extension). Otherwise MOVB
+// operates on bytes exactly as MOV operates on words.
+//
+void KD11CPU::MOVB (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
+{
+    DoubleOperandInstruction doubleOperandInstruction (cpu, instruction);
+
+    OperandLocation sourceOperandLocation =
+            doubleOperandInstruction.getSourceOperandLocation (reg);
+    CondData<u8> source = sourceOperandLocation.byteContents ();
+    if (!source.hasValue ())
+        return;
+
+    s8 tmp = (s8) source;
+
+    OperandLocation destOperandLocation =
+            doubleOperandInstruction.getDestinationOperandLocation (reg);
+
+    // If the destination mode is 0 (Register) the regular operand processing
+    // is bypassed and the signed eight bit value u8 is directly written into
+    // the register, causing sign extension in the register.
+    if (destOperandLocation.isA<u8> ())
+        register_[destOperandLocation] = tmp;
+    else
+        if (!destOperandLocation.writeByte (tmp))
+            return;
+    
+    PSW_EQ (PSW_N, tmp & 0x80);
+    PSW_EQ (PSW_Z, !tmp);
     PSW_CLR (PSW_V);
 }
 
@@ -62,13 +97,13 @@ void KD11CPU::CMP (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
 
     OperandLocation sourceOperandLocation = 
             doubleOperandInstruction.getSourceOperandLocation (reg);
-    CondData<u16> source = sourceOperandLocation.contents ();
+    CondData<u16> source = sourceOperandLocation.wordContents ();
     if (!source.hasValue ())
         return;
 
     OperandLocation destinationOperandLocation = 
             doubleOperandInstruction.getDestinationOperandLocation (reg);
-    CondData<u16> destination = destinationOperandLocation.contents ();
+    CondData<u16> destination = destinationOperandLocation.wordContents ();
     if (!destination.hasValue ())
         return;
 
@@ -101,13 +136,13 @@ void KD11CPU::BIT (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
 
     OperandLocation sourceOperandLocation = 
             doubleOperandInstruction.getSourceOperandLocation (reg);
-    CondData<u16> source = sourceOperandLocation.contents ();
+    CondData<u16> source = sourceOperandLocation.wordContents ();
     if (!source.hasValue ())
         return;
 
     OperandLocation destinationOperandLocation = 
             doubleOperandInstruction.getDestinationOperandLocation (reg);
-    CondData<u16> destination = destinationOperandLocation.contents ();
+    CondData<u16> destination = destinationOperandLocation.wordContents ();
     if (!destination.hasValue ())
         return;
 
@@ -138,13 +173,13 @@ void KD11CPU::BIC (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
 
     OperandLocation sourceOperandLocation = 
             doubleOperandInstruction.getSourceOperandLocation (reg);
-    CondData<u16> source = sourceOperandLocation.contents ();
+    CondData<u16> source = sourceOperandLocation.wordContents ();
     if (!source.hasValue ())
         return;
 
     OperandLocation destinationOperandLocation = 
             doubleOperandInstruction.getDestinationOperandLocation (reg);
-    CondData<u16> destination = destinationOperandLocation.contents ();
+    CondData<u16> destination = destinationOperandLocation.wordContents ();
     if (!destination.hasValue ())
         return;
 
@@ -179,13 +214,13 @@ void KD11CPU::BIS (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
 
     OperandLocation sourceOperandLocation = 
             doubleOperandInstruction.getSourceOperandLocation (reg);
-    CondData<u16> source = sourceOperandLocation.contents ();
+    CondData<u16> source = sourceOperandLocation.wordContents ();
     if (!source.hasValue ())
         return;
 
     OperandLocation destinationOperandLocation = 
             doubleOperandInstruction.getDestinationOperandLocation (reg);
-    CondData<u16> destination = destinationOperandLocation.contents ();
+    CondData<u16> destination = destinationOperandLocation.wordContents ();
     if (!destination.hasValue ())
         return;
 
@@ -223,13 +258,13 @@ void KD11CPU::ADD (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
 
     OperandLocation sourceOperandLocation = 
             doubleOperandInstruction.getSourceOperandLocation (reg);
-    CondData<u16> source = sourceOperandLocation.contents ();
+    CondData<u16> source = sourceOperandLocation.wordContents ();
     if (!source.hasValue ())
         return;
 
     OperandLocation destinationOperandLocation = 
             doubleOperandInstruction.getDestinationOperandLocation (reg);
-    CondData<u16> destination = destinationOperandLocation.contents ();
+    CondData<u16> destination = destinationOperandLocation.wordContents ();
     if (!destination.hasValue ())
         return;
 

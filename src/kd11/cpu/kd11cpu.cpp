@@ -52,6 +52,14 @@ CondData<u16> KD11CPU::fetchWord (u16 address)
     return value;
 }
 
+// Fetch the byte at the given word or byte address
+CondData<u8> KD11CPU::fetchByte (u16 address)
+{
+    return (address & 1) ? 
+        static_cast<CondData<u8>> (fetchWord (address & 0xFFFE) >> 8) : 
+	    static_cast<CondData<u8>> (fetchWord (address) & 0377);
+}
+
 bool KD11CPU::putWord (u16 address, u16 value)
 {
     if (!bus_->writeWord (address, value))
@@ -836,6 +844,8 @@ void KD11CPU::execInstr ()
             break;
 
         case 011: /* MOVB */
+            MOVB (this, register_, insn);
+            /*
             if (!insn2->getSourceOperand (this, register_,
                 Bitmask (OperandOptions::Byte |
                     OperandOptions::AutoIncr), tmp))
@@ -854,6 +864,7 @@ void KD11CPU::execInstr ()
             PSW_EQ (PSW_N, tmp & 0x80);
             PSW_EQ (PSW_Z, !tmp);
             PSW_CLR (PSW_V);
+            */
             break;
 
         case 012: /* CMPB */
