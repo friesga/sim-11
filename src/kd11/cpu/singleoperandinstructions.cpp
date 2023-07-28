@@ -143,6 +143,34 @@ void KD11CPU::COM (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
     PSW_EQ (PSW_Z, !operand);
 }
 
+// COM - complement destination byte
+//
+// Operation:
+//  refer to COM
+// 
+// Condition Codes:
+//  refer to COM
+//
+void KD11CPU::COMB (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
+{
+    SingleOperandInstruction combInstruction {cpu, instruction};
+
+    OperandLocation operandLocation = 
+        combInstruction.getOperandLocation (reg);
+    CondData<u8> operand = operandLocation.byteContents ();
+    if (!operand.hasValue ())
+        return;
+
+    // Complement the operand and write it to the operand location
+    operand = ~operand;
+    operandLocation.writeByte (operand);
+
+    PSW_CLR (PSW_V);
+    PSW_SET (PSW_C);
+    PSW_EQ (PSW_N, operand & 0x80);
+    PSW_EQ (PSW_Z, !((u8) operand));
+}
+
 // INC - increment destination
 //
 // Operation:

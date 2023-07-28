@@ -152,6 +152,7 @@ private:
 	void CLR (KD11CPU* cpu, u16 (&reg)[8], u16 instruction);
 	void CLRB (KD11CPU* cpu, u16 (&reg)[8], u16 instruction);
 	void COM (KD11CPU* cpu, u16 (&reg)[8], u16 instruction);
+	void COMB (KD11CPU* cpu, u16 (&reg)[8], u16 instruction);
 	void INC (KD11CPU* cpu, u16 (&reg)[8], u16 instruction);
 	void DEC (KD11CPU* cpu, u16 (&reg)[8], u16 instruction);
 	void NEG (KD11CPU* cpu, u16 (&reg)[8], u16 instruction);
