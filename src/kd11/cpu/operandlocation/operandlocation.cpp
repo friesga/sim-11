@@ -89,12 +89,17 @@ bool OperandLocation::write (u16 contents)
 }
 
 // Write the given byte to the operand location
+// 
+// When general registers are used, byte instructions only operate on
+// bits 0-7; i.e. byte 0 of the register.
+//
 bool OperandLocation::writeByte (u8 contents)
 {
     if (holds_alternative<u8> (location_))
     {
         // The variant holds a register number
-        cpu_->register_[get<u8> (location_)] = contents;
+        u16 regNr = get<u8> (location_);
+        cpu_->register_[regNr] = (cpu_->register_[regNr] & 0xFF00) | contents;
         return true;
     }
     else

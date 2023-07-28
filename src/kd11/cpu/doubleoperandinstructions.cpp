@@ -38,7 +38,13 @@ void KD11CPU::MOV (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
     PSW_CLR (PSW_V);
 }
 
-// MOVB - same as MOV
+// MOVB - move source to destination
+// 
+// Operation:
+//  refer to MOV
+// 
+// Condition Codes:
+//  refer to MOV
 //
 // The MOVB to a register (unique among byte instructions) extends the most
 // significant bit of the low order byte (sign extension). Otherwise MOVB

@@ -590,13 +590,8 @@ void KD11CPU::execInstr ()
                     TRAP ();
                     break;
 
-                case 01050: /* CLRB */
-                    if (!insn1->putOperand (this, register_,
-                        Bitmask (OperandOptions::Byte), 0))
-                        return;
-
-                    PSW_CLR (PSW_N | PSW_V | PSW_C);
-                    PSW_SET (PSW_Z);
+                case 01050:
+                    CLRB (this, register_, insn);
                     break;
 
                 case 01051: /* COMB */

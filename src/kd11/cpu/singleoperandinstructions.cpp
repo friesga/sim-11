@@ -90,6 +90,26 @@ void KD11CPU::CLR (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
     PSW_SET (PSW_Z);
 }
 
+// CLRB - clear destination byte
+//
+// Operation:
+//  refer to CLR
+// 
+// Condition Codes:
+//  refer to CLR
+//
+void KD11CPU::CLRB (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
+{
+    SingleOperandInstruction clrbInstruction {cpu, instruction};
+    OperandLocation operandLocation =
+        clrbInstruction.getOperandLocation (reg);
+
+    operandLocation.writeByte (0);
+
+    PSW_CLR (PSW_N | PSW_V | PSW_C);
+    PSW_SET (PSW_Z);
+}
+
 // COM - complement destination
 //
 // Operation:
