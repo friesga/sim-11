@@ -514,10 +514,10 @@ void KD11CPU::TST (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
 //
 void KD11CPU::TSTB (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
 {
-    SingleOperandInstruction sbcbInstruction {cpu, instruction};
+    SingleOperandInstruction tstbInstruction {cpu, instruction};
 
     OperandLocation operandLocation = 
-        sbcbInstruction.getOperandLocation (reg);
+        tstbInstruction.getOperandLocation (reg);
     CondData<u8> source = operandLocation.byteContents ();
     if (!source.hasValue ())
         return;
@@ -563,6 +563,40 @@ void KD11CPU::ROR (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
 
     PSW_EQ (PSW_C, contents & 0000001);
     PSW_EQ (PSW_N, result & 0100000);
+    PSW_EQ (PSW_Z, !result);
+    PSW_EQ (PSW_V, PSW_GET (PSW_N) ^ PSW_GET (PSW_C));
+}
+
+// RORB - rotate right byte
+//
+// Operation:
+//  refer to ROR
+// 
+// Condition Codes:
+//  refer to ROR
+//
+// Same as ROR instruction with the exception that for odd adresses the
+// carry bit is loaded in bit 15 of the word and for even addresses the carry
+// bit is loaded in bit 7 of the word.
+//
+void KD11CPU::RORB (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
+{
+    SingleOperandInstruction rorbInstruction {cpu, instruction};
+
+    OperandLocation operandLocation = 
+        rorbInstruction.getOperandLocation (reg);
+    CondData<u8> source = operandLocation.byteContents ();
+    if (!source.hasValue ())
+        return;
+
+    u16 result = source >> 1;
+    if (PSW_GET (PSW_C))
+        result |= 0x80;
+
+    operandLocation.writeByte (result);
+
+    PSW_EQ (PSW_C, source & 0x01);
+    PSW_EQ (PSW_N, result & 0x80);
     PSW_EQ (PSW_Z, !result);
     PSW_EQ (PSW_V, PSW_GET (PSW_N) ^ PSW_GET (PSW_C));
 }
