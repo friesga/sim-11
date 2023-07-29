@@ -614,22 +614,8 @@ void KD11CPU::execInstr ()
                     ADCB (this, register_, insn);
                     break;
 
-                case 01056: /* SBCB */
-                    if (!insn1->getOperand (this, register_,
-                        Bitmask (OperandOptions::Byte), src))
-                        return;
-
-                    tmp2 = PSW_GET (PSW_C) ? 1 : 0;
-                    tmp = (u8)(src - tmp2);
-
-                    if (!insn1->putOperand (this, register_,
-                        Bitmask (OperandOptions::Byte), tmp))
-                        return;
-
-                    PSW_EQ (PSW_V, src == 0200);
-                    PSW_EQ (PSW_C, !src && PSW_GET (PSW_C));
-                    PSW_EQ (PSW_N, tmp & 0x80);
-                    PSW_EQ (PSW_Z, !tmp);
+                case 01056:
+                    SBCB (this, register_, insn);
                     break;
 
                 case 01057: /* TSTB */

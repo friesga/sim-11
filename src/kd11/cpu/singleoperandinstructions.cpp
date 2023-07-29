@@ -450,6 +450,35 @@ void KD11CPU::SBC (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
     PSW_EQ (PSW_Z, !result);
 }
 
+// SBCB - subtract carry byte
+//
+// Operation:
+//  refer to SBC
+// 
+// Condition Codes:
+//  refer to SBC
+//
+void KD11CPU::SBCB (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
+{
+    SingleOperandInstruction sbcbInstruction {cpu, instruction};
+
+    OperandLocation operandLocation = 
+        sbcbInstruction.getOperandLocation (reg);
+    CondData<u8> source = operandLocation.byteContents ();
+    if (!source.hasValue ())
+        return;
+
+    u16 tmp = PSW_GET (PSW_C) ? 1 : 0;
+    u16 destination = (u8) (source - tmp);
+
+    operandLocation.writeByte (destination);
+
+    PSW_EQ (PSW_V, source == 0200);
+    PSW_EQ (PSW_C, !source && PSW_GET (PSW_C));
+    PSW_EQ (PSW_N, destination & 0x80);
+    PSW_EQ (PSW_Z, !destination);
+}
+
 // TST - test destination
 //
 // Operation
