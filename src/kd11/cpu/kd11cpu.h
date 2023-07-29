@@ -156,6 +156,7 @@ private:
 	void INC (KD11CPU* cpu, u16 (&reg)[8], u16 instruction);
 	void INCB (KD11CPU* cpu, u16 (&reg)[8], u16 instruction);
 	void DEC (KD11CPU* cpu, u16 (&reg)[8], u16 instruction);
+	void DECB (KD11CPU* cpu, u16 (&reg)[8], u16 instruction);
 	void NEG (KD11CPU* cpu, u16 (&reg)[8], u16 instruction);
 	void ADC (KD11CPU* cpu, u16 (&reg)[8], u16 instruction);
 	void SBC (KD11CPU* cpu, u16 (&reg)[8], u16 instruction);

@@ -202,7 +202,7 @@ void KD11CPU::INC (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
     PSW_EQ (PSW_Z, !result);
 }
 
-// INC - increment destination byte
+// INCB - increment destination byte
 //
 // Operation:
 //  refer to INC
@@ -258,6 +258,33 @@ void KD11CPU::DEC (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
     PSW_EQ (PSW_V, contents == 0100000)
     PSW_EQ (PSW_N, result & 0100000);
     PSW_EQ (PSW_Z, !result);
+}
+
+// DECB - decrement destination byte
+//
+// Operation:
+//  refer to DEC
+// 
+// Condition Codes:
+//  refer to DEC
+//
+void KD11CPU::DECB (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
+{
+    SingleOperandInstruction decbInstruction {cpu, instruction};
+
+    OperandLocation operandLocation = 
+        decbInstruction.getOperandLocation (reg);
+    CondData<u8> src = operandLocation.byteContents ();
+    if (!src.hasValue ())
+        return;
+
+    u8 tmp = (u8) (src - 1);
+
+    operandLocation.writeByte (tmp);
+
+    PSW_EQ (PSW_V, src == 0000200)
+        PSW_EQ (PSW_N, tmp & 0x80);
+    PSW_EQ (PSW_Z, !tmp);
 }
 
 // NEG - negate destination
