@@ -642,23 +642,8 @@ void KD11CPU::execInstr ()
                     MTPS (this, register_, insn);
                     break;
 
-                case 01067: /* MFPS */
-                    tmp = (u8)psw;
-                    if (insn1->mode == 0)
-                    {
-                        // If destination is mode 0, PS bit 7 is sign
-                        // extended through upper byte of the register.
-                        register_[insn1->rn] = (s8) psw;
-                    }
-                    else
-                    {
-                        if (!insn1->putOperand (this, register_,
-                            Bitmask (OperandOptions::Byte), tmp))
-                            return;
-                    }
-                    PSW_EQ (PSW_N, tmp & 0x80);
-                    PSW_EQ (PSW_Z, !(tmp & 0xFF));
-                    PSW_CLR (PSW_V);
+                case 01067:
+                    MFPS (this, register_, insn);
                     break;
 
                 default:

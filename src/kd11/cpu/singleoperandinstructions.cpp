@@ -853,6 +853,48 @@ void KD11CPU::MTPS (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
     psw = (psw & PSW_T) | (newValue & ~PSW_T);
 }
 
+// MFPS - Move byte from Processor Status Word
+//
+// Operation:
+//  (dst) < PSW
+//  dst lower 8 bits
+//
+// Condition Codes:
+//  N = set if PSW bit 7 = 1; cleared otherwise
+//  Z = set if PS <0:7> = O; cleared otherwise·
+//  V = cleared
+//  C = not affected
+// 
+// The 8 bit contents of the PS are moved to the effective destination. If
+// destination is mode 0, PS bit 7 is sign extended through upper byte of the
+// register. The destination operand address is treated as a byte address.
+//
+void KD11CPU::MFPS (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
+{
+    SingleOperandInstruction mfpsInstruction {cpu, instruction};
+
+    OperandLocation operandLocation = 
+        mfpsInstruction.getOperandLocation (reg);
+
+    u16 contents = (u8) psw;
+
+    if (operandLocation.isA<u8> ())
+    {
+        // If destination is mode 0 (Register), the regular operand processing
+        // is bypassed and PS bit 7 is sign extended through the upper byte of
+        // the register.
+        register_[operandLocation] = (s8) psw;
+    }
+    else
+    {
+        if (!operandLocation.writeByte (contents))
+            return;
+    }
+    PSW_EQ (PSW_N, contents & 0x80);
+    PSW_EQ (PSW_Z, !(contents & 0xFF));
+    PSW_CLR (PSW_V);
+}
+
 // SXT - sign extend
 //
 // Operation:

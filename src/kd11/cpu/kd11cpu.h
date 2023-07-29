@@ -174,6 +174,7 @@ private:
 	void ASL (KD11CPU* cpu, u16 (&reg)[8], u16 instruction);
 	void ASLB (KD11CPU* cpu, u16 (&reg)[8], u16 instruction);
 	void MTPS (KD11CPU* cpu, u16 (&reg)[8], u16 instruction);
+	void MFPS (KD11CPU* cpu, u16 (&reg)[8], u16 instruction);
 	void SXT (KD11CPU* cpu, u16 (&reg)[8], u16 instruction);
 
 	// Double operand instructions
