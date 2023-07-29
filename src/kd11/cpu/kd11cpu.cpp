@@ -647,35 +647,13 @@ void KD11CPU::execInstr ()
                     break;
 
                 default:
-                    /* unused */
-                    trace.trap (TrapRecordType::TRAP_ILL, 010);
-                    setTrap (&illegalInstructionTrap);
+                    unused ();
                     break;
             }
             break;
 
-        case 011: /* MOVB */
+        case 011:
             MOVB (this, register_, insn);
-            /*
-            if (!insn2->getSourceOperand (this, register_,
-                Bitmask (OperandOptions::Byte |
-                    OperandOptions::AutoIncr), tmp))
-                return;
-            tmp = (s8)tmp;
-            if (insn2->dst_mode == 0)
-            {
-                register_[insn2->dst_rn] = tmp;
-            }
-            else
-            {
-                if (!insn2->putDestOperand (this, register_,
-                    Bitmask (OperandOptions::Byte), tmp))
-                    return;
-            }
-            PSW_EQ (PSW_N, tmp & 0x80);
-            PSW_EQ (PSW_Z, !tmp);
-            PSW_CLR (PSW_V);
-            */
             break;
 
         case 012: /* CMPB */
