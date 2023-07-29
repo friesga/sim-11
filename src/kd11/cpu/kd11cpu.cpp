@@ -630,30 +630,8 @@ void KD11CPU::execInstr ()
                     ROLB (this, register_, insn);
                     break;
 
-                case 01062: /* ASRB */
-                    if (!insn1->getOperand (this, register_,
-                        Bitmask (OperandOptions::Byte), src))
-                        return;
-
-                    tmp = src;
-                    if (tmp & 0x80)
-                    {
-                        tmp >>= 1;
-                        tmp |= 0x80;
-                    }
-                    else
-                    {
-                        tmp >>= 1;
-                    }
-
-                    if (!insn1->putOperand (this, register_,
-                        Bitmask (OperandOptions::Byte), tmp))
-                        return;
-
-                    PSW_EQ (PSW_C, src & 1);
-                    PSW_EQ (PSW_N, tmp & 0x80);
-                    PSW_EQ (PSW_Z, !tmp);
-                    PSW_EQ (PSW_V, PSW_GET (PSW_N) ^ PSW_GET (PSW_C));
+                case 01062:
+                    ASRB (this, register_, insn);
                     break;
 
                 case 01063: /* ASLB */

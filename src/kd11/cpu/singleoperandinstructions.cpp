@@ -575,7 +575,7 @@ void KD11CPU::ROR (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
 // Condition Codes:
 //  refer to ROR
 //
-// Same as ROR instruction with the exception that for odd adresses the
+// Same as ROR instruction with the distintion that for odd adresses the
 // carry bit is loaded in bit 15 of the word and for even addresses the carry
 // bit is loaded in bit 7 of the word.
 //
@@ -648,7 +648,7 @@ void KD11CPU::ROL (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
 // Condition Codes:
 //  refer to ROL
 //
-// Same as ROL instruction with the exception that for odd adresses the
+// Same as ROL instruction with the distinction that for odd adresses the
 // carry bit is loaded with bit 15 of the word and for even addresses the carry
 // bit is loaded with bit 7 of the word.
 //
@@ -713,6 +713,44 @@ void KD11CPU::ASR (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
 
     PSW_EQ (PSW_C, contents & 1);
     PSW_EQ (PSW_N, result & 0100000);
+    PSW_EQ (PSW_Z, !result);
+    PSW_EQ (PSW_V, PSW_GET (PSW_N) ^ PSW_GET (PSW_C));
+}
+
+// ASR - arithmetic shift right byte
+//
+// Operation:
+//  refer to ROL
+// 
+// Condition Codes:
+//  refer to ROL
+//
+// Same as ASR instruction with the distinction that for odd adresses bit 15
+// is reproduced and for even addresses bit 7 is reproduced.
+//
+void KD11CPU::ASRB (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
+{
+    SingleOperandInstruction asrbInstruction {cpu, instruction};
+
+    OperandLocation operandLocation = 
+        asrbInstruction.getOperandLocation (reg);
+    CondData<u8> source = operandLocation.byteContents ();
+    if (!source.hasValue ())
+        return;
+
+    u16 result = source;
+    if (result & 0x80)
+    {
+        result >>= 1;
+        result |= 0x80;
+    }
+    else
+        result >>= 1;
+
+    operandLocation.writeByte (result);
+
+    PSW_EQ (PSW_C, source & 1);
+    PSW_EQ (PSW_N, result & 0x80);
     PSW_EQ (PSW_Z, !result);
     PSW_EQ (PSW_V, PSW_GET (PSW_N) ^ PSW_GET (PSW_C));
 }
