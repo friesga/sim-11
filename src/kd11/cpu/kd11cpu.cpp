@@ -610,22 +610,8 @@ void KD11CPU::execInstr ()
                     NEGB (this, register_, insn);
                     break;
 
-                case 01055: /* ADCB */
-                    if (!insn1->getOperand (this, register_,
-                        Bitmask (OperandOptions::Byte), src))
-                        return;
-
-                    tmp2 = PSW_GET (PSW_C) ? 1 : 0;
-                    tmp = (u8)(src + tmp2);
-
-                    if (!insn1->putOperand (this, register_,
-                        Bitmask (OperandOptions::Byte), tmp))
-                        return;
-
-                    PSW_EQ (PSW_V, src == 0177 && PSW_GET (PSW_C));
-                    PSW_EQ (PSW_C, src == 0377 && PSW_GET (PSW_C));
-                    PSW_EQ (PSW_N, tmp & 0x80);
-                    PSW_EQ (PSW_Z, !tmp);
+                case 01055:
+                    ADCB (this, register_, insn);
                     break;
 
                 case 01056: /* SBCB */

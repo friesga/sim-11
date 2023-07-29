@@ -160,6 +160,7 @@ private:
 	void NEG (KD11CPU* cpu, u16 (&reg)[8], u16 instruction);
 	void NEGB (KD11CPU* cpu, u16 (&reg)[8], u16 instruction);
 	void ADC (KD11CPU* cpu, u16 (&reg)[8], u16 instruction);
+	void ADCB (KD11CPU* cpu, u16 (&reg)[8], u16 instruction);
 	void SBC (KD11CPU* cpu, u16 (&reg)[8], u16 instruction);
 	void TST (KD11CPU* cpu, u16 (&reg)[8], u16 instruction);
 	void ROR (KD11CPU* cpu, u16 (&reg)[8], u16 instruction);

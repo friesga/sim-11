@@ -387,6 +387,35 @@ void KD11CPU::ADC (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
     PSW_EQ (PSW_Z, !result);
 }
 
+// ADCB - add carry byte
+//
+// Operation:
+//  refer to ADC
+// 
+// Condition Codes:
+//  refer to ADC
+//
+void KD11CPU::ADCB (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
+{
+    SingleOperandInstruction adcbInstruction {cpu, instruction};
+
+    OperandLocation operandLocation = 
+        adcbInstruction.getOperandLocation (reg);
+    CondData<u8> source = operandLocation.byteContents ();
+    if (!source.hasValue ())
+        return;
+
+    u16 tmp = PSW_GET (PSW_C) ? 1 : 0;
+    u16 destination = (u8) (source + tmp);
+
+    operandLocation.writeByte (destination);
+
+    PSW_EQ (PSW_V, source == 0177 && PSW_GET (PSW_C));
+    PSW_EQ (PSW_C, source == 0377 && PSW_GET (PSW_C));
+    PSW_EQ (PSW_N, destination & 0x80);
+    PSW_EQ (PSW_Z, !destination);
+}
+
 // SBC - subtract carry
 //
 // Operation
