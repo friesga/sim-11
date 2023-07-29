@@ -825,6 +825,34 @@ void KD11CPU::ASLB (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
     PSW_EQ (PSW_V, PSW_GET (PSW_N) ^ PSW_GET (PSW_C));
 }
 
+// MTPS - Move byte to Processor Status Word
+//
+// Operation:
+//  PSW <- (src)
+//
+// Condition Codes:
+//  Set according to effective SRC operand bits 0-3
+//
+// The 8 bits of the effective operand replaces the current contents of the
+// PSW. The source operand address is treated as a byte address. Note that the
+// T bit (PSW bit 4) cannot be set with this instruction. The SRC operand
+// remains unchanged. This instruction can be used to change the priority bit
+// (PSW bit 7) in the PSW
+//
+void KD11CPU::MTPS (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
+{
+    SingleOperandInstruction mtpsInstruction {cpu, instruction};
+
+    OperandLocation operandLocation = 
+        mtpsInstruction.getOperandLocation (reg);
+    CondData<u8> newValue = operandLocation.byteContents ();
+    if (!newValue.hasValue ())
+        return;
+
+    // Allow bits 5/6/7 to be set and cleared
+    psw = (psw & PSW_T) | (newValue & ~PSW_T);
+}
+
 // SXT - sign extend
 //
 // Operation:

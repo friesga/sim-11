@@ -639,17 +639,7 @@ void KD11CPU::execInstr ()
                     break;
 
                 case 01064:
-                    // MTPS
-                    // Note that the T bit cannot be set with this instruction
-                    // and that bits 5 and 6 are reserved.
-                    if (!insn1->getOperand (this, register_,
-                        Bitmask (OperandOptions::Byte |
-                            OperandOptions::AutoIncr), tmp))
-                        return;
-
-
-                    // Allow bits 5/6/7 to be set and cleared
-                    psw = (psw & PSW_T) | (tmp & ~PSW_T);
+                    MTPS (this, register_, insn);
                     break;
 
                 case 01067: /* MFPS */
