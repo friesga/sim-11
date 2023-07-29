@@ -640,6 +640,40 @@ void KD11CPU::ROL (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
     PSW_EQ (PSW_V, PSW_GET (PSW_N) ^ PSW_GET (PSW_C));
 }
 
+// ROLB - rotate left byte
+//
+// Operation:
+//  refer to ROL
+// 
+// Condition Codes:
+//  refer to ROL
+//
+// Same as ROL instruction with the exception that for odd adresses the
+// carry bit is loaded with bit 15 of the word and for even addresses the carry
+// bit is loaded with bit 7 of the word.
+//
+void KD11CPU::ROLB (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
+{
+    SingleOperandInstruction rolbInstruction {cpu, instruction};
+
+    OperandLocation operandLocation = 
+        rolbInstruction.getOperandLocation (reg);
+    CondData<u8> source = operandLocation.byteContents ();
+    if (!source.hasValue ())
+        return;
+
+    u16 result = (u8)(source << 1);
+    if (PSW_GET (PSW_C))
+        result |= 0x01;
+
+    operandLocation.writeByte (result);
+
+    PSW_EQ (PSW_C, source & 0x80);
+    PSW_EQ (PSW_N, result & 0x80);
+    PSW_EQ (PSW_Z, !result);
+    PSW_EQ (PSW_V, PSW_GET (PSW_N) ^ PSW_GET (PSW_C));
+}
+
 // ASR - arithmetic shift right
 // 
 // Operation:

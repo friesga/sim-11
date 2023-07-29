@@ -168,6 +168,7 @@ private:
 	void ROR (KD11CPU* cpu, u16 (&reg)[8], u16 instruction);
 	void RORB (KD11CPU* cpu, u16 (&reg)[8], u16 instruction);
 	void ROL (KD11CPU* cpu, u16 (&reg)[8], u16 instruction);
+	void ROLB (KD11CPU* cpu, u16 (&reg)[8], u16 instruction);
 	void ASR (KD11CPU* cpu, u16 (&reg)[8], u16 instruction);
 	void ASL (KD11CPU* cpu, u16 (&reg)[8], u16 instruction);
 	void SXT (KD11CPU* cpu, u16 (&reg)[8], u16 instruction);
