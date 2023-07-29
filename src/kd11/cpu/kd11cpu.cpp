@@ -618,16 +618,8 @@ void KD11CPU::execInstr ()
                     SBCB (this, register_, insn);
                     break;
 
-                case 01057: /* TSTB */
-                    if (!insn1->getOperand (this, register_,
-                        Bitmask (OperandOptions::Byte |
-                            OperandOptions::AutoIncr), tmp))
-                        return;
-
-                    PSW_CLR (PSW_V);
-                    PSW_CLR (PSW_C);
-                    PSW_EQ (PSW_N, tmp & 0x80);
-                    PSW_EQ (PSW_Z, !tmp);
+                case 01057:
+                    TSTB (this, register_, insn);
                     break;
 
                 case 01060: /* RORB */

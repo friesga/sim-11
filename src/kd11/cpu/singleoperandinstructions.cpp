@@ -504,6 +504,30 @@ void KD11CPU::TST (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
     PSW_EQ (PSW_Z, !contents);
 }
 
+// TSTB - test destination byte
+//
+// Operation:
+//  refer to TST
+// 
+// Condition Codes:
+//  refer to TST
+//
+void KD11CPU::TSTB (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
+{
+    SingleOperandInstruction sbcbInstruction {cpu, instruction};
+
+    OperandLocation operandLocation = 
+        sbcbInstruction.getOperandLocation (reg);
+    CondData<u8> source = operandLocation.byteContents ();
+    if (!source.hasValue ())
+        return;
+
+    PSW_CLR (PSW_V);
+    PSW_CLR (PSW_C);
+    PSW_EQ (PSW_N, source & 0x80);
+    PSW_EQ (PSW_Z, !source);
+}
+
 // ROR - rotate right
 //
 // Operation:
