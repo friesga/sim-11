@@ -664,46 +664,12 @@ void KD11CPU::execInstr ()
             BITB (this, register_, insn);
             break;
 
-        case 014: /* BICB */
-            if (!insn2->getSourceOperand (this, register_,
-                Bitmask (OperandOptions::Byte |
-                    OperandOptions::AutoIncr), src))
-                return;
-
-            if (!insn2->getDestOperand (this, register_,
-                Bitmask (OperandOptions::Byte), dst))
-                return;
-
-            tmp = (u8)(~src & dst);
-
-            if (!insn2->putDestOperand (this, register_,
-                Bitmask (OperandOptions::Byte), tmp))
-                return;
-
-            PSW_EQ (PSW_N, tmp & 0x80);
-            PSW_EQ (PSW_Z, !tmp);
-            PSW_CLR (PSW_V);
+        case 014:
+            BICB (this, register_, insn);
             break;
 
-        case 015: /* BISB */
-            if (!insn2->getSourceOperand (this, register_,
-                Bitmask (OperandOptions::Byte |
-                    OperandOptions::AutoIncr), src))
-                return;
-
-            if (!insn2->getDestOperand (this, register_,
-                Bitmask (OperandOptions::Byte), dst))
-                return;
-
-            tmp = src | dst;
-
-            if (!insn2->putDestOperand (this, register_,
-                Bitmask (OperandOptions::Byte), tmp))
-                return;
-
-            PSW_EQ (PSW_N, tmp & 0x80);
-            PSW_EQ (PSW_Z, !tmp);
-            PSW_CLR (PSW_V);
+        case 015:
+            BISB (this, register_, insn);
             break;
 
         case 016: /* SUB */

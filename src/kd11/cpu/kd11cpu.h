@@ -185,7 +185,9 @@ private:
 	void BIT (KD11CPU* cpu, u16 (&reg)[8], u16 instruction);
 	void BITB (KD11CPU* cpu, u16 (&reg)[8], u16 instruction);
 	void BIC (KD11CPU* cpu, u16 (&reg)[8], u16 instruction);
+	void BICB (KD11CPU* cpu, u16 (&reg)[8], u16 instruction);
 	void BIS (KD11CPU* cpu, u16 (&reg)[8], u16 instruction);
+	void BISB (KD11CPU* cpu, u16 (&reg)[8], u16 instruction);
 	void ADD (KD11CPU* cpu, u16 (&reg)[8], u16 instruction);
 
 	// EIS, JSR and XOR instructions. These instructions share the same

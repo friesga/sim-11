@@ -261,6 +261,40 @@ void KD11CPU::BIC (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
     PSW_CLR (PSW_V);
 }
 
+// BICB - bit clear byte
+//
+// Operation:
+//  refer to BIC
+// 
+// Condition Codes:
+//  refer to BIC
+//
+void KD11CPU::BICB (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
+{
+    DoubleOperandInstruction bicbInstruction (cpu, instruction);
+
+    OperandLocation sourceOperandLocation =
+            bicbInstruction.getSourceOperandLocation (reg);
+    CondData<u8> source = sourceOperandLocation.byteContents ();
+    if (!source.hasValue ())
+        return;
+
+    OperandLocation destOperandLocation =
+            bicbInstruction.getDestinationOperandLocation (reg);
+    CondData<u8> destination = destOperandLocation.byteContents ();
+    if (!destination.hasValue ())
+        return;
+
+    u16 tmp = (u8) (~source & destination);
+
+    if (!destOperandLocation.writeByte (tmp))
+        return;
+
+    PSW_EQ (PSW_N, tmp & 0x80);
+    PSW_EQ (PSW_Z, !tmp);
+    PSW_CLR (PSW_V);
+}
+
 // BIS - bit set
 //
 // Operation:
@@ -298,6 +332,40 @@ void KD11CPU::BIS (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
     destinationOperandLocation.write (tmp);
 
     PSW_EQ (PSW_N, tmp & 0x8000);
+    PSW_EQ (PSW_Z, !tmp);
+    PSW_CLR (PSW_V);
+}
+
+// BISB - bit set byte
+//
+// Operation:
+//  refer to BIS
+// 
+// Condition Codes:
+//  refer to BIS
+//
+void KD11CPU::BISB (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
+{
+    DoubleOperandInstruction bisbInstruction (cpu, instruction);
+
+    OperandLocation sourceOperandLocation =
+            bisbInstruction.getSourceOperandLocation (reg);
+    CondData<u8> source = sourceOperandLocation.byteContents ();
+    if (!source.hasValue ())
+        return;
+
+    OperandLocation destOperandLocation =
+            bisbInstruction.getDestinationOperandLocation (reg);
+    CondData<u8> destination = destOperandLocation.byteContents ();
+    if (!destination.hasValue ())
+        return;
+
+    u16 tmp = source | destination;
+
+    if (!destOperandLocation.writeByte (tmp))
+        return;
+
+    PSW_EQ (PSW_N, tmp & 0x80);
     PSW_EQ (PSW_Z, !tmp);
     PSW_CLR (PSW_V);
 }
