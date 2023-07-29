@@ -202,6 +202,33 @@ void KD11CPU::INC (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
     PSW_EQ (PSW_Z, !result);
 }
 
+// INC - increment destination byte
+//
+// Operation:
+//  refer to INC
+// 
+// Condition Codes:
+//  refer to INC
+//
+void KD11CPU::INCB (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
+{
+    SingleOperandInstruction incbInstruction {cpu, instruction};
+
+    OperandLocation operandLocation = 
+        incbInstruction.getOperandLocation (reg);
+    CondData<u8> src = operandLocation.byteContents ();
+    if (!src.hasValue ())
+        return;
+
+    u8 tmp = (u8) (src + 1);
+
+    operandLocation.writeByte (tmp);
+
+    PSW_EQ (PSW_V, src == 000177)
+        PSW_EQ (PSW_N, tmp & 0x80);
+    PSW_EQ (PSW_Z, !tmp);
+}
+
 // DEC - decrement destination
 //
 // Operation:
