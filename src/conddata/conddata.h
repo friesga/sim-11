@@ -25,6 +25,12 @@ public:
     CondData<T>& operator+= (T const &value);
     CondData<T>& operator-= (T const &value);
 
+    // Increment/decrement operators
+    CondData<T>& operator++ ();
+    CondData<T>& operator-- ();
+    CondData<T> operator++ (int);
+    CondData<T> operator-- (int);
+
     // Conversion operator
     operator T() const;
 
@@ -102,6 +108,58 @@ inline CondData<T>& CondData<T>::operator-= (T const &value)
     return *this;
 }
 
+// Pre-increment operator
+template <typename T>
+inline CondData<T>& CondData<T>::operator++ ()
+{
+    if (validValue_)
+        ++value_;
+    else
+        throw (std::string ("Increment on invalid CondData object"));
+    return *this;
+}
+
+// Pre-decrement operator
+template <typename T>
+inline CondData<T>& CondData<T>::operator-- ()
+{
+    if (validValue_)
+        --value_;
+    else
+        throw (std::string ("Decrement on invalid CondData object"));
+    return *this;
+}
+
+// Post-increment operator. The int parameter is a dummy parameter used to
+// differentiate between prefix and postfix versions of the operators.
+// Increment the object and return the original object.
+template <typename T>
+inline CondData<T> CondData<T>::operator++ (int)
+{
+    if (validValue_)
+    {
+        CondData<T> copy {*this};
+        ++(*this);
+        return copy;
+    }
+    else
+        throw (std::string ("Increment on invalid CondData object"));
+}
+
+// Post-decrement oerator
+template <typename T>
+inline CondData<T> CondData<T>::operator-- (int)
+{
+    if (validValue_)
+    {
+        CondData<T> tmp = *this;
+        --value_;
+        return tmp;
+    }
+    else
+        throw (std::string ("Increment on invalid CondData object"));
+}
+
 // Try to convert the object to the native type, throwing an exception
 // if it doesn't contain a valid value.
 template <typename T>
@@ -112,7 +170,6 @@ inline CondData<T>::operator T() const
 
     return value_;
 }
-
 
 // Return the valid value status to the caller
 template <typename T>

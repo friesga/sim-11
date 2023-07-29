@@ -100,3 +100,31 @@ TEST (CondDataTest, objectCanBeShiftedRight)
     CondData<int> cd0 = CondData<int> {4} >> 2;
     EXPECT_TRUE (cd0 == 1);
 }
+
+TEST (CondDataTest, objectCanBePreIncremented)
+{
+    CondData<int> cd0 = ++CondData<int> {4};
+    EXPECT_TRUE (cd0 == 5);
+}
+
+TEST (CondDataTest, objectCanBePreDecremented)
+{
+    CondData<int> cd0 = --CondData<int> {4};
+    EXPECT_TRUE (cd0 == 3);
+}
+
+TEST (CondDataTest, objectCanBePostIncremented)
+{
+    CondData<int> cd0 = CondData<int> {4};
+    CondData<int> cd1 = cd0++;
+    EXPECT_TRUE (cd1 == 4);
+    EXPECT_TRUE (cd0 == 5);
+}
+
+TEST (CondDataTest, objectCanBePostDecremented)
+{
+    CondData<int> cd0 = CondData<int> {4};
+    CondData<int> cd1 = cd0--;
+    EXPECT_TRUE (cd1 == 4);
+    EXPECT_TRUE (cd0 == 3);
+}
