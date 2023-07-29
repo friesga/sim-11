@@ -717,13 +717,13 @@ void KD11CPU::ASR (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
     PSW_EQ (PSW_V, PSW_GET (PSW_N) ^ PSW_GET (PSW_C));
 }
 
-// ASR - arithmetic shift right byte
+// ASRB - arithmetic shift right byte
 //
 // Operation:
-//  refer to ROL
+//  refer to ASR
 // 
 // Condition Codes:
-//  refer to ROL
+//  refer to ASR
 //
 // Same as ASR instruction with the distinction that for odd adresses bit 15
 // is reproduced and for even addresses bit 7 is reproduced.
@@ -788,6 +788,39 @@ void KD11CPU::ASL (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
 
     PSW_EQ (PSW_C, contents & 0100000);
     PSW_EQ (PSW_N, result & 0100000);
+    PSW_EQ (PSW_Z, !result);
+    PSW_EQ (PSW_V, PSW_GET (PSW_N) ^ PSW_GET (PSW_C));
+}
+
+// ASLB - arithmetic shift left byte
+//
+// Operation:
+//  refer to ASL
+// 
+// Condition Codes:
+//  refer to ASL
+//
+// Same as ASL instruction with the distinction that for odd adresses the
+// carry bit is loaded from bit 15 of the word and bit 8 is loaded with a zero
+// and for even addresses the carry bit is loaded from bit 7 and bit 0 is
+// loaded with a zero.
+//
+void KD11CPU::ASLB (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
+{
+    SingleOperandInstruction aslbInstruction {cpu, instruction};
+
+    OperandLocation operandLocation = 
+        aslbInstruction.getOperandLocation (reg);
+    CondData<u8> source = operandLocation.byteContents ();
+    if (!source.hasValue ())
+        return;
+
+    u16 result = (u8) (source << 1);
+
+    operandLocation.writeByte (result);
+
+    PSW_EQ (PSW_C, source & 0x80);
+    PSW_EQ (PSW_N, result & 0x80);
     PSW_EQ (PSW_Z, !result);
     PSW_EQ (PSW_V, PSW_GET (PSW_N) ^ PSW_GET (PSW_C));
 }
