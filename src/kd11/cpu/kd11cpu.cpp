@@ -660,21 +660,8 @@ void KD11CPU::execInstr ()
             CMPB (this, register_, insn);
             break;
 
-        case 013: /* BITB */
-            if (!insn2->getSourceOperand (this, register_,
-                Bitmask (OperandOptions::Byte |
-                    OperandOptions::AutoIncr), src))
-                return;
-
-            if (!insn2->getDestOperand (this, register_,
-                Bitmask (OperandOptions::Byte |
-                    OperandOptions::AutoIncr), dst))
-                return;
-
-            tmp = src & dst;
-            PSW_EQ (PSW_N, tmp & 0x80);
-            PSW_EQ (PSW_Z, !tmp);
-            PSW_CLR (PSW_V);
+        case 013:
+            BITB (this, register_, insn);
             break;
 
         case 014: /* BICB */

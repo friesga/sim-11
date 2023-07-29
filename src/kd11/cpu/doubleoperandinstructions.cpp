@@ -124,10 +124,10 @@ void KD11CPU::CMP (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
 // CMPB - compare source to destination byte
 // 
 // Operation:
-//  refer to MOV
+//  refer to CMP
 // 
 // Condition Codes:
-//  refer to MOV
+//  refer to CMP
 //
 void KD11CPU::CMPB (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
 {
@@ -187,6 +187,36 @@ void KD11CPU::BIT (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
 
     u16 tmp = source & destination;
     PSW_EQ (PSW_N, tmp & 0x8000);
+    PSW_EQ (PSW_Z, !tmp);
+    PSW_CLR (PSW_V);
+}
+
+// BITB - bit test byte
+//
+// Operation:
+//  refer to BIT
+// 
+// Condition Codes:
+//  refer to BIT
+//
+void KD11CPU::BITB (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
+{
+    DoubleOperandInstruction bitbInstruction (cpu, instruction);
+
+    OperandLocation sourceOperandLocation =
+            bitbInstruction.getSourceOperandLocation (reg);
+    CondData<u8> source = sourceOperandLocation.byteContents ();
+    if (!source.hasValue ())
+        return;
+
+    OperandLocation destOperandLocation =
+            bitbInstruction.getDestinationOperandLocation (reg);
+    CondData<u8> destination = destOperandLocation.byteContents ();
+    if (!destination.hasValue ())
+        return;
+
+    u16 tmp = source & destination;
+    PSW_EQ (PSW_N, tmp & 0x80);
     PSW_EQ (PSW_Z, !tmp);
     PSW_CLR (PSW_V);
 }
