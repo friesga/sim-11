@@ -181,6 +181,7 @@ private:
 	void MOV (KD11CPU* cpu, u16 (&reg)[8], u16 instruction);
 	void MOVB (KD11CPU* cpu, u16 (&reg)[8], u16 instruction);
 	void CMP (KD11CPU* cpu, u16 (&reg)[8], u16 instruction);
+	void CMPB (KD11CPU* cpu, u16 (&reg)[8], u16 instruction);
 	void BIT (KD11CPU* cpu, u16 (&reg)[8], u16 instruction);
 	void BIC (KD11CPU* cpu, u16 (&reg)[8], u16 instruction);
 	void BIS (KD11CPU* cpu, u16 (&reg)[8], u16 instruction);

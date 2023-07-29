@@ -656,23 +656,8 @@ void KD11CPU::execInstr ()
             MOVB (this, register_, insn);
             break;
 
-        case 012: /* CMPB */
-            if (!insn2->getSourceOperand (this, register_,
-                Bitmask (OperandOptions::Byte |
-                    OperandOptions::AutoIncr), src))
-                return;
-
-            if (!insn2->getDestOperand (this, register_,
-                Bitmask (OperandOptions::Byte |
-                    OperandOptions::AutoIncr), dst))
-                return;
-
-            tmp = (u8)(src - dst);
-            PSW_EQ (PSW_N, tmp & 0x80);
-            PSW_EQ (PSW_Z, !tmp);
-            PSW_EQ (PSW_V, ((src & 0x80) != (dst & 0x80)) \
-                && ((dst & 0x80) == (tmp & 0x80)));
-            PSW_EQ (PSW_C, (src - dst) & 0x100);
+        case 012:
+            CMPB (this, register_, insn);
             break;
 
         case 013: /* BITB */
