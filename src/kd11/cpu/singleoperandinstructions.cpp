@@ -323,6 +323,35 @@ void KD11CPU::NEG (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
     PSW_EQ (PSW_C, operand);
 }
 
+// NEGB - negate destination byte
+//
+// Operation:
+//  refer to NEG
+// 
+// Condition Codes:
+//  refer to NEG
+//
+void KD11CPU::NEGB (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
+{
+    SingleOperandInstruction negbInstruction {cpu, instruction};
+
+    OperandLocation operandLocation = 
+        negbInstruction.getOperandLocation (reg);
+    CondData<u8> operand = operandLocation.byteContents ();
+    if (!operand.hasValue ())
+        return;
+
+    if (operand != 0200)
+        operand = -operand;
+
+    operandLocation.writeByte (operand);
+
+    PSW_EQ (PSW_V, operand == 0200)
+        PSW_EQ (PSW_N, operand & 0x80);
+    PSW_EQ (PSW_Z, !operand);
+    PSW_EQ (PSW_C, operand);
+}
+
 // ADC - add carry
 //
 // Operation:

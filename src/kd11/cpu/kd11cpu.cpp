@@ -606,23 +606,8 @@ void KD11CPU::execInstr ()
                     DECB (this, register_, insn);
                     break;
 
-                case 01054: /* NEGB */
-                    if (!insn1->getOperand (this, register_,
-                        Bitmask (OperandOptions::Byte), tmp))
-                        return;
-
-                    if (tmp != 0200)
-                    {
-                        tmp = -tmp;
-                    }
-                    if (!insn1->putOperand (this, register_,
-                        Bitmask (OperandOptions::Byte), tmp))
-                        return;
-
-                    PSW_EQ (PSW_V, tmp == 0200)
-                        PSW_EQ (PSW_N, tmp & 0x80);
-                    PSW_EQ (PSW_Z, !tmp);
-                    PSW_EQ (PSW_C, tmp);
+                case 01054:
+                    NEGB (this, register_, insn);
                     break;
 
                 case 01055: /* ADCB */
