@@ -84,6 +84,26 @@ void KD11CPU::BPT ()
     setTrap (&BreakpointTrap);
 }
 
+// IOT - input/output trap
+//
+// Operation:
+//  v(SP) <- PS
+//  v(SP) <- PC
+//  PC <- (20)
+//  PS <- (22)
+//
+// Condition Codes:
+//  N: loaded from trap vector
+//  Z: loaded from trap vector
+//  V: loaded from trap vector
+//  C: loaded from trap vector
+//
+void KD11CPU::IOT ()
+{
+    trace.trap (TrapRecordType::TRAP, 020);
+    setTrap (&InputOutputTrap);
+}
+
 // EMT - emulator trap
 //
 // Operation:

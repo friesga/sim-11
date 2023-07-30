@@ -93,7 +93,7 @@ private:
 		{RequestType::Trap, TrapPriority::TraceTrap, 0, 014};
 	InterruptRequest const BreakpointTrap
 		{RequestType::Trap, TrapPriority::InstructionTrap, 0, 014};
-	InterruptRequest const IOT 
+	InterruptRequest const InputOutputTrap 
 		{RequestType::Trap, TrapPriority::InstructionTrap, 0, 020};
 	InterruptRequest const EmulatorTrap
 		{RequestType::Trap, TrapPriority::InstructionTrap, 0, 030};
@@ -153,6 +153,7 @@ private:
 	void WAIT ();
 	void RTI ();
 	void BPT ();
+	void IOT ();
 	void EMT ();
 	void TRAP ();
 	void unused ();

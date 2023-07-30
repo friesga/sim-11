@@ -262,9 +262,8 @@ void KD11CPU::execInstr ()
                             BPT ();
                             break;
 
-                        case 0000004: /* IOT */
-                            trace.trap (TrapRecordType::TRAP, 020);
-                            setTrap (&IOT);
+                        case 0000004:
+                            IOT ();
                             break;
 
                         case 0000005: // RESET - Reset external bus
