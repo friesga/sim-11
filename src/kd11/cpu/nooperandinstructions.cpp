@@ -117,6 +117,33 @@ void KD11CPU::RESET ()
     bus_->BINIT().cycle ();
 }
 
+// RTT - return from interrupt
+//
+// Operation:
+//  PC <- (SP)^
+//  PS <- (SP)^
+//
+// Conditions Codes:
+//  N: loaded from processor stack
+//  Z: loaded from processor stack
+//  V: loaded from processor stack
+//  C: loaded from processor stack
+//
+// Operation is the same as RTI except that it inhibits a trace trap while
+// RTI permits trace trap. If new PS has T bit set, trap will occur after
+// execution of first instruction after RTT.
+//
+void KD11CPU::RTT ()
+{
+    if (!popWord (&register_[7]))
+        return;
+    if (!popWord (&psw))
+        return;
+
+    // Prevent a trace trap on the next instruction
+    runState = CpuState::INHIBIT_TRACE;
+}
+
 // EMT - emulator trap
 //
 // Operation:

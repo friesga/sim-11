@@ -155,6 +155,7 @@ private:
 	void BPT ();
 	void IOT ();
 	void RESET ();
+	void RTT ();
 	void EMT ();
 	void TRAP ();
 	void unused ();

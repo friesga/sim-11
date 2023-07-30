@@ -270,16 +270,8 @@ void KD11CPU::execInstr ()
                             RESET ();
                             break;
 
-                        case 0000006: /* RTT */
-                            register_[7] = READCPU (register_[6]);
-                            register_[6] += 2;
-                            RETURN_IF (!tmpValue.hasValue ());
-                            psw = READCPU (register_[6]);
-                            register_[6] += 2;
-                            RETURN_IF (!tmpValue.hasValue ());
-
-                            // Prevent a trace trap on the next instruction
-                            runState = CpuState::INHIBIT_TRACE;
+                        case 0000006:
+                            RTT ();
                             break;
 
                         default: 
