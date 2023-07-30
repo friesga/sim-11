@@ -53,11 +53,26 @@ CondData<u16> KD11CPU::fetchWord (u16 address)
 }
 
 // Fetch the byte at the given word or byte address
+// 
+// The validity of the fetched word has to be checked before the shift-
+// and and-operators can be applied to the word!
 CondData<u8> KD11CPU::fetchByte (u16 address)
 {
-    return (address & 1) ? 
-        static_cast<CondData<u8>> (fetchWord (address & 0xFFFE) >> 8) : 
-	    static_cast<CondData<u8>> (fetchWord (address) & 0377);
+    CondData<u16> retValue {};
+    if (address & 1)
+    {
+         retValue = fetchWord (address & 0xFFFE);
+         if (retValue.hasValue ())
+             return CondData<u8> (retValue >> 8);
+    }
+    else
+    {
+        retValue = fetchWord (address);
+        if (retValue.hasValue ())
+            return CondData<u8> (retValue & 0377);
+    }
+
+    return CondData<u8> {};
 }
 
 bool KD11CPU::putWord (u16 address, u16 value)
