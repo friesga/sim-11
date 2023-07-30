@@ -258,9 +258,8 @@ void KD11CPU::execInstr ()
                             RTI ();
                             break;
 
-                        case 0000003: /* BPT */
-                            trace.trap (TrapRecordType::TRAP, 014);
-                            setTrap (&BPT);
+                        case 0000003:
+                            BPT ();
                             break;
 
                         case 0000004: /* IOT */

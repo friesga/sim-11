@@ -87,14 +87,22 @@ private:
 	// can be only one trap serviced at the time.
 	InterruptRequest const *trap_;
 
-	InterruptRequest const busError{RequestType::Trap, TrapPriority::BusError, 0, 004};
-	InterruptRequest const traceTrap{RequestType::Trap, TrapPriority::TraceTrap, 0, 014};
-	InterruptRequest const BPT{RequestType::Trap, TrapPriority::InstructionTrap, 0, 014};
-	InterruptRequest const IOT{RequestType::Trap, TrapPriority::InstructionTrap, 0, 020};
-	InterruptRequest const EmulatorTrap {RequestType::Trap, TrapPriority::InstructionTrap, 0, 030};
-	InterruptRequest const TRP{RequestType::Trap, TrapPriority::InstructionTrap, 0, 034};
-	InterruptRequest const FIS{RequestType::Trap, TrapPriority::InstructionTrap, 0, 0244};
-	InterruptRequest const illegalInstructionTrap{RequestType::Trap, TrapPriority::InstructionTrap, 0, 010};
+	InterruptRequest const busError 
+		{RequestType::Trap, TrapPriority::BusError, 0, 004};
+	InterruptRequest const traceTrap 
+		{RequestType::Trap, TrapPriority::TraceTrap, 0, 014};
+	InterruptRequest const BreakpointTrap
+		{RequestType::Trap, TrapPriority::InstructionTrap, 0, 014};
+	InterruptRequest const IOT 
+		{RequestType::Trap, TrapPriority::InstructionTrap, 0, 020};
+	InterruptRequest const EmulatorTrap
+		{RequestType::Trap, TrapPriority::InstructionTrap, 0, 030};
+	InterruptRequest const TRP
+		{RequestType::Trap, TrapPriority::InstructionTrap, 0, 034};
+	InterruptRequest const FIS
+		{RequestType::Trap, TrapPriority::InstructionTrap, 0, 0244};
+	InterruptRequest const illegalInstructionTrap
+		{RequestType::Trap, TrapPriority::InstructionTrap, 0, 010};
 
 	// This enum holds the reason for halting the system. This data is printed
 	// by the ODT Maintenance command.
@@ -144,6 +152,7 @@ private:
 	void HALT ();
 	void WAIT ();
 	void RTI ();
+	void BPT ();
 	void EMT ();
 	void TRAP ();
 	void unused ();

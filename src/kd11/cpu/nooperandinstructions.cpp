@@ -64,6 +64,26 @@ void KD11CPU::RTI ()
         return;
 }
 
+// BPT - breakpoint trap
+//
+// Operation:
+//  v(SP) <- PS
+//  v(SP) <- PC
+//  PC <- (14)
+//  PS <- (16)
+//
+// Condition Codes:
+//  N: loaded from trap vector
+//  Z: loaded from trap vector
+//  V: loaded from trap vector
+//  C: loaded from trap vector
+//
+void KD11CPU::BPT ()
+{
+    trace.trap (TrapRecordType::TRAP, 014);
+    setTrap (&BreakpointTrap);
+}
+
 // EMT - emulator trap
 //
 // Operation:
