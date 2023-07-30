@@ -143,6 +143,7 @@ private:
 	// These instruction have no operands.
 	void HALT ();
 	void WAIT ();
+	void RTI ();
 	void EMT ();
 	void TRAP ();
 	void unused ();

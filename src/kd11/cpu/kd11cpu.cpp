@@ -254,13 +254,8 @@ void KD11CPU::execInstr ()
                             WAIT ();
                             break;
 
-                        case 0000002: /* RTI */
-                            register_[7] = READCPU (register_[6]);
-                            register_[6] += 2;
-                            RETURN_IF (!tmpValue.hasValue ());
-                            psw = READCPU (register_[6]);
-                            register_[6] += 2;
-                            RETURN_IF (!tmpValue.hasValue ());
+                        case 0000002:
+                            RTI ();
                             break;
 
                         case 0000003: /* BPT */
