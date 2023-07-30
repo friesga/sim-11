@@ -104,6 +104,19 @@ void KD11CPU::IOT ()
     setTrap (&InputOutputTrap);
 }
 
+// RESET - reset external bus
+//
+// Condition Codes: not affected
+//
+// Sends INIT on the BUS for 10 micro seconds. All devices on the BUS are
+// reset to their state at power-up. The processor remains in an idle state
+// for 90 micro seconds following issuance of INIT.
+//
+void KD11CPU::RESET ()
+{
+    bus_->BINIT().cycle ();
+}
+
 // EMT - emulator trap
 //
 // Operation:

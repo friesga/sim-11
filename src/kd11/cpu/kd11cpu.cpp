@@ -266,12 +266,8 @@ void KD11CPU::execInstr ()
                             IOT ();
                             break;
 
-                        case 0000005: // RESET - Reset external bus
-                            // Sends INIT on the BUS for 10 micro seconds.
-                            // All devices on the BUS are reset to their
-                            // state at power-up.
-                            // (LSI11 PDP11/03 Processor Handbook)
-                            bus_->BINIT().cycle ();
+                        case 0000005:
+                            RESET ();
                             break;
 
                         case 0000006: /* RTT */
