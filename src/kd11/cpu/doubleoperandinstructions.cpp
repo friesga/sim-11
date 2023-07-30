@@ -415,3 +415,45 @@ void KD11CPU::ADD (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
         && ((destination & 0x8000) != (result & 0x8000)));
     PSW_EQ (PSW_C, ((u32)source + (u32)destination) & 0x10000);
 }
+
+// SUB - subtract src from dst
+//
+// Operation:
+//  (dst) <- (dst) - (src)
+//
+// Condition Codes:
+//  N: set if result <0; cleared otherwise
+//  Z: set if result = 0; cleared otherwise
+//  V: set if there was arithmetic overflow as a result of the operation,
+//     that is if operands were of opposite signs and the sign of the source
+//     was the same as the sign of the result; cleared otherwise
+//  C: cleared if there was a carry from the most significant bit of the
+//     result; set otherwise
+//
+void KD11CPU::SUB (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
+{
+    DoubleOperandInstruction subInstruction (cpu, instruction);
+
+    OperandLocation sourceOperandLocation = 
+            subInstruction.getSourceOperandLocation (reg);
+    CondData<u16> source = sourceOperandLocation.wordContents ();
+    if (!source.hasValue ())
+        return;
+
+    OperandLocation destinationOperandLocation = 
+            subInstruction.getDestinationOperandLocation (reg);
+    CondData<u16> destination = destinationOperandLocation.wordContents ();
+    if (!destination.hasValue ())
+        return;
+
+    u16 result = destination - source;
+
+    if (!destinationOperandLocation.write (result))
+        return;
+
+    PSW_EQ (PSW_N, result & 0x8000);
+    PSW_EQ (PSW_Z, !result);
+    PSW_EQ (PSW_V, ((source & 0x8000) != (destination & 0x8000)) \
+        && ((source & 0x8000) == (result & 0x8000)));
+    PSW_EQ (PSW_C, ((u32) destination - (u32) source) & 0x10000);
+}
