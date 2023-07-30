@@ -220,16 +220,18 @@ void KD11CPU::execInstr ()
     KD11INSNMARK* insnmark = (KD11INSNMARK*)&insn;
     KD11INSNSOB* insnsob = (KD11INSNSOB*)&insn;
 
-    /* single operand instructions */
+    // single operand instructions
     switch (insn >> 12)
     {
-        case 000: /* 00 xx xx group */
+        case 000: 
+            // 00 xx xx group
             switch (insn >> 6)
             {
-                case 00000: /* 00 00 xx group */
+                case 00000: 
+                    // 00 00 xx group
                     switch (insn)
                     {
-                        case 0000000: /* HALT */
+                        case 0000000:
                             HALT ();
                             break;
 
@@ -277,15 +279,14 @@ void KD11CPU::execInstr ()
                             runState = CpuState::INHIBIT_TRACE;
                             break;
 
-                        default: /* 00 00 07 - 00 00 77 */
-                            /* unused opcodes */
-                            trace.trap (TrapRecordType::TRAP_ILL, 010);
-                            setTrap (&illegalInstructionTrap);
+                        default: 
+                            // 00 00 07 - 00 00 77
+                            unused ();
                             break;
                     }
                     break;
 
-                case 00001: /* JMP */
+                case 00001:
                     JMP (this, register_, insn);
                     break;
 
@@ -305,7 +306,7 @@ void KD11CPU::execInstr ()
                         unused ();
                     break;
 
-                case 00003: /* SWAB */
+                case 00003:
                     SWAB (this, register_, insn);
                     break;
 
@@ -456,7 +457,8 @@ void KD11CPU::execInstr ()
             ADD (this, register_, insn);
             break;
 
-        case 007: /* 07 xx xx group */
+        case 007: 
+            // 07 xx xx group 
             switch (insn >> 9)
             {
                 case 0070:
@@ -676,9 +678,8 @@ void KD11CPU::execInstr ()
             SUB (this, register_, insn);
             break;
 
-        default: /* unused */
-            trace.trap (TrapRecordType::TRAP_ILL, 010);
-            setTrap (&illegalInstructionTrap);
+        default:
+            unused ();
             break;
     }
 }
