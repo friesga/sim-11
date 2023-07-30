@@ -235,9 +235,8 @@ void KD11CPU::execInstr ()
                             HALT ();
                             break;
 
-                        case 0000001: /* WAIT */
-                            trace.cpuEvent (CpuEventRecordType::CPU_WAIT, register_[7]);
-                            runState = CpuState::WAIT;
+                        case 0000001:
+                            WAIT ();
                             break;
 
                         case 0000002: /* RTI */

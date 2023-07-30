@@ -142,6 +142,7 @@ private:
 	// Instruction in the Program Control Group Traps and Operate Group.
 	// These instruction have no operands.
 	void HALT ();
+	void WAIT ();
 	void EMT ();
 	void TRAP ();
 	void unused ();
