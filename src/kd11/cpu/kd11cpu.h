@@ -115,12 +115,11 @@ private:
 	void halt ();
     void start (u16 address);
 	void proceed ();
-    u16 registerValue (u8 registerNr);
-    void setRegister (u8 registerNr, u16 value);
-    u16 pswValue ();
-    void setPSW (u16 value);
-
-
+    
+	constexpr u16 registerValue (u8 registerNr);
+    constexpr void setRegister (u8 registerNr, u16 value);
+    constexpr u16 pswValue ();
+	constexpr void setPSW (u16 value);
 	constexpr bool isSet (u16 x);
 	constexpr void setConditionCode (u16 x);
 	constexpr void clearConditionCode (u16 x);
@@ -267,5 +266,36 @@ constexpr void KD11CPU::setConditionCodeIf_ClearElse (u16 x, bool condition)
 	else
 		clearConditionCode (x);
 }
+
+// The functions registerValue(), setRegister(), setPSW() and pswValue()
+// are used by ODT.
+// 
+// Return the value of a register. Access to the registers and PSW has to be
+// provided via special functions as the KD11 has no registers to access them.
+//
+constexpr u16 KD11CPU::registerValue (u8 registerNr)
+{
+    return register_[registerNr];
+}
+
+// Set the given register to the given value
+constexpr void KD11CPU::setRegister (u8 registerNr, u16 value)
+{
+    register_[registerNr] = value;
+}
+
+// Set the Processor Status Word to the given value. The T-bit cannot be set
+// via this function.
+// 
+
+ constexpr void KD11CPU::setPSW (u16 value)
+ {
+     psw = (psw & PSW_T) | (value & ~PSW_T);
+ }
+
+ constexpr u16 KD11CPU::pswValue ()
+ {
+     return psw;
+ }
 
 #endif // _KD11CPU_H_
