@@ -37,17 +37,6 @@ enum class CpuState
 #define	PSW_PRIO		_BV(7)
 #define	PSW_PRIORITY	(_BV(7) | _BV(6) | _BV(5))
 
-#define	PSW_GET(x)		(((psw) & (x)) ? 1 : 0)
-#define	PSW_SET(x)		((psw) |= (x))
-#define	PSW_CLR(x)		((psw) &= ~(x))
-#define	PSW_EQ(x, v) { \
-	if(v) { \
-		PSW_SET(x); \
-	} else { \
-		PSW_CLR(x); \
-	} \
-}
-
 #define USE_FLOAT
 
 // Two different LSI-models exist, the LSI-11 and the LSI-11/2. The LSI-11
@@ -130,6 +119,12 @@ private:
     void setRegister (u8 registerNr, u16 value);
     u16 pswValue ();
     void setPSW (u16 value);
+
+
+	constexpr bool isSet (u16 x);
+	constexpr void setConditionCode (u16 x);
+	constexpr void clearConditionCode (u16 x);
+	constexpr void setConditionCodeIf_ClearElse (u16 x, bool v);
 
 	// These functions are used by the Instruction classes.
 	CondData<u16> fetchWord (u16 address);
@@ -248,5 +243,29 @@ private:
 	void BCS (u16 instruction);
 };
 
+// constexpr functions are implicitly inline and therefore need to be defined
+// in every translation unit.
+constexpr bool KD11CPU::isSet (u16 x)
+{
+	return (psw & x) ? true : false;
+}
+
+constexpr void KD11CPU::setConditionCode (u16 x)
+{
+	psw |= x;
+}
+
+constexpr void KD11CPU::clearConditionCode (u16 x)
+{
+	psw &= ~x;
+}
+
+constexpr void KD11CPU::setConditionCodeIf_ClearElse (u16 x, bool condition)
+{
+	if (condition)
+		setConditionCode (x);
+	else
+		clearConditionCode (x);
+}
 
 #endif // _KD11CPU_H_

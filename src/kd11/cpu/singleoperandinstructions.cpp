@@ -60,10 +60,10 @@ void KD11CPU::SWAB (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
     operand = ((operand & 0x00FF) << 8) | ((operand >> 8) & 0xFF);
     operandLocation.write (operand);
 
-    PSW_EQ (PSW_N, operand & 0x80);
-    PSW_EQ (PSW_Z, !((u8) operand));
-    PSW_CLR (PSW_V);
-    PSW_CLR (PSW_C);
+    setConditionCodeIf_ClearElse (PSW_N, operand & 0x80);
+    setConditionCodeIf_ClearElse (PSW_Z, !((u8) operand));
+    clearConditionCode (PSW_V);
+    clearConditionCode (PSW_C);
 }
 
 // CLR - clear destination
@@ -86,8 +86,8 @@ void KD11CPU::CLR (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
     OperandLocation operandLocation = soi.getOperandLocation (reg);
     operandLocation.write (0);
 
-    PSW_CLR (PSW_N | PSW_V | PSW_C);
-    PSW_SET (PSW_Z);
+    clearConditionCode (PSW_N | PSW_V | PSW_C);
+    setConditionCode (PSW_Z);
 }
 
 // CLRB - clear destination byte
@@ -106,8 +106,8 @@ void KD11CPU::CLRB (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
 
     operandLocation.writeByte (0);
 
-    PSW_CLR (PSW_N | PSW_V | PSW_C);
-    PSW_SET (PSW_Z);
+    clearConditionCode (PSW_N | PSW_V | PSW_C);
+    setConditionCode (PSW_Z);
 }
 
 // COM - complement destination
@@ -137,10 +137,10 @@ void KD11CPU::COM (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
     operand = ~operand;
     operandLocation.write (operand);
 
-    PSW_CLR (PSW_V);
-    PSW_SET (PSW_C);
-    PSW_EQ (PSW_N, operand & 0x8000);
-    PSW_EQ (PSW_Z, !operand);
+    clearConditionCode (PSW_V);
+    setConditionCode (PSW_C);
+    setConditionCodeIf_ClearElse (PSW_N, operand & 0x8000);
+    setConditionCodeIf_ClearElse (PSW_Z, !operand);
 }
 
 // COM - complement destination byte
@@ -165,10 +165,10 @@ void KD11CPU::COMB (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
     operand = ~operand;
     operandLocation.writeByte (operand);
 
-    PSW_CLR (PSW_V);
-    PSW_SET (PSW_C);
-    PSW_EQ (PSW_N, operand & 0x80);
-    PSW_EQ (PSW_Z, !((u8) operand));
+    clearConditionCode (PSW_V);
+    setConditionCode (PSW_C);
+    setConditionCodeIf_ClearElse (PSW_N, operand & 0x80);
+    setConditionCodeIf_ClearElse (PSW_Z, !((u8) operand));
 }
 
 // INC - increment destination
@@ -197,9 +197,9 @@ void KD11CPU::INC (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
     u16 result = contents + 1;
     operandLocation.write (result);
 
-    PSW_EQ (PSW_V, contents == 077777)
-    PSW_EQ (PSW_N, result & 0x8000);
-    PSW_EQ (PSW_Z, !result);
+    setConditionCodeIf_ClearElse (PSW_V, contents == 077777);
+    setConditionCodeIf_ClearElse (PSW_N, result & 0x8000);
+    setConditionCodeIf_ClearElse (PSW_Z, !result);
 }
 
 // INCB - increment destination byte
@@ -224,9 +224,9 @@ void KD11CPU::INCB (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
 
     operandLocation.writeByte (tmp);
 
-    PSW_EQ (PSW_V, src == 000177)
-        PSW_EQ (PSW_N, tmp & 0x80);
-    PSW_EQ (PSW_Z, !tmp);
+    setConditionCodeIf_ClearElse (PSW_V, src == 000177);
+    setConditionCodeIf_ClearElse (PSW_N, tmp & 0x80);
+    setConditionCodeIf_ClearElse (PSW_Z, !tmp);
 }
 
 // DEC - decrement destination
@@ -255,9 +255,9 @@ void KD11CPU::DEC (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
     u16 result = contents - 1;
     operandLocation.write (result);
 
-    PSW_EQ (PSW_V, contents == 0100000)
-    PSW_EQ (PSW_N, result & 0100000);
-    PSW_EQ (PSW_Z, !result);
+    setConditionCodeIf_ClearElse (PSW_V, contents == 0100000);
+    setConditionCodeIf_ClearElse (PSW_N, result & 0100000);
+    setConditionCodeIf_ClearElse (PSW_Z, !result);
 }
 
 // DECB - decrement destination byte
@@ -282,9 +282,9 @@ void KD11CPU::DECB (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
 
     operandLocation.writeByte (tmp);
 
-    PSW_EQ (PSW_V, src == 0000200)
-        PSW_EQ (PSW_N, tmp & 0x80);
-    PSW_EQ (PSW_Z, !tmp);
+    setConditionCodeIf_ClearElse (PSW_V, src == 0000200);
+    setConditionCodeIf_ClearElse (PSW_N, tmp & 0x80);
+    setConditionCodeIf_ClearElse (PSW_Z, !tmp);
 }
 
 // NEG - negate destination
@@ -317,10 +317,10 @@ void KD11CPU::NEG (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
     
     operandLocation.write (operand);
 
-    PSW_EQ (PSW_V, operand == 0100000)
-    PSW_EQ (PSW_N, operand & 0100000);
-    PSW_EQ (PSW_Z, !operand);
-    PSW_EQ (PSW_C, operand);
+    setConditionCodeIf_ClearElse (PSW_V, operand == 0100000);
+    setConditionCodeIf_ClearElse (PSW_N, operand & 0100000);
+    setConditionCodeIf_ClearElse (PSW_Z, !operand);
+    setConditionCodeIf_ClearElse (PSW_C, operand);
 }
 
 // NEGB - negate destination byte
@@ -346,10 +346,10 @@ void KD11CPU::NEGB (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
 
     operandLocation.writeByte (operand);
 
-    PSW_EQ (PSW_V, operand == 0200)
-        PSW_EQ (PSW_N, operand & 0x80);
-    PSW_EQ (PSW_Z, !operand);
-    PSW_EQ (PSW_C, operand);
+    setConditionCodeIf_ClearElse (PSW_V, operand == 0200);
+    setConditionCodeIf_ClearElse (PSW_N, operand & 0x80);
+    setConditionCodeIf_ClearElse (PSW_Z, !operand);
+    setConditionCodeIf_ClearElse (PSW_C, operand);
 }
 
 // ADC - add carry
@@ -376,15 +376,15 @@ void KD11CPU::ADC (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
     if (!contents.hasValue ())
         return;
 
-    u16 cBit = PSW_GET (PSW_C) ? 1 : 0;
+    u16 cBit = isSet (PSW_C) ? 1 : 0;
     u16 result = contents + cBit;
 
     operandLocation.write (result);
 
-    PSW_EQ (PSW_V, contents == 0077777 && PSW_GET (PSW_C));
-    PSW_EQ (PSW_C, contents == 0177777 && PSW_GET (PSW_C));
-    PSW_EQ (PSW_N, result & 0x8000);
-    PSW_EQ (PSW_Z, !result);
+    setConditionCodeIf_ClearElse (PSW_V, contents == 0077777 && isSet (PSW_C));
+    setConditionCodeIf_ClearElse (PSW_C, contents == 0177777 && isSet (PSW_C));
+    setConditionCodeIf_ClearElse (PSW_N, result & 0x8000);
+    setConditionCodeIf_ClearElse (PSW_Z, !result);
 }
 
 // ADCB - add carry byte
@@ -405,15 +405,15 @@ void KD11CPU::ADCB (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
     if (!source.hasValue ())
         return;
 
-    u16 tmp = PSW_GET (PSW_C) ? 1 : 0;
+    u16 tmp = isSet (PSW_C) ? 1 : 0;
     u16 destination = (u8) (source + tmp);
 
     operandLocation.writeByte (destination);
 
-    PSW_EQ (PSW_V, source == 0177 && PSW_GET (PSW_C));
-    PSW_EQ (PSW_C, source == 0377 && PSW_GET (PSW_C));
-    PSW_EQ (PSW_N, destination & 0x80);
-    PSW_EQ (PSW_Z, !destination);
+    setConditionCodeIf_ClearElse (PSW_V, source == 0177 && isSet (PSW_C));
+    setConditionCodeIf_ClearElse (PSW_C, source == 0377 && isSet (PSW_C));
+    setConditionCodeIf_ClearElse (PSW_N, destination & 0x80);
+    setConditionCodeIf_ClearElse (PSW_Z, !destination);
 }
 
 // SBC - subtract carry
@@ -439,15 +439,15 @@ void KD11CPU::SBC (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
     if (!contents.hasValue ())
         return;
 
-    u16 cBit = PSW_GET (PSW_C) ? 1 : 0;
+    u16 cBit = isSet (PSW_C) ? 1 : 0;
     u16 result = contents - cBit;
 
     operandLocation.write (result);
 
-    PSW_EQ (PSW_V, contents == 0100000);
-    PSW_EQ (PSW_C, !contents && PSW_GET (PSW_C));
-    PSW_EQ (PSW_N, result & 0x8000);
-    PSW_EQ (PSW_Z, !result);
+    setConditionCodeIf_ClearElse (PSW_V, contents == 0100000);
+    setConditionCodeIf_ClearElse (PSW_C, !contents && isSet (PSW_C));
+    setConditionCodeIf_ClearElse (PSW_N, result & 0x8000);
+    setConditionCodeIf_ClearElse (PSW_Z, !result);
 }
 
 // SBCB - subtract carry byte
@@ -468,15 +468,15 @@ void KD11CPU::SBCB (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
     if (!source.hasValue ())
         return;
 
-    u16 tmp = PSW_GET (PSW_C) ? 1 : 0;
+    u16 tmp = isSet (PSW_C) ? 1 : 0;
     u16 destination = (u8) (source - tmp);
 
     operandLocation.writeByte (destination);
 
-    PSW_EQ (PSW_V, source == 0200);
-    PSW_EQ (PSW_C, !source && PSW_GET (PSW_C));
-    PSW_EQ (PSW_N, destination & 0x80);
-    PSW_EQ (PSW_Z, !destination);
+    setConditionCodeIf_ClearElse (PSW_V, source == 0200);
+    setConditionCodeIf_ClearElse (PSW_C, !source && isSet (PSW_C));
+    setConditionCodeIf_ClearElse (PSW_N, destination & 0x80);
+    setConditionCodeIf_ClearElse (PSW_Z, !destination);
 }
 
 // TST - test destination
@@ -498,10 +498,10 @@ void KD11CPU::TST (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
     if (!contents.hasValue ())
         return;
 
-    PSW_CLR (PSW_V);
-    PSW_CLR (PSW_C);
-    PSW_EQ (PSW_N, contents & 0100000);
-    PSW_EQ (PSW_Z, !contents);
+    clearConditionCode (PSW_V);
+    clearConditionCode (PSW_C);
+    setConditionCodeIf_ClearElse (PSW_N, contents & 0100000);
+    setConditionCodeIf_ClearElse (PSW_Z, !contents);
 }
 
 // TSTB - test destination byte
@@ -522,10 +522,10 @@ void KD11CPU::TSTB (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
     if (!source.hasValue ())
         return;
 
-    PSW_CLR (PSW_V);
-    PSW_CLR (PSW_C);
-    PSW_EQ (PSW_N, source & 0x80);
-    PSW_EQ (PSW_Z, !source);
+    clearConditionCode (PSW_V);
+    clearConditionCode (PSW_C);
+    setConditionCodeIf_ClearElse (PSW_N, source & 0x80);
+    setConditionCodeIf_ClearElse (PSW_Z, !source);
 }
 
 // ROR - rotate right
@@ -554,17 +554,17 @@ void KD11CPU::ROR (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
     if (!contents.hasValue ())
         return;
 
-    u16 cBit = PSW_GET (PSW_C);
+    u16 cBit = isSet (PSW_C);
     u16 result = contents >> 1;
     if (cBit)
         result |= 0100000;
 
     operandLocation.write (result);
 
-    PSW_EQ (PSW_C, contents & 0000001);
-    PSW_EQ (PSW_N, result & 0100000);
-    PSW_EQ (PSW_Z, !result);
-    PSW_EQ (PSW_V, PSW_GET (PSW_N) ^ PSW_GET (PSW_C));
+    setConditionCodeIf_ClearElse (PSW_C, contents & 0000001);
+    setConditionCodeIf_ClearElse (PSW_N, result & 0100000);
+    setConditionCodeIf_ClearElse (PSW_Z, !result);
+    setConditionCodeIf_ClearElse (PSW_V, isSet (PSW_N) ^ isSet (PSW_C));
 }
 
 // RORB - rotate right byte
@@ -590,15 +590,15 @@ void KD11CPU::RORB (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
         return;
 
     u16 result = source >> 1;
-    if (PSW_GET (PSW_C))
+    if (isSet (PSW_C))
         result |= 0x80;
 
     operandLocation.writeByte (result);
 
-    PSW_EQ (PSW_C, source & 0x01);
-    PSW_EQ (PSW_N, result & 0x80);
-    PSW_EQ (PSW_Z, !result);
-    PSW_EQ (PSW_V, PSW_GET (PSW_N) ^ PSW_GET (PSW_C));
+    setConditionCodeIf_ClearElse (PSW_C, source & 0x01);
+    setConditionCodeIf_ClearElse (PSW_N, result & 0x80);
+    setConditionCodeIf_ClearElse (PSW_Z, !result);
+    setConditionCodeIf_ClearElse (PSW_V, isSet (PSW_N) ^ isSet (PSW_C));
 }
 
 // ROL - rotate left
@@ -627,17 +627,17 @@ void KD11CPU::ROL (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
     if (!contents.hasValue ())
         return;
 
-    u16 cBit = PSW_GET (PSW_C);
+    u16 cBit = isSet (PSW_C);
     u16 result = contents << 1;
     if (cBit)
         result |= 01;
 
     operandLocation.write (result);
 
-    PSW_EQ (PSW_C, contents & 0100000);
-    PSW_EQ (PSW_N, result & 0100000);
-    PSW_EQ (PSW_Z, !result);
-    PSW_EQ (PSW_V, PSW_GET (PSW_N) ^ PSW_GET (PSW_C));
+    setConditionCodeIf_ClearElse (PSW_C, contents & 0100000);
+    setConditionCodeIf_ClearElse (PSW_N, result & 0100000);
+    setConditionCodeIf_ClearElse (PSW_Z, !result);
+    setConditionCodeIf_ClearElse (PSW_V, isSet (PSW_N) ^ isSet (PSW_C));
 }
 
 // ROLB - rotate left byte
@@ -663,15 +663,15 @@ void KD11CPU::ROLB (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
         return;
 
     u16 result = (u8)(source << 1);
-    if (PSW_GET (PSW_C))
+    if (isSet (PSW_C))
         result |= 0x01;
 
     operandLocation.writeByte (result);
 
-    PSW_EQ (PSW_C, source & 0x80);
-    PSW_EQ (PSW_N, result & 0x80);
-    PSW_EQ (PSW_Z, !result);
-    PSW_EQ (PSW_V, PSW_GET (PSW_N) ^ PSW_GET (PSW_C));
+    setConditionCodeIf_ClearElse (PSW_C, source & 0x80);
+    setConditionCodeIf_ClearElse (PSW_N, result & 0x80);
+    setConditionCodeIf_ClearElse (PSW_Z, !result);
+    setConditionCodeIf_ClearElse (PSW_V, isSet (PSW_N) ^ isSet (PSW_C));
 }
 
 // ASR - arithmetic shift right
@@ -711,10 +711,10 @@ void KD11CPU::ASR (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
 
     operandLocation.write (result);
 
-    PSW_EQ (PSW_C, contents & 1);
-    PSW_EQ (PSW_N, result & 0100000);
-    PSW_EQ (PSW_Z, !result);
-    PSW_EQ (PSW_V, PSW_GET (PSW_N) ^ PSW_GET (PSW_C));
+    setConditionCodeIf_ClearElse (PSW_C, contents & 1);
+    setConditionCodeIf_ClearElse (PSW_N, result & 0100000);
+    setConditionCodeIf_ClearElse (PSW_Z, !result);
+    setConditionCodeIf_ClearElse (PSW_V, isSet (PSW_N) ^ isSet (PSW_C));
 }
 
 // ASRB - arithmetic shift right byte
@@ -749,10 +749,10 @@ void KD11CPU::ASRB (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
 
     operandLocation.writeByte (result);
 
-    PSW_EQ (PSW_C, source & 1);
-    PSW_EQ (PSW_N, result & 0x80);
-    PSW_EQ (PSW_Z, !result);
-    PSW_EQ (PSW_V, PSW_GET (PSW_N) ^ PSW_GET (PSW_C));
+    setConditionCodeIf_ClearElse (PSW_C, source & 1);
+    setConditionCodeIf_ClearElse (PSW_N, result & 0x80);
+    setConditionCodeIf_ClearElse (PSW_Z, !result);
+    setConditionCodeIf_ClearElse (PSW_V, isSet (PSW_N) ^ isSet (PSW_C));
 }
 
 // ASL - arithmetic shift left
@@ -786,10 +786,10 @@ void KD11CPU::ASL (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
 
     operandLocation.write (result);
 
-    PSW_EQ (PSW_C, contents & 0100000);
-    PSW_EQ (PSW_N, result & 0100000);
-    PSW_EQ (PSW_Z, !result);
-    PSW_EQ (PSW_V, PSW_GET (PSW_N) ^ PSW_GET (PSW_C));
+    setConditionCodeIf_ClearElse (PSW_C, contents & 0100000);
+    setConditionCodeIf_ClearElse (PSW_N, result & 0100000);
+    setConditionCodeIf_ClearElse (PSW_Z, !result);
+    setConditionCodeIf_ClearElse (PSW_V, isSet (PSW_N) ^ isSet (PSW_C));
 }
 
 // ASLB - arithmetic shift left byte
@@ -819,10 +819,10 @@ void KD11CPU::ASLB (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
 
     operandLocation.writeByte (result);
 
-    PSW_EQ (PSW_C, source & 0x80);
-    PSW_EQ (PSW_N, result & 0x80);
-    PSW_EQ (PSW_Z, !result);
-    PSW_EQ (PSW_V, PSW_GET (PSW_N) ^ PSW_GET (PSW_C));
+    setConditionCodeIf_ClearElse (PSW_C, source & 0x80);
+    setConditionCodeIf_ClearElse (PSW_N, result & 0x80);
+    setConditionCodeIf_ClearElse (PSW_Z, !result);
+    setConditionCodeIf_ClearElse (PSW_V, isSet (PSW_N) ^ isSet (PSW_C));
 }
 
 // MTPS - Move byte to Processor Status Word
@@ -890,9 +890,9 @@ void KD11CPU::MFPS (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
         if (!operandLocation.writeByte (contents))
             return;
     }
-    PSW_EQ (PSW_N, contents & 0x80);
-    PSW_EQ (PSW_Z, !(contents & 0xFF));
-    PSW_CLR (PSW_V);
+    setConditionCodeIf_ClearElse (PSW_N, contents & 0x80);
+    setConditionCodeIf_ClearElse (PSW_Z, !(contents & 0xFF));
+    clearConditionCode (PSW_V);
 }
 
 // SXT - sign extend
@@ -915,10 +915,10 @@ void KD11CPU::SXT (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
     SingleOperandInstruction soi {cpu, instruction};
 
     OperandLocation operandLocation = soi.getOperandLocation (reg);
-    u16 result = PSW_GET (PSW_N) ? 0177777 : 0;
+    u16 result = isSet (PSW_N) ? 0177777 : 0;
 
     operandLocation.write (result);
 
-    PSW_EQ (PSW_Z, !PSW_GET (PSW_N));
-    PSW_CLR (PSW_V);
+    setConditionCodeIf_ClearElse (PSW_Z, !isSet (PSW_N));
+    clearConditionCode (PSW_V);
 }

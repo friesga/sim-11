@@ -32,9 +32,9 @@ void KD11CPU::MOV (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
 
     destOperandLocation.write (source);
 
-    PSW_EQ (PSW_N, source & 0100000);
-    PSW_EQ (PSW_Z, !source);
-    PSW_CLR (PSW_V);
+    setConditionCodeIf_ClearElse (PSW_N, source & 0100000);
+    setConditionCodeIf_ClearElse (PSW_Z, !source);
+    clearConditionCode (PSW_V);
 }
 
 // MOVB - move source to destination
@@ -73,9 +73,9 @@ void KD11CPU::MOVB (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
         if (!destOperandLocation.writeByte (tmp))
             return;
     
-    PSW_EQ (PSW_N, tmp & 0x80);
-    PSW_EQ (PSW_Z, !tmp);
-    PSW_CLR (PSW_V);
+    setConditionCodeIf_ClearElse (PSW_N, tmp & 0x80);
+    setConditionCodeIf_ClearElse (PSW_Z, !tmp);
+    clearConditionCode (PSW_V);
 }
 
 // CMP - compare source to destination
@@ -113,11 +113,11 @@ void KD11CPU::CMP (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
         return;
 
     u16 tmp = source - destination;
-    PSW_EQ (PSW_N, tmp & 0x8000);
-    PSW_EQ (PSW_Z, !tmp);
-    PSW_EQ (PSW_V, ((source & 0x8000) != (destination & 0x8000)) \
+    setConditionCodeIf_ClearElse (PSW_N, tmp & 0x8000);
+    setConditionCodeIf_ClearElse (PSW_Z, !tmp);
+    setConditionCodeIf_ClearElse (PSW_V, ((source & 0x8000) != (destination & 0x8000)) \
         && ((destination & 0x8000) == (tmp & 0x8000)));
-    PSW_EQ (PSW_C, ((u32)source - (u32)destination) & 0x10000);
+    setConditionCodeIf_ClearElse (PSW_C, ((u32)source - (u32)destination) & 0x10000);
 }
 
 // CMPB - compare source to destination byte
@@ -146,11 +146,11 @@ void KD11CPU::CMPB (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
 
     u16 tmp = (u8) (source - destination);
 
-    PSW_EQ (PSW_N, tmp & 0x80);
-    PSW_EQ (PSW_Z, !tmp);
-    PSW_EQ (PSW_V, ((source & 0x80) != (destination & 0x80)) \
+    setConditionCodeIf_ClearElse (PSW_N, tmp & 0x80);
+    setConditionCodeIf_ClearElse (PSW_Z, !tmp);
+    setConditionCodeIf_ClearElse (PSW_V, ((source & 0x80) != (destination & 0x80)) \
         && ((destination & 0x80) == (tmp & 0x80)));
-    PSW_EQ (PSW_C, (source - destination) & 0x100);
+    setConditionCodeIf_ClearElse (PSW_C, (source - destination) & 0x100);
 }
 
 // BIT - bit test
@@ -185,9 +185,9 @@ void KD11CPU::BIT (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
         return;
 
     u16 tmp = source & destination;
-    PSW_EQ (PSW_N, tmp & 0x8000);
-    PSW_EQ (PSW_Z, !tmp);
-    PSW_CLR (PSW_V);
+    setConditionCodeIf_ClearElse (PSW_N, tmp & 0x8000);
+    setConditionCodeIf_ClearElse (PSW_Z, !tmp);
+    clearConditionCode (PSW_V);
 }
 
 // BITB - bit test byte
@@ -215,9 +215,9 @@ void KD11CPU::BITB (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
         return;
 
     u16 tmp = source & destination;
-    PSW_EQ (PSW_N, tmp & 0x80);
-    PSW_EQ (PSW_Z, !tmp);
-    PSW_CLR (PSW_V);
+    setConditionCodeIf_ClearElse (PSW_N, tmp & 0x80);
+    setConditionCodeIf_ClearElse (PSW_Z, !tmp);
+    clearConditionCode (PSW_V);
 }
 
 // BIC - bit clear
@@ -255,9 +255,9 @@ void KD11CPU::BIC (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
 
     destinationOperandLocation.write (tmp);
 
-    PSW_EQ (PSW_N, tmp & 0x8000);
-    PSW_EQ (PSW_Z, !tmp);
-    PSW_CLR (PSW_V);
+    setConditionCodeIf_ClearElse (PSW_N, tmp & 0x8000);
+    setConditionCodeIf_ClearElse (PSW_Z, !tmp);
+    clearConditionCode (PSW_V);
 }
 
 // BICB - bit clear byte
@@ -289,9 +289,9 @@ void KD11CPU::BICB (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
     if (!destOperandLocation.writeByte (tmp))
         return;
 
-    PSW_EQ (PSW_N, tmp & 0x80);
-    PSW_EQ (PSW_Z, !tmp);
-    PSW_CLR (PSW_V);
+    setConditionCodeIf_ClearElse (PSW_N, tmp & 0x80);
+    setConditionCodeIf_ClearElse (PSW_Z, !tmp);
+    clearConditionCode (PSW_V);
 }
 
 // BIS - bit set
@@ -330,9 +330,9 @@ void KD11CPU::BIS (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
 
     destinationOperandLocation.write (tmp);
 
-    PSW_EQ (PSW_N, tmp & 0x8000);
-    PSW_EQ (PSW_Z, !tmp);
-    PSW_CLR (PSW_V);
+    setConditionCodeIf_ClearElse (PSW_N, tmp & 0x8000);
+    setConditionCodeIf_ClearElse (PSW_Z, !tmp);
+    clearConditionCode (PSW_V);
 }
 
 // BISB - bit set byte
@@ -364,9 +364,9 @@ void KD11CPU::BISB (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
     if (!destOperandLocation.writeByte (tmp))
         return;
 
-    PSW_EQ (PSW_N, tmp & 0x80);
-    PSW_EQ (PSW_Z, !tmp);
-    PSW_CLR (PSW_V);
+    setConditionCodeIf_ClearElse (PSW_N, tmp & 0x80);
+    setConditionCodeIf_ClearElse (PSW_Z, !tmp);
+    clearConditionCode (PSW_V);
 }
 
 // ADD - add source to destination
@@ -408,11 +408,11 @@ void KD11CPU::ADD (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
 
     destinationOperandLocation.write (result);
 
-    PSW_EQ (PSW_N, result & 0x8000);
-    PSW_EQ (PSW_Z, !result);
-    PSW_EQ (PSW_V, ((source & 0x8000) == (destination & 0x8000)) \
+    setConditionCodeIf_ClearElse (PSW_N, result & 0x8000);
+    setConditionCodeIf_ClearElse (PSW_Z, !result);
+    setConditionCodeIf_ClearElse (PSW_V, ((source & 0x8000) == (destination & 0x8000)) \
         && ((destination & 0x8000) != (result & 0x8000)));
-    PSW_EQ (PSW_C, ((u32)source + (u32)destination) & 0x10000);
+    setConditionCodeIf_ClearElse (PSW_C, ((u32)source + (u32)destination) & 0x10000);
 }
 
 // SUB - subtract src from dst
@@ -450,9 +450,9 @@ void KD11CPU::SUB (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
     if (!destinationOperandLocation.write (result))
         return;
 
-    PSW_EQ (PSW_N, result & 0x8000);
-    PSW_EQ (PSW_Z, !result);
-    PSW_EQ (PSW_V, ((source & 0x8000) != (destination & 0x8000)) \
+    setConditionCodeIf_ClearElse (PSW_N, result & 0x8000);
+    setConditionCodeIf_ClearElse (PSW_Z, !result);
+    setConditionCodeIf_ClearElse (PSW_V, ((source & 0x8000) != (destination & 0x8000)) \
         && ((source & 0x8000) == (result & 0x8000)));
-    PSW_EQ (PSW_C, ((u32) destination - (u32) source) & 0x10000);
+    setConditionCodeIf_ClearElse (PSW_C, ((u32) destination - (u32) source) & 0x10000);
 }

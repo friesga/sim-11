@@ -75,10 +75,10 @@ void KD11CPU::MUL (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
     register_[regNr] = (u16) (tmps32 >> 16);
     register_[regNr | 1] = (u16) tmps32;
 
-    PSW_CLR (PSW_V);
-    PSW_EQ (PSW_N, tmps32 < 0);
-    PSW_EQ (PSW_Z, !tmps32);
-    PSW_EQ (PSW_C, (tmps32 >= 0x7FFF) || (tmps32 < -0x8000));
+    clearConditionCode (PSW_V);
+    setConditionCodeIf_ClearElse (PSW_N, tmps32 < 0);
+    setConditionCodeIf_ClearElse (PSW_Z, !tmps32);
+    setConditionCodeIf_ClearElse (PSW_C, (tmps32 >= 0x7FFF) || (tmps32 < -0x8000));
 }
 
 // DIV - divide
@@ -114,25 +114,25 @@ void KD11CPU::DIV (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
 
     if (source == 0)
     {
-        PSW_SET (PSW_C);
-        PSW_SET (PSW_V);
+        setConditionCode (PSW_C);
+        setConditionCode (PSW_V);
     }
     else
     {
         s32 quotient = tmps32 / (s16) source;
         s32 remainder = tmps32 % (s16) source;
-        PSW_CLR (PSW_C);
+        clearConditionCode (PSW_C);
 
         if ((s16) quotient != quotient)
         {
-            PSW_SET (PSW_V);
+            setConditionCode (PSW_V);
         }
         else
         {
             register_[regNr] = (u16) quotient;
             register_[regNr | 1] = (u16) remainder;
-            PSW_EQ (PSW_Z, !quotient);
-            PSW_EQ (PSW_N, quotient < 0);
+            setConditionCodeIf_ClearElse (PSW_Z, !quotient);
+            setConditionCodeIf_ClearElse (PSW_N, quotient < 0);
         }
     }
 }
@@ -176,14 +176,14 @@ void KD11CPU::ASH (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
         stmp2 = stmp >> (source - 1);
         stmp >>= source;
         tmp = (u16) stmp;
-        PSW_EQ (PSW_C, stmp2 & 1);
-        PSW_CLR (PSW_V);
+        setConditionCodeIf_ClearElse (PSW_C, stmp2 & 1);
+        clearConditionCode (PSW_V);
     }
     else if ((source & 0x1F) == 0)
     {
         // Zero - don't shift
-        PSW_CLR (PSW_V);
-        PSW_CLR (PSW_C);
+        clearConditionCode (PSW_V);
+        clearConditionCode (PSW_C);
         tmp = dst;
     }
     else
@@ -199,21 +199,21 @@ void KD11CPU::ASH (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
             mask = 0x8000;
             mask >>= source;
             u16 tmp2 = dst & mask;
-            PSW_EQ (PSW_V, !((tmp2 == 0) || (((tmp2 & mask) | ~mask) == 0xFFFF)));
+            setConditionCodeIf_ClearElse (PSW_V, !((tmp2 == 0) || (((tmp2 & mask) | ~mask) == 0xFFFF)));
         }
         else
         {
-            PSW_CLR (PSW_V);
+            clearConditionCode (PSW_V);
         }
-        PSW_EQ (PSW_C, (dst << (source - 1)) & 0x8000);
+        setConditionCodeIf_ClearElse (PSW_C, (dst << (source - 1)) & 0x8000);
         if ((dst & 0x8000) != (tmp & 0x8000))
         {
-            PSW_SET (PSW_V);
+            setConditionCode (PSW_V);
         }
     }
     register_[regNr] = tmp;
-    PSW_EQ (PSW_N, tmp & 0x8000);
-    PSW_EQ (PSW_Z, !tmp);
+    setConditionCodeIf_ClearElse (PSW_N, tmp & 0x8000);
+    setConditionCodeIf_ClearElse (PSW_Z, !tmp);
 }
 
 // ASHC - arithemetic shift combined
@@ -259,9 +259,9 @@ void KD11CPU::ASHC (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
     if ((source & 0x3F) == 0x20)
     {
         // Negative; 32 right
-        PSW_EQ (PSW_C, tmps32 & 0x80000000);
-        PSW_CLR (PSW_V);
-        if (PSW_GET (PSW_C))
+        setConditionCodeIf_ClearElse (PSW_C, tmps32 & 0x80000000);
+        clearConditionCode (PSW_V);
+        if (isSet (PSW_C))
         {
             tmps32 = 0xFFFFFFFF;
         }
@@ -277,13 +277,13 @@ void KD11CPU::ASHC (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
         source = (~source & 0x1F) + 1;
         stmp2 = tmps32 >> (source - 1);
         tmps32 >>= source;
-        PSW_EQ (PSW_C, stmp2 & 1);
+        setConditionCodeIf_ClearElse (PSW_C, stmp2 & 1);
     }
     else if ((source & 0x1F) == 0)
     {
         // Zero - don't shift
-        PSW_CLR (PSW_V);
-        PSW_CLR (PSW_C);
+        clearConditionCode (PSW_V);
+        clearConditionCode (PSW_C);
     }
     else
     {
@@ -292,14 +292,14 @@ void KD11CPU::ASHC (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
         source = source & 0x1F;
         stmp2 = tmps32 << (source - 1);
         tmps32 <<= source;
-        PSW_EQ (PSW_C, stmp2 & 0x80000000);
-        PSW_EQ (PSW_V, !!(dst & 0x8000)
+        setConditionCodeIf_ClearElse (PSW_C, stmp2 & 0x80000000);
+        setConditionCodeIf_ClearElse (PSW_V, !!(dst & 0x8000)
             != !!(tmps32 & 0x80000000));
     }
     register_[regNr] = (u16)(tmps32 >> 16);
     register_[regNr | 1] = (u16)tmps32;
-    PSW_EQ (PSW_N, tmps32 & 0x80000000);
-    PSW_EQ (PSW_Z, !tmps32);
+    setConditionCodeIf_ClearElse (PSW_N, tmps32 & 0x80000000);
+    setConditionCodeIf_ClearElse (PSW_Z, !tmps32);
 }
 
 // XOR - exclusive OR
@@ -333,7 +333,7 @@ void KD11CPU::XOR (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
 
     destinationOperandLocation.write (result);
 
-    PSW_EQ (PSW_N, result & 0x8000);
-    PSW_EQ (PSW_Z, !result);
-    PSW_CLR (PSW_V);
+    setConditionCodeIf_ClearElse (PSW_N, result & 0x8000);
+    setConditionCodeIf_ClearElse (PSW_Z, !result);
+    clearConditionCode (PSW_V);
 }

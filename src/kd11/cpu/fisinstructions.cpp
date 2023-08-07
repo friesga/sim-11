@@ -11,26 +11,26 @@ void KD11CPU::returnFISresult (Float result, u16 registerNumber)
         putWord (register_[registerNumber] + 4, high);
         putWord (register_[registerNumber] + 6, low);
         register_[registerNumber] += 4;
-        PSW_EQ (PSW_N, result.value () < 0);
-        PSW_EQ (PSW_Z, result.value () == 0);
-        PSW_CLR (PSW_V);
-        PSW_CLR (PSW_C);
+        setConditionCodeIf_ClearElse (PSW_N, result.value () < 0);
+        setConditionCodeIf_ClearElse (PSW_Z, result.value () == 0);
+        clearConditionCode (PSW_V);
+        clearConditionCode (PSW_C);
     }
     else if (conversionResult == Float::Result::Underflow)
     {
-        PSW_SET (PSW_N);
-        PSW_SET (PSW_V);
-        PSW_CLR (PSW_Z);
-        PSW_CLR (PSW_C);
+        setConditionCode (PSW_N);
+        setConditionCode (PSW_V);
+        clearConditionCode (PSW_Z);
+        clearConditionCode (PSW_C);
         setTrap (&FIS);
     }
     else
     {
         // Overflow or Nan
-        PSW_CLR (PSW_N);
-        PSW_SET (PSW_V);
-        PSW_CLR (PSW_Z);
-        PSW_CLR (PSW_C);
+        clearConditionCode (PSW_N);
+        setConditionCode (PSW_V);
+        clearConditionCode (PSW_Z);
+        clearConditionCode (PSW_C);
         setTrap (&FIS);
     }
 }
@@ -63,10 +63,10 @@ void KD11CPU::executeFISinstruction (u16 stackPointer,
         {
             // The arguments are invalid. This is notably a division
             // by zero
-            PSW_SET (PSW_N);
-            PSW_CLR (PSW_Z);
-            PSW_SET (PSW_V);
-            PSW_SET (PSW_C);
+            setConditionCode (PSW_N);
+            clearConditionCode (PSW_Z);
+            setConditionCode (PSW_V);
+            setConditionCode (PSW_C);
             setTrap (&FIS);
         }
     }
