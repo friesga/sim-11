@@ -1,6 +1,13 @@
 #include "branchinstruction/branchinstruction.h"
 #include "kd11cpu.h"
 
+// Execute the branch given in the instruction under the given condition.
+constexpr void KD11CPU::executeBranchIf (bool condition, u16 instruction)
+{
+    if (condition)
+        BR (instruction);
+}
+
 // BR - branch (unconditional)
 //
 // Operation:
@@ -29,12 +36,7 @@ void KD11CPU::BR (u16 instruction)
 //
 void KD11CPU::BNE (u16 instruction)
 {
-    if (!PSW_GET (PSW_Z))
-    {
-        BranchInstruction branchInstruction {instruction};
-
-        register_[7] += (s16) branchInstruction.getOffset () * 2;
-    }
+    executeBranchIf (!PSW_GET (PSW_Z), instruction);
 }
 
 // BEQ - branch if queal (to zero)
@@ -43,19 +45,14 @@ void KD11CPU::BNE (u16 instruction)
 //  PC <- PC + (2 * offset) if Z = 1
 // 
 // Tests the state of the Z·bit and causes a branch if Z is set. As an
-/// example, it is used to test equality following a CMP operation, to test
+// example, it is used to test equality following a CMP operation, to test
 // that no bits set in the destination were also set in the source following
 // a BIT operation, and generally, to test that the result of the previous
 // operation was zero.
 //
 void KD11CPU::BEQ (u16 instruction)
 {
-    if (PSW_GET (PSW_Z))
-    {
-        BranchInstruction branchInstruction {instruction};
-
-        register_[7] += (s16) branchInstruction.getOffset () * 2;
-    }
+    executeBranchIf (PSW_GET (PSW_Z), instruction);
 }
 
 // BGE - branch if greater than or equal (to zero)
@@ -70,12 +67,7 @@ void KD11CPU::BEQ (u16 instruction)
 //
 void KD11CPU::BGE (u16 instruction)
 {
-    if ((PSW_GET (PSW_N) ^ PSW_GET (PSW_V)) == 0)
-    {
-        BranchInstruction branchInstruction {instruction};
-
-        register_[7] += (s16)branchInstruction.getOffset () * 2;
-    }
+    executeBranchIf ((PSW_GET (PSW_N) ^ PSW_GET (PSW_V)) == 0, instruction);
 }
 
 // BLT - branch if less than (zero)
@@ -94,12 +86,7 @@ void KD11CPU::BGE (u16 instruction)
 //
 void KD11CPU::BLT (u16 instruction)
 {
-    if (PSW_GET (PSW_N) ^ PSW_GET (PSW_V))
-    {
-        BranchInstruction branchInstruction {instruction};
-
-        register_[7] += (s16)branchInstruction.getOffset () * 2;
-    }
+    executeBranchIf (PSW_GET (PSW_N) ^ PSW_GET (PSW_V), instruction);
 }
 
 // BGT - branch if greater than (zero)
@@ -111,12 +98,8 @@ void KD11CPU::BLT (u16 instruction)
 // a zero result.
 void KD11CPU::BGT (u16 instruction)
 {
-    if ((PSW_GET (PSW_Z) || (PSW_GET (PSW_N) ^ PSW_GET (PSW_V))) == 0)
-    {
-        BranchInstruction branchInstruction {instruction};
-
-        register_[7] += (s16)branchInstruction.getOffset () * 2;
-    }
+    executeBranchIf ((PSW_GET (PSW_Z) || (PSW_GET (PSW_N) ^ PSW_GET (PSW_V))) == 0,
+        instruction);
 }
 
 // BLE - branch if less than or equal (to zero)
@@ -129,12 +112,8 @@ void KD11CPU::BGT (u16 instruction)
 //
 void KD11CPU::BLE (u16 instruction)
 {
-    if (PSW_GET (PSW_Z) || (PSW_GET (PSW_N) ^ PSW_GET (PSW_V)))
-    {
-        BranchInstruction branchInstruction {instruction};
-
-        register_[7] += (s16)branchInstruction.getOffset () * 2;
-    }
+    executeBranchIf (PSW_GET (PSW_Z) || (PSW_GET (PSW_N) ^ PSW_GET (PSW_V)),
+        instruction);
 }
 
 // BPL - branch if plus
@@ -149,11 +128,7 @@ void KD11CPU::BLE (u16 instruction)
 //
 void KD11CPU::BPL (u16 instruction)
 {
-    if (!PSW_GET (PSW_N))
-    {
-        BranchInstruction branchInstruction {instruction};
-        register_[7] += (s16)((s8) branchInstruction.getOffset ()) * 2;
-    }
+    executeBranchIf (!PSW_GET (PSW_N), instruction);
 }
 
 // BMI - branch if minus
@@ -169,11 +144,7 @@ void KD11CPU::BPL (u16 instruction)
 //
 void KD11CPU::BMI (u16 instruction)
 {
-    if (PSW_GET (PSW_N))
-    {
-        BranchInstruction branchInstruction {instruction};
-        register_[7] += (s16)((s8) branchInstruction.getOffset ()) * 2;
-    }
+    executeBranchIf (PSW_GET (PSW_N), instruction);
 }
 
 // BHI - branch if higher
@@ -189,11 +160,7 @@ void KD11CPU::BMI (u16 instruction)
 //
 void KD11CPU::BHI (u16 instruction)
 {
-    if (!PSW_GET (PSW_C) && !PSW_GET (PSW_Z))
-    {
-        BranchInstruction branchInstruction {instruction};
-        register_[7] += (s16)((s8) branchInstruction.getOffset ()) * 2;
-    }
+    executeBranchIf (!PSW_GET (PSW_C) && !PSW_GET (PSW_Z), instruction);
 }
 
 // BLOS - branch if lower or same
@@ -210,11 +177,7 @@ void KD11CPU::BHI (u16 instruction)
 //
 void KD11CPU::BLOS (u16 instruction)
 {
-    if (PSW_GET (PSW_C) || PSW_GET (PSW_Z))
-    {
-        BranchInstruction branchInstruction {instruction};
-        register_[7] += (s16)((s8) branchInstruction.getOffset ()) * 2;
-    }
+    executeBranchIf (PSW_GET (PSW_C) || PSW_GET (PSW_Z), instruction);
 }
 
 // BVC - branch if overflow is clear
@@ -229,11 +192,7 @@ void KD11CPU::BLOS (u16 instruction)
 //
 void KD11CPU::BVC (u16 instruction)
 {
-    if (!PSW_GET (PSW_V))
-    {
-        BranchInstruction branchInstruction {instruction};
-        register_[7] += (s16)((s8) branchInstruction.getOffset ()) * 2;
-    }
+    executeBranchIf (!PSW_GET (PSW_V), instruction);
 }
 
 // BVS - branch if overflow is set
@@ -248,11 +207,7 @@ void KD11CPU::BVC (u16 instruction)
 //
 void KD11CPU::BVS (u16 instruction)
 {
-    if (PSW_GET (PSW_V))
-    {
-        BranchInstruction branchInstruction {instruction};
-        register_[7] += (s16)((s8) branchInstruction.getOffset ()) * 2;
-    }
+    executeBranchIf (PSW_GET (PSW_V), instruction);
 }
 
 // BCC - branch if carry is clear
@@ -267,11 +222,7 @@ void KD11CPU::BVS (u16 instruction)
 //
 void KD11CPU::BCC (u16 instruction)
 {
-    if (!PSW_GET (PSW_C))
-    {
-        BranchInstruction branchInstruction {instruction};
-        register_[7] += (s16)((s8) branchInstruction.getOffset ()) * 2;
-    }
+    executeBranchIf (!PSW_GET (PSW_C), instruction);
 }
 
 // BCS - branch if carry is set
@@ -286,9 +237,5 @@ void KD11CPU::BCC (u16 instruction)
 //
 void KD11CPU::BCS (u16 instruction)
 {
-    if (PSW_GET (PSW_C))
-    {
-        BranchInstruction branchInstruction {instruction};
-        register_[7] += (s16)((s8) branchInstruction.getOffset ()) * 2;
-    }
+    executeBranchIf (PSW_GET (PSW_C), instruction);
 }

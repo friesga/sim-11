@@ -144,6 +144,7 @@ private:
 	void executeFISinstruction (u16 stackPointer, 
 		std::function<bool(Float, Float)> argumentsValid,
 		std::function<Float(Float, Float)>);
+	constexpr void executeBranchIf (bool condition, u16 instruction);
 
 	bool popWord (u16 *destination);
 
