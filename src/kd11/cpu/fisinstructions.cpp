@@ -1,6 +1,40 @@
 #include "kd11cpu.h"
 #include "fisinstruction/fisinstruction.h"
 
+// Return the result of a floating point calculation
+void KD11CPU::returnFISresult (Float result, u16 registerNumber)
+{
+    u16 high, low;
+    Float::Result conversionResult = result.pdp11Dword (&high, &low);
+    if (conversionResult == Float::Result::OK)
+    {
+        putWord (register_[registerNumber] + 4, high);
+        putWord (register_[registerNumber] + 6, low);
+        register_[registerNumber] += 4;
+        PSW_EQ (PSW_N, result.value () < 0);
+        PSW_EQ (PSW_Z, result.value () == 0);
+        PSW_CLR (PSW_V);
+        PSW_CLR (PSW_C);
+    }
+    else if (conversionResult == Float::Result::Underflow)
+    {
+        PSW_SET (PSW_N);
+        PSW_SET (PSW_V);
+        PSW_CLR (PSW_Z);
+        PSW_CLR (PSW_C);
+        setTrap (&FIS);
+    }
+    else
+    {
+        // Overflow or Nan
+        PSW_CLR (PSW_N);
+        PSW_SET (PSW_V);
+        PSW_CLR (PSW_Z);
+        PSW_CLR (PSW_C);
+        setTrap (&FIS);
+    }
+}
+
 // Execute a FADD, FSUB, FMUL or FDIV instruction.
 void KD11CPU::executeFISinstruction (u16 stackPointer,
     std::function<bool(Float, Float)> argumentsValid,
