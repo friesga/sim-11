@@ -36,6 +36,7 @@ set (KD11ODT_SRCS
 set (KD11CPU_SRCS
     src/kd11/cpu/kd11cpu.cpp
     src/kd11/cpu/cpucontrol.cpp
+    src/kd11/cpu/memoryaccess.cpp
     src/kd11/cpu/lsi11instruction/lsi11instruction.cpp
     src/kd11/cpu/operandlocation/operandlocation.cpp
     src/kd11/cpu/singleoperandinstruction/singleoperandinstruction.cpp

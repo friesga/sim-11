@@ -22,69 +22,6 @@ KD11CPU::KD11CPU (Qbus* bus)
     bus_->SRUN().set (false);
 }
 
-CpuState KD11CPU::currentCpuState ()
-{
-    return runState;
-}
-
-CondData<u16> KD11CPU::fetchWord (u16 address)
-{
-    // return bus_->read (address);
-    CondData<u16> value = bus_->read (address);
-    if (!value.hasValue ())
-    {
-        trace.bus (BusRecordType::ReadFail, address, 0);
-        setTrap (&busError);
-        return {};
-    }
-    return value;
-}
-
-// Fetch the byte at the given word or byte address
-// 
-// The validity of the fetched word has to be checked before the shift-
-// and and-operators can be applied to the word!
-CondData<u8> KD11CPU::fetchByte (u16 address)
-{
-    CondData<u16> retValue {};
-    if (address & 1)
-    {
-         retValue = fetchWord (address & 0xFFFE);
-         if (retValue.hasValue ())
-             return CondData<u8> (retValue >> 8);
-    }
-    else
-    {
-        retValue = fetchWord (address);
-        if (retValue.hasValue ())
-            return CondData<u8> (retValue & 0377);
-    }
-
-    return CondData<u8> {};
-}
-
-bool KD11CPU::putWord (u16 address, u16 value)
-{
-    if (!bus_->writeWord (address, value))
-    {
-        trace.bus (BusRecordType::WriteFail, address, value);
-        setTrap (&busError);
-        return false;
-    }
-    return true;
-}
-
-bool KD11CPU::putByte (u16 address, u8 value)
-{
-    if (!bus_->writeByte (address, value))
-    {
-        trace.bus (BusRecordType::WriteFail, address, value);
-        setTrap (&busError);
-        return false;
-    }
-    return true;
-}
-
 // Perform a CPU step. The step mainly comprises three actions:
 // 1. Execution of an instruction,
 // 2. Handle the trace bit,
@@ -755,6 +692,11 @@ void KD11CPU::loadTrapVector (InterruptRequest const* trap)
 void KD11CPU::setTrap (InterruptRequest const* trap)
 {
     trap_ = trap;
+}
+
+CpuState KD11CPU::currentCpuState ()
+{
+    return runState;
 }
 
 u8 KD11CPU::cpuPriority()

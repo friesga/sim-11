@@ -174,18 +174,6 @@ void KD11CPU::FDIV (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
         [] (Float f1, Float f2) {return f1 / f2;});
 }
 
-// Pop a word from the processor stack returning true if this succeeds
-// or false when a bus error occurs.
-bool KD11CPU::popWord (u16 *destination)
-{
-    CondData<u16> tmpValue = fetchWord (register_[6]);
-    *destination = tmpValue.valueOr (0);
-    register_[6] += 2;
-    if (!tmpValue.hasValue ())
-        return false;
-    return true;
-}
-
 // RTS - Return from subroutine
 // 
 // Operation:
