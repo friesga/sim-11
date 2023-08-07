@@ -1,13 +1,4 @@
 #include "kd11cpu.h"
-
-#include "instruction/instruction.h"
-#include "kd11insn1/kd11insn1.h"
-#include "kd11insn2/kd11insn2.h"
-#include "kd11insnbr/kd11insnbr.h"
-#include "kd11insnjsr/kd11insnjsr.h"
-#include "kd11insnrts/kd11insnrts.h"
-#include "kd11insnmark/kd11insnmark.h"
-#include "kd11insnsob/kd11insnsob.h"
 #include "qbus/qbus.h"
 #include "busdevice/busdevice.h"
 #include "float/float.h"
@@ -16,9 +7,6 @@
 
 #include <functional>
 #include <chrono>
-
-#define RETURN_IF(cond) \
-    if (cond) return;
 
 // Constructor
 KD11CPU::KD11CPU (Qbus* bus)
@@ -131,9 +119,6 @@ void KD11CPU::returnFISresult (Float result, u16 registerNumber)
     }
 }
 
-#define	READCPU(addr)	\
-    (tmpValue = fetchWord(addr)).valueOr(0);
-
 // Perform a CPU step. The step mainly comprises three actions:
 // 1. Execution of an instruction,
 // 2. Handle the trace bit,
@@ -225,15 +210,6 @@ void KD11CPU::execInstr ()
         return;
     u16 insn = tmpValue;
     register_[7] += 2;
-
-    // Get pointers to the possible instruction formats
-    KD11INSN1* insn1 = (KD11INSN1*)&insn;
-    KD11INSN2* insn2 = (KD11INSN2*)&insn;
-    KD11INSNBR* insnbr = (KD11INSNBR*)&insn;
-    KD11INSNJSR* insnjsr = (KD11INSNJSR*)&insn;
-    KD11INSNRTS* insnrts = (KD11INSNRTS*)&insn;
-    KD11INSNMARK* insnmark = (KD11INSNMARK*)&insn;
-    KD11INSNSOB* insnsob = (KD11INSNSOB*)&insn;
 
     // single operand instructions
     switch (insn >> 12)

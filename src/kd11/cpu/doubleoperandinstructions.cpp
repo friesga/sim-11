@@ -1,6 +1,5 @@
 #include "doubleoperandinstruction/doubleoperandinstruction.h"
 
-#include "kd11insn2/kd11insn2.h"
 #include "bitmask.h"
 
 // MOV - move source to destination

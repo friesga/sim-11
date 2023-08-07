@@ -2,7 +2,6 @@
 #include "trace/trace.h"
 
 #include "bitmask.h"
-#include "kd11insnjsr/kd11insnjsr.h"
 
 // JSR - jump to subroutine
 //

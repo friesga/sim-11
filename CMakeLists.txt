@@ -36,14 +36,6 @@ set (KD11ODT_SRCS
 set (KD11CPU_SRCS
     src/kd11/cpu/kd11cpu.cpp
     src/kd11/cpu/cpucontrol.cpp
-    src/kd11/cpu/instruction/getaddress.cpp
-    src/kd11/cpu/instruction/getbyteoperand.cpp
-    src/kd11/cpu/instruction/getwordoperand.cpp
-    src/kd11/cpu/instruction/putbyteoperand.cpp
-    src/kd11/cpu/instruction/putwordoperand.cpp
-    src/kd11/cpu/kd11insn1/kd11insn1.cpp
-    src/kd11/cpu/kd11insn2/kd11insn2.cpp
-    src/kd11/cpu/kd11insnjsr/kd11insnjsr.cpp
     src/kd11/cpu/lsi11instruction/lsi11instruction.cpp
     src/kd11/cpu/operandlocation/operandlocation.cpp
     src/kd11/cpu/singleoperandinstruction/singleoperandinstruction.cpp
