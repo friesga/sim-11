@@ -20,3 +20,4 @@ u16 SingleOperandInstruction::getOperationCode ()
 {
 	return instr_.decoded.opcode;
 }
+

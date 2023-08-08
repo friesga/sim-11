@@ -2,11 +2,12 @@
 #define _EISINSTRUCTION_H_
 
 #include "../kd11cpu.h"
+#include "../lsi11instruction/lsi11instruction.h"
 #include "../operandlocation/operandlocation.h"
 
 // The EIS instruction format is used by the EIS instructions MUL, DIV, ASH
 // and ASHC instruction and additionally by the JSR and XOR instructions.
-class EisInstruction
+class EisInstruction : public LSI11Instruction
 {
 	union instr
 	{
@@ -27,6 +28,7 @@ class EisInstruction
 public:
 	EisInstruction (KD11CPU *cpu, u16 instruction);
 	OperandLocation getOperandLocation (u16 (&reg)[8]);
+	u16 getOperationCode ();
 	u16 getRegisterNr ();
 };
 
