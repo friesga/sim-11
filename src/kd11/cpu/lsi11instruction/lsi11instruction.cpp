@@ -1,6 +1,6 @@
 #include "lsi11instruction.h"
 
-LSI11Instruction::LSI11Instruction (KD11CPU *cpu)
+LSI11Instruction::LSI11Instruction (CpuData *cpu)
 	:
 	cpu_ {cpu}
 {}

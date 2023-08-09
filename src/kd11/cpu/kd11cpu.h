@@ -49,7 +49,7 @@ enum class CpuRunState
 // This class simulates a KD11-NA, i.e. a KD11-H base version including EIS
 // and FIS support.
 //
-class KD11CPU : public CpuControl, CpuData
+class KD11CPU : public CpuControl, public CpuData
 {
 public:
 	// KD11ODT and LSI11 need access to the CpuControl functions. The class
@@ -135,8 +135,6 @@ private:
 	constexpr void setConditionCode (u16 x);
 	constexpr void clearConditionCode (u16 x);
 	constexpr void setConditionCodeIf_ClearElse (u16 x, bool v);
-
-
 
 	void execInstr ();
 	void handleTraps();

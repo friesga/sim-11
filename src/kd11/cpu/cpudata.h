@@ -1,6 +1,7 @@
 #ifndef _CPUDATA_H_
 #define _CPUDATA_H_
 
+#include "types.h"
 #include "conddata/conddata.h"
 
 // This interface provides access to the CPU data the instruction classes

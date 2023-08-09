@@ -4,13 +4,13 @@ using std::monostate;
 using std::get;
 using std::holds_alternative;
 
-OperandLocation::OperandLocation (KD11CPU *cpu, u8 registerNumber)
+OperandLocation::OperandLocation (CpuData *cpu, u8 registerNumber)
     :
     location_ {registerNumber},
     cpu_ {cpu}
 {}
 
-OperandLocation::OperandLocation (KD11CPU *cpu, CondData<u16> memoryAddress)
+OperandLocation::OperandLocation (CpuData *cpu, CondData<u16> memoryAddress)
     :
     location_ {memoryAddress},
     cpu_ {cpu}
@@ -44,7 +44,7 @@ CondData<u16> OperandLocation::wordContents ()
     if (holds_alternative<u8> (location_))
     {
         // The variant holds a register number
-        return CondData<u16> {cpu_->register_[get<u8> (location_)]};
+        return CondData<u16> {cpu_->registers () [get<u8> (location_)]};
     }
     else
     {
@@ -63,7 +63,7 @@ CondData<u8> OperandLocation::byteContents ()
     {
         // The variant holds a register number
         return CondData<u8> {static_cast<u8> 
-            (cpu_->register_[get<u8> (location_)] & 0377)};
+            (cpu_->registers ()[get<u8> (location_)] & 0377)};
     }
     else
     {
@@ -78,7 +78,7 @@ bool OperandLocation::write (u16 contents)
     if (holds_alternative<u8> (location_))
     {
         // The variant holds a register number
-        cpu_->register_[get<u8> (location_)] = contents;
+        cpu_->registers () [get<u8> (location_)] = contents;
         return true;
     }
     else
@@ -99,7 +99,8 @@ bool OperandLocation::writeByte (u8 contents)
     {
         // The variant holds a register number
         u16 regNr = get<u8> (location_);
-        cpu_->register_[regNr] = (cpu_->register_[regNr] & 0xFF00) | contents;
+        cpu_->registers () [regNr] = 
+            (cpu_->registers () [regNr] & 0xFF00) | contents;
         return true;
     }
     else

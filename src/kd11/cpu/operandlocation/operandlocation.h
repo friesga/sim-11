@@ -17,8 +17,8 @@ using std::monostate;
 class OperandLocation
 {
 public:
-    OperandLocation (KD11CPU *cpu, u8 registerNumber);
-    OperandLocation (KD11CPU *cpu, CondData<u16> memoryAddress);
+    OperandLocation (CpuData *cpu, u8 registerNumber);
+    OperandLocation (CpuData *cpu, CondData<u16> memoryAddress);
     template <typename T> bool isA ();
     bool isValid ();
     operator u16 ();
@@ -29,7 +29,7 @@ public:
 
 private:
     variant <u8, CondData <u16>> location_;
-    KD11CPU *cpu_;
+    CpuData *cpu_;
 };
 
 template <typename T>

@@ -1,15 +1,16 @@
 #ifndef _LSI11INSTRUCTION_H_
 #define _LSI11INSTRUCTION_H_
 
+#include "../cpudata.h"
 #include "../operandlocation/operandlocation.h"
 #include "../operand/operand.h"
 
 class LSI11Instruction
 {
 protected:
-	KD11CPU *cpu_;
+	CpuData *cpu_;
 
-	LSI11Instruction (KD11CPU *cpu);
+	LSI11Instruction (CpuData *cpu);
 	OperandLocation decodeOperand (Operand operand, u16 (&reg)[8]);
 	bool isByteInstruction ();
 
