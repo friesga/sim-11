@@ -72,7 +72,7 @@ State KD11ODT::transition (RegisterOpened_4 &&currentState, AtSignCmdEntered)
     return openNextAddress ([this] () 
     {
         return location_.isA<RegisterLocation> () ?
-            cpu_.register_[location_.registerNr ()] : cpu_.psw;
+            cpu_.register_[location_.registerNr ()] : cpu_.psw_;
     });
 }
 

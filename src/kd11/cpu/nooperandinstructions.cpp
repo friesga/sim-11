@@ -60,7 +60,7 @@ void KD11CPU::RTI ()
 {
     if (!popWord (&register_[7]))
         return;
-    if (!popWord (&psw))
+    if (!popWord (&psw_))
         return;
 }
 
@@ -137,7 +137,7 @@ void KD11CPU::RTT ()
 {
     if (!popWord (&register_[7]))
         return;
-    if (!popWord (&psw))
+    if (!popWord (&psw_))
         return;
 
     // Prevent a trace trap on the next instruction

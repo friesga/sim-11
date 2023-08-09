@@ -850,7 +850,7 @@ void KD11CPU::MTPS (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
         return;
 
     // Allow bits 5/6/7 to be set and cleared
-    psw = (psw & PSW_T) | (newValue & ~PSW_T);
+    psw_ = (psw_ & PSW_T) | (newValue & ~PSW_T);
 }
 
 // MFPS - Move byte from Processor Status Word
@@ -876,14 +876,14 @@ void KD11CPU::MFPS (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
     OperandLocation operandLocation = 
         mfpsInstruction.getOperandLocation (reg);
 
-    u16 contents = (u8) psw;
+    u16 contents = (u8) psw_;
 
     if (operandLocation.isA<u8> ())
     {
         // If destination is mode 0 (Register), the regular operand processing
         // is bypassed and PS bit 7 is sign extended through the upper byte of
         // the register.
-        register_[operandLocation] = (s8) psw;
+        register_[operandLocation] = (s8) psw_;
     }
     else
     {

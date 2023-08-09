@@ -13,7 +13,7 @@ KD11CPU::KD11CPU (Qbus* bus)
     :
     bus_ {bus},
     register_ {0},
-    psw {0},
+    psw_ {0},
     runState {CpuRunState::HALT},
     trap_ {nullptr},
     haltReason_ {HaltReason::HaltInstruction}
@@ -48,7 +48,7 @@ bool KD11CPU::step ()
         runState = CpuRunState::RUN;
         bus_->SRUN().set (true);
     }
-    else if (!trap_ && (psw & PSW_T))
+    else if (!trap_ && (psw_ & PSW_T))
     {
         trace.trap (TrapRecordType::TRAP_T, 014);
         setTrap (&traceTrap);
@@ -79,7 +79,7 @@ bool KD11CPU::step ()
         code[0] = bus_->read (register_[7] + 0).valueOr (0);
         code[1] = bus_->read (register_[7] + 2).valueOr (0);
         code[2] = bus_->read (register_[7] + 4).valueOr (0);
-        trace.cpuStep (register_, psw, code);
+        trace.cpuStep (register_, psw_, code);
         trace.clearIgnoreBus ();
     }
 
@@ -171,9 +171,9 @@ void KD11CPU::execInstr ()
                     else if ((insn & 0177740) == 0000240)
                     {
                         if (insn & 020)
-                            SCC (psw, insn);
+                            SCC (psw_, insn);
                         else
-                            CCC (psw, insn);
+                            CCC (psw_, insn);
                     }
                     else
                         // 00 02 10 - 00 02 27
@@ -623,7 +623,7 @@ void KD11CPU::handleTraps ()
     // bus time out. In that case the CPU is halted.
     // ToDo: Remove code duplication
     register_[6] -= 2;
-    if (!putWord (register_[6], psw))
+    if (!putWord (register_[6], psw_))
     {
         trace.cpuEvent (CpuEventRecordType::CPU_DBLBUS, register_[6]);
         // ToDo: All interrupts should be cleared?
@@ -660,7 +660,7 @@ void KD11CPU::handleTraps ()
     }
 
     tmpValue = fetchWord (trapToProcess + 2);
-    psw = tmpValue.valueOr (0);
+    psw_ = tmpValue.valueOr (0);
     if (!tmpValue.hasValue ())
     {
         trace.cpuEvent (CpuEventRecordType::CPU_DBLBUS, trapToProcess + 2);
@@ -685,7 +685,7 @@ void KD11CPU::loadTrapVector (InterruptRequest const* trap)
 {
     unsigned char trapVector = trap->vector ();
     register_[7] = fetchWord (trapVector).valueOr (0);
-    psw = fetchWord (trapVector + 2).valueOr (0);
+    psw_ = fetchWord (trapVector + 2).valueOr (0);
 }
 
 // Generate the given trap using the interrupt request mechanism
@@ -701,5 +701,5 @@ CpuRunState KD11CPU::currentCpuState ()
 
 u8 KD11CPU::cpuPriority()
 {
-    return (psw & PSW_PRIORITY) >> 5;
+    return (psw_ & PSW_PRIORITY) >> 5;
 }

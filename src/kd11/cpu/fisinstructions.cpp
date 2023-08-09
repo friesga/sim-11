@@ -41,7 +41,7 @@ void KD11CPU::executeFISinstruction (u16 stackPointer,
     std::function<Float(Float, Float)> instruction)
 {
     // Clear PSW bits 5 and 6
-    psw &= ~(_BV(5) | _BV(6));
+    psw_ &= ~(_BV(5) | _BV(6));
 
     CondData<u16> f1High = fetchWord (register_[stackPointer] + 4);
     CondData<u16> f1Low = fetchWord (register_[stackPointer] + 6);

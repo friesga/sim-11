@@ -11,7 +11,7 @@ void KD11CPU::reset ()
     for (u16 regNr = 0; regNr <= 6; ++regNr)
         register_[regNr] = 0;
 
-    psw = 0;
+    psw_ = 0;
 }
 
 // Halt the processor

@@ -2,6 +2,7 @@
 #define _KD11CPU_H_
 
 #include "cpucontrol.h"
+#include "cpudata.h"
 #include "qbus/qbus.h"
 #include "float/float.h"
 #include "types.h"
@@ -47,7 +48,8 @@ enum class CpuRunState
 // an overview of the different variations. 
 // This class simulates a KD11-NA, i.e. a KD11-H base version including EIS
 // and FIS support.
-class KD11CPU : public CpuControl
+//
+class KD11CPU : public CpuControl, CpuData
 {
 public:
 	// KD11ODT and LSI11 need access to the CpuControl functions. The class
@@ -66,10 +68,19 @@ public:
 	bool step ();
 	CpuRunState currentCpuState ();
 
+	// These functions have to be provided for the CpuData interfaces and are
+	// used by the instruction classes.
+	constexpr GeneralRegisters& registers () override;
+    constexpr u16& psw () override;
+	CondData<u16> fetchWord (u16 address) override;
+	CondData<u8> fetchByte (u16 address) override;
+	bool putWord (u16 address, u16 value) override;
+	bool putByte (u16 address, u8 value) override;
+
 private:
 	Qbus *bus_;
 	u16	register_[8];
-	u16	psw;
+	u16	psw_;
 	CpuRunState runState;
 
 	// A trap is a special kind of interrupt, internal to the CPU. There
@@ -125,11 +136,7 @@ private:
 	constexpr void clearConditionCode (u16 x);
 	constexpr void setConditionCodeIf_ClearElse (u16 x, bool v);
 
-	// These functions are used by the Instruction classes.
-	CondData<u16> fetchWord (u16 address);
-	CondData<u8> fetchByte (u16 address);
-	bool putWord (u16 address, u16 value);
-	bool putByte (u16 address, u8 value);
+
 
 	void execInstr ();
 	void handleTraps();
@@ -244,19 +251,33 @@ private:
 
 // constexpr functions are implicitly inline and therefore need to be defined
 // in every translation unit.
+//
+// The functions registers() and psw() are required by the CpuData interface.
+//
+constexpr CpuData::GeneralRegisters& KD11CPU::registers ()
+{
+	return register_;
+}
+
+constexpr u16& KD11CPU::psw ()
+{
+	return psw_;
+}
+
+// ToDo: Move condition code functions to LSI11Instruction
 constexpr bool KD11CPU::isSet (u16 x)
 {
-	return (psw & x) ? true : false;
+	return (psw_ & x) ? true : false;
 }
 
 constexpr void KD11CPU::setConditionCode (u16 x)
 {
-	psw |= x;
+	psw_ |= x;
 }
 
 constexpr void KD11CPU::clearConditionCode (u16 x)
 {
-	psw &= ~x;
+	psw_ &= ~x;
 }
 
 constexpr void KD11CPU::setConditionCodeIf_ClearElse (u16 x, bool condition)
@@ -290,12 +311,12 @@ constexpr void KD11CPU::setRegister (u8 registerNr, u16 value)
 
  constexpr void KD11CPU::setPSW (u16 value)
  {
-     psw = (psw & PSW_T) | (value & ~PSW_T);
+     psw_ = (psw_ & PSW_T) | (value & ~PSW_T);
  }
 
  constexpr u16 KD11CPU::pswValue ()
  {
-     return psw;
+     return psw_;
  }
 
 #endif // _KD11CPU_H_
