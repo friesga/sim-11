@@ -1,7 +1,7 @@
 #include "doubleoperandinstruction.h"
 
 // Initialize the instr struct with the first member
-DoubleOperandInstruction::DoubleOperandInstruction (KD11CPU *cpu, u16 instruction)
+DoubleOperandInstruction::DoubleOperandInstruction (CpuData* cpu, u16 instruction)
 	:
 	LSI11Instruction (cpu),
 	instr_ {instruction}

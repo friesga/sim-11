@@ -23,10 +23,10 @@ class EisInstruction : public LSI11Instruction
 	} 
 	instr_;
 
-	KD11CPU *cpu_;
+	CpuData* cpu_;
 
 public:
-	EisInstruction (KD11CPU *cpu, u16 instruction);
+	EisInstruction (CpuData* cpu, u16 instruction);
 	OperandLocation getOperandLocation (u16 (&reg)[8]);
 	u16 getOperationCode ();
 	u16 getRegisterNr ();

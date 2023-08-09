@@ -18,10 +18,10 @@ class MarkInstruction
 	} 
 	instr_;
 
-	KD11CPU *cpu_;
+	CpuData* cpu_;
 
 public:
-	MarkInstruction (KD11CPU *cpu, u16 instruction);
+	MarkInstruction (CpuData* cpu, u16 instruction);
 	u16 numberOfParameters ();
 };
 

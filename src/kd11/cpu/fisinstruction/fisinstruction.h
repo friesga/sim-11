@@ -19,10 +19,10 @@ class FISInstruction
 	} 
 	instr_;
 
-	KD11CPU *cpu_;
+	CpuData* cpu_;
 
 public:
-	FISInstruction (KD11CPU *cpu, u16 instruction);
+	FISInstruction (CpuData* cpu, u16 instruction);
 	u16 getRegister ();
 };
 

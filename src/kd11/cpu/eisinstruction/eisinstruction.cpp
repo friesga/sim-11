@@ -1,7 +1,7 @@
 #include "eisinstruction.h"
 #include "../operand/operand.h"
 
-EisInstruction::EisInstruction (KD11CPU *cpu, u16 instruction)
+EisInstruction::EisInstruction (CpuData* cpu, u16 instruction)
     :
 	LSI11Instruction (cpu),
     instr_ {instruction},

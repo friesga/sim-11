@@ -25,7 +25,7 @@ class DoubleOperandInstruction : public LSI11Instruction
 	instr_;
 
 public:
-	DoubleOperandInstruction (KD11CPU *cpu, u16 instruction);
+	DoubleOperandInstruction (CpuData* cpu, u16 instruction);
 	OperandLocation getSourceOperandLocation (u16 (&reg)[8]);
 	OperandLocation getDestinationOperandLocation (u16 (&reg)[8]);
 	u16 getOperationCode ();

@@ -1,6 +1,6 @@
 #include "sobinstruction.h"
 
-SobInstruction::SobInstruction (KD11CPU *cpu, u16 instruction)
+SobInstruction::SobInstruction (CpuData* cpu, u16 instruction)
 	:
 	LSI11Instruction (cpu),
 	instr_ {instruction}

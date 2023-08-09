@@ -5,7 +5,7 @@
 // be cleared together. Condition code bits in the PSW corresponding to bits
 // in the condition code operator (bits O-3) are cleared.
 // 
-void KD11CPU::CCC (KD11CPU *cpu, u16 instruction)
+void KD11CPU::CCC (CpuData* cpu, u16 instruction)
 {
     CcInstruction ccInstruction {instruction};
     cpu->psw () &= ~ccInstruction.getConditionCodes ();
@@ -15,7 +15,7 @@ void KD11CPU::CCC (KD11CPU *cpu, u16 instruction)
 // be set together. Condition code bits in the PSW corresponding to bits
 // in the condition code operator (bits O-3) are set.
 // 
-void KD11CPU::SCC (KD11CPU *cpu, u16 instruction)
+void KD11CPU::SCC (CpuData* cpu, u16 instruction)
 {
     CcInstruction ccInstruction {instruction};
     cpu->psw () |= ccInstruction.getConditionCodes ();

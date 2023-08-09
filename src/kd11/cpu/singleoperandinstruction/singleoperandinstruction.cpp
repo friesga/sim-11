@@ -2,7 +2,7 @@
 #include "../operand/operand.h"
 
 // Initialize the instr struct with the first member
-SingleOperandInstruction::SingleOperandInstruction (KD11CPU *cpu, u16 instruction)
+SingleOperandInstruction::SingleOperandInstruction (CpuData *cpu, u16 instruction)
 	:
 	LSI11Instruction (cpu),
 	instr_ {instruction}

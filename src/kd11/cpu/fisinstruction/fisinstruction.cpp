@@ -1,6 +1,6 @@
 #include "fisinstruction.h"
 
-FISInstruction::FISInstruction (KD11CPU *cpu, u16 instruction)
+FISInstruction::FISInstruction (CpuData* cpu, u16 instruction)
     :
     instr_ {instruction},
 	cpu_ {cpu}

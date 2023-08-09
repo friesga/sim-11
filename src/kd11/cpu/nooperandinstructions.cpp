@@ -9,7 +9,7 @@
 // instruction to be executed. The processor goes into the HALT mode.
 // The console mode of operation is enabled.
 //
-void KD11CPU::HALT (KD11CPU *cpu, u16 instruction)
+void KD11CPU::HALT (CpuData* cpu, u16 instruction)
 {
     trace.cpuEvent (CpuEventRecordType::CPU_HALT, register_[7]);
 
@@ -34,7 +34,7 @@ void KD11CPU::HALT (KD11CPU *cpu, u16 instruction)
 // execution of an RTI instruction) will cause resumption of the interrupted
 // process at the instruction following the WAIT.
 // 
-void KD11CPU::WAIT (KD11CPU *cpu, u16 instruction)
+void KD11CPU::WAIT (CpuData* cpu, u16 instruction)
 {
     trace.cpuEvent (CpuEventRecordType::CPU_WAIT, register_[7]);
     runState = CpuRunState::WAIT;
@@ -56,7 +56,7 @@ void KD11CPU::WAIT (KD11CPU *cpu, u16 instruction)
 // restored (popped) from-the processor stack. If a trace trap is pending, the
 // first instruction after RTI will not be executed prior to the next T traps.
 //
-void KD11CPU::RTI (KD11CPU *cpu, u16 instruction)
+void KD11CPU::RTI (CpuData* cpu, u16 instruction)
 {
     if (!popWord (&register_[7]))
         return;
@@ -78,7 +78,7 @@ void KD11CPU::RTI (KD11CPU *cpu, u16 instruction)
 //  V: loaded from trap vector
 //  C: loaded from trap vector
 //
-void KD11CPU::BPT (KD11CPU *cpu, u16 instruction)
+void KD11CPU::BPT (CpuData* cpu, u16 instruction)
 {
     trace.trap (TrapRecordType::TRAP, 014);
     setTrap (&BreakpointTrap);
@@ -98,7 +98,7 @@ void KD11CPU::BPT (KD11CPU *cpu, u16 instruction)
 //  V: loaded from trap vector
 //  C: loaded from trap vector
 //
-void KD11CPU::IOT (KD11CPU *cpu, u16 instruction)
+void KD11CPU::IOT (CpuData* cpu, u16 instruction)
 {
     trace.trap (TrapRecordType::TRAP, 020);
     setTrap (&InputOutputTrap);
@@ -112,7 +112,7 @@ void KD11CPU::IOT (KD11CPU *cpu, u16 instruction)
 // reset to their state at power-up. The processor remains in an idle state
 // for 90 micro seconds following issuance of INIT.
 //
-void KD11CPU::RESET (KD11CPU *cpu, u16 instruction)
+void KD11CPU::RESET (CpuData* cpu, u16 instruction)
 {
     bus_->BINIT().cycle ();
 }
@@ -133,7 +133,7 @@ void KD11CPU::RESET (KD11CPU *cpu, u16 instruction)
 // RTI permits trace trap. If new PS has T bit set, trap will occur after
 // execution of first instruction after RTT.
 //
-void KD11CPU::RTT (KD11CPU *cpu, u16 instruction)
+void KD11CPU::RTT (CpuData* cpu, u16 instruction)
 {
     if (!popWord (&register_[7]))
         return;
@@ -164,7 +164,7 @@ void KD11CPU::RTT (KD11CPU *cpu, u16 instruction)
 // from the word at address 30; the new processor status (PS) is taken from the
 // word at address 32.
 //
-void KD11CPU::EMT (KD11CPU *cpu, u16 instruction)
+void KD11CPU::EMT (CpuData* cpu, u16 instruction)
 {
     trace.trap (TrapRecordType::TRAP, 030);
     setTrap (&EmulatorTrap);
@@ -188,14 +188,14 @@ void KD11CPU::EMT (KD11CPU *cpu, u16 instruction)
 // are identical in operation, except that the trap vector for TRAP is at
 // address 34.
 //
-void KD11CPU::TRAP (KD11CPU *cpu, u16 instruction)
+void KD11CPU::TRAP (CpuData* cpu, u16 instruction)
 {
     trace.trap (TrapRecordType::TRAP, 034);
     setTrap (&TRP);
 }
 
 // Unused/reserved operation codes
-void KD11CPU::unused (KD11CPU *cpu, u16 instruction)
+void KD11CPU::unused (CpuData* cpu, u16 instruction)
 {
     trace.trap (TrapRecordType::TRAP_ILL, 010);
     setTrap (&illegalInstructionTrap);

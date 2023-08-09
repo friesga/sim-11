@@ -17,7 +17,7 @@
 // contents of the destination are lost. The contents of the source address
 // are not affected.
 //
-void KD11CPU::MOV (KD11CPU* cpu, u16 instruction)
+void KD11CPU::MOV (CpuData* cpu, u16 instruction)
 {
     DoubleOperandInstruction doubleOperandInstruction (cpu, instruction);
 
@@ -49,7 +49,7 @@ void KD11CPU::MOV (KD11CPU* cpu, u16 instruction)
 // significant bit of the low order byte (sign extension). Otherwise MOVB
 // operates on bytes exactly as MOV operates on words.
 //
-void KD11CPU::MOVB (KD11CPU* cpu, u16 instruction)
+void KD11CPU::MOVB (CpuData* cpu, u16 instruction)
 {
     DoubleOperandInstruction doubleOperandInstruction (cpu, instruction);
 
@@ -96,7 +96,7 @@ void KD11CPU::MOVB (KD11CPU* cpu, u16 instruction)
 // which may then be used for arithmetic and logical conditional branches.
 // Both operands are unaffected. The only action is to set the condition codes.
 //
-void KD11CPU::CMP (KD11CPU* cpu, u16 instruction)
+void KD11CPU::CMP (CpuData* cpu, u16 instruction)
 {
     DoubleOperandInstruction doubleOperandInstruction (cpu, instruction);
 
@@ -128,7 +128,7 @@ void KD11CPU::CMP (KD11CPU* cpu, u16 instruction)
 // Condition Codes:
 //  refer to CMP
 //
-void KD11CPU::CMPB (KD11CPU* cpu, u16 instruction)
+void KD11CPU::CMPB (CpuData* cpu, u16 instruction)
 {
     DoubleOperandInstruction cmpbInstruction (cpu, instruction);
 
@@ -168,7 +168,7 @@ void KD11CPU::CMPB (KD11CPU* cpu, u16 instruction)
 // and modifies condition codes accordingly. Neither the source nor
 // destination operands are affected.
 //
-void KD11CPU::BIT (KD11CPU* cpu, u16 instruction)
+void KD11CPU::BIT (CpuData* cpu, u16 instruction)
 {
     DoubleOperandInstruction doubleOperandInstruction (cpu, instruction);
 
@@ -198,7 +198,7 @@ void KD11CPU::BIT (KD11CPU* cpu, u16 instruction)
 // Condition Codes:
 //  refer to BIT
 //
-void KD11CPU::BITB (KD11CPU* cpu, u16 instruction)
+void KD11CPU::BITB (CpuData* cpu, u16 instruction)
 {
     DoubleOperandInstruction bitbInstruction (cpu, instruction);
 
@@ -235,7 +235,7 @@ void KD11CPU::BITB (KD11CPU* cpu, u16 instruction)
 // source. The original contents of the destination are lost. The contents of
 // the source are unaffected.
 //
-void KD11CPU::BIC (KD11CPU* cpu, u16 instruction)
+void KD11CPU::BIC (CpuData* cpu, u16 instruction)
 {
     DoubleOperandInstruction doubleOperandInstruction (cpu, instruction);
 
@@ -268,7 +268,7 @@ void KD11CPU::BIC (KD11CPU* cpu, u16 instruction)
 // Condition Codes:
 //  refer to BIC
 //
-void KD11CPU::BICB (KD11CPU* cpu, u16 instruction)
+void KD11CPU::BICB (CpuData* cpu, u16 instruction)
 {
     DoubleOperandInstruction bicbInstruction (cpu, instruction);
 
@@ -310,7 +310,7 @@ void KD11CPU::BICB (KD11CPU* cpu, u16 instruction)
 // corresponding bits set in the source are set in the destination. The
 // contents of the destination are lost.
 //
-void KD11CPU::BIS (KD11CPU* cpu, u16 instruction)
+void KD11CPU::BIS (CpuData* cpu, u16 instruction)
 {
     DoubleOperandInstruction doubleOperandInstruction (cpu, instruction);
 
@@ -343,7 +343,7 @@ void KD11CPU::BIS (KD11CPU* cpu, u16 instruction)
 // Condition Codes:
 //  refer to BIS
 //
-void KD11CPU::BISB (KD11CPU* cpu, u16 instruction)
+void KD11CPU::BISB (CpuData* cpu, u16 instruction)
 {
     DoubleOperandInstruction bisbInstruction (cpu, instruction);
 
@@ -388,7 +388,7 @@ void KD11CPU::BISB (KD11CPU* cpu, u16 instruction)
 // The contents of the source are not affected. Two's complement addition is
 // performed.
 //
-void KD11CPU::ADD (KD11CPU* cpu, u16 instruction)
+void KD11CPU::ADD (CpuData* cpu, u16 instruction)
 {
     DoubleOperandInstruction doubleOperandInstruction (cpu, instruction);
 
@@ -429,7 +429,7 @@ void KD11CPU::ADD (KD11CPU* cpu, u16 instruction)
 //  C: cleared if there was a carry from the most significant bit of the
 //     result; set otherwise
 //
-void KD11CPU::SUB (KD11CPU* cpu, u16 instruction)
+void KD11CPU::SUB (CpuData* cpu, u16 instruction)
 {
     DoubleOperandInstruction subInstruction (cpu, instruction);
 

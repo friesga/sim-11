@@ -3,7 +3,7 @@
 
 // Execute the branch given in the instruction under the given condition.
 constexpr void KD11CPU::executeBranchIf (bool condition, 
-    KD11CPU *cpu, u16 instruction)
+    CpuData* cpu, u16 instruction)
 {
     if (condition)
         BR (cpu, instruction);
@@ -17,7 +17,7 @@ constexpr void KD11CPU::executeBranchIf (bool condition,
 // Provides a way of transferring program control within a range of -128 (10)
 // to +127 (10) words with a one word instruction.
 //
-void KD11CPU::BR (KD11CPU *cpu, u16 instruction)
+void KD11CPU::BR (CpuData* cpu, u16 instruction)
 {
     BranchInstruction branchInstruction {instruction};
 
@@ -35,7 +35,7 @@ void KD11CPU::BR (KD11CPU *cpu, u16 instruction)
 // in the source, following a BIT, and generally, to test that the result of
 // the previous operation was not zero.
 //
-void KD11CPU::BNE (KD11CPU* cpu, u16 instruction)
+void KD11CPU::BNE (CpuData*  cpu, u16 instruction)
 {
     executeBranchIf (!isSet (PSW_Z), cpu, instruction);
 }
@@ -51,7 +51,7 @@ void KD11CPU::BNE (KD11CPU* cpu, u16 instruction)
 // a BIT operation, and generally, to test that the result of the previous
 // operation was zero.
 //
-void KD11CPU::BEQ (KD11CPU* cpu, u16 instruction)
+void KD11CPU::BEQ (CpuData*  cpu, u16 instruction)
 {
     executeBranchIf (isSet (PSW_Z), cpu, instruction);
 }
@@ -66,7 +66,7 @@ void KD11CPU::BEQ (KD11CPU* cpu, u16 instruction)
 // follows an operation that caused addition of two positive numbers. BGE will
 // also cause a branch on a zero result.
 //
-void KD11CPU::BGE (KD11CPU* cpu, u16 instruction)
+void KD11CPU::BGE (CpuData*  cpu, u16 instruction)
 {
     executeBranchIf ((isSet (PSW_N) ^ isSet (PSW_V)) == 0, cpu, instruction);
 }
@@ -85,7 +85,7 @@ void KD11CPU::BGE (KD11CPU* cpu, u16 instruction)
 // negative destination. BLT will not cause a branch if the result of the
 // previous operation was zero (without overflow).
 //
-void KD11CPU::BLT (KD11CPU* cpu, u16 instruction)
+void KD11CPU::BLT (CpuData*  cpu, u16 instruction)
 {
     executeBranchIf (isSet (PSW_N) ^ isSet (PSW_V), cpu, instruction);
 }
@@ -97,7 +97,7 @@ void KD11CPU::BLT (KD11CPU* cpu, u16 instruction)
 //
 // Operation of BGT is similar to BGE, except BGT will not cause a branch on
 // a zero result.
-void KD11CPU::BGT (KD11CPU* cpu, u16 instruction)
+void KD11CPU::BGT (CpuData*  cpu, u16 instruction)
 {
     executeBranchIf ((isSet (PSW_Z) || (isSet (PSW_N) ^ isSet (PSW_V))) == 0,
         cpu, instruction);
@@ -111,7 +111,7 @@ void KD11CPU::BGT (KD11CPU* cpu, u16 instruction)
 // Operation is similar to BLT but in addition will cause a branch if the
 // result of the previous operation was zero.
 //
-void KD11CPU::BLE (KD11CPU* cpu, u16 instruction)
+void KD11CPU::BLE (CpuData*  cpu, u16 instruction)
 {
     executeBranchIf (isSet (PSW_Z) || (isSet (PSW_N) ^ isSet (PSW_V)),
         cpu, instruction);
@@ -127,7 +127,7 @@ void KD11CPU::BLE (KD11CPU* cpu, u16 instruction)
 // Tests the state of the N-bit and causes a branch if N is clear, (positive
 // result). BPL is the complementary operation of BMI.
 //
-void KD11CPU::BPL (KD11CPU* cpu, u16 instruction)
+void KD11CPU::BPL (CpuData*  cpu, u16 instruction)
 {
     executeBranchIf (!isSet (PSW_N), cpu, instruction);
 }
@@ -143,7 +143,7 @@ void KD11CPU::BPL (KD11CPU* cpu, u16 instruction)
 // to test the sign (most significant bit) of the result of the previous
 // operation), branching if negative. BMI is the complementary function of BPL.
 //
-void KD11CPU::BMI (KD11CPU* cpu, u16 instruction)
+void KD11CPU::BMI (CpuData*  cpu, u16 instruction)
 {
     executeBranchIf (isSet (PSW_N), cpu, instruction);
 }
@@ -159,7 +159,7 @@ void KD11CPU::BMI (KD11CPU* cpu, u16 instruction)
 // result. This will happen in comparison (CMP) operations as long as the
 // source has a higher unsigned value than the destination.
 //
-void KD11CPU::BHI (KD11CPU* cpu, u16 instruction)
+void KD11CPU::BHI (CpuData*  cpu, u16 instruction)
 {
     executeBranchIf (!isSet (PSW_C) && !isSet (PSW_Z), cpu, instruction);
 }
@@ -176,7 +176,7 @@ void KD11CPU::BHI (KD11CPU* cpu, u16 instruction)
 // in comparison operations as long as the source is equal to, or has a lower
 // unsigned value than the destination.
 //
-void KD11CPU::BLOS (KD11CPU* cpu, u16 instruction)
+void KD11CPU::BLOS (CpuData*  cpu, u16 instruction)
 {
     executeBranchIf (isSet (PSW_C) || isSet (PSW_Z), cpu, instruction);
 }
@@ -191,7 +191,7 @@ void KD11CPU::BLOS (KD11CPU* cpu, u16 instruction)
 // Tests the state of the V bit and causes a branch if the V bit is clear.
 // BVC is complementary operation to BVS.
 //
-void KD11CPU::BVC (KD11CPU* cpu, u16 instruction)
+void KD11CPU::BVC (CpuData*  cpu, u16 instruction)
 {
     executeBranchIf (!isSet (PSW_V), cpu, instruction);
 }
@@ -206,7 +206,7 @@ void KD11CPU::BVC (KD11CPU* cpu, u16 instruction)
 // Tests the state of V bit (overflow) and causes a branch if the V bit is
 // set. BVS is used to detect arithmetic overflow in the previous operation.
 //
-void KD11CPU::BVS (KD11CPU* cpu, u16 instruction)
+void KD11CPU::BVS (CpuData*  cpu, u16 instruction)
 {
     executeBranchIf (isSet (PSW_V), cpu, instruction);
 }
@@ -221,7 +221,7 @@ void KD11CPU::BVS (KD11CPU* cpu, u16 instruction)
 // Tests the state of the C-bit and causes a branch if C is clear. BCC is
 // the complementary operation to BCS.
 //
-void KD11CPU::BCC (KD11CPU* cpu, u16 instruction)
+void KD11CPU::BCC (CpuData*  cpu, u16 instruction)
 {
     executeBranchIf (!isSet (PSW_C), cpu, instruction);
 }
@@ -236,7 +236,7 @@ void KD11CPU::BCC (KD11CPU* cpu, u16 instruction)
 // Tests the state of the C-bit and causes a branch if C is set. It is used
 // to test for a carry in the result of a previous operation.
 //
-void KD11CPU::BCS (KD11CPU* cpu, u16 instruction)
+void KD11CPU::BCS (CpuData*  cpu, u16 instruction)
 {
     executeBranchIf (isSet (PSW_C), cpu, instruction);
 }

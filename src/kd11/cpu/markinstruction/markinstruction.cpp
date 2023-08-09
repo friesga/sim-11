@@ -1,6 +1,6 @@
 #include "markinstruction.h"
 
-MarkInstruction::MarkInstruction (KD11CPU *cpu, u16 instruction)
+MarkInstruction::MarkInstruction (CpuData* cpu, u16 instruction)
     :
     cpu_ {cpu},
     instr_ {instruction}
