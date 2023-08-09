@@ -13,7 +13,7 @@ void KD11CPU::HALT ()
 {
     trace.cpuEvent (CpuEventRecordType::CPU_HALT, register_[7]);
 
-    runState = CpuState::HALT;
+    runState = CpuRunState::HALT;
     haltReason_ = HaltReason::HaltInstruction;
     bus_->SRUN ().set (false);
 }
@@ -37,7 +37,7 @@ void KD11CPU::HALT ()
 void KD11CPU::WAIT ()
 {
     trace.cpuEvent (CpuEventRecordType::CPU_WAIT, register_[7]);
-    runState = CpuState::WAIT;
+    runState = CpuRunState::WAIT;
 }
 
 // RTI - return from interrupt
@@ -141,7 +141,7 @@ void KD11CPU::RTT ()
         return;
 
     // Prevent a trace trap on the next instruction
-    runState = CpuState::INHIBIT_TRACE;
+    runState = CpuRunState::INHIBIT_TRACE;
 }
 
 // EMT - emulator trap

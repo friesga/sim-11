@@ -12,8 +12,8 @@
 namespace KD11_ODT { class KD11ODT; }
 namespace kd11_na { class KD11; }
 
-// Definition of CPU states
-enum class CpuState
+// Definition of CPU run states
+enum class CpuRunState
 {
 	HALT,
 	RUN,
@@ -64,13 +64,13 @@ public:
 
 	KD11CPU (Qbus *bus);
 	bool step ();
-	CpuState currentCpuState ();
+	CpuRunState currentCpuState ();
 
 private:
 	Qbus *bus_;
 	u16	register_[8];
 	u16	psw;
-	CpuState runState;
+	CpuRunState runState;
 
 	// A trap is a special kind of interrupt, internal to the CPU. There
 	// can be only one trap serviced at the time.

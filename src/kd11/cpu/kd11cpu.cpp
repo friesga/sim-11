@@ -14,7 +14,7 @@ KD11CPU::KD11CPU (Qbus* bus)
     bus_ {bus},
     register_ {0},
     psw {0},
-    runState {CpuState::HALT},
+    runState {CpuRunState::HALT},
     trap_ {nullptr},
     haltReason_ {HaltReason::HaltInstruction}
 {
@@ -43,9 +43,9 @@ bool KD11CPU::step ()
 {
     // Generate a Trace trap if the trace bit is set, unless the previous
     // instruction was a RTT or another trap is pending.
-    if (runState == CpuState::INHIBIT_TRACE)
+    if (runState == CpuRunState::INHIBIT_TRACE)
     {
-        runState = CpuState::RUN;
+        runState = CpuRunState::RUN;
         bus_->SRUN().set (true);
     }
     else if (!trap_ && (psw & PSW_T))
@@ -62,10 +62,10 @@ bool KD11CPU::step ()
 	// - INHIBIT_TRACE: the CPU is running but no trace trap has to be
     //   executed on this instruction. At this point in the step the cpu cannot
     //   be in this state.
-    if (runState == CpuState::HALT)
+    if (runState == CpuRunState::HALT)
         return false;
 
-    if (runState == CpuState::WAIT)
+    if (runState == CpuRunState::WAIT)
         return true;
 
     if(trace.isActive ())
@@ -96,7 +96,7 @@ bool KD11CPU::step ()
             (std::chrono::duration_cast<std::chrono::nanoseconds> (end - start)).count ());
     }
 
-    return (runState != CpuState::HALT);
+    return (runState != CpuRunState::HALT);
 }
 
 // Execute one instruction
@@ -597,7 +597,7 @@ void KD11CPU::handleTraps ()
     // 
     // Check if there is a trap or interrupt request to handle and the CPU
     // isn't halted. This is the most common case so check this as first.
-    if ((!trap_ && !bus_->intrptReqAvailable ()) || runState == CpuState::HALT)
+    if ((!trap_ && !bus_->intrptReqAvailable ()) || runState == CpuRunState::HALT)
         return;
 
     // Traps have the highest priority, so first check if there is a trap
@@ -628,7 +628,7 @@ void KD11CPU::handleTraps ()
         trace.cpuEvent (CpuEventRecordType::CPU_DBLBUS, register_[6]);
         // ToDo: All interrupts should be cleared?
         trap_ = nullptr;
-        runState = CpuState::HALT;
+        runState = CpuRunState::HALT;
         haltReason_ = HaltReason::DoubleBusError;
         bus_->SRUN().set (false);
         return;
@@ -639,7 +639,7 @@ void KD11CPU::handleTraps ()
     {
         trace.cpuEvent (CpuEventRecordType::CPU_DBLBUS, register_[6]);
         trap_ = nullptr;
-        runState = CpuState::HALT;
+        runState = CpuRunState::HALT;
         haltReason_ = HaltReason::DoubleBusError;
         bus_->SRUN().set (false);
         return;
@@ -653,7 +653,7 @@ void KD11CPU::handleTraps ()
     {
         trace.cpuEvent (CpuEventRecordType::CPU_DBLBUS, trapToProcess);
         trap_ = nullptr;
-        runState = CpuState::HALT;
+        runState = CpuRunState::HALT;
         haltReason_ = HaltReason::BusErrorOnIntrptVector;
         bus_->SRUN().set (false);
         return;
@@ -665,17 +665,17 @@ void KD11CPU::handleTraps ()
     {
         trace.cpuEvent (CpuEventRecordType::CPU_DBLBUS, trapToProcess + 2);
         trap_ = nullptr;
-        runState = CpuState::HALT;
+        runState = CpuRunState::HALT;
         haltReason_ = HaltReason::BusErrorOnIntrptVector;
         bus_->SRUN().set (false);
         return;
     }
 
     /* resume execution if in WAIT state */
-    if (runState == CpuState::WAIT)
+    if (runState == CpuRunState::WAIT)
     {
         trace.cpuEvent (CpuEventRecordType::CPU_RUN, register_[7]);
-        runState = CpuState::RUN;
+        runState = CpuRunState::RUN;
         bus_->SRUN().set (true);
     }
 }
@@ -694,7 +694,7 @@ void KD11CPU::setTrap (InterruptRequest const* trap)
     trap_ = trap;
 }
 
-CpuState KD11CPU::currentCpuState ()
+CpuRunState KD11CPU::currentCpuState ()
 {
     return runState;
 }
