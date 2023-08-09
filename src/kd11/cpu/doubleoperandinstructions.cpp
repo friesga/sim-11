@@ -17,18 +17,18 @@
 // contents of the destination are lost. The contents of the source address
 // are not affected.
 //
-void KD11CPU::MOV (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
+void KD11CPU::MOV (KD11CPU* cpu, u16 instruction)
 {
     DoubleOperandInstruction doubleOperandInstruction (cpu, instruction);
 
     OperandLocation sourceOperandLocation = 
-            doubleOperandInstruction.getSourceOperandLocation (reg);
+            doubleOperandInstruction.getSourceOperandLocation (cpu->registers ());
     CondData<u16> source = sourceOperandLocation.wordContents ();
     if (!source.hasValue ())
         return;
 
     OperandLocation destOperandLocation =
-        doubleOperandInstruction.getDestinationOperandLocation (reg);
+        doubleOperandInstruction.getDestinationOperandLocation (cpu->registers ());
 
     destOperandLocation.write (source);
 
@@ -49,12 +49,12 @@ void KD11CPU::MOV (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
 // significant bit of the low order byte (sign extension). Otherwise MOVB
 // operates on bytes exactly as MOV operates on words.
 //
-void KD11CPU::MOVB (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
+void KD11CPU::MOVB (KD11CPU* cpu, u16 instruction)
 {
     DoubleOperandInstruction doubleOperandInstruction (cpu, instruction);
 
     OperandLocation sourceOperandLocation =
-            doubleOperandInstruction.getSourceOperandLocation (reg);
+            doubleOperandInstruction.getSourceOperandLocation (cpu->registers ());
     CondData<u8> source = sourceOperandLocation.byteContents ();
     if (!source.hasValue ())
         return;
@@ -62,7 +62,7 @@ void KD11CPU::MOVB (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
     s8 tmp = (s8) source;
 
     OperandLocation destOperandLocation =
-            doubleOperandInstruction.getDestinationOperandLocation (reg);
+            doubleOperandInstruction.getDestinationOperandLocation (cpu->registers ());
 
     // If the destination mode is 0 (Register) the regular operand processing
     // is bypassed and the signed eight bit value u8 is directly written into
@@ -96,18 +96,18 @@ void KD11CPU::MOVB (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
 // which may then be used for arithmetic and logical conditional branches.
 // Both operands are unaffected. The only action is to set the condition codes.
 //
-void KD11CPU::CMP (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
+void KD11CPU::CMP (KD11CPU* cpu, u16 instruction)
 {
     DoubleOperandInstruction doubleOperandInstruction (cpu, instruction);
 
     OperandLocation sourceOperandLocation = 
-            doubleOperandInstruction.getSourceOperandLocation (reg);
+            doubleOperandInstruction.getSourceOperandLocation (cpu->registers ());
     CondData<u16> source = sourceOperandLocation.wordContents ();
     if (!source.hasValue ())
         return;
 
     OperandLocation destinationOperandLocation = 
-            doubleOperandInstruction.getDestinationOperandLocation (reg);
+            doubleOperandInstruction.getDestinationOperandLocation (cpu->registers ());
     CondData<u16> destination = destinationOperandLocation.wordContents ();
     if (!destination.hasValue ())
         return;
@@ -128,18 +128,18 @@ void KD11CPU::CMP (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
 // Condition Codes:
 //  refer to CMP
 //
-void KD11CPU::CMPB (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
+void KD11CPU::CMPB (KD11CPU* cpu, u16 instruction)
 {
     DoubleOperandInstruction cmpbInstruction (cpu, instruction);
 
     OperandLocation sourceOperandLocation =
-            cmpbInstruction.getSourceOperandLocation (reg);
+            cmpbInstruction.getSourceOperandLocation (cpu->registers ());
     CondData<u8> source = sourceOperandLocation.byteContents ();
     if (!source.hasValue ())
         return;
 
     OperandLocation destOperandLocation =
-            cmpbInstruction.getDestinationOperandLocation (reg);
+            cmpbInstruction.getDestinationOperandLocation (cpu->registers ());
     CondData<u8> destination = destOperandLocation.byteContents ();
     if (!destination.hasValue ())
         return;
@@ -168,18 +168,18 @@ void KD11CPU::CMPB (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
 // and modifies condition codes accordingly. Neither the source nor
 // destination operands are affected.
 //
-void KD11CPU::BIT (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
+void KD11CPU::BIT (KD11CPU* cpu, u16 instruction)
 {
     DoubleOperandInstruction doubleOperandInstruction (cpu, instruction);
 
     OperandLocation sourceOperandLocation = 
-            doubleOperandInstruction.getSourceOperandLocation (reg);
+            doubleOperandInstruction.getSourceOperandLocation (cpu->registers ());
     CondData<u16> source = sourceOperandLocation.wordContents ();
     if (!source.hasValue ())
         return;
 
     OperandLocation destinationOperandLocation = 
-            doubleOperandInstruction.getDestinationOperandLocation (reg);
+            doubleOperandInstruction.getDestinationOperandLocation (cpu->registers ());
     CondData<u16> destination = destinationOperandLocation.wordContents ();
     if (!destination.hasValue ())
         return;
@@ -198,18 +198,18 @@ void KD11CPU::BIT (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
 // Condition Codes:
 //  refer to BIT
 //
-void KD11CPU::BITB (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
+void KD11CPU::BITB (KD11CPU* cpu, u16 instruction)
 {
     DoubleOperandInstruction bitbInstruction (cpu, instruction);
 
     OperandLocation sourceOperandLocation =
-            bitbInstruction.getSourceOperandLocation (reg);
+            bitbInstruction.getSourceOperandLocation (cpu->registers ());
     CondData<u8> source = sourceOperandLocation.byteContents ();
     if (!source.hasValue ())
         return;
 
     OperandLocation destOperandLocation =
-            bitbInstruction.getDestinationOperandLocation (reg);
+            bitbInstruction.getDestinationOperandLocation (cpu->registers ());
     CondData<u8> destination = destOperandLocation.byteContents ();
     if (!destination.hasValue ())
         return;
@@ -235,18 +235,18 @@ void KD11CPU::BITB (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
 // source. The original contents of the destination are lost. The contents of
 // the source are unaffected.
 //
-void KD11CPU::BIC (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
+void KD11CPU::BIC (KD11CPU* cpu, u16 instruction)
 {
     DoubleOperandInstruction doubleOperandInstruction (cpu, instruction);
 
     OperandLocation sourceOperandLocation = 
-            doubleOperandInstruction.getSourceOperandLocation (reg);
+            doubleOperandInstruction.getSourceOperandLocation (cpu->registers ());
     CondData<u16> source = sourceOperandLocation.wordContents ();
     if (!source.hasValue ())
         return;
 
     OperandLocation destinationOperandLocation = 
-            doubleOperandInstruction.getDestinationOperandLocation (reg);
+            doubleOperandInstruction.getDestinationOperandLocation (cpu->registers ());
     CondData<u16> destination = destinationOperandLocation.wordContents ();
     if (!destination.hasValue ())
         return;
@@ -268,18 +268,18 @@ void KD11CPU::BIC (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
 // Condition Codes:
 //  refer to BIC
 //
-void KD11CPU::BICB (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
+void KD11CPU::BICB (KD11CPU* cpu, u16 instruction)
 {
     DoubleOperandInstruction bicbInstruction (cpu, instruction);
 
     OperandLocation sourceOperandLocation =
-            bicbInstruction.getSourceOperandLocation (reg);
+            bicbInstruction.getSourceOperandLocation (cpu->registers ());
     CondData<u8> source = sourceOperandLocation.byteContents ();
     if (!source.hasValue ())
         return;
 
     OperandLocation destOperandLocation =
-            bicbInstruction.getDestinationOperandLocation (reg);
+            bicbInstruction.getDestinationOperandLocation (cpu->registers ());
     CondData<u8> destination = destOperandLocation.byteContents ();
     if (!destination.hasValue ())
         return;
@@ -310,18 +310,18 @@ void KD11CPU::BICB (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
 // corresponding bits set in the source are set in the destination. The
 // contents of the destination are lost.
 //
-void KD11CPU::BIS (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
+void KD11CPU::BIS (KD11CPU* cpu, u16 instruction)
 {
     DoubleOperandInstruction doubleOperandInstruction (cpu, instruction);
 
     OperandLocation sourceOperandLocation = 
-            doubleOperandInstruction.getSourceOperandLocation (reg);
+            doubleOperandInstruction.getSourceOperandLocation (cpu->registers ());
     CondData<u16> source = sourceOperandLocation.wordContents ();
     if (!source.hasValue ())
         return;
 
     OperandLocation destinationOperandLocation = 
-            doubleOperandInstruction.getDestinationOperandLocation (reg);
+            doubleOperandInstruction.getDestinationOperandLocation (cpu->registers ());
     CondData<u16> destination = destinationOperandLocation.wordContents ();
     if (!destination.hasValue ())
         return;
@@ -343,18 +343,18 @@ void KD11CPU::BIS (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
 // Condition Codes:
 //  refer to BIS
 //
-void KD11CPU::BISB (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
+void KD11CPU::BISB (KD11CPU* cpu, u16 instruction)
 {
     DoubleOperandInstruction bisbInstruction (cpu, instruction);
 
     OperandLocation sourceOperandLocation =
-            bisbInstruction.getSourceOperandLocation (reg);
+            bisbInstruction.getSourceOperandLocation (cpu->registers ());
     CondData<u8> source = sourceOperandLocation.byteContents ();
     if (!source.hasValue ())
         return;
 
     OperandLocation destOperandLocation =
-            bisbInstruction.getDestinationOperandLocation (reg);
+            bisbInstruction.getDestinationOperandLocation (cpu->registers ());
     CondData<u8> destination = destOperandLocation.byteContents ();
     if (!destination.hasValue ())
         return;
@@ -388,18 +388,18 @@ void KD11CPU::BISB (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
 // The contents of the source are not affected. Two's complement addition is
 // performed.
 //
-void KD11CPU::ADD (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
+void KD11CPU::ADD (KD11CPU* cpu, u16 instruction)
 {
     DoubleOperandInstruction doubleOperandInstruction (cpu, instruction);
 
     OperandLocation sourceOperandLocation = 
-            doubleOperandInstruction.getSourceOperandLocation (reg);
+            doubleOperandInstruction.getSourceOperandLocation (cpu->registers ());
     CondData<u16> source = sourceOperandLocation.wordContents ();
     if (!source.hasValue ())
         return;
 
     OperandLocation destinationOperandLocation = 
-            doubleOperandInstruction.getDestinationOperandLocation (reg);
+            doubleOperandInstruction.getDestinationOperandLocation (cpu->registers ());
     CondData<u16> destination = destinationOperandLocation.wordContents ();
     if (!destination.hasValue ())
         return;
@@ -429,18 +429,18 @@ void KD11CPU::ADD (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
 //  C: cleared if there was a carry from the most significant bit of the
 //     result; set otherwise
 //
-void KD11CPU::SUB (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
+void KD11CPU::SUB (KD11CPU* cpu, u16 instruction)
 {
     DoubleOperandInstruction subInstruction (cpu, instruction);
 
     OperandLocation sourceOperandLocation = 
-            subInstruction.getSourceOperandLocation (reg);
+            subInstruction.getSourceOperandLocation (cpu->registers ());
     CondData<u16> source = sourceOperandLocation.wordContents ();
     if (!source.hasValue ())
         return;
 
     OperandLocation destinationOperandLocation = 
-            subInstruction.getDestinationOperandLocation (reg);
+            subInstruction.getDestinationOperandLocation (cpu->registers ());
     CondData<u16> destination = destinationOperandLocation.wordContents ();
     if (!destination.hasValue ())
         return;

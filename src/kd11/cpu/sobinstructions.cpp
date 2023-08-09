@@ -13,12 +13,13 @@
 // subtracted from the PC (now pointing to the following word). The offset is
 // interpreted as a sixbit positive number.
 //
-void KD11CPU::SOB (KD11CPU *cpu, u16 (&reg)[8], u16 instruction)
+void KD11CPU::SOB (KD11CPU *cpu, u16 instruction)
 {
     SobInstruction sobInstruction (cpu, instruction);
     u16 regNr = sobInstruction.getRegisterNr ();
     u16 offset = sobInstruction.getOffset ();
 
+    CpuData::GeneralRegisters& reg = cpu->registers ();
     reg[regNr]--;
     if (reg[regNr])
         reg[7] -= 2 * offset;

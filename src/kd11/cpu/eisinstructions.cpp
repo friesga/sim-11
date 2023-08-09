@@ -24,10 +24,10 @@
 // JMP and JSR with register mode destinations are illegal instructions, and
 // trap to vector address 4.
 //
-void KD11CPU::JSR (KD11CPU* cpu, u16 (&registers)[8], u16 instruction)
+void KD11CPU::JSR (KD11CPU* cpu, u16 instruction)
 {
     EisInstruction jsrInstruction {cpu, instruction};
-    OperandLocation destination = jsrInstruction.getOperandLocation (registers);
+    OperandLocation destination = jsrInstruction.getOperandLocation (cpu->registers ());
 
     if (!destination.isA<CondData<u16>> ())
     {
@@ -60,7 +60,7 @@ void KD11CPU::JSR (KD11CPU* cpu, u16 (&registers)[8], u16 instruction)
 // succeeding register (if R is even). If R is odd only the low order product
 // is stored.
 //
-void KD11CPU::MUL (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
+void KD11CPU::MUL (KD11CPU* cpu, u16 instruction)
 {
     EisInstruction mulInstruction (cpu, instruction);
     u16 regNr = mulInstruction.getRegisterNr ();
@@ -68,7 +68,7 @@ void KD11CPU::MUL (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
     u16 dst = register_[regNr];
 
     OperandLocation sourceOperandLocation = 
-        mulInstruction.getOperandLocation (reg);
+        mulInstruction.getOperandLocation (cpu->registers ());
     CondData<u16> source = sourceOperandLocation.wordContents ();
     
     s32 tmps32 = (s32)(s16)dst * (s16) source;
@@ -99,7 +99,7 @@ void KD11CPU::MUL (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
 // performed so that the remainder is of the same sign as the dividend. R must
 // be even.
 //
-void KD11CPU::DIV (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
+void KD11CPU::DIV (KD11CPU* cpu, u16 instruction)
 {
     EisInstruction divInstruction (cpu, instruction);
     u16 regNr = divInstruction.getRegisterNr ();
@@ -107,7 +107,7 @@ void KD11CPU::DIV (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
     s32 tmps32 = (register_[regNr] << 16) | register_[regNr| 1];
 
     OperandLocation sourceOperandLocation = 
-        divInstruction.getOperandLocation (reg);
+        divInstruction.getOperandLocation (cpu->registers ());
     CondData<u16> source = sourceOperandLocation.wordContents ();
     if (!source.hasValue ())
         return;
@@ -154,7 +154,7 @@ void KD11CPU::DIV (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
 // 6 bits of the source operand. This number ranges from -32 to + 31. Negative
 // is a a right shift and positive is a left shift.
 //
-void KD11CPU::ASH (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
+void KD11CPU::ASH (KD11CPU* cpu, u16 instruction)
 {
     EisInstruction ashInstruction (cpu, instruction);
     u16 regNr = ashInstruction.getRegisterNr ();
@@ -162,7 +162,7 @@ void KD11CPU::ASH (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
     u16 dst = register_[regNr];
 
     OperandLocation sourceOperandLocation = 
-        ashInstruction.getOperandLocation (reg);
+        ashInstruction.getOperandLocation (cpu->registers ());
     CondData<u16> source = sourceOperandLocation.wordContents ();
     if (!source.hasValue ())
         return;
@@ -241,7 +241,7 @@ void KD11CPU::ASH (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
 // (for up to a shift of 16). The 16 bit word is rotated right the number of
 // bits specified by the shift count.
 //
-void KD11CPU::ASHC (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
+void KD11CPU::ASHC (KD11CPU* cpu, u16 instruction)
 {
     EisInstruction ashcInstruction (cpu, instruction);
     u16 regNr = ashcInstruction.getRegisterNr ();
@@ -251,7 +251,7 @@ void KD11CPU::ASHC (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
     s32 tmps32 = (register_[regNr] << 16) | register_[regNr | 1];
 
     OperandLocation sourceOperandLocation = 
-        ashcInstruction.getOperandLocation (reg);
+        ashcInstruction.getOperandLocation (cpu->registers ());
     CondData<u16> source = sourceOperandLocation.wordContents ();
     if (!source.hasValue ())
         return;
@@ -316,7 +316,7 @@ void KD11CPU::ASHC (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
 // The exclusive OR of the register and destination operand is stored in the
 // destination address. Contents of register are unaffected.
 //
-void KD11CPU::XOR (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
+void KD11CPU::XOR (KD11CPU* cpu, u16 instruction)
 {
     EisInstruction ashcInstruction (cpu, instruction);
     u16 regNr = ashcInstruction.getRegisterNr ();
@@ -324,7 +324,7 @@ void KD11CPU::XOR (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
     u16 source = register_[regNr];
 
     OperandLocation destinationOperandLocation = 
-        ashcInstruction.getOperandLocation (reg);
+        ashcInstruction.getOperandLocation (cpu->registers ());
     CondData<u16> destination = destinationOperandLocation.wordContents ();
     if (!destination.hasValue ())
         return;

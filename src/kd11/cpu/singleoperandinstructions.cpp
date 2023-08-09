@@ -17,13 +17,13 @@
 // program control to be transferred to the address held in the specified
 // register. Note that instructions are word data and must therefore be
 // fetched from an even-numbered address.
-void KD11CPU::JMP (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
+void KD11CPU::JMP (KD11CPU* cpu, u16 instruction)
 {
     SingleOperandInstruction soi {cpu, instruction};
-    OperandLocation location = soi.getOperandLocation (reg);
+    OperandLocation location = soi.getOperandLocation (cpu->registers ());
 
     if (location.isA<CondData<u16>> ())
-        reg[7] = location;
+        cpu->registers ()[7] = location;
     else
     {
         // Illegal instruction
@@ -47,11 +47,11 @@ void KD11CPU::JMP (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
 // Exchanges high-order byte and low-order byte of the destination
 // word (destination must be a word address).
 //
-void KD11CPU::SWAB (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
+void KD11CPU::SWAB (KD11CPU* cpu, u16 instruction)
 {
     SingleOperandInstruction soi {cpu, instruction};
 
-    OperandLocation operandLocation = soi.getOperandLocation (reg);
+    OperandLocation operandLocation = soi.getOperandLocation (cpu->registers ());
     CondData<u16> operand = operandLocation.wordContents ();
     if (!operand.hasValue ())
         return;
@@ -79,11 +79,11 @@ void KD11CPU::SWAB (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
 //
 // Contents of specified destination are replaced with zeroes.
 //
-void KD11CPU::CLR (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
+void KD11CPU::CLR (KD11CPU* cpu, u16 instruction)
 {
     SingleOperandInstruction soi {cpu, instruction};
 
-    OperandLocation operandLocation = soi.getOperandLocation (reg);
+    OperandLocation operandLocation = soi.getOperandLocation (cpu->registers ());
     operandLocation.write (0);
 
     clearConditionCode (PSW_N | PSW_V | PSW_C);
@@ -98,11 +98,11 @@ void KD11CPU::CLR (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
 // Condition Codes:
 //  refer to CLR
 //
-void KD11CPU::CLRB (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
+void KD11CPU::CLRB (KD11CPU* cpu, u16 instruction)
 {
     SingleOperandInstruction clrbInstruction {cpu, instruction};
     OperandLocation operandLocation =
-        clrbInstruction.getOperandLocation (reg);
+        clrbInstruction.getOperandLocation (cpu->registers ());
 
     operandLocation.writeByte (0);
 
@@ -124,11 +124,11 @@ void KD11CPU::CLRB (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
 // Replaces the contents of the destination address by their logical
 // complement (each bit equal to 0 is set and each bit equal to 1 is cleared).
 //
-void KD11CPU::COM (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
+void KD11CPU::COM (KD11CPU* cpu, u16 instruction)
 {
     SingleOperandInstruction soi {cpu, instruction};
 
-    OperandLocation operandLocation = soi.getOperandLocation (reg);
+    OperandLocation operandLocation = soi.getOperandLocation (cpu->registers ());
     CondData<u16> operand = operandLocation.wordContents ();
     if (!operand.hasValue ())
         return;
@@ -151,12 +151,12 @@ void KD11CPU::COM (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
 // Condition Codes:
 //  refer to COM
 //
-void KD11CPU::COMB (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
+void KD11CPU::COMB (KD11CPU* cpu, u16 instruction)
 {
     SingleOperandInstruction combInstruction {cpu, instruction};
 
     OperandLocation operandLocation = 
-        combInstruction.getOperandLocation (reg);
+        combInstruction.getOperandLocation (cpu->registers ());
     CondData<u8> operand = operandLocation.byteContents ();
     if (!operand.hasValue ())
         return;
@@ -184,11 +184,11 @@ void KD11CPU::COMB (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
 //
 // Add one to contents of destination
 //
-void KD11CPU::INC (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
+void KD11CPU::INC (KD11CPU* cpu, u16 instruction)
 {
     SingleOperandInstruction soi {cpu, instruction};
 
-    OperandLocation operandLocation = soi.getOperandLocation (reg);
+    OperandLocation operandLocation = soi.getOperandLocation (cpu->registers ());
     CondData<u16> contents = operandLocation.wordContents ();
     if (!contents.hasValue ())
         return;
@@ -210,12 +210,12 @@ void KD11CPU::INC (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
 // Condition Codes:
 //  refer to INC
 //
-void KD11CPU::INCB (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
+void KD11CPU::INCB (KD11CPU* cpu, u16 instruction)
 {
     SingleOperandInstruction incbInstruction {cpu, instruction};
 
     OperandLocation operandLocation = 
-        incbInstruction.getOperandLocation (reg);
+        incbInstruction.getOperandLocation (cpu->registers ());
     CondData<u8> src = operandLocation.byteContents ();
     if (!src.hasValue ())
         return;
@@ -242,11 +242,11 @@ void KD11CPU::INCB (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
 //
 // Subtract 1 from the contents of the destination
 //
-void KD11CPU::DEC (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
+void KD11CPU::DEC (KD11CPU* cpu, u16 instruction)
 {
     SingleOperandInstruction soi {cpu, instruction};
 
-    OperandLocation operandLocation = soi.getOperandLocation (reg);
+    OperandLocation operandLocation = soi.getOperandLocation (cpu->registers ());
     CondData<u16> contents = operandLocation.wordContents ();
     if (!contents.hasValue ())
         return;
@@ -268,12 +268,12 @@ void KD11CPU::DEC (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
 // Condition Codes:
 //  refer to DEC
 //
-void KD11CPU::DECB (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
+void KD11CPU::DECB (KD11CPU* cpu, u16 instruction)
 {
     SingleOperandInstruction decbInstruction {cpu, instruction};
 
     OperandLocation operandLocation = 
-        decbInstruction.getOperandLocation (reg);
+        decbInstruction.getOperandLocation (cpu->registers ());
     CondData<u8> src = operandLocation.byteContents ();
     if (!src.hasValue ())
         return;
@@ -302,11 +302,11 @@ void KD11CPU::DECB (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
 // Note that 100000 is replaced by itself (in two's complement notation the
 // most negative number has no positive counterpart).
 //
-void KD11CPU::NEG (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
+void KD11CPU::NEG (KD11CPU* cpu, u16 instruction)
 {
     SingleOperandInstruction soi {cpu, instruction};
 
-    OperandLocation operandLocation = soi.getOperandLocation (reg);
+    OperandLocation operandLocation = soi.getOperandLocation (cpu->registers ());
     CondData<u16> operand = operandLocation.wordContents ();
     if (!operand.hasValue ())
         return;
@@ -331,12 +331,12 @@ void KD11CPU::NEG (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
 // Condition Codes:
 //  refer to NEG
 //
-void KD11CPU::NEGB (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
+void KD11CPU::NEGB (KD11CPU* cpu, u16 instruction)
 {
     SingleOperandInstruction negbInstruction {cpu, instruction};
 
     OperandLocation operandLocation = 
-        negbInstruction.getOperandLocation (reg);
+        negbInstruction.getOperandLocation (cpu->registers ());
     CondData<u8> operand = operandLocation.byteContents ();
     if (!operand.hasValue ())
         return;
@@ -367,11 +367,11 @@ void KD11CPU::NEGB (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
 // carry from the addition of the low-order words to be carried into the
 // high-order result.
 //
-void KD11CPU::ADC (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
+void KD11CPU::ADC (KD11CPU* cpu, u16 instruction)
 {
     SingleOperandInstruction soi {cpu, instruction};
 
-    OperandLocation operandLocation = soi.getOperandLocation (reg);
+    OperandLocation operandLocation = soi.getOperandLocation (cpu->registers ());
     CondData<u16> contents = operandLocation.wordContents ();
     if (!contents.hasValue ())
         return;
@@ -395,12 +395,12 @@ void KD11CPU::ADC (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
 // Condition Codes:
 //  refer to ADC
 //
-void KD11CPU::ADCB (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
+void KD11CPU::ADCB (KD11CPU* cpu, u16 instruction)
 {
     SingleOperandInstruction adcbInstruction {cpu, instruction};
 
     OperandLocation operandLocation = 
-        adcbInstruction.getOperandLocation (reg);
+        adcbInstruction.getOperandLocation (cpu->registers ());
     CondData<u8> source = operandLocation.byteContents ();
     if (!source.hasValue ())
         return;
@@ -430,11 +430,11 @@ void KD11CPU::ADCB (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
 // Subtracts the contents of the C-bit from the destination. This permits the
 // carry from the subtraction of two low-order words to be subtracted from the
 // high order part of the result.
-void KD11CPU::SBC (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
+void KD11CPU::SBC (KD11CPU* cpu, u16 instruction)
 {
     SingleOperandInstruction soi {cpu, instruction};
 
-    OperandLocation operandLocation = soi.getOperandLocation (reg);
+    OperandLocation operandLocation = soi.getOperandLocation (cpu->registers ());
     CondData<u16> contents = operandLocation.wordContents ();
     if (!contents.hasValue ())
         return;
@@ -458,12 +458,12 @@ void KD11CPU::SBC (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
 // Condition Codes:
 //  refer to SBC
 //
-void KD11CPU::SBCB (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
+void KD11CPU::SBCB (KD11CPU* cpu, u16 instruction)
 {
     SingleOperandInstruction sbcbInstruction {cpu, instruction};
 
     OperandLocation operandLocation = 
-        sbcbInstruction.getOperandLocation (reg);
+        sbcbInstruction.getOperandLocation (cpu->registers ());
     CondData<u8> source = operandLocation.byteContents ();
     if (!source.hasValue ())
         return;
@@ -489,11 +489,11 @@ void KD11CPU::SBCB (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
 //  Z: set if result is 0; cleared otherwise
 //  V: cleared
 //  C: cleared
-void KD11CPU::TST (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
+void KD11CPU::TST (KD11CPU* cpu, u16 instruction)
 {
     SingleOperandInstruction soi {cpu, instruction};
 
-    OperandLocation operandLocation = soi.getOperandLocation (reg);
+    OperandLocation operandLocation = soi.getOperandLocation (cpu->registers ());
     CondData<u16> contents = operandLocation.wordContents ();
     if (!contents.hasValue ())
         return;
@@ -512,12 +512,12 @@ void KD11CPU::TST (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
 // Condition Codes:
 //  refer to TST
 //
-void KD11CPU::TSTB (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
+void KD11CPU::TSTB (KD11CPU* cpu, u16 instruction)
 {
     SingleOperandInstruction tstbInstruction {cpu, instruction};
 
     OperandLocation operandLocation = 
-        tstbInstruction.getOperandLocation (reg);
+        tstbInstruction.getOperandLocation (cpu->registers ());
     CondData<u8> source = operandLocation.byteContents ();
     if (!source.hasValue ())
         return;
@@ -545,11 +545,11 @@ void KD11CPU::TSTB (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
 // the C-bit and the previous contents of the C-bit are loaded into bit 15 of
 // the destination.
 //
-void KD11CPU::ROR (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
+void KD11CPU::ROR (KD11CPU* cpu, u16 instruction)
 {
     SingleOperandInstruction soi {cpu, instruction};
 
-    OperandLocation operandLocation = soi.getOperandLocation (reg);
+    OperandLocation operandLocation = soi.getOperandLocation (cpu->registers ());
     CondData<u16> contents = operandLocation.wordContents ();
     if (!contents.hasValue ())
         return;
@@ -579,12 +579,12 @@ void KD11CPU::ROR (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
 // carry bit is loaded in bit 15 of the word and for even addresses the carry
 // bit is loaded in bit 7 of the word.
 //
-void KD11CPU::RORB (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
+void KD11CPU::RORB (KD11CPU* cpu, u16 instruction)
 {
     SingleOperandInstruction rorbInstruction {cpu, instruction};
 
     OperandLocation operandLocation = 
-        rorbInstruction.getOperandLocation (reg);
+        rorbInstruction.getOperandLocation (cpu->registers ());
     CondData<u8> source = operandLocation.byteContents ();
     if (!source.hasValue ())
         return;
@@ -618,11 +618,11 @@ void KD11CPU::RORB (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
 // the C-bit of the status word and the previous contents of the C-bit are
 // loaded into Bit 0 of the destination.
 //
-void KD11CPU::ROL (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
+void KD11CPU::ROL (KD11CPU* cpu, u16 instruction)
 {
     SingleOperandInstruction soi {cpu, instruction};
 
-    OperandLocation operandLocation = soi.getOperandLocation (reg);
+    OperandLocation operandLocation = soi.getOperandLocation (cpu->registers ());
     CondData<u16> contents = operandLocation.wordContents ();
     if (!contents.hasValue ())
         return;
@@ -652,12 +652,12 @@ void KD11CPU::ROL (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
 // carry bit is loaded with bit 15 of the word and for even addresses the carry
 // bit is loaded with bit 7 of the word.
 //
-void KD11CPU::ROLB (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
+void KD11CPU::ROLB (KD11CPU* cpu, u16 instruction)
 {
     SingleOperandInstruction rolbInstruction {cpu, instruction};
 
     OperandLocation operandLocation = 
-        rolbInstruction.getOperandLocation (reg);
+        rolbInstruction.getOperandLocation (cpu->registers ());
     CondData<u8> source = operandLocation.byteContents ();
     if (!source.hasValue ())
         return;
@@ -691,11 +691,11 @@ void KD11CPU::ROLB (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
 // The C-bit is loaded from bit 0 of the destination. ASR performs signed
 // division of the destination by two.
 //
-void KD11CPU::ASR (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
+void KD11CPU::ASR (KD11CPU* cpu, u16 instruction)
 {
     SingleOperandInstruction soi {cpu, instruction};
 
-    OperandLocation operandLocation = soi.getOperandLocation (reg);
+    OperandLocation operandLocation = soi.getOperandLocation (cpu->registers ());
     CondData<u16> contents = operandLocation.wordContents ();
     if (!contents.hasValue ())
         return;;
@@ -728,12 +728,12 @@ void KD11CPU::ASR (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
 // Same as ASR instruction with the distinction that for odd adresses bit 15
 // is reproduced and for even addresses bit 7 is reproduced.
 //
-void KD11CPU::ASRB (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
+void KD11CPU::ASRB (KD11CPU* cpu, u16 instruction)
 {
     SingleOperandInstruction asrbInstruction {cpu, instruction};
 
     OperandLocation operandLocation = 
-        asrbInstruction.getOperandLocation (reg);
+        asrbInstruction.getOperandLocation (cpu->registers ());
     CondData<u8> source = operandLocation.byteContents ();
     if (!source.hasValue ())
         return;
@@ -773,11 +773,11 @@ void KD11CPU::ASRB (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
 // of the destination. ASL performs a signed multiplication of the destination
 // by 2 with overflow indication.
 //
-void KD11CPU::ASL (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
+void KD11CPU::ASL (KD11CPU* cpu, u16 instruction)
 {
     SingleOperandInstruction soi {cpu, instruction};
 
-    OperandLocation operandLocation = soi.getOperandLocation (reg);
+    OperandLocation operandLocation = soi.getOperandLocation (cpu->registers ());
     CondData<u16> contents = operandLocation.wordContents ();
     if (!contents.hasValue ())
         return;
@@ -805,12 +805,12 @@ void KD11CPU::ASL (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
 // and for even addresses the carry bit is loaded from bit 7 and bit 0 is
 // loaded with a zero.
 //
-void KD11CPU::ASLB (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
+void KD11CPU::ASLB (KD11CPU* cpu, u16 instruction)
 {
     SingleOperandInstruction aslbInstruction {cpu, instruction};
 
     OperandLocation operandLocation = 
-        aslbInstruction.getOperandLocation (reg);
+        aslbInstruction.getOperandLocation (cpu->registers ());
     CondData<u8> source = operandLocation.byteContents ();
     if (!source.hasValue ())
         return;
@@ -839,12 +839,12 @@ void KD11CPU::ASLB (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
 // remains unchanged. This instruction can be used to change the priority bit
 // (PSW bit 7) in the PSW
 //
-void KD11CPU::MTPS (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
+void KD11CPU::MTPS (KD11CPU* cpu, u16 instruction)
 {
     SingleOperandInstruction mtpsInstruction {cpu, instruction};
 
     OperandLocation operandLocation = 
-        mtpsInstruction.getOperandLocation (reg);
+        mtpsInstruction.getOperandLocation (cpu->registers ());
     CondData<u8> newValue = operandLocation.byteContents ();
     if (!newValue.hasValue ())
         return;
@@ -869,12 +869,12 @@ void KD11CPU::MTPS (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
 // destination is mode 0, PS bit 7 is sign extended through upper byte of the
 // register. The destination operand address is treated as a byte address.
 //
-void KD11CPU::MFPS (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
+void KD11CPU::MFPS (KD11CPU* cpu, u16 instruction)
 {
     SingleOperandInstruction mfpsInstruction {cpu, instruction};
 
     OperandLocation operandLocation = 
-        mfpsInstruction.getOperandLocation (reg);
+        mfpsInstruction.getOperandLocation (cpu->registers ());
 
     u16 contents = (u8) psw_;
 
@@ -910,11 +910,11 @@ void KD11CPU::MFPS (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
 // If the condition code bit N is set then a -1 is placed in the destination
 // operand: if N bit is clear, then a 0 is placed in the destination operand.
 //
-void KD11CPU::SXT (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
+void KD11CPU::SXT (KD11CPU* cpu, u16 instruction)
 {
     SingleOperandInstruction soi {cpu, instruction};
 
-    OperandLocation operandLocation = soi.getOperandLocation (reg);
+    OperandLocation operandLocation = soi.getOperandLocation (cpu->registers ());
     u16 result = isSet (PSW_N) ? 0177777 : 0;
 
     operandLocation.write (result);

@@ -90,7 +90,7 @@ void KD11CPU::executeFISinstruction (u16 stackPointer,
 // 
 // A <- A + B
 //
-void KD11CPU::FADD (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
+void KD11CPU::FADD (KD11CPU* cpu, u16 instruction)
 {
     FISInstruction fisInstruction (cpu, instruction);
     executeFISinstruction (fisInstruction.getRegister (),
@@ -115,7 +115,7 @@ void KD11CPU::FADD (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
 //
 // A <- A - B
 //
-void KD11CPU::FSUB (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
+void KD11CPU::FSUB (KD11CPU* cpu, u16 instruction)
 {
     FISInstruction fisInstruction (cpu, instruction);
     executeFISinstruction (fisInstruction.getRegister (),
@@ -140,7 +140,7 @@ void KD11CPU::FSUB (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
 //
 // A <- A * B
 //
-void KD11CPU::FMUL (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
+void KD11CPU::FMUL (KD11CPU* cpu, u16 instruction)
 {
     FISInstruction fisInstruction (cpu, instruction);
     executeFISinstruction (fisInstruction.getRegister (),
@@ -166,7 +166,7 @@ void KD11CPU::FMUL (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
 //
 // A <- A / B
 //
-void KD11CPU::FDIV (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
+void KD11CPU::FDIV (KD11CPU* cpu, u16 instruction)
 {
     FISInstruction fisInstruction (cpu, instruction);
     executeFISinstruction (fisInstruction.getRegister (),
@@ -183,7 +183,7 @@ void KD11CPU::FDIV (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
 // Loads contents of reg into PC and pops the top element of
 // the processor stack into the specified register.
 //
-void KD11CPU::RTS (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
+void KD11CPU::RTS (KD11CPU* cpu, u16 instruction)
 {
     FISInstruction rtsInstruction (cpu, instruction);
     u16 regNr = rtsInstruction.getRegister ();

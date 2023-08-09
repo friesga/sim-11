@@ -126,111 +126,111 @@ void KD11CPU::execInstr ()
                     switch (insn)
                     {
                         case 0000000:
-                            HALT ();
+                            HALT (this, insn);
                             break;
 
                         case 0000001:
-                            WAIT ();
+                            WAIT (this, insn);
                             break;
 
                         case 0000002:
-                            RTI ();
+                            RTI (this, insn);
                             break;
 
                         case 0000003:
-                            BPT ();
+                            BPT (this, insn);
                             break;
 
                         case 0000004:
-                            IOT ();
+                            IOT (this, insn);
                             break;
 
                         case 0000005:
-                            RESET ();
+                            RESET (this, insn);
                             break;
 
                         case 0000006:
-                            RTT ();
+                            RTT (this, insn);
                             break;
 
                         default: 
                             // 00 00 07 - 00 00 77
-                            unused ();
+                            unused (this, insn);
                             break;
                     }
                     break;
 
                 case 00001:
-                    JMP (this, register_, insn);
+                    JMP (this, insn);
                     break;
 
                 case 00002:
                     // 00 02 xx group
                     if ((insn & 0177770) == 0000200)
-                        RTS (this, register_, insn);
+                        RTS (this, insn);
                     else if ((insn & 0177740) == 0000240)
                     {
                         if (insn & 020)
-                            SCC (psw_, insn);
+                            SCC (this, insn);
                         else
-                            CCC (psw_, insn);
+                            CCC (this, insn);
                     }
                     else
                         // 00 02 10 - 00 02 27
-                        unused ();
+                        unused (this, insn);
                     break;
 
                 case 00003:
-                    SWAB (this, register_, insn);
+                    SWAB (this, insn);
                     break;
 
                 case 00004: 
                 case 00005:
                 case 00006:
                 case 00007:
-                    BR (insn);
+                    BR (this, insn);
                     break;
 
                 case 00010:
                 case 00011:
                 case 00012:
                 case 00013:
-                    BNE (insn);
+                    BNE (this, insn);
                     break;
 
                 case 00014:
                 case 00015:
                 case 00016:
                 case 00017:
-                    BEQ (insn);
+                    BEQ (this, insn);
                     break;
 
                 case 00020:
                 case 00021:
                 case 00022:
                 case 00023:
-                    BGE (insn);
+                    BGE (this, insn);
                     break;
 
                 case 00024:
                 case 00025:
                 case 00026:
                 case 00027:
-                    BLT (insn);
+                    BLT (this, insn);
                     break;
 
                 case 00030:
                 case 00031:
                 case 00032:
                 case 00033:
-                    BGT (insn);
+                    BGT (this, insn);
                     break;
 
                 case 00034:
                 case 00035:
                 case 00036:
                 case 00037:
-                    BLE (insn);
+                    BLE (this, insn);
                     break;
 
                 case 00040:
@@ -241,94 +241,94 @@ void KD11CPU::execInstr ()
                 case 00045:
                 case 00046:
                 case 00047:
-                    JSR (this, register_, insn);
+                    JSR (this, insn);
                     break;
 
                 case 00050:
-                    CLR (this, register_, insn);
+                    CLR (this, insn);
                     break;
 
                 case 00051:
-                    COM (this, register_, insn);
+                    COM (this, insn);
                     break;
 
                 case 00052:
-                    INC (this, register_, insn);
+                    INC (this, insn);
                     break;
 
                 case 00053:
-                    DEC (this, register_, insn);
+                    DEC (this, insn);
                     break;
 
                 case 00054:
-                    NEG (this, register_, insn);
+                    NEG (this, insn);
                     break;
 
                 case 00055:
-                    ADC (this, register_, insn);
+                    ADC (this, insn);
                     break;
 
                 case 00056:
-                    SBC (this, register_, insn);
+                    SBC (this, insn);
                     break;
 
                 case 00057:
-                    TST (this, register_, insn);
+                    TST (this, insn);
                     break;
 
                 case 00060:
-                    ROR (this, register_, insn);
+                    ROR (this, insn);
                     break;
 
                 case 00061:
-                    ROL (this, register_, insn);
+                    ROL (this, insn);
                     break;
 
                 case 00062:
-                    ASR (this, register_, insn);
+                    ASR (this, insn);
                     break;
 
                 case 00063:
-                    ASL (this, register_, insn);
+                    ASL (this, insn);
                     break;
 
                 case 00064:
-                    MARK (this, register_, insn);
+                    MARK (this, insn);
                     break;
 
                 case 00067:
-                    SXT (this, register_, insn);
+                    SXT (this, insn);
                     break;
 
                 default:
                     // 006500-006677, 007000-007777
-                    unused ();
+                    unused (this, insn);
                     break;
             }
             break;
 
         case 001:
-            MOV (this, register_, insn);
+            MOV (this, insn);
             break;
 
         case 002:
-            CMP (this, register_, insn);
+            CMP (this, insn);
             break;
 
         case 003:
-            BIT (this, register_, insn);
+            BIT (this, insn);
             break;
 
         case 004:
-            BIC (this, register_, insn);
+            BIC (this, insn);
             break;
 
         case 005:
-            BIS (this, register_, insn);
+            BIS (this, insn);
             break;
 
         case 006:
-            ADD (this, register_, insn);
+            ADD (this, insn);
             break;
 
         case 007: 
@@ -336,23 +336,23 @@ void KD11CPU::execInstr ()
             switch (insn >> 9)
             {
                 case 0070:
-                    MUL (this, register_, insn);
+                    MUL (this, insn);
                     break;
 
                 case 0071:
-                    DIV (this, register_, insn);
+                    DIV (this, insn);
                     break;
 
                 case 0072:
-                    ASH (this, register_, insn);
+                    ASH (this, insn);
                     break;
 
                 case 0073:
-                    ASHC (this, register_, insn);
+                    ASHC (this, insn);
                     break;
 
                 case 0074:
-                    XOR (this, register_, insn);
+                    XOR (this, insn);
                     break;
 
                 case 0075: /* FIS instructions */
@@ -360,34 +360,34 @@ void KD11CPU::execInstr ()
                     {
 #ifdef USE_FLOAT
                         case 007500:
-                            FADD (this, register_, insn);
+                            FADD (this, insn);
                             break;
 
                         case 007501:
-                            FSUB (this, register_, insn);
+                            FSUB (this, insn);
                             break;
 
                         case 007502:
-                            FMUL (this, register_, insn);
+                            FMUL (this, insn);
                             break;
 
                         case 007503:
-                            FDIV (this, register_, insn);
+                            FDIV (this, insn);
                             break;
 #endif
                         default:
                             // 075040-076777: unused 
-                            unused ();
+                            unused (this, insn);
                             break;
                     }
                     break;
 
                 case 0077:
-                    SOB (this, register_, insn);
+                    SOB (this, insn);
                     break;
 
                 default:
-                    unused ();
+                    unused (this, insn);
                     break;
             }
             break;
@@ -400,160 +400,160 @@ void KD11CPU::execInstr ()
                 case 01001:
                 case 01002:
                 case 01003:
-                    BPL (insn);
+                    BPL (this, insn);
                     break;
 
                 case 01004:
                 case 01005:
                 case 01006:
                 case 01007:
-                    BMI (insn);
+                    BMI (this, insn);
                     break;
 
                 case 01010:
                 case 01011:
                 case 01012:
                 case 01013:
-                    BHI (insn);
+                    BHI (this, insn);
                     break;
 
                 case 01014:
                 case 01015:
                 case 01016:
                 case 01017:
-                    BLOS (insn);
+                    BLOS (this, insn);
                     break;
 
                 case 01020:
                 case 01021:
                 case 01022:
                 case 01023:
-                    BVC (insn);
+                    BVC (this, insn);
                     break;
 
                 case 01024:
                 case 01025:
                 case 01026:
                 case 01027:
-                    BVS (insn);
+                    BVS (this, insn);
                     break;
 
                 case 01030:
                 case 01031:
                 case 01032:
                 case 01033:
-                    BCC (insn);
+                    BCC (this, insn);
                     break;
 
                 case 01034:
                 case 01035:
                 case 01036:
                 case 01037:
-                    BCS (insn);
+                    BCS (this, insn);
                     break;
 
                 case 01040:
                 case 01041:
                 case 01042:
                 case 01043:
-                    EMT ();
+                    EMT (this, insn);
                     break;
 
                 case 01044:
                 case 01045:
                 case 01046:
                 case 01047:
-                    TRAP ();
+                    TRAP (this, insn);
                     break;
 
                 case 01050:
-                    CLRB (this, register_, insn);
+                    CLRB (this, insn);
                     break;
 
                 case 01051:
-                    COMB (this, register_, insn);
+                    COMB (this, insn);
                     break;
 
                 case 01052:
-                    INCB (this, register_, insn);
+                    INCB (this, insn);
                     break;
 
                 case 01053:
-                    DECB (this, register_, insn);
+                    DECB (this, insn);
                     break;
 
                 case 01054:
-                    NEGB (this, register_, insn);
+                    NEGB (this, insn);
                     break;
 
                 case 01055:
-                    ADCB (this, register_, insn);
+                    ADCB (this, insn);
                     break;
 
                 case 01056:
-                    SBCB (this, register_, insn);
+                    SBCB (this, insn);
                     break;
 
                 case 01057:
-                    TSTB (this, register_, insn);
+                    TSTB (this, insn);
                     break;
 
                 case 01060:
-                    RORB (this, register_, insn);
+                    RORB (this, insn);
                     break;
 
                 case 01061:
-                    ROLB (this, register_, insn);
+                    ROLB (this, insn);
                     break;
 
                 case 01062:
-                    ASRB (this, register_, insn);
+                    ASRB (this, insn);
                     break;
 
                 case 01063:
-                    ASLB (this, register_, insn);
+                    ASLB (this, insn);
                     break;
 
                 case 01064:
-                    MTPS (this, register_, insn);
+                    MTPS (this, insn);
                     break;
 
                 case 01067:
-                    MFPS (this, register_, insn);
+                    MFPS (this, insn);
                     break;
 
                 default:
-                    unused ();
+                    unused (this, insn);
                     break;
             }
             break;
 
         case 011:
-            MOVB (this, register_, insn);
+            MOVB (this, insn);
             break;
 
         case 012:
-            CMPB (this, register_, insn);
+            CMPB (this, insn);
             break;
 
         case 013:
-            BITB (this, register_, insn);
+            BITB (this, insn);
             break;
 
         case 014:
-            BICB (this, register_, insn);
+            BICB (this, insn);
             break;
 
         case 015:
-            BISB (this, register_, insn);
+            BISB (this, insn);
             break;
 
         case 016:
-            SUB (this, register_, insn);
+            SUB (this, insn);
             break;
 
         default:
-            unused ();
+            unused (this, insn);
             break;
     }
 }

@@ -145,108 +145,108 @@ private:
 	void executeFISinstruction (u16 stackPointer, 
 		std::function<bool(Float, Float)> argumentsValid,
 		std::function<Float(Float, Float)>);
-	constexpr void executeBranchIf (bool condition, u16 instruction);
+	constexpr void executeBranchIf (bool condition, KD11CPU* cpu, u16 instruction);
 
 	bool popWord (u16 *destination);
 
 	// Instruction in the Program Control Group Traps and Operate Group.
 	// These instruction have no operands.
-	void HALT ();
-	void WAIT ();
-	void RTI ();
-	void BPT ();
-	void IOT ();
-	void RESET ();
-	void RTT ();
-	void EMT ();
-	void TRAP ();
-	void unused ();
+	void HALT (KD11CPU *cpu, u16 instruction);
+	void WAIT (KD11CPU *cpu, u16 instruction);
+	void RTI (KD11CPU *cpu, u16 instruction);
+	void BPT (KD11CPU *cpu, u16 instruction);
+	void IOT (KD11CPU *cpu, u16 instruction);
+	void RESET (KD11CPU *cpu, u16 instruction);
+	void RTT (KD11CPU *cpu, u16 instruction);
+	void EMT (KD11CPU *cpu, u16 instruction);
+	void TRAP (KD11CPU *cpu, u16 instruction);
+	void unused (KD11CPU *cpu, u16 instruction);
 
 	// Single operand instructions
-	void JMP (KD11CPU *cpu, u16 (&reg)[8], u16 instruction);
-	void SWAB (KD11CPU* cpu, u16 (&reg)[8], u16 instruction);
-	void CLR (KD11CPU* cpu, u16 (&reg)[8], u16 instruction);
-	void CLRB (KD11CPU* cpu, u16 (&reg)[8], u16 instruction);
-	void COM (KD11CPU* cpu, u16 (&reg)[8], u16 instruction);
-	void COMB (KD11CPU* cpu, u16 (&reg)[8], u16 instruction);
-	void INC (KD11CPU* cpu, u16 (&reg)[8], u16 instruction);
-	void INCB (KD11CPU* cpu, u16 (&reg)[8], u16 instruction);
-	void DEC (KD11CPU* cpu, u16 (&reg)[8], u16 instruction);
-	void DECB (KD11CPU* cpu, u16 (&reg)[8], u16 instruction);
-	void NEG (KD11CPU* cpu, u16 (&reg)[8], u16 instruction);
-	void NEGB (KD11CPU* cpu, u16 (&reg)[8], u16 instruction);
-	void ADC (KD11CPU* cpu, u16 (&reg)[8], u16 instruction);
-	void ADCB (KD11CPU* cpu, u16 (&reg)[8], u16 instruction);
-	void SBC (KD11CPU* cpu, u16 (&reg)[8], u16 instruction);
-	void SBCB (KD11CPU* cpu, u16 (&reg)[8], u16 instruction);
-	void TST (KD11CPU* cpu, u16 (&reg)[8], u16 instruction);
-	void TSTB (KD11CPU* cpu, u16 (&reg)[8], u16 instruction);
-	void ROR (KD11CPU* cpu, u16 (&reg)[8], u16 instruction);
-	void RORB (KD11CPU* cpu, u16 (&reg)[8], u16 instruction);
-	void ROL (KD11CPU* cpu, u16 (&reg)[8], u16 instruction);
-	void ROLB (KD11CPU* cpu, u16 (&reg)[8], u16 instruction);
-	void ASR (KD11CPU* cpu, u16 (&reg)[8], u16 instruction);
-	void ASRB (KD11CPU* cpu, u16 (&reg)[8], u16 instruction);
-	void ASL (KD11CPU* cpu, u16 (&reg)[8], u16 instruction);
-	void ASLB (KD11CPU* cpu, u16 (&reg)[8], u16 instruction);
-	void MTPS (KD11CPU* cpu, u16 (&reg)[8], u16 instruction);
-	void MFPS (KD11CPU* cpu, u16 (&reg)[8], u16 instruction);
-	void SXT (KD11CPU* cpu, u16 (&reg)[8], u16 instruction);
+	void JMP (KD11CPU *cpu, u16 instruction);
+	void SWAB (KD11CPU* cpu, u16 instruction);
+	void CLR (KD11CPU* cpu, u16 instruction);
+	void CLRB (KD11CPU* cpu, u16 instruction);
+	void COM (KD11CPU* cpu, u16 instruction);
+	void COMB (KD11CPU* cpu, u16 instruction);
+	void INC (KD11CPU* cpu, u16 instruction);
+	void INCB (KD11CPU* cpu, u16 instruction);
+	void DEC (KD11CPU* cpu, u16 instruction);
+	void DECB (KD11CPU* cpu, u16 instruction);
+	void NEG (KD11CPU* cpu, u16 instruction);
+	void NEGB (KD11CPU* cpu, u16 instruction);
+	void ADC (KD11CPU* cpu, u16 instruction);
+	void ADCB (KD11CPU* cpu, u16 instruction);
+	void SBC (KD11CPU* cpu, u16 instruction);
+	void SBCB (KD11CPU* cpu, u16 instruction);
+	void TST (KD11CPU* cpu, u16 instruction);
+	void TSTB (KD11CPU* cpu, u16 instruction);
+	void ROR (KD11CPU* cpu, u16 instruction);
+	void RORB (KD11CPU* cpu, u16 instruction);
+	void ROL (KD11CPU* cpu, u16 instruction);
+	void ROLB (KD11CPU* cpu, u16 instruction);
+	void ASR (KD11CPU* cpu, u16 instruction);
+	void ASRB (KD11CPU* cpu, u16 instruction);
+	void ASL (KD11CPU* cpu, u16 instruction);
+	void ASLB (KD11CPU* cpu, u16 instruction);
+	void MTPS (KD11CPU* cpu, u16 instruction);
+	void MFPS (KD11CPU* cpu, u16 instruction);
+	void SXT (KD11CPU* cpu, u16 instruction);
 
 	// Double operand instructions
-	void MOV (KD11CPU* cpu, u16 (&reg)[8], u16 instruction);
-	void MOVB (KD11CPU* cpu, u16 (&reg)[8], u16 instruction);
-	void CMP (KD11CPU* cpu, u16 (&reg)[8], u16 instruction);
-	void CMPB (KD11CPU* cpu, u16 (&reg)[8], u16 instruction);
-	void BIT (KD11CPU* cpu, u16 (&reg)[8], u16 instruction);
-	void BITB (KD11CPU* cpu, u16 (&reg)[8], u16 instruction);
-	void BIC (KD11CPU* cpu, u16 (&reg)[8], u16 instruction);
-	void BICB (KD11CPU* cpu, u16 (&reg)[8], u16 instruction);
-	void BIS (KD11CPU* cpu, u16 (&reg)[8], u16 instruction);
-	void BISB (KD11CPU* cpu, u16 (&reg)[8], u16 instruction);
-	void ADD (KD11CPU* cpu, u16 (&reg)[8], u16 instruction);
-	void SUB (KD11CPU* cpu, u16 (&reg)[8], u16 instruction);
+	void MOV (KD11CPU* cpu, u16 instruction);
+	void MOVB (KD11CPU* cpu, u16 instruction);
+	void CMP (KD11CPU* cpu, u16 instruction);
+	void CMPB (KD11CPU* cpu, u16 instruction);
+	void BIT (KD11CPU* cpu, u16 instruction);
+	void BITB (KD11CPU* cpu, u16 instruction);
+	void BIC (KD11CPU* cpu, u16 instruction);
+	void BICB (KD11CPU* cpu, u16 instruction);
+	void BIS (KD11CPU* cpu, u16 instruction);
+	void BISB (KD11CPU* cpu, u16 instruction);
+	void ADD (KD11CPU* cpu, u16 instruction);
+	void SUB (KD11CPU* cpu, u16 instruction);
 
 	// EIS, JSR and XOR instructions. These instructions share the same
 	// instruction format
-	void JSR (KD11CPU *cpu, u16 (&reg)[8], u16 instruction);
-	void MUL (KD11CPU *cpu, u16 (&reg)[8], u16 instruction);
-	void DIV (KD11CPU *cpu, u16 (&reg)[8], u16 instruction);
-	void ASH (KD11CPU *cpu, u16 (&reg)[8], u16 instruction);
-	void ASHC (KD11CPU *cpu, u16 (&reg)[8], u16 instruction);
-	void XOR (KD11CPU *cpu, u16 (&reg)[8], u16 instruction);
+	void JSR (KD11CPU *cpu, u16 instruction);
+	void MUL (KD11CPU *cpu, u16 instruction);
+	void DIV (KD11CPU *cpu, u16 instruction);
+	void ASH (KD11CPU *cpu, u16 instruction);
+	void ASHC (KD11CPU *cpu, u16 instruction);
+	void XOR (KD11CPU *cpu, u16 instruction);
 
 	// FIS and RTS instructions. These instructions share the FIS instruction
 	// format.
-	void RTS (KD11CPU *cpu, u16 (&reg)[8], u16 instruction);
-	void FADD (KD11CPU *cpu, u16 (&reg)[8], u16 instruction);
-	void FSUB (KD11CPU *cpu, u16 (&reg)[8], u16 instruction);
-	void FMUL (KD11CPU *cpu, u16 (&reg)[8], u16 instruction);
-	void FDIV (KD11CPU *cpu, u16 (&reg)[8], u16 instruction);
+	void RTS (KD11CPU *cpu, u16 instruction);
+	void FADD (KD11CPU *cpu, u16 instruction);
+	void FSUB (KD11CPU *cpu, u16 instruction);
+	void FMUL (KD11CPU *cpu, u16 instruction);
+	void FDIV (KD11CPU *cpu, u16 instruction);
 
 	// SOB instruction format
-	void SOB (KD11CPU *cpu, u16 (&reg)[8], u16 instruction);
+	void SOB (KD11CPU *cpu, u16 instruction);
 
-	void MARK (KD11CPU* cpu, u16 (&reg)[8], u16 instruction);
-	void CCC (u16 &psw, u16 instruction);
-	void SCC (u16 &psw, u16 instruction);
+	void MARK (KD11CPU* cpu, u16 instruction);
+	void CCC (KD11CPU *cpu, u16 instruction);
+	void SCC (KD11CPU* cpu, u16 instruction);
 
 	// Branch instructions
-	void BR (u16 instruction);
-	void BNE (u16 instruction);
-	void BEQ (u16 instruction);
-	void BGE (u16 instruction);
-	void BLT (u16 instruction);
-	void BGT (u16 instruction);
-	void BLE (u16 instruction);
-	void BPL (u16 instruction);
-	void BMI (u16 instruction);
-	void BHI (u16 instruction);
-	void BLOS (u16 instruction);
-	void BVC (u16 instruction);
-	void BVS (u16 instruction);
-	void BCC (u16 instruction);
-	void BCS (u16 instruction);
+	void BR (KD11CPU* cpu, u16 instruction);
+	void BNE (KD11CPU* cpu, u16 instruction);
+	void BEQ (KD11CPU* cpu, u16 instruction);
+	void BGE (KD11CPU* cpu, u16 instruction);
+	void BLT (KD11CPU* cpu, u16 instruction);
+	void BGT (KD11CPU* cpu, u16 instruction);
+	void BLE (KD11CPU* cpu, u16 instruction);
+	void BPL (KD11CPU* cpu, u16 instruction);
+	void BMI (KD11CPU* cpu, u16 instruction);
+	void BHI (KD11CPU* cpu, u16 instruction);
+	void BLOS (KD11CPU* cpu, u16 instruction);
+	void BVC (KD11CPU* cpu, u16 instruction);
+	void BVS (KD11CPU* cpu, u16 instruction);
+	void BCC (KD11CPU* cpu, u16 instruction);
+	void BCS (KD11CPU* cpu, u16 instruction);
 };
 
 // constexpr functions are implicitly inline and therefore need to be defined

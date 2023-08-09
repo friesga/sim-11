@@ -17,7 +17,7 @@
 //  (3) contents of the old R5 to be popped into R5 thus completing the
 //      return from subroutine.
 // 
-void KD11CPU::MARK (KD11CPU* cpu, u16 (&reg)[8], u16 instruction)
+void KD11CPU::MARK (KD11CPU* cpu, u16 instruction)
 {
     MarkInstruction mi {cpu, instruction};
 
