@@ -89,6 +89,8 @@ private:
 
 	InterruptRequest const busError 
 		{RequestType::Trap, TrapPriority::BusError, 0, 004};
+	InterruptRequest const illegalInstructionTrap
+		{RequestType::Trap, TrapPriority::InstructionTrap, 0, 010};
 	InterruptRequest const traceTrap 
 		{RequestType::Trap, TrapPriority::TraceTrap, 0, 014};
 	InterruptRequest const BreakpointTrap
@@ -101,8 +103,20 @@ private:
 		{RequestType::Trap, TrapPriority::InstructionTrap, 0, 034};
 	InterruptRequest const FIS
 		{RequestType::Trap, TrapPriority::InstructionTrap, 0, 0244};
-	InterruptRequest const illegalInstructionTrap
-		{RequestType::Trap, TrapPriority::InstructionTrap, 0, 010};
+
+	// This array will contain pointers to the InterruptRequest's defined
+	// above in the order defined in CpuData::Trap enum.
+	InterruptRequest const* vectorTable[8]
+	{
+		nullptr,
+		&busError,
+		&illegalInstructionTrap,
+		&BreakpointTrap,
+		&InputOutputTrap,
+		&EmulatorTrap,
+		&TRP,
+		&FIS
+	};
 
 	// This enum holds the reason for halting the system. This data is printed
 	// by the ODT Maintenance command.

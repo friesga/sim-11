@@ -3,6 +3,7 @@
 
 #include "types.h"
 #include "conddata/conddata.h"
+#include "interruptrequest/interruptrequest.h"
 
 // This interface provides access to the CPU data the instruction classes
 // need to be able to decode the operands adresses and execute the function.
@@ -15,6 +16,20 @@
 class CpuData
 {
 public:
+	// The Trap enum is defined as a non-class enum to be able to use it
+	// as an array index.
+	enum Trap
+	{
+		None,
+		BusError,
+		IllegalInstructionTrap,
+		BreakpointTrap,
+		InputOutputTrap,
+		EmulatorTrap,
+		TRP,
+		FIS
+	};
+
 	using GeneralRegisters = u16[8];
 
 	// Definition of the LSI-11/2 execution state

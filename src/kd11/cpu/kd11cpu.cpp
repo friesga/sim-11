@@ -5,8 +5,14 @@
 #include "trace/trace.h"
 #include "bitmask.h"
 
+#include "kd11_na_instructions/jmp.h"
+
 #include <functional>
 #include <chrono>
+#include <memory>
+
+using std::unique_ptr;
+using std::make_unique;
 
 // Constructor
 KD11CPU::KD11CPU (Qbus* bus)
@@ -161,8 +167,15 @@ void KD11CPU::execInstr ()
                     break;
 
                 case 00001:
-                    JMP (this, insn);
+                {
+                    // JMP (this, insn);
+                    unique_ptr<LSI11Instruction> jmp = 
+                        make_unique<KD11_NA::JMP> (static_cast<CpuData*> (this), insn);
+                    CpuData::Trap returnedTrap = jmp->execute ();
+                    if (returnedTrap != CpuData::Trap::None)
+                        setTrap (vectorTable [returnedTrap]);
                     break;
+                }
 
                 case 00002:
                     // 00 02 xx group

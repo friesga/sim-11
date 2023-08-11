@@ -7,6 +7,11 @@
 
 class LSI11Instruction
 {
+public:
+	// All derived classes will have to provide an execute function
+	// ToDo: Make execute() a pute virtual function
+	virtual CpuData::Trap execute () { return CpuData::Trap::None; };
+
 protected:
 	CpuData *cpu_;
 
@@ -14,7 +19,7 @@ protected:
 	OperandLocation decodeOperand (Operand operand, u16 (&reg)[8]);
 	bool isByteInstruction ();
 
-	// All derived class have to provide a function returning the operation
+	// All derived classes have to provide a function returning the operation
 	// code of the instruction. This detour to get at the instruction's
 	// opcode is necessary as the decoding of the instruction takes places
 	// after LSII11Instruction's constructor is called.

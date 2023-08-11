@@ -24,7 +24,7 @@ class SingleOperandInstruction : public LSI11Instruction
 public:
 	SingleOperandInstruction (CpuData *cpu, u16 instruction);
 	OperandLocation getOperandLocation (u16 (&reg)[8]);
-	u16 getOperationCode ();
+	u16 getOperationCode () override;
 };
 
 
