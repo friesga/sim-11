@@ -3,8 +3,7 @@
 FISInstruction::FISInstruction (CpuData* cpu, u16 instruction)
     :
     LSI11Instruction (cpu),
-    instr_ {instruction},
-	cpu_ {cpu}
+    instr_ {instruction}
 {}
 
 u16 FISInstruction::getRegister ()

@@ -26,7 +26,7 @@ public:
 	u16 getOperationCode () override;
 
 protected:
-	CpuData* cpu_;
+	// CpuData* cpu_;
 
 	CpuData::Trap returnFISresult (Float result, u16 registerNumber);
 	CpuData::Trap executeFISinstruction (u16 stackPointer, 
