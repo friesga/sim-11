@@ -1,9 +1,10 @@
 #ifndef _CCINSTRUCTION_H_
 #define _CCINSTRUCTION_H_
 
+#include "../lsi11instruction/lsi11instruction.h"
 #include "../kd11cpu.h"
 
-class CcInstruction
+class CcInstruction : public LSI11Instruction
 {
     union instr
 	{
@@ -17,11 +18,10 @@ class CcInstruction
 	} 
 	instr_;
 
-	KD11CPU *cpu_;
-
 public:
-	CcInstruction (u16 instruction);
+	CcInstruction (CpuData* cpu, u16 instruction);
 	u16 getConditionCodes ();
+	u16 getOperationCode () override;
 };
 
 #endif // !_CCINSTRUCTION_H_

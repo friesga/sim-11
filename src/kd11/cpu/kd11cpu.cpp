@@ -11,6 +11,8 @@
 #include "kd11_na_instructions/fsub.h"
 #include "kd11_na_instructions/fmul.h"
 #include "kd11_na_instructions/fdiv.h"
+#include "kd11_na_instructions/ccc.h"
+#include "kd11_na_instructions/scc.h"
 
 #include <functional>
 #include <chrono>
@@ -197,10 +199,18 @@ void KD11CPU::execInstr ()
                     }
                     else if ((insn & 0177740) == 0000240)
                     {
+                        unique_ptr<LSI11Instruction> instr;
+
                         if (insn & 020)
-                            SCC (this, insn);
+                            // SCC (this, insn);
+                            instr = make_unique<KD11_NA::SCC> (static_cast<CpuData*> (this), insn);
                         else
-                            CCC (this, insn);
+                            // CCC (this, insn);
+                            instr = make_unique<KD11_NA::CCC> (static_cast<CpuData*> (this), insn);
+
+                        CpuData::Trap returnedTrap = instr->execute ();
+                        if (returnedTrap != CpuData::Trap::None)
+                            setTrap (vectorTable [returnedTrap]);
                     }
                     else
                         // 00 02 10 - 00 02 27
