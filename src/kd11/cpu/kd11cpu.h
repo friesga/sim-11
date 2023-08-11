@@ -154,10 +154,7 @@ private:
 	void execInstr ();
 	void handleTraps();
 	u8 cpuPriority ();
-	void returnFISresult (Float result, u16 registerNumber);
-	void executeFISinstruction (u16 stackPointer, 
-		std::function<bool(Float, Float)> argumentsValid,
-		std::function<Float(Float, Float)>);
+	
 	constexpr void executeBranchIf (bool condition, CpuData*  cpu, u16 instruction);
 
 	// Instruction in the Program Control Group Traps and Operate Group.

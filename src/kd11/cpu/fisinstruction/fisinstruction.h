@@ -26,6 +26,12 @@ public:
 	FISInstruction (CpuData* cpu, u16 instruction);
 	u16 getRegister ();
 	u16 getOperationCode () override;
+
+protected:
+	CpuData::Trap returnFISresult (Float result, u16 registerNumber);
+	CpuData::Trap executeFISinstruction (u16 stackPointer, 
+		std::function<bool(Float, Float)> argumentsValid,
+		std::function<Float(Float, Float)>);
 };
 
 #endif // _FISINSTRUCTION_H_

@@ -7,6 +7,10 @@
 
 #include "kd11_na_instructions/jmp.h"
 #include "kd11_na_instructions/rts.h"
+#include "kd11_na_instructions/fadd.h"
+#include "kd11_na_instructions/fsub.h"
+#include "kd11_na_instructions/fmul.h"
+#include "kd11_na_instructions/fdiv.h"
 
 #include <functional>
 #include <chrono>
@@ -384,20 +388,48 @@ void KD11CPU::execInstr ()
                     {
 #ifdef USE_FLOAT
                         case 007500:
-                            FADD (this, insn);
+                        {
+                            // FADD (this, insn);
+                            unique_ptr<LSI11Instruction> instr = 
+                                make_unique<KD11_NA::FADD> (static_cast<CpuData*> (this), insn);
+                            CpuData::Trap returnedTrap = instr->execute ();
+                            if (returnedTrap != CpuData::Trap::None)
+                                setTrap (vectorTable [returnedTrap]);
                             break;
+                        }
 
                         case 007501:
-                            FSUB (this, insn);
+                        {
+                            // FSUB (this, insn);
+                            unique_ptr<LSI11Instruction> instr = 
+                                make_unique<KD11_NA::FSUB> (static_cast<CpuData*> (this), insn);
+                            CpuData::Trap returnedTrap = instr->execute ();
+                            if (returnedTrap != CpuData::Trap::None)
+                                setTrap (vectorTable [returnedTrap]);
                             break;
+                        }
 
                         case 007502:
-                            FMUL (this, insn);
+                        {
+                            // FMUL (this, insn);
+                            unique_ptr<LSI11Instruction> instr = 
+                                make_unique<KD11_NA::FMUL> (static_cast<CpuData*> (this), insn);
+                            CpuData::Trap returnedTrap = instr->execute ();
+                            if (returnedTrap != CpuData::Trap::None)
+                                setTrap (vectorTable [returnedTrap]);
                             break;
+                        }
 
                         case 007503:
-                            FDIV (this, insn);
+                        {
+                            // FDIV (this, insn);
+                            unique_ptr<LSI11Instruction> instr = 
+                                make_unique<KD11_NA::FDIV> (static_cast<CpuData*> (this), insn);
+                            CpuData::Trap returnedTrap = instr->execute ();
+                            if (returnedTrap != CpuData::Trap::None)
+                                setTrap (vectorTable [returnedTrap]);
                             break;
+                        }
 #endif
                         default:
                             // 075040-076777: unused 

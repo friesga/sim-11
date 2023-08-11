@@ -5,6 +5,15 @@
 #include "../cpudata.h"
 #include "../operandlocation/operandlocation.h"
 
+// RTS - Return from subroutine
+// 
+// Operation:
+//  PC <- (reg)
+//  (reg) <- (SP)^
+// 
+// Loads contents of reg into PC and pops the top element of
+// the processor stack into the specified register.
+//
 namespace KD11_NA
 {
     class RTS : public FISInstruction
@@ -37,5 +46,4 @@ namespace KD11_NA
     }
 }
 
-
-#endif // _JMP_H_
+#endif // _RTS_H_
