@@ -2,10 +2,11 @@
 #define _FISINSTRUCTION_H_
 
 #include "../kd11cpu.h"
+#include "../lsi11instruction/lsi11instruction.h"
 
 // The FIS instruction format is used for the FIS instructions, FADD, FSUB,
 // FMUL and FDIV. The RTS instruction uses the same format.
-class FISInstruction
+class FISInstruction : public LSI11Instruction
 {
     union instr
 	{
@@ -24,6 +25,7 @@ class FISInstruction
 public:
 	FISInstruction (CpuData* cpu, u16 instruction);
 	u16 getRegister ();
+	u16 getOperationCode () override;
 };
 
 #endif // _FISINSTRUCTION_H_

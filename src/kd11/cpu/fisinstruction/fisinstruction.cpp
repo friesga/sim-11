@@ -2,6 +2,7 @@
 
 FISInstruction::FISInstruction (CpuData* cpu, u16 instruction)
     :
+    LSI11Instruction (cpu),
     instr_ {instruction},
 	cpu_ {cpu}
 {}

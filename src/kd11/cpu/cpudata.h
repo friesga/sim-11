@@ -41,6 +41,7 @@ public:
 	virtual CondData<u8> fetchByte (u16 address) = 0;
 	virtual bool putWord (u16 address, u16 value) = 0;
 	virtual bool putByte (u16 address, u8 value) = 0;
+	virtual bool popWord (u16 *destination) = 0;
 };
 
 #endif // _CPUDATA_H_

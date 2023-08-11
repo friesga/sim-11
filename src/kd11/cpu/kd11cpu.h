@@ -76,6 +76,7 @@ public:
 	CondData<u8> fetchByte (u16 address) override;
 	bool putWord (u16 address, u16 value) override;
 	bool putByte (u16 address, u8 value) override;
+	bool popWord (u16 *destination) override;
 
 private:
 	Qbus *bus_;
@@ -158,8 +159,6 @@ private:
 		std::function<bool(Float, Float)> argumentsValid,
 		std::function<Float(Float, Float)>);
 	constexpr void executeBranchIf (bool condition, CpuData*  cpu, u16 instruction);
-
-	bool popWord (u16 *destination);
 
 	// Instruction in the Program Control Group Traps and Operate Group.
 	// These instruction have no operands.

@@ -1,6 +1,11 @@
 #include "kd11cpu.h"
 #include "fisinstruction/fisinstruction.h"
 
+u16 FISInstruction::getOperationCode ()
+{
+    return instr_.decoded.opcode;
+}
+
 // Return the result of a floating point calculation
 void KD11CPU::returnFISresult (Float result, u16 registerNumber)
 {

@@ -6,6 +6,7 @@
 #include "bitmask.h"
 
 #include "kd11_na_instructions/jmp.h"
+#include "kd11_na_instructions/rts.h"
 
 #include <functional>
 #include <chrono>
@@ -178,9 +179,18 @@ void KD11CPU::execInstr ()
                 }
 
                 case 00002:
+                {
                     // 00 02 xx group
                     if ((insn & 0177770) == 0000200)
-                        RTS (this, insn);
+                    {
+                        // RTS (this, insn);
+                        unique_ptr<LSI11Instruction> instr = 
+                            make_unique<KD11_NA::RTS> (static_cast<CpuData*> (this), insn);
+                        CpuData::Trap returnedTrap = instr->execute ();
+                        if (returnedTrap != CpuData::Trap::None)
+                            setTrap (vectorTable [returnedTrap]);
+                        break;
+                    }
                     else if ((insn & 0177740) == 0000240)
                     {
                         if (insn & 020)
@@ -192,6 +202,7 @@ void KD11CPU::execInstr ()
                         // 00 02 10 - 00 02 27
                         unused (this, insn);
                     break;
+                }
 
                 case 00003:
                     SWAB (this, insn);
