@@ -29,24 +29,16 @@ namespace KD11_NA
     public:
         FMUL (CpuData* cpu, u16 instruction);
         CpuData::Trap execute () override;
-
-    private:
-        CpuData* cpu_;
-        u16 instruction_;
     };
 
     FMUL::FMUL (CpuData* cpu, u16 instruction)
         :
-        FISInstruction (cpu, instruction),
-        cpu_ {cpu},
-        instruction_ {instruction}
+        FISInstruction (cpu, instruction)
     {}
 
     CpuData::Trap FMUL::execute ()
     {
-        FISInstruction fisInstruction (cpu_, instruction_);
-
-        return executeFISinstruction (fisInstruction.getRegister (),
+        return executeFISinstruction (getRegister (),
             [] (Float f1, Float f2) {return true;},
             [] (Float f1, Float f2) {return f1 * f2;});
     }

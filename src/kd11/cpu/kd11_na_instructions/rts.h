@@ -21,23 +21,16 @@ namespace KD11_NA
     public:
         RTS (CpuData* cpu, u16 instruction);
         CpuData::Trap execute () override;
-
-    private:
-        CpuData* cpu_;
-        u16 instruction_;
     };
 
     RTS::RTS (CpuData* cpu, u16 instruction)
         :
-        FISInstruction (cpu, instruction),
-        cpu_ {cpu},
-        instruction_ {instruction}
+        FISInstruction (cpu, instruction)
     {}
 
     CpuData::Trap RTS::execute ()
     {
-        FISInstruction rtsInstruction (cpu_, instruction_);
-        u16 regNr = rtsInstruction.getRegister ();
+        u16 regNr = getRegister ();
 
         cpu_->registers ()[7] = cpu_->registers ()[regNr];
         cpu_->popWord (&cpu_->registers ()[regNr]);
