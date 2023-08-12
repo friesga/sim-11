@@ -18,6 +18,7 @@
 #include "kd11_na_instructions/com.h"
 #include "kd11_na_instructions/inc.h"
 #include "kd11_na_instructions/dec.h"
+#include "kd11_na_instructions/neg.h"
 
 #include <functional>
 #include <chrono>
@@ -339,8 +340,15 @@ void KD11CPU::execInstr ()
                 }
 
                 case 00054:
-                    NEG (this, insn);
+                {
+                    // NEG (this, insn);
+                    unique_ptr<LSI11Instruction> instr = 
+                        make_unique<KD11_NA::NEG> (static_cast<CpuData*> (this), insn);
+                    CpuData::Trap returnedTrap = instr->execute ();
+                    if (returnedTrap != CpuData::Trap::None)
+                            setTrap (vectorTable [returnedTrap]);
                     break;
+                }
 
                 case 00055:
                     ADC (this, insn);

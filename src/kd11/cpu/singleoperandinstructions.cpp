@@ -298,6 +298,7 @@ void KD11CPU::DECB (CpuData* cpu, u16 instruction)
     setConditionCodeIf_ClearElse (PSW_Z, !tmp);
 }
 
+/*
 // NEG - negate destination
 //
 // Operation:
@@ -333,6 +334,7 @@ void KD11CPU::NEG (CpuData* cpu, u16 instruction)
     setConditionCodeIf_ClearElse (PSW_Z, !operand);
     setConditionCodeIf_ClearElse (PSW_C, operand);
 }
+*/
 
 // NEGB - negate destination byte
 //
