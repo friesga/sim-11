@@ -277,6 +277,7 @@ void KD11CPU::DEC (CpuData* cpu, u16 instruction)
 }
 */
 
+/*
 // DECB - decrement destination byte
 //
 // Operation:
@@ -303,6 +304,7 @@ void KD11CPU::DECB (CpuData* cpu, u16 instruction)
     setConditionCodeIf_ClearElse (PSW_N, tmp & 0x80);
     setConditionCodeIf_ClearElse (PSW_Z, !tmp);
 }
+*/
 
 /*
 // NEG - negate destination
