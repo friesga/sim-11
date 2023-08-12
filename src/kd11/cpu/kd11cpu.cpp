@@ -14,6 +14,7 @@
 #include "kd11_na_instructions/ccc.h"
 #include "kd11_na_instructions/scc.h"
 #include "kd11_na_instructions/swab.h"
+#include "kd11_na_instructions/clr.h"
 
 #include <functional>
 #include <chrono>
@@ -291,8 +292,15 @@ void KD11CPU::execInstr ()
                     break;
 
                 case 00050:
-                    CLR (this, insn);
+                {
+                    // CLR (this, insn);
+                    unique_ptr<LSI11Instruction> instr = 
+                        make_unique<KD11_NA::CLR> (static_cast<CpuData*> (this), insn);
+                    CpuData::Trap returnedTrap = instr->execute ();
+                    if (returnedTrap != CpuData::Trap::None)
+                            setTrap (vectorTable [returnedTrap]);
                     break;
+                }
 
                 case 00051:
                     COM (this, insn);
