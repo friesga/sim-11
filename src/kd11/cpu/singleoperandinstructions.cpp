@@ -547,6 +547,7 @@ void KD11CPU::TSTB (CpuData* cpu, u16 instruction)
     setConditionCodeIf_ClearElse (PSW_Z, !source);
 }
 
+/*
 // ROR - rotate right
 //
 // Operation:
@@ -585,6 +586,7 @@ void KD11CPU::ROR (CpuData* cpu, u16 instruction)
     setConditionCodeIf_ClearElse (PSW_Z, !result);
     setConditionCodeIf_ClearElse (PSW_V, isSet (PSW_N) ^ isSet (PSW_C));
 }
+*/
 
 // RORB - rotate right byte
 //

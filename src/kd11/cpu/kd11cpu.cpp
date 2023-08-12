@@ -22,6 +22,7 @@
 #include "kd11_na_instructions/adc.h"
 #include "kd11_na_instructions/sbc.h"
 #include "kd11_na_instructions/tst.h"
+#include "kd11_na_instructions/ror.h"
 
 #include <functional>
 #include <chrono>
@@ -387,8 +388,15 @@ void KD11CPU::execInstr ()
                 }
 
                 case 00060:
-                    ROR (this, insn);
+                {
+                    // ROR (this, insn);
+                    unique_ptr<LSI11Instruction> instr = 
+                        make_unique<KD11_NA::ROR> (static_cast<CpuData*> (this), insn);
+                    CpuData::Trap returnedTrap = instr->execute ();
+                    if (returnedTrap != CpuData::Trap::None)
+                            setTrap (vectorTable [returnedTrap]);
                     break;
+                }
 
                 case 00061:
                     ROL (this, insn);
