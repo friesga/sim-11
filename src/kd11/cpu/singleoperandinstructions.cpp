@@ -622,6 +622,7 @@ void KD11CPU::RORB (CpuData* cpu, u16 instruction)
     setConditionCodeIf_ClearElse (PSW_V, isSet (PSW_N) ^ isSet (PSW_C));
 }
 
+/*
 // ROL - rotate left
 // 
 // Operation:
@@ -660,6 +661,7 @@ void KD11CPU::ROL (CpuData* cpu, u16 instruction)
     setConditionCodeIf_ClearElse (PSW_Z, !result);
     setConditionCodeIf_ClearElse (PSW_V, isSet (PSW_N) ^ isSet (PSW_C));
 }
+*/
 
 // ROLB - rotate left byte
 //
