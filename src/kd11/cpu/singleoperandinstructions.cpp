@@ -697,6 +697,7 @@ void KD11CPU::ROLB (CpuData* cpu, u16 instruction)
     setConditionCodeIf_ClearElse (PSW_V, isSet (PSW_N) ^ isSet (PSW_C));
 }
 
+/*
 // ASR - arithmetic shift right
 // 
 // Operation:
@@ -739,6 +740,7 @@ void KD11CPU::ASR (CpuData* cpu, u16 instruction)
     setConditionCodeIf_ClearElse (PSW_Z, !result);
     setConditionCodeIf_ClearElse (PSW_V, isSet (PSW_N) ^ isSet (PSW_C));
 }
+*/
 
 // ASRB - arithmetic shift right byte
 //
