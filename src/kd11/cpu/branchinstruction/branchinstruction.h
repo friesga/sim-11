@@ -1,9 +1,10 @@
 #ifndef _BRANCHINSTRUCTION_H_
 #define _BRANCHINSTRUCTION_H_
 
-#include "types.h"
+#include "../lsi11instruction/lsi11instruction.h"
+#include "../cpudata.h"
 
-class BranchInstruction
+class BranchInstruction : public LSI11Instruction
 {
     union instr
 	{
@@ -18,8 +19,9 @@ class BranchInstruction
 	instr_;
 
 public:
-	BranchInstruction (u16 instruction);
+	BranchInstruction (CpuData* cpu, u16 instruction);
 	s8 getOffset ();
+	u16 getOperationCode () override;
 };
 
 #endif // _BRANCHINSTRUCTION_H_

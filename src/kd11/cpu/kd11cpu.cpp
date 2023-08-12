@@ -41,6 +41,7 @@
 #include "kd11_na_instructions/rolb.h"
 #include "kd11_na_instructions/asrb.h"
 #include "kd11_na_instructions/aslb.h"
+#include "kd11_na_instructions/br.h"
 
 #include <functional>
 #include <chrono>
@@ -261,8 +262,15 @@ void KD11CPU::execInstr ()
                 case 00005:
                 case 00006:
                 case 00007:
-                    BR (this, insn);
+                {
+                    // BR (this, insn);
+                    unique_ptr<LSI11Instruction> instr = 
+                        make_unique<KD11_NA::BR> (static_cast<CpuData*> (this), insn);
+                    CpuData::Trap returnedTrap = instr->execute ();
+                    if (returnedTrap != CpuData::Trap::None)
+                            setTrap (vectorTable [returnedTrap]);
                     break;
+                }
 
                 case 00010:
                 case 00011:

@@ -9,6 +9,7 @@ constexpr void KD11CPU::executeBranchIf (bool condition,
         BR (cpu, instruction);
 }
 
+
 // BR - branch (unconditional)
 //
 // Operation:
@@ -19,10 +20,11 @@ constexpr void KD11CPU::executeBranchIf (bool condition,
 //
 void KD11CPU::BR (CpuData* cpu, u16 instruction)
 {
-    BranchInstruction branchInstruction {instruction};
+    BranchInstruction branchInstruction {cpu, instruction};
 
     register_[7] += (s16) branchInstruction.getOffset () * 2;
 }
+
 
 // BNE - branch if not equal (to zero)
 //
