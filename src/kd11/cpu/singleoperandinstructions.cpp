@@ -537,6 +537,7 @@ void KD11CPU::TST (CpuData* cpu, u16 instruction)
 }
 */
 
+/*
 // TSTB - test destination byte
 //
 // Operation:
@@ -560,6 +561,7 @@ void KD11CPU::TSTB (CpuData* cpu, u16 instruction)
     setConditionCodeIf_ClearElse (PSW_N, source & 0x80);
     setConditionCodeIf_ClearElse (PSW_Z, !source);
 }
+*/
 
 /*
 // ROR - rotate right
