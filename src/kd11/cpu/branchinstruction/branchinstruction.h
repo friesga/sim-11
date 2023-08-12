@@ -20,8 +20,13 @@ class BranchInstruction : public LSI11Instruction
 
 public:
 	BranchInstruction (CpuData* cpu, u16 instruction);
+	
 	s8 getOffset ();
 	u16 getOperationCode () override;
+
+protected:
+	constexpr void executeBranchIf (bool condition);
+	void executeBranch ();
 };
 
 #endif // _BRANCHINSTRUCTION_H_

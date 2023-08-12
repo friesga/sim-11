@@ -29,8 +29,7 @@ namespace KD11_NA
 
     CpuData::Trap BR::execute ()
     {
-        cpu_->registers ()[7] += (s16) getOffset () * 2;
-
+        executeBranch ();
         return CpuData::Trap::None;
     }
 }
