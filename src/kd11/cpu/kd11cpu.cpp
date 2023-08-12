@@ -28,6 +28,7 @@
 #include "kd11_na_instructions/asl.h"
 #include "kd11_na_instructions/mtps.h"
 #include "kd11_na_instructions/mfps.h"
+#include "kd11_na_instructions/sxt.h"
 
 #include <functional>
 #include <chrono>
@@ -441,8 +442,15 @@ void KD11CPU::execInstr ()
                     break;
 
                 case 00067:
-                    SXT (this, insn);
+                {
+                    // SXT (this, insn);
+                    unique_ptr<LSI11Instruction> instr = 
+                        make_unique<KD11_NA::SXT> (static_cast<CpuData*> (this), insn);
+                    CpuData::Trap returnedTrap = instr->execute ();
+                    if (returnedTrap != CpuData::Trap::None)
+                            setTrap (vectorTable [returnedTrap]);
                     break;
+                }
 
                 default:
                     // 006500-006677, 007000-007777

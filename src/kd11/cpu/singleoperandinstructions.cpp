@@ -926,6 +926,7 @@ void KD11CPU::MFPS (CpuData* cpu, u16 instruction)
 }
 */
 
+/*
 // SXT - sign extend
 //
 // Operation:
@@ -953,3 +954,4 @@ void KD11CPU::SXT (CpuData* cpu, u16 instruction)
     setConditionCodeIf_ClearElse (PSW_Z, !isSet (PSW_N));
     clearConditionCode (PSW_V);
 }
+*/
