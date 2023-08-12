@@ -25,7 +25,7 @@ void KD11CPU::BR (CpuData* cpu, u16 instruction)
     register_[7] += (s16) branchInstruction.getOffset () * 2;
 }
 
-
+/*
 // BNE - branch if not equal (to zero)
 //
 // Operation:
@@ -41,6 +41,7 @@ void KD11CPU::BNE (CpuData*  cpu, u16 instruction)
 {
     executeBranchIf (!isSet (PSW_Z), cpu, instruction);
 }
+*/
 
 // BEQ - branch if queal (to zero)
 //

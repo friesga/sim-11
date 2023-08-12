@@ -13,13 +13,6 @@ void BranchInstruction::executeBranch ()
     cpu_->registers ()[7] += (s16) getOffset () * 2;
 }
 
-// Execute the branch given in the instruction under the given condition.
-constexpr void BranchInstruction::executeBranchIf (bool condition)
-{
-    if (condition)
-        executeBranch ();
-}
-
 s8 BranchInstruction::getOffset ()
 {
     return instr_.decoded.offset;

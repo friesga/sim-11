@@ -42,6 +42,7 @@
 #include "kd11_na_instructions/asrb.h"
 #include "kd11_na_instructions/aslb.h"
 #include "kd11_na_instructions/br.h"
+#include "kd11_na_instructions/bne.h"
 
 #include <functional>
 #include <chrono>
@@ -276,8 +277,15 @@ void KD11CPU::execInstr ()
                 case 00011:
                 case 00012:
                 case 00013:
-                    BNE (this, insn);
+                {
+                    // BNE (this, insn);
+                    unique_ptr<LSI11Instruction> instr = 
+                        make_unique<KD11_NA::BNE> (static_cast<CpuData*> (this), insn);
+                    CpuData::Trap returnedTrap = instr->execute ();
+                    if (returnedTrap != CpuData::Trap::None)
+                            setTrap (vectorTable [returnedTrap]);
                     break;
+                }
 
                 case 00014:
                 case 00015:

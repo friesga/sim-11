@@ -29,4 +29,11 @@ protected:
 	void executeBranch ();
 };
 
+// Execute the branch given in the instruction under the given condition.
+constexpr void BranchInstruction::executeBranchIf (bool condition)
+{
+    if (condition)
+        executeBranch ();
+}
+
 #endif // _BRANCHINSTRUCTION_H_
