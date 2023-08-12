@@ -762,6 +762,7 @@ void KD11CPU::ASR (CpuData* cpu, u16 instruction)
 }
 */
 
+/*
 // ASRB - arithmetic shift right byte
 //
 // Operation:
@@ -799,6 +800,7 @@ void KD11CPU::ASRB (CpuData* cpu, u16 instruction)
     setConditionCodeIf_ClearElse (PSW_Z, !result);
     setConditionCodeIf_ClearElse (PSW_V, isSet (PSW_N) ^ isSet (PSW_C));
 }
+*/
 
 /*
 // ASL - arithmetic shift left
@@ -839,6 +841,7 @@ void KD11CPU::ASL (CpuData* cpu, u16 instruction)
 }
 */
 
+/*
 // ASLB - arithmetic shift left byte
 //
 // Operation:
@@ -871,6 +874,7 @@ void KD11CPU::ASLB (CpuData* cpu, u16 instruction)
     setConditionCodeIf_ClearElse (PSW_Z, !result);
     setConditionCodeIf_ClearElse (PSW_V, isSet (PSW_N) ^ isSet (PSW_C));
 }
+*/
 
 /*
 // MTPS - Move byte to Processor Status Word

@@ -39,6 +39,8 @@
 #include "kd11_na_instructions/tstb.h"
 #include "kd11_na_instructions/rorb.h"
 #include "kd11_na_instructions/rolb.h"
+#include "kd11_na_instructions/asrb.h"
+#include "kd11_na_instructions/aslb.h"
 
 #include <functional>
 #include <chrono>
@@ -767,12 +769,26 @@ void KD11CPU::execInstr ()
                 }
 
                 case 01062:
-                    ASRB (this, insn);
+                {
+                    // ASRB (this, insn);
+                    unique_ptr<LSI11Instruction> instr = 
+                        make_unique<KD11_NA::ASRB> (static_cast<CpuData*> (this), insn);
+                    CpuData::Trap returnedTrap = instr->execute ();
+                    if (returnedTrap != CpuData::Trap::None)
+                        setTrap (vectorTable [returnedTrap]);
                     break;
+                }
 
                 case 01063:
-                    ASLB (this, insn);
+                {
+                    // ASLB (this, insn);
+                    unique_ptr<LSI11Instruction> instr = 
+                        make_unique<KD11_NA::ASLB> (static_cast<CpuData*> (this), insn);
+                    CpuData::Trap returnedTrap = instr->execute ();
+                    if (returnedTrap != CpuData::Trap::None)
+                        setTrap (vectorTable [returnedTrap]);
                     break;
+                }
 
                 case 01064:
                 {
