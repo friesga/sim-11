@@ -215,6 +215,7 @@ void KD11CPU::INC (CpuData* cpu, u16 instruction)
 }
 */
 
+/*
 // INCB - increment destination byte
 //
 // Operation:
@@ -241,6 +242,7 @@ void KD11CPU::INCB (CpuData* cpu, u16 instruction)
     setConditionCodeIf_ClearElse (PSW_N, tmp & 0x80);
     setConditionCodeIf_ClearElse (PSW_Z, !tmp);
 }
+*/
 
 /*
 // DEC - decrement destination

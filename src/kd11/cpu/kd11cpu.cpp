@@ -31,6 +31,7 @@
 #include "kd11_na_instructions/sxt.h"
 #include "kd11_na_instructions/clrb.h"
 #include "kd11_na_instructions/comb.h"
+#include "kd11_na_instructions/incb.h"
 
 #include <functional>
 #include <chrono>
@@ -671,8 +672,15 @@ void KD11CPU::execInstr ()
                 }
 
                 case 01052:
-                    INCB (this, insn);
+                {
+                    // INCB (this, insn);
+                    unique_ptr<LSI11Instruction> instr = 
+                        make_unique<KD11_NA::INCB> (static_cast<CpuData*> (this), insn);
+                    CpuData::Trap returnedTrap = instr->execute ();
+                    if (returnedTrap != CpuData::Trap::None)
+                            setTrap (vectorTable [returnedTrap]);
                     break;
+                }
 
                 case 01053:
                     DECB (this, insn);
