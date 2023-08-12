@@ -29,6 +29,7 @@
 #include "kd11_na_instructions/mtps.h"
 #include "kd11_na_instructions/mfps.h"
 #include "kd11_na_instructions/sxt.h"
+#include "kd11_na_instructions/clrb.h"
 
 #include <functional>
 #include <chrono>
@@ -647,8 +648,15 @@ void KD11CPU::execInstr ()
                     break;
 
                 case 01050:
-                    CLRB (this, insn);
+                {
+                    // CLRB (this, insn);
+                    unique_ptr<LSI11Instruction> instr = 
+                        make_unique<KD11_NA::CLRB> (static_cast<CpuData*> (this), insn);
+                    CpuData::Trap returnedTrap = instr->execute ();
+                    if (returnedTrap != CpuData::Trap::None)
+                            setTrap (vectorTable [returnedTrap]);
                     break;
+                }
 
                 case 01051:
                     COMB (this, insn);

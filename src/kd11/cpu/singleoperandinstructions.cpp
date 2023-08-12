@@ -95,6 +95,7 @@ void KD11CPU::CLR (CpuData* cpu, u16 instruction)
 }
 */
 
+/*
 // CLRB - clear destination byte
 //
 // Operation:
@@ -114,6 +115,7 @@ void KD11CPU::CLRB (CpuData* cpu, u16 instruction)
     clearConditionCode (PSW_N | PSW_V | PSW_C);
     setConditionCode (PSW_Z);
 }
+*/
 
 /*
 // COM - complement destination
