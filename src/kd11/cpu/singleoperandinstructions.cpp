@@ -496,6 +496,7 @@ void KD11CPU::SBCB (CpuData* cpu, u16 instruction)
     setConditionCodeIf_ClearElse (PSW_Z, !destination);
 }
 
+/*
 // TST - test destination
 //
 // Operation
@@ -520,6 +521,7 @@ void KD11CPU::TST (CpuData* cpu, u16 instruction)
     setConditionCodeIf_ClearElse (PSW_N, contents & 0100000);
     setConditionCodeIf_ClearElse (PSW_Z, !contents);
 }
+*/
 
 // TSTB - test destination byte
 //
