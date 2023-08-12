@@ -780,6 +780,7 @@ void KD11CPU::ASRB (CpuData* cpu, u16 instruction)
     setConditionCodeIf_ClearElse (PSW_V, isSet (PSW_N) ^ isSet (PSW_C));
 }
 
+/*
 // ASL - arithmetic shift left
 //
 // Operation:
@@ -816,6 +817,7 @@ void KD11CPU::ASL (CpuData* cpu, u16 instruction)
     setConditionCodeIf_ClearElse (PSW_Z, !result);
     setConditionCodeIf_ClearElse (PSW_V, isSet (PSW_N) ^ isSet (PSW_C));
 }
+*/
 
 // ASLB - arithmetic shift left byte
 //
