@@ -604,6 +604,7 @@ void KD11CPU::ROR (CpuData* cpu, u16 instruction)
 }
 */
 
+/*
 // RORB - rotate right byte
 //
 // Operation:
@@ -637,6 +638,7 @@ void KD11CPU::RORB (CpuData* cpu, u16 instruction)
     setConditionCodeIf_ClearElse (PSW_Z, !result);
     setConditionCodeIf_ClearElse (PSW_V, isSet (PSW_N) ^ isSet (PSW_C));
 }
+*/
 
 /*
 // ROL - rotate left
@@ -679,6 +681,7 @@ void KD11CPU::ROL (CpuData* cpu, u16 instruction)
 }
 */
 
+/*
 // ROLB - rotate left byte
 //
 // Operation:
@@ -712,6 +715,7 @@ void KD11CPU::ROLB (CpuData* cpu, u16 instruction)
     setConditionCodeIf_ClearElse (PSW_Z, !result);
     setConditionCodeIf_ClearElse (PSW_V, isSet (PSW_N) ^ isSet (PSW_C));
 }
+*/
 
 /*
 // ASR - arithmetic shift right
