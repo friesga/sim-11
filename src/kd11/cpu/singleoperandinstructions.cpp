@@ -479,6 +479,7 @@ void KD11CPU::SBC (CpuData* cpu, u16 instruction)
 }
 */
 
+/*
 // SBCB - subtract carry byte
 //
 // Operation:
@@ -507,6 +508,7 @@ void KD11CPU::SBCB (CpuData* cpu, u16 instruction)
     setConditionCodeIf_ClearElse (PSW_N, destination & 0x80);
     setConditionCodeIf_ClearElse (PSW_Z, !destination);
 }
+*/
 
 /*
 // TST - test destination
