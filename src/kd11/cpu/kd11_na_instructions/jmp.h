@@ -5,6 +5,22 @@
 #include "../cpudata.h"
 #include "../operandlocation/operandlocation.h"
 
+// JMP - jump
+//
+// Operation:
+//  PC <- (dst)
+//
+// JMP provides more flexible program branching than provided with the branch
+// instructions. Control may be transferred to any location in memory (no
+// range limitation) and can be accomplished with the full flexibility of the
+// addressing modes, with the exception of register mode 0. Execution of a
+// jump with mode 0 will cause an "illegal instruction" condition, and will
+// cause the CPU to trap to vector address 4. (Program control cannot be
+// transferred to a register.) Register deferred mode is legal and will cause
+// program control to be transferred to the address held in the specified
+// register. Note that instructions are word data and must therefore be
+// fetched from an even-numbered address.
+//
 namespace KD11_NA
 {
     class JMP : public SingleOperandInstruction
@@ -14,16 +30,12 @@ namespace KD11_NA
         CpuData::Trap execute () override;
 
     private:
-        CpuData* cpu_;
-        u16 instruction_;
         OperandLocation location_;
     };
 
     JMP::JMP (CpuData* cpu, u16 instruction)
         :
         SingleOperandInstruction (cpu, instruction),
-        cpu_ {cpu},
-        instruction_ {instruction},
         location_ {getOperandLocation (cpu_->registers ())}
     {}
 
