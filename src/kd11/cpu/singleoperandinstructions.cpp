@@ -178,6 +178,7 @@ void KD11CPU::COMB (CpuData* cpu, u16 instruction)
     setConditionCodeIf_ClearElse (PSW_Z, !((u8) operand));
 }
 
+/*
 // INC - increment destination
 //
 // Operation:
@@ -208,6 +209,7 @@ void KD11CPU::INC (CpuData* cpu, u16 instruction)
     setConditionCodeIf_ClearElse (PSW_N, result & 0x8000);
     setConditionCodeIf_ClearElse (PSW_Z, !result);
 }
+*/
 
 // INCB - increment destination byte
 //

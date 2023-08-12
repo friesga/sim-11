@@ -16,6 +16,7 @@
 #include "kd11_na_instructions/swab.h"
 #include "kd11_na_instructions/clr.h"
 #include "kd11_na_instructions/com.h"
+#include "kd11_na_instructions/inc.h"
 
 #include <functional>
 #include <chrono>
@@ -315,8 +316,15 @@ void KD11CPU::execInstr ()
                 }
 
                 case 00052:
-                    INC (this, insn);
+                {
+                    // INC (this, insn);
+                    unique_ptr<LSI11Instruction> instr = 
+                        make_unique<KD11_NA::INC> (static_cast<CpuData*> (this), insn);
+                    CpuData::Trap returnedTrap = instr->execute ();
+                    if (returnedTrap != CpuData::Trap::None)
+                            setTrap (vectorTable [returnedTrap]);
                     break;
+                }
 
                 case 00053:
                     DEC (this, insn);
