@@ -852,6 +852,7 @@ void KD11CPU::ASLB (CpuData* cpu, u16 instruction)
     setConditionCodeIf_ClearElse (PSW_V, isSet (PSW_N) ^ isSet (PSW_C));
 }
 
+/*
 // MTPS - Move byte to Processor Status Word
 //
 // Operation:
@@ -879,6 +880,7 @@ void KD11CPU::MTPS (CpuData* cpu, u16 instruction)
     // Allow bits 5/6/7 to be set and cleared
     psw_ = (psw_ & PSW_T) | (newValue & ~PSW_T);
 }
+*/
 
 // MFPS - Move byte from Processor Status Word
 //

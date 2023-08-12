@@ -26,6 +26,7 @@
 #include "kd11_na_instructions/rol.h"
 #include "kd11_na_instructions/asr.h"
 #include "kd11_na_instructions/asl.h"
+#include "kd11_na_instructions/mtps.h"
 
 #include <functional>
 #include <chrono>
@@ -685,8 +686,15 @@ void KD11CPU::execInstr ()
                     break;
 
                 case 01064:
-                    MTPS (this, insn);
+                {
+                    // MTPS (this, insn);
+                    unique_ptr<LSI11Instruction> instr = 
+                        make_unique<KD11_NA::MTPS> (static_cast<CpuData*> (this), insn);
+                    CpuData::Trap returnedTrap = instr->execute ();
+                    if (returnedTrap != CpuData::Trap::None)
+                            setTrap (vectorTable [returnedTrap]);
                     break;
+                }
 
                 case 01067:
                     MFPS (this, insn);
