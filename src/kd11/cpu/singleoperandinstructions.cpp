@@ -2,6 +2,7 @@
 #include "trace/trace.h"
 #include "singleoperandinstruction/singleoperandinstruction.h"
 
+/*
 // JMP - jump
 //
 // Operation:
@@ -31,6 +32,7 @@ void KD11CPU::JMP (CpuData* cpu, u16 instruction)
         setTrap (&busError);
     }
 }
+*/
 
 // SWAB - swap bytes
 //
@@ -47,6 +49,7 @@ void KD11CPU::JMP (CpuData* cpu, u16 instruction)
 // Exchanges high-order byte and low-order byte of the destination
 // word (destination must be a word address).
 //
+/*
 void KD11CPU::SWAB (CpuData* cpu, u16 instruction)
 {
     SingleOperandInstruction soi {cpu, instruction};
@@ -65,6 +68,7 @@ void KD11CPU::SWAB (CpuData* cpu, u16 instruction)
     clearConditionCode (PSW_V);
     clearConditionCode (PSW_C);
 }
+*/
 
 // CLR - clear destination
 //

@@ -13,6 +13,7 @@
 #include "kd11_na_instructions/fdiv.h"
 #include "kd11_na_instructions/ccc.h"
 #include "kd11_na_instructions/scc.h"
+#include "kd11_na_instructions/swab.h"
 
 #include <functional>
 #include <chrono>
@@ -219,8 +220,15 @@ void KD11CPU::execInstr ()
                 }
 
                 case 00003:
-                    SWAB (this, insn);
+                {
+                    // SWAB (this, insn);
+                    unique_ptr<LSI11Instruction> instr = 
+                            make_unique<KD11_NA::SWAB> (static_cast<CpuData*> (this), insn);
+                    CpuData::Trap returnedTrap = instr->execute ();
+                    if (returnedTrap != CpuData::Trap::None)
+                            setTrap (vectorTable [returnedTrap]);
                     break;
+                }
 
                 case 00004: 
                 case 00005:
