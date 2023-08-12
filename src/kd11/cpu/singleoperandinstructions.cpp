@@ -882,6 +882,7 @@ void KD11CPU::MTPS (CpuData* cpu, u16 instruction)
 }
 */
 
+/*
 // MFPS - Move byte from Processor Status Word
 //
 // Operation:
@@ -923,6 +924,7 @@ void KD11CPU::MFPS (CpuData* cpu, u16 instruction)
     setConditionCodeIf_ClearElse (PSW_Z, !(contents & 0xFF));
     clearConditionCode (PSW_V);
 }
+*/
 
 // SXT - sign extend
 //
