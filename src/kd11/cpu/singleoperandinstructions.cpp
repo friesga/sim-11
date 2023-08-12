@@ -152,6 +152,7 @@ void KD11CPU::COM (CpuData* cpu, u16 instruction)
 }
 */
 
+/*
 // COMB - complement destination byte
 //
 // Operation:
@@ -179,6 +180,7 @@ void KD11CPU::COMB (CpuData* cpu, u16 instruction)
     setConditionCodeIf_ClearElse (PSW_N, operand & 0x80);
     setConditionCodeIf_ClearElse (PSW_Z, !((u8) operand));
 }
+*/
 
 /*
 // INC - increment destination
