@@ -365,6 +365,7 @@ void KD11CPU::NEGB (CpuData* cpu, u16 instruction)
     setConditionCodeIf_ClearElse (PSW_C, operand);
 }
 
+/*/
 // ADC - add carry
 //
 // Operation:
@@ -399,6 +400,7 @@ void KD11CPU::ADC (CpuData* cpu, u16 instruction)
     setConditionCodeIf_ClearElse (PSW_N, result & 0x8000);
     setConditionCodeIf_ClearElse (PSW_Z, !result);
 }
+*/
 
 // ADCB - add carry byte
 //
