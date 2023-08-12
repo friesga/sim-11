@@ -34,6 +34,7 @@
 #include "kd11_na_instructions/incb.h"
 #include "kd11_na_instructions/decb.h"
 #include "kd11_na_instructions/negb.h"
+#include "kd11_na_instructions/adcb.h"
 
 #include <functional>
 #include <chrono>
@@ -707,8 +708,15 @@ void KD11CPU::execInstr ()
                 }
 
                 case 01055:
-                    ADCB (this, insn);
+                {
+                    // ADCB (this, insn);
+                    unique_ptr<LSI11Instruction> instr = 
+                        make_unique<KD11_NA::ADCB> (static_cast<CpuData*> (this), insn);
+                    CpuData::Trap returnedTrap = instr->execute ();
+                    if (returnedTrap != CpuData::Trap::None)
+                            setTrap (vectorTable [returnedTrap]);
                     break;
+                }
 
                 case 01056:
                     SBCB (this, insn);
