@@ -344,6 +344,7 @@ void KD11CPU::NEG (CpuData* cpu, u16 instruction)
 }
 */
 
+/*
 // NEGB - negate destination byte
 //
 // Operation:
@@ -372,6 +373,7 @@ void KD11CPU::NEGB (CpuData* cpu, u16 instruction)
     setConditionCodeIf_ClearElse (PSW_Z, !operand);
     setConditionCodeIf_ClearElse (PSW_C, operand);
 }
+*/
 
 /*/
 // ADC - add carry
