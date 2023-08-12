@@ -238,6 +238,7 @@ void KD11CPU::INCB (CpuData* cpu, u16 instruction)
     setConditionCodeIf_ClearElse (PSW_Z, !tmp);
 }
 
+/*
 // DEC - decrement destination
 //
 // Operation:
@@ -268,6 +269,7 @@ void KD11CPU::DEC (CpuData* cpu, u16 instruction)
     setConditionCodeIf_ClearElse (PSW_N, result & 0100000);
     setConditionCodeIf_ClearElse (PSW_Z, !result);
 }
+*/
 
 // DECB - decrement destination byte
 //
