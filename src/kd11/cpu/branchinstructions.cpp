@@ -165,6 +165,7 @@ void KD11CPU::BMI (CpuData*  cpu, u16 instruction)
 }
 */
 
+/*
 // BHI - branch if higher
 //
 // Operation:
@@ -180,6 +181,7 @@ void KD11CPU::BHI (CpuData*  cpu, u16 instruction)
 {
     executeBranchIf (!isSet (PSW_C) && !isSet (PSW_Z), cpu, instruction);
 }
+*/
 
 // BLOS - branch if lower or same
 //
