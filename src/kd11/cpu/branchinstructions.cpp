@@ -99,6 +99,7 @@ void KD11CPU::BLT (CpuData*  cpu, u16 instruction)
 }
 */
 
+/*
 // BGT - branch if greater than (zero)
 //
 // Operation:
@@ -111,6 +112,7 @@ void KD11CPU::BGT (CpuData*  cpu, u16 instruction)
     executeBranchIf ((isSet (PSW_Z) || (isSet (PSW_N) ^ isSet (PSW_V))) == 0,
         cpu, instruction);
 }
+*/
 
 // BLE - branch if less than or equal (to zero)
 //
