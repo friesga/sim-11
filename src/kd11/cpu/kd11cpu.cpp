@@ -52,6 +52,7 @@
 #include "kd11_na_instructions/bmi.h"
 #include "kd11_na_instructions/bhi.h"
 #include "kd11_na_instructions/blos.h"
+#include "kd11_na_instructions/bvc.h"
 
 #include <functional>
 #include <chrono>
@@ -708,8 +709,15 @@ void KD11CPU::execInstr ()
                 case 01021:
                 case 01022:
                 case 01023:
-                    BVC (this, insn);
+                {
+                    // BVC (this, insn);
+                    unique_ptr<LSI11Instruction> instr = 
+                        make_unique<KD11_NA::BVC> (static_cast<CpuData*> (this), insn);
+                    CpuData::Trap returnedTrap = instr->execute ();
+                    if (returnedTrap != CpuData::Trap::None)
+                        setTrap (vectorTable [returnedTrap]);
                     break;
+                }
 
                 case 01024:
                 case 01025:
