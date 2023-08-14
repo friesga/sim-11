@@ -183,6 +183,7 @@ void KD11CPU::BHI (CpuData*  cpu, u16 instruction)
 }
 */
 
+/*
 // BLOS - branch if lower or same
 //
 // Operation:
@@ -199,6 +200,7 @@ void KD11CPU::BLOS (CpuData*  cpu, u16 instruction)
 {
     executeBranchIf (isSet (PSW_C) || isSet (PSW_Z), cpu, instruction);
 }
+*/
 
 // BVC - branch if overflow is clear
 //
