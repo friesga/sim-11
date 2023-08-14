@@ -219,6 +219,7 @@ void KD11CPU::BVC (CpuData*  cpu, u16 instruction)
 }
 */
 
+/*
 // BVS - branch if overflow is set
 //
 // Operation:
@@ -233,6 +234,7 @@ void KD11CPU::BVS (CpuData*  cpu, u16 instruction)
 {
     executeBranchIf (isSet (PSW_V), cpu, instruction);
 }
+*/
 
 // BCC - branch if carry is clear
 //
