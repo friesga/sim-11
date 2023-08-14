@@ -130,7 +130,7 @@ void KD11CPU::BLE (CpuData*  cpu, u16 instruction)
 }
 */
 
-
+/*
 // BPL - branch if plus
 //
 // Operation:
@@ -145,6 +145,7 @@ void KD11CPU::BPL (CpuData*  cpu, u16 instruction)
 {
     executeBranchIf (!isSet (PSW_N), cpu, instruction);
 }
+*/
 
 
 // BMI - branch if minus

@@ -48,6 +48,7 @@
 #include "kd11_na_instructions/blt.h"
 #include "kd11_na_instructions/bgt.h"
 #include "kd11_na_instructions/ble.h"
+#include "kd11_na_instructions/bpl.h"
 
 #include <functional>
 #include <chrono>
@@ -648,8 +649,15 @@ void KD11CPU::execInstr ()
                 case 01001:
                 case 01002:
                 case 01003:
-                    BPL (this, insn);
+                {
+                    // BPL (this, insn);
+                    unique_ptr<LSI11Instruction> instr = 
+                        make_unique<KD11_NA::BPL> (static_cast<CpuData*> (this), insn);
+                    CpuData::Trap returnedTrap = instr->execute ();
+                    if (returnedTrap != CpuData::Trap::None)
+                        setTrap (vectorTable [returnedTrap]);
                     break;
+                }
 
                 case 01004:
                 case 01005:
