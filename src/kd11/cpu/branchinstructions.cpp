@@ -43,6 +43,7 @@ void KD11CPU::BNE (CpuData*  cpu, u16 instruction)
 }
 */
 
+/*
 // BEQ - branch if queal (to zero)
 //
 // Operation:
@@ -58,6 +59,7 @@ void KD11CPU::BEQ (CpuData*  cpu, u16 instruction)
 {
     executeBranchIf (isSet (PSW_Z), cpu, instruction);
 }
+*/
 
 // BGE - branch if greater than or equal (to zero)
 // 
