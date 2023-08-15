@@ -253,6 +253,7 @@ void KD11CPU::BCC (CpuData*  cpu, u16 instruction)
 }
 */
 
+/*
 // BCS - branch if carry is set
 //
 // Operation:
@@ -267,3 +268,4 @@ void KD11CPU::BCS (CpuData*  cpu, u16 instruction)
 {
     executeBranchIf (isSet (PSW_C), cpu, instruction);
 }
+*/
