@@ -54,6 +54,7 @@
 #include "kd11_na_instructions/blos.h"
 #include "kd11_na_instructions/bvc.h"
 #include "kd11_na_instructions/bvs.h"
+#include "kd11_na_instructions/bcc.h"
 
 #include <functional>
 #include <chrono>
@@ -738,8 +739,15 @@ void KD11CPU::execInstr ()
                 case 01031:
                 case 01032:
                 case 01033:
-                    BCC (this, insn);
+                {
+                    // BCC (this, insn);
+                    unique_ptr<LSI11Instruction> instr = 
+                        make_unique<KD11_NA::BCC> (static_cast<CpuData*> (this), insn);
+                    CpuData::Trap returnedTrap = instr->execute ();
+                    if (returnedTrap != CpuData::Trap::None)
+                        setTrap (vectorTable [returnedTrap]);
                     break;
+                }
 
                 case 01034:
                 case 01035:
