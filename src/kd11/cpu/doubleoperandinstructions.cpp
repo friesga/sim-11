@@ -157,6 +157,7 @@ void KD11CPU::CMPB (CpuData* cpu, u16 instruction)
     setConditionCodeIf_ClearElse (PSW_C, (source - destination) & 0x100);
 }
 
+/*
 // BIT - bit test
 //
 // Operation:
@@ -193,6 +194,7 @@ void KD11CPU::BIT (CpuData* cpu, u16 instruction)
     setConditionCodeIf_ClearElse (PSW_Z, !tmp);
     clearConditionCode (PSW_V);
 }
+*/
 
 // BITB - bit test byte
 //
