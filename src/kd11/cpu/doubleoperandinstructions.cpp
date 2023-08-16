@@ -80,6 +80,7 @@ void KD11CPU::MOVB (CpuData* cpu, u16 instruction)
     clearConditionCode (PSW_V);
 }
 
+/*
 // CMP - compare source to destination
 //
 // Operation:
@@ -121,6 +122,7 @@ void KD11CPU::CMP (CpuData* cpu, u16 instruction)
         && ((destination & 0x8000) == (tmp & 0x8000)));
     setConditionCodeIf_ClearElse (PSW_C, ((u32)source - (u32)destination) & 0x10000);
 }
+*/
 
 // CMPB - compare source to destination byte
 // 
