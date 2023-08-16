@@ -36,13 +36,8 @@ namespace KD11_NA
 
     CpuData::Trap MOV::execute ()
     {
-        if (!getSourceWordOperand ())
-            return CpuData::Trap::BusError;
-
-        OperandLocation destOperandLocation =
-            getDestinationOperandLocation (cpu_->registers ());
-
-        if (!destOperandLocation.write (source_))
+        if (!readSourceWordOperand () || 
+                !writeDestinationWordOperand (source_))
             return CpuData::Trap::BusError;
 
         setConditionCodeIf_ClearElse (PSW_N, source_ & 0100000);

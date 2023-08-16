@@ -36,9 +36,15 @@ protected:
 	CondData<u16> source_;
 	CondData<u16> destination_;
 
-	bool getSourceWordOperand ();
-	bool getDestinationWordOperand ();
-	bool getDestinationOperand ();
+	bool readSourceWordOperand ();
+	bool readDestinationWordOperand ();
+	bool writeDestinationWordOperand (u16 operand);
+
+private:
+	// The destination operand location is defined as a class memeber as for
+	// some instructions, such as the ADD instruction, that location has to
+	// be used to retrieve and to write the destination operand.
+	OperandLocation destinationOperandLocation_ {};
 };
 
 #endif // _DOUBLEINSTRUCTIONFORMAT_H_

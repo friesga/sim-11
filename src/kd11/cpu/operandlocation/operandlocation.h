@@ -17,6 +17,7 @@ using std::monostate;
 class OperandLocation
 {
 public:
+    OperandLocation ();
     OperandLocation (CpuData *cpu, u8 registerNumber);
     OperandLocation (CpuData *cpu, CondData<u16> memoryAddress);
     template <typename T> bool isA ();
@@ -28,7 +29,7 @@ public:
     bool writeByte (u8 contents);
 
 private:
-    variant <u8, CondData <u16>> location_;
+    variant <monostate, u8, CondData <u16>> location_;
     CpuData *cpu_;
 };
 

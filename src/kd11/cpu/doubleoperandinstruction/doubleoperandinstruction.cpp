@@ -1,5 +1,10 @@
 #include "doubleoperandinstruction.h"
 
+// It would be nice if source and destination operand locations and operands
+// could be retrieved in the constructor. This is not possible however, as
+// not for all instructions the destination operand has to be retrieved and
+// we need a return value for the retrieval.
+// 
 // Initialize the instr struct with the first member
 DoubleOperandInstruction::DoubleOperandInstruction (CpuData* cpu, u16 instruction)
 	:
@@ -24,7 +29,7 @@ u16 DoubleOperandInstruction::getOperationCode ()
 	return instr_.decoded.opcode;
 }
 
-bool DoubleOperandInstruction::getSourceWordOperand ()
+bool DoubleOperandInstruction::readSourceWordOperand ()
 {
 	OperandLocation sourceOperandLocation = 
 		getSourceOperandLocation (cpu_->registers ());
@@ -32,10 +37,25 @@ bool DoubleOperandInstruction::getSourceWordOperand ()
 	return source_.hasValue ();
 }
 
-bool DoubleOperandInstruction::getDestinationWordOperand ()
+bool DoubleOperandInstruction::readDestinationWordOperand ()
 {
-	OperandLocation destinationOperandLocation = 
+	destinationOperandLocation_ = 
 		getDestinationOperandLocation (cpu_->registers ());
-    destination_ = destinationOperandLocation.wordContents ();
+    destination_ = destinationOperandLocation_.wordContents ();
 	return destination_.hasValue ();
+}
+
+// For most instructions the destination operand location will have be
+// determined when the destion operand has been retrieved. Some instructions
+// however just write the destination operand. In these cases the operand
+// location still has to be determined.
+bool DoubleOperandInstruction::writeDestinationWordOperand (u16 operand)
+{
+	if (!destinationOperandLocation_.isValid ())
+	{
+		destinationOperandLocation_ = 
+			getDestinationOperandLocation (cpu_->registers ());
+	}
+	
+	return destinationOperandLocation_.write (operand);
 }

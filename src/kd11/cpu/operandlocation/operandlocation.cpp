@@ -4,6 +4,14 @@ using std::monostate;
 using std::get;
 using std::holds_alternative;
 
+// Allow an uninitialized OperandLocation to be able to define it as a
+// class memeber.
+OperandLocation::OperandLocation ()
+    :
+    location_ {monostate {}},
+    cpu_ {}
+{}
+
 OperandLocation::OperandLocation (CpuData *cpu, u8 registerNumber)
     :
     location_ {registerNumber},
