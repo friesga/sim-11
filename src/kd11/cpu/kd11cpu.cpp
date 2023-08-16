@@ -59,6 +59,7 @@
 #include "kd11_na_instructions/mov.h"
 #include "kd11_na_instructions/cmp.h"
 #include "kd11_na_instructions/bit.h"
+#include "kd11_na_instructions/bic.h"
 
 #include <functional>
 #include <chrono>
@@ -572,8 +573,15 @@ void KD11CPU::execInstr ()
         }
 
         case 004:
-            BIC (this, insn);
+        {
+            // BIC (this, insn);
+            unique_ptr<LSI11Instruction> instr = 
+                make_unique<KD11_NA::BIC> (static_cast<CpuData*> (this), insn);
+            CpuData::Trap returnedTrap = instr->execute ();
+            if (returnedTrap != CpuData::Trap::None)
+                setTrap (vectorTable [returnedTrap]);
             break;
+        }
 
         case 005:
             BIS (this, insn);
