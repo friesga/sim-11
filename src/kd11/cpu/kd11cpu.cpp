@@ -60,6 +60,7 @@
 #include "kd11_na_instructions/cmp.h"
 #include "kd11_na_instructions/bit.h"
 #include "kd11_na_instructions/bic.h"
+#include "kd11_na_instructions/bis.h"
 
 #include <functional>
 #include <chrono>
@@ -584,8 +585,15 @@ void KD11CPU::execInstr ()
         }
 
         case 005:
-            BIS (this, insn);
+        {
+            // BIS (this, insn);
+            unique_ptr<LSI11Instruction> instr = 
+                make_unique<KD11_NA::BIS> (static_cast<CpuData*> (this), insn);
+            CpuData::Trap returnedTrap = instr->execute ();
+            if (returnedTrap != CpuData::Trap::None)
+                setTrap (vectorTable [returnedTrap]);
             break;
+        }
 
         case 006:
             ADD (this, insn);
