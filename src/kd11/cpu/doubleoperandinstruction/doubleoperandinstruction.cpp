@@ -24,3 +24,18 @@ u16 DoubleOperandInstruction::getOperationCode ()
 	return instr_.decoded.opcode;
 }
 
+bool DoubleOperandInstruction::getSourceWordOperand ()
+{
+	OperandLocation sourceOperandLocation = 
+		getSourceOperandLocation (cpu_->registers ());
+    source_ = sourceOperandLocation.wordContents ();
+	return source_.hasValue ();
+}
+
+bool DoubleOperandInstruction::getDestinationWordOperand ()
+{
+	OperandLocation destinationOperandLocation = 
+		getDestinationOperandLocation (cpu_->registers ());
+    destination_ = destinationOperandLocation.wordContents ();
+	return destination_.hasValue ();
+}

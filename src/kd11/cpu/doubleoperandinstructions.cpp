@@ -2,6 +2,7 @@
 
 #include "bitmask.h"
 
+/*
 // MOV - move source to destination
 //
 // Operation:
@@ -36,6 +37,7 @@ void KD11CPU::MOV (CpuData* cpu, u16 instruction)
     setConditionCodeIf_ClearElse (PSW_Z, !source);
     clearConditionCode (PSW_V);
 }
+*/
 
 // MOVB - move source to destination
 // 

@@ -26,9 +26,19 @@ class DoubleOperandInstruction : public LSI11Instruction
 
 public:
 	DoubleOperandInstruction (CpuData* cpu, u16 instruction);
+
+	// ToDo: Make getSourceOperandLocation and getDestinationOperandLocation private
 	OperandLocation getSourceOperandLocation (u16 (&reg)[8]);
 	OperandLocation getDestinationOperandLocation (u16 (&reg)[8]);
 	u16 getOperationCode ();
+
+protected:
+	CondData<u16> source_;
+	CondData<u16> destination_;
+
+	bool getSourceWordOperand ();
+	bool getDestinationWordOperand ();
+	bool getDestinationOperand ();
 };
 
 #endif // _DOUBLEINSTRUCTIONFORMAT_H_
