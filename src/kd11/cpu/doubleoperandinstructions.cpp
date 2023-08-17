@@ -427,6 +427,7 @@ void KD11CPU::ADD (CpuData* cpu, u16 instruction)
 }
 */
 
+/*
 // SUB - subtract src from dst
 //
 // Operation:
@@ -468,3 +469,4 @@ void KD11CPU::SUB (CpuData* cpu, u16 instruction)
         && ((source & 0x8000) == (result & 0x8000)));
     setConditionCodeIf_ClearElse (PSW_C, ((u32) destination - (u32) source) & 0x10000);
 }
+*/

@@ -62,6 +62,7 @@
 #include "kd11_na_instructions/bic.h"
 #include "kd11_na_instructions/bis.h"
 #include "kd11_na_instructions/add.h"
+#include "kd11_na_instructions/sub.h"
 
 #include <functional>
 #include <chrono>
@@ -1007,8 +1008,15 @@ void KD11CPU::execInstr ()
             break;
 
         case 016:
-            SUB (this, insn);
+        {
+            // SUB (this, insn);
+            unique_ptr<LSI11Instruction> instr = 
+                make_unique<KD11_NA::SUB> (static_cast<CpuData*> (this), insn);
+            CpuData::Trap returnedTrap = instr->execute ();
+            if (returnedTrap != CpuData::Trap::None)
+                setTrap (vectorTable [returnedTrap]);
             break;
+        }
 
         default:
             unused (this, insn);
