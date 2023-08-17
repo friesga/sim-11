@@ -36,10 +36,13 @@ namespace KD11_NA
 
     CpuData::Trap BIT::execute ()
     {
-        if (!readSourceWordOperand () || !readDestinationWordOperand ())
+        CondData<u16> source, destination;
+
+        if (!readSourceWordOperand (&source) || 
+                !readDestinationWordOperand (&destination))
             return CpuData::Trap::BusError;
 
-        u16 tmp = source_ & destination_;
+        u16 tmp = source & destination;
         setConditionCodeIf_ClearElse (PSW_N, tmp & 0x8000);
         setConditionCodeIf_ClearElse (PSW_Z, !tmp);
         clearConditionCode (PSW_V);

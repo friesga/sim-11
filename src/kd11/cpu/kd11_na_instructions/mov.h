@@ -36,12 +36,14 @@ namespace KD11_NA
 
     CpuData::Trap MOV::execute ()
     {
-        if (!readSourceWordOperand () || 
-                !writeDestinationWordOperand (source_))
+        CondData<u16> source, destination;
+
+        if (!readSourceWordOperand (&source) || 
+                !writeDestinationWordOperand (source))
             return CpuData::Trap::BusError;
 
-        setConditionCodeIf_ClearElse (PSW_N, source_ & 0100000);
-        setConditionCodeIf_ClearElse (PSW_Z, !source_);
+        setConditionCodeIf_ClearElse (PSW_N, source & 0100000);
+        setConditionCodeIf_ClearElse (PSW_Z, !source);
         clearConditionCode (PSW_V);
 
         return CpuData::Trap::None;

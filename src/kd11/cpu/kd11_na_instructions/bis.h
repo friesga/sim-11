@@ -37,10 +37,13 @@ namespace KD11_NA
 
     CpuData::Trap BIS::execute ()
     {
-        if (!readSourceWordOperand () || !readDestinationWordOperand ())
+        CondData<u16> source, destination;
+
+        if (!readSourceWordOperand (&source) || 
+                !readDestinationWordOperand (&destination))
             return CpuData::Trap::BusError;
 
-        u16 tmp = source_ | destination_;
+        u16 tmp = source | destination;
 
         if (!writeDestinationWordOperand (tmp))
             return CpuData::Trap::BusError;

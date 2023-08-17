@@ -29,20 +29,20 @@ u16 DoubleOperandInstruction::getOperationCode ()
 	return instr_.decoded.opcode;
 }
 
-bool DoubleOperandInstruction::readSourceWordOperand ()
+bool DoubleOperandInstruction::readSourceWordOperand (CondData<u16> *source)
 {
 	OperandLocation sourceOperandLocation = 
 		getSourceOperandLocation (cpu_->registers ());
-    source_ = sourceOperandLocation.wordContents ();
-	return source_.hasValue ();
+    *source = sourceOperandLocation.wordContents ();
+	return (*source).hasValue ();
 }
 
-bool DoubleOperandInstruction::readDestinationWordOperand ()
+bool DoubleOperandInstruction::readDestinationWordOperand (CondData<u16> *destination)
 {
 	destinationOperandLocation_ = 
 		getDestinationOperandLocation (cpu_->registers ());
-    destination_ = destinationOperandLocation_.wordContents ();
-	return destination_.hasValue ();
+    *destination = destinationOperandLocation_.wordContents ();
+	return (*destination).hasValue ();
 }
 
 // For most instructions the destination operand location will have be

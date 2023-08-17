@@ -33,11 +33,8 @@ public:
 	u16 getOperationCode ();
 
 protected:
-	CondData<u16> source_;
-	CondData<u16> destination_;
-
-	bool readSourceWordOperand ();
-	bool readDestinationWordOperand ();
+	bool readSourceWordOperand (CondData<u16> *source);
+	bool readDestinationWordOperand (CondData<u16> *destination);
 	bool writeDestinationWordOperand (u16 operand);
 
 private:
