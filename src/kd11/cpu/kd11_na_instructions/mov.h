@@ -39,7 +39,7 @@ namespace KD11_NA
         CondData<u16> source, destination;
 
         if (!readSourceOperand (&source) || 
-                !writeDestinationWordOperand (source))
+                !writeDestinationOperand (source))
             return CpuData::Trap::BusError;
 
         setConditionCodeIf_ClearElse (PSW_N, source & 0100000);

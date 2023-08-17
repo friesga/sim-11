@@ -45,7 +45,7 @@ namespace KD11_NA
 
         u16 tmp = source | destination;
 
-        if (!writeDestinationWordOperand (tmp))
+        if (!writeDestinationOperand (tmp))
             return CpuData::Trap::BusError;
 
         setConditionCodeIf_ClearElse (PSW_N, tmp & 0x8000);

@@ -37,8 +37,8 @@ protected:
 	bool readSourceOperand (CondData<u8> *source);
 	bool readDestinationOperand (CondData<u16> *destination);
 	bool readDestinationOperand (CondData<u8> *destination);
-	bool writeDestinationWordOperand (u16 operand);
-	bool writeDestinationByteOperand (u8 operand);
+	bool writeDestinationOperand (u16 operand);
+	bool writeDestinationOperand (u8 operand);
 
 private:
 	// The destination operand location is defined as a class memeber as for

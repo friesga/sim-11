@@ -65,7 +65,7 @@ bool DoubleOperandInstruction::readDestinationOperand (CondData<u8> *destination
 // determined when the destion operand has been retrieved. Some instructions
 // however just write the destination operand. In these cases the operand
 // location still has to be determined.
-bool DoubleOperandInstruction::writeDestinationWordOperand (u16 operand)
+bool DoubleOperandInstruction::writeDestinationOperand (u16 operand)
 {
 	if (!destinationOperandLocation_.isValid ())
 	{
@@ -77,7 +77,7 @@ bool DoubleOperandInstruction::writeDestinationWordOperand (u16 operand)
 }
 
 
-bool  DoubleOperandInstruction::writeDestinationByteOperand (u8 operand)
+bool  DoubleOperandInstruction::writeDestinationOperand (u8 operand)
 {
 	if (!destinationOperandLocation_.isValid ())
 	{
