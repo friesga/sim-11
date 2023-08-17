@@ -29,7 +29,7 @@ u16 DoubleOperandInstruction::getOperationCode ()
 	return instr_.decoded.opcode;
 }
 
-bool DoubleOperandInstruction::readSourceWordOperand (CondData<u16> *source)
+bool DoubleOperandInstruction::readSourceOperand (CondData<u16> *source)
 {
 	OperandLocation sourceOperandLocation = 
 		getSourceOperandLocation (cpu_->registers ());
@@ -37,7 +37,7 @@ bool DoubleOperandInstruction::readSourceWordOperand (CondData<u16> *source)
 	return (*source).hasValue ();
 }
 
-bool DoubleOperandInstruction::readSourceByteOperand (CondData<u8> *source)
+bool DoubleOperandInstruction::readSourceOperand (CondData<u8> *source)
 {
 	OperandLocation sourceOperandLocation = 
 		getSourceOperandLocation (cpu_->registers ());

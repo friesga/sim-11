@@ -33,9 +33,9 @@ public:
 	u16 getOperationCode ();
 
 protected:
-	bool readSourceWordOperand (CondData<u16> *source);
+	bool readSourceOperand (CondData<u16> *source);
+	bool readSourceOperand (CondData<u8> *source);
 	bool readDestinationWordOperand (CondData<u16> *destination);
-	bool readSourceByteOperand (CondData<u8> *source);
 	bool writeDestinationWordOperand (u16 operand);
 	bool writeDestinationByteOperand (u8 operand);
 
