@@ -35,7 +35,9 @@ public:
 protected:
 	bool readSourceWordOperand (CondData<u16> *source);
 	bool readDestinationWordOperand (CondData<u16> *destination);
+	bool readSourceByteOperand (CondData<u8> *source);
 	bool writeDestinationWordOperand (u16 operand);
+	bool writeDestinationByteOperand (u8 operand);
 
 private:
 	// The destination operand location is defined as a class memeber as for

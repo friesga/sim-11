@@ -39,6 +39,7 @@ void KD11CPU::MOV (CpuData* cpu, u16 instruction)
 }
 */
 
+/*
 // MOVB - move source to destination
 // 
 // Operation:
@@ -79,6 +80,7 @@ void KD11CPU::MOVB (CpuData* cpu, u16 instruction)
     setConditionCodeIf_ClearElse (PSW_Z, !tmp);
     clearConditionCode (PSW_V);
 }
+*/
 
 /*
 // CMP - compare source to destination

@@ -37,6 +37,14 @@ bool DoubleOperandInstruction::readSourceWordOperand (CondData<u16> *source)
 	return (*source).hasValue ();
 }
 
+bool DoubleOperandInstruction::readSourceByteOperand (CondData<u8> *source)
+{
+	OperandLocation sourceOperandLocation = 
+		getSourceOperandLocation (cpu_->registers ());
+    *source = sourceOperandLocation.byteContents ();
+	return (*source).hasValue ();
+}
+
 bool DoubleOperandInstruction::readDestinationWordOperand (CondData<u16> *destination)
 {
 	destinationOperandLocation_ = 
@@ -45,7 +53,7 @@ bool DoubleOperandInstruction::readDestinationWordOperand (CondData<u16> *destin
 	return (*destination).hasValue ();
 }
 
-// For most instructions the destination operand location will have be
+// For most instructions the destination operand location will have been
 // determined when the destion operand has been retrieved. Some instructions
 // however just write the destination operand. In these cases the operand
 // location still has to be determined.
@@ -58,4 +66,15 @@ bool DoubleOperandInstruction::writeDestinationWordOperand (u16 operand)
 	}
 	
 	return destinationOperandLocation_.write (operand);
+}
+
+bool  DoubleOperandInstruction::writeDestinationByteOperand (u8 operand)
+{
+	if (!destinationOperandLocation_.isValid ())
+	{
+		destinationOperandLocation_ = 
+			getDestinationOperandLocation (cpu_->registers ());
+	}
+	
+	return destinationOperandLocation_.writeByte (operand);
 }

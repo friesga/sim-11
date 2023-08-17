@@ -63,6 +63,7 @@
 #include "kd11_na_instructions/bis.h"
 #include "kd11_na_instructions/add.h"
 #include "kd11_na_instructions/sub.h"
+#include "kd11_na_instructions/movb.h"
 
 #include <functional>
 #include <chrono>
@@ -988,8 +989,15 @@ void KD11CPU::execInstr ()
             break;
 
         case 011:
-            MOVB (this, insn);
+        {
+            // MOVB (this, insn);
+            unique_ptr<LSI11Instruction> instr = 
+                make_unique<KD11_NA::MOVB> (static_cast<CpuData*> (this), insn);
+            CpuData::Trap returnedTrap = instr->execute ();
+            if (returnedTrap != CpuData::Trap::None)
+                setTrap (vectorTable [returnedTrap]);
             break;
+        }
 
         case 012:
             CMPB (this, insn);
