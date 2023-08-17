@@ -379,6 +379,7 @@ void KD11CPU::BISB (CpuData* cpu, u16 instruction)
     clearConditionCode (PSW_V);
 }
 
+/*
 // ADD - add source to destination
 //
 // Operation:
@@ -424,6 +425,7 @@ void KD11CPU::ADD (CpuData* cpu, u16 instruction)
         && ((destination & 0x8000) != (result & 0x8000)));
     setConditionCodeIf_ClearElse (PSW_C, ((u32)source + (u32)destination) & 0x10000);
 }
+*/
 
 // SUB - subtract src from dst
 //
