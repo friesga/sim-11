@@ -45,7 +45,7 @@ bool DoubleOperandInstruction::readSourceOperand (CondData<u8> *source)
 	return (*source).hasValue ();
 }
 
-bool DoubleOperandInstruction::readDestinationWordOperand (CondData<u16> *destination)
+bool DoubleOperandInstruction::readDestinationOperand (CondData<u16> *destination)
 {
 	destinationOperandLocation_ = 
 		getDestinationOperandLocation (cpu_->registers ());
@@ -53,7 +53,7 @@ bool DoubleOperandInstruction::readDestinationWordOperand (CondData<u16> *destin
 	return (*destination).hasValue ();
 }
 
-bool DoubleOperandInstruction::readDestinationByteOperand (CondData<u8> *destination)
+bool DoubleOperandInstruction::readDestinationOperand (CondData<u8> *destination)
 {
 	destinationOperandLocation_ = 
 		getDestinationOperandLocation (cpu_->registers ());

@@ -43,7 +43,7 @@ namespace KD11_NA
         CondData<u16> source, destination;
 
         if (!readSourceOperand (&source) || 
-                !readDestinationWordOperand (&destination))
+                !readDestinationOperand (&destination))
             return CpuData::Trap::BusError;
 
         u16 result = source + destination;

@@ -31,7 +31,7 @@ namespace KD11_NA
     {
         CondData<u8> source, destination;
 
-        if (!readSourceOperand (&source) || !readDestinationByteOperand (&destination))
+        if (!readSourceOperand (&source) || !readDestinationOperand (&destination))
             return CpuData::Trap::BusError;
 
         u16 tmp = (u8) (source - destination);
