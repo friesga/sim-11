@@ -1,5 +1,5 @@
 #ifndef _MOVB_H_
-#define _MOVN_H_
+#define _MOVB_H_
 
 #include "../doubleoperandinstruction/doubleoperandinstruction.h"
 #include "../cpudata.h"

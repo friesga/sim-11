@@ -126,6 +126,7 @@ void KD11CPU::CMP (CpuData* cpu, u16 instruction)
 }
 */
 
+/*
 // CMPB - compare source to destination byte
 // 
 // Operation:
@@ -158,6 +159,7 @@ void KD11CPU::CMPB (CpuData* cpu, u16 instruction)
         && ((destination & 0x80) == (tmp & 0x80)));
     setConditionCodeIf_ClearElse (PSW_C, (source - destination) & 0x100);
 }
+*/
 
 /*
 // BIT - bit test
