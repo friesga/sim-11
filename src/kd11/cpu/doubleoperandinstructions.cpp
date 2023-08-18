@@ -353,6 +353,7 @@ void KD11CPU::BIS (CpuData* cpu, u16 instruction)
 }
 */
 
+/*
 // BISB - bit set byte
 //
 // Operation:
@@ -386,6 +387,7 @@ void KD11CPU::BISB (CpuData* cpu, u16 instruction)
     setConditionCodeIf_ClearElse (PSW_Z, !tmp);
     clearConditionCode (PSW_V);
 }
+*/
 
 /*
 // ADD - add source to destination
