@@ -274,6 +274,7 @@ void KD11CPU::BIC (CpuData* cpu, u16 instruction)
 }
 */
 
+/*
 // BICB - bit clear byte
 //
 // Operation:
@@ -307,6 +308,7 @@ void KD11CPU::BICB (CpuData* cpu, u16 instruction)
     setConditionCodeIf_ClearElse (PSW_Z, !tmp);
     clearConditionCode (PSW_V);
 }
+*/
 
 /*
 // BIS - bit set
