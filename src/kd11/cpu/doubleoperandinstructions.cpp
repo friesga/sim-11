@@ -200,6 +200,7 @@ void KD11CPU::BIT (CpuData* cpu, u16 instruction)
 }
 */
 
+/*
 // BITB - bit test byte
 //
 // Operation:
@@ -229,6 +230,7 @@ void KD11CPU::BITB (CpuData* cpu, u16 instruction)
     setConditionCodeIf_ClearElse (PSW_Z, !tmp);
     clearConditionCode (PSW_V);
 }
+*/
 
 /*
 // BIC - bit clear

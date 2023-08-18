@@ -65,6 +65,7 @@
 #include "kd11_na_instructions/sub.h"
 #include "kd11_na_instructions/movb.h"
 #include "kd11_na_instructions/cmpb.h"
+#include "kd11_na_instructions/bitb.h"
 
 #include <functional>
 #include <chrono>
@@ -1012,8 +1013,15 @@ void KD11CPU::execInstr ()
         }
 
         case 013:
-            BITB (this, insn);
+        {
+            // BITB (this, insn);
+            unique_ptr<LSI11Instruction> instr = 
+                make_unique<KD11_NA::BITB> (static_cast<CpuData*> (this), insn);
+            CpuData::Trap returnedTrap = instr->execute ();
+            if (returnedTrap != CpuData::Trap::None)
+                setTrap (vectorTable [returnedTrap]);
             break;
+        }
 
         case 014:
             BICB (this, insn);
