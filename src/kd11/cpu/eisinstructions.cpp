@@ -47,6 +47,7 @@ void KD11CPU::JSR (CpuData*  cpu, u16 instruction)
 }
 */
 
+/*
 // MUL - multiply
 //
 // Operation:
@@ -83,6 +84,7 @@ void KD11CPU::MUL (CpuData*  cpu, u16 instruction)
     setConditionCodeIf_ClearElse (PSW_Z, !tmps32);
     setConditionCodeIf_ClearElse (PSW_C, (tmps32 >= 0x7FFF) || (tmps32 < -0x8000));
 }
+*/
 
 // DIV - divide
 //

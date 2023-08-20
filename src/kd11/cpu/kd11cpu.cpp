@@ -70,6 +70,7 @@
 #include "kd11_na_instructions/bisb.h"
 #include "kd11_na_instructions/sob.h"
 #include "kd11_na_instructions/jsr.h"
+#include "kd11_na_instructions/mul.h"
 
 #include <functional>
 #include <chrono>
@@ -627,8 +628,15 @@ void KD11CPU::execInstr ()
             switch (insn >> 9)
             {
                 case 0070:
-                    MUL (this, insn);
+                {
+                    // MUL (this, insn);
+                    unique_ptr<LSI11Instruction> instr = 
+                        make_unique<KD11_NA::MUL> (static_cast<CpuData*> (this), insn);
+                    CpuData::Trap returnedTrap = instr->execute ();
+                    if (returnedTrap != CpuData::Trap::None)
+                        setTrap (vectorTable [returnedTrap]);
                     break;
+                }
 
                 case 0071:
                     DIV (this, insn);
