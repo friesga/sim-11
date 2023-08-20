@@ -39,6 +39,7 @@ set (KD11CPU_SRCS
     src/kd11/cpu/memoryaccess.cpp
     src/kd11/cpu/lsi11instruction/lsi11instruction.cpp
     src/kd11/cpu/operandlocation/operandlocation.cpp
+    src/kd11/cpu/nooperandinstruction/nooperandinstruction.cpp
     src/kd11/cpu/singleoperandinstruction/singleoperandinstruction.cpp
     src/kd11/cpu/doubleoperandinstruction/doubleoperandinstruction.cpp
     src/kd11/cpu/fisinstruction/fisinstruction.cpp
