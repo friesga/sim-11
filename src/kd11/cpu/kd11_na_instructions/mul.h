@@ -40,13 +40,13 @@ namespace KD11_NA
         u16 regNr = getRegisterNr ();
 
         CpuData::GeneralRegisters& registers = cpu_->registers ();
-        u16 dst = registers[regNr];
+        u16 destination = registers[regNr];
 
-        OperandLocation sourceOperandLocation = 
-            mulInstruction.getOperandLocation (cpu->registers ());
-        CondData<u16> source = sourceOperandLocation.wordContents ();
+        CondData<u16> source;
+        if (!readSourceOperand (&source))
+            return CpuData::Trap::BusError;
     
-        s32 tmps32 = (s32)(s16)dst * (s16) source;
+        s32 tmps32 = (s32)(s16)destination * (s16) source;
         registers[regNr] = (u16) (tmps32 >> 16);
         registers[regNr | 1] = (u16) tmps32;
 

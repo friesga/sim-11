@@ -28,6 +28,9 @@ public:
 	OperandLocation getOperandLocation (u16 (&reg)[8]);
 	u16 getOperationCode ();
 	u16 getRegisterNr ();
+
+protected:
+	bool readSourceOperand (CondData<u16> *source);
 };
 
 

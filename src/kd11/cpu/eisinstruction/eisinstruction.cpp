@@ -14,6 +14,14 @@ OperandLocation EisInstruction::getOperandLocation (u16 (&reg)[8])
 		instr_.decoded.operandMode}, reg);
 }
 
+bool EisInstruction::readSourceOperand (CondData<u16> *source)
+{
+	OperandLocation sourceOperandLocation = 
+		getOperandLocation (cpu_->registers ());
+    *source = sourceOperandLocation.wordContents ();
+	return (*source).hasValue ();
+}
+
 // Return the instruction's operation code
 u16 EisInstruction::getOperationCode ()
 {
