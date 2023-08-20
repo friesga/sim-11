@@ -42,6 +42,7 @@ void KD11CPU::WAIT (CpuData* cpu, u16 instruction)
     runState = CpuRunState::WAIT;
 }
 
+/*
 // RTI - return from interrupt
 //
 // Operation:
@@ -65,6 +66,7 @@ void KD11CPU::RTI (CpuData* cpu, u16 instruction)
     if (!popWord (&psw_))
         return;
 }
+*/
 
 // BPT - breakpoint trap
 //

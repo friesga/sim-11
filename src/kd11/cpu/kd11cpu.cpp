@@ -77,6 +77,7 @@
 #include "kd11_na_instructions/xor.h"
 #include "kd11_na_instructions/mark.h"
 #include "kd11_na_instructions/halt.h"
+#include "kd11_na_instructions/rti.h"
 
 #include <functional>
 #include <chrono>
@@ -218,8 +219,15 @@ void KD11CPU::execInstr ()
                             break;
 
                         case 0000002:
-                            RTI (this, insn);
+                        {
+                            // RTI (this, insn);
+                            unique_ptr<LSI11Instruction> instr = 
+                                make_unique<KD11_NA::RTI> (static_cast<CpuData*> (this), insn);
+                            CpuData::Trap returnedTrap = instr->execute ();
+                            if (returnedTrap != CpuData::Trap::None)
+                                setTrap (vectorTable [returnedTrap]);
                             break;
+                        }
 
                         case 0000003:
                             BPT (this, insn);

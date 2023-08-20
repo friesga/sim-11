@@ -6,7 +6,14 @@
 #include "../cpucontrol.h"
 #include "../operandlocation/operandlocation.h"
 
-
+// HALT - halt
+// 
+// Condition Codes: not affected
+// 
+// Causes the processor to leave RUN mode. The PC points to the next
+// instruction to be executed. The processor goes into the HALT mode.
+// The console mode of operation is enabled.
+//
 namespace KD11_NA
 {
     class HALT : public NoOperandInstruction
