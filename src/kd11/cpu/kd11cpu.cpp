@@ -75,6 +75,7 @@
 #include "kd11_na_instructions/ash.h"
 #include "kd11_na_instructions/ashc.h"
 #include "kd11_na_instructions/xor.h"
+#include "kd11_na_instructions/mark.h"
 
 #include <functional>
 #include <chrono>
@@ -540,8 +541,15 @@ void KD11CPU::execInstr ()
                 }
 
                 case 00064:
-                    MARK (this, insn);
+                {
+                    // MARK (this, insn);
+                    unique_ptr<LSI11Instruction> instr = 
+                        make_unique<KD11_NA::MARK> (static_cast<CpuData*> (this), insn);
+                    CpuData::Trap returnedTrap = instr->execute ();
+                    if (returnedTrap != CpuData::Trap::None)
+                            setTrap (vectorTable [returnedTrap]);
                     break;
+                }
 
                 case 00067:
                 {

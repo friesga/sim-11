@@ -2,6 +2,7 @@
 #include "trace/trace.h"
 #include "markinstruction/markinstruction.h"
 
+/*
 // MARK - mark
 //
 // Operation:
@@ -26,3 +27,4 @@ void KD11CPU::MARK (CpuData*  cpu, u16 instruction)
     register_[5] = fetchWord (register_[6]);
     register_[6] += 2;
 }
+*/
