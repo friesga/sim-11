@@ -313,6 +313,7 @@ void KD11CPU::ASHC (CpuData*  cpu, u16 instruction)
 }
 */
 
+/*
 // XOR - exclusive OR
 //
 // Operation:
@@ -348,3 +349,4 @@ void KD11CPU::XOR (CpuData*  cpu, u16 instruction)
     setConditionCodeIf_ClearElse (PSW_Z, !result);
     clearConditionCode (PSW_V);
 }
+*/

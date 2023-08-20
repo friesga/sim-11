@@ -74,6 +74,7 @@
 #include "kd11_na_instructions/div.h"
 #include "kd11_na_instructions/ash.h"
 #include "kd11_na_instructions/ashc.h"
+#include "kd11_na_instructions/xor.h"
 
 #include <functional>
 #include <chrono>
@@ -675,8 +676,15 @@ void KD11CPU::execInstr ()
                 }
 
                 case 0074:
-                    XOR (this, insn);
+                {
+                    // XOR (this, insn);
+                    unique_ptr<LSI11Instruction> instr = 
+                        make_unique<KD11_NA::XOR> (static_cast<CpuData*> (this), insn);
+                    CpuData::Trap returnedTrap = instr->execute ();
+                    if (returnedTrap != CpuData::Trap::None)
+                        setTrap (vectorTable [returnedTrap]);
                     break;
+                }
 
                 case 0075: /* FIS instructions */
                     switch (insn >> 3)
