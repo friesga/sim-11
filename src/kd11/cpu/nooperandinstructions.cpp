@@ -68,6 +68,7 @@ void KD11CPU::RTI (CpuData* cpu, u16 instruction)
 }
 */
 
+/*
 // BPT - breakpoint trap
 //
 // Operation:
@@ -87,6 +88,7 @@ void KD11CPU::BPT (CpuData* cpu, u16 instruction)
     trace.trap (TrapRecordType::TRAP, 014);
     setTrap (&BreakpointTrap);
 }
+*/
 
 // IOT - input/output trap
 //
