@@ -90,6 +90,7 @@ void KD11CPU::BPT (CpuData* cpu, u16 instruction)
 }
 */
 
+/*
 // IOT - input/output trap
 //
 // Operation:
@@ -109,6 +110,7 @@ void KD11CPU::IOT (CpuData* cpu, u16 instruction)
     trace.trap (TrapRecordType::TRAP, 020);
     setTrap (&InputOutputTrap);
 }
+*/
 
 // RESET - reset external bus
 //

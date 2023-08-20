@@ -79,6 +79,7 @@
 #include "kd11_na_instructions/halt.h"
 #include "kd11_na_instructions/rti.h"
 #include "kd11_na_instructions/bpt.h"
+#include "kd11_na_instructions/iot.h"
 
 #include <functional>
 #include <chrono>
@@ -242,8 +243,15 @@ void KD11CPU::execInstr ()
                         }
 
                         case 0000004:
-                            IOT (this, insn);
+                        {
+                            // IOT (this, insn);
+                            unique_ptr<LSI11Instruction> instr = 
+                                make_unique<KD11_NA::IOT> (static_cast<CpuData*> (this), insn);
+                            CpuData::Trap returnedTrap = instr->execute ();
+                            if (returnedTrap != CpuData::Trap::None)
+                                setTrap (vectorTable [returnedTrap]);
                             break;
+                        }
 
                         case 0000005:
                             RESET (this, insn);
