@@ -225,6 +225,7 @@ void KD11CPU::ASH (CpuData*  cpu, u16 instruction)
 }
 */
 
+/*
 // ASHC - arithemetic shift combined
 //
 // Operation:
@@ -310,6 +311,7 @@ void KD11CPU::ASHC (CpuData*  cpu, u16 instruction)
     setConditionCodeIf_ClearElse (PSW_N, tmps32 & 0x80000000);
     setConditionCodeIf_ClearElse (PSW_Z, !tmps32);
 }
+*/
 
 // XOR - exclusive OR
 //

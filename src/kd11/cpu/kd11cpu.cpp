@@ -73,6 +73,7 @@
 #include "kd11_na_instructions/mul.h"
 #include "kd11_na_instructions/div.h"
 #include "kd11_na_instructions/ash.h"
+#include "kd11_na_instructions/ashc.h"
 
 #include <functional>
 #include <chrono>
@@ -663,8 +664,15 @@ void KD11CPU::execInstr ()
                 }
 
                 case 0073:
-                    ASHC (this, insn);
+                {
+                    // ASHC (this, insn);
+                    unique_ptr<LSI11Instruction> instr = 
+                        make_unique<KD11_NA::ASHC> (static_cast<CpuData*> (this), insn);
+                    CpuData::Trap returnedTrap = instr->execute ();
+                    if (returnedTrap != CpuData::Trap::None)
+                        setTrap (vectorTable [returnedTrap]);
                     break;
+                }
 
                 case 0074:
                     XOR (this, insn);
