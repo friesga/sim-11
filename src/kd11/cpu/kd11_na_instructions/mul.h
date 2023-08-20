@@ -43,7 +43,7 @@ namespace KD11_NA
         u16 destination = registers[regNr];
 
         CondData<u16> source;
-        if (!readSourceOperand (&source))
+        if (!readOperand (&source))
             return CpuData::Trap::BusError;
     
         s32 tmps32 = (s32)(s16)destination * (s16) source;

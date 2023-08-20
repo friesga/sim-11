@@ -45,7 +45,7 @@ namespace KD11_NA
         s32 tmps32 = (registers[regNr] << 16) | registers[regNr| 1];
 
         CondData<u16> source;
-        if (!readSourceOperand (&source))
+        if (!readOperand (&source))
             return CpuData::Trap::BusError;
 
         if (source == 0)

@@ -44,7 +44,7 @@ namespace KD11_NA
         u16 destination = registers[regNr];
 
         CondData<u16> source;
-        if (!readSourceOperand (&source))
+        if (!readOperand (&source))
             return CpuData::Trap::BusError;
 
         if (source & 0x20)

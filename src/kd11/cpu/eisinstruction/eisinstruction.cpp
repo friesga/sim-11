@@ -14,7 +14,9 @@ OperandLocation EisInstruction::getOperandLocation (u16 (&reg)[8])
 		instr_.decoded.operandMode}, reg);
 }
 
-bool EisInstruction::readSourceOperand (CondData<u16> *source)
+// The operand in the EIS instruction format is either a source or
+// a destination operand.
+bool EisInstruction::readOperand (CondData<u16> *source)
 {
 	OperandLocation sourceOperandLocation = 
 		getOperandLocation (cpu_->registers ());

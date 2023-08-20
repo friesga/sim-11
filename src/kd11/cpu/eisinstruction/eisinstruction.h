@@ -30,7 +30,7 @@ public:
 	u16 getRegisterNr ();
 
 protected:
-	bool readSourceOperand (CondData<u16> *source);
+	bool readOperand (CondData<u16> *source);
 };
 
 
