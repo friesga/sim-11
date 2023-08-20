@@ -31,6 +31,10 @@ public:
 
 protected:
 	bool readOperand (CondData<u16> *source);
+	bool writeOperand (u16 operand);
+
+private:
+	OperandLocation operandLocation_ {};
 };
 
 

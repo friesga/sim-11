@@ -18,10 +18,21 @@ OperandLocation EisInstruction::getOperandLocation (u16 (&reg)[8])
 // a destination operand.
 bool EisInstruction::readOperand (CondData<u16> *source)
 {
-	OperandLocation sourceOperandLocation = 
+	operandLocation_ = 
 		getOperandLocation (cpu_->registers ());
-    *source = sourceOperandLocation.wordContents ();
+    *source = operandLocation_.wordContents ();
 	return (*source).hasValue ();
+}
+
+bool EisInstruction::writeOperand (u16 operand)
+{
+	if (!operandLocation_.isValid ())
+	{
+		operandLocation_ = 
+			getOperandLocation (cpu_->registers ());
+	}
+	
+	return operandLocation_.write (operand);
 }
 
 // Return the instruction's operation code

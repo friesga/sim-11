@@ -40,15 +40,14 @@ namespace KD11_NA
 
         u16 source = registers[regNr];
 
-        OperandLocation destinationOperandLocation = 
-            getOperandLocation (registers);
-        CondData<u16> destination = destinationOperandLocation.wordContents ();
-        if (!destination.hasValue ())
+        CondData<u16> destination;
+        if (!readOperand (&destination))
             return CpuData::Trap::BusError;
 
         u16 result = source ^ destination;
 
-        destinationOperandLocation.write (result);
+        if (!writeOperand (result))
+            return CpuData::Trap::BusError;
 
         setConditionCodeIf_ClearElse (PSW_N, result & 0x8000);
         setConditionCodeIf_ClearElse (PSW_Z, !result);
