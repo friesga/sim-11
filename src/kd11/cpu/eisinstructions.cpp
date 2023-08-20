@@ -144,6 +144,7 @@ void KD11CPU::DIV (CpuData*  cpu, u16 instruction)
 }
 */
 
+/*
 // ASH - shift arithmetically
 //
 // Operation:
@@ -222,6 +223,7 @@ void KD11CPU::ASH (CpuData*  cpu, u16 instruction)
     setConditionCodeIf_ClearElse (PSW_N, tmp & 0x8000);
     setConditionCodeIf_ClearElse (PSW_Z, !tmp);
 }
+*/
 
 // ASHC - arithemetic shift combined
 //
