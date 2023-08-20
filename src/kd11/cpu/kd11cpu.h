@@ -49,7 +49,10 @@ enum class CpuRunState
 // This class simulates a KD11-NA, i.e. a KD11-H base version including EIS
 // and FIS support.
 //
-class KD11CPU : public CpuControl, public CpuData
+// The class CpuData is derived from CpuControl, so the KD11CPU has to
+// implement both interfaces.
+//
+class KD11CPU : public CpuData
 {
 public:
 	// KD11ODT and LSI11 need access to the CpuControl functions. The class

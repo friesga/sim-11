@@ -76,6 +76,7 @@
 #include "kd11_na_instructions/ashc.h"
 #include "kd11_na_instructions/xor.h"
 #include "kd11_na_instructions/mark.h"
+#include "kd11_na_instructions/halt.h"
 
 #include <functional>
 #include <chrono>
@@ -202,8 +203,15 @@ void KD11CPU::execInstr ()
                     switch (insn)
                     {
                         case 0000000:
-                            HALT (this, insn);
+                        {
+                            // HALT (this, insn);
+                            unique_ptr<LSI11Instruction> instr = 
+                                make_unique<KD11_NA::HALT> (static_cast<CpuData*> (this), insn);
+                            CpuData::Trap returnedTrap = instr->execute ();
+                            if (returnedTrap != CpuData::Trap::None)
+                                setTrap (vectorTable [returnedTrap]);
                             break;
+                        }
 
                         case 0000001:
                             WAIT (this, insn);

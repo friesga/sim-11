@@ -2,6 +2,7 @@
 #define _CPUDATA_H_
 
 #include "types.h"
+#include "cpucontrol.h"
 #include "conddata/conddata.h"
 #include "interruptrequest/interruptrequest.h"
 
@@ -12,8 +13,12 @@
 //
 // For a LSI-11 the execution state is defined by the eight general registers
 // and the processor status word.
+// 
+// The CpuData interface also provides access to the CpuControl functions, to
+// allow the Operate Group instructions, such as HALT and RESET, to access the
+// control functions.
 //
-class CpuData
+class CpuData : public CpuControl
 {
 public:
 	// The Trap enum is defined as a non-class enum to be able to use it

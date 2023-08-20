@@ -1,6 +1,7 @@
 #include "kd11cpu.h"
 #include "trace/trace.h"
 
+/*
 // HALT - halt
 // 
 // Condition Codes: not affected
@@ -17,6 +18,7 @@ void KD11CPU::HALT (CpuData* cpu, u16 instruction)
     haltReason_ = HaltReason::HaltInstruction;
     bus_->SRUN ().set (false);
 }
+*/
 
 // WAIT - wait for interrupt
 //

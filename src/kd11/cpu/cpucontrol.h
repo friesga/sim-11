@@ -8,6 +8,7 @@
 // control it from the console.
 class CpuControl
 {
+public:
     // The setTrap function is needed for the execution of a reset in power-up
     // mode 0 (start via vector at address 24/26).
     virtual void setTrap (InterruptRequest const *ir) = 0;

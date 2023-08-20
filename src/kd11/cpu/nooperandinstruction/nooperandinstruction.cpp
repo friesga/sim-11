@@ -1,4 +1,4 @@
-#include "nooperandinstruction.h"#include "markinstruction.h"
+#include "nooperandinstruction.h"
 
 NoOperandInstruction::NoOperandInstruction (CpuData* cpu, u16 instruction)
     :
