@@ -25,13 +25,13 @@ class EisInstruction : public LSI11Instruction
 
 public:
 	EisInstruction (CpuData* cpu, u16 instruction);
-	OperandLocation getOperandLocation (u16 (&reg)[8]);
-	u16 getOperationCode ();
-	u16 getRegisterNr ();
-
+	u16 getOperationCode () override;
+	
 protected:
+	OperandLocation getOperandLocation (u16 (&reg)[8]);
 	bool readOperand (CondData<u16> *source);
 	bool writeOperand (u16 operand);
+	u16 getRegisterNr ();
 
 private:
 	OperandLocation operandLocation_ {};
