@@ -86,6 +86,7 @@ void KD11CPU::MUL (CpuData*  cpu, u16 instruction)
 }
 */
 
+/*
 // DIV - divide
 //
 // Operation:
@@ -141,6 +142,7 @@ void KD11CPU::DIV (CpuData*  cpu, u16 instruction)
         }
     }
 }
+*/
 
 // ASH - shift arithmetically
 //
