@@ -69,6 +69,7 @@
 #include "kd11_na_instructions/bicb.h"
 #include "kd11_na_instructions/bisb.h"
 #include "kd11_na_instructions/sob.h"
+#include "kd11_na_instructions/jsr.h"
 
 #include <functional>
 #include <chrono>
@@ -391,8 +392,15 @@ void KD11CPU::execInstr ()
                 case 00045:
                 case 00046:
                 case 00047:
-                    JSR (this, insn);
+                {
+                    // JSR (this, insn);
+                    unique_ptr<LSI11Instruction> instr = 
+                        make_unique<KD11_NA::JSR> (static_cast<CpuData*> (this), insn);
+                    CpuData::Trap returnedTrap = instr->execute ();
+                    if (returnedTrap != CpuData::Trap::None)
+                            setTrap (vectorTable [returnedTrap]);
                     break;
+                }
 
                 case 00050:
                 {

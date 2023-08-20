@@ -4,8 +4,7 @@
 EisInstruction::EisInstruction (CpuData* cpu, u16 instruction)
     :
 	LSI11Instruction (cpu),
-    instr_ {instruction},
-    cpu_ {cpu}
+    instr_ {instruction}
 {}
 
 // Derive the location of the operand from the instruction

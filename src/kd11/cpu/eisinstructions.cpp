@@ -3,6 +3,7 @@
 
 #include "bitmask.h"
 
+/*
 // JSR - jump to subroutine
 //
 // Operation:
@@ -44,6 +45,8 @@ void KD11CPU::JSR (CpuData*  cpu, u16 instruction)
     register_[jsrInstruction.getRegisterNr ()] = register_[7];
     register_[7] = destination;
 }
+*/
+
 // MUL - multiply
 //
 // Operation:
