@@ -70,3 +70,10 @@ bool KD11CPU::popWord (u16 *destination)
         return false;
     return true;
 }
+
+// Push the given value on the processor stack
+void KD11CPU::pushWord (u16 value)
+{
+    register_[6] -= 2;
+    putWord (register_[6], value);
+}

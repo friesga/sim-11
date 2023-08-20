@@ -52,10 +52,9 @@ namespace KD11_NA
         }
 
         CpuData::GeneralRegisters& registers = cpu_->registers ();
-        u16 specifiedRegister = registers[getRegisterNr ()];
+        u16 specifiedRegisterContents = registers[getRegisterNr ()];
 
-        registers[6] -= 2;
-        cpu_->putWord (registers[6], specifiedRegister);
+        cpu_->pushWord (specifiedRegisterContents);
         registers[getRegisterNr ()] = registers[7];
         registers[7] = destination;
 
