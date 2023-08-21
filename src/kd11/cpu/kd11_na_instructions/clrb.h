@@ -20,20 +20,16 @@ namespace KD11_NA
     public:
         CLRB (CpuData* cpu, u16 instruction);
         CpuData::Trap execute () override;
-
-    private:
-        OperandLocation location_;
     };
 
     CLRB::CLRB (CpuData* cpu, u16 instruction)
         :
-        SingleOperandInstruction (cpu, instruction),
-        location_ {getOperandLocation (cpu_->registers ())}
+        SingleOperandInstruction (cpu, instruction)
     {}
 
     CpuData::Trap CLRB::execute ()
     {
-        if (!location_.writeByte (0))
+        if (!writeOperand ((u8) 0))
             return CpuData::Trap::BusError;
 
         clearConditionCode (PSW_N | PSW_V | PSW_C);
