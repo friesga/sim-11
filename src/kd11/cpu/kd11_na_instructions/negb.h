@@ -20,27 +20,23 @@ namespace KD11_NA
     public:
         NEGB (CpuData* cpu, u16 instruction);
         CpuData::Trap execute () override;
-
-    private:
-        OperandLocation location_;
     };
 
     NEGB::NEGB (CpuData* cpu, u16 instruction)
         :
-        SingleOperandInstruction (cpu, instruction),
-        location_ {getOperandLocation (cpu_->registers ())}
+        SingleOperandInstruction (cpu, instruction)
     {}
 
     CpuData::Trap NEGB::execute ()
     {
-        CondData<u8> operand = location_.byteContents ();
-        if (!operand.hasValue ())
+        CondData<u8> operand;
+        if (!readOperand (&operand))
             return CpuData::Trap::BusError;
 
         if (operand != 0200)
             operand = -operand;
 
-        if (!location_.writeByte (operand))
+        if (!writeOperand (operand))
             return CpuData::Trap::BusError;
 
         setConditionCodeIf_ClearElse (PSW_V, operand == 0200);
