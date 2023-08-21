@@ -26,26 +26,23 @@ namespace KD11_NA
     public:
         COM (CpuData* cpu, u16 instruction);
         CpuData::Trap execute () override;
-
-    private:
-        OperandLocation location_;
     };
 
     COM::COM (CpuData* cpu, u16 instruction)
         :
-        SingleOperandInstruction (cpu, instruction),
-        location_ {getOperandLocation (cpu_->registers ())}
+        SingleOperandInstruction (cpu, instruction)
     {}
 
     CpuData::Trap COM::execute ()
     {
-        CondData<u16> operand = location_.wordContents ();
-        if (!operand.hasValue ())
+        CondData<u16> operand;
+        if (!readOperand (&operand))
             return CpuData::Trap::BusError;
 
         // Complement the operand and write it to the operand location
         operand = ~operand;
-        location_.write (operand);
+        if (!writeOperand (operand))
+            return CpuData::Trap::BusError;
 
         clearConditionCode (PSW_V);
         setConditionCode (PSW_C);
