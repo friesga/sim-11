@@ -20,26 +20,22 @@ namespace KD11_NA
     public:
         COMB (CpuData* cpu, u16 instruction);
         CpuData::Trap execute () override;
-
-    private:
-        OperandLocation location_;
     };
 
     COMB::COMB (CpuData* cpu, u16 instruction)
         :
-        SingleOperandInstruction (cpu, instruction),
-        location_ {getOperandLocation (cpu_->registers ())}
+        SingleOperandInstruction (cpu, instruction)
     {}
 
     CpuData::Trap COMB::execute ()
     {
-        CondData<u8> operand = location_.byteContents ();
-        if (!operand.hasValue ())
+        CondData<u8> operand;
+        if (!readOperand (&operand))
             return CpuData::Trap::BusError;
 
         // Complement the operand and write it to the operand location
         operand = ~operand;
-        if (!location_.writeByte (operand))
+        if (!writeOperand (operand))
             return CpuData::Trap::BusError;
 
         clearConditionCode (PSW_V);
