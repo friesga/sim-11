@@ -85,6 +85,7 @@
 #include "kd11_na_instructions/trap.h"
 #include "kd11_na_instructions/wait.h"
 #include "kd11_na_instructions/reset.h"
+#include "kd11_na_instructions/unused.h"
 
 #include <functional>
 #include <chrono>
@@ -288,9 +289,16 @@ void KD11CPU::execInstr ()
                         }
 
                         default: 
+                        {
                             // 00 00 07 - 00 00 77
-                            unused (this, insn);
+                            // unused (this, insn);
+                            unique_ptr<LSI11Instruction> instr = 
+                                make_unique<KD11_NA::Unused> (static_cast<CpuData*> (this), insn);
+                            CpuData::Trap returnedTrap = instr->execute ();
+                            if (returnedTrap != CpuData::Trap::None)
+                                setTrap (vectorTable [returnedTrap]);
                             break;
+                        }
                     }
                     break;
 
@@ -334,8 +342,15 @@ void KD11CPU::execInstr ()
                             setTrap (vectorTable [returnedTrap]);
                     }
                     else
+                    {
                         // 00 02 10 - 00 02 27
-                        unused (this, insn);
+                        // unused (this, insn);
+                        unique_ptr<LSI11Instruction> instr = 
+                            make_unique<KD11_NA::Unused> (static_cast<CpuData*> (this), insn);
+                        CpuData::Trap returnedTrap = instr->execute ();
+                        if (returnedTrap != CpuData::Trap::None)
+                            setTrap (vectorTable [returnedTrap]);
+                    }
                     break;
                 }
 
@@ -621,9 +636,16 @@ void KD11CPU::execInstr ()
                 }
 
                 default:
+                {
                     // 006500-006677, 007000-007777
-                    unused (this, insn);
+                    // unused (this, insn);
+                    unique_ptr<LSI11Instruction> instr = 
+                        make_unique<KD11_NA::Unused> (static_cast<CpuData*> (this), insn);
+                    CpuData::Trap returnedTrap = instr->execute ();
+                    if (returnedTrap != CpuData::Trap::None)
+                        setTrap (vectorTable [returnedTrap]);
                     break;
+                }
             }
             break;
 
@@ -801,9 +823,16 @@ void KD11CPU::execInstr ()
                         }
 #endif
                         default:
+                        {
                             // 075040-076777: unused 
-                            unused (this, insn);
+                            // unused (this, insn);
+                            unique_ptr<LSI11Instruction> instr = 
+                                make_unique<KD11_NA::Unused> (static_cast<CpuData*> (this), insn);
+                            CpuData::Trap returnedTrap = instr->execute ();
+                            if (returnedTrap != CpuData::Trap::None)
+                                setTrap (vectorTable [returnedTrap]);
                             break;
+                        }
                     }
                     break;
 
@@ -819,8 +848,15 @@ void KD11CPU::execInstr ()
                 }
 
                 default:
-                    unused (this, insn);
+                {
+                    // unused (this, insn);
+                    unique_ptr<LSI11Instruction> instr = 
+                        make_unique<KD11_NA::Unused> (static_cast<CpuData*> (this), insn);
+                    CpuData::Trap returnedTrap = instr->execute ();
+                    if (returnedTrap != CpuData::Trap::None)
+                        setTrap (vectorTable [returnedTrap]);
                     break;
+                }
             }
             break;
 
@@ -1123,8 +1159,15 @@ void KD11CPU::execInstr ()
                 }
 
                 default:
-                    unused (this, insn);
+                {
+                    // unused (this, insn);
+                    unique_ptr<LSI11Instruction> instr = 
+                        make_unique<KD11_NA::Unused> (static_cast<CpuData*> (this), insn);
+                    CpuData::Trap returnedTrap = instr->execute ();
+                    if (returnedTrap != CpuData::Trap::None)
+                        setTrap (vectorTable [returnedTrap]);
                     break;
+                }
             }
             break;
 
@@ -1195,8 +1238,15 @@ void KD11CPU::execInstr ()
         }
 
         default:
-            unused (this, insn);
+        {
+            // unused (this, insn);
+            unique_ptr<LSI11Instruction> instr = 
+                make_unique<KD11_NA::Unused> (static_cast<CpuData*> (this), insn);
+            CpuData::Trap returnedTrap = instr->execute ();
+            if (returnedTrap != CpuData::Trap::None)
+                setTrap (vectorTable [returnedTrap]);
             break;
+        }
     }
 }
 

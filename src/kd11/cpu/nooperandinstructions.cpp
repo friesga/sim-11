@@ -212,9 +212,11 @@ void KD11CPU::TRAP (CpuData* cpu, u16 instruction)
 }
 */
 
+/*
 // Unused/reserved operation codes
 void KD11CPU::unused (CpuData* cpu, u16 instruction)
 {
     trace.trap (TrapRecordType::TRAP_ILL, 010);
     setTrap (&illegalInstructionTrap);
 }
+*/
