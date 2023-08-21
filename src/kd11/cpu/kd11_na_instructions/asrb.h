@@ -23,24 +23,20 @@ namespace KD11_NA
     public:
         ASRB (CpuData* cpu, u16 instruction);
         CpuData::Trap execute () override;
-
-    private:
-        OperandLocation location_;
     };
 
     ASRB::ASRB (CpuData* cpu, u16 instruction)
         :
-        SingleOperandInstruction (cpu, instruction),
-        location_ {getOperandLocation (cpu_->registers ())}
+        SingleOperandInstruction (cpu, instruction)
     {}
 
     CpuData::Trap ASRB::execute ()
     {
-        CondData<u8> source = location_.byteContents ();
-        if (!source.hasValue ())
+        CondData<u8> source;
+        if (!readOperand (&source))
             return CpuData::Trap::BusError;
 
-        u16 result = source;
+        u8 result = source;
         if (result & 0x80)
         {
             result >>= 1;
@@ -49,7 +45,7 @@ namespace KD11_NA
         else
             result >>= 1;
 
-        if (!location_.writeByte (result))
+        if (!writeOperand (result))
             return CpuData::Trap::BusError;
 
         setConditionCodeIf_ClearElse (PSW_C, source & 1);
