@@ -28,22 +28,19 @@ namespace KD11_NA
     public:
         JMP (CpuData* cpu, u16 instruction);
         CpuData::Trap execute () override;
-
-    private:
-        OperandLocation location_;
     };
 
     JMP::JMP (CpuData* cpu, u16 instruction)
         :
-        SingleOperandInstruction (cpu, instruction),
-        location_ {getOperandLocation (cpu_->registers ())}
+        SingleOperandInstruction (cpu, instruction)
     {}
 
     CpuData::Trap JMP::execute ()
     {
-        if (location_.isA<CondData<u16>> ())
+        operandLocation_  = getOperandLocation (cpu_->registers ());
+        if (operandLocation_.isA<CondData<u16>> ())
         {
-            cpu_->registers ()[7] = location_;
+            cpu_->registers ()[7] = operandLocation_;
             return CpuData::Trap::None;
         }
 
