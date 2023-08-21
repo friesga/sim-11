@@ -80,6 +80,7 @@
 #include "kd11_na_instructions/rti.h"
 #include "kd11_na_instructions/bpt.h"
 #include "kd11_na_instructions/iot.h"
+#include "kd11_na_instructions/rtt.h"
 
 #include <functional>
 #include <chrono>
@@ -258,8 +259,15 @@ void KD11CPU::execInstr ()
                             break;
 
                         case 0000006:
-                            RTT (this, insn);
+                        {
+                            // RTT (this, insn);
+                            unique_ptr<LSI11Instruction> instr = 
+                                make_unique<KD11_NA::RTT> (static_cast<CpuData*> (this), insn);
+                            CpuData::Trap returnedTrap = instr->execute ();
+                            if (returnedTrap != CpuData::Trap::None)
+                                setTrap (vectorTable [returnedTrap]);
                             break;
+                        }
 
                         default: 
                             // 00 00 07 - 00 00 77

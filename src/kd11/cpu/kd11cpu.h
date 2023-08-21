@@ -137,14 +137,14 @@ private:
 
 	HaltReason haltReason_;
 
-	// Definition of CpuControl functions. The intention is that these
-	// functions are to be used by K11ODT and the reset function.
-	void loadTrapVector (InterruptRequest const* trap);
-	void setTrap (InterruptRequest const *ir);
-	void reset ();
-	void halt ();
-    void start (u16 address);
-	void proceed ();
+	// Definition of CpuControl functions. These functions are
+	// used by K11ODT and the Operate Group instructions.
+	void setTrap (InterruptRequest const *ir) override;
+	void reset () override;
+	void halt () override;
+    void start (u16 address) override;
+	void proceed () override;
+	void inhibitTraceTrap () override;
     
 	constexpr u16 registerValue (u8 registerNr);
     constexpr void setRegister (u8 registerNr, u16 value);
@@ -155,6 +155,7 @@ private:
 	constexpr void clearConditionCode (u16 x);
 	constexpr void setConditionCodeIf_ClearElse (u16 x, bool v);
 
+	void loadTrapVector (InterruptRequest const* trap);
 	void execInstr ();
 	void handleTraps();
 	u8 cpuPriority ();

@@ -16,6 +16,7 @@ public:
     virtual void halt () = 0;
     virtual void start (u16 address) = 0;
     virtual void proceed () = 0;
+    virtual void inhibitTraceTrap () = 0;
 
     virtual u16 registerValue (u8 registerNr) = 0;
     virtual void setRegister (u8 registerNr, u16 value) = 0;

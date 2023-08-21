@@ -125,6 +125,7 @@ void KD11CPU::RESET (CpuData* cpu, u16 instruction)
     bus_->BINIT().cycle ();
 }
 
+/*
 // RTT - return from interrupt
 //
 // Operation:
@@ -151,6 +152,7 @@ void KD11CPU::RTT (CpuData* cpu, u16 instruction)
     // Prevent a trace trap on the next instruction
     runState = CpuRunState::INHIBIT_TRACE;
 }
+*/
 
 // EMT - emulator trap
 //
