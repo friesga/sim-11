@@ -20,30 +20,27 @@ namespace KD11_NA
     public:
         DECB (CpuData* cpu, u16 instruction);
         CpuData::Trap execute () override;
-
-    private:
-        OperandLocation location_;
     };
 
     DECB::DECB (CpuData* cpu, u16 instruction)
         :
-        SingleOperandInstruction (cpu, instruction),
-        location_ {getOperandLocation (cpu_->registers ())}
+        SingleOperandInstruction (cpu, instruction)
     {}
 
     CpuData::Trap DECB::execute ()
     {
-        CondData<u8> src = location_.byteContents ();
-        if (!src.hasValue ())
+        CondData<u8> source;
+        if (!readOperand (&source))
             return CpuData::Trap::BusError;
 
-        u8 tmp = (u8) (src - 1);
+        u8 result = (u8) (source - 1);
 
-        location_.writeByte (tmp);
+        if(!writeOperand (result))
+            return CpuData::Trap::BusError;
 
-        setConditionCodeIf_ClearElse (PSW_V, src == 0000200);
-        setConditionCodeIf_ClearElse (PSW_N, tmp & 0x80);
-        setConditionCodeIf_ClearElse (PSW_Z, !tmp);
+        setConditionCodeIf_ClearElse (PSW_V, source == 0000200);
+        setConditionCodeIf_ClearElse (PSW_N, result & 0x80);
+        setConditionCodeIf_ClearElse (PSW_Z, !result);
 
         return CpuData::Trap::None;
     }
