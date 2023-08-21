@@ -26,27 +26,24 @@ namespace KD11_NA
     public:
         SBC (CpuData* cpu, u16 instruction);
         CpuData::Trap execute () override;
-
-    private:
-        OperandLocation location_;
     };
 
     SBC::SBC (CpuData* cpu, u16 instruction)
         :
-        SingleOperandInstruction (cpu, instruction),
-        location_ {getOperandLocation (cpu_->registers ())}
+        SingleOperandInstruction (cpu, instruction)
     {}
 
     CpuData::Trap SBC::execute ()
     {
-        CondData<u16> contents = location_.wordContents ();
-        if (!contents.hasValue ())
+        CondData<u16> contents;
+        if (!readOperand (&contents))
             return CpuData::Trap::BusError;
 
         u16 cBit = isSet (PSW_C) ? 1 : 0;
         u16 result = contents - cBit;
 
-        location_.write (result);
+        if (!writeOperand (result))
+            return CpuData::Trap::BusError;
 
         setConditionCodeIf_ClearElse (PSW_V, contents == 0100000);
         setConditionCodeIf_ClearElse (PSW_C, !contents && isSet (PSW_C));
