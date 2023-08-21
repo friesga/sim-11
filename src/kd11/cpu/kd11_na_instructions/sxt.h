@@ -27,22 +27,19 @@ namespace KD11_NA
     public:
         SXT (CpuData* cpu, u16 instruction);
         CpuData::Trap execute () override;
-
-    private:
-        OperandLocation location_;
     };
 
     SXT::SXT (CpuData* cpu, u16 instruction)
         :
-        SingleOperandInstruction (cpu, instruction),
-        location_ {getOperandLocation (cpu_->registers ())}
+        SingleOperandInstruction (cpu, instruction)
     {}
 
     CpuData::Trap SXT::execute ()
     {
         u16 result = isSet (PSW_N) ? 0177777 : 0;
 
-        location_.write (result);
+        if (!writeOperand (result))
+            return CpuData::Trap::BusError;
 
         setConditionCodeIf_ClearElse (PSW_Z, !isSet (PSW_N));
         clearConditionCode (PSW_V);
