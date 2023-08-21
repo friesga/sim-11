@@ -55,18 +55,11 @@ enum class CpuRunState
 class KD11CPU : public CpuData
 {
 public:
-	// KD11ODT and LSI11 need access to the CpuControl functions. The class
-	// Instruction needs access to fetchWord(), putWord() and putByte().
-	// I prefer to declare these classes friends to making these functions
-	// public.
+	// KD11ODT and LSI11 need access to the CpuControl functions.
 	friend class kd11_na::KD11;
 	friend class KD11_ODT::KD11ODT;
 	friend class LSI11;
-	friend class Instruction;
-	friend class LSI11Instruction;
-	friend class EisInstruction;
-	friend class OperandLocation;
-
+	
 	KD11CPU (Qbus *bus);
 	bool step ();
 	CpuRunState currentCpuState ();
@@ -152,116 +145,11 @@ private:
     constexpr void setRegister (u8 registerNr, u16 value);
     constexpr u16 pswValue ();
 	constexpr void setPSW (u16 value);
-	constexpr bool isSet (u16 x);
-	constexpr void setConditionCode (u16 x);
-	constexpr void clearConditionCode (u16 x);
-	constexpr void setConditionCodeIf_ClearElse (u16 x, bool v);
 
 	void loadTrapVector (InterruptRequest const* trap);
 	void execInstr ();
 	void handleTraps();
 	u8 cpuPriority ();
-	
-	constexpr void executeBranchIf (bool condition, CpuData*  cpu, u16 instruction);
-
-	// Instruction in the Program Control Group Traps and Operate Group.
-	// These instruction have no operands.
-	void HALT (CpuData* cpu, u16 instruction);
-	void WAIT (CpuData* cpu, u16 instruction);
-	void RTI (CpuData* cpu, u16 instruction);
-	void BPT (CpuData* cpu, u16 instruction);
-	void IOT (CpuData* cpu, u16 instruction);
-	void RESET (CpuData* cpu, u16 instruction);
-	void RTT (CpuData* cpu, u16 instruction);
-	void EMT (CpuData* cpu, u16 instruction);
-	void TRAP (CpuData* cpu, u16 instruction);
-	void unused (CpuData* cpu, u16 instruction);
-
-	// Single operand instructions
-	void JMP (CpuData *cpu, u16 instruction);
-	void SWAB (CpuData* cpu, u16 instruction);
-	void CLR (CpuData* cpu, u16 instruction);
-	void CLRB (CpuData* cpu, u16 instruction);
-	void COM (CpuData* cpu, u16 instruction);
-	void COMB (CpuData* cpu, u16 instruction);
-	void INC (CpuData* cpu, u16 instruction);
-	void INCB (CpuData* cpu, u16 instruction);
-	void DEC (CpuData* cpu, u16 instruction);
-	void DECB (CpuData* cpu, u16 instruction);
-	void NEG (CpuData* cpu, u16 instruction);
-	void NEGB (CpuData* cpu, u16 instruction);
-	void ADC (CpuData* cpu, u16 instruction);
-	void ADCB (CpuData* cpu, u16 instruction);
-	void SBC (CpuData* cpu, u16 instruction);
-	void SBCB (CpuData* cpu, u16 instruction);
-	void TST (CpuData* cpu, u16 instruction);
-	void TSTB (CpuData* cpu, u16 instruction);
-	void ROR (CpuData* cpu, u16 instruction);
-	void RORB (CpuData* cpu, u16 instruction);
-	void ROL (CpuData* cpu, u16 instruction);
-	void ROLB (CpuData* cpu, u16 instruction);
-	void ASR (CpuData* cpu, u16 instruction);
-	void ASRB (CpuData* cpu, u16 instruction);
-	void ASL (CpuData* cpu, u16 instruction);
-	void ASLB (CpuData* cpu, u16 instruction);
-	void MTPS (CpuData* cpu, u16 instruction);
-	void MFPS (CpuData* cpu, u16 instruction);
-	void SXT (CpuData* cpu, u16 instruction);
-
-	// Double operand instructions
-	void MOV (CpuData* cpu, u16 instruction);
-	void MOVB (CpuData* cpu, u16 instruction);
-	void CMP (CpuData* cpu, u16 instruction);
-	void CMPB (CpuData* cpu, u16 instruction);
-	void BIT (CpuData* cpu, u16 instruction);
-	void BITB (CpuData* cpu, u16 instruction);
-	void BIC (CpuData* cpu, u16 instruction);
-	void BICB (CpuData* cpu, u16 instruction);
-	void BIS (CpuData* cpu, u16 instruction);
-	void BISB (CpuData* cpu, u16 instruction);
-	void ADD (CpuData* cpu, u16 instruction);
-	void SUB (CpuData* cpu, u16 instruction);
-
-	// EIS, JSR and XOR instructions. These instructions share the same
-	// instruction format
-	void JSR (CpuData* cpu, u16 instruction);
-	void MUL (CpuData* cpu, u16 instruction);
-	void DIV (CpuData* cpu, u16 instruction);
-	void ASH (CpuData* cpu, u16 instruction);
-	void ASHC (CpuData* cpu, u16 instruction);
-	void XOR (CpuData* cpu, u16 instruction);
-
-	// FIS and RTS instructions. These instructions share the FIS instruction
-	// format.
-	void RTS (CpuData* cpu, u16 instruction);
-	void FADD (CpuData* cpu, u16 instruction);
-	void FSUB (CpuData* cpu, u16 instruction);
-	void FMUL (CpuData* cpu, u16 instruction);
-	void FDIV (CpuData* cpu, u16 instruction);
-
-	// SOB instruction format
-	void SOB (CpuData* cpu, u16 instruction);
-
-	void MARK (CpuData*  cpu, u16 instruction);
-	void CCC (CpuData* cpu, u16 instruction);
-	void SCC (CpuData* cpu, u16 instruction);
-
-	// Branch instructions
-	void BR (CpuData*  cpu, u16 instruction);
-	void BNE (CpuData*  cpu, u16 instruction);
-	void BEQ (CpuData*  cpu, u16 instruction);
-	void BGE (CpuData*  cpu, u16 instruction);
-	void BLT (CpuData*  cpu, u16 instruction);
-	void BGT (CpuData*  cpu, u16 instruction);
-	void BLE (CpuData*  cpu, u16 instruction);
-	void BPL (CpuData*  cpu, u16 instruction);
-	void BMI (CpuData*  cpu, u16 instruction);
-	void BHI (CpuData*  cpu, u16 instruction);
-	void BLOS (CpuData*  cpu, u16 instruction);
-	void BVC (CpuData*  cpu, u16 instruction);
-	void BVS (CpuData*  cpu, u16 instruction);
-	void BCC (CpuData*  cpu, u16 instruction);
-	void BCS (CpuData*  cpu, u16 instruction);
 };
 
 // constexpr functions are implicitly inline and therefore need to be defined
@@ -279,29 +167,6 @@ constexpr u16& KD11CPU::psw ()
 	return psw_;
 }
 
-// ToDo: Move condition code functions to LSI11Instruction
-constexpr bool KD11CPU::isSet (u16 x)
-{
-	return (psw_ & x) ? true : false;
-}
-
-constexpr void KD11CPU::setConditionCode (u16 x)
-{
-	psw_ |= x;
-}
-
-constexpr void KD11CPU::clearConditionCode (u16 x)
-{
-	psw_ &= ~x;
-}
-
-constexpr void KD11CPU::setConditionCodeIf_ClearElse (u16 x, bool condition)
-{
-	if (condition)
-		setConditionCode (x);
-	else
-		clearConditionCode (x);
-}
 
 // The functions registerValue(), setRegister(), setPSW() and pswValue()
 // are used by ODT.
