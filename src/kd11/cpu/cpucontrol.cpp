@@ -5,7 +5,7 @@
 // Reset the processor
 // 
 // Clear the registers and the PSW
-void KD11CPU::reset ()
+void KD11CPU::cpuReset ()
 {
     // Initialize the registers except for the PC
     for (u16 regNr = 0; regNr <= 6; ++regNr)

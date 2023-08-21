@@ -140,7 +140,7 @@ private:
 	// Definition of CpuControl functions. These functions are
 	// used by K11ODT and the Operate Group instructions.
 	void setTrap (InterruptRequest const *ir) override;
-	void reset () override;
+	void cpuReset () override;
 	void busReset () override;
 	void halt () override;
 	void wait () override;

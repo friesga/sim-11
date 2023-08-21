@@ -22,7 +22,7 @@ using namespace kd11_na;
 //
 kd11_na::State KD11::powerUpRoutine ()
 {
-    cpu_.reset ();
+    cpu_.cpuReset ();
     bus_->BINIT().cycle ();
 
     switch (powerUpMode_)
