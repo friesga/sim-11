@@ -42,9 +42,8 @@ namespace KD11_NA
         if (!readOperand (&contents))
             return CpuData::Trap::BusError;
 
-        u16 cBit = isSet (PSW_C);
         u16 result = contents >> 1;
-        if (cBit)
+        if (isSet (PSW_C))
             result |= 0100000;
 
         if (!writeOperand (result))
