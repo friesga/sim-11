@@ -14,6 +14,7 @@ public:
     virtual void setTrap (InterruptRequest const *ir) = 0;
     virtual void reset () = 0;
     virtual void halt () = 0;
+    virtual void wait () = 0;
     virtual void start (u16 address) = 0;
     virtual void proceed () = 0;
     virtual void inhibitTraceTrap () = 0;

@@ -20,6 +20,7 @@ void KD11CPU::HALT (CpuData* cpu, u16 instruction)
 }
 */
 
+/*
 // WAIT - wait for interrupt
 //
 // Condition Codes: not affected
@@ -41,6 +42,7 @@ void KD11CPU::WAIT (CpuData* cpu, u16 instruction)
     trace.cpuEvent (CpuEventRecordType::CPU_WAIT, register_[7]);
     runState = CpuRunState::WAIT;
 }
+*/
 
 /*
 // RTI - return from interrupt

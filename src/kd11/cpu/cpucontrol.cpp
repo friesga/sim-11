@@ -23,6 +23,13 @@ void KD11CPU::halt ()
     trace.cpuEvent (CpuEventRecordType::CPU_HALT, register_[7]);
 }
 
+// Wait for an interrupt
+void KD11CPU::wait ()
+{
+    trace.cpuEvent (CpuEventRecordType::CPU_WAIT, register_[7]);
+    runState = CpuRunState::WAIT;
+}
+
 // Start the processor at the given address
 void KD11CPU::start (u16 address)
 {

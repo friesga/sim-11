@@ -142,6 +142,7 @@ private:
 	void setTrap (InterruptRequest const *ir) override;
 	void reset () override;
 	void halt () override;
+	void wait () override;
     void start (u16 address) override;
 	void proceed () override;
 	void inhibitTraceTrap () override;
