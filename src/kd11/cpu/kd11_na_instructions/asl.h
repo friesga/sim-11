@@ -30,26 +30,23 @@ namespace KD11_NA
     public:
         ASL (CpuData* cpu, u16 instruction);
         CpuData::Trap execute () override;
-
-    private:
-        OperandLocation location_;
     };
 
     ASL::ASL (CpuData* cpu, u16 instruction)
         :
-        SingleOperandInstruction (cpu, instruction),
-        location_ {getOperandLocation (cpu_->registers ())}
+        SingleOperandInstruction (cpu, instruction)
     {}
 
     CpuData::Trap ASL::execute ()
     {
-        CondData<u16> contents = location_.wordContents ();
-        if (!contents.hasValue ())
+        CondData<u16> contents;
+        if (!readOperand (&contents))
             return CpuData::Trap::BusError;
 
         u16 result = contents << 1;
 
-        location_.write (result);
+        if (!writeOperand (result))
+            return CpuData::Trap::BusError;
 
         setConditionCodeIf_ClearElse (PSW_C, contents & 0100000);
         setConditionCodeIf_ClearElse (PSW_N, result & 0100000);
