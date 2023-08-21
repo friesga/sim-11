@@ -25,20 +25,17 @@ namespace KD11_NA
     public:
         CLR (CpuData* cpu, u16 instruction);
         CpuData::Trap execute () override;
-
-    private:
-        OperandLocation location_;
     };
 
     CLR::CLR (CpuData* cpu, u16 instruction)
         :
-        SingleOperandInstruction (cpu, instruction),
-        location_ {getOperandLocation (cpu_->registers ())}
+        SingleOperandInstruction (cpu, instruction)
     {}
 
     CpuData::Trap CLR::execute ()
     {
-        location_.write (0);
+        if (!writeOperand ((u16) 0))
+            return CpuData::Trap::BusError;
 
         clearConditionCode (PSW_N | PSW_V | PSW_C);
         setConditionCode (PSW_Z);
