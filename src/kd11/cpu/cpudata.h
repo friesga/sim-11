@@ -31,7 +31,7 @@ public:
 		BreakpointTrap,
 		InputOutputTrap,
 		EmulatorTrap,
-		TRP,
+		TrapInstruction,
 		FIS
 	};
 

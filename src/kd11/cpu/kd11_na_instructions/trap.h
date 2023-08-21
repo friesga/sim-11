@@ -40,7 +40,7 @@ namespace KD11_NA
 
     CpuData::Trap TRAP::execute ()
     {
-        return CpuData::Trap::TRP;
+        return CpuData::Trap::TrapInstruction;
     }
 }
 

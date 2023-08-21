@@ -104,7 +104,7 @@ private:
 		{RequestType::Trap, TrapPriority::InstructionTrap, 0, 020};
 	InterruptRequest const EmulatorTrap
 		{RequestType::Trap, TrapPriority::InstructionTrap, 0, 030};
-	InterruptRequest const TRP
+	InterruptRequest const TrapInstruction
 		{RequestType::Trap, TrapPriority::InstructionTrap, 0, 034};
 	InterruptRequest const FIS
 		{RequestType::Trap, TrapPriority::InstructionTrap, 0, 0244};
@@ -119,7 +119,7 @@ private:
 		&BreakpointTrap,
 		&InputOutputTrap,
 		&EmulatorTrap,
-		&TRP,
+		&TrapInstruction,
 		&FIS
 	};
 
