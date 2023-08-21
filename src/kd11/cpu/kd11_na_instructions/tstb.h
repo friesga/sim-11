@@ -20,21 +20,17 @@ namespace KD11_NA
     public:
         TSTB (CpuData* cpu, u16 instruction);
         CpuData::Trap execute () override;
-
-    private:
-        OperandLocation location_;
     };
 
     TSTB::TSTB (CpuData* cpu, u16 instruction)
         :
-        SingleOperandInstruction (cpu, instruction),
-        location_ {getOperandLocation (cpu_->registers ())}
+        SingleOperandInstruction (cpu, instruction)
     {}
 
     CpuData::Trap TSTB::execute ()
     {
-        CondData<u8> source = location_.byteContents ();
-        if (!source.hasValue ())
+        CondData<u8> source;
+        if (!readOperand (&source))
             return CpuData::Trap::BusError;
 
         clearConditionCode (PSW_V);
