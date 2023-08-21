@@ -81,6 +81,7 @@
 #include "kd11_na_instructions/bpt.h"
 #include "kd11_na_instructions/iot.h"
 #include "kd11_na_instructions/rtt.h"
+#include "kd11_na_instructions/emt.h"
 
 #include <functional>
 #include <chrono>
@@ -926,8 +927,15 @@ void KD11CPU::execInstr ()
                 case 01041:
                 case 01042:
                 case 01043:
-                    EMT (this, insn);
+                {
+                    // EMT (this, insn);
+                    unique_ptr<LSI11Instruction> instr = 
+                        make_unique<KD11_NA::EMT> (static_cast<CpuData*> (this), insn);
+                    CpuData::Trap returnedTrap = instr->execute ();
+                    if (returnedTrap != CpuData::Trap::None)
+                        setTrap (vectorTable [returnedTrap]);
                     break;
+                }
 
                 case 01044:
                 case 01045:

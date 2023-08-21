@@ -154,6 +154,7 @@ void KD11CPU::RTT (CpuData* cpu, u16 instruction)
 }
 */
 
+/*
 // EMT - emulator trap
 //
 // Operation:
@@ -179,6 +180,7 @@ void KD11CPU::EMT (CpuData* cpu, u16 instruction)
     trace.trap (TrapRecordType::TRAP, 030);
     setTrap (&EmulatorTrap);
 }
+*/
 
 // TRAP - trap
 //
