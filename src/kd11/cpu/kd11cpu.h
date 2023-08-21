@@ -141,6 +141,7 @@ private:
 	// used by K11ODT and the Operate Group instructions.
 	void setTrap (InterruptRequest const *ir) override;
 	void reset () override;
+	void busReset () override;
 	void halt () override;
 	void wait () override;
     void start (u16 address) override;

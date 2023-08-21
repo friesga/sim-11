@@ -14,6 +14,12 @@ void KD11CPU::reset ()
     psw_ = 0;
 }
 
+// Reset (the devices on) the bus by setting the INIT signal
+void KD11CPU::busReset ()
+{
+    bus_->BINIT().cycle ();
+}
+
 // Halt the processor
 void KD11CPU::halt ()
 {

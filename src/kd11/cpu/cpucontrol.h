@@ -13,6 +13,7 @@ public:
     // mode 0 (start via vector at address 24/26).
     virtual void setTrap (InterruptRequest const *ir) = 0;
     virtual void reset () = 0;
+    virtual void busReset () = 0;
     virtual void halt () = 0;
     virtual void wait () = 0;
     virtual void start (u16 address) = 0;

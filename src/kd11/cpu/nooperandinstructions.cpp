@@ -114,6 +114,7 @@ void KD11CPU::IOT (CpuData* cpu, u16 instruction)
 }
 */
 
+/*
 // RESET - reset external bus
 //
 // Condition Codes: not affected
@@ -126,6 +127,7 @@ void KD11CPU::RESET (CpuData* cpu, u16 instruction)
 {
     bus_->BINIT().cycle ();
 }
+*/
 
 /*
 // RTT - return from interrupt

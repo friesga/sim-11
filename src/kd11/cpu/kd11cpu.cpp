@@ -84,6 +84,7 @@
 #include "kd11_na_instructions/emt.h"
 #include "kd11_na_instructions/trap.h"
 #include "kd11_na_instructions/wait.h"
+#include "kd11_na_instructions/reset.h"
 
 #include <functional>
 #include <chrono>
@@ -265,8 +266,15 @@ void KD11CPU::execInstr ()
                         }
 
                         case 0000005:
-                            RESET (this, insn);
+                        {
+                            // RESET (this, insn);
+                            unique_ptr<LSI11Instruction> instr = 
+                                make_unique<KD11_NA::RESET> (static_cast<CpuData*> (this), insn);
+                            CpuData::Trap returnedTrap = instr->execute ();
+                            if (returnedTrap != CpuData::Trap::None)
+                                setTrap (vectorTable [returnedTrap]);
                             break;
+                        }
 
                         case 0000006:
                         {
