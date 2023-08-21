@@ -28,31 +28,28 @@ namespace KD11_NA
     public:
         MFPS (CpuData* cpu, u16 instruction);
         CpuData::Trap execute () override;
-
-    private:
-        OperandLocation location_;
     };
 
     MFPS::MFPS (CpuData* cpu, u16 instruction)
         :
-        SingleOperandInstruction (cpu, instruction),
-        location_ {getOperandLocation (cpu_->registers ())}
+        SingleOperandInstruction (cpu, instruction)
     {}
 
     CpuData::Trap MFPS::execute ()
     {
-        u16 contents = (u8) cpu_->psw ();
+        u8 contents = (u8) cpu_->psw ();
+        operandLocation_ = getOperandLocation (cpu_->registers ());
 
-        if (location_.isA<u8> ())
+        if (operandLocation_.isA<u8> ())
         {
             // If destination is mode 0 (Register), the regular operand processing
             // is bypassed and PS bit 7 is sign extended through the upper byte of
             // the register.
-            cpu_->registers ()[location_] = (s8) cpu_->psw ();
+            cpu_->registers ()[operandLocation_] = (s8) cpu_->psw ();
         }
         else
         {
-            if (!location_.writeByte (contents))
+            if (!writeOperand (contents))
                 return CpuData::Trap::BusError;
         }
         setConditionCodeIf_ClearElse (PSW_N, contents & 0x80);

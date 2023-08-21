@@ -27,8 +27,8 @@ public:
 	u16 getOperationCode () override;
 
 protected:
-	// The operand location is protected as the JMP instruction is a special
-	// case and needs access to the location.
+	// The operand location is protected as some instructions (notably the JMP
+	// and MFPS instructions) are special cases and need access to the location.
 	OperandLocation operandLocation_ {};
 
 	bool readOperand (CondData<u16> *operand);
