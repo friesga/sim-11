@@ -22,12 +22,10 @@ class FISInstruction : public LSI11Instruction
 
 public:
 	FISInstruction (CpuData* cpu, u16 instruction);
-	u16 getRegister ();
 	u16 getOperationCode () override;
 
 protected:
-	// CpuData* cpu_;
-
+	u16 getRegister ();
 	CpuData::Trap returnFISresult (Float result, u16 registerNumber);
 	CpuData::Trap executeFISinstruction (u16 stackPointer, 
 		std::function<bool(Float, Float)> argumentsValid,

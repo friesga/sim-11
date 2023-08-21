@@ -26,13 +26,11 @@ class DoubleOperandInstruction : public LSI11Instruction
 
 public:
 	DoubleOperandInstruction (CpuData* cpu, u16 instruction);
-
-	// ToDo: Make getSourceOperandLocation and getDestinationOperandLocation private
-	OperandLocation getSourceOperandLocation (u16 (&reg)[8]);
-	OperandLocation getDestinationOperandLocation (u16 (&reg)[8]);
 	u16 getOperationCode ();
 
 protected:
+	OperandLocation getSourceOperandLocation (u16 (&reg)[8]);
+	OperandLocation getDestinationOperandLocation (u16 (&reg)[8]);
 	bool readSourceOperand (CondData<u16> *source);
 	bool readSourceOperand (CondData<u8> *source);
 	bool readDestinationOperand (CondData<u16> *destination);
@@ -41,7 +39,7 @@ protected:
 	bool writeDestinationOperand (u8 operand);
 
 private:
-	// The destination operand location is defined as a class memeber as for
+	// The destination operand location is defined as a class member as for
 	// some instructions, such as the ADD instruction, that location has to
 	// be used to retrieve and to write the destination operand.
 	OperandLocation destinationOperandLocation_ {};

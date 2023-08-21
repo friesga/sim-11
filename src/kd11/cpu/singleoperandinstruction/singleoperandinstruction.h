@@ -23,7 +23,6 @@ class SingleOperandInstruction : public LSI11Instruction
 
 public:
 	SingleOperandInstruction (CpuData *cpu, u16 instruction);
-	OperandLocation getOperandLocation (u16 (&reg)[8]);
 	u16 getOperationCode () override;
 
 protected:
@@ -31,6 +30,7 @@ protected:
 	// and MFPS instructions) are special cases and need access to the location.
 	OperandLocation operandLocation_ {};
 
+	OperandLocation getOperandLocation (u16 (&reg)[8]);
 	bool readOperand (CondData<u16> *operand);
 	bool readOperand (CondData<u8> *operand);
 	bool writeOperand (u16 operand);
