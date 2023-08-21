@@ -20,27 +20,23 @@ namespace KD11_NA
     public:
         ADCB (CpuData* cpu, u16 instruction);
         CpuData::Trap execute () override;
-
-    private:
-        OperandLocation location_;
     };
 
     ADCB::ADCB (CpuData* cpu, u16 instruction)
         :
-        SingleOperandInstruction (cpu, instruction),
-        location_ {getOperandLocation (cpu_->registers ())}
+        SingleOperandInstruction (cpu, instruction)
     {}
 
     CpuData::Trap ADCB::execute ()
     {
-        CondData<u8> source = location_.byteContents ();
-        if (!source.hasValue ())
+        CondData<u8> source; 
+        if (!readOperand (&source))
             return CpuData::Trap::BusError;
 
         u16 tmp = isSet (PSW_C) ? 1 : 0;
-        u16 destination = (u8) (source + tmp);
+        u8 destination = (u8) (source + tmp);
 
-        if (!location_.writeByte (destination))
+        if (!writeOperand (destination))
             return CpuData::Trap::BusError;
 
         setConditionCodeIf_ClearElse (PSW_V, source == 0177 && isSet (PSW_C));
