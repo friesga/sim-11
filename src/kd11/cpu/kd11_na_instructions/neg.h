@@ -27,28 +27,25 @@ namespace KD11_NA
     public:
         NEG (CpuData* cpu, u16 instruction);
         CpuData::Trap execute () override;
-
-    private:
-        OperandLocation location_;
     };
 
     NEG::NEG (CpuData* cpu, u16 instruction)
         :
-        SingleOperandInstruction (cpu, instruction),
-        location_ {getOperandLocation (cpu_->registers ())}
+        SingleOperandInstruction (cpu, instruction)
     {}
 
     CpuData::Trap NEG::execute ()
     {
-        CondData<u16> operand = location_.wordContents ();
-        if (!operand.hasValue ())
+        CondData<u16> operand;
+        if (!readOperand (&operand))
             return CpuData::Trap::BusError;
 
         // Negate the operand and write it to the operand location
         if (operand != 0100000)
             operand = -operand;
     
-        location_.write (operand);
+        if (!writeOperand (operand))
+            return CpuData::Trap::BusError;
 
         setConditionCodeIf_ClearElse (PSW_V, operand == 0100000);
         setConditionCodeIf_ClearElse (PSW_N, operand & 0100000);
