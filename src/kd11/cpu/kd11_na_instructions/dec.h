@@ -25,26 +25,23 @@ namespace KD11_NA
     public:
         DEC (CpuData* cpu, u16 instruction);
         CpuData::Trap execute () override;
-
-    private:
-        OperandLocation location_;
     };
 
     DEC::DEC (CpuData* cpu, u16 instruction)
         :
-        SingleOperandInstruction (cpu, instruction),
-        location_ {getOperandLocation (cpu_->registers ())}
+        SingleOperandInstruction (cpu, instruction)
     {}
 
     CpuData::Trap DEC::execute ()
     {
-        CondData<u16> contents = location_.wordContents ();
-        if (!contents.hasValue ())
+        CondData<u16> contents;
+        if (!readOperand (&contents))
             return CpuData::Trap::BusError;
 
         // Increment the operand and write it to the operand location
         u16 result = contents - 1;
-        location_.write (result);
+        if (!writeOperand (result))
+            return CpuData::Trap::BusError;
 
         setConditionCodeIf_ClearElse (PSW_V, contents == 0100000);
         setConditionCodeIf_ClearElse (PSW_N, result & 0100000);
