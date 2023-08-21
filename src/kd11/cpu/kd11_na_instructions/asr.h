@@ -29,21 +29,17 @@ namespace KD11_NA
     public:
         ASR (CpuData* cpu, u16 instruction);
         CpuData::Trap execute () override;
-
-    private:
-        OperandLocation location_;
     };
 
     ASR::ASR (CpuData* cpu, u16 instruction)
         :
-        SingleOperandInstruction (cpu, instruction),
-        location_ {getOperandLocation (cpu_->registers ())}
+        SingleOperandInstruction (cpu, instruction)
     {}
 
     CpuData::Trap ASR::execute ()
     {
-        CondData<u16> contents = location_.wordContents ();
-        if (!contents.hasValue ())
+        CondData<u16> contents;
+        if (!readOperand (&contents))
             return CpuData::Trap::BusError;
 
         u16 result = contents;
@@ -55,7 +51,8 @@ namespace KD11_NA
         else
             result >>= 1;
 
-        location_.write (result);
+        if (!writeOperand (result))
+            return CpuData::Trap::BusError;
 
         setConditionCodeIf_ClearElse (PSW_C, contents & 1);
         setConditionCodeIf_ClearElse (PSW_N, result & 0100000);
