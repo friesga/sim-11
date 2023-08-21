@@ -26,21 +26,17 @@ namespace KD11_NA
     public:
         MTPS (CpuData* cpu, u16 instruction);
         CpuData::Trap execute () override;
-
-    private:
-        OperandLocation location_;
     };
 
     MTPS::MTPS (CpuData* cpu, u16 instruction)
         :
-        SingleOperandInstruction (cpu, instruction),
-        location_ {getOperandLocation (cpu_->registers ())}
+        SingleOperandInstruction (cpu, instruction)
     {}
 
     CpuData::Trap MTPS::execute ()
     {
-        CondData<u8> newValue = location_.byteContents ();
-        if (!newValue.hasValue ())
+        CondData<u8> newValue;
+        if (!readOperand (&newValue))
             return CpuData::Trap::BusError;
 
         // Allow bits 5/6/7 to be set and cleared
