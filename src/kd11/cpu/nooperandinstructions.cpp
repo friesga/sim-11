@@ -182,6 +182,7 @@ void KD11CPU::EMT (CpuData* cpu, u16 instruction)
 }
 */
 
+/*
 // TRAP - trap
 //
 // Operation:
@@ -205,6 +206,7 @@ void KD11CPU::TRAP (CpuData* cpu, u16 instruction)
     trace.trap (TrapRecordType::TRAP, 034);
     setTrap (&TRP);
 }
+*/
 
 // Unused/reserved operation codes
 void KD11CPU::unused (CpuData* cpu, u16 instruction)
