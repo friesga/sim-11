@@ -1,7 +1,5 @@
 #include "branchinstruction.h"
 
-namespace KD11_NA { class BR; }
-
 BranchInstruction::BranchInstruction (CpuData *cpu, u16 instruction)
     :
     LSI11Instruction (cpu),

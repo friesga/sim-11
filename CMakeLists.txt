@@ -47,7 +47,9 @@ set (KD11CPU_SRCS
     src/kd11/cpu/branchinstruction/branchinstruction.cpp
     src/kd11/cpu/eisinstruction/eisinstruction.cpp
     src/kd11/cpu/markinstruction/markinstruction.cpp
-    src/kd11/cpu/sobinstruction/sobinstruction.cpp)
+    src/kd11/cpu/sobinstruction/sobinstruction.cpp
+    src/kd11/cpu/kd11_na/kd11_na.cpp
+    src/kd11/cpu/kd11_na/opcodetables.cpp)
 
  set (KD11_SRCS
     src/kd11/kd11.cpp

@@ -6,6 +6,7 @@
 #include "qbus/qbus.h"
 #include "float/float.h"
 #include "types.h"
+#include "kd11_na/kd11_na.h"
 
 #include <functional>
 
@@ -80,6 +81,7 @@ private:
 	u16	register_[8];
 	u16	psw_;
 	CpuRunState runState;
+	KD11_NA kd11_na;
 
 	// A trap is a special kind of interrupt, internal to the CPU. There
 	// can be only one trap serviced at the time.
