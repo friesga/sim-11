@@ -19,7 +19,7 @@ public:
     {
         return make_unique<T> (cpu, instruction);
     }
-};;
+};
 
 
 #endif // _WITHFACTORY_H_

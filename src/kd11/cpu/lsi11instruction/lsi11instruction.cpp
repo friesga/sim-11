@@ -1,5 +1,7 @@
 #include "lsi11instruction.h"
 
+#include <typeinfo>
+
 LSI11Instruction::LSI11Instruction (CpuData *cpu)
 	:
 	cpu_ {cpu}
@@ -116,4 +118,14 @@ bool LSI11Instruction::isByteInstruction ()
 	u16 opCode = getOperationCode ();
 	return (opCode >= 01050 && opCode <= 01067) || 
 		   (opCode >= 011 && opCode <= 015) ? true : false;
+}
+
+// Return the mnemonic for this instruction from the object's class name.
+// The call "typeid (*this).name ()" will return a string with the complete
+// type, e.g. "class KD11_NA::HALT". The position of the mnemonic string
+// is two characters after the first colon in the type name.
+string LSI11Instruction::mnemonic ()
+{
+	string typeName = typeid (*this).name ();
+	return typeName.substr (typeName.find (":") + 2);
 }

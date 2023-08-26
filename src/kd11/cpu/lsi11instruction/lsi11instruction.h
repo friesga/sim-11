@@ -5,12 +5,17 @@
 #include "../operandlocation/operandlocation.h"
 #include "../operand/operand.h"
 
+#include <string>
+
+using std::string;
+
 class LSI11Instruction
 {
 public:
 	// All derived classes will have to provide an execute function
 	// ToDo: Make execute() a pute virtual function
 	virtual CpuData::Trap execute () { return CpuData::Trap::None; };
+	string mnemonic ();
 
 protected:
 	CpuData *cpu_;

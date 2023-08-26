@@ -1,8 +1,9 @@
 #ifndef _OPERANDLOCATION_H_
 #define _OPERANDLOCATION_H_
 
-#include "../kd11cpu.h"
 #include <variant>
+
+#include "../cpudata.h"
 
 using std::variant;
 using std::monostate;

@@ -337,6 +337,7 @@ set (GTEST_SRCS
     gtest/fistest.cpp
     gtest/kd11configuratortest.cpp
     gtest/kd11odttest.cpp
+    gtest/kd11_nadecodertest.cpp
     gtest/locationtest.cpp
     gtest/rlv12attachtest.cpp
     gtest/rlv12maintenancetest.cpp
