@@ -108,13 +108,16 @@ bool KD11CPU::step ()
 void KD11CPU::execInstr ()
 {
     // Get next instruction to execute and move PC forward
-    CondData<u16> tmpValue = fetchWord (register_[7]);
-    if (!tmpValue.hasValue())
+    CondData<u16> instructionWord = fetchWord (register_[7]);
+    if (!instructionWord.hasValue())
+    {
+        trace.bus (BusRecordType::ReadFail, register_[7], 0);
+        setTrap (&busError);
         return;
-    u16 insn = tmpValue;
+    }
     register_[7] += 2;
 
-    unique_ptr<LSI11Instruction> instr = kd11_na.decode (this, insn);
+    unique_ptr<LSI11Instruction> instr = kd11_na.decode (this, instructionWord);
     CpuData::Trap returnedTrap = instr->execute ();
     if (returnedTrap != CpuData::Trap::None)
         setTrap (vectorTable [returnedTrap]);
