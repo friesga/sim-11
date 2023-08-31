@@ -1,12 +1,19 @@
 #ifndef _OPERANDLOCATION_H_
 #define _OPERANDLOCATION_H_
 
-#include <variant>
+#include "emptyoperandlocation/emptyoperandlocation.h"
+#include "registeroperandlocation/registeroperandlocation.h"
+#include "memoryoperandlocation/memoryoperandlocation.h"
 
+#include "types.h"
 #include "../cpudata.h"
+#include "conddata/conddata.h"
+
+#include <variant>
+#include <type_traits>
 
 using std::variant;
-using std::monostate;
+
 
 // A location of an instruction operand is either a register or a memory
 // location in the given CPU. A memory location is in the form of a CondData
@@ -19,25 +26,55 @@ class OperandLocation
 {
 public:
     OperandLocation ();
-    OperandLocation (CpuData *cpu, u8 registerNumber);
-    OperandLocation (CpuData *cpu, CondData<u16> memoryAddress);
+    ~OperandLocation () {};
+    template <typename T>
+    OperandLocation (const T& operandLocation);
+    template <typename T> void operator= (const T& operandLocation);
     template <typename T> bool isA ();
     bool isValid ();
     operator u16 ();
-    CondData<u16> wordContents ();
-    CondData<u8> byteContents ();
-    bool write (u16 contents);
-    bool writeByte (u8 contents);
+    template <typename T> CondData<T> contents ();
+    template <typename T> bool write (T contents);
 
 private:
-    variant <monostate, u8, CondData <u16>> location_;
-    CpuData *cpu_;
+    variant <EmptyOperandLocation, RegisterOperandLocation, MemoryOperandLocation> location_;
 };
+
+template <typename T>
+OperandLocation::OperandLocation (const T& operandLocation)
+    :
+    location_ {operandLocation}
+{}
 
 template <typename T>
 inline bool OperandLocation::isA ()
 {
     return holds_alternative<T> (location_);
+}
+
+// Assignment operator
+template <typename T>
+void OperandLocation::operator= (const T& operandLocation)
+{
+    location_ = operandLocation;
+}
+
+// Return the contents of the location pointed to by this OperandLocation. The
+// location is either a register number or a memory address. In the first case
+// the contents of the register are returned, in the second case the contents
+// of the memory address.
+template <typename T>
+CondData<T> OperandLocation::contents ()
+{
+    return std::visit ([] (auto &obj) -> CondData<T> 
+         {return obj.contents<T> (); }, location_);
+}
+
+template <typename T>
+bool OperandLocation::write (T contents)
+{
+    return std::visit ([contents] (auto &obj) -> bool 
+        {return obj.write<T> (contents); }, location_);
 }
 
 #endif // _OPERANDLOCATION_H_

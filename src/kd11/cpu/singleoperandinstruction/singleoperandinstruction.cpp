@@ -24,14 +24,14 @@ u16 SingleOperandInstruction::getOperationCode ()
 bool SingleOperandInstruction::readOperand (CondData<u16> *operand)
 {
 	operandLocation_ =  getOperandLocation (cpu_->registers ());
-    *operand = operandLocation_.wordContents ();
+    *operand = operandLocation_.contents<u16> ();
 	return (*operand).hasValue ();
 }
 
 bool SingleOperandInstruction::readOperand (CondData<u8> *operand)
 {
 	operandLocation_ =  getOperandLocation (cpu_->registers ());
-    *operand = operandLocation_.byteContents ();
+    *operand = operandLocation_.contents<u8> ();
 	return (*operand).hasValue ();
 }
 
@@ -54,6 +54,6 @@ bool SingleOperandInstruction::writeOperand (u8 operand)
 			getOperandLocation (cpu_->registers ());
 	}
 	
-	return operandLocation_.writeByte (operand);
+	return operandLocation_.write<u8> (operand);
 }
 

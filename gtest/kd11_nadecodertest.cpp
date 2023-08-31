@@ -1,6 +1,7 @@
 #include "../src/kd11/cpu/lsi11instruction/lsi11instruction.h"
 #include "../src/kd11/cpu/kd11_na/kd11_na.h"
 #include "../src/kd11/cpu/cpudata.h"
+#include "dummycpu/dummycpu.h"
 
 #include <gtest/gtest.h>
 #include <string>
@@ -9,37 +10,6 @@ using std::unique_ptr;
 using std::make_unique;
 using std::string;
 
-// Dummy implementation of the CpuData interface to be passed to the
-// instruction decoder. It's functions will not be called.
-class DummyCpu : public CpuData
-{
-public:
-    // Definitions required for the CpuData interface
-    GeneralRegisters dummyRegisters;
-    u16 dummyPsw;
-	GeneralRegisters& registers () {return dummyRegisters; };
-	u16& psw () { return dummyPsw; };
-    CondData<u16> fetchWord (u16 address) { return CondData<u16> {}; };
-	CondData<u8> fetchByte (u16 address) { return CondData<u8> {};};
-	bool putWord (u16 address, u16 value) { return false; };
-	bool putByte (u16 address, u8 value) { return false; };
-	void pushWord (u16 value) {};
-	bool popWord (u16 *destination) { return false; };
-
-    // Definitions required for the CpuControl interface
-    void setTrap (InterruptRequest const *ir) {};
-    void cpuReset () {};
-    void busReset () {};
-    void halt () {};
-    void wait () {};
-    void start (u16 address) {};
-    void proceed () {};
-    void inhibitTraceTrap () {};
-    u16 registerValue (u8 registerNr) { return 0; };
-    void setRegister (u8 registerNr, u16 value) {};
-    u16 pswValue () { return 0; };
-    void setPSW (u16 value) {};
-};
 
 // Get the mnemonic from the decoded instruction
 string getInstrMnemonic (u16 instruction)

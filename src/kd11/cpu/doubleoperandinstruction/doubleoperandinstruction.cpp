@@ -33,7 +33,7 @@ bool DoubleOperandInstruction::readSourceOperand (CondData<u16> *source)
 {
 	OperandLocation sourceOperandLocation = 
 		getSourceOperandLocation (cpu_->registers ());
-    *source = sourceOperandLocation.wordContents ();
+    *source = sourceOperandLocation.contents<u16> ();
 	return (*source).hasValue ();
 }
 
@@ -41,7 +41,7 @@ bool DoubleOperandInstruction::readSourceOperand (CondData<u8> *source)
 {
 	OperandLocation sourceOperandLocation = 
 		getSourceOperandLocation (cpu_->registers ());
-    *source = sourceOperandLocation.byteContents ();
+    *source = sourceOperandLocation.contents<u8> ();
 	return (*source).hasValue ();
 }
 
@@ -49,7 +49,7 @@ bool DoubleOperandInstruction::readDestinationOperand (CondData<u16> *destinatio
 {
 	destinationOperandLocation_ = 
 		getDestinationOperandLocation (cpu_->registers ());
-    *destination = destinationOperandLocation_.wordContents ();
+    *destination = destinationOperandLocation_.contents<u16> ();
 	return (*destination).hasValue ();
 }
 
@@ -57,7 +57,7 @@ bool DoubleOperandInstruction::readDestinationOperand (CondData<u8> *destination
 {
 	destinationOperandLocation_ = 
 		getDestinationOperandLocation (cpu_->registers ());
-    *destination = destinationOperandLocation_.byteContents ();
+    *destination = destinationOperandLocation_.contents<u8> ();
 	return (*destination).hasValue ();
 }
 
@@ -85,5 +85,5 @@ bool  DoubleOperandInstruction::writeDestinationOperand (u8 operand)
 			getDestinationOperandLocation (cpu_->registers ());
 	}
 	
-	return destinationOperandLocation_.writeByte (operand);
+	return destinationOperandLocation_.write<u8> (operand);
 }

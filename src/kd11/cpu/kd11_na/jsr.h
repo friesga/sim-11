@@ -44,7 +44,7 @@ CpuData::Trap KD11_NA::JSR::execute ()
 {
     OperandLocation destination = getOperandLocation (cpu_->registers ());
 
-    if (!destination.isA<CondData<u16>> ())
+    if (!destination.isA<MemoryOperandLocation> ())
     {
         // Illegal instruction
         trace.trap (TrapRecordType::TRAP_RADDR, 04);

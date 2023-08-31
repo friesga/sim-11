@@ -39,6 +39,9 @@ set (KD11CPU_SRCS
     src/kd11/cpu/memoryaccess.cpp
     src/kd11/cpu/lsi11instruction/lsi11instruction.cpp
     src/kd11/cpu/operandlocation/operandlocation.cpp
+    src/kd11/cpu/operandlocation/emptyoperandlocation/emptyoperandlocation.cpp
+    src/kd11/cpu/operandlocation/registeroperandlocation/registeroperandlocation.cpp
+    src/kd11/cpu/operandlocation/memoryoperandlocation/memoryoperandlocation.cpp
     src/kd11/cpu/nooperandinstruction/nooperandinstruction.cpp
     src/kd11/cpu/singleoperandinstruction/singleoperandinstruction.cpp
     src/kd11/cpu/doubleoperandinstruction/doubleoperandinstruction.cpp
@@ -339,6 +342,8 @@ set (GTEST_SRCS
     gtest/kd11odttest.cpp
     gtest/kd11_nadecodertest.cpp
     gtest/locationtest.cpp
+    gtest/operandlocationtest.cpp
+    gtest/dummycpu/dummycpu.cpp
     gtest/rlv12attachtest.cpp
     gtest/rlv12maintenancetest.cpp
     gtest/rlv12getstatustest.cpp

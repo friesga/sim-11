@@ -40,7 +40,7 @@ CpuData::Trap KD11_NA::MFPS::execute ()
     u8 contents = (u8) cpu_->psw ();
     operandLocation_ = getOperandLocation (cpu_->registers ());
 
-    if (operandLocation_.isA<u8> ())
+    if (operandLocation_.isA<RegisterOperandLocation> ())
     {
         // If destination is mode 0 (Register), the regular operand processing
         // is bypassed and PS bit 7 is sign extended through the upper byte of

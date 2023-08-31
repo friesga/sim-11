@@ -46,10 +46,10 @@ CpuData::Trap KD11_NA::MOVB::execute ()
     OperandLocation destOperandLocation =
         getDestinationOperandLocation (cpu_->registers ());
 
-    if (destOperandLocation.isA<u8> ())
+    if (destOperandLocation.isA<RegisterOperandLocation> ())
         cpu_->registers ()[destOperandLocation] = tmp;
     else
-        if (!destOperandLocation.writeByte (tmp))
+        if (!destOperandLocation.write<u8> (tmp))
             return CpuData::Trap::BusError;
 
     setConditionCodeIf_ClearElse (PSW_N, tmp & 0x80);

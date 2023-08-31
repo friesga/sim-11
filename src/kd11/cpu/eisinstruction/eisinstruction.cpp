@@ -20,7 +20,7 @@ bool EisInstruction::readOperand (CondData<u16> *source)
 {
 	operandLocation_ = 
 		getOperandLocation (cpu_->registers ());
-    *source = operandLocation_.wordContents ();
+    *source = operandLocation_.contents<u16> ();
 	return (*source).hasValue ();
 }
 

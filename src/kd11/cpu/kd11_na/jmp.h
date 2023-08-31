@@ -39,7 +39,7 @@ KD11_NA::JMP::JMP (CpuData* cpu, u16 instruction)
 CpuData::Trap KD11_NA::JMP::execute ()
 {
     operandLocation_ = getOperandLocation (cpu_->registers ());
-    if (operandLocation_.isA<CondData<u16>> ())
+    if (operandLocation_.isA<MemoryOperandLocation> ())
     {
         cpu_->registers ()[7] = operandLocation_;
         return CpuData::Trap::None;
