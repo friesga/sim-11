@@ -31,12 +31,9 @@ public:
 protected:
 	OperandLocation getSourceOperandLocation (u16 (&reg)[8]);
 	OperandLocation getDestinationOperandLocation (u16 (&reg)[8]);
-	bool readSourceOperand (CondData<u16> *source);
-	bool readSourceOperand (CondData<u8> *source);
-	bool readDestinationOperand (CondData<u16> *destination);
-	bool readDestinationOperand (CondData<u8> *destination);
-	bool writeDestinationOperand (u16 operand);
-	bool writeDestinationOperand (u8 operand);
+	template <typename T> bool readSourceOperand (T *source);
+	template <typename T> bool readDestinationOperand (T *destination);
+	template <typename T> bool writeDestinationOperand (T operand);
 
 private:
 	// The destination operand location is defined as a class member as for
@@ -44,5 +41,42 @@ private:
 	// be used to retrieve and to write the destination operand.
 	OperandLocation destinationOperandLocation_ {};
 };
+
+// The functions below are templated for bytes (type u8 or CondData<u8>) and
+// words (type u16 and CondData<u16>). Trying to use the functions for other
+// types will result in compilation errors.
+template <typename T>
+bool DoubleOperandInstruction::readSourceOperand (T *source)
+{
+	OperandLocation sourceOperandLocation = 
+		getSourceOperandLocation (cpu_->registers ());
+    *source = sourceOperandLocation.contents<T> ();
+	return (*source).hasValue ();
+}
+
+template <typename T>
+bool DoubleOperandInstruction::readDestinationOperand (T *destination)
+{
+	destinationOperandLocation_ = 
+		getDestinationOperandLocation (cpu_->registers ());
+    *destination = destinationOperandLocation_.contents<T> ();
+	return (*destination).hasValue ();
+}
+
+// For most instructions the destination operand location will have been
+// determined when the destion operand has been retrieved. Some instructions
+// however just write the destination operand. In these cases the operand
+// location still has to be determined.
+template <typename T>
+bool DoubleOperandInstruction::writeDestinationOperand (T operand)
+{
+	if (!destinationOperandLocation_.isValid ())
+	{
+		destinationOperandLocation_ = 
+			getDestinationOperandLocation (cpu_->registers ());
+	}
+	
+	return destinationOperandLocation_.write<T> (operand);
+}
 
 #endif // _DOUBLEINSTRUCTIONFORMAT_H_

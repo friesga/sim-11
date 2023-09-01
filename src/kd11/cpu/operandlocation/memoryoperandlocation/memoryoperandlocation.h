@@ -10,8 +10,8 @@ public:
     MemoryOperandLocation (CpuData *cpu, CondData<u16> memoryAddress);
     bool isValid ();
     operator u16 ();
-    template <typename T> requires std::same_as<T, u16> CondData<T> contents ();
-    template <typename T> requires std::same_as<T, u8> CondData<T> contents ();
+    template <typename T> requires std::same_as<T, CondData<u16>> T contents ();
+    template <typename T> requires std::same_as<T, CondData<u8>> T contents ();
     template <typename T> requires std::same_as<T, u16> bool write (T contents);
     template <typename T> requires std::same_as<T, u8> bool write (T contents);
 
@@ -21,15 +21,15 @@ private:
 };
 
 template <typename T>
-requires std::same_as<T, u16>
-CondData<T> MemoryOperandLocation::contents ()
+requires std::same_as<T, CondData<u16>>
+T MemoryOperandLocation::contents ()
 {
     return cpu_->fetchWord (location_);
 }
 
 template <typename T>
-requires std::same_as<T, u8>
-CondData<T> MemoryOperandLocation::contents ()
+requires std::same_as<T, CondData<u8>>
+T MemoryOperandLocation::contents ()
 {
     return cpu_->fetchByte (location_);
 }

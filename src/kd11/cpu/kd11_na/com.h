@@ -41,7 +41,7 @@ CpuData::Trap KD11_NA::COM::execute ()
 
     // Complement the operand and write it to the operand location
     operand = ~operand;
-    if (!writeOperand (operand))
+    if (!writeOperand (operand.value ()))
         return CpuData::Trap::BusError;
 
     clearConditionCode (PSW_V);

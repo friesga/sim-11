@@ -14,7 +14,6 @@ DoubleOperandInstruction::DoubleOperandInstruction (CpuData* cpu, u16 instructio
 
 OperandLocation DoubleOperandInstruction::getSourceOperandLocation (u16 (&reg)[8])
 {
-	// isByteInstruction (instr_.decoded.opcode)
 	return decodeOperand (Operand {instr_.decoded.src_rn, instr_.decoded.src_mode}, reg);
 }
 
@@ -27,63 +26,4 @@ OperandLocation DoubleOperandInstruction::getDestinationOperandLocation (u16 (&r
 u16 DoubleOperandInstruction::getOperationCode ()
 {
 	return instr_.decoded.opcode;
-}
-
-bool DoubleOperandInstruction::readSourceOperand (CondData<u16> *source)
-{
-	OperandLocation sourceOperandLocation = 
-		getSourceOperandLocation (cpu_->registers ());
-    *source = sourceOperandLocation.contents<u16> ();
-	return (*source).hasValue ();
-}
-
-bool DoubleOperandInstruction::readSourceOperand (CondData<u8> *source)
-{
-	OperandLocation sourceOperandLocation = 
-		getSourceOperandLocation (cpu_->registers ());
-    *source = sourceOperandLocation.contents<u8> ();
-	return (*source).hasValue ();
-}
-
-bool DoubleOperandInstruction::readDestinationOperand (CondData<u16> *destination)
-{
-	destinationOperandLocation_ = 
-		getDestinationOperandLocation (cpu_->registers ());
-    *destination = destinationOperandLocation_.contents<u16> ();
-	return (*destination).hasValue ();
-}
-
-bool DoubleOperandInstruction::readDestinationOperand (CondData<u8> *destination)
-{
-	destinationOperandLocation_ = 
-		getDestinationOperandLocation (cpu_->registers ());
-    *destination = destinationOperandLocation_.contents<u8> ();
-	return (*destination).hasValue ();
-}
-
-// For most instructions the destination operand location will have been
-// determined when the destion operand has been retrieved. Some instructions
-// however just write the destination operand. In these cases the operand
-// location still has to be determined.
-bool DoubleOperandInstruction::writeDestinationOperand (u16 operand)
-{
-	if (!destinationOperandLocation_.isValid ())
-	{
-		destinationOperandLocation_ = 
-			getDestinationOperandLocation (cpu_->registers ());
-	}
-	
-	return destinationOperandLocation_.write (operand);
-}
-
-
-bool  DoubleOperandInstruction::writeDestinationOperand (u8 operand)
-{
-	if (!destinationOperandLocation_.isValid ())
-	{
-		destinationOperandLocation_ = 
-			getDestinationOperandLocation (cpu_->registers ());
-	}
-	
-	return destinationOperandLocation_.write<u8> (operand);
 }

@@ -44,7 +44,7 @@ CpuData::Trap KD11_NA::NEG::execute ()
     if (operand != 0100000)
         operand = -operand;
 
-    if (!writeOperand (operand))
+    if (!writeOperand (operand.value ()))
         return CpuData::Trap::BusError;
 
     setConditionCodeIf_ClearElse (PSW_V, operand == 0100000);

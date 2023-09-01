@@ -31,12 +31,31 @@ protected:
 	OperandLocation operandLocation_ {};
 
 	OperandLocation getOperandLocation (u16 (&reg)[8]);
-	bool readOperand (CondData<u16> *operand);
-	bool readOperand (CondData<u8> *operand);
-	bool writeOperand (u16 operand);
-	bool writeOperand (u8 operand);
-
+	template <typename T> bool readOperand (T *operand);
+	template <typename T> bool writeOperand (T operand);
 };
 
+// The functions below are templated for bytes (type u8 or CondData<u8>) and
+// words (type u16 and CondData<u16>). Trying to use the functions for other
+// types will result in compilation errors.
+template <typename T>
+bool SingleOperandInstruction::readOperand (T *operand)
+{
+	operandLocation_ =  getOperandLocation (cpu_->registers ());
+    *operand = operandLocation_.contents<T> ();
+	return (*operand).hasValue ();
+}
+
+template <typename T>
+bool SingleOperandInstruction::writeOperand (T operand)
+{
+	if (!operandLocation_.isValid ())
+	{
+		operandLocation_ = 
+			getOperandLocation (cpu_->registers ());
+	}
+	
+	return operandLocation_.write<T> (operand);
+}
 
 #endif // !_SINGLEOPERANDINSTRUCTION_H_

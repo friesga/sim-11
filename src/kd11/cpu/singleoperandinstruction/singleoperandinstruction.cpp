@@ -21,39 +21,3 @@ u16 SingleOperandInstruction::getOperationCode ()
 	return instr_.decoded.opcode;
 }
 
-bool SingleOperandInstruction::readOperand (CondData<u16> *operand)
-{
-	operandLocation_ =  getOperandLocation (cpu_->registers ());
-    *operand = operandLocation_.contents<u16> ();
-	return (*operand).hasValue ();
-}
-
-bool SingleOperandInstruction::readOperand (CondData<u8> *operand)
-{
-	operandLocation_ =  getOperandLocation (cpu_->registers ());
-    *operand = operandLocation_.contents<u8> ();
-	return (*operand).hasValue ();
-}
-
-bool SingleOperandInstruction::writeOperand (u16 operand)
-{
-	if (!operandLocation_.isValid ())
-	{
-		operandLocation_ = 
-			getOperandLocation (cpu_->registers ());
-	}
-	
-	return operandLocation_.write (operand);
-}
-
-bool SingleOperandInstruction::writeOperand (u8 operand)
-{
-	if (!operandLocation_.isValid ())
-	{
-		operandLocation_ = 
-			getOperandLocation (cpu_->registers ());
-	}
-	
-	return operandLocation_.write<u8> (operand);
-}
-

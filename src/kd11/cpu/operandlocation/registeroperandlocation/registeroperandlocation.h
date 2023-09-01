@@ -12,8 +12,8 @@ public:
     RegisterOperandLocation (CpuData *cpu, u8 registerNumber);
     bool isValid ();
     operator u16 ();
-    template <typename T> requires std::same_as<T, u16> CondData<T> contents ();
-    template <typename T> requires std::same_as<T, u8> CondData<T> contents ();
+    template <typename T> requires std::same_as<T, CondData<u16>> T contents ();
+    template <typename T> requires std::same_as<T, CondData<u8>> T contents ();
     template <typename T> requires std::same_as<T, u16> bool write (T contents);
     template <typename T> requires std::same_as<T, u8> bool write (T contents);
 
@@ -23,15 +23,15 @@ private:
 };
 
 template <typename T>
-requires std::same_as<T, u16>
-CondData<T> RegisterOperandLocation::contents ()
+requires std::same_as<T, CondData<u16>>
+T RegisterOperandLocation::contents ()
 {
     return CondData<u16> {cpu_->registers () [location_]};
 }
 
 template <typename T>
-requires std::same_as<T, u8>
-CondData<T> RegisterOperandLocation::contents ()
+requires std::same_as<T, CondData<u8>>
+T RegisterOperandLocation::contents ()
 {
     return CondData<u8> {static_cast<u8> (cpu_->registers () [location_] & 0377)};
 }

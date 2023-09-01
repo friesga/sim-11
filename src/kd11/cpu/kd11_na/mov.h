@@ -39,7 +39,7 @@ CpuData::Trap KD11_NA::MOV::execute ()
     CondData<u16> source, destination;
 
     if (!readSourceOperand (&source) ||
-        !writeDestinationOperand (source))
+        !writeDestinationOperand (source.value ()))
         return CpuData::Trap::BusError;
 
     setConditionCodeIf_ClearElse (PSW_N, source & 0100000);

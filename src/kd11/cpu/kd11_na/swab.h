@@ -43,7 +43,7 @@ CpuData::Trap KD11_NA::SWAB::execute ()
     // Swap bytes in the operand and write it to the operand location
     operand = ((operand & 0x00FF) << 8) | ((operand >> 8) & 0xFF);
 
-    if (!writeOperand (operand))
+    if (!writeOperand (operand.value ()))
         return CpuData::Trap::BusError;
 
     setConditionCodeIf_ClearElse (PSW_N, operand & 0x80);
