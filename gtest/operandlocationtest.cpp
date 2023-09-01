@@ -76,7 +76,7 @@ TEST (OperandLocationTest, RegisterLocationWordCanBeRead)
    
     dummyCpu.registers() [1] = 0177777;
 
-    EXPECT_EQ (operandLocation.contents<u16> (), 0177777);
+    EXPECT_EQ (operandLocation.contents<CondData<u16>> ().value (), 0177777);
 }
 
 TEST (OperandLocationTest, MemoryLocationWordCanBeWritten)
@@ -85,7 +85,7 @@ TEST (OperandLocationTest, MemoryLocationWordCanBeWritten)
     OperandLocation operandLocation {MemoryOperandLocation {&dummyCpu, CondData<u16> {100}}};
     EXPECT_TRUE (operandLocation.write<u16> (1000));
 
-    EXPECT_EQ (operandLocation.contents<u16> (), 1000);
+    EXPECT_EQ (operandLocation.contents<CondData<u16>> ().value (), 1000);
     EXPECT_EQ (dummyCpu.fetchWord (100), 1000);
 }
 
@@ -105,7 +105,7 @@ TEST (OperandLocationTest, RegisterLocationByteCanBeRead)
    
     dummyCpu.registers() [1] = 0101;
 
-    EXPECT_EQ (operandLocation.contents<u8> (), 0101);
+    EXPECT_EQ (operandLocation.contents<CondData<u8>> ().value (), 0101);
 }
 
 TEST (OperandLocationTest, MemoryLocationByteCanBeWrittenAndRead)
@@ -114,7 +114,7 @@ TEST (OperandLocationTest, MemoryLocationByteCanBeWrittenAndRead)
     OperandLocation operandLocation {MemoryOperandLocation {&dummyCpu, CondData<u16> {100}}};
     EXPECT_TRUE (operandLocation.write<u8> (255));
 
-    EXPECT_EQ (operandLocation.contents<u8> (), 255);
+    EXPECT_EQ (operandLocation.contents<CondData<u8>> ().value (), 255);
     EXPECT_EQ (dummyCpu.fetchWord (100), 255);
 }
 
@@ -134,7 +134,7 @@ TEST (OperandLocationTest, WriteToInvalidOperationLocationFails)
 TEST (OperandLocationTest, ReadFromInvalidOperationLocationFails)
 {
     OperandLocation operandLocation {};
-    EXPECT_THROW (operandLocation.contents<u16> (), string);
+    EXPECT_THROW (operandLocation.contents<CondData<u16>> ().value (), string);
 }
 
 TEST (OperandLocationTest, RegisterLocationCanBeConvertedTou16)
