@@ -63,18 +63,22 @@ void OperandLocation::operator= (const T& operandLocation)
 // location is either a register number or a memory address. In the first case
 // the contents of the register are returned, in the second case the contents
 // of the memory address.
+//
+// Note the syntax in the contents<T> call below. MSVCC accept the syntax
+// "obj.contents<T> ()" but gcc has to be informed about the nature of the
+// call. See C++ Annotations par. 23.1.2.
 template <typename T>
 CondData<T> OperandLocation::contents ()
 {
     return std::visit ([] (auto &obj) -> CondData<T> 
-         {return obj.contents<T> (); }, location_);
+         {return obj.template contents<T> (); }, location_);
 }
 
 template <typename T>
 bool OperandLocation::write (T contents)
 {
     return std::visit ([contents] (auto &obj) -> bool 
-        {return obj.write<T> (contents); }, location_);
+        {return obj.template write<T> (contents); }, location_);
 }
 
 #endif // _OPERANDLOCATION_H_

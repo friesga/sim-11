@@ -59,4 +59,4 @@ constexpr void LSI11Instruction::setConditionCodeIf_ClearElse (u16 x, bool condi
 		clearConditionCode (x);
 }
 
-#endif _LSI11INSTRUCTION_H_
+#endif // _LSI11INSTRUCTION_H_

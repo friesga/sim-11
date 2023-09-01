@@ -47,7 +47,6 @@ KD11_NA::ASHC::ASHC (CpuData* cpu, u16 instruction)
 CpuData::Trap KD11_NA::ASHC::execute ()
 {
     u16 regNr = getRegisterNr ();
-    u16 tmp {0};
     CpuData::GeneralRegisters& registers = cpu_->registers ();
     u16 dst = registers[regNr];
 
