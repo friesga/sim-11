@@ -12,19 +12,19 @@
 // be set together. Condition code bits in the PSW corresponding to bits
 // in the condition code operator (bits O-3) are set.
 //  
-class KD11_NA::SCC : public CcInstruction, public WithFactory<SCC>
+class KD11_NAInstruction::SCC : public CcInstruction, public WithFactory<SCC>
 {
 public:
     SCC (CpuData* cpu, u16 instruction);
     CpuData::Trap execute () override;
 };
 
-KD11_NA::SCC::SCC (CpuData* cpu, u16 instruction)
+KD11_NAInstruction::SCC::SCC (CpuData* cpu, u16 instruction)
     :
     CcInstruction (cpu, instruction)
 {}
 
-CpuData::Trap KD11_NA::SCC::execute ()
+CpuData::Trap KD11_NAInstruction::SCC::execute ()
 {
     cpu_->psw () |= getConditionCodes ();
     return CpuData::Trap::None;

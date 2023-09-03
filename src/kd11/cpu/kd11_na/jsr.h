@@ -28,19 +28,19 @@
 // JMP and JSR with register mode destinations are illegal instructions, and
 // trap to vector address 4.
 //
-class KD11_NA::JSR : public EisInstruction, public WithFactory<JSR>
+class KD11_NAInstruction::JSR : public EisInstruction, public WithFactory<JSR>
 {
 public:
     JSR (CpuData* cpu, u16 instruction);
     CpuData::Trap execute () override;
 };
 
-KD11_NA::JSR::JSR (CpuData* cpu, u16 instruction)
+KD11_NAInstruction::JSR::JSR (CpuData* cpu, u16 instruction)
     :
     EisInstruction (cpu, instruction)
 {}
 
-CpuData::Trap KD11_NA::JSR::execute ()
+CpuData::Trap KD11_NAInstruction::JSR::execute ()
 {
     OperandLocation destination = getOperandLocation (cpu_->registers ());
 

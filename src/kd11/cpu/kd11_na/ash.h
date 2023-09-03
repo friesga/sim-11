@@ -24,19 +24,19 @@
 // 6 bits of the source operand. This number ranges from -32 to + 31. Negative
 // is a a right shift and positive is a left shift.
 //
-class KD11_NA::ASH : public EisInstruction, public WithFactory<ASH>
+class KD11_NAInstruction::ASH : public EisInstruction, public WithFactory<ASH>
 {
 public:
     ASH (CpuData* cpu, u16 instruction);
     CpuData::Trap execute () override;
 };
 
-KD11_NA::ASH::ASH (CpuData* cpu, u16 instruction)
+KD11_NAInstruction::ASH::ASH (CpuData* cpu, u16 instruction)
     :
     EisInstruction (cpu, instruction)
 {}
 
-CpuData::Trap KD11_NA::ASH::execute ()
+CpuData::Trap KD11_NAInstruction::ASH::execute ()
 {
     u16 regNr = getRegisterNr ();
     u16 tmp {0};

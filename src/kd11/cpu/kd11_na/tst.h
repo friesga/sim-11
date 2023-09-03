@@ -18,19 +18,19 @@
 //  V: cleared
 //  C: cleared
 //
-class KD11_NA::TST : public SingleOperandInstruction, public WithFactory<TST>
+class KD11_NAInstruction::TST : public SingleOperandInstruction, public WithFactory<TST>
 {
 public:
     TST (CpuData* cpu, u16 instruction);
     CpuData::Trap execute () override;
 };
 
-KD11_NA::TST::TST (CpuData* cpu, u16 instruction)
+KD11_NAInstruction::TST::TST (CpuData* cpu, u16 instruction)
     :
     SingleOperandInstruction (cpu, instruction)
 {}
 
-CpuData::Trap KD11_NA::TST::execute ()
+CpuData::Trap KD11_NAInstruction::TST::execute ()
 {
     CondData<u16> contents;
     if (!readOperand (&contents))

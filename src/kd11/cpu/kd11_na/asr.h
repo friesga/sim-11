@@ -24,19 +24,19 @@
 // The C-bit is loaded from bit 0 of the destination. ASR performs signed
 // division of the destination by two.
 //
-class KD11_NA::ASR : public SingleOperandInstruction, public WithFactory<ASR>
+class KD11_NAInstruction::ASR : public SingleOperandInstruction, public WithFactory<ASR>
 {
 public:
     ASR (CpuData* cpu, u16 instruction);
     CpuData::Trap execute () override;
 };
 
-KD11_NA::ASR::ASR (CpuData* cpu, u16 instruction)
+KD11_NAInstruction::ASR::ASR (CpuData* cpu, u16 instruction)
     :
     SingleOperandInstruction (cpu, instruction)
 {}
 
-CpuData::Trap KD11_NA::ASR::execute ()
+CpuData::Trap KD11_NAInstruction::ASR::execute ()
 {
     CondData<u16> contents;
     if (!readOperand (&contents))

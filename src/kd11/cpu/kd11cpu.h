@@ -81,7 +81,7 @@ private:
 	u16	register_[8];
 	u16	psw_;
 	CpuRunState runState;
-	KD11_NA kd11_na;
+	KD11_NAInstruction kd11_naInstruction;
 
 	// A trap is a special kind of interrupt, internal to the CPU. There
 	// can be only one trap serviced at the time.

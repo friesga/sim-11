@@ -15,19 +15,19 @@
 // Condition Codes:
 //  refer to CMP
 //
-class KD11_NA::CMPB : public DoubleOperandInstruction, public WithFactory<CMPB>
+class KD11_NAInstruction::CMPB : public DoubleOperandInstruction, public WithFactory<CMPB>
 {
 public:
     CMPB (CpuData* cpu, u16 instruction);
     CpuData::Trap execute () override;
 };
 
-KD11_NA::CMPB::CMPB (CpuData* cpu, u16 instruction)
+KD11_NAInstruction::CMPB::CMPB (CpuData* cpu, u16 instruction)
     :
     DoubleOperandInstruction (cpu, instruction)
 {}
 
-CpuData::Trap KD11_NA::CMPB::execute ()
+CpuData::Trap KD11_NAInstruction::CMPB::execute ()
 {
     CondData<u8> source, destination;
 

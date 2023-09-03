@@ -18,19 +18,19 @@
 // in the source, following a BIT, and generally, to test that the result of
 // the previous operation was not zero.
 //
-class KD11_NA::BNE : public BranchInstruction, public WithFactory<BNE>
+class KD11_NAInstruction::BNE : public BranchInstruction, public WithFactory<BNE>
 {
 public:
     BNE (CpuData* cpu, u16 instruction);
     CpuData::Trap execute () override;
 };
 
-KD11_NA::BNE::BNE (CpuData* cpu, u16 instruction)
+KD11_NAInstruction::BNE::BNE (CpuData* cpu, u16 instruction)
     :
     BranchInstruction (cpu, instruction)
 {}
 
-CpuData::Trap KD11_NA::BNE::execute ()
+CpuData::Trap KD11_NAInstruction::BNE::execute ()
 {
     executeBranchIf (!isSet (PSW_Z));
     return CpuData::Trap::None;

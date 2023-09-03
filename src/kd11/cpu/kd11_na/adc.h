@@ -22,19 +22,19 @@
 // carry from the addition of the low-order words to be carried into the
 // high-order result.
 //
-class KD11_NA::ADC : public SingleOperandInstruction, public WithFactory<ADC>
+class KD11_NAInstruction::ADC : public SingleOperandInstruction, public WithFactory<ADC>
 {
 public:
     ADC (CpuData* cpu, u16 instruction);
     CpuData::Trap execute () override;
 };
 
-KD11_NA::ADC::ADC (CpuData* cpu, u16 instruction)
+KD11_NAInstruction::ADC::ADC (CpuData* cpu, u16 instruction)
     :
     SingleOperandInstruction (cpu, instruction)
 {}
 
-CpuData::Trap KD11_NA::ADC::execute ()
+CpuData::Trap KD11_NAInstruction::ADC::execute ()
 {
     CondData<u16> contents;
     if (!readOperand (&contents))

@@ -24,19 +24,19 @@
 //
 // A <- A - B
 //
-class KD11_NA::FSUB : public FISInstruction, public WithFactory<FSUB>
+class KD11_NAInstruction::FSUB : public FISInstruction, public WithFactory<FSUB>
 {
 public:
     FSUB (CpuData* cpu, u16 instruction);
     CpuData::Trap execute () override;
 };
 
-KD11_NA::FSUB::FSUB (CpuData* cpu, u16 instruction)
+KD11_NAInstruction::FSUB::FSUB (CpuData* cpu, u16 instruction)
     :
     FISInstruction (cpu, instruction)
 {}
 
-CpuData::Trap KD11_NA::FSUB::execute ()
+CpuData::Trap KD11_NAInstruction::FSUB::execute ()
 {
     return executeFISinstruction (getRegister (),
         [](Float f1, Float f2) { return true; },

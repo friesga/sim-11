@@ -15,19 +15,19 @@
 // Condition Codes:
 //  refer to BIC
 //
-class KD11_NA::BICB : public DoubleOperandInstruction, public WithFactory<BICB>
+class KD11_NAInstruction::BICB : public DoubleOperandInstruction, public WithFactory<BICB>
 {
 public:
     BICB (CpuData* cpu, u16 instruction);
     CpuData::Trap execute () override;
 };
 
-KD11_NA::BICB::BICB (CpuData* cpu, u16 instruction)
+KD11_NAInstruction::BICB::BICB (CpuData* cpu, u16 instruction)
     :
     DoubleOperandInstruction (cpu, instruction)
 {}
 
-CpuData::Trap KD11_NA::BICB::execute ()
+CpuData::Trap KD11_NAInstruction::BICB::execute ()
 {
     CondData<u8> source, destination;
 

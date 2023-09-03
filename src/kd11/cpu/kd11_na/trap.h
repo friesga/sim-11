@@ -26,19 +26,19 @@
 // are identical in operation, except that the trap vector for TRAP is at
 // address 34.
 //
-class KD11_NA::TRAP : public NoOperandInstruction, public WithFactory<TRAP>
+class KD11_NAInstruction::TRAP : public NoOperandInstruction, public WithFactory<TRAP>
 {
 public:
     TRAP (CpuData* cpu, u16 instruction);
     CpuData::Trap execute () override;
 };
 
-KD11_NA::TRAP::TRAP (CpuData* cpu, u16 instruction)
+KD11_NAInstruction::TRAP::TRAP (CpuData* cpu, u16 instruction)
     :
     NoOperandInstruction (cpu, instruction)
 {}
 
-CpuData::Trap KD11_NA::TRAP::execute ()
+CpuData::Trap KD11_NAInstruction::TRAP::execute ()
 {
     return CpuData::Trap::TrapInstruction;
 }

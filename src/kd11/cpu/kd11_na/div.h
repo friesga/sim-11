@@ -25,19 +25,19 @@
 // performed so that the remainder is of the same sign as the dividend. R must
 // be even.
 //
-class KD11_NA::DIV : public EisInstruction, public WithFactory<DIV>
+class KD11_NAInstruction::DIV : public EisInstruction, public WithFactory<DIV>
 {
 public:
     DIV (CpuData* cpu, u16 instruction);
     CpuData::Trap execute () override;
 };
 
-KD11_NA::DIV::DIV (CpuData* cpu, u16 instruction)
+KD11_NAInstruction::DIV::DIV (CpuData* cpu, u16 instruction)
     :
     EisInstruction (cpu, instruction)
 {}
 
-CpuData::Trap KD11_NA::DIV::execute ()
+CpuData::Trap KD11_NAInstruction::DIV::execute ()
 {
     u16 regNr = getRegisterNr ();
 

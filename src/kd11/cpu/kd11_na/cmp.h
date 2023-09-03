@@ -25,19 +25,19 @@
 // which may then be used for arithmetic and logical conditional branches.
 // Both operands are unaffected. The only action is to set the condition codes.
 //
-class KD11_NA::CMP : public DoubleOperandInstruction, public WithFactory<CMP>
+class KD11_NAInstruction::CMP : public DoubleOperandInstruction, public WithFactory<CMP>
 {
 public:
     CMP (CpuData* cpu, u16 instruction);
     CpuData::Trap execute () override;
 };
 
-KD11_NA::CMP::CMP (CpuData* cpu, u16 instruction)
+KD11_NAInstruction::CMP::CMP (CpuData* cpu, u16 instruction)
     :
     DoubleOperandInstruction (cpu, instruction)
 {}
 
-CpuData::Trap KD11_NA::CMP::execute ()
+CpuData::Trap KD11_NAInstruction::CMP::execute ()
 {
     CondData<u16> source, destination;
 

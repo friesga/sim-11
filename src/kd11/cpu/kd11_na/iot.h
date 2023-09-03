@@ -22,19 +22,19 @@
 //  V: loaded from trap vector
 //  C: loaded from trap vector
 //
-class KD11_NA::IOT : public NoOperandInstruction, public WithFactory<IOT>
+class KD11_NAInstruction::IOT : public NoOperandInstruction, public WithFactory<IOT>
 {
 public:
     IOT (CpuData* cpu, u16 instruction);
     CpuData::Trap execute () override;
 };
 
-KD11_NA::IOT::IOT (CpuData* cpu, u16 instruction)
+KD11_NAInstruction::IOT::IOT (CpuData* cpu, u16 instruction)
     :
     NoOperandInstruction (cpu, instruction)
 {}
 
-CpuData::Trap KD11_NA::IOT::execute ()
+CpuData::Trap KD11_NAInstruction::IOT::execute ()
 {
     return CpuData::Trap::InputOutputTrap;
 }

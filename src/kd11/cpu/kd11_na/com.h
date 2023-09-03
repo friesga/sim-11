@@ -21,19 +21,19 @@
 // Replaces the contents of the destination address by their logical
 // complement (each bit equal to 0 is set and each bit equal to 1 is cleared).
 //
-class KD11_NA::COM : public SingleOperandInstruction, public WithFactory<COM>
+class KD11_NAInstruction::COM : public SingleOperandInstruction, public WithFactory<COM>
 {
 public:
     COM (CpuData* cpu, u16 instruction);
     CpuData::Trap execute () override;
 };
 
-KD11_NA::COM::COM (CpuData* cpu, u16 instruction)
+KD11_NAInstruction::COM::COM (CpuData* cpu, u16 instruction)
     :
     SingleOperandInstruction (cpu, instruction)
 {}
 
-CpuData::Trap KD11_NA::COM::execute ()
+CpuData::Trap KD11_NAInstruction::COM::execute ()
 {
     CondData<u16> operand;
     if (!readOperand (&operand))

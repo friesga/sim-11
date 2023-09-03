@@ -24,19 +24,19 @@
 //
 // A <- A * B
 //
-class KD11_NA::FMUL : public FISInstruction, public WithFactory<FMUL>
+class KD11_NAInstruction::FMUL : public FISInstruction, public WithFactory<FMUL>
 {
 public:
     FMUL (CpuData* cpu, u16 instruction);
     CpuData::Trap execute () override;
 };
 
-KD11_NA::FMUL::FMUL (CpuData* cpu, u16 instruction)
+KD11_NAInstruction::FMUL::FMUL (CpuData* cpu, u16 instruction)
     :
     FISInstruction (cpu, instruction)
 {}
 
-CpuData::Trap KD11_NA::FMUL::execute ()
+CpuData::Trap KD11_NAInstruction::FMUL::execute ()
 {
     return executeFISinstruction (getRegister (),
         [](Float f1, Float f2) { return true; },

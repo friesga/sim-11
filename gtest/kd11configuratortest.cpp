@@ -47,7 +47,7 @@ TEST (KD11ConfiguratorTest, invalidPowerUpModeThrows)
 	}
 	catch (std::invalid_argument const &except)
 	{
-		EXPECT_STREQ (except.what(), "Incorrect KD11 power-up_mode value");
+		EXPECT_STREQ (except.what(), "Incorrect KD11-NA power-up_mode value");
 	}
 	catch (...)
 	{

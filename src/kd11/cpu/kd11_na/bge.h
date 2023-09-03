@@ -17,19 +17,19 @@
 // follows an operation that caused addition of two positive numbers. BGE will
 // also cause a branch on a zero result.
 //
-class KD11_NA::BGE : public BranchInstruction, public WithFactory<BGE>
+class KD11_NAInstruction::BGE : public BranchInstruction, public WithFactory<BGE>
 {
 public:
     BGE (CpuData* cpu, u16 instruction);
     CpuData::Trap execute () override;
 };
 
-KD11_NA::BGE::BGE (CpuData* cpu, u16 instruction)
+KD11_NAInstruction::BGE::BGE (CpuData* cpu, u16 instruction)
     :
     BranchInstruction (cpu, instruction)
 {}
 
-CpuData::Trap KD11_NA::BGE::execute ()
+CpuData::Trap KD11_NAInstruction::BGE::execute ()
 {
     executeBranchIf ((isSet (PSW_N) ^ isSet (PSW_V)) == 0);
     return CpuData::Trap::None;

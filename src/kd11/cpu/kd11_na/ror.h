@@ -24,19 +24,19 @@
 // the C-bit and the previous contents of the C-bit are loaded into bit 15 of
 // the destination.
 //
-class KD11_NA::ROR : public SingleOperandInstruction, public WithFactory<ROR>
+class KD11_NAInstruction::ROR : public SingleOperandInstruction, public WithFactory<ROR>
 {
 public:
     ROR (CpuData* cpu, u16 instruction);
     CpuData::Trap execute () override;
 };
 
-KD11_NA::ROR::ROR (CpuData* cpu, u16 instruction)
+KD11_NAInstruction::ROR::ROR (CpuData* cpu, u16 instruction)
     :
     SingleOperandInstruction (cpu, instruction)
 {}
 
-CpuData::Trap KD11_NA::ROR::execute ()
+CpuData::Trap KD11_NAInstruction::ROR::execute ()
 {
     CondData<u16> contents;
     if (!readOperand (&contents))

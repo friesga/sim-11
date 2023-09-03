@@ -26,19 +26,19 @@
 // The contents of the source are not affected. Two's complement addition is
 // performed.
 //
-class KD11_NA::ADD : public DoubleOperandInstruction, public WithFactory<ADD>
+class KD11_NAInstruction::ADD : public DoubleOperandInstruction, public WithFactory<ADD>
 {
 public:
     ADD (CpuData* cpu, u16 instruction);
     CpuData::Trap execute () override;
 };
 
-KD11_NA::ADD::ADD (CpuData* cpu, u16 instruction)
+KD11_NAInstruction::ADD::ADD (CpuData* cpu, u16 instruction)
     :
     DoubleOperandInstruction (cpu, instruction)
 {}
 
-CpuData::Trap KD11_NA::ADD::execute ()
+CpuData::Trap KD11_NAInstruction::ADD::execute ()
 {
     CondData<u16> source, destination;
 

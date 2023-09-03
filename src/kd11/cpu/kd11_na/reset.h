@@ -16,19 +16,19 @@
 // reset to their state at power-up. The processor remains in an idle state
 // for 90 micro seconds following issuance of INIT.
 //
-class KD11_NA::RESET : public NoOperandInstruction, public WithFactory<RESET>
+class KD11_NAInstruction::RESET : public NoOperandInstruction, public WithFactory<RESET>
 {
 public:
     RESET (CpuData* cpu, u16 instruction);
     CpuData::Trap execute () override;
 };
 
-KD11_NA::RESET::RESET (CpuData* cpu, u16 instruction)
+KD11_NAInstruction::RESET::RESET (CpuData* cpu, u16 instruction)
     :
     NoOperandInstruction (cpu, instruction)
 {}
 
-CpuData::Trap KD11_NA::RESET::execute ()
+CpuData::Trap KD11_NAInstruction::RESET::execute ()
 {
     cpu_->busReset ();
     return CpuData::Trap::None;

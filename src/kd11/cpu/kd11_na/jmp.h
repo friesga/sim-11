@@ -24,19 +24,19 @@
 // register. Note that instructions are word data and must therefore be
 // fetched from an even-numbered address.
 //
-class KD11_NA::JMP : public SingleOperandInstruction, public WithFactory<JMP>
+class KD11_NAInstruction::JMP : public SingleOperandInstruction, public WithFactory<JMP>
 {
 public:
     JMP (CpuData* cpu, u16 instruction);
     CpuData::Trap execute () override;
 };
 
-KD11_NA::JMP::JMP (CpuData* cpu, u16 instruction)
+KD11_NAInstruction::JMP::JMP (CpuData* cpu, u16 instruction)
     :
     SingleOperandInstruction (cpu, instruction)
 {}
 
-CpuData::Trap KD11_NA::JMP::execute ()
+CpuData::Trap KD11_NAInstruction::JMP::execute ()
 {
     operandLocation_ = getOperandLocation (cpu_->registers ());
     if (operandLocation_.isA<MemoryOperandLocation> ())

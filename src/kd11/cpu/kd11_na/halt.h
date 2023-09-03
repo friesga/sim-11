@@ -16,19 +16,19 @@
 // instruction to be executed. The processor goes into the HALT mode.
 // The console mode of operation is enabled.
 //
-class KD11_NA::HALT : public NoOperandInstruction, public WithFactory<HALT>
+class KD11_NAInstruction::HALT : public NoOperandInstruction, public WithFactory<HALT>
 {
 public:
     HALT (CpuData* cpu, u16 instruction);
     CpuData::Trap execute () override;
 };
 
-KD11_NA::HALT::HALT (CpuData* cpu, u16 instruction)
+KD11_NAInstruction::HALT::HALT (CpuData* cpu, u16 instruction)
     :
     NoOperandInstruction (cpu, instruction)
 {}
 
-CpuData::Trap KD11_NA::HALT::execute ()
+CpuData::Trap KD11_NAInstruction::HALT::execute ()
 {
     cpu_->halt ();
     return CpuData::Trap::None;

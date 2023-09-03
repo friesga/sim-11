@@ -24,19 +24,19 @@
 // execution of an RTI instruction) will cause resumption of the interrupted
 // process at the instruction following the WAIT.
 //
-class KD11_NA::WAIT : public NoOperandInstruction, public WithFactory<WAIT>
+class KD11_NAInstruction::WAIT : public NoOperandInstruction, public WithFactory<WAIT>
 {
 public:
     WAIT (CpuData* cpu, u16 instruction);
     CpuData::Trap execute () override;
 };
 
-KD11_NA::WAIT::WAIT (CpuData* cpu, u16 instruction)
+KD11_NAInstruction::WAIT::WAIT (CpuData* cpu, u16 instruction)
     :
     NoOperandInstruction (cpu, instruction)
 {}
 
-CpuData::Trap KD11_NA::WAIT::execute ()
+CpuData::Trap KD11_NAInstruction::WAIT::execute ()
 {
     cpu_->wait ();
     return CpuData::Trap::None;

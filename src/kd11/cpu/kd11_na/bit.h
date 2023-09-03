@@ -22,19 +22,19 @@
 // and modifies condition codes accordingly. Neither the source nor
 // destination operands are affected.
 //
-class KD11_NA::BIT : public DoubleOperandInstruction, public WithFactory<BIT>
+class KD11_NAInstruction::BIT : public DoubleOperandInstruction, public WithFactory<BIT>
 {
 public:
     BIT (CpuData* cpu, u16 instruction);
     CpuData::Trap execute () override;
 };
 
-KD11_NA::BIT::BIT (CpuData* cpu, u16 instruction)
+KD11_NAInstruction::BIT::BIT (CpuData* cpu, u16 instruction)
     :
     DoubleOperandInstruction (cpu, instruction)
 {}
 
-CpuData::Trap KD11_NA::BIT::execute ()
+CpuData::Trap KD11_NAInstruction::BIT::execute ()
 {
     CondData<u16> source, destination;
 

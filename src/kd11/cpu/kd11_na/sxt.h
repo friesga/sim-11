@@ -22,19 +22,19 @@
 // If the condition code bit N is set then a -1 is placed in the destination
 // operand: if N bit is clear, then a 0 is placed in the destination operand.
 //
-class KD11_NA::SXT : public SingleOperandInstruction, public WithFactory<SXT>
+class KD11_NAInstruction::SXT : public SingleOperandInstruction, public WithFactory<SXT>
 {
 public:
     SXT (CpuData* cpu, u16 instruction);
     CpuData::Trap execute () override;
 };
 
-KD11_NA::SXT::SXT (CpuData* cpu, u16 instruction)
+KD11_NAInstruction::SXT::SXT (CpuData* cpu, u16 instruction)
     :
     SingleOperandInstruction (cpu, instruction)
 {}
 
-CpuData::Trap KD11_NA::SXT::execute ()
+CpuData::Trap KD11_NAInstruction::SXT::execute ()
 {
     u16 result = isSet (PSW_N) ? 0177777 : 0;
 

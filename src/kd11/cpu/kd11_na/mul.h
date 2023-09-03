@@ -23,19 +23,19 @@
 // succeeding register (if R is even). If R is odd only the low order product
 // is stored.
 //
-class KD11_NA::MUL : public EisInstruction, public WithFactory<MUL>
+class KD11_NAInstruction::MUL : public EisInstruction, public WithFactory<MUL>
 {
 public:
     MUL (CpuData* cpu, u16 instruction);
     CpuData::Trap execute () override;
 };
 
-KD11_NA::MUL::MUL (CpuData* cpu, u16 instruction)
+KD11_NAInstruction::MUL::MUL (CpuData* cpu, u16 instruction)
     :
     EisInstruction (cpu, instruction)
 {}
 
-CpuData::Trap KD11_NA::MUL::execute ()
+CpuData::Trap KD11_NAInstruction::MUL::execute ()
 {
     u16 regNr = getRegisterNr ();
 

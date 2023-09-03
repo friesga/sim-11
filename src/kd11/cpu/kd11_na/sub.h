@@ -21,19 +21,19 @@
 //  C: cleared if there was a carry from the most significant bit of the
 //     result; set otherwise
 //
-class KD11_NA::SUB : public DoubleOperandInstruction, public WithFactory<SUB>
+class KD11_NAInstruction::SUB : public DoubleOperandInstruction, public WithFactory<SUB>
 {
 public:
     SUB (CpuData* cpu, u16 instruction);
     CpuData::Trap execute () override;
 };
 
-KD11_NA::SUB::SUB (CpuData* cpu, u16 instruction)
+KD11_NAInstruction::SUB::SUB (CpuData* cpu, u16 instruction)
     :
     DoubleOperandInstruction (cpu, instruction)
 {}
 
-CpuData::Trap KD11_NA::SUB::execute ()
+CpuData::Trap KD11_NAInstruction::SUB::execute ()
 {
     CondData<u16> source, destination;
 

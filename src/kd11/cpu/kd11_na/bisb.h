@@ -15,19 +15,19 @@
 // Condition Codes:
 //  refer to BIS
 //
-class KD11_NA::BISB : public DoubleOperandInstruction, public WithFactory<BISB>
+class KD11_NAInstruction::BISB : public DoubleOperandInstruction, public WithFactory<BISB>
 {
 public:
     BISB (CpuData* cpu, u16 instruction);
     CpuData::Trap execute () override;
 };
 
-KD11_NA::BISB::BISB (CpuData* cpu, u16 instruction)
+KD11_NAInstruction::BISB::BISB (CpuData* cpu, u16 instruction)
     :
     DoubleOperandInstruction (cpu, instruction)
 {}
 
-CpuData::Trap KD11_NA::BISB::execute ()
+CpuData::Trap KD11_NAInstruction::BISB::execute ()
 {
     CondData<u8> source, destination;
 

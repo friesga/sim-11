@@ -15,19 +15,19 @@
 // Condition Codes:
 //  refer to ADC
 //
-class KD11_NA::ADCB : public SingleOperandInstruction, public WithFactory<ADCB>
+class KD11_NAInstruction::ADCB : public SingleOperandInstruction, public WithFactory<ADCB>
 {
 public:
     ADCB (CpuData* cpu, u16 instruction);
     CpuData::Trap execute () override;
 };
 
-KD11_NA::ADCB::ADCB (CpuData* cpu, u16 instruction)
+KD11_NAInstruction::ADCB::ADCB (CpuData* cpu, u16 instruction)
     :
     SingleOperandInstruction (cpu, instruction)
 {}
 
-CpuData::Trap KD11_NA::ADCB::execute ()
+CpuData::Trap KD11_NAInstruction::ADCB::execute ()
 {
     CondData<u8> source;
     if (!readOperand (&source))

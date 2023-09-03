@@ -15,19 +15,19 @@
 // Condition Codes:
 //  refer to CLR
 //
-class KD11_NA::CLRB : public SingleOperandInstruction, public WithFactory<CLRB>
+class KD11_NAInstruction::CLRB : public SingleOperandInstruction, public WithFactory<CLRB>
 {
 public:
     CLRB (CpuData* cpu, u16 instruction);
     CpuData::Trap execute () override;
 };
 
-KD11_NA::CLRB::CLRB (CpuData* cpu, u16 instruction)
+KD11_NAInstruction::CLRB::CLRB (CpuData* cpu, u16 instruction)
     :
     SingleOperandInstruction (cpu, instruction)
 {}
 
-CpuData::Trap KD11_NA::CLRB::execute ()
+CpuData::Trap KD11_NAInstruction::CLRB::execute ()
 {
     if (!writeOperand ((u8)0))
         return CpuData::Trap::BusError;

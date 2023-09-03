@@ -16,19 +16,19 @@
 // Loads contents of reg into PC and pops the top element of
 // the processor stack into the specified register.
 //
-class KD11_NA::RTS : public FISInstruction, public WithFactory<RTS>
+class KD11_NAInstruction::RTS : public FISInstruction, public WithFactory<RTS>
 {
 public:
     RTS (CpuData* cpu, u16 instruction);
     CpuData::Trap execute () override;
 };
 
-KD11_NA::RTS::RTS (CpuData* cpu, u16 instruction)
+KD11_NAInstruction::RTS::RTS (CpuData* cpu, u16 instruction)
     :
     FISInstruction (cpu, instruction)
 {}
 
-CpuData::Trap KD11_NA::RTS::execute ()
+CpuData::Trap KD11_NAInstruction::RTS::execute ()
 {
     u16 regNr = getRegister ();
 

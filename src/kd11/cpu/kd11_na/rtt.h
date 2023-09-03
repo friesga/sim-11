@@ -24,19 +24,19 @@
 // RTI permits trace trap. If new PS has T bit set, trap will occur after
 // execution of first instruction after RTT.
 //
-class KD11_NA::RTT : public NoOperandInstruction, public WithFactory<RTT>
+class KD11_NAInstruction::RTT : public NoOperandInstruction, public WithFactory<RTT>
 {
 public:
     RTT (CpuData* cpu, u16 instruction);
     CpuData::Trap execute () override;
 };
 
-KD11_NA::RTT::RTT (CpuData* cpu, u16 instruction)
+KD11_NAInstruction::RTT::RTT (CpuData* cpu, u16 instruction)
     :
     NoOperandInstruction (cpu, instruction)
 {}
 
-CpuData::Trap KD11_NA::RTT::execute ()
+CpuData::Trap KD11_NAInstruction::RTT::execute ()
 {
     if (!cpu_->popWord (&cpu_->registers ()[7]))
         return CpuData::Trap::BusError;

@@ -20,19 +20,19 @@
 //
 // Subtract 1 from the contents of the destination
 //
-class KD11_NA::DEC : public SingleOperandInstruction, public WithFactory<DEC>
+class KD11_NAInstruction::DEC : public SingleOperandInstruction, public WithFactory<DEC>
 {
 public:
     DEC (CpuData* cpu, u16 instruction);
     CpuData::Trap execute () override;
 };
 
-KD11_NA::DEC::DEC (CpuData* cpu, u16 instruction)
+KD11_NAInstruction::DEC::DEC (CpuData* cpu, u16 instruction)
     :
     SingleOperandInstruction (cpu, instruction)
 {}
 
-CpuData::Trap KD11_NA::DEC::execute ()
+CpuData::Trap KD11_NAInstruction::DEC::execute ()
 {
     CondData<u16> contents;
     if (!readOperand (&contents))

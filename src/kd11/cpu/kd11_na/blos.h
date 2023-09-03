@@ -19,19 +19,19 @@
 // in comparison operations as long as the source is equal to, or has a lower
 // unsigned value than the destination.
 //
-class KD11_NA::BLOS : public BranchInstruction, public WithFactory<BLOS>
+class KD11_NAInstruction::BLOS : public BranchInstruction, public WithFactory<BLOS>
 {
 public:
     BLOS (CpuData* cpu, u16 instruction);
     CpuData::Trap execute () override;
 };
 
-KD11_NA::BLOS::BLOS (CpuData* cpu, u16 instruction)
+KD11_NAInstruction::BLOS::BLOS (CpuData* cpu, u16 instruction)
     :
     BranchInstruction (cpu, instruction)
 {}
 
-CpuData::Trap KD11_NA::BLOS::execute ()
+CpuData::Trap KD11_NAInstruction::BLOS::execute ()
 {
     executeBranchIf (isSet (PSW_C) || isSet (PSW_Z));
     return CpuData::Trap::None;

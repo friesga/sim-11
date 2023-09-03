@@ -17,19 +17,19 @@
 // Tests the state of V bit (overflow) and causes a branch if the V bit is
 // set. BVS is used to detect arithmetic overflow in the previous operation.
 //
-class KD11_NA::BVS : public BranchInstruction, public WithFactory<BVS>
+class KD11_NAInstruction::BVS : public BranchInstruction, public WithFactory<BVS>
 {
 public:
     BVS (CpuData* cpu, u16 instruction);
     CpuData::Trap execute () override;
 };
 
-KD11_NA::BVS::BVS (CpuData* cpu, u16 instruction)
+KD11_NAInstruction::BVS::BVS (CpuData* cpu, u16 instruction)
     :
     BranchInstruction (cpu, instruction)
 {}
 
-CpuData::Trap KD11_NA::BVS::execute ()
+CpuData::Trap KD11_NAInstruction::BVS::execute ()
 {
     executeBranchIf (isSet (PSW_V));
     return CpuData::Trap::None;

@@ -25,19 +25,19 @@
 //
 // A <- A / B
 //
-class KD11_NA::FDIV : public FISInstruction, public WithFactory<FDIV>
+class KD11_NAInstruction::FDIV : public FISInstruction, public WithFactory<FDIV>
 {
 public:
     FDIV (CpuData* cpu, u16 instruction);
     CpuData::Trap execute () override;
 };
 
-KD11_NA::FDIV::FDIV (CpuData* cpu, u16 instruction)
+KD11_NAInstruction::FDIV::FDIV (CpuData* cpu, u16 instruction)
     :
     FISInstruction (cpu, instruction)
 {}
 
-CpuData::Trap KD11_NA::FDIV::execute ()
+CpuData::Trap KD11_NAInstruction::FDIV::execute ()
 {
     return executeFISinstruction (getRegister (),
         [](Float f1, Float f2) { return f2.value () != 0; },

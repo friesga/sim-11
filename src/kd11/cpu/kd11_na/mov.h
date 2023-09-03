@@ -22,19 +22,19 @@
 // contents of the destination are lost. The contents of the source address
 // are not affected.
 //
-class KD11_NA::MOV : public DoubleOperandInstruction, public WithFactory<MOV>
+class KD11_NAInstruction::MOV : public DoubleOperandInstruction, public WithFactory<MOV>
 {
 public:
     MOV (CpuData* cpu, u16 instruction);
     CpuData::Trap execute () override;
 };
 
-KD11_NA::MOV::MOV (CpuData* cpu, u16 instruction)
+KD11_NAInstruction::MOV::MOV (CpuData* cpu, u16 instruction)
     :
     DoubleOperandInstruction (cpu, instruction)
 {}
 
-CpuData::Trap KD11_NA::MOV::execute ()
+CpuData::Trap KD11_NAInstruction::MOV::execute ()
 {
     CondData<u16> source, destination;
 

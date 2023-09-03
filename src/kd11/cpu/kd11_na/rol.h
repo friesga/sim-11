@@ -24,19 +24,19 @@
 // the C-bit of the status word and the previous contents of the C-bit are
 // loaded into Bit 0 of the destination.
 //
-class KD11_NA::ROL : public SingleOperandInstruction, public WithFactory<ROL>
+class KD11_NAInstruction::ROL : public SingleOperandInstruction, public WithFactory<ROL>
 {
 public:
     ROL (CpuData* cpu, u16 instruction);
     CpuData::Trap execute () override;
 };
 
-KD11_NA::ROL::ROL (CpuData* cpu, u16 instruction)
+KD11_NAInstruction::ROL::ROL (CpuData* cpu, u16 instruction)
     :
     SingleOperandInstruction (cpu, instruction)
 {}
 
-CpuData::Trap KD11_NA::ROL::execute ()
+CpuData::Trap KD11_NAInstruction::ROL::execute ()
 {
     CondData<u16> contents;
     if (!readOperand (&contents))

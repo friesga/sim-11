@@ -18,19 +18,19 @@
 // Same as ASR instruction with the distinction that for odd adresses bit 15
 // is reproduced and for even addresses bit 7 is reproduced.
 //
-class KD11_NA::ASRB : public SingleOperandInstruction, public WithFactory<ASRB>
+class KD11_NAInstruction::ASRB : public SingleOperandInstruction, public WithFactory<ASRB>
 {
 public:
     ASRB (CpuData* cpu, u16 instruction);
     CpuData::Trap execute () override;
 };
 
-KD11_NA::ASRB::ASRB (CpuData* cpu, u16 instruction)
+KD11_NAInstruction::ASRB::ASRB (CpuData* cpu, u16 instruction)
     :
     SingleOperandInstruction (cpu, instruction)
 {}
 
-CpuData::Trap KD11_NA::ASRB::execute ()
+CpuData::Trap KD11_NAInstruction::ASRB::execute ()
 {
     CondData<u8> source;
     if (!readOperand (&source))

@@ -19,19 +19,19 @@
 // significant bit of the low order byte (sign extension). Otherwise MOVB
 // operates on bytes exactly as MOV operates on words.
 //
-class KD11_NA::MOVB : public DoubleOperandInstruction, public WithFactory<MOVB>
+class KD11_NAInstruction::MOVB : public DoubleOperandInstruction, public WithFactory<MOVB>
 {
 public:
     MOVB (CpuData* cpu, u16 instruction);
     CpuData::Trap execute () override;
 };
 
-KD11_NA::MOVB::MOVB (CpuData* cpu, u16 instruction)
+KD11_NAInstruction::MOVB::MOVB (CpuData* cpu, u16 instruction)
     :
     DoubleOperandInstruction (cpu, instruction)
 {}
 
-CpuData::Trap KD11_NA::MOVB::execute ()
+CpuData::Trap KD11_NAInstruction::MOVB::execute ()
 {
     CondData<u8> source;
 

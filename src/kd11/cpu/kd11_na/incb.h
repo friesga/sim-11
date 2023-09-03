@@ -15,19 +15,19 @@
 // Condition Codes:
 //  refer to INC
 //
-class KD11_NA::INCB : public SingleOperandInstruction, public WithFactory<INCB>
+class KD11_NAInstruction::INCB : public SingleOperandInstruction, public WithFactory<INCB>
 {
 public:
     INCB (CpuData* cpu, u16 instruction);
     CpuData::Trap execute () override;
 };
 
-KD11_NA::INCB::INCB (CpuData* cpu, u16 instruction)
+KD11_NAInstruction::INCB::INCB (CpuData* cpu, u16 instruction)
     :
     SingleOperandInstruction (cpu, instruction)
 {}
 
-CpuData::Trap KD11_NA::INCB::execute ()
+CpuData::Trap KD11_NAInstruction::INCB::execute ()
 {
     CondData<u8> source;
     if (!readOperand (&source))

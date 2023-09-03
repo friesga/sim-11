@@ -18,19 +18,19 @@
 // to test the sign (most significant bit) of the result of the previous
 // operation), branching if negative. BMI is the complementary function of BPL.
 //
-class KD11_NA::BMI : public BranchInstruction, public WithFactory<BMI>
+class KD11_NAInstruction::BMI : public BranchInstruction, public WithFactory<BMI>
 {
 public:
     BMI (CpuData* cpu, u16 instruction);
     CpuData::Trap execute () override;
 };
 
-KD11_NA::BMI::BMI (CpuData* cpu, u16 instruction)
+KD11_NAInstruction::BMI::BMI (CpuData* cpu, u16 instruction)
     :
     BranchInstruction (cpu, instruction)
 {}
 
-CpuData::Trap KD11_NA::BMI::execute ()
+CpuData::Trap KD11_NAInstruction::BMI::execute ()
 {
     executeBranchIf (isSet (PSW_N));
     return CpuData::Trap::None;

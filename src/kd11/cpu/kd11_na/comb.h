@@ -15,19 +15,19 @@
 // Condition Codes:
 //  refer to COM
 //
-class KD11_NA::COMB : public SingleOperandInstruction, public WithFactory<COMB>
+class KD11_NAInstruction::COMB : public SingleOperandInstruction, public WithFactory<COMB>
 {
 public:
     COMB (CpuData* cpu, u16 instruction);
     CpuData::Trap execute () override;
 };
 
-KD11_NA::COMB::COMB (CpuData* cpu, u16 instruction)
+KD11_NAInstruction::COMB::COMB (CpuData* cpu, u16 instruction)
     :
     SingleOperandInstruction (cpu, instruction)
 {}
 
-CpuData::Trap KD11_NA::COMB::execute ()
+CpuData::Trap KD11_NAInstruction::COMB::execute ()
 {
     CondData<u8> operand;
     if (!readOperand (&operand))

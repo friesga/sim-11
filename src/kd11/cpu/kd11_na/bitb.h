@@ -15,19 +15,19 @@
 // Condition Codes:
 //  refer to BIT
 //
-class KD11_NA::BITB : public DoubleOperandInstruction, public WithFactory<BITB>
+class KD11_NAInstruction::BITB : public DoubleOperandInstruction, public WithFactory<BITB>
 {
 public:
     BITB (CpuData* cpu, u16 instruction);
     CpuData::Trap execute () override;
 };
 
-KD11_NA::BITB::BITB (CpuData* cpu, u16 instruction)
+KD11_NAInstruction::BITB::BITB (CpuData* cpu, u16 instruction)
     :
     DoubleOperandInstruction (cpu, instruction)
 {}
 
-CpuData::Trap KD11_NA::BITB::execute ()
+CpuData::Trap KD11_NAInstruction::BITB::execute ()
 {
     CondData<u8> source, destination;
 

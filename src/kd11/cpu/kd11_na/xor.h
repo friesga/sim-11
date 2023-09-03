@@ -21,19 +21,19 @@
 // The exclusive OR of the register and destination operand is stored in the
 // destination address. Contents of register are unaffected.
 //
-class KD11_NA::XOR : public EisInstruction, public WithFactory<XOR>
+class KD11_NAInstruction::XOR : public EisInstruction, public WithFactory<XOR>
 {
 public:
     XOR (CpuData* cpu, u16 instruction);
     CpuData::Trap execute () override;
 };
 
-KD11_NA::XOR::XOR (CpuData* cpu, u16 instruction)
+KD11_NAInstruction::XOR::XOR (CpuData* cpu, u16 instruction)
     :
     EisInstruction (cpu, instruction)
 {}
 
-CpuData::Trap KD11_NA::XOR::execute ()
+CpuData::Trap KD11_NAInstruction::XOR::execute ()
 {
     u16 regNr = getRegisterNr ();
     CpuData::GeneralRegisters& registers = cpu_->registers ();

@@ -15,19 +15,19 @@
 // Condition Codes:
 //  refer to TST
 //
-class KD11_NA::TSTB : public SingleOperandInstruction, public WithFactory<TSTB>
+class KD11_NAInstruction::TSTB : public SingleOperandInstruction, public WithFactory<TSTB>
 {
 public:
     TSTB (CpuData* cpu, u16 instruction);
     CpuData::Trap execute () override;
 };
 
-KD11_NA::TSTB::TSTB (CpuData* cpu, u16 instruction)
+KD11_NAInstruction::TSTB::TSTB (CpuData* cpu, u16 instruction)
     :
     SingleOperandInstruction (cpu, instruction)
 {}
 
-CpuData::Trap KD11_NA::TSTB::execute ()
+CpuData::Trap KD11_NAInstruction::TSTB::execute ()
 {
     CondData<u8> source;
     if (!readOperand (&source))

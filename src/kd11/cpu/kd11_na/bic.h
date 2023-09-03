@@ -22,19 +22,19 @@
 // source. The original contents of the destination are lost. The contents of
 // the source are unaffected.
 //
-class KD11_NA::BIC : public DoubleOperandInstruction, public WithFactory<BIC>
+class KD11_NAInstruction::BIC : public DoubleOperandInstruction, public WithFactory<BIC>
 {
 public:
     BIC (CpuData* cpu, u16 instruction);
     CpuData::Trap execute () override;
 };
 
-KD11_NA::BIC::BIC (CpuData* cpu, u16 instruction)
+KD11_NAInstruction::BIC::BIC (CpuData* cpu, u16 instruction)
     :
     DoubleOperandInstruction (cpu, instruction)
 {}
 
-CpuData::Trap KD11_NA::BIC::execute ()
+CpuData::Trap KD11_NAInstruction::BIC::execute ()
 {
     CondData<u16> source, destination;
 

@@ -20,19 +20,19 @@
 //
 // Add one to contents of destination
 //
-class KD11_NA::INC : public SingleOperandInstruction, public WithFactory<INC>
+class KD11_NAInstruction::INC : public SingleOperandInstruction, public WithFactory<INC>
 {
 public:
     INC (CpuData* cpu, u16 instruction);
     CpuData::Trap execute () override;
 };
 
-KD11_NA::INC::INC (CpuData* cpu, u16 instruction)
+KD11_NAInstruction::INC::INC (CpuData* cpu, u16 instruction)
     :
     SingleOperandInstruction (cpu, instruction)
 {}
 
-CpuData::Trap KD11_NA::INC::execute ()
+CpuData::Trap KD11_NAInstruction::INC::execute ()
 {
     CondData<u16> contents;
     if (!readOperand (&contents))

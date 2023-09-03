@@ -22,19 +22,19 @@
 //  (3) contents of the old R5 to be popped into R5 thus completing the
 //      return from subroutine.
 //
-class KD11_NA::MARK : public MarkInstruction, public WithFactory<MARK>
+class KD11_NAInstruction::MARK : public MarkInstruction, public WithFactory<MARK>
 {
 public:
     MARK (CpuData* cpu, u16 instruction);
     CpuData::Trap execute () override;
 };
 
-KD11_NA::MARK::MARK (CpuData* cpu, u16 instruction)
+KD11_NAInstruction::MARK::MARK (CpuData* cpu, u16 instruction)
     :
     MarkInstruction (cpu, instruction)
 {}
 
-CpuData::Trap KD11_NA::MARK::execute ()
+CpuData::Trap KD11_NAInstruction::MARK::execute ()
 {
     CpuData::GeneralRegisters& registers = cpu_->registers ();
 

@@ -32,19 +32,19 @@
 // (for up to a shift of 16). The 16 bit word is rotated right the number of
 // bits specified by the shift count.
 //
-class KD11_NA::ASHC : public EisInstruction, public WithFactory<ASHC>
+class KD11_NAInstruction::ASHC : public EisInstruction, public WithFactory<ASHC>
 {
 public:
     ASHC (CpuData* cpu, u16 instruction);
     CpuData::Trap execute () override;
 };
 
-KD11_NA::ASHC::ASHC (CpuData* cpu, u16 instruction)
+KD11_NAInstruction::ASHC::ASHC (CpuData* cpu, u16 instruction)
     :
     EisInstruction (cpu, instruction)
 {}
 
-CpuData::Trap KD11_NA::ASHC::execute ()
+CpuData::Trap KD11_NAInstruction::ASHC::execute ()
 {
     u16 regNr = getRegisterNr ();
     CpuData::GeneralRegisters& registers = cpu_->registers ();

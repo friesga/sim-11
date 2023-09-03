@@ -18,19 +18,19 @@
 // result. This will happen in comparison (CMP) operations as long as the
 // source has a higher unsigned value than the destination.
 //
-class KD11_NA::BHI : public BranchInstruction, public WithFactory<BHI>
+class KD11_NAInstruction::BHI : public BranchInstruction, public WithFactory<BHI>
 {
 public:
     BHI (CpuData* cpu, u16 instruction);
     CpuData::Trap execute () override;
 };
 
-KD11_NA::BHI::BHI (CpuData* cpu, u16 instruction)
+KD11_NAInstruction::BHI::BHI (CpuData* cpu, u16 instruction)
     :
     BranchInstruction (cpu, instruction)
 {}
 
-CpuData::Trap KD11_NA::BHI::execute ()
+CpuData::Trap KD11_NAInstruction::BHI::execute ()
 {
     executeBranchIf (!isSet (PSW_C) && !isSet (PSW_Z));
     return CpuData::Trap::None;

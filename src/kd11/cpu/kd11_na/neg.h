@@ -22,19 +22,19 @@
 // Note that 100000 is replaced by itself (in two's complement notation the
 // most negative number has no positive counterpart).
 //
-class KD11_NA::NEG : public SingleOperandInstruction, public WithFactory<NEG>
+class KD11_NAInstruction::NEG : public SingleOperandInstruction, public WithFactory<NEG>
 {
 public:
     NEG (CpuData* cpu, u16 instruction);
     CpuData::Trap execute () override;
 };
 
-KD11_NA::NEG::NEG (CpuData* cpu, u16 instruction)
+KD11_NAInstruction::NEG::NEG (CpuData* cpu, u16 instruction)
     :
     SingleOperandInstruction (cpu, instruction)
 {}
 
-CpuData::Trap KD11_NA::NEG::execute ()
+CpuData::Trap KD11_NAInstruction::NEG::execute ()
 {
     CondData<u16> operand;
     if (!readOperand (&operand))

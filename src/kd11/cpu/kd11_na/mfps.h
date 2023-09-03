@@ -23,19 +23,19 @@
 // destination is mode 0, PS bit 7 is sign extended through upper byte of the
 // register. The destination operand address is treated as a byte address.
 //
-class KD11_NA::MFPS : public SingleOperandInstruction, public WithFactory<MFPS>
+class KD11_NAInstruction::MFPS : public SingleOperandInstruction, public WithFactory<MFPS>
 {
 public:
     MFPS (CpuData* cpu, u16 instruction);
     CpuData::Trap execute () override;
 };
 
-KD11_NA::MFPS::MFPS (CpuData* cpu, u16 instruction)
+KD11_NAInstruction::MFPS::MFPS (CpuData* cpu, u16 instruction)
     :
     SingleOperandInstruction (cpu, instruction)
 {}
 
-CpuData::Trap KD11_NA::MFPS::execute ()
+CpuData::Trap KD11_NAInstruction::MFPS::execute ()
 {
     u8 contents = (u8) cpu_->psw ();
     operandLocation_ = getOperandLocation (cpu_->registers ());

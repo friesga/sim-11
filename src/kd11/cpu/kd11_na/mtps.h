@@ -21,19 +21,19 @@
 // remains unchanged. This instruction can be used to change the priority bit
 // (PSW bit 7) in the PSW
 //
-class KD11_NA::MTPS : public SingleOperandInstruction, public WithFactory<MTPS>
+class KD11_NAInstruction::MTPS : public SingleOperandInstruction, public WithFactory<MTPS>
 {
 public:
     MTPS (CpuData* cpu, u16 instruction);
     CpuData::Trap execute () override;
 };
 
-KD11_NA::MTPS::MTPS (CpuData* cpu, u16 instruction)
+KD11_NAInstruction::MTPS::MTPS (CpuData* cpu, u16 instruction)
     :
     SingleOperandInstruction (cpu, instruction)
 {}
 
-CpuData::Trap KD11_NA::MTPS::execute ()
+CpuData::Trap KD11_NAInstruction::MTPS::execute ()
 {
     CondData<u8> newValue;
     if (!readOperand (&newValue))

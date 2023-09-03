@@ -17,19 +17,19 @@
 // Tests the state of the N-bit and causes a branch if N is clear, (positive
 // result). BPL is the complementary operation of BMI.
 //
-class KD11_NA::BPL : public BranchInstruction, public WithFactory<BPL>
+class KD11_NAInstruction::BPL : public BranchInstruction, public WithFactory<BPL>
 {
 public:
     BPL (CpuData* cpu, u16 instruction);
     CpuData::Trap execute () override;
 };
 
-KD11_NA::BPL::BPL (CpuData* cpu, u16 instruction)
+KD11_NAInstruction::BPL::BPL (CpuData* cpu, u16 instruction)
     :
     BranchInstruction (cpu, instruction)
 {}
 
-CpuData::Trap KD11_NA::BPL::execute ()
+CpuData::Trap KD11_NAInstruction::BPL::execute ()
 {
     executeBranchIf (!isSet (PSW_N));
     return CpuData::Trap::None;

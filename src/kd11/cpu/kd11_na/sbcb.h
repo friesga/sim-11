@@ -15,19 +15,19 @@
 // Condition Codes:
 //  refer to SBC
 //
-class KD11_NA::SBCB : public SingleOperandInstruction, public WithFactory<SBCB>
+class KD11_NAInstruction::SBCB : public SingleOperandInstruction, public WithFactory<SBCB>
 {
 public:
     SBCB (CpuData* cpu, u16 instruction);
     CpuData::Trap execute () override;
 };
 
-KD11_NA::SBCB::SBCB (CpuData* cpu, u16 instruction)
+KD11_NAInstruction::SBCB::SBCB (CpuData* cpu, u16 instruction)
     :
     SingleOperandInstruction (cpu, instruction)
 {}
 
-CpuData::Trap KD11_NA::SBCB::execute ()
+CpuData::Trap KD11_NAInstruction::SBCB::execute ()
 {
     CondData<u8> source;
     if (!readOperand (&source))

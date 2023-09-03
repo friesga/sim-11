@@ -17,19 +17,19 @@
 // Tests the state of the V bit and causes a branch if the V bit is clear.
 // BVC is complementary operation to BVS.
 //
-class KD11_NA::BVC : public BranchInstruction, public WithFactory<BVC>
+class KD11_NAInstruction::BVC : public BranchInstruction, public WithFactory<BVC>
 {
 public:
     BVC (CpuData* cpu, u16 instruction);
     CpuData::Trap execute () override;
 };
 
-KD11_NA::BVC::BVC (CpuData* cpu, u16 instruction)
+KD11_NAInstruction::BVC::BVC (CpuData* cpu, u16 instruction)
     :
     BranchInstruction (cpu, instruction)
 {}
 
-CpuData::Trap KD11_NA::BVC::execute ()
+CpuData::Trap KD11_NAInstruction::BVC::execute ()
 {
     executeBranchIf (!isSet (PSW_V));
     return CpuData::Trap::None;

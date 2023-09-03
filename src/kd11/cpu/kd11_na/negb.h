@@ -15,19 +15,19 @@
 // Condition Codes:
 //  refer to NEG
 //
-class KD11_NA::NEGB : public SingleOperandInstruction, public WithFactory<NEGB>
+class KD11_NAInstruction::NEGB : public SingleOperandInstruction, public WithFactory<NEGB>
 {
 public:
     NEGB (CpuData* cpu, u16 instruction);
     CpuData::Trap execute () override;
 };
 
-KD11_NA::NEGB::NEGB (CpuData* cpu, u16 instruction)
+KD11_NAInstruction::NEGB::NEGB (CpuData* cpu, u16 instruction)
     :
     SingleOperandInstruction (cpu, instruction)
 {}
 
-CpuData::Trap KD11_NA::NEGB::execute ()
+CpuData::Trap KD11_NAInstruction::NEGB::execute ()
 {
     CondData<u8> operand;
     if (!readOperand (&operand))

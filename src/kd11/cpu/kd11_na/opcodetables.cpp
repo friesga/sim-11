@@ -84,7 +84,7 @@
 // Instruction format for Operate Group plus BPT and IOT,
 //
 // and minus NOP instructions.
-KD11_NA::opCodeTable const KD11_NA::group_00_00_nn
+KD11_NAInstruction::opCodeTable const KD11_NAInstruction::group_00_00_nn
 { 
     HALT::create,       // 00 00 00 
     WAIT::create,       // 00 00 01
@@ -96,7 +96,7 @@ KD11_NA::opCodeTable const KD11_NA::group_00_00_nn
 };
 
 // Instruction format for RTS and Condition Code Operators instructions
-KD11_NA::opCodeTable const KD11_NA::group_00_02_nn
+KD11_NAInstruction::opCodeTable const KD11_NAInstruction::group_00_02_nn
 {
     RTS::create,        // 00 02 00
     RTS::create,        // 00 02 01
@@ -171,7 +171,7 @@ KD11_NA::opCodeTable const KD11_NA::group_00_02_nn
 // The range 07 51 xx till 07 57 xx is handled in the corresponding function
 // to minimize the size of this opcode table.
 //
-KD11_NA::opCodeTable const KD11_NA::group_07_5n_nx
+KD11_NAInstruction::opCodeTable const KD11_NAInstruction::group_07_5n_nx
 {
     FADD::create,       // 07 50 0x
     FSUB::create,       // 07 50 1x
@@ -188,7 +188,7 @@ KD11_NA::opCodeTable const KD11_NA::group_07_5n_nx
 // 
 // The FIS instructions are defined in a separate group.
 //
-KD11_NA::opCodeTable const KD11_NA::group_07_nx_xx
+KD11_NAInstruction::opCodeTable const KD11_NAInstruction::group_07_nx_xx
 {
     MUL::create,                    // 07 0x xx
     DIV::create,                    // 07 1x xx
@@ -202,7 +202,7 @@ KD11_NA::opCodeTable const KD11_NA::group_07_nx_xx
 
 // Instruction format for the Program Control and Single Operand Group
 // instructions.
-KD11_NA::opCodeTable const KD11_NA::group_10_xx_xx
+KD11_NAInstruction::opCodeTable const KD11_NAInstruction::group_10_xx_xx
 {
     BPL::create,    // 10 00 xx
     BPL::create,    // 10 01 xx
@@ -272,7 +272,7 @@ KD11_NA::opCodeTable const KD11_NA::group_10_xx_xx
 
 // Instruction format for the Program Control and Single Operand Group
 // instructions. 
-KD11_NA::opCodeTable const KD11_NA::group_00_nn_xx
+KD11_NAInstruction::opCodeTable const KD11_NAInstruction::group_00_nn_xx
 { 
     decodeGroup_00_00_nn,           // 00 00 NN
     JMP::create,                    // 00 01 xx
@@ -341,7 +341,7 @@ KD11_NA::opCodeTable const KD11_NA::group_00_nn_xx
 };
 
 // This is the main operation code control table.
-KD11_NA::opCodeTable const KD11_NA::group_nn_xx_xx 
+KD11_NAInstruction::opCodeTable const KD11_NAInstruction::group_nn_xx_xx 
 {
     decodeGroup_00_nn_xx,           // 00 xx xx
     MOV::create,                    // 01 xx xx

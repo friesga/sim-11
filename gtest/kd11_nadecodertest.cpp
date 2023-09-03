@@ -14,9 +14,9 @@ using std::string;
 // Get the mnemonic from the decoded instruction
 string getInstrMnemonic (u16 instruction)
 {
-    KD11_NA kd11_na;
+    KD11_NAInstruction kd11_naInstruction;
     DummyCpu cpu;
-    unique_ptr<LSI11Instruction> instr = kd11_na.decode (&cpu, instruction);
+    unique_ptr<LSI11Instruction> instr = kd11_naInstruction.decode (&cpu, instruction);
     return instr->mnemonic ();
 }
 

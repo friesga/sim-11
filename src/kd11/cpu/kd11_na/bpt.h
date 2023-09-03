@@ -22,19 +22,19 @@
 //  V: loaded from trap vector
 //  C: loaded from trap vector
 //
-class KD11_NA::BPT : public NoOperandInstruction, public WithFactory<BPT>
+class KD11_NAInstruction::BPT : public NoOperandInstruction, public WithFactory<BPT>
 {
 public:
     BPT (CpuData* cpu, u16 instruction);
     CpuData::Trap execute () override;
 };
 
-KD11_NA::BPT::BPT (CpuData* cpu, u16 instruction)
+KD11_NAInstruction::BPT::BPT (CpuData* cpu, u16 instruction)
     :
     NoOperandInstruction (cpu, instruction)
 {}
 
-CpuData::Trap KD11_NA::BPT::execute ()
+CpuData::Trap KD11_NAInstruction::BPT::execute ()
 {
     return CpuData::Trap::BreakpointTrap;
 }

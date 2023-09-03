@@ -17,19 +17,19 @@
 // Tests the state of the C-bit and causes a branch if C is clear. BCC is
 // the complementary operation to BCS.
 //
-class KD11_NA::BCC : public BranchInstruction, public WithFactory<BCC>
+class KD11_NAInstruction::BCC : public BranchInstruction, public WithFactory<BCC>
 {
 public:
     BCC (CpuData* cpu, u16 instruction);
     CpuData::Trap execute () override;
 };
 
-KD11_NA::BCC::BCC (CpuData* cpu, u16 instruction)
+KD11_NAInstruction::BCC::BCC (CpuData* cpu, u16 instruction)
     :
     BranchInstruction (cpu, instruction)
 {}
 
-CpuData::Trap KD11_NA::BCC::execute ()
+CpuData::Trap KD11_NAInstruction::BCC::execute ()
 {
     executeBranchIf (!isSet (PSW_C));
     return CpuData::Trap::None;

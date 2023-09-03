@@ -127,7 +127,7 @@ bool LSI11Instruction::isByteInstruction ()
 
 // Return the mnemonic for this instruction from the object's class name.
 // The call "typeid (*this).name ()" will return a string with the complete
-// type, e.g. "class KD11_NA::HALT". The position of the mnemonic string
+// type, e.g. "class KD11_NAInstruction::HALT". The position of the mnemonic string
 // is two characters after the first colon in the type name.
 string LSI11Instruction::mnemonic ()
 {

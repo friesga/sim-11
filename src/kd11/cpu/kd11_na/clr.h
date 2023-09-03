@@ -20,19 +20,19 @@
 //
 // Contents of specified destination are replaced with zeroes.
 //
-class KD11_NA::CLR : public SingleOperandInstruction, public WithFactory<CLR>
+class KD11_NAInstruction::CLR : public SingleOperandInstruction, public WithFactory<CLR>
 {
 public:
     CLR (CpuData* cpu, u16 instruction);
     CpuData::Trap execute () override;
 };
 
-KD11_NA::CLR::CLR (CpuData* cpu, u16 instruction)
+KD11_NAInstruction::CLR::CLR (CpuData* cpu, u16 instruction)
     :
     SingleOperandInstruction (cpu, instruction)
 {}
 
-CpuData::Trap KD11_NA::CLR::execute ()
+CpuData::Trap KD11_NAInstruction::CLR::execute ()
 {
     if (!writeOperand ((u16)0))
         return CpuData::Trap::BusError;

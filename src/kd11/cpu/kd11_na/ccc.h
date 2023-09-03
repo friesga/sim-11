@@ -16,19 +16,19 @@
 // instruction. The operation code indicates this a CCC instruction without
 // any condition code set and thus the instruction has no effect.
 // 
-class KD11_NA::CCC : public CcInstruction, public WithFactory<CCC>
+class KD11_NAInstruction::CCC : public CcInstruction, public WithFactory<CCC>
 {
 public:
     CCC (CpuData* cpu, u16 instruction);
     CpuData::Trap execute () override;
 };
 
-KD11_NA::CCC::CCC (CpuData* cpu, u16 instruction)
+KD11_NAInstruction::CCC::CCC (CpuData* cpu, u16 instruction)
     :
     CcInstruction (cpu, instruction)
 {}
 
-CpuData::Trap KD11_NA::CCC::execute ()
+CpuData::Trap KD11_NAInstruction::CCC::execute ()
 {
     cpu_->psw () &= ~getConditionCodes ();
     return CpuData::Trap::None;

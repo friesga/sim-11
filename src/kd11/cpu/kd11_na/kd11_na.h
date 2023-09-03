@@ -94,7 +94,7 @@ using std::unique_ptr;
 //  SUB ---------------- 16 xx xx
 //  unused ------------- 17 xx xx
 //
-class KD11_NA
+class KD11_NAInstruction
 {
 public:
     unique_ptr<LSI11Instruction> decode (CpuData* cpu, u16 instruction);

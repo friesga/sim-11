@@ -28,19 +28,19 @@
 // from the word at address 30; the new processor status (PS) is taken from the
 // word at address 32.
 //
-class KD11_NA::EMT : public NoOperandInstruction, public WithFactory<EMT>
+class KD11_NAInstruction::EMT : public NoOperandInstruction, public WithFactory<EMT>
 {
 public:
     EMT (CpuData* cpu, u16 instruction);
     CpuData::Trap execute () override;
 };
 
-KD11_NA::EMT::EMT (CpuData* cpu, u16 instruction)
+KD11_NAInstruction::EMT::EMT (CpuData* cpu, u16 instruction)
     :
     NoOperandInstruction (cpu, instruction)
 {}
 
-CpuData::Trap KD11_NA::EMT::execute ()
+CpuData::Trap KD11_NAInstruction::EMT::execute ()
 {
     return CpuData::Trap::EmulatorTrap;
 }

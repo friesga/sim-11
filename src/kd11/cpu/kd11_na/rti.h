@@ -24,19 +24,19 @@
 // restored (popped) from-the processor stack. If a trace trap is pending, the
 // first instruction after RTI will not be executed prior to the next T traps.
 //
-class KD11_NA::RTI : public NoOperandInstruction, public WithFactory<RTI>
+class KD11_NAInstruction::RTI : public NoOperandInstruction, public WithFactory<RTI>
 {
 public:
     RTI (CpuData* cpu, u16 instruction);
     CpuData::Trap execute () override;
 };
 
-KD11_NA::RTI::RTI (CpuData* cpu, u16 instruction)
+KD11_NAInstruction::RTI::RTI (CpuData* cpu, u16 instruction)
     :
     NoOperandInstruction (cpu, instruction)
 {}
 
-CpuData::Trap KD11_NA::RTI::execute ()
+CpuData::Trap KD11_NAInstruction::RTI::execute ()
 {
     if (!cpu_->popWord (&cpu_->registers ()[7]))
         return CpuData::Trap::BusError;

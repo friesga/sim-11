@@ -19,19 +19,19 @@
 // carry bit is loaded with bit 15 of the word and for even addresses the carry
 // bit is loaded with bit 7 of the word.
 //
-class KD11_NA::ROLB : public SingleOperandInstruction, public WithFactory<ROLB>
+class KD11_NAInstruction::ROLB : public SingleOperandInstruction, public WithFactory<ROLB>
 {
 public:
     ROLB (CpuData* cpu, u16 instruction);
     CpuData::Trap execute () override;
 };
 
-KD11_NA::ROLB::ROLB (CpuData* cpu, u16 instruction)
+KD11_NAInstruction::ROLB::ROLB (CpuData* cpu, u16 instruction)
     :
     SingleOperandInstruction (cpu, instruction)
 {}
 
-CpuData::Trap KD11_NA::ROLB::execute ()
+CpuData::Trap KD11_NAInstruction::ROLB::execute ()
 {
     CondData<u8> source;
     if (!readOperand (&source))

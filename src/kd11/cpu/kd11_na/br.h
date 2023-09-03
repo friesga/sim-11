@@ -15,19 +15,19 @@
 // Provides a way of transferring program control within a range of -128 (10)
 // to +127 (10) words with a one word instruction.
 //
-class KD11_NA::BR : public BranchInstruction, public WithFactory<BR>
+class KD11_NAInstruction::BR : public BranchInstruction, public WithFactory<BR>
 {
 public:
     BR (CpuData* cpu, u16 instruction);
     CpuData::Trap execute () override;
 };
 
-KD11_NA::BR::BR (CpuData* cpu, u16 instruction)
+KD11_NAInstruction::BR::BR (CpuData* cpu, u16 instruction)
     :
     BranchInstruction (cpu, instruction)
 {}
 
-CpuData::Trap KD11_NA::BR::execute ()
+CpuData::Trap KD11_NAInstruction::BR::execute ()
 {
     executeBranch ();
     return CpuData::Trap::None;

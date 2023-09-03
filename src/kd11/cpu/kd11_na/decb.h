@@ -15,19 +15,19 @@
 // Condition Codes:
 //  refer to DEC
 //
-class KD11_NA::DECB : public SingleOperandInstruction, public WithFactory<DECB>
+class KD11_NAInstruction::DECB : public SingleOperandInstruction, public WithFactory<DECB>
 {
 public:
     DECB (CpuData* cpu, u16 instruction);
     CpuData::Trap execute () override;
 };
 
-KD11_NA::DECB::DECB (CpuData* cpu, u16 instruction)
+KD11_NAInstruction::DECB::DECB (CpuData* cpu, u16 instruction)
     :
     SingleOperandInstruction (cpu, instruction)
 {}
 
-CpuData::Trap KD11_NA::DECB::execute ()
+CpuData::Trap KD11_NAInstruction::DECB::execute ()
 {
     CondData<u8> source;
     if (!readOperand (&source))

@@ -13,7 +13,7 @@
 //
 // Reserved instructions trap to vector address 10.
 //
-class KD11_NA::Unused : public NoOperandInstruction, public WithFactory<Unused>
+class KD11_NAInstruction::Unused : public NoOperandInstruction, public WithFactory<Unused>
 {
 public:
     Unused (CpuData* cpu, u16 instruction);
@@ -22,12 +22,12 @@ public:
 
 // The two function members are defined inline as this header file is
 // included in both opcodetables.cpp and kd11_na.cpp.
-inline KD11_NA::Unused::Unused (CpuData* cpu, u16 instruction)
+inline KD11_NAInstruction::Unused::Unused (CpuData* cpu, u16 instruction)
     :
     NoOperandInstruction (cpu, instruction)
 {}
 
-inline CpuData::Trap KD11_NA::Unused::execute ()
+inline CpuData::Trap KD11_NAInstruction::Unused::execute ()
 {
     trace.trap (TrapRecordType::TRAP_ILL, 010);
     return CpuData::Trap::IllegalInstructionTrap;

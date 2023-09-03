@@ -21,19 +21,19 @@
 // negative destination. BLT will not cause a branch if the result of the
 // previous operation was zero (without overflow).
 //
-class KD11_NA::BLT : public BranchInstruction, public WithFactory<BLT>
+class KD11_NAInstruction::BLT : public BranchInstruction, public WithFactory<BLT>
 {
 public:
     BLT (CpuData* cpu, u16 instruction);
     CpuData::Trap execute () override;
 };
 
-KD11_NA::BLT::BLT (CpuData* cpu, u16 instruction)
+KD11_NAInstruction::BLT::BLT (CpuData* cpu, u16 instruction)
     :
     BranchInstruction (cpu, instruction)
 {}
 
-CpuData::Trap KD11_NA::BLT::execute ()
+CpuData::Trap KD11_NAInstruction::BLT::execute ()
 {
     executeBranchIf (isSet (PSW_N) ^ isSet (PSW_V));
     return CpuData::Trap::None;

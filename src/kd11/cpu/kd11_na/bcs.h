@@ -17,19 +17,19 @@
 // Tests the state of the C-bit and causes a branch if C is set. It is used
 // to test for a carry in the result of a previous operation.
 //
-class KD11_NA::BCS : public BranchInstruction, public WithFactory<BCS>
+class KD11_NAInstruction::BCS : public BranchInstruction, public WithFactory<BCS>
 {
 public:
     BCS (CpuData* cpu, u16 instruction);
     CpuData::Trap execute () override;
 };
 
-KD11_NA::BCS::BCS (CpuData* cpu, u16 instruction)
+KD11_NAInstruction::BCS::BCS (CpuData* cpu, u16 instruction)
     :
     BranchInstruction (cpu, instruction)
 {}
 
-CpuData::Trap KD11_NA::BCS::execute ()
+CpuData::Trap KD11_NAInstruction::BCS::execute ()
 {
     executeBranchIf (isSet (PSW_C));
     return CpuData::Trap::None;

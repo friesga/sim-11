@@ -23,19 +23,19 @@
 // corresponding bits set in the source are set in the destination. The
 // contents of the destination are lost.
 //
-class KD11_NA::BIS : public DoubleOperandInstruction, public WithFactory<BIS>
+class KD11_NAInstruction::BIS : public DoubleOperandInstruction, public WithFactory<BIS>
 {
 public:
     BIS (CpuData* cpu, u16 instruction);
     CpuData::Trap execute () override;
 };
 
-KD11_NA::BIS::BIS (CpuData* cpu, u16 instruction)
+KD11_NAInstruction::BIS::BIS (CpuData* cpu, u16 instruction)
     :
     DoubleOperandInstruction (cpu, instruction)
 {}
 
-CpuData::Trap KD11_NA::BIS::execute ()
+CpuData::Trap KD11_NAInstruction::BIS::execute ()
 {
     CondData<u16> source, destination;
 

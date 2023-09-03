@@ -25,19 +25,19 @@
 // 
 // A <- A + B
 //
-class KD11_NA::FADD : public FISInstruction, public WithFactory<FADD>
+class KD11_NAInstruction::FADD : public FISInstruction, public WithFactory<FADD>
 {
 public:
     FADD (CpuData* cpu, u16 instruction);
     CpuData::Trap execute () override;
 };
 
-KD11_NA::FADD::FADD (CpuData* cpu, u16 instruction)
+KD11_NAInstruction::FADD::FADD (CpuData* cpu, u16 instruction)
     :
     FISInstruction (cpu, instruction)
 {}
 
-CpuData::Trap KD11_NA::FADD::execute ()
+CpuData::Trap KD11_NAInstruction::FADD::execute ()
 {
     return executeFISinstruction (getRegister (),
         [](Float f1, Float f2) { return true; },

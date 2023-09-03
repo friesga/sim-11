@@ -22,19 +22,19 @@
 // carry from the subtraction of two low-order words to be subtracted from the
 // high order part of the result.
 //
-class KD11_NA::SBC : public SingleOperandInstruction, public WithFactory<SBC>
+class KD11_NAInstruction::SBC : public SingleOperandInstruction, public WithFactory<SBC>
 {
 public:
     SBC (CpuData* cpu, u16 instruction);
     CpuData::Trap execute () override;
 };
 
-KD11_NA::SBC::SBC (CpuData* cpu, u16 instruction)
+KD11_NAInstruction::SBC::SBC (CpuData* cpu, u16 instruction)
     :
     SingleOperandInstruction (cpu, instruction)
 {}
 
-CpuData::Trap KD11_NA::SBC::execute ()
+CpuData::Trap KD11_NAInstruction::SBC::execute ()
 {
     CondData<u16> contents;
     if (!readOperand (&contents))
