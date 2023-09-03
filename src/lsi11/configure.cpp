@@ -22,7 +22,7 @@ void LSI11::configureDevices (Window *window)
     // The Console class reads characters and sends them to the dlv11
     unique_ptr<Console> console =  OperatorConsoleFactory::create ();
 
-    kd11_ = new KD11 (&bus_);
+    kd11_ = new KD11_NA (&bus_);
     msv11_ = new MSV11D (&bus_);
     dlv11_ = new DLV11J (&bus_, move (console));
     bdv11_ = new BDV11 (&bus_);
@@ -49,7 +49,7 @@ void LSI11::configureDevices (vector<shared_ptr<DeviceConfig>> systemConfig,
         switch (device->deviceType_)
         {
             case DeviceType::KD11_NA:
-                kd11_ = new KD11 (&bus_,
+                kd11_ = new KD11_NA (&bus_,
                     static_pointer_cast<KD11_NAConfig> (device));
                 break;
 

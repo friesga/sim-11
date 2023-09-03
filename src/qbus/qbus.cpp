@@ -133,7 +133,7 @@ bool Qbus::getIntrptReq(InterruptRequest &intrptReq)
 // Install the given device in the given slot. Every BusDevice contains a
 // pointer to the bus it is installed on. This pointer has to be specified
 // in the device's constructor. There is something to be said for setting
-// the pointer in the installModule function but in e.g. the KD11 device
+// the pointer in the installModule function but in e.g. the KD11_NA device
 // the pointer is already used in the constructor.
 void Qbus::installModule (int slot, BusDevice *module)
 {

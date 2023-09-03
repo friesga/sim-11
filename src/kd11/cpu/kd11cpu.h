@@ -12,7 +12,7 @@
 
 // Forward declarations to be able to declare these classes as friends
 namespace KD11_ODT { class KD11ODT; }
-namespace kd11_na { class KD11; }
+namespace kd11_na { class KD11_NA; }
 
 // Definition of CPU run states
 enum class CpuRunState
@@ -57,7 +57,7 @@ class KD11CPU : public CpuData
 {
 public:
 	// KD11ODT and LSI11 need access to the CpuControl functions.
-	friend class kd11_na::KD11;
+	friend class kd11_na::KD11_NA;
 	friend class KD11_ODT::KD11ODT;
 	friend class LSI11;
 	

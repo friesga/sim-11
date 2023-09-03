@@ -19,7 +19,7 @@ using std::monostate;
 
 namespace kd11_na
 {
-	// Definition of the events to be processed by the KD11
+	// Definition of the events to be processed by the KD11_NA
 	struct BPOK_high {};
 	struct Halt {};
 	struct Start {};
@@ -50,22 +50,22 @@ namespace kd11_na
 		ExitPoint,
 		monostate>;
 
-	// The class KD11 is composed of the KD11 CPU and the KD11 ODT.
-	class KD11 : public BusDevice, public variantFsm::Fsm<KD11, Event, State>
+	// The class KD11_NA is composed of the KD11_NA CPU and the KD11_NA ODT.
+	class KD11_NA : public BusDevice, public variantFsm::Fsm<KD11_NA, Event, State>
 	{
 	public:
-		KD11 (Qbus *bus);
-		KD11 (Qbus *bus, shared_ptr<KD11_NAConfig> kd11_naConfig);
-		~KD11 ();
+		KD11_NA (Qbus *bus);
+		KD11_NA (Qbus *bus, shared_ptr<KD11_NAConfig> kd11_naConfig);
+		~KD11_NA ();
 		void start (u16 startAddress);
 		void start ();
 		
 		// Give main() access to the CPU to set PC and runState
 		KD11CPU &cpu();
 
-		// The KD11 is a BusDevice without registers so the read and write 
+		// The KD11_NA is a BusDevice without registers so the read and write 
 		// register functions are dummies. The reset function is called on a
-		// bus reset and has no function for the KD11 either.
+		// bus reset and has no function for the KD11_NA either.
 		StatusCode read (u16 addr, u16 *destination) override 
 			{ return StatusCode::FunctionNotImplemented; };
 		StatusCode writeWord (u16 addr, u16 value) override
@@ -81,7 +81,7 @@ namespace kd11_na
 		void ExitReceiver (bool signalValue);
 		void ResetReceiver (bool signalValue);
 
-		// Definition of the KD11 state machine
+		// Definition of the KD11_NA state machine
 		State transition (PowerOff&&, BPOK_high);		// -> Halted/Running
 		void entry (Running);
 		State transition (Running&&, Reset);			// -> Halted/Running
@@ -124,7 +124,7 @@ namespace kd11_na
 
 		enum {stdBootAddress = 0173000};
 
-		// The KD11 is started in its own thread
+		// The KD11_NA is started in its own thread
 		std::thread kd11Thread_;
 
 		// Definition of a queue for the processing of bus signal events
@@ -143,7 +143,7 @@ namespace kd11_na
 	// This function returns true if the first element in the signal queue is
 	// a variant holding an Event of the specified type.
 	template <typename T>
-	bool KD11::signalIsOfType ()
+	bool KD11_NA::signalIsOfType ()
 	{
 		return holds_alternative<T> (signalEventQueue_.first ());
 	}

@@ -6,12 +6,12 @@ using namespace KD11_ODT;
 using std::make_unique;
 using std::monostate;
 
-kd11_na::State KD11::transition (PowerOff&&, BPOK_high)
+kd11_na::State KD11_NA::transition (PowerOff&&, BPOK_high)
 {
     return powerUpRoutine ();
 }
 
-void KD11::entry (Running)
+void KD11_NA::entry (Running)
 {
     while (!signalAvailable ())
     {
@@ -29,18 +29,18 @@ void KD11::entry (Running)
     bus_->SRUN ().set (false);
 }
 
-kd11_na::State KD11::transition (Running&&, Reset)
+kd11_na::State KD11_NA::transition (Running&&, Reset)
 {
     return powerUpRoutine ();
 }
 
-kd11_na::State KD11::transition (Running&&, Halt)
+kd11_na::State KD11_NA::transition (Running&&, Halt)
 {
     return Halted {};
 }
 
 
-kd11_na::State KD11::transition (Running&&, BPOK_low)
+kd11_na::State KD11_NA::transition (Running&&, BPOK_low)
 {
     return PowerFail {};
 }
@@ -51,22 +51,22 @@ kd11_na::State KD11::transition (Running&&, BPOK_low)
 // Handbook states: "A / issued immediately after the processor
 // enters ODT mode causes a ?<CR><LF> to be printed because a
 // location has not yet been opened.
-void KD11::entry (Halted)
+void KD11_NA::entry (Halted)
 {
     runODT ();
 }
 
-kd11_na::State KD11::transition (Halted&&, Start)
+kd11_na::State KD11_NA::transition (Halted&&, Start)
 {
     return Running {};
 }
 
-kd11_na::State KD11::transition (Halted&&, Reset)
+kd11_na::State KD11_NA::transition (Halted&&, Reset)
 {
     return powerUpRoutine ();
 }
  
-kd11_na::State KD11::transition (Halted&&, BPOK_low)
+kd11_na::State KD11_NA::transition (Halted&&, BPOK_low)
 {
     return PowerOff {};
 }
@@ -76,7 +76,7 @@ kd11_na::State KD11::transition (Halted&&, BPOK_low)
 // 1000 instructions (presuming an avering instruction exeution time of
 // 4 microseconds and 4 milliseconds DC power available). The powerfail
 // routine cannot be single stepped.
-void KD11::entry (PowerFail)
+void KD11_NA::entry (PowerFail)
 {
     size_t maxInstructions {1000};
 
@@ -96,19 +96,19 @@ void KD11::entry (PowerFail)
         signalEventQueue_.push (BDCOK_low {});
 }
 
-kd11_na::State KD11::transition (PowerFail&&, BDCOK_low)
+kd11_na::State KD11_NA::transition (PowerFail&&, BDCOK_low)
 {
     bus_->SRUN ().set (false);
     return PowerOff {};
 }
 
-kd11_na::State KD11::transition (PowerFail&&, Halt)
+kd11_na::State KD11_NA::transition (PowerFail&&, Halt)
 {
     bus_->SRUN ().set (false);
     return PowerOff {};
 }
 
-void KD11::entry (ExitPoint)
+void KD11_NA::entry (ExitPoint)
 {
     kd11Running_ = false;
 }

@@ -8,7 +8,7 @@ using namespace kd11_na;
 // 2. Place the processor in ODT mode,
 // 3. Start the system at the boot address.
 // 
-// These modes can be selected in the KD11 section of the configuration file.
+// These modes can be selected in the KD11_NA section of the configuration file.
 // See Table 11-4 (Console Power-Up Printout (or Display) in the LSI-11,
 // PDP-11/03 user's manual (EK-LSI11-TM-003) for the expected reaction on
 // power-up.
@@ -20,7 +20,7 @@ using namespace kd11_na;
 //
 // The function will return the state to transition to.
 //
-kd11_na::State KD11::powerUpRoutine ()
+kd11_na::State KD11_NA::powerUpRoutine ()
 {
     cpu_.cpuReset ();
     bus_->BINIT().cycle ();
@@ -41,7 +41,7 @@ kd11_na::State KD11::powerUpRoutine ()
         case KD11_NAConfig::PowerUpMode::ODT:
             // Halt the processor (if it isn't already halted). This will
             // place the processor in ODT mode on the next execution of
-            // KD11::step(). If the processor already is in ODT mode the
+            // KD11_NA::step(). If the processor already is in ODT mode the
             // signal is ignored and this is a no-operation.
             cpu_.halt ();
             return Halted {};

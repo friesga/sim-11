@@ -13,7 +13,7 @@ using std::this_thread::sleep_for;
 //
 // processCharacter() will return false when it cannot process characters
 // anymore because either a Proceed or Go command was entered.
-void KD11::runODT ()
+void KD11_NA::runODT ()
 {
     OperatorConsoleAccess console_ {bus_};
     Event haltEvent {};

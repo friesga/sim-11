@@ -38,7 +38,7 @@ KD11CPU::KD11CPU (Qbus* bus)
 // presence of traps is checked before an instruction is executed.
 //
 // The normal instruction flow can be interrupted by the setting of the BHALT
-// or RESET bus signal. These signals are handled in their corresponding KD11
+// or RESET bus signal. These signals are handled in their corresponding KD11_NA
 // receivers which then calls a KD11CPU control function.
 //
 // This function will return if the CPU is in the state RUN and another
@@ -124,7 +124,7 @@ void KD11CPU::execInstr ()
 }
 
 
-// This function is called on every KD11 step, whether or not a trap to
+// This function is called on every KD11_NA step, whether or not a trap to
 // be handled is present. If a trap is present the current PC and PSW are
 // saved on the stack and the PC and PSW of the trap vector are loaded.
 // If there is no trap to be handled the function simply returns.
