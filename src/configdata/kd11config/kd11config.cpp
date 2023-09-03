@@ -1,7 +1,7 @@
 #include "kd11config.h"
 #include "../devicetype/devicetype.h"
 
-KD11Config::KD11Config ()
+KD11_NAConfig::KD11_NAConfig ()
     : 
-    DeviceConfig (DeviceType::KD11)
+    DeviceConfig (DeviceType::KD11_NA)
 {}

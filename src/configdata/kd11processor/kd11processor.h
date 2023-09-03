@@ -12,24 +12,24 @@ using std::unique_ptr;
 using std::map;
 using std::string;
 
-class KD11Processor : public SectionProcessor
+class KD11_NAProcessor : public SectionProcessor
 {
-	unique_ptr<KD11Config> kd11ConfigPtr {nullptr};
+	unique_ptr<KD11_NAConfig> kd11ConfigPtr {nullptr};
 
 	// Define process as a pointer to a KD11Processor member function
 	// with a iniparser::Value argument and returning void.
-	typedef void (KD11Processor::*Process)(iniparser::Value);
+	typedef void (KD11_NAProcessor::*Process)(iniparser::Value);
 	
 	map<string, Process> valueProcessors =
 	{
-		{"power-up_mode", &KD11Processor::processPowerUpMode}
+		{"power-up_mode", &KD11_NAProcessor::processPowerUpMode}
 	};
 
-	map<string, KD11Config::PowerUpMode> validPowerUpModes =
+	map<string, KD11_NAConfig::PowerUpMode> validPowerUpModes =
 	{
-		{"vector",    KD11Config::PowerUpMode::Vector},
-		{"ODT",       KD11Config::PowerUpMode::ODT},
-		{"bootstrap", KD11Config::PowerUpMode::Bootstrap},
+		{"vector",    KD11_NAConfig::PowerUpMode::Vector},
+		{"ODT",       KD11_NAConfig::PowerUpMode::ODT},
+		{"bootstrap", KD11_NAConfig::PowerUpMode::Bootstrap},
 	};
 
 	void processValue (iniparser::Section::ValueIterator valueIterator);
@@ -39,7 +39,7 @@ class KD11Processor : public SectionProcessor
 
 
 public:
-	KD11Processor ();
+	KD11_NAProcessor ();
 	unique_ptr<DeviceConfig> getConfig () override;
 };
 

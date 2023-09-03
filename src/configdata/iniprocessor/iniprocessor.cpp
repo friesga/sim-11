@@ -44,7 +44,7 @@ unique_ptr<SectionProcessor> IniProcessor::createMSV11Processor ()
     return make_unique<MSV11Processor> ();
 }
 
-unique_ptr<SectionProcessor> IniProcessor::createKD11Processor ()
+unique_ptr<SectionProcessor> IniProcessor::createKD11_NAProcessor ()
 {
-    return make_unique<KD11Processor> ();
+    return make_unique<KD11_NAProcessor> ();
 }

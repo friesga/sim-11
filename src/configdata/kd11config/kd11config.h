@@ -3,7 +3,7 @@
 
 #include "../deviceconfig/deviceconfig.h"
 
-struct KD11Config : public DeviceConfig
+struct KD11_NAConfig : public DeviceConfig
 {
     // Definition of the power-up modes:
     // - Vector (mode 0)
@@ -30,7 +30,7 @@ struct KD11Config : public DeviceConfig
     // Bootstrap as that's more convenient for the user.
     PowerUpMode powerUpMode {PowerUpMode::Bootstrap};
 
-    KD11Config ();
+    KD11_NAConfig ();
 };
 
 #endif // !_KD11CONFIG_H_

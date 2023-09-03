@@ -17,18 +17,18 @@ using namespace kd11_na;
 KD11::KD11 (Qbus* bus)
     :
     BusDevice (bus),
-    powerUpMode_ {KD11Config::PowerUpMode::Bootstrap},
+    powerUpMode_ {KD11_NAConfig::PowerUpMode::Bootstrap},
     kd11Running_ {true},
     startAddress_ {stdBootAddress}
 {
     subscribeToSignals ();
 }
 
-KD11::KD11 (Qbus *bus, shared_ptr<KD11Config> kd11Config)
+KD11::KD11 (Qbus *bus, shared_ptr<KD11_NAConfig> kd11_naConfig)
     :
     KD11 (bus)
 {
-    powerUpMode_ = kd11Config->powerUpMode;
+    powerUpMode_ = kd11_naConfig->powerUpMode;
 }
 
 KD11::~KD11 ()

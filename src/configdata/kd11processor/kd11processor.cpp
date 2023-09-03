@@ -5,38 +5,38 @@ using std::make_unique;
 using std::move;
 using std::invalid_argument;
 
-KD11Processor::KD11Processor ()
+KD11_NAProcessor::KD11_NAProcessor ()
 {
-	kd11ConfigPtr = make_unique<KD11Config> ();
+	kd11ConfigPtr = make_unique<KD11_NAConfig> ();
 }
 
-void KD11Processor::processValue (iniparser::Section::ValueIterator valueIterator)
+void KD11_NAProcessor::processValue (iniparser::Section::ValueIterator valueIterator)
 {
 	Process processFunction = valueProcessors[valueIterator->first];
     (this->*processFunction)(valueIterator->second);
 }
 
-void KD11Processor::processPowerUpMode (iniparser::Value value)
+void KD11_NAProcessor::processPowerUpMode (iniparser::Value value)
 {
-	map<string, KD11Config::PowerUpMode>::iterator iter;
+	map<string, KD11_NAConfig::PowerUpMode>::iterator iter;
 
     if ((iter = validPowerUpModes.find (value.asString ())) != 
             validPowerUpModes.end ())
         kd11ConfigPtr->powerUpMode = iter->second;
     else
-        throw invalid_argument {"Incorrect KD11 power-up_mode value"};
+        throw invalid_argument {"Incorrect KD11-NA power-up_mode value"};
 }
 
-// Check the consistency of the configuration of the KD11. Currently
+// Check the consistency of the configuration of the KD11-NA. Currently
 // this is a void.
-void KD11Processor::checkConsistency ()
+void KD11_NAProcessor::checkConsistency ()
 {
 }
 
-void KD11Processor::processSubsection (iniparser::Section *subSection)
+void KD11_NAProcessor::processSubsection (iniparser::Section *subSection)
 {}
 
-unique_ptr<DeviceConfig> KD11Processor::getConfig ()
+unique_ptr<DeviceConfig> KD11_NAProcessor::getConfig ()
 {
 	return move (kd11ConfigPtr);
 }

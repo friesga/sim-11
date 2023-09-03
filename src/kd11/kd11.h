@@ -55,7 +55,7 @@ namespace kd11_na
 	{
 	public:
 		KD11 (Qbus *bus);
-		KD11 (Qbus *bus, shared_ptr<KD11Config> kd11Config);
+		KD11 (Qbus *bus, shared_ptr<KD11_NAConfig> kd11_naConfig);
 		~KD11 ();
 		void start (u16 startAddress);
 		void start ();
@@ -118,7 +118,7 @@ namespace kd11_na
 	private:
 		KD11CPU cpu_ {bus_};
 		unique_ptr<KD11ODT>	odt_ {};
-		KD11Config::PowerUpMode powerUpMode_;
+		KD11_NAConfig::PowerUpMode powerUpMode_;
 		bool kd11Running_;
 		u16 startAddress_;
 

@@ -27,7 +27,7 @@ kd11_na::State KD11::powerUpRoutine ()
 
     switch (powerUpMode_)
     {
-        case KD11Config::PowerUpMode::Vector:
+        case KD11_NAConfig::PowerUpMode::Vector:
             cpu_.loadTrapVector (&powerFail);
             cpu_.proceed ();
 
@@ -38,7 +38,7 @@ kd11_na::State KD11::powerUpRoutine ()
 
             return Running {};
 
-        case KD11Config::PowerUpMode::ODT:
+        case KD11_NAConfig::PowerUpMode::ODT:
             // Halt the processor (if it isn't already halted). This will
             // place the processor in ODT mode on the next execution of
             // KD11::step(). If the processor already is in ODT mode the
@@ -46,7 +46,7 @@ kd11_na::State KD11::powerUpRoutine ()
             cpu_.halt ();
             return Halted {};
 
-        case KD11Config::PowerUpMode::Bootstrap:
+        case KD11_NAConfig::PowerUpMode::Bootstrap:
             // Start the processor at the start address. This address is
             // either the standard boot address or an address determined by
             // a loaded file in absolute loader format.
