@@ -1,11 +1,11 @@
-#include "kd11cpu.h"
+#include "kd11_na_cpu.h"
 #include "cpucontrol.h"
 #include "trace/trace.h"
 
 // Reset the processor
 // 
 // Clear the registers and the PSW
-void KD11CPU::cpuReset ()
+void KD11_NA_Cpu::cpuReset ()
 {
     // Initialize the registers except for the PC
     for (u16 regNr = 0; regNr <= 6; ++regNr)
@@ -15,13 +15,13 @@ void KD11CPU::cpuReset ()
 }
 
 // Reset (the devices on) the bus by setting the INIT signal
-void KD11CPU::busReset ()
+void KD11_NA_Cpu::busReset ()
 {
     bus_->BINIT().cycle ();
 }
 
 // Halt the processor
-void KD11CPU::halt ()
+void KD11_NA_Cpu::halt ()
 {
     runState = CpuRunState::HALT;
     haltReason_ = HaltReason::HaltInstruction;
@@ -30,14 +30,14 @@ void KD11CPU::halt ()
 }
 
 // Wait for an interrupt
-void KD11CPU::wait ()
+void KD11_NA_Cpu::wait ()
 {
     trace.cpuEvent (CpuEventRecordType::CPU_WAIT, register_[7]);
     runState = CpuRunState::WAIT;
 }
 
 // Start the processor at the given address
-void KD11CPU::start (u16 address)
+void KD11_NA_Cpu::start (u16 address)
 {
     register_[7] = address;
     runState = CpuRunState::RUN;
@@ -46,7 +46,7 @@ void KD11CPU::start (u16 address)
 }
 
 // Continue execution at the current PC
-void KD11CPU::proceed ()
+void KD11_NA_Cpu::proceed ()
 {
     runState = CpuRunState::RUN;
     bus_->SRUN().set (true);
@@ -55,7 +55,7 @@ void KD11CPU::proceed ()
 
 // Prevent a trace trap on execution of the next instruction. This is
 // used by the RTT instruction.
-void KD11CPU::inhibitTraceTrap ()
+void KD11_NA_Cpu::inhibitTraceTrap ()
 {
     runState = CpuRunState::INHIBIT_TRACE;
 }

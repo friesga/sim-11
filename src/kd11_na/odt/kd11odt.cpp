@@ -20,7 +20,7 @@ using std::move;
 using std::to_string;
 using std::make_unique;
 
-KD11ODT::KD11ODT (Qbus *bus, KD11CPU &cpu, unique_ptr<ConsoleAccess> consoleAccess)
+KD11ODT::KD11ODT (Qbus *bus, KD11_NA_Cpu &cpu, unique_ptr<ConsoleAccess> consoleAccess)
     : 
     bus_ {bus},
     cpu_ {cpu},

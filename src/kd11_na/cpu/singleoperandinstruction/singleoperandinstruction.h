@@ -1,7 +1,7 @@
 #ifndef _SINGLEOPERANDINSTRUCTION_H_
 #define _SINGLEOPERANDINSTRUCTION_H_
 
-#include "../kd11cpu.h"
+#include "../kd11_na_cpu.h"
 #include "../lsi11instruction/lsi11instruction.h"
 
 class SingleOperandInstruction : public LSI11Instruction

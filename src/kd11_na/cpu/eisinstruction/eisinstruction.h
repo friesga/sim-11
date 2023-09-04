@@ -1,7 +1,7 @@
 #ifndef _EISINSTRUCTION_H_
 #define _EISINSTRUCTION_H_
 
-#include "../kd11cpu.h"
+#include "../kd11_na_cpu.h"
 #include "../lsi11instruction/lsi11instruction.h"
 #include "../operandlocation/operandlocation.h"
 

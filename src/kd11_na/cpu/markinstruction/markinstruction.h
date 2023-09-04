@@ -2,7 +2,7 @@
 #define _MARKINSTRUCTION_H_
 
 #include "../lsi11instruction/lsi11instruction.h"
-#include "../kd11cpu.h"
+#include "../kd11_na_cpu.h"
 #include "../operandlocation/operandlocation.h"
 
 class MarkInstruction : public LSI11Instruction

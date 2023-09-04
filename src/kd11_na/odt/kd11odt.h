@@ -2,7 +2,7 @@
 #define _K11ODT_H_
 
 #include "qbus/qbus.h"
-#include "kd11_na/cpu/kd11cpu.h"
+#include "kd11_na/cpu/kd11_na_cpu.h"
 #include "variantfsm/fsm.h"
 #include "location/location.h"
 #include "conddata/conddata.h"
@@ -114,7 +114,7 @@ namespace KD11_ODT
         enum { PswDesignator = 'S' };
 
         Qbus* bus_;
-        KD11CPU& cpu_;
+        KD11_NA_Cpu& cpu_;
         unique_ptr<ConsoleAccess> console_;
         bool odtRunning_;
         string digitSeries_;
@@ -242,7 +242,7 @@ namespace KD11_ODT
         template <typename S> void entry (S&) {}
 
         // Definition of public functions.
-        KD11ODT (Qbus* bus, KD11CPU& cpu, unique_ptr<ConsoleAccess> consoleAccess);
+        KD11ODT (Qbus* bus, KD11_NA_Cpu& cpu, unique_ptr<ConsoleAccess> consoleAccess);
         bool processCharacter (u8 character);
     };
 }

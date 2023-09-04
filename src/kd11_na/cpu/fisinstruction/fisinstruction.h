@@ -1,7 +1,7 @@
 #ifndef _FISINSTRUCTION_H_
 #define _FISINSTRUCTION_H_
 
-#include "../kd11cpu.h"
+#include "../kd11_na_cpu.h"
 #include "../lsi11instruction/lsi11instruction.h"
 
 // The FIS instruction format is used for the FIS instructions, FADD, FSUB,

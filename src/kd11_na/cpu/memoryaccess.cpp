@@ -1,7 +1,7 @@
-#include "kd11cpu.h"
+#include "kd11_na_cpu.h"
 #include "trace/trace.h"
 
-CondData<u16> KD11CPU::fetchWord (u16 address)
+CondData<u16> KD11_NA_Cpu::fetchWord (u16 address)
 {
     // return bus_->read (address);
     CondData<u16> value = bus_->read (address);
@@ -18,7 +18,7 @@ CondData<u16> KD11CPU::fetchWord (u16 address)
 // 
 // The validity of the fetched word has to be checked before the shift-
 // and and-operators can be applied to the word!
-CondData<u8> KD11CPU::fetchByte (u16 address)
+CondData<u8> KD11_NA_Cpu::fetchByte (u16 address)
 {
     CondData<u16> retValue {};
     if (address & 1)
@@ -37,7 +37,7 @@ CondData<u8> KD11CPU::fetchByte (u16 address)
     return CondData<u8> {};
 }
 
-bool KD11CPU::putWord (u16 address, u16 value)
+bool KD11_NA_Cpu::putWord (u16 address, u16 value)
 {
     if (!bus_->writeWord (address, value))
     {
@@ -48,7 +48,7 @@ bool KD11CPU::putWord (u16 address, u16 value)
     return true;
 }
 
-bool KD11CPU::putByte (u16 address, u8 value)
+bool KD11_NA_Cpu::putByte (u16 address, u8 value)
 {
     if (!bus_->writeByte (address, value))
     {
@@ -61,7 +61,7 @@ bool KD11CPU::putByte (u16 address, u8 value)
 
 // Pop a word from the processor stack returning true if this succeeds
 // or false when a bus error occurs.
-bool KD11CPU::popWord (u16 *destination)
+bool KD11_NA_Cpu::popWord (u16 *destination)
 {
     CondData<u16> tmpValue = fetchWord (register_[6]);
     *destination = tmpValue.valueOr (0);
@@ -72,7 +72,7 @@ bool KD11CPU::popWord (u16 *destination)
 }
 
 // Push the given value on the processor stack
-void KD11CPU::pushWord (u16 value)
+void KD11_NA_Cpu::pushWord (u16 value)
 {
     register_[6] -= 2;
     putWord (register_[6], value);

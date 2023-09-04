@@ -34,7 +34,7 @@ set (KD11ODT_SRCS
     src/kd11_na/odt/startingregister.cpp)
 
 set (KD11CPU_SRCS
-    src/kd11_na/cpu/kd11cpu.cpp
+    src/kd11_na/cpu/kd11_na_cpu.cpp
     src/kd11_na/cpu/cpucontrol.cpp
     src/kd11_na/cpu/memoryaccess.cpp
     src/kd11_na/cpu/lsi11instruction/lsi11instruction.cpp

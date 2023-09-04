@@ -1,5 +1,5 @@
-#ifndef _KD11CPU_H_
-#define _KD11CPU_H_
+#ifndef _KD11_NA_CPU_H_
+#define _KD11_NA_CPU_H_
 
 #include "cpucontrol.h"
 #include "cpudata.h"
@@ -50,10 +50,10 @@ enum class CpuRunState
 // This class simulates a KD11-NA, i.e. a KD11-H base version including EIS
 // and FIS support.
 //
-// The class CpuData is derived from CpuControl, so the KD11CPU has to
+// The class CpuData is derived from CpuControl, so the KD11_NA_Cpu has to
 // implement both interfaces.
 //
-class KD11CPU : public CpuData
+class KD11_NA_Cpu : public CpuData
 {
 public:
 	// KD11ODT and LSI11 need access to the CpuControl functions.
@@ -61,7 +61,7 @@ public:
 	friend class KD11_ODT::KD11ODT;
 	friend class LSI11;
 	
-	KD11CPU (Qbus *bus);
+	KD11_NA_Cpu (Qbus *bus);
 	bool step ();
 	CpuRunState currentCpuState ();
 
@@ -159,12 +159,12 @@ private:
 //
 // The functions registers() and psw() are required by the CpuData interface.
 //
-constexpr CpuData::GeneralRegisters& KD11CPU::registers ()
+constexpr CpuData::GeneralRegisters& KD11_NA_Cpu::registers ()
 {
 	return register_;
 }
 
-constexpr u16& KD11CPU::psw ()
+constexpr u16& KD11_NA_Cpu::psw ()
 {
 	return psw_;
 }
@@ -176,13 +176,13 @@ constexpr u16& KD11CPU::psw ()
 // Return the value of a register. Access to the registers and PSW has to be
 // provided via special functions as the KD11 has no registers to access them.
 //
-constexpr u16 KD11CPU::registerValue (u8 registerNr)
+constexpr u16 KD11_NA_Cpu::registerValue (u8 registerNr)
 {
     return register_[registerNr];
 }
 
 // Set the given register to the given value
-constexpr void KD11CPU::setRegister (u8 registerNr, u16 value)
+constexpr void KD11_NA_Cpu::setRegister (u8 registerNr, u16 value)
 {
     register_[registerNr] = value;
 }
@@ -191,14 +191,14 @@ constexpr void KD11CPU::setRegister (u8 registerNr, u16 value)
 // via this function.
 // 
 
- constexpr void KD11CPU::setPSW (u16 value)
+ constexpr void KD11_NA_Cpu::setPSW (u16 value)
  {
      psw_ = (psw_ & PSW_T) | (value & ~PSW_T);
  }
 
- constexpr u16 KD11CPU::pswValue ()
+ constexpr u16 KD11_NA_Cpu::pswValue ()
  {
      return psw_;
  }
 
-#endif // _KD11CPU_H_
+#endif // _KD11_NA_CPU_H_

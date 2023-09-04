@@ -1,4 +1,4 @@
-#include "kd11cpu.h"
+#include "kd11_na_cpu.h"
 #include "qbus/qbus.h"
 #include "busdevice/busdevice.h"
 #include "float/float.h"
@@ -13,7 +13,7 @@ using std::unique_ptr;
 using std::make_unique;
 
 // Constructor
-KD11CPU::KD11CPU (Qbus* bus)
+KD11_NA_Cpu::KD11_NA_Cpu (Qbus* bus)
     :
     bus_ {bus},
     register_ {0},
@@ -39,12 +39,12 @@ KD11CPU::KD11CPU (Qbus* bus)
 //
 // The normal instruction flow can be interrupted by the setting of the BHALT
 // or RESET bus signal. These signals are handled in their corresponding KD11_NA
-// receivers which then calls a KD11CPU control function.
+// receivers which then calls a KD11_NA_Cpu control function.
 //
 // This function will return if the CPU is in the state RUN and another
 // instruction can be executed, false otherwise. In the latter case a HALT
 // instruction was executed.
-bool KD11CPU::step ()
+bool KD11_NA_Cpu::step ()
 {
     // Generate a Trace trap if the trace bit is set, unless the previous
     // instruction was a RTT or another trap is pending.
@@ -105,7 +105,7 @@ bool KD11CPU::step ()
 }
 
 // Execute one instruction
-void KD11CPU::execInstr ()
+void KD11_NA_Cpu::execInstr ()
 {
     // Get next instruction to execute and move PC forward
     CondData<u16> instructionWord = fetchWord (register_[7]);
@@ -144,7 +144,7 @@ void KD11CPU::execInstr ()
 // Refer to the LSI-11 WCS user's guide (EK-KUV11-TM-001) par 2.3.
 //
 
-void KD11CPU::handleTraps ()
+void KD11_NA_Cpu::handleTraps ()
 {
     InterruptRequest intrptReq;
     u16 trapToProcess{ 0 };
@@ -246,7 +246,7 @@ void KD11CPU::handleTraps ()
 }
 
 // Load PC and PSW with the vector from the given trap
-void KD11CPU::loadTrapVector (InterruptRequest const* trap)
+void KD11_NA_Cpu::loadTrapVector (InterruptRequest const* trap)
 {
     unsigned char trapVector = trap->vector ();
     register_[7] = fetchWord (trapVector).valueOr (0);
@@ -254,17 +254,17 @@ void KD11CPU::loadTrapVector (InterruptRequest const* trap)
 }
 
 // Generate the given trap using the interrupt request mechanism
-void KD11CPU::setTrap (InterruptRequest const* trap)
+void KD11_NA_Cpu::setTrap (InterruptRequest const* trap)
 {
     trap_ = trap;
 }
 
-CpuRunState KD11CPU::currentCpuState ()
+CpuRunState KD11_NA_Cpu::currentCpuState ()
 {
     return runState;
 }
 
-u8 KD11CPU::cpuPriority()
+u8 KD11_NA_Cpu::cpuPriority()
 {
     return (psw_ & PSW_PRIORITY) >> 5;
 }

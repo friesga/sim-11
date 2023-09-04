@@ -12,7 +12,7 @@ using std::oct;
 using std::setw;
 using std::setfill;
 
-// The following macro's are defined in types.h and kd11cpu.h and are to be
+// The following macro's are defined in types.h and kd11_na_cpu.h and are to be
 // converted to functions.
 #define	_BV(x)	(1 << (x))
 

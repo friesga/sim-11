@@ -38,7 +38,7 @@ KD11_NA::~KD11_NA ()
 }
 
 
-KD11CPU& KD11_NA::cpu ()
+KD11_NA_Cpu& KD11_NA::cpu ()
 {
     return cpu_;
 }

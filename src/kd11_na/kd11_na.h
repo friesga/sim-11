@@ -1,7 +1,7 @@
 #ifndef _KD11_NA_H_
 #define _KD11_NA_H_
 
-#include "cpu/kd11cpu.h"
+#include "cpu/kd11_na_cpu.h"
 #include "odt/kd11odt.h"
 #include "configdata/kd11_naconfig/kd11_naconfig.h"
 #include "variantfsm/fsm.h"
@@ -61,7 +61,7 @@ namespace kd11_na
 		void start ();
 		
 		// Give main() access to the CPU to set PC and runState
-		KD11CPU &cpu();
+		KD11_NA_Cpu &cpu();
 
 		// The KD11_NA is a BusDevice without registers so the read and write 
 		// register functions are dummies. The reset function is called on a
@@ -116,7 +116,7 @@ namespace kd11_na
         template <typename S> void entry (S&) {}
 
 	private:
-		KD11CPU cpu_ {bus_};
+		KD11_NA_Cpu cpu_ {bus_};
 		unique_ptr<KD11ODT>	odt_ {};
 		KD11_NAConfig::PowerUpMode powerUpMode_;
 		bool kd11Running_;
