@@ -140,7 +140,7 @@ set (CONFIGURATOR_SRCS
     src/configdata/rlunitconfig/rlunitconfig.cpp
     src/configdata/rlunitprocessor/rlunitprocessor.cpp
     src/configdata/kd11_naconfig/kd11_naconfig.cpp
-    src/configdata/kd11processor/kd11processor.cpp)
+    src/configdata/kd11_naprocessor/kd11_naprocessor.cpp)
 
 set (FLOAT_SRCS
     src/float/float.cpp

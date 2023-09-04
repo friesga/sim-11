@@ -6,7 +6,7 @@
 #include "../bdv11processor/bdv11processor.h"
 #include "../dlv11processor/dlv11processor.h"
 #include "../msv11processor/msv11processor.h"
-#include "../kd11processor/kd11processor.h"
+#include "../kd11_naprocessor/kd11_naprocessor.h"
 
 using std::make_unique;
 

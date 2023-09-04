@@ -1,4 +1,4 @@
-#include "kd11processor.h"
+#include "kd11_naprocessor.h"
 #include "../kd11_naconfig/kd11_naconfig.h"
 
 using std::make_unique;

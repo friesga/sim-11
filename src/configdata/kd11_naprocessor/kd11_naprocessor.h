@@ -1,5 +1,5 @@
-#ifndef _KD11PROCESSOR_H_
-#define _KD11PROCESSOR_H_
+#ifndef _KD11_NAPROCESSOR_H_
+#define _KD11_NAPROCESSOR_H_
 
 #include "../sectionprocessor/sectionprocessor.h"
 #include "../kd11_naconfig/kd11_naconfig.h"
@@ -43,4 +43,4 @@ public:
 	unique_ptr<DeviceConfig> getConfig () override;
 };
 
-#endif // _KD11PROCESSOR_H_
+#endif // _KD11_NAPROCESSOR_H_
