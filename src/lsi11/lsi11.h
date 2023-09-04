@@ -7,7 +7,7 @@
 #include "bdv11/bdv11.h"
 #include "dlv11j/dlv11j.h"
 #include "msv11d/msv11d.h"
-#include "kd11/kd11.h"
+#include "kd11_na/kd11_na.h"
 #include "qbus/qbus.h"
 #include "console/console.h"
 #include "cmdlineoptions/cmdlineoptions.h"

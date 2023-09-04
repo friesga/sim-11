@@ -19,48 +19,48 @@ set (CMDLINEOPTIONS_SRCS
     src/cmdlineoptions/data.cpp)
 
 set (KD11ODT_SRCS
-    src/kd11/odt/kd11odt.cpp
-    src/kd11/odt/addressopened.cpp
-    src/kd11/odt/atprompt.cpp
-    src/kd11/odt/createevent.cpp
-    src/kd11/odt/enteringaddress.cpp
-    src/kd11/odt/enteringaddressvalue.cpp
-    src/kd11/odt/enteringbinarydump.cpp
-    src/kd11/odt/enteringregister.cpp
-    src/kd11/odt/enteringregistervalue.cpp
-    src/kd11/odt/entrypoint.cpp
-    src/kd11/odt/exitpoint.cpp
-    src/kd11/odt/registeropened.cpp
-    src/kd11/odt/startingregister.cpp)
+    src/kd11_na/odt/kd11odt.cpp
+    src/kd11_na/odt/addressopened.cpp
+    src/kd11_na/odt/atprompt.cpp
+    src/kd11_na/odt/createevent.cpp
+    src/kd11_na/odt/enteringaddress.cpp
+    src/kd11_na/odt/enteringaddressvalue.cpp
+    src/kd11_na/odt/enteringbinarydump.cpp
+    src/kd11_na/odt/enteringregister.cpp
+    src/kd11_na/odt/enteringregistervalue.cpp
+    src/kd11_na/odt/entrypoint.cpp
+    src/kd11_na/odt/exitpoint.cpp
+    src/kd11_na/odt/registeropened.cpp
+    src/kd11_na/odt/startingregister.cpp)
 
 set (KD11CPU_SRCS
-    src/kd11/cpu/kd11cpu.cpp
-    src/kd11/cpu/cpucontrol.cpp
-    src/kd11/cpu/memoryaccess.cpp
-    src/kd11/cpu/lsi11instruction/lsi11instruction.cpp
-    src/kd11/cpu/operandlocation/operandlocation.cpp
-    src/kd11/cpu/operandlocation/emptyoperandlocation/emptyoperandlocation.cpp
-    src/kd11/cpu/operandlocation/registeroperandlocation/registeroperandlocation.cpp
-    src/kd11/cpu/operandlocation/memoryoperandlocation/memoryoperandlocation.cpp
-    src/kd11/cpu/nooperandinstruction/nooperandinstruction.cpp
-    src/kd11/cpu/singleoperandinstruction/singleoperandinstruction.cpp
-    src/kd11/cpu/doubleoperandinstruction/doubleoperandinstruction.cpp
-    src/kd11/cpu/fisinstruction/fisinstruction.cpp
-    src/kd11/cpu/ccinstruction/ccinstruction.cpp
-    src/kd11/cpu/branchinstruction/branchinstruction.cpp
-    src/kd11/cpu/eisinstruction/eisinstruction.cpp
-    src/kd11/cpu/markinstruction/markinstruction.cpp
-    src/kd11/cpu/sobinstruction/sobinstruction.cpp
-    src/kd11/cpu/kd11_na/kd11_na.cpp
-    src/kd11/cpu/kd11_na/opcodetables.cpp)
+    src/kd11_na/cpu/kd11cpu.cpp
+    src/kd11_na/cpu/cpucontrol.cpp
+    src/kd11_na/cpu/memoryaccess.cpp
+    src/kd11_na/cpu/lsi11instruction/lsi11instruction.cpp
+    src/kd11_na/cpu/operandlocation/operandlocation.cpp
+    src/kd11_na/cpu/operandlocation/emptyoperandlocation/emptyoperandlocation.cpp
+    src/kd11_na/cpu/operandlocation/registeroperandlocation/registeroperandlocation.cpp
+    src/kd11_na/cpu/operandlocation/memoryoperandlocation/memoryoperandlocation.cpp
+    src/kd11_na/cpu/nooperandinstruction/nooperandinstruction.cpp
+    src/kd11_na/cpu/singleoperandinstruction/singleoperandinstruction.cpp
+    src/kd11_na/cpu/doubleoperandinstruction/doubleoperandinstruction.cpp
+    src/kd11_na/cpu/fisinstruction/fisinstruction.cpp
+    src/kd11_na/cpu/ccinstruction/ccinstruction.cpp
+    src/kd11_na/cpu/branchinstruction/branchinstruction.cpp
+    src/kd11_na/cpu/eisinstruction/eisinstruction.cpp
+    src/kd11_na/cpu/markinstruction/markinstruction.cpp
+    src/kd11_na/cpu/sobinstruction/sobinstruction.cpp
+    src/kd11_na/cpu/kd11_nainstruction/kd11_nainstruction.cpp
+    src/kd11_na/cpu/kd11_nainstruction/opcodetables.cpp)
 
  set (KD11_SRCS
-    src/kd11/kd11.cpp
-    src/kd11/poweruproutine.cpp
-    src/kd11/runodt.cpp
-    src/kd11/signalreceivers.cpp
-    src/kd11/statemachine.cpp
-    src/kd11/operatorconsoleaccess/operatorconsoleaccess.cpp
+    src/kd11_na/kd11_na.cpp
+    src/kd11_na/poweruproutine.cpp
+    src/kd11_na/runodt.cpp
+    src/kd11_na/signalreceivers.cpp
+    src/kd11_na/statemachine.cpp
+    src/kd11_na/operatorconsoleaccess/operatorconsoleaccess.cpp
     ${KD11CPU_SRCS}
     ${KD11ODT_SRCS})
 
