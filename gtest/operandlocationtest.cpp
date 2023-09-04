@@ -1,4 +1,4 @@
-#include "kd11_na/cpu/operandlocation/operandlocation.h"
+#include "kd/kd11_na/cpu/operandlocation/operandlocation.h"
 #include "dummycpu/dummycpu.h"
 
 #include <gtest/gtest.h>

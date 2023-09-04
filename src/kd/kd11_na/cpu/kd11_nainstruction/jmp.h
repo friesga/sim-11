@@ -6,7 +6,7 @@
 #include "../cpudata.h"
 #include "../operandlocation/operandlocation.h"
 #include "withfactory.h"
-#include "../../../trace/trace.h"
+#include "trace/trace.h"
 
 // JMP - jump
 //

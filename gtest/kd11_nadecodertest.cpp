@@ -1,6 +1,6 @@
-#include "../src/kd11_na/cpu/lsi11instruction/lsi11instruction.h"
-#include "../src/kd11_na/cpu/kd11_nainstruction/kd11_nainstruction.h"
-#include "../src/kd11_na/cpu/cpudata.h"
+#include "kd/kd11_na/cpu/lsi11instruction/lsi11instruction.h"
+#include "kd/kd11_na/cpu/kd11_nainstruction/kd11_nainstruction.h"
+#include "kd/kd11_na/cpu/cpudata.h"
 #include "dummycpu/dummycpu.h"
 
 #include <gtest/gtest.h>

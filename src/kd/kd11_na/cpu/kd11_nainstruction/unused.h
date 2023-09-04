@@ -6,7 +6,7 @@
 #include "../cpudata.h"
 #include "../cpucontrol.h"
 #include "../operandlocation/operandlocation.h"
-#include "../../../trace/trace.h"
+#include "trace/trace.h"
 #include "withfactory.h"
 
 // Unused/reserved instruction

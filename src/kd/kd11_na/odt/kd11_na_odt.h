@@ -2,7 +2,7 @@
 #define _K11ODT_H_
 
 #include "qbus/qbus.h"
-#include "kd11_na/cpu/kd11_na_cpu.h"
+#include "kd/kd11_na/cpu/kd11_na_cpu.h"
 #include "variantfsm/fsm.h"
 #include "location/location.h"
 #include "conddata/conddata.h"

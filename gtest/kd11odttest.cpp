@@ -1,6 +1,6 @@
 #include "dlv11j/dlv11j.h"
 #include "msv11d/msv11d.h"
-#include "kd11_na/odt/kd11_na_odt.h"
+#include "kd/kd11_na/odt/kd11_na_odt.h"
 #include "testconsoleaccess.h"
 
 using namespace kd11_na_odt;
