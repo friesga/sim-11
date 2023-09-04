@@ -1,5 +1,5 @@
-#ifndef _KD11CONFIG_H_
-#define _KD11CONFIG_H_
+#ifndef _KD11_NACONFIG_H_
+#define _KD11_NACONFIG_H_
 
 #include "../deviceconfig/deviceconfig.h"
 
@@ -33,4 +33,4 @@ struct KD11_NAConfig : public DeviceConfig
     KD11_NAConfig ();
 };
 
-#endif // !_KD11CONFIG_H_
+#endif // !_KD11_NACONFIG_H_

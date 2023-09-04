@@ -1,5 +1,5 @@
 #include "kd11processor.h"
-#include "../kd11config/kd11config.h"
+#include "../kd11_naconfig/kd11_naconfig.h"
 
 using std::make_unique;
 using std::move;

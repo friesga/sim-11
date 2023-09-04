@@ -2,7 +2,7 @@
 #define _KD11PROCESSOR_H_
 
 #include "../sectionprocessor/sectionprocessor.h"
-#include "../kd11config/kd11config.h"
+#include "../kd11_naconfig/kd11_naconfig.h"
 
 #include <memory>
 #include <map>

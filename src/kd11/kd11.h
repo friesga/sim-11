@@ -3,7 +3,7 @@
 
 #include "cpu/kd11cpu.h"
 #include "odt/kd11odt.h"
-#include "configdata/kd11config/kd11config.h"
+#include "configdata/kd11_naconfig/kd11_naconfig.h"
 #include "variantfsm/fsm.h"
 #include "threadsafecontainers/threadsafequeue.h"
 
