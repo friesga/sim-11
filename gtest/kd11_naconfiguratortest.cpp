@@ -5,7 +5,7 @@
 #include <fstream>	
 #include <gtest/gtest.h>
 
-TEST (KD11ConfiguratorTest, powerUpModeAccepted)
+TEST (KD11_NAConfiguratorTest, powerUpModeAccepted)
 {
     iniparser::File ft;
 	std::stringstream stream;
@@ -30,7 +30,7 @@ TEST (KD11ConfiguratorTest, powerUpModeAccepted)
 	EXPECT_EQ (kd11_naConfig->powerUpMode, KD11_NAConfig::PowerUpMode::ODT);
 }
 
-TEST (KD11ConfiguratorTest, invalidPowerUpModeThrows)
+TEST (KD11_NAConfiguratorTest, invalidPowerUpModeThrows)
 {
     iniparser::File ft;
 	std::stringstream stream;
