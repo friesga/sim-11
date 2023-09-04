@@ -8,6 +8,7 @@
 #include "dlv11j/dlv11j.h"
 #include "msv11d/msv11d.h"
 #include "kd/kd11_na/kd11_na.h"
+#include "kd/kdf11_a/kdf11_a.h"
 #include "qbus/qbus.h"
 #include "console/console.h"
 #include "cmdlineoptions/cmdlineoptions.h"
@@ -29,7 +30,8 @@ class LSI11
 	// of unique_ptr's for the decice pointers results in complicated code
 	// and the use of raw pointers in e.g. Qbus::responsibleModule() as these
 	// pointers are used in loadFile() and in run().
-	KD11_NA *kd11_;
+	KD11_NA *kd11_na_;
+	KDF11_A *kdf11_a_;
 	MSV11D *msv11_;
 	RXV21 *rxv21_;
 	RLV12 *rlv12_;

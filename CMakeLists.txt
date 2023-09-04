@@ -54,7 +54,10 @@ set (KD11CPU_SRCS
     src/kd/kd11_na/cpu/kd11_nainstruction/kd11_nainstruction.cpp
     src/kd/kd11_na/cpu/kd11_nainstruction/opcodetables.cpp)
 
- set (KD11_SRCS
+set (KDF11_A_SRCS
+    src/kd/kdf11_a/kdf11_a.cpp)
+
+ set (KD11_NA_SRCS
     src/kd/kd11_na/kd11_na.cpp
     src/kd/kd11_na/poweruproutine.cpp
     src/kd/kd11_na/runodt.cpp
@@ -140,7 +143,9 @@ set (CONFIGURATOR_SRCS
     src/configdata/rlunitconfig/rlunitconfig.cpp
     src/configdata/rlunitprocessor/rlunitprocessor.cpp
     src/configdata/kd11_naconfig/kd11_naconfig.cpp
-    src/configdata/kd11_naprocessor/kd11_naprocessor.cpp)
+    src/configdata/kd11_naprocessor/kd11_naprocessor.cpp
+    src/configdata/kdf11_aconfig/kdf11_aconfig.cpp
+    src/configdata/kdf11_aprocessor/kdf11_aprocessor.cpp)
 
 set (FLOAT_SRCS
     src/float/float.cpp
@@ -215,7 +220,8 @@ set (SIM11_SRCS
     src/bdv11/bdv11.cpp
     src/bdv11/bdv11_e53.cpp
     src/dlv11j/dlv11j.cpp
-    ${KD11_SRCS}
+    ${KD11_NA_SRCS}
+    ${KDF11_A_SRCS}
     src/lib/gotapproval.cpp
     src/lsi11/lsi11.cpp
     src/lsi11/configure.cpp
@@ -371,7 +377,8 @@ set (SIM11_TEST_SRCS
     src/busdevice/busdevice.cpp
     src/busdevice/writebyte.cpp
     src/lib/gotapproval.cpp
-    ${KD11_SRCS}
+    ${KD11_NA_SRCS}
+    ${KDF11_A_SRCS}
     src/dlv11j/dlv11j.cpp
     src/msv11d/msv11d.cpp
     src/signal/signal.cpp

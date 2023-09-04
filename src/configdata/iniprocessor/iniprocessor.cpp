@@ -7,6 +7,7 @@
 #include "../dlv11processor/dlv11processor.h"
 #include "../msv11processor/msv11processor.h"
 #include "../kd11_naprocessor/kd11_naprocessor.h"
+#include "../kdf11_aprocessor/kdf11_aprocessor.h"
 
 using std::make_unique;
 
@@ -47,4 +48,9 @@ unique_ptr<SectionProcessor> IniProcessor::createMSV11Processor ()
 unique_ptr<SectionProcessor> IniProcessor::createKD11_NAProcessor ()
 {
     return make_unique<KD11_NAProcessor> ();
+}
+
+unique_ptr<SectionProcessor> IniProcessor::createKDF11_AProcessor ()
+{
+    return make_unique<KDF11_AProcessor> ();
 }

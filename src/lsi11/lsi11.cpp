@@ -6,7 +6,7 @@
 
 LSI11::LSI11 (CmdLineOptions const &cmdLineOptions)
 	:
-	kd11_ {nullptr},
+	kd11_na_ {nullptr},
 	msv11_ {nullptr},
 	rxv21_ {nullptr},
 	rlv12_ {nullptr},
@@ -18,7 +18,7 @@ LSI11::LSI11 (CmdLineOptions const &cmdLineOptions)
 
 LSI11::~LSI11 ()
 {
-	delete kd11_;
+	delete kd11_na_;
 	delete msv11_;
 	delete dlv11_;
 	delete bdv11_;

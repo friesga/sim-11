@@ -6,7 +6,7 @@ void LSI11::run ()
 	// Start the CPU state machine, with the CPU starting either at the
 	// address specified in the loaded file or at the standard boot address.
 	if (cmdLineOptions_.load_file) 
-		kd11_->start (loadFile ());
+		kd11_na_->start (loadFile ());
 	else
-		kd11_->start ();
+		kd11_na_->start ();
 }

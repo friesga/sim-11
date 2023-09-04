@@ -2,7 +2,7 @@
 
 void LSI11::installModules ()
 {
-    bus_.installModule (1, kd11_);
+    bus_.installModule (1, kd11_na_);
     bus_.installModule (2, msv11_);
     bus_.installModule (3, rlv12_);
     bus_.installModule (4, rxv21_);

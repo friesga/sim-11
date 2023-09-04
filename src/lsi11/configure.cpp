@@ -3,6 +3,7 @@
 #include "configdata/rxv21config/rxv21config.h"
 #include "configdata/msv11config/msv11config.h"
 #include "configdata/bdv11config/bdv11config.h"
+#include "configdata/kdf11_aconfig/kdf11_aconfig.h"
 #include "console/operatorconsole/operatorconsolefactory.h"
 
 #include <memory>		// For make_unique
@@ -22,7 +23,8 @@ void LSI11::configureDevices (Window *window)
     // The Console class reads characters and sends them to the dlv11
     unique_ptr<Console> console =  OperatorConsoleFactory::create ();
 
-    kd11_ = new KD11_NA (&bus_);
+    // By default use the KD11-NA processor
+    kd11_na_ = new KD11_NA (&bus_);
     msv11_ = new MSV11D (&bus_);
     dlv11_ = new DLV11J (&bus_, move (console));
     bdv11_ = new BDV11 (&bus_);
@@ -49,8 +51,13 @@ void LSI11::configureDevices (vector<shared_ptr<DeviceConfig>> systemConfig,
         switch (device->deviceType_)
         {
             case DeviceType::KD11_NA:
-                kd11_ = new KD11_NA (&bus_,
+                kd11_na_ = new KD11_NA (&bus_,
                     static_pointer_cast<KD11_NAConfig> (device));
+                break;
+
+            case DeviceType::KDF11_A:
+                kdf11_a_ = new KDF11_A (&bus_,
+                    static_pointer_cast<KDF11_AConfig> (device));
                 break;
 
             case DeviceType::MSV11:
