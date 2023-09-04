@@ -1,7 +1,7 @@
-#include "kd11odt.h"
+#include "kd11_na_odt.h"
 #include "trace/trace.h"
 
-using namespace KD11_ODT;
+using namespace kd11_na_odt;
 
 #include <sstream>
 #include <iomanip>
@@ -20,7 +20,7 @@ using std::move;
 using std::to_string;
 using std::make_unique;
 
-KD11ODT::KD11ODT (Qbus *bus, KD11_NA_Cpu &cpu, unique_ptr<ConsoleAccess> consoleAccess)
+KD11_NA_ODT::KD11_NA_ODT (Qbus *bus, KD11_NA_Cpu &cpu, unique_ptr<ConsoleAccess> consoleAccess)
     : 
     bus_ {bus},
     cpu_ {cpu},
@@ -34,7 +34,7 @@ KD11ODT::KD11ODT (Qbus *bus, KD11_NA_Cpu &cpu, unique_ptr<ConsoleAccess> console
     dispatch (StartFsm {});
 }
 
-CondData<u8> KD11ODT::echoCharacter (CondData<u8> c)
+CondData<u8> KD11_NA_ODT::echoCharacter (CondData<u8> c)
 {
     // All characters (except ASCII codes 0, 2, 010 <BS> and 012 <LF>) are
     // to be echoed (EK-KDJ1A-UG-001).
@@ -69,7 +69,7 @@ CondData<u8> KD11ODT::echoCharacter (CondData<u8> c)
 // in a <CR><LF> sequence and for Linux in just a <LF>. So to get the same
 // output on both Windows and Linux, we have to add a <CR> for every <LF>
 // in the string.
-void KD11ODT::writeString (string str)
+void KD11_NA_ODT::writeString (string str)
 {
     for (u8 c : str)
     {
@@ -86,7 +86,7 @@ void KD11ODT::writeString (string str)
 //
 // Test runs conducted on a real LSI-11/2 show the last opened location
 // is set too on opening an invalid address.
-State KD11ODT::writeAddressContents (u16 address)
+State KD11_NA_ODT::writeAddressContents (u16 address)
 {
     location_ = AddressLocation {static_cast<u16> (address)};
     if (bus_->read (address).hasValue ())
@@ -103,14 +103,14 @@ State KD11ODT::writeAddressContents (u16 address)
 
 // The computer always prints six numeric characters [i.e. prints leading
 // zero's]. (EK-11V03-TM-002)
-string KD11ODT::octalNumberToString (u16 number)
+string KD11_NA_ODT::octalNumberToString (u16 number)
 {
     stringstream tmp {};
     tmp << oct << setfill ('0') << setw (6) << number;
     return tmp.str ();
 }
 
-u32 KD11ODT::stringToOctalNumber (string str)
+u32 KD11_NA_ODT::stringToOctalNumber (string str)
 {
     stringstream tmp {str};
     u32 returnValue;
@@ -124,7 +124,7 @@ u32 KD11ODT::stringToOctalNumber (string str)
 // With the implementation of the RUBOUT the passed string can be empty. In 
 // that case the string cannot be converted to a integer and an error is
 // returned.
-bool KD11ODT::stringTou16 (string str, size_t nDigits, u16 *value)
+bool KD11_NA_ODT::stringTou16 (string str, size_t nDigits, u16 *value)
 {
     if (str.empty ())
         return false;
@@ -134,7 +134,7 @@ bool KD11ODT::stringTou16 (string str, size_t nDigits, u16 *value)
     return true;
 }
 
-bool KD11ODT::registerSeriesEndsWith (string str)
+bool KD11_NA_ODT::registerSeriesEndsWith (string str)
 {
     if (registerSeries_.size() >= 3)
     {
@@ -144,7 +144,7 @@ bool KD11ODT::registerSeriesEndsWith (string str)
         return false;
 }
 
-State KD11ODT::openAddress ()
+State KD11_NA_ODT::openAddress ()
 {
     // Convert the last eight digits entered to an address. This can lead
     // to an address larger than the available memory, but currently the
@@ -160,7 +160,7 @@ State KD11ODT::openAddress ()
 
 // Convert the least significant 16 bits of the value entered to the new
 // value. If this value exceeds the maximal value of a 16 bit word display an error.
-void KD11ODT::setAddressValue ()
+void KD11_NA_ODT::setAddressValue ()
 {
     if (stringTou16 (digitSeries_, 6, &newValue_))
         bus_->writeWord (location_.wordAddress (), newValue_);
@@ -184,7 +184,7 @@ void KD11ODT::setAddressValue ()
 // getNextAddress as there are a number of commands only differing on the
 // calculation of the address.
 // 
-State KD11ODT::openNextAddress (std::function<u16(void)> getNextAddress)
+State KD11_NA_ODT::openNextAddress (std::function<u16(void)> getNextAddress)
 {
     u16 address = getNextAddress ();
     writeString (octalNumberToString (address) + '/');
@@ -201,7 +201,7 @@ State KD11ODT::openNextAddress (std::function<u16(void)> getNextAddress)
 // getNextRegister. This functor should either increment of decrement the
 // register number modulo 8 (the number of internal registers).
 //
-State KD11ODT::openNextRegister (State &&currentState, 
+State KD11_NA_ODT::openNextRegister (State &&currentState, 
     std::function<u8(void)> getNextRegister)
 {
     if (location_.isA<PSWLocation> ())
@@ -217,7 +217,7 @@ State KD11ODT::openNextRegister (State &&currentState,
 // Note that the contents of the PSW can be changed using the CR
 // command but bit 4 (the T bit) cannot be set using any of the
 // commands. (LSI11 PDP11/03 Processor Handbook)
-void KD11ODT::setRegisterValue ()
+void KD11_NA_ODT::setRegisterValue ()
 {
     // Convert the last six digits entered to the new value. If this value
     // exceeds the maximal value of a 16 bit word display an error.
@@ -236,7 +236,7 @@ void KD11ODT::setRegisterValue ()
 }
 
 // Set the CPU into the running state with the specified address as the PC
-void KD11ODT::startCPU (u16 address)
+void KD11_NA_ODT::startCPU (u16 address)
 {
     bus_->BINIT().cycle ();
     cpu_.start (address);
@@ -245,7 +245,7 @@ void KD11ODT::startCPU (u16 address)
 
 // Process the given character in the state machine, returning true if we can
 // accept another character, i.e. the state machine is still running.
-bool KD11ODT::processCharacter (u8 character)
+bool KD11_NA_ODT::processCharacter (u8 character)
 {
     dispatch (createEvent (echoCharacter (character)));
     return odtRunning_;

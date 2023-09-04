@@ -1,9 +1,9 @@
-#include "kd11odt.h"
+#include "kd11_na_odt.h"
 
-using namespace KD11_ODT;
+using namespace kd11_na_odt;
 
 // This file contains the state transitions for the state EnteringAddress_5.
-State KD11ODT::transition (EnteringAddress_5 &&, DigitEntered digitEntered)
+State KD11_NA_ODT::transition (EnteringAddress_5 &&, DigitEntered digitEntered)
 {
     // Append the digit typed by the user to the address string and allow more
     // characters to be typed
@@ -21,7 +21,7 @@ State KD11ODT::transition (EnteringAddress_5 &&, DigitEntered digitEntered)
 // erased and it is not possible to terminate the present mode the
 // console is in. [This implies the EnteringAddress_5 state is not left.]
 //
-State KD11ODT::transition (EnteringAddress_5 &&currentState, RuboutEntered)
+State KD11_NA_ODT::transition (EnteringAddress_5 &&currentState, RuboutEntered)
 {
     // Remove the last entered character and echo a backslash. Prevent
     // undefined behaviour by checking if there is a character to pop.
@@ -46,7 +46,7 @@ State KD11ODT::transition (EnteringAddress_5 &&currentState, RuboutEntered)
 // ODT responds to the error by printing ?<CR><LF> or @". 
 // (EK-KDJ1B-UG-001 and KDJ1E-UG-001)
 //
-State KD11ODT::transition (EnteringAddress_5 &&, OpenLocationCmdEntered)
+State KD11_NA_ODT::transition (EnteringAddress_5 &&, OpenLocationCmdEntered)
 {
     return move (openAddress ());
 }
@@ -65,7 +65,7 @@ State KD11ODT::transition (EnteringAddress_5 &&, OpenLocationCmdEntered)
 // Recognition of the semicolon is not implemented as the reaction on
 // input of characters after the semicolon is not described and is unclear.
 //
-State KD11ODT::transition (EnteringAddress_5 &&, GoCmdEntered)
+State KD11_NA_ODT::transition (EnteringAddress_5 &&, GoCmdEntered)
 {
     // A byte address can be specified as start address. Bit 0 of the start
     // address will be ignored and the CPU will start at the specified
@@ -86,7 +86,7 @@ State KD11ODT::transition (EnteringAddress_5 &&, GoCmdEntered)
 
 // Test runs on a real LSI-11/2 showed that a location can be closed before
 // it is opened.
-State KD11ODT::transition (EnteringAddress_5&&, CloseLocationCmdEntered)
+State KD11_NA_ODT::transition (EnteringAddress_5&&, CloseLocationCmdEntered)
 {
     writeString ("\n");
     return AtPrompt_1 {};

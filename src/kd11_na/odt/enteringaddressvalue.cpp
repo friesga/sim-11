@@ -1,12 +1,12 @@
-#include "kd11odt.h"
+#include "kd11_na_odt.h"
 
-using namespace KD11_ODT;
+using namespace kd11_na_odt;
 
 #include <cassert>
 
 // This file contains the entry actions and state transitions for
 // the state EnteringAddressValue_7.
-State KD11ODT::transition (EnteringAddressValue_7 &&, DigitEntered digitEntered)
+State KD11_NA_ODT::transition (EnteringAddressValue_7 &&, DigitEntered digitEntered)
 { 
     digitSeries_.push_back (digitEntered.digit);
     return EnteringAddressValue_7 {};
@@ -23,7 +23,7 @@ State KD11ODT::transition (EnteringAddressValue_7 &&, DigitEntered digitEntered)
 // a leading zero, but making a distinction between an empty string indicating
 // there are no characters to be converted to a value and an empty string
 // which should be converted to zero will create an even uglier solution.
-State KD11ODT::transition (EnteringAddressValue_7 &&currentState, RuboutEntered)
+State KD11_NA_ODT::transition (EnteringAddressValue_7 &&currentState, RuboutEntered)
 {
     // We expect there always is at least one character in the digitSeries_
     // buffer available. This either is a digit entered by the user or a '0'
@@ -40,20 +40,20 @@ State KD11ODT::transition (EnteringAddressValue_7 &&currentState, RuboutEntered)
     return move (currentState);
 }
 
-State KD11ODT::transition (EnteringAddressValue_7 &&, CloseLocationCmdEntered)
+State KD11_NA_ODT::transition (EnteringAddressValue_7 &&, CloseLocationCmdEntered)
 {
     setAddressValue ();
     writeString ("\n");
     return AtPrompt_1 {};
 }
 
-State KD11ODT::transition (EnteringAddressValue_7 &&, OpenNextLocationCmdEntered)
+State KD11_NA_ODT::transition (EnteringAddressValue_7 &&, OpenNextLocationCmdEntered)
 {
     setAddressValue ();
     return openNextAddress ([this] () {return location_.inputAddress () + 2;});
 }
 
-State KD11ODT::transition (EnteringAddressValue_7 &&, OpenPreviousLocationCmdEntered)
+State KD11_NA_ODT::transition (EnteringAddressValue_7 &&, OpenPreviousLocationCmdEntered)
 {
     writeString ("\n");
     setAddressValue ();
@@ -63,14 +63,14 @@ State KD11ODT::transition (EnteringAddressValue_7 &&, OpenPreviousLocationCmdEnt
 // Also the open location can be optionally modified similar to other commands
 // and if done, the new contents will be used as the pointer.
 // (LSI11 PDP11/03 Processor Handbook)
-State KD11ODT::transition (EnteringAddressValue_7 &&, AtSignCmdEntered)
+State KD11_NA_ODT::transition (EnteringAddressValue_7 &&, AtSignCmdEntered)
 {
     writeString ("\n");
     setAddressValue ();
     return openNextAddress ([this] () {return newValue_;});
 }
 
-State KD11ODT::transition (EnteringAddressValue_7 &&, BackArrowCmdEntered)
+State KD11_NA_ODT::transition (EnteringAddressValue_7 &&, BackArrowCmdEntered)
 {
     writeString ("\n");
     setAddressValue ();
@@ -81,7 +81,7 @@ State KD11ODT::transition (EnteringAddressValue_7 &&, BackArrowCmdEntered)
 // When an address location is open, another location can be opened without
 // explicitly closing the first location; e.g., 1000/123456 2000/054321.
 // (Micronote 050 Micro ODT Differences - LSI-11 vs. LSI-11/23)
-State KD11ODT::transition (EnteringAddressValue_7 &&, OpenLocationCmdEntered)
+State KD11_NA_ODT::transition (EnteringAddressValue_7 &&, OpenLocationCmdEntered)
 {
     return move (openAddress ());
 }

@@ -1,8 +1,8 @@
-#include "kd11odt.h"
+#include "kd11_na_odt.h"
 
-using namespace KD11_ODT;
+using namespace kd11_na_odt;
 
-State KD11ODT::transition (AddressOpened_3 &&, DigitEntered digitEntered)
+State KD11_NA_ODT::transition (AddressOpened_3 &&, DigitEntered digitEntered)
 {
     digitSeries_ = digitEntered.digit;
     return EnteringAddressValue_7 {};
@@ -14,7 +14,7 @@ State KD11ODT::transition (AddressOpened_3 &&, DigitEntered digitEntered)
 // new value will be zero when more characters are erased than are available
 // in the buffer. See the comment at the RuboutEntered transition in the
 // EnteringAddressValue_7 state.
-State KD11ODT::transition (AddressOpened_3 &&, RuboutEntered)
+State KD11_NA_ODT::transition (AddressOpened_3 &&, RuboutEntered)
 {
     console_->write ('\\');
     digitSeries_ = '0';
@@ -22,7 +22,7 @@ State KD11ODT::transition (AddressOpened_3 &&, RuboutEntered)
 }
 
 // This file contains the state transitions for the state AddressOpened_3.
-State KD11ODT::transition (AddressOpened_3 &&, CloseLocationCmdEntered)
+State KD11_NA_ODT::transition (AddressOpened_3 &&, CloseLocationCmdEntered)
 {
     writeString ("\n");
     return AtPrompt_1 {};
@@ -34,7 +34,7 @@ State KD11ODT::transition (AddressOpened_3 &&, CloseLocationCmdEntered)
 // GPR + l. If the contents of the open location or GPR are
 // to be modified, the new contents should precede the LF operator.
 // (Microcomputer and Memories Chapter 7)
-State KD11ODT::transition (AddressOpened_3 &&, OpenNextLocationCmdEntered)
+State KD11_NA_ODT::transition (AddressOpened_3 &&, OpenNextLocationCmdEntered)
 {
     return openNextAddress ([this] () {return location_.inputAddress () + 2;});
 }
@@ -45,7 +45,7 @@ State KD11ODT::transition (AddressOpened_3 &&, OpenNextLocationCmdEntered)
 // contents of the open location or GPR are to be modified, the new
 // contents should precede the "up arrow" operator.
 // (Microcomputer and Memories Chapter 7)
-State KD11ODT::transition (AddressOpened_3 &&, OpenPreviousLocationCmdEntered)
+State KD11_NA_ODT::transition (AddressOpened_3 &&, OpenPreviousLocationCmdEntered)
 {
     writeString ("\n");
     return openNextAddress ([this] () {return location_.inputAddress () - 2;});
@@ -57,7 +57,7 @@ State KD11ODT::transition (AddressOpened_3 &&, OpenPreviousLocationCmdEntered)
 // contents of the first location point to the second location to be opened.
 // The contents of the first location can be modified before the @ command
 // is used. (Microcomputer and Memories Chapter 7)
-State KD11ODT::transition (AddressOpened_3 &&, AtSignCmdEntered)
+State KD11_NA_ODT::transition (AddressOpened_3 &&, AtSignCmdEntered)
 {
     writeString ("\n");
     return openNextAddress ([this] () {return bus_->read (location_.inputAddress ());});
@@ -73,7 +73,7 @@ State KD11ODT::transition (AddressOpened_3 &&, AtSignCmdEntered)
 // Computers Handbook).
 // The last sentence seems to indicate the word address has to be used
 // instead of the input address (which might be a byte address).
- State KD11ODT::transition (AddressOpened_3 &&, BackArrowCmdEntered)
+ State KD11_NA_ODT::transition (AddressOpened_3 &&, BackArrowCmdEntered)
  {
     writeString ("\n");
     return openNextAddress ([this] () 
@@ -86,7 +86,7 @@ State KD11ODT::transition (AddressOpened_3 &&, AtSignCmdEntered)
 // show that the same holds for register locations, i.e. when an address
 // location is open a register location can be opened and when a register
 // location is open an address or register location can be opened.
-State KD11ODT::transition (AddressOpened_3&&, RegisterCmdEntered)
+State KD11_NA_ODT::transition (AddressOpened_3&&, RegisterCmdEntered)
 {
     return StartingRegister_2 {};
 }

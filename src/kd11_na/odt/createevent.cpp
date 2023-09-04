@@ -1,6 +1,6 @@
-#include "kd11odt.h"
+#include "kd11_na_odt.h"
 
-using namespace KD11_ODT;
+using namespace kd11_na_odt;
 
 // Create the appropriate event from the given character. We receive either
 // a character or an empty object. In the latter case we create an
@@ -13,7 +13,7 @@ using namespace KD11_ODT;
 // characters as commands". The test runs conducted at a real LSI-11/2
 // demonstrated that lower case characters are not accepted.
 //
-Event KD11ODT::createEvent (CondData<u8> c)
+Event KD11_NA_ODT::createEvent (CondData<u8> c)
 {
     if (!c.hasValue ())
         return ExitCmdGiven {};

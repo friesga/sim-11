@@ -1,20 +1,20 @@
-#include "kd11odt.h"
+#include "kd11_na_odt.h"
 
-using namespace KD11_ODT;
+using namespace kd11_na_odt;
 
 #include <cassert>
 
 using std::move;
 using std::monostate;
 
-State KD11ODT::transition (EnteringRegisterValue_8 &&, DigitEntered digitEntered)
+State KD11_NA_ODT::transition (EnteringRegisterValue_8 &&, DigitEntered digitEntered)
 {
     digitSeries_.push_back (digitEntered.digit);
     return EnteringRegisterValue_8 {};
 }
 
 // See the comment at the equivalent EnteringAddressValue_7 state
-State KD11ODT::transition (EnteringRegisterValue_8 &&currentState, RuboutEntered)
+State KD11_NA_ODT::transition (EnteringRegisterValue_8 &&currentState, RuboutEntered)
 {
     // We expect there always is at least one character in the digitSeries_
     // buffer available. This either is a digit entered by the user or a '0'
@@ -31,7 +31,7 @@ State KD11ODT::transition (EnteringRegisterValue_8 &&currentState, RuboutEntered
     return move (currentState);
 }
 
-State KD11ODT::transition (EnteringRegisterValue_8 &&, CloseLocationCmdEntered)
+State KD11_NA_ODT::transition (EnteringRegisterValue_8 &&, CloseLocationCmdEntered)
 {   
     setRegisterValue ();
     writeString ("\n");
@@ -40,19 +40,19 @@ State KD11ODT::transition (EnteringRegisterValue_8 &&, CloseLocationCmdEntered)
 
 // When the user enters an Open location command (/) the given value has to be
 // used as an address to open.
-State KD11ODT::transition (EnteringRegisterValue_8&&, OpenLocationCmdEntered)
+State KD11_NA_ODT::transition (EnteringRegisterValue_8&&, OpenLocationCmdEntered)
 {
     return move (openAddress ());
 }
 
-State KD11ODT::transition (EnteringRegisterValue_8 &&, OpenNextLocationCmdEntered)
+State KD11_NA_ODT::transition (EnteringRegisterValue_8 &&, OpenNextLocationCmdEntered)
 {
     setRegisterValue ();
     return move (openNextRegister (RegisterOpened_4 {},
         [this] () {return (location_.registerNr () + 1) % 8;}));
 }
 
-State KD11ODT::transition (EnteringRegisterValue_8 &&, OpenPreviousLocationCmdEntered)
+State KD11_NA_ODT::transition (EnteringRegisterValue_8 &&, OpenPreviousLocationCmdEntered)
 {
     writeString ("\n");
     setRegisterValue ();
@@ -70,7 +70,7 @@ State KD11ODT::transition (EnteringRegisterValue_8 &&, OpenPreviousLocationCmdEn
 // 
 // In case there is no previously opened location an error is retuned on
 // opening the location.
-State KD11ODT::transition (EnteringRegisterValue_8 &&, AtSignCmdEntered)
+State KD11_NA_ODT::transition (EnteringRegisterValue_8 &&, AtSignCmdEntered)
 {
     writeString ("\n"); 
     setRegisterValue ();
@@ -105,7 +105,7 @@ State KD11ODT::transition (EnteringRegisterValue_8 &&, AtSignCmdEntered)
 // the open location and if attempted, the command will modify the GPR
 // or PS if data has been typed, and close the GPR or PS; then a CR,
 // LF, @ will be issued. (LSI11 PDP11/03 Processor Handbook)
-State KD11ODT::transition (EnteringRegisterValue_8 &&, BackArrowCmdEntered)
+State KD11_NA_ODT::transition (EnteringRegisterValue_8 &&, BackArrowCmdEntered)
 {   
     setRegisterValue ();
     // The cursor is positioned just after the _, so write a new line

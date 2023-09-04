@@ -5,7 +5,7 @@ using namespace kd11_na;
 using std::make_unique;
 using std::this_thread::sleep_for;
 
-// On every entry to ODT a new KD11ODT object is created to make
+// On every entry to ODT a new KD11_NA_ODT object is created to make
 // sure it is initialized properly. The Microcomputer and Memories
 // Handbook states: "A / issued immediately after the processor
 // enters ODT mode causes a ?<CR><LF> to be printed because a
@@ -18,7 +18,7 @@ void KD11_NA::runODT ()
     OperatorConsoleAccess console_ {bus_};
     Event haltEvent {};
 
-    odt_ = make_unique<KD11ODT> (bus_, cpu_, 
+    odt_ = make_unique<KD11_NA_ODT> (bus_, cpu_, 
         make_unique<OperatorConsoleAccess> (bus_));
 
     while (true)

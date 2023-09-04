@@ -1,6 +1,6 @@
-#include "kd11odt.h"
+#include "kd11_na_odt.h"
 
-using namespace KD11_ODT;
+using namespace kd11_na_odt;
 
 // This command is used for manufacturing test purposes and is not a normal
 // user command. [...] The protocol is as follows:
@@ -20,7 +20,7 @@ using namespace KD11_ODT;
 //
 // (Microcomputer and Memories EB-20912-20)
 //
-State KD11ODT::transition (AtPrompt_1 &&, BinaryDumpCmdEntered)
+State KD11_NA_ODT::transition (AtPrompt_1 &&, BinaryDumpCmdEntered)
 {
     // Expect two bytes and transform it into the starting address.
     // The two bytes forming the address have to be read in two separate

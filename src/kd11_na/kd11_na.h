@@ -2,12 +2,12 @@
 #define _KD11_NA_H_
 
 #include "cpu/kd11_na_cpu.h"
-#include "odt/kd11odt.h"
+#include "odt/kd11_na_odt.h"
 #include "configdata/kd11_naconfig/kd11_naconfig.h"
 #include "variantfsm/fsm.h"
 #include "threadsafecontainers/threadsafequeue.h"
 
-using namespace KD11_ODT;
+using namespace kd11_na_odt;
 
 #include <memory>
 
@@ -117,7 +117,7 @@ namespace kd11_na
 
 	private:
 		KD11_NA_Cpu cpu_ {bus_};
-		unique_ptr<KD11ODT>	odt_ {};
+		unique_ptr<KD11_NA_ODT>	odt_ {};
 		KD11_NAConfig::PowerUpMode powerUpMode_;
 		bool kd11Running_;
 		u16 startAddress_;

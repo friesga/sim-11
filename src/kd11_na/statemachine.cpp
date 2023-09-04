@@ -1,7 +1,7 @@
 #include "kd11_na.h"
 
 using namespace kd11_na;
-using namespace KD11_ODT;
+using namespace kd11_na_odt;
 
 using std::make_unique;
 using std::monostate;
@@ -46,7 +46,7 @@ kd11_na::State KD11_NA::transition (Running&&, BPOK_low)
 }
 
 
-// On every entry to ODT a new KD11ODT object is created to make
+// On every entry to ODT a new KD11_NA_ODT object is created to make
 // sure it is initialized properly. The Microcomputer and Memories
 // Handbook states: "A / issued immediately after the processor
 // enters ODT mode causes a ?<CR><LF> to be printed because a

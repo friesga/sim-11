@@ -15,7 +15,7 @@ using std::unique_ptr;
 using std::string;
 using std::monostate;
 
-namespace KD11_ODT
+namespace kd11_na_odt
 {
     // Definition of the events to be processed by the ODT command parser
     struct StartFsm {};
@@ -106,7 +106,7 @@ namespace KD11_ODT
         ExitPoint,
         monostate>;
 
-    class KD11ODT : public variantFsm::Fsm<KD11ODT, Event, State>
+    class KD11_NA_ODT : public variantFsm::Fsm<KD11_NA_ODT, Event, State>
     {
         enum { BASE8 = 8 };
         enum { DC3 = 023 };               // ASCII code for Cntrl-shift-s
@@ -242,7 +242,7 @@ namespace KD11_ODT
         template <typename S> void entry (S&) {}
 
         // Definition of public functions.
-        KD11ODT (Qbus* bus, KD11_NA_Cpu& cpu, unique_ptr<ConsoleAccess> consoleAccess);
+        KD11_NA_ODT (Qbus* bus, KD11_NA_Cpu& cpu, unique_ptr<ConsoleAccess> consoleAccess);
         bool processCharacter (u8 character);
     };
 }

@@ -1,8 +1,8 @@
-#include "kd11odt.h"
+#include "kd11_na_odt.h"
 
-using namespace KD11_ODT;
+using namespace kd11_na_odt;
 
-State KD11ODT::transition (StartingRegister_2 &&, DigitEntered digitEntered)
+State KD11_NA_ODT::transition (StartingRegister_2 &&, DigitEntered digitEntered)
 {
     // Append the given digit to the series of digits entered. This is to keep
     // track of the last digits entered.
@@ -20,14 +20,14 @@ State KD11ODT::transition (StartingRegister_2 &&, DigitEntered digitEntered)
     return EnteringRegister_6 {};
 }
 
-// See comment on KD11ODT::transition (EnteringRegister_6 &&, RuboutEntered)
-State KD11ODT::transition (StartingRegister_2 &&, RuboutEntered)
+// See comment on KD11_NA_ODT::transition (EnteringRegister_6 &&, RuboutEntered)
+State KD11_NA_ODT::transition (StartingRegister_2 &&, RuboutEntered)
 {
     console_->write ('\\');
     return EnteringAddress_5 {};
 }
 
-State KD11ODT::transition (StartingRegister_2 &&, PswDesignatorEntered)
+State KD11_NA_ODT::transition (StartingRegister_2 &&, PswDesignatorEntered)
 {
     registerSeries_.push_back (PswDesignator);
     return EnteringRegister_6 {};

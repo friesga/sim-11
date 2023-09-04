@@ -19,7 +19,7 @@ set (CMDLINEOPTIONS_SRCS
     src/cmdlineoptions/data.cpp)
 
 set (KD11ODT_SRCS
-    src/kd11_na/odt/kd11odt.cpp
+    src/kd11_na/odt/kd11_na_odt.cpp
     src/kd11_na/odt/addressopened.cpp
     src/kd11_na/odt/atprompt.cpp
     src/kd11_na/odt/createevent.cpp

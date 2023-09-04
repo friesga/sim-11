@@ -1,9 +1,9 @@
 #include "dlv11j/dlv11j.h"
 #include "msv11d/msv11d.h"
-#include "kd11_na/odt/kd11odt.h"
+#include "kd11_na/odt/kd11_na_odt.h"
 #include "testconsoleaccess.h"
 
-using namespace KD11_ODT;
+using namespace kd11_na_odt;
 
 #include <gtest/gtest.h>
 #include <memory>
@@ -46,12 +46,12 @@ protected:
         TestConsoleAccess *testConsole = static_cast<TestConsoleAccess*> (console.get ());
 
         Qbus bus;
-        KD11CPU kd11cpu (&bus);
+        KD11_NA_Cpu kd11cpu (&bus);
         MSV11D msv11d (&bus);
         bus.installModule (1, &msv11d);
 
         // Create a KD11ODt instance and let it process a character sequence
-        KD11ODT kd11odt {&bus, kd11cpu, move (console)};
+        KD11_NA_ODT kd11odt {&bus, kd11cpu, move (console)};
 
         // Read the characters from the input sequence and feed them to ODT.
         // The characters could be retrieved from the input sequence directly,

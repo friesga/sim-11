@@ -1,6 +1,6 @@
-#include "kd11odt.h"
+#include "kd11_na_odt.h"
 
-using namespace KD11_ODT;
+using namespace kd11_na_odt;
 
 // This file contains all transition for the state EnteringRegister_6.
 // In this state two cases have to be treated: the entry and display of
@@ -10,7 +10,7 @@ using namespace KD11_ODT;
 // implemented statemachine to resemble the statemachine described in the
 // KDJ11 User Guide as closely as possible.
 
-State KD11ODT::transition (EnteringRegister_6 &&, DigitEntered digitEntered)
+State KD11_NA_ODT::transition (EnteringRegister_6 &&, DigitEntered digitEntered)
 {
     // Append the entered digit to series of digits entered. See comment
     // on the transition in the StartingRegister_5 state.
@@ -39,7 +39,7 @@ State KD11ODT::transition (EnteringRegister_6 &&, DigitEntered digitEntered)
 // transition to the EnteringAddress_5 state. So on a RuboutEntered event
 // in this (i.e. the EnteringRegister_6) state, both registerSeries_ and
 // digitSeries_ have to be cleared.
-State KD11ODT::transition (EnteringRegister_6 &&, RuboutEntered)
+State KD11_NA_ODT::transition (EnteringRegister_6 &&, RuboutEntered)
 {
     console_->write ('\\');
     registerSeries_.clear ();
@@ -47,7 +47,7 @@ State KD11ODT::transition (EnteringRegister_6 &&, RuboutEntered)
     return EnteringAddress_5 {};
 }
 
-State KD11ODT::transition (EnteringRegister_6 &&, PswDesignatorEntered)
+State KD11_NA_ODT::transition (EnteringRegister_6 &&, PswDesignatorEntered)
 {
     registerSeries_.push_back (PswDesignator);
     return EnteringRegister_6 {};
@@ -57,7 +57,7 @@ State KD11ODT::transition (EnteringRegister_6 &&, PswDesignatorEntered)
 // a register or the PSW has to be opened. At least for a LSI-11/2 this
 // is not correct. If more than one register digit is entered the digits
 // are interpreted as an address to be opened.
-State KD11ODT::transition (EnteringRegister_6 &&, OpenLocationCmdEntered)
+State KD11_NA_ODT::transition (EnteringRegister_6 &&, OpenLocationCmdEntered)
 {
     // The last character in the registerSeries indicates whether a register
     // and in that case which register or the PSW has to be openend.
@@ -85,7 +85,7 @@ State KD11ODT::transition (EnteringRegister_6 &&, OpenLocationCmdEntered)
 
 // Test runs on a real LSI-11/2 showed that an address location can be closed
 // before it is opened. Presumably the same holds for a register location.
-State KD11ODT::transition (EnteringRegister_6 &&, CloseLocationCmdEntered)
+State KD11_NA_ODT::transition (EnteringRegister_6 &&, CloseLocationCmdEntered)
 {
     writeString ("\n");
     return AtPrompt_1 {};

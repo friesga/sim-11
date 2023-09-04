@@ -1,22 +1,22 @@
-#include "kd11odt.h"
+#include "kd11_na_odt.h"
 
-using namespace KD11_ODT;
+using namespace kd11_na_odt;
 
 using std::move;
 
-State KD11ODT::transition (RegisterOpened_4 &&, CloseLocationCmdEntered)
+State KD11_NA_ODT::transition (RegisterOpened_4 &&, CloseLocationCmdEntered)
 {
     writeString ("\n");
     return AtPrompt_1 {};
 }
 
-State KD11ODT::transition (RegisterOpened_4 &&, DigitEntered digitEntered)
+State KD11_NA_ODT::transition (RegisterOpened_4 &&, DigitEntered digitEntered)
 {
     digitSeries_ = digitEntered.digit;
     return EnteringRegisterValue_8 {};
 }
 
-State KD11ODT::transition (RegisterOpened_4 &&, RuboutEntered)
+State KD11_NA_ODT::transition (RegisterOpened_4 &&, RuboutEntered)
 {
     console_->write ('\\');
     digitSeries_ = '0';
@@ -38,7 +38,7 @@ State KD11ODT::transition (RegisterOpened_4 &&, RuboutEntered)
 // 
 // This function will transition either to the current state or to atPrompt_1
 // in case the PSW is openend.
-State KD11ODT::transition (RegisterOpened_4 &&currentState, OpenNextLocationCmdEntered)
+State KD11_NA_ODT::transition (RegisterOpened_4 &&currentState, OpenNextLocationCmdEntered)
 {
     return move (openNextRegister (move (currentState),
         [this] () {return (location_.registerNr () + 1) % 8;}));
@@ -59,14 +59,14 @@ State KD11ODT::transition (RegisterOpened_4 &&currentState, OpenNextLocationCmdE
 // 
 // Process the OpenPreviousLocationCmdEntered event. This function will transition
 // either to the current state or to atPrompt_1 in case the PSW is openend.
-State KD11ODT::transition (RegisterOpened_4 &&currentState, OpenPreviousLocationCmdEntered)
+State KD11_NA_ODT::transition (RegisterOpened_4 &&currentState, OpenPreviousLocationCmdEntered)
 {
     writeString ("\n");
     return move (openNextRegister (move (currentState),
         [this] () {return static_cast<u8> (location_.registerNr () - 1) % 8;}));
 }
 
-State KD11ODT::transition (RegisterOpened_4 &&currentState, AtSignCmdEntered)
+State KD11_NA_ODT::transition (RegisterOpened_4 &&currentState, AtSignCmdEntered)
 {
     writeString ("\n");
     return openNextAddress ([this] () 
@@ -80,7 +80,7 @@ State KD11ODT::transition (RegisterOpened_4 &&currentState, AtSignCmdEntered)
 // the open location and if attempted, the command will modify the GPR
 // or PS if data has been typed, and close the GPR or PS; then a CR,
 // LF, @ will be issued. (LSI11 PDP11/03 Processor Handbook)
-State KD11ODT::transition (RegisterOpened_4 &&, BackArrowCmdEntered)
+State KD11_NA_ODT::transition (RegisterOpened_4 &&, BackArrowCmdEntered)
 {
     // The cursor is positioned just after the _, so write a new line
     // to position the cursor at the begin of the new line.
@@ -94,7 +94,7 @@ State KD11ODT::transition (RegisterOpened_4 &&, BackArrowCmdEntered)
 // show that the same holds for register locations, i.e. when an address
 // location is open a register location can be opened and when a register
 // location is open an address or register location can be opened.
-State KD11ODT::transition (RegisterOpened_4 &&, RegisterCmdEntered)
+State KD11_NA_ODT::transition (RegisterOpened_4 &&, RegisterCmdEntered)
 {
     return StartingRegister_2 {};
 }
