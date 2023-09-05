@@ -2,7 +2,7 @@
 #define _BDV11_H_
 
 #include "qbus/qbus.h"
-#include "busdevice/busdevice.h"
+#include "pdp11peripheral/pdp11peripheral.h"
 #include "configdata/bdv11config/bdv11config.h"
 
 #include <memory>
@@ -13,7 +13,7 @@ using std::shared_ptr;
 // The default RT-11 line clock frequency is 60 Hz
 #define	LTC_RATE		60
 
-class BDV11 : public BusDevice
+class BDV11 : public PDP11Peripheral
 {
 public:
 	BDV11 (Qbus *bus);

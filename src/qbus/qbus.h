@@ -6,7 +6,7 @@
 #include "conddata/conddata.h"
 #include "interruptrequest/interruptrequest.h"
 #include "threadsafecontainers/threadsafeprioqueue.h"
-#include "busdevice/busdevice.h"
+#include "pdp11peripheral/pdp11peripheral.h"
 #include "signal/signal.h"
 
 #include <string>
@@ -41,7 +41,7 @@ using std::vector;
 #define	INTRPT_LATENCY			5
 #define	INTRPT_LATENCY_JITTER	2
 
-class BusDevice;
+class PDP11Peripheral;
 
 class Qbus
 {
@@ -91,11 +91,11 @@ public:
 	CondData<u16> read (u16 addr);
 	bool writeWord (u16 addr, u16 value);
 	bool writeByte (u16 addr, u8 val);
-	void installModule (int slot, BusDevice *module);
-	BusDevice *findModuleByName (string moduleName);
+	void installModule (int slot, PDP11Peripheral *module);
+	PDP11Peripheral *findModuleByName (string moduleName);
 
 private:
-	BusDevice *slots[LSI11_SIZE] {nullptr};
+	PDP11Peripheral *slots[LSI11_SIZE] {nullptr};
 
 	// This queue keeps all interrupt requests, ordered in interrupt priority
 	using IntrptReqQueue = ThreadSafePrioQueue<InterruptRequest>;
@@ -115,7 +115,7 @@ private:
 	u16	delay_;
 
 	void reset ();
-	BusDevice *responsibleModule (u16 address);
+	PDP11Peripheral *responsibleModule (u16 address);
 	void pushInterruptRequest (InterruptRequest interruptReq);
 	void BINITReceiver (bool signalValue);
 };

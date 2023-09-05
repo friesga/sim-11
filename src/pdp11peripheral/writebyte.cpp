@@ -1,8 +1,8 @@
-#include "busdevice.h"
+#include "pdp11peripheral.h"
 
 // The defualt implementation of writeByte() for QBus modules. This
 // implementation can be overridden if needed.
-StatusCode BusDevice::writeByte (u16 addr, u8 value)
+StatusCode PDP11Peripheral::writeByte (u16 addr, u8 value)
 {
     u16 aaddr = addr & 0xFFFE;
 	u16 tmp;

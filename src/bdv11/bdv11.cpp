@@ -61,7 +61,7 @@ using std::shared_ptr;
 
 BDV11::BDV11 (Qbus *bus)
 	:
-	BusDevice (bus),
+	PDP11Peripheral (bus),
 	pcr {0},
 	scratch {0},
 	option {0},

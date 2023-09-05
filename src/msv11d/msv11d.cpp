@@ -10,7 +10,7 @@ using std::shared_ptr;
 
 MSV11D::MSV11D (Qbus *bus)
 	:
-	BusDevice (bus),
+	PDP11Peripheral (bus),
 	powerSource_ {MSV11Config::PowerSource::System}
 {
 	data = (u8*) malloc (MSV11D_SIZE);

@@ -232,8 +232,8 @@ set (SIM11_SRCS
     src/main/main.cpp
     src/msv11d/msv11d.cpp
     ${QBUS_SRCS}
-    src/busdevice/busdevice.cpp
-    src/busdevice/writebyte.cpp
+    src/pdp11peripheral/pdp11peripheral.cpp
+    src/pdp11peripheral/writebyte.cpp
     ${RLV12_SRCS}
     ${SDL_SRCS}
     src/rxv21/rxv21.cpp
@@ -374,8 +374,8 @@ set (SIM11_TEST_SRCS
     ${SIM_FIO_SRCS}
     ${RLV12_SRCS}
     ${FLOAT_SRCS}
-    src/busdevice/busdevice.cpp
-    src/busdevice/writebyte.cpp
+    src/pdp11peripheral/pdp11peripheral.cpp
+    src/pdp11peripheral/writebyte.cpp
     src/lib/gotapproval.cpp
     ${KD11_NA_SRCS}
     ${KDF11_A_SRCS}

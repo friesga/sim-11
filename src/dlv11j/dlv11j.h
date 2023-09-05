@@ -2,7 +2,7 @@
 #define _DLV11J_H_
 
 #include "qbus/qbus.h"
-#include "busdevice/busdevice.h"
+#include "pdp11peripheral/pdp11peripheral.h"
 #include "configdata/dlv11config/dlv11config.h"
 #include "console/console.h"
 
@@ -36,7 +36,7 @@ struct DLV11Ch
 	function<void(unsigned char)> send {};
 };
 
-class DLV11J : public BusDevice
+class DLV11J : public PDP11Peripheral
 {
 public:
 	DLV11J (Qbus *bus, unique_ptr<Console> console);

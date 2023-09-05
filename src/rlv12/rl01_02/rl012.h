@@ -58,7 +58,7 @@ class RL01_2 : public Unit
 
 public:
     // Constructor and destructor
-    RL01_2 (BusDevice *owningDevice);
+    RL01_2 (PDP11Peripheral *owningDevice);
     ~RL01_2 ();
 
     // Seek timer, started in a separate thread

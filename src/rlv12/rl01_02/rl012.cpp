@@ -4,7 +4,7 @@
 // Constructor
 // By default the unit is off-line. It is set on-line when a file is
 // attached.
-RL01_2::RL01_2 (BusDevice *owningDevice)
+RL01_2::RL01_2 (PDP11Peripheral *owningDevice)
     :
     Unit (owningDevice),
     currentDiskAddress_ {0},

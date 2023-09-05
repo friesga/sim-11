@@ -4,7 +4,7 @@
 #include "trace/trace.h"
 #include "rl01_02/rl012.h"
 #include "qbus/qbus.h"
-#include "busdevice/busdevice.h"
+#include "pdp11peripheral/pdp11peripheral.h"
 #include "threadsafecontainers/threadsafequeue.h"
 #include "statuscodes.h"
 #include "rlv12command/rlv12command.h"
@@ -21,7 +21,7 @@
 class CmdProcessor;
 
 // Implementation of the RL11, RLV11 and RLV12 controllers.
-class RLV12 : public BusDevice
+class RLV12 : public PDP11Peripheral
 {
     friend class CmdProcessor;
     friend class RL01_2;

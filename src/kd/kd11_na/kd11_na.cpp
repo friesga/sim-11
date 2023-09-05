@@ -16,7 +16,7 @@ using namespace kd11_na;
 // the user.
 KD11_NA::KD11_NA (Qbus* bus)
     :
-    BusDevice (bus),
+    PDP11Peripheral (bus),
     powerUpMode_ {KD11_NAConfig::PowerUpMode::Bootstrap},
     kd11Running_ {true},
     startAddress_ {stdBootAddress}

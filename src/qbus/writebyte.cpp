@@ -3,7 +3,7 @@
 
 bool Qbus::writeByte (u16 address, u8 value)
 {
-	BusDevice *module;
+	PDP11Peripheral *module;
 		
 	if ((module = responsibleModule(address)) != nullptr)
 	{

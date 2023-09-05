@@ -13,7 +13,7 @@ using namespace rxv21;
 // Constructor for a default RXV21 device without attached files
 RXV21::RXV21 (Qbus *bus)
 	:
-	BusDevice (bus),
+	PDP11Peripheral (bus),
 
 	// Factory configuration
 	base {0177170},
@@ -31,7 +31,7 @@ RXV21::RXV21 (Qbus *bus)
 
 RXV21::RXV21 (Qbus *bus, shared_ptr<RXV21Config> rxConfig)
 	:
-	BusDevice (bus)
+	PDP11Peripheral (bus)
 {
 	name_ = "RX";
 

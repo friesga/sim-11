@@ -31,7 +31,7 @@ using std::placeholders::_2;
 // configuration.
 DLV11J::DLV11J (Qbus *bus, unique_ptr<Console> console)
 	:
-	BusDevice (bus),
+	PDP11Peripheral (bus),
 	// Set factory configuration for base address, vector and BREAK key response.
 	// The default break key is set to the esc key.
 	baseAddress_ {defaultBaseAddress_},
@@ -58,7 +58,7 @@ DLV11J::DLV11J (Qbus *bus, unique_ptr<Console> console)
 DLV11J::DLV11J (Qbus *bus, unique_ptr<Console> console, 
 		shared_ptr<DLV11Config> dlv11Config)
 	:
-	BusDevice (bus),
+	PDP11Peripheral (bus),
 	baseAddress_ {dlv11Config->baseAddress},
 	baseVector_ {dlv11Config->vector},
 	ch3BreakResponse_ {dlv11Config->ch3BreakResponse},

@@ -1,7 +1,7 @@
 #ifndef _UNIT_H_
 #define _UNIT_H_
 
-#include "busdevice/busdevice.h"
+#include "pdp11peripheral/pdp11peripheral.h"
 #include "statuscodes.h"
 #include "types.h"
 #include "bitmask.h"
@@ -66,7 +66,7 @@ class Unit
     void setBuffered ();
 
 protected:
-    BusDevice *owningDevice_;       // Pointer to the controller
+    PDP11Peripheral *owningDevice_;       // Pointer to the controller
     FILE *filePtr_;                 // The disk file
     u32 capacity_;                  // Drive capacity in words
     u32 flags_;                     // Bit flags
@@ -78,7 +78,7 @@ protected:
 
 public:
     // Constructor
-    Unit (BusDevice *owningDevice);
+    Unit (PDP11Peripheral *owningDevice);
 
     // Functions to be implemented by concrete devices
     virtual StatusCode configure (shared_ptr<DeviceConfig> deviceConfig) = 0;

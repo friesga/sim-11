@@ -1,5 +1,5 @@
-#ifndef _BUSDEVICE_H_
-#define _BUSDEVICE_H_
+#ifndef _PDP11PERIPHERAL_H_
+#define _PDP11PERIPHERAL_H_
 
 #include "types.h"
 #include "statuscodes.h"
@@ -11,7 +11,7 @@ class Qbus;
 class Unit;
 
 // Definition of the functions every Qbus module should provide.
-class BusDevice
+class PDP11Peripheral
 {
 protected:
 	Qbus* bus_;
@@ -20,10 +20,10 @@ protected:
     u32 vector_;                // Device vector
 
 public:
-	BusDevice (Qbus *bus);
+	PDP11Peripheral (Qbus *bus);
 
 	// Required functions
-	virtual ~BusDevice () {};
+	virtual ~PDP11Peripheral () {};
 	virtual StatusCode read (u16 addr, u16 *destination) = 0;
 	virtual StatusCode writeWord (u16 addr, u16 value) = 0;
 	virtual StatusCode writeByte (u16 addr, u8 value);
@@ -34,4 +34,4 @@ public:
 	std::string name() { return name_; }
 };
 
-#endif // _BUSDEVICE_H_
+#endif // _PDP11PERIPHERAL_H_

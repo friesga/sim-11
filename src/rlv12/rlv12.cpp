@@ -17,7 +17,7 @@ using std::placeholders::_1;
 // ToDo: Remove default RLV12 constructor
 RLV12::RLV12 (Qbus *bus)
     :
-    BusDevice (bus),
+    PDP11Peripheral (bus),
     csr_ {0},
     bar_ {0},
     dar_ {0},
@@ -46,7 +46,7 @@ RLV12::RLV12 (Qbus *bus)
 
 RLV12::RLV12 (Qbus *bus, shared_ptr<RLConfig> rlConfig)
     :
-    BusDevice (bus),
+    PDP11Peripheral (bus),
     csr_ {0},
     bar_ {0},
     dar_ {0},

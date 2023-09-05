@@ -2,7 +2,7 @@
 #define _MSV11D_H_
 
 #include "qbus/qbus.h"
-#include "busdevice/busdevice.h"
+#include "pdp11peripheral/pdp11peripheral.h"
 #include "configdata/msv11config/msv11config.h"
 
 using std::shared_ptr;
@@ -10,7 +10,7 @@ using std::shared_ptr;
 /* Main memory size: 32kW / 64kB */
 #define	MSV11D_SIZE		(65536 - 2 * 4096)
 
-class MSV11D : public BusDevice
+class MSV11D : public PDP11Peripheral
 {
 public:
 	MSV11D (Qbus* bus);

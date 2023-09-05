@@ -1,6 +1,6 @@
 #include "kd11_na_cpu.h"
 #include "qbus/qbus.h"
-#include "busdevice/busdevice.h"
+#include "pdp11peripheral/pdp11peripheral.h"
 #include "float/float.h"
 #include "trace/trace.h"
 #include "bitmask.h"

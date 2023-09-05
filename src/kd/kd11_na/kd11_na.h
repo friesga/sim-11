@@ -51,7 +51,7 @@ namespace kd11_na
 		monostate>;
 
 	// The class KD11_NA is composed of the KD11_NA CPU and the KD11_NA ODT.
-	class KD11_NA : public BusDevice, public variantFsm::Fsm<KD11_NA, Event, State>
+	class KD11_NA : public PDP11Peripheral, public variantFsm::Fsm<KD11_NA, Event, State>
 	{
 	public:
 		KD11_NA (Qbus *bus);
@@ -63,7 +63,7 @@ namespace kd11_na
 		// Give main() access to the CPU to set PC and runState
 		KD11_NA_Cpu &cpu();
 
-		// The KD11_NA is a BusDevice without registers so the read and write 
+		// The KD11_NA is a PDP11Peripheral without registers so the read and write 
 		// register functions are dummies. The reset function is called on a
 		// bus reset and has no function for the KD11_NA either.
 		StatusCode read (u16 addr, u16 *destination) override 
