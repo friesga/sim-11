@@ -3,7 +3,7 @@
 
 bool Qbus::writeWord (u16 address, u16 value)
 {
-	PDP11Peripheral *module;
+	BusDevice *module;
 
 	address &= 0xFFFE;
 		

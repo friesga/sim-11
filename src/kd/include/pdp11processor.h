@@ -8,7 +8,7 @@
 // This interface defines the functions a PDP-11 processor has to implement
 // to be able to configure and run it.
 //
-// Every PDP-11 processor is a bus device and therefor has to implement the
+// Every PDP-11 processor is a bus device and therefore has to implement the
 // BusDevice interface.
 class PDP11Processor : public BusDevice
 {

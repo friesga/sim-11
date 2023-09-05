@@ -1,6 +1,7 @@
 #ifndef _KD11_NA_H_
 #define _KD11_NA_H_
 
+#include "kd/include/pdp11processor.h"
 #include "cpu/kd11_na_cpu.h"
 #include "odt/kd11_na_odt.h"
 #include "configdata/kd11_naconfig/kd11_naconfig.h"
@@ -51,7 +52,7 @@ namespace kd11_na
 		monostate>;
 
 	// The class KD11_NA is composed of the KD11_NA CPU and the KD11_NA ODT.
-	class KD11_NA : public PDP11Peripheral, public variantFsm::Fsm<KD11_NA, Event, State>
+	class KD11_NA : public PDP11Processor, public variantFsm::Fsm<KD11_NA, Event, State>
 	{
 	public:
 		KD11_NA (Qbus *bus);
@@ -116,6 +117,7 @@ namespace kd11_na
         template <typename S> void entry (S&) {}
 
 	private:
+		Qbus *bus_;
 		KD11_NA_Cpu cpu_ {bus_};
 		unique_ptr<KD11_NA_ODT>	odt_ {};
 		KD11_NAConfig::PowerUpMode powerUpMode_;

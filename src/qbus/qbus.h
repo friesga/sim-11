@@ -91,11 +91,10 @@ public:
 	CondData<u16> read (u16 addr);
 	bool writeWord (u16 addr, u16 value);
 	bool writeByte (u16 addr, u8 val);
-	void installModule (int slot, PDP11Peripheral *module);
-	PDP11Peripheral *findModuleByName (string moduleName);
+	void installModule (int slot, BusDevice *module);
 
 private:
-	PDP11Peripheral *slots[LSI11_SIZE] {nullptr};
+	BusDevice *slots[LSI11_SIZE] {nullptr};
 
 	// This queue keeps all interrupt requests, ordered in interrupt priority
 	using IntrptReqQueue = ThreadSafePrioQueue<InterruptRequest>;
@@ -115,7 +114,7 @@ private:
 	u16	delay_;
 
 	void reset ();
-	PDP11Peripheral *responsibleModule (u16 address);
+	BusDevice *responsibleModule (u16 address);
 	void pushInterruptRequest (InterruptRequest interruptReq);
 	void BINITReceiver (bool signalValue);
 };

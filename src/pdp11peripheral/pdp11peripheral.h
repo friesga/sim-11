@@ -3,6 +3,7 @@
 
 #include "types.h"
 #include "statuscodes.h"
+#include "busdevice/busdevice.h"
 
 #include <string>
 #include <memory>
@@ -10,8 +11,9 @@
 class Qbus;
 class Unit;
 
-// Definition of the functions every Qbus module should provide.
-class PDP11Peripheral
+// Definition of some data members and functions common to all PDP-11
+// peripheral classes.
+class PDP11Peripheral : public BusDevice
 {
 protected:
 	Qbus* bus_;
@@ -21,16 +23,9 @@ protected:
 
 public:
 	PDP11Peripheral (Qbus *bus);
-
-	// Required functions
 	virtual ~PDP11Peripheral () {};
-	virtual StatusCode read (u16 addr, u16 *destination) = 0;
-	virtual StatusCode writeWord (u16 addr, u16 value) = 0;
-	virtual StatusCode writeByte (u16 addr, u8 value);
-	virtual bool responsible (u16 addr) = 0;
-	virtual void reset () = 0;
-
-	// Optional functions
+	StatusCode writeByte (u16 addr, u8 value) override;
+	
 	std::string name() { return name_; }
 };
 

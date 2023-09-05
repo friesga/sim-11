@@ -1,6 +1,7 @@
 #ifndef _LSI11_H_
 #define _LSI11_H_
 
+#include "kd/include/pdp11processor.h"
 #include "ba11_n/ba11_n.h"
 #include "rxv21/rxv21.h"
 #include "rlv12/rlv12.h"
@@ -30,7 +31,7 @@ class LSI11
 	// of unique_ptr's for the decice pointers results in complicated code
 	// and the use of raw pointers in e.g. Qbus::responsibleModule() as these
 	// pointers are used in loadFile() and in run().
-	KD11_NA *kd11_na_;
+	PDP11Processor *kd11_na_;
 	KDF11_A *kdf11_a_;
 	MSV11D *msv11_;
 	RXV21 *rxv21_;

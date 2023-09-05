@@ -20,7 +20,7 @@ Qbus::Qbus ()
 
 CondData<u16> Qbus::read (u16 address)
 {
-	PDP11Peripheral *module;
+	BusDevice *module;
 	u16 addr = address;
 
 	address &= 0xFFFE;
@@ -135,16 +135,8 @@ bool Qbus::getIntrptReq(InterruptRequest &intrptReq)
 // in the device's constructor. There is something to be said for setting
 // the pointer in the installModule function but in e.g. the KD11_NA device
 // the pointer is already used in the constructor.
-void Qbus::installModule (int slot, PDP11Peripheral *module)
+void Qbus::installModule (int slot, BusDevice *module)
 {
 	if (slot < LSI11_SIZE && module != nullptr)
 		slots[slot] = module;
-}
-
-PDP11Peripheral *Qbus::findModuleByName (std::string moduleName)
-{
-	for (auto module : slots)
-		if (module != nullptr && module->name() == moduleName)
-			return module;
-	return nullptr;
 }
