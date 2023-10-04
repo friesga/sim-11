@@ -8,8 +8,7 @@
 #include <string>
 
 using std::shared_ptr;
-
-using namespace kd11_na;
+using std::make_unique;
 
 // The factory power-up mode configuration is mode 0 (get vector at address
 // 24 and 26), but we'll set it to Bootstrap as that's more convenient for
@@ -21,6 +20,7 @@ KD11_NA::KD11_NA (Qbus* bus)
     kd11Running_ {true},
     startAddress_ {stdBootAddress}
 {
+    stateMachine_ = make_unique<StateMachine> (this);
     subscribeToSignals ();
 }
 
@@ -37,12 +37,10 @@ KD11_NA::~KD11_NA ()
     kd11Thread_.join ();
 }
 
-
 KD11_NA_Cpu& KD11_NA::cpu ()
 {
     return cpu_;
 }
-
 
 // Run the KD11_NA state machine
 void KD11_NA::run ()
@@ -54,7 +52,7 @@ void KD11_NA::run ()
         // Read a character from the console, create the appropriate event
         // from it and process that event
         signalEventQueue_.waitAndPop (event);
-        dispatch (event);
+        stateMachine_->dispatch (event);
     }
 }
 

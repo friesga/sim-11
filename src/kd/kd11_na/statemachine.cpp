@@ -1,71 +1,68 @@
 #include "kd11_na.h"
 
-using namespace kd11_na;
-
 using std::make_unique;
 using std::monostate;
 
-kd11_na::State KD11_NA::transition (PowerOff&&, BPOK_high)
+KD11_NA::State KD11_NA::StateMachine::transition (PowerOff&&, BPOK_high)
 {
-    return powerUpRoutine ();
+    return context_->powerUpRoutine ();
 }
 
-void KD11_NA::entry (Running)
+void KD11_NA::StateMachine::entry (Running)
 {
-    while (!signalAvailable ())
+    while (!context_->signalAvailable ())
     {
         // Increment the bus delay timer. This really should be solved
         // otherwise, but as the CPU steps are performed in this fumction
         // the bus steps have to be executed here too.
-        bus_->step ();
+        context_->bus_->step ();
 
         // If the CPU is halted or BHALT is true ODT must be started. In the
         // latter case one instruction is executed and thus the CPU is single
         // stepped.
-        if (!cpu_.step () || bus_->BHALT())
-            signalEventQueue_.push (Halt {});
+        if (!context_->cpu_.step () || context_->bus_->BHALT())
+            context_->signalEventQueue_.push (Halt {});
     }
-    bus_->SRUN ().set (false);
+    context_->bus_->SRUN ().set (false);
 }
 
-kd11_na::State KD11_NA::transition (Running&&, Reset)
+KD11_NA::State KD11_NA::StateMachine::transition (Running&&, Reset)
 {
-    return powerUpRoutine ();
+    return context_->powerUpRoutine ();
 }
 
-kd11_na::State KD11_NA::transition (Running&&, Halt)
+KD11_NA::State KD11_NA::StateMachine::transition (Running&&, Halt)
 {
     return Halted {};
 }
 
 
-kd11_na::State KD11_NA::transition (Running&&, BPOK_low)
+KD11_NA::State KD11_NA::StateMachine::transition (Running&&, BPOK_low)
 {
     return PowerFail {};
 }
-
 
 // On every entry to ODT a new KD11_NA_ODT object is created to make
 // sure it is initialized properly. The Microcomputer and Memories
 // Handbook states: "A / issued immediately after the processor
 // enters ODT mode causes a ?<CR><LF> to be printed because a
 // location has not yet been opened.
-void KD11_NA::entry (Halted)
+void KD11_NA::StateMachine::entry (Halted)
 {
-    runODT ();
+    context_->runODT ();
 }
 
-kd11_na::State KD11_NA::transition (Halted&&, Start)
+KD11_NA::State KD11_NA::StateMachine::transition (Halted&&, Start)
 {
     return Running {};
 }
 
-kd11_na::State KD11_NA::transition (Halted&&, Reset)
+KD11_NA::State KD11_NA::StateMachine::transition (Halted&&, Reset)
 {
-    return powerUpRoutine ();
+    return context_->powerUpRoutine ();
 }
  
-kd11_na::State KD11_NA::transition (Halted&&, BPOK_low)
+KD11_NA::State KD11_NA::StateMachine::transition (Halted&&, BPOK_low)
 {
     return PowerOff {};
 }
@@ -75,39 +72,39 @@ kd11_na::State KD11_NA::transition (Halted&&, BPOK_low)
 // 1000 instructions (presuming an avering instruction exeution time of
 // 4 microseconds and 4 milliseconds DC power available). The powerfail
 // routine cannot be single stepped.
-void KD11_NA::entry (PowerFail)
+void KD11_NA::StateMachine::entry (PowerFail)
 {
     size_t maxInstructions {1000};
 
     // On a powerfail trap to the vector at address 24/26
-    cpu_.setTrap (&powerFail);
+    context_->cpu_.setTrap (&context_->powerFail);
 
-    while (!signalAvailable () && maxInstructions-- > 0)
+    while (!context_->signalAvailable () && maxInstructions-- > 0)
     {
-        if (!cpu_.step ())
+        if (!context_->cpu_.step ())
         {
-            signalEventQueue_.push (Halt {});
+            context_->signalEventQueue_.push (Halt {});
             return;
         }
     }
 
     if (maxInstructions == 0)
-        signalEventQueue_.push (BDCOK_low {});
+        context_->signalEventQueue_.push (BDCOK_low {});
 }
 
-kd11_na::State KD11_NA::transition (PowerFail&&, BDCOK_low)
+KD11_NA::State KD11_NA::StateMachine::transition (PowerFail&&, BDCOK_low)
 {
-    bus_->SRUN ().set (false);
+    context_->bus_->SRUN ().set (false);
     return PowerOff {};
 }
 
-kd11_na::State KD11_NA::transition (PowerFail&&, Halt)
+KD11_NA::State KD11_NA::StateMachine::transition (PowerFail&&, Halt)
 {
-    bus_->SRUN ().set (false);
+    context_->bus_->SRUN ().set (false);
     return PowerOff {};
 }
 
-void KD11_NA::entry (ExitPoint)
+void KD11_NA::StateMachine::entry (ExitPoint)
 {
-    kd11Running_ = false;
+    context_->kd11Running_ = false;
 }

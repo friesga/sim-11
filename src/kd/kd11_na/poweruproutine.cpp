@@ -1,7 +1,5 @@
 #include "kd11_na.h"
 
-using namespace kd11_na;
-
 // The reaction on a power-up is configured by the power-up mode. Three
 // power-up modes can be selected:
 // 1. Trap to location 24/26,
@@ -20,7 +18,7 @@ using namespace kd11_na;
 //
 // The function will return the state to transition to.
 //
-kd11_na::State KD11_NA::powerUpRoutine ()
+KD11_NA::State KD11_NA::powerUpRoutine ()
 {
     cpu_.cpuReset ();
     bus_->BINIT().cycle ();
