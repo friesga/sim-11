@@ -11,7 +11,7 @@
 #include <functional>
 
 // Forward declarations to be able to declare these classes as friends
-namespace kd11_na_odt { class KD11_NA_ODT; }
+class KD11_NA_ODT;
 namespace kd11_na { class KD11_NA; }
 
 // Definition of CPU run states
@@ -58,7 +58,7 @@ class KD11_NA_Cpu : public CpuData
 public:
 	// KD11_NA_ODT and LSI11 need access to the CpuControl functions.
 	friend class kd11_na::KD11_NA;
-	friend class kd11_na_odt::KD11_NA_ODT;
+	friend class KD11_NA_ODT;
 	friend class LSI11;
 	
 	KD11_NA_Cpu (Qbus *bus);

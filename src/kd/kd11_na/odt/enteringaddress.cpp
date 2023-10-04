@@ -1,13 +1,11 @@
 #include "kd11_na_odt.h"
 
-using namespace kd11_na_odt;
-
 // This file contains the state transitions for the state EnteringAddress_5.
-State KD11_NA_ODT::transition (EnteringAddress_5 &&, DigitEntered digitEntered)
+KD11_NA_ODT::State KD11_NA_ODT::StateMachine::transition (EnteringAddress_5 &&, DigitEntered digitEntered)
 {
     // Append the digit typed by the user to the address string and allow more
     // characters to be typed
-    digitSeries_.push_back (digitEntered.digit);
+    context_->digitSeries_.push_back (digitEntered.digit);
     return EnteringAddress_5 {};
 }
 
@@ -21,14 +19,14 @@ State KD11_NA_ODT::transition (EnteringAddress_5 &&, DigitEntered digitEntered)
 // erased and it is not possible to terminate the present mode the
 // console is in. [This implies the EnteringAddress_5 state is not left.]
 //
-State KD11_NA_ODT::transition (EnteringAddress_5 &&currentState, RuboutEntered)
+KD11_NA_ODT::State KD11_NA_ODT::StateMachine::transition (EnteringAddress_5 &&currentState, RuboutEntered)
 {
     // Remove the last entered character and echo a backslash. Prevent
     // undefined behaviour by checking if there is a character to pop.
-    if (!digitSeries_.empty ())
-        digitSeries_.pop_back ();
+    if (!context_->digitSeries_.empty ())
+        context_->digitSeries_.pop_back ();
 
-    console_->write ('\\');
+    context_->console_->write ('\\');
     return move (currentState);
 }
 
@@ -46,9 +44,9 @@ State KD11_NA_ODT::transition (EnteringAddress_5 &&currentState, RuboutEntered)
 // ODT responds to the error by printing ?<CR><LF> or @". 
 // (EK-KDJ1B-UG-001 and KDJ1E-UG-001)
 //
-State KD11_NA_ODT::transition (EnteringAddress_5 &&, OpenLocationCmdEntered)
+KD11_NA_ODT::State KD11_NA_ODT::StateMachine::transition (EnteringAddress_5 &&, OpenLocationCmdEntered)
 {
-    return move (openAddress ());
+    return move (context_->openAddress ());
 }
 
 // Transform the now complete address string to an address and use it in
@@ -65,29 +63,29 @@ State KD11_NA_ODT::transition (EnteringAddress_5 &&, OpenLocationCmdEntered)
 // Recognition of the semicolon is not implemented as the reaction on
 // input of characters after the semicolon is not described and is unclear.
 //
-State KD11_NA_ODT::transition (EnteringAddress_5 &&, GoCmdEntered)
+KD11_NA_ODT::State KD11_NA_ODT::StateMachine::transition (EnteringAddress_5 &&, GoCmdEntered)
 {
     // A byte address can be specified as start address. Bit 0 of the start
     // address will be ignored and the CPU will start at the specified
     // address minus 1. When the CPU then halts bit 0 of the printed address
     // will be set so the printed address is the halt address plus 1.
-    if (u16 address; stringTou16 (digitSeries_, 8, &address))
+    if (u16 address; context_->stringTou16 (context_->digitSeries_, 8, &address))
     {
         // Set the CPU into the running state with the specified address
         // as the PC and exit ODT
-        startCPU (address);
+        context_->startCPU (address);
         return ExitPoint {};
     }
 
     // Invalid address entered
-    writeString ("?\n");
+    context_->writeString ("?\n");
     return AtPrompt_1 {};
 }
 
 // Test runs on a real LSI-11/2 showed that a location can be closed before
 // it is opened.
-State KD11_NA_ODT::transition (EnteringAddress_5&&, CloseLocationCmdEntered)
+KD11_NA_ODT::State KD11_NA_ODT::StateMachine::transition (EnteringAddress_5&&, CloseLocationCmdEntered)
 {
-    writeString ("\n");
+    context_->writeString ("\n");
     return AtPrompt_1 {};
 }

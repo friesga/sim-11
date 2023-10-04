@@ -8,8 +8,6 @@
 #include "variantfsm/fsm.h"
 #include "threadsafecontainers/threadsafequeue.h"
 
-using namespace kd11_na_odt;
-
 #include <memory>
 
 using std::unique_ptr;

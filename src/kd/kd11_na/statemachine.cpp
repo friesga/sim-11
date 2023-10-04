@@ -1,7 +1,6 @@
 #include "kd11_na.h"
 
 using namespace kd11_na;
-using namespace kd11_na_odt;
 
 using std::make_unique;
 using std::monostate;

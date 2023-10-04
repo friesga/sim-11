@@ -1,7 +1,5 @@
 #include "kd11_na_odt.h"
 
-using namespace kd11_na_odt;
-
 // The EntryPoint is a pseudo-state at which the state machine is entered.
 // In this state no actions are performed. The transition to the first real
 // state is taken when initialization of KD11_NA_ODT is complete. This prevents
@@ -21,8 +19,8 @@ using namespace kd11_na_odt;
 // If the CPU is started on a byte address the halt address will be a byte
 // adress too, namely the halt address plus 1.
 //
-State KD11_NA_ODT::transition (EntryPoint &&, StartFsm)
+KD11_NA_ODT::State KD11_NA_ODT::StateMachine::transition (EntryPoint &&, StartFsm)
 {
-    writeString ("\n" + octalNumberToString (cpu_.registerValue (7)) + "\n");
+    context_->writeString ("\n" + context_->octalNumberToString (context_->cpu_.registerValue (7)) + "\n");
     return AtPrompt_1 {};
 }

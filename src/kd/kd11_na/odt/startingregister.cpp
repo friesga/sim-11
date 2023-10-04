@@ -1,8 +1,6 @@
 #include "kd11_na_odt.h"
 
-using namespace kd11_na_odt;
-
-State KD11_NA_ODT::transition (StartingRegister_2 &&, DigitEntered digitEntered)
+KD11_NA_ODT::State KD11_NA_ODT::StateMachine::transition (StartingRegister_2 &&, DigitEntered digitEntered)
 {
     // Append the given digit to the series of digits entered. This is to keep
     // track of the last digits entered.
@@ -16,19 +14,19 @@ State KD11_NA_ODT::transition (StartingRegister_2 &&, DigitEntered digitEntered)
     // more than one digit is entered, the digits are interpreted as an
     // address to be opened.
     //
-    registerSeries_.push_back (digitEntered.digit);
+    context_->registerSeries_.push_back (digitEntered.digit);
     return EnteringRegister_6 {};
 }
 
 // See comment on KD11_NA_ODT::transition (EnteringRegister_6 &&, RuboutEntered)
-State KD11_NA_ODT::transition (StartingRegister_2 &&, RuboutEntered)
+KD11_NA_ODT::State KD11_NA_ODT::StateMachine::transition (StartingRegister_2 &&, RuboutEntered)
 {
-    console_->write ('\\');
+    context_->console_->write ('\\');
     return EnteringAddress_5 {};
 }
 
-State KD11_NA_ODT::transition (StartingRegister_2 &&, PswDesignatorEntered)
+KD11_NA_ODT::State KD11_NA_ODT::StateMachine::transition (StartingRegister_2 &&, PswDesignatorEntered)
 {
-    registerSeries_.push_back (PswDesignator);
+    context_->registerSeries_.push_back (PswDesignator);
     return EnteringRegister_6 {};
 }

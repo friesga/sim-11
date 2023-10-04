@@ -1,63 +1,61 @@
 #include "kd11_na_odt.h"
 
-using namespace kd11_na_odt;
-
 #include <cassert>
 
 using std::move;
 using std::monostate;
 
-State KD11_NA_ODT::transition (EnteringRegisterValue_8 &&, DigitEntered digitEntered)
+KD11_NA_ODT::State KD11_NA_ODT::StateMachine::transition (EnteringRegisterValue_8 &&, DigitEntered digitEntered)
 {
-    digitSeries_.push_back (digitEntered.digit);
+    context_->digitSeries_.push_back (digitEntered.digit);
     return EnteringRegisterValue_8 {};
 }
 
 // See the comment at the equivalent EnteringAddressValue_7 state
-State KD11_NA_ODT::transition (EnteringRegisterValue_8 &&currentState, RuboutEntered)
+KD11_NA_ODT::State KD11_NA_ODT::StateMachine::transition (EnteringRegisterValue_8 &&currentState, RuboutEntered)
 {
     // We expect there always is at least one character in the digitSeries_
     // buffer available. This either is a digit entered by the user or a '0'
     // in case the user has typed a RUBOUT in the AddressOpened_3 state.
-    assert (!digitSeries_.empty ());
+    assert (!context_->digitSeries_.empty ());
 
     // Echo a backslash and remove the last entered character. If the 
     // digitSeries_ is now empty replace it with a '0'.
-    console_->write ('\\');
-    digitSeries_.pop_back ();
-    if (digitSeries_.empty ())
-        digitSeries_.push_back ('0');
+    context_->console_->write ('\\');
+    context_->digitSeries_.pop_back ();
+    if (context_->digitSeries_.empty ())
+        context_->digitSeries_.push_back ('0');
 
     return move (currentState);
 }
 
-State KD11_NA_ODT::transition (EnteringRegisterValue_8 &&, CloseLocationCmdEntered)
+KD11_NA_ODT::State KD11_NA_ODT::StateMachine::transition (EnteringRegisterValue_8 &&, CloseLocationCmdEntered)
 {   
-    setRegisterValue ();
-    writeString ("\n");
+    context_->setRegisterValue ();
+    context_->writeString ("\n");
     return AtPrompt_1 {};
 }
 
 // When the user enters an Open location command (/) the given value has to be
 // used as an address to open.
-State KD11_NA_ODT::transition (EnteringRegisterValue_8&&, OpenLocationCmdEntered)
+KD11_NA_ODT::State KD11_NA_ODT::StateMachine::transition (EnteringRegisterValue_8&&, OpenLocationCmdEntered)
 {
-    return move (openAddress ());
+    return move (context_->openAddress ());
 }
 
-State KD11_NA_ODT::transition (EnteringRegisterValue_8 &&, OpenNextLocationCmdEntered)
+KD11_NA_ODT::State KD11_NA_ODT::StateMachine::transition (EnteringRegisterValue_8 &&, OpenNextLocationCmdEntered)
 {
-    setRegisterValue ();
-    return move (openNextRegister (RegisterOpened_4 {},
-        [this] () {return (location_.registerNr () + 1) % 8;}));
+    context_->setRegisterValue ();
+    return move (context_->openNextRegister (RegisterOpened_4 {},
+        [this] () {return (context_->location_.registerNr () + 1) % 8;}));
 }
 
-State KD11_NA_ODT::transition (EnteringRegisterValue_8 &&, OpenPreviousLocationCmdEntered)
+KD11_NA_ODT::State KD11_NA_ODT::StateMachine::transition (EnteringRegisterValue_8 &&, OpenPreviousLocationCmdEntered)
 {
-    writeString ("\n");
-    setRegisterValue ();
-    return move (openNextRegister (RegisterOpened_4 {},
-        [this] () {return static_cast<u8> (location_.registerNr () - 1) % 8;}));
+    context_->writeString ("\n");
+    context_->setRegisterValue ();
+    return move (context_->openNextRegister (RegisterOpened_4 {},
+        [this] () {return static_cast<u8> (context_->location_.registerNr () - 1) % 8;}));
 }
 
 // If used on the PS, the command will modify the PS if data has
@@ -70,22 +68,22 @@ State KD11_NA_ODT::transition (EnteringRegisterValue_8 &&, OpenPreviousLocationC
 // 
 // In case there is no previously opened location an error is retuned on
 // opening the location.
-State KD11_NA_ODT::transition (EnteringRegisterValue_8 &&, AtSignCmdEntered)
+KD11_NA_ODT::State KD11_NA_ODT::StateMachine::transition (EnteringRegisterValue_8 &&, AtSignCmdEntered)
 {
-    writeString ("\n"); 
-    setRegisterValue ();
+    context_->writeString ("\n"); 
+    context_->setRegisterValue ();
     u16 addressToOpen {0};
-    if (location_.isA<RegisterLocation> ())
-        addressToOpen = cpu_.register_[location_.registerNr ()];
+    if (context_->location_.isA<RegisterLocation> ())
+        addressToOpen = context_->cpu_.register_[context_->location_.registerNr ()];
     else
     {
         // The PSW is opened
-        assert (location_.isA<PSWLocation> ());
+        assert (context_->location_.isA<PSWLocation> ());
         
         // In case there is no currently open location print the error indication
-        if (location_.previousIsA<monostate> ())
+        if (context_->location_.previousIsA<monostate> ())
         {
-            writeString ("@/?\n");
+            context_->writeString ("@/?\n");
             return AtPrompt_1 {};
         }
 
@@ -93,23 +91,23 @@ State KD11_NA_ODT::transition (EnteringRegisterValue_8 &&, AtSignCmdEntered)
         // address, the address to open is that address; in case the
         // previously openend location was a register the contents of that
         // address is the location to open.
-        if (location_.previousIsA<AddressLocation> ())
-            addressToOpen = location_.previousInputAddress ();
+        if (context_->location_.previousIsA<AddressLocation> ())
+            addressToOpen = context_->location_.previousInputAddress ();
         else
-            addressToOpen = cpu_.register_[location_.previousRegisterNr ()];
+            addressToOpen = context_->cpu_.register_[context_->location_.previousRegisterNr ()];
     }
-    return openNextAddress ([=] () {return addressToOpen;});
+    return context_->openNextAddress ([=] () {return addressToOpen;});
 }
 
 // Note that this [back arrow] command cannot be used if a GPR or the PS is
 // the open location and if attempted, the command will modify the GPR
 // or PS if data has been typed, and close the GPR or PS; then a CR,
 // LF, @ will be issued. (LSI11 PDP11/03 Processor Handbook)
-State KD11_NA_ODT::transition (EnteringRegisterValue_8 &&, BackArrowCmdEntered)
+KD11_NA_ODT::State KD11_NA_ODT::StateMachine::transition (EnteringRegisterValue_8 &&, BackArrowCmdEntered)
 {   
-    setRegisterValue ();
+    context_->setRegisterValue ();
     // The cursor is positioned just after the _, so write a new line
     // to position the cursor at the begin of the new line.
-    writeString ("\n");
+    context_->writeString ("\n");
     return AtPrompt_1 {};
 }

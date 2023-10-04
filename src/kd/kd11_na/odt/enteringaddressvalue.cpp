@@ -1,14 +1,12 @@
 #include "kd11_na_odt.h"
 
-using namespace kd11_na_odt;
-
 #include <cassert>
 
 // This file contains the entry actions and state transitions for
 // the state EnteringAddressValue_7.
-State KD11_NA_ODT::transition (EnteringAddressValue_7 &&, DigitEntered digitEntered)
+KD11_NA_ODT::State KD11_NA_ODT::StateMachine::transition (EnteringAddressValue_7 &&, DigitEntered digitEntered)
 { 
-    digitSeries_.push_back (digitEntered.digit);
+    context_->digitSeries_.push_back (digitEntered.digit);
     return EnteringAddressValue_7 {};
 }
 
@@ -23,65 +21,65 @@ State KD11_NA_ODT::transition (EnteringAddressValue_7 &&, DigitEntered digitEnte
 // a leading zero, but making a distinction between an empty string indicating
 // there are no characters to be converted to a value and an empty string
 // which should be converted to zero will create an even uglier solution.
-State KD11_NA_ODT::transition (EnteringAddressValue_7 &&currentState, RuboutEntered)
+KD11_NA_ODT::State KD11_NA_ODT::StateMachine::transition (EnteringAddressValue_7 &&currentState, RuboutEntered)
 {
     // We expect there always is at least one character in the digitSeries_
     // buffer available. This either is a digit entered by the user or a '0'
     // in case the user has typed a RUBOUT in the AddressOpened_3 state.
-    assert (!digitSeries_.empty ());
+    assert (!context_->digitSeries_.empty ());
 
     // Echo a backslash and remove the last entered character. If the 
     // digitSeries_ is now empty replace it with a '0'.
-    console_->write ('\\');
-    digitSeries_.pop_back ();
-    if (digitSeries_.empty ())
-        digitSeries_.push_back ('0');
+    context_->console_->write ('\\');
+    context_->digitSeries_.pop_back ();
+    if (context_->digitSeries_.empty ())
+        context_->digitSeries_.push_back ('0');
 
     return move (currentState);
 }
 
-State KD11_NA_ODT::transition (EnteringAddressValue_7 &&, CloseLocationCmdEntered)
+KD11_NA_ODT::State KD11_NA_ODT::StateMachine::transition (EnteringAddressValue_7 &&, CloseLocationCmdEntered)
 {
-    setAddressValue ();
-    writeString ("\n");
+    context_->setAddressValue ();
+    context_->writeString ("\n");
     return AtPrompt_1 {};
 }
 
-State KD11_NA_ODT::transition (EnteringAddressValue_7 &&, OpenNextLocationCmdEntered)
+KD11_NA_ODT::State KD11_NA_ODT::StateMachine::transition (EnteringAddressValue_7 &&, OpenNextLocationCmdEntered)
 {
-    setAddressValue ();
-    return openNextAddress ([this] () {return location_.inputAddress () + 2;});
+    context_->setAddressValue ();
+    return context_->openNextAddress ([this] () {return context_->location_.inputAddress () + 2;});
 }
 
-State KD11_NA_ODT::transition (EnteringAddressValue_7 &&, OpenPreviousLocationCmdEntered)
+KD11_NA_ODT::State KD11_NA_ODT::StateMachine::transition (EnteringAddressValue_7 &&, OpenPreviousLocationCmdEntered)
 {
-    writeString ("\n");
-    setAddressValue ();
-    return openNextAddress ([this] () {return location_.inputAddress () - 2;});
+    context_->writeString ("\n");
+    context_->setAddressValue ();
+    return context_->openNextAddress ([this] () {return context_->location_.inputAddress () - 2;});
 }
 
 // Also the open location can be optionally modified similar to other commands
 // and if done, the new contents will be used as the pointer.
 // (LSI11 PDP11/03 Processor Handbook)
-State KD11_NA_ODT::transition (EnteringAddressValue_7 &&, AtSignCmdEntered)
+KD11_NA_ODT::State KD11_NA_ODT::StateMachine::transition (EnteringAddressValue_7 &&, AtSignCmdEntered)
 {
-    writeString ("\n");
-    setAddressValue ();
-    return openNextAddress ([this] () {return newValue_;});
+    context_->writeString ("\n");
+    context_->setAddressValue ();
+    return context_->openNextAddress ([this] () {return context_->newValue_;});
 }
 
-State KD11_NA_ODT::transition (EnteringAddressValue_7 &&, BackArrowCmdEntered)
+KD11_NA_ODT::State KD11_NA_ODT::StateMachine::transition (EnteringAddressValue_7 &&, BackArrowCmdEntered)
 {
-    writeString ("\n");
-    setAddressValue ();
-    return openNextAddress ([this] () 
-        {return location_.wordAddress () + bus_->read (location_.wordAddress ()) + 2;});
+    context_->writeString ("\n");
+    context_->setAddressValue ();
+    return context_->openNextAddress ([this] () 
+        {return context_->location_.wordAddress () + context_->bus_->read (context_->location_.wordAddress ()) + 2;});
 }
 
 // When an address location is open, another location can be opened without
 // explicitly closing the first location; e.g., 1000/123456 2000/054321.
 // (Micronote 050 Micro ODT Differences - LSI-11 vs. LSI-11/23)
-State KD11_NA_ODT::transition (EnteringAddressValue_7 &&, OpenLocationCmdEntered)
+KD11_NA_ODT::State KD11_NA_ODT::StateMachine::transition (EnteringAddressValue_7 &&, OpenLocationCmdEntered)
 {
-    return move (openAddress ());
+    return move (context_->openAddress ());
 }

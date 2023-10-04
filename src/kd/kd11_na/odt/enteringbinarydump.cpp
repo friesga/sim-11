@@ -1,7 +1,5 @@
 #include "kd11_na_odt.h"
 
-using namespace kd11_na_odt;
-
 // This command is used for manufacturing test purposes and is not a normal
 // user command. [...] The protocol is as follows:
 // 1. After a prompt character, console OOT receives a control-shift-S
@@ -20,18 +18,18 @@ using namespace kd11_na_odt;
 //
 // (Microcomputer and Memories EB-20912-20)
 //
-State KD11_NA_ODT::transition (AtPrompt_1 &&, BinaryDumpCmdEntered)
+KD11_NA_ODT::State KD11_NA_ODT::StateMachine::transition (AtPrompt_1 &&, BinaryDumpCmdEntered)
 {
     // Expect two bytes and transform it into the starting address.
     // The two bytes forming the address have to be read in two separate
     // statements to make sure the high byte of the address is read first.
-    u16 highByte = console_->read () << 8;
-    u16 startAddress = highByte | console_->read ();
+    u16 highByte = context_->console_->read () << 8;
+    u16 startAddress = highByte | context_->console_->read ();
 
     // Dump 10 bytes i.e. 5 words as binaries
     for (size_t numWords = 0; numWords < 5; ++numWords)
     {
-        console_->write (bus_->read (startAddress));
+        context_->console_->write (context_->bus_->read (startAddress));
         startAddress += 2;
     }
 

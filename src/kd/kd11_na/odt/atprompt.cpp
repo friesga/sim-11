@@ -1,29 +1,27 @@
 #include "kd11_na_odt.h"
 #include "trace/trace.h"
 
-using namespace kd11_na_odt;
-
 using std::move;
 using std::to_string;
 
 // This file contains the entry actions and state transitions for
 // the state AtPrompt_1.
 
-void KD11_NA_ODT::entry (AtPrompt_1)
+void KD11_NA_ODT::StateMachine::entry (AtPrompt_1)
 {
-    console_->write ('@');
+    context_->console_->write ('@');
 }
 
-State KD11_NA_ODT::transition (AtPrompt_1 &&, DigitEntered digitEntered)
+KD11_NA_ODT::State KD11_NA_ODT::StateMachine::transition (AtPrompt_1 &&, DigitEntered digitEntered)
 {
     // The given digit is the first digit of an address
-    digitSeries_ = digitEntered.digit;
+    context_->digitSeries_ = digitEntered.digit;
     return EnteringAddress_5 {};
 }
 
-State KD11_NA_ODT::transition (AtPrompt_1 &&, RegisterCmdEntered)
+KD11_NA_ODT::State KD11_NA_ODT::StateMachine::transition (AtPrompt_1 &&, RegisterCmdEntered)
 {
-    registerSeries_.clear ();
+    context_->registerSeries_.clear ();
     return StartingRegister_2 {};
 }
 
@@ -32,30 +30,30 @@ State KD11_NA_ODT::transition (AtPrompt_1 &&, RegisterCmdEntered)
 // only if it is entered immediately after a prompt character. A / issued
 // immediately after the processor enters OOT mode will cause ? <CR>, <LF> to
 // be printed because a location has not yet been opened. (EK-KDJ1A-UG-001)
-State KD11_NA_ODT::transition (AtPrompt_1 && currentState, OpenLocationCmdEntered)
+KD11_NA_ODT::State KD11_NA_ODT::StateMachine::transition (AtPrompt_1 && currentState, OpenLocationCmdEntered)
 {
-    if (location_.isA<monostate> ())
+    if (context_->location_.isA<monostate> ())
     {
         // No location openend yet
-        writeString ("?\n");
+        context_->writeString ("?\n");
         return move (currentState);
     }
 
-    if (location_.isA<AddressLocation> ())
+    if (context_->location_.isA<AddressLocation> ())
     {
         // Print last opened address and it's value
-        return writeAddressContents (location_.wordAddress ());
+        return context_->writeAddressContents (context_->location_.wordAddress ());
     }
 
-    if (location_.isA<RegisterLocation> ())
+    if (context_->location_.isA<RegisterLocation> ())
     {
-        writeString (octalNumberToString (cpu_.registerValue (location_.registerNr ())) + ' ');
+        context_->writeString (context_->octalNumberToString (context_->cpu_.registerValue (context_->location_.registerNr ())) + ' ');
         return RegisterOpened_4 {};
     }
 
-    if (location_.isA<PSWLocation> ())
+    if (context_->location_.isA<PSWLocation> ())
     {
-        writeString (octalNumberToString (cpu_.pswValue ()) + ' ');
+        context_->writeString (context_->octalNumberToString (context_->cpu_.pswValue ()) + ' ');
         return RegisterOpened_4 {};
     }
 
@@ -64,17 +62,17 @@ State KD11_NA_ODT::transition (AtPrompt_1 && currentState, OpenLocationCmdEntere
 }
 
 // On a Proceed command set the CPU into the running state and exit ODT
-State KD11_NA_ODT::transition (AtPrompt_1 &&, ProceedCmdEntered)
+KD11_NA_ODT::State KD11_NA_ODT::StateMachine::transition (AtPrompt_1 &&, ProceedCmdEntered)
 {
-    cpu_.proceed ();
-    trace.cpuEvent (CpuEventRecordType::CPU_ODT_P, cpu_.registerValue (7));
+    context_->cpu_.proceed ();
+    trace.cpuEvent (CpuEventRecordType::CPU_ODT_P, context_->cpu_.registerValue (7));
     return ExitPoint {};
 }
 
 // On a Go command start the CPU at the default address (000000).
-State KD11_NA_ODT::transition (AtPrompt_1 &&, GoCmdEntered)
+KD11_NA_ODT::State KD11_NA_ODT::StateMachine::transition (AtPrompt_1 &&, GoCmdEntered)
 {
-    startCPU (000000);
+    context_->startCPU (000000);
     return ExitPoint {};
 }
 
@@ -82,8 +80,8 @@ State KD11_NA_ODT::transition (AtPrompt_1 &&, GoCmdEntered)
 // the contents of an internal CPU register. This data reflects how the
 // machine got to the console mode.
 // The value is or'ed with 010 as a real LSI-11/2 prints that value.
-State KD11_NA_ODT::transition (AtPrompt_1&&, MaintenanceCmdEntered)
+KD11_NA_ODT::State KD11_NA_ODT::StateMachine::transition (AtPrompt_1&&, MaintenanceCmdEntered)
 {
-    writeString (octalNumberToString (static_cast<u16> (cpu_.haltReason_) | 010) + '\n');
+    context_->writeString (context_->octalNumberToString (static_cast<u16> (context_->cpu_.haltReason_) | 010) + '\n');
     return AtPrompt_1 {};
 }

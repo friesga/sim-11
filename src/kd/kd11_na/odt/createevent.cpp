@@ -1,7 +1,5 @@
 #include "kd11_na_odt.h"
 
-using namespace kd11_na_odt;
-
 // Create the appropriate event from the given character. We receive either
 // a character or an empty object. In the latter case we create an
 // ExitCmdGiven event to make the state machine transition to the exit point.
@@ -13,7 +11,7 @@ using namespace kd11_na_odt;
 // characters as commands". The test runs conducted at a real LSI-11/2
 // demonstrated that lower case characters are not accepted.
 //
-Event KD11_NA_ODT::createEvent (CondData<u8> c)
+KD11_NA_ODT::Event KD11_NA_ODT::createEvent (CondData<u8> c)
 {
     if (!c.hasValue ())
         return ExitCmdGiven {};

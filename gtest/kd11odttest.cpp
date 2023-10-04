@@ -3,8 +3,6 @@
 #include "kd/kd11_na/odt/kd11_na_odt.h"
 #include "testconsoleaccess.h"
 
-using namespace kd11_na_odt;
-
 #include <gtest/gtest.h>
 #include <memory>
 #include <utility>

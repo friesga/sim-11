@@ -1,8 +1,6 @@
 #include "kd11_na_odt.h"
 #include "trace/trace.h"
 
-using namespace kd11_na_odt;
-
 #include <sstream>
 #include <iomanip>
 #include <thread>
@@ -30,8 +28,10 @@ KD11_NA_ODT::KD11_NA_ODT (Qbus *bus, KD11_NA_Cpu &cpu, unique_ptr<ConsoleAccess>
     registerSeries_ {},
     location_ {}
 {
+    stateMachine_ = make_unique<StateMachine> (this);
+
     // Start the fsm by a transition to the AtPrompt_1 state
-    dispatch (StartFsm {});
+    stateMachine_->dispatch (StartFsm {});
 }
 
 CondData<u8> KD11_NA_ODT::echoCharacter (CondData<u8> c)
@@ -86,7 +86,7 @@ void KD11_NA_ODT::writeString (string str)
 //
 // Test runs conducted on a real LSI-11/2 show the last opened location
 // is set too on opening an invalid address.
-State KD11_NA_ODT::writeAddressContents (u16 address)
+KD11_NA_ODT::State KD11_NA_ODT::writeAddressContents (u16 address)
 {
     location_ = AddressLocation {static_cast<u16> (address)};
     if (bus_->read (address).hasValue ())
@@ -144,7 +144,7 @@ bool KD11_NA_ODT::registerSeriesEndsWith (string str)
         return false;
 }
 
-State KD11_NA_ODT::openAddress ()
+KD11_NA_ODT::State KD11_NA_ODT::openAddress ()
 {
     // Convert the last eight digits entered to an address. This can lead
     // to an address larger than the available memory, but currently the
@@ -184,7 +184,7 @@ void KD11_NA_ODT::setAddressValue ()
 // getNextAddress as there are a number of commands only differing on the
 // calculation of the address.
 // 
-State KD11_NA_ODT::openNextAddress (std::function<u16(void)> getNextAddress)
+KD11_NA_ODT::State KD11_NA_ODT::openNextAddress (std::function<u16(void)> getNextAddress)
 {
     u16 address = getNextAddress ();
     writeString (octalNumberToString (address) + '/');
@@ -201,7 +201,7 @@ State KD11_NA_ODT::openNextAddress (std::function<u16(void)> getNextAddress)
 // getNextRegister. This functor should either increment of decrement the
 // register number modulo 8 (the number of internal registers).
 //
-State KD11_NA_ODT::openNextRegister (State &&currentState, 
+KD11_NA_ODT::State KD11_NA_ODT::openNextRegister (State &&currentState, 
     std::function<u8(void)> getNextRegister)
 {
     if (location_.isA<PSWLocation> ())
@@ -247,6 +247,6 @@ void KD11_NA_ODT::startCPU (u16 address)
 // accept another character, i.e. the state machine is still running.
 bool KD11_NA_ODT::processCharacter (u8 character)
 {
-    dispatch (createEvent (echoCharacter (character)));
+    stateMachine_->dispatch (createEvent (echoCharacter (character)));
     return odtRunning_;
 }

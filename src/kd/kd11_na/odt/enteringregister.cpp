@@ -1,7 +1,5 @@
 #include "kd11_na_odt.h"
 
-using namespace kd11_na_odt;
-
 // This file contains all transition for the state EnteringRegister_6.
 // In this state two cases have to be treated: the entry and display of
 // a register and the entry and display of the PSW. I would have preferred
@@ -10,20 +8,20 @@ using namespace kd11_na_odt;
 // implemented statemachine to resemble the statemachine described in the
 // KDJ11 User Guide as closely as possible.
 
-State KD11_NA_ODT::transition (EnteringRegister_6 &&, DigitEntered digitEntered)
+KD11_NA_ODT::State KD11_NA_ODT::StateMachine::transition (EnteringRegister_6 &&, DigitEntered digitEntered)
 {
     // Append the entered digit to series of digits entered. See comment
     // on the transition in the StartingRegister_5 state.
-    if (registerSeries_.empty ())
+    if (context_->registerSeries_.empty ())
     {
-        registerSeries_.push_back (digitEntered.digit);
+        context_->registerSeries_.push_back (digitEntered.digit);
         return EnteringRegister_6 {};
     }
     else
     {
-        digitSeries_ = registerSeries_;
-        digitSeries_.push_back (digitEntered.digit);
-        registerSeries_.clear ();
+        context_->digitSeries_ = context_->registerSeries_;
+        context_->digitSeries_.push_back (digitEntered.digit);
+        context_->registerSeries_.clear ();
         return EnteringAddress_5 {};
     }
 }
@@ -39,17 +37,17 @@ State KD11_NA_ODT::transition (EnteringRegister_6 &&, DigitEntered digitEntered)
 // transition to the EnteringAddress_5 state. So on a RuboutEntered event
 // in this (i.e. the EnteringRegister_6) state, both registerSeries_ and
 // digitSeries_ have to be cleared.
-State KD11_NA_ODT::transition (EnteringRegister_6 &&, RuboutEntered)
+KD11_NA_ODT::State KD11_NA_ODT::StateMachine::transition (EnteringRegister_6 &&, RuboutEntered)
 {
-    console_->write ('\\');
-    registerSeries_.clear ();
-    digitSeries_.clear ();
+    context_->console_->write ('\\');
+    context_->registerSeries_.clear ();
+    context_->digitSeries_.clear ();
     return EnteringAddress_5 {};
 }
 
-State KD11_NA_ODT::transition (EnteringRegister_6 &&, PswDesignatorEntered)
+KD11_NA_ODT::State KD11_NA_ODT::StateMachine::transition (EnteringRegister_6 &&, PswDesignatorEntered)
 {
-    registerSeries_.push_back (PswDesignator);
+    context_->registerSeries_.push_back (PswDesignator);
     return EnteringRegister_6 {};
 }
 
@@ -57,11 +55,11 @@ State KD11_NA_ODT::transition (EnteringRegister_6 &&, PswDesignatorEntered)
 // a register or the PSW has to be opened. At least for a LSI-11/2 this
 // is not correct. If more than one register digit is entered the digits
 // are interpreted as an address to be opened.
-State KD11_NA_ODT::transition (EnteringRegister_6 &&, OpenLocationCmdEntered)
+KD11_NA_ODT::State KD11_NA_ODT::StateMachine::transition (EnteringRegister_6 &&, OpenLocationCmdEntered)
 {
     // The last character in the registerSeries indicates whether a register
     // and in that case which register or the PSW has to be openend.
-    if (registerSeries_.back() == PswDesignator)
+    if (context_->registerSeries_.back() == PswDesignator)
     {
         // Open PSW. Only set it as a new open location if it wasn't already
         // the open location. This way the previously opened memory or
@@ -69,15 +67,15 @@ State KD11_NA_ODT::transition (EnteringRegister_6 &&, OpenLocationCmdEntered)
         // multiple times. This is used in the processing of the at sign
         // command for an opened PSW (see the gtransition from
         // EnteringRegisterValue_8 for the AtSignCmdEntered event).
-        writeString (octalNumberToString (cpu_.pswValue ()) + ' ');
-        if (!location_.isA<PSWLocation> ())
-            location_ = PSWLocation {};
+        context_->writeString (context_->octalNumberToString (context_->cpu_.pswValue ()) + ' ');
+        if (!context_->location_.isA<PSWLocation> ())
+            context_->location_ = PSWLocation {};
     }
     else
     {
         // Open register
-        location_ = RegisterLocation {static_cast<u8> (registerSeries_.back() - '0')};
-        writeString (octalNumberToString (cpu_.registerValue (location_.registerNr ())) + ' ');
+        context_->location_ = RegisterLocation {static_cast<u8> (context_->registerSeries_.back() - '0')};
+        context_->writeString (context_->octalNumberToString (context_->cpu_.registerValue (context_->location_.registerNr ())) + ' ');
     }
 
     return RegisterOpened_4 {};
@@ -85,8 +83,8 @@ State KD11_NA_ODT::transition (EnteringRegister_6 &&, OpenLocationCmdEntered)
 
 // Test runs on a real LSI-11/2 showed that an address location can be closed
 // before it is opened. Presumably the same holds for a register location.
-State KD11_NA_ODT::transition (EnteringRegister_6 &&, CloseLocationCmdEntered)
+KD11_NA_ODT::State KD11_NA_ODT::StateMachine::transition (EnteringRegister_6 &&, CloseLocationCmdEntered)
 {
-    writeString ("\n");
+    context_->writeString ("\n");
     return AtPrompt_1 {};
 }
