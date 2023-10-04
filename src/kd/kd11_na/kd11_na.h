@@ -7,6 +7,7 @@
 #include "configdata/kd11_naconfig/kd11_naconfig.h"
 #include "variantfsm/fsm.h"
 #include "threadsafecontainers/threadsafequeue.h"
+#include "kd/common/controllogic/controllogic.h"
 
 #include <memory>
 
@@ -16,7 +17,8 @@ using std::unique_lock;
 using std::defer_lock;
 using std::monostate;
 
-// The class KD11_NA is composed of the KD11_NA CPU and the KD11_NA ODT.
+// The class KD11_NA starta the control logic which on its turn has to run
+// the KD11_NA's cpu and start the KD11_NA's ODT.
 class KD11_NA : public PDP11Processor
 {
 public:
@@ -42,128 +44,18 @@ public:
         { return false; }
     void reset () override {};
 
-    // Declare the signal receivers
-    void BHALTReceiver (bool signalValue);
-    void BPOKReceiver (bool signalValue);
-    void ExitReceiver (bool signalValue);
-    void ResetReceiver (bool signalValue);
-
 private:
-    // Definition of the events to be processed by the KD11_NA
-    struct BPOK_high {};
-    struct Halt {};
-    struct Start {};
-    struct Reset {};
-    struct BPOK_low {};
-    struct BDCOK_low {};
-    struct Exit {};
-
-    using Event = std::variant<BPOK_high,
-        Halt,
-        Start,
-        Reset,
-        BPOK_low,
-        BDCOK_low,
-        Exit>;
-
-    // Definition of the states
-    struct PowerOff {};
-    struct Running {};
-    struct Halted {};
-    struct PowerFail {};
-    struct ExitPoint {};
-
-    using State = std::variant<PowerOff,
-        Running,
-        Halted,
-        PowerFail,
-        ExitPoint,
-        monostate>;
-
-    // Use the PIMPL idiom to be able to define the StateMachine outside
-    // of the Switch class
-    class StateMachine;
-    unique_ptr<StateMachine> stateMachine_;
+    enum { stdBootAddress = 0173000 };
 
     Qbus* bus_;
     KD11_NA_Cpu cpu_ {bus_};
     unique_ptr<KD11_NA_ODT>	odt_ {};
     KD11_NAConfig::PowerUpMode powerUpMode_;
-    bool kd11Running_;
     u16 startAddress_;
-
-    enum { stdBootAddress = 0173000 };
+    ControlLogic controlLogic_ {bus_, &cpu_, powerUpMode_, startAddress_};
 
     // The KD11_NA is started in its own thread
     std::thread kd11Thread_;
-
-    // Definition of a queue for the processing of bus signal events
-    ThreadSafeQueue<Event> signalEventQueue_;
-
-    InterruptRequest const powerFail {RequestType::Trap, TrapPriority::PowerFail, 0, 024};
-
-    State powerUpRoutine ();
-    void subscribeToSignals ();
-    void run ();
-    void runODT ();
-    bool signalAvailable ();
-    template <typename T> bool signalIsOfType ();
 };
-
-// This function returns true if the first element in the signal queue is
-// a variant holding an Event of the specified type.
-template <typename T>
-bool KD11_NA::signalIsOfType ()
-{
-    return holds_alternative<T> (signalEventQueue_.first ());
-}
-
-class KD11_NA::StateMachine : public variantFsm::Fsm<StateMachine, Event, State>
-{
-public:
-    StateMachine (KD11_NA* context);
-
-    // Definition of the KD11_NA state machine
-    State transition (PowerOff&&, BPOK_high);		// -> Halted/Running
-    void entry (Running);
-    State transition (Running&&, Reset);			// -> Halted/Running
-    State transition (Running&&, Halt);				// -> Halted
-    State transition (Running&&, BPOK_low);			// -> PowerFail
-    void entry (Halted);
-    State transition (Halted&&, Start);				// -> Running
-    State transition (Halted&&, Reset);				// -> Halted/Running
-    State transition (Halted&&, BPOK_low);			// -> PowerOff
-    void entry (PowerFail);
-    State transition (PowerFail&&, BDCOK_low);		// -> PowerOff
-    State transition (PowerFail&&, Halt);			// -> PowerOff
-
-    template <typename S>
-    State transition (S&& state, Exit)
-    {
-        return ExitPoint {};
-    }
-    void entry (ExitPoint);
-
-    // Define the default transition for transitions not explicitly
-    // defined above. The default transition implies the event is ignored.
-    template <typename S, typename E>
-    State transition (S&& state, E)
-    {
-        return monostate {};
-    }
-
-    // As we make use of exit/entry functions, we must handle all cases.
-    // The default entry/exit action is an immediate return.
-    template <typename S> void exit (variantFsm::TagType<S>) {}
-    template <typename S> void entry (S&) {}
-
-private:
-    KD11_NA *context_;
-};
-
-inline KD11_NA::StateMachine::StateMachine (KD11_NA* context)
-    :
-    context_ {context}
-{}
 
 #endif // !_KD11_NA_H_

@@ -1,4 +1,4 @@
-#include "kd11_na.h"
+#include "controllogic.h"
 
 using std::make_unique;
 using std::this_thread::sleep_for;
@@ -11,7 +11,7 @@ using std::this_thread::sleep_for;
 //
 // processCharacter() will return false when it cannot process characters
 // anymore because either a Proceed or Go command was entered.
-void KD11_NA::runODT ()
+void ControlLogic::runODT ()
 {
     OperatorConsoleAccess console_ {bus_};
     Event haltEvent {};

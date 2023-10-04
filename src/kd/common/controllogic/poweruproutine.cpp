@@ -1,4 +1,4 @@
-#include "kd11_na.h"
+#include "controllogic.h"
 
 // The reaction on a power-up is configured by the power-up mode. Three
 // power-up modes can be selected:
@@ -18,7 +18,7 @@
 //
 // The function will return the state to transition to.
 //
-KD11_NA::State KD11_NA::powerUpRoutine ()
+ControlLogic::State ControlLogic::powerUpRoutine ()
 {
     cpu_.cpuReset ();
     bus_->BINIT().cycle ();

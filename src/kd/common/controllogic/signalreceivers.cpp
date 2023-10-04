@@ -1,18 +1,18 @@
-#include "kd11_na.h"
+#include "controllogic.h"
 
 using std::bind;
 using std::placeholders::_1;
 
 // Get notifications on the state of the signals
-void KD11_NA::subscribeToSignals ()
+void ControlLogic::subscribeToSignals ()
 {
-    bus_->BHALT().subscribe (bind (&KD11_NA::BHALTReceiver, this, _1));
-    bus_->BPOK().subscribe (bind (&KD11_NA::BPOKReceiver, this, _1));
-    bus_->RESET().subscribe (bind (&KD11_NA::ResetReceiver, this, _1));
+    bus_->BHALT().subscribe (bind (&ControlLogic::BHALTReceiver, this, _1));
+    bus_->BPOK().subscribe (bind (&ControlLogic::BPOKReceiver, this, _1));
+    bus_->RESET().subscribe (bind (&ControlLogic::ResetReceiver, this, _1));
 }
 
 // The BHALT signal halts the processor. 
-void KD11_NA::BHALTReceiver (bool signalValue)
+void ControlLogic::BHALTReceiver (bool signalValue)
 {
     if (signalValue)
         signalEventQueue_.push (Halt {});
@@ -27,7 +27,7 @@ void KD11_NA::BHALTReceiver (bool signalValue)
 // Note that this function will be executed in a different thread from the
 // thread in which the CPU is running. Access to the signal event is 
 // synchronized via the ThreadSafeQueue.
-void KD11_NA::BPOKReceiver (bool signalValue)
+void ControlLogic::BPOKReceiver (bool signalValue)
 {
     if (signalValue)
         signalEventQueue_.push (BPOK_high {});
@@ -35,12 +35,12 @@ void KD11_NA::BPOKReceiver (bool signalValue)
         signalEventQueue_.push (BPOK_low {});
 }
 
-void KD11_NA::ExitReceiver (bool signalValue)
+void ControlLogic::ExitReceiver (bool signalValue)
 {
     signalEventQueue_.push (Exit {});
 }
 
-void KD11_NA::ResetReceiver (bool signalValue)
+void ControlLogic::ResetReceiver (bool signalValue)
 {
     if (signalValue)
         signalEventQueue_.push (Reset {});

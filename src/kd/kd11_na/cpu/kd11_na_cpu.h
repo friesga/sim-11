@@ -56,8 +56,8 @@ enum class CpuRunState
 class KD11_NA_Cpu : public CpuData
 {
 public:
-	// KD11_NA_ODT and LSI11 need access to the CpuControl functions.
-	friend class KD11_NA;
+	// The ControlLogic and LSI11 classes need access to the CpuControl functions.
+	friend class ControlLogic;
 	friend class KD11_NA_ODT;
 	friend class LSI11;
 	

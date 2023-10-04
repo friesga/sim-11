@@ -18,6 +18,13 @@ set (CMDLINEOPTIONS_SRCS
     src/cmdlineoptions/cmdlineoptions.cpp
     src/cmdlineoptions/data.cpp)
 
+set (KD11CONTROLLOGIC_SRCS
+    src/kd/common/controllogic/controllogic.cpp
+    src/kd/common/controllogic/poweruproutine.cpp
+    src/kd/common/controllogic/runodt.cpp
+    src/kd/common/controllogic/signalreceivers.cpp
+    src/kd/common/controllogic/statemachine.cpp)
+
 set (KD11ODT_SRCS
     src/kd/kd11_na/odt/kd11_na_odt.cpp
     src/kd/kd11_na/odt/addressopened.cpp
@@ -59,11 +66,8 @@ set (KDF11_A_SRCS
 
  set (KD11_NA_SRCS
     src/kd/kd11_na/kd11_na.cpp
-    src/kd/kd11_na/poweruproutine.cpp
-    src/kd/kd11_na/runodt.cpp
-    src/kd/kd11_na/signalreceivers.cpp
-    src/kd/kd11_na/statemachine.cpp
     src/kd/kd11_na/operatorconsoleaccess/operatorconsoleaccess.cpp
+    ${KD11CONTROLLOGIC_SRCS}
     ${KD11CPU_SRCS}
     ${KD11ODT_SRCS})
 

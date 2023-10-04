@@ -1,14 +1,14 @@
-#include "kd11_na.h"
+#include "controllogic.h"
 
 using std::make_unique;
 using std::monostate;
 
-KD11_NA::State KD11_NA::StateMachine::transition (PowerOff&&, BPOK_high)
+ControlLogic::State ControlLogic::StateMachine::transition (PowerOff&&, BPOK_high)
 {
     return context_->powerUpRoutine ();
 }
 
-void KD11_NA::StateMachine::entry (Running)
+void ControlLogic::StateMachine::entry (Running)
 {
     while (!context_->signalAvailable ())
     {
@@ -26,18 +26,18 @@ void KD11_NA::StateMachine::entry (Running)
     context_->bus_->SRUN ().set (false);
 }
 
-KD11_NA::State KD11_NA::StateMachine::transition (Running&&, Reset)
+ControlLogic::State ControlLogic::StateMachine::transition (Running&&, Reset)
 {
     return context_->powerUpRoutine ();
 }
 
-KD11_NA::State KD11_NA::StateMachine::transition (Running&&, Halt)
+ControlLogic::State ControlLogic::StateMachine::transition (Running&&, Halt)
 {
     return Halted {};
 }
 
 
-KD11_NA::State KD11_NA::StateMachine::transition (Running&&, BPOK_low)
+ControlLogic::State ControlLogic::StateMachine::transition (Running&&, BPOK_low)
 {
     return PowerFail {};
 }
@@ -47,22 +47,22 @@ KD11_NA::State KD11_NA::StateMachine::transition (Running&&, BPOK_low)
 // Handbook states: "A / issued immediately after the processor
 // enters ODT mode causes a ?<CR><LF> to be printed because a
 // location has not yet been opened.
-void KD11_NA::StateMachine::entry (Halted)
+void ControlLogic::StateMachine::entry (Halted)
 {
     context_->runODT ();
 }
 
-KD11_NA::State KD11_NA::StateMachine::transition (Halted&&, Start)
+ControlLogic::State ControlLogic::StateMachine::transition (Halted&&, Start)
 {
     return Running {};
 }
 
-KD11_NA::State KD11_NA::StateMachine::transition (Halted&&, Reset)
+ControlLogic::State ControlLogic::StateMachine::transition (Halted&&, Reset)
 {
     return context_->powerUpRoutine ();
 }
  
-KD11_NA::State KD11_NA::StateMachine::transition (Halted&&, BPOK_low)
+ControlLogic::State ControlLogic::StateMachine::transition (Halted&&, BPOK_low)
 {
     return PowerOff {};
 }
@@ -72,7 +72,7 @@ KD11_NA::State KD11_NA::StateMachine::transition (Halted&&, BPOK_low)
 // 1000 instructions (presuming an avering instruction exeution time of
 // 4 microseconds and 4 milliseconds DC power available). The powerfail
 // routine cannot be single stepped.
-void KD11_NA::StateMachine::entry (PowerFail)
+void ControlLogic::StateMachine::entry (PowerFail)
 {
     size_t maxInstructions {1000};
 
@@ -92,19 +92,19 @@ void KD11_NA::StateMachine::entry (PowerFail)
         context_->signalEventQueue_.push (BDCOK_low {});
 }
 
-KD11_NA::State KD11_NA::StateMachine::transition (PowerFail&&, BDCOK_low)
+ControlLogic::State ControlLogic::StateMachine::transition (PowerFail&&, BDCOK_low)
 {
     context_->bus_->SRUN ().set (false);
     return PowerOff {};
 }
 
-KD11_NA::State KD11_NA::StateMachine::transition (PowerFail&&, Halt)
+ControlLogic::State ControlLogic::StateMachine::transition (PowerFail&&, Halt)
 {
     context_->bus_->SRUN ().set (false);
     return PowerOff {};
 }
 
-void KD11_NA::StateMachine::entry (ExitPoint)
+void ControlLogic::StateMachine::entry (ExitPoint)
 {
     context_->kd11Running_ = false;
 }
