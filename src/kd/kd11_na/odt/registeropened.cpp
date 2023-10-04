@@ -70,7 +70,7 @@ KD11_NA_ODT::State KD11_NA_ODT::StateMachine::transition (RegisterOpened_4 &&cur
     return context_->openNextAddress ([this] () 
     {
         return context_->location_.isA<RegisterLocation> () ?
-            context_->cpu_.register_[context_->location_.registerNr ()] : context_->cpu_.psw_;
+            context_->cpu_.registers() [context_->location_.registerNr ()] : context_->cpu_.psw ();
     });
 }
 

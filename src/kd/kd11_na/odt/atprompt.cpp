@@ -82,6 +82,6 @@ KD11_NA_ODT::State KD11_NA_ODT::StateMachine::transition (AtPrompt_1 &&, GoCmdEn
 // The value is or'ed with 010 as a real LSI-11/2 prints that value.
 KD11_NA_ODT::State KD11_NA_ODT::StateMachine::transition (AtPrompt_1&&, MaintenanceCmdEntered)
 {
-    context_->writeString (context_->octalNumberToString (static_cast<u16> (context_->cpu_.haltReason_) | 010) + '\n');
+    context_->writeString (context_->octalNumberToString (static_cast<u16> (context_->cpu_.haltReason ()) | 010) + '\n');
     return AtPrompt_1 {};
 }

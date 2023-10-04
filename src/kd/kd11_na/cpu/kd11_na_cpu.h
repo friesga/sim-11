@@ -118,18 +118,6 @@ private:
 		&FIS
 	};
 
-	// This enum holds the reason for halting the system. This data is printed
-	// by the ODT Maintenance command.
-	// (LSI11 PDP11/03 Processor Handbook)
-	enum class HaltReason
-	{
-		HaltInstruction			= 0,	// Halt instruction or B Halt line
-		BusErrorOnIntrptVector  = 1,	// Bus Error occurred while getting device interrupt vector
-		BusErrorOnMemoryRefresh = 2,	// Not used
-		DoubleBusError			= 3,	// Double Bus Error occurred (stack was non-existent value)
-		NonExistentMicroAddress = 4		// Not used
-	};
-
 	HaltReason haltReason_;
 
 	// Definition of CpuControl functions. These functions are
@@ -147,6 +135,7 @@ private:
     constexpr void setRegister (u8 registerNr, u16 value);
     constexpr u16 pswValue ();
 	constexpr void setPSW (u16 value);
+	constexpr HaltReason haltReason ();
 
 	void loadTrapVector (InterruptRequest const* trap);
 	void execInstr ();
@@ -190,7 +179,6 @@ constexpr void KD11_NA_Cpu::setRegister (u8 registerNr, u16 value)
 // Set the Processor Status Word to the given value. The T-bit cannot be set
 // via this function.
 // 
-
  constexpr void KD11_NA_Cpu::setPSW (u16 value)
  {
      psw_ = (psw_ & PSW_T) | (value & ~PSW_T);
@@ -201,4 +189,8 @@ constexpr void KD11_NA_Cpu::setRegister (u8 registerNr, u16 value)
      return psw_;
  }
 
+ constexpr CpuControl::HaltReason KD11_NA_Cpu::haltReason ()
+ {
+	 return haltReason_;
+ }
 #endif // _KD11_NA_CPU_H_

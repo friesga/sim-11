@@ -9,6 +9,18 @@
 class CpuControl
 {
 public:
+    // This enum holds the reason for halting the system. This data is printed
+	// by the ODT Maintenance command.
+	// (LSI11 PDP11/03 Processor Handbook)
+	enum class HaltReason
+	{
+		HaltInstruction			= 0,	// Halt instruction or B Halt line
+		BusErrorOnIntrptVector  = 1,	// Bus Error occurred while getting device interrupt vector
+		BusErrorOnMemoryRefresh = 2,	// Not used
+		DoubleBusError			= 3,	// Double Bus Error occurred (stack was non-existent value)
+		NonExistentMicroAddress = 4		// Not used
+	};
+
     // The setTrap function is needed for the execution of a reset in power-up
     // mode 0 (start via vector at address 24/26).
     virtual void setTrap (InterruptRequest const *ir) = 0;
@@ -25,6 +37,8 @@ public:
 
     virtual u16 pswValue () = 0;
     virtual void setPSW (u16 value) = 0;
+
+    virtual HaltReason haltReason () = 0;
 };
 
 

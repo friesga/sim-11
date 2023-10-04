@@ -1,6 +1,7 @@
 #ifndef _K11ODT_H_
 #define _K11ODT_H_
 
+#include "kd/include/kd11odt.h"
 #include "qbus/qbus.h"
 #include "kd/kd11_na/cpu/kd11_na_cpu.h"
 #include "variantfsm/fsm.h"
@@ -8,6 +9,7 @@
 #include "conddata/conddata.h"
 #include "../consoleaccess.h"
 #include "../operatorconsoleaccess/operatorconsoleaccess.h"
+#include "kd/kd11_na/cpu/cpudata.h"
 
 #include <string>
 
@@ -15,13 +17,16 @@ using std::unique_ptr;
 using std::string;
 using std::monostate;
 
-
-class KD11_NA_ODT
+class KD11_NA_ODT : public KD11ODT
 {
 public:
-    // Definition of public functions.
-    KD11_NA_ODT (Qbus* bus, KD11_NA_Cpu& cpu, unique_ptr<ConsoleAccess> consoleAccess);
-    bool processCharacter (u8 character);
+    KD11_NA_ODT (Qbus* bus, CpuData& cpu, unique_ptr<ConsoleAccess> consoleAccess);
+
+    // Definition of the function required by the KD11ODT interface
+    bool processCharacter (u8 character) override;
+
+    static unique_ptr<KD11_NA_ODT> createODT (Qbus *bus, CpuData &cpu,
+        unique_ptr<ConsoleAccess> consoleAccess);
 
 private:
     enum { BASE8 = 8 };
@@ -124,7 +129,7 @@ private:
     unique_ptr<StateMachine> stateMachine_;
 
     Qbus* bus_;
-    KD11_NA_Cpu& cpu_;
+    CpuData& cpu_;
     unique_ptr<ConsoleAccess> console_;
     bool odtRunning_;
     string digitSeries_;

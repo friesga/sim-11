@@ -17,8 +17,9 @@ using std::min;
 using std::move;
 using std::to_string;
 using std::make_unique;
+using std::move;
 
-KD11_NA_ODT::KD11_NA_ODT (Qbus *bus, KD11_NA_Cpu &cpu, unique_ptr<ConsoleAccess> consoleAccess)
+KD11_NA_ODT::KD11_NA_ODT (Qbus *bus, CpuData &cpu, unique_ptr<ConsoleAccess> consoleAccess)
     : 
     bus_ {bus},
     cpu_ {cpu},
@@ -32,6 +33,13 @@ KD11_NA_ODT::KD11_NA_ODT (Qbus *bus, KD11_NA_Cpu &cpu, unique_ptr<ConsoleAccess>
 
     // Start the fsm by a transition to the AtPrompt_1 state
     stateMachine_->dispatch (StartFsm {});
+}
+
+unique_ptr<KD11_NA_ODT> KD11_NA_ODT::createODT (Qbus *bus, CpuData &cpu,
+    unique_ptr<ConsoleAccess> consoleAccess)
+{
+    return move (make_unique<KD11_NA_ODT> (bus, cpu, 
+        make_unique<OperatorConsoleAccess> (bus)));
 }
 
 CondData<u8> KD11_NA_ODT::echoCharacter (CondData<u8> c)

@@ -2,8 +2,10 @@
 #define _CONTROLLOGIC_H_
 
 #include "kd/include/pdp11processor.h"
+#include "kd/include/kd11odt.h"
 #include "kd/kd11_na/cpu/kd11_na_cpu.h"
-#include "kd/kd11_na/odt/kd11_na_odt.h"
+#include "kd/kd11_na/operatorconsoleaccess/operatorconsoleaccess.h"
+#include "kd/include/kd11odt.h"
 #include "configdata/kd11_naconfig/kd11_naconfig.h"
 #include "variantfsm/fsm.h"
 #include "threadsafecontainers/threadsafequeue.h"
@@ -15,6 +17,10 @@ using std::shared_ptr;
 using std::unique_lock;
 using std::defer_lock;
 using std::monostate;
+using std::bind;
+using std::placeholders::_1;
+using std::placeholders::_2;
+using std::placeholders::_3;
 
 // The ControlLogic contains the Power-Up/Power-Down/Restart/Halt logic. The
 // logic is a state machine and always is in one of the following states:
@@ -30,8 +36,16 @@ using std::monostate;
 class ControlLogic
 {
 public:
+    // The constructor has the following parameters:
+    // bus - Pointer to the bus to use,
+    // cpu - Pointer to the cpu in the system, eg a KD11_NA or KDF11-A,
+    // powerUpMode - The mode to switch to when powered up,
+    // startAddress - The address to set the PC to when starting up,
+    // odtCreator - A std::function for a function to create an ODT object
+    //
     ControlLogic (Qbus* bus, CpuData* cpu, 
-        KD11_NAConfig::PowerUpMode powerUpMode, u16 startAddress);
+        KD11_NAConfig::PowerUpMode powerUpMode, u16 startAddress,
+        KD11ODT::Creator odtCreator);
     ~ControlLogic ();
     void run ();
 
@@ -80,9 +94,10 @@ private:
 
     Qbus* bus_;
     KD11_NA_Cpu cpu_ {bus_};
-    unique_ptr<KD11_NA_ODT>	odt_ {};
+    unique_ptr<KD11ODT>	odt_ {};
     KD11_NAConfig::PowerUpMode powerUpMode_;
     u16 startAddress_;
+    KD11ODT::Creator odtCreator_;
     bool kd11Running_;
 
     // Definition of a queue for the processing of bus signal events

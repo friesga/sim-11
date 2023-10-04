@@ -14,12 +14,14 @@ using std::make_unique;
 // 24 and 26), but we'll set it to Bootstrap as that's more convenient for
 // the user.
 ControlLogic::ControlLogic (Qbus* bus, CpuData* cpu, 
-    KD11_NAConfig::PowerUpMode powerUpMode, u16 startAddress)
+    KD11_NAConfig::PowerUpMode powerUpMode, u16 startAddress,
+    KD11ODT::Creator odtCreator)
     :
     bus_ (bus),
     powerUpMode_ {powerUpMode},
     kd11Running_ {true},
-    startAddress_ {startAddress}
+    startAddress_ {startAddress},
+    odtCreator_ (odtCreator)
 {
     stateMachine_ = make_unique<StateMachine> (this);
     subscribeToSignals ();

@@ -1,7 +1,16 @@
 #include "controllogic.h"
+#include "kd/kd11_na/kd11_na.h"
 
+#include <functional>
+
+using std::unique_ptr;
 using std::make_unique;
 using std::this_thread::sleep_for;
+using std::function;
+using std::bind;
+using std::placeholders::_1;
+using std::placeholders::_2;
+using std::placeholders::_3;
 
 // On every entry to ODT a new KD11_NA_ODT object is created to make
 // sure it is initialized properly. The Microcomputer and Memories
@@ -16,8 +25,9 @@ void ControlLogic::runODT ()
     OperatorConsoleAccess console_ {bus_};
     Event haltEvent {};
 
-    odt_ = make_unique<KD11_NA_ODT> (bus_, cpu_, 
-        make_unique<OperatorConsoleAccess> (bus_));
+    // Create a fresh ODT object. The function to create the object is passed
+    // to the ControlLogic when it is constructed.
+    odt_ = odtCreator_ (bus_, cpu_, make_unique<OperatorConsoleAccess> (bus_));
 
     while (true)
     {
