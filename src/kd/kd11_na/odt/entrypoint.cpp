@@ -21,6 +21,6 @@
 //
 KD11_NA_ODT::State KD11_NA_ODT::StateMachine::transition (EntryPoint &&, StartFsm)
 {
-    context_->writeString ("\n" + context_->octalNumberToString (context_->cpu_.registerValue (7)) + "\n");
+    context_->writeString ("\n" + context_->octalNumberToString (context_->cpu_->registerValue (7)) + "\n");
     return AtPrompt_1 {};
 }

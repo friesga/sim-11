@@ -18,6 +18,7 @@ ControlLogic::ControlLogic (Qbus* bus, CpuData* cpu,
     KD11ODT::Creator odtCreator)
     :
     bus_ (bus),
+    cpu_ {cpu},
     powerUpMode_ {powerUpMode},
     kd11Running_ {true},
     startAddress_ {startAddress},

@@ -3,6 +3,7 @@
 
 #include "types.h"
 #include "cpucontrol.h"
+#include "cpuexecution.h"
 #include "conddata/conddata.h"
 #include "interruptrequest/interruptrequest.h"
 
@@ -18,7 +19,7 @@
 // allow the Operate Group instructions, such as HALT and RESET, to access the
 // control functions.
 //
-class CpuData : public CpuControl
+class CpuData : public CpuControl, public CpuExecution
 {
 public:
 	// The Trap enum is defined as a non-class enum to be able to use it

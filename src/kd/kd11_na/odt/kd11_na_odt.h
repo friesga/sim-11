@@ -20,12 +20,12 @@ using std::monostate;
 class KD11_NA_ODT : public KD11ODT
 {
 public:
-    KD11_NA_ODT (Qbus* bus, CpuData& cpu, unique_ptr<ConsoleAccess> consoleAccess);
+    KD11_NA_ODT (Qbus* bus, CpuData* cpu, unique_ptr<ConsoleAccess> consoleAccess);
 
     // Definition of the function required by the KD11ODT interface
     bool processCharacter (u8 character) override;
 
-    static unique_ptr<KD11_NA_ODT> createODT (Qbus *bus, CpuData &cpu,
+    static unique_ptr<KD11_NA_ODT> createODT (Qbus *bus, CpuData* cpu,
         unique_ptr<ConsoleAccess> consoleAccess);
 
 private:
@@ -129,7 +129,7 @@ private:
     unique_ptr<StateMachine> stateMachine_;
 
     Qbus* bus_;
-    CpuData& cpu_;
+    CpuData* cpu_;
     unique_ptr<ConsoleAccess> console_;
     bool odtRunning_;
     string digitSeries_;

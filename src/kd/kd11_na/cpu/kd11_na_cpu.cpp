@@ -41,7 +41,7 @@ KD11_NA_Cpu::KD11_NA_Cpu (Qbus* bus)
 // or RESET bus signal. These signals are handled in their corresponding KD11_NA
 // receivers which then calls a KD11_NA_Cpu control function.
 //
-// This function will return if the CPU is in the state RUN and another
+// This function will return true if the CPU is in the state RUN and another
 // instruction can be executed, false otherwise. In the latter case a HALT
 // instruction was executed.
 bool KD11_NA_Cpu::step ()
@@ -245,7 +245,7 @@ void KD11_NA_Cpu::handleTraps ()
     }
 }
 
-// Load PC and PSW with the vector from the given trap
+// Load PC and PSW from the given vector
 void KD11_NA_Cpu::loadTrapVector (InterruptRequest const* trap)
 {
     unsigned char trapVector = trap->vector ();

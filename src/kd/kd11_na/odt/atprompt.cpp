@@ -47,13 +47,13 @@ KD11_NA_ODT::State KD11_NA_ODT::StateMachine::transition (AtPrompt_1 && currentS
 
     if (context_->location_.isA<RegisterLocation> ())
     {
-        context_->writeString (context_->octalNumberToString (context_->cpu_.registerValue (context_->location_.registerNr ())) + ' ');
+        context_->writeString (context_->octalNumberToString (context_->cpu_->registerValue (context_->location_.registerNr ())) + ' ');
         return RegisterOpened_4 {};
     }
 
     if (context_->location_.isA<PSWLocation> ())
     {
-        context_->writeString (context_->octalNumberToString (context_->cpu_.pswValue ()) + ' ');
+        context_->writeString (context_->octalNumberToString (context_->cpu_->pswValue ()) + ' ');
         return RegisterOpened_4 {};
     }
 
@@ -64,8 +64,8 @@ KD11_NA_ODT::State KD11_NA_ODT::StateMachine::transition (AtPrompt_1 && currentS
 // On a Proceed command set the CPU into the running state and exit ODT
 KD11_NA_ODT::State KD11_NA_ODT::StateMachine::transition (AtPrompt_1 &&, ProceedCmdEntered)
 {
-    context_->cpu_.proceed ();
-    trace.cpuEvent (CpuEventRecordType::CPU_ODT_P, context_->cpu_.registerValue (7));
+    context_->cpu_->proceed ();
+    trace.cpuEvent (CpuEventRecordType::CPU_ODT_P, context_->cpu_->registerValue (7));
     return ExitPoint {};
 }
 
@@ -82,6 +82,6 @@ KD11_NA_ODT::State KD11_NA_ODT::StateMachine::transition (AtPrompt_1 &&, GoCmdEn
 // The value is or'ed with 010 as a real LSI-11/2 prints that value.
 KD11_NA_ODT::State KD11_NA_ODT::StateMachine::transition (AtPrompt_1&&, MaintenanceCmdEntered)
 {
-    context_->writeString (context_->octalNumberToString (static_cast<u16> (context_->cpu_.haltReason ()) | 010) + '\n');
+    context_->writeString (context_->octalNumberToString (static_cast<u16> (context_->cpu_->haltReason ()) | 010) + '\n');
     return AtPrompt_1 {};
 }

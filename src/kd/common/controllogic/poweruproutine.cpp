@@ -20,14 +20,14 @@
 //
 ControlLogic::State ControlLogic::powerUpRoutine ()
 {
-    cpu_.cpuReset ();
+    cpu_->cpuReset ();
     bus_->BINIT().cycle ();
 
     switch (powerUpMode_)
     {
         case KD11_NAConfig::PowerUpMode::Vector:
-            cpu_.loadTrapVector (&powerFail);
-            cpu_.proceed ();
+            cpu_->loadTrapVector (&powerFail);
+            cpu_->proceed ();
 
             // If BHALT is set immediately transition to the Halted state,
             // before even one instruction is executed cf Table 11-4.
@@ -41,14 +41,14 @@ ControlLogic::State ControlLogic::powerUpRoutine ()
             // place the processor in ODT mode on the next execution of
             // KD11_NA::step(). If the processor already is in ODT mode the
             // signal is ignored and this is a no-operation.
-            cpu_.halt ();
+            cpu_->halt ();
             return Halted {};
 
         case KD11_NAConfig::PowerUpMode::Bootstrap:
             // Start the processor at the start address. This address is
             // either the standard boot address or an address determined by
             // a loaded file in absolute loader format.
-            cpu_.start (startAddress_);
+            cpu_->start (startAddress_);
 
             // If BHALT is set immediately transition to the Halted state,
             // before even one instruction is executed cf Table 11-4.

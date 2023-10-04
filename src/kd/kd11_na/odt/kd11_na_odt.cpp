@@ -19,7 +19,7 @@ using std::to_string;
 using std::make_unique;
 using std::move;
 
-KD11_NA_ODT::KD11_NA_ODT (Qbus *bus, CpuData &cpu, unique_ptr<ConsoleAccess> consoleAccess)
+KD11_NA_ODT::KD11_NA_ODT (Qbus *bus, CpuData* cpu, unique_ptr<ConsoleAccess> consoleAccess)
     : 
     bus_ {bus},
     cpu_ {cpu},
@@ -35,7 +35,7 @@ KD11_NA_ODT::KD11_NA_ODT (Qbus *bus, CpuData &cpu, unique_ptr<ConsoleAccess> con
     stateMachine_->dispatch (StartFsm {});
 }
 
-unique_ptr<KD11_NA_ODT> KD11_NA_ODT::createODT (Qbus *bus, CpuData &cpu,
+unique_ptr<KD11_NA_ODT> KD11_NA_ODT::createODT (Qbus *bus, CpuData* cpu,
     unique_ptr<ConsoleAccess> consoleAccess)
 {
     return move (make_unique<KD11_NA_ODT> (bus, cpu, 
@@ -218,7 +218,7 @@ KD11_NA_ODT::State KD11_NA_ODT::openNextRegister (State &&currentState,
     u8 registerNr = getNextRegister ();
     location_ = RegisterLocation {registerNr};
     writeString ("R" + to_string(registerNr) + '/' + 
-        octalNumberToString (cpu_.registerValue (registerNr)) + ' ');
+        octalNumberToString (cpu_->registerValue (registerNr)) + ' ');
     return move (currentState);
 }
 
@@ -233,11 +233,11 @@ void KD11_NA_ODT::setRegisterValue ()
     {
         // Either a register or the PSW has to be set to the new value.
         if (location_.isA<RegisterLocation> ())
-            cpu_.setRegister (location_.registerNr (), newValue_);
+            cpu_->setRegister (location_.registerNr (), newValue_);
         else
             // Setting or clearing the PSW T-bit will be prohibited
             // by setPSW()
-            cpu_.setPSW (newValue_);
+            cpu_->setPSW (newValue_);
     }
     else
         writeString ("?\n");
@@ -247,7 +247,7 @@ void KD11_NA_ODT::setRegisterValue ()
 void KD11_NA_ODT::startCPU (u16 address)
 {
     bus_->BINIT().cycle ();
-    cpu_.start (address);
+    cpu_->start (address);
     trace.cpuEvent (CpuEventRecordType::CPU_ODT_P, address);
 }
 

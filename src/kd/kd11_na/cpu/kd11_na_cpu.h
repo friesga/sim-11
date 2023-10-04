@@ -62,7 +62,7 @@ public:
 	friend class LSI11;
 	
 	KD11_NA_Cpu (Qbus *bus);
-	bool step ();
+
 	CpuRunState currentCpuState ();
 
 	// These functions have to be provided for the CpuData interfaces and are
@@ -75,6 +75,10 @@ public:
 	bool putByte (u16 address, u8 value) override;
 	void pushWord (u16 value) override;
 	bool popWord (u16 *destination) override;
+
+	// This function is required by the CpuExecution interface and executes
+	// the next instruction on the cpu.
+	bool step () override;
 
 private:
 	Qbus *bus_;
@@ -123,6 +127,7 @@ private:
 	// Definition of CpuControl functions. These functions are
 	// used by K11ODT and the Operate Group instructions.
 	void setTrap (InterruptRequest const *ir) override;
+	void loadTrapVector (InterruptRequest const* trap) override;
 	void cpuReset () override;
 	void busReset () override;
 	void halt () override;
@@ -137,7 +142,6 @@ private:
 	constexpr void setPSW (u16 value);
 	constexpr HaltReason haltReason ();
 
-	void loadTrapVector (InterruptRequest const* trap);
 	void execInstr ();
 	void handleTraps();
 	u8 cpuPriority ();

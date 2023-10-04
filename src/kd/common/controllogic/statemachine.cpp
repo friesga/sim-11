@@ -20,7 +20,7 @@ void ControlLogic::StateMachine::entry (Running)
         // If the CPU is halted or BHALT is true ODT must be started. In the
         // latter case one instruction is executed and thus the CPU is single
         // stepped.
-        if (!context_->cpu_.step () || context_->bus_->BHALT())
+        if (!context_->cpu_->step () || context_->bus_->BHALT())
             context_->signalEventQueue_.push (Halt {});
     }
     context_->bus_->SRUN ().set (false);
@@ -77,11 +77,11 @@ void ControlLogic::StateMachine::entry (PowerFail)
     size_t maxInstructions {1000};
 
     // On a powerfail trap to the vector at address 24/26
-    context_->cpu_.setTrap (&context_->powerFail);
+    context_->cpu_->setTrap (&context_->powerFail);
 
     while (!context_->signalAvailable () && maxInstructions-- > 0)
     {
-        if (!context_->cpu_.step ())
+        if (!context_->cpu_->step ())
         {
             context_->signalEventQueue_.push (Halt {});
             return;

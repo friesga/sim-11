@@ -93,7 +93,7 @@ private:
     unique_ptr<StateMachine> stateMachine_;
 
     Qbus* bus_;
-    KD11_NA_Cpu cpu_ {bus_};
+    CpuData* cpu_;
     unique_ptr<KD11ODT>	odt_ {};
     KD11_NAConfig::PowerUpMode powerUpMode_;
     u16 startAddress_;
