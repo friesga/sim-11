@@ -1,14 +1,12 @@
 #include "kd11_na.h"
 #include "qbus/qbus.h"
-#include "operatorconsoleaccess/operatorconsoleaccess.h"
 
 #include <memory>
 #include <thread>
-#include <chrono>
-#include <string>
 
 using std::shared_ptr;
 using std::make_unique;
+using std::thread;
 
 // The factory power-up mode configuration is mode 0 (get vector at address
 // 24 and 26), but we'll set it to Bootstrap as that's more convenient for
@@ -39,7 +37,7 @@ KD11_NA_Cpu& KD11_NA::cpu ()
 
 void KD11_NA::start ()
 {
-    kd11Thread_ = std::thread ([&, this] {controlLogic_.run ();});
+    kd11Thread_ = thread ([&, this] {controlLogic_.run ();});
 }
 
 // Start the ControlLogic state machine, starting the CPU at the given address. This

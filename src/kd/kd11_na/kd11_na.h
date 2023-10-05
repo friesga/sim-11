@@ -5,17 +5,12 @@
 #include "cpu/kd11_na_cpu.h"
 #include "odt/kd11_na_odt.h"
 #include "configdata/kd11_naconfig/kd11_naconfig.h"
-#include "variantfsm/fsm.h"
-#include "threadsafecontainers/threadsafequeue.h"
 #include "kd/common/controllogic/controllogic.h"
 
 #include <memory>
 
 using std::unique_ptr;
 using std::shared_ptr;
-using std::unique_lock;
-using std::defer_lock;
-using std::monostate;
 
 // The class KD11_NA starta the control logic which on its turn has to run
 // the KD11_NA's cpu and start the KD11_NA's ODT.

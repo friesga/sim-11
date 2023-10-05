@@ -1,11 +1,9 @@
 #ifndef _CONTROLLOGIC_H_
 #define _CONTROLLOGIC_H_
 
-#include "kd/include/pdp11processor.h"
 #include "kd/include/kd11odt.h"
 #include "kd/kd11_na/cpu/kd11_na_cpu.h"
 #include "kd/kd11_na/operatorconsoleaccess/operatorconsoleaccess.h"
-#include "kd/include/kd11odt.h"
 #include "configdata/kd11_naconfig/kd11_naconfig.h"
 #include "variantfsm/fsm.h"
 #include "threadsafecontainers/threadsafequeue.h"
@@ -13,9 +11,6 @@
 #include <memory>
 
 using std::unique_ptr;
-using std::shared_ptr;
-using std::unique_lock;
-using std::defer_lock;
 using std::monostate;
 using std::bind;
 using std::placeholders::_1;
@@ -25,8 +20,8 @@ using std::placeholders::_3;
 // The ControlLogic contains the Power-Up/Power-Down/Restart/Halt logic. The
 // logic is a state machine and always is in one of the following states:
 // Power Off - The system is switched off,
-// Halted - The processor is halted and ODT is executed,
-// Running - The processor is running,
+// Halted    - The processor is halted and ODT is executed,
+// Running   - The processor is running,
 // PowerFail - The AC power is failing and DC power will drop in a few
 //             milliseonds.
 //
