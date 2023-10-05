@@ -146,6 +146,8 @@ set (CONFIGURATOR_SRCS
     src/configdata/msv11processor/msv11processor.cpp
     src/configdata/rlunitconfig/rlunitconfig.cpp
     src/configdata/rlunitprocessor/rlunitprocessor.cpp
+    src/configdata/kd11config/kd11config.cpp
+    src/configdata/kd11processor/kd11processor.cpp
     src/configdata/kd11_naconfig/kd11_naconfig.cpp
     src/configdata/kd11_naprocessor/kd11_naprocessor.cpp
     src/configdata/kdf11_aconfig/kdf11_aconfig.cpp
@@ -349,6 +351,7 @@ set (GTEST_SRCS
     gtest/dlv11configuratortest.cpp
     gtest/fistest.cpp
     gtest/kd11_naconfiguratortest.cpp
+    gtest/kdf11_aconfiguratortest.cpp
     gtest/kd11odttest.cpp
     gtest/kd11_nadecodertest.cpp
     gtest/locationtest.cpp
