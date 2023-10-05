@@ -20,9 +20,9 @@ ControlLogic::ControlLogic (Qbus* bus, CpuData* cpu,
     bus_ (bus),
     cpu_ {cpu},
     powerUpMode_ {powerUpMode},
-    kd11Running_ {true},
     startAddress_ {startAddress},
-    odtCreator_ (odtCreator)
+    odtCreator_ {odtCreator},
+    kd11Running_ {true}
 {
     stateMachine_ = make_unique<StateMachine> (this);
     subscribeToSignals ();
