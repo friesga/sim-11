@@ -30,6 +30,7 @@ public:
 
     // Definitions required for the CpuControl interface
     void setTrap (InterruptRequest const *ir) {};
+    void loadTrapVector (InterruptRequest const* trap) {};
     void cpuReset () {};
     void busReset () {};
     void halt () {};
@@ -41,6 +42,10 @@ public:
     void setRegister (u8 registerNr, u16 value) {};
     u16 pswValue () { return 0; };
     void setPSW (u16 value) {};
+    HaltReason haltReason () { return HaltReason::HaltInstruction; };
+
+    // Definitions required for the CpuExecution interface
+    bool step () { return false; };
 
 private:
     // Allocate a memory of 16kW. This allows attempts to read and write
