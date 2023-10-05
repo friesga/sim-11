@@ -27,6 +27,7 @@ KD11_NA::KD11_NA (Qbus *bus, shared_ptr<KD11_NAConfig> kd11_naConfig)
 
 KD11_NA::~KD11_NA ()
 {
+    controlLogic_.exit ();
     kd11Thread_.join ();
 }
 

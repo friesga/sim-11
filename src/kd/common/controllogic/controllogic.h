@@ -41,8 +41,8 @@ public:
     ControlLogic (Qbus* bus, CpuData* cpu, 
         KD11_NAConfig::PowerUpMode powerUpMode, u16 startAddress,
         KD11ODT::Creator odtCreator);
-    ~ControlLogic ();
     void run ();
+    void exit ();
 
     // Declare the signal receivers
     void BHALTReceiver (bool signalValue);

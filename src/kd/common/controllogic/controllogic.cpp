@@ -28,11 +28,6 @@ ControlLogic::ControlLogic (Qbus* bus, CpuData* cpu,
     subscribeToSignals ();
 }
 
-ControlLogic::~ControlLogic ()
-{
-    signalEventQueue_.push (Exit {});
-}
-
 // Run the ControlLogic state machine
 void ControlLogic::run ()
 {
@@ -45,6 +40,11 @@ void ControlLogic::run ()
         signalEventQueue_.waitAndPop (event);
         stateMachine_->dispatch (event);
     }
+}
+
+void ControlLogic::exit ()
+{
+    signalEventQueue_.push (Exit {});
 }
 
 bool ControlLogic::signalAvailable ()
