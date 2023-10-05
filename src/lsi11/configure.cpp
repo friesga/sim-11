@@ -22,7 +22,7 @@ void LSI11::configureDevices (Window *window)
     unique_ptr<Console> console =  OperatorConsoleFactory::create ();
 
     // By default use the KD11-NA processor
-    kd11_na_ = new KD11_NA (&bus_);
+    processor_ = new KD11_NA (&bus_);
     msv11_ = new MSV11D (&bus_);
     dlv11_ = new DLV11J (&bus_, move (console));
     bdv11_ = new BDV11 (&bus_);
@@ -49,12 +49,12 @@ void LSI11::configureDevices (vector<shared_ptr<DeviceConfig>> systemConfig,
         switch (device->deviceType_)
         {
             case DeviceType::KD11_NA:
-                kd11_na_ = new KD11_NA (&bus_,
+                processor_ = new KD11_NA (&bus_,
                     static_pointer_cast<KD11_NAConfig> (device));
                 break;
 
             case DeviceType::KDF11_A:
-                kdf11_a_ = new KDF11_A (&bus_,
+                processor_ = new KDF11_A (&bus_,
                     static_pointer_cast<KDF11_AConfig> (device));
                 break;
 
@@ -82,7 +82,7 @@ void LSI11::configureDevices (vector<shared_ptr<DeviceConfig>> systemConfig,
 
             case DeviceType::RLV12:
                 rlv12_ = new RLV12
-                (&bus_, static_pointer_cast<RLConfig> (device));
+                    (&bus_, static_pointer_cast<RLConfig> (device));
                 break;
 
             case DeviceType::BA11_N:

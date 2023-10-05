@@ -1,8 +1,11 @@
 #include "lsi11.h"
 
+// Install the devices on the bus. The installation is kept in one function
+// to easily determine the order of devices on the bus.
 void LSI11::installModules ()
 {
-    bus_.installModule (1, kd11_na_);
+    // Install either the KD11-NA or the KDF11-A processor.
+    bus_.installModule (1, processor_);
     bus_.installModule (2, msv11_);
     bus_.installModule (3, rlv12_);
     bus_.installModule (4, rxv21_);

@@ -30,8 +30,9 @@ class LSI11
 	// of unique_ptr's for the decice pointers results in complicated code
 	// and the use of raw pointers in e.g. Qbus::responsibleModule() as these
 	// pointers are used in loadFile() and in run().
-	PDP11Processor *kd11_na_;
-	KDF11_A *kdf11_a_;
+	//
+	// The PDP11Processor is either a KD11_NA or a KDF11_A.
+	PDP11Processor *processor_;
 	MSV11D *msv11_;
 	RXV21 *rxv21_;
 	RLV12 *rlv12_;
