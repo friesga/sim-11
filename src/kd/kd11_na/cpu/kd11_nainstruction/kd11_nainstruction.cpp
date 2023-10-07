@@ -1,5 +1,6 @@
 #include "kd11_nainstruction.h"
-#include "unused.h"
+#include "kd/common/instructions/commoninstruction.h"
+#include "kd/common/instructions/unused.h"
 
 #include <memory>
 
@@ -15,7 +16,7 @@ unique_ptr<LSI11Instruction> KD11_NAInstruction::decodeGroup_00_00_nn (CpuData* 
     if (instruction < 07)
         return (*group_00_00_nn [instruction]) (cpu, instruction);
         
-    return Unused::create (cpu, instruction);
+    return CommonInstruction::Unused::create (cpu, instruction);
 }
 
 unique_ptr<LSI11Instruction> KD11_NAInstruction::decodeGroup_00_02_nn (CpuData* cpu, u16 instruction)
@@ -29,7 +30,7 @@ unique_ptr<LSI11Instruction> KD11_NAInstruction::decodeGroup_07_5n_nx (CpuData* 
     if (index < 010)
         return (*group_07_5n_nx [index]) (cpu, instruction);
         
-    return Unused::create (cpu, instruction);
+    return CommonInstruction::Unused::create (cpu, instruction);
 }
 
 unique_ptr<LSI11Instruction> KD11_NAInstruction::decodeGroup_07_nx_xx (CpuData* cpu, u16 instruction)
