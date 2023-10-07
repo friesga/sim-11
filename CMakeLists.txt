@@ -355,6 +355,7 @@ set (GTEST_SRCS
     gtest/kd11odttest.cpp
     gtest/kd11_nadecodertest.cpp
     gtest/kd11_na/inctest.cpp
+    gtest/kd11_na/movtest.cpp
     gtest/locationtest.cpp
     gtest/operandlocationtest.cpp
     gtest/dummycpu/dummycpu.cpp
