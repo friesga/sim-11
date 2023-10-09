@@ -1,7 +1,7 @@
 #ifndef _MEMORYOPERANDLOCATION_H_
 #define _MEMORYOPERANDLOCATION_H_
 
-#include "../../cpudata.h"
+#include "kd/include/cpudata.h"
 #include "conddata/conddata.h"
 
 class MemoryOperandLocation

@@ -1,12 +1,12 @@
-#ifndef _KD11_NA_CPU_H_
-#define _KD11_NA_CPU_H_
+#ifndef _KDF11_A_CPU_H_
+#define _KDF11_A_CPU_H_
 
 #include "kd/include/cpucontrol.h"
 #include "kd/include/cpudata.h"
 #include "qbus/qbus.h"
 #include "float/float.h"
 #include "types.h"
-#include "kd11_nainstruction/kd11_nainstruction.h"
+#include "kd/kd11_na/cpu/kd11_nainstruction/kd11_nainstruction.h"
 
 #include <functional>
 
@@ -16,19 +16,13 @@ class KD11_NA;
 
 #define USE_FLOAT
 
-// Two different LSI-models exist, the LSI-11 and the LSI-11/2. The LSI-11
-// comprises the M7264 module in one of its variations. The LSI-11/2
-// consists of a M7270 module with a KD11-HA or KD11-NA processor. These
-// processors differ in the availability of the EIS and FIS options.
-// See http://web.frainresearch.org:8080/projects/pdp-11/lsi-11.php for
-// an overview of the different variations. 
-// This class simulates a KD11-NA, i.e. a KD11-H base version including EIS
-// and FIS support.
+// 
+// This class simulates a KDF11-A.
 //
 // The class CpuData is derived from CpuControl and CpuExecution, so the
-// KD11_NA_Cpu has to implement all three interfaces.
+// KDF11_A_Cpu has to implement all three interfaces.
 //
-class KD11_NA_Cpu : public CpuData
+class KDF11_A_Cpu : public CpuData
 {
 public:
 	// The ControlLogic and LSI11 classes need access to the CpuControl functions.
@@ -36,7 +30,7 @@ public:
 	friend class KD11_NA_ODT;
 	friend class LSI11;
 	
-	KD11_NA_Cpu (Qbus *bus);
+	KDF11_A_Cpu (Qbus *bus);
 
 	// These functions have to be provided for the CpuData interfaces and are
 	// used by the instruction classes.
@@ -134,12 +128,12 @@ private:
 //
 // The functions registers() and psw() are required by the CpuData interface.
 //
-constexpr CpuData::GeneralRegisters& KD11_NA_Cpu::registers ()
+constexpr CpuData::GeneralRegisters& KDF11_A_Cpu::registers ()
 {
 	return register_;
 }
 
-constexpr u16& KD11_NA_Cpu::psw ()
+constexpr u16& KDF11_A_Cpu::psw ()
 {
 	return psw_;
 }
@@ -151,13 +145,13 @@ constexpr u16& KD11_NA_Cpu::psw ()
 // Return the value of a register. Access to the registers and PSW has to be
 // provided via special functions as the KD11 has no registers to access them.
 //
-constexpr u16 KD11_NA_Cpu::registerValue (u8 registerNr)
+constexpr u16 KDF11_A_Cpu::registerValue (u8 registerNr)
 {
     return register_[registerNr];
 }
 
 // Set the given register to the given value
-constexpr void KD11_NA_Cpu::setRegister (u8 registerNr, u16 value)
+constexpr void KDF11_A_Cpu::setRegister (u8 registerNr, u16 value)
 {
     register_[registerNr] = value;
 }
@@ -165,18 +159,18 @@ constexpr void KD11_NA_Cpu::setRegister (u8 registerNr, u16 value)
 // Set the Processor Status Word to the given value. The T-bit cannot be set
 // via this function.
 // 
- constexpr void KD11_NA_Cpu::setPSW (u16 value)
+ constexpr void KDF11_A_Cpu::setPSW (u16 value)
  {
      psw_ = (psw_ & PSW_T) | (value & ~PSW_T);
  }
 
- constexpr u16 KD11_NA_Cpu::pswValue ()
+ constexpr u16 KDF11_A_Cpu::pswValue ()
  {
      return psw_;
  }
 
- constexpr CpuControl::HaltReason KD11_NA_Cpu::haltReason ()
+ constexpr CpuControl::HaltReason KDF11_A_Cpu::haltReason ()
  {
 	 return haltReason_;
  }
-#endif // _KD11_NA_CPU_H_
+#endif // _KDF11_A_CPU_H_

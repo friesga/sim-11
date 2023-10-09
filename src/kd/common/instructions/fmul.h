@@ -3,7 +3,7 @@
 
 #include "commoninstruction.h"
 #include "kd/kd11_na/cpu/fisinstruction/fisinstruction.h"
-#include "kd/kd11_na/cpu/cpudata.h"
+#include "kd/include/cpudata.h"
 #include "kd/kd11_na/cpu/operandlocation/operandlocation.h"
 #include "withfactory.h"
 

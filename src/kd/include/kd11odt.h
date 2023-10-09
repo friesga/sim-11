@@ -3,7 +3,7 @@
 
 #include "types.h"
 #include "qbus/qbus.h"
-#include "kd/kd11_na/cpu/cpudata.h"
+#include "kd/include/cpudata.h"
 #include "kd/kd11_na/operatorconsoleaccess/operatorconsoleaccess.h"
 
 #include <memory>

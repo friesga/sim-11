@@ -31,7 +31,7 @@ KDF11_A::~KDF11_A ()
     kd11Thread_.join ();
 }
 
-KD11_NA_Cpu& KDF11_A::cpu ()
+KDF11_A_Cpu& KDF11_A::cpu ()
 {
     return cpu_;
 }

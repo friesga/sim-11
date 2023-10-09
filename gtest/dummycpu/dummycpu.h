@@ -1,7 +1,7 @@
 #ifndef _DUMMYCPU_H_
 #define _DUMMYCPU_H_
 
-#include "kd/kd11_na/cpu/cpudata.h"
+#include "kd/include/cpudata.h"
 
 #include <memory>
 

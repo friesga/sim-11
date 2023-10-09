@@ -9,7 +9,7 @@
 #include "conddata/conddata.h"
 #include "../consoleaccess.h"
 #include "../operatorconsoleaccess/operatorconsoleaccess.h"
-#include "kd/kd11_na/cpu/cpudata.h"
+#include "kd/include/cpudata.h"
 
 #include <string>
 

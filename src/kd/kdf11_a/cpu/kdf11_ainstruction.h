@@ -1,14 +1,14 @@
-#ifndef _KD11_NAINSTRUCTION_H_
-#define _KD11_NAINSTRUCTION_H_
+#ifndef _KDF11_AINSTRUCTION_H_
+#define _KDF11_AINSTRUCTION_H_
 
 #include "../lsi11instruction/lsi11instruction.h"
-#include "kd/include/cpudata.h"
+#include "../cpudata.h"
 
 #include <memory>
 
 using std::unique_ptr;
 
-// This class decodes and executes the KD11_NA the instructions. To this
+// This class decodes and executes the KDF11-A instructions. To this
 // purpose we use an operation code table with function pointers as that
 // allows to have different versions of an instruction for the different
 // CPU types.
@@ -94,7 +94,7 @@ using std::unique_ptr;
 //  SUB ---------------- 16 xx xx
 //  unused ------------- 17 xx xx
 //
-class KD11_NAInstruction
+class KDF11_AInstruction
 {
 public:
     unique_ptr<LSI11Instruction> decode (CpuData* cpu, u16 instruction);
@@ -209,4 +209,4 @@ private:
     static unique_ptr<LSI11Instruction> decodeGroup_nn_xx_xx (CpuData*, u16);
 };
 
-#endif // KD11_NAINSTRUCTION_H_
+#endif // KDF11_AINSTRUCTION_H_

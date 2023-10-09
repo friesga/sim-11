@@ -1,7 +1,7 @@
 #ifndef _LSI11INSTRUCTION_H_
 #define _LSI11INSTRUCTION_H_
 
-#include "../cpudata.h"
+#include "kd/include/cpudata.h"
 #include "../operandlocation/operandlocation.h"
 #include "../operand/operand.h"
 

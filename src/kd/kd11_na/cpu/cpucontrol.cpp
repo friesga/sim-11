@@ -1,5 +1,4 @@
 #include "kd11_na_cpu.h"
-#include "cpucontrol.h"
 #include "trace/trace.h"
 
 // Reset the processor

@@ -2,7 +2,7 @@
 #define _BRANCHINSTRUCTION_H_
 
 #include "../lsi11instruction/lsi11instruction.h"
-#include "../cpudata.h"
+#include "kd/include/cpudata.h"
 
 class BranchInstruction : public LSI11Instruction
 {

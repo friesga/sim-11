@@ -2,7 +2,7 @@
 #define _KDF11_A_H_
 
 #include "kd/include/pdp11processor.h"
-#include "kd/kd11_na/cpu/kd11_na_cpu.h"
+#include "kd/kdf11_a/cpu/kdf11_a_cpu.h"
 #include "kd/kd11_na/odt/kd11_na_odt.h"
 #include "configdata/kdf11_aconfig/kdf11_aconfig.h"
 #include "kd/common/controllogic/controllogic.h"
@@ -24,7 +24,7 @@ public:
     void start ();
 
     // Give main() access to the CPU to set PC and runState
-    KD11_NA_Cpu& cpu ();
+    KDF11_A_Cpu& cpu ();
 
     // The KDF11_A is a PDP11Peripheral without registers so the read and write 
     // register functions are dummies. The reset function is called on a
@@ -43,7 +43,7 @@ private:
     enum { stdBootAddress = 0173000 };
 
     Qbus* bus_;
-    KD11_NA_Cpu cpu_ {bus_};
+    KDF11_A_Cpu cpu_ {bus_};
     unique_ptr<KD11_NA_ODT>	odt_ {};
     KDF11_AConfig::PowerUpMode powerUpMode_;
     u16 startAddress_;

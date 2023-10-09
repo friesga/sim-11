@@ -3,8 +3,8 @@
 
 #include "commoninstruction.h"
 #include "kd/kd11_na/cpu/nooperandinstruction/nooperandinstruction.h"
-#include "kd/kd11_na/cpu/cpudata.h"
-#include "kd/kd11_na/cpu/cpucontrol.h"
+#include "kd/include/cpudata.h"
+#include "kd/include/cpucontrol.h"
 #include "kd/kd11_na/cpu/operandlocation/operandlocation.h"
 #include "trace/trace.h"
 #include "withfactory.h"
