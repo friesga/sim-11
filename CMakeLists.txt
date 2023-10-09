@@ -18,6 +18,10 @@ set (CMDLINEOPTIONS_SRCS
     src/cmdlineoptions/cmdlineoptions.cpp
     src/cmdlineoptions/data.cpp)
 
+set (KD11COMMON_SRCS
+src/kd/common/kd11cpudata/kd11cpudata.cpp
+    src/kd/common/kd11cpudata/kd11memoryaccess.cpp)
+
 set (KD11CONTROLLOGIC_SRCS
     src/kd/common/controllogic/controllogic.cpp
     src/kd/common/controllogic/poweruproutine.cpp
@@ -43,7 +47,6 @@ set (KD11ODT_SRCS
 set (KD11_NA_CPU_SRCS
     src/kd/kd11_na/cpu/kd11_na_cpu.cpp
     src/kd/kd11_na/cpu/cpucontrol.cpp
-    src/kd/kd11_na/cpu/memoryaccess.cpp
     src/kd/kd11_na/cpu/lsi11instruction/lsi11instruction.cpp
     src/kd/kd11_na/cpu/operandlocation/operandlocation.cpp
     src/kd/kd11_na/cpu/operandlocation/emptyoperandlocation/emptyoperandlocation.cpp
@@ -64,12 +67,12 @@ set (KD11_NA_CPU_SRCS
 set (KDF11_A_SRCS
     src/kd/kdf11_a/kdf11_a.cpp
     src/kd/kdf11_a/cpu/kdf11_a_cpu.cpp
-    src/kd/kdf11_a/cpu/cpucontrol.cpp
-    src/kd/kdf11_a/cpu/memoryaccess.cpp)
+    src/kd/kdf11_a/cpu/cpucontrol.cpp)
 
  set (KD11_NA_SRCS
     src/kd/kd11_na/kd11_na.cpp
     src/kd/kd11_na/operatorconsoleaccess/operatorconsoleaccess.cpp
+    ${KD11COMMON_SRCS}
     ${KD11CONTROLLOGIC_SRCS}
     ${KD11_NA_CPU_SRCS}
     ${KD11ODT_SRCS})

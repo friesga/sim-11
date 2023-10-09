@@ -21,9 +21,6 @@ public:
 		NonExistentMicroAddress = 4		// Not used
 	};
 
-    // The setTrap function is needed for the execution of a reset in power-up
-    // mode 0 (start via vector at address 24/26).
-    virtual void setTrap (InterruptRequest const *ir) = 0;
     virtual void loadTrapVector (InterruptRequest const* trap) = 0;
     virtual void cpuReset () = 0;
     virtual void busReset () = 0;

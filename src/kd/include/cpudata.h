@@ -49,6 +49,11 @@ public:
 	virtual bool putByte (u16 address, u8 value) = 0;
 	virtual void pushWord (u16 value) = 0;
 	virtual bool popWord (u16 *destination) = 0;
+
+	// The memory access functions must be able to generate a bus error trap
+	// whem accessing non-existing memory.
+	// 
+    virtual void setTrap (InterruptRequest const *ir) = 0;
 };
 
 #endif // _CPUDATA_H_

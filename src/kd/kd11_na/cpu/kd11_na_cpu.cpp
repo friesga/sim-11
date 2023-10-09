@@ -15,12 +15,9 @@ using std::make_unique;
 // Constructor
 KD11_NA_Cpu::KD11_NA_Cpu (Qbus* bus)
     :
-    bus_ {bus},
-    register_ {0},
-    psw_ {0},
+    KD11CpuData (bus),
     runState {CpuRunState::HALT},
     kd11_naInstruction {},
-    trap_ {nullptr},
     haltReason_ {HaltReason::HaltInstruction}
 {
     register_[7] = 0;
@@ -251,12 +248,6 @@ void KD11_NA_Cpu::loadTrapVector (InterruptRequest const* trap)
     unsigned char trapVector = trap->vector ();
     register_[7] = fetchWord (trapVector).valueOr (0);
     psw_ = fetchWord (trapVector + 2).valueOr (0);
-}
-
-// Generate the given trap using the interrupt request mechanism
-void KD11_NA_Cpu::setTrap (InterruptRequest const* trap)
-{
-    trap_ = trap;
 }
 
 u8 KD11_NA_Cpu::cpuPriority()
