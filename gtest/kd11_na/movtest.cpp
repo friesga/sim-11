@@ -3,12 +3,14 @@
 
 #include <gtest/gtest.h>
 
-// Verify the MOV instruction in source operand mode 0 (Register) and
-// destination operand mode 2 (Autoincrement).
-// MOV Rx, (Rx)+ using the same register as both register and destination:
-// initial contents of Rx are used as the source operand.
-// So MOV R0, (R0)+ should result in a copy of the contents of R0 to the
-// address contained in R0.
+// Verify the operation of the MOV instruction in source operand mode 0
+// (Register) and destination operand mode 2 (Autoincrement) on a KD11-NA.
+// 
+// On a KD11-NA (and some other processors) the instruction "MOV Rx, (Rx)+"
+// using the same register as both register and destination, the initial
+// contents of Rx are used as the source operand. So "MOV R0, (R0)+" should
+// result in a copy of the contents of R0 to the address contained in R0.
+//
 TEST (KD11_NAMOVTEST, MovMode0Mode2Functions)
 {
     DummyCpu cpu;
