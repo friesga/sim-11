@@ -14,22 +14,6 @@
 class KD11_NA_ODT;
 class KD11_NA;
 
-// The processor status word in the LSI-11 is a composite of (1) the 4 PDP-11
-// condition codes (N,Z,V,C) [bits 0:3] and (2) the Trace Bit [bit 4] and (3)
-// the Interrupt Enable bit [bit 7]. (EK-KUV11-TM-001 pg. 1-9). 
-// Processor Status Word bits 5 and 6 are reserved (EK-KUV11-TM-001
-// Figure 2-5). These bits can be set and cleared by the MTPS instruction
-// however. At least every FIS instruction resets bits 5 and 6. This
-// behaviour is confirmed by the VKAAC0 (Basic Intruction Tests) and VKACC0
-// diagnostics.
-#define	PSW_C			_BV(0)
-#define	PSW_V			_BV(1)
-#define	PSW_Z			_BV(2)
-#define	PSW_N			_BV(3)
-#define	PSW_T			_BV(4)
-#define	PSW_PRIO		_BV(7)
-#define	PSW_PRIORITY	(_BV(7) | _BV(6) | _BV(5))
-
 #define USE_FLOAT
 
 // Two different LSI-models exist, the LSI-11 and the LSI-11/2. The LSI-11
