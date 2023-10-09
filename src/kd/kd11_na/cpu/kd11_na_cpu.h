@@ -14,15 +14,6 @@
 class KD11_NA_ODT;
 class KD11_NA;
 
-// Definition of CPU run states
-enum class CpuRunState
-{
-	HALT,
-	RUN,
-	WAIT,
-	INHIBIT_TRACE
-};
-
 // The processor status word in the LSI-11 is a composite of (1) the 4 PDP-11
 // condition codes (N,Z,V,C) [bits 0:3] and (2) the Trace Bit [bit 4] and (3)
 // the Interrupt Enable bit [bit 7]. (EK-KUV11-TM-001 pg. 1-9). 
@@ -63,8 +54,6 @@ public:
 	
 	KD11_NA_Cpu (Qbus *bus);
 
-	CpuRunState currentCpuState ();
-
 	// These functions have to be provided for the CpuData interfaces and are
 	// used by the instruction classes.
 	constexpr GeneralRegisters& registers () override;
@@ -81,6 +70,15 @@ public:
 	bool step () override;
 
 private:
+	// Definition of CPU run states
+	enum class CpuRunState
+	{
+		HALT,
+		RUN,
+		WAIT,
+		INHIBIT_TRACE
+	};
+
 	Qbus *bus_;
 	u16	register_[8];
 	u16	psw_;

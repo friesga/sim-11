@@ -259,11 +259,6 @@ void KD11_NA_Cpu::setTrap (InterruptRequest const* trap)
     trap_ = trap;
 }
 
-CpuRunState KD11_NA_Cpu::currentCpuState ()
-{
-    return runState;
-}
-
 u8 KD11_NA_Cpu::cpuPriority()
 {
     return (psw_ & PSW_PRIORITY) >> 5;
