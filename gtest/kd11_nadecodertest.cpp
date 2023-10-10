@@ -1,4 +1,4 @@
-#include "kd/kd11_na/cpu/lsi11instruction/lsi11instruction.h"
+#include "kd/common/lsi11instruction/lsi11instruction.h"
 #include "kd/kd11_na/cpu/kd11_nainstruction/kd11_nainstruction.h"
 #include "kd/include/cpudata.h"
 #include "dummycpu/dummycpu.h"

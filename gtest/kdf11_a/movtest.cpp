@@ -1,4 +1,4 @@
-#include "kd/kd11_na/cpu/kd11_nainstruction/kd11_nainstruction.h"
+#include "kd/kdf11_a/cpu/kdf11_ainstruction/kdf11_ainstruction.h"
 #include "../dummycpu/dummycpu.h"
 
 #include <gtest/gtest.h>
@@ -15,7 +15,7 @@
 TEST (KDF11_AMOVTEST, MovMode0Mode2Functions)
 {
     DummyCpu cpu;
-    KD11_NAInstruction instrDecoder;
+    KDF11_AInstruction instrDecoder;
 
     // MOV R0, (R0)+
     unique_ptr<LSI11Instruction> instruction {instrDecoder.decode (&cpu, 0010020)};

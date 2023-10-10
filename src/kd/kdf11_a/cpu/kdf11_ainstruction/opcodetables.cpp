@@ -55,7 +55,7 @@
 #include "kd/common/instructions/jsr.h"
 #include "kd/common/instructions/mark.h"
 #include "kd/common/instructions/mfps.h"
-#include "kd/common/instructions/mov.h"
+#include "mov.h"
 #include "kd/common/instructions/movb.h"
 #include "kd/common/instructions/mtps.h"
 #include "kd/common/instructions/mul.h"
@@ -197,7 +197,7 @@ KDF11_AInstruction::opCodeTable const KDF11_AInstruction::group_07_nx_xx
     CommonInstruction::ASH::create,                    // 07 2x xx
     CommonInstruction::ASHC::create,                   // 07 3x xx
     CommonInstruction::XOR::create,                    // 07 4x xx
-    decodeGroup_07_5n_nx,           // 07 5x xx
+    decodeGroup_07_5n_nx,                              // 07 5x xx
     CommonInstruction::Unused::create,                 // 07 6x xx
     CommonInstruction::SOB::create                     // 07 7x xx
 };
@@ -276,9 +276,9 @@ KDF11_AInstruction::opCodeTable const KDF11_AInstruction::group_10_xx_xx
 // instructions. 
 KDF11_AInstruction::opCodeTable const KDF11_AInstruction::group_00_nn_xx
 { 
-    decodeGroup_00_00_nn,           // 00 00 NN
+    decodeGroup_00_00_nn,                              // 00 00 NN
     CommonInstruction::JMP::create,                    // 00 01 xx
-    decodeGroup_00_02_nn,           // 00 02 NN
+    decodeGroup_00_02_nn,                              // 00 02 NN
     CommonInstruction::SWAB::create,                   // 00 03 xx
     CommonInstruction::BR::create,                     // 00 04 xx
     CommonInstruction::BR::create,                     // 00 05 xx
@@ -345,15 +345,15 @@ KDF11_AInstruction::opCodeTable const KDF11_AInstruction::group_00_nn_xx
 // This is the main operation code control table.
 KDF11_AInstruction::opCodeTable const KDF11_AInstruction::group_nn_xx_xx 
 {
-    decodeGroup_00_nn_xx,           // 00 xx xx
-    CommonInstruction::MOV::create,                    // 01 xx xx
+    decodeGroup_00_nn_xx,                              // 00 xx xx
+    KDF11_AInstruction::MOV::create,                   // 01 xx xx
     CommonInstruction::CMP::create,                    // 02 xx xx
     CommonInstruction::BIT::create,                    // 03 xx xx
     CommonInstruction::BIC::create,                    // 04 xx xx
     CommonInstruction::BIS::create,                    // 05 xx xx
     CommonInstruction::ADD::create,                    // 06 xx xx
-    decodeGroup_07_nx_xx,           // 07 nx xx
-    decodeGroup_10_xx_xx,           // 10 xx xx
+    decodeGroup_07_nx_xx,                              // 07 nx xx
+    decodeGroup_10_xx_xx,                              // 10 xx xx
     CommonInstruction::MOVB::create,                   // 11 xx xx
     CommonInstruction::CMPB::create,                   // 12 xx xx
     CommonInstruction::BITB::create,                   // 13 xx xx
