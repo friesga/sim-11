@@ -2,8 +2,8 @@
 #define _LSI11INSTRUCTION_H_
 
 #include "kd/include/cpudata.h"
-#include "../operandlocation/operandlocation.h"
-#include "../operand/operand.h"
+#include "kd/kd11_na/cpu/operandlocation/operandlocation.h"
+#include "kd/kd11_na/cpu/operand/operand.h"
 
 #include <string>
 

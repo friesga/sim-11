@@ -2,7 +2,7 @@
 #define _SOBINSTRUCTION_H_
 
 #include "../kd11_na_cpu.h"
-#include "../lsi11instruction/lsi11instruction.h"
+#include "kd/common/lsi11instruction/lsi11instruction.h"
 
 class SobInstruction : public LSI11Instruction
 {

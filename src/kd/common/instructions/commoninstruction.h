@@ -1,7 +1,7 @@
 #ifndef _COMMONINSTRUCTION_H_
 #define _COMMONINSTRUCTION_H_
 
-#include "kd/kd11_na/cpu/lsi11instruction/lsi11instruction.h"
+#include "kd/common/lsi11instruction/lsi11instruction.h"
 #include "kd/include/cpudata.h"
 
 #include <memory>

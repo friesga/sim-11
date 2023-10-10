@@ -1,7 +1,7 @@
 #ifndef _NOOPERANDINSTRUCTION_H_
 #define _NOOPERANDINSTRUCTION_H_
 
-#include "../lsi11instruction/lsi11instruction.h"
+#include "kd/common/lsi11instruction/lsi11instruction.h"
 #include "../kd11_na_cpu.h"
 #include "../operandlocation/operandlocation.h"
 

@@ -20,7 +20,8 @@ set (CMDLINEOPTIONS_SRCS
 
 set (KD11COMMON_SRCS
 src/kd/common/kd11cpudata/kd11cpudata.cpp
-    src/kd/common/kd11cpudata/kd11memoryaccess.cpp)
+    src/kd/common/kd11cpudata/kd11memoryaccess.cpp
+    src/kd/common/lsi11instruction/lsi11instruction.cpp)
 
 set (KD11CONTROLLOGIC_SRCS
     src/kd/common/controllogic/controllogic.cpp
@@ -47,7 +48,6 @@ set (KD11ODT_SRCS
 set (KD11_NA_CPU_SRCS
     src/kd/kd11_na/cpu/kd11_na_cpu.cpp
     src/kd/kd11_na/cpu/cpucontrol.cpp
-    src/kd/kd11_na/cpu/lsi11instruction/lsi11instruction.cpp
     src/kd/kd11_na/cpu/operandlocation/operandlocation.cpp
     src/kd/kd11_na/cpu/operandlocation/emptyoperandlocation/emptyoperandlocation.cpp
     src/kd/kd11_na/cpu/operandlocation/registeroperandlocation/registeroperandlocation.cpp

@@ -2,7 +2,7 @@
 #define _EISINSTRUCTION_H_
 
 #include "../kd11_na_cpu.h"
-#include "../lsi11instruction/lsi11instruction.h"
+#include "kd/common/lsi11instruction/lsi11instruction.h"
 #include "../operandlocation/operandlocation.h"
 
 // The EIS instruction format is used by the EIS instructions MUL, DIV, ASH
