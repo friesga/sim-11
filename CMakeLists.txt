@@ -67,7 +67,9 @@ set (KD11_NA_CPU_SRCS
 set (KDF11_A_SRCS
     src/kd/kdf11_a/kdf11_a.cpp
     src/kd/kdf11_a/cpu/kdf11_a_cpu.cpp
-    src/kd/kdf11_a/cpu/cpucontrol.cpp)
+    src/kd/kdf11_a/cpu/cpucontrol.cpp
+    src/kd/kdf11_a/cpu/kdf11_ainstruction/kdf11_ainstruction.cpp
+    src/kd/kdf11_a/cpu/kdf11_ainstruction/opcodetables.cpp)
 
  set (KD11_NA_SRCS
     src/kd/kd11_na/kd11_na.cpp

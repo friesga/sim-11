@@ -24,12 +24,12 @@ public:
     CpuData::Trap execute () override;
 };
 
-CommonInstruction::BVC::BVC (CpuData* cpu, u16 instruction)
+inline CommonInstruction::BVC::BVC (CpuData* cpu, u16 instruction)
     :
     BranchInstruction (cpu, instruction)
 {}
 
-CpuData::Trap CommonInstruction::BVC::execute ()
+inline CpuData::Trap CommonInstruction::BVC::execute ()
 {
     executeBranchIf (!isSet (PSW_V));
     return CpuData::Trap::None;

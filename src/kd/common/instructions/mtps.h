@@ -28,12 +28,12 @@ public:
     CpuData::Trap execute () override;
 };
 
-CommonInstruction::MTPS::MTPS (CpuData* cpu, u16 instruction)
+inline CommonInstruction::MTPS::MTPS (CpuData* cpu, u16 instruction)
     :
     SingleOperandInstruction (cpu, instruction)
 {}
 
-CpuData::Trap CommonInstruction::MTPS::execute ()
+inline CpuData::Trap CommonInstruction::MTPS::execute ()
 {
     CondData<u8> newValue;
     if (!readOperand (&newValue))

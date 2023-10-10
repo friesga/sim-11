@@ -23,12 +23,12 @@ public:
     CpuData::Trap execute () override;
 };
 
-CommonInstruction::RTS::RTS (CpuData* cpu, u16 instruction)
+inline CommonInstruction::RTS::RTS (CpuData* cpu, u16 instruction)
     :
     FISInstruction (cpu, instruction)
 {}
 
-CpuData::Trap CommonInstruction::RTS::execute ()
+inline CpuData::Trap CommonInstruction::RTS::execute ()
 {
     u16 regNr = getRegister ();
 

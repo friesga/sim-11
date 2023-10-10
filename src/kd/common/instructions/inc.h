@@ -27,12 +27,12 @@ public:
     CpuData::Trap execute () override;
 };
 
-CommonInstruction::INC::INC (CpuData* cpu, u16 instruction)
+inline CommonInstruction::INC::INC (CpuData* cpu, u16 instruction)
     :
     SingleOperandInstruction (cpu, instruction)
 {}
 
-CpuData::Trap CommonInstruction::INC::execute ()
+inline CpuData::Trap CommonInstruction::INC::execute ()
 {
     CondData<u16> contents;
     if (!readOperand (&contents))

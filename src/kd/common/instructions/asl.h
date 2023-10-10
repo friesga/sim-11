@@ -32,12 +32,12 @@ public:
     CpuData::Trap execute () override;
 };
 
-CommonInstruction::ASL::ASL (CpuData* cpu, u16 instruction)
+inline CommonInstruction::ASL::ASL (CpuData* cpu, u16 instruction)
     :
     SingleOperandInstruction (cpu, instruction)
 {}
 
-CpuData::Trap CommonInstruction::ASL::execute ()
+inline CpuData::Trap CommonInstruction::ASL::execute ()
 {
     CondData<u16> contents;
     if (!readOperand (&contents))

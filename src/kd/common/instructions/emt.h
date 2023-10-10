@@ -35,12 +35,12 @@ public:
     CpuData::Trap execute () override;
 };
 
-CommonInstruction::EMT::EMT (CpuData* cpu, u16 instruction)
+inline CommonInstruction::EMT::EMT (CpuData* cpu, u16 instruction)
     :
     NoOperandInstruction (cpu, instruction)
 {}
 
-CpuData::Trap CommonInstruction::EMT::execute ()
+inline CpuData::Trap CommonInstruction::EMT::execute ()
 {
     return CpuData::Trap::EmulatorTrap;
 }

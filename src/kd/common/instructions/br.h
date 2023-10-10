@@ -22,12 +22,12 @@ public:
     CpuData::Trap execute () override;
 };
 
-CommonInstruction::BR::BR (CpuData* cpu, u16 instruction)
+inline CommonInstruction::BR::BR (CpuData* cpu, u16 instruction)
     :
     BranchInstruction (cpu, instruction)
 {}
 
-CpuData::Trap CommonInstruction::BR::execute ()
+inline CpuData::Trap CommonInstruction::BR::execute ()
 {
     executeBranch ();
     return CpuData::Trap::None;

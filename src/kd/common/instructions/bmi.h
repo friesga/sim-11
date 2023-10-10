@@ -25,12 +25,12 @@ public:
     CpuData::Trap execute () override;
 };
 
-CommonInstruction::BMI::BMI (CpuData* cpu, u16 instruction)
+inline CommonInstruction::BMI::BMI (CpuData* cpu, u16 instruction)
     :
     BranchInstruction (cpu, instruction)
 {}
 
-CpuData::Trap CommonInstruction::BMI::execute ()
+inline CpuData::Trap CommonInstruction::BMI::execute ()
 {
     executeBranchIf (isSet (PSW_N));
     return CpuData::Trap::None;

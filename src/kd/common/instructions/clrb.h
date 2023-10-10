@@ -22,12 +22,12 @@ public:
     CpuData::Trap execute () override;
 };
 
-CommonInstruction::CLRB::CLRB (CpuData* cpu, u16 instruction)
+inline CommonInstruction::CLRB::CLRB (CpuData* cpu, u16 instruction)
     :
     SingleOperandInstruction (cpu, instruction)
 {}
 
-CpuData::Trap CommonInstruction::CLRB::execute ()
+inline CpuData::Trap CommonInstruction::CLRB::execute ()
 {
     if (!writeOperand ((u8)0))
         return CpuData::Trap::BusError;

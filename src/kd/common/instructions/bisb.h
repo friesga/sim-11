@@ -22,12 +22,12 @@ public:
     CpuData::Trap execute () override;
 };
 
-CommonInstruction::BISB::BISB (CpuData* cpu, u16 instruction)
+inline CommonInstruction::BISB::BISB (CpuData* cpu, u16 instruction)
     :
     DoubleOperandInstruction (cpu, instruction)
 {}
 
-CpuData::Trap CommonInstruction::BISB::execute ()
+inline CpuData::Trap CommonInstruction::BISB::execute ()
 {
     CondData<u8> source, destination;
 

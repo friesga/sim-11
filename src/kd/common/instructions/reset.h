@@ -23,12 +23,12 @@ public:
     CpuData::Trap execute () override;
 };
 
-CommonInstruction::RESET::RESET (CpuData* cpu, u16 instruction)
+inline CommonInstruction::RESET::RESET (CpuData* cpu, u16 instruction)
     :
     NoOperandInstruction (cpu, instruction)
 {}
 
-CpuData::Trap CommonInstruction::RESET::execute ()
+inline CpuData::Trap CommonInstruction::RESET::execute ()
 {
     cpu_->busReset ();
     return CpuData::Trap::None;

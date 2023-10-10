@@ -35,12 +35,12 @@ public:
     CpuData::Trap execute () override;
 };
 
-CommonInstruction::JSR::JSR (CpuData* cpu, u16 instruction)
+inline CommonInstruction::JSR::JSR (CpuData* cpu, u16 instruction)
     :
     EisInstruction (cpu, instruction)
 {}
 
-CpuData::Trap CommonInstruction::JSR::execute ()
+inline CpuData::Trap CommonInstruction::JSR::execute ()
 {
     OperandLocation destination = getOperandLocation (cpu_->registers ());
 

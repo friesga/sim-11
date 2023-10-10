@@ -28,12 +28,12 @@ public:
     CpuData::Trap execute () override;
 };
 
-CommonInstruction::SUB::SUB (CpuData* cpu, u16 instruction)
+inline CommonInstruction::SUB::SUB (CpuData* cpu, u16 instruction)
     :
     DoubleOperandInstruction (cpu, instruction)
 {}
 
-CpuData::Trap CommonInstruction::SUB::execute ()
+inline CpuData::Trap CommonInstruction::SUB::execute ()
 {
     CondData<u16> source, destination;
 

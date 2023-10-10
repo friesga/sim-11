@@ -4,7 +4,7 @@
 #include "kd/common/kd11cpudata/kd11cpudata.h"
 #include "float/float.h"
 #include "types.h"
-#include "kd/kd11_na/cpu/kd11_nainstruction/kd11_nainstruction.h"
+#include "kd/kdf11_a/cpu/kdf11_ainstruction/kdf11_ainstruction.h"
 
 #include <functional>
 
@@ -45,7 +45,7 @@ private:
 	};
 
 	CpuRunState runState;
-	KD11_NAInstruction kd11_naInstruction;
+	KDF11_AInstruction kdf11_aInstruction;
 
 	// This array will contain pointers to the InterruptRequest's defined
 	// above in the order defined in CpuData::Trap enum.

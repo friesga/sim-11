@@ -26,12 +26,12 @@ public:
     CpuData::Trap execute () override;
 };
 
-CommonInstruction::SOB::SOB (CpuData* cpu, u16 instruction)
+inline CommonInstruction::SOB::SOB (CpuData* cpu, u16 instruction)
     :
     SobInstruction (cpu, instruction)
 {}
 
-CpuData::Trap CommonInstruction::SOB::execute ()
+inline CpuData::Trap CommonInstruction::SOB::execute ()
 {
     u16 regNr = getRegisterNr ();
     u16 offset = getOffset ();

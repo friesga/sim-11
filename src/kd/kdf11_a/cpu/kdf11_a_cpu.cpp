@@ -17,7 +17,7 @@ KDF11_A_Cpu::KDF11_A_Cpu (Qbus* bus)
     :
     KD11CpuData (bus),
     runState {CpuRunState::HALT},
-    kd11_naInstruction {},
+    kdf11_aInstruction {},
     haltReason_ {HaltReason::HaltInstruction}
 {
     register_[7] = 0;
@@ -114,7 +114,7 @@ void KDF11_A_Cpu::execInstr ()
     }
     register_[7] += 2;
 
-    unique_ptr<LSI11Instruction> instr = kd11_naInstruction.decode (this, instructionWord);
+    unique_ptr<LSI11Instruction> instr = kdf11_aInstruction.decode (this, instructionWord);
     CpuData::Trap returnedTrap = instr->execute ();
     if (returnedTrap != CpuData::Trap::None)
         setTrap (vectorTable [returnedTrap]);

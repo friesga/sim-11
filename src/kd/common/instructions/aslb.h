@@ -27,12 +27,12 @@ public:
     CpuData::Trap execute () override;
 };
 
-CommonInstruction::ASLB::ASLB (CpuData* cpu, u16 instruction)
+inline CommonInstruction::ASLB::ASLB (CpuData* cpu, u16 instruction)
     :
     SingleOperandInstruction (cpu, instruction)
 {}
 
-CpuData::Trap CommonInstruction::ASLB::execute ()
+inline CpuData::Trap CommonInstruction::ASLB::execute ()
 {
     CondData<u8> source;
     if (!readOperand (&source))

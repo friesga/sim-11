@@ -29,12 +29,12 @@ public:
     CpuData::Trap execute () override;
 };
 
-CommonInstruction::BPT::BPT (CpuData* cpu, u16 instruction)
+inline CommonInstruction::BPT::BPT (CpuData* cpu, u16 instruction)
     :
     NoOperandInstruction (cpu, instruction)
 {}
 
-CpuData::Trap CommonInstruction::BPT::execute ()
+inline CpuData::Trap CommonInstruction::BPT::execute ()
 {
     return CpuData::Trap::BreakpointTrap;
 }

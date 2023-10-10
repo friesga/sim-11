@@ -31,12 +31,12 @@ public:
     CpuData::Trap execute () override;
 };
 
-CommonInstruction::FMUL::FMUL (CpuData* cpu, u16 instruction)
+inline CommonInstruction::FMUL::FMUL (CpuData* cpu, u16 instruction)
     :
     FISInstruction (cpu, instruction)
 {}
 
-CpuData::Trap CommonInstruction::FMUL::execute ()
+inline CpuData::Trap CommonInstruction::FMUL::execute ()
 {
     return executeFISinstruction (getRegister (),
         [](Float f1, Float f2) { return true; },

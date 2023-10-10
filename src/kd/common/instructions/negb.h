@@ -22,12 +22,12 @@ public:
     CpuData::Trap execute () override;
 };
 
-CommonInstruction::NEGB::NEGB (CpuData* cpu, u16 instruction)
+inline CommonInstruction::NEGB::NEGB (CpuData* cpu, u16 instruction)
     :
     SingleOperandInstruction (cpu, instruction)
 {}
 
-CpuData::Trap CommonInstruction::NEGB::execute ()
+inline CpuData::Trap CommonInstruction::NEGB::execute ()
 {
     CondData<u8> operand;
     if (!readOperand (&operand))

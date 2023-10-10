@@ -30,12 +30,12 @@ public:
     CpuData::Trap execute () override;
 };
 
-CommonInstruction::MFPS::MFPS (CpuData* cpu, u16 instruction)
+inline CommonInstruction::MFPS::MFPS (CpuData* cpu, u16 instruction)
     :
     SingleOperandInstruction (cpu, instruction)
 {}
 
-CpuData::Trap CommonInstruction::MFPS::execute ()
+inline CpuData::Trap CommonInstruction::MFPS::execute ()
 {
     u8 contents = (u8) cpu_->psw ();
     operandLocation_ = getOperandLocation (cpu_->registers ());

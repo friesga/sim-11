@@ -96,8 +96,9 @@ using std::unique_ptr;
 //
 class CommonInstruction
 {
-    // Allow KD11_NAInstruction access to the common instructions
+    // Allow CPU's access to the common instructions
     friend class KD11_NAInstruction;
+    friend class KDF11_AInstruction;
 
 public:
     unique_ptr<LSI11Instruction> decode (CpuData* cpu, u16 instruction);

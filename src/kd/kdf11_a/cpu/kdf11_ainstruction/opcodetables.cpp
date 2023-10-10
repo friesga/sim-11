@@ -1,4 +1,4 @@
-#include "kd11_nainstruction.h"
+#include "kdf11_ainstruction.h"
 #include "kd/common/instructions/commoninstruction.h"
 
 #include "kd/common/instructions/adc.h"
@@ -86,7 +86,7 @@
 // Instruction format for Operate Group plus BPT and IOT,
 //
 // and minus NOP instructions.
-KD11_NAInstruction::opCodeTable const KD11_NAInstruction::group_00_00_nn
+KDF11_AInstruction::opCodeTable const KDF11_AInstruction::group_00_00_nn
 { 
     CommonInstruction::HALT::create,       // 00 00 00 
     CommonInstruction::WAIT::create,       // 00 00 01
@@ -98,7 +98,7 @@ KD11_NAInstruction::opCodeTable const KD11_NAInstruction::group_00_00_nn
 };
 
 // Instruction format for RTS and Condition Code Operators instructions
-KD11_NAInstruction::opCodeTable const KD11_NAInstruction::group_00_02_nn
+KDF11_AInstruction::opCodeTable const KDF11_AInstruction::group_00_02_nn
 {
     CommonInstruction::RTS::create,        // 00 02 00
     CommonInstruction::RTS::create,        // 00 02 01
@@ -173,7 +173,7 @@ KD11_NAInstruction::opCodeTable const KD11_NAInstruction::group_00_02_nn
 // The range 07 51 xx till 07 57 xx is handled in the corresponding function
 // to minimize the size of this opcode table.
 //
-KD11_NAInstruction::opCodeTable const KD11_NAInstruction::group_07_5n_nx
+KDF11_AInstruction::opCodeTable const KDF11_AInstruction::group_07_5n_nx
 {
     CommonInstruction::FADD::create,       // 07 50 0x
     CommonInstruction::FSUB::create,       // 07 50 1x
@@ -190,7 +190,7 @@ KD11_NAInstruction::opCodeTable const KD11_NAInstruction::group_07_5n_nx
 // 
 // The FIS instructions are defined in a separate group.
 //
-KD11_NAInstruction::opCodeTable const KD11_NAInstruction::group_07_nx_xx
+KDF11_AInstruction::opCodeTable const KDF11_AInstruction::group_07_nx_xx
 {
     CommonInstruction::MUL::create,                    // 07 0x xx
     CommonInstruction::DIV::create,                    // 07 1x xx
@@ -204,7 +204,7 @@ KD11_NAInstruction::opCodeTable const KD11_NAInstruction::group_07_nx_xx
 
 // Instruction format for the Program Control and Single Operand Group
 // instructions.
-KD11_NAInstruction::opCodeTable const KD11_NAInstruction::group_10_xx_xx
+KDF11_AInstruction::opCodeTable const KDF11_AInstruction::group_10_xx_xx
 {
     CommonInstruction::BPL::create,    // 10 00 xx
     CommonInstruction::BPL::create,    // 10 01 xx
@@ -274,7 +274,7 @@ KD11_NAInstruction::opCodeTable const KD11_NAInstruction::group_10_xx_xx
 
 // Instruction format for the Program Control and Single Operand Group
 // instructions. 
-KD11_NAInstruction::opCodeTable const KD11_NAInstruction::group_00_nn_xx
+KDF11_AInstruction::opCodeTable const KDF11_AInstruction::group_00_nn_xx
 { 
     decodeGroup_00_00_nn,           // 00 00 NN
     CommonInstruction::JMP::create,                    // 00 01 xx
@@ -343,7 +343,7 @@ KD11_NAInstruction::opCodeTable const KD11_NAInstruction::group_00_nn_xx
 };
 
 // This is the main operation code control table.
-KD11_NAInstruction::opCodeTable const KD11_NAInstruction::group_nn_xx_xx 
+KDF11_AInstruction::opCodeTable const KDF11_AInstruction::group_nn_xx_xx 
 {
     decodeGroup_00_nn_xx,           // 00 xx xx
     CommonInstruction::MOV::create,                    // 01 xx xx

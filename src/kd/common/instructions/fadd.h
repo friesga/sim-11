@@ -32,12 +32,12 @@ public:
     CpuData::Trap execute () override;
 };
 
-CommonInstruction::FADD::FADD (CpuData* cpu, u16 instruction)
+inline CommonInstruction::FADD::FADD (CpuData* cpu, u16 instruction)
     :
     FISInstruction (cpu, instruction)
 {}
 
-CpuData::Trap CommonInstruction::FADD::execute ()
+inline CpuData::Trap CommonInstruction::FADD::execute ()
 {
     return executeFISinstruction (getRegister (),
         [](Float f1, Float f2) { return true; },

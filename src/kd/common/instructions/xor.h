@@ -28,12 +28,12 @@ public:
     CpuData::Trap execute () override;
 };
 
-CommonInstruction::XOR::XOR (CpuData* cpu, u16 instruction)
+inline CommonInstruction::XOR::XOR (CpuData* cpu, u16 instruction)
     :
     EisInstruction (cpu, instruction)
 {}
 
-CpuData::Trap CommonInstruction::XOR::execute ()
+inline CpuData::Trap CommonInstruction::XOR::execute ()
 {
     u16 regNr = getRegisterNr ();
     CpuData::GeneralRegisters& registers = cpu_->registers ();

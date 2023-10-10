@@ -25,12 +25,12 @@ public:
     CpuData::Trap execute () override;
 };
 
-CommonInstruction::TST::TST (CpuData* cpu, u16 instruction)
+inline CommonInstruction::TST::TST (CpuData* cpu, u16 instruction)
     :
     SingleOperandInstruction (cpu, instruction)
 {}
 
-CpuData::Trap CommonInstruction::TST::execute ()
+inline CpuData::Trap CommonInstruction::TST::execute ()
 {
     CondData<u16> contents;
     if (!readOperand (&contents))

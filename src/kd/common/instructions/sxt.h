@@ -29,12 +29,12 @@ public:
     CpuData::Trap execute () override;
 };
 
-CommonInstruction::SXT::SXT (CpuData* cpu, u16 instruction)
+inline CommonInstruction::SXT::SXT (CpuData* cpu, u16 instruction)
     :
     SingleOperandInstruction (cpu, instruction)
 {}
 
-CpuData::Trap CommonInstruction::SXT::execute ()
+inline CpuData::Trap CommonInstruction::SXT::execute ()
 {
     u16 result = isSet (PSW_N) ? 0177777 : 0;
 

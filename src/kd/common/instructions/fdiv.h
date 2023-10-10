@@ -32,12 +32,12 @@ public:
     CpuData::Trap execute () override;
 };
 
-CommonInstruction::FDIV::FDIV (CpuData* cpu, u16 instruction)
+inline CommonInstruction::FDIV::FDIV (CpuData* cpu, u16 instruction)
     :
     FISInstruction (cpu, instruction)
 {}
 
-CpuData::Trap CommonInstruction::FDIV::execute ()
+inline CpuData::Trap CommonInstruction::FDIV::execute ()
 {
     return executeFISinstruction (getRegister (),
         [](Float f1, Float f2) { return f2.value () != 0; },

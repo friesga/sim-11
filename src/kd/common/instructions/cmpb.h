@@ -22,12 +22,12 @@ public:
     CpuData::Trap execute () override;
 };
 
-CommonInstruction::CMPB::CMPB (CpuData* cpu, u16 instruction)
+inline CommonInstruction::CMPB::CMPB (CpuData* cpu, u16 instruction)
     :
     DoubleOperandInstruction (cpu, instruction)
 {}
 
-CpuData::Trap CommonInstruction::CMPB::execute ()
+inline CpuData::Trap CommonInstruction::CMPB::execute ()
 {
     CondData<u8> source, destination;
 

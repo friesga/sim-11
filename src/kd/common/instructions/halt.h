@@ -23,12 +23,12 @@ public:
     CpuData::Trap execute () override;
 };
 
-CommonInstruction::HALT::HALT (CpuData* cpu, u16 instruction)
+inline CommonInstruction::HALT::HALT (CpuData* cpu, u16 instruction)
     :
     NoOperandInstruction (cpu, instruction)
 {}
 
-CpuData::Trap CommonInstruction::HALT::execute ()
+inline CpuData::Trap CommonInstruction::HALT::execute ()
 {
     cpu_->halt ();
     return CpuData::Trap::None;

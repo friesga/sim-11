@@ -30,12 +30,12 @@ public:
     CpuData::Trap execute () override;
 };
 
-CommonInstruction::MUL::MUL (CpuData* cpu, u16 instruction)
+inline CommonInstruction::MUL::MUL (CpuData* cpu, u16 instruction)
     :
     EisInstruction (cpu, instruction)
 {}
 
-CpuData::Trap CommonInstruction::MUL::execute ()
+inline CpuData::Trap CommonInstruction::MUL::execute ()
 {
     u16 regNr = getRegisterNr ();
 

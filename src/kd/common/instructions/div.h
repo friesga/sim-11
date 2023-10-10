@@ -32,12 +32,12 @@ public:
     CpuData::Trap execute () override;
 };
 
-CommonInstruction::DIV::DIV (CpuData* cpu, u16 instruction)
+inline CommonInstruction::DIV::DIV (CpuData* cpu, u16 instruction)
     :
     EisInstruction (cpu, instruction)
 {}
 
-CpuData::Trap CommonInstruction::DIV::execute ()
+inline CpuData::Trap CommonInstruction::DIV::execute ()
 {
     u16 regNr = getRegisterNr ();
 

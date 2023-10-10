@@ -26,12 +26,12 @@ public:
     CpuData::Trap execute () override;
 };
 
-CommonInstruction::ROLB::ROLB (CpuData* cpu, u16 instruction)
+inline CommonInstruction::ROLB::ROLB (CpuData* cpu, u16 instruction)
     :
     SingleOperandInstruction (cpu, instruction)
 {}
 
-CpuData::Trap CommonInstruction::ROLB::execute ()
+inline CpuData::Trap CommonInstruction::ROLB::execute ()
 {
     CondData<u8> source;
     if (!readOperand (&source))

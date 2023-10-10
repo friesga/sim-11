@@ -31,12 +31,12 @@ public:
     CpuData::Trap execute () override;
 };
 
-CommonInstruction::ASH::ASH (CpuData* cpu, u16 instruction)
+inline CommonInstruction::ASH::ASH (CpuData* cpu, u16 instruction)
     :
     EisInstruction (cpu, instruction)
 {}
 
-CpuData::Trap CommonInstruction::ASH::execute ()
+inline CpuData::Trap CommonInstruction::ASH::execute ()
 {
     u16 regNr = getRegisterNr ();
     u16 tmp {0};

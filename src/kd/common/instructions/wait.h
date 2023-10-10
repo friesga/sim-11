@@ -31,12 +31,12 @@ public:
     CpuData::Trap execute () override;
 };
 
-CommonInstruction::WAIT::WAIT (CpuData* cpu, u16 instruction)
+inline CommonInstruction::WAIT::WAIT (CpuData* cpu, u16 instruction)
     :
     NoOperandInstruction (cpu, instruction)
 {}
 
-CpuData::Trap CommonInstruction::WAIT::execute ()
+inline CpuData::Trap CommonInstruction::WAIT::execute ()
 {
     cpu_->wait ();
     return CpuData::Trap::None;

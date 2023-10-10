@@ -29,12 +29,12 @@ public:
     CpuData::Trap execute () override;
 };
 
-CommonInstruction::IOT::IOT (CpuData* cpu, u16 instruction)
+inline CommonInstruction::IOT::IOT (CpuData* cpu, u16 instruction)
     :
     NoOperandInstruction (cpu, instruction)
 {}
 
-CpuData::Trap CommonInstruction::IOT::execute ()
+inline CpuData::Trap CommonInstruction::IOT::execute ()
 {
     return CpuData::Trap::InputOutputTrap;
 }

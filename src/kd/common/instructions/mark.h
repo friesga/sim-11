@@ -29,12 +29,12 @@ public:
     CpuData::Trap execute () override;
 };
 
-CommonInstruction::MARK::MARK (CpuData* cpu, u16 instruction)
+inline CommonInstruction::MARK::MARK (CpuData* cpu, u16 instruction)
     :
     MarkInstruction (cpu, instruction)
 {}
 
-CpuData::Trap CommonInstruction::MARK::execute ()
+inline CpuData::Trap CommonInstruction::MARK::execute ()
 {
     CpuData::GeneralRegisters& registers = cpu_->registers ();
 

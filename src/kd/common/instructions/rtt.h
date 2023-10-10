@@ -31,12 +31,12 @@ public:
     CpuData::Trap execute () override;
 };
 
-CommonInstruction::RTT::RTT (CpuData* cpu, u16 instruction)
+inline CommonInstruction::RTT::RTT (CpuData* cpu, u16 instruction)
     :
     NoOperandInstruction (cpu, instruction)
 {}
 
-CpuData::Trap CommonInstruction::RTT::execute ()
+inline CpuData::Trap CommonInstruction::RTT::execute ()
 {
     if (!cpu_->popWord (&cpu_->registers ()[7]))
         return CpuData::Trap::BusError;

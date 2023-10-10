@@ -31,12 +31,12 @@ public:
     CpuData::Trap execute () override;
 };
 
-CommonInstruction::JMP::JMP (CpuData* cpu, u16 instruction)
+inline CommonInstruction::JMP::JMP (CpuData* cpu, u16 instruction)
     :
     SingleOperandInstruction (cpu, instruction)
 {}
 
-CpuData::Trap CommonInstruction::JMP::execute ()
+inline CpuData::Trap CommonInstruction::JMP::execute ()
 {
     operandLocation_ = getOperandLocation (cpu_->registers ());
     if (operandLocation_.isA<MemoryOperandLocation> ())

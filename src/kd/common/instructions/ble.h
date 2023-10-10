@@ -22,12 +22,12 @@ public:
     CpuData::Trap execute () override;
 };
 
-CommonInstruction::BLE::BLE (CpuData* cpu, u16 instruction)
+inline CommonInstruction::BLE::BLE (CpuData* cpu, u16 instruction)
     :
     BranchInstruction (cpu, instruction)
 {}
 
-CpuData::Trap CommonInstruction::BLE::execute ()
+inline CpuData::Trap CommonInstruction::BLE::execute ()
 {
     executeBranchIf (isSet (PSW_Z) || (isSet (PSW_N) ^ isSet (PSW_V)));
     return CpuData::Trap::None;

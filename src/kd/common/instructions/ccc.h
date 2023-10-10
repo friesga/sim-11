@@ -23,12 +23,12 @@ public:
     CpuData::Trap execute () override;
 };
 
-CommonInstruction::CCC::CCC (CpuData* cpu, u16 instruction)
+inline CommonInstruction::CCC::CCC (CpuData* cpu, u16 instruction)
     :
     CcInstruction (cpu, instruction)
 {}
 
-CpuData::Trap CommonInstruction::CCC::execute ()
+inline CpuData::Trap CommonInstruction::CCC::execute ()
 {
     cpu_->psw () &= ~getConditionCodes ();
     return CpuData::Trap::None;

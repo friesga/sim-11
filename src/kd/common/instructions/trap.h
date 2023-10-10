@@ -33,12 +33,12 @@ public:
     CpuData::Trap execute () override;
 };
 
-CommonInstruction::TRAP::TRAP (CpuData* cpu, u16 instruction)
+inline CommonInstruction::TRAP::TRAP (CpuData* cpu, u16 instruction)
     :
     NoOperandInstruction (cpu, instruction)
 {}
 
-CpuData::Trap CommonInstruction::TRAP::execute ()
+inline CpuData::Trap CommonInstruction::TRAP::execute ()
 {
     return CpuData::Trap::TrapInstruction;
 }

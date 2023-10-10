@@ -29,12 +29,12 @@ public:
     CpuData::Trap execute () override;
 };
 
-CommonInstruction::SWAB::SWAB (CpuData* cpu, u16 instruction)
+inline CommonInstruction::SWAB::SWAB (CpuData* cpu, u16 instruction)
     :
     SingleOperandInstruction (cpu, instruction)
 {}
 
-CpuData::Trap CommonInstruction::SWAB::execute ()
+inline CpuData::Trap CommonInstruction::SWAB::execute ()
 {
     CondData<u16> operand;
     if (!readOperand (&operand))
