@@ -96,6 +96,8 @@ using std::unique_ptr;
 //
 class KDF11_AInstruction
 {
+    class MOV;
+
 public:
     unique_ptr<LSI11Instruction> decode (CpuData* cpu, u16 instruction);
 
