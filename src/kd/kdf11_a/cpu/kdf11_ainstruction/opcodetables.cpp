@@ -55,7 +55,7 @@
 #include "kd/common/instructions/jsr.h"
 #include "kd/common/instructions/mark.h"
 #include "kd/common/instructions/mfps.h"
-#include "mov.h"
+#include "kd/common/instructions/mov.h"
 #include "kd/common/instructions/movb.h"
 #include "kd/common/instructions/mtps.h"
 #include "kd/common/instructions/mul.h"
@@ -346,7 +346,7 @@ KDF11_AInstruction::opCodeTable const KDF11_AInstruction::group_00_nn_xx
 KDF11_AInstruction::opCodeTable const KDF11_AInstruction::group_nn_xx_xx 
 {
     decodeGroup_00_nn_xx,                              // 00 xx xx
-    KDF11_AInstruction::MOV::create,                   // 01 xx xx
+    CommonInstruction::MOV::create,                    // 01 xx xx
     CommonInstruction::CMP::create,                    // 02 xx xx
     CommonInstruction::BIT::create,                    // 03 xx xx
     CommonInstruction::BIC::create,                    // 04 xx xx

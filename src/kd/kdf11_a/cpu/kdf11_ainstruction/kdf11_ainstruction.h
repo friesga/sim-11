@@ -100,8 +100,6 @@ public:
     unique_ptr<LSI11Instruction> decode (CpuData* cpu, u16 instruction);
 
 private:
-    class MOV;
-
     typedef  unique_ptr<LSI11Instruction> (*InstructionCreator) (CpuData*, u16);
     using opCodeTable = InstructionCreator[];
 
