@@ -3,7 +3,7 @@
 
 #include "types.h"
 #include "statuscodes.h"
-#include "busdevice/busdevice.h"
+#include "abstractbusdevice/abstractbusdevice.h"
 
 #include <string>
 #include <memory>
@@ -13,7 +13,7 @@ class Unit;
 
 // Definition of some data members and functions common to all PDP-11
 // peripheral classes.
-class PDP11Peripheral : public BusDevice
+class PDP11Peripheral : public AbstractBusDevice
 {
 protected:
 	Qbus* bus_;
@@ -24,7 +24,6 @@ protected:
 public:
 	PDP11Peripheral (Qbus *bus);
 	virtual ~PDP11Peripheral () {};
-	StatusCode writeByte (u16 addr, u8 value) override;
 	
 	std::string name() { return name_; }
 };

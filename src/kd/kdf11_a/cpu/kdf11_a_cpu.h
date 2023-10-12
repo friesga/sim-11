@@ -23,7 +23,9 @@ class KD11_NA;
 class KDF11_A_Cpu : public KD11CpuData
 {
 public:
-	// The ControlLogic and LSI11 classes need access to the CpuControl functions.
+	// The KDF11_A needs access to the PSW. The ControlLogic and LSI11 classes
+	// need access to the CpuControl functions.
+	friend class KDF11_A;
 	friend class ControlLogic;
 	friend class KD11_NA_ODT;
 	friend class LSI11;

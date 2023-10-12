@@ -231,6 +231,7 @@ endif ()
 set (SIM11_SRCS
     ${BA11_N_SRCS}
     ${CONSOLE_SRCS}
+    src/abstractbusdevice/writebyte.cpp
     src/bdv11/bdv11.cpp
     src/bdv11/bdv11_e53.cpp
     src/dlv11j/dlv11j.cpp
@@ -247,7 +248,6 @@ set (SIM11_SRCS
     src/msv11d/msv11d.cpp
     ${QBUS_SRCS}
     src/pdp11peripheral/pdp11peripheral.cpp
-    src/pdp11peripheral/writebyte.cpp
     ${RLV12_SRCS}
     ${SDL_SRCS}
     src/rxv21/rxv21.cpp
@@ -364,7 +364,7 @@ set (GTEST_SRCS
     gtest/kd11_nadecodertest.cpp
     gtest/kd11_na/inctest.cpp
     gtest/kd11_na/movtest.cpp
-    gtest/kdf11_a/movtest.cpp
+    gtest/kdf11_a/pswtest.cpp
     gtest/locationtest.cpp
     gtest/operandlocationtest.cpp
     gtest/dummycpu/dummycpu.cpp
@@ -392,8 +392,8 @@ set (SIM11_TEST_SRCS
     ${SIM_FIO_SRCS}
     ${RLV12_SRCS}
     ${FLOAT_SRCS}
+    src/abstractbusdevice/writebyte.cpp
     src/pdp11peripheral/pdp11peripheral.cpp
-    src/pdp11peripheral/writebyte.cpp
     src/lib/gotapproval.cpp
     ${KD11_NA_SRCS}
     ${KDF11_A_SRCS}

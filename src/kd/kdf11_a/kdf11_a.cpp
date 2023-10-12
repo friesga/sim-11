@@ -48,3 +48,30 @@ void KDF11_A::start (u16 startAddress)
     startAddress_ = startAddress;
     start ();
 }
+
+StatusCode KDF11_A::read (u16 address, u16* destination)
+{
+    if (address == PSWAddress)
+    {
+        *destination = cpu_.pswValue ();
+        return StatusCode::OK;
+    }
+
+    return StatusCode::NonExistingMemory;
+}
+
+StatusCode KDF11_A::writeWord (u16 address, u16 value)
+{
+    if (address == PSWAddress)
+    {
+        cpu_.setPSW (value);
+        return StatusCode::OK;
+    }
+
+    return StatusCode::NonExistingMemory;
+}
+
+bool KDF11_A::responsible (u16 address)
+{
+    return (address == PSWAddress) ? true : false; 
+}

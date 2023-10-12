@@ -1,6 +1,9 @@
 #ifndef _BUSDEVICE_H_
 #define _BUSDEVICE_H_
 
+#include "types.h"
+#include "statuscodes.h"
+
 // Definition of the functions every Qbus module must provide.
 //
 // The following information structure is used:
@@ -8,12 +11,17 @@
 //			    BusDevice
 //		           ^
 //                 |
+//			AbstractBusDevice
+//				   |
 //        +--------+---------+
 //        |                  |
 //   PDP11Processor  PDP11Peripheral
 //
-// BusDevice and PDP11Processor are interfaces, PDP11Peripheral is a
-// base class for the peripheral devices.
+// BusDevice is the interface for all PDP11Processor's and PDP11Peripheral's.
+// AbstractBusDevice is a partial implementation of the BusDevice interface,
+// providing a writeByte() function. PDP11Processor is an interface for
+// processor implementation and PDP11Peripheral is a base class for the
+// peripheral devices.
 //
 class BusDevice
 {

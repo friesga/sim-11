@@ -26,21 +26,17 @@ public:
     // Give main() access to the CPU to set PC and runState
     KDF11_A_Cpu& cpu ();
 
-    // The KDF11_A is a PDP11Peripheral without registers so the read and write 
-    // register functions are dummies. The reset function is called on a
-    // bus reset and has no function for the KDF11_A either.
-    StatusCode read (u16 addr, u16* destination) override
-        { return StatusCode::FunctionNotImplemented; };
-    StatusCode writeWord (u16 addr, u16 value) override
-        { return StatusCode::FunctionNotImplemented; };
-    StatusCode writeByte (u16 addr, u8 value) override
-        { return StatusCode::FunctionNotImplemented; };
-    bool responsible (u16 addr) override
-        { return false; }
+    // The KDF11_A is a PDP11Peripheral with at least one register, the
+    // PSW.
+    // The function writeByte() is implemented in PDP11Peripheral
+    StatusCode read (u16 address, u16* destination) override;
+    StatusCode writeWord (u16 address, u16 value) override;
+    bool responsible (u16 address) override;
     void reset () override {};
 
 private:
     enum { stdBootAddress = 0173000 };
+    enum { PSWAddress = 0177776 };
 
     Qbus* bus_;
     KDF11_A_Cpu cpu_ {bus_};
