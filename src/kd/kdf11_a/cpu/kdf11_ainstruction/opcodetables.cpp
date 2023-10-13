@@ -34,7 +34,7 @@
 #include "kd/common/instructions/bvs.h"
 #include "kd/common/instructions/ccc.h"
 #include "clr.h"
-#include "kd/common/instructions/clrb.h"
+#include "clrb.h"
 #include "kd/common/instructions/cmp.h"
 #include "kd/common/instructions/cmpb.h"
 #include "kd/common/instructions/com.h"
@@ -246,7 +246,7 @@ KDF11_AInstruction::opCodeTable const KDF11_AInstruction::group_10_xx_xx
     CommonInstruction::TRAP::create,   // 10 45 xx
     CommonInstruction::TRAP::create,   // 10 46 xx
     CommonInstruction::TRAP::create,   // 10 47 xx
-    CommonInstruction::CLRB::create,   // 10 50 xx
+    KDF11_AInstruction::CLRB::create,  // 10 50 xx
     CommonInstruction::COMB::create,   // 10 51 xx
     CommonInstruction::INCB::create,   // 10 52 xx
     CommonInstruction::DECB::create,   // 10 53 xx

@@ -100,3 +100,24 @@ TEST_F (KDF11_A_PSWTEST, CLRDoesNotSetCC)
     EXPECT_EQ (kdf11a->read (PswAddress, &psw), StatusCode::OK);
     EXPECT_EQ (psw, 0);
 }
+
+// Verify that a CLRB @#PS instruction actually clears the PSW (and does
+// not set the Z-bit).
+TEST_F (KDF11_A_PSWTEST, CLRBDoesNotSetCC)
+{
+    kdf11a->writeWord (PswAddress, 0177777);
+
+    // CLR @#PS
+    unique_ptr<LSI11Instruction> instruction {instrDecoder.decode (&kdf11a->cpu (), 0105037)};
+
+    // Assume the CLR instruction is at address 0, so the second word of the
+    // instruction is at address 2.
+    kdf11a->cpu ().registers () [7] = 2;
+    kdf11a->cpu ().putWord (2, 0177776);
+
+    EXPECT_EQ (instruction->execute (), CpuData::Trap::None);
+    
+    u16 psw;
+    EXPECT_EQ (kdf11a->read (PswAddress, &psw), StatusCode::OK);
+    EXPECT_EQ (psw, 0177400);
+}

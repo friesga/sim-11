@@ -97,6 +97,7 @@ using std::unique_ptr;
 class KDF11_AInstruction
 {
     class CLR;
+    class CLRB;
     class MOV;
     class MOVB;
 
