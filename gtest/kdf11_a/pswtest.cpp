@@ -33,10 +33,33 @@ TEST (KDF11_A_PSWTEST, MOVDoesNotSetCC)
 
     // Assume the MOV instruction is at address 0, so the second and third
     // word of the instruction are at address 2 and 4.
-    // be at address 2. Address 8 = 100, R1 = 10
     kdf11a.cpu ().registers () [7] = 2;
     kdf11a.cpu ().putWord (2, 0);
     kdf11a.cpu ().putWord (4, 0177776);
+
+    instruction->execute ();
+    
+    u16 psw;
+    EXPECT_EQ (kdf11a.read (PswAddress, &psw), StatusCode::OK);
+    EXPECT_EQ (psw, 0);
+}
+
+// Verify that a CLR @#PS instruction actually clears the PSW (and does
+// not set the Z-bit). See JKDBD0 test 243.
+TEST (KDF11_A_PSWTEST, CLRDoesNotSetCC)
+{
+    Qbus qbus;
+    KDF11_A kdf11a (&qbus);
+    KDF11_AInstruction instrDecoder;
+    u16 const PswAddress = 0177776;
+
+    // CLR @#PS
+    unique_ptr<LSI11Instruction> instruction {instrDecoder.decode (&kdf11a.cpu (), 0005037)};
+
+    // Assume the CLR instruction is at address 0, so the second word of the
+    // instruction is at address 2.
+    kdf11a.cpu ().registers () [7] = 2;
+    kdf11a.cpu ().putWord (2, 0177776);
 
     instruction->execute ();
     

@@ -33,7 +33,7 @@
 #include "kd/common/instructions/bvc.h"
 #include "kd/common/instructions/bvs.h"
 #include "kd/common/instructions/ccc.h"
-#include "kd/common/instructions/clr.h"
+#include "clr.h"
 #include "kd/common/instructions/clrb.h"
 #include "kd/common/instructions/cmp.h"
 #include "kd/common/instructions/cmpb.h"
@@ -316,7 +316,7 @@ KDF11_AInstruction::opCodeTable const KDF11_AInstruction::group_00_nn_xx
     CommonInstruction::JSR::create,                    // 00 45 xx
     CommonInstruction::JSR::create,                    // 00 46 xx
     CommonInstruction::JSR::create,                    // 00 47 xx
-    CommonInstruction::CLR::create,                    // 00 50 xx
+    KDF11_AInstruction::CLR::create,                   // 00 50 xx
     CommonInstruction::COM::create,                    // 00 51 xx
     CommonInstruction::INC::create,                    // 00 52 xx
     CommonInstruction::DEC::create,                    // 00 53 xx
