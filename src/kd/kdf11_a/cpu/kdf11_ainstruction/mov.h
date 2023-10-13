@@ -24,8 +24,12 @@
 // 
 // This class implements the MOV instruction for the KDF11-A. This processor
 // allows access to the PSW via address 0177776. As JKDBD0 test 33 shows,
-// a MOV to the PSW does not set the condition codes. This implies that the
-// condition codes are set before the MOV is executed.
+// a MOV to the PSW does not set the condition codes. Therefore the condition
+// codes are set before the MOV is executed. As a consequence the original
+// conditions codes have to be restored when a write to the destionation
+// operand location fails. The setPSW() can be used for this purpose as the
+// T-bit is not affected by an Explicit PS Access (see EK-KDF-UG-PR2,
+// Table 8-1).
 //
 class KDF11_AInstruction::MOV : public DoubleOperandInstruction, public WithFactory<MOV>
 {
@@ -47,12 +51,17 @@ inline CpuData::Trap KDF11_AInstruction::MOV::execute ()
     if (!readSourceOperand (&source))
         return CpuData::Trap::BusError;
 
+    u16 originalPsw = cpu_->pswValue ();
+
     setConditionCodeIf_ClearElse (PSW_N, source & 0100000);
     setConditionCodeIf_ClearElse (PSW_Z, !source);
     clearConditionCode (PSW_V);
     
     if (!writeDestinationOperand (source.value ()))
+    {
+        cpu_->setPSW (originalPsw);
         return CpuData::Trap::BusError;
+    }
 
     return CpuData::Trap::None;
 }
