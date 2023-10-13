@@ -98,6 +98,7 @@ class KDF11_AInstruction
 {
     class CLR;
     class MOV;
+    class MOVB;
 
 public:
     unique_ptr<LSI11Instruction> decode (CpuData* cpu, u16 instruction);

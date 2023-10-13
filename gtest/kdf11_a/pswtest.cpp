@@ -58,6 +58,28 @@ TEST_F (KDF11_A_PSWTEST, MOVDoesNotSetCC)
 }
 
 
+// Verify that a MOVB #0, @#PS instruction actually clears the lower byte 
+// of the PSW (and does not set the Z-bit).
+TEST_F (KDF11_A_PSWTEST, MOVBDoesNotSetCC)
+{
+    kdf11a->writeWord (PswAddress, 0177777);
+
+    // MOVB #0, @#PS
+    unique_ptr<LSI11Instruction> instruction {instrDecoder.decode (&kdf11a->cpu (), 0112737)};
+
+    // Assume the MOV instruction is at address 0, so the second and third
+    // word of the instruction are at address 2 and 4.
+    kdf11a->cpu ().registers () [7] = 2;
+    kdf11a->cpu ().putWord (2, 0);
+    kdf11a->cpu ().putWord (4, 0177776);
+
+    EXPECT_EQ (instruction->execute (), CpuData::Trap::None);
+    
+    u16 psw;
+    EXPECT_EQ (kdf11a->read (PswAddress, &psw), StatusCode::OK);
+    EXPECT_EQ (psw, 0177400);
+}
+
 // Verify that a CLR @#PS instruction actually clears the PSW (and does
 // not set the Z-bit). See JKDBD0 test 243.
 TEST_F (KDF11_A_PSWTEST, CLRDoesNotSetCC)
