@@ -2,7 +2,7 @@
 #define _KDF11_AREGISTERS_H_
 
 #include "kd/include/generalregisters.h"
-#include "kd/common/lsi11instruction/lsi11instruction.h"
+#include "kd/include/psw.h"
 
 // This class implements the general register set for the KDF11_A. This
 // processor has R0-R5, two stack pointers (R6) and R7. The stack pointer
