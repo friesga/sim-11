@@ -80,8 +80,6 @@ private:
 	void proceed () override;
 	void inhibitTraceTrap () override;
     
-	constexpr u16 registerValue (u8 registerNr);
-    constexpr void setRegister (u8 registerNr, u16 value);
     constexpr u16 pswValue ();
 	constexpr void setPSW (u16 value);
 	constexpr HaltReason haltReason ();
@@ -94,23 +92,8 @@ private:
 // constexpr functions are implicitly inline and therefore need to be defined
 // in every translation unit.
 //
-// The functions registerValue(), setRegister(), setPSW() and pswValue()
-// are used by ODT.
+// The functions setPSW() and pswValue() are used by ODT.
 // 
-// Return the value of a register. Access to the registers and PSW has to be
-// provided via special functions as the KD11 has no registers to access them.
-//
-constexpr u16 KD11_NA_Cpu::registerValue (u8 registerNr)
-{
-    return register_[registerNr];
-}
-
-// Set the given register to the given value
-constexpr void KD11_NA_Cpu::setRegister (u8 registerNr, u16 value)
-{
-    register_[registerNr] = value;
-}
-
 // Set the Processor Status Word to the given value. The T-bit cannot be set
 // via this function.
 // 

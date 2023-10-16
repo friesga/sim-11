@@ -30,9 +30,6 @@ public:
     virtual void proceed () = 0;
     virtual void inhibitTraceTrap () = 0;
 
-    virtual u16 registerValue (u8 registerNr) = 0;
-    virtual void setRegister (u8 registerNr, u16 value) = 0;
-
     virtual u16 pswValue () = 0;
     virtual void setPSW (u16 value) = 0;
 

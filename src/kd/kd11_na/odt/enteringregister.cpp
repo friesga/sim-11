@@ -75,7 +75,7 @@ KD11_NA_ODT::State KD11_NA_ODT::StateMachine::transition (EnteringRegister_6 &&,
     {
         // Open register
         context_->location_ = RegisterLocation {static_cast<u8> (context_->registerSeries_.back() - '0')};
-        context_->writeString (context_->octalNumberToString (context_->cpu_->registerValue (context_->location_.registerNr ())) + ' ');
+        context_->writeString (context_->octalNumberToString (context_->cpu_->registers () [context_->location_.registerNr ()]) + ' ');
     }
 
     return RegisterOpened_4 {};
