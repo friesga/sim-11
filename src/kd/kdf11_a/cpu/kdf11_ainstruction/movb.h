@@ -41,23 +41,24 @@ inline CpuData::Trap KDF11_AInstruction::MOVB::execute ()
     if (!readSourceOperand (&source))
         return CpuData::Trap::BusError;
 
-    // s8 tmp = (s8)source;
+    // Make the source a signed eight bit value 
+    s8 tmp = (s8) source;
     u16 originalPsw = cpu_->pswValue ();
 
-    setConditionCodeIf_ClearElse (PSW_N, source & 0x80);
-    setConditionCodeIf_ClearElse (PSW_Z, !source);
+    setConditionCodeIf_ClearElse (PSW_N, tmp & 0x80);
+    setConditionCodeIf_ClearElse (PSW_Z, !tmp);
     clearConditionCode (PSW_V);
 
     // If the destination mode is 0 (Register) the regular operand processing
-    // is bypassed and the signed eight bit value u8 is directly written into
+    // is bypassed and the signed eight bit value s8 is directly written into
     // the register, causing sign extension in the register.
     OperandLocation destOperandLocation =
         getDestinationOperandLocation (cpu_->registers ());
 
     if (destOperandLocation.isA<RegisterOperandLocation> ())
-        cpu_->registers ()[destOperandLocation] = source;
+        cpu_->registers ()[destOperandLocation] = tmp;
     else
-        if (!destOperandLocation.write<u8> (source))
+        if (!destOperandLocation.write<u8> (tmp))
         {
             cpu_->setPSW (originalPsw);
             return CpuData::Trap::BusError;
