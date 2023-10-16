@@ -51,7 +51,7 @@ inline CpuData::Trap CommonInstruction::JSR::execute ()
         return CpuData::Trap::BusError;
     }
 
-    CpuData::GeneralRegisters& registers = cpu_->registers ();
+    GeneralRegisters& registers = cpu_->registers ();
     u16 specifiedRegisterContents = registers[getRegisterNr ()];
 
     cpu_->pushWord (specifiedRegisterContents);

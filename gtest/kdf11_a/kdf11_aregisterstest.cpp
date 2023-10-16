@@ -75,3 +75,49 @@ TEST_F (KDF11_ARegistersTest, StackPointersAreIndependent)
     EXPECT_EQ (getR6 (IllegalMode), 12);
     EXPECT_EQ (getR6 (UserMode), 13);
 }
+
+TEST_F (KDF11_ARegistersTest, RegistersCanBeConvertedToArray)
+{
+    psw = KernelMode;
+    registers [0] = 10;
+    registers [1] = 11;
+    registers [2] = 12;
+    registers [3] = 13;
+    registers [4] = 14;
+    registers [5] = 15;
+    registers [6] = 16;     // This will set the kernel SP
+    registers [7] = 17;
+
+    u16* arrayPtr = registers;
+    EXPECT_EQ (arrayPtr [0], 10);
+    EXPECT_EQ (arrayPtr [1], 11);
+    EXPECT_EQ (arrayPtr [2], 12);
+    EXPECT_EQ (arrayPtr [3], 13);
+    EXPECT_EQ (arrayPtr [4], 14);
+    EXPECT_EQ (arrayPtr [5], 15);
+    EXPECT_EQ (arrayPtr [6], 16);  // Kernel SP returned
+    EXPECT_EQ (arrayPtr [7], 17);
+}
+
+TEST_F (KDF11_ARegistersTest, UserSpConvertedToArray)
+{
+    psw = UserMode;
+    registers [0] = 10;
+    registers [1] = 11;
+    registers [2] = 12;
+    registers [3] = 13;
+    registers [4] = 14;
+    registers [5] = 15;
+    registers [6] = 16;     // This will set the user SP
+    registers [7] = 17;
+
+    u16* arrayPtr = registers;
+    EXPECT_EQ (arrayPtr [0], 10);
+    EXPECT_EQ (arrayPtr [1], 11);
+    EXPECT_EQ (arrayPtr [2], 12);
+    EXPECT_EQ (arrayPtr [3], 13);
+    EXPECT_EQ (arrayPtr [4], 14);
+    EXPECT_EQ (arrayPtr [5], 15);
+    EXPECT_EQ (arrayPtr [6], 16);  // User SP returned
+    EXPECT_EQ (arrayPtr [7], 17);
+}

@@ -20,7 +20,6 @@ KDF11_A_Cpu::KDF11_A_Cpu (Qbus* bus)
     kdf11_aInstruction {},
     haltReason_ {HaltReason::HaltInstruction}
 {
-    register_[7] = 0;
     bus_->SRUN().set (false);
 }
 
@@ -78,10 +77,10 @@ bool KDF11_A_Cpu::step ()
         // the instruction isn't decoded at this point. Therefore use the bus
         // read function instead of fetchWord(). The latter will generate a
         // bus error trap on access of an invalid address.
-        code[0] = bus_->read (register_[7] + 0).valueOr (0);
-        code[1] = bus_->read (register_[7] + 2).valueOr (0);
-        code[2] = bus_->read (register_[7] + 4).valueOr (0);
-        trace.cpuStep (register_, psw_, code);
+        code[0] = bus_->read (registers_[7] + 0).valueOr (0);
+        code[1] = bus_->read (registers_[7] + 2).valueOr (0);
+        code[2] = bus_->read (registers_[7] + 4).valueOr (0);
+        trace.cpuStep (registers_, psw_, code);
         trace.clearIgnoreBus ();
     }
 
@@ -105,14 +104,14 @@ bool KDF11_A_Cpu::step ()
 void KDF11_A_Cpu::execInstr ()
 {
     // Get next instruction to execute and move PC forward
-    CondData<u16> instructionWord = fetchWord (register_[7]);
+    CondData<u16> instructionWord = fetchWord (registers_[7]);
     if (!instructionWord.hasValue())
     {
-        trace.bus (BusRecordType::ReadFail, register_[7], 0);
+        trace.bus (BusRecordType::ReadFail, registers_[7], 0);
         setTrap (&busError);
         return;
     }
-    register_[7] += 2;
+    registers_[7] += 2;
 
     unique_ptr<LSI11Instruction> instr = kdf11_aInstruction.decode (this, instructionWord);
     CpuData::Trap returnedTrap = instr->execute ();
@@ -184,10 +183,10 @@ void KDF11_A_Cpu::handleTraps ()
     // Save PC and PSW on the stack. Adressing the stack could result in a
     // bus time out. In that case the CPU is halted.
     // ToDo: Remove code duplication
-    register_[6] -= 2;
-    if (!putWord (register_[6], psw_))
+    registers_[6] -= 2;
+    if (!putWord (registers_[6], psw_))
     {
-        trace.cpuEvent (CpuEventRecordType::CPU_DBLBUS, register_[6]);
+        trace.cpuEvent (CpuEventRecordType::CPU_DBLBUS, registers_[6]);
         // ToDo: All interrupts should be cleared?
         trap_ = nullptr;
         runState = CpuRunState::HALT;
@@ -196,10 +195,10 @@ void KDF11_A_Cpu::handleTraps ()
         return;
     }
 
-    register_[6] -= 2;
-    if (!putWord (register_[6], register_[7]))
+    registers_[6] -= 2;
+    if (!putWord (registers_[6], registers_[7]))
     {
-        trace.cpuEvent (CpuEventRecordType::CPU_DBLBUS, register_[6]);
+        trace.cpuEvent (CpuEventRecordType::CPU_DBLBUS, registers_[6]);
         trap_ = nullptr;
         runState = CpuRunState::HALT;
         haltReason_ = HaltReason::DoubleBusError;
@@ -210,7 +209,7 @@ void KDF11_A_Cpu::handleTraps ()
     // Read new PC and PSW from the trap vector. These read's could also
     // result in a bus time out.
     tmpValue = fetchWord (trapToProcess);
-    register_[7] = tmpValue.valueOr (0);
+    registers_[7] = tmpValue.valueOr (0);
     if (!tmpValue.hasValue ())
     {
         trace.cpuEvent (CpuEventRecordType::CPU_DBLBUS, trapToProcess);
@@ -236,7 +235,7 @@ void KDF11_A_Cpu::handleTraps ()
     /* resume execution if in WAIT state */
     if (runState == CpuRunState::WAIT)
     {
-        trace.cpuEvent (CpuEventRecordType::CPU_RUN, register_[7]);
+        trace.cpuEvent (CpuEventRecordType::CPU_RUN, registers_[7]);
         runState = CpuRunState::RUN;
         bus_->SRUN().set (true);
     }
@@ -246,7 +245,7 @@ void KDF11_A_Cpu::handleTraps ()
 void KDF11_A_Cpu::loadTrapVector (InterruptRequest const* trap)
 {
     unsigned char trapVector = trap->vector ();
-    register_[7] = fetchWord (trapVector).valueOr (0);
+    registers_[7] = fetchWord (trapVector).valueOr (0);
     psw_ = fetchWord (trapVector + 2).valueOr (0);
 }
 

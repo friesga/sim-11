@@ -29,8 +29,8 @@ public:
 	u16 getOperationCode ();
 
 protected:
-	OperandLocation getSourceOperandLocation (u16 (&reg)[8]);
-	OperandLocation getDestinationOperandLocation (u16 (&reg)[8]);
+	OperandLocation getSourceOperandLocation (GeneralRegisters &reg);
+	OperandLocation getDestinationOperandLocation (GeneralRegisters &reg);
 	template <typename T> bool readSourceOperand (T *source);
 	template <typename T> bool readDestinationOperand (T *destination);
 	template <typename T> bool writeDestinationOperand (T operand);

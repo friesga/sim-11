@@ -4,7 +4,6 @@
 KD11CpuData::KD11CpuData (Qbus* bus)
     :
     bus_ {bus},
-    register_ {0},
     psw_ {0},
     trap_ {nullptr}
 {}

@@ -39,7 +39,7 @@ inline CpuData::Trap CommonInstruction::MUL::execute ()
 {
     u16 regNr = getRegisterNr ();
 
-    CpuData::GeneralRegisters& registers = cpu_->registers ();
+    GeneralRegisters& registers = cpu_->registers ();
     u16 destination = registers[regNr];
 
     CondData<u16> source;

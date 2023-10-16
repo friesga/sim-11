@@ -17,7 +17,7 @@ LSI11Instruction::LSI11Instruction (CpuData *cpu)
 // for bytes, by two for words, always by two for R6 and R7) to address the
 // next sequential location.
 //
-OperandLocation LSI11Instruction::decodeOperand (Operand operand, u16 (&reg)[8])
+OperandLocation LSI11Instruction::decodeOperand (Operand operand, GeneralRegisters& reg)
 {
 	CondData<u16> addr;
 	CondData<u16> index;

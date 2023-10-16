@@ -22,7 +22,7 @@ protected:
 	CpuData *cpu_;
 
 	LSI11Instruction (CpuData *cpu);
-	OperandLocation decodeOperand (Operand operand, u16 (&reg)[8]);
+	OperandLocation decodeOperand (Operand operand, GeneralRegisters &reg);
 	bool isByteInstruction ();
 
 	// All derived classes have to provide a function returning the operation

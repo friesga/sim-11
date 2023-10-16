@@ -40,7 +40,7 @@ inline CpuData::Trap CommonInstruction::ASH::execute ()
 {
     u16 regNr = getRegisterNr ();
     u16 tmp {0};
-    CpuData::GeneralRegisters& registers = cpu_->registers ();
+    GeneralRegisters& registers = cpu_->registers ();
     u16 destination = registers[regNr];
 
     CondData<u16> source;

@@ -2,6 +2,7 @@
 #define _DUMMYCPU_H_
 
 #include "kd/include/cpudata.h"
+#include "kd/kd11_na/cpu/kd11_naregisters/kd11_naregisters.h"
 
 #include <memory>
 
@@ -12,10 +13,10 @@ using std::unique_ptr;
 class DummyCpu : public CpuData
 {
 public:
-    using GeneralRegisters = u16[8];
-
     // Definitions required for the CpuData interface
-    GeneralRegisters dummyRegisters;
+    // Use the KD11_NARegisters as that is the most simple GeneralRegisters
+    // implementation.
+    KD11_NARegisters dummyRegisters;
     u16 dummyPsw;
 
     DummyCpu ();

@@ -36,7 +36,7 @@ inline CommonInstruction::MARK::MARK (CpuData* cpu, u16 instruction)
 
 inline CpuData::Trap CommonInstruction::MARK::execute ()
 {
-    CpuData::GeneralRegisters& registers = cpu_->registers ();
+    GeneralRegisters& registers = cpu_->registers ();
 
     registers[6] = registers[7] + 2 * numberOfParameters ();
     registers[7] = registers[5];

@@ -6,6 +6,7 @@
 #include "cpuexecution.h"
 #include "conddata/conddata.h"
 #include "interruptrequest/interruptrequest.h"
+#include "kd/include/generalregisters.h"
 
 // This interface provides access to the CPU data the instruction classes
 // need to be able to decode the operands adresses and execute the function.
@@ -36,9 +37,7 @@ public:
 		FIS
 	};
 
-	using GeneralRegisters = u16[8];
-
-	// Definition of the LSI-11/2 execution state
+	// Definition of the KD11 execution state
     virtual GeneralRegisters& registers () = 0;
     virtual u16& psw () = 0;
 

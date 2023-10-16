@@ -18,7 +18,6 @@ public:
 
 	// These functions have to be provided for the CpuData interfaces and are
 	// used by the instruction classes.
-	constexpr GeneralRegisters& registers () override;
     constexpr u16& psw () override;
 	CondData<u16> fetchWord (u16 address) override;
 	CondData<u8> fetchByte (u16 address) override;
@@ -30,7 +29,6 @@ public:
 
 protected:
 	Qbus *bus_;
-	u16	register_[8];
 	u16	psw_;
 
 	// A trap is a special kind of interrupt, internal to the CPU. There
@@ -74,13 +72,8 @@ protected:
 // constexpr functions are implicitly inline and therefore need to be defined
 // in every translation unit.
 //
-// The functions registers() and psw() are required by the CpuData interface.
+// The function psw() is required by the CpuData interface.
 //
-constexpr CpuData::GeneralRegisters& KD11CpuData::registers ()
-{
-	return register_;
-}
-
 constexpr u16& KD11CpuData::psw ()
 {
 	return psw_;

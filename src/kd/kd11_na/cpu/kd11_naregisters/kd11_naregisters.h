@@ -10,6 +10,7 @@ class KD11_NARegisters : public GeneralRegisters
 public:
     KD11_NARegisters ();
     u16& operator[] (u16 registerNr) override;
+    operator registerArray() override;
 
 private:
     enum {numRegisters = 8};

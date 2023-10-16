@@ -5,6 +5,7 @@
 #include "float/float.h"
 #include "types.h"
 #include "kd11_nainstruction/kd11_nainstruction.h"
+#include "kd11_naregisters/kd11_naregisters.h"
 
 #include <functional>
 
@@ -52,6 +53,7 @@ private:
 
 	CpuRunState runState;
 	KD11_NAInstruction kd11_naInstruction;
+	KD11_NARegisters registers_;
 
 	// This array will contain pointers to the InterruptRequest's defined
 	// above in the order defined in CpuData::Trap enum.
@@ -68,6 +70,9 @@ private:
 	};
 
 	HaltReason haltReason_;
+
+	// Definition of the functions required by the CpuData interface
+	constexpr GeneralRegisters& registers () override;
 
 	// Definition of CpuControl functions. These functions are
 	// used by K11ODT and the Operate Group instructions.
@@ -92,6 +97,12 @@ private:
 // constexpr functions are implicitly inline and therefore need to be defined
 // in every translation unit.
 //
+constexpr GeneralRegisters& KD11_NA_Cpu::registers ()
+{
+	return registers_;
+}
+
+
 // The functions setPSW() and pswValue() are used by ODT.
 // 
 // Set the Processor Status Word to the given value. The T-bit cannot be set

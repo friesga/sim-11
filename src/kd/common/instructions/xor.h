@@ -36,7 +36,7 @@ inline CommonInstruction::XOR::XOR (CpuData* cpu, u16 instruction)
 inline CpuData::Trap CommonInstruction::XOR::execute ()
 {
     u16 regNr = getRegisterNr ();
-    CpuData::GeneralRegisters& registers = cpu_->registers ();
+    GeneralRegisters& registers = cpu_->registers ();
 
     u16 source = registers[regNr];
 

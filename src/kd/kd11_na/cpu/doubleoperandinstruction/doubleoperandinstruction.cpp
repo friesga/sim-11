@@ -12,12 +12,12 @@ DoubleOperandInstruction::DoubleOperandInstruction (CpuData* cpu, u16 instructio
 	instr_ {instruction}
 {}
 
-OperandLocation DoubleOperandInstruction::getSourceOperandLocation (u16 (&reg)[8])
+OperandLocation DoubleOperandInstruction::getSourceOperandLocation (GeneralRegisters &reg)
 {
 	return decodeOperand (Operand {instr_.decoded.src_rn, instr_.decoded.src_mode}, reg);
 }
 
-OperandLocation DoubleOperandInstruction::getDestinationOperandLocation (u16 (&reg)[8])
+OperandLocation DoubleOperandInstruction::getDestinationOperandLocation (GeneralRegisters &reg)
 {
 	return decodeOperand (Operand {instr_.decoded.dst_rn, instr_.decoded.dst_mode}, reg);
 }

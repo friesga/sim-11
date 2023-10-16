@@ -28,7 +28,7 @@ public:
 	u16 getOperationCode () override;
 	
 protected:
-	OperandLocation getOperandLocation (u16 (&reg)[8]);
+	OperandLocation getOperandLocation (GeneralRegisters &reg);
 	bool readOperand (CondData<u16> *source);
 	bool writeOperand (u16 operand);
 	u16 getRegisterNr ();

@@ -27,13 +27,14 @@
 class KDF11_ARegisters : public GeneralRegisters
 {
 public:
-    KDF11_ARegisters (u16& psw);
+    KDF11_ARegisters (u16 const &psw);
     u16& operator[] (u16 registerNr) override;
+    operator registerArray() override;
 
 private:
     enum {numRegisters = 8};
 
-    u16& psw_;
+    u16 const &psw_;
 
     // The registers are defined by the registers_ array, of wich
     // registers_[6] isn't used. The stack pointers are defined in its own

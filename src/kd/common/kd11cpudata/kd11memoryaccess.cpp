@@ -63,9 +63,9 @@ bool KD11CpuData::putByte (u16 address, u8 value)
 // or false when a bus error occurs.
 bool KD11CpuData::popWord (u16 *destination)
 {
-    CondData<u16> tmpValue = fetchWord (register_[6]);
+    CondData<u16> tmpValue = fetchWord (registers ()[6]);
     *destination = tmpValue.valueOr (0);
-    register_[6] += 2;
+    registers ()[6] += 2;
     if (!tmpValue.hasValue ())
         return false;
     return true;
@@ -74,6 +74,6 @@ bool KD11CpuData::popWord (u16 *destination)
 // Push the given value on the processor stack
 void KD11CpuData::pushWord (u16 value)
 {
-    register_[6] -= 2;
-    putWord (register_[6], value);
+    registers ()[6] -= 2;
+    putWord (registers ()[6], value);
 }

@@ -30,7 +30,7 @@ protected:
 	// and MFPS instructions) are special cases and need access to the location.
 	OperandLocation operandLocation_ {};
 
-	OperandLocation getOperandLocation (u16 (&reg)[8]);
+	OperandLocation getOperandLocation (GeneralRegisters &reg);
 	template <typename T> bool readOperand (T *operand);
 	template <typename T> bool writeOperand (T operand);
 };

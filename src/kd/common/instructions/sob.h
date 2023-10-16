@@ -36,7 +36,7 @@ inline CpuData::Trap CommonInstruction::SOB::execute ()
     u16 regNr = getRegisterNr ();
     u16 offset = getOffset ();
 
-    CpuData::GeneralRegisters& reg = cpu_->registers ();
+    GeneralRegisters& reg = cpu_->registers ();
     reg[regNr]--;
     if (reg[regNr])
         reg[7] -= 2 * offset;

@@ -5,6 +5,7 @@
 #include "float/float.h"
 #include "types.h"
 #include "kd/kdf11_a/cpu/kdf11_ainstruction/kdf11_ainstruction.h"
+#include "kdf11_aregisters/kdf11_aregisters.h"
 
 #include <functional>
 
@@ -36,6 +37,9 @@ public:
 	// the next instruction on the cpu.
 	bool step () override;
 
+	// Definition of the functions required by the CpuData interface
+	constexpr GeneralRegisters& registers () override;
+
 private:
 	// Definition of CPU run states
 	enum class CpuRunState
@@ -48,6 +52,7 @@ private:
 
 	CpuRunState runState;
 	KDF11_AInstruction kdf11_aInstruction;
+	KDF11_ARegisters registers_ {psw_};
 
 	// This array will contain pointers to the InterruptRequest's defined
 	// above in the order defined in CpuData::Trap enum.
@@ -85,6 +90,11 @@ private:
 	u8 cpuPriority ();
 };
 
+
+constexpr GeneralRegisters& KDF11_A_Cpu::registers ()
+{
+	return registers_;
+}
 
 // The functions setPSW() and pswValue() are used by ODT.
 // 

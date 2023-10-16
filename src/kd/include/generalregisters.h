@@ -8,10 +8,16 @@
 // register sets of the PDP-11 processor family. As a bonus the registerNr
 // can be checked against the number of registers.
 //
+// The u16* conversion operator is used to convert the registers to an
+// array which can then be passed to the Trace::cpuStep(). This ensures
+// the actually used stack pointer is written to the trace file.
 class GeneralRegisters
 {
 public:
+    using registerArray = u16*;
+
     virtual u16& operator[] (u16 registerNr) = 0;
+    virtual operator registerArray() = 0;
 };
 
 #endif // _GENERALREGISTERS_H_

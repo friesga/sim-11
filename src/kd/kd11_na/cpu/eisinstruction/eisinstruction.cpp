@@ -8,7 +8,7 @@ EisInstruction::EisInstruction (CpuData* cpu, u16 instruction)
 {}
 
 // Derive the location of the operand from the instruction
-OperandLocation EisInstruction::getOperandLocation (u16 (&reg)[8])
+OperandLocation EisInstruction::getOperandLocation (GeneralRegisters& reg)
 {
 	return decodeOperand (Operand {instr_.decoded.operandRegNr,
 		instr_.decoded.operandMode}, reg);

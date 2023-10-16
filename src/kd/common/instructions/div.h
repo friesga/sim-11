@@ -41,7 +41,7 @@ inline CpuData::Trap CommonInstruction::DIV::execute ()
 {
     u16 regNr = getRegisterNr ();
 
-    CpuData::GeneralRegisters& registers = cpu_->registers ();
+    GeneralRegisters& registers = cpu_->registers ();
     s32 tmps32 = (registers[regNr] << 16) | registers[regNr | 1];
 
     CondData<u16> source;
