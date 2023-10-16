@@ -62,14 +62,16 @@ set (KD11_NA_CPU_SRCS
     src/kd/kd11_na/cpu/markinstruction/markinstruction.cpp
     src/kd/kd11_na/cpu/sobinstruction/sobinstruction.cpp
     src/kd/kd11_na/cpu/kd11_nainstruction/kd11_nainstruction.cpp
-    src/kd/kd11_na/cpu/kd11_nainstruction/opcodetables.cpp)
+    src/kd/kd11_na/cpu/kd11_nainstruction/opcodetables.cpp
+    src/kd/kd11_na/cpu/kd11_naregisters/kd11_naregisters.cpp)
 
 set (KDF11_A_SRCS
     src/kd/kdf11_a/kdf11_a.cpp
     src/kd/kdf11_a/cpu/kdf11_a_cpu.cpp
     src/kd/kdf11_a/cpu/cpucontrol.cpp
     src/kd/kdf11_a/cpu/kdf11_ainstruction/kdf11_ainstruction.cpp
-    src/kd/kdf11_a/cpu/kdf11_ainstruction/opcodetables.cpp)
+    src/kd/kdf11_a/cpu/kdf11_ainstruction/opcodetables.cpp
+    src/kd/kdf11_a/cpu/kdf11_aregisters/kdf11_aregisters.cpp)
 
  set (KD11_NA_SRCS
     src/kd/kd11_na/kd11_na.cpp
@@ -364,7 +366,9 @@ set (GTEST_SRCS
     gtest/kd11_nadecodertest.cpp
     gtest/kd11_na/inctest.cpp
     gtest/kd11_na/movtest.cpp
+    gtest/kd11_na/kd11_naregisterstest.cpp
     gtest/kdf11_a/pswtest.cpp
+    gtest/kdf11_a/kdf11_aregisterstest.cpp
     gtest/locationtest.cpp
     gtest/operandlocationtest.cpp
     gtest/dummycpu/dummycpu.cpp

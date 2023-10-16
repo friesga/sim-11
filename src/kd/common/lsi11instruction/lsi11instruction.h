@@ -17,13 +17,14 @@ using std::string;
 // however. At least every FIS instruction resets bits 5 and 6. This
 // behaviour is confirmed by the VKAAC0 (Basic Intruction Tests) and VKACC0
 // diagnostics.
-#define	PSW_C			_BV(0)
-#define	PSW_V			_BV(1)
-#define	PSW_Z			_BV(2)
-#define	PSW_N			_BV(3)
-#define	PSW_T			_BV(4)
-#define	PSW_PRIO		_BV(7)
-#define	PSW_PRIORITY	(_BV(7) | _BV(6) | _BV(5))
+#define	PSW_C				_BV(0)
+#define	PSW_V				_BV(1)
+#define	PSW_Z				_BV(2)
+#define	PSW_N				_BV(3)
+#define	PSW_T				_BV(4)
+#define	PSW_PRIO			_BV(7)
+#define	PSW_PRIORITY		(_BV(7) | _BV(6) | _BV(5))
+#define	PSW_MEM_MGMT_MODE	(_BV(15) | _BV(14))
 
 class LSI11Instruction
 {
