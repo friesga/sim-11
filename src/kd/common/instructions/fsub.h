@@ -2,7 +2,7 @@
 #define _FSUB_H_
 
 #include "commoninstruction.h"
-#include "kd/kd11_na/cpu/fisinstruction/fisinstruction.h"
+#include "kd/common/fisinstruction/fisinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/kd11_na/cpu/operandlocation/operandlocation.h"
 #include "withfactory.h"

@@ -1,8 +1,10 @@
 #ifndef _FISINSTRUCTION_H_
 #define _FISINSTRUCTION_H_
 
-#include "../kd11_na_cpu.h"
 #include "kd/common/lsi11instruction/lsi11instruction.h"
+#include "float/float.h"
+
+#include <functional>
 
 // The FIS instruction format is used for the FIS instructions, FADD, FSUB,
 // FMUL and FDIV. The RTS instruction uses the same format.
