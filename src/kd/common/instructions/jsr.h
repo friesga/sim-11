@@ -2,7 +2,7 @@
 #define _JSR_H_
 
 #include "commoninstruction.h"
-#include "kd/kd11_na/cpu/eisinstruction/eisinstruction.h"
+#include "kd/common/eisinstruction/eisinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/kd11_na/cpu/operandlocation/operandlocation.h"
 #include "withfactory.h"
