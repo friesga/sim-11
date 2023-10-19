@@ -26,6 +26,7 @@ public:
 	void pushWord (u16 value) override;
 	bool popWord (u16 *destination) override;
 	void setTrap (InterruptRequest const *ir) override;
+	void set (ConditionCodes conditionCodes) override;
 
 protected:
 	Qbus *bus_;

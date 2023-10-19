@@ -7,6 +7,7 @@
 #include "conddata/conddata.h"
 #include "interruptrequest/interruptrequest.h"
 #include "kd/include/generalregisters.h"
+#include "kd/common/conditioncodes/conditioncodes.h"
 
 // This interface provides access to the CPU data the instruction classes
 // need to be able to decode the operands adresses and execute the function.
@@ -40,6 +41,7 @@ public:
 	// Definition of the KD11 execution state
     virtual GeneralRegisters& registers () = 0;
     virtual u16& psw () = 0;
+	virtual void set (ConditionCodes conditionCodes) = 0;
 
 	// Definition of functions to access memory
 	virtual CondData<u16> fetchWord (u16 address) = 0;
