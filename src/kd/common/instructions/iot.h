@@ -2,7 +2,7 @@
 #define _IOT_H_
 
 #include "commoninstruction.h"
-#include "kd/kd11_na/cpu/nooperandinstruction/nooperandinstruction.h"
+#include "kd/common/nooperandinstruction/nooperandinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/include/cpucontrol.h"
 #include "kd/kd11_na/cpu/operandlocation/operandlocation.h"
