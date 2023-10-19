@@ -356,6 +356,7 @@ set (GTEST_SRCS
     gtest/interruptrequesttest.cpp
     gtest/bitmasktest.cpp
     gtest/conddatatest.cpp
+    gtest/conditioncodestest.cpp
     gtest/configuratortest.cpp
     gtest/bdv11configuratortest.cpp
     gtest/dlv11configuratortest.cpp
