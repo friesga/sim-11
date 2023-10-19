@@ -42,9 +42,8 @@ inline CpuData::Trap CommonInstruction::MOV::execute ()
         !writeDestinationOperand (source.value ()))
         return CpuData::Trap::BusError;
 
-    setConditionCodeIf_ClearElse (PSW_N, source & 0100000);
-    setConditionCodeIf_ClearElse (PSW_Z, !source);
-    clearConditionCode (PSW_V);
+    setPSW (ConditionCodes ({.N = (bool) (source & 0100000),
+        .Z = source == 0, .V = false}));
 
     return CpuData::Trap::None;
 }

@@ -5,6 +5,7 @@
 #include "kd/common/operandlocation/operandlocation.h"
 #include "kd/common/operand/operand.h"
 #include "kd/include/psw.h"
+#include "kd/common/conditioncodes/conditioncodes.h"
 
 #include <string>
 
@@ -35,6 +36,7 @@ protected:
 	constexpr void setConditionCode (u16 x);
 	constexpr void clearConditionCode (u16 x);
 	constexpr void setConditionCodeIf_ClearElse (u16 x, bool v);
+	void setPSW (ConditionCodes conditionCodes);
 };
 
 constexpr bool LSI11Instruction::isSet (u16 x)

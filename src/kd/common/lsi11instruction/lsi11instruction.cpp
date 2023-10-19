@@ -134,3 +134,8 @@ string LSI11Instruction::mnemonic ()
 	string typeName = typeid (*this).name ();
 	return typeName.substr (typeName.find (":") + 2);
 }
+
+void LSI11Instruction::setPSW (ConditionCodes conditionCodes)
+{
+	cpu_->setCC (conditionCodes);
+}
