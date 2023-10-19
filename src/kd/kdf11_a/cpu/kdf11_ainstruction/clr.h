@@ -4,7 +4,7 @@
 #include "kd/kdf11_a/cpu/kdf11_ainstruction/kdf11_ainstruction.h"
 #include "kd/common/singleoperandinstruction/singleoperandinstruction.h"
 #include "kd/include/cpudata.h"
-#include "kd/kd11_na/cpu/operandlocation/operandlocation.h"
+#include "kd/common/operandlocation/operandlocation.h"
 #include "kd/common/instructions/withfactory.h"
 
 // CLR - clear destination

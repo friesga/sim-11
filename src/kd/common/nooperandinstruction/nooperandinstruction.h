@@ -2,7 +2,7 @@
 #define _NOOPERANDINSTRUCTION_H_
 
 #include "kd/common/lsi11instruction/lsi11instruction.h"
-#include "kd/kd11_na/cpu/operandlocation/operandlocation.h"
+#include "kd/common/operandlocation/operandlocation.h"
 
 class NoOperandInstruction : public LSI11Instruction
 {

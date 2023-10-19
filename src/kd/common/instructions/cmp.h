@@ -4,7 +4,7 @@
 #include "commoninstruction.h"
 #include "kd/common/doubleoperandinstruction/doubleoperandinstruction.h"
 #include "kd/include/cpudata.h"
-#include "kd/kd11_na/cpu/operandlocation/operandlocation.h"
+#include "kd/common/operandlocation/operandlocation.h"
 #include "withfactory.h"
 
 // CMP - compare source to destination

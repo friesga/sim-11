@@ -48,10 +48,10 @@ set (KD11ODT_SRCS
 set (KD11_NA_CPU_SRCS
     src/kd/kd11_na/cpu/kd11_na_cpu.cpp
     src/kd/kd11_na/cpu/cpucontrol.cpp
-    src/kd/kd11_na/cpu/operandlocation/operandlocation.cpp
-    src/kd/kd11_na/cpu/operandlocation/emptyoperandlocation/emptyoperandlocation.cpp
-    src/kd/kd11_na/cpu/operandlocation/registeroperandlocation/registeroperandlocation.cpp
-    src/kd/kd11_na/cpu/operandlocation/memoryoperandlocation/memoryoperandlocation.cpp
+    src/kd/common/operandlocation/operandlocation.cpp
+    src/kd/common/operandlocation/emptyoperandlocation/emptyoperandlocation.cpp
+    src/kd/common/operandlocation/registeroperandlocation/registeroperandlocation.cpp
+    src/kd/common/operandlocation/memoryoperandlocation/memoryoperandlocation.cpp
     src/kd/common/nooperandinstruction/nooperandinstruction.cpp
     src/kd/common/singleoperandinstruction/singleoperandinstruction.cpp
     src/kd/common/doubleoperandinstruction/doubleoperandinstruction.cpp

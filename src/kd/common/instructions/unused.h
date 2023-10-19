@@ -5,7 +5,7 @@
 #include "kd/common/nooperandinstruction/nooperandinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/include/cpucontrol.h"
-#include "kd/kd11_na/cpu/operandlocation/operandlocation.h"
+#include "kd/common/operandlocation/operandlocation.h"
 #include "trace/trace.h"
 #include "withfactory.h"
 
