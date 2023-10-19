@@ -35,13 +35,10 @@ protected:
 	template <typename T> bool readDestinationOperand (T *destination);
 	template <typename T> bool writeDestinationOperand (T operand);
 
-protected:
+private:
 	// The destination operand location is defined as a class member as for
 	// some instructions, such as the ADD instruction, that location has to
 	// be used to retrieve and to write the destination operand.
-	// Its is defined protected as for double operand instructions on some
-	// processors the destination operand has to be determined before the
-	// source operand is retrieved.
 	OperandLocation destinationOperandLocation_ {};
 };
 
