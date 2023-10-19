@@ -1,7 +1,6 @@
 #ifndef _DOUBLEINSTRUCTIONFORMAT_H_
 #define _DOUBLEINSTRUCTIONFORMAT_H_
 
-#include "../kd11_na_cpu.h"
 #include "kd/common/lsi11instruction/lsi11instruction.h"
 
 class DoubleOperandInstruction : public LSI11Instruction
