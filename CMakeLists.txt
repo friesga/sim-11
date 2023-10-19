@@ -59,7 +59,7 @@ set (KD11_NA_CPU_SRCS
     src/kd/common/ccinstruction/ccinstruction.cpp
     src/kd/common/branchinstruction/branchinstruction.cpp
     src/kd/common/eisinstruction/eisinstruction.cpp
-    src/kd/kd11_na/cpu/markinstruction/markinstruction.cpp
+    src/kd/common/markinstruction/markinstruction.cpp
     src/kd/kd11_na/cpu/sobinstruction/sobinstruction.cpp
     src/kd/kd11_na/cpu/kd11_nainstruction/kd11_nainstruction.cpp
     src/kd/kd11_na/cpu/kd11_nainstruction/opcodetables.cpp
