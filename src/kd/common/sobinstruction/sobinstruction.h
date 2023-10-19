@@ -1,7 +1,6 @@
 #ifndef _SOBINSTRUCTION_H_
 #define _SOBINSTRUCTION_H_
 
-#include "../kd11_na_cpu.h"
 #include "kd/common/lsi11instruction/lsi11instruction.h"
 
 class SobInstruction : public LSI11Instruction
