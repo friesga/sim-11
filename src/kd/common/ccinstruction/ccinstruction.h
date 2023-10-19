@@ -2,7 +2,6 @@
 #define _CCINSTRUCTION_H_
 
 #include "kd/common/lsi11instruction/lsi11instruction.h"
-#include "../kd11_na_cpu.h"
 
 class CcInstruction : public LSI11Instruction
 {

@@ -56,7 +56,7 @@ set (KD11_NA_CPU_SRCS
     src/kd/kd11_na/cpu/singleoperandinstruction/singleoperandinstruction.cpp
     src/kd/kd11_na/cpu/doubleoperandinstruction/doubleoperandinstruction.cpp
     src/kd/kd11_na/cpu/fisinstruction/fisinstruction.cpp
-    src/kd/kd11_na/cpu/ccinstruction/ccinstruction.cpp
+    src/kd/common/ccinstruction/ccinstruction.cpp
     src/kd/common/branchinstruction/branchinstruction.cpp
     src/kd/kd11_na/cpu/eisinstruction/eisinstruction.cpp
     src/kd/kd11_na/cpu/markinstruction/markinstruction.cpp
