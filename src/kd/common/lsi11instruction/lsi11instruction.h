@@ -3,7 +3,7 @@
 
 #include "kd/include/cpudata.h"
 #include "kd/kd11_na/cpu/operandlocation/operandlocation.h"
-#include "kd/kd11_na/cpu/operand/operand.h"
+#include "kd/common/operand/operand.h"
 #include "kd/include/psw.h"
 
 #include <string>

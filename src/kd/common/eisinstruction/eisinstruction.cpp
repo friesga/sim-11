@@ -1,5 +1,5 @@
 #include "eisinstruction.h"
-#include "kd/kd11_na/cpu/operand/operand.h"
+#include "kd/common/operand/operand.h"
 
 EisInstruction::EisInstruction (CpuData* cpu, u16 instruction)
     :
