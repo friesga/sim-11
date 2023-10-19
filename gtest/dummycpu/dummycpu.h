@@ -3,6 +3,7 @@
 
 #include "kd/include/cpudata.h"
 #include "kd/kd11_na/cpu/kd11_naregisters/kd11_naregisters.h"
+#include "kd/common/conditioncodes/conditioncodes.h"
 
 #include <memory>
 
@@ -28,6 +29,7 @@ public:
 	bool putByte (u16 address, u8 value);
 	void pushWord (u16 value) {};
 	bool popWord (u16 *destination) { return false; };
+    void set (ConditionCodes conditionCodes) {};
 
     // Definitions required for the CpuControl interface
     void setTrap (InterruptRequest const *ir) {};
