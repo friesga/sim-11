@@ -2,7 +2,7 @@
 #define _CLR_H_
 
 #include "kd/kdf11_a/cpu/kdf11_ainstruction/kdf11_ainstruction.h"
-#include "kd/kd11_na/cpu/singleoperandinstruction/singleoperandinstruction.h"
+#include "kd/common/singleoperandinstruction/singleoperandinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/kd11_na/cpu/operandlocation/operandlocation.h"
 #include "kd/common/instructions/withfactory.h"

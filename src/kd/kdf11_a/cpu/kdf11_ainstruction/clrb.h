@@ -2,7 +2,7 @@
 #define _CLRB_H_
 
 #include "kdf11_ainstruction.h"
-#include "kd/kd11_na/cpu/singleoperandinstruction/singleoperandinstruction.h"
+#include "kd/common/singleoperandinstruction/singleoperandinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/kd11_na/cpu/operandlocation/operandlocation.h"
 #include "kd/common/instructions/clrb.h"

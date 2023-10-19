@@ -53,7 +53,7 @@ set (KD11_NA_CPU_SRCS
     src/kd/kd11_na/cpu/operandlocation/registeroperandlocation/registeroperandlocation.cpp
     src/kd/kd11_na/cpu/operandlocation/memoryoperandlocation/memoryoperandlocation.cpp
     src/kd/common/nooperandinstruction/nooperandinstruction.cpp
-    src/kd/kd11_na/cpu/singleoperandinstruction/singleoperandinstruction.cpp
+    src/kd/common/singleoperandinstruction/singleoperandinstruction.cpp
     src/kd/common/doubleoperandinstruction/doubleoperandinstruction.cpp
     src/kd/common/fisinstruction/fisinstruction.cpp
     src/kd/common/ccinstruction/ccinstruction.cpp
