@@ -33,33 +33,12 @@ protected:
 	virtual u16 getOperationCode () = 0;
 
 	constexpr bool isSet (u16 x);
-	constexpr void setConditionCode (u16 x);
-	constexpr void clearConditionCode (u16 x);
-	constexpr void setConditionCodeIf_ClearElse (u16 x, bool v);
 	void setPSW (ConditionCodes conditionCodes);
 };
 
 constexpr bool LSI11Instruction::isSet (u16 x)
 {
 	return (cpu_->psw () & x) ? true : false;
-}
-
-constexpr void LSI11Instruction::setConditionCode (u16 x)
-{
-	cpu_->psw () |= x;
-}
-
-constexpr void LSI11Instruction::clearConditionCode (u16 x)
-{
-	cpu_->psw () &= ~x;
-}
-
-constexpr void LSI11Instruction::setConditionCodeIf_ClearElse (u16 x, bool condition)
-{
-	if (condition)
-		setConditionCode (x);
-	else
-		clearConditionCode (x);
 }
 
 #endif // _LSI11INSTRUCTION_H_
