@@ -39,9 +39,9 @@ inline CpuData::Trap CommonInstruction::BICB::execute ()
     if (!writeDestinationOperand (tmp))
         return CpuData::Trap::BusError;
 
-    setConditionCodeIf_ClearElse (PSW_N, tmp & 0x80);
-    setConditionCodeIf_ClearElse (PSW_Z, !tmp);
-    clearConditionCode (PSW_V);
+    setPSW (ConditionCodes {.N = (bool) (tmp & 0x80),
+        .Z = tmp == 0,
+        .V = false});
 
     return CpuData::Trap::None;
 }

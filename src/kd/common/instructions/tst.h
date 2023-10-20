@@ -36,10 +36,10 @@ inline CpuData::Trap CommonInstruction::TST::execute ()
     if (!readOperand (&contents))
         return CpuData::Trap::BusError;
 
-    clearConditionCode (PSW_V);
-    clearConditionCode (PSW_C);
-    setConditionCodeIf_ClearElse (PSW_N, contents & 0100000);
-    setConditionCodeIf_ClearElse (PSW_Z, !contents);
+    setPSW (ConditionCodes {.N = (bool) (contents & 0100000),
+        .Z = contents == 0,
+        .V = false,
+        .C = false});
 
     return CpuData::Trap::None;
 }

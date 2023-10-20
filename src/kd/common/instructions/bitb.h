@@ -35,9 +35,10 @@ inline CpuData::Trap CommonInstruction::BITB::execute ()
         return CpuData::Trap::BusError;
 
     u16 tmp = source & destination;
-    setConditionCodeIf_ClearElse (PSW_N, tmp & 0x80);
-    setConditionCodeIf_ClearElse (PSW_Z, !tmp);
-    clearConditionCode (PSW_V);
+
+    setPSW (ConditionCodes {.N = (bool) (tmp & 0x80),
+        .Z = tmp == 0,
+        .V = false});
 
     return CpuData::Trap::None;
 }

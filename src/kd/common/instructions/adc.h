@@ -46,10 +46,10 @@ inline CpuData::Trap CommonInstruction::ADC::execute ()
     if (!writeOperand (result))
         return CpuData::Trap::BusError;
 
-    setConditionCodeIf_ClearElse (PSW_V, contents == 0077777 && isSet (PSW_C));
-    setConditionCodeIf_ClearElse (PSW_C, contents == 0177777 && isSet (PSW_C));
-    setConditionCodeIf_ClearElse (PSW_N, result & 0x8000);
-    setConditionCodeIf_ClearElse (PSW_Z, !result);
+     setPSW (ConditionCodes ({.N = (bool) (result & 0x8000),
+        .Z = result == 0,
+        .V = contents == 0077777 && isSet (PSW_C),
+        .C = contents == 0177777 && isSet (PSW_C)}));
 
     return CpuData::Trap::None;
 }

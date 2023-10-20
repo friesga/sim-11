@@ -50,10 +50,10 @@ inline CpuData::Trap CommonInstruction::MUL::execute ()
     registers[regNr] = (u16)(tmps32 >> 16);
     registers[regNr | 1] = (u16)tmps32;
 
-    clearConditionCode (PSW_V);
-    setConditionCodeIf_ClearElse (PSW_N, tmps32 < 0);
-    setConditionCodeIf_ClearElse (PSW_Z, !tmps32);
-    setConditionCodeIf_ClearElse (PSW_C, (tmps32 >= 0x7FFF) || (tmps32 < -0x8000));
+    setPSW (ConditionCodes {.N = tmps32 < 0,
+        .Z = tmps32 == 0,
+        .V = false,
+        .C = (tmps32 >= 0x7FFF) || (tmps32 < -0x8000)});
 
     return CpuData::Trap::None;
 }

@@ -43,9 +43,9 @@ inline CpuData::Trap CommonInstruction::INC::execute ()
     if (!writeOperand (result))
         return CpuData::Trap::BusError;
 
-    setConditionCodeIf_ClearElse (PSW_V, contents == 077777);
-    setConditionCodeIf_ClearElse (PSW_N, result & 0x8000);
-    setConditionCodeIf_ClearElse (PSW_Z, !result);
+    setPSW (ConditionCodes {.N = (bool) (result & 0x8000),
+        .Z = result == 0,
+        .V = contents == 077777});
 
     return CpuData::Trap::None;
 }

@@ -34,15 +34,15 @@ inline CpuData::Trap CommonInstruction::SBCB::execute ()
         return CpuData::Trap::BusError;
 
     u16 cBit = isSet (PSW_C) ? 1 : 0;
-    u8 destination = (u8)(source - cBit);
+    u8 destination = (u8) (source - cBit);
 
     if (!writeOperand (destination))
         return CpuData::Trap::BusError;
 
-    setConditionCodeIf_ClearElse (PSW_V, source == 0200);
-    setConditionCodeIf_ClearElse (PSW_C, !source && isSet (PSW_C));
-    setConditionCodeIf_ClearElse (PSW_N, destination & 0x80);
-    setConditionCodeIf_ClearElse (PSW_Z, !destination);
+    setPSW (ConditionCodes {.N = (bool) (destination & 0x80),
+        .Z = destination == 0,
+        .V = source == 0200,
+        .C = source == 0 && cBit});
 
     return CpuData::Trap::None;
 }

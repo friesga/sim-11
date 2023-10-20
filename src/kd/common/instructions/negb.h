@@ -39,10 +39,10 @@ inline CpuData::Trap CommonInstruction::NEGB::execute ()
     if (!writeOperand (operand.value ()))
         return CpuData::Trap::BusError;
 
-    setConditionCodeIf_ClearElse (PSW_V, operand == 0200);
-    setConditionCodeIf_ClearElse (PSW_N, operand & 0x80);
-    setConditionCodeIf_ClearElse (PSW_Z, !operand);
-    setConditionCodeIf_ClearElse (PSW_C, operand);
+    setPSW (ConditionCodes {.N = (bool) (operand & 0x80),
+        .Z = operand == 0,
+        .V = operand == 0200,
+        .C = operand != 0});
 
     return CpuData::Trap::None;
 }

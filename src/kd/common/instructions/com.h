@@ -44,10 +44,10 @@ inline CpuData::Trap CommonInstruction::COM::execute ()
     if (!writeOperand (operand.value ()))
         return CpuData::Trap::BusError;
 
-    clearConditionCode (PSW_V);
-    setConditionCode (PSW_C);
-    setConditionCodeIf_ClearElse (PSW_N, operand & 0x8000);
-    setConditionCodeIf_ClearElse (PSW_Z, !operand);
+    setPSW ({ConditionCodes {.N = (bool) (operand & 0x8000),
+        .Z = operand == 0,
+        .V = false,
+        .C = true}});
 
     return CpuData::Trap::None;
 }

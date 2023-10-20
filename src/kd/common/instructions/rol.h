@@ -50,10 +50,10 @@ inline CpuData::Trap CommonInstruction::ROL::execute ()
     if (!writeOperand (result))
         return CpuData::Trap::BusError;
 
-    setConditionCodeIf_ClearElse (PSW_C, contents & 0100000);
-    setConditionCodeIf_ClearElse (PSW_N, result & 0100000);
-    setConditionCodeIf_ClearElse (PSW_Z, !result);
-    setConditionCodeIf_ClearElse (PSW_V, isSet (PSW_N) ^ isSet (PSW_C));
+    setPSW (ConditionCodes {.N = (bool) (result & 0100000),
+        .Z = result == 0,
+        .V = (result & 0100000) != (contents & 0100000),
+        .C = (bool) (contents & 0100000)});
 
     return CpuData::Trap::None;
 }

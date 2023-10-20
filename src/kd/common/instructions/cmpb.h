@@ -34,13 +34,12 @@ inline CpuData::Trap CommonInstruction::CMPB::execute ()
     if (!readSourceOperand (&source) || !readDestinationOperand (&destination))
         return CpuData::Trap::BusError;
 
-    u16 tmp = (u8)(source - destination);
+    u16 tmp = (u8) (source - destination);
 
-    setConditionCodeIf_ClearElse (PSW_N, tmp & 0x80);
-    setConditionCodeIf_ClearElse (PSW_Z, !tmp);
-    setConditionCodeIf_ClearElse (PSW_V, ((source & 0x80) != (destination & 0x80)) \
-        && ((destination & 0x80) == (tmp & 0x80)));
-    setConditionCodeIf_ClearElse (PSW_C, (source - destination) & 0x100);
+    setPSW (ConditionCodes {.N = (bool) (tmp & 0x80),
+        .Z = tmp == 0,
+        .V = ((source & 0x80) != (destination & 0x80)) && ((destination & 0x80) == (tmp & 0x80)),
+        .C = (bool) ((source - destination) & 0x100)});
 
     return CpuData::Trap::None;
 }

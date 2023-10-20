@@ -38,7 +38,7 @@ inline CpuData::Trap CommonInstruction::MOVB::execute ()
     if (!readSourceOperand (&source))
         return CpuData::Trap::BusError;
 
-    s8 tmp = (s8)source;
+    s8 tmp = (s8) source;
 
     // If the destination mode is 0 (Register) the regular operand processing
     // is bypassed and the signed eight bit value u8 is directly written into
@@ -52,9 +52,9 @@ inline CpuData::Trap CommonInstruction::MOVB::execute ()
         if (!destOperandLocation.write<u8> (tmp))
             return CpuData::Trap::BusError;
 
-    setConditionCodeIf_ClearElse (PSW_N, tmp & 0x80);
-    setConditionCodeIf_ClearElse (PSW_Z, !tmp);
-    clearConditionCode (PSW_V);
+    setPSW (ConditionCodes ({.N = (bool) (source & 0x80),
+        .Z = tmp == 0,
+        .V = false}));
 
     return CpuData::Trap::None;
 }

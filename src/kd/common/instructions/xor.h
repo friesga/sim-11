@@ -49,9 +49,9 @@ inline CpuData::Trap CommonInstruction::XOR::execute ()
     if (!writeOperand (result))
         return CpuData::Trap::BusError;
 
-    setConditionCodeIf_ClearElse (PSW_N, result & 0x8000);
-    setConditionCodeIf_ClearElse (PSW_Z, !result);
-    clearConditionCode (PSW_V);
+    setPSW (ConditionCodes {.N = (bool) (result & 0x8000),
+        .Z = result == 0,
+        .V = false});
 
     return CpuData::Trap::None;
 }

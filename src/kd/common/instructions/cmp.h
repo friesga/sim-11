@@ -46,11 +46,11 @@ inline CpuData::Trap CommonInstruction::CMP::execute ()
         return CpuData::Trap::BusError;
 
     u16 tmp = source - destination;
-    setConditionCodeIf_ClearElse (PSW_N, tmp & 0x8000);
-    setConditionCodeIf_ClearElse (PSW_Z, !tmp);
-    setConditionCodeIf_ClearElse (PSW_V, ((source & 0x8000) != (destination & 0x8000)) \
-        && ((destination & 0x8000) == (tmp & 0x8000)));
-    setConditionCodeIf_ClearElse (PSW_C, ((u32)source - (u32)destination) & 0x10000);
+
+    setPSW (ConditionCodes {.N = (bool) (tmp & 0x8000),
+        .Z = tmp == 0,
+        .V = ((source & 0x8000) != (destination & 0x8000)) && ((destination & 0x8000) == (tmp & 0x8000)),
+        .C = (bool) (((u32) source - (u32) destination) & 0x10000)});
 
     return CpuData::Trap::None;
 }

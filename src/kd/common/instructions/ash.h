@@ -56,14 +56,12 @@ inline CpuData::Trap CommonInstruction::ASH::execute ()
         stmp2 = stmp >> (source - 1);
         stmp >>= source;
         tmp = (u16)stmp;
-        setConditionCodeIf_ClearElse (PSW_C, stmp2 & 1);
-        clearConditionCode (PSW_V);
+        setPSW (ConditionCodes {.V = false, .C = (bool) (stmp2 & 1)});
     }
     else if ((source & 0x1F) == 0)
     {
         // Zero - don't shift
-        clearConditionCode (PSW_V);
-        clearConditionCode (PSW_C);
+        setPSW (ConditionCodes {.V = false, .C = false});
         tmp = destination;
     }
     else
@@ -79,21 +77,20 @@ inline CpuData::Trap CommonInstruction::ASH::execute ()
             mask = 0x8000;
             mask >>= source;
             u16 tmp2 = destination & mask;
-            setConditionCodeIf_ClearElse (PSW_V, !((tmp2 == 0) || (((tmp2 & mask) | ~mask) == 0xFFFF)));
+            setPSW (ConditionCodes {.V = !((tmp2 == 0) || (((tmp2 & mask) | ~mask) == 0xFFFF))});
         }
         else
         {
-            clearConditionCode (PSW_V);
+            setPSW (ConditionCodes {.V = false});
         }
-        setConditionCodeIf_ClearElse (PSW_C, (destination << (source - 1)) & 0x8000);
+        setPSW (ConditionCodes {.C = (bool) ((destination << (source - 1)) & 0x8000)});
         if ((destination & 0x8000) != (tmp & 0x8000))
         {
-            setConditionCode (PSW_V);
+            setPSW (ConditionCodes {.V = true});
         }
     }
     registers[regNr] = tmp;
-    setConditionCodeIf_ClearElse (PSW_N, tmp & 0x8000);
-    setConditionCodeIf_ClearElse (PSW_Z, !tmp);
+    setPSW (ConditionCodes {.N = (bool) (tmp & 0x8000), .Z = tmp == 0});
 
     return CpuData::Trap::None;
 }

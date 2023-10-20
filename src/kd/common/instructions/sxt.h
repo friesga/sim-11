@@ -41,8 +41,8 @@ inline CpuData::Trap CommonInstruction::SXT::execute ()
     if (!writeOperand (result))
         return CpuData::Trap::BusError;
 
-    setConditionCodeIf_ClearElse (PSW_Z, !isSet (PSW_N));
-    clearConditionCode (PSW_V);
+    setPSW (ConditionCodes {.Z = !isSet (PSW_N),
+        .V = false});
 
     return CpuData::Trap::None;
 }

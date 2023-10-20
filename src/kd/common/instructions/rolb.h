@@ -37,17 +37,17 @@ inline CpuData::Trap CommonInstruction::ROLB::execute ()
     if (!readOperand (&source))
         return CpuData::Trap::BusError;
 
-    u8 result = (u8)(source << 1);
+    u8 result = (u8) (source << 1);
     if (isSet (PSW_C))
         result |= 0x01;
 
     if (!writeOperand (result))
         return CpuData::Trap::BusError;
 
-    setConditionCodeIf_ClearElse (PSW_C, source & 0x80);
-    setConditionCodeIf_ClearElse (PSW_N, result & 0x80);
-    setConditionCodeIf_ClearElse (PSW_Z, !result);
-    setConditionCodeIf_ClearElse (PSW_V, isSet (PSW_N) ^ isSet (PSW_C));
+    setPSW (ConditionCodes {.N = (bool) (result & 0x80),
+        .Z = result == 0,
+        .V = (result & 0x80) != (source & 0x80),
+        .C = (bool) (source & 0x80)});
 
     return CpuData::Trap::None;
 }

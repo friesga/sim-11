@@ -43,7 +43,8 @@ inline CpuData::Trap CommonInstruction::MOV::execute ()
         return CpuData::Trap::BusError;
 
     setPSW (ConditionCodes ({.N = (bool) (source & 0100000),
-        .Z = source == 0, .V = false}));
+        .Z = source == 0,
+        .V = false}));
 
     return CpuData::Trap::None;
 }

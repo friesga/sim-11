@@ -52,9 +52,10 @@ inline CpuData::Trap CommonInstruction::MFPS::execute ()
         if (!writeOperand (contents))
             return CpuData::Trap::BusError;
     }
-    setConditionCodeIf_ClearElse (PSW_N, contents & 0x80);
-    setConditionCodeIf_ClearElse (PSW_Z, !(contents & 0xFF));
-    clearConditionCode (PSW_V);
+    
+    setPSW (ConditionCodes {.N = (bool) (contents & 0x80),
+        .Z = (contents & 0xFF) == 0,
+        .V = false});
 
     return CpuData::Trap::None;
 }

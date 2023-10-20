@@ -33,14 +33,14 @@ inline CpuData::Trap CommonInstruction::DECB::execute ()
     if (!readOperand (&source))
         return CpuData::Trap::BusError;
 
-    u8 result = (u8)(source - 1);
+    u8 result = (u8) (source - 1);
 
     if (!writeOperand (result))
         return CpuData::Trap::BusError;
 
-    setConditionCodeIf_ClearElse (PSW_V, source == 0000200);
-    setConditionCodeIf_ClearElse (PSW_N, result & 0x80);
-    setConditionCodeIf_ClearElse (PSW_Z, !result);
+    setPSW (ConditionCodes {.N = (bool) (result & 0x80),
+        .Z = result == 0,
+        .V = source == 0000200});
 
     return CpuData::Trap::None;
 }

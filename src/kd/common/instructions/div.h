@@ -50,25 +50,24 @@ inline CpuData::Trap CommonInstruction::DIV::execute ()
 
     if (source == 0)
     {
-        setConditionCode (PSW_C);
-        setConditionCode (PSW_V);
+        setPSW (ConditionCodes {.V = true, .C = true});
     }
     else
     {
         s32 quotient = tmps32 / (s16)source;
         s32 remainder = tmps32 % (s16)source;
-        clearConditionCode (PSW_C);
 
         if ((s16)quotient != quotient)
         {
-            setConditionCode (PSW_V);
+            setPSW (ConditionCodes {.V = true, .C = false});
         }
         else
         {
             registers[regNr] = (u16)quotient;
             registers[regNr | 1] = (u16)remainder;
-            setConditionCodeIf_ClearElse (PSW_Z, !quotient);
-            setConditionCodeIf_ClearElse (PSW_N, quotient < 0);
+            setPSW (ConditionCodes {.N = quotient < 0,
+                .Z = quotient == 0,
+                .C = false});
         }
     }
 

@@ -46,10 +46,18 @@ inline CpuData::Trap CommonInstruction::SWAB::execute ()
     if (!writeOperand (operand.value ()))
         return CpuData::Trap::BusError;
 
+    /*
     setConditionCodeIf_ClearElse (PSW_N, operand & 0x80);
     setConditionCodeIf_ClearElse (PSW_Z, !((u8)operand));
     clearConditionCode (PSW_V);
     clearConditionCode (PSW_C);
+    */
+
+    setPSW (ConditionCodes {.N = (bool) (operand & 0x80),
+        .Z = (u8) operand == 0,
+        .V = false,
+        .C = false});
+
 
     return CpuData::Trap::None;
 }

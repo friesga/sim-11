@@ -43,9 +43,9 @@ inline CpuData::Trap CommonInstruction::DEC::execute ()
     if (!writeOperand (result))
         return CpuData::Trap::BusError;
 
-    setConditionCodeIf_ClearElse (PSW_V, contents == 0100000);
-    setConditionCodeIf_ClearElse (PSW_N, result & 0100000);
-    setConditionCodeIf_ClearElse (PSW_Z, !result);
+    setPSW (ConditionCodes {.N = (bool) (result & 0100000),
+        .Z = result == 0,
+        .V = contents == 0100000});
 
     return CpuData::Trap::None;
 }

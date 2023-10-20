@@ -38,9 +38,9 @@ inline CpuData::Trap CommonInstruction::INCB::execute ()
     if (!writeOperand (result))
         return CpuData::Trap::BusError;
 
-    setConditionCodeIf_ClearElse (PSW_V, source == 000177);
-    setConditionCodeIf_ClearElse (PSW_N, result & 0x80);
-    setConditionCodeIf_ClearElse (PSW_Z, !result);
+    setPSW (ConditionCodes {.N = (bool) (result & 0x80),
+        .Z = result == 0,
+        .V = source == 000177});
 
     return CpuData::Trap::None;
 }

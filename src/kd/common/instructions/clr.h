@@ -37,8 +37,10 @@ inline CpuData::Trap CommonInstruction::CLR::execute ()
     if (!writeOperand ((u16)0))
         return CpuData::Trap::BusError;
 
-    clearConditionCode (PSW_N | PSW_V | PSW_C);
-    setConditionCode (PSW_Z);
+    setPSW (ConditionCodes {.N = false,
+        .Z = true,
+        .V = false,
+        .C = false});
 
     return CpuData::Trap::None;
 }
