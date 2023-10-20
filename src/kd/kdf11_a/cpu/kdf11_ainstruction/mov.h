@@ -53,9 +53,9 @@ inline CpuData::Trap KDF11_AInstruction::MOV::execute ()
 
     u16 originalPsw = cpu_->pswValue ();
 
-    setConditionCodeIf_ClearElse (PSW_N, source & 0100000);
-    setConditionCodeIf_ClearElse (PSW_Z, !source);
-    clearConditionCode (PSW_V);
+    setPSW (ConditionCodes ({.N = (bool) (source & 0100000),
+        .Z = source == 0,
+        .V = false}));
     
     if (!writeDestinationOperand (source.value ()))
     {

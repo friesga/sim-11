@@ -26,27 +26,30 @@ CpuData::Trap FISInstruction::returnFISresult (Float result, u16 registerNumber)
         cpu_->putWord (cpu_->registers ()[registerNumber] + 4, high);
         cpu_->putWord (cpu_->registers ()[registerNumber] + 6, low);
         cpu_->registers ()[registerNumber] += 4;
-        setConditionCodeIf_ClearElse (PSW_N, result.value () < 0);
-        setConditionCodeIf_ClearElse (PSW_Z, result.value () == 0);
-        clearConditionCode (PSW_V);
-        clearConditionCode (PSW_C);
+
+        setPSW (ConditionCodes {.N = result.value () < 0,
+            .Z = result.value () == 0,
+            .V = false,
+            .C = false});
         return CpuData::Trap::None;
     }
 
     if (conversionResult == Float::Result::Underflow)
     {
-        setConditionCode (PSW_N);
-        setConditionCode (PSW_V);
-        clearConditionCode (PSW_Z);
-        clearConditionCode (PSW_C);
+        setPSW (ConditionCodes {.N = true,
+            .Z = false,
+            .V = true,
+            .C = false});
+
         return CpuData::Trap::FIS;
     }
     
     // Overflow or Nan
-    clearConditionCode (PSW_N);
-    setConditionCode (PSW_V);
-    clearConditionCode (PSW_Z);
-    clearConditionCode (PSW_C);
+    setPSW (ConditionCodes {.N = false,
+        .Z = false,
+        .V = true,
+        .C = false});
+
     return CpuData::Trap::FIS;
 }
 
@@ -82,9 +85,10 @@ CpuData::Trap FISInstruction::executeFISinstruction (u16 stackPointer,
 
     // The arguments are invalid. This is notably a division
     // by zero
-    setConditionCode (PSW_N);
-    clearConditionCode (PSW_Z);
-    setConditionCode (PSW_V);
-    setConditionCode (PSW_C);
+    setPSW (ConditionCodes {.N = true,
+        .Z = false,
+        .V = true,
+        .C = true});
+
     return CpuData::Trap::FIS;
 }

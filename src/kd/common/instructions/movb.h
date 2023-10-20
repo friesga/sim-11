@@ -52,7 +52,7 @@ inline CpuData::Trap CommonInstruction::MOVB::execute ()
         if (!destOperandLocation.write<u8> (tmp))
             return CpuData::Trap::BusError;
 
-    setPSW (ConditionCodes ({.N = (bool) (source & 0x80),
+    setPSW (ConditionCodes ({.N = (bool) (tmp & 0x80),
         .Z = tmp == 0,
         .V = false}));
 

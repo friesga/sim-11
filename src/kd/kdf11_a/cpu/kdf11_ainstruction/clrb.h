@@ -34,8 +34,10 @@ inline CpuData::Trap KDF11_AInstruction::CLRB::execute ()
 {
     u16 originalPsw = cpu_->pswValue ();
 
-    clearConditionCode (PSW_N | PSW_V | PSW_C);
-    setConditionCode (PSW_Z);
+    setPSW (ConditionCodes {.N = false,
+        .Z = true,
+        .V = false,
+        .C = false});
 
     if (!writeOperand ((u8) 0))
     {

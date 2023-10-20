@@ -45,9 +45,9 @@ inline CpuData::Trap KDF11_AInstruction::MOVB::execute ()
     s8 tmp = (s8) source;
     u16 originalPsw = cpu_->pswValue ();
 
-    setConditionCodeIf_ClearElse (PSW_N, tmp & 0x80);
-    setConditionCodeIf_ClearElse (PSW_Z, !tmp);
-    clearConditionCode (PSW_V);
+    setPSW (ConditionCodes ({.N = (bool) (tmp & 0x80),
+        .Z = tmp == 0,
+        .V = false}));
 
     // If the destination mode is 0 (Register) the regular operand processing
     // is bypassed and the signed eight bit value s8 is directly written into
