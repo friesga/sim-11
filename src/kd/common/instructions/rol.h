@@ -52,7 +52,7 @@ inline CpuData::Trap CommonInstruction::ROL::execute ()
 
     setPSW (ConditionCodes {.N = (bool) (result & 0100000),
         .Z = result == 0,
-        .V = (result & 0100000) != (contents & 0100000),
+        .V = (bool) (result & 0100000) != (bool) (contents & 0100000),
         .C = (bool) (contents & 0100000)});
 
     return CpuData::Trap::None;

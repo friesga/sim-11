@@ -50,7 +50,7 @@ inline CpuData::Trap CommonInstruction::ASRB::execute ()
 
     setPSW (ConditionCodes {.N = (bool) (result & 0x80),
         .Z = result == 0,
-        .V = (bool) ((bool) (result & 0x80) != (bool) (source & 1)),
+        .V = (bool) (result & 0x80) != (bool) (source & 1),
         .C = (bool) (source & 1)});
 
     return CpuData::Trap::None;

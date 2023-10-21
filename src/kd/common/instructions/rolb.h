@@ -46,7 +46,7 @@ inline CpuData::Trap CommonInstruction::ROLB::execute ()
 
     setPSW (ConditionCodes {.N = (bool) (result & 0x80),
         .Z = result == 0,
-        .V = (result & 0x80) != (source & 0x80),
+        .V = (bool) (result & 0x80) != (bool) (source & 0x80),
         .C = (bool) (source & 0x80)});
 
     return CpuData::Trap::None;

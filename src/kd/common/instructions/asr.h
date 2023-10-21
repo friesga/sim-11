@@ -56,7 +56,7 @@ inline CpuData::Trap CommonInstruction::ASR::execute ()
 
     setPSW (ConditionCodes {.N = (bool) (result & 0100000),
         .Z = result == 0,
-        .V = (bool) ((bool) (result & 0100000) != (bool) (contents & 1)),
+        .V = (bool) (result & 0100000) != (bool) (contents & 1),
         .C = (bool) (contents & 1)});
 
     return CpuData::Trap::None;
