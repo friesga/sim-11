@@ -43,7 +43,6 @@ inline CpuData::Trap KDF11_AInstruction::MOVB::execute ()
 
     // Make the source a signed eight bit value 
     s8 tmp = (s8) source;
-    u16 originalPsw = cpu_->pswValue ();
 
     setPSW (ConditionCodes ({.N = (bool) (tmp & 0x80),
         .Z = tmp == 0,
@@ -59,10 +58,7 @@ inline CpuData::Trap KDF11_AInstruction::MOVB::execute ()
         cpu_->registers ()[destOperandLocation] = tmp;
     else
         if (!destOperandLocation.write<u8> (tmp))
-        {
-            cpu_->setPSW (originalPsw);
             return CpuData::Trap::BusError;
-        }
 
     return CpuData::Trap::None;
 }

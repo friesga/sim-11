@@ -94,12 +94,47 @@ using std::unique_ptr;
 //  SUB ---------------- 16 xx xx
 //  unused ------------- 17 xx xx
 //
+// This processor allows access to the PSW via address 0177776. As e.g. JKDBD0
+// test 33 shows, a write to the PSW does not affect the condition codes.
+// Therefore the condition codes are set before the write to the destination.
+// We assume that the state of the condition codes is undefined on the
+// execution of instructions in which the write fails.
+//
 class KDF11_AInstruction
 {
+    class ADC;
+    class ADCB;
+    class ADD;
+    class ASL;
+    class ASLB;
+    class ASR;
+    class ASRB;
+    class BIC;
+    class BICB;
+    class BIS;
+    class BISB;
     class CLR;
     class CLRB;
+    class COM;
+    class COMB;
+    class DEC;
+    class DECB;
+    class INC;
+    class INCB;
     class MOV;
     class MOVB;
+    class NEG;
+    class NEGB;
+    class ROL;
+    class ROLB;
+    class ROR;
+    class RORB;
+    class SBC;
+    class SBCB;
+    class SUB;
+    class SWAB;
+    class SXT;
+    class XOR;
 
 public:
     unique_ptr<LSI11Instruction> decode (CpuData* cpu, u16 instruction);

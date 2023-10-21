@@ -43,18 +43,13 @@ inline KDF11_AInstruction::CLR::CLR (CpuData* cpu, u16 instruction)
 
 inline CpuData::Trap KDF11_AInstruction::CLR::execute ()
 {
-    u16 originalPsw = cpu_->pswValue ();
-
     setPSW (ConditionCodes {.N = false,
         .Z = true,
         .V = false,
         .C = false});
 
     if (!writeOperand ((u16) 0))
-    {
-        cpu_->setPSW (originalPsw);
         return CpuData::Trap::BusError;
-    }
 
     return CpuData::Trap::None;
 }
