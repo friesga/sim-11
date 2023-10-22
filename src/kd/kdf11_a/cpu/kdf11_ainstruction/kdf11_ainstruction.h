@@ -31,7 +31,7 @@ using std::unique_ptr;
 //      IOT ------------ 00 00 04
 //      RESET ---------- 00 00 05
 //      RTT ------------ 00 00 06
-//      unused --------- 00 00 07
+//      MFPT ----------- 00 00 07
 //      ...
 //      unused --------- 00 00 77
 //    JMP -------------- 00 01 xx
@@ -121,6 +121,7 @@ class KDF11_AInstruction
     class DECB;
     class INC;
     class INCB;
+    class MFPT;
     class MOV;
     class MOVB;
     class NEG;

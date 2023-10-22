@@ -546,6 +546,9 @@ int TraceRecord<CpuStepRecord>::LSI11Disassemble(const u16* insn, u16 pc, char* 
 		case 0000006: /* RTT */
 			WRITE("RTT");
 			RET0();
+		case 0000007: /* MFPT (only KDF11-A) */
+			WRITE("MFPT");
+			RET0();
 		case 0000000: /* HALT */
 			WRITE("HALT");
 			RET0();

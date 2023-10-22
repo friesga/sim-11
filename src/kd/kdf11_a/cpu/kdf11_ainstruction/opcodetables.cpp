@@ -55,6 +55,7 @@
 #include "kd/common/instructions/jsr.h"
 #include "kd/common/instructions/mark.h"
 #include "kd/common/instructions/mfps.h"
+#include "mfpt.h"
 #include "mov.h"
 #include "movb.h"
 #include "kd/common/instructions/mtps.h"
@@ -94,7 +95,8 @@ KDF11_AInstruction::opCodeTable const KDF11_AInstruction::group_00_00_nn
     CommonInstruction::BPT::create,        // 00 00 03
     CommonInstruction::IOT::create,        // 00 00 04
     CommonInstruction::RESET::create,      // 00 00 05
-    CommonInstruction::RTT::create         // 00 00 06
+    CommonInstruction::RTT::create,        // 00 00 06
+    KDF11_AInstruction::MFPT::create       // 00 00 07
 };
 
 // Instruction format for RTS and Condition Code Operators instructions

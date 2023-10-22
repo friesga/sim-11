@@ -13,7 +13,7 @@ unique_ptr<LSI11Instruction> KDF11_AInstruction::decode (CpuData* cpu, u16 instr
 
 unique_ptr<LSI11Instruction> KDF11_AInstruction::decodeGroup_00_00_nn (CpuData* cpu, u16 instruction)
 {
-    if (instruction < 07)
+    if (instruction <= 07)
         return (*group_00_00_nn [instruction]) (cpu, instruction);
         
     return CommonInstruction::Unused::create (cpu, instruction);
