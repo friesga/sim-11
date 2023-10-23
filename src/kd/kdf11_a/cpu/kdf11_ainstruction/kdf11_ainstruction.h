@@ -121,6 +121,7 @@ class KDF11_AInstruction
     class DECB;
     class INC;
     class INCB;
+    class MFPD;
     class MFPT;
     class MOV;
     class MOVB;

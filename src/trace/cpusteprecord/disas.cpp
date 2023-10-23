@@ -324,12 +324,20 @@ int TraceRecord<CpuStepRecord>::LSI11Disassemble(const u16* insn, u16 pc, char* 
 			WRITE("MTPS\t");
 			OP1();
 			RET1();
+		case 0106500: /* MFPI */
+			WRITE("MFPI\t");
+			OP1();
+			RET1();
 		case 0000100: /* JMP */
 			WRITE("JMP\t");
 			OP1();
 			RET1();
 		case 0006400: /* MARK */
 			WRITE("MARK\t");
+			WRITEN(opcd & 077);
+			RET0();
+		case 0006500: /* MFPD */
+			WRITE("MFPD\t");
 			WRITEN(opcd & 077);
 			RET0();
 	}
@@ -667,9 +675,11 @@ int TraceRecord<CpuStepRecord>::LSI11InstructionLength(const u16* insn)
 		case 0006700: /* SXT */
 		case 0106700: /* MFPS */
 		case 0106400: /* MTPS */
+		case 0106500: /* MFPI */
 		case 0000100: /* JMP */
 			return OP1LEN();
 		case 0006400: /* MARK */
+		case 0006500: /* MFPD */
 			return 1;
 	}
 

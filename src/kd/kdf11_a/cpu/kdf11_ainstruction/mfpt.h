@@ -11,7 +11,7 @@
 // MFPT - Move from processor type
 // //
 // Operation:
-//  RO <- 000003 
+//  R0 <- 000003 
 //
 // Condition Codes: 
 //  N: unaffected 
