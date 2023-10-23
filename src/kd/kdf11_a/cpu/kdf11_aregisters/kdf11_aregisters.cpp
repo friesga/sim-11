@@ -26,6 +26,19 @@ u16& KDF11_ARegisters::operator[] (u16 registerNr)
     return registers_ [registerNr];
 }
 
+// Return the contents of the specified register in to the previous memory
+// management mode.
+u16& KDF11_ARegisters::prevModeContents (u16 registerNr)
+{
+    if (registerNr >= numRegisters)
+        throw string ("Illegal register number");
+
+    if (registerNr == 6)
+        return R6_ [previousMemMgmtMode (psw_)];
+
+    return registers_ [registerNr];
+}
+
 // Convert the object to an array of eight u16's. As a C-style array cannot
 // be returned from a function we use a pointer to a static array. This is ok
 // as long as there is just one KDF11_ARegisters object and that's the case

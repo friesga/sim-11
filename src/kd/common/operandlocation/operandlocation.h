@@ -34,6 +34,7 @@ public:
     bool isValid ();
     operator u16 ();
     template <typename T> CondData<T> contents ();
+    template <typename T> CondData<T> prevModeContents ();
     template <typename T> bool write (T contents);
 
 private:
@@ -72,6 +73,15 @@ CondData<T> OperandLocation::contents ()
 {
     return std::visit ([] (auto &obj) -> CondData<T> 
          {return obj.template contents<T> (); }, location_);
+}
+
+// Return the contents of the operand location in the previous memory
+// management mode.
+template <typename T>
+CondData<T> OperandLocation::prevModeContents ()
+{
+    return std::visit ([] (auto &obj) -> CondData<T> 
+         {return obj.template prevModeContents<T> (); }, location_);
 }
 
 template <typename T>

@@ -29,6 +29,7 @@ class KDF11_ARegisters : public GeneralRegisters
 public:
     KDF11_ARegisters (u16 const &psw);
     u16& operator[] (u16 registerNr) override;
+    u16& prevModeContents (u16 registerNr) override;
     operator registerArray() override;
 
 private:
@@ -43,17 +44,17 @@ private:
     u16 R6_[4];
 
     constexpr u16 memMgmtMode (u16 psw);
-
-    // Disable copy and assignment of KDF11_ARegisters objects. This makes
-    // it possible to make the KDF11_ARegisters object of a processor a
-    // public data member.
-    KDF11_ARegisters (const KDF11_ARegisters&) = delete; 
-    KDF11_ARegisters& operator=(const KDF11_ARegisters&) = delete;
+    constexpr u16 previousMemMgmtMode (u16 psw);
 };
 
 constexpr u16 KDF11_ARegisters::memMgmtMode (u16 psw)
 {
-    return (psw & PSW_MEM_MGMT_MODE) >> 14;
+    return (psw & PSW_MEM_MGMT_MODE) >> PSW_MEM_MGMT_MODE_P;
+}
+
+constexpr u16 KDF11_ARegisters::previousMemMgmtMode (u16 psw)
+{
+    return (psw & PSW_PREV_MEM_MGMT_MODE) >> PSW_PREV_MEM_MGMT_MODE_P;
 }
 
 #endif // _KDF11_AREGISTERS_H_

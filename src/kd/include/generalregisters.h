@@ -17,6 +17,7 @@ public:
     using registerArray = u16*;
 
     virtual u16& operator[] (u16 registerNr) = 0;
+    virtual u16& prevModeContents (u16 registerNr) = 0;
     virtual operator registerArray() = 0;
 };
 

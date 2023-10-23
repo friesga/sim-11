@@ -21,6 +21,14 @@ u16& KD11_NARegisters::operator[] (u16 registerNr)
     return registers_ [registerNr];
 }
 
+// Return the contents of the specified register in to the previous memory
+// management mode. As the KDF11-NA has no memory management modes the current
+// mode contents are returned
+u16& KD11_NARegisters::prevModeContents (u16 registerNr)
+{
+    return this->operator[](registerNr);
+}
+
 // Convert the object to an array of eight u16's. As a C-style array cannot
 // be returned from a function we use a pointer to a static array. This is ok
 // as long as there is just one KDF11_ARegisters object and that's the case

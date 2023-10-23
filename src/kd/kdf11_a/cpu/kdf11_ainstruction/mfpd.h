@@ -41,7 +41,13 @@ inline KDF11_AInstruction::MFPD::MFPD (CpuData* cpu, u16 instruction)
 inline CpuData::Trap KDF11_AInstruction::MFPD::execute ()
 {
     CondData<u16> source;
-    if (!readOperand (&source))
+
+    // The source operand is determined in the current memory management
+    // mode and then retrieved using the previous mode.
+    operandLocation_ =  getOperandLocation (cpu_->registers ());
+    source = operandLocation_.prevModeContents<CondData<u16>> ();
+
+    if (!source.hasValue ())
         return CpuData::Trap::BusError;
 
     cpu_->pushWord (source);
