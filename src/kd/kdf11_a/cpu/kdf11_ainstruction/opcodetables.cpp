@@ -57,6 +57,7 @@
 #include "mfpd.h"
 #include "kd/common/instructions/mfps.h"
 #include "mfpt.h"
+#include "mtpd.h"
 #include "mov.h"
 #include "movb.h"
 #include "kd/common/instructions/mtps.h"
@@ -262,8 +263,8 @@ KDF11_AInstruction::opCodeTable const KDF11_AInstruction::group_10_xx_xx
     KDF11_AInstruction::ASRB::create,  // 10 62 xx
     KDF11_AInstruction::ASLB::create,  // 10 63 xx
     CommonInstruction::MTPS::create,   // 10 64 xx
-    KDF11_AInstruction::MFPD::create,  // 10 65 xx MFPD and MFPI are the same instruction
-    CommonInstruction::Unused::create, // 10 66 xx Undefined in the LSI-11 Processor Handbook
+    KDF11_AInstruction::MFPD::create,  // 10 65 xx MFPD and MFPI are identical instructions
+    KDF11_AInstruction::MTPD::create,  // 10 66 xx MTPD and MTPI are identical instructions
     CommonInstruction::MFPS::create,   // 10 67 xx
     CommonInstruction::Unused::create, // 10 70 xx The range 10 70 xx till 10 77 xx is undefined
     CommonInstruction::Unused::create, // 10 71 xx in the LSI-11 Processor Handbook
@@ -333,7 +334,7 @@ KDF11_AInstruction::opCodeTable const KDF11_AInstruction::group_00_nn_xx
     KDF11_AInstruction::ASL::create,                   // 00 63 xx
     CommonInstruction::MARK::create,                   // 00 64 xx
     KDF11_AInstruction::MFPD::create,                  // 00 65 xx KDF11-A specific instruction
-    CommonInstruction::Unused::create,                 // 00 66 xx Undefined in the LSI-11 Processor Handbook
+    KDF11_AInstruction::MTPD::create,                  // 00 66 xx idem
     KDF11_AInstruction::SXT::create,                   // 00 67 xx
     CommonInstruction::Unused::create,                 // 00 70 xx
     CommonInstruction::Unused::create,                 // 00 71 xx

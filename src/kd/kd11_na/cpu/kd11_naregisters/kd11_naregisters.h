@@ -11,6 +11,7 @@ public:
     KD11_NARegisters ();
     u16& operator[] (u16 registerNr) override;
     u16& prevModeContents (u16 registerNr) override;
+    void writePrevMode (u16 registerNr, u16 contents) override;
     operator registerArray() override;
 
 private:

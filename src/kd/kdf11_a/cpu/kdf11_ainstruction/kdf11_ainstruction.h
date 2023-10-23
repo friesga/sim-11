@@ -123,6 +123,7 @@ class KDF11_AInstruction
     class INCB;
     class MFPD;
     class MFPT;
+    class MTPD;
     class MOV;
     class MOVB;
     class NEG;

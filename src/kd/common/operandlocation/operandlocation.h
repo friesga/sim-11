@@ -36,6 +36,7 @@ public:
     template <typename T> CondData<T> contents ();
     template <typename T> CondData<T> prevModeContents ();
     template <typename T> bool write (T contents);
+    template <typename T> bool writePrevMode (T contents);
 
 private:
     variant <EmptyOperandLocation, RegisterOperandLocation, MemoryOperandLocation> location_;
@@ -89,6 +90,15 @@ bool OperandLocation::write (T contents)
 {
     return std::visit ([contents] (auto &obj) -> bool 
         {return obj.template write<T> (contents); }, location_);
+}
+
+// Write the contents to the operand location in the previous memory
+// management mode.
+template <typename T>
+bool OperandLocation::writePrevMode (T contents)
+{
+    return std::visit ([contents] (auto &obj) -> bool 
+        {return obj.template writePrevMode<T> (contents); }, location_);
 }
 
 #endif // _OPERANDLOCATION_H_

@@ -18,6 +18,8 @@ public:
     template <typename T> requires std::same_as<T, CondData<u8>> T prevModeContents ();
     template <typename T> requires std::same_as<T, u16> bool write (T contents);
     template <typename T> requires std::same_as<T, u8> bool write (T contents);
+    template <typename T> requires std::same_as<T, u16> bool writePrevMode (T contents);
+    template <typename T> requires std::same_as<T, u8> bool writePrevMode (T contents);
 
 private:
     u8 location_;
@@ -73,6 +75,23 @@ bool RegisterOperandLocation::write (T contents)
     return true;
 }
 
+template <typename T> 
+requires std::same_as<T, u16> 
+bool RegisterOperandLocation::writePrevMode (T contents)
+{
+    cpu_->registers ().writePrevMode (location_, contents);
+    return true;
+}
+
+template <typename T>
+requires std::same_as<T, u8>
+bool RegisterOperandLocation::writePrevMode (T contents)
+{
+    u16 originalContents = cpu_->registers ().prevModeContents (location_);
+    cpu_->registers ().writePrevMode (location_, 
+        (originalContents & 0xFF00) | contents);
+    return true;
+}
 #endif // !_REGISTEROPERANDLOCATION_H_
 
 

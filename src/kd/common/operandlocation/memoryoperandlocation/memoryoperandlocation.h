@@ -16,6 +16,8 @@ public:
     template <typename T> requires std::same_as<T, CondData<u8>> T prevModeContents ();
     template <typename T> requires std::same_as<T, u16> bool write (T contents);
     template <typename T> requires std::same_as<T, u8> bool write (T contents);
+    template <typename T> requires std::same_as<T, u16> bool writePrevMode (T contents);
+    template <typename T> requires std::same_as<T, u8> bool writePrevMode (T contents);
 
 private:
     CondData <u16> location_;
@@ -38,7 +40,7 @@ T MemoryOperandLocation::contents ()
 
 // Return the contents of the operand location in the previous memory
 // management mode. 
-// ToDo: Implemenent memory management
+// ToDo: Implement memory management
 // Until we have implemented the MMU the contents in the current mode
 // are returned.
 template <typename T>
@@ -62,7 +64,6 @@ bool MemoryOperandLocation::write (T contents)
     return cpu_->putWord (location_, contents);
 }
 
-
 template <typename T>
 requires std::same_as<T, u8>
 bool MemoryOperandLocation::write (T contents)
@@ -70,4 +71,22 @@ bool MemoryOperandLocation::write (T contents)
     return cpu_->putByte (location_, contents);
 }
 
+// Write the contents to the memory location using the previous memory
+// management mode
+// ToDo: Implement memory management
+// Until we have implemented the MMU the contents are written using the
+// current mode.
+template <typename T>
+requires std::same_as<T, u16>
+bool MemoryOperandLocation::writePrevMode (T contents)
+{
+    return cpu_->putWord (location_, contents);
+}
+
+template <typename T>
+requires std::same_as<T, u8>
+bool MemoryOperandLocation::writePrevMode (T contents)
+{
+    return cpu_->putByte (location_, contents);
+}
 #endif // _MEMORYOPERANDLOCATION_H_

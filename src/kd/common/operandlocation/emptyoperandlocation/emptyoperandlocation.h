@@ -20,6 +20,8 @@ public:
     template <typename T> requires std::same_as<T, CondData<u8>> T prevModeContents ();
     template <typename T> requires std::same_as<T, u16> bool write (T contents);
     template <typename T> requires std::same_as<T, u8> bool write (T contents);
+    template <typename T> requires std::same_as<T, u16> bool writePrevMode (T contents);
+    template <typename T> requires std::same_as<T, u8> bool writePrevMode (T contents);
 
 };
 
@@ -61,6 +63,20 @@ bool EmptyOperandLocation::write (T contents)
 template <typename T>
 requires std::same_as<T, u8>
 bool EmptyOperandLocation::write (T contents)
+{
+    throw string ("Write access on empty operand location");
+}
+
+template <typename T>
+requires std::same_as<T, u16>
+bool EmptyOperandLocation::writePrevMode (T contents)
+{
+    throw string ("Write access on empty operand location");
+}
+
+template <typename T>
+requires std::same_as<T, u8>
+bool EmptyOperandLocation::writePrevMode (T contents)
 {
     throw string ("Write access on empty operand location");
 }
