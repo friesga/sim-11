@@ -2,7 +2,7 @@
 #define _MOVB_H_
 
 #include "kdf11_ainstruction.h"
-#include "kd/common/doubleoperandinstruction/doubleoperandinstruction.h"
+#include "kd/kdf11_a/cpu/kd11doubleoperandinstruction/kd11doubleoperandinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/common/operandlocation/operandlocation.h"
 #include "kd/common/instructions/withfactory.h"
@@ -22,7 +22,7 @@
 // This class implements the MOVB instruction for the KDF11-A. See comment
 // in KDF11_AInstruction::MOV.
 //
-class KDF11_AInstruction::MOVB : public DoubleOperandInstruction, public WithFactory<MOVB>
+class KDF11_AInstruction::MOVB : public KD11DoubleOperandInstruction, public WithFactory<MOVB>
 {
 public:
     MOVB (CpuData* cpu, u16 instruction);
@@ -31,7 +31,7 @@ public:
 
 inline KDF11_AInstruction::MOVB::MOVB (CpuData* cpu, u16 instruction)
     :
-    DoubleOperandInstruction (cpu, instruction)
+    KD11DoubleOperandInstruction (cpu, instruction)
 {}
 
 inline CpuData::Trap KDF11_AInstruction::MOVB::execute ()
@@ -51,13 +51,10 @@ inline CpuData::Trap KDF11_AInstruction::MOVB::execute ()
     // If the destination mode is 0 (Register) the regular operand processing
     // is bypassed and the signed eight bit value s8 is directly written into
     // the register, causing sign extension in the register.
-    OperandLocation destOperandLocation =
-        getDestinationOperandLocation (cpu_->registers ());
-
-    if (destOperandLocation.isA<RegisterOperandLocation> ())
-        cpu_->registers ()[destOperandLocation] = tmp;
+    if (destinationOperandLocation_.isA<RegisterOperandLocation> ())
+        cpu_->registers ()[destinationOperandLocation_] = tmp;
     else
-        if (!destOperandLocation.write<u8> (tmp))
+        if (!destinationOperandLocation_.write<u8> (tmp))
             return CpuData::Trap::BusError;
 
     return CpuData::Trap::None;

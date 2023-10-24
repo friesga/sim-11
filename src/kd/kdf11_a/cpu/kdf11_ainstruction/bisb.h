@@ -2,7 +2,7 @@
 #define _BISB_H_
 
 #include "kdf11_ainstruction.h"
-#include "kd/common/doubleoperandinstruction/doubleoperandinstruction.h"
+#include "kd/kdf11_a/cpu/kd11doubleoperandinstruction/kd11doubleoperandinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/common/operandlocation/operandlocation.h"
 #include "kd/common/instructions/withfactory.h"
@@ -15,7 +15,7 @@
 // Condition Codes:
 //  refer to BIS
 //
-class KDF11_AInstruction::BISB : public DoubleOperandInstruction, public WithFactory<BISB>
+class KDF11_AInstruction::BISB : public KD11DoubleOperandInstruction, public WithFactory<BISB>
 {
 public:
     BISB (CpuData* cpu, u16 instruction);
@@ -24,7 +24,7 @@ public:
 
 inline KDF11_AInstruction::BISB::BISB (CpuData* cpu, u16 instruction)
     :
-    DoubleOperandInstruction (cpu, instruction)
+    KD11DoubleOperandInstruction (cpu, instruction)
 {}
 
 inline CpuData::Trap KDF11_AInstruction::BISB::execute ()

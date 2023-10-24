@@ -43,13 +43,13 @@ inline CpuData::Trap CommonInstruction::MOVB::execute ()
     // If the destination mode is 0 (Register) the regular operand processing
     // is bypassed and the signed eight bit value u8 is directly written into
     // the register, causing sign extension in the register.
-    OperandLocation destOperandLocation =
+    destinationOperandLocation_ = 
         getDestinationOperandLocation (cpu_->registers ());
 
-    if (destOperandLocation.isA<RegisterOperandLocation> ())
-        cpu_->registers ()[destOperandLocation] = tmp;
+    if (destinationOperandLocation_.isA<RegisterOperandLocation> ())
+        cpu_->registers ()[destinationOperandLocation_] = tmp;
     else
-        if (!destOperandLocation.write<u8> (tmp))
+        if (!destinationOperandLocation_.write<u8> (tmp))
             return CpuData::Trap::BusError;
 
     setPSW (ConditionCodes ({.N = (bool) (tmp & 0x80),

@@ -2,7 +2,7 @@
 #define _ADD_H_
 
 #include "kdf11_ainstruction.h"
-#include "kd/common/doubleoperandinstruction/doubleoperandinstruction.h"
+#include "kd/kdf11_a/cpu/kd11doubleoperandinstruction/kd11doubleoperandinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/common/operandlocation/operandlocation.h"
 #include "kd/common/instructions/withfactory.h"
@@ -26,7 +26,7 @@
 // The contents of the source are not affected. Two's complement addition is
 // performed.
 //
-class KDF11_AInstruction::ADD : public DoubleOperandInstruction, public WithFactory<ADD>
+class KDF11_AInstruction::ADD : public KD11DoubleOperandInstruction, public WithFactory<ADD>
 {
 public:
     ADD (CpuData* cpu, u16 instruction);
@@ -35,7 +35,7 @@ public:
 
 inline KDF11_AInstruction::ADD::ADD (CpuData* cpu, u16 instruction)
     :
-    DoubleOperandInstruction (cpu, instruction)
+    KD11DoubleOperandInstruction (cpu, instruction)
 {}
 
 inline CpuData::Trap KDF11_AInstruction::ADD::execute ()

@@ -28,17 +28,22 @@ public:
 	u16 getOperationCode ();
 
 protected:
+	// The destination operand location is defined protected as the MOVB
+	// instruction needs to know its type.
+	OperandLocation destinationOperandLocation_ {};
+
 	OperandLocation getSourceOperandLocation (GeneralRegisters &reg);
 	OperandLocation getDestinationOperandLocation (GeneralRegisters &reg);
+	void getOperandLocations (GeneralRegisters &reg);
 	template <typename T> bool readSourceOperand (T *source);
 	template <typename T> bool readDestinationOperand (T *destination);
 	template <typename T> bool writeDestinationOperand (T operand);
 
 private:
-	// The destination operand location is defined as a class member as for
-	// some instructions, such as the ADD instruction, that location has to
-	// be used to retrieve and to write the destination operand.
-	OperandLocation destinationOperandLocation_ {};
+	// The source and destination operand locations are defined as class
+	// members as for the KD11-F in some cases the destination operand
+	// location has to be determined before the source operand is retrieved.
+	OperandLocation sourceOperandLocation_ {};
 };
 
 // The functions below are templated for bytes (type u8 or CondData<u8>) and
@@ -47,17 +52,25 @@ private:
 template <typename T>
 bool DoubleOperandInstruction::readSourceOperand (T *source)
 {
-	OperandLocation sourceOperandLocation = 
-		getSourceOperandLocation (cpu_->registers ());
-    *source = sourceOperandLocation.contents<T> ();
+	if (!sourceOperandLocation_.isValid ())
+	{
+		sourceOperandLocation_ = 
+			getSourceOperandLocation (cpu_->registers ());
+	}
+
+    *source = sourceOperandLocation_.contents<T> ();
 	return (*source).hasValue ();
 }
 
 template <typename T>
 bool DoubleOperandInstruction::readDestinationOperand (T *destination)
 {
-	destinationOperandLocation_ = 
-		getDestinationOperandLocation (cpu_->registers ());
+	if (!destinationOperandLocation_.isValid ()) 
+	{
+		destinationOperandLocation_ = 
+			getDestinationOperandLocation (cpu_->registers ());
+	}
+
     *destination = destinationOperandLocation_.contents<T> ();
 	return (*destination).hasValue ();
 }

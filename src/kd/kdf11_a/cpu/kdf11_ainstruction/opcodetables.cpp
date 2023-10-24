@@ -20,8 +20,8 @@
 #include "bicb.h"
 #include "bis.h"
 #include "bisb.h"
-#include "kd/common/instructions/bit.h"
-#include "kd/common/instructions/bitb.h"
+#include "bit.h"
+#include "bitb.h"
 #include "kd/common/instructions/ble.h"
 #include "kd/common/instructions/blos.h"
 #include "kd/common/instructions/blt.h"
@@ -35,8 +35,8 @@
 #include "kd/common/instructions/ccc.h"
 #include "clr.h"
 #include "clrb.h"
-#include "kd/common/instructions/cmp.h"
-#include "kd/common/instructions/cmpb.h"
+#include "cmp.h"
+#include "cmpb.h"
 #include "com.h"
 #include "comb.h"
 #include "dec.h"
@@ -351,18 +351,18 @@ KDF11_AInstruction::opCodeTable const KDF11_AInstruction::group_nn_xx_xx
 {
     decodeGroup_00_nn_xx,                              // 00 xx xx
     KDF11_AInstruction::MOV::create,                   // 01 xx xx
-    CommonInstruction::CMP::create,                    // 02 xx xx
-    CommonInstruction::BIT::create,                    // 03 xx xx
+    KDF11_AInstruction::CMP::create,                   // 02 xx xx
+    KDF11_AInstruction::BIT::create,                   // 03 xx xx
     KDF11_AInstruction::BIC::create,                   // 04 xx xx
     KDF11_AInstruction::BIS::create,                   // 05 xx xx
     KDF11_AInstruction::ADD::create,                   // 06 xx xx
     decodeGroup_07_nx_xx,                              // 07 nx xx
     decodeGroup_10_xx_xx,                              // 10 xx xx
     KDF11_AInstruction::MOVB::create,                  // 11 xx xx
-    CommonInstruction::CMPB::create,                   // 12 xx xx
-    CommonInstruction::BITB::create,                   // 13 xx xx
+    KDF11_AInstruction::CMPB::create,                  // 12 xx xx
+    KDF11_AInstruction::BITB::create,                  // 13 xx xx
     KDF11_AInstruction::BICB::create,                  // 14 xx xx
-    KDF11_AInstruction::BISB::create,                   // 15 xx xx
+    KDF11_AInstruction::BISB::create,                  // 15 xx xx
     KDF11_AInstruction::SUB::create,                   // 16 xx xx
     CommonInstruction::Unused::create                  // 17 xx xx Undefined in the LSI-11 Processor Handbook
 };

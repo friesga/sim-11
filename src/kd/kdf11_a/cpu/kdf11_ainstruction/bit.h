@@ -1,5 +1,5 @@
-#ifndef _BIS_H_
-#define _BIS_H_
+#ifndef _BIT_H_
+#define _BIT_H_
 
 #include "kdf11_ainstruction.h"
 #include "kd/kdf11_a/cpu/kd11doubleoperandinstruction/kd11doubleoperandinstruction.h"
@@ -7,35 +7,34 @@
 #include "kd/common/operandlocation/operandlocation.h"
 #include "kd/common/instructions/withfactory.h"
 
-// BIS - bit set
+// BIT - bit test
 //
 // Operation:
-//  (dst) <- (src) v (dst)
+//  (src) ^ (dst)
 //
 // Condition Codes:
-//  N: set if high-order bit of result set. cleared otherwise
+//  N: set if high-order bit of result set: cleared otherwise
 //  Z: set if result = O: cleared otherwise
 //  V: cleared
 //  C: not affected
 //
-// Performs "Inclusive OR"operation between the source and destination
-// operands and leaves the result at the destination address: that is,
-// corresponding bits set in the source are set in the destination. The
-// contents of the destination are lost.
+// Performs logical "and"comparison of the source and destination operands
+// and modifies condition codes accordingly. Neither the source nor
+// destination operands are affected.
 //
-class KDF11_AInstruction::BIS : public KD11DoubleOperandInstruction, public WithFactory<BIS>
+class KDF11_AInstruction::BIT : public KD11DoubleOperandInstruction, public WithFactory<BIT>
 {
 public:
-    BIS (CpuData* cpu, u16 instruction);
+    BIT (CpuData* cpu, u16 instruction);
     CpuData::Trap execute () override;
 };
 
-inline KDF11_AInstruction::BIS::BIS (CpuData* cpu, u16 instruction)
+inline KDF11_AInstruction::BIT::BIT (CpuData* cpu, u16 instruction)
     :
     KD11DoubleOperandInstruction (cpu, instruction)
 {}
 
-inline CpuData::Trap KDF11_AInstruction::BIS::execute ()
+inline CpuData::Trap KDF11_AInstruction::BIT::execute ()
 {
     CondData<u16> source, destination;
 
@@ -43,16 +42,13 @@ inline CpuData::Trap KDF11_AInstruction::BIS::execute ()
         !readDestinationOperand (&destination))
         return CpuData::Trap::BusError;
 
-    u16 tmp = source | destination;
+    u16 tmp = source & destination;
 
     setPSW (ConditionCodes {.N = (bool) (tmp & 0x8000),
         .Z = tmp == 0,
         .V = false});
 
-    if (!writeDestinationOperand (tmp))
-        return CpuData::Trap::BusError;
-
     return CpuData::Trap::None;
 }
 
-#endif // _BIS_H_
+#endif // _BIT_H_

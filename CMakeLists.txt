@@ -68,6 +68,7 @@ set (KD11_NA_CPU_SRCS
 set (KDF11_A_SRCS
     src/kd/kdf11_a/kdf11_a.cpp
     src/kd/kdf11_a/cpu/kdf11_a_cpu.cpp
+    src/kd/kdf11_a/cpu/kd11doubleoperandinstruction/kd11doubleoperandinstruction.cpp
     src/kd/kdf11_a/cpu/cpucontrol.cpp
     src/kd/kdf11_a/cpu/kdf11_ainstruction/kdf11_ainstruction.cpp
     src/kd/kdf11_a/cpu/kdf11_ainstruction/opcodetables.cpp
@@ -272,7 +273,7 @@ set (SIM11_SRCS
     src/interruptrequest/interruptrequest.cpp)
 
 # Add source to this project's executable.
-add_executable (${TARGET} ${SIM11_SRCS})
+add_executable (${TARGET} ${SIM11_SRCS} "src/kd/kdf11_a/cpu/kdf11_ainstruction/cmp.h")
 #set_property(TARGET ${TARGET} PROPERTY C_STANDARD 90)
   
 # At least C++17 is needed for use of std::variant in variantfsm.
@@ -409,7 +410,7 @@ set (SIM11_TEST_SRCS
     src/logger/logger.cpp
     src/logger/data.cpp)
 
-add_executable (sim-11-test ${SIM11_TEST_SRCS})
+add_executable (sim-11-test ${SIM11_TEST_SRCS} "src/kd/kdf11_a/cpu/kdf11_ainstruction/cmp.h")
 
 set(GTEST_INCLUDE_DIRS 
     G:/src/gtest-1.10.0/googletest/include)
@@ -435,7 +436,7 @@ enable_testing ()
 # Create trace reader
 add_executable (tracereader 
     tracereader/main.cpp
-    ${TRACE_SRCS})
+    ${TRACE_SRCS} "src/kd/kdf11_a/cpu/kdf11_ainstruction/cmp.h")
 
 target_include_directories (tracereader PRIVATE include src)
     

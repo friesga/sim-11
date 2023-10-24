@@ -2,7 +2,7 @@
 #define _MOV_H_
 
 #include "kd/kdf11_a/cpu/kdf11_ainstruction/kdf11_ainstruction.h"
-#include "kd/common/doubleoperandinstruction/doubleoperandinstruction.h"
+#include "kd/kdf11_a/cpu/kd11doubleoperandinstruction/kd11doubleoperandinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/common/operandlocation/operandlocation.h"
 #include "kd/common/instructions/withfactory.h"
@@ -24,7 +24,7 @@
 // 
 // This class implements the MOV instruction for the KDF11-A. 
 //
-class KDF11_AInstruction::MOV : public DoubleOperandInstruction, public WithFactory<MOV>
+class KDF11_AInstruction::MOV : public KD11DoubleOperandInstruction, public WithFactory<MOV>
 {
 public:
     MOV (CpuData* cpu, u16 instruction);
@@ -33,7 +33,7 @@ public:
 
 inline KDF11_AInstruction::MOV::MOV (CpuData* cpu, u16 instruction)
     :
-    DoubleOperandInstruction (cpu, instruction)
+    KD11DoubleOperandInstruction (cpu, instruction)
 {}
 
 

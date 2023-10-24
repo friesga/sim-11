@@ -1,5 +1,5 @@
-#ifndef _BICB_H_
-#define _BICB_H_
+#ifndef _CMPB_H_
+#define _CMPB_H_
 
 #include "kdf11_ainstruction.h"
 #include "kd/kdf11_a/cpu/kd11doubleoperandinstruction/kd11doubleoperandinstruction.h"
@@ -7,43 +7,41 @@
 #include "kd/common/operandlocation/operandlocation.h"
 #include "kd/common/instructions/withfactory.h"
 
-// BICB - bit clear byte
-//
+// CMPB - compare source to destination byte
+// 
 // Operation:
-//  refer to BIC
+//  refer to CMP
 // 
 // Condition Codes:
-//  refer to BIC
+//  refer to CMP
 //
-class KDF11_AInstruction::BICB : public KD11DoubleOperandInstruction, public WithFactory<BICB>
+class KDF11_AInstruction::CMPB : public KD11DoubleOperandInstruction, public WithFactory<CMPB>
 {
 public:
-    BICB (CpuData* cpu, u16 instruction);
+    CMPB (CpuData* cpu, u16 instruction);
     CpuData::Trap execute () override;
 };
 
-inline KDF11_AInstruction::BICB::BICB (CpuData* cpu, u16 instruction)
+inline KDF11_AInstruction::CMPB::CMPB (CpuData* cpu, u16 instruction)
     :
     KD11DoubleOperandInstruction (cpu, instruction)
 {}
 
-inline CpuData::Trap KDF11_AInstruction::BICB::execute ()
+inline CpuData::Trap KDF11_AInstruction::CMPB::execute ()
 {
     CondData<u8> source, destination;
 
     if (!readSourceOperand (&source) || !readDestinationOperand (&destination))
         return CpuData::Trap::BusError;
 
-    u8 tmp = (u8)(~source & destination);
+    u16 tmp = (u8) (source - destination);
 
     setPSW (ConditionCodes {.N = (bool) (tmp & 0x80),
         .Z = tmp == 0,
-        .V = false});
-
-    if (!writeDestinationOperand (tmp))
-        return CpuData::Trap::BusError;
+        .V = ((source & 0x80) != (destination & 0x80)) && ((destination & 0x80) == (tmp & 0x80)),
+        .C = (bool) ((source - destination) & 0x100)});
 
     return CpuData::Trap::None;
 }
 
-#endif // _BICB_H_
+#endif // _CMPB_H_

@@ -113,8 +113,12 @@ class KDF11_AInstruction
     class BICB;
     class BIS;
     class BISB;
+    class BIT;
+    class BITB;
     class CLR;
     class CLRB;
+    class CMP;
+    class CMPB;
     class COM;
     class COMB;
     class DEC;
