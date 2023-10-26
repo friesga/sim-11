@@ -72,8 +72,8 @@ bool KD11CpuData::popWord (u16 *destination)
 }
 
 // Push the given value on the processor stack
-void KD11CpuData::pushWord (u16 value)
+bool KD11CpuData::pushWord (u16 value)
 {
     registers ()[6] -= 2;
-    putWord (registers ()[6], value);
+    return putWord (registers ()[6], value);
 }

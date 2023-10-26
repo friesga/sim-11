@@ -54,7 +54,8 @@ inline CpuData::Trap CommonInstruction::JSR::execute ()
     GeneralRegisters& registers = cpu_->registers ();
     u16 specifiedRegisterContents = registers[getRegisterNr ()];
 
-    cpu_->pushWord (specifiedRegisterContents);
+    if (!cpu_->pushWord (specifiedRegisterContents))
+        return CpuData::Trap::BusError;
     registers[getRegisterNr ()] = registers[7];
     registers[7] = destination;
 

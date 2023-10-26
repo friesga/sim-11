@@ -23,7 +23,7 @@ public:
 	CondData<u8> fetchByte (u16 address) override;
 	bool putWord (u16 address, u16 value) override;
 	bool putByte (u16 address, u8 value) override;
-	void pushWord (u16 value) override;
+	bool pushWord (u16 value) override;
 	bool popWord (u16 *destination) override;
 	void setTrap (InterruptRequest const *ir) override;
 	void setCC (ConditionCodes conditionCodes) override;

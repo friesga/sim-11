@@ -50,7 +50,8 @@ inline CpuData::Trap KDF11_AInstruction::MFPD::execute ()
     if (!source.hasValue ())
         return CpuData::Trap::BusError;
 
-    cpu_->pushWord (source);
+    if (!cpu_->pushWord (source))
+        return CpuData::Trap::BusError;
 
     setPSW (ConditionCodes {.N = (bool) (source & 0100000),
         .Z = source == 0,
