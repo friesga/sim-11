@@ -29,6 +29,11 @@ u16& KD11_NARegisters::prevModeContents (u16 registerNr)
     return this->operator[](registerNr);
 }
 
+u16& KD11_NARegisters::contents (u16 registerNr, u16 mode)
+{
+    return this->operator[](registerNr);
+}
+
 // Write the given contents to the given register, using the previous
 // memory management mode. As the KDF11-NA has no memory management modes the current
 // mode contents are returned.

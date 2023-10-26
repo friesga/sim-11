@@ -17,24 +17,23 @@ KDF11_ARegisters::KDF11_ARegisters (u16 const& psw)
 
 u16& KDF11_ARegisters::operator[] (u16 registerNr)
 {
-    if (registerNr >= numRegisters)
-        throw string ("Illegal register number");
-
-    if (registerNr == 6)
-        return R6_ [memMgmtMode (psw_)];
-
-    return registers_ [registerNr];
+    return contents (registerNr, memMgmtMode (psw_));
 }
 
 // Return the contents of the specified register in to the previous memory
 // management mode.
 u16& KDF11_ARegisters::prevModeContents (u16 registerNr)
 {
+    return contents (registerNr, previousMemMgmtMode (psw_));
+}
+
+u16& KDF11_ARegisters::contents (u16 registerNr, u16 mode)
+{
     if (registerNr >= numRegisters)
         throw string ("Illegal register number");
 
     if (registerNr == 6)
-        return R6_ [previousMemMgmtMode (psw_)];
+        return R6_ [mode];
 
     return registers_ [registerNr];
 }

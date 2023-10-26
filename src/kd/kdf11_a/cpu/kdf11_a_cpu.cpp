@@ -159,18 +159,27 @@ void KDF11_A_Cpu::handleTraps ()
     InterruptRequest intrptReq;
     u16 trapToProcess{ 0 };
 
-    // Traps are handled in order of their priority:
-    // - Bus errors,
-    // - Instruction traps
-    // - Event and device interrupts, only if the priority bit is clear,
+    // Traps are handled in order of their priority (cf. EK-KDF11-UG-PR2,
+    // par. 10.3.11):
+    // 
+    // - Memory Management Violation (MMUERR),
+    // - Timeout Error (BUSERR),
+    // - Parity Error (PARERR) - Unsupported
+    // - Trace (T) Bit,
+    // - Stack Overflow (STKOVF),
+    // - Power Fail (PFAIL),
+    // - Interrupt Level 7 (BIRQ7),
+    // - Interrupt Level 6 (BIRQ6),
+    // - Interrupt Level 5 (BIRQ5),
+    // - Interrupt Level 4 (BIRQ4),
+    // - Halt Line
     // 
     // Interrupts are only processed if their priority is higher than the
-    // current CPU priority. (The LSI-11 has just two priority levels,
-    // zero and BR4.) Note that the numerical value of the TrapPriority enum
-    // is used as bus request level. Traps in HALT mode are ignored.
+    // current CPU priority. Note that the numerical value of the TrapPriority
+    // enum is used as bus request level.
     // 
-    // Check if there is a trap or interrupt request to handle and the CPU
-    // isn't halted. This is the most common case so check this as first.
+    // Check if there is a trap or interrupt request to handle. This is the
+    // most common case so check this as first.
     if (!trap_ && !bus_->intrptReqAvailable ())
         return;
 
@@ -189,7 +198,6 @@ void KDF11_A_Cpu::handleTraps ()
             return;
     }
     else return;
-
 
     trace.cpuEvent (CpuEventRecordType::CPU_TRAP, trapToProcess);
 

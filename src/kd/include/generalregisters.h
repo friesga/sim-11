@@ -18,6 +18,7 @@ public:
 
     virtual u16& operator[] (u16 registerNr) = 0;
     virtual u16& prevModeContents (u16 registerNr) = 0;
+    virtual u16& contents (u16 registerNr, u16 mode) = 0;
     virtual void writePrevMode (u16 registerNr, u16 contents) = 0;
     virtual operator registerArray() = 0;
 };
