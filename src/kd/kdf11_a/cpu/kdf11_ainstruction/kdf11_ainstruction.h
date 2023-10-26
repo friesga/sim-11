@@ -99,6 +99,13 @@ using std::unique_ptr;
 // Therefore the condition codes are set before the write to the destination.
 // We assume that the state of the condition codes is undefined on the
 // execution of instructions in which the write fails.
+// 
+// The double operand instructions are derived from
+// KD11DoubleOperandInstruction. This class on its turn is derived from
+// DoubleOperandInstruction and retrieves in its constructor both source and
+// destination operand locations. This ensures that instructions having the
+// same register as both source and destination operands are executed in
+// the correct order for the KDF11-A.
 //
 class KDF11_AInstruction
 {
