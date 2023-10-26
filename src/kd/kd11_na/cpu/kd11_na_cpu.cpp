@@ -169,7 +169,7 @@ void KD11_NA_Cpu::handleTraps ()
     // 
     // Check if there is a trap or interrupt request to handle and the CPU
     // isn't halted. This is the most common case so check this as first.
-    if ((!trap_ && !bus_->intrptReqAvailable ()))
+    if (!trap_ && !bus_->intrptReqAvailable ())
         return;
 
     // Traps have the highest priority, so first check if there is a trap
@@ -218,7 +218,7 @@ u16 KD11_NA_Cpu::fetchFromVector (u16 address, u16* dest)
 }
 
 // Swap the PC and PSW with new values from the given vector
-void KD11_NA_Cpu::swapPcPSW (u16 vecrorAddress)
+void KD11_NA_Cpu::swapPcPSW (u16 vectorAddress)
 {
     // Save PC and PSW on the stack. Adressing the stack could result in a
     // bus time out. In that case the CPU is halted.
@@ -235,10 +235,10 @@ void KD11_NA_Cpu::swapPcPSW (u16 vecrorAddress)
 
     // Read new PC and PSW from the trap vector. These read's could also
     // result in a bus time out.
-    if (!fetchFromVector (vecrorAddress, &registers_[7]) ||
-        !fetchFromVector (vecrorAddress + 2, &psw_))
+    if (!fetchFromVector (vectorAddress, &registers_[7]) ||
+        !fetchFromVector (vectorAddress + 2, &psw_))
     {
-        trace.cpuEvent (CpuEventRecordType::CPU_DBLBUS, vecrorAddress);
+        trace.cpuEvent (CpuEventRecordType::CPU_DBLBUS, vectorAddress);
         trap_ = nullptr;
         runState = CpuRunState::HALT;
         haltReason_ = HaltReason::BusErrorOnIntrptVector;

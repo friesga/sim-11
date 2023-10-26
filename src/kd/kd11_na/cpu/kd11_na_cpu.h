@@ -93,7 +93,7 @@ private:
 	void handleTraps();
 	u8 cpuPriority ();
 	void execute ();
-	void swapPcPSW (u16 vecrorAddress);
+	void swapPcPSW (u16 vectorAddress);
 	u16 fetchFromVector (u16 address, u16* dest);
 	void traceStep ();
 };
