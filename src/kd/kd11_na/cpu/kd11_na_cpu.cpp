@@ -177,60 +177,11 @@ void KD11_NA_Cpu::handleTraps ()
     }
     else return;
 
-
     trace.cpuEvent (CpuEventRecordType::CPU_TRAP, trapToProcess);
 
-    // Save PC and PSW on the stack. Adressing the stack could result in a
-    // bus time out. In that case the CPU is halted.
-    // ToDo: Remove code duplication
-    registers_[6] -= 2;
-    if (!putWord (registers_[6], psw_))
-    {
-        trace.cpuEvent (CpuEventRecordType::CPU_DBLBUS, registers_[6]);
-        // ToDo: All interrupts should be cleared?
-        trap_ = nullptr;
-        runState = CpuRunState::HALT;
-        haltReason_ = HaltReason::DoubleBusError;
-        bus_->SRUN().set (false);
-        return;
-    }
-
-    registers_[6] -= 2;
-    if (!putWord (registers_[6], registers_[7]))
-    {
-        trace.cpuEvent (CpuEventRecordType::CPU_DBLBUS, registers_[6]);
-        trap_ = nullptr;
-        runState = CpuRunState::HALT;
-        haltReason_ = HaltReason::DoubleBusError;
-        bus_->SRUN().set (false);
-        return;
-    }
-
-    // Read new PC and PSW from the trap vector. These read's could also
-    // result in a bus time out.
-    tmpValue = fetchWord (trapToProcess);
-    registers_[7] = tmpValue.valueOr (0);
-    if (!tmpValue.hasValue ())
-    {
-        trace.cpuEvent (CpuEventRecordType::CPU_DBLBUS, trapToProcess);
-        trap_ = nullptr;
-        runState = CpuRunState::HALT;
-        haltReason_ = HaltReason::BusErrorOnIntrptVector;
-        bus_->SRUN().set (false);
-        return;
-    }
-
-    tmpValue = fetchWord (trapToProcess + 2);
-    psw_ = tmpValue.valueOr (0);
-    if (!tmpValue.hasValue ())
-    {
-        trace.cpuEvent (CpuEventRecordType::CPU_DBLBUS, trapToProcess + 2);
-        trap_ = nullptr;
-        runState = CpuRunState::HALT;
-        haltReason_ = HaltReason::BusErrorOnIntrptVector;
-        bus_->SRUN().set (false);
-        return;
-    }
+    // Swap the PC and PSW with new values from the trap vector to process.
+    // If this fails the processor will be put in the HALT state.
+    swapPcPSW (trapToProcess);
 
     /* resume execution if in WAIT state */
     if (runState == CpuRunState::WAIT)
@@ -252,4 +203,43 @@ void KD11_NA_Cpu::loadTrapVector (InterruptRequest const* trap)
 u8 KD11_NA_Cpu::cpuPriority()
 {
     return (psw_ & PSW_PRIORITY) >> 5;
+}
+
+// Fetch PC and PSW from the given vector address. If this fails the
+// processor will halt anyway.
+u16 KD11_NA_Cpu::fetchFromVector (u16 address, u16* dest)
+{
+    CondData<u16> tmpValue = fetchWord (address);
+    *dest = tmpValue.valueOr (0);
+    return tmpValue.hasValue ();
+}
+
+// Swap the PC and PSW with new values from the given vector
+void KD11_NA_Cpu::swapPcPSW (u16 vecrorAddress)
+{
+    // Save PC and PSW on the stack. Adressing the stack could result in a
+    // bus time out. In that case the CPU is halted.
+    if (!pushWord (psw_) || !pushWord (registers_[7]))
+    {
+        trace.cpuEvent (CpuEventRecordType::CPU_DBLBUS, registers_[6]);
+        // ToDo: All interrupts should be cleared?
+        trap_ = nullptr;
+        runState = CpuRunState::HALT;
+        haltReason_ = HaltReason::DoubleBusError;
+        bus_->SRUN().set (false);
+        return;
+    }
+
+    // Read new PC and PSW from the trap vector. These read's could also
+    // result in a bus time out.
+    if (!fetchFromVector (vecrorAddress, &registers_[7]) ||
+        !fetchFromVector (vecrorAddress + 2, &psw_))
+    {
+        trace.cpuEvent (CpuEventRecordType::CPU_DBLBUS, vecrorAddress);
+        trap_ = nullptr;
+        runState = CpuRunState::HALT;
+        haltReason_ = HaltReason::BusErrorOnIntrptVector;
+        bus_->SRUN().set (false);
+        return;
+    }
 }
