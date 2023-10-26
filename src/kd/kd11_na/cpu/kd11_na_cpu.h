@@ -92,8 +92,10 @@ private:
 	void execInstr ();
 	void handleTraps();
 	u8 cpuPriority ();
+	void execute ();
 	void swapPcPSW (u16 vecrorAddress);
 	u16 fetchFromVector (u16 address, u16* dest);
+	void traceStep ();
 };
 
 // constexpr functions are implicitly inline and therefore need to be defined

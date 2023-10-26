@@ -30,6 +30,13 @@ KD11_NA_Cpu::KD11_NA_Cpu (Qbus* bus)
 //    of the instruction, either a trap as a result of an instruction, or an
 //    interrupt requested by a bus device.
 // 
+// The cpu always is in of the following states:
+// - HALT: the CPU is halted and cannot execute the step, return false,
+// - RUN: the CPU will execute the next instruction,
+// - WAIT: the CPU is running but is still waiting for an interrupt, return true
+// - INHIBIT_TRACE: the CPU is running but no trace trap has to be
+//   executed on this instruction.
+// 
 // As the power-up mode can be set to trap to the vector at address 024, the
 // presence of traps is checked before an instruction is executed.
 //
@@ -42,47 +49,52 @@ KD11_NA_Cpu::KD11_NA_Cpu (Qbus* bus)
 // instruction was executed.
 bool KD11_NA_Cpu::step ()
 {
-    // Generate a Trace trap if the trace bit is set, unless the previous
-    // instruction was a RTT or another trap is pending.
-    if (runState == CpuRunState::INHIBIT_TRACE)
+    switch (runState)
     {
-        runState = CpuRunState::RUN;
-        bus_->SRUN().set (true);
+        case CpuRunState::HALT:
+            return false;
+
+        case CpuRunState::WAIT:
+            // If an interrupt request is present resume execution
+            // ToDo: load trap vector at this point?
+            if (bus_->intrptReqAvailable ())
+            {
+                trace.cpuEvent (CpuEventRecordType::CPU_RUN, registers_[7]);
+                runState = CpuRunState::RUN;
+                bus_->SRUN().set (true);
+            }
+            return true;
+
+        case CpuRunState::INHIBIT_TRACE:
+            trace.cpuEvent (CpuEventRecordType::CPU_RUN, registers_[7]);
+            runState = CpuRunState::RUN;
+            bus_->SRUN().set (true);
+            execute ();
+            return runState != CpuRunState::HALT;
+
+        case CpuRunState::RUN:
+            // Generate a Trace trap if the trace bit is set, unless the previous
+            // instruction was a RTT or another trap is pending.
+            if (!trap_ && (psw_ & PSW_T))
+            {
+                trace.trap (TrapRecordType::TRAP_T, 014);
+                setTrap (&traceTrap);
+            }
+            execute ();
+            return runState != CpuRunState::HALT; 
+
+        default:
+            // Satisfy the compiler
+            throw ("Cannot happen");
     }
-    else if (!trap_ && (psw_ & PSW_T))
-    {
-        trace.trap (TrapRecordType::TRAP_T, 014);
-        setTrap (&traceTrap);
-    }
+}
+
+void KD11_NA_Cpu::execute ()
+{
     handleTraps ();
 
-    // The continutaion of the step depends on the run state:
-    // - HALT: the CPU is halted and cannot execute the step, return false,
-	// - RUN: the CPU will execute the next instruction,
-	// - WAIT: the CPU is running but is still waiting for an interrupt, return true
-	// - INHIBIT_TRACE: the CPU is running but no trace trap has to be
-    //   executed on this instruction. At this point in the step the cpu cannot
-    //   be in this state.
-    if (runState == CpuRunState::HALT)
-        return false;
-
-    if (runState == CpuRunState::WAIT)
-        return true;
-
     if(trace.isActive ())
-    {
-        trace.setIgnoreBus ();
-        u16 code[3];
-        // The read of register_[7]+2 and  register_[7]+4 may access an invalid address as
-        // the instruction isn't decoded at this point. Therefore use the bus
-        // read function instead of fetchWord(). The latter will generate a
-        // bus error trap on access of an invalid address.
-        code[0] = bus_->read (registers_[7] + 0).valueOr (0);
-        code[1] = bus_->read (registers_[7] + 2).valueOr (0);
-        code[2] = bus_->read (registers_[7] + 4).valueOr (0);
-        trace.cpuStep (registers (), psw_, code);
-        trace.clearIgnoreBus ();
-    }
+        traceStep ();
 
     // If there is a pending bus interrupt that can be executed, process
     // that interrupt first, else execute the next instruction
@@ -97,7 +109,9 @@ bool KD11_NA_Cpu::step ()
             (std::chrono::duration_cast<std::chrono::nanoseconds> (end - start)).count ());
     }
 
-    return (runState != CpuRunState::HALT);
+    // Instructions leave the run state unchanged except for:
+    // - the RTT instruction sets the state to INHIBIT_TRACE,
+    // - the WAIT instrcution sets the state to WAIT.
 }
 
 // Execute one instruction
@@ -119,11 +133,10 @@ void KD11_NA_Cpu::execInstr ()
         setTrap (vectorTable [returnedTrap]);
 }
 
-
-// This function is called on every KD11_NA step, whether or not a trap to
-// be handled is present. If a trap is present the current PC and PSW are
-// saved on the stack and the PC and PSW of the trap vector are loaded.
-// If there is no trap to be handled the function simply returns.
+// This function checks whether or not a trap or interrupt request is present.
+// In that case the current PC and PSW are saved on the stack and the PC and
+// PSW of the trap vector are loaded. If there is no trap or interrupt request
+// to be handled the function simply returns.
 //
 // Trap priority order from high to low (cf Fig. 2-13) is defined as (vectors
 // between brackets):
@@ -139,12 +152,10 @@ void KD11_NA_Cpu::execInstr ()
 // 
 // Refer to the LSI-11 WCS user's guide (EK-KUV11-TM-001) par 2.3.
 //
-
 void KD11_NA_Cpu::handleTraps ()
 {
     InterruptRequest intrptReq;
-    u16 trapToProcess{ 0 };
-    CondData<u16> tmpValue;
+    u16 trapToProcess {0};
 
     // Traps are handled in order of their priority:
     // - Bus errors,
@@ -158,7 +169,7 @@ void KD11_NA_Cpu::handleTraps ()
     // 
     // Check if there is a trap or interrupt request to handle and the CPU
     // isn't halted. This is the most common case so check this as first.
-    if ((!trap_ && !bus_->intrptReqAvailable ()) || runState == CpuRunState::HALT)
+    if ((!trap_ && !bus_->intrptReqAvailable ()))
         return;
 
     // Traps have the highest priority, so first check if there is a trap
@@ -182,14 +193,6 @@ void KD11_NA_Cpu::handleTraps ()
     // Swap the PC and PSW with new values from the trap vector to process.
     // If this fails the processor will be put in the HALT state.
     swapPcPSW (trapToProcess);
-
-    /* resume execution if in WAIT state */
-    if (runState == CpuRunState::WAIT)
-    {
-        trace.cpuEvent (CpuEventRecordType::CPU_RUN, registers_[7]);
-        runState = CpuRunState::RUN;
-        bus_->SRUN().set (true);
-    }
 }
 
 // Load PC and PSW from the given vector
@@ -242,4 +245,19 @@ void KD11_NA_Cpu::swapPcPSW (u16 vecrorAddress)
         bus_->SRUN().set (false);
         return;
     }
+}
+
+void KD11_NA_Cpu::traceStep ()
+{
+    trace.setIgnoreBus ();
+    u16 code[3];
+    // The read of register_[7]+2 and  register_[7]+4 may access an invalid address as
+    // the instruction isn't decoded at this point. Therefore use the bus
+    // read function instead of fetchWord(). The latter will generate a
+    // bus error trap on access of an invalid address.
+    code[0] = bus_->read (registers_[7] + 0).valueOr (0);
+    code[1] = bus_->read (registers_[7] + 2).valueOr (0);
+    code[2] = bus_->read (registers_[7] + 4).valueOr (0);
+    trace.cpuStep (registers (), psw_, code);
+    trace.clearIgnoreBus ();
 }
