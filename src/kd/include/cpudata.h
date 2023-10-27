@@ -59,6 +59,7 @@ public:
 	// whem accessing non-existing memory.
 	// 
     virtual void setTrap (Trap trap) = 0;
+	virtual void loadTrapVector (Trap trap) = 0;
 };
 
 #endif // _CPUDATA_H_

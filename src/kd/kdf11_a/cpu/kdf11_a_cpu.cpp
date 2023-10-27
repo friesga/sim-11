@@ -208,11 +208,10 @@ void KDF11_A_Cpu::handleTraps ()
 }
 
 // Load PC and PSW from the given vector
-void KDF11_A_Cpu::loadTrapVector (InterruptRequest const* trap)
+void KDF11_A_Cpu::loadTrapVector (CpuData::Trap trap)
 {
-    unsigned char trapVector = trap->vector ();
-    registers_[7] = fetchWord (trapVector).valueOr (0);
-    psw_ = fetchWord (trapVector + 2).valueOr (0);
+    registers_[7] = fetchWord (trap).valueOr (0);
+    psw_ = fetchWord (trap + 2).valueOr (0);
 }
 
 u8 KDF11_A_Cpu::cpuPriority()

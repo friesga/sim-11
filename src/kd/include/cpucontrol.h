@@ -21,7 +21,6 @@ public:
 		NonExistentMicroAddress = 4		// Not used
 	};
 
-    virtual void loadTrapVector (InterruptRequest const* trap) = 0;
     virtual void cpuReset () = 0;
     virtual void busReset () = 0;
     virtual void halt () = 0;

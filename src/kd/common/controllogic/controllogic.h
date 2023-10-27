@@ -98,8 +98,6 @@ private:
     // Definition of a queue for the processing of bus signal events
     ThreadSafeQueue<Event> signalEventQueue_;
 
-    InterruptRequest const powerFail {RequestType::Trap, TrapPriority::PowerFail, 0, 024};
-
     State powerUpRoutine ();
     void subscribeToSignals ();
     void runODT ();
