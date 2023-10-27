@@ -7,8 +7,10 @@
 // (N,Z,V,C) [bits 0:3], (2) the Trace Bit [bit 4] and (3) the Interrupt Enable
 // bit [bit 7]. (EK-KUV11-TM-001 pg. 1-9). 
 // 
+// +----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+
 // | 15 | 14 | 13 | 12 | 11 | 10 | 09 | 08 | 07 | 06 | 05 | 04 | 03 | 02 | 01 | 00 |
-// |                                       |   Priority   |  T |  N |  Z |  V |  C | 
+// |                                       |   Priority   |  T |  N |  Z |  V |  C |
+// +----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+ 
 // 
 // T - When set, a processor trap will occur through location 14 at completion
 //     of the current instruction execution, and a new processor status word will
@@ -27,8 +29,10 @@
 //
 // The KDF11-A PSW format:
 //
+// +----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+
 // | 15 | 14 | 13 | 12 | 11 | 10 | 09 | 08 | 07 | 06 | 05 | 04 | 03 | 02 | 01 | 00 |
-// |   CM    |    PM   |  Reserved    | SI |   Priority   |  T |  N |  Z |  V |  C | 
+// |   CM    |    PM   |  Reserved    | SI |   Priority   |  T |  N |  Z |  V |  C |
+// +----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+
 //
 // CM - Current Memory Management Mode
 // PM - Previous Memory Management Mode
@@ -47,5 +51,8 @@
 #define	PSW_MEM_MGMT_MODE	        (_BV(15) | _BV(14))
 #define PSW_PREV_MEM_MGMT_MODE_P    12
 #define	PSW_PREV_MEM_MGMT_MODE      (_BV(13) | _BV(12))
+
+#define KERNEL_MODE                 0
+#define USER_MODE                   3
 
 #endif // _PSW_H_
