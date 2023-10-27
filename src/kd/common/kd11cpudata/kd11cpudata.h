@@ -25,7 +25,7 @@ public:
 	bool putByte (u16 address, u8 value) override;
 	bool pushWord (u16 value) override;
 	bool popWord (u16 *destination) override;
-	void setTrap (InterruptRequest const *ir) override;
+	void setTrap (CpuData::Trap trap) override;
 	void setCC (ConditionCodes conditionCodes) override;
 
 protected:
@@ -34,40 +34,7 @@ protected:
 
 	// A trap is a special kind of interrupt, internal to the CPU. There
 	// can be only one trap serviced at the time.
-	InterruptRequest const *trap_;
-
-	InterruptRequest const busError 
-		{RequestType::Trap, TrapPriority::BusError, 0, 004};
-	InterruptRequest const illegalInstructionTrap
-		{RequestType::Trap, TrapPriority::InstructionTrap, 0, 010};
-	InterruptRequest const traceTrap 
-		{RequestType::Trap, TrapPriority::TraceTrap, 0, 014};
-	InterruptRequest const BreakpointTrap
-		{RequestType::Trap, TrapPriority::InstructionTrap, 0, 014};
-	InterruptRequest const InputOutputTrap 
-		{RequestType::Trap, TrapPriority::InstructionTrap, 0, 020};
-	InterruptRequest const EmulatorTrap
-		{RequestType::Trap, TrapPriority::InstructionTrap, 0, 030};
-	InterruptRequest const TrapInstruction
-		{RequestType::Trap, TrapPriority::InstructionTrap, 0, 034};
-	InterruptRequest const FIS
-		{RequestType::Trap, TrapPriority::InstructionTrap, 0, 0244};
-
-	/*
-	// This array will contain pointers to the InterruptRequest's defined
-	// above in the order defined in CpuData::Trap enum.
-	InterruptRequest const* vectorTable[8]
-	{
-		nullptr,
-		&busError,
-		&illegalInstructionTrap,
-		&BreakpointTrap,
-		&InputOutputTrap,
-		&EmulatorTrap,
-		&TrapInstruction,
-		&FIS
-	};
-	*/
+	CpuData::Trap trap_;
 };
 
 // constexpr functions are implicitly inline and therefore need to be defined

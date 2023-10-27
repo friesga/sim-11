@@ -53,21 +53,6 @@ private:
 	CpuRunState runState;
 	KDF11_AInstruction kdf11_aInstruction;
 	KDF11_ARegisters registers_ {psw_};
-
-	// This array will contain pointers to the InterruptRequest's defined
-	// above in the order defined in CpuData::Trap enum.
-	InterruptRequest const* vectorTable[8]
-	{
-		nullptr,
-		&busError,
-		&illegalInstructionTrap,
-		&BreakpointTrap,
-		&InputOutputTrap,
-		&EmulatorTrap,
-		&TrapInstruction,
-		&FIS
-	};
-
 	HaltReason haltReason_;
 
 	// Definition of CpuControl functions. These functions are

@@ -78,7 +78,7 @@ bool KD11_NA_Cpu::step ()
             if (!trap_ && (psw_ & PSW_T))
             {
                 trace.trap (TrapRecordType::TRAP_T, 014);
-                setTrap (&traceTrap);
+                setTrap (CpuData::Trap::BreakpointTrap);
             }
             execute ();
             return runState != CpuRunState::HALT; 
@@ -122,7 +122,7 @@ void KD11_NA_Cpu::execInstr ()
     if (!instructionWord.hasValue())
     {
         trace.bus (BusRecordType::ReadFail, registers_[7], 0);
-        setTrap (&busError);
+        setTrap (CpuData::Trap::BusError);
         return;
     }
     registers_[7] += 2;
@@ -130,7 +130,7 @@ void KD11_NA_Cpu::execInstr ()
     unique_ptr<LSI11Instruction> instr = kd11_naInstruction.decode (this, instructionWord);
     CpuData::Trap returnedTrap = instr->execute ();
     if (returnedTrap != CpuData::Trap::None)
-        setTrap (vectorTable [returnedTrap]);
+        setTrap (returnedTrap);
 }
 
 // This function checks whether or not a trap or interrupt request is present.
@@ -155,7 +155,7 @@ void KD11_NA_Cpu::execInstr ()
 void KD11_NA_Cpu::handleTraps ()
 {
     InterruptRequest intrptReq;
-    u16 trapToProcess {0};
+    u16 vectorAddress {0};
 
     // Traps are handled in order of their priority:
     // - Bus errors,
@@ -174,25 +174,26 @@ void KD11_NA_Cpu::handleTraps ()
 
     // Traps have the highest priority, so first check if there is a trap
     // to handle
-    if (trap_)
+    if (trap_ != CpuData::Trap::None)
     {
-        trapToProcess = trap_->vector ();
-        trap_ = nullptr;
+        // The enum trap_ is converted to the u16 vector address
+        vectorAddress = trap_;
+        trap_ = CpuData::Trap::None;
     }
     else if (bus_->intrptPriority () > cpuPriority ())
     {
         if (bus_->getIntrptReq (intrptReq))
-            trapToProcess = intrptReq.vector ();
+            vectorAddress = intrptReq.vector ();
         else
             return;
     }
     else return;
 
-    trace.cpuEvent (CpuEventRecordType::CPU_TRAP, trapToProcess);
+    trace.cpuEvent (CpuEventRecordType::CPU_TRAP, vectorAddress);
 
     // Swap the PC and PSW with new values from the trap vector to process.
     // If this fails the processor will be put in the HALT state.
-    swapPcPSW (trapToProcess);
+    swapPcPSW (vectorAddress);
 }
 
 // Load PC and PSW from the given vector
@@ -226,7 +227,7 @@ void KD11_NA_Cpu::swapPcPSW (u16 vectorAddress)
     {
         trace.cpuEvent (CpuEventRecordType::CPU_DBLBUS, registers_[6]);
         // ToDo: All interrupts should be cleared?
-        trap_ = nullptr;
+        trap_ = CpuData::Trap::None;
         runState = CpuRunState::HALT;
         haltReason_ = HaltReason::DoubleBusError;
         bus_->SRUN().set (false);
@@ -239,7 +240,7 @@ void KD11_NA_Cpu::swapPcPSW (u16 vectorAddress)
         !fetchFromVector (vectorAddress + 2, &psw_))
     {
         trace.cpuEvent (CpuEventRecordType::CPU_DBLBUS, vectorAddress);
-        trap_ = nullptr;
+        trap_ = CpuData::Trap::None;
         runState = CpuRunState::HALT;
         haltReason_ = HaltReason::BusErrorOnIntrptVector;
         bus_->SRUN().set (false);
