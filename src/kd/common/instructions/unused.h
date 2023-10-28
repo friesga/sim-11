@@ -30,7 +30,8 @@ inline CommonInstruction::Unused::Unused (CpuData* cpu, u16 instruction)
 inline CpuData::Trap CommonInstruction::Unused::execute ()
 {
     trace.trap (TrapRecordType::TRAP_ILL, 010);
-    return CpuData::Trap::IllegalInstructionTrap;
+    cpu_->setTrap (CpuData::Trap::IllegalInstructionTrap);
+    return CpuData::Trap::None;
 }
 
 #endif // _UNUSED_H_

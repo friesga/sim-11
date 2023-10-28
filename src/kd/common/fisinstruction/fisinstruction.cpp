@@ -41,7 +41,8 @@ CpuData::Trap FISInstruction::returnFISresult (Float result, u16 registerNumber)
             .V = true,
             .C = false});
 
-        return CpuData::Trap::FIS;
+        cpu_->setTrap (CpuData::Trap::FIS);
+        return CpuData::Trap::None;
     }
     
     // Overflow or Nan
@@ -50,7 +51,8 @@ CpuData::Trap FISInstruction::returnFISresult (Float result, u16 registerNumber)
         .V = true,
         .C = false});
 
-    return CpuData::Trap::FIS;
+    cpu_->setTrap (CpuData::Trap::FIS);
+    return CpuData::Trap::None;
 }
 
 // Execute a FADD, FSUB, FMUL or FDIV instruction.
@@ -72,7 +74,10 @@ CpuData::Trap FISInstruction::executeFISinstruction (u16 stackPointer,
 
     if (!f1High.hasValue () || !f1Low.hasValue () ||
         !f2High.hasValue () || !f2Low.hasValue ())
-        return CpuData::Trap::BusError;
+    {
+        cpu_->setTrap (CpuData::Trap::BusError);
+        return CpuData::Trap::None;
+    }
      
     Float f1 (f1High, f1Low);
     Float f2 (f2High, f2Low);
@@ -90,5 +95,6 @@ CpuData::Trap FISInstruction::executeFISinstruction (u16 stackPointer,
         .V = true,
         .C = true});
 
-    return CpuData::Trap::FIS;
+    cpu_->setTrap (CpuData::Trap::FIS);
+    return CpuData::Trap::None;
 }

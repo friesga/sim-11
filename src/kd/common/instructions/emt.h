@@ -42,7 +42,8 @@ inline CommonInstruction::EMT::EMT (CpuData* cpu, u16 instruction)
 
 inline CpuData::Trap CommonInstruction::EMT::execute ()
 {
-    return CpuData::Trap::EmulatorTrap;
+    cpu_->setTrap (CpuData::Trap::EmulatorTrap);
+    return CpuData::Trap::None;
 }
 
 #endif // _EMT_H_

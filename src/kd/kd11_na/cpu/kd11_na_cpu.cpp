@@ -129,8 +129,6 @@ void KD11_NA_Cpu::execInstr ()
 
     unique_ptr<LSI11Instruction> instr = kd11_naInstruction.decode (this, instructionWord);
     CpuData::Trap returnedTrap = instr->execute ();
-    if (returnedTrap != CpuData::Trap::None)
-        setTrap (returnedTrap);
 }
 
 // This function checks whether or not a trap or interrupt request is present.

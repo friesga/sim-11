@@ -36,7 +36,8 @@ inline CommonInstruction::BPT::BPT (CpuData* cpu, u16 instruction)
 
 inline CpuData::Trap CommonInstruction::BPT::execute ()
 {
-    return CpuData::Trap::BreakpointTrap;
+    cpu_->setTrap (CpuData::Trap::BreakpointTrap);
+    return CpuData::Trap::None;
 }
 
 #endif // _BPT_H_

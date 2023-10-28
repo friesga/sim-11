@@ -129,8 +129,6 @@ void KDF11_A_Cpu::execInstr ()
 
     unique_ptr<LSI11Instruction> instr = kdf11_aInstruction.decode (this, instructionWord);
     CpuData::Trap returnedTrap = instr->execute ();
-    if (returnedTrap != CpuData::Trap::None)
-        setTrap (returnedTrap);
 }
 
 

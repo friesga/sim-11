@@ -48,7 +48,8 @@ inline CpuData::Trap CommonInstruction::JSR::execute ()
     {
         // Illegal instruction
         trace.trap (TrapRecordType::TRAP_RADDR, 04);
-        return CpuData::Trap::BusError;
+        cpu_->setTrap (CpuData::Trap::BusError);
+        return CpuData::Trap::None;
     }
 
     GeneralRegisters& registers = cpu_->registers ();

@@ -36,7 +36,8 @@ inline CommonInstruction::IOT::IOT (CpuData* cpu, u16 instruction)
 
 inline CpuData::Trap CommonInstruction::IOT::execute ()
 {
-    return CpuData::Trap::InputOutputTrap;
+    cpu_->setTrap (CpuData::Trap::InputOutputTrap);
+    return CpuData::Trap::None;
 }
 
 #endif // _IOT_H_
