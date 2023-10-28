@@ -4,6 +4,7 @@
 #include "kd/include/cpudata.h"
 #include "qbus/qbus.h"
 #include "types.h"
+#include "trace/trace.h"
 
 #include <functional>
 
@@ -25,7 +26,7 @@ public:
 	bool putByte (u16 address, u8 value) override;
 	bool pushWord (u16 value) override;
 	bool popWord (u16 *destination) override;
-	void setTrap (CpuData::Trap trap) override;
+	void setTrap (CpuData::Trap trap, TrapRecordType cause = TrapRecordType::TRAP) override;
 	void setCC (ConditionCodes conditionCodes) override;
 
 protected:

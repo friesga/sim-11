@@ -8,6 +8,7 @@
 #include "interruptrequest/interruptrequest.h"
 #include "kd/include/generalregisters.h"
 #include "kd/common/conditioncodes/conditioncodes.h"
+#include "trace/trace.h"
 
 // This interface provides access to the CPU data the instruction classes
 // need to be able to decode the operands adresses and execute the function.
@@ -58,7 +59,7 @@ public:
 	// The memory access functions must be able to generate a bus error trap
 	// whem accessing non-existing memory.
 	// 
-    virtual void setTrap (Trap trap) = 0;
+    virtual void setTrap (Trap trap, TrapRecordType cause = TrapRecordType::TRAP) = 0;
 	virtual void loadTrapVector (Trap trap) = 0;
 };
 

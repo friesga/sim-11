@@ -47,7 +47,6 @@ inline bool CommonInstruction::JSR::execute ()
     if (!destination.isA<MemoryOperandLocation> ())
     {
         // Illegal instruction
-        trace.trap (TrapRecordType::TRAP_RADDR, 04);
         cpu_->setTrap (CpuData::Trap::BusError);
         return true;
     }

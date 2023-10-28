@@ -76,10 +76,8 @@ bool KD11_NA_Cpu::step ()
             // Generate a Trace trap if the trace bit is set, unless the previous
             // instruction was a RTT or another trap is pending.
             if (!trap_ && (psw_ & PSW_T))
-            {
-                trace.trap (TrapRecordType::TRAP_T, 014);
                 setTrap (CpuData::Trap::BreakpointTrap);
-            }
+            
             execute ();
             return runState != CpuRunState::HALT; 
 

@@ -46,7 +46,6 @@ inline bool CommonInstruction::JMP::execute ()
     }
 
     // Illegal instruction
-    trace.trap (TrapRecordType::TRAP_RADDR, 04);
     cpu_->setTrap (CpuData::Trap::BusError);
     return false;
 }
