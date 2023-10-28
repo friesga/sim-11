@@ -89,7 +89,7 @@ bool KDF11_A_Cpu::step ()
 
 void KDF11_A_Cpu::execute ()
 {
-    handleTraps ();
+    handleTrapsAndInterrupts ();
 
     if(trace.isActive ())
         traceStep ();
@@ -155,7 +155,7 @@ void KDF11_A_Cpu::execInstr ()
 // Refer to the LSI-11 WCS user's guide (EK-KUV11-TM-001) par 2.3.
 //
 
-void KDF11_A_Cpu::handleTraps ()
+void KDF11_A_Cpu::handleTrapsAndInterrupts ()
 {
     InterruptRequest intrptReq;
     u16 vectorAddress {0};
@@ -188,24 +188,29 @@ void KDF11_A_Cpu::handleTraps ()
     // to handle
     if (trap_ != CpuData::Trap::None)
     {
-        // The enum trap_ is converted to the u16 vector address
-        vectorAddress = trap_;
-        trap_ = CpuData::Trap::None;
+        handleTrap ();
     }
     else if (bus_->intrptPriority () > cpuPriority ())
-    {
-        if (bus_->getIntrptReq (intrptReq))
-            vectorAddress = intrptReq.vector ();
-        else
-            return;
-    }
-    else return;
+        handleInterrupt ();
+}
 
-    trace.cpuEvent (CpuEventRecordType::CPU_TRAP, vectorAddress);
-
+void KDF11_A_Cpu::handleTrap ()
+{
+    // The enum trap_ is converted to the u16 vector address
     // Swap the PC and PSW with new values from the trap vector to process.
     // If this fails the processor will be put in the HALT state.
-    swapPcPSW (vectorAddress);
+    swapPcPSW (trap_);
+    trap_ = CpuData::Trap::None;
+}
+
+void KDF11_A_Cpu::handleInterrupt ()
+{
+    InterruptRequest intrptReq;
+ 
+    if (bus_->getIntrptReq (intrptReq))
+        // Swap the PC and PSW with new values from the trap vector to process.
+        // If this fails the processor will be put in the HALT state.
+        swapPcPSW (intrptReq.vector ());
 }
 
 // Load PC and PSW from the given vector

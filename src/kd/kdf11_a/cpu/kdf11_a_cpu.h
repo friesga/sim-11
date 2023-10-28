@@ -71,7 +71,9 @@ private:
 	constexpr HaltReason haltReason ();
 
 	void execInstr ();
-	void handleTraps();
+	void handleTrapsAndInterrupts();
+	void handleTrap ();
+	void handleInterrupt ();
 	u8 cpuPriority ();
 	void execute ();
 	void swapPcPSW (u16 vectorAddress);
