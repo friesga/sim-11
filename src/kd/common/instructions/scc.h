@@ -16,7 +16,7 @@ class CommonInstruction::SCC : public CcInstruction, public WithFactory<SCC>
 {
 public:
     SCC (CpuData* cpu, u16 instruction);
-    CpuData::Trap execute () override;
+    bool execute () override;
 };
 
 inline CommonInstruction::SCC::SCC (CpuData* cpu, u16 instruction)
@@ -24,10 +24,10 @@ inline CommonInstruction::SCC::SCC (CpuData* cpu, u16 instruction)
     CcInstruction (cpu, instruction)
 {}
 
-inline CpuData::Trap CommonInstruction::SCC::execute ()
+inline bool CommonInstruction::SCC::execute ()
 {
     cpu_->psw () |= getConditionCodes ();
-    return CpuData::Trap::None;
+    return true;
 }
 
 #endif // _CCC_H_

@@ -26,7 +26,7 @@ class CommonInstruction::SXT : public SingleOperandInstruction, public WithFacto
 {
 public:
     SXT (CpuData* cpu, u16 instruction);
-    CpuData::Trap execute () override;
+    bool execute () override;
 };
 
 inline CommonInstruction::SXT::SXT (CpuData* cpu, u16 instruction)
@@ -34,17 +34,17 @@ inline CommonInstruction::SXT::SXT (CpuData* cpu, u16 instruction)
     SingleOperandInstruction (cpu, instruction)
 {}
 
-inline CpuData::Trap CommonInstruction::SXT::execute ()
+inline bool CommonInstruction::SXT::execute ()
 {
     u16 result = isSet (PSW_N) ? 0177777 : 0;
 
     if (!writeOperand (result))
-        return CpuData::Trap::BusError;
+        return false;
 
     setPSW (ConditionCodes {.Z = !isSet (PSW_N),
         .V = false});
 
-    return CpuData::Trap::None;
+    return true;
 }
 
 #endif // _SXT_H_

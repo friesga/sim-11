@@ -23,7 +23,7 @@ class CommonInstruction::SOB : public SobInstruction, public WithFactory<SOB>
 {
 public:
     SOB (CpuData* cpu, u16 instruction);
-    CpuData::Trap execute () override;
+    bool execute () override;
 };
 
 inline CommonInstruction::SOB::SOB (CpuData* cpu, u16 instruction)
@@ -31,7 +31,7 @@ inline CommonInstruction::SOB::SOB (CpuData* cpu, u16 instruction)
     SobInstruction (cpu, instruction)
 {}
 
-inline CpuData::Trap CommonInstruction::SOB::execute ()
+inline bool CommonInstruction::SOB::execute ()
 {
     u16 regNr = getRegisterNr ();
     u16 offset = getOffset ();
@@ -41,7 +41,7 @@ inline CpuData::Trap CommonInstruction::SOB::execute ()
     if (reg[regNr])
         reg[7] -= 2 * offset;
 
-    return CpuData::Trap::None;
+    return true;
 }
 
 #endif // _SOB_H_

@@ -28,7 +28,7 @@ class KDF11_AInstruction::MOV : public KD11DoubleOperandInstruction, public With
 {
 public:
     MOV (CpuData* cpu, u16 instruction);
-    CpuData::Trap execute () override;
+    bool execute () override;
 };
 
 inline KDF11_AInstruction::MOV::MOV (CpuData* cpu, u16 instruction)
@@ -37,21 +37,21 @@ inline KDF11_AInstruction::MOV::MOV (CpuData* cpu, u16 instruction)
 {}
 
 
-inline CpuData::Trap KDF11_AInstruction::MOV::execute ()
+inline bool KDF11_AInstruction::MOV::execute ()
 {
     CondData<u16> source, destination;
 
     if (!readSourceOperand (&source))
-        return CpuData::Trap::BusError;
+        return false;
 
     setPSW (ConditionCodes ({.N = (bool) (source & 0100000),
         .Z = source == 0,
         .V = false}));
     
     if (!writeDestinationOperand (source.value ()))
-        return CpuData::Trap::BusError;
+        return false;
 
-    return CpuData::Trap::None;
+    return true;
 }
 
 #endif // _MOV_H_

@@ -19,7 +19,7 @@ class KDF11_AInstruction::COMB : public SingleOperandInstruction, public WithFac
 {
 public:
     COMB (CpuData* cpu, u16 instruction);
-    CpuData::Trap execute () override;
+    bool execute () override;
 };
 
 inline KDF11_AInstruction::COMB::COMB (CpuData* cpu, u16 instruction)
@@ -27,11 +27,11 @@ inline KDF11_AInstruction::COMB::COMB (CpuData* cpu, u16 instruction)
     SingleOperandInstruction (cpu, instruction)
 {}
 
-inline CpuData::Trap KDF11_AInstruction::COMB::execute ()
+inline bool KDF11_AInstruction::COMB::execute ()
 {
     CondData<u8> operand;
     if (!readOperand (&operand))
-        return CpuData::Trap::BusError;
+        return false;
 
     // Complement the operand, adjust the condition codes and write the
     // complement to the operand location.
@@ -43,9 +43,9 @@ inline CpuData::Trap KDF11_AInstruction::COMB::execute ()
         .C = true}});
 
     if (!writeOperand (operand.value ()))
-        return CpuData::Trap::BusError;
+        return false;
 
-    return CpuData::Trap::None;
+    return true;
 }
 
 #endif // _COMB_H_

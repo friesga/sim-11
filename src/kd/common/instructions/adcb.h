@@ -19,7 +19,7 @@ class CommonInstruction::ADCB : public SingleOperandInstruction, public WithFact
 {
 public:
     ADCB (CpuData* cpu, u16 instruction);
-    CpuData::Trap execute () override;
+    bool execute () override;
 };
 
 inline CommonInstruction::ADCB::ADCB (CpuData* cpu, u16 instruction)
@@ -27,24 +27,24 @@ inline CommonInstruction::ADCB::ADCB (CpuData* cpu, u16 instruction)
     SingleOperandInstruction (cpu, instruction)
 {}
 
-inline CpuData::Trap CommonInstruction::ADCB::execute ()
+inline bool CommonInstruction::ADCB::execute ()
 {
     CondData<u8> source;
     if (!readOperand (&source))
-        return CpuData::Trap::BusError;
+        return false;
 
     u16 tmp = isSet (PSW_C) ? 1 : 0;
     u8 destination = (u8)(source + tmp);
 
     if (!writeOperand (destination))
-        return CpuData::Trap::BusError;
+        return false;
 
     setPSW (ConditionCodes ({.N = (bool) (destination & 0x80),
         .Z = destination == 0,
         .V = source == 0177 && isSet (PSW_C),
         .C = source == 0377 && isSet (PSW_C)}));
 
-    return CpuData::Trap::None;
+    return true;
 }
 
 #endif // _ADCB_H_

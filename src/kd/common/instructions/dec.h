@@ -24,7 +24,7 @@ class CommonInstruction::DEC : public SingleOperandInstruction, public WithFacto
 {
 public:
     DEC (CpuData* cpu, u16 instruction);
-    CpuData::Trap execute () override;
+    bool execute () override;
 };
 
 inline CommonInstruction::DEC::DEC (CpuData* cpu, u16 instruction)
@@ -32,22 +32,22 @@ inline CommonInstruction::DEC::DEC (CpuData* cpu, u16 instruction)
     SingleOperandInstruction (cpu, instruction)
 {}
 
-inline CpuData::Trap CommonInstruction::DEC::execute ()
+inline bool CommonInstruction::DEC::execute ()
 {
     CondData<u16> contents;
     if (!readOperand (&contents))
-        return CpuData::Trap::BusError;
+        return false;
 
     // Increment the operand and write it to the operand location
     u16 result = contents - 1;
     if (!writeOperand (result))
-        return CpuData::Trap::BusError;
+        return false;
 
     setPSW (ConditionCodes {.N = (bool) (result & 0100000),
         .Z = result == 0,
         .V = contents == 0100000});
 
-    return CpuData::Trap::None;
+    return true;
 }
 
 #endif // _DEC_H_

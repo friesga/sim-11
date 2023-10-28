@@ -19,7 +19,7 @@ class KDF11_AInstruction::ADCB : public SingleOperandInstruction, public WithFac
 {
 public:
     ADCB (CpuData* cpu, u16 instruction);
-    CpuData::Trap execute () override;
+    bool execute () override;
 };
 
 inline KDF11_AInstruction::ADCB::ADCB (CpuData* cpu, u16 instruction)
@@ -27,11 +27,11 @@ inline KDF11_AInstruction::ADCB::ADCB (CpuData* cpu, u16 instruction)
     SingleOperandInstruction (cpu, instruction)
 {}
 
-inline CpuData::Trap KDF11_AInstruction::ADCB::execute ()
+inline bool KDF11_AInstruction::ADCB::execute ()
 {
     CondData<u8> source;
     if (!readOperand (&source))
-        return CpuData::Trap::BusError;
+        return false;
 
     u16 tmp = isSet (PSW_C) ? 1 : 0;
     u8 destination = (u8) (source + tmp);
@@ -42,9 +42,9 @@ inline CpuData::Trap KDF11_AInstruction::ADCB::execute ()
         .C = source == 0377 && isSet (PSW_C)}));
 
     if (!writeOperand (destination))
-        return CpuData::Trap::BusError;
+        return false;
 
-    return CpuData::Trap::None;
+    return true;
 }
 
 #endif // _ADCB_H_

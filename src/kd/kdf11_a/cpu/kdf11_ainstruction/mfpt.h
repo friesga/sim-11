@@ -28,7 +28,7 @@ class KDF11_AInstruction::MFPT : public NoOperandInstruction, public WithFactory
 {
 public:
     MFPT (CpuData* cpu, u16 instruction);
-    CpuData::Trap execute () override;
+    bool execute () override;
 };
 
 inline KDF11_AInstruction::MFPT::MFPT (CpuData* cpu, u16 instruction)
@@ -36,10 +36,10 @@ inline KDF11_AInstruction::MFPT::MFPT (CpuData* cpu, u16 instruction)
     NoOperandInstruction (cpu, instruction)
 {}
 
-inline CpuData::Trap KDF11_AInstruction::MFPT::execute ()
+inline bool KDF11_AInstruction::MFPT::execute ()
 {
     cpu_->registers ()[0] = 3;
-    return CpuData::Trap::None;
+    return true;
 }
 
 #endif // _MFPT_H_

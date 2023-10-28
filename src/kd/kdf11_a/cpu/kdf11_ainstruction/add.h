@@ -30,7 +30,7 @@ class KDF11_AInstruction::ADD : public KD11DoubleOperandInstruction, public With
 {
 public:
     ADD (CpuData* cpu, u16 instruction);
-    CpuData::Trap execute () override;
+    bool execute () override;
 };
 
 inline KDF11_AInstruction::ADD::ADD (CpuData* cpu, u16 instruction)
@@ -38,13 +38,13 @@ inline KDF11_AInstruction::ADD::ADD (CpuData* cpu, u16 instruction)
     KD11DoubleOperandInstruction (cpu, instruction)
 {}
 
-inline CpuData::Trap KDF11_AInstruction::ADD::execute ()
+inline bool KDF11_AInstruction::ADD::execute ()
 {
     CondData<u16> source, destination;
 
     if (!readSourceOperand (&source) ||
         !readDestinationOperand (&destination))
-        return CpuData::Trap::BusError;
+        return false;
 
     u16 result = source + destination;
 
@@ -55,9 +55,9 @@ inline CpuData::Trap KDF11_AInstruction::ADD::execute ()
         .C = (bool) (((u32) source + (u32) destination) & 0x10000)}));
 
     if (!writeDestinationOperand (result))
-        return CpuData::Trap::BusError;
+        return false;
 
-    return CpuData::Trap::None;
+    return true;
 }
 
 #endif // _ADD_H_

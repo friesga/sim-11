@@ -25,7 +25,7 @@ class KDF11_AInstruction::SUB : public KD11DoubleOperandInstruction, public With
 {
 public:
     SUB (CpuData* cpu, u16 instruction);
-    CpuData::Trap execute () override;
+    bool execute () override;
 };
 
 inline KDF11_AInstruction::SUB::SUB (CpuData* cpu, u16 instruction)
@@ -33,13 +33,13 @@ inline KDF11_AInstruction::SUB::SUB (CpuData* cpu, u16 instruction)
     KD11DoubleOperandInstruction (cpu, instruction)
 {}
 
-inline CpuData::Trap KDF11_AInstruction::SUB::execute ()
+inline bool KDF11_AInstruction::SUB::execute ()
 {
     CondData<u16> source, destination;
 
     if (!readSourceOperand (&source) ||
         !readDestinationOperand (&destination))
-        return CpuData::Trap::BusError;
+        return false;
 
     u16 result = destination - source;
 
@@ -50,9 +50,9 @@ inline CpuData::Trap KDF11_AInstruction::SUB::execute ()
         .C = (bool) (((u32) destination - (u32) source) & 0x10000)});
 
     if (!writeDestinationOperand (result))
-        return CpuData::Trap::BusError;
+        return false;
 
-    return CpuData::Trap::None;
+    return true;
 }
 
 #endif // _SUB_H_

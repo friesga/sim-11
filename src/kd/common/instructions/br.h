@@ -19,7 +19,7 @@ class CommonInstruction::BR : public BranchInstruction, public WithFactory<BR>
 {
 public:
     BR (CpuData* cpu, u16 instruction);
-    CpuData::Trap execute () override;
+    bool execute () override;
 };
 
 inline CommonInstruction::BR::BR (CpuData* cpu, u16 instruction)
@@ -27,10 +27,10 @@ inline CommonInstruction::BR::BR (CpuData* cpu, u16 instruction)
     BranchInstruction (cpu, instruction)
 {}
 
-inline CpuData::Trap CommonInstruction::BR::execute ()
+inline bool CommonInstruction::BR::execute ()
 {
     executeBranch ();
-    return CpuData::Trap::None;
+    return true;
 }
 
 #endif // _BR_H_

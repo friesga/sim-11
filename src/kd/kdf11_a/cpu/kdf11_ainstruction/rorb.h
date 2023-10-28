@@ -23,7 +23,7 @@ class KDF11_AInstruction::RORB : public SingleOperandInstruction, public WithFac
 {
 public:
     RORB (CpuData* cpu, u16 instruction);
-    CpuData::Trap execute () override;
+    bool execute () override;
 };
 
 inline KDF11_AInstruction::RORB::RORB (CpuData* cpu, u16 instruction)
@@ -31,11 +31,11 @@ inline KDF11_AInstruction::RORB::RORB (CpuData* cpu, u16 instruction)
     SingleOperandInstruction (cpu, instruction)
 {}
 
-inline CpuData::Trap KDF11_AInstruction::RORB::execute ()
+inline bool KDF11_AInstruction::RORB::execute ()
 {
     CondData<u8> source;
     if (!readOperand (&source))
-        return CpuData::Trap::BusError;
+        return false;
 
     u8 result = source >> 1;
     if (isSet (PSW_C))
@@ -47,9 +47,9 @@ inline CpuData::Trap KDF11_AInstruction::RORB::execute ()
         .C = (bool) (source & 0x01)});
 
     if (!writeOperand (result))
-        return CpuData::Trap::BusError;
+        return false;
 
-    return CpuData::Trap::None;
+    return true;
 }
 
 #endif // _RORB_H_

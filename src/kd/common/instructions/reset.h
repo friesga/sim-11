@@ -20,7 +20,7 @@ class CommonInstruction::RESET : public NoOperandInstruction, public WithFactory
 {
 public:
     RESET (CpuData* cpu, u16 instruction);
-    CpuData::Trap execute () override;
+    bool execute () override;
 };
 
 inline CommonInstruction::RESET::RESET (CpuData* cpu, u16 instruction)
@@ -28,10 +28,10 @@ inline CommonInstruction::RESET::RESET (CpuData* cpu, u16 instruction)
     NoOperandInstruction (cpu, instruction)
 {}
 
-inline CpuData::Trap CommonInstruction::RESET::execute ()
+inline bool CommonInstruction::RESET::execute ()
 {
     cpu_->busReset ();
-    return CpuData::Trap::None;
+    return true;
 }
 
 #endif // _RESET_H_

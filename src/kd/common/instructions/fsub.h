@@ -28,7 +28,7 @@ class CommonInstruction::FSUB : public FISInstruction, public WithFactory<FSUB>
 {
 public:
     FSUB (CpuData* cpu, u16 instruction);
-    CpuData::Trap execute () override;
+    bool execute () override;
 };
 
 inline CommonInstruction::FSUB::FSUB (CpuData* cpu, u16 instruction)
@@ -36,7 +36,7 @@ inline CommonInstruction::FSUB::FSUB (CpuData* cpu, u16 instruction)
     FISInstruction (cpu, instruction)
 {}
 
-inline CpuData::Trap CommonInstruction::FSUB::execute ()
+inline bool CommonInstruction::FSUB::execute ()
 {
     return executeFISinstruction (getRegister (),
         [](Float f1, Float f2) { return true; },

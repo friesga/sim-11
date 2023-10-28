@@ -22,7 +22,7 @@ class CommonInstruction::BMI : public BranchInstruction, public WithFactory<BMI>
 {
 public:
     BMI (CpuData* cpu, u16 instruction);
-    CpuData::Trap execute () override;
+    bool execute () override;
 };
 
 inline CommonInstruction::BMI::BMI (CpuData* cpu, u16 instruction)
@@ -30,10 +30,10 @@ inline CommonInstruction::BMI::BMI (CpuData* cpu, u16 instruction)
     BranchInstruction (cpu, instruction)
 {}
 
-inline CpuData::Trap CommonInstruction::BMI::execute ()
+inline bool CommonInstruction::BMI::execute ()
 {
     executeBranchIf (isSet (PSW_N));
-    return CpuData::Trap::None;
+    return true;
 }
 
 #endif // _BMI_H_

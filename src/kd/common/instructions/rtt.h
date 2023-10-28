@@ -28,7 +28,7 @@ class CommonInstruction::RTT : public NoOperandInstruction, public WithFactory<R
 {
 public:
     RTT (CpuData* cpu, u16 instruction);
-    CpuData::Trap execute () override;
+    bool execute () override;
 };
 
 inline CommonInstruction::RTT::RTT (CpuData* cpu, u16 instruction)
@@ -36,17 +36,17 @@ inline CommonInstruction::RTT::RTT (CpuData* cpu, u16 instruction)
     NoOperandInstruction (cpu, instruction)
 {}
 
-inline CpuData::Trap CommonInstruction::RTT::execute ()
+inline bool CommonInstruction::RTT::execute ()
 {
     if (!cpu_->popWord (&cpu_->registers ()[7]))
-        return CpuData::Trap::BusError;
+        return false;
     if (!cpu_->popWord (&cpu_->psw ()))
-        return CpuData::Trap::BusError;
+        return false;
 
     // Prevent a trace trap on the next instruction
     cpu_->inhibitTraceTrap ();
 
-    return CpuData::Trap::None;
+    return true;
 }
 
 #endif // _RTT_H_

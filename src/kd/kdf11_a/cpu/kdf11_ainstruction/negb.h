@@ -19,7 +19,7 @@ class KDF11_AInstruction::NEGB : public SingleOperandInstruction, public WithFac
 {
 public:
     NEGB (CpuData* cpu, u16 instruction);
-    CpuData::Trap execute () override;
+    bool execute () override;
 };
 
 inline KDF11_AInstruction::NEGB::NEGB (CpuData* cpu, u16 instruction)
@@ -27,11 +27,11 @@ inline KDF11_AInstruction::NEGB::NEGB (CpuData* cpu, u16 instruction)
     SingleOperandInstruction (cpu, instruction)
 {}
 
-inline CpuData::Trap KDF11_AInstruction::NEGB::execute ()
+inline bool KDF11_AInstruction::NEGB::execute ()
 {
     CondData<u8> operand;
     if (!readOperand (&operand))
-        return CpuData::Trap::BusError;
+        return false;
 
     if (operand != 0200)
         operand = -operand;
@@ -42,9 +42,9 @@ inline CpuData::Trap KDF11_AInstruction::NEGB::execute ()
         .C = operand != 0});
 
     if (!writeOperand (operand.value ()))
-        return CpuData::Trap::BusError;
+        return false;
 
-    return CpuData::Trap::None;
+    return true;
 }
 
 #endif // _NEGB_H_

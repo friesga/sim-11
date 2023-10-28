@@ -17,7 +17,7 @@ u16 FISInstruction::getOperationCode ()
 }
 
 // Return the result of a floating point calculation
-CpuData::Trap FISInstruction::returnFISresult (Float result, u16 registerNumber)
+bool FISInstruction::returnFISresult (Float result, u16 registerNumber)
 {
     u16 high, low;
     Float::Result conversionResult = result.pdp11Dword (&high, &low);
@@ -31,7 +31,7 @@ CpuData::Trap FISInstruction::returnFISresult (Float result, u16 registerNumber)
             .Z = result.value () == 0,
             .V = false,
             .C = false});
-        return CpuData::Trap::None;
+        return true;
     }
 
     if (conversionResult == Float::Result::Underflow)
@@ -42,7 +42,7 @@ CpuData::Trap FISInstruction::returnFISresult (Float result, u16 registerNumber)
             .C = false});
 
         cpu_->setTrap (CpuData::Trap::FIS);
-        return CpuData::Trap::None;
+        return true;
     }
     
     // Overflow or Nan
@@ -52,11 +52,11 @@ CpuData::Trap FISInstruction::returnFISresult (Float result, u16 registerNumber)
         .C = false});
 
     cpu_->setTrap (CpuData::Trap::FIS);
-    return CpuData::Trap::None;
+    return true;
 }
 
 // Execute a FADD, FSUB, FMUL or FDIV instruction.
-CpuData::Trap FISInstruction::executeFISinstruction (u16 stackPointer,
+bool FISInstruction::executeFISinstruction (u16 stackPointer,
     std::function<bool(Float, Float)> argumentsValid,
     std::function<Float(Float, Float)> instruction)
 {
@@ -76,7 +76,7 @@ CpuData::Trap FISInstruction::executeFISinstruction (u16 stackPointer,
         !f2High.hasValue () || !f2Low.hasValue ())
     {
         cpu_->setTrap (CpuData::Trap::BusError);
-        return CpuData::Trap::None;
+        return true;
     }
      
     Float f1 (f1High, f1Low);
@@ -96,5 +96,5 @@ CpuData::Trap FISInstruction::executeFISinstruction (u16 stackPointer,
         .C = true});
 
     cpu_->setTrap (CpuData::Trap::FIS);
-    return CpuData::Trap::None;
+    return true;
 }

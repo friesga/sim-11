@@ -24,7 +24,7 @@ class KDF11_AInstruction::INC : public SingleOperandInstruction, public WithFact
 {
 public:
     INC (CpuData* cpu, u16 instruction);
-    CpuData::Trap execute () override;
+    bool execute () override;
 };
 
 inline KDF11_AInstruction::INC::INC (CpuData* cpu, u16 instruction)
@@ -32,11 +32,11 @@ inline KDF11_AInstruction::INC::INC (CpuData* cpu, u16 instruction)
     SingleOperandInstruction (cpu, instruction)
 {}
 
-inline CpuData::Trap KDF11_AInstruction::INC::execute ()
+inline bool KDF11_AInstruction::INC::execute ()
 {
     CondData<u16> contents;
     if (!readOperand (&contents))
-        return CpuData::Trap::BusError;
+        return false;
 
     // Increment the operand and write it to the operand location
     u16 result = contents + 1;
@@ -46,9 +46,9 @@ inline CpuData::Trap KDF11_AInstruction::INC::execute ()
         .V = contents == 077777});
 
     if (!writeOperand (result))
-        return CpuData::Trap::BusError;
+        return false;
 
-    return CpuData::Trap::None;
+    return true;
 }
 
 #endif // _INC_H_

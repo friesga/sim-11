@@ -20,7 +20,7 @@ class CommonInstruction::CCC : public CcInstruction, public WithFactory<CCC>
 {
 public:
     CCC (CpuData* cpu, u16 instruction);
-    CpuData::Trap execute () override;
+    bool execute () override;
 };
 
 inline CommonInstruction::CCC::CCC (CpuData* cpu, u16 instruction)
@@ -28,10 +28,10 @@ inline CommonInstruction::CCC::CCC (CpuData* cpu, u16 instruction)
     CcInstruction (cpu, instruction)
 {}
 
-inline CpuData::Trap CommonInstruction::CCC::execute ()
+inline bool CommonInstruction::CCC::execute ()
 {
     cpu_->psw () &= ~getConditionCodes ();
-    return CpuData::Trap::None;
+    return true;
 }
 
 #endif // _CCC_H_

@@ -32,7 +32,7 @@ class CommonInstruction::EMT : public NoOperandInstruction, public WithFactory<E
 {
 public:
     EMT (CpuData* cpu, u16 instruction);
-    CpuData::Trap execute () override;
+    bool execute () override;
 };
 
 inline CommonInstruction::EMT::EMT (CpuData* cpu, u16 instruction)
@@ -40,10 +40,10 @@ inline CommonInstruction::EMT::EMT (CpuData* cpu, u16 instruction)
     NoOperandInstruction (cpu, instruction)
 {}
 
-inline CpuData::Trap CommonInstruction::EMT::execute ()
+inline bool CommonInstruction::EMT::execute ()
 {
     cpu_->setTrap (CpuData::Trap::EmulatorTrap);
-    return CpuData::Trap::None;
+    return true;
 }
 
 #endif // _EMT_H_

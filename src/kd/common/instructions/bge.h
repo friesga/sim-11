@@ -21,7 +21,7 @@ class CommonInstruction::BGE : public BranchInstruction, public WithFactory<BGE>
 {
 public:
     BGE (CpuData* cpu, u16 instruction);
-    CpuData::Trap execute () override;
+    bool execute () override;
 };
 
 inline CommonInstruction::BGE::BGE (CpuData* cpu, u16 instruction)
@@ -29,10 +29,10 @@ inline CommonInstruction::BGE::BGE (CpuData* cpu, u16 instruction)
     BranchInstruction (cpu, instruction)
 {}
 
-inline CpuData::Trap CommonInstruction::BGE::execute ()
+inline bool CommonInstruction::BGE::execute ()
 {
     executeBranchIf ((isSet (PSW_N) ^ isSet (PSW_V)) == 0);
-    return CpuData::Trap::None;
+    return true;
 }
 
 #endif // _BGE_H_

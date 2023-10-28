@@ -17,7 +17,7 @@ class CommonInstruction::Unused : public NoOperandInstruction, public WithFactor
 {
 public:
     Unused (CpuData* cpu, u16 instruction);
-    CpuData::Trap execute () override;
+    bool execute () override;
 };
 
 // The two function members are defined inline as this header file is
@@ -27,11 +27,11 @@ inline CommonInstruction::Unused::Unused (CpuData* cpu, u16 instruction)
     NoOperandInstruction (cpu, instruction)
 {}
 
-inline CpuData::Trap CommonInstruction::Unused::execute ()
+inline bool CommonInstruction::Unused::execute ()
 {
     trace.trap (TrapRecordType::TRAP_ILL, 010);
     cpu_->setTrap (CpuData::Trap::IllegalInstructionTrap);
-    return CpuData::Trap::None;
+    return true;
 }
 
 #endif // _UNUSED_H_

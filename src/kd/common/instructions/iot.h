@@ -26,7 +26,7 @@ class CommonInstruction::IOT : public NoOperandInstruction, public WithFactory<I
 {
 public:
     IOT (CpuData* cpu, u16 instruction);
-    CpuData::Trap execute () override;
+    bool execute () override;
 };
 
 inline CommonInstruction::IOT::IOT (CpuData* cpu, u16 instruction)
@@ -34,10 +34,10 @@ inline CommonInstruction::IOT::IOT (CpuData* cpu, u16 instruction)
     NoOperandInstruction (cpu, instruction)
 {}
 
-inline CpuData::Trap CommonInstruction::IOT::execute ()
+inline bool CommonInstruction::IOT::execute ()
 {
     cpu_->setTrap (CpuData::Trap::InputOutputTrap);
-    return CpuData::Trap::None;
+    return true;
 }
 
 #endif // _IOT_H_

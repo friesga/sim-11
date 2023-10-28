@@ -32,7 +32,7 @@ class CommonInstruction::JSR : public EisInstruction, public WithFactory<JSR>
 {
 public:
     JSR (CpuData* cpu, u16 instruction);
-    CpuData::Trap execute () override;
+    bool execute () override;
 };
 
 inline CommonInstruction::JSR::JSR (CpuData* cpu, u16 instruction)
@@ -40,7 +40,7 @@ inline CommonInstruction::JSR::JSR (CpuData* cpu, u16 instruction)
     EisInstruction (cpu, instruction)
 {}
 
-inline CpuData::Trap CommonInstruction::JSR::execute ()
+inline bool CommonInstruction::JSR::execute ()
 {
     OperandLocation destination = getOperandLocation (cpu_->registers ());
 
@@ -49,18 +49,18 @@ inline CpuData::Trap CommonInstruction::JSR::execute ()
         // Illegal instruction
         trace.trap (TrapRecordType::TRAP_RADDR, 04);
         cpu_->setTrap (CpuData::Trap::BusError);
-        return CpuData::Trap::None;
+        return true;
     }
 
     GeneralRegisters& registers = cpu_->registers ();
     u16 specifiedRegisterContents = registers[getRegisterNr ()];
 
     if (!cpu_->pushWord (specifiedRegisterContents))
-        return CpuData::Trap::BusError;
+        return false;
     registers[getRegisterNr ()] = registers[7];
     registers[7] = destination;
 
-    return CpuData::Trap::None;
+    return true;
 }
 
 #endif // _JSR_H_

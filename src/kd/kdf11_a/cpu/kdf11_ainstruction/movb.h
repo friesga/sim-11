@@ -26,7 +26,7 @@ class KDF11_AInstruction::MOVB : public KD11DoubleOperandInstruction, public Wit
 {
 public:
     MOVB (CpuData* cpu, u16 instruction);
-    CpuData::Trap execute () override;
+    bool execute () override;
 };
 
 inline KDF11_AInstruction::MOVB::MOVB (CpuData* cpu, u16 instruction)
@@ -34,12 +34,12 @@ inline KDF11_AInstruction::MOVB::MOVB (CpuData* cpu, u16 instruction)
     KD11DoubleOperandInstruction (cpu, instruction)
 {}
 
-inline CpuData::Trap KDF11_AInstruction::MOVB::execute ()
+inline bool KDF11_AInstruction::MOVB::execute ()
 {
     CondData<u8> source;
 
     if (!readSourceOperand (&source))
-        return CpuData::Trap::BusError;
+        return false;
 
     // Make the source a signed eight bit value 
     s8 tmp = (s8) source;
@@ -55,9 +55,9 @@ inline CpuData::Trap KDF11_AInstruction::MOVB::execute ()
         cpu_->registers ()[destinationOperandLocation_] = tmp;
     else
         if (!destinationOperandLocation_.write<u8> (tmp))
-            return CpuData::Trap::BusError;
+            return false;
 
-    return CpuData::Trap::None;
+    return true;
 }
 
 #endif // _MOVB_H_

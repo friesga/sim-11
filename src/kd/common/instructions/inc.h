@@ -24,7 +24,7 @@ class CommonInstruction::INC : public SingleOperandInstruction, public WithFacto
 {
 public:
     INC (CpuData* cpu, u16 instruction);
-    CpuData::Trap execute () override;
+    bool execute () override;
 };
 
 inline CommonInstruction::INC::INC (CpuData* cpu, u16 instruction)
@@ -32,22 +32,22 @@ inline CommonInstruction::INC::INC (CpuData* cpu, u16 instruction)
     SingleOperandInstruction (cpu, instruction)
 {}
 
-inline CpuData::Trap CommonInstruction::INC::execute ()
+inline bool CommonInstruction::INC::execute ()
 {
     CondData<u16> contents;
     if (!readOperand (&contents))
-        return CpuData::Trap::BusError;
+        return false;
 
     // Increment the operand and write it to the operand location
     u16 result = contents + 1;
     if (!writeOperand (result))
-        return CpuData::Trap::BusError;
+        return false;
 
     setPSW (ConditionCodes {.N = (bool) (result & 0x8000),
         .Z = result == 0,
         .V = contents == 077777});
 
-    return CpuData::Trap::None;
+    return true;
 }
 
 #endif // _INC_H_

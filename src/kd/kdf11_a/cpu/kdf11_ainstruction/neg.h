@@ -26,7 +26,7 @@ class KDF11_AInstruction::NEG : public SingleOperandInstruction, public WithFact
 {
 public:
     NEG (CpuData* cpu, u16 instruction);
-    CpuData::Trap execute () override;
+    bool execute () override;
 };
 
 inline KDF11_AInstruction::NEG::NEG (CpuData* cpu, u16 instruction)
@@ -34,11 +34,11 @@ inline KDF11_AInstruction::NEG::NEG (CpuData* cpu, u16 instruction)
     SingleOperandInstruction (cpu, instruction)
 {}
 
-inline CpuData::Trap KDF11_AInstruction::NEG::execute ()
+inline bool KDF11_AInstruction::NEG::execute ()
 {
     CondData<u16> operand;
     if (!readOperand (&operand))
-        return CpuData::Trap::BusError;
+        return false;
 
     // Negate the operand, adjust the condition codes accordingly and write
     // it the negated operand to the operand location.
@@ -51,9 +51,9 @@ inline CpuData::Trap KDF11_AInstruction::NEG::execute ()
         .C = operand != 0});
 
     if (!writeOperand (operand.value ()))
-        return CpuData::Trap::BusError;
+        return false;
 
-    return CpuData::Trap::None;
+    return true;
 }
 
 #endif // _NEG_H_

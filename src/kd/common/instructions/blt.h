@@ -25,7 +25,7 @@ class CommonInstruction::BLT : public BranchInstruction, public WithFactory<BLT>
 {
 public:
     BLT (CpuData* cpu, u16 instruction);
-    CpuData::Trap execute () override;
+    bool execute () override;
 };
 
 inline CommonInstruction::BLT::BLT (CpuData* cpu, u16 instruction)
@@ -33,10 +33,10 @@ inline CommonInstruction::BLT::BLT (CpuData* cpu, u16 instruction)
     BranchInstruction (cpu, instruction)
 {}
 
-inline CpuData::Trap CommonInstruction::BLT::execute ()
+inline bool CommonInstruction::BLT::execute ()
 {
     executeBranchIf (isSet (PSW_N) ^ isSet (PSW_V));
-    return CpuData::Trap::None;
+    return true;
 }
 
 #endif // _BLT_H_

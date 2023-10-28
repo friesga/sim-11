@@ -19,7 +19,7 @@ class CommonInstruction::CLRB : public SingleOperandInstruction, public WithFact
 {
 public:
     CLRB (CpuData* cpu, u16 instruction);
-    CpuData::Trap execute () override;
+    bool execute () override;
 };
 
 inline CommonInstruction::CLRB::CLRB (CpuData* cpu, u16 instruction)
@@ -27,17 +27,17 @@ inline CommonInstruction::CLRB::CLRB (CpuData* cpu, u16 instruction)
     SingleOperandInstruction (cpu, instruction)
 {}
 
-inline CpuData::Trap CommonInstruction::CLRB::execute ()
+inline bool CommonInstruction::CLRB::execute ()
 {
     if (!writeOperand ((u8)0))
-        return CpuData::Trap::BusError;
+        return false;
 
     setPSW (ConditionCodes {.N = false,
         .Z = true,
         .V = false,
         .C = false});
 
-    return CpuData::Trap::None;
+    return true;
 }
 
 #endif // _CLRB_H_

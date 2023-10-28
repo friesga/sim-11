@@ -19,7 +19,7 @@ class CommonInstruction::CMPB : public DoubleOperandInstruction, public WithFact
 {
 public:
     CMPB (CpuData* cpu, u16 instruction);
-    CpuData::Trap execute () override;
+    bool execute () override;
 };
 
 inline CommonInstruction::CMPB::CMPB (CpuData* cpu, u16 instruction)
@@ -27,12 +27,12 @@ inline CommonInstruction::CMPB::CMPB (CpuData* cpu, u16 instruction)
     DoubleOperandInstruction (cpu, instruction)
 {}
 
-inline CpuData::Trap CommonInstruction::CMPB::execute ()
+inline bool CommonInstruction::CMPB::execute ()
 {
     CondData<u8> source, destination;
 
     if (!readSourceOperand (&source) || !readDestinationOperand (&destination))
-        return CpuData::Trap::BusError;
+        return false;
 
     u16 tmp = (u8) (source - destination);
 
@@ -41,7 +41,7 @@ inline CpuData::Trap CommonInstruction::CMPB::execute ()
         .V = ((source & 0x80) != (destination & 0x80)) && ((destination & 0x80) == (tmp & 0x80)),
         .C = (bool) ((source - destination) & 0x100)});
 
-    return CpuData::Trap::None;
+    return true;
 }
 
 #endif // _CMPB_H_

@@ -28,7 +28,7 @@ class CommonInstruction::ROR : public SingleOperandInstruction, public WithFacto
 {
 public:
     ROR (CpuData* cpu, u16 instruction);
-    CpuData::Trap execute () override;
+    bool execute () override;
 };
 
 inline CommonInstruction::ROR::ROR (CpuData* cpu, u16 instruction)
@@ -36,25 +36,25 @@ inline CommonInstruction::ROR::ROR (CpuData* cpu, u16 instruction)
     SingleOperandInstruction (cpu, instruction)
 {}
 
-inline CpuData::Trap CommonInstruction::ROR::execute ()
+inline bool CommonInstruction::ROR::execute ()
 {
     CondData<u16> contents;
     if (!readOperand (&contents))
-        return CpuData::Trap::BusError;
+        return false;
 
     u16 result = contents >> 1;
     if (isSet (PSW_C))
         result |= 0100000;
 
     if (!writeOperand (result))
-        return CpuData::Trap::BusError;
+        return false;
 
     setPSW (ConditionCodes {.N = (bool) (result & 0100000),
         .Z = result == 0,
         .V = (bool) (result & 0100000) != (bool) (contents & 0000001),
         .C = (bool) (contents & 0000001)});
 
-    return CpuData::Trap::None;
+    return true;
 }
 
 #endif // _ROR_H_

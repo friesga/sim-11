@@ -23,7 +23,7 @@ class CommonInstruction::MOVB : public DoubleOperandInstruction, public WithFact
 {
 public:
     MOVB (CpuData* cpu, u16 instruction);
-    CpuData::Trap execute () override;
+    bool execute () override;
 };
 
 inline CommonInstruction::MOVB::MOVB (CpuData* cpu, u16 instruction)
@@ -31,12 +31,12 @@ inline CommonInstruction::MOVB::MOVB (CpuData* cpu, u16 instruction)
     DoubleOperandInstruction (cpu, instruction)
 {}
 
-inline CpuData::Trap CommonInstruction::MOVB::execute ()
+inline bool CommonInstruction::MOVB::execute ()
 {
     CondData<u8> source;
 
     if (!readSourceOperand (&source))
-        return CpuData::Trap::BusError;
+        return false;
 
     s8 tmp = (s8) source;
 
@@ -50,13 +50,13 @@ inline CpuData::Trap CommonInstruction::MOVB::execute ()
         cpu_->registers ()[destinationOperandLocation_] = tmp;
     else
         if (!destinationOperandLocation_.write<u8> (tmp))
-            return CpuData::Trap::BusError;
+            return false;
 
     setPSW (ConditionCodes ({.N = (bool) (tmp & 0x80),
         .Z = tmp == 0,
         .V = false}));
 
-    return CpuData::Trap::None;
+    return true;
 }
 
 #endif // _MOVB_H_

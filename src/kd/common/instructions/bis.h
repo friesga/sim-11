@@ -27,7 +27,7 @@ class CommonInstruction::BIS : public DoubleOperandInstruction, public WithFacto
 {
 public:
     BIS (CpuData* cpu, u16 instruction);
-    CpuData::Trap execute () override;
+    bool execute () override;
 };
 
 inline CommonInstruction::BIS::BIS (CpuData* cpu, u16 instruction)
@@ -35,24 +35,24 @@ inline CommonInstruction::BIS::BIS (CpuData* cpu, u16 instruction)
     DoubleOperandInstruction (cpu, instruction)
 {}
 
-inline CpuData::Trap CommonInstruction::BIS::execute ()
+inline bool CommonInstruction::BIS::execute ()
 {
     CondData<u16> source, destination;
 
     if (!readSourceOperand (&source) ||
         !readDestinationOperand (&destination))
-        return CpuData::Trap::BusError;
+        return false;
 
     u16 tmp = source | destination;
 
     if (!writeDestinationOperand (tmp))
-        return CpuData::Trap::BusError;
+        return false;
 
     setPSW (ConditionCodes {.N = (bool) (tmp & 0x8000),
         .Z = tmp == 0,
         .V = false});
 
-    return CpuData::Trap::None;
+    return true;
 }
 
 #endif // _BIS_H_

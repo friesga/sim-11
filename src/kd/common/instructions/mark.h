@@ -26,7 +26,7 @@ class CommonInstruction::MARK : public MarkInstruction, public WithFactory<MARK>
 {
 public:
     MARK (CpuData* cpu, u16 instruction);
-    CpuData::Trap execute () override;
+    bool execute () override;
 };
 
 inline CommonInstruction::MARK::MARK (CpuData* cpu, u16 instruction)
@@ -34,7 +34,7 @@ inline CommonInstruction::MARK::MARK (CpuData* cpu, u16 instruction)
     MarkInstruction (cpu, instruction)
 {}
 
-inline CpuData::Trap CommonInstruction::MARK::execute ()
+inline bool CommonInstruction::MARK::execute ()
 {
     GeneralRegisters& registers = cpu_->registers ();
 
@@ -43,7 +43,7 @@ inline CpuData::Trap CommonInstruction::MARK::execute ()
     registers[5] = cpu_->fetchWord (registers[6]);
     registers[6] += 2;
 
-    return CpuData::Trap::None;
+    return true;
 }
 
 #endif // _MARK_H_

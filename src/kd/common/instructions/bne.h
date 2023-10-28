@@ -22,7 +22,7 @@ class CommonInstruction::BNE : public BranchInstruction, public WithFactory<BNE>
 {
 public:
     BNE (CpuData* cpu, u16 instruction);
-    CpuData::Trap execute () override;
+    bool execute () override;
 };
 
 inline CommonInstruction::BNE::BNE (CpuData* cpu, u16 instruction)
@@ -30,10 +30,10 @@ inline CommonInstruction::BNE::BNE (CpuData* cpu, u16 instruction)
     BranchInstruction (cpu, instruction)
 {}
 
-inline CpuData::Trap CommonInstruction::BNE::execute ()
+inline bool CommonInstruction::BNE::execute ()
 {
     executeBranchIf (!isSet (PSW_Z));
-    return CpuData::Trap::None;
+    return true;
 }
 
 #endif // _BNE_H_

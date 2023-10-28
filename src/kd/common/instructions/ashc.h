@@ -36,7 +36,7 @@ class CommonInstruction::ASHC : public EisInstruction, public WithFactory<ASHC>
 {
 public:
     ASHC (CpuData* cpu, u16 instruction);
-    CpuData::Trap execute () override;
+    bool execute () override;
 };
 
 inline CommonInstruction::ASHC::ASHC (CpuData* cpu, u16 instruction)
@@ -44,7 +44,7 @@ inline CommonInstruction::ASHC::ASHC (CpuData* cpu, u16 instruction)
     EisInstruction (cpu, instruction)
 {}
 
-inline CpuData::Trap CommonInstruction::ASHC::execute ()
+inline bool CommonInstruction::ASHC::execute ()
 {
     u16 regNr = getRegisterNr ();
     GeneralRegisters& registers = cpu_->registers ();
@@ -54,7 +54,7 @@ inline CpuData::Trap CommonInstruction::ASHC::execute ()
 
     CondData<u16> source;
     if (!readOperand (&source))
-        return CpuData::Trap::BusError;
+        return false;
 
     if ((source & 0x3F) == 0x20)
     {
@@ -94,7 +94,7 @@ inline CpuData::Trap CommonInstruction::ASHC::execute ()
     setPSW (ConditionCodes {.N = (bool) (tmps32 & 0x80000000),
         .Z = tmps32 == 0});
 
-    return CpuData::Trap::None;
+    return true;
 }
 
 #endif // _ASHC_H_

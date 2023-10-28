@@ -28,8 +28,8 @@ public:
 
 protected:
 	u16 getRegister ();
-	CpuData::Trap returnFISresult (Float result, u16 registerNumber);
-	CpuData::Trap executeFISinstruction (u16 stackPointer, 
+	bool returnFISresult (Float result, u16 registerNumber);
+	bool executeFISinstruction (u16 stackPointer, 
 		std::function<bool(Float, Float)> argumentsValid,
 		std::function<Float(Float, Float)>);
 };

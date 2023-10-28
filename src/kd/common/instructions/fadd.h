@@ -29,7 +29,7 @@ class CommonInstruction::FADD : public FISInstruction, public WithFactory<FADD>
 {
 public:
     FADD (CpuData* cpu, u16 instruction);
-    CpuData::Trap execute () override;
+    bool execute () override;
 };
 
 inline CommonInstruction::FADD::FADD (CpuData* cpu, u16 instruction)
@@ -37,7 +37,7 @@ inline CommonInstruction::FADD::FADD (CpuData* cpu, u16 instruction)
     FISInstruction (cpu, instruction)
 {}
 
-inline CpuData::Trap CommonInstruction::FADD::execute ()
+inline bool CommonInstruction::FADD::execute ()
 {
     return executeFISinstruction (getRegister (),
         [](Float f1, Float f2) { return true; },

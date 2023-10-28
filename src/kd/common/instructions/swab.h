@@ -26,7 +26,7 @@ class CommonInstruction::SWAB : public SingleOperandInstruction, public WithFact
 {
 public:
     SWAB (CpuData* cpu, u16 instruction);
-    CpuData::Trap execute () override;
+    bool execute () override;
 };
 
 inline CommonInstruction::SWAB::SWAB (CpuData* cpu, u16 instruction)
@@ -34,17 +34,17 @@ inline CommonInstruction::SWAB::SWAB (CpuData* cpu, u16 instruction)
     SingleOperandInstruction (cpu, instruction)
 {}
 
-inline CpuData::Trap CommonInstruction::SWAB::execute ()
+inline bool CommonInstruction::SWAB::execute ()
 {
     CondData<u16> operand;
     if (!readOperand (&operand))
-        return CpuData::Trap::BusError;
+        return false;
 
     // Swap bytes in the operand and write it to the operand location
     operand = ((operand & 0x00FF) << 8) | ((operand >> 8) & 0xFF);
 
     if (!writeOperand (operand.value ()))
-        return CpuData::Trap::BusError;
+        return false;
 
     /*
     setConditionCodeIf_ClearElse (PSW_N, operand & 0x80);
@@ -59,7 +59,7 @@ inline CpuData::Trap CommonInstruction::SWAB::execute ()
         .C = false});
 
 
-    return CpuData::Trap::None;
+    return true;
 }
 
 

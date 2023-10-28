@@ -33,7 +33,7 @@ class KDF11_AInstruction::MTPD : public SingleOperandInstruction, public WithFac
 {
 public:
     MTPD (CpuData* cpu, u16 instruction);
-    CpuData::Trap execute () override;
+    bool execute () override;
 };
 
 inline KDF11_AInstruction::MTPD::MTPD (CpuData* cpu, u16 instruction)
@@ -41,7 +41,7 @@ inline KDF11_AInstruction::MTPD::MTPD (CpuData* cpu, u16 instruction)
     SingleOperandInstruction (cpu, instruction)
 {}
 
-inline CpuData::Trap KDF11_AInstruction::MTPD::execute ()
+inline bool KDF11_AInstruction::MTPD::execute ()
 {
     u16 tmp;
     
@@ -51,13 +51,13 @@ inline CpuData::Trap KDF11_AInstruction::MTPD::execute ()
     operandLocation_ =  getOperandLocation (cpu_->registers ());
 
     if (!cpu_->popWord (&tmp) || !operandLocation_.writePrevMode (tmp))
-        return CpuData::Trap::BusError;
+        return false;
         
     setPSW (ConditionCodes {.N = (bool) (tmp & 0100000),
         .Z = tmp == 0,
         .V = false});
 
-    return CpuData::Trap::None;
+    return true;
 }
 
 #endif // _MTPD_H_

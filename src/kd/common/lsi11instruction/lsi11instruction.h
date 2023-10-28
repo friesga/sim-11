@@ -15,8 +15,8 @@ class LSI11Instruction
 {
 public:
 	// All derived classes will have to provide an execute function
-	// ToDo: Make execute() a pute virtual function
-	virtual CpuData::Trap execute () { return CpuData::Trap::None; };
+	// ToDo: Make execute() a pure virtual function
+	virtual bool execute () { return true; };
 	string mnemonic ();
 
 protected:

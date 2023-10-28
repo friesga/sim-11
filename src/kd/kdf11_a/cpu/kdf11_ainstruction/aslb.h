@@ -24,7 +24,7 @@ class KDF11_AInstruction::ASLB : public SingleOperandInstruction, public WithFac
 {
 public:
     ASLB (CpuData* cpu, u16 instruction);
-    CpuData::Trap execute () override;
+    bool execute () override;
 };
 
 inline KDF11_AInstruction::ASLB::ASLB (CpuData* cpu, u16 instruction)
@@ -32,11 +32,11 @@ inline KDF11_AInstruction::ASLB::ASLB (CpuData* cpu, u16 instruction)
     SingleOperandInstruction (cpu, instruction)
 {}
 
-inline CpuData::Trap KDF11_AInstruction::ASLB::execute ()
+inline bool KDF11_AInstruction::ASLB::execute ()
 {
     CondData<u8> source;
     if (!readOperand (&source))
-        return CpuData::Trap::BusError;
+        return false;
 
     u8 result = (u8) (source << 1);
 
@@ -46,9 +46,9 @@ inline CpuData::Trap KDF11_AInstruction::ASLB::execute ()
         .C = (bool) (source & 0x80)});
 
     if (!writeOperand (result))
-        return CpuData::Trap::BusError;
+        return false;
 
-    return CpuData::Trap::None;
+    return true;
 }
 
 #endif // _ASLB_H_

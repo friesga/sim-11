@@ -19,7 +19,7 @@ class CommonInstruction::INCB : public SingleOperandInstruction, public WithFact
 {
 public:
     INCB (CpuData* cpu, u16 instruction);
-    CpuData::Trap execute () override;
+    bool execute () override;
 };
 
 inline CommonInstruction::INCB::INCB (CpuData* cpu, u16 instruction)
@@ -27,22 +27,22 @@ inline CommonInstruction::INCB::INCB (CpuData* cpu, u16 instruction)
     SingleOperandInstruction (cpu, instruction)
 {}
 
-inline CpuData::Trap CommonInstruction::INCB::execute ()
+inline bool CommonInstruction::INCB::execute ()
 {
     CondData<u8> source;
     if (!readOperand (&source))
-        return CpuData::Trap::BusError;
+        return false;
 
     u8 result = (u8)(source + 1);
 
     if (!writeOperand (result))
-        return CpuData::Trap::BusError;
+        return false;
 
     setPSW (ConditionCodes {.N = (bool) (result & 0x80),
         .Z = result == 0,
         .V = source == 000177});
 
-    return CpuData::Trap::None;
+    return true;
 }
 
 #endif // _INCB_H_

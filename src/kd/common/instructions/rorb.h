@@ -23,7 +23,7 @@ class CommonInstruction::RORB : public SingleOperandInstruction, public WithFact
 {
 public:
     RORB (CpuData* cpu, u16 instruction);
-    CpuData::Trap execute () override;
+    bool execute () override;
 };
 
 inline CommonInstruction::RORB::RORB (CpuData* cpu, u16 instruction)
@@ -31,25 +31,25 @@ inline CommonInstruction::RORB::RORB (CpuData* cpu, u16 instruction)
     SingleOperandInstruction (cpu, instruction)
 {}
 
-inline CpuData::Trap CommonInstruction::RORB::execute ()
+inline bool CommonInstruction::RORB::execute ()
 {
     CondData<u8> source;
     if (!readOperand (&source))
-        return CpuData::Trap::BusError;
+        return false;
 
     u8 result = source >> 1;
     if (isSet (PSW_C))
         result |= 0x80;
 
     if (!writeOperand (result))
-        return CpuData::Trap::BusError;
+        return false;
 
     setPSW (ConditionCodes {.N = (bool) (result & 0x80),
         .Z = result == 0,
         .V = (bool) (result & 0x80) != (bool) (source & 0x01),
         .C = (bool) (source & 0x01)});
 
-    return CpuData::Trap::None;
+    return true;
 }
 
 #endif // _RORB_H_

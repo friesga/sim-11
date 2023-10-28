@@ -26,7 +26,7 @@ class CommonInstruction::ADC : public SingleOperandInstruction, public WithFacto
 {
 public:
     ADC (CpuData* cpu, u16 instruction);
-    CpuData::Trap execute () override;
+    bool execute () override;
 };
 
 inline CommonInstruction::ADC::ADC (CpuData* cpu, u16 instruction)
@@ -34,24 +34,24 @@ inline CommonInstruction::ADC::ADC (CpuData* cpu, u16 instruction)
     SingleOperandInstruction (cpu, instruction)
 {}
 
-inline CpuData::Trap CommonInstruction::ADC::execute ()
+inline bool CommonInstruction::ADC::execute ()
 {
     CondData<u16> contents;
     if (!readOperand (&contents))
-        return CpuData::Trap::BusError;
+        return false;
 
     u16 cBit = isSet (PSW_C) ? 1 : 0;
     u16 result = contents + cBit;
 
     if (!writeOperand (result))
-        return CpuData::Trap::BusError;
+        return false;
 
      setPSW (ConditionCodes ({.N = (bool) (result & 0x8000),
         .Z = result == 0,
         .V = contents == 0077777 && isSet (PSW_C),
         .C = contents == 0177777 && isSet (PSW_C)}));
 
-    return CpuData::Trap::None;
+    return true;
 }
 
 #endif // _ADC_H_

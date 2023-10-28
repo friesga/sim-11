@@ -24,7 +24,7 @@ class CommonInstruction::CLR : public SingleOperandInstruction, public WithFacto
 {
 public:
     CLR (CpuData* cpu, u16 instruction);
-    CpuData::Trap execute () override;
+    bool execute () override;
 };
 
 inline CommonInstruction::CLR::CLR (CpuData* cpu, u16 instruction)
@@ -32,17 +32,17 @@ inline CommonInstruction::CLR::CLR (CpuData* cpu, u16 instruction)
     SingleOperandInstruction (cpu, instruction)
 {}
 
-inline CpuData::Trap CommonInstruction::CLR::execute ()
+inline bool CommonInstruction::CLR::execute ()
 {
     if (!writeOperand ((u16)0))
-        return CpuData::Trap::BusError;
+        return false;
 
     setPSW (ConditionCodes {.N = false,
         .Z = true,
         .V = false,
         .C = false});
 
-    return CpuData::Trap::None;
+    return true;
 }
 
 #endif // _CLR_H_

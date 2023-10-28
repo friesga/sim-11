@@ -19,7 +19,7 @@ class  KDF11_AInstruction::BITB : public KD11DoubleOperandInstruction, public Wi
 {
 public:
     BITB (CpuData* cpu, u16 instruction);
-    CpuData::Trap execute () override;
+    bool execute () override;
 };
 
 inline  KDF11_AInstruction::BITB::BITB (CpuData* cpu, u16 instruction)
@@ -27,12 +27,12 @@ inline  KDF11_AInstruction::BITB::BITB (CpuData* cpu, u16 instruction)
     KD11DoubleOperandInstruction (cpu, instruction)
 {}
 
-inline CpuData::Trap  KDF11_AInstruction::BITB::execute ()
+inline bool  KDF11_AInstruction::BITB::execute ()
 {
     CondData<u8> source, destination;
 
     if (!readSourceOperand (&source) || !readDestinationOperand (&destination))
-        return CpuData::Trap::BusError;
+        return false;
 
     u16 tmp = source & destination;
 
@@ -40,7 +40,7 @@ inline CpuData::Trap  KDF11_AInstruction::BITB::execute ()
         .Z = tmp == 0,
         .V = false});
 
-    return CpuData::Trap::None;
+    return true;
 }
 
 #endif // _BITB_H_

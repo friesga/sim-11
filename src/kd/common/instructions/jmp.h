@@ -28,7 +28,7 @@ class CommonInstruction::JMP : public SingleOperandInstruction, public WithFacto
 {
 public:
     JMP (CpuData* cpu, u16 instruction);
-    CpuData::Trap execute () override;
+    bool execute () override;
 };
 
 inline CommonInstruction::JMP::JMP (CpuData* cpu, u16 instruction)
@@ -36,19 +36,19 @@ inline CommonInstruction::JMP::JMP (CpuData* cpu, u16 instruction)
     SingleOperandInstruction (cpu, instruction)
 {}
 
-inline CpuData::Trap CommonInstruction::JMP::execute ()
+inline bool CommonInstruction::JMP::execute ()
 {
     operandLocation_ = getOperandLocation (cpu_->registers ());
     if (operandLocation_.isA<MemoryOperandLocation> ())
     {
         cpu_->registers ()[7] = operandLocation_;
-        return CpuData::Trap::None;
+        return true;
     }
 
     // Illegal instruction
     trace.trap (TrapRecordType::TRAP_RADDR, 04);
     cpu_->setTrap (CpuData::Trap::BusError);
-    return CpuData::Trap::BusError;
+    return false;
 }
 
 

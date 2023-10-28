@@ -19,7 +19,7 @@ class CommonInstruction::NEGB : public SingleOperandInstruction, public WithFact
 {
 public:
     NEGB (CpuData* cpu, u16 instruction);
-    CpuData::Trap execute () override;
+    bool execute () override;
 };
 
 inline CommonInstruction::NEGB::NEGB (CpuData* cpu, u16 instruction)
@@ -27,24 +27,24 @@ inline CommonInstruction::NEGB::NEGB (CpuData* cpu, u16 instruction)
     SingleOperandInstruction (cpu, instruction)
 {}
 
-inline CpuData::Trap CommonInstruction::NEGB::execute ()
+inline bool CommonInstruction::NEGB::execute ()
 {
     CondData<u8> operand;
     if (!readOperand (&operand))
-        return CpuData::Trap::BusError;
+        return false;
 
     if (operand != 0200)
         operand = -operand;
 
     if (!writeOperand (operand.value ()))
-        return CpuData::Trap::BusError;
+        return false;
 
     setPSW (ConditionCodes {.N = (bool) (operand & 0x80),
         .Z = operand == 0,
         .V = operand == 0200,
         .C = operand != 0});
 
-    return CpuData::Trap::None;
+    return true;
 }
 
 #endif // _NEGB_H_

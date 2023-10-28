@@ -26,7 +26,7 @@ class CommonInstruction::NEG : public SingleOperandInstruction, public WithFacto
 {
 public:
     NEG (CpuData* cpu, u16 instruction);
-    CpuData::Trap execute () override;
+    bool execute () override;
 };
 
 inline CommonInstruction::NEG::NEG (CpuData* cpu, u16 instruction)
@@ -34,25 +34,25 @@ inline CommonInstruction::NEG::NEG (CpuData* cpu, u16 instruction)
     SingleOperandInstruction (cpu, instruction)
 {}
 
-inline CpuData::Trap CommonInstruction::NEG::execute ()
+inline bool CommonInstruction::NEG::execute ()
 {
     CondData<u16> operand;
     if (!readOperand (&operand))
-        return CpuData::Trap::BusError;
+        return false;
 
     // Negate the operand and write it to the operand location
     if (operand != 0100000)
         operand = -operand;
 
     if (!writeOperand (operand.value ()))
-        return CpuData::Trap::BusError;
+        return false;
 
     setPSW (ConditionCodes {.N = (bool) (operand & 0100000),
         .Z = operand == 0,
         .V = operand == 0100000,
         .C = operand != 0});
 
-    return CpuData::Trap::None;
+    return true;
 }
 
 #endif // _NEG_H_

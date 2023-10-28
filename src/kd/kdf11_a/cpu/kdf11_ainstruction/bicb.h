@@ -19,7 +19,7 @@ class KDF11_AInstruction::BICB : public KD11DoubleOperandInstruction, public Wit
 {
 public:
     BICB (CpuData* cpu, u16 instruction);
-    CpuData::Trap execute () override;
+    bool execute () override;
 };
 
 inline KDF11_AInstruction::BICB::BICB (CpuData* cpu, u16 instruction)
@@ -27,12 +27,12 @@ inline KDF11_AInstruction::BICB::BICB (CpuData* cpu, u16 instruction)
     KD11DoubleOperandInstruction (cpu, instruction)
 {}
 
-inline CpuData::Trap KDF11_AInstruction::BICB::execute ()
+inline bool KDF11_AInstruction::BICB::execute ()
 {
     CondData<u8> source, destination;
 
     if (!readSourceOperand (&source) || !readDestinationOperand (&destination))
-        return CpuData::Trap::BusError;
+        return false;
 
     u8 tmp = (u8)(~source & destination);
 
@@ -41,9 +41,9 @@ inline CpuData::Trap KDF11_AInstruction::BICB::execute ()
         .V = false});
 
     if (!writeDestinationOperand (tmp))
-        return CpuData::Trap::BusError;
+        return false;
 
-    return CpuData::Trap::None;
+    return true;
 }
 
 #endif // _BICB_H_

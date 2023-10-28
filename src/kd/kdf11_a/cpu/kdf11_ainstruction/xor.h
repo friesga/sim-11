@@ -25,7 +25,7 @@ class KDF11_AInstruction::XOR : public EisInstruction, public WithFactory<XOR>
 {
 public:
     XOR (CpuData* cpu, u16 instruction);
-    CpuData::Trap execute () override;
+    bool execute () override;
 };
 
 inline KDF11_AInstruction::XOR::XOR (CpuData* cpu, u16 instruction)
@@ -33,7 +33,7 @@ inline KDF11_AInstruction::XOR::XOR (CpuData* cpu, u16 instruction)
     EisInstruction (cpu, instruction)
 {}
 
-inline CpuData::Trap KDF11_AInstruction::XOR::execute ()
+inline bool KDF11_AInstruction::XOR::execute ()
 {
     u16 regNr = getRegisterNr ();
     GeneralRegisters& registers = cpu_->registers ();
@@ -42,7 +42,7 @@ inline CpuData::Trap KDF11_AInstruction::XOR::execute ()
 
     CondData<u16> destination;
     if (!readOperand (&destination))
-        return CpuData::Trap::BusError;
+        return false;
 
     u16 result = source ^ destination;
 
@@ -51,9 +51,9 @@ inline CpuData::Trap KDF11_AInstruction::XOR::execute ()
         .V = false});
 
     if (!writeOperand (result))
-        return CpuData::Trap::BusError;
+        return false;
 
-    return CpuData::Trap::None;
+    return true;
 }
 
 #endif // _XOR_H_

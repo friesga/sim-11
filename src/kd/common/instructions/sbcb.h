@@ -19,7 +19,7 @@ class CommonInstruction::SBCB : public SingleOperandInstruction, public WithFact
 {
 public:
     SBCB (CpuData* cpu, u16 instruction);
-    CpuData::Trap execute () override;
+    bool execute () override;
 };
 
 inline CommonInstruction::SBCB::SBCB (CpuData* cpu, u16 instruction)
@@ -27,24 +27,24 @@ inline CommonInstruction::SBCB::SBCB (CpuData* cpu, u16 instruction)
     SingleOperandInstruction (cpu, instruction)
 {}
 
-inline CpuData::Trap CommonInstruction::SBCB::execute ()
+inline bool CommonInstruction::SBCB::execute ()
 {
     CondData<u8> source;
     if (!readOperand (&source))
-        return CpuData::Trap::BusError;
+        return false;
 
     u16 cBit = isSet (PSW_C) ? 1 : 0;
     u8 destination = (u8) (source - cBit);
 
     if (!writeOperand (destination))
-        return CpuData::Trap::BusError;
+        return false;
 
     setPSW (ConditionCodes {.N = (bool) (destination & 0x80),
         .Z = destination == 0,
         .V = source == 0200,
         .C = source == 0 && cBit});
 
-    return CpuData::Trap::None;
+    return true;
 }
 
 #endif // _SBCB_H_

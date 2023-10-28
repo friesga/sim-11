@@ -28,7 +28,7 @@ class KDF11_AInstruction::ASR : public SingleOperandInstruction, public WithFact
 {
 public:
     ASR (CpuData* cpu, u16 instruction);
-    CpuData::Trap execute () override;
+    bool execute () override;
 };
 
 inline KDF11_AInstruction::ASR::ASR (CpuData* cpu, u16 instruction)
@@ -36,11 +36,11 @@ inline KDF11_AInstruction::ASR::ASR (CpuData* cpu, u16 instruction)
     SingleOperandInstruction (cpu, instruction)
 {}
 
-inline CpuData::Trap KDF11_AInstruction::ASR::execute ()
+inline bool KDF11_AInstruction::ASR::execute ()
 {
     CondData<u16> contents;
     if (!readOperand (&contents))
-        return CpuData::Trap::BusError;
+        return false;
 
     u16 result = contents;
     if (result & 0100000)
@@ -57,9 +57,9 @@ inline CpuData::Trap KDF11_AInstruction::ASR::execute ()
         .C = (bool) (contents & 1)});
 
     if (!writeOperand (result))
-        return CpuData::Trap::BusError;
+        return false;
 
-    return CpuData::Trap::None;
+    return true;
 }
 
 #endif // _ASR_H_

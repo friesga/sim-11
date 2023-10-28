@@ -30,7 +30,7 @@ class CommonInstruction::TRAP : public NoOperandInstruction, public WithFactory<
 {
 public:
     TRAP (CpuData* cpu, u16 instruction);
-    CpuData::Trap execute () override;
+    bool execute () override;
 };
 
 inline CommonInstruction::TRAP::TRAP (CpuData* cpu, u16 instruction)
@@ -38,10 +38,10 @@ inline CommonInstruction::TRAP::TRAP (CpuData* cpu, u16 instruction)
     NoOperandInstruction (cpu, instruction)
 {}
 
-inline CpuData::Trap CommonInstruction::TRAP::execute ()
+inline bool CommonInstruction::TRAP::execute ()
 {
     cpu_->setTrap (CpuData::Trap::TrapInstruction);
-    return CpuData::Trap::None;
+    return true;
 }
 
 #endif // _TRAP_H_

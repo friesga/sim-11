@@ -24,7 +24,7 @@ class CommonInstruction::ASLB : public SingleOperandInstruction, public WithFact
 {
 public:
     ASLB (CpuData* cpu, u16 instruction);
-    CpuData::Trap execute () override;
+    bool execute () override;
 };
 
 inline CommonInstruction::ASLB::ASLB (CpuData* cpu, u16 instruction)
@@ -32,23 +32,23 @@ inline CommonInstruction::ASLB::ASLB (CpuData* cpu, u16 instruction)
     SingleOperandInstruction (cpu, instruction)
 {}
 
-inline CpuData::Trap CommonInstruction::ASLB::execute ()
+inline bool CommonInstruction::ASLB::execute ()
 {
     CondData<u8> source;
     if (!readOperand (&source))
-        return CpuData::Trap::BusError;
+        return false;
 
     u8 result = (u8)(source << 1);
 
     if (!writeOperand (result))
-        return CpuData::Trap::BusError;
+        return false;
 
     setPSW (ConditionCodes {.N = (bool) (result & 0x80),
         .Z = result == 0,
         .V = (bool) ((result & 0x80) ^ (source & 0x80)),
         .C = (bool) (source & 0x80)});
 
-    return CpuData::Trap::None;
+    return true;
 }
 
 #endif // _ASLB_H_

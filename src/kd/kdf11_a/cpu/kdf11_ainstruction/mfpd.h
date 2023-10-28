@@ -30,7 +30,7 @@ class KDF11_AInstruction::MFPD : public SingleOperandInstruction, public WithFac
 {
 public:
     MFPD (CpuData* cpu, u16 instruction);
-    CpuData::Trap execute () override;
+    bool execute () override;
 };
 
 inline KDF11_AInstruction::MFPD::MFPD (CpuData* cpu, u16 instruction)
@@ -38,7 +38,7 @@ inline KDF11_AInstruction::MFPD::MFPD (CpuData* cpu, u16 instruction)
     SingleOperandInstruction (cpu, instruction)
 {}
 
-inline CpuData::Trap KDF11_AInstruction::MFPD::execute ()
+inline bool KDF11_AInstruction::MFPD::execute ()
 {
     CondData<u16> source;
 
@@ -48,16 +48,16 @@ inline CpuData::Trap KDF11_AInstruction::MFPD::execute ()
     source = operandLocation_.prevModeContents<CondData<u16>> ();
 
     if (!source.hasValue ())
-        return CpuData::Trap::BusError;
+        return false;
 
     if (!cpu_->pushWord (source))
-        return CpuData::Trap::BusError;
+        return false;
 
     setPSW (ConditionCodes {.N = (bool) (source & 0100000),
         .Z = source == 0,
         .V = false});
 
-    return CpuData::Trap::None;
+    return true;
 }
 
 #endif // _MFPD_H_

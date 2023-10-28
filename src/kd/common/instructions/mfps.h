@@ -27,7 +27,7 @@ class CommonInstruction::MFPS : public SingleOperandInstruction, public WithFact
 {
 public:
     MFPS (CpuData* cpu, u16 instruction);
-    CpuData::Trap execute () override;
+    bool execute () override;
 };
 
 inline CommonInstruction::MFPS::MFPS (CpuData* cpu, u16 instruction)
@@ -35,7 +35,7 @@ inline CommonInstruction::MFPS::MFPS (CpuData* cpu, u16 instruction)
     SingleOperandInstruction (cpu, instruction)
 {}
 
-inline CpuData::Trap CommonInstruction::MFPS::execute ()
+inline bool CommonInstruction::MFPS::execute ()
 {
     u8 contents = (u8) cpu_->psw ();
     operandLocation_ = getOperandLocation (cpu_->registers ());
@@ -50,14 +50,14 @@ inline CpuData::Trap CommonInstruction::MFPS::execute ()
     else
     {
         if (!writeOperand (contents))
-            return CpuData::Trap::BusError;
+            return false;
     }
     
     setPSW (ConditionCodes {.N = (bool) (contents & 0x80),
         .Z = (contents & 0xFF) == 0,
         .V = false});
 
-    return CpuData::Trap::None;
+    return true;
 }
 
 #endif // _MFPS_H_

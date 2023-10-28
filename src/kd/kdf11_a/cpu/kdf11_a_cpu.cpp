@@ -127,8 +127,13 @@ void KDF11_A_Cpu::execInstr ()
     }
     registers_[7] += 2;
 
-    unique_ptr<LSI11Instruction> instr = kdf11_aInstruction.decode (this, instructionWord);
-    CpuData::Trap returnedTrap = instr->execute ();
+    unique_ptr<LSI11Instruction> instr = 
+        kdf11_aInstruction.decode (this, instructionWord);
+
+    // execute() returns true if the instruction was completed; false if it
+    // was aborted due to an error condition. In that case a trap has been
+    // set.
+    instr->execute ();
 }
 
 

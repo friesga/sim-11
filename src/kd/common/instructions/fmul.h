@@ -28,7 +28,7 @@ class CommonInstruction::FMUL : public FISInstruction, public WithFactory<FMUL>
 {
 public:
     FMUL (CpuData* cpu, u16 instruction);
-    CpuData::Trap execute () override;
+    bool execute () override;
 };
 
 inline CommonInstruction::FMUL::FMUL (CpuData* cpu, u16 instruction)
@@ -36,7 +36,7 @@ inline CommonInstruction::FMUL::FMUL (CpuData* cpu, u16 instruction)
     FISInstruction (cpu, instruction)
 {}
 
-inline CpuData::Trap CommonInstruction::FMUL::execute ()
+inline bool CommonInstruction::FMUL::execute ()
 {
     return executeFISinstruction (getRegister (),
         [](Float f1, Float f2) { return true; },

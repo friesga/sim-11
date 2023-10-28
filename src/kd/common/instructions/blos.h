@@ -23,7 +23,7 @@ class CommonInstruction::BLOS : public BranchInstruction, public WithFactory<BLO
 {
 public:
     BLOS (CpuData* cpu, u16 instruction);
-    CpuData::Trap execute () override;
+    bool execute () override;
 };
 
 inline CommonInstruction::BLOS::BLOS (CpuData* cpu, u16 instruction)
@@ -31,10 +31,10 @@ inline CommonInstruction::BLOS::BLOS (CpuData* cpu, u16 instruction)
     BranchInstruction (cpu, instruction)
 {}
 
-inline CpuData::Trap CommonInstruction::BLOS::execute ()
+inline bool CommonInstruction::BLOS::execute ()
 {
     executeBranchIf (isSet (PSW_C) || isSet (PSW_Z));
-    return CpuData::Trap::None;
+    return true;
 }
 
 #endif // _BLOS_H_

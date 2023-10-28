@@ -26,7 +26,7 @@ class CommonInstruction::BIT : public DoubleOperandInstruction, public WithFacto
 {
 public:
     BIT (CpuData* cpu, u16 instruction);
-    CpuData::Trap execute () override;
+    bool execute () override;
 };
 
 inline CommonInstruction::BIT::BIT (CpuData* cpu, u16 instruction)
@@ -34,13 +34,13 @@ inline CommonInstruction::BIT::BIT (CpuData* cpu, u16 instruction)
     DoubleOperandInstruction (cpu, instruction)
 {}
 
-inline CpuData::Trap CommonInstruction::BIT::execute ()
+inline bool CommonInstruction::BIT::execute ()
 {
     CondData<u16> source, destination;
 
     if (!readSourceOperand (&source) ||
         !readDestinationOperand (&destination))
-        return CpuData::Trap::BusError;
+        return false;
 
     u16 tmp = source & destination;
 
@@ -48,7 +48,7 @@ inline CpuData::Trap CommonInstruction::BIT::execute ()
         .Z = tmp == 0,
         .V = false});
 
-    return CpuData::Trap::None;
+    return true;
 }
 
 #endif // _BIT_H_

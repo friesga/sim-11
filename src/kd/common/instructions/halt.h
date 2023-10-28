@@ -20,7 +20,7 @@ class CommonInstruction::HALT : public NoOperandInstruction, public WithFactory<
 {
 public:
     HALT (CpuData* cpu, u16 instruction);
-    CpuData::Trap execute () override;
+    bool execute () override;
 };
 
 inline CommonInstruction::HALT::HALT (CpuData* cpu, u16 instruction)
@@ -28,10 +28,10 @@ inline CommonInstruction::HALT::HALT (CpuData* cpu, u16 instruction)
     NoOperandInstruction (cpu, instruction)
 {}
 
-inline CpuData::Trap CommonInstruction::HALT::execute ()
+inline bool CommonInstruction::HALT::execute ()
 {
     cpu_->halt ();
-    return CpuData::Trap::None;
+    return true;
 }
 
 #endif // _HALT_H_

@@ -21,7 +21,7 @@ class CommonInstruction::BCS : public BranchInstruction, public WithFactory<BCS>
 {
 public:
     BCS (CpuData* cpu, u16 instruction);
-    CpuData::Trap execute () override;
+    bool execute () override;
 };
 
 inline CommonInstruction::BCS::BCS (CpuData* cpu, u16 instruction)
@@ -29,10 +29,10 @@ inline CommonInstruction::BCS::BCS (CpuData* cpu, u16 instruction)
     BranchInstruction (cpu, instruction)
 {}
 
-inline CpuData::Trap CommonInstruction::BCS::execute ()
+inline bool CommonInstruction::BCS::execute ()
 {
     executeBranchIf (isSet (PSW_C));
-    return CpuData::Trap::None;
+    return true;
 }
 
 #endif // _BCS_H_

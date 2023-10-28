@@ -28,7 +28,7 @@ class CommonInstruction::ASR : public SingleOperandInstruction, public WithFacto
 {
 public:
     ASR (CpuData* cpu, u16 instruction);
-    CpuData::Trap execute () override;
+    bool execute () override;
 };
 
 inline CommonInstruction::ASR::ASR (CpuData* cpu, u16 instruction)
@@ -36,11 +36,11 @@ inline CommonInstruction::ASR::ASR (CpuData* cpu, u16 instruction)
     SingleOperandInstruction (cpu, instruction)
 {}
 
-inline CpuData::Trap CommonInstruction::ASR::execute ()
+inline bool CommonInstruction::ASR::execute ()
 {
     CondData<u16> contents;
     if (!readOperand (&contents))
-        return CpuData::Trap::BusError;
+        return false;
 
     u16 result = contents;
     if (result & 0100000)
@@ -52,14 +52,14 @@ inline CpuData::Trap CommonInstruction::ASR::execute ()
         result >>= 1;
 
     if (!writeOperand (result))
-        return CpuData::Trap::BusError;
+        return false;
 
     setPSW (ConditionCodes {.N = (bool) (result & 0100000),
         .Z = result == 0,
         .V = (bool) (result & 0100000) != (bool) (contents & 1),
         .C = (bool) (contents & 1)});
 
-    return CpuData::Trap::None;
+    return true;
 }
 
 #endif // _ASR_H_

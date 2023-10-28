@@ -19,7 +19,7 @@ class CommonInstruction::BLE : public BranchInstruction, public WithFactory<BLE>
 {
 public:
     BLE (CpuData* cpu, u16 instruction);
-    CpuData::Trap execute () override;
+    bool execute () override;
 };
 
 inline CommonInstruction::BLE::BLE (CpuData* cpu, u16 instruction)
@@ -27,10 +27,10 @@ inline CommonInstruction::BLE::BLE (CpuData* cpu, u16 instruction)
     BranchInstruction (cpu, instruction)
 {}
 
-inline CpuData::Trap CommonInstruction::BLE::execute ()
+inline bool CommonInstruction::BLE::execute ()
 {
     executeBranchIf (isSet (PSW_Z) || (isSet (PSW_N) ^ isSet (PSW_V)));
-    return CpuData::Trap::None;
+    return true;
 }
 
 #endif // _BLE_H_

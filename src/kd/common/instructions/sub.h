@@ -25,7 +25,7 @@ class CommonInstruction::SUB : public DoubleOperandInstruction, public WithFacto
 {
 public:
     SUB (CpuData* cpu, u16 instruction);
-    CpuData::Trap execute () override;
+    bool execute () override;
 };
 
 inline CommonInstruction::SUB::SUB (CpuData* cpu, u16 instruction)
@@ -33,18 +33,18 @@ inline CommonInstruction::SUB::SUB (CpuData* cpu, u16 instruction)
     DoubleOperandInstruction (cpu, instruction)
 {}
 
-inline CpuData::Trap CommonInstruction::SUB::execute ()
+inline bool CommonInstruction::SUB::execute ()
 {
     CondData<u16> source, destination;
 
     if (!readSourceOperand (&source) ||
         !readDestinationOperand (&destination))
-        return CpuData::Trap::BusError;
+        return false;
 
     u16 result = destination - source;
 
     if (!writeDestinationOperand (result))
-        return CpuData::Trap::BusError;
+        return false;
 
     setPSW (ConditionCodes {.N = (bool) (result & 0x8000),
         .Z = result == 0,
@@ -52,7 +52,7 @@ inline CpuData::Trap CommonInstruction::SUB::execute ()
              ((source & 0x8000) == (result & 0x8000)),
         .C = (bool) (((u32) destination - (u32) source) & 0x10000)});
 
-    return CpuData::Trap::None;
+    return true;
 }
 
 #endif // _SUB_H_

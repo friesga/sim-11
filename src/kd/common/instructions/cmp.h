@@ -29,7 +29,7 @@ class CommonInstruction::CMP : public DoubleOperandInstruction, public WithFacto
 {
 public:
     CMP (CpuData* cpu, u16 instruction);
-    CpuData::Trap execute () override;
+    bool execute () override;
 };
 
 inline CommonInstruction::CMP::CMP (CpuData* cpu, u16 instruction)
@@ -37,13 +37,13 @@ inline CommonInstruction::CMP::CMP (CpuData* cpu, u16 instruction)
     DoubleOperandInstruction (cpu, instruction)
 {}
 
-inline CpuData::Trap CommonInstruction::CMP::execute ()
+inline bool CommonInstruction::CMP::execute ()
 {
     CondData<u16> source, destination;
 
     if (!readSourceOperand (&source) ||
         !readDestinationOperand (&destination))
-        return CpuData::Trap::BusError;
+        return false;
 
     u16 tmp = source - destination;
 
@@ -52,7 +52,7 @@ inline CpuData::Trap CommonInstruction::CMP::execute ()
         .V = ((source & 0x8000) != (destination & 0x8000)) && ((destination & 0x8000) == (tmp & 0x8000)),
         .C = (bool) (((u32) source - (u32) destination) & 0x10000)});
 
-    return CpuData::Trap::None;
+    return true;
 }
 
 #endif // _CMP_H_

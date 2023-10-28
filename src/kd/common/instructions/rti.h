@@ -28,7 +28,7 @@ class CommonInstruction::RTI : public NoOperandInstruction, public WithFactory<R
 {
 public:
     RTI (CpuData* cpu, u16 instruction);
-    CpuData::Trap execute () override;
+    bool execute () override;
 };
 
 inline CommonInstruction::RTI::RTI (CpuData* cpu, u16 instruction)
@@ -36,14 +36,14 @@ inline CommonInstruction::RTI::RTI (CpuData* cpu, u16 instruction)
     NoOperandInstruction (cpu, instruction)
 {}
 
-inline CpuData::Trap CommonInstruction::RTI::execute ()
+inline bool CommonInstruction::RTI::execute ()
 {
     if (!cpu_->popWord (&cpu_->registers ()[7]))
-        return CpuData::Trap::BusError;
+        return false;
     if (!cpu_->popWord (&cpu_->psw ()))
-        return CpuData::Trap::BusError;
+        return false;
 
-    return CpuData::Trap::None;
+    return true;
 }
 
 #endif // _RTI_H_

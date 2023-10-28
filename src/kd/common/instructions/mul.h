@@ -27,7 +27,7 @@ class CommonInstruction::MUL : public EisInstruction, public WithFactory<MUL>
 {
 public:
     MUL (CpuData* cpu, u16 instruction);
-    CpuData::Trap execute () override;
+    bool execute () override;
 };
 
 inline CommonInstruction::MUL::MUL (CpuData* cpu, u16 instruction)
@@ -35,7 +35,7 @@ inline CommonInstruction::MUL::MUL (CpuData* cpu, u16 instruction)
     EisInstruction (cpu, instruction)
 {}
 
-inline CpuData::Trap CommonInstruction::MUL::execute ()
+inline bool CommonInstruction::MUL::execute ()
 {
     u16 regNr = getRegisterNr ();
 
@@ -44,7 +44,7 @@ inline CpuData::Trap CommonInstruction::MUL::execute ()
 
     CondData<u16> source;
     if (!readOperand (&source))
-        return CpuData::Trap::BusError;
+        return false;
 
     s32 tmps32 = (s32)(s16)destination * (s16)source;
     registers[regNr] = (u16)(tmps32 >> 16);
@@ -55,7 +55,7 @@ inline CpuData::Trap CommonInstruction::MUL::execute ()
         .V = false,
         .C = (tmps32 >= 0x7FFF) || (tmps32 < -0x8000)});
 
-    return CpuData::Trap::None;
+    return true;
 }
 
 #endif // _MUL_H_

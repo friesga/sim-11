@@ -127,8 +127,13 @@ void KD11_NA_Cpu::execInstr ()
     }
     registers_[7] += 2;
 
-    unique_ptr<LSI11Instruction> instr = kd11_naInstruction.decode (this, instructionWord);
-    CpuData::Trap returnedTrap = instr->execute ();
+    unique_ptr<LSI11Instruction> instr = 
+        kd11_naInstruction.decode (this, instructionWord);
+
+    // execute() returns true if the instruction was completed; false if it
+    // was aborted due to an error condition. In that case a trap has been
+    // set.
+    instr->execute ();
 }
 
 // This function checks whether or not a trap or interrupt request is present.

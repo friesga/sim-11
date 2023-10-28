@@ -22,7 +22,7 @@ class CommonInstruction::TST : public SingleOperandInstruction, public WithFacto
 {
 public:
     TST (CpuData* cpu, u16 instruction);
-    CpuData::Trap execute () override;
+    bool execute () override;
 };
 
 inline CommonInstruction::TST::TST (CpuData* cpu, u16 instruction)
@@ -30,18 +30,18 @@ inline CommonInstruction::TST::TST (CpuData* cpu, u16 instruction)
     SingleOperandInstruction (cpu, instruction)
 {}
 
-inline CpuData::Trap CommonInstruction::TST::execute ()
+inline bool CommonInstruction::TST::execute ()
 {
     CondData<u16> contents;
     if (!readOperand (&contents))
-        return CpuData::Trap::BusError;
+        return false;
 
     setPSW (ConditionCodes {.N = (bool) (contents & 0100000),
         .Z = contents == 0,
         .V = false,
         .C = false});
 
-    return CpuData::Trap::None;
+    return true;
 }
 
 #endif // _TST_H_

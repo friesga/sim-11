@@ -29,7 +29,7 @@ class CommonInstruction::DIV : public EisInstruction, public WithFactory<DIV>
 {
 public:
     DIV (CpuData* cpu, u16 instruction);
-    CpuData::Trap execute () override;
+    bool execute () override;
 };
 
 inline CommonInstruction::DIV::DIV (CpuData* cpu, u16 instruction)
@@ -37,7 +37,7 @@ inline CommonInstruction::DIV::DIV (CpuData* cpu, u16 instruction)
     EisInstruction (cpu, instruction)
 {}
 
-inline CpuData::Trap CommonInstruction::DIV::execute ()
+inline bool CommonInstruction::DIV::execute ()
 {
     u16 regNr = getRegisterNr ();
 
@@ -46,7 +46,7 @@ inline CpuData::Trap CommonInstruction::DIV::execute ()
 
     CondData<u16> source;
     if (!readOperand (&source))
-        return CpuData::Trap::BusError;
+        return false;
 
     if (source == 0)
     {
@@ -71,7 +71,7 @@ inline CpuData::Trap CommonInstruction::DIV::execute ()
         }
     }
 
-    return CpuData::Trap::None;
+    return true;
 }
 
 #endif // _DIV_H_

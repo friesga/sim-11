@@ -28,7 +28,7 @@ class CommonInstruction::WAIT : public NoOperandInstruction, public WithFactory<
 {
 public:
     WAIT (CpuData* cpu, u16 instruction);
-    CpuData::Trap execute () override;
+    bool execute () override;
 };
 
 inline CommonInstruction::WAIT::WAIT (CpuData* cpu, u16 instruction)
@@ -36,10 +36,10 @@ inline CommonInstruction::WAIT::WAIT (CpuData* cpu, u16 instruction)
     NoOperandInstruction (cpu, instruction)
 {}
 
-inline CpuData::Trap CommonInstruction::WAIT::execute ()
+inline bool CommonInstruction::WAIT::execute ()
 {
     cpu_->wait ();
-    return CpuData::Trap::None;
+    return true;
 }
 
 #endif // _WAIT_H_

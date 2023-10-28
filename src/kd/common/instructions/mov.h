@@ -26,7 +26,7 @@ class CommonInstruction::MOV : public DoubleOperandInstruction, public WithFacto
 {
 public:
     MOV (CpuData* cpu, u16 instruction);
-    CpuData::Trap execute () override;
+    bool execute () override;
 };
 
 inline CommonInstruction::MOV::MOV (CpuData* cpu, u16 instruction)
@@ -34,19 +34,19 @@ inline CommonInstruction::MOV::MOV (CpuData* cpu, u16 instruction)
     DoubleOperandInstruction (cpu, instruction)
 {}
 
-inline CpuData::Trap CommonInstruction::MOV::execute ()
+inline bool CommonInstruction::MOV::execute ()
 {
     CondData<u16> source, destination;
 
     if (!readSourceOperand (&source) ||
         !writeDestinationOperand (source.value ()))
-        return CpuData::Trap::BusError;
+        return false;
 
     setPSW (ConditionCodes ({.N = (bool) (source & 0100000),
         .Z = source == 0,
         .V = false}));
 
-    return CpuData::Trap::None;
+    return true;
 }
 
 #endif // _MOV_H_

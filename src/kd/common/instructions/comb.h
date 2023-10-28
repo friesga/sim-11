@@ -19,7 +19,7 @@ class CommonInstruction::COMB : public SingleOperandInstruction, public WithFact
 {
 public:
     COMB (CpuData* cpu, u16 instruction);
-    CpuData::Trap execute () override;
+    bool execute () override;
 };
 
 inline CommonInstruction::COMB::COMB (CpuData* cpu, u16 instruction)
@@ -27,23 +27,23 @@ inline CommonInstruction::COMB::COMB (CpuData* cpu, u16 instruction)
     SingleOperandInstruction (cpu, instruction)
 {}
 
-inline CpuData::Trap CommonInstruction::COMB::execute ()
+inline bool CommonInstruction::COMB::execute ()
 {
     CondData<u8> operand;
     if (!readOperand (&operand))
-        return CpuData::Trap::BusError;
+        return false;
 
     // Complement the operand and write it to the operand location
     operand = ~operand;
     if (!writeOperand (operand.value ()))
-        return CpuData::Trap::BusError;
+        return false;
 
     setPSW ({ConditionCodes {.N = (bool) (operand & 0x80),
         .Z = (u8) operand == 0,
         .V = false,
         .C = true}});
 
-    return CpuData::Trap::None;
+    return true;
 }
 
 #endif // _COMB_H_

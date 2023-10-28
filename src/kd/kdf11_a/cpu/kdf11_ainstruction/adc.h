@@ -26,7 +26,7 @@ class KDF11_AInstruction::ADC : public SingleOperandInstruction, public WithFact
 {
 public:
     ADC (CpuData* cpu, u16 instruction);
-    CpuData::Trap execute () override;
+    bool execute () override;
 };
 
 inline KDF11_AInstruction::ADC::ADC (CpuData* cpu, u16 instruction)
@@ -34,11 +34,11 @@ inline KDF11_AInstruction::ADC::ADC (CpuData* cpu, u16 instruction)
     SingleOperandInstruction (cpu, instruction)
 {}
 
-inline CpuData::Trap KDF11_AInstruction::ADC::execute ()
+inline bool KDF11_AInstruction::ADC::execute ()
 {
     CondData<u16> contents;
     if (!readOperand (&contents))
-        return CpuData::Trap::BusError;
+        return false;
 
     u16 cBit = isSet (PSW_C) ? 1 : 0;
     u16 result = contents + cBit;
@@ -49,9 +49,9 @@ inline CpuData::Trap KDF11_AInstruction::ADC::execute ()
         .C = contents == 0177777 && isSet (PSW_C)}));
 
     if (!writeOperand (result))
-        return CpuData::Trap::BusError;
+        return false;
 
-    return CpuData::Trap::None;
+    return true;
 }
 
 #endif // _ADC_H_

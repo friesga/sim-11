@@ -25,7 +25,7 @@ class CommonInstruction::MTPS : public SingleOperandInstruction, public WithFact
 {
 public:
     MTPS (CpuData* cpu, u16 instruction);
-    CpuData::Trap execute () override;
+    bool execute () override;
 };
 
 inline CommonInstruction::MTPS::MTPS (CpuData* cpu, u16 instruction)
@@ -33,16 +33,16 @@ inline CommonInstruction::MTPS::MTPS (CpuData* cpu, u16 instruction)
     SingleOperandInstruction (cpu, instruction)
 {}
 
-inline CpuData::Trap CommonInstruction::MTPS::execute ()
+inline bool CommonInstruction::MTPS::execute ()
 {
     CondData<u8> newValue;
     if (!readOperand (&newValue))
-        return CpuData::Trap::BusError;
+        return false;
 
     // Allow bits 5/6/7 to be set and cleared
     cpu_->psw () = (cpu_->psw () & PSW_T) | (newValue & ~PSW_T);
 
-    return CpuData::Trap::None;
+    return true;
 }
 
 #endif // _MTPS_H_

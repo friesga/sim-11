@@ -26,7 +26,7 @@ class CommonInstruction::BPT : public NoOperandInstruction, public WithFactory<B
 {
 public:
     BPT (CpuData* cpu, u16 instruction);
-    CpuData::Trap execute () override;
+    bool execute () override;
 };
 
 inline CommonInstruction::BPT::BPT (CpuData* cpu, u16 instruction)
@@ -34,10 +34,10 @@ inline CommonInstruction::BPT::BPT (CpuData* cpu, u16 instruction)
     NoOperandInstruction (cpu, instruction)
 {}
 
-inline CpuData::Trap CommonInstruction::BPT::execute ()
+inline bool CommonInstruction::BPT::execute ()
 {
     cpu_->setTrap (CpuData::Trap::BreakpointTrap);
-    return CpuData::Trap::None;
+    return true;
 }
 
 #endif // _BPT_H_

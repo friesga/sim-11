@@ -22,7 +22,7 @@ class KDF11_AInstruction::CLRB : public SingleOperandInstruction, public WithFac
 {
 public:
     CLRB (CpuData* cpu, u16 instruction);
-    CpuData::Trap execute () override;
+    bool execute () override;
 };
 
 inline KDF11_AInstruction::CLRB::CLRB (CpuData* cpu, u16 instruction)
@@ -30,7 +30,7 @@ inline KDF11_AInstruction::CLRB::CLRB (CpuData* cpu, u16 instruction)
     SingleOperandInstruction (cpu, instruction)
 {}
 
-inline CpuData::Trap KDF11_AInstruction::CLRB::execute ()
+inline bool KDF11_AInstruction::CLRB::execute ()
 {
     setPSW (ConditionCodes {.N = false,
         .Z = true,
@@ -38,9 +38,9 @@ inline CpuData::Trap KDF11_AInstruction::CLRB::execute ()
         .C = false});
 
     if (!writeOperand ((u8) 0))
-        return CpuData::Trap::BusError;
+        return false;
 
-    return CpuData::Trap::None;
+    return true;
 }
 
 #endif // _CLRB_H_

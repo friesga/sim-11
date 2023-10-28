@@ -19,7 +19,7 @@ class CommonInstruction::BITB : public DoubleOperandInstruction, public WithFact
 {
 public:
     BITB (CpuData* cpu, u16 instruction);
-    CpuData::Trap execute () override;
+    bool execute () override;
 };
 
 inline CommonInstruction::BITB::BITB (CpuData* cpu, u16 instruction)
@@ -27,12 +27,12 @@ inline CommonInstruction::BITB::BITB (CpuData* cpu, u16 instruction)
     DoubleOperandInstruction (cpu, instruction)
 {}
 
-inline CpuData::Trap CommonInstruction::BITB::execute ()
+inline bool CommonInstruction::BITB::execute ()
 {
     CondData<u8> source, destination;
 
     if (!readSourceOperand (&source) || !readDestinationOperand (&destination))
-        return CpuData::Trap::BusError;
+        return false;
 
     u16 tmp = source & destination;
 
@@ -40,7 +40,7 @@ inline CpuData::Trap CommonInstruction::BITB::execute ()
         .Z = tmp == 0,
         .V = false});
 
-    return CpuData::Trap::None;
+    return true;
 }
 
 #endif // _BITB_H_

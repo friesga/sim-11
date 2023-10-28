@@ -19,7 +19,7 @@ class KDF11_AInstruction::INCB : public SingleOperandInstruction, public WithFac
 {
 public:
     INCB (CpuData* cpu, u16 instruction);
-    CpuData::Trap execute () override;
+    bool execute () override;
 };
 
 inline KDF11_AInstruction::INCB::INCB (CpuData* cpu, u16 instruction)
@@ -27,11 +27,11 @@ inline KDF11_AInstruction::INCB::INCB (CpuData* cpu, u16 instruction)
     SingleOperandInstruction (cpu, instruction)
 {}
 
-inline CpuData::Trap KDF11_AInstruction::INCB::execute ()
+inline bool KDF11_AInstruction::INCB::execute ()
 {
     CondData<u8> source;
     if (!readOperand (&source))
-        return CpuData::Trap::BusError;
+        return false;
 
     u8 result = (u8)(source + 1);
 
@@ -40,9 +40,9 @@ inline CpuData::Trap KDF11_AInstruction::INCB::execute ()
         .V = source == 000177});
 
     if (!writeOperand (result))
-        return CpuData::Trap::BusError;
+        return false;
 
-    return CpuData::Trap::None;
+    return true;
 }
 
 #endif // _INCB_H_

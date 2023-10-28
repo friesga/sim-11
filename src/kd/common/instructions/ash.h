@@ -28,7 +28,7 @@ class CommonInstruction::ASH : public EisInstruction, public WithFactory<ASH>
 {
 public:
     ASH (CpuData* cpu, u16 instruction);
-    CpuData::Trap execute () override;
+    bool execute () override;
 };
 
 inline CommonInstruction::ASH::ASH (CpuData* cpu, u16 instruction)
@@ -36,7 +36,7 @@ inline CommonInstruction::ASH::ASH (CpuData* cpu, u16 instruction)
     EisInstruction (cpu, instruction)
 {}
 
-inline CpuData::Trap CommonInstruction::ASH::execute ()
+inline bool CommonInstruction::ASH::execute ()
 {
     u16 regNr = getRegisterNr ();
     u16 tmp {0};
@@ -45,7 +45,7 @@ inline CpuData::Trap CommonInstruction::ASH::execute ()
 
     CondData<u16> source;
     if (!readOperand (&source))
-        return CpuData::Trap::BusError;
+        return false;
 
     if (source & 0x20)
     {
@@ -92,6 +92,6 @@ inline CpuData::Trap CommonInstruction::ASH::execute ()
     registers[regNr] = tmp;
     setPSW (ConditionCodes {.N = (bool) (tmp & 0x8000), .Z = tmp == 0});
 
-    return CpuData::Trap::None;
+    return true;
 }
 #endif // _ASH_H_

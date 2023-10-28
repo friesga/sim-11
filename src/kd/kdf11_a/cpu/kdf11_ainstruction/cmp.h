@@ -29,7 +29,7 @@ class KDF11_AInstruction::CMP : public KD11DoubleOperandInstruction, public With
 {
 public:
     CMP (CpuData* cpu, u16 instruction);
-    CpuData::Trap execute () override;
+    bool execute () override;
 };
 
 inline KDF11_AInstruction::CMP::CMP (CpuData* cpu, u16 instruction)
@@ -37,13 +37,13 @@ inline KDF11_AInstruction::CMP::CMP (CpuData* cpu, u16 instruction)
     KD11DoubleOperandInstruction (cpu, instruction)
 {}
 
-inline CpuData::Trap KDF11_AInstruction::CMP::execute ()
+inline bool KDF11_AInstruction::CMP::execute ()
 {
     CondData<u16> source, destination;
 
     if (!readSourceOperand (&source) ||
         !readDestinationOperand (&destination))
-        return CpuData::Trap::BusError;
+        return false;
 
     u16 tmp = source - destination;
 
@@ -52,7 +52,7 @@ inline CpuData::Trap KDF11_AInstruction::CMP::execute ()
         .V = ((source & 0x8000) != (destination & 0x8000)) && ((destination & 0x8000) == (tmp & 0x8000)),
         .C = (bool) (((u32) source - (u32) destination) & 0x10000)});
 
-    return CpuData::Trap::None;
+    return true;
 }
 
 #endif // _CMP_H_

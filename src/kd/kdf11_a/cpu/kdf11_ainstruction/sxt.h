@@ -26,7 +26,7 @@ class KDF11_AInstruction::SXT : public SingleOperandInstruction, public WithFact
 {
 public:
     SXT (CpuData* cpu, u16 instruction);
-    CpuData::Trap execute () override;
+    bool execute () override;
 };
 
 inline KDF11_AInstruction::SXT::SXT (CpuData* cpu, u16 instruction)
@@ -34,7 +34,7 @@ inline KDF11_AInstruction::SXT::SXT (CpuData* cpu, u16 instruction)
     SingleOperandInstruction (cpu, instruction)
 {}
 
-inline CpuData::Trap KDF11_AInstruction::SXT::execute ()
+inline bool KDF11_AInstruction::SXT::execute ()
 {
     u16 result = isSet (PSW_N) ? 0177777 : 0;
 
@@ -42,9 +42,9 @@ inline CpuData::Trap KDF11_AInstruction::SXT::execute ()
         .V = false});
 
     if (!writeOperand (result))
-        return CpuData::Trap::BusError;
+        return false;
 
-    return CpuData::Trap::None;
+    return true;
 }
 
 #endif // _SXT_H_

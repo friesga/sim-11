@@ -19,7 +19,7 @@ class CommonInstruction::TSTB : public SingleOperandInstruction, public WithFact
 {
 public:
     TSTB (CpuData* cpu, u16 instruction);
-    CpuData::Trap execute () override;
+    bool execute () override;
 };
 
 inline CommonInstruction::TSTB::TSTB (CpuData* cpu, u16 instruction)
@@ -27,18 +27,18 @@ inline CommonInstruction::TSTB::TSTB (CpuData* cpu, u16 instruction)
     SingleOperandInstruction (cpu, instruction)
 {}
 
-inline CpuData::Trap CommonInstruction::TSTB::execute ()
+inline bool CommonInstruction::TSTB::execute ()
 {
     CondData<u8> source;
     if (!readOperand (&source))
-        return CpuData::Trap::BusError;
+        return false;
 
     setPSW (ConditionCodes {.N = (bool) (source & 0x80),
         .Z = source == 0,
         .V = false,
         .C = false});
 
-    return CpuData::Trap::None;
+    return true;
 }
 
 #endif // _TSTB_H_

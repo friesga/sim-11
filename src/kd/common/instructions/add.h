@@ -30,7 +30,7 @@ class CommonInstruction::ADD : public DoubleOperandInstruction, public WithFacto
 {
 public:
     ADD (CpuData* cpu, u16 instruction);
-    CpuData::Trap execute () override;
+    bool execute () override;
 };
 
 inline CommonInstruction::ADD::ADD (CpuData* cpu, u16 instruction)
@@ -38,25 +38,25 @@ inline CommonInstruction::ADD::ADD (CpuData* cpu, u16 instruction)
     DoubleOperandInstruction (cpu, instruction)
 {}
 
-inline CpuData::Trap CommonInstruction::ADD::execute ()
+inline bool CommonInstruction::ADD::execute ()
 {
     CondData<u16> source, destination;
 
     if (!readSourceOperand (&source) ||
         !readDestinationOperand (&destination))
-        return CpuData::Trap::BusError;
+        return false;
 
     u16 result = source + destination;
 
     if (!writeDestinationOperand (result))
-        return CpuData::Trap::BusError;
+        return false;
 
     setPSW (ConditionCodes ({.N = (bool) (result & 0x8000),
         .Z = result == 0,
         .V = ((source & 0x8000) == (destination & 0x8000)) && ((destination & 0x8000) != (result & 0x8000)),
         .C = (bool) (((u32) source + (u32) destination) & 0x10000)}));
 
-    return CpuData::Trap::None;
+    return true;
 }
 
 #endif // _ADD_H_

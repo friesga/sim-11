@@ -21,7 +21,7 @@ class CommonInstruction::BPL : public BranchInstruction, public WithFactory<BPL>
 {
 public:
     BPL (CpuData* cpu, u16 instruction);
-    CpuData::Trap execute () override;
+    bool execute () override;
 };
 
 inline CommonInstruction::BPL::BPL (CpuData* cpu, u16 instruction)
@@ -29,10 +29,10 @@ inline CommonInstruction::BPL::BPL (CpuData* cpu, u16 instruction)
     BranchInstruction (cpu, instruction)
 {}
 
-inline CpuData::Trap CommonInstruction::BPL::execute ()
+inline bool CommonInstruction::BPL::execute ()
 {
     executeBranchIf (!isSet (PSW_N));
-    return CpuData::Trap::None;
+    return true;
 }
 
 #endif // _BPL_H_

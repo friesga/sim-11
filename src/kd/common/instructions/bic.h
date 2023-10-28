@@ -26,7 +26,7 @@ class CommonInstruction::BIC : public DoubleOperandInstruction, public WithFacto
 {
 public:
     BIC (CpuData* cpu, u16 instruction);
-    CpuData::Trap execute () override;
+    bool execute () override;
 };
 
 inline CommonInstruction::BIC::BIC (CpuData* cpu, u16 instruction)
@@ -34,24 +34,24 @@ inline CommonInstruction::BIC::BIC (CpuData* cpu, u16 instruction)
     DoubleOperandInstruction (cpu, instruction)
 {}
 
-inline CpuData::Trap CommonInstruction::BIC::execute ()
+inline bool CommonInstruction::BIC::execute ()
 {
     CondData<u16> source, destination;
 
     if (!readSourceOperand (&source) ||
         !readDestinationOperand (&destination))
-        return CpuData::Trap::BusError;
+        return false;
 
     u16 result = ~source & destination;
 
     if (!writeDestinationOperand (result))
-        return CpuData::Trap::BusError;
+        return false;
 
     setPSW (ConditionCodes {.N = (bool) (result & 0x8000),
         .Z = result == 0,
         .V = false});
 
-    return CpuData::Trap::None;
+    return true;
 }
 
 #endif // _BIC_H_

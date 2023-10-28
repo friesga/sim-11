@@ -19,7 +19,7 @@ class CommonInstruction::BISB : public DoubleOperandInstruction, public WithFact
 {
 public:
     BISB (CpuData* cpu, u16 instruction);
-    CpuData::Trap execute () override;
+    bool execute () override;
 };
 
 inline CommonInstruction::BISB::BISB (CpuData* cpu, u16 instruction)
@@ -27,23 +27,23 @@ inline CommonInstruction::BISB::BISB (CpuData* cpu, u16 instruction)
     DoubleOperandInstruction (cpu, instruction)
 {}
 
-inline CpuData::Trap CommonInstruction::BISB::execute ()
+inline bool CommonInstruction::BISB::execute ()
 {
     CondData<u8> source, destination;
 
     if (!readSourceOperand (&source) || !readDestinationOperand (&destination))
-        return CpuData::Trap::BusError;
+        return false;
 
     u8 tmp = source | destination;
 
     if (!writeDestinationOperand (tmp))
-        return CpuData::Trap::BusError;
+        return false;
 
     setPSW (ConditionCodes {.N = (bool) (tmp & 0x80),
         .Z = tmp == 0,
         .V = false});
 
-    return CpuData::Trap::None;
+    return true;
 }
 
 #endif // _BISB_H_

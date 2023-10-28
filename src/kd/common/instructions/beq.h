@@ -22,7 +22,7 @@ class CommonInstruction::BEQ : public BranchInstruction, public WithFactory<BEQ>
 {
 public:
     BEQ (CpuData* cpu, u16 instruction);
-    CpuData::Trap execute () override;
+    bool execute () override;
 };
 
 inline CommonInstruction::BEQ::BEQ (CpuData* cpu, u16 instruction)
@@ -30,10 +30,10 @@ inline CommonInstruction::BEQ::BEQ (CpuData* cpu, u16 instruction)
     BranchInstruction (cpu, instruction)
 {}
 
-inline CpuData::Trap CommonInstruction::BEQ::execute ()
+inline bool CommonInstruction::BEQ::execute ()
 {
     executeBranchIf (isSet (PSW_Z));
-    return CpuData::Trap::None;
+    return true;
 }
 
 #endif // _BEQ_H_

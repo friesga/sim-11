@@ -19,7 +19,7 @@ class CommonInstruction::DECB : public SingleOperandInstruction, public WithFact
 {
 public:
     DECB (CpuData* cpu, u16 instruction);
-    CpuData::Trap execute () override;
+    bool execute () override;
 };
 
 inline CommonInstruction::DECB::DECB (CpuData* cpu, u16 instruction)
@@ -27,22 +27,22 @@ inline CommonInstruction::DECB::DECB (CpuData* cpu, u16 instruction)
     SingleOperandInstruction (cpu, instruction)
 {}
 
-inline CpuData::Trap CommonInstruction::DECB::execute ()
+inline bool CommonInstruction::DECB::execute ()
 {
     CondData<u8> source;
     if (!readOperand (&source))
-        return CpuData::Trap::BusError;
+        return false;
 
     u8 result = (u8) (source - 1);
 
     if (!writeOperand (result))
-        return CpuData::Trap::BusError;
+        return false;
 
     setPSW (ConditionCodes {.N = (bool) (result & 0x80),
         .Z = result == 0,
         .V = source == 0000200});
 
-    return CpuData::Trap::None;
+    return true;
 }
 
 #endif // _DECB_H_

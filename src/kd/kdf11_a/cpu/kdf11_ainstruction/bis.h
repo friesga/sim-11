@@ -27,7 +27,7 @@ class KDF11_AInstruction::BIS : public KD11DoubleOperandInstruction, public With
 {
 public:
     BIS (CpuData* cpu, u16 instruction);
-    CpuData::Trap execute () override;
+    bool execute () override;
 };
 
 inline KDF11_AInstruction::BIS::BIS (CpuData* cpu, u16 instruction)
@@ -35,13 +35,13 @@ inline KDF11_AInstruction::BIS::BIS (CpuData* cpu, u16 instruction)
     KD11DoubleOperandInstruction (cpu, instruction)
 {}
 
-inline CpuData::Trap KDF11_AInstruction::BIS::execute ()
+inline bool KDF11_AInstruction::BIS::execute ()
 {
     CondData<u16> source, destination;
 
     if (!readSourceOperand (&source) ||
         !readDestinationOperand (&destination))
-        return CpuData::Trap::BusError;
+        return false;
 
     u16 tmp = source | destination;
 
@@ -50,9 +50,9 @@ inline CpuData::Trap KDF11_AInstruction::BIS::execute ()
         .V = false});
 
     if (!writeDestinationOperand (tmp))
-        return CpuData::Trap::BusError;
+        return false;
 
-    return CpuData::Trap::None;
+    return true;
 }
 
 #endif // _BIS_H_

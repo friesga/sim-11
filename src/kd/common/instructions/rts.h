@@ -20,7 +20,7 @@ class CommonInstruction::RTS : public FISInstruction, public WithFactory<RTS>
 {
 public:
     RTS (CpuData* cpu, u16 instruction);
-    CpuData::Trap execute () override;
+    bool execute () override;
 };
 
 inline CommonInstruction::RTS::RTS (CpuData* cpu, u16 instruction)
@@ -28,14 +28,14 @@ inline CommonInstruction::RTS::RTS (CpuData* cpu, u16 instruction)
     FISInstruction (cpu, instruction)
 {}
 
-inline CpuData::Trap CommonInstruction::RTS::execute ()
+inline bool CommonInstruction::RTS::execute ()
 {
     u16 regNr = getRegister ();
 
     cpu_->registers ()[7] = cpu_->registers ()[regNr];
     cpu_->popWord (&cpu_->registers ()[regNr]);
 
-    return CpuData::Trap::None;
+    return true;
 }
 
 #endif // _RTS_H_
