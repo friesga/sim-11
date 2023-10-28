@@ -43,12 +43,7 @@ private:
     unique_ptr<KD11_NA_ODT>	odt_ {};
     KDF11_AConfig::PowerUpMode powerUpMode_;
     u16 startAddress_;
-
-    // Besides a pointer to the bus, a reference to our cpu, the start address
-    // and the power-up mode, the ControlLogic also gets passed a
-    // std::function to the function to create ODT objects.
-    ControlLogic controlLogic_ {bus_, &cpu_, powerUpMode_, startAddress_,
-        bind (&KD11_NA_ODT::createODT, _1, _2, _3)};
+    unique_ptr<ControlLogic> controlLogic_;
 
     // The KDF11_A is started in its own thread
     std::thread kd11Thread_;
