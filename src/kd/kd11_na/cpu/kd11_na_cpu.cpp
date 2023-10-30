@@ -34,9 +34,7 @@ KD11_NA_Cpu::KD11_NA_Cpu (Qbus* bus)
 // The cpu always is in of the following states:
 // - HALT: the CPU is halted and cannot execute the step, return false,
 // - RUN: the CPU will execute the next instruction,
-// - WAIT: the CPU is running but is still waiting for an interrupt, return true
-// - INHIBIT_TRACE: the CPU is running but no trace trap has to be
-//   executed on this instruction.
+// - WAIT: the CPU is running but is still waiting for an interrupt, return true.
 // 
 // As the power-up mode can be set to trap to the vector at address 024, the
 // presence of traps is checked before an instruction is executed.

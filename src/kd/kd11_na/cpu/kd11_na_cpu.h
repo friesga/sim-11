@@ -47,8 +47,7 @@ private:
 	{
 		HALT,
 		RUN,
-		WAIT,
-		INHIBIT_TRACE
+		WAIT
 	};
 
 	CpuRunState runState;
@@ -69,7 +68,6 @@ private:
 	void wait () override;
     void start (u16 address) override;
 	void proceed () override;
-	void inhibitTraceTrap () override;
     
     constexpr u16 pswValue ();
 	constexpr void setPSW (u16 value);

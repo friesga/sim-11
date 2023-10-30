@@ -51,10 +51,3 @@ void KD11_NA_Cpu::proceed ()
     bus_->SRUN().set (true);
     trace.cpuEvent (CpuEventRecordType::CPU_ODT_P, registers_[7]);
 }
-
-// Prevent a trace trap on execution of the next instruction. This is
-// used by the RTT instruction.
-void KD11_NA_Cpu::inhibitTraceTrap ()
-{
-    runState = CpuRunState::INHIBIT_TRACE;
-}
