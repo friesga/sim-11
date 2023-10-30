@@ -39,6 +39,7 @@ public:
 
 	// Definition of the functions required by the CpuData interface
 	constexpr GeneralRegisters& registers () override;
+	bool stackOverflow () override;
 
 private:
 	// Definition of CPU run states
@@ -49,10 +50,13 @@ private:
 		WAIT
 	};
 
+	enum {stackLimit = 0400};
+
 	CpuRunState runState;
 	KDF11_AInstruction kdf11_aInstruction;
 	KDF11_ARegisters registers_ {psw_};
 	HaltReason haltReason_;
+	bool traceFlag_;
 
 	// Definition of CpuControl functions. These functions are
 	// used by K11ODT and the Operate Group instructions.
@@ -67,7 +71,7 @@ private:
     constexpr u16 pswValue ();
 	constexpr void setPSW (u16 value);
 	constexpr HaltReason haltReason ();
-	bool traceFlag_;
+	constexpr bool inKernelMode ();
 
 	void execInstr ();
 	void handleTrap ();
@@ -104,4 +108,10 @@ constexpr GeneralRegisters& KDF11_A_Cpu::registers ()
  {
 	 return haltReason_;
  }
+
+ constexpr bool KDF11_A_Cpu::inKernelMode ()
+ {
+	 return (psw_ & PSW_MEM_MGMT_MODE) == KERNEL_MODE;
+ }
+
 #endif // _KDF11_A_CPU_H_

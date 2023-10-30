@@ -58,6 +58,7 @@ private:
 
 	// Definition of the functions required by the CpuData interface
 	constexpr GeneralRegisters& registers () override;
+	bool stackOverflow () override;
 
 	// Definition of CpuControl functions. These functions are
 	// used by K11ODT and the Operate Group instructions.

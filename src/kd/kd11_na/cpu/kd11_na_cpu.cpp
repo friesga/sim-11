@@ -224,3 +224,9 @@ void KD11_NA_Cpu::traceStep ()
     trace.cpuStep (registers (), psw_, code);
     trace.clearIgnoreBus ();
 }
+
+// The KD11-NA does not support a stack limit so stack overflow cannot occur.
+bool KD11_NA_Cpu::stackOverflow ()
+{
+    return false;
+}

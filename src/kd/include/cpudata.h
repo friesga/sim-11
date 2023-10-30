@@ -47,6 +47,7 @@ public:
     virtual GeneralRegisters& registers () = 0;
     virtual u16& psw () = 0;
 	virtual void setCC (ConditionCodes conditionCodes) = 0;
+	virtual bool stackOverflow () = 0;
 
 	// Definition of functions to access memory
 	virtual CondData<u16> fetchWord (u16 address) = 0;
@@ -57,8 +58,7 @@ public:
 	virtual bool popWord (u16 *destination) = 0;
 
 	// The memory access functions must be able to generate a bus error trap
-	// whem accessing non-existing memory.
-	// 
+	// when accessing non-existing memory.
     virtual void setTrap (Trap trap, TrapRecordType cause = TrapRecordType::TRAP) = 0;
 	virtual void loadTrapVector (Trap trap) = 0;
 };

@@ -34,9 +34,7 @@ KDF11_A_Cpu::KDF11_A_Cpu (Qbus* bus)
 // The cpu always is in of the following states:
 // - HALT: the CPU is halted and cannot execute the step, return false,
 // - RUN: the CPU will execute the next instruction,
-// - WAIT: the CPU is running but is still waiting for an interrupt, return true
-// - INHIBIT_TRACE: the CPU is running but no trace trap has to be
-//   executed on this instruction.
+// - WAIT: the CPU is running but is still waiting for an interrupt, return true.
 // 
 // As the power-up mode can be set to trap to the vector at address 024, the
 // presence of traps is checked before an instruction is executed.
@@ -244,4 +242,11 @@ void KDF11_A_Cpu::traceStep ()
     code[2] = bus_->read (registers_[7] + 4).valueOr (0);
     trace.cpuStep (registers (), psw_, code);
     trace.clearIgnoreBus ();
+}
+
+// Check if a stack overflow has occurred, i.e. the kernel stack pointer has
+// been decremented below the stack limit.
+bool KDF11_A_Cpu::stackOverflow ()
+{
+    return inKernelMode () && registers_ [6] < stackLimit;
 }
