@@ -36,12 +36,20 @@ inline CommonInstruction::RTI::RTI (CpuData* cpu, u16 instruction)
     NoOperandInstruction (cpu, instruction)
 {}
 
+
+// If an RTI [instruction] sets the T bit in the PS, a trace trap will occur
+// before the next instruction is executed. (Micro PDP-11 Handbook, pag 322.)
+// This behaviour differs from the other instructionss in which setting the
+// T-bit results in a trace trap on the next instruction.
 inline bool CommonInstruction::RTI::execute ()
 {
     if (!cpu_->popWord (&cpu_->registers ()[7]))
         return false;
     if (!cpu_->popWord (&cpu_->psw ()))
         return false;
+
+    if (cpu_->pswValue () & PSW_T)
+        cpu_->setTrap (CpuData::Trap::BreakpointTrap);
 
     return true;
 }

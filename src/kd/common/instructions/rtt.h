@@ -36,15 +36,15 @@ inline CommonInstruction::RTT::RTT (CpuData* cpu, u16 instruction)
     NoOperandInstruction (cpu, instruction)
 {}
 
+//  If the RTT sets the T bit in the PS, the next instruction will be executed
+// and then the trace trap will be processed. (Micro PDP-11 Handbook,
+// pag 322). This is the normal behaviour for instruction setting the T-bit.
 inline bool CommonInstruction::RTT::execute ()
 {
     if (!cpu_->popWord (&cpu_->registers ()[7]))
         return false;
     if (!cpu_->popWord (&cpu_->psw ()))
         return false;
-
-    // Prevent a trace trap on the next instruction
-    cpu_->inhibitTraceTrap ();
 
     return true;
 }

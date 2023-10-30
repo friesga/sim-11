@@ -55,6 +55,7 @@ private:
 	KD11_NAInstruction kd11_naInstruction;
 	KD11_NARegisters registers_;
 	HaltReason haltReason_;
+	bool traceFlag_;
 
 	// Definition of the functions required by the CpuData interface
 	constexpr GeneralRegisters& registers () override;
@@ -75,7 +76,6 @@ private:
 	constexpr HaltReason haltReason ();
 
 	void execInstr ();
-	void handleTrapsAndInterrupts();
 	void handleTrap ();
 	void handleInterrupt ();
 	u8 cpuPriority ();

@@ -18,7 +18,8 @@ KD11_NA_Cpu::KD11_NA_Cpu (Qbus* bus)
     KD11CpuData (bus),
     runState {CpuRunState::HALT},
     kd11_naInstruction {},
-    haltReason_ {HaltReason::HaltInstruction}
+    haltReason_ {HaltReason::HaltInstruction},
+    traceFlag_ {false}
 {
     bus_->SRUN().set (false);
 }
@@ -65,19 +66,7 @@ bool KD11_NA_Cpu::step ()
             }
             return true;
 
-        case CpuRunState::INHIBIT_TRACE:
-            trace.cpuEvent (CpuEventRecordType::CPU_RUN, registers_[7]);
-            runState = CpuRunState::RUN;
-            bus_->SRUN().set (true);
-            execute ();
-            return runState != CpuRunState::HALT;
-
         case CpuRunState::RUN:
-            // Generate a Trace trap if the trace bit is set, unless the previous
-            // instruction was a RTT or another trap is pending.
-            if (!trap_ && (psw_ & PSW_T))
-                setTrap (CpuData::Trap::BreakpointTrap);
-            
             execute ();
             return runState != CpuRunState::HALT; 
 
@@ -89,27 +78,28 @@ bool KD11_NA_Cpu::step ()
 
 void KD11_NA_Cpu::execute ()
 {
-    handleTrapsAndInterrupts ();
+    // If there is a pending bus interrupt that can be executed, process
+    // that interrupt first, else execute the next instruction
+    // Interrupts are only processed if their priority is higher than the
+    // current CPU priority. (The LSI-11 has just two priority levels,
+    // zero and BR4.) Note that the numerical value of the TrapPriority enum
+    // is used as bus request level. Traps in HALT mode are ignored.
+    if (bus_->intrptReqAvailable () && bus_->intrptPriority () > cpuPriority ())
+        handleInterrupt ();
 
     if(trace.isActive ())
         traceStep ();
 
-    // If there is a pending bus interrupt that can be executed, process
-    // that interrupt first, else execute the next instruction
-    if (!bus_->intrptReqAvailable () || cpuPriority () >= bus_->intrptPriority ())
-    {
-        std::chrono::high_resolution_clock::time_point start =
-            std::chrono::high_resolution_clock::now ();
-        execInstr ();
-        std::chrono::high_resolution_clock::time_point end =
-            std::chrono::high_resolution_clock::now ();
-        trace.duration ("Instruction",
+    std::chrono::high_resolution_clock::time_point start =
+    std::chrono::high_resolution_clock::now ();
+    execInstr ();
+    std::chrono::high_resolution_clock::time_point end =
+        std::chrono::high_resolution_clock::now ();
+    trace.duration ("Instruction",
             (std::chrono::duration_cast<std::chrono::nanoseconds> (end - start)).count ());
-    }
 
-    // Instructions leave the run state unchanged except for:
-    // - the RTT instruction sets the state to INHIBIT_TRACE,
-    // - the WAIT instrcution sets the state to WAIT.
+    // Instructions leave the run state unchanged except for the WAIT
+    // instcution which sets the state to WAIT.
 }
 
 // Execute one instruction
@@ -128,57 +118,27 @@ void KD11_NA_Cpu::execInstr ()
     unique_ptr<LSI11Instruction> instr = 
         kd11_naInstruction.decode (this, instructionWord);
 
-    // execute() returns true if the instruction was completed; false if it
-    // was aborted due to an error condition. In that case a trap has been
-    // set.
+    // If the trace flag is set, the next instruction has to result in a trace
+    // trap, unless the instruction resulted in another trap.
+    if (traceFlag_)
+        setTrap (CpuData::Trap::BreakpointTrap);
+
+    // Execute the next instruction. The function returns true if the
+    // instruction was completed and false if it was aborted due to an error
+    // condition. In that case a trap has been set. Note however that trap
+    // instructions set a trap and return true. 
     instr->execute ();
-}
 
-// This function checks whether or not a trap or interrupt request is present.
-// In that case the current PC and PSW are saved on the stack and the PC and
-// PSW of the trap vector are loaded. If there is no trap or interrupt request
-// to be handled the function simply returns.
-//
-// Trap priority order from high to low (cf Fig. 2-13) is defined as (vectors
-// between brackets):
-// - Bus error (004)
-// - Machine trap (BPT (014), IOT (020), EMT (030), TRAP (034) instruction)
-// - Trace trap (PSW bit 4) (014)
-// - Powerfail/HALT interrupt (024)
-// - Event interrupt (LTC) (100)
-// - Device interrupt
-// 
-// The event and device interrupts are only processed if the PSW priority bit
-// is cleared.
-// 
-// Refer to the LSI-11 WCS user's guide (EK-KUV11-TM-001) par 2.3.
-//
-void KD11_NA_Cpu::handleTrapsAndInterrupts ()
-{
-    // Traps are handled in order of their priority:
-    // - Bus errors,
-    // - Instruction traps
-    // - Event and device interrupts, only if the priority bit is clear,
-    // 
-    // Interrupts are only processed if their priority is higher than the
-    // current CPU priority. (The LSI-11 has just two priority levels,
-    // zero and BR4.) Note that the numerical value of the TrapPriority enum
-    // is used as bus request level. Traps in HALT mode are ignored.
-    // 
-    // Check if there is a trap or interrupt request to handle and the CPU
-    // isn't halted. This is the most common case so check this as first.
-    if (!trap_ && !bus_->intrptReqAvailable ())
-        return;
-
-    // Traps have the highest priority, so first check if there is a trap
-    // to handle
     if (trap_ != CpuData::Trap::None)
-    {
         handleTrap ();
-    }
-    else if (bus_->intrptPriority () > cpuPriority ())
-        handleInterrupt ();
-}
+
+    // Trace Trap is enabled by bit 4 of the PSW and causes processor traps at
+    // the end of instruction execution. The instruction-that is executed
+    // after the instruction that set the T-bit will proceed to completion and
+    // then trap through the trap vector at address 14.
+    // LSI-11/PDP-11/03 Processor Handbook pag. 114.
+    traceFlag_ =  (psw_ & PSW_T) ? true : false;
+} 
 
 void KD11_NA_Cpu::handleTrap ()
 {
@@ -198,7 +158,6 @@ void KD11_NA_Cpu::handleInterrupt ()
         // If this fails the processor will be put in the HALT state.
         swapPcPSW (intrptReq.vector ());
 }
-
 
 // Load PC and PSW from the given vector
 void KD11_NA_Cpu::loadTrapVector (CpuData::Trap trap)
