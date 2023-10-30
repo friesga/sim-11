@@ -8,10 +8,9 @@ InterruptRequest::InterruptRequest()
     vector_{0}
 {}
 
-InterruptRequest::InterruptRequest(RequestType requestType, 
-    TrapPriority priority, unsigned char busOrder, unsigned char vector)
+InterruptRequest::InterruptRequest(TrapPriority priority,
+        unsigned char busOrder, unsigned char vector)
     :
-    requestType_ {requestType},
     priority_ {priority},
     busOrder_ {busOrder},
     vector_ {vector}
@@ -40,12 +39,6 @@ long InterruptRequest::intrptPriority (TrapPriority trapPriority,
     unsigned char busOrder) const
 {
     return (static_cast<long>(trapPriority) * 256) + busOrder;
-}
-
-// Accessors
-RequestType InterruptRequest::requestType() const
-{
-    return requestType_;
 }
 
 unsigned char InterruptRequest::busOrder() const

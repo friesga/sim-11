@@ -17,18 +17,6 @@ enum class TrapPriority
     None = 0
 };
 
-// The interrupt and trap mechanism have much functionality in common,
-// such as the handling of interrupts and traps. Traps are handled internally
-// in the cpu while interrupt requests are processed via the bus. Handling
-// interrupt requests therefore introduce a (random) bus delay.
-// 
-// This enum defines whether a request is a trap or an interrupt request.
-enum class RequestType
-{
-    Trap,
-    IntrptReq
-};
-
 // This class comprises all information for an interrupt request:
 // - Whether the request is a trap or an interrupt,
 // - The trap priority,
@@ -41,7 +29,6 @@ enum class RequestType
 // PDP-11.
 class InterruptRequest
 {
-    RequestType requestType_;
     TrapPriority priority_;
     unsigned char busOrder_;
     unsigned char vector_;
@@ -50,13 +37,12 @@ class InterruptRequest
 
 public:
     InterruptRequest();
-    InterruptRequest(RequestType requestType, TrapPriority priority,
-        unsigned char prioLevel, unsigned char vector);
+    InterruptRequest(TrapPriority priority, unsigned char prioLevel,
+        unsigned char vector);
     bool operator< (InterruptRequest const &ir) const;
     bool operator== (InterruptRequest const &ir) const;
 
     // Accessors
-    RequestType requestType() const;
     TrapPriority priority() const;
     unsigned char busOrder() const;
     unsigned char vector() const;

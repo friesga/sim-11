@@ -46,7 +46,7 @@ CondData<u16> Qbus::read (u16 address)
 void Qbus::setInterrupt (TrapPriority priority, 
 		unsigned char busOrder, unsigned char vector)
 {
-	InterruptRequest intrptReq {RequestType::IntrptReq, priority, busOrder, vector};
+	InterruptRequest intrptReq {priority, busOrder, vector};
 	pushInterruptRequest (intrptReq);
 }
 
@@ -64,8 +64,7 @@ void Qbus::pushInterruptRequest (InterruptRequest intrptReq)
 // priority and busorder (see InterruptRequest::operator==).
 void Qbus::clearInterrupt (TrapPriority priority, unsigned char busOrder)
 {
-	intrptReqQueue_.erase (InterruptRequest {RequestType::IntrptReq, 
-		priority, busOrder, 0});
+	intrptReqQueue_.erase (InterruptRequest {priority, busOrder, 0});
 }
 
 // Clear all pending interrupts
@@ -106,8 +105,7 @@ void Qbus::step ()
 // Traps are handled internally in the CPU and are to be processed immediately.
 bool Qbus::intrptReqAvailable() 
 {
-	return (!intrptReqQueue_.empty() && 
-		(delay_ >= INTRPT_LATENCY || intrptReqQueue_.top().requestType() == RequestType::Trap));
+	return (!intrptReqQueue_.empty() && delay_ >= INTRPT_LATENCY);
 }
 
 // Return the priority of the interrupt request with the highest priority
