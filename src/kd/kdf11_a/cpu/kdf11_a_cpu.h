@@ -69,9 +69,9 @@ private:
     constexpr u16 pswValue ();
 	constexpr void setPSW (u16 value);
 	constexpr HaltReason haltReason ();
+	bool traceFlag_;
 
 	void execInstr ();
-	void handleTrapsAndInterrupts();
 	void handleTrap ();
 	void handleInterrupt ();
 	u8 cpuPriority ();
