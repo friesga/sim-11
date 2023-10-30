@@ -15,8 +15,7 @@ class LSI11Instruction
 {
 public:
 	// All derived classes will have to provide an execute function
-	// ToDo: Make execute() a pure virtual function
-	virtual bool execute () { return true; };
+	virtual bool execute () = 0;
 	string mnemonic ();
 
 protected:
