@@ -25,22 +25,19 @@
 class CpuData : public CpuControl, public CpuExecution
 {
 public:
-	// Definition of the trap conditions and the vector belonging to the
-	// condition.
-	// 
-	// The TrapCondition enum is defined as a non-class enum to be able to use it
-	// as vector addresses.
-	enum TrapCondition
+	// Definition of the trap conditions. The vectors corresponding to these
+	// conditions are defined in a map.
+	enum class TrapCondition
 	{
-		None = 0,						// Reserved
-		BusError = 004,					// Time out and other errors
-		IllegalInstructionTrap = 010,	// Illegal and reserved instructions
-		BreakpointTrap = 014,			// BPT instruction
-		InputOutputTrap = 020,			// IOT instruction
-		PowerFail = 024,				// Power fail
-		EmulatorTrap = 030,				// EMT instruction
-		TrapInstruction = 034,			// TRAP instruction
-		FIS = 0244						// Floating point
+		None,					// Reserved
+		BusError,				// Time out and other errors
+		IllegalInstructionTrap,	// Illegal and reserved instructions
+		BreakpointTrap,			// BPT instruction
+		InputOutputTrap,		// IOT instruction
+		PowerFail,				// Power fail
+		EmulatorTrap,			// EMT instruction
+		TrapInstruction,		// TRAP instruction
+		FIS						// Floating point
 	};
 
 	// Definition of the KD11 execution state

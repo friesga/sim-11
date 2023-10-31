@@ -7,6 +7,9 @@
 #include "trace/trace.h"
 
 #include <functional>
+#include <map>
+
+using std::map;
 
 //
 // The class CpuData implements the CpuData interface and can act as a base
@@ -36,6 +39,8 @@ protected:
 	// A trap is a special kind of interrupt, internal to the CPU. There
 	// can be only one trap serviced at the time.
 	CpuData::TrapCondition trap_;
+
+	static map<CpuData::TrapCondition, u16> trapVector_;
 };
 
 // constexpr functions are implicitly inline and therefore need to be defined
