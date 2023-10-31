@@ -53,6 +53,9 @@ inline bool KDF11_AInstruction::MFPD::execute ()
     if (!cpu_->pushWord (source))
         return false;
 
+    if (cpu_->stackOverflow ())
+        cpu_->setTrap (CpuData::TrapCondition::StackOverflow);
+
     setPSW (ConditionCodes {.N = (bool) (source & 0100000),
         .Z = source == 0,
         .V = false});

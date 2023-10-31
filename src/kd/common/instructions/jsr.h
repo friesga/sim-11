@@ -56,6 +56,10 @@ inline bool CommonInstruction::JSR::execute ()
 
     if (!cpu_->pushWord (specifiedRegisterContents))
         return false;
+
+    if (cpu_->stackOverflow ())
+        cpu_->setTrap (CpuData::TrapCondition::StackOverflow);
+
     registers[getRegisterNr ()] = registers[7];
     registers[7] = destination;
 
