@@ -29,7 +29,7 @@ inline CommonInstruction::Unused::Unused (CpuData* cpu, u16 instruction)
 
 inline bool CommonInstruction::Unused::execute ()
 {
-    cpu_->setTrap (CpuData::TrapCondition::IllegalInstructionTrap);
+    cpu_->setTrap (CpuData::TrapCondition::ReservedInstructionTrap);
     return true;
 }
 

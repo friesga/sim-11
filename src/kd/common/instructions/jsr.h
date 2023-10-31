@@ -47,7 +47,7 @@ inline bool CommonInstruction::JSR::execute ()
     if (!destination.isA<MemoryOperandLocation> ())
     {
         // Illegal instruction
-        cpu_->setTrap (CpuData::TrapCondition::BusError);
+        cpu_->setTrap (CpuData::TrapCondition::IllegalInstructionTrap);
         return true;
     }
 

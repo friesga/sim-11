@@ -147,10 +147,10 @@ void KDF11_A_Cpu::serviceTrap ()
 
     // Check if a stack overflow occurred as a result of the trap. In that
     // case a stack overflow trap has to be processed first unless the
-    // stack overflow was caused by a bus error trap as that would result
-    // in a loop of stack overflow traps.
-    if (stackOverflow () && trap_ != CpuData::TrapCondition::BusError)
-        swapPcPSW (trapVector_ [CpuData::TrapCondition::BusError]);
+    // original trap was caused by a stack overflow in the executed
+    // instruction.
+    if (stackOverflow () && trap_ != CpuData::TrapCondition::StackOverflow)
+        swapPcPSW (trapVector_ [CpuData::TrapCondition::StackOverflow]);
 
     trap_ = CpuData::TrapCondition::None;
 }

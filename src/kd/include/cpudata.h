@@ -29,15 +29,17 @@ public:
 	// conditions are defined in a map.
 	enum class TrapCondition
 	{
-		None,					// Reserved
-		BusError,				// Time out and other errors
-		IllegalInstructionTrap,	// Illegal and reserved instructions
-		BreakpointTrap,			// BPT instruction
-		InputOutputTrap,		// IOT instruction
-		PowerFail,				// Power fail
-		EmulatorTrap,			// EMT instruction
-		TrapInstruction,		// TRAP instruction
-		FIS						// Floating point
+		None,						// Reserved
+		BusError,					// Time out and other errors
+		ReservedInstructionTrap,	// Reserved instruction
+		IllegalInstructionTrap,		// Illegal and reserved instructions
+		BreakpointTrap,				// BPT instruction
+		InputOutputTrap,			// IOT instruction
+		PowerFail,					// Power fail
+		EmulatorTrap,				// EMT instruction
+		TrapInstruction,			// TRAP instruction
+		FIS,						// Floating point
+		StackOverflow				// Stack overflow
 	};
 
 	// Definition of the KD11 execution state
