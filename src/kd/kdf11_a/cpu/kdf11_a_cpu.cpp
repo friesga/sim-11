@@ -128,7 +128,23 @@ void KDF11_A_Cpu::execInstr ()
     instr->execute ();
 
     if (trap_ != CpuData::Trap::None)
+    {
+        // bool busErrorTrapOccurred = trap_ == CpuData::BusError;
+        CpuData::Trap trapCause = trap_;
         handleTrap ();
+
+        // Check if a stack overflow occurred as a result of the trap. In that
+        // case a stack overflow trap has to be processed first unless the
+        // stack overflow was caused by a bus error trap as that would result
+        // in a loop of stack overflow traps.
+        // if (stackOverflow () && !busErrorTrapOccurred)
+        if (stackOverflow () && trapCause != CpuData::BusError)
+        {
+            setTrap (CpuData::Trap::BusError);
+            handleTrap ();
+        }
+    }
+
 
     // Trace Trap is enabled by bit 4 of the PSW and causes processor traps at
     // the end of instruction execution. The instruction-that is executed
