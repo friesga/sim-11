@@ -55,7 +55,7 @@
 #include "kd/common/instructions/jsr.h"
 #include "kd/common/instructions/mark.h"
 #include "mfpd.h"
-#include "kd/common/instructions/mfps.h"
+#include "mfps.h"
 #include "mfpt.h"
 #include "mtpd.h"
 #include "mov.h"
@@ -265,7 +265,7 @@ KDF11_AInstruction::opCodeTable const KDF11_AInstruction::group_10_xx_xx
     CommonInstruction::MTPS::create,   // 10 64 xx
     KDF11_AInstruction::MFPD::create,  // 10 65 xx MFPD and MFPI are identical instructions
     KDF11_AInstruction::MTPD::create,  // 10 66 xx MTPD and MTPI are identical instructions
-    CommonInstruction::MFPS::create,   // 10 67 xx
+    KDF11_AInstruction::MFPS::create,  // 10 67 xx
     CommonInstruction::Unused::create, // 10 70 xx The range 10 70 xx till 10 77 xx is undefined
     CommonInstruction::Unused::create, // 10 71 xx in the LSI-11 Processor Handbook
     CommonInstruction::Unused::create, // 10 72 xx
