@@ -160,9 +160,16 @@ void KDF11_A_Cpu::serviceInterrupt ()
     InterruptRequest intrptReq;
  
     if (bus_->getIntrptReq (intrptReq))
+    {
         // Swap the PC and PSW with new values from the trap vector to process.
         // If this fails the processor will be put in the HALT state.
         swapPcPSW (intrptReq.vector ());
+
+        // Check if a stack overflow occurred as a result of the interrupt.
+        // In that case a stack overflow trap has to be processed first.
+        if (stackOverflow ())
+            swapPcPSW (trapVector_ [CpuData::TrapCondition::StackOverflow]);
+    }
 }
 
 // Load PC and PSW from the given vector
