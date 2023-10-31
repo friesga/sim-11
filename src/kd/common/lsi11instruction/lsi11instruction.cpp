@@ -67,7 +67,7 @@ OperandLocation LSI11Instruction::decodeOperand (Operand operand, GeneralRegiste
 				reg[operand.registerNr_] -= 2;
 			addr = reg[operand.registerNr_];
 
-			if (cpu_->stackOverflow ())
+			if (operand.registerNr_ == 6 && cpu_->stackOverflow ())
 				cpu_->setTrap (CpuData::Trap::BusError);  
 
 			return OperandLocation (MemoryOperandLocation {cpu_, 
@@ -81,7 +81,7 @@ OperandLocation LSI11Instruction::decodeOperand (Operand operand, GeneralRegiste
 			reg[operand.registerNr_] -= 2;
 			addr = reg[operand.registerNr_];
 
-			if (cpu_->stackOverflow ())
+			if (operand.registerNr_ == 6 && cpu_->stackOverflow ())
 				cpu_->setTrap (CpuData::Trap::BusError);  
 
 			return OperandLocation (MemoryOperandLocation {cpu_, 
