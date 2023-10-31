@@ -77,7 +77,7 @@ void ControlLogic::StateMachine::entry (PowerFail)
     size_t maxInstructions {1000};
 
     // On a powerfail trap to the vector at address 24/26
-    context_->cpu_->setTrap (CpuData::Trap::PowerFail);
+    context_->cpu_->setTrap (CpuData::TrapCondition::PowerFail);
 
     while (!context_->signalAvailable () && maxInstructions-- > 0)
     {

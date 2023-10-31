@@ -6,11 +6,11 @@ KD11CpuData::KD11CpuData (Qbus* bus)
     :
     bus_ {bus},
     psw_ {0},
-    trap_ {CpuData::Trap::None}
+    trap_ {CpuData::TrapCondition::None}
 {}
 
 // Generate the given trap using the interrupt request mechanism
-void KD11CpuData::setTrap (CpuData::Trap trap, TrapRecordType cause)
+void KD11CpuData::setTrap (CpuData::TrapCondition trap, TrapRecordType cause)
 {
     trace.trap (cause, trap);
     trap_ = trap;

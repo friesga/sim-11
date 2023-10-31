@@ -26,7 +26,7 @@ public:
 	bool putByte (u16 address, u8 value) override;
 	bool pushWord (u16 value) override;
 	bool popWord (u16 *destination) override;
-	void setTrap (CpuData::Trap trap, TrapRecordType cause = TrapRecordType::TRAP) override;
+	void setTrap (CpuData::TrapCondition trap, TrapRecordType cause = TrapRecordType::TRAP) override;
 	void setCC (ConditionCodes conditionCodes) override;
 
 protected:
@@ -35,7 +35,7 @@ protected:
 
 	// A trap is a special kind of interrupt, internal to the CPU. There
 	// can be only one trap serviced at the time.
-	CpuData::Trap trap_;
+	CpuData::TrapCondition trap_;
 };
 
 // constexpr functions are implicitly inline and therefore need to be defined

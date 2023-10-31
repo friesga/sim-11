@@ -48,7 +48,7 @@ inline bool CommonInstruction::RTI::execute ()
         return false;
 
     if (cpu_->pswValue () & PSW_T)
-        cpu_->setTrap (CpuData::Trap::BreakpointTrap);
+        cpu_->setTrap (CpuData::TrapCondition::BreakpointTrap);
 
     return true;
 }

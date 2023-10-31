@@ -46,7 +46,7 @@ inline bool CommonInstruction::JMP::execute ()
     }
 
     // Illegal instruction
-    cpu_->setTrap (CpuData::Trap::BusError);
+    cpu_->setTrap (CpuData::TrapCondition::BusError);
     return false;
 }
 

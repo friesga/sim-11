@@ -41,7 +41,7 @@ bool FISInstruction::returnFISresult (Float result, u16 registerNumber)
             .V = true,
             .C = false});
 
-        cpu_->setTrap (CpuData::Trap::FIS);
+        cpu_->setTrap (CpuData::TrapCondition::FIS);
         return true;
     }
     
@@ -51,7 +51,7 @@ bool FISInstruction::returnFISresult (Float result, u16 registerNumber)
         .V = true,
         .C = false});
 
-    cpu_->setTrap (CpuData::Trap::FIS);
+    cpu_->setTrap (CpuData::TrapCondition::FIS);
     return true;
 }
 
@@ -75,7 +75,7 @@ bool FISInstruction::executeFISinstruction (u16 stackPointer,
     if (!f1High.hasValue () || !f1Low.hasValue () ||
         !f2High.hasValue () || !f2Low.hasValue ())
     {
-        cpu_->setTrap (CpuData::Trap::BusError);
+        cpu_->setTrap (CpuData::TrapCondition::BusError);
         return true;
     }
      
@@ -95,6 +95,6 @@ bool FISInstruction::executeFISinstruction (u16 stackPointer,
         .V = true,
         .C = true});
 
-    cpu_->setTrap (CpuData::Trap::FIS);
+    cpu_->setTrap (CpuData::TrapCondition::FIS);
     return true;
 }

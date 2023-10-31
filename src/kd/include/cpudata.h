@@ -28,9 +28,9 @@ public:
 	// Definition of the trap conditions and the vector belonging to the
 	// condition.
 	// 
-	// The Trap enum is defined as a non-class enum to be able to use it
+	// The TrapCondition enum is defined as a non-class enum to be able to use it
 	// as vector addresses.
-	enum Trap
+	enum TrapCondition
 	{
 		None = 0,						// Reserved
 		BusError = 004,					// Time out and other errors
@@ -59,8 +59,8 @@ public:
 
 	// The memory access functions must be able to generate a bus error trap
 	// when accessing non-existing memory.
-    virtual void setTrap (Trap trap, TrapRecordType cause = TrapRecordType::TRAP) = 0;
-	virtual void loadTrapVector (Trap trap) = 0;
+    virtual void setTrap (TrapCondition trap, TrapRecordType cause = TrapRecordType::TRAP) = 0;
+	virtual void loadTrapVector (TrapCondition trap) = 0;
 };
 
 #endif // _CPUDATA_H_

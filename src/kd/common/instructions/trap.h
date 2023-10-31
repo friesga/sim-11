@@ -40,7 +40,7 @@ inline CommonInstruction::TRAP::TRAP (CpuData* cpu, u16 instruction)
 
 inline bool CommonInstruction::TRAP::execute ()
 {
-    cpu_->setTrap (CpuData::Trap::TrapInstruction);
+    cpu_->setTrap (CpuData::TrapCondition::TrapInstruction);
     return true;
 }
 

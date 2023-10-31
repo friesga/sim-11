@@ -8,7 +8,7 @@ CondData<u16> KD11CpuData::fetchWord (u16 address)
     if (!value.hasValue ())
     {
         trace.bus (BusRecordType::ReadFail, address, 0);
-        setTrap (CpuData::Trap::BusError);
+        setTrap (CpuData::TrapCondition::BusError);
         return {};
     }
     return value;
@@ -42,7 +42,7 @@ bool KD11CpuData::putWord (u16 address, u16 value)
     if (!bus_->writeWord (address, value))
     {
         trace.bus (BusRecordType::WriteFail, address, value);
-        setTrap (CpuData::Trap::BusError);
+        setTrap (CpuData::TrapCondition::BusError);
         return false;
     }
     return true;
@@ -53,7 +53,7 @@ bool KD11CpuData::putByte (u16 address, u8 value)
     if (!bus_->writeByte (address, value))
     {
         trace.bus (BusRecordType::WriteFail, address, value);
-        setTrap (CpuData::Trap::BusError);
+        setTrap (CpuData::TrapCondition::BusError);
         return false;
     }
     return true;
