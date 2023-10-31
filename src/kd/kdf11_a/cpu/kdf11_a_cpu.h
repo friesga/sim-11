@@ -74,8 +74,8 @@ private:
 	constexpr bool inKernelMode ();
 
 	void execInstr ();
-	void handleTrap ();
-	void handleInterrupt ();
+	void serviceTrap ();
+	void serviceInterrupt ();
 	u8 cpuPriority ();
 	void execute ();
 	void swapPcPSW (u16 vectorAddress);

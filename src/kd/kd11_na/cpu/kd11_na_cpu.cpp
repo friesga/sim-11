@@ -83,7 +83,7 @@ void KD11_NA_Cpu::execute ()
     // zero and BR4.) Note that the numerical value of the TrapPriority enum
     // is used as bus request level. Traps in HALT mode are ignored.
     if (bus_->intrptReqAvailable () && bus_->intrptPriority () > cpuPriority ())
-        handleInterrupt ();
+        serviceInterrupt ();
 
     if(trace.isActive ())
         traceStep ();
@@ -128,7 +128,7 @@ void KD11_NA_Cpu::execInstr ()
     instr->execute ();
 
     if (trap_ != CpuData::Trap::None)
-        handleTrap ();
+        serviceTrap ();
 
     // Trace Trap is enabled by bit 4 of the PSW and causes processor traps at
     // the end of instruction execution. The instruction-that is executed
@@ -138,7 +138,7 @@ void KD11_NA_Cpu::execInstr ()
     traceFlag_ =  (psw_ & PSW_T) ? true : false;
 } 
 
-void KD11_NA_Cpu::handleTrap ()
+void KD11_NA_Cpu::serviceTrap ()
 {
     // The enum trap_ is converted to the u16 vector address
     // Swap the PC and PSW with new values from the trap vector to process.
@@ -147,7 +147,7 @@ void KD11_NA_Cpu::handleTrap ()
     trap_ = CpuData::Trap::None;
 }
 
-void KD11_NA_Cpu::handleInterrupt ()
+void KD11_NA_Cpu::serviceInterrupt ()
 {
     InterruptRequest intrptReq;
  

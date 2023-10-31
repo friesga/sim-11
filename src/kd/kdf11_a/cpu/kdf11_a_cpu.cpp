@@ -83,7 +83,7 @@ void KDF11_A_Cpu::execute ()
     // zero and BR4.) Note that the numerical value of the TrapPriority enum
     // is used as bus request level. Traps in HALT mode are ignored.
     if (bus_->intrptReqAvailable () && bus_->intrptPriority () > cpuPriority ())
-        handleInterrupt ();
+        serviceInterrupt ();
 
     if(trace.isActive ())
         traceStep ();
@@ -128,23 +128,7 @@ void KDF11_A_Cpu::execInstr ()
     instr->execute ();
 
     if (trap_ != CpuData::Trap::None)
-    {
-        // bool busErrorTrapOccurred = trap_ == CpuData::BusError;
-        CpuData::Trap trapCause = trap_;
-        handleTrap ();
-
-        // Check if a stack overflow occurred as a result of the trap. In that
-        // case a stack overflow trap has to be processed first unless the
-        // stack overflow was caused by a bus error trap as that would result
-        // in a loop of stack overflow traps.
-        // if (stackOverflow () && !busErrorTrapOccurred)
-        if (stackOverflow () && trapCause != CpuData::BusError)
-        {
-            setTrap (CpuData::Trap::BusError);
-            handleTrap ();
-        }
-    }
-
+        serviceTrap ();
 
     // Trace Trap is enabled by bit 4 of the PSW and causes processor traps at
     // the end of instruction execution. The instruction-that is executed
@@ -154,37 +138,24 @@ void KDF11_A_Cpu::execInstr ()
     traceFlag_ =  (psw_ & PSW_T) ? true : false;
 }
 
-
-// This function is called on every KD11_NA step, whether or not a trap to
-// be handled is present. If a trap is present the current PC and PSW are
-// saved on the stack and the PC and PSW of the trap vector are loaded.
-// If there is no trap to be handled the function simply returns.
-//
-// Trap priority order from high to low (cf Fig. 2-13) is defined as (vectors
-// between brackets):
-// - Bus error (004)
-// - Machine trap (BPT (014), IOT (020), EMT (030), TRAP (034) instruction)
-// - Trace trap (PSW bit 4) (014)
-// - Powerfail/HALT interrupt (024)
-// - Event interrupt (LTC) (100)
-// - Device interrupt
-// 
-// The event and device interrupts are only processed if the PSW priority bit
-// is cleared.
-// 
-// Refer to the LSI-11 WCS user's guide (EK-KUV11-TM-001) par 2.3.
-//
-
-void KDF11_A_Cpu::handleTrap ()
+void KDF11_A_Cpu::serviceTrap ()
 {
     // The enum trap_ is converted to the u16 vector address
     // Swap the PC and PSW with new values from the trap vector to process.
     // If this fails the processor will be put in the HALT state.
     swapPcPSW (trap_);
+
+    // Check if a stack overflow occurred as a result of the trap. In that
+    // case a stack overflow trap has to be processed first unless the
+    // stack overflow was caused by a bus error trap as that would result
+    // in a loop of stack overflow traps.
+    if (stackOverflow () && trap_ != CpuData::BusError)
+        swapPcPSW (CpuData::BusError);
+
     trap_ = CpuData::Trap::None;
 }
 
-void KDF11_A_Cpu::handleInterrupt ()
+void KDF11_A_Cpu::serviceInterrupt ()
 {
     InterruptRequest intrptReq;
  
