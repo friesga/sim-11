@@ -11,7 +11,7 @@
 // "get source address, source, destination address, destination", while
 // on the KDF11-A (and other KDF11, J-11 and T-11 processors) the order is
 // "get source address, destination address, source, destination". See a.o.
-// EK-KDF11-UG-PR2, table C differences 1 and 2.
+// EK-KDF11-UG-PR2, table C differences 1 and 2 and micro note 078, item 4.
 // 
 // The KDF11-A behaviour is implemented by subclassing
 // DoubleOperandInstruction and retrieving the source and destination operands
