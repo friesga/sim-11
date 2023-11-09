@@ -16,7 +16,13 @@ KD11_NA::KD11_NA (Qbus* bus)
     bus_ (bus),
     powerUpMode_ {KD11_NAConfig::PowerUpMode::Bootstrap},
     startAddress_ {stdBootAddress}
-{}
+{
+    // Besides a pointer to the bus, a reference to our cpu, the start address
+    // and the power-up mode, the ControlLogic also gets passed a
+    // std::function to the function to create ODT objects.
+    controlLogic_ = make_unique<ControlLogic> (bus_, &cpu_, powerUpMode_,
+        startAddress_, bind (&KD11_NA_ODT::createODT, _1, _2, _3));
+}
 
 KD11_NA::KD11_NA (Qbus *bus, shared_ptr<KD11_NAConfig> kd11_naConfig)
     :
@@ -24,9 +30,6 @@ KD11_NA::KD11_NA (Qbus *bus, shared_ptr<KD11_NAConfig> kd11_naConfig)
 {
     powerUpMode_ = kd11_naConfig->powerUpMode;
 
-    // Besides a pointer to the bus, a reference to our cpu, the start address
-    // and the power-up mode, the ControlLogic also gets passed a
-    // std::function to the function to create ODT objects.
     controlLogic_ = make_unique<ControlLogic> (bus_, &cpu_, powerUpMode_,
         startAddress_, bind (&KD11_NA_ODT::createODT, _1, _2, _3));
 }
