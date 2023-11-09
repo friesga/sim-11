@@ -6,12 +6,12 @@
 // Verify InterruptRequests have strict weak ordering
 TEST (InterruptRequest, isOrdered)
 {
-    InterruptRequest const prio12_0 {RequestType::Trap, TrapPriority::BusError, 0, 004};
-    InterruptRequest const prio12_1 {RequestType::Trap, TrapPriority::BusError, 1, 004};
-    InterruptRequest const prio12_x {RequestType::IntrptReq, TrapPriority::BusError, 0, 0};
+    InterruptRequest const prio12_0 {TrapPriority::BusError, 0, 004};
+    InterruptRequest const prio12_1 {TrapPriority::BusError, 1, 004};
+    InterruptRequest const prio12_x {TrapPriority::BusError, 0, 0};
 
-    InterruptRequest const prio10_0 {RequestType::Trap, TrapPriority::TraceTrap, 0, 014};
-    InterruptRequest const prio10_1 {RequestType::Trap, TrapPriority::TraceTrap, 1, 014};
+    InterruptRequest const prio10_0 {TrapPriority::TraceTrap, 0, 014};
+    InterruptRequest const prio10_1 {TrapPriority::TraceTrap, 1, 014};
 
     EXPECT_TRUE (prio10_0 < prio12_0);
     EXPECT_TRUE (prio10_0 < prio10_1);
@@ -25,10 +25,8 @@ TEST (InterruptRequest, isOrdered)
 // their TrapPriority and bus order are equal.
 TEST (InterruptRequest, canBePushedAndCleared)
 {
-    InterruptRequest const intrptReqA {RequestType::Trap, 
-        TrapPriority::BusError, 0, 004};
-    InterruptRequest const intrptReqB {RequestType::IntrptReq, 
-        TrapPriority::BusError, 0, 000};
+    InterruptRequest const intrptReqA {TrapPriority::BusError, 0, 004};
+    InterruptRequest const intrptReqB {TrapPriority::BusError, 0, 000};
     ThreadSafePrioQueue<InterruptRequest> queue;
 
     queue.push (intrptReqA);

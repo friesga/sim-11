@@ -22,14 +22,17 @@ public:
 
     DummyCpu ();
 	GeneralRegisters& registers () {return dummyRegisters; };
-	u16& psw () { return dummyPsw; };
+	u16& psw () { return dummyPsw; }
+    void setCC (ConditionCodes conditionCodes) {};
+    bool stackOverflow () {return false;};
     CondData<u16> fetchWord (u16 address);
 	CondData<u8> fetchByte (u16 address);
 	bool putWord (u16 address, u16 value);
 	bool putByte (u16 address, u8 value);
-	void pushWord (u16 value) {};
+	bool pushWord (u16 value) { return true; };
 	bool popWord (u16 *destination) { return false; };
-    void set (ConditionCodes conditionCodes) {};
+    void setTrap (TrapCondition trap, TrapRecordType cause) {};
+    void loadTrapVector (TrapCondition trap) {};
 
     // Definitions required for the CpuControl interface
     void setTrap (InterruptRequest const *ir) {};
