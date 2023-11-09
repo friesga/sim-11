@@ -5,6 +5,7 @@
 #include "pdp11peripheral/pdp11peripheral.h"
 #include "configdata/dlv11config/dlv11config.h"
 #include "console/console.h"
+#include "dlv11channel/dlv11channel.h"
 
 #include <memory>
 #include <functional>
@@ -12,29 +13,6 @@
 using std::unique_ptr;
 using std::shared_ptr;
 using std::function;
-
-/* DLV11-J input buffer */
-#define	DLV11J_BUF		2048
-
-struct DLV11Ch
-{
-	u16	rcsr {0};
-	u16	rbuf {0};
-	u16	xcsr {0};
-	u16	xbuf {0};
-
-	u16	base {0};
-	u16	vector {0};
-
-	u8*	buf {nullptr};
-	u16	buf_r {0};
-	u16	buf_w {0};
-	u16	buf_size {0};
-
-	// Send a character from the DLV11-J to the outside world.
-	// void (*send)(unsigned char c);
-	function<void(unsigned char)> send {};
-};
 
 class DLV11J : public PDP11Peripheral
 {
@@ -63,7 +41,7 @@ private:
 	enum {defaultCh3Address_ = 0177560};
 	enum {defaultCh3Vector_ = 060};
 
-	DLV11Ch	channel_[4];
+	unique_ptr<DLV11Channel> channel_[4];
 	u16	baseAddress_;
 	u16 baseVector_;
 	DLV11Config::Ch3BreakResponse ch3BreakResponse_;
@@ -76,8 +54,8 @@ private:
 	void writeRCSR (int n, u16 value);
 	void writeXCSR (int n, u16 value);
 	void console_print (unsigned char c);
-	bool queueCharacter (DLV11Ch* channel, unsigned char c);
-	void receiveDone (DLV11Ch* channel);
+	bool queueCharacter (unique_ptr<DLV11Channel>& channel, unsigned char c);
+	void receiveDone (unique_ptr<DLV11Channel>& channel);
 	void processBreak ();
 };
 

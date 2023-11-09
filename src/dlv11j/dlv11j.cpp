@@ -8,6 +8,10 @@
 using std::bind;
 using std::placeholders::_1;
 using std::placeholders::_2;
+using std::make_unique;
+
+/* Size of DLV11-J input buffer */
+#define	DLV11J_BUF		2048
 
 #define	RCSR_READER_ENABLE	_BV(0)
 #define	RCSR_RCVR_INT		_BV(6)
@@ -40,14 +44,26 @@ DLV11J::DLV11J (Qbus *bus, unique_ptr<Console> console)
 	breakKey_ {27},
 	console_ {move (console)}
 {
+	for (u16 channelNr = 0; channelNr < numChannels; ++channelNr)
+	{
+		if (channelNr == 3)
+		{
+			channel_[channelNr] = make_unique<DLV11Channel>
+				(defaultCh3Address_, defaultCh3Vector_);
+		}
+		else
+		{
+			channel_[channelNr] = make_unique<DLV11Channel>
+				(baseAddress_ + 8 * channelNr, baseVector_ + 8 * channelNr);
+		}
+	}
+
 	initialize ();
 
 	// Factory configuration is for channel 3 to be used as console and the
 	// channel's base address and vector have to be set to the appropriate
 	// values.
-	channel_[3].base = defaultCh3Address_;
-	channel_[3].vector = defaultCh3Vector_;
-	channel_[3].send = std::bind (&DLV11J::console_print, this, std::placeholders::_1);
+	channel_[3]->send = std::bind (&DLV11J::console_print, this, std::placeholders::_1);
 
 	reset ();
 }
@@ -65,6 +81,20 @@ DLV11J::DLV11J (Qbus *bus, unique_ptr<Console> console,
 	breakKey_ {dlv11Config->breakKey},
 	console_ {move (console)}
 {
+	for (u16 channelNr = 0; channelNr < numChannels; ++channelNr)
+	{
+		if (channelNr == 3 && dlv11Config->ch3ConsoleEnabled)
+		{
+			channel_[channelNr] = make_unique<DLV11Channel> 
+				(defaultCh3Address_, defaultCh3Vector_);
+		}
+		else
+		{
+			channel_[channelNr] = make_unique<DLV11Channel>
+				(baseAddress_ + 8 * channelNr, baseVector_ + 8 * channelNr);
+		}
+	}
+
 	initialize ();
 
 	// If channel 3 is to be used as console the channel's base address
@@ -77,9 +107,7 @@ DLV11J::DLV11J (Qbus *bus, unique_ptr<Console> console,
 
 	if (dlv11Config->ch3ConsoleEnabled)
 	{
-		channel_[3].base = dlv11Config->baseAddress + 060;
-		channel_[3].vector = defaultCh3Vector_;
-		channel_[3].send = std::bind (&DLV11J::console_print, this, std::placeholders::_1);
+		channel_[3]->send = std::bind (&DLV11J::console_print, this, std::placeholders::_1);
 	}
 
 	reset ();
@@ -91,12 +119,7 @@ DLV11J::DLV11J (Qbus *bus, unique_ptr<Console> console,
 // have to be defined.
 DLV11J::~DLV11J ()
 {
-	u8 channelNr;
 
-	for (channelNr = 0; channelNr < numChannels; ++channelNr)
-	{
-		free (channel_[channelNr].buf);
-	}
 }
 
 // Initialize the DLV11J and its channels and set the channel's base address
@@ -104,18 +127,6 @@ DLV11J::~DLV11J ()
 // overwritten if channel 3 is configured for console operation.
 void DLV11J::initialize ()
 {
-	int channelNr;
-	for (channelNr = 0; channelNr < numChannels; ++channelNr)
-	{
-		channel_[channelNr].buf = (u8*) malloc (DLV11J_BUF);
-		channel_[channelNr].buf_r = 0;
-		channel_[channelNr].buf_w = 0;
-		channel_[channelNr].buf_size = 0;
-		channel_[channelNr].base = baseAddress_ + 8 * channelNr;
-		channel_[channelNr].vector = baseVector_ + 8 * channelNr;
-		channel_[channelNr].rcsr = 0;
-	}
-
 	// Pass the console the function we want to receive the characters on
 	console_->setReceiver (bind (&DLV11J::receive, this, _1, _2));
 
@@ -124,7 +135,7 @@ void DLV11J::initialize ()
 
 void DLV11J::readChannel (int channelNr)
 {
-	DLV11Ch* ch = &channel_[channelNr];
+	unique_ptr<DLV11Channel>& ch = channel_[channelNr];
 	if (ch->buf_size > 0)
 	{
 		ch->rbuf = (u8) ch->buf[ch->buf_r++];
@@ -151,7 +162,7 @@ void DLV11J::readChannel (int channelNr)
 
 void DLV11J::writeChannel (int channelNr)
 {
-	DLV11Ch* ch = &channel_[channelNr];
+	unique_ptr<DLV11Channel>& ch = channel_[channelNr];
 	trace.dlv11 (DLV11RecordType::DLV11_TX, channelNr, ch->xbuf);
 
 	if (ch->send)
@@ -169,20 +180,20 @@ StatusCode DLV11J::read (u16 address, u16 *destAddress)
 	switch (address)
 	{
 		case 0177560:
-			*destAddress = channel_[3].rcsr;
+			*destAddress = channel_[3]->rcsr;
 			break;
 
 		case 0177562:
 			readChannel(3);
-			*destAddress = channel_[3].rbuf;
+			*destAddress = channel_[3]->rbuf;
 			break;
 
 		case 0177564:
-			*destAddress = channel_[3].xcsr;
+			*destAddress = channel_[3]->xcsr;
 			break;
 
 		case 0177566:
-			*destAddress = channel_[3].xbuf;
+			*destAddress = channel_[3]->xbuf;
 			break;
 
 		default:
@@ -193,7 +204,7 @@ StatusCode DLV11J::read (u16 address, u16 *destAddress)
 
 void DLV11J::writeRCSR (int n, u16 value)
 {
-	DLV11Ch* ch = &channel_[n];
+	unique_ptr<DLV11Channel>& ch = channel_[n];
 	u16 old = ch->rcsr;
 	ch->rcsr = (ch->rcsr & ~RCSR_WR_MASK) | (value & RCSR_WR_MASK);
 	
@@ -204,7 +215,7 @@ void DLV11J::writeRCSR (int n, u16 value)
 
 void DLV11J::writeXCSR (int n, u16 value)
 {
-	DLV11Ch* ch = &channel_[n];
+	unique_ptr<DLV11Channel>& ch = channel_[n];
 	u16 old = ch->xcsr;
 	ch->xcsr = (ch->xcsr & ~XCSR_WR_MASK) | (value & XCSR_WR_MASK);
 	
@@ -232,7 +243,7 @@ StatusCode DLV11J::writeWord (u16 address, u16 value)
 			break;
 
 		case 0177566:
-			channel_[3].xbuf = value;
+			channel_[3]->xbuf = value;
 			writeChannel (3);
 			break;
 	}
@@ -265,15 +276,15 @@ void DLV11J::reset ()
 
 	for (channelNr = 0; channelNr < numChannels; ++channelNr)
 	{
-		channel_[channelNr].rcsr &= ~RCSR_RCVR_INT;
-		channel_[channelNr].xcsr = XCSR_TRANSMIT_READY;
+		channel_[channelNr]->rcsr &= ~RCSR_RCVR_INT;
+		channel_[channelNr]->xcsr = XCSR_TRANSMIT_READY;
 	}
 }
 
 // Put the given character in the buffer for the given channel. The buffer
 // is a queue implemented as a fixed-size circular array. The array contains
 // buf_size characters with the head at position buf_w.
-bool DLV11J::queueCharacter (DLV11Ch* channel, unsigned char c)
+bool DLV11J::queueCharacter (unique_ptr<DLV11Channel>& channel, unsigned char c)
 {
 	if (channel->buf_size < DLV11J_BUF)
 	{
@@ -286,7 +297,7 @@ bool DLV11J::queueCharacter (DLV11Ch* channel, unsigned char c)
 	return false;
 }
 
-void DLV11J::receiveDone (DLV11Ch* channel)
+void DLV11J::receiveDone (unique_ptr<DLV11Channel>& channel)
 {
 	channel->rcsr |= RCSR_RCVR_DONE;
 	if (channel->rcsr & RCSR_RCVR_INT)
@@ -333,7 +344,7 @@ void DLV11J::receive (int channelNr, unsigned char c)
 			return;
 		}
 
-		DLV11Ch* ch = &channel_[channelNr];
+		unique_ptr<DLV11Channel>& ch = channel_[channelNr];
 		if (queueCharacter (ch, c))
 		{
 			trace.dlv11 (DLV11RecordType::DLV11_RX, channelNr, c);
