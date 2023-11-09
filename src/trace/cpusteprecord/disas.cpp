@@ -2,8 +2,10 @@
 #include "../tracerecord.h"
 #include "cpusteprecord.h"
 
-#include <string.h>
+#include <string>
 
+using std::string;
+using std::to_string;
 
 typedef struct {
 	u16	rn:3;
@@ -42,161 +44,133 @@ typedef struct {
 	u16	opcode:7;
 } KD11INSNSOB;
 
-#define	WRITE(s)	pos = LSI11Write(buf, s, pos)
-#define	WRITEN(n)	pos = LSI11WriteN(buf, n, pos)
-#define	WRITEC(c)	buf[pos++] = c, buf[pos] = 0
-
-int TraceRecord<CpuStepRecord>::LSI11Write(char* buf, const char* str, int pos)
+// Convert the given value to a string in octal representation of the value
+string TraceRecord<CpuStepRecord>::octalToString (u16 val)
 {
-	// ToDo: the int should really be a size_t
-	// Changing this must lead to a necessary overhaul of this module.
-	int len = static_cast<int> (strlen (str));
-	memcpy(&buf[pos], str, len);
-	buf[pos + len] = 0;
-	return pos + len;
-}
+	string str {};
+	char c;
 
-int TraceRecord<CpuStepRecord>::LSI11WriteN(char* buf, u16 val, int pos)
-{
-	int i;
-	int start = pos;
-	buf[pos] = ((val >> 15) & 0x7) + '0';
-	if(buf[pos] != '0') {
-		pos++;
-	}
-	for(i = 0; i < 5; i++) {
-		buf[pos] = ((val >> 12) & 7) + '0';
+	c = ((val >> 15) & 0x7) + '0';
+	if (c != '0')
+		str = c;
+
+	for (int i = 0; i < 5; ++i)
+	{
+		c = ((val >> 12) & 7) + '0';
 		val <<= 3;
-		if(pos != start || buf[pos] != '0') {
-			pos++;
-		}
+
+		if (str.size () > 0 || c != '0')
+			str += c;
 	}
-	if(pos == start) {
-		buf[pos++] = '0';
-	}
-	buf[pos] = 0;
-	return pos;
+
+	if (str.size () == 0)
+		str = '0';
+	
+	return str;
 }
 
-const u16* TraceRecord<CpuStepRecord>::LSI11DisassemblePCOperand(u8 rn, u8 mode, const u16* x, u16* pc, char* buf, int* p)
+
+string TraceRecord<CpuStepRecord>::LSI11DisassemblePCOperand (u8 rn, u8 mode, const u16*& x, u16* pc)
 {
-	int pos = *p;
-	switch(mode) {
+	switch (mode)
+	{
 		case 2:
 			*pc += 2;
-			WRITEC('#');
-			WRITEN(*(x++));
-			break;
+			return "#" + octalToString (*(x++));
+
 		case 3:
 			*pc += 2;
-			WRITEC('@');
-			WRITEC('#');
-			WRITEN(*(x++));
-			break;
+			return "@#" + octalToString (*(x++));
+
 		case 6:
 			*pc += 2;
-			WRITEN(*pc + *(x++));
-			break;
+			return octalToString (*pc + *(x++));
+
 		case 7:
 			*pc += 2;
-			WRITEC('@');
-			WRITEN(*pc + *(x++));
-			break;
+			return "@" + octalToString (*pc + *(x++));
+
+		default:
+			throw string ("Illegal PC operand");
 	}
-	*p = pos;
-	return x;
 }
 
-#define	WRITERN(rn) { \
-	if(rn == 6) { \
-		WRITE("SP"); \
-	} else if(rn == 7) { \
-		WRITE("PC"); \
-	} else { \
-		WRITEC('R'); \
-		WRITEC(rn + '0'); \
-	} \
-}
-
-const u16* TraceRecord<CpuStepRecord>::LSI11DisassembleOperand(u8 rn, u8 mode, const u16* x, u16* pc, char* buf, int* p)
+string TraceRecord<CpuStepRecord>::writeRn (u16 rn)
 {
-	int pos = *p;
-	if(rn == 7 && ((mode & 6) == 2 || (mode & 6) == 6)) {
-		return LSI11DisassemblePCOperand(rn, mode, x, pc, buf, p);
-	}
-	switch(mode) {
+    if (rn == 6)
+        return "SP";
+    else if (rn == 7)
+        return "PC";
+    else
+        return  "R" + to_string (rn);
+}
+
+string TraceRecord<CpuStepRecord>::LSI11DisassembleOperand (u8 rn, u8 mode, const u16*& x, u16* pc)
+{
+	if (rn == 7 && ((mode & 6) == 2 || (mode & 6) == 6))
+		return LSI11DisassemblePCOperand (rn, mode, x, pc);
+	
+	switch (mode)
+	{
 		case 0:
-			WRITERN(rn);
-			break;
+			return writeRn (rn);
+
 		case 1:
-			WRITEC('(');
-			WRITERN(rn);
-			WRITEC(')');
-			break;
-		case 3:
-			WRITEC('@');
+			return "(" + writeRn (rn) + ')';
+
 		case 2:
-			WRITEC('(');
-			WRITERN(rn);
-			WRITEC(')');
-			WRITEC('+');
-			break;
-		case 5:
-			WRITEC('@');
+			return "(" + writeRn (rn) + ")+";
+
+		case 3:
+			return "@(" + writeRn (rn) + ")+";
+
 		case 4:
-			WRITEC('-');
-			WRITEC('(');
-			WRITERN(rn);
-			WRITEC(')');
-			break;
-		case 7:
-			WRITEC('@');
+			return "-(" + writeRn (rn) + ')';
+
+		case 5:
+			return "@-(" + writeRn (rn) + ')';
+
 		case 6:
 			*pc += 2;
-			WRITEN(*(x++));
-			WRITEC('(');
-			WRITERN(rn);
-			WRITEC(')');
-			break;
+			return octalToString (*(x++)) + '(' + writeRn (rn) + ')';
+
+		case 7:
+			*pc += 2;
+			return "@" + octalToString (*(x++)) + '(' + writeRn (rn) + ')';
+
+		default:
+			throw string ("Illegal operand");
 	}
-	*p = pos;
-	return x;
 }
 
-int TraceRecord<CpuStepRecord>::LSI11DisassembleBranch(s8 offset, u16 pc, char* buf, int pos)
+string TraceRecord<CpuStepRecord>::LSI11DisassembleBranch (s8 offset, u16 pc)
 {
+	string str {};
 	s16 off = offset * 2;
-	if(pc == 0xFFFF) {
-		WRITEC('.');
-		if(offset >= 0) {
-			WRITEC('+');
-			WRITEN(off);
-		} else {
-			WRITEC('-');
-			WRITEN(-off);
-		}
-	} else {
-		WRITEC('L');
-		WRITEN(pc + off);
-	}
-	return pos;
-}
 
-#define OP1()	insn = LSI11DisassembleOperand((u8) insn1->rn, (u8) insn1->mode, \
-		insn, &pc, buf, &pos)
-#define OP2()	insn = LSI11DisassembleOperand((u8) insn2->src_rn, (u8) insn2->src_mode, \
-		insn, &pc, buf, &pos), \
-		WRITEC(','), \
-		insn = LSI11DisassembleOperand((u8) insn2->dst_rn, (u8) insn2->dst_mode, \
-		insn, &pc, buf, &pos)
-#define BR()	pos = LSI11DisassembleBranch((s8) insnbr->offset, pc, buf, pos)
-#define	RET0()	return (int) (insn - start);
-#define	RET1()	return (int) (insn - start);
-#define	RET2()	return (int) (insn - start);
+	if (pc == 0xFFFF)
+	{
+		str = '.';
+		if (offset >= 0)
+		{
+			str += '+';
+			str += octalToString (off);
+		}
+		else
+		{
+			str += '-';
+			str += octalToString (-off);
+		}
+	}
+	else
+		str = 'L' + octalToString (pc + off);
+
+	return str;
+}
 
 // ToDo: As LSI11Disassemble is part of the TraceRecord<TraceCpu> class the 
 // parameters insn and pc can be retrieved from the object.
-int TraceRecord<CpuStepRecord>::LSI11Disassemble(const u16* insn, u16 pc, char* buf)
+string TraceRecord<CpuStepRecord>::LSI11Disassemble (const u16* insn, u16 pc)
 {
 	int pos = 0;
 	u16 opcd = *insn;
@@ -211,561 +185,382 @@ int TraceRecord<CpuStepRecord>::LSI11Disassemble(const u16* insn, u16 pc, char* 
 
 	pc += 2;
 
-	switch(opcd & 0177700) {
+	switch (opcd & 0177700)
+	{
 		case 0005000: /* CLR */
-			WRITE("CLR\t");
-			OP1();
-			RET1();
+			return "CLR\t" + LSI11DisassembleOperand ((u8) insn1->rn, (u8) insn1->mode, 
+				insn, &pc);
+			
 		case 0105000: /* CLRB */
-			WRITE("CLRB\t");
-			OP1();
-			RET1();
+			return "CLRB\t" + LSI11DisassembleOperand ((u8) insn1->rn, (u8) insn1->mode, 
+				insn, &pc);
+
 		case 0005100: /* COM */
-			WRITE("COM\t");
-			OP1();
-			RET1();
+			return "COM\t" + LSI11DisassembleOperand ((u8) insn1->rn, (u8) insn1->mode, 
+				insn, &pc);
+
 		case 0105100: /* COMB */
-			WRITE("COMB\t");
-			OP1();
-			RET1();
+			return "COMB\t" + LSI11DisassembleOperand ((u8) insn1->rn, (u8) insn1->mode, 
+				insn, &pc);
+
 		case 0005200: /* INC */
-			WRITE("INC\t");
-			OP1();
-			RET1();
+			return "INC\t" + LSI11DisassembleOperand ((u8) insn1->rn, (u8) insn1->mode, 
+				insn, &pc);
+
 		case 0105200: /* INCB */
-			WRITE("INCB\t");
-			OP1();
-			RET1();
+			return "INCB\t" + LSI11DisassembleOperand ((u8) insn1->rn, (u8) insn1->mode, 
+				insn, &pc);
+
 		case 0005300: /* DEC */
-			WRITE("DEC\t");
-			OP1();
-			RET1();
+			return "DEC\t" + LSI11DisassembleOperand ((u8) insn1->rn, (u8) insn1->mode, 
+				insn, &pc);
+
 		case 0105300: /* DECB */
-			WRITE("DECB\t");
-			OP1();
-			RET1();
+			return "DECB\t" + LSI11DisassembleOperand ((u8) insn1->rn, (u8) insn1->mode, 
+				insn, &pc);
+
 		case 0005400: /* NEG */
-			WRITE("NEG\t");
-			OP1();
-			RET1();
+			return "NEG\t" + LSI11DisassembleOperand ((u8) insn1->rn, (u8) insn1->mode, 
+				insn, &pc);
+
 		case 0105400: /* NEGB */
-			WRITE("NEGB\t");
-			OP1();
-			RET1();
+			return "NEGB\t" + LSI11DisassembleOperand ((u8) insn1->rn, (u8) insn1->mode, 
+				insn, &pc);
+
 		case 0005700: /* TST */
-			WRITE("TST\t");
-			OP1();
-			RET1();
+			return "TST\t" + LSI11DisassembleOperand ((u8) insn1->rn, (u8) insn1->mode, 
+				insn, &pc);
+
 		case 0105700: /* TSTB */
-			WRITE("TSTB\t");
-			OP1();
-			RET1();
+			return "TSTB\t" + LSI11DisassembleOperand ((u8) insn1->rn, (u8) insn1->mode, 
+				insn, &pc);
+
 		case 0006200: /* ASR */
-			WRITE("ASR\t");
-			OP1();
-			RET1();
+			return "ASR\t" + LSI11DisassembleOperand ((u8) insn1->rn, (u8) insn1->mode, 
+				insn, &pc);
+
 		case 0106200: /* ASRB */
-			WRITE("ASRB\t");
-			OP1();
-			RET1();
+			return "ASRB\t" + LSI11DisassembleOperand ((u8) insn1->rn, (u8) insn1->mode, 
+				insn, &pc);
+
 		case 0006300: /* ASL */
-			WRITE("ASL\t");
-			OP1();
-			RET1();
+			return "ASL\t" + LSI11DisassembleOperand ((u8) insn1->rn, (u8) insn1->mode, 
+				insn, &pc);
+
 		case 0106300: /* ASLB */
-			WRITE("ASLB\t");
-			OP1();
-			RET1();
+			return "ASLB\t" + LSI11DisassembleOperand ((u8) insn1->rn, (u8) insn1->mode, 
+				insn, &pc);
+
 		case 0006000: /* ROR */
-			WRITE("ROR\t");
-			OP1();
-			RET1();
+			return "ROR\t" + LSI11DisassembleOperand ((u8) insn1->rn, (u8) insn1->mode, 
+				insn, &pc);
+
 		case 0106000: /* RORB */
-			WRITE("RORB\t");
-			OP1();
-			RET1();
+			return "RORB\t" + LSI11DisassembleOperand ((u8) insn1->rn, (u8) insn1->mode, 
+				insn, &pc);
+
 		case 0006100: /* ROL */
-			WRITE("ROL\t");
-			OP1();
-			RET1();
+			return "ROL\t" + LSI11DisassembleOperand ((u8) insn1->rn, (u8) insn1->mode, 
+				insn, &pc);
+
 		case 0106100: /* ROLB */
-			WRITE("ROLB\t");
-			OP1();
-			RET1();
+			return "ROLB\t" + LSI11DisassembleOperand ((u8) insn1->rn, (u8) insn1->mode, 
+				insn, &pc);
+
 		case 0000300: /* SWAB */
-			WRITE("SWAB\t");
-			OP1();
-			RET1();
+			return "SWAB\t" + LSI11DisassembleOperand ((u8) insn1->rn, (u8) insn1->mode, 
+				insn, &pc);
+
 		case 0005500: /* ADC */
-			WRITE("ADC\t");
-			OP1();
-			RET1();
+			return "ADC\t" + LSI11DisassembleOperand ((u8) insn1->rn, (u8) insn1->mode, 
+				insn, &pc);
+
 		case 0105500: /* ADCB */
-			WRITE("ADCB\t");
-			OP1();
-			RET1();
+			return "ADCB\t" + LSI11DisassembleOperand ((u8) insn1->rn, (u8) insn1->mode, 
+				insn, &pc);
+
 		case 0005600: /* SBC */
-			WRITE("SBC\t");
-			OP1();
-			RET1();
+			return "SBC\t" + LSI11DisassembleOperand ((u8) insn1->rn, (u8) insn1->mode, 
+				insn, &pc);
+
 		case 0105600: /* SBCB */
-			WRITE("SBCB\t");
-			OP1();
-			RET1();
+			return "SBCB\t" + LSI11DisassembleOperand ((u8) insn1->rn, (u8) insn1->mode, 
+				insn, &pc);
+
 		case 0006700: /* SXT */
-			WRITE("SXT\t");
-			OP1();
-			RET1();
+			return "SXT\t" + LSI11DisassembleOperand ((u8) insn1->rn, (u8) insn1->mode, 
+				insn, &pc);
+
 		case 0106700: /* MFPS */
-			WRITE("MFPS\t");
-			OP1();
-			RET1();
+			return "MFPS\t" + LSI11DisassembleOperand ((u8) insn1->rn, (u8) insn1->mode, 
+				insn, &pc);
+
 		case 0106400: /* MTPS */
-			WRITE("MTPS\t");
-			OP1();
-			RET1();
+			return "MTPS\t" + LSI11DisassembleOperand ((u8) insn1->rn, (u8) insn1->mode, 
+				insn, &pc);
+
 		case 0106500: /* MFPI */
-			WRITE("MFPI\t");
-			OP1();
-			RET1();
+			return "MFPI\t" + LSI11DisassembleOperand ((u8) insn1->rn, (u8) insn1->mode, 
+				insn, &pc);
+
 		case 0000100: /* JMP */
-			WRITE("JMP\t");
-			OP1();
-			RET1();
+			return "JMP\t" + LSI11DisassembleOperand ((u8) insn1->rn, (u8) insn1->mode, 
+				insn, &pc);
+
 		case 0006400: /* MARK */
-			WRITE("MARK\t");
-			WRITEN(opcd & 077);
-			RET0();
+			return "MARK\t" + octalToString (opcd & 077);
+
 		case 0006500: /* MFPD */
-			WRITE("MFPD\t");
-			WRITEN(opcd & 077);
-			RET0();
+			return "MFPD\t" + octalToString (opcd & 077);
 	}
+	string oper1, oper2;
 
-	switch(opcd & 0170000) {
+	switch (opcd & 0170000)
+	{
 		case 0010000: /* MOV */
-			WRITE("MOV\t");
-			OP2();
-			RET2();
+			// The operands have to be disassembled first in the correct order
+			// before being assembled into a string. The string concatenation
+			// occurs from left to right and unfortunately LSI11DisassembleOperand
+			// is not side-effect free.
+			oper1 = LSI11DisassembleOperand ((u8) insn2->src_rn, (u8) insn2->src_mode, insn, &pc);
+			oper2 = LSI11DisassembleOperand ((u8) insn2->dst_rn, (u8) insn2->dst_mode, insn, &pc);
+			return "MOV\t" + oper1 + ',' + oper2;
+
 		case 0110000: /* MOVB */
-			WRITE("MOVB\t");
-			OP2();
-			RET2();
+			oper1 = LSI11DisassembleOperand ((u8) insn2->src_rn, (u8) insn2->src_mode, insn, &pc);
+			oper2 = LSI11DisassembleOperand ((u8) insn2->dst_rn, (u8) insn2->dst_mode, insn, &pc);
+			return string("MOVB\t") + oper1 + ',' + oper2;
+
 		case 0020000: /* CMP */
-			WRITE("CMP\t");
-			OP2();
-			RET2();
+			oper1 = LSI11DisassembleOperand ((u8) insn2->src_rn, (u8) insn2->src_mode, insn, &pc);
+			oper2 = LSI11DisassembleOperand ((u8) insn2->dst_rn, (u8) insn2->dst_mode, insn, &pc);
+			return string("CMP\t") + oper1 + ',' + oper2;
+
 		case 0120000: /* CMPB */
-			WRITE("CMPB\t");
-			OP2();
-			RET2();
+			oper1 = LSI11DisassembleOperand ((u8) insn2->src_rn, (u8) insn2->src_mode, insn, &pc);
+			oper2 = LSI11DisassembleOperand ((u8) insn2->dst_rn, (u8) insn2->dst_mode, insn, &pc);
+			return string("CMPB\t") + oper1 + ',' + oper2;
+
 		case 0060000: /* ADD */
-			WRITE("ADD\t");
-			OP2();
-			RET2();
+			oper1 = LSI11DisassembleOperand ((u8) insn2->src_rn, (u8) insn2->src_mode, insn, &pc);
+			oper2 = LSI11DisassembleOperand ((u8) insn2->dst_rn, (u8) insn2->dst_mode, insn, &pc);
+			return string("ADD\t") + oper1 + ',' + oper2;
+
 		case 0160000: /* SUB */
-			WRITE("SUB\t");
-			OP2();
-			RET2();
+			oper1 = LSI11DisassembleOperand ((u8) insn2->src_rn, (u8) insn2->src_mode, insn, &pc);
+			oper2 = LSI11DisassembleOperand ((u8) insn2->dst_rn, (u8) insn2->dst_mode, insn, &pc);
+			return string("SUB\t") + oper1 + ',' + oper2;
+
 		case 0030000: /* BIT */
-			WRITE("BIT\t");
-			OP2();
-			RET2();
+			oper1 = LSI11DisassembleOperand ((u8) insn2->src_rn, (u8) insn2->src_mode, insn, &pc);
+			oper2 = LSI11DisassembleOperand ((u8) insn2->dst_rn, (u8) insn2->dst_mode, insn, &pc);
+			return string("BIT\t") + oper1 + ',' + oper2;
+
 		case 0130000: /* BITB */
-			WRITE("BITB\t");
-			OP2();
-			RET2();
+			oper1 = LSI11DisassembleOperand ((u8) insn2->src_rn, (u8) insn2->src_mode, insn, &pc);
+			oper2 = LSI11DisassembleOperand ((u8) insn2->dst_rn, (u8) insn2->dst_mode, insn, &pc);
+			return string("BITB\t") + oper1 + ',' + oper2;
+
 		case 0040000: /* BIC */
-			WRITE("BIC\t");
-			OP2();
-			RET2();
+			oper1 = LSI11DisassembleOperand ((u8) insn2->src_rn, (u8) insn2->src_mode, insn, &pc);
+			oper2 = LSI11DisassembleOperand ((u8) insn2->dst_rn, (u8) insn2->dst_mode, insn, &pc);
+			return string("BIC\t") + oper1 + ',' + oper2;
+
 		case 0140000: /* BICB */
-			WRITE("BICB\t");
-			OP2();
-			RET2();
+			oper1 = LSI11DisassembleOperand ((u8) insn2->src_rn, (u8) insn2->src_mode, insn, &pc);
+			oper2 = LSI11DisassembleOperand ((u8) insn2->dst_rn, (u8) insn2->dst_mode, insn, &pc);
+			return string("BICB\t") + oper1 + ',' + oper2;
+
 		case 0050000: /* BIS */
-			WRITE("BIS\t");
-			OP2();
-			RET2();
+			oper1 = LSI11DisassembleOperand ((u8) insn2->src_rn, (u8) insn2->src_mode, insn, &pc);
+			oper2 = LSI11DisassembleOperand ((u8) insn2->dst_rn, (u8) insn2->dst_mode, insn, &pc);
+			return string("BIS\t") + oper1 + ',' + oper2;
+
 		case 0150000: /* BISB */
-			WRITE("BISB\t");
-			OP2();
-			RET2();
+			oper1 = LSI11DisassembleOperand ((u8) insn2->src_rn, (u8) insn2->src_mode, insn, &pc);
+			oper2 = LSI11DisassembleOperand ((u8) insn2->dst_rn, (u8) insn2->dst_mode, insn, &pc);
+			return string("BISB\t") + oper1 + ',' + oper2;
 	}
 
-	switch(opcd & 0177000) {
+	switch (opcd & 0177000)
+	{
 		case 0074000: /* XOR */
-			WRITE("XOR\t");
-			WRITERN(insnjsr->r);
-			WRITEC(',');
-			OP1();
-			RET1();
+			return "XOR\t" + writeRn (insnjsr->r) + ',' +
+				LSI11DisassembleOperand ((u8) insn1->rn, (u8) insn1->mode,
+				insn, &pc);
+
 		case 0004000: /* JSR */
-			WRITE("JSR\t");
-			WRITERN(insnjsr->r);
-			WRITEC(',');
-			OP1();
-			RET1();
+			return "JSR\t" + writeRn (insnjsr->r) + ',' +
+				LSI11DisassembleOperand ((u8) insn1->rn, (u8) insn1->mode,
+				insn, &pc);
+
 		case 0077000: /* SOB */
-			WRITE("SOB\t");
-			WRITERN(insnjsr->r);
-			WRITEC(',');
-			WRITEC('L');
-			WRITEN(pc - insnsob->offset * 2);
-			RET1();
+			return "SOB\t" + writeRn (insnjsr->r) + ",L" +
+				octalToString (pc - insnsob->offset * 2);
+
 		case 0070000: /* MUL */
-			WRITE("MUL\t");
-			OP1();
-			WRITEC(',');
-			WRITERN(insnjsr->r);
-			RET1();
+			return "MUL\t" + LSI11DisassembleOperand ((u8) insn1->rn,
+				(u8) insn1->mode, insn, &pc) + ',' + to_string (insnjsr->r);
+
 		case 0071000: /* DIV */
-			WRITE("DIV\t");
-			OP1();
-			WRITEC(',');
-			WRITERN(insnjsr->r);
-			RET1();
+			return "DIV\t" + LSI11DisassembleOperand ((u8) insn1->rn,
+				(u8) insn1->mode, insn, &pc) + ',' + to_string (insnjsr->r);
+
 		case 0072000: /* ASH */
-			WRITE("ASH\t");
-			OP1();
-			WRITEC(',');
-			WRITERN(insnjsr->r);
-			RET1();
+			return "ASH\t" + LSI11DisassembleOperand ((u8) insn1->rn,
+				(u8) insn1->mode, insn, &pc) + ',' + to_string (insnjsr->r);
+
 		case 0073000: /* ASHC */
-			WRITE("ASHC\t");
-			OP1();
-			WRITEC(',');
-			WRITERN(insnjsr->r);
-			RET1();
+			return "ASHC\t" + LSI11DisassembleOperand ((u8) insn1->rn,
+				(u8) insn1->mode, insn, &pc) + ',' + to_string (insnjsr->r);
 	}
 
-	switch(opcd & 0177770) {
+	switch (opcd & 0177770)
+	{
 		case 0000200: /* RTS */
-			WRITE("RTS\t");
-			WRITERN(insnrts->rn);
-			RET0();
+			return "RTS\t"+ writeRn (insnrts->rn);
+
 		case 0075000: /* FADD */
-			WRITE("FADD\t");
-			WRITERN(insnrts->rn);
-			RET0();
+			return "FADD\t"+ writeRn (insnrts->rn);
+
 		case 0075010: /* FSUB */
-			WRITE("FSUB\t");
-			WRITERN(insnrts->rn);
-			RET0();
+			return "FSUB\t"+ writeRn (insnrts->rn);
+
 		case 0075020: /* FMUL */
-			WRITE("FMUL\t");
-			WRITERN(insnrts->rn);
-			RET0();
+			return "FMUL\t"+ writeRn (insnrts->rn);
+
 		case 0075030: /* FDIV */
-			WRITE("FDIV\t");
-			WRITERN(insnrts->rn);
-			RET0();
+			return "FDIV\t"+ writeRn (insnrts->rn);
 	}
 
-	switch(opcd & 0177400) {
+	switch (opcd & 0177400)
+	{
 		case 0000400: /* BR */
-			WRITE("BR\t");
-			BR();
-			RET0();
+			return "BR\t" + LSI11DisassembleBranch ((s8) insnbr->offset, pc);
+
 		case 0001000: /* BNE */
-			WRITE("BNE\t");
-			BR();
-			RET0();
+			return "BNE\t" + LSI11DisassembleBranch ((s8) insnbr->offset, pc);
+
 		case 0001400: /* BEQ */
-			WRITE("BEQ\t");
-			BR();
-			RET0();
+			return "BEQ\t" + LSI11DisassembleBranch ((s8) insnbr->offset, pc);
+
 		case 0100000: /* BPL */
-			WRITE("BPL\t");
-			BR();
-			RET0();
+			return "BPL\t" + LSI11DisassembleBranch ((s8) insnbr->offset, pc);
+
 		case 0100400: /* BMI */
-			WRITE("BMI\t");
-			BR();
-			RET0();
+			return "BMI\t" + LSI11DisassembleBranch ((s8) insnbr->offset, pc);
+
 		case 0102000: /* BVC */
-			WRITE("BVC\t");
-			BR();
-			RET0();
+			return "BVC\t" + LSI11DisassembleBranch ((s8) insnbr->offset, pc);
+
 		case 0102400: /* BVS */
-			WRITE("BVS\t");
-			BR();
-			RET0();
+			return "BVS\t" + LSI11DisassembleBranch ((s8) insnbr->offset, pc);
+
 		case 0103000: /* BCC */
-			WRITE("BCC\t");
-			BR();
-			RET0();
+			return "BCC\t" + LSI11DisassembleBranch ((s8) insnbr->offset, pc);
+
 		case 0103400: /* BCS */
-			WRITE("BCS\t");
-			BR();
-			RET0();
+			return "BCS\t" + LSI11DisassembleBranch ((s8) insnbr->offset, pc);
+
 		case 0002000: /* BGE */
-			WRITE("BGE\t");
-			BR();
-			RET0();
+			return "BGE\t" + LSI11DisassembleBranch ((s8) insnbr->offset, pc);
+
 		case 0002400: /* BLT */
-			WRITE("BLT\t");
-			BR();
-			RET0();
+			return "BLT\t" + LSI11DisassembleBranch ((s8) insnbr->offset, pc);
+
 		case 0003000: /* BGT */
-			WRITE("BGT\t");
-			BR();
-			RET0();
+			return "BGT\t" + LSI11DisassembleBranch ((s8) insnbr->offset, pc);
+
 		case 0003400: /* BLE */
-			WRITE("BLE\t");
-			BR();
-			RET0();
+			return "BLE\t" + LSI11DisassembleBranch ((s8) insnbr->offset, pc);
+
 		case 0101000: /* BHI */
-			WRITE("BHI\t");
-			BR();
-			RET0();
+			return "BHI\t" + LSI11DisassembleBranch ((s8) insnbr->offset, pc);
+
 		case 0101400: /* BLOS */
-			WRITE("BLOS\t");
-			BR();
-			RET0();
+			return "BLOS\t" + LSI11DisassembleBranch ((s8) insnbr->offset, pc);
+
 		case 0104000: /* EMT */
-			if(opcd & 0377) {
-				WRITE("EMT\t");
-				WRITEN(opcd & 0377);
-			} else {
-				WRITE("EMT");
-			}
-			RET0();
+			if(opcd & 0377)
+				return "EMT\t" + octalToString (opcd & 0377);
+			else
+				return "EMT";
+
 		case 0104400: /* TRAP */
-			if(opcd & 0377) {
-				WRITE("TRAP\t");
-				WRITEN(opcd & 0377);
-			} else {
-				WRITE("TRAP");
-			}
-			RET0();
+			if(opcd & 0377)
+				return "TRAP\t" + octalToString (opcd & 0377);
+			else
+				return "TRAP";
 	}
 
-	switch(opcd) {
+	switch (opcd)
+	{
 		case 0000003: /* BPT */
-			WRITE("BPT");
-			RET0();
+			return "BPT";
+
 		case 0000004: /* IOT */
-			WRITE("IOT");
-			RET0();
+			return "IOT";
+
 		case 0000002: /* RTI */
-			WRITE("RTI");
-			RET0();
+			return "RTI";
+
 		case 0000006: /* RTT */
-			WRITE("RTT");
-			RET0();
+			return "RTT";
+
 		case 0000007: /* MFPT (only KDF11-A) */
-			WRITE("MFPT");
-			RET0();
+			return "MFPT";
+
 		case 0000000: /* HALT */
-			WRITE("HALT");
-			RET0();
+			return "HALT";
+
 		case 0000001: /* WAIT */
-			WRITE("WAIT");
-			RET0();
+			return "WAIT";
+
 		case 0000005: /* RESET */
-			WRITE("RESET");
-			RET0();
+			return "RESET";
+
 		case 0000240: /* NOP */
-			WRITE("NOP");
-			RET0();
+			return "NOP";
+
 		case 0000241: /* CLC */
-			WRITE("CLC");
-			RET0();
+			return "CLC";
+
 		case 0000242: /* CLV */
-			WRITE("CLV");
-			RET0();
+			return "CLV";
+
 		case 0000243: /* CLVC */
-			WRITE("CLVC");
-			RET0();
+			return "CLVC";
+
 		case 0000244: /* CLZ */
-			WRITE("CLZ");
-			RET0();
+			return "CLZ";
+
 		case 0000250: /* CLN */
-			WRITE("CLN");
-			RET0();
+			return "CLN";
+
 		case 0000257: /* CCC */
-			WRITE("CCC");
-			RET0();
+			return "CCC";
+
 		case 0000260: /* NOP1 */
-			WRITE("NOP1");
-			RET0();
+			return "NOP1";
+
 		case 0000261: /* SEC */
-			WRITE("SEC");
-			RET0();
+			return "SEC";
+
 		case 0000262: /* SEV */
-			WRITE("SEV");
-			RET0();
+			return "SEV";
+
 		case 0000263: /* SEVC */
-			WRITE("SEVC");
-			RET0();
+			return "SEVC";
+
 		case 0000264: /* SEZ */
-			WRITE("SEZ");
-			RET0();
+			return "SEZ";
+
 		case 0000270: /* SEN */
-			WRITE("SEN");
-			RET0();
+			return "SEN";
+
 		case 0000277: /* SCC */
-			WRITE("SCC");
-			RET0();
+			return "SCC";
 	}
 
-	WRITE("; unknown [");
-	WRITEN(opcd);
-	WRITEC(']');
-	return 1;
-}
-
-#define OP1LEN()	LSI11OperandLength((const u8) insn1->rn, (const u8) insn1->mode) + 1
-#define OP2LEN()	LSI11OperandLength((const u8) insn2->src_rn, (const u8) insn2->src_mode) + \
-			LSI11OperandLength((const u8) insn2->dst_rn, (const u8) insn2->dst_mode) + 1
-
-int TraceRecord<CpuStepRecord>::LSI11OperandLength(const u8 rn, const u8 mode)
-{
-	if(rn == 7 && ((mode & 6) == 2 || (mode & 6) == 6)) {
-		return 1;
-	}
-	switch(mode) {
-		default:
-		case 0:
-		case 1:
-		case 3:
-		case 2:
-		case 5:
-		case 4:
-			return 0;
-		case 6:
-		case 7:
-			return 1;
-	}
-}
-
-int TraceRecord<CpuStepRecord>::LSI11InstructionLength(const u16* insn)
-{
-	u16 opcd = *insn;
-	KD11INSN1* insn1 = (KD11INSN1*) insn;
-	KD11INSN2* insn2 = (KD11INSN2*) insn;
-
-	switch(opcd & 0177700) {
-		case 0005000: /* CLR */
-		case 0105000: /* CLRB */
-		case 0005100: /* COM */
-		case 0105100: /* COMB */
-		case 0005200: /* INC */
-		case 0105200: /* INCB */
-		case 0005300: /* DEC */
-		case 0105300: /* DECB */
-		case 0005400: /* NEG */
-		case 0105400: /* NEGB */
-		case 0005700: /* TST */
-		case 0105700: /* TSTB */
-		case 0006200: /* ASR */
-		case 0106200: /* ASRB */
-		case 0006300: /* ASL */
-		case 0106300: /* ASLB */
-		case 0006000: /* ROR */
-		case 0106000: /* RORB */
-		case 0006100: /* ROL */
-		case 0106100: /* ROLB */
-		case 0000300: /* SWAB */
-		case 0005500: /* ADC */
-		case 0105500: /* ADCB */
-		case 0005600: /* SBC */
-		case 0105600: /* SBCB */
-		case 0006700: /* SXT */
-		case 0106700: /* MFPS */
-		case 0106400: /* MTPS */
-		case 0106500: /* MFPI */
-		case 0000100: /* JMP */
-			return OP1LEN();
-		case 0006400: /* MARK */
-		case 0006500: /* MFPD */
-			return 1;
-	}
-
-	switch(opcd & 0170000) {
-		case 0010000: /* MOV */
-		case 0110000: /* MOVB */
-		case 0020000: /* CMP */
-		case 0120000: /* CMPB */
-		case 0060000: /* ADD */
-		case 0160000: /* SUB */
-		case 0030000: /* BIT */
-		case 0130000: /* BITB */
-		case 0040000: /* BIC */
-		case 0140000: /* BICB */
-		case 0050000: /* BIS */
-		case 0150000: /* BISB */
-			return OP2LEN();
-	}
-
-	switch(opcd & 0177000) {
-		case 0074000: /* XOR */
-		case 0004000: /* JSR */
-			return OP1LEN();
-		case 0077000: /* SOB */
-			return 1;
-		case 0070000: /* MUL */
-		case 0071000: /* DIV */
-		case 0072000: /* ASH */
-		case 0073000: /* ASHC */
-			return OP1LEN();
-	}
-
-	switch(opcd & 0177770) {
-		case 0000200: /* RTS */
-		case 0075000: /* FADD */
-		case 0075010: /* FSUB */
-		case 0075020: /* FMUL */
-		case 0075030: /* FDIV */
-			return 1;
-	}
-
-	switch(opcd & 0177400) {
-		case 0000400: /* BR */
-		case 0001000: /* BNE */
-		case 0001400: /* BEQ */
-		case 0100000: /* BPL */
-		case 0100400: /* BMI */
-		case 0102000: /* BVC */
-		case 0102400: /* BVS */
-		case 0103000: /* BCC */
-		case 0103400: /* BCS */
-		case 0002000: /* BGE */
-		case 0002400: /* BLT */
-		case 0003000: /* BGT */
-		case 0003400: /* BLE */
-		case 0101000: /* BHI */
-		case 0101400: /* BLOS */
-		case 0104000: /* EMT */
-		case 0104400: /* TRAP */
-			return 1;
-	}
-
-	switch(opcd) {
-		case 0000003: /* BPT */
-		case 0000004: /* IOT */
-		case 0000002: /* RTI */
-		case 0000006: /* RTT */
-		case 0000000: /* HALT */
-		case 0000001: /* WAIT */
-		case 0000005: /* RESET */
-		case 0000240: /* NOP */
-		case 0000241: /* CLC */
-		case 0000242: /* CLV */
-		case 0000243: /* CLVC */
-		case 0000244: /* CLZ */
-		case 0000250: /* CLN */
-		case 0000257: /* CCC */
-		case 0000260: /* NOP1 */
-		case 0000261: /* SEC */
-		case 0000262: /* SEV */
-		case 0000263: /* SEVC */
-		case 0000264: /* SEZ */
-		case 0000270: /* SEN */
-		case 0000277: /* SCC */
-			return 1;
-	}
-
-	return 1;
+	return "; unknown [" + octalToString (opcd) + ']';
 }

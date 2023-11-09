@@ -2,9 +2,6 @@
 
 std::ostream& operator<< (std::ostream& os, TraceRecord<CpuStepRecord> record)
 {
-	char buf[64];
-    record.LSI11Disassemble (record.insn_, record.r_[7], buf);
-
 	os << oct << setw(6) << setfill('0') << "[CPU ] "
 		"PC=" << record.r_[7] << ' ' <<
 		"PSW [" << record.priorityBit () <<
@@ -22,7 +19,8 @@ std::ostream& operator<< (std::ostream& os, TraceRecord<CpuStepRecord> record)
 		"R3=" << record.r_[3] << ' ' <<
 		"R4=" << record.r_[4] << ' ' <<
 		"R5=" << record.r_[5] << "] " <<
-		*record.insn_ << " => " << buf << '\n';
+		*record.insn_ << " => " << 
+		record.LSI11Disassemble (record.insn_, record.r_[7]) << '\n';
 
 	return os;
 }

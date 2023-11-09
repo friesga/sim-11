@@ -7,10 +7,12 @@
 #include <algorithm>
 #include <iterator>
 #include <iomanip>
+#include <string>
 
 using std::oct;
 using std::setw;
 using std::setfill;
+using std::string;
 
 // The following macro's are defined in types.h and kd11_na_cpu.h and are to be
 // converted to functions.
@@ -55,16 +57,12 @@ class TraceRecord<CpuStepRecord>
 	char overflowBit () { return (psw_ & PSW_V) ? 'V' : '-'; }
 	char carryBit ()    { return (psw_ & PSW_C) ? 'C' : '-'; }
 
-	int LSI11Disassemble (const u16* insn, u16 pc, char* buf);
-    int LSI11Write (char* buf, const char* str, int pos);
-    int LSI11WriteN (char* buf, u16 val, int pos);
-    const u16* LSI11DisassemblePCOperand (u8 rn, u8 mode, const u16* x,
-        u16* pc, char* buf, int* p);
-    const u16* LSI11DisassembleOperand(u8 rn, u8 mode, const u16* x,
-        u16* pc, char* buf, int* p);
-    int LSI11DisassembleBranch(s8 offset, u16 pc, char* buf, int pos);
-    int LSI11OperandLength(const u8 rn, const u8 mode);
-    int LSI11InstructionLength(const u16* insn);
+	string LSI11Disassemble (const u16* insn, u16 pc);
+    string octalToString (u16 val);
+    string LSI11DisassemblePCOperand (u8 rn, u8 mode, const u16*& x, u16* pc);
+    string LSI11DisassembleOperand(u8 rn, u8 mode, const u16*& x, u16* pc);
+    string LSI11DisassembleBranch(s8 offset, u16 pc);
+	string writeRn (u16 rn);
 
 
 public:
