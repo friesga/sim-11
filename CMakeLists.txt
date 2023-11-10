@@ -405,7 +405,6 @@ set (SIM11_TEST_SRCS
     src/lib/gotapproval.cpp
     ${KD11_NA_SRCS}
     ${KDF11_A_SRCS}
-    src/dlv11j/dlv11j.cpp
     src/msv11d/msv11d.cpp
     src/signal/signal.cpp
     ${TRACE_SRCS}

@@ -1,9 +1,10 @@
+#include "trace/trace.h"
+#include "dlv11j.h"
+#include "console/operatorconsole/operatorconsolefactory.h"
+
 #include <string.h>
 #include <stdlib.h>
 #include <functional>
-
-#include "trace/trace.h"
-#include "dlv11j.h"
 
 using std::bind;
 using std::placeholders::_1;
@@ -33,7 +34,7 @@ using std::make_unique;
 
 // Construct a default DLV11-J object, i.e. without a user-specified
 // configuration.
-DLV11J::DLV11J (Qbus *bus, unique_ptr<Console> console)
+DLV11J::DLV11J (Qbus *bus)
 	:
 	PDP11Peripheral (bus),
 	// Set factory configuration for base address, vector and BREAK key response.
@@ -41,29 +42,12 @@ DLV11J::DLV11J (Qbus *bus, unique_ptr<Console> console)
 	baseAddress_ {defaultBaseAddress_},
 	baseVector_ {defaultBaseVector_},
 	ch3BreakResponse_ {DLV11Config::Ch3BreakResponse::Halt},
-	breakKey_ {27},
-	console_ {move (console)}
+	breakKey_ {27}
 {
-	for (u16 channelNr = 0; channelNr < numChannels; ++channelNr)
-	{
-		if (channelNr == 3)
-		{
-			channel_[channelNr] = make_unique<DLV11Channel>
-				(defaultCh3Address_, defaultCh3Vector_);
-		}
-		else
-		{
-			channel_[channelNr] = make_unique<DLV11Channel>
-				(baseAddress_ + 8 * channelNr, baseVector_ + 8 * channelNr);
-		}
-	}
+	console_ =  OperatorConsoleFactory::create ();
 
-	initialize ();
-
-	// Factory configuration is for channel 3 to be used as console and the
-	// channel's base address and vector have to be set to the appropriate
-	// values.
-	channel_[3]->send = std::bind (&DLV11J::console_print, this, std::placeholders::_1);
+	// Initialize the channels with channel 3 console enabled
+	initialize (true);
 
 	reset ();
 }
@@ -71,19 +55,44 @@ DLV11J::DLV11J (Qbus *bus, unique_ptr<Console> console)
 // Construct a DLV11-J object with the configuration as specified by
 // the user.
 // ToDo: The code in these two constructors should be merged
-DLV11J::DLV11J (Qbus *bus, unique_ptr<Console> console, 
-		shared_ptr<DLV11Config> dlv11Config)
+DLV11J::DLV11J (Qbus *bus, shared_ptr<DLV11Config> dlv11Config)
 	:
 	PDP11Peripheral (bus),
 	baseAddress_ {dlv11Config->baseAddress},
 	baseVector_ {dlv11Config->vector},
 	ch3BreakResponse_ {dlv11Config->ch3BreakResponse},
-	breakKey_ {dlv11Config->breakKey},
-	console_ {move (console)}
+	breakKey_ {dlv11Config->breakKey}
+{
+	console_ =  OperatorConsoleFactory::create ();
+
+	initialize (dlv11Config->ch3ConsoleEnabled);
+
+	reset ();
+}
+
+// The class has a meaningful destructor so the "rule of five" applies
+// and copy and move constructors and copy and move assignment operators
+// have to be defined.
+DLV11J::~DLV11J ()
+{
+
+}
+
+// Initialize the DLV11J and its channels
+// 
+// If channel 3 is to be used as console the channel's base address
+// and vector have to be set to the appropriate values.
+//
+// When channel 3 is configured as the console device interface [...]
+// the interrupt vectors of the channel become 60 and 64. This is true
+// regardless of the configured base vector of the module.
+// (EK-DLV1J-UG-001)
+//
+void DLV11J::initialize (bool ch3ConsoleEnabled)
 {
 	for (u16 channelNr = 0; channelNr < numChannels; ++channelNr)
 	{
-		if (channelNr == 3 && dlv11Config->ch3ConsoleEnabled)
+		if (channelNr == 3 && ch3ConsoleEnabled)
 		{
 			channel_[channelNr] = make_unique<DLV11Channel> 
 				(defaultCh3Address_, defaultCh3Vector_);
@@ -95,38 +104,10 @@ DLV11J::DLV11J (Qbus *bus, unique_ptr<Console> console,
 		}
 	}
 
-	initialize ();
+	if (ch3ConsoleEnabled)
+		channel_[3]->send = 
+			std::bind (&DLV11J::console_print, this, std::placeholders::_1);
 
-	// If channel 3 is to be used as console the channel's base address
-	// and vector have to be set to the appropriate values.
-	//
-	// When channel 3 is configured as the console device interface [...]
-	// the interrupt vectors of the channel become 60 and 64. This is true
-	// regardless of the configured base vector of the module.
-	// (EK-DLV1J-UG-001)
-
-	if (dlv11Config->ch3ConsoleEnabled)
-	{
-		channel_[3]->send = std::bind (&DLV11J::console_print, this, std::placeholders::_1);
-	}
-
-	reset ();
-}
-
-
-// The class has a meaningful destructor so the "rule of five" applies
-// and copy and move constructors and copy and move assignment operators
-// have to be defined.
-DLV11J::~DLV11J ()
-{
-
-}
-
-// Initialize the DLV11J and its channels and set the channel's base address
-// and vector to their default values. The value for channel 3 has to be
-// overwritten if channel 3 is configured for console operation.
-void DLV11J::initialize ()
-{
 	// Pass the console the function we want to receive the characters on
 	console_->setReceiver (bind (&DLV11J::receive, this, _1, _2));
 

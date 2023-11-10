@@ -18,13 +18,10 @@ using std::string;
 // without any files attached.
 void LSI11::configureDevices (Window *window)
 {
-    // The Console class reads characters and sends them to the dlv11
-    unique_ptr<Console> console =  OperatorConsoleFactory::create ();
-
     // By default use the KD11-NA processor
     processor_ = new KD11_NA (&bus_);
     msv11_ = new MSV11D (&bus_);
-    dlv11_ = new DLV11J (&bus_, move (console));
+    dlv11_ = new DLV11J (&bus_);
     bdv11_ = new BDV11 (&bus_);
     rxv21_ = new RXV21 (&bus_);
     rlv12_ = new RLV12 (&bus_);
@@ -64,9 +61,7 @@ void LSI11::configureDevices (vector<shared_ptr<DeviceConfig>> systemConfig,
                 break;
 
             case DeviceType::DLV11_J:
-                // The Console class reads characters and sends them to the dlv11
                 dlv11_ = new DLV11J (&bus_, 
-                    move (OperatorConsoleFactory::create ()),
                     static_pointer_cast<DLV11Config> (device));
                 break;
 

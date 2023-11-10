@@ -17,9 +17,8 @@ using std::function;
 class DLV11J : public PDP11Peripheral
 {
 public:
-	DLV11J (Qbus *bus, unique_ptr<Console> console);
-	DLV11J (Qbus *bus, unique_ptr<Console> console, 
-		shared_ptr<DLV11Config> dlv11Config);
+	DLV11J (Qbus *bus);
+	DLV11J (Qbus *bus, shared_ptr<DLV11Config> dlv11Config);
 	~DLV11J ();
 
 	// Define the obligatory functions
@@ -48,7 +47,7 @@ private:
     unsigned char breakKey_;
 	unique_ptr<Console> console_;
 
-	void initialize ();
+	void initialize (bool ch3Enabled);
 	void readChannel (int channelNr);
 	void writeChannel (int channelNr);
 	void writeRCSR (int n, u16 value);
