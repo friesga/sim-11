@@ -54,22 +54,24 @@ void DLV11J::initialize (bool ch3ConsoleEnabled)
 // This function allows the host system to read a word from one of the
 // DLV11-J's registers. The read command is passed through to the appropriate
 // channel.
-StatusCode DLV11J::read (u16 address, u16 *destAddress)
+StatusCode DLV11J::read (u16 registerAddress, u16 *destAddress)
 {
-	return channel_[3]->read (address, destAddress);
+	return channel_[extractChannelNr (registerAddress)]->read (registerAddress,
+		destAddress);
 }
 
 // This function allows the host system to write a word to one of the
 // DLV11-J's registers. The write command is passed through to the appropriate
 // channel.
-StatusCode DLV11J::writeWord (u16 address, u16 value)
+StatusCode DLV11J::writeWord (u16 registerAddress, u16 value)
 {
-	return channel_[3]->writeWord (address, value);
+	return channel_[extractChannelNr (registerAddress)]->writeWord (registerAddress,
+		value);
 }
 
 bool DLV11J::responsible (u16 address)
 {
-	if (address >= baseAddress_ && address <= baseAddress_ + (3 * 8))
+	if (address >= baseAddress_ && address < baseAddress_ + (3 * 8))
 		return true;
 
 	/* console device */
@@ -90,5 +92,17 @@ void DLV11J::reset ()
 {
 	for (u8 channelNr = 0; channelNr < numChannels; ++channelNr)
 		channel_[channelNr]->reset ();
+}
+
+// Determine the channel number from the register address. An exception
+// to the standard formula has to be made for the use of channel 3 as
+// console device.
+u16 DLV11J::extractChannelNr (u16 registerAddress)
+{
+	if (registerAddress >= defaultCh3Address_ && 
+			registerAddress < defaultCh3Address_ + (3 * 8))
+		return 3;
+	else
+		return static_cast<u16> ((registerAddress & 030) >> 3);
 }
 
