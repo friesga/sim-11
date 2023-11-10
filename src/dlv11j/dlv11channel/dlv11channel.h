@@ -4,11 +4,13 @@
 #include "qbus/qbus.h"
 #include "statuscodes.h"
 #include "configdata/dlv11config/dlv11config.h"
+#include "console/console.h"
 
 #include <functional>
 #include <memory>
 
 using std::function;
+using std::unique_ptr;
 using std::shared_ptr;
 
 class DLV11Channel
@@ -43,6 +45,7 @@ private:
 	DLV11Config::Ch3BreakResponse ch3BreakResponse_;
     unsigned char breakKey_;
 	u16 channelNr_;
+	unique_ptr<Console> console_;
 
 	void readChannel ();
 	void writeRCSR (u16 value);

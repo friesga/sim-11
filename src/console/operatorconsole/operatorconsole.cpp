@@ -20,7 +20,7 @@ OperatorConsole::~OperatorConsole ()
     senderThread_.join ();
 }
 
-void OperatorConsole::setReceiver (std::function<void(int, char)> receiver)
+void OperatorConsole::setReceiver (std::function<void(char)> receiver)
 {
     receiver_ = receiver;
 }
@@ -32,7 +32,7 @@ bool OperatorConsole::isActive ()
 
 void OperatorConsole::send (const char c)
 {
-	receiver_ (3, c);
+	receiver_ (c);
 }
 
 void OperatorConsole::sendString (const char* s)

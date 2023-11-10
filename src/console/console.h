@@ -9,7 +9,7 @@ using std::function;
 class Console
 {
 public:
-    virtual void setReceiver (function<void(int, char)>) = 0;
+    virtual void setReceiver (function<void(char)>) = 0;
     virtual void send (char) = 0;
     virtual void print (char const c) = 0;
     virtual bool isActive() = 0;

@@ -21,7 +21,7 @@ public:
     virtual void sender () = 0;
 
     // Console functions to implement
-    void setReceiver (std::function<void(int, char)> receiver) override;
+    void setReceiver (std::function<void(char)> receiver) override;
     void send (const char c) override;
     void print (char const c) override;
     bool isActive() override;
@@ -32,7 +32,7 @@ public:
 protected:
     std::thread senderThread_;
     bool consoleRunning_ {false};
-    std::function<void(int, char)> receiver_;
+    std::function<void(char)> receiver_;
 };
 
 #endif // !_OPERATORCONSOLE_H_

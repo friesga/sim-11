@@ -1,7 +1,12 @@
 #include "dlv11channel.h"
 #include "trace/trace.h"
+#include "console/operatorconsole/operatorconsolefactory.h"
 
 #include <memory>
+#include <functional>
+
+using std::bind;
+using std::placeholders::_1;
 
 /* Size of DLV11-J input buffer */
 #define	DLV11J_BUF		2048
@@ -37,15 +42,37 @@ DLV11Channel::DLV11Channel (Qbus* bus, u16 channelBaseAddress,
 	vector {channelVector},
 	bus_ {bus},
 	ch3BreakResponse_ {dlv11Config->ch3BreakResponse},
-	breakKey_ {dlv11Config->breakKey},
-	channelNr_ {static_cast<u16> ((base & 030) >> 3)}
-{}
+	breakKey_ {dlv11Config->breakKey}
+{
+	// Determine the channel number from the base address. An exception
+	// to the standard formula has to be made when channel 3 is used as
+	// a console device.
+	if (base == 0177560)
+		channelNr_ = 3;
+	else
+		channelNr_ = static_cast<u16> ((base & 030) >> 3);
+
+	if (channelNr_ == 3)
+	{
+		console_ = OperatorConsoleFactory::create ();
+
+		// Pass the console the function we want to receive the characters on
+		console_->setReceiver (bind (&DLV11Channel::receive, this, _1));
+	}
+	
+	reset ();
+}
 
 DLV11Channel::~DLV11Channel ()
 {
 	free (buf);
 }
 
+void DLV11Channel::reset ()
+{
+	rcsr &= ~RCSR_RCVR_INT;
+	xcsr = XCSR_TRANSMIT_READY;
+}
 
 // This function allows the host system to read a word from one of the
 // DLV11-J's registers.
@@ -151,8 +178,10 @@ void DLV11Channel::writeChannel ()
 {
 	trace.dlv11 (DLV11RecordType::DLV11_TX, channelNr_, xbuf);
 
-	if (send)
-		send ((unsigned char) xbuf);
+	// if (send)
+	// 	send ((unsigned char) xbuf);
+	if (console_)
+		console_->print ((unsigned char) xbuf);
 	
 	xcsr |= XCSR_TRANSMIT_READY;
 	if (xcsr & XCSR_TRANSMIT_INT)

@@ -45,7 +45,6 @@ private:
 	shared_ptr<DLV11Config> dlv11Config_;
 	DLV11Config::Ch3BreakResponse ch3BreakResponse_;
     unsigned char breakKey_;
-	unique_ptr<Console> console_;
 
 	void initialize (bool ch3Enabled);
 	void readChannel (int channelNr);

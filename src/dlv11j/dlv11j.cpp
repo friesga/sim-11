@@ -42,8 +42,6 @@ DLV11J::DLV11J (Qbus *bus, shared_ptr<DLV11Config> dlv11Config)
 	ch3BreakResponse_ {dlv11Config->ch3BreakResponse},
 	breakKey_ {dlv11Config->breakKey}
 {
-	console_ =  OperatorConsoleFactory::create ();
-
 	initialize (dlv11Config->ch3ConsoleEnabled);
 
 	reset ();
@@ -83,16 +81,19 @@ void DLV11J::initialize (bool ch3ConsoleEnabled)
 		}
 	}
 
+#if 0
 	if (ch3ConsoleEnabled)
 		channel_[3]->send = 
 			std::bind (&DLV11J::console_print, this, std::placeholders::_1);
 
 	// Pass the console the function we want to receive the characters on
 	console_->setReceiver (bind (&DLV11J::receive, this, _1, _2));
+#endif // 0
 
 	bus_->BINIT().subscribe (bind (&DLV11J::BINITReceiver, this, _1));
 }
 
+#if 0
 void DLV11J::readChannel (int channelNr)
 {
 	unique_ptr<DLV11Channel>& ch = channel_[channelNr];
@@ -132,6 +133,7 @@ void DLV11J::writeChannel (int channelNr)
 	if (ch->xcsr & XCSR_TRANSMIT_INT)
 		bus_->setInterrupt (TrapPriority::BR4, 6, ch->vector + 4);
 }
+#endif // 0
 
 // This function allows the host system to read a word from one of the
 // DLV11-J's registers.
@@ -140,6 +142,7 @@ StatusCode DLV11J::read (u16 address, u16 *destAddress)
 	return channel_[3]->read (address, destAddress);
 }
 
+#if 0
 void DLV11J::writeRCSR (int n, u16 value)
 {
 	unique_ptr<DLV11Channel>& ch = channel_[n];
@@ -161,6 +164,7 @@ void DLV11J::writeXCSR (int n, u16 value)
 			&& (ch->xcsr & XCSR_TRANSMIT_READY))
 		bus_->setInterrupt (TrapPriority::BR4, 6, ch->vector + 4);
 }
+#endif // 0
 
 // This function allows the host system to write a word to one of the
 // DLV11-J's registers.
@@ -168,6 +172,7 @@ StatusCode DLV11J::writeWord (u16 address, u16 value)
 {
 	return channel_[3]->writeWord (address, value);
 }
+
 
 bool DLV11J::responsible (u16 address)
 {
@@ -190,15 +195,11 @@ void DLV11J::BINITReceiver (bool signalValue)
 
 void DLV11J::reset ()
 {
-	u8 channelNr;
-
-	for (channelNr = 0; channelNr < numChannels; ++channelNr)
-	{
-		channel_[channelNr]->rcsr &= ~RCSR_RCVR_INT;
-		channel_[channelNr]->xcsr = XCSR_TRANSMIT_READY;
-	}
+	for (u8 channelNr = 0; channelNr < numChannels; ++channelNr)
+		channel_[channelNr]->reset ();
 }
 
+#if 0
 // Put the given character in the buffer for the given channel. The buffer
 // is a queue implemented as a fixed-size circular array. The array contains
 // buf_size characters with the head at position buf_w.
@@ -221,6 +222,7 @@ void DLV11J::receiveDone (unique_ptr<DLV11Channel>& channel)
 	if (channel->rcsr & RCSR_RCVR_INT)
 		bus_->setInterrupt (TrapPriority::BR4, 6, channel->vector);
 }
+
 
 // Hitting the BREAK key on the console initiates a Channel 3 Break Reponse.
 // The response is either cycling the BHALT signal, cycling the RESET signal
@@ -271,10 +273,11 @@ void DLV11J::receive (int channelNr, unsigned char c)
 	}
 }
 
+
 // Print a character from the DLV11-J to the outside world (i.e. the
 // console in this case).
 void DLV11J::console_print (unsigned char c)
 {
 	console_->print (c);
 }
-
+#endif // 0
