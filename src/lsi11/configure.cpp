@@ -21,7 +21,9 @@ void LSI11::configureDevices (Window *window)
     // By default use the KD11-NA processor
     processor_ = new KD11_NA (&bus_);
     msv11_ = new MSV11D (&bus_);
-    dlv11_ = new DLV11J (&bus_);
+
+    // Create a DLV11J object with the default condiguration
+    dlv11_ = new DLV11J (&bus_, make_shared<DLV11Config> ());
     bdv11_ = new BDV11 (&bus_);
     rxv21_ = new RXV21 (&bus_);
     rlv12_ = new RLV12 (&bus_);

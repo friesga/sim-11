@@ -25,7 +25,7 @@
 #define	XCSR_WR_MASK		(XCSR_TRANSMIT_INT | XCSR_TRANSMIT_BREAK)
 
 
-DLV11Channel::DLV11Channel (u16 channelBaseAddress, 
+DLV11Channel::DLV11Channel (Qbus* bus, u16 channelBaseAddress, 
 	u16 channelVector)
 	:
 	buf {(u8*) malloc (DLV11J_BUF)},
@@ -34,7 +34,8 @@ DLV11Channel::DLV11Channel (u16 channelBaseAddress,
 	buf_size {0},
 	rcsr {0},
 	base {channelBaseAddress},
-	vector {channelVector}
+	vector {channelVector},
+	bus_ {bus}
 {}
 
 DLV11Channel::~DLV11Channel ()
@@ -180,4 +181,5 @@ void DLV11Channel::receive (unsigned char c)
 		}
 	}
 }
+
 #endif // 0

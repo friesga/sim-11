@@ -17,7 +17,6 @@ using std::function;
 class DLV11J : public PDP11Peripheral
 {
 public:
-	DLV11J (Qbus *bus);
 	DLV11J (Qbus *bus, shared_ptr<DLV11Config> dlv11Config);
 	~DLV11J ();
 

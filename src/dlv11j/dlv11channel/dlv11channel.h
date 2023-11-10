@@ -11,7 +11,7 @@ using std::function;
 class DLV11Channel
 {
 public:
-	DLV11Channel (u16 channelBaseAddress, u16 vector);
+	DLV11Channel (Qbus* bus, u16 channelBaseAddress, u16 vector);
 	~DLV11Channel ();
 	StatusCode read (u16 address, u16 *destAddress);
 	StatusCode writeWord (u16 address, u16 value);
@@ -35,6 +35,8 @@ public:
 	function<void(unsigned char)> send {};
 
 private:
+	Qbus* bus_;
+
 	void readChannel ();
 	void writeRCSR (u16 value);
 	void writeXCSR (u16 value);

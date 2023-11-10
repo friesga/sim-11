@@ -32,29 +32,7 @@ using std::make_unique;
 #define	RCSR_WR_MASK		(RCSR_RCVR_INT | RCSR_READER_ENABLE)
 #define	XCSR_WR_MASK		(XCSR_TRANSMIT_INT | XCSR_TRANSMIT_BREAK)
 
-// Construct a default DLV11-J object, i.e. without a user-specified
-// configuration.
-DLV11J::DLV11J (Qbus *bus)
-	:
-	PDP11Peripheral (bus),
-	// Set factory configuration for base address, vector and BREAK key response.
-	// The default break key is set to the esc key.
-	baseAddress_ {defaultBaseAddress_},
-	baseVector_ {defaultBaseVector_},
-	ch3BreakResponse_ {DLV11Config::Ch3BreakResponse::Halt},
-	breakKey_ {27}
-{
-	console_ =  OperatorConsoleFactory::create ();
-
-	// Initialize the channels with channel 3 console enabled
-	initialize (true);
-
-	reset ();
-}
-
-// Construct a DLV11-J object with the configuration as specified by
-// the user.
-// ToDo: The code in these two constructors should be merged
+// Construct a DLV11-J object with the given configuration
 DLV11J::DLV11J (Qbus *bus, shared_ptr<DLV11Config> dlv11Config)
 	:
 	PDP11Peripheral (bus),
@@ -95,12 +73,12 @@ void DLV11J::initialize (bool ch3ConsoleEnabled)
 		if (channelNr == 3 && ch3ConsoleEnabled)
 		{
 			channel_[channelNr] = make_unique<DLV11Channel> 
-				(defaultCh3Address_, defaultCh3Vector_);
+				(bus_, defaultCh3Address_, defaultCh3Vector_);
 		}
 		else
 		{
 			channel_[channelNr] = make_unique<DLV11Channel>
-				(baseAddress_ + 8 * channelNr, baseVector_ + 8 * channelNr);
+				(bus_, baseAddress_ + 8 * channelNr, baseVector_ + 8 * channelNr);
 		}
 	}
 
