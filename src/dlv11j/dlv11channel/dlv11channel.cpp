@@ -26,7 +26,7 @@
 
 
 DLV11Channel::DLV11Channel (Qbus* bus, u16 channelBaseAddress, 
-	u16 channelVector)
+	u16 channelVector, shared_ptr<DLV11Config> dlv11Config)
 	:
 	buf {(u8*) malloc (DLV11J_BUF)},
 	buf_r {0},
@@ -35,7 +35,10 @@ DLV11Channel::DLV11Channel (Qbus* bus, u16 channelBaseAddress,
 	rcsr {0},
 	base {channelBaseAddress},
 	vector {channelVector},
-	bus_ {bus}
+	bus_ {bus},
+	ch3BreakResponse_ {dlv11Config->ch3BreakResponse},
+	breakKey_ {dlv11Config->breakKey},
+	channelNr_ {static_cast<u16> ((base & 030) >> 3)}
 {}
 
 DLV11Channel::~DLV11Channel ()
@@ -43,7 +46,7 @@ DLV11Channel::~DLV11Channel ()
 	free (buf);
 }
 
-#if 0
+
 // This function allows the host system to read a word from one of the
 // DLV11-J's registers.
 StatusCode DLV11Channel::read (u16 address, u16 *destAddress)
@@ -81,11 +84,11 @@ void DLV11Channel::readChannel ()
 		buf_r %= DLV11J_BUF;
 		buf_size--;
 
-		if(buf_size)
+		if (buf_size)
 		{
 			/* more date in the RX buffer... */
 			rcsr |= RCSR_RCVR_DONE;
-			if(rcsr & RCSR_RCVR_INT)
+			if (rcsr & RCSR_RCVR_INT)
 				bus_->setInterrupt (TrapPriority::BR4, 6, vector);
 		} 
 		else
@@ -146,7 +149,7 @@ void DLV11Channel::writeXCSR (u16 value)
 
 void DLV11Channel::writeChannel ()
 {
-	trace.dlv11 (DLV11RecordType::DLV11_TX, channelNr, xbuf);
+	trace.dlv11 (DLV11RecordType::DLV11_TX, channelNr_, xbuf);
 
 	if (send)
 		send ((unsigned char) xbuf);
@@ -173,13 +176,59 @@ void DLV11Channel::receive (unsigned char c)
 			return;
 		}
 
-		unique_ptr<DLV11Channel>& ch = channel_[channelNr];
-		if (queueCharacter (ch, c))
+		if (queueCharacter (c))
 		{
-			trace.dlv11 (DLV11RecordType::DLV11_RX, channelNr, c);
-			receiveDone (ch);
+			trace.dlv11 (DLV11RecordType::DLV11_RX, channelNr_, c);
+			receiveDone ();
 		}
 	}
 }
 
-#endif // 0
+// Hitting the BREAK key on the console initiates a Channel 3 Break Reponse.
+// The response is either cycling the BHALT signal, cycling the RESET signal
+// or a no-operation.
+// 
+// Cycling the BHALT signal results in halting the processor and cycling the
+// RESET signal results in the execution of the power up routine. The signals
+// are cycled as the key presses have to be treated as triggers.
+// 
+// As we don't have a real BREAK key at our disposal and a BREAK key press
+// is replaced by a (configurable) regular key press, the no-operation
+// response has to result in passing the received character on to the host
+// system.
+void DLV11Channel::processBreak ()
+{
+	if (ch3BreakResponse_ == DLV11Config::Ch3BreakResponse::Halt)
+	{
+		bus_->BHALT ().cycle ();
+		return;
+	}
+	else if (ch3BreakResponse_ == DLV11Config::Ch3BreakResponse::Boot)
+	{
+		bus_->RESET ().cycle ();
+		return;
+	}
+}
+
+// Put the given character in the buffer for the given channel. The buffer
+// is a queue implemented as a fixed-size circular array. The array contains
+// buf_size characters with the head at position buf_w.
+bool DLV11Channel::queueCharacter (unsigned char c)
+{
+	if (buf_size < DLV11J_BUF)
+	{
+		buf[buf_w++] = c;
+		buf_w %= DLV11J_BUF;
+		buf_size++;
+		return true;
+	}
+
+	return false;
+}
+
+void DLV11Channel::receiveDone ()
+{
+	rcsr |= RCSR_RCVR_DONE;
+	if (rcsr & RCSR_RCVR_INT)
+		bus_->setInterrupt (TrapPriority::BR4, 6, vector);
+}

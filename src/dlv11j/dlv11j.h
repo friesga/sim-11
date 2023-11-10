@@ -42,6 +42,7 @@ private:
 	unique_ptr<DLV11Channel> channel_[4];
 	u16	baseAddress_;
 	u16 baseVector_;
+	shared_ptr<DLV11Config> dlv11Config_;
 	DLV11Config::Ch3BreakResponse ch3BreakResponse_;
     unsigned char breakKey_;
 	unique_ptr<Console> console_;

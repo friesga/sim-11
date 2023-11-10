@@ -38,6 +38,7 @@ DLV11J::DLV11J (Qbus *bus, shared_ptr<DLV11Config> dlv11Config)
 	PDP11Peripheral (bus),
 	baseAddress_ {dlv11Config->baseAddress},
 	baseVector_ {dlv11Config->vector},
+	dlv11Config_ {dlv11Config},
 	ch3BreakResponse_ {dlv11Config->ch3BreakResponse},
 	breakKey_ {dlv11Config->breakKey}
 {
@@ -72,13 +73,13 @@ void DLV11J::initialize (bool ch3ConsoleEnabled)
 	{
 		if (channelNr == 3 && ch3ConsoleEnabled)
 		{
-			channel_[channelNr] = make_unique<DLV11Channel> 
-				(bus_, defaultCh3Address_, defaultCh3Vector_);
+			channel_[channelNr] = make_unique<DLV11Channel> (bus_,
+				defaultCh3Address_, defaultCh3Vector_, dlv11Config_);
 		}
 		else
 		{
-			channel_[channelNr] = make_unique<DLV11Channel>
-				(bus_, baseAddress_ + 8 * channelNr, baseVector_ + 8 * channelNr);
+			channel_[channelNr] = make_unique<DLV11Channel> (bus_,
+				baseAddress_ + 8 * channelNr, baseVector_ + 8 * channelNr, dlv11Config_);
 		}
 	}
 
