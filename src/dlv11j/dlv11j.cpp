@@ -137,29 +137,7 @@ void DLV11J::writeChannel (int channelNr)
 // DLV11-J's registers.
 StatusCode DLV11J::read (u16 address, u16 *destAddress)
 {
-	switch (address)
-	{
-		case 0177560:
-			*destAddress = channel_[3]->rcsr;
-			break;
-
-		case 0177562:
-			readChannel(3);
-			*destAddress = channel_[3]->rbuf;
-			break;
-
-		case 0177564:
-			*destAddress = channel_[3]->xcsr;
-			break;
-
-		case 0177566:
-			*destAddress = channel_[3]->xbuf;
-			break;
-
-		default:
-			return StatusCode::NonExistingMemory;
-	}
-	return StatusCode::OK;
+	return channel_[3]->read (address, destAddress);
 }
 
 void DLV11J::writeRCSR (int n, u16 value)
@@ -188,27 +166,7 @@ void DLV11J::writeXCSR (int n, u16 value)
 // DLV11-J's registers.
 StatusCode DLV11J::writeWord (u16 address, u16 value)
 {
-	switch (address)
-	{
-		case 0177560:
-			writeRCSR (3, value);
-			break;
-
-		case 0177562:
-			/* ignored */
-			break;
-
-		case 0177564:
-			writeXCSR (3, value);
-			break;
-
-		case 0177566:
-			channel_[3]->xbuf = value;
-			writeChannel (3);
-			break;
-	}
-
-	return StatusCode::OK;
+	return channel_[3]->writeWord (address, value);
 }
 
 bool DLV11J::responsible (u16 address)

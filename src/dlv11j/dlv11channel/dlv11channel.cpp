@@ -111,7 +111,7 @@ StatusCode DLV11Channel::writeWord (u16 address, u16 value)
 			break;
 
 		case 0177562:
-			/* ignored */
+			// ignored
 			break;
 
 		case 0177564:
