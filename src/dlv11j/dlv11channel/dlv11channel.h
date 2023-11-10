@@ -23,6 +23,7 @@ public:
 	StatusCode writeWord (u16 address, u16 value);
 	void reset ();
 
+private:
 	u16	rcsr {0};
 	u16	rbuf {0};
 	u16	xcsr {0};
@@ -36,11 +37,6 @@ public:
 	u16	buf_w {0};
 	u16	buf_size {0};
 
-	// Send a character from the DLV11-J to the outside world.
-	// void (*send)(unsigned char c);
-	function<void(unsigned char)> send {};
-
-private:
 	Qbus* bus_;
 	DLV11Config::Ch3BreakResponse ch3BreakResponse_;
     unsigned char breakKey_;

@@ -34,10 +34,6 @@ DLV11Channel::DLV11Channel (Qbus* bus, u16 channelBaseAddress,
 	u16 channelVector, shared_ptr<DLV11Config> dlv11Config)
 	:
 	buf {(u8*) malloc (DLV11J_BUF)},
-	buf_r {0},
-	buf_w {0},
-	buf_size {0},
-	rcsr {0},
 	base {channelBaseAddress},
 	vector {channelVector},
 	bus_ {bus},
@@ -113,7 +109,7 @@ void DLV11Channel::readChannel ()
 
 		if (buf_size)
 		{
-			/* more date in the RX buffer... */
+			// More date in the RX buffer...
 			rcsr |= RCSR_RCVR_DONE;
 			if (rcsr & RCSR_RCVR_INT)
 				bus_->setInterrupt (TrapPriority::BR4, 6, vector);
@@ -178,8 +174,6 @@ void DLV11Channel::writeChannel ()
 {
 	trace.dlv11 (DLV11RecordType::DLV11_TX, channelNr_, xbuf);
 
-	// if (send)
-	// 	send ((unsigned char) xbuf);
 	if (console_)
 		console_->print ((unsigned char) xbuf);
 	
