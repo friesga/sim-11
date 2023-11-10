@@ -19,17 +19,26 @@ public:
 	DLV11Channel (Qbus* bus, u16 channelBaseAddress, u16 vector,
 		shared_ptr<DLV11Config> dlv11Config);
 	~DLV11Channel ();
-	StatusCode read (u16 address, u16 *destAddress);
-	StatusCode writeWord (u16 address, u16 value);
+	StatusCode read (u16 registerAddress, u16 *destAddress);
+	StatusCode writeWord (u16 registerAddress, u16 value);
 	void reset ();
 
 private:
+	// Define DLV11-J's registers as offsets from the controllers base address
+    enum
+    { 
+        RCSR = 00,	// Receiver control/status register
+        RBUF = 02,	// Receiver data buffer register
+        XCSR = 04,	// Transmitter control/status register
+        XBUF = 06	// Transmitter data buffer register
+    };
+
 	u16	rcsr {0};
 	u16	rbuf {0};
 	u16	xcsr {0};
 	u16	xbuf {0};
 
-	u16	base {0};
+	u16	baseAddress {0};
 	u16	vector {0};
 
 	u8*	buf {nullptr};

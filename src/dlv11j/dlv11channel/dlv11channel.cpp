@@ -34,7 +34,7 @@ DLV11Channel::DLV11Channel (Qbus* bus, u16 channelBaseAddress,
 	u16 channelVector, shared_ptr<DLV11Config> dlv11Config)
 	:
 	buf {(u8*) malloc (DLV11J_BUF)},
-	base {channelBaseAddress},
+	baseAddress {channelBaseAddress},
 	vector {channelVector},
 	bus_ {bus},
 	ch3BreakResponse_ {dlv11Config->ch3BreakResponse},
@@ -43,10 +43,10 @@ DLV11Channel::DLV11Channel (Qbus* bus, u16 channelBaseAddress,
 	// Determine the channel number from the base address. An exception
 	// to the standard formula has to be made when channel 3 is used as
 	// a console device.
-	if (base == 0177560)
+	if (baseAddress == 0177560)
 		channelNr_ = 3;
 	else
-		channelNr_ = static_cast<u16> ((base & 030) >> 3);
+		channelNr_ = static_cast<u16> ((baseAddress & 030) >> 3);
 
 	if (channelNr_ == 3)
 	{
@@ -72,24 +72,24 @@ void DLV11Channel::reset ()
 
 // This function allows the host system to read a word from one of the
 // DLV11-J's registers.
-StatusCode DLV11Channel::read (u16 address, u16 *destAddress)
+StatusCode DLV11Channel::read (u16 registerAddress, u16 *destAddress)
 {
-	switch (address)
+	switch (registerAddress & 06)
 	{
-		case 0177560:
+		case RCSR:
 			*destAddress = rcsr;
 			break;
 
-		case 0177562:
+		case RBUF:
 			readChannel();
 			*destAddress = rbuf;
 			break;
 
-		case 0177564:
+		case XCSR:
 			*destAddress = xcsr;
 			break;
 
-		case 0177566:
+		case XBUF:
 			*destAddress = xbuf;
 			break;
 
@@ -125,23 +125,23 @@ void DLV11Channel::readChannel ()
 	}
 }
 
-StatusCode DLV11Channel::writeWord (u16 address, u16 value)
+StatusCode DLV11Channel::writeWord (u16 registerAddress, u16 value)
 {
-	switch (address)
+	switch (registerAddress & 06)
 	{
-		case 0177560:
+		case RCSR:
 			writeRCSR (value);
 			break;
 
-		case 0177562:
+		case RBUF:
 			// ignored
 			break;
 
-		case 0177564:
+		case XCSR:
 			writeXCSR (value);
 			break;
 
-		case 0177566:
+		case XBUF:
 			xbuf = value;
 			writeChannel ();
 			break;
@@ -192,7 +192,7 @@ void DLV11Channel::receive (unsigned char c)
 {
 	if (bus_->BPOK ())
 	{
-		if (base == 0177560 && c == breakKey_)
+		if (baseAddress == 0177560 && c == breakKey_)
 		{
 			// Process the BREAK, not queueing it as a received character
 			processBreak ();
