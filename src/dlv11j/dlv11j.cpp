@@ -69,14 +69,26 @@ StatusCode DLV11J::writeWord (u16 registerAddress, u16 value)
 		value);
 }
 
+// If channel 3 is configured as console device the DLV11J is responsible for
+// three sets of registers (one set per channel) starting from its base
+// address plus the register set for the console device, and is responsible
+// for four sets of registers is channel 3 is not configured as console
+// device.
 bool DLV11J::responsible (u16 address)
 {
-	if (address >= baseAddress_ && address < baseAddress_ + (3 * 8))
-		return true;
+	if (dlv11Config_->ch3ConsoleEnabled)
+	{
+		if (address >= baseAddress_ && address < baseAddress_ + (3 * 8))
+			return true;
 
-	/* console device */
-	if (address >= 0177560 && address <= 0177566)
-		return true;
+		if (address >= 0177560 && address <= 0177566)
+			return true;
+	}
+	else
+	{
+		if (address >= baseAddress_ && address < baseAddress_ + (4 * 8))
+			return true;
+	}
 
 	return false;
 }
