@@ -8,10 +8,16 @@
 
 #include <functional>
 #include <memory>
+#include <thread>
+#include <mutex>
+#include <condition_variable>
 
 using std::function;
 using std::unique_ptr;
 using std::shared_ptr;
+using std::thread;
+using std::mutex;
+using std::condition_variable;
 
 class DLV11Channel
 {
@@ -51,11 +57,15 @@ private:
     unsigned char breakKey_;
 	u16 channelNr_;
 	unique_ptr<Console> console_;
+	bool channelRunning_;
+	thread transmitterThread_;
+	mutex registerAccessMutex_;
+	condition_variable dataAvailable_;
 
 	void readChannel ();
 	void writeRCSR (u16 value);
 	void writeXCSR (u16 value);
-	void writeChannel ();
+	void transmitter ();
 	void receive (unsigned char c);
 	void processBreak ();
 	bool queueCharacter (unsigned char c);

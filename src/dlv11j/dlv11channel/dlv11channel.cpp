@@ -7,6 +7,8 @@
 
 using std::bind;
 using std::placeholders::_1;
+using std::lock_guard;
+using std::unique_lock;
 
 /* Size of DLV11-J input buffer */
 #define	DLV11J_BUF		2048
@@ -29,7 +31,7 @@ using std::placeholders::_1;
 #define	RCSR_WR_MASK		(RCSR_RCVR_INT | RCSR_READER_ENABLE)
 #define	XCSR_WR_MASK		(XCSR_TRANSMIT_INT | XCSR_TRANSMIT_BREAK)
 
-
+// Constructor
 DLV11Channel::DLV11Channel (Qbus* bus, u16 channelBaseAddress, 
 	u16 channelVector, shared_ptr<DLV11Config> dlv11Config)
 	:
@@ -38,7 +40,8 @@ DLV11Channel::DLV11Channel (Qbus* bus, u16 channelBaseAddress,
 	vector {channelVector},
 	bus_ {bus},
 	ch3BreakResponse_ {dlv11Config->ch3BreakResponse},
-	breakKey_ {dlv11Config->breakKey}
+	breakKey_ {dlv11Config->breakKey},
+	channelRunning_ {true}
 {
 	// Determine the channel number from the base address. An exception
 	// to the standard formula has to be made when channel 3 is used as
@@ -55,17 +58,29 @@ DLV11Channel::DLV11Channel (Qbus* bus, u16 channelBaseAddress,
 		// Pass the console the function we want to receive the characters on
 		console_->setReceiver (bind (&DLV11Channel::receive, this, _1));
 	}
+
+	// Create a thread running the transmitter
+    transmitterThread_ = thread (&DLV11Channel::transmitter, this);
 	
 	reset ();
 }
 
+// Destructor
 DLV11Channel::~DLV11Channel ()
 {
+	// Signal the transmitter to exit
+	channelRunning_ = false;
+	dataAvailable_.notify_one ();
+
+	// And then wait for its exit
+	transmitterThread_.join ();
+
 	free (buf);
 }
 
 void DLV11Channel::reset ()
 {
+	lock_guard<mutex> lock {registerAccessMutex_};
 	rcsr &= ~RCSR_RCVR_INT;
 	xcsr = XCSR_TRANSMIT_READY;
 }
@@ -74,6 +89,8 @@ void DLV11Channel::reset ()
 // DLV11-J's registers.
 StatusCode DLV11Channel::read (u16 registerAddress, u16 *destAddress)
 {
+	lock_guard<mutex> lock {registerAccessMutex_};
+
 	switch (registerAddress & 06)
 	{
 		case RCSR:
@@ -125,8 +142,24 @@ void DLV11Channel::readChannel ()
 	}
 }
 
+// This function allows the processor to write a word to one of the
+// DLV11-J's registers.
+// 
+// Access to the registers has to be synchronized as the transmitter runs in
+// a sperate thread. The registers are accessed in five functions:
+// - The processor reading a register (read),
+// - The processor writing a register (writeWord),
+// - The transmitter transmitting a character to the operator console
+//   (transmitter), 
+// - The operator console receiving data (receive),
+// - Reset caused by a bus initialization (reset).
+// 
+// Each of these functions therefore has to lock the registerAccessMutex_.
+//
 StatusCode DLV11Channel::writeWord (u16 registerAddress, u16 value)
 {
+	lock_guard<mutex> lock {registerAccessMutex_};
+
 	switch (registerAddress & 06)
 	{
 		case RCSR:
@@ -142,8 +175,9 @@ StatusCode DLV11Channel::writeWord (u16 registerAddress, u16 value)
 			break;
 
 		case XBUF:
+			xcsr &= ~XCSR_TRANSMIT_READY;
 			xbuf = value;
-			writeChannel ();
+			dataAvailable_.notify_one ();
 			break;
 	}
 
@@ -170,16 +204,31 @@ void DLV11Channel::writeXCSR (u16 value)
 		bus_->setInterrupt (TrapPriority::BR4, 6, vector + 4);
 }
 
-void DLV11Channel::writeChannel ()
+// Transmit data to the receiver. For channel 3 the data is sent to the
+// operator console, for the other channels the data currently disappears
+// into a vacuum.
+//
+// The transmitters runs in its own thread to create a realistic timing on
+// Transmitter Ready bit in the XCSR. This satisfies at least VDLAB0 TEST 6.
+void DLV11Channel::transmitter ()
 {
-	trace.dlv11 (DLV11RecordType::DLV11_TX, channelNr_, xbuf);
+	while (channelRunning_)
+	{
+		unique_lock<mutex> lock {registerAccessMutex_};
+		dataAvailable_.wait (lock);
 
-	if (console_)
-		console_->print ((unsigned char) xbuf);
+		if (!channelRunning_)
+			break;
+
+		trace.dlv11 (DLV11RecordType::DLV11_TX, channelNr_, xbuf);
+
+		if (console_)
+			console_->print ((unsigned char) xbuf);
 	
-	xcsr |= XCSR_TRANSMIT_READY;
-	if (xcsr & XCSR_TRANSMIT_INT)
-		bus_->setInterrupt (TrapPriority::BR4, 6, vector + 4);
+		xcsr |= XCSR_TRANSMIT_READY;
+		if (xcsr & XCSR_TRANSMIT_INT)
+			bus_->setInterrupt (TrapPriority::BR4, 6, vector + 4);
+	}
 }
 
 // The functions above interface with the processor; the following functions
@@ -190,6 +239,8 @@ void DLV11Channel::writeChannel ()
 // ignored.
 void DLV11Channel::receive (unsigned char c)
 {
+	lock_guard<mutex> lock {registerAccessMutex_};
+
 	if (bus_->BPOK ())
 	{
 		if (baseAddress == 0177560 && c == breakKey_)

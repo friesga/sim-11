@@ -18,6 +18,7 @@ private:
     Qbus* bus_;
 
     CondData<u16> readDLV11J (u16 address);
+    bool transmitReady ();
 };
 
 

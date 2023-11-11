@@ -28,14 +28,22 @@ bool OperatorConsoleAccess::available ()
 CondData<u8> OperatorConsoleAccess::read ()
 {
     while (!available ())
-        sleep_for (std::chrono::milliseconds (50));
+        sleep_for (std::chrono::microseconds (500));
 
     // Read the character
     return (readDLV11J (0177562));
 }
 
+// Determine if the DLV11J is ready to accept a character
+bool OperatorConsoleAccess::transmitReady ()
+{
+    return (readDLV11J (0177564) & 0200) != 0;
+}
+
 void OperatorConsoleAccess::write (u8 c)
 {
-    // ToDo: Check for transmit ready?
+    while (!transmitReady ())
+        sleep_for (std::chrono::microseconds (500));
+
     bus_->writeWord (0177566, static_cast<u8> (c));
 }
