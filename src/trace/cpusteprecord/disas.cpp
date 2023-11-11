@@ -188,130 +188,130 @@ string TraceRecord<CpuStepRecord>::LSI11Disassemble (const u16* insn, u16 pc)
 	switch (opcd & 0177700)
 	{
 		case 0005000: /* CLR */
-			return "CLR\t" + LSI11DisassembleOperand ((u8) insn1->rn, (u8) insn1->mode, 
+			return "CLR " + LSI11DisassembleOperand ((u8) insn1->rn, (u8) insn1->mode, 
 				insn, &pc);
 			
 		case 0105000: /* CLRB */
-			return "CLRB\t" + LSI11DisassembleOperand ((u8) insn1->rn, (u8) insn1->mode, 
+			return "CLRB " + LSI11DisassembleOperand ((u8) insn1->rn, (u8) insn1->mode, 
 				insn, &pc);
 
 		case 0005100: /* COM */
-			return "COM\t" + LSI11DisassembleOperand ((u8) insn1->rn, (u8) insn1->mode, 
+			return "COM " + LSI11DisassembleOperand ((u8) insn1->rn, (u8) insn1->mode, 
 				insn, &pc);
 
 		case 0105100: /* COMB */
-			return "COMB\t" + LSI11DisassembleOperand ((u8) insn1->rn, (u8) insn1->mode, 
+			return "COMB " + LSI11DisassembleOperand ((u8) insn1->rn, (u8) insn1->mode, 
 				insn, &pc);
 
 		case 0005200: /* INC */
-			return "INC\t" + LSI11DisassembleOperand ((u8) insn1->rn, (u8) insn1->mode, 
+			return "INC " + LSI11DisassembleOperand ((u8) insn1->rn, (u8) insn1->mode, 
 				insn, &pc);
 
 		case 0105200: /* INCB */
-			return "INCB\t" + LSI11DisassembleOperand ((u8) insn1->rn, (u8) insn1->mode, 
+			return "INCB " + LSI11DisassembleOperand ((u8) insn1->rn, (u8) insn1->mode, 
 				insn, &pc);
 
 		case 0005300: /* DEC */
-			return "DEC\t" + LSI11DisassembleOperand ((u8) insn1->rn, (u8) insn1->mode, 
+			return "DEC " + LSI11DisassembleOperand ((u8) insn1->rn, (u8) insn1->mode, 
 				insn, &pc);
 
 		case 0105300: /* DECB */
-			return "DECB\t" + LSI11DisassembleOperand ((u8) insn1->rn, (u8) insn1->mode, 
+			return "DECB " + LSI11DisassembleOperand ((u8) insn1->rn, (u8) insn1->mode, 
 				insn, &pc);
 
 		case 0005400: /* NEG */
-			return "NEG\t" + LSI11DisassembleOperand ((u8) insn1->rn, (u8) insn1->mode, 
+			return "NEG " + LSI11DisassembleOperand ((u8) insn1->rn, (u8) insn1->mode, 
 				insn, &pc);
 
 		case 0105400: /* NEGB */
-			return "NEGB\t" + LSI11DisassembleOperand ((u8) insn1->rn, (u8) insn1->mode, 
+			return "NEGB " + LSI11DisassembleOperand ((u8) insn1->rn, (u8) insn1->mode, 
 				insn, &pc);
 
 		case 0005700: /* TST */
-			return "TST\t" + LSI11DisassembleOperand ((u8) insn1->rn, (u8) insn1->mode, 
+			return "TST " + LSI11DisassembleOperand ((u8) insn1->rn, (u8) insn1->mode, 
 				insn, &pc);
 
 		case 0105700: /* TSTB */
-			return "TSTB\t" + LSI11DisassembleOperand ((u8) insn1->rn, (u8) insn1->mode, 
+			return "TSTB " + LSI11DisassembleOperand ((u8) insn1->rn, (u8) insn1->mode, 
 				insn, &pc);
 
 		case 0006200: /* ASR */
-			return "ASR\t" + LSI11DisassembleOperand ((u8) insn1->rn, (u8) insn1->mode, 
+			return "ASR " + LSI11DisassembleOperand ((u8) insn1->rn, (u8) insn1->mode, 
 				insn, &pc);
 
 		case 0106200: /* ASRB */
-			return "ASRB\t" + LSI11DisassembleOperand ((u8) insn1->rn, (u8) insn1->mode, 
+			return "ASRB " + LSI11DisassembleOperand ((u8) insn1->rn, (u8) insn1->mode, 
 				insn, &pc);
 
 		case 0006300: /* ASL */
-			return "ASL\t" + LSI11DisassembleOperand ((u8) insn1->rn, (u8) insn1->mode, 
+			return "ASL " + LSI11DisassembleOperand ((u8) insn1->rn, (u8) insn1->mode, 
 				insn, &pc);
 
 		case 0106300: /* ASLB */
-			return "ASLB\t" + LSI11DisassembleOperand ((u8) insn1->rn, (u8) insn1->mode, 
+			return "ASLB " + LSI11DisassembleOperand ((u8) insn1->rn, (u8) insn1->mode, 
 				insn, &pc);
 
 		case 0006000: /* ROR */
-			return "ROR\t" + LSI11DisassembleOperand ((u8) insn1->rn, (u8) insn1->mode, 
+			return "ROR " + LSI11DisassembleOperand ((u8) insn1->rn, (u8) insn1->mode, 
 				insn, &pc);
 
 		case 0106000: /* RORB */
-			return "RORB\t" + LSI11DisassembleOperand ((u8) insn1->rn, (u8) insn1->mode, 
+			return "RORB " + LSI11DisassembleOperand ((u8) insn1->rn, (u8) insn1->mode, 
 				insn, &pc);
 
 		case 0006100: /* ROL */
-			return "ROL\t" + LSI11DisassembleOperand ((u8) insn1->rn, (u8) insn1->mode, 
+			return "ROL " + LSI11DisassembleOperand ((u8) insn1->rn, (u8) insn1->mode, 
 				insn, &pc);
 
 		case 0106100: /* ROLB */
-			return "ROLB\t" + LSI11DisassembleOperand ((u8) insn1->rn, (u8) insn1->mode, 
+			return "ROLB " + LSI11DisassembleOperand ((u8) insn1->rn, (u8) insn1->mode, 
 				insn, &pc);
 
 		case 0000300: /* SWAB */
-			return "SWAB\t" + LSI11DisassembleOperand ((u8) insn1->rn, (u8) insn1->mode, 
+			return "SWAB " + LSI11DisassembleOperand ((u8) insn1->rn, (u8) insn1->mode, 
 				insn, &pc);
 
 		case 0005500: /* ADC */
-			return "ADC\t" + LSI11DisassembleOperand ((u8) insn1->rn, (u8) insn1->mode, 
+			return "ADC " + LSI11DisassembleOperand ((u8) insn1->rn, (u8) insn1->mode, 
 				insn, &pc);
 
 		case 0105500: /* ADCB */
-			return "ADCB\t" + LSI11DisassembleOperand ((u8) insn1->rn, (u8) insn1->mode, 
+			return "ADCB " + LSI11DisassembleOperand ((u8) insn1->rn, (u8) insn1->mode, 
 				insn, &pc);
 
 		case 0005600: /* SBC */
-			return "SBC\t" + LSI11DisassembleOperand ((u8) insn1->rn, (u8) insn1->mode, 
+			return "SBC " + LSI11DisassembleOperand ((u8) insn1->rn, (u8) insn1->mode, 
 				insn, &pc);
 
 		case 0105600: /* SBCB */
-			return "SBCB\t" + LSI11DisassembleOperand ((u8) insn1->rn, (u8) insn1->mode, 
+			return "SBCB " + LSI11DisassembleOperand ((u8) insn1->rn, (u8) insn1->mode, 
 				insn, &pc);
 
 		case 0006700: /* SXT */
-			return "SXT\t" + LSI11DisassembleOperand ((u8) insn1->rn, (u8) insn1->mode, 
+			return "SXT " + LSI11DisassembleOperand ((u8) insn1->rn, (u8) insn1->mode, 
 				insn, &pc);
 
 		case 0106700: /* MFPS */
-			return "MFPS\t" + LSI11DisassembleOperand ((u8) insn1->rn, (u8) insn1->mode, 
+			return "MFPS " + LSI11DisassembleOperand ((u8) insn1->rn, (u8) insn1->mode, 
 				insn, &pc);
 
 		case 0106400: /* MTPS */
-			return "MTPS\t" + LSI11DisassembleOperand ((u8) insn1->rn, (u8) insn1->mode, 
+			return "MTPS " + LSI11DisassembleOperand ((u8) insn1->rn, (u8) insn1->mode, 
 				insn, &pc);
 
 		case 0106500: /* MFPI */
-			return "MFPI\t" + LSI11DisassembleOperand ((u8) insn1->rn, (u8) insn1->mode, 
+			return "MFPI " + LSI11DisassembleOperand ((u8) insn1->rn, (u8) insn1->mode, 
 				insn, &pc);
 
 		case 0000100: /* JMP */
-			return "JMP\t" + LSI11DisassembleOperand ((u8) insn1->rn, (u8) insn1->mode, 
+			return "JMP " + LSI11DisassembleOperand ((u8) insn1->rn, (u8) insn1->mode, 
 				insn, &pc);
 
 		case 0006400: /* MARK */
-			return "MARK\t" + octalToString (opcd & 077);
+			return "MARK " + octalToString (opcd & 077);
 
 		case 0006500: /* MFPD */
-			return "MFPD\t" + octalToString (opcd & 077);
+			return "MFPD " + octalToString (opcd & 077);
 	}
 	string oper1, oper2;
 
@@ -324,171 +324,171 @@ string TraceRecord<CpuStepRecord>::LSI11Disassemble (const u16* insn, u16 pc)
 			// is not side-effect free.
 			oper1 = LSI11DisassembleOperand ((u8) insn2->src_rn, (u8) insn2->src_mode, insn, &pc);
 			oper2 = LSI11DisassembleOperand ((u8) insn2->dst_rn, (u8) insn2->dst_mode, insn, &pc);
-			return "MOV\t" + oper1 + ',' + oper2;
+			return "MOV " + oper1 + ',' + oper2;
 
 		case 0110000: /* MOVB */
 			oper1 = LSI11DisassembleOperand ((u8) insn2->src_rn, (u8) insn2->src_mode, insn, &pc);
 			oper2 = LSI11DisassembleOperand ((u8) insn2->dst_rn, (u8) insn2->dst_mode, insn, &pc);
-			return string("MOVB\t") + oper1 + ',' + oper2;
+			return string("MOVB ") + oper1 + ',' + oper2;
 
 		case 0020000: /* CMP */
 			oper1 = LSI11DisassembleOperand ((u8) insn2->src_rn, (u8) insn2->src_mode, insn, &pc);
 			oper2 = LSI11DisassembleOperand ((u8) insn2->dst_rn, (u8) insn2->dst_mode, insn, &pc);
-			return string("CMP\t") + oper1 + ',' + oper2;
+			return string("CMP ") + oper1 + ',' + oper2;
 
 		case 0120000: /* CMPB */
 			oper1 = LSI11DisassembleOperand ((u8) insn2->src_rn, (u8) insn2->src_mode, insn, &pc);
 			oper2 = LSI11DisassembleOperand ((u8) insn2->dst_rn, (u8) insn2->dst_mode, insn, &pc);
-			return string("CMPB\t") + oper1 + ',' + oper2;
+			return string("CMPB ") + oper1 + ',' + oper2;
 
 		case 0060000: /* ADD */
 			oper1 = LSI11DisassembleOperand ((u8) insn2->src_rn, (u8) insn2->src_mode, insn, &pc);
 			oper2 = LSI11DisassembleOperand ((u8) insn2->dst_rn, (u8) insn2->dst_mode, insn, &pc);
-			return string("ADD\t") + oper1 + ',' + oper2;
+			return string("ADD ") + oper1 + ',' + oper2;
 
 		case 0160000: /* SUB */
 			oper1 = LSI11DisassembleOperand ((u8) insn2->src_rn, (u8) insn2->src_mode, insn, &pc);
 			oper2 = LSI11DisassembleOperand ((u8) insn2->dst_rn, (u8) insn2->dst_mode, insn, &pc);
-			return string("SUB\t") + oper1 + ',' + oper2;
+			return string("SUB ") + oper1 + ',' + oper2;
 
 		case 0030000: /* BIT */
 			oper1 = LSI11DisassembleOperand ((u8) insn2->src_rn, (u8) insn2->src_mode, insn, &pc);
 			oper2 = LSI11DisassembleOperand ((u8) insn2->dst_rn, (u8) insn2->dst_mode, insn, &pc);
-			return string("BIT\t") + oper1 + ',' + oper2;
+			return string("BIT ") + oper1 + ',' + oper2;
 
 		case 0130000: /* BITB */
 			oper1 = LSI11DisassembleOperand ((u8) insn2->src_rn, (u8) insn2->src_mode, insn, &pc);
 			oper2 = LSI11DisassembleOperand ((u8) insn2->dst_rn, (u8) insn2->dst_mode, insn, &pc);
-			return string("BITB\t") + oper1 + ',' + oper2;
+			return string("BITB ") + oper1 + ',' + oper2;
 
 		case 0040000: /* BIC */
 			oper1 = LSI11DisassembleOperand ((u8) insn2->src_rn, (u8) insn2->src_mode, insn, &pc);
 			oper2 = LSI11DisassembleOperand ((u8) insn2->dst_rn, (u8) insn2->dst_mode, insn, &pc);
-			return string("BIC\t") + oper1 + ',' + oper2;
+			return string("BIC ") + oper1 + ',' + oper2;
 
 		case 0140000: /* BICB */
 			oper1 = LSI11DisassembleOperand ((u8) insn2->src_rn, (u8) insn2->src_mode, insn, &pc);
 			oper2 = LSI11DisassembleOperand ((u8) insn2->dst_rn, (u8) insn2->dst_mode, insn, &pc);
-			return string("BICB\t") + oper1 + ',' + oper2;
+			return string("BICB ") + oper1 + ',' + oper2;
 
 		case 0050000: /* BIS */
 			oper1 = LSI11DisassembleOperand ((u8) insn2->src_rn, (u8) insn2->src_mode, insn, &pc);
 			oper2 = LSI11DisassembleOperand ((u8) insn2->dst_rn, (u8) insn2->dst_mode, insn, &pc);
-			return string("BIS\t") + oper1 + ',' + oper2;
+			return string("BIS ") + oper1 + ',' + oper2;
 
 		case 0150000: /* BISB */
 			oper1 = LSI11DisassembleOperand ((u8) insn2->src_rn, (u8) insn2->src_mode, insn, &pc);
 			oper2 = LSI11DisassembleOperand ((u8) insn2->dst_rn, (u8) insn2->dst_mode, insn, &pc);
-			return string("BISB\t") + oper1 + ',' + oper2;
+			return string("BISB ") + oper1 + ',' + oper2;
 	}
 
 	switch (opcd & 0177000)
 	{
 		case 0074000: /* XOR */
-			return "XOR\t" + writeRn (insnjsr->r) + ',' +
+			return "XOR " + writeRn (insnjsr->r) + ',' +
 				LSI11DisassembleOperand ((u8) insn1->rn, (u8) insn1->mode,
 				insn, &pc);
 
 		case 0004000: /* JSR */
-			return "JSR\t" + writeRn (insnjsr->r) + ',' +
+			return "JSR " + writeRn (insnjsr->r) + ',' +
 				LSI11DisassembleOperand ((u8) insn1->rn, (u8) insn1->mode,
 				insn, &pc);
 
 		case 0077000: /* SOB */
-			return "SOB\t" + writeRn (insnjsr->r) + ",L" +
+			return "SOB " + writeRn (insnjsr->r) + ",L" +
 				octalToString (pc - insnsob->offset * 2);
 
 		case 0070000: /* MUL */
-			return "MUL\t" + LSI11DisassembleOperand ((u8) insn1->rn,
+			return "MUL " + LSI11DisassembleOperand ((u8) insn1->rn,
 				(u8) insn1->mode, insn, &pc) + ',' + to_string (insnjsr->r);
 
 		case 0071000: /* DIV */
-			return "DIV\t" + LSI11DisassembleOperand ((u8) insn1->rn,
+			return "DIV " + LSI11DisassembleOperand ((u8) insn1->rn,
 				(u8) insn1->mode, insn, &pc) + ',' + to_string (insnjsr->r);
 
 		case 0072000: /* ASH */
-			return "ASH\t" + LSI11DisassembleOperand ((u8) insn1->rn,
+			return "ASH " + LSI11DisassembleOperand ((u8) insn1->rn,
 				(u8) insn1->mode, insn, &pc) + ',' + to_string (insnjsr->r);
 
 		case 0073000: /* ASHC */
-			return "ASHC\t" + LSI11DisassembleOperand ((u8) insn1->rn,
+			return "ASHC " + LSI11DisassembleOperand ((u8) insn1->rn,
 				(u8) insn1->mode, insn, &pc) + ',' + to_string (insnjsr->r);
 	}
 
 	switch (opcd & 0177770)
 	{
 		case 0000200: /* RTS */
-			return "RTS\t"+ writeRn (insnrts->rn);
+			return "RTS "+ writeRn (insnrts->rn);
 
 		case 0075000: /* FADD */
-			return "FADD\t"+ writeRn (insnrts->rn);
+			return "FADD "+ writeRn (insnrts->rn);
 
 		case 0075010: /* FSUB */
-			return "FSUB\t"+ writeRn (insnrts->rn);
+			return "FSUB "+ writeRn (insnrts->rn);
 
 		case 0075020: /* FMUL */
-			return "FMUL\t"+ writeRn (insnrts->rn);
+			return "FMUL "+ writeRn (insnrts->rn);
 
 		case 0075030: /* FDIV */
-			return "FDIV\t"+ writeRn (insnrts->rn);
+			return "FDIV "+ writeRn (insnrts->rn);
 	}
 
 	switch (opcd & 0177400)
 	{
 		case 0000400: /* BR */
-			return "BR\t" + LSI11DisassembleBranch ((s8) insnbr->offset, pc);
+			return "BR " + LSI11DisassembleBranch ((s8) insnbr->offset, pc);
 
 		case 0001000: /* BNE */
-			return "BNE\t" + LSI11DisassembleBranch ((s8) insnbr->offset, pc);
+			return "BNE " + LSI11DisassembleBranch ((s8) insnbr->offset, pc);
 
 		case 0001400: /* BEQ */
-			return "BEQ\t" + LSI11DisassembleBranch ((s8) insnbr->offset, pc);
+			return "BEQ " + LSI11DisassembleBranch ((s8) insnbr->offset, pc);
 
 		case 0100000: /* BPL */
-			return "BPL\t" + LSI11DisassembleBranch ((s8) insnbr->offset, pc);
+			return "BPL " + LSI11DisassembleBranch ((s8) insnbr->offset, pc);
 
 		case 0100400: /* BMI */
-			return "BMI\t" + LSI11DisassembleBranch ((s8) insnbr->offset, pc);
+			return "BMI " + LSI11DisassembleBranch ((s8) insnbr->offset, pc);
 
 		case 0102000: /* BVC */
-			return "BVC\t" + LSI11DisassembleBranch ((s8) insnbr->offset, pc);
+			return "BVC " + LSI11DisassembleBranch ((s8) insnbr->offset, pc);
 
 		case 0102400: /* BVS */
-			return "BVS\t" + LSI11DisassembleBranch ((s8) insnbr->offset, pc);
+			return "BVS " + LSI11DisassembleBranch ((s8) insnbr->offset, pc);
 
 		case 0103000: /* BCC */
-			return "BCC\t" + LSI11DisassembleBranch ((s8) insnbr->offset, pc);
+			return "BCC " + LSI11DisassembleBranch ((s8) insnbr->offset, pc);
 
 		case 0103400: /* BCS */
-			return "BCS\t" + LSI11DisassembleBranch ((s8) insnbr->offset, pc);
+			return "BCS " + LSI11DisassembleBranch ((s8) insnbr->offset, pc);
 
 		case 0002000: /* BGE */
-			return "BGE\t" + LSI11DisassembleBranch ((s8) insnbr->offset, pc);
+			return "BGE " + LSI11DisassembleBranch ((s8) insnbr->offset, pc);
 
 		case 0002400: /* BLT */
-			return "BLT\t" + LSI11DisassembleBranch ((s8) insnbr->offset, pc);
+			return "BLT " + LSI11DisassembleBranch ((s8) insnbr->offset, pc);
 
 		case 0003000: /* BGT */
-			return "BGT\t" + LSI11DisassembleBranch ((s8) insnbr->offset, pc);
+			return "BGT " + LSI11DisassembleBranch ((s8) insnbr->offset, pc);
 
 		case 0003400: /* BLE */
-			return "BLE\t" + LSI11DisassembleBranch ((s8) insnbr->offset, pc);
+			return "BLE " + LSI11DisassembleBranch ((s8) insnbr->offset, pc);
 
 		case 0101000: /* BHI */
-			return "BHI\t" + LSI11DisassembleBranch ((s8) insnbr->offset, pc);
+			return "BHI " + LSI11DisassembleBranch ((s8) insnbr->offset, pc);
 
 		case 0101400: /* BLOS */
-			return "BLOS\t" + LSI11DisassembleBranch ((s8) insnbr->offset, pc);
+			return "BLOS " + LSI11DisassembleBranch ((s8) insnbr->offset, pc);
 
 		case 0104000: /* EMT */
 			if(opcd & 0377)
-				return "EMT\t" + octalToString (opcd & 0377);
+				return "EMT " + octalToString (opcd & 0377);
 			else
 				return "EMT";
 
 		case 0104400: /* TRAP */
 			if(opcd & 0377)
-				return "TRAP\t" + octalToString (opcd & 0377);
+				return "TRAP " + octalToString (opcd & 0377);
 			else
 				return "TRAP";
 	}
