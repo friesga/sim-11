@@ -72,4 +72,4 @@ private:
 	void receiveDone ();
 };
 
-#endif _DLV11CHANNEL_H_
+#endif // _DLV11CHANNEL_H_

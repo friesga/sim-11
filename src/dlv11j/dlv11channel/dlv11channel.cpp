@@ -35,9 +35,9 @@ using std::unique_lock;
 DLV11Channel::DLV11Channel (Qbus* bus, u16 channelBaseAddress, 
 	u16 channelVector, shared_ptr<DLV11Config> dlv11Config)
 	:
-	buf {(u8*) malloc (DLV11J_BUF)},
 	baseAddress {channelBaseAddress},
 	vector {channelVector},
+	buf {(u8*) malloc (DLV11J_BUF)},
 	bus_ {bus},
 	ch3BreakResponse_ {dlv11Config->ch3BreakResponse},
 	breakKey_ {dlv11Config->breakKey},
