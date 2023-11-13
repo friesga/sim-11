@@ -172,9 +172,7 @@ string TraceRecord<CpuStepRecord>::LSI11DisassembleBranch (s8 offset, u16 pc)
 // parameters insn and pc can be retrieved from the object.
 string TraceRecord<CpuStepRecord>::LSI11Disassemble (const u16* insn, u16 pc)
 {
-	int pos = 0;
 	u16 opcd = *insn;
-	const u16* start = insn;
 	KD11INSN1* insn1 = (KD11INSN1*) insn;
 	KD11INSN2* insn2 = (KD11INSN2*) insn;
 	KD11INSNBR* insnbr = (KD11INSNBR*) insn;
