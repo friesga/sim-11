@@ -358,6 +358,7 @@ set (GTEST_SRCS
     gtest/threadsafecontainertest.cpp
     gtest/interruptrequesttest.cpp
     gtest/bitmasktest.cpp
+    gtest/circular_buffertest.cpp
     gtest/conddatatest.cpp
     gtest/conditioncodestest.cpp
     gtest/configuratortest.cpp
