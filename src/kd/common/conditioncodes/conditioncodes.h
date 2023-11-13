@@ -2,10 +2,7 @@
 #define _CONDITIONCODES_H_
 
 #include "conddata/conddata.h"
-
-#include <cstdint>
-
-using u16 = uint16_t;
+#include "types.h"
 
 struct ConditionCodes
 {
@@ -22,6 +19,7 @@ struct ConditionCodes
         int V_:1 = 0;
         int Z_:1 = 0;
         int N_:1 = 0;
+        int filler: 12 = 0;
     };
 
     union Mask
