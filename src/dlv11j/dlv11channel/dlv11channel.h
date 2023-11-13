@@ -5,6 +5,7 @@
 #include "statuscodes.h"
 #include "configdata/dlv11config/dlv11config.h"
 #include "console/console.h"
+#include "circular_buffer/circular_buffer.h"
 
 #include <functional>
 #include <memory>
@@ -47,10 +48,8 @@ private:
 	u16	baseAddress {0};
 	u16	vector {0};
 
-	u8*	buf {nullptr};
-	u16	buf_r {0};
-	u16	buf_w {0};
-	u16	buf_size {0};
+	enum {rBufferSize = 2048};
+	CircularBuffer<u8, rBufferSize> rBuffer_;
 
 	Qbus* bus_;
 	DLV11Config::Ch3BreakResponse ch3BreakResponse_;

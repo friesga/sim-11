@@ -10,9 +10,6 @@ using std::placeholders::_1;
 using std::lock_guard;
 using std::unique_lock;
 
-/* Size of DLV11-J input buffer */
-#define	DLV11J_BUF		2048
-
 #define	RCSR_READER_ENABLE	_BV(0)
 #define	RCSR_RCVR_INT		_BV(6)
 #define	RCSR_RCVR_DONE		_BV(7)
@@ -37,7 +34,6 @@ DLV11Channel::DLV11Channel (Qbus* bus, u16 channelBaseAddress,
 	:
 	baseAddress {channelBaseAddress},
 	vector {channelVector},
-	buf {(u8*) malloc (DLV11J_BUF)},
 	bus_ {bus},
 	ch3BreakResponse_ {dlv11Config->ch3BreakResponse},
 	breakKey_ {dlv11Config->breakKey},
@@ -74,8 +70,6 @@ DLV11Channel::~DLV11Channel ()
 
 	// And then wait for its exit
 	transmitterThread_.join ();
-
-	free (buf);
 }
 
 void DLV11Channel::reset ()
@@ -118,13 +112,11 @@ StatusCode DLV11Channel::read (u16 registerAddress, u16 *destAddress)
 
 void DLV11Channel::readChannel ()
 {
-	if (buf_size > 0)
+	if (!rBuffer_.empty ())
 	{
-		rbuf = (u8) buf[buf_r++];
-		buf_r %= DLV11J_BUF;
-		buf_size--;
+		rbuf = rBuffer_.get ();
 
-		if (buf_size)
+		if (!rBuffer_.empty ())
 		{
 			// More date in the RX buffer...
 			rcsr |= RCSR_RCVR_DONE;
@@ -140,6 +132,7 @@ void DLV11Channel::readChannel ()
 		if (rbuf & RBUF_ERROR_MASK)
 			rbuf |= RBUF_ERROR;
 	}
+
 }
 
 // This function allows the processor to write a word to one of the
@@ -289,15 +282,7 @@ void DLV11Channel::processBreak ()
 // buf_size characters with the head at position buf_w.
 bool DLV11Channel::queueCharacter (unsigned char c)
 {
-	if (buf_size < DLV11J_BUF)
-	{
-		buf[buf_w++] = c;
-		buf_w %= DLV11J_BUF;
-		buf_size++;
-		return true;
-	}
-
-	return false;
+	return rBuffer_.put (c);
 }
 
 void DLV11Channel::receiveDone ()
