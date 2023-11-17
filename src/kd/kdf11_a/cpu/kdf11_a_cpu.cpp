@@ -88,13 +88,7 @@ void KDF11_A_Cpu::execute ()
     if(trace.isActive ())
         traceStep ();
 
-    std::chrono::high_resolution_clock::time_point start =
-    std::chrono::high_resolution_clock::now ();
     execInstr ();
-    std::chrono::high_resolution_clock::time_point end =
-        std::chrono::high_resolution_clock::now ();
-    trace.duration ("Instruction",
-            (std::chrono::duration_cast<std::chrono::nanoseconds> (end - start)).count ());
 
     // Instructions leave the run state unchanged except for the WAIT
     // instcution which sets the state to WAIT.
