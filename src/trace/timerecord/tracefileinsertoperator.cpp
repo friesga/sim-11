@@ -1,12 +1,12 @@
-#include "durationrecord.h"
+#include "timerecord.h"
 
 #include "../tracefileoutstream/tracefileoutstream.h"
 
-// Overloaded operator<< function to write TraceDuration records to
-// a trace file. This is a custom function as the TraceDuration record
-// contains a fixed and a variable part.
+// Overloaded operator<< function to write time records to a trace file.
+// This is a custom function as the TimeRecord contains a fixed and a
+// variable part.
 TracefileOutStream& operator<< (TracefileOutStream& tos, 
-    TraceRecord<DurationRecord> record)
+    TraceRecord<TimeRecord> record)
 {
     // Guard against simultaneous trace file writes
     lock_guard<mutex> guard{ tos.traceFileMutex_ };
@@ -18,7 +18,7 @@ TracefileOutStream& operator<< (TracefileOutStream& tos,
 
     // Write the record to the tracefile without the msg_ data member.
     tos.write (reinterpret_cast<char const *>(&record), 
-        sizeof (record.durationCount_) + sizeof (record.length_));
+        sizeof (record.duration_) + sizeof (record.length_));
 
     // Then write the message
     tos.write (reinterpret_cast<char const *>(record.msg_.c_str()), 

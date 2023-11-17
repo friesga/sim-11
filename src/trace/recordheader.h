@@ -7,7 +7,9 @@
 
 // Definition of the magic's, identifying the trace record type
 // in the trace file. The magic value is the hexadecimal representation
-// of the enum's value.
+// of the enum ASCII characters (see e.g. 
+// https://www.utilities-online.info/ascii-to-hex)
+//
 // The constants are defined as conventional enums to be able to convert them
 // to byte-swapped integers in trace records.
 enum class Magic
@@ -16,7 +18,6 @@ enum class Magic
 	CPU0 = 0x43505530,
 	CPUZ = 0x4350555a,
 	CPU1 = 0x43505531,
-	DURA = 0x44555241,	// Duration
 	BUS0 = 0x42555330,
 	BUS1 = 0x42555331,
 	TRAP = 0x54524150,
@@ -29,6 +30,7 @@ enum class Magic
 	DLV1 = 0x444C5631,
 	RL2A = 0x524C3241,	// RLV12 register
 	RL2C = 0x524C3243,	// RLV12 command
+	TIME = 0x54494d45
 };
 
 // Definition of the type to discriminate the trace records in the template

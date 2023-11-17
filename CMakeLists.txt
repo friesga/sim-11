@@ -209,9 +209,9 @@ set (TRACE_SRCS
     src/trace/rlv12registersrecord/ostreaminsertopreator.cpp 
     src/trace/rlv12commandrecord/operator.cpp
     src/trace/rlv12commandrecord/getcommandname.cpp
-    src/trace/durationrecord/tracefileinsertoperator.cpp
-    src/trace/durationrecord/extractionoperator.cpp
-    src/trace/durationrecord/ostreaminsertoperator.cpp
+    src/trace/timerecord/tracefileinsertoperator.cpp
+    src/trace/timerecord/extractionoperator.cpp
+    src/trace/timerecord/ostreaminsertoperator.cpp
     src/trace/memorydumprecord/tracefileinsertoperator.cpp 
     src/trace/memorydumprecord/extractionoperator.cpp
     src/trace/memorydumprecord/ostreaminsertoperator.cpp)

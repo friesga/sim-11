@@ -123,10 +123,16 @@ void Trace::rlv12Command (u16 command)
         tracefileOut_ << TraceRecord<RLV12CommandRecord> (command);
 }
 
-void Trace::duration (string msg, u32 durationCount) 
+// This functions logs a time record in the logfile. It has to be passed a
+// high_resolution_clock::duration which can be used to log either a point in
+// time (i.e. the time elapsed since January 1st 1970) or a duration. To log 
+// the current time the function has to passed the result of a
+// high_resolution_clock::now ().time_since_epoch () call.
+//
+void Trace::time (string msg, high_resolution_clock::duration duration) 
 {
-    if (traceEnabled && (flags_ & Trace::Category::Duration))
-        tracefileOut_ << TraceRecord<DurationRecord> (msg, durationCount);
+    if (traceEnabled && (flags_ & Trace::Category::Time))
+        tracefileOut_ << TraceRecord<TimeRecord> (msg, duration);
 }
 
 void Trace::setIgnoreBus ()

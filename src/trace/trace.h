@@ -15,7 +15,7 @@
 #include "dlv11record/dlv11record.h"
 #include "rlv12registersrecord/rlv12registersrecord.h"
 #include "rlv12commandrecord/rlv12commandrecord.h"
-#include "durationrecord/durationrecord.h"
+#include "timerecord/timerecord.h"
 
 #include "tracefileoutstream/tracefileoutstream.h"
 #include "tracefileinstream/tracefileinstream.h"
@@ -48,7 +48,7 @@ public:
         RXV21Error = (1 << 10),     // RXV21ErrorRecord
         RXV21Disk  = (1 << 11),     // RXV21DiskRecord
         RLV12	   = (1 << 12),     // RLV12RegistersRecord, RLV12CommandRecord
-        Duration   = (1 << 13)      // DurationRecord
+        Time       = (1 << 13)      // TimeRecord
     };
 
     Trace ();
@@ -72,7 +72,7 @@ public:
     void rxv21Error (RXV21ErrorRecordType type, u16 info);
     void rlv12Registers (string msg, u16 rlcs, u16 rlba, u16 rlda, u16 rlmpr, u16 rlbae);
     void rlv12Command (u16 command);
-    void duration (string msg, u32 durationCount);
+    void time (string msg, high_resolution_clock::duration duration);
     void setIgnoreBus ();
     void clearIgnoreBus();
 };
