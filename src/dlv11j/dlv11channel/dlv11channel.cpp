@@ -4,11 +4,15 @@
 
 #include <memory>
 #include <functional>
+#include <chrono>
+#include <thread>
 
 using std::bind;
 using std::placeholders::_1;
 using std::lock_guard;
 using std::unique_lock;
+using std::chrono::high_resolution_clock;
+using std::chrono::duration;
 
 #define	RCSR_READER_ENABLE	_BV(0)
 #define	RCSR_RCVR_INT		_BV(6)
@@ -170,6 +174,7 @@ StatusCode DLV11Channel::writeWord (u16 registerAddress, u16 value)
 		case XBUF:
 			xcsr &= ~XCSR_TRANSMIT_READY;
 			xbuf = value;
+			trace.time ("XMIT_READY cleared", high_resolution_clock::now ().time_since_epoch ());
 			dataAvailable_.notify_one ();
 			break;
 	}
@@ -201,23 +206,64 @@ void DLV11Channel::writeXCSR (u16 value)
 // operator console, for the other channels the data currently disappears
 // into a vacuum.
 //
-// The transmitters runs in its own thread to create a realistic timing on
-// Transmitter Ready bit in the XCSR. This satisfies at least VDLAB0 TEST 6.
+// The transmitter runs in its own thread to create a realistic timing on
+// Transmitter Ready bit in the XCSR. The DLV11-J transmitter is double
+// buffered. It comprises two registers, a holding register which receives
+// characters from the processor and a shift register from which the characters
+// are sent over the serial line. On receipt of a character in the holding
+// register XMIT_READY is cleared, the character is transferred to the shift
+// register, after which XMIT_READY is set again as the holding register is
+// ready to accept another register. On receipt of a second character while
+// the shift register is not yet empty XMIT_READY is cleared but not set
+// until the shift register is empty and the character can be moved to that
+// register. This implies that the first received character can be processed
+// immediately but a time delay is present on receipt of a second character
+// while the first character is being processed. See EK-DLV11J-UG-001
+// par. 4.9.4 (Transmit Operation).
+// 
+// This timing behaviour is implemented to satisfy at least VDLAB0 TEST 6.
+//
 void DLV11Channel::transmitter ()
 {
+	high_resolution_clock::time_point nextCharCanBeProcessedAt = 
+		high_resolution_clock::now ();
+
+	// Get a lock on the registerAccessMutex_. This lock will be released by
+	// the dataAvailable_.wait() call and lock again on return.
+	unique_lock<mutex> lock {registerAccessMutex_};
+
 	while (channelRunning_)
 	{
-		unique_lock<mutex> lock {registerAccessMutex_};
 		dataAvailable_.wait (lock);
 
 		if (!channelRunning_)
 			break;
 
-		trace.dlv11 (DLV11RecordType::DLV11_TX, channelNr_, xbuf);
+		if (nextCharCanBeProcessedAt > high_resolution_clock::now ())
+		{
+			// Simulate waiting for the shift register to be emptied.
+			// Before we are going to sleep the lock has to be unlocked to
+			// give writeWord() the opportunity to access the registers. The
+			// lock has to be locked again when we are awakened.
+			trace.time ("sleepUntil", nextCharCanBeProcessedAt.time_since_epoch ());
+			lock.unlock ();
+			// sleepUntil (nextCharCanBeProcessedAt);
+			std::this_thread::sleep_until (nextCharCanBeProcessedAt);
+			lock.lock ();
+		}
 
 		if (console_)
 			console_->print ((unsigned char) xbuf);
-	
+
+		// Simulate the delay caused by transferring the character from the
+		// shift register over the serial line. VDLAB0 test 6 waits a maximum
+		// of 100 milliseconds for XMIT_READY to become set again. A wait of
+		// 1 millisecond satisfies the test.
+		nextCharCanBeProcessedAt = high_resolution_clock::now () + 
+			// std::chrono::microseconds (1000);
+			std::chrono::microseconds (50);
+
+		trace.time ("XMIT_READY set", high_resolution_clock::now ().time_since_epoch ());
 		xcsr |= XCSR_TRANSMIT_READY;
 		if (xcsr & XCSR_TRANSMIT_INT)
 			bus_->setInterrupt (TrapPriority::BR4, 6, vector + 4);
@@ -290,4 +336,13 @@ void DLV11Channel::receiveDone ()
 	rcsr |= RCSR_RCVR_DONE;
 	if (rcsr & RCSR_RCVR_INT)
 		bus_->setInterrupt (TrapPriority::BR4, 6, vector);
+}
+
+// This function sleeps until the given time point is passed. We prefer
+// our own sleep_until implementation as this_thread::sleep_until seems
+// to have the result that the thread isn't yielded.
+void DLV11Channel::sleepUntil (high_resolution_clock::time_point timePoint)
+{
+	while (high_resolution_clock::now() < timePoint)
+        std::this_thread::yield ();
 }

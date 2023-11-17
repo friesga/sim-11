@@ -12,6 +12,7 @@
 #include <thread>
 #include <mutex>
 #include <condition_variable>
+#include <chrono>
 
 using std::function;
 using std::unique_ptr;
@@ -19,6 +20,7 @@ using std::shared_ptr;
 using std::thread;
 using std::mutex;
 using std::condition_variable;
+using std::chrono::high_resolution_clock;
 
 class DLV11Channel
 {
@@ -69,6 +71,7 @@ private:
 	void processBreak ();
 	bool queueCharacter (unsigned char c);
 	void receiveDone ();
+	void sleepUntil (high_resolution_clock::time_point timePoint);
 };
 
 #endif // _DLV11CHANNEL_H_
