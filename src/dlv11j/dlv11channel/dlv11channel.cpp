@@ -41,7 +41,8 @@ DLV11Channel::DLV11Channel (Qbus* bus, u16 channelBaseAddress,
 	bus_ {bus},
 	ch3BreakResponse_ {dlv11Config->ch3BreakResponse},
 	breakKey_ {dlv11Config->breakKey},
-	channelRunning_ {true}
+	channelRunning_ {true},
+	charAvailable_ {false}
 {
 	// Determine the channel number from the base address. An exception
 	// to the standard formula has to be made when channel 3 is used as
@@ -70,7 +71,7 @@ DLV11Channel::~DLV11Channel ()
 {
 	// Signal the transmitter to exit
 	channelRunning_ = false;
-	dataAvailable_.notify_one ();
+	transmitter_.notify_one ();
 
 	// And then wait for its exit
 	transmitterThread_.join ();
@@ -174,8 +175,8 @@ StatusCode DLV11Channel::writeWord (u16 registerAddress, u16 value)
 		case XBUF:
 			xcsr &= ~XCSR_TRANSMIT_READY;
 			xbuf = value;
-			trace.time ("XMIT_READY cleared", high_resolution_clock::now ().time_since_epoch ());
-			dataAvailable_.notify_one ();
+			charAvailable_ = true;
+			transmitter_.notify_one ();
 			break;
 	}
 
@@ -214,7 +215,7 @@ void DLV11Channel::writeXCSR (u16 value)
 // register XMIT_READY is cleared, the character is transferred to the shift
 // register, after which XMIT_READY is set again as the holding register is
 // ready to accept another register. On receipt of a second character while
-// the shift register is not yet empty XMIT_READY is cleared but not set
+// the shift register is not yet empty XMIT_READY is cleared and not set
 // until the shift register is empty and the character can be moved to that
 // register. This implies that the first received character can be processed
 // immediately but a time delay is present on receipt of a second character
@@ -228,45 +229,39 @@ void DLV11Channel::transmitter ()
 	high_resolution_clock::time_point nextCharCanBeProcessedAt = 
 		high_resolution_clock::now ();
 
-	// Get a lock on the registerAccessMutex_. This lock will be released by
-	// the dataAvailable_.wait() call and lock again on return.
-	unique_lock<mutex> lock {registerAccessMutex_};
-
 	while (channelRunning_)
 	{
-		dataAvailable_.wait (lock);
+		// Get a lock on the registerAccessMutex_. This lock will be released by
+		// the transmitter_.wait() call and lock again on return of that call.
+		unique_lock<mutex> lock {registerAccessMutex_};
+
+		if (!charAvailable_)
+			transmitter_.wait (lock);
+		charAvailable_ = false;
 
 		if (!channelRunning_)
 			break;
 
-		if (nextCharCanBeProcessedAt > high_resolution_clock::now ())
-		{
-			// Simulate waiting for the shift register to be emptied.
-			// Before we are going to sleep the lock has to be unlocked to
-			// give writeWord() the opportunity to access the registers. The
-			// lock has to be locked again when we are awakened.
-			trace.time ("sleepUntil", nextCharCanBeProcessedAt.time_since_epoch ());
-			lock.unlock ();
-			// sleepUntil (nextCharCanBeProcessedAt);
-			std::this_thread::sleep_until (nextCharCanBeProcessedAt);
-			lock.lock ();
-		}
-
 		if (console_)
 			console_->print ((unsigned char) xbuf);
+
+		xcsr |= XCSR_TRANSMIT_READY;
+		if (xcsr & XCSR_TRANSMIT_INT)
+			bus_->setInterrupt (TrapPriority::BR4, 6, vector + 4);
+
+		// The following sleep has to be done while the registerAccessMutex_
+		// is unlocked as else the processor has no opportunity to send the
+		// next character to the DLV11-J and the delay would be useless.
+		lock.unlock ();
 
 		// Simulate the delay caused by transferring the character from the
 		// shift register over the serial line. VDLAB0 test 6 waits a maximum
 		// of 100 milliseconds for XMIT_READY to become set again. A wait of
-		// 1 millisecond satisfies the test.
+		// 1 millisecond real time satisfies the test.
 		nextCharCanBeProcessedAt = high_resolution_clock::now () + 
-			// std::chrono::microseconds (1000);
-			std::chrono::microseconds (50);
+			std::chrono::microseconds (1000);
 
-		trace.time ("XMIT_READY set", high_resolution_clock::now ().time_since_epoch ());
-		xcsr |= XCSR_TRANSMIT_READY;
-		if (xcsr & XCSR_TRANSMIT_INT)
-			bus_->setInterrupt (TrapPriority::BR4, 6, vector + 4);
+		sleepUntil (nextCharCanBeProcessedAt);
 	}
 }
 

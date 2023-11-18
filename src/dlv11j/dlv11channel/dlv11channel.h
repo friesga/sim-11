@@ -61,7 +61,8 @@ private:
 	bool channelRunning_;
 	thread transmitterThread_;
 	mutex registerAccessMutex_;
-	condition_variable dataAvailable_;
+	condition_variable transmitter_;
+	bool charAvailable_;
 
 	void readChannel ();
 	void writeRCSR (u16 value);
