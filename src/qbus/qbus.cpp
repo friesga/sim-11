@@ -103,9 +103,17 @@ void Qbus::step ()
 // Wait a random number (max INTRPT_LATENCY) of steps till processing of an
 // interrupt request. The delay counter is incremented every Qbus step.
 // Traps are handled internally in the CPU and are to be processed immediately.
+//
+// This delay doesn't seem to be necessary to pass the VKAAC0 (for the
+// KD11-NA) and the JKDBD0 (for the KDF11-A) diagnostics. These diagnostics
+// however require a realistic delay on the DLV11-J transmitter XMIT-READY
+// bit. As that delay is implemented the interrupt latency seems superfluous.
+// For the time being left the mechanism intact and disabled the actual delay.
+//
 bool Qbus::intrptReqAvailable() 
 {
-	return (!intrptReqQueue_.empty() && delay_ >= INTRPT_LATENCY);
+	// return (!intrptReqQueue_.empty() && delay_ >= INTRPT_LATENCY);
+	return (!intrptReqQueue_.empty());
 }
 
 // Return the priority of the interrupt request with the highest priority
