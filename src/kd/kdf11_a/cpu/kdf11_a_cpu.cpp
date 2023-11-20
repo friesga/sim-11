@@ -16,6 +16,7 @@ using std::make_unique;
 KDF11_A_Cpu::KDF11_A_Cpu (Qbus* bus)
     :
     KD11CpuData (bus),
+    mmu_ {make_unique<KTF11_A> (bus)},
     runState {CpuRunState::HALT},
     kdf11_aInstruction {},
     haltReason_ {HaltReason::HaltInstruction},
@@ -238,9 +239,9 @@ void KDF11_A_Cpu::traceStep ()
     // the instruction isn't decoded at this point. Therefore use the bus
     // read function instead of fetchWord(). The latter will generate a
     // bus error trap on access of an invalid address.
-    code[0] = bus_->read (registers_[7] + 0).valueOr (0);
-    code[1] = bus_->read (registers_[7] + 2).valueOr (0);
-    code[2] = bus_->read (registers_[7] + 4).valueOr (0);
+    code[0] = mmu_->read (registers_[7] + 0).valueOr (0);
+    code[1] = mmu_->read (registers_[7] + 2).valueOr (0);
+    code[2] = mmu_->read (registers_[7] + 4).valueOr (0);
     trace.cpuStep (registers (), psw_, code);
     trace.clearIgnoreBus ();
 }

@@ -6,6 +6,7 @@
 #include "types.h"
 #include "kd/kdf11_a/cpu/kdf11_ainstruction/kdf11_ainstruction.h"
 #include "kdf11_aregisters/kdf11_aregisters.h"
+#include "kd/kdf11_a/ktf11_a/ktf11_a.h"
 
 #include <functional>
 
@@ -61,6 +62,7 @@ private:
 
 	enum {stackLimit = 0400};
 
+	unique_ptr<KTF11_A> mmu_;
 	CpuRunState runState;
 	KDF11_AInstruction kdf11_aInstruction;
 	KDF11_ARegisters registers_ {psw_};
