@@ -67,16 +67,7 @@ using std::unique_ptr;
 //    ASH -------------- 07 2x xx
 //    ASHC ------------- 07 3x xx
 //    XOR -------------- 07 4x xx
-//    Group  07 5x xx
-//      FADD ----------- 07 50 0x
-//      FSUB ----------- 07 50 1x
-//      FMUL ----------- 07 50 2x
-//      FDIV ----------- 07 50 3x
-//      unused --------- 07 50 4x
-//      unused --------- 07 50 5x
-//      unused --------- 07 50 6x
-//      unused --------- 07 50 7x
-// 
+//    unused ----------- 07 5x xx
 //    unused ----------- 07 6x xx
 //    SOB -------------- 07 7x xx
 // 
@@ -163,7 +154,6 @@ private:
     // the same for all instances of the class (if there are anyway).
     static opCodeTable const group_00_00_nn;
     static opCodeTable const group_00_02_nn;
-    static opCodeTable const group_07_5n_nx;
     static opCodeTable const group_07_nx_xx;
     static opCodeTable const group_10_xx_xx;
     static opCodeTable const group_00_nn_xx;
@@ -174,7 +164,6 @@ private:
     // simply walk through the operation code tables declared above.
     static unique_ptr<LSI11Instruction> decodeGroup_00_00_nn (CpuData*, u16);
     static unique_ptr<LSI11Instruction> decodeGroup_00_02_nn (CpuData*, u16);
-    static unique_ptr<LSI11Instruction> decodeGroup_07_5n_nx (CpuData*, u16);
     static unique_ptr<LSI11Instruction> decodeGroup_07_nx_xx (CpuData*, u16);
     static unique_ptr<LSI11Instruction> decodeGroup_10_xx_xx (CpuData*, u16);
     static unique_ptr<LSI11Instruction> decodeGroup_00_nn_xx (CpuData*, u16);

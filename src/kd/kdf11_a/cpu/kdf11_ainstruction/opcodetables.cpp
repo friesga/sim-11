@@ -43,10 +43,6 @@
 #include "decb.h"
 #include "kd/common/instructions/div.h"
 #include "kd/common/instructions/emt.h"
-#include "kd/common/instructions/fadd.h"
-#include "kd/common/instructions/fdiv.h"
-#include "kd/common/instructions/fmul.h"
-#include "kd/common/instructions/fsub.h"
 #include "kd/common/instructions/halt.h"
 #include "inc.h"
 #include "incb.h"
@@ -170,25 +166,6 @@ KDF11_AInstruction::opCodeTable const KDF11_AInstruction::group_00_02_nn
     CommonInstruction::SCC::create         // 00 02 77
 };
 
-// Instruction format for Fixed and Floating Point Arithmetic instructions
-// (just the FIS part of the instruction format).
-// 
-// Just the operation codes in the range 07 50 0x till 07 50 3x are used.
-// The range 07 51 xx till 07 57 xx is handled in the corresponding function
-// to minimize the size of this opcode table.
-//
-KDF11_AInstruction::opCodeTable const KDF11_AInstruction::group_07_5n_nx
-{
-    CommonInstruction::FADD::create,       // 07 50 0x
-    CommonInstruction::FSUB::create,       // 07 50 1x
-    CommonInstruction::FMUL::create,       // 07 50 2x
-    CommonInstruction::FDIV::create,       // 07 50 3x
-    CommonInstruction::Unused::create,     // 07 50 4x
-    CommonInstruction::Unused::create,     // 07 50 5x
-    CommonInstruction::Unused::create,     // 07 50 6x
-    CommonInstruction::Unused::create      // 07 50 7x
-};
-
 // Instruction format for Fixed and Floating Point Arithmetic instructions,
 // plus the SOB and XOR instructions.
 // 
@@ -201,7 +178,7 @@ KDF11_AInstruction::opCodeTable const KDF11_AInstruction::group_07_nx_xx
     CommonInstruction::ASH::create,                    // 07 2x xx
     CommonInstruction::ASHC::create,                   // 07 3x xx
     KDF11_AInstruction::XOR::create,                   // 07 4x xx
-    decodeGroup_07_5n_nx,                              // 07 5x xx
+    CommonInstruction::Unused::create,                 // 07 5x xx
     CommonInstruction::Unused::create,                 // 07 6x xx
     CommonInstruction::SOB::create                     // 07 7x xx
 };

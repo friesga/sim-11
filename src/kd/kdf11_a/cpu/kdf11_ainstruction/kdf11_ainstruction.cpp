@@ -24,14 +24,6 @@ unique_ptr<LSI11Instruction> KDF11_AInstruction::decodeGroup_00_02_nn (CpuData* 
     return (*group_00_02_nn [instruction - 0200]) (cpu, instruction);
 }
 
-unique_ptr<LSI11Instruction> KDF11_AInstruction::decodeGroup_07_5n_nx (CpuData* cpu, u16 instruction)
-{
-    u16 index = (instruction >> 3) - 07500;
-    if (index < 010)
-        return (*group_07_5n_nx [index]) (cpu, instruction);
-        
-    return CommonInstruction::Unused::create (cpu, instruction);
-}
 
 unique_ptr<LSI11Instruction> KDF11_AInstruction::decodeGroup_07_nx_xx (CpuData* cpu, u16 instruction)
 {
