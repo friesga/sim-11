@@ -23,12 +23,7 @@ public:
 	// These functions have to be provided for the CpuData interfaces and are
 	// used by the instruction classes.
     constexpr u16& psw () override;
-	CondData<u16> fetchWord (u16 address) override;
-	CondData<u8> fetchByte (u16 address) override;
-	bool putWord (u16 address, u16 value) override;
-	bool putByte (u16 address, u8 value) override;
-	bool pushWord (u16 value) override;
-	bool popWord (u16 *destination) override;
+
 	void setTrap (CpuData::TrapCondition trap, TrapRecordType cause = TrapRecordType::TRAP) override;
 	void setCC (ConditionCodes conditionCodes) override;
 
