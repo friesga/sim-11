@@ -190,17 +190,30 @@ u16 KDF11_A_Cpu::fetchFromVector (u16 address, u16* dest)
 // Swap the PC and PSW with new values from the given vector
 void KDF11_A_Cpu::swapPcPSW (u16 vectorAddress)
 {
-    // Save PC and PSW on the stack. Adressing the stack could result in a
-    // bus time out. In that case the CPU is halted.
-    if (!pushWord (psw_) || !pushWord (registers_[7]))
+    // Save PC and PSW on the stack. 
+    // Unlike the KD11-F and KD11-HA, the KDF11-AA does not enter console
+    // ODT upon occurrence of a double bus error (for example, when R6 points
+    // to nonexistent memory during a bus timeout trap). The KDF11-BA creates
+    // a new stack at location 2 and continues to trap to 4. (EK-KDF11-UG-PR2)
+    // 
+    // The order of execution of the trap sequence seems to be that the new
+    // PSW is loaded before the old PSW is saved onto the stack. This means
+    // that if a bus error occurs on the push of the psw onto the stack the
+    // new psw already is loaded. This behaviour is implied by JKDBD0
+    // test 407. The same behaviour might exist for saveing and retrieval of
+    // the PC.
+    // 
+    u16 oldPSW = psw_;
+    fetchFromVector (vectorAddress + 2, &psw_);
+    if (!pushWord (oldPSW) || !pushWord (registers_[7]))
     {
+        // Set the stack pointer at location 4 as it will be decremented
+        // before the PSW is pushed.
         trace.cpuEvent (CpuEventRecordType::CPU_DBLBUS, registers_[6]);
-        // ToDo: All interrupts should be cleared?
-        trap_ = CpuData::TrapCondition::None;
-        runState = CpuRunState::HALT;
-        haltReason_ = HaltReason::DoubleBusError;
-        bus_->SRUN().set (false);
-        return;
+        registers_[6] = 4;
+        pushWord (psw_);
+        pushWord (registers_[7]);
+        vectorAddress = 4;
     }
 
     // Read new PC and PSW from the trap vector. These read's could also
@@ -234,7 +247,10 @@ void KDF11_A_Cpu::traceStep ()
 
 // Check if a stack overflow has occurred, i.e. the kernel stack pointer has
 // been decremented below the stack limit.
+// On a double bus error a new stack will be set up at locations 2 and 0. This
+// should not result in a stack overflow trap.
 bool KDF11_A_Cpu::stackOverflow ()
 {
-    return inKernelMode () && registers_ [6] < stackLimit;
+    return inKernelMode () && 
+        registers_ [6] > 0 && registers_ [6] < stackLimit;
 }
