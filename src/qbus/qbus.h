@@ -43,6 +43,20 @@ using std::vector;
 
 class PDP11Peripheral;
 
+// This class implements the Qbus backplane. Two variants of the backplane
+// exist: 18-bit and 22-bit wide. As the 18-bit backplanes can be upgraded
+// to a 22-bit without impact on the functionality of the system we implement
+// the 22-bit version.
+//
+// Addresses on the Qbus are represented by a 32-bit integer. Devices in the
+// I/O page ignore the nine high-order address bits BDAL<21:13> and instead
+// decode BBS7 [which indicates an I/O page access] along with the thirteen
+// low-order address bits. (Supersystems Handbook)
+// 
+// This means that register address for devices with registers in the I/O
+// page can be limited to 16-bits. The 32-bit bus address will be truncated
+// to a 16 bit address to be used by the device.
+//
 class Qbus
 {
 public:
@@ -88,9 +102,9 @@ public:
 	bool getIntrptReq (InterruptRequest &ir);
 
 	void step ();
-	CondData<u16> read (u16 addr);
-	bool writeWord (u16 addr, u16 value);
-	bool writeByte (u16 addr, u8 val);
+	CondData<u16> read (u32 address);
+	bool writeWord (u32 address, u16 value);
+	bool writeByte (u32 address, u8 val);
 	void installModule (int slot, BusDevice *module);
 
 private:
@@ -114,7 +128,7 @@ private:
 	u16	delay_;
 
 	void reset ();
-	BusDevice *responsibleModule (u16 address);
+	BusDevice *responsibleModule (u32 address);
 	void pushInterruptRequest (InterruptRequest interruptReq);
 	void BINITReceiver (bool signalValue);
 };

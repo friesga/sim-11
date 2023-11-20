@@ -18,7 +18,7 @@ Qbus::Qbus ()
 	ourKey_ = BINIT().subscribe (bind (&Qbus::BINITReceiver, this, _1));
 }
 
-CondData<u16> Qbus::read (u16 address)
+CondData<u16> Qbus::read (u32 address)
 {
 	BusDevice *module;
 	u16 addr = address;
