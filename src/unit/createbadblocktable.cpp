@@ -35,7 +35,7 @@
 StatusCode Unit::createBadBlockTable (int32_t sectorsPerSurface, 
     int32_t physWordsPerSector)
 {
-    t_addr da;
+    u32 da;
     u16 *badSectorInfo;
     // Each block written to the bad block file comprises two 256-word
     // sectors

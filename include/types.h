@@ -12,20 +12,18 @@ using s32	= int32_t;
 using u64	= uint64_t;
 using s64	= int64_t;
 
-#if defined (USE_INT64) && defined (USE_ADDR64)         // 64 bit addresses
-typedef uint64_t        t_addr;
-#define T_ADDR_W        64
-#define T_ADDR_FMT      LL_FMT
-#else                                                   // 32 bit addresses
-typedef uint32_t        t_addr;
-#define T_ADDR_W        32
-#define T_ADDR_FMT      ""
-#endif 
-
+// Define a bit index
 #define	_BV(x)	(1 << (x))
 
+// Construct a bit field n bits wide
+consteval u16 bitField (size_t n)
+{
+    return (1U << n) - 1U;
+}
+
+// The following definitions are used to read and write device files.
 #ifdef WIN32
-// We can safely asseume that all Win32 systems are little endian
+// We can safely assume that all Win32 systems are little endian
 #define	U16B(x)			_byteswap_ushort(x)
 #define	U32B(x)			_byteswap_ulong(x)
 #define	U64B(x)			_byteswap_uint64(x)
