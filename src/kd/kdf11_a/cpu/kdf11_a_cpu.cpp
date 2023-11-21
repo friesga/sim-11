@@ -16,7 +16,7 @@ using std::make_unique;
 KDF11_A_Cpu::KDF11_A_Cpu (Qbus* bus)
     :
     KD11CpuData (bus),
-    mmu_ {make_unique<KTF11_A> (bus)},
+    mmu_ {make_unique<KTF11_A> (bus, this)},
     runState {CpuRunState::HALT},
     kdf11_aInstruction {},
     haltReason_ {HaltReason::HaltInstruction},

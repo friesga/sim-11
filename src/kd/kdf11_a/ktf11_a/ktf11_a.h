@@ -2,6 +2,8 @@
 #define _KTF11A_H_
 
 #include "qbus/qbus.h"
+#include "kd/include/cpudata.h"
+#include "apr.h"
 
 // The class KTF11_A implements the memory management option for the KDF11-A.
 // It implements a subset of the standard PDP-11 Memory Management. There is
@@ -21,13 +23,41 @@
 class KTF11_A
 {
 public:
-	KTF11_A (Qbus* bus);
+	KTF11_A (Qbus* bus, CpuData* cpu);
     CondData<u16> read (u16 address);
 	bool writeWord (u16 address, u16 value);
 	bool writeByte (u16 address, u8 value);
 
 private:
+	// A virtual address is composed of the following fields:
+	// - Active Page Field <15:13>,
+	// - Block number <12:6>
+	// - Displacement in block <5:0>
+	//
+	u16 const APFIndex = 13;
+	u16 const APFMask = (u16) (bitField (3) << APFIndex);
+	u16 const blockNrIndex = 6;
+	u16 const blockNrMask = (u16) (bitField (7) << blockNrIndex);
+	u16 const DIBMask {bitField (6)};
+
 	Qbus* bus_;
+	CpuData* cpu_;
+
+	// The PSW current memory management mode bits allow the presence of four
+	// modes, Kernel, Reserved, Illegal and User, of which only Kernel and
+	// User mode are actually used on the KTF11-A. As EK-KDF11-UG-PR2 states
+	// that the Reserved and Illegal mode do not cause a halt, we presume the
+	// presence of four Active Page Register sets.
+	ActivePageRegisterSet activePageRegisterSet_[4];
+
+	u32 constructPhysicalAddress (u16 address);
+	constexpr u16 activePageField (u16 address);
+	constexpr u16 blockNumber (u16 address);
+	constexpr u16 displacementInBlock (u16 address);
+	u16 pageAddressField (u16 activePageField);
+	constexpr u16 memoryManagementMode ();
 };
 
-#endif _KTF11A_H_
+
+
+#endif // _KTF11A_H_
