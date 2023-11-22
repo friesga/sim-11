@@ -3,7 +3,7 @@
 
 CondData<u16> KDF11_A_Cpu::fetchWord (u16 address)
 {
-    CondData<u16> value = mmu_->read (address);
+    CondData<u16> value = mmu_->mappedRead (address);
     if (!value.hasValue ())
     {
         trace.bus (BusRecordType::ReadFail, address, 0);
@@ -38,7 +38,7 @@ CondData<u8> KDF11_A_Cpu::fetchByte (u16 address)
 
 bool KDF11_A_Cpu::putWord (u16 address, u16 value)
 {
-    if (!mmu_->writeWord (address, value))
+    if (!mmu_->mappedWriteWord (address, value))
     {
         trace.bus (BusRecordType::WriteFail, address, value);
         setTrap (CpuData::TrapCondition::BusError);
@@ -49,7 +49,7 @@ bool KDF11_A_Cpu::putWord (u16 address, u16 value)
 
 bool KDF11_A_Cpu::putByte (u16 address, u8 value)
 {
-    if (!mmu_->writeByte (address, value))
+    if (!mmu_->mappedWriteByte (address, value))
     {
         trace.bus (BusRecordType::WriteFail, address, value);
         setTrap (CpuData::TrapCondition::BusError);

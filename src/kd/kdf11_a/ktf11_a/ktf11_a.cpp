@@ -7,18 +7,20 @@ KTF11_A::KTF11_A (Qbus* bus, CpuData* cpu)
     cpu_ {cpu}
 {}
 
-CondData<u16> KTF11_A::read (u16 address)
+// Return the word at the given virtual address using the MMU mapping
+CondData<u16> KTF11_A::mappedRead (u16 address)
 {
     return bus_->read (address);
 }
 
-bool KTF11_A::writeWord (u16 address, u16 value)
+// Write the word at the given virtual address using the MMU mapping
+bool KTF11_A::mappedWriteWord (u16 address, u16 value)
 {
     return bus_->writeWord (address, value);
 }
 
-
-bool KTF11_A::writeByte (u16 address, u8 value)
+// Write the byte at the given virtual address using the MMU mapping
+bool KTF11_A::mappedWriteByte (u16 address, u8 value)
 {
     return bus_->writeByte (address, value);
 }
@@ -32,7 +34,7 @@ constexpr u16 KTF11_A::activePageField (u16 address)
 // Return the block number from the given virtual address
 constexpr u16 KTF11_A::blockNumber (u16 address)
 {
-    return (address >> blockNrMask) >> blockNrIndex;
+    return (address & blockNrMask) >> blockNrIndex;
 }
 
 // Return the displacement in block from the given virtual address

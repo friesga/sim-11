@@ -75,7 +75,8 @@ set (KDF11_A_SRCS
     src/kd/kdf11_a/cpu/kdf11_ainstruction/opcodetables.cpp
     src/kd/kdf11_a/cpu/kdf11_aregisters/kdf11_aregisters.cpp
     src/kd/kdf11_a/cpu/kdf11_a_memoryaccess.cpp
-    src/kd/kdf11_a/ktf11_a/ktf11_a.cpp)
+    src/kd/kdf11_a/ktf11_a/ktf11_a.cpp
+    src/kd/kdf11_a/ktf11_a/ktf11_aregisters.cpp)
 
  set (KD11_NA_SRCS
     src/kd/kd11_na/kd11_na.cpp
@@ -376,6 +377,7 @@ set (GTEST_SRCS
     gtest/kd11_na/kd11_naregisterstest.cpp
     gtest/kdf11_a/pswtest.cpp
     gtest/kdf11_a/kdf11_aregisterstest.cpp
+    gtest/ktf11_a/ktf11_aregisterstest.cpp
     gtest/locationtest.cpp
     gtest/operandlocationtest.cpp
     gtest/dummycpu/dummycpu.cpp

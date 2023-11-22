@@ -3,6 +3,7 @@
 
 #include "qbus/qbus.h"
 #include "kd/include/cpudata.h"
+#include "abstractbusdevice/abstractbusdevice.h"
 #include "apr.h"
 
 // The class KTF11_A implements the memory management option for the KDF11-A.
@@ -20,13 +21,24 @@
 // pages, each page composed of from 1 to 128 integral blocks of 32 words. 
 // (EK-KDF11-UG-PR2)
 //
-class KTF11_A
+class KTF11_A : public AbstractBusDevice
 {
 public:
 	KTF11_A (Qbus* bus, CpuData* cpu);
-    CondData<u16> read (u16 address);
-	bool writeWord (u16 address, u16 value);
-	bool writeByte (u16 address, u8 value);
+
+	// Functions required by the BusDevice interface. The KTF11-A is treated
+	// as a bus device as it has registers which have to be accessible on the
+	// bus.
+	StatusCode read (u16 address, u16 *destination) override;
+	StatusCode writeWord (u16 address, u16 value) override;
+	bool responsible (u16 address) override;
+	void reset () override;
+
+	// The following functions are called from the processor to access the
+	// memory and device registers (via the bus).
+    CondData<u16> mappedRead (u16 address);
+	bool mappedWriteWord (u16 address, u16 value);
+	bool mappedWriteByte (u16 address, u8 value);
 
 private:
 	// A virtual address is composed of the following fields:
@@ -34,14 +46,28 @@ private:
 	// - Block number <12:6>
 	// - Displacement in block <5:0>
 	//
-	u16 const APFIndex = 13;
-	u16 const APFMask = (u16) (bitField (3) << APFIndex);
-	u16 const blockNrIndex = 6;
-	u16 const blockNrMask = (u16) (bitField (7) << blockNrIndex);
-	u16 const DIBMask {bitField (6)};
+	static const u16 APFIndex = 13;
+	static const u16 APFMask = (u16) (bitField (3) << APFIndex);
+	static const u16 blockNrIndex = 6;
+	static const u16 blockNrMask = (u16) (bitField (7) << blockNrIndex);
+	static const u16 DIBMask {bitField (6)};
+
+	// Definition of the adresses of the KTF11-A
+	static const u16 kernelPARBase = 0172340;
+	static const u16 kernelPDRBase = 0172300;
+	static const u16 userPARBase = 0177640;
+	static const u16 userPDRBase = 0177600;
+	static const u16 statusRegister0 = 0177572;
+	static const u16 statusRegister1 = 0177574;
+	static const u16 statusRegister2 = 0177576;
+	static const u16 statusRegister3 = 0172516;
 
 	Qbus* bus_;
 	CpuData* cpu_;
+	u16 sr0_ {0};
+	u16 sr1_ {0};
+	u16 sr2_ {0};
+	u16 sr3_ {0};
 
 	// The PSW current memory management mode bits allow the presence of four
 	// modes, Kernel, Reserved, Illegal and User, of which only Kernel and
@@ -56,6 +82,7 @@ private:
 	constexpr u16 displacementInBlock (u16 address);
 	u16 pageAddressField (u16 activePageField);
 	constexpr u16 memoryManagementMode ();
+	u16* registerPointer (u16 address);
 };
 
 
