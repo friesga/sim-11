@@ -2,6 +2,7 @@
 #define __TYPES_H__
 
 #include <stdint.h>
+#include <cstddef>      // For size_t
 
 using u8    = uint8_t;
 using s8	= int8_t;

@@ -2,14 +2,13 @@
 #define _KTF11ASR0_H_
 
 #include "types.h"
+#include "registerbase/registerbase.h"
 
 // Definition of KTF11-A Status Register 0
-class SR0
+class SR0 : public RegisterBase
 {
 public:
     SR0 (u16 value);
-    void operator= (u16 const value);
-    operator u16 ();
     bool managementEnabled ();
 
 private:
@@ -23,16 +22,6 @@ inline SR0::SR0 (u16 value)
     : 
     value_ {value}
 {}
-
-inline void SR0::operator= (u16 const value)
-{
-    value_ = value;
-}
-
-inline SR0::operator u16 ()
-{
-    return value_;
-}
 
 inline bool SR0::managementEnabled ()
 {
