@@ -10,6 +10,9 @@ KTF11_A::KTF11_A (Qbus* bus, CpuData* cpu)
 // Return the word at the given virtual address using the MMU mapping
 CondData<u16> KTF11_A::mappedRead (u16 address)
 {
+    if (sr0_.managementEnabled ())
+        return bus_->read (physicalAddress (address));
+
     return bus_->read (address);
 }
 
@@ -63,7 +66,7 @@ u16 KTF11_A::pageAddressField (u16 address)
     return aprSet->activePageRegister_->PageAddressRegister_;
 }
 
-// Construct a 22-bit physical address from the given 16-bit virtual address
+// Return the 22-bit physical address for the given 16-bit virtual address
 //
 // The logical sequence involved in forming a physical address is as follows. 
 // 
@@ -82,7 +85,7 @@ u16 KTF11_A::pageAddressField (u16 address)
 // 
 // Source: EK-KDF11-UG-PR2
 //
-u32 KTF11_A::constructPhysicalAddress (u16 address)
+u32 KTF11_A::physicalAddress (u16 address)
 {
     u32 physicalBlockNr = pageAddressField (address) + blockNumber (address);
     return (physicalBlockNr << 6) | displacementInBlock (address);

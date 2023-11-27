@@ -9,7 +9,7 @@ u16* KTF11_A::registerPointer (u16 address)
     switch (address)
     {
         case statusRegister0:
-            return &sr0_;
+            return reinterpret_cast<u16*> (&sr0_);
 
         case statusRegister1:
             return &sr1_;

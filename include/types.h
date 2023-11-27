@@ -15,6 +15,12 @@ using s64	= int64_t;
 // Define a bit index
 #define	_BV(x)	(1 << (x))
 
+// Return an u16 with the given bit set
+consteval u16 bitValue (size_t x)
+{
+    return (1 << x);
+}
+
 // Construct a bit field n bits wide
 consteval u16 bitField (size_t n)
 {

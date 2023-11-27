@@ -5,6 +5,7 @@
 #include "kd/include/cpudata.h"
 #include "abstractbusdevice/abstractbusdevice.h"
 #include "apr.h"
+#include "ktf11_asr0.h"
 
 // The class KTF11_A implements the memory management option for the KDF11-A.
 // It implements a subset of the standard PDP-11 Memory Management. There is
@@ -64,7 +65,9 @@ private:
 
 	Qbus* bus_;
 	CpuData* cpu_;
-	u16 sr0_ {0};
+
+	// Definition of status registers
+	SR0 sr0_ {0};
 	u16 sr1_ {0};
 	u16 sr2_ {0};
 	u16 sr3_ {0};
@@ -76,7 +79,7 @@ private:
 	// presence of four Active Page Register sets.
 	ActivePageRegisterSet activePageRegisterSet_[4];
 
-	u32 constructPhysicalAddress (u16 address);
+	u32 physicalAddress (u16 address);
 	constexpr u16 activePageField (u16 address);
 	constexpr u16 blockNumber (u16 address);
 	constexpr u16 displacementInBlock (u16 address);
