@@ -63,7 +63,7 @@ u16 KTF11_A::pageAddressField (u16 address)
 {
     u16 apf = activePageField (address);
     ActivePageRegisterSet *aprSet = &activePageRegisterSet_[memoryManagementMode ()];
-    return aprSet->activePageRegister_->PageAddressRegister_;
+    return aprSet->activePageRegister_[apf].PageAddressRegister_;
 }
 
 // Return the 22-bit physical address for the given 16-bit virtual address
