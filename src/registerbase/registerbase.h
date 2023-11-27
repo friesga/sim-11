@@ -12,12 +12,19 @@ class RegisterBase : public Register<RegisterBase>
 {
 public:
     using Register<RegisterBase>::operator=;
+
+    RegisterBase (u16 const value);
     void assignmentOperatorImpl (u16 const value);
     u16 operatoru16Impl ();
 
 protected:
     u16 value_;
 };
+
+inline RegisterBase::RegisterBase (u16 const value)
+    :
+    value_ {value}
+{}
 
 inline void RegisterBase::assignmentOperatorImpl (u16 const value)
 {

@@ -20,7 +20,7 @@ private:
 
 inline SR0::SR0 (u16 value)
     : 
-    value_ {value}
+    RegisterBase {value}
 {}
 
 inline bool SR0::managementEnabled ()

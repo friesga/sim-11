@@ -4,12 +4,12 @@
 #include "ktf11_a.h"
 #include "kd/include/psw.h"
 
-u16* KTF11_A::registerPointer (u16 address)
+RegisterBase* KTF11_A::registerPointer (u16 address)
 {
     switch (address)
     {
         case statusRegister0:
-            return reinterpret_cast<u16*> (&sr0_);
+            return &sr0_;
 
         case statusRegister1:
             return &sr1_;
@@ -57,7 +57,7 @@ u16* KTF11_A::registerPointer (u16 address)
 // address
 StatusCode KTF11_A::read (u16 address, u16 *destination)
 {
-    u16* regPtr = registerPointer (address);
+    RegisterBase* regPtr = registerPointer (address);
     if (regPtr != nullptr)
     {
         *destination = *regPtr;
@@ -72,7 +72,7 @@ StatusCode KTF11_A::writeWord (u16 address, u16 value)
     if (address == statusRegister1 || address == statusRegister2)
         return StatusCode::ReadOnly;
 
-    u16* regPtr = registerPointer (address);
+    RegisterBase* regPtr = registerPointer (address);
     if (regPtr != nullptr)
     {
         *regPtr = value;
