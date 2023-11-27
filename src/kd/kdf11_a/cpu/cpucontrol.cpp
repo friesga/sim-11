@@ -13,10 +13,12 @@ void KDF11_A_Cpu::cpuReset ()
     psw_ = 0;
 }
 
-// Reset (the devices on) the bus by setting the INIT signal
+// Reset (the devices on) the bus by setting the INIT signal and reset
+// the KTF11-A.
 void KDF11_A_Cpu::busReset ()
 {
     bus_->BINIT().cycle ();
+    mmu_->reset ();
 }
 
 // Halt the processor
