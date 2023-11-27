@@ -14,8 +14,6 @@ public:
 private:
     static const u16 EnableManagementIndex = 0;
 	static const u16 EnableManagementMask = bitValue (EnableManagementIndex);
-
-    u16 value_;
 };
 
 inline SR0::SR0 (u16 value)

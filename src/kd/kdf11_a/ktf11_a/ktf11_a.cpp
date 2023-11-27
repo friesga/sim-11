@@ -19,12 +19,18 @@ CondData<u16> KTF11_A::mappedRead (u16 address)
 // Write the word at the given virtual address using the MMU mapping
 bool KTF11_A::mappedWriteWord (u16 address, u16 value)
 {
+    if (sr0_.managementEnabled ())
+        return bus_->writeWord (physicalAddress (address), value);
+
     return bus_->writeWord (address, value);
 }
 
 // Write the byte at the given virtual address using the MMU mapping
 bool KTF11_A::mappedWriteByte (u16 address, u8 value)
 {
+    if (sr0_.managementEnabled ())
+        return bus_->writeByte (physicalAddress (address), value);
+
     return bus_->writeByte (address, value);
 }
 
