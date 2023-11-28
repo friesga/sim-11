@@ -27,7 +27,8 @@ TEST_F (KTF11_ARegisters, statusRegister0)
     EXPECT_EQ (value, 0177777);
 }
 
-// Verify SR1 is a read-only register
+// Verify SR1 is a read-only register that reads as zero and writes to the
+// register are ignored
 TEST_F (KTF11_ARegisters, statusRegister1)
 {
     // Verify SR0 initially has value 0
@@ -36,7 +37,9 @@ TEST_F (KTF11_ARegisters, statusRegister1)
     EXPECT_EQ (value, 0);
 
     // Verify a new value cannot be written
-    EXPECT_EQ (ktf11_a.writeWord (01777574, 0177777), StatusCode::ReadOnly);
+    EXPECT_EQ (ktf11_a.writeWord (01777574, 0177777), StatusCode::OK);
+    EXPECT_EQ (ktf11_a.read (01777574, &value), StatusCode::OK);
+    EXPECT_EQ (value, 0);
 }
 
 // Verify an illegal address is detected
@@ -76,7 +79,7 @@ TEST_F (KTF11_ARegisters, kernelDSpaceNotPresent)
 }
 
 // Verify SR2 is read-only
-TEST_F (KTF11_ARegisters, statusRegister2IsReadOnly)
+TEST_F (KTF11_ARegisters, statusRegister2)
 {
     // Verify SR2 initially has value 0
     u16 value {0177777};
