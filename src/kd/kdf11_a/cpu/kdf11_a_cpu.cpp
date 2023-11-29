@@ -108,6 +108,10 @@ void KDF11_A_Cpu::execInstr ()
     }
     registers_[7] += 2;
 
+    // During each instruction fetch SR2 is loaded with the 16-bit virtual
+    // address (VA) but is not updated if the instruction fetch fails.
+    mmu_->sr2_ = instructionWord;
+
     unique_ptr<LSI11Instruction> instr = 
         kdf11_aInstruction.decode (this, instructionWord);
 

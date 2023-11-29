@@ -28,6 +28,9 @@
 class KTF11_A : public AbstractBusDevice
 {
 public:
+	// Define KDF11_A_Cpu as a friend as CPU and MMU work closely together.
+	friend class KDF11_A_Cpu;
+
 	KTF11_A (Qbus* bus, CpuData* cpu);
 
 	// Functions required by the BusDevice interface. The KTF11-A is treated
