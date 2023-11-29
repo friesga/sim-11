@@ -1,7 +1,7 @@
 #ifndef _APR_H_
 #define _APR_H_
 
-#include "registerbase/registerbase.h"
+#include "basicregister/basicregister.h"
 
 // This struct defines the Active Page Register (APR). The register
 // comprises two 16-bit registers: the Page Address Register (PAR) and the
@@ -11,8 +11,8 @@
 //
 struct ActivePageRegister
 {
-    RegisterBase PageAddressRegister_ {0};
-    RegisterBase PageDescripterRegister_ {0};
+    BasicRegister PageAddressRegister_ {0};
+    BasicRegister PageDescripterRegister_ {0};
 
     u16 AccessControlField ();
 };

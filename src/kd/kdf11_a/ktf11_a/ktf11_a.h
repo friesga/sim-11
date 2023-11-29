@@ -8,7 +8,7 @@
 #include "ktf11_asr0.h"
 #include "ktf11_asr1.h"
 #include "ktf11_asr2.h"
-#include "registerbase/registerbase.h"
+#include "basicregister/basicregister.h"
 
 // The class KTF11_A implements the memory management option for the KDF11-A.
 // It implements a subset of the standard PDP-11 Memory Management. There is
@@ -73,7 +73,7 @@ private:
 	SR0 sr0_ {0};
 	SR1 sr1_ {0};
 	SR2 sr2_ {0};
-	RegisterBase sr3_ {0};
+	BasicRegister sr3_ {0};
 
 	// The PSW current memory management mode bits allow the presence of four
 	// modes, Kernel, Reserved, Illegal and User, of which only Kernel and

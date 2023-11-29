@@ -2,10 +2,11 @@
 #define _KTF11ASR0_H_
 
 #include "types.h"
-#include "registerbase/registerbase.h"
+#include "basicregister/basicregister.h"
 
 // Definition of KTF11-A Status Register 0
-class SR0 : public RegisterBase
+//
+class SR0 : public BasicRegister
 {
 public:
     SR0 (u16 value);
@@ -18,7 +19,7 @@ private:
 
 inline SR0::SR0 (u16 value)
     : 
-    RegisterBase {value}
+    BasicRegister {value}
 {}
 
 inline bool SR0::managementEnabled ()

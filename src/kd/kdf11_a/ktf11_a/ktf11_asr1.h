@@ -2,13 +2,13 @@
 #define _KTF11ASR1_H_
 
 #include "types.h"
-#include "registerbase/registerbase.h"
+#include "basicregister/basicregister.h"
 
 // Definition of KTF11-A Status Register 1
 //
 // SR1 is a read-only register that always reads as zero. 
 //
-class SR1 : public RegisterBase
+class SR1 : public BasicRegister
 {
 public:
     SR1 (u16 value);
@@ -18,7 +18,7 @@ public:
 
 inline SR1::SR1 (u16 value)
     : 
-    RegisterBase {value}
+    BasicRegister {value}
 {}
 
 // Ignore the write

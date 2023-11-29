@@ -2,7 +2,7 @@
 #define _KTF11ASR2_H_
 
 #include "types.h"
-#include "registerbase/registerbase.h"
+#include "basicregister/basicregister.h"
 
 // Definition of KTF11-A Status Register 2
 //
@@ -12,7 +12,7 @@
 // program counter. The content of SR2 is frozen whenever one of the abort
 // flags (SR0<15:13> is set. 
 //
-class SR2 : public RegisterBase
+class SR2 : public BasicRegister
 {
 public:
     SR2 (u16 value);
@@ -21,7 +21,7 @@ public:
 
 inline SR2::SR2 (u16 value)
     : 
-    RegisterBase {value}
+    BasicRegister {value}
 {}
 
 // Ignore the write
