@@ -6,6 +6,8 @@
 #include "abstractbusdevice/abstractbusdevice.h"
 #include "apr.h"
 #include "ktf11_asr0.h"
+#include "ktf11_asr1.h"
+#include "ktf11_asr2.h"
 #include "registerbase/registerbase.h"
 
 // The class KTF11_A implements the memory management option for the KDF11-A.
@@ -69,8 +71,8 @@ private:
 
 	// Definition of status registers
 	SR0 sr0_ {0};
-	RegisterBase sr1_ {0};
-	RegisterBase sr2_ {0};
+	SR1 sr1_ {0};
+	SR2 sr2_ {0};
 	RegisterBase sr3_ {0};
 
 	// The PSW current memory management mode bits allow the presence of four
@@ -86,7 +88,7 @@ private:
 	constexpr u16 displacementInBlock (u16 address);
 	u16 pageAddressField (u16 activePageField);
 	constexpr u16 memoryManagementMode ();
-	RegisterBase* registerPointer (u16 address);
+	Register* registerPointer (u16 address);
 };
 
 

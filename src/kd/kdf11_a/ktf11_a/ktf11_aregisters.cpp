@@ -4,7 +4,7 @@
 #include "ktf11_a.h"
 #include "kd/include/psw.h"
 
-RegisterBase* KTF11_A::registerPointer (u16 address)
+Register* KTF11_A::registerPointer (u16 address)
 {
     switch (address)
     {
@@ -68,7 +68,7 @@ StatusCode KTF11_A::read (u16 address, u16 *destination)
         return StatusCode::OK;
     }
 
-    RegisterBase* regPtr = registerPointer (address);
+    Register* regPtr = registerPointer (address);
     if (regPtr != nullptr)
     {
         *destination = *regPtr;
@@ -82,10 +82,10 @@ StatusCode KTF11_A::writeWord (u16 address, u16 value)
 {
     // Status registers 1 and 2 are read-only. Writes to those registers are
     // ignored.
-    if (address == statusRegister1 || address == statusRegister2)
+    if (address == statusRegister2)
         return StatusCode::OK;
 
-    RegisterBase* regPtr = registerPointer (address);
+    Register* regPtr = registerPointer (address);
     if (regPtr != nullptr)
     {
         *regPtr = value;
