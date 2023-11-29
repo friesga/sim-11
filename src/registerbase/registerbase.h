@@ -8,14 +8,12 @@
 // Note that the assignment operator in a derived class is not inherited from
 // the base class and has to be defined explicitly.
 //
-class RegisterBase : public Register<RegisterBase>
+class RegisterBase : public Register
 {
 public:
-    using Register<RegisterBase>::operator=;
-
     RegisterBase (u16 const value);
-    void assignmentOperatorImpl (u16 const value);
-    u16 operatoru16Impl ();
+    void operator= (u16 const value) override;
+    operator u16 () override;
 
 protected:
     u16 value_;
@@ -26,12 +24,12 @@ inline RegisterBase::RegisterBase (u16 const value)
     value_ {value}
 {}
 
-inline void RegisterBase::assignmentOperatorImpl (u16 const value)
+inline void RegisterBase::operator= (u16 const value)
 {
     value_ = value;
 }
 
-inline u16 RegisterBase::operatoru16Impl ()
+inline RegisterBase::operator u16 ()
 {
     return value_;
 }
