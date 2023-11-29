@@ -100,7 +100,11 @@ bool KTF11_A::responsible (u16 address)
     return registerPointer (address) != nullptr;
 }
 
+// SR0 and SR3 are cleared by the RESET instruction, power-up or restart. 
 void KTF11_A::reset ()
-{}
+{
+    sr0_ = 0;
+    sr3_ = 0;
+}
 
 #endif // _KTF11AREGISTERS_H_
