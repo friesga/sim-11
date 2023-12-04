@@ -29,7 +29,7 @@
 class KTF11_A : public AbstractBusDevice, public MMU
 {
 public:
-	KTF11_A (Qbus* bus, CpuData* cpu);
+	KTF11_A (Qbus* bus, CpuData* cpuData);
 
 	// Functions required by the BusDevice interface. The KTF11-A is treated
 	// as a bus device as it has registers which have to be accessible on the
@@ -46,12 +46,12 @@ public:
 	bool mappedWriteByte (u16 address, u8 value) override;
 	void setSR2 (u16 value) override;
 
-	CondData<u16> fetchWord (u16 address) override { return {}; }
-	CondData<u8> fetchByte (u16 address) override { return {}; }
-	bool putWord (u16 address, u16 value) override { return false; }
-	bool putByte (u16 address, u8 value) override { return false; }
-	bool pushWord (u16 value) override { return false; }
-	bool popWord (u16 *destination) override { return false; }
+	CondData<u16> fetchWord (u16 address) override;
+	CondData<u8> fetchByte (u16 address) override;
+	bool putWord (u16 address, u16 value) override;
+	bool putByte (u16 address, u8 value) override;
+	bool pushWord (u16 value) override;
+	bool popWord (u16 *destination) override;
 
 private:
 	// A virtual address is composed of the following fields:
@@ -76,7 +76,7 @@ private:
 	static const u16 statusRegister3 = 0172516;
 
 	Qbus* bus_;
-	CpuData* cpu_;
+	CpuData* cpuData_;
 
 	// Definition of status registers
 	SR0 sr0_ {0};

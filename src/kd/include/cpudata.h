@@ -48,14 +48,6 @@ public:
 	virtual void setCC (ConditionCodes conditionCodes) = 0;
 	virtual bool stackOverflow () = 0;
 
-	// Definition of functions to access memory
-	virtual CondData<u16> fetchWord (u16 address) = 0;
-	virtual CondData<u8> fetchByte (u16 address) = 0;
-	virtual bool putWord (u16 address, u16 value) = 0;
-	virtual bool putByte (u16 address, u8 value) = 0;
-	virtual bool pushWord (u16 value) = 0;
-	virtual bool popWord (u16 *destination) = 0;
-
 	// The memory access functions must be able to generate a bus error trap
 	// when accessing non-existing memory.
     virtual void setTrap (TrapCondition trap, TrapRecordType cause = TrapRecordType::TRAP) = 0;

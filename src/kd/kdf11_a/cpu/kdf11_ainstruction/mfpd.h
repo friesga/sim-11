@@ -51,7 +51,7 @@ inline bool KDF11_AInstruction::MFPD::execute ()
     if (!source.hasValue ())
         return false;
 
-    if (!cpu_->pushWord (source))
+    if (!mmu_->pushWord (source))
         return false;
 
     if (cpu_->stackOverflow ())

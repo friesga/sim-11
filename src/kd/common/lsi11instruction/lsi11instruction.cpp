@@ -34,7 +34,7 @@ OperandLocation LSI11Instruction::decodeOperand (Operand operand, GeneralRegiste
 		case 1:
 			// Register deferred (indirect) mode. The register contains
 			// the address of the operand.
-			return OperandLocation (MemoryOperandLocation {cpu_, 
+			return OperandLocation (MemoryOperandLocation {cpu_, mmu_,
 				CondData<u16> (reg[operand.registerNr_])});
 
 		case 2:
@@ -47,7 +47,7 @@ OperandLocation LSI11Instruction::decodeOperand (Operand operand, GeneralRegiste
 			else
 				reg[operand.registerNr_] += 2;
 
-			return OperandLocation (MemoryOperandLocation {cpu_, 
+			return OperandLocation (MemoryOperandLocation {cpu_, mmu_,
 				CondData<u16> (addr)});
 
 		case 3: 
@@ -56,8 +56,8 @@ OperandLocation LSI11Instruction::decodeOperand (Operand operand, GeneralRegiste
 			// incremented (always by 2; even for byte instructions).
 			addr = reg[operand.registerNr_];
 			reg[operand.registerNr_] += 2;
-			return OperandLocation (MemoryOperandLocation {cpu_, 
-				CondData<u16> (cpu_->fetchWord (addr))});
+			return OperandLocation (MemoryOperandLocation {cpu_, mmu_,
+				CondData<u16> (mmu_->fetchWord (addr))});
 
 		case 4:
 			// Auto-decrement mode. Register is decremented and then used as a
@@ -72,7 +72,7 @@ OperandLocation LSI11Instruction::decodeOperand (Operand operand, GeneralRegiste
 			if (operand.registerNr_ == 6 && cpu_->stackOverflow ())
 				cpu_->setTrap (CpuData::TrapCondition::StackOverflow);  
 
-			return OperandLocation (MemoryOperandLocation {cpu_, 
+			return OperandLocation (MemoryOperandLocation {cpu_, mmu_,
 				CondData<u16> (addr)});
 
 		case 5:
@@ -86,8 +86,8 @@ OperandLocation LSI11Instruction::decodeOperand (Operand operand, GeneralRegiste
 			if (operand.registerNr_ == 6 && cpu_->stackOverflow ())
 				cpu_->setTrap (CpuData::TrapCondition::StackOverflow);  
 
-			return OperandLocation (MemoryOperandLocation {cpu_, 
-				CondData<u16> (cpu_->fetchWord (addr))});
+			return OperandLocation (MemoryOperandLocation {cpu_, mmu_,
+				CondData<u16> (mmu_->fetchWord (addr))});
 
 		case 6:
 			// Index mode. The contents of the in the instruction specified
@@ -97,9 +97,9 @@ OperandLocation LSI11Instruction::decodeOperand (Operand operand, GeneralRegiste
 			// word. After fetching the index it has to be incremented again
 			// to point to the next instruction. This can be regarded as an
 			// undesirable side effect of this function.
-			index = cpu_->fetchWord (reg[7]);
+			index = mmu_->fetchWord (reg[7]);
 			reg[7] += 2;
-			return OperandLocation (MemoryOperandLocation {cpu_, 
+			return OperandLocation (MemoryOperandLocation {cpu_, mmu_,
 				CondData<u16> (reg[operand.registerNr_] + index)});
 			
 		case 7: 
@@ -108,11 +108,11 @@ OperandLocation LSI11Instruction::decodeOperand (Operand operand, GeneralRegiste
 			// the specified register are added and the sum is used as a pointer
 			// to a word containing the address of the operand.
 			// See the comment at mode 6.
-			index = cpu_->fetchWord (reg[7]);
+			index = mmu_->fetchWord (reg[7]);
 			reg[7] += 2;
 			addr = reg[operand.registerNr_] + index;
-			return OperandLocation (MemoryOperandLocation {cpu_, 
-				CondData<u16> (cpu_->fetchWord (addr))});
+			return OperandLocation (MemoryOperandLocation {cpu_, mmu_,
+				CondData<u16> (mmu_->fetchWord (addr))});
 
 		default:
 			// Satisfy the compiler. This cannot happen as the mode bit field

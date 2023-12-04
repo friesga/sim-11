@@ -41,7 +41,7 @@ inline bool CommonInstruction::MARK::execute ()
 
     registers[6] = registers[7] + 2 * numberOfParameters ();
     registers[7] = registers[5];
-    registers[5] = cpu_->fetchWord (registers[6]);
+    registers[5] = mmu_->fetchWord (registers[6]);
     registers[6] += 2;
 
     return true;

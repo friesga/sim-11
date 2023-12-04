@@ -1,9 +1,10 @@
 #include "memoryoperandlocation.h"
 
-MemoryOperandLocation::MemoryOperandLocation (CpuData *cpu, CondData<u16> memoryAddress)
+MemoryOperandLocation::MemoryOperandLocation (CpuData *cpu, MMU* mmu, CondData<u16> memoryAddress)
     :
     location_ {memoryAddress},
-    cpu_ {cpu}
+    cpu_ {cpu},
+    mmu_ {mmu}
 {}
 
 // Return whether or not the OperandLocation points to a valid address

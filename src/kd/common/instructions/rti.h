@@ -44,8 +44,8 @@ inline CommonInstruction::RTI::RTI (CpuData* cpu, CpuControl* cpuControl,
 // T-bit results in a trace trap on the next instruction.
 inline bool CommonInstruction::RTI::execute ()
 {
-    if (!cpu_->popWord (&cpu_->registers ()[7]) || 
-            !cpu_->popWord (&cpu_->psw ()))
+    if (!mmu_->popWord (&cpu_->registers ()[7]) || 
+            !mmu_->popWord (&cpu_->psw ()))
         return false;
 
     if (cpu_->pswValue () & PSW_T)

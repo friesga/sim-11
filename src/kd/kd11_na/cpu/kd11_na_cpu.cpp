@@ -99,7 +99,7 @@ void KD11_NA_Cpu::execute ()
 void KD11_NA_Cpu::execInstr ()
 {
     // Get next instruction to execute and move PC forward
-    CondData<u16> instructionWord = fetchWord (registers_[7]);
+    CondData<u16> instructionWord = mmu_->fetchWord (registers_[7]);
     if (!instructionWord.hasValue())
     {
         trace.bus (BusRecordType::ReadFail, registers_[7], 0);
@@ -155,8 +155,8 @@ void KD11_NA_Cpu::serviceInterrupt ()
 // Load PC and PSW from the given vector
 void KD11_NA_Cpu::loadTrapVector (CpuData::TrapCondition trap)
 {
-    registers_[7] = fetchWord (trapVector_ [trap]).valueOr (0);
-    psw_ = fetchWord (trapVector_ [trap] + 2).valueOr (0);
+    registers_[7] = mmu_->fetchWord (trapVector_ [trap]).valueOr (0);
+    psw_ = mmu_->fetchWord (trapVector_ [trap] + 2).valueOr (0);
 }
 
 u8 KD11_NA_Cpu::cpuPriority()
@@ -168,7 +168,7 @@ u8 KD11_NA_Cpu::cpuPriority()
 // processor will halt anyway.
 u16 KD11_NA_Cpu::fetchFromVector (u16 address, u16* dest)
 {
-    CondData<u16> tmpValue = fetchWord (address);
+    CondData<u16> tmpValue = mmu_->fetchWord (address);
     *dest = tmpValue.valueOr (0);
     return tmpValue.hasValue ();
 }
@@ -180,7 +180,7 @@ void KD11_NA_Cpu::swapPcPSW (u16 vectorAddress)
 
     // Save PC and PSW on the stack. Adressing the stack could result in a
     // bus time out. In that case the CPU is halted.
-    if (!pushWord (psw_) || !pushWord (registers_[7]))
+    if (!mmu_->pushWord (psw_) || !mmu_->pushWord (registers_[7]))
     {
         trace.cpuEvent (CpuEventRecordType::CPU_DBLBUS, registers_[6]);
         // ToDo: All interrupts should be cleared?

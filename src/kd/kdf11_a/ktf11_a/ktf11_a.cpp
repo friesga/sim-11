@@ -1,11 +1,87 @@
 #include "ktf11_a.h"
 #include "kd/include/psw.h"
 
-KTF11_A::KTF11_A (Qbus* bus, CpuData* cpu)
+KTF11_A::KTF11_A (Qbus* bus, CpuData* cpuData)
     :
     bus_ {bus},
-    cpu_ {cpu}
+    cpuData_ {cpuData}
 {}
+CondData<u16> KTF11_A::fetchWord (u16 address)
+{
+    // return bus_->read (address);
+    CondData<u16> value = bus_->read (address);
+    if (!value.hasValue ())
+    {
+        trace.bus (BusRecordType::ReadFail, address, 0);
+        cpuData_->setTrap (CpuData::TrapCondition::BusError);
+        return {};
+    }
+    return value;
+}
+
+// Fetch the byte at the given word or byte address
+// 
+// The validity of the fetched word has to be checked before the shift-
+// and and-operators can be applied to the word!
+CondData<u8> KTF11_A::fetchByte (u16 address)
+{
+    CondData<u16> retValue {};
+    if (address & 1)
+    {
+         retValue = fetchWord (address & 0xFFFE);
+         if (retValue.hasValue ())
+             return CondData<u8> (retValue >> 8);
+    }
+    else
+    {
+        retValue = fetchWord (address);
+        if (retValue.hasValue ())
+            return CondData<u8> (retValue & 0377);
+    }
+
+    return CondData<u8> {};
+}
+
+bool KTF11_A::putWord (u16 address, u16 value)
+{
+    if (!bus_->writeWord (address, value))
+    {
+        trace.bus (BusRecordType::WriteFail, address, value);
+        cpuData_->setTrap (CpuData::TrapCondition::BusError);
+        return false;
+    }
+    return true;
+}
+
+bool KTF11_A::putByte (u16 address, u8 value)
+{
+    if (!bus_->writeByte (address, value))
+    {
+        trace.bus (BusRecordType::WriteFail, address, value);
+        cpuData_->setTrap (CpuData::TrapCondition::BusError);
+        return false;
+    }
+    return true;
+}
+
+// Pop a word from the processor stack returning true if this succeeds
+// or false when a bus error occurs.
+bool KTF11_A::popWord (u16 *destination)
+{
+    CondData<u16> tmpValue = fetchWord (cpuData_->registers ()[6]);
+    *destination = tmpValue.valueOr (0);
+    cpuData_->registers ()[6] += 2;
+    if (!tmpValue.hasValue ())
+        return false;
+    return true;
+}
+
+// Push the given value on the processor stack
+bool KTF11_A::pushWord (u16 value)
+{
+    cpuData_->registers ()[6] -= 2;
+    return putWord (cpuData_->registers ()[6], value);
+}
 
 // Return the word at the given virtual address using the MMU mapping
 CondData<u16> KTF11_A::mappedRead (u16 address)
@@ -55,7 +131,7 @@ constexpr u16 KTF11_A::displacementInBlock (u16 address)
 // Return the current memory management mode
 constexpr u16 KTF11_A::memoryManagementMode ()
 {
-    return (cpu_->psw () & PSW_MEM_MGMT_MODE) >> PSW_MEM_MGMT_MODE_P;
+    return (cpuData_->psw () & PSW_MEM_MGMT_MODE) >> PSW_MEM_MGMT_MODE_P;
 }
 
 // Return the Page Address Field for the given virtual address and the

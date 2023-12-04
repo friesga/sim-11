@@ -42,15 +42,6 @@ public:
 	// the next instruction on the cpu.
 	bool step () override;
 
-	// The following functions are required by the CpuData interface. These
-	// functions access memory directly.
-	CondData<u16> fetchWord (u16 address) override;
-	CondData<u8> fetchByte (u16 address) override;
-	bool putWord (u16 address, u16 value) override;
-	bool putByte (u16 address, u8 value) override;
-	bool pushWord (u16 value) override;
-	bool popWord (u16 *destination) override;
-
 private:
 	// Definition of CPU run states
 	enum class CpuRunState

@@ -51,7 +51,7 @@ inline bool KDF11_AInstruction::MTPD::execute ()
     // is written using the previous mode.
     operandLocation_ =  getOperandLocation (cpu_->registers ());
 
-    if (!cpu_->popWord (&tmp) || !operandLocation_.writePrevMode (tmp))
+    if (!mmu_->popWord (&tmp) || !operandLocation_.writePrevMode (tmp))
         return false;
         
     setPSW (ConditionCodes {.N = (bool) (tmp & 0100000),

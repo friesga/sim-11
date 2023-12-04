@@ -23,8 +23,8 @@ bool FISInstruction::returnFISresult (Float result, u16 registerNumber)
     Float::Result conversionResult = result.pdp11Dword (&high, &low);
     if (conversionResult == Float::Result::OK)
     {
-        cpu_->putWord (cpu_->registers ()[registerNumber] + 4, high);
-        cpu_->putWord (cpu_->registers ()[registerNumber] + 6, low);
+        mmu_->putWord (cpu_->registers ()[registerNumber] + 4, high);
+        mmu_->putWord (cpu_->registers ()[registerNumber] + 6, low);
         cpu_->registers ()[registerNumber] += 4;
 
         setPSW (ConditionCodes {.N = result.value () < 0,
@@ -64,13 +64,13 @@ bool FISInstruction::executeFISinstruction (u16 stackPointer,
     cpu_->psw () &= ~(_BV(5) | _BV(6));
 
     CondData<u16> f1High = 
-        cpu_->fetchWord (cpu_->registers ()[stackPointer] + 4);
+        mmu_->fetchWord (cpu_->registers ()[stackPointer] + 4);
     CondData<u16> f1Low = 
-        cpu_->fetchWord (cpu_->registers ()[stackPointer] + 6);
+        mmu_->fetchWord (cpu_->registers ()[stackPointer] + 6);
     CondData<u16> f2High = 
-        cpu_->fetchWord (cpu_->registers ()[stackPointer]);
+        mmu_->fetchWord (cpu_->registers ()[stackPointer]);
     CondData<u16> f2Low = 
-        cpu_->fetchWord (cpu_->registers ()[stackPointer] + 2);
+        mmu_->fetchWord (cpu_->registers ()[stackPointer] + 2);
 
     if (!f1High.hasValue () || !f1Low.hasValue () ||
         !f2High.hasValue () || !f2Low.hasValue ())

@@ -55,7 +55,7 @@ inline bool CommonInstruction::JSR::execute ()
     GeneralRegisters& registers = cpu_->registers ();
     u16 specifiedRegisterContents = registers[getRegisterNr ()];
 
-    if (!cpu_->pushWord (specifiedRegisterContents))
+    if (!mmu_->pushWord (specifiedRegisterContents))
         return false;
 
     if (cpu_->stackOverflow ())

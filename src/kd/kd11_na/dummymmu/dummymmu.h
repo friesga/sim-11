@@ -9,7 +9,7 @@ class DummyMMU : public MMU
 {
 public:
 	void reset ();
-	DummyMMU (Qbus* bus, CpuData* cppuData);
+	DummyMMU (Qbus* bus, CpuData* cpuData);
     CondData<u16> fetchWord (u16 address) override;
 	CondData<u8> fetchByte (u16 address) override;
 	bool putWord (u16 address, u16 value) override;

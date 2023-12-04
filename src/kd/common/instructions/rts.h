@@ -34,7 +34,7 @@ inline bool CommonInstruction::RTS::execute ()
     u16 regNr = getRegister ();
 
     cpu_->registers ()[7] = cpu_->registers ()[regNr];
-    cpu_->popWord (&cpu_->registers ()[regNr]);
+    mmu_->popWord (&cpu_->registers ()[regNr]);
 
     return true;
 }
