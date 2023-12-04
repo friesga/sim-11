@@ -12,10 +12,13 @@ using std::to_string;
 using std::make_unique;
 using std::move;
 
-KD11_NA_ODT::KD11_NA_ODT (Qbus *bus, CpuData* cpu, unique_ptr<ConsoleAccess> consoleAccess)
+KD11_NA_ODT::KD11_NA_ODT (Qbus *bus, CpuData* cpu, CpuControl* cpuControl,
+        MMU* mmu, unique_ptr<ConsoleAccess> consoleAccess)
     : 
     bus_ {bus},
     cpu_ {cpu},
+    cpuControl_ {cpuControl},
+    mmu_ {mmu},
     console_ {move (consoleAccess)},
     odtRunning_ {true},
     newValue_ {0},
@@ -29,9 +32,9 @@ KD11_NA_ODT::KD11_NA_ODT (Qbus *bus, CpuData* cpu, unique_ptr<ConsoleAccess> con
 }
 
 unique_ptr<KD11_NA_ODT> KD11_NA_ODT::createODT (Qbus *bus, CpuData* cpu,
-    unique_ptr<ConsoleAccess> consoleAccess)
+    CpuControl* cpuControl, MMU* mmu, unique_ptr<ConsoleAccess> consoleAccess)
 {
-    return move (make_unique<KD11_NA_ODT> (bus, cpu, 
+    return move (make_unique<KD11_NA_ODT> (bus, cpu, cpu, mmu,
         make_unique<OperatorConsoleAccess> (bus)));
 }
 

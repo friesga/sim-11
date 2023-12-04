@@ -7,6 +7,11 @@
 using std::shared_ptr;
 using std::make_unique;
 using std::thread;
+using std::placeholders::_1;
+using std::placeholders::_2;
+using std::placeholders::_3;
+using std::placeholders::_4;
+using std::placeholders::_5;
 
 // The factory power-up mode configuration is mode 0 (get vector at address
 // 24 and 26), but we'll set it to Bootstrap as that's more convenient for
@@ -21,7 +26,7 @@ KDF11_A::KDF11_A (Qbus* bus)
     // and the power-up mode, the ControlLogic also gets passed a
     // std::function to the function to create ODT objects.
     controlLogic_ = make_unique<ControlLogic> (bus_, &cpu_, &cpu_, &mmu_, powerUpMode_,
-        startAddress_, bind (&KD11_NA_ODT::createODT, _1, _2, _3));
+        startAddress_, bind (&KD11_NA_ODT::createODT, _1, _2, _3, _4, _5));
 }
 
 KDF11_A::KDF11_A (Qbus *bus, shared_ptr<KDF11_AConfig> kdf11_aConfig)
@@ -34,7 +39,7 @@ KDF11_A::KDF11_A (Qbus *bus, shared_ptr<KDF11_AConfig> kdf11_aConfig)
     // and the power-up mode, the ControlLogic also gets passed a
     // std::function to the function to create ODT objects.
     controlLogic_ = make_unique<ControlLogic> (bus_, &cpu_, &cpu_, &mmu_, powerUpMode_,
-        startAddress_, bind (&KD11_NA_ODT::createODT, _1, _2, _3));
+        startAddress_, bind (&KD11_NA_ODT::createODT, _1, _2, _3, _4, _5));
 }
 
 KDF11_A::~KDF11_A ()

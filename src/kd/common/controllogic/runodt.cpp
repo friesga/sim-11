@@ -27,7 +27,8 @@ void ControlLogic::runODT ()
 
     // Create a fresh ODT object. The function to create the object is passed
     // to the ControlLogic when it is constructed.
-    odt_ = odtCreator_ (bus_, cpu_, make_unique<OperatorConsoleAccess> (bus_));
+    odt_ = odtCreator_ (bus_, cpu_, cpu_, mmu_,
+        make_unique<OperatorConsoleAccess> (bus_));
 
     while (true)
     {

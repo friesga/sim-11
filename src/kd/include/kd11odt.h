@@ -4,6 +4,7 @@
 #include "types.h"
 #include "qbus/qbus.h"
 #include "kd/include/cpudata.h"
+#include "kd/include/mmu.h"
 #include "kd/kd11_na/operatorconsoleaccess/operatorconsoleaccess.h"
 
 #include <memory>
@@ -14,7 +15,8 @@ using std::unique_ptr;
 class KD11ODT
 {
 public:
-    using Creator = function<unique_ptr<KD11ODT>(Qbus*, CpuData*, unique_ptr<ConsoleAccess>)>;
+    using Creator = function<unique_ptr<KD11ODT>(Qbus*, CpuData*, CpuControl*,
+        MMU*, unique_ptr<ConsoleAccess>)>;
 
     virtual bool processCharacter (u8 character) = 0;
 };
