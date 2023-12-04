@@ -96,3 +96,8 @@ u32 KTF11_A::physicalAddress (u16 address)
     u32 physicalBlockNr = pageAddressField (address) + blockNumber (address);
     return (physicalBlockNr << 6) | displacementInBlock (address);
 }
+
+void KTF11_A::setSR2 (u16 value)
+{
+    sr2_ = value;
+}

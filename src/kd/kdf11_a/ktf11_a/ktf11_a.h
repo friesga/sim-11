@@ -29,9 +29,6 @@
 class KTF11_A : public AbstractBusDevice, public MMU
 {
 public:
-	// Define KDF11_A_Cpu as a friend as CPU and MMU work closely together.
-	friend class KDF11_A_Cpu;
-
 	KTF11_A (Qbus* bus, CpuData* cpu);
 
 	// Functions required by the BusDevice interface. The KTF11-A is treated
@@ -44,9 +41,10 @@ public:
 
 	// The following functions are called from the processor to access the
 	// memory and device registers (via the bus).
-    CondData<u16> mappedRead (u16 address);
-	bool mappedWriteWord (u16 address, u16 value);
-	bool mappedWriteByte (u16 address, u8 value);
+    CondData<u16> mappedRead (u16 address) override;
+	bool mappedWriteWord (u16 address, u16 value) override;
+	bool mappedWriteByte (u16 address, u8 value) override;
+	void setSR2 (u16 value) override;
 
 	CondData<u16> fetchWord (u16 address) override { return {}; }
 	CondData<u8> fetchByte (u16 address) override { return {}; }

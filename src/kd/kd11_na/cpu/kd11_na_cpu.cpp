@@ -13,9 +13,10 @@ using std::unique_ptr;
 using std::make_unique;
 
 // Constructor
-KD11_NA_Cpu::KD11_NA_Cpu (Qbus* bus)
+KD11_NA_Cpu::KD11_NA_Cpu (Qbus* bus, MMU* mmu)
     :
     KD11CpuData (bus),
+    mmu_ {mmu},
     runState {CpuRunState::HALT},
     kd11_naInstruction {},
     haltReason_ {HaltReason::HaltInstruction},
@@ -108,7 +109,7 @@ void KD11_NA_Cpu::execInstr ()
     registers_[7] += 2;
 
     unique_ptr<LSI11Instruction> instr = 
-        kd11_naInstruction.decode (this, this, &dummyMMU, instructionWord);
+        kd11_naInstruction.decode (this, this, mmu_, instructionWord);
 
     // If the trace flag is set, the next instruction has to result in a trace
     // trap, unless the instruction resulted in another trap.

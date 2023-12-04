@@ -13,10 +13,10 @@ using std::unique_ptr;
 using std::make_unique;
 
 // Constructor
-KDF11_A_Cpu::KDF11_A_Cpu (Qbus* bus)
+KDF11_A_Cpu::KDF11_A_Cpu (Qbus* bus, MMU* mmu)
     :
     KD11CpuData (bus),
-    mmu_ {make_unique<KTF11_A> (bus, this)},
+    mmu_ {mmu},
     runState {CpuRunState::HALT},
     kdf11_aInstruction {},
     haltReason_ {HaltReason::HaltInstruction},
@@ -110,10 +110,10 @@ void KDF11_A_Cpu::execInstr ()
 
     // During each instruction fetch SR2 is loaded with the 16-bit virtual
     // address (VA) but is not updated if the instruction fetch fails.
-    mmu_->sr2_ = instructionWord;
+    mmu_->setSR2 (instructionWord);
 
     unique_ptr<LSI11Instruction> instr = 
-        kdf11_aInstruction.decode (this, this, mmu_.get (), instructionWord);
+        kdf11_aInstruction.decode (this, this, mmu_, instructionWord);
 
     // If the trace flag is set, the next instruction has to result in a trace
     // trap, unless the instruction resulted in another trap.

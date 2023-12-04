@@ -6,7 +6,7 @@
 #include "types.h"
 #include "kd11_nainstruction/kd11_nainstruction.h"
 #include "kd11_naregisters/kd11_naregisters.h"
-#include "kd/kd11_na/dummymmu/dummymmu.h"
+#include "kd/include/mmu.h"
 
 #include <functional>
 
@@ -36,7 +36,7 @@ public:
 	friend class KD11_NA_ODT;
 	friend class LSI11;
 	
-	KD11_NA_Cpu (Qbus *bus);
+	KD11_NA_Cpu (Qbus *bus, MMU* mmu);
 
 	// This function is required by the CpuExecution interface and executes
 	// the next instruction on the cpu.
@@ -60,7 +60,7 @@ private:
 		WAIT
 	};
 
-	DummyMMU dummyMMU {bus_, this};
+	MMU* mmu_;
 	CpuRunState runState;
 	KD11_NAInstruction kd11_naInstruction;
 	KD11_NARegisters registers_;

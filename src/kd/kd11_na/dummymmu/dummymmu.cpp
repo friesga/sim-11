@@ -7,6 +7,9 @@ DummyMMU::DummyMMU (Qbus* bus, CpuData* cpuData)
     cpuData_ {cpuData}
 {}
 
+void DummyMMU::reset ()
+{}
+
 CondData<u16> DummyMMU::fetchWord (u16 address)
 {
     // return bus_->read (address);
@@ -83,3 +86,21 @@ bool DummyMMU::pushWord (u16 value)
     cpuData_->registers ()[6] -= 2;
     return putWord (cpuData_->registers ()[6], value);
 }
+
+CondData<u16> DummyMMU::mappedRead (u16 address)
+{
+    return bus_->read (address);
+}
+
+bool DummyMMU::mappedWriteWord (u16 address, u16 value)
+{
+    return bus_->writeWord (address, value);
+}
+
+bool DummyMMU::mappedWriteByte (u16 address, u8 value)
+{
+    return bus_->writeByte (address, value);
+}
+
+void DummyMMU::setSR2 (u16 value)
+{}

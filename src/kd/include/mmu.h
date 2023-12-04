@@ -8,13 +8,20 @@
 class MMU
 {
 public:
+	virtual void reset () = 0;
     virtual CondData<u16> fetchWord (u16 address) = 0;
 	virtual CondData<u8> fetchByte (u16 address) = 0;
 	virtual bool putWord (u16 address, u16 value) = 0;
 	virtual bool putByte (u16 address, u8 value) = 0;
 	virtual bool pushWord (u16 value) = 0;
 	virtual bool popWord (u16 *destination) = 0;
+
+	virtual CondData<u16> mappedRead (u16 address) = 0;
+	virtual bool mappedWriteWord (u16 address, u16 value) = 0;
+	virtual bool mappedWriteByte (u16 address, u8 value) = 0;
+
+	virtual void setSR2 (u16 value) = 0;
 };
 
 
-#endif _MMU_H_
+#endif // _MMU_H_

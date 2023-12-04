@@ -39,7 +39,8 @@ private:
     enum { PSWAddress = 0177776 };
 
     Qbus* bus_;
-    KDF11_A_Cpu cpu_ {bus_};
+    KTF11_A mmu_ {bus_, &cpu_};
+    KDF11_A_Cpu cpu_ {bus_, &mmu_};
     unique_ptr<KD11_NA_ODT>	odt_ {};
     KDF11_AConfig::PowerUpMode powerUpMode_;
     u16 startAddress_;

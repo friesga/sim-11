@@ -32,7 +32,7 @@ public:
 	friend class KD11_NA_ODT;
 	friend class LSI11;
 	
-	KDF11_A_Cpu (Qbus *bus);
+	KDF11_A_Cpu (Qbus *bus, MMU* mmu);
 
 	// This function is required by the CpuExecution interface and executes
 	// the next instruction on the cpu.
@@ -62,7 +62,7 @@ private:
 
 	enum {stackLimit = 0400};
 
-	unique_ptr<KTF11_A> mmu_;
+	MMU* mmu_;
 	CpuRunState runState;
 	KDF11_AInstruction kdf11_aInstruction;
 	KDF11_ARegisters registers_ {psw_};
