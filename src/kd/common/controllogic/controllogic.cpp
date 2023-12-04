@@ -13,12 +13,15 @@ using std::make_unique;
 // The factory power-up mode configuration is mode 0 (get vector at address
 // 24 and 26), but we'll set it to Bootstrap as that's more convenient for
 // the user.
-ControlLogic::ControlLogic (Qbus* bus, CpuData* cpu, 
+ControlLogic::ControlLogic (Qbus* bus, CpuData* cpu,
+    CpuControl* cpuControl, MMU* mmu,
     KD11_NAConfig::PowerUpMode powerUpMode, u16 startAddress,
     KD11ODT::Creator odtCreator)
     :
     bus_ (bus),
     cpu_ {cpu},
+    cpuControl_ {cpuControl},
+    mmu_ {mmu},
     powerUpMode_ {powerUpMode},
     startAddress_ {startAddress},
     odtCreator_ {odtCreator},

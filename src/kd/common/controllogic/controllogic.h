@@ -3,6 +3,7 @@
 
 #include "kd/include/kd11odt.h"
 #include "kd/kd11_na/cpu/kd11_na_cpu.h"
+#include "kd/include/mmu.h"
 #include "kd/kd11_na/operatorconsoleaccess/operatorconsoleaccess.h"
 #include "configdata/kd11_naconfig/kd11_naconfig.h"
 #include "variantfsm/fsm.h"
@@ -38,7 +39,8 @@ public:
     // startAddress - The address to set the PC to when starting up,
     // odtCreator - A std::function for a function to create an ODT object
     //
-    ControlLogic (Qbus* bus, CpuData* cpu, 
+    ControlLogic (Qbus* bus, CpuData* cpu,
+        CpuControl* cpuControl, MMU* mmu,
         KD11_NAConfig::PowerUpMode powerUpMode, u16 startAddress,
         KD11ODT::Creator odtCreator);
     void run ();
@@ -89,6 +91,8 @@ private:
 
     Qbus* bus_;
     CpuData* cpu_;
+    CpuControl* cpuControl_;
+    MMU* mmu_;
     unique_ptr<KD11ODT>	odt_ {};
     KD11_NAConfig::PowerUpMode powerUpMode_;
     u16 startAddress_;
