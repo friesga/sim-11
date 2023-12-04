@@ -28,13 +28,14 @@
 class KDF11_AInstruction::CMP : public KD11DoubleOperandInstruction, public WithFactory<CMP>
 {
 public:
-    CMP (CpuData* cpu, u16 instruction);
+    CMP (CpuData* cpu, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline KDF11_AInstruction::CMP::CMP (CpuData* cpu, u16 instruction)
+inline KDF11_AInstruction::CMP::CMP (CpuData* cpu, CpuControl* cpuControl,
+        MMU* mmu, u16 instruction)
     :
-    KD11DoubleOperandInstruction (cpu, instruction)
+    KD11DoubleOperandInstruction (cpu, cpuControl, mmu, instruction)
 {}
 
 inline bool KDF11_AInstruction::CMP::execute ()

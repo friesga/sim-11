@@ -18,13 +18,14 @@
 class KDF11_AInstruction::COMB : public SingleOperandInstruction, public WithFactory<COMB>
 {
 public:
-    COMB (CpuData* cpu, u16 instruction);
+    COMB (CpuData* cpu, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline KDF11_AInstruction::COMB::COMB (CpuData* cpu, u16 instruction)
+inline KDF11_AInstruction::COMB::COMB (CpuData* cpu, CpuControl* cpuControl,
+        MMU* mmu, u16 instruction)
     :
-    SingleOperandInstruction (cpu, instruction)
+    SingleOperandInstruction (cpu, cpuControl, mmu, instruction)
 {}
 
 inline bool KDF11_AInstruction::COMB::execute ()

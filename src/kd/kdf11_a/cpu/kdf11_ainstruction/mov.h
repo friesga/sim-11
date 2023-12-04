@@ -27,13 +27,14 @@
 class KDF11_AInstruction::MOV : public KD11DoubleOperandInstruction, public WithFactory<MOV>
 {
 public:
-    MOV (CpuData* cpu, u16 instruction);
+    MOV (CpuData* cpu, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline KDF11_AInstruction::MOV::MOV (CpuData* cpu, u16 instruction)
+inline KDF11_AInstruction::MOV::MOV (CpuData* cpu, CpuControl* cpuControl,
+        MMU* mmu, u16 instruction)
     :
-    KD11DoubleOperandInstruction (cpu, instruction)
+    KD11DoubleOperandInstruction (cpu, cpuControl, mmu, instruction)
 {}
 
 

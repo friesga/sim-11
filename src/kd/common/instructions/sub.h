@@ -24,13 +24,14 @@
 class CommonInstruction::SUB : public DoubleOperandInstruction, public WithFactory<SUB>
 {
 public:
-    SUB (CpuData* cpu, u16 instruction);
+    SUB (CpuData* cpu, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline CommonInstruction::SUB::SUB (CpuData* cpu, u16 instruction)
+inline CommonInstruction::SUB::SUB (CpuData* cpu, CpuControl* cpuControl,
+        MMU* mmu, u16 instruction)
     :
-    DoubleOperandInstruction (cpu, instruction)
+    DoubleOperandInstruction (cpu, cpuControl, mmu, instruction)
 {}
 
 inline bool CommonInstruction::SUB::execute ()

@@ -27,13 +27,14 @@
 class CommonInstruction::JMP : public SingleOperandInstruction, public WithFactory<JMP>
 {
 public:
-    JMP (CpuData* cpu, u16 instruction);
+    JMP (CpuData* cpu, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline CommonInstruction::JMP::JMP (CpuData* cpu, u16 instruction)
+inline CommonInstruction::JMP::JMP (CpuData* cpu, CpuControl* cpuControl,
+        MMU* mmu, u16 instruction)
     :
-    SingleOperandInstruction (cpu, instruction)
+    SingleOperandInstruction (cpu, cpuControl, mmu, instruction)
 {}
 
 inline bool CommonInstruction::JMP::execute ()

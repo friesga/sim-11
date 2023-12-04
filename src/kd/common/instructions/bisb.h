@@ -18,13 +18,14 @@
 class CommonInstruction::BISB : public DoubleOperandInstruction, public WithFactory<BISB>
 {
 public:
-    BISB (CpuData* cpu, u16 instruction);
+    BISB (CpuData* cpu, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline CommonInstruction::BISB::BISB (CpuData* cpu, u16 instruction)
+inline CommonInstruction::BISB::BISB (CpuData* cpu, CpuControl* cpuControl,
+        MMU* mmu, u16 instruction)
     :
-    DoubleOperandInstruction (cpu, instruction)
+    DoubleOperandInstruction (cpu, cpuControl, mmu, instruction)
 {}
 
 inline bool CommonInstruction::BISB::execute ()

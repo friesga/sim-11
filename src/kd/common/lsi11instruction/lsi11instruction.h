@@ -2,6 +2,7 @@
 #define _LSI11INSTRUCTION_H_
 
 #include "kd/include/cpudata.h"
+#include "kd/include/mmu.h"
 #include "kd/common/operandlocation/operandlocation.h"
 #include "kd/common/operand/operand.h"
 #include "kd/include/psw.h"
@@ -20,8 +21,10 @@ public:
 
 protected:
 	CpuData *cpu_;
+	CpuControl* cpuControl_;
+	MMU* mmu_;
 
-	LSI11Instruction (CpuData *cpu);
+	LSI11Instruction (CpuData *cpu, CpuControl* cpuControl, MMU* mmu);
 	OperandLocation decodeOperand (Operand operand, GeneralRegisters &reg);
 	bool isByteInstruction ();
 

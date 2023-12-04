@@ -26,13 +26,14 @@
 class CommonInstruction::MFPS : public SingleOperandInstruction, public WithFactory<MFPS>
 {
 public:
-    MFPS (CpuData* cpu, u16 instruction);
+    MFPS (CpuData* cpu, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline CommonInstruction::MFPS::MFPS (CpuData* cpu, u16 instruction)
+inline CommonInstruction::MFPS::MFPS (CpuData* cpu, CpuControl* cpuControl,
+        MMU* mmu, u16 instruction)
     :
-    SingleOperandInstruction (cpu, instruction)
+    SingleOperandInstruction (cpu, cpuControl, mmu, instruction)
 {}
 
 inline bool CommonInstruction::MFPS::execute ()

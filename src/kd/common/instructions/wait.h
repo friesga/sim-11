@@ -27,13 +27,14 @@
 class CommonInstruction::WAIT : public NoOperandInstruction, public WithFactory<WAIT>
 {
 public:
-    WAIT (CpuData* cpu, u16 instruction);
+    WAIT (CpuData* cpu, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline CommonInstruction::WAIT::WAIT (CpuData* cpu, u16 instruction)
+inline CommonInstruction::WAIT::WAIT (CpuData* cpu, CpuControl* cpuControl,
+        MMU* mmu, u16 instruction)
     :
-    NoOperandInstruction (cpu, instruction)
+    NoOperandInstruction (cpu, cpuControl, mmu, instruction)
 {}
 
 inline bool CommonInstruction::WAIT::execute ()

@@ -22,13 +22,14 @@
 class CommonInstruction::ROLB : public SingleOperandInstruction, public WithFactory<ROLB>
 {
 public:
-    ROLB (CpuData* cpu, u16 instruction);
+    ROLB (CpuData* cpu, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline CommonInstruction::ROLB::ROLB (CpuData* cpu, u16 instruction)
+inline CommonInstruction::ROLB::ROLB (CpuData* cpu, CpuControl* cpuControl,
+        MMU* mmu, u16 instruction)
     :
-    SingleOperandInstruction (cpu, instruction)
+    SingleOperandInstruction (cpu, cpuControl, mmu, instruction)
 {}
 
 inline bool CommonInstruction::ROLB::execute ()

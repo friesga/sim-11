@@ -24,13 +24,14 @@
 class CommonInstruction::BLT : public BranchInstruction, public WithFactory<BLT>
 {
 public:
-    BLT (CpuData* cpu, u16 instruction);
+    BLT (CpuData* cpu, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline CommonInstruction::BLT::BLT (CpuData* cpu, u16 instruction)
+inline CommonInstruction::BLT::BLT (CpuData* cpu, CpuControl* cpuControl,
+        MMU* mmu, u16 instruction)
     :
-    BranchInstruction (cpu, instruction)
+    BranchInstruction (cpu, cpuControl, mmu, instruction)
 {}
 
 inline bool CommonInstruction::BLT::execute ()

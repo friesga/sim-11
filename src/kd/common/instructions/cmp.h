@@ -28,13 +28,14 @@
 class CommonInstruction::CMP : public DoubleOperandInstruction, public WithFactory<CMP>
 {
 public:
-    CMP (CpuData* cpu, u16 instruction);
+    CMP (CpuData* cpu, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline CommonInstruction::CMP::CMP (CpuData* cpu, u16 instruction)
+inline CommonInstruction::CMP::CMP (CpuData* cpu, CpuControl* cpuControl,
+        MMU* mmu, u16 instruction)
     :
-    DoubleOperandInstruction (cpu, instruction)
+    DoubleOperandInstruction (cpu, cpuControl, mmu, instruction)
 {}
 
 inline bool CommonInstruction::CMP::execute ()

@@ -24,13 +24,14 @@
 class CommonInstruction::XOR : public EisInstruction, public WithFactory<XOR>
 {
 public:
-    XOR (CpuData* cpu, u16 instruction);
+    XOR (CpuData* cpu, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline CommonInstruction::XOR::XOR (CpuData* cpu, u16 instruction)
+inline CommonInstruction::XOR::XOR (CpuData* cpu, CpuControl* cpuControl,
+        MMU* mmu, u16 instruction)
     :
-    EisInstruction (cpu, instruction)
+    EisInstruction (cpu, cpuControl, mmu, instruction)
 {}
 
 inline bool CommonInstruction::XOR::execute ()

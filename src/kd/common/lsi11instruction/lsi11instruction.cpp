@@ -2,9 +2,11 @@
 
 #include <typeinfo>
 
-LSI11Instruction::LSI11Instruction (CpuData *cpu)
+LSI11Instruction::LSI11Instruction (CpuData *cpu, CpuControl* cpuControl, MMU* mmu)
 	:
-	cpu_ {cpu}
+	cpu_ {cpu},
+	cpuControl_ {cpuControl},
+	mmu_ {mmu}
 {}
 
 // Get the location of the operand by decoding the adressing mode of the

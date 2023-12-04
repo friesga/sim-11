@@ -25,13 +25,14 @@
 class CommonInstruction::IOT : public NoOperandInstruction, public WithFactory<IOT>
 {
 public:
-    IOT (CpuData* cpu, u16 instruction);
+    IOT (CpuData* cpu, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline CommonInstruction::IOT::IOT (CpuData* cpu, u16 instruction)
+inline CommonInstruction::IOT::IOT (CpuData* cpu, CpuControl* cpuControl,
+        MMU* mmu, u16 instruction)
     :
-    NoOperandInstruction (cpu, instruction)
+    NoOperandInstruction (cpu, cpuControl, mmu, instruction)
 {}
 
 inline bool CommonInstruction::IOT::execute ()

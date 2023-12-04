@@ -32,13 +32,14 @@
 class KDF11_AInstruction::MTPD : public SingleOperandInstruction, public WithFactory<MTPD>
 {
 public:
-    MTPD (CpuData* cpu, u16 instruction);
+    MTPD (CpuData* cpu, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline KDF11_AInstruction::MTPD::MTPD (CpuData* cpu, u16 instruction)
+inline KDF11_AInstruction::MTPD::MTPD (CpuData* cpu, CpuControl* cpuControl,
+        MMU* mmu, u16 instruction)
     :
-    SingleOperandInstruction (cpu, instruction)
+    SingleOperandInstruction (cpu, cpuControl, mmu, instruction)
 {}
 
 inline bool KDF11_AInstruction::MTPD::execute ()

@@ -32,13 +32,14 @@
 class KDF11_AInstruction::MFPS : public SingleOperandInstruction, public WithFactory<MFPS>
 {
 public:
-    MFPS (CpuData* cpu, u16 instruction);
+    MFPS (CpuData* cpu, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline KDF11_AInstruction::MFPS::MFPS (CpuData* cpu, u16 instruction)
+inline KDF11_AInstruction::MFPS::MFPS (CpuData* cpu, CpuControl* cpuControl,
+        MMU* mmu, u16 instruction)
     :
-    SingleOperandInstruction (cpu, instruction)
+    SingleOperandInstruction (cpu, cpuControl, mmu, instruction)
 {}
 
 inline bool KDF11_AInstruction::MFPS::execute ()

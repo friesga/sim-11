@@ -24,13 +24,14 @@
 class CommonInstruction::MTPS : public SingleOperandInstruction, public WithFactory<MTPS>
 {
 public:
-    MTPS (CpuData* cpu, u16 instruction);
+    MTPS (CpuData* cpu, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline CommonInstruction::MTPS::MTPS (CpuData* cpu, u16 instruction)
+inline CommonInstruction::MTPS::MTPS (CpuData* cpu, CpuControl* cpuControl,
+        MMU* mmu, u16 instruction)
     :
-    SingleOperandInstruction (cpu, instruction)
+    SingleOperandInstruction (cpu, cpuControl, mmu, instruction)
 {}
 
 inline bool CommonInstruction::MTPS::execute ()

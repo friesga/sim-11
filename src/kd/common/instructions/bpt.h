@@ -25,13 +25,14 @@
 class CommonInstruction::BPT : public NoOperandInstruction, public WithFactory<BPT>
 {
 public:
-    BPT (CpuData* cpu, u16 instruction);
+    BPT (CpuData* cpu, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline CommonInstruction::BPT::BPT (CpuData* cpu, u16 instruction)
+inline CommonInstruction::BPT::BPT (CpuData* cpu, CpuControl* cpuControl,
+        MMU* mmu, u16 instruction)
     :
-    NoOperandInstruction (cpu, instruction)
+    NoOperandInstruction (cpu, cpuControl, mmu, instruction)
 {}
 
 inline bool CommonInstruction::BPT::execute ()

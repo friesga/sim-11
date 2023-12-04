@@ -64,7 +64,8 @@ set (KD11_NA_CPU_SRCS
     src/kd/kd11_na/cpu/cpucontrol.cpp
     src/kd/kd11_na/cpu/kd11_nainstruction/opcodetables.cpp
     src/kd/kd11_na/cpu/kd11_naregisters/kd11_naregisters.cpp
-    src/kd/kd11_na/cpu/kd11_na_memoryaccess.cpp)
+    src/kd/kd11_na/cpu/kd11_na_memoryaccess.cpp
+    src/kd/kd11_na/dummymmu/dummymmu.cpp)
 
 set (KDF11_A_SRCS
     src/kd/kdf11_a/kdf11_a.cpp

@@ -24,13 +24,14 @@
 class KDF11_AInstruction::XOR : public EisInstruction, public WithFactory<XOR>
 {
 public:
-    XOR (CpuData* cpu, u16 instruction);
+    XOR (CpuData* cpu, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline KDF11_AInstruction::XOR::XOR (CpuData* cpu, u16 instruction)
+inline KDF11_AInstruction::XOR::XOR (CpuData* cpu, CpuControl* cpuControl,
+        MMU* mmu, u16 instruction)
     :
-    EisInstruction (cpu, instruction)
+    EisInstruction (cpu, cpuControl, mmu, instruction)
 {}
 
 inline bool KDF11_AInstruction::XOR::execute ()

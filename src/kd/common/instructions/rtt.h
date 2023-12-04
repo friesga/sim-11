@@ -27,13 +27,14 @@
 class CommonInstruction::RTT : public NoOperandInstruction, public WithFactory<RTT>
 {
 public:
-    RTT (CpuData* cpu, u16 instruction);
+    RTT (CpuData* cpu, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline CommonInstruction::RTT::RTT (CpuData* cpu, u16 instruction)
+inline CommonInstruction::RTT::RTT (CpuData* cpu, CpuControl* cpuControl,
+        MMU* mmu, u16 instruction)
     :
-    NoOperandInstruction (cpu, instruction)
+    NoOperandInstruction (cpu, cpuControl, mmu, instruction)
 {}
 
 //  If the RTT sets the T bit in the PS, the next instruction will be executed

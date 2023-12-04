@@ -113,7 +113,7 @@ void KDF11_A_Cpu::execInstr ()
     mmu_->sr2_ = instructionWord;
 
     unique_ptr<LSI11Instruction> instr = 
-        kdf11_aInstruction.decode (this, instructionWord);
+        kdf11_aInstruction.decode (this, this, mmu_.get (), instructionWord);
 
     // If the trace flag is set, the next instruction has to result in a trace
     // trap, unless the instruction resulted in another trap.

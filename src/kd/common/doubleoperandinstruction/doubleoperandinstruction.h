@@ -24,7 +24,7 @@ class DoubleOperandInstruction : public LSI11Instruction
 	instr_;
 
 public:
-	DoubleOperandInstruction (CpuData* cpu, u16 instruction);
+	DoubleOperandInstruction (CpuData* cpu, CpuControl* cpuControl, MMU* mmu, u16 instruction);
 	u16 getOperationCode ();
 
 protected:

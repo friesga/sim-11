@@ -6,6 +6,7 @@
 #include "types.h"
 #include "kd11_nainstruction/kd11_nainstruction.h"
 #include "kd11_naregisters/kd11_naregisters.h"
+#include "kd/kd11_na/dummymmu/dummymmu.h"
 
 #include <functional>
 
@@ -59,6 +60,7 @@ private:
 		WAIT
 	};
 
+	DummyMMU dummyMMU {bus_, this};
 	CpuRunState runState;
 	KD11_NAInstruction kd11_naInstruction;
 	KD11_NARegisters registers_;

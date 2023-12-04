@@ -24,13 +24,14 @@
 class KDF11_AInstruction::COM : public SingleOperandInstruction, public WithFactory<COM>
 {
 public:
-    COM (CpuData* cpu, u16 instruction);
+    COM (CpuData* cpu, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline KDF11_AInstruction::COM::COM (CpuData* cpu, u16 instruction)
+inline KDF11_AInstruction::COM::COM (CpuData* cpu, CpuControl* cpuControl,
+        MMU* mmu, u16 instruction)
     :
-    SingleOperandInstruction (cpu, instruction)
+    SingleOperandInstruction (cpu, cpuControl, mmu, instruction)
 {}
 
 inline bool KDF11_AInstruction::COM::execute ()

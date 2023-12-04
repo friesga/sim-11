@@ -27,13 +27,14 @@
 class CommonInstruction::ROL : public SingleOperandInstruction, public WithFactory<ROL>
 {
 public:
-    ROL (CpuData* cpu, u16 instruction);
+    ROL (CpuData* cpu, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline CommonInstruction::ROL::ROL (CpuData* cpu, u16 instruction)
+inline CommonInstruction::ROL::ROL (CpuData* cpu, CpuControl* cpuControl,
+        MMU* mmu, u16 instruction)
     :
-    SingleOperandInstruction (cpu, instruction)
+    SingleOperandInstruction (cpu, cpuControl, mmu, instruction)
 {}
 
 inline bool CommonInstruction::ROL::execute ()

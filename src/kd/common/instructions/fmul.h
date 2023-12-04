@@ -27,13 +27,14 @@
 class CommonInstruction::FMUL : public FISInstruction, public WithFactory<FMUL>
 {
 public:
-    FMUL (CpuData* cpu, u16 instruction);
+    FMUL (CpuData* cpu, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline CommonInstruction::FMUL::FMUL (CpuData* cpu, u16 instruction)
+inline CommonInstruction::FMUL::FMUL (CpuData* cpu, CpuControl* cpuControl,
+        MMU* mmu, u16 instruction)
     :
-    FISInstruction (cpu, instruction)
+    FISInstruction (cpu, cpuControl, mmu, instruction)
 {}
 
 inline bool CommonInstruction::FMUL::execute ()

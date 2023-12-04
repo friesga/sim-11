@@ -27,13 +27,14 @@
 class CommonInstruction::FSUB : public FISInstruction, public WithFactory<FSUB>
 {
 public:
-    FSUB (CpuData* cpu, u16 instruction);
+    FSUB (CpuData* cpu, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline CommonInstruction::FSUB::FSUB (CpuData* cpu, u16 instruction)
+inline CommonInstruction::FSUB::FSUB (CpuData* cpu, CpuControl* cpuControl,
+        MMU* mmu, u16 instruction)
     :
-    FISInstruction (cpu, instruction)
+    FISInstruction (cpu, cpuControl, mmu, instruction)
 {}
 
 inline bool CommonInstruction::FSUB::execute ()

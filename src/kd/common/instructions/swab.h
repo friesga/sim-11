@@ -25,13 +25,14 @@
 class CommonInstruction::SWAB : public SingleOperandInstruction, public WithFactory<SWAB>
 {
 public:
-    SWAB (CpuData* cpu, u16 instruction);
+    SWAB (CpuData* cpu, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline CommonInstruction::SWAB::SWAB (CpuData* cpu, u16 instruction)
+inline CommonInstruction::SWAB::SWAB (CpuData* cpu, CpuControl* cpuControl,
+        MMU* mmu, u16 instruction)
     :
-    SingleOperandInstruction (cpu, instruction)
+    SingleOperandInstruction (cpu, cpuControl, mmu, instruction)
 {}
 
 inline bool CommonInstruction::SWAB::execute ()

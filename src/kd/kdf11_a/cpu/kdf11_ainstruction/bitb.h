@@ -18,13 +18,14 @@
 class  KDF11_AInstruction::BITB : public KD11DoubleOperandInstruction, public WithFactory<BITB>
 {
 public:
-    BITB (CpuData* cpu, u16 instruction);
+    BITB (CpuData* cpu, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline  KDF11_AInstruction::BITB::BITB (CpuData* cpu, u16 instruction)
+inline  KDF11_AInstruction::BITB::BITB (CpuData* cpu, CpuControl* cpuControl,
+        MMU* mmu, u16 instruction)
     :
-    KD11DoubleOperandInstruction (cpu, instruction)
+    KD11DoubleOperandInstruction (cpu, cpuControl, mmu, instruction)
 {}
 
 inline bool  KDF11_AInstruction::BITB::execute ()

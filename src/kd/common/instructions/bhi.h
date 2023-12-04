@@ -21,13 +21,14 @@
 class CommonInstruction::BHI : public BranchInstruction, public WithFactory<BHI>
 {
 public:
-    BHI (CpuData* cpu, u16 instruction);
+    BHI (CpuData* cpu, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline CommonInstruction::BHI::BHI (CpuData* cpu, u16 instruction)
+inline CommonInstruction::BHI::BHI (CpuData* cpu, CpuControl* cpuControl,
+        MMU* mmu, u16 instruction)
     :
-    BranchInstruction (cpu, instruction)
+    BranchInstruction (cpu, cpuControl, mmu, instruction)
 {}
 
 inline bool CommonInstruction::BHI::execute ()

@@ -24,13 +24,14 @@
 class KDF11_AInstruction::SUB : public KD11DoubleOperandInstruction, public WithFactory<SUB>
 {
 public:
-    SUB (CpuData* cpu, u16 instruction);
+    SUB (CpuData* cpu, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline KDF11_AInstruction::SUB::SUB (CpuData* cpu, u16 instruction)
+inline KDF11_AInstruction::SUB::SUB (CpuData* cpu, CpuControl* cpuControl,
+        MMU* mmu, u16 instruction)
     :
-    KD11DoubleOperandInstruction (cpu, instruction)
+    KD11DoubleOperandInstruction (cpu, cpuControl, mmu, instruction)
 {}
 
 inline bool KDF11_AInstruction::SUB::execute ()

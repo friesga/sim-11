@@ -18,13 +18,14 @@
 class KDF11_AInstruction::INCB : public SingleOperandInstruction, public WithFactory<INCB>
 {
 public:
-    INCB (CpuData* cpu, u16 instruction);
+    INCB (CpuData* cpu, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline KDF11_AInstruction::INCB::INCB (CpuData* cpu, u16 instruction)
+inline KDF11_AInstruction::INCB::INCB (CpuData* cpu, CpuControl* cpuControl,
+        MMU* mmu, u16 instruction)
     :
-    SingleOperandInstruction (cpu, instruction)
+    SingleOperandInstruction (cpu, cpuControl, mmu, instruction)
 {}
 
 inline bool KDF11_AInstruction::INCB::execute ()

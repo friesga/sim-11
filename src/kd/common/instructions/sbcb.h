@@ -18,13 +18,14 @@
 class CommonInstruction::SBCB : public SingleOperandInstruction, public WithFactory<SBCB>
 {
 public:
-    SBCB (CpuData* cpu, u16 instruction);
+    SBCB (CpuData* cpu, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline CommonInstruction::SBCB::SBCB (CpuData* cpu, u16 instruction)
+inline CommonInstruction::SBCB::SBCB (CpuData* cpu, CpuControl* cpuControl,
+        MMU* mmu, u16 instruction)
     :
-    SingleOperandInstruction (cpu, instruction)
+    SingleOperandInstruction (cpu, cpuControl, mmu, instruction)
 {}
 
 inline bool CommonInstruction::SBCB::execute ()

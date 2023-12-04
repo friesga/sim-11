@@ -27,13 +27,14 @@
 class CommonInstruction::ASH : public EisInstruction, public WithFactory<ASH>
 {
 public:
-    ASH (CpuData* cpu, u16 instruction);
+    ASH (CpuData* cpu, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline CommonInstruction::ASH::ASH (CpuData* cpu, u16 instruction)
+inline CommonInstruction::ASH::ASH (CpuData* cpu, CpuControl* cpuControl,
+        MMU* mmu, u16 instruction)
     :
-    EisInstruction (cpu, instruction)
+    EisInstruction (cpu, cpuControl, mmu, instruction)
 {}
 
 inline bool CommonInstruction::ASH::execute ()

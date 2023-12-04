@@ -21,13 +21,14 @@
 class CommonInstruction::BEQ : public BranchInstruction, public WithFactory<BEQ>
 {
 public:
-    BEQ (CpuData* cpu, u16 instruction);
+    BEQ (CpuData* cpu, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline CommonInstruction::BEQ::BEQ (CpuData* cpu, u16 instruction)
+inline CommonInstruction::BEQ::BEQ (CpuData* cpu, CpuControl* cpuControl,
+        MMU* mmu, u16 instruction)
     :
-    BranchInstruction (cpu, instruction)
+    BranchInstruction (cpu, cpuControl, mmu, instruction)
 {}
 
 inline bool CommonInstruction::BEQ::execute ()

@@ -22,13 +22,14 @@
 class CommonInstruction::SOB : public SobInstruction, public WithFactory<SOB>
 {
 public:
-    SOB (CpuData* cpu, u16 instruction);
+    SOB (CpuData* cpu, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline CommonInstruction::SOB::SOB (CpuData* cpu, u16 instruction)
+inline CommonInstruction::SOB::SOB (CpuData* cpu, CpuControl* cpuControl,
+        MMU* mmu, u16 instruction)
     :
-    SobInstruction (cpu, instruction)
+    SobInstruction (cpu, cpuControl, mmu, instruction)
 {}
 
 inline bool CommonInstruction::SOB::execute ()

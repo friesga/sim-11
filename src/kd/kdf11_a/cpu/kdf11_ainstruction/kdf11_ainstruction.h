@@ -143,10 +143,12 @@ class KDF11_AInstruction
     class XOR;
 
 public:
-    unique_ptr<LSI11Instruction> decode (CpuData* cpu, u16 instruction);
+    unique_ptr<LSI11Instruction> decode (CpuData* cpu, CpuControl* cpuControl,
+        MMU* mmu, u16 instruction);
 
 private:
-    typedef  unique_ptr<LSI11Instruction> (*InstructionCreator) (CpuData*, u16);
+    typedef  unique_ptr<LSI11Instruction> (*InstructionCreator) (CpuData*, CpuControl*,
+        MMU*, u16);
     using opCodeTable = InstructionCreator[];
 
     // As the dimensions of the opCodeTable's are not specified, the arrays
@@ -162,12 +164,12 @@ private:
     // As a consequence the following functions have to be defined static too.
     // This is fine too, as these functions don't use local variables and
     // simply walk through the operation code tables declared above.
-    static unique_ptr<LSI11Instruction> decodeGroup_00_00_nn (CpuData*, u16);
-    static unique_ptr<LSI11Instruction> decodeGroup_00_02_nn (CpuData*, u16);
-    static unique_ptr<LSI11Instruction> decodeGroup_07_nx_xx (CpuData*, u16);
-    static unique_ptr<LSI11Instruction> decodeGroup_10_xx_xx (CpuData*, u16);
-    static unique_ptr<LSI11Instruction> decodeGroup_00_nn_xx (CpuData*, u16);
-    static unique_ptr<LSI11Instruction> decodeGroup_nn_xx_xx (CpuData*, u16);
+    static unique_ptr<LSI11Instruction> decodeGroup_00_00_nn (CpuData*, CpuControl*, MMU*, u16);
+    static unique_ptr<LSI11Instruction> decodeGroup_00_02_nn (CpuData*, CpuControl*, MMU*, u16);
+    static unique_ptr<LSI11Instruction> decodeGroup_07_nx_xx (CpuData*, CpuControl*, MMU*, u16);
+    static unique_ptr<LSI11Instruction> decodeGroup_10_xx_xx (CpuData*, CpuControl*, MMU*, u16);
+    static unique_ptr<LSI11Instruction> decodeGroup_00_nn_xx (CpuData*, CpuControl*, MMU*, u16);
+    static unique_ptr<LSI11Instruction> decodeGroup_nn_xx_xx (CpuData*, CpuControl*, MMU*, u16);
 };
 
 #endif // KDF11_AINSTRUCTION_H_

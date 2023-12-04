@@ -25,13 +25,14 @@
 class CommonInstruction::BIT : public DoubleOperandInstruction, public WithFactory<BIT>
 {
 public:
-    BIT (CpuData* cpu, u16 instruction);
+    BIT (CpuData* cpu, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline CommonInstruction::BIT::BIT (CpuData* cpu, u16 instruction)
+inline CommonInstruction::BIT::BIT (CpuData* cpu, CpuControl* cpuControl,
+        MMU* mmu, u16 instruction)
     :
-    DoubleOperandInstruction (cpu, instruction)
+    DoubleOperandInstruction (cpu, cpuControl, mmu, instruction)
 {}
 
 inline bool CommonInstruction::BIT::execute ()

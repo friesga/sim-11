@@ -15,9 +15,10 @@ template <typename T>
 class WithFactory
 {
 public:
-    static unique_ptr<LSI11Instruction> create (CpuData* cpu, u16 instruction)
+    static unique_ptr<LSI11Instruction> create (CpuData* cpu,
+        CpuControl* cpuControl, MMU* mmu, u16 instruction)
     {
-        return make_unique<T> (cpu, instruction);
+        return make_unique<T> (cpu, cpuControl, mmu, instruction);
     }
 };
 

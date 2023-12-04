@@ -16,15 +16,16 @@
 class CommonInstruction::Unused : public NoOperandInstruction, public WithFactory<Unused>
 {
 public:
-    Unused (CpuData* cpu, u16 instruction);
+    Unused (CpuData* cpu, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
 // The two function members are defined inline as this header file is
 // included in both opcodetables.cpp and kd11_na.cpp.
-inline CommonInstruction::Unused::Unused (CpuData* cpu, u16 instruction)
+inline CommonInstruction::Unused::Unused (CpuData* cpu, CpuControl* cpuControl,
+        MMU* mmu, u16 instruction)
     :
-    NoOperandInstruction (cpu, instruction)
+    NoOperandInstruction (cpu, cpuControl, mmu, instruction)
 {}
 
 inline bool CommonInstruction::Unused::execute ()

@@ -25,13 +25,14 @@
 class KDF11_AInstruction::SXT : public SingleOperandInstruction, public WithFactory<SXT>
 {
 public:
-    SXT (CpuData* cpu, u16 instruction);
+    SXT (CpuData* cpu, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline KDF11_AInstruction::SXT::SXT (CpuData* cpu, u16 instruction)
+inline KDF11_AInstruction::SXT::SXT (CpuData* cpu, CpuControl* cpuControl,
+        MMU* mmu, u16 instruction)
     :
-    SingleOperandInstruction (cpu, instruction)
+    SingleOperandInstruction (cpu, cpuControl, mmu, instruction)
 {}
 
 inline bool KDF11_AInstruction::SXT::execute ()

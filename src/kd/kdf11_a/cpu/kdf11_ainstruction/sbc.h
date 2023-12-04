@@ -25,13 +25,14 @@
 class KDF11_AInstruction::SBC : public SingleOperandInstruction, public WithFactory<SBC>
 {
 public:
-    SBC (CpuData* cpu, u16 instruction);
+    SBC (CpuData* cpu, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline KDF11_AInstruction::SBC::SBC (CpuData* cpu, u16 instruction)
+inline KDF11_AInstruction::SBC::SBC (CpuData* cpu, CpuControl* cpuControl,
+        MMU* mmu, u16 instruction)
     :
-    SingleOperandInstruction (cpu, instruction)
+    SingleOperandInstruction (cpu, cpuControl, mmu, instruction)
 {}
 
 inline bool KDF11_AInstruction::SBC::execute ()

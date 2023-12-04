@@ -3,6 +3,7 @@
 
 #include "qbus/qbus.h"
 #include "kd/include/cpudata.h"
+#include "kd/include/mmu.h"
 #include "abstractbusdevice/abstractbusdevice.h"
 #include "apr.h"
 #include "ktf11_asr0.h"
@@ -25,7 +26,7 @@
 // pages, each page composed of from 1 to 128 integral blocks of 32 words. 
 // (EK-KDF11-UG-PR2)
 //
-class KTF11_A : public AbstractBusDevice
+class KTF11_A : public AbstractBusDevice, public MMU
 {
 public:
 	// Define KDF11_A_Cpu as a friend as CPU and MMU work closely together.
@@ -46,6 +47,13 @@ public:
     CondData<u16> mappedRead (u16 address);
 	bool mappedWriteWord (u16 address, u16 value);
 	bool mappedWriteByte (u16 address, u8 value);
+
+	CondData<u16> fetchWord (u16 address) override { return {}; }
+	CondData<u8> fetchByte (u16 address) override { return {}; }
+	bool putWord (u16 address, u16 value) override { return false; }
+	bool putByte (u16 address, u8 value) override { return false; }
+	bool pushWord (u16 value) override { return false; }
+	bool popWord (u16 *destination) override { return false; }
 
 private:
 	// A virtual address is composed of the following fields:

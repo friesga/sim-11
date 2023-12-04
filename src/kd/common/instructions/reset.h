@@ -19,13 +19,14 @@
 class CommonInstruction::RESET : public NoOperandInstruction, public WithFactory<RESET>
 {
 public:
-    RESET (CpuData* cpu, u16 instruction);
+    RESET (CpuData* cpu, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline CommonInstruction::RESET::RESET (CpuData* cpu, u16 instruction)
+inline CommonInstruction::RESET::RESET (CpuData* cpu, CpuControl* cpuControl,
+        MMU* mmu, u16 instruction)
     :
-    NoOperandInstruction (cpu, instruction)
+    NoOperandInstruction (cpu, cpuControl, mmu, instruction)
 {}
 
 inline bool CommonInstruction::RESET::execute ()

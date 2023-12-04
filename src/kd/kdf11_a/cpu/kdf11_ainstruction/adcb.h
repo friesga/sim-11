@@ -18,13 +18,14 @@
 class KDF11_AInstruction::ADCB : public SingleOperandInstruction, public WithFactory<ADCB>
 {
 public:
-    ADCB (CpuData* cpu, u16 instruction);
+    ADCB (CpuData* cpu, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline KDF11_AInstruction::ADCB::ADCB (CpuData* cpu, u16 instruction)
+inline KDF11_AInstruction::ADCB::ADCB (CpuData* cpu,
+        CpuControl* cpuControl, MMU* mmu, u16 instruction)
     :
-    SingleOperandInstruction (cpu, instruction)
+    SingleOperandInstruction (cpu, cpuControl, mmu, instruction)
 {}
 
 inline bool KDF11_AInstruction::ADCB::execute ()

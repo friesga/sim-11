@@ -108,7 +108,7 @@ void KD11_NA_Cpu::execInstr ()
     registers_[7] += 2;
 
     unique_ptr<LSI11Instruction> instr = 
-        kd11_naInstruction.decode (this, instructionWord);
+        kd11_naInstruction.decode (this, this, &dummyMMU, instructionWord);
 
     // If the trace flag is set, the next instruction has to result in a trace
     // trap, unless the instruction resulted in another trap.

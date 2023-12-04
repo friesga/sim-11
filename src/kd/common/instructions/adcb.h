@@ -18,13 +18,14 @@
 class CommonInstruction::ADCB : public SingleOperandInstruction, public WithFactory<ADCB>
 {
 public:
-    ADCB (CpuData* cpu, u16 instruction);
+    ADCB (CpuData* cpu, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline CommonInstruction::ADCB::ADCB (CpuData* cpu, u16 instruction)
+inline CommonInstruction::ADCB::ADCB (CpuData* cpu, CpuControl* cpuControl,
+        MMU* mmu, u16 instruction)
     :
-    SingleOperandInstruction (cpu, instruction)
+    SingleOperandInstruction (cpu, cpuControl, mmu, instruction)
 {}
 
 inline bool CommonInstruction::ADCB::execute ()

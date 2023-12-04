@@ -31,13 +31,14 @@
 class CommonInstruction::JSR : public EisInstruction, public WithFactory<JSR>
 {
 public:
-    JSR (CpuData* cpu, u16 instruction);
+    JSR (CpuData* cpu, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline CommonInstruction::JSR::JSR (CpuData* cpu, u16 instruction)
+inline CommonInstruction::JSR::JSR (CpuData* cpu, CpuControl* cpuControl,
+        MMU* mmu, u16 instruction)
     :
-    EisInstruction (cpu, instruction)
+    EisInstruction (cpu, cpuControl, mmu, instruction)
 {}
 
 inline bool CommonInstruction::JSR::execute ()

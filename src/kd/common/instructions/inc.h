@@ -23,13 +23,14 @@
 class CommonInstruction::INC : public SingleOperandInstruction, public WithFactory<INC>
 {
 public:
-    INC (CpuData* cpu, u16 instruction);
+    INC (CpuData* cpu, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline CommonInstruction::INC::INC (CpuData* cpu, u16 instruction)
+inline CommonInstruction::INC::INC (CpuData* cpu, CpuControl* cpuControl,
+        MMU* mmu, u16 instruction)
     :
-    SingleOperandInstruction (cpu, instruction)
+    SingleOperandInstruction (cpu, cpuControl, mmu, instruction)
 {}
 
 inline bool CommonInstruction::INC::execute ()

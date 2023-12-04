@@ -27,13 +27,14 @@
 class KDF11_AInstruction::ROR : public SingleOperandInstruction, public WithFactory<ROR>
 {
 public:
-    ROR (CpuData* cpu, u16 instruction);
+    ROR (CpuData* cpu, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline KDF11_AInstruction::ROR::ROR (CpuData* cpu, u16 instruction)
+inline KDF11_AInstruction::ROR::ROR (CpuData* cpu, CpuControl* cpuControl,
+        MMU* mmu, u16 instruction)
     :
-    SingleOperandInstruction (cpu, instruction)
+    SingleOperandInstruction (cpu, cpuControl, mmu, instruction)
 {}
 
 inline bool KDF11_AInstruction::ROR::execute ()

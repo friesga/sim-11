@@ -18,13 +18,14 @@
 class CommonInstruction::DECB : public SingleOperandInstruction, public WithFactory<DECB>
 {
 public:
-    DECB (CpuData* cpu, u16 instruction);
+    DECB (CpuData* cpu, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline CommonInstruction::DECB::DECB (CpuData* cpu, u16 instruction)
+inline CommonInstruction::DECB::DECB (CpuData* cpu, CpuControl* cpuControl,
+        MMU* mmu, u16 instruction)
     :
-    SingleOperandInstruction (cpu, instruction)
+    SingleOperandInstruction (cpu, cpuControl, mmu, instruction)
 {}
 
 inline bool CommonInstruction::DECB::execute ()

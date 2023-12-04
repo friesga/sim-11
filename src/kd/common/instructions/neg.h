@@ -25,13 +25,14 @@
 class CommonInstruction::NEG : public SingleOperandInstruction, public WithFactory<NEG>
 {
 public:
-    NEG (CpuData* cpu, u16 instruction);
+    NEG (CpuData* cpu, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline CommonInstruction::NEG::NEG (CpuData* cpu, u16 instruction)
+inline CommonInstruction::NEG::NEG (CpuData* cpu, CpuControl* cpuControl,
+        MMU* mmu, u16 instruction)
     :
-    SingleOperandInstruction (cpu, instruction)
+    SingleOperandInstruction (cpu, cpuControl, mmu, instruction)
 {}
 
 inline bool CommonInstruction::NEG::execute ()

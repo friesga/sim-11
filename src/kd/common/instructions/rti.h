@@ -27,13 +27,14 @@
 class CommonInstruction::RTI : public NoOperandInstruction, public WithFactory<RTI>
 {
 public:
-    RTI (CpuData* cpu, u16 instruction);
+    RTI (CpuData* cpu, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline CommonInstruction::RTI::RTI (CpuData* cpu, u16 instruction)
+inline CommonInstruction::RTI::RTI (CpuData* cpu, CpuControl* cpuControl,
+        MMU* mmu, u16 instruction)
     :
-    NoOperandInstruction (cpu, instruction)
+    NoOperandInstruction (cpu, cpuControl, mmu, instruction)
 {}
 
 

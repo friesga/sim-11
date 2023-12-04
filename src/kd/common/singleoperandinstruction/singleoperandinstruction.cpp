@@ -2,9 +2,10 @@
 #include "kd/common/operand/operand.h"
 
 // Initialize the instr struct with the first member
-SingleOperandInstruction::SingleOperandInstruction (CpuData *cpu, u16 instruction)
+SingleOperandInstruction::SingleOperandInstruction (CpuData *cpu, CpuControl* cpuControl,
+		MMU* mmu, u16 instruction)
 	:
-	LSI11Instruction (cpu),
+	LSI11Instruction (cpu, cpuControl, mmu),
 	instr_ {instruction}
 {}
 

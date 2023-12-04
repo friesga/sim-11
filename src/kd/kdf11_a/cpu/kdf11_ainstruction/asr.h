@@ -27,13 +27,14 @@
 class KDF11_AInstruction::ASR : public SingleOperandInstruction, public WithFactory<ASR>
 {
 public:
-    ASR (CpuData* cpu, u16 instruction);
+    ASR (CpuData* cpu, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline KDF11_AInstruction::ASR::ASR (CpuData* cpu, u16 instruction)
+inline KDF11_AInstruction::ASR::ASR (CpuData* cpu,
+        CpuControl* cpuControl, MMU* mmu, u16 instruction)
     :
-    SingleOperandInstruction (cpu, instruction)
+    SingleOperandInstruction (cpu, cpuControl, mmu, instruction)
 {}
 
 inline bool KDF11_AInstruction::ASR::execute ()

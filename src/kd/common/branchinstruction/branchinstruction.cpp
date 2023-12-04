@@ -1,8 +1,9 @@
 #include "branchinstruction.h"
 
-BranchInstruction::BranchInstruction (CpuData *cpu, u16 instruction)
+BranchInstruction::BranchInstruction (CpuData *cpu, CpuControl* cpuControl,
+        MMU* mmu, u16 instruction)
     :
-    LSI11Instruction (cpu),
+    LSI11Instruction (cpu, cpuControl, mmu),
     instr_ {instruction}
 {}
 

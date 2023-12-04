@@ -20,7 +20,7 @@
 class KD11DoubleOperandInstruction : public DoubleOperandInstruction
 {
 public:
-    KD11DoubleOperandInstruction (CpuData* cpu, u16 instruction);
+    KD11DoubleOperandInstruction (CpuData* cpu, CpuControl* cpuControl, MMU* mmu, u16 instruction);
 };
 
 

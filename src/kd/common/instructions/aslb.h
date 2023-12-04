@@ -23,13 +23,14 @@
 class CommonInstruction::ASLB : public SingleOperandInstruction, public WithFactory<ASLB>
 {
 public:
-    ASLB (CpuData* cpu, u16 instruction);
+    ASLB (CpuData* cpu, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline CommonInstruction::ASLB::ASLB (CpuData* cpu, u16 instruction)
+inline CommonInstruction::ASLB::ASLB (CpuData* cpu, CpuControl* cpuControl,
+        MMU* mmu, u16 instruction)
     :
-    SingleOperandInstruction (cpu, instruction)
+    SingleOperandInstruction (cpu, cpuControl, mmu, instruction)
 {}
 
 inline bool CommonInstruction::ASLB::execute ()

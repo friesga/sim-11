@@ -9,7 +9,7 @@ class NoOperandInstruction : public LSI11Instruction
 	u16 instr_;
 
 public:
-	NoOperandInstruction (CpuData* cpu, u16 instruction);
+	NoOperandInstruction (CpuData* cpu, CpuControl* cpuControl, MMU* mmu, u16 instruction);
 	u16 getOperationCode () override;
 };
 

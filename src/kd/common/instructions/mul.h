@@ -26,13 +26,14 @@
 class CommonInstruction::MUL : public EisInstruction, public WithFactory<MUL>
 {
 public:
-    MUL (CpuData* cpu, u16 instruction);
+    MUL (CpuData* cpu, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline CommonInstruction::MUL::MUL (CpuData* cpu, u16 instruction)
+inline CommonInstruction::MUL::MUL (CpuData* cpu, CpuControl* cpuControl,
+        MMU* mmu, u16 instruction)
     :
-    EisInstruction (cpu, instruction)
+    EisInstruction (cpu, cpuControl, mmu, instruction)
 {}
 
 inline bool CommonInstruction::MUL::execute ()
