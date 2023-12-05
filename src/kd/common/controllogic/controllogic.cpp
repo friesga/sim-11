@@ -54,3 +54,10 @@ bool ControlLogic::signalAvailable ()
 {
     return signalEventQueue_.size () > 0;
 }
+
+// Load PC and PSW from the given vector
+void ControlLogic::loadTrapVector (CpuData::TrapCondition trap)
+{
+    cpu_->registers ()[7] = mmu_->fetchWord (cpu_->trapVector (trap)).valueOr (0);
+    cpu_->psw () = mmu_->fetchWord (cpu_->trapVector (trap) + 2).valueOr (0);
+}

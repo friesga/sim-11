@@ -65,7 +65,6 @@ private:
 
 	// Definition of CpuControl functions. These functions are
 	// used by K11ODT and the Operate Group instructions.
-	void loadTrapVector (CpuData::TrapCondition trap) override;
 	void cpuReset () override;
 	void busReset () override;
 	void halt () override;

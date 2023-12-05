@@ -103,6 +103,7 @@ private:
     ThreadSafeQueue<Event> signalEventQueue_;
 
     State powerUpRoutine ();
+    void loadTrapVector (CpuData::TrapCondition trap);
     void subscribeToSignals ();
     void runODT ();
     bool signalAvailable ();

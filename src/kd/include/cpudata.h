@@ -51,7 +51,6 @@ public:
     virtual void setTrap (TrapCondition trap, TrapRecordType cause = TrapRecordType::TRAP) = 0;
 	virtual u16 trapVector () = 0;
 	virtual u16 trapVector (TrapCondition trap) = 0;
-	virtual void loadTrapVector (TrapCondition trap) = 0;
 };
 
 #endif // _CPUDATA_H_

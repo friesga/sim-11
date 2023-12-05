@@ -152,13 +152,6 @@ void KD11_NA_Cpu::serviceInterrupt ()
         swapPcPSW (intrptReq.vector ());
 }
 
-// Load PC and PSW from the given vector
-void KD11_NA_Cpu::loadTrapVector (CpuData::TrapCondition trap)
-{
-    registers_[7] = mmu_->fetchWord (trapVector (trap)).valueOr (0);
-    psw_ = mmu_->fetchWord (trapVector (trap) + 2).valueOr (0);
-}
-
 u8 KD11_NA_Cpu::cpuPriority()
 {
     return (psw_ & PSW_PRIORITY) >> 5;
