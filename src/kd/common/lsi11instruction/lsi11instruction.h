@@ -2,6 +2,7 @@
 #define _LSI11INSTRUCTION_H_
 
 #include "kd/include/cpudata.h"
+#include "kd/include/cpucontrol.h"
 #include "kd/include/mmu.h"
 #include "kd/common/operandlocation/operandlocation.h"
 #include "kd/common/operand/operand.h"

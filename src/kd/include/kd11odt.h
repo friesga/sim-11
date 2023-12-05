@@ -4,6 +4,7 @@
 #include "types.h"
 #include "qbus/qbus.h"
 #include "kd/include/cpudata.h"
+#include "kd/include/cpucontrol.h"
 #include "kd/include/mmu.h"
 #include "kd/kd11_na/operatorconsoleaccess/operatorconsoleaccess.h"
 

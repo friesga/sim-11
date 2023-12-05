@@ -32,6 +32,10 @@ public:
     virtual void setPSW (u16 value) = 0;
 
     virtual HaltReason haltReason () = 0;
+
+    // The step has to return true if a following instruction can be execued,
+    // false otherwise. In the latter case a HALT instruction was executed.
+    virtual bool step () = 0;
 };
 
 

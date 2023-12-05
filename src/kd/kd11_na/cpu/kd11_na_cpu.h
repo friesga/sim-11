@@ -2,6 +2,7 @@
 #define _KD11_NA_CPU_H_
 
 #include "kd/common/kd11cpudata/kd11cpudata.h"
+#include "kd/include/cpucontrol.h"
 #include "float/float.h"
 #include "types.h"
 #include "kd11_nainstruction/kd11_nainstruction.h"

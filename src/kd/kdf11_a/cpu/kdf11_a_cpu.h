@@ -2,6 +2,7 @@
 #define _KDF11_A_CPU_H_
 
 #include "kd/common/kd11cpudata/kd11cpudata.h"
+#include "kd/include/cpucontrol.h"
 #include "float/float.h"
 #include "types.h"
 #include "kd/kdf11_a/cpu/kdf11_ainstruction/kdf11_ainstruction.h"

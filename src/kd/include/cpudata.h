@@ -2,8 +2,6 @@
 #define _CPUDATA_H_
 
 #include "types.h"
-#include "cpucontrol.h"
-#include "cpuexecution.h"
 #include "conddata/conddata.h"
 #include "interruptrequest/interruptrequest.h"
 #include "kd/include/generalregisters.h"
@@ -22,7 +20,7 @@
 // allow the Operate Group instructions, such as HALT and RESET, to access the
 // control functions.
 //
-class CpuData : public CpuExecution
+class CpuData
 {
 public:
 	// Definition of the trap conditions. The vectors corresponding to these
