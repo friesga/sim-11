@@ -49,6 +49,8 @@ public:
 	// The memory access functions must be able to generate a bus error trap
 	// when accessing non-existing memory.
     virtual void setTrap (TrapCondition trap, TrapRecordType cause = TrapRecordType::TRAP) = 0;
+	virtual u16 trapVector () = 0;
+	virtual u16 trapVector (TrapCondition trap) = 0;
 	virtual void loadTrapVector (TrapCondition trap) = 0;
 };
 

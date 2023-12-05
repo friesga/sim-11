@@ -27,6 +27,9 @@ public:
 	void setTrap (CpuData::TrapCondition trap, TrapRecordType cause = TrapRecordType::TRAP) override;
 	void setCC (ConditionCodes conditionCodes) override;
 
+	u16 trapVector () override;
+	u16 trapVector (TrapCondition trap) override;
+
 protected:
 	Qbus *bus_;
 	u16	psw_;
@@ -46,6 +49,16 @@ protected:
 constexpr u16& KD11CpuData::psw ()
 {
 	return psw_;
+}
+
+inline u16 KD11CpuData::trapVector ()
+{
+	return trapVector_[trap_];
+}
+
+inline u16 KD11CpuData::trapVector (TrapCondition trap)
+{
+	return trapVector_[trap_];
 }
 
 #endif // _KD11CPUDATA_H_
