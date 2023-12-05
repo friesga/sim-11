@@ -22,7 +22,7 @@ class KD11_NA;
 // The class CpuData is derived from CpuControl and CpuExecution, so the
 // KDF11_A_Cpu has to implement all three interfaces.
 //
-class KDF11_A_Cpu : public KD11CpuData
+class KDF11_A_Cpu : public CpuControl, public KD11CpuData
 {
 public:
 	// The KDF11_A needs access to the PSW. The ControlLogic and LSI11 classes

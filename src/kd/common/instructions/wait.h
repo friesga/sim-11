@@ -39,7 +39,7 @@ inline CommonInstruction::WAIT::WAIT (CpuData* cpu, CpuControl* cpuControl,
 
 inline bool CommonInstruction::WAIT::execute ()
 {
-    cpu_->wait ();
+    cpuControl_->wait ();
     return true;
 }
 

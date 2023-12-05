@@ -22,7 +22,7 @@
 // allow the Operate Group instructions, such as HALT and RESET, to access the
 // control functions.
 //
-class CpuData : public CpuControl, public CpuExecution
+class CpuData : public CpuExecution
 {
 public:
 	// Definition of the trap conditions. The vectors corresponding to these

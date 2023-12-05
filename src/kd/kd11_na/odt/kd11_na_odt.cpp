@@ -34,7 +34,7 @@ KD11_NA_ODT::KD11_NA_ODT (Qbus *bus, CpuData* cpu, CpuControl* cpuControl,
 unique_ptr<KD11_NA_ODT> KD11_NA_ODT::createODT (Qbus *bus, CpuData* cpu,
     CpuControl* cpuControl, MMU* mmu, unique_ptr<ConsoleAccess> consoleAccess)
 {
-    return move (make_unique<KD11_NA_ODT> (bus, cpu, cpu, mmu,
+    return move (make_unique<KD11_NA_ODT> (bus, cpu, cpuControl, mmu,
         make_unique<OperatorConsoleAccess> (bus)));
 }
 
@@ -233,7 +233,7 @@ void KD11_NA_ODT::setRegisterValue ()
         else
             // Setting or clearing the PSW T-bit will be prohibited
             // by setPSW()
-            cpu_->setPSW (newValue_);
+            cpuControl_->setPSW (newValue_);
     }
     else
         writeString ("?\n");
@@ -243,7 +243,7 @@ void KD11_NA_ODT::setRegisterValue ()
 void KD11_NA_ODT::startCPU (u16 address)
 {
     bus_->BINIT().cycle ();
-    cpu_->start (address);
+    cpuControl_->start (address);
     trace.cpuEvent (CpuEventRecordType::CPU_ODT_P, address);
 }
 

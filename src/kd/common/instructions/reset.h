@@ -31,7 +31,7 @@ inline CommonInstruction::RESET::RESET (CpuData* cpu, CpuControl* cpuControl,
 
 inline bool CommonInstruction::RESET::execute ()
 {
-    cpu_->busReset ();
+    cpuControl_->busReset ();
     return true;
 }
 

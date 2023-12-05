@@ -31,7 +31,7 @@ inline CommonInstruction::HALT::HALT (CpuData* cpu, CpuControl* cpuControl,
 
 inline bool CommonInstruction::HALT::execute ()
 {
-    cpu_->halt ();
+    cpuControl_->halt ();
     return true;
 }
 

@@ -28,7 +28,7 @@ class KD11_NA;
 // The class CpuData is derived from CpuControl and CpuExecution, so the
 // KD11_NA_Cpu has to implement all three interfaces.
 //
-class KD11_NA_Cpu : public KD11CpuData
+class KD11_NA_Cpu : public CpuControl, public KD11CpuData
 {
 public:
 	// The ControlLogic and LSI11 classes need access to the CpuControl functions.
