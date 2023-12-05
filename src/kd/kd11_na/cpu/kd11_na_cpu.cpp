@@ -138,7 +138,7 @@ void KD11_NA_Cpu::serviceTrap ()
     // The enum trap_ is converted to the u16 vector address
     // Swap the PC and PSW with new values from the trap vector to process.
     // If this fails the processor will be put in the HALT state.
-    swapPcPSW (trapVector_ [trap_]);
+    swapPcPSW (trapVector (trap_));
     trap_ = CpuData::TrapCondition::None;
 }
 
@@ -155,8 +155,8 @@ void KD11_NA_Cpu::serviceInterrupt ()
 // Load PC and PSW from the given vector
 void KD11_NA_Cpu::loadTrapVector (CpuData::TrapCondition trap)
 {
-    registers_[7] = mmu_->fetchWord (trapVector_ [trap]).valueOr (0);
-    psw_ = mmu_->fetchWord (trapVector_ [trap] + 2).valueOr (0);
+    registers_[7] = mmu_->fetchWord (trapVector (trap)).valueOr (0);
+    psw_ = mmu_->fetchWord (trapVector (trap) + 2).valueOr (0);
 }
 
 u8 KD11_NA_Cpu::cpuPriority()

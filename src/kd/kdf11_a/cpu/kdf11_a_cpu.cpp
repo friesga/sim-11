@@ -142,14 +142,14 @@ void KDF11_A_Cpu::serviceTrap ()
     // The enum trap_ is converted to the u16 vector address
     // Swap the PC and PSW with new values from the trap vector to process.
     // If this fails the processor will be put in the HALT state.
-    swapPcPSW (trapVector_ [trap_]);
+    swapPcPSW (trapVector (trap_));
 
     // Check if a stack overflow occurred as a result of the trap. In that
     // case a stack overflow trap has to be processed first unless the
     // original trap was caused by a stack overflow in the executed
     // instruction.
     if (stackOverflow () && trap_ != CpuData::TrapCondition::StackOverflow)
-        swapPcPSW (trapVector_ [CpuData::TrapCondition::StackOverflow]);
+        swapPcPSW (trapVector (CpuData::TrapCondition::StackOverflow));
 
     trap_ = CpuData::TrapCondition::None;
 }
@@ -174,8 +174,8 @@ void KDF11_A_Cpu::serviceInterrupt ()
 // Load PC and PSW from the given vector
 void KDF11_A_Cpu::loadTrapVector (CpuData::TrapCondition trap)
 {
-    registers_[7] = mmu_->fetchWord (trapVector_ [trap]).valueOr (0);
-    psw_ = mmu_->fetchWord (trapVector_ [trap] + 2).valueOr (0);
+    registers_[7] = mmu_->fetchWord (trapVector (trap)).valueOr (0);
+    psw_ = mmu_->fetchWord (trapVector (trap) + 2).valueOr (0);
 }
 
 u8 KDF11_A_Cpu::cpuPriority()
