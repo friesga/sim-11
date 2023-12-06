@@ -26,6 +26,7 @@ public:
 	void setCC (ConditionCodes conditionCodes) override;
 	constexpr bool stackOverflow () override;
 
+	constexpr TrapCondition trap () override;
 	void setTrap (CpuData::TrapCondition trap, TrapRecordType cause = TrapRecordType::TRAP) override;
 	u16 trapVector () override;
 	u16 trapVector (TrapCondition trap) override;
@@ -63,6 +64,11 @@ constexpr bool KD11_NACpuData::stackOverflow ()
     return false;
 }
 
+constexpr CpuData::TrapCondition KD11_NACpuData::trap ()
+{
+	return trap_;
+}
+
 inline u16 KD11_NACpuData::trapVector ()
 {
 	return trapVector_[trap_];
@@ -70,7 +76,7 @@ inline u16 KD11_NACpuData::trapVector ()
 
 inline u16 KD11_NACpuData::trapVector (TrapCondition trap)
 {
-	return trapVector_[trap_];
+	return trapVector_[trap];
 }
 
 #endif // _KD11NACPUDATA_H_

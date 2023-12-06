@@ -4,6 +4,7 @@
 #include "kd/include/pdp11processor.h"
 #include "cpu/kd11_na_cpu.h"
 #include "odt/kd11_na_odt.h"
+#include "kd/kd11_na/cpudata/kd11_nacpudata.h"
 #include "kd/kd11_na/dummymmu/dummymmu.h"
 #include "configdata/kd11_naconfig/kd11_naconfig.h"
 #include "kd/common/controllogic/controllogic.h"
@@ -44,8 +45,9 @@ private:
     enum { stdBootAddress = 0173000 };
 
     Qbus* bus_;
-    KD11_NA_Cpu cpu_ {bus_, &dummyMMU_};
-    DummyMMU dummyMMU_ {bus_, &cpu_};
+    KD11_NACpuData cpuData_ {bus_};
+    KD11_NA_Cpu cpu_ {bus_, &cpuData_, &dummyMMU_};
+    DummyMMU dummyMMU_ {bus_, &cpuData_};
     unique_ptr<KD11_NA_ODT>	odt_ {};
     KD11_NAConfig::PowerUpMode powerUpMode_;
     u16 startAddress_;

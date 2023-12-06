@@ -1,5 +1,4 @@
 #include "kdf11_a_cpu.h"
-#include "qbus/qbus.h"
 #include "pdp11peripheral/pdp11peripheral.h"
 #include "float/float.h"
 #include "trace/trace.h"
@@ -13,10 +12,11 @@ using std::unique_ptr;
 using std::make_unique;
 
 // Constructor
-KDF11_A_Cpu::KDF11_A_Cpu (Qbus* bus, MMU* mmu)
+KDF11_A_Cpu::KDF11_A_Cpu (Qbus* bus, CpuData* cpuData, MMU* mmu)
     :
-    KD11CpuData (bus),
+    bus_ {bus},
     mmu_ {mmu},
+    cpuData_ {cpuData},
     runState {CpuRunState::HALT},
     kdf11_aInstruction {},
     haltReason_ {HaltReason::HaltInstruction},
@@ -59,7 +59,7 @@ bool KDF11_A_Cpu::step ()
             // ToDo: load trap vector at this point?
             if (bus_->intrptReqAvailable ())
             {
-                trace.cpuEvent (CpuEventRecordType::CPU_RUN, registers_[7]);
+                trace.cpuEvent (CpuEventRecordType::CPU_RUN, cpuData_->registers ()[7]);
                 runState = CpuRunState::RUN;
                 bus_->SRUN().set (true);
             }
@@ -99,26 +99,26 @@ void KDF11_A_Cpu::execute ()
 void KDF11_A_Cpu::execInstr ()
 {
     // Get next instruction to execute and move PC forward
-    CondData<u16> instructionWord = mmu_->fetchWord (registers_[7]);
+    CondData<u16> instructionWord = mmu_->fetchWord (cpuData_->registers ()[7]);
     if (!instructionWord.hasValue())
     {
-        trace.bus (BusRecordType::ReadFail, registers_[7], 0);
-        setTrap (CpuData::TrapCondition::BusError);
+        trace.bus (BusRecordType::ReadFail, cpuData_->registers ()[7], 0);
+        cpuData_->setTrap (CpuData::TrapCondition::BusError);
         return;
     }
-    registers_[7] += 2;
+    cpuData_->registers ()[7] += 2;
 
     // During each instruction fetch SR2 is loaded with the 16-bit virtual
     // address (VA) but is not updated if the instruction fetch fails.
     mmu_->setSR2 (instructionWord);
 
     unique_ptr<LSI11Instruction> instr = 
-        kdf11_aInstruction.decode (this, this, mmu_, instructionWord);
+        kdf11_aInstruction.decode (cpuData_, this, mmu_, instructionWord);
 
     // If the trace flag is set, the next instruction has to result in a trace
     // trap, unless the instruction resulted in another trap.
     if (traceFlag_)
-        setTrap (CpuData::TrapCondition::BreakpointTrap);
+        cpuData_->setTrap (CpuData::TrapCondition::BreakpointTrap);
 
     // Execute the next instruction. The function returns true if the
     // instruction was completed and false if it was aborted due to an error
@@ -126,7 +126,7 @@ void KDF11_A_Cpu::execInstr ()
     // instructions set a trap and return true. 
     instr->execute ();
 
-    if (trap_ != CpuData::TrapCondition::None)
+    if (cpuData_->trap () != CpuData::TrapCondition::None)
         serviceTrap ();
 
     // Trace Trap is enabled by bit 4 of the PSW and causes processor traps at
@@ -134,7 +134,7 @@ void KDF11_A_Cpu::execInstr ()
     // after the instruction that set the T-bit will proceed to completion and
     // then trap through the trap vector at address 14.
     // LSI-11/PDP-11/03 Processor Handbook pag. 114.
-    traceFlag_ =  (psw_ & PSW_T) ? true : false;
+    traceFlag_ =  (cpuData_->psw () & PSW_T) ? true : false;
 }
 
 void KDF11_A_Cpu::serviceTrap ()
@@ -142,16 +142,16 @@ void KDF11_A_Cpu::serviceTrap ()
     // The enum trap_ is converted to the u16 vector address
     // Swap the PC and PSW with new values from the trap vector to process.
     // If this fails the processor will be put in the HALT state.
-    swapPcPSW (trapVector (trap_));
+    swapPcPSW (cpuData_->trapVector ());
 
     // Check if a stack overflow occurred as a result of the trap. In that
     // case a stack overflow trap has to be processed first unless the
     // original trap was caused by a stack overflow in the executed
     // instruction.
-    if (stackOverflow () && trap_ != CpuData::TrapCondition::StackOverflow)
-        swapPcPSW (trapVector (CpuData::TrapCondition::StackOverflow));
+    if (cpuData_->stackOverflow () && cpuData_->trap () != CpuData::TrapCondition::StackOverflow)
+        swapPcPSW (cpuData_->trapVector (CpuData::TrapCondition::StackOverflow));
 
-    trap_ = CpuData::TrapCondition::None;
+    cpuData_->setTrap (CpuData::TrapCondition::None);
 }
 
 void KDF11_A_Cpu::serviceInterrupt ()
@@ -166,15 +166,15 @@ void KDF11_A_Cpu::serviceInterrupt ()
 
         // Check if a stack overflow occurred as a result of the interrupt.
         // In that case a stack overflow trap has to be processed first.
-        if (stackOverflow ())
-            swapPcPSW (trapVector_ [CpuData::TrapCondition::StackOverflow]);
+        if (cpuData_->stackOverflow ())
+            swapPcPSW (cpuData_->trapVector (CpuData::TrapCondition::StackOverflow));
     }
 }
 
 
 u8 KDF11_A_Cpu::cpuPriority()
 {
-    return (psw_ & PSW_PRIORITY) >> 5;
+    return (cpuData_->psw () & PSW_PRIORITY) >> 5;
 }
 
 // Fetch PC and PSW from the given vector address. If this fails the
@@ -202,26 +202,26 @@ void KDF11_A_Cpu::swapPcPSW (u16 vectorAddress)
     // test 407. The same behaviour might exist for saveing and retrieval of
     // the PC.
     // 
-    u16 oldPSW = psw_;
-    fetchFromVector (vectorAddress + 2, &psw_);
-    if (!mmu_->pushWord (oldPSW) || !mmu_->pushWord (registers_[7]))
+    u16 oldPSW = cpuData_->psw ();
+    fetchFromVector (vectorAddress + 2, &cpuData_->psw ());
+    if (!mmu_->pushWord (oldPSW) || !mmu_->pushWord (cpuData_->registers ()[7]))
     {
         // Set the stack pointer at location 4 as it will be decremented
         // before the PSW is pushed.
-        trace.cpuEvent (CpuEventRecordType::CPU_DBLBUS, registers_[6]);
-        registers_[6] = 4;
-        mmu_->pushWord (psw_);
-        mmu_->pushWord (registers_[7]);
+        trace.cpuEvent (CpuEventRecordType::CPU_DBLBUS, cpuData_->registers ()[6]);
+        cpuData_->registers ()[6] = 4;
+        mmu_->pushWord (cpuData_->psw ());
+        mmu_->pushWord (cpuData_->registers ()[7]);
         vectorAddress = 4;
     }
 
     // Read new PC and PSW from the trap vector. These read's could also
     // result in a bus time out.
-    if (!fetchFromVector (vectorAddress, &registers_[7]) ||
-        !fetchFromVector (vectorAddress + 2, &psw_))
+    if (!fetchFromVector (vectorAddress, &cpuData_->registers ()[7]) ||
+        !fetchFromVector (vectorAddress + 2, &cpuData_->psw ()))
     {
         trace.cpuEvent (CpuEventRecordType::CPU_DBLBUS, vectorAddress);
-        trap_ = CpuData::TrapCondition::None;
+        cpuData_->setTrap (CpuData::TrapCondition::None);
         runState = CpuRunState::HALT;
         haltReason_ = HaltReason::BusErrorOnIntrptVector;
         bus_->SRUN().set (false);
@@ -237,19 +237,10 @@ void KDF11_A_Cpu::traceStep ()
     // the instruction isn't decoded at this point. Therefore use the bus
     // read function instead of fetchWord(). The latter will generate a
     // bus error trap on access of an invalid address.
-    code[0] = mmu_->mappedRead (registers_[7] + 0).valueOr (0);
-    code[1] = mmu_->mappedRead (registers_[7] + 2).valueOr (0);
-    code[2] = mmu_->mappedRead (registers_[7] + 4).valueOr (0);
-    trace.cpuStep (registers (), psw_, code);
+    code[0] = mmu_->mappedRead (cpuData_->registers ()[7] + 0).valueOr (0);
+    code[1] = mmu_->mappedRead (cpuData_->registers ()[7] + 2).valueOr (0);
+    code[2] = mmu_->mappedRead (cpuData_->registers ()[7] + 4).valueOr (0);
+    trace.cpuStep (cpuData_->registers (), cpuData_->psw (), code);
     trace.clearIgnoreBus ();
 }
 
-// Check if a stack overflow has occurred, i.e. the kernel stack pointer has
-// been decremented below the stack limit.
-// On a double bus error a new stack will be set up at locations 2 and 0. This
-// should not result in a stack overflow trap.
-bool KDF11_A_Cpu::stackOverflow ()
-{
-    return inKernelMode () && 
-        registers_ [6] > 0 && registers_ [6] < stackLimit;
-}

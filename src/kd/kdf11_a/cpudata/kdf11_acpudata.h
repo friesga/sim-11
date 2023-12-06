@@ -18,28 +18,33 @@ using std::map;
 class KDF11_ACpuData : public CpuData
 {
 public:
-	KDF11_NACpuData (Qbus *bus);
+	KDF11_ACpuData (Qbus *bus);
 
 	// Functions requited by the CpuData interface
 	constexpr GeneralRegisters& registers () override;
 	constexpr u16& psw () override;
 	void setCC (ConditionCodes conditionCodes) override;
-	constexpr bool stackOverflow () override;
+	bool stackOverflow () override;
 
+	constexpr TrapCondition trap () override;
 	void setTrap (CpuData::TrapCondition trap, TrapRecordType cause = TrapRecordType::TRAP) override;
 	u16 trapVector () override;
 	u16 trapVector (TrapCondition trap) override;
 
 private:
+	enum {stackLimit = 0400};
+
 	Qbus *bus_;
 	u16	psw_;
-	KD11_NARegisters registers_;
+	KDF11_ARegisters registers_ {psw_};
 
 	// A trap is a special kind of interrupt, internal to the CPU. There
 	// can be only one trap serviced at the time.
 	CpuData::TrapCondition trap_;
 
 	static map<CpuData::TrapCondition, u16> trapVector_;
+
+	constexpr bool inKernelMode ();
 };
 
 // constexpr functions are implicitly inline and therefore need to be defined
@@ -57,10 +62,9 @@ constexpr GeneralRegisters& KDF11_ACpuData::registers ()
 	return registers_;
 }
 
-// The KD11-NA does not support a stack limit so stack overflow cannot occur.
-constexpr bool KDF11_ACpuData::stackOverflow ()
+constexpr CpuData::TrapCondition KDF11_ACpuData::trap ()
 {
-    return false;
+	return trap_;
 }
 
 inline u16 KDF11_ACpuData::trapVector ()
@@ -70,7 +74,12 @@ inline u16 KDF11_ACpuData::trapVector ()
 
 inline u16 KDF11_ACpuData::trapVector (TrapCondition trap)
 {
-	return trapVector_[trap_];
+	return trapVector_[trap];
 }
+
+ constexpr bool KDF11_ACpuData::inKernelMode ()
+ {
+	 return (psw_ & PSW_MEM_MGMT_MODE) == KERNEL_MODE;
+ }
 
 #endif // _KDF11ACPUDATA_H_

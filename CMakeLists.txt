@@ -19,8 +19,6 @@ set (CMDLINEOPTIONS_SRCS
     src/cmdlineoptions/data.cpp)
 
 set (KD11COMMON_SRCS
-src/kd/common/kd11cpudata/kd11cpudata.cpp
-    src/kd/common/kd11cpudata/trapvector.cpp
     src/kd/common/lsi11instruction/lsi11instruction.cpp
     src/kd/common/operandlocation/operandlocation.cpp
     src/kd/common/operandlocation/emptyoperandlocation/emptyoperandlocation.cpp

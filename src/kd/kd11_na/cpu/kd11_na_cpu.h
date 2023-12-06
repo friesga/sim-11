@@ -1,7 +1,8 @@
 #ifndef _KD11_NA_CPU_H_
 #define _KD11_NA_CPU_H_
 
-#include "kd/common/kd11cpudata/kd11cpudata.h"
+#include "qbus/qbus.h"
+#include "kd/include/cpudata.h"
 #include "kd/include/cpucontrol.h"
 #include "float/float.h"
 #include "types.h"
@@ -29,7 +30,7 @@ class KD11_NA;
 // The class CpuData is derived from CpuControl and CpuExecution, so the
 // KD11_NA_Cpu has to implement all three interfaces.
 //
-class KD11_NA_Cpu : public CpuControl, public KD11CpuData
+class KD11_NA_Cpu : public CpuControl
 {
 public:
 	// The ControlLogic and LSI11 classes need access to the CpuControl functions.
@@ -37,7 +38,7 @@ public:
 	friend class KD11_NA_ODT;
 	friend class LSI11;
 	
-	KD11_NA_Cpu (Qbus *bus, MMU* mmu);
+	KD11_NA_Cpu (Qbus *bus, CpuData* cpuData, MMU* mmu);
 
 	// This function is required by the CpuExecution interface and executes
 	// the next instruction on the cpu.
@@ -52,16 +53,13 @@ private:
 		WAIT
 	};
 
+	Qbus* bus_;
 	MMU* mmu_;
+	CpuData* cpuData_;
 	CpuRunState runState;
 	KD11_NAInstruction kd11_naInstruction;
-	KD11_NARegisters registers_;
 	HaltReason haltReason_;
 	bool traceFlag_;
-
-	// Definition of the functions required by the CpuData interface
-	constexpr GeneralRegisters& registers () override;
-	bool stackOverflow () override;
 
 	// Definition of CpuControl functions. These functions are
 	// used by K11ODT and the Operate Group instructions.
@@ -89,12 +87,6 @@ private:
 // constexpr functions are implicitly inline and therefore need to be defined
 // in every translation unit.
 //
-constexpr GeneralRegisters& KD11_NA_Cpu::registers ()
-{
-	return registers_;
-}
-
-
 // The functions setPSW() and pswValue() are used by ODT.
 // 
 // Set the Processor Status Word to the given value. The T-bit cannot be set
@@ -102,12 +94,12 @@ constexpr GeneralRegisters& KD11_NA_Cpu::registers ()
 // 
  constexpr void KD11_NA_Cpu::setPSW (u16 value)
  {
-     psw_ = (psw_ & PSW_T) | (value & ~PSW_T);
+     cpuData_->psw () = (cpuData_->psw () & PSW_T) | (value & ~PSW_T);
  }
 
  constexpr u16 KD11_NA_Cpu::pswValue ()
  {
-     return psw_;
+     return cpuData_->psw ();
  }
 
  constexpr CpuControl::HaltReason KD11_NA_Cpu::haltReason ()

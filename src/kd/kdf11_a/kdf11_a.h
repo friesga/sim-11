@@ -6,6 +6,7 @@
 #include "kd/kd11_na/odt/kd11_na_odt.h"
 #include "configdata/kdf11_aconfig/kdf11_aconfig.h"
 #include "kd/common/controllogic/controllogic.h"
+#include "kd/kdf11_a/cpudata/kdf11_acpudata.h"
 
 #include <memory>
 
@@ -39,8 +40,9 @@ private:
     enum { PSWAddress = 0177776 };
 
     Qbus* bus_;
-    KTF11_A mmu_ {bus_, &cpu_};
-    KDF11_A_Cpu cpu_ {bus_, &mmu_};
+    KDF11_ACpuData cpuData_ {bus_};
+    KTF11_A mmu_ {bus_, &cpuData_};
+    KDF11_A_Cpu cpu_ {bus_, &cpuData_, &mmu_};
     unique_ptr<KD11_NA_ODT>	odt_ {};
     KDF11_AConfig::PowerUpMode powerUpMode_;
     u16 startAddress_;

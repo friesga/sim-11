@@ -13,10 +13,11 @@ using std::unique_ptr;
 using std::make_unique;
 
 // Constructor
-KD11_NA_Cpu::KD11_NA_Cpu (Qbus* bus, MMU* mmu)
+KD11_NA_Cpu::KD11_NA_Cpu (Qbus* bus, CpuData* cpuData, MMU* mmu)
     :
-    KD11CpuData (bus),
+    bus_ {bus},
     mmu_ {mmu},
+    cpuData_ {cpuData},
     runState {CpuRunState::HALT},
     kd11_naInstruction {},
     haltReason_ {HaltReason::HaltInstruction},
@@ -59,7 +60,7 @@ bool KD11_NA_Cpu::step ()
             // ToDo: load trap vector at this point?
             if (bus_->intrptReqAvailable ())
             {
-                trace.cpuEvent (CpuEventRecordType::CPU_RUN, registers_[7]);
+                trace.cpuEvent (CpuEventRecordType::CPU_RUN, cpuData_->registers ()[7]);
                 runState = CpuRunState::RUN;
                 bus_->SRUN().set (true);
             }
@@ -99,22 +100,22 @@ void KD11_NA_Cpu::execute ()
 void KD11_NA_Cpu::execInstr ()
 {
     // Get next instruction to execute and move PC forward
-    CondData<u16> instructionWord = mmu_->fetchWord (registers_[7]);
+    CondData<u16> instructionWord = mmu_->fetchWord (cpuData_->registers ()[7]);
     if (!instructionWord.hasValue())
     {
-        trace.bus (BusRecordType::ReadFail, registers_[7], 0);
-        setTrap (CpuData::TrapCondition::BusError);
+        trace.bus (BusRecordType::ReadFail, cpuData_->registers ()[7], 0);
+        cpuData_->setTrap (CpuData::TrapCondition::BusError);
         return;
     }
-    registers_[7] += 2;
+    cpuData_->registers ()[7] += 2;
 
     unique_ptr<LSI11Instruction> instr = 
-        kd11_naInstruction.decode (this, this, mmu_, instructionWord);
+        kd11_naInstruction.decode (cpuData_, this, mmu_, instructionWord);
 
     // If the trace flag is set, the next instruction has to result in a trace
     // trap, unless the instruction resulted in another trap.
     if (traceFlag_)
-        setTrap (CpuData::TrapCondition::BreakpointTrap);
+        cpuData_->setTrap (CpuData::TrapCondition::BreakpointTrap);
 
     // Execute the next instruction. The function returns true if the
     // instruction was completed and false if it was aborted due to an error
@@ -122,7 +123,7 @@ void KD11_NA_Cpu::execInstr ()
     // instructions set a trap and return true. 
     instr->execute ();
 
-    if (trap_ != CpuData::TrapCondition::None)
+    if (cpuData_->trap () != CpuData::TrapCondition::None)
         serviceTrap ();
 
     // Trace Trap is enabled by bit 4 of the PSW and causes processor traps at
@@ -130,7 +131,7 @@ void KD11_NA_Cpu::execInstr ()
     // after the instruction that set the T-bit will proceed to completion and
     // then trap through the trap vector at address 14.
     // LSI-11/PDP-11/03 Processor Handbook pag. 114.
-    traceFlag_ =  (psw_ & PSW_T) ? true : false;
+    traceFlag_ =  (cpuData_-> psw() & PSW_T) ? true : false;
 } 
 
 void KD11_NA_Cpu::serviceTrap ()
@@ -138,8 +139,8 @@ void KD11_NA_Cpu::serviceTrap ()
     // The enum trap_ is converted to the u16 vector address
     // Swap the PC and PSW with new values from the trap vector to process.
     // If this fails the processor will be put in the HALT state.
-    swapPcPSW (trapVector (trap_));
-    trap_ = CpuData::TrapCondition::None;
+    swapPcPSW (cpuData_->trapVector ());
+    cpuData_->setTrap (CpuData::TrapCondition::None);
 }
 
 void KD11_NA_Cpu::serviceInterrupt ()
@@ -154,7 +155,7 @@ void KD11_NA_Cpu::serviceInterrupt ()
 
 u8 KD11_NA_Cpu::cpuPriority()
 {
-    return (psw_ & PSW_PRIORITY) >> 5;
+    return (cpuData_->psw () & PSW_PRIORITY) >> 5;
 }
 
 // Fetch PC and PSW from the given vector address. If this fails the
@@ -173,11 +174,11 @@ void KD11_NA_Cpu::swapPcPSW (u16 vectorAddress)
 
     // Save PC and PSW on the stack. Adressing the stack could result in a
     // bus time out. In that case the CPU is halted.
-    if (!mmu_->pushWord (psw_) || !mmu_->pushWord (registers_[7]))
+    if (!mmu_->pushWord (cpuData_->psw ()) || !mmu_->pushWord (cpuData_->registers ()[7]))
     {
-        trace.cpuEvent (CpuEventRecordType::CPU_DBLBUS, registers_[6]);
+        trace.cpuEvent (CpuEventRecordType::CPU_DBLBUS, cpuData_->registers ()[6]);
         // ToDo: All interrupts should be cleared?
-        trap_ = CpuData::TrapCondition::None;
+        cpuData_->setTrap (CpuData::TrapCondition::None);
         runState = CpuRunState::HALT;
         haltReason_ = HaltReason::DoubleBusError;
         bus_->SRUN().set (false);
@@ -186,11 +187,11 @@ void KD11_NA_Cpu::swapPcPSW (u16 vectorAddress)
 
     // Read new PC and PSW from the trap vector. These read's could also
     // result in a bus time out.
-    if (!fetchFromVector (vectorAddress, &registers_[7]) ||
-        !fetchFromVector (vectorAddress + 2, &psw_))
+    if (!fetchFromVector (vectorAddress, &cpuData_->registers ()[7]) ||
+        !fetchFromVector (vectorAddress + 2, &cpuData_->psw ()))
     {
         trace.cpuEvent (CpuEventRecordType::CPU_DBLBUS, vectorAddress);
-        trap_ = CpuData::TrapCondition::None;
+        cpuData_->setTrap (CpuData::TrapCondition::None);
         runState = CpuRunState::HALT;
         haltReason_ = HaltReason::BusErrorOnIntrptVector;
         bus_->SRUN().set (false);
@@ -206,15 +207,10 @@ void KD11_NA_Cpu::traceStep ()
     // the instruction isn't decoded at this point. Therefore use the bus
     // read function instead of fetchWord(). The latter will generate a
     // bus error trap on access of an invalid address.
-    code[0] = bus_->read (registers_[7] + 0).valueOr (0);
-    code[1] = bus_->read (registers_[7] + 2).valueOr (0);
-    code[2] = bus_->read (registers_[7] + 4).valueOr (0);
-    trace.cpuStep (registers (), psw_, code);
+    code[0] = bus_->read (cpuData_->registers ()[7] + 0).valueOr (0);
+    code[1] = bus_->read (cpuData_->registers ()[7] + 2).valueOr (0);
+    code[2] = bus_->read (cpuData_->registers ()[7] + 4).valueOr (0);
+    trace.cpuStep (cpuData_->registers (), cpuData_->psw (), code);
     trace.clearIgnoreBus ();
 }
 
-// The KD11-NA does not support a stack limit so stack overflow cannot occur.
-bool KD11_NA_Cpu::stackOverflow ()
-{
-    return false;
-}
