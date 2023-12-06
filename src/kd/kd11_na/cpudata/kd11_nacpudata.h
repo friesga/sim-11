@@ -1,0 +1,76 @@
+#ifndef _KD11NACPUDATA_H_
+#define _KD11NACPUDATA_H_
+
+#include "kd/include/cpudata.h"
+#include "kd/kd11_na/cpu/kd11_naregisters/kd11_naregisters.h"
+#include "qbus/qbus.h"
+#include "types.h"
+#include "trace/trace.h"
+
+#include <functional>
+#include <map>
+
+using std::map;
+
+//
+// The class KD11_NACpuData implements the CpuData interface for the KD11-NA.
+//
+class KD11_NACpuData : public CpuData
+{
+public:
+	KD11_NACpuData (Qbus *bus);
+
+	// Functions requited by the CpuData interface
+	constexpr GeneralRegisters& registers () override;
+	constexpr u16& psw () override;
+	void setCC (ConditionCodes conditionCodes) override;
+	constexpr bool stackOverflow () override;
+
+	void setTrap (CpuData::TrapCondition trap, TrapRecordType cause = TrapRecordType::TRAP) override;
+	u16 trapVector () override;
+	u16 trapVector (TrapCondition trap) override;
+
+private:
+	Qbus *bus_;
+	u16	psw_;
+	KD11_NARegisters registers_;
+
+	// A trap is a special kind of interrupt, internal to the CPU. There
+	// can be only one trap serviced at the time.
+	CpuData::TrapCondition trap_;
+
+	static map<CpuData::TrapCondition, u16> trapVector_;
+};
+
+// constexpr functions are implicitly inline and therefore need to be defined
+// in every translation unit.
+//
+// The function psw() is required by the CpuData interface.
+//
+constexpr u16& KD11_NACpuData::psw ()
+{
+	return psw_;
+}
+
+constexpr GeneralRegisters& KD11_NACpuData::registers ()
+{
+	return registers_;
+}
+
+// The KD11-NA does not support a stack limit so stack overflow cannot occur.
+constexpr bool KD11_NACpuData::stackOverflow ()
+{
+    return false;
+}
+
+inline u16 KD11_NACpuData::trapVector ()
+{
+	return trapVector_[trap_];
+}
+
+inline u16 KD11_NACpuData::trapVector (TrapCondition trap)
+{
+	return trapVector_[trap_];
+}
+
+#endif // _KD11NACPUDATA_H_
