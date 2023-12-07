@@ -27,16 +27,23 @@ class KD11_NA;
 class KDF11_A_Cpu : public CpuControl
 {
 public:
-	// The KDF11_A needs access to the PSW. The ControlLogic and LSI11 classes
-	// need access to the CpuControl functions.
-	friend class KDF11_A;
-	friend class ControlLogic;
-	friend class KD11_NA_ODT;
 	friend class LSI11;
 	
 	KDF11_A_Cpu (Qbus *bus, CpuData*, MMU* mmu);
 
-	// This function is required by the CpuExecution interface and executes
+	// Definition of functions required by the CpuControl interface.
+	void cpuReset () override;
+	void busReset () override;
+	void halt () override;
+	void wait () override;
+    void start (u16 address) override;
+	void proceed () override;
+    
+    constexpr u16 pswValue ();
+	constexpr void setPSW (u16 value);
+	constexpr HaltReason haltReason ();
+
+	// This function is required by the CpuControl interface and executes
 	// the next instruction on the cpu.
 	bool step () override;
 
@@ -57,20 +64,7 @@ private:
 	HaltReason haltReason_;
 	bool traceFlag_;
 
-	// Definition of CpuControl functions. These functions are
-	// used by K11ODT and the Operate Group instructions.
-	void cpuReset () override;
-	void busReset () override;
-	void halt () override;
-	void wait () override;
-    void start (u16 address) override;
-	void proceed () override;
-    
-    constexpr u16 pswValue ();
-	constexpr void setPSW (u16 value);
-	constexpr HaltReason haltReason ();
 	constexpr bool inKernelMode ();
-
 	void execInstr ();
 	void serviceTrap ();
 	void serviceInterrupt ();
