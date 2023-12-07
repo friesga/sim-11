@@ -160,7 +160,7 @@ u8 KD11_NA_Cpu::cpuPriority()
 
 // Fetch PC and PSW from the given vector address. If this fails the
 // processor will halt anyway.
-u16 KD11_NA_Cpu::fetchFromVector (u16 address, u16* dest)
+bool KD11_NA_Cpu::fetchFromVector (u16 address, u16* dest)
 {
     CondData<u16> tmpValue = mmu_->fetchWord (address);
     *dest = tmpValue.valueOr (0);

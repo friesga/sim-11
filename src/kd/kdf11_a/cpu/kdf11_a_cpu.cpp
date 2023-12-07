@@ -179,7 +179,7 @@ u8 KDF11_A_Cpu::cpuPriority()
 
 // Fetch PC and PSW from the given vector address. If this fails the
 // processor will halt anyway.
-u16 KDF11_A_Cpu::fetchFromVector (u16 address, u16* dest)
+bool KDF11_A_Cpu::fetchFromVector (u16 address, u16* dest)
 {
     CondData<u16> tmpValue = mmu_->fetchWord (address);
     *dest = tmpValue.valueOr (0);
