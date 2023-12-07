@@ -186,6 +186,14 @@ bool KDF11_A_Cpu::fetchFromVector (u16 address, u16* dest)
     return tmpValue.hasValue ();
 }
 
+bool KDF11_A_Cpu::fetchFromVector (u16 address, function<void (u16)> lambda)
+{
+    CondData<u16> tmpValue = mmu_->fetchWord (address);
+    lambda (tmpValue.valueOr (0));
+    return tmpValue.hasValue ();
+}
+
+
 // Swap the PC and PSW with new values from the given vector
 void KDF11_A_Cpu::swapPcPSW (u16 vectorAddress)
 {
@@ -203,7 +211,7 @@ void KDF11_A_Cpu::swapPcPSW (u16 vectorAddress)
     // the PC.
     // 
     u16 oldPSW = cpuData_->psw ();
-    fetchFromVector (vectorAddress + 2, &cpuData_->psw ());
+    fetchFromVector (vectorAddress + 2, [this] (u16 value) {setPSW (value);});
     if (!mmu_->pushWord (oldPSW) || !mmu_->pushWord (cpuData_->registers ()[7]))
     {
         // Set the stack pointer at location 4 as it will be decremented

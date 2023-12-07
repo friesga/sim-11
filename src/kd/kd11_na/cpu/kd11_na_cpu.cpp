@@ -167,6 +167,13 @@ bool KD11_NA_Cpu::fetchFromVector (u16 address, u16* dest)
     return tmpValue.hasValue ();
 }
 
+bool KD11_NA_Cpu::fetchFromVector (u16 address, function<void (u16)> lambda)
+{
+    CondData<u16> tmpValue = mmu_->fetchWord (address);
+    lambda (tmpValue.valueOr (0));
+    return tmpValue.hasValue ();
+}
+
 // Swap the PC and PSW with new values from the given vector
 void KD11_NA_Cpu::swapPcPSW (u16 vectorAddress)
 {

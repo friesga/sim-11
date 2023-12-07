@@ -12,6 +12,8 @@
 
 #include <functional>
 
+using std::function;
+
 // Forward declarations to be able to declare these classes as friends
 class KD11_NA_ODT;
 class KD11_NA;
@@ -67,8 +69,6 @@ private:
 	HaltReason haltReason_;
 	bool traceFlag_;
 
-
-
 	void execInstr ();
 	void serviceTrap ();
 	void serviceInterrupt ();
@@ -76,6 +76,7 @@ private:
 	void execute ();
 	void swapPcPSW (u16 vectorAddress);
 	bool fetchFromVector (u16 address, u16* dest);
+	bool fetchFromVector (u16 address, function<void (u16)> lambda);
 	void traceStep ();
 };
 
