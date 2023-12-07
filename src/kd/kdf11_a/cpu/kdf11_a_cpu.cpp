@@ -151,7 +151,7 @@ void KDF11_A_Cpu::serviceTrap ()
     if (cpuData_->stackOverflow () && cpuData_->trap () != CpuData::TrapCondition::StackOverflow)
         swapPcPSW (cpuData_->trapVector (CpuData::TrapCondition::StackOverflow));
 
-    cpuData_->setTrap (CpuData::TrapCondition::None);
+    cpuData_->clearTrap ();
 }
 
 void KDF11_A_Cpu::serviceInterrupt ()
@@ -221,7 +221,7 @@ void KDF11_A_Cpu::swapPcPSW (u16 vectorAddress)
         !fetchFromVector (vectorAddress + 2, &cpuData_->psw ()))
     {
         trace.cpuEvent (CpuEventRecordType::CPU_DBLBUS, vectorAddress);
-        cpuData_->setTrap (CpuData::TrapCondition::None);
+        cpuData_->clearTrap ();
         runState = CpuRunState::HALT;
         haltReason_ = HaltReason::BusErrorOnIntrptVector;
         bus_->SRUN().set (false);

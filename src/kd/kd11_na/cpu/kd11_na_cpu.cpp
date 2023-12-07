@@ -140,7 +140,7 @@ void KD11_NA_Cpu::serviceTrap ()
     // Swap the PC and PSW with new values from the trap vector to process.
     // If this fails the processor will be put in the HALT state.
     swapPcPSW (cpuData_->trapVector ());
-    cpuData_->setTrap (CpuData::TrapCondition::None);
+    cpuData_->clearTrap ();
 }
 
 void KD11_NA_Cpu::serviceInterrupt ()
@@ -178,7 +178,7 @@ void KD11_NA_Cpu::swapPcPSW (u16 vectorAddress)
     {
         trace.cpuEvent (CpuEventRecordType::CPU_DBLBUS, cpuData_->registers ()[6]);
         // ToDo: All interrupts should be cleared?
-        cpuData_->setTrap (CpuData::TrapCondition::None);
+        cpuData_->clearTrap ();
         runState = CpuRunState::HALT;
         haltReason_ = HaltReason::DoubleBusError;
         bus_->SRUN().set (false);
@@ -191,7 +191,7 @@ void KD11_NA_Cpu::swapPcPSW (u16 vectorAddress)
         !fetchFromVector (vectorAddress + 2, &cpuData_->psw ()))
     {
         trace.cpuEvent (CpuEventRecordType::CPU_DBLBUS, vectorAddress);
-        cpuData_->setTrap (CpuData::TrapCondition::None);
+        cpuData_->clearTrap ();
         runState = CpuRunState::HALT;
         haltReason_ = HaltReason::BusErrorOnIntrptVector;
         bus_->SRUN().set (false);

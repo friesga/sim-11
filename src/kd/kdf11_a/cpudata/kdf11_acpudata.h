@@ -28,6 +28,7 @@ public:
 
 	constexpr TrapCondition trap () override;
 	void setTrap (CpuData::TrapCondition trap, TrapRecordType cause = TrapRecordType::TRAP) override;
+	constexpr void clearTrap () override;
 	u16 trapVector () override;
 	u16 trapVector (TrapCondition trap) override;
 
@@ -59,6 +60,11 @@ constexpr u16& KDF11_ACpuData::psw ()
 constexpr GeneralRegisters& KDF11_ACpuData::registers ()
 {
 	return registers_;
+}
+
+constexpr void KDF11_ACpuData::clearTrap ()
+{
+	trap_ = TrapCondition::None;
 }
 
 constexpr CpuData::TrapCondition KDF11_ACpuData::trap ()

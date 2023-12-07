@@ -28,6 +28,7 @@ public:
 
 	constexpr TrapCondition trap () override;
 	void setTrap (CpuData::TrapCondition trap, TrapRecordType cause = TrapRecordType::TRAP) override;
+	constexpr void clearTrap () override;
 	u16 trapVector () override;
 	u16 trapVector (TrapCondition trap) override;
 
@@ -61,6 +62,11 @@ constexpr GeneralRegisters& KD11_NACpuData::registers ()
 constexpr bool KD11_NACpuData::stackOverflow ()
 {
     return false;
+}
+
+constexpr void KD11_NACpuData::clearTrap ()
+{
+	trap_ = TrapCondition::None;
 }
 
 constexpr CpuData::TrapCondition KD11_NACpuData::trap ()
