@@ -40,7 +40,7 @@ private:
     enum { PSWAddress = 0177776 };
 
     Qbus* bus_;
-    KDF11_ACpuData cpuData_ {bus_};
+    KDF11_ACpuData cpuData_ {};
     KTF11_A mmu_ {bus_, &cpuData_};
     KDF11_A_Cpu cpu_ {bus_, &cpuData_, &mmu_};
     unique_ptr<KD11_NA_ODT>	odt_ {};

@@ -18,7 +18,7 @@ using std::map;
 class KDF11_ACpuData : public CpuData
 {
 public:
-	KDF11_ACpuData (Qbus *bus);
+	KDF11_ACpuData ();
 
 	// Functions requited by the CpuData interface
 	constexpr GeneralRegisters& registers () override;
@@ -34,7 +34,6 @@ public:
 private:
 	enum {stackLimit = 0400};
 
-	Qbus *bus_;
 	u16	psw_;
 	KDF11_ARegisters registers_ {psw_};
 

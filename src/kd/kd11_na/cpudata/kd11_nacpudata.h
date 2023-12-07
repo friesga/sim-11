@@ -18,7 +18,7 @@ using std::map;
 class KD11_NACpuData : public CpuData
 {
 public:
-	KD11_NACpuData (Qbus *bus);
+	KD11_NACpuData ();
 
 	// Functions requited by the CpuData interface
 	constexpr GeneralRegisters& registers () override;
@@ -32,7 +32,6 @@ public:
 	u16 trapVector (TrapCondition trap) override;
 
 private:
-	Qbus *bus_;
 	u16	psw_;
 	KD11_NARegisters registers_;
 

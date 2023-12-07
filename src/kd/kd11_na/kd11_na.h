@@ -45,7 +45,7 @@ private:
     enum { stdBootAddress = 0173000 };
 
     Qbus* bus_;
-    KD11_NACpuData cpuData_ {bus_};
+    KD11_NACpuData cpuData_;
     KD11_NA_Cpu cpu_ {bus_, &cpuData_, &dummyMMU_};
     DummyMMU dummyMMU_ {bus_, &cpuData_};
     unique_ptr<KD11_NA_ODT>	odt_ {};

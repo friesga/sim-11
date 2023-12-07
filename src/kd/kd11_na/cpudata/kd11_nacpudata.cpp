@@ -2,9 +2,8 @@
 #include "kd/include/psw.h"
 
 // Constructor
-KD11_NACpuData::KD11_NACpuData (Qbus* bus)
+KD11_NACpuData::KD11_NACpuData ()
     :
-    bus_ {bus},
     psw_ {0},
     trap_ {CpuData::TrapCondition::None}
 {}
