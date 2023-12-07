@@ -39,7 +39,6 @@ public:
     void start (u16 address) override;
 	void proceed () override;
     
-    constexpr u16 pswValue ();
 	constexpr void setPSW (u16 value);
 	constexpr HaltReason haltReason ();
 
@@ -75,8 +74,7 @@ private:
 	void traceStep ();
 };
 
-
-// The functions setPSW() and pswValue() are used by ODT.
+// The function setPSW() is used by ODT.
 // 
 // Set the Processor Status Word to the given value. The T-bit cannot be set
 // via this function.
@@ -84,11 +82,6 @@ private:
  constexpr void KDF11_A_Cpu::setPSW (u16 value)
  {
      cpuData_->psw () = (cpuData_->psw () & PSW_T) | (value & ~PSW_T);
- }
-
- constexpr u16 KDF11_A_Cpu::pswValue ()
- {
-     return cpuData_->psw ();
  }
 
  constexpr CpuControl::HaltReason KDF11_A_Cpu::haltReason ()

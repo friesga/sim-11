@@ -67,7 +67,7 @@ KD11_NA_ODT::State KD11_NA_ODT::StateMachine::transition (EnteringRegister_6 &&,
         // multiple times. This is used in the processing of the at sign
         // command for an opened PSW (see the gtransition from
         // EnteringRegisterValue_8 for the AtSignCmdEntered event).
-        context_->writeString (context_->octalNumberToString (context_->cpuControl_->pswValue ()) + ' ');
+        context_->writeString (context_->octalNumberToString (context_->cpu_->psw ()) + ' ');
         if (!context_->location_.isA<PSWLocation> ())
             context_->location_ = PSWLocation {};
     }

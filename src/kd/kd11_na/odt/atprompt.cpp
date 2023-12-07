@@ -53,7 +53,7 @@ KD11_NA_ODT::State KD11_NA_ODT::StateMachine::transition (AtPrompt_1 && currentS
 
     if (context_->location_.isA<PSWLocation> ())
     {
-        context_->writeString (context_->octalNumberToString (context_->cpuControl_->pswValue ()) + ' ');
+        context_->writeString (context_->octalNumberToString (context_->cpu_->psw ()) + ' ');
         return RegisterOpened_4 {};
     }
 

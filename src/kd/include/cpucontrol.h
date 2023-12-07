@@ -28,7 +28,6 @@ public:
     virtual void start (u16 address) = 0;
     virtual void proceed () = 0;
 
-    virtual u16 pswValue () = 0;
     virtual void setPSW (u16 value) = 0;
 
     virtual HaltReason haltReason () = 0;

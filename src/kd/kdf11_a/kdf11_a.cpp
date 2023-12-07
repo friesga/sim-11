@@ -81,7 +81,7 @@ StatusCode KDF11_A::read (u16 address, u16* destination)
 {
     if (address == PSWAddress)
     {
-        *destination = cpu_.pswValue ();
+        *destination = cpuData_.psw ();
         return StatusCode::OK;
     }
 

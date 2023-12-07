@@ -48,7 +48,7 @@ inline bool CommonInstruction::RTI::execute ()
             !mmu_->popWord (&cpu_->psw ()))
         return false;
 
-    if (cpuControl_->pswValue () & PSW_T)
+    if (cpu_->psw () & PSW_T)
         cpu_->setTrap (CpuData::TrapCondition::BreakpointTrap);
 
     return true;
