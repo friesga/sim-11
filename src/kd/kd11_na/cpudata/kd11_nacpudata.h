@@ -2,7 +2,7 @@
 #define _KD11NACPUDATA_H_
 
 #include "kd/include/cpudata.h"
-#include "kd/kd11_na/cpu/kd11_naregisters/kd11_naregisters.h"
+#include "kd/kd11_na/cpudata/kd11_naregisters/kd11_naregisters.h"
 #include "qbus/qbus.h"
 #include "types.h"
 #include "trace/trace.h"

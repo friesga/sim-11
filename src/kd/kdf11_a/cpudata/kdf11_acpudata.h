@@ -2,7 +2,7 @@
 #define _KDF11ACPUDATA_H_
 
 #include "kd/include/cpudata.h"
-#include "kd/kdf11_a/cpu/kdf11_aregisters/kdf11_aregisters.h"
+#include "kd/kdf11_a/cpudata/kdf11_aregisters/kdf11_aregisters.h"
 #include "qbus/qbus.h"
 #include "types.h"
 #include "trace/trace.h"

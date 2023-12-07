@@ -7,7 +7,7 @@
 #include "float/float.h"
 #include "types.h"
 #include "kd/kdf11_a/cpu/kdf11_ainstruction/kdf11_ainstruction.h"
-#include "kdf11_aregisters/kdf11_aregisters.h"
+#include "kd/kdf11_a/cpudata/kdf11_aregisters/kdf11_aregisters.h"
 #include "kd/kdf11_a/ktf11_a/ktf11_a.h"
 
 #include <functional>
