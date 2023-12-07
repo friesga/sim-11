@@ -46,10 +46,7 @@ public:
 	void wait () override;
     void start (u16 address) override;
 	void proceed () override;
-    
-	constexpr void setPSW (u16 value);
 	constexpr HaltReason haltReason ();
-
 	bool step () override;
 
 private:
@@ -79,19 +76,6 @@ private:
 	bool fetchFromVector (u16 address, function<void (u16)> lambda);
 	void traceStep ();
 };
-
-// constexpr functions are implicitly inline and therefore need to be defined
-// in every translation unit.
-//
-// The function setPSW() is used by ODT.
-// 
-// Set the Processor Status Word to the given value. The T-bit cannot be set
-// via this function.
-// 
- constexpr void KD11_NA_Cpu::setPSW (u16 value)
- {
-     cpuData_->psw () = (cpuData_->psw () & PSW_T) | (value & ~PSW_T);
- }
 
  constexpr CpuControl::HaltReason KD11_NA_Cpu::haltReason ()
  {

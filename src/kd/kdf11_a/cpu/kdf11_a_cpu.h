@@ -38,12 +38,7 @@ public:
 	void wait () override;
     void start (u16 address) override;
 	void proceed () override;
-    
-	constexpr void setPSW (u16 value);
 	constexpr HaltReason haltReason ();
-
-	// This function is required by the CpuControl interface and executes
-	// the next instruction on the cpu.
 	bool step () override;
 
 private:
@@ -74,16 +69,6 @@ private:
 	bool fetchFromVector (u16 address, function<void (u16)> lambda);
 	void traceStep ();
 };
-
-// The function setPSW() is used by ODT.
-// 
-// Set the Processor Status Word to the given value. The T-bit cannot be set
-// via this function.
-// 
- constexpr void KDF11_A_Cpu::setPSW (u16 value)
- {
-     cpuData_->psw () = (cpuData_->psw () & PSW_T) | (value & ~PSW_T);
- }
 
  constexpr CpuControl::HaltReason KDF11_A_Cpu::haltReason ()
  {

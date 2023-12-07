@@ -92,7 +92,7 @@ StatusCode KDF11_A::writeWord (u16 address, u16 value)
 {
     if (address == PSWAddress)
     {
-        cpu_.setPSW (value);
+        cpuData_.setPSW (value);
         return StatusCode::OK;
     }
 

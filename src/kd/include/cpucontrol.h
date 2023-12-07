@@ -27,9 +27,6 @@ public:
     virtual void wait () = 0;
     virtual void start (u16 address) = 0;
     virtual void proceed () = 0;
-
-    virtual void setPSW (u16 value) = 0;
-
     virtual HaltReason haltReason () = 0;
 
     // The step has to return true if a following instruction can be execued,

@@ -23,6 +23,7 @@ public:
 	// Functions requited by the CpuData interface
 	constexpr GeneralRegisters& registers () override;
 	constexpr u16& psw () override;
+	constexpr void setPSW (u16 value) override;
 	void setCC (ConditionCodes conditionCodes) override;
 	bool stackOverflow () override;
 
@@ -55,6 +56,14 @@ private:
 constexpr u16& KDF11_ACpuData::psw ()
 {
 	return psw_;
+}
+
+// Set the Processor Status Word to the given value. The T-bit cannot be set
+// via this function.
+// 
+constexpr void KDF11_ACpuData::setPSW (u16 value)
+{
+	psw_ = (psw_ & PSW_T) | (value & ~PSW_T);
 }
 
 constexpr GeneralRegisters& KDF11_ACpuData::registers ()
