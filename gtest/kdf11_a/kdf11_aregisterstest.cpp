@@ -1,4 +1,4 @@
-#include "kd/kdf11_a/cpu/kdf11_aregisters/kdf11_aregisters.h"
+#include "kd/kdf11_a/cpudata/kdf11_aregisters/kdf11_aregisters.h"
 
 #include <gtest/gtest.h>
 #include <string>
