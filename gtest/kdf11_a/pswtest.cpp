@@ -44,10 +44,11 @@ TEST_F (KDF11_A_PSWTEST, MOVDoesNotSetCC)
     // MOVB #0, @#PS
     // Assume the MOV instruction is at address 0, so the second and third
     // word of the instruction are at address 2 and 4.
-    kdf11a->cpu ().registers () [7] = 2;
-    kdf11a->cpu ().putWord (2, 0);
-    kdf11a->cpu ().putWord (4, 0177776);
-    unique_ptr<LSI11Instruction> instruction {instrDecoder.decode (&kdf11a->cpu (), 0012737)};
+    kdf11a->cpuData ()->registers () [7] = 2;
+    kdf11a->mmu ()->putWord (2, 0);
+    kdf11a->mmu ()->putWord (4, 0177776);
+    unique_ptr<LSI11Instruction> instruction {instrDecoder.decode (kdf11a->cpuData (),
+        kdf11a->cpu (), kdf11a->mmu (), 0012737)};
 
     EXPECT_TRUE (instruction->execute ());
     
@@ -66,10 +67,11 @@ TEST_F (KDF11_A_PSWTEST, MOVBDoesNotSetCC)
     // MOVB #0, @#PS
     // Assume the MOV instruction is at address 0, so the second and third
     // word of the instruction are at address 2 and 4.
-    kdf11a->cpu ().registers () [7] = 2;
-    kdf11a->cpu ().putWord (2, 0);
-    kdf11a->cpu ().putWord (4, 0177776);
-    unique_ptr<LSI11Instruction> instruction {instrDecoder.decode (&kdf11a->cpu (), 0112737)};
+    kdf11a->cpuData ()->registers () [7] = 2;
+    kdf11a->mmu ()->putWord (2, 0);
+    kdf11a->mmu ()->putWord (4, 0177776);
+    unique_ptr<LSI11Instruction> instruction {instrDecoder.decode (kdf11a->cpuData (),
+        kdf11a->cpu (), kdf11a->mmu (), 0112737)};
 
     EXPECT_TRUE (instruction->execute ());
     
@@ -87,9 +89,10 @@ TEST_F (KDF11_A_PSWTEST, CLRDoesNotSetCC)
     // CLR @#PS
     // Assume the CLR instruction is at address 0, so the second word of the
     // instruction is at address 2.
-    kdf11a->cpu ().registers () [7] = 2;
-    kdf11a->cpu ().putWord (2, 0177776);
-    unique_ptr<LSI11Instruction> instruction {instrDecoder.decode (&kdf11a->cpu (), 0005037)};
+    kdf11a->cpuData ()->registers () [7] = 2;
+    kdf11a->mmu ()->putWord (2, 0177776);
+    unique_ptr<LSI11Instruction> instruction {instrDecoder.decode (kdf11a->cpuData (),
+        kdf11a->cpu (), kdf11a->mmu (), 0005037)};
 
     EXPECT_TRUE (instruction->execute ());
     
@@ -107,9 +110,10 @@ TEST_F (KDF11_A_PSWTEST, CLRBDoesNotSetCC)
     // CLR @#PS
     // Assume the CLR instruction is at address 0, so the second word of the
     // instruction is at address 2.
-    kdf11a->cpu ().registers () [7] = 2;
-    kdf11a->cpu ().putWord (2, 0177776);
-    unique_ptr<LSI11Instruction> instruction {instrDecoder.decode (&kdf11a->cpu (), 0105037)};
+    kdf11a->cpuData ()->registers () [7] = 2;
+    kdf11a->mmu ()->putWord (2, 0177776);
+    unique_ptr<LSI11Instruction> instruction {instrDecoder.decode (kdf11a->cpuData (),
+        kdf11a->cpu (), kdf11a->mmu (), 0105037)};
 
     EXPECT_TRUE (instruction->execute ());
     
