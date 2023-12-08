@@ -1,4 +1,4 @@
-#include "kd/kd11_na/cpu/kd11_naregisters/kd11_naregisters.h"
+#include "kd/kd11_na/cpudata/kd11_naregisters/kd11_naregisters.h"
 
 #include <gtest/gtest.h>
 #include <string>
