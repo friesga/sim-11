@@ -211,7 +211,7 @@ void KDF11_A_Cpu::swapPcPSW (u16 vectorAddress)
     // the PC.
     // 
     u16 oldPSW = cpuData_->psw ();
-    fetchFromVector (vectorAddress + 2, [this] (u16 value) {cpuData_->setPSW (value);});
+    fetchFromVector (vectorAddress + 2, [this] (u16 value) {cpuData_->loadPSW (value);});
     if (!mmu_->pushWord (oldPSW) || !mmu_->pushWord (cpuData_->registers ()[7]))
     {
         // Set the stack pointer at location 4 as it will be decremented

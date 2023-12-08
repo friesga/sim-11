@@ -24,6 +24,7 @@ public:
 	constexpr GeneralRegisters& registers () override;
 	constexpr u16& psw () override;
 	constexpr void setPSW (u16 value) override;
+	constexpr void loadPSW (u16 value) override;
 	void setCC (ConditionCodes conditionCodes) override;
 	bool stackOverflow () override;
 
@@ -58,12 +59,19 @@ constexpr u16& KDF11_ACpuData::psw ()
 	return psw_;
 }
 
-// Set the Processor Status Word to the given value. The T-bit cannot be set
-// via this function.
-// 
-constexpr void KDF11_ACpuData::setPSW (u16 value)
+//
+// Set the Processor Status Word to the given value. Two variants of this
+// function exist: setPSW() by which the T-bit cannot be set or cleared
+// and loadPSW() in which the complete PSW is replaced by the given value.
+// The latter function should only be used to load the PSW from a trap vector.
+ constexpr void KDF11_ACpuData::setPSW (u16 value)
+ {
+     psw_ = (psw_ & PSW_T) | (value & ~PSW_T);
+ }
+
+constexpr void KDF11_ACpuData::loadPSW (u16 value)
 {
-	psw_ = (psw_ & PSW_T) | (value & ~PSW_T);
+	psw_ = value;
 }
 
 constexpr GeneralRegisters& KDF11_ACpuData::registers ()
