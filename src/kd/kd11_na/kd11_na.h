@@ -25,8 +25,10 @@ public:
     void start (u16 startAddress);
     void start ();
 
-    // Give main() access to the CPU to set PC and runState
-    KD11_NA_Cpu& cpu ();
+    // Give unit tests access to the CPU, CpuData and the MMU.
+    constexpr CpuControl* cpu ();
+    constexpr CpuData* cpuData ();
+    constexpr MMU* mmu ();
 
     // The KD11_NA is a PDP11Peripheral without registers so the read and write 
     // register functions are dummies. The reset function is called on a
@@ -56,5 +58,21 @@ private:
     // The KD11_NA is started in its own thread
     std::thread kd11Thread_;
 };
+
+constexpr CpuControl* KD11_NA::cpu ()
+{
+    return &cpu_;
+}
+
+constexpr CpuData* KD11_NA::cpuData ()
+{
+    return &cpuData_;
+}
+
+constexpr MMU* KD11_NA::mmu ()
+{
+    return &dummyMMU_;
+}
+
 
 #endif // !_KD11_NA_H_

@@ -45,11 +45,6 @@ KD11_NA::~KD11_NA ()
     kd11Thread_.join ();
 }
 
-KD11_NA_Cpu& KD11_NA::cpu ()
-{
-    return cpu_;
-}
-
 void KD11_NA::start ()
 {
     kd11Thread_ = thread ([&, this] {controlLogic_->run ();});

@@ -48,11 +48,6 @@ KDF11_A::~KDF11_A ()
     kd11Thread_.join ();
 }
 
-KDF11_A_Cpu& KDF11_A::cpu ()
-{
-    return cpu_;
-}
-
 void KDF11_A::start ()
 {
     kd11Thread_ = thread ([&, this] {controlLogic_->run ();});

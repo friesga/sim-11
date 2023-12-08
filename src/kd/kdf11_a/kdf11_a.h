@@ -24,8 +24,10 @@ public:
     void start (u16 startAddress);
     void start ();
 
-    // Give main() access to the CPU to set PC and runState
-    KDF11_A_Cpu& cpu ();
+    // Give unit tests access to the CPU, CpuData and the MMU.
+    constexpr CpuControl* cpu ();
+    constexpr CpuData* cpuData ();
+    constexpr MMU* mmu ();
 
     // The KDF11_A is a PDP11Peripheral with at least one register, the
     // PSW.
@@ -51,5 +53,20 @@ private:
     // The KDF11_A is started in its own thread
     std::thread kd11Thread_;
 };
+
+constexpr CpuControl* KDF11_A::cpu ()
+{
+    return &cpu_;
+}
+
+constexpr CpuData* KDF11_A::cpuData ()
+{
+    return &cpuData_;
+}
+
+constexpr MMU* KDF11_A::mmu ()
+{
+    return &mmu_;
+}
 
 #endif // !_KDF11_A_H_
