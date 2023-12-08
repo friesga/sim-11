@@ -21,9 +21,6 @@ class KD11_NA;
 // 
 // This class simulates a KDF11-A.
 //
-// The class CpuData is derived from CpuControl and CpuExecution, so the
-// KDF11_A_Cpu has to implement all three interfaces.
-//
 class KDF11_A_Cpu : public CpuControl
 {
 public:

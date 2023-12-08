@@ -29,9 +29,6 @@ class KD11_NA;
 // This class simulates a KD11-NA, i.e. a KD11-H base version including EIS
 // and FIS support.
 //
-// The class CpuData is derived from CpuControl and CpuExecution, so the
-// KD11_NA_Cpu has to implement all three interfaces.
-//
 class KD11_NA_Cpu : public CpuControl
 {
 public:
