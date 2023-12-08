@@ -22,7 +22,7 @@ public:
 
 	// Functions requited by the CpuData interface
 	constexpr GeneralRegisters& registers () override;
-	constexpr u16& psw () override;
+	constexpr u16 psw () override;
 	constexpr void setPSW (u16 value) override;
 	constexpr void loadPSW (u16 value) override;
 	void setCC (ConditionCodes conditionCodes) override;
@@ -50,7 +50,7 @@ private:
 //
 // The function psw() is required by the CpuData interface.
 //
-constexpr u16& KD11_NACpuData::psw ()
+constexpr u16 KD11_NACpuData::psw ()
 {
 	return psw_;
 }

@@ -31,7 +31,7 @@ inline CommonInstruction::CCC::CCC (CpuData* cpu, CpuControl* cpuControl,
 
 inline bool CommonInstruction::CCC::execute ()
 {
-    cpu_->psw () &= ~getConditionCodes ();
+    cpu_->setPSW (cpu_->psw () & ~getConditionCodes ());
     return true;
 }
 

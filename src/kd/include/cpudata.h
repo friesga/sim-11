@@ -42,7 +42,7 @@ public:
 
 	// Definition of the KD11 execution state
     virtual GeneralRegisters& registers () = 0;
-    virtual u16& psw () = 0;
+    virtual u16 psw () = 0;
 	virtual void setPSW (u16 value) = 0;
 	virtual void loadPSW (u16 value) = 0;
 	virtual void setCC (ConditionCodes conditionCodes) = 0;

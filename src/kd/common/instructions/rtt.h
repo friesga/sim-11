@@ -42,9 +42,12 @@ inline CommonInstruction::RTT::RTT (CpuData* cpu, CpuControl* cpuControl,
 // pag 322). This is the normal behaviour for instruction setting the T-bit.
 inline bool CommonInstruction::RTT::execute ()
 {
-    if (!mmu_->popWord (&cpu_->registers ()[7]) || 
-            !mmu_->popWord (&cpu_->psw ()))
+    u16 tmp;
+
+    if (!mmu_->popWord (&cpu_->registers ()[7]) || !mmu_->popWord (&tmp))
         return false;
+
+    cpu_->loadPSW (tmp);
 
     return true;
 }

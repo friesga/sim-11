@@ -44,10 +44,12 @@ inline CommonInstruction::RTI::RTI (CpuData* cpu, CpuControl* cpuControl,
 // T-bit results in a trace trap on the next instruction.
 inline bool CommonInstruction::RTI::execute ()
 {
-    if (!mmu_->popWord (&cpu_->registers ()[7]) || 
-            !mmu_->popWord (&cpu_->psw ()))
+    u16 tmp;
+
+    if (!mmu_->popWord (&cpu_->registers ()[7]) || !mmu_->popWord (&tmp))
         return false;
 
+    cpu_->loadPSW (tmp);
     if (cpu_->psw () & PSW_T)
         cpu_->setTrap (CpuData::TrapCondition::BreakpointTrap);
 

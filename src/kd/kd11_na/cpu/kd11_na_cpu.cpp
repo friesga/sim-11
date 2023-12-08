@@ -195,7 +195,7 @@ void KD11_NA_Cpu::swapPcPSW (u16 vectorAddress)
     // Read new PC and PSW from the trap vector. These read's could also
     // result in a bus time out.
     if (!fetchFromVector (vectorAddress, &cpuData_->registers ()[7]) ||
-        !fetchFromVector (vectorAddress + 2, &cpuData_->psw ()))
+        !fetchFromVector (vectorAddress + 2, [this] (u16 value) {cpuData_->loadPSW (value);}))
     {
         trace.cpuEvent (CpuEventRecordType::CPU_DBLBUS, vectorAddress);
         cpuData_->clearTrap ();

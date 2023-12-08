@@ -10,7 +10,7 @@ void KD11_NA_Cpu::cpuReset ()
     for (u16 regNr = 0; regNr <= 6; ++regNr)
         cpuData_->registers ()[regNr] = 0;
 
-    cpuData_->psw () = 0;
+    cpuData_->loadPSW (0);
 }
 
 // Reset (the devices on) the bus by setting the INIT signal
