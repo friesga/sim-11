@@ -14,8 +14,7 @@ using std::setw;
 using std::setfill;
 using std::string;
 
-// The following macro's are defined in types.h and kd11_na_cpu.h and are to be
-// converted to functions.
+// The following macro's are to be converted to functions.
 #define	_BV(x)	(1 << (x))
 
 #define	PSW_C			_BV(0)

@@ -1,4 +1,4 @@
-#include "kd11_na_cpu.h"
+#include "kd11_na_cpucontrol.h"
 #include "qbus/qbus.h"
 #include "pdp11peripheral/pdp11peripheral.h"
 #include "float/float.h"

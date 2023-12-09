@@ -3,7 +3,7 @@
 
 #include "kd/include/kd11odt.h"
 #include "qbus/qbus.h"
-#include "kd/kd11_na/cpucontrol/kd11_na_cpu.h"
+#include "kd/kd11_na/cpucontrol/kd11_na_cpucontrol.h"
 #include "variantfsm/fsm.h"
 #include "location/location.h"
 #include "conddata/conddata.h"
