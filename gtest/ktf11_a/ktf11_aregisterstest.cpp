@@ -1,5 +1,5 @@
 #include "qbus/qbus.h"
-#include "kd/kdf11_a/cpucontrol/kdf11_a_cpu.h"
+#include "kd/kdf11_a/cpucontrol/kdf11_a_cpucontrol.h"
 #include "kd/kdf11_a/cpudata/kdf11_acpudata.h"
 #include "kd/kdf11_a/ktf11_a/ktf11_a.h"
 #include "msv11d/msv11d.h"

@@ -1,4 +1,4 @@
-#include "kdf11_a_cpu.h"
+#include "kdf11_a_cpucontrol.h"
 #include "trace/trace.h"
 
 // Reset the processor

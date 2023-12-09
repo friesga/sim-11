@@ -1,4 +1,4 @@
-#include "kdf11_a_cpu.h"
+#include "kdf11_a_cpucontrol.h"
 #include "pdp11peripheral/pdp11peripheral.h"
 #include "float/float.h"
 #include "trace/trace.h"
