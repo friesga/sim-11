@@ -1,63 +1,23 @@
 #ifndef _DUMMYCPU_H_
 #define _DUMMYCPU_H_
 
-#include "kd/include/cpudata.h"
-#include "kd/kd11_na/cpu/kd11_naregisters/kd11_naregisters.h"
-#include "kd/common/conditioncodes/conditioncodes.h"
+#include "dummycpucontrol.h"
+#include "dummycpudata.h"
+#include "dummymmu/dummymmu.h"
 
-#include <memory>
-
-using std::unique_ptr;
-
-// Dummy implementation of the CpuData interface to be passed to the
-// instruction decoder. It's functions will not be called.
-class DummyCpu : public CpuData
+// Dummy implementation of a CPU to be used in unit tests.
+class DummyCpu
 {
 public:
-    // Definitions required for the CpuData interface
-    // Use the KD11_NARegisters as that is the most simple GeneralRegisters
-    // implementation.
-    KD11_NARegisters dummyRegisters;
-    u16 dummyPsw;
-
-    DummyCpu ();
-	GeneralRegisters& registers () {return dummyRegisters; };
-	u16& psw () { return dummyPsw; }
-    void setCC (ConditionCodes conditionCodes) {};
-    bool stackOverflow () {return false;};
-    CondData<u16> fetchWord (u16 address);
-	CondData<u8> fetchByte (u16 address);
-	bool putWord (u16 address, u16 value);
-	bool putByte (u16 address, u8 value);
-	bool pushWord (u16 value) { return true; };
-	bool popWord (u16 *destination) { return false; };
-    void setTrap (TrapCondition trap, TrapRecordType cause) {};
-    void loadTrapVector (TrapCondition trap) {};
-
-    // Definitions required for the CpuControl interface
-    void setTrap (InterruptRequest const *ir) {};
-    void loadTrapVector (InterruptRequest const* trap) {};
-    void cpuReset () {};
-    void busReset () {};
-    void halt () {};
-    void wait () {};
-    void start (u16 address) {};
-    void proceed () {};
-    void inhibitTraceTrap () {};
-    u16 registerValue (u8 registerNr) { return 0; };
-    void setRegister (u8 registerNr, u16 value) {};
-    u16 pswValue () { return 0; };
-    void setPSW (u16 value) {};
-    HaltReason haltReason () { return HaltReason::HaltInstruction; };
-
-    // Definitions required for the CpuExecution interface
-    bool step () { return false; };
+    // Give unit tests access to the CPU, CpuData and the MMU.
+    constexpr CpuControl* cpu () { return &cpuControl_; };
+    constexpr CpuData* cpuData () { return &cpuData_; };
+    constexpr MMU* mmu () { return &dummyMMU_; };
 
 private:
-    // Allocate a memory of 16kW. This allows attempts to read and write
-    // from and to non-existing memory addresses.
-    static const int memorySize_ {1000};
-    unique_ptr<u16[]> memory_;
+    DummyCpuControl cpuControl_;
+    DummyCpuData cpuData_;
+    DummyMMU dummyMMU_;
 };
 
 #endif // _DUMMYCPU_H_

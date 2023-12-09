@@ -1,15 +1,15 @@
-#include "dummycpu.h"
+#include "dummymmu.h"
 
 #include <memory>
 
 using std::make_unique;
 
-DummyCpu::DummyCpu ()
+DummyMMU::DummyMMU ()
 {
 	memory_ = make_unique<u16[]> (memorySize_);
 }
 
-CondData<u16> DummyCpu::fetchWord (u16 address)
+CondData<u16> DummyMMU::fetchWord (u16 address)
 {
     if (address < memorySize_)
 	    return CondData<u16> {memory_[address]};
@@ -17,7 +17,7 @@ CondData<u16> DummyCpu::fetchWord (u16 address)
         return CondData<u16> {};
 }
 
-CondData<u8> DummyCpu::fetchByte (u16 address)
+CondData<u8> DummyMMU::fetchByte (u16 address)
 {
 	CondData<u16> retValue {};
     if (address & 1)
@@ -36,7 +36,7 @@ CondData<u8> DummyCpu::fetchByte (u16 address)
     return CondData<u8> {};
 }
 
-bool DummyCpu::putWord (u16 address, u16 value)
+bool DummyMMU::putWord (u16 address, u16 value)
 {
     if (address < memorySize_)
     {
@@ -47,7 +47,7 @@ bool DummyCpu::putWord (u16 address, u16 value)
         return false;
 }
 
-bool DummyCpu::putByte (u16 address, u8 value)
+bool DummyMMU::putByte (u16 address, u8 value)
 {
 	CondData<u16> tmp = fetchWord (address);
 	if(address & 1)
