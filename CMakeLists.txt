@@ -33,7 +33,7 @@ set (KD11COMMON_SRCS
     src/kd/common/eisinstruction/eisinstruction.cpp
     src/kd/common/markinstruction/markinstruction.cpp
     src/kd/common/sobinstruction/sobinstruction.cpp
-    src/kd/kd11_na/cpu/kd11_nainstruction/kd11_nainstruction.cpp)
+    src/kd/kd11_na/cpucontrol/kd11_nainstruction/kd11_nainstruction.cpp)
 
 set (KD11CONTROLLOGIC_SRCS
     src/kd/common/controllogic/controllogic.cpp
@@ -58,9 +58,9 @@ set (KD11ODT_SRCS
     src/kd/kd11_na/odt/startingregister.cpp)
 
 set (KD11_NA_CPU_SRCS
-    src/kd/kd11_na/cpu/kd11_na_cpu.cpp
-    src/kd/kd11_na/cpu/cpucontrol.cpp
-    src/kd/kd11_na/cpu/kd11_nainstruction/opcodetables.cpp
+    src/kd/kd11_na/cpucontrol/kd11_na_cpu.cpp
+    src/kd/kd11_na/cpucontrol/cpucontrol.cpp
+    src/kd/kd11_na/cpucontrol/kd11_nainstruction/opcodetables.cpp
     src/kd/kd11_na/cpudata/kd11_nacpudata.cpp
     src/kd/kd11_na/cpudata/kd11_natrapvector.cpp
     src/kd/kd11_na/cpudata/kd11_naregisters/kd11_naregisters.cpp

@@ -2,7 +2,7 @@
 #define _KD11_NA_H_
 
 #include "kd/include/pdp11processor.h"
-#include "cpu/kd11_na_cpu.h"
+#include "cpucontrol/kd11_na_cpu.h"
 #include "odt/kd11_na_odt.h"
 #include "kd/kd11_na/cpudata/kd11_nacpudata.h"
 #include "kd/kd11_na/pseudommu/pseudommu.h"

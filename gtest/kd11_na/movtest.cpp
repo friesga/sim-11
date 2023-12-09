@@ -1,4 +1,4 @@
-#include "kd/kd11_na/cpu/kd11_nainstruction/kd11_nainstruction.h"
+#include "kd/kd11_na/cpucontrol/kd11_nainstruction/kd11_nainstruction.h"
 #include "../dummycpu/dummycpu.h"
 
 #include <gtest/gtest.h>
