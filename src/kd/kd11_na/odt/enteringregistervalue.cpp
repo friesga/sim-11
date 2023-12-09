@@ -74,7 +74,7 @@ KD11_NA_ODT::State KD11_NA_ODT::StateMachine::transition (EnteringRegisterValue_
     context_->setRegisterValue ();
     u16 addressToOpen {0};
     if (context_->location_.isA<RegisterLocation> ())
-        addressToOpen = context_->cpu_->registers () [context_->location_.registerNr ()];
+        addressToOpen = context_->cpuData_->registers () [context_->location_.registerNr ()];
     else
     {
         // The PSW is opened
@@ -94,7 +94,7 @@ KD11_NA_ODT::State KD11_NA_ODT::StateMachine::transition (EnteringRegisterValue_
         if (context_->location_.previousIsA<AddressLocation> ())
             addressToOpen = context_->location_.previousInputAddress ();
         else
-            addressToOpen = context_->cpu_->registers () [context_->location_.previousRegisterNr ()];
+            addressToOpen = context_->cpuData_->registers () [context_->location_.previousRegisterNr ()];
     }
     return context_->openNextAddress ([=] () {return addressToOpen;});
 }

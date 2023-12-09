@@ -47,13 +47,13 @@ KD11_NA_ODT::State KD11_NA_ODT::StateMachine::transition (AtPrompt_1 && currentS
 
     if (context_->location_.isA<RegisterLocation> ())
     {
-        context_->writeString (context_->octalNumberToString (context_->cpu_->registers () [context_->location_.registerNr ()]) + ' ');
+        context_->writeString (context_->octalNumberToString (context_->cpuData_->registers () [context_->location_.registerNr ()]) + ' ');
         return RegisterOpened_4 {};
     }
 
     if (context_->location_.isA<PSWLocation> ())
     {
-        context_->writeString (context_->octalNumberToString (context_->cpu_->psw ()) + ' ');
+        context_->writeString (context_->octalNumberToString (context_->cpuData_->psw ()) + ' ');
         return RegisterOpened_4 {};
     }
 
@@ -65,7 +65,7 @@ KD11_NA_ODT::State KD11_NA_ODT::StateMachine::transition (AtPrompt_1 && currentS
 KD11_NA_ODT::State KD11_NA_ODT::StateMachine::transition (AtPrompt_1 &&, ProceedCmdEntered)
 {
     context_->cpuControl_->proceed ();
-    trace.cpuEvent (CpuEventRecordType::CPU_ODT_P, context_->cpu_->registers ()[7]);
+    trace.cpuEvent (CpuEventRecordType::CPU_ODT_P, context_->cpuData_->registers ()[7]);
     return ExitPoint {};
 }
 
