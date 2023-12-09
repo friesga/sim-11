@@ -29,12 +29,12 @@ class KD11_NA;
 // This class simulates a KD11-NA, i.e. a KD11-H base version including EIS
 // and FIS support.
 //
-class KD11_NA_Cpu : public CpuControl
+class KD11_NA_CpuControl : public CpuControl
 {
 public:
 	friend class LSI11;
 	
-	KD11_NA_Cpu (Qbus *bus, CpuData* cpuData, MMU* mmu);
+	KD11_NA_CpuControl (Qbus *bus, CpuData* cpuData, MMU* mmu);
 
 	// Definition of functions required by the CpuControl interface.
 	void cpuReset () override;
@@ -74,7 +74,7 @@ private:
 	void traceStep ();
 };
 
- constexpr CpuControl::HaltReason KD11_NA_Cpu::haltReason ()
+ constexpr CpuControl::HaltReason KD11_NA_CpuControl::haltReason ()
  {
 	 return haltReason_;
  }

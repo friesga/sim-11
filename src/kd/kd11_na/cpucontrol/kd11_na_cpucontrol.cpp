@@ -4,7 +4,7 @@
 // Reset the processor
 // 
 // Clear the registers and the PSW
-void KD11_NA_Cpu::cpuReset ()
+void KD11_NA_CpuControl::cpuReset ()
 {
     // Initialize the registers except for the PC
     for (u16 regNr = 0; regNr <= 6; ++regNr)
@@ -14,13 +14,13 @@ void KD11_NA_Cpu::cpuReset ()
 }
 
 // Reset (the devices on) the bus by setting the INIT signal
-void KD11_NA_Cpu::busReset ()
+void KD11_NA_CpuControl::busReset ()
 {
     bus_->BINIT().cycle ();
 }
 
 // Halt the processor
-void KD11_NA_Cpu::halt ()
+void KD11_NA_CpuControl::halt ()
 {
     runState = CpuRunState::HALT;
     haltReason_ = HaltReason::HaltInstruction;
@@ -29,14 +29,14 @@ void KD11_NA_Cpu::halt ()
 }
 
 // Wait for an interrupt
-void KD11_NA_Cpu::wait ()
+void KD11_NA_CpuControl::wait ()
 {
     trace.cpuEvent (CpuEventRecordType::CPU_WAIT, cpuData_->registers ()[7]);
     runState = CpuRunState::WAIT;
 }
 
 // Start the processor at the given address
-void KD11_NA_Cpu::start (u16 address)
+void KD11_NA_CpuControl::start (u16 address)
 {
     cpuData_->registers ()[7] = address;
     runState = CpuRunState::RUN;
@@ -45,7 +45,7 @@ void KD11_NA_Cpu::start (u16 address)
 }
 
 // Continue execution at the current PC
-void KD11_NA_Cpu::proceed ()
+void KD11_NA_CpuControl::proceed ()
 {
     runState = CpuRunState::RUN;
     bus_->SRUN().set (true);

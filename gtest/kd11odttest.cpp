@@ -48,7 +48,7 @@ protected:
         Qbus bus;
         KD11_NACpuData cpuData;
         PseudoMMU mmu {&bus, &cpuData};
-        KD11_NA_Cpu kd11cpu (&bus, &cpuData, &mmu);
+        KD11_NA_CpuControl kd11cpu (&bus, &cpuData, &mmu);
         MSV11D msv11d (&bus);
         bus.installModule (1, &msv11d);
 

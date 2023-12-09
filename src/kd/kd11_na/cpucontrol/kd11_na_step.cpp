@@ -13,7 +13,7 @@ using std::unique_ptr;
 using std::make_unique;
 
 // Constructor
-KD11_NA_Cpu::KD11_NA_Cpu (Qbus* bus, CpuData* cpuData, MMU* mmu)
+KD11_NA_CpuControl::KD11_NA_CpuControl (Qbus* bus, CpuData* cpuData, MMU* mmu)
     :
     bus_ {bus},
     mmu_ {mmu},
@@ -43,12 +43,12 @@ KD11_NA_Cpu::KD11_NA_Cpu (Qbus* bus, CpuData* cpuData, MMU* mmu)
 //
 // The normal instruction flow can be interrupted by the setting of the BHALT
 // or RESET bus signal. These signals are handled in their corresponding KD11_NA
-// receivers which then calls a KD11_NA_Cpu control function.
+// receivers which then calls a KD11_NA_CpuControl control function.
 //
 // This function will return true if the CPU is in the state RUN and another
 // instruction can be executed, false otherwise. In the latter case a HALT
 // instruction was executed.
-bool KD11_NA_Cpu::step ()
+bool KD11_NA_CpuControl::step ()
 {
     switch (runState)
     {
@@ -76,7 +76,7 @@ bool KD11_NA_Cpu::step ()
     }
 }
 
-void KD11_NA_Cpu::execute ()
+void KD11_NA_CpuControl::execute ()
 {
     // If there is a pending bus interrupt that can be executed, process
     // that interrupt first, else execute the next instruction
@@ -97,7 +97,7 @@ void KD11_NA_Cpu::execute ()
 }
 
 // Execute one instruction
-void KD11_NA_Cpu::execInstr ()
+void KD11_NA_CpuControl::execInstr ()
 {
     // Get next instruction to execute and move PC forward
     CondData<u16> instructionWord = mmu_->fetchWord (cpuData_->registers ()[7]);
@@ -134,7 +134,7 @@ void KD11_NA_Cpu::execInstr ()
     traceFlag_ =  (cpuData_-> psw() & PSW_T) ? true : false;
 } 
 
-void KD11_NA_Cpu::serviceTrap ()
+void KD11_NA_CpuControl::serviceTrap ()
 {
     // The enum trap_ is converted to the u16 vector address
     // Swap the PC and PSW with new values from the trap vector to process.
@@ -143,7 +143,7 @@ void KD11_NA_Cpu::serviceTrap ()
     cpuData_->clearTrap ();
 }
 
-void KD11_NA_Cpu::serviceInterrupt ()
+void KD11_NA_CpuControl::serviceInterrupt ()
 {
     InterruptRequest intrptReq;
  
@@ -153,21 +153,21 @@ void KD11_NA_Cpu::serviceInterrupt ()
         swapPcPSW (intrptReq.vector ());
 }
 
-u8 KD11_NA_Cpu::cpuPriority()
+u8 KD11_NA_CpuControl::cpuPriority()
 {
     return (cpuData_->psw () & PSW_PRIORITY) >> 5;
 }
 
 // Fetch PC and PSW from the given vector address. If this fails the
 // processor will halt anyway.
-bool KD11_NA_Cpu::fetchFromVector (u16 address, u16* dest)
+bool KD11_NA_CpuControl::fetchFromVector (u16 address, u16* dest)
 {
     CondData<u16> tmpValue = mmu_->fetchWord (address);
     *dest = tmpValue.valueOr (0);
     return tmpValue.hasValue ();
 }
 
-bool KD11_NA_Cpu::fetchFromVector (u16 address, function<void (u16)> lambda)
+bool KD11_NA_CpuControl::fetchFromVector (u16 address, function<void (u16)> lambda)
 {
     CondData<u16> tmpValue = mmu_->fetchWord (address);
     lambda (tmpValue.valueOr (0));
@@ -175,7 +175,7 @@ bool KD11_NA_Cpu::fetchFromVector (u16 address, function<void (u16)> lambda)
 }
 
 // Swap the PC and PSW with new values from the given vector
-void KD11_NA_Cpu::swapPcPSW (u16 vectorAddress)
+void KD11_NA_CpuControl::swapPcPSW (u16 vectorAddress)
 {
     trace.cpuEvent (CpuEventRecordType::CPU_TRAP, vectorAddress);
 
@@ -206,7 +206,7 @@ void KD11_NA_Cpu::swapPcPSW (u16 vectorAddress)
     }
 }
 
-void KD11_NA_Cpu::traceStep ()
+void KD11_NA_CpuControl::traceStep ()
 {
     trace.setIgnoreBus ();
     u16 code[3];

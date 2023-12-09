@@ -42,7 +42,7 @@ KDF11_A_Cpu::KDF11_A_Cpu (Qbus* bus, CpuData* cpuData, MMU* mmu)
 //
 // The normal instruction flow can be interrupted by the setting of the BHALT
 // or RESET bus signal. These signals are handled in their corresponding KD11_NA
-// receivers which then calls a KD11_NA_Cpu control function.
+// receivers which then calls a KD11_NA_CpuControl control function.
 //
 // This function will return true if the CPU is in the state RUN and another
 // instruction can be executed, false otherwise. In the latter case a HALT
