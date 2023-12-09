@@ -1,5 +1,6 @@
 #include "qbus/qbus.h"
 #include "kd/kdf11_a/cpu/kdf11_a_cpu.h"
+#include "kd/kdf11_a/cpudata/kdf11_acpudata.h"
 #include "kd/kdf11_a/ktf11_a/ktf11_a.h"
 #include "msv11d/msv11d.h"
 
@@ -15,8 +16,9 @@ protected:
     static const int KernelDspacePDR0 {0172320};
 
     Qbus qbus;
-    KDF11_A_Cpu kdf11_aCpu {&qbus};
-    KTF11_A ktf11_a {&qbus, &kdf11_aCpu};
+    KDF11_ACpuData cpuData;
+    KTF11_A ktf11_a {&qbus, &cpuData};
+    KDF11_A_Cpu kdf11_aCpu {&qbus, &cpuData, &ktf11_a};
 };
 
 // Verify SR0 can be read and written
@@ -51,10 +53,6 @@ TEST_F (KTF11_ARegisters, statusRegister1)
 // Verify an illegal address is detected
 TEST_F (KTF11_ARegisters, illegalAddress)
 {
-    Qbus qbus;
-    KDF11_A_Cpu kdf11_aCpu {&qbus};
-    KTF11_A ktf11_a {&qbus, &kdf11_aCpu};
-
     u16 value {0177777};
     EXPECT_EQ (ktf11_a.read (0176600, &value), StatusCode::NonExistingMemory);
 }
@@ -76,10 +74,6 @@ TEST_F (KTF11_ARegisters, kernelPAR7)
 // Verify Kernel D space PDR 0 is not present
 TEST_F (KTF11_ARegisters, kernelDSpaceNotPresent)
 {
-    Qbus qbus;
-    KDF11_A_Cpu kdf11_aCpu {&qbus};
-    KTF11_A ktf11_a {&qbus, &kdf11_aCpu};
-
     u16 value {0177777};
     EXPECT_EQ (ktf11_a.read (KernelDspacePDR0, &value), StatusCode::NonExistingMemory);
 }

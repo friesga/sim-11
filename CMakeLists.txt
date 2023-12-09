@@ -378,7 +378,7 @@ set (GTEST_SRCS
     gtest/kd11_na/kd11_naregisterstest.cpp
     gtest/kdf11_a/pswtest.cpp
     gtest/kdf11_a/kdf11_aregisterstest.cpp
-    # gtest/ktf11_a/ktf11_aregisterstest.cpp
+    gtest/ktf11_a/ktf11_aregisterstest.cpp
     gtest/locationtest.cpp
     gtest/operandlocationtest.cpp
     gtest/dummycpu/dummymmu/dummymmu.cpp
