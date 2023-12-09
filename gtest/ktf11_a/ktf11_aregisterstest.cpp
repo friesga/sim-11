@@ -18,7 +18,7 @@ protected:
     Qbus qbus;
     KDF11_ACpuData cpuData;
     KTF11_A ktf11_a {&qbus, &cpuData};
-    KDF11_A_Cpu kdf11_aCpu {&qbus, &cpuData, &ktf11_a};
+    KDF11_A_CpuControl kdf11_aCpu {&qbus, &cpuData, &ktf11_a};
 };
 
 // Verify SR0 can be read and written

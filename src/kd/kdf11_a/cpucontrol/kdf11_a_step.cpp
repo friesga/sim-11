@@ -12,7 +12,7 @@ using std::unique_ptr;
 using std::make_unique;
 
 // Constructor
-KDF11_A_Cpu::KDF11_A_Cpu (Qbus* bus, CpuData* cpuData, MMU* mmu)
+KDF11_A_CpuControl::KDF11_A_CpuControl (Qbus* bus, CpuData* cpuData, MMU* mmu)
     :
     bus_ {bus},
     mmu_ {mmu},
@@ -47,7 +47,7 @@ KDF11_A_Cpu::KDF11_A_Cpu (Qbus* bus, CpuData* cpuData, MMU* mmu)
 // This function will return true if the CPU is in the state RUN and another
 // instruction can be executed, false otherwise. In the latter case a HALT
 // instruction was executed.
-bool KDF11_A_Cpu::step ()
+bool KDF11_A_CpuControl::step ()
 {
     switch (runState)
     {
@@ -75,7 +75,7 @@ bool KDF11_A_Cpu::step ()
     }
 }
 
-void KDF11_A_Cpu::execute ()
+void KDF11_A_CpuControl::execute ()
 {
     // If there is a pending bus interrupt that can be executed, process
     // that interrupt first, else execute the next instruction
@@ -96,7 +96,7 @@ void KDF11_A_Cpu::execute ()
 }
 
 // Execute one instruction
-void KDF11_A_Cpu::execInstr ()
+void KDF11_A_CpuControl::execInstr ()
 {
     // Get next instruction to execute and move PC forward
     CondData<u16> instructionWord = mmu_->fetchWord (cpuData_->registers ()[7]);
@@ -137,7 +137,7 @@ void KDF11_A_Cpu::execInstr ()
     traceFlag_ =  (cpuData_->psw () & PSW_T) ? true : false;
 }
 
-void KDF11_A_Cpu::serviceTrap ()
+void KDF11_A_CpuControl::serviceTrap ()
 {
     // The enum trap_ is converted to the u16 vector address
     // Swap the PC and PSW with new values from the trap vector to process.
@@ -154,7 +154,7 @@ void KDF11_A_Cpu::serviceTrap ()
     cpuData_->clearTrap ();
 }
 
-void KDF11_A_Cpu::serviceInterrupt ()
+void KDF11_A_CpuControl::serviceInterrupt ()
 {
     InterruptRequest intrptReq;
  
@@ -172,21 +172,21 @@ void KDF11_A_Cpu::serviceInterrupt ()
 }
 
 
-u8 KDF11_A_Cpu::cpuPriority()
+u8 KDF11_A_CpuControl::cpuPriority()
 {
     return (cpuData_->psw () & PSW_PRIORITY) >> 5;
 }
 
 // Fetch PC and PSW from the given vector address. If this fails the
 // processor will halt anyway.
-bool KDF11_A_Cpu::fetchFromVector (u16 address, u16* dest)
+bool KDF11_A_CpuControl::fetchFromVector (u16 address, u16* dest)
 {
     CondData<u16> tmpValue = mmu_->fetchWord (address);
     *dest = tmpValue.valueOr (0);
     return tmpValue.hasValue ();
 }
 
-bool KDF11_A_Cpu::fetchFromVector (u16 address, function<void (u16)> lambda)
+bool KDF11_A_CpuControl::fetchFromVector (u16 address, function<void (u16)> lambda)
 {
     CondData<u16> tmpValue = mmu_->fetchWord (address);
     lambda (tmpValue.valueOr (0));
@@ -195,7 +195,7 @@ bool KDF11_A_Cpu::fetchFromVector (u16 address, function<void (u16)> lambda)
 
 
 // Swap the PC and PSW with new values from the given vector
-void KDF11_A_Cpu::swapPcPSW (u16 vectorAddress)
+void KDF11_A_CpuControl::swapPcPSW (u16 vectorAddress)
 {
     // Save PC and PSW on the stack. 
     // Unlike the KD11-F and KD11-HA, the KDF11-AA does not enter console
@@ -237,7 +237,7 @@ void KDF11_A_Cpu::swapPcPSW (u16 vectorAddress)
     }
 }
 
-void KDF11_A_Cpu::traceStep ()
+void KDF11_A_CpuControl::traceStep ()
 {
     trace.setIgnoreBus ();
     u16 code[3];
