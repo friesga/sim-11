@@ -48,7 +48,7 @@ TEST_F (KDF11_A_PSWTEST, MOVDoesNotSetCC)
     kdf11a->mmu ()->putWord (2, 0);
     kdf11a->mmu ()->putWord (4, 0177776);
     unique_ptr<LSI11Instruction> instruction {instrDecoder.decode (kdf11a->cpuData (),
-        kdf11a->cpu (), kdf11a->mmu (), 0012737)};
+        kdf11a->cpuControl (), kdf11a->mmu (), 0012737)};
 
     EXPECT_TRUE (instruction->execute ());
     
@@ -71,7 +71,7 @@ TEST_F (KDF11_A_PSWTEST, MOVBDoesNotSetCC)
     kdf11a->mmu ()->putWord (2, 0);
     kdf11a->mmu ()->putWord (4, 0177776);
     unique_ptr<LSI11Instruction> instruction {instrDecoder.decode (kdf11a->cpuData (),
-        kdf11a->cpu (), kdf11a->mmu (), 0112737)};
+        kdf11a->cpuControl (), kdf11a->mmu (), 0112737)};
 
     EXPECT_TRUE (instruction->execute ());
     
@@ -92,7 +92,7 @@ TEST_F (KDF11_A_PSWTEST, CLRDoesNotSetCC)
     kdf11a->cpuData ()->registers () [7] = 2;
     kdf11a->mmu ()->putWord (2, 0177776);
     unique_ptr<LSI11Instruction> instruction {instrDecoder.decode (kdf11a->cpuData (),
-        kdf11a->cpu (), kdf11a->mmu (), 0005037)};
+        kdf11a->cpuControl (), kdf11a->mmu (), 0005037)};
 
     EXPECT_TRUE (instruction->execute ());
     
@@ -113,7 +113,7 @@ TEST_F (KDF11_A_PSWTEST, CLRBDoesNotSetCC)
     kdf11a->cpuData ()->registers () [7] = 2;
     kdf11a->mmu ()->putWord (2, 0177776);
     unique_ptr<LSI11Instruction> instruction {instrDecoder.decode (kdf11a->cpuData (),
-        kdf11a->cpu (), kdf11a->mmu (), 0105037)};
+        kdf11a->cpuControl (), kdf11a->mmu (), 0105037)};
 
     EXPECT_TRUE (instruction->execute ());
     
