@@ -5,7 +5,7 @@
 #include "cpu/kd11_na_cpu.h"
 #include "odt/kd11_na_odt.h"
 #include "kd/kd11_na/cpudata/kd11_nacpudata.h"
-#include "kd/kd11_na/dummymmu/dummymmu.h"
+#include "kd/kd11_na/pseudommu/pseudommu.h"
 #include "configdata/kd11_naconfig/kd11_naconfig.h"
 #include "kd/common/controllogic/controllogic.h"
 
@@ -48,8 +48,8 @@ private:
 
     Qbus* bus_;
     KD11_NACpuData cpuData_;
-    KD11_NA_Cpu cpu_ {bus_, &cpuData_, &dummyMMU_};
-    DummyMMU dummyMMU_ {bus_, &cpuData_};
+    KD11_NA_Cpu cpu_ {bus_, &cpuData_, &pseudoMMU_};
+    PseudoMMU pseudoMMU_ {bus_, &cpuData_};
     unique_ptr<KD11_NA_ODT>	odt_ {};
     KD11_NAConfig::PowerUpMode powerUpMode_;
     u16 startAddress_;
@@ -71,7 +71,7 @@ constexpr CpuData* KD11_NA::cpuData ()
 
 constexpr MMU* KD11_NA::mmu ()
 {
-    return &dummyMMU_;
+    return &pseudoMMU_;
 }
 
 

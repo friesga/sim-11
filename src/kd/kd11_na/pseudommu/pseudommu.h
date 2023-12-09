@@ -1,15 +1,23 @@
+#ifndef _PSEUDOMMU_H_
+#define _PSEUDOMMU_H_
+
 #include "kd/include/mmu.h"
 #include "qbus/qbus.h"
 #include "conddata/conddata.h"
 #include "kd/include/cpudata.h"
 
+//
+// Pseudo: being apparently rather than actually as stated 
+// (https://www.merriam-webster.com/dictionary/pseudo)
+// 
 // As the KD11-NA has no MMU, this class handles virtual addresses as
-// physicals addresses.
-class DummyMMU : public MMU
+// physical addresses.
+//
+class PseudoMMU : public MMU
 {
 public:
 	void reset ();
-	DummyMMU (Qbus* bus, CpuData* cpuData);
+	PseudoMMU (Qbus* bus, CpuData* cpuData);
     CondData<u16> fetchWord (u16 address) override;
 	CondData<u8> fetchByte (u16 address) override;
 	bool putWord (u16 address, u16 value) override;
@@ -27,3 +35,5 @@ private:
 	Qbus* bus_;
 	CpuData* cpuData_;
 };
+
+#endif // _PSEUDOMMU_H_

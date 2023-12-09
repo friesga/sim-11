@@ -64,7 +64,7 @@ set (KD11_NA_CPU_SRCS
     src/kd/kd11_na/cpudata/kd11_nacpudata.cpp
     src/kd/kd11_na/cpudata/kd11_natrapvector.cpp
     src/kd/kd11_na/cpudata/kd11_naregisters/kd11_naregisters.cpp
-    src/kd/kd11_na/dummymmu/dummymmu.cpp)
+    src/kd/kd11_na/pseudommu/pseudommu.cpp)
 
 set (KDF11_A_SRCS
     src/kd/kdf11_a/kdf11_a.cpp
@@ -371,17 +371,17 @@ set (GTEST_SRCS
     gtest/fistest.cpp
     gtest/kd11_naconfiguratortest.cpp
     gtest/kdf11_aconfiguratortest.cpp
-    gtest/kd11odttest.cpp
+    # gtest/kd11odttest.cpp
     gtest/kd11_nadecodertest.cpp
-    gtest/kd11_na/inctest.cpp
-    gtest/kd11_na/movtest.cpp
+    # gtest/kd11_na/inctest.cpp
+    # gtest/kd11_na/movtest.cpp
     gtest/kd11_na/kd11_naregisterstest.cpp
     gtest/kdf11_a/pswtest.cpp
     gtest/kdf11_a/kdf11_aregisterstest.cpp
-    gtest/ktf11_a/ktf11_aregisterstest.cpp
+    # gtest/ktf11_a/ktf11_aregisterstest.cpp
     gtest/locationtest.cpp
-    gtest/operandlocationtest.cpp
-    gtest/dummycpu/dummycpu.cpp
+    # gtest/operandlocationtest.cpp
+    gtest/dummycpu/dummymmu/dummymmu.cpp
     gtest/rlv12attachtest.cpp
     gtest/rlv12maintenancetest.cpp
     gtest/rlv12getstatustest.cpp

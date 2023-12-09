@@ -1,16 +1,16 @@
-#include "dummymmu.h"
+#include "pseudommu.h"
 #include "trace/trace.h"
 
-DummyMMU::DummyMMU (Qbus* bus, CpuData* cpuData)
+PseudoMMU::PseudoMMU (Qbus* bus, CpuData* cpuData)
     :
     bus_ {bus},
     cpuData_ {cpuData}
 {}
 
-void DummyMMU::reset ()
+void PseudoMMU::reset ()
 {}
 
-CondData<u16> DummyMMU::fetchWord (u16 address)
+CondData<u16> PseudoMMU::fetchWord (u16 address)
 {
     // return bus_->read (address);
     CondData<u16> value = bus_->read (address);
@@ -27,7 +27,7 @@ CondData<u16> DummyMMU::fetchWord (u16 address)
 // 
 // The validity of the fetched word has to be checked before the shift-
 // and and-operators can be applied to the word!
-CondData<u8> DummyMMU::fetchByte (u16 address)
+CondData<u8> PseudoMMU::fetchByte (u16 address)
 {
     CondData<u16> retValue {};
     if (address & 1)
@@ -46,7 +46,7 @@ CondData<u8> DummyMMU::fetchByte (u16 address)
     return CondData<u8> {};
 }
 
-bool DummyMMU::putWord (u16 address, u16 value)
+bool PseudoMMU::putWord (u16 address, u16 value)
 {
     if (!bus_->writeWord (address, value))
     {
@@ -57,7 +57,7 @@ bool DummyMMU::putWord (u16 address, u16 value)
     return true;
 }
 
-bool DummyMMU::putByte (u16 address, u8 value)
+bool PseudoMMU::putByte (u16 address, u8 value)
 {
     if (!bus_->writeByte (address, value))
     {
@@ -70,7 +70,7 @@ bool DummyMMU::putByte (u16 address, u8 value)
 
 // Pop a word from the processor stack returning true if this succeeds
 // or false when a bus error occurs.
-bool DummyMMU::popWord (u16 *destination)
+bool PseudoMMU::popWord (u16 *destination)
 {
     CondData<u16> tmpValue = fetchWord (cpuData_->registers ()[6]);
     *destination = tmpValue.valueOr (0);
@@ -81,26 +81,26 @@ bool DummyMMU::popWord (u16 *destination)
 }
 
 // Push the given value on the processor stack
-bool DummyMMU::pushWord (u16 value)
+bool PseudoMMU::pushWord (u16 value)
 {
     cpuData_->registers ()[6] -= 2;
     return putWord (cpuData_->registers ()[6], value);
 }
 
-CondData<u16> DummyMMU::mappedRead (u16 address)
+CondData<u16> PseudoMMU::mappedRead (u16 address)
 {
     return bus_->read (address);
 }
 
-bool DummyMMU::mappedWriteWord (u16 address, u16 value)
+bool PseudoMMU::mappedWriteWord (u16 address, u16 value)
 {
     return bus_->writeWord (address, value);
 }
 
-bool DummyMMU::mappedWriteByte (u16 address, u8 value)
+bool PseudoMMU::mappedWriteByte (u16 address, u8 value)
 {
     return bus_->writeByte (address, value);
 }
 
-void DummyMMU::setSR2 (u16 value)
+void PseudoMMU::setSR2 (u16 value)
 {}
