@@ -58,8 +58,8 @@ set (KD11ODT_SRCS
     src/kd/kd11_na/odt/startingregister.cpp)
 
 set (KD11_NA_CPU_SRCS
-    src/kd/kd11_na/cpucontrol/kd11_na_cpu.cpp
-    src/kd/kd11_na/cpucontrol/cpucontrol.cpp
+    src/kd/kd11_na/cpucontrol/kd11_na_step.cpp
+    src/kd/kd11_na/cpucontrol/kd11_na_cpucontrol.cpp
     src/kd/kd11_na/cpucontrol/kd11_nainstruction/opcodetables.cpp
     src/kd/kd11_na/cpudata/kd11_nacpudata.cpp
     src/kd/kd11_na/cpudata/kd11_natrapvector.cpp
