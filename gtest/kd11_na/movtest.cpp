@@ -17,11 +17,12 @@ TEST (KD11_NAMOVTEST, MovMode0Mode2Functions)
     KD11_NAInstruction instrDecoder;
 
     // MOV R0, (R0)+
-    unique_ptr<LSI11Instruction> instruction {instrDecoder.decode (&cpu, 0010020)};
+    unique_ptr<LSI11Instruction> instruction {instrDecoder.decode (cpu.cpuData (),
+        cpu.cpu (), cpu.mmu (), 0010020)};
 
-    cpu.registers () [0] = 10;
-    cpu.putWord (10, 0);
+    cpu.cpuData ()->registers () [0] = 10;
+    cpu.mmu ()->putWord (10, 0);
     instruction->execute ();
-    EXPECT_EQ (cpu.fetchWord (10), 10);
-    EXPECT_EQ (cpu.registers () [0], 12);
+    EXPECT_EQ (cpu.mmu ()->fetchWord (10), 10);
+    EXPECT_EQ (cpu.cpuData ()->registers () [0], 12);
 }
