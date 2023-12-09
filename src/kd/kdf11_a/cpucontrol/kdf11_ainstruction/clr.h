@@ -1,7 +1,7 @@
 #ifndef _CLR_H_
 #define _CLR_H_
 
-#include "kd/kdf11_a/cpu/kdf11_ainstruction/kdf11_ainstruction.h"
+#include "kd/kdf11_a/cpucontrol/kdf11_ainstruction/kdf11_ainstruction.h"
 #include "kd/common/singleoperandinstruction/singleoperandinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/common/operandlocation/operandlocation.h"

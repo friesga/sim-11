@@ -68,11 +68,11 @@ set (KD11_NA_CPU_SRCS
 
 set (KDF11_A_SRCS
     src/kd/kdf11_a/kdf11_a.cpp
-    src/kd/kdf11_a/cpu/kdf11_a_cpu.cpp
-    src/kd/kdf11_a/cpu/kd11doubleoperandinstruction/kd11doubleoperandinstruction.cpp
-    src/kd/kdf11_a/cpu/cpucontrol.cpp
-    src/kd/kdf11_a/cpu/kdf11_ainstruction/kdf11_ainstruction.cpp
-    src/kd/kdf11_a/cpu/kdf11_ainstruction/opcodetables.cpp
+    src/kd/kdf11_a/cpucontrol/kdf11_a_cpu.cpp
+    src/kd/kdf11_a/cpucontrol/kd11doubleoperandinstruction/kd11doubleoperandinstruction.cpp
+    src/kd/kdf11_a/cpucontrol/cpucontrol.cpp
+    src/kd/kdf11_a/cpucontrol/kdf11_ainstruction/kdf11_ainstruction.cpp
+    src/kd/kdf11_a/cpucontrol/kdf11_ainstruction/opcodetables.cpp
     src/kd/kdf11_a/cpudata/kdf11_acpudata.cpp
     src/kd/kdf11_a/cpudata/kdf11_atrapvector.cpp
     src/kd/kdf11_a/cpudata/kdf11_aregisters/kdf11_aregisters.cpp
@@ -279,7 +279,7 @@ set (SIM11_SRCS
     src/interruptrequest/interruptrequest.cpp)
 
 # Add source to this project's executable.
-add_executable (${TARGET} ${SIM11_SRCS} "src/kd/kdf11_a/cpu/kdf11_ainstruction/cmp.h")
+add_executable (${TARGET} ${SIM11_SRCS})
 #set_property(TARGET ${TARGET} PROPERTY C_STANDARD 90)
   
 # At least C++17 is needed for use of std::variant in variantfsm.
@@ -417,7 +417,7 @@ set (SIM11_TEST_SRCS
     src/logger/logger.cpp
     src/logger/data.cpp)
 
-add_executable (sim-11-test ${SIM11_TEST_SRCS} "src/kd/kdf11_a/cpu/kdf11_ainstruction/cmp.h")
+add_executable (sim-11-test ${SIM11_TEST_SRCS})
 
 set(GTEST_INCLUDE_DIRS 
     G:/src/gtest-1.10.0/googletest/include)
@@ -443,7 +443,7 @@ enable_testing ()
 # Create trace reader
 add_executable (tracereader 
     tracereader/main.cpp
-    ${TRACE_SRCS} "src/kd/kdf11_a/cpu/kdf11_ainstruction/cmp.h")
+    ${TRACE_SRCS})
 
 target_include_directories (tracereader PRIVATE include src)
     

@@ -1,8 +1,8 @@
 #ifndef _MOV_H_
 #define _MOV_H_
 
-#include "kd/kdf11_a/cpu/kdf11_ainstruction/kdf11_ainstruction.h"
-#include "kd/kdf11_a/cpu/kd11doubleoperandinstruction/kd11doubleoperandinstruction.h"
+#include "kd/kdf11_a/cpucontrol/kdf11_ainstruction/kdf11_ainstruction.h"
+#include "kd/kdf11_a/cpucontrol/kd11doubleoperandinstruction/kd11doubleoperandinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/common/operandlocation/operandlocation.h"
 #include "kd/common/instructions/withfactory.h"

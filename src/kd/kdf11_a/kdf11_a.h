@@ -2,7 +2,7 @@
 #define _KDF11_A_H_
 
 #include "kd/include/pdp11processor.h"
-#include "kd/kdf11_a/cpu/kdf11_a_cpu.h"
+#include "kd/kdf11_a/cpucontrol/kdf11_a_cpu.h"
 #include "kd/kd11_na/odt/kd11_na_odt.h"
 #include "configdata/kdf11_aconfig/kdf11_aconfig.h"
 #include "kd/common/controllogic/controllogic.h"
