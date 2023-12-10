@@ -18,7 +18,7 @@ TEST (KD11_NAMOVTEST, MovMode0Mode2Functions)
 
     // MOV R0, (R0)+
     unique_ptr<LSI11Instruction> instruction {instrDecoder.decode (cpu.cpuData (),
-        cpu.cpu (), cpu.mmu (), 0010020)};
+        cpu.cpuControl (), cpu.mmu (), 0010020)};
 
     cpu.cpuData ()->registers () [0] = 10;
     cpu.mmu ()->putWord (10, 0);

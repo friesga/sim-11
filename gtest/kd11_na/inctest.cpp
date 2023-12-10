@@ -11,7 +11,7 @@ TEST (KD11_NAINCTEST, IncMode0Functions)
 
     // INC R1
     unique_ptr<LSI11Instruction> instruction {instrDecoder.decode (cpu.cpuData (),
-        cpu.cpu (), cpu.mmu (), 0005201)};
+        cpu.cpuControl (), cpu.mmu (), 0005201)};
 
     // Assign R1 a random value and execute the INC on it
     cpu.cpuData()->registers () [1] = 10;
@@ -27,7 +27,7 @@ TEST (KD11_NAINCTEST, IncMode1Functions)
 
     // INC @R1
     unique_ptr<LSI11Instruction> instruction {instrDecoder.decode (cpu.cpuData (),
-        cpu.cpu (), cpu.mmu (), 0005211)};
+        cpu.cpuControl (), cpu.mmu (), 0005211)};
 
     // Increment the address contained in R1
     cpu.cpuData ()-> registers () [1] = 10;
@@ -44,7 +44,7 @@ TEST (KD11_NAINCTEST, IncMode2Functions)
 
     // INC (R1)+
     unique_ptr<LSI11Instruction> instruction {instrDecoder.decode (cpu.cpuData (),
-        cpu.cpu (), cpu.mmu (), 0005221)};
+        cpu.cpuControl (), cpu.mmu (), 0005221)};
 
     // Address 10 = 100, R1 = 10
     cpu.mmu ()->putWord (10, 100);
@@ -68,7 +68,7 @@ TEST (KD11_NAINCTEST, IncMode3Functions)
 
     // INC @(R1)+
     unique_ptr<LSI11Instruction> instruction {instrDecoder.decode (cpu.cpuData (),
-        cpu.cpu (), cpu.mmu (), 0005231)};
+        cpu.cpuControl (), cpu.mmu (), 0005231)};
 
     cpu.cpuData ()->registers () [1] = 10;
     cpu.mmu ()->putWord (10, 100);
@@ -86,7 +86,7 @@ TEST (KD11_NAINCTEST, IncMode4Functions)
 
     // INC -(R1)
     unique_ptr<LSI11Instruction> instruction {instrDecoder.decode (cpu.cpuData (),
-        cpu.cpu (), cpu.mmu (), 0005241)};
+        cpu.cpuControl (), cpu.mmu (), 0005241)};
 
     // Address 8 = 100, R1 = 10
     cpu.mmu ()->putWord (8, 100);
@@ -109,7 +109,7 @@ TEST (KD11_NAINCTEST, IncMode5Functions)
 
     // INC @-(R1)
     unique_ptr<LSI11Instruction> instruction {instrDecoder.decode (cpu.cpuData (),
-        cpu.cpu (), cpu.mmu (), 0005251)};
+        cpu.cpuControl (), cpu.mmu (), 0005251)};
 
     cpu.cpuData ()->registers () [1] = 10;
     cpu.mmu ()->putWord (8, 100);
@@ -127,7 +127,7 @@ TEST (KD11_NAINCTEST, IncMode6Functions)
 
     // INC 2(R1)
     unique_ptr<LSI11Instruction> instruction {instrDecoder.decode (cpu.cpuData (),
-        cpu.cpu (), cpu.mmu (), 0005261)};
+        cpu.cpuControl (), cpu.mmu (), 0005261)};
 
     // Assume the INC instruction is at address 0, so the index word will
     // be at address 2. Address 8 = 100, R1 = 10
@@ -154,7 +154,7 @@ TEST (KD11_NAINCTEST, IncMode7Functions)
 
     // INC @2(R1)
     unique_ptr<LSI11Instruction> instruction {instrDecoder.decode (cpu.cpuData (),
-        cpu.cpu (), cpu.mmu (), 0005271)};
+        cpu.cpuControl (), cpu.mmu (), 0005271)};
 
     // Assume the INC instruction is at address 0, so the index word will
     // be at address 2. 

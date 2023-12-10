@@ -17,7 +17,7 @@ string getInstrMnemonic (u16 instruction)
     KD11_NAInstruction kd11_naInstruction;
     DummyCpu cpu;
     unique_ptr<LSI11Instruction> instr = kd11_naInstruction.decode (cpu.cpuData (),
-        cpu.cpu (), cpu.mmu (), instruction);
+        cpu.cpuControl (), cpu.mmu (), instruction);
     return instr->mnemonic ();
 }
 
