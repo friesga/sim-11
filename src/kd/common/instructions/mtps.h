@@ -41,7 +41,7 @@ inline bool CommonInstruction::MTPS::execute ()
         return false;
 
     // Allow bits 5/6/7 to be set and cleared
-    cpu_->setPSW (newValue);
+    cpuData_->setPSW (newValue);
 
     return true;
 }

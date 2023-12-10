@@ -49,7 +49,7 @@ inline bool KDF11_AInstruction::MTPD::execute ()
     // The destination operand and the value popped off the stack are 
     // retrieved in the current memory management and the tmp value then
     // is written using the previous mode.
-    operandLocation_ =  getOperandLocation (cpu_->registers ());
+    operandLocation_ =  getOperandLocation (cpuData_->registers ());
 
     if (!mmu_->popWord (&tmp) || !operandLocation_.writePrevMode (tmp))
         return false;

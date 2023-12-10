@@ -90,7 +90,7 @@ private:
     unique_ptr<StateMachine> stateMachine_;
 
     Qbus* bus_;
-    CpuData* cpu_;
+    CpuData* cpuData_;
     CpuControl* cpuControl_;
     MMU* mmu_;
     unique_ptr<KD11ODT>	odt_ {};

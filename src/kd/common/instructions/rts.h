@@ -33,8 +33,8 @@ inline bool CommonInstruction::RTS::execute ()
 {
     u16 regNr = getRegister ();
 
-    cpu_->registers ()[7] = cpu_->registers ()[regNr];
-    mmu_->popWord (&cpu_->registers ()[regNr]);
+    cpuData_->registers ()[7] = cpuData_->registers ()[regNr];
+    mmu_->popWord (&cpuData_->registers ()[regNr]);
 
     return true;
 }

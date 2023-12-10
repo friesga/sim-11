@@ -45,7 +45,7 @@ inline bool KDF11_AInstruction::MFPD::execute ()
 
     // The source operand is determined in the current memory management
     // mode and then retrieved using the previous mode.
-    operandLocation_ =  getOperandLocation (cpu_->registers ());
+    operandLocation_ =  getOperandLocation (cpuData_->registers ());
     source = operandLocation_.prevModeContents<CondData<u16>> ();
 
     if (!source.hasValue ())
@@ -54,8 +54,8 @@ inline bool KDF11_AInstruction::MFPD::execute ()
     if (!mmu_->pushWord (source))
         return false;
 
-    if (cpu_->stackOverflow ())
-        cpu_->setTrap (CpuData::TrapCondition::StackOverflow);
+    if (cpuData_->stackOverflow ())
+        cpuData_->setTrap (CpuData::TrapCondition::StackOverflow);
 
     setPSW (ConditionCodes {.N = (bool) (source & 0100000),
         .Z = source == 0,

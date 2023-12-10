@@ -5,5 +5,5 @@ KD11DoubleOperandInstruction::KD11DoubleOperandInstruction (CpuData* cpu,
     :
     DoubleOperandInstruction (cpu, cpuControl, mmu, instruction)
 {
-    getOperandLocations (cpu_->registers ());
+    getOperandLocations (cpuData_->registers ());
 }

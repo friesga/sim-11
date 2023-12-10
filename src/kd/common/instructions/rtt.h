@@ -44,10 +44,10 @@ inline bool CommonInstruction::RTT::execute ()
 {
     u16 tmp;
 
-    if (!mmu_->popWord (&cpu_->registers ()[7]) || !mmu_->popWord (&tmp))
+    if (!mmu_->popWord (&cpuData_->registers ()[7]) || !mmu_->popWord (&tmp))
         return false;
 
-    cpu_->loadPSW (tmp);
+    cpuData_->loadPSW (tmp);
 
     return true;
 }

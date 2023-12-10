@@ -46,12 +46,12 @@ inline bool CommonInstruction::RTI::execute ()
 {
     u16 tmp;
 
-    if (!mmu_->popWord (&cpu_->registers ()[7]) || !mmu_->popWord (&tmp))
+    if (!mmu_->popWord (&cpuData_->registers ()[7]) || !mmu_->popWord (&tmp))
         return false;
 
-    cpu_->loadPSW (tmp);
-    if (cpu_->psw () & PSW_T)
-        cpu_->setTrap (CpuData::TrapCondition::BreakpointTrap);
+    cpuData_->loadPSW (tmp);
+    if (cpuData_->psw () & PSW_T)
+        cpuData_->setTrap (CpuData::TrapCondition::BreakpointTrap);
 
     return true;
 }

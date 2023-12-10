@@ -8,7 +8,7 @@
 class MemoryOperandLocation
 {
 public:
-    MemoryOperandLocation (CpuData *cpu, MMU* mmu, CondData<u16> memoryAddress);
+    MemoryOperandLocation (CpuData* cpuData, MMU* mmu, CondData<u16> memoryAddress);
     bool isValid ();
     operator u16 ();
     template <typename T> requires std::same_as<T, CondData<u16>> T contents ();
@@ -22,7 +22,7 @@ public:
 
 private:
     CondData <u16> location_;
-    CpuData *cpu_;
+    CpuData* cpuData_;
     MMU* mmu_;
 };
 

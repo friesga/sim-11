@@ -42,7 +42,7 @@ inline bool CommonInstruction::DIV::execute ()
 {
     u16 regNr = getRegisterNr ();
 
-    GeneralRegisters& registers = cpu_->registers ();
+    GeneralRegisters& registers = cpuData_->registers ();
     s32 tmps32 = (registers[regNr] << 16) | registers[regNr | 1];
 
     CondData<u16> source;

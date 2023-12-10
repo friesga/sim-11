@@ -53,7 +53,7 @@ inline bool KDF11_AInstruction::MOVB::execute ()
     // is bypassed and the signed eight bit value s8 is directly written into
     // the register, causing sign extension in the register.
     if (destinationOperandLocation_.isA<RegisterOperandLocation> ())
-        cpu_->registers ()[destinationOperandLocation_] = tmp;
+        cpuData_->registers ()[destinationOperandLocation_] = tmp;
     else
         if (!destinationOperandLocation_.write<u8> (tmp))
             return false;

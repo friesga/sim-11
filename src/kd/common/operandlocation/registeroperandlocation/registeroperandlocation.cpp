@@ -1,10 +1,10 @@
 #include "registeroperandlocation.h"
 
 
-RegisterOperandLocation::RegisterOperandLocation (CpuData *cpu, u8 registerNumber)
+RegisterOperandLocation::RegisterOperandLocation (CpuData* cpuData, u8 registerNumber)
     :
     location_ {registerNumber},
-    cpu_ {cpu}
+    cpuData_ {cpuData}
 {}
 
 // Return whether or not the OperandLocation points to a valid address

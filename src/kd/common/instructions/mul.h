@@ -40,7 +40,7 @@ inline bool CommonInstruction::MUL::execute ()
 {
     u16 regNr = getRegisterNr ();
 
-    GeneralRegisters& registers = cpu_->registers ();
+    GeneralRegisters& registers = cpuData_->registers ();
     u16 destination = registers[regNr];
 
     CondData<u16> source;

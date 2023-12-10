@@ -43,23 +43,23 @@ inline CommonInstruction::JSR::JSR (CpuData* cpu, CpuControl* cpuControl,
 
 inline bool CommonInstruction::JSR::execute ()
 {
-    OperandLocation destination = getOperandLocation (cpu_->registers ());
+    OperandLocation destination = getOperandLocation (cpuData_->registers ());
 
     if (!destination.isA<MemoryOperandLocation> ())
     {
         // Illegal instruction
-        cpu_->setTrap (CpuData::TrapCondition::IllegalInstructionTrap);
+        cpuData_->setTrap (CpuData::TrapCondition::IllegalInstructionTrap);
         return true;
     }
 
-    GeneralRegisters& registers = cpu_->registers ();
+    GeneralRegisters& registers = cpuData_->registers ();
     u16 specifiedRegisterContents = registers[getRegisterNr ()];
 
     if (!mmu_->pushWord (specifiedRegisterContents))
         return false;
 
-    if (cpu_->stackOverflow ())
-        cpu_->setTrap (CpuData::TrapCondition::StackOverflow);
+    if (cpuData_->stackOverflow ())
+        cpuData_->setTrap (CpuData::TrapCondition::StackOverflow);
 
     registers[getRegisterNr ()] = registers[7];
     registers[7] = destination;

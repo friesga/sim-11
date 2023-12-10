@@ -1,15 +1,15 @@
 #include "branchinstruction.h"
 
-BranchInstruction::BranchInstruction (CpuData *cpu, CpuControl* cpuControl,
+BranchInstruction::BranchInstruction (CpuData* cpuData, CpuControl* cpuControl,
         MMU* mmu, u16 instruction)
     :
-    LSI11Instruction (cpu, cpuControl, mmu),
+    LSI11Instruction (cpuData, cpuControl, mmu),
     instr_ {instruction}
 {}
 
 void BranchInstruction::executeBranch ()
 {
-    cpu_->registers ()[7] += (s16) getOffset () * 2;
+    cpuData_->registers ()[7] += (s16) getOffset () * 2;
 }
 
 s8 BranchInstruction::getOffset ()

@@ -37,7 +37,7 @@ inline bool CommonInstruction::SOB::execute ()
     u16 regNr = getRegisterNr ();
     u16 offset = getOffset ();
 
-    GeneralRegisters& reg = cpu_->registers ();
+    GeneralRegisters& reg = cpuData_->registers ();
     reg[regNr]--;
     if (reg[regNr])
         reg[7] -= 2 * offset;

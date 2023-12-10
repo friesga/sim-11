@@ -45,10 +45,10 @@ inline bool CommonInstruction::MOVB::execute ()
     // is bypassed and the signed eight bit value u8 is directly written into
     // the register, causing sign extension in the register.
     destinationOperandLocation_ = 
-        getDestinationOperandLocation (cpu_->registers ());
+        getDestinationOperandLocation (cpuData_->registers ());
 
     if (destinationOperandLocation_.isA<RegisterOperandLocation> ())
-        cpu_->registers ()[destinationOperandLocation_] = tmp;
+        cpuData_->registers ()[destinationOperandLocation_] = tmp;
     else
         if (!destinationOperandLocation_.write<u8> (tmp))
             return false;

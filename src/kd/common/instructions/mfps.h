@@ -38,15 +38,15 @@ inline CommonInstruction::MFPS::MFPS (CpuData* cpu, CpuControl* cpuControl,
 
 inline bool CommonInstruction::MFPS::execute ()
 {
-    u8 contents = (u8) cpu_->psw ();
-    operandLocation_ = getOperandLocation (cpu_->registers ());
+    u8 contents = (u8) cpuData_->psw ();
+    operandLocation_ = getOperandLocation (cpuData_->registers ());
 
     if (operandLocation_.isA<RegisterOperandLocation> ())
     {
         // If destination is mode 0 (Register), the regular operand processing
         // is bypassed and PS bit 7 is sign extended through the upper byte of
         // the register.
-        cpu_->registers ()[operandLocation_] = (s8)cpu_->psw ();
+        cpuData_->registers ()[operandLocation_] = (s8)cpuData_->psw ();
     }
     else
     {

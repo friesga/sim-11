@@ -21,7 +21,7 @@ class SingleOperandInstruction : public LSI11Instruction
 	instr_;
 
 public:
-	SingleOperandInstruction (CpuData *cpu, CpuControl* cpuControl, MMU* mmu, u16 instruction);
+	SingleOperandInstruction (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
 	u16 getOperationCode () override;
 
 protected:
@@ -40,7 +40,7 @@ protected:
 template <typename T>
 bool SingleOperandInstruction::readOperand (T *operand)
 {
-	operandLocation_ =  getOperandLocation (cpu_->registers ());
+	operandLocation_ =  getOperandLocation (cpuData_->registers ());
     *operand = operandLocation_.contents<T> ();
 	return (*operand).hasValue ();
 }
@@ -51,7 +51,7 @@ bool SingleOperandInstruction::writeOperand (T operand)
 	if (!operandLocation_.isValid ())
 	{
 		operandLocation_ = 
-			getOperandLocation (cpu_->registers ());
+			getOperandLocation (cpuData_->registers ());
 	}
 	
 	return operandLocation_.write<T> (operand);

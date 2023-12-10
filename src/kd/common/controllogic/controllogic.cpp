@@ -13,13 +13,13 @@ using std::make_unique;
 // The factory power-up mode configuration is mode 0 (get vector at address
 // 24 and 26), but we'll set it to Bootstrap as that's more convenient for
 // the user.
-ControlLogic::ControlLogic (Qbus* bus, CpuData* cpu,
+ControlLogic::ControlLogic (Qbus* bus, CpuData* cpuData,
     CpuControl* cpuControl, MMU* mmu,
     KD11_NAConfig::PowerUpMode powerUpMode, u16 startAddress,
     KD11ODT::Creator odtCreator)
     :
     bus_ (bus),
-    cpu_ {cpu},
+    cpuData_ {cpuData},
     cpuControl_ {cpuControl},
     mmu_ {mmu},
     powerUpMode_ {powerUpMode},
@@ -58,6 +58,6 @@ bool ControlLogic::signalAvailable ()
 // Load PC and PSW from the given vector
 void ControlLogic::loadTrapVector (CpuData::TrapCondition trap)
 {
-    cpu_->registers ()[7] = mmu_->fetchWord (cpu_->trapVector (trap)).valueOr (0);
-    cpu_->loadPSW (mmu_->fetchWord (cpu_->trapVector (trap) + 2).valueOr (0));
+    cpuData_->registers ()[7] = mmu_->fetchWord (cpuData_->trapVector (trap)).valueOr (0);
+    cpuData_->loadPSW (mmu_->fetchWord (cpuData_->trapVector (trap) + 2).valueOr (0));
 }

@@ -41,7 +41,7 @@ inline bool CommonInstruction::ASH::execute ()
 {
     u16 regNr = getRegisterNr ();
     u16 tmp {0};
-    GeneralRegisters& registers = cpu_->registers ();
+    GeneralRegisters& registers = cpuData_->registers ();
     u16 destination = registers[regNr];
 
     CondData<u16> source;

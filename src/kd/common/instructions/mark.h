@@ -37,7 +37,7 @@ inline CommonInstruction::MARK::MARK (CpuData* cpu, CpuControl* cpuControl,
 
 inline bool CommonInstruction::MARK::execute ()
 {
-    GeneralRegisters& registers = cpu_->registers ();
+    GeneralRegisters& registers = cpuData_->registers ();
 
     registers[6] = registers[7] + 2 * numberOfParameters ();
     registers[7] = registers[5];

@@ -37,7 +37,7 @@ inline KDF11_AInstruction::XOR::XOR (CpuData* cpu, CpuControl* cpuControl,
 inline bool KDF11_AInstruction::XOR::execute ()
 {
     u16 regNr = getRegisterNr ();
-    GeneralRegisters& registers = cpu_->registers ();
+    GeneralRegisters& registers = cpuData_->registers ();
 
     u16 source = registers[regNr];
 

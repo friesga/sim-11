@@ -9,7 +9,7 @@
 class RegisterOperandLocation
 {
 public:
-    RegisterOperandLocation (CpuData *cpu, u8 registerNumber);
+    RegisterOperandLocation (CpuData* cpuData, u8 registerNumber);
     bool isValid ();
     operator u16 ();
     template <typename T> requires std::same_as<T, CondData<u16>> T contents ();
@@ -23,14 +23,14 @@ public:
 
 private:
     u8 location_;
-    CpuData *cpu_;
+    CpuData* cpuData_;
 };
 
 template <typename T>
 requires std::same_as<T, CondData<u16>>
 T RegisterOperandLocation::contents ()
 {
-    return CondData<u16> {cpu_->registers () [location_]};
+    return CondData<u16> {cpuData_->registers () [location_]};
 }
 
 template <typename T>
@@ -38,7 +38,7 @@ requires std::same_as<T, CondData<u8>>
 T RegisterOperandLocation::contents ()
 {
     return CondData<u8> {static_cast<u8> 
-        (cpu_->registers () [location_] & 0377)};
+        (cpuData_->registers () [location_] & 0377)};
 }
 
 // Return the contents of the operand location in the previous memory
@@ -47,7 +47,7 @@ template <typename T>
 requires std::same_as<T, CondData<u16>>
 T RegisterOperandLocation::prevModeContents ()
 {
-    return CondData<u16> {cpu_->registers ().prevModeContents (location_)};
+    return CondData<u16> {cpuData_->registers ().prevModeContents (location_)};
 }
 
 template <typename T>
@@ -55,14 +55,14 @@ requires std::same_as<T, CondData<u8>>
 T RegisterOperandLocation::prevModeContents ()
 {
     return CondData<u8> {static_cast<u8> 
-        (cpu_->registers ().prevModeContents (location_) & 0377)};
+        (cpuData_->registers ().prevModeContents (location_) & 0377)};
 }
 
 template <typename T> 
 requires std::same_as<T, u16> 
 bool RegisterOperandLocation::write (T contents)
 {
-    cpu_->registers () [location_] = contents;
+    cpuData_->registers () [location_] = contents;
     return true;
 }
 
@@ -71,7 +71,7 @@ requires std::same_as<T, u8>
 bool RegisterOperandLocation::write (T contents)
 {
     u16 regNr = location_;
-    cpu_->registers () [regNr] = (cpu_->registers () [regNr] & 0xFF00) | contents;
+    cpuData_->registers () [regNr] = (cpuData_->registers () [regNr] & 0xFF00) | contents;
     return true;
 }
 
@@ -79,7 +79,7 @@ template <typename T>
 requires std::same_as<T, u16> 
 bool RegisterOperandLocation::writePrevMode (T contents)
 {
-    cpu_->registers ().writePrevMode (location_, contents);
+    cpuData_->registers ().writePrevMode (location_, contents);
     return true;
 }
 
@@ -87,8 +87,8 @@ template <typename T>
 requires std::same_as<T, u8>
 bool RegisterOperandLocation::writePrevMode (T contents)
 {
-    u16 originalContents = cpu_->registers ().prevModeContents (location_);
-    cpu_->registers ().writePrevMode (location_, 
+    u16 originalContents = cpuData_->registers ().prevModeContents (location_);
+    cpuData_->registers ().writePrevMode (location_, 
         (originalContents & 0xFF00) | contents);
     return true;
 }

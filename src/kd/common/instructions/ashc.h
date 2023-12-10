@@ -48,7 +48,7 @@ inline CommonInstruction::ASHC::ASHC (CpuData* cpu, CpuControl* cpuControl,
 inline bool CommonInstruction::ASHC::execute ()
 {
     u16 regNr = getRegisterNr ();
-    GeneralRegisters& registers = cpu_->registers ();
+    GeneralRegisters& registers = cpuData_->registers ();
     u16 dst = registers[regNr];
 
     s32 tmps32 = (registers[regNr] << 16) | registers[regNr | 1];

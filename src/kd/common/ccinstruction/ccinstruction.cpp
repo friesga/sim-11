@@ -1,9 +1,9 @@
 #include "ccinstruction.h"
 
-CcInstruction::CcInstruction (CpuData *cpu, CpuControl* cpuControl,
+CcInstruction::CcInstruction (CpuData* cpuData, CpuControl* cpuControl,
         MMU* mmu, u16 instruction)
     :
-    LSI11Instruction (cpu, cpuControl, mmu),
+    LSI11Instruction (cpuData, cpuControl, mmu),
     instr_ {instruction}
 {}
 

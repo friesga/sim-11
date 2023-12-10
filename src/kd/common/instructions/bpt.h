@@ -37,7 +37,7 @@ inline CommonInstruction::BPT::BPT (CpuData* cpu, CpuControl* cpuControl,
 
 inline bool CommonInstruction::BPT::execute ()
 {
-    cpu_->setTrap (CpuData::TrapCondition::BreakpointTrap);
+    cpuData_->setTrap (CpuData::TrapCondition::BreakpointTrap);
     return true;
 }
 

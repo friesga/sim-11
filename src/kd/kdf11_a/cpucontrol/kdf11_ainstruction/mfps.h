@@ -44,8 +44,8 @@ inline KDF11_AInstruction::MFPS::MFPS (CpuData* cpu, CpuControl* cpuControl,
 
 inline bool KDF11_AInstruction::MFPS::execute ()
 {
-    u8 contents = (u8) cpu_->psw ();
-    operandLocation_ = getOperandLocation (cpu_->registers ());
+    u8 contents = (u8) cpuData_->psw ();
+    operandLocation_ = getOperandLocation (cpuData_->registers ());
 
     setPSW (ConditionCodes {.N = (bool) (contents & 0x80),
         .Z = (contents & 0xFF) == 0,
@@ -56,7 +56,7 @@ inline bool KDF11_AInstruction::MFPS::execute ()
         // If destination is mode 0 (Register), the regular operand processing
         // is bypassed and PS bit 7 is sign extended through the upper byte of
         // the register.
-        cpu_->registers ()[operandLocation_] = (s8) contents;
+        cpuData_->registers ()[operandLocation_] = (s8) contents;
     }
     else
     {

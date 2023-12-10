@@ -20,7 +20,7 @@ OperandLocation EisInstruction::getOperandLocation (GeneralRegisters& reg)
 bool EisInstruction::readOperand (CondData<u16> *source)
 {
 	operandLocation_ = 
-		getOperandLocation (cpu_->registers ());
+		getOperandLocation (cpuData_->registers ());
     *source = operandLocation_.contents<CondData<u16>> ();
 	return (*source).hasValue ();
 }
@@ -30,7 +30,7 @@ bool EisInstruction::writeOperand (u16 operand)
 	if (!operandLocation_.isValid ())
 	{
 		operandLocation_ = 
-			getOperandLocation (cpu_->registers ());
+			getOperandLocation (cpuData_->registers ());
 	}
 	
 	return operandLocation_.write (operand);

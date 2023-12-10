@@ -23,9 +23,9 @@ bool FISInstruction::returnFISresult (Float result, u16 registerNumber)
     Float::Result conversionResult = result.pdp11Dword (&high, &low);
     if (conversionResult == Float::Result::OK)
     {
-        mmu_->putWord (cpu_->registers ()[registerNumber] + 4, high);
-        mmu_->putWord (cpu_->registers ()[registerNumber] + 6, low);
-        cpu_->registers ()[registerNumber] += 4;
+        mmu_->putWord (cpuData_->registers ()[registerNumber] + 4, high);
+        mmu_->putWord (cpuData_->registers ()[registerNumber] + 6, low);
+        cpuData_->registers ()[registerNumber] += 4;
 
         setPSW (ConditionCodes {.N = result.value () < 0,
             .Z = result.value () == 0,
@@ -41,7 +41,7 @@ bool FISInstruction::returnFISresult (Float result, u16 registerNumber)
             .V = true,
             .C = false});
 
-        cpu_->setTrap (CpuData::TrapCondition::FIS);
+        cpuData_->setTrap (CpuData::TrapCondition::FIS);
         return true;
     }
     
@@ -51,7 +51,7 @@ bool FISInstruction::returnFISresult (Float result, u16 registerNumber)
         .V = true,
         .C = false});
 
-    cpu_->setTrap (CpuData::TrapCondition::FIS);
+    cpuData_->setTrap (CpuData::TrapCondition::FIS);
     return true;
 }
 
@@ -61,21 +61,21 @@ bool FISInstruction::executeFISinstruction (u16 stackPointer,
     std::function<Float(Float, Float)> instruction)
 {
     // Clear PSW bits 5 and 6
-    cpu_->setPSW (cpu_->psw () & ~(_BV(5) | _BV(6)));
+    cpuData_->setPSW (cpuData_->psw () & ~(_BV(5) | _BV(6)));
 
     CondData<u16> f1High = 
-        mmu_->fetchWord (cpu_->registers ()[stackPointer] + 4);
+        mmu_->fetchWord (cpuData_->registers ()[stackPointer] + 4);
     CondData<u16> f1Low = 
-        mmu_->fetchWord (cpu_->registers ()[stackPointer] + 6);
+        mmu_->fetchWord (cpuData_->registers ()[stackPointer] + 6);
     CondData<u16> f2High = 
-        mmu_->fetchWord (cpu_->registers ()[stackPointer]);
+        mmu_->fetchWord (cpuData_->registers ()[stackPointer]);
     CondData<u16> f2Low = 
-        mmu_->fetchWord (cpu_->registers ()[stackPointer] + 2);
+        mmu_->fetchWord (cpuData_->registers ()[stackPointer] + 2);
 
     if (!f1High.hasValue () || !f1Low.hasValue () ||
         !f2High.hasValue () || !f2Low.hasValue ())
     {
-        cpu_->setTrap (CpuData::TrapCondition::BusError);
+        cpuData_->setTrap (CpuData::TrapCondition::BusError);
         return true;
     }
      
@@ -95,6 +95,6 @@ bool FISInstruction::executeFISinstruction (u16 stackPointer,
         .V = true,
         .C = true});
 
-    cpu_->setTrap (CpuData::TrapCondition::FIS);
+    cpuData_->setTrap (CpuData::TrapCondition::FIS);
     return true;
 }

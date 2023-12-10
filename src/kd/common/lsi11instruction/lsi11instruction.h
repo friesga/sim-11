@@ -21,11 +21,11 @@ public:
 	string mnemonic ();
 
 protected:
-	CpuData *cpu_;
+	CpuData* cpuData_;
 	CpuControl* cpuControl_;
 	MMU* mmu_;
 
-	LSI11Instruction (CpuData *cpu, CpuControl* cpuControl, MMU* mmu);
+	LSI11Instruction (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu);
 	OperandLocation decodeOperand (Operand operand, GeneralRegisters &reg);
 	bool isByteInstruction ();
 
@@ -41,7 +41,7 @@ protected:
 
 constexpr bool LSI11Instruction::isSet (u16 x)
 {
-	return (cpu_->psw () & x) ? true : false;
+	return (cpuData_->psw () & x) ? true : false;
 }
 
 #endif // _LSI11INSTRUCTION_H_

@@ -30,7 +30,7 @@ inline CommonInstruction::Unused::Unused (CpuData* cpu, CpuControl* cpuControl,
 
 inline bool CommonInstruction::Unused::execute ()
 {
-    cpu_->setTrap (CpuData::TrapCondition::ReservedInstructionTrap);
+    cpuData_->setTrap (CpuData::TrapCondition::ReservedInstructionTrap);
     return true;
 }
 

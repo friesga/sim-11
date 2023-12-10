@@ -39,7 +39,7 @@ inline KDF11_AInstruction::MFPT::MFPT (CpuData* cpu, CpuControl* cpuControl,
 
 inline bool KDF11_AInstruction::MFPT::execute ()
 {
-    cpu_->registers ()[0] = 3;
+    cpuData_->registers ()[0] = 3;
     return true;
 }
 

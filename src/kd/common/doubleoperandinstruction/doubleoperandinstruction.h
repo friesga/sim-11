@@ -55,7 +55,7 @@ bool DoubleOperandInstruction::readSourceOperand (T *source)
 	if (!sourceOperandLocation_.isValid ())
 	{
 		sourceOperandLocation_ = 
-			getSourceOperandLocation (cpu_->registers ());
+			getSourceOperandLocation (cpuData_->registers ());
 	}
 
     *source = sourceOperandLocation_.contents<T> ();
@@ -68,7 +68,7 @@ bool DoubleOperandInstruction::readDestinationOperand (T *destination)
 	if (!destinationOperandLocation_.isValid ()) 
 	{
 		destinationOperandLocation_ = 
-			getDestinationOperandLocation (cpu_->registers ());
+			getDestinationOperandLocation (cpuData_->registers ());
 	}
 
     *destination = destinationOperandLocation_.contents<T> ();
@@ -85,7 +85,7 @@ bool DoubleOperandInstruction::writeDestinationOperand (T operand)
 	if (!destinationOperandLocation_.isValid ())
 	{
 		destinationOperandLocation_ = 
-			getDestinationOperandLocation (cpu_->registers ());
+			getDestinationOperandLocation (cpuData_->registers ());
 	}
 	
 	return destinationOperandLocation_.write<T> (operand);

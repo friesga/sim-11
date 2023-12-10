@@ -39,15 +39,15 @@ inline CommonInstruction::JMP::JMP (CpuData* cpu, CpuControl* cpuControl,
 
 inline bool CommonInstruction::JMP::execute ()
 {
-    operandLocation_ = getOperandLocation (cpu_->registers ());
+    operandLocation_ = getOperandLocation (cpuData_->registers ());
     if (operandLocation_.isA<MemoryOperandLocation> ())
     {
-        cpu_->registers ()[7] = operandLocation_;
+        cpuData_->registers ()[7] = operandLocation_;
         return true;
     }
 
     // Illegal instruction
-    cpu_->setTrap (CpuData::TrapCondition::BusError);
+    cpuData_->setTrap (CpuData::TrapCondition::BusError);
     return false;
 }
 

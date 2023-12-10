@@ -2,9 +2,9 @@
 
 #include <typeinfo>
 
-LSI11Instruction::LSI11Instruction (CpuData *cpu, CpuControl* cpuControl, MMU* mmu)
+LSI11Instruction::LSI11Instruction (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu)
 	:
-	cpu_ {cpu},
+	cpuData_ {cpuData},
 	cpuControl_ {cpuControl},
 	mmu_ {mmu}
 {}
@@ -29,12 +29,12 @@ OperandLocation LSI11Instruction::decodeOperand (Operand operand, GeneralRegiste
 		case 0:
 			// Register mode. The operand is contained in the instruction
 			// specified register.
-			return OperandLocation (RegisterOperandLocation {cpu_, (u8) operand.registerNr_});
+			return OperandLocation (RegisterOperandLocation {cpuData_, (u8) operand.registerNr_});
 
 		case 1:
 			// Register deferred (indirect) mode. The register contains
 			// the address of the operand.
-			return OperandLocation (MemoryOperandLocation {cpu_, mmu_,
+			return OperandLocation (MemoryOperandLocation {cpuData_, mmu_,
 				CondData<u16> (reg[operand.registerNr_])});
 
 		case 2:
@@ -47,7 +47,7 @@ OperandLocation LSI11Instruction::decodeOperand (Operand operand, GeneralRegiste
 			else
 				reg[operand.registerNr_] += 2;
 
-			return OperandLocation (MemoryOperandLocation {cpu_, mmu_,
+			return OperandLocation (MemoryOperandLocation {cpuData_, mmu_,
 				CondData<u16> (addr)});
 
 		case 3: 
@@ -56,7 +56,7 @@ OperandLocation LSI11Instruction::decodeOperand (Operand operand, GeneralRegiste
 			// incremented (always by 2; even for byte instructions).
 			addr = reg[operand.registerNr_];
 			reg[operand.registerNr_] += 2;
-			return OperandLocation (MemoryOperandLocation {cpu_, mmu_,
+			return OperandLocation (MemoryOperandLocation {cpuData_, mmu_,
 				CondData<u16> (mmu_->fetchWord (addr))});
 
 		case 4:
@@ -69,10 +69,10 @@ OperandLocation LSI11Instruction::decodeOperand (Operand operand, GeneralRegiste
 				reg[operand.registerNr_] -= 2;
 			addr = reg[operand.registerNr_];
 
-			if (operand.registerNr_ == 6 && cpu_->stackOverflow ())
-				cpu_->setTrap (CpuData::TrapCondition::StackOverflow);  
+			if (operand.registerNr_ == 6 && cpuData_->stackOverflow ())
+				cpuData_->setTrap (CpuData::TrapCondition::StackOverflow);  
 
-			return OperandLocation (MemoryOperandLocation {cpu_, mmu_,
+			return OperandLocation (MemoryOperandLocation {cpuData_, mmu_,
 				CondData<u16> (addr)});
 
 		case 5:
@@ -83,10 +83,10 @@ OperandLocation LSI11Instruction::decodeOperand (Operand operand, GeneralRegiste
 			reg[operand.registerNr_] -= 2;
 			addr = reg[operand.registerNr_];
 
-			if (operand.registerNr_ == 6 && cpu_->stackOverflow ())
-				cpu_->setTrap (CpuData::TrapCondition::StackOverflow);  
+			if (operand.registerNr_ == 6 && cpuData_->stackOverflow ())
+				cpuData_->setTrap (CpuData::TrapCondition::StackOverflow);  
 
-			return OperandLocation (MemoryOperandLocation {cpu_, mmu_,
+			return OperandLocation (MemoryOperandLocation {cpuData_, mmu_,
 				CondData<u16> (mmu_->fetchWord (addr))});
 
 		case 6:
@@ -99,7 +99,7 @@ OperandLocation LSI11Instruction::decodeOperand (Operand operand, GeneralRegiste
 			// undesirable side effect of this function.
 			index = mmu_->fetchWord (reg[7]);
 			reg[7] += 2;
-			return OperandLocation (MemoryOperandLocation {cpu_, mmu_,
+			return OperandLocation (MemoryOperandLocation {cpuData_, mmu_,
 				CondData<u16> (reg[operand.registerNr_] + index)});
 			
 		case 7: 
@@ -111,7 +111,7 @@ OperandLocation LSI11Instruction::decodeOperand (Operand operand, GeneralRegiste
 			index = mmu_->fetchWord (reg[7]);
 			reg[7] += 2;
 			addr = reg[operand.registerNr_] + index;
-			return OperandLocation (MemoryOperandLocation {cpu_, mmu_,
+			return OperandLocation (MemoryOperandLocation {cpuData_, mmu_,
 				CondData<u16> (mmu_->fetchWord (addr))});
 
 		default:
@@ -147,5 +147,5 @@ string LSI11Instruction::mnemonic ()
 
 void LSI11Instruction::setPSW (ConditionCodes conditionCodes)
 {
-	cpu_->setCC (conditionCodes);
+	cpuData_->setCC (conditionCodes);
 }
