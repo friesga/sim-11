@@ -19,14 +19,14 @@
 class CommonInstruction::CCC : public CcInstruction, public WithFactory<CCC>
 {
 public:
-    CCC (CpuData* cpu, CpuControl* cpuControl, MMU* mmu, u16 instruction);
+    CCC (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline CommonInstruction::CCC::CCC (CpuData* cpu, CpuControl* cpuControl,
+inline CommonInstruction::CCC::CCC (CpuData* cpuData, CpuControl* cpuControl,
         MMU* mmu, u16 instruction)
     :
-    CcInstruction (cpu, cpuControl, mmu, instruction)
+    CcInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
 inline bool CommonInstruction::CCC::execute ()

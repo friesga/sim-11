@@ -18,14 +18,14 @@
 class CommonInstruction::TSTB : public SingleOperandInstruction, public WithFactory<TSTB>
 {
 public:
-    TSTB (CpuData* cpu, CpuControl* cpuControl, MMU* mmu, u16 instruction);
+    TSTB (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline CommonInstruction::TSTB::TSTB (CpuData* cpu, CpuControl* cpuControl,
+inline CommonInstruction::TSTB::TSTB (CpuData* cpuData, CpuControl* cpuControl,
         MMU* mmu, u16 instruction)
     :
-    SingleOperandInstruction (cpu, cpuControl, mmu, instruction)
+    SingleOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
 inline bool CommonInstruction::TSTB::execute ()

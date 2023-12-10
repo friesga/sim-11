@@ -101,7 +101,7 @@ class CommonInstruction
     friend class KDF11_AInstruction;
 
 public:
-    unique_ptr<LSI11Instruction> decode (CpuData* cpu, CpuControl* cpuControl,
+    unique_ptr<LSI11Instruction> decode (CpuData* cpuData, CpuControl* cpuControl,
         MMU* mmu, u16 instruction);
 
 private:

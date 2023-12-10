@@ -28,14 +28,14 @@
 class CommonInstruction::FDIV : public FISInstruction, public WithFactory<FDIV>
 {
 public:
-    FDIV (CpuData* cpu, CpuControl* cpuControl, MMU* mmu, u16 instruction);
+    FDIV (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline CommonInstruction::FDIV::FDIV (CpuData* cpu, CpuControl* cpuControl,
+inline CommonInstruction::FDIV::FDIV (CpuData* cpuData, CpuControl* cpuControl,
         MMU* mmu, u16 instruction)
     :
-    FISInstruction (cpu, cpuControl, mmu, instruction)
+    FISInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
 inline bool CommonInstruction::FDIV::execute ()

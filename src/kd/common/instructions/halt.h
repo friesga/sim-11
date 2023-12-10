@@ -19,14 +19,14 @@
 class CommonInstruction::HALT : public NoOperandInstruction, public WithFactory<HALT>
 {
 public:
-    HALT (CpuData* cpu, CpuControl* cpuControl, MMU* mmu, u16 instruction);
+    HALT (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline CommonInstruction::HALT::HALT (CpuData* cpu, CpuControl* cpuControl,
+inline CommonInstruction::HALT::HALT (CpuData* cpuData, CpuControl* cpuControl,
         MMU* mmu, u16 instruction)
     :
-    NoOperandInstruction (cpu, cpuControl, mmu, instruction)
+    NoOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
 inline bool CommonInstruction::HALT::execute ()

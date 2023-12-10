@@ -20,14 +20,14 @@
 class CommonInstruction::BGE : public BranchInstruction, public WithFactory<BGE>
 {
 public:
-    BGE (CpuData* cpu, CpuControl* cpuControl, MMU* mmu, u16 instruction);
+    BGE (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline CommonInstruction::BGE::BGE (CpuData* cpu, CpuControl* cpuControl,
+inline CommonInstruction::BGE::BGE (CpuData* cpuData, CpuControl* cpuControl,
         MMU* mmu, u16 instruction)
     :
-    BranchInstruction (cpu, cpuControl, mmu, instruction)
+    BranchInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
 inline bool CommonInstruction::BGE::execute ()

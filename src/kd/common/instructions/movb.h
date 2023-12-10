@@ -22,14 +22,14 @@
 class CommonInstruction::MOVB : public DoubleOperandInstruction, public WithFactory<MOVB>
 {
 public:
-    MOVB (CpuData* cpu, CpuControl* cpuControl, MMU* mmu, u16 instruction);
+    MOVB (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline CommonInstruction::MOVB::MOVB (CpuData* cpu, CpuControl* cpuControl,
+inline CommonInstruction::MOVB::MOVB (CpuData* cpuData, CpuControl* cpuControl,
         MMU* mmu, u16 instruction)
     :
-    DoubleOperandInstruction (cpu, cpuControl, mmu, instruction)
+    DoubleOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
 inline bool CommonInstruction::MOVB::execute ()

@@ -29,14 +29,14 @@
 class CommonInstruction::ADD : public DoubleOperandInstruction, public WithFactory<ADD>
 {
 public:
-    ADD (CpuData* cpu, CpuControl* cpuControl, MMU* mmu, u16 instruction);
+    ADD (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline CommonInstruction::ADD::ADD (CpuData* cpu, CpuControl* cpuControl,
+inline CommonInstruction::ADD::ADD (CpuData* cpuData, CpuControl* cpuControl,
         MMU* mmu, u16 instruction)
     :
-    DoubleOperandInstruction (cpu, cpuControl, mmu, instruction)
+    DoubleOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
 inline bool CommonInstruction::ADD::execute ()

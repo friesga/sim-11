@@ -28,14 +28,14 @@
 class CommonInstruction::DIV : public EisInstruction, public WithFactory<DIV>
 {
 public:
-    DIV (CpuData* cpu, CpuControl* cpuControl, MMU* mmu, u16 instruction);
+    DIV (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline CommonInstruction::DIV::DIV (CpuData* cpu, CpuControl* cpuControl,
+inline CommonInstruction::DIV::DIV (CpuData* cpuData, CpuControl* cpuControl,
         MMU* mmu, u16 instruction)
     :
-    EisInstruction (cpu, cpuControl, mmu, instruction)
+    EisInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
 inline bool CommonInstruction::DIV::execute ()

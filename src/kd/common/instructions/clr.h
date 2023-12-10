@@ -23,14 +23,14 @@
 class CommonInstruction::CLR : public SingleOperandInstruction, public WithFactory<CLR>
 {
 public:
-    CLR (CpuData* cpu, CpuControl* cpuControl, MMU* mmu, u16 instruction);
+    CLR (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline CommonInstruction::CLR::CLR (CpuData* cpu, CpuControl* cpuControl,
+inline CommonInstruction::CLR::CLR (CpuData* cpuData, CpuControl* cpuControl,
         MMU* mmu, u16 instruction)
     :
-    SingleOperandInstruction (cpu, cpuControl, mmu, instruction)
+    SingleOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
 inline bool CommonInstruction::CLR::execute ()

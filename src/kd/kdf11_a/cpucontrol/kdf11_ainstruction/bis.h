@@ -26,14 +26,14 @@
 class KDF11_AInstruction::BIS : public KD11DoubleOperandInstruction, public WithFactory<BIS>
 {
 public:
-    BIS (CpuData* cpu, CpuControl* cpuControl, MMU* mmu, u16 instruction);
+    BIS (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline KDF11_AInstruction::BIS::BIS (CpuData* cpu,
+inline KDF11_AInstruction::BIS::BIS (CpuData* cpuData,
         CpuControl* cpuControl, MMU* mmu, u16 instruction)
     :
-    KD11DoubleOperandInstruction (cpu, cpuControl, mmu, instruction)
+    KD11DoubleOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
 inline bool KDF11_AInstruction::BIS::execute ()

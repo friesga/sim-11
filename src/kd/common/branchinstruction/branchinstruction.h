@@ -19,7 +19,7 @@ class BranchInstruction : public LSI11Instruction
 	instr_;
 
 public:
-	BranchInstruction (CpuData* cpu, CpuControl* cpuControl, MMU* mmu, u16 instruction);
+	BranchInstruction (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
 	u16 getOperationCode () override;
 
 protected:

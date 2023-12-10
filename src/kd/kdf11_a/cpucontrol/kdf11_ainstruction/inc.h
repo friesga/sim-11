@@ -23,14 +23,14 @@
 class KDF11_AInstruction::INC : public SingleOperandInstruction, public WithFactory<INC>
 {
 public:
-    INC (CpuData* cpu, CpuControl* cpuControl, MMU* mmu, u16 instruction);
+    INC (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline KDF11_AInstruction::INC::INC (CpuData* cpu, CpuControl* cpuControl,
+inline KDF11_AInstruction::INC::INC (CpuData* cpuData, CpuControl* cpuControl,
         MMU* mmu, u16 instruction)
     :
-    SingleOperandInstruction (cpu, cpuControl, mmu, instruction)
+    SingleOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
 inline bool KDF11_AInstruction::INC::execute ()

@@ -25,14 +25,14 @@
 class CommonInstruction::ADC : public SingleOperandInstruction, public WithFactory<ADC>
 {
 public:
-    ADC (CpuData* cpu, CpuControl* cpuControl, MMU* mmu, u16 instruction);
+    ADC (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline CommonInstruction::ADC::ADC (CpuData* cpu, CpuControl* cpuControl,
+inline CommonInstruction::ADC::ADC (CpuData* cpuData, CpuControl* cpuControl,
         MMU* mmu, u16 instruction)
     :
-    SingleOperandInstruction (cpu, cpuControl, mmu, instruction)
+    SingleOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
 inline bool CommonInstruction::ADC::execute ()

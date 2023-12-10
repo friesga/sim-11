@@ -23,7 +23,7 @@ class EisInstruction : public LSI11Instruction
 	instr_;
 
 public:
-	EisInstruction (CpuData* cpu, CpuControl* cpuControl, MMU* mmu, u16 instruction);
+	EisInstruction (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
 	u16 getOperationCode () override;
 	
 protected:

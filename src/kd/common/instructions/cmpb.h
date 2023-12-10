@@ -18,14 +18,14 @@
 class CommonInstruction::CMPB : public DoubleOperandInstruction, public WithFactory<CMPB>
 {
 public:
-    CMPB (CpuData* cpu, CpuControl* cpuControl, MMU* mmu, u16 instruction);
+    CMPB (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline CommonInstruction::CMPB::CMPB (CpuData* cpu, CpuControl* cpuControl,
+inline CommonInstruction::CMPB::CMPB (CpuData* cpuData, CpuControl* cpuControl,
         MMU* mmu, u16 instruction)
     :
-    DoubleOperandInstruction (cpu, cpuControl, mmu, instruction)
+    DoubleOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
 inline bool CommonInstruction::CMPB::execute ()

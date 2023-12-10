@@ -20,14 +20,14 @@
 class CommonInstruction::BPL : public BranchInstruction, public WithFactory<BPL>
 {
 public:
-    BPL (CpuData* cpu, CpuControl* cpuControl, MMU* mmu, u16 instruction);
+    BPL (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline CommonInstruction::BPL::BPL (CpuData* cpu, CpuControl* cpuControl,
+inline CommonInstruction::BPL::BPL (CpuData* cpuData, CpuControl* cpuControl,
         MMU* mmu, u16 instruction)
     :
-    BranchInstruction (cpu, cpuControl, mmu, instruction)
+    BranchInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
 inline bool CommonInstruction::BPL::execute ()

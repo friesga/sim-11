@@ -28,14 +28,14 @@
 class CommonInstruction::ASL : public SingleOperandInstruction, public WithFactory<ASL>
 {
 public:
-    ASL (CpuData* cpu, CpuControl* cpuControl, MMU* mmu, u16 instruction);
+    ASL (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline CommonInstruction::ASL::ASL (CpuData* cpu, CpuControl* cpuControl,
+inline CommonInstruction::ASL::ASL (CpuData* cpuData, CpuControl* cpuControl,
         MMU* mmu, u16 instruction)
     :
-    SingleOperandInstruction (cpu, cpuControl, mmu, instruction)
+    SingleOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
 inline bool CommonInstruction::ASL::execute ()

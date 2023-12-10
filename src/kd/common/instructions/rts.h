@@ -19,14 +19,14 @@
 class CommonInstruction::RTS : public FISInstruction, public WithFactory<RTS>
 {
 public:
-    RTS (CpuData* cpu, CpuControl* cpuControl, MMU* mmu, u16 instruction);
+    RTS (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline CommonInstruction::RTS::RTS (CpuData* cpu, CpuControl* cpuControl,
+inline CommonInstruction::RTS::RTS (CpuData* cpuData, CpuControl* cpuControl,
         MMU* mmu, u16 instruction)
     :
-    FISInstruction (cpu, cpuControl, mmu, instruction)
+    FISInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
 inline bool CommonInstruction::RTS::execute ()

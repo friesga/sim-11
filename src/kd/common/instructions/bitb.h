@@ -18,14 +18,14 @@
 class CommonInstruction::BITB : public DoubleOperandInstruction, public WithFactory<BITB>
 {
 public:
-    BITB (CpuData* cpu, CpuControl* cpuControl, MMU* mmu, u16 instruction);
+    BITB (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline CommonInstruction::BITB::BITB (CpuData* cpu, CpuControl* cpuControl,
+inline CommonInstruction::BITB::BITB (CpuData* cpuData, CpuControl* cpuControl,
         MMU* mmu, u16 instruction)
     :
-    DoubleOperandInstruction (cpu, cpuControl, mmu, instruction)
+    DoubleOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
 inline bool CommonInstruction::BITB::execute ()

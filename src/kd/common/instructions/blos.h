@@ -22,14 +22,14 @@
 class CommonInstruction::BLOS : public BranchInstruction, public WithFactory<BLOS>
 {
 public:
-    BLOS (CpuData* cpu, CpuControl* cpuControl, MMU* mmu, u16 instruction);
+    BLOS (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline CommonInstruction::BLOS::BLOS (CpuData* cpu, CpuControl* cpuControl,
+inline CommonInstruction::BLOS::BLOS (CpuData* cpuData, CpuControl* cpuControl,
         MMU* mmu, u16 instruction)
     :
-    BranchInstruction (cpu, cpuControl, mmu, instruction)
+    BranchInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
 inline bool CommonInstruction::BLOS::execute ()

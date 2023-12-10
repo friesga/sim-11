@@ -35,14 +35,14 @@
 class CommonInstruction::ASHC : public EisInstruction, public WithFactory<ASHC>
 {
 public:
-    ASHC (CpuData* cpu, CpuControl* cpuControl, MMU* mmu, u16 instruction);
+    ASHC (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline CommonInstruction::ASHC::ASHC (CpuData* cpu, CpuControl* cpuControl,
+inline CommonInstruction::ASHC::ASHC (CpuData* cpuData, CpuControl* cpuControl,
         MMU* mmu, u16 instruction)
     :
-    EisInstruction (cpu, cpuControl, mmu, instruction)
+    EisInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
 inline bool CommonInstruction::ASHC::execute ()

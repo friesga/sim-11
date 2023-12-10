@@ -25,14 +25,14 @@
 class CommonInstruction::MOV : public DoubleOperandInstruction, public WithFactory<MOV>
 {
 public:
-    MOV (CpuData* cpu, CpuControl* cpuControl, MMU* mmu, u16 instruction);
+    MOV (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline CommonInstruction::MOV::MOV (CpuData* cpu, CpuControl* cpuControl,
+inline CommonInstruction::MOV::MOV (CpuData* cpuData, CpuControl* cpuControl,
         MMU* mmu, u16 instruction)
     :
-    DoubleOperandInstruction (cpu, cpuControl, mmu, instruction)
+    DoubleOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
 inline bool CommonInstruction::MOV::execute ()

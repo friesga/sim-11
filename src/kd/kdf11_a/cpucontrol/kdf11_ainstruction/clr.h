@@ -32,14 +32,14 @@
 class KDF11_AInstruction::CLR : public SingleOperandInstruction, public WithFactory<CLR>
 {
 public:
-    CLR (CpuData* cpu, CpuControl* cpuControl, MMU* mmu, u16 instruction);
+    CLR (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline KDF11_AInstruction::CLR::CLR (CpuData* cpu, CpuControl* cpuControl,
+inline KDF11_AInstruction::CLR::CLR (CpuData* cpuData, CpuControl* cpuControl,
         MMU* mmu, u16 instruction)
     :
-    SingleOperandInstruction (cpu, cpuControl, mmu, instruction)
+    SingleOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
 inline bool KDF11_AInstruction::CLR::execute ()

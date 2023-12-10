@@ -25,14 +25,14 @@
 class CommonInstruction::SXT : public SingleOperandInstruction, public WithFactory<SXT>
 {
 public:
-    SXT (CpuData* cpu, CpuControl* cpuControl, MMU* mmu, u16 instruction);
+    SXT (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline CommonInstruction::SXT::SXT (CpuData* cpu, CpuControl* cpuControl,
+inline CommonInstruction::SXT::SXT (CpuData* cpuData, CpuControl* cpuControl,
         MMU* mmu, u16 instruction)
     :
-    SingleOperandInstruction (cpu, cpuControl, mmu, instruction)
+    SingleOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
 inline bool CommonInstruction::SXT::execute ()

@@ -25,14 +25,14 @@
 class CommonInstruction::SBC : public SingleOperandInstruction, public WithFactory<SBC>
 {
 public:
-    SBC (CpuData* cpu, CpuControl* cpuControl, MMU* mmu, u16 instruction);
+    SBC (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline CommonInstruction::SBC::SBC (CpuData* cpu, CpuControl* cpuControl,
+inline CommonInstruction::SBC::SBC (CpuData* cpuData, CpuControl* cpuControl,
         MMU* mmu, u16 instruction)
     :
-    SingleOperandInstruction (cpu, cpuControl, mmu, instruction)
+    SingleOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
 inline bool CommonInstruction::SBC::execute ()

@@ -25,14 +25,14 @@
 class KDF11_AInstruction::SWAB : public SingleOperandInstruction, public WithFactory<SWAB>
 {
 public:
-    SWAB (CpuData* cpu, CpuControl* cpuControl, MMU* mmu, u16 instruction);
+    SWAB (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline KDF11_AInstruction::SWAB::SWAB (CpuData* cpu, CpuControl* cpuControl,
+inline KDF11_AInstruction::SWAB::SWAB (CpuData* cpuData, CpuControl* cpuControl,
         MMU* mmu, u16 instruction)
     :
-    SingleOperandInstruction (cpu, cpuControl, mmu, instruction)
+    SingleOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
 inline bool KDF11_AInstruction::SWAB::execute ()

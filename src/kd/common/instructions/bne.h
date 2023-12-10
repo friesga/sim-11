@@ -21,14 +21,14 @@
 class CommonInstruction::BNE : public BranchInstruction, public WithFactory<BNE>
 {
 public:
-    BNE (CpuData* cpu, CpuControl* cpuControl, MMU* mmu, u16 instruction);
+    BNE (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline CommonInstruction::BNE::BNE (CpuData* cpu, CpuControl* cpuControl,
+inline CommonInstruction::BNE::BNE (CpuData* cpuData, CpuControl* cpuControl,
         MMU* mmu, u16 instruction)
     :
-    BranchInstruction (cpu, cpuControl, mmu, instruction)
+    BranchInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
 inline bool CommonInstruction::BNE::execute ()

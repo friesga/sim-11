@@ -26,14 +26,14 @@
 class CommonInstruction::BIS : public DoubleOperandInstruction, public WithFactory<BIS>
 {
 public:
-    BIS (CpuData* cpu, CpuControl* cpuControl, MMU* mmu, u16 instruction);
+    BIS (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline CommonInstruction::BIS::BIS (CpuData* cpu, CpuControl* cpuControl,
+inline CommonInstruction::BIS::BIS (CpuData* cpuData, CpuControl* cpuControl,
         MMU* mmu, u16 instruction)
     :
-    DoubleOperandInstruction (cpu, cpuControl, mmu, instruction)
+    DoubleOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
 inline bool CommonInstruction::BIS::execute ()

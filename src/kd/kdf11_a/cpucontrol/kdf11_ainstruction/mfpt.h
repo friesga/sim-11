@@ -27,14 +27,14 @@
 class KDF11_AInstruction::MFPT : public NoOperandInstruction, public WithFactory<MFPT>
 {
 public:
-    MFPT (CpuData* cpu, CpuControl* cpuControl, MMU* mmu, u16 instruction);
+    MFPT (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline KDF11_AInstruction::MFPT::MFPT (CpuData* cpu, CpuControl* cpuControl,
+inline KDF11_AInstruction::MFPT::MFPT (CpuData* cpuData, CpuControl* cpuControl,
         MMU* mmu, u16 instruction)
     :
-    NoOperandInstruction (cpu, cpuControl, mmu, instruction)
+    NoOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
 inline bool KDF11_AInstruction::MFPT::execute ()

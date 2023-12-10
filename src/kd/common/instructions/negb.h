@@ -18,14 +18,14 @@
 class CommonInstruction::NEGB : public SingleOperandInstruction, public WithFactory<NEGB>
 {
 public:
-    NEGB (CpuData* cpu, CpuControl* cpuControl, MMU* mmu, u16 instruction);
+    NEGB (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline CommonInstruction::NEGB::NEGB (CpuData* cpu, CpuControl* cpuControl,
+inline CommonInstruction::NEGB::NEGB (CpuData* cpuData, CpuControl* cpuControl,
         MMU* mmu, u16 instruction)
     :
-    SingleOperandInstruction (cpu, cpuControl, mmu, instruction)
+    SingleOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
 inline bool CommonInstruction::NEGB::execute ()

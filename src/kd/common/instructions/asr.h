@@ -27,14 +27,14 @@
 class CommonInstruction::ASR : public SingleOperandInstruction, public WithFactory<ASR>
 {
 public:
-    ASR (CpuData* cpu, CpuControl* cpuControl, MMU* mmu, u16 instruction);
+    ASR (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline CommonInstruction::ASR::ASR (CpuData* cpu, CpuControl* cpuControl,
+inline CommonInstruction::ASR::ASR (CpuData* cpuData, CpuControl* cpuControl,
         MMU* mmu, u16 instruction)
     :
-    SingleOperandInstruction (cpu, cpuControl, mmu, instruction)
+    SingleOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
 inline bool CommonInstruction::ASR::execute ()

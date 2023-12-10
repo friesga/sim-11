@@ -29,14 +29,14 @@
 class KDF11_AInstruction::ADD : public KD11DoubleOperandInstruction, public WithFactory<ADD>
 {
 public:
-    ADD (CpuData* cpu, CpuControl* cpuControl, MMU* mmu, u16 instruction);
+    ADD (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline KDF11_AInstruction::ADD::ADD (CpuData* cpu,
+inline KDF11_AInstruction::ADD::ADD (CpuData* cpuData,
         CpuControl* cpuControl, MMU* mmu, u16 instruction)
     :
-    KD11DoubleOperandInstruction (cpu, cpuControl, mmu, instruction)
+    KD11DoubleOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
 inline bool KDF11_AInstruction::ADD::execute ()

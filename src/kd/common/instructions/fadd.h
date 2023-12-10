@@ -28,14 +28,14 @@
 class CommonInstruction::FADD : public FISInstruction, public WithFactory<FADD>
 {
 public:
-    FADD (CpuData* cpu, CpuControl* cpuControl, MMU* mmu, u16 instruction);
+    FADD (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline CommonInstruction::FADD::FADD (CpuData* cpu, CpuControl* cpuControl,
+inline CommonInstruction::FADD::FADD (CpuData* cpuData, CpuControl* cpuControl,
         MMU* mmu, u16 instruction)
     :
-    FISInstruction (cpu, cpuControl, mmu, instruction)
+    FISInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
 inline bool CommonInstruction::FADD::execute ()

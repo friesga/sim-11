@@ -15,14 +15,14 @@
 class CommonInstruction::SCC : public CcInstruction, public WithFactory<SCC>
 {
 public:
-    SCC (CpuData* cpu, CpuControl* cpuControl, MMU* mmu, u16 instruction);
+    SCC (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline CommonInstruction::SCC::SCC (CpuData* cpu, CpuControl* cpuControl,
+inline CommonInstruction::SCC::SCC (CpuData* cpuData, CpuControl* cpuControl,
         MMU* mmu, u16 instruction)
     :
-    CcInstruction (cpu, cpuControl, mmu, instruction)
+    CcInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
 inline bool CommonInstruction::SCC::execute ()

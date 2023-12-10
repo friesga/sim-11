@@ -25,14 +25,14 @@
 class CommonInstruction::MARK : public MarkInstruction, public WithFactory<MARK>
 {
 public:
-    MARK (CpuData* cpu, CpuControl* cpuControl, MMU* mmu, u16 instruction);
+    MARK (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline CommonInstruction::MARK::MARK (CpuData* cpu, CpuControl* cpuControl,
+inline CommonInstruction::MARK::MARK (CpuData* cpuData, CpuControl* cpuControl,
         MMU* mmu, u16 instruction)
     :
-    MarkInstruction (cpu, cpuControl, mmu, instruction)
+    MarkInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
 inline bool CommonInstruction::MARK::execute ()

@@ -1,8 +1,8 @@
 #include "fisinstruction.h"
 
-FISInstruction::FISInstruction (CpuData* cpu, CpuControl* cpuControl, MMU* mmu, u16 instruction)
+FISInstruction::FISInstruction (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction)
     :
-    LSI11Instruction (cpu, cpuControl, mmu),
+    LSI11Instruction (cpuData, cpuControl, mmu),
     instr_ {instruction}
 {}
 
