@@ -44,7 +44,7 @@ private:
     Qbus* bus_;
     KDF11_ACpuData cpuData_ {};
     KTF11_A mmu_ {bus_, &cpuData_};
-    KDF11_A_CpuControl cpu_ {bus_, &cpuData_, &mmu_};
+    KDF11_A_CpuControl cpuControl_ {bus_, &cpuData_, &mmu_};
     unique_ptr<KD11_NA_ODT>	odt_ {};
     KDF11_AConfig::PowerUpMode powerUpMode_;
     u16 startAddress_;
@@ -56,7 +56,7 @@ private:
 
 constexpr CpuControl* KDF11_A::cpuControl ()
 {
-    return &cpu_;
+    return &cpuControl_;
 }
 
 constexpr CpuData* KDF11_A::cpuData ()

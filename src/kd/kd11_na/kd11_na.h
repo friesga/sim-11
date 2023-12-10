@@ -48,7 +48,7 @@ private:
 
     Qbus* bus_;
     KD11_NACpuData cpuData_;
-    KD11_NA_CpuControl cpu_ {bus_, &cpuData_, &pseudoMMU_};
+    KD11_NA_CpuControl cpuControl_ {bus_, &cpuData_, &pseudoMMU_};
     PseudoMMU pseudoMMU_ {bus_, &cpuData_};
     unique_ptr<KD11_NA_ODT>	odt_ {};
     KD11_NAConfig::PowerUpMode powerUpMode_;
@@ -61,7 +61,7 @@ private:
 
 constexpr CpuControl* KD11_NA::cpuControl ()
 {
-    return &cpu_;
+    return &cpuControl_;
 }
 
 constexpr CpuData* KD11_NA::cpuData ()
