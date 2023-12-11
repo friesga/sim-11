@@ -8,7 +8,8 @@ using std::string;
 // Verify all registers are initialized to zero
 TEST (KD11_NARegistersTest, RegistersInitializedToZero)
 {
-    KD11_NARegisters registers;
+    u16 psw;
+    KD11_NARegisters registers {psw};
     EXPECT_EQ (registers [0], 0);
     EXPECT_EQ (registers [1], 0);
     EXPECT_EQ (registers [2], 0);
@@ -21,7 +22,8 @@ TEST (KD11_NARegistersTest, RegistersInitializedToZero)
 
 TEST (KD11_NARegistersTest, RegistersCanBeAssignedTo)
 {
-    KD11_NARegisters registers;
+    u16 psw;
+    KD11_NARegisters registers {psw};
 
     registers [0] = 10;
     EXPECT_EQ (registers [0], 10);
@@ -29,14 +31,16 @@ TEST (KD11_NARegistersTest, RegistersCanBeAssignedTo)
 
 TEST (KD11_NARegistersTest, ExceptionOnIllegalRegisterNr)
 {
-    KD11_NARegisters registers;
+    u16 psw;
+    KD11_NARegisters registers {psw};
 
     EXPECT_THROW (registers [8], string);
 }
 
 TEST (KD11_NARegistersTest, RegistersCanBeConvertedToArray)
 {
-    KD11_NARegisters registers;
+    u16 psw;
+    KD11_NARegisters registers {psw};
     registers [0] = 10;
     registers [1] = 11;
     registers [2] = 12;
