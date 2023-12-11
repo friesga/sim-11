@@ -61,8 +61,6 @@ set (KD11_NA_CPU_SRCS
     src/kd/kd11_na/cpucontrol/kd11_na_step.cpp
     src/kd/kd11_na/cpucontrol/kd11_na_cpucontrol.cpp
     src/kd/kd11_na/cpucontrol/kd11_nainstruction/opcodetables.cpp
-    src/kd/kd11_na/cpudata/kd11_nacpudata.cpp
-    src/kd/kd11_na/cpudata/kd11_natrapvector.cpp
     src/kd/kd11_na/cpudata/kd11_naregisters/kd11_naregisters.cpp
     src/kd/kd11_na/pseudommu/pseudommu.cpp)
 
@@ -70,8 +68,6 @@ set (KDF11_A_SRCS
     src/kd/kdf11_a/kdf11_a.cpp
     src/kd/kdf11_a/cpucontrol/kdf11_a_step.cpp
     src/kd/kdf11_a/cpucontrol/kdf11_a_cpucontrol.cpp
-    src/kd/kdf11_a/cpudata/kdf11_acpudata.cpp
-    src/kd/kdf11_a/cpudata/kdf11_atrapvector.cpp
     src/kd/kdf11_a/cpudata/kdf11_aregisters/kdf11_aregisters.cpp
     src/kd/kdf11_a/kd11doubleoperandinstruction/kd11doubleoperandinstruction.cpp
     src/kd/kdf11_a/kdf11_ainstruction/kdf11_ainstruction.cpp

@@ -8,7 +8,9 @@ using std::copy;
 using std::begin;
 using std::end;
 
-KD11_NARegisters::KD11_NARegisters ()
+// The psw argument is ignored. It is required by the KDF11_ARegisters'
+// constructor but isn't used on the KD11-NA.
+KD11_NARegisters::KD11_NARegisters (u16 const &psw)
     :
     registers_ {}
 {}

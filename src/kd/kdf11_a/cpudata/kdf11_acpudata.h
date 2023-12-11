@@ -1,102 +1,36 @@
 #ifndef _KDF11ACPUDATA_H_
 #define _KDF11ACPUDATA_H_
 
-#include "kd/include/cpudata.h"
+#include "kd/common/kdcpudata/kdcpudata.h"
 #include "kd/kdf11_a/cpudata/kdf11_aregisters/kdf11_aregisters.h"
 #include "qbus/qbus.h"
 #include "types.h"
 #include "trace/trace.h"
 
-#include <functional>
-#include <map>
-
-using std::map;
-
 //
 // The class KDF11_ACpuData implements the CpuData interface for the KDF11-A.
 //
-class KDF11_ACpuData : public CpuData
+class KDF11_ACpuData : public KDCpuData<KDF11_ARegisters>
 {
 public:
-	KDF11_ACpuData ();
-
-	// Functions requited by the CpuData interface
-	constexpr GeneralRegisters& registers () override;
-	constexpr u16 psw () override;
-	constexpr void setPSW (u16 value) override;
-	constexpr void loadPSW (u16 value) override;
-	void setCC (ConditionCodes conditionCodes) override;
+	// Functions required by the CpuData interface and not implemented by
+	// KDCpuData
 	bool stackOverflow () override;
-
-	constexpr TrapCondition trap () override;
-	void setTrap (CpuData::TrapCondition trap, TrapRecordType cause = TrapRecordType::TRAP) override;
-	constexpr void clearTrap () override;
-	u16 trapVector () override;
-	u16 trapVector (TrapCondition trap) override;
 
 private:
 	enum {stackLimit = 0400};
 
-	u16	psw_;
-	KDF11_ARegisters registers_ {psw_};
-
-	// A trap is a special kind of interrupt, internal to the CPU. There
-	// can be only one trap serviced at the time.
-	CpuData::TrapCondition trap_;
-
-	static map<CpuData::TrapCondition, u16> trapVector_;
-
 	constexpr bool inKernelMode ();
 };
 
-// constexpr functions are implicitly inline and therefore need to be defined
-// in every translation unit.
-//
-// The function psw() is required by the CpuData interface.
-//
-constexpr u16 KDF11_ACpuData::psw ()
+// Check if a stack overflow has occurred, i.e. the kernel stack pointer has
+// been decremented below the stack limit.
+// On a double bus error a new stack will be set up at locations 2 and 0. This
+// should not result in a stack overflow trap.
+inline bool KDF11_ACpuData::stackOverflow ()
 {
-	return psw_;
-}
-
-//
-// Set the Processor Status Word to the given value. Two variants of this
-// function exist: setPSW() by which the T-bit cannot be set or cleared
-// and loadPSW() in which the complete PSW is replaced by the given value.
-// The latter function should only be used to load the PSW from a trap vector.
- constexpr void KDF11_ACpuData::setPSW (u16 value)
- {
-     psw_ = (psw_ & PSW_T) | (value & ~PSW_T);
- }
-
-constexpr void KDF11_ACpuData::loadPSW (u16 value)
-{
-	psw_ = value;
-}
-
-constexpr GeneralRegisters& KDF11_ACpuData::registers ()
-{
-	return registers_;
-}
-
-constexpr void KDF11_ACpuData::clearTrap ()
-{
-	trap_ = TrapCondition::None;
-}
-
-constexpr CpuData::TrapCondition KDF11_ACpuData::trap ()
-{
-	return trap_;
-}
-
-inline u16 KDF11_ACpuData::trapVector ()
-{
-	return trapVector_[trap_];
-}
-
-inline u16 KDF11_ACpuData::trapVector (TrapCondition trap)
-{
-	return trapVector_[trap];
+    return inKernelMode () && 
+        registers_ [6] > 0 && registers_ [6] < stackLimit;
 }
 
  constexpr bool KDF11_ACpuData::inKernelMode ()
