@@ -6,7 +6,7 @@
 #include "qbus/qbus.h"
 #include "float/float.h"
 #include "types.h"
-#include "kd/kdf11_a/cpucontrol/kdf11_ainstruction/kdf11_ainstruction.h"
+#include "kd/kdf11_a/kdf11_ainstruction/kdf11_ainstruction.h"
 #include "kd/kdf11_a/cpudata/kdf11_aregisters/kdf11_aregisters.h"
 #include "kd/kdf11_a/ktf11_a/ktf11_a.h"
 
