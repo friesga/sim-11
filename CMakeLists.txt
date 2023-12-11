@@ -69,13 +69,13 @@ set (KD11_NA_CPU_SRCS
 set (KDF11_A_SRCS
     src/kd/kdf11_a/kdf11_a.cpp
     src/kd/kdf11_a/cpucontrol/kdf11_a_step.cpp
-    src/kd/kdf11_a/cpucontrol/kd11doubleoperandinstruction/kd11doubleoperandinstruction.cpp
     src/kd/kdf11_a/cpucontrol/kdf11_a_cpucontrol.cpp
     src/kd/kdf11_a/cpucontrol/kdf11_ainstruction/kdf11_ainstruction.cpp
     src/kd/kdf11_a/cpucontrol/kdf11_ainstruction/opcodetables.cpp
     src/kd/kdf11_a/cpudata/kdf11_acpudata.cpp
     src/kd/kdf11_a/cpudata/kdf11_atrapvector.cpp
     src/kd/kdf11_a/cpudata/kdf11_aregisters/kdf11_aregisters.cpp
+    src/kd/kdf11_a/kd11doubleoperandinstruction/kd11doubleoperandinstruction.cpp
     src/kd/kdf11_a/ktf11_a/ktf11_a.cpp
     src/kd/kdf11_a/ktf11_a/ktf11_aregisters.cpp)
 
