@@ -69,11 +69,12 @@ set (KDF11_A_SRCS
     src/kd/kdf11_a/cpucontrol/kdf11_a_step.cpp
     src/kd/kdf11_a/cpucontrol/kdf11_a_cpucontrol.cpp
     src/kd/kdf11_a/cpudata/kdf11_aregisters/kdf11_aregisters.cpp
+    src/kd/kdf11_a/cpudata/kdf11_abusdevice.cpp
     src/kd/kdf11_a/kd11doubleoperandinstruction/kd11doubleoperandinstruction.cpp
     src/kd/kdf11_a/kdf11_ainstruction/kdf11_ainstruction.cpp
     src/kd/kdf11_a/kdf11_ainstruction/opcodetables.cpp
     src/kd/kdf11_a/ktf11_a/ktf11_a.cpp
-    src/kd/kdf11_a/ktf11_a/ktf11_aregisters.cpp)
+    src/kd/kdf11_a/ktf11_a/ktf11_abusdevice.cpp)
 
  set (KD11_NA_SRCS
     src/kd/kd11_na/kd11_na.cpp
@@ -374,7 +375,7 @@ set (GTEST_SRCS
     gtest/kd11_na/kd11_naregisterstest.cpp
     gtest/kdf11_a/pswtest.cpp
     gtest/kdf11_a/kdf11_aregisterstest.cpp
-    gtest/ktf11_a/ktf11_aregisterstest.cpp
+    gtest/kdf11_a/kdf11_abusdevicetest.cpp
     gtest/locationtest.cpp
     gtest/operandlocationtest.cpp
     gtest/dummycpu/dummymmu/dummymmu.cpp

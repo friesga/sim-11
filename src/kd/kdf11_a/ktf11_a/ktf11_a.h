@@ -26,18 +26,10 @@
 // pages, each page composed of from 1 to 128 integral blocks of 32 words. 
 // (EK-KDF11-UG-PR2)
 //
-class KTF11_A : public AbstractBusDevice, public MMU
+class KTF11_A : public MMU, public AbstractBusDevice
 {
 public:
 	KTF11_A (Qbus* bus, CpuData* cpuData);
-
-	// Functions required by the BusDevice interface. The KTF11-A is treated
-	// as a bus device as it has registers which have to be accessible on the
-	// bus.
-	StatusCode read (u16 address, u16 *destination) override;
-	StatusCode writeWord (u16 address, u16 value) override;
-	bool responsible (u16 address) override;
-	void reset () override;
 
 	// The following functions are called from the processor to access the
 	// memory and device registers (via the bus).
@@ -52,6 +44,13 @@ public:
 	bool putByte (u16 address, u8 value) override;
 	bool pushWord (u16 value) override;
 	bool popWord (u16 *destination) override;
+
+	// Functions required by the BusDevice interface and not implemented by
+	// AbstractBusDevice.
+	StatusCode read (u16 address, u16 *destination) override;
+	StatusCode writeWord (u16 address, u16 value) override;
+	bool responsible (u16 address) override;
+	void reset () override;
 
 private:
 	// A virtual address is composed of the following fields:

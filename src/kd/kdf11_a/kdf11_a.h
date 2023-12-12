@@ -9,9 +9,11 @@
 #include "kd/kdf11_a/cpudata/kdf11_acpudata.h"
 
 #include <memory>
+#include <array>
 
 using std::unique_ptr;
 using std::shared_ptr;
+using std::array;
 
 // The class KDF11_A starts the control logic which on its turn has to run
 // the KDF11_A's cpu and start the KD11_FA's ODT.
@@ -35,11 +37,10 @@ public:
     StatusCode read (u16 address, u16* destination) override;
     StatusCode writeWord (u16 address, u16 value) override;
     bool responsible (u16 address) override;
-    void reset () override {};
+    void reset () override;
 
 private:
     enum { stdBootAddress = 0173000 };
-    enum { PSWAddress = 0177776 };
 
     Qbus* bus_;
     KDF11_ACpuData cpuData_ {};
@@ -49,6 +50,8 @@ private:
     KDF11_AConfig::PowerUpMode powerUpMode_;
     u16 startAddress_;
     unique_ptr<ControlLogic> controlLogic_;
+
+    const array<BusDevice*, 2> cpuModules_ {&cpuData_, &mmu_};
 
     // The KDF11_A is started in its own thread
     std::thread kd11Thread_;

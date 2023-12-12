@@ -3,22 +3,29 @@
 
 #include "kd/common/kdcpudata/kdcpudata.h"
 #include "kd/kdf11_a/cpudata/kdf11_aregisters/kdf11_aregisters.h"
-#include "qbus/qbus.h"
-#include "types.h"
-#include "trace/trace.h"
+#include "abstractbusdevice/abstractbusdevice.h"
 
 //
-// The class KDF11_ACpuData implements the CpuData interface for the KDF11-A.
+// The class KDF11_ACpuData implements the CpuData interface for the KDF11-A
+// plus the BusDevice interface for bus access to the PSW.
 //
-class KDF11_ACpuData : public KDCpuData<KDF11_ARegisters>
+class KDF11_ACpuData : public KDCpuData<KDF11_ARegisters>, public AbstractBusDevice
 {
 public:
 	// Functions required by the CpuData interface and not implemented by
 	// KDCpuData
 	bool stackOverflow () override;
 
+	// Functions required by the BusDevice interface and not implemented by
+	// AbstractBusDevice.
+	StatusCode read (u16 address, u16 *destination) override;
+	StatusCode writeWord (u16 address, u16 value) override;
+	bool responsible (u16 address) override;
+	void reset () override;
+
 private:
 	enum {stackLimit = 0400};
+	enum { PSWAddress = 0177776 };
 
 	constexpr bool inKernelMode ();
 };

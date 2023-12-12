@@ -26,10 +26,10 @@
 class BusDevice
 {
 public:
-	virtual StatusCode read (u16 addr, u16 *destination) = 0;
-	virtual StatusCode writeWord (u16 addr, u16 value) = 0;
-	virtual StatusCode writeByte (u16 addr, u8 value) = 0;
-	virtual bool responsible (u16 addr) = 0;
+	virtual StatusCode read (u16 address, u16 *destination) = 0;
+	virtual StatusCode writeWord (u16 address, u16 value) = 0;
+	virtual StatusCode writeByte (u16 address, u8 value) = 0;
+	virtual bool responsible (u16 address) = 0;
 	virtual void reset () = 0;
 };
 
