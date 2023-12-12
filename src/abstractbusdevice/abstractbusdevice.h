@@ -1,7 +1,7 @@
 #ifndef _ABSTRACTBUSDEVICE_H_
 #define _ABSTRACTBUSDEVICE_H_
 
-#include "busdevice/busdevice.h"
+#include "busdevice.h"
 #include "statuscodes.h"
 
 // This class acts as a common base class for the PDP11Peripheral and
