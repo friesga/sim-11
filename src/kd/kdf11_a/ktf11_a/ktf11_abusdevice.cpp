@@ -3,6 +3,7 @@
 
 #include "ktf11_a.h"
 #include "kd/include/psw.h"
+#include "basicregister/readonlyregister.h"
 
 Register* KTF11_A::registerPointer (u16 address)
 {
@@ -12,10 +13,10 @@ Register* KTF11_A::registerPointer (u16 address)
             return &sr0_;
 
         case statusRegister1:
-            return &sr1_;
+            return &readOnlySr1_;
 
         case statusRegister2:
-            return &sr2_;
+            return &readOnlySr2_;
 
         case statusRegister3:
             return &sr3_;
@@ -55,19 +56,8 @@ Register* KTF11_A::registerPointer (u16 address)
 
 // Return the contents of the given registers at the given destination
 // address
-//
-// Status register 1 is a read-only register that always reads as zero.
-//
-// ToDo: This exception and the exceptions in writeWord() should be part of
-// an SR1 and SR2 class.
 StatusCode KTF11_A::read (u16 address, u16 *destination)
 {
-    if (address == statusRegister1)
-    {
-        *destination = 0;
-        return StatusCode::OK;
-    }
-
     Register* regPtr = registerPointer (address);
     if (regPtr != nullptr)
     {
@@ -80,11 +70,6 @@ StatusCode KTF11_A::read (u16 address, u16 *destination)
 
 StatusCode KTF11_A::writeWord (u16 address, u16 value)
 {
-    // Status registers 1 and 2 are read-only. Writes to those registers are
-    // ignored.
-    if (address == statusRegister2)
-        return StatusCode::OK;
-
     Register* regPtr = registerPointer (address);
     if (regPtr != nullptr)
     {

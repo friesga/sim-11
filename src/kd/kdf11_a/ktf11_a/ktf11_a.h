@@ -7,9 +7,8 @@
 #include "abstractbusdevice/abstractbusdevice.h"
 #include "apr.h"
 #include "ktf11_asr0.h"
-#include "ktf11_asr1.h"
-#include "ktf11_asr2.h"
 #include "basicregister/basicregister.h"
+#include "basicregister/readonlyregister.h"
 
 // The class KTF11_A implements the memory management option for the KDF11-A.
 // It implements a subset of the standard PDP-11 Memory Management. There is
@@ -78,10 +77,32 @@ private:
 	CpuData* cpuData_;
 
 	// Definition of status registers
+	//
+	// SR0 contains abort error flags, memory management enable, and other
+	// information essential for an operating system to recover from an abort
+	// or to service a memory management trap. 
+	// 
+	// SR1 is a read-only register that always reads as zero.
+	// 
+	// SR2 is loaded with a 16-bit virtual address (VA) during each instruction
+	// fetch, but is not updated if the instruction fetch fails. SR2 is
+	// read-only; a write attempt will not modify its contents. SR2 is the
+	// virtual address program counter. The content of SR2 is frozen whenever
+	// one of the abort flags (SR0<15:13>) is set.
+	//
+	// SR3 bit <4> enables or disables the memory management 22-bit mapping. 
+	// SR3 bit <5> is a read/write bit that has no effect on KDF11-BA operation.
+	//
 	SR0 sr0_ {0};
-	SR1 sr1_ {0};
-	SR2 sr2_ {0};
+	BasicRegister const sr1_ {0};
+	BasicRegister sr2_ {0};
 	BasicRegister sr3_ {0};
+
+	// The ReadonlyRegisters form a kind of facade or decorator which
+	// removes the possibility to write to a register from the specified
+	// register.
+	ReadOnlyRegister readOnlySr1_ {sr1_};
+	ReadOnlyRegister readOnlySr2_ {sr2_};
 
 	// The PSW current memory management mode bits allow the presence of four
 	// modes, Kernel, Reserved, Illegal and User, of which only Kernel and

@@ -7,7 +7,7 @@ class Register
 {
 public:
     virtual void operator= (u16 const value) = 0;
-    virtual operator u16 () = 0;
+    virtual operator u16 () const = 0;
 };
 
 
