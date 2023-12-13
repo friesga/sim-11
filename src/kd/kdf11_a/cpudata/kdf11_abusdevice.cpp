@@ -39,9 +39,11 @@ StatusCode KDF11_ACpuData::writeWord (u16 address, u16 value)
 }
 
 
+// Check if the KDF11-A is responsible for the given address. This address can
+// be even or odd. 
 bool KDF11_ACpuData::responsible (u16 address)
 {
-    return (address == PSWAddress) ? true : false; 
+    return ((address & 0177776) == PSWAddress) ? true : false; 
 }
 
 
