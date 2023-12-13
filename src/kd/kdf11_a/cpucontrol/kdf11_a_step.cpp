@@ -106,11 +106,12 @@ void KDF11_A_CpuControl::execInstr ()
         cpuData_->setTrap (CpuData::TrapCondition::BusError);
         return;
     }
-    cpuData_->registers ()[7] += 2;
 
     // During each instruction fetch SR2 is loaded with the 16-bit virtual
     // address (VA) but is not updated if the instruction fetch fails.
-    mmu_->setSR2 (instructionWord);
+    mmu_->setSR2 (cpuData_->registers ()[7]);
+
+    cpuData_->registers ()[7] += 2;
 
     unique_ptr<LSI11Instruction> instr = 
         kdf11_aInstruction.decode (cpuData_, this, mmu_, instructionWord);
