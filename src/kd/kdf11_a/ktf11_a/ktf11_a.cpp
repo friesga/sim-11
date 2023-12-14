@@ -173,7 +173,10 @@ u32 KTF11_A::physicalAddress (u16 address)
     return (physicalBlockNr << 6) | displacementInBlock (address);
 }
 
+// The content of SR2 (the virtual program counter) is frozen whenever one of
+// the abort flags (SR0<15:13>) is set.
 void KTF11_A::setVirtualPC (u16 value)
 {
-    sr2_ = value;
+    if (!sr0_.accessAborted ())
+        sr2_ = value;
 }

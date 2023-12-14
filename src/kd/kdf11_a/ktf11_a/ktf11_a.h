@@ -7,6 +7,7 @@
 #include "abstractbusdevice/abstractbusdevice.h"
 #include "apr.h"
 #include "ktf11_asr0.h"
+#include "ktf11_asr3.h"
 #include "basicregister/basicregister.h"
 #include "basicregister/readonlyregister.h"
 
@@ -96,7 +97,7 @@ private:
 	SR0 sr0_ {0};
 	BasicRegister const sr1_ {0};
 	BasicRegister sr2_ {0};
-	BasicRegister sr3_ {0};
+	SR3 sr3_ {0};
 
 	// The ReadonlyRegisters form a kind of facade or decorator which
 	// removes the possibility to write to a register from the specified
