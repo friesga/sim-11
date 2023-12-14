@@ -29,7 +29,7 @@ public:
 	bool mappedWriteWord (u16 address, u16 value) override;
 	bool mappedWriteByte (u16 address, u8 value) override;
 
-	void setSR2 (u16 value) override;
+	void setVirtualPC (u16 value) override;
 
 private:
 	Qbus* bus_;

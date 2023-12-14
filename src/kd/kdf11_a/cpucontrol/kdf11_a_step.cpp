@@ -109,7 +109,7 @@ void KDF11_A_CpuControl::execInstr ()
 
     // During each instruction fetch SR2 is loaded with the 16-bit virtual
     // address (VA) but is not updated if the instruction fetch fails.
-    mmu_->setSR2 (cpuData_->registers ()[7]);
+    mmu_->setVirtualPC (cpuData_->registers ()[7]);
 
     cpuData_->registers ()[7] += 2;
 

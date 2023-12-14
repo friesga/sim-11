@@ -20,7 +20,7 @@ public:
 	virtual bool mappedWriteWord (u16 address, u16 value) = 0;
 	virtual bool mappedWriteByte (u16 address, u8 value) = 0;
 
-	virtual void setSR2 (u16 value) = 0;
+	virtual void setVirtualPC (u16 value) = 0;
 };
 
 

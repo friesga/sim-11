@@ -35,7 +35,7 @@ public:
     CondData<u16> mappedRead (u16 address) override;
 	bool mappedWriteWord (u16 address, u16 value) override;
 	bool mappedWriteByte (u16 address, u8 value) override;
-	void setSR2 (u16 value) override;
+	void setVirtualPC (u16 value) override;
 
 	CondData<u16> fetchWord (u16 address) override;
 	CondData<u8> fetchByte (u16 address) override;

@@ -102,5 +102,5 @@ bool PseudoMMU::mappedWriteByte (u16 address, u8 value)
     return bus_->writeByte (address, value);
 }
 
-void PseudoMMU::setSR2 (u16 value)
+void PseudoMMU::setVirtualPC (u16 value)
 {}

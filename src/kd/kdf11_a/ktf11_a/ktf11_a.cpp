@@ -173,7 +173,7 @@ u32 KTF11_A::physicalAddress (u16 address)
     return (physicalBlockNr << 6) | displacementInBlock (address);
 }
 
-void KTF11_A::setSR2 (u16 value)
+void KTF11_A::setVirtualPC (u16 value)
 {
     sr2_ = value;
 }
