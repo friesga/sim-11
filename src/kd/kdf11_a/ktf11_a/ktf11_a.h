@@ -31,19 +31,22 @@ class KTF11_A : public MMU, public AbstractBusDevice
 public:
 	KTF11_A (Qbus* bus, CpuData* cpuData);
 
-	// The following functions are called from the processor to access the
-	// memory and device registers (via the bus).
-    CondData<u16> mappedRead (u16 address) override;
-	bool mappedWriteWord (u16 address, u16 value) override;
-	bool mappedWriteByte (u16 address, u8 value) override;
-	void setVirtualPC (u16 value) override;
-
+	// Functions reuiqred by the MMU interface
 	CondData<u16> fetchWord (u16 address) override;
 	CondData<u8> fetchByte (u16 address) override;
 	bool putWord (u16 address, u16 value) override;
 	bool putByte (u16 address, u8 value) override;
 	bool pushWord (u16 value) override;
 	bool popWord (u16 *destination) override;
+
+	// The following functions use the given adress as a physical address
+	// (in case memory management is disabled) to access memory or map the
+	// virtual address to a physical address when memory management is 
+	// enabled.
+    CondData<u16> mappedRead (u16 address) override;
+	bool mappedWriteWord (u16 address, u16 value) override;
+	bool mappedWriteByte (u16 address, u8 value) override;
+	void setVirtualPC (u16 value) override;
 
 	// Functions required by the BusDevice interface and not implemented by
 	// AbstractBusDevice.

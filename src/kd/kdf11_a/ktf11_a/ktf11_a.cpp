@@ -9,7 +9,7 @@ KTF11_A::KTF11_A (Qbus* bus, CpuData* cpuData)
 CondData<u16> KTF11_A::fetchWord (u16 address)
 {
     // return bus_->read (address);
-    CondData<u16> value = bus_->read (address);
+    CondData<u16> value = mappedRead (address);
     if (!value.hasValue ())
     {
         trace.bus (BusRecordType::ReadFail, address, 0);
@@ -44,7 +44,7 @@ CondData<u8> KTF11_A::fetchByte (u16 address)
 
 bool KTF11_A::putWord (u16 address, u16 value)
 {
-    if (!bus_->writeWord (address, value))
+    if (!mappedWriteWord (address, value))
     {
         trace.bus (BusRecordType::WriteFail, address, value);
         cpuData_->setTrap (CpuData::TrapCondition::BusError);
@@ -55,7 +55,7 @@ bool KTF11_A::putWord (u16 address, u16 value)
 
 bool KTF11_A::putByte (u16 address, u8 value)
 {
-    if (!bus_->writeByte (address, value))
+    if (!mappedWriteByte (address, value))
     {
         trace.bus (BusRecordType::WriteFail, address, value);
         cpuData_->setTrap (CpuData::TrapCondition::BusError);
