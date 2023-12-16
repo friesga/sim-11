@@ -101,7 +101,7 @@ bool KTF11_A::mappedWriteWord (u16 address, u16 value)
         bool writeOk = bus_->writeWord (physicalAddress (address, apr), value);
 
         if (writeOk)
-            apr->PageDescripterRegister_.setWriteAccess ();
+            apr->pageDescripterRegister_.setWriteAccess ();
         return writeOk;
     }
 
@@ -177,7 +177,7 @@ u32 KTF11_A::physicalAddress (u16 address)
 // using the already determined page address field.
 u32 KTF11_A::physicalAddress (u16 address, ActivePageRegister* apr)
 {
-    u32 physicalBlockNr = apr->PageAddressRegister_ + blockNumber (address);
+    u32 physicalBlockNr = apr->pageAddressRegister_ + blockNumber (address);
     return (physicalBlockNr << 6) | displacementInBlock (address);
 }
 

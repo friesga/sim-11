@@ -15,8 +15,12 @@ public:
     PDR (u16 value);
     void operator= (u16 const value) override;
     void setWriteAccess ();
+    void clearWriteAccess ();
 
 private:
+    // Address of the corresponding Page Address Register
+    BasicRegister* par_;
+
     static const u16 AccessControlFieldIndex = 1;
     static const u16 AccessControlFieldMask = (u16) (bitField (2) << AccessControlFieldIndex);
     static const u16 ExpansionDirectionIndex = 3;
@@ -43,6 +47,11 @@ inline void PDR::operator= (u16 const value)
 inline void PDR::setWriteAccess ()
 {
     value_ |= WriteAccessMask;
+}
+
+inline void PDR::clearWriteAccess ()
+{
+    value_ &= ~WriteAccessMask;
 }
 
 #endif // _KTF11PDR_H_

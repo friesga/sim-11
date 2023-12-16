@@ -31,22 +31,22 @@ Register* KTF11_A::registerPointer (u16 address)
                 case kernelPARBase:
                     return &activePageRegisterSet_[KERNEL_MODE]
                         .activePageRegister_[index]
-                        .PageAddressRegister_;
+                        .pageAddressRegister_;
 
                 case kernelPDRBase:
                     return &activePageRegisterSet_[KERNEL_MODE]
                         .activePageRegister_[index]
-                        .PageDescripterRegister_;
+                        .pageDescripterRegister_;
 
                 case userPARBase:
                     return &activePageRegisterSet_[USER_MODE]
                         .activePageRegister_[index]
-                        .PageAddressRegister_;
+                        .pageAddressRegister_;
 
                 case userPDRBase:
                     return &activePageRegisterSet_[USER_MODE]
                         .activePageRegister_[index]
-                        .PageDescripterRegister_;
+                        .pageDescripterRegister_;
 
                 default:
                     return nullptr;
