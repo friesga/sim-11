@@ -14,6 +14,7 @@ class PDR : public BasicRegister
 public:
     PDR (u16 value);
     void operator= (u16 const value) override;
+    void setWriteAccess ();
 
 private:
     static const u16 AccessControlFieldIndex = 1;
@@ -37,6 +38,11 @@ inline void PDR::operator= (u16 const value)
 {
     value_ = (value & (AccessControlFieldMask | ExpansionDirectionMask |
         WriteAccessMask | PageLengthFieldMask)) & ~WriteAccessMask;
+}
+
+inline void PDR::setWriteAccess ()
+{
+    value_ |= WriteAccessMask;
 }
 
 #endif // _KTF11PDR_H_

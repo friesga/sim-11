@@ -116,6 +116,8 @@ private:
 	ActivePageRegisterSet activePageRegisterSet_[4];
 
 	u32 physicalAddress (u16 address);
+	u32 physicalAddress (u16 address, ActivePageRegister* apr);
+	ActivePageRegister *activePageRegister (u16 address);
 	constexpr u16 activePageField (u16 address);
 	constexpr u16 blockNumber (u16 address);
 	constexpr u16 displacementInBlock (u16 address);
