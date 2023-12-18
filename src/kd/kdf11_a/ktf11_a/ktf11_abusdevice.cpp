@@ -4,6 +4,7 @@
 #include "ktf11_a.h"
 #include "kd/include/psw.h"
 #include "basicregister/readonlyregister.h"
+#include "trace/trace.h"
 
 Register* KTF11_A::registerPointer (u16 address)
 {
@@ -74,6 +75,7 @@ StatusCode KTF11_A::writeWord (u16 address, u16 value)
     if (regPtr != nullptr)
     {
         *regPtr = value;
+        trace.MmuApr (activePageRegisterSet_[KERNEL_MODE]);
         return StatusCode::OK;
     }
 

@@ -215,7 +215,8 @@ set (TRACE_SRCS
     src/trace/timerecord/ostreaminsertoperator.cpp
     src/trace/memorydumprecord/tracefileinsertoperator.cpp 
     src/trace/memorydumprecord/extractionoperator.cpp
-    src/trace/memorydumprecord/ostreaminsertoperator.cpp)
+    src/trace/memorydumprecord/ostreaminsertoperator.cpp
+    src/trace/ktf11_arecord/operator.cpp)
 
 # Handling of the console is system-specific
 if (MSVC)
@@ -443,6 +444,16 @@ add_executable (tracereader
     ${TRACE_SRCS})
 
 target_include_directories (tracereader PRIVATE include src)
+
+# GCC specific compiler options
+if (CMAKE_C_COMPILER_ID STREQUAL "GNU")
+target_compile_options (tracereader PRIVATE -Wall --std=c++20)
+endif ()
+
+# MSVC specific compiler options
+if (CMAKE_C_COMPILER_ID STREQUAL "MSVC")
+target_compile_options (tracereader PRIVATE /std:c++20)
+endif ()
     
 # MSVC specific compiler options
 if (CMAKE_C_COMPILER_ID STREQUAL "MSVC")

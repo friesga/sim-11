@@ -78,6 +78,10 @@ void processTraceRecord(Magic magic, TracefileInStream &tracefile)
             readAndPrintRecord<RLV12CommandRecord> (tracefile);
             break;
 
+        case Magic::MMU0:
+            readAndPrintRecord<KTF11_ARecord> (tracefile);
+            break;
+
         default:
             throw string("Unknown magic");
     }

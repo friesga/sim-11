@@ -15,7 +15,6 @@ using std::setfill;
 using std::string;
 
 // The following macro's are to be converted to functions.
-#define	_BV(x)	(1 << (x))
 
 #define	PSW_C			_BV(0)
 #define	PSW_V			_BV(1)

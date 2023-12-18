@@ -135,6 +135,12 @@ void Trace::time (string msg, high_resolution_clock::duration duration)
         tracefileOut_ << TraceRecord<TimeRecord> (msg, duration);
 }
 
+void Trace::MmuApr (ActivePageRegisterSet const& aprSet)
+{
+    if (traceEnabled && (flags_ & Trace::Category::MMUAPR))
+        tracefileOut_ << TraceRecord<KTF11_ARecord> (aprSet);
+}
+
 void Trace::setIgnoreBus ()
 {
     flags_ |= Trace::Category::IgnoreBus;

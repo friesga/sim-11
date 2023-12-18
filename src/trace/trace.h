@@ -16,6 +16,7 @@
 #include "rlv12registersrecord/rlv12registersrecord.h"
 #include "rlv12commandrecord/rlv12commandrecord.h"
 #include "timerecord/timerecord.h"
+#include "ktf11_arecord/ktf11_arecord.h"
 
 #include "tracefileoutstream/tracefileoutstream.h"
 #include "tracefileinstream/tracefileinstream.h"
@@ -48,7 +49,8 @@ public:
         RXV21Error = (1 << 10),     // RXV21ErrorRecord
         RXV21Disk  = (1 << 11),     // RXV21DiskRecord
         RLV12	   = (1 << 12),     // RLV12RegistersRecord, RLV12CommandRecord
-        Time       = (1 << 13)      // TimeRecord
+        Time       = (1 << 13),     // TimeRecord
+        MMUAPR     = (1 << 14)      // KTF11_ARecord
     };
 
     Trace ();
@@ -73,6 +75,7 @@ public:
     void rlv12Registers (string msg, u16 rlcs, u16 rlba, u16 rlda, u16 rlmpr, u16 rlbae);
     void rlv12Command (u16 command);
     void time (string msg, high_resolution_clock::duration duration);
+    void MmuApr (ActivePageRegisterSet const& aprSet);
     void setIgnoreBus ();
     void clearIgnoreBus();
 };

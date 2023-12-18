@@ -41,7 +41,9 @@ try
 
 	// Activate the tracing facility when specified on the command line
 	if (cmdLineOptions.trace_file) 
-		trace.activate (cmdLineOptions.trace_file, Trace::Category::CpuStep);
+		trace.activate (cmdLineOptions.trace_file, 
+//			Trace::Category::CpuStep | Trace::Category::MMUAPR);
+			Trace::Category::MMUAPR);
 
 	// Create the window for the panels
 	SDLWindow sdlWindow {"PDP-11/03", 100, 100, 750, 200};
