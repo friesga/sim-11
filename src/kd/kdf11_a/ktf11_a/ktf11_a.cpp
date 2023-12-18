@@ -50,6 +50,7 @@ bool KTF11_A::putWord (u16 address, u16 value)
         cpuData_->setTrap (CpuData::TrapCondition::BusError);
         return false;
     }
+    trace.MmuApr (activePageRegisterSet_[KERNEL_MODE]);
     return true;
 }
 
@@ -92,17 +93,25 @@ CondData<u16> KTF11_A::mappedRead (u16 address)
     return bus_->read (address);
 }
 
-// Write the word at the given virtual address using the MMU mapping
+// Write the word at the given virtual address using the MMU mapping.
+// 
+// First register the write access to the page and then write the word
+// to prevent that a write to a PDR clearing the W-bit will immediately
+// lead to setting the W-bit again. This satifies diagnostic JKDAD1 test 26.
+//
+// JKDAD1 test 30 describes and tests two W-bit special cases:
+// 1. The KPDR7 W-bit should not be set when writing to Status Register 0,
+// 2. The W-bit is still set if "the DATO is aborted due to a time-out 
+//    error", i.e. if the write fails. 
+//
 bool KTF11_A::mappedWriteWord (u16 address, u16 value)
 {
     if (sr0_.managementEnabled ())
     {
         ActivePageRegister* apr = activePageRegister (address);
-        bool writeOk = bus_->writeWord (physicalAddress (address, apr), value);
-
-        if (writeOk)
+        if (address != statusRegister0)
             apr->pageDescripterRegister_.setWriteAccess ();
-        return writeOk;
+        return bus_->writeWord (physicalAddress (address, apr), value);
     }
 
     return bus_->writeWord (address, value);
@@ -112,7 +121,12 @@ bool KTF11_A::mappedWriteWord (u16 address, u16 value)
 bool KTF11_A::mappedWriteByte (u16 address, u8 value)
 {
     if (sr0_.managementEnabled ())
+    {
+        ActivePageRegister* apr = activePageRegister (address);
+        if ((address & 0177776) != statusRegister0)
+            apr->pageDescripterRegister_.setWriteAccess ();
         return bus_->writeByte (physicalAddress (address), value);
+    }
 
     return bus_->writeByte (address, value);
 }
