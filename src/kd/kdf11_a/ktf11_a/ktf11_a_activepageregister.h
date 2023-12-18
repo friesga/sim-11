@@ -5,10 +5,6 @@
 #include "ktf11_apdr.h"
 #include "ktf11_apar.h"
 
-#include <array>
-
-using std::array;
-
 // This struct defines the Active Page Register (APR). The register
 // comprises two 16-bit registers: the Page Address Register (PAR) and the
 // Page Description Register (PDR).
@@ -36,25 +32,5 @@ inline ActivePageRegister::ActivePageRegister (ActivePageRegister const &other)
     pageAddressRegister_ = other.pageAddressRegister_;
     pageDescripterRegister_ = other.pageDescripterRegister_;
 }
-
-// This struct defines a set of Active Page Registers.
-struct ActivePageRegisterSet
-{
-    array<ActivePageRegister, 8> activePageRegister_;
-
-    ActivePageRegisterSet ();
-    ActivePageRegisterSet (ActivePageRegisterSet const &aprSet);
-};
-
-inline ActivePageRegisterSet::ActivePageRegisterSet ()
-    :
-    activePageRegister_ {}
-{}
-
-inline ActivePageRegisterSet::ActivePageRegisterSet (ActivePageRegisterSet const &other)
-{
-    activePageRegister_ = other.activePageRegister_;
-}
-
 
 #endif // _APR_H_

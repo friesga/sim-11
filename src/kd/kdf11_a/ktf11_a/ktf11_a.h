@@ -5,7 +5,7 @@
 #include "kd/include/cpudata.h"
 #include "kd/include/mmu.h"
 #include "abstractbusdevice/abstractbusdevice.h"
-#include "apr.h"
+#include "ktf11_a_activepageregisterset.h"
 #include "ktf11_asr0.h"
 #include "ktf11_asr3.h"
 #include "basicregister/basicregister.h"
