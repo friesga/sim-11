@@ -24,7 +24,7 @@ public:
 	bool mappedWriteWord (u16 address, u16 value) { return putWord (address, value); };
 	bool mappedWriteByte (u16 address, u8 value) { return putByte (address, value); };
 
-	void setSR2 (u16 value) {};
+	void setVirtualPC (u16 value) {};
 
 private:
     // Allocate a memory of 16kW. This allows attempts to read and write
