@@ -37,7 +37,8 @@ public:
 		EmulatorTrap,				// EMT instruction
 		TrapInstruction,			// TRAP instruction
 		FIS,						// Floating point
-		StackOverflow				// Stack overflow
+		StackOverflow,				// Stack overflow
+		MemoryManagementTrap		// Memory management abort
 	};
 
 	// Definition of the KD11 execution state

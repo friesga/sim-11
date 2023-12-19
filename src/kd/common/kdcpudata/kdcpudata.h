@@ -150,7 +150,8 @@ map<CpuData::TrapCondition, u16> KDCpuData<REGISTERTYPE>::trapVector_
 	make_pair (CpuData::TrapCondition::EmulatorTrap, 030),				// EMT instruction
 	make_pair (CpuData::TrapCondition::TrapInstruction, 034),			// TRAP instruction
 	make_pair (CpuData::TrapCondition::FIS, 0244),						// Floating point
-	make_pair (CpuData::TrapCondition::StackOverflow, 004)				// Stack overflow
+	make_pair (CpuData::TrapCondition::StackOverflow, 004),				// Stack overflow
+	make_pair (CpuData::TrapCondition::MemoryManagementTrap, 0250),		// Memory Management abort
 };
 
 #endif // _KDCPUDATA_H_

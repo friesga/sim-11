@@ -8,15 +8,9 @@ KTF11_A::KTF11_A (Qbus* bus, CpuData* cpuData)
 {}
 CondData<u16> KTF11_A::fetchWord (u16 address)
 {
-    // return bus_->read (address);
-    CondData<u16> value = mappedRead (address);
-    if (!value.hasValue ())
-    {
-        trace.bus (BusRecordType::ReadFail, address, 0);
-        cpuData_->setTrap (CpuData::TrapCondition::BusError);
-        return {};
-    }
-    return value;
+    return (sr0_.managementEnabled ()) ? 
+        mappedRead (address) :
+        readPhysical (address);
 }
 
 // Fetch the byte at the given word or byte address
@@ -87,10 +81,13 @@ bool KTF11_A::pushWord (u16 value)
 // Return the word at the given virtual address using the MMU mapping
 CondData<u16> KTF11_A::mappedRead (u16 address)
 {
-    if (sr0_.managementEnabled ())
-        return bus_->read (physicalAddress (address));
-
-    return bus_->read (address);
+    if (!readAllowed (address))
+    {
+        cpuData_->setTrap (CpuData::TrapCondition::MemoryManagementTrap);
+        return {};
+    }
+    
+    return readPhysical (physicalAddress (address));
 }
 
 // Write the word at the given virtual address using the MMU mapping.
@@ -140,6 +137,20 @@ CondData<u16> KTF11_A::readWithoutTrap (u16 address)
     return (sr0_.managementEnabled ()) ? 
         bus_->read (physicalAddress (address)) :
         bus_->read (address);
+}
+
+// Return the word at the given physical address, generating a bus error trap
+// in case the read fails.
+CondData<u16> KTF11_A::readPhysical (u16 address)
+{
+    CondData<u16> value = bus_->read (address);
+    if (!value.hasValue ())
+    {
+        trace.bus (BusRecordType::ReadFail, address, 0);
+        cpuData_->setTrap (CpuData::TrapCondition::BusError);
+    }
+
+    return value;
 }
 
 // Return the Active Page Field (APF) from the given virtual address
@@ -212,4 +223,9 @@ void KTF11_A::setVirtualPC (u16 value)
 {
     if (!sr0_.accessAborted ())
         sr2_ = value;
+}
+
+bool KTF11_A::readAllowed (u16 address)
+{
+    return true;
 }
