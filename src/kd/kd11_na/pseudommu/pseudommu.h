@@ -29,6 +29,8 @@ public:
 	bool mappedWriteWord (u16 address, u16 value) override;
 	bool mappedWriteByte (u16 address, u8 value) override;
 
+	CondData<u16> readWithoutTrap (u16 address) override;
+
 	void setVirtualPC (u16 value) override;
 
 private:

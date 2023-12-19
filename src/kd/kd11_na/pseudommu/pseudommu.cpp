@@ -102,5 +102,10 @@ bool PseudoMMU::mappedWriteByte (u16 address, u8 value)
     return bus_->writeByte (address, value);
 }
 
+CondData<u16> PseudoMMU::readWithoutTrap (u16 address)
+{
+    return bus_->read (address);
+}
+
 void PseudoMMU::setVirtualPC (u16 value)
 {}

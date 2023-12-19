@@ -24,6 +24,8 @@ public:
 	bool mappedWriteWord (u16 address, u16 value) { return putWord (address, value); };
 	bool mappedWriteByte (u16 address, u8 value) { return putByte (address, value); };
 
+	CondData<u16> readWithoutTrap (u16 address) { return fetchWord (address); };
+
 	void setVirtualPC (u16 value) {};
 
 private:

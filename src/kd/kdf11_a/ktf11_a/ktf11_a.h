@@ -48,6 +48,8 @@ public:
 	bool mappedWriteByte (u16 address, u8 value) override;
 	void setVirtualPC (u16 value) override;
 
+	CondData<u16> readWithoutTrap (u16 address) override;
+
 	// Functions required by the BusDevice interface and not implemented by
 	// AbstractBusDevice.
 	StatusCode read (u16 address, u16 *destination) override;

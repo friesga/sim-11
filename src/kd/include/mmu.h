@@ -21,6 +21,7 @@ public:
 	virtual bool mappedWriteByte (u16 address, u8 value) = 0;
 
 	virtual void setVirtualPC (u16 value) = 0;
+	virtual CondData<u16> readWithoutTrap (u16 address) = 0;
 };
 
 

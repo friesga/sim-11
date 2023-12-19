@@ -131,6 +131,17 @@ bool KTF11_A::mappedWriteByte (u16 address, u8 value)
     return bus_->writeByte (address, value);
 }
 
+// Return the word at the given virtual address using the MMU mapping
+// without setting a trap in case of a buserror. This function is a
+// special case, used by CpuControl's step() function to read instruction
+// words.
+CondData<u16> KTF11_A::readWithoutTrap (u16 address)
+{
+    return (sr0_.managementEnabled ()) ? 
+        bus_->read (physicalAddress (address)) :
+        bus_->read (address);
+}
+
 // Return the Active Page Field (APF) from the given virtual address
 constexpr u16 KTF11_A::activePageField (u16 address)
 {
