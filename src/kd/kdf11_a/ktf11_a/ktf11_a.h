@@ -126,7 +126,7 @@ private:
 	u16 pageAddressField (u16 activePageField);
 	constexpr u16 memoryManagementMode ();
 	Register* registerPointer (u16 address);
-	bool readAllowed (u16 address);
+	bool readAllowed (PDR const & pdr);
 	CondData<u16> readPhysical (u16 address);
 };
 

@@ -81,7 +81,8 @@ bool KTF11_A::pushWord (u16 value)
 // Return the word at the given virtual address using the MMU mapping
 CondData<u16> KTF11_A::mappedRead (u16 address)
 {
-    if (!readAllowed (address))
+    ActivePageRegister* apr = activePageRegister (address);
+    if (!readAllowed (apr->pageDescripterRegister_))
     {
         cpuData_->setTrap (CpuData::TrapCondition::MemoryManagementTrap);
         return {};
@@ -225,7 +226,10 @@ void KTF11_A::setVirtualPC (u16 value)
         sr2_ = value;
 }
 
-bool KTF11_A::readAllowed (u16 address)
+// This function checks wheter or not a read on the page with the given Page
+// Descriptor Register is allowed.
+bool KTF11_A::readAllowed (PDR const & pdr)
 {
-    return true;
+    PDR::AccessControlKey key = pdr.accessControlKey ();
+    return key == PDR::AccessControlKey::ReadOnly || key == PDR::AccessControlKey::ReadWrite;
 }

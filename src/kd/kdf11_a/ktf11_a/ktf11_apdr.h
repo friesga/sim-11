@@ -12,10 +12,22 @@
 class PDR : public BasicRegister
 {
 public:
+    // Definition of the Access Control Field keys. The key is defined
+    // without the use of bit 0 (and therefore differs from the definition
+    // of the keys in the KDF11-A User Guide).
+    enum class AccessControlKey
+    {
+        NonResidant = 0,
+        ReadOnly = 1,
+        Unused = 2,
+        ReadWrite = 3
+    };
+
     PDR (u16 value);
     void operator= (u16 const value) override;
     void setWriteAccess ();
     void clearWriteAccess ();
+    AccessControlKey accessControlKey () const;
 
 private:
     // Address of the corresponding Page Address Register
@@ -52,6 +64,12 @@ inline void PDR::setWriteAccess ()
 inline void PDR::clearWriteAccess ()
 {
     value_ &= ~WriteAccessMask;
+}
+
+inline PDR::AccessControlKey PDR::accessControlKey () const
+{
+    return static_cast<AccessControlKey>
+        ((value_ & AccessControlFieldMask) >> AccessControlFieldIndex);
 }
 
 #endif // _KTF11PDR_H_
