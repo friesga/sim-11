@@ -9,9 +9,17 @@
 class SR0 : public BasicRegister
 {
 public:
+    enum class AbortReason
+    {
+        NonResident,
+        PageLengthError,
+        ReadOnlyAccessViolation
+    };
+
     SR0 (u16 value);
     bool managementEnabled ();
     bool accessAborted ();
+    void setAbortCondition (AbortReason reason, u16 mode, u16 pageNumber);
 
 private:
     static const u16 EnableManagementIndex = 0;
