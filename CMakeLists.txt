@@ -375,6 +375,7 @@ set (GTEST_SRCS
     gtest/kd11_na/movtest.cpp
     gtest/kd11_na/kd11_naregisterstest.cpp
     gtest/kdf11_a/pswtest.cpp
+    gtest/kdf11_a/kdf11_a_pswregistertest.cpp
     gtest/kdf11_a/kdf11_aregisterstest.cpp
     gtest/kdf11_a/kdf11_abusdevicetest.cpp
     gtest/locationtest.cpp
