@@ -17,7 +17,7 @@ public:
     // of the keys in the KDF11-A User Guide).
     enum class AccessControlKey
     {
-        NonResidant = 0,
+        NonResident = 0,
         ReadOnly = 1,
         Unused = 2,
         ReadWrite = 3

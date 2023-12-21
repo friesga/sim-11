@@ -73,14 +73,9 @@ bool KTF11_A::pushWord (u16 value)
 CondData<u16> KTF11_A::mappedRead (u16 address)
 {
     ActivePageRegister* apr = activePageRegister (address);
-    if (!readAllowed (apr->pageDescripterRegister_))
-    {
-        sr0_.setAbortCondition (SR0::AbortReason::NonResident, 
-            static_cast<u16> (cpuData_->psw ().currentMode ()),
-            activePageField (address));
-        cpuData_->setTrap (CpuData::TrapCondition::MemoryManagementTrap);
-        return {};
-    }
+
+    if (!pageResident (apr->pageDescripterRegister_))
+        return abortAccess (SR0::AbortReason::NonResident, address);
     
     return readPhysical (physicalAddress (address));
 }
@@ -96,29 +91,25 @@ CondData<u16> KTF11_A::mappedRead (u16 address)
 // 2. The W-bit is still set if "the DATO is aborted due to a time-out 
 //    error", i.e. if the write fails. 
 //
+// The abort flags are in priority order in that flags to the right are less
+// significant and should be ignored when a more significant flag is asserted.
+// For example, a nonresident abort service routine would ignore the
+// page-length bit (14) and read-only access violation bit (13).
+// A page-length abort service routine would ignore the read-only access
+// violation bit. (EK-KDF11-UG-PR2)
+//
 bool KTF11_A::mappedWriteWord (u16 address, u16 value)
 {
     ActivePageRegister* apr = activePageRegister (address);
     if (address != statusRegister0)
             apr->pageDescripterRegister_.setWriteAccess ();
 
-    if (!pageResident ())
-    {
-        sr0_.setAbortCondition (SR0::AbortReason::NonResident, 
-            static_cast<u16> (cpuData_->psw ().currentMode ()),
-            activePageField (address));
-        cpuData_->setTrap (CpuData::TrapCondition::MemoryManagementTrap);
-        return false;
-    }
+    if (!pageResident (apr->pageDescripterRegister_))
+        return abortAccess (SR0::AbortReason::NonResident, address);
 
-    if (!writeAllowed ())
-    {
-        sr0_.setAbortCondition (SR0::AbortReason::ReadOnlyAccessViolation, 
-            static_cast<u16> (cpuData_->psw ().currentMode ()),
-            activePageField (address));
-        cpuData_->setTrap (CpuData::TrapCondition::MemoryManagementTrap);
-        return false;
-    }
+    if (!writeAllowed (apr->pageDescripterRegister_))
+        return abortAccess (SR0::AbortReason::ReadOnlyAccessViolation, address);
+
     return writePhysicalWord (physicalAddress (address, apr), value);
 }
 
@@ -129,23 +120,11 @@ bool KTF11_A::mappedWriteByte (u16 address, u8 value)
     if ((address & 0177776) != statusRegister0)
         apr->pageDescripterRegister_.setWriteAccess ();
 
-    if (!pageResident ())
-    {
-        sr0_.setAbortCondition (SR0::AbortReason::NonResident, 
-            static_cast<u16> (cpuData_->psw ().currentMode ()),
-            activePageField (address));
-        cpuData_->setTrap (CpuData::TrapCondition::MemoryManagementTrap);
-        return false;
-    }
+    if (!pageResident (apr->pageDescripterRegister_))
+        return abortAccess (SR0::AbortReason::NonResident, address);
 
-    if (!writeAllowed ())
-    {
-        sr0_.setAbortCondition (SR0::AbortReason::ReadOnlyAccessViolation, 
-            static_cast<u16> (cpuData_->psw ().currentMode ()),
-            activePageField (address));
-        cpuData_->setTrap (CpuData::TrapCondition::MemoryManagementTrap);
-        return false;
-    }
+    if (!writeAllowed (apr->pageDescripterRegister_))
+        return abortAccess (SR0::AbortReason::ReadOnlyAccessViolation, address);
 
     return writePhysicalByte (physicalAddress (address, apr), value);
 }
@@ -275,20 +254,23 @@ void KTF11_A::setVirtualPC (u16 value)
         sr2_ = value;
 }
 
-// This function checks wheter or not a read on the page with the given Page
-// Descriptor Register is allowed.
-bool KTF11_A::readAllowed (PDR const & pdr)
+// This function checks whether or not the page with the given Page
+// Descriptor Register is resident.
+bool KTF11_A::pageResident (PDR const & pdr)
 {
-    PDR::AccessControlKey key = pdr.accessControlKey ();
-    return key == PDR::AccessControlKey::ReadOnly || key == PDR::AccessControlKey::ReadWrite;
+    return pdr.accessControlKey () != PDR::AccessControlKey::NonResident;
 }
 
-bool KTF11_A::pageResident ()
+bool KTF11_A::writeAllowed (PDR const & pdr)
 {
-    return true;
+    return pdr.accessControlKey () == PDR::AccessControlKey::ReadWrite;
 }
 
-bool KTF11_A::writeAllowed ()
+bool KTF11_A::abortAccess (SR0::AbortReason reason, u16 address)
 {
-    return true;
+    sr0_.setAbortCondition (reason, 
+        static_cast<u16> (cpuData_->psw ().currentMode ()),
+        activePageField (address));
+    cpuData_->setTrap (CpuData::TrapCondition::MemoryManagementTrap);
+    return false;
 }

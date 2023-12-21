@@ -126,9 +126,9 @@ private:
 	u16 pageAddressField (u16 activePageField);
 	constexpr u16 memoryManagementMode ();
 	Register* registerPointer (u16 address);
-	bool readAllowed (PDR const & pdr);
-	bool pageResident ();
-	bool writeAllowed ();
+	bool pageResident (PDR const & pdr);
+	bool writeAllowed (PDR const & pdr);
+	bool abortAccess (SR0::AbortReason reason, u16 address);
 	CondData<u16> readPhysical (u16 address);
 	bool writePhysicalWord (u16 address, u16 value);
 	bool writePhysicalByte (u16 address, u16 value);
