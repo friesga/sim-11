@@ -1,6 +1,8 @@
 #ifndef _PSW_H_
 #define _PSW_H_
 
+#include "types.h"
+
 // The following macro's define the format of the Processor Status Word (PSW).
 // 
 // The PSW in the LSI-11 is a composite of (1) the 4 PDP-11 condition codes
@@ -56,5 +58,27 @@
 
 #define KERNEL_MODE                 0
 #define USER_MODE                   3
+
+class PSW 
+{
+public:
+    // Definition of the Memory Management Modes as used for the Current
+    // Mode (bits <15:14>) Previous Mode (bits <13:12>).
+    enum class Mode
+    {
+        Kernel = 0,
+        Reserved = 1,
+        Illegal = 2,
+        User = 3
+    };
+
+    virtual void clearConditionCodes (u16 conditionCodes) = 0;
+    virtual void setConditionCodes (u16 conditionCodes) = 0;
+    virtual bool traceBitSet () = 0;
+    virtual u16 priorityLevel () = 0;
+    virtual void setPriorityLevel (u16 level) = 0;
+    virtual Mode currentMode () const = 0;
+    virtual Mode previousMode () const = 0;
+};
 
 #endif // _PSW_H_

@@ -2,6 +2,7 @@
 #define _KDCPUDATA_H_
 
 #include "kd/include/cpudata.h"
+#include "kd/common/kdcpudata/kdpsw.h"
 #include "types.h"
 #include "trace/trace.h"
 
@@ -35,7 +36,7 @@ public:
 	u16 trapVector (TrapCondition trap) override;
 
 protected:
-	u16	psw_;
+	KD_PSW psw_ {0};
 	REGISTERTYPE registers_ {psw_};
 
 	// A trap is a special kind of interrupt, internal to the CPU. There

@@ -1,29 +1,20 @@
-#ifndef _KDF11_A_PSW_H_
-#define _KDF11_A_PSW_H_
+#ifndef _KD_PSW_H_
+#define _KD_PSW_H_
 
+#include "kd/include/psw.h"
 #include "basicregister/basicregister.h"
 
-class KDF11_A_PSW : public BasicRegister
+class KD_PSW : public PSW, public BasicRegister
 {
 public:
-    // Definition of the Memory Management Modes as used for the Current
-    // Mode (bits <15:14>) Previous Mode (bits <13:12>).
-    enum class Mode
-    {
-        Kernel = 0,
-        Reserved = 1,
-        Illegal = 2,
-        User = 3
-    };
-
-    KDF11_A_PSW (u16 value);
-    void clearConditionCodes (u16 conditionCodes);
-    void setConditionCodes (u16 conditionCodes);
-    bool traceBitSet ();
-    u16 priorityLevel ();
-    void setPriorityLevel (u16 level);
-    Mode currentMode ();
-    Mode previousMode ();
+    KD_PSW (u16 value);
+    void clearConditionCodes (u16 conditionCodes) override;
+    void setConditionCodes (u16 conditionCodes) override;
+    bool traceBitSet () override;
+    u16 priorityLevel () override;
+    void setPriorityLevel (u16 level) override;
+    PSW::Mode currentMode () const override;
+    PSW::Mode previousMode () const override;
 
 private:
     static const u16 ConditionCodesMask = (u16) bitField (4);
@@ -37,48 +28,48 @@ private:
     static const u16 CurrentModeMask = (u16) (bitField (2) << CurrentModeIndex);
 };
 
-inline KDF11_A_PSW::KDF11_A_PSW (u16 value)
+inline KD_PSW::KD_PSW (u16 value)
     : 
     BasicRegister {value}
 {}
 
-inline void KDF11_A_PSW::clearConditionCodes (u16 conditionCodes)
+inline void KD_PSW::clearConditionCodes (u16 conditionCodes)
 {
     value_ &= ~(conditionCodes & ConditionCodesMask);
 }
 
-inline void KDF11_A_PSW::setConditionCodes (u16 conditionCodes)
+inline void KD_PSW::setConditionCodes (u16 conditionCodes)
 {
     value_ |= (conditionCodes & ConditionCodesMask);
 }
 
 // Return the status (set or clear) of the Trace Bit.
-inline bool KDF11_A_PSW::traceBitSet ()
+inline bool KD_PSW::traceBitSet ()
 {
     return value_ & TraceBitMask;
 }
 
 // Return the Priority Level
-inline u16 KDF11_A_PSW::priorityLevel ()
+inline u16 KD_PSW::priorityLevel ()
 {
     return (value_ & PriorityLevelMask) >> PriorityLevelIndex;
 }
 
 // Set the priority level to the given level. The level is masked with the
 // three lowest bits to make sure no level exceeding level 7 can be set.
-inline void KDF11_A_PSW::setPriorityLevel (u16 level)
+inline void KD_PSW::setPriorityLevel (u16 level)
 {
     value_ = (value_ & ~PriorityLevelMask) | ((level & 07) << PriorityLevelIndex);
 }
 
-inline KDF11_A_PSW::Mode KDF11_A_PSW::currentMode ()
+inline PSW::Mode KD_PSW::currentMode () const
 {
     return static_cast<Mode> ((value_ & CurrentModeMask) >> CurrentModeIndex);
 }
 
-inline KDF11_A_PSW::Mode KDF11_A_PSW::previousMode ()
+inline PSW::Mode KD_PSW::previousMode () const
 {
     return static_cast<Mode> ((value_ & PreviousModeMask) >> PreviousModeIndex);
 }
 
-#endif // _KDF11_A_PSW_H_
+#endif // _KD_PSW_H_

@@ -8,7 +8,7 @@ using std::copy;
 using std::begin;
 using std::end;
 
-KDF11_ARegisters::KDF11_ARegisters (u16 const& psw)
+KDF11_ARegisters::KDF11_ARegisters (PSW const& psw)
     :
     psw_ {psw},
     registers_ {0},
@@ -17,14 +17,14 @@ KDF11_ARegisters::KDF11_ARegisters (u16 const& psw)
 
 u16& KDF11_ARegisters::operator[] (u16 registerNr)
 {
-    return contents (registerNr, memMgmtMode (psw_));
+    return contents (registerNr, static_cast<u16> (psw_.currentMode ()));
 }
 
 // Return the contents of the specified register in to the previous memory
 // management mode.
 u16& KDF11_ARegisters::prevModeContents (u16 registerNr)
 {
-    return contents (registerNr, previousMemMgmtMode (psw_));
+    return contents (registerNr, static_cast<u16> (psw_.previousMode ()));
 }
 
 u16& KDF11_ARegisters::contents (u16 registerNr, u16 mode)
@@ -46,7 +46,7 @@ void KDF11_ARegisters::writePrevMode (u16 registerNr, u16 contents)
         throw string ("Illegal register number");
 
     if (registerNr == 6)
-        R6_ [previousMemMgmtMode (psw_)] = contents;
+        R6_ [static_cast<u16> (psw_.previousMode ())] = contents;
 
     registers_ [registerNr] = contents;
 }
@@ -62,6 +62,6 @@ KDF11_ARegisters::operator registerArray ()
     // First copy the registers_ array and then overwrite R6 with the correct
     // value.
     copy (begin (registers_), end (registers_), registers);
-    registers [6] = R6_ [memMgmtMode (psw_)];
+    registers [6] = R6_ [static_cast<u16> (psw_.currentMode ())];
     return registers;
 }

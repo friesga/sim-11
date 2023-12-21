@@ -27,7 +27,7 @@
 class KDF11_ARegisters : public GeneralRegisters
 {
 public:
-    KDF11_ARegisters (u16 const &psw);
+    KDF11_ARegisters (PSW const &psw);
     u16& operator[] (u16 registerNr) override;
     u16& prevModeContents (u16 registerNr) override;
     u16& contents (u16 registerNr, u16 mode);
@@ -37,26 +37,14 @@ public:
 private:
     enum {numRegisters = 8};
 
-    u16 const &psw_;
+    PSW const &psw_;
 
     // The registers are defined by the registers_ array, of wich
     // registers_[6] isn't used. The stack pointers are defined in its own
     // array, indexed by the memory management mode.
     u16 registers_[numRegisters];
     u16 R6_[4];
-
-    constexpr u16 memMgmtMode (u16 psw);
-    constexpr u16 previousMemMgmtMode (u16 psw);
 };
 
-constexpr u16 KDF11_ARegisters::memMgmtMode (u16 psw)
-{
-    return (psw & PSW_MEM_MGMT_MODE) >> PSW_MEM_MGMT_MODE_P;
-}
-
-constexpr u16 KDF11_ARegisters::previousMemMgmtMode (u16 psw)
-{
-    return (psw & PSW_PREV_MEM_MGMT_MODE) >> PSW_PREV_MEM_MGMT_MODE_P;
-}
 
 #endif // _KDF11_AREGISTERS_H_
