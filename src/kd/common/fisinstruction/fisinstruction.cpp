@@ -60,9 +60,6 @@ bool FISInstruction::executeFISinstruction (u16 stackPointer,
     std::function<bool(Float, Float)> argumentsValid,
     std::function<Float(Float, Float)> instruction)
 {
-    // Clear PSW bits 5 and 6
-    cpuData_->setPSW (cpuData_->psw () & ~(_BV(5) | _BV(6)));
-
     CondData<u16> f1High = 
         mmu_->fetchWord (cpuData_->registers ()[stackPointer] + 4);
     CondData<u16> f1Low = 
