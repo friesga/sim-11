@@ -38,25 +38,16 @@ CondData<u8> KTF11_A::fetchByte (u16 address)
 
 bool KTF11_A::putWord (u16 address, u16 value)
 {
-    if (!mappedWriteWord (address, value))
-    {
-        trace.bus (BusRecordType::WriteFail, address, value);
-        cpuData_->setTrap (CpuData::TrapCondition::BusError);
-        return false;
-    }
-    trace.MmuApr (activePageRegisterSet_[static_cast<u16> (PSW::Mode::Kernel)]);
-    return true;
+    return (sr0_.managementEnabled ()) ? 
+        mappedWriteWord (address, value) :
+        writePhysicalWord (address, value);
 }
 
 bool KTF11_A::putByte (u16 address, u8 value)
 {
-    if (!mappedWriteByte (address, value))
-    {
-        trace.bus (BusRecordType::WriteFail, address, value);
-        cpuData_->setTrap (CpuData::TrapCondition::BusError);
-        return false;
-    }
-    return true;
+    return (sr0_.managementEnabled ()) ? 
+        mappedWriteByte (address, value) :
+        writePhysicalByte (address, value);
 }
 
 // Pop a word from the processor stack returning true if this succeeds
@@ -84,6 +75,9 @@ CondData<u16> KTF11_A::mappedRead (u16 address)
     ActivePageRegister* apr = activePageRegister (address);
     if (!readAllowed (apr->pageDescripterRegister_))
     {
+        sr0_.setAbortCondition (SR0::AbortReason::NonResident, 
+            static_cast<u16> (cpuData_->psw ().currentMode ()),
+            activePageField (address));
         cpuData_->setTrap (CpuData::TrapCondition::MemoryManagementTrap);
         return {};
     }
@@ -104,30 +98,58 @@ CondData<u16> KTF11_A::mappedRead (u16 address)
 //
 bool KTF11_A::mappedWriteWord (u16 address, u16 value)
 {
-    if (sr0_.managementEnabled ())
-    {
-        ActivePageRegister* apr = activePageRegister (address);
-        if (address != statusRegister0)
+    ActivePageRegister* apr = activePageRegister (address);
+    if (address != statusRegister0)
             apr->pageDescripterRegister_.setWriteAccess ();
-        return bus_->writeWord (physicalAddress (address, apr), value);
+
+    if (!pageResident ())
+    {
+        sr0_.setAbortCondition (SR0::AbortReason::NonResident, 
+            static_cast<u16> (cpuData_->psw ().currentMode ()),
+            activePageField (address));
+        cpuData_->setTrap (CpuData::TrapCondition::MemoryManagementTrap);
+        return false;
     }
 
-    return bus_->writeWord (address, value);
+    if (!writeAllowed ())
+    {
+        sr0_.setAbortCondition (SR0::AbortReason::ReadOnlyAccessViolation, 
+            static_cast<u16> (cpuData_->psw ().currentMode ()),
+            activePageField (address));
+        cpuData_->setTrap (CpuData::TrapCondition::MemoryManagementTrap);
+        return false;
+    }
+    return writePhysicalWord (physicalAddress (address, apr), value);
 }
 
 // Write the byte at the given virtual address using the MMU mapping
 bool KTF11_A::mappedWriteByte (u16 address, u8 value)
 {
-    if (sr0_.managementEnabled ())
+    ActivePageRegister* apr = activePageRegister (address);
+    if ((address & 0177776) != statusRegister0)
+        apr->pageDescripterRegister_.setWriteAccess ();
+
+    if (!pageResident ())
     {
-        ActivePageRegister* apr = activePageRegister (address);
-        if ((address & 0177776) != statusRegister0)
-            apr->pageDescripterRegister_.setWriteAccess ();
-        return bus_->writeByte (physicalAddress (address), value);
+        sr0_.setAbortCondition (SR0::AbortReason::NonResident, 
+            static_cast<u16> (cpuData_->psw ().currentMode ()),
+            activePageField (address));
+        cpuData_->setTrap (CpuData::TrapCondition::MemoryManagementTrap);
+        return false;
     }
 
-    return bus_->writeByte (address, value);
+    if (!writeAllowed ())
+    {
+        sr0_.setAbortCondition (SR0::AbortReason::ReadOnlyAccessViolation, 
+            static_cast<u16> (cpuData_->psw ().currentMode ()),
+            activePageField (address));
+        cpuData_->setTrap (CpuData::TrapCondition::MemoryManagementTrap);
+        return false;
+    }
+
+    return writePhysicalByte (physicalAddress (address, apr), value);
 }
+
 
 // Return the word at the given virtual address using the MMU mapping
 // without setting a trap in case of a buserror. This function is a
@@ -153,6 +175,33 @@ CondData<u16> KTF11_A::readPhysical (u16 address)
 
     return value;
 }
+
+// Write the given value to the given physical address, generating a bus
+// error trap in case the write fails.
+bool KTF11_A::writePhysicalWord (u16 address, u16 value)
+{
+    if (!bus_->writeWord (address, value))
+    {
+        trace.bus (BusRecordType::WriteFail, address, value);
+        cpuData_->setTrap (CpuData::TrapCondition::BusError);
+        return false;
+    }
+
+    return true;
+}
+
+bool KTF11_A::writePhysicalByte (u16 address, u16 value)
+{
+    if (!bus_->writeByte (address, value))
+    {
+        trace.bus (BusRecordType::WriteFail, address, value);
+        cpuData_->setTrap (CpuData::TrapCondition::BusError);
+        return false;
+    }
+
+    return true;
+}
+
 
 // Return the Active Page Field (APF) from the given virtual address
 constexpr u16 KTF11_A::activePageField (u16 address)
@@ -232,4 +281,14 @@ bool KTF11_A::readAllowed (PDR const & pdr)
 {
     PDR::AccessControlKey key = pdr.accessControlKey ();
     return key == PDR::AccessControlKey::ReadOnly || key == PDR::AccessControlKey::ReadWrite;
+}
+
+bool KTF11_A::pageResident ()
+{
+    return true;
+}
+
+bool KTF11_A::writeAllowed ()
+{
+    return true;
 }

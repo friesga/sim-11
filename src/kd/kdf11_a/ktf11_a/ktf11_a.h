@@ -127,7 +127,11 @@ private:
 	constexpr u16 memoryManagementMode ();
 	Register* registerPointer (u16 address);
 	bool readAllowed (PDR const & pdr);
+	bool pageResident ();
+	bool writeAllowed ();
 	CondData<u16> readPhysical (u16 address);
+	bool writePhysicalWord (u16 address, u16 value);
+	bool writePhysicalByte (u16 address, u16 value);
 };
 
 
