@@ -50,7 +50,7 @@ inline bool CommonInstruction::RTI::execute ()
         return false;
 
     cpuData_->loadPSW (tmp);
-    if (cpuData_->psw () & PSW_T)
+    if (cpuData_->psw ().traceBitSet ())
         cpuData_->setTrap (CpuData::TrapCondition::BreakpointTrap);
 
     return true;

@@ -44,21 +44,6 @@
 // Priority - Priority Level
 // T-bit and conditions codes as described above
 //
-#define	PSW_C				        _BV(0)
-#define	PSW_V				        _BV(1)
-#define	PSW_Z				        _BV(2)
-#define	PSW_N				        _BV(3)
-#define	PSW_T				        _BV(4)
-#define	PSW_PRIO			        _BV(7)
-#define	PSW_PRIORITY		        (_BV(7) | _BV(6) | _BV(5))
-#define	PSW_MEM_MGMT_MODE_P	        14
-#define	PSW_MEM_MGMT_MODE	        (_BV(15) | _BV(14))
-#define PSW_PREV_MEM_MGMT_MODE_P    12
-#define	PSW_PREV_MEM_MGMT_MODE      (_BV(13) | _BV(12))
-
-#define KERNEL_MODE                 0
-#define USER_MODE                   3
-
 class PSW 
 {
 public:

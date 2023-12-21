@@ -30,22 +30,22 @@ Register* KTF11_A::registerPointer (u16 address)
             switch (address & 0177760)
             {
                 case kernelPARBase:
-                    return &activePageRegisterSet_[KERNEL_MODE]
+                    return &activePageRegisterSet_[static_cast<u16> (PSW::Mode::Kernel)]
                         .activePageRegister_[index]
                         .pageAddressRegister_;
 
                 case kernelPDRBase:
-                    return &activePageRegisterSet_[KERNEL_MODE]
+                    return &activePageRegisterSet_[static_cast<u16> (PSW::Mode::Kernel)]
                         .activePageRegister_[index]
                         .pageDescripterRegister_;
 
                 case userPARBase:
-                    return &activePageRegisterSet_[USER_MODE]
+                    return &activePageRegisterSet_[static_cast<u16> (PSW::Mode::User)]
                         .activePageRegister_[index]
                         .pageAddressRegister_;
 
                 case userPDRBase:
-                    return &activePageRegisterSet_[USER_MODE]
+                    return &activePageRegisterSet_[static_cast<u16> (PSW::Mode::User)]
                         .activePageRegister_[index]
                         .pageDescripterRegister_;
 
@@ -75,7 +75,7 @@ StatusCode KTF11_A::writeWord (u16 address, u16 value)
     if (regPtr != nullptr)
     {
         *regPtr = value;
-        trace.MmuApr (activePageRegisterSet_[KERNEL_MODE]);
+        trace.MmuApr (activePageRegisterSet_[static_cast<u16> (PSW::Mode::Kernel)]);
         return StatusCode::OK;
     }
 

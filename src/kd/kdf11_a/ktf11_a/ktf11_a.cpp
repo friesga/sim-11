@@ -44,7 +44,7 @@ bool KTF11_A::putWord (u16 address, u16 value)
         cpuData_->setTrap (CpuData::TrapCondition::BusError);
         return false;
     }
-    trace.MmuApr (activePageRegisterSet_[KERNEL_MODE]);
+    trace.MmuApr (activePageRegisterSet_[static_cast<u16> (PSW::Mode::Kernel)]);
     return true;
 }
 
@@ -175,7 +175,7 @@ constexpr u16 KTF11_A::displacementInBlock (u16 address)
 // Return the current memory management mode
 constexpr u16 KTF11_A::memoryManagementMode ()
 {
-    return (cpuData_->psw () & PSW_MEM_MGMT_MODE) >> PSW_MEM_MGMT_MODE_P;
+    return static_cast<u16> (cpuData_->psw ().currentMode ());
 }
 
 // Return a pointer to the active (i.e. kernel or user) page register for the

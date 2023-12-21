@@ -135,7 +135,7 @@ void KDF11_A_CpuControl::execInstr ()
     // after the instruction that set the T-bit will proceed to completion and
     // then trap through the trap vector at address 14.
     // LSI-11/PDP-11/03 Processor Handbook pag. 114.
-    traceFlag_ =  (cpuData_->psw () & PSW_T) ? true : false;
+    traceFlag_ =  (cpuData_->psw ().traceBitSet ()) ? true : false;
 }
 
 void KDF11_A_CpuControl::serviceTrap ()
@@ -175,7 +175,7 @@ void KDF11_A_CpuControl::serviceInterrupt ()
 
 u8 KDF11_A_CpuControl::cpuPriority()
 {
-    return (cpuData_->psw () & PSW_PRIORITY) >> 5;
+    return cpuData_->psw ().priorityLevel ();
 }
 
 // Fetch PC and PSW from the given vector address. If this fails the

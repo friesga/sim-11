@@ -42,7 +42,7 @@ inline bool KDF11_ACpuData::stackOverflow ()
 
  constexpr bool KDF11_ACpuData::inKernelMode ()
  {
-	 return (psw_ & PSW_MEM_MGMT_MODE) == KERNEL_MODE;
+	 return psw_.currentMode () == PSW::Mode::Kernel;
  }
 
 #endif // _KDF11ACPUDATA_H_
