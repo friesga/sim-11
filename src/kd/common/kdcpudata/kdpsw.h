@@ -10,6 +10,7 @@ public:
     KD_PSW (u16 value);
     operator u16 () override;
     void set (u16 value) override;
+    void load (u16 value) override;
     void clearConditionCodes (u16 conditionCodes) override;
     void setConditionCodes (u16 conditionCodes) override;
     bool traceBitSet () override;
@@ -40,10 +41,18 @@ inline KD_PSW::operator u16 ()
     return value_;
 }
 
-// Set the PSW to the given value without affecting the T-bit.
+// Set the Processor Status Word to the given value. Two variants of this
+// function exist: set() by which the T-bit is not affected and load()
+// in which the complete PSW is replaced by the given value. The latter
+// function should only be used to load the PSW from a trap vector.
 inline void KD_PSW::set (u16 value)
 {
     value_ = (value_ & TraceBitMask) | (value & ~TraceBitMask);
+}
+
+inline void KD_PSW::load (u16 value)
+{
+    value_ = value;
 }
 
 inline void KD_PSW::clearConditionCodes (u16 conditionCodes)

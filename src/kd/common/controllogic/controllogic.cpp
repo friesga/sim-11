@@ -59,5 +59,5 @@ bool ControlLogic::signalAvailable ()
 void ControlLogic::loadTrapVector (CpuData::TrapCondition trap)
 {
     cpuData_->registers ()[7] = mmu_->fetchWord (cpuData_->trapVector (trap)).valueOr (0);
-    cpuData_->loadPSW (mmu_->fetchWord (cpuData_->trapVector (trap) + 2).valueOr (0));
+    cpuData_->psw ().load (mmu_->fetchWord (cpuData_->trapVector (trap) + 2).valueOr (0));
 }

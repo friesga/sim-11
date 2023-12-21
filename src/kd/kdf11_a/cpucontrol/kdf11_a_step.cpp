@@ -212,7 +212,7 @@ void KDF11_A_CpuControl::swapPcPSW (u16 vectorAddress)
     // the PC.
     // 
     u16 oldPSW = cpuData_->psw ();
-    fetchFromVector (vectorAddress + 2, [this] (u16 value) {cpuData_->loadPSW (value);});
+    fetchFromVector (vectorAddress + 2, [this] (u16 value) {cpuData_->psw ().load (value);});
     if (!mmu_->pushWord (oldPSW) || !mmu_->pushWord (cpuData_->registers ()[7]))
     {
         // Set the stack pointer at location 4 as it will be decremented
@@ -227,7 +227,7 @@ void KDF11_A_CpuControl::swapPcPSW (u16 vectorAddress)
     // Read new PC and PSW from the trap vector. These read's could also
     // result in a bus time out.
     if (!fetchFromVector (vectorAddress, &cpuData_->registers ()[7]) ||
-        !fetchFromVector (vectorAddress + 2, [this] (u16 value) {cpuData_->loadPSW (value);}))
+        !fetchFromVector (vectorAddress + 2, [this] (u16 value) {cpuData_->psw ().load (value);}))
     {
         trace.cpuEvent (CpuEventRecordType::CPU_DBLBUS, vectorAddress);
         cpuData_->clearTrap ();

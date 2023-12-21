@@ -49,7 +49,7 @@ inline bool CommonInstruction::RTI::execute ()
     if (!mmu_->popWord (&cpuData_->registers ()[7]) || !mmu_->popWord (&tmp))
         return false;
 
-    cpuData_->loadPSW (tmp);
+    cpuData_->psw ().load (tmp);
     if (cpuData_->psw ().traceBitSet ())
         cpuData_->setTrap (CpuData::TrapCondition::BreakpointTrap);
 

@@ -25,7 +25,6 @@ public:
 	// Functions required by the CpuData interface
 	constexpr GeneralRegisters& registers () override;
 	constexpr PSW& psw () override;
-	constexpr void loadPSW (u16 value) override;
 	void setCC (ConditionCodes conditionCodes) override;
 
 	constexpr TrapCondition trap () override;
@@ -62,17 +61,6 @@ template <typename REGISTERTYPE>
 constexpr PSW& KDCpuData<REGISTERTYPE>::psw ()
 {
 	return psw_;
-}
-
-// Set the Processor Status Word to the given value. Two variants of this
-// function exist: setPSW() by which the T-bit cannot be set or cleared
-// and loadPSW() in which the complete PSW is replaced by the given value.
-// The latter function should only be used to load the PSW from a trap vector.
-
- template <typename REGISTERTYPE>
-constexpr void KDCpuData<REGISTERTYPE>::loadPSW (u16 value)
-{
-	psw_ = value;
 }
 
 // Calculate the new condition codes from the current condition codes and
