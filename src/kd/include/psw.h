@@ -72,6 +72,7 @@ public:
         User = 3
     };
 
+    virtual operator u16 () = 0;
     virtual void clearConditionCodes (u16 conditionCodes) = 0;
     virtual void setConditionCodes (u16 conditionCodes) = 0;
     virtual bool traceBitSet () = 0;

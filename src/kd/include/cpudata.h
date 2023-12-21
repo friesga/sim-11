@@ -5,6 +5,7 @@
 #include "conddata/conddata.h"
 #include "interruptrequest/interruptrequest.h"
 #include "kd/include/generalregisters.h"
+#include "kd/include/psw.h"
 #include "kd/common/conditioncodes/conditioncodes.h"
 #include "trace/trace.h"
 
@@ -43,7 +44,7 @@ public:
 
 	// Definition of the KD11 execution state
     virtual GeneralRegisters& registers () = 0;
-    virtual u16 psw () = 0;
+    virtual PSW& psw () = 0;
 	virtual void setPSW (u16 value) = 0;
 	virtual void loadPSW (u16 value) = 0;
 	virtual void setCC (ConditionCodes conditionCodes) = 0;

@@ -8,6 +8,7 @@ class KD_PSW : public PSW, public BasicRegister
 {
 public:
     KD_PSW (u16 value);
+    operator u16 () override;
     void clearConditionCodes (u16 conditionCodes) override;
     void setConditionCodes (u16 conditionCodes) override;
     bool traceBitSet () override;
@@ -32,6 +33,11 @@ inline KD_PSW::KD_PSW (u16 value)
     : 
     BasicRegister {value}
 {}
+
+inline KD_PSW::operator u16 ()
+{
+    return value_;
+}
 
 inline void KD_PSW::clearConditionCodes (u16 conditionCodes)
 {
