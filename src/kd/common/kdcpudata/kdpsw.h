@@ -9,6 +9,7 @@ class KD_PSW : public PSW, public BasicRegister
 public:
     KD_PSW (u16 value);
     operator u16 () override;
+    void set (u16 value) override;
     void clearConditionCodes (u16 conditionCodes) override;
     void setConditionCodes (u16 conditionCodes) override;
     bool traceBitSet () override;
@@ -37,6 +38,12 @@ inline KD_PSW::KD_PSW (u16 value)
 inline KD_PSW::operator u16 ()
 {
     return value_;
+}
+
+// Set the PSW to the given value without affecting the T-bit.
+inline void KD_PSW::set (u16 value)
+{
+    value_ = (value_ & TraceBitMask) | (value & ~TraceBitMask);
 }
 
 inline void KD_PSW::clearConditionCodes (u16 conditionCodes)

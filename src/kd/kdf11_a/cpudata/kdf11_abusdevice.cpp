@@ -31,7 +31,7 @@ StatusCode KDF11_ACpuData::writeWord (u16 address, u16 value)
 {
     if (address == PSWAddress)
     {
-        setPSW (value);
+        psw_.set (value);
         return StatusCode::OK;
     }
 

@@ -58,6 +58,7 @@ public:
     };
 
     virtual operator u16 () = 0;
+    virtual void set (u16 value) = 0;
     virtual void clearConditionCodes (u16 conditionCodes) = 0;
     virtual void setConditionCodes (u16 conditionCodes) = 0;
     virtual bool traceBitSet () = 0;
