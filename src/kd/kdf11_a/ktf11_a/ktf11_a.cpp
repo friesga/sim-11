@@ -255,10 +255,14 @@ void KTF11_A::setVirtualPC (u16 value)
 }
 
 // This function checks whether or not the page with the given Page
-// Descriptor Register is resident.
+// Descriptor Register is resident. The KDF11-A User Guide defines the
+// value 2 (key 4) as "Unused" but diagnostic JKDAD1 test 30 shows that
+// accesses to a page with that value have to be aborted.
 bool KTF11_A::pageResident (PDR const & pdr)
 {
-    return pdr.accessControlKey () != PDR::AccessControlKey::NonResident;
+    PDR::AccessControlKey key = pdr.accessControlKey ();
+    return key != PDR::AccessControlKey::NonResident &&
+        key != PDR::AccessControlKey::Unused;
 }
 
 bool KTF11_A::writeAllowed (PDR const & pdr)
