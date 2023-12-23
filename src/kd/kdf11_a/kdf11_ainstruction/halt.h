@@ -15,7 +15,7 @@
 // instruction to be executed. The processor goes into the HALT mode.
 // The console mode of operation is enabled.
 //
-// A HALT in user mode traps to location 10.
+// A HALT in user mode traps to location 10 (EK-KDF11-UG-PR2, par. 8.3.3.3).
 //
 class KDF11_AInstruction::HALT : public NoOperandInstruction, public WithFactory<HALT>
 {

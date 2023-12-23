@@ -60,7 +60,7 @@
 #include "kd/common/instructions/mul.h"
 #include "neg.h"
 #include "negb.h"
-#include "kd/common/instructions/reset.h"
+#include "reset.h"
 #include "rol.h"
 #include "rolb.h"
 #include "ror.h"
@@ -92,7 +92,7 @@ KDF11_AInstruction::opCodeTable const KDF11_AInstruction::group_00_00_nn
     CommonInstruction::RTI::create,        // 00 00 02
     CommonInstruction::BPT::create,        // 00 00 03
     CommonInstruction::IOT::create,        // 00 00 04
-    CommonInstruction::RESET::create,      // 00 00 05
+    KDF11_AInstruction::RESET::create,     // 00 00 05
     CommonInstruction::RTT::create,        // 00 00 06
     KDF11_AInstruction::MFPT::create       // 00 00 07
 };

@@ -132,6 +132,7 @@ class KDF11_AInstruction
     class MOVB;
     class NEG;
     class NEGB;
+    class RESET;
     class ROL;
     class ROLB;
     class ROR;
