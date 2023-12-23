@@ -80,7 +80,7 @@ CondData<u16> KTF11_A::mappedRead (u16 address)
     if (!withinPage (blockNumber (address), apr->pageDescripterRegister_))
         return abortAccess (SR0::AbortReason::PageLengthError, address);
     
-    return readPhysical (physicalAddress (address));
+    return readPhysical (physicalAddress (address, apr));
 }
 
 // Write the word at the given virtual address using the MMU mapping.
