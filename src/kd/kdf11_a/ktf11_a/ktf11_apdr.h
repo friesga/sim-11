@@ -23,11 +23,19 @@ public:
         ReadWrite = 3
     };
 
+    enum class ExpansionDirection
+    {
+        Upward = 0,
+        Downward = 1
+    };
+
     PDR (u16 value);
     void operator= (u16 const value) override;
     void setWriteAccess ();
     void clearWriteAccess ();
     AccessControlKey accessControlKey () const;
+    u16 pageLength () const;
+    ExpansionDirection expansionDirection () const;
 
 private:
     // Address of the corresponding Page Address Register
@@ -70,6 +78,17 @@ inline PDR::AccessControlKey PDR::accessControlKey () const
 {
     return static_cast<AccessControlKey>
         ((value_ & AccessControlFieldMask) >> AccessControlFieldIndex);
+}
+
+inline u16 PDR::pageLength () const
+{
+    return (value_ & PageLengthFieldMask) >> PageLengthFieldIndex;
+}
+
+inline PDR::ExpansionDirection PDR::expansionDirection () const
+{
+    return static_cast<ExpansionDirection> 
+        ((value_ & ExpansionDirectionMask) >> ExpansionDirectionIndex);
 }
 
 #endif // _KTF11PDR_H_

@@ -76,6 +76,9 @@ CondData<u16> KTF11_A::mappedRead (u16 address)
 
     if (!pageResident (apr->pageDescripterRegister_))
         return abortAccess (SR0::AbortReason::NonResident, address);
+
+    if (!withinPage (blockNumber (address), apr->pageDescripterRegister_))
+        return abortAccess (SR0::AbortReason::PageLengthError, address);
     
     return readPhysical (physicalAddress (address));
 }
@@ -107,6 +110,9 @@ bool KTF11_A::mappedWriteWord (u16 address, u16 value)
     if (!pageResident (apr->pageDescripterRegister_))
         return abortAccess (SR0::AbortReason::NonResident, address);
 
+    if (!withinPage (blockNumber (address), apr->pageDescripterRegister_))
+        return abortAccess (SR0::AbortReason::PageLengthError, address);
+
     if (!writeAllowed (apr->pageDescripterRegister_))
         return abortAccess (SR0::AbortReason::ReadOnlyAccessViolation, address);
 
@@ -122,6 +128,9 @@ bool KTF11_A::mappedWriteByte (u16 address, u8 value)
 
     if (!pageResident (apr->pageDescripterRegister_))
         return abortAccess (SR0::AbortReason::NonResident, address);
+
+    if (!withinPage (blockNumber (address), apr->pageDescripterRegister_))
+        return abortAccess (SR0::AbortReason::PageLengthError, address);
 
     if (!writeAllowed (apr->pageDescripterRegister_))
         return abortAccess (SR0::AbortReason::ReadOnlyAccessViolation, address);
@@ -277,4 +286,20 @@ bool KTF11_A::abortAccess (SR0::AbortReason reason, u16 address)
         activePageField (address));
     cpuData_->setTrap (CpuData::TrapCondition::MemoryManagementTrap);
     return false;
+}
+
+// This function checks if the given block number is within the page 
+// described by the given page descriptor register.
+//
+// [In case the page Expansion Direction is upward and] VBA<12:6> [i.e. the
+// block number] is less than or equal to PDR:14:8> [i.e. the page length
+// field] a page length abort should occur and be reported by SR0 and SR2.
+// [In case the page Expansion Direction is downward] and VBA<12:6> is less
+// than PDR<14:8> a page length abort should occur...] (JKDAD1 TEST 33 and
+// TEST 34)
+bool KTF11_A::withinPage (u16 blockNumber, PDR const & pdr)
+{
+    return (pdr.expansionDirection () == PDR::ExpansionDirection::Upward) ?
+        blockNumber <= pdr.pageLength () :
+        blockNumber >= pdr.pageLength ();
 }

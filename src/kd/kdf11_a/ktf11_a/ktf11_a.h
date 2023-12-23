@@ -128,6 +128,7 @@ private:
 	Register* registerPointer (u16 address);
 	bool pageResident (PDR const & pdr);
 	bool writeAllowed (PDR const & pdr);
+	bool withinPage (u16 blockNumber, PDR const & pdr);
 	bool abortAccess (SR0::AbortReason reason, u16 address);
 	CondData<u16> readPhysical (u16 address);
 	bool writePhysicalWord (u16 address, u16 value);
