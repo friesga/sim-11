@@ -43,7 +43,7 @@
 #include "decb.h"
 #include "kd/common/instructions/div.h"
 #include "kd/common/instructions/emt.h"
-#include "kd/common/instructions/halt.h"
+#include "halt.h"
 #include "inc.h"
 #include "incb.h"
 #include "kd/common/instructions/iot.h"
@@ -87,7 +87,7 @@
 // and minus NOP instructions.
 KDF11_AInstruction::opCodeTable const KDF11_AInstruction::group_00_00_nn
 { 
-    CommonInstruction::HALT::create,       // 00 00 00 
+    KDF11_AInstruction::HALT::create,      // 00 00 00 
     CommonInstruction::WAIT::create,       // 00 00 01
     CommonInstruction::RTI::create,        // 00 00 02
     CommonInstruction::BPT::create,        // 00 00 03

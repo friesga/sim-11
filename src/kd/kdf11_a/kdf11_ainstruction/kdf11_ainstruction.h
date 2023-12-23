@@ -121,6 +121,7 @@ class KDF11_AInstruction
     class COMB;
     class DEC;
     class DECB;
+    class HALT;
     class INC;
     class INCB;
     class MFPD;
