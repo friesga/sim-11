@@ -64,12 +64,12 @@ public:
         RTI = 0,
         Trap,
         ExplicitAccess,
-        MTPS
+        MTPS,
+        Reset
     };
 
     virtual operator u16 () = 0;
     virtual void set (ProtectionMode protectionde, u16 value) = 0;
-    virtual void load (u16 value) = 0;
     virtual bool traceBitSet () = 0;
     virtual u16 priorityLevel () = 0;
     virtual void setPriorityLevel (u16 level) = 0;

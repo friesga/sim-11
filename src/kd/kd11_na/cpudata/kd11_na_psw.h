@@ -14,7 +14,6 @@ public:
     KD11_NA_PSW (u16 value);
     operator u16 () override;
     void set (PSW::ProtectionMode protectionMode, u16 value) override;
-    void load (u16 value) override;
     bool traceBitSet () override;
     u16 priorityLevel () override;
     void setPriorityLevel (u16 level) override;
@@ -44,14 +43,10 @@ inline KD11_NA_PSW::operator u16 ()
 inline void KD11_NA_PSW::set (PSW::ProtectionMode protectionMode, u16 value)
 {
     value_ = (protectionMode == PSW::ProtectionMode::Trap || 
-                protectionMode == PSW::ProtectionMode::RTI) ?
+                protectionMode == PSW::ProtectionMode::RTI ||
+                protectionMode == PSW::ProtectionMode::Reset) ?
             value :
             (value_ & TraceBitMask) | (value & ~TraceBitMask);
-}
-
-inline void KD11_NA_PSW::load (u16 value)
-{
-    value_ = value;
 }
 
 // Return the status (set or clear) of the Trace Bit.

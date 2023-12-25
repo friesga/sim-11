@@ -14,7 +14,6 @@ public:
     KDF11_A_PSW (u16 value);
     operator u16 () override;
     void set (PSW::ProtectionMode protectionMode, u16 value) override;
-    void load (u16 value) override;
     bool traceBitSet () override;
     u16 priorityLevel () override;
     void setPriorityLevel (u16 level) override;
@@ -52,7 +51,8 @@ inline const KDF11_A_PSW::ProtectionModeMask KDF11_A_PSW::protectionMode_[] =
     {0000000, 0170340},   // RTI
     {0000000, 0000000},   // Trap
     {0000020, 0000020},   // ExplicitAccess
-    {0177420, 0177760}    // MTPS
+    {0177420, 0177760},   // MTPS
+    {0000000, 0000000},   // Reset
 };
 
 inline KDF11_A_PSW::KDF11_A_PSW (u16 value)
@@ -74,11 +74,6 @@ inline void KDF11_A_PSW::set (PSW::ProtectionMode protectionMode, u16 value)
         protectionMode_[static_cast<u16> (protectionMode)].user_;
 
     value_ = (value_ & mask) | (value & ~mask);
-}
-
-inline void KDF11_A_PSW::load (u16 value)
-{
-    value_ = value;
 }
 
 // Return the status (set or clear) of the Trace Bit.

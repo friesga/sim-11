@@ -10,7 +10,7 @@ void KDF11_A_CpuControl::cpuReset ()
     for (u16 regNr = 0; regNr <= 6; ++regNr)
         cpuData_->registers ()[regNr] = 0;
 
-    cpuData_->psw ().load (0);
+    cpuData_->psw ().set (PSW::ProtectionMode::Reset, 0);
 }
 
 // Reset (the devices on) the bus by setting the INIT signal and reset
