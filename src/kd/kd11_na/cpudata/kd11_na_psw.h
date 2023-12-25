@@ -43,7 +43,10 @@ inline KD11_NA_PSW::operator u16 ()
 // protection mode. 
 inline void KD11_NA_PSW::set (PSW::ProtectionMode protectionMode, u16 value)
 {
-    value_ = (value_ & TraceBitMask) | (value & ~TraceBitMask);
+    value_ = (protectionMode == PSW::ProtectionMode::Trap || 
+                protectionMode == PSW::ProtectionMode::RTI) ?
+            value :
+            (value_ & TraceBitMask) | (value & ~TraceBitMask);
 }
 
 inline void KD11_NA_PSW::load (u16 value)

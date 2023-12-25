@@ -47,7 +47,7 @@ inline bool CommonInstruction::RTT::execute ()
     if (!mmu_->popWord (&cpuData_->registers ()[7]) || !mmu_->popWord (&tmp))
         return false;
 
-    cpuData_->psw ().load (tmp);
+    cpuData_->psw ().set (PSW::ProtectionMode::RTI, tmp);
 
     return true;
 }
