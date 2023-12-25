@@ -27,7 +27,8 @@ inline CommonInstruction::SCC::SCC (CpuData* cpuData, CpuControl* cpuControl,
 
 inline bool CommonInstruction::SCC::execute ()
 {
-    cpuData_->psw ().set (cpuData_->psw () | getConditionCodes ());
+    cpuData_->psw ().set (PSW::ProtectionMode::ExplicitAccess,
+        cpuData_->psw () | getConditionCodes ());
     return true;
 }
 

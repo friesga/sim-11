@@ -233,7 +233,8 @@ void KD11_NA_ODT::setRegisterValue ()
         else
             // Setting or clearing the PSW T-bit will be prohibited
             // by PSW::set().
-            cpuData_->psw ().set (newValue_);
+            cpuData_->psw ().set (PSW::ProtectionMode::ExplicitAccess,
+                newValue_);
     }
     else
         writeString ("?\n");

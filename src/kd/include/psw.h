@@ -57,8 +57,18 @@ public:
         User = 3
     };
 
+    // This enum defines the different PSW protection possibilities as defined
+    // in EK-KDF11-UG-PR2 Table 8-1.
+    enum class ProtectionMode
+    {
+        RTI = 0,
+        Trap,
+        ExplicitAccess,
+        MTPS
+    };
+
     virtual operator u16 () = 0;
-    virtual void set (u16 value) = 0;
+    virtual void set (ProtectionMode protectionde, u16 value) = 0;
     virtual void load (u16 value) = 0;
     virtual void clearConditionCodes (u16 conditionCodes) = 0;
     virtual void setConditionCodes (u16 conditionCodes) = 0;
