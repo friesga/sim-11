@@ -2,14 +2,16 @@
 #define _KDF11ACPUDATA_H_
 
 #include "kd/common/kdcpudata/kdcpudata.h"
-#include "kd/kdf11_a/cpudata/kdf11_aregisters/kdf11_aregisters.h"
+#include "kdf11_aregisters/kdf11_aregisters.h"
+#include "kdf11_a_psw.h"
 #include "abstractbusdevice/abstractbusdevice.h"
 
 //
 // The class KDF11_ACpuData implements the CpuData interface for the KDF11-A
 // plus the BusDevice interface for bus access to the PSW.
 //
-class KDF11_ACpuData : public KDCpuData<KDF11_ARegisters>, public AbstractBusDevice
+class KDF11_ACpuData : public KDCpuData<KDF11_ARegisters, KDF11_A_PSW>,
+	public AbstractBusDevice
 {
 public:
 	// Functions required by the CpuData interface and not implemented by

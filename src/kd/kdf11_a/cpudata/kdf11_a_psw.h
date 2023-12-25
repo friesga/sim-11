@@ -1,5 +1,5 @@
-#ifndef _KD_PSW_H_
-#define _KD_PSW_H_
+#ifndef _KDF11_A_PSW_H_
+#define _KDF11_A_PSW_H_
 
 #include "kd/include/psw.h"
 #include "basicregister/basicregister.h"
@@ -8,10 +8,10 @@
 
 using std::array;
 
-class KD_PSW : public PSW, public BasicRegister
+class KDF11_A_PSW : public PSW, public BasicRegister
 {
 public:
-    KD_PSW (u16 value);
+    KDF11_A_PSW (u16 value);
     operator u16 () override;
     void set (PSW::ProtectionMode protectionMode, u16 value) override;
     void load (u16 value) override;
@@ -47,7 +47,7 @@ private:
 // new value. The mask contains the bits not to be changed by the particular
 // access. This implements the PSW protection as defined in EK-KDF11-UG-PR2
 // Table 8-1. The array is in order of PSW::ProtectionMode.
-inline const KD_PSW::ProtectionModeMask KD_PSW::protectionMode_[] =
+inline const KDF11_A_PSW::ProtectionModeMask KDF11_A_PSW::protectionMode_[] =
 {
     {0000000, 0170340},   // RTI
     {0000000, 0000000},   // Trap
@@ -55,63 +55,59 @@ inline const KD_PSW::ProtectionModeMask KD_PSW::protectionMode_[] =
     {0177420, 0177760}    // MTPS
 };
 
-inline KD_PSW::KD_PSW (u16 value)
+inline KDF11_A_PSW::KDF11_A_PSW (u16 value)
     : 
     BasicRegister {value}
 {}
 
-inline KD_PSW::operator u16 ()
+inline KDF11_A_PSW::operator u16 ()
 {
     return value_;
 }
 
-// Set the Processor Status Word to the given value. Two variants of this
-// function exist: set() by which the T-bit is not affected and load()
-// in which the complete PSW is replaced by the given value. The latter
-// function should only be used to load the PSW from a trap vector.
-inline void KD_PSW::set (PSW::ProtectionMode protectionMode, u16 value)
+// Set the Processor Status Word to the given value conform the given
+// protection mode.
+inline void KDF11_A_PSW::set (PSW::ProtectionMode protectionMode, u16 value)
 {
-    // value_ = (value_ & TraceBitMask) | (value & ~TraceBitMask);
     u16 mask = (currentMode () == PSW::Mode::Kernel) ?
         protectionMode_[static_cast<u16> (protectionMode)].kernel_ :
         protectionMode_[static_cast<u16> (protectionMode)].user_;
 
-
     value_ = (value_ & mask) | (value & ~mask);
 }
 
-inline void KD_PSW::load (u16 value)
+inline void KDF11_A_PSW::load (u16 value)
 {
     value_ = value;
 }
 
 // Return the status (set or clear) of the Trace Bit.
-inline bool KD_PSW::traceBitSet ()
+inline bool KDF11_A_PSW::traceBitSet ()
 {
     return value_ & TraceBitMask;
 }
 
 // Return the Priority Level
-inline u16 KD_PSW::priorityLevel ()
+inline u16 KDF11_A_PSW::priorityLevel ()
 {
     return (value_ & PriorityLevelMask) >> PriorityLevelIndex;
 }
 
 // Set the priority level to the given level. The level is masked with the
 // three lowest bits to make sure no level exceeding level 7 can be set.
-inline void KD_PSW::setPriorityLevel (u16 level)
+inline void KDF11_A_PSW::setPriorityLevel (u16 level)
 {
     value_ = (value_ & ~PriorityLevelMask) | ((level & 07) << PriorityLevelIndex);
 }
 
-inline PSW::Mode KD_PSW::currentMode () const
+inline PSW::Mode KDF11_A_PSW::currentMode () const
 {
     return static_cast<Mode> ((value_ & CurrentModeMask) >> CurrentModeIndex);
 }
 
-inline PSW::Mode KD_PSW::previousMode () const
+inline PSW::Mode KDF11_A_PSW::previousMode () const
 {
     return static_cast<Mode> ((value_ & PreviousModeMask) >> PreviousModeIndex);
 }
 
-#endif // _KD_PSW_H_
+#endif // _KDF11_A_PSW_H_
