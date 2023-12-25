@@ -15,8 +15,6 @@ public:
     operator u16 () override;
     void set (PSW::ProtectionMode protectionMode, u16 value) override;
     void load (u16 value) override;
-    void clearConditionCodes (u16 conditionCodes) override;
-    void setConditionCodes (u16 conditionCodes) override;
     bool traceBitSet () override;
     u16 priorityLevel () override;
     void setPriorityLevel (u16 level) override;
@@ -85,16 +83,6 @@ inline void KD_PSW::set (PSW::ProtectionMode protectionMode, u16 value)
 inline void KD_PSW::load (u16 value)
 {
     value_ = value;
-}
-
-inline void KD_PSW::clearConditionCodes (u16 conditionCodes)
-{
-    value_ &= ~(conditionCodes & ConditionCodesMask);
-}
-
-inline void KD_PSW::setConditionCodes (u16 conditionCodes)
-{
-    value_ |= (conditionCodes & ConditionCodesMask);
 }
 
 // Return the status (set or clear) of the Trace Bit.
