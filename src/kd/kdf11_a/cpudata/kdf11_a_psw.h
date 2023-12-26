@@ -40,6 +40,8 @@ private:
     };
 
     static const ProtectionModeMask protectionMode_[];
+
+    void setPreviousMode (u16 mode);
 };
 
 // This array defines the values the PSW will be masked with to set the
@@ -69,11 +71,15 @@ inline KDF11_A_PSW::operator u16 ()
 // protection mode.
 inline void KDF11_A_PSW::set (PSW::ProtectionMode protectionMode, u16 value)
 {
-    u16 mask = (currentMode () == PSW::Mode::Kernel) ?
+    PSW::Mode presentMode = currentMode ();
+    u16 mask = (presentMode == PSW::Mode::Kernel) ?
         protectionMode_[static_cast<u16> (protectionMode)].kernel_ :
         protectionMode_[static_cast<u16> (protectionMode)].user_;
 
     value_ = (value_ & mask) | (value & ~mask);
+
+    if (protectionMode == PSW::ProtectionMode::Trap)
+        setPreviousMode (static_cast<u16> (presentMode));
 }
 
 // Return the status (set or clear) of the Trace Bit.
@@ -103,6 +109,12 @@ inline PSW::Mode KDF11_A_PSW::currentMode () const
 inline PSW::Mode KDF11_A_PSW::previousMode () const
 {
     return static_cast<Mode> ((value_ & PreviousModeMask) >> PreviousModeIndex);
+}
+
+
+inline void KDF11_A_PSW::setPreviousMode (u16 mode)
+{
+    value_ = (value_ & ~PreviousModeMask) | (mode << PreviousModeIndex);
 }
 
 #endif // _KDF11_A_PSW_H_
