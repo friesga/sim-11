@@ -39,13 +39,7 @@ public:
 	bool pushWord (u16 value) override;
 	bool popWord (u16 *destination) override;
 
-	// The following functions use the given adress as a physical address
-	// (in case memory management is disabled) to access memory or map the
-	// virtual address to a physical address when memory management is 
-	// enabled.
-    CondData<u16> mappedRead (u16 address) override;
-	bool mappedWriteWord (u16 address, u16 value) override;
-	bool mappedWriteByte (u16 address, u8 value) override;
+
 	void setVirtualPC (u16 value) override;
 
 	CondData<u16> readWithoutTrap (u16 address) override;
@@ -116,6 +110,14 @@ private:
 	// that the Reserved and Illegal mode do not cause a halt, we presume the
 	// presence of four Active Page Register sets.
 	ActivePageRegisterSet activePageRegisterSet_[4];
+
+	// The following functions use the given adress as a physical address
+	// (in case memory management is disabled) to access memory or map the
+	// virtual address to a physical address when memory management is 
+	// enabled.
+    CondData<u16> mappedRead (u16 address);
+	bool mappedWriteWord (u16 address, u16 value);
+	bool mappedWriteByte (u16 address, u8 value);
 
 	u32 physicalAddress (u16 address);
 	u32 physicalAddress (u16 address, ActivePageRegister* apr);

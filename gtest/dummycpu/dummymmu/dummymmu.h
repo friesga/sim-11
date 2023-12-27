@@ -19,13 +19,7 @@ public:
 	bool putByte (u16 address, u8 value);
 	bool pushWord (u16 value) { return true; };
 	bool popWord (u16 *destination) { return false; };
-
-	CondData<u16> mappedRead (u16 address) { return fetchWord (address); };
-	bool mappedWriteWord (u16 address, u16 value) { return putWord (address, value); };
-	bool mappedWriteByte (u16 address, u8 value) { return putByte (address, value); };
-
 	CondData<u16> readWithoutTrap (u16 address) { return fetchWord (address); };
-
 	void setVirtualPC (u16 value) {};
 
 private:
@@ -33,6 +27,10 @@ private:
     // from and to non-existing memory addresses.
     static const int memorySize_ {1000};
     unique_ptr<u16[]> memory_;
+
+	CondData<u16> mappedRead (u16 address) { return fetchWord (address); };
+	bool mappedWriteWord (u16 address, u16 value) { return putWord (address, value); };
+	bool mappedWriteByte (u16 address, u8 value) { return putByte (address, value); };
 };
 
 

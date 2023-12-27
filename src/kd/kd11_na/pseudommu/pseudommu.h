@@ -24,18 +24,16 @@ public:
 	bool putByte (u16 address, u8 value) override;
 	bool pushWord (u16 value) override;
 	bool popWord (u16 *destination) override;
-
-	CondData<u16> mappedRead (u16 address) override;
-	bool mappedWriteWord (u16 address, u16 value) override;
-	bool mappedWriteByte (u16 address, u8 value) override;
-
 	CondData<u16> readWithoutTrap (u16 address) override;
-
 	void setVirtualPC (u16 value) override;
 
 private:
 	Qbus* bus_;
 	CpuData* cpuData_;
+
+	CondData<u16> mappedRead (u16 address);
+	bool mappedWriteWord (u16 address, u16 value);
+	bool mappedWriteByte (u16 address, u8 value);
 };
 
 #endif // _PSEUDOMMU_H_
