@@ -6,6 +6,7 @@ KTF11_A::KTF11_A (Qbus* bus, CpuData* cpuData)
     bus_ {bus},
     cpuData_ {cpuData}
 {}
+
 CondData<u16> KTF11_A::fetchWord (u16 address)
 {
     return (sr0_.managementEnabled ()) ? 

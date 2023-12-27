@@ -1,5 +1,5 @@
 #include "kd/kdf11_a/cpudata/kdf11_aregisters/kdf11_aregisters.h"
-#include "kd/common/kdcpudata/kdpsw.h"
+#include "kd/kdf11_a/cpudata/kdf11_a_psw.h"
 
 #include <gtest/gtest.h>
 #include <string>
@@ -14,7 +14,7 @@ protected:
     enum {IllegalMode  = 0100000};
     enum {UserMode     = 0140000};
 
-    KD_PSW psw {0};
+    KDF11_A_PSW psw {0};
     KDF11_ARegisters registers {psw};
 
     void setR6 (u16 memMgmtMode, u16 value)
