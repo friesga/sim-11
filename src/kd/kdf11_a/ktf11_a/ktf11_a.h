@@ -123,6 +123,7 @@ private:
 	bool mappedWriteWord (u16 address, u16 value, u16 mode);
 	bool mappedWriteByte (u16 address, u8 value, u16 mode);
 
+	u16 modeNumber (PSW::Mode memMgtmtMode);
 	u32 physicalAddress (u16 address);
 	u32 physicalAddress (u16 address, ActivePageRegister* apr);
 	ActivePageRegister *activePageRegister (u16 address, u16 mode);
@@ -130,7 +131,8 @@ private:
 	constexpr u16 blockNumber (u16 address);
 	constexpr u16 displacementInBlock (u16 address);
 	u16 pageAddressField (u16 activePageField);
-	constexpr u16 memoryManagementMode ();
+	constexpr u16 currentMemoryManagementMode ();
+	constexpr u16 previousMemoryManagementMode ();
 	Register* registerPointer (u16 address);
 	bool pageResident (PDR const & pdr);
 	bool writeAllowed (PDR const & pdr);

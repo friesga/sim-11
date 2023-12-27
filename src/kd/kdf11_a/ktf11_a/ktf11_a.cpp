@@ -9,12 +9,8 @@ KTF11_A::KTF11_A (Qbus* bus, CpuData* cpuData)
 
 CondData<u16> KTF11_A::fetchWord (u16 address, PSW::Mode memMgmtMode)
 {
-    u16 mode = (memMgmtMode == PSW::Mode::Default) ?
-        memoryManagementMode () :
-        static_cast<u16> (memMgmtMode);
-
     return (sr0_.managementEnabled ()) ? 
-        mappedRead (address, mode) :
+        mappedRead (address, modeNumber (memMgmtMode)) :
         readPhysical (address);
 }
 
@@ -43,23 +39,15 @@ CondData<u8> KTF11_A::fetchByte (u16 address, PSW::Mode memMgmtMode)
 
 bool KTF11_A::putWord (u16 address, u16 value, PSW::Mode memMgmtMode)
 {
-    u16 mode = (memMgmtMode == PSW::Mode::Default) ?
-        memoryManagementMode () :
-        static_cast<u16> (memMgmtMode);
-
     return (sr0_.managementEnabled ()) ? 
-        mappedWriteWord (address, value, mode) :
+        mappedWriteWord (address, value, modeNumber (memMgmtMode)) :
         writePhysicalWord (address, value);
 }
 
 bool KTF11_A::putByte (u16 address, u8 value, PSW::Mode memMgmtMode)
 {
-    u16 mode = (memMgmtMode == PSW::Mode::Default) ?
-        memoryManagementMode () :
-        static_cast<u16> (memMgmtMode);
-
     return (sr0_.managementEnabled ()) ? 
-        mappedWriteByte (address, value, mode) :
+        mappedWriteByte (address, value, modeNumber (memMgmtMode)) :
         writePhysicalByte (address, value);
 }
 
@@ -80,6 +68,18 @@ bool KTF11_A::pushWord (u16 value)
 {
     cpuData_->registers ()[6] -= 2;
     return putWord (cpuData_->registers ()[6], value);
+}
+
+// Return the given PSW::Mode to a number as defined in the PSW.
+u16 KTF11_A::modeNumber (PSW::Mode memMgmtMode)
+{
+    if (memMgmtMode == PSW::Mode::Default)
+        return currentMemoryManagementMode ();
+
+    if (memMgmtMode == PSW::Mode::Previous)
+        return previousMemoryManagementMode ();
+
+    return static_cast<u16> (memMgmtMode);
 }
 
 // Return the word at the given virtual address using the MMU mapping
@@ -223,9 +223,15 @@ constexpr u16 KTF11_A::displacementInBlock (u16 address)
 }
 
 // Return the current memory management mode
-constexpr u16 KTF11_A::memoryManagementMode ()
+constexpr u16 KTF11_A::currentMemoryManagementMode ()
 {
     return static_cast<u16> (cpuData_->psw ().currentMode ());
+}
+
+// Return the previous memory management mode
+constexpr u16 KTF11_A::previousMemoryManagementMode ()
+{
+    return static_cast<u16> (cpuData_->psw ().previousMode ());
 }
 
 // Return a pointer to the (kernel or user) page register for the
@@ -259,7 +265,7 @@ ActivePageRegister *KTF11_A::activePageRegister (u16 address, u16 mode)
 u32 KTF11_A::physicalAddress (u16 address)
 {
     return physicalAddress (address, 
-        activePageRegister (address, memoryManagementMode ()));
+        activePageRegister (address, currentMemoryManagementMode ()));
 }
 
 // Return the 22-bit physical address for the given 16-bit virtual address

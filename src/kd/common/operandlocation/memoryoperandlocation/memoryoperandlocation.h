@@ -42,21 +42,18 @@ T MemoryOperandLocation::contents ()
 
 // Return the contents of the operand location in the previous memory
 // management mode. 
-// ToDo: Implement memory management
-// Until we have implemented the MMU the contents in the current mode
-// are returned.
 template <typename T>
 requires std::same_as<T, CondData<u16>>
 T MemoryOperandLocation::prevModeContents ()
 {
-    return mmu_->fetchWord (location_);
+    return mmu_->fetchWord (location_, PSW::Mode::Previous);
 }
 
 template <typename T>
 requires std::same_as<T, CondData<u8>>
 T MemoryOperandLocation::prevModeContents ()
 {
-    return mmu_->fetchByte (location_);
+    return mmu_->fetchByte (location_, PSW::Mode::Previous);
 }
 
 template <typename T>
@@ -75,20 +72,17 @@ bool MemoryOperandLocation::write (T contents)
 
 // Write the contents to the memory location using the previous memory
 // management mode
-// ToDo: Implement memory management
-// Until we have implemented the MMU the contents are written using the
-// current mode.
 template <typename T>
 requires std::same_as<T, u16>
 bool MemoryOperandLocation::writePrevMode (T contents)
 {
-    return mmu_->putWord (location_, contents);
+    return mmu_->putWord (location_, contents, PSW::Mode::Previous);
 }
 
 template <typename T>
 requires std::same_as<T, u8>
 bool MemoryOperandLocation::writePrevMode (T contents)
 {
-    return mmu_->putByte (location_, contents);
+    return mmu_->putByte (location_, contents, PSW::Mode::Previous);
 }
 #endif // _MEMORYOPERANDLOCATION_H_
