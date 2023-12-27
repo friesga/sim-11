@@ -48,13 +48,15 @@ class PSW
 {
 public:
     // Definition of the Memory Management Modes as used for the Current
-    // Mode (bits <15:14>) Previous Mode (bits <13:12>).
+    // Mode (bits <15:14>) Previous Mode (bits <13:12>). The mode "Default"
+    // isn't a PDP-11 mode but can be used as a default parameter.
     enum class Mode
     {
         Kernel = 0,
         Reserved = 1,
         Illegal = 2,
-        User = 3
+        User = 3,
+        Default = 4
     };
 
     // This enum defines the different PSW protection possibilities as defined

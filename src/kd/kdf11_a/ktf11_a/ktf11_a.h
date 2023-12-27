@@ -32,10 +32,14 @@ public:
 	KTF11_A (Qbus* bus, CpuData* cpuData);
 
 	// Functions reuiqred by the MMU interface
-	CondData<u16> fetchWord (u16 address) override;
-	CondData<u8> fetchByte (u16 address) override;
-	bool putWord (u16 address, u16 value) override;
-	bool putByte (u16 address, u8 value) override;
+	CondData<u16> fetchWord (u16 address, 
+		PSW::Mode memMgmtMode = PSW::Mode::Default) override;
+	CondData<u8> fetchByte (u16 address, 
+		PSW::Mode memMgmtMode = PSW::Mode::Default) override;
+	bool putWord (u16 address, u16 value, 
+		PSW::Mode memMgmtMode = PSW::Mode::Default) override;
+	bool putByte (u16 address, u8 value, 
+		PSW::Mode memMgmtMode = PSW::Mode::Default) override;
 	bool pushWord (u16 value) override;
 	bool popWord (u16 *destination) override;
 
@@ -115,13 +119,13 @@ private:
 	// (in case memory management is disabled) to access memory or map the
 	// virtual address to a physical address when memory management is 
 	// enabled.
-    CondData<u16> mappedRead (u16 address);
-	bool mappedWriteWord (u16 address, u16 value);
-	bool mappedWriteByte (u16 address, u8 value);
+    CondData<u16> mappedRead (u16 address, u16 mode);
+	bool mappedWriteWord (u16 address, u16 value, u16 mode);
+	bool mappedWriteByte (u16 address, u8 value, u16 mode);
 
 	u32 physicalAddress (u16 address);
 	u32 physicalAddress (u16 address, ActivePageRegister* apr);
-	ActivePageRegister *activePageRegister (u16 address);
+	ActivePageRegister *activePageRegister (u16 address, u16 mode);
 	constexpr u16 activePageField (u16 address);
 	constexpr u16 blockNumber (u16 address);
 	constexpr u16 displacementInBlock (u16 address);

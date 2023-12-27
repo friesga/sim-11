@@ -9,7 +9,7 @@ DummyMMU::DummyMMU ()
 	memory_ = make_unique<u16[]> (memorySize_);
 }
 
-CondData<u16> DummyMMU::fetchWord (u16 address)
+CondData<u16> DummyMMU::fetchWord (u16 address, PSW::Mode memMgmtMode)
 {
     if (address < memorySize_)
 	    return CondData<u16> {memory_[address]};
@@ -17,18 +17,18 @@ CondData<u16> DummyMMU::fetchWord (u16 address)
         return CondData<u16> {};
 }
 
-CondData<u8> DummyMMU::fetchByte (u16 address)
+CondData<u8> DummyMMU::fetchByte (u16 address, PSW::Mode memMgmtMode)
 {
 	CondData<u16> retValue {};
     if (address & 1)
     {
-         retValue = fetchWord (address & 0xFFFE);
+         retValue = fetchWord (address & 0xFFFE, memMgmtMode);
          if (retValue.hasValue ())
              return CondData<u8> (retValue >> 8);
     }
     else
     {
-        retValue = fetchWord (address);
+        retValue = fetchWord (address, memMgmtMode);
         if (retValue.hasValue ())
             return CondData<u8> (retValue & 0377);
     }
@@ -36,7 +36,7 @@ CondData<u8> DummyMMU::fetchByte (u16 address)
     return CondData<u8> {};
 }
 
-bool DummyMMU::putWord (u16 address, u16 value)
+bool DummyMMU::putWord (u16 address, u16 value, PSW::Mode memMgmtMode)
 {
     if (address < memorySize_)
     {
@@ -47,7 +47,7 @@ bool DummyMMU::putWord (u16 address, u16 value)
         return false;
 }
 
-bool DummyMMU::putByte (u16 address, u8 value)
+bool DummyMMU::putByte (u16 address, u8 value, PSW::Mode memMgmtMode)
 {
 	CondData<u16> tmp = fetchWord (address);
 	if(address & 1)

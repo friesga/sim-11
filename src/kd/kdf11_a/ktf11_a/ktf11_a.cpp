@@ -7,10 +7,14 @@ KTF11_A::KTF11_A (Qbus* bus, CpuData* cpuData)
     cpuData_ {cpuData}
 {}
 
-CondData<u16> KTF11_A::fetchWord (u16 address)
+CondData<u16> KTF11_A::fetchWord (u16 address, PSW::Mode memMgmtMode)
 {
+    u16 mode = (memMgmtMode == PSW::Mode::Default) ?
+        memoryManagementMode () :
+        static_cast<u16> (memMgmtMode);
+
     return (sr0_.managementEnabled ()) ? 
-        mappedRead (address) :
+        mappedRead (address, mode) :
         readPhysical (address);
 }
 
@@ -18,18 +22,18 @@ CondData<u16> KTF11_A::fetchWord (u16 address)
 // 
 // The validity of the fetched word has to be checked before the shift-
 // and and-operators can be applied to the word!
-CondData<u8> KTF11_A::fetchByte (u16 address)
+CondData<u8> KTF11_A::fetchByte (u16 address, PSW::Mode memMgmtMode)
 {
     CondData<u16> retValue {};
     if (address & 1)
     {
-         retValue = fetchWord (address & 0xFFFE);
+         retValue = fetchWord (address & 0xFFFE, memMgmtMode);
          if (retValue.hasValue ())
              return CondData<u8> (retValue >> 8);
     }
     else
     {
-        retValue = fetchWord (address);
+        retValue = fetchWord (address, memMgmtMode);
         if (retValue.hasValue ())
             return CondData<u8> (retValue & 0377);
     }
@@ -37,17 +41,25 @@ CondData<u8> KTF11_A::fetchByte (u16 address)
     return CondData<u8> {};
 }
 
-bool KTF11_A::putWord (u16 address, u16 value)
+bool KTF11_A::putWord (u16 address, u16 value, PSW::Mode memMgmtMode)
 {
+    u16 mode = (memMgmtMode == PSW::Mode::Default) ?
+        memoryManagementMode () :
+        static_cast<u16> (memMgmtMode);
+
     return (sr0_.managementEnabled ()) ? 
-        mappedWriteWord (address, value) :
+        mappedWriteWord (address, value, mode) :
         writePhysicalWord (address, value);
 }
 
-bool KTF11_A::putByte (u16 address, u8 value)
+bool KTF11_A::putByte (u16 address, u8 value, PSW::Mode memMgmtMode)
 {
+    u16 mode = (memMgmtMode == PSW::Mode::Default) ?
+        memoryManagementMode () :
+        static_cast<u16> (memMgmtMode);
+
     return (sr0_.managementEnabled ()) ? 
-        mappedWriteByte (address, value) :
+        mappedWriteByte (address, value, mode) :
         writePhysicalByte (address, value);
 }
 
@@ -71,9 +83,9 @@ bool KTF11_A::pushWord (u16 value)
 }
 
 // Return the word at the given virtual address using the MMU mapping
-CondData<u16> KTF11_A::mappedRead (u16 address)
+CondData<u16> KTF11_A::mappedRead (u16 address, u16 mode)
 {
-    ActivePageRegister* apr = activePageRegister (address);
+    ActivePageRegister* apr = activePageRegister (address, mode);
 
     if (!pageResident (apr->pageDescripterRegister_))
         return abortAccess (SR0::AbortReason::NonResident, address);
@@ -102,9 +114,9 @@ CondData<u16> KTF11_A::mappedRead (u16 address)
 // A page-length abort service routine would ignore the read-only access
 // violation bit. (EK-KDF11-UG-PR2)
 //
-bool KTF11_A::mappedWriteWord (u16 address, u16 value)
+bool KTF11_A::mappedWriteWord (u16 address, u16 value, u16 mode)
 {
-    ActivePageRegister* apr = activePageRegister (address);
+    ActivePageRegister* apr = activePageRegister (address, mode);
     if (address != statusRegister0)
             apr->pageDescripterRegister_.setWriteAccess ();
 
@@ -121,9 +133,9 @@ bool KTF11_A::mappedWriteWord (u16 address, u16 value)
 }
 
 // Write the byte at the given virtual address using the MMU mapping
-bool KTF11_A::mappedWriteByte (u16 address, u8 value)
+bool KTF11_A::mappedWriteByte (u16 address, u8 value, u16 mode)
 {
-    ActivePageRegister* apr = activePageRegister (address);
+    ActivePageRegister* apr = activePageRegister (address, mode);
     if ((address & 0177776) != statusRegister0)
         apr->pageDescripterRegister_.setWriteAccess ();
 
@@ -216,12 +228,13 @@ constexpr u16 KTF11_A::memoryManagementMode ()
     return static_cast<u16> (cpuData_->psw ().currentMode ());
 }
 
-// Return a pointer to the active (i.e. kernel or user) page register for the
-// given virtual address. The page register contains the PAR and PDR.
-ActivePageRegister *KTF11_A::activePageRegister (u16 address)
+// Return a pointer to the (kernel or user) page register for the
+// given virtual address, using the given mode. The page register contains
+// the PAR and PDR.
+ActivePageRegister *KTF11_A::activePageRegister (u16 address, u16 mode)
 {
     u16 apf = activePageField (address);
-    return &activePageRegisterSet_[memoryManagementMode ()].activePageRegister_[apf];
+    return &activePageRegisterSet_[mode].activePageRegister_[apf];
 }
 
 // Return the 22-bit physical address for the given 16-bit virtual address
@@ -245,7 +258,8 @@ ActivePageRegister *KTF11_A::activePageRegister (u16 address)
 //
 u32 KTF11_A::physicalAddress (u16 address)
 {
-    return physicalAddress (address, activePageRegister (address));
+    return physicalAddress (address, 
+        activePageRegister (address, memoryManagementMode ()));
 }
 
 // Return the 22-bit physical address for the given 16-bit virtual address

@@ -10,9 +10,9 @@ PseudoMMU::PseudoMMU (Qbus* bus, CpuData* cpuData)
 void PseudoMMU::reset ()
 {}
 
-CondData<u16> PseudoMMU::fetchWord (u16 address)
+// The PSW::Mode is a default parameter which is not used in the PseudoMMU.
+CondData<u16> PseudoMMU::fetchWord (u16 address, PSW::Mode mode)
 {
-    // return bus_->read (address);
     CondData<u16> value = bus_->read (address);
     if (!value.hasValue ())
     {
@@ -23,11 +23,12 @@ CondData<u16> PseudoMMU::fetchWord (u16 address)
     return value;
 }
 
-// Fetch the byte at the given word or byte address
+// Fetch the byte at the given word or byte address. The PSW::Mode is a
+// default parameter which is not used in the PseudoMMU.
 // 
 // The validity of the fetched word has to be checked before the shift-
 // and and-operators can be applied to the word!
-CondData<u8> PseudoMMU::fetchByte (u16 address)
+CondData<u8> PseudoMMU::fetchByte (u16 address, PSW::Mode memMgmtMode)
 {
     CondData<u16> retValue {};
     if (address & 1)
@@ -46,7 +47,8 @@ CondData<u8> PseudoMMU::fetchByte (u16 address)
     return CondData<u8> {};
 }
 
-bool PseudoMMU::putWord (u16 address, u16 value)
+// The PSW::Mode is a default parameter which is not used in the PseudoMMU.
+bool PseudoMMU::putWord (u16 address, u16 value, PSW::Mode memMgmtMode)
 {
     if (!bus_->writeWord (address, value))
     {
@@ -57,7 +59,8 @@ bool PseudoMMU::putWord (u16 address, u16 value)
     return true;
 }
 
-bool PseudoMMU::putByte (u16 address, u8 value)
+// The PSW::Mode is a default parameter which is not used in the PseudoMMU.
+bool PseudoMMU::putByte (u16 address, u8 value, PSW::Mode memMgmtMode)
 {
     if (!bus_->writeByte (address, value))
     {

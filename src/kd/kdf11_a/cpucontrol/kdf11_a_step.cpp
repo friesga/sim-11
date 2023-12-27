@@ -182,14 +182,14 @@ u8 KDF11_A_CpuControl::cpuPriority()
 // processor will halt anyway.
 bool KDF11_A_CpuControl::fetchFromVector (u16 address, u16* dest)
 {
-    CondData<u16> tmpValue = mmu_->fetchWord (address);
+    CondData<u16> tmpValue = mmu_->fetchWord (address, PSW::Mode::Kernel);
     *dest = tmpValue.valueOr (0);
     return tmpValue.hasValue ();
 }
 
 bool KDF11_A_CpuControl::fetchFromVector (u16 address, function<void (u16)> lambda)
 {
-    CondData<u16> tmpValue = mmu_->fetchWord (address);
+    CondData<u16> tmpValue = mmu_->fetchWord (address, PSW::Mode::Kernel);
     lambda (tmpValue.valueOr (0));
     return tmpValue.hasValue ();
 }

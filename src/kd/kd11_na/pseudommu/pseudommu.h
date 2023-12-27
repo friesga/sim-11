@@ -18,10 +18,14 @@ class PseudoMMU : public MMU
 public:
 	void reset ();
 	PseudoMMU (Qbus* bus, CpuData* cpuData);
-    CondData<u16> fetchWord (u16 address) override;
-	CondData<u8> fetchByte (u16 address) override;
-	bool putWord (u16 address, u16 value) override;
-	bool putByte (u16 address, u8 value) override;
+    CondData<u16> fetchWord (u16 address, 
+		PSW::Mode mode = PSW::Mode::Default) override;
+	CondData<u8> fetchByte (u16 address, 
+		PSW::Mode memMgmtMode = PSW::Mode::Default) override;
+	bool putWord (u16 address, u16 value, 
+		PSW::Mode memMgmtMode = PSW::Mode::Default) override;
+	bool putByte (u16 address, u8 value, 
+		PSW::Mode memMgmtMode = PSW::Mode::Default) override;
 	bool pushWord (u16 value) override;
 	bool popWord (u16 *destination) override;
 	CondData<u16> readWithoutTrap (u16 address) override;
