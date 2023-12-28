@@ -106,3 +106,28 @@ TEST (KDF11_AConfiguratorTest, KD11AndKDF11_AOptionsAreProcessed)
 	EXPECT_EQ (kdf11_aConfig->powerUpMode, KDF11_AConfig::PowerUpMode::ODT);
 	EXPECT_TRUE (kdf11_aConfig->ktf11_a_present);
 }
+
+TEST (KDF11_AConfiguratorTest, unknownOptionThrows)
+{
+    iniparser::File ft;
+	std::stringstream stream;
+	stream << "[KDF11-A]\n"
+		"option = unknown";
+	stream >> ft;
+
+	IniProcessor iniProcessor;
+
+	try
+	{
+		iniProcessor.process (ft);
+		FAIL();
+	}
+	catch (std::invalid_argument const &except)
+	{
+		EXPECT_STREQ (except.what(), "Unknown KD11 option: option");
+	}
+	catch (...)
+	{
+		FAIL();
+	}
+}

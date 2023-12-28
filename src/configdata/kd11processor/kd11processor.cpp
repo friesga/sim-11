@@ -15,6 +15,10 @@ void KD11Processor::init (KD11Config* kd11Config)
 void KD11Processor::processValue (iniparser::Section::ValueIterator valueIterator)
 {
 	Process processFunction = valueProcessors[valueIterator->first];
+
+    if (processFunction == nullptr)
+        throw invalid_argument {"Unknown KD11 option: " + valueIterator->first};
+
     (this->*processFunction)(valueIterator->second);
 }
 
