@@ -22,6 +22,9 @@ KDF11_A::KDF11_A (Qbus* bus)
     powerUpMode_ {KDF11_AConfig::PowerUpMode::Bootstrap},
     startAddress_ {stdBootAddress}
 {
+    // Add the MMU to the CPU modules
+    cpuModules_.push_back (&mmu_);
+
     // Besides a pointer to the bus, a reference to our cpu, the start address
     // and the power-up mode, the ControlLogic also gets passed a
     // std::function to the function to create ODT objects.
@@ -35,6 +38,12 @@ KDF11_A::KDF11_A (Qbus *bus, shared_ptr<KDF11_AConfig> kdf11_aConfig)
     powerUpMode_ {kdf11_aConfig->powerUpMode},
     startAddress_ {stdBootAddress}
 {
+    // If the KTF11-A is configured add it to the CPU modules. If it is not
+    // configured its registers will not be available on the bus and
+    // consequently it cannot be enabled.
+    if (kdf11_aConfig->ktf11_a_present)
+        cpuModules_.push_back (&mmu_);
+
     // Besides a pointer to the bus, a reference to our cpu, the start address
     // and the power-up mode, the ControlLogic also gets passed a
     // std::function to the function to create ODT objects.

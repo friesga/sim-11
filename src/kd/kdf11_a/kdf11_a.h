@@ -9,11 +9,11 @@
 #include "kd/kdf11_a/cpudata/kdf11_acpudata.h"
 
 #include <memory>
-#include <array>
+#include <vector>
 
 using std::unique_ptr;
 using std::shared_ptr;
-using std::array;
+using std::vector;
 
 // The class KDF11_A starts the control logic which on its turn has to run
 // the KDF11_A's cpu and start the KD11_FA's ODT.
@@ -51,7 +51,11 @@ private:
     u16 startAddress_;
     unique_ptr<ControlLogic> controlLogic_;
 
-    const array<BusDevice*, 2> cpuModules_ {&cpuData_, &mmu_};
+    // The cpuModules_ vector contains the modules having registers that
+    // accessible from the bus. The CpuData's registers (i.e. just the PSW)
+    // will be present. The KTF11-A will be added when it's defined in the
+    // configuration.
+    vector<BusDevice*> cpuModules_ {&cpuData_};
 
     // The KDF11_A is started in its own thread
     std::thread kd11Thread_;
