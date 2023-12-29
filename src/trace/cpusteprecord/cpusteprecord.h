@@ -23,12 +23,15 @@ using std::string;
 #define	PSW_T				_BV(4)
 #define	PSW_PRIO			_BV(7)
 #define	PSW_PRIORITY		(_BV(7) | _BV(6) | _BV(5))
-#define PSW_CURRENT_MODE	(_BV(15) | _BV(14))		
+#define PSW_PREVIOUS_MODE_I	12
+#define PSW_CURRENT_MODE_I	14	
+#define PSW_PREVIOUS_MODE_M	(_BV(13) | _BV(12))
+#define PSW_CURRENT_MODE_M	(_BV(15) | _BV(14))	
 
-#define KERNEL_MODE_MASK	0000000
-#define RESERVED_MODE_MASK	0040000
-#define ILLEGAL_MODE_MASK	0100000
-#define USER_MODE_MASK	    0140000
+#define KERNEL_MODE_MASK	0
+#define RESERVED_MODE_MASK	1
+#define ILLEGAL_MODE_MASK	2
+#define USER_MODE_MASK	    3
 
 #define	PSW_BIT(x)		(((record.psw_) & (x)) ? 1 : 0)
 
@@ -52,7 +55,8 @@ class TraceRecord<CpuStepRecord>
 	u16	psw_;
 	u16	insn_[maxInstructionSize];
 
-	char mode ();
+	char currentMode ();
+	char previousMode ();
 	char priorityBit () { return (psw_ & PSW_PRIO) ? 'P' : '-'; }
 	char bit6 () { return (psw_ & _BV(6)) ? 'p' : '-'; }
 	char bit5 () { return (psw_ & _BV(5)) ? 'p' : '-'; }
@@ -93,9 +97,9 @@ inline TraceRecord<CpuStepRecord>::TraceRecord (u16 r[], u16 psw, u16 insn[])
 	std::copy (insn, insn + maxInstructionSize, insn_);
 }
 
-inline char TraceRecord<CpuStepRecord>::mode ()
+inline char TraceRecord<CpuStepRecord>::currentMode ()
 {
-	switch (psw_ & PSW_CURRENT_MODE)
+	switch ((psw_ & PSW_CURRENT_MODE_M) >> PSW_CURRENT_MODE_I)
 	{
 		case KERNEL_MODE_MASK:
 			return 'K';
@@ -113,5 +117,27 @@ inline char TraceRecord<CpuStepRecord>::mode ()
 			return 'X';
 	}
 }
+
+inline char TraceRecord<CpuStepRecord>::previousMode ()
+{
+	switch ((psw_ & PSW_PREVIOUS_MODE_M) >> PSW_PREVIOUS_MODE_I)
+	{
+		case KERNEL_MODE_MASK:
+			return 'k';
+			
+		case RESERVED_MODE_MASK:
+			return 'r';
+
+		case ILLEGAL_MODE_MASK:
+			return 'i';
+
+		case USER_MODE_MASK:
+			return 'u';
+
+		default:
+			return 'X';
+	}
+}
+
 
 #endif // _CPUSTEPRECORD_H_

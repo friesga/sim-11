@@ -4,7 +4,8 @@ std::ostream& operator<< (std::ostream& os, TraceRecord<CpuStepRecord> record)
 {
 	os << oct << setw(6) << setfill('0') << "[CPU ] "
 		"PC=" << record.r_[7] << ' ' <<
-		"PSW [" << record.mode () <<
+		"PSW [" << record.currentMode () <<
+				   record.previousMode () <<
 				   record.priorityBit () <<
 				   record.bit6 () <<
 				   record.bit5 () <<
