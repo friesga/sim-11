@@ -208,7 +208,7 @@ void KDF11_A_CpuControl::swapPcPSW (u16 vectorAddress)
     // PSW is loaded before the old PSW is saved onto the stack. This means
     // that if a bus error occurs on the push of the psw onto the stack the
     // new psw already is loaded. This behaviour is implied by JKDBD0
-    // test 407. The same behaviour might exist for saveing and retrieval of
+    // test 407. The same behaviour might exist for saving and retrieval of
     // the PC.
     // 
     u16 oldPSW = cpuData_->psw ();
@@ -225,11 +225,9 @@ void KDF11_A_CpuControl::swapPcPSW (u16 vectorAddress)
         vectorAddress = 4;
     }
 
-    // Read new PC and PSW from the trap vector. These read's could also
+    // Read new PC from the trap vector. This read could also
     // result in a bus time out.
-    if (!fetchFromVector (vectorAddress, &cpuData_->registers ()[7]) ||
-        !fetchFromVector (vectorAddress + 2, [this] (u16 value)
-            {cpuData_->psw ().set (PSW::ProtectionMode::Trap, value);}))
+    if (!fetchFromVector (vectorAddress, &cpuData_->registers ()[7]))
     {
         trace.cpuEvent (CpuEventRecordType::CPU_DBLBUS, vectorAddress);
         cpuData_->clearTrap ();
