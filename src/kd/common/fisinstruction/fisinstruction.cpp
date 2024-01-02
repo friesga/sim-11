@@ -60,6 +60,14 @@ bool FISInstruction::executeFISinstruction (u16 stackPointer,
     std::function<bool(Float, Float)> argumentsValid,
     std::function<Float(Float, Float)> instruction)
 {
+    // Clear PSW bits 5 and 6. This is necessary to succesfully execute
+    // the VKACC1 diagnostic, in which the lower byte of the PSW is compared
+    // with the expected result. Bits 5 and 6 of the PSW form the two
+    // least significant bits of the priority level but are unused in the
+    // KD11-NA.
+    cpuData_->psw ().set (PSW::ProtectionMode::ExplicitAccess,
+        cpuData_->psw () & ~(_BV(5) | _BV(6)));
+
     CondData<u16> f1High = 
         mmu_->fetchWord (cpuData_->registers ()[stackPointer] + 4);
     CondData<u16> f1Low = 
