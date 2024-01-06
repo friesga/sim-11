@@ -23,6 +23,9 @@ CondData<u16> Qbus::read (BusAddress address)
 	BusDevice *module;
 	u16 addr = address;
 
+	// Prevent read's from odd addresses
+	address &= 0xFFFE;
+
 	if ((module = responsibleModule (address)) != nullptr)
 	{
 		u16 value;
