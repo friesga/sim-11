@@ -1,7 +1,7 @@
 #include "qbus.h"
 #include "trace/trace.h"
 
-BusDevice *Qbus::responsibleModule (u32 address)
+BusDevice *Qbus::responsibleModule (BusAddress address)
 {
 	for (size_t index = 0; index < LSI11_SIZE; ++index)
 	{

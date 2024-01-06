@@ -266,10 +266,10 @@ public:
 
     // Required functions
     void reset () override;
-    bool responsible (u16 addr) override;
-    StatusCode read (u16 registerAddress, u16* data) override;
-    StatusCode writeByte (u16 registerAddress, u8 data) override;
-    StatusCode writeWord (u16 registerAddress, u16 data) override;
+    bool responsible (BusAddress addr) override;
+    StatusCode read (BusAddress registerAddress, u16* data) override;
+    StatusCode writeByte (BusAddress registerAddress, u8 data) override;
+    StatusCode writeWord (BusAddress registerAddress, u16 data) override;
 
     // Declare the signal receivers
 	void BINITReceiver (bool signalValue);

@@ -32,13 +32,13 @@ public:
 	KTF11_A (Qbus* bus, CpuData* cpuData);
 
 	// Functions reuiqred by the MMU interface
-	CondData<u16> fetchWord (u16 address, 
+	CondData<u16> fetchWord (BusAddress address, 
 		PSW::Mode memMgmtMode = PSW::Mode::Default) override;
-	CondData<u8> fetchByte (u16 address, 
+	CondData<u8> fetchByte (BusAddress address, 
 		PSW::Mode memMgmtMode = PSW::Mode::Default) override;
-	bool putWord (u16 address, u16 value, 
+	bool putWord (BusAddress address, u16 value, 
 		PSW::Mode memMgmtMode = PSW::Mode::Default) override;
-	bool putByte (u16 address, u8 value, 
+	bool putByte (BusAddress address, u8 value, 
 		PSW::Mode memMgmtMode = PSW::Mode::Default) override;
 	bool pushWord (u16 value) override;
 	bool popWord (u16 *destination) override;
@@ -50,9 +50,9 @@ public:
 
 	// Functions required by the BusDevice interface and not implemented by
 	// AbstractBusDevice.
-	StatusCode read (u16 address, u16 *destination) override;
-	StatusCode writeWord (u16 address, u16 value) override;
-	bool responsible (u16 address) override;
+	StatusCode read (BusAddress address, u16 *destination) override;
+	StatusCode writeWord (BusAddress address, u16 value) override;
+	bool responsible (BusAddress address) override;
 	void reset () override;
 
 private:

@@ -1,12 +1,13 @@
 #include "qbus.h"
 #include "trace/trace.h"
 
-bool Qbus::writeWord (u32 address, u16 value)
+bool Qbus::writeWord (BusAddress address, u16 value)
 {
 	BusDevice *module;
-
+	
+	// Prevent write's to odd addresses
 	address &= 0xFFFE;
-		
+
 	if ((module = responsibleModule(address)) != nullptr)
 	{
 		trace.bus (BusRecordType::Write, address, value);

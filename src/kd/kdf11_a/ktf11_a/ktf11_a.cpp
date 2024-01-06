@@ -7,7 +7,7 @@ KTF11_A::KTF11_A (Qbus* bus, CpuData* cpuData)
     cpuData_ {cpuData}
 {}
 
-CondData<u16> KTF11_A::fetchWord (u16 address, PSW::Mode memMgmtMode)
+CondData<u16> KTF11_A::fetchWord (BusAddress address, PSW::Mode memMgmtMode)
 {
     return (sr0_.managementEnabled ()) ? 
         mappedRead (address, modeNumber (memMgmtMode)) :
@@ -18,7 +18,7 @@ CondData<u16> KTF11_A::fetchWord (u16 address, PSW::Mode memMgmtMode)
 // 
 // The validity of the fetched word has to be checked before the shift-
 // and and-operators can be applied to the word!
-CondData<u8> KTF11_A::fetchByte (u16 address, PSW::Mode memMgmtMode)
+CondData<u8> KTF11_A::fetchByte (BusAddress address, PSW::Mode memMgmtMode)
 {
     CondData<u16> retValue {};
     if (address & 1)
@@ -37,14 +37,14 @@ CondData<u8> KTF11_A::fetchByte (u16 address, PSW::Mode memMgmtMode)
     return CondData<u8> {};
 }
 
-bool KTF11_A::putWord (u16 address, u16 value, PSW::Mode memMgmtMode)
+bool KTF11_A::putWord (BusAddress address, u16 value, PSW::Mode memMgmtMode)
 {
     return (sr0_.managementEnabled ()) ? 
         mappedWriteWord (address, value, modeNumber (memMgmtMode)) :
         writePhysicalWord (address, value);
 }
 
-bool KTF11_A::putByte (u16 address, u8 value, PSW::Mode memMgmtMode)
+bool KTF11_A::putByte (BusAddress address, u8 value, PSW::Mode memMgmtMode)
 {
     return (sr0_.managementEnabled ()) ? 
         mappedWriteByte (address, value, modeNumber (memMgmtMode)) :

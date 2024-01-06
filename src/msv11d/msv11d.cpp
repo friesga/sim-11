@@ -33,7 +33,7 @@ MSV11D::~MSV11D ()
 	free (data);
 }
 
-StatusCode MSV11D::read (u16 address, u16 *destAddress)
+StatusCode MSV11D::read (BusAddress address, u16 *destAddress)
 {
 	// Get the contents of the specified address via a u16 pointer
 	// as data is an array of bytes.
@@ -42,7 +42,7 @@ StatusCode MSV11D::read (u16 address, u16 *destAddress)
 	return StatusCode::OK;
 }
 
-StatusCode MSV11D::writeWord (u16 address, u16 value)
+StatusCode MSV11D::writeWord (BusAddress address, u16 value)
 {
 	u16* mem = (u16*) &data[address];
 	*mem = value;
@@ -50,7 +50,7 @@ StatusCode MSV11D::writeWord (u16 address, u16 value)
 	return StatusCode::OK;
 }
 
-bool MSV11D::responsible (u16 address)
+bool MSV11D::responsible (BusAddress address)
 {
 	return (address < MSV11D_SIZE) ? true : false;
 }

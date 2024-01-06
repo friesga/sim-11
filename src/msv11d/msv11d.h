@@ -16,9 +16,9 @@ public:
 	MSV11D (Qbus* bus);
 	MSV11D (Qbus* bus, shared_ptr<MSV11Config> msv11Config);
 	~MSV11D ();
-	StatusCode read (u16 address, u16 *destAddress) override;
-	StatusCode writeWord (u16 address, u16 value) override;
-	bool responsible (u16 address) override;
+	StatusCode read (BusAddress address, u16 *destAddress) override;
+	StatusCode writeWord (BusAddress address, u16 value) override;
+	bool responsible (BusAddress address) override;
 	void reset ();
 	
 	// Declare the signal receivers

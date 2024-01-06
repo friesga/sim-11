@@ -18,13 +18,13 @@ class PseudoMMU : public MMU
 public:
 	void reset ();
 	PseudoMMU (Qbus* bus, CpuData* cpuData);
-    CondData<u16> fetchWord (u16 address, 
+    CondData<u16> fetchWord (BusAddress address, 
 		PSW::Mode mode = PSW::Mode::Default) override;
-	CondData<u8> fetchByte (u16 address, 
+	CondData<u8> fetchByte (BusAddress address, 
 		PSW::Mode memMgmtMode = PSW::Mode::Default) override;
-	bool putWord (u16 address, u16 value, 
+	bool putWord (BusAddress address, u16 value, 
 		PSW::Mode memMgmtMode = PSW::Mode::Default) override;
-	bool putByte (u16 address, u8 value, 
+	bool putByte (BusAddress address, u8 value, 
 		PSW::Mode memMgmtMode = PSW::Mode::Default) override;
 	bool pushWord (u16 value) override;
 	bool popWord (u16 *destination) override;

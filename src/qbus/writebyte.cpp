@@ -1,7 +1,7 @@
 #include "qbus.h"
 #include "trace/trace.h"
 
-bool Qbus::writeByte (u32 address, u8 value)
+bool Qbus::writeByte (BusAddress address, u8 value)
 {
 	BusDevice *module;
 		

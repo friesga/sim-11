@@ -70,7 +70,7 @@ void KDF11_A::start (u16 startAddress)
     start ();
 }
 
-StatusCode KDF11_A::read (u16 address, u16* destination)
+StatusCode KDF11_A::read (BusAddress address, u16* destination)
 {
     for (BusDevice* module : cpuModules_)
         if (module->responsible (address))
@@ -79,7 +79,7 @@ StatusCode KDF11_A::read (u16 address, u16* destination)
     return StatusCode::NonExistingMemory;
 }
 
-StatusCode KDF11_A::writeWord (u16 address, u16 value)
+StatusCode KDF11_A::writeWord (BusAddress address, u16 value)
 {
     for (BusDevice* module : cpuModules_)
         if (module->responsible (address))
@@ -89,7 +89,7 @@ StatusCode KDF11_A::writeWord (u16 address, u16 value)
 
 }
 
-bool KDF11_A::responsible (u16 address)
+bool KDF11_A::responsible (BusAddress address)
 {
     for (BusDevice* module : cpuModules_)
         if (module->responsible (address))

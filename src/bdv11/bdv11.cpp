@@ -193,7 +193,7 @@ void BDV11::memoryDump (u16 pcr, int hi)
 	}
 }
 
-StatusCode BDV11::read (u16 address, u16 *destAddress)
+StatusCode BDV11::read (BusAddress address, u16 *destAddress)
 {
 	switch (address) 
 	{
@@ -232,7 +232,7 @@ StatusCode BDV11::read (u16 address, u16 *destAddress)
 	return StatusCode::OK;
 }
 
-StatusCode BDV11::writeWord (u16 address, u16 value)
+StatusCode BDV11::writeWord (BusAddress address, u16 value)
 {
 	switch (address)
 	{
@@ -275,7 +275,7 @@ StatusCode BDV11::writeWord (u16 address, u16 value)
 	return StatusCode::OK;
 }
 
-bool BDV11::responsible (u16 address)
+bool BDV11::responsible (BusAddress address)
 {
 	switch (address)
 	{

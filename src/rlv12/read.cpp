@@ -9,7 +9,7 @@
  *  17774406 RLMP    read/write
  *  17774410 RLBAE   read/write
  */
-StatusCode RLV12::read (u16 registerAddress, u16* data)
+StatusCode RLV12::read (BusAddress registerAddress, u16* data)
 {
     // Decode registerAddress<3:1>
     switch (registerAddress & 016)

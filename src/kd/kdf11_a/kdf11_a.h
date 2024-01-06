@@ -34,9 +34,9 @@ public:
     // The KDF11_A is a PDP11Peripheral with at least one register, the
     // PSW.
     // The function writeByte() is implemented in PDP11Peripheral
-    StatusCode read (u16 address, u16* destination) override;
-    StatusCode writeWord (u16 address, u16 value) override;
-    bool responsible (u16 address) override;
+    StatusCode read (BusAddress address, u16* destination) override;
+    StatusCode writeWord (BusAddress address, u16 value) override;
+    bool responsible (BusAddress address) override;
     void reset () override;
 
 private:

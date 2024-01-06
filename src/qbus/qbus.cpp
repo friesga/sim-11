@@ -18,12 +18,10 @@ Qbus::Qbus ()
 	ourKey_ = BINIT().subscribe (bind (&Qbus::BINITReceiver, this, _1));
 }
 
-CondData<u16> Qbus::read (u32 address)
+CondData<u16> Qbus::read (BusAddress address)
 {
 	BusDevice *module;
 	u16 addr = address;
-
-	address &= 0xFFFE;
 
 	if ((module = responsibleModule (address)) != nullptr)
 	{

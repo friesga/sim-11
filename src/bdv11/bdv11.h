@@ -19,9 +19,9 @@ public:
 	BDV11 (Qbus *bus);
 	BDV11 (Qbus *bus, shared_ptr<BDV11Config> bdv11Config);
 	~BDV11 ();
-	StatusCode read (u16 address, u16 *destAddress) override;
-	StatusCode writeWord (u16 address, u16 value) override;
-	bool responsible (u16 address) override;
+	StatusCode read (BusAddress address, u16 *destAddress) override;
+	StatusCode writeWord (BusAddress address, u16 value) override;
+	bool responsible (BusAddress address) override;
 	void reset ();
 
 	// Declare the signal receivers

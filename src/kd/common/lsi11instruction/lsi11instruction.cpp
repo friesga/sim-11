@@ -21,7 +21,7 @@ LSI11Instruction::LSI11Instruction (CpuData* cpuData, CpuControl* cpuControl, MM
 //
 OperandLocation LSI11Instruction::decodeOperand (Operand operand, GeneralRegisters& reg)
 {
-	CondData<u16> addr;
+	CondData<u16> address;
 	CondData<u16> index;
 
 	switch (operand.mode_)
@@ -40,7 +40,7 @@ OperandLocation LSI11Instruction::decodeOperand (Operand operand, GeneralRegiste
 		case 2:
 			// Auto-increment mode. Register is used as a pointer to
 			// sequential data then incremented.
-			addr = reg[operand.registerNr_];
+			address = reg[operand.registerNr_];
 			if (isByteInstruction () && operand.registerNr_ != 6 &&
 					operand.registerNr_ != 7)
 				++reg[operand.registerNr_];
@@ -48,16 +48,16 @@ OperandLocation LSI11Instruction::decodeOperand (Operand operand, GeneralRegiste
 				reg[operand.registerNr_] += 2;
 
 			return OperandLocation (MemoryOperandLocation {cpuData_, mmu_,
-				CondData<u16> (addr)});
+				CondData<u16> (address)});
 
 		case 3: 
 			// Auto-increment deferred (indirect) mode. Register is first used
 			// as apointer to a word containing the address of the operand, then
 			// incremented (always by 2; even for byte instructions).
-			addr = reg[operand.registerNr_];
+			address = reg[operand.registerNr_];
 			reg[operand.registerNr_] += 2;
 			return OperandLocation (MemoryOperandLocation {cpuData_, mmu_,
-				CondData<u16> (mmu_->fetchWord (addr))});
+				CondData<u16> (mmu_->fetchWord (static_cast<BusAddress> (address)))});
 
 		case 4:
 			// Auto-decrement mode. Register is decremented and then used as a
@@ -67,13 +67,13 @@ OperandLocation LSI11Instruction::decodeOperand (Operand operand, GeneralRegiste
 				--reg[operand.registerNr_];
 			else
 				reg[operand.registerNr_] -= 2;
-			addr = reg[operand.registerNr_];
+			address = reg[operand.registerNr_];
 
 			if (operand.registerNr_ == 6 && cpuData_->stackOverflow ())
 				cpuData_->setTrap (CpuData::TrapCondition::StackOverflow);  
 
 			return OperandLocation (MemoryOperandLocation {cpuData_, mmu_,
-				CondData<u16> (addr)});
+				CondData<u16> (address)});
 
 		case 5:
 			// Auto-decrement deferred (indirect) mode. Register is
@@ -81,13 +81,13 @@ OperandLocation LSI11Instruction::decodeOperand (Operand operand, GeneralRegiste
 			// then used as a pointer to a word containing the address of the
 			// operand.
 			reg[operand.registerNr_] -= 2;
-			addr = reg[operand.registerNr_];
+			address = reg[operand.registerNr_];
 
 			if (operand.registerNr_ == 6 && cpuData_->stackOverflow ())
 				cpuData_->setTrap (CpuData::TrapCondition::StackOverflow);  
 
 			return OperandLocation (MemoryOperandLocation {cpuData_, mmu_,
-				CondData<u16> (mmu_->fetchWord (addr))});
+				CondData<u16> (mmu_->fetchWord (static_cast<BusAddress> (address)))});
 
 		case 6:
 			// Index mode. The contents of the in the instruction specified
@@ -110,9 +110,9 @@ OperandLocation LSI11Instruction::decodeOperand (Operand operand, GeneralRegiste
 			// See the comment at mode 6.
 			index = mmu_->fetchWord (reg[7]);
 			reg[7] += 2;
-			addr = reg[operand.registerNr_] + index;
+			address = reg[operand.registerNr_] + index;
 			return OperandLocation (MemoryOperandLocation {cpuData_, mmu_,
-				CondData<u16> (mmu_->fetchWord (addr))});
+				CondData<u16> (mmu_->fetchWord (static_cast<BusAddress> (address)))});
 
 		default:
 			// Satisfy the compiler. This cannot happen as the mode bit field

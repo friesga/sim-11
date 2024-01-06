@@ -102,9 +102,9 @@ public:
 	bool getIntrptReq (InterruptRequest &ir);
 
 	void step ();
-	CondData<u16> read (u32 address);
-	bool writeWord (u32 address, u16 value);
-	bool writeByte (u32 address, u8 val);
+	CondData<u16> read (BusAddress address);
+	bool writeWord (BusAddress address, u16 value);
+	bool writeByte (BusAddress address, u8 val);
 	void installModule (int slot, BusDevice *module);
 
 private:
@@ -128,7 +128,7 @@ private:
 	u16	delay_;
 
 	void reset ();
-	BusDevice *responsibleModule (u32 address);
+	BusDevice *responsibleModule (BusAddress address);
 	void pushInterruptRequest (InterruptRequest interruptReq);
 	void BINITReceiver (bool signalValue);
 };

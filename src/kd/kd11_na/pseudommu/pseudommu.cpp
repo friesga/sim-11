@@ -11,7 +11,7 @@ void PseudoMMU::reset ()
 {}
 
 // The PSW::Mode is a default parameter which is not used in the PseudoMMU.
-CondData<u16> PseudoMMU::fetchWord (u16 address, PSW::Mode mode)
+CondData<u16> PseudoMMU::fetchWord (BusAddress address, PSW::Mode mode)
 {
     CondData<u16> value = bus_->read (address);
     if (!value.hasValue ())
@@ -28,7 +28,7 @@ CondData<u16> PseudoMMU::fetchWord (u16 address, PSW::Mode mode)
 // 
 // The validity of the fetched word has to be checked before the shift-
 // and and-operators can be applied to the word!
-CondData<u8> PseudoMMU::fetchByte (u16 address, PSW::Mode memMgmtMode)
+CondData<u8> PseudoMMU::fetchByte (BusAddress address, PSW::Mode memMgmtMode)
 {
     CondData<u16> retValue {};
     if (address & 1)
@@ -48,7 +48,7 @@ CondData<u8> PseudoMMU::fetchByte (u16 address, PSW::Mode memMgmtMode)
 }
 
 // The PSW::Mode is a default parameter which is not used in the PseudoMMU.
-bool PseudoMMU::putWord (u16 address, u16 value, PSW::Mode memMgmtMode)
+bool PseudoMMU::putWord (BusAddress address, u16 value, PSW::Mode memMgmtMode)
 {
     if (!bus_->writeWord (address, value))
     {
@@ -60,7 +60,7 @@ bool PseudoMMU::putWord (u16 address, u16 value, PSW::Mode memMgmtMode)
 }
 
 // The PSW::Mode is a default parameter which is not used in the PseudoMMU.
-bool PseudoMMU::putByte (u16 address, u8 value, PSW::Mode memMgmtMode)
+bool PseudoMMU::putByte (BusAddress address, u8 value, PSW::Mode memMgmtMode)
 {
     if (!bus_->writeByte (address, value))
     {

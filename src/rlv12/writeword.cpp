@@ -14,12 +14,12 @@ using std::lock_guard;
 // See also:
 // https://retrocomputing.stackexchange.com/questions/24823/dec-rlv12-disk-controller-register-access
 //
-StatusCode RLV12::writeByte (u16 registerAddress, u8 data)
+StatusCode RLV12::writeByte (BusAddress registerAddress, u8 data)
 {
     return StatusCode::NonExistingMemory;
 }
 
-StatusCode RLV12::writeWord (u16 registerAddress, u16 data)
+StatusCode RLV12::writeWord (BusAddress registerAddress, u16 data)
 {
     // Get reference to drive
     RL01_2 &unit = units_[getDrive (data)];

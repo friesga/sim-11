@@ -30,14 +30,14 @@ template <typename T>
 requires std::same_as<T, CondData<u16>>
 T MemoryOperandLocation::contents ()
 {
-    return mmu_->fetchWord (location_);
+    return mmu_->fetchWord (static_cast<BusAddress> (location_));
 }
 
 template <typename T>
 requires std::same_as<T, CondData<u8>>
 T MemoryOperandLocation::contents ()
 {
-    return mmu_->fetchByte (location_);
+    return mmu_->fetchByte (static_cast<BusAddress> (location_));
 }
 
 // Return the contents of the operand location in the previous memory
@@ -46,28 +46,30 @@ template <typename T>
 requires std::same_as<T, CondData<u16>>
 T MemoryOperandLocation::prevModeContents ()
 {
-    return mmu_->fetchWord (location_, PSW::Mode::Previous);
+    return mmu_->fetchWord (static_cast<BusAddress> (location_),
+        PSW::Mode::Previous);
 }
 
 template <typename T>
 requires std::same_as<T, CondData<u8>>
 T MemoryOperandLocation::prevModeContents ()
 {
-    return mmu_->fetchByte (location_, PSW::Mode::Previous);
+    return mmu_->fetchByte (static_cast<BusAddress> (location_),
+        PSW::Mode::Previous);
 }
 
 template <typename T>
 requires std::same_as<T, u16>
 bool MemoryOperandLocation::write (T contents)
 {
-    return mmu_->putWord (location_, contents);
+    return mmu_->putWord (static_cast<BusAddress> (location_), contents);
 }
 
 template <typename T>
 requires std::same_as<T, u8>
 bool MemoryOperandLocation::write (T contents)
 {
-    return mmu_->putByte (location_, contents);
+    return mmu_->putByte (static_cast<BusAddress> (location_), contents);
 }
 
 // Write the contents to the memory location using the previous memory
@@ -76,13 +78,15 @@ template <typename T>
 requires std::same_as<T, u16>
 bool MemoryOperandLocation::writePrevMode (T contents)
 {
-    return mmu_->putWord (location_, contents, PSW::Mode::Previous);
+    return mmu_->putWord (static_cast<BusAddress> (location_), contents,
+        PSW::Mode::Previous);
 }
 
 template <typename T>
 requires std::same_as<T, u8>
 bool MemoryOperandLocation::writePrevMode (T contents)
 {
-    return mmu_->putByte (location_, contents, PSW::Mode::Previous);
+    return mmu_->putByte (static_cast<BusAddress> (location_), contents,
+        PSW::Mode::Previous);
 }
 #endif // _MEMORYOPERANDLOCATION_H_
