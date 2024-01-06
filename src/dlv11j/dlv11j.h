@@ -17,8 +17,8 @@ public:
 	DLV11J (Qbus *bus, shared_ptr<DLV11Config> dlv11Config);
 
 	// Define the obligatory functions
-	StatusCode read (BusAddress registerAddress, u16 *destAddress) override;
-	StatusCode writeWord (BusAddress registerAddress, u16 value) override;
+	StatusCode read (BusAddress busAddress, u16 *destAddress) override;
+	StatusCode writeWord (BusAddress busAddress, u16 value) override;
 	bool responsible (BusAddress address) override;
 	void reset ();
 

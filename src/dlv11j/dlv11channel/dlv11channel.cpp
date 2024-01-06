@@ -86,11 +86,11 @@ void DLV11Channel::reset ()
 
 // This function allows the host system to read a word from one of the
 // DLV11-J's registers.
-StatusCode DLV11Channel::read (u16 registerAddress, u16 *destAddress)
+StatusCode DLV11Channel::read (BusAddress busAddress, u16 *destAddress)
 {
 	lock_guard<mutex> lock {registerAccessMutex_};
 
-	switch (registerAddress & 06)
+	switch (busAddress.registerAddress () & 06)
 	{
 		case RCSR:
 			*destAddress = rcsr;
@@ -154,11 +154,11 @@ void DLV11Channel::readChannel ()
 // 
 // Each of these functions therefore has to lock the registerAccessMutex_.
 //
-StatusCode DLV11Channel::writeWord (u16 registerAddress, u16 value)
+StatusCode DLV11Channel::writeWord (BusAddress busAddress, u16 value)
 {
 	lock_guard<mutex> lock {registerAccessMutex_};
 
-	switch (registerAddress & 06)
+	switch (busAddress.registerAddress () & 06)
 	{
 		case RCSR:
 			writeRCSR (value);

@@ -54,18 +54,18 @@ void DLV11J::initialize (bool ch3ConsoleEnabled)
 // This function allows the host system to read a word from one of the
 // DLV11-J's registers. The read command is passed through to the appropriate
 // channel.
-StatusCode DLV11J::read (BusAddress registerAddress, u16 *destAddress)
+StatusCode DLV11J::read (BusAddress busAddress, u16 *destAddress)
 {
-	return channel_[extractChannelNr (registerAddress)]->read (registerAddress,
+	return channel_[extractChannelNr (busAddress)]->read (busAddress,
 		destAddress);
 }
 
 // This function allows the host system to write a word to one of the
 // DLV11-J's registers. The write command is passed through to the appropriate
 // channel.
-StatusCode DLV11J::writeWord (BusAddress registerAddress, u16 value)
+StatusCode DLV11J::writeWord (BusAddress busAddress, u16 value)
 {
-	return channel_[extractChannelNr (registerAddress)]->writeWord (registerAddress,
+	return channel_[extractChannelNr (busAddress)]->writeWord (busAddress,
 		value);
 }
 

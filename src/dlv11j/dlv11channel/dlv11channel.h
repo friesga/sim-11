@@ -28,8 +28,8 @@ public:
 	DLV11Channel (Qbus* bus, u16 channelBaseAddress, u16 vector,
 		shared_ptr<DLV11Config> dlv11Config);
 	~DLV11Channel ();
-	StatusCode read (u16 registerAddress, u16 *destAddress);
-	StatusCode writeWord (u16 registerAddress, u16 value);
+	StatusCode read (BusAddress busAddress, u16 *destAddress);
+	StatusCode writeWord (BusAddress busAddress, u16 value);
 	void reset ();
 
 private:
