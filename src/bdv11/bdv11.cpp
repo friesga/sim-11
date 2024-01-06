@@ -193,9 +193,9 @@ void BDV11::memoryDump (u16 pcr, int hi)
 	}
 }
 
-StatusCode BDV11::read (BusAddress address, u16 *destAddress)
+StatusCode BDV11::read (BusAddress busAddress, u16 *destAddress)
 {
-	switch (address) 
+	switch (busAddress.registerAddress ()) 
 	{
 		case 0177520:
 			*destAddress = pcr;
@@ -216,14 +216,16 @@ StatusCode BDV11::read (BusAddress address, u16 *destAddress)
 			break;
 
 		default:
-			if (address >= 0173000 && address < 0173400)
+			if (busAddress.registerAddress () >= 0173000 && 
+				busAddress.registerAddress () < 0173400)
 			{
-				*destAddress = getWordLow ((address - 0173000) / 2);
+				*destAddress = getWordLow ((busAddress.registerAddress () - 0173000) / 2);
 				break;
 			} 
-			else if (address >= 0173400 && address < 0173776) 
+			else if (busAddress.registerAddress () >= 0173400 &&
+				busAddress.registerAddress () < 0173776) 
 			{
-				*destAddress = getWordHigh ((address - 0173400) / 2);
+				*destAddress = getWordHigh ((busAddress.registerAddress () - 0173400) / 2);
 				break;
 			}
 			else
@@ -232,9 +234,9 @@ StatusCode BDV11::read (BusAddress address, u16 *destAddress)
 	return StatusCode::OK;
 }
 
-StatusCode BDV11::writeWord (BusAddress address, u16 value)
+StatusCode BDV11::writeWord (BusAddress busAddress, u16 value)
 {
-	switch (address)
+	switch (busAddress.registerAddress ())
 	{
 		case 0177520:
 			/* record new memory content in trace */
@@ -275,9 +277,9 @@ StatusCode BDV11::writeWord (BusAddress address, u16 value)
 	return StatusCode::OK;
 }
 
-bool BDV11::responsible (BusAddress address)
+bool BDV11::responsible (BusAddress busAddress)
 {
-	switch (address)
+	switch (busAddress.registerAddress ())
 	{
 		case 0177520:
 		case 0177522:
@@ -285,7 +287,8 @@ bool BDV11::responsible (BusAddress address)
 		case 0177546:
 			return true;
 		default:
-			return (address >= 0173000 && address <= 0173776) ? true : false;
+			return (busAddress.registerAddress () >= 0173000 && 
+				busAddress.registerAddress () <= 0173776) ? true : false;
 	}
 }
 
