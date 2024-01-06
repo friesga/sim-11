@@ -150,9 +150,10 @@ void RLV12::reset ()
 // Bus Address Extension register. This function will return true for
 // an access to that register; following reads and writes to that register
 // however will return a non-existing memory error.
-bool RLV12::responsible (BusAddress address)
+bool RLV12::responsible (BusAddress busAddress)
 {
-    return address >= baseAddress_ && address <= (baseAddress_ + BAE) ?
+    return busAddress.registerAddress () >= baseAddress_ &&
+            busAddress.registerAddress () <= (baseAddress_ + BAE) ? 
         true : false;
 }
 

@@ -18,8 +18,8 @@ class PDP11Peripheral : public AbstractBusDevice
 protected:
 	Qbus* bus_;
     std::string name_;          // Device name
-    u32 baseAddress_;           // Device registers base address
-    u32 vector_;                // Device vector
+    u16 baseAddress_;           // Device registers base address
+    u16 vector_;                // Device vector
 
 public:
 	PDP11Peripheral (Qbus *bus);

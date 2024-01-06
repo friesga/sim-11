@@ -42,13 +42,13 @@ class RLV12 : public PDP11Peripheral
     static constexpr int32_t RL02_WordsPerCartridge = 
         RL01_WordsPerCartridge * 2;
 
-    // Define the address of the IOPage for a 16-bit system. The definition
-    // for a 22-bit system woule be 017760000 (i.e. 2**22 - 2**13).
-    static constexpr u32 IOPageBase = 0160000;          // IOPAGEBASE
+    // Define the base address of the registers in the I/O page as
+    // a 16-bit address.
+    static constexpr u16 IOPageBase = 0160000;
 
     // Define the default base address and vector of the device
-    static constexpr u32 RLV_BaseAddress = IOPageBase + 014400;
-    static constexpr u32 RLV_Vector = 0160;
+    static constexpr u16 RLV_BaseAddress = IOPageBase + 014400;
+    static constexpr u16 RLV_Vector = 0160;
     
     // Define RLV12 registers as offsets from the controllers base address
     enum
@@ -267,9 +267,9 @@ public:
     // Required functions
     void reset () override;
     bool responsible (BusAddress addr) override;
-    StatusCode read (BusAddress registerAddress, u16* data) override;
-    StatusCode writeByte (BusAddress registerAddress, u8 data) override;
-    StatusCode writeWord (BusAddress registerAddress, u16 data) override;
+    StatusCode read (BusAddress busAddress, u16* data) override;
+    StatusCode writeByte (BusAddress busAddress, u8 data) override;
+    StatusCode writeWord (BusAddress busAddress, u16 data) override;
 
     // Declare the signal receivers
 	void BINITReceiver (bool signalValue);
