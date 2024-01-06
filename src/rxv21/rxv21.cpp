@@ -103,13 +103,13 @@ void RXV21::done ()
 }
 
 // Read operation on either the RX2CS or RX2DB
-StatusCode RXV21::read (BusAddress address, u16 *destAddress)
+StatusCode RXV21::read (BusAddress busAddress, u16 *destAddress)
 {
-	if(address == base) 
-		/* Return value of the RX2CS */
+	if (busAddress.registerAddress () == base) 
+		// Return value of the RX2CS
 		*destAddress = rx2cs & RX_RMASK;
-	else if(address == base + 2) 
-		/* Return value of the RX2DB */
+	else if (busAddress.registerAddress () == base + 2) 
+		// Return value of the RX2DB
 		*destAddress = rx2db;
 
 	return StatusCode::OK;
@@ -122,11 +122,11 @@ StatusCode RXV21::read (BusAddress address, u16 *destAddress)
 // 2. Writing parameters of the command to the RX2DB, such as the sector
 //	  and track address or the bus address.
 //
-StatusCode RXV21::writeWord (BusAddress address, u16 value)
+StatusCode RXV21::writeWord (BusAddress busAddress, u16 value)
 {
-	if (address == base) 
+	if (busAddress.registerAddress () == base) 
 	{ 
-		/* Write RX2CS */
+		// Write RX2CS
 		int intr = rx2cs & RX_INTR_ENB;
 		rx2cs = (rx2cs & ~RX_WMASK) | (value & RX_WMASK);
 		rx2cs &= ~(RX_TR | RX_INIT | RX_ERROR);
@@ -149,9 +149,9 @@ StatusCode RXV21::writeWord (BusAddress address, u16 value)
 		if (!intr && (value & RX_INTR_ENB) && (rx2cs & RX_DONE)) 
 			bus_->setInterrupt (TrapPriority::BR4, 5, vector);
 	} 
-	else if (address == base + 2) 
+	else if (busAddress.registerAddress () == base + 2) 
 	{ 
-		/* Write RX2DB */
+		// Write RX2DB
 		rx2db = value;
 		dispatch (rxv21Rx2dbFilled {});
 	}
@@ -159,9 +159,10 @@ StatusCode RXV21::writeWord (BusAddress address, u16 value)
 	return StatusCode::OK;
 }
 
-bool RXV21::responsible (BusAddress address)
+bool RXV21::responsible (BusAddress busAddress)
 {
-	return address >= base && address <= (base + 2) ? true : false;
+	return busAddress.registerAddress () >= base && 
+		busAddress.registerAddress () <= (base + 2) ? true : false;
 }
 
 // On assertion of the BINIT signal initialize the device.
