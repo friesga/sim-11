@@ -109,12 +109,12 @@ void DLV11J::reset ()
 // Determine the channel number from the register address. An exception
 // to the standard formula has to be made for the use of channel 3 as
 // console device.
-u16 DLV11J::extractChannelNr (u16 registerAddress)
+u16 DLV11J::extractChannelNr (BusAddress busAddress)
 {
-	if (registerAddress >= defaultCh3Address_ && 
-			registerAddress < defaultCh3Address_ + (3 * 8))
+	if (busAddress.registerAddress () >= defaultCh3Address_ && 
+			busAddress.registerAddress () < defaultCh3Address_ + (3 * 8))
 		return 3;
 	else
-		return static_cast<u16> ((registerAddress & 030) >> 3);
+		return static_cast<u16> ((busAddress.registerAddress  () & 030) >> 3);
 }
 

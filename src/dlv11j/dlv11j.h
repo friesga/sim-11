@@ -36,7 +36,7 @@ private:
 	shared_ptr<DLV11Config> dlv11Config_;
 
 	void initialize (bool ch3Enabled);
-	u16 extractChannelNr (u16 registerAddress);
+	u16 extractChannelNr (BusAddress busAddress);
 };
 
 #endif // !_DLV11J_H_
