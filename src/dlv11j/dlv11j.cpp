@@ -74,19 +74,22 @@ StatusCode DLV11J::writeWord (BusAddress registerAddress, u16 value)
 // address plus the register set for the console device, and is responsible
 // for four sets of registers is channel 3 is not configured as console
 // device.
-bool DLV11J::responsible (BusAddress address)
+bool DLV11J::responsible (BusAddress busAddress)
 {
 	if (dlv11Config_->ch3ConsoleEnabled)
 	{
-		if (address >= baseAddress_ && address < baseAddress_ + (3 * 8))
+		if (busAddress.registerAddress () >= baseAddress_ &&
+				busAddress.registerAddress () < baseAddress_ + (3 * 8))
 			return true;
 
-		if (address >= 0177560 && address <= 0177566)
+		if (busAddress.registerAddress () >= 0177560 &&
+				busAddress.registerAddress () <= 0177566)
 			return true;
 	}
 	else
 	{
-		if (address >= baseAddress_ && address < baseAddress_ + (4 * 8))
+		if (busAddress.registerAddress () >= baseAddress_ &&
+				busAddress.registerAddress () < baseAddress_ + (4 * 8))
 			return true;
 	}
 
