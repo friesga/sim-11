@@ -133,7 +133,7 @@ private:
 	u16 pageAddressField (u16 activePageField);
 	constexpr u16 currentMemoryManagementMode ();
 	constexpr u16 previousMemoryManagementMode ();
-	Register* registerPointer (u16 address);
+	Register* registerPointer (BusAddress address);
 	bool pageResident (PDR const & pdr);
 	bool writeAllowed (PDR const & pdr);
 	bool withinPage (u16 blockNumber, PDR const & pdr);

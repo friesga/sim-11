@@ -6,9 +6,9 @@
 #include "basicregister/readonlyregister.h"
 #include "trace/trace.h"
 
-Register* KTF11_A::registerPointer (u16 address)
+Register* KTF11_A::registerPointer (BusAddress busAddress)
 {
-    switch (address)
+    switch (busAddress.registerAddress ())
     {
         case statusRegister0:
             return &sr0_;
@@ -26,8 +26,9 @@ Register* KTF11_A::registerPointer (u16 address)
             // The twelve highest bits indicate the register set while the
             // lower four bits indicate the the register number within
             // the set.
-            u16 index = (address & 017) / 2;
-            switch (address & 0177760)
+            u16 index = (busAddress.registerAddress () & 017) / 2;
+
+            switch (busAddress.registerAddress () & 0177760)
             {
                 case kernelPARBase:
                     return &activePageRegisterSet_[static_cast<u16> (PSW::Mode::Kernel)]
