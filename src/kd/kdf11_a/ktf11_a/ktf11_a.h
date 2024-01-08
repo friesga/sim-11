@@ -32,13 +32,13 @@ public:
 	KTF11_A (Qbus* bus, CpuData* cpuData);
 
 	// Functions reuiqred by the MMU interface
-	CondData<u16> fetchWord (BusAddress address, 
+	CondData<u16> fetchWord (VirtualAddress address, 
 		PSW::Mode memMgmtMode = PSW::Mode::Default) override;
-	CondData<u8> fetchByte (BusAddress address, 
+	CondData<u8> fetchByte (VirtualAddress address, 
 		PSW::Mode memMgmtMode = PSW::Mode::Default) override;
-	bool putWord (BusAddress address, u16 value, 
+	bool putWord (VirtualAddress address, u16 value, 
 		PSW::Mode memMgmtMode = PSW::Mode::Default) override;
-	bool putByte (BusAddress address, u8 value, 
+	bool putByte (VirtualAddress address, u8 value, 
 		PSW::Mode memMgmtMode = PSW::Mode::Default) override;
 	bool pushWord (u16 value) override;
 	bool popWord (u16 *destination) override;
@@ -119,9 +119,9 @@ private:
 	// (in case memory management is disabled) to access memory or map the
 	// virtual address to a physical address when memory management is 
 	// enabled.
-    CondData<u16> mappedRead (u16 address, u16 mode);
-	bool mappedWriteWord (u16 address, u16 value, u16 mode);
-	bool mappedWriteByte (u16 address, u8 value, u16 mode);
+    CondData<u16> mappedRead (VirtualAddress address, u16 mode);
+	bool mappedWriteWord (VirtualAddress address, u16 value, u16 mode);
+	bool mappedWriteByte (VirtualAddress address, u8 value, u16 mode);
 
 	u16 modeNumber (PSW::Mode memMgtmtMode);
 	u32 physicalAddress (u16 address);

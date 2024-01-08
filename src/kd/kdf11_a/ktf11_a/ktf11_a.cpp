@@ -7,7 +7,7 @@ KTF11_A::KTF11_A (Qbus* bus, CpuData* cpuData)
     cpuData_ {cpuData}
 {}
 
-CondData<u16> KTF11_A::fetchWord (BusAddress address, PSW::Mode memMgmtMode)
+CondData<u16> KTF11_A::fetchWord (VirtualAddress address, PSW::Mode memMgmtMode)
 {
     return (sr0_.managementEnabled ()) ? 
         mappedRead (address, modeNumber (memMgmtMode)) :
@@ -18,7 +18,7 @@ CondData<u16> KTF11_A::fetchWord (BusAddress address, PSW::Mode memMgmtMode)
 // 
 // The validity of the fetched word has to be checked before the shift-
 // and and-operators can be applied to the word!
-CondData<u8> KTF11_A::fetchByte (BusAddress address, PSW::Mode memMgmtMode)
+CondData<u8> KTF11_A::fetchByte (VirtualAddress address, PSW::Mode memMgmtMode)
 {
     CondData<u16> retValue {};
     if (address & 1)
@@ -37,14 +37,14 @@ CondData<u8> KTF11_A::fetchByte (BusAddress address, PSW::Mode memMgmtMode)
     return CondData<u8> {};
 }
 
-bool KTF11_A::putWord (BusAddress address, u16 value, PSW::Mode memMgmtMode)
+bool KTF11_A::putWord (VirtualAddress address, u16 value, PSW::Mode memMgmtMode)
 {
     return (sr0_.managementEnabled ()) ? 
         mappedWriteWord (address, value, modeNumber (memMgmtMode)) :
         writePhysicalWord (address, value);
 }
 
-bool KTF11_A::putByte (BusAddress address, u8 value, PSW::Mode memMgmtMode)
+bool KTF11_A::putByte (VirtualAddress address, u8 value, PSW::Mode memMgmtMode)
 {
     return (sr0_.managementEnabled ()) ? 
         mappedWriteByte (address, value, modeNumber (memMgmtMode)) :
@@ -83,7 +83,7 @@ u16 KTF11_A::modeNumber (PSW::Mode memMgmtMode)
 }
 
 // Return the word at the given virtual address using the MMU mapping
-CondData<u16> KTF11_A::mappedRead (u16 address, u16 mode)
+CondData<u16> KTF11_A::mappedRead (VirtualAddress address, u16 mode)
 {
     ActivePageRegister* apr = activePageRegister (address, mode);
 
@@ -114,7 +114,7 @@ CondData<u16> KTF11_A::mappedRead (u16 address, u16 mode)
 // A page-length abort service routine would ignore the read-only access
 // violation bit. (EK-KDF11-UG-PR2)
 //
-bool KTF11_A::mappedWriteWord (u16 address, u16 value, u16 mode)
+bool KTF11_A::mappedWriteWord (VirtualAddress address, u16 value, u16 mode)
 {
     ActivePageRegister* apr = activePageRegister (address, mode);
     if (address != statusRegister0)
@@ -133,7 +133,7 @@ bool KTF11_A::mappedWriteWord (u16 address, u16 value, u16 mode)
 }
 
 // Write the byte at the given virtual address using the MMU mapping
-bool KTF11_A::mappedWriteByte (u16 address, u8 value, u16 mode)
+bool KTF11_A::mappedWriteByte (VirtualAddress address, u8 value, u16 mode)
 {
     ActivePageRegister* apr = activePageRegister (address, mode);
     if ((address & 0177776) != statusRegister0)

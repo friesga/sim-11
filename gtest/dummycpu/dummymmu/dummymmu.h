@@ -13,13 +13,13 @@ class DummyMMU : public MMU
 public:
 	DummyMMU ();
 	void reset () {};
-    CondData<u16> fetchWord (BusAddress address, 
+    CondData<u16> fetchWord (VirtualAddress address, 
 		PSW::Mode memMgmtMode = PSW::Mode::Default);
-	CondData<u8> fetchByte (BusAddress address,
+	CondData<u8> fetchByte (VirtualAddress address,
 		PSW::Mode memMgmtMode = PSW::Mode::Default);
-	bool putWord (BusAddress address, u16 value,
+	bool putWord (VirtualAddress address, u16 value,
 		PSW::Mode memMgmtMode = PSW::Mode::Default);
-	bool putByte (BusAddress address, u8 value,
+	bool putByte (VirtualAddress address, u8 value,
 		PSW::Mode memMgmtMode = PSW::Mode::Default);
 	bool pushWord (u16 value) { return true; };
 	bool popWord (u16 *destination) { return false; };

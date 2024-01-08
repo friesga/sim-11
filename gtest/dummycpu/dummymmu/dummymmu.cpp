@@ -9,7 +9,7 @@ DummyMMU::DummyMMU ()
 	memory_ = make_unique<u16[]> (memorySize_);
 }
 
-CondData<u16> DummyMMU::fetchWord (BusAddress address, PSW::Mode memMgmtMode)
+CondData<u16> DummyMMU::fetchWord (VirtualAddress address, PSW::Mode memMgmtMode)
 {
     if (address < memorySize_)
 	    return CondData<u16> {memory_[address]};
@@ -17,7 +17,7 @@ CondData<u16> DummyMMU::fetchWord (BusAddress address, PSW::Mode memMgmtMode)
         return CondData<u16> {};
 }
 
-CondData<u8> DummyMMU::fetchByte (BusAddress address, PSW::Mode memMgmtMode)
+CondData<u8> DummyMMU::fetchByte (VirtualAddress address, PSW::Mode memMgmtMode)
 {
 	CondData<u16> retValue {};
     if (address & 1)
@@ -36,7 +36,7 @@ CondData<u8> DummyMMU::fetchByte (BusAddress address, PSW::Mode memMgmtMode)
     return CondData<u8> {};
 }
 
-bool DummyMMU::putWord (BusAddress address, u16 value, PSW::Mode memMgmtMode)
+bool DummyMMU::putWord (VirtualAddress address, u16 value, PSW::Mode memMgmtMode)
 {
     if (address < memorySize_)
     {
@@ -47,7 +47,7 @@ bool DummyMMU::putWord (BusAddress address, u16 value, PSW::Mode memMgmtMode)
         return false;
 }
 
-bool DummyMMU::putByte (BusAddress address, u8 value, PSW::Mode memMgmtMode)
+bool DummyMMU::putByte (VirtualAddress address, u8 value, PSW::Mode memMgmtMode)
 {
 	CondData<u16> tmp = fetchWord (address);
 	if(address & 1)
