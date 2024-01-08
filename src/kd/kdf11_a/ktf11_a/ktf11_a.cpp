@@ -165,12 +165,12 @@ CondData<u16> KTF11_A::readWithoutTrap (u16 address)
 
 // Return the word at the given physical address, generating a bus error trap
 // in case the read fails.
-CondData<u16> KTF11_A::readPhysical (u16 address)
+CondData<u16> KTF11_A::readPhysical (BusAddress busAddress)
 {
-    CondData<u16> value = bus_->read (address);
+    CondData<u16> value = bus_->read (busAddress);
     if (!value.hasValue ())
     {
-        trace.bus (BusRecordType::ReadFail, address, 0);
+        trace.bus (BusRecordType::ReadFail, busAddress, 0);
         cpuData_->setTrap (CpuData::TrapCondition::BusError);
     }
 
@@ -179,11 +179,11 @@ CondData<u16> KTF11_A::readPhysical (u16 address)
 
 // Write the given value to the given physical address, generating a bus
 // error trap in case the write fails.
-bool KTF11_A::writePhysicalWord (u16 address, u16 value)
+bool KTF11_A::writePhysicalWord (BusAddress busAddress, u16 value)
 {
-    if (!bus_->writeWord (address, value))
+    if (!bus_->writeWord (busAddress, value))
     {
-        trace.bus (BusRecordType::WriteFail, address, value);
+        trace.bus (BusRecordType::WriteFail, busAddress, value);
         cpuData_->setTrap (CpuData::TrapCondition::BusError);
         return false;
     }
@@ -191,11 +191,11 @@ bool KTF11_A::writePhysicalWord (u16 address, u16 value)
     return true;
 }
 
-bool KTF11_A::writePhysicalByte (u16 address, u16 value)
+bool KTF11_A::writePhysicalByte (BusAddress busAddress, u16 value)
 {
-    if (!bus_->writeByte (address, value))
+    if (!bus_->writeByte (busAddress, value))
     {
-        trace.bus (BusRecordType::WriteFail, address, value);
+        trace.bus (BusRecordType::WriteFail, busAddress, value);
         cpuData_->setTrap (CpuData::TrapCondition::BusError);
         return false;
     }
@@ -262,7 +262,7 @@ ActivePageRegister *KTF11_A::activePageRegister (u16 address, u16 mode)
 // 
 // Source: EK-KDF11-UG-PR2
 //
-u32 KTF11_A::physicalAddress (VirtualAddress address)
+BusAddress KTF11_A::physicalAddress (VirtualAddress address)
 {
     return physicalAddress (address, 
         activePageRegister (address, currentMemoryManagementMode ()));
@@ -270,7 +270,7 @@ u32 KTF11_A::physicalAddress (VirtualAddress address)
 
 // Return the 22-bit physical address for the given 16-bit virtual address
 // using the already determined page address field.
-u32 KTF11_A::physicalAddress (VirtualAddress address, ActivePageRegister* apr)
+BusAddress KTF11_A::physicalAddress (VirtualAddress address, ActivePageRegister* apr)
 {
     u32 physicalBlockNr = apr->pageAddressRegister_ + blockNumber (address);
     return (physicalBlockNr << 6) | displacementInBlock (address);

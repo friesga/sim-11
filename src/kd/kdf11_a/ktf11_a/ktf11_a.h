@@ -124,8 +124,8 @@ private:
 	bool mappedWriteByte (VirtualAddress address, u8 value, u16 mode);
 
 	u16 modeNumber (PSW::Mode memMgtmtMode);
-	u32 physicalAddress (VirtualAddress address);
-	u32 physicalAddress (VirtualAddress address, ActivePageRegister* apr);
+	BusAddress physicalAddress (VirtualAddress address);
+	BusAddress physicalAddress (VirtualAddress address, ActivePageRegister* apr);
 	ActivePageRegister *activePageRegister (u16 address, u16 mode);
 	constexpr u16 activePageField (u16 address);
 	constexpr u16 blockNumber (u16 address);
@@ -138,9 +138,9 @@ private:
 	bool writeAllowed (PDR const & pdr);
 	bool withinPage (u16 blockNumber, PDR const & pdr);
 	bool abortAccess (SR0::AbortReason reason, u16 address);
-	CondData<u16> readPhysical (u16 address);
-	bool writePhysicalWord (u16 address, u16 value);
-	bool writePhysicalByte (u16 address, u16 value);
+	CondData<u16> readPhysical (BusAddress busAddress);
+	bool writePhysicalWord (BusAddress busAddress, u16 value);
+	bool writePhysicalByte (BusAddress busAddress, u16 value);
 };
 
 
