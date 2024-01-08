@@ -277,6 +277,9 @@ StatusCode BDV11::writeWord (BusAddress busAddress, u16 value)
 	return StatusCode::OK;
 }
 
+// As the BDV11 will only be accessed by means of unmapped (16-bit) addresses
+// the given bus address can be compared directly with the BDV11's device
+// addresses.
 bool BDV11::responsible (BusAddress busAddress)
 {
 	switch (busAddress.registerAddress ())

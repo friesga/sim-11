@@ -76,6 +76,9 @@ StatusCode DLV11J::writeWord (BusAddress busAddress, u16 value)
 // device.
 bool DLV11J::responsible (BusAddress busAddress)
 {
+	if (!busAddress.isInIOpage ())
+		return false;
+
 	if (dlv11Config_->ch3ConsoleEnabled)
 	{
 		if (busAddress.registerAddress () >= baseAddress_ &&

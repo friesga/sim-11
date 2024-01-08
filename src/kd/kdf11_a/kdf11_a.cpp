@@ -89,10 +89,13 @@ StatusCode KDF11_A::writeWord (BusAddress address, u16 value)
 
 }
 
-bool KDF11_A::responsible (BusAddress address)
+bool KDF11_A::responsible (BusAddress busAddress)
 {
+    if (!busAddress.isInIOpage ())
+        return false;
+
     for (BusDevice* module : cpuModules_)
-        if (module->responsible (address))
+        if (module->responsible (busAddress))
             return true;
 
     return false;

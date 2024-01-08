@@ -161,6 +161,9 @@ StatusCode RXV21::writeWord (BusAddress busAddress, u16 value)
 
 bool RXV21::responsible (BusAddress busAddress)
 {
+	if (!busAddress.isInIOpage ())
+		return false;
+
 	return busAddress.registerAddress () >= base && 
 		busAddress.registerAddress () <= (base + 2) ? true : false;
 }

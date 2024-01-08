@@ -152,6 +152,9 @@ void RLV12::reset ()
 // however will return a non-existing memory error.
 bool RLV12::responsible (BusAddress busAddress)
 {
+    if (!busAddress.isInIOpage ())
+        return false;
+
     return busAddress.registerAddress () >= baseAddress_ &&
             busAddress.registerAddress () <= (baseAddress_ + BAE) ? 
         true : false;
