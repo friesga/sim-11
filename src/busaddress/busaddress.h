@@ -13,7 +13,7 @@ public:
     u16 registerAddress ();
 
 private:
-    u16 value_;
+    u32 value_;
 };
 
 inline BusAddress::BusAddress (u16 value)
