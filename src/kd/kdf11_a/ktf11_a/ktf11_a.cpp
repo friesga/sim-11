@@ -262,7 +262,7 @@ ActivePageRegister *KTF11_A::activePageRegister (u16 address, u16 mode)
 // 
 // Source: EK-KDF11-UG-PR2
 //
-u32 KTF11_A::physicalAddress (u16 address)
+u32 KTF11_A::physicalAddress (VirtualAddress address)
 {
     return physicalAddress (address, 
         activePageRegister (address, currentMemoryManagementMode ()));
@@ -270,7 +270,7 @@ u32 KTF11_A::physicalAddress (u16 address)
 
 // Return the 22-bit physical address for the given 16-bit virtual address
 // using the already determined page address field.
-u32 KTF11_A::physicalAddress (u16 address, ActivePageRegister* apr)
+u32 KTF11_A::physicalAddress (VirtualAddress address, ActivePageRegister* apr)
 {
     u32 physicalBlockNr = apr->pageAddressRegister_ + blockNumber (address);
     return (physicalBlockNr << 6) | displacementInBlock (address);

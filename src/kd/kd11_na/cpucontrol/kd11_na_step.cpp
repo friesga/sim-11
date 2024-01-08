@@ -215,9 +215,9 @@ void KD11_NA_CpuControl::traceStep ()
     // the instruction isn't decoded at this point. Therefore use the bus
     // read function instead of fetchWord(). The latter will generate a
     // bus error trap on access of an invalid address.
-    code[0] = bus_->read (cpuData_->registers ()[7] + 0).valueOr (0);
-    code[1] = bus_->read (cpuData_->registers ()[7] + 2).valueOr (0);
-    code[2] = bus_->read (cpuData_->registers ()[7] + 4).valueOr (0);
+    code[0] = mmu_->readWithoutTrap (cpuData_->registers ()[7] + 0).valueOr (0);
+    code[1] = mmu_->readWithoutTrap (cpuData_->registers ()[7] + 2).valueOr (0);
+    code[2] = mmu_->readWithoutTrap (cpuData_->registers ()[7] + 4).valueOr (0);
     trace.cpuStep (cpuData_->registers (), cpuData_->psw (), code);
     trace.clearIgnoreBus ();
 }

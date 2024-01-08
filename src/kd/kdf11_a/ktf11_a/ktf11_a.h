@@ -124,8 +124,8 @@ private:
 	bool mappedWriteByte (VirtualAddress address, u8 value, u16 mode);
 
 	u16 modeNumber (PSW::Mode memMgtmtMode);
-	u32 physicalAddress (u16 address);
-	u32 physicalAddress (u16 address, ActivePageRegister* apr);
+	u32 physicalAddress (VirtualAddress address);
+	u32 physicalAddress (VirtualAddress address, ActivePageRegister* apr);
 	ActivePageRegister *activePageRegister (u16 address, u16 mode);
 	constexpr u16 activePageField (u16 address);
 	constexpr u16 blockNumber (u16 address);

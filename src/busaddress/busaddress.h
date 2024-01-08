@@ -7,8 +7,8 @@
 class BusAddress
 {
 public:
-    BusAddress (u16 value);
-    operator u16 ();
+    BusAddress (u32 value);
+    operator u32 ();
     BusAddress& operator &= (u16 mask);
     u16 registerAddress ();
 
@@ -16,15 +16,17 @@ private:
     u32 value_;
 };
 
-inline BusAddress::BusAddress (u16 value)
+
+inline BusAddress::BusAddress (u32 value)
 {
     value_ = value;
 }
 
-inline BusAddress::operator u16 ()
+inline BusAddress::operator u32 ()
 {
     return value_;
 }
+
 
 inline BusAddress& BusAddress::operator &= (u16 mask)
 {
@@ -36,7 +38,8 @@ inline BusAddress& BusAddress::operator &= (u16 mask)
 // a register in the I/O space.
 inline u16 BusAddress::registerAddress ()
 {
-    return value_;
+    return value_ & 0177777;
 }
+
 
 #endif // _BUSADDRESS_H_
