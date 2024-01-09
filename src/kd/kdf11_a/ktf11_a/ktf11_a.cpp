@@ -273,7 +273,8 @@ BusAddress KTF11_A::physicalAddress (VirtualAddress address)
 BusAddress KTF11_A::physicalAddress (VirtualAddress address, ActivePageRegister* apr)
 {
     u32 physicalBlockNr = apr->pageAddressRegister_ + blockNumber (address);
-    return (physicalBlockNr << 6) | displacementInBlock (address);
+    return BusAddress ((physicalBlockNr << 6) | displacementInBlock (address),
+        BusAddress::Width::_18Bit);
 }
 
 // The content of SR2 (the virtual program counter) is frozen whenever one of
