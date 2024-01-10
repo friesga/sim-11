@@ -34,7 +34,7 @@ private:
 // Definition of the I/O page base address for 16-, 18- and 22-bits wide bus.
 inline const array<u32, 3>  BusAddress::ioPageBases_ =
 {
-    016000,     // 16-bit
+    0160000,    // 16-bit
     0760000,    // 18-bit
     017760000   // 22-bit
 };
@@ -65,7 +65,7 @@ inline BusAddress& BusAddress::operator &= (u32 mask)
 
 inline bool BusAddress::isInIOpage ()
 {
-    return value_ & ioPageBase_;
+    return (value_ & ioPageBase_) == ioPageBase_;
 }
 
 // Return the bus address as a register address, i.e. an u16 address of
