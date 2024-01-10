@@ -272,7 +272,7 @@ BusAddress KTF11_A::physicalAddress (VirtualAddress address)
 // using the already determined page address field.
 BusAddress KTF11_A::physicalAddress (VirtualAddress address, ActivePageRegister* apr)
 {
-    u32 physicalBlockNr = apr->pageAddressRegister_ + blockNumber (address);
+    u32 physicalBlockNr = (apr->pageAddressRegister_ & 03777) + blockNumber (address);
     return BusAddress ((physicalBlockNr << 6) | displacementInBlock (address),
         BusAddress::Width::_18Bit);
 }

@@ -6,7 +6,7 @@ bool Qbus::writeWord (BusAddress address, u16 value)
 	BusDevice *module;
 	
 	// Prevent write's to odd addresses
-	address &= 0xFFFE;
+	address &= 0xFFFFFFFE;
 
 	if ((module = responsibleModule(address)) != nullptr)
 	{

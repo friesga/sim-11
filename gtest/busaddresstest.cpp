@@ -20,3 +20,10 @@ TEST (BusAddressTest, BusAddressCanBeMasked)
     address &= 0177776;
     ASSERT_EQ ((u16) address, 0177776);
 }
+
+TEST (BusAddressTest, _18BitBusAddressCanBeMasked)
+{
+    BusAddress address = 0200000;
+    address &= 0xFFFFFFFE;
+    ASSERT_EQ ((u32) address, 0200000);
+}

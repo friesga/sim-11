@@ -21,7 +21,7 @@ public:
     BusAddress (u32 value);
     BusAddress (u32 value, Width width);
     operator u32 ();
-    BusAddress& operator &= (u16 mask);
+    BusAddress& operator &= (u32 mask);
     bool isInIOpage ();
     u16 registerAddress ();
 
@@ -57,7 +57,7 @@ inline BusAddress::operator u32 ()
 }
 
 
-inline BusAddress& BusAddress::operator &= (u16 mask)
+inline BusAddress& BusAddress::operator &= (u32 mask)
 {
     value_ &= mask;
     return *this;
@@ -75,5 +75,10 @@ inline u16 BusAddress::registerAddress ()
     return value_ & 0177777;
 }
 
+inline BusAddress operator& (BusAddress lhs, u32 rhs)
+{
+    lhs &= rhs;
+    return lhs;
+}
 
 #endif // _BUSADDRESS_H_
