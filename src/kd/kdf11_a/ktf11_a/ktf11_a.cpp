@@ -268,13 +268,27 @@ BusAddress KTF11_A::physicalAddress (VirtualAddress address)
         activePageRegister (address, currentMemoryManagementMode ()));
 }
 
-// Return the 22-bit physical address for the given 16-bit virtual address
+// Return the 18- or 22-bit physical address for the given 16-bit virtual address
 // using the already determined page address field.
 BusAddress KTF11_A::physicalAddress (VirtualAddress address, ActivePageRegister* apr)
 {
-    u32 physicalBlockNr = (apr->pageAddressRegister_ & 03777) + blockNumber (address);
+    return sr3_._22BitMappingEnabled () ? 
+        _22bitPhysicalAddress (address, apr) :
+        _18bitPhysicalAddress (address, apr);
+}
+
+BusAddress KTF11_A::_18bitPhysicalAddress (VirtualAddress address, ActivePageRegister* apr)
+{
+    u32 physicalBlockNr = (apr->pageAddressRegister_ & 07777) + blockNumber (address);
     return BusAddress ((physicalBlockNr << 6) | displacementInBlock (address),
         BusAddress::Width::_18Bit);
+}
+
+BusAddress KTF11_A::_22bitPhysicalAddress (VirtualAddress address, ActivePageRegister* apr)
+{
+    u32 physicalBlockNr = apr->pageAddressRegister_ + blockNumber (address);
+    return BusAddress ((physicalBlockNr << 6) | displacementInBlock (address),
+        BusAddress::Width::_22Bit);
 }
 
 // The content of SR2 (the virtual program counter) is frozen whenever one of

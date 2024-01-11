@@ -126,6 +126,8 @@ private:
 	u16 modeNumber (PSW::Mode memMgtmtMode);
 	BusAddress physicalAddress (VirtualAddress address);
 	BusAddress physicalAddress (VirtualAddress address, ActivePageRegister* apr);
+	BusAddress _18bitPhysicalAddress (VirtualAddress address, ActivePageRegister* apr);
+	BusAddress _22bitPhysicalAddress (VirtualAddress address, ActivePageRegister* apr);
 	ActivePageRegister *activePageRegister (u16 address, u16 mode);
 	constexpr u16 activePageField (u16 address);
 	constexpr u16 blockNumber (u16 address);

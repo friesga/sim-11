@@ -11,6 +11,7 @@ class SR3 : public BasicRegister
 public:
     SR3 (u16 value);
     void operator= (u16 const value) override;
+    bool _22BitMappingEnabled ();
 
 private:
     static const u16 Enable22BitMappingIndex = 4;
@@ -30,6 +31,11 @@ inline SR3::SR3 (u16 value)
 inline void SR3::operator= (u16 const value)
 {
     value_ = value & (Enable22BitMappingMask | EnableIOMappingMask);
+}
+
+inline bool SR3::_22BitMappingEnabled ()
+{
+    return value_ & Enable22BitMappingMask;
 }
 
 #endif // _KTF11ASR3_H_
