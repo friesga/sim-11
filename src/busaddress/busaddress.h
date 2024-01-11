@@ -28,10 +28,22 @@ public:
 private:
     u32 value_;
     u32 ioPageBase_;
+    static const array<u32, 3> maxNumber_;
     static const array<u32, 3> ioPageBases_;
 };
 
-// Definition of the I/O page base address for 16-, 18- and 22-bits wide bus.
+// Definition of the used bits for 16-, 18- and 22-bits wide busses.
+inline const array<u32, 3>  BusAddress::maxNumber_ =
+{
+    0177777,    // 16-bit
+    0777777,    // 18-bit
+    017777777   // 22-bit
+};
+
+// Definition of the I/O page base address for 16-, 18- and 22-bits
+// wide busses. These constants could be derived from the maxNumber_
+// constants (maxNumber_[x] - (8 * 1024) + 1) but we'll keep them as
+// separate constants for reference puposes.
 inline const array<u32, 3>  BusAddress::ioPageBases_ =
 {
     0160000,    // 16-bit
@@ -40,9 +52,14 @@ inline const array<u32, 3>  BusAddress::ioPageBases_ =
 };
 
 
+// Initialize the bus address with the given value, taking into consideration
+// the maximum number that can be represented with the given width. This
+// implies that a number greater than the maximum number for that width will
+// overflow from zero. This feature is verified by the JKDAD1 diagnostic
+// test 24.
 inline BusAddress::BusAddress (u32 value, Width width)
 {
-    value_ = value;
+    value_ = value & maxNumber_.at (static_cast<size_t> (width));
     ioPageBase_ = ioPageBases_.at (static_cast<size_t> (width));
 }
 
