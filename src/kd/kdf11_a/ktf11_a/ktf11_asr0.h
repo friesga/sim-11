@@ -61,8 +61,8 @@ inline void SR0::setAbortCondition (AbortReason reason, u16 mode, u16 pageNumber
     if ((value_ & AbortConditionMask) == 0)
     {
         value_ = static_cast<u16> (reason) |
-            (mode << AccessViolationModeIndex) & AccessViolationModeMask |
-            (pageNumber << PageNumberIndex) & PageNumberMask |
+            ((mode << AccessViolationModeIndex) & AccessViolationModeMask) |
+            ((pageNumber << PageNumberIndex) & PageNumberMask) |
             EnableManagementMask;
     }
 }

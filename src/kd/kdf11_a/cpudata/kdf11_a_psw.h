@@ -17,8 +17,8 @@ public:
     bool traceBitSet () override;
     u16 priorityLevel () override;
     void setPriorityLevel (u16 level) override;
-    PSW::Mode currentMode () const override;
-    PSW::Mode previousMode () const override;
+    constexpr PSW::Mode currentMode () const override;
+    constexpr PSW::Mode previousMode () const override;
 
 private:
     static const u16 ConditionCodesMask = (u16) bitField (4);
@@ -101,12 +101,12 @@ inline void KDF11_A_PSW::setPriorityLevel (u16 level)
     value_ = (value_ & ~PriorityLevelMask) | ((level & 07) << PriorityLevelIndex);
 }
 
-inline PSW::Mode KDF11_A_PSW::currentMode () const
+inline constexpr PSW::Mode KDF11_A_PSW::currentMode () const
 {
     return static_cast<Mode> ((value_ & CurrentModeMask) >> CurrentModeIndex);
 }
 
-inline PSW::Mode KDF11_A_PSW::previousMode () const
+inline constexpr PSW::Mode KDF11_A_PSW::previousMode () const
 {
     return static_cast<Mode> ((value_ & PreviousModeMask) >> PreviousModeIndex);
 }
