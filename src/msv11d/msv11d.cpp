@@ -13,9 +13,8 @@ MSV11D::MSV11D (Qbus *bus)
 	PDP11Peripheral (bus),
 	powerSource_ {MSV11Config::PowerSource::System}
 {
-	data = (u8*) malloc (MSV11D_SIZE);
-	if (data != nullptr)
-		memset (data, 0, MSV11D_SIZE);
+	// Allocate and initialize the memory
+	data = new u8[MSV11D_SIZE] ();
 
 	// Subscribe to the BPOK signal
 	bus_->BPOK().subscribe (bind (&MSV11D::BPOKReceiver, this, _1));
@@ -30,7 +29,7 @@ MSV11D::MSV11D (Qbus* bus, shared_ptr<MSV11Config> msv11Config)
 
 MSV11D::~MSV11D ()
 {
-	free (data);
+	delete[] data;
 }
 
 StatusCode MSV11D::read (BusAddress address, u16 *destAddress)
