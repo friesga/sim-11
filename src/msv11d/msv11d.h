@@ -8,7 +8,7 @@
 using std::shared_ptr;
 
 /* Main memory size: 32kW / 64kB */
-#define	MSV11D_SIZE		(65536 - 2 * 4096)
+#define	MSV11D_SIZE		65536
 
 class MSV11D : public PDP11Peripheral
 {

@@ -50,9 +50,9 @@ StatusCode MSV11D::writeWord (BusAddress address, u16 value)
 	return StatusCode::OK;
 }
 
-bool MSV11D::responsible (BusAddress address)
+bool MSV11D::responsible (BusAddress busAddress)
 {
-	return (address < MSV11D_SIZE) ? true : false;
+	return (!busAddress.isInIOpage () && busAddress < MSV11D_SIZE) ? true : false;
 }
 
 void MSV11D::reset ()
