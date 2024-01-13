@@ -23,7 +23,7 @@ TEST (BusAddressTest, BusAddressCanBeMasked)
 
 TEST (BusAddressTest, _18BitBusAddressCanBeMasked)
 {
-    BusAddress address = 0200000;
+    BusAddress address {0200000, BusAddress::Width::_18Bit};
     address &= 0xFFFFFFFE;
     ASSERT_EQ ((u32) address, 0200000);
 }
