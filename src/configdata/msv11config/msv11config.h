@@ -23,6 +23,7 @@ struct MSV11Config : public DeviceConfig
     // MSV11 modules are factory-configured with power jumpers installed for
     // normal system power, only. (EK-MSV1D-OP-001)
     PowerSource powerSource {PowerSource::System};
+    bool bank7Lower2kWEnabled {false};
     MSV11Config ();
 };
 

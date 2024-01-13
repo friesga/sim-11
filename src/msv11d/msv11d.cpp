@@ -11,7 +11,8 @@ using std::shared_ptr;
 MSV11D::MSV11D (Qbus *bus)
 	:
 	PDP11Peripheral (bus),
-	powerSource_ {MSV11Config::PowerSource::System}
+	powerSource_ {MSV11Config::PowerSource::System},
+	bank7Lower2kWEnabled_ {false}
 {
 	// Allocate and initialize the memory
 	data = new u8[MSV11D_SIZE] ();
@@ -25,6 +26,7 @@ MSV11D::MSV11D (Qbus* bus, shared_ptr<MSV11Config> msv11Config)
 	MSV11D (bus)
 {
 	powerSource_ = msv11Config->powerSource;
+	bank7Lower2kWEnabled_ = msv11Config->bank7Lower2kWEnabled;
 }
 
 MSV11D::~MSV11D ()
@@ -51,7 +53,11 @@ StatusCode MSV11D::writeWord (BusAddress address, u16 value)
 
 bool MSV11D::responsible (BusAddress busAddress)
 {
-	return (!busAddress.isInIOpage () && busAddress < MSV11D_SIZE) ? true : false;
+	bool addressIsInIOpage = (bank7Lower2kWEnabled_) ? 
+		busAddress.isInIOpageLower2K () : 
+		busAddress.isInIOpage ();
+
+	return (!addressIsInIOpage && busAddress < MSV11D_SIZE) ? true : false;
 }
 
 void MSV11D::reset ()

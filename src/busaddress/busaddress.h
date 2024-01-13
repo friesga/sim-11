@@ -23,6 +23,7 @@ public:
     operator u32 ();
     BusAddress& operator &= (u32 mask);
     bool isInIOpage ();
+    bool isInIOpageLower2K ();
     u16 registerAddress ();
 
 private:
@@ -83,6 +84,12 @@ inline BusAddress& BusAddress::operator &= (u32 mask)
 inline bool BusAddress::isInIOpage ()
 {
     return (value_ & ioPageBase_) == ioPageBase_;
+}
+
+inline bool BusAddress::isInIOpageLower2K ()
+{
+    u32 lower2KioPageBase = ioPageBase_ + 4096;
+    return (value_ & lower2KioPageBase) == lower2KioPageBase;
 }
 
 // Return the bus address as a register address, i.e. an u16 address of

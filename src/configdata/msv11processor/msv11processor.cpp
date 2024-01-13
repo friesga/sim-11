@@ -29,6 +29,18 @@ void MSV11Processor::processPowerSource (iniparser::Value value)
         throw invalid_argument {"Incorrect MSV11 power_source value"};
 }
 
+void MSV11Processor::processBank7Lower2kW (iniparser::Value value)
+{
+	try
+	{
+		msv11ConfigPtr->bank7Lower2kWEnabled = value.asBool ();
+	}
+	catch (invalid_argument const &)
+	{
+		throw invalid_argument {"Value of bank7_lower2K_enabled must be \'true\' or \'false\'"};
+	}
+}
+
 // Check the consistency of the configuration of the MSV11 memory. Currently
 // this is a void.
 void MSV11Processor::checkConsistency ()
