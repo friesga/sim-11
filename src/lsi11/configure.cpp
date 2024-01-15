@@ -20,7 +20,7 @@ void LSI11::configureDevices (Window *window)
 {
     // By default use the KD11-NA processor
     processor_ = new KD11_NA (&bus_);
-    msv11_ = new MSV11D (&bus_);
+    msv11_.push_back (new MSV11D (&bus_));
 
     // Create a DLV11J object with the default condiguration
     dlv11_ = new DLV11J (&bus_, make_shared<DLV11Config> ());
@@ -58,8 +58,8 @@ void LSI11::configureDevices (vector<shared_ptr<DeviceConfig>> systemConfig,
                 break;
 
             case DeviceType::MSV11:
-                msv11_ = new MSV11D (&bus_,
-                    static_pointer_cast<MSV11Config> (device));
+                msv11_.push_back (new MSV11D (&bus_,
+                    static_pointer_cast<MSV11Config> (device)));
                 break;
 
             case DeviceType::DLV11_J:

@@ -7,7 +7,7 @@
 LSI11::LSI11 (CmdLineOptions const &cmdLineOptions)
 	:
 	processor_ {nullptr},
-	msv11_ {nullptr},
+	msv11_ {},
 	rxv21_ {nullptr},
 	rlv12_ {nullptr},
 	dlv11_ {nullptr},
@@ -19,7 +19,8 @@ LSI11::LSI11 (CmdLineOptions const &cmdLineOptions)
 LSI11::~LSI11 ()
 {
 	delete processor_;
-	delete msv11_;
+	for (MSV11D* msv11d : msv11_)
+		delete msv11d;
 	delete dlv11_;
 	delete bdv11_;
 	delete rxv21_;

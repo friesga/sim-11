@@ -16,9 +16,11 @@
 #include "panel.h"
 
 #include <memory>
+#include <vector>
 
 using std::shared_ptr;
 using std::unique_ptr;
+using std::vector;
 
 using namespace rxv21;
 
@@ -33,7 +35,7 @@ class LSI11
 	//
 	// The PDP11Processor is either a KD11_NA or a KDF11_A.
 	PDP11Processor *processor_;
-	MSV11D *msv11_;
+	vector<MSV11D*> msv11_;
 	RXV21 *rxv21_;
 	RLV12 *rlv12_;
 	DLV11J *dlv11_;

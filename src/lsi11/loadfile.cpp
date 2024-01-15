@@ -55,8 +55,8 @@ u16 LSI11::loadFile ()
         (void)!fread (&len, 2, 1, f);
         (void)!fread (&addr, 2, 1, f);
         bytes += len;
-        (void)!fread (&msv11_->data[addr], len - 6, 1, f);
-        trace.memoryDump (&msv11_->data[addr], addr, len - 6);
+        (void)!fread (&msv11_[0]->data[addr], len - 6, 1, f);
+        trace.memoryDump (&msv11_[0]->data[addr], addr, len - 6);
         (void)!fread (&cksum, 1, 1, f);
         if (len == 6)
         {
