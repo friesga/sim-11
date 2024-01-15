@@ -44,6 +44,9 @@ void MSV11Processor::processStartingAddress (iniparser::Value value)
 			value.asString()};
 	}
 
+	if (msv11ConfigPtr->startingAddress > 0760000)
+		throw invalid_argument {"MSV11 maximum starting address is 0760000"};
+
 	if (msv11ConfigPtr->startingAddress % 020000 != 0)
 		throw invalid_argument {"MSV11 address must start at 4K boundary"};
 }

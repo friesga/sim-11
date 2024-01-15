@@ -81,6 +81,31 @@ TEST (MSV11ConfiguratorTest, invalidStartingAddressThrows)
 	}
 }
 
+TEST (MSV11ConfiguratorTest, exceedingMaximumStartingAddressThrows)
+{
+	iniparser::File ft;
+	std::stringstream stream;
+	stream << "[MSV11]\n"
+		"starting_address = 01000000\n";
+	stream >> ft;
+
+	IniProcessor iniProcessor;
+
+	try
+	{
+		iniProcessor.process (ft);
+		FAIL();
+	}
+	catch (std::invalid_argument const &except)
+	{
+		EXPECT_STREQ (except.what(), "MSV11 maximum starting address is 0760000");
+	}
+	catch (...)
+	{
+		FAIL();
+	}
+}
+
 TEST (MSV11ConfiguratorTest, startingAddressNotAt4KBoundaryThrows)
 {
 	iniparser::File ft;
