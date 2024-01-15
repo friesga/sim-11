@@ -130,3 +130,37 @@ TEST (MSV11ConfiguratorTest, startingAddressNotAt4KBoundaryThrows)
 		FAIL();
 	}
 }
+
+TEST (MSV11ConfiguratorTest, multipleMSV11SectionsAccepted)
+{
+    iniparser::File ft;
+	std::stringstream stream;
+	stream << "[MSV11]\n"
+		"starting_address = 0\n"
+		"\n"
+		"[MSV11]\n"
+		"starting_address = 020000\n";
+	stream >> ft;
+
+	IniProcessor iniProcessor;
+	EXPECT_NO_THROW (iniProcessor.process (ft)); 
+
+	vector<shared_ptr<DeviceConfig>> systemConfig = 
+		iniProcessor.getSystemConfig ();
+
+	// Verify the vector contains two device configurations
+	ASSERT_EQ (systemConfig.size (), 2);
+
+	// The only device types in this testset shoiuld be the MSV11's
+	ASSERT_EQ (systemConfig[0]->deviceType_, DeviceType::MSV11);
+	ASSERT_EQ (systemConfig[1]->deviceType_, DeviceType::MSV11);
+
+	// The first section should have starting address 0
+	shared_ptr<MSV11Config> msv11Config = 
+		static_pointer_cast<MSV11Config> (systemConfig[0]);
+	EXPECT_EQ (msv11Config->startingAddress, 0);
+
+	// And the section section should have starting address 020000
+	msv11Config = static_pointer_cast<MSV11Config> (systemConfig[1]);
+	EXPECT_EQ (msv11Config->startingAddress, 020000);
+}
