@@ -19,8 +19,8 @@ using std::array;
 using std::function;
 using std::vector;
 
-/* Backplane size */
-#define	LSI11_SIZE		8
+// A BA11-N backplane has nine slots, numbered 1 to 9.
+#define	LSI11_SIZE		9
 
 // Qbus interrupt latency, defined as the maximum number of instructions
 // after which the interrupt will be processed. The INTRPT_LATENCY_JITTER
