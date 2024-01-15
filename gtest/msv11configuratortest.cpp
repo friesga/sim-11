@@ -80,3 +80,28 @@ TEST (MSV11ConfiguratorTest, invalidStartingAddressThrows)
 		FAIL();
 	}
 }
+
+TEST (MSV11ConfiguratorTest, startingAddressNotAt4KBoundaryThrows)
+{
+	iniparser::File ft;
+	std::stringstream stream;
+	stream << "[MSV11]\n"
+		"starting_address = 10000\n";
+	stream >> ft;
+
+	IniProcessor iniProcessor;
+
+	try
+	{
+		iniProcessor.process (ft);
+		FAIL();
+	}
+	catch (std::invalid_argument const &except)
+	{
+		EXPECT_STREQ (except.what(), "MSV11 address must start at 4K boundary");
+	}
+	catch (...)
+	{
+		FAIL();
+	}
+}

@@ -43,6 +43,9 @@ void MSV11Processor::processStartingAddress (iniparser::Value value)
 		throw invalid_argument {"Incorrect address in MSV11 section specified: " + 
 			value.asString()};
 	}
+
+	if (msv11ConfigPtr->startingAddress % 020000 != 0)
+		throw invalid_argument {"MSV11 address must start at 4K boundary"};
 }
 
 void MSV11Processor::processBank7Lower2kW (iniparser::Value value)
