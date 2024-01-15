@@ -1008,8 +1008,10 @@ namespace iniparser
     class File
     {
     public:
-        // Sections stores all values and comments inside them
-        typedef std::map<std::string, Section*> SectionMap;
+        // Sections stores all values and comments inside them.
+        // The SectionMap is defined as a multimap to be able to store
+        // multiple sections with the same key in the map.
+        typedef std::multimap<std::string, Section*> SectionMap;
         typedef std::pair<std::string, Section*> SectionPair;
         typedef SectionMap::iterator          SectionIterator;
         typedef SectionMap::const_iterator    ConstSectionIterator;
@@ -1448,8 +1450,13 @@ namespace iniparser
                 // Add comment (it can be set with any string type, other than EMPTY and ERROR)
                 pcomment += comment;
                 // Add section (or modify comment of existing one if needed)
+                // When UNIQUE_SECTIONS is defined, sections must be unique.
+                // However no error is reported when multiple sections with
+                // the same key are detected. In case UNIQUE_SECTIONS is
+                // undefined every parsed section is added to the section map.
                 if (lt == LEKSYSINI_SECTION)
                 {
+#ifdef UNIQUE_SECTIONS
                     SectionMap::iterator it = pmap.find(section_key);
                     if (it == pmap.end())
                     {
@@ -1467,6 +1474,10 @@ namespace iniparser
                                 it->second->_comment = pcomment;
                         }
                     }
+#else
+                    cur_sect = new Section(this,section_key,pcomment);
+                    pmap.insert(SectionPair(section_key, cur_sect));
+#endif // UNIQUE_SECTIONS
                     pcomment.clear();
                 }
                 else if (lt == LEKSYSINI_ENTRY)
