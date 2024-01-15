@@ -380,6 +380,7 @@ set (GTEST_SRCS
     gtest/kdf11_a/kdf11_aregisterstest.cpp
     gtest/kdf11_a/kdf11_abusdevicetest.cpp
     gtest/locationtest.cpp
+    gtest/msv11configuratortest.cpp
     gtest/operandlocationtest.cpp
     gtest/dummycpu/dummymmu/dummymmu.cpp
     gtest/rlv12attachtest.cpp
