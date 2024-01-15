@@ -29,6 +29,7 @@ private:
 	static const size_t MSV11D_SIZE {65536};
 
 	MSV11Config::PowerSource powerSource_;
+	u32 startingAddress_;
 	bool bank7Lower2kWEnabled_;
 };
 
