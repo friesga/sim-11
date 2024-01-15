@@ -24,6 +24,7 @@ class MSV11Processor : public SectionProcessor
 	map<string, Process> valueProcessors =
 	{
 		{"power_source", &MSV11Processor::processPowerSource},
+		{"starting_address", &MSV11Processor::processStartingAddress},
 		{"bank7_lower2K_enabled", &MSV11Processor::processBank7Lower2kW}
 	};
 
@@ -37,6 +38,7 @@ class MSV11Processor : public SectionProcessor
 	void checkConsistency ();
 	void processSubsection (iniparser::Section *subSection);
 	void processPowerSource (iniparser::Value value);
+	void processStartingAddress (iniparser::Value value);
 	void processBank7Lower2kW (iniparser::Value value);
 
 public:

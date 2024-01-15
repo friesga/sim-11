@@ -13,8 +13,11 @@ MSV11Processor::MSV11Processor ()
 
 void MSV11Processor::processValue (iniparser::Section::ValueIterator valueIterator)
 {
-    // Throw exception for non-existing key?
     Process processFunction = valueProcessors[valueIterator->first];
+
+	if (processFunction == nullptr)
+		throw std::out_of_range ("Unknown key");
+
     (this->*processFunction)(valueIterator->second);
 }
 
@@ -29,6 +32,19 @@ void MSV11Processor::processPowerSource (iniparser::Value value)
         throw invalid_argument {"Incorrect MSV11 power_source value"};
 }
 
+void MSV11Processor::processStartingAddress (iniparser::Value value)
+{
+	try
+	{
+		msv11ConfigPtr->startingAddress = touint<u32> (value.asString());
+	}
+	catch (std::invalid_argument const &)
+	{
+		throw invalid_argument {"Incorrect address in MSV11 section specified: " + 
+			value.asString()};
+	}
+}
+
 void MSV11Processor::processBank7Lower2kW (iniparser::Value value)
 {
 	try
@@ -41,8 +57,7 @@ void MSV11Processor::processBank7Lower2kW (iniparser::Value value)
 	}
 }
 
-// Check the consistency of the configuration of the MSV11 memory. Currently
-// this is a void.
+// Check the consistency of the configuration of the MSV11 memory.
 void MSV11Processor::checkConsistency ()
 {
 }
