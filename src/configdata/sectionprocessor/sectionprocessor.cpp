@@ -48,8 +48,8 @@ void SectionProcessor::processSection (iniparser::Section* section)
 		}
 		catch (std::out_of_range const &)
 		{
-			throw std::invalid_argument {"Unknown key in section RL: " +  
-				valueIterator->first};
+			throw std::invalid_argument {"Unknown key in section " + 
+				section->name () + ": " + valueIterator->first};
 		}
 	}
 
