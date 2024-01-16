@@ -59,6 +59,7 @@ class IniProcessor
 	};
 
     void processSection (iniparser::Section* section);
+	void checkConfigConsistency ();
 	unique_ptr<SectionProcessor> createBA11_NProcessor ();
 	unique_ptr<SectionProcessor> createBDV11Processor ();
 	unique_ptr<SectionProcessor> createDLV11Processor ();

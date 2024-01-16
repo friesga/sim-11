@@ -140,6 +140,7 @@ set (CONFIGURATOR_SRCS
     src/configdata/iniprocessor/iniprocessor.cpp
     src/configdata/iniprocessor/process.cpp
     src/configdata/iniprocessor/processsection.cpp
+    src/configdata/iniprocessor/checkconfigconsistency.cpp
     src/configdata/iniprocessor/getsystemconfig.cpp
     src/configdata/sectionprocessor/sectionprocessor.cpp
     src/configdata/rlprocessor/rlprocessor.cpp
