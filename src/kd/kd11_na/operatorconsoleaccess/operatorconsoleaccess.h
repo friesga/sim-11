@@ -1,7 +1,7 @@
 #ifndef _OPERATORCONSOLEACCESS_H_
 #define _OPERATORCONSOLEACCESS_H_
 
-#include "../consoleaccess.h"
+#include "kd/include/consoleaccess.h"
 #include "qbus/qbus.h"
 #include "conddata/conddata.h"
 

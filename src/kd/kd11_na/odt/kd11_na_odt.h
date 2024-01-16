@@ -7,7 +7,7 @@
 #include "variantfsm/fsm.h"
 #include "location/location.h"
 #include "conddata/conddata.h"
-#include "../consoleaccess.h"
+#include "kd/include/consoleaccess.h"
 #include "../operatorconsoleaccess/operatorconsoleaccess.h"
 #include "kd/include/cpudata.h"
 
