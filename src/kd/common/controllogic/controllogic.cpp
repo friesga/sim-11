@@ -1,6 +1,6 @@
 #include "controllogic.h"
 #include "qbus/qbus.h"
-#include "kd/kd11_na/operatorconsoleaccess/operatorconsoleaccess.h"
+#include "kd/common/operatorconsoleaccess/operatorconsoleaccess.h"
 
 #include <memory>
 #include <thread>

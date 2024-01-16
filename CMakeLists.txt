@@ -33,6 +33,7 @@ set (KD11COMMON_SRCS
     src/kd/common/eisinstruction/eisinstruction.cpp
     src/kd/common/markinstruction/markinstruction.cpp
     src/kd/common/sobinstruction/sobinstruction.cpp
+    src/kd/common/operatorconsoleaccess/operatorconsoleaccess.cpp
     src/kd/kd11_na/cpucontrol/kd11_nainstruction/kd11_nainstruction.cpp)
 
 set (KD11CONTROLLOGIC_SRCS
@@ -42,7 +43,7 @@ set (KD11CONTROLLOGIC_SRCS
     src/kd/common/controllogic/signalreceivers.cpp
     src/kd/common/controllogic/statemachine.cpp)
 
-set (KD11ODT_SRCS
+set (KD11_NA_ODT_SRCS
     src/kd/kd11_na/odt/kd11_na_odt.cpp
     src/kd/kd11_na/odt/addressopened.cpp
     src/kd/kd11_na/odt/atprompt.cpp
@@ -64,6 +65,21 @@ set (KD11_NA_CPU_SRCS
     src/kd/kd11_na/cpudata/kd11_naregisters/kd11_naregisters.cpp
     src/kd/kd11_na/pseudommu/pseudommu.cpp)
 
+set (KDF11_A_ODT_SRCS
+    src/kd/kdf11_a/odt/kdf11_a_odt.cpp
+    src/kd/kdf11_a/odt/addressopened.cpp
+    src/kd/kdf11_a/odt/atprompt.cpp
+    src/kd/kdf11_a/odt/createevent.cpp
+    src/kd/kdf11_a/odt/enteringaddress.cpp
+    src/kd/kdf11_a/odt/enteringaddressvalue.cpp
+    src/kd/kdf11_a/odt/enteringbinarydump.cpp
+    src/kd/kdf11_a/odt/enteringregister.cpp
+    src/kd/kdf11_a/odt/enteringregistervalue.cpp
+    src/kd/kdf11_a/odt/entrypoint.cpp
+    src/kd/kdf11_a/odt/exitpoint.cpp
+    src/kd/kdf11_a/odt/registeropened.cpp
+    src/kd/kdf11_a/odt/startingregister.cpp)
+
 set (KDF11_A_SRCS
     src/kd/kdf11_a/kdf11_a.cpp
     src/kd/kdf11_a/cpucontrol/kdf11_a_step.cpp
@@ -78,11 +94,10 @@ set (KDF11_A_SRCS
 
  set (KD11_NA_SRCS
     src/kd/kd11_na/kd11_na.cpp
-    src/kd/kd11_na/operatorconsoleaccess/operatorconsoleaccess.cpp
     ${KD11COMMON_SRCS}
     ${KD11CONTROLLOGIC_SRCS}
     ${KD11_NA_CPU_SRCS}
-    ${KD11ODT_SRCS})
+    ${KD11_NA_ODT_SRCS})
 
 set (RLV12_SRCS
     src/rlv12/calccrc.cpp
