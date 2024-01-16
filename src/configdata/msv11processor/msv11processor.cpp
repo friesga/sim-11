@@ -43,12 +43,6 @@ void MSV11Processor::processStartingAddress (iniparser::Value value)
 		throw invalid_argument {"Incorrect address in MSV11 section specified: " + 
 			value.asString()};
 	}
-
-	if (msv11ConfigPtr->startingAddress > 0760000)
-		throw invalid_argument {"MSV11 maximum starting address is 0760000"};
-
-	if (msv11ConfigPtr->startingAddress % 020000 != 0)
-		throw invalid_argument {"MSV11 address must start at 4K boundary"};
 }
 
 void MSV11Processor::processBank7Lower2kW (iniparser::Value value)
@@ -66,6 +60,11 @@ void MSV11Processor::processBank7Lower2kW (iniparser::Value value)
 // Check the consistency of the configuration of the MSV11 memory.
 void MSV11Processor::checkConsistency ()
 {
+	if (msv11ConfigPtr->startingAddress > 0760000)
+		throw invalid_argument {"MSV11 maximum starting address is 0760000"};
+
+	if (msv11ConfigPtr->startingAddress % 020000 != 0)
+		throw invalid_argument {"MSV11 address must start at 4K boundary"};
 }
 
 void MSV11Processor::processSubsection (iniparser::Section *subSection)
