@@ -137,9 +137,12 @@ TEST (MSV11ConfiguratorTest, multipleMSV11SectionsAccepted)
 	std::stringstream stream;
 	stream << "[MSV11]\n"
 		"starting_address = 0\n"
-		"\n"
 		"[MSV11]\n"
-		"starting_address = 020000\n";
+		"starting_address = 0200000\n"
+		"[MSV11]\n"
+		"starting_address = 0400000\n"
+		"[MSV11]\n"
+		"starting_address = 0600000\n";
 	stream >> ft;
 
 	IniProcessor iniProcessor;
@@ -149,7 +152,7 @@ TEST (MSV11ConfiguratorTest, multipleMSV11SectionsAccepted)
 		iniProcessor.getSystemConfig ();
 
 	// Verify the vector contains two device configurations
-	ASSERT_EQ (systemConfig.size (), 2);
+	ASSERT_EQ (systemConfig.size (), 4);
 
 	// The only device types in this testset shoiuld be the MSV11's
 	ASSERT_EQ (systemConfig[0]->deviceType_, DeviceType::MSV11);
@@ -162,7 +165,7 @@ TEST (MSV11ConfiguratorTest, multipleMSV11SectionsAccepted)
 
 	// And the section section should have starting address 020000
 	msv11Config = static_pointer_cast<MSV11Config> (systemConfig[1]);
-	EXPECT_EQ (msv11Config->startingAddress, 020000);
+	EXPECT_EQ (msv11Config->startingAddress, 0200000);
 }
 
 TEST (MSV11ConfiguratorTest, maxNrOfCardsExceededThrows)
@@ -172,13 +175,13 @@ TEST (MSV11ConfiguratorTest, maxNrOfCardsExceededThrows)
 	stream << "[MSV11]\n"
 		"starting_address = 0\n"
 		"[MSV11]\n"
-		"starting_address = 020000\n"
+		"starting_address = 0200000\n"
 		"[MSV11]\n"
-		"starting_address = 040000\n"
+		"starting_address = 0400000\n"
 		"[MSV11]\n"
-		"starting_address = 060000\n"
+		"starting_address = 0600000\n"
 		"[MSV11]\n"
-		"starting_address = 0100000\n";
+		"starting_address = 0\n";
 	stream >> ft;
 
 	IniProcessor iniProcessor;
@@ -191,6 +194,33 @@ TEST (MSV11ConfiguratorTest, maxNrOfCardsExceededThrows)
 	catch (std::out_of_range const &except)
 	{
 		EXPECT_STREQ (except.what(), "Maximum number of MSV11 cards (4) exceeded");
+	}
+	catch (...)
+	{
+		FAIL();
+	}
+}
+
+TEST (MSV11ConfiguratorTest, conflictingAddressesThrows)
+{
+	iniparser::File ft;
+	std::stringstream stream;
+	stream << "[MSV11]\n"
+		"starting_address = 0\n"
+		"[MSV11]\n"
+		"starting_address = 020000\n";
+	stream >> ft;
+
+	IniProcessor iniProcessor;
+
+	try
+	{
+		iniProcessor.process (ft);
+		FAIL();
+	}
+	catch (std::invalid_argument const &except)
+	{
+		EXPECT_STREQ (except.what(), "MSV11 starting address conflict");
 	}
 	catch (...)
 	{

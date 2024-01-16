@@ -3,6 +3,7 @@
 
 #include "iniparser.h"
 #include "../sectionprocessor/sectionprocessor.h"
+#include "configdata/msv11config/msv11config.h"
 
 #include <map>
 #include <memory>
@@ -60,6 +61,9 @@ class IniProcessor
 
     void processSection (iniparser::Section* section);
 	void checkConfigConsistency ();
+	bool conflictsWith (shared_ptr<MSV11Config> msv11Card1, 
+    shared_ptr<MSV11Config> msv11Card2);
+	bool isWithin (u32 address, u32 begin, u32 end);
 	unique_ptr<SectionProcessor> createBA11_NProcessor ();
 	unique_ptr<SectionProcessor> createBDV11Processor ();
 	unique_ptr<SectionProcessor> createDLV11Processor ();
