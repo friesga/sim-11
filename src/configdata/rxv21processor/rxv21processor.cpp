@@ -1,3 +1,4 @@
+#include "types.h"
 #include "rxv21processor.h"
 #include "../rxv21unitprocessor/rxv21unitprocessor.h"
 
@@ -22,7 +23,7 @@ void RXV21Processor::processAddress (iniparser::Value value)
 {
 	try
 	{
-		rxConfigPtr->address = touint16_t (value.asString());
+		rxConfigPtr->address = touint<u16> (value.asString());
 	}
 	catch (std::invalid_argument const &)
 	{
@@ -35,7 +36,7 @@ void RXV21Processor::processVector (iniparser::Value value)
 { 
 	try
 	{
-		rxConfigPtr->vector = touint16_t (value.asString());
+		rxConfigPtr->vector = touint<u16> (value.asString());
 	}
 	catch (std::invalid_argument const &)
 	{

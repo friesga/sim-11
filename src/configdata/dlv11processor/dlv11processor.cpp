@@ -23,7 +23,7 @@ void DLV11Processor::processAddress (iniparser::Value value)
 {
 	try
 	{
-		dlv11ConfigPtr->baseAddress = touint16_t (value.asString());
+		dlv11ConfigPtr->baseAddress = touint<u16> (value.asString());
 	}
 	catch (std::invalid_argument const &)
 	{
@@ -36,7 +36,7 @@ void DLV11Processor::processVector (iniparser::Value value)
 { 
 	try
 	{
-		dlv11ConfigPtr->vector = touint16_t (value.asString());
+		dlv11ConfigPtr->vector = touint<u16> (value.asString());
 	}
 	catch (invalid_argument const &)
 	{

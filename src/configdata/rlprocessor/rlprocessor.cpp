@@ -39,7 +39,7 @@ void RLProcessor::processAddress (iniparser::Value value)
 {
 	try
 	{
-		rlConfigPtr->address = touint16_t (value.asString());
+		rlConfigPtr->address = touint<u16> (value.asString());
 	}
 	catch (std::invalid_argument const &)
 	{
@@ -52,7 +52,7 @@ void RLProcessor::processVector (iniparser::Value value)
 { 
 	try
 	{
-		rlConfigPtr->vector = touint16_t (value.asString());
+		rlConfigPtr->vector = touint<u16> (value.asString());
 	}
 	catch (std::invalid_argument const &)
 	{

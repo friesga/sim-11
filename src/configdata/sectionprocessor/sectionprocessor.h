@@ -16,9 +16,7 @@ class SectionProcessor
     virtual void processSubsection (iniparser::Section *subSection) = 0;
 
 protected:
-    template <typename T>
-    T touint (string number);
-    uint16_t touint16_t (string number);
+    template <typename T> T touint (string number);
     size_t unitNumberFromSectionName (string name);
 
 public:
