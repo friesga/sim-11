@@ -90,7 +90,8 @@ set (KDF11_A_SRCS
     src/kd/kdf11_a/kdf11_ainstruction/kdf11_ainstruction.cpp
     src/kd/kdf11_a/kdf11_ainstruction/opcodetables.cpp
     src/kd/kdf11_a/ktf11_a/ktf11_a.cpp
-    src/kd/kdf11_a/ktf11_a/ktf11_abusdevice.cpp)
+    src/kd/kdf11_a/ktf11_a/ktf11_abusdevice.cpp
+    ${KDF11_A_ODT_SRCS})
 
  set (KD11_NA_SRCS
     src/kd/kd11_na/kd11_na.cpp

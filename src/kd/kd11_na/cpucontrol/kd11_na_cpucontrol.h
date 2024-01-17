@@ -14,10 +14,6 @@
 
 using std::function;
 
-// Forward declarations to be able to declare these classes as friends
-class KD11_NA_ODT;
-class KD11_NA;
-
 #define USE_FLOAT
 
 // Two different LSI-models exist, the LSI-11 and the LSI-11/2. The LSI-11

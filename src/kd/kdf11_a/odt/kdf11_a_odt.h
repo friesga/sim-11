@@ -1,5 +1,5 @@
-#ifndef _KD11_NA_ODT_H_
-#define _KD11_NA_ODT_H_
+#ifndef _KDF11_A_ODT_H_
+#define _KDF11_A_ODT_H_
 
 #include "kd/include/kd11odt.h"
 #include "qbus/qbus.h"
@@ -17,16 +17,16 @@ using std::unique_ptr;
 using std::string;
 using std::monostate;
 
-class KD11_NA_ODT : public KD11ODT
+class KDF11_A_ODT : public KD11ODT
 {
 public:
-    KD11_NA_ODT (Qbus* bus, CpuData* cpuData, CpuControl* cpuControl,
+    KDF11_A_ODT (Qbus* bus, CpuData* cpuData, CpuControl* cpuControl,
         MMU* mmu, unique_ptr<ConsoleAccess> consoleAccess);
 
     // Definition of the function required by the KD11ODT interface
     bool processCharacter (u8 character) override;
 
-    static unique_ptr<KD11_NA_ODT> createODT (Qbus *bus, CpuData* cpuData,
+    static unique_ptr<KDF11_A_ODT> createODT (Qbus *bus, CpuData* cpuData,
         CpuControl* cpuControl, MMU* mmu, unique_ptr<ConsoleAccess> consoleAccess);
 
 private:
@@ -157,10 +157,10 @@ private:
     void startCPU (u16 address);
 };
 
-class KD11_NA_ODT::StateMachine : public variantFsm::Fsm<StateMachine, Event, State>
+class KDF11_A_ODT::StateMachine : public variantFsm::Fsm<StateMachine, Event, State>
 {
 public:
-    StateMachine (KD11_NA_ODT* context);
+    StateMachine (KDF11_A_ODT* context);
     // Definition of entry actions and state transitions for valid characters.
     // Invalid characters cause the default transition defined below to occur.
     // 
@@ -264,12 +264,12 @@ public:
     template <typename S> void entry (S&) {}
 
 private:
-    KD11_NA_ODT* context_;
+    KDF11_A_ODT* context_;
 };
 
-inline KD11_NA_ODT::StateMachine::StateMachine (KD11_NA_ODT* context)
+inline KDF11_A_ODT::StateMachine::StateMachine (KDF11_A_ODT* context)
     :
     context_ {context}
 {}
 
-#endif // _KD11_NA_ODT_H_
+#endif // _KDF11_A_ODT_H_

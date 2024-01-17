@@ -12,9 +12,6 @@
 
 #include <functional>
 
-// Forward declarations to be able to declare these classes as friends
-class KD11_NA_ODT;
-class KD11_NA;
 
 #define USE_FLOAT
 

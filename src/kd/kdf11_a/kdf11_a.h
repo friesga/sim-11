@@ -3,7 +3,7 @@
 
 #include "kd/include/pdp11processor.h"
 #include "kd/kdf11_a/cpucontrol/kdf11_a_cpucontrol.h"
-#include "kd/kd11_na/odt/kd11_na_odt.h"
+#include "kd/kdf11_a/odt/kdf11_a_odt.h"
 #include "configdata/kdf11_aconfig/kdf11_aconfig.h"
 #include "kd/common/controllogic/controllogic.h"
 #include "kd/kdf11_a/cpudata/kdf11_acpudata.h"
@@ -46,7 +46,7 @@ private:
     KDF11_ACpuData cpuData_ {};
     KTF11_A mmu_ {bus_, &cpuData_};
     KDF11_A_CpuControl cpuControl_ {bus_, &cpuData_, &mmu_};
-    unique_ptr<KD11_NA_ODT>	odt_ {};
+    unique_ptr<KDF11_A_ODT>	odt_ {};
     KDF11_AConfig::PowerUpMode powerUpMode_;
     u16 startAddress_;
     unique_ptr<ControlLogic> controlLogic_;
