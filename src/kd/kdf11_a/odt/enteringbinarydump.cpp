@@ -1,4 +1,5 @@
 #include "kdf11_a_odt.h"
+#include "busaddress/busaddress.h"
 
 // This command is used for manufacturing test purposes and is not a normal
 // user command. [...] The protocol is as follows:
@@ -18,6 +19,12 @@
 //
 // (Microcomputer and Memories EB-20912-20)
 //
+// Micronote 050 states the following difference with KD11-NA ODT:
+// "Control-Shift-S command mode (ASCII 23) accepts 2 bytes forming an 18-bit
+// address with bits (17:16) always zeroes and dumps 10 bytes in binary
+// format." This implies a difference on adressing the I/O page. On the
+// KD11-NA addresses above 0160000 would access the I/O page while on the
+// KDF11-A they would access memory.
 KDF11_A_ODT::State KDF11_A_ODT::StateMachine::transition (AtPrompt_1 &&, BinaryDumpCmdEntered)
 {
     // Expect two bytes and transform it into the starting address.
@@ -29,7 +36,8 @@ KDF11_A_ODT::State KDF11_A_ODT::StateMachine::transition (AtPrompt_1 &&, BinaryD
     // Dump 10 bytes i.e. 5 words as binaries
     for (size_t numWords = 0; numWords < 5; ++numWords)
     {
-        context_->console_->write (context_->bus_->read (startAddress));
+        context_->console_->write (context_->bus_->read (BusAddress (startAddress,
+            BusAddress::Width::_18Bit)));
         startAddress += 2;
     }
 
