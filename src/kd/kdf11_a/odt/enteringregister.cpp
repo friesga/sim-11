@@ -64,9 +64,7 @@ KDF11_A_ODT::State KDF11_A_ODT::StateMachine::transition (EnteringRegister_6 &&,
         // Open PSW. Only set it as a new open location if it wasn't already
         // the open location. This way the previously opened memory or
         // register location can be accessed, even if the PSW is openend
-        // multiple times. This is used in the processing of the at sign
-        // command for an opened PSW (see the gtransition from
-        // EnteringRegisterValue_8 for the AtSignCmdEntered event).
+        // multiple times.
         context_->writeString (context_->octalNumberToString (context_->cpuData_->psw ()) + ' ');
         if (!context_->location_.isA<PSWLocation> ())
             context_->location_ = PSWLocation {};

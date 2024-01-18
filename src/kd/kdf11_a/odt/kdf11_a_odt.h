@@ -56,7 +56,6 @@ private:
 
     // The following commands are only implemented in the LSI-11 (KD11-F
     // processor) ODT and are not implemented in the PDP-11/23 (KDF11 processor).
-    struct AtSignCmdEntered {};                 // @
     struct BackArrowCmdEntered {};              // Back arrow (ASCII 137)
     struct RuboutEntered {};                    // Rubout (ASCII 177)
     struct MaintenanceCmdEntered {};            // M
@@ -104,7 +103,6 @@ private:
         PswDesignatorEntered,
         BinaryDumpCmdEntered,
         ExitCmdGiven,
-        AtSignCmdEntered,
         BackArrowCmdEntered,
         RuboutEntered,
         MaintenanceCmdEntered>;
@@ -185,7 +183,6 @@ public:
     State transition (AddressOpened_3&&, RuboutEntered);                           // -> EnteringAddressValue_7
     State transition (AddressOpened_3&&, CloseLocationCmdEntered);                 // -> AtPrompt_1
     State transition (AddressOpened_3&&, OpenNextLocationCmdEntered);              // -> AddressOpened_3
-    State transition (AddressOpened_3&&, AtSignCmdEntered);                        // -> AddressOpened_3
     State transition (AddressOpened_3&&, BackArrowCmdEntered);                     // -> AddressOpened_3
     State transition (AddressOpened_3&&, RegisterCmdEntered);                      // -> StartingRegister_2
 
@@ -193,7 +190,6 @@ public:
     State transition (EnteringAddressValue_7&&, RuboutEntered);                    // -> EnteringAddressValue_7
     State transition (EnteringAddressValue_7&&, CloseLocationCmdEntered);          // -> AtPrompt_1
     State transition (EnteringAddressValue_7&&, OpenNextLocationCmdEntered);       // -> AddressOpened_3
-    State transition (EnteringAddressValue_7&&, AtSignCmdEntered);                 // -> AddressOpened_3
     State transition (EnteringAddressValue_7&&, BackArrowCmdEntered);              // -> AddressOpened_3
     State transition (EnteringAddressValue_7&&, OpenLocationCmdEntered);           // -> AddressOpened_3
 
@@ -211,7 +207,6 @@ public:
     State transition (RegisterOpened_4&&, DigitEntered);                           // -> EnteringRegisterValue_8
     State transition (RegisterOpened_4&&, RuboutEntered);                          // -> RegisterOpened_4
     State transition (RegisterOpened_4&&, OpenNextLocationCmdEntered);             // -> RegisterOpened_4/AtPrompt_1
-    State transition (RegisterOpened_4&&, AtSignCmdEntered);                       // -> AddressOpened_3
     State transition (RegisterOpened_4&&, BackArrowCmdEntered);                    // -> AtPrompt_1
     State transition (RegisterOpened_4&&, RegisterCmdEntered);                     // -> StartingRegister_2
 
@@ -220,7 +215,6 @@ public:
     State transition (EnteringRegisterValue_8&&, CloseLocationCmdEntered);         // -> AtPrompt_1
     State transition (EnteringRegisterValue_8&&, OpenLocationCmdEntered);          // -> AddressOpened_3
     State transition (EnteringRegisterValue_8&&, OpenNextLocationCmdEntered);      // -> EnteringRegisterValue_8/AtPrompt_1
-    State transition (EnteringRegisterValue_8&&, AtSignCmdEntered);                // -> AddressOpened_3
     State transition (EnteringRegisterValue_8&&, BackArrowCmdEntered);             // -> AtPrompt_1
 
     void entry (ExitPoint);

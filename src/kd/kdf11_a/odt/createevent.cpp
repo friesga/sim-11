@@ -40,9 +40,6 @@ KDF11_A_ODT::Event KDF11_A_ODT::createEvent (CondData<u8> c)
         case '7':
             return DigitEntered {c};
 
-        case '@':
-            return AtSignCmdEntered {};
-
         case 'G':
             // Go command
             return GoCmdEntered {};

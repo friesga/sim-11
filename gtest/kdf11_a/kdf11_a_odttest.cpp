@@ -209,22 +209,32 @@ TEST_F (KDF11_A_ODTTest, BinaryDumpReturnsBytes)
     executeSequence (testSequence);
 }
 
-// This test comprises the commands implemented in just the KD11-F (LSI-11)
-// processors
+// This test comprises the commands implemented in just the KD11-NA (LSI-11)
+// processors. On the KDF11-A these commands will return an error.
 TEST_F (KDF11_A_ODTTest, KD11FOnlyCommands)
 {
     vector<TestSequence> testSequences =
     {
-        {"10/@\rP",                 "\n000000\n@10/000000 @\n000000/000000 \r\n@",
-            "At sign opens indirect address"},
-        {"10/11\r10/@\rP",          "\n000000\n@10/000000 11\r\n@10/000011 @\n000011/000011 \r\n@",
-            "At sign opens indirect byte address"},
-        {"10/200@\r10/\rP",         "\n000000\n@10/000000 200@\n000200/000000 \r\n@10/000200 \r\n@",
-            "New address value can be entered with at sign"},
-        {"R0/@\rP",                 "\n000000\n@R0/000000 @\n000000/000000 \r\n@",
-            "At sign on register opens indirect address"},
-        {"R0/1\rR0/@\rP",           "\n000000\n@R0/000000 1\r\n@R0/000001 @\n000001/000000 \r\n@",
-            "At sign on register opens indirect byte address"},
+        {"10/^\rP",                 "\n000000\n@10/000000 ^?\n@",
+            "Up arrow (^) on open location returns error"},
+        {"10/10^P",          "\n000000\n@10/000000 10^?\n@",
+            "Error on Up arrow when entering new address value"},
+        {"R0/^\rP",                 "\n000000\n@R0/000000 ^?\n@",
+            "Up arrow on open register returns error"},
+        {"RS/^\rP",                 "\n000000\n@RS/000000 ^?\n@",
+            "Up arrow on opened PSW returns error"},
+        {"R1/10^\rR1/\rP",          "\n000000\n@R1/000000 10^?\n@",
+            "Error on Up arrow when entering new register value"},
+        {"RS/10^RS/\rP",            "\n000000\n@RS/000000 10^?\n@",
+            "Error on Up arrow when entering new PSW value"},
+        {"10/@\rP",                 "\n000000\n@10/000000 @?\n@",
+            "At sign returns error"},
+        {"10/200@\rP",         "\n000000\n@10/000000 200@?\n@",
+            "Error at at sign when entering new address value"},
+        {"R0/@\rP",                 "\n000000\n@R0/000000 @?\n@",
+            "At sign on register returns error"},
+
+/*
         {"R0/200@\rR0/\rP",         "\n000000\n@R0/000000 200@\n000200/000000 \r\n@R0/000200 \r\n@",
             "New register value can be entered with at sign"},
         {"RS/@\rP",                 "\n000000\n@RS/000000 @\n000000/000000 \r\n@",
@@ -241,6 +251,8 @@ TEST_F (KDF11_A_ODTTest, KD11FOnlyCommands)
             "New register value can be entered with at sign and sets last address location"},
         {"100/100\rRS/4@\r/\rP",    "\n000000\n@100/000000 100\r\n@RS/000000 4@\n000100/000100 \r\n@/000100 \r\n@",
             "New register value can be entered with at sign and keeps last address location"},
+
+*/
         {"1000/_\rP",               "\n000000\n@1000/000000 _\n001002/000000 \r\n@",
             "New address can be opened with back arrow"},
          {"1001/_\rP",               "\n000000\n@1001/000000 _\n001002/000000 \r\n@",

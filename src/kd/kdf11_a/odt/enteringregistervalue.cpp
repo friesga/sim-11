@@ -50,46 +50,6 @@ KDF11_A_ODT::State KDF11_A_ODT::StateMachine::transition (EnteringRegisterValue_
         [this] () {return (context_->location_.registerNr () + 1) % 8;}));
 }
 
-// If used on the PS, the command will modify the PS if data has
-// been typed and close it; however, the last GPR or memory location
-// contents will be used as a pointer. (LSI11 PDP11/03 Processor Handbook)
-// 
-// Test runs on a real LSI-11/2 show that the last sentence has to be read
-// as: "the last GPR contents or memory location contents will be used as a
-// pointer".
-// 
-// In case there is no previously opened location an error is retuned on
-// opening the location.
-KDF11_A_ODT::State KDF11_A_ODT::StateMachine::transition (EnteringRegisterValue_8 &&, AtSignCmdEntered)
-{
-    context_->writeString ("\n"); 
-    context_->setRegisterValue ();
-    u16 addressToOpen {0};
-    if (context_->location_.isA<RegisterLocation> ())
-        addressToOpen = context_->cpuData_->registers () [context_->location_.registerNr ()];
-    else
-    {
-        // The PSW is opened
-        assert (context_->location_.isA<PSWLocation> ());
-        
-        // In case there is no currently open location print the error indication
-        if (context_->location_.previousIsA<monostate> ())
-        {
-            context_->writeString ("@/?\n");
-            return AtPrompt_1 {};
-        }
-
-        // In case the previously opened location was an
-        // address, the address to open is that address; in case the
-        // previously openend location was a register the contents of that
-        // address is the location to open.
-        if (context_->location_.previousIsA<AddressLocation> ())
-            addressToOpen = context_->location_.previousInputAddress ();
-        else
-            addressToOpen = context_->cpuData_->registers () [context_->location_.previousRegisterNr ()];
-    }
-    return context_->openNextAddress ([=] () {return addressToOpen;});
-}
 
 // Note that this [back arrow] command cannot be used if a GPR or the PS is
 // the open location and if attempted, the command will modify the GPR

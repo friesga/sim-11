@@ -37,18 +37,6 @@ KDF11_A_ODT::State KDF11_A_ODT::StateMachine::transition (AddressOpened_3 &&, Op
     return context_->openNextAddress ([this] () {return context_->location_.inputAddress () + 2;});
 }
 
-// Once a location has been opened, the @ command is used to close
-// that location and open a second location, using the contents of the first
-// location as an indirect address to the second location. That is, the
-// contents of the first location point to the second location to be opened.
-// The contents of the first location can be modified before the @ command
-// is used. (Microcomputer and Memories Chapter 7)
-KDF11_A_ODT::State KDF11_A_ODT::StateMachine::transition (AddressOpened_3 &&, AtSignCmdEntered)
-{
-    context_->writeString ("\n");
-    return context_->openNextAddress ([this] () {return context_->bus_->read (context_->location_.inputAddress ());});
-}
-
 // This command is used once a location has been opened to open
 // the location that is the address of the contents of the open location
 // plus the address of the open location plus 2. 

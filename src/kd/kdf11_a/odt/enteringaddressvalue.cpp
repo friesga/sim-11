@@ -51,16 +51,6 @@ KDF11_A_ODT::State KDF11_A_ODT::StateMachine::transition (EnteringAddressValue_7
     return context_->openNextAddress ([this] () {return context_->location_.inputAddress () + 2;});
 }
 
-// Also the open location can be optionally modified similar to other commands
-// and if done, the new contents will be used as the pointer.
-// (LSI11 PDP11/03 Processor Handbook)
-KDF11_A_ODT::State KDF11_A_ODT::StateMachine::transition (EnteringAddressValue_7 &&, AtSignCmdEntered)
-{
-    context_->writeString ("\n");
-    context_->setAddressValue ();
-    return context_->openNextAddress ([this] () {return context_->newValue_;});
-}
-
 KDF11_A_ODT::State KDF11_A_ODT::StateMachine::transition (EnteringAddressValue_7 &&, BackArrowCmdEntered)
 {
     context_->writeString ("\n");

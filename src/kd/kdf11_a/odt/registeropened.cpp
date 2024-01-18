@@ -42,16 +42,6 @@ KDF11_A_ODT::State KDF11_A_ODT::StateMachine::transition (RegisterOpened_4 &&cur
         [this] () {return (context_->location_.registerNr () + 1) % 8;}));
 }
 
-KDF11_A_ODT::State KDF11_A_ODT::StateMachine::transition (RegisterOpened_4 &&currentState, AtSignCmdEntered)
-{
-    context_->writeString ("\n");
-    return context_->openNextAddress ([this] () 
-    {
-        return context_->location_.isA<RegisterLocation> () ?
-            context_->cpuData_->registers() [context_->location_.registerNr ()] : context_->cpuData_->psw ();
-    });
-}
-
 // Note that this [back arrow] command cannot be used if a GPR or the PS is
 // the open location and if attempted, the command will modify the GPR
 // or PS if data has been typed, and close the GPR or PS; then a CR,
