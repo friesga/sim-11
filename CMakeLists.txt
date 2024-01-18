@@ -396,6 +396,7 @@ set (GTEST_SRCS
     gtest/kdf11_a/kdf11_a_pswregistertest.cpp
     gtest/kdf11_a/kdf11_aregisterstest.cpp
     gtest/kdf11_a/kdf11_abusdevicetest.cpp
+    gtest/kdf11_a/kdf11_a_odttest.cpp
     gtest/locationtest.cpp
     gtest/msv11configuratortest.cpp
     gtest/operandlocationtest.cpp

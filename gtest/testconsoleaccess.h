@@ -31,7 +31,7 @@ private:
     queue<char> outputBuffer_;
 };
 
-TestConsoleAccess::TestConsoleAccess (string inputString)
+inline TestConsoleAccess::TestConsoleAccess (string inputString)
     :
     inputBuffer_ {move (inputString)},
     inputIter_ {inputBuffer_.begin ()}
@@ -44,20 +44,20 @@ inline bool TestConsoleAccess::available ()
 
 // Read a character from the test console. The function gets the character
 // from the supplied string.
-CondData<u8> TestConsoleAccess::read ()
+inline CondData<u8> TestConsoleAccess::read ()
 {
     return *inputIter_++;
 }
 
 // Write a character to the test console. The function put the character in
 // an outputbuffer from which it can be retrieved by getCharacter().
-void TestConsoleAccess::write (u8 c)
+inline void TestConsoleAccess::write (u8 c)
 {
     outputBuffer_.push (c);
 }
 
 // Get the next character waiting to be written to the console
-char TestConsoleAccess::getCharacter ()
+inline char TestConsoleAccess::getCharacter ()
 {
     char c;
     c = outputBuffer_.front ();
