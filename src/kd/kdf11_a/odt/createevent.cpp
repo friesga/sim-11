@@ -59,13 +59,6 @@ KDF11_A_ODT::Event KDF11_A_ODT::createEvent (CondData<u8> c)
         case 'S':
             return PswDesignatorEntered {};
 
-        case BS:
-            // On VT100 compatible terminals, this is the character produced
-            // by the key marked "<=". On modern machines it is called
-            // backspace and doesn't match the PC delete key.
-            // (https://www.asciihex.com/character/control/127/0x7F/del-delete-character)
-            return RuboutEntered {};
-
         case ';':
             // The semicolon is accepted for PDP-11 ODT compatibility. If the
             // semicolon character is received during any character sequence,

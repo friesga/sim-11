@@ -26,25 +26,6 @@ KDF11_A_ODT::State KDF11_A_ODT::StateMachine::transition (EnteringRegister_6 &&,
     }
 }
 
-// The RUBOUT command cannot be used while entering a register number.
-// R2\4/012345 will not open register R4; however the RUBOUT command will
-// cause ODT to revert to memory mode and open location 4.
-// (LSI11 PDP11/03 Processor Handbook)
-//
-// This implies that on a RUBOUT a transition to the AddressOpened_3 state
-// has to performed. A RuboutEntered event can only be triggered when one
-// digit has been entered as a second digit will already have caused a
-// transition to the EnteringAddress_5 state. So on a RuboutEntered event
-// in this (i.e. the EnteringRegister_6) state, both registerSeries_ and
-// digitSeries_ have to be cleared.
-KDF11_A_ODT::State KDF11_A_ODT::StateMachine::transition (EnteringRegister_6 &&, RuboutEntered)
-{
-    context_->console_->write ('\\');
-    context_->registerSeries_.clear ();
-    context_->digitSeries_.clear ();
-    return EnteringAddress_5 {};
-}
-
 KDF11_A_ODT::State KDF11_A_ODT::StateMachine::transition (EnteringRegister_6 &&, PswDesignatorEntered)
 {
     context_->registerSeries_.push_back (PswDesignator);

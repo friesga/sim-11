@@ -56,7 +56,6 @@ private:
 
     // The following commands are only implemented in the LSI-11 (KD11-F
     // processor) ODT and are not implemented in the PDP-11/23 (KDF11 processor).
-    struct RuboutEntered {};                    // Rubout (ASCII 177)
     struct MaintenanceCmdEntered {};            // M
 
     // OOT has 10 internal states, with each state having its own set of valid
@@ -102,7 +101,6 @@ private:
         PswDesignatorEntered,
         BinaryDumpCmdEntered,
         ExitCmdGiven,
-        RuboutEntered,
         MaintenanceCmdEntered>;
 
     using State = std::variant<EntryPoint,
@@ -172,41 +170,34 @@ public:
     State transition (AtPrompt_1&&, MaintenanceCmdEntered);                        // -> AtPrompt_1
 
     State transition (EnteringAddress_5&&, DigitEntered);                          // -> EnteringAddress_5
-    State transition (EnteringAddress_5&&, RuboutEntered);                         // -> EnteringAddress_5
     State transition (EnteringAddress_5&&, OpenLocationCmdEntered);                // -> AddressOpened_3
     State transition (EnteringAddress_5&&, GoCmdEntered);                          // -> ExitPoint
     State transition (EnteringAddress_5&&, CloseLocationCmdEntered);               // -> AtPrompt_1
 
     State transition (AddressOpened_3&&, DigitEntered);                            // -> EnteringAddressValue_7
-    State transition (AddressOpened_3&&, RuboutEntered);                           // -> EnteringAddressValue_7
     State transition (AddressOpened_3&&, CloseLocationCmdEntered);                 // -> AtPrompt_1
     State transition (AddressOpened_3&&, OpenNextLocationCmdEntered);              // -> AddressOpened_3
     State transition (AddressOpened_3&&, RegisterCmdEntered);                      // -> StartingRegister_2
 
     State transition (EnteringAddressValue_7&&, DigitEntered);                     // -> EnteringAddressValue_7
-    State transition (EnteringAddressValue_7&&, RuboutEntered);                    // -> EnteringAddressValue_7
     State transition (EnteringAddressValue_7&&, CloseLocationCmdEntered);          // -> AtPrompt_1
     State transition (EnteringAddressValue_7&&, OpenNextLocationCmdEntered);       // -> AddressOpened_3
     State transition (EnteringAddressValue_7&&, OpenLocationCmdEntered);           // -> AddressOpened_3
 
     State transition (StartingRegister_2&&, DigitEntered);                         // -> EnteringRegister_6
-    State transition (StartingRegister_2&&, RuboutEntered);                        // -> EnteringAddress_5
     State transition (StartingRegister_2&&, PswDesignatorEntered);                 // -> EnteringRegister_6
 
     State transition (EnteringRegister_6&&, DigitEntered);                         // -> EnteringRegister_6
-    State transition (EnteringRegister_6&&, RuboutEntered);                        // -> EnteringAddress_5
     State transition (EnteringRegister_6&&, PswDesignatorEntered);                 // -> EnteringRegister_6
     State transition (EnteringRegister_6&&, OpenLocationCmdEntered);               // -> RegisterOpenend_4
     State transition (EnteringRegister_6&&, CloseLocationCmdEntered);              // -> AtPrompt_1
 
     State transition (RegisterOpened_4&&, CloseLocationCmdEntered);                // -> AtPrompt_1
     State transition (RegisterOpened_4&&, DigitEntered);                           // -> EnteringRegisterValue_8
-    State transition (RegisterOpened_4&&, RuboutEntered);                          // -> RegisterOpened_4
     State transition (RegisterOpened_4&&, OpenNextLocationCmdEntered);             // -> RegisterOpened_4/AtPrompt_1
     State transition (RegisterOpened_4&&, RegisterCmdEntered);                     // -> StartingRegister_2
 
     State transition (EnteringRegisterValue_8&&, DigitEntered);                    // -> EnteringRegisterValue_8
-    State transition (EnteringRegisterValue_8&&, RuboutEntered);                   // -> EnteringRegisterValue_8
     State transition (EnteringRegisterValue_8&&, CloseLocationCmdEntered);         // -> AtPrompt_1
     State transition (EnteringRegisterValue_8&&, OpenLocationCmdEntered);          // -> AddressOpened_3
     State transition (EnteringRegisterValue_8&&, OpenNextLocationCmdEntered);      // -> EnteringRegisterValue_8/AtPrompt_1

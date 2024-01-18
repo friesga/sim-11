@@ -6,19 +6,6 @@ KDF11_A_ODT::State KDF11_A_ODT::StateMachine::transition (AddressOpened_3 &&, Di
     return EnteringAddressValue_7 {};
 }
 
-// A RUBOUT is entered while there is no digit for the new value entered.
-// Echo a backslash character, put a '0' in the digitSeries_ buffer and
-// transition to the EnteringAddressValue_7 state. This way the default
-// new value will be zero when more characters are erased than are available
-// in the buffer. See the comment at the RuboutEntered transition in the
-// EnteringAddressValue_7 state.
-KDF11_A_ODT::State KDF11_A_ODT::StateMachine::transition (AddressOpened_3 &&, RuboutEntered)
-{
-    context_->console_->write ('\\');
-    context_->digitSeries_ = '0';
-    return EnteringAddressValue_7 {};
-}
-
 // This file contains the state transitions for the state AddressOpened_3.
 KDF11_A_ODT::State KDF11_A_ODT::StateMachine::transition (AddressOpened_3 &&, CloseLocationCmdEntered)
 {

@@ -18,13 +18,6 @@ KDF11_A_ODT::State KDF11_A_ODT::StateMachine::transition (StartingRegister_2 &&,
     return EnteringRegister_6 {};
 }
 
-// See comment on KDF11_A_ODT::transition (EnteringRegister_6 &&, RuboutEntered)
-KDF11_A_ODT::State KDF11_A_ODT::StateMachine::transition (StartingRegister_2 &&, RuboutEntered)
-{
-    context_->console_->write ('\\');
-    return EnteringAddress_5 {};
-}
-
 KDF11_A_ODT::State KDF11_A_ODT::StateMachine::transition (StartingRegister_2 &&, PswDesignatorEntered)
 {
     context_->registerSeries_.push_back (PswDesignator);

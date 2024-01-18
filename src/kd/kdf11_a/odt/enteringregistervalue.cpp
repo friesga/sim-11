@@ -11,24 +11,6 @@ KDF11_A_ODT::State KDF11_A_ODT::StateMachine::transition (EnteringRegisterValue_
     return EnteringRegisterValue_8 {};
 }
 
-// See the comment at the equivalent EnteringAddressValue_7 state
-KDF11_A_ODT::State KDF11_A_ODT::StateMachine::transition (EnteringRegisterValue_8 &&currentState, RuboutEntered)
-{
-    // We expect there always is at least one character in the digitSeries_
-    // buffer available. This either is a digit entered by the user or a '0'
-    // in case the user has typed a RUBOUT in the AddressOpened_3 state.
-    assert (!context_->digitSeries_.empty ());
-
-    // Echo a backslash and remove the last entered character. If the 
-    // digitSeries_ is now empty replace it with a '0'.
-    context_->console_->write ('\\');
-    context_->digitSeries_.pop_back ();
-    if (context_->digitSeries_.empty ())
-        context_->digitSeries_.push_back ('0');
-
-    return move (currentState);
-}
-
 KDF11_A_ODT::State KDF11_A_ODT::StateMachine::transition (EnteringRegisterValue_8 &&, CloseLocationCmdEntered)
 {   
     context_->setRegisterValue ();

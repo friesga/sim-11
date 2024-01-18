@@ -14,13 +14,6 @@ KDF11_A_ODT::State KDF11_A_ODT::StateMachine::transition (RegisterOpened_4 &&, D
     return EnteringRegisterValue_8 {};
 }
 
-KDF11_A_ODT::State KDF11_A_ODT::StateMachine::transition (RegisterOpened_4 &&, RuboutEntered)
-{
-    context_->console_->write ('\\');
-    context_->digitSeries_ = '0';
-    return EnteringRegisterValue_8 {};
-}
-
 // This [<LF>] command is used to close an open location or GPR (general
 // purpose register). If entered after a location has been opened, it will
 // close the open location or GPR and open location+2 or GPR+1. If the
