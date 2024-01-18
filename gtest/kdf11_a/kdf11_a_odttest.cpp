@@ -248,8 +248,8 @@ TEST_F (KDF11_A_ODTTest, KD11FOnlyCommands)
 
         {"2/177777\r0/2/\rP",       "\n000000\n@2/000000 177777\r\n@0/000000 2/177777 \r\n@", 
             "Address location can be opened without closing first location"},
-        {"MP",                          "\n000000\n@M000010\n@",
-            "Maintenance command accepted"}
+        {"MP",                          "\n000000\n@M?\n@",
+            "Maintenance command returns error"}
     };
 
     for (TestSequence testSequence : testSequences)

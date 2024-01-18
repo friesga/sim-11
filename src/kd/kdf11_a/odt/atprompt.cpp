@@ -75,13 +75,3 @@ KDF11_A_ODT::State KDF11_A_ODT::StateMachine::transition (AtPrompt_1 &&, GoCmdEn
     context_->startCPU (000000);
     return ExitPoint {};
 }
-
-// The "M" (Maintenance) command is used for maintenance purposes and prints
-// the contents of an internal CPU register. This data reflects how the
-// machine got to the console mode.
-// The value is or'ed with 010 as a real LSI-11/2 prints that value.
-KDF11_A_ODT::State KDF11_A_ODT::StateMachine::transition (AtPrompt_1&&, MaintenanceCmdEntered)
-{
-    context_->writeString (context_->octalNumberToString (static_cast<u16> (context_->cpuControl_->haltReason ()) | 010) + '\n');
-    return AtPrompt_1 {};
-}

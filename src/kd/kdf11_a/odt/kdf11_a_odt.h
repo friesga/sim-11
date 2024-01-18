@@ -54,10 +54,6 @@ private:
     struct BinaryDumpCmdEntered {};             // Cntrl-shift-s
     struct ExitCmdGiven {};                     // BA11_N close button clicked
 
-    // The following commands are only implemented in the LSI-11 (KD11-F
-    // processor) ODT and are not implemented in the PDP-11/23 (KDF11 processor).
-    struct MaintenanceCmdEntered {};            // M
-
     // OOT has 10 internal states, with each state having its own set of valid
     // input characters. Some commands are allowed only when in certain states
     // or sequences; thus an attempt has been made to lower the probability
@@ -100,8 +96,7 @@ private:
         RegisterCmdEntered,
         PswDesignatorEntered,
         BinaryDumpCmdEntered,
-        ExitCmdGiven,
-        MaintenanceCmdEntered>;
+        ExitCmdGiven>;
 
     using State = std::variant<EntryPoint,
         AtPrompt_1,
@@ -167,7 +162,6 @@ public:
     State transition (AtPrompt_1&&, ProceedCmdEntered);                            // -> ExitPoint
     State transition (AtPrompt_1&&, GoCmdEntered);                                 // -> ExitPoint
     State transition (AtPrompt_1&&, BinaryDumpCmdEntered);                         // -> EnteringBinaryDump_10
-    State transition (AtPrompt_1&&, MaintenanceCmdEntered);                        // -> AtPrompt_1
 
     State transition (EnteringAddress_5&&, DigitEntered);                          // -> EnteringAddress_5
     State transition (EnteringAddress_5&&, OpenLocationCmdEntered);                // -> AddressOpened_3

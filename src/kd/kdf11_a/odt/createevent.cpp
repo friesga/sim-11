@@ -44,10 +44,6 @@ KDF11_A_ODT::Event KDF11_A_ODT::createEvent (CondData<u8> c)
             // Go command
             return GoCmdEntered {};
 
-        case 'M':
-            // Maintenance command
-            return MaintenanceCmdEntered {};
-
         case 'P':
             // Proceed command
             return ProceedCmdEntered {};
