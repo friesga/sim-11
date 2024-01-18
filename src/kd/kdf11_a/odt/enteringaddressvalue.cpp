@@ -51,14 +51,6 @@ KDF11_A_ODT::State KDF11_A_ODT::StateMachine::transition (EnteringAddressValue_7
     return context_->openNextAddress ([this] () {return context_->location_.inputAddress () + 2;});
 }
 
-KDF11_A_ODT::State KDF11_A_ODT::StateMachine::transition (EnteringAddressValue_7 &&, BackArrowCmdEntered)
-{
-    context_->writeString ("\n");
-    context_->setAddressValue ();
-    return context_->openNextAddress ([this] () 
-        {return context_->location_.wordAddress () + context_->bus_->read (context_->location_.wordAddress ()) + 2;});
-}
-
 // When an address location is open, another location can be opened without
 // explicitly closing the first location; e.g., 1000/123456 2000/054321.
 // (Micronote 050 Micro ODT Differences - LSI-11 vs. LSI-11/23)

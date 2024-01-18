@@ -37,22 +37,6 @@ KDF11_A_ODT::State KDF11_A_ODT::StateMachine::transition (AddressOpened_3 &&, Op
     return context_->openNextAddress ([this] () {return context_->location_.inputAddress () + 2;});
 }
 
-// This command is used once a location has been opened to open
-// the location that is the address of the contents of the open location
-// plus the address of the open location plus 2. 
-// (LSI11 PDP11/03 Processor Handbook)
-//
-// ODT interprets the contents of the currently open *word* as an address
-// indexed by the PC and opens the addressed location. (MicroProcessor
-// Computers Handbook).
-// The last sentence seems to indicate the word address has to be used
-// instead of the input address (which might be a byte address).
- KDF11_A_ODT::State KDF11_A_ODT::StateMachine::transition (AddressOpened_3 &&, BackArrowCmdEntered)
- {
-    context_->writeString ("\n");
-    return context_->openNextAddress ([this] () 
-        {return context_->location_.wordAddress () + context_->bus_->read (context_->location_.wordAddress ()) + 2;});
- }
 
 // Micronote 050 (Micro ODT Differences - LSI-11 vs. LSI-11/23) states that
 // when an address location is open, another location can be opened without

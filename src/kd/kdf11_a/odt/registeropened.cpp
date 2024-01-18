@@ -42,18 +42,6 @@ KDF11_A_ODT::State KDF11_A_ODT::StateMachine::transition (RegisterOpened_4 &&cur
         [this] () {return (context_->location_.registerNr () + 1) % 8;}));
 }
 
-// Note that this [back arrow] command cannot be used if a GPR or the PS is
-// the open location and if attempted, the command will modify the GPR
-// or PS if data has been typed, and close the GPR or PS; then a CR,
-// LF, @ will be issued. (LSI11 PDP11/03 Processor Handbook)
-KDF11_A_ODT::State KDF11_A_ODT::StateMachine::transition (RegisterOpened_4 &&, BackArrowCmdEntered)
-{
-    // The cursor is positioned just after the _, so write a new line
-    // to position the cursor at the begin of the new line.
-    context_->writeString ("\n");
-    return AtPrompt_1 {};
-}
-
 // Micronote 050 (Micro ODT Differences - LSI-11 vs. LSI-11/23) states that
 // when an address location is open, another location can be opened without
 // explicitly closing the first location. Tests conducted at a real LSi-11/2

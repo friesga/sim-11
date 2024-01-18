@@ -59,10 +59,6 @@ KDF11_A_ODT::Event KDF11_A_ODT::createEvent (CondData<u8> c)
         case 'S':
             return PswDesignatorEntered {};
 
-        case '_':
-            // ASCII 137 back arrow
-            return BackArrowCmdEntered {};
-
         case BS:
             // On VT100 compatible terminals, this is the character produced
             // by the key marked "<=". On modern machines it is called
