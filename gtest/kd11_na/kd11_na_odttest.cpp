@@ -3,7 +3,7 @@
 #include "kd/kd11_na/odt/kd11_na_odt.h"
 #include "kd/kd11_na/cpudata/kd11_nacpudata.h"
 #include "kd/kd11_na/pseudommu/pseudommu.h"
-#include "testconsoleaccess.h"
+#include "../testconsoleaccess.h"
 
 #include <gtest/gtest.h>
 #include <memory>
@@ -25,7 +25,7 @@ using std::vector;
             " expected: " << c << " got: " << got << '\n'; \
     }
 
-class KD11ODTTest : public ::testing::Test
+class KD11_NA_ODTTest : public ::testing::Test
 {
 protected:
     struct TestSequence
@@ -81,7 +81,7 @@ protected:
 // Note that the default value of R7. i.e. the PC will be the boot address
 // 0000000.
 //
-TEST_F (KD11ODTTest, KDF11PlusKD11_FCommands)
+TEST_F (KD11_NA_ODTTest, KDF11PlusKD11_FCommands)
 {
     vector<TestSequence> testSequences =
     {
@@ -190,7 +190,7 @@ TEST_F (KD11ODTTest, KDF11PlusKD11_FCommands)
 }
 
 
-TEST_F (KD11ODTTest, BinaryDumpReturnsBytes)
+TEST_F (KD11_NA_ODTTest, BinaryDumpReturnsBytes)
 {
     // Fill the memory locations 0402-0412 with ASCII characters to be able
     // to check the correct result of the binary dump, followed by a Binary
@@ -211,7 +211,7 @@ TEST_F (KD11ODTTest, BinaryDumpReturnsBytes)
 
 // This test comprises the commands implemented in just the KD11-F (LSI-11)
 // processors
-TEST_F (KD11ODTTest, KD11FOnlyCommands)
+TEST_F (KD11_NA_ODTTest, KD11FOnlyCommands)
 {
     vector<TestSequence> testSequences =
     {
