@@ -1,8 +1,8 @@
 #include "dlv11j/dlv11j.h"
 #include "msv11d/msv11d.h"
-#include "kd/kd11_na/odt/kd11_na_odt.h"
-#include "kd/kd11_na/cpudata/kd11_nacpudata.h"
-#include "kd/kd11_na/pseudommu/pseudommu.h"
+#include "kd/kdf11_a/odt/kdf11_a_odt.h"
+#include "kd/kdf11_a/cpudata/kdf11_acpudata.h"
+#include "kd/kdf11_a/ktf11_a/ktf11_a.h"
 #include "../testconsoleaccess.h"
 
 #include <gtest/gtest.h>
@@ -46,14 +46,14 @@ protected:
         TestConsoleAccess *testConsole = static_cast<TestConsoleAccess*> (console.get ());
 
         Qbus bus;
-        KD11_NACpuData cpuData;
-        PseudoMMU mmu {&bus, &cpuData};
+        KDF11_ACpuData cpuData;
+        KTF11_A mmu {&bus, &cpuData};
         KD11_NA_CpuControl kd11cpu (&bus, &cpuData, &mmu);
         MSV11D msv11d (&bus);
         bus.installModule (1, &msv11d);
 
         // Create a KD11ODT instance and let it process a character sequence
-        KD11_NA_ODT kd11odt {&bus, &cpuData, &kd11cpu, &mmu, move (console)};
+        KDF11_A_ODT kd11odt {&bus, &cpuData, &kd11cpu, &mmu, move (console)};
 
         // Read the characters from the input sequence and feed them to ODT.
         // The characters could be retrieved from the input sequence directly,
@@ -215,22 +215,6 @@ TEST_F (KDF11_A_ODTTest, KD11FOnlyCommands)
 {
     vector<TestSequence> testSequences =
     {
-        {"10/^\rP",                 "\n000000\n@10/000000 ^\n000006/000000 \r\n@",
-            "Up arrow (^) opens previous location"},
-        {"11/^\rP",                 "\n000000\n@11/000000 ^\n000007/000000 \r\n@",
-            "Up arrow (^) on byte address opens previous byte address"},
-        {"10/10^\r10/\rP",          "\n000000\n@10/000000 10^\n000006/000000 \r\n@10/000010 \r\n@",
-            "New address value can be entered with up arrow"},
-        {"11/10^\r10/\rP",          "\n000000\n@11/000000 10^\n000007/000000 \r\n@10/000010 \r\n@",
-            "New byte address value can be entered with up arrow"},
-        {"R0/^\rP",                 "\n000000\n@R0/000000 ^\nR7/000000 \r\n@",
-            "up arrow opens next register and rolls over to R7"},
-        {"RS/^\rP",                 "\n000000\n@RS/000000 ^\n@",
-            "up arrow on opened PSW closes location"},
-        {"R1/10^\rR1/\rP",          "\n000000\n@R1/000000 10^\nR0/000000 \r\n@R1/000010 \r\n@",
-            "New register value can be entered with up arrow"},
-        {"RS/10^RS/\rP",            "\n000000\n@RS/000000 10^\n@RS/000010 \r\n@",
-            "New PSW value can be entered with uparrow"},
         {"10/@\rP",                 "\n000000\n@10/000000 @\n000000/000000 \r\n@",
             "At sign opens indirect address"},
         {"10/11\r10/@\rP",          "\n000000\n@10/000000 11\r\n@10/000011 @\n000011/000011 \r\n@",

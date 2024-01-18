@@ -42,28 +42,6 @@ KDF11_A_ODT::State KDF11_A_ODT::StateMachine::transition (RegisterOpened_4 &&cur
         [this] () {return (context_->location_.registerNr () + 1) % 8;}));
 }
 
-// The "up arrow" command is also used to close an open location or GPR. If
-// entered after a location or GPR has been opened, it will close the open
-// location or GPR and open location-2, or GPR-1.lf the contents of the
-//open location or GPR are to be modified, the new contents should
-// precede the "up arrow" operator.
-// 
-// If "up arrow" is used to decrement below R0, the register name printed is
-// meaningless but the content is that of R7.
-// (Microcomputers and Memories Chapter 7)
-// 
-// This last behaviour is not implemented as 1) it clearly is a (documented)
-// bug and 2) the real behaviour is not completely described.
-// 
-// Process the OpenPreviousLocationCmdEntered event. This function will transition
-// either to the current state or to atPrompt_1 in case the PSW is openend.
-KDF11_A_ODT::State KDF11_A_ODT::StateMachine::transition (RegisterOpened_4 &&currentState, OpenPreviousLocationCmdEntered)
-{
-    context_->writeString ("\n");
-    return move (context_->openNextRegister (move (currentState),
-        [this] () {return static_cast<u8> (context_->location_.registerNr () - 1) % 8;}));
-}
-
 KDF11_A_ODT::State KDF11_A_ODT::StateMachine::transition (RegisterOpened_4 &&currentState, AtSignCmdEntered)
 {
     context_->writeString ("\n");

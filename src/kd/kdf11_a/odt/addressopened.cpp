@@ -37,18 +37,6 @@ KDF11_A_ODT::State KDF11_A_ODT::StateMachine::transition (AddressOpened_3 &&, Op
     return context_->openNextAddress ([this] () {return context_->location_.inputAddress () + 2;});
 }
 
-// The "up arrow" command is also used to close an open location or GPR.
-// If entered after a location or GPR has been opened, it will close
-// the open location or GPR and open location -2, or GPR-1. If the
-// contents of the open location or GPR are to be modified, the new
-// contents should precede the "up arrow" operator.
-// (Microcomputer and Memories Chapter 7)
-KDF11_A_ODT::State KDF11_A_ODT::StateMachine::transition (AddressOpened_3 &&, OpenPreviousLocationCmdEntered)
-{
-    context_->writeString ("\n");
-    return context_->openNextAddress ([this] () {return context_->location_.inputAddress () - 2;});
-}
-
 // Once a location has been opened, the @ command is used to close
 // that location and open a second location, using the contents of the first
 // location as an indirect address to the second location. That is, the

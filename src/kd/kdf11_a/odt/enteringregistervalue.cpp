@@ -50,14 +50,6 @@ KDF11_A_ODT::State KDF11_A_ODT::StateMachine::transition (EnteringRegisterValue_
         [this] () {return (context_->location_.registerNr () + 1) % 8;}));
 }
 
-KDF11_A_ODT::State KDF11_A_ODT::StateMachine::transition (EnteringRegisterValue_8 &&, OpenPreviousLocationCmdEntered)
-{
-    context_->writeString ("\n");
-    context_->setRegisterValue ();
-    return move (context_->openNextRegister (RegisterOpened_4 {},
-        [this] () {return static_cast<u8> (context_->location_.registerNr () - 1) % 8;}));
-}
-
 // If used on the PS, the command will modify the PS if data has
 // been typed and close it; however, the last GPR or memory location
 // contents will be used as a pointer. (LSI11 PDP11/03 Processor Handbook)
