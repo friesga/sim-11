@@ -23,15 +23,3 @@ KDF11_A_ODT::State KDF11_A_ODT::StateMachine::transition (AddressOpened_3 &&, Op
 {
     return context_->openNextAddress ([this] () {return context_->location_.inputAddress () + 2;});
 }
-
-
-// Micronote 050 (Micro ODT Differences - LSI-11 vs. LSI-11/23) states that
-// when an address location is open, another location can be opened without
-// explicitly closing the first location. Tests conducted at a real LSi-11/2
-// show that the same holds for register locations, i.e. when an address
-// location is open a register location can be opened and when a register
-// location is open an address or register location can be opened.
-KDF11_A_ODT::State KDF11_A_ODT::StateMachine::transition (AddressOpened_3&&, RegisterCmdEntered)
-{
-    return StartingRegister_2 {};
-}

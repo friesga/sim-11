@@ -175,14 +175,14 @@ TEST_F (KDF11_A_ODTTest, KDF11PlusKD11_FCommands)
             "<LF> on byte location opens next byte location"},
         {"10;/2;\r10/\rP",     "\n000000\n@10;/000000 2;\r\n@10/000002 \r\n@",
             "Semicolon character is ignored"},
-        {"0/2/\rP",            "\n000000\n@0/000000 2/000000 \r\n@",
-            "Address can be opened on entering address value"},
-        {"R0/2/\rP",           "\n000000\n@R0/000000 2/000000 \r\n@",
-            "Address can be opened on entering register value"},
-        {"R0/R1/\rP",          "\n000000\n@R0/000000 R1/000000 \r\n@",
-            "Register can be opened on entering register value"},
-        {"0/R1/\rP",           "\n000000\n@0/000000 R1/000000 \r\n@",
-            "Register can be opened on entering address value"}
+        {"0/2/\rP",            "\n000000\n@0/000000 2/?\n@",
+            "Address can not be opened on entering address value"},
+        {"R0/2/\rP",           "\n000000\n@R0/000000 2/?\n@",
+            "Address can not be opened on entering register value"},
+        {"R0/R\rP",          "\n000000\n@R0/000000 R?\n@",
+            "Register can not be opened on entering register value"},
+        {"0/R\rP",           "\n000000\n@0/000000 R?\n@",
+            "Register can not be opened on entering address value"}
     };
 
     for (TestSequence testSequence : testSequences)
@@ -246,7 +246,7 @@ TEST_F (KDF11_A_ODTTest, KD11FOnlyCommands)
         {"R0/123\010\rP", "\n000000\n@R0/000000 123?\n@",
             "Error on rub out of register value digit"},
 
-        {"2/177777\r0/2/\rP",       "\n000000\n@2/000000 177777\r\n@0/000000 2/177777 \r\n@", 
+        {"0/2/\rP",       "\n000000\n@0/000000 2/?\n@", 
             "Address location can be opened without closing first location"},
         {"MP",                          "\n000000\n@M?\n@",
             "Maintenance command returns error"}

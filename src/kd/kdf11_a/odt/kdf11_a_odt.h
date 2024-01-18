@@ -171,12 +171,10 @@ public:
     State transition (AddressOpened_3&&, DigitEntered);                            // -> EnteringAddressValue_7
     State transition (AddressOpened_3&&, CloseLocationCmdEntered);                 // -> AtPrompt_1
     State transition (AddressOpened_3&&, OpenNextLocationCmdEntered);              // -> AddressOpened_3
-    State transition (AddressOpened_3&&, RegisterCmdEntered);                      // -> StartingRegister_2
 
     State transition (EnteringAddressValue_7&&, DigitEntered);                     // -> EnteringAddressValue_7
     State transition (EnteringAddressValue_7&&, CloseLocationCmdEntered);          // -> AtPrompt_1
     State transition (EnteringAddressValue_7&&, OpenNextLocationCmdEntered);       // -> AddressOpened_3
-    State transition (EnteringAddressValue_7&&, OpenLocationCmdEntered);           // -> AddressOpened_3
 
     State transition (StartingRegister_2&&, DigitEntered);                         // -> EnteringRegister_6
     State transition (StartingRegister_2&&, PswDesignatorEntered);                 // -> EnteringRegister_6
@@ -189,11 +187,9 @@ public:
     State transition (RegisterOpened_4&&, CloseLocationCmdEntered);                // -> AtPrompt_1
     State transition (RegisterOpened_4&&, DigitEntered);                           // -> EnteringRegisterValue_8
     State transition (RegisterOpened_4&&, OpenNextLocationCmdEntered);             // -> RegisterOpened_4/AtPrompt_1
-    State transition (RegisterOpened_4&&, RegisterCmdEntered);                     // -> StartingRegister_2
 
     State transition (EnteringRegisterValue_8&&, DigitEntered);                    // -> EnteringRegisterValue_8
     State transition (EnteringRegisterValue_8&&, CloseLocationCmdEntered);         // -> AtPrompt_1
-    State transition (EnteringRegisterValue_8&&, OpenLocationCmdEntered);          // -> AddressOpened_3
     State transition (EnteringRegisterValue_8&&, OpenNextLocationCmdEntered);      // -> EnteringRegisterValue_8/AtPrompt_1
 
     void entry (ExitPoint);
