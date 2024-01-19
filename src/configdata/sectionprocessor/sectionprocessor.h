@@ -5,6 +5,7 @@
 #include "../deviceconfig/deviceconfig.h"
 
 #include <memory>
+#include <limits>
 
 using std::string;
 using std::unique_ptr;
