@@ -39,7 +39,7 @@ KD11_NA_ODT::State KD11_NA_ODT::StateMachine::transition (AtPrompt_1 && currentS
         return move (currentState);
     }
 
-    if (context_->location_.isA<AddressLocation> ())
+    if (context_->location_.isA<AddressLocation<u16>> ())
     {
         // Print last opened address and it's value
         return context_->writeAddressContents (context_->location_.wordAddress ());

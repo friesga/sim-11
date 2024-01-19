@@ -91,7 +91,7 @@ KD11_NA_ODT::State KD11_NA_ODT::StateMachine::transition (EnteringRegisterValue_
         // address, the address to open is that address; in case the
         // previously openend location was a register the contents of that
         // address is the location to open.
-        if (context_->location_.previousIsA<AddressLocation> ())
+        if (context_->location_.previousIsA<AddressLocation<u16>> ())
             addressToOpen = context_->location_.previousInputAddress ();
         else
             addressToOpen = context_->cpuData_->registers () [context_->location_.previousRegisterNr ()];

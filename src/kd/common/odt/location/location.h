@@ -14,11 +14,12 @@ using std::get;
 using std::holds_alternative;
 using std::move;
 
+template <typename AddressType>
 class Location
 {
 public:
     using LocationVariant = variant<monostate,
-        AddressLocation,
+        AddressLocation<AddressType>,
         RegisterLocation,
         PSWLocation>;
 
@@ -28,11 +29,11 @@ public:
     template <typename LocationType> bool isA ();
     template <typename LocationType> bool previousIsA ();
     Location &operator= (const LocationVariant &location);
-    u16 inputAddress ();
-    u16 wordAddress ();
+    AddressType inputAddress ();
+    AddressType wordAddress ();
     u8 registerNr ();
-    u16 previousInputAddress ();
-    u16 previousWordAddress ();
+    AddressType previousInputAddress ();
+    AddressType previousWordAddress ();
     u8 previousRegisterNr ();
 
 private:
@@ -40,41 +41,47 @@ private:
     LocationVariant previousLocation_;
 };
 
-inline Location::Location ()
+template <typename AddressType>
+inline Location<AddressType>::Location ()
     :
     openedLocation_ {monostate {}},
     previousLocation_ {monostate {}}
 {}
 
 // Save the current location object and assign a new location object to the
-// current location. 
-inline Location &Location::operator= (const LocationVariant &location)
+// current location.
+template <typename AddressType>
+inline Location<AddressType> &Location<AddressType>::operator= (const LocationVariant &location)
 {
     previousLocation_ = move (openedLocation_);
     openedLocation_ = location;
     return *this;
 }
 
+template <typename AddressType>
 template <typename LocationType>
-inline LocationType Location::opened ()
+inline LocationType Location<AddressType>::opened ()
 {
     return get<LocationType> (openedLocation_);
 }
 
+template <typename AddressType>
 template <typename LocationType>
-inline LocationType Location::previous ()
+inline LocationType Location<AddressType>::previous ()
 {
     return get<LocationType> (previousLocation_);
 }
 
+template <typename AddressType>
 template <typename LocationType>
-inline bool Location::isA ()
+inline bool Location<AddressType>::isA ()
 {
     return holds_alternative<LocationType> (openedLocation_);
 }
 
+template <typename AddressType>
 template <typename LocationType>
-inline bool Location::previousIsA ()
+inline bool Location<AddressType>::previousIsA ()
 {
     return holds_alternative<LocationType> (previousLocation_);
 }
@@ -82,42 +89,48 @@ inline bool Location::previousIsA ()
 
 // Return the input address, presuming the current location is
 // an AddressLocation
-inline u16 Location::inputAddress ()
+template <typename AddressType>
+inline AddressType Location<AddressType>::inputAddress ()
 {
-    return get<AddressLocation> (openedLocation_).inputAddress ();
+    return get<AddressLocation<AddressType>> (openedLocation_).inputAddress ();
 }
 
 // Return the currently opened address, presuming the current location is
 // an AddressLocation
-inline u16 Location::wordAddress ()
+template <typename AddressType>
+inline AddressType Location<AddressType>::wordAddress ()
 {
-    return get<AddressLocation> (openedLocation_).wordAddress ();
+    return get<AddressLocation<AddressType>> (openedLocation_).wordAddress ();
 }
 
 // Return the currently opened register, presuming the current location is
 // a RegisterLocation
-inline u8 Location::registerNr ()
+template <typename AddressType>
+inline u8 Location<AddressType>::registerNr ()
 {
     return get<RegisterLocation> (openedLocation_).registerNr ();
 }
 
 // Return the previous input address, presuming the previous location is
 // an AddressLocation
-inline u16 Location::previousInputAddress ()
+template <typename AddressType>
+inline AddressType Location<AddressType>::previousInputAddress ()
 {
-    return get<AddressLocation> (previousLocation_).inputAddress ();
+    return get<AddressLocation<AddressType>> (previousLocation_).inputAddress ();
 }
 
 // Return the previously opened address, presuming the previous location is
 // an AddressLocation
-inline u16 Location::previousWordAddress ()
+template <typename AddressType>
+inline AddressType Location<AddressType>::previousWordAddress ()
 {
-    return get<AddressLocation> (previousLocation_).wordAddress ();
+    return get<AddressLocation<AddressType>> (previousLocation_).wordAddress ();
 }
 
 // Return the previously opened register, presuming the previous location is
 // a RegisterLocation
-inline u8 Location::previousRegisterNr ()
+template <typename AddressType>
+inline u8 Location<AddressType>::previousRegisterNr ()
 {
     return get<RegisterLocation> (previousLocation_).registerNr ();
 }

@@ -92,7 +92,7 @@ void KDF11_A_ODT::writeString (string str)
 // is set too on opening an invalid address.
 KDF11_A_ODT::State KDF11_A_ODT::writeAddressContents (u16 address)
 {
-    location_ = AddressLocation {static_cast<u16> (address)};
+    location_ = AddressLocation<u16> {address};
     if (bus_->read (address).hasValue ())
     {
         writeString (octalNumberToString (bus_->read (location_.wordAddress ())) + ' ');

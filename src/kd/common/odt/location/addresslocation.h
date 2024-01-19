@@ -3,34 +3,42 @@
 
 #include "types.h"
 
+#include <limits>
+
+using std::numeric_limits;
+
 // This class keeps track of an address location. The class discriminates
 // between the address as input by the user and the derived word address.
 // The input address might be a byte address, the word address is the
 // input address with bit 0 cleared.
+template <typename AddressType>
 class AddressLocation
 {
 public:
-    AddressLocation (u16 address);
-    u16 inputAddress ();
-    u16 wordAddress ();
+    AddressLocation (AddressType address);
+    AddressType inputAddress ();
+    AddressType wordAddress ();
 
 private:
-    u16 address_;
+    AddressType address_;
 };
 
-inline AddressLocation::AddressLocation (u16 address)
+template <typename AddressType>
+inline AddressLocation<AddressType>::AddressLocation (AddressType address)
     :
     address_ {address}
 {}
 
-inline u16 AddressLocation::inputAddress ()
+template <typename AddressType>
+inline AddressType AddressLocation<AddressType>::inputAddress ()
 {
     return address_;
 }
 
-inline u16 AddressLocation::wordAddress ()
+template <typename AddressType>
+inline AddressType AddressLocation<AddressType>::wordAddress ()
 {
-    return address_ & 0177776;
+    return address_ & (numeric_limits<AddressType>::max () - 1);
 }
 
 #endif // _ADDRESSLOCATION_H_

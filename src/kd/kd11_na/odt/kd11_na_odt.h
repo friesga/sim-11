@@ -5,7 +5,7 @@
 #include "qbus/qbus.h"
 #include "kd/kd11_na/cpucontrol/kd11_na_cpucontrol.h"
 #include "variantfsm/fsm.h"
-#include "location/location.h"
+#include "kd/common/odt/location/location.h"
 #include "conddata/conddata.h"
 #include "kd/include/consoleaccess.h"
 #include "kd/common/operatorconsoleaccess/operatorconsoleaccess.h"
@@ -138,7 +138,7 @@ private:
     string digitSeries_;
     u16 newValue_;
     string registerSeries_;
-    Location location_;
+    Location<u16> location_;
 
     CondData<u8> echoCharacter (CondData<u8> c);
     void writeString (string str);
