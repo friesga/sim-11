@@ -5,6 +5,7 @@
 #include "registerlocation.h"
 #include "pswlocation.h"
 
+#include <concepts>
 #include <variant>
 #include <utility>
 
@@ -13,8 +14,9 @@ using std::monostate;
 using std::get;
 using std::holds_alternative;
 using std::move;
+using std::integral;
 
-template <typename AddressType>
+template <integral AddressType>
 class Location
 {
 public:
@@ -41,7 +43,7 @@ private:
     LocationVariant previousLocation_;
 };
 
-template <typename AddressType>
+template <integral AddressType>
 inline Location<AddressType>::Location ()
     :
     openedLocation_ {monostate {}},
@@ -50,7 +52,7 @@ inline Location<AddressType>::Location ()
 
 // Save the current location object and assign a new location object to the
 // current location.
-template <typename AddressType>
+template <integral AddressType>
 inline Location<AddressType> &Location<AddressType>::operator= (const LocationVariant &location)
 {
     previousLocation_ = move (openedLocation_);
@@ -58,28 +60,28 @@ inline Location<AddressType> &Location<AddressType>::operator= (const LocationVa
     return *this;
 }
 
-template <typename AddressType>
+template <integral AddressType>
 template <typename LocationType>
 inline LocationType Location<AddressType>::opened ()
 {
     return get<LocationType> (openedLocation_);
 }
 
-template <typename AddressType>
+template <integral AddressType>
 template <typename LocationType>
 inline LocationType Location<AddressType>::previous ()
 {
     return get<LocationType> (previousLocation_);
 }
 
-template <typename AddressType>
+template <integral AddressType>
 template <typename LocationType>
 inline bool Location<AddressType>::isA ()
 {
     return holds_alternative<LocationType> (openedLocation_);
 }
 
-template <typename AddressType>
+template <integral AddressType>
 template <typename LocationType>
 inline bool Location<AddressType>::previousIsA ()
 {
@@ -89,7 +91,7 @@ inline bool Location<AddressType>::previousIsA ()
 
 // Return the input address, presuming the current location is
 // an AddressLocation
-template <typename AddressType>
+template <integral AddressType>
 inline AddressType Location<AddressType>::inputAddress ()
 {
     return get<AddressLocation<AddressType>> (openedLocation_).inputAddress ();
@@ -97,7 +99,7 @@ inline AddressType Location<AddressType>::inputAddress ()
 
 // Return the currently opened address, presuming the current location is
 // an AddressLocation
-template <typename AddressType>
+template <integral AddressType>
 inline AddressType Location<AddressType>::wordAddress ()
 {
     return get<AddressLocation<AddressType>> (openedLocation_).wordAddress ();
@@ -105,7 +107,7 @@ inline AddressType Location<AddressType>::wordAddress ()
 
 // Return the currently opened register, presuming the current location is
 // a RegisterLocation
-template <typename AddressType>
+template <integral AddressType>
 inline u8 Location<AddressType>::registerNr ()
 {
     return get<RegisterLocation> (openedLocation_).registerNr ();
@@ -113,7 +115,7 @@ inline u8 Location<AddressType>::registerNr ()
 
 // Return the previous input address, presuming the previous location is
 // an AddressLocation
-template <typename AddressType>
+template <integral AddressType>
 inline AddressType Location<AddressType>::previousInputAddress ()
 {
     return get<AddressLocation<AddressType>> (previousLocation_).inputAddress ();
@@ -121,7 +123,7 @@ inline AddressType Location<AddressType>::previousInputAddress ()
 
 // Return the previously opened address, presuming the previous location is
 // an AddressLocation
-template <typename AddressType>
+template <integral AddressType>
 inline AddressType Location<AddressType>::previousWordAddress ()
 {
     return get<AddressLocation<AddressType>> (previousLocation_).wordAddress ();
@@ -129,7 +131,7 @@ inline AddressType Location<AddressType>::previousWordAddress ()
 
 // Return the previously opened register, presuming the previous location is
 // a RegisterLocation
-template <typename AddressType>
+template <integral AddressType>
 inline u8 Location<AddressType>::previousRegisterNr ()
 {
     return get<RegisterLocation> (previousLocation_).registerNr ();
