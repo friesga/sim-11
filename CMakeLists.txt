@@ -33,7 +33,7 @@ set (KD11COMMON_SRCS
     src/kd/common/eisinstruction/eisinstruction.cpp
     src/kd/common/markinstruction/markinstruction.cpp
     src/kd/common/sobinstruction/sobinstruction.cpp
-    src/kd/common/operatorconsoleaccess/operatorconsoleaccess.cpp
+    src/kd/common/odt/operatorconsoleaccess/operatorconsoleaccess.cpp
     src/kd/kd11_na/cpucontrol/kd11_nainstruction/kd11_nainstruction.cpp)
 
 set (KD11CONTROLLOGIC_SRCS

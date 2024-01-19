@@ -8,7 +8,7 @@
 #include "kd/common/odt/location/location.h"
 #include "conddata/conddata.h"
 #include "kd/include/consoleaccess.h"
-#include "kd/common/operatorconsoleaccess/operatorconsoleaccess.h"
+#include "kd/common/odt/operatorconsoleaccess/operatorconsoleaccess.h"
 #include "kd/include/cpudata.h"
 
 #include <string>

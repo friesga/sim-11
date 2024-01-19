@@ -6,7 +6,7 @@
 #include "kd/include/cpudata.h"
 #include "kd/include/cpucontrol.h"
 #include "kd/include/mmu.h"
-#include "kd/common/operatorconsoleaccess/operatorconsoleaccess.h"
+#include "kd/common/odt/operatorconsoleaccess/operatorconsoleaccess.h"
 
 #include <memory>
 
