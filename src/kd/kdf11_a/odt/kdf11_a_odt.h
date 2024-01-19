@@ -133,6 +133,7 @@ private:
     string octalNumberToString (u16 number);
     u32 stringToOctalNumber (string str);
     bool stringTou16 (string str, size_t nDigits, u16* value);
+    bool stringTou18 (string str, size_t nDigits, u32* value);
     Event createEvent (CondData<u8> c);
     State openAddress ();
     void setAddressValue ();

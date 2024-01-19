@@ -124,10 +124,6 @@ u32 KDF11_A_ODT::stringToOctalNumber (string str)
 
 // Convert the least significant 16 bits from the given octal number
 // string to a u16 and report the success or failure of this conversion.
-//
-// With the implementation of the RUBOUT the passed string can be empty. In 
-// that case the string cannot be converted to a integer and an error is
-// returned.
 bool KDF11_A_ODT::stringTou16 (string str, size_t nDigits, u16 *value)
 {
     if (str.empty ())
@@ -135,6 +131,17 @@ bool KDF11_A_ODT::stringTou16 (string str, size_t nDigits, u16 *value)
 
     u32 tmp = stringToOctalNumber (str);
     *value = static_cast<u16> (tmp & 0177777);
+    return true;
+}
+
+// Convert the least significant 18 bits from the given octal number
+// string to a u32 and report the success or failure of this conversion.
+bool KDF11_A_ODT::stringTou18 (string str, size_t nDigits, u32 *value)
+{
+    if (str.empty ())
+        return false;
+
+    *value = stringToOctalNumber (str) & 0777777;
     return true;
 }
 
@@ -151,11 +158,9 @@ bool KDF11_A_ODT::registerSeriesEndsWith (string str)
 KDF11_A_ODT::State KDF11_A_ODT::openAddress ()
 {
     // Convert the last eight digits entered to an address. This can lead
-    // to an address larger than the available memory, but currently the
-    // address is a 16 bit unsigned integer and the maximum amount of memory
-    // in a LSI-11 is 32kW.
-    u16 address {0};
-    stringTou16 (digitSeries_, 8, &address);
+    // to an address larger than the available memory.
+    u32 address {0};
+    stringTou18 (digitSeries_, 8, &address);
     
     // The specified address might be a byte or a word address. This is
     // dealt with in the Location class.
