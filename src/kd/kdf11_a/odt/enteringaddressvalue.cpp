@@ -20,5 +20,5 @@ KDF11_A_ODT::State KDF11_A_ODT::StateMachine::transition (EnteringAddressValue_7
 KDF11_A_ODT::State KDF11_A_ODT::StateMachine::transition (EnteringAddressValue_7 &&, OpenNextLocationCmdEntered)
 {
     context_->setAddressValue ();
-    return context_->openNextAddress ([this] () {return context_->location_.inputAddress () + 2;});
+    return context_->openNextAddress ();
 }

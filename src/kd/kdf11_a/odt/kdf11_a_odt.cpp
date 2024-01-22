@@ -190,13 +190,15 @@ void KDF11_A_ODT::setAddressValue ()
 // location 0 if the last location in the I/O page (17 777 776) is open and
 // the user issues an <LF>. (EK-KDJ1B-UG-001)
 // 
-// The calculation of the next address has to be provided by the functor
-// getNextAddress as there are a number of commands only differing on the
-// calculation of the address.
+// Incrementing <LF>, the addresses 177776, 377776, 577776 and 777776 result
+// in the addresses 000000, 200000, 400000, and 600000, respectively. That is,
+// the upper 2 bits of the 18-bit address are not affected; they must be
+// explicitly set. (EK-KDFEB-UG)
 // 
-KDF11_A_ODT::State KDF11_A_ODT::openNextAddress (std::function<u32(void)> getNextAddress)
+KDF11_A_ODT::State KDF11_A_ODT::openNextAddress ()
 {
-    u32 address = getNextAddress ();
+    u32 address = (location_.inputAddress () & 0600000) | 
+        ((location_.inputAddress () + 2) % 0200000);
     writeString (octalNumberToString (address) + '/');
     return writeAddressContents (address);
 }

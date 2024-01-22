@@ -137,7 +137,7 @@ private:
     Event createEvent (CondData<u8> c);
     State openAddress ();
     void setAddressValue ();
-    State openNextAddress (std::function<u32 (void)> getNextRegister);
+    State openNextAddress ();
     State openNextRegister (State&& currentState,
         std::function<u8 (void)> getNextRegister);
     bool registerSeriesEndsWith (string);

@@ -50,6 +50,7 @@ protected:
         KTF11_A mmu {&bus, &cpuData};
         KD11_NA_CpuControl kd11cpu (&bus, &cpuData, &mmu);
         MSV11D msv11d (&bus);
+
         bus.installModule (1, &msv11d);
 
         // Create a KD11ODT instance and let it process a character sequence
@@ -169,8 +170,8 @@ TEST_F (KDF11_A_ODTTest, KDF11PlusKD11_FCommands)
             "Error on opening invalid address"},
         {"0/\r777774//\rP", "\n000000\n@0/000000 \r\n@777774/?\n@/?\n@",
             "Last opened location set on opening invalid address"},
-        {"177776/\nP",       "\n000000\n@177776/000000 \n200000/?\n@",
-            "Error on next opened invalid address"},
+        {"177776/\n\rP",           "\n000000\n@177776/000000 \n000000/000000 \r\n@",
+             "Address 177776 wraps around to 000000"},
         {"11/2\r10/\rP",       "\n000000\n@11/000000 2\r\n@10/000002 \r\n@",
             "Byte address value can be opened and value can be set"},
         {"11/\n\rP",           "\n000000\n@11/000000 \n000013/000000 \r\n@",

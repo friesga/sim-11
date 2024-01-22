@@ -21,5 +21,5 @@ KDF11_A_ODT::State KDF11_A_ODT::StateMachine::transition (AddressOpened_3 &&, Cl
 // (Microcomputer and Memories Chapter 7)
 KDF11_A_ODT::State KDF11_A_ODT::StateMachine::transition (AddressOpened_3 &&, OpenNextLocationCmdEntered)
 {
-    return context_->openNextAddress ([this] () {return context_->location_.inputAddress () + 2;});
+    return context_->openNextAddress ();
 }
