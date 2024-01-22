@@ -125,24 +125,25 @@ private:
     string digitSeries_;
     u16 newValue_;
     string registerSeries_;
-    Location<u16> location_;
+    Location<u32> location_;
 
     CondData<u8> echoCharacter (CondData<u8> c);
     void writeString (string str);
-    State writeAddressContents (u16 address);
-    string octalNumberToString (u16 number);
+    State writeAddressContents (u32 address);
+    string octalNumberToString (u32 number);
     u32 stringToOctalNumber (string str);
     bool stringTou16 (string str, size_t nDigits, u16* value);
     bool stringTou18 (string str, size_t nDigits, u32* value);
     Event createEvent (CondData<u8> c);
     State openAddress ();
     void setAddressValue ();
-    State openNextAddress (std::function<u16 (void)> getNextRegister);
+    State openNextAddress (std::function<u32 (void)> getNextRegister);
     State openNextRegister (State&& currentState,
         std::function<u8 (void)> getNextRegister);
     bool registerSeriesEndsWith (string);
     void setRegisterValue ();
     void startCPU (u16 address);
+    bool endsWith (string const &completeString, string const &endString);
 };
 
 class KDF11_A_ODT::StateMachine : public variantFsm::Fsm<StateMachine, Event, State>

@@ -9,11 +9,6 @@ KDF11_A_ODT::State KDF11_A_ODT::StateMachine::transition (StartingRegister_2 &&,
     // the last character as the register designator. An exception: if the last
     // three digits equal 077 or 477, OOT will open the PS rather than R7.
     // (EK-KDJ1A-UG-001)
-    //
-    // Test runs executed on a LSI-11/2 show that this is not correct. When
-    // more than one digit is entered, the digits are interpreted as an
-    // address to be opened.
-    //
     context_->registerSeries_.push_back (digitEntered.digit);
     return EnteringRegister_6 {};
 }

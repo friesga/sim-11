@@ -90,12 +90,13 @@ void KDF11_A_ODT::writeString (string str)
 //
 // Test runs conducted on a real LSI-11/2 show the last opened location
 // is set too on opening an invalid address.
-KDF11_A_ODT::State KDF11_A_ODT::writeAddressContents (u16 address)
+KDF11_A_ODT::State KDF11_A_ODT::writeAddressContents (u32 address)
 {
-    location_ = AddressLocation<u16> {address};
-    if (bus_->read (address).hasValue ())
+    location_ = AddressLocation<u32> {address};
+    if (bus_->read (BusAddress (address, BusAddress::Width::_18Bit)).hasValue ())
     {
-        writeString (octalNumberToString (bus_->read (location_.wordAddress ())) + ' ');
+        writeString (octalNumberToString (bus_->read (BusAddress (location_.wordAddress (),
+            BusAddress::Width::_18Bit))) + ' ');
         return AddressOpened_3{};
     }
     else
@@ -107,7 +108,7 @@ KDF11_A_ODT::State KDF11_A_ODT::writeAddressContents (u16 address)
 
 // The computer always prints six numeric characters [i.e. prints leading
 // zero's]. (EK-11V03-TM-002)
-string KDF11_A_ODT::octalNumberToString (u16 number)
+string KDF11_A_ODT::octalNumberToString (u32 number)
 {
     stringstream tmp {};
     tmp << oct << setfill ('0') << setw (6) << number;
@@ -193,9 +194,9 @@ void KDF11_A_ODT::setAddressValue ()
 // getNextAddress as there are a number of commands only differing on the
 // calculation of the address.
 // 
-KDF11_A_ODT::State KDF11_A_ODT::openNextAddress (std::function<u16(void)> getNextAddress)
+KDF11_A_ODT::State KDF11_A_ODT::openNextAddress (std::function<u32(void)> getNextAddress)
 {
-    u16 address = getNextAddress ();
+    u32 address = getNextAddress ();
     writeString (octalNumberToString (address) + '/');
     return writeAddressContents (address);
 }
@@ -259,4 +260,14 @@ bool KDF11_A_ODT::processCharacter (u8 character)
 {
     stateMachine_->dispatch (createEvent (echoCharacter (character)));
     return odtRunning_;
+}
+
+// Test if the given string ends with the second given string
+bool KDF11_A_ODT::endsWith (string const &completeString, string const &endString)
+{
+    if (completeString.length() >= endString.length())
+        return (completeString.compare (completeString.length() - endString.length(),
+            endString.length(), endString) == 0);
+    else
+        return false;
 }
