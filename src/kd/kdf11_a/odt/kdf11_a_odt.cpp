@@ -247,9 +247,17 @@ void KDF11_A_ODT::setRegisterValue ()
 }
 
 // Set the CPU into the running state with the specified address as the PC
+// 
+// On a hardware KDF11-A an 18-bit address has to be specified to start the
+// CPU. This makes little sense however as the PC is 16-bits and the CPU is
+// running in umapped mode, so also using 16-bit addresses. In the KDF11-A
+// the 18-bit address is used to address the I/O page but that should not
+// be necessary when we're using 16-bit addresses with proper mapping to the
+// I/O page.
 void KDF11_A_ODT::startCPU (u16 address)
 {
     bus_->BINIT().cycle ();
+    mmu_->reset ();
     cpuControl_->start (address);
     trace.cpuEvent (CpuEventRecordType::CPU_ODT_P, address);
 }
