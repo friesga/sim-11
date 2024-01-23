@@ -50,7 +50,7 @@ void Trace::cpuEvent (CpuEventRecordType type, u16 value)
         tracefileOut_ << TraceRecord<CpuEventRecord> (type, value);
 }
 
-void Trace::bus (BusRecordType type, u16 address, u16 value) 
+void Trace::bus (BusRecordType type, u32 address, u16 value) 
 {
     if (traceEnabled && (flags_ & Trace::Category::Bus) && 
             !(flags_ & Trace::Category::IgnoreBus))

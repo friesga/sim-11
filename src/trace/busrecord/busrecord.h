@@ -27,13 +27,13 @@ class TraceRecord<BusRecord>
         TraceRecord<BusRecord> record);
 
 	BusRecordType type_;
-	u16	address_;
+	u32	address_;
 	u16	value_;
 	u16	pad_;
 
 public:
 	TraceRecord ();
-	TraceRecord (BusRecordType type, u16 address, u16 value);
+	TraceRecord (BusRecordType type, u32 address, u16 value);
     Magic magic () {return Magic::BUS0;}
 };
 
@@ -48,7 +48,7 @@ inline TraceRecord<BusRecord>::TraceRecord ()
 
 
 inline TraceRecord<BusRecord>::TraceRecord (BusRecordType type,
-    u16 address, u16 value)
+    u32 address, u16 value)
 	:
     type_ {type},
 	address_ {address},

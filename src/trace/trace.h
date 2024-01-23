@@ -63,7 +63,7 @@ public:
     bool isActive ();
     void cpuStep (u16* r, u16 psw, u16* insn);
     void cpuEvent (CpuEventRecordType type, u16 value);
-    void bus (BusRecordType type, u16 address, u16 value);
+    void bus (BusRecordType type, u32 address, u16 value);
     void memoryDump (u8* ptr, u16 address, u16 length);
     void irq (IrqRecordType type, int vector);
     void trap (TrapRecordType cause, int vector);
