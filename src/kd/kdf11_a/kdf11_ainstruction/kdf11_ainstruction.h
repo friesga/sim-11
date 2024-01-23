@@ -142,6 +142,7 @@ class KDF11_AInstruction
     class SUB;
     class SWAB;
     class SXT;
+    class WAIT;
     class XOR;
 
 public:

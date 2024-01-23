@@ -79,7 +79,7 @@
 #include "kd/common/instructions/tst.h"
 #include "kd/common/instructions/tstb.h"
 #include "kd/common/instructions/unused.h"
-#include "kd/common/instructions/wait.h"
+#include "wait.h"
 #include "xor.h"
 
 // Instruction format for Operate Group plus BPT and IOT,
@@ -88,7 +88,7 @@
 KDF11_AInstruction::opCodeTable const KDF11_AInstruction::group_00_00_nn
 { 
     KDF11_AInstruction::HALT::create,      // 00 00 00 
-    CommonInstruction::WAIT::create,       // 00 00 01
+    KDF11_AInstruction::WAIT::create,      // 00 00 01
     CommonInstruction::RTI::create,        // 00 00 02
     CommonInstruction::BPT::create,        // 00 00 03
     CommonInstruction::IOT::create,        // 00 00 04
