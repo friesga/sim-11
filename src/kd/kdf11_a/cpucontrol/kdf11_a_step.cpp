@@ -187,21 +187,13 @@ bool KDF11_A_CpuControl::fetchFromVector (u16 address, u16* dest)
     return tmpValue.hasValue ();
 }
 
-bool KDF11_A_CpuControl::fetchFromVector (u16 address, function<void (u16)> lambda)
-{
-    CondData<u16> tmpValue = mmu_->fetchWord (address, PSW::Mode::Kernel);
-    lambda (tmpValue.valueOr (0));
-    return tmpValue.hasValue ();
-}
-
-
 // Swap the PC and PSW with new values from the given vector
 void KDF11_A_CpuControl::swapPcPSW (u16 vectorAddress)
 {
     // Save PC and PSW on the stack. 
     // Unlike the KD11-F and KD11-HA, the KDF11-AA does not enter console
     // ODT upon occurrence of a double bus error (for example, when R6 points
-    // to nonexistent memory during a bus timeout trap). The KDF11-BA creates
+    // to nonexistent memory during a bus timeout trap). The KDF11-AA creates
     // a new stack at location 2 and continues to trap to 4. (EK-KDF11-UG-PR2)
     // 
     // The order of execution of the trap sequence seems to be that the new
@@ -211,31 +203,34 @@ void KDF11_A_CpuControl::swapPcPSW (u16 vectorAddress)
     // test 407. The same behaviour might exist for saving and retrieval of
     // the PC.
     // 
+    // If a bus timeout occurs while getting an interrupt vector, the KDF11-AA
+    // ignores it and continues execution of the program, whereas in such case
+    // the KDll-F and KDll-HA enter console ODT. (EK-KDF11-UG-PR2)
+    //
+    u16 newPC, newPSW;
+
+    // Ignore bus errors on fetching the interrupt vector.
+    if (!fetchFromVector (vectorAddress, &newPC) ||
+        !fetchFromVector (vectorAddress + 2, &newPSW))
+        return;
+
+    // Set new PSW before saving the old PSW
     u16 oldPSW = cpuData_->psw ();
-    fetchFromVector (vectorAddress + 2, [this] (u16 value)
-        {cpuData_->psw ().set (PSW::ProtectionMode::Trap, value);});
+    cpuData_->psw ().set (PSW::ProtectionMode::Trap, newPSW);
+
     if (!mmu_->pushWord (oldPSW) || !mmu_->pushWord (cpuData_->registers ()[7]))
     {
-        // Set the stack pointer at location 4 as it will be decremented
-        // before the PSW is pushed.
+        // Set up new stack at location 2 and trap to address 4. The stack
+        // pointer is set at location 4 as it will be decremented before the
+        // PSW is pushed.
         trace.cpuEvent (CpuEventRecordType::CPU_DBLBUS, cpuData_->registers ()[6]);
+        fetchFromVector (4, &newPC);
         cpuData_->registers ()[6] = 4;
         mmu_->pushWord (cpuData_->psw ());
         mmu_->pushWord (cpuData_->registers ()[7]);
-        vectorAddress = 4;
     }
 
-    // Read new PC from the trap vector. This read could also
-    // result in a bus time out.
-    if (!fetchFromVector (vectorAddress, &cpuData_->registers ()[7]))
-    {
-        trace.cpuEvent (CpuEventRecordType::CPU_DBLBUS, vectorAddress);
-        cpuData_->clearTrap ();
-        runState = CpuRunState::HALT;
-        haltReason_ = HaltReason::BusErrorOnIntrptVector;
-        bus_->SRUN().set (false);
-        return;
-    }
+    cpuData_->registers ()[7] = newPC;
 }
 
 void KDF11_A_CpuControl::traceStep ()

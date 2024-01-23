@@ -60,7 +60,6 @@ private:
 	void execute ();
 	void swapPcPSW (u16 vectorAddress);
 	bool fetchFromVector (u16 address, u16* dest);
-	bool fetchFromVector (u16 address, function<void (u16)> lambda);
 	void traceStep ();
 };
 
