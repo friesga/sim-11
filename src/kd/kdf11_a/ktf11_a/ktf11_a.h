@@ -16,7 +16,7 @@
 // no support for split I/D space and no supervisor mode.
 //
 // The memory management unit is located between the central processor unit
-// and the LSI-II bus address lines. When the memory management unit is
+// and the LSI-11 bus address lines. When the memory management unit is
 // operating, the normal 16-bit direct byte address is no longer interpreted
 // as a direct physical address (PA) but as a virtual address (VA) containing
 // information to be used in constructing a new 18- or 22-bit physical

@@ -7,6 +7,11 @@ KTF11_A::KTF11_A (Qbus* bus, CpuData* cpuData)
     cpuData_ {cpuData}
 {}
 
+// The PDP-11 Architecture Handbook appendix B (PDP-11 Family Differences),
+// item 39 states that current mode PS bits <15:14> set to 01 or 10 will cause
+// a MEM MGT trap upon any memory reference. Par. 8.5.3.1 of the KDF11-BA CPU
+// Module User's Guide states that references using mode 01 or 10 will not cause
+// a halt.
 CondData<u16> KTF11_A::fetchWord (VirtualAddress address, PSW::Mode memMgmtMode)
 {
     return (sr0_.managementEnabled ()) ? 
