@@ -14,8 +14,6 @@
 
 using std::function;
 
-#define USE_FLOAT
-
 // Two different LSI-models exist, the LSI-11 and the LSI-11/2. The LSI-11
 // comprises the M7264 module in one of its variations. The LSI-11/2
 // consists of a M7270 module with a KD11-HA or KD11-NA processor. These

@@ -12,9 +12,6 @@
 
 #include <functional>
 
-
-#define USE_FLOAT
-
 // 
 // This class simulates a KDF11-A.
 //
