@@ -66,13 +66,15 @@ u16 CmdProcessor::maintenanceCmd (RL01_2 *unit, RLV12Command &rlv12Command)
 
     // Transfer 255 words from FIFO to the original memory address
     // plus 512 (using memoryAddress from the previous loop).
-    // Just as for the bus->read() operation, the success of the
-    // bus->writeWord() operation is not tested as on failures it will
-    // generate a bus error trap.
     for (size_t wordCount = 0; wordCount < 255; wordCount++)
     {
-        controller_->bus_->writeWord (memoryAddress, 
-            controller_->dataBuffer_[wordCount]);
+        if (!controller_->bus_->writeWord (memoryAddress, 
+            controller_->dataBuffer_[wordCount]))
+        {
+            rlcsValue = RLV12::CSR_CompositeError | RLV12::CSR_NonExistentMemory;
+            break;
+        }
+
         memoryAddress += 2;
         ++controller_->wordCounter_;
     }
