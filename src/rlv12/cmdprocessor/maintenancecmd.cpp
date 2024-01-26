@@ -12,7 +12,7 @@
 //
 u16 CmdProcessor::maintenanceCmd (RL01_2 *unit, RLV12Command &rlv12Command)
 {
-    u32  memoryAddress;
+    BusAddress  memoryAddress {0};
     u16 rlcsValue {0};
 
     // The VRLBC0 diagnostic expects a reaction on a Maintenance command
@@ -50,8 +50,6 @@ u16 CmdProcessor::maintenanceCmd (RL01_2 *unit, RLV12Command &rlv12Command)
     }
 
     // Transfer 256 words to FIFO
-    // The success of the bus->read() operation is not tested as on failures
-    // bus->read() will generate a bus error trap.
     for (size_t wordCount = 0; wordCount < 256; ++wordCount)
     {
         CondData<u16> value = controller_->bus_->read (memoryAddress);

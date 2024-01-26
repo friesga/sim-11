@@ -21,6 +21,7 @@ public:
     BusAddress (u32 value);
     BusAddress (u32 value, Width width);
     operator u32 ();
+    BusAddress& operator += (u32 value);
     BusAddress& operator &= (u32 mask);
     bool isInIOpage ();
     bool isInIOpageLower2K ();
@@ -74,6 +75,11 @@ inline BusAddress::operator u32 ()
     return value_;
 }
 
+inline BusAddress& BusAddress::operator += (u32 value)
+{
+    value_ += value;
+    return *this;
+}
 
 inline BusAddress& BusAddress::operator &= (u32 mask)
 {

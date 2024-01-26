@@ -182,15 +182,15 @@ void RLV12::memAddrToRegs (u32 memoryAddress)
         bae_ = upper6Bits & BAE_Mask; 
 }
 
-// Get a 16-, 18- or 22-bit address from the BA, CSR and (in case of 22-bit
-// systems) BAE registers. For 16- and 18-bit systems the BA16 and BA17 bits
-// are used, for 22-bit systems the BAE register is used.
-u32 RLV12::memAddrFromRegs ()
+// Get a 18- or 22-bit address from the BA, CSR and (in case of 22-bit
+// systems) BAE registers. For 18-bit systems the BA16 and BA17 bits are
+// used, for 22-bit systems the BAE register is used.
+BusAddress RLV12::memAddrFromRegs ()
 {
     if (!(rlType_ == RLConfig::RLType::RLV12 && _22bit_))
-        return (getBA16BA17 (csr_) << 16) | bar_;
+        return BusAddress ((getBA16BA17 (csr_) << 16) | bar_, BusAddress::Width::_22Bit);
     else
-        return (bae_ << 16) | bar_;
+        return BusAddress ((bae_ << 16) | bar_, BusAddress::Width::_18Bit);
 }
 
 // Update the BAE register bits 00 and 01 from the contents of the CSR BA16

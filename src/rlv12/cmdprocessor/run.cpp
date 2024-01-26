@@ -28,9 +28,9 @@ void CmdProcessor::run ()
         // Assemble a command from the command given in the CSR and the
         // parameters in the other registers
         // ToDo: Assemble command in the constructor?!
-        RLV12Command rlv12Command (RLV12::getFunction (controller_->csr_), controller_->dar_,
+        RLV12Command rlv12Command {RLV12::getFunction (controller_->csr_), controller_->dar_,
             controller_->memAddrFromRegs (), 
-            0200000 - controller_->wordCounter_);
+            (u32) 0200000 - controller_->wordCounter_};
 
         // Execute the command
         // ToDo: Merge the command pointer with the function pointer?

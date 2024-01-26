@@ -1,8 +1,8 @@
 #include "rlv12command.h"
 #include "types.h"
 
-RLV12Command::RLV12Command (u8 function, int32_t diskAddress, int32_t memoryAddress, 
-        size_t wordCount)
+RLV12Command::RLV12Command (u8 function, int32_t diskAddress, BusAddress memoryAddress, 
+        u32 wordCount)
     :
     function_ {function},
     diskAddress_ {diskAddress},

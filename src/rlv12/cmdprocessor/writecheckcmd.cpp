@@ -55,7 +55,7 @@ u16 CmdProcessor::writeCheckCmd (RL01_2 *unit, RLV12Command &rlv12Command)
 
         // Save wordCount
         size_t numWordsToCheck = rlv12Command.wordCount_;
-        int32_t memAddr = rlv12Command.memoryAddress_;
+        BusAddress memAddr = rlv12Command.memoryAddress_;
 
         for (rlv12Command.wordCount_ = 0; 
             rlv12Command.wordCount_ < numWordsToCheck;

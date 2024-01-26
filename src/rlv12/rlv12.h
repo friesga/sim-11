@@ -4,6 +4,7 @@
 #include "trace/trace.h"
 #include "rl01_02/rl012.h"
 #include "qbus/qbus.h"
+#include "busaddress/busaddress.h"
 #include "pdp11peripheral/pdp11peripheral.h"
 #include "threadsafecontainers/threadsafequeue.h"
 #include "statuscodes.h"
@@ -80,7 +81,7 @@ class RLV12 : public PDP11Peripheral
     static constexpr u16 CSR_AddressExtension = 
         CSR_AddressExtMask << CSR_AddressExtPosition;
 
-    static constexpr u16 getFunction (u16 csr_)
+    static constexpr u8 getFunction (u16 csr_)
     {
         constexpr u16 CSR_FunctionPosition = 1;
         constexpr u16 CSR_FunctionMask     = 7;
@@ -281,7 +282,7 @@ public:
     // Functions to set and get memory adresses consistently for
     // 16-, 18- and 22-bit systems
     void memAddrToRegs (u32 memoryAddress);
-    u32 memAddrFromRegs ();
+    BusAddress memAddrFromRegs ();
     void updateBAE ();
     u16 rlcsPlusDriveStatus (RL01_2 &unit);
     constexpr u16 getBA16BA17 (u16 csr_);
