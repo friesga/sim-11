@@ -297,8 +297,18 @@ string TraceRecord<CpuStepRecord>::LSI11Disassemble (const u16* insn, u16 pc)
 			return "MTPS " + LSI11DisassembleOperand ((u8) insn1->rn, (u8) insn1->mode, 
 				insn, &pc);
 
+		case 0006500: /* MFPD */
+			return "MFPD " + octalToString (opcd & 077);
+
+		case 0006600: /* MTPD */
+			return "MTPD " + octalToString (opcd & 077);
+
 		case 0106500: /* MFPI */
 			return "MFPI " + LSI11DisassembleOperand ((u8) insn1->rn, (u8) insn1->mode, 
+				insn, &pc);
+
+		case 0106600: /* MTPI */
+			return "MTPI " + LSI11DisassembleOperand ((u8) insn1->rn, (u8) insn1->mode, 
 				insn, &pc);
 
 		case 0000100: /* JMP */
@@ -307,9 +317,6 @@ string TraceRecord<CpuStepRecord>::LSI11Disassemble (const u16* insn, u16 pc)
 
 		case 0006400: /* MARK */
 			return "MARK " + octalToString (opcd & 077);
-
-		case 0006500: /* MFPD */
-			return "MFPD " + octalToString (opcd & 077);
 	}
 	string oper1, oper2;
 
