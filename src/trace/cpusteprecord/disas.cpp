@@ -298,10 +298,12 @@ string TraceRecord<CpuStepRecord>::LSI11Disassemble (const u16* insn, u16 pc)
 				insn, &pc);
 
 		case 0006500: /* MFPD */
-			return "MFPD " + octalToString (opcd & 077);
+			return "MFPD " + LSI11DisassembleOperand ((u8) insn1->rn, (u8) insn1->mode, 
+				insn, &pc);
 
 		case 0006600: /* MTPD */
-			return "MTPD " + octalToString (opcd & 077);
+			return "MTPD " + LSI11DisassembleOperand ((u8) insn1->rn, (u8) insn1->mode, 
+				insn, &pc);
 
 		case 0106500: /* MFPI */
 			return "MFPI " + LSI11DisassembleOperand ((u8) insn1->rn, (u8) insn1->mode, 
