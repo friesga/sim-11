@@ -38,14 +38,15 @@ CmdLineOptions::CmdLineOptions(int argc, char const **argv)
 			--argc;
 			++argv;
 		} 
-		else if(!strcmp("--help", *argv)) 
+		else if(!strcmp("-h", *argv)) 
 		{
-			 msg << "Usage: " << self << " [OPTIONS]\n"
+			 msg << "Usage: " << self << " [Options]\n"
 					"\n"
-					"OPTIONS:\n"
-					"  -l file.bin     Load file.bin in absolute loader format\n"
-					"  -c file		   Use configuration from specified ini file\n"
-					"  -t file.trc     Record execution trace to file.trc\n";			
+					"Options:\n"
+					"  -l file.bin   Load file.bin in absolute loader format\n"
+					"  -c file       Use configuration from specified ini file\n"
+					"  -t file.trc   Record execution trace to file.trc\n"
+					"  -h            Show this message";			
 			 throw (msg.str());
 		} 
 		else 
