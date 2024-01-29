@@ -4,18 +4,22 @@
 // Support for the BA11-N Mounting Box
 //
 #include <functional>
+#include <map>
 
 using std::unique_ptr;
+using std::shared_ptr;
 using std::bind;
 using std::placeholders::_1;
+using std::map;
 
 // Constructor
 // Create a window showing the BA11-N and devices and then start a thread
 // handling the events and render the lamps and switches.
-BA11_N::BA11_N (Qbus *bus, Window *window)
+BA11_N::BA11_N (Qbus *bus, Window *window, shared_ptr<BA11_NConfig> ba11_nConfig)
     :
     bus_ {bus},
-    frontWindow_ {window}
+    frontWindow_ {window},
+    logo_ {ba11_nConfig->logo}
 {
     createBezel ();
 }
@@ -65,7 +69,7 @@ void BA11_N::createBezel ()
     //
     Panel *panel = frontWindow_->createPanel ();
 
-    panel->createFront ("../../assets/11_03 front.png", 0, 0);
+    panel->createFront (frontImage (logo_), 0, 0);
     pwrOkLed_ = panel->createIndicator ("../../assets/red led.png", 
         Indicator::State::Off, 515, 114, 12, 12);
     runLed_ = panel->createIndicator ("../../assets/red led.png", 
@@ -87,6 +91,18 @@ void BA11_N::createBezel ()
     // Now the RUN led is created when can subscribe to the signal indicating
     // the state to be shown.
     bus_->SRUN().subscribe (bind (&BA11_N::SRUNReceiver, this, _1));
+}
+
+// Get the fromt image for the given logo
+string BA11_N::frontImage (BA11_NConfig::Logo logo)
+{
+    map <BA11_NConfig::Logo, string> frontImages =
+    {
+        {BA11_NConfig::Logo::PDP_1103L, "../../assets/11_03 front.png"},
+        {BA11_NConfig::Logo::PDP_1123,  "../../assets/11_23 front.png"}
+    };
+
+    return frontImages[logo];
 }
 
 void BA11_N::restartSwitchClicked (Button::State state)

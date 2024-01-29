@@ -16,9 +16,25 @@ class BA11_NProcessor : public SectionProcessor
 {
 	unique_ptr<BA11_NConfig> ba11_nConfigPtr {nullptr};
 
+	// Define Process as a pointer to a BDV11Processor member function
+	// with a iniparser::Value argument and returning void.
+	typedef void (BA11_NProcessor::*Process)(iniparser::Value);
+	
+	map<string, Process> valueProcessors =
+	{
+		{"logo", &BA11_NProcessor::processLogo}
+	};
+
+	map<string, BA11_NConfig::Logo> availableLogos =
+	{
+		{"PDP-11/03L",     BA11_NConfig::Logo::PDP_1103L},
+		{"PDP-11/23",      BA11_NConfig::Logo::PDP_1123},
+	};
+
 	void processValue (iniparser::Section::ValueIterator valueIterator);
 	void checkConsistency ();
 	void processSubsection (iniparser::Section *subSection);
+	void processLogo (iniparser::Value value);
 
 public:
 	BA11_NProcessor ();

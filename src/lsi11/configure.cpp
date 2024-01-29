@@ -27,7 +27,8 @@ void LSI11::configureDevices (Window *window)
     bdv11_ = new BDV11 (&bus_);
     rxv21_ = new RXV21 (&bus_);
     rlv12_ = new RLV12 (&bus_);
-    ba11_n_ = std::make_unique<BA11_N> (&bus_, window);
+    ba11_n_ = std::make_unique<BA11_N> (&bus_, window, 
+        make_shared<BA11_NConfig> ());
 
     installModules ();
     reset ();
@@ -83,7 +84,8 @@ void LSI11::configureDevices (vector<shared_ptr<DeviceConfig>> systemConfig,
                 break;
 
             case DeviceType::BA11_N:
-                ba11_n_ = std::make_unique<BA11_N> (&bus_, window);
+                ba11_n_ = std::make_unique<BA11_N> (&bus_, window, 
+                    static_pointer_cast<BA11_NConfig> (device));
                 break;
 
             default:
