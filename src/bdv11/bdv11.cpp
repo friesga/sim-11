@@ -127,7 +127,7 @@ u16 BDV11::getWordLow (u16 word)
 	if (page < 0x10)
 	{
 		u16 romword = page * 0200 + word;
-		return bdv11_e53[romword];
+		return ROM_045E2_046E2[romword];
 	}
 	else
 	{
@@ -141,7 +141,7 @@ u16 BDV11::getWordHigh (u16 word)
 	if (page < 0x10)
 	{
 		u16 romword = page * 0200 + word;
-		return bdv11_e53[romword];
+		return ROM_045E2_046E2[romword];
 	} 
 	else 
 	{
@@ -161,7 +161,7 @@ void BDV11::memoryDump (u16 pcr, int hi)
 		if (page < 0x10) 
 		{
 			u16 romword = page * 0200;
-			data = &bdv11_e53[romword];
+			data = &ROM_045E2_046E2[romword];
 		} 
 		else 
 		{
@@ -175,7 +175,7 @@ void BDV11::memoryDump (u16 pcr, int hi)
 		if (page < 0x10) 
 		{
 			u16 romword = page * 0200;
-			data = &bdv11_e53[romword];
+			data = &ROM_045E2_046E2[romword];
 		} 
 		else 
 		{

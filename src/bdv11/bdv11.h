@@ -34,6 +34,7 @@ private:
 	void memoryDump (u16 pcr, int hi);
 	void tick();
 
+	static const u16 ROM_045E2_046E2[2048];
 	u16	pcr;
 	u16	scratch;
 	u16	option;
@@ -44,7 +45,5 @@ private:
 	std::thread ltcThread_;
 	bool running_;
 };
-
-extern const u16 bdv11_e53[2048];
 
 #endif // !_BDV11_H_
