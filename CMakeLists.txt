@@ -256,7 +256,7 @@ set (SIM11_SRCS
     ${CONSOLE_SRCS}
     src/abstractbusdevice/writebyte.cpp
     src/bdv11/bdv11.cpp
-    src/bdv11/bdv11_e53.cpp
+    src/bdv11/bdv11_rom.cpp
     src/dlv11j/dlv11j.cpp
     src/dlv11j/dlv11channel/dlv11channel.cpp
     ${KD11_NA_SRCS}
