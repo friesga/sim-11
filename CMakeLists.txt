@@ -182,7 +182,8 @@ set (CONFIGURATOR_SRCS
     src/configdata/kd11_naprocessor/kd11_naprocessor.cpp
     src/configdata/kdf11_aconfig/kdf11_aconfig.cpp
     src/configdata/kdf11_aprocessor/kdf11_aprocessor.cpp
-    src/configdata/kdf11_bconfig/kdf11_bconfig.cpp)
+    src/configdata/kdf11_bconfig/kdf11_bconfig.cpp
+    src/configdata/kdf11_bprocessor/kdf11_bprocessor.cpp)
 
 set (FLOAT_SRCS
     src/float/float.cpp

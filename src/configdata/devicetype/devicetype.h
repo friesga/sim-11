@@ -3,8 +3,9 @@
 
 enum class DeviceType
 {
-    KD11_NA,    // KD11-NA (LSI-11/2) processor
-    KDF11_A,    // KDF11-A (PDP-11/23) processor
+    KD11_NA,    // LSI-11/2 processor
+    KDF11_A,    // PDP-11/23 processor
+    KDF11_B,    // PDP-11/23+ processor
     MSV11,
     DLV11_J,
     BDV11,
