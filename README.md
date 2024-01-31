@@ -73,9 +73,10 @@ to start the system.
 Implementation Details
 ----------------------
 
-- The switch configuration on the BDV11 module can be changed in the file
-  `src/bdv11.c`. The macro `BDV11_SWITCH` is the switch configuration.
-  One day the switch configuration will be implemented in the ini-file.
+- The simulator is configured by means of a .ini file. Every section defines the
+  configuration of one device, i.e. a board, a device unit or the mounting box.
+  Every section contains a number of key-value pairs, defining a specific
+  device setting.
 
 - The simulator is partly multi-threaded. This makes it possible that threads
   can go to sleep, waiting for events to occur. Some diagnostics report
