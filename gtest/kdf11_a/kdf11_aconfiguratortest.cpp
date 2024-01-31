@@ -131,3 +131,78 @@ TEST (KDF11_AConfiguratorTest, unknownOptionThrows)
 		FAIL();
 	}
 }
+
+TEST (KDF11_AConfiguratorTest, validStartingAddressAccepted)
+{
+    iniparser::File ft;
+	std::stringstream stream;
+	stream << "[KDF11-A]\n"
+		"starting_address = 0173000\n";
+	stream >> ft;
+
+	IniProcessor iniProcessor;
+	iniProcessor.process (ft);
+
+	vector<shared_ptr<DeviceConfig>> systemConfig = 
+		iniProcessor.getSystemConfig ();
+
+	// The only device type in this testset is the KDF11-A so if that's
+	// not correct the following tests will fail too.
+	ASSERT_EQ (systemConfig[0]->deviceType_, DeviceType::KDF11_A);
+
+	// The device's type is DLV11J so the configuration is a 
+	shared_ptr<KDF11_AConfig> kdf11_aConfig = 
+		static_pointer_cast<KDF11_AConfig> (systemConfig[0]);
+
+	EXPECT_EQ (kdf11_aConfig->startingAddress, 0173000);
+}
+
+TEST (KDF11_AConfiguratorTest, invalidStartingAddressThrows)
+{
+    iniparser::File ft;
+	std::stringstream stream;
+	stream << "[KDF11-A]\n"
+		"starting_address = true";
+	stream >> ft;
+
+	IniProcessor iniProcessor;
+
+	try
+	{
+		iniProcessor.process (ft);
+		FAIL();
+	}
+	catch (std::invalid_argument const &except)
+	{
+		EXPECT_STREQ (except.what(), "Incorrect starting address in KDF11-A section specified: true");
+	}
+	catch (...)
+	{
+		FAIL();
+	}
+}
+
+TEST (KDF11_AConfiguratorTest, startingAddressNotOn256WordBoundaryThrows)
+{
+    iniparser::File ft;
+	std::stringstream stream;
+	stream << "[KDF11-A]\n"
+		"starting_address = 0200";
+	stream >> ft;
+
+	IniProcessor iniProcessor;
+
+	try
+	{
+		iniProcessor.process (ft);
+		FAIL();
+	}
+	catch (std::invalid_argument const &except)
+	{
+		EXPECT_STREQ (except.what(), "KDF11-A starting address must reside on 256-word boundary");
+	}
+	catch (...)
+	{
+		FAIL();
+	}
+}

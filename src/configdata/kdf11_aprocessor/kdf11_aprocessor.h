@@ -15,7 +15,6 @@ public:
 	KDF11_AProcessor ();
 	void processValue (iniparser::Section::ValueIterator valueIterator) override;
 	unique_ptr<DeviceConfig> getConfig () override;
-	void processKTF11_A (iniparser::Value value);
 
 private:
 	unique_ptr<KDF11_AConfig> kd11ConfigPtr {make_unique<KDF11_AConfig> ()};
@@ -26,8 +25,12 @@ private:
 	
 	map<string, Process> valueProcessors =
 	{
-		{"KTF11-A", &KDF11_AProcessor::processKTF11_A}
+		{"KTF11-A", &KDF11_AProcessor::processKTF11_A},
+		{"starting_address", &KDF11_AProcessor::processStartingAddress}
 	};
+
+	void processKTF11_A (iniparser::Value value);
+	void processStartingAddress (iniparser::Value value);
 };
 
 #endif // _KDF11_APROCESSOR_H_

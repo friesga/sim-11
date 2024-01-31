@@ -42,6 +42,29 @@ void KDF11_AProcessor::processKTF11_A (iniparser::Value value)
 	}
 }
 
+// The high byte (bits <15:09>) of the starting address are selectable.
+// The starting address can reside on any 256-word boundary in the lower
+// 32K of memory address space (EK-KDF11-UG-PR2).
+void KDF11_AProcessor::processStartingAddress (iniparser::Value value)
+{
+	u16 startingAddress {0};
+	try
+	{
+		startingAddress = touint<u16> (value.asString());
+	}
+	catch (std::invalid_argument const &)
+	{
+		throw invalid_argument {"Incorrect starting address in KDF11-A section specified: " + 
+			value.asString()};
+	}
+
+	// Check the starting address is on a 256-word boundary
+	if ((startingAddress % 01000) != 0)
+		throw invalid_argument {"KDF11-A starting address must reside on 256-word boundary"};
+
+	kd11ConfigPtr->startingAddress = startingAddress;
+}
+
 unique_ptr<DeviceConfig> KDF11_AProcessor::getConfig ()
 {
 	return move (kd11ConfigPtr);

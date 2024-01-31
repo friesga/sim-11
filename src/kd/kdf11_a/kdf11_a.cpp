@@ -36,7 +36,7 @@ KDF11_A::KDF11_A (Qbus *bus, shared_ptr<KDF11_AConfig> kdf11_aConfig)
     :
     bus_ (bus),
     powerUpMode_ {kdf11_aConfig->powerUpMode},
-    startAddress_ {stdBootAddress}
+    startAddress_ {kdf11_aConfig->startingAddress}
 {
     // If the KTF11-A is configured add it to the CPU modules. If it is not
     // configured its registers will not be available on the bus and

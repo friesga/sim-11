@@ -181,7 +181,8 @@ set (CONFIGURATOR_SRCS
     src/configdata/kd11_naconfig/kd11_naconfig.cpp
     src/configdata/kd11_naprocessor/kd11_naprocessor.cpp
     src/configdata/kdf11_aconfig/kdf11_aconfig.cpp
-    src/configdata/kdf11_aprocessor/kdf11_aprocessor.cpp)
+    src/configdata/kdf11_aprocessor/kdf11_aprocessor.cpp
+    src/configdata/kdf11_bconfig/kdf11_bconfig.cpp)
 
 set (FLOAT_SRCS
     src/float/float.cpp
@@ -387,13 +388,13 @@ set (GTEST_SRCS
     gtest/dlv11configuratortest.cpp
     gtest/fistest.cpp
     gtest/kd11_naconfiguratortest.cpp
-    gtest/kdf11_aconfiguratortest.cpp
     gtest/kd11_nadecodertest.cpp
     gtest/kd11_na/inctest.cpp
     gtest/kd11_na/movtest.cpp
     gtest/kd11_na/kd11_naregisterstest.cpp
     gtest/kd11_na/kd11_na_odttest.cpp
     gtest/kdf11_a/pswtest.cpp
+    gtest/kdf11_a/kdf11_aconfiguratortest.cpp
     gtest/kdf11_a/kdf11_a_pswregistertest.cpp
     gtest/kdf11_a/kdf11_aregisterstest.cpp
     gtest/kdf11_a/kdf11_abusdevicetest.cpp
