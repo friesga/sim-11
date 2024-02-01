@@ -56,7 +56,8 @@ class IniProcessor
 		{"RL",      &IniProcessor::createRLProcessor},
 		{"RXV21",   &IniProcessor::createRXProcessor},
 		{"KD11-NA", &IniProcessor::createKD11_NAProcessor},
-		{"KDF11-A", &IniProcessor::createKDF11_AProcessor}
+		{"KDF11-A", &IniProcessor::createKDF11_AProcessor},
+		{"KDF11-B", &IniProcessor::createKDF11_BProcessor}
 	};
 
     void processSection (iniparser::Section* section);
@@ -72,6 +73,7 @@ class IniProcessor
 	unique_ptr<SectionProcessor> createRXProcessor ();
 	unique_ptr<SectionProcessor> createKD11_NAProcessor ();
 	unique_ptr<SectionProcessor> createKDF11_AProcessor ();
+	unique_ptr<SectionProcessor> createKDF11_BProcessor ();
 
 public:
     void process (string filename);

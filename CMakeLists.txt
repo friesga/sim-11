@@ -100,6 +100,10 @@ set (KDF11_A_SRCS
     ${KD11_NA_CPU_SRCS}
     ${KD11_NA_ODT_SRCS})
 
+set (KDF11_B_SRCS
+    src/kd/kdf11/kdf11.cpp
+    src/kd/kdf11/kdf11_b/kdf11_b.cpp)
+
 set (RLV12_SRCS
     src/rlv12/calccrc.cpp
     src/rlv12/rlv12.cpp
@@ -263,6 +267,7 @@ set (SIM11_SRCS
     src/dlv11j/dlv11channel/dlv11channel.cpp
     ${KD11_NA_SRCS}
     ${KDF11_A_SRCS}
+    ${KDF11_B_SRCS}
     src/lib/gotapproval.cpp
     src/lsi11/lsi11.cpp
     src/lsi11/configure.cpp

@@ -2,5 +2,5 @@
 
 KDF11_BConfig::KDF11_BConfig ()
     : 
-    KD11Config (DeviceType::KDF11_A)
+    KD11Config (DeviceType::KDF11_B)
 {}

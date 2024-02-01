@@ -4,6 +4,7 @@
 #include "configdata/msv11config/msv11config.h"
 #include "configdata/bdv11config/bdv11config.h"
 #include "configdata/kdf11_aconfig/kdf11_aconfig.h"
+#include "configdata/kdf11_bconfig/kdf11_bconfig.h"
 #include "console/operatorconsole/operatorconsolefactory.h"
 
 #include <memory>		// For make_unique
@@ -56,6 +57,11 @@ void LSI11::configureDevices (vector<shared_ptr<DeviceConfig>> systemConfig,
             case DeviceType::KDF11_A:
                 processor_ = new KDF11_A (&bus_,
                     static_pointer_cast<KDF11_AConfig> (device));
+                break;
+
+            case DeviceType::KDF11_B:
+                processor_ = new KDF11_B (&bus_,
+                    static_pointer_cast<KDF11_BConfig> (device));
                 break;
 
             case DeviceType::MSV11:
