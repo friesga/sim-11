@@ -8,7 +8,7 @@ using std::copy;
 using std::begin;
 using std::end;
 
-// The psw argument is ignored. It is required by the KDF11_ARegisters'
+// The psw argument is ignored. It is required by the KDF11Registers'
 // constructor but isn't used on the KD11-NA.
 KD11_NARegisters::KD11_NARegisters (u16 const &psw)
     :
@@ -46,7 +46,7 @@ void KD11_NARegisters::writePrevMode (u16 registerNr, u16 contents)
 
 // Convert the object to an array of eight u16's. As a C-style array cannot
 // be returned from a function we use a pointer to a static array. This is ok
-// as long as there is just one KDF11_ARegisters object and that's the case
+// as long as there is just one KDF11Registers object and that's the case
 // as there is one processor in the system.
 KD11_NARegisters::operator registerArray ()
 {

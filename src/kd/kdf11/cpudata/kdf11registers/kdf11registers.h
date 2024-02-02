@@ -4,7 +4,7 @@
 #include "kd/include/generalregisters.h"
 #include "kd/include/psw.h"
 
-// This class implements the general register set for the KDF11_A. This
+// This class implements the general register set for the KDF11_A/B. This
 // processor has R0-R5, two stack pointers (R6) and R7. The stack pointer
 // selected is determined by PSW<15:14>. The value 0b00 specifies the
 // Kernel stack pointer, the vale 0b11 specifies the user stack pointer.
@@ -24,10 +24,10 @@
 // cause a halt. We therefore presume the presence of four stack pointers,
 // one for each memory management mode.
 //
-class KDF11_ARegisters : public GeneralRegisters
+class KDF11Registers : public GeneralRegisters
 {
 public:
-    KDF11_ARegisters (PSW const &psw);
+    KDF11Registers (PSW const &psw);
     u16& operator[] (u16 registerNr) override;
     u16& prevModeContents (u16 registerNr) override;
     u16& contents (u16 registerNr, u16 mode);

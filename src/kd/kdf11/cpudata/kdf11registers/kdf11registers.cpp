@@ -8,26 +8,26 @@ using std::copy;
 using std::begin;
 using std::end;
 
-KDF11_ARegisters::KDF11_ARegisters (PSW const& psw)
+KDF11Registers::KDF11Registers (PSW const& psw)
     :
     psw_ {psw},
     registers_ {0},
     R6_ {0}
 {}
 
-u16& KDF11_ARegisters::operator[] (u16 registerNr)
+u16& KDF11Registers::operator[] (u16 registerNr)
 {
     return contents (registerNr, static_cast<u16> (psw_.currentMode ()));
 }
 
 // Return the contents of the specified register in to the previous memory
 // management mode.
-u16& KDF11_ARegisters::prevModeContents (u16 registerNr)
+u16& KDF11Registers::prevModeContents (u16 registerNr)
 {
     return contents (registerNr, static_cast<u16> (psw_.previousMode ()));
 }
 
-u16& KDF11_ARegisters::contents (u16 registerNr, u16 mode)
+u16& KDF11Registers::contents (u16 registerNr, u16 mode)
 {
     if (registerNr >= numRegisters)
         throw string ("Illegal register number");
@@ -40,7 +40,7 @@ u16& KDF11_ARegisters::contents (u16 registerNr, u16 mode)
 
 // Write the given contents to the given register, using the previous
 // memory management mode
-void KDF11_ARegisters::writePrevMode (u16 registerNr, u16 contents)
+void KDF11Registers::writePrevMode (u16 registerNr, u16 contents)
 {
     if (registerNr >= numRegisters)
         throw string ("Illegal register number");
@@ -53,9 +53,9 @@ void KDF11_ARegisters::writePrevMode (u16 registerNr, u16 contents)
 
 // Convert the object to an array of eight u16's. As a C-style array cannot
 // be returned from a function we use a pointer to a static array. This is ok
-// as long as there is just one KDF11_ARegisters object and that's the case
+// as long as there is just one KDF11Registers object and that's the case
 // as there is one processor in the system.
-KDF11_ARegisters::operator registerArray ()
+KDF11Registers::operator registerArray ()
 {
     static u16 registers[8];
 
