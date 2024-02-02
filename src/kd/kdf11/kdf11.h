@@ -35,7 +35,7 @@ protected:
     enum { stdBootAddress = 0173000 };
 
     Qbus* bus_;
-    KDF11_ACpuData cpuData_ {};
+    KDF11CpuData cpuData_ {};
     KTF11_A mmu_ {bus_, &cpuData_};
     KDF11_CpuControl cpuControl_ {bus_, &cpuData_, &mmu_};
     unique_ptr<KDF11_A_ODT>	odt_ {};

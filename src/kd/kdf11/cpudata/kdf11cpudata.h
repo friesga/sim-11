@@ -7,10 +7,10 @@
 #include "abstractbusdevice/abstractbusdevice.h"
 
 //
-// The class KDF11_ACpuData implements the CpuData interface for the KDF11-A
+// The class KDF11CpuData implements the CpuData interface for the KDF11-A
 // plus the BusDevice interface for bus access to the PSW.
 //
-class KDF11_ACpuData : public KDCpuData<KDF11Registers, KDF11_A_PSW>,
+class KDF11CpuData : public KDCpuData<KDF11Registers, KDF11_PSW>,
 	public AbstractBusDevice
 {
 public:
@@ -36,13 +36,13 @@ private:
 // been decremented below the stack limit.
 // On a double bus error a new stack will be set up at locations 2 and 0. This
 // should not result in a stack overflow trap.
-inline bool KDF11_ACpuData::stackOverflow ()
+inline bool KDF11CpuData::stackOverflow ()
 {
     return inKernelMode () && 
         registers_ [6] > 0 && registers_ [6] < stackLimit;
 }
 
- constexpr bool KDF11_ACpuData::inKernelMode ()
+ constexpr bool KDF11CpuData::inKernelMode ()
  {
 	 return psw_.currentMode () == PSW::Mode::Kernel;
  }

@@ -15,7 +15,7 @@
 // setPSW() is be used to set the PSW to the new value to prevent the 
 // T-bit from being set or cleared.
 //
-StatusCode KDF11_ACpuData::read (BusAddress busAddress, u16 *destination)
+StatusCode KDF11CpuData::read (BusAddress busAddress, u16 *destination)
 {
     if (busAddress.registerAddress () == PSWAddress)
     {
@@ -27,7 +27,7 @@ StatusCode KDF11_ACpuData::read (BusAddress busAddress, u16 *destination)
 }
 
 
-StatusCode KDF11_ACpuData::writeWord (BusAddress busAddress, u16 value)
+StatusCode KDF11CpuData::writeWord (BusAddress busAddress, u16 value)
 {
     if (busAddress.registerAddress () == PSWAddress)
     {
@@ -41,11 +41,11 @@ StatusCode KDF11_ACpuData::writeWord (BusAddress busAddress, u16 value)
 
 // Check if the KDF11-A is responsible for the given address. This address can
 // be even or odd. 
-bool KDF11_ACpuData::responsible (BusAddress busAddress)
+bool KDF11CpuData::responsible (BusAddress busAddress)
 {
     return ((busAddress.registerAddress () & 0177776) == PSWAddress) ? true : false; 
 }
 
 
-void KDF11_ACpuData::reset ()
+void KDF11CpuData::reset ()
 {}
