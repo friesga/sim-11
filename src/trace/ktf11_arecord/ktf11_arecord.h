@@ -4,7 +4,7 @@
 #include "types.h"
 #include "../tracerecord.h"
 #include "../recordheader.h"
-#include "kd/kdf11/kdf11_a/ktf11_a/ktf11_a_activepageregisterset.h"
+#include "kd/kdf11/ktf11_a/ktf11_a_activepageregisterset.h"
 
 #include <iostream>
 
