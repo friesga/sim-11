@@ -13,14 +13,14 @@
 #include <functional>
 
 // 
-// This class simulates a KDF11-A.
+// This class contains the control functions for the KDF11-A and KDF11-B.
 //
-class KDF11_A_CpuControl : public CpuControl
+class KDF11_CpuControl : public CpuControl
 {
 public:
 	friend class LSI11;
 	
-	KDF11_A_CpuControl (Qbus *bus, CpuData*, MMU* mmu);
+	KDF11_CpuControl (Qbus *bus, CpuData*, MMU* mmu);
 
 	// Definition of functions required by the CpuControl interface.
 	void cpuReset () override;
@@ -60,7 +60,7 @@ private:
 	void traceStep ();
 };
 
- constexpr CpuControl::HaltReason KDF11_A_CpuControl::haltReason ()
+ constexpr CpuControl::HaltReason KDF11_CpuControl::haltReason ()
  {
 	 return haltReason_;
  }

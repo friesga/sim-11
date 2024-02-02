@@ -4,7 +4,7 @@
 // Reset the processor
 // 
 // Clear the registers and the PSW
-void KDF11_A_CpuControl::cpuReset ()
+void KDF11_CpuControl::cpuReset ()
 {
     // Initialize the registers except for the PC
     for (u16 regNr = 0; regNr <= 6; ++regNr)
@@ -15,14 +15,14 @@ void KDF11_A_CpuControl::cpuReset ()
 
 // Reset (the devices on) the bus by setting the INIT signal and reset
 // the KTF11-A.
-void KDF11_A_CpuControl::busReset ()
+void KDF11_CpuControl::busReset ()
 {
     bus_->BINIT().cycle ();
     mmu_->reset ();
 }
 
 // Halt the processor
-void KDF11_A_CpuControl::halt ()
+void KDF11_CpuControl::halt ()
 {
     runState = CpuRunState::HALT;
     haltReason_ = HaltReason::HaltInstruction;
@@ -31,14 +31,14 @@ void KDF11_A_CpuControl::halt ()
 }
 
 // Wait for an interrupt
-void KDF11_A_CpuControl::wait ()
+void KDF11_CpuControl::wait ()
 {
     trace.cpuEvent (CpuEventRecordType::CPU_WAIT, cpuData_->registers ()[7]);
     runState = CpuRunState::WAIT;
 }
 
 // Start the processor at the given address
-void KDF11_A_CpuControl::start (u16 address)
+void KDF11_CpuControl::start (u16 address)
 {
     cpuData_->registers ()[7] = address;
     runState = CpuRunState::RUN;
@@ -47,7 +47,7 @@ void KDF11_A_CpuControl::start (u16 address)
 }
 
 // Continue execution at the current PC
-void KDF11_A_CpuControl::proceed ()
+void KDF11_CpuControl::proceed ()
 {
     runState = CpuRunState::RUN;
     bus_->SRUN().set (true);

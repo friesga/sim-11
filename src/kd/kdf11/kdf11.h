@@ -37,7 +37,7 @@ protected:
     Qbus* bus_;
     KDF11_ACpuData cpuData_ {};
     KTF11_A mmu_ {bus_, &cpuData_};
-    KDF11_A_CpuControl cpuControl_ {bus_, &cpuData_, &mmu_};
+    KDF11_CpuControl cpuControl_ {bus_, &cpuData_, &mmu_};
     unique_ptr<KDF11_A_ODT>	odt_ {};
     KD11Config::PowerUpMode powerUpMode_;
     u16 startAddress_;
