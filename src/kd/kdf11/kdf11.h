@@ -2,11 +2,11 @@
 #define _KDF11_H_
 
 #include "kd/include/pdp11processor.h"
-#include "kd/kdf11/cpucontrol/kdf11_a_cpucontrol.h"
+#include "kd/kdf11/cpucontrol/kdf11_cpucontrol.h"
 #include "kd/kdf11/odt/kdf11_a_odt.h"
 #include "configdata/kd11config/kd11config.h"
 #include "kd/common/controllogic/controllogic.h"
-#include "kd/kdf11/cpudata/kdf11_acpudata.h"
+#include "kd/kdf11/cpudata/kdf11cpudata.h"
 
 // The class KDF11 is a super class for the KDF11_A and KDF11-B classes,
 // harbouring the common classes for these processors.

@@ -1,26 +1,27 @@
 #include "kdf11instruction.h"
 #include "kd/common/instructions/commoninstruction.h"
-#include "kd/common/instructions/adc.h"
-#include "kd/common/instructions/adcb.h"
-#include "kd/common/instructions/add.h"
+
+#include "adc.h"
+#include "adcb.h"
+#include "add.h"
 #include "kd/common/instructions/ash.h"
 #include "kd/common/instructions/ashc.h"
-#include "kd/common/instructions/asl.h"
-#include "kd/common/instructions/aslb.h"
-#include "kd/common/instructions/asr.h"
-#include "kd/common/instructions/asrb.h"
+#include "asl.h"
+#include "aslb.h"
+#include "asr.h"
+#include "asrb.h"
 #include "kd/common/instructions/bcc.h"
 #include "kd/common/instructions/bcs.h"
 #include "kd/common/instructions/beq.h"
 #include "kd/common/instructions/bge.h"
 #include "kd/common/instructions/bgt.h"
 #include "kd/common/instructions/bhi.h"
-#include "kd/common/instructions/bic.h"
-#include "kd/common/instructions/bicb.h"
-#include "kd/common/instructions/bis.h"
-#include "kd/common/instructions/bisb.h"
-#include "kd/common/instructions/bit.h"
-#include "kd/common/instructions/bitb.h"
+#include "bic.h"
+#include "bicb.h"
+#include "bis.h"
+#include "bisb.h"
+#include "bit.h"
+#include "bitb.h"
 #include "kd/common/instructions/ble.h"
 #include "kd/common/instructions/blos.h"
 #include "kd/common/instructions/blt.h"
@@ -32,68 +33,68 @@
 #include "kd/common/instructions/bvc.h"
 #include "kd/common/instructions/bvs.h"
 #include "kd/common/instructions/ccc.h"
-#include "kd/common/instructions/clr.h"
-#include "kd/common/instructions/clrb.h"
-#include "kd/common/instructions/cmp.h"
-#include "kd/common/instructions/cmpb.h"
-#include "kd/common/instructions/com.h"
-#include "kd/common/instructions/comb.h"
-#include "kd/common/instructions/dec.h"
-#include "kd/common/instructions/decb.h"
+#include "clr.h"
+#include "clrb.h"
+#include "cmp.h"
+#include "cmpb.h"
+#include "com.h"
+#include "comb.h"
+#include "dec.h"
+#include "decb.h"
 #include "kd/common/instructions/div.h"
 #include "kd/common/instructions/emt.h"
-#include "kd/common/instructions/fadd.h"
-#include "kd/common/instructions/fdiv.h"
-#include "kd/common/instructions/fmul.h"
-#include "kd/common/instructions/fsub.h"
-#include "kd/common/instructions/halt.h"
-#include "kd/common/instructions/inc.h"
-#include "kd/common/instructions/incb.h"
+#include "halt.h"
+#include "inc.h"
+#include "incb.h"
 #include "kd/common/instructions/iot.h"
 #include "kd/common/instructions/jmp.h"
 #include "kd/common/instructions/jsr.h"
 #include "kd/common/instructions/mark.h"
-#include "kd/common/instructions/mfps.h"
-#include "kd/common/instructions/mov.h"
-#include "kd/common/instructions/movb.h"
+#include "mfpd.h"
+#include "mfps.h"
+#include "mfpt.h"
+#include "mtpd.h"
+#include "mov.h"
+#include "movb.h"
 #include "kd/common/instructions/mtps.h"
 #include "kd/common/instructions/mul.h"
-#include "kd/common/instructions/neg.h"
-#include "kd/common/instructions/negb.h"
-#include "kd/common/instructions/reset.h"
-#include "kd/common/instructions/rol.h"
-#include "kd/common/instructions/rolb.h"
-#include "kd/common/instructions/ror.h"
-#include "kd/common/instructions/rorb.h"
+#include "neg.h"
+#include "negb.h"
+#include "reset.h"
+#include "rol.h"
+#include "rolb.h"
+#include "ror.h"
+#include "rorb.h"
 #include "kd/common/instructions/rti.h"
 #include "kd/common/instructions/rts.h"
 #include "kd/common/instructions/rtt.h"
-#include "kd/common/instructions/sbc.h"
-#include "kd/common/instructions/sbcb.h"
+#include "sbc.h"
+#include "sbcb.h"
 #include "kd/common/instructions/scc.h"
 #include "kd/common/instructions/sob.h"
-#include "kd/common/instructions/sub.h"
-#include "kd/common/instructions/swab.h"
-#include "kd/common/instructions/sxt.h"
+#include "sub.h"
+#include "swab.h"
+#include "sxt.h"
 #include "kd/common/instructions/trap.h"
 #include "kd/common/instructions/tst.h"
 #include "kd/common/instructions/tstb.h"
 #include "kd/common/instructions/unused.h"
-#include "kd/common/instructions/wait.h"
-#include "kd/common/instructions/xor.h"
+#include "wait.h"
+#include "xor.h"
 
 // Instruction format for Operate Group plus BPT and IOT,
 //
 // and minus NOP instructions.
 KDF11_AInstruction::opCodeTable const KDF11_AInstruction::group_00_00_nn
 { 
-    CommonInstruction::HALT::create,       // 00 00 00 
-    CommonInstruction::WAIT::create,       // 00 00 01
+    KDF11_AInstruction::HALT::create,      // 00 00 00 
+    KDF11_AInstruction::WAIT::create,      // 00 00 01
     CommonInstruction::RTI::create,        // 00 00 02
     CommonInstruction::BPT::create,        // 00 00 03
     CommonInstruction::IOT::create,        // 00 00 04
-    CommonInstruction::RESET::create,      // 00 00 05
-    CommonInstruction::RTT::create         // 00 00 06
+    KDF11_AInstruction::RESET::create,     // 00 00 05
+    CommonInstruction::RTT::create,        // 00 00 06
+    KDF11_AInstruction::MFPT::create       // 00 00 07
 };
 
 // Instruction format for RTS and Condition Code Operators instructions
@@ -165,25 +166,6 @@ KDF11_AInstruction::opCodeTable const KDF11_AInstruction::group_00_02_nn
     CommonInstruction::SCC::create         // 00 02 77
 };
 
-// Instruction format for Fixed and Floating Point Arithmetic instructions
-// (just the FIS part of the instruction format).
-// 
-// Just the operation codes in the range 07 50 0x till 07 50 3x are used.
-// The range 07 51 xx till 07 57 xx is handled in the corresponding function
-// to minimize the size of this opcode table.
-//
-KDF11_AInstruction::opCodeTable const KDF11_AInstruction::group_07_5n_nx
-{
-    CommonInstruction::FADD::create,       // 07 50 0x
-    CommonInstruction::FSUB::create,       // 07 50 1x
-    CommonInstruction::FMUL::create,       // 07 50 2x
-    CommonInstruction::FDIV::create,       // 07 50 3x
-    CommonInstruction::Unused::create,     // 07 50 4x
-    CommonInstruction::Unused::create,     // 07 50 5x
-    CommonInstruction::Unused::create,     // 07 50 6x
-    CommonInstruction::Unused::create      // 07 50 7x
-};
-
 // Instruction format for Fixed and Floating Point Arithmetic instructions,
 // plus the SOB and XOR instructions.
 // 
@@ -195,8 +177,8 @@ KDF11_AInstruction::opCodeTable const KDF11_AInstruction::group_07_nx_xx
     CommonInstruction::DIV::create,                    // 07 1x xx
     CommonInstruction::ASH::create,                    // 07 2x xx
     CommonInstruction::ASHC::create,                   // 07 3x xx
-    CommonInstruction::XOR::create,                    // 07 4x xx
-    decodeGroup_07_5n_nx,           // 07 5x xx
+    KDF11_AInstruction::XOR::create,                   // 07 4x xx
+    CommonInstruction::Unused::create,                 // 07 5x xx
     CommonInstruction::Unused::create,                 // 07 6x xx
     CommonInstruction::SOB::create                     // 07 7x xx
 };
@@ -245,22 +227,22 @@ KDF11_AInstruction::opCodeTable const KDF11_AInstruction::group_10_xx_xx
     CommonInstruction::TRAP::create,   // 10 45 xx
     CommonInstruction::TRAP::create,   // 10 46 xx
     CommonInstruction::TRAP::create,   // 10 47 xx
-    CommonInstruction::CLRB::create,   // 10 50 xx
-    CommonInstruction::COMB::create,   // 10 51 xx
-    CommonInstruction::INCB::create,   // 10 52 xx
-    CommonInstruction::DECB::create,   // 10 53 xx
-    CommonInstruction::NEGB::create,   // 10 54 xx
-    CommonInstruction::ADCB::create,   // 10 55 xx
-    CommonInstruction::SBCB::create,   // 10 56 xx
+    KDF11_AInstruction::CLRB::create,  // 10 50 xx
+    KDF11_AInstruction::COMB::create,  // 10 51 xx
+    KDF11_AInstruction::INCB::create,  // 10 52 xx
+    KDF11_AInstruction::DECB::create,  // 10 53 xx
+    KDF11_AInstruction::NEGB::create,  // 10 54 xx
+    KDF11_AInstruction::ADCB::create,  // 10 55 xx
+    KDF11_AInstruction::SBCB::create,  // 10 56 xx
     CommonInstruction::TSTB::create,   // 10 57 xx
-    CommonInstruction::RORB::create,   // 10 60 xx
-    CommonInstruction::ROLB::create,   // 10 61 xx
-    CommonInstruction::ASRB::create,   // 10 62 xx
-    CommonInstruction::ASLB::create,   // 10 63 xx
+    KDF11_AInstruction::RORB::create,  // 10 60 xx
+    KDF11_AInstruction::ROLB::create,  // 10 61 xx
+    KDF11_AInstruction::ASRB::create,  // 10 62 xx
+    KDF11_AInstruction::ASLB::create,  // 10 63 xx
     CommonInstruction::MTPS::create,   // 10 64 xx
-    CommonInstruction::Unused::create, // 10 65 xx Undefined in the LSI-11 Processor Handbook
-    CommonInstruction::Unused::create, // 10 66 xx Undefined in the LSI-11 Processor Handbook
-    CommonInstruction::MFPS::create,   // 10 67 xx
+    KDF11_AInstruction::MFPD::create,  // 10 65 xx MFPD and MFPI are identical instructions
+    KDF11_AInstruction::MTPD::create,  // 10 66 xx MTPD and MTPI are identical instructions
+    KDF11_AInstruction::MFPS::create,  // 10 67 xx
     CommonInstruction::Unused::create, // 10 70 xx The range 10 70 xx till 10 77 xx is undefined
     CommonInstruction::Unused::create, // 10 71 xx in the LSI-11 Processor Handbook
     CommonInstruction::Unused::create, // 10 72 xx
@@ -275,10 +257,10 @@ KDF11_AInstruction::opCodeTable const KDF11_AInstruction::group_10_xx_xx
 // instructions. 
 KDF11_AInstruction::opCodeTable const KDF11_AInstruction::group_00_nn_xx
 { 
-    decodeGroup_00_00_nn,           // 00 00 NN
+    decodeGroup_00_00_nn,                              // 00 00 NN
     CommonInstruction::JMP::create,                    // 00 01 xx
-    decodeGroup_00_02_nn,           // 00 02 NN
-    CommonInstruction::SWAB::create,                   // 00 03 xx
+    decodeGroup_00_02_nn,                              // 00 02 NN
+    KDF11_AInstruction::SWAB::create,                  // 00 03 xx
     CommonInstruction::BR::create,                     // 00 04 xx
     CommonInstruction::BR::create,                     // 00 05 xx
     CommonInstruction::BR::create,                     // 00 06 xx
@@ -315,22 +297,22 @@ KDF11_AInstruction::opCodeTable const KDF11_AInstruction::group_00_nn_xx
     CommonInstruction::JSR::create,                    // 00 45 xx
     CommonInstruction::JSR::create,                    // 00 46 xx
     CommonInstruction::JSR::create,                    // 00 47 xx
-    CommonInstruction::CLR::create,                    // 00 50 xx
-    CommonInstruction::COM::create,                    // 00 51 xx
-    CommonInstruction::INC::create,                    // 00 52 xx
-    CommonInstruction::DEC::create,                    // 00 53 xx
-    CommonInstruction::NEG::create,                    // 00 54 xx
-    CommonInstruction::ADC::create,                    // 00 55 xx
-    CommonInstruction::SBC::create,                    // 00 56 xx
+    KDF11_AInstruction::CLR::create,                   // 00 50 xx
+    KDF11_AInstruction::COM::create,                   // 00 51 xx
+    KDF11_AInstruction::INC::create,                   // 00 52 xx
+    KDF11_AInstruction::DEC::create,                   // 00 53 xx
+    KDF11_AInstruction::NEG::create,                   // 00 54 xx
+    KDF11_AInstruction::ADC::create,                   // 00 55 xx
+    KDF11_AInstruction::SBC::create,                   // 00 56 xx
     CommonInstruction::TST::create,                    // 00 57 xx
-    CommonInstruction::ROR::create,                    // 00 60 xx
-    CommonInstruction::ROL::create,                    // 00 61 xx
-    CommonInstruction::ASR::create,                    // 00 62 xx
-    CommonInstruction::ASL::create,                    // 00 63 xx
+    KDF11_AInstruction::ROR::create,                   // 00 60 xx
+    KDF11_AInstruction::ROL::create,                   // 00 61 xx
+    KDF11_AInstruction::ASR::create,                   // 00 62 xx
+    KDF11_AInstruction::ASL::create,                   // 00 63 xx
     CommonInstruction::MARK::create,                   // 00 64 xx
-    CommonInstruction::Unused::create,                 // 00 65 xx Undefined in the LSI-11 Processor Handbook
-    CommonInstruction::Unused::create,                 // 00 66 xx idem
-    CommonInstruction::SXT::create,                    // 00 67 xx
+    KDF11_AInstruction::MFPD::create,                  // 00 65 xx KDF11-A specific instruction
+    KDF11_AInstruction::MTPD::create,                  // 00 66 xx idem
+    KDF11_AInstruction::SXT::create,                   // 00 67 xx
     CommonInstruction::Unused::create,                 // 00 70 xx
     CommonInstruction::Unused::create,                 // 00 71 xx
     CommonInstruction::Unused::create,                 // 00 72 xx
@@ -344,20 +326,20 @@ KDF11_AInstruction::opCodeTable const KDF11_AInstruction::group_00_nn_xx
 // This is the main operation code control table.
 KDF11_AInstruction::opCodeTable const KDF11_AInstruction::group_nn_xx_xx 
 {
-    decodeGroup_00_nn_xx,           // 00 xx xx
-    CommonInstruction::MOV::create,                    // 01 xx xx
-    CommonInstruction::CMP::create,                    // 02 xx xx
-    CommonInstruction::BIT::create,                    // 03 xx xx
-    CommonInstruction::BIC::create,                    // 04 xx xx
-    CommonInstruction::BIS::create,                    // 05 xx xx
-    CommonInstruction::ADD::create,                    // 06 xx xx
-    decodeGroup_07_nx_xx,           // 07 nx xx
-    decodeGroup_10_xx_xx,           // 10 xx xx
-    CommonInstruction::MOVB::create,                   // 11 xx xx
-    CommonInstruction::CMPB::create,                   // 12 xx xx
-    CommonInstruction::BITB::create,                   // 13 xx xx
-    CommonInstruction::BICB::create,                   // 14 xx xx
-    CommonInstruction::BISB::create,                   // 15 xx xx
-    CommonInstruction::SUB::create,                    // 16 xx xx
+    decodeGroup_00_nn_xx,                              // 00 xx xx
+    KDF11_AInstruction::MOV::create,                   // 01 xx xx
+    KDF11_AInstruction::CMP::create,                   // 02 xx xx
+    KDF11_AInstruction::BIT::create,                   // 03 xx xx
+    KDF11_AInstruction::BIC::create,                   // 04 xx xx
+    KDF11_AInstruction::BIS::create,                   // 05 xx xx
+    KDF11_AInstruction::ADD::create,                   // 06 xx xx
+    decodeGroup_07_nx_xx,                              // 07 nx xx
+    decodeGroup_10_xx_xx,                              // 10 xx xx
+    KDF11_AInstruction::MOVB::create,                  // 11 xx xx
+    KDF11_AInstruction::CMPB::create,                  // 12 xx xx
+    KDF11_AInstruction::BITB::create,                  // 13 xx xx
+    KDF11_AInstruction::BICB::create,                  // 14 xx xx
+    KDF11_AInstruction::BISB::create,                  // 15 xx xx
+    KDF11_AInstruction::SUB::create,                   // 16 xx xx
     CommonInstruction::Unused::create                  // 17 xx xx Undefined in the LSI-11 Processor Handbook
 };

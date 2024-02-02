@@ -82,13 +82,13 @@ set (KDF11_ODT_SRCS
 
 set (KDF11_A_SRCS
     src/kd/kdf11/kdf11_a/kdf11_a.cpp
-    src/kd/kdf11/cpucontrol/kdf11_a_step.cpp
-    src/kd/kdf11/cpucontrol/kdf11_a_cpucontrol.cpp
-    src/kd/kdf11/cpudata/kdf11_aregisters/kdf11_aregisters.cpp
-    src/kd/kdf11/cpudata/kdf11_abusdevice.cpp
+    src/kd/kdf11/cpucontrol/kdf11_step.cpp
+    src/kd/kdf11/cpucontrol/kdf11_cpucontrol.cpp
+    src/kd/kdf11/cpudata/kdf11registers/kdf11registers.cpp
+    src/kd/kdf11/cpudata/kdf11busdevice.cpp
     src/kd/kdf11/kd11doubleoperandinstruction/kd11doubleoperandinstruction.cpp
-    src/kd/kdf11/kdf11_ainstruction/kdf11_ainstruction.cpp
-    src/kd/kdf11/kdf11_ainstruction/opcodetables.cpp
+    src/kd/kdf11/kdf11instruction/kdf11instruction.cpp
+    src/kd/kdf11/kdf11instruction/opcodetables.cpp
     src/kd/kdf11/ktf11_a/ktf11_a.cpp
     src/kd/kdf11/ktf11_a/ktf11_abusdevice.cpp
     ${KDF11_ODT_SRCS})
