@@ -66,31 +66,31 @@ set (KD11_NA_CPU_SRCS
     src/kd/kd11_na/pseudommu/pseudommu.cpp)
 
 set (KDF11_A_ODT_SRCS
-    src/kd/kdf11_a/odt/kdf11_a_odt.cpp
-    src/kd/kdf11_a/odt/addressopened.cpp
-    src/kd/kdf11_a/odt/atprompt.cpp
-    src/kd/kdf11_a/odt/createevent.cpp
-    src/kd/kdf11_a/odt/enteringaddress.cpp
-    src/kd/kdf11_a/odt/enteringaddressvalue.cpp
-    src/kd/kdf11_a/odt/enteringbinarydump.cpp
-    src/kd/kdf11_a/odt/enteringregister.cpp
-    src/kd/kdf11_a/odt/enteringregistervalue.cpp
-    src/kd/kdf11_a/odt/entrypoint.cpp
-    src/kd/kdf11_a/odt/exitpoint.cpp
-    src/kd/kdf11_a/odt/registeropened.cpp
-    src/kd/kdf11_a/odt/startingregister.cpp)
+    src/kd/kdf11/kdf11_a/odt/kdf11_a_odt.cpp
+    src/kd/kdf11/kdf11_a/odt/addressopened.cpp
+    src/kd/kdf11/kdf11_a/odt/atprompt.cpp
+    src/kd/kdf11/kdf11_a/odt/createevent.cpp
+    src/kd/kdf11/kdf11_a/odt/enteringaddress.cpp
+    src/kd/kdf11/kdf11_a/odt/enteringaddressvalue.cpp
+    src/kd/kdf11/kdf11_a/odt/enteringbinarydump.cpp
+    src/kd/kdf11/kdf11_a/odt/enteringregister.cpp
+    src/kd/kdf11/kdf11_a/odt/enteringregistervalue.cpp
+    src/kd/kdf11/kdf11_a/odt/entrypoint.cpp
+    src/kd/kdf11/kdf11_a/odt/exitpoint.cpp
+    src/kd/kdf11/kdf11_a/odt/registeropened.cpp
+    src/kd/kdf11/kdf11_a/odt/startingregister.cpp)
 
 set (KDF11_A_SRCS
-    src/kd/kdf11_a/kdf11_a.cpp
-    src/kd/kdf11_a/cpucontrol/kdf11_a_step.cpp
-    src/kd/kdf11_a/cpucontrol/kdf11_a_cpucontrol.cpp
-    src/kd/kdf11_a/cpudata/kdf11_aregisters/kdf11_aregisters.cpp
-    src/kd/kdf11_a/cpudata/kdf11_abusdevice.cpp
-    src/kd/kdf11_a/kd11doubleoperandinstruction/kd11doubleoperandinstruction.cpp
-    src/kd/kdf11_a/kdf11_ainstruction/kdf11_ainstruction.cpp
-    src/kd/kdf11_a/kdf11_ainstruction/opcodetables.cpp
-    src/kd/kdf11_a/ktf11_a/ktf11_a.cpp
-    src/kd/kdf11_a/ktf11_a/ktf11_abusdevice.cpp
+    src/kd/kdf11/kdf11_a/kdf11_a.cpp
+    src/kd/kdf11/kdf11_a/cpucontrol/kdf11_a_step.cpp
+    src/kd/kdf11/kdf11_a/cpucontrol/kdf11_a_cpucontrol.cpp
+    src/kd/kdf11/kdf11_a/cpudata/kdf11_aregisters/kdf11_aregisters.cpp
+    src/kd/kdf11/kdf11_a/cpudata/kdf11_abusdevice.cpp
+    src/kd/kdf11/kdf11_a/kd11doubleoperandinstruction/kd11doubleoperandinstruction.cpp
+    src/kd/kdf11/kdf11_a/kdf11_ainstruction/kdf11_ainstruction.cpp
+    src/kd/kdf11/kdf11_a/kdf11_ainstruction/opcodetables.cpp
+    src/kd/kdf11/kdf11_a/ktf11_a/ktf11_a.cpp
+    src/kd/kdf11/kdf11_a/ktf11_a/ktf11_abusdevice.cpp
     ${KDF11_A_ODT_SRCS})
 
  set (KD11_NA_SRCS

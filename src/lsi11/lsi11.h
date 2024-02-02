@@ -9,7 +9,7 @@
 #include "dlv11j/dlv11j.h"
 #include "msv11d/msv11d.h"
 #include "kd/kd11_na/kd11_na.h"
-#include "kd/kdf11_a/kdf11_a.h"
+#include "kd/kdf11/kdf11_a/kdf11_a.h"
 #include "kd/kdf11/kdf11_b/kdf11_b.h"
 #include "qbus/qbus.h"
 #include "console/console.h"

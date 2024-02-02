@@ -1,41 +1,41 @@
-#ifndef _BICB_H_
-#define _BICB_H_
+#ifndef _BISB_H_
+#define _BISB_H_
 
 #include "kdf11_ainstruction.h"
-#include "kd/kdf11_a/kd11doubleoperandinstruction/kd11doubleoperandinstruction.h"
+#include "kd/kdf11/kdf11_a/kd11doubleoperandinstruction/kd11doubleoperandinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/common/operandlocation/operandlocation.h"
 #include "kd/common/instructions/withfactory.h"
 
-// BICB - bit clear byte
+// BISB - bit set byte
 //
 // Operation:
-//  refer to BIC
+//  refer to BIS
 // 
 // Condition Codes:
-//  refer to BIC
+//  refer to BIS
 //
-class KDF11_AInstruction::BICB : public KD11DoubleOperandInstruction, public WithFactory<BICB>
+class KDF11_AInstruction::BISB : public KD11DoubleOperandInstruction, public WithFactory<BISB>
 {
 public:
-    BICB (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
+    BISB (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline KDF11_AInstruction::BICB::BICB (CpuData* cpuData, CpuControl* cpuControl,
-        MMU* mmu, u16 instruction)
+inline KDF11_AInstruction::BISB::BISB (CpuData* cpuData,
+        CpuControl* cpuControl, MMU* mmu, u16 instruction)
     :
     KD11DoubleOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
-inline bool KDF11_AInstruction::BICB::execute ()
+inline bool KDF11_AInstruction::BISB::execute ()
 {
     CondData<u8> source, destination;
 
     if (!readSourceOperand (&source) || !readDestinationOperand (&destination))
         return false;
 
-    u8 tmp = (u8)(~source & destination);
+    u8 tmp = source | destination;
 
     setPSW (ConditionCodes {.N = (bool) (tmp & 0x80),
         .Z = tmp == 0,
@@ -47,4 +47,4 @@ inline bool KDF11_AInstruction::BICB::execute ()
     return true;
 }
 
-#endif // _BICB_H_
+#endif // _BISB_H_

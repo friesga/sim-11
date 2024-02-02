@@ -2,7 +2,7 @@
 #define _ADD_H_
 
 #include "kdf11_ainstruction.h"
-#include "kd/kdf11_a/kd11doubleoperandinstruction/kd11doubleoperandinstruction.h"
+#include "kd/kdf11/kdf11_a/kd11doubleoperandinstruction/kd11doubleoperandinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/common/operandlocation/operandlocation.h"
 #include "kd/common/instructions/withfactory.h"

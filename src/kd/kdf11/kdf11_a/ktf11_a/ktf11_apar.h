@@ -3,7 +3,7 @@
 
 #include "types.h"
 #include "basicregister/basicregister.h"
-#include "kd/kdf11_a/ktf11_a/ktf11_apdr.h"
+#include "kd/kdf11/kdf11_a/ktf11_a/ktf11_apdr.h"
 
 // Definition of the KTF11-A Page Address Register.
 //
