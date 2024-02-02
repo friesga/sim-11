@@ -19,7 +19,7 @@ using std::placeholders::_5;
 KDF11_A::KDF11_A (Qbus* bus)
     :
     bus_ (bus),
-    powerUpMode_ {KDF11_AConfig::PowerUpMode::Bootstrap},
+    powerUpMode_ {KD11Config::PowerUpMode::Bootstrap},
     startAddress_ {stdBootAddress}
 {
     // Add the MMU to the CPU modules

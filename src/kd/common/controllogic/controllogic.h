@@ -41,7 +41,7 @@ public:
     //
     ControlLogic (Qbus* bus, CpuData* cpuData,
         CpuControl* cpuControl, MMU* mmu,
-        KD11_NAConfig::PowerUpMode powerUpMode, u16 startAddress,
+        KD11Config::PowerUpMode powerUpMode, u16 startAddress,
         KD11ODT::Creator odtCreator);
     void run ();
     void exit ();
@@ -94,7 +94,7 @@ private:
     CpuControl* cpuControl_;
     MMU* mmu_;
     unique_ptr<KD11ODT>	odt_ {};
-    KD11_NAConfig::PowerUpMode powerUpMode_;
+    KD11Config::PowerUpMode powerUpMode_;
     u16 startAddress_;
     KD11ODT::Creator odtCreator_;
     bool kd11Running_;

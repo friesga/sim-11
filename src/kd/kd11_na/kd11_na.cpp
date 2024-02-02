@@ -19,7 +19,7 @@ using std::placeholders::_5;
 KD11_NA::KD11_NA (Qbus* bus)
     :
     bus_ (bus),
-    powerUpMode_ {KD11_NAConfig::PowerUpMode::Bootstrap},
+    powerUpMode_ {KD11Config::PowerUpMode::Bootstrap},
     startAddress_ {stdBootAddress}
 {
     // Besides a pointer to the bus, a reference to our cpu, the start address

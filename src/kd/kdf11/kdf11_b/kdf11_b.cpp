@@ -18,7 +18,7 @@ using std::placeholders::_5;
 // the user.
 KDF11_B::KDF11_B (Qbus* bus)
     :
-    KDF11 (bus, KDF11_BConfig::PowerUpMode::Bootstrap, stdBootAddress)
+    KDF11 (bus, KD11Config::PowerUpMode::Bootstrap, stdBootAddress)
 {
     // Add the MMU to the CPU modules
     cpuModules_.push_back (&mmu_);

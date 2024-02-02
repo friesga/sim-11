@@ -51,7 +51,7 @@ private:
     KD11_NA_CpuControl cpuControl_ {bus_, &cpuData_, &pseudoMMU_};
     PseudoMMU pseudoMMU_ {bus_, &cpuData_};
     unique_ptr<KD11_NA_ODT>	odt_ {};
-    KD11_NAConfig::PowerUpMode powerUpMode_;
+    KD11Config::PowerUpMode powerUpMode_;
     u16 startAddress_;
     unique_ptr<ControlLogic> controlLogic_;
 

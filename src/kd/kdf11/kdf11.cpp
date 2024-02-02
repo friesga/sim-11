@@ -16,7 +16,7 @@ using std::placeholders::_5;
 KDF11::KDF11 (Qbus* bus, KD11Config::PowerUpMode powerUpMode, u16 startAddress)
     :
     bus_ {bus},
-    powerUpMode_ {powerUpMode_},
+    powerUpMode_ {powerUpMode},
     startAddress_ {startAddress}
 {}
 

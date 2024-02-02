@@ -47,7 +47,7 @@ private:
     KTF11_A mmu_ {bus_, &cpuData_};
     KDF11_A_CpuControl cpuControl_ {bus_, &cpuData_, &mmu_};
     unique_ptr<KDF11_A_ODT>	odt_ {};
-    KDF11_AConfig::PowerUpMode powerUpMode_;
+    KD11Config::PowerUpMode powerUpMode_;
     u16 startAddress_;
     unique_ptr<ControlLogic> controlLogic_;
 

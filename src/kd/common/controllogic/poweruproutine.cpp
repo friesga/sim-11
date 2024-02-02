@@ -25,7 +25,7 @@ ControlLogic::State ControlLogic::powerUpRoutine ()
 
     switch (powerUpMode_)
     {
-        case KD11_NAConfig::PowerUpMode::Vector:
+        case KD11Config::PowerUpMode::Vector:
             loadTrapVector (CpuData::TrapCondition::PowerFail);
             cpuControl_->proceed ();
 
@@ -36,7 +36,7 @@ ControlLogic::State ControlLogic::powerUpRoutine ()
 
             return Running {};
 
-        case KD11_NAConfig::PowerUpMode::ODT:
+        case KD11Config::PowerUpMode::ODT:
             // Halt the processor (if it isn't already halted). This will
             // place the processor in ODT mode on the next execution of
             // KD11_NA::step(). If the processor already is in ODT mode the
@@ -44,7 +44,7 @@ ControlLogic::State ControlLogic::powerUpRoutine ()
             cpuControl_->halt ();
             return Halted {};
 
-        case KD11_NAConfig::PowerUpMode::Bootstrap:
+        case KD11Config::PowerUpMode::Bootstrap:
             // Start the processor at the start address. This address is
             // either the standard boot address or an address determined by
             // a loaded file in absolute loader format.

@@ -15,7 +15,7 @@ using std::make_unique;
 // the user.
 ControlLogic::ControlLogic (Qbus* bus, CpuData* cpuData,
     CpuControl* cpuControl, MMU* mmu,
-    KD11_NAConfig::PowerUpMode powerUpMode, u16 startAddress,
+    KD11Config::PowerUpMode powerUpMode, u16 startAddress,
     KD11ODT::Creator odtCreator)
     :
     bus_ (bus),
