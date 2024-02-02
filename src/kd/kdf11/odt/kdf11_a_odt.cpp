@@ -12,7 +12,7 @@ using std::to_string;
 using std::make_unique;
 using std::move;
 
-KDF11_A_ODT::KDF11_A_ODT (Qbus *bus, CpuData* cpuData, CpuControl* cpuControl,
+KDF11_ODT::KDF11_ODT (Qbus *bus, CpuData* cpuData, CpuControl* cpuControl,
         MMU* mmu, unique_ptr<ConsoleAccess> consoleAccess)
     : 
     bus_ {bus},
@@ -31,14 +31,14 @@ KDF11_A_ODT::KDF11_A_ODT (Qbus *bus, CpuData* cpuData, CpuControl* cpuControl,
     stateMachine_->dispatch (StartFsm {});
 }
 
-unique_ptr<KDF11_A_ODT> KDF11_A_ODT::createODT (Qbus *bus, CpuData* cpuData,
+unique_ptr<KDF11_ODT> KDF11_ODT::createODT (Qbus *bus, CpuData* cpuData,
     CpuControl* cpuControl, MMU* mmu, unique_ptr<ConsoleAccess> consoleAccess)
 {
-    return move (make_unique<KDF11_A_ODT> (bus, cpuData, cpuControl, mmu,
+    return move (make_unique<KDF11_ODT> (bus, cpuData, cpuControl, mmu,
         make_unique<OperatorConsoleAccess> (bus)));
 }
 
-CondData<u8> KDF11_A_ODT::echoCharacter (CondData<u8> c)
+CondData<u8> KDF11_ODT::echoCharacter (CondData<u8> c)
 {
     // All characters (except ASCII codes 0, 2, 010 <BS> and 012 <LF>) are
     // to be echoed (EK-KDJ1A-UG-001).
@@ -73,7 +73,7 @@ CondData<u8> KDF11_A_ODT::echoCharacter (CondData<u8> c)
 // in a <CR><LF> sequence and for Linux in just a <LF>. So to get the same
 // output on both Windows and Linux, we have to add a <CR> for every <LF>
 // in the string.
-void KDF11_A_ODT::writeString (string str)
+void KDF11_ODT::writeString (string str)
 {
     for (u8 c : str)
     {
@@ -90,7 +90,7 @@ void KDF11_A_ODT::writeString (string str)
 //
 // Test runs conducted on a real LSI-11/2 show the last opened location
 // is set too on opening an invalid address.
-KDF11_A_ODT::State KDF11_A_ODT::writeAddressContents (u32 address)
+KDF11_ODT::State KDF11_ODT::writeAddressContents (u32 address)
 {
     location_ = AddressLocation<u32> {address};
     if (bus_->read (BusAddress (address, BusAddress::Width::_18Bit)).hasValue ())
@@ -108,14 +108,14 @@ KDF11_A_ODT::State KDF11_A_ODT::writeAddressContents (u32 address)
 
 // The computer always prints six numeric characters [i.e. prints leading
 // zero's]. (EK-11V03-TM-002)
-string KDF11_A_ODT::octalNumberToString (u32 number)
+string KDF11_ODT::octalNumberToString (u32 number)
 {
     stringstream tmp {};
     tmp << oct << setfill ('0') << setw (6) << number;
     return tmp.str ();
 }
 
-u32 KDF11_A_ODT::stringToOctalNumber (string str)
+u32 KDF11_ODT::stringToOctalNumber (string str)
 {
     stringstream tmp {str};
     u32 returnValue;
@@ -125,7 +125,7 @@ u32 KDF11_A_ODT::stringToOctalNumber (string str)
 
 // Convert the least significant 16 bits from the given octal number
 // string to a u16 and report the success or failure of this conversion.
-bool KDF11_A_ODT::stringTou16 (string str, size_t nDigits, u16 *value)
+bool KDF11_ODT::stringTou16 (string str, size_t nDigits, u16 *value)
 {
     if (str.empty ())
         return false;
@@ -137,7 +137,7 @@ bool KDF11_A_ODT::stringTou16 (string str, size_t nDigits, u16 *value)
 
 // Convert the least significant 18 bits from the given octal number
 // string to a u32 and report the success or failure of this conversion.
-bool KDF11_A_ODT::stringTou18 (string str, size_t nDigits, u32 *value)
+bool KDF11_ODT::stringTou18 (string str, size_t nDigits, u32 *value)
 {
     if (str.empty ())
         return false;
@@ -146,7 +146,7 @@ bool KDF11_A_ODT::stringTou18 (string str, size_t nDigits, u32 *value)
     return true;
 }
 
-bool KDF11_A_ODT::registerSeriesEndsWith (string str)
+bool KDF11_ODT::registerSeriesEndsWith (string str)
 {
     if (registerSeries_.size() >= 3)
     {
@@ -156,7 +156,7 @@ bool KDF11_A_ODT::registerSeriesEndsWith (string str)
         return false;
 }
 
-KDF11_A_ODT::State KDF11_A_ODT::openAddress ()
+KDF11_ODT::State KDF11_ODT::openAddress ()
 {
     // Convert the last eight digits entered to an address. This can lead
     // to an address larger than the available memory.
@@ -170,7 +170,7 @@ KDF11_A_ODT::State KDF11_A_ODT::openAddress ()
 
 // Convert the least significant 16 bits of the value entered to the new
 // value. If this value exceeds the maximal value of a 16 bit word display an error.
-void KDF11_A_ODT::setAddressValue ()
+void KDF11_ODT::setAddressValue ()
 {
     if (stringTou16 (digitSeries_, 6, &newValue_))
         bus_->writeWord (location_.wordAddress (), newValue_);
@@ -195,7 +195,7 @@ void KDF11_A_ODT::setAddressValue ()
 // the upper 2 bits of the 18-bit address are not affected; they must be
 // explicitly set. (EK-KDFEB-UG)
 // 
-KDF11_A_ODT::State KDF11_A_ODT::openNextAddress ()
+KDF11_ODT::State KDF11_ODT::openNextAddress ()
 {
     u32 address = (location_.inputAddress () & 0600000) | 
         ((location_.inputAddress () + 2) % 0200000);
@@ -213,7 +213,7 @@ KDF11_A_ODT::State KDF11_A_ODT::openNextAddress ()
 // getNextRegister. This functor should either increment of decrement the
 // register number modulo 8 (the number of internal registers).
 //
-KDF11_A_ODT::State KDF11_A_ODT::openNextRegister (State &&currentState, 
+KDF11_ODT::State KDF11_ODT::openNextRegister (State &&currentState, 
     std::function<u8(void)> getNextRegister)
 {
     if (location_.isA<PSWLocation> ())
@@ -229,7 +229,7 @@ KDF11_A_ODT::State KDF11_A_ODT::openNextRegister (State &&currentState,
 // Note that the contents of the PSW can be changed using the CR
 // command but bit 4 (the T bit) cannot be set using any of the
 // commands. (LSI11 PDP11/03 Processor Handbook)
-void KDF11_A_ODT::setRegisterValue ()
+void KDF11_ODT::setRegisterValue ()
 {
     // Convert the last six digits entered to the new value. If this value
     // exceeds the maximal value of a 16 bit word display an error.
@@ -256,7 +256,7 @@ void KDF11_A_ODT::setRegisterValue ()
 // the 18-bit address is used to address the I/O page but that should not
 // be necessary when we're using 16-bit addresses with proper mapping to the
 // I/O page.
-void KDF11_A_ODT::startCPU (u16 address)
+void KDF11_ODT::startCPU (u16 address)
 {
     bus_->BINIT().cycle ();
     mmu_->reset ();
@@ -266,14 +266,14 @@ void KDF11_A_ODT::startCPU (u16 address)
 
 // Process the given character in the state machine, returning true if we can
 // accept another character, i.e. the state machine is still running.
-bool KDF11_A_ODT::processCharacter (u8 character)
+bool KDF11_ODT::processCharacter (u8 character)
 {
     stateMachine_->dispatch (createEvent (echoCharacter (character)));
     return odtRunning_;
 }
 
 // Test if the given string ends with the second given string
-bool KDF11_A_ODT::endsWith (string const &completeString, string const &endString)
+bool KDF11_ODT::endsWith (string const &completeString, string const &endString)
 {
     if (completeString.length() >= endString.length())
         return (completeString.compare (completeString.length() - endString.length(),

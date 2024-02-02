@@ -2,13 +2,13 @@
 
 using std::move;
 
-KDF11_A_ODT::State KDF11_A_ODT::StateMachine::transition (RegisterOpened_4 &&, CloseLocationCmdEntered)
+KDF11_ODT::State KDF11_ODT::StateMachine::transition (RegisterOpened_4 &&, CloseLocationCmdEntered)
 {
     context_->writeString ("\n");
     return AtPrompt_1 {};
 }
 
-KDF11_A_ODT::State KDF11_A_ODT::StateMachine::transition (RegisterOpened_4 &&, DigitEntered digitEntered)
+KDF11_ODT::State KDF11_ODT::StateMachine::transition (RegisterOpened_4 &&, DigitEntered digitEntered)
 {
     context_->digitSeries_ = digitEntered.digit;
     return EnteringRegisterValue_8 {};
@@ -29,7 +29,7 @@ KDF11_A_ODT::State KDF11_A_ODT::StateMachine::transition (RegisterOpened_4 &&, D
 // 
 // This function will transition either to the current state or to atPrompt_1
 // in case the PSW is openend.
-KDF11_A_ODT::State KDF11_A_ODT::StateMachine::transition (RegisterOpened_4 &&currentState, OpenNextLocationCmdEntered)
+KDF11_ODT::State KDF11_ODT::StateMachine::transition (RegisterOpened_4 &&currentState, OpenNextLocationCmdEntered)
 {
     return move (context_->openNextRegister (move (currentState),
         [this] () {return (context_->location_.registerNr () + 1) % 8;}));

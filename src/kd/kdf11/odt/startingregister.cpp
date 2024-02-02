@@ -1,6 +1,6 @@
 #include "kdf11_a_odt.h"
 
-KDF11_A_ODT::State KDF11_A_ODT::StateMachine::transition (StartingRegister_2 &&, DigitEntered digitEntered)
+KDF11_ODT::State KDF11_ODT::StateMachine::transition (StartingRegister_2 &&, DigitEntered digitEntered)
 {
     // Append the given digit to the series of digits entered. This is to keep
     // track of the last digits entered.
@@ -13,7 +13,7 @@ KDF11_A_ODT::State KDF11_A_ODT::StateMachine::transition (StartingRegister_2 &&,
     return EnteringRegister_6 {};
 }
 
-KDF11_A_ODT::State KDF11_A_ODT::StateMachine::transition (StartingRegister_2 &&, PswDesignatorEntered)
+KDF11_ODT::State KDF11_ODT::StateMachine::transition (StartingRegister_2 &&, PswDesignatorEntered)
 {
     context_->registerSeries_.push_back (PswDesignator);
     return EnteringRegister_6 {};

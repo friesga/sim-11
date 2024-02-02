@@ -27,7 +27,7 @@ KDF11_A::KDF11_A (Qbus* bus)
     // and the power-up mode, the ControlLogic also gets passed a
     // std::function to the function to create ODT objects.
     controlLogic_ = make_unique<ControlLogic> (bus_, &cpuData_, &cpuControl_, &mmu_, powerUpMode_,
-        startAddress_, bind (&KDF11_A_ODT::createODT, _1, _2, _3, _4, _5));
+        startAddress_, bind (&KDF11_ODT::createODT, _1, _2, _3, _4, _5));
 }
 
 KDF11_A::KDF11_A (Qbus *bus, shared_ptr<KDF11_AConfig> kdf11_aConfig)
@@ -44,7 +44,7 @@ KDF11_A::KDF11_A (Qbus *bus, shared_ptr<KDF11_AConfig> kdf11_aConfig)
     // and the power-up mode, the ControlLogic also gets passed a
     // std::function to the function to create ODT objects.
     controlLogic_ = make_unique<ControlLogic> (bus_, &cpuData_, &cpuControl_, &mmu_, powerUpMode_,
-        startAddress_, bind (&KDF11_A_ODT::createODT, _1, _2, _3, _4, _5));
+        startAddress_, bind (&KDF11_ODT::createODT, _1, _2, _3, _4, _5));
 }
 
 

@@ -11,7 +11,7 @@
 // characters as commands". The test runs conducted at a real LSI-11/2
 // demonstrated that lower case characters are not accepted.
 //
-KDF11_A_ODT::Event KDF11_A_ODT::createEvent (CondData<u8> c)
+KDF11_ODT::Event KDF11_ODT::createEvent (CondData<u8> c)
 {
     if (!c.hasValue ())
         return ExitCmdGiven {};

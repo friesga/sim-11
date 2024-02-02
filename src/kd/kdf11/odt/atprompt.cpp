@@ -7,19 +7,19 @@ using std::to_string;
 // This file contains the entry actions and state transitions for
 // the state AtPrompt_1.
 
-void KDF11_A_ODT::StateMachine::entry (AtPrompt_1)
+void KDF11_ODT::StateMachine::entry (AtPrompt_1)
 {
     context_->console_->write ('@');
 }
 
-KDF11_A_ODT::State KDF11_A_ODT::StateMachine::transition (AtPrompt_1 &&, DigitEntered digitEntered)
+KDF11_ODT::State KDF11_ODT::StateMachine::transition (AtPrompt_1 &&, DigitEntered digitEntered)
 {
     // The given digit is the first digit of an address
     context_->digitSeries_ = digitEntered.digit;
     return EnteringAddress_5 {};
 }
 
-KDF11_A_ODT::State KDF11_A_ODT::StateMachine::transition (AtPrompt_1 &&, RegisterCmdEntered)
+KDF11_ODT::State KDF11_ODT::StateMachine::transition (AtPrompt_1 &&, RegisterCmdEntered)
 {
     context_->registerSeries_.clear ();
     return StartingRegister_2 {};
@@ -30,7 +30,7 @@ KDF11_A_ODT::State KDF11_A_ODT::StateMachine::transition (AtPrompt_1 &&, Registe
 // only if it is entered immediately after a prompt character. A / issued
 // immediately after the processor enters OOT mode will cause ? <CR>, <LF> to
 // be printed because a location has not yet been opened. (EK-KDJ1A-UG-001)
-KDF11_A_ODT::State KDF11_A_ODT::StateMachine::transition (AtPrompt_1 && currentState, OpenLocationCmdEntered)
+KDF11_ODT::State KDF11_ODT::StateMachine::transition (AtPrompt_1 && currentState, OpenLocationCmdEntered)
 {
     if (context_->location_.isA<monostate> ())
     {
@@ -62,7 +62,7 @@ KDF11_A_ODT::State KDF11_A_ODT::StateMachine::transition (AtPrompt_1 && currentS
 }
 
 // On a Proceed command set the CPU into the running state and exit ODT
-KDF11_A_ODT::State KDF11_A_ODT::StateMachine::transition (AtPrompt_1 &&, ProceedCmdEntered)
+KDF11_ODT::State KDF11_ODT::StateMachine::transition (AtPrompt_1 &&, ProceedCmdEntered)
 {
     context_->cpuControl_->proceed ();
     trace.cpuEvent (CpuEventRecordType::CPU_ODT_P, context_->cpuData_->registers ()[7]);
@@ -70,7 +70,7 @@ KDF11_A_ODT::State KDF11_A_ODT::StateMachine::transition (AtPrompt_1 &&, Proceed
 }
 
 // On a Go command start the CPU at the default address (000000).
-KDF11_A_ODT::State KDF11_A_ODT::StateMachine::transition (AtPrompt_1 &&, GoCmdEntered)
+KDF11_ODT::State KDF11_ODT::StateMachine::transition (AtPrompt_1 &&, GoCmdEntered)
 {
     context_->startCPU (000000);
     return ExitPoint {};

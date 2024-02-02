@@ -1,7 +1,7 @@
 #include "kdf11_a_odt.h"
 
 // This file contains the state transitions for the state EnteringAddress_5.
-KDF11_A_ODT::State KDF11_A_ODT::StateMachine::transition (EnteringAddress_5 &&, DigitEntered digitEntered)
+KDF11_ODT::State KDF11_ODT::StateMachine::transition (EnteringAddress_5 &&, DigitEntered digitEntered)
 {
     // Append the digit typed by the user to the address string and allow more
     // characters to be typed
@@ -23,7 +23,7 @@ KDF11_A_ODT::State KDF11_A_ODT::StateMachine::transition (EnteringAddress_5 &&, 
 // ODT responds to the error by printing ?<CR><LF> or @". 
 // (EK-KDJ1B-UG-001 and KDJ1E-UG-001)
 //
-KDF11_A_ODT::State KDF11_A_ODT::StateMachine::transition (EnteringAddress_5 &&, OpenLocationCmdEntered)
+KDF11_ODT::State KDF11_ODT::StateMachine::transition (EnteringAddress_5 &&, OpenLocationCmdEntered)
 {
     return move (context_->openAddress ());
 }
@@ -42,7 +42,7 @@ KDF11_A_ODT::State KDF11_A_ODT::StateMachine::transition (EnteringAddress_5 &&, 
 // Recognition of the semicolon is not implemented as the reaction on
 // input of characters after the semicolon is not described and is unclear.
 //
-KDF11_A_ODT::State KDF11_A_ODT::StateMachine::transition (EnteringAddress_5 &&, GoCmdEntered)
+KDF11_ODT::State KDF11_ODT::StateMachine::transition (EnteringAddress_5 &&, GoCmdEntered)
 {
     // A byte address can be specified as start address. Bit 0 of the start
     // address will be ignored and the CPU will start at the specified
@@ -63,7 +63,7 @@ KDF11_A_ODT::State KDF11_A_ODT::StateMachine::transition (EnteringAddress_5 &&, 
 
 // Test runs on a real LSI-11/2 showed that a location can be closed before
 // it is opened.
-KDF11_A_ODT::State KDF11_A_ODT::StateMachine::transition (EnteringAddress_5&&, CloseLocationCmdEntered)
+KDF11_ODT::State KDF11_ODT::StateMachine::transition (EnteringAddress_5&&, CloseLocationCmdEntered)
 {
     context_->writeString ("\n");
     return AtPrompt_1 {};

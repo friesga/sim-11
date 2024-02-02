@@ -7,7 +7,7 @@
 // statemachine offers no functionality for substates and I prefer the
 // implemented statemachine to resemble the statemachine described in the
 // KDJ11 User Guide as closely as possible.
-KDF11_A_ODT::State KDF11_A_ODT::StateMachine::transition (EnteringRegister_6 &&, DigitEntered digitEntered)
+KDF11_ODT::State KDF11_ODT::StateMachine::transition (EnteringRegister_6 &&, DigitEntered digitEntered)
 {
     // Append the entered digit to series of digits entered. See comment
     // on the transition in the StartingRegister_5 state.
@@ -15,7 +15,7 @@ KDF11_A_ODT::State KDF11_A_ODT::StateMachine::transition (EnteringRegister_6 &&,
     return EnteringRegister_6 {};
 }
 
-KDF11_A_ODT::State KDF11_A_ODT::StateMachine::transition (EnteringRegister_6 &&, PswDesignatorEntered)
+KDF11_ODT::State KDF11_ODT::StateMachine::transition (EnteringRegister_6 &&, PswDesignatorEntered)
 {
     context_->registerSeries_.push_back (PswDesignator);
     return EnteringRegister_6 {};
@@ -23,7 +23,7 @@ KDF11_A_ODT::State KDF11_A_ODT::StateMachine::transition (EnteringRegister_6 &&,
 
 // According to EK-KDJ1A-UG-001 the last three digits indicates whether
 // a register or the PSW has to be opened.
-KDF11_A_ODT::State KDF11_A_ODT::StateMachine::transition (EnteringRegister_6 &&, OpenLocationCmdEntered)
+KDF11_ODT::State KDF11_ODT::StateMachine::transition (EnteringRegister_6 &&, OpenLocationCmdEntered)
 {
     string const pswDesignator077 {"077"};
     string const pswDesignator477 {"477"};
@@ -52,7 +52,7 @@ KDF11_A_ODT::State KDF11_A_ODT::StateMachine::transition (EnteringRegister_6 &&,
     return RegisterOpened_4 {};
 }
 
-KDF11_A_ODT::State KDF11_A_ODT::StateMachine::transition (EnteringRegister_6 &&, CloseLocationCmdEntered)
+KDF11_ODT::State KDF11_ODT::StateMachine::transition (EnteringRegister_6 &&, CloseLocationCmdEntered)
 {
     context_->writeString ("\n");
     return AtPrompt_1 {};

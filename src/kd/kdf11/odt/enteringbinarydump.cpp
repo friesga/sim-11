@@ -25,7 +25,7 @@
 // format." This implies a difference on adressing the I/O page. On the
 // KD11-NA addresses above 0160000 would access the I/O page while on the
 // KDF11-A they would access memory.
-KDF11_A_ODT::State KDF11_A_ODT::StateMachine::transition (AtPrompt_1 &&, BinaryDumpCmdEntered)
+KDF11_ODT::State KDF11_ODT::StateMachine::transition (AtPrompt_1 &&, BinaryDumpCmdEntered)
 {
     // Expect two bytes and transform it into the starting address.
     // The two bytes forming the address have to be read in two separate
