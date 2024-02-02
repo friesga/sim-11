@@ -1,7 +1,7 @@
 #ifndef _KDF11_BCONFIG_H_
 #define _KDF11_BCONFIG_H_
 
-#include "../kd11config/kd11config.h"
+#include "../kdconfig/kdconfig.h"
 
 struct KDF11_BConfig : public KD11Config
 {

@@ -1,7 +1,7 @@
 #ifndef _KD11PROCESSOR_H_
 #define _KD11PROCESSOR_H_
 
-#include "../kd11config/kd11config.h"
+#include "../kdconfig/kdconfig.h"
 #include "../sectionprocessor/sectionprocessor.h"
 
 #include <memory>
