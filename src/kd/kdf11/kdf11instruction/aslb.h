@@ -20,20 +20,20 @@
 // and for even addresses the carry bit is loaded from bit 7 and bit 0 is
 // loaded with a zero.
 //
-class KDF11_AInstruction::ASLB : public SingleOperandInstruction, public WithFactory<ASLB>
+class KDF11Instruction::ASLB : public SingleOperandInstruction, public WithFactory<ASLB>
 {
 public:
     ASLB (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline KDF11_AInstruction::ASLB::ASLB (CpuData* cpuData,
+inline KDF11Instruction::ASLB::ASLB (CpuData* cpuData,
         CpuControl* cpuControl, MMU* mmu, u16 instruction)
     :
     SingleOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
-inline bool KDF11_AInstruction::ASLB::execute ()
+inline bool KDF11Instruction::ASLB::execute ()
 {
     CondData<u8> source;
     if (!readOperand (&source))

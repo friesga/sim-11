@@ -16,22 +16,22 @@
 //  refer to CLR
 //
 // This class implements the CLRB instruction for the KDF11-A. See comment
-// in KDF11_AInstruction::MOV.
+// in KDF11Instruction::MOV.
 //
-class KDF11_AInstruction::CLRB : public SingleOperandInstruction, public WithFactory<CLRB>
+class KDF11Instruction::CLRB : public SingleOperandInstruction, public WithFactory<CLRB>
 {
 public:
     CLRB (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline KDF11_AInstruction::CLRB::CLRB (CpuData* cpuData, CpuControl* cpuControl,
+inline KDF11Instruction::CLRB::CLRB (CpuData* cpuData, CpuControl* cpuControl,
         MMU* mmu, u16 instruction)
     :
     SingleOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
-inline bool KDF11_AInstruction::CLRB::execute ()
+inline bool KDF11Instruction::CLRB::execute ()
 {
     setPSW (ConditionCodes {.N = false,
         .Z = true,

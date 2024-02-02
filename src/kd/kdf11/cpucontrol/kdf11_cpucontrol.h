@@ -45,7 +45,7 @@ private:
 	MMU* mmu_;
 	CpuData* cpuData_;
 	CpuRunState runState;
-	KDF11_AInstruction kdf11_aInstruction;
+	KDF11Instruction KDF11Instruction;
 	HaltReason haltReason_;
 	bool traceFlag_;
 

@@ -24,20 +24,20 @@
 // used to indicate which processor a program is being executed on. LSI-11 and
 // LSI-11/2 processors treat this op code as a reserved instruction trap. 
 //
-class KDF11_AInstruction::MFPT : public NoOperandInstruction, public WithFactory<MFPT>
+class KDF11Instruction::MFPT : public NoOperandInstruction, public WithFactory<MFPT>
 {
 public:
     MFPT (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline KDF11_AInstruction::MFPT::MFPT (CpuData* cpuData, CpuControl* cpuControl,
+inline KDF11Instruction::MFPT::MFPT (CpuData* cpuData, CpuControl* cpuControl,
         MMU* mmu, u16 instruction)
     :
     NoOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
-inline bool KDF11_AInstruction::MFPT::execute ()
+inline bool KDF11Instruction::MFPT::execute ()
 {
     cpuData_->registers ()[0] = 3;
     return true;

@@ -18,20 +18,20 @@
 // A RESET executed in user mode results in a NOP (EK-KDF11-UG-PR2,
 // par. 8.3.3.3).
 //
-class KDF11_AInstruction::RESET : public NoOperandInstruction, public WithFactory<RESET>
+class KDF11Instruction::RESET : public NoOperandInstruction, public WithFactory<RESET>
 {
 public:
     RESET (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline KDF11_AInstruction::RESET::RESET (CpuData* cpuData, CpuControl* cpuControl,
+inline KDF11Instruction::RESET::RESET (CpuData* cpuData, CpuControl* cpuControl,
         MMU* mmu, u16 instruction)
     :
     NoOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
-inline bool KDF11_AInstruction::RESET::execute ()
+inline bool KDF11Instruction::RESET::execute ()
 {
     if (cpuData_->psw ().currentMode () != PSW::Mode::User)
         cpuControl_->busReset ();

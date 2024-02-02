@@ -19,20 +19,20 @@
 // carry bit is loaded with bit 15 of the word and for even addresses the carry
 // bit is loaded with bit 7 of the word.
 //
-class KDF11_AInstruction::ROLB : public SingleOperandInstruction, public WithFactory<ROLB>
+class KDF11Instruction::ROLB : public SingleOperandInstruction, public WithFactory<ROLB>
 {
 public:
     ROLB (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline KDF11_AInstruction::ROLB::ROLB (CpuData* cpuData, CpuControl* cpuControl,
+inline KDF11Instruction::ROLB::ROLB (CpuData* cpuData, CpuControl* cpuControl,
         MMU* mmu, u16 instruction)
     :
     SingleOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
-inline bool KDF11_AInstruction::ROLB::execute ()
+inline bool KDF11Instruction::ROLB::execute ()
 {
     CondData<u8> source;
     if (!readOperand (&source))

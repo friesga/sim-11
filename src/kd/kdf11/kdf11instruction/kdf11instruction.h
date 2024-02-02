@@ -1,5 +1,5 @@
-#ifndef _KDF11_AINSTRUCTION_H_
-#define _KDF11_AINSTRUCTION_H_
+#ifndef _KDF11Instruction_H_
+#define _KDF11Instruction_H_
 
 #include "kd/common/lsi11instruction/lsi11instruction.h"
 #include "kd/include/cpudata.h"
@@ -98,7 +98,7 @@ using std::unique_ptr;
 // same register as both source and destination operands are executed in
 // the correct order for the KDF11-A.
 //
-class KDF11_AInstruction
+class KDF11Instruction
 {
     class ADC;
     class ADCB;
@@ -175,4 +175,4 @@ private:
     static unique_ptr<LSI11Instruction> decodeGroup_nn_xx_xx (CpuData*, CpuControl*, MMU*, u16);
 };
 
-#endif // KDF11_AINSTRUCTION_H_
+#endif // KDF11Instruction_H_

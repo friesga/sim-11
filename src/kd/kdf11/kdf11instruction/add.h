@@ -26,20 +26,20 @@
 // The contents of the source are not affected. Two's complement addition is
 // performed.
 //
-class KDF11_AInstruction::ADD : public KD11DoubleOperandInstruction, public WithFactory<ADD>
+class KDF11Instruction::ADD : public KD11DoubleOperandInstruction, public WithFactory<ADD>
 {
 public:
     ADD (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline KDF11_AInstruction::ADD::ADD (CpuData* cpuData,
+inline KDF11Instruction::ADD::ADD (CpuData* cpuData,
         CpuControl* cpuControl, MMU* mmu, u16 instruction)
     :
     KD11DoubleOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
-inline bool KDF11_AInstruction::ADD::execute ()
+inline bool KDF11Instruction::ADD::execute ()
 {
     CondData<u16> source, destination;
 

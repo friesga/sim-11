@@ -25,20 +25,20 @@
 // which may then be used for arithmetic and logical conditional branches.
 // Both operands are unaffected. The only action is to set the condition codes.
 //
-class KDF11_AInstruction::CMP : public KD11DoubleOperandInstruction, public WithFactory<CMP>
+class KDF11Instruction::CMP : public KD11DoubleOperandInstruction, public WithFactory<CMP>
 {
 public:
     CMP (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline KDF11_AInstruction::CMP::CMP (CpuData* cpuData, CpuControl* cpuControl,
+inline KDF11Instruction::CMP::CMP (CpuData* cpuData, CpuControl* cpuControl,
         MMU* mmu, u16 instruction)
     :
     KD11DoubleOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
-inline bool KDF11_AInstruction::CMP::execute ()
+inline bool KDF11Instruction::CMP::execute ()
 {
     CondData<u16> source, destination;
 

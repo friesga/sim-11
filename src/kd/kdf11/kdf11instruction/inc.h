@@ -20,20 +20,20 @@
 //
 // Add one to contents of destination
 //
-class KDF11_AInstruction::INC : public SingleOperandInstruction, public WithFactory<INC>
+class KDF11Instruction::INC : public SingleOperandInstruction, public WithFactory<INC>
 {
 public:
     INC (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline KDF11_AInstruction::INC::INC (CpuData* cpuData, CpuControl* cpuControl,
+inline KDF11Instruction::INC::INC (CpuData* cpuData, CpuControl* cpuControl,
         MMU* mmu, u16 instruction)
     :
     SingleOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
-inline bool KDF11_AInstruction::INC::execute ()
+inline bool KDF11Instruction::INC::execute ()
 {
     CondData<u16> contents;
     if (!readOperand (&contents))

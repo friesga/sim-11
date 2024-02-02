@@ -22,20 +22,20 @@
 // Exchanges high-order byte and low-order byte of the destination
 // word (destination must be a word address).
 //
-class KDF11_AInstruction::SWAB : public SingleOperandInstruction, public WithFactory<SWAB>
+class KDF11Instruction::SWAB : public SingleOperandInstruction, public WithFactory<SWAB>
 {
 public:
     SWAB (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline KDF11_AInstruction::SWAB::SWAB (CpuData* cpuData, CpuControl* cpuControl,
+inline KDF11Instruction::SWAB::SWAB (CpuData* cpuData, CpuControl* cpuControl,
         MMU* mmu, u16 instruction)
     :
     SingleOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
-inline bool KDF11_AInstruction::SWAB::execute ()
+inline bool KDF11Instruction::SWAB::execute ()
 {
     CondData<u16> operand;
     if (!readOperand (&operand))

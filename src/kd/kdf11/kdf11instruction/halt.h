@@ -17,20 +17,20 @@
 //
 // A HALT in user mode traps to location 10 (EK-KDF11-UG-PR2, par. 8.3.3.3).
 //
-class KDF11_AInstruction::HALT : public NoOperandInstruction, public WithFactory<HALT>
+class KDF11Instruction::HALT : public NoOperandInstruction, public WithFactory<HALT>
 {
 public:
     HALT (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline KDF11_AInstruction::HALT::HALT (CpuData* cpuData, CpuControl* cpuControl,
+inline KDF11Instruction::HALT::HALT (CpuData* cpuData, CpuControl* cpuControl,
         MMU* mmu, u16 instruction)
     :
     NoOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
-inline bool KDF11_AInstruction::HALT::execute ()
+inline bool KDF11Instruction::HALT::execute ()
 {
     if (cpuData_->psw ().currentMode () == PSW::Mode::User)
     {

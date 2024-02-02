@@ -15,20 +15,20 @@
 // Condition Codes:
 //  refer to COM
 //
-class KDF11_AInstruction::COMB : public SingleOperandInstruction, public WithFactory<COMB>
+class KDF11Instruction::COMB : public SingleOperandInstruction, public WithFactory<COMB>
 {
 public:
     COMB (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline KDF11_AInstruction::COMB::COMB (CpuData* cpuData, CpuControl* cpuControl,
+inline KDF11Instruction::COMB::COMB (CpuData* cpuData, CpuControl* cpuControl,
         MMU* mmu, u16 instruction)
     :
     SingleOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
-inline bool KDF11_AInstruction::COMB::execute ()
+inline bool KDF11Instruction::COMB::execute ()
 {
     CondData<u8> operand;
     if (!readOperand (&operand))

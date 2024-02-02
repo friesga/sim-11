@@ -20,22 +20,22 @@
 // operates on bytes exactly as MOV operates on words.
 //
 // This class implements the MOVB instruction for the KDF11-A. See comment
-// in KDF11_AInstruction::MOV.
+// in KDF11Instruction::MOV.
 //
-class KDF11_AInstruction::MOVB : public KD11DoubleOperandInstruction, public WithFactory<MOVB>
+class KDF11Instruction::MOVB : public KD11DoubleOperandInstruction, public WithFactory<MOVB>
 {
 public:
     MOVB (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline KDF11_AInstruction::MOVB::MOVB (CpuData* cpuData, CpuControl* cpuControl,
+inline KDF11Instruction::MOVB::MOVB (CpuData* cpuData, CpuControl* cpuControl,
         MMU* mmu, u16 instruction)
     :
     KD11DoubleOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
-inline bool KDF11_AInstruction::MOVB::execute ()
+inline bool KDF11Instruction::MOVB::execute ()
 {
     CondData<u8> source;
 

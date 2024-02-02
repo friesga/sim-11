@@ -15,20 +15,20 @@
 // Condition Codes:
 //  refer to DEC
 //
-class KDF11_AInstruction::DECB : public SingleOperandInstruction, public WithFactory<DECB>
+class KDF11Instruction::DECB : public SingleOperandInstruction, public WithFactory<DECB>
 {
 public:
     DECB (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline KDF11_AInstruction::DECB::DECB (CpuData* cpuData, CpuControl* cpuControl,
+inline KDF11Instruction::DECB::DECB (CpuData* cpuData, CpuControl* cpuControl,
         MMU* mmu, u16 instruction)
     :
     SingleOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
-inline bool KDF11_AInstruction::DECB::execute ()
+inline bool KDF11Instruction::DECB::execute ()
 {
     CondData<u8> source;
     if (!readOperand (&source))

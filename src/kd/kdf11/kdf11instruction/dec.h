@@ -20,20 +20,20 @@
 //
 // Subtract 1 from the contents of the destination
 //
-class KDF11_AInstruction::DEC : public SingleOperandInstruction, public WithFactory<DEC>
+class KDF11Instruction::DEC : public SingleOperandInstruction, public WithFactory<DEC>
 {
 public:
     DEC (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline KDF11_AInstruction::DEC::DEC (CpuData* cpuData, CpuControl* cpuControl,
+inline KDF11Instruction::DEC::DEC (CpuData* cpuData, CpuControl* cpuControl,
         MMU* mmu, u16 instruction)
     :
     SingleOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
-inline bool KDF11_AInstruction::DEC::execute ()
+inline bool KDF11Instruction::DEC::execute ()
 {
     CondData<u16> contents;
     if (!readOperand (&contents))

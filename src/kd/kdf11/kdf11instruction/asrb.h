@@ -18,20 +18,20 @@
 // Same as ASR instruction with the distinction that for odd adresses bit 15
 // is reproduced and for even addresses bit 7 is reproduced.
 //
-class KDF11_AInstruction::ASRB : public SingleOperandInstruction, public WithFactory<ASRB>
+class KDF11Instruction::ASRB : public SingleOperandInstruction, public WithFactory<ASRB>
 {
 public:
     ASRB (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline KDF11_AInstruction::ASRB::ASRB (CpuData* cpuData,
+inline KDF11Instruction::ASRB::ASRB (CpuData* cpuData,
         CpuControl* cpuControl, MMU* mmu, u16 instruction)
     :
     SingleOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
-inline bool KDF11_AInstruction::ASRB::execute ()
+inline bool KDF11Instruction::ASRB::execute ()
 {
     CondData<u8> source;
     if (!readOperand (&source))

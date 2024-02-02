@@ -23,20 +23,20 @@
 // corresponding bits set in the source are set in the destination. The
 // contents of the destination are lost.
 //
-class KDF11_AInstruction::BIS : public KD11DoubleOperandInstruction, public WithFactory<BIS>
+class KDF11Instruction::BIS : public KD11DoubleOperandInstruction, public WithFactory<BIS>
 {
 public:
     BIS (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline KDF11_AInstruction::BIS::BIS (CpuData* cpuData,
+inline KDF11Instruction::BIS::BIS (CpuData* cpuData,
         CpuControl* cpuControl, MMU* mmu, u16 instruction)
     :
     KD11DoubleOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
-inline bool KDF11_AInstruction::BIS::execute ()
+inline bool KDF11Instruction::BIS::execute ()
 {
     CondData<u16> source, destination;
 

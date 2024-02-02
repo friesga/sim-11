@@ -22,20 +22,20 @@
 // and modifies condition codes accordingly. Neither the source nor
 // destination operands are affected.
 //
-class KDF11_AInstruction::BIT : public KD11DoubleOperandInstruction, public WithFactory<BIT>
+class KDF11Instruction::BIT : public KD11DoubleOperandInstruction, public WithFactory<BIT>
 {
 public:
     BIT (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline KDF11_AInstruction::BIT::BIT (CpuData* cpuData, CpuControl* cpuControl,
+inline KDF11Instruction::BIT::BIT (CpuData* cpuData, CpuControl* cpuControl,
         MMU* mmu, u16 instruction)
     :
     KD11DoubleOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
-inline bool KDF11_AInstruction::BIT::execute ()
+inline bool KDF11Instruction::BIT::execute ()
 {
     CondData<u16> source, destination;
 

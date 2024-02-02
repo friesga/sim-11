@@ -29,20 +29,20 @@
 // T-bit is not affected by an Explicit PS Access (see EK-KDF-UG-PR2,
 // Table 8-1).
 //
-class KDF11_AInstruction::CLR : public SingleOperandInstruction, public WithFactory<CLR>
+class KDF11Instruction::CLR : public SingleOperandInstruction, public WithFactory<CLR>
 {
 public:
     CLR (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline KDF11_AInstruction::CLR::CLR (CpuData* cpuData, CpuControl* cpuControl,
+inline KDF11Instruction::CLR::CLR (CpuData* cpuData, CpuControl* cpuControl,
         MMU* mmu, u16 instruction)
     :
     SingleOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
-inline bool KDF11_AInstruction::CLR::execute ()
+inline bool KDF11Instruction::CLR::execute ()
 {
     setPSW (ConditionCodes {.N = false,
         .Z = true,

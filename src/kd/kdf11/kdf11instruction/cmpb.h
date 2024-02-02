@@ -15,19 +15,19 @@
 // Condition Codes:
 //  refer to CMP
 //
-class KDF11_AInstruction::CMPB : public KD11DoubleOperandInstruction, public WithFactory<CMPB>
+class KDF11Instruction::CMPB : public KD11DoubleOperandInstruction, public WithFactory<CMPB>
 {
 public:
     CMPB (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline KDF11_AInstruction::CMPB::CMPB (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction)
+inline KDF11Instruction::CMPB::CMPB (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction)
     :
     KD11DoubleOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
-inline bool KDF11_AInstruction::CMPB::execute ()
+inline bool KDF11Instruction::CMPB::execute ()
 {
     CondData<u8> source, destination;
 

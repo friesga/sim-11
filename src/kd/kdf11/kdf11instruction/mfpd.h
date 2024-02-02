@@ -26,20 +26,20 @@
 // Since data space does not exist in the KDFll, MFPD executes in the same way
 // as an MFPI does. 
 //
-class KDF11_AInstruction::MFPD : public SingleOperandInstruction, public WithFactory<MFPD>
+class KDF11Instruction::MFPD : public SingleOperandInstruction, public WithFactory<MFPD>
 {
 public:
     MFPD (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline KDF11_AInstruction::MFPD::MFPD (CpuData* cpuData, CpuControl* cpuControl,
+inline KDF11Instruction::MFPD::MFPD (CpuData* cpuData, CpuControl* cpuControl,
         MMU* mmu, u16 instruction)
     :
     SingleOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
-inline bool KDF11_AInstruction::MFPD::execute ()
+inline bool KDF11Instruction::MFPD::execute ()
 {
     CondData<u16> source;
 

@@ -22,20 +22,20 @@
 // carry from the subtraction of two low-order words to be subtracted from the
 // high order part of the result.
 //
-class KDF11_AInstruction::SBC : public SingleOperandInstruction, public WithFactory<SBC>
+class KDF11Instruction::SBC : public SingleOperandInstruction, public WithFactory<SBC>
 {
 public:
     SBC (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline KDF11_AInstruction::SBC::SBC (CpuData* cpuData, CpuControl* cpuControl,
+inline KDF11Instruction::SBC::SBC (CpuData* cpuData, CpuControl* cpuControl,
         MMU* mmu, u16 instruction)
     :
     SingleOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
-inline bool KDF11_AInstruction::SBC::execute ()
+inline bool KDF11Instruction::SBC::execute ()
 {
     CondData<u16> contents;
     if (!readOperand (&contents))

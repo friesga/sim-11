@@ -29,20 +29,20 @@
 // Since data space does not exist in the KDF11, MTPD executes in the same way 
 // as MTPI does. 
 //
-class KDF11_AInstruction::MTPD : public SingleOperandInstruction, public WithFactory<MTPD>
+class KDF11Instruction::MTPD : public SingleOperandInstruction, public WithFactory<MTPD>
 {
 public:
     MTPD (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline KDF11_AInstruction::MTPD::MTPD (CpuData* cpuData, CpuControl* cpuControl,
+inline KDF11Instruction::MTPD::MTPD (CpuData* cpuData, CpuControl* cpuControl,
         MMU* mmu, u16 instruction)
     :
     SingleOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
-inline bool KDF11_AInstruction::MTPD::execute ()
+inline bool KDF11Instruction::MTPD::execute ()
 {
     u16 tmp;
     

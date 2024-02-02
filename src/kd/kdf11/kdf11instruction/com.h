@@ -21,20 +21,20 @@
 // Replaces the contents of the destination address by their logical
 // complement (each bit equal to 0 is set and each bit equal to 1 is cleared).
 //
-class KDF11_AInstruction::COM : public SingleOperandInstruction, public WithFactory<COM>
+class KDF11Instruction::COM : public SingleOperandInstruction, public WithFactory<COM>
 {
 public:
     COM (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline KDF11_AInstruction::COM::COM (CpuData* cpuData, CpuControl* cpuControl,
+inline KDF11Instruction::COM::COM (CpuData* cpuData, CpuControl* cpuControl,
         MMU* mmu, u16 instruction)
     :
     SingleOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
-inline bool KDF11_AInstruction::COM::execute ()
+inline bool KDF11Instruction::COM::execute ()
 {
     CondData<u16> operand;
     if (!readOperand (&operand))

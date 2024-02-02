@@ -15,20 +15,20 @@
 // Condition Codes:
 //  refer to BIS
 //
-class KDF11_AInstruction::BISB : public KD11DoubleOperandInstruction, public WithFactory<BISB>
+class KDF11Instruction::BISB : public KD11DoubleOperandInstruction, public WithFactory<BISB>
 {
 public:
     BISB (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline KDF11_AInstruction::BISB::BISB (CpuData* cpuData,
+inline KDF11Instruction::BISB::BISB (CpuData* cpuData,
         CpuControl* cpuControl, MMU* mmu, u16 instruction)
     :
     KD11DoubleOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
-inline bool KDF11_AInstruction::BISB::execute ()
+inline bool KDF11Instruction::BISB::execute ()
 {
     CondData<u8> source, destination;
 

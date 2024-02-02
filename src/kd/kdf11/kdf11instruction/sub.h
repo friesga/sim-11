@@ -21,20 +21,20 @@
 //  C: cleared if there was a carry from the most significant bit of the
 //     result; set otherwise
 //
-class KDF11_AInstruction::SUB : public KD11DoubleOperandInstruction, public WithFactory<SUB>
+class KDF11Instruction::SUB : public KD11DoubleOperandInstruction, public WithFactory<SUB>
 {
 public:
     SUB (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline KDF11_AInstruction::SUB::SUB (CpuData* cpuData, CpuControl* cpuControl,
+inline KDF11Instruction::SUB::SUB (CpuData* cpuData, CpuControl* cpuControl,
         MMU* mmu, u16 instruction)
     :
     KD11DoubleOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
-inline bool KDF11_AInstruction::SUB::execute ()
+inline bool KDF11Instruction::SUB::execute ()
 {
     CondData<u16> source, destination;
 

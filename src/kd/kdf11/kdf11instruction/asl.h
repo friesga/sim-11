@@ -25,20 +25,20 @@
 // of the destination. ASL performs a signed multiplication of the destination
 // by 2 with overflow indication.
 //
-class KDF11_AInstruction::ASL : public SingleOperandInstruction, public WithFactory<ASL>
+class KDF11Instruction::ASL : public SingleOperandInstruction, public WithFactory<ASL>
 {
 public:
     ASL (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline KDF11_AInstruction::ASL::ASL (CpuData* cpuData,
+inline KDF11Instruction::ASL::ASL (CpuData* cpuData,
         CpuControl* cpuControl, MMU* mmu, u16 instruction)
     :
     SingleOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
-inline bool KDF11_AInstruction::ASL::execute ()
+inline bool KDF11Instruction::ASL::execute ()
 {
     CondData<u16> contents;
     if (!readOperand (&contents))

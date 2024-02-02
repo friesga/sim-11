@@ -15,20 +15,20 @@
 // Condition Codes:
 //  refer to SBC
 //
-class KDF11_AInstruction::SBCB : public SingleOperandInstruction, public WithFactory<SBCB>
+class KDF11Instruction::SBCB : public SingleOperandInstruction, public WithFactory<SBCB>
 {
 public:
     SBCB (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline KDF11_AInstruction::SBCB::SBCB (CpuData* cpuData, CpuControl* cpuControl,
+inline KDF11Instruction::SBCB::SBCB (CpuData* cpuData, CpuControl* cpuControl,
         MMU* mmu, u16 instruction)
     :
     SingleOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
-inline bool KDF11_AInstruction::SBCB::execute ()
+inline bool KDF11Instruction::SBCB::execute ()
 {
     CondData<u8> source;
     if (!readOperand (&source))

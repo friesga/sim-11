@@ -85,20 +85,20 @@
 // Instruction format for Operate Group plus BPT and IOT,
 //
 // and minus NOP instructions.
-KDF11_AInstruction::opCodeTable const KDF11_AInstruction::group_00_00_nn
+KDF11Instruction::opCodeTable const KDF11Instruction::group_00_00_nn
 { 
-    KDF11_AInstruction::HALT::create,      // 00 00 00 
-    KDF11_AInstruction::WAIT::create,      // 00 00 01
+    KDF11Instruction::HALT::create,      // 00 00 00 
+    KDF11Instruction::WAIT::create,      // 00 00 01
     CommonInstruction::RTI::create,        // 00 00 02
     CommonInstruction::BPT::create,        // 00 00 03
     CommonInstruction::IOT::create,        // 00 00 04
-    KDF11_AInstruction::RESET::create,     // 00 00 05
+    KDF11Instruction::RESET::create,     // 00 00 05
     CommonInstruction::RTT::create,        // 00 00 06
-    KDF11_AInstruction::MFPT::create       // 00 00 07
+    KDF11Instruction::MFPT::create       // 00 00 07
 };
 
 // Instruction format for RTS and Condition Code Operators instructions
-KDF11_AInstruction::opCodeTable const KDF11_AInstruction::group_00_02_nn
+KDF11Instruction::opCodeTable const KDF11Instruction::group_00_02_nn
 {
     CommonInstruction::RTS::create,        // 00 02 00
     CommonInstruction::RTS::create,        // 00 02 01
@@ -171,13 +171,13 @@ KDF11_AInstruction::opCodeTable const KDF11_AInstruction::group_00_02_nn
 // 
 // The FIS instructions are defined in a separate group.
 //
-KDF11_AInstruction::opCodeTable const KDF11_AInstruction::group_07_nx_xx
+KDF11Instruction::opCodeTable const KDF11Instruction::group_07_nx_xx
 {
     CommonInstruction::MUL::create,                    // 07 0x xx
     CommonInstruction::DIV::create,                    // 07 1x xx
     CommonInstruction::ASH::create,                    // 07 2x xx
     CommonInstruction::ASHC::create,                   // 07 3x xx
-    KDF11_AInstruction::XOR::create,                   // 07 4x xx
+    KDF11Instruction::XOR::create,                     // 07 4x xx
     CommonInstruction::Unused::create,                 // 07 5x xx
     CommonInstruction::Unused::create,                 // 07 6x xx
     CommonInstruction::SOB::create                     // 07 7x xx
@@ -185,7 +185,7 @@ KDF11_AInstruction::opCodeTable const KDF11_AInstruction::group_07_nx_xx
 
 // Instruction format for the Program Control and Single Operand Group
 // instructions.
-KDF11_AInstruction::opCodeTable const KDF11_AInstruction::group_10_xx_xx
+KDF11Instruction::opCodeTable const KDF11Instruction::group_10_xx_xx
 {
     CommonInstruction::BPL::create,    // 10 00 xx
     CommonInstruction::BPL::create,    // 10 01 xx
@@ -227,22 +227,22 @@ KDF11_AInstruction::opCodeTable const KDF11_AInstruction::group_10_xx_xx
     CommonInstruction::TRAP::create,   // 10 45 xx
     CommonInstruction::TRAP::create,   // 10 46 xx
     CommonInstruction::TRAP::create,   // 10 47 xx
-    KDF11_AInstruction::CLRB::create,  // 10 50 xx
-    KDF11_AInstruction::COMB::create,  // 10 51 xx
-    KDF11_AInstruction::INCB::create,  // 10 52 xx
-    KDF11_AInstruction::DECB::create,  // 10 53 xx
-    KDF11_AInstruction::NEGB::create,  // 10 54 xx
-    KDF11_AInstruction::ADCB::create,  // 10 55 xx
-    KDF11_AInstruction::SBCB::create,  // 10 56 xx
+    KDF11Instruction::CLRB::create,    // 10 50 xx
+    KDF11Instruction::COMB::create,    // 10 51 xx
+    KDF11Instruction::INCB::create,    // 10 52 xx
+    KDF11Instruction::DECB::create,    // 10 53 xx
+    KDF11Instruction::NEGB::create,    // 10 54 xx
+    KDF11Instruction::ADCB::create,    // 10 55 xx
+    KDF11Instruction::SBCB::create,    // 10 56 xx
     CommonInstruction::TSTB::create,   // 10 57 xx
-    KDF11_AInstruction::RORB::create,  // 10 60 xx
-    KDF11_AInstruction::ROLB::create,  // 10 61 xx
-    KDF11_AInstruction::ASRB::create,  // 10 62 xx
-    KDF11_AInstruction::ASLB::create,  // 10 63 xx
+    KDF11Instruction::RORB::create,    // 10 60 xx
+    KDF11Instruction::ROLB::create,    // 10 61 xx
+    KDF11Instruction::ASRB::create,    // 10 62 xx
+    KDF11Instruction::ASLB::create,    // 10 63 xx
     CommonInstruction::MTPS::create,   // 10 64 xx
-    KDF11_AInstruction::MFPD::create,  // 10 65 xx MFPD and MFPI are identical instructions
-    KDF11_AInstruction::MTPD::create,  // 10 66 xx MTPD and MTPI are identical instructions
-    KDF11_AInstruction::MFPS::create,  // 10 67 xx
+    KDF11Instruction::MFPD::create,    // 10 65 xx MFPD and MFPI are identical instructions
+    KDF11Instruction::MTPD::create,    // 10 66 xx MTPD and MTPI are identical instructions
+    KDF11Instruction::MFPS::create,    // 10 67 xx
     CommonInstruction::Unused::create, // 10 70 xx The range 10 70 xx till 10 77 xx is undefined
     CommonInstruction::Unused::create, // 10 71 xx in the LSI-11 Processor Handbook
     CommonInstruction::Unused::create, // 10 72 xx
@@ -255,12 +255,12 @@ KDF11_AInstruction::opCodeTable const KDF11_AInstruction::group_10_xx_xx
 
 // Instruction format for the Program Control and Single Operand Group
 // instructions. 
-KDF11_AInstruction::opCodeTable const KDF11_AInstruction::group_00_nn_xx
+KDF11Instruction::opCodeTable const KDF11Instruction::group_00_nn_xx
 { 
     decodeGroup_00_00_nn,                              // 00 00 NN
     CommonInstruction::JMP::create,                    // 00 01 xx
     decodeGroup_00_02_nn,                              // 00 02 NN
-    KDF11_AInstruction::SWAB::create,                  // 00 03 xx
+    KDF11Instruction::SWAB::create,                    // 00 03 xx
     CommonInstruction::BR::create,                     // 00 04 xx
     CommonInstruction::BR::create,                     // 00 05 xx
     CommonInstruction::BR::create,                     // 00 06 xx
@@ -297,22 +297,22 @@ KDF11_AInstruction::opCodeTable const KDF11_AInstruction::group_00_nn_xx
     CommonInstruction::JSR::create,                    // 00 45 xx
     CommonInstruction::JSR::create,                    // 00 46 xx
     CommonInstruction::JSR::create,                    // 00 47 xx
-    KDF11_AInstruction::CLR::create,                   // 00 50 xx
-    KDF11_AInstruction::COM::create,                   // 00 51 xx
-    KDF11_AInstruction::INC::create,                   // 00 52 xx
-    KDF11_AInstruction::DEC::create,                   // 00 53 xx
-    KDF11_AInstruction::NEG::create,                   // 00 54 xx
-    KDF11_AInstruction::ADC::create,                   // 00 55 xx
-    KDF11_AInstruction::SBC::create,                   // 00 56 xx
+    KDF11Instruction::CLR::create,                     // 00 50 xx
+    KDF11Instruction::COM::create,                     // 00 51 xx
+    KDF11Instruction::INC::create,                     // 00 52 xx
+    KDF11Instruction::DEC::create,                     // 00 53 xx
+    KDF11Instruction::NEG::create,                     // 00 54 xx
+    KDF11Instruction::ADC::create,                     // 00 55 xx
+    KDF11Instruction::SBC::create,                     // 00 56 xx
     CommonInstruction::TST::create,                    // 00 57 xx
-    KDF11_AInstruction::ROR::create,                   // 00 60 xx
-    KDF11_AInstruction::ROL::create,                   // 00 61 xx
-    KDF11_AInstruction::ASR::create,                   // 00 62 xx
-    KDF11_AInstruction::ASL::create,                   // 00 63 xx
+    KDF11Instruction::ROR::create,                     // 00 60 xx
+    KDF11Instruction::ROL::create,                     // 00 61 xx
+    KDF11Instruction::ASR::create,                     // 00 62 xx
+    KDF11Instruction::ASL::create,                     // 00 63 xx
     CommonInstruction::MARK::create,                   // 00 64 xx
-    KDF11_AInstruction::MFPD::create,                  // 00 65 xx KDF11-A specific instruction
-    KDF11_AInstruction::MTPD::create,                  // 00 66 xx idem
-    KDF11_AInstruction::SXT::create,                   // 00 67 xx
+    KDF11Instruction::MFPD::create,                    // 00 65 xx KDF11-A specific instruction
+    KDF11Instruction::MTPD::create,                    // 00 66 xx idem
+    KDF11Instruction::SXT::create,                     // 00 67 xx
     CommonInstruction::Unused::create,                 // 00 70 xx
     CommonInstruction::Unused::create,                 // 00 71 xx
     CommonInstruction::Unused::create,                 // 00 72 xx
@@ -324,22 +324,22 @@ KDF11_AInstruction::opCodeTable const KDF11_AInstruction::group_00_nn_xx
 };
 
 // This is the main operation code control table.
-KDF11_AInstruction::opCodeTable const KDF11_AInstruction::group_nn_xx_xx 
+KDF11Instruction::opCodeTable const KDF11Instruction::group_nn_xx_xx 
 {
     decodeGroup_00_nn_xx,                              // 00 xx xx
-    KDF11_AInstruction::MOV::create,                   // 01 xx xx
-    KDF11_AInstruction::CMP::create,                   // 02 xx xx
-    KDF11_AInstruction::BIT::create,                   // 03 xx xx
-    KDF11_AInstruction::BIC::create,                   // 04 xx xx
-    KDF11_AInstruction::BIS::create,                   // 05 xx xx
-    KDF11_AInstruction::ADD::create,                   // 06 xx xx
+    KDF11Instruction::MOV::create,                     // 01 xx xx
+    KDF11Instruction::CMP::create,                     // 02 xx xx
+    KDF11Instruction::BIT::create,                     // 03 xx xx
+    KDF11Instruction::BIC::create,                     // 04 xx xx
+    KDF11Instruction::BIS::create,                     // 05 xx xx
+    KDF11Instruction::ADD::create,                     // 06 xx xx
     decodeGroup_07_nx_xx,                              // 07 nx xx
     decodeGroup_10_xx_xx,                              // 10 xx xx
-    KDF11_AInstruction::MOVB::create,                  // 11 xx xx
-    KDF11_AInstruction::CMPB::create,                  // 12 xx xx
-    KDF11_AInstruction::BITB::create,                  // 13 xx xx
-    KDF11_AInstruction::BICB::create,                  // 14 xx xx
-    KDF11_AInstruction::BISB::create,                  // 15 xx xx
-    KDF11_AInstruction::SUB::create,                   // 16 xx xx
+    KDF11Instruction::MOVB::create,                    // 11 xx xx
+    KDF11Instruction::CMPB::create,                    // 12 xx xx
+    KDF11Instruction::BITB::create,                    // 13 xx xx
+    KDF11Instruction::BICB::create,                    // 14 xx xx
+    KDF11Instruction::BISB::create,                    // 15 xx xx
+    KDF11Instruction::SUB::create,                     // 16 xx xx
     CommonInstruction::Unused::create                  // 17 xx xx Undefined in the LSI-11 Processor Handbook
 };

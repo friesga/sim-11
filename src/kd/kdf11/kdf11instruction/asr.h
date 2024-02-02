@@ -24,20 +24,20 @@
 // The C-bit is loaded from bit 0 of the destination. ASR performs signed
 // division of the destination by two.
 //
-class KDF11_AInstruction::ASR : public SingleOperandInstruction, public WithFactory<ASR>
+class KDF11Instruction::ASR : public SingleOperandInstruction, public WithFactory<ASR>
 {
 public:
     ASR (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline KDF11_AInstruction::ASR::ASR (CpuData* cpuData,
+inline KDF11Instruction::ASR::ASR (CpuData* cpuData,
         CpuControl* cpuControl, MMU* mmu, u16 instruction)
     :
     SingleOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
-inline bool KDF11_AInstruction::ASR::execute ()
+inline bool KDF11Instruction::ASR::execute ()
 {
     CondData<u16> contents;
     if (!readOperand (&contents))

@@ -28,20 +28,20 @@
 // instruction and trap immediately. This implies that the WAIT instruction
 // is not executed if the PSW T-bit is set.
 //
-class KDF11_AInstruction::WAIT : public NoOperandInstruction, public WithFactory<WAIT>
+class KDF11Instruction::WAIT : public NoOperandInstruction, public WithFactory<WAIT>
 {
 public:
     WAIT (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline KDF11_AInstruction::WAIT::WAIT (CpuData* cpuData, CpuControl* cpuControl,
+inline KDF11Instruction::WAIT::WAIT (CpuData* cpuData, CpuControl* cpuControl,
         MMU* mmu, u16 instruction)
     :
     NoOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
-inline bool KDF11_AInstruction::WAIT::execute ()
+inline bool KDF11Instruction::WAIT::execute ()
 {
     if (!cpuData_->psw ().traceBitSet ())
         cpuControl_->wait ();

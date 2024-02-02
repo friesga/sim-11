@@ -24,20 +24,20 @@
 // the C-bit and the previous contents of the C-bit are loaded into bit 15 of
 // the destination.
 //
-class KDF11_AInstruction::ROR : public SingleOperandInstruction, public WithFactory<ROR>
+class KDF11Instruction::ROR : public SingleOperandInstruction, public WithFactory<ROR>
 {
 public:
     ROR (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline KDF11_AInstruction::ROR::ROR (CpuData* cpuData, CpuControl* cpuControl,
+inline KDF11Instruction::ROR::ROR (CpuData* cpuData, CpuControl* cpuControl,
         MMU* mmu, u16 instruction)
     :
     SingleOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
-inline bool KDF11_AInstruction::ROR::execute ()
+inline bool KDF11Instruction::ROR::execute ()
 {
     CondData<u16> contents;
     if (!readOperand (&contents))

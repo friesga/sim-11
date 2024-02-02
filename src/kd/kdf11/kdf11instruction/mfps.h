@@ -29,20 +29,20 @@
 // odd instruction MFPS 177776, i.e. writes the lower byte of the PSW to
 // itself.
 //
-class KDF11_AInstruction::MFPS : public SingleOperandInstruction, public WithFactory<MFPS>
+class KDF11Instruction::MFPS : public SingleOperandInstruction, public WithFactory<MFPS>
 {
 public:
     MFPS (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline KDF11_AInstruction::MFPS::MFPS (CpuData* cpuData, CpuControl* cpuControl,
+inline KDF11Instruction::MFPS::MFPS (CpuData* cpuData, CpuControl* cpuControl,
         MMU* mmu, u16 instruction)
     :
     SingleOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
-inline bool KDF11_AInstruction::MFPS::execute ()
+inline bool KDF11Instruction::MFPS::execute ()
 {
     u8 contents = (u8) cpuData_->psw ();
     operandLocation_ = getOperandLocation (cpuData_->registers ());

@@ -98,7 +98,7 @@ class CommonInstruction
 {
     // Allow CPU's access to the common instructions
     friend class KD11_NAInstruction;
-    friend class KDF11_AInstruction;
+    friend class KDF11Instruction;
 
 public:
     unique_ptr<LSI11Instruction> decode (CpuData* cpuData, CpuControl* cpuControl,

@@ -15,20 +15,20 @@
 // Condition Codes:
 //  refer to NEG
 //
-class KDF11_AInstruction::NEGB : public SingleOperandInstruction, public WithFactory<NEGB>
+class KDF11Instruction::NEGB : public SingleOperandInstruction, public WithFactory<NEGB>
 {
 public:
     NEGB (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline KDF11_AInstruction::NEGB::NEGB (CpuData* cpuData, CpuControl* cpuControl,
+inline KDF11Instruction::NEGB::NEGB (CpuData* cpuData, CpuControl* cpuControl,
         MMU* mmu, u16 instruction)
     :
     SingleOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
-inline bool KDF11_AInstruction::NEGB::execute ()
+inline bool KDF11Instruction::NEGB::execute ()
 {
     CondData<u8> operand;
     if (!readOperand (&operand))

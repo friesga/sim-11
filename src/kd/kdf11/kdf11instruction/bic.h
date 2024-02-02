@@ -22,20 +22,20 @@
 // source. The original contents of the destination are lost. The contents of
 // the source are unaffected.
 //
-class KDF11_AInstruction::BIC : public KD11DoubleOperandInstruction, public WithFactory<BIC>
+class KDF11Instruction::BIC : public KD11DoubleOperandInstruction, public WithFactory<BIC>
 {
 public:
     BIC (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline KDF11_AInstruction::BIC::BIC (CpuData* cpuData,
+inline KDF11Instruction::BIC::BIC (CpuData* cpuData,
         CpuControl* cpuControl, MMU* mmu, u16 instruction)
     :
     KD11DoubleOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
-inline bool KDF11_AInstruction::BIC::execute ()
+inline bool KDF11Instruction::BIC::execute ()
 {
     CondData<u16> source, destination;
 

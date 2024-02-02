@@ -15,20 +15,20 @@
 // Condition Codes:
 //  refer to ADC
 //
-class KDF11_AInstruction::ADCB : public SingleOperandInstruction, public WithFactory<ADCB>
+class KDF11Instruction::ADCB : public SingleOperandInstruction, public WithFactory<ADCB>
 {
 public:
     ADCB (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline KDF11_AInstruction::ADCB::ADCB (CpuData* cpuData,
+inline KDF11Instruction::ADCB::ADCB (CpuData* cpuData,
         CpuControl* cpuControl, MMU* mmu, u16 instruction)
     :
     SingleOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
-inline bool KDF11_AInstruction::ADCB::execute ()
+inline bool KDF11Instruction::ADCB::execute ()
 {
     CondData<u8> source;
     if (!readOperand (&source))
