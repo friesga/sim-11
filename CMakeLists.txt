@@ -80,8 +80,10 @@ set (KDF11_ODT_SRCS
     src/kd/kdf11/odt/registeropened.cpp
     src/kd/kdf11/odt/startingregister.cpp)
 
-set (KDF11_A_SRCS
+set (KDF11_SRCS
+    src/kd/kdf11/kdf11.cpp
     src/kd/kdf11/kdf11_a/kdf11_a.cpp
+    src/kd/kdf11/kdf11_b/kdf11_b.cpp
     src/kd/kdf11/cpucontrol/kdf11_step.cpp
     src/kd/kdf11/cpucontrol/kdf11_cpucontrol.cpp
     src/kd/kdf11/cpudata/kdf11registers/kdf11registers.cpp
@@ -99,10 +101,6 @@ set (KDF11_A_SRCS
     ${KD11CONTROLLOGIC_SRCS}
     ${KD11_NA_CPU_SRCS}
     ${KD11_NA_ODT_SRCS})
-
-set (KDF11_B_SRCS
-    src/kd/kdf11/kdf11.cpp
-    src/kd/kdf11/kdf11_b/kdf11_b.cpp)
 
 set (RLV12_SRCS
     src/rlv12/calccrc.cpp
@@ -266,8 +264,7 @@ set (SIM11_SRCS
     src/dlv11j/dlv11j.cpp
     src/dlv11j/dlv11channel/dlv11channel.cpp
     ${KD11_NA_SRCS}
-    ${KDF11_A_SRCS}
-    ${KDF11_B_SRCS}
+    ${KDF11_SRCS}
     src/lib/gotapproval.cpp
     src/lsi11/lsi11.cpp
     src/lsi11/configure.cpp
