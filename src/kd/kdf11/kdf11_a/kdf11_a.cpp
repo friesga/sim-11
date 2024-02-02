@@ -18,9 +18,7 @@ using std::placeholders::_5;
 // the user.
 KDF11_A::KDF11_A (Qbus* bus)
     :
-    bus_ (bus),
-    powerUpMode_ {KD11Config::PowerUpMode::Bootstrap},
-    startAddress_ {stdBootAddress}
+    KDF11 (bus, KD11Config::PowerUpMode::Bootstrap, stdBootAddress)
 {
     // Add the MMU to the CPU modules
     cpuModules_.push_back (&mmu_);
@@ -34,9 +32,7 @@ KDF11_A::KDF11_A (Qbus* bus)
 
 KDF11_A::KDF11_A (Qbus *bus, shared_ptr<KDF11_AConfig> kdf11_aConfig)
     :
-    bus_ (bus),
-    powerUpMode_ {kdf11_aConfig->powerUpMode},
-    startAddress_ {kdf11_aConfig->startingAddress}
+    KDF11 (bus, KD11Config::PowerUpMode::Bootstrap, stdBootAddress)
 {
     // If the KTF11-A is configured add it to the CPU modules. If it is not
     // configured its registers will not be available on the bus and
@@ -51,58 +47,5 @@ KDF11_A::KDF11_A (Qbus *bus, shared_ptr<KDF11_AConfig> kdf11_aConfig)
         startAddress_, bind (&KDF11_A_ODT::createODT, _1, _2, _3, _4, _5));
 }
 
-KDF11_A::~KDF11_A ()
-{
-    controlLogic_->exit ();
-    kd11Thread_.join ();
-}
 
-void KDF11_A::start ()
-{
-    kd11Thread_ = thread ([&, this] {controlLogic_->run ();});
-}
-
-// Start the ControlLogic state machine, starting the CPU at the given address. This
-// address supersedes the standard boot address.
-void KDF11_A::start (u16 startAddress)
-{
-    startAddress_ = startAddress;
-    start ();
-}
-
-StatusCode KDF11_A::read (BusAddress address, u16* destination)
-{
-    for (BusDevice* module : cpuModules_)
-        if (module->responsible (address))
-            return module->read (address, destination);
-
-    return StatusCode::NonExistingMemory;
-}
-
-StatusCode KDF11_A::writeWord (BusAddress address, u16 value)
-{
-    for (BusDevice* module : cpuModules_)
-        if (module->responsible (address))
-            return module->writeWord (address, value);
-
-    return StatusCode::NonExistingMemory;
-
-}
-
-bool KDF11_A::responsible (BusAddress busAddress)
-{
-    if (!busAddress.isInIOpage ())
-        return false;
-
-    for (BusDevice* module : cpuModules_)
-        if (module->responsible (busAddress))
-            return true;
-
-    return false;
-}
-
-void KDF11_A::reset ()
-{
-    for (BusDevice* module : cpuModules_)
-        module->reset ();
-}   
+   
