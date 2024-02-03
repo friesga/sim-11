@@ -62,7 +62,7 @@ DLV11Channel::~DLV11Channel ()
 void DLV11Channel::reset ()
 {
 	lock_guard<mutex> lock {registerAccessMutex_};
-	rcsr &= ~RCSR_RCVR_INT;
+	rcsr &= ~(RCSR_RCVR_INT | RCSR_RCVR_DONE);
 	xcsr = XCSR_TRANSMIT_READY;
 }
 
@@ -235,6 +235,10 @@ void DLV11Channel::transmitter ()
 		// is unlocked as else the processor has no opportunity to send the
 		// next character to the DLV11-J and the delay would be useless.
 		lock.unlock ();
+
+		// Loopback char on other channels
+		if (!console_)
+			receive ((unsigned char) xbuf);
 
 		// Simulate the delay caused by transferring the character from the
 		// shift register over the serial line. VDLAB0 test 6 waits a maximum
