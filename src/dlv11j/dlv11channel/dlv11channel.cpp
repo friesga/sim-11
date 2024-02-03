@@ -14,24 +14,6 @@ using std::unique_lock;
 using std::chrono::high_resolution_clock;
 using std::chrono::duration;
 
-#define	RCSR_READER_ENABLE	_BV(0)
-#define	RCSR_RCVR_INT		_BV(6)
-#define	RCSR_RCVR_DONE		_BV(7)
-
-#define	RBUF_ERROR			_BV(15)
-#define	RBUF_OVERRUN		_BV(14)
-#define	RBUF_FRAMING_ERROR	_BV(13)
-#define	RBUF_PARITY_ERROR	_BV(12)
-#define	RBUF_ERROR_MASK		(RBUF_OVERRUN | RBUF_FRAMING_ERROR \
-		| RBUF_PARITY_ERROR)
-
-#define	XCSR_TRANSMIT_READY	_BV(7)
-#define	XCSR_TRANSMIT_INT	_BV(6)
-#define	XCSR_TRANSMIT_BREAK	_BV(0)
-
-#define	RCSR_WR_MASK		(RCSR_RCVR_INT | RCSR_READER_ENABLE)
-#define	XCSR_WR_MASK		(XCSR_TRANSMIT_INT | XCSR_TRANSMIT_BREAK)
-
 // Constructor
 DLV11Channel::DLV11Channel (Qbus* bus, u16 channelBaseAddress, 
 	u16 channelVector, shared_ptr<DLV11Config> dlv11Config)

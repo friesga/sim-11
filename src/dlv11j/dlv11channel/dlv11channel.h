@@ -42,6 +42,23 @@ private:
         XBUF = 06	// Transmitter data buffer register
     };
 
+	static const u16 RCSR_READER_ENABLE	 = bitValue (0);
+	static const u16 RCSR_RCVR_INT		 = bitValue (6);
+	static const u16 RCSR_RCVR_DONE		 = bitValue (7);
+	static const u16 RCSR_WR_MASK		 = RCSR_RCVR_INT | RCSR_READER_ENABLE;
+
+	static const u16 RBUF_PARITY_ERROR	 = bitValue (12);
+	static const u16 RBUF_FRAMING_ERROR	 = bitValue (13);
+	static const u16 RBUF_OVERRUN		 = bitValue (14);
+	static const u16 RBUF_ERROR			 = bitValue (15);
+	static const u16 RBUF_ERROR_MASK	 = RBUF_OVERRUN | RBUF_FRAMING_ERROR |
+										  RBUF_PARITY_ERROR;
+	
+	static const u16 XCSR_TRANSMIT_BREAK = bitValue (0);
+	static const u16 XCSR_TRANSMIT_INT	 = bitValue (6);
+	static const u16 XCSR_TRANSMIT_READY = bitValue (7);
+	static const u16 XCSR_WR_MASK		 = XCSR_TRANSMIT_INT | XCSR_TRANSMIT_BREAK;
+
 	u16	rcsr {0};
 	u16	rbuf {0};
 	u16	xcsr {0};
