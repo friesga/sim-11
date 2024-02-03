@@ -165,10 +165,16 @@ StatusCode DLV11Channel::writeWord (BusAddress busAddress, u16 value)
 	return StatusCode::OK;
 }
 
+// Reader Enable - Write only bit - Setting this bit [...] clears receiver
+// done (bit 7). (EK-DLV1J-UG-001)
+// This functionaility is tested by VDLAB0 test 7.
 void DLV11Channel::writeRCSR (u16 value)
 {
 	u16 old = rcsr;
 	rcsr = (rcsr & ~RCSR_WR_MASK) | (value & RCSR_WR_MASK);
+
+	if (value & RCSR_READER_ENABLE)
+		rcsr &= ~RCSR_RCVR_DONE;
 	
 	if ((value & RCSR_RCVR_INT) && !(old & RCSR_RCVR_INT)
 			&& (rcsr & RCSR_RCVR_DONE))
