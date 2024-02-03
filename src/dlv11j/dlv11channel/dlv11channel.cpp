@@ -102,16 +102,7 @@ void DLV11Channel::readChannel ()
 	if (!rBuffer_.empty ())
 	{
 		rbuf = rBuffer_.get ();
-
-		if (!rBuffer_.empty ())
-		{
-			// More date in the RX buffer...
-			rcsr |= RCSR_RCVR_DONE;
-			if (rcsr & RCSR_RCVR_INT)
-				bus_->setInterrupt (TrapPriority::BR4, 6, vector);
-		} 
-		else
-			rcsr &= ~RCSR_RCVR_DONE;
+		rcsr &= ~RCSR_RCVR_DONE;
 	} 
 	else
 	{
@@ -119,7 +110,6 @@ void DLV11Channel::readChannel ()
 		if (rbuf & RBUF_ERROR_MASK)
 			rbuf |= RBUF_ERROR;
 	}
-
 }
 
 // This function allows the processor to write a word to one of the
