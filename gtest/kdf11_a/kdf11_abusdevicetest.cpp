@@ -1,5 +1,5 @@
 #include "qbus/qbus.h"
-#include "kd/kdf11_a/kdf11_a.h"
+#include "kd/kdf11/kdf11_a/kdf11_a.h"
 
 #include <gtest/gtest.h>
 

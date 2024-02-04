@@ -434,7 +434,7 @@ set (SIM11_TEST_SRCS
     src/pdp11peripheral/pdp11peripheral.cpp
     src/lib/gotapproval.cpp
     ${KD11_NA_SRCS}
-    ${KDF11_A_SRCS}
+    ${KDF11_SRCS}
     src/msv11d/msv11d.cpp
     src/signal/signal.cpp
     ${TRACE_SRCS}

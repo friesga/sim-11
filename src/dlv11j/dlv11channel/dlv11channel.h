@@ -67,8 +67,8 @@ private:
 	u16	baseAddress {0};
 	u16	vector {0};
 
-	enum {rBufferSize = 2048};
-	CircularBuffer<u8, rBufferSize> rBuffer_;
+	enum {receiveBufferSize = 1};
+	CircularBuffer<u8, receiveBufferSize> receiveBuffer_;
 
 	Qbus* bus_;
 	DLV11Config::Ch3BreakResponse ch3BreakResponse_;

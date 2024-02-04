@@ -1,5 +1,5 @@
 #include "qbus/qbus.h"
-#include "kd/kdf11_a/kdf11_a.h"
+#include "kd/kdf11/kdf11_a/kdf11_a.h"
 #include "msv11d/msv11d.h"
 
 #include <gtest/gtest.h>
@@ -10,7 +10,7 @@ protected:
     Qbus qbus;
     KDF11_A* kdf11a  = new KDF11_A (&qbus);
     MSV11D*  memory  = new MSV11D (&qbus);
-    KDF11_AInstruction instrDecoder;
+    KDF11Instruction instrDecoder;
     u16 const PswAddress = 0177776;
 
     void SetUp() override

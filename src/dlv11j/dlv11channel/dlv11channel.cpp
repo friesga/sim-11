@@ -62,6 +62,7 @@ DLV11Channel::~DLV11Channel ()
 void DLV11Channel::reset ()
 {
 	lock_guard<mutex> lock {registerAccessMutex_};
+	receiveBuffer_.reset ();
 	rcsr &= ~(RCSR_RCVR_INT | RCSR_RCVR_DONE);
 	xcsr = XCSR_TRANSMIT_READY;
 }
@@ -99,9 +100,9 @@ StatusCode DLV11Channel::read (BusAddress busAddress, u16 *destAddress)
 
 void DLV11Channel::readChannel ()
 {
-	if (!rBuffer_.empty ())
+	if (!receiveBuffer_.empty ())
 	{
-		rbuf = rBuffer_.get ();
+		rbuf = receiveBuffer_.get ();
 		rcsr &= ~RCSR_RCVR_DONE;
 	} 
 	else
@@ -305,7 +306,7 @@ void DLV11Channel::processBreak ()
 // buf_size characters with the head at position buf_w.
 bool DLV11Channel::queueCharacter (unsigned char c)
 {
-	return rBuffer_.put (c);
+	return receiveBuffer_.put (c);
 }
 
 void DLV11Channel::receiveDone ()
