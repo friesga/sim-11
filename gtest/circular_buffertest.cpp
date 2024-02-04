@@ -63,3 +63,21 @@ TEST (CircularBufferTest, OverflowDetected)
     ASSERT_FALSE (item.hasValue ());
 }
 
+TEST (CircularBufferTest, OneElement)
+{
+    CircularBuffer<int, 1> testBuffer {};
+
+    // Verify the buffer can hold one element and than is full
+    ASSERT_TRUE (testBuffer.put (1));
+    ASSERT_TRUE (testBuffer.full ());
+    ASSERT_FALSE (testBuffer.put (2));
+    
+    EXPECT_EQ (testBuffer.get (), 1);
+
+    // Verify the buffer now is empty
+    ASSERT_EQ (testBuffer.size (), 0);
+    ASSERT_TRUE (testBuffer.empty ());
+
+    CondData<int> item = testBuffer.get ();
+    ASSERT_FALSE (item.hasValue ());
+}
