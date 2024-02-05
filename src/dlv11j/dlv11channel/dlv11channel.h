@@ -71,6 +71,14 @@ private:
 	enum {receiveBufferSize = 1};
 	CircularBuffer<u8, receiveBufferSize> receiveBuffer_;
 
+	enum class Function
+	{
+		Transmit = 0,
+		Receive = 1
+	};
+
+	u8 interruptPriority (Function function, u16 channelNr);
+
 	Qbus* bus_;
 	DLV11Config::Ch3BreakResponse ch3BreakResponse_;
     unsigned char breakKey_;

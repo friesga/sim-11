@@ -163,7 +163,8 @@ void DLV11Channel::writeRCSR (u16 value)
 			&& (rcsr & RCSR_RCVR_DONE))
 	{
 		trace.dlv11 (DLV11RecordType::DLV11_SEI, channelNr_, value);
-		bus_->setInterrupt (TrapPriority::BR4, 6, 10 + 3 - channelNr_, vector);
+		bus_->setInterrupt (TrapPriority::BR4, 6, 
+			interruptPriority (Function::Receive, channelNr_), vector);
 	}
 
 	if (value & RCSR_READER_ENABLE)
@@ -182,7 +183,8 @@ void DLV11Channel::writeXCSR (u16 value)
 			&& (xcsr & XCSR_TRANSMIT_READY))
 	{
 		trace.dlv11 (DLV11RecordType::DLV11_SEI, channelNr_, value);
-		bus_->setInterrupt (TrapPriority::BR4, 6, 3 - channelNr_, vector + 4);
+		bus_->setInterrupt (TrapPriority::BR4, 6, 
+			interruptPriority (Function::Transmit, channelNr_), vector + 4);
 	}
 }
 
@@ -232,7 +234,8 @@ void DLV11Channel::transmitter ()
 		if (xcsr & XCSR_TRANSMIT_INT)
 		{
 			trace.dlv11 (DLV11RecordType::DLV11_SEI, channelNr_, xbuf);
-			bus_->setInterrupt (TrapPriority::BR4, 6, 3 - channelNr_, vector + 4);
+			bus_->setInterrupt (TrapPriority::BR4, 6, 
+				interruptPriority (Function::Transmit, channelNr_), vector + 4);
 		}
 
 		// The following sleep has to be done while the registerAccessMutex_
@@ -359,7 +362,8 @@ void DLV11Channel::receiveDone ()
 	if (rcsr & RCSR_RCVR_INT)
 	{
 		trace.dlv11 (DLV11RecordType::DLV11_SEI, channelNr_, 0);
-		bus_->setInterrupt (TrapPriority::BR4, 6, 10 + 3 - channelNr_, vector);
+		bus_->setInterrupt (TrapPriority::BR4, 6, 
+			interruptPriority (Function::Receive, channelNr_), vector);
 	}
 }
 
@@ -376,4 +380,26 @@ void DLV11Channel::sleepUntil (high_resolution_clock::time_point timePoint)
 {
 	while (high_resolution_clock::now() < timePoint)
         std::this_thread::yield ();
+}
+
+// This functions determines the priority of the interrupt to be generated.
+// 
+// Interrupt priority within the DLV11-J module is also structured. Interrupt
+// priority is as follows.
+//
+//	Interrupt Priority	Requesting Function
+//	1 (highest)			Channel 0 Receiver
+//	2					Channel 1 Receiver
+//	3					Channel 2 Receiver
+//	4					Channel 3 Receiver
+//	5					Channel 0 Transmitter
+//	6					Channel 1 Transmitter
+//	7					Channel 2 Transmitter
+//	8 (lowest)			Channel 3 Transmitter
+//
+u8 DLV11Channel::interruptPriority (Function function, u16 channelNr)
+{
+	u16 numChannels {3};
+
+	return static_cast<u16> (function) * 10 + numChannels - channelNr;
 }
