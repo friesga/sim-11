@@ -65,15 +65,15 @@ StatusCode RLV12::writeWord (BusAddress busAddress, u16 data)
             {                              
                 // Ready set?
                 if ((data & CSR_InterruptEnable) == 0)
-                    bus_->clearInterrupt (TrapPriority::BR4, 4);
+                    bus_->clearInterrupt (TrapPriority::BR4, 0, 4);
                 else if ((csr_ & (CSR_ControllerReady + CSR_InterruptEnable))
                         == CSR_ControllerReady)
-                    bus_->setInterrupt (TrapPriority::BR4, 4, vector_);
+                    bus_->setInterrupt (TrapPriority::BR4, 4, 0, vector_);
 
                 return StatusCode::OK;
             }
 
-            bus_->clearInterrupt (TrapPriority::BR4, 4);
+            bus_->clearInterrupt (TrapPriority::BR4, 0, 4);
 
             // At the start of every command errors are cleared. Note that
             // Composite Error is cleared (or set) in read(), based on the

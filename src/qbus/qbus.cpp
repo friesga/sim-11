@@ -45,9 +45,9 @@ CondData<u16> Qbus::read (BusAddress address)
 // a device already has set an interrupt. That would be an error on the
 // part of the device and wouldn't harm.
 void Qbus::setInterrupt (TrapPriority priority, 
-		unsigned char busOrder, unsigned char vector)
+		unsigned char busOrder, u8 functionOrder, unsigned char vector)
 {
-	InterruptRequest intrptReq {priority, busOrder, vector};
+	InterruptRequest intrptReq {priority, busOrder, functionOrder, vector};
 	pushInterruptRequest (intrptReq);
 }
 
@@ -63,9 +63,10 @@ void Qbus::pushInterruptRequest (InterruptRequest intrptReq)
 // Clear the specified interrupt request. The InterruptRequQueue will delete
 // the interrupt request equal to specified request. Equality is based on
 // priority and busorder (see InterruptRequest::operator==).
-void Qbus::clearInterrupt (TrapPriority priority, unsigned char busOrder)
+void Qbus::clearInterrupt (TrapPriority priority, unsigned char busOrder,
+	u8 functionOrder)
 {
-	intrptReqQueue_.erase (InterruptRequest {priority, busOrder, 0});
+	intrptReqQueue_.erase (InterruptRequest {priority, busOrder, functionOrder, 0});
 }
 
 // Clear all pending interrupts

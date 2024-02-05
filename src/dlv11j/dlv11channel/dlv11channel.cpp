@@ -163,7 +163,7 @@ void DLV11Channel::writeRCSR (u16 value)
 			&& (rcsr & RCSR_RCVR_DONE))
 	{
 		trace.dlv11 (DLV11RecordType::DLV11_SEI, channelNr_, value);
-		bus_->setInterrupt (TrapPriority::BR4, 6, vector);
+		bus_->setInterrupt (TrapPriority::BR4, 6, 10 + 3 - channelNr_, vector);
 	}
 
 	if (value & RCSR_READER_ENABLE)
@@ -182,7 +182,7 @@ void DLV11Channel::writeXCSR (u16 value)
 			&& (xcsr & XCSR_TRANSMIT_READY))
 	{
 		trace.dlv11 (DLV11RecordType::DLV11_SEI, channelNr_, value);
-		bus_->setInterrupt (TrapPriority::BR4, 6, vector + 4);
+		bus_->setInterrupt (TrapPriority::BR4, 6, 3 - channelNr_, vector + 4);
 	}
 }
 
@@ -232,7 +232,7 @@ void DLV11Channel::transmitter ()
 		if (xcsr & XCSR_TRANSMIT_INT)
 		{
 			trace.dlv11 (DLV11RecordType::DLV11_SEI, channelNr_, xbuf);
-			bus_->setInterrupt (TrapPriority::BR4, 6, vector + 4);
+			bus_->setInterrupt (TrapPriority::BR4, 6, 3 - channelNr_, vector + 4);
 		}
 
 		// The following sleep has to be done while the registerAccessMutex_
@@ -359,7 +359,7 @@ void DLV11Channel::receiveDone ()
 	if (rcsr & RCSR_RCVR_INT)
 	{
 		trace.dlv11 (DLV11RecordType::DLV11_SEI, channelNr_, 0);
-		bus_->setInterrupt (TrapPriority::BR4, 6, vector);
+		bus_->setInterrupt (TrapPriority::BR4, 6, 10 + 3 - channelNr_, vector);
 	}
 }
 

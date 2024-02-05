@@ -1,6 +1,8 @@
 #ifndef _INTERRUPTREQUEST_H_
 #define _INTERRUPTREQUEST_H_
 
+#include "types.h"
+
 // Definition of trap priorities. The BR4-BR7 priorities concur with
 // the CPU priority as indicated in the PSW (bits 5-7).
 enum class TrapPriority
@@ -29,16 +31,10 @@ enum class TrapPriority
 // PDP-11.
 class InterruptRequest
 {
-    TrapPriority priority_;
-    unsigned char busOrder_;
-    unsigned char vector_;
-
-    long intrptPriority (TrapPriority trapPriority, unsigned char busOrder) const;
-
 public:
     InterruptRequest();
-    InterruptRequest(TrapPriority priority, unsigned char prioLevel,
-        unsigned char vector);
+    InterruptRequest(TrapPriority priority, unsigned char busOrder,
+        u8 functionOrder, unsigned char vector);
     bool operator< (InterruptRequest const &ir) const;
     bool operator== (InterruptRequest const &ir) const;
 
@@ -46,6 +42,15 @@ public:
     TrapPriority priority() const;
     unsigned char busOrder() const;
     unsigned char vector() const;
+
+private:
+    TrapPriority priority_;
+    unsigned char busOrder_;
+    u8 functionOrder_;
+    unsigned char vector_;
+
+    long intrptPriority (TrapPriority trapPriority, unsigned char busOrder,
+        u8 functionOrder) const;
 };
 
 #endif // !_INTERRUPTREQUEST_H_

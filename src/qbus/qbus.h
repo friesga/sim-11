@@ -93,9 +93,10 @@ public:
 	Signal &BINIT ();
 
 	Qbus ();
-	void setInterrupt (TrapPriority priority, 
-		unsigned char busOrder, unsigned char vector);
-	void clearInterrupt (TrapPriority priority, unsigned char busOrder);
+	void setInterrupt (TrapPriority priority, unsigned char busOrder,
+		u8 functionOrder, unsigned char vector);
+	void clearInterrupt (TrapPriority priority, unsigned char busOrder,
+		u8 functionOrder);
 	void clearInterrupts ();
 	bool intrptReqAvailable ();
 	u8 intrptPriority ();

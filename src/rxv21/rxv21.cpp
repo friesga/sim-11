@@ -99,7 +99,7 @@ void RXV21::done ()
 	// being processed, the request is held and on the next step the request
 	// is tried again.
 	if (rx2cs & RX_INTR_ENB) 
-		bus_->setInterrupt (TrapPriority::BR4, 5, vector);
+		bus_->setInterrupt (TrapPriority::BR4, 5, 0, vector);
 }
 
 // Read operation on either the RX2CS or RX2DB
@@ -147,7 +147,7 @@ StatusCode RXV21::writeWord (BusAddress busAddress, u16 value)
 		// if interrupts were not enabled and Interrupt Enable is set in this
 		// register write action.
 		if (!intr && (value & RX_INTR_ENB) && (rx2cs & RX_DONE)) 
-			bus_->setInterrupt (TrapPriority::BR4, 5, vector);
+			bus_->setInterrupt (TrapPriority::BR4, 5, 0, vector);
 	} 
 	else if (busAddress.registerAddress () == base + 2) 
 	{ 
