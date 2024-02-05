@@ -64,6 +64,7 @@ void DLV11Channel::reset ()
 	lock_guard<mutex> lock {registerAccessMutex_};
 	receiveBuffer_.reset ();
 	rcsr &= ~(RCSR_RCVR_INT | RCSR_RCVR_DONE);
+	rbuf &= ~RBUF_ERROR_MASK;
 	xcsr = XCSR_TRANSMIT_READY;
 }
 
@@ -102,15 +103,9 @@ void DLV11Channel::readChannel ()
 {
 	if (!receiveBuffer_.empty ())
 	{
-		rbuf = receiveBuffer_.get ();
+		rbuf = (rbuf & 0177400) | receiveBuffer_.get ();
 		rcsr &= ~RCSR_RCVR_DONE;
 	} 
-	else
-	{
-		rbuf = RBUF_OVERRUN;
-		if (rbuf & RBUF_ERROR_MASK)
-			rbuf |= RBUF_ERROR;
-	}
 }
 
 // This function allows the processor to write a word to one of the
@@ -257,6 +252,18 @@ void DLV11Channel::transmitter ()
 // Receive a character from outside the system in the DLV11-J. If the
 // system is powered on the received character is processed, else it is
 // ignored.
+//
+// When the receiver done bit (bit 7) is set, the computer is given one full
+// character time to read the receive buffer. If the program does not read the
+// data before the next character is completely assembled within the holding
+// register, the UART will set the data overrun flag. The setting of the flag
+// indicates the first character was lost. (EK-DLV1J-UG-001)
+//
+// The error indications in the Receive Buffer should be cleared by the next
+// transfer when the receiver buffer has been read. This functionality is not
+// documented in the DLV11-J User Guide but is described in diagnostic VDLAB0
+// test 12.
+//
 void DLV11Channel::receive (unsigned char c)
 {
 	lock_guard<mutex> lock {registerAccessMutex_};
@@ -270,10 +277,20 @@ void DLV11Channel::receive (unsigned char c)
 			return;
 		}
 
+		clearReceiveError ();
+
 		if (queueCharacter (c))
 		{
 			trace.dlv11 (DLV11RecordType::DLV11_RX, channelNr_, c);
 			receiveDone ();
+		}
+		else
+		{
+			// Buffer overrun occurs
+			trace.dlv11 (DLV11RecordType::DLV11_OVERRUN, channelNr_, c);
+			rbuf = RBUF_OVERRUN | RBUF_ERROR;
+			receiveBuffer_.reset ();
+			receiveBuffer_.put (c);
 		}
 	}
 }
@@ -317,6 +334,12 @@ void DLV11Channel::receiveDone ()
 	rcsr |= RCSR_RCVR_DONE;
 	if (rcsr & RCSR_RCVR_INT)
 		bus_->setInterrupt (TrapPriority::BR4, 6, vector);
+}
+
+void DLV11Channel::clearReceiveError ()
+{
+	if ((rbuf & RBUF_ERROR) && receiveBuffer_.empty ())
+	 rbuf &= ~RBUF_ERROR_MASK;
 }
 
 // This function sleeps until the given time point is passed. We prefer

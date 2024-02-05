@@ -52,7 +52,7 @@ private:
 	static const u16 RBUF_OVERRUN		 = bitValue (14);
 	static const u16 RBUF_ERROR			 = bitValue (15);
 	static const u16 RBUF_ERROR_MASK	 = RBUF_OVERRUN | RBUF_FRAMING_ERROR |
-										  RBUF_PARITY_ERROR;
+										   RBUF_PARITY_ERROR | RBUF_ERROR;
 	
 	static const u16 XCSR_TRANSMIT_BREAK = bitValue (0);
 	static const u16 XCSR_TRANSMIT_INT	 = bitValue (6);
@@ -89,6 +89,7 @@ private:
 	void processBreak ();
 	bool queueCharacter (unsigned char c);
 	void receiveDone ();
+	void clearReceiveError ();
 	void sleepUntil (high_resolution_clock::time_point timePoint);
 };
 
