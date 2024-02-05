@@ -28,6 +28,11 @@ consteval u16 bitField (size_t n)
     return (1U << n) - 1U;
 }
 
+constexpr u8 lowByte (u16 value)
+{
+    return static_cast<u8> (value & 0377);
+}
+
 // The following definitions are used to read and write device files.
 #ifdef WIN32
 // We can safely assume that all Win32 systems are little endian
