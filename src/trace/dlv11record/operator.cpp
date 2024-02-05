@@ -45,6 +45,10 @@ std::ostream& operator<< (std::ostream& os, TraceRecord<DLV11Record> record)
             os << record.createMessage ("transmit").str ();
             break;
 
+        case DLV11RecordType::DLV11_OVERRUN:
+            os << record.createMessage ("overrun").str ();
+            break;
+
         default:
             os << "Unsuported type\n";
             break;
