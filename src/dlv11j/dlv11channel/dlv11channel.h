@@ -6,6 +6,7 @@
 #include "configdata/dlv11config/dlv11config.h"
 #include "console/console.h"
 #include "circular_buffer/circular_buffer.h"
+#include "character/character.h"
 
 #include <functional>
 #include <memory>
@@ -85,7 +86,7 @@ private:
 	void writeRCSR (u16 value);
 	void writeXCSR (u16 value);
 	void transmitter ();
-	void receive (unsigned char c);
+	void receive (Character c);
 	void processBreak ();
 	bool queueCharacter (unsigned char c);
 	void receiveDone ();

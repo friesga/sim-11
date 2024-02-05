@@ -242,7 +242,8 @@ void DLV11Channel::transmitter ()
 
 		// Loopback char on other channels
 		if (!console_)
-			receive ((unsigned char) xbuf);
+			receive (Character {lowByte (xbuf), 
+					(xcsr & XCSR_TRANSMIT_BREAK) == XCSR_TRANSMIT_BREAK});
 
 		// Simulate the delay caused by transferring the character from the
 		// shift register over the serial line. VDLAB0 test 6 waits a maximum
@@ -273,7 +274,18 @@ void DLV11Channel::transmitter ()
 // documented in the DLV11-J User Guide but is described in diagnostic VDLAB0
 // test 12.
 //
-void DLV11Channel::receive (unsigned char c)
+// During normal operation, the UART checks each received character for the
+// proper number of STOP bits. It does this by testing for a marking condition
+// at the appropriate bit time. If the UART finds a spacing condition instead,
+// it sets the framing error flag (FE). The BREAK signal is a continuous
+// spacing condition, and is interpreted by the UART as a data character that
+// is missing its STOP bit(s). The UART, therefore, responds to the BREAK
+// signal by asserting FE H. (EK-DLV1J-UG-001)
+//
+// The spacing condition is simulated by the Break condition in the
+// transmitted Character object.
+//
+void DLV11Channel::receive (Character c)
 {
 	lock_guard<mutex> lock {registerAccessMutex_};
 
@@ -287,6 +299,9 @@ void DLV11Channel::receive (unsigned char c)
 		}
 
 		clearReceiveError ();
+
+		if (c.isBreak ())
+			rbuf |= RBUF_ERROR | RBUF_PARITY_ERROR | RBUF_FRAMING_ERROR;
 
 		if (queueCharacter (c))
 		{
