@@ -158,16 +158,19 @@ void DLV11Channel::writeRCSR (u16 value)
 {
 	u16 old = rcsr;
 	rcsr = (rcsr & ~RCSR_WR_MASK) | (value & RCSR_WR_MASK);
+	
+	if ((value & RCSR_RCVR_INT) && !(old & RCSR_RCVR_INT)
+			&& (rcsr & RCSR_RCVR_DONE))
+	{
+		trace.dlv11 (DLV11RecordType::DLV11_SEI, channelNr_, value);
+		bus_->setInterrupt (TrapPriority::BR4, 6, vector);
+	}
 
 	if (value & RCSR_READER_ENABLE)
 	{
 		receiveBuffer_.reset ();
 		rcsr &= ~RCSR_RCVR_DONE;
 	}
-	
-	if ((value & RCSR_RCVR_INT) && !(old & RCSR_RCVR_INT)
-			&& (rcsr & RCSR_RCVR_DONE))
-		bus_->setInterrupt (TrapPriority::BR4, 6, vector);
 }
 
 void DLV11Channel::writeXCSR (u16 value)
@@ -177,7 +180,10 @@ void DLV11Channel::writeXCSR (u16 value)
 	
 	if ((value & XCSR_TRANSMIT_INT) && !(old & XCSR_TRANSMIT_INT)
 			&& (xcsr & XCSR_TRANSMIT_READY))
+	{
+		trace.dlv11 (DLV11RecordType::DLV11_SEI, channelNr_, value);
 		bus_->setInterrupt (TrapPriority::BR4, 6, vector + 4);
+	}
 }
 
 // Transmit data to the receiver. For channel 3 the data is sent to the
@@ -224,7 +230,10 @@ void DLV11Channel::transmitter ()
 
 		xcsr |= XCSR_TRANSMIT_READY;
 		if (xcsr & XCSR_TRANSMIT_INT)
+		{
+			trace.dlv11 (DLV11RecordType::DLV11_SEI, channelNr_, xbuf);
 			bus_->setInterrupt (TrapPriority::BR4, 6, vector + 4);
+		}
 
 		// The following sleep has to be done while the registerAccessMutex_
 		// is unlocked as else the processor has no opportunity to send the
@@ -333,7 +342,10 @@ void DLV11Channel::receiveDone ()
 {
 	rcsr |= RCSR_RCVR_DONE;
 	if (rcsr & RCSR_RCVR_INT)
+	{
+		trace.dlv11 (DLV11RecordType::DLV11_SEI, channelNr_, 0);
 		bus_->setInterrupt (TrapPriority::BR4, 6, vector);
+	}
 }
 
 void DLV11Channel::clearReceiveError ()
