@@ -35,3 +35,11 @@ TEST (InterruptRequest, canBePushedAndCleared)
     queue.erase (intrptReqB);
     EXPECT_TRUE (queue.size() == 0);
 }
+
+TEST (InterruptRequest, functionOrderisOrdered)
+{
+    InterruptRequest const order0 {TrapPriority::BusError, 0, 0, 004};
+    InterruptRequest const order1 {TrapPriority::BusError, 0, 1, 004};
+    
+    EXPECT_TRUE (order0 < order1);
+}
