@@ -5,7 +5,7 @@
 #include "statuscodes.h"
 #include "configdata/dlv11config/dlv11config.h"
 #include "console/console.h"
-#include "circular_buffer/circular_buffer.h"
+#include "characterbuffer/characterbuffer.h"
 #include "character/character.h"
 
 #include <functional>
@@ -76,8 +76,7 @@ private:
 	u16	baseAddress {0};
 	u16	vector {0};
 
-	enum {receiveBufferSize = 1};
-	CircularBuffer<u8, receiveBufferSize> receiveBuffer_;
+	CharacterBuffer<u8> receiveBuffer_;
 
 	enum class Function
 	{

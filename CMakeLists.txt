@@ -382,7 +382,7 @@ set (GTEST_SRCS
     gtest/interruptrequesttest.cpp
     gtest/bitmasktest.cpp
     gtest/busaddresstest.cpp
-    gtest/circular_buffertest.cpp
+    gtest/characterbuffertest.cpp
     gtest/conddatatest.cpp
     gtest/conditioncodestest.cpp
     gtest/configuratortest.cpp
