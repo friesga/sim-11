@@ -21,7 +21,6 @@ Qbus::Qbus ()
 CondData<u16> Qbus::read (BusAddress address)
 {
 	BusDevice *module;
-	u16 addr = address;
 
 	// Prevent read's from odd addresses
 	address &= 0xFFFFFFFE;
@@ -31,7 +30,7 @@ CondData<u16> Qbus::read (BusAddress address)
 		u16 value;
 		if (module->read (address, &value) == StatusCode::OK)
 		{
-			trace.bus (BusRecordType::Read, addr, value);
+			trace.bus (BusRecordType::Read, address, value);
 			return value;
 		}
 		else
