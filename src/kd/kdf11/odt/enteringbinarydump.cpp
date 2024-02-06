@@ -1,4 +1,4 @@
-#include "kdf11_a_odt.h"
+#include "kdf11_odt.h"
 #include "busaddress/busaddress.h"
 
 // This command is used for manufacturing test purposes and is not a normal

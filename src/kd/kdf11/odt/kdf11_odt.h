@@ -1,5 +1,5 @@
-#ifndef _KDF11_A_ODT_H_
-#define _KDF11_A_ODT_H_
+#ifndef _KDF11_ODT_H_
+#define _KDF11_ODT_H_
 
 #include "kd/include/kd11odt.h"
 #include "qbus/qbus.h"
@@ -237,4 +237,4 @@ inline KDF11_ODT::StateMachine::StateMachine (KDF11_ODT* context)
     context_ {context}
 {}
 
-#endif // _KDF11_A_ODT_H_
+#endif // _KDF11_ODT_H_

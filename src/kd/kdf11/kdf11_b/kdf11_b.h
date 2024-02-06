@@ -3,7 +3,7 @@
 
 #include "kd/kdf11/kdf11.h"
 #include "kd/kdf11/cpucontrol/kdf11_cpucontrol.h"
-#include "kd/kdf11/odt/kdf11_a_odt.h"
+#include "kd/kdf11/odt/kdf11_odt.h"
 #include "configdata/kdf11_bconfig/kdf11_bconfig.h"
 #include "kd/common/controllogic/controllogic.h"
 #include "kd/kdf11/cpudata/kdf11cpudata.h"

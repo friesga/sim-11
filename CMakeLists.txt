@@ -66,7 +66,7 @@ set (KD11_NA_CPU_SRCS
     src/kd/kd11_na/pseudommu/pseudommu.cpp)
 
 set (KDF11_ODT_SRCS
-    src/kd/kdf11/odt/kdf11_a_odt.cpp
+    src/kd/kdf11/odt/kdf11_odt.cpp
     src/kd/kdf11/odt/addressopened.cpp
     src/kd/kdf11/odt/atprompt.cpp
     src/kd/kdf11/odt/createevent.cpp
