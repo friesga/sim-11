@@ -82,6 +82,18 @@ void DLV11Processor::processBreakKey (iniparser::Value value)
             throw invalid_argument {"Incorrect break key specification"};
 }
 
+void DLV11Processor::processLoopback (iniparser::Value value)
+{
+	try
+	{
+		dlv11ConfigPtr->loopback = value.asBool ();
+	}
+	catch (invalid_argument const &)
+	{
+		throw invalid_argument {"Value of loopback must be \'true\' or \'false\'"};
+	}
+}
+
 // Check the consistency of the configuration of the DLV11 controller.
 void DLV11Processor::checkConsistency ()
 {

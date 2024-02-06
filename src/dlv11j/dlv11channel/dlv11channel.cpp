@@ -23,6 +23,7 @@ DLV11Channel::DLV11Channel (Qbus* bus, u16 channelBaseAddress,
 	bus_ {bus},
 	ch3BreakResponse_ {dlv11Config->ch3BreakResponse},
 	breakKey_ {dlv11Config->breakKey},
+	loopback_ {dlv11Config->loopback},
 	channelRunning_ {true},
 	charAvailable_ {false}
 {
@@ -243,8 +244,9 @@ void DLV11Channel::transmitter ()
 		// next character to the DLV11-J and the delay would be useless.
 		lock.unlock ();
 
-		// Loopback char on other channels
-		if (!console_)
+		// If loopback is enabled send the character to the receiver of this
+		// channel.
+		if (loopback_ && !console_)
 			receive (Character {lowByte (xbuf), 
 					(xcsr & XCSR_TRANSMIT_BREAK) == XCSR_TRANSMIT_BREAK});
 

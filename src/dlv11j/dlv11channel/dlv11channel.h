@@ -23,6 +23,14 @@ using std::mutex;
 using std::condition_variable;
 using std::chrono::high_resolution_clock;
 
+// This class defines the behaviour of a DLV11-J channel.
+//
+// For data loop back tests to be performed, the diagnostic [VDLAB0] requires
+// the H3270-A option (four diagnostic loopback plugs) to be inserted into the
+// module's four peripheral device connectors. (EK-DLV1J-UG-001)
+// 
+// This option can be enabled by the DLV11-J loopback option in the
+// configuration file.
 class DLV11Channel
 {
 public:
@@ -82,6 +90,7 @@ private:
 	Qbus* bus_;
 	DLV11Config::Ch3BreakResponse ch3BreakResponse_;
     unsigned char breakKey_;
+	bool loopback_;
 	u16 channelNr_;
 	unique_ptr<Console> console_;
 	bool channelRunning_;

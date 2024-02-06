@@ -23,6 +23,7 @@ struct DLV11Config : public DeviceConfig
     bool ch3ConsoleEnabled {true};
     Ch3BreakResponse ch3BreakResponse {Ch3BreakResponse::Halt};
     unsigned char breakKey {27};
+    bool loopback {true};
 
     DLV11Config ();
 };

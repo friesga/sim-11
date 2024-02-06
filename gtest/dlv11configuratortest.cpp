@@ -283,3 +283,28 @@ TEST (DLV11ConfiguratorTest, consoleEnabledinvalidBaseAddressThrows)
 		FAIL();
 	}
 }
+
+TEST (DLV11ConfiguratorTest, loopbackOptionAccepted)
+{
+    iniparser::File ft;
+	std::stringstream stream;
+	stream << "[DLV11-J]\n"
+		"loopback = true\n";
+	stream >> ft;
+
+	IniProcessor iniProcessor;
+	EXPECT_NO_THROW (iniProcessor.process (ft)); 
+
+	vector<shared_ptr<DeviceConfig>> systemConfig = 
+		iniProcessor.getSystemConfig ();
+
+	// The only device type in this testset is the DLV11-J so if that's
+	// not correct the following tests will fail too.
+	ASSERT_EQ (systemConfig[0]->deviceType_, DeviceType::DLV11_J);
+
+	// The device's type is DLV11J so the configuration is a 
+	shared_ptr<DLV11Config> dlv11Config = 
+		static_pointer_cast<DLV11Config> (systemConfig[0]);
+
+	EXPECT_TRUE (dlv11Config->loopback);
+}

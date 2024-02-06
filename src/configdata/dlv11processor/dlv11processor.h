@@ -26,7 +26,8 @@ class DLV11Processor : public SectionProcessor
 		{"vector", &DLV11Processor::processVector},
 		{"ch3_console_enabled", &DLV11Processor::processConsoleEnabled},
 		{"ch3_break_response", &DLV11Processor::processBreakResponse},
-		{"break_key", &DLV11Processor::processBreakKey}
+		{"break_key", &DLV11Processor::processBreakKey},
+		{"loopback", &DLV11Processor::processLoopback}
 	};
 
 	map<string, DLV11Config::Ch3BreakResponse> validBreakResponses =
@@ -42,6 +43,7 @@ class DLV11Processor : public SectionProcessor
 	void processConsoleEnabled (iniparser::Value value);
 	void processBreakResponse (iniparser::Value value);
 	void processBreakKey (iniparser::Value value);
+	void processLoopback (iniparser::Value value);
 	void checkConsistency ();
 	void processSubsection (iniparser::Section *subSection);
 
