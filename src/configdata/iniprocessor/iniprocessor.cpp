@@ -8,7 +8,7 @@
 #include "../msv11processor/msv11processor.h"
 #include "../kd11_naprocessor/kd11_naprocessor.h"
 #include "../kdf11_aprocessor/kdf11_aprocessor.h"
-#include "../kdf11_bprocessor/kdf11_bprocessor.h"
+#include "../kdf11_b/kdf11_bprocessor/kdf11_bprocessor.h"
 
 using std::make_unique;
 
