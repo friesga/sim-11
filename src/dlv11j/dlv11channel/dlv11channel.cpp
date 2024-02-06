@@ -15,8 +15,8 @@ using std::chrono::high_resolution_clock;
 using std::chrono::duration;
 
 // Constructor
-DLV11Channel::DLV11Channel (Qbus* bus, u16 channelBaseAddress, 
-	u16 channelVector, shared_ptr<DLV11Config> dlv11Config)
+DLV11Channel::DLV11Channel (Qbus* bus, u16 channelBaseAddress,
+	u16 channelVector, u16 channelNr, shared_ptr<DLV11Config> dlv11Config)
 	:
 	baseAddress {channelBaseAddress},
 	vector {channelVector},
@@ -24,6 +24,7 @@ DLV11Channel::DLV11Channel (Qbus* bus, u16 channelBaseAddress,
 	ch3BreakResponse_ {dlv11Config->ch3BreakResponse},
 	breakKey_ {dlv11Config->breakKey},
 	loopback_ {dlv11Config->loopback},
+	channelNr_ {channelNr},
 	channelRunning_ {true},
 	charAvailable_ {false}
 {
@@ -31,11 +32,6 @@ DLV11Channel::DLV11Channel (Qbus* bus, u16 channelBaseAddress,
 	// to the standard formula has to be made when channel 3 is used as
 	// a console device.
 	if (baseAddress == 0177560)
-		channelNr_ = 3;
-	else
-		channelNr_ = static_cast<u16> ((baseAddress & 030) >> 3);
-
-	if (channelNr_ == 3)
 	{
 		console_ = OperatorConsoleFactory::create ();
 
@@ -296,7 +292,7 @@ void DLV11Channel::receive (Character c)
 
 	if (bus_->BPOK ())
 	{
-		if (baseAddress == 0177560 && c == breakKey_)
+		if (console_ && c == breakKey_)
 		{
 			// Process the BREAK, not queueing it as a received character
 			processBreak ();

@@ -35,7 +35,7 @@ class DLV11Channel
 {
 public:
 	DLV11Channel (Qbus* bus, u16 channelBaseAddress, u16 vector,
-		shared_ptr<DLV11Config> dlv11Config);
+		u16 channelNr, shared_ptr<DLV11Config> dlv11Config);
 	~DLV11Channel ();
 	StatusCode read (BusAddress busAddress, u16 *destAddress);
 	StatusCode writeWord (BusAddress busAddress, u16 value);

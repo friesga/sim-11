@@ -39,12 +39,13 @@ void DLV11J::initialize (bool ch3ConsoleEnabled)
 		if (channelNr == 3 && ch3ConsoleEnabled)
 		{
 			channel_[channelNr] = make_unique<DLV11Channel> (bus_,
-				defaultCh3Address_, defaultCh3Vector_, dlv11Config_);
+				defaultCh3Address_, defaultCh3Vector_, channelNr, dlv11Config_);
 		}
 		else
 		{
 			channel_[channelNr] = make_unique<DLV11Channel> (bus_,
-				baseAddress_ + 8 * channelNr, baseVector_ + 8 * channelNr, dlv11Config_);
+				baseAddress_ + 8 * channelNr, baseVector_ + 8 * channelNr,
+				channelNr, dlv11Config_);
 		}
 	}
 
