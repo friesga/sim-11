@@ -3,17 +3,29 @@
 
 #include "configdata/sectionprocessor/sectionprocessor.h"
 #include "configdata/serialconfig/dlconfig/dlconfig.h"
+#include "configdata/serialconfig/uartconfig/uartconfig.h"
 
 #include <memory>
 #include <map>
 #include <string>
+#include <vector>
 
 using std::unique_ptr;
 using std::map;
 using std::string;
+using std::vector;
 
 class DLV11Processor : public SectionProcessor
 {
+public:
+	DLV11Processor ();
+	unique_ptr<DeviceConfig> getConfig ();
+
+private:
+	enum {numChannels = 4};
+	enum {defaultCh3Address_ = 0177560};
+	enum {defaultCh3Vector_ = 060};
+
 	unique_ptr<DLConfig> dlConfigPtr {nullptr};
 
     // Define process as a pointer to a DLV11Processor member function
@@ -46,10 +58,8 @@ class DLV11Processor : public SectionProcessor
 	void processLoopback (iniparser::Value value);
 	void checkConsistency ();
 	void processSubsection (iniparser::Section *subSection);
-
-public:
-	DLV11Processor ();
-	unique_ptr<DeviceConfig> getConfig ();
+	void checkBaseAddress ();
+	void createUARTsConfig ();
 };
 
 

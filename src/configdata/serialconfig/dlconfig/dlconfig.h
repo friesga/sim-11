@@ -3,6 +3,11 @@
 
 #include "types.h"
 #include "configdata/deviceconfig/deviceconfig.h"
+#include "configdata/serialconfig/uartconfig/uartconfig.h"
+
+#include <vector>
+
+using std::vector;
 
 // Set factory configuration for base address, vector and BREAK key response.
 // The default break key is set to the esc key.
@@ -24,6 +29,8 @@ struct DLConfig : public DeviceConfig
     BreakResponse breakResponse {BreakResponse::Halt};
     unsigned char breakKey {27};
     bool loopback {true};
+
+    vector<UARTConfig> uarts {};
 
     DLConfig ();
 };

@@ -7,11 +7,13 @@
 // This class defines the configuratipn parameters for a DL-compatible
 // Universal Asynchronous Receiver-Transmitter (UART).
 // 
-class UARTConfig : public DeviceConfig
+struct UARTConfig : public DeviceConfig
 {
-    bool enabled;
-    u16 baseAddress {};
-	u16 vector {};
+    bool enabled_;
+    u16 baseAddress_;
+	u16 baseVector_;
+
+    UARTConfig (u16 baseAddress, u16 baseVector);
 };
 
 #endif // _UARTCONFIG_H_

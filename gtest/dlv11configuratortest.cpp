@@ -187,7 +187,7 @@ TEST (DLConfiguratorTest, baseAddressAndVectorAccepted)
 	std::stringstream stream;
 	stream << "[DLV11-J]\n"
 		"address = 0176500\n"
-		"vector = 300";
+		"vector = 0300";
 	stream >> ft;
 
 	IniProcessor iniProcessor;
@@ -205,7 +205,7 @@ TEST (DLConfiguratorTest, baseAddressAndVectorAccepted)
 		static_pointer_cast<DLConfig> (systemConfig[0]);
 
 	EXPECT_EQ (dlConfig->baseAddress, 0176500);
-	EXPECT_EQ (dlConfig->baseVector, 300);
+	EXPECT_EQ (dlConfig->baseVector, 0300);
 }
 
 TEST (DLConfiguratorTest, invalidBaseAddressThrows)
@@ -307,4 +307,133 @@ TEST (DLConfiguratorTest, loopbackOptionAccepted)
 		static_pointer_cast<DLConfig> (systemConfig[0]);
 
 	EXPECT_TRUE (dlConfig->loopback);
+}
+
+TEST (DLConfiguratorTest, uartConfigCreated)
+{
+    iniparser::File ft;
+	std::stringstream stream;
+	stream << "[DLV11-J]\n"
+		"ch3_console_enabled = false\n"
+		"address = 0176500\n"
+		"vector = 0300";
+	stream >> ft;
+
+	IniProcessor iniProcessor;
+	EXPECT_NO_THROW (iniProcessor.process (ft)); 
+
+	vector<shared_ptr<DeviceConfig>> systemConfig = 
+		iniProcessor.getSystemConfig ();
+
+	// The only device type in this testset is the DLV11-J so if that's
+	// not correct the following tests will fail too.
+	ASSERT_EQ (systemConfig[0]->deviceType_, DeviceType::DLV11_J);
+
+	// The device's type is DLV11J so the configuration is a 
+	shared_ptr<DLConfig> dlConfig = 
+		static_pointer_cast<DLConfig> (systemConfig[0]);
+
+	EXPECT_EQ (dlConfig->baseAddress, 0176500);
+	EXPECT_EQ (dlConfig->baseVector, 0300);
+
+	// The configuration should contain four UARTConfig objects with the
+	// correct base address and vector
+	EXPECT_EQ (dlConfig->uarts.size (), 4);
+	EXPECT_EQ (dlConfig->uarts[0].baseAddress_, 0176500);
+	EXPECT_EQ (dlConfig->uarts[0].baseVector_, 0300);
+
+	EXPECT_EQ (dlConfig->uarts[1].baseAddress_, 0176510);
+	EXPECT_EQ (dlConfig->uarts[1].baseVector_, 0310);
+
+	EXPECT_EQ (dlConfig->uarts[2].baseAddress_, 0176520);
+	EXPECT_EQ (dlConfig->uarts[2].baseVector_, 0320);
+
+	EXPECT_EQ (dlConfig->uarts[3].baseAddress_, 0176530);
+	EXPECT_EQ (dlConfig->uarts[3].baseVector_, 0330);
+}
+
+TEST (DLConfiguratorTest, consoleUARTConfigCreated)
+{
+    iniparser::File ft;
+	std::stringstream stream;
+	stream << "[DLV11-J]\n"
+		"ch3_console_enabled = true\n"
+		"address = 0176500\n"
+		"vector = 0300";
+	stream >> ft;
+
+	IniProcessor iniProcessor;
+	EXPECT_NO_THROW (iniProcessor.process (ft)); 
+
+	vector<shared_ptr<DeviceConfig>> systemConfig = 
+		iniProcessor.getSystemConfig ();
+
+	// The only device type in this testset is the DLV11-J so if that's
+	// not correct the following tests will fail too.
+	ASSERT_EQ (systemConfig[0]->deviceType_, DeviceType::DLV11_J);
+
+	// The device's type is DLV11J so the configuration is a 
+	shared_ptr<DLConfig> dlConfig = 
+		static_pointer_cast<DLConfig> (systemConfig[0]);
+
+	EXPECT_EQ (dlConfig->baseAddress, 0176500);
+	EXPECT_EQ (dlConfig->baseVector, 0300);
+
+	// The configuration should contain four UARTConfig objects with the
+	// correct base address and vector
+	EXPECT_EQ (dlConfig->uarts.size (), 4);
+	EXPECT_EQ (dlConfig->uarts[0].baseAddress_, 0176500);
+	EXPECT_EQ (dlConfig->uarts[0].baseVector_, 0300);
+
+	EXPECT_EQ (dlConfig->uarts[1].baseAddress_, 0176510);
+	EXPECT_EQ (dlConfig->uarts[1].baseVector_, 0310);
+
+	EXPECT_EQ (dlConfig->uarts[2].baseAddress_, 0176520);
+	EXPECT_EQ (dlConfig->uarts[2].baseVector_, 0320);
+
+	EXPECT_EQ (dlConfig->uarts[3].baseAddress_, 0177560);
+	EXPECT_EQ (dlConfig->uarts[3].baseVector_, 060);
+}
+
+TEST (DLConfiguratorTest, alternativeBaseAddressConfigCreated)
+{
+    iniparser::File ft;
+	std::stringstream stream;
+	stream << "[DLV11-J]\n"
+		"ch3_console_enabled = false\n"
+		"address = 0176540\n"
+		"vector = 0200";
+	stream >> ft;
+
+	IniProcessor iniProcessor;
+	EXPECT_NO_THROW (iniProcessor.process (ft)); 
+
+	vector<shared_ptr<DeviceConfig>> systemConfig = 
+		iniProcessor.getSystemConfig ();
+
+	// The only device type in this testset is the DLV11-J so if that's
+	// not correct the following tests will fail too.
+	ASSERT_EQ (systemConfig[0]->deviceType_, DeviceType::DLV11_J);
+
+	// The device's type is DLV11J so the configuration is a 
+	shared_ptr<DLConfig> dlConfig = 
+		static_pointer_cast<DLConfig> (systemConfig[0]);
+
+	EXPECT_EQ (dlConfig->baseAddress, 0176540);
+	EXPECT_EQ (dlConfig->baseVector, 0200);
+
+	// The configuration should contain four UARTConfig objects with the
+	// correct base address and vector
+	EXPECT_EQ (dlConfig->uarts.size (), 4);
+	EXPECT_EQ (dlConfig->uarts[0].baseAddress_, 0176540);
+	EXPECT_EQ (dlConfig->uarts[0].baseVector_, 0200);
+
+	EXPECT_EQ (dlConfig->uarts[1].baseAddress_, 0176550);
+	EXPECT_EQ (dlConfig->uarts[1].baseVector_, 0210);
+
+	EXPECT_EQ (dlConfig->uarts[2].baseAddress_, 0176560);
+	EXPECT_EQ (dlConfig->uarts[2].baseVector_, 0220);
+
+	EXPECT_EQ (dlConfig->uarts[3].baseAddress_, 0176570);
+	EXPECT_EQ (dlConfig->uarts[3].baseVector_, 0230);
 }
