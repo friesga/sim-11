@@ -1,7 +1,7 @@
 #ifndef _DLV11PROCESSOR_H_
 #define _DLV11PROCESSOR_H_
 
-#include "../sectionprocessor/sectionprocessor.h"
+#include "configdata/sectionprocessor/sectionprocessor.h"
 #include "configdata/serialconfig/dlconfig/dlconfig.h"
 
 #include <memory>

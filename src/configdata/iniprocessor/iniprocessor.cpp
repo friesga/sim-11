@@ -4,7 +4,7 @@
 #include "../rlprocessor/rlprocessor.h"
 #include "../rxv21processor/rxv21processor.h"
 #include "../bdv11processor/bdv11processor.h"
-#include "../dlv11processor/dlv11processor.h"
+#include "configdata/serialconfig/dlv11processor/dlv11processor.h"
 #include "../msv11processor/msv11processor.h"
 #include "../kd11_naprocessor/kd11_naprocessor.h"
 #include "../kdf11_aprocessor/kdf11_aprocessor.h"
