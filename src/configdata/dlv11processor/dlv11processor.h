@@ -2,7 +2,7 @@
 #define _DLV11PROCESSOR_H_
 
 #include "../sectionprocessor/sectionprocessor.h"
-#include "../dlv11config/dlv11config.h"
+#include "configdata/serialconfig/dlconfig/dlconfig.h"
 
 #include <memory>
 #include <map>
@@ -14,7 +14,7 @@ using std::string;
 
 class DLV11Processor : public SectionProcessor
 {
-	unique_ptr<DLV11Config> dlv11ConfigPtr {nullptr};
+	unique_ptr<DLConfig> dlConfigPtr {nullptr};
 
     // Define process as a pointer to a DLV11Processor member function
 	// with a iniparser::Value argument and returning void.
@@ -30,11 +30,11 @@ class DLV11Processor : public SectionProcessor
 		{"loopback", &DLV11Processor::processLoopback}
 	};
 
-	map<string, DLV11Config::Ch3BreakResponse> validBreakResponses =
+	map<string, DLConfig::Ch3BreakResponse> validBreakResponses =
 	{
-		{"boot", DLV11Config::Ch3BreakResponse::Boot},
-		{"halt", DLV11Config::Ch3BreakResponse::Halt},
-		{"none", DLV11Config::Ch3BreakResponse::None}
+		{"boot", DLConfig::Ch3BreakResponse::Boot},
+		{"halt", DLConfig::Ch3BreakResponse::Halt},
+		{"none", DLConfig::Ch3BreakResponse::None}
 	};
 
     void processValue (iniparser::Section::ValueIterator valueIterator);

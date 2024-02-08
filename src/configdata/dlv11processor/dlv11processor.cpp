@@ -1,5 +1,5 @@
 #include "dlv11processor.h"
-#include "../dlv11config/dlv11config.h"
+#include "configdata/serialconfig/dlconfig/dlconfig.h"
 
 #include <utility>
 
@@ -9,7 +9,7 @@ using std::invalid_argument;
 
 DLV11Processor::DLV11Processor ()
 {
-	dlv11ConfigPtr = make_unique<DLV11Config> ();
+	dlConfigPtr = make_unique<DLConfig> ();
 }
 
 void DLV11Processor::processValue (iniparser::Section::ValueIterator valueIterator)
@@ -23,7 +23,7 @@ void DLV11Processor::processAddress (iniparser::Value value)
 {
 	try
 	{
-		dlv11ConfigPtr->baseAddress = touint<u16> (value.asString());
+		dlConfigPtr->baseAddress = touint<u16> (value.asString());
 	}
 	catch (std::invalid_argument const &)
 	{
@@ -36,7 +36,7 @@ void DLV11Processor::processVector (iniparser::Value value)
 { 
 	try
 	{
-		dlv11ConfigPtr->vector = touint<u16> (value.asString());
+		dlConfigPtr->vector = touint<u16> (value.asString());
 	}
 	catch (invalid_argument const &)
 	{
@@ -49,7 +49,7 @@ void DLV11Processor::processConsoleEnabled (iniparser::Value value)
 {
 	try
 	{
-		dlv11ConfigPtr->ch3ConsoleEnabled = value.asBool ();
+		dlConfigPtr->ch3ConsoleEnabled = value.asBool ();
 	}
 	catch (invalid_argument const &)
 	{
@@ -61,23 +61,23 @@ void DLV11Processor::processConsoleEnabled (iniparser::Value value)
 // values.
 void DLV11Processor::processBreakResponse (iniparser::Value value)
 {
-    map<string, DLV11Config::Ch3BreakResponse>::iterator iter;
+    map<string, DLConfig::Ch3BreakResponse>::iterator iter;
 
     if ((iter = validBreakResponses.find (value.asString ())) != 
             validBreakResponses.end ())
-        dlv11ConfigPtr->ch3BreakResponse = iter->second;
+        dlConfigPtr->ch3BreakResponse = iter->second;
     else
         throw invalid_argument {"Incorrect ch3_break_response value"};
 }
 
 void DLV11Processor::processBreakKey (iniparser::Value value)
 {
-    // dlv11ConfigPtr->breakKey = static_cast<unsigned char> (value.asInt ());
+    // dlConfigPtr->breakKey = static_cast<unsigned char> (value.asInt ());
     if (value.asString () == "esc")
-        dlv11ConfigPtr->breakKey = 27;
+        dlConfigPtr->breakKey = 27;
     else if (value.asString().starts_with ('^') &&
             value.asString ().size () == 2)
-        dlv11ConfigPtr->breakKey = value.asString ().at (1) & ~11100000;
+        dlConfigPtr->breakKey = value.asString ().at (1) & ~11100000;
     else
             throw invalid_argument {"Incorrect break key specification"};
 }
@@ -86,7 +86,7 @@ void DLV11Processor::processLoopback (iniparser::Value value)
 {
 	try
 	{
-		dlv11ConfigPtr->loopback = value.asBool ();
+		dlConfigPtr->loopback = value.asBool ();
 	}
 	catch (invalid_argument const &)
 	{
@@ -98,21 +98,21 @@ void DLV11Processor::processLoopback (iniparser::Value value)
 void DLV11Processor::checkConsistency ()
 {
 	// If a base address is specified, check it is in the valid range
-	if (dlv11ConfigPtr->baseAddress > 0)
+	if (dlConfigPtr->baseAddress > 0)
 	{
-		if (dlv11ConfigPtr->baseAddress < 0160000 ||
-			dlv11ConfigPtr->baseAddress > 0177770)
+		if (dlConfigPtr->baseAddress < 0160000 ||
+			dlConfigPtr->baseAddress > 0177770)
 			throw invalid_argument {"DLV11-J base address must be in range 0160000 - 0177770"};
 	}
 
 	// if channel 3 is to function as the console device, the base address
 	// must be configured for one of three addresses: 176500 (factory
 	// configuration), 176540 or 177500 (EK-DLV1J-UG-001). 
-	if (dlv11ConfigPtr->ch3ConsoleEnabled  &&
-		!(dlv11ConfigPtr->baseAddress == 0 || 
-		  dlv11ConfigPtr->baseAddress == 0176500 ||
-		  dlv11ConfigPtr->baseAddress == 0176540 ||
-		  dlv11ConfigPtr->baseAddress == 0177500))
+	if (dlConfigPtr->ch3ConsoleEnabled  &&
+		!(dlConfigPtr->baseAddress == 0 || 
+		  dlConfigPtr->baseAddress == 0176500 ||
+		  dlConfigPtr->baseAddress == 0176540 ||
+		  dlConfigPtr->baseAddress == 0177500))
 	{
 		throw invalid_argument {"DLV11-J base address must be 0176500, 0176540 or 177500"};
 	}
@@ -123,5 +123,5 @@ void DLV11Processor::processSubsection (iniparser::Section *subSection)
 
 unique_ptr<DeviceConfig> DLV11Processor::getConfig ()
 {
-	return move (dlv11ConfigPtr);
+	return move (dlConfigPtr);
 }

@@ -2,28 +2,30 @@
 #define _DLCONFIG_H_
 
 #include "types.h"
-#include "../deviceconfig/deviceconfig.h"
-#include "../uartconfig/uartconfig.h"
+#include "configdata/deviceconfig/deviceconfig.h"
 
-#include <vector>
-
-using std::vector;
-
-// This class defines the configuration for DL-compatible modules, such
-// as the DLV11-J and the serial-line units integrated in the KDF11-B.
-class DLConfig : public DeviceConfig
+// Set factory configuration for base address, vector and BREAK key response.
+// The default break key is set to the esc key.
+struct DLConfig : public DeviceConfig
 {
-    enum class BreakResponse
+    enum class Ch3BreakResponse
     {
         Boot,
         Halt,
         None
     };
 
-    BreakResponse BreakResponse {BreakResponse::Halt};
+    enum {defaultBaseAddress = 0176500};
+	enum {defaultBaseVector = 0300};
+
+    uint16_t baseAddress {defaultBaseAddress};
+	uint16_t vector {defaultBaseVector};
+    bool ch3ConsoleEnabled {true};
+    Ch3BreakResponse ch3BreakResponse {Ch3BreakResponse::Halt};
     unsigned char breakKey {27};
     bool loopback {true};
-    vector<UARTConfig> uarts;
+
+    DLConfig ();
 };
 
 #endif // _DLCONFIG_H_

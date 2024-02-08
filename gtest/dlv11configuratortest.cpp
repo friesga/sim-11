@@ -1,11 +1,11 @@
 #include "configdata/iniprocessor/iniprocessor.h"
 #include "configdata/devicetype/devicetype.h"
-#include "configdata/dlv11config/dlv11config.h"
+#include "configdata/serialconfig/dlconfig/dlconfig.h"
 
 #include <fstream>	
 #include <gtest/gtest.h>
 
-TEST (DLV11ConfiguratorTest, breakResponseAccepted)
+TEST (DLConfiguratorTest, breakResponseAccepted)
 {
     iniparser::File ft;
 	std::stringstream stream;
@@ -23,14 +23,14 @@ TEST (DLV11ConfiguratorTest, breakResponseAccepted)
 	// not correct the following tests will fail too.
 	ASSERT_EQ (systemConfig[0]->deviceType_, DeviceType::DLV11_J);
 
-	// The device's type is DLV11J so the configuration is a DLV11Config object
-	shared_ptr<DLV11Config> dlv11Config = 
-		static_pointer_cast<DLV11Config> (systemConfig[0]);
+	// The device's type is DLV11J so the configuration is a DLConfig object
+	shared_ptr<DLConfig> dlConfig = 
+		static_pointer_cast<DLConfig> (systemConfig[0]);
 
-	EXPECT_EQ (dlv11Config->ch3BreakResponse, DLV11Config::Ch3BreakResponse::Boot);
+	EXPECT_EQ (dlConfig->ch3BreakResponse, DLConfig::Ch3BreakResponse::Boot);
 }
 
-TEST (DLV11ConfiguratorTest, escCharAccepted)
+TEST (DLConfiguratorTest, escCharAccepted)
 {
     iniparser::File ft;
 	std::stringstream stream;
@@ -49,13 +49,13 @@ TEST (DLV11ConfiguratorTest, escCharAccepted)
 	ASSERT_EQ (systemConfig[0]->deviceType_, DeviceType::DLV11_J);
 
 	// The device's type is DLV11J so the configuration is a 
-	shared_ptr<DLV11Config> dlv11Config = 
-		static_pointer_cast<DLV11Config> (systemConfig[0]);
+	shared_ptr<DLConfig> dlConfig = 
+		static_pointer_cast<DLConfig> (systemConfig[0]);
 
-	EXPECT_EQ (dlv11Config->breakKey, 27);
+	EXPECT_EQ (dlConfig->breakKey, 27);
 }
 
-TEST (DLV11ConfiguratorTest, upperCaseControlCharAccepted)
+TEST (DLConfiguratorTest, upperCaseControlCharAccepted)
 {
     iniparser::File ft;
 	std::stringstream stream;
@@ -74,13 +74,13 @@ TEST (DLV11ConfiguratorTest, upperCaseControlCharAccepted)
 	ASSERT_EQ (systemConfig[0]->deviceType_, DeviceType::DLV11_J);
 
 	// The device's type is DLV11J so the configuration is a 
-	shared_ptr<DLV11Config> dlv11Config = 
-		static_pointer_cast<DLV11Config> (systemConfig[0]);
+	shared_ptr<DLConfig> dlConfig = 
+		static_pointer_cast<DLConfig> (systemConfig[0]);
 
-	EXPECT_EQ (dlv11Config->breakKey, 8);
+	EXPECT_EQ (dlConfig->breakKey, 8);
 }
 
-TEST (DLV11ConfiguratorTest, lowerCaseControlCharAccepted)
+TEST (DLConfiguratorTest, lowerCaseControlCharAccepted)
 {
     iniparser::File ft;
 	std::stringstream stream;
@@ -99,13 +99,13 @@ TEST (DLV11ConfiguratorTest, lowerCaseControlCharAccepted)
 	ASSERT_EQ (systemConfig[0]->deviceType_, DeviceType::DLV11_J);
 
 	// The device's type is DLV11J so the configuration is a 
-	shared_ptr<DLV11Config> dlv11Config = 
-		static_pointer_cast<DLV11Config> (systemConfig[0]);
+	shared_ptr<DLConfig> dlConfig = 
+		static_pointer_cast<DLConfig> (systemConfig[0]);
 
-	EXPECT_EQ (dlv11Config->breakKey, 8);
+	EXPECT_EQ (dlConfig->breakKey, 8);
 }
 
-TEST (DLV11ConfiguratorTest, invalidBreakResponseThrows)
+TEST (DLConfiguratorTest, invalidBreakResponseThrows)
 {
     iniparser::File ft;
 	std::stringstream stream;
@@ -131,7 +131,7 @@ TEST (DLV11ConfiguratorTest, invalidBreakResponseThrows)
 	}
 }
 
-TEST (DLV11ConfiguratorTest, unknownBreakKeyThrows)
+TEST (DLConfiguratorTest, unknownBreakKeyThrows)
 {
     iniparser::File ft;
 	std::stringstream stream;
@@ -156,7 +156,7 @@ TEST (DLV11ConfiguratorTest, unknownBreakKeyThrows)
 	}
 }
 
-TEST (DLV11ConfiguratorTest, invalidBreakKeyThrows)
+TEST (DLConfiguratorTest, invalidBreakKeyThrows)
 {
     iniparser::File ft;
 	std::stringstream stream;
@@ -181,7 +181,7 @@ TEST (DLV11ConfiguratorTest, invalidBreakKeyThrows)
 	}
 }
 
-TEST (DLV11ConfiguratorTest, baseAddressAndVectorAccepted)
+TEST (DLConfiguratorTest, baseAddressAndVectorAccepted)
 {
     iniparser::File ft;
 	std::stringstream stream;
@@ -201,14 +201,14 @@ TEST (DLV11ConfiguratorTest, baseAddressAndVectorAccepted)
 	ASSERT_EQ (systemConfig[0]->deviceType_, DeviceType::DLV11_J);
 
 	// The device's type is DLV11J so the configuration is a 
-	shared_ptr<DLV11Config> dlv11Config = 
-		static_pointer_cast<DLV11Config> (systemConfig[0]);
+	shared_ptr<DLConfig> dlConfig = 
+		static_pointer_cast<DLConfig> (systemConfig[0]);
 
-	EXPECT_EQ (dlv11Config->baseAddress, 0176500);
-	EXPECT_EQ (dlv11Config->vector, 300);
+	EXPECT_EQ (dlConfig->baseAddress, 0176500);
+	EXPECT_EQ (dlConfig->vector, 300);
 }
 
-TEST (DLV11ConfiguratorTest, invalidBaseAddressThrows)
+TEST (DLConfiguratorTest, invalidBaseAddressThrows)
 {
     iniparser::File ft;
 	std::stringstream stream;
@@ -233,7 +233,7 @@ TEST (DLV11ConfiguratorTest, invalidBaseAddressThrows)
 	}
 }
 
-TEST (DLV11ConfiguratorTest, consoleSelectionAccepted)
+TEST (DLConfiguratorTest, consoleSelectionAccepted)
 {
     iniparser::File ft;
 	std::stringstream stream;
@@ -252,13 +252,13 @@ TEST (DLV11ConfiguratorTest, consoleSelectionAccepted)
 	ASSERT_EQ (systemConfig[0]->deviceType_, DeviceType::DLV11_J);
 
 	// The device's type is DLV11J so the configuration is a 
-	shared_ptr<DLV11Config> dlv11Config = 
-		static_pointer_cast<DLV11Config> (systemConfig[0]);
+	shared_ptr<DLConfig> dlConfig = 
+		static_pointer_cast<DLConfig> (systemConfig[0]);
 
-	EXPECT_TRUE (dlv11Config->ch3ConsoleEnabled);
+	EXPECT_TRUE (dlConfig->ch3ConsoleEnabled);
 }
 
-TEST (DLV11ConfiguratorTest, consoleEnabledinvalidBaseAddressThrows)
+TEST (DLConfiguratorTest, consoleEnabledinvalidBaseAddressThrows)
 {
     iniparser::File ft;
 	std::stringstream stream;
@@ -284,7 +284,7 @@ TEST (DLV11ConfiguratorTest, consoleEnabledinvalidBaseAddressThrows)
 	}
 }
 
-TEST (DLV11ConfiguratorTest, loopbackOptionAccepted)
+TEST (DLConfiguratorTest, loopbackOptionAccepted)
 {
     iniparser::File ft;
 	std::stringstream stream;
@@ -303,8 +303,8 @@ TEST (DLV11ConfiguratorTest, loopbackOptionAccepted)
 	ASSERT_EQ (systemConfig[0]->deviceType_, DeviceType::DLV11_J);
 
 	// The device's type is DLV11J so the configuration is a 
-	shared_ptr<DLV11Config> dlv11Config = 
-		static_pointer_cast<DLV11Config> (systemConfig[0]);
+	shared_ptr<DLConfig> dlConfig = 
+		static_pointer_cast<DLConfig> (systemConfig[0]);
 
-	EXPECT_TRUE (dlv11Config->loopback);
+	EXPECT_TRUE (dlConfig->loopback);
 }

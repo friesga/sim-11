@@ -10,14 +10,14 @@ using std::placeholders::_1;
 using std::make_unique;
 
 // Construct a DLV11-J object with the given configuration
-DLV11J::DLV11J (Qbus *bus, shared_ptr<DLV11Config> dlv11Config)
+DLV11J::DLV11J (Qbus *bus, shared_ptr<DLConfig> dlConfig)
 	:
 	PDP11Peripheral (bus),
-	baseAddress_ {dlv11Config->baseAddress},
-	baseVector_ {dlv11Config->vector},
-	dlv11Config_ {dlv11Config}
+	baseAddress_ {dlConfig->baseAddress},
+	baseVector_ {dlConfig->vector},
+	dlConfig_ {dlConfig}
 {
-	initialize (dlv11Config->ch3ConsoleEnabled);
+	initialize (dlConfig->ch3ConsoleEnabled);
 
 	reset ();
 }
@@ -39,13 +39,13 @@ void DLV11J::initialize (bool ch3ConsoleEnabled)
 		if (channelNr == 3 && ch3ConsoleEnabled)
 		{
 			channel_[channelNr] = make_unique<DLV11Channel> (bus_,
-				defaultCh3Address_, defaultCh3Vector_, channelNr, dlv11Config_);
+				defaultCh3Address_, defaultCh3Vector_, channelNr, dlConfig_);
 		}
 		else
 		{
 			channel_[channelNr] = make_unique<DLV11Channel> (bus_,
 				baseAddress_ + 8 * channelNr, baseVector_ + 8 * channelNr,
-				channelNr, dlv11Config_);
+				channelNr, dlConfig_);
 		}
 	}
 
@@ -80,7 +80,7 @@ bool DLV11J::responsible (BusAddress busAddress)
 	if (!busAddress.isInIOpage ())
 		return false;
 
-	if (dlv11Config_->ch3ConsoleEnabled)
+	if (dlConfig_->ch3ConsoleEnabled)
 	{
 		if (busAddress.registerAddress () >= baseAddress_ &&
 				busAddress.registerAddress () < baseAddress_ + (3 * 8))

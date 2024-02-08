@@ -3,7 +3,7 @@
 
 #include "qbus/qbus.h"
 #include "statuscodes.h"
-#include "configdata/dlv11config/dlv11config.h"
+#include "configdata/serialconfig/dlconfig/dlconfig.h"
 #include "console/console.h"
 #include "characterbuffer/characterbuffer.h"
 #include "character/character.h"
@@ -35,7 +35,7 @@ class DLV11Channel
 {
 public:
 	DLV11Channel (Qbus* bus, u16 channelBaseAddress, u16 vector,
-		u16 channelNr, shared_ptr<DLV11Config> dlv11Config);
+		u16 channelNr, shared_ptr<DLConfig> dlConfig);
 	~DLV11Channel ();
 	StatusCode read (BusAddress busAddress, u16 *destAddress);
 	StatusCode writeWord (BusAddress busAddress, u16 value);
@@ -87,7 +87,7 @@ private:
 	u8 interruptPriority (Function function, u16 channelNr);
 
 	Qbus* bus_;
-	DLV11Config::Ch3BreakResponse ch3BreakResponse_;
+	DLConfig::Ch3BreakResponse ch3BreakResponse_;
     unsigned char breakKey_;
 	bool loopback_;
 	u16 channelNr_;

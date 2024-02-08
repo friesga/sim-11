@@ -2,7 +2,7 @@
 #define _UARTCONFIG_H_
 
 #include "types.h"
-#include "../deviceconfig/deviceconfig.h"
+#include "configdata/deviceconfig/deviceconfig.h"
 
 // This class defines the configuratipn parameters for a DL-compatible
 // Universal Asynchronous Receiver-Transmitter (UART).

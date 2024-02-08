@@ -172,7 +172,7 @@ set (CONFIGURATOR_SRCS
     src/configdata/ba11nconfig/ba11nconfig.cpp 
     src/configdata/bdv11config/bdv11config.cpp
     src/configdata/bdv11processor/bdv11processor.cpp
-    src/configdata/dlv11config/dlv11config.cpp 
+    src/configdata/serialconfig/dlconfig/dlconfig.cpp 
     src/configdata/dlv11processor/dlv11processor.cpp
     src/configdata/msv11config/msv11config.cpp 
     src/configdata/msv11processor/msv11processor.cpp

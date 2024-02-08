@@ -16,14 +16,14 @@ using std::chrono::duration;
 
 // Constructor
 DLV11Channel::DLV11Channel (Qbus* bus, u16 channelBaseAddress,
-	u16 channelVector, u16 channelNr, shared_ptr<DLV11Config> dlv11Config)
+	u16 channelVector, u16 channelNr, shared_ptr<DLConfig> dlConfig)
 	:
 	baseAddress {channelBaseAddress},
 	vector {channelVector},
 	bus_ {bus},
-	ch3BreakResponse_ {dlv11Config->ch3BreakResponse},
-	breakKey_ {dlv11Config->breakKey},
-	loopback_ {dlv11Config->loopback},
+	ch3BreakResponse_ {dlConfig->ch3BreakResponse},
+	breakKey_ {dlConfig->breakKey},
+	loopback_ {dlConfig->loopback},
 	channelNr_ {channelNr},
 	channelRunning_ {true},
 	charAvailable_ {false}
@@ -334,12 +334,12 @@ void DLV11Channel::receive (Character c)
 // system.
 void DLV11Channel::processBreak ()
 {
-	if (ch3BreakResponse_ == DLV11Config::Ch3BreakResponse::Halt)
+	if (ch3BreakResponse_ == DLConfig::Ch3BreakResponse::Halt)
 	{
 		bus_->BHALT ().cycle ();
 		return;
 	}
-	else if (ch3BreakResponse_ == DLV11Config::Ch3BreakResponse::Boot)
+	else if (ch3BreakResponse_ == DLConfig::Ch3BreakResponse::Boot)
 	{
 		bus_->RESET ().cycle ();
 		return;

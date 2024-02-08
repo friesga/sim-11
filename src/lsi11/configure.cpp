@@ -24,7 +24,7 @@ void LSI11::configureDevices (Window *window)
     msv11_.push_back (new MSV11D (&bus_));
 
     // Create a DLV11J object with the default condiguration
-    dlv11_ = new DLV11J (&bus_, make_shared<DLV11Config> ());
+    dlv11_ = new DLV11J (&bus_, make_shared<DLConfig> ());
     bdv11_ = new BDV11 (&bus_);
     rxv21_ = new RXV21 (&bus_);
     rlv12_ = new RLV12 (&bus_);
@@ -71,7 +71,7 @@ void LSI11::configureDevices (vector<shared_ptr<DeviceConfig>> systemConfig,
 
             case DeviceType::DLV11_J:
                 dlv11_ = new DLV11J (&bus_, 
-                    static_pointer_cast<DLV11Config> (device));
+                    static_pointer_cast<DLConfig> (device));
                 break;
 
             case DeviceType::BDV11:
