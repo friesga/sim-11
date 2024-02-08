@@ -21,7 +21,7 @@ DLV11Channel::DLV11Channel (Qbus* bus, u16 channelBaseAddress,
 	baseAddress {channelBaseAddress},
 	vector {channelVector},
 	bus_ {bus},
-	ch3BreakResponse_ {dlConfig->ch3BreakResponse},
+	breakResponse_ {dlConfig->breakResponse},
 	breakKey_ {dlConfig->breakKey},
 	loopback_ {dlConfig->loopback},
 	channelNr_ {channelNr},
@@ -334,12 +334,12 @@ void DLV11Channel::receive (Character c)
 // system.
 void DLV11Channel::processBreak ()
 {
-	if (ch3BreakResponse_ == DLConfig::Ch3BreakResponse::Halt)
+	if (breakResponse_ == DLConfig::BreakResponse::Halt)
 	{
 		bus_->BHALT ().cycle ();
 		return;
 	}
-	else if (ch3BreakResponse_ == DLConfig::Ch3BreakResponse::Boot)
+	else if (breakResponse_ == DLConfig::BreakResponse::Boot)
 	{
 		bus_->RESET ().cycle ();
 		return;

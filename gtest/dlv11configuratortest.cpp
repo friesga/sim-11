@@ -27,7 +27,7 @@ TEST (DLConfiguratorTest, breakResponseAccepted)
 	shared_ptr<DLConfig> dlConfig = 
 		static_pointer_cast<DLConfig> (systemConfig[0]);
 
-	EXPECT_EQ (dlConfig->ch3BreakResponse, DLConfig::Ch3BreakResponse::Boot);
+	EXPECT_EQ (dlConfig->breakResponse, DLConfig::BreakResponse::Boot);
 }
 
 TEST (DLConfiguratorTest, escCharAccepted)

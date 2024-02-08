@@ -30,11 +30,11 @@ class DLV11Processor : public SectionProcessor
 		{"loopback", &DLV11Processor::processLoopback}
 	};
 
-	map<string, DLConfig::Ch3BreakResponse> validBreakResponses =
+	map<string, DLConfig::BreakResponse> validBreakResponses =
 	{
-		{"boot", DLConfig::Ch3BreakResponse::Boot},
-		{"halt", DLConfig::Ch3BreakResponse::Halt},
-		{"none", DLConfig::Ch3BreakResponse::None}
+		{"boot", DLConfig::BreakResponse::Boot},
+		{"halt", DLConfig::BreakResponse::Halt},
+		{"none", DLConfig::BreakResponse::None}
 	};
 
     void processValue (iniparser::Section::ValueIterator valueIterator);

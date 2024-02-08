@@ -8,7 +8,7 @@
 // The default break key is set to the esc key.
 struct DLConfig : public DeviceConfig
 {
-    enum class Ch3BreakResponse
+    enum class BreakResponse
     {
         Boot,
         Halt,
@@ -21,7 +21,7 @@ struct DLConfig : public DeviceConfig
     u16 baseAddress {defaultBaseAddress};
 	u16 baseVector {defaultBaseVector};
     bool ch3ConsoleEnabled {true};
-    Ch3BreakResponse ch3BreakResponse {Ch3BreakResponse::Halt};
+    BreakResponse breakResponse {BreakResponse::Halt};
     unsigned char breakKey {27};
     bool loopback {true};
 

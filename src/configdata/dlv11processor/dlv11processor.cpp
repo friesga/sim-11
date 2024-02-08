@@ -61,11 +61,11 @@ void DLV11Processor::processConsoleEnabled (iniparser::Value value)
 // values.
 void DLV11Processor::processBreakResponse (iniparser::Value value)
 {
-    map<string, DLConfig::Ch3BreakResponse>::iterator iter;
+    map<string, DLConfig::BreakResponse>::iterator iter;
 
     if ((iter = validBreakResponses.find (value.asString ())) != 
             validBreakResponses.end ())
-        dlConfigPtr->ch3BreakResponse = iter->second;
+        dlConfigPtr->breakResponse = iter->second;
     else
         throw invalid_argument {"Incorrect ch3_break_response value"};
 }

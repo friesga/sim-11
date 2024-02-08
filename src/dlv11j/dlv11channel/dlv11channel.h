@@ -87,7 +87,7 @@ private:
 	u8 interruptPriority (Function function, u16 channelNr);
 
 	Qbus* bus_;
-	DLConfig::Ch3BreakResponse ch3BreakResponse_;
+	DLConfig::BreakResponse breakResponse_;
     unsigned char breakKey_;
 	bool loopback_;
 	u16 channelNr_;
