@@ -205,7 +205,7 @@ TEST (DLConfiguratorTest, baseAddressAndVectorAccepted)
 		static_pointer_cast<DLConfig> (systemConfig[0]);
 
 	EXPECT_EQ (dlConfig->baseAddress, 0176500);
-	EXPECT_EQ (dlConfig->vector, 300);
+	EXPECT_EQ (dlConfig->baseVector, 300);
 }
 
 TEST (DLConfiguratorTest, invalidBaseAddressThrows)

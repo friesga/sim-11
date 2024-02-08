@@ -18,8 +18,8 @@ struct DLConfig : public DeviceConfig
     enum {defaultBaseAddress = 0176500};
 	enum {defaultBaseVector = 0300};
 
-    uint16_t baseAddress {defaultBaseAddress};
-	uint16_t vector {defaultBaseVector};
+    u16 baseAddress {defaultBaseAddress};
+	u16 baseVector {defaultBaseVector};
     bool ch3ConsoleEnabled {true};
     Ch3BreakResponse ch3BreakResponse {Ch3BreakResponse::Halt};
     unsigned char breakKey {27};

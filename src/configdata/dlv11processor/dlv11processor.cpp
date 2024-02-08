@@ -36,7 +36,7 @@ void DLV11Processor::processVector (iniparser::Value value)
 { 
 	try
 	{
-		dlConfigPtr->vector = touint<u16> (value.asString());
+		dlConfigPtr->baseVector = touint<u16> (value.asString());
 	}
 	catch (invalid_argument const &)
 	{

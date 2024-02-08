@@ -14,7 +14,7 @@ DLV11J::DLV11J (Qbus *bus, shared_ptr<DLConfig> dlConfig)
 	:
 	PDP11Peripheral (bus),
 	baseAddress_ {dlConfig->baseAddress},
-	baseVector_ {dlConfig->vector},
+	baseVector_ {dlConfig->baseVector},
 	dlConfig_ {dlConfig}
 {
 	initialize (dlConfig->ch3ConsoleEnabled);
