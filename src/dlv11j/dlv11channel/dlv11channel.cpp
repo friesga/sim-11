@@ -15,11 +15,11 @@ using std::chrono::high_resolution_clock;
 using std::chrono::duration;
 
 // Constructor
-DLV11Channel::DLV11Channel (Qbus* bus, u16 channelBaseAddress,
-	u16 channelVector, u16 channelNr, shared_ptr<DLConfig> dlConfig)
+DLV11Channel::DLV11Channel (Qbus* bus, UARTConfig& uartConfig,
+	u16 channelNr, shared_ptr<DLConfig> dlConfig)
 	:
-	baseAddress {channelBaseAddress},
-	vector {channelVector},
+	baseAddress {uartConfig.baseAddress_},
+	vector {uartConfig.baseVector_},
 	bus_ {bus},
 	breakResponse_ {dlConfig->breakResponse},
 	breakKey_ {dlConfig->breakKey},
@@ -28,9 +28,7 @@ DLV11Channel::DLV11Channel (Qbus* bus, u16 channelBaseAddress,
 	channelRunning_ {true},
 	charAvailable_ {false}
 {
-	// Determine the channel number from the base address. An exception
-	// to the standard formula has to be made when channel 3 is used as
-	// a console device.
+	// A channel used as console will always have base address 0177560.
 	if (baseAddress == 0177560)
 	{
 		console_ = OperatorConsoleFactory::create ();

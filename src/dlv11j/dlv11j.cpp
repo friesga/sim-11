@@ -36,6 +36,7 @@ void DLV11J::initialize (bool ch3ConsoleEnabled)
 {
 	for (u16 channelNr = 0; channelNr < numChannels; ++channelNr)
 	{
+		/*
 		if (channelNr == 3 && ch3ConsoleEnabled)
 		{
 			channel_[channelNr] = make_unique<DLV11Channel> (bus_,
@@ -47,6 +48,9 @@ void DLV11J::initialize (bool ch3ConsoleEnabled)
 				baseAddress_ + 8 * channelNr, baseVector_ + 8 * channelNr,
 				channelNr, dlConfig_);
 		}
+		*/
+		channel_[channelNr] = make_unique<DLV11Channel> (bus_,
+				dlConfig_->uarts[channelNr], channelNr, dlConfig_);
 	}
 
 	bus_->BINIT().subscribe (bind (&DLV11J::BINITReceiver, this, _1));

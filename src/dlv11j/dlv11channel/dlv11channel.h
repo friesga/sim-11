@@ -4,6 +4,7 @@
 #include "qbus/qbus.h"
 #include "statuscodes.h"
 #include "configdata/serialconfig/dlconfig/dlconfig.h"
+#include "configdata/serialconfig/uartconfig/uartconfig.h"
 #include "console/console.h"
 #include "characterbuffer/characterbuffer.h"
 #include "character/character.h"
@@ -34,7 +35,7 @@ using std::chrono::high_resolution_clock;
 class DLV11Channel
 {
 public:
-	DLV11Channel (Qbus* bus, u16 channelBaseAddress, u16 vector,
+	DLV11Channel (Qbus* bus, UARTConfig& uartConfig,
 		u16 channelNr, shared_ptr<DLConfig> dlConfig);
 	~DLV11Channel ();
 	StatusCode read (BusAddress busAddress, u16 *destAddress);
