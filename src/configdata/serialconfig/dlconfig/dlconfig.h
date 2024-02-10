@@ -13,15 +13,17 @@ using std::vector;
 // The default break key is set to the esc key.
 struct DLConfig : public DeviceConfig
 {
+    enum {numChannels = 4};
+    enum {defaultBaseAddress = 0176500};
+	enum {defaultBaseVector = 0300};
+	enum {defaultCh3Address_ = 0177560};
+	enum {defaultCh3Vector_ = 060};
     enum class BreakResponse
     {
         Boot,
         Halt,
         None
     };
-
-    enum {defaultBaseAddress = 0176500};
-	enum {defaultBaseVector = 0300};
 
     u16 baseAddress {defaultBaseAddress};
 	u16 baseVector {defaultBaseVector};
@@ -33,6 +35,7 @@ struct DLConfig : public DeviceConfig
     vector<UARTConfig> uarts {};
 
     DLConfig ();
+    void createDLV11J_UARTsConfig ();
 };
 
 #endif // _DLCONFIG_H_

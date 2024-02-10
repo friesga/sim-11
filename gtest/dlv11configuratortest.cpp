@@ -3,7 +3,11 @@
 #include "configdata/serialconfig/dlconfig/dlconfig.h"
 
 #include <fstream>	
+#include <memory>
 #include <gtest/gtest.h>
+
+using std::unique_ptr;
+using std::make_unique;
 
 TEST (DLConfiguratorTest, breakResponseAccepted)
 {
@@ -276,7 +280,7 @@ TEST (DLConfiguratorTest, consoleEnabledinvalidBaseAddressThrows)
 	}
 	catch (std::invalid_argument const &except)
 	{
-		EXPECT_STREQ (except.what(), "DLV11-J base address must be 0176500, 0176540 or 177500");
+		EXPECT_STREQ (except.what(), "DLV11-J base address must be 0176500, 0176540 or 0177500");
 	}
 	catch (...)
 	{
@@ -307,6 +311,29 @@ TEST (DLConfiguratorTest, loopbackOptionAccepted)
 		static_pointer_cast<DLConfig> (systemConfig[0]);
 
 	EXPECT_TRUE (dlConfig->loopback);
+}
+
+TEST (DLConfiguratorTest, defaultUARTConfigCreated)
+{
+	unique_ptr<DLConfig>dlConfig = make_unique<DLConfig> ();
+
+	EXPECT_EQ (dlConfig->baseAddress, 0176500);
+	EXPECT_EQ (dlConfig->baseVector, 0300);
+
+	// The configuration should contain four UARTConfig objects with the
+	// correct base address and vector
+	EXPECT_EQ (dlConfig->uarts.size (), 4);
+	EXPECT_EQ (dlConfig->uarts[0].baseAddress_, 0176500);
+	EXPECT_EQ (dlConfig->uarts[0].baseVector_, 0300);
+
+	EXPECT_EQ (dlConfig->uarts[1].baseAddress_, 0176510);
+	EXPECT_EQ (dlConfig->uarts[1].baseVector_, 0310);
+
+	EXPECT_EQ (dlConfig->uarts[2].baseAddress_, 0176520);
+	EXPECT_EQ (dlConfig->uarts[2].baseVector_, 0320);
+
+	EXPECT_EQ (dlConfig->uarts[3].baseAddress_, 0177560);
+	EXPECT_EQ (dlConfig->uarts[3].baseVector_, 060);
 }
 
 TEST (DLConfiguratorTest, uartConfigCreated)

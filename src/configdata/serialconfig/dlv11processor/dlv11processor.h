@@ -59,7 +59,6 @@ private:
 	void checkConsistency ();
 	void processSubsection (iniparser::Section *subSection);
 	void checkBaseAddress ();
-	void createUARTsConfig ();
 };
 
 

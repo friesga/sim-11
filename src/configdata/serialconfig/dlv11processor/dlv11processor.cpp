@@ -101,7 +101,7 @@ void DLV11Processor::checkConsistency ()
 
 	// Now we determined the configured base address of the DLV11-J is valid
 	// we can use it to create the configuration for the channels.
-	createUARTsConfig ();
+	dlConfigPtr->createDLV11J_UARTsConfig ();
 }
 
 void DLV11Processor::checkBaseAddress ()
@@ -123,22 +123,7 @@ void DLV11Processor::checkBaseAddress ()
 		  dlConfigPtr->baseAddress == 0176540 ||
 		  dlConfigPtr->baseAddress == 0177500))
 	{
-		throw invalid_argument {"DLV11-J base address must be 0176500, 0176540 or 177500"};
-	}
-}
-
-void DLV11Processor::createUARTsConfig ()
-{
-	for (u16 channelNr = 0; channelNr < numChannels; ++channelNr)
-	{
-		if (channelNr == 3 && dlConfigPtr->ch3ConsoleEnabled)
-			dlConfigPtr->uarts.push_back (UARTConfig {
-				defaultCh3Address_, 
-				defaultCh3Vector_});
-		else
-			dlConfigPtr->uarts.push_back (UARTConfig {
-				static_cast<u16> (dlConfigPtr->baseAddress + 8 * channelNr),
-				static_cast<u16> (dlConfigPtr->baseVector + 8 * channelNr)});
+		throw invalid_argument {"DLV11-J base address must be 0176500, 0176540 or 0177500"};
 	}
 }
 
