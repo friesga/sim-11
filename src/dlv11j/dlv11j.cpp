@@ -36,19 +36,6 @@ void DLV11J::initialize (bool ch3ConsoleEnabled)
 {
 	for (u16 channelNr = 0; channelNr < numChannels; ++channelNr)
 	{
-		/*
-		if (channelNr == 3 && ch3ConsoleEnabled)
-		{
-			channel_[channelNr] = make_unique<DLV11Channel> (bus_,
-				defaultCh3Address_, defaultCh3Vector_, channelNr, dlConfig_);
-		}
-		else
-		{
-			channel_[channelNr] = make_unique<DLV11Channel> (bus_,
-				baseAddress_ + 8 * channelNr, baseVector_ + 8 * channelNr,
-				channelNr, dlConfig_);
-		}
-		*/
 		channel_[channelNr] = make_unique<DLV11Channel> (bus_,
 				dlConfig_->uarts[channelNr], channelNr, dlConfig_);
 	}
@@ -84,22 +71,9 @@ bool DLV11J::responsible (BusAddress busAddress)
 	if (!busAddress.isInIOpage ())
 		return false;
 
-	if (dlConfig_->ch3ConsoleEnabled)
-	{
-		if (busAddress.registerAddress () >= baseAddress_ &&
-				busAddress.registerAddress () < baseAddress_ + (3 * 8))
+	for (auto &channel : channel_)
+		if (channel->responsible (busAddress))
 			return true;
-
-		if (busAddress.registerAddress () >= 0177560 &&
-				busAddress.registerAddress () <= 0177566)
-			return true;
-	}
-	else
-	{
-		if (busAddress.registerAddress () >= baseAddress_ &&
-				busAddress.registerAddress () < baseAddress_ + (4 * 8))
-			return true;
-	}
 
 	return false;
 }

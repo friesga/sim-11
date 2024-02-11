@@ -63,6 +63,12 @@ void DLV11Channel::reset ()
 	xcsr = XCSR_TRANSMIT_READY;
 }
 
+bool DLV11Channel::responsible (BusAddress address)
+{
+	return address.registerAddress () >= baseAddress &&
+		address.registerAddress () <= baseAddress + 6;
+}
+
 // This function allows the host system to read a word from one of the
 // DLV11-J's registers.
 StatusCode DLV11Channel::read (BusAddress busAddress, u16 *destAddress)

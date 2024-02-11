@@ -2,6 +2,7 @@
 #define _DLV11CHANNEL_H_
 
 #include "qbus/qbus.h"
+#include "abstractbusdevice/abstractbusdevice.h"
 #include "statuscodes.h"
 #include "configdata/serialconfig/dlconfig/dlconfig.h"
 #include "configdata/serialconfig/uartconfig/uartconfig.h"
@@ -32,7 +33,7 @@ using std::chrono::high_resolution_clock;
 // 
 // This option can be enabled by the DLV11-J loopback option in the
 // configuration file.
-class DLV11Channel
+class DLV11Channel : public AbstractBusDevice
 {
 public:
 	DLV11Channel (Qbus* bus, UARTConfig& uartConfig,
@@ -40,6 +41,7 @@ public:
 	~DLV11Channel ();
 	StatusCode read (BusAddress busAddress, u16 *destAddress);
 	StatusCode writeWord (BusAddress busAddress, u16 value);
+	bool responsible (BusAddress address);
 	void reset ();
 
 private:
