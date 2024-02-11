@@ -4,10 +4,12 @@
 #include <string.h>
 #include <stdlib.h>
 #include <functional>
+#include <ranges>
 
 using std::bind;
 using std::placeholders::_1;
 using std::make_unique;
+using std::ranges::any_of;
 
 // Construct a DLV11-J object with the given configuration
 DLV11J::DLV11J (Qbus *bus, shared_ptr<DLConfig> dlConfig)
@@ -61,21 +63,17 @@ StatusCode DLV11J::writeWord (BusAddress busAddress, u16 value)
 		value);
 }
 
-// If channel 3 is configured as console device the DLV11J is responsible for
-// three sets of registers (one set per channel) starting from its base
-// address plus the register set for the console device, and is responsible
-// for four sets of registers is channel 3 is not configured as console
-// device.
+// The responsibility for the handling of bus addresses is delegated to the
+// DLV11-J's channels.
 bool DLV11J::responsible (BusAddress busAddress)
 {
 	if (!busAddress.isInIOpage ())
 		return false;
 
-	for (auto &channel : channel_)
-		if (channel->responsible (busAddress))
-			return true;
+	auto isResponsible = [busAddress] (unique_ptr<DLV11Channel> &channel)
+		{return channel->responsible (busAddress); };
 
-	return false;
+	return any_of (channel_, isResponsible);
 }
 
 // On assertion of the BINIT signal initialize the device.
