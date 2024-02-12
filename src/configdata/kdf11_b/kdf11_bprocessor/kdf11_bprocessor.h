@@ -26,6 +26,8 @@ private:
 	map<string, Process> valueProcessors =
 	{
 	};
+
+	void processSubsection (iniparser::Section *subSection) override;
 };
 
 #endif // _KDF11_BPROCESSOR_H_

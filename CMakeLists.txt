@@ -186,6 +186,7 @@ set (CONFIGURATOR_SRCS
     src/configdata/kdf11_aconfig/kdf11_aconfig.cpp
     src/configdata/kdf11_aprocessor/kdf11_aprocessor.cpp
     src/configdata/kdf11_b/kdf11_bconfig/kdf11_bconfig.cpp
+    src/configdata/kdf11_b/sluconfig/sluconfig.cpp
     src/configdata/kdf11_b/kdf11_bprocessor/kdf11_bprocessor.cpp)
 
 set (FLOAT_SRCS
@@ -404,6 +405,7 @@ set (GTEST_SRCS
     gtest/kdf11_a/kdf11_abusdevicetest.cpp
     gtest/kdf11_a/kdf11_a_odttest.cpp
     gtest/kdf11_b/kdf11_bconfiguratortest.cpp
+    gtest/kdf11_b/sluconfiguratortest.cpp
     gtest/locationtest.cpp
     gtest/msv11configuratortest.cpp
     gtest/operandlocationtest.cpp
