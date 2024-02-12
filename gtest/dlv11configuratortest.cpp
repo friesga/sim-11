@@ -1,6 +1,7 @@
 #include "configdata/iniprocessor/iniprocessor.h"
 #include "configdata/devicetype/devicetype.h"
 #include "configdata/serialconfig/dlv11jconfig/dlv11jconfig.h"
+#include "configdata/serialconfig/consoleconfig/consoleconfig.h"
 
 #include <fstream>	
 #include <memory>
@@ -31,7 +32,7 @@ TEST (DLV11JConfiguratorTest, breakResponseAccepted)
 	shared_ptr<DLV11JConfig> dlConfig = 
 		static_pointer_cast<DLV11JConfig> (systemConfig[0]);
 
-	EXPECT_EQ (dlConfig->breakResponse, DLV11JConfig::BreakResponse::Boot);
+	EXPECT_EQ (dlConfig->consoleConfig.breakResponse, ConsoleConfig::BreakResponse::Boot);
 }
 
 TEST (DLV11JConfiguratorTest, escCharAccepted)
@@ -56,7 +57,7 @@ TEST (DLV11JConfiguratorTest, escCharAccepted)
 	shared_ptr<DLV11JConfig> dlConfig = 
 		static_pointer_cast<DLV11JConfig> (systemConfig[0]);
 
-	EXPECT_EQ (dlConfig->breakKey, 27);
+	EXPECT_EQ (dlConfig->consoleConfig.breakKey, 27);
 }
 
 TEST (DLV11JConfiguratorTest, upperCaseControlCharAccepted)
@@ -81,7 +82,7 @@ TEST (DLV11JConfiguratorTest, upperCaseControlCharAccepted)
 	shared_ptr<DLV11JConfig> dlConfig = 
 		static_pointer_cast<DLV11JConfig> (systemConfig[0]);
 
-	EXPECT_EQ (dlConfig->breakKey, 8);
+	EXPECT_EQ (dlConfig->consoleConfig.breakKey, 8);
 }
 
 TEST (DLV11JConfiguratorTest, lowerCaseControlCharAccepted)
@@ -106,7 +107,7 @@ TEST (DLV11JConfiguratorTest, lowerCaseControlCharAccepted)
 	shared_ptr<DLV11JConfig> dlConfig = 
 		static_pointer_cast<DLV11JConfig> (systemConfig[0]);
 
-	EXPECT_EQ (dlConfig->breakKey, 8);
+	EXPECT_EQ (dlConfig->consoleConfig.breakKey, 8);
 }
 
 TEST (DLV11JConfiguratorTest, invalidBreakResponseThrows)
