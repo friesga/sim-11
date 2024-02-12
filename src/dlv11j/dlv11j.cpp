@@ -19,7 +19,7 @@ DLV11J::DLV11J (Qbus *bus, shared_ptr<DLConfig> dlConfig)
 	baseVector_ {dlConfig->baseVector},
 	dlConfig_ {dlConfig}
 {
-	initialize (dlConfig->ch3ConsoleEnabled);
+	initialize ();
 
 	reset ();
 }
@@ -34,7 +34,7 @@ DLV11J::DLV11J (Qbus *bus, shared_ptr<DLConfig> dlConfig)
 // regardless of the configured base vector of the module.
 // (EK-DLV1J-UG-001)
 //
-void DLV11J::initialize (bool ch3ConsoleEnabled)
+void DLV11J::initialize ()
 {
 	for (u16 channelNr = 0; channelNr < numChannels; ++channelNr)
 	{

@@ -35,7 +35,7 @@ private:
 	u16 baseVector_;
 	shared_ptr<DLConfig> dlConfig_;
 
-	void initialize (bool ch3Enabled);
+	void initialize ();
 	u16 extractChannelNr (BusAddress busAddress);
 };
 
