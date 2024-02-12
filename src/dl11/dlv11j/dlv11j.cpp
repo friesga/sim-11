@@ -36,6 +36,9 @@ DLV11J::DLV11J (Qbus *bus, shared_ptr<DLV11JConfig> dlConfig)
 //
 void DLV11J::initialize ()
 {
+	// Note that the console configuration is passed to all channels although
+	// it will be used only by channel 3. This avoids an additional constructor
+	// and if-statement.
 	for (u16 channelNr = 0; channelNr < numChannels; ++channelNr)
 	{
 		channel_[channelNr] = make_unique<UART> (bus_,
