@@ -42,11 +42,11 @@ private:
 		{"loopback", &DLV11Processor::processLoopback}
 	};
 
-	map<string, DLV11JConfig::BreakResponse> validBreakResponses =
+	map<string, ConsoleConfig::BreakResponse> validBreakResponses =
 	{
-		{"boot", DLV11JConfig::BreakResponse::Boot},
-		{"halt", DLV11JConfig::BreakResponse::Halt},
-		{"none", DLV11JConfig::BreakResponse::None}
+		{"boot", ConsoleConfig::BreakResponse::Boot},
+		{"halt", ConsoleConfig::BreakResponse::Halt},
+		{"none", ConsoleConfig::BreakResponse::None}
 	};
 
     void processValue (iniparser::Section::ValueIterator valueIterator);

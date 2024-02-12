@@ -6,6 +6,7 @@
 #include "statuscodes.h"
 #include "configdata/serialconfig/dlv11jconfig/dlv11jconfig.h"
 #include "configdata/serialconfig/uartconfig/uartconfig.h"
+#include "configdata/serialconfig/consoleconfig/consoleconfig.h"
 #include "console/console.h"
 #include "characterbuffer/characterbuffer.h"
 #include "character/character.h"
@@ -38,7 +39,7 @@ class UART : public AbstractBusDevice
 {
 public:
 	UART (Qbus* bus, UARTConfig& uartConfig,
-		u16 channelNr, shared_ptr<DLV11JConfig> dlConfig);
+		u16 channelNr, ConsoleConfig consoleConfig);
 	~UART ();
 	StatusCode read (BusAddress busAddress, u16 *destAddress);
 	StatusCode writeWord (BusAddress busAddress, u16 value);
@@ -91,7 +92,7 @@ private:
 	u8 interruptPriority (Function function, u16 channelNr);
 
 	Qbus* bus_;
-	DLV11JConfig::BreakResponse breakResponse_;
+	ConsoleConfig::BreakResponse breakResponse_;
     unsigned char breakKey_;
 	bool loopback_;
 	u16 channelNr_;

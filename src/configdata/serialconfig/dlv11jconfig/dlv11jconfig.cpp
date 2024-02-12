@@ -26,13 +26,15 @@ void DLV11JConfig::createDLV11J_UARTsConfig ()
 			uarts.push_back (UARTConfig
 			{
 				defaultCh3Address_, 
-				defaultCh3Vector_
+				defaultCh3Vector_,
+				false
 			});
 		else
 			uarts.push_back (UARTConfig
 			{
 				static_cast<u16> (baseAddress + 8 * channelNr),
-				static_cast<u16> (baseVector + 8 * channelNr)}
+				static_cast<u16> (baseVector + 8 * channelNr),
+				loopback}
 			);
 	}
 }

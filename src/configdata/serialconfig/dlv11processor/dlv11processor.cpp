@@ -61,11 +61,11 @@ void DLV11Processor::processConsoleEnabled (iniparser::Value value)
 // values.
 void DLV11Processor::processBreakResponse (iniparser::Value value)
 {
-    map<string, DLV11JConfig::BreakResponse>::iterator iter;
+    map<string, ConsoleConfig::BreakResponse>::iterator iter;
 
     if ((iter = validBreakResponses.find (value.asString ())) != 
             validBreakResponses.end ())
-        dlConfigPtr->breakResponse = iter->second;
+        dlConfigPtr->consoleConfig.breakResponse = iter->second;
     else
         throw invalid_argument {"Incorrect ch3_break_response value"};
 }
@@ -74,10 +74,10 @@ void DLV11Processor::processBreakKey (iniparser::Value value)
 {
     // dlConfigPtr->breakKey = static_cast<unsigned char> (value.asInt ());
     if (value.asString () == "esc")
-        dlConfigPtr->breakKey = 27;
+        dlConfigPtr->consoleConfig.breakKey = 27;
     else if (value.asString().starts_with ('^') &&
             value.asString ().size () == 2)
-        dlConfigPtr->breakKey = value.asString ().at (1) & ~11100000;
+        dlConfigPtr->consoleConfig.breakKey = value.asString ().at (1) & ~11100000;
     else
             throw invalid_argument {"Incorrect break key specification"};
 }

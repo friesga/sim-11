@@ -12,8 +12,9 @@ struct UARTConfig : public DeviceConfig
     bool enabled_;
     u16 baseAddress_;
 	u16 baseVector_;
+    bool loopback_;
 
-    UARTConfig (u16 baseAddress, u16 baseVector);
+    UARTConfig (u16 baseAddress, u16 baseVector, bool loopback);
 };
 
 #endif // _UARTCONFIG_H_

@@ -39,7 +39,7 @@ void DLV11J::initialize ()
 	for (u16 channelNr = 0; channelNr < numChannels; ++channelNr)
 	{
 		channel_[channelNr] = make_unique<UART> (bus_,
-				dlConfig_->uarts[channelNr], channelNr, dlConfig_);
+				dlConfig_->uarts[channelNr], channelNr, dlConfig_->consoleConfig);
 	}
 
 	bus_->BINIT().subscribe (bind (&DLV11J::BINITReceiver, this, _1));

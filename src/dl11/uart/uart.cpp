@@ -16,14 +16,14 @@ using std::chrono::duration;
 
 // Constructor
 UART::UART (Qbus* bus, UARTConfig& uartConfig,
-	u16 channelNr, shared_ptr<DLV11JConfig> dlConfig)
+	u16 channelNr, ConsoleConfig consoleConfig)
 	:
 	baseAddress {uartConfig.baseAddress_},
 	vector {uartConfig.baseVector_},
 	bus_ {bus},
-	breakResponse_ {dlConfig->breakResponse},
-	breakKey_ {dlConfig->breakKey},
-	loopback_ {dlConfig->loopback},
+	breakResponse_ {consoleConfig.breakResponse},
+	breakKey_ {consoleConfig.breakKey},
+	loopback_ {uartConfig.loopback_},
 	channelNr_ {channelNr},
 	channelRunning_ {true},
 	charAvailable_ {false}
@@ -338,12 +338,12 @@ void UART::receive (Character c)
 // system.
 void UART::processBreak ()
 {
-	if (breakResponse_ == DLV11JConfig::BreakResponse::Halt)
+	if (breakResponse_ == ConsoleConfig::BreakResponse::Halt)
 	{
 		bus_->BHALT ().cycle ();
 		return;
 	}
-	else if (breakResponse_ == DLV11JConfig::BreakResponse::Boot)
+	else if (breakResponse_ == ConsoleConfig::BreakResponse::Boot)
 	{
 		bus_->RESET ().cycle ();
 		return;
