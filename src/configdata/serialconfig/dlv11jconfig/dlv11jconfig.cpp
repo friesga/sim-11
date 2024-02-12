@@ -1,6 +1,6 @@
-#include "dlconfig.h"
+#include "dlv11jconfig.h"
 
-DLConfig::DLConfig ()
+DLV11JConfig::DLV11JConfig ()
     : 
     DeviceConfig (DeviceType::DLV11_J)
 {
@@ -15,7 +15,7 @@ DLConfig::DLConfig ()
 // configuration options. The default UART configuration is created to make
 // sure that a system with the default configuration is able to print at
 // least the halting address.
-void DLConfig::createDLV11J_UARTsConfig ()
+void DLV11JConfig::createDLV11J_UARTsConfig ()
 {
 	if (uarts.size () > 0)
 		uarts.clear ();

@@ -172,7 +172,7 @@ set (CONFIGURATOR_SRCS
     src/configdata/ba11nconfig/ba11nconfig.cpp 
     src/configdata/bdv11config/bdv11config.cpp
     src/configdata/bdv11processor/bdv11processor.cpp
-    src/configdata/serialconfig/dlconfig/dlconfig.cpp 
+    src/configdata/serialconfig/dlv11jconfig/dlv11jconfig.cpp 
     src/configdata/serialconfig/uartconfig/uartconfig.cpp
     src/configdata/serialconfig/dlv11processor/dlv11processor.cpp
     src/configdata/msv11config/msv11config.cpp 
@@ -263,7 +263,7 @@ set (SIM11_SRCS
     src/bdv11/bdv11.cpp
     src/bdv11/bdv11_rom.cpp
     src/dl11/dlv11j/dlv11j.cpp
-    src/dl11/dlv11channel/dlv11channel.cpp
+    src/dl11/uart/uart.cpp
     ${KD11_NA_SRCS}
     ${KDF11_SRCS}
     src/lib/gotapproval.cpp

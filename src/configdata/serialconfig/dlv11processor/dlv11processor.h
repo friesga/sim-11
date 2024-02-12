@@ -2,7 +2,7 @@
 #define _DLV11PROCESSOR_H_
 
 #include "configdata/sectionprocessor/sectionprocessor.h"
-#include "configdata/serialconfig/dlconfig/dlconfig.h"
+#include "configdata/serialconfig/dlv11jconfig/dlv11jconfig.h"
 #include "configdata/serialconfig/uartconfig/uartconfig.h"
 
 #include <memory>
@@ -26,7 +26,7 @@ private:
 	enum {defaultCh3Address_ = 0177560};
 	enum {defaultCh3Vector_ = 060};
 
-	unique_ptr<DLConfig> dlConfigPtr {nullptr};
+	unique_ptr<DLV11JConfig> dlConfigPtr {nullptr};
 
     // Define process as a pointer to a DLV11Processor member function
 	// with a iniparser::Value argument and returning void.
@@ -42,11 +42,11 @@ private:
 		{"loopback", &DLV11Processor::processLoopback}
 	};
 
-	map<string, DLConfig::BreakResponse> validBreakResponses =
+	map<string, DLV11JConfig::BreakResponse> validBreakResponses =
 	{
-		{"boot", DLConfig::BreakResponse::Boot},
-		{"halt", DLConfig::BreakResponse::Halt},
-		{"none", DLConfig::BreakResponse::None}
+		{"boot", DLV11JConfig::BreakResponse::Boot},
+		{"halt", DLV11JConfig::BreakResponse::Halt},
+		{"none", DLV11JConfig::BreakResponse::None}
 	};
 
     void processValue (iniparser::Section::ValueIterator valueIterator);

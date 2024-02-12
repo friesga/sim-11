@@ -3,8 +3,8 @@
 
 #include "qbus/qbus.h"
 #include "pdp11peripheral/pdp11peripheral.h"
-#include "configdata/serialconfig/dlconfig/dlconfig.h"
-#include "dl11/dlv11channel/dlv11channel.h"
+#include "configdata/serialconfig/dlv11jconfig/dlv11jconfig.h"
+#include "dl11/uart/uart.h"
 
 #include <memory>
 
@@ -14,7 +14,7 @@ using std::shared_ptr;
 class DLV11J : public PDP11Peripheral
 {
 public:
-	DLV11J (Qbus *bus, shared_ptr<DLConfig> dlConfig);
+	DLV11J (Qbus *bus, shared_ptr<DLV11JConfig> dlConfig);
 
 	// Define the obligatory functions
 	StatusCode read (BusAddress busAddress, u16 *destAddress) override;
@@ -30,10 +30,10 @@ private:
 	enum {defaultCh3Address_ = 0177560};
 	enum {defaultCh3Vector_ = 060};
 
-	unique_ptr<DLV11Channel> channel_[4];
+	unique_ptr<UART> channel_[4];
 	u16	baseAddress_;
 	u16 baseVector_;
-	shared_ptr<DLConfig> dlConfig_;
+	shared_ptr<DLV11JConfig> dlConfig_;
 
 	void initialize ();
 	u16 extractChannelNr (BusAddress busAddress);

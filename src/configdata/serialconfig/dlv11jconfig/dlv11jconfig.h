@@ -11,7 +11,7 @@ using std::vector;
 
 // Set factory configuration for base address, vector and BREAK key response.
 // The default break key is set to the esc key.
-struct DLConfig : public DeviceConfig
+struct DLV11JConfig : public DeviceConfig
 {
     enum {numChannels = 4};
     enum {defaultBaseAddress = 0176500};
@@ -34,7 +34,7 @@ struct DLConfig : public DeviceConfig
 
     vector<UARTConfig> uarts {};
 
-    DLConfig ();
+    DLV11JConfig ();
     void createDLV11J_UARTsConfig ();
 };
 

@@ -1,4 +1,4 @@
-#include "dlv11channel.h"
+#include "uart.h"
 #include "trace/trace.h"
 #include "console/operatorconsole/operatorconsolefactory.h"
 
@@ -15,8 +15,8 @@ using std::chrono::high_resolution_clock;
 using std::chrono::duration;
 
 // Constructor
-DLV11Channel::DLV11Channel (Qbus* bus, UARTConfig& uartConfig,
-	u16 channelNr, shared_ptr<DLConfig> dlConfig)
+UART::UART (Qbus* bus, UARTConfig& uartConfig,
+	u16 channelNr, shared_ptr<DLV11JConfig> dlConfig)
 	:
 	baseAddress {uartConfig.baseAddress_},
 	vector {uartConfig.baseVector_},
@@ -34,17 +34,17 @@ DLV11Channel::DLV11Channel (Qbus* bus, UARTConfig& uartConfig,
 		console_ = OperatorConsoleFactory::create ();
 
 		// Pass the console the function we want to receive the characters on
-		console_->setReceiver (bind (&DLV11Channel::receive, this, _1));
+		console_->setReceiver (bind (&UART::receive, this, _1));
 	}
 
 	// Create a thread running the transmitter
-    transmitterThread_ = thread (&DLV11Channel::transmitter, this);
+    transmitterThread_ = thread (&UART::transmitter, this);
 	
 	reset ();
 }
 
 // Destructor
-DLV11Channel::~DLV11Channel ()
+UART::~UART ()
 {
 	// Signal the transmitter to exit
 	channelRunning_ = false;
@@ -54,7 +54,7 @@ DLV11Channel::~DLV11Channel ()
 	transmitterThread_.join ();
 }
 
-void DLV11Channel::reset ()
+void UART::reset ()
 {
 	lock_guard<mutex> lock {registerAccessMutex_};
 	receiveBuffer_.reset ();
@@ -63,15 +63,15 @@ void DLV11Channel::reset ()
 	xcsr = XCSR_TRANSMIT_READY;
 }
 
-bool DLV11Channel::responsible (BusAddress address)
+bool UART::responsible (BusAddress address)
 {
 	return address.registerAddress () >= baseAddress &&
 		address.registerAddress () <= baseAddress + 6;
 }
 
 // This function allows the host system to read a word from one of the
-// DLV11-J's registers.
-StatusCode DLV11Channel::read (BusAddress busAddress, u16 *destAddress)
+// UART's registers.
+StatusCode UART::read (BusAddress busAddress, u16 *destAddress)
 {
 	lock_guard<mutex> lock {registerAccessMutex_};
 
@@ -100,7 +100,7 @@ StatusCode DLV11Channel::read (BusAddress busAddress, u16 *destAddress)
 	return StatusCode::OK;
 }
 
-void DLV11Channel::readChannel ()
+void UART::readChannel ()
 {
 	if (!receiveBuffer_.empty ())
 	{
@@ -110,7 +110,7 @@ void DLV11Channel::readChannel ()
 }
 
 // This function allows the processor to write a word to one of the
-// DLV11-J's registers.
+// UART's registers.
 // 
 // Access to the registers has to be synchronized as the transmitter runs in
 // a sperate thread. The registers are accessed in five functions:
@@ -123,7 +123,7 @@ void DLV11Channel::readChannel ()
 // 
 // Each of these functions therefore has to lock the registerAccessMutex_.
 //
-StatusCode DLV11Channel::writeWord (BusAddress busAddress, u16 value)
+StatusCode UART::writeWord (BusAddress busAddress, u16 value)
 {
 	lock_guard<mutex> lock {registerAccessMutex_};
 
@@ -155,7 +155,7 @@ StatusCode DLV11Channel::writeWord (BusAddress busAddress, u16 value)
 // Reader Enable - Write only bit - Setting this bit [...] clears receiver
 // done (bit 7). (EK-DLV1J-UG-001)
 // This functionality is tested by VDLAB0 test 7.
-void DLV11Channel::writeRCSR (u16 value)
+void UART::writeRCSR (u16 value)
 {
 	u16 old = rcsr;
 	rcsr = (rcsr & ~RCSR_WR_MASK) | (value & RCSR_WR_MASK);
@@ -175,7 +175,7 @@ void DLV11Channel::writeRCSR (u16 value)
 	}
 }
 
-void DLV11Channel::writeXCSR (u16 value)
+void UART::writeXCSR (u16 value)
 {
 	u16 old = xcsr;
 	xcsr = (xcsr & ~XCSR_WR_MASK) | (value & XCSR_WR_MASK);
@@ -210,7 +210,7 @@ void DLV11Channel::writeXCSR (u16 value)
 // 
 // This timing behaviour is implemented to satisfy at least VDLAB0 TEST 6.
 //
-void DLV11Channel::transmitter ()
+void UART::transmitter ()
 {
 	high_resolution_clock::time_point nextCharCanBeProcessedAt = 
 		high_resolution_clock::now ();
@@ -241,7 +241,7 @@ void DLV11Channel::transmitter ()
 
 		// The following sleep has to be done while the registerAccessMutex_
 		// is unlocked as else the processor has no opportunity to send the
-		// next character to the DLV11-J and the delay would be useless.
+		// next character to the UART and the delay would be useless.
 		lock.unlock ();
 
 		// If loopback is enabled send the character to the receiver of this
@@ -290,7 +290,7 @@ void DLV11Channel::transmitter ()
 // The spacing condition is simulated by the Break condition in the
 // transmitted Character object.
 //
-void DLV11Channel::receive (Character c)
+void UART::receive (Character c)
 {
 	lock_guard<mutex> lock {registerAccessMutex_};
 
@@ -336,14 +336,14 @@ void DLV11Channel::receive (Character c)
 // is replaced by a (configurable) regular key press, the no-operation
 // response has to result in passing the received character on to the host
 // system.
-void DLV11Channel::processBreak ()
+void UART::processBreak ()
 {
-	if (breakResponse_ == DLConfig::BreakResponse::Halt)
+	if (breakResponse_ == DLV11JConfig::BreakResponse::Halt)
 	{
 		bus_->BHALT ().cycle ();
 		return;
 	}
-	else if (breakResponse_ == DLConfig::BreakResponse::Boot)
+	else if (breakResponse_ == DLV11JConfig::BreakResponse::Boot)
 	{
 		bus_->RESET ().cycle ();
 		return;
@@ -353,12 +353,12 @@ void DLV11Channel::processBreak ()
 // Put the given character in the buffer for the given channel. The buffer
 // is a queue implemented as a fixed-size circular array. The array contains
 // buf_size characters with the head at position buf_w.
-bool DLV11Channel::queueCharacter (unsigned char c)
+bool UART::queueCharacter (unsigned char c)
 {
 	return receiveBuffer_.put (c);
 }
 
-void DLV11Channel::receiveDone ()
+void UART::receiveDone ()
 {
 	rcsr |= RCSR_RCVR_DONE;
 	if (rcsr & RCSR_RCVR_INT)
@@ -369,7 +369,7 @@ void DLV11Channel::receiveDone ()
 	}
 }
 
-void DLV11Channel::clearReceiveError ()
+void UART::clearReceiveError ()
 {
 	if ((rbuf & RBUF_ERROR) && receiveBuffer_.empty ())
 	 rbuf &= ~RBUF_ERROR_MASK;
@@ -378,7 +378,7 @@ void DLV11Channel::clearReceiveError ()
 // This function sleeps until the given time point is passed. We prefer
 // our own sleep_until implementation as this_thread::sleep_until seems
 // to have the result that the thread isn't yielded.
-void DLV11Channel::sleepUntil (high_resolution_clock::time_point timePoint)
+void UART::sleepUntil (high_resolution_clock::time_point timePoint)
 {
 	while (high_resolution_clock::now() < timePoint)
         std::this_thread::yield ();
@@ -399,7 +399,7 @@ void DLV11Channel::sleepUntil (high_resolution_clock::time_point timePoint)
 //	7					Channel 2 Transmitter
 //	8 (lowest)			Channel 3 Transmitter
 //
-u8 DLV11Channel::interruptPriority (Function function, u16 channelNr)
+u8 UART::interruptPriority (Function function, u16 channelNr)
 {
 	u16 numChannels {3};
 

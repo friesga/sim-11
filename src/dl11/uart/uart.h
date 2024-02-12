@@ -4,7 +4,7 @@
 #include "qbus/qbus.h"
 #include "abstractbusdevice/abstractbusdevice.h"
 #include "statuscodes.h"
-#include "configdata/serialconfig/dlconfig/dlconfig.h"
+#include "configdata/serialconfig/dlv11jconfig/dlv11jconfig.h"
 #include "configdata/serialconfig/uartconfig/uartconfig.h"
 #include "console/console.h"
 #include "characterbuffer/characterbuffer.h"
@@ -25,7 +25,8 @@ using std::mutex;
 using std::condition_variable;
 using std::chrono::high_resolution_clock;
 
-// This class defines the behaviour of a DLV11-J channel.
+// This class defines the behaviour of a Universal Asynchronous Receiver/
+// Transmitter as used for a DLV11-J channel.
 //
 // For data loop back tests to be performed, the diagnostic [VDLAB0] requires
 // the H3270-A option (four diagnostic loopback plugs) to be inserted into the
@@ -33,19 +34,19 @@ using std::chrono::high_resolution_clock;
 // 
 // This option can be enabled by the DLV11-J loopback option in the
 // configuration file.
-class DLV11Channel : public AbstractBusDevice
+class UART : public AbstractBusDevice
 {
 public:
-	DLV11Channel (Qbus* bus, UARTConfig& uartConfig,
-		u16 channelNr, shared_ptr<DLConfig> dlConfig);
-	~DLV11Channel ();
+	UART (Qbus* bus, UARTConfig& uartConfig,
+		u16 channelNr, shared_ptr<DLV11JConfig> dlConfig);
+	~UART ();
 	StatusCode read (BusAddress busAddress, u16 *destAddress);
 	StatusCode writeWord (BusAddress busAddress, u16 value);
 	bool responsible (BusAddress address);
 	void reset ();
 
 private:
-	// Define DLV11-J's registers as offsets from the controllers base address
+	// Define the UART's registers as offsets from the controller's base address.
     enum
     { 
         RCSR = 00,	// Receiver control/status register
@@ -90,7 +91,7 @@ private:
 	u8 interruptPriority (Function function, u16 channelNr);
 
 	Qbus* bus_;
-	DLConfig::BreakResponse breakResponse_;
+	DLV11JConfig::BreakResponse breakResponse_;
     unsigned char breakKey_;
 	bool loopback_;
 	u16 channelNr_;

@@ -1,5 +1,5 @@
 #include "dlv11processor.h"
-#include "configdata/serialconfig/dlconfig/dlconfig.h"
+#include "configdata/serialconfig/dlv11jconfig/dlv11jconfig.h"
 
 #include <utility>
 
@@ -9,7 +9,7 @@ using std::invalid_argument;
 
 DLV11Processor::DLV11Processor ()
 {
-	dlConfigPtr = make_unique<DLConfig> ();
+	dlConfigPtr = make_unique<DLV11JConfig> ();
 }
 
 void DLV11Processor::processValue (iniparser::Section::ValueIterator valueIterator)
@@ -61,7 +61,7 @@ void DLV11Processor::processConsoleEnabled (iniparser::Value value)
 // values.
 void DLV11Processor::processBreakResponse (iniparser::Value value)
 {
-    map<string, DLConfig::BreakResponse>::iterator iter;
+    map<string, DLV11JConfig::BreakResponse>::iterator iter;
 
     if ((iter = validBreakResponses.find (value.asString ())) != 
             validBreakResponses.end ())

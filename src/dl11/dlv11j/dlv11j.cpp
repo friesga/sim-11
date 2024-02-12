@@ -12,7 +12,7 @@ using std::make_unique;
 using std::ranges::any_of;
 
 // Construct a DLV11-J object with the given configuration
-DLV11J::DLV11J (Qbus *bus, shared_ptr<DLConfig> dlConfig)
+DLV11J::DLV11J (Qbus *bus, shared_ptr<DLV11JConfig> dlConfig)
 	:
 	PDP11Peripheral (bus),
 	baseAddress_ {dlConfig->baseAddress},
@@ -38,7 +38,7 @@ void DLV11J::initialize ()
 {
 	for (u16 channelNr = 0; channelNr < numChannels; ++channelNr)
 	{
-		channel_[channelNr] = make_unique<DLV11Channel> (bus_,
+		channel_[channelNr] = make_unique<UART> (bus_,
 				dlConfig_->uarts[channelNr], channelNr, dlConfig_);
 	}
 
@@ -70,7 +70,7 @@ bool DLV11J::responsible (BusAddress busAddress)
 	if (!busAddress.isInIOpage ())
 		return false;
 
-	auto isResponsible = [busAddress] (unique_ptr<DLV11Channel> &channel)
+	auto isResponsible = [busAddress] (unique_ptr<UART> &channel)
 		{return channel->responsible (busAddress); };
 
 	return any_of (channel_, isResponsible);
