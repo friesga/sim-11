@@ -262,8 +262,8 @@ set (SIM11_SRCS
     src/abstractbusdevice/writebyte.cpp
     src/bdv11/bdv11.cpp
     src/bdv11/bdv11_rom.cpp
-    src/dlv11j/dlv11j.cpp
-    src/dlv11j/dlv11channel/dlv11channel.cpp
+    src/dl11/dlv11j/dlv11j.cpp
+    src/dl11/dlv11channel/dlv11channel.cpp
     ${KD11_NA_SRCS}
     ${KDF11_SRCS}
     src/lib/gotapproval.cpp

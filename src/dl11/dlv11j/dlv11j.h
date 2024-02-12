@@ -4,7 +4,7 @@
 #include "qbus/qbus.h"
 #include "pdp11peripheral/pdp11peripheral.h"
 #include "configdata/serialconfig/dlconfig/dlconfig.h"
-#include "dlv11channel/dlv11channel.h"
+#include "dl11/dlv11channel/dlv11channel.h"
 
 #include <memory>
 
