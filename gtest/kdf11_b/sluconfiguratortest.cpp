@@ -31,6 +31,32 @@ TEST (KDF11_BConfiguratorTest, invalidSubsectionThrows)
 	}
 }
 
+TEST (KDF11_BConfiguratorTest, subsectionDoubleDefinitionThrows)
+{
+    iniparser::File ft;
+	std::stringstream stream;
+	stream << "[KDF11-B]\n"
+			  "[KDF11-B.SLU1]\n"
+			  "[KDF11-B.SLU1]\n";
+	stream >> ft;
+
+	IniProcessor iniProcessor;
+
+	try
+	{
+		iniProcessor.process (ft);
+		FAIL();
+	}
+	catch (std::invalid_argument const &except)
+	{
+		EXPECT_STREQ (except.what(), "Double specification for KDF11-B SLU1");
+	}
+	catch (...)
+	{
+		FAIL();
+	}
+}
+
 TEST (SLUConfiguratorTest, defaultConfigurationAccepted)
 {
     iniparser::File ft;
