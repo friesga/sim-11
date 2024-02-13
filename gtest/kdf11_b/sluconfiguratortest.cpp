@@ -36,8 +36,8 @@ TEST (KDF11_BConfiguratorTest, subsectionDoubleDefinitionThrows)
     iniparser::File ft;
 	std::stringstream stream;
 	stream << "[KDF11-B]\n"
-			  "[KDF11-B.SLU1]\n"
-			  "[KDF11-B.SLU1]\n";
+			  "[KDF11-B.SLU]\n"
+			  "[KDF11-B.SLU]\n";
 	stream >> ft;
 
 	IniProcessor iniProcessor;
@@ -49,7 +49,7 @@ TEST (KDF11_BConfiguratorTest, subsectionDoubleDefinitionThrows)
 	}
 	catch (std::invalid_argument const &except)
 	{
-		EXPECT_STREQ (except.what(), "Double specification for KDF11-B SLU1");
+		EXPECT_STREQ (except.what(), "Double specification for KDF11-B SLU");
 	}
 	catch (...)
 	{
@@ -62,7 +62,7 @@ TEST (SLUConfiguratorTest, defaultConfigurationAccepted)
     iniparser::File ft;
 	std::stringstream stream;
 	stream << "[KDF11-B]\n"
-		"[KDF11-B.SLU1]\n";
+		"[KDF11-B.SLU]\n";
 	stream >> ft;
 
 	IniProcessor iniProcessor;
@@ -79,8 +79,39 @@ TEST (SLUConfiguratorTest, defaultConfigurationAccepted)
 	shared_ptr<KDF11_BConfig> kdf11_bConfig = 
 		static_pointer_cast<KDF11_BConfig> (systemConfig[0]);
 
-	EXPECT_EQ (kdf11_bConfig->sluConfig.uartConfig[0].baseAddress_, 0177560);
-	EXPECT_EQ (kdf11_bConfig->sluConfig.uartConfig[0].baseVector_, 060);
-	EXPECT_EQ (kdf11_bConfig->sluConfig.uartConfig[1].baseAddress_, 0176500);
-	EXPECT_EQ (kdf11_bConfig->sluConfig.uartConfig[1].baseVector_, 0300);
+	SLUConfig* sluConfig = (SLUConfig*) kdf11_bConfig->sluConfig.get ();
+	
+	EXPECT_EQ (sluConfig->uartConfig[0].baseAddress_, 0177560);
+	EXPECT_EQ (sluConfig->uartConfig[0].baseVector_, 060);
+	EXPECT_EQ (sluConfig->uartConfig[1].baseAddress_, 0176500);
+	EXPECT_EQ (sluConfig->uartConfig[1].baseVector_, 0300);
+}
+
+TEST (SLUConfiguratorTest, slu2AddressAccepted)
+{
+    iniparser::File ft;
+	std::stringstream stream;
+	stream << "[KDF11-B]\n"
+		"[KDF11-B.SLU]\n"
+		"slu2_address = 0176540";
+	stream >> ft;
+
+	IniProcessor iniProcessor;
+	EXPECT_NO_THROW (iniProcessor.process (ft)); 
+
+	vector<shared_ptr<DeviceConfig>> systemConfig = 
+		iniProcessor.getSystemConfig ();
+
+	// The only device type in this testset is the KD11 so if that's
+	// not correct the following tests will fail too.
+	ASSERT_EQ (systemConfig[0]->deviceType_, DeviceType::KDF11_B);
+
+	// The device's type is KD11 so the configuration is a KD11Config object
+	shared_ptr<KDF11_BConfig> kdf11_bConfig = 
+		static_pointer_cast<KDF11_BConfig> (systemConfig[0]);
+
+	SLUConfig* sluConfig = (SLUConfig*) kdf11_bConfig->sluConfig.get ();
+
+	EXPECT_EQ (sluConfig->uartConfig[1].baseAddress_, 0176540);
+	EXPECT_EQ (sluConfig->uartConfig[1].baseVector_, 0340);
 }

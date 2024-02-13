@@ -4,9 +4,13 @@
 #include "../../kdconfig/kdconfig.h"
 #include "../sluconfig/sluconfig.h"
 
+#include <memory>
+
+using std::unique_ptr;
+
 struct KDF11_BConfig : public KD11Config
 {
-    SLUConfig sluConfig;
+    unique_ptr<DeviceConfig> sluConfig;
 
     KDF11_BConfig ();
 };

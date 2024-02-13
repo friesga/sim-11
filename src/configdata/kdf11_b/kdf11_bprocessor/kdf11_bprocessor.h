@@ -27,6 +27,7 @@ private:
 	{
 	};
 
+	bool sluDefined {false};
 	void processSubsection (iniparser::Section *subSection) override;
 };
 

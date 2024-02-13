@@ -1,4 +1,5 @@
 #include "kdf11_bprocessor.h"
+#include "../sluprocessor/sluprocessor.h"
 
 using std::make_unique;
 using std::move;
@@ -32,36 +33,20 @@ void KDF11_BProcessor::processValue (iniparser::Section::ValueIterator valueIter
 void KDF11_BProcessor::processSubsection (iniparser::Section *subSection)
 {
 	u16 unitNr {};
-	if (subSection->name().substr(0, 4) == "SLU1")
-		unitNr = 0;
-	else if (subSection->name().substr(0, 4) == "SLU2")
-		unitNr = 1;
-	else
+	if (subSection->name().substr(0, 4) != "SLU")
 		throw std::invalid_argument {"Unknown KDF11-B subsection: " + 
 			subSection->name()};
-	/*
-		if (subSection->name().substr(0, 4) != "unit")
-		throw std::invalid_argument {"Unknown RL subsection: " + 
+
+	if (sluDefined)
+		throw std::invalid_argument {"Double specification for KDF11-B " + 
 			subSection->name()};
+	sluDefined = true;
 
-	// Get the unit number from the subsection name. This will throw an
-	// exception if an incorrect unit number is specified. The unit number
-	// is stored in the RlUnitConfig struct so it is clear to which unit
-	// the configuration applies.
-	size_t unitNumber = unitNumberFromSectionName (subSection->name());
-
-	// Check that the configuration for this unit has not already been
-	// specified.
-	if (rlConfigPtr->rlUnitConfig[unitNumber] != nullptr)
-		throw std::invalid_argument {"Double specification for RL subsection: " + 
-			subSection->name()};
-
-	RLUnitProcessor rlUnitProcessor {};
-	rlUnitProcessor.processSection (subSection);
+	SLUProcessor sluProcessor {};
+	sluProcessor.processSection (subSection);
 
 	// Add the unit configuration to the Rl device configuration
-	rlConfigPtr->rlUnitConfig[unitNumber] = rlUnitProcessor.getConfig ();
-	*/
+	kd11ConfigPtr->sluConfig = sluProcessor.getConfig ();
 }
 
 unique_ptr<DeviceConfig> KDF11_BProcessor::getConfig ()
