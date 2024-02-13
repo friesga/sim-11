@@ -3,12 +3,16 @@
 
 #include <utility>
 #include <string>
+#include <algorithm>
 
 using std::make_unique;
 using std::move;
 using std::invalid_argument;
 using std::move;
 using std::string;
+using std::ranges::find_if;
+using std::vector;
+using std::pair;
 
 SLUProcessor::SLUProcessor ()
 {
@@ -52,11 +56,13 @@ void SLUProcessor::processSLUxEnabled (size_t unitNr, string id, iniparser::Valu
 
 void SLUProcessor::processSLU2Address (iniparser::Value value)
 {
-	u16 address;
+	vector<pair<u16, u16>>::iterator it;
 
 	try
 	{
-		address = touint<u16> (value.asString());
+		u16 address = touint<u16> (value.asString());
+		it = find_if (sluConfigPtr->validSlu2AddressVector,
+			[&address] (pair<u16, u16> element) {return element.first == address;});
 	}
 	catch (std::invalid_argument const &)
 	{
@@ -64,20 +70,11 @@ void SLUProcessor::processSLU2Address (iniparser::Value value)
 			value.asString()};
 	}
 
-	if (address == 0176500)
-	{
-		sluConfigPtr->uartConfig[1].baseAddress_ = address;
-		sluConfigPtr->uartConfig[1].baseVector_ = 0300;
-	}
-	else if (address == 0176540)
-	{
-		sluConfigPtr->uartConfig[1].baseAddress_ = address;
-		sluConfigPtr->uartConfig[1].baseVector_ = 0340;
-	}
-	else
-		throw invalid_argument {"SLU2 address must be either 0176500 or 0176540"}; 
-
-	sluConfigPtr->uartConfig[1].baseAddress_ = address;
+	if (it == sluConfigPtr->validSlu2AddressVector.end ())
+		throw invalid_argument {"KDF11-B SLU2 address must be either 0176500 or 0176540"}; 
+		
+	sluConfigPtr->uartConfig[1].baseAddress_ = it->first;
+	sluConfigPtr->uartConfig[1].baseVector_ = it->second;
 }
 
 void SLUProcessor::processSLU2Vector (iniparser::Value value)

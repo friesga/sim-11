@@ -19,7 +19,7 @@ struct SLUConfig : public DeviceConfig
     enum {defaultSLU2Address = 0176500};
 	enum {defaultSLU2Vector = 0300};
 
-    vector<pair<u16, u16>> slu2AddressVector = 
+    vector<pair<u16, u16>> validSlu2AddressVector = 
     {
         {0176500, 0300},
         {0176540, 0340}

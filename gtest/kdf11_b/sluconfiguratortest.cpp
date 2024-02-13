@@ -6,7 +6,7 @@
 #include <fstream>	
 #include <gtest/gtest.h>
 
-TEST (KDF11_BConfiguratorTest, invalidSubsectionThrows)
+TEST (SLUConfiguratorTest, invalidSubsectionThrows)
 {
     iniparser::File ft;
 	std::stringstream stream;
@@ -31,7 +31,7 @@ TEST (KDF11_BConfiguratorTest, invalidSubsectionThrows)
 	}
 }
 
-TEST (KDF11_BConfiguratorTest, subsectionDoubleDefinitionThrows)
+TEST (SLUConfiguratorTest, subsectionDoubleDefinitionThrows)
 {
     iniparser::File ft;
 	std::stringstream stream;
@@ -119,6 +119,33 @@ TEST (SLUConfiguratorTest, slu2AddressAccepted)
 
 	EXPECT_EQ (sluConfig->uartConfig[1].baseAddress_, 0176540);
 	EXPECT_EQ (sluConfig->uartConfig[1].baseVector_, 0340);
+}
+
+TEST (SLUConfiguratorTest, incorrectSLU2AddressRejected)
+{
+    iniparser::File ft;
+	std::stringstream stream;
+	stream << "[KDF11-B]\n"
+		"[KDF11-B.SLU]\n"
+		"slu2_address = 0176510";
+	stream >> ft;
+
+	IniProcessor iniProcessor;
+
+	try
+	{
+		iniProcessor.process (ft);
+		FAIL();
+	}
+	catch (std::invalid_argument const &except)
+	{
+		EXPECT_STREQ (except.what(), 
+			"KDF11-B SLU2 address must be either 0176500 or 0176540");
+	}
+	catch (...)
+	{
+		FAIL();
+	}
 }
 
 TEST (SLUConfiguratorTest, sluDisabledAccepted)
