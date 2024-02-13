@@ -25,9 +25,6 @@ struct SLUConfig : public DeviceConfig
         {0176540, 0340}
     };
 
-    bool slu1Enabled {true};
-    bool slu2Enabled {true};
-
     vector<UARTConfig> uartConfig = 
     {
         UARTConfig {defaultSLU1Address, defaultSLU1Vector, true},

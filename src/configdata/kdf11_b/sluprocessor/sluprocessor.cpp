@@ -30,7 +30,7 @@ void SLUProcessor::processSLU1Enabled (iniparser::Value value)
 {
     try
 	{
-		sluConfigPtr->slu1Enabled = value.asBool ();
+		sluConfigPtr->uartConfig[0].enabled_ = value.asBool ();
 	}
 	catch (invalid_argument const &)
 	{
@@ -42,7 +42,7 @@ void SLUProcessor::processSLU2Enabled (iniparser::Value value)
 {
     try
 	{
-		sluConfigPtr->slu2Enabled = value.asBool ();
+		sluConfigPtr->uartConfig[1].enabled_ = value.asBool ();
 	}
 	catch (invalid_argument const &)
 	{

@@ -81,10 +81,15 @@ TEST (SLUConfiguratorTest, defaultConfigurationAccepted)
 
 	SLUConfig* sluConfig = (SLUConfig*) kdf11_bConfig->sluConfig.get ();
 	
+	EXPECT_EQ (sluConfig->uartConfig[0].enabled_, true);
 	EXPECT_EQ (sluConfig->uartConfig[0].baseAddress_, 0177560);
 	EXPECT_EQ (sluConfig->uartConfig[0].baseVector_, 060);
+	EXPECT_EQ (sluConfig->uartConfig[0].loopback_, true);
+
+	EXPECT_EQ (sluConfig->uartConfig[1].enabled_, true);
 	EXPECT_EQ (sluConfig->uartConfig[1].baseAddress_, 0176500);
 	EXPECT_EQ (sluConfig->uartConfig[1].baseVector_, 0300);
+	EXPECT_EQ (sluConfig->uartConfig[1].loopback_, true);
 }
 
 TEST (SLUConfiguratorTest, slu2AddressAccepted)
