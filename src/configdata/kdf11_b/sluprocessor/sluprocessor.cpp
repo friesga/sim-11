@@ -2,11 +2,13 @@
 #include "../sluconfig/sluconfig.h"
 
 #include <utility>
+#include <string>
 
 using std::make_unique;
 using std::move;
 using std::invalid_argument;
 using std::move;
+using std::string;
 
 SLUProcessor::SLUProcessor ()
 {
@@ -28,25 +30,23 @@ void SLUProcessor::processSubsection (iniparser::Section *subSection)
 
 void SLUProcessor::processSLU1Enabled (iniparser::Value value)
 {
-    try
-	{
-		sluConfigPtr->uartConfig[0].enabled_ = value.asBool ();
-	}
-	catch (invalid_argument const &)
-	{
-		throw invalid_argument {"Value of slu1_enabled must be \'true\' or \'false\'"};
-	}
+    processSLUxEnabled (0, "slu1", value);
 }
 
 void SLUProcessor::processSLU2Enabled (iniparser::Value value)
 {
+    processSLUxEnabled (1, "slu2", value);
+}
+
+void SLUProcessor::processSLUxEnabled (size_t unitNr, string id, iniparser::Value value)
+{
     try
 	{
-		sluConfigPtr->uartConfig[1].enabled_ = value.asBool ();
+		sluConfigPtr->uartConfig[unitNr].enabled_ = value.asBool ();
 	}
 	catch (invalid_argument const &)
 	{
-		throw invalid_argument {"Value of slu2_enabled must be \'true\' or \'false\'"};
+		throw invalid_argument {"Value of " + id + "_enabled must be \'true\' or \'false\'"};
 	}
 }
 

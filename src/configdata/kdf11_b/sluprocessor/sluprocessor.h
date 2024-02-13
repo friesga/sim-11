@@ -34,6 +34,7 @@ class SLUProcessor : public SectionProcessor
 	void processSubsection (iniparser::Section *subSection);
 	void processSLU1Enabled (iniparser::Value value);
 	void processSLU2Enabled (iniparser::Value value);
+	void processSLUxEnabled (size_t unitNr, string id, iniparser::Value value);
 	void processSLU2Address (iniparser::Value value);
 	void processSLU2Vector (iniparser::Value value);
 	void processBreakResponse (iniparser::Value value);
