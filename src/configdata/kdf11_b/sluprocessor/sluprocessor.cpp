@@ -77,9 +77,6 @@ void SLUProcessor::processSLU2Address (iniparser::Value value)
 	sluConfigPtr->uartConfig[1].baseVector_ = it->second;
 }
 
-void SLUProcessor::processSLU2Vector (iniparser::Value value)
-{}
-
 void SLUProcessor::processBreakResponse (iniparser::Value value)
 {}
 

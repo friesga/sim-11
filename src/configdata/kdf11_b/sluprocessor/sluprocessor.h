@@ -23,7 +23,6 @@ class SLUProcessor : public SectionProcessor
 		{"slu1_enabled", &SLUProcessor::processSLU1Enabled},
 		{"slu2_enabled", &SLUProcessor::processSLU2Enabled},
 		{"slu2_address", &SLUProcessor::processSLU2Address},
-		{"slu2_vector", &SLUProcessor::processSLU2Vector},
 		{"break_response", &SLUProcessor::processBreakResponse},
 		{"break_key", &SLUProcessor::processBreakKey},
 		{"loopback", &SLUProcessor::processLoopback}
@@ -36,7 +35,6 @@ class SLUProcessor : public SectionProcessor
 	void processSLU2Enabled (iniparser::Value value);
 	void processSLUxEnabled (size_t unitNr, string id, iniparser::Value value);
 	void processSLU2Address (iniparser::Value value);
-	void processSLU2Vector (iniparser::Value value);
 	void processBreakResponse (iniparser::Value value);
 	void processBreakKey (iniparser::Value value);
 	void processLoopback (iniparser::Value value);
