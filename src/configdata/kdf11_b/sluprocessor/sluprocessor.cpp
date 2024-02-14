@@ -89,7 +89,15 @@ void SLUProcessor::processBreakResponse (iniparser::Value value)
 }
 
 void SLUProcessor::processBreakKey (iniparser::Value value)
-{}
+{
+	if (value.asString () == "esc")
+        sluConfigPtr->consoleConfig.breakKey = 27;
+    else if (value.asString().starts_with ('^') &&
+            value.asString ().size () == 2)
+        sluConfigPtr->consoleConfig.breakKey = value.asString ().at (1) & ~11100000;
+    else
+            throw invalid_argument {"Incorrect break key specification"};
+}
 
 void SLUProcessor::processLoopback (iniparser::Value value)
 {}
