@@ -288,3 +288,32 @@ TEST (SLUConfiguratorTest, upperCaseControlCharAccepted)
 	
 	EXPECT_EQ (sluConfig->consoleConfig.breakKey, 8);
 }
+
+TEST (SLUConfiguratorTest, loopbackAccepted)
+{
+    iniparser::File ft;
+	std::stringstream stream;
+	stream << "[KDF11-B]\n"
+		"[KDF11-B.SLU]\n"
+		"loopback = false\n";
+	stream >> ft;
+
+	IniProcessor iniProcessor;
+	EXPECT_NO_THROW (iniProcessor.process (ft)); 
+
+	vector<shared_ptr<DeviceConfig>> systemConfig = 
+		iniProcessor.getSystemConfig ();
+
+	// The only device type in this testset is the KD11 so if that's
+	// not correct the following tests will fail too.
+	ASSERT_EQ (systemConfig[0]->deviceType_, DeviceType::KDF11_B);
+
+	// The device's type is KD11 so the configuration is a KD11Config object
+	shared_ptr<KDF11_BConfig> kdf11_bConfig = 
+		static_pointer_cast<KDF11_BConfig> (systemConfig[0]);
+
+	SLUConfig* sluConfig = (SLUConfig*) kdf11_bConfig->sluConfig.get ();
+	
+	EXPECT_EQ (sluConfig->uartConfig[0].loopback_, false);
+	EXPECT_EQ (sluConfig->uartConfig[1].loopback_, false);
+}

@@ -100,7 +100,21 @@ void SLUProcessor::processBreakKey (iniparser::Value value)
 }
 
 void SLUProcessor::processLoopback (iniparser::Value value)
-{}
+{
+	bool loopback;
+
+	try
+	{
+		loopback = value.asBool ();
+	}
+	catch (invalid_argument const &)
+	{
+		throw invalid_argument {"Value of KDF11-B SLU loopback must be \'true\' or \'false\'"};
+	}
+
+	sluConfigPtr->uartConfig[0].loopback_ = loopback;
+	sluConfigPtr->uartConfig[1].loopback_ = loopback;
+}
 
 unique_ptr<DeviceConfig> SLUProcessor::getConfig ()
 {
