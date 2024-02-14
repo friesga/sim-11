@@ -28,6 +28,13 @@ class SLUProcessor : public SectionProcessor
 		{"loopback", &SLUProcessor::processLoopback}
 	};
 
+	map<string, ConsoleConfig::BreakResponse> validBreakResponses =
+	{
+		{"boot", ConsoleConfig::BreakResponse::Boot},
+		{"halt", ConsoleConfig::BreakResponse::Halt},
+		{"none", ConsoleConfig::BreakResponse::None}
+	};
+
     void processValue (iniparser::Section::ValueIterator valueIterator);
 	void checkConsistency ();
 	void processSubsection (iniparser::Section *subSection);

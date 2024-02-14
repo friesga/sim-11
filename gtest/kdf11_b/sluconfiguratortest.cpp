@@ -177,3 +177,58 @@ TEST (SLUConfiguratorTest, sluDisabledAccepted)
 	EXPECT_EQ (sluConfig->uartConfig[0].enabled_, false);
 	EXPECT_EQ (sluConfig->uartConfig[1].enabled_, false);
 }
+
+TEST (SLUConfiguratorTest, breakResponsedAccepted)
+{
+    iniparser::File ft;
+	std::stringstream stream;
+	stream << "[KDF11-B]\n"
+		"[KDF11-B.SLU]\n"
+		"break_response = boot\n";
+	stream >> ft;
+
+	IniProcessor iniProcessor;
+	EXPECT_NO_THROW (iniProcessor.process (ft)); 
+
+	vector<shared_ptr<DeviceConfig>> systemConfig = 
+		iniProcessor.getSystemConfig ();
+
+	// The only device type in this testset is the KD11 so if that's
+	// not correct the following tests will fail too.
+	ASSERT_EQ (systemConfig[0]->deviceType_, DeviceType::KDF11_B);
+
+	// The device's type is KD11 so the configuration is a KD11Config object
+	shared_ptr<KDF11_BConfig> kdf11_bConfig = 
+		static_pointer_cast<KDF11_BConfig> (systemConfig[0]);
+
+	SLUConfig* sluConfig = (SLUConfig*) kdf11_bConfig->sluConfig.get ();
+	
+	EXPECT_EQ (sluConfig->consoleConfig.breakResponse, ConsoleConfig::BreakResponse::Boot);
+}
+
+TEST (SLUConfiguratorTest, invalidBreakResponseRejected)
+{
+    iniparser::File ft;
+	std::stringstream stream;
+	stream << "[KDF11-B]\n"
+		"[KDF11-B.SLU]\n"
+		"break_response = incorrect\n";
+	stream >> ft;
+
+	IniProcessor iniProcessor;
+
+	try
+	{
+		iniProcessor.process (ft);
+		FAIL();
+	}
+	catch (std::invalid_argument const &except)
+	{
+		EXPECT_STREQ (except.what(), 
+			"Incorrect KDF11-B SLU break_response value");
+	}
+	catch (...)
+	{
+		FAIL();
+	}
+}

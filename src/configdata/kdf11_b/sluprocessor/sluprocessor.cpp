@@ -78,7 +78,15 @@ void SLUProcessor::processSLU2Address (iniparser::Value value)
 }
 
 void SLUProcessor::processBreakResponse (iniparser::Value value)
-{}
+{
+	map<string, ConsoleConfig::BreakResponse>::iterator iter;
+
+    if ((iter = validBreakResponses.find (value.asString ())) != 
+            validBreakResponses.end ())
+        sluConfigPtr->consoleConfig.breakResponse = iter->second;
+    else
+        throw invalid_argument {"Incorrect KDF11-B SLU break_response value"};
+}
 
 void SLUProcessor::processBreakKey (iniparser::Value value)
 {}
