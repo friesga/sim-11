@@ -8,6 +8,10 @@
 #include "kd/common/controllogic/controllogic.h"
 #include "kd/kdf11/cpudata/kdf11cpudata.h"
 
+#include <memory>
+
+using std::unique_ptr;
+
 // The class KDF11 is a super class for the KDF11_A and KDF11-B classes,
 // harbouring the common classes for these processors.
 class KDF11 : public PDP11Processor

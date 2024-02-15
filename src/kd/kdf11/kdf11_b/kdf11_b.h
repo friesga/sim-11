@@ -7,6 +7,7 @@
 #include "configdata/kdf11_b/kdf11_bconfig/kdf11_bconfig.h"
 #include "kd/common/controllogic/controllogic.h"
 #include "kd/kdf11/cpudata/kdf11cpudata.h"
+#include "kd/kdf11/kdf11_b/serial_line_units/serial_line_units.h"
 
 #include <memory>
 #include <vector>
@@ -37,8 +38,10 @@ using std::vector;
 class KDF11_B : public KDF11
 {
 public:
-    KDF11_B (Qbus* bus);
     KDF11_B (Qbus* bus, shared_ptr<KDF11_BConfig> kdf11_bConfig);
+
+private:
+    unique_ptr<SerialLineUnits> serialLineUnits;
 };
 
 #endif // !_KDF11_B_H_
