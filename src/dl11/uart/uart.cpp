@@ -20,6 +20,7 @@ UART::UART (Qbus* bus, UARTConfig& uartConfig,
 	:
 	baseAddress {uartConfig.baseAddress_},
 	vector {uartConfig.baseVector_},
+	enabled_ {uartConfig.enabled_},
 	bus_ {bus},
 	breakResponse_ {consoleConfig.breakResponse},
 	breakKey_ {consoleConfig.breakKey},
@@ -65,7 +66,8 @@ void UART::reset ()
 
 bool UART::responsible (BusAddress address)
 {
-	return address.registerAddress () >= baseAddress &&
+	return enabled_ &&
+		address.registerAddress () >= baseAddress &&
 		address.registerAddress () <= baseAddress + 6;
 }
 

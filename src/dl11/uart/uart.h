@@ -81,6 +81,10 @@ private:
 	u16	baseAddress {0};
 	u16	vector {0};
 
+	// The KDF11-B serial line units UARTS can be configured enabled or
+	// disabled; the DLV11-J UARTS always are enabled.
+	bool enabled_ {};
+
 	CharacterBuffer<u8> receiveBuffer_;
 
 	enum class Function
