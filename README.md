@@ -17,7 +17,7 @@ This emulator passes the following XXDP diagnostics:
 - VKAAC0 (11/03 CPU basic instruction test),
 - VKABB0 (11/03 CPU EIS instruction test),
 - VKACC1 (11/03 CPU FIS instruction test).
-  This diagnostics produces four errors for the one-bit edge cases,
+  This diagnostic produces four errors for the one-bit edge cases,
 - VKADC1 (11/03 trap test),
 - VKAHA1 (4K system exerciser),
 - JKDBD0 (11/23 Basic CPU test),
@@ -27,7 +27,8 @@ This emulator passes the following XXDP diagnostics:
 - ZRLGE0 (RLV11 controller test 1),
 - ZRLHB1 (RLV11 controller test 2),
 - ZRLJC0 (RL01/02 drive test 2 (Seek),
-- ZRLKB3 (RL01/02 performance exerciser).
+- ZRLKB3 (RL01/02 performance exerciser),
+- VDLAB0 (DLV11-J test).
 
 The simulator runs:
 - RT-11 V05.07,
