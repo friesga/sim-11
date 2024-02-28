@@ -223,7 +223,7 @@ StatusCode BDV11::read (BusAddress busAddress, u16 *destAddress)
 				break;
 			} 
 			else if (busAddress.registerAddress () >= 0173400 &&
-				busAddress.registerAddress () < 0173776) 
+				busAddress.registerAddress () <= 0173776) 
 			{
 				*destAddress = getWordHigh ((busAddress.registerAddress () - 0173400) / 2);
 				break;
@@ -282,7 +282,8 @@ StatusCode BDV11::writeWord (BusAddress busAddress, u16 value)
 // addresses.
 bool BDV11::responsible (BusAddress busAddress)
 {
-	switch (busAddress.registerAddress ())
+	// The BDV11 registers are word or byte addressable
+	switch (busAddress.registerAddress () & 0177776)
 	{
 		case 0177520:
 		case 0177522:
