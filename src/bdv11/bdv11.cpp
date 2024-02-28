@@ -18,7 +18,7 @@ using std::shared_ptr;
 // of the register corresponding with switches E15-1 through E15-8 (hereafter
 // named A1 through A8 and B1 through B8 respectively).
 //
-// Switches A 1 through B4 are defined as follows:
+// Switches A1 through B4 are defined as follows:
 // A1 0N	Execute CPU tests on power-up or restart.
 // A2 ON	Execute memory test on power-up or restart.
 // A3 ON	DECNET BOOT - A4, A5, A6, A7 are used as arguments.
@@ -36,28 +36,35 @@ using std::shared_ptr;
 //
 // Source: LSI-11 Systems Service Manual, 3rd Edition, module M8012.
 //
-#define	_A(x)		(1 << ((x) - 1))
-#define	_B(x)		(1 << ((x) + 7))
+consteval u16 A (size_t x)
+{
+    return 1 << (x - 1);
+}
 
-#define	BDV11_CPU_TEST	_A(1)
-#define	BDV11_MEM_TEST	_A(2)	
-#define	BDV11_DECNET	_A(3)
-#define	BDV11_DIALOG	_A(4)
-#define	BDV11_LOOP	_B(1)
-#define	BDV11_RK05	_A(8)
-#define	BDV11_RL01	_A(7)
-#define	BDV11_RX01	_A(6)
-#define	BDV11_RX02	(_A(6) | _A(7))
-#define	BDV11_ROM	_A(5)
+consteval u16 B (size_t x)
+{
+    return 1 << (x + 7);
+}
 
-#define	BDV11_EXT_DIAG	_B(2)
-#define	BDV11_2780	_B(3)
-#define	BDV11_PROG_ROM	_B(4)
+static const u16 BDV11_CPU_TEST	 {A(1)};
+static const u16 BDV11_MEM_TEST	 {A(2)};	
+static const u16 BDV11_DECNET	 {A(3)};
+static const u16 BDV11_DIALOG	 {A(4)};
+static const u16 BDV11_LOOP		 {B(1)};
+static const u16 BDV11_RK05		 {A(8)};
+static const u16 BDV11_RL01		 {A(7)};
+static const u16 BDV11_RX01		 {A(6)};
+static const u16 BDV11_RX02		 {A(6) | A(7)};
+static const u16 BDV11_ROM		 {A(5)};
+
+static const u16 BDV11_EXT_DIAG	 {B(2)};
+static const u16 BDV11_2780		 {B(3)};
+static const u16 BDV11_PROG_ROM	 {B(4)};
 
 // Definition of the default contents of the switch register in case no
 // configuration options are specified
-#define	BDV11_SWITCH	(BDV11_CPU_TEST | BDV11_MEM_TEST \
-		| BDV11_DIALOG | BDV11_RX02)
+static const u16 BDV11_SWITCH	 {BDV11_CPU_TEST | BDV11_MEM_TEST |\
+								  BDV11_DIALOG   | BDV11_RX02};
 
 BDV11::BDV11 (Qbus *bus)
 	:
