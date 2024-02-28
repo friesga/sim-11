@@ -54,19 +54,15 @@ void BDV11Processor::processConsoleDialog (iniparser::Value value)
 
 void BDV11Processor::processBootDevice (iniparser::Value value)
 {
-	if (value.asString() == "RK05")
-		bdv11ConfigPtr->bootDevice = BDV11Config::BootDevice::RK05;
-	else if (value.asString() == "RL01")
-		bdv11ConfigPtr->bootDevice = BDV11Config::BootDevice::RL01;
-	else if (value.asString() == "RX01")
-		bdv11ConfigPtr->bootDevice = BDV11Config::BootDevice::RX01;
-	else if (value.asString() == "RX02")
-		bdv11ConfigPtr->bootDevice = BDV11Config::BootDevice::RX02;
-	else if (value.asString() == "BDV11_ROM")
-		bdv11ConfigPtr->bootDevice = BDV11Config::BootDevice::BDV11ROM;
-	else 
-		throw std::invalid_argument {"Incorrect BDV11 boot device: " + 
+	try
+	{
+		bdv11ConfigPtr->bootDevice = bootDeviceSpec.at (value.asString ());
+	}
+	catch (out_of_range const &)
+	{
+		throw invalid_argument  {"Incorrect BDV11 boot device: " + 
 			value.asString()};
+	}
 }
 
 // Check the consistency of the configuration of the BDV11 controller. Currently

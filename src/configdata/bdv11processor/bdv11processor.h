@@ -42,6 +42,16 @@ private:
 		{"kdf11-b", BDV11Config::BootROM::KDF11_BA}
 	};
 
+	map<string, BDV11Config::BootDevice> bootDeviceSpec =
+	{
+		{"RK05",	  BDV11Config::BootDevice::RK05},
+		{"RL01",	  BDV11Config::BootDevice::RL01},
+		{"RX01",	  BDV11Config::BootDevice::RX01},
+		{"RX02",	  BDV11Config::BootDevice::RX02},
+		{"BDV11_ROM", BDV11Config::BootDevice::BDV11ROM}
+	};
+
+
     void processValue (iniparser::Section::ValueIterator valueIterator);
 	void checkConsistency ();
 	void processSubsection (iniparser::Section *subSection);
