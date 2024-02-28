@@ -1,5 +1,6 @@
 #include "kdf11_bprocessor.h"
 #include "../sluprocessor/sluprocessor.h"
+#include "configdata/bdv11processor/bdv11processor.h"
 
 using std::make_unique;
 using std::move;
@@ -32,10 +33,17 @@ void KDF11_BProcessor::processValue (iniparser::Section::ValueIterator valueIter
 // A KDF11-B module comprises besides the processor two serial line units.
 void KDF11_BProcessor::processSubsection (iniparser::Section *subSection)
 {
-	if (subSection->name().substr(0, 4) != "SLU")
+	if (subSection->name() == "SLU")
+		processSLUSubsection (subSection);
+	else if (subSection->name() == "BDV11")
+		processBDV11Subsection (subSection);
+	else
 		throw std::invalid_argument {"Unknown KDF11-B subsection: " + 
 			subSection->name()};
+}
 
+void KDF11_BProcessor::processSLUSubsection (iniparser::Section *subSection)
+{
 	if (sluDefined)
 		throw std::invalid_argument {"Double specification for KDF11-B " + 
 			subSection->name()};
@@ -44,8 +52,22 @@ void KDF11_BProcessor::processSubsection (iniparser::Section *subSection)
 	SLUProcessor sluProcessor {};
 	sluProcessor.processSection (subSection);
 
-	// Add the unit configuration to the Rl device configuration
+	// Add the configuration to the KDF11-B configuration
 	kd11ConfigPtr->sluConfig = sluProcessor.getConfig ();
+}
+
+void KDF11_BProcessor::processBDV11Subsection (iniparser::Section *subSection)
+{
+	if (bdv11Defined)
+		throw std::invalid_argument {"Double specification for KDF11-B " + 
+			subSection->name()};
+	bdv11Defined = true;
+
+	BDV11Processor bdv11Processor {};
+	bdv11Processor.processSection (subSection);
+
+	// Add the unit configuration to the Rl device configuration
+	kd11ConfigPtr->bdv11Config = bdv11Processor.getConfig ();
 }
 
 unique_ptr<DeviceConfig> KDF11_BProcessor::getConfig ()

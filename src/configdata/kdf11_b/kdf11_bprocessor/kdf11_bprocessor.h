@@ -28,7 +28,10 @@ private:
 	};
 
 	bool sluDefined {false};
+	bool bdv11Defined {false};
 	void processSubsection (iniparser::Section *subSection) override;
+	void processSLUSubsection (iniparser::Section *subSection);
+	void processBDV11Subsection (iniparser::Section *subSection);
 };
 
 #endif // _KDF11_BPROCESSOR_H_
