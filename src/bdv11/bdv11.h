@@ -29,6 +29,11 @@ public:
 	void BPOKReceiver (bool signalValue);
 
 private:
+	static const u16 PCR {0177520};		// Page Control Register
+	static const u16 RWR {0177522};		// Read/Wrire Register
+	static const u16 SDR {0177524};		// Switch and Display Register
+	static const u16 BER {0177546};		// BEVNT Register
+
 	u16 getWordLow (u16 word);
 	u16 getWordHigh (u16 word);
 	void memoryDump (u16 pcr, int hi);
