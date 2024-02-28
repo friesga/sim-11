@@ -14,6 +14,11 @@ using std::string;
 
 class BDV11Processor : public SectionProcessor
 {
+public:
+	BDV11Processor ();
+	unique_ptr<DeviceConfig> getConfig ();
+
+private:
 	unique_ptr<BDV11Config> bdv11ConfigPtr {nullptr};
 
     // Define process as a pointer to a BDV11Processor member function
@@ -23,6 +28,7 @@ class BDV11Processor : public SectionProcessor
 	
 	map<string, Process> valueProcessors =
 	{
+		{"boot_rom", &BDV11Processor::processBootROM},
 		{"cpu_tests", &BDV11Processor::processCpuTests},
 		{"memory_tests", &BDV11Processor::processMemoryTests},
 		{"decnet_boot", &BDV11Processor::processDecnetBoot},
@@ -30,18 +36,21 @@ class BDV11Processor : public SectionProcessor
 		{"boot_device", &BDV11Processor::processBootDevice},
 	};
 
+	map<string, BDV11Config::BootROM> bootROMSpec =
+	{
+		{"bdv11",   BDV11Config::BootROM::BDV11},
+		{"kdf11-b", BDV11Config::BootROM::KDF11_BA}
+	};
+
     void processValue (iniparser::Section::ValueIterator valueIterator);
 	void checkConsistency ();
 	void processSubsection (iniparser::Section *subSection);
+	void processBootROM (iniparser::Value value);
 	void processCpuTests (iniparser::Value value);
 	void processMemoryTests (iniparser::Value value);
 	void processDecnetBoot (iniparser::Value value);
 	void processConsoleDialog (iniparser::Value value);
 	void processBootDevice (iniparser::Value value);
-
-public:
-	BDV11Processor ();
-	unique_ptr<DeviceConfig> getConfig ();
 };
 
 

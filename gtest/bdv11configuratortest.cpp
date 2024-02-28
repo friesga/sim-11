@@ -90,3 +90,53 @@ TEST (BDV11ConfiguratorTest, defaultsOk)
 	EXPECT_TRUE (bdv11Config->consoleDialog);
 	EXPECT_EQ (bdv11Config->bootDevice, BDV11Config::BootDevice::RX02);
 }
+
+TEST (BDV11ConfiguratorTest, bootROMAccepted)
+{
+    iniparser::File ft;
+	std::stringstream stream;
+	stream << "[BDV11]\n"
+		"boot_rom = kdf11-b";
+	stream >> ft;
+
+	IniProcessor iniProcessor;
+	EXPECT_NO_THROW (iniProcessor.process (ft)); 
+
+	vector<shared_ptr<DeviceConfig>> systemConfig = 
+		iniProcessor.getSystemConfig ();
+
+	// The only device type in this testset is the DLV11-J so if that's
+	// not correct the following tests will fail too.
+	ASSERT_EQ (systemConfig[0]->deviceType_, DeviceType::BDV11);
+
+	// The device's type is BDV11 so the configuration is a BDV11Config object
+	shared_ptr<BDV11Config> bdv11Config = 
+		static_pointer_cast<BDV11Config> (systemConfig[0]);
+
+	EXPECT_EQ (bdv11Config->bootROM, BDV11Config::BootROM::KDF11_BA);
+}
+
+TEST (BDV11ConfiguratorTest, invalidBootROMThrows)
+{
+    iniparser::File ft;
+	std::stringstream stream;
+	stream << "[BDV11]\n"
+		"boot_rom = xxx";
+	stream >> ft;
+
+	IniProcessor iniProcessor;
+
+	try
+	{
+		iniProcessor.process (ft);
+		FAIL();
+	}
+	catch (std::invalid_argument const &except)
+	{
+		EXPECT_STREQ (except.what(), "Incorrect BDV11 boot rom: xxx");
+	}
+	catch (...)
+	{
+		FAIL();
+	}
+}

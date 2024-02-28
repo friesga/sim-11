@@ -4,6 +4,8 @@
 
 using std::make_unique;
 using std::move;
+using std::invalid_argument;
+using std::out_of_range;
 
 BDV11Processor::BDV11Processor ()
 {
@@ -15,6 +17,19 @@ void BDV11Processor::processValue (iniparser::Section::ValueIterator valueIterat
     // Throw exception for non-existing key?
     Process processFunction = valueProcessors[valueIterator->first];
     (this->*processFunction)(valueIterator->second);
+}
+
+void BDV11Processor::processBootROM (iniparser::Value value)
+{
+	try
+	{
+		bdv11ConfigPtr->bootROM = bootROMSpec.at (value.asString ());
+	}
+	catch (out_of_range const &)
+	{
+		throw invalid_argument {"Incorrect BDV11 boot rom: " + 
+			value.asString()};
+	}
 }
 
 void BDV11Processor::processCpuTests (iniparser::Value value)
