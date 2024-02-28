@@ -18,7 +18,7 @@ KDF11_CpuControl::KDF11_CpuControl (Qbus* bus, CpuData* cpuData, MMU* mmu)
     mmu_ {mmu},
     cpuData_ {cpuData},
     runState {CpuRunState::HALT},
-    KDF11Instruction {},
+    kdf11Instruction {},
     haltReason_ {HaltReason::HaltInstruction},
     traceFlag_ {false}
 {
@@ -114,7 +114,7 @@ void KDF11_CpuControl::execInstr ()
     cpuData_->registers ()[7] += 2;
 
     unique_ptr<LSI11Instruction> instr = 
-        KDF11Instruction.decode (cpuData_, this, mmu_, instructionWord);
+        kdf11Instruction.decode (cpuData_, this, mmu_, instructionWord);
 
     // If the trace flag is set, the next instruction has to result in a trace
     // trap, unless the instruction resulted in another trap.
