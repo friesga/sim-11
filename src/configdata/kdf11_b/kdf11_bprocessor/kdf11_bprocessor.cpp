@@ -32,7 +32,6 @@ void KDF11_BProcessor::processValue (iniparser::Section::ValueIterator valueIter
 // A KDF11-B module comprises besides the processor two serial line units.
 void KDF11_BProcessor::processSubsection (iniparser::Section *subSection)
 {
-	u16 unitNr {};
 	if (subSection->name().substr(0, 4) != "SLU")
 		throw std::invalid_argument {"Unknown KDF11-B subsection: " + 
 			subSection->name()};
