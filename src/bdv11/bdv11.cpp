@@ -120,6 +120,8 @@ BDV11::BDV11 (Qbus *bus, shared_ptr<BDV11Config> bdv11Config)
 			switchRegister_ |= BDV11_ROM;
 			break;
 	}
+
+	romUsed_ = romToUse (bdv11Config);
 }
 
 BDV11::~BDV11 ()
@@ -128,13 +130,18 @@ BDV11::~BDV11 ()
 	ltcThread_.join();
 }
 
+BDV11::ROMimage* BDV11::romToUse (shared_ptr<BDV11Config> bdv11Config)
+{
+	return &availableROMs.find (bdv11Config->bootROM)->second;
+}
+
 u16 BDV11::getWordLow (u16 word)
 {
 	u16 page = pcr & 0xFF;
 	if (page < 0x10)
 	{
 		u16 romword = page * 0200 + word;
-		return ROM_045E2_046E2[romword];
+		return (*romUsed_)[romword];
 	}
 	else
 	{
@@ -148,7 +155,7 @@ u16 BDV11::getWordHigh (u16 word)
 	if (page < 0x10)
 	{
 		u16 romword = page * 0200 + word;
-		return ROM_045E2_046E2[romword];
+		return (*romUsed_)[romword];
 	} 
 	else 
 	{
@@ -168,7 +175,7 @@ void BDV11::memoryDump (u16 pcr, int hi)
 		if (page < 0x10) 
 		{
 			u16 romword = page * 0200;
-			data = &ROM_045E2_046E2[romword];
+			data = &(*romUsed_)[romword];
 		} 
 		else 
 		{
@@ -182,7 +189,7 @@ void BDV11::memoryDump (u16 pcr, int hi)
 		if (page < 0x10) 
 		{
 			u16 romword = page * 0200;
-			data = &ROM_045E2_046E2[romword];
+			data = &(*romUsed_)[romword];
 		} 
 		else 
 		{

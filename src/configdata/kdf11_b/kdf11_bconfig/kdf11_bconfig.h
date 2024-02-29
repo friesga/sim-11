@@ -7,11 +7,12 @@
 #include <memory>
 
 using std::unique_ptr;
+using std::shared_ptr;
 
 struct KDF11_BConfig : public KD11Config
 {
     unique_ptr<DeviceConfig> sluConfig;
-    unique_ptr<DeviceConfig> bdv11Config;
+    shared_ptr<DeviceConfig> bdv11Config;
 
     KDF11_BConfig ();
 };

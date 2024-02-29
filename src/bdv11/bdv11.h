@@ -6,8 +6,14 @@
 #include "configdata/bdv11config/bdv11config.h"
 
 #include <memory>
+#include <array>
+#include <map>
+#include <string>
 
 using std::shared_ptr;
+using std::array;
+using std::map;
+using std::string;
 
 /* LTC rate */
 // The default RT-11 line clock frequency is 60 Hz
@@ -34,12 +40,23 @@ private:
 	static const u16 SDR {0177524};		// Switch and Display Register
 	static const u16 BER {0177546};		// BEVNT Register
 
+	using ROMimage = const array<u16, 2048>;
+
+	ROMimage* romToUse (shared_ptr<BDV11Config> bdv11Config);
 	u16 getWordLow (u16 word);
 	u16 getWordHigh (u16 word);
 	void memoryDump (u16 pcr, int hi);
 	void tick();
 
-	static const u16 ROM_045E2_046E2[2048];
+	static ROMimage ROM_045E2_046E2;
+	static ROMimage ROM_339E2_340E2;
+
+	map<BDV11Config::BootROM, ROMimage&> availableROMs =
+	{
+		{BDV11Config::BootROM::BDV11,    ROM_045E2_046E2},
+		{BDV11Config::BootROM::KDF11_BA, ROM_339E2_340E2}
+	};
+
 	u16	pcr;
 	u16	scratch;
 	u16	option;
@@ -49,6 +66,7 @@ private:
 	float	time;
 	std::thread ltcThread_;
 	bool running_;
+	ROMimage* romUsed_ {&ROM_045E2_046E2};
 };
 
 #endif // !_BDV11_H_

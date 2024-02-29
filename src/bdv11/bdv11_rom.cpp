@@ -1,9 +1,11 @@
 #include "types.h"
 #include "bdv11.h"
 
+using std::array;
+
 // The following array is the contents of the 23-045E2 and 23-046E2 ROMs.
 //
-const u16 BDV11::ROM_045E2_046E2[2048] =
+const array<u16, 2048> BDV11::ROM_045E2_046E2 =
 {
 	0112737, 0000016, 0177524, 0000005, 0012700, 0000340, 0106400, 0012706, 
 	0177524, 0012737, 0000400, 0177520, 0005001, 0005002, 0005003, 0005004, 

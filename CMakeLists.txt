@@ -265,6 +265,7 @@ set (SIM11_SRCS
     src/abstractbusdevice/writebyte.cpp
     src/bdv11/bdv11.cpp
     src/bdv11/bdv11_rom.cpp
+    src/bdv11/kdf11b_rom.cpp
     src/dl11/dlv11j/dlv11j.cpp
     src/dl11/uart/uart.cpp
     ${KD11_NA_SRCS}
