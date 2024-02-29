@@ -22,7 +22,7 @@ void KDF11_BProcessor::processValue (iniparser::Section::ValueIterator valueIter
 {
 	Process processFunction = valueProcessors[valueIterator->first];
 
-	// If a processFunction is found the key is found in the KDF11-A's
+	// If a processFunction is found the key is found in the KDF11-B's
 	// options, else it might be a KD11 common key.
 	if (processFunction != nullptr)
 		(this->*processFunction)(valueIterator->second);
@@ -30,25 +30,30 @@ void KDF11_BProcessor::processValue (iniparser::Section::ValueIterator valueIter
 		KD11Processor::processValue (valueIterator);
 }
 
-// A KDF11-B module comprises besides the processor two serial line units.
 void KDF11_BProcessor::processSubsection (iniparser::Section *subSection)
 {
-	if (subSection->name() == "SLU")
-		processSLUSubsection (subSection);
-	else if (subSection->name() == "BDV11")
-		processBDV11Subsection (subSection);
-	else
+	SectionProcessDef* sectionProcessDef;
+
+	try
+	{
+		sectionProcessDef = &sectionProcess.at (subSection->name());
+	}
+	catch (std::out_of_range)
+	{
 		throw std::invalid_argument {"Unknown KDF11-B subsection: " + 
 			subSection->name()};
+	}
+
+	if (sectionProcessDef->defined)
+		throw std::invalid_argument {"Double specification for KDF11-B " + 
+			subSection->name()};
+	sectionProcessDef->defined = true;
+
+	(this->*sectionProcessDef->sectionProcessor) (subSection);
 }
 
 void KDF11_BProcessor::processSLUSubsection (iniparser::Section *subSection)
 {
-	if (sluDefined)
-		throw std::invalid_argument {"Double specification for KDF11-B " + 
-			subSection->name()};
-	sluDefined = true;
-
 	SLUProcessor sluProcessor {};
 	sluProcessor.processSection (subSection);
 
@@ -58,11 +63,6 @@ void KDF11_BProcessor::processSLUSubsection (iniparser::Section *subSection)
 
 void KDF11_BProcessor::processBDV11Subsection (iniparser::Section *subSection)
 {
-	if (bdv11Defined)
-		throw std::invalid_argument {"Double specification for KDF11-B " + 
-			subSection->name()};
-	bdv11Defined = true;
-
 	BDV11Processor bdv11Processor {};
 	bdv11Processor.processSection (subSection);
 
