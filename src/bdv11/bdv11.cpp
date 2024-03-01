@@ -12,60 +12,6 @@ using std::bind;
 using std::placeholders::_1;
 using std::shared_ptr;
 
-// Definition of the Switch Register lay-out.
-// The switch register is used for maintenance and system configuration
-// (selects diagnostic and/or bootstrap programs for execution). Bits 0-11
-// of the register corresponding with switches E15-1 through E15-8 (hereafter
-// named A1 through A8 and B1 through B8 respectively).
-//
-// Switches A1 through B4 are defined as follows:
-// A1 0N	Execute CPU tests on power-up or restart.
-// A2 ON	Execute memory test on power-up or restart.
-// A3 ON	DECNET BOOT - A4, A5, A6, A7 are used as arguments.
-// A4 ON	Console test and dialog (A3 OFF).
-// A4 OFF	Turnkey BOOT dispatched by switch setting (A3 OFF).
-//			Switches A5, A6, A7, A8, B1 are used as arguments.
-// 
-//			Device			A5	A6	A7	A8	B1
-//			Loop on Error	OFF OFF OFF OFF ON
-//			RK05			OFF	OFF OFF ON	OFF
-//			RL01			OFF OFF ON	OFF	OFF
-//			RX01			OFF ON	OFF OFF OFF
-//			RX02			OFF ON	ON	OFF OFF
-//			BDV11 ROM		ON	OFF	OFF	OFF OFF
-//
-// Source: LSI-11 Systems Service Manual, 3rd Edition, module M8012.
-//
-consteval u16 A (size_t x)
-{
-    return 1 << (x - 1);
-}
-
-consteval u16 B (size_t x)
-{
-    return 1 << (x + 7);
-}
-
-static const u16 BDV11_CPU_TEST	 {A(1)};
-static const u16 BDV11_MEM_TEST	 {A(2)};	
-static const u16 BDV11_DECNET	 {A(3)};
-static const u16 BDV11_DIALOG	 {A(4)};
-static const u16 BDV11_LOOP		 {B(1)};
-static const u16 BDV11_RK05		 {A(8)};
-static const u16 BDV11_RL01		 {A(7)};
-static const u16 BDV11_RX01		 {A(6)};
-static const u16 BDV11_RX02		 {A(6) | A(7)};
-static const u16 BDV11_ROM		 {A(5)};
-
-static const u16 BDV11_EXT_DIAG	 {B(2)};
-static const u16 BDV11_2780		 {B(3)};
-static const u16 BDV11_PROG_ROM	 {B(4)};
-
-// Definition of the default contents of the switch register in case no
-// configuration options are specified
-static const u16 BDV11_SWITCH	 {BDV11_CPU_TEST | BDV11_MEM_TEST |\
-								  BDV11_DIALOG   | BDV11_RX02};
-
 BDV11::BDV11 (Qbus *bus)
 	:
 	PDP11Peripheral (bus),
@@ -88,30 +34,8 @@ BDV11::BDV11 (Qbus *bus, shared_ptr<BDV11Config> bdv11Config)
 	:
 	BDV11 (bus)
 {
-	switchRegister_ = switchRegisterValue (bdv11Config);
-	
-	switch (bdv11Config->bootDevice)
-	{
-		case BDV11Config::BootDevice::RK05:
-			switchRegister_ |= BDV11_RK05;
-			break;
-
-		case BDV11Config::BootDevice::RL01:
-			switchRegister_ |= BDV11_RL01;
-			break;
-
-		case BDV11Config::BootDevice::RX01:
-			switchRegister_ |= BDV11_RX01;
-			break;
-
-		case BDV11Config::BootDevice::RX02:
-			switchRegister_ |= BDV11_RX02;
-			break;
-
-		case BDV11Config::BootDevice::BDV11ROM:
-			switchRegister_ |= BDV11_ROM;
-			break;
-	}
+	switchRegister_ = switchRegisterProgramSelection (bdv11Config);
+	switchRegister_ |= switchRegisterBootDevice (bdv11Config);
 
 	romUsed_ = romToUse (bdv11Config);
 }
@@ -122,7 +46,7 @@ BDV11::~BDV11 ()
 	ltcThread_.join();
 }
 
-u16 BDV11::switchRegisterValue (shared_ptr<BDV11Config> bdv11Config)
+u16 BDV11::switchRegisterProgramSelection (shared_ptr<BDV11Config> bdv11Config)
 {
 	u16 switchRegister {0};
 
@@ -136,6 +60,11 @@ u16 BDV11::switchRegisterValue (shared_ptr<BDV11Config> bdv11Config)
 		switchRegister |= BDV11_DIALOG;
 
 	return switchRegister;
+}
+
+u16 BDV11::switchRegisterBootDevice (shared_ptr<BDV11Config> bdv11Config)
+{
+	return bootDevices.find (bdv11Config->bootDevice)->second;
 }
 
 BDV11::ROMimage* BDV11::romToUse (shared_ptr<BDV11Config> bdv11Config)
