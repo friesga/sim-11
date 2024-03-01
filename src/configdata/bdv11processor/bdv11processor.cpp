@@ -69,6 +69,9 @@ void BDV11Processor::processBootDevice (iniparser::Value value)
 // this is a void.
 void BDV11Processor::checkConsistency ()
 {
+	if (bdv11ConfigPtr->bootDevice == BDV11Config::BootDevice::TU58 &&
+		bdv11ConfigPtr->bootROM == BDV11Config::BootROM::BDV11)
+		throw invalid_argument  {"TU58 as boot device is not supported in BDV11 ROMs"};
 }
 
 void BDV11Processor::processSubsection (iniparser::Section *subSection)

@@ -15,6 +15,7 @@ struct BDV11Config : public DeviceConfig
     {
         RK05,
         RL01,
+        TU58,
         RX01,
         RX02,
         BDV11ROM

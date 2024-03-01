@@ -140,3 +140,30 @@ TEST (BDV11ConfiguratorTest, invalidBootROMThrows)
 		FAIL();
 	}
 }
+
+TEST (BDV11ConfiguratorTest, tu58BootDeviceThrows)
+{
+    iniparser::File ft;
+	std::stringstream stream;
+	stream << "[BDV11]\n"
+		"boot_device = TU58";
+	stream >> ft;
+
+	IniProcessor iniProcessor;
+
+	try
+	{
+		iniProcessor.process (ft);
+		FAIL();
+	}
+	catch (std::invalid_argument const &except)
+	{
+		EXPECT_STREQ (except.what(),
+			"TU58 as boot device is not supported in BDV11 ROMs");
+	}
+	catch (...)
+	{
+		FAIL();
+	}
+}
+

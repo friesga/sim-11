@@ -37,11 +37,17 @@ using std::string;
 //			Loop on Error	OFF OFF OFF OFF ON
 //			RK05			OFF	OFF OFF ON	OFF
 //			RL01			OFF OFF ON	OFF	OFF
+//			TU58			OFF OFF ON  ON  OFF
 //			RX01			OFF ON	OFF OFF OFF
 //			RX02			OFF ON	ON	OFF OFF
 //			BDV11 ROM		ON	OFF	OFF	OFF OFF
 //
-// Source: LSI-11 Systems Service Manual, 3rd Edition, module M8012.
+// Notes:
+// 1) The B-switches are only present on the BDV11.
+// 2) The TU58 as boot device is not supported in the BDV11 ROMs.
+// 
+// Sources: LSI-11 Systems Service Manual, 3rd Edition, module M8012
+// and KDF11-BA CPU Module Users's Guide.
 //
 consteval u16 A (size_t x)
 {
@@ -80,6 +86,7 @@ private:
 	static const u16 BDV11_LOOP		 {B(1)};
 	static const u16 BDV11_RK05		 {A(8)};
 	static const u16 BDV11_RL01		 {A(7)};
+	static const u16 BDV11_TU58		 {A(7) | A(8)};
 	static const u16 BDV11_RX01		 {A(6)};
 	static const u16 BDV11_RX02		 {A(6) | A(7)};
 	static const u16 BDV11_ROM		 {A(5)};
@@ -120,6 +127,7 @@ private:
 	{
 		{BDV11Config::BootDevice::RK05,     BDV11_RK05},
 		{BDV11Config::BootDevice::RL01,     BDV11_RL01},
+		{BDV11Config::BootDevice::TU58,     BDV11_TU58},
 		{BDV11Config::BootDevice::RX01,     BDV11_RX01},
 		{BDV11Config::BootDevice::RX02,     BDV11_RX02},
 		{BDV11Config::BootDevice::BDV11ROM, BDV11_ROM}
