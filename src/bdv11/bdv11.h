@@ -36,7 +36,7 @@ public:
 
 private:
 	static const u16 PCR {0177520};		// Page Control Register
-	static const u16 RWR {0177522};		// Read/Wrire Register
+	static const u16 RWR {0177522};		// Read/Write Register
 	static const u16 SDR {0177524};		// Switch and Display Register
 	static const u16 BER {0177546};		// BEVNT Register
 

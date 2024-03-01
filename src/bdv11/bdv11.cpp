@@ -305,10 +305,14 @@ bool BDV11::responsible (BusAddress busAddress)
 	// The BDV11 registers are word or byte addressable
 	switch (busAddress.registerAddress () & 0177776)
 	{
-		case 0177520:
-		case 0177522:
-		case 0177524:
-		case 0177546:
+		case PCR:
+			// Page Control Register
+		case RWR:
+			// Read/Write Register
+		case SDR:
+			// Switch and Display Register
+		case BER:
+			// BEVNT Register
 			return true;
 		default:
 			return (busAddress.registerAddress () >= 0173000 && 
