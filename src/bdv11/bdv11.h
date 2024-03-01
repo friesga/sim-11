@@ -43,6 +43,7 @@ private:
 	using ROMimage = const array<u16, 2048>;
 
 	ROMimage* romToUse (shared_ptr<BDV11Config> bdv11Config);
+	u16 switchRegisterValue (shared_ptr<BDV11Config> bdv11Config);
 	u16 getWordLow (u16 word);
 	u16 getWordHigh (u16 word);
 	void memoryDump (u16 pcr, int hi);

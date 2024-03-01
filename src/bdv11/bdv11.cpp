@@ -88,15 +88,7 @@ BDV11::BDV11 (Qbus *bus, shared_ptr<BDV11Config> bdv11Config)
 	:
 	BDV11 (bus)
 {
-	switchRegister_ = 0;
-	if (bdv11Config->cpuTests)
-		switchRegister_ |= BDV11_CPU_TEST;
-	if (bdv11Config->memoryTests)
-		switchRegister_ |= BDV11_MEM_TEST;
-	if (bdv11Config->decnetBoot)
-		switchRegister_ |= BDV11_DECNET;
-	if (bdv11Config->consoleDialog)
-		switchRegister_ |= BDV11_DIALOG;
+	switchRegister_ = switchRegisterValue (bdv11Config);
 	
 	switch (bdv11Config->bootDevice)
 	{
@@ -128,6 +120,22 @@ BDV11::~BDV11 ()
 {
 	running_ = false;
 	ltcThread_.join();
+}
+
+u16 BDV11::switchRegisterValue (shared_ptr<BDV11Config> bdv11Config)
+{
+	u16 switchRegister {0};
+
+	if (bdv11Config->cpuTests)
+		switchRegister |= BDV11_CPU_TEST;
+	if (bdv11Config->memoryTests)
+		switchRegister |= BDV11_MEM_TEST;
+	if (bdv11Config->decnetBoot)
+		switchRegister |= BDV11_DECNET;
+	if (bdv11Config->consoleDialog)
+		switchRegister |= BDV11_DIALOG;
+
+	return switchRegister;
 }
 
 BDV11::ROMimage* BDV11::romToUse (shared_ptr<BDV11Config> bdv11Config)
