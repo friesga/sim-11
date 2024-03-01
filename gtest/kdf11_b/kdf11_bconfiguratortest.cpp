@@ -80,6 +80,31 @@ TEST (KDF11_BConfiguratorTest, KTF11_AOptionThrows)
 	}
 }
 
+TEST (KDF11_BConfiguratorTest, BDV11OptionThrows)
+{
+    iniparser::File ft;
+	std::stringstream stream;
+	stream << "[KDF11-B]\n"
+		"[BDV11]";
+	stream >> ft;
+
+	IniProcessor iniProcessor;
+
+	try
+	{
+		iniProcessor.process (ft);
+		FAIL();
+	}
+	catch (std::invalid_argument const &except)
+	{
+		EXPECT_STREQ (except.what(), "Specify either KDF11-B or BDV11");
+	}
+	catch (...)
+	{
+		FAIL();
+	}
+}
+
 
 TEST (KDF11_BConfiguratorTest, startingAddressThrows)
 {

@@ -199,6 +199,11 @@ set (FLOAT_SRCS
 set (BA11_N_SRCS
     src/ba11_n/ba11_n.cpp)
 
+set (BDV11_SRCS
+    src/bdv11/bdv11.cpp
+    src/bdv11/bdv11_rom.cpp
+    src/bdv11/kdf11b_rom.cpp)
+
 set (SDL_SRCS
     src/sdl/sdlinit/sdlinit.cpp
     src/sdl/sdlpanel/sdlpanel.cpp
@@ -263,9 +268,7 @@ set (SIM11_SRCS
     ${BA11_N_SRCS}
     ${CONSOLE_SRCS}
     src/abstractbusdevice/writebyte.cpp
-    src/bdv11/bdv11.cpp
-    src/bdv11/bdv11_rom.cpp
-    src/bdv11/kdf11b_rom.cpp
+    ${BDV11_SRCS}
     src/dl11/dlv11j/dlv11j.cpp
     src/dl11/uart/uart.cpp
     ${KD11_NA_SRCS}
@@ -443,6 +446,7 @@ set (SIM11_TEST_SRCS
     src/lib/gotapproval.cpp
     ${KD11_NA_SRCS}
     ${KDF11_SRCS}
+    ${BDV11_SRCS}
     src/msv11d/msv11d.cpp
     src/dl11/uart/uart.cpp
     ${CONSOLE_SRCS}

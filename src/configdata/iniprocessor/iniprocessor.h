@@ -41,6 +41,12 @@ using std::vector;
 //
 class IniProcessor
 {
+public:
+    void process (string filename);
+	void process (iniparser::File iniFile);
+	vector<shared_ptr<DeviceConfig>> &getSystemConfig ();
+
+private:
 	// Define the system configuration as a vector of (shared) pointers
 	// to device configurations.
 	vector<shared_ptr<DeviceConfig>> systemConfig {};
@@ -62,6 +68,8 @@ class IniProcessor
 
     void processSection (iniparser::Section* section);
 	void checkConfigConsistency ();
+	void checkMSV11Consistency ();
+	void checkKDF11_BConsistency ();
 	bool conflictsWith (shared_ptr<MSV11Config> msv11Card1, 
     shared_ptr<MSV11Config> msv11Card2);
 	bool isWithin (u32 address, u32 begin, u32 end);
@@ -74,11 +82,6 @@ class IniProcessor
 	unique_ptr<SectionProcessor> createKD11_NAProcessor ();
 	unique_ptr<SectionProcessor> createKDF11_AProcessor ();
 	unique_ptr<SectionProcessor> createKDF11_BProcessor ();
-
-public:
-    void process (string filename);
-	void process (iniparser::File iniFile);
-	vector<shared_ptr<DeviceConfig>> &getSystemConfig ();
 };
 
 #endif // !_INIPROCESSOR_H_
