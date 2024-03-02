@@ -38,12 +38,16 @@ void LSI11::checkConsistency (vector<shared_ptr<DeviceConfig>> systemConfig)
     if (numberOFProcessors > 1)
         throw string("More than one processor configured, this system cannot run.");
 
-    if (presentDevices.count (DeviceType::KDF11_B) == 0 &&
-            presentDevices.count(DeviceType::DLV11_J) == 0)
-        throw string("No DLV11 configured, this system cannot run.");
+    // The system has to contain terminal interfaces and a boot module,
+    // either provided by a DLV11-J and a BDV11 or by a KDF11-B.
+    if (presentDevices.count (DeviceType::KDF11_B) == 0)
+    {
+        if (presentDevices.count(DeviceType::DLV11_J) == 0)
+            throw string("No DLV11 configured, this system cannot run.");
 
-    if (presentDevices.count(DeviceType::BDV11) == 0)
-        throw string("No BDV11 configured, this system cannot run.");
+        if (presentDevices.count(DeviceType::BDV11) == 0)
+            throw string("No BDV11 configured, this system cannot run.");
+    }
 
     if (presentDevices.count(DeviceType::RXV21) == 0 && 
         presentDevices.count(DeviceType::RLV12) == 0)
