@@ -21,6 +21,7 @@ public:
 	StatusCode writeWord (BusAddress address, u16 value);
 	bool responsible (BusAddress address);
 	void reset ();
+	void BINITReceiver (bool signalValue);
 
 private:
     array<unique_ptr<UART>, 2> uarts_;

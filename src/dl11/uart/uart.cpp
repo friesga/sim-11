@@ -62,6 +62,8 @@ void UART::reset ()
 	rcsr &= ~(RCSR_RCVR_INT | RCSR_RCVR_DONE);
 	rbuf &= ~RBUF_ERROR_MASK;
 	xcsr = XCSR_TRANSMIT_READY;
+
+	trace.dlv11 (DLV11RecordType::DLV11_RESET, channelNr_, rcsr);
 }
 
 bool UART::responsible (BusAddress address)
