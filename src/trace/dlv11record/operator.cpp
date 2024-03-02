@@ -35,6 +35,10 @@ std::ostream& operator<< (std::ostream& os, TraceRecord<DLV11Record> record)
 
     switch (record.type_)
     {
+        case DLV11RecordType::DLV11_RESET:
+            os << record.createMessage ("reset").str ();
+            break;
+
         case DLV11RecordType::DLV11_RX:
             os << record.createMessage ("receive").str ();
             break;

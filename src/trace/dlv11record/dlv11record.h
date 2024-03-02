@@ -18,12 +18,13 @@ struct DLV11Record {};
 
 enum class DLV11RecordType
 {
+	DLV11_RESET,
 	DLV11_RX,
 	DLV11_TX,
 	DLV11_RDY,
 	DLV11_SEI,
 	DLV11_CLI,
-	DLV11_OVERRUN
+	DLV11_OVERRUN,
 };
 
 // Specialization of the TraceRecord for the TraceDLV11 record
