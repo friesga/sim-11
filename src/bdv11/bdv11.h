@@ -79,6 +79,8 @@ private:
 	static const u16 SDR {0177524};		// Switch and Display Register
 	static const u16 LKS {0177546};		// Line Clock Status Register
 
+	static const u16 LKS_IE		     {bitValue (6)};
+
 	static const u16 BDV11_CPU_TEST	 {A(1)};
 	static const u16 BDV11_MEM_TEST	 {A(2)};	
 	static const u16 BDV11_DECNET	 {A(3)};
@@ -109,6 +111,7 @@ private:
 	u16 getWordHigh (u16 word);
 	void memoryDump (u16 pcr, int hi);
 	void tick();
+	void writeLKS (u16 value);
 
 	static ROMimage ROM_045E2_046E2;
 	static ROMimage ROM_339E2_340E2;

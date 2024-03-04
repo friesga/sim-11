@@ -225,13 +225,22 @@ StatusCode BDV11::writeWord (BusAddress busAddress, u16 value)
 			break;
 
 		case LKS:
-			// Line Clock Status register. Bit 6 controls the line time clock (LTC)
-			// function.
-			ltc = value & 0100;
+			// Line Clock Status register
+			writeLKS (value);
 			break;
 	}
 
 	return StatusCode::OK;
+}
+
+// Write the Line Time Clock Status Register. If interrupts are disabled
+// possibly pending interrupts have to be cleared.
+void BDV11::writeLKS (u16 value)
+{
+	ltc = value & LKS_IE;
+
+	if (!(ltc & LKS_IE))
+		bus_->clearInterrupt (TrapPriority::BR6, 9, 0);
 }
 
 // As the BDV11 will only be accessed by means of unmapped (16-bit) addresses
@@ -296,7 +305,7 @@ void BDV11::tick()
 	while (running_)
 	{
 		// Check the line time clock (LTC) is enabled
-		if (ltc & 0100)
+		if (ltc & LKS_IE)
 		{
 			bus_->setInterrupt (TrapPriority::BR6, 9, 0, 0100);
 			nextWakeup += cycleTime;
