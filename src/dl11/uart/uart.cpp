@@ -189,17 +189,26 @@ void UART::writeXCSR (u16 value)
 	u16 old = xcsr;
 	xcsr = (xcsr & ~XCSR_WR_MASK) | (value & XCSR_WR_MASK);
 	
-	if ((value & XCSR_TRANSMIT_IE) && !(old & XCSR_TRANSMIT_IE)
+	setInterruptIfEnabled (old, value);
+	clearInterruptIfDisabled (old, value);
+}
+
+void UART::setInterruptIfEnabled (u16 oldCSRvalue, u16 newCSRvalue)
+{
+	if ((newCSRvalue & XCSR_TRANSMIT_IE) && !(oldCSRvalue & XCSR_TRANSMIT_IE)
 			&& (xcsr & XCSR_TRANSMIT_READY))
 	{
-		trace.dlv11 (DLV11RecordType::DLV11_SEI, channelNr_, value);
+		trace.dlv11 (DLV11RecordType::DLV11_SEI, channelNr_, newCSRvalue);
 		bus_->setInterrupt (TrapPriority::BR4, 6, 
 			interruptPriority (Function::Transmit, channelNr_), vector + 4);
 	}
+}
 
-	if ((old & XCSR_TRANSMIT_IE) && !(value & XCSR_TRANSMIT_IE))
+void UART::clearInterruptIfDisabled (u16 oldCSRvalue, u16 newCSRvalue)
+{
+	if ((oldCSRvalue & XCSR_TRANSMIT_IE) && !(newCSRvalue & XCSR_TRANSMIT_IE))
 	{
-		trace.dlv11 (DLV11RecordType::DLV11_CLI, channelNr_, value);
+		trace.dlv11 (DLV11RecordType::DLV11_CLI, channelNr_, newCSRvalue);
 		bus_->clearInterrupt (TrapPriority::BR4, 6, 
 			interruptPriority (Function::Transmit, channelNr_));
 	}
@@ -207,7 +216,10 @@ void UART::writeXCSR (u16 value)
 
 void UART::writeXBUF (u16 value)
 {
+	u16 old = xcsr;
 	xcsr &= ~XCSR_TRANSMIT_READY;
+	clearInterruptIfDisabled (old, value);
+
 	xbuf = value;
 	charAvailable_ = true;
 	transmitter_.notify_one ();
