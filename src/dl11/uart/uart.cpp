@@ -162,6 +162,7 @@ void UART::writeRCSR (u16 value)
 	rcsr = (rcsr & ~RCSR_WR_MASK) | (value & RCSR_WR_MASK);
 	
 	setRecvInterruptIfEnabled (old, value);
+	clearRecvInterruptIfDisabled (old, value);
 
 	if (value & RCSR_READER_ENABLE)
 	{
@@ -178,6 +179,16 @@ void UART::setRecvInterruptIfEnabled (u16 oldCSRvalue, u16 newCSRvalue)
 		trace.dlv11 (DLV11RecordType::DLV11_SEI, channelNr_, newCSRvalue);
 		bus_->setInterrupt (TrapPriority::BR4, 6, 
 			interruptPriority (Function::Receive, channelNr_), vector);
+	}
+}
+
+void UART::clearRecvInterruptIfDisabled (u16 oldCSRvalue, u16 newCSRvalue)
+{
+	if ((oldCSRvalue & RCSR_RCVR_IE) && !(newCSRvalue & RCSR_RCVR_IE))
+	{
+		trace.dlv11 (DLV11RecordType::DLV11_CLI, channelNr_, newCSRvalue);
+		bus_->clearInterrupt (TrapPriority::BR4, 6, 
+			interruptPriority (Function::Receive, channelNr_));
 	}
 }
 
