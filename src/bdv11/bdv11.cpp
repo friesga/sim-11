@@ -278,6 +278,9 @@ void BDV11::reset ()
 	display = 0;
 	ltc = 0;
 
+	// Clear possibly pending interrupts
+	bus_->clearInterrupt (TrapPriority::BR6, 9, 0);
+
 	memoryDump (pcr, 0);
 	memoryDump (pcr, 1);
 }
