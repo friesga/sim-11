@@ -111,8 +111,9 @@ private:
 	void writeRCSR (u16 value);
 	void writeXCSR (u16 value);
 	void writeXBUF (u16 value);
-	void setInterruptIfEnabled (u16 oldCSRvalue, u16 newCSRvalue);
-	void clearInterruptIfDisabled (u16 oldCSRvalue, u16 newCSRvalue);
+	void setRecvInterruptIfEnabled (u16 oldCSRvalue, u16 newCSRvalue);
+	void setXmitInterruptIfEnabled (u16 oldCSRvalue, u16 newCSRvalue);
+	void clearXmitInterruptIfDisabled (u16 oldCSRvalue, u16 newCSRvalue);
 	void transmitter ();
 	void receive (Character c);
 	void processBreak ();
