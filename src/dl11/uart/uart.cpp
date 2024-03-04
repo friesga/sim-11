@@ -179,6 +179,14 @@ void UART::writeRCSR (u16 value)
 	}
 }
 
+// In handling a write of the transmit CSR two situations have to be taken
+// into account:
+// 1. When the transmitter became ready interrupts were disabled. When
+//    interrupts are enabled later on the interrupt has to be raised then,
+// 2. When the transmitter became ready interrupts were enabled and an
+//    interrupt was generated. When interrupts are disabled later on the
+//    interrupt has to be revoked.
+//
 void UART::writeXCSR (u16 value)
 {
 	u16 old = xcsr;
@@ -190,6 +198,13 @@ void UART::writeXCSR (u16 value)
 		trace.dlv11 (DLV11RecordType::DLV11_SEI, channelNr_, value);
 		bus_->setInterrupt (TrapPriority::BR4, 6, 
 			interruptPriority (Function::Transmit, channelNr_), vector + 4);
+	}
+
+	if ((old & XCSR_TRANSMIT_INT) && !(value & XCSR_TRANSMIT_INT))
+	{
+		trace.dlv11 (DLV11RecordType::DLV11_CLI, channelNr_, value);
+		bus_->clearInterrupt (TrapPriority::BR4, 6, 
+			interruptPriority (Function::Transmit, channelNr_));
 	}
 }
 
