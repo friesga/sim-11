@@ -211,6 +211,9 @@ void UART::writeXCSR (u16 value)
 {
 	u16 old = xcsr;
 	xcsr = (xcsr & ~XCSR_WR_MASK) | (value & XCSR_WR_MASK);
+
+	if (xcsr & XCSR_TRANSMIT_BREAK)
+		sendChar (0);
 	
 	setXmitInterruptIfEnabled (old, value);
 	clearXmitInterruptIfDisabled (old, value);
@@ -240,9 +243,14 @@ void UART::clearXmitInterruptIfDisabled (u16 oldCSRvalue, u16 newCSRvalue)
 void UART::writeXBUF (u16 value)
 {
 	u16 old = xcsr;
-	xcsr &= ~XCSR_TRANSMIT_READY;
 	clearXmitInterruptIfDisabled (old, value);
 
+	sendChar (value);
+}
+
+void UART::sendChar (u16 value)
+{
+	xcsr &= ~XCSR_TRANSMIT_READY;
 	xbuf = value;
 	charAvailable_ = true;
 	transmitter_.notify_one ();
