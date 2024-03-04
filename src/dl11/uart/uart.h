@@ -110,6 +110,7 @@ private:
 	void readChannel ();
 	void writeRCSR (u16 value);
 	void writeXCSR (u16 value);
+	void writeXBUF (u16 value);
 	void transmitter ();
 	void receive (Character c);
 	void processBreak ();

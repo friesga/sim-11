@@ -146,10 +146,7 @@ StatusCode UART::writeWord (BusAddress busAddress, u16 value)
 			break;
 
 		case XBUF:
-			xcsr &= ~XCSR_TRANSMIT_READY;
-			xbuf = value;
-			charAvailable_ = true;
-			transmitter_.notify_one ();
+			writeXBUF (value);
 			break;
 	}
 
@@ -206,6 +203,14 @@ void UART::writeXCSR (u16 value)
 		bus_->clearInterrupt (TrapPriority::BR4, 6, 
 			interruptPriority (Function::Transmit, channelNr_));
 	}
+}
+
+void UART::writeXBUF (u16 value)
+{
+	xcsr &= ~XCSR_TRANSMIT_READY;
+	xbuf = value;
+	charAvailable_ = true;
+	transmitter_.notify_one ();
 }
 
 // Transmit data to the receiver. For channel 3 the data is sent to the
