@@ -107,7 +107,7 @@ private:
 	condition_variable transmitter_;
 	bool charAvailable_;
 
-	void readChannel ();
+	void readRBUF (u16 *destAddress);
 	void writeRCSR (u16 value);
 	void writeXCSR (u16 value);
 	void writeXBUF (u16 value);

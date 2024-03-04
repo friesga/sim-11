@@ -86,8 +86,7 @@ StatusCode UART::read (BusAddress busAddress, u16 *destAddress)
 			break;
 
 		case RBUF:
-			readChannel();
-			*destAddress = rbuf;
+			readRBUF (destAddress);
 			break;
 
 		case XCSR:
@@ -104,13 +103,21 @@ StatusCode UART::read (BusAddress busAddress, u16 *destAddress)
 	return StatusCode::OK;
 }
 
-void UART::readChannel ()
+void UART::readRBUF (u16 *destAddress)
 {
+	u16 old = rcsr;
+
 	if (!receiveBuffer_.empty ())
 	{
 		rbuf = (rbuf & 0177400) | receiveBuffer_.get ();
 		rcsr &= ~RCSR_RCVR_DONE;
 	} 
+
+	*destAddress = rbuf;
+
+	trace.dlv11 (DLV11RecordType::DLV11_CLI, channelNr_, rcsr);
+	bus_->clearInterrupt (TrapPriority::BR4, 6, 
+		interruptPriority (Function::Receive, channelNr_));
 }
 
 // This function allows the processor to write a word to one of the
