@@ -163,9 +163,9 @@ StatusCode BDV11::read (BusAddress busAddress, u16 *destAddress)
 			*destAddress = switchRegister_;
 			break;
 
-		case BER:
-			// BEVNT Register. According to the BDV11 technical manual
-			// (EK-BDV11-TM-001) this is a write-only register.
+		case LKS:
+			// Line Clock Status Register. According to the BDV11 technical
+			// manual (EK-BDV11-TM-001) this is a write-only register.
 			*destAddress = ltc;
 			break;
 
@@ -224,8 +224,8 @@ StatusCode BDV11::writeWord (BusAddress busAddress, u16 value)
 			display = value;
 			break;
 
-		case BER:
-			// BEVNT register. Bit 6 controls the line time clock (LTC)
+		case LKS:
+			// Line Clock Status register. Bit 6 controls the line time clock (LTC)
 			// function.
 			ltc = value & 0100;
 			break;
@@ -248,8 +248,8 @@ bool BDV11::responsible (BusAddress busAddress)
 			// Read/Write Register
 		case SDR:
 			// Switch and Display Register
-		case BER:
-			// BEVNT Register
+		case LKS:
+			// Line Clock Status Register
 			return true;
 		default:
 			return (busAddress.registerAddress () >= 0173000 && 

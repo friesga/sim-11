@@ -77,7 +77,7 @@ private:
 	static const u16 PCR {0177520};		// Page Control Register
 	static const u16 RWR {0177522};		// Read/Write Register
 	static const u16 SDR {0177524};		// Switch and Display Register
-	static const u16 BER {0177546};		// BEVNT Register
+	static const u16 LKS {0177546};		// Line Clock Status Register
 
 	static const u16 BDV11_CPU_TEST	 {A(1)};
 	static const u16 BDV11_MEM_TEST	 {A(2)};	
