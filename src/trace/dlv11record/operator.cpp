@@ -51,6 +51,10 @@ std::ostream& operator<< (std::ostream& os, TraceRecord<DLV11Record> record)
             os << record.createMessage ("set interrupt").str ();
             break;
 
+        case DLV11RecordType::DLV11_CLI:
+            os << record.createMessage ("clear interrupt").str ();
+            break;
+
         case DLV11RecordType::DLV11_OVERRUN:
             os << record.createMessage ("overrun").str ();
             break;
