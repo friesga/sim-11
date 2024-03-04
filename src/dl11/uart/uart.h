@@ -57,9 +57,9 @@ private:
     };
 
 	static const u16 RCSR_READER_ENABLE	 = bitValue (0);
-	static const u16 RCSR_RCVR_INT		 = bitValue (6);
+	static const u16 RCSR_RCVR_IE		 = bitValue (6);
 	static const u16 RCSR_RCVR_DONE		 = bitValue (7);
-	static const u16 RCSR_WR_MASK		 = RCSR_RCVR_INT | RCSR_READER_ENABLE;
+	static const u16 RCSR_WR_MASK		 = RCSR_RCVR_IE | RCSR_READER_ENABLE;
 
 	static const u16 RBUF_PARITY_ERROR	 = bitValue (12);
 	static const u16 RBUF_FRAMING_ERROR	 = bitValue (13);
@@ -69,9 +69,9 @@ private:
 										   RBUF_PARITY_ERROR | RBUF_ERROR;
 	
 	static const u16 XCSR_TRANSMIT_BREAK = bitValue (0);
-	static const u16 XCSR_TRANSMIT_INT	 = bitValue (6);
+	static const u16 XCSR_TRANSMIT_IE	 = bitValue (6);
 	static const u16 XCSR_TRANSMIT_READY = bitValue (7);
-	static const u16 XCSR_WR_MASK		 = XCSR_TRANSMIT_INT | XCSR_TRANSMIT_BREAK;
+	static const u16 XCSR_WR_MASK		 = XCSR_TRANSMIT_IE | XCSR_TRANSMIT_BREAK;
 
 	u16	rcsr {0};
 	u16	rbuf {0};

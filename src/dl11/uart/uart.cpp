@@ -59,7 +59,7 @@ void UART::reset ()
 {
 	lock_guard<mutex> lock {registerAccessMutex_};
 	receiveBuffer_.reset ();
-	rcsr &= ~(RCSR_RCVR_INT | RCSR_RCVR_DONE);
+	rcsr &= ~(RCSR_RCVR_IE | RCSR_RCVR_DONE);
 	rbuf &= ~RBUF_ERROR_MASK;
 	xcsr = XCSR_TRANSMIT_READY;
 
@@ -164,7 +164,7 @@ void UART::writeRCSR (u16 value)
 	u16 old = rcsr;
 	rcsr = (rcsr & ~RCSR_WR_MASK) | (value & RCSR_WR_MASK);
 	
-	if ((value & RCSR_RCVR_INT) && !(old & RCSR_RCVR_INT)
+	if ((value & RCSR_RCVR_IE) && !(old & RCSR_RCVR_IE)
 			&& (rcsr & RCSR_RCVR_DONE))
 	{
 		trace.dlv11 (DLV11RecordType::DLV11_SEI, channelNr_, value);
@@ -192,7 +192,7 @@ void UART::writeXCSR (u16 value)
 	u16 old = xcsr;
 	xcsr = (xcsr & ~XCSR_WR_MASK) | (value & XCSR_WR_MASK);
 	
-	if ((value & XCSR_TRANSMIT_INT) && !(old & XCSR_TRANSMIT_INT)
+	if ((value & XCSR_TRANSMIT_IE) && !(old & XCSR_TRANSMIT_IE)
 			&& (xcsr & XCSR_TRANSMIT_READY))
 	{
 		trace.dlv11 (DLV11RecordType::DLV11_SEI, channelNr_, value);
@@ -200,7 +200,7 @@ void UART::writeXCSR (u16 value)
 			interruptPriority (Function::Transmit, channelNr_), vector + 4);
 	}
 
-	if ((old & XCSR_TRANSMIT_INT) && !(value & XCSR_TRANSMIT_INT))
+	if ((old & XCSR_TRANSMIT_IE) && !(value & XCSR_TRANSMIT_IE))
 	{
 		trace.dlv11 (DLV11RecordType::DLV11_CLI, channelNr_, value);
 		bus_->clearInterrupt (TrapPriority::BR4, 6, 
@@ -251,7 +251,7 @@ void UART::transmitter ()
 			console_->print ((unsigned char) xbuf);
 
 		xcsr |= XCSR_TRANSMIT_READY;
-		if (xcsr & XCSR_TRANSMIT_INT)
+		if (xcsr & XCSR_TRANSMIT_IE)
 		{
 			trace.dlv11 (DLV11RecordType::DLV11_SEI, channelNr_, xbuf);
 			bus_->setInterrupt (TrapPriority::BR4, 6, 
@@ -380,7 +380,7 @@ bool UART::queueCharacter (unsigned char c)
 void UART::receiveDone ()
 {
 	rcsr |= RCSR_RCVR_DONE;
-	if (rcsr & RCSR_RCVR_INT)
+	if (rcsr & RCSR_RCVR_IE)
 	{
 		trace.dlv11 (DLV11RecordType::DLV11_SEI, channelNr_, 0);
 		bus_->setInterrupt (TrapPriority::BR4, 6, 
