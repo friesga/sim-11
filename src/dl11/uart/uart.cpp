@@ -105,8 +105,6 @@ StatusCode UART::read (BusAddress busAddress, u16 *destAddress)
 
 void UART::readRBUF (u16 *destAddress)
 {
-	u16 old = rcsr;
-
 	if (!receiveBuffer_.empty ())
 	{
 		rbuf = (rbuf & 0177400) | receiveBuffer_.get ();
