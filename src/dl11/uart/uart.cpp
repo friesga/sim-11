@@ -63,6 +63,11 @@ void UART::reset ()
 	rbuf &= ~RBUF_ERROR_MASK;
 	xcsr = XCSR_TRANSMIT_READY;
 
+	bus_->clearInterrupt (TrapPriority::BR4, 6, 
+		interruptPriority (Function::Receive, channelNr_));
+	bus_->clearInterrupt (TrapPriority::BR4, 6, 
+			interruptPriority (Function::Transmit, channelNr_));
+
 	trace.dlv11 (DLV11RecordType::DLV11_RESET, channelNr_, rcsr);
 }
 
