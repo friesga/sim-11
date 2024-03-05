@@ -22,9 +22,12 @@ enum class DLV11RecordType
 	DLV11_RX,
 	DLV11_TX,
 	DLV11_RDY,
-	DLV11_SEI,
-	DLV11_CLI,
+	DLV11_SET_TXI,
+	DLV11_SET_RXI,
+	DLV11_CL_TXI,
+	DLV11_CL_RXI,
 	DLV11_OVERRUN,
+	DLV11_READER_ENABLE
 };
 
 // Specialization of the TraceRecord for the TraceDLV11 record

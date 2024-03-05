@@ -59,7 +59,7 @@ void UART::reset ()
 {
 	lock_guard<mutex> lock {registerAccessMutex_};
 	receiveBuffer_.reset ();
-	rcsr &= ~(RCSR_RCVR_IE | RCSR_RCVR_DONE);
+	rcsr &= ~(RCSR_RCVR_IE | RCSR_RCVR_DONE | RCSR_READER_ENABLE);
 	rbuf &= ~RBUF_ERROR_MASK;
 	xcsr = XCSR_TRANSMIT_READY;
 
@@ -109,11 +109,12 @@ void UART::readRBUF (u16 *destAddress)
 	{
 		rbuf = (rbuf & 0177400) | receiveBuffer_.get ();
 		rcsr &= ~RCSR_RCVR_DONE;
+		trace.dlv11 (DLV11RecordType::DLV11_RX, channelNr_, rbuf);
 	} 
 
 	*destAddress = rbuf;
 
-	trace.dlv11 (DLV11RecordType::DLV11_CLI, channelNr_, rcsr);
+	trace.dlv11 (DLV11RecordType::DLV11_CL_RXI, channelNr_, rcsr);
 	bus_->clearInterrupt (TrapPriority::BR4, 6, 
 		interruptPriority (Function::Receive, channelNr_));
 }
@@ -173,6 +174,7 @@ void UART::writeRCSR (u16 value)
 	{
 		receiveBuffer_.reset ();
 		rcsr &= ~RCSR_RCVR_DONE;
+		trace.dlv11 (DLV11RecordType::DLV11_READER_ENABLE, channelNr_, value);
 	}
 }
 
@@ -181,7 +183,7 @@ void UART::setRecvInterruptIfEnabled (u16 oldCSRvalue, u16 newCSRvalue)
 	if ((newCSRvalue & RCSR_RCVR_IE) && !(oldCSRvalue & RCSR_RCVR_IE)
 			&& (rcsr & RCSR_RCVR_DONE))
 	{
-		trace.dlv11 (DLV11RecordType::DLV11_SEI, channelNr_, newCSRvalue);
+		trace.dlv11 (DLV11RecordType::DLV11_SET_RXI, channelNr_, newCSRvalue);
 		bus_->setInterrupt (TrapPriority::BR4, 6, 
 			interruptPriority (Function::Receive, channelNr_), vector);
 	}
@@ -191,7 +193,7 @@ void UART::clearRecvInterruptIfDisabled (u16 oldCSRvalue, u16 newCSRvalue)
 {
 	if ((oldCSRvalue & RCSR_RCVR_IE) && !(newCSRvalue & RCSR_RCVR_IE))
 	{
-		trace.dlv11 (DLV11RecordType::DLV11_CLI, channelNr_, newCSRvalue);
+		trace.dlv11 (DLV11RecordType::DLV11_CL_RXI, channelNr_, newCSRvalue);
 		bus_->clearInterrupt (TrapPriority::BR4, 6, 
 			interruptPriority (Function::Receive, channelNr_));
 	}
@@ -222,7 +224,7 @@ void UART::setXmitInterruptIfEnabled (u16 oldCSRvalue, u16 newCSRvalue)
 	if ((newCSRvalue & XCSR_TRANSMIT_IE) && !(oldCSRvalue & XCSR_TRANSMIT_IE)
 			&& (xcsr & XCSR_TRANSMIT_READY))
 	{
-		trace.dlv11 (DLV11RecordType::DLV11_SEI, channelNr_, newCSRvalue);
+		trace.dlv11 (DLV11RecordType::DLV11_SET_TXI, channelNr_, newCSRvalue);
 		bus_->setInterrupt (TrapPriority::BR4, 6, 
 			interruptPriority (Function::Transmit, channelNr_), vector + 4);
 	}
@@ -232,7 +234,7 @@ void UART::clearXmitInterruptIfDisabled (u16 oldCSRvalue, u16 newCSRvalue)
 {
 	if ((oldCSRvalue & XCSR_TRANSMIT_IE) && !(newCSRvalue & XCSR_TRANSMIT_IE))
 	{
-		trace.dlv11 (DLV11RecordType::DLV11_CLI, channelNr_, newCSRvalue);
+		trace.dlv11 (DLV11RecordType::DLV11_CL_TXI, channelNr_, newCSRvalue);
 		bus_->clearInterrupt (TrapPriority::BR4, 6, 
 			interruptPriority (Function::Transmit, channelNr_));
 	}
@@ -299,21 +301,21 @@ void UART::transmitter ()
 		xcsr |= XCSR_TRANSMIT_READY;
 		if (xcsr & XCSR_TRANSMIT_IE)
 		{
-			trace.dlv11 (DLV11RecordType::DLV11_SEI, channelNr_, xbuf);
+			trace.dlv11 (DLV11RecordType::DLV11_SET_TXI, channelNr_, xbuf);
 			bus_->setInterrupt (TrapPriority::BR4, 6, 
 				interruptPriority (Function::Transmit, channelNr_), vector + 4);
 		}
+
+		// If loopback is enabled send the character to the receiver of this
+		// channel.
+		if (loopback_ && !console_)
+			receiveMutExcluded (Character {lowByte (xbuf), 
+					(xcsr & XCSR_TRANSMIT_BREAK) == XCSR_TRANSMIT_BREAK});
 
 		// The following sleep has to be done while the registerAccessMutex_
 		// is unlocked as else the processor has no opportunity to send the
 		// next character to the UART and the delay would be useless.
 		lock.unlock ();
-
-		// If loopback is enabled send the character to the receiver of this
-		// channel.
-		if (loopback_ && !console_)
-			receive (Character {lowByte (xbuf), 
-					(xcsr & XCSR_TRANSMIT_BREAK) == XCSR_TRANSMIT_BREAK});
 
 		// Simulate the delay caused by transferring the character from the
 		// shift register over the serial line. VDLAB0 test 6 waits a maximum
@@ -358,7 +360,14 @@ void UART::transmitter ()
 void UART::receive (Character c)
 {
 	lock_guard<mutex> lock {registerAccessMutex_};
+	receiveMutExcluded (c);
+}
 
+// This function performs the actual receive with the registerAccessMutex_
+// locked. The function is via receive() called from OperatorConsole and
+// internally in transmitter() for the loopback functionality.
+void UART::receiveMutExcluded (Character c)
+{
 	if (bus_->BPOK ())
 	{
 		if (console_ && c == breakKey_)
@@ -375,7 +384,7 @@ void UART::receive (Character c)
 
 		if (queueCharacter (c))
 		{
-			trace.dlv11 (DLV11RecordType::DLV11_RX, channelNr_, c);
+			trace.dlv11 (DLV11RecordType::DLV11_TX, channelNr_, c);
 			receiveDone ();
 		}
 		else
@@ -428,7 +437,7 @@ void UART::receiveDone ()
 	rcsr |= RCSR_RCVR_DONE;
 	if (rcsr & RCSR_RCVR_IE)
 	{
-		trace.dlv11 (DLV11RecordType::DLV11_SEI, channelNr_, 0);
+		trace.dlv11 (DLV11RecordType::DLV11_SET_RXI, channelNr_, 0);
 		bus_->setInterrupt (TrapPriority::BR4, 6, 
 			interruptPriority (Function::Receive, channelNr_), vector);
 	}

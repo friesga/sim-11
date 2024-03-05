@@ -118,6 +118,7 @@ private:
 	void clearXmitInterruptIfDisabled (u16 oldCSRvalue, u16 newCSRvalue);
 	void transmitter ();
 	void receive (Character c);
+	void receiveMutExcluded (Character c);
 	void processBreak ();
 	bool queueCharacter (unsigned char c);
 	void receiveDone ();

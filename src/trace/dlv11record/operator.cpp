@@ -39,7 +39,7 @@ std::ostream& operator<< (std::ostream& os, TraceRecord<DLV11Record> record)
             os << record.createMessage ("reset").str ();
             break;
 
-        case DLV11RecordType::DLV11_RX:
+        case DLV11RecordType::DLV11_RX: 
             os << record.createMessage ("receive").str ();
             break;
 
@@ -47,16 +47,28 @@ std::ostream& operator<< (std::ostream& os, TraceRecord<DLV11Record> record)
             os << record.createMessage ("transmit").str ();
             break;
 
-        case DLV11RecordType::DLV11_SEI:
-            os << record.createMessage ("set interrupt").str ();
+        case DLV11RecordType::DLV11_SET_RXI:
+            os << record.createMessage ("set receive interrupt").str ();
             break;
 
-        case DLV11RecordType::DLV11_CLI:
-            os << record.createMessage ("clear interrupt").str ();
+        case DLV11RecordType::DLV11_SET_TXI:
+            os << record.createMessage ("set transmit interrupt").str ();
+            break;
+
+        case DLV11RecordType::DLV11_CL_RXI:
+            os << record.createMessage ("clear receive interrupt").str ();
+            break;
+
+        case DLV11RecordType::DLV11_CL_TXI:
+            os << record.createMessage ("clear transmit interrupt").str ();
             break;
 
         case DLV11RecordType::DLV11_OVERRUN:
             os << record.createMessage ("overrun").str ();
+            break;
+
+        case DLV11RecordType::DLV11_READER_ENABLE:
+            os << record.createMessage ("reader enable").str ();
             break;
 
         default:
