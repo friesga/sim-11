@@ -29,7 +29,9 @@ This emulator passes the following XXDP diagnostics:
 - ZRLJC0 (RL01/02 drive test 2 (Seek),
 - ZRLKB3 (RL01/02 performance exerciser),
 - VDLAB0 (DLV11-J test),
-- VM8AF0 (BDV11/KDF11-B Bootstrap diagnostic).
+- VM8AF0 (BDV11/KDF11-B Bootstrap diagnostic),
+- JKDKB0 (11/23+ CPU Cluster diagnostic),
+- JDLAA0 (11/23+ SLU/DLV11-J diagnostic). 
 
 The simulator runs:
 - RT-11 V05.07,
