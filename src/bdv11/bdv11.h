@@ -19,6 +19,10 @@ using std::string;
 // The default RT-11 line clock frequency is 60 Hz
 #define	LTC_RATE		60
 
+// The BDV11 is a bus terminator, bootstrap/diagnostic ROM and line time
+// clock module, to be used with e.a. a KD11-NA and KDF11-A. The module is
+// also incorporated in a KDF11-B.
+// 
 // Definition of the Switch Register lay-out.
 // The switch register is used for maintenance and system configuration
 // (selects diagnostic and/or bootstrap programs for execution). Bits 0-11

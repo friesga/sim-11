@@ -72,6 +72,24 @@ BDV11::ROMimage* BDV11::romToUse (shared_ptr<BDV11Config> bdv11Config)
 	return &availableROMs.find (bdv11Config->bootROM)->second;
 }
 
+// A block of 256 LSI-11 bus addresses is reserved for use in addressing ROM
+// locations on the BDV11 module. This block resides in the upper 4K address
+// bank (28K-32K), which is normally used for peripheral-device addressing,
+// and consists of byte addresses 173000-173776 (512 byte addresses correspond
+// to 256 word addresses in the LSI-11 addressing scheme).
+//
+// The BDV11 logic enables all 2048 locations in a selected 2K ROM (or 1024
+// locations in a 1K ROM) to be addressed by just these 256 bus addresses.
+// The logic includes a page control register (PCR) at bus address 177520;
+// the contents of this read/write register determine the specific ROM
+// location that is accessed when one of the 256 bus addresses is placed on
+// the BDAL lines. The PCR is loaded with "page" information, i.e., the PCR
+// contents point to one of 16 (or one of 8) 128-word pages in the seiected
+// ROM (16 pages X 128 words = 2048 words). (EK-BDV11-TM-001)
+// 
+// A 2K ROM comprises contents for two pages, the first (lowest) page contains
+// the contents for addresses 173000 - 173376 and the second (highest) page
+// contains the contents for addresses 173400 - 173777.
 u16 BDV11::getWordLow (u16 word)
 {
 	u16 page = pcr & 0xFF;
@@ -278,6 +296,21 @@ void BDV11::BPOKReceiver (bool signalValue)
 		ltc = 0;
 }
 
+// The page https://gunkies.org/wiki/BDV11_Bus_Terminator/ROM reports the
+// following issue with the line time clock: "Once the KW11-L on a BDV11 has
+// been enabled, RESET/etc do not disable it, unlike every other device in the
+// PDP-11 universe! (This is apparently because they were short a QBUS
+// receiver for the BINIT bus line, and didn't want to add another complete
+// chip to be able to monitor it.)
+// So if you start some operating system which enables the KW11-L (e.g. UNIX),
+// and then try and re-boot it by halting the machine and using the 'Go'
+// command to ODT, you'll probably get a clock interrupt in the process of
+// booting, which will trash it.
+// The only thing that clears it is either a manual disable (write 0 to the
+// KW11-L's CSR); something which toggles the BDCOK bus line - e.g. using the
+// BDV11's on-board RESTART switch, or a front-panel restart switch; or power
+// cycling the machine".
+//
 void BDV11::reset ()
 {
 	pcr = 0;
