@@ -12,7 +12,8 @@ struct BA11_NConfig : public DeviceConfig
     enum class Logo
     {
         PDP_1103L,
-        PDP_1123
+        PDP_1123,
+        PDP_1123_PLUS
     };
 
     Logo logo {Logo::PDP_1103L};

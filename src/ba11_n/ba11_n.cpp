@@ -93,13 +93,14 @@ void BA11_N::createBezel ()
     bus_->SRUN().subscribe (bind (&BA11_N::SRUNReceiver, this, _1));
 }
 
-// Get the fromt image for the given logo
+// Get the front image for the given logo
 string BA11_N::frontImage (BA11_NConfig::Logo logo)
 {
     map <BA11_NConfig::Logo, string> frontImages =
     {
-        {BA11_NConfig::Logo::PDP_1103L, "../../assets/11_03 front.png"},
-        {BA11_NConfig::Logo::PDP_1123,  "../../assets/11_23 front.png"}
+        {BA11_NConfig::Logo::PDP_1103L,       "../../assets/11_03 front.png"},
+        {BA11_NConfig::Logo::PDP_1123,        "../../assets/11_23 front.png"},
+        {BA11_NConfig::Logo::PDP_1123_PLUS,   "../../assets/11_23+ front.png"}
     };
 
     return frontImages[logo];

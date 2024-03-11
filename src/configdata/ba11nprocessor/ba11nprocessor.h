@@ -29,6 +29,7 @@ class BA11_NProcessor : public SectionProcessor
 	{
 		{"PDP-11/03L",     BA11_NConfig::Logo::PDP_1103L},
 		{"PDP-11/23",      BA11_NConfig::Logo::PDP_1123},
+		{"PDP-11/23+",     BA11_NConfig::Logo::PDP_1123_PLUS}
 	};
 
 	void processValue (iniparser::Section::ValueIterator valueIterator);
