@@ -31,12 +31,13 @@ This emulator passes the following XXDP diagnostics:
 - VDLAB0 (DLV11-J test),
 - VM8AF0 (BDV11/KDF11-B Bootstrap diagnostic),
 - JKDKB0 (11/23+ CPU Cluster diagnostic),
-- JDLAA0 (11/23+ SLU/DLV11-J diagnostic). 
+- JDLAA0 (11/23+ SLU/DLV11-J diagnostic),
+- JKDIB0 (KDF11-B 11/23+ SLU-LTC Repair).
 
 The simulator runs:
 - RT-11 V05.07,
 - XXDP V2.6,
-- RSX-11M when configured as a PDP-11/23.
+- RSX-11M when configured as a PDP-11/23(+).
 
 The simuator is based on https://github.com/hackyourlife/lsi-11
 with the following changes and additions:
@@ -44,7 +45,9 @@ with the following changes and additions:
 - Almost completely rewritten in C++,
 - Runs on both Windows and Linux,
 - Added support for RL01/RL02,
-- Added support for KDF11-A,
+- Added support for KDF11-A (PDP-11/23),
+- Added support for KTF11-A Memory Management Unit,
+- Added support for KDF11-B (PDP-11/23+)
 - Added support for BA11-N mounting box, showing status LEDs and switches
   to control the CPU,
 - Power-up and powerfail support,
