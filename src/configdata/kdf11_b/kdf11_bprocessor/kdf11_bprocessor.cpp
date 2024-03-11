@@ -38,7 +38,7 @@ void KDF11_BProcessor::processSubsection (iniparser::Section *subSection)
 	{
 		sectionProcessDef = &sectionProcess.at (subSection->name());
 	}
-	catch (std::out_of_range)
+	catch (std::out_of_range const&)
 	{
 		throw std::invalid_argument {"Unknown KDF11-B subsection: " + 
 			subSection->name()};
