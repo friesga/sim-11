@@ -7,7 +7,7 @@
 #include "kd/kdf11/odt/kdf11_odt.h"
 #include "configdata/kdf11_aconfig/kdf11_aconfig.h"
 #include "kd/common/controllogic/controllogic.h"
-#include "kd/kdf11/registeraccess/registeraccess.h"
+#include "kd/kdf11/registerhandler/registerhandler.h"
 
 #include <memory>
 #include <vector>
@@ -56,10 +56,10 @@ private:
     KDF11_CpuControl cpuControl_ {bus_, &cpuData_, &mmu_};
     unique_ptr<ControlLogic> controlLogic_;
 
-    // RegisterAccess performs the functions required by the BusDevice
+    // RegisterHandler performs the functions required by the BusDevice
     // interface. These functions are put in a separate class as they are used
     // by both the KDF11_A and KDF11_B classes.
-    unique_ptr<RegisterAccess> registerAccess_;
+    unique_ptr<RegisterHandler> registerHandler_;
 
     // The KDF11_A is started in its own thread
     thread kd11Thread_;

@@ -24,13 +24,13 @@ KDF11_A::KDF11_A (Qbus *bus, shared_ptr<KDF11_AConfig> kdf11_aConfig)
     // configured its registers will not be available on the bus and
     // consequently it cannot be enabled.
     // 
-    // I would have liked to state 'make_unique<RegisterAccess> ({&cpuData_})'
+    // I would have liked to state 'make_unique<RegisterHandler> ({&cpuData_})'
     // but unfortunately make_unique cannot accept an initializer_list.
     vector<BusDevice*> modules {&cpuData_};
     if (kdf11_aConfig->ktf11_a_present)
         modules.push_back (&mmu_);
 
-    registerAccess_ = make_unique<RegisterAccess> (modules);
+    registerHandler_ = make_unique<RegisterHandler> (modules);
 
     // Besides a pointer to the bus, a reference to our cpu, the start address
     // and the power-up mode, the ControlLogic also gets passed a
@@ -67,20 +67,20 @@ void KDF11_A::start (u16 startAddress)
 //
 StatusCode KDF11_A::read (BusAddress address, u16* destination)
 {
-    return registerAccess_->read (address, destination);
+    return registerHandler_->read (address, destination);
 }
 
 StatusCode KDF11_A::writeWord (BusAddress address, u16 value)
 {
-    return registerAccess_->writeWord (address, value);
+    return registerHandler_->writeWord (address, value);
 }
 
 bool KDF11_A::responsible (BusAddress address)
 {
-    return registerAccess_->responsible (address);
+    return registerHandler_->responsible (address);
 }
 
 void KDF11_A::reset ()
 {
-    return registerAccess_->reset ();
+    return registerHandler_->reset ();
 }

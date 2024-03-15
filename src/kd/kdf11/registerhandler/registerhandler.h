@@ -1,5 +1,5 @@
-#ifndef _REGISTERACCESS_H_
-#define _REGISTERACCESS_H_
+#ifndef _REGISTERHANDLER_H_
+#define _REGISTERHANDLER_H_
 
 #include "qbus/qbus.h"
 #include "abstractbusdevice/abstractbusdevice.h"
@@ -12,10 +12,10 @@
 using std::vector;
 using std::unique_ptr;
 
-class RegisterAccess : public AbstractBusDevice
+class RegisterHandler : public AbstractBusDevice
 {
 public:
-    RegisterAccess (vector<BusDevice*> cpuModules);
+    RegisterHandler (vector<BusDevice*> cpuModules);
 
     // Functions required by the BusDevice interface
     // The function writeByte() is implemented by AbstractBusDevice
@@ -32,4 +32,4 @@ private:
     vector<BusDevice*> cpuModules_ {};
 };
 
-#endif // _REGISTERACCESS_H_
+#endif // _REGISTERHANDLER_H_

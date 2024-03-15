@@ -1,11 +1,11 @@
-#include "registeraccess.h"
+#include "registerhandler.h"
 
-RegisterAccess::RegisterAccess (vector<BusDevice*> cpuModules)
+RegisterHandler::RegisterHandler (vector<BusDevice*> cpuModules)
     :
     cpuModules_ {cpuModules}
 {}
 
-StatusCode RegisterAccess::read (BusAddress address, u16* destination)
+StatusCode RegisterHandler::read (BusAddress address, u16* destination)
 {
     for (BusDevice* module : cpuModules_)
         if (module->responsible (address))
@@ -14,7 +14,7 @@ StatusCode RegisterAccess::read (BusAddress address, u16* destination)
     return StatusCode::NonExistingMemory;
 }
 
-StatusCode RegisterAccess::writeWord (BusAddress address, u16 value)
+StatusCode RegisterHandler::writeWord (BusAddress address, u16 value)
 {
     for (BusDevice* module : cpuModules_)
         if (module->responsible (address))
@@ -24,7 +24,7 @@ StatusCode RegisterAccess::writeWord (BusAddress address, u16 value)
 
 }
 
-bool RegisterAccess::responsible (BusAddress busAddress)
+bool RegisterHandler::responsible (BusAddress busAddress)
 {
     if (!busAddress.isInIOpage ())
         return false;
@@ -36,7 +36,7 @@ bool RegisterAccess::responsible (BusAddress busAddress)
     return false;
 }
 
-void RegisterAccess::reset ()
+void RegisterHandler::reset ()
 {
     for (BusDevice* module : cpuModules_)
         module->reset ();
