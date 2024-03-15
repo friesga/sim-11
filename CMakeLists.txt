@@ -274,12 +274,12 @@ set (SIM11_SRCS
     ${KD11_NA_SRCS}
     ${KDF11_SRCS}
     src/lib/gotapproval.cpp
-    src/lsi11/lsi11.cpp
-    src/lsi11/configure.cpp
-    src/lsi11/checkconsistency.cpp
-    src/lsi11/installmodules.cpp
-    src/lsi11/loadfile.cpp
-    src/lsi11/run.cpp
+    src/pdp11/pdp11.cpp
+    src/pdp11/configure.cpp
+    src/pdp11/checkconsistency.cpp
+    src/pdp11/installmodules.cpp
+    src/pdp11/loadfile.cpp
+    src/pdp11/run.cpp
     src/main/main.cpp
     src/msv11d/msv11d.cpp
     ${QBUS_SRCS}

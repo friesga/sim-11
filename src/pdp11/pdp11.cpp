@@ -2,9 +2,9 @@
 #include <string.h>
 
 #include "trace/trace.h"
-#include "lsi11.h"
+#include "pdp11.h"
 
-LSI11::LSI11 (CmdLineOptions const &cmdLineOptions)
+PDP_11::PDP_11 (CmdLineOptions const &cmdLineOptions)
 	:
 	processor_ {nullptr},
 	msv11_ {},
@@ -16,7 +16,7 @@ LSI11::LSI11 (CmdLineOptions const &cmdLineOptions)
 	cmdLineOptions_ {cmdLineOptions}
 {}
 
-LSI11::~LSI11 ()
+PDP_11::~PDP_11 ()
 {
 	delete processor_;
 	for (MSV11D* msv11d : msv11_)
@@ -30,7 +30,7 @@ LSI11::~LSI11 ()
 // Reset the bus and all devices on the bus. The bus will forward the BINIT
 // signal to all devices on the bus subscribed to that signal, including
 // the bus itself.
-void LSI11::reset ()
+void PDP_11::reset ()
 {
 	bus_.BINIT().cycle ();
 }

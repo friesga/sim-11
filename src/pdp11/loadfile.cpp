@@ -1,4 +1,4 @@
-#include "lsi11.h"
+#include "pdp11.h"
 #include "cmdlineoptions/cmdlineoptions.h"
 
 #include <string>
@@ -8,7 +8,7 @@ using std::string;
 
 // Load the given file in absolute loader format, returning the start address
 // of the loaded binary.
-u16 LSI11::loadFile ()
+u16 PDP_11::loadFile ()
 {
     /* execute absolute loader binary */
     /* const char* filename = "VKAAC0.BIC"; */

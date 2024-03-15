@@ -1,4 +1,4 @@
-#include "lsi11.h"
+#include "pdp11.h"
 #include "configdata/iniprocessor/iniprocessor.h"
 #include "configdata/rxv21config/rxv21config.h"
 #include "configdata/msv11config/msv11config.h"
@@ -17,7 +17,7 @@ using std::string;
 
 // Configure the LSI-11 with a default configuration. Create a bare system
 // without any files attached.
-void LSI11::configureDevices (Window *window)
+void PDP_11::configureDevices (Window *window)
 {
     // By default use the KD11-NA processor
     processor_ = new KD11_NA (&bus_);
@@ -38,7 +38,7 @@ void LSI11::configureDevices (Window *window)
 // Configure the devices and install them on the bus.
 // Accessing a non-configured device will result in a bus time-out
 // and the BDV11 boot will halt at address 000010.
-void LSI11::configureDevices (vector<shared_ptr<DeviceConfig>> systemConfig,
+void PDP_11::configureDevices (vector<shared_ptr<DeviceConfig>> systemConfig,
     Window *window)
 {
     // Check for presence of necessary devices

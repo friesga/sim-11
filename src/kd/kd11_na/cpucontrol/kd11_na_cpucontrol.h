@@ -26,7 +26,7 @@ using std::function;
 class KD11_NA_CpuControl : public CpuControl
 {
 public:
-	friend class LSI11;
+	friend class PDP_11;
 	
 	KD11_NA_CpuControl (Qbus *bus, CpuData* cpuData, MMU* mmu);
 

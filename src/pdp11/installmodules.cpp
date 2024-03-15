@@ -1,10 +1,10 @@
-#include "lsi11.h"
+#include "pdp11.h"
 
 // Install the devices on the bus. The installation is kept in one function
 // to easily determine the order of devices on the bus.
 // A BA11-N backplane has nine slots, named ROW 1 to ROW 9. ROW 1 corresponds
 // with slot[0], ROW 9 with slot [8].
-void LSI11::installModules ()
+void PDP_11::installModules ()
 {
     size_t slotNr {0};
 

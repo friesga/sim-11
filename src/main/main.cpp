@@ -1,4 +1,4 @@
-#include "lsi11/lsi11.h"
+#include "pdp11/pdp11.h"
 #include "trace/trace.h"
 #include "cmdlineoptions/cmdlineoptions.h"
 #include "logger/logger.h"
@@ -53,7 +53,7 @@ try
 	// devices are destructed befor destruction of the SDLWindow. This prevents
 	// a segmentation fault that can occur if the devices access the window's
 	// panels.
-	LSI11 lsi11 {cmdLineOptions};
+	PDP_11 lsi11 {cmdLineOptions};
 
 	// If a configuration file is specified create the system configuration from
 	// that file and configure the lsi11 with the devices and parameters as

@@ -1,4 +1,4 @@
-#include "lsi11.h"
+#include "pdp11.h"
 
 #include <set>
 #include <iostream>
@@ -15,7 +15,7 @@ using std::string;
 // controllers, without which the system will not properly run.
 // It would be nice if these configuration errors could be indicated
 // in a more lifelike way such as setting led indicators.
-void LSI11::checkConsistency (vector<shared_ptr<DeviceConfig>> systemConfig)
+void PDP_11::checkConsistency (vector<shared_ptr<DeviceConfig>> systemConfig)
 {
     set<DeviceType> presentDevices {};
 

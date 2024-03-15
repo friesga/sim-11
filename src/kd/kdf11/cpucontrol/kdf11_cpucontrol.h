@@ -18,7 +18,7 @@
 class KDF11_CpuControl : public CpuControl
 {
 public:
-	friend class LSI11;
+	friend class PDP_11;
 	
 	KDF11_CpuControl (Qbus *bus, CpuData*, MMU* mmu);
 

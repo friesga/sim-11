@@ -25,7 +25,7 @@ using std::vector;
 
 using namespace rxv21;
 
-class LSI11
+class PDP_11
 {
 	Qbus bus_;
 	// We would prefer using shared_ptr's as pointers to the devices but the
@@ -49,8 +49,8 @@ class LSI11
 	void installModules ();
 
 public:
-	LSI11 (CmdLineOptions const &cmdLineOptions);
-	~LSI11 ();
+	PDP_11 (CmdLineOptions const &cmdLineOptions);
+	~PDP_11 ();
 	void configureDevices (Window *window);
 	void configureDevices (vector<shared_ptr<DeviceConfig>> systemConfig,
 		Window *window);
