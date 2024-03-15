@@ -47,6 +47,11 @@ public:
     void start (u16 startAddress);
     void start ();
 
+    // Functions to give unit tests access to the CPU's components.
+    constexpr CpuControl* cpuControl ();
+    constexpr CpuData* cpuData ();
+    constexpr MMU* mmu ();
+
 private:
     Qbus* bus_;
 
@@ -66,5 +71,21 @@ private:
 
     u16 startAddress_;
 };
+
+// constexpr functions are by definition inline
+constexpr CpuControl* KDF11_A::cpuControl ()
+{
+    return &cpuControl_;
+}
+
+constexpr CpuData* KDF11_A::cpuData ()
+{
+    return &cpuData_;
+}
+
+constexpr MMU* KDF11_A::mmu ()
+{
+    return &mmu_;
+}
 
 #endif // !_KDF11_A_H_

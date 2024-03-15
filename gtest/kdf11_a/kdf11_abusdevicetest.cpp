@@ -1,7 +1,11 @@
 #include "qbus/qbus.h"
 #include "kd/kdf11/kdf11_a/kdf11_a.h"
+#include "configdata/kdf11_aconfig/kdf11_aconfig.h"
 
 #include <gtest/gtest.h>
+#include <memory>
+
+using std::make_shared;
 
 class KDF11_ADeviceBus : public ::testing::Test
 {
@@ -14,7 +18,7 @@ protected:
     static const int KernelDspacePDR0 {0172320};
 
     Qbus bus_;
-    KDF11_A kdf11_a {&bus_};
+    KDF11_A kdf11_a {&bus_, make_shared<KDF11_AConfig> (true)};
 };
 
 // Verify SR0 can be read and written

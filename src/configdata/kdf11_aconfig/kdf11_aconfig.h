@@ -7,6 +7,7 @@
 struct KDF11_AConfig : public KD11Config
 {
     KDF11_AConfig ();
+    KDF11_AConfig (bool ktf11_aPresent);
 
     bool ktf11_a_present {false};
     u16 startingAddress {0173000};

@@ -1,14 +1,19 @@
 #include "qbus/qbus.h"
 #include "kd/kdf11/kdf11_a/kdf11_a.h"
 #include "msv11d/msv11d.h"
+#include "configdata/kdf11_aconfig/kdf11_aconfig.h"
 
 #include <gtest/gtest.h>
+#include <memory>
+
+using std::make_shared;
 
 class KDF11_A_PSWTEST : public ::testing::Test
 {
 protected:
     Qbus qbus;
-    KDF11_A* kdf11a  = new KDF11_A (&qbus);
+    shared_ptr<KDF11_AConfig> kdf11_aConfig = make_shared<KDF11_AConfig> (true);
+    KDF11_A* kdf11a  = new KDF11_A (&qbus, kdf11_aConfig);
     MSV11D*  memory  = new MSV11D (&qbus);
     KDF11Instruction instrDecoder;
     u16 const PswAddress = 0177776;
