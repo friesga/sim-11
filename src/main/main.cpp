@@ -46,7 +46,7 @@ try
 			Trace::Category::DLV11);
 
 	// Create the window for the panels
-	SDLWindow sdlWindow {"PDP-11/03", 100, 100, 750, 200};
+	SDLWindow sdlWindow {"PDP-11 Console", 100, 100, 750, 200};
 
 	// Create a lsi11 with configured (or default) devices.
 	// The devices are created after creation of the window to make sure the
