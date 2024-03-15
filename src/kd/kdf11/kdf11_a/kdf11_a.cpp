@@ -3,49 +3,84 @@
 
 #include <memory>
 #include <thread>
+#include <vector>
 
 using std::shared_ptr;
 using std::make_unique;
 using std::thread;
+using std::vector;
 using std::placeholders::_1;
 using std::placeholders::_2;
 using std::placeholders::_3;
 using std::placeholders::_4;
 using std::placeholders::_5;
 
-// The factory power-up mode configuration is mode 0 (get vector at address
-// 24 and 26), but we'll set it to Bootstrap as that's more convenient for
-// the user.
-KDF11_A::KDF11_A (Qbus* bus)
-    :
-    KDF11 (bus, KD11Config::PowerUpMode::Bootstrap, stdBootAddress)
-{
-    // Add the MMU to the CPU modules
-    cpuModules_.push_back (&mmu_);
-
-    // Besides a pointer to the bus, a reference to our cpu, the start address
-    // and the power-up mode, the ControlLogic also gets passed a
-    // std::function to the function to create ODT objects.
-    controlLogic_ = make_unique<ControlLogic> (bus_, &cpuData_, &cpuControl_, &mmu_, powerUpMode_,
-        startAddress_, bind (&KDF11_ODT::createODT, _1, _2, _3, _4, _5));
-}
-
 KDF11_A::KDF11_A (Qbus *bus, shared_ptr<KDF11_AConfig> kdf11_aConfig)
     :
-    KDF11 (bus, KD11Config::PowerUpMode::Bootstrap, stdBootAddress)
+    bus_ {bus},
+    startAddress_ {kdf11_aConfig->startingAddress}
 {
     // If the KTF11-A is configured add it to the CPU modules. If it is not
     // configured its registers will not be available on the bus and
     // consequently it cannot be enabled.
+    // 
+    // I would have liked to state 'make_unique<RegisterAccess> ({&cpuData_})'
+    // but unfortunately make_unique cannot accept an initializer_list.
+    vector<BusDevice*> modules {&cpuData_};
     if (kdf11_aConfig->ktf11_a_present)
-        cpuModules_.push_back (&mmu_);
+        modules.push_back (&mmu_);
+
+    registerAccess_ = make_unique<RegisterAccess> (modules);
 
     // Besides a pointer to the bus, a reference to our cpu, the start address
     // and the power-up mode, the ControlLogic also gets passed a
     // std::function to the function to create ODT objects.
-    controlLogic_ = make_unique<ControlLogic> (bus_, &cpuData_, &cpuControl_, &mmu_, powerUpMode_,
-        startAddress_, bind (&KDF11_ODT::createODT, _1, _2, _3, _4, _5));
+    controlLogic_ = make_unique<ControlLogic> (bus_,
+        &cpuData_,
+        &cpuControl_,
+        &mmu_,
+        kdf11_aConfig->powerUpMode,
+        startAddress_,
+        bind (&KDF11_ODT::createODT, _1, _2, _3, _4, _5));
 }
 
+KDF11_A::~KDF11_A ()
+{
+    controlLogic_->exit ();
+    kd11Thread_.join ();
+}
 
-   
+void KDF11_A::start ()
+{
+    kd11Thread_ = thread ([&, this] {controlLogic_->run ();});
+}
+
+// Start the ControlLogic state machine, starting the CPU at the given
+// address. This address supersedes the standard boot address.
+void KDF11_A::start (u16 startAddress)
+{
+    startAddress_ = startAddress;
+    start ();
+}
+
+// Registers accesses are forwarded to the register handler.
+//
+StatusCode KDF11_A::read (BusAddress address, u16* destination)
+{
+    return registerAccess_->read (address, destination);
+}
+
+StatusCode KDF11_A::writeWord (BusAddress address, u16 value)
+{
+    return registerAccess_->writeWord (address, value);
+}
+
+bool KDF11_A::responsible (BusAddress address)
+{
+    return registerAccess_->responsible (address);
+}
+
+void KDF11_A::reset ()
+{
+    return registerAccess_->reset ();
+}
