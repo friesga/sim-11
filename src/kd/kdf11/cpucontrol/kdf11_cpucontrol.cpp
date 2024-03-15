@@ -1,6 +1,20 @@
 #include "kdf11_cpucontrol.h"
 #include "trace/trace.h"
 
+// Constructor
+KDF11_CpuControl::KDF11_CpuControl (Qbus* bus, CpuData* cpuData, MMU* mmu)
+    :
+    bus_ {bus},
+    mmu_ {mmu},
+    cpuData_ {cpuData},
+    runState {CpuRunState::HALT},
+    kdf11Instruction {},
+    haltReason_ {HaltReason::HaltInstruction},
+    traceFlag_ {false}
+{
+    bus_->SRUN().set (false);
+}
+
 // Reset the processor
 // 
 // Clear the registers and the PSW

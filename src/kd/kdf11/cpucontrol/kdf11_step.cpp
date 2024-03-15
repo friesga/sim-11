@@ -11,20 +11,6 @@
 using std::unique_ptr;
 using std::make_unique;
 
-// Constructor
-KDF11_CpuControl::KDF11_CpuControl (Qbus* bus, CpuData* cpuData, MMU* mmu)
-    :
-    bus_ {bus},
-    mmu_ {mmu},
-    cpuData_ {cpuData},
-    runState {CpuRunState::HALT},
-    kdf11Instruction {},
-    haltReason_ {HaltReason::HaltInstruction},
-    traceFlag_ {false}
-{
-    bus_->SRUN().set (false);
-}
-
 // Perform a CPU step. The step mainly comprises three actions:
 // 1. Execution of an instruction,
 // 2. Handle the trace bit,
