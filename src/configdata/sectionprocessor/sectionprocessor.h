@@ -8,7 +8,7 @@
 #include <limits>
 
 using std::string;
-using std::unique_ptr;
+using std::shared_ptr;
 
 class SectionProcessor
 {
@@ -22,7 +22,7 @@ protected:
 
 public:
     void processSection (iniparser::Section* section);
-    virtual unique_ptr<DeviceConfig> getConfig () = 0;
+    virtual shared_ptr<DeviceConfig> getConfig () = 0;
 };
 
 // Return the number represented by the string as the specified unsigned

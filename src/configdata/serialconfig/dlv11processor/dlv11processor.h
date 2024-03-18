@@ -11,6 +11,7 @@
 #include <vector>
 
 using std::unique_ptr;
+using std::shared_ptr;
 using std::map;
 using std::string;
 using std::vector;
@@ -19,7 +20,7 @@ class DLV11Processor : public SectionProcessor
 {
 public:
 	DLV11Processor ();
-	unique_ptr<DeviceConfig> getConfig ();
+	shared_ptr<DeviceConfig> getConfig ();
 
 private:
 	enum {numChannels = 4};

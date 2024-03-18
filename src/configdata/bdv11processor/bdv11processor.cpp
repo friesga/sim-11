@@ -77,7 +77,7 @@ void BDV11Processor::checkConsistency ()
 void BDV11Processor::processSubsection (iniparser::Section *subSection)
 {}
 
-unique_ptr<DeviceConfig> BDV11Processor::getConfig ()
+shared_ptr<DeviceConfig> BDV11Processor::getConfig ()
 {
 	return move (bdv11ConfigPtr);
 }

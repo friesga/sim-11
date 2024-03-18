@@ -77,7 +77,7 @@ void RXV21Processor::processSubsection (iniparser::Section *subSection)
 	rxConfigPtr->rxv21UnitConfig[unitNumber] = rxv21UnitProcessor.getConfig ();
 }
 
-unique_ptr<DeviceConfig> RXV21Processor::getConfig ()
+shared_ptr<DeviceConfig> RXV21Processor::getConfig ()
 {
 	return move (rxConfigPtr);
 }

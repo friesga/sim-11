@@ -8,6 +8,7 @@
 #include <map>
 #include <string>
 
+using std::shared_ptr;
 using std::unique_ptr;
 using std::map;
 using std::string;
@@ -39,7 +40,7 @@ class BA11_NProcessor : public SectionProcessor
 
 public:
 	BA11_NProcessor ();
-	unique_ptr<DeviceConfig> getConfig () override;
+	shared_ptr<DeviceConfig> getConfig () override;
 };
 
 #endif // !_BA11NPROCESSOR_H_

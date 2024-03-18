@@ -116,7 +116,7 @@ void SLUProcessor::processLoopback (iniparser::Value value)
 	sluConfigPtr->uartConfig[1].loopback_ = loopback;
 }
 
-unique_ptr<DeviceConfig> SLUProcessor::getConfig ()
+shared_ptr<DeviceConfig> SLUProcessor::getConfig ()
 {
 	return move (sluConfigPtr);
 }

@@ -9,6 +9,7 @@
 #include <string>
 
 using std::unique_ptr;
+using std::shared_ptr;
 using std::map;
 using std::string;
 
@@ -41,7 +42,7 @@ class RLUnitProcessor : public SectionProcessor
 
 public:
 	RLUnitProcessor ();
-	unique_ptr<DeviceConfig> getConfig ();
+	shared_ptr<DeviceConfig> getConfig ();
 };
 
 

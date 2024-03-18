@@ -9,6 +9,7 @@
 #include <string>
 
 using std::unique_ptr;
+using std::shared_ptr;
 using std::map;
 using std::string;
 
@@ -16,7 +17,7 @@ class BDV11Processor : public SectionProcessor
 {
 public:
 	BDV11Processor ();
-	unique_ptr<DeviceConfig> getConfig ();
+	shared_ptr<DeviceConfig> getConfig ();
 
 private:
 	unique_ptr<BDV11Config> bdv11ConfigPtr {nullptr};

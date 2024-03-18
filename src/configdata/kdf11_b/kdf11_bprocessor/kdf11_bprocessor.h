@@ -7,6 +7,7 @@
 #include <memory>
 
 using std::unique_ptr;
+using std::shared_ptr;
 using std::make_unique;
 
 class KDF11_BProcessor : public KD11Processor
@@ -14,7 +15,7 @@ class KDF11_BProcessor : public KD11Processor
 public:
 	KDF11_BProcessor ();
 	void processValue (iniparser::Section::ValueIterator valueIterator) override;
-	unique_ptr<DeviceConfig> getConfig () override;
+	shared_ptr<DeviceConfig> getConfig () override;
 
 private:
 	unique_ptr<KDF11_BConfig> kd11ConfigPtr {make_unique<KDF11_BConfig> ()};

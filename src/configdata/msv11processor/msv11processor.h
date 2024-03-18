@@ -9,6 +9,7 @@
 #include <string>
 
 using std::unique_ptr;
+using std::shared_ptr;
 using std::map;
 using std::string;
 
@@ -43,7 +44,7 @@ class MSV11Processor : public SectionProcessor
 
 public:
 	MSV11Processor ();
-	unique_ptr<DeviceConfig> getConfig ();
+	shared_ptr<DeviceConfig> getConfig ();
 };
 
 

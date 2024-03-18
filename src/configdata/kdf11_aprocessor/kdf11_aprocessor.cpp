@@ -65,7 +65,7 @@ void KDF11_AProcessor::processStartingAddress (iniparser::Value value)
 	kd11ConfigPtr->startingAddress = startingAddress;
 }
 
-unique_ptr<DeviceConfig> KDF11_AProcessor::getConfig ()
+shared_ptr<DeviceConfig> KDF11_AProcessor::getConfig ()
 {
 	return move (kd11ConfigPtr);
 }
