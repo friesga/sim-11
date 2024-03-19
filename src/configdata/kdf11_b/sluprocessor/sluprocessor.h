@@ -49,7 +49,7 @@ class SLUProcessor : public SectionProcessor
 
 public:
 	SLUProcessor ();
-	shared_ptr<DeviceConfig> getConfig ();
+	DeviceConfigVariant getConfig ();
 };
 
 

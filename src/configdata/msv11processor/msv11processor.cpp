@@ -70,7 +70,7 @@ void MSV11Processor::checkConsistency ()
 void MSV11Processor::processSubsection (iniparser::Section *subSection)
 {}
 
-shared_ptr<DeviceConfig> MSV11Processor::getConfig ()
+DeviceConfigVariant MSV11Processor::getConfig ()
 {
 	return move (msv11ConfigPtr);
 }

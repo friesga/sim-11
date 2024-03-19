@@ -130,7 +130,7 @@ void DLV11Processor::checkBaseAddress ()
 void DLV11Processor::processSubsection (iniparser::Section *subSection)
 {}
 
-shared_ptr<DeviceConfig> DLV11Processor::getConfig ()
+DeviceConfigVariant DLV11Processor::getConfig ()
 {
 	return move (dlConfigPtr);
 }

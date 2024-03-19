@@ -10,7 +10,7 @@
 // Get rid of SDL's main function
 #undef main
 
-vector<shared_ptr<DeviceConfig>> createSystemConfig (const char* const &configFile)
+vector<DeviceConfigVariant> createSystemConfig (const char* const &configFile)
 {
     IniProcessor configProcessor;
     iniparser::File ft;

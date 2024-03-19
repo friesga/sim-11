@@ -10,6 +10,8 @@ using std::ranges::view;
 using std::ranges::find_if;
 using std::copy_if;
 using std::invalid_argument;
+using std::holds_alternative;
+using std::get;
 
 // This function checks the consistency of the configuration across all
 // configured devices.
@@ -24,12 +26,17 @@ void IniProcessor::checkMSV11Consistency ()
     // Check the maximum number of MSV11-D cards in the system
     size_t const maximumNrOfMSV11cards {4};
 
-    vector<shared_ptr<DeviceConfig>> msv11Cards {};
+    vector<shared_ptr<MSV11Config>> msv11Cards {};
 
     // Copy the MSV11Config's to another vector
+    /*
     copy_if (systemConfig.begin (), systemConfig.end (),
         back_inserter (msv11Cards),
-        [] (shared_ptr<DeviceConfig> device) {return device->deviceType_ ==  DeviceType::MSV11;});
+        [] (DeviceConfigVariant device) {return holds_alternative<shared_ptr<MSV11Config>> (device);});
+    */
+    for (auto device: systemConfig)
+        if (holds_alternative<shared_ptr<MSV11Config>> (device))
+            msv11Cards.push_back (get<shared_ptr<MSV11Config>> (device));
 
     // Verify it contains no more than the maximum number of devices
     if (msv11Cards.size () > maximumNrOfMSV11cards)
@@ -55,10 +62,10 @@ void IniProcessor::checkMSV11Consistency ()
 // to a system with undefined behaviour.
 void IniProcessor::checkKDF11_BConsistency ()
 {
-    auto isKDF11_B = [] (shared_ptr<DeviceConfig> device)
-        {return device->deviceType_ == DeviceType::KDF11_B;};
-    auto isBDV11 = [] (shared_ptr<DeviceConfig> device)
-        {return device->deviceType_ == DeviceType::BDV11;};
+    auto isKDF11_B = [] (DeviceConfigVariant device)
+        {return holds_alternative<shared_ptr<KDF11_BConfig>> (device);};
+    auto isBDV11 = [] (DeviceConfigVariant device)
+        {return holds_alternative<shared_ptr<BDV11Config>> (device);};
 
     if (find_if (systemConfig, isKDF11_B) != systemConfig.end () &&
         find_if (systemConfig, isBDV11)   != systemConfig.end ())

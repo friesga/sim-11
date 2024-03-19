@@ -2,8 +2,10 @@
 #include "configdata/devicetype/devicetype.h"
 #include "configdata/kd11_naconfig/kd11_naconfig.h"
 
-#include <fstream>	
+#include <fstream>
 #include <gtest/gtest.h>
+
+using std::get;
 
 TEST (KD11_NAConfiguratorTest, powerUpModeAccepted)
 {
@@ -16,16 +18,16 @@ TEST (KD11_NAConfiguratorTest, powerUpModeAccepted)
 	IniProcessor iniProcessor;
 	EXPECT_NO_THROW (iniProcessor.process (ft)); 
 
-	vector<shared_ptr<DeviceConfig>> systemConfig = 
+	vector<DeviceConfigVariant> systemConfig = 
 		iniProcessor.getSystemConfig ();
+
+	// The configuration is a KD11Config object
+	shared_ptr<KD11_NAConfig> kd11_naConfig = 
+		get<shared_ptr<KD11_NAConfig>> (systemConfig[0]);
 
 	// The only device type in this testset is the KD11 so if that's
 	// not correct the following tests will fail too.
-	ASSERT_EQ (systemConfig[0]->deviceType_, DeviceType::KD11_NA);
-
-	// The device's type is KD11 so the configuration is a KD11Config object
-	shared_ptr<KD11_NAConfig> kd11_naConfig = 
-		static_pointer_cast<KD11_NAConfig> (systemConfig[0]);
+	ASSERT_EQ (kd11_naConfig->deviceType_, DeviceType::KD11_NA);
 
 	EXPECT_EQ (kd11_naConfig->powerUpMode, KD11_NAConfig::PowerUpMode::ODT);
 }

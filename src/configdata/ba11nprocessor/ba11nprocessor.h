@@ -40,7 +40,7 @@ class BA11_NProcessor : public SectionProcessor
 
 public:
 	BA11_NProcessor ();
-	shared_ptr<DeviceConfig> getConfig () override;
+	DeviceConfigVariant getConfig () override;
 };
 
 #endif // !_BA11NPROCESSOR_H_

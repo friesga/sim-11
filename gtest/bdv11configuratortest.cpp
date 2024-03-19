@@ -20,16 +20,16 @@ TEST (BDV11ConfiguratorTest, optionsAccepted)
 	IniProcessor iniProcessor;
 	EXPECT_NO_THROW (iniProcessor.process (ft)); 
 
-	vector<shared_ptr<DeviceConfig>> systemConfig = 
+	vector<DeviceConfigVariant> systemConfig = 
 		iniProcessor.getSystemConfig ();
-
-	// The only device type in this testset is the DLV11-J so if that's
-	// not correct the following tests will fail too.
-	ASSERT_EQ (systemConfig[0]->deviceType_, DeviceType::BDV11);
 
 	// The device's type is BDV11 so the configuration is a BDV11Config object
 	shared_ptr<BDV11Config> bdv11Config = 
-		static_pointer_cast<BDV11Config> (systemConfig[0]);
+		get<shared_ptr<BDV11Config>> (systemConfig[0]);
+
+	// The only device type in this testset is the DLV11-J so if that's
+	// not correct the following tests will fail too.
+	ASSERT_EQ (bdv11Config->deviceType_, DeviceType::BDV11);
 
 	EXPECT_TRUE (bdv11Config->cpuTests);
 	EXPECT_TRUE (bdv11Config->memoryTests);
@@ -73,16 +73,18 @@ TEST (BDV11ConfiguratorTest, defaultsOk)
 	IniProcessor iniProcessor;
 	EXPECT_NO_THROW (iniProcessor.process (ft)); 
 
-	vector<shared_ptr<DeviceConfig>> systemConfig = 
+	vector<DeviceConfigVariant> systemConfig = 
 		iniProcessor.getSystemConfig ();
 
-	// The only device type in this testset is the DLV11-J so if that's
-	// not correct the following tests will fail too.
-	ASSERT_EQ (systemConfig[0]->deviceType_, DeviceType::BDV11);
+
 
 	// The device's type is BDV11 so the configuration is a BDV11Config object
 	shared_ptr<BDV11Config> bdv11Config = 
-		static_pointer_cast<BDV11Config> (systemConfig[0]);
+		get<shared_ptr<BDV11Config>> (systemConfig[0]);
+
+	// The only device type in this testset is the DLV11-J so if that's
+	// not correct the following tests will fail too.
+	ASSERT_EQ (bdv11Config->deviceType_, DeviceType::BDV11);
 
 	EXPECT_TRUE (bdv11Config->cpuTests);
 	EXPECT_TRUE (bdv11Config->memoryTests);
@@ -102,16 +104,16 @@ TEST (BDV11ConfiguratorTest, bootROMAccepted)
 	IniProcessor iniProcessor;
 	EXPECT_NO_THROW (iniProcessor.process (ft)); 
 
-	vector<shared_ptr<DeviceConfig>> systemConfig = 
+	vector<DeviceConfigVariant> systemConfig = 
 		iniProcessor.getSystemConfig ();
-
-	// The only device type in this testset is the DLV11-J so if that's
-	// not correct the following tests will fail too.
-	ASSERT_EQ (systemConfig[0]->deviceType_, DeviceType::BDV11);
 
 	// The device's type is BDV11 so the configuration is a BDV11Config object
 	shared_ptr<BDV11Config> bdv11Config = 
-		static_pointer_cast<BDV11Config> (systemConfig[0]);
+		get<shared_ptr<BDV11Config>> (systemConfig[0]);
+
+	// The only device type in this testset is the DLV11-J so if that's
+	// not correct the following tests will fail too.
+	ASSERT_EQ (bdv11Config->deviceType_, DeviceType::BDV11);
 
 	EXPECT_EQ (bdv11Config->bootROM, BDV11Config::BootROM::KDF11_BA);
 }

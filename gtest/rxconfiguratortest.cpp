@@ -22,18 +22,16 @@ TEST (RxConfiguratorTest, rxConfigProcessed)
 	IniProcessor configProcessor;
 	EXPECT_NO_THROW (configProcessor.process (ft));
 
-	vector<shared_ptr<DeviceConfig>> &deviceConfig = 
+	vector<DeviceConfigVariant> &deviceConfig = 
 		configProcessor.getSystemConfig ();
-	EXPECT_EQ (static_pointer_cast<RXV21Config> 
-			(deviceConfig[0])->address, 0174400);
-	EXPECT_EQ (static_pointer_cast<RXV21Config> 
-			(deviceConfig[0])->vector, 0160);
 
-	shared_ptr<RXV21Config> rxv21Config =
-		static_pointer_cast<RXV21Config> (deviceConfig[0]);
+	auto rxv21Config = 
+		get<shared_ptr<RXV21Config>> (deviceConfig[0]);
+
+	EXPECT_EQ (rxv21Config->address, 0174400);
+	EXPECT_EQ (rxv21Config->vector, 0160);
 
 	EXPECT_STREQ (static_pointer_cast<RXV21UnitConfig> 
 			(rxv21Config->rxv21UnitConfig[0])->fileName.c_str(), 
 			"rx01.dsk");
-
 }

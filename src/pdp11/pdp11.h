@@ -2,6 +2,7 @@
 #define _LSI11_H_
 
 #include "kd/include/pdp11processor.h"
+#include "configdata/deviceconfig/deviceconfigvariant.h"
 #include "ba11_n/ba11_n.h"
 #include "rxv21/rxv21.h"
 #include "rlv12/rlv12.h"
@@ -44,7 +45,7 @@ class PDP_11
 	unique_ptr<BA11_N> ba11_n_;
 	CmdLineOptions const &cmdLineOptions_;
 
-	void checkConsistency (vector<shared_ptr<DeviceConfig>> systemConfig);
+	void checkConsistency (vector<DeviceConfigVariant> systemConfig);
 	u16 loadFile ();
 	void installModules ();
 
@@ -52,7 +53,7 @@ public:
 	PDP_11 (CmdLineOptions const &cmdLineOptions);
 	~PDP_11 ();
 	void configureDevices (Window *window);
-	void configureDevices (vector<shared_ptr<DeviceConfig>> systemConfig,
+	void configureDevices (vector<DeviceConfigVariant> systemConfig,
 		Window *window);
 	void run ();
 	void reset ();

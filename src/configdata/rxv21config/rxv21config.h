@@ -2,6 +2,7 @@
 #define _RXCONFIG_H_
 
 #include "../deviceconfig/deviceconfig.h"
+#include "configdata/rxv21unitconfig/rxv21unitconfig.h"
 
 // ToDo: Replace by inclusion of types.h
 #include <cstdint>
@@ -16,7 +17,7 @@ struct RXV21Config : public DeviceConfig
     static constexpr size_t numRxUnits = 2;
 	uint16_t address {0};
 	uint16_t vector {0};
-	shared_ptr<DeviceConfig> rxv21UnitConfig[numRxUnits] = {};
+	shared_ptr<RXV21UnitConfig> rxv21UnitConfig[numRxUnits] = {};
 
 	RXV21Config ();
 };

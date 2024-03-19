@@ -41,16 +41,16 @@ TEST (MSV11ConfiguratorTest, startingAddressAccepted)
 	IniProcessor iniProcessor;
 	EXPECT_NO_THROW (iniProcessor.process (ft)); 
 
-	vector<shared_ptr<DeviceConfig>> systemConfig = 
+	vector<DeviceConfigVariant> systemConfig = 
 		iniProcessor.getSystemConfig ();
+
+	// The device's type is MSV11 so the configuration is a MSV11Config object
+	auto msv11Config = 
+		get<shared_ptr<MSV11Config>> (systemConfig[0]);
 
 	// The only device type in this testset is the MSV11 so if that's
 	// not correct the following tests will fail too.
-	ASSERT_EQ (systemConfig[0]->deviceType_, DeviceType::MSV11);
-
-	// The device's type is MSV11 so the configuration is a MSV11Config object
-	shared_ptr<MSV11Config> msv11Config = 
-		static_pointer_cast<MSV11Config> (systemConfig[0]);
+	ASSERT_EQ (msv11Config->deviceType_, DeviceType::MSV11);
 
 	EXPECT_EQ (msv11Config->startingAddress, 020000);
 }
@@ -148,24 +148,26 @@ TEST (MSV11ConfiguratorTest, multipleMSV11SectionsAccepted)
 	IniProcessor iniProcessor;
 	EXPECT_NO_THROW (iniProcessor.process (ft)); 
 
-	vector<shared_ptr<DeviceConfig>> systemConfig = 
+	vector<DeviceConfigVariant> systemConfig = 
 		iniProcessor.getSystemConfig ();
 
 	// Verify the vector contains two device configurations
 	ASSERT_EQ (systemConfig.size (), 4);
 
-	// The only device types in this testset shoiuld be the MSV11's
-	ASSERT_EQ (systemConfig[0]->deviceType_, DeviceType::MSV11);
-	ASSERT_EQ (systemConfig[1]->deviceType_, DeviceType::MSV11);
+	auto msv11Config0 = 
+		get<shared_ptr<MSV11Config>> (systemConfig[0]);
+	auto msv11Config1 = 
+		get<shared_ptr<MSV11Config>> (systemConfig[0]);
+
+	// The only device types in this testset should be the MSV11's
+	ASSERT_EQ (msv11Config0->deviceType_, DeviceType::MSV11);
+	ASSERT_EQ (msv11Config1->deviceType_, DeviceType::MSV11);
 
 	// The first section should have starting address 0
-	shared_ptr<MSV11Config> msv11Config = 
-		static_pointer_cast<MSV11Config> (systemConfig[0]);
-	EXPECT_EQ (msv11Config->startingAddress, 0);
+	EXPECT_EQ (msv11Config0->startingAddress, 0);
 
 	// And the section section should have starting address 020000
-	msv11Config = static_pointer_cast<MSV11Config> (systemConfig[1]);
-	EXPECT_EQ (msv11Config->startingAddress, 0200000);
+	EXPECT_EQ (msv11Config1->startingAddress, 0200000);
 }
 
 TEST (MSV11ConfiguratorTest, maxNrOfCardsExceededThrows)

@@ -1,6 +1,6 @@
 #include "iniprocessor.h"
 
-vector<shared_ptr<DeviceConfig>> &IniProcessor::getSystemConfig ()
+vector<DeviceConfigVariant> &IniProcessor::getSystemConfig ()
 {
     return systemConfig;
 }

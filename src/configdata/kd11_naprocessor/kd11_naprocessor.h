@@ -13,7 +13,7 @@ class KD11_NAProcessor : public KD11Processor
 {
 public:
 	KD11_NAProcessor ();
-	shared_ptr<DeviceConfig> getConfig () override;
+	DeviceConfigVariant getConfig () override;
 
 private:
 	unique_ptr<KD11_NAConfig> kd11ConfigPtr {make_unique<KD11_NAConfig> ()};

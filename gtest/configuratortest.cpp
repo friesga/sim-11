@@ -8,12 +8,14 @@
 #include <set>
 #include <vector>
 #include <string>
+#include <variant>
 
 using std::shared_ptr;
 using std::static_pointer_cast;
 using std::set;
 using std::vector;
 using std::string;
+using std::get;
 
 // Minimal tests for the ConfigProcessor class
 TEST (ConfigProcessorTest, configProcessed)
@@ -42,18 +44,17 @@ TEST (ConfigProcessorTest, configProcessed)
 
 	// Verify the device is present in the configuration with all attributes
 	// having their correct value.
-	vector<shared_ptr<DeviceConfig>> &configuration = 
+	vector<DeviceConfigVariant> &configuration = 
 		iniProcessor.getSystemConfig ();
 
-	EXPECT_EQ (configuration[0]->deviceType_, DeviceType::RLV12);
-	EXPECT_EQ (static_pointer_cast<RLConfig> 
-			(configuration[0])->rlType, RLConfig::RLType::RLV12);
-	EXPECT_EQ (static_pointer_cast<RLConfig> 
-			(configuration[0])->address, 0174400);
-	EXPECT_EQ (static_pointer_cast<RLConfig> 
-			(configuration[0])->vector, 0160);
-	EXPECT_EQ (static_pointer_cast<RLConfig> 
-			(configuration[0])->numUnits, 1);
+	shared_ptr<RLConfig> rlConfig = 
+		get<shared_ptr<RLConfig>> (configuration[0]);
+
+	EXPECT_EQ (rlConfig->deviceType_, DeviceType::RLV12);
+	EXPECT_EQ (rlConfig->rlType, RLConfig::RLType::RLV12);
+	EXPECT_EQ (rlConfig->address, 0174400);
+	EXPECT_EQ (rlConfig->vector, 0160);
+	EXPECT_EQ (rlConfig->numUnits, 1);
 }
 
 TEST (ConfigProcessorTest, configProcessorThrows)
@@ -114,15 +115,15 @@ TEST (ConfigProcessorTest, fileName)
 	IniProcessor iniProcessor;
 	iniProcessor.process (ft);
 
-	for (shared_ptr<DeviceConfig> device : iniProcessor.getSystemConfig ())
+	for (auto device : iniProcessor.getSystemConfig ())
     {
+		// The device's type is RLV12 so the configuration is a RLConfig
+		auto rlConfig = 
+			get<shared_ptr<RLConfig>> (device);
+
 		// The only device type in this testset is the RLV12 so if that's
 		// not corrected the following tests will fail too.
-		ASSERT_EQ (device->deviceType_, DeviceType::RLV12);
-
-		// The device's type is RLV12 so the configuration is a RLConfig
-		shared_ptr<RLConfig> rlConfig = 
-			static_pointer_cast<RLConfig> (device);
+		ASSERT_EQ (rlConfig->deviceType_, DeviceType::RLV12);
 
 		// Now we can check the unit's filenames. The devices in the 
 		// units are of type RLUnitConfig.
@@ -155,6 +156,7 @@ TEST (ConfigProcessorTest, allSectionsProcessedOnce)
 		
 	stream >> ft;
 
+	/*
 	set<DeviceType> allDevices
 	{
 		DeviceType::MSV11,
@@ -164,21 +166,32 @@ TEST (ConfigProcessorTest, allSectionsProcessedOnce)
 		DeviceType::RLV12,
 		DeviceType::BA11_N
 	};
+	*/
+
+	set<DeviceConfigVariant> allDevices
+	{
+		shared_ptr<MSV11Config> {},
+		shared_ptr<DLV11JConfig> {},
+		shared_ptr<BDV11Config> {},
+		shared_ptr<RXV21Config> {},
+		shared_ptr<RLConfig> {},
+		shared_ptr<BA11_NConfig> {}
+	};
 
 	IniProcessor iniProcessor;
 	EXPECT_NO_THROW (iniProcessor.process (ft));
 
-	for (shared_ptr<DeviceConfig> device : iniProcessor.getSystemConfig ())
+	for (auto device : iniProcessor.getSystemConfig ())
     {
 		// The only device type in this testset is the RLV12 so if that's
 		// not corrected the following tests will fail too.
 		// ASSERT_EQ (device->deviceType_, DeviceType::RLV12);
 		
 		// Verify the section has not already been processed
-		EXPECT_TRUE (allDevices.find (device->deviceType_) != allDevices.end());
+		EXPECT_TRUE (allDevices.find (device) != allDevices.end());
 
 		// Mark the device types processed
-		allDevices.erase (device->deviceType_);
+		allDevices.erase (device);
 	}
 
 	// Verify all devices are processed

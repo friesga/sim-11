@@ -3,9 +3,11 @@
 #include "../rxv21unitprocessor/rxv21unitprocessor.h"
 
 #include <utility>
+#include <variant>
 
 using std::make_unique;
 using std::move;
+using std::get;
 
 RXV21Processor::RXV21Processor ()
 {
@@ -74,10 +76,11 @@ void RXV21Processor::processSubsection (iniparser::Section *subSection)
 	rxv21UnitProcessor.processSection (subSection);
 
 	// Add the unit configuration to the RXV21 device configuration
-	rxConfigPtr->rxv21UnitConfig[unitNumber] = rxv21UnitProcessor.getConfig ();
+	rxConfigPtr->rxv21UnitConfig[unitNumber] = 
+		get<shared_ptr<RXV21UnitConfig>> (rxv21UnitProcessor.getConfig ());
 }
 
-shared_ptr<DeviceConfig> RXV21Processor::getConfig ()
+DeviceConfigVariant RXV21Processor::getConfig ()
 {
 	return move (rxConfigPtr);
 }

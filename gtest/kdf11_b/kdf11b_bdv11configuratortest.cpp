@@ -17,16 +17,16 @@ TEST (KDF11B_BDV11ConfiguratorTest, defaultConfigurationAccepted)
 	IniProcessor iniProcessor;
 	EXPECT_NO_THROW (iniProcessor.process (ft)); 
 
-	vector<shared_ptr<DeviceConfig>> systemConfig = 
+	vector<DeviceConfigVariant> systemConfig = 
 		iniProcessor.getSystemConfig ();
+
+	// The device's type is KD11 so the configuration is a KD11Config object
+	auto kdf11_bConfig = 
+		get<shared_ptr<KDF11_BConfig>> (systemConfig[0]);
 
 	// The only device type in this testset is the KD11 so if that's
 	// not correct the following tests will fail too.
-	ASSERT_EQ (systemConfig[0]->deviceType_, DeviceType::KDF11_B);
-
-	// The device's type is KD11 so the configuration is a KD11Config object
-	shared_ptr<KDF11_BConfig> kdf11_bConfig = 
-		static_pointer_cast<KDF11_BConfig> (systemConfig[0]);
+	ASSERT_EQ (kdf11_bConfig->deviceType_, DeviceType::KDF11_B);
 
 	BDV11Config* bdv11Config = (BDV11Config*) kdf11_bConfig->bdv11Config.get ();
 	
@@ -36,7 +36,6 @@ TEST (KDF11B_BDV11ConfiguratorTest, defaultConfigurationAccepted)
 	EXPECT_TRUE (bdv11Config->consoleDialog);
 	EXPECT_EQ (bdv11Config->bootDevice, BDV11Config::BootDevice::RX02);
 	EXPECT_EQ (bdv11Config->bootROM, BDV11Config::BootROM::BDV11);
-
 }
 
 TEST (KDF11B_BDV11ConfiguratorTest, bootROMAccepted)
@@ -51,16 +50,16 @@ TEST (KDF11B_BDV11ConfiguratorTest, bootROMAccepted)
 	IniProcessor iniProcessor;
 	EXPECT_NO_THROW (iniProcessor.process (ft)); 
 
-	vector<shared_ptr<DeviceConfig>> systemConfig = 
+	vector<DeviceConfigVariant> systemConfig = 
 		iniProcessor.getSystemConfig ();
+
+	// The device's type is KD11 so the configuration is a KD11Config object
+	auto kdf11_bConfig = 
+		get<shared_ptr<KDF11_BConfig>> (systemConfig[0]);
 
 	// The only device type in this testset is the KD11 so if that's
 	// not correct the following tests will fail too.
-	ASSERT_EQ (systemConfig[0]->deviceType_, DeviceType::KDF11_B);
-
-	// The device's type is KD11 so the configuration is a KD11Config object
-	shared_ptr<KDF11_BConfig> kdf11_bConfig = 
-		static_pointer_cast<KDF11_BConfig> (systemConfig[0]);
+	ASSERT_EQ (kdf11_bConfig->deviceType_, DeviceType::KDF11_B);
 
 	BDV11Config* bdv11Config = (BDV11Config*) kdf11_bConfig->bdv11Config.get ();
 	
@@ -84,16 +83,16 @@ TEST (KDF11B_BDV11ConfiguratorTest, optionsAccepted)
 	IniProcessor iniProcessor;
 	EXPECT_NO_THROW (iniProcessor.process (ft)); 
 
-	vector<shared_ptr<DeviceConfig>> systemConfig = 
+	vector<DeviceConfigVariant> systemConfig = 
 		iniProcessor.getSystemConfig ();
+
+	// The device's type is KD11 so the configuration is a KD11Config object
+	auto kdf11_bConfig = 
+		get<shared_ptr<KDF11_BConfig>> (systemConfig[0]);
 
 	// The only device type in this testset is the KD11 so if that's
 	// not correct the following tests will fail too.
-	ASSERT_EQ (systemConfig[0]->deviceType_, DeviceType::KDF11_B);
-
-	// The device's type is KD11 so the configuration is a KD11Config object
-	shared_ptr<KDF11_BConfig> kdf11_bConfig = 
-		static_pointer_cast<KDF11_BConfig> (systemConfig[0]);
+	ASSERT_EQ (kdf11_bConfig->deviceType_, DeviceType::KDF11_B);
 
 	BDV11Config* bdv11Config = (BDV11Config*) kdf11_bConfig->bdv11Config.get ();
 	
@@ -118,16 +117,16 @@ TEST (KDF11B_BDV11ConfiguratorTest, tu58bootDeviceAccepted)
 	IniProcessor iniProcessor;
 	EXPECT_NO_THROW (iniProcessor.process (ft)); 
 
-	vector<shared_ptr<DeviceConfig>> systemConfig = 
+	vector<DeviceConfigVariant> systemConfig = 
 		iniProcessor.getSystemConfig ();
+
+	// The device's type is KD11 so the configuration is a KD11Config object
+	auto kdf11_bConfig = 
+		get<shared_ptr<KDF11_BConfig>> (systemConfig[0]);
 
 	// The only device type in this testset is the KD11 so if that's
 	// not correct the following tests will fail too.
-	ASSERT_EQ (systemConfig[0]->deviceType_, DeviceType::KDF11_B);
-
-	// The device's type is KD11 so the configuration is a KD11Config object
-	shared_ptr<KDF11_BConfig> kdf11_bConfig = 
-		static_pointer_cast<KDF11_BConfig> (systemConfig[0]);
+	ASSERT_EQ (kdf11_bConfig->deviceType_, DeviceType::KDF11_B);
 
 	BDV11Config* bdv11Config = (BDV11Config*) kdf11_bConfig->bdv11Config.get ();
 	

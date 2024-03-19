@@ -1,5 +1,6 @@
 #include "configdata/iniprocessor/iniprocessor.h"
 #include "configdata/devicetype/devicetype.h"
+#include "configdata/deviceconfig/deviceconfigvariant.h"
 #include "configdata/ba11nconfig/ba11nconfig.h"
 
 #include <fstream>	
@@ -15,18 +16,18 @@ TEST (BA11_NConfiguratorTest, defaultLogoIsPDP11_03L)
 	IniProcessor iniProcessor;
 	EXPECT_NO_THROW (iniProcessor.process (ft)); 
 
-	vector<shared_ptr<DeviceConfig>> systemConfig = 
+	vector<DeviceConfigVariant> systemConfig = 
 		iniProcessor.getSystemConfig ();
+
+	// The device's type is BA11_N so the configuration is a BA11_NConfig object
+	shared_ptr<BA11_NConfig> ba11_nConfig = 
+		get<shared_ptr<BA11_NConfig>> (systemConfig[0]);
 
 	// The only device type in this testset is the BA11-N so if that's
 	// not correct the following tests will fail too.
-	ASSERT_EQ (systemConfig[0]->deviceType_, DeviceType::BA11_N);
+	ASSERT_EQ (ba11_nConfig->deviceType_, DeviceType::BA11_N);
 
-	// The device's type is BA11_N so the configuration is a BA11_NConfig object
-	shared_ptr<BA11_NConfig> dlv11Config = 
-		static_pointer_cast<BA11_NConfig> (systemConfig[0]);
-
-	EXPECT_EQ (dlv11Config->logo, BA11_NConfig::Logo::PDP_1103L);
+	EXPECT_EQ (ba11_nConfig->logo, BA11_NConfig::Logo::PDP_1103L);
 }
 
 
@@ -41,18 +42,18 @@ TEST (BA11_NConfiguratorTest, logoSelected)
 	IniProcessor iniProcessor;
 	EXPECT_NO_THROW (iniProcessor.process (ft)); 
 
-	vector<shared_ptr<DeviceConfig>> systemConfig = 
+	vector<DeviceConfigVariant> systemConfig = 
 		iniProcessor.getSystemConfig ();
+
+	// The device's type is BA11_N so the configuration is a BA11_NConfig object
+	shared_ptr<BA11_NConfig> ba11_nConfig = 
+		get<shared_ptr<BA11_NConfig>> (systemConfig[0]);
 
 	// The only device type in this testset is the BA11-N so if that's
 	// not correct the following tests will fail too.
-	ASSERT_EQ (systemConfig[0]->deviceType_, DeviceType::BA11_N);
+	ASSERT_EQ (ba11_nConfig->deviceType_, DeviceType::BA11_N);
 
-	// The device's type is BA11_N so the configuration is a BA11_NConfig object
-	shared_ptr<BA11_NConfig> dlv11Config = 
-		static_pointer_cast<BA11_NConfig> (systemConfig[0]);
-
-	EXPECT_EQ (dlv11Config->logo, BA11_NConfig::Logo::PDP_1123);
+	EXPECT_EQ (ba11_nConfig->logo, BA11_NConfig::Logo::PDP_1123);
 }
 
 TEST (BA11_NConfiguratorTest, unknownKeyThrows)

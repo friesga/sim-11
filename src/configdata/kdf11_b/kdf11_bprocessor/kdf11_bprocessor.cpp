@@ -2,9 +2,12 @@
 #include "../sluprocessor/sluprocessor.h"
 #include "configdata/bdv11processor/bdv11processor.h"
 
+#include <variant>
+
 using std::make_unique;
 using std::move;
 using std::invalid_argument;
+using std::get;
 
 // To be able to pass the unique_ptr<KD11_BConfig> as a KD11Config pointer
 // to KD11Processor, we have to pass the unique_ptr to KD11Processor via the
@@ -58,7 +61,8 @@ void KDF11_BProcessor::processSLUSubsection (iniparser::Section *subSection)
 	sluProcessor.processSection (subSection);
 
 	// Add the configuration to the KDF11-B configuration
-	kd11ConfigPtr->sluConfig = sluProcessor.getConfig ();
+	kd11ConfigPtr->sluConfig = 
+		get<shared_ptr<SLUConfig>> (sluProcessor.getConfig ());
 }
 
 void KDF11_BProcessor::processBDV11Subsection (iniparser::Section *subSection)
@@ -67,10 +71,11 @@ void KDF11_BProcessor::processBDV11Subsection (iniparser::Section *subSection)
 	bdv11Processor.processSection (subSection);
 
 	// Add the unit configuration to the Rl device configuration
-	kd11ConfigPtr->bdv11Config = bdv11Processor.getConfig ();
+	kd11ConfigPtr->bdv11Config = 
+		get<shared_ptr<BDV11Config>> (bdv11Processor.getConfig ());
 }
 
-shared_ptr<DeviceConfig> KDF11_BProcessor::getConfig ()
+DeviceConfigVariant KDF11_BProcessor::getConfig ()
 {
 	return move (kd11ConfigPtr);
 }

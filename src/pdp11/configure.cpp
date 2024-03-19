@@ -14,6 +14,7 @@ using std::shared_ptr;
 using std::make_shared;
 using std::static_pointer_cast;
 using std::string;
+using std::get;
 
 // Configure the LSI-11 with a default configuration. Create a bare system
 // without any files attached.
@@ -38,60 +39,69 @@ void PDP_11::configureDevices (Window *window)
 // Configure the devices and install them on the bus.
 // Accessing a non-configured device will result in a bus time-out
 // and the BDV11 boot will halt at address 000010.
-void PDP_11::configureDevices (vector<shared_ptr<DeviceConfig>> systemConfig,
+void PDP_11::configureDevices (vector<DeviceConfigVariant> systemConfig,
     Window *window)
 {
     // Check for presence of necessary devices
     checkConsistency (systemConfig);
 
     // Get the device configurations and populate the LSI bus with these devices.
-    for (shared_ptr<DeviceConfig> device : systemConfig)
+    for (auto device : systemConfig)
     {
-        switch (device->deviceType_)
+        switch (device.index ())
         {
-            case DeviceType::KD11_NA:
+            // case DeviceType::KD11_NA:
+            case 0:
                 processor_ = new KD11_NA (&bus_,
-                    static_pointer_cast<KD11_NAConfig> (device));
+                    get<shared_ptr<KD11_NAConfig>> (device));
                 break;
 
-            case DeviceType::KDF11_A:
+            // case DeviceType::KDF11_A:
+            case 1:
                 processor_ = new KDF11_A (&bus_,
-                    static_pointer_cast<KDF11_AConfig> (device));
+                    get<shared_ptr<KDF11_AConfig>> (device));
                 break;
 
-            case DeviceType::KDF11_B:
+            // case DeviceType::KDF11_B:
+            case 2:
                 processor_ = new KDF11_B (&bus_,
-                    static_pointer_cast<KDF11_BConfig> (device));
+                    get<shared_ptr<KDF11_BConfig>> (device));
                 break;
 
-            case DeviceType::MSV11:
+            // case DeviceType::MSV11:
+            case 3:
                 msv11_.push_back (new MSV11D (&bus_,
-                    static_pointer_cast<MSV11Config> (device)));
+                    get<shared_ptr<MSV11Config>> (device)));
                 break;
 
-            case DeviceType::DLV11_J:
+            // case DeviceType::DLV11_J:
+            case 4:
                 dlv11_ = new DLV11J (&bus_, 
-                    static_pointer_cast<DLV11JConfig> (device));
+                    get<shared_ptr<DLV11JConfig>> (device));
                 break;
 
-            case DeviceType::BDV11:
+            // case DeviceType::BDV11:
+            case 5:
                 bdv11_ = new BDV11 (&bus_,
-                    static_pointer_cast<BDV11Config> (device));
+                    get<shared_ptr<BDV11Config>> (device));
                 break;
 
-            case DeviceType::RXV21:
+            // case DeviceType::RXV21:
+            case 6:
                 rxv21_ = new RXV21 (&bus_,
-                    static_pointer_cast<RXV21Config> (device));
+                    get<shared_ptr<RXV21Config>> (device));
                 break;
 
-            case DeviceType::RLV12:
+            // case DeviceType::RLV12:
+            case 7:
                 rlv12_ = new RLV12
-                    (&bus_, static_pointer_cast<RLConfig> (device));
+                    (&bus_, get<shared_ptr<RLConfig>> (device));
                 break;
 
-            case DeviceType::BA11_N:
+            // case DeviceType::BA11_N:
+            case 8:
                 ba11_n_ = std::make_unique<BA11_N> (&bus_, window, 
-                    static_pointer_cast<BA11_NConfig> (device));
+                    get<shared_ptr<BA11_NConfig>> (device));
                 break;
 
             default:

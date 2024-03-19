@@ -3,9 +3,11 @@
 
 #include "../iniprocessor/iniparser.h"
 #include "../deviceconfig/deviceconfig.h"
+#include "configdata/deviceconfig/deviceconfigvariant.h"
 
 #include <memory>
 #include <limits>
+#include <string>
 
 using std::string;
 using std::shared_ptr;
@@ -22,7 +24,7 @@ protected:
 
 public:
     void processSection (iniparser::Section* section);
-    virtual shared_ptr<DeviceConfig> getConfig () = 0;
+    virtual DeviceConfigVariant getConfig () = 0;
 };
 
 // Return the number represented by the string as the specified unsigned

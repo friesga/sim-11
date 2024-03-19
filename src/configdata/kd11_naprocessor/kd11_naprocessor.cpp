@@ -18,7 +18,7 @@ KD11_NAProcessor::KD11_NAProcessor ()
 }
 
 
-shared_ptr<DeviceConfig> KD11_NAProcessor::getConfig ()
+DeviceConfigVariant KD11_NAProcessor::getConfig ()
 {
 	return move (kd11ConfigPtr);
 }

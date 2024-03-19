@@ -38,7 +38,7 @@ struct RLConfig : public DeviceConfig
 	RLType rlType {RLType::RLV12};
 	bool _22bit {false};
 
-	shared_ptr<DeviceConfig> rlUnitConfig[maxRlUnits] = {};
+	shared_ptr<RLUnitConfig> rlUnitConfig[maxRlUnits] = {};
 
 	RLConfig ();
 };

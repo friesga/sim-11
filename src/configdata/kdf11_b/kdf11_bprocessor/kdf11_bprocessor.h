@@ -15,7 +15,7 @@ class KDF11_BProcessor : public KD11Processor
 public:
 	KDF11_BProcessor ();
 	void processValue (iniparser::Section::ValueIterator valueIterator) override;
-	shared_ptr<DeviceConfig> getConfig () override;
+	DeviceConfigVariant getConfig () override;
 
 private:
 	unique_ptr<KDF11_BConfig> kd11ConfigPtr {make_unique<KDF11_BConfig> ()};
