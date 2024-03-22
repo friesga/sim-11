@@ -157,7 +157,7 @@ TEST (MSV11ConfiguratorTest, multipleMSV11SectionsAccepted)
 	auto msv11Config0 = 
 		get<shared_ptr<MSV11Config>> (systemConfig[0]);
 	auto msv11Config1 = 
-		get<shared_ptr<MSV11Config>> (systemConfig[0]);
+		get<shared_ptr<MSV11Config>> (systemConfig[1]);
 
 	// The only device types in this testset should be the MSV11's
 	ASSERT_EQ (msv11Config0->deviceType_, DeviceType::MSV11);

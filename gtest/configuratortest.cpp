@@ -5,17 +5,17 @@
 #include <fstream>	
 #include <gtest/gtest.h>
 #include <memory>
-#include <set>
 #include <vector>
 #include <string>
 #include <variant>
+#include <ranges>
 
 using std::shared_ptr;
 using std::static_pointer_cast;
-using std::set;
 using std::vector;
 using std::string;
 using std::get;
+using std::ranges::find_if;
 
 // Minimal tests for the ConfigProcessor class
 TEST (ConfigProcessorTest, configProcessed)
@@ -141,6 +141,12 @@ TEST (ConfigProcessorTest, fileName)
     }
 }
 
+template<typename V>
+std::type_info const& var_type (V const& v)
+{
+  return std::visit ([] (auto&&x)->decltype(auto) { return typeid (x); }, v);
+}
+
 // Verify all sections in the testset are processed once and can be retrieved
 TEST (ConfigProcessorTest, allSectionsProcessedOnce)
 {
@@ -156,19 +162,7 @@ TEST (ConfigProcessorTest, allSectionsProcessedOnce)
 		
 	stream >> ft;
 
-	/*
-	set<DeviceType> allDevices
-	{
-		DeviceType::MSV11,
-		DeviceType::DLV11_J,
-		DeviceType::BDV11,
-		DeviceType::RXV21,
-		DeviceType::RLV12,
-		DeviceType::BA11_N
-	};
-	*/
-
-	set<DeviceConfigVariant> allDevices
+	vector<DeviceConfigVariant> allDevices
 	{
 		shared_ptr<MSV11Config> {},
 		shared_ptr<DLV11JConfig> {},
@@ -181,17 +175,22 @@ TEST (ConfigProcessorTest, allSectionsProcessedOnce)
 	IniProcessor iniProcessor;
 	EXPECT_NO_THROW (iniProcessor.process (ft));
 
-	for (auto device : iniProcessor.getSystemConfig ())
+	for (auto thisDevice : iniProcessor.getSystemConfig ())
     {
 		// The only device type in this testset is the RLV12 so if that's
 		// not corrected the following tests will fail too.
 		// ASSERT_EQ (device->deviceType_, DeviceType::RLV12);
 		
+		auto findType = [thisDevice] (auto device)
+			{return var_type (device) == var_type (thisDevice); };
+
+        auto foundIterator = find_if (allDevices, findType);
+
 		// Verify the section has not already been processed
-		EXPECT_TRUE (allDevices.find (device) != allDevices.end());
+		EXPECT_TRUE (foundIterator != allDevices.end());
 
 		// Mark the device types processed
-		allDevices.erase (device);
+		allDevices.erase (foundIterator);
 	}
 
 	// Verify all devices are processed
