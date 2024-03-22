@@ -3,6 +3,8 @@
 
 #include <stdint.h>
 #include <cstddef>      // For size_t
+#include <typeinfo>
+#include <variant>
 
 using u8    = uint8_t;
 using s8	= int8_t;
@@ -60,5 +62,12 @@ constexpr u8 lowByte (u16 value)
 #define	U64L(x)			(x)
 #endif	// __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__
 #endif // WIN32
+
+// Return the type of the variable contained in the given variant
+template<typename V>
+std::type_info const& var_type (V const& v)
+{
+  return std::visit ([] (auto&&x)->decltype(auto) { return typeid (x); }, v);
+}
 
 #endif

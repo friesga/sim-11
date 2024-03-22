@@ -48,6 +48,7 @@ class PDP_11
 	void checkConsistency (vector<DeviceConfigVariant> systemConfig);
 	u16 loadFile ();
 	void installModules ();
+	template<typename T> static bool findDevice (DeviceConfigVariant device);
 
 public:
 	PDP_11 (CmdLineOptions const &cmdLineOptions);

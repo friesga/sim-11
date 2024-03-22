@@ -141,12 +141,6 @@ TEST (ConfigProcessorTest, fileName)
     }
 }
 
-template<typename V>
-std::type_info const& var_type (V const& v)
-{
-  return std::visit ([] (auto&&x)->decltype(auto) { return typeid (x); }, v);
-}
-
 // Verify all sections in the testset are processed once and can be retrieved
 TEST (ConfigProcessorTest, allSectionsProcessedOnce)
 {
