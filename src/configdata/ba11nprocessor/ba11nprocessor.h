@@ -1,7 +1,7 @@
 #ifndef _BA11NPROCESSOR_H_
 #define _BA11NPROCESSOR_H_
 
-#include "../sectionprocessor/sectionprocessor.h"
+#include "../sectionprocessor/deviceconfigprocessor.h"
 #include "../ba11nconfig/ba11nconfig.h"
 
 #include <memory>
@@ -13,7 +13,7 @@ using std::unique_ptr;
 using std::map;
 using std::string;
 
-class BA11_NProcessor : public SectionProcessor
+class BA11_NProcessor : public DeviceConfigProcessor
 {
 	unique_ptr<BA11_NConfig> ba11_nConfigPtr {nullptr};
 

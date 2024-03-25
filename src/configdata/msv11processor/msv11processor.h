@@ -1,7 +1,7 @@
 #ifndef _MSV11PROCESSOR_H_
 #define _MSV11PROCESSOR_H_
 
-#include "../sectionprocessor/sectionprocessor.h"
+#include "../sectionprocessor/deviceconfigprocessor.h"
 #include "../msv11config/msv11config.h"
 
 #include <memory>
@@ -13,7 +13,7 @@ using std::shared_ptr;
 using std::map;
 using std::string;
 
-class MSV11Processor : public SectionProcessor
+class MSV11Processor : public DeviceConfigProcessor
 {
 	unique_ptr<MSV11Config> msv11ConfigPtr {nullptr};
 

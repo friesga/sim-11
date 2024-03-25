@@ -79,9 +79,6 @@ protected:
 public:
     // Constructor
     Unit (PDP11Peripheral *owningDevice);
-
-    // Functions to be implemented by concrete devices
-    virtual StatusCode configure (DeviceConfig deviceConfig) = 0;
 };
 
 #endif // !_UNIT_H_

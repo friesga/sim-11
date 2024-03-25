@@ -1,7 +1,7 @@
 #ifndef _RLUNITPROCESSOR_H_
 #define _RLUNITPROCESSOR_H_
 
-#include "../sectionprocessor/sectionprocessor.h"
+#include "../sectionprocessor/deviceconfigprocessor.h"
 #include "../rlunitconfig/rlunitconfig.h"
 
 #include <memory>
@@ -13,7 +13,7 @@ using std::shared_ptr;
 using std::map;
 using std::string;
 
-class RLUnitProcessor : public SectionProcessor
+class RLUnitProcessor : public DeviceConfigProcessor
 {
 	unique_ptr<RLUnitConfig> rlUnitConfigPtr {nullptr};
 

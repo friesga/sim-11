@@ -1,7 +1,7 @@
 #ifndef _KD11_NAPROCESSOR_H_
 #define _KD11_NAPROCESSOR_H_
 
-#include "configdata/sectionprocessor/sectionprocessor.h"
+#include "configdata/sectionprocessor/deviceconfigprocessor.h"
 #include "../kd11processor/kd11processor.h"
 #include "../kd11_naconfig/kd11_naconfig.h"
 
@@ -10,7 +10,7 @@
 using std::unique_ptr;
 using std::make_unique;
 
-class KD11_NAProcessor : public SectionProcessor
+class KD11_NAProcessor : public DeviceConfigProcessor
 {
 public:
 	KD11_NAProcessor ();

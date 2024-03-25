@@ -6,11 +6,8 @@
 using std::shared_ptr;
 using std::get;
 
-StatusCode RL01_2::configure (DeviceConfig deviceConfig)
+StatusCode RL01_2::configure (shared_ptr<RLUnitConfig> rlUnitConfig)
 {
-    shared_ptr<RLUnitConfig> rlUnitConfig = 
-        get<shared_ptr<RLUnitConfig>> (deviceConfig);
-
     // Set unit type and size from the given configuration. Note that if
     // the unit type is Auto the unit's capacity is determined after
     // attaching the file to the unit. The capacity is also needed for

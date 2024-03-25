@@ -3,7 +3,7 @@
 
 #include "iniparser.h"
 #include "configdata/deviceconfig/deviceconfig.h"
-#include "../sectionprocessor/sectionprocessor.h"
+#include "../sectionprocessor/deviceconfigprocessor.h"
 #include "configdata/msv11config/msv11config.h"
 
 #include <map>
@@ -32,7 +32,7 @@ using std::vector;
 // 3. Add a create_DEVICE_Processor function to this (IniProcessor) class.
 //    This function is a factory for the creation of a _DEVICE_Processor
 //    object,
-// 4. Add an entry to the sectionProcessorFactories map in this class. This
+// 4. Add an entry to the deviceConfigProcessorFactories map in this class. This
 //    maps a section name in the ini-file to the create_DEVICE_Processor
 //    function and thereby to the _DEVICE_Processor function processing
 //    that section.
@@ -49,9 +49,9 @@ private:
 	// to device configurations.
 	vector<DeviceConfig> systemConfig {};
 
-	typedef unique_ptr<SectionProcessor> (IniProcessor::*SectionProcessorFactory) ();
+	typedef unique_ptr<DeviceConfigProcessor> (IniProcessor::*DeviceConfigProcessorFactory) ();
 
-    map<string, SectionProcessorFactory> sectionProcessorFactories =
+    map<string, DeviceConfigProcessorFactory> deviceConfigProcessorFactories =
 	{
 		{"BA11-N",  &IniProcessor::createBA11_NProcessor},
 		{"BDV11",   &IniProcessor::createBDV11Processor},
@@ -71,15 +71,15 @@ private:
 	bool conflictsWith (shared_ptr<MSV11Config> msv11Card1, 
     shared_ptr<MSV11Config> msv11Card2);
 	bool isWithin (u32 address, u32 begin, u32 end);
-	unique_ptr<SectionProcessor> createBA11_NProcessor ();
-	unique_ptr<SectionProcessor> createBDV11Processor ();
-	unique_ptr<SectionProcessor> createDLV11Processor ();
-	unique_ptr<SectionProcessor> createMSV11Processor ();
-	unique_ptr<SectionProcessor> createRLProcessor ();
-	unique_ptr<SectionProcessor> createRXProcessor ();
-	unique_ptr<SectionProcessor> createKD11_NAProcessor ();
-	unique_ptr<SectionProcessor> createKDF11_AProcessor ();
-	unique_ptr<SectionProcessor> createKDF11_BProcessor ();
+	unique_ptr<DeviceConfigProcessor> createBA11_NProcessor ();
+	unique_ptr<DeviceConfigProcessor> createBDV11Processor ();
+	unique_ptr<DeviceConfigProcessor> createDLV11Processor ();
+	unique_ptr<DeviceConfigProcessor> createMSV11Processor ();
+	unique_ptr<DeviceConfigProcessor> createRLProcessor ();
+	unique_ptr<DeviceConfigProcessor> createRXProcessor ();
+	unique_ptr<DeviceConfigProcessor> createKD11_NAProcessor ();
+	unique_ptr<DeviceConfigProcessor> createKDF11_AProcessor ();
+	unique_ptr<DeviceConfigProcessor> createKDF11_BProcessor ();
 };
 
 #endif // !_INIPROCESSOR_H_

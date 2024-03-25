@@ -1,7 +1,7 @@
 #ifndef _RXV21UNITPROCESSOR_H_
 #define _RXV21UNITPROCESSOR_H_
 
-#include "../sectionprocessor/sectionprocessor.h"
+#include "../sectionprocessor/deviceconfigprocessor.h"
 #include "../rxv21unitconfig/rxv21unitconfig.h"
 #include "rxv21unitprocessor.h"
 
@@ -14,7 +14,7 @@ using std::shared_ptr;
 using std::map;
 using std::string;
 
-class RXV21UnitProcessor : public SectionProcessor
+class RXV21UnitProcessor : public DeviceConfigProcessor
 {
 	unique_ptr<RXV21UnitConfig> rxv21UnitConfigPtr {nullptr};
 

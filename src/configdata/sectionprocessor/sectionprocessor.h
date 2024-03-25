@@ -15,7 +15,6 @@ class SectionProcessor
 {
 public:
     void processSection (iniparser::Section* section);
-    virtual DeviceConfig getConfig () = 0;
 
 protected:
     template <typename T> T touint (string number);

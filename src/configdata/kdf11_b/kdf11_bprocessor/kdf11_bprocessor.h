@@ -1,7 +1,7 @@
 #ifndef _KDF11_BPROCESSOR_H_
 #define _KDF11_BPROCESSOR_H_
 
-#include "configdata/sectionprocessor/sectionprocessor.h"
+#include "configdata/sectionprocessor/deviceconfigprocessor.h"
 #include "../../kd11processor/kd11processor.h"
 #include "../kdf11_bconfig/kdf11_bconfig.h"
 
@@ -10,7 +10,7 @@
 using std::unique_ptr;
 using std::make_unique;
 
-class KDF11_BProcessor : public SectionProcessor
+class KDF11_BProcessor : public DeviceConfigProcessor
 {
 public:
 	DeviceConfig getConfig () override;

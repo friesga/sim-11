@@ -1,7 +1,7 @@
 #ifndef _BDV11PROCESSOR_H_
 #define _BDV11PROCESSOR_H_
 
-#include "../sectionprocessor/sectionprocessor.h"
+#include "../sectionprocessor/deviceconfigprocessor.h"
 #include "../bdv11config/bdv11config.h"
 
 #include <memory>
@@ -13,7 +13,7 @@ using std::shared_ptr;
 using std::map;
 using std::string;
 
-class BDV11Processor : public SectionProcessor
+class BDV11Processor : public DeviceConfigProcessor
 {
 public:
 	BDV11Processor ();

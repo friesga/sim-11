@@ -1,10 +1,10 @@
 #ifndef _RXPROCESSOR_H_
 #define _RXPROCESSOR_H_
 
-#include "../sectionprocessor/sectionprocessor.h"
+#include "../sectionprocessor/deviceconfigprocessor.h"
 #include "../rxv21config/rxv21config.h"
 
-class RXV21Processor : public SectionProcessor
+class RXV21Processor : public DeviceConfigProcessor
 {
     std::unique_ptr<RXV21Config> rxConfigPtr {nullptr};
 

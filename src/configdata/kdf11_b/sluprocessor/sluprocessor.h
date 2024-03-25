@@ -1,7 +1,7 @@
 #ifndef _SLUPROCESSOR_H_
 #define _SLUPROCESSOR_H_
 
-#include "configdata/sectionprocessor/sectionprocessor.h"
+#include "configdata/sectionprocessor/deviceconfigprocessor.h"
 #include "configdata/kdf11_b/sluconfig/sluconfig.h"
 
 #include <memory>
@@ -13,7 +13,7 @@ using std::shared_ptr;
 using std::map;
 using std::string;
 
-class SLUProcessor : public SectionProcessor
+class SLUProcessor : public DeviceConfigProcessor
 {
 	unique_ptr<SLUConfig> sluConfigPtr {nullptr};
 

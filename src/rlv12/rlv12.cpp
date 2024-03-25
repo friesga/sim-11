@@ -72,13 +72,13 @@ RLV12::RLV12 (Qbus *bus, shared_ptr<RLConfig> rlConfig)
 	for (size_t unitNumber = 0; 
 		unitNumber < rlConfig->numUnits; ++unitNumber)
 	{
-		shared_ptr<RLUnitConfig> rlUnitConfig = 
-            static_pointer_cast<RLUnitConfig> (rlConfig->rlUnitConfig[unitNumber]);
+        shared_ptr<RLUnitConfig> rlUnitConfig = 
+            rlConfig->rlUnitConfig[unitNumber];
 
         if (rlUnitConfig == nullptr)
             continue;
 
-		if (unit(unitNumber)->configure (rlUnitConfig) != StatusCode::OK)
+		if (unit (unitNumber)->configure (rlUnitConfig) != StatusCode::OK)
 			throw "Error attaching " + rlUnitConfig->fileName;
 	}
 

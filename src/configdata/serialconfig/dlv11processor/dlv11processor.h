@@ -1,7 +1,7 @@
 #ifndef _DLV11PROCESSOR_H_
 #define _DLV11PROCESSOR_H_
 
-#include "configdata/sectionprocessor/sectionprocessor.h"
+#include "configdata/sectionprocessor/deviceconfigprocessor.h"
 #include "configdata/serialconfig/dlv11jconfig/dlv11jconfig.h"
 #include "configdata/serialconfig/uartconfig/uartconfig.h"
 
@@ -16,7 +16,7 @@ using std::map;
 using std::string;
 using std::vector;
 
-class DLV11Processor : public SectionProcessor
+class DLV11Processor : public DeviceConfigProcessor
 {
 public:
 	DLV11Processor ();
