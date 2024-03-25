@@ -6,14 +6,12 @@
 
 #include <memory>
 
-using std::shared_ptr;
+using std::unique_ptr;
 using std::make_unique;
 
-class KDF11_AProcessor : public KD11Processor
+class KDF11_AProcessor : public SectionProcessor
 {
 public:
-	KDF11_AProcessor ();
-	void processValue (iniparser::Section::ValueIterator valueIterator) override;
 	DeviceConfigVariant getConfig () override;
 
 private:
@@ -26,11 +24,16 @@ private:
 	map<string, Process> valueProcessors =
 	{
 		{"KTF11-A", &KDF11_AProcessor::processKTF11_A},
-		{"starting_address", &KDF11_AProcessor::processStartingAddress}
+		{"starting_address", &KDF11_AProcessor::processStartingAddress},
+		{"power-up_mode", &KDF11_AProcessor::processPowerUpMode}
 	};
 
+	void processValue (iniparser::Section::ValueIterator valueIterator) override;
+	void checkConsistency () override;
+	void processSubsection (iniparser::Section *subSection) override;
 	void processKTF11_A (iniparser::Value value);
 	void processStartingAddress (iniparser::Value value);
+	void processPowerUpMode (iniparser::Value value);
 };
 
 #endif // _KDF11_APROCESSOR_H_

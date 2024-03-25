@@ -3,5 +3,5 @@
 
 KD11_NAConfig::KD11_NAConfig ()
     : 
-    KD11Config (DeviceType::KD11_NA)
+    DeviceConfig (DeviceType::KD11_NA)
 {}

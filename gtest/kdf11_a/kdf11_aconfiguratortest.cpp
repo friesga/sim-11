@@ -1,6 +1,7 @@
 #include "configdata/iniprocessor/iniprocessor.h"
 #include "configdata/devicetype/devicetype.h"
 #include "configdata/kdf11_aconfig/kdf11_aconfig.h"
+#include "configdata/kdconfig/kdconfig.h"
 
 #include <fstream>	
 #include <gtest/gtest.h>
@@ -27,7 +28,7 @@ TEST (KDF11_AConfiguratorTest, powerUpModeAccepted)
 	// not correct the following tests will fail too.
 	ASSERT_EQ (kdf11_aConfig->deviceType_, DeviceType::KDF11_A);
 
-	EXPECT_EQ (kdf11_aConfig->powerUpMode, KDF11_AConfig::PowerUpMode::ODT);
+	EXPECT_EQ (kdf11_aConfig->powerUpMode, KD11Config::PowerUpMode::ODT);
 }
 
 TEST (KDF11_AConfiguratorTest, invalidPowerUpModeThrows)
@@ -103,7 +104,7 @@ TEST (KDF11_AConfiguratorTest, KD11AndKDF11_AOptionsAreProcessed)
 	// not correct the following tests will fail too.
 	ASSERT_EQ (kdf11_aConfig->deviceType_, DeviceType::KDF11_A);
 
-	EXPECT_EQ (kdf11_aConfig->powerUpMode, KDF11_AConfig::PowerUpMode::ODT);
+	EXPECT_EQ (kdf11_aConfig->powerUpMode, KD11Config::PowerUpMode::ODT);
 	EXPECT_TRUE (kdf11_aConfig->ktf11_a_present);
 }
 
@@ -124,7 +125,7 @@ TEST (KDF11_AConfiguratorTest, unknownOptionThrows)
 	}
 	catch (std::invalid_argument const &except)
 	{
-		EXPECT_STREQ (except.what(), "Unknown KD11 option: option");
+		EXPECT_STREQ (except.what(), "Unknown key in section KDF11-A: option");
 	}
 	catch (...)
 	{

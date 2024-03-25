@@ -27,7 +27,7 @@ TEST (KDF11_BConfiguratorTest, powerUpModeAccepted)
 	// not correct the following tests will fail too.
 	ASSERT_EQ (kdf11_bConfig->deviceType_, DeviceType::KDF11_B);
 
-	EXPECT_EQ (kdf11_bConfig->powerUpMode, KDF11_BConfig::PowerUpMode::ODT);
+	EXPECT_EQ (kdf11_bConfig->powerUpMode, KD11Config::PowerUpMode::ODT);
 }
 
 TEST (KDF11_BConfiguratorTest, invalidPowerUpModeThrows)
@@ -72,7 +72,7 @@ TEST (KDF11_BConfiguratorTest, KTF11_AOptionThrows)
 	}
 	catch (std::invalid_argument const &except)
 	{
-		EXPECT_STREQ (except.what(), "Unknown KD11 option: KTF11-A");
+		EXPECT_STREQ (except.what(), "Unknown key in section KDF11-B: KTF11-A");
 	}
 	catch (...)
 	{
@@ -123,7 +123,7 @@ TEST (KDF11_BConfiguratorTest, startingAddressThrows)
 	}
 	catch (std::invalid_argument const &except)
 	{
-		EXPECT_STREQ (except.what(), "Unknown KD11 option: starting_address");
+		EXPECT_STREQ (except.what(), "Unknown key in section KDF11-B: starting_address");
 	}
 	catch (...)
 	{

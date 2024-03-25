@@ -1,12 +1,10 @@
 #ifndef _KD11CONFIG_H_
 #define _KD11CONFIG_H_
 
-#include "../deviceconfig/deviceconfig.h"
-
 // This struct contains the configuration options common to the KD11-NA
-// and KDF11-A processors.
+// and KDF11 processors.
 //
-struct KD11Config : public DeviceConfig
+struct KD11Config
 {
     // Definition of the power-up modes:
     // - Vector (mode 0)
@@ -28,12 +26,6 @@ struct KD11Config : public DeviceConfig
         ODT,
         Bootstrap
     };
-
-    // Power-up mode factory configuration is mode 0, but we'll set it to
-    // Bootstrap as that's more convenient for the user.
-    PowerUpMode powerUpMode {PowerUpMode::Bootstrap};
-
-    KD11Config (DeviceType deviceType);
 };
 
 #endif // !_KD11CONFIG_H_

@@ -1,24 +1,38 @@
 #include "kd11_naprocessor.h"
 #include "../kd11_naconfig/kd11_naconfig.h"
 
-using std::make_unique;
 using std::move;
 using std::invalid_argument;
 
-// To be able to pass the unique_ptr<KD11_NAConfig> as a KD11Config pointer
-// to KD11Processor, we have to pass the unique_ptr to KD11Processor via the
-// init() function as KD11Processor's constructor is called before the
-// unique_ptr is initialized.
 KD11_NAProcessor::KD11_NAProcessor ()
-	:
-	KD11Processor (),
-	kd11ConfigPtr {make_unique<KD11_NAConfig> ()}
+{}
+
+void KD11_NAProcessor::processValue (iniparser::Section::ValueIterator valueIterator)
 {
-	init (kd11ConfigPtr.get ());
+    Process processFunction = valueProcessors[valueIterator->first];
+
+	if (processFunction == nullptr)
+        // This exception will be catched and processed in 
+        // SectionProcessor::processSection().
+		throw std::out_of_range ("Unknown key in KD11-NA section");
+
+    (this->*processFunction)(valueIterator->second);
 }
 
+void KD11_NAProcessor::checkConsistency ()
+{}
+
+void KD11_NAProcessor::processSubsection (iniparser::Section *subSection)
+{}
+
+void KD11_NAProcessor::processPowerUpMode (iniparser::Value value)
+{
+	KD11Processor kd11Procesor;
+	kd11_naConfigPtr->powerUpMode = 
+		kd11Procesor.processPowerUpMode (value);
+}
 
 DeviceConfigVariant KD11_NAProcessor::getConfig ()
 {
-	return move (kd11ConfigPtr);
+	return move (kd11_naConfigPtr);
 }

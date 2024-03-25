@@ -29,7 +29,7 @@ TEST (KD11_NAConfiguratorTest, powerUpModeAccepted)
 	// not correct the following tests will fail too.
 	ASSERT_EQ (kd11_naConfig->deviceType_, DeviceType::KD11_NA);
 
-	EXPECT_EQ (kd11_naConfig->powerUpMode, KD11_NAConfig::PowerUpMode::ODT);
+	EXPECT_EQ (kd11_naConfig->powerUpMode, KD11Config::PowerUpMode::ODT);
 }
 
 TEST (KD11_NAConfiguratorTest, invalidPowerUpModeThrows)

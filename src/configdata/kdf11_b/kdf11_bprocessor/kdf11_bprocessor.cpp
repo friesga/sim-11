@@ -4,34 +4,22 @@
 
 #include <variant>
 
-using std::make_unique;
 using std::move;
 using std::invalid_argument;
 using std::get;
-
-// To be able to pass the unique_ptr<KD11_BConfig> as a KD11Config pointer
-// to KD11Processor, we have to pass the unique_ptr to KD11Processor via the
-// init() function as KD11Processor's constructor is called before the
-// unique_ptr is initialized.
-KDF11_BProcessor::KDF11_BProcessor ()
-	:
-	KD11Processor (),
-	kd11ConfigPtr {make_unique<KDF11_BConfig> ()}
-{
-	init (kd11ConfigPtr.get ());
-}
 
 void KDF11_BProcessor::processValue (iniparser::Section::ValueIterator valueIterator)
 {
 	Process processFunction = valueProcessors[valueIterator->first];
 
-	// If a processFunction is found the key is found in the KDF11-B's
-	// options, else it might be a KD11 common key.
-	if (processFunction != nullptr)
-		(this->*processFunction)(valueIterator->second);
-	else
-		KD11Processor::processValue (valueIterator);
+	if (processFunction == nullptr)
+		throw std::out_of_range ("Unknown key in KDF11-B section");
+
+    (this->*processFunction)(valueIterator->second);
 }
+
+void KDF11_BProcessor::checkConsistency ()
+{}
 
 void KDF11_BProcessor::processSubsection (iniparser::Section *subSection)
 {
@@ -55,13 +43,20 @@ void KDF11_BProcessor::processSubsection (iniparser::Section *subSection)
 	(this->*sectionProcessDef->sectionProcessor) (subSection);
 }
 
+void KDF11_BProcessor::processPowerUpMode (iniparser::Value value)
+{
+	KD11Processor kd11Procesor;
+	kdf11_bConfigPtr->powerUpMode = 
+		kd11Procesor.processPowerUpMode (value);
+}
+
 void KDF11_BProcessor::processSLUSubsection (iniparser::Section *subSection)
 {
 	SLUProcessor sluProcessor {};
 	sluProcessor.processSection (subSection);
 
 	// Add the configuration to the KDF11-B configuration
-	kd11ConfigPtr->sluConfig = 
+	kdf11_bConfigPtr->sluConfig = 
 		get<shared_ptr<SLUConfig>> (sluProcessor.getConfig ());
 }
 
@@ -71,11 +66,11 @@ void KDF11_BProcessor::processBDV11Subsection (iniparser::Section *subSection)
 	bdv11Processor.processSection (subSection);
 
 	// Add the unit configuration to the Rl device configuration
-	kd11ConfigPtr->bdv11Config = 
+	kdf11_bConfigPtr->bdv11Config = 
 		get<shared_ptr<BDV11Config>> (bdv11Processor.getConfig ());
 }
 
 DeviceConfigVariant KDF11_BProcessor::getConfig ()
 {
-	return move (kd11ConfigPtr);
+	return move (kdf11_bConfigPtr);
 }

@@ -14,17 +14,18 @@ using std::shared_ptr;
 
 class SectionProcessor
 {
-    virtual void processValue (iniparser::Section::ValueIterator valueIterator) = 0;
-    virtual void checkConsistency () = 0;
-    virtual void processSubsection (iniparser::Section *subSection) = 0;
+public:
+    void processSection (iniparser::Section* section);
+    virtual DeviceConfigVariant getConfig () = 0;
 
 protected:
     template <typename T> T touint (string number);
     size_t unitNumberFromSectionName (string name);
 
-public:
-    void processSection (iniparser::Section* section);
-    virtual DeviceConfigVariant getConfig () = 0;
+private:
+    virtual void processValue (iniparser::Section::ValueIterator valueIterator) = 0;
+    virtual void checkConsistency () = 0;
+    virtual void processSubsection (iniparser::Section *subSection) = 0;
 };
 
 // Return the number represented by the string as the specified unsigned
