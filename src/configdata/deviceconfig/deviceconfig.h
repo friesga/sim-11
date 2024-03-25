@@ -27,7 +27,6 @@ using DeviceConfig = variant<
     shared_ptr<BDV11Config>,
     shared_ptr<RXV21Config>,
     shared_ptr<RLConfig>,
-    shared_ptr<BA11_NConfig>,
-    shared_ptr<SLUConfig>>;
+    shared_ptr<BA11_NConfig>>;
 
 #endif // _DEVICECONFIGVARIANT_H_

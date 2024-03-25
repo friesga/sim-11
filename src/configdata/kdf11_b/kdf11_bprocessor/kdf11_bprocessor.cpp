@@ -56,8 +56,7 @@ void KDF11_BProcessor::processSLUSubsection (iniparser::Section *subSection)
 	sluProcessor.processSection (subSection);
 
 	// Add the configuration to the KDF11-B configuration
-	kdf11_bConfigPtr->sluConfig = 
-		get<shared_ptr<SLUConfig>> (sluProcessor.getConfig ());
+	kdf11_bConfigPtr->sluConfig = sluProcessor.getConfig ();
 }
 
 void KDF11_BProcessor::processBDV11Subsection (iniparser::Section *subSection)
