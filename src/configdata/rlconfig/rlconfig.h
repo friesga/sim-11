@@ -2,7 +2,6 @@
 #define _RLCONFIG_H_
 
 #include "types.h"
-#include "../deviceconfig/deviceconfig.h"
 #include "../rlunitconfig/rlunitconfig.h"
 
 #include <vector>
@@ -22,7 +21,7 @@ using std::shared_ptr;
 // 
 // Source: RL01/RL02 User Guide (EK-RL012-UG-005)
 //
-struct RLConfig : public DeviceConfig
+struct RLConfig
 {
 	enum class RLType
 	{	
@@ -39,8 +38,6 @@ struct RLConfig : public DeviceConfig
 	bool _22bit {false};
 
 	shared_ptr<RLUnitConfig> rlUnitConfig[maxRlUnits] = {};
-
-	RLConfig ();
 };
 
 #endif // _RLCONFIG_H_

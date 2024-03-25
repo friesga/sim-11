@@ -22,21 +22,17 @@ using std::vector;
 // configurations.
 //
 // Take the following actions to add a device:
-// 1. Add the device type to the DeviceType enumeration (in 
-//    devicetype/devicetype.h),
-// 2. Create a _DEVICE_Config class derived from DeviceConfig, with a
-//    constructor calling the DeviceConfig constructor with the device
-//    type as added to DeviceType. The _DEVICE_Config class will hold the
+// 1. Create a _DEVICE_Config class. The _DEVICE_Config class will hold the
 //    device's attributes,
-// 3. Create a _DEVICE_Processor class. This class will process the 
+// 2. Create a _DEVICE_Processor class. This class will process the 
 //    the section in the ini-file for the device. The class needs a
 //    constructor, a processValue() function to incorporate the passed
 //    Value in the configuration and a getConfig() function returning the
 //	  DeviceConfiguration,
-// 4. Add a create_DEVICE_Processor function to this (IniProcessor) class.
+// 3. Add a create_DEVICE_Processor function to this (IniProcessor) class.
 //    This function is a factory for the creation of a _DEVICE_Processor
 //    object,
-// 5. Add an entry to the sectionProcessorFactories map in this class. This
+// 4. Add an entry to the sectionProcessorFactories map in this class. This
 //    maps a section name in the ini-file to the create_DEVICE_Processor
 //    function and thereby to the _DEVICE_Processor function processing
 //    that section.

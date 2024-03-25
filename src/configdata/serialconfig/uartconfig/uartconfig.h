@@ -2,12 +2,11 @@
 #define _UARTCONFIG_H_
 
 #include "types.h"
-#include "configdata/deviceconfig/deviceconfig.h"
 
 // This class defines the configuratipn parameters for a DL-compatible
 // Universal Asynchronous Receiver-Transmitter (UART).
 // 
-struct UARTConfig : public DeviceConfig
+struct UARTConfig
 {
     bool enabled_;
     u16 baseAddress_;

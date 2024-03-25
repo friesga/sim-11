@@ -1,5 +1,4 @@
 #include "configdata/iniprocessor/iniprocessor.h"
-#include "configdata/devicetype/devicetype.h"
 #include "configdata/kd11_naconfig/kd11_naconfig.h"
 
 #include <fstream>
@@ -21,13 +20,13 @@ TEST (KD11_NAConfiguratorTest, powerUpModeAccepted)
 	vector<DeviceConfigVariant> systemConfig = 
 		iniProcessor.getSystemConfig ();
 
+	// The only device type in this testset is the KD11 so if that's
+	// not correct the following tests will fail too.
+	ASSERT_TRUE (holds_alternative<shared_ptr<KD11_NAConfig>> (systemConfig[0]));
+
 	// The configuration is a KD11Config object
 	shared_ptr<KD11_NAConfig> kd11_naConfig = 
 		get<shared_ptr<KD11_NAConfig>> (systemConfig[0]);
-
-	// The only device type in this testset is the KD11 so if that's
-	// not correct the following tests will fail too.
-	ASSERT_EQ (kd11_naConfig->deviceType_, DeviceType::KD11_NA);
 
 	EXPECT_EQ (kd11_naConfig->powerUpMode, KD11Config::PowerUpMode::ODT);
 }

@@ -1,5 +1,4 @@
 #include "configdata/iniprocessor/iniprocessor.h"
-#include "configdata/devicetype/devicetype.h"
 #include "configdata/kdf11_aconfig/kdf11_aconfig.h"
 #include "configdata/kdconfig/kdconfig.h"
 
@@ -20,13 +19,13 @@ TEST (KDF11_AConfiguratorTest, powerUpModeAccepted)
 	vector<DeviceConfigVariant> systemConfig = 
 		iniProcessor.getSystemConfig ();
 
+	// The only device type in this testset is the KD11 so if that's
+	// not correct the following tests will fail too.
+	ASSERT_TRUE (holds_alternative<shared_ptr<KDF11_AConfig>> (systemConfig[0]));
+
 	// The device's type is KD11 so the configuration is a KD11Config object
 	auto kdf11_aConfig = 
 		get<shared_ptr<KDF11_AConfig>> (systemConfig[0]);
-
-	// The only device type in this testset is the KD11 so if that's
-	// not correct the following tests will fail too.
-	ASSERT_EQ (kdf11_aConfig->deviceType_, DeviceType::KDF11_A);
 
 	EXPECT_EQ (kdf11_aConfig->powerUpMode, KD11Config::PowerUpMode::ODT);
 }
@@ -70,13 +69,13 @@ TEST (KDF11_AConfiguratorTest, KTF11_AisDetected)
 	vector<DeviceConfigVariant> systemConfig = 
 		iniProcessor.getSystemConfig ();
 
+	// The only device type in this testset is the KDF11-A so if that's
+	// not correct the following tests will fail too.
+	ASSERT_TRUE (holds_alternative<shared_ptr<KDF11_AConfig>> (systemConfig[0]));
+
 	// The device's type is DLV11J so the configuration is a 
 	auto kdf11_aConfig = 
 		get<shared_ptr<KDF11_AConfig>> (systemConfig[0]);
-
-	// The only device type in this testset is the KDF11-A so if that's
-	// not correct the following tests will fail too.
-	ASSERT_EQ (kdf11_aConfig->deviceType_, DeviceType::KDF11_A);
 
 	EXPECT_TRUE (kdf11_aConfig->ktf11_a_present);
 }
@@ -96,13 +95,13 @@ TEST (KDF11_AConfiguratorTest, KD11AndKDF11_AOptionsAreProcessed)
 	vector<DeviceConfigVariant> systemConfig = 
 		iniProcessor.getSystemConfig ();
 
+	// The only device type in this testset is the KDF11-A so if that's
+	// not correct the following tests will fail too.
+	ASSERT_TRUE (holds_alternative<shared_ptr<KDF11_AConfig>> (systemConfig[0]));
+
 	// The device's type is DLV11J so the configuration is a 
 	auto kdf11_aConfig = 
 		get<shared_ptr<KDF11_AConfig>> (systemConfig[0]);
-
-	// The only device type in this testset is the KDF11-A so if that's
-	// not correct the following tests will fail too.
-	ASSERT_EQ (kdf11_aConfig->deviceType_, DeviceType::KDF11_A);
 
 	EXPECT_EQ (kdf11_aConfig->powerUpMode, KD11Config::PowerUpMode::ODT);
 	EXPECT_TRUE (kdf11_aConfig->ktf11_a_present);
@@ -147,13 +146,13 @@ TEST (KDF11_AConfiguratorTest, validStartingAddressAccepted)
 	vector<DeviceConfigVariant> systemConfig = 
 		iniProcessor.getSystemConfig ();
 
+	// The only device type in this testset is the KDF11-A so if that's
+	// not correct the following tests will fail too.
+	ASSERT_TRUE (holds_alternative<shared_ptr<KDF11_AConfig>> (systemConfig[0]));
+
 	// The device's type is DLV11J so the configuration is a 
 	auto kdf11_aConfig = 
 		get<shared_ptr<KDF11_AConfig>> (systemConfig[0]);
-
-	// The only device type in this testset is the KDF11-A so if that's
-	// not correct the following tests will fail too.
-	ASSERT_EQ (kdf11_aConfig->deviceType_, DeviceType::KDF11_A);
 
 	EXPECT_EQ (kdf11_aConfig->startingAddress, 0173000);
 }

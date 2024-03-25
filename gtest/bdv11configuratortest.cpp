@@ -1,5 +1,4 @@
 #include "configdata/iniprocessor/iniprocessor.h"
-#include "configdata/devicetype/devicetype.h"
 #include "configdata/bdv11config/bdv11config.h"
 
 #include <fstream>	
@@ -23,13 +22,13 @@ TEST (BDV11ConfiguratorTest, optionsAccepted)
 	vector<DeviceConfigVariant> systemConfig = 
 		iniProcessor.getSystemConfig ();
 
+	// The only device type in this testset is the DLV11-J so if that's
+	// not correct the following tests will fail too.
+	ASSERT_TRUE (holds_alternative<shared_ptr<BDV11Config>> (systemConfig[0]));
+
 	// The device's type is BDV11 so the configuration is a BDV11Config object
 	shared_ptr<BDV11Config> bdv11Config = 
 		get<shared_ptr<BDV11Config>> (systemConfig[0]);
-
-	// The only device type in this testset is the DLV11-J so if that's
-	// not correct the following tests will fail too.
-	ASSERT_EQ (bdv11Config->deviceType_, DeviceType::BDV11);
 
 	EXPECT_TRUE (bdv11Config->cpuTests);
 	EXPECT_TRUE (bdv11Config->memoryTests);
@@ -76,15 +75,13 @@ TEST (BDV11ConfiguratorTest, defaultsOk)
 	vector<DeviceConfigVariant> systemConfig = 
 		iniProcessor.getSystemConfig ();
 
-
+	// The only device type in this testset is the DLV11-J so if that's
+	// not correct the following tests will fail too.
+	ASSERT_TRUE (holds_alternative<shared_ptr<BDV11Config>> (systemConfig[0]));
 
 	// The device's type is BDV11 so the configuration is a BDV11Config object
 	shared_ptr<BDV11Config> bdv11Config = 
 		get<shared_ptr<BDV11Config>> (systemConfig[0]);
-
-	// The only device type in this testset is the DLV11-J so if that's
-	// not correct the following tests will fail too.
-	ASSERT_EQ (bdv11Config->deviceType_, DeviceType::BDV11);
 
 	EXPECT_TRUE (bdv11Config->cpuTests);
 	EXPECT_TRUE (bdv11Config->memoryTests);
@@ -107,13 +104,13 @@ TEST (BDV11ConfiguratorTest, bootROMAccepted)
 	vector<DeviceConfigVariant> systemConfig = 
 		iniProcessor.getSystemConfig ();
 
+	// The only device type in this testset is the DLV11-J so if that's
+	// not correct the following tests will fail too.
+	ASSERT_TRUE (holds_alternative<shared_ptr<BDV11Config>> (systemConfig[0]));
+
 	// The device's type is BDV11 so the configuration is a BDV11Config object
 	shared_ptr<BDV11Config> bdv11Config = 
 		get<shared_ptr<BDV11Config>> (systemConfig[0]);
-
-	// The only device type in this testset is the DLV11-J so if that's
-	// not correct the following tests will fail too.
-	ASSERT_EQ (bdv11Config->deviceType_, DeviceType::BDV11);
 
 	EXPECT_EQ (bdv11Config->bootROM, BDV11Config::BootROM::KDF11_BA);
 }

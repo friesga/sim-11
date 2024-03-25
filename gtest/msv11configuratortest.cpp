@@ -1,5 +1,4 @@
 #include "configdata/iniprocessor/iniprocessor.h"
-#include "configdata/devicetype/devicetype.h"
 #include "configdata/msv11config/msv11config.h"
 
 #include <fstream>	
@@ -44,13 +43,13 @@ TEST (MSV11ConfiguratorTest, startingAddressAccepted)
 	vector<DeviceConfigVariant> systemConfig = 
 		iniProcessor.getSystemConfig ();
 
+	// The only device type in this testset is the MSV11 so if that's
+	// not correct the following tests will fail too.
+	ASSERT_TRUE (holds_alternative<shared_ptr<MSV11Config>> (systemConfig[0]));
+
 	// The device's type is MSV11 so the configuration is a MSV11Config object
 	auto msv11Config = 
 		get<shared_ptr<MSV11Config>> (systemConfig[0]);
-
-	// The only device type in this testset is the MSV11 so if that's
-	// not correct the following tests will fail too.
-	ASSERT_EQ (msv11Config->deviceType_, DeviceType::MSV11);
 
 	EXPECT_EQ (msv11Config->startingAddress, 020000);
 }
@@ -154,14 +153,14 @@ TEST (MSV11ConfiguratorTest, multipleMSV11SectionsAccepted)
 	// Verify the vector contains two device configurations
 	ASSERT_EQ (systemConfig.size (), 4);
 
+	// The only device types in this testset should be the MSV11's
+	ASSERT_TRUE (holds_alternative<shared_ptr<MSV11Config>> (systemConfig[0]));
+	ASSERT_TRUE (holds_alternative<shared_ptr<MSV11Config>> (systemConfig[1]));
+
 	auto msv11Config0 = 
 		get<shared_ptr<MSV11Config>> (systemConfig[0]);
 	auto msv11Config1 = 
 		get<shared_ptr<MSV11Config>> (systemConfig[1]);
-
-	// The only device types in this testset should be the MSV11's
-	ASSERT_EQ (msv11Config0->deviceType_, DeviceType::MSV11);
-	ASSERT_EQ (msv11Config1->deviceType_, DeviceType::MSV11);
 
 	// The first section should have starting address 0
 	EXPECT_EQ (msv11Config0->startingAddress, 0);

@@ -1,5 +1,4 @@
 #include "configdata/iniprocessor/iniprocessor.h"
-#include "configdata/devicetype/devicetype.h"
 #include "configdata/rlconfig/rlconfig.h"
 
 #include <fstream>	
@@ -47,10 +46,11 @@ TEST (ConfigProcessorTest, configProcessed)
 	vector<DeviceConfigVariant> &configuration = 
 		iniProcessor.getSystemConfig ();
 
+	ASSERT_TRUE (holds_alternative<shared_ptr<RLConfig>> (configuration[0]));
+
 	shared_ptr<RLConfig> rlConfig = 
 		get<shared_ptr<RLConfig>> (configuration[0]);
 
-	EXPECT_EQ (rlConfig->deviceType_, DeviceType::RLV12);
 	EXPECT_EQ (rlConfig->rlType, RLConfig::RLType::RLV12);
 	EXPECT_EQ (rlConfig->address, 0174400);
 	EXPECT_EQ (rlConfig->vector, 0160);
@@ -117,13 +117,13 @@ TEST (ConfigProcessorTest, fileName)
 
 	for (auto device : iniProcessor.getSystemConfig ())
     {
+		// The only device type in this testset is the RLV12 so if that's
+		// not corrected the following tests will fail too.
+		ASSERT_TRUE (holds_alternative<shared_ptr<RLConfig>> (device));
+
 		// The device's type is RLV12 so the configuration is a RLConfig
 		auto rlConfig = 
 			get<shared_ptr<RLConfig>> (device);
-
-		// The only device type in this testset is the RLV12 so if that's
-		// not corrected the following tests will fail too.
-		ASSERT_EQ (rlConfig->deviceType_, DeviceType::RLV12);
 
 		// Now we can check the unit's filenames. The devices in the 
 		// units are of type RLUnitConfig.
@@ -171,10 +171,6 @@ TEST (ConfigProcessorTest, allSectionsProcessedOnce)
 
 	for (auto thisDevice : iniProcessor.getSystemConfig ())
     {
-		// The only device type in this testset is the RLV12 so if that's
-		// not corrected the following tests will fail too.
-		// ASSERT_EQ (device->deviceType_, DeviceType::RLV12);
-		
 		auto findType = [thisDevice] (auto device)
 			{return var_type (device) == var_type (thisDevice); };
 

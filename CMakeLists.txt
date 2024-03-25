@@ -163,30 +163,21 @@ set (CONFIGURATOR_SRCS
     src/configdata/iniprocessor/getsystemconfig.cpp
     src/configdata/sectionprocessor/sectionprocessor.cpp
     src/configdata/rlprocessor/rlprocessor.cpp
-    src/configdata/deviceconfig/deviceconfig.cpp
-    src/configdata/rlconfig/rlconfig.cpp
-    src/configdata/rxv21config/rxv21config.cpp
     src/configdata/rxv21processor/rxv21processor.cpp
-    src/configdata/rxv21unitconfig/rxv21unitconfig.cpp
     src/configdata/rxv21unitprocessor/rxv21unitprocessor.cpp
     src/configdata/ba11nprocessor/ba11nprocessor.cpp
-    src/configdata/ba11nconfig/ba11nconfig.cpp 
-    src/configdata/bdv11config/bdv11config.cpp
     src/configdata/bdv11processor/bdv11processor.cpp
     src/configdata/serialconfig/dlv11jconfig/dlv11jconfig.cpp 
     src/configdata/serialconfig/uartconfig/uartconfig.cpp
     src/configdata/serialconfig/dlv11processor/dlv11processor.cpp
-    src/configdata/msv11config/msv11config.cpp 
     src/configdata/msv11processor/msv11processor.cpp
     src/configdata/rlunitconfig/rlunitconfig.cpp
     src/configdata/rlunitprocessor/rlunitprocessor.cpp
     src/configdata/kd11processor/kd11processor.cpp
-    src/configdata/kd11_naconfig/kd11_naconfig.cpp
     src/configdata/kd11_naprocessor/kd11_naprocessor.cpp
     src/configdata/kdf11_aconfig/kdf11_aconfig.cpp
     src/configdata/kdf11_aprocessor/kdf11_aprocessor.cpp
     src/configdata/kdf11_b/kdf11_bconfig/kdf11_bconfig.cpp
-    src/configdata/kdf11_b/sluconfig/sluconfig.cpp
     src/configdata/kdf11_b/kdf11_bprocessor/kdf11_bprocessor.cpp
     src/configdata/kdf11_b/sluprocessor/sluprocessor.cpp)
 

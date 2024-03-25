@@ -1,5 +1,4 @@
 #include "configdata/iniprocessor/iniprocessor.h"
-#include "configdata/devicetype/devicetype.h"
 #include "configdata/kdf11_b/kdf11_bconfig/kdf11_bconfig.h"
 
 #include <fstream>	
@@ -19,13 +18,13 @@ TEST (KDF11_BConfiguratorTest, powerUpModeAccepted)
 	vector<DeviceConfigVariant> systemConfig = 
 		iniProcessor.getSystemConfig ();
 
+	// The only device type in this testset is the KD11 so if that's
+	// not correct the following tests will fail too.
+	ASSERT_TRUE (holds_alternative<shared_ptr<KDF11_BConfig>> (systemConfig[0]));
+
 	// The device's type is KD11 so the configuration is a KD11Config object
 	auto kdf11_bConfig = 
 		get<shared_ptr<KDF11_BConfig>> (systemConfig[0]);
-
-	// The only device type in this testset is the KD11 so if that's
-	// not correct the following tests will fail too.
-	ASSERT_EQ (kdf11_bConfig->deviceType_, DeviceType::KDF11_B);
 
 	EXPECT_EQ (kdf11_bConfig->powerUpMode, KD11Config::PowerUpMode::ODT);
 }

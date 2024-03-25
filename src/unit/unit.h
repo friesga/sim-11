@@ -6,7 +6,7 @@
 #include "types.h"
 #include "bitmask.h"
 #include "attachflags.h"
-#include "configdata/deviceconfig/deviceconfig.h"
+#include "configdata/deviceconfig/deviceconfigvariant.h"
 
 #include <cstdio>
 #include <string>
@@ -81,7 +81,7 @@ public:
     Unit (PDP11Peripheral *owningDevice);
 
     // Functions to be implemented by concrete devices
-    virtual StatusCode configure (shared_ptr<DeviceConfig> deviceConfig) = 0;
+    virtual StatusCode configure (DeviceConfigVariant deviceConfig) = 0;
 };
 
 #endif // !_UNIT_H_

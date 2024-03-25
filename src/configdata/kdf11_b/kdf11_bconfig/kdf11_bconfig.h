@@ -9,7 +9,7 @@
 
 using std::shared_ptr;
 
-struct KDF11_BConfig : public DeviceConfig
+struct KDF11_BConfig
 {
     KD11Config::PowerUpMode powerUpMode {KD11Config::PowerUpMode::Bootstrap};
     shared_ptr<SLUConfig> sluConfig;

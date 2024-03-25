@@ -1,13 +1,15 @@
 #include "../rlv12.h"
 #include "sim_fio/sim_fio.h"
 
-using std::shared_ptr;
-using std::static_pointer_cast;
+#include <variant>
 
-StatusCode RL01_2::configure (shared_ptr<DeviceConfig> deviceConfig)
+using std::shared_ptr;
+using std::get;
+
+StatusCode RL01_2::configure (DeviceConfigVariant deviceConfig)
 {
     shared_ptr<RLUnitConfig> rlUnitConfig = 
-        static_pointer_cast<RLUnitConfig> (deviceConfig);
+        get<shared_ptr<RLUnitConfig>> (deviceConfig);
 
     // Set unit type and size from the given configuration. Note that if
     // the unit type is Auto the unit's capacity is determined after

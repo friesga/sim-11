@@ -1,8 +1,6 @@
 #include "dlv11jconfig.h"
 
 DLV11JConfig::DLV11JConfig ()
-    : 
-    DeviceConfig (DeviceType::DLV11_J)
 {
 	createDLV11J_UARTsConfig ();
 }

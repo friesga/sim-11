@@ -12,7 +12,7 @@ using std::pair;
 
 // This structure defines the configuration parameters for the serial line
 // units of a KDF11-B.
-struct SLUConfig : public DeviceConfig
+struct SLUConfig
 {
 	enum {defaultSLU1Address = 0177560};
 	enum {defaultSLU1Vector = 060};
@@ -31,8 +31,6 @@ struct SLUConfig : public DeviceConfig
         UARTConfig {defaultSLU2Address, defaultSLU2Vector, true},
     };
     ConsoleConfig consoleConfig;
-
-    SLUConfig ();
 };
 
 #endif // _SLUCONFIG_H_

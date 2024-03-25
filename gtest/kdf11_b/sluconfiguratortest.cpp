@@ -1,5 +1,4 @@
 #include "configdata/iniprocessor/iniprocessor.h"
-#include "configdata/devicetype/devicetype.h"
 #include "configdata/kdf11_b/kdf11_bconfig/kdf11_bconfig.h"
 #include "configdata/serialconfig/uartconfig/uartconfig.h"
 
@@ -71,13 +70,13 @@ TEST (SLUConfiguratorTest, defaultConfigurationAccepted)
 	vector<DeviceConfigVariant> systemConfig = 
 		iniProcessor.getSystemConfig ();
 
+	// The only device type in this testset is the KD11 so if that's
+	// not correct the following tests will fail too.
+	ASSERT_TRUE (holds_alternative<shared_ptr<KDF11_BConfig>> (systemConfig[0]));
+
 	// The device's type is KD11 so the configuration is a KD11Config object
 	auto kdf11_bConfig = 
 		get<shared_ptr<KDF11_BConfig>> (systemConfig[0]);
-
-	// The only device type in this testset is the KD11 so if that's
-	// not correct the following tests will fail too.
-	ASSERT_EQ (kdf11_bConfig->deviceType_, DeviceType::KDF11_B);
 
 	SLUConfig* sluConfig = (SLUConfig*) kdf11_bConfig->sluConfig.get ();
 	
@@ -107,13 +106,13 @@ TEST (SLUConfiguratorTest, slu2AddressAccepted)
 	vector<DeviceConfigVariant> systemConfig = 
 		iniProcessor.getSystemConfig ();
 
+	// The only device type in this testset is the KD11 so if that's
+	// not correct the following tests will fail too.
+	ASSERT_TRUE (holds_alternative<shared_ptr<KDF11_BConfig>> (systemConfig[0]));
+
 	// The device's type is KD11 so the configuration is a KD11Config object
 	auto kdf11_bConfig = 
 		get<shared_ptr<KDF11_BConfig>> (systemConfig[0]);
-
-	// The only device type in this testset is the KD11 so if that's
-	// not correct the following tests will fail too.
-	ASSERT_EQ (kdf11_bConfig->deviceType_, DeviceType::KDF11_B);
 
 	SLUConfig* sluConfig = (SLUConfig*) kdf11_bConfig->sluConfig.get ();
 
@@ -164,13 +163,13 @@ TEST (SLUConfiguratorTest, sluDisabledAccepted)
 	vector<DeviceConfigVariant> systemConfig = 
 		iniProcessor.getSystemConfig ();
 
+	// The only device type in this testset is the KD11 so if that's
+	// not correct the following tests will fail too.
+	ASSERT_TRUE (holds_alternative<shared_ptr<KDF11_BConfig>> (systemConfig[0]));
+
 	// The device's type is KD11 so the configuration is a KD11Config object
 	auto kdf11_bConfig = 
 		get<shared_ptr<KDF11_BConfig>> (systemConfig[0]);
-
-	// The only device type in this testset is the KD11 so if that's
-	// not correct the following tests will fail too.
-	ASSERT_EQ (kdf11_bConfig->deviceType_, DeviceType::KDF11_B);
 
 	SLUConfig* sluConfig = (SLUConfig*) kdf11_bConfig->sluConfig.get ();
 	
@@ -193,13 +192,13 @@ TEST (SLUConfiguratorTest, breakResponsedAccepted)
 	vector<DeviceConfigVariant> systemConfig = 
 		iniProcessor.getSystemConfig ();
 
+	// The only device type in this testset is the KD11 so if that's
+	// not correct the following tests will fail too.
+	ASSERT_TRUE (holds_alternative<shared_ptr<KDF11_BConfig>> (systemConfig[0]));
+
 	// The device's type is KD11 so the configuration is a KD11Config object
 	auto kdf11_bConfig = 
 		get<shared_ptr<KDF11_BConfig>> (systemConfig[0]);
-
-	// The only device type in this testset is the KD11 so if that's
-	// not correct the following tests will fail too.
-	ASSERT_EQ (kdf11_bConfig->deviceType_, DeviceType::KDF11_B);
 
 	SLUConfig* sluConfig = (SLUConfig*) kdf11_bConfig->sluConfig.get ();
 	
@@ -248,13 +247,13 @@ TEST (SLUConfiguratorTest, escBreakKeyAccepted)
 	vector<DeviceConfigVariant> systemConfig = 
 		iniProcessor.getSystemConfig ();
 
+	// The only device type in this testset is the KD11 so if that's
+	// not correct the following tests will fail too.
+	ASSERT_TRUE (holds_alternative<shared_ptr<KDF11_BConfig>> (systemConfig[0]));
+
 	// The device's type is KD11 so the configuration is a KD11Config object
 	auto kdf11_bConfig = 
 		get<shared_ptr<KDF11_BConfig>> (systemConfig[0]);
-
-	// The only device type in this testset is the KD11 so if that's
-	// not correct the following tests will fail too.
-	ASSERT_EQ (kdf11_bConfig->deviceType_, DeviceType::KDF11_B);
 
 	SLUConfig* sluConfig = (SLUConfig*) kdf11_bConfig->sluConfig.get ();
 	
@@ -276,13 +275,13 @@ TEST (SLUConfiguratorTest, upperCaseControlCharAccepted)
 	vector<DeviceConfigVariant> systemConfig = 
 		iniProcessor.getSystemConfig ();
 
+	// The only device type in this testset is the KD11 so if that's
+	// not correct the following tests will fail too.
+	ASSERT_TRUE (holds_alternative<shared_ptr<KDF11_BConfig>> (systemConfig[0]));
+
 	// The device's type is KD11 so the configuration is a KD11Config object
 	auto kdf11_bConfig = 
 		get<shared_ptr<KDF11_BConfig>> (systemConfig[0]);
-
-	// The only device type in this testset is the KD11 so if that's
-	// not correct the following tests will fail too.
-	ASSERT_EQ (kdf11_bConfig->deviceType_, DeviceType::KDF11_B);
 
 	SLUConfig* sluConfig = (SLUConfig*) kdf11_bConfig->sluConfig.get ();
 	
@@ -304,13 +303,13 @@ TEST (SLUConfiguratorTest, loopbackAccepted)
 	vector<DeviceConfigVariant> systemConfig = 
 		iniProcessor.getSystemConfig ();
 
+	// The only device type in this testset is the KD11 so if that's
+	// not correct the following tests will fail too.
+	ASSERT_TRUE (holds_alternative<shared_ptr<KDF11_BConfig>> (systemConfig[0]));
+
 	// The device's type is KD11 so the configuration is a KD11Config object
 	auto kdf11_bConfig = 
 		get<shared_ptr<KDF11_BConfig>> (systemConfig[0]);
-
-	// The only device type in this testset is the KD11 so if that's
-	// not correct the following tests will fail too.
-	ASSERT_EQ (kdf11_bConfig->deviceType_, DeviceType::KDF11_B);
 
 	SLUConfig* sluConfig = (SLUConfig*) kdf11_bConfig->sluConfig.get ();
 	

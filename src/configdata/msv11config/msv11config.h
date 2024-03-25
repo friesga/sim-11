@@ -2,9 +2,8 @@
 #define _MSV11CONFIG_H_
 
 #include "types.h"
-#include "../deviceconfig/deviceconfig.h"
 
-struct MSV11Config : public DeviceConfig
+struct MSV11Config
 {
     // Definition of the power source:
     // - System
@@ -37,8 +36,6 @@ struct MSV11Config : public DeviceConfig
     // Bank 7 for system memory, the lower 2K portion of Bank 7 can be enabled
     // by setting the bank7_lower2K_enabled option to true.
     bool bank7Lower2kWEnabled {false};
-
-    MSV11Config ();
 };
 
 #endif // _MSV11CONFIG_H_

@@ -1,5 +1,4 @@
 #include "configdata/iniprocessor/iniprocessor.h"
-#include "configdata/devicetype/devicetype.h"
 #include "configdata/serialconfig/dlv11jconfig/dlv11jconfig.h"
 #include "configdata/serialconfig/consoleconfig/consoleconfig.h"
 
@@ -24,13 +23,13 @@ TEST (DLV11JConfiguratorTest, breakResponseAccepted)
 	vector<DeviceConfigVariant> systemConfig = 
 		iniProcessor.getSystemConfig ();
 
+	// The only device type in this testset is the DLV11-J so if that's
+	// not correct the following tests will fail too.
+	ASSERT_TRUE (holds_alternative<shared_ptr<DLV11JConfig>> (systemConfig[0]));
+
 	// The device's type is DLV11J so the configuration is a DLV11JConfig object
 	auto dlConfig = 
 		get<shared_ptr<DLV11JConfig>> (systemConfig[0]);
-
-	// The only device type in this testset is the DLV11-J so if that's
-	// not correct the following tests will fail too.
-	ASSERT_EQ (dlConfig->deviceType_, DeviceType::DLV11_J);
 
 	EXPECT_EQ (dlConfig->consoleConfig.breakResponse, ConsoleConfig::BreakResponse::Boot);
 }
@@ -49,13 +48,13 @@ TEST (DLV11JConfiguratorTest, escCharAccepted)
 	vector<DeviceConfigVariant> systemConfig = 
 		iniProcessor.getSystemConfig ();
 
+	// The only device type in this testset is the DLV11-J so if that's
+	// not correct the following tests will fail too.
+	ASSERT_TRUE (holds_alternative<shared_ptr<DLV11JConfig>> (systemConfig[0]));
+
 	// The device's type is DLV11J so the configuration is a 
 	auto dlConfig = 
 		get<shared_ptr<DLV11JConfig>> (systemConfig[0]);
-
-	// The only device type in this testset is the DLV11-J so if that's
-	// not correct the following tests will fail too.
-	ASSERT_EQ (dlConfig->deviceType_, DeviceType::DLV11_J);
 
 	EXPECT_EQ (dlConfig->consoleConfig.breakKey, 27);
 }
@@ -74,13 +73,13 @@ TEST (DLV11JConfiguratorTest, upperCaseControlCharAccepted)
 	vector<DeviceConfigVariant> systemConfig = 
 		iniProcessor.getSystemConfig ();
 
+	// The only device type in this testset is the DLV11-J so if that's
+	// not correct the following tests will fail too.
+	ASSERT_TRUE (holds_alternative<shared_ptr<DLV11JConfig>> (systemConfig[0]));
+
 	// The device's type is DLV11J so the configuration is a 
 	auto dlConfig = 
 		get<shared_ptr<DLV11JConfig>> (systemConfig[0]);
-
-		// The only device type in this testset is the DLV11-J so if that's
-	// not correct the following tests will fail too.
-	ASSERT_EQ (dlConfig->deviceType_, DeviceType::DLV11_J);
 
 	EXPECT_EQ (dlConfig->consoleConfig.breakKey, 8);
 }
@@ -99,13 +98,13 @@ TEST (DLV11JConfiguratorTest, lowerCaseControlCharAccepted)
 	vector<DeviceConfigVariant> systemConfig = 
 		iniProcessor.getSystemConfig ();
 
+	// The only device type in this testset is the DLV11-J so if that's
+	// not correct the following tests will fail too.
+	ASSERT_TRUE (holds_alternative<shared_ptr<DLV11JConfig>> (systemConfig[0]));
+
 	// The device's type is DLV11J so the configuration is a 
 	auto dlConfig = 
 		get<shared_ptr<DLV11JConfig>> (systemConfig[0]);
-
-		// The only device type in this testset is the DLV11-J so if that's
-	// not correct the following tests will fail too.
-	ASSERT_EQ (dlConfig->deviceType_, DeviceType::DLV11_J);
 
 	EXPECT_EQ (dlConfig->consoleConfig.breakKey, 8);
 }
@@ -201,13 +200,13 @@ TEST (DLV11JConfiguratorTest, baseAddressAndVectorAccepted)
 	vector<DeviceConfigVariant> systemConfig = 
 		iniProcessor.getSystemConfig ();
 
+	// The only device type in this testset is the DLV11-J so if that's
+	// not correct the following tests will fail too.
+	ASSERT_TRUE (holds_alternative<shared_ptr<DLV11JConfig>> (systemConfig[0]));
+
 	// The device's type is DLV11J so the configuration is a 
 	auto dlConfig = 
 		get<shared_ptr<DLV11JConfig>> (systemConfig[0]);
-
-	// The only device type in this testset is the DLV11-J so if that's
-	// not correct the following tests will fail too.
-	ASSERT_EQ (dlConfig->deviceType_, DeviceType::DLV11_J);
 
 	EXPECT_EQ (dlConfig->baseAddress, 0176500);
 	EXPECT_EQ (dlConfig->baseVector, 0300);
@@ -252,13 +251,13 @@ TEST (DLV11JConfiguratorTest, consoleSelectionAccepted)
 	vector<DeviceConfigVariant> systemConfig = 
 		iniProcessor.getSystemConfig ();
 
+	// The only device type in this testset is the DLV11-J so if that's
+	// not correct the following tests will fail too.
+	ASSERT_TRUE (holds_alternative<shared_ptr<DLV11JConfig>> (systemConfig[0]));
+
 	// The device's type is DLV11J so the configuration is a 
 	auto dlConfig = 
 		get<shared_ptr<DLV11JConfig>> (systemConfig[0]);
-
-	// The only device type in this testset is the DLV11-J so if that's
-	// not correct the following tests will fail too.
-	ASSERT_EQ (dlConfig->deviceType_, DeviceType::DLV11_J);
 
 	EXPECT_TRUE (dlConfig->ch3ConsoleEnabled);
 }
@@ -303,13 +302,13 @@ TEST (DLV11JConfiguratorTest, loopbackOptionAccepted)
 	vector<DeviceConfigVariant> systemConfig = 
 		iniProcessor.getSystemConfig ();
 
+	// The only device type in this testset is the DLV11-J so if that's
+	// not correct the following tests will fail too.
+	ASSERT_TRUE (holds_alternative<shared_ptr<DLV11JConfig>> (systemConfig[0]));
+
 	// The device's type is DLV11J so the configuration is a 
 	auto dlConfig = 
 		get<shared_ptr<DLV11JConfig>> (systemConfig[0]);
-
-	// The only device type in this testset is the DLV11-J so if that's
-	// not correct the following tests will fail too.
-	ASSERT_EQ (dlConfig->deviceType_, DeviceType::DLV11_J);
 
 	EXPECT_TRUE (dlConfig->loopback);
 }
@@ -353,13 +352,13 @@ TEST (DLV11JConfiguratorTest, uartConfigCreated)
 	vector<DeviceConfigVariant> systemConfig = 
 		iniProcessor.getSystemConfig ();
 
+	// The only device type in this testset is the DLV11-J so if that's
+	// not correct the following tests will fail too.
+	ASSERT_TRUE (holds_alternative<shared_ptr<DLV11JConfig>> (systemConfig[0]));
+
 	// The device's type is DLV11J so the configuration is a 
 	auto dlConfig = 
 		get<shared_ptr<DLV11JConfig>> (systemConfig[0]);
-
-	// The only device type in this testset is the DLV11-J so if that's
-	// not correct the following tests will fail too.
-	ASSERT_EQ (dlConfig->deviceType_, DeviceType::DLV11_J);
 
 	EXPECT_EQ (dlConfig->baseAddress, 0176500);
 	EXPECT_EQ (dlConfig->baseVector, 0300);
@@ -396,13 +395,13 @@ TEST (DLV11JConfiguratorTest, consoleUARTConfigCreated)
 	vector<DeviceConfigVariant> systemConfig = 
 		iniProcessor.getSystemConfig ();
 
+	// The only device type in this testset is the DLV11-J so if that's
+	// not correct the following tests will fail too.
+	ASSERT_TRUE (holds_alternative<shared_ptr<DLV11JConfig>> (systemConfig[0]));
+
 	// The device's type is DLV11J so the configuration is a 
 	auto dlConfig = 
 		get<shared_ptr<DLV11JConfig>> (systemConfig[0]);
-
-	// The only device type in this testset is the DLV11-J so if that's
-	// not correct the following tests will fail too.
-	ASSERT_EQ (dlConfig->deviceType_, DeviceType::DLV11_J);
 
 	EXPECT_EQ (dlConfig->baseAddress, 0176500);
 	EXPECT_EQ (dlConfig->baseVector, 0300);
@@ -439,13 +438,13 @@ TEST (DLV11JConfiguratorTest, alternativeBaseAddressConfigCreated)
 	vector<DeviceConfigVariant> systemConfig = 
 		iniProcessor.getSystemConfig ();
 
+	// The only device type in this testset is the DLV11-J so if that's
+	// not correct the following tests will fail too.
+	ASSERT_TRUE (holds_alternative<shared_ptr<DLV11JConfig>> (systemConfig[0]));
+
 	// The device's type is DLV11J so the configuration is a 
 	auto dlConfig = 
 		get<shared_ptr<DLV11JConfig>> (systemConfig[0]);
-
-	// The only device type in this testset is the DLV11-J so if that's
-	// not correct the following tests will fail too.
-	ASSERT_EQ (dlConfig->deviceType_, DeviceType::DLV11_J);
 
 	EXPECT_EQ (dlConfig->baseAddress, 0176540);
 	EXPECT_EQ (dlConfig->baseVector, 0200);

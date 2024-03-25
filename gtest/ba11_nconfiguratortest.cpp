@@ -1,10 +1,11 @@
 #include "configdata/iniprocessor/iniprocessor.h"
-#include "configdata/devicetype/devicetype.h"
 #include "configdata/deviceconfig/deviceconfigvariant.h"
 #include "configdata/ba11nconfig/ba11nconfig.h"
 
 #include <fstream>	
 #include <gtest/gtest.h>
+
+using std::holds_alternative;
 
 TEST (BA11_NConfiguratorTest, defaultLogoIsPDP11_03L)
 {
@@ -19,13 +20,13 @@ TEST (BA11_NConfiguratorTest, defaultLogoIsPDP11_03L)
 	vector<DeviceConfigVariant> systemConfig = 
 		iniProcessor.getSystemConfig ();
 
+	// The only device type in this testset is the BA11-N so if that's
+	// not correct the following tests will fail too.
+	ASSERT_TRUE (holds_alternative<shared_ptr<BA11_NConfig>> (systemConfig[0]));
+
 	// The device's type is BA11_N so the configuration is a BA11_NConfig object
 	shared_ptr<BA11_NConfig> ba11_nConfig = 
 		get<shared_ptr<BA11_NConfig>> (systemConfig[0]);
-
-	// The only device type in this testset is the BA11-N so if that's
-	// not correct the following tests will fail too.
-	ASSERT_EQ (ba11_nConfig->deviceType_, DeviceType::BA11_N);
 
 	EXPECT_EQ (ba11_nConfig->logo, BA11_NConfig::Logo::PDP_1103L);
 }
@@ -45,13 +46,13 @@ TEST (BA11_NConfiguratorTest, logoSelected)
 	vector<DeviceConfigVariant> systemConfig = 
 		iniProcessor.getSystemConfig ();
 
+	// The only device type in this testset is the BA11-N so if that's
+	// not correct the following tests will fail too.
+	ASSERT_TRUE (holds_alternative<shared_ptr<BA11_NConfig>> (systemConfig[0]));
+
 	// The device's type is BA11_N so the configuration is a BA11_NConfig object
 	shared_ptr<BA11_NConfig> ba11_nConfig = 
 		get<shared_ptr<BA11_NConfig>> (systemConfig[0]);
-
-	// The only device type in this testset is the BA11-N so if that's
-	// not correct the following tests will fail too.
-	ASSERT_EQ (ba11_nConfig->deviceType_, DeviceType::BA11_N);
 
 	EXPECT_EQ (ba11_nConfig->logo, BA11_NConfig::Logo::PDP_1123);
 }

@@ -1,8 +1,6 @@
 #ifndef _RLUNITCONFIG_H_
 #define _RLUNITCONFIG_H_
 
-#include "../deviceconfig/deviceconfig.h"
-
 #include <string>
 
 using std::string;
@@ -21,7 +19,7 @@ struct RLUnitConfigParams
 };
 
 // Definition of the configuration result of an RL01/02 unit.
-struct RLUnitConfig : public DeviceConfig
+struct RLUnitConfig
 {
     enum class RLUnitType
 	{

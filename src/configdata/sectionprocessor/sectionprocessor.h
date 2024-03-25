@@ -2,7 +2,6 @@
 #define _SECTIONPROCESSOR_H_
 
 #include "../iniprocessor/iniparser.h"
-#include "../deviceconfig/deviceconfig.h"
 #include "configdata/deviceconfig/deviceconfigvariant.h"
 
 #include <memory>

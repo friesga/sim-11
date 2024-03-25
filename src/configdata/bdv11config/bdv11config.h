@@ -1,9 +1,7 @@
 #ifndef _BDV11CONFIG_H_
 #define _BDV11CONFIG_H_
 
-#include "../deviceconfig/deviceconfig.h"
-
-struct BDV11Config : public DeviceConfig
+struct BDV11Config
 {
     enum class BootROM
     {
@@ -27,8 +25,6 @@ struct BDV11Config : public DeviceConfig
     bool consoleDialog {true};
     BootROM bootROM {BootROM::BDV11};
     BootDevice bootDevice {BootDevice::RX02};
-
-    BDV11Config ();
 };
 
 #endif // _BDV11CONFIG_H_
