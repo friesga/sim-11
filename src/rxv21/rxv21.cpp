@@ -52,13 +52,14 @@ RXV21::RXV21 (Qbus *bus, shared_ptr<RXV21Config> rxConfig)
 
 	// Check if unit 0 is configured and a filename is given in the 
 	// configuration. If so, read the contents of the file into memory.
+	// if (rxConfig->rxv21UnitConfig[0] != nullptr &&
+	//	!static_pointer_cast<RXV21UnitConfig> 
+	// 		(rxConfig->rxv21UnitConfig[0])->fileName.empty ())
 	if (rxConfig->rxv21UnitConfig[0] != nullptr &&
-		!static_pointer_cast<RXV21UnitConfig> 
-			(rxConfig->rxv21UnitConfig[0])->fileName.empty ())
+		!rxConfig->rxv21UnitConfig[0]->fileName.empty ())
 	{
 		FILE* floppy_file = 
-			fopen (static_pointer_cast<RXV21UnitConfig> 
-				(rxConfig->rxv21UnitConfig[0])->fileName.c_str(), "rb");
+			fopen (rxConfig->rxv21UnitConfig[0]->fileName.c_str(), "rb");
 		if (!floppy_file) 
 		{
 			free(data);

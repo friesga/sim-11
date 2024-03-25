@@ -1,7 +1,7 @@
 #ifndef _RXV21UNITPROCESSOR_H_
 #define _RXV21UNITPROCESSOR_H_
 
-#include "../sectionprocessor/deviceconfigprocessor.h"
+#include "../sectionprocessor/unitconfigprocessor.h"
 #include "../rxv21unitconfig/rxv21unitconfig.h"
 #include "rxv21unitprocessor.h"
 
@@ -14,13 +14,12 @@ using std::shared_ptr;
 using std::map;
 using std::string;
 
-class RXV21UnitProcessor : public DeviceConfigProcessor
+class RXV21UnitProcessor : public UnitConfigProcessor
 {
 	unique_ptr<RXV21UnitConfig> rxv21UnitConfigPtr {nullptr};
 
     // Define process as a pointer to a BDV11Processor member function
 	// with a iniparser::Value argument and returning void.
-
 	typedef void (RXV21UnitProcessor::*Process)(iniparser::Value);
 	
 	map<string, Process> valueProcessors =
@@ -41,7 +40,7 @@ class RXV21UnitProcessor : public DeviceConfigProcessor
 
 public:
 	RXV21UnitProcessor ();
-	DeviceConfig getConfig ();
+	shared_ptr<RXV21UnitConfig> getConfig ();
 };
 
 

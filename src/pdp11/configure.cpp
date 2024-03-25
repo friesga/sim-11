@@ -71,8 +71,6 @@ void PDP_11::configureDevices (vector<DeviceConfig> systemConfig,
             {rlv12_ = new RLV12 (&bus_, rlConfig); },
         [this, window] (shared_ptr<BA11_NConfig> ba11_nConfig) 
             {ba11_n_ = std::make_unique<BA11_N> (&bus_, window, ba11_nConfig); },
-        [this] (shared_ptr<RXV21UnitConfig> rxv21UnitConfig)
-            { throw std::runtime_error ("RXV21UnitConfig in systemConfig"); },
         [this] (shared_ptr<SLUConfig> sluConfig)
             { throw std::runtime_error ("SLUConfig in systemConfig"); },
     };

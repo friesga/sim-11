@@ -63,7 +63,7 @@ void RXV21UnitProcessor::checkConsistency ()
 void RXV21UnitProcessor::processSubsection (iniparser::Section *subSection)
 {}
 
-DeviceConfig RXV21UnitProcessor::getConfig ()
+shared_ptr<RXV21UnitConfig> RXV21UnitProcessor::getConfig ()
 {
 	return move (rxv21UnitConfigPtr);
 }
