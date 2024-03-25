@@ -73,8 +73,6 @@ void PDP_11::configureDevices (vector<DeviceConfig> systemConfig,
             {ba11_n_ = std::make_unique<BA11_N> (&bus_, window, ba11_nConfig); },
         [this] (shared_ptr<RXV21UnitConfig> rxv21UnitConfig)
             { throw std::runtime_error ("RXV21UnitConfig in systemConfig"); },
-        [this] (shared_ptr<RLUnitConfig> rlUnitConfig)
-            { throw std::runtime_error ("RLUnitConfig in systemConfig"); },
         [this] (shared_ptr<SLUConfig> sluConfig)
             { throw std::runtime_error ("SLUConfig in systemConfig"); },
     };

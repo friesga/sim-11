@@ -31,7 +31,6 @@ using DeviceConfig = variant<
     shared_ptr<RLConfig>,
     shared_ptr<BA11_NConfig>,
     shared_ptr<RXV21UnitConfig>,
-    shared_ptr<RLUnitConfig>,
     shared_ptr<SLUConfig>>;
 
 #endif // _DEVICECONFIGVARIANT_H_

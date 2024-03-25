@@ -3,11 +3,9 @@
 #include "../rlunitprocessor/rlunitprocessor.h"
 
 #include <utility>
-#include <variant>
 
 using std::make_unique;
 using std::move;
-using std::get;
 
 RLProcessor::RLProcessor ()
 {
@@ -123,9 +121,8 @@ void RLProcessor::processSubsection (iniparser::Section *subSection)
 	RLUnitProcessor rlUnitProcessor {};
 	rlUnitProcessor.processSection (subSection);
 
-	// Add the unit configuration to the Rl device configuration
-	rlConfigPtr->rlUnitConfig[unitNumber] = 
-		get<shared_ptr<RLUnitConfig>> (rlUnitProcessor.getConfig ());
+	// Add the unit configuration to the RL device configuration
+	rlConfigPtr->rlUnitConfig[unitNumber] = rlUnitProcessor.getConfig ();
 }
 
 DeviceConfig RLProcessor::getConfig ()
