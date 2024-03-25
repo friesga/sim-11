@@ -14,7 +14,7 @@ class KD11_NAProcessor : public SectionProcessor
 {
 public:
 	KD11_NAProcessor ();
-	DeviceConfigVariant getConfig () override;
+	DeviceConfig getConfig () override;
 
 private:
 	// Define process as a pointer to a KD11Processor member function

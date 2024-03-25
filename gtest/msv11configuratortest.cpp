@@ -40,7 +40,7 @@ TEST (MSV11ConfiguratorTest, startingAddressAccepted)
 	IniProcessor iniProcessor;
 	EXPECT_NO_THROW (iniProcessor.process (ft)); 
 
-	vector<DeviceConfigVariant> systemConfig = 
+	vector<DeviceConfig> systemConfig = 
 		iniProcessor.getSystemConfig ();
 
 	// The only device type in this testset is the MSV11 so if that's
@@ -147,7 +147,7 @@ TEST (MSV11ConfiguratorTest, multipleMSV11SectionsAccepted)
 	IniProcessor iniProcessor;
 	EXPECT_NO_THROW (iniProcessor.process (ft)); 
 
-	vector<DeviceConfigVariant> systemConfig = 
+	vector<DeviceConfig> systemConfig = 
 		iniProcessor.getSystemConfig ();
 
 	// Verify the vector contains two device configurations

@@ -80,7 +80,7 @@ void RXV21Processor::processSubsection (iniparser::Section *subSection)
 		get<shared_ptr<RXV21UnitConfig>> (rxv21UnitProcessor.getConfig ());
 }
 
-DeviceConfigVariant RXV21Processor::getConfig ()
+DeviceConfig RXV21Processor::getConfig ()
 {
 	return move (rxConfigPtr);
 }

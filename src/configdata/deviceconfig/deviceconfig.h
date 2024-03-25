@@ -20,7 +20,7 @@
 using std::variant;
 using std::shared_ptr;
 
-using DeviceConfigVariant = variant<
+using DeviceConfig = variant<
     shared_ptr<KD11_NAConfig>,
     shared_ptr<KDF11_AConfig>,
     shared_ptr<KDF11_BConfig>,

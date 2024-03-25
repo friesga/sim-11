@@ -20,7 +20,7 @@ class DLV11Processor : public SectionProcessor
 {
 public:
 	DLV11Processor ();
-	DeviceConfigVariant getConfig ();
+	DeviceConfig getConfig ();
 
 private:
 	enum {numChannels = 4};

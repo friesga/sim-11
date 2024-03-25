@@ -41,7 +41,7 @@ class RLProcessor : public SectionProcessor
 
 public:
 	RLProcessor ();
-	DeviceConfigVariant getConfig ();
+	DeviceConfig getConfig ();
 };
 
 

@@ -62,7 +62,7 @@ void KDF11_AProcessor::processPowerUpMode (iniparser::Value value)
 		kd11Procesor.processPowerUpMode (value);
 }
 
-DeviceConfigVariant KDF11_AProcessor::getConfig ()
+DeviceConfig KDF11_AProcessor::getConfig ()
 {
 	return move (kd11ConfigPtr);
 }

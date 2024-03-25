@@ -44,7 +44,7 @@ class MSV11Processor : public SectionProcessor
 
 public:
 	MSV11Processor ();
-	DeviceConfigVariant getConfig ();
+	DeviceConfig getConfig ();
 };
 
 

@@ -30,7 +30,7 @@ void BA11_NProcessor::checkConsistency ()
 void BA11_NProcessor::processSubsection (iniparser::Section *subSection)
 {}
 
-DeviceConfigVariant BA11_NProcessor::getConfig ()
+DeviceConfig BA11_NProcessor::getConfig ()
 {
 	return move (ba11_nConfigPtr);
 }

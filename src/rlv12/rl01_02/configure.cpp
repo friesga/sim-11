@@ -6,7 +6,7 @@
 using std::shared_ptr;
 using std::get;
 
-StatusCode RL01_2::configure (DeviceConfigVariant deviceConfig)
+StatusCode RL01_2::configure (DeviceConfig deviceConfig)
 {
     shared_ptr<RLUnitConfig> rlUnitConfig = 
         get<shared_ptr<RLUnitConfig>> (deviceConfig);

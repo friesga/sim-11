@@ -70,7 +70,7 @@ void KDF11_BProcessor::processBDV11Subsection (iniparser::Section *subSection)
 		get<shared_ptr<BDV11Config>> (bdv11Processor.getConfig ());
 }
 
-DeviceConfigVariant KDF11_BProcessor::getConfig ()
+DeviceConfig KDF11_BProcessor::getConfig ()
 {
 	return move (kdf11_bConfigPtr);
 }

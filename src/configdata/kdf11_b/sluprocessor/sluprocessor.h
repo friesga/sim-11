@@ -49,7 +49,7 @@ class SLUProcessor : public SectionProcessor
 
 public:
 	SLUProcessor ();
-	DeviceConfigVariant getConfig ();
+	DeviceConfig getConfig ();
 };
 
 

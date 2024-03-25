@@ -1,5 +1,5 @@
 #include "configdata/iniprocessor/iniprocessor.h"
-#include "configdata/deviceconfig/deviceconfigvariant.h"
+#include "configdata/deviceconfig/deviceconfig.h"
 #include "configdata/ba11nconfig/ba11nconfig.h"
 
 #include <fstream>	
@@ -17,7 +17,7 @@ TEST (BA11_NConfiguratorTest, defaultLogoIsPDP11_03L)
 	IniProcessor iniProcessor;
 	EXPECT_NO_THROW (iniProcessor.process (ft)); 
 
-	vector<DeviceConfigVariant> systemConfig = 
+	vector<DeviceConfig> systemConfig = 
 		iniProcessor.getSystemConfig ();
 
 	// The only device type in this testset is the BA11-N so if that's
@@ -43,7 +43,7 @@ TEST (BA11_NConfiguratorTest, logoSelected)
 	IniProcessor iniProcessor;
 	EXPECT_NO_THROW (iniProcessor.process (ft)); 
 
-	vector<DeviceConfigVariant> systemConfig = 
+	vector<DeviceConfig> systemConfig = 
 		iniProcessor.getSystemConfig ();
 
 	// The only device type in this testset is the BA11-N so if that's

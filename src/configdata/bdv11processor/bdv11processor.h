@@ -17,7 +17,7 @@ class BDV11Processor : public SectionProcessor
 {
 public:
 	BDV11Processor ();
-	DeviceConfigVariant getConfig ();
+	DeviceConfig getConfig ();
 
 private:
 	unique_ptr<BDV11Config> bdv11ConfigPtr {nullptr};

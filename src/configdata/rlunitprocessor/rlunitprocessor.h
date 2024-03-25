@@ -42,7 +42,7 @@ class RLUnitProcessor : public SectionProcessor
 
 public:
 	RLUnitProcessor ();
-	DeviceConfigVariant getConfig ();
+	DeviceConfig getConfig ();
 };
 
 

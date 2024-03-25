@@ -75,7 +75,7 @@ void RLUnitProcessor::checkConsistency ()
 void RLUnitProcessor::processSubsection (iniparser::Section *subSection)
 {}
 
-DeviceConfigVariant RLUnitProcessor::getConfig ()
+DeviceConfig RLUnitProcessor::getConfig ()
 {
 	return move (rlUnitConfigPtr);
 }

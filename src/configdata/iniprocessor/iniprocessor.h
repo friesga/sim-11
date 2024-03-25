@@ -2,7 +2,7 @@
 #define _INIPROCESSOR_H_
 
 #include "iniparser.h"
-#include "configdata/deviceconfig/deviceconfigvariant.h"
+#include "configdata/deviceconfig/deviceconfig.h"
 #include "../sectionprocessor/sectionprocessor.h"
 #include "configdata/msv11config/msv11config.h"
 
@@ -42,12 +42,12 @@ class IniProcessor
 public:
     void process (string filename);
 	void process (iniparser::File iniFile);
-	vector<DeviceConfigVariant> &getSystemConfig ();
+	vector<DeviceConfig> &getSystemConfig ();
 
 private:
 	// Define the system configuration as a vector of (shared) pointers
 	// to device configurations.
-	vector<DeviceConfigVariant> systemConfig {};
+	vector<DeviceConfig> systemConfig {};
 
 	typedef unique_ptr<SectionProcessor> (IniProcessor::*SectionProcessorFactory) ();
 

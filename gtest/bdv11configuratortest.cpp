@@ -19,7 +19,7 @@ TEST (BDV11ConfiguratorTest, optionsAccepted)
 	IniProcessor iniProcessor;
 	EXPECT_NO_THROW (iniProcessor.process (ft)); 
 
-	vector<DeviceConfigVariant> systemConfig = 
+	vector<DeviceConfig> systemConfig = 
 		iniProcessor.getSystemConfig ();
 
 	// The only device type in this testset is the DLV11-J so if that's
@@ -72,7 +72,7 @@ TEST (BDV11ConfiguratorTest, defaultsOk)
 	IniProcessor iniProcessor;
 	EXPECT_NO_THROW (iniProcessor.process (ft)); 
 
-	vector<DeviceConfigVariant> systemConfig = 
+	vector<DeviceConfig> systemConfig = 
 		iniProcessor.getSystemConfig ();
 
 	// The only device type in this testset is the DLV11-J so if that's
@@ -101,7 +101,7 @@ TEST (BDV11ConfiguratorTest, bootROMAccepted)
 	IniProcessor iniProcessor;
 	EXPECT_NO_THROW (iniProcessor.process (ft)); 
 
-	vector<DeviceConfigVariant> systemConfig = 
+	vector<DeviceConfig> systemConfig = 
 		iniProcessor.getSystemConfig ();
 
 	// The only device type in this testset is the DLV11-J so if that's

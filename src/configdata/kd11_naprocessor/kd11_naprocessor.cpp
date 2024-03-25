@@ -32,7 +32,7 @@ void KD11_NAProcessor::processPowerUpMode (iniparser::Value value)
 		kd11Procesor.processPowerUpMode (value);
 }
 
-DeviceConfigVariant KD11_NAProcessor::getConfig ()
+DeviceConfig KD11_NAProcessor::getConfig ()
 {
 	return move (kd11_naConfigPtr);
 }

@@ -12,7 +12,7 @@ using std::make_unique;
 class KDF11_AProcessor : public SectionProcessor
 {
 public:
-	DeviceConfigVariant getConfig () override;
+	DeviceConfig getConfig () override;
 
 private:
 	unique_ptr<KDF11_AConfig> kd11ConfigPtr {make_unique<KDF11_AConfig> ()};

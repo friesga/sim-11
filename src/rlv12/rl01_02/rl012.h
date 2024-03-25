@@ -65,7 +65,7 @@ public:
     void seekTimer ();
 
     // Required functions
-    StatusCode configure (DeviceConfigVariant deviceConfig) override;
+    StatusCode configure (DeviceConfig deviceConfig) override;
 };
 
 #endif // _RL012_H_

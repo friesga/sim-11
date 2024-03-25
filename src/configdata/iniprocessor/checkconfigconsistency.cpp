@@ -32,7 +32,7 @@ void IniProcessor::checkMSV11Consistency ()
     /*
     copy_if (systemConfig.begin (), systemConfig.end (),
         back_inserter (msv11Cards),
-        [] (DeviceConfigVariant device) {return holds_alternative<shared_ptr<MSV11Config>> (device);});
+        [] (DeviceConfig device) {return holds_alternative<shared_ptr<MSV11Config>> (device);});
     */
     for (auto device: systemConfig)
         if (holds_alternative<shared_ptr<MSV11Config>> (device))
@@ -62,9 +62,9 @@ void IniProcessor::checkMSV11Consistency ()
 // to a system with undefined behaviour.
 void IniProcessor::checkKDF11_BConsistency ()
 {
-    auto isKDF11_B = [] (DeviceConfigVariant device)
+    auto isKDF11_B = [] (DeviceConfig device)
         {return holds_alternative<shared_ptr<KDF11_BConfig>> (device);};
-    auto isBDV11 = [] (DeviceConfigVariant device)
+    auto isBDV11 = [] (DeviceConfig device)
         {return holds_alternative<shared_ptr<BDV11Config>> (device);};
 
     if (find_if (systemConfig, isKDF11_B) != systemConfig.end () &&

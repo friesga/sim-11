@@ -15,7 +15,7 @@ TEST (KDF11_BConfiguratorTest, powerUpModeAccepted)
 	IniProcessor iniProcessor;
 	EXPECT_NO_THROW (iniProcessor.process (ft)); 
 
-	vector<DeviceConfigVariant> systemConfig = 
+	vector<DeviceConfig> systemConfig = 
 		iniProcessor.getSystemConfig ();
 
 	// The only device type in this testset is the KD11 so if that's

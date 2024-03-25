@@ -13,7 +13,7 @@ using std::string;
 using std::ranges::count_if;
 
 template<typename T>
-bool PDP_11::findDevice (DeviceConfigVariant device)
+bool PDP_11::findDevice (DeviceConfig device)
 {
     return var_type (device) == typeid (shared_ptr<T> {});   
 }
@@ -22,12 +22,12 @@ bool PDP_11::findDevice (DeviceConfigVariant device)
 // controllers, without which the system will not properly run.
 // It would be nice if these configuration errors could be indicated
 // in a more lifelike way such as setting led indicators.
-void PDP_11::checkConsistency (vector<DeviceConfigVariant> systemConfig)
+void PDP_11::checkConsistency (vector<DeviceConfig> systemConfig)
 {
-    vector<DeviceConfigVariant> presentDevices {};
+    vector<DeviceConfig> presentDevices {};
 
     // Mark the devices in the systemconfiguration as present
-    for (DeviceConfigVariant device : systemConfig)
+    for (DeviceConfig device : systemConfig)
         presentDevices.push_back (device);
 
     // Now check for missing devices

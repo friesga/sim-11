@@ -43,7 +43,7 @@ TEST (ConfigProcessorTest, configProcessed)
 
 	// Verify the device is present in the configuration with all attributes
 	// having their correct value.
-	vector<DeviceConfigVariant> &configuration = 
+	vector<DeviceConfig> &configuration = 
 		iniProcessor.getSystemConfig ();
 
 	ASSERT_TRUE (holds_alternative<shared_ptr<RLConfig>> (configuration[0]));
@@ -156,7 +156,7 @@ TEST (ConfigProcessorTest, allSectionsProcessedOnce)
 		
 	stream >> ft;
 
-	vector<DeviceConfigVariant> allDevices
+	vector<DeviceConfig> allDevices
 	{
 		shared_ptr<MSV11Config> {},
 		shared_ptr<DLV11JConfig> {},

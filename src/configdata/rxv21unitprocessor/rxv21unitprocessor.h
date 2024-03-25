@@ -41,7 +41,7 @@ class RXV21UnitProcessor : public SectionProcessor
 
 public:
 	RXV21UnitProcessor ();
-	DeviceConfigVariant getConfig ();
+	DeviceConfig getConfig ();
 };
 
 

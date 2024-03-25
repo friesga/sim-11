@@ -22,7 +22,7 @@ TEST (RxConfiguratorTest, rxConfigProcessed)
 	IniProcessor configProcessor;
 	EXPECT_NO_THROW (configProcessor.process (ft));
 
-	vector<DeviceConfigVariant> &deviceConfig = 
+	vector<DeviceConfig> &deviceConfig = 
 		configProcessor.getSystemConfig ();
 
 	auto rxv21Config = 

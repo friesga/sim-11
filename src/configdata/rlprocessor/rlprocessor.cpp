@@ -128,7 +128,7 @@ void RLProcessor::processSubsection (iniparser::Section *subSection)
 		get<shared_ptr<RLUnitConfig>> (rlUnitProcessor.getConfig ());
 }
 
-DeviceConfigVariant RLProcessor::getConfig ()
+DeviceConfig RLProcessor::getConfig ()
 {
 	return move (rlConfigPtr);
 }

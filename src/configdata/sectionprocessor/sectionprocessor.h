@@ -2,7 +2,7 @@
 #define _SECTIONPROCESSOR_H_
 
 #include "../iniprocessor/iniparser.h"
-#include "configdata/deviceconfig/deviceconfigvariant.h"
+#include "configdata/deviceconfig/deviceconfig.h"
 
 #include <memory>
 #include <limits>
@@ -15,7 +15,7 @@ class SectionProcessor
 {
 public:
     void processSection (iniparser::Section* section);
-    virtual DeviceConfigVariant getConfig () = 0;
+    virtual DeviceConfig getConfig () = 0;
 
 protected:
     template <typename T> T touint (string number);
