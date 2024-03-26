@@ -1,8 +1,8 @@
 #ifndef _RXPROCESSOR_H_
 #define _RXPROCESSOR_H_
 
-#include "../sectionprocessor/deviceconfigprocessor.h"
-#include "../rxv21config/rxv21config.h"
+#include "configdata/sectionprocessor/deviceconfigprocessor.h"
+#include "configdata/rxv21/rxv21config/rxv21config.h"
 
 class RXV21Processor : public DeviceConfigProcessor
 {

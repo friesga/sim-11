@@ -1,5 +1,5 @@
 #include "rxv21unitprocessor.h"
-#include "../rxv21unitconfig/rxv21unitconfig.h"
+#include "configdata/rxv21/rxv21unitconfig/rxv21unitconfig.h"
 
 #include <utility>
 

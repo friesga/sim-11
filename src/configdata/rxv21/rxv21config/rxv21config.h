@@ -2,7 +2,7 @@
 #define _RXCONFIG_H_
 
 #include "types.h"
-#include "configdata/rxv21unitconfig/rxv21unitconfig.h"
+#include "configdata/rxv21/rxv21unitconfig/rxv21unitconfig.h"
 
 #include <memory>
 

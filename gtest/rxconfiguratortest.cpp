@@ -1,6 +1,6 @@
 #include "configdata/iniprocessor/iniprocessor.h"
-#include "configdata/rxv21config/rxv21config.h"
-#include "configdata/rxv21unitconfig/rxv21unitconfig.h"
+#include "configdata/rxv21/rxv21config/rxv21config.h"
+#include "configdata/rxv21/rxv21unitconfig/rxv21unitconfig.h"
 
 #include <sstream>	
 #include <gtest/gtest.h>

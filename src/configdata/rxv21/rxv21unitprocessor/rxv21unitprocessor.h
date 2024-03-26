@@ -1,8 +1,8 @@
 #ifndef _RXV21UNITPROCESSOR_H_
 #define _RXV21UNITPROCESSOR_H_
 
-#include "../sectionprocessor/unitconfigprocessor.h"
-#include "../rxv21unitconfig/rxv21unitconfig.h"
+#include "configdata/sectionprocessor/unitconfigprocessor.h"
+#include "configdata/rxv21/rxv21unitconfig/rxv21unitconfig.h"
 #include "rxv21unitprocessor.h"
 
 #include <memory>

@@ -163,8 +163,8 @@ set (CONFIGURATOR_SRCS
     src/configdata/iniprocessor/getsystemconfig.cpp
     src/configdata/sectionprocessor/sectionprocessor.cpp
     src/configdata/rl/rlprocessor/rlprocessor.cpp
-    src/configdata/rxv21processor/rxv21processor.cpp
-    src/configdata/rxv21unitprocessor/rxv21unitprocessor.cpp
+    src/configdata/rxv21/rxv21processor/rxv21processor.cpp
+    src/configdata/rxv21/rxv21unitprocessor/rxv21unitprocessor.cpp
     src/configdata/ba11nprocessor/ba11nprocessor.cpp
     src/configdata/bdv11processor/bdv11processor.cpp
     src/configdata/serialconfig/dlv11jconfig/dlv11jconfig.cpp 
