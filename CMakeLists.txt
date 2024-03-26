@@ -384,6 +384,7 @@ set (GTEST_SRCS
     gtest/conddatatest.cpp
     gtest/conditioncodestest.cpp
     gtest/configuratortest.cpp
+    gtest/consoleconsistencytest.cpp
     gtest/ba11_nconfiguratortest.cpp
     gtest/bdv11configuratortest.cpp
     gtest/dlv11configuratortest.cpp

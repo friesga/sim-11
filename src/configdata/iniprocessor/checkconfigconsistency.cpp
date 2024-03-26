@@ -19,6 +19,7 @@ void IniProcessor::checkConfigConsistency ()
 {
     checkMSV11Consistency ();
     checkKDF11_BConsistency ();
+    checkConsoleConsistency ();
 }
 
 void IniProcessor::checkMSV11Consistency ()
@@ -83,4 +84,36 @@ bool IniProcessor::conflictsWith (shared_ptr<MSV11Config> msv11Card1,
 bool IniProcessor::isWithin (u32 address, u32 begin, u32 end)
 {
     return address >= begin && address <= end;
+}
+
+// A system with undefined behaviour is created when it is configured
+// with two consoles. This occurs when the system comprises a KDF11-B with 
+// SLU1 enabled and a DLV11 with ch3_console_enabled.
+void IniProcessor::checkConsoleConsistency ()
+{
+    auto hasKDF11BConsole = [] (DeviceConfig device)
+    {
+        if (holds_alternative<shared_ptr<KDF11_BConfig>> (device))
+        {
+            shared_ptr<KDF11_BConfig> kdf11bConfig = 
+                get<shared_ptr<KDF11_BConfig>> (device);
+            return kdf11bConfig->sluConfig->uartConfig[0].enabled_;
+        }
+        return false;
+    };
+
+    auto hasDLV11JConsole = [] (DeviceConfig device)
+    {
+        if (holds_alternative<shared_ptr<DLV11JConfig>> (device))
+        {
+            shared_ptr<DLV11JConfig> dlv11jConfig = 
+                get<shared_ptr<DLV11JConfig>> (device);
+            return dlv11jConfig->ch3ConsoleEnabled;
+        }
+        return false;
+    };
+
+    if (find_if (systemConfig, hasKDF11BConsole) != systemConfig.end () &&
+        find_if (systemConfig, hasDLV11JConsole) != systemConfig.end ())
+            throw invalid_argument {"Specify either KDF11-B or DLV11-J as console"};
 }
