@@ -1,7 +1,7 @@
 #ifndef _KDF11_BCONFIG_H_
 #define _KDF11_BCONFIG_H_
 
-#include "../../kdconfig/kdconfig.h"
+#include "configdata/kd11config/kd11config.h"
 #include "../sluconfig/sluconfig.h"
 #include "configdata/bdv11config/bdv11config.h"
 

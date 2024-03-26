@@ -1,7 +1,7 @@
 #ifndef _KDF11_ACONFIG_H_
 #define _KDF11_ACONFIG_H_
 
-#include "configdata/kdconfig/kdconfig.h"
+#include "configdata/kd11config/kd11config.h"
 #include "types.h"
 
 struct KDF11_AConfig

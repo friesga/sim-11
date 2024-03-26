@@ -1,6 +1,6 @@
 #include "configdata/iniprocessor/iniprocessor.h"
 #include "configdata/kdf11_aconfig/kdf11_aconfig.h"
-#include "configdata/kdconfig/kdconfig.h"
+#include "configdata/kd11config/kd11config.h"
 
 #include <fstream>	
 #include <gtest/gtest.h>

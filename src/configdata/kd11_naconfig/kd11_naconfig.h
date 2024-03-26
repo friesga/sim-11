@@ -1,7 +1,7 @@
 #ifndef _KD11_NACONFIG_H_
 #define _KD11_NACONFIG_H_
 
-#include "configdata/kdconfig/kdconfig.h"
+#include "configdata/kd11config/kd11config.h"
 
 struct KD11_NAConfig
 {
