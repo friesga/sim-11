@@ -62,7 +62,7 @@ void RXV21Processor::processSubsection (iniparser::Section *subSection)
 	// exception if an incorrect unit number is specified. The unit number
 	// is stored in the RXV21UnitConfig struct so it is clear to which unit
 	// the configuration applies.
-	size_t unitNumber = unitNumberFromSectionName (subSection->name());
+	size_t unitNumber = unitNumberFromSectionName (subSection->name(), rxConfigPtr->numRxUnits);
 
 	// Check that the configuration for this unit has not already been
 	// specified.

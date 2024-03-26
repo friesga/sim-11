@@ -18,7 +18,7 @@ public:
 
 protected:
     template <typename T> T touint (string number);
-    size_t unitNumberFromSectionName (string name);
+    size_t unitNumberFromSectionName (string name, size_t maxUnits);
 
 private:
     virtual void processValue (iniparser::Section::ValueIterator valueIterator) = 0;

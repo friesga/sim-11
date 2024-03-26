@@ -2,7 +2,9 @@
 
 #include <limits>
 
-size_t SectionProcessor::unitNumberFromSectionName (string name)
+using std::to_string;
+
+size_t SectionProcessor::unitNumberFromSectionName (string name, size_t maxUnits)
 {
 	size_t unitNumber;
 
@@ -12,11 +14,12 @@ size_t SectionProcessor::unitNumberFromSectionName (string name)
 	}
 	catch (std::invalid_argument const &)
 	{
-		throw std::invalid_argument {"RL invalid unit number"};
+		throw std::invalid_argument {"Invalid unit number: " + name};
 	}
 	
-	if (unitNumber > 3)
-		throw std::invalid_argument {"RL unit number out of range 0-3"};
+	if (unitNumber >= maxUnits)
+		throw std::invalid_argument {"Unit number out of range 0-" +
+			to_string (maxUnits - 1)};
 
 	return unitNumber;
 }
