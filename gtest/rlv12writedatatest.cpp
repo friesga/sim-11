@@ -1,7 +1,7 @@
 #include "pdp11/pdp11.h"
 #include "msv11d/msv11d.h"
 #include "rlv12/rlv12.h"
-#include "configdata/rlunitconfig/rlunitconfig.h"
+#include "configdata/rl/rlunitconfig/rlunitconfig.h"
 #include "cmdlineoptions/cmdlineoptions.h"
 
 #include <gtest/gtest.h>

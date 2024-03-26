@@ -2,7 +2,7 @@
 #define _RLCONFIG_H_
 
 #include "types.h"
-#include "../rlunitconfig/rlunitconfig.h"
+#include "configdata/rl/rlunitconfig/rlunitconfig.h"
 
 #include <vector>
 #include <memory>

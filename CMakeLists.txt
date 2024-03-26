@@ -162,7 +162,7 @@ set (CONFIGURATOR_SRCS
     src/configdata/iniprocessor/checkconfigconsistency.cpp
     src/configdata/iniprocessor/getsystemconfig.cpp
     src/configdata/sectionprocessor/sectionprocessor.cpp
-    src/configdata/rlprocessor/rlprocessor.cpp
+    src/configdata/rl/rlprocessor/rlprocessor.cpp
     src/configdata/rxv21processor/rxv21processor.cpp
     src/configdata/rxv21unitprocessor/rxv21unitprocessor.cpp
     src/configdata/ba11nprocessor/ba11nprocessor.cpp
@@ -171,8 +171,8 @@ set (CONFIGURATOR_SRCS
     src/configdata/serialconfig/uartconfig/uartconfig.cpp
     src/configdata/serialconfig/dlv11processor/dlv11processor.cpp
     src/configdata/msv11processor/msv11processor.cpp
-    src/configdata/rlunitconfig/rlunitconfig.cpp
-    src/configdata/rlunitprocessor/rlunitprocessor.cpp
+    src/configdata/rl/rlunitconfig/rlunitconfig.cpp
+    src/configdata/rl/rlunitprocessor/rlunitprocessor.cpp
     src/configdata/kd11processor/kd11processor.cpp
     src/configdata/kd11_naprocessor/kd11_naprocessor.cpp
     src/configdata/kdf11_aconfig/kdf11_aconfig.cpp

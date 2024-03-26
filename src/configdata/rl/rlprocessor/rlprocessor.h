@@ -1,8 +1,8 @@
 #ifndef _RLPROCESSOR_H_
 #define _RLPROCESSOR_H_
 
-#include "../sectionprocessor/deviceconfigprocessor.h"
-#include "../rlconfig/rlconfig.h"
+#include "configdata/sectionprocessor/deviceconfigprocessor.h"
+#include "configdata/rl/rlconfig/rlconfig.h"
 
 #include <memory>
 #include <map>

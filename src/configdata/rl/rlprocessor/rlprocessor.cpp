@@ -1,6 +1,6 @@
 #include "rlprocessor.h"
-#include "../rlunitconfig/rlunitconfig.h"
-#include "../rlunitprocessor/rlunitprocessor.h"
+#include "configdata/rl/rlunitconfig/rlunitconfig.h"
+#include "configdata/rl/rlunitprocessor/rlunitprocessor.h"
 
 #include <utility>
 

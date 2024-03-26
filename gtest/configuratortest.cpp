@@ -1,5 +1,5 @@
 #include "configdata/iniprocessor/iniprocessor.h"
-#include "configdata/rlconfig/rlconfig.h"
+#include "configdata/rl/rlconfig/rlconfig.h"
 
 #include <fstream>	
 #include <gtest/gtest.h>

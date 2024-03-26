@@ -9,7 +9,7 @@
 #include "threadsafecontainers/threadsafequeue.h"
 #include "statuscodes.h"
 #include "rlv12command/rlv12command.h"
-#include "configdata/rlconfig/rlconfig.h"
+#include "configdata/rl/rlconfig/rlconfig.h"
 #include "cmdprocessor/cmdprocessor.h"
 
 #include <array>

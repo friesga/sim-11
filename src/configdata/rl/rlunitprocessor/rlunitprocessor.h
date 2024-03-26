@@ -1,8 +1,8 @@
 #ifndef _RLUNITPROCESSOR_H_
 #define _RLUNITPROCESSOR_H_
 
-#include "../sectionprocessor/unitconfigprocessor.h"
-#include "../rlunitconfig/rlunitconfig.h"
+#include "configdata/sectionprocessor/unitconfigprocessor.h"
+#include "configdata/rl/rlunitconfig/rlunitconfig.h"
 
 #include <memory>
 #include <map>

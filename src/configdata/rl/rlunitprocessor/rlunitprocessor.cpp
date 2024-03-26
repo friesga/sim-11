@@ -1,5 +1,5 @@
 #include "rlunitprocessor.h"
-#include "../rlunitconfig/rlunitconfig.h"
+#include "configdata/rl/rlunitconfig/rlunitconfig.h"
 
 #include <utility>
 

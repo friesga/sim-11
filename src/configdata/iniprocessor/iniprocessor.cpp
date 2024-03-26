@@ -1,7 +1,7 @@
 #include "iniprocessor.h"
 #include "../sectionprocessor/sectionprocessor.h"
 #include "../ba11nprocessor/ba11nprocessor.h"
-#include "../rlprocessor/rlprocessor.h"
+#include "configdata/rl/rlprocessor/rlprocessor.h"
 #include "../rxv21processor/rxv21processor.h"
 #include "../bdv11processor/bdv11processor.h"
 #include "configdata/serialconfig/dlv11processor/dlv11processor.h"
