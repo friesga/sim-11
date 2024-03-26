@@ -48,25 +48,25 @@ try
 	// Create the window for the panels
 	SDLWindow sdlWindow {"PDP-11 Console", 100, 100, 750, 200};
 
-	// Create a lsi11 with configured (or default) devices.
+	// Create a pdp-11 with configured (or default) devices.
 	// The devices are created after creation of the window to make sure the
 	// devices are destructed befor destruction of the SDLWindow. This prevents
 	// a segmentation fault that can occur if the devices access the window's
 	// panels.
-	PDP_11 lsi11 {cmdLineOptions};
+	PDP_11 pdp11 {cmdLineOptions};
 
 	// If a configuration file is specified create the system configuration from
-	// that file and configure the lsi11 with the devices and parameters as
+	// that file and configure the pdp-11 with the devices and parameters as
 	// specified in that file. If no file is specified use the default
 	// configuration.
 	if (cmdLineOptions.config_file)
-		lsi11.configureDevices (createSystemConfig (cmdLineOptions.config_file),
+		pdp11.configureDevices (createSystemConfig (cmdLineOptions.config_file),
 			&sdlWindow);
 	else
-		lsi11.configureDevices (&sdlWindow);
+		pdp11.configureDevices (&sdlWindow);
 
-	// Start the lsi11. This starts the processor
-	lsi11.run();
+	// Start the pdp-11. This starts the processor
+	pdp11.run();
 
 	// Start rendering the window and processing events
 	sdlWindow.handler ();
