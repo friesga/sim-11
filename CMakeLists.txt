@@ -383,7 +383,7 @@ set (GTEST_SRCS
     gtest/characterbuffertest.cpp
     gtest/conddatatest.cpp
     gtest/conditioncodestest.cpp
-    gtest/configuratortest.cpp
+    gtest/configprocessortest.cpp
     gtest/consoleconsistencytest.cpp
     gtest/ba11_nconfiguratortest.cpp
     gtest/bdv11configuratortest.cpp
