@@ -251,12 +251,13 @@ StatusCode BDV11::writeWord (BusAddress busAddress, u16 value)
 	return StatusCode::OK;
 }
 
-// Write the Line Time Clock Status Register. Clearing the Interrupt Enable
-// bit does not imply that a pending interrupt has to be cleared. This
-// behaviour is not documented but is implied by diagnostic JKDIB0 test 50.
+// Write the Line Time Clock Status Register.
 void BDV11::writeLKS (u16 value)
 {
 	ltc = value & LKS_IE;
+
+	if (!(ltc & LKS_IE))
+		bus_->clearInterrupt (TrapPriority::BR6, 9, 0);
 }
 
 // As the BDV11 will only be accessed by means of unmapped (16-bit) addresses
