@@ -86,6 +86,7 @@ set (KDF11_SRCS
     src/kd/kdf11/kdf11_b/serial_line_units/serial_line_units.cpp
     src/kd/kdf11/cpucontrol/kdf11_step.cpp
     src/kd/kdf11/cpucontrol/kdf11_cpucontrol.cpp
+    src/kd/kdf11/cpucontrol/calcinstructiontime.cpp
     src/kd/kdf11/cpudata/kdf11registers/kdf11registers.cpp
     src/kd/kdf11/cpudata/kdf11busdevice.cpp
     src/kd/kdf11/registerhandler/registerhandler.cpp

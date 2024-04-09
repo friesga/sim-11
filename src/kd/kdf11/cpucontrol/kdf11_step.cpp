@@ -11,6 +11,8 @@
 using std::unique_ptr;
 using std::make_unique;
 
+using namespace std::chrono;
+
 // Perform a CPU step. The step mainly comprises three actions:
 // 1. Execution of an instruction,
 // 2. Handle the trace bit,
@@ -107,11 +109,30 @@ void KDF11_CpuControl::execInstr ()
     if (traceFlag_)
         cpuData_->setTrap (CpuData::TrapCondition::BreakpointTrap);
 
+    calculatedInstructionTime += 
+        calcInstructionTime (instructionWord);
+
     // Execute the next instruction. The function returns true if the
     // instruction was completed and false if it was aborted due to an error
     // condition. In that case a trap has been set. Note however that trap
     // instructions set a trap and return true. 
     instr->execute ();
+
+    // Compare calculated total instruction times with actual time passed
+    // every millisecond.
+    if (calculatedInstructionTime >= 1000.0)
+    {
+        std::chrono::duration<uint32_t, std::micro> realInstructionTimes =
+            duration_cast<microseconds> (std::chrono::high_resolution_clock::now() -
+                startOfInterval);
+
+        if (realInstructionTimes < microseconds (1000))
+            std::this_thread::sleep_for (std::chrono::microseconds(1000) -
+                realInstructionTimes);
+        
+        calculatedInstructionTime = 0.0;
+        startOfInterval = high_resolution_clock::now();
+    }
 
     if (cpuData_->trap () != CpuData::TrapCondition::None)
         serviceTrap ();
