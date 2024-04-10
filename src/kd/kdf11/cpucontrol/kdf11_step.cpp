@@ -7,9 +7,13 @@
 #include <functional>
 #include <chrono>
 #include <memory>
+#include <stdexcept>
+#include <iostream>
 
 using std::unique_ptr;
 using std::make_unique;
+using std::runtime_error;
+using std::cout;
 
 using namespace std::chrono;
 
@@ -109,8 +113,11 @@ void KDF11_CpuControl::execInstr ()
     if (traceFlag_)
         cpuData_->setTrap (CpuData::TrapCondition::BreakpointTrap);
 
-    calculatedInstructionTime += 
-        calcInstructionTime (instructionWord);
+    if (startOfInterval.time_since_epoch () == 
+        std::chrono::duration<uint32_t, std::micro> (0))
+            startOfInterval = high_resolution_clock::now();
+
+    double instrTime = calcInstructionTime (instructionWord);
 
     // Execute the next instruction. The function returns true if the
     // instruction was completed and false if it was aborted due to an error
@@ -129,6 +136,10 @@ void KDF11_CpuControl::execInstr ()
         if (realInstructionTimes < microseconds (1000))
             std::this_thread::sleep_for (std::chrono::microseconds(1000) -
                 realInstructionTimes);
+        else
+            // throw runtime_error ("Insufficient performance on host system");
+            cout << "Insufficient performance on host system: " << 
+                realInstructionTimes << '\n';
         
         calculatedInstructionTime = 0.0;
         startOfInterval = high_resolution_clock::now();

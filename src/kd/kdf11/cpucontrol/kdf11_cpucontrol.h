@@ -13,7 +13,6 @@
 
 #include <functional>
 #include <chrono>
-
 // 
 // This class contains the control functions for the KDF11-A and KDF11-B.
 //
@@ -148,7 +147,7 @@ private:
     AddressTimes const basicRESETTimes {{5.0, 4.750}};
 
     double calculatedInstructionTime {0.0};
-    high_resolution_clock::time_point startOfInterval {high_resolution_clock::now()};
+    high_resolution_clock::time_point startOfInterval {};
 
 	// Definition of CPU run states
 	enum class CpuRunState
