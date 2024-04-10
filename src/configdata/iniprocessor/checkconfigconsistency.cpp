@@ -113,7 +113,7 @@ void IniProcessor::checkConsoleConsistency ()
         return false;
     };
 
-    if (find_if (systemConfig, hasKDF11BConsole) != systemConfig.end () &&
-        find_if (systemConfig, hasDLV11JConsole) != systemConfig.end ())
+    if (find_if (systemConfig, hasKDF11BConsole) == systemConfig.end () &&
+        find_if (systemConfig, hasDLV11JConsole) == systemConfig.end ())
             throw invalid_argument {"Specify either KDF11-B or DLV11-J as console"};
 }
