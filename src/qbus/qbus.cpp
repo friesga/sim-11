@@ -59,6 +59,14 @@ void Qbus::pushInterruptRequest (InterruptRequest intrptReq)
 	delay_ = IRCJITTER ();
 }
 
+
+bool Qbus::containsInterrupt (TrapPriority priority, unsigned char busOrder,
+	u8 functionOrder)
+{
+	return intrptReqQueue_.contains (InterruptRequest {priority,
+		busOrder, functionOrder, 0});
+}
+
 // Clear the specified interrupt request. The InterruptRequQueue will delete
 // the interrupt request equal to specified request. Equality is based on
 // priority and busorder (see InterruptRequest::operator==).

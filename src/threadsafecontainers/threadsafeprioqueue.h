@@ -23,6 +23,7 @@ class ThreadSafePrioQueue
 public:
     void clear();
     bool empty();
+    bool contains (T const &elem);
     void erase (T const &elem);
     bool fetchTop(T &dest);
     void push (T const &ir);
@@ -82,6 +83,14 @@ bool ThreadSafePrioQueue<T>::empty()
 {
     std::lock_guard<std::mutex> lock(guard);
     return queue_.empty();
+}
+
+// Check is the queue conrains an element with the specified value
+template <typename T>
+bool ThreadSafePrioQueue<T>::contains (T const &elem)
+{
+    std::lock_guard<std::mutex> lock(guard);
+    return queue_.contains (elem);
 }
 
 // Erase the element in the queue with the specified value

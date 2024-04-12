@@ -95,6 +95,8 @@ public:
 	Qbus ();
 	void setInterrupt (TrapPriority priority, unsigned char busOrder,
 		u8 functionOrder, unsigned char vector);
+	bool containsInterrupt (TrapPriority priority, unsigned char busOrder,
+		u8 functionOrder);
 	void clearInterrupt (TrapPriority priority, unsigned char busOrder,
 		u8 functionOrder);
 	void clearInterrupts ();
