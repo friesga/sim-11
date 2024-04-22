@@ -330,6 +330,7 @@ void UART::transmitter ()
 			std::chrono::microseconds (1000);
 
 		sleepUntil (nextCharCanBeProcessedAt);
+		trace.dlv11 (DLV11RecordType::DLV11_XMIT_RDY, channelNr_, xbuf);
 	}
 }
 
