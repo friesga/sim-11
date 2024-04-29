@@ -5,6 +5,7 @@
 #include "configdata/bdv11config/bdv11config.h"
 #include "configdata/kdf11_aconfig/kdf11_aconfig.h"
 #include "configdata/kdf11_b/kdf11_bconfig/kdf11_bconfig.h"
+#include "configdata/consistencychecker/consistencychecker.h"
 #include "console/operatorconsole/operatorconsolefactory.h"
 
 #include <memory>		// For make_unique
@@ -49,7 +50,8 @@ void PDP_11::configureDevices (vector<DeviceConfig> systemConfig,
     Window *window)
 {
     // Check for presence of necessary devices
-    checkConsistency (systemConfig);
+    ConsistencyChecker consistencyChecker;
+    consistencyChecker.checkConsistency (systemConfig);
 
     auto configVisitor = overloaded 
     {

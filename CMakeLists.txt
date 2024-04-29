@@ -180,7 +180,8 @@ set (CONFIGURATOR_SRCS
     src/configdata/kdf11_aprocessor/kdf11_aprocessor.cpp
     src/configdata/kdf11_b/kdf11_bconfig/kdf11_bconfig.cpp
     src/configdata/kdf11_b/kdf11_bprocessor/kdf11_bprocessor.cpp
-    src/configdata/kdf11_b/sluprocessor/sluprocessor.cpp)
+    src/configdata/kdf11_b/sluprocessor/sluprocessor.cpp
+    src/configdata/consistencychecker/consistencychecker.cpp)
 
 set (FLOAT_SRCS
     src/float/float.cpp
@@ -267,7 +268,6 @@ set (SIM11_SRCS
     src/lib/gotapproval.cpp
     src/pdp11/pdp11.cpp
     src/pdp11/configure.cpp
-    src/pdp11/checkconsistency.cpp
     src/pdp11/installmodules.cpp
     src/pdp11/loadfile.cpp
     src/pdp11/run.cpp

@@ -45,10 +45,8 @@ class PDP_11
 	unique_ptr<BA11_N> ba11_n_;
 	CmdLineOptions const &cmdLineOptions_;
 
-	void checkConsistency (vector<DeviceConfig> systemConfig);
 	u16 loadFile ();
 	void installModules ();
-	template<typename T> static bool findDevice (DeviceConfig device);
 
 public:
 	PDP_11 (CmdLineOptions const &cmdLineOptions);

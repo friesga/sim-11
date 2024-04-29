@@ -1,4 +1,5 @@
 #include "configdata/iniprocessor/iniprocessor.h"
+#include "configdata/consistencychecker/consistencychecker.h"
 
 #include <fstream>	
 #include <gtest/gtest.h>
@@ -16,10 +17,14 @@ TEST (ConsoleConsistencyTest, twoConsolesThrows)
 	stream >> ft;
 
 	IniProcessor iniProcessor;
+	ConsistencyChecker consistencyChecker;
 
+	EXPECT_NO_THROW (iniProcessor.process (ft)); 
+
+	vector<DeviceConfig> systemConfig = iniProcessor.getSystemConfig ();
 	try
 	{
-		iniProcessor.process (ft);
+		consistencyChecker.checkConsoleConsistency (systemConfig);
 		FAIL();
 	}
 	catch (std::invalid_argument const &except)
