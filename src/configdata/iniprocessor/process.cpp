@@ -21,6 +21,4 @@ void IniProcessor::process (iniparser::File iniFile)
 
 	for (iniparser::Section* sectionPtr : topLevelSections)
 		processSection (sectionPtr);
-
-	checkConfigConsistency ();
 }

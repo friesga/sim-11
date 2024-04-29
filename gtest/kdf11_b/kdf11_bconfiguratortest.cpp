@@ -1,5 +1,6 @@
 #include "configdata/iniprocessor/iniprocessor.h"
 #include "configdata/kdf11_b/kdf11_bconfig/kdf11_bconfig.h"
+#include "configdata/consistencychecker/consistencychecker.h"
 
 #include <fstream>	
 #include <gtest/gtest.h>
@@ -88,10 +89,13 @@ TEST (KDF11_BConfiguratorTest, BDV11OptionThrows)
 	stream >> ft;
 
 	IniProcessor iniProcessor;
+	EXPECT_NO_THROW (iniProcessor.process (ft)); 
 
+	vector<DeviceConfig> systemConfig = iniProcessor.getSystemConfig ();
+	ConsistencyChecker consistencyChecker {systemConfig};
 	try
 	{
-		iniProcessor.process (ft);
+		consistencyChecker.checkKDF11_BConsistency ();
 		FAIL();
 	}
 	catch (std::invalid_argument const &except)

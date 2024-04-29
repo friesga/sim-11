@@ -160,7 +160,6 @@ set (CONFIGURATOR_SRCS
     src/configdata/iniprocessor/iniprocessor.cpp
     src/configdata/iniprocessor/process.cpp
     src/configdata/iniprocessor/processsection.cpp
-    src/configdata/iniprocessor/checkconfigconsistency.cpp
     src/configdata/iniprocessor/getsystemconfig.cpp
     src/configdata/sectionprocessor/sectionprocessor.cpp
     src/configdata/rl/rlprocessor/rlprocessor.cpp
@@ -181,7 +180,9 @@ set (CONFIGURATOR_SRCS
     src/configdata/kdf11_b/kdf11_bconfig/kdf11_bconfig.cpp
     src/configdata/kdf11_b/kdf11_bprocessor/kdf11_bprocessor.cpp
     src/configdata/kdf11_b/sluprocessor/sluprocessor.cpp
-    src/configdata/consistencychecker/consistencychecker.cpp)
+    src/configdata/consistencychecker/consistencychecker.cpp
+    src/configdata/consistencychecker/checkmsv11consistency.cpp
+    src/configdata/consistencychecker/checkkdf11bconsistency.cpp)
 
 set (FLOAT_SRCS
     src/float/float.cpp

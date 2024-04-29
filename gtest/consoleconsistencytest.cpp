@@ -17,14 +17,13 @@ TEST (ConsoleConsistencyTest, twoConsolesThrows)
 	stream >> ft;
 
 	IniProcessor iniProcessor;
-	ConsistencyChecker consistencyChecker;
-
 	EXPECT_NO_THROW (iniProcessor.process (ft)); 
 
 	vector<DeviceConfig> systemConfig = iniProcessor.getSystemConfig ();
+	ConsistencyChecker consistencyChecker {systemConfig};
 	try
 	{
-		consistencyChecker.checkConsoleConsistency (systemConfig);
+		consistencyChecker.checkConsoleConsistency ();
 		FAIL();
 	}
 	catch (std::invalid_argument const &except)

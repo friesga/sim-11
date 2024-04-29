@@ -16,6 +16,11 @@ using std::ranges::count_if;
 using std::ranges::find_if;
 using std::invalid_argument;
 
+ConsistencyChecker::ConsistencyChecker (vector<DeviceConfig> const& systemConfig)
+    :
+    systemConfig_ {systemConfig}
+{}
+
 template<typename T>
 bool ConsistencyChecker::findDevice (DeviceConfig device)
 {
@@ -26,12 +31,14 @@ bool ConsistencyChecker::findDevice (DeviceConfig device)
 // controllers, without which the system will not properly run.
 // It would be nice if these configuration errors could be indicated
 // in a more lifelike way such as setting led indicators.
-void ConsistencyChecker::checkConsistency (vector<DeviceConfig> const& systemConfig)
+//
+// ToDo: Move checks to separate functions.
+void ConsistencyChecker::checkAll ()
 {
     vector<DeviceConfig> presentDevices {};
 
     // Mark the devices in the systemconfiguration as present
-    for (DeviceConfig device : systemConfig)
+    for (DeviceConfig device : systemConfig_)
         presentDevices.push_back (device);
 
     // Now check for missing devices
@@ -67,13 +74,15 @@ void ConsistencyChecker::checkConsistency (vector<DeviceConfig> const& systemCon
     if (count_if (presentDevices, &ConsistencyChecker::findDevice<BA11_NConfig>) == 0)
         throw string("No BA11-N Mounting box configured, this system cannot run.");
 
-    checkConsoleConsistency (systemConfig);
+    checkMSV11Consistency ();
+    checkKDF11_BConsistency ();
+    checkConsoleConsistency ();
 }
 
 // A system with undefined behaviour is created when it is configured
 // with two consoles. This occurs when the system comprises a KDF11-B with 
 // SLU1 enabled and a DLV11 with ch3_console_enabled.
-void ConsistencyChecker::checkConsoleConsistency (vector<DeviceConfig> const& systemConfig)
+void ConsistencyChecker::checkConsoleConsistency ()
 {
     auto hasKDF11BConsole = [] (DeviceConfig device)
     {
@@ -97,7 +106,7 @@ void ConsistencyChecker::checkConsoleConsistency (vector<DeviceConfig> const& sy
         return false;
     };
 
-    if (find_if (systemConfig, hasKDF11BConsole) != systemConfig.end () &&
-        find_if (systemConfig, hasDLV11JConsole) != systemConfig.end ())
+    if (find_if (systemConfig_, hasKDF11BConsole) != systemConfig_.end () &&
+        find_if (systemConfig_, hasDLV11JConsole) != systemConfig_.end ())
             throw invalid_argument {"Specify either KDF11-B or DLV11-J as console"};
 }

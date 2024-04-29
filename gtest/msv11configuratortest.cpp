@@ -1,5 +1,6 @@
 #include "configdata/iniprocessor/iniprocessor.h"
 #include "configdata/msv11config/msv11config.h"
+#include "configdata/consistencychecker/consistencychecker.h"
 
 #include <fstream>	
 #include <gtest/gtest.h>
@@ -186,10 +187,13 @@ TEST (MSV11ConfiguratorTest, maxNrOfCardsExceededThrows)
 	stream >> ft;
 
 	IniProcessor iniProcessor;
+	EXPECT_NO_THROW (iniProcessor.process (ft)); 
 
+	vector<DeviceConfig> systemConfig = iniProcessor.getSystemConfig ();
+	ConsistencyChecker consistencyChecker {systemConfig};
 	try
 	{
-		iniProcessor.process (ft);
+		consistencyChecker.checkMSV11Consistency ();
 		FAIL();
 	}
 	catch (std::out_of_range const &except)
@@ -213,10 +217,13 @@ TEST (MSV11ConfiguratorTest, conflictingAddressesThrows)
 	stream >> ft;
 
 	IniProcessor iniProcessor;
+	EXPECT_NO_THROW (iniProcessor.process (ft)); 
 
+	vector<DeviceConfig> systemConfig = iniProcessor.getSystemConfig ();
+	ConsistencyChecker consistencyChecker {systemConfig};
 	try
 	{
-		iniProcessor.process (ft);
+		consistencyChecker.checkMSV11Consistency ();
 		FAIL();
 	}
 	catch (std::invalid_argument const &except)

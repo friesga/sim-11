@@ -50,8 +50,8 @@ void PDP_11::configureDevices (vector<DeviceConfig> systemConfig,
     Window *window)
 {
     // Check for presence of necessary devices
-    ConsistencyChecker consistencyChecker;
-    consistencyChecker.checkConsistency (systemConfig);
+    ConsistencyChecker consistencyChecker {systemConfig};
+    consistencyChecker.checkAll ();
 
     auto configVisitor = overloaded 
     {

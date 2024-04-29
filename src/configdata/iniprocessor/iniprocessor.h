@@ -65,12 +65,6 @@ private:
 	};
 
     void processSection (iniparser::Section* section);
-	void checkConfigConsistency ();
-	void checkMSV11Consistency ();
-	void checkKDF11_BConsistency ();
-	bool conflictsWith (shared_ptr<MSV11Config> msv11Card1, 
-    shared_ptr<MSV11Config> msv11Card2);
-	bool isWithin (u32 address, u32 begin, u32 end);
 	unique_ptr<DeviceConfigProcessor> createBA11_NProcessor ();
 	unique_ptr<DeviceConfigProcessor> createBDV11Processor ();
 	unique_ptr<DeviceConfigProcessor> createDLV11Processor ();
