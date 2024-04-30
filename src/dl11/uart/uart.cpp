@@ -1,6 +1,7 @@
 #include "uart.h"
 #include "trace/trace.h"
 #include "console/operatorconsole/operatorconsolefactory.h"
+#include "chrono/alarmclock/alarmclock.h"
 
 #include <memory>
 #include <functional>
@@ -287,6 +288,8 @@ void UART::transmitter ()
 	high_resolution_clock::time_point nextCharCanBeProcessedAt = 
 		high_resolution_clock::now ();
 
+	AlarmClock alarmClock {};
+
 	while (channelRunning_)
 	{
 		// Get a lock on the registerAccessMutex_. This lock will be released by
@@ -324,12 +327,8 @@ void UART::transmitter ()
 
 		// Simulate the delay caused by transferring the character from the
 		// shift register over the serial line. VDLAB0 test 6 waits a maximum
-		// of 100 milliseconds for XMIT_READY to become set again. A wait of
-		// 1 millisecond real time satisfies the test.
-		nextCharCanBeProcessedAt = high_resolution_clock::now () + 
-			std::chrono::microseconds (1000);
-
-		sleepUntil (nextCharCanBeProcessedAt);
+		// of 100 milliseconds for XMIT_READY to become set again.
+		alarmClock.sleepFor (std::chrono::microseconds (50));
 		trace.dlv11 (DLV11RecordType::DLV11_XMIT_RDY, channelNr_, xbuf);
 	}
 }
@@ -453,15 +452,6 @@ void UART::clearReceiveError ()
 {
 	if ((rbuf & RBUF_ERROR) && receiveBuffer_.empty ())
 	 rbuf &= ~RBUF_ERROR_MASK;
-}
-
-// This function sleeps until the given time point is passed. We prefer
-// our own sleep_until implementation as this_thread::sleep_until seems
-// to have the result that the thread isn't yielded.
-void UART::sleepUntil (high_resolution_clock::time_point timePoint)
-{
-	while (high_resolution_clock::now() < timePoint)
-        std::this_thread::yield ();
 }
 
 // This functions determines the priority of the interrupt to be generated.

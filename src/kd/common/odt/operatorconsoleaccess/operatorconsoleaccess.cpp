@@ -1,6 +1,7 @@
 #include "operatorconsoleaccess.h"
+#include "chrono/simulatorclock/simulatorclock.h"
 
-using std::this_thread::sleep_for;
+using std::chrono::microseconds;
 
 OperatorConsoleAccess::OperatorConsoleAccess (Qbus* bus)
     : bus_ {bus}
@@ -28,7 +29,7 @@ bool OperatorConsoleAccess::available ()
 CondData<u8> OperatorConsoleAccess::read ()
 {
     while (!available ())
-        sleep_for (std::chrono::microseconds (500));
+        SimulatorClock::forwardClock (microseconds (50));
 
     // Read the character
     return (readDLV11J (0177562));
@@ -43,7 +44,7 @@ bool OperatorConsoleAccess::transmitReady ()
 void OperatorConsoleAccess::write (u8 c)
 {
     while (!transmitReady ())
-        sleep_for (std::chrono::microseconds (500));
+        SimulatorClock::forwardClock (microseconds (50));
 
     bus_->writeWord (0177566, static_cast<u8> (c));
 }

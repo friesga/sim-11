@@ -1,5 +1,6 @@
 #include "kdf11_cpucontrol.h"
 #include "pdp11peripheral/pdp11peripheral.h"
+#include "chrono/simulatorclock/simulatorclock.h"
 #include "float/float.h"
 #include "trace/trace.h"
 #include "bitmask.h"
@@ -113,37 +114,21 @@ void KDF11_CpuControl::execInstr ()
     if (traceFlag_)
         cpuData_->setTrap (CpuData::TrapCondition::BreakpointTrap);
 
-    if (startOfInterval.time_since_epoch () == 
-        std::chrono::duration<uint32_t, std::micro> (0))
-            startOfInterval = high_resolution_clock::now();
 
+    // The instruction time is defined in microseconds with an accuracy of
+    // nanoseconds. Convert the time in microseconds to the 64-bits integer
+    // number of nanoseconds.
     double instrTime = calcInstructionTime (instructionWord);
+    SimulatorClock::forwardClock
+    (
+        SimulatorClock::duration (static_cast<uint64_t> (instrTime * 1000))
+    );
 
     // Execute the next instruction. The function returns true if the
     // instruction was completed and false if it was aborted due to an error
     // condition. In that case a trap has been set. Note however that trap
     // instructions set a trap and return true. 
     instr->execute ();
-
-    // Compare calculated total instruction times with actual time passed
-    // every millisecond.
-    if (calculatedInstructionTime >= 1000.0)
-    {
-        std::chrono::duration<uint32_t, std::micro> realInstructionTimes =
-            duration_cast<microseconds> (std::chrono::high_resolution_clock::now() -
-                startOfInterval);
-
-        if (realInstructionTimes < microseconds (1000))
-            std::this_thread::sleep_for (std::chrono::microseconds(1000) -
-                realInstructionTimes);
-        else
-            // throw runtime_error ("Insufficient performance on host system");
-            cout << "Insufficient performance on host system: " << 
-                realInstructionTimes << '\n';
-        
-        calculatedInstructionTime = 0.0;
-        startOfInterval = high_resolution_clock::now();
-    }
 
     if (cpuData_->trap () != CpuData::TrapCondition::None)
         serviceTrap ();

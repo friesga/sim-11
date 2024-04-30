@@ -1,16 +1,17 @@
 #include "controllogic.h"
 #include "kd/kd11_na/kd11_na.h"
+#include "chrono/simulatorclock/simulatorclock.h"
 
 #include <functional>
 
 using std::unique_ptr;
 using std::make_unique;
-using std::this_thread::sleep_for;
 using std::function;
 using std::bind;
 using std::placeholders::_1;
 using std::placeholders::_2;
 using std::placeholders::_3;
+using std::chrono::microseconds;
 
 // On every entry to ODT a new KD11_NA_ODT object is created to make
 // sure it is initialized properly. The Microcomputer and Memories
@@ -53,6 +54,6 @@ void ControlLogic::runODT ()
         }
 
         // Neither a character nor a bus signal available
-        sleep_for (std::chrono::milliseconds (50));
+        SimulatorClock::forwardClock (microseconds (50));
     }
 }

@@ -189,6 +189,11 @@ set (FLOAT_SRCS
     src/float/ieeetopdp11.cpp
     src/float/pdp11toieee.cpp)
 
+set (CHRONO_SRCS
+    src/chrono/simulatorclock/simulatorclock.cpp
+    src/chrono/alarmclock/alarmclock.cpp
+    src/chrono/wakeupcall/alarmwakeupcall/alarmwakeupcall.cpp)
+
 set (BA11_N_SRCS
     src/ba11_n/ba11_n.cpp)
 
@@ -260,6 +265,7 @@ endif ()
 set (SIM11_SRCS
     ${BA11_N_SRCS}
     ${CONSOLE_SRCS}
+    ${CHRONO_SRCS}
     src/abstractbusdevice/writebyte.cpp
     ${BDV11_SRCS}
     src/dl11/dlv11j/dlv11j.cpp
@@ -421,6 +427,7 @@ set (GTEST_SRCS
     gtest/rlv12writedatatest.cpp
     gtest/rxconfiguratortest.cpp
     gtest/signaltest.cpp
+    gtest/simulatorclocktest.cpp
     gtest/tracetest.cpp
     gtest/variantfsmtest.cpp)
     
@@ -428,6 +435,7 @@ set (SIM11_TEST_SRCS
     ${GTEST_SRCS}
     ${CMDLINEOPTIONS_SRCS}
     ${CONFIGURATOR_SRCS}
+    ${CHRONO_SRCS}
     src/interruptrequest/interruptrequest.cpp
     ${QBUS_SRCS}
     ${UNIT_SRCS}

@@ -24,7 +24,6 @@ using std::shared_ptr;
 using std::thread;
 using std::mutex;
 using std::condition_variable;
-using std::chrono::high_resolution_clock;
 
 // This class defines the behaviour of a Universal Asynchronous Receiver/
 // Transmitter as used for a DLV11-J channel.
@@ -123,7 +122,6 @@ private:
 	bool queueCharacter (unsigned char c);
 	void receiveDone ();
 	void clearReceiveError ();
-	void sleepUntil (high_resolution_clock::time_point timePoint);
 };
 
 #endif // _DLV11CHANNEL_H_

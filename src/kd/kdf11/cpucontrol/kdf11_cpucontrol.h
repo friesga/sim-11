@@ -146,9 +146,6 @@ private:
     AddressTimes const basicHALTTimes  {{0.0, 0.0}};
     AddressTimes const basicRESETTimes {{5.0, 4.750}};
 
-    double calculatedInstructionTime {0.0};
-    high_resolution_clock::time_point startOfInterval {};
-
 	// Definition of CPU run states
 	enum class CpuRunState
 	{
