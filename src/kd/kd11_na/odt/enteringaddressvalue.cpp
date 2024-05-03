@@ -81,5 +81,5 @@ KD11_NA_ODT::State KD11_NA_ODT::StateMachine::transition (EnteringAddressValue_7
 // (Micronote 050 Micro ODT Differences - LSI-11 vs. LSI-11/23)
 KD11_NA_ODT::State KD11_NA_ODT::StateMachine::transition (EnteringAddressValue_7 &&, OpenLocationCmdEntered)
 {
-    return move (context_->openAddress ());
+    return context_->openAddress ();
 }

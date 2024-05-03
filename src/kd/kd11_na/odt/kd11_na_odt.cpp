@@ -34,8 +34,8 @@ KD11_NA_ODT::KD11_NA_ODT (Qbus *bus, CpuData* cpuData, CpuControl* cpuControl,
 unique_ptr<KD11_NA_ODT> KD11_NA_ODT::createODT (Qbus *bus, CpuData* cpuData,
     CpuControl* cpuControl, MMU* mmu, unique_ptr<ConsoleAccess> consoleAccess)
 {
-    return move (make_unique<KD11_NA_ODT> (bus, cpuData, cpuControl, mmu,
-        make_unique<OperatorConsoleAccess> (bus)));
+    return make_unique<KD11_NA_ODT> (bus, cpuData, cpuControl, mmu,
+        make_unique<OperatorConsoleAccess> (bus));
 }
 
 CondData<u8> KD11_NA_ODT::echoCharacter (CondData<u8> c)

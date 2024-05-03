@@ -9,6 +9,8 @@
 class SR0 : public BasicRegister
 {
 public:
+    using BasicRegister::operator=;
+
     enum class AbortReason
     {
         NonResident = 0100000,

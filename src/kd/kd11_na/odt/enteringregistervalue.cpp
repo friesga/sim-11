@@ -40,22 +40,22 @@ KD11_NA_ODT::State KD11_NA_ODT::StateMachine::transition (EnteringRegisterValue_
 // used as an address to open.
 KD11_NA_ODT::State KD11_NA_ODT::StateMachine::transition (EnteringRegisterValue_8&&, OpenLocationCmdEntered)
 {
-    return move (context_->openAddress ());
+    return context_->openAddress ();
 }
 
 KD11_NA_ODT::State KD11_NA_ODT::StateMachine::transition (EnteringRegisterValue_8 &&, OpenNextLocationCmdEntered)
 {
     context_->setRegisterValue ();
-    return move (context_->openNextRegister (RegisterOpened_4 {},
-        [this] () {return (context_->location_.registerNr () + 1) % 8;}));
+    return context_->openNextRegister (RegisterOpened_4 {},
+        [this] () {return (context_->location_.registerNr () + 1) % 8;});
 }
 
 KD11_NA_ODT::State KD11_NA_ODT::StateMachine::transition (EnteringRegisterValue_8 &&, OpenPreviousLocationCmdEntered)
 {
     context_->writeString ("\n");
     context_->setRegisterValue ();
-    return move (context_->openNextRegister (RegisterOpened_4 {},
-        [this] () {return static_cast<u8> (context_->location_.registerNr () - 1) % 8;}));
+    return context_->openNextRegister (RegisterOpened_4 {},
+        [this] () {return static_cast<u8> (context_->location_.registerNr () - 1) % 8;});
 }
 
 // If used on the PS, the command will modify the PS if data has

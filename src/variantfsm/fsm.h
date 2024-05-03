@@ -176,7 +176,7 @@ namespace variantFsm
     template <typename ...Ts> std::variant<TagType<Ts>...>
     getVariantTag(const std::variant<Ts...>& value)
     {
-        return std::move(std::visit(GetVariantTagVisitor<Ts...>(), value));
+        return std::visit(GetVariantTagVisitor<Ts...>(), value);
     }
 
     // Calls the appropriate `transition(State, Event)` function of the derived class.
@@ -186,7 +186,7 @@ namespace variantFsm
         template <typename ActiveState, typename Event>
         State operator()(ActiveState&& state, const Event& event)
         {
-            return std::move (self.transition(std::move(state), event));
+            return self.transition(std::move(state), event);
         }
         Implementor& self;
     };
@@ -240,8 +240,8 @@ namespace variantFsm
 
             // Dispatch the event and obtain the new state.
             EventDispatcher<Implementor, State> dispatcher(*self);
-            State toState = std::move (std::visit (dispatcher, 
-                    std::move (fsmState), event));
+            State toState = std::visit (dispatcher, 
+                    std::move (fsmState), event);
 
             // Check if State contains the type std::monostate. If it does
             // the return of that type inidicates that the transition is

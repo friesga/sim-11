@@ -11,8 +11,10 @@ using std::array;
 class KDF11_PSW : public PSW, public BasicRegister
 {
 public:
+    using BasicRegister::operator=;
+
     KDF11_PSW (u16 value);
-    operator u16 () override;
+    operator u16 () const override;
     void set (PSW::ProtectionMode protectionMode, u16 value) override;
     bool traceBitSet () override;
     u16 priorityLevel () override;
@@ -62,7 +64,7 @@ inline KDF11_PSW::KDF11_PSW (u16 value)
     BasicRegister {value}
 {}
 
-inline KDF11_PSW::operator u16 ()
+inline KDF11_PSW::operator u16 () const
 {
     return value_;
 }

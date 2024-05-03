@@ -38,8 +38,8 @@ KD11_NA_ODT::State KD11_NA_ODT::StateMachine::transition (RegisterOpened_4 &&, R
 // in case the PSW is openend.
 KD11_NA_ODT::State KD11_NA_ODT::StateMachine::transition (RegisterOpened_4 &&currentState, OpenNextLocationCmdEntered)
 {
-    return move (context_->openNextRegister (move (currentState),
-        [this] () {return (context_->location_.registerNr () + 1) % 8;}));
+    return context_->openNextRegister (move (currentState),
+        [this] () {return (context_->location_.registerNr () + 1) % 8;});
 }
 
 // The "up arrow" command is also used to close an open location or GPR. If
@@ -60,8 +60,8 @@ KD11_NA_ODT::State KD11_NA_ODT::StateMachine::transition (RegisterOpened_4 &&cur
 KD11_NA_ODT::State KD11_NA_ODT::StateMachine::transition (RegisterOpened_4 &&currentState, OpenPreviousLocationCmdEntered)
 {
     context_->writeString ("\n");
-    return move (context_->openNextRegister (move (currentState),
-        [this] () {return static_cast<u8> (context_->location_.registerNr () - 1) % 8;}));
+    return context_->openNextRegister (move (currentState),
+        [this] () {return static_cast<u8> (context_->location_.registerNr () - 1) % 8;});
 }
 
 KD11_NA_ODT::State KD11_NA_ODT::StateMachine::transition (RegisterOpened_4 &&currentState, AtSignCmdEntered)

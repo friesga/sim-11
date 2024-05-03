@@ -21,6 +21,6 @@ KDF11_ODT::State KDF11_ODT::StateMachine::transition (EnteringRegisterValue_8 &&
 KDF11_ODT::State KDF11_ODT::StateMachine::transition (EnteringRegisterValue_8 &&, OpenNextLocationCmdEntered)
 {
     context_->setRegisterValue ();
-    return move (context_->openNextRegister (RegisterOpened_4 {},
-        [this] () {return (context_->location_.registerNr () + 1) % 8;}));
+    return context_->openNextRegister (RegisterOpened_4 {},
+        [this] () {return (context_->location_.registerNr () + 1) % 8;});
 }

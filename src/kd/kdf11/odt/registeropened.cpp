@@ -31,6 +31,6 @@ KDF11_ODT::State KDF11_ODT::StateMachine::transition (RegisterOpened_4 &&, Digit
 // in case the PSW is openend.
 KDF11_ODT::State KDF11_ODT::StateMachine::transition (RegisterOpened_4 &&currentState, OpenNextLocationCmdEntered)
 {
-    return move (context_->openNextRegister (move (currentState),
-        [this] () {return (context_->location_.registerNr () + 1) % 8;}));
+    return context_->openNextRegister (move (currentState),
+        [this] () {return (context_->location_.registerNr () + 1) % 8;});
 }

@@ -46,7 +46,7 @@ KD11_NA_ODT::State KD11_NA_ODT::StateMachine::transition (EnteringAddress_5 &&cu
 //
 KD11_NA_ODT::State KD11_NA_ODT::StateMachine::transition (EnteringAddress_5 &&, OpenLocationCmdEntered)
 {
-    return move (context_->openAddress ());
+    return context_->openAddress ();
 }
 
 // Transform the now complete address string to an address and use it in
