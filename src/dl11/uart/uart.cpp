@@ -248,9 +248,6 @@ void UART::clearXmitInterruptIfDisabled (u16 oldCSRvalue, u16 newCSRvalue)
 
 void UART::writeXBUF (u16 value)
 {
-	u16 old = xcsr;
-	clearXmitInterruptIfDisabled (old, value);
-
 	sendChar (value);
 }
 
