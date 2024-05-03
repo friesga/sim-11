@@ -328,7 +328,8 @@ void UART::transmitter ()
 		// Simulate the delay caused by transferring the character from the
 		// shift register over the serial line. VDLAB0 test 6 waits a maximum
 		// of 100 milliseconds for XMIT_READY to become set again.
-		alarmClock.sleepFor (std::chrono::microseconds (50));
+		// A delay of 500 microseconds is based on a baudrate of 19.2 Kbits/sec.
+		alarmClock.sleepFor (std::chrono::microseconds (500));
 		trace.dlv11 (DLV11RecordType::DLV11_XMIT_RDY, channelNr_, xbuf);
 	}
 }
