@@ -47,8 +47,12 @@ std::ostream& operator<< (std::ostream& os, TraceRecord<DLV11Record> record)
             os << record.createMessage ("transmit").str ();
             break;
 
-        case DLV11RecordType::DLV11_XMIT_RDY:
-            os << record.createMessage ("transmitter ready").str ();
+        case DLV11RecordType::DLV11_SET_XMIT_RDY:
+            os << record.createMessage ("set transmitter ready").str ();
+            break;
+
+        case DLV11RecordType::DLV11_CLR_XMIT_RDY:
+            os << record.createMessage("clear transmitter ready").str();
             break;
 
         case DLV11RecordType::DLV11_SET_RXI:

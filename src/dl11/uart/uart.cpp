@@ -254,6 +254,7 @@ void UART::writeXBUF (u16 value)
 void UART::sendChar (u16 value)
 {
 	xcsr &= ~XCSR_TRANSMIT_READY;
+	trace.dlv11(DLV11RecordType::DLV11_CLR_XMIT_RDY, channelNr_, value);
 	xbuf = value;
 	charAvailable_ = true;
 	transmitter_.notify_one ();
@@ -304,6 +305,8 @@ void UART::transmitter ()
 			console_->print ((unsigned char) xbuf);
 
 		xcsr |= XCSR_TRANSMIT_READY;
+		trace.dlv11(DLV11RecordType::DLV11_SET_XMIT_RDY, channelNr_, xbuf);
+
 		if (xcsr & XCSR_TRANSMIT_IE)
 		{
 			trace.dlv11 (DLV11RecordType::DLV11_SET_TXI, channelNr_, xbuf);
@@ -327,7 +330,7 @@ void UART::transmitter ()
 		// of 100 milliseconds for XMIT_READY to become set again.
 		// A delay of 500 microseconds is based on a baudrate of 19.2 Kbits/sec.
 		alarmClock.sleepFor (std::chrono::microseconds (500));
-		trace.dlv11 (DLV11RecordType::DLV11_XMIT_RDY, channelNr_, xbuf);
+		
 	}
 }
 
