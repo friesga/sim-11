@@ -32,6 +32,7 @@ public:
 	virtual StatusCode writeByte (BusAddress address, u8 value) = 0;
 	virtual bool responsible (BusAddress address) = 0;
 	virtual void reset () = 0;
+	~BusDevice() {};
 };
 
 #endif // !_BUSDEVICE_H_
