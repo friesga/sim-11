@@ -176,3 +176,13 @@ TEST (ThreadSafePrioQueue, waitOnQueueSucceeds)
     t1.join ();
     t2.join ();
 }
+
+TEST (ThreadSafePrioQueue, identicalElementsCanBePushed)
+{
+    ThreadSafePrioQueue<int, std::multiset<int>> priorityQueue;
+
+    // Now push an element on the queue to verify it's not empty anymore
+    priorityQueue.push (42);
+    priorityQueue.push (42);
+    EXPECT_EQ (priorityQueue.size (), 2);
+}

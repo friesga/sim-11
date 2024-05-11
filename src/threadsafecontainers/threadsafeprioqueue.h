@@ -17,12 +17,17 @@ using std::logic_error;
 
 
 // Implementation of a thread safe queue. The queue is implemented by
-// means of a set because a set, contrary to a priority_queue,
-// provides an iterator and an erase() function. Because of the use of
-// set the queue can contain only unique elements. A set orders
-// its elements in ascending order. The element with the highest priority
-// therefore is at the end of the set.
-template <typename T>
+// means of a set or multiset because sets, contrary to a priority_queue,
+// provide an iterator and an erase() function. A set ordersits elements
+// in ascending order. The element with the highest priority is therefore
+// at the end of the set.
+// 
+// The container to be used for the queue must be either a std::set or a
+// std::multiset, the difference being that a std::set (and therefor the
+// queue) will contain only unique elements while a std::multiset can contain
+// duplicate elements.
+template <typename T, typename C = set<T>>
+    requires (std::same_as<C, set<T>> || std::same_as<C, std::multiset<T>>)
 class ThreadSafePrioQueue
 {
 public:
@@ -47,7 +52,7 @@ public:
         using pointer           = value_type const *;
         using reference         = value_type const &;
 
-        ConstIterator (typename set<T>::const_iterator iter) : 
+        ConstIterator (typename C::const_iterator iter) : 
             ptr_ {iter} {};
 
         reference operator*() { return *ptr_; }
@@ -67,48 +72,52 @@ public:
     private:
         // Pointer to the element the iterator is pointing at
         // pointer ptr_;
-        typename set<T>::const_iterator ptr_;
+        typename C::const_iterator ptr_;
     };
 
     ConstIterator cbegin() { return ConstIterator (queue_.cbegin()); }
     ConstIterator cend()   { return ConstIterator (queue_.cend()); }
 
 private:
-    set<T> queue_;
+    C queue_;
     mutable mutex guard;
     condition_variable signal;
 
-    typename set<T>::iterator front () const; 
+    typename C::iterator front () const; 
 };
 
 // Clear the contents of the priority queue
-template <typename T>
-void ThreadSafePrioQueue<T>::clear()
+template <typename T, typename C>
+    requires (std::same_as<C, set<T>> || std::same_as<C, std::multiset<T>>) 
+void ThreadSafePrioQueue<T, C>::clear()
 {
-    set<T> emptyQueue;
+    C emptyQueue;
 
     lock_guard<mutex> lock (guard);
     swap(queue_, emptyQueue);
 }
 
-template <typename T>
-bool ThreadSafePrioQueue<T>::empty()
+template <typename T, typename C>
+    requires (std::same_as<C, set<T>> || std::same_as<C, std::multiset<T>>)
+bool ThreadSafePrioQueue<T, C>::empty()
 {
     lock_guard<mutex> lock (guard);
     return queue_.empty ();
 }
 
 // Check if the queue contains an element with the specified value
-template <typename T>
-bool ThreadSafePrioQueue<T>::contains (T const &elem)
+template <typename T, typename C>
+    requires (std::same_as<C, set<T>> || std::same_as<C, std::multiset<T>>)
+bool ThreadSafePrioQueue<T, C>::contains (T const &elem)
 {
     lock_guard<std::mutex> lock(guard);
     return queue_.contains (elem);
 }
 
 // Erase the element in the queue with the specified value
-template <typename T>
- void ThreadSafePrioQueue<T>::erase (T const &elem)
+template <typename T, typename C>
+    requires (std::same_as<C, set<T>> || std::same_as<C, std::multiset<T>>)
+ void ThreadSafePrioQueue<T, C>::erase (T const &elem)
 {
     lock_guard<mutex> lock (guard);
     queue_.erase (elem);
@@ -117,8 +126,9 @@ template <typename T>
 // To prevent an exception on the return of a T object, the top element is
 // moved to the destination and is then removed. This prevents the loss of
 // queue elements.
-template <typename T>
-bool ThreadSafePrioQueue<T>::fetchTop(T &dest)
+template <typename T, typename C>
+    requires (std::same_as<C, set<T>> || std::same_as<C, std::multiset<T>>)
+bool ThreadSafePrioQueue<T, C>::fetchTop(T &dest)
 {
     lock_guard<mutex> lock (guard);
 
@@ -135,8 +145,9 @@ bool ThreadSafePrioQueue<T>::fetchTop(T &dest)
     return true;
 }
 
-template <typename T>
-void ThreadSafePrioQueue<T>::waitAndFetchTop(T &dest)
+template <typename T, typename C>
+    requires (std::same_as<C, set<T>> || std::same_as<C, std::multiset<T>>)
+void ThreadSafePrioQueue<T, C>::waitAndFetchTop(T &dest)
 {
     unique_lock<mutex> lock (guard);
 
@@ -147,23 +158,26 @@ void ThreadSafePrioQueue<T>::waitAndFetchTop(T &dest)
 }
 
 
-template <typename T>
-void ThreadSafePrioQueue<T>::push (T const &elem)
+template <typename T, typename C>
+    requires (std::same_as<C, set<T>> || std::same_as<C, std::multiset<T>>)
+void ThreadSafePrioQueue<T, C>::push (T const &elem)
 {
     lock_guard<mutex> lock (guard);
     queue_.insert (elem);
     signal.notify_one ();
 }
 
-template <typename T>
-size_t ThreadSafePrioQueue<T>::size()
+template <typename T, typename C>
+    requires (std::same_as<C, set<T>> || std::same_as<C, std::multiset<T>>)
+size_t ThreadSafePrioQueue<T, C>::size()
 {
     lock_guard<mutex> lock (guard);
     return queue_.size();
 }
 
-template <typename T>
-T const &ThreadSafePrioQueue<T>::top() const
+template <typename T, typename C>
+    requires (std::same_as<C, set<T>> || std::same_as<C, std::multiset<T>>)
+T const &ThreadSafePrioQueue<T, C>::top() const
 {
     lock_guard<mutex> lock (guard);
 
@@ -178,8 +192,9 @@ T const &ThreadSafePrioQueue<T>::top() const
 // Return an iterator to the element at the front of the queue, i.e. the last
 // element in the set. This function is private as it relies on the lock of
 // the calling functions to keep the queue thread safe.
-template <typename T>
-typename set<T>::iterator ThreadSafePrioQueue<T>::front () const
+template <typename T, typename C>
+    requires (std::same_as<C, set<T>> || std::same_as<C, std::multiset<T>>)
+typename C::iterator ThreadSafePrioQueue<T, C>::front () const
 {
     return --queue_.end ();
 }
