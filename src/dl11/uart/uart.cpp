@@ -246,9 +246,10 @@ void UART::clearXmitInterruptIfDisabled (u16 oldCSRvalue, u16 newCSRvalue)
 	}
 }
 
+// Bits 8-15 are not used.
 void UART::writeXBUF (u16 value)
 {
-	sendChar (value);
+	sendChar (value & 0377);
 }
 
 void UART::sendChar (u16 value)
@@ -330,7 +331,6 @@ void UART::transmitter ()
 		// of 100 milliseconds for XMIT_READY to become set again.
 		// A delay of 500 microseconds is based on a baudrate of 19.2 Kbits/sec.
 		alarmClock.sleepFor (std::chrono::microseconds (500));
-		
 	}
 }
 
