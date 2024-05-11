@@ -1,11 +1,11 @@
-#include "timerecord.h"
+#include "clockrecord.h"
 
 #include "../tracefileinstream/tracefileinstream.h"
 
 // Definition of the overloaded operator>>() function to read TraceDuration
 // records from the tracefile. These records contain a fixed member as
 // defined in the class plus a variable length character string.
-TracefileInStream &operator>> (TracefileInStream &is, TraceRecord<TimeRecord> &record)
+TracefileInStream &operator>> (TracefileInStream &is, TraceRecord<ClockRecord> &record)
 {
     // Read the fixed part of the record
     is.read (reinterpret_cast<char *> (&record),
@@ -16,7 +16,7 @@ TracefileInStream &operator>> (TracefileInStream &is, TraceRecord<TimeRecord> &r
     size_t constexpr maxStringSize = 128;
 
     if (record.length_ > maxStringSize)
-        throw "String in TimeRecord record too long";
+        throw "String in ClockRecord record too long";
 
     char buffer[maxStringSize] {0};
     is.read (buffer, record.length_);

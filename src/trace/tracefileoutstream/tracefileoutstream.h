@@ -18,7 +18,7 @@ class TraceRecord;
 
 struct MemoryDumpRecord;
 struct RLV12RegistersRecord;
-struct TimeRecord;
+struct ClockRecord;
 
 // Definition of an overloaded ofstream class to be used for writing
 // TraceRecords to the tracefile. To this purpose a separate class is
@@ -35,7 +35,7 @@ class TracefileOutStream : public ofstream
 	friend TracefileOutStream& operator<< (TracefileOutStream& tos, 
         TraceRecord<RLV12RegistersRecord> record);
 	friend TracefileOutStream& operator<< (TracefileOutStream& tos, 
-		TraceRecord<TimeRecord> record);
+		TraceRecord<ClockRecord> record);
 
 	static char const header_[6];
 	std::string baseFileName {};

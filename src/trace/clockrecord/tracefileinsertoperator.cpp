@@ -1,12 +1,12 @@
-#include "timerecord.h"
+#include "clockrecord.h"
 
 #include "../tracefileoutstream/tracefileoutstream.h"
 
 // Overloaded operator<< function to write time records to a trace file.
-// This is a custom function as the TimeRecord contains a fixed and a
+// This is a custom function as the ClockRecord contains a fixed and a
 // variable part.
 TracefileOutStream& operator<< (TracefileOutStream& tos, 
-    TraceRecord<TimeRecord> record)
+    TraceRecord<ClockRecord> record)
 {
     // Guard against simultaneous trace file writes
     lock_guard<mutex> guard{ tos.traceFileMutex_ };

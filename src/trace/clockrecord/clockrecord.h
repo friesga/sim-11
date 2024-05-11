@@ -1,5 +1,5 @@
-#ifndef _DURATIONRECORD_H_
-#define _DURATIONRECORD_H_
+#ifndef _CLOCKRECORD_H_
+#define _CLOCKRECORD_H_
 
 #include "types.h"
 #include "../tracerecord.h"
@@ -19,18 +19,18 @@ using std::to_string;
 
 // Definition of the type to discriminate the trace records in the template
 // classes.
-struct TimeRecord {};
+struct ClockRecord {};
 
 // Specialization of the TraceRecord for the TraceDuration record
 template <>
-class TraceRecord<TimeRecord>
+class TraceRecord<ClockRecord>
 {
     friend TracefileOutStream& operator<< (TracefileOutStream& tos, 
-        TraceRecord<TimeRecord> record);
+        TraceRecord<ClockRecord> record);
     friend TracefileInStream &operator>> (TracefileInStream &is,
-        TraceRecord<TimeRecord> &record);
+        TraceRecord<ClockRecord> &record);
     friend std::ostream& operator<< (std::ostream& os, 
-        TraceRecord<TimeRecord> record);
+        TraceRecord<ClockRecord> record);
 
     high_resolution_clock::duration duration_;
     size_t length_;
@@ -39,18 +39,18 @@ class TraceRecord<TimeRecord>
 public:
 	TraceRecord ();
 	TraceRecord (string msg, high_resolution_clock::duration duration);
-    Magic magic () {return Magic::TIME;}
+    Magic magic () {return Magic::CLCK;}
     string str ();
 };
 
-inline TraceRecord<TimeRecord>::TraceRecord ()
+inline TraceRecord<ClockRecord>::TraceRecord ()
 	:
     duration_ {},
     length_ {0},
     msg_ {}
 {}
 
-inline TraceRecord<TimeRecord>::TraceRecord (string msg, 
+inline TraceRecord<ClockRecord>::TraceRecord (string msg, 
     high_resolution_clock::duration duration)
 	:
     duration_ {duration},
@@ -58,7 +58,7 @@ inline TraceRecord<TimeRecord>::TraceRecord (string msg,
     msg_ {msg}
 {}
 
-inline string TraceRecord<TimeRecord>::str ()
+inline string TraceRecord<ClockRecord>::str ()
 {
     typedef std::chrono::duration<int, 
         std::ratio_multiply<std::chrono::hours::period, std::ratio<8>>::type> Days;
@@ -99,4 +99,4 @@ inline string TraceRecord<TimeRecord>::str ()
     return result;
 }
 
-#endif // !_DURATIONRECORD_H_
+#endif // !_CLOCKRECORD_H_

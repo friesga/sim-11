@@ -129,10 +129,10 @@ void Trace::rlv12Command (u16 command)
 // or a duration. To log the current time the function has to passed the
 // result of a SimulatorClock::now ().time_since_epoch () call.
 //
-void Trace::time (string msg, SimulatorClock::duration duration) 
+void Trace::clock (string msg, SimulatorClock::duration duration) 
 {
-    if (traceEnabled && (flags_ & Trace::Category::Time))
-        tracefileOut_ << TraceRecord<TimeRecord> (msg, duration);
+    if (traceEnabled && (flags_ & Trace::Category::Clock))
+        tracefileOut_ << TraceRecord<ClockRecord> (msg, duration);
 }
 
 void Trace::MmuApr (ActivePageRegisterSet const& aprSet)

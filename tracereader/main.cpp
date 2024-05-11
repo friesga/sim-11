@@ -26,8 +26,8 @@ void processTraceRecord(Magic magic, TracefileInStream &tracefile)
             readAndPrintRecord<CpuEventRecord> (tracefile);
             break;
 
-	    case Magic::TIME:
-            readAndPrintRecord<TimeRecord> (tracefile);
+	    case Magic::CLCK:
+            readAndPrintRecord<ClockRecord> (tracefile);
             break;
 
         case Magic::BUS0:
