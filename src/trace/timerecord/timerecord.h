@@ -81,19 +81,21 @@ inline string TraceRecord<TimeRecord>::str ()
     // than using string concatenation. See 
     // https://stackoverflow.com/questions/18892281/most-optimized-way-of-concatenation-in-strings
     //
-    string result = msg_;
-    result += ": ";
+    string result {};
+    result += "[";
     result += to_string (hours.count ());
     result += ':';
     result += to_string (minutes.count ());
     result += ':';
     result += to_string (seconds.count ());
-    result += '.';
+    result += ':';
     result += to_string (milliseconds.count ());
     result += '.';
     result += to_string (microseconds.count ());
     result += '.';
     result += to_string (nanoseconds.count ());
+    result += "] ";
+    result += msg_;
     return result;
 }
 
