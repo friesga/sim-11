@@ -17,6 +17,7 @@
 #include "rlv12commandrecord/rlv12commandrecord.h"
 #include "timerecord/timerecord.h"
 #include "ktf11_arecord/ktf11_arecord.h"
+#include "chrono/simulatorclock/simulatorclock.h"
 
 #include "tracefileoutstream/tracefileoutstream.h"
 #include "tracefileinstream/tracefileinstream.h"
@@ -74,12 +75,11 @@ public:
     void rxv21Error (RXV21ErrorRecordType type, u16 info);
     void rlv12Registers (string msg, u16 rlcs, u16 rlba, u16 rlda, u16 rlmpr, u16 rlbae);
     void rlv12Command (u16 command);
-    void time (string msg, high_resolution_clock::duration duration);
+    void time (string msg, SimulatorClock::duration duration);
     void MmuApr (ActivePageRegisterSet const& aprSet);
     void setIgnoreBus ();
     void clearIgnoreBus();
 };
-
 
 // External declaration for the Trace global object.
 extern Trace trace;
