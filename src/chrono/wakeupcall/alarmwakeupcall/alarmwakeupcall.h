@@ -4,6 +4,7 @@
 #include "../wakeupcall.h"
 #include "chrono/simulatorclock/simulatorclock.h"
 
+#include <cstddef>
 #include <condition_variable>
 
 using std::condition_variable;
@@ -13,8 +14,8 @@ class AlarmWakeUpCall : public WakeUpCall
 {
 public:
     AlarmWakeUpCall ();
-    void ring (uint64_t currentTime) override;
-    void waitFor () override;
+    void ring (uint64_t currentTime);
+    void waitFor ();
     size_t id ();
 
 private:

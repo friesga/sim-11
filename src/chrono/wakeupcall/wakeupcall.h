@@ -1,6 +1,7 @@
 #ifndef _WAKEUPCALL_H_
 #define _WAKEUPCALL_H_
 
+#include <cstddef>
 #include <cstdint>
 
 // The currentTime is the time elapsed in micro seconds from the start

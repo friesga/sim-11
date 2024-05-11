@@ -284,9 +284,6 @@ void UART::sendChar (u16 value)
 //
 void UART::transmitter ()
 {
-	high_resolution_clock::time_point nextCharCanBeProcessedAt = 
-		high_resolution_clock::now ();
-
 	AlarmClock alarmClock {};
 
 	while (channelRunning_)
