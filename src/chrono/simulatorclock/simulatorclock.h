@@ -9,10 +9,13 @@
 #include <ratio>
 #include <cstdint>
 #include <compare>
+#include <string>
 
 using std::chrono::time_point;
 using std::chrono::duration;
 using std::nano;
+using std::string;
+using std::multiset;
 
 // This class keeps track of the simulator internal clock and schedules
 // thread wakeups according to this clock.
@@ -39,9 +42,17 @@ private:
         time_point wakeUpTime_ {};
         WakeUpCall* wakeUpCall_ {nullptr};
     };
+  
+#ifdef DEBUG
+    static void logWakeupRequestQueue (string msg);
+#endif
 
     static time_point currentTime_;
-    static ThreadSafePrioQueue<WakeUpRequest> wakeUpRequestQueue_;
+
+    // Use a multiset as the basis for the ThreadSafePrioQueue to allow
+    // "duplicate" WakeUpRequest objects to be added to the queue.
+    static ThreadSafePrioQueue<WakeUpRequest, multiset<WakeUpRequest>> wakeUpRequestQueue_;
+    static mutex clockMutex_;
 };
 
 #endif // !_SIMULATORCLOCK_H_
