@@ -12,6 +12,7 @@ class WakeUpCall
 public:
     virtual void ring (uint64_t currentTime) = 0;
     virtual void waitFor () = 0;
+    virtual size_t id () = 0;
 };
 
 #endif // _WAKEUPCALL

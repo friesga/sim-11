@@ -23,8 +23,18 @@ public:
     }
 
 private:
+    size_t id ()
+    {
+        return myId_;
+    }
+
     uint64_t called_ {0};
+    size_t myId_;
+
+    static size_t id_;
 };
+
+size_t SpyWakeUpCall::id_ {0};
 
 TEST (SimulatorClock, clockWakesUp)
 {
@@ -36,5 +46,7 @@ TEST (SimulatorClock, clockWakesUp)
     EXPECT_EQ (spyWakeUpCall.calledAt (), 0);
 
     simulatorClock.forwardClock (200ms);
-    EXPECT_EQ (spyWakeUpCall.calledAt (), 300000);
+
+    // The clock keeps track of simulated time in nanoseconds
+    EXPECT_EQ (spyWakeUpCall.calledAt (), 300'000'000);
 }
