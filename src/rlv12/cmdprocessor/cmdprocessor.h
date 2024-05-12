@@ -3,6 +3,7 @@
 
 #include "../rlv12.h"
 #include "../rlv12command/rlv12command.h"
+#include "chrono/alarmclock/alarmclock.h"
 
 #include <thread>
 #include <vector>
@@ -20,6 +21,7 @@ class CmdProcessor
     bool running_;
     RLV12 *controller_;
     std::thread cmdProcessorThread_;
+    AlarmClock alarmClock_;
 
     u16 maintenanceCmd (RL01_2 *unit, RLV12Command &rlv12Command);
     u16 writeCheckCmd (RL01_2 *unit, RLV12Command &rlv12Command);

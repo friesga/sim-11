@@ -15,12 +15,10 @@ u16 CmdProcessor::maintenanceCmd (RL01_2 *unit, RLV12Command &rlv12Command)
     BusAddress  memoryAddress {0};
     u16 rlcsValue {0};
 
-    // The VRLBC0 diagnostic expects a reaction on a Maintenance command
-    // between 155 and 650 milliseconds. This time is determined by executing
-    // a number of instructions. As the emulated instructions are not timed
-    // (yet) the reaction time will vary per host CPU and has to be determined
-    // by trial and error.
-    std::this_thread::sleep_for(std::chrono::milliseconds (55));
+    // The VRLBC0 diagnostic test 25 expects a reaction on a Maintenance
+    // command between 155 and 650 milliseconds. This time is determined
+    // by executing a number of instructions.
+    alarmClock_.sleepFor (std::chrono::milliseconds (200));
 
     // This command is a NOP on the RL11 controller
     if (controller_->rlType_ == RLConfig::RLType::RL11)

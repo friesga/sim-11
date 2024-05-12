@@ -4,6 +4,7 @@
 #include "unit/unit.h"
 #include "types.h"
 #include "statuscodes.h"
+#include "chrono/alarmclock/alarmclock.h"
 
 #include <mutex>
 #include <thread>
@@ -43,6 +44,7 @@ class RL01_2 : public Unit
     Bitmask<RlStatus> rlStatus_;
     int32_t driveStatus_;
     bool running_;
+    AlarmClock alarmClock_;
 
     // Thread simulating seek timing
     std::thread seekTimerThread_;

@@ -25,9 +25,7 @@ u16 CmdProcessor::readDataCmd (RL01_2 *unit, RLV12Command &rlv12Command)
     limitWordCount (rlv12Command);
 
     // Revolutional latency is 12.5ms average (EK-RLV-TD-001). 
-    // The time needed to execute this function is determined by trial
-    // and error.
-    std::this_thread::sleep_for (std::chrono::milliseconds (10));
+    alarmClock_.sleepFor (std::chrono::microseconds (12500));
 
     // Guard against drive access while a seek is running
 	std::lock_guard<std::mutex> guard{ unit->driveMutex_ };
