@@ -4,6 +4,7 @@
 #include "logger/logger.h"
 #include "configdata/iniprocessor/iniprocessor.h"
 #include "sdl/sdlwindow/sdlwindow.h"
+#include "chrono/simulatorclock/simulatorclock.h"
 
 #include <iostream>
 
@@ -70,6 +71,8 @@ try
 
 	// Start rendering the window and processing events
 	sdlWindow.handler ();
+
+	SimulatorClock::halt ();
 
 	// Necessary for linux to get the command line prompt on the next line
 	std::cout << std::endl;

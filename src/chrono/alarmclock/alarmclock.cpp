@@ -10,8 +10,8 @@ void AlarmClock::sleepFor (SimulatorClock::duration time)
     SimulatorClock::time_point wakeupTime = 
         SimulatorClock::now () + time;
 
-    // Add this time to the timer queue
-    SimulatorClock::wakeMeAt (wakeupTime, &myWakeUpCall);
-
-    myWakeUpCall.waitFor ();
+    // Go to sleep until the indicated time point if the clock 
+    // is still running.
+    if (SimulatorClock::wakeMeAt (wakeupTime, &myWakeUpCall))
+        myWakeUpCall.waitFor ();
 }

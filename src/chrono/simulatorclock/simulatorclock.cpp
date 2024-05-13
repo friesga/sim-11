@@ -25,11 +25,17 @@ void SimulatorClock::forwardClock (duration timeIncrement)
     }
 }
 
-void SimulatorClock::wakeMeAt (time_point timePoint,
+bool SimulatorClock::wakeMeAt (time_point timePoint,
     WakeUpCall* wakeUpCall)
 {
     lock_guard<mutex> lock {SimulatorClock::clockMutex_};
-    wakeUpRequestQueue_.push (WakeUpRequest {timePoint, wakeUpCall});
+    if (running_)
+    {
+        wakeUpRequestQueue_.push (WakeUpRequest {timePoint, wakeUpCall});
+        return true;
+    }
+
+    return false;
 }
 
 // Note that the ordering of WakeUpRequest objects is based solely on their
@@ -40,6 +46,23 @@ void SimulatorClock::wakeMeAt (time_point timePoint,
 std::strong_ordering SimulatorClock::WakeUpRequest::operator<=> (WakeUpRequest const& rhs) const
 {
     return wakeUpTime_ <=> rhs.wakeUpTime_;
+}
+
+// When halting the clock all threads waiting to wakened up are awaken
+void SimulatorClock::halt ()
+{
+    lock_guard<mutex> lock {SimulatorClock::clockMutex_};
+    WakeUpRequest nextWakeup;
+
+    running_ = false;
+
+    while (!wakeUpRequestQueue_.empty ())
+    {
+        wakeUpRequestQueue_.fetchTop (nextWakeup);
+
+        // Notify the sleeping thread
+        nextWakeup.wakeUpCall_->ring (currentTime_.time_since_epoch ().count ());
+    }
 }
 
 #ifdef DEBUG
@@ -64,3 +87,4 @@ SimulatorClock::time_point SimulatorClock::currentTime_ {};
 ThreadSafePrioQueue<SimulatorClock::WakeUpRequest,
     multiset<SimulatorClock::WakeUpRequest>> SimulatorClock::wakeUpRequestQueue_ {};
 mutex SimulatorClock::clockMutex_;
+bool SimulatorClock::running_ {true};

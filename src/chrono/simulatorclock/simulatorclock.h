@@ -32,7 +32,8 @@ public:
 
     static time_point now () noexcept;
     static void forwardClock (duration timeIncrement);
-    static void wakeMeAt (time_point timePoint, WakeUpCall* wakeUpCall);
+    static bool wakeMeAt (time_point timePoint, WakeUpCall* wakeUpCall);
+    static void halt ();
 
 private:
     struct WakeUpRequest
@@ -53,6 +54,7 @@ private:
     // "duplicate" WakeUpRequest objects to be added to the queue.
     static ThreadSafePrioQueue<WakeUpRequest, multiset<WakeUpRequest>> wakeUpRequestQueue_;
     static mutex clockMutex_;
+    static bool running_;
 };
 
 #endif // !_SIMULATORCLOCK_H_
