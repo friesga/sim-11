@@ -69,4 +69,5 @@ void SDLWindow::handler ()
 		render();
         sleep_for (std::chrono::milliseconds (10));
 	}
-    while (!handleEvents ());}
+    while (!handleEvents ());
+}
