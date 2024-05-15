@@ -81,8 +81,8 @@ u16 CmdProcessor::seekCmd (RL01_2 *unit, RLV12Command &rlv12Command)
     // 55ms average seek, 100ms maximum seek
     // 
     // Try to simulate this timing by the following formula
-    // unit->seekTime_ = 17 + (0.4 * abs (newCylinder - currentCylinder));
-    unit->seekTime_ = 55;
+    unit->seekTime_ = std::chrono::milliseconds (static_cast<uint64_t>
+        (6.5 + (0.04 * abs (newCylinder - currentCylinder))));
 
     // Wakeup the seekTimer thread for the unit. After the specified seek
     // time enter position mode with heads locked on cylinder (i.e. seek

@@ -17,7 +17,7 @@ void RL01_2::seekTimer ()
         // finished lock the heads on the cylinder.
         startSeek_.wait (lock);
 
-        alarmClock_.sleepFor (std::chrono::milliseconds (seekTime_));
+        alarmClock_.sleepFor (seekTime_);
         driveStatus_ =
             (driveStatus_ & ~RLV12::MPR_GS_State) | RLV12::MPR_GS_LockOn;
     }

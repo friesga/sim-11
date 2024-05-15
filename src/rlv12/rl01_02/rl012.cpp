@@ -11,7 +11,7 @@ RL01_2::RL01_2 (PDP11Peripheral *owningDevice)
     rlStatus_ {RlStatus::UNIT_OFFL},
     driveStatus_ {0},
     running_ {true},
-    seekTime_ {0}
+    seekTime_ {}
 {
     seekTimerThread_ = std::thread(&RL01_2::seekTimer, this);
 }

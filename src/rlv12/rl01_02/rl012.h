@@ -56,7 +56,7 @@ class RL01_2 : public Unit
     std::condition_variable startSeek_;
 
     // Calculated seek time
-    int32_t seekTime_;
+    SimulatorClock::duration seekTime_;
 
 public:
     // Constructor and destructor

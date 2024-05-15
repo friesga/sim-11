@@ -44,7 +44,8 @@ try
 	if (cmdLineOptions.trace_file) 
 		trace.activate (cmdLineOptions.trace_file, 
 			Trace::Category::CpuStep |
-			Trace::Category::DLV11);
+			Trace::Category::RLV12 |
+			Trace::Category::Clock);
 
 	// Create the window for the panels
 	SDLWindow sdlWindow {"PDP-11 Console", 100, 100, 750, 200};
