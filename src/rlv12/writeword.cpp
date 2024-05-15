@@ -82,8 +82,19 @@ StatusCode RLV12::writeWord (BusAddress busAddress, u16 data)
 
             trace.rlv12Command (getFunction (csr_));
 
-            // We're done using the registers this call. Notify the command
-            // processor a command has been issued.
+            // Diagnostic ZRLJC0 requires a response from the Get Status
+            // command within 10 microseconds. As a context switch to the
+            // command processor occasionally leads to the exceeding of this
+            // value, the Get Status command is executed in the current
+            // context.
+            if (getFunction (csr_) == CSR_GetStatus)
+            {
+                setDone (unit, getStatusCmd (&units_[getDrive (csr_)]));
+                break;
+            }
+
+            // We're done using the registers this call. Notify the
+            // command processor a command has been issued.
             lock.unlock ();
             signal_.notify_one ();
             break;

@@ -258,6 +258,7 @@ class RLV12 : public PDP11Peripheral
     // Private functions
     u16 calcCRC (int const wc, u16 const *data);
     void setDone (RL01_2 &unit, u16 status);
+    u16 getStatusCmd (RL01_2* unit);
 
 public:
     // Constructors/destructor

@@ -129,7 +129,8 @@ set (RLV12_SRCS
     src/rlv12/rlcsplusdrivestatus.cpp
     src/rlv12/read.cpp
     src/rlv12/setdone.cpp
-    src/rlv12/writeword.cpp)
+    src/rlv12/writeword.cpp
+    src/rlv12/getstatuscmd.cpp)
 
 set (SIM_FIO_SRCS
     src/sim_fio/sim_fopen.cpp
