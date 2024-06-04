@@ -2,7 +2,7 @@
 #define _ADD_H_
 
 #include "commoninstruction.h"
-#include "kd/common/doubleoperandinstruction/doubleoperandinstruction.h"
+#include "kd/common/instructionformats/doubleoperandinstruction/doubleoperandinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/common/operandlocation/operandlocation.h"
 #include "withfactory.h"

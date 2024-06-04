@@ -2,7 +2,7 @@
 #define _EMT_H_
 
 #include "commoninstruction.h"
-#include "kd/common/nooperandinstruction/nooperandinstruction.h"
+#include "kd/common/instructionformats/nooperandinstruction/nooperandinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/include/cpucontrol.h"
 #include "kd/common/operandlocation/operandlocation.h"

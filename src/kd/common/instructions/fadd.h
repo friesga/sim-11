@@ -2,7 +2,7 @@
 #define _FADD_H_
 
 #include "commoninstruction.h"
-#include "kd/common/fisinstruction/fisinstruction.h"
+#include "kd/common/instructionformats/fisinstruction/fisinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/common/operandlocation/operandlocation.h"
 #include "withfactory.h"

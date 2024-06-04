@@ -1,7 +1,7 @@
 #ifndef _KD11DOUBLEOPERANDINSTRUCTION_H_
 #define _KD11DOUBLEOPERANDINSTRUCTION_H_
 
-#include "kd/common/doubleoperandinstruction/doubleoperandinstruction.h"
+#include "kd/common/instructionformats/doubleoperandinstruction/doubleoperandinstruction.h"
 
 // PDP-11 CPU's differ in the way the source and destination operands in double
 // operand instructions are retrieved. As a consequence these CPU's differ in

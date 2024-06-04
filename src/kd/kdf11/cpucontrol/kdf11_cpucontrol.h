@@ -130,6 +130,7 @@ private:
 
     AddressTimes const basicB7JSRTimes
     {
+        {0.0, 0.0},
         {4.350, 3.900},
         {4.650, 4.200},
         {5.475, 4.800},

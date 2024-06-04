@@ -2,7 +2,7 @@
 #define _MARK_H_
 
 #include "commoninstruction.h"
-#include "kd/common/markinstruction/markinstruction.h"
+#include "kd/common/instructionformats/markinstruction/markinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/common/operandlocation/operandlocation.h"
 #include "withfactory.h"

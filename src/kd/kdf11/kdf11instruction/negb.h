@@ -2,7 +2,7 @@
 #define _NEGB_H_
 
 #include "kdf11instruction.h"
-#include "kd/common/singleoperandinstruction/singleoperandinstruction.h"
+#include "kd/common/instructionformats/singleoperandinstruction/singleoperandinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/common/operandlocation/operandlocation.h"
 #include "kd/common/instructions/withfactory.h"

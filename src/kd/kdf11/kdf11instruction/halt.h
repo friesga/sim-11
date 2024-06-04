@@ -1,7 +1,7 @@
 #ifndef _HALT_H_
 #define _HALT_H_
 
-#include "kd/common/nooperandinstruction/nooperandinstruction.h"
+#include "kd/common/instructionformats/nooperandinstruction/nooperandinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/include/cpucontrol.h"
 #include "kd/common/operandlocation/operandlocation.h"

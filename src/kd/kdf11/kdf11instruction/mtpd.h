@@ -2,7 +2,7 @@
 #define _MTPD_H_
 
 #include "kdf11instruction.h"
-#include "kd/common/singleoperandinstruction/singleoperandinstruction.h"
+#include "kd/common/instructionformats/singleoperandinstruction/singleoperandinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/include/cpucontrol.h"
 #include "kd/common/operandlocation/operandlocation.h"

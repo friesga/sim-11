@@ -2,7 +2,7 @@
 #define _ADCB_H_
 
 #include "commoninstruction.h"
-#include "kd/common/singleoperandinstruction/singleoperandinstruction.h"
+#include "kd/common/instructionformats/singleoperandinstruction/singleoperandinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/common/operandlocation/operandlocation.h"
 #include "withfactory.h"

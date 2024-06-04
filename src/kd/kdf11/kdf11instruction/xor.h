@@ -2,7 +2,7 @@
 #define _XOR_H_
 
 #include "kdf11instruction.h"
-#include "kd/common/eisinstruction/eisinstruction.h"
+#include "kd/common/instructionformats/eisinstruction/eisinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/common/operandlocation/operandlocation.h"
 #include "kd/common/instructions/withfactory.h"

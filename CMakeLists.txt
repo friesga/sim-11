@@ -24,15 +24,15 @@ set (KD11COMMON_SRCS
     src/kd/common/operandlocation/emptyoperandlocation/emptyoperandlocation.cpp
     src/kd/common/operandlocation/registeroperandlocation/registeroperandlocation.cpp
     src/kd/common/operandlocation/memoryoperandlocation/memoryoperandlocation.cpp
-    src/kd/common/nooperandinstruction/nooperandinstruction.cpp
-    src/kd/common/singleoperandinstruction/singleoperandinstruction.cpp
-    src/kd/common/doubleoperandinstruction/doubleoperandinstruction.cpp
-    src/kd/common/fisinstruction/fisinstruction.cpp
-    src/kd/common/ccinstruction/ccinstruction.cpp
-    src/kd/common/branchinstruction/branchinstruction.cpp
-    src/kd/common/eisinstruction/eisinstruction.cpp
-    src/kd/common/markinstruction/markinstruction.cpp
-    src/kd/common/sobinstruction/sobinstruction.cpp
+    src/kd/common/instructionformats/nooperandinstruction/nooperandinstruction.cpp
+    src/kd/common/instructionformats/singleoperandinstruction/singleoperandinstruction.cpp
+    src/kd/common/instructionformats/doubleoperandinstruction/doubleoperandinstruction.cpp
+    src/kd/common/instructionformats/fisinstruction/fisinstruction.cpp
+    src/kd/common/instructionformats/ccinstruction/ccinstruction.cpp
+    src/kd/common/instructionformats/branchinstruction/branchinstruction.cpp
+    src/kd/common/instructionformats/eisinstruction/eisinstruction.cpp
+    src/kd/common/instructionformats/markinstruction/markinstruction.cpp
+    src/kd/common/instructionformats/sobinstruction/sobinstruction.cpp
     src/kd/common/odt/operatorconsoleaccess/operatorconsoleaccess.cpp)
 
 set (KD11CONTROLLOGIC_SRCS
@@ -62,6 +62,7 @@ set (KD11_NA_CPU_SRCS
     src/kd/kd11_na/cpucontrol/kd11_na_cpucontrol.cpp
     src/kd/kd11_na/cpucontrol/kd11_nainstruction/opcodetables.cpp
     src/kd/kd11_na/cpucontrol/kd11_nainstruction/kd11_nainstruction.cpp
+    src/kd/kd11_na/cpucontrol/kd11_na_calcinstructiontime.cpp
     src/kd/kd11_na/cpudata/kd11_naregisters/kd11_naregisters.cpp
     src/kd/kd11_na/pseudommu/pseudommu.cpp)
 

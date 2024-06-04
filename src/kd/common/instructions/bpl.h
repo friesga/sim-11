@@ -2,7 +2,7 @@
 #define _BPL_H_
 
 #include "commoninstruction.h"
-#include "kd/common/branchinstruction/branchinstruction.h"
+#include "kd/common/instructionformats/branchinstruction/branchinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/common/operandlocation/operandlocation.h"
 #include "withfactory.h"

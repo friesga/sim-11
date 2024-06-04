@@ -2,7 +2,7 @@
 #define _SOB_H_
 
 #include "commoninstruction.h"
-#include "kd/common/sobinstruction/sobinstruction.h"
+#include "kd/common/instructionformats/sobinstruction/sobinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/common/operandlocation/operandlocation.h"
 #include "withfactory.h"
