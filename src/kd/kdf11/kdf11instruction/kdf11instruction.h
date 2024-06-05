@@ -7,6 +7,7 @@
 #include <memory>
 
 using std::unique_ptr;
+using std::make_unique;
 
 // This class decodes and executes the KDF11-A instructions. To this
 // purpose we use an operation code table with function pointers as that
@@ -154,6 +155,10 @@ private:
         MMU*, u16);
     using opCodeTable = InstructionCreator[];
 
+    template <typename T>
+    static unique_ptr<LSI11Instruction> create (CpuData* cpuData,
+        CpuControl* cpuControl, MMU* mmu, u16 instruction);
+
     // As the dimensions of the opCodeTable's are not specified, the arrays
     // must be declared as static members. This is ok, as this data will be
     // the same for all instances of the class (if there are anyway).
@@ -174,5 +179,12 @@ private:
     static unique_ptr<LSI11Instruction> decodeGroup_00_nn_xx (CpuData*, CpuControl*, MMU*, u16);
     static unique_ptr<LSI11Instruction> decodeGroup_nn_xx_xx (CpuData*, CpuControl*, MMU*, u16);
 };
+
+template <typename T>
+unique_ptr<LSI11Instruction> KDF11Instruction::create (CpuData* cpuData,
+    CpuControl* cpuControl, MMU* mmu, u16 instruction)
+{
+    return make_unique<T> (cpuData, cpuControl, mmu, instruction);
+}
 
 #endif // KDF11Instruction_H_

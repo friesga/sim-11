@@ -5,7 +5,7 @@
 #include "kd/common/instructionformats/singleoperandinstruction/singleoperandinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/common/operandlocation/operandlocation.h"
-#include "withfactory.h"
+
 
 // ASR - arithmetic shift right
 // 
@@ -24,7 +24,7 @@
 // The C-bit is loaded from bit 0 of the destination. ASR performs signed
 // division of the destination by two.
 //
-class CommonInstruction::ASR : public SingleOperandInstruction, public WithFactory<ASR>
+class CommonInstruction::ASR : public SingleOperandInstruction
 {
 public:
     ASR (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);

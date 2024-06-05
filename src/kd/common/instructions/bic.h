@@ -5,7 +5,7 @@
 #include "kd/common/instructionformats/doubleoperandinstruction/doubleoperandinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/common/operandlocation/operandlocation.h"
-#include "withfactory.h"
+
 
 // BIC - bit clear
 //
@@ -22,7 +22,7 @@
 // source. The original contents of the destination are lost. The contents of
 // the source are unaffected.
 //
-class CommonInstruction::BIC : public DoubleOperandInstruction, public WithFactory<BIC>
+class CommonInstruction::BIC : public DoubleOperandInstruction
 {
 public:
     BIC (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);

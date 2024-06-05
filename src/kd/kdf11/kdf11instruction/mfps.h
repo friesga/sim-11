@@ -5,7 +5,7 @@
 #include "kd/common/instructionformats/singleoperandinstruction/singleoperandinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/common/operandlocation/operandlocation.h"
-#include "kd/common/instructions/withfactory.h"
+
 
 // MFPS - Move byte from Processor Status Word
 //
@@ -29,7 +29,7 @@
 // odd instruction MFPS 177776, i.e. writes the lower byte of the PSW to
 // itself.
 //
-class KDF11Instruction::MFPS : public SingleOperandInstruction, public WithFactory<MFPS>
+class KDF11Instruction::MFPS : public SingleOperandInstruction
 {
 public:
     MFPS (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);

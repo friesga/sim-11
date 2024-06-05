@@ -5,7 +5,7 @@
 #include "kd/common/instructionformats/singleoperandinstruction/singleoperandinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/common/operandlocation/operandlocation.h"
-#include "withfactory.h"
+
 
 // ROR - rotate right
 //
@@ -24,7 +24,7 @@
 // the C-bit and the previous contents of the C-bit are loaded into bit 15 of
 // the destination.
 //
-class CommonInstruction::ROR : public SingleOperandInstruction, public WithFactory<ROR>
+class CommonInstruction::ROR : public SingleOperandInstruction
 {
 public:
     ROR (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);

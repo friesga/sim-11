@@ -5,7 +5,7 @@
 #include "kd/common/instructionformats/branchinstruction/branchinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/common/operandlocation/operandlocation.h"
-#include "withfactory.h"
+
 
 // BPL - branch if plus
 //
@@ -17,7 +17,7 @@
 // Tests the state of the N-bit and causes a branch if N is clear, (positive
 // result). BPL is the complementary operation of BMI.
 //
-class CommonInstruction::BPL : public BranchInstruction, public WithFactory<BPL>
+class CommonInstruction::BPL : public BranchInstruction
 {
 public:
     BPL (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);

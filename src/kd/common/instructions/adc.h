@@ -5,7 +5,7 @@
 #include "kd/common/instructionformats/singleoperandinstruction/singleoperandinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/common/operandlocation/operandlocation.h"
-#include "withfactory.h"
+
 
 // ADC - add carry
 //
@@ -22,7 +22,7 @@
 // carry from the addition of the low-order words to be carried into the
 // high-order result.
 //
-class CommonInstruction::ADC : public SingleOperandInstruction, public WithFactory<ADC>
+class CommonInstruction::ADC : public SingleOperandInstruction
 {
 public:
     ADC (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);

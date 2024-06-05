@@ -5,7 +5,7 @@
 #include "kd/common/instructionformats/branchinstruction/branchinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/common/operandlocation/operandlocation.h"
-#include "withfactory.h"
+
 
 // BEQ - branch if queal (to zero)
 //
@@ -18,7 +18,7 @@
 // a BIT operation, and generally, to test that the result of the previous
 // operation was zero.
 //
-class CommonInstruction::BEQ : public BranchInstruction, public WithFactory<BEQ>
+class CommonInstruction::BEQ : public BranchInstruction
 {
 public:
     BEQ (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);

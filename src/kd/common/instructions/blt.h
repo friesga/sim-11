@@ -5,7 +5,7 @@
 #include "kd/common/instructionformats/branchinstruction/branchinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/common/operandlocation/operandlocation.h"
-#include "withfactory.h"
+
 
 // BLT - branch if less than (zero)
 //
@@ -21,7 +21,7 @@
 // negative destination. BLT will not cause a branch if the result of the
 // previous operation was zero (without overflow).
 //
-class CommonInstruction::BLT : public BranchInstruction, public WithFactory<BLT>
+class CommonInstruction::BLT : public BranchInstruction
 {
 public:
     BLT (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);

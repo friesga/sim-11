@@ -5,7 +5,7 @@
 #include "kd/common/instructionformats/fisinstruction/fisinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/common/operandlocation/operandlocation.h"
-#include "withfactory.h"
+
 
 // FDIV - floating divide
 //
@@ -25,7 +25,7 @@
 //
 // A <- A / B
 //
-class CommonInstruction::FDIV : public FISInstruction, public WithFactory<FDIV>
+class CommonInstruction::FDIV : public FISInstruction
 {
 public:
     FDIV (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);

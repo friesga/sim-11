@@ -7,13 +7,13 @@
 #include "kd/include/cpucontrol.h"
 #include "kd/common/operandlocation/operandlocation.h"
 #include "trace/trace.h"
-#include "withfactory.h"
+
 
 // Unused/reserved instruction
 //
 // Reserved instructions trap to vector address 10.
 //
-class CommonInstruction::Unused : public NoOperandInstruction, public WithFactory<Unused>
+class CommonInstruction::Unused : public NoOperandInstruction
 {
 public:
     Unused (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);

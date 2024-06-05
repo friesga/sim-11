@@ -5,7 +5,7 @@
 #include "kd/common/instructionformats/fisinstruction/fisinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/common/operandlocation/operandlocation.h"
-#include "withfactory.h"
+
 
 // RTS - Return from subroutine
 // 
@@ -16,7 +16,7 @@
 // Loads contents of reg into PC and pops the top element of
 // the processor stack into the specified register.
 //
-class CommonInstruction::RTS : public FISInstruction, public WithFactory<RTS>
+class CommonInstruction::RTS : public FISInstruction
 {
 public:
     RTS (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);

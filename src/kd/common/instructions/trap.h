@@ -6,7 +6,7 @@
 #include "kd/include/cpudata.h"
 #include "kd/include/cpucontrol.h"
 #include "kd/common/operandlocation/operandlocation.h"
-#include "withfactory.h"
+
 
 // TRAP - trap
 //
@@ -26,7 +26,7 @@
 // are identical in operation, except that the trap vector for TRAP is at
 // address 34.
 //
-class CommonInstruction::TRAP : public NoOperandInstruction, public WithFactory<TRAP>
+class CommonInstruction::TRAP : public NoOperandInstruction
 {
 public:
     TRAP (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);

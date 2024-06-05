@@ -5,7 +5,7 @@
 #include "kd/common/instructionformats/singleoperandinstruction/singleoperandinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/common/operandlocation/operandlocation.h"
-#include "withfactory.h"
+
 
 // COM - complement destination
 //
@@ -21,7 +21,7 @@
 // Replaces the contents of the destination address by their logical
 // complement (each bit equal to 0 is set and each bit equal to 1 is cleared).
 //
-class CommonInstruction::COM : public SingleOperandInstruction, public WithFactory<COM>
+class CommonInstruction::COM : public SingleOperandInstruction
 {
 public:
     COM (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);

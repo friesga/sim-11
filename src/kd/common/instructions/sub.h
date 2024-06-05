@@ -5,7 +5,7 @@
 #include "kd/common/instructionformats/doubleoperandinstruction/doubleoperandinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/common/operandlocation/operandlocation.h"
-#include "withfactory.h"
+
 
 // SUB - subtract src from dst
 //
@@ -21,7 +21,7 @@
 //  C: cleared if there was a carry from the most significant bit of the
 //     result; set otherwise
 //
-class CommonInstruction::SUB : public DoubleOperandInstruction, public WithFactory<SUB>
+class CommonInstruction::SUB : public DoubleOperandInstruction
 {
 public:
     SUB (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);

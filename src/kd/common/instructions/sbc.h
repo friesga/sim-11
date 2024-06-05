@@ -5,7 +5,7 @@
 #include "kd/common/instructionformats/singleoperandinstruction/singleoperandinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/common/operandlocation/operandlocation.h"
-#include "withfactory.h"
+
 
 // SBC - subtract carry
 //
@@ -22,7 +22,7 @@
 // carry from the subtraction of two low-order words to be subtracted from the
 // high order part of the result.
 //
-class CommonInstruction::SBC : public SingleOperandInstruction, public WithFactory<SBC>
+class CommonInstruction::SBC : public SingleOperandInstruction
 {
 public:
     SBC (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);

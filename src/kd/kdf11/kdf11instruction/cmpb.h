@@ -5,7 +5,7 @@
 #include "kd/kdf11/kd11doubleoperandinstruction/kd11doubleoperandinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/common/operandlocation/operandlocation.h"
-#include "kd/common/instructions/withfactory.h"
+
 
 // CMPB - compare source to destination byte
 // 
@@ -15,7 +15,7 @@
 // Condition Codes:
 //  refer to CMP
 //
-class KDF11Instruction::CMPB : public KD11DoubleOperandInstruction, public WithFactory<CMPB>
+class KDF11Instruction::CMPB : public KD11DoubleOperandInstruction
 {
 public:
     CMPB (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);

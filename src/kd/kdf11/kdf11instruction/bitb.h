@@ -5,7 +5,7 @@
 #include "kd/kdf11/kd11doubleoperandinstruction/kd11doubleoperandinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/common/operandlocation/operandlocation.h"
-#include "kd/common/instructions/withfactory.h"
+
 
 // BITB - bit test byte
 //
@@ -15,7 +15,7 @@
 // Condition Codes:
 //  refer to BIT
 //
-class  KDF11Instruction::BITB : public KD11DoubleOperandInstruction, public WithFactory<BITB>
+class  KDF11Instruction::BITB : public KD11DoubleOperandInstruction
 {
 public:
     BITB (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);

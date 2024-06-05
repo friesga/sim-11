@@ -6,7 +6,7 @@
 #include "kd/include/cpudata.h"
 #include "kd/include/cpucontrol.h"
 #include "kd/common/operandlocation/operandlocation.h"
-#include "withfactory.h"
+
 
 // EMT - emulator trap
 //
@@ -28,7 +28,7 @@
 // from the word at address 30; the new processor status (PS) is taken from the
 // word at address 32.
 //
-class CommonInstruction::EMT : public NoOperandInstruction, public WithFactory<EMT>
+class CommonInstruction::EMT : public NoOperandInstruction
 {
 public:
     EMT (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);

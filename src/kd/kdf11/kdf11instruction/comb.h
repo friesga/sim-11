@@ -5,7 +5,7 @@
 #include "kd/common/instructionformats/singleoperandinstruction/singleoperandinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/common/operandlocation/operandlocation.h"
-#include "kd/common/instructions/withfactory.h"
+
 
 // COMB - complement destination byte
 //
@@ -15,7 +15,7 @@
 // Condition Codes:
 //  refer to COM
 //
-class KDF11Instruction::COMB : public SingleOperandInstruction, public WithFactory<COMB>
+class KDF11Instruction::COMB : public SingleOperandInstruction
 {
 public:
     COMB (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);

@@ -5,7 +5,7 @@
 #include "kd/common/instructionformats/singleoperandinstruction/singleoperandinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/common/operandlocation/operandlocation.h"
-#include "withfactory.h"
+
 
 // CLR - clear destination
 //
@@ -20,7 +20,7 @@
 //
 // Contents of specified destination are replaced with zeroes.
 //
-class CommonInstruction::CLR : public SingleOperandInstruction, public WithFactory<CLR>
+class CommonInstruction::CLR : public SingleOperandInstruction
 {
 public:
     CLR (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);

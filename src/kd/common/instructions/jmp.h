@@ -5,7 +5,7 @@
 #include "kd/common/instructionformats/singleoperandinstruction/singleoperandinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/common/operandlocation/operandlocation.h"
-#include "withfactory.h"
+
 #include "trace/trace.h"
 
 // JMP - jump
@@ -24,7 +24,7 @@
 // register. Note that instructions are word data and must therefore be
 // fetched from an even-numbered address.
 //
-class CommonInstruction::JMP : public SingleOperandInstruction, public WithFactory<JMP>
+class CommonInstruction::JMP : public SingleOperandInstruction
 {
 public:
     JMP (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);

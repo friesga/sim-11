@@ -5,7 +5,7 @@
 #include "kd/common/instructionformats/branchinstruction/branchinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/common/operandlocation/operandlocation.h"
-#include "withfactory.h"
+
 
 // BGT - branch if greater than (zero)
 //
@@ -14,7 +14,7 @@
 //
 // Operation of BGT is similar to BGE, except BGT will not cause a branch on
 // a zero result.
-class CommonInstruction::BGT : public BranchInstruction, public WithFactory<BGT>
+class CommonInstruction::BGT : public BranchInstruction
 {
 public:
     BGT (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);

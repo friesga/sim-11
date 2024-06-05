@@ -5,7 +5,7 @@
 #include "kd/common/instructionformats/singleoperandinstruction/singleoperandinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/common/operandlocation/operandlocation.h"
-#include "kd/common/instructions/withfactory.h"
+
 
 // SWAB - swap bytes
 //
@@ -22,7 +22,7 @@
 // Exchanges high-order byte and low-order byte of the destination
 // word (destination must be a word address).
 //
-class KDF11Instruction::SWAB : public SingleOperandInstruction, public WithFactory<SWAB>
+class KDF11Instruction::SWAB : public SingleOperandInstruction
 {
 public:
     SWAB (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);

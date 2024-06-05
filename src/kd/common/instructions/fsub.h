@@ -5,7 +5,7 @@
 #include "kd/common/instructionformats/fisinstruction/fisinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/common/operandlocation/operandlocation.h"
-#include "withfactory.h"
+
 
 // FSUB - floating subtract
 //
@@ -24,7 +24,7 @@
 //
 // A <- A - B
 //
-class CommonInstruction::FSUB : public FISInstruction, public WithFactory<FSUB>
+class CommonInstruction::FSUB : public FISInstruction
 {
 public:
     FSUB (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);

@@ -5,7 +5,7 @@
 #include "kd/kdf11/kd11doubleoperandinstruction/kd11doubleoperandinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/common/operandlocation/operandlocation.h"
-#include "kd/common/instructions/withfactory.h"
+
 
 // CMP - compare source to destination
 //
@@ -25,7 +25,7 @@
 // which may then be used for arithmetic and logical conditional branches.
 // Both operands are unaffected. The only action is to set the condition codes.
 //
-class KDF11Instruction::CMP : public KD11DoubleOperandInstruction, public WithFactory<CMP>
+class KDF11Instruction::CMP : public KD11DoubleOperandInstruction
 {
 public:
     CMP (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);

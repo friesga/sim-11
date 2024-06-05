@@ -5,7 +5,7 @@
 #include "kd/common/instructionformats/singleoperandinstruction/singleoperandinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/common/operandlocation/operandlocation.h"
-#include "withfactory.h"
+
 
 // MTPS - Move byte to Processor Status Word
 //
@@ -21,7 +21,7 @@
 // remains unchanged. This instruction can be used to change the priority bit
 // (PSW bit 7) in the PSW
 //
-class CommonInstruction::MTPS : public SingleOperandInstruction, public WithFactory<MTPS>
+class CommonInstruction::MTPS : public SingleOperandInstruction
 {
 public:
     MTPS (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);

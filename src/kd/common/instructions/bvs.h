@@ -5,7 +5,7 @@
 #include "kd/common/instructionformats/branchinstruction/branchinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/common/operandlocation/operandlocation.h"
-#include "withfactory.h"
+
 
 // BVS - branch if overflow is set
 //
@@ -17,7 +17,7 @@
 // Tests the state of V bit (overflow) and causes a branch if the V bit is
 // set. BVS is used to detect arithmetic overflow in the previous operation.
 //
-class CommonInstruction::BVS : public BranchInstruction, public WithFactory<BVS>
+class CommonInstruction::BVS : public BranchInstruction
 {
 public:
     BVS (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);

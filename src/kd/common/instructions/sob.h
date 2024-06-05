@@ -5,7 +5,7 @@
 #include "kd/common/instructionformats/sobinstruction/sobinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/common/operandlocation/operandlocation.h"
-#include "withfactory.h"
+
 
 // SOB - subtract one and branch (if != 0)
 //
@@ -19,7 +19,7 @@
 // subtracted from the PC (now pointing to the following word). The offset is
 // interpreted as a sixbit positive number.
 //
-class CommonInstruction::SOB : public SobInstruction, public WithFactory<SOB>
+class CommonInstruction::SOB : public SobInstruction
 {
 public:
     SOB (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);

@@ -5,7 +5,7 @@
 #include "kd/common/instructionformats/singleoperandinstruction/singleoperandinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/common/operandlocation/operandlocation.h"
-#include "withfactory.h"
+
 
 // ASL - arithmetic shift left
 //
@@ -25,7 +25,7 @@
 // of the destination. ASL performs a signed multiplication of the destination
 // by 2 with overflow indication.
 //
-class CommonInstruction::ASL : public SingleOperandInstruction, public WithFactory<ASL>
+class CommonInstruction::ASL : public SingleOperandInstruction
 {
 public:
     ASL (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);

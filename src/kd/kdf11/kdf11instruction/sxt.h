@@ -5,7 +5,7 @@
 #include "kd/common/instructionformats/singleoperandinstruction/singleoperandinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/common/operandlocation/operandlocation.h"
-#include "kd/common/instructions/withfactory.h"
+
 
 // SXT - sign extend
 //
@@ -22,7 +22,7 @@
 // If the condition code bit N is set then a -1 is placed in the destination
 // operand: if N bit is clear, then a 0 is placed in the destination operand.
 //
-class KDF11Instruction::SXT : public SingleOperandInstruction, public WithFactory<SXT>
+class KDF11Instruction::SXT : public SingleOperandInstruction
 {
 public:
     SXT (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);

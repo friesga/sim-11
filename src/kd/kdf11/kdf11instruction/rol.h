@@ -5,7 +5,7 @@
 #include "kd/common/instructionformats/singleoperandinstruction/singleoperandinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/common/operandlocation/operandlocation.h"
-#include "kd/common/instructions/withfactory.h"
+
 
 // ROL - rotate left
 // 
@@ -24,7 +24,7 @@
 // the C-bit of the status word and the previous contents of the C-bit are
 // loaded into Bit 0 of the destination.
 //
-class KDF11Instruction::ROL : public SingleOperandInstruction, public WithFactory<ROL>
+class KDF11Instruction::ROL : public SingleOperandInstruction
 {
 public:
     ROL (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);

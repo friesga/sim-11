@@ -6,7 +6,7 @@
 #include "kd/include/cpudata.h"
 #include "kd/include/cpucontrol.h"
 #include "kd/common/operandlocation/operandlocation.h"
-#include "withfactory.h"
+
 
 // RTT - return from interrupt
 //
@@ -24,7 +24,7 @@
 // RTI permits trace trap. If new PS has T bit set, trap will occur after
 // execution of first instruction after RTT.
 //
-class CommonInstruction::RTT : public NoOperandInstruction, public WithFactory<RTT>
+class CommonInstruction::RTT : public NoOperandInstruction
 {
 public:
     RTT (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);

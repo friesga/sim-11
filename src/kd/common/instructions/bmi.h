@@ -5,7 +5,7 @@
 #include "kd/common/instructionformats/branchinstruction/branchinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/common/operandlocation/operandlocation.h"
-#include "withfactory.h"
+
 
 // BMI - branch if minus
 //
@@ -18,7 +18,7 @@
 // to test the sign (most significant bit) of the result of the previous
 // operation), branching if negative. BMI is the complementary function of BPL.
 //
-class CommonInstruction::BMI : public BranchInstruction, public WithFactory<BMI>
+class CommonInstruction::BMI : public BranchInstruction
 {
 public:
     BMI (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);

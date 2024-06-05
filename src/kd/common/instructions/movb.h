@@ -5,7 +5,7 @@
 #include "kd/common/instructionformats/doubleoperandinstruction/doubleoperandinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/common/operandlocation/operandlocation.h"
-#include "withfactory.h"
+
 
 // MOVB - move source to destination
 // 
@@ -19,7 +19,7 @@
 // significant bit of the low order byte (sign extension). Otherwise MOVB
 // operates on bytes exactly as MOV operates on words.
 //
-class CommonInstruction::MOVB : public DoubleOperandInstruction, public WithFactory<MOVB>
+class CommonInstruction::MOVB : public DoubleOperandInstruction
 {
 public:
     MOVB (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);

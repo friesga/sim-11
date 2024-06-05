@@ -5,7 +5,7 @@
 #include "kd/common/instructionformats/singleoperandinstruction/singleoperandinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/common/operandlocation/operandlocation.h"
-#include "withfactory.h"
+
 
 // ADCB - add carry byte
 //
@@ -15,7 +15,7 @@
 // Condition Codes:
 //  refer to ADC
 //
-class CommonInstruction::ADCB : public SingleOperandInstruction, public WithFactory<ADCB>
+class CommonInstruction::ADCB : public SingleOperandInstruction
 {
 public:
     ADCB (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);

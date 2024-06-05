@@ -6,7 +6,7 @@
 #include "kd/include/cpudata.h"
 #include "kd/include/cpucontrol.h"
 #include "kd/common/operandlocation/operandlocation.h"
-#include "withfactory.h"
+
 
 // HALT - halt
 // 
@@ -16,7 +16,7 @@
 // instruction to be executed. The processor goes into the HALT mode.
 // The console mode of operation is enabled.
 //
-class CommonInstruction::HALT : public NoOperandInstruction, public WithFactory<HALT>
+class CommonInstruction::HALT : public NoOperandInstruction
 {
 public:
     HALT (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);

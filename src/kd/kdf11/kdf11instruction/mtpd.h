@@ -6,7 +6,7 @@
 #include "kd/include/cpudata.h"
 #include "kd/include/cpucontrol.h"
 #include "kd/common/operandlocation/operandlocation.h"
-#include "kd/common/instructions/withfactory.h"
+
 
 // MTPD - Move to previous data space
 // MTPI - Move to previous instruction space
@@ -29,7 +29,7 @@
 // Since data space does not exist in the KDF11, MTPD executes in the same way 
 // as MTPI does. 
 //
-class KDF11Instruction::MTPD : public SingleOperandInstruction, public WithFactory<MTPD>
+class KDF11Instruction::MTPD : public SingleOperandInstruction
 {
 public:
     MTPD (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);

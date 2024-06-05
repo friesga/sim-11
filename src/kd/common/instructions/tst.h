@@ -5,7 +5,7 @@
 #include "kd/common/instructionformats/singleoperandinstruction/singleoperandinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/common/operandlocation/operandlocation.h"
-#include "withfactory.h"
+
 
 // TST - test destination
 //
@@ -18,7 +18,7 @@
 //  V: cleared
 //  C: cleared
 //
-class CommonInstruction::TST : public SingleOperandInstruction, public WithFactory<TST>
+class CommonInstruction::TST : public SingleOperandInstruction
 {
 public:
     TST (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);

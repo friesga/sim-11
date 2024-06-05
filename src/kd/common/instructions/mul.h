@@ -5,7 +5,7 @@
 #include "kd/common/instructionformats/eisinstruction/eisinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/common/operandlocation/operandlocation.h"
-#include "withfactory.h"
+
 
 // MUL - multiply
 //
@@ -23,7 +23,7 @@
 // succeeding register (if R is even). If R is odd only the low order product
 // is stored.
 //
-class CommonInstruction::MUL : public EisInstruction, public WithFactory<MUL>
+class CommonInstruction::MUL : public EisInstruction
 {
 public:
     MUL (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);

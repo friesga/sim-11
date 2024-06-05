@@ -6,7 +6,7 @@
 #include "kd/include/cpudata.h"
 #include "kd/include/cpucontrol.h"
 #include "kd/common/operandlocation/operandlocation.h"
-#include "withfactory.h"
+
 
 // RESET - reset external bus
 //
@@ -16,7 +16,7 @@
 // reset to their state at power-up. The processor remains in an idle state
 // for 90 micro seconds following issuance of INIT.
 //
-class CommonInstruction::RESET : public NoOperandInstruction, public WithFactory<RESET>
+class CommonInstruction::RESET : public NoOperandInstruction
 {
 public:
     RESET (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);

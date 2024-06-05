@@ -5,7 +5,7 @@
 #include "kd/common/instructionformats/singleoperandinstruction/singleoperandinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/common/operandlocation/operandlocation.h"
-#include "kd/common/instructions/withfactory.h"
+
 
 // ASRB - arithmetic shift right byte
 //
@@ -18,7 +18,7 @@
 // Same as ASR instruction with the distinction that for odd adresses bit 15
 // is reproduced and for even addresses bit 7 is reproduced.
 //
-class KDF11Instruction::ASRB : public SingleOperandInstruction, public WithFactory<ASRB>
+class KDF11Instruction::ASRB : public SingleOperandInstruction
 {
 public:
     ASRB (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);

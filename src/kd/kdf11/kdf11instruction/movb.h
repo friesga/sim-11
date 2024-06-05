@@ -5,7 +5,7 @@
 #include "kd/kdf11/kd11doubleoperandinstruction/kd11doubleoperandinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/common/operandlocation/operandlocation.h"
-#include "kd/common/instructions/withfactory.h"
+
 
 // MOVB - move source to destination
 // 
@@ -22,7 +22,7 @@
 // This class implements the MOVB instruction for the KDF11-A. See comment
 // in KDF11Instruction::MOV.
 //
-class KDF11Instruction::MOVB : public KD11DoubleOperandInstruction, public WithFactory<MOVB>
+class KDF11Instruction::MOVB : public KD11DoubleOperandInstruction
 {
 public:
     MOVB (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);

@@ -5,7 +5,7 @@
 #include "kd/kdf11/kd11doubleoperandinstruction/kd11doubleoperandinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/common/operandlocation/operandlocation.h"
-#include "kd/common/instructions/withfactory.h"
+
 
 // BIT - bit test
 //
@@ -22,7 +22,7 @@
 // and modifies condition codes accordingly. Neither the source nor
 // destination operands are affected.
 //
-class KDF11Instruction::BIT : public KD11DoubleOperandInstruction, public WithFactory<BIT>
+class KDF11Instruction::BIT : public KD11DoubleOperandInstruction
 {
 public:
     BIT (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);

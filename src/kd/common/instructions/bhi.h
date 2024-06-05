@@ -5,7 +5,7 @@
 #include "kd/common/instructionformats/branchinstruction/branchinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/common/operandlocation/operandlocation.h"
-#include "withfactory.h"
+
 
 // BHI - branch if higher
 //
@@ -18,7 +18,7 @@
 // result. This will happen in comparison (CMP) operations as long as the
 // source has a higher unsigned value than the destination.
 //
-class CommonInstruction::BHI : public BranchInstruction, public WithFactory<BHI>
+class CommonInstruction::BHI : public BranchInstruction
 {
 public:
     BHI (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);

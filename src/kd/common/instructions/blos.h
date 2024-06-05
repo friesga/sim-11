@@ -5,7 +5,7 @@
 #include "kd/common/instructionformats/branchinstruction/branchinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/common/operandlocation/operandlocation.h"
-#include "withfactory.h"
+
 
 // BLOS - branch if lower or same
 //
@@ -19,7 +19,7 @@
 // in comparison operations as long as the source is equal to, or has a lower
 // unsigned value than the destination.
 //
-class CommonInstruction::BLOS : public BranchInstruction, public WithFactory<BLOS>
+class CommonInstruction::BLOS : public BranchInstruction
 {
 public:
     BLOS (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);

@@ -5,7 +5,7 @@
 #include "kd/common/instructionformats/singleoperandinstruction/singleoperandinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/common/operandlocation/operandlocation.h"
-#include "withfactory.h"
+
 
 // CLRB - clear destination byte
 //
@@ -15,7 +15,7 @@
 // Condition Codes:
 //  refer to CLR
 //
-class CommonInstruction::CLRB : public SingleOperandInstruction, public WithFactory<CLRB>
+class CommonInstruction::CLRB : public SingleOperandInstruction
 {
 public:
     CLRB (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);

@@ -5,7 +5,7 @@
 #include "kd/common/instructionformats/singleoperandinstruction/singleoperandinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/common/operandlocation/operandlocation.h"
-#include "withfactory.h"
+
 
 // INCB - increment destination byte
 //
@@ -15,7 +15,7 @@
 // Condition Codes:
 //  refer to INC
 //
-class CommonInstruction::INCB : public SingleOperandInstruction, public WithFactory<INCB>
+class CommonInstruction::INCB : public SingleOperandInstruction
 {
 public:
     INCB (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);

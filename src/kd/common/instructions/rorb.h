@@ -5,7 +5,7 @@
 #include "kd/common/instructionformats/singleoperandinstruction/singleoperandinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/common/operandlocation/operandlocation.h"
-#include "withfactory.h"
+
 
 // RORB - rotate right byte
 //
@@ -19,7 +19,7 @@
 // carry bit is loaded in bit 15 of the word and for even addresses the carry
 // bit is loaded in bit 7 of the word.
 //
-class CommonInstruction::RORB : public SingleOperandInstruction, public WithFactory<RORB>
+class CommonInstruction::RORB : public SingleOperandInstruction
 {
 public:
     RORB (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);

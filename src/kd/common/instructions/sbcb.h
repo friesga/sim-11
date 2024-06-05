@@ -5,7 +5,7 @@
 #include "kd/common/instructionformats/singleoperandinstruction/singleoperandinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/common/operandlocation/operandlocation.h"
-#include "withfactory.h"
+
 
 // SBCB - subtract carry byte
 //
@@ -15,7 +15,7 @@
 // Condition Codes:
 //  refer to SBC
 //
-class CommonInstruction::SBCB : public SingleOperandInstruction, public WithFactory<SBCB>
+class CommonInstruction::SBCB : public SingleOperandInstruction
 {
 public:
     SBCB (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);

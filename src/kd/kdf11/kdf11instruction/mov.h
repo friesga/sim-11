@@ -5,7 +5,7 @@
 #include "kd/kdf11/kd11doubleoperandinstruction/kd11doubleoperandinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/common/operandlocation/operandlocation.h"
-#include "kd/common/instructions/withfactory.h"
+
 
 // MOV - move source to destination
 //
@@ -24,7 +24,7 @@
 // 
 // This class implements the MOV instruction for the KDF11-A. 
 //
-class KDF11Instruction::MOV : public KD11DoubleOperandInstruction, public WithFactory<MOV>
+class KDF11Instruction::MOV : public KD11DoubleOperandInstruction
 {
 public:
     MOV (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);

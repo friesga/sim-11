@@ -6,7 +6,7 @@
 #include "kd/include/cpudata.h"
 #include "kd/include/cpucontrol.h"
 #include "kd/common/operandlocation/operandlocation.h"
-#include "kd/common/instructions/withfactory.h"
+
 
 // MFPD - Move from previous data space
 // MFPI - Move from previous instruction space
@@ -26,7 +26,7 @@
 // Since data space does not exist in the KDFll, MFPD executes in the same way
 // as an MFPI does. 
 //
-class KDF11Instruction::MFPD : public SingleOperandInstruction, public WithFactory<MFPD>
+class KDF11Instruction::MFPD : public SingleOperandInstruction
 {
 public:
     MFPD (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);

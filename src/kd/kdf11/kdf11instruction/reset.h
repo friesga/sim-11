@@ -5,7 +5,7 @@
 #include "kd/include/cpudata.h"
 #include "kd/include/cpucontrol.h"
 #include "kd/common/operandlocation/operandlocation.h"
-#include "kd/common/instructions/withfactory.h"
+
 
 // RESET - reset external bus
 //
@@ -18,7 +18,7 @@
 // A RESET executed in user mode results in a NOP (EK-KDF11-UG-PR2,
 // par. 8.3.3.3).
 //
-class KDF11Instruction::RESET : public NoOperandInstruction, public WithFactory<RESET>
+class KDF11Instruction::RESET : public NoOperandInstruction
 {
 public:
     RESET (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);

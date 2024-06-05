@@ -5,6 +5,7 @@
 #include <memory>
 
 using std::unique_ptr;
+using std::make_unique;
 
 unique_ptr<LSI11Instruction> KDF11Instruction::decode (CpuData* cpuData,
     CpuControl* cpuControl, MMU* mmu, u16 instruction)
@@ -18,7 +19,7 @@ unique_ptr<LSI11Instruction> KDF11Instruction::decodeGroup_00_00_nn (CpuData* cp
     if (instruction <= 07)
         return (*group_00_00_nn [instruction]) (cpuData, cpuControl, mmu, instruction);
         
-    return CommonInstruction::Unused::create (cpuData, cpuControl, mmu, instruction);
+    return make_unique<CommonInstruction::Unused> (cpuData, cpuControl, mmu, instruction);
 }
 
 unique_ptr<LSI11Instruction> KDF11Instruction::decodeGroup_00_02_nn (CpuData* cpuData,

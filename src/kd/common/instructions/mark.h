@@ -5,7 +5,7 @@
 #include "kd/common/instructionformats/markinstruction/markinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/common/operandlocation/operandlocation.h"
-#include "withfactory.h"
+
 
 // MARK - mark
 //
@@ -22,7 +22,7 @@
 //  (3) contents of the old R5 to be popped into R5 thus completing the
 //      return from subroutine.
 //
-class CommonInstruction::MARK : public MarkInstruction, public WithFactory<MARK>
+class CommonInstruction::MARK : public MarkInstruction
 {
 public:
     MARK (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);

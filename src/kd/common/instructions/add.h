@@ -5,7 +5,7 @@
 #include "kd/common/instructionformats/doubleoperandinstruction/doubleoperandinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/common/operandlocation/operandlocation.h"
-#include "withfactory.h"
+
 
 // ADD - add source to destination
 //
@@ -26,7 +26,7 @@
 // The contents of the source are not affected. Two's complement addition is
 // performed.
 //
-class CommonInstruction::ADD : public DoubleOperandInstruction, public WithFactory<ADD>
+class CommonInstruction::ADD : public DoubleOperandInstruction
 {
 public:
     ADD (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);

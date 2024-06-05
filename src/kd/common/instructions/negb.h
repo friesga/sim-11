@@ -5,7 +5,7 @@
 #include "kd/common/instructionformats/singleoperandinstruction/singleoperandinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/common/operandlocation/operandlocation.h"
-#include "withfactory.h"
+
 
 // NEGB - negate destination byte
 //
@@ -15,7 +15,7 @@
 // Condition Codes:
 //  refer to NEG
 //
-class CommonInstruction::NEGB : public SingleOperandInstruction, public WithFactory<NEGB>
+class CommonInstruction::NEGB : public SingleOperandInstruction
 {
 public:
     NEGB (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);

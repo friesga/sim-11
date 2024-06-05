@@ -18,7 +18,7 @@
 // This class implements the CLRB instruction for the KDF11-A. See comment
 // in KDF11Instruction::MOV.
 //
-class KDF11Instruction::CLRB : public SingleOperandInstruction, public WithFactory<CLRB>
+class KDF11Instruction::CLRB : public SingleOperandInstruction
 {
 public:
     CLRB (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);

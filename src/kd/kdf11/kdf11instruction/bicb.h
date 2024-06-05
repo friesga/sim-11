@@ -5,7 +5,7 @@
 #include "kd/kdf11/kd11doubleoperandinstruction/kd11doubleoperandinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/common/operandlocation/operandlocation.h"
-#include "kd/common/instructions/withfactory.h"
+
 
 // BICB - bit clear byte
 //
@@ -15,7 +15,7 @@
 // Condition Codes:
 //  refer to BIC
 //
-class KDF11Instruction::BICB : public KD11DoubleOperandInstruction, public WithFactory<BICB>
+class KDF11Instruction::BICB : public KD11DoubleOperandInstruction
 {
 public:
     BICB (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);

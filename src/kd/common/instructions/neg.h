@@ -5,7 +5,7 @@
 #include "kd/common/instructionformats/singleoperandinstruction/singleoperandinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/common/operandlocation/operandlocation.h"
-#include "withfactory.h"
+
 
 // NEG - negate destination
 //
@@ -22,7 +22,7 @@
 // Note that 100000 is replaced by itself (in two's complement notation the
 // most negative number has no positive counterpart).
 //
-class CommonInstruction::NEG : public SingleOperandInstruction, public WithFactory<NEG>
+class CommonInstruction::NEG : public SingleOperandInstruction
 {
 public:
     NEG (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);

@@ -5,7 +5,7 @@
 #include "kd/common/instructionformats/singleoperandinstruction/singleoperandinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/common/operandlocation/operandlocation.h"
-#include "withfactory.h"
+
 
 // MFPS - Move byte from Processor Status Word
 //
@@ -23,7 +23,7 @@
 // destination is mode 0, PS bit 7 is sign extended through upper byte of the
 // register. The destination operand address is treated as a byte address.
 //
-class CommonInstruction::MFPS : public SingleOperandInstruction, public WithFactory<MFPS>
+class CommonInstruction::MFPS : public SingleOperandInstruction
 {
 public:
     MFPS (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);

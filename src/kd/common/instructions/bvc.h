@@ -5,7 +5,7 @@
 #include "kd/common/instructionformats/branchinstruction/branchinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/common/operandlocation/operandlocation.h"
-#include "withfactory.h"
+
 
 // BVC - branch if overflow is clear
 //
@@ -17,7 +17,7 @@
 // Tests the state of the V bit and causes a branch if the V bit is clear.
 // BVC is complementary operation to BVS.
 //
-class CommonInstruction::BVC : public BranchInstruction, public WithFactory<BVC>
+class CommonInstruction::BVC : public BranchInstruction
 {
 public:
     BVC (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);

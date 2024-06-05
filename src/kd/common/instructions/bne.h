@@ -5,7 +5,7 @@
 #include "kd/common/instructionformats/branchinstruction/branchinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/common/operandlocation/operandlocation.h"
-#include "withfactory.h"
+
 
 // BNE - branch if not equal (to zero)
 //
@@ -18,7 +18,7 @@
 // in the source, following a BIT, and generally, to test that the result of
 // the previous operation was not zero.
 //
-class CommonInstruction::BNE : public BranchInstruction, public WithFactory<BNE>
+class CommonInstruction::BNE : public BranchInstruction
 {
 public:
     BNE (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);

@@ -6,7 +6,7 @@
 #include "kd/include/cpudata.h"
 #include "kd/include/cpucontrol.h"
 #include "kd/common/operandlocation/operandlocation.h"
-#include "kd/common/instructions/withfactory.h"
+
 
 // MFPT - Move from processor type
 // //
@@ -24,7 +24,7 @@
 // used to indicate which processor a program is being executed on. LSI-11 and
 // LSI-11/2 processors treat this op code as a reserved instruction trap. 
 //
-class KDF11Instruction::MFPT : public NoOperandInstruction, public WithFactory<MFPT>
+class KDF11Instruction::MFPT : public NoOperandInstruction
 {
 public:
     MFPT (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);

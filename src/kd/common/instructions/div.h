@@ -5,7 +5,7 @@
 #include "kd/common/instructionformats/eisinstruction/eisinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/common/operandlocation/operandlocation.h"
-#include "withfactory.h"
+
 
 // DIV - divide
 //
@@ -25,7 +25,7 @@
 // performed so that the remainder is of the same sign as the dividend. R must
 // be even.
 //
-class CommonInstruction::DIV : public EisInstruction, public WithFactory<DIV>
+class CommonInstruction::DIV : public EisInstruction
 {
 public:
     DIV (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);

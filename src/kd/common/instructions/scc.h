@@ -5,14 +5,14 @@
 #include "kd/common/instructionformats/ccinstruction/ccinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/common/operandlocation/operandlocation.h"
-#include "withfactory.h"
+
 
 //
 // Set condition code bits. Selectable combinations of these bits may
 // be set together. Condition code bits in the PSW corresponding to bits
 // in the condition code operator (bits O-3) are set.
 //  
-class CommonInstruction::SCC : public CcInstruction, public WithFactory<SCC>
+class CommonInstruction::SCC : public CcInstruction
 {
 public:
     SCC (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);

@@ -5,7 +5,7 @@
 #include "kd/common/instructionformats/singleoperandinstruction/singleoperandinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/common/operandlocation/operandlocation.h"
-#include "kd/common/instructions/withfactory.h"
+
 
 // CLR - clear destination
 //
@@ -29,7 +29,7 @@
 // T-bit is not affected by an Explicit PS Access (see EK-KDF-UG-PR2,
 // Table 8-1).
 //
-class KDF11Instruction::CLR : public SingleOperandInstruction, public WithFactory<CLR>
+class KDF11Instruction::CLR : public SingleOperandInstruction
 {
 public:
     CLR (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);

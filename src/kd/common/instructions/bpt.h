@@ -6,7 +6,7 @@
 #include "kd/include/cpudata.h"
 #include "kd/include/cpucontrol.h"
 #include "kd/common/operandlocation/operandlocation.h"
-#include "withfactory.h"
+
 
 // BPT - breakpoint trap
 //
@@ -22,7 +22,7 @@
 //  V: loaded from trap vector
 //  C: loaded from trap vector
 //
-class CommonInstruction::BPT : public NoOperandInstruction, public WithFactory<BPT>
+class CommonInstruction::BPT : public NoOperandInstruction
 {
 public:
     BPT (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);

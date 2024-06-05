@@ -5,7 +5,7 @@
 #include "kd/include/cpudata.h"
 #include "kd/include/cpucontrol.h"
 #include "kd/common/operandlocation/operandlocation.h"
-#include "kd/common/instructions/withfactory.h"
+
 
 // HALT - halt
 // 
@@ -17,7 +17,7 @@
 //
 // A HALT in user mode traps to location 10 (EK-KDF11-UG-PR2, par. 8.3.3.3).
 //
-class KDF11Instruction::HALT : public NoOperandInstruction, public WithFactory<HALT>
+class KDF11Instruction::HALT : public NoOperandInstruction
 {
 public:
     HALT (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);

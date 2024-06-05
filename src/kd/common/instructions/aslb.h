@@ -5,7 +5,7 @@
 #include "kd/common/instructionformats/singleoperandinstruction/singleoperandinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/common/operandlocation/operandlocation.h"
-#include "withfactory.h"
+
 
 // ASLB - arithmetic shift left byte
 //
@@ -20,7 +20,7 @@
 // and for even addresses the carry bit is loaded from bit 7 and bit 0 is
 // loaded with a zero.
 //
-class CommonInstruction::ASLB : public SingleOperandInstruction, public WithFactory<ASLB>
+class CommonInstruction::ASLB : public SingleOperandInstruction
 {
 public:
     ASLB (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);

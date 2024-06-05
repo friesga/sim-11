@@ -5,7 +5,7 @@
 #include "kd/common/instructionformats/ccinstruction/ccinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/common/operandlocation/operandlocation.h"
-#include "withfactory.h"
+
 
 //
 // Clear condition code bits. Selectable combinations of these bits may
@@ -16,7 +16,7 @@
 // instruction. The operation code indicates this a CCC instruction without
 // any condition code set and thus the instruction has no effect.
 // 
-class CommonInstruction::CCC : public CcInstruction, public WithFactory<CCC>
+class CommonInstruction::CCC : public CcInstruction
 {
 public:
     CCC (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);

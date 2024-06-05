@@ -6,7 +6,7 @@
 #include "kd/include/cpudata.h"
 #include "kd/include/cpucontrol.h"
 #include "kd/common/operandlocation/operandlocation.h"
-#include "kd/common/instructions/withfactory.h"
+
 
 // WAIT - wait for interrupt
 //
@@ -28,7 +28,7 @@
 // instruction and trap immediately. This implies that the WAIT instruction
 // is not executed if the PSW T-bit is set.
 //
-class KDF11Instruction::WAIT : public NoOperandInstruction, public WithFactory<WAIT>
+class KDF11Instruction::WAIT : public NoOperandInstruction
 {
 public:
     WAIT (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);

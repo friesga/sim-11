@@ -5,7 +5,7 @@
 #include "kd/common/instructionformats/singleoperandinstruction/singleoperandinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/common/operandlocation/operandlocation.h"
-#include "withfactory.h"
+
 
 // DECB - decrement destination byte
 //
@@ -15,7 +15,7 @@
 // Condition Codes:
 //  refer to DEC
 //
-class CommonInstruction::DECB : public SingleOperandInstruction, public WithFactory<DECB>
+class CommonInstruction::DECB : public SingleOperandInstruction
 {
 public:
     DECB (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);

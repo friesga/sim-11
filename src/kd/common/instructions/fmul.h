@@ -5,7 +5,7 @@
 #include "kd/common/instructionformats/fisinstruction/fisinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/common/operandlocation/operandlocation.h"
-#include "withfactory.h"
+
 
 // FMUL - floating multiply
 //
@@ -24,7 +24,7 @@
 //
 // A <- A * B
 //
-class CommonInstruction::FMUL : public FISInstruction, public WithFactory<FMUL>
+class CommonInstruction::FMUL : public FISInstruction
 {
 public:
     FMUL (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);

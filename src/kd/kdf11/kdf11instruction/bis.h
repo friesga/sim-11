@@ -5,7 +5,7 @@
 #include "kd/kdf11/kd11doubleoperandinstruction/kd11doubleoperandinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/common/operandlocation/operandlocation.h"
-#include "kd/common/instructions/withfactory.h"
+
 
 // BIS - bit set
 //
@@ -23,7 +23,7 @@
 // corresponding bits set in the source are set in the destination. The
 // contents of the destination are lost.
 //
-class KDF11Instruction::BIS : public KD11DoubleOperandInstruction, public WithFactory<BIS>
+class KDF11Instruction::BIS : public KD11DoubleOperandInstruction
 {
 public:
     BIS (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);

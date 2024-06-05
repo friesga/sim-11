@@ -6,7 +6,7 @@
 #include "kd/include/cpudata.h"
 #include "kd/include/cpucontrol.h"
 #include "kd/common/operandlocation/operandlocation.h"
-#include "withfactory.h"
+
 
 // IOT - input/output trap
 //
@@ -22,7 +22,7 @@
 //  V: loaded from trap vector
 //  C: loaded from trap vector
 //
-class CommonInstruction::IOT : public NoOperandInstruction, public WithFactory<IOT>
+class CommonInstruction::IOT : public NoOperandInstruction
 {
 public:
     IOT (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);

@@ -5,7 +5,7 @@
 #include "kd/common/instructionformats/eisinstruction/eisinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/common/operandlocation/operandlocation.h"
-#include "withfactory.h"
+
 
 // ASHC - arithemetic shift combined
 //
@@ -32,7 +32,7 @@
 // (for up to a shift of 16). The 16 bit word is rotated right the number of
 // bits specified by the shift count.
 //
-class CommonInstruction::ASHC : public EisInstruction, public WithFactory<ASHC>
+class CommonInstruction::ASHC : public EisInstruction
 {
 public:
     ASHC (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);

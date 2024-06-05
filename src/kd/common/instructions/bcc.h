@@ -5,7 +5,7 @@
 #include "kd/common/instructionformats/branchinstruction/branchinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/common/operandlocation/operandlocation.h"
-#include "withfactory.h"
+
 
 // BCC - branch if carry is clear
 //
@@ -17,7 +17,7 @@
 // Tests the state of the C-bit and causes a branch if C is clear. BCC is
 // the complementary operation to BCS.
 //
-class CommonInstruction::BCC : public BranchInstruction, public WithFactory<BCC>
+class CommonInstruction::BCC : public BranchInstruction
 {
 public:
     BCC (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);

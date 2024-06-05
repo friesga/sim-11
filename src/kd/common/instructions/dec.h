@@ -5,7 +5,7 @@
 #include "kd/common/instructionformats/singleoperandinstruction/singleoperandinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/common/operandlocation/operandlocation.h"
-#include "withfactory.h"
+
 
 // DEC - decrement destination
 //
@@ -20,7 +20,7 @@
 //
 // Subtract 1 from the contents of the destination
 //
-class CommonInstruction::DEC : public SingleOperandInstruction, public WithFactory<DEC>
+class CommonInstruction::DEC : public SingleOperandInstruction
 {
 public:
     DEC (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);

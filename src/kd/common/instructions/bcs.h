@@ -5,7 +5,7 @@
 #include "kd/common/instructionformats/branchinstruction/branchinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/common/operandlocation/operandlocation.h"
-#include "withfactory.h"
+
 
 // BCS - branch if carry is set
 //
@@ -17,7 +17,7 @@
 // Tests the state of the C-bit and causes a branch if C is set. It is used
 // to test for a carry in the result of a previous operation.
 //
-class CommonInstruction::BCS : public BranchInstruction, public WithFactory<BCS>
+class CommonInstruction::BCS : public BranchInstruction
 {
 public:
     BCS (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);

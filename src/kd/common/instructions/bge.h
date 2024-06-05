@@ -5,7 +5,7 @@
 #include "kd/common/instructionformats/branchinstruction/branchinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/common/operandlocation/operandlocation.h"
-#include "withfactory.h"
+
 
 // BGE - branch if greater than or equal (to zero)
 // 
@@ -17,7 +17,7 @@
 // follows an operation that caused addition of two positive numbers. BGE will
 // also cause a branch on a zero result.
 //
-class CommonInstruction::BGE : public BranchInstruction, public WithFactory<BGE>
+class CommonInstruction::BGE : public BranchInstruction
 {
 public:
     BGE (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);

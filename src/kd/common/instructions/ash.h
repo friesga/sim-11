@@ -5,7 +5,7 @@
 #include "kd/common/instructionformats/eisinstruction/eisinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/common/operandlocation/operandlocation.h"
-#include "withfactory.h"
+
 
 // ASH - shift arithmetically
 //
@@ -24,7 +24,7 @@
 // 6 bits of the source operand. This number ranges from -32 to + 31. Negative
 // is a a right shift and positive is a left shift.
 //
-class CommonInstruction::ASH : public EisInstruction, public WithFactory<ASH>
+class CommonInstruction::ASH : public EisInstruction
 {
 public:
     ASH (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);

@@ -5,7 +5,7 @@
 #include "kd/common/instructionformats/doubleoperandinstruction/doubleoperandinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/common/operandlocation/operandlocation.h"
-#include "withfactory.h"
+
 
 // BISB - bit set byte
 //
@@ -15,7 +15,7 @@
 // Condition Codes:
 //  refer to BIS
 //
-class CommonInstruction::BISB : public DoubleOperandInstruction, public WithFactory<BISB>
+class CommonInstruction::BISB : public DoubleOperandInstruction
 {
 public:
     BISB (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);

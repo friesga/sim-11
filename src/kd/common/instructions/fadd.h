@@ -5,7 +5,7 @@
 #include "kd/common/instructionformats/fisinstruction/fisinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/common/operandlocation/operandlocation.h"
-#include "withfactory.h"
+
 
 // FADD - floating add
 //
@@ -25,7 +25,7 @@
 // 
 // A <- A + B
 //
-class CommonInstruction::FADD : public FISInstruction, public WithFactory<FADD>
+class CommonInstruction::FADD : public FISInstruction
 {
 public:
     FADD (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);

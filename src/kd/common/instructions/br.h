@@ -5,7 +5,7 @@
 #include "kd/common/instructionformats/branchinstruction/branchinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/common/operandlocation/operandlocation.h"
-#include "withfactory.h"
+
 
 // BR - branch (unconditional)
 //
@@ -15,7 +15,7 @@
 // Provides a way of transferring program control within a range of -128 (10)
 // to +127 (10) words with a one word instruction.
 //
-class CommonInstruction::BR : public BranchInstruction, public WithFactory<BR>
+class CommonInstruction::BR : public BranchInstruction
 {
 public:
     BR (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);

@@ -5,7 +5,7 @@
 #include "kd/common/instructionformats/branchinstruction/branchinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/common/operandlocation/operandlocation.h"
-#include "withfactory.h"
+
 
 // BLE - branch if less than or equal (to zero)
 //
@@ -15,7 +15,7 @@
 // Operation is similar to BLT but in addition will cause a branch if the
 // result of the previous operation was zero.
 //
-class CommonInstruction::BLE : public BranchInstruction, public WithFactory<BLE>
+class CommonInstruction::BLE : public BranchInstruction
 {
 public:
     BLE (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);

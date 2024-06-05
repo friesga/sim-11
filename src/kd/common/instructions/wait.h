@@ -6,7 +6,7 @@
 #include "kd/include/cpudata.h"
 #include "kd/include/cpucontrol.h"
 #include "kd/common/operandlocation/operandlocation.h"
-#include "withfactory.h"
+
 
 // WAIT - wait for interrupt
 //
@@ -24,7 +24,7 @@
 // execution of an RTI instruction) will cause resumption of the interrupted
 // process at the instruction following the WAIT.
 //
-class CommonInstruction::WAIT : public NoOperandInstruction, public WithFactory<WAIT>
+class CommonInstruction::WAIT : public NoOperandInstruction
 {
 public:
     WAIT (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);

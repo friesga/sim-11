@@ -5,7 +5,7 @@
 #include "kd/common/instructionformats/eisinstruction/eisinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/common/operandlocation/operandlocation.h"
-#include "kd/common/instructions/withfactory.h"
+
 
 // XOR - exclusive OR
 //
@@ -21,7 +21,7 @@
 // The exclusive OR of the register and destination operand is stored in the
 // destination address. Contents of register are unaffected.
 //
-class KDF11Instruction::XOR : public EisInstruction, public WithFactory<XOR>
+class KDF11Instruction::XOR : public EisInstruction
 {
 public:
     XOR (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);

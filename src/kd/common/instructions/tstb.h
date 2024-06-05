@@ -5,7 +5,7 @@
 #include "kd/common/instructionformats/singleoperandinstruction/singleoperandinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/common/operandlocation/operandlocation.h"
-#include "withfactory.h"
+
 
 // TSTB - test destination byte
 //
@@ -15,7 +15,7 @@
 // Condition Codes:
 //  refer to TST
 //
-class CommonInstruction::TSTB : public SingleOperandInstruction, public WithFactory<TSTB>
+class CommonInstruction::TSTB : public SingleOperandInstruction
 {
 public:
     TSTB (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);

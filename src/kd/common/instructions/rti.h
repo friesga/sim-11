@@ -6,7 +6,7 @@
 #include "kd/include/cpudata.h"
 #include "kd/include/cpucontrol.h"
 #include "kd/common/operandlocation/operandlocation.h"
-#include "withfactory.h"
+
 
 // RTI - return from interrupt
 //
@@ -24,7 +24,7 @@
 // restored (popped) from-the processor stack. If a trace trap is pending, the
 // first instruction after RTI will not be executed prior to the next T traps.
 //
-class CommonInstruction::RTI : public NoOperandInstruction, public WithFactory<RTI>
+class CommonInstruction::RTI : public NoOperandInstruction
 {
 public:
     RTI (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
