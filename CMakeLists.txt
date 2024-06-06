@@ -64,7 +64,8 @@ set (KD11_NA_CPU_SRCS
     src/kd/kd11_na/cpucontrol/kd11_nainstruction/kd11_nainstruction.cpp
     src/kd/kd11_na/cpucontrol/kd11_na_calcinstructiontime.cpp
     src/kd/kd11_na/cpudata/kd11_naregisters/kd11_naregisters.cpp
-    src/kd/kd11_na/pseudommu/pseudommu.cpp)
+    src/kd/kd11_na/pseudommu/pseudommu.cpp
+    src/kd/kd11_na/executor/executor.cpp)
 
 set (KDF11_ODT_SRCS
     src/kd/kdf11/odt/kdf11_odt.cpp

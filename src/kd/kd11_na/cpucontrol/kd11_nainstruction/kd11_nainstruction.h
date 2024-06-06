@@ -3,11 +3,7 @@
 
 #include "kd/common/lsi11instruction/lsi11instruction.h"
 #include "kd/include/cpudata.h"
-
-#include <memory>
-
-using std::unique_ptr;
-using std::make_unique;
+#include "instructions.h"
 
 // This class decodes and executes the KD11_NA the instructions. To this
 // purpose we use an operation code table with function pointers as that
@@ -98,16 +94,15 @@ using std::make_unique;
 class KD11_NAInstruction
 {
 public:
-    unique_ptr<LSI11Instruction> decode (CpuData* cpuData, CpuControl* cpuControl,
+    Instruction decode (CpuData* cpuData, CpuControl* cpuControl,
         MMU* mmu, u16 instruction);
 
 private:
-    typedef  unique_ptr<LSI11Instruction> (*InstructionCreator) (CpuData*,
-        CpuControl*, MMU*, u16);
+    typedef Instruction (*InstructionCreator) (CpuData*, CpuControl*, MMU*, u16);
     using opCodeTable = InstructionCreator[];
 
     template <typename T>
-    static unique_ptr<LSI11Instruction> create (CpuData* cpuData,
+    static Instruction create (CpuData* cpuData, 
         CpuControl* cpuControl, MMU* mmu, u16 instruction);
 
     // As the dimensions of the opCodeTable's are not specified, the arrays
@@ -124,20 +119,20 @@ private:
     // As a consequence the following functions have to be defined static too.
     // This is fine too, as these functions don't use local variables and
     // simply walk through the operation code tables declared above.
-    static unique_ptr<LSI11Instruction> decodeGroup_00_00_nn (CpuData*, CpuControl*, MMU*, u16);
-    static unique_ptr<LSI11Instruction> decodeGroup_00_02_nn (CpuData*, CpuControl*, MMU*, u16);
-    static unique_ptr<LSI11Instruction> decodeGroup_07_5n_nx (CpuData*, CpuControl*, MMU*, u16);
-    static unique_ptr<LSI11Instruction> decodeGroup_07_nx_xx (CpuData*, CpuControl*, MMU*, u16);
-    static unique_ptr<LSI11Instruction> decodeGroup_10_xx_xx (CpuData*, CpuControl*, MMU*, u16);
-    static unique_ptr<LSI11Instruction> decodeGroup_00_nn_xx (CpuData*, CpuControl*, MMU*, u16);
-    static unique_ptr<LSI11Instruction> decodeGroup_nn_xx_xx (CpuData*, CpuControl*, MMU*, u16);
+    static Instruction decodeGroup_00_00_nn (CpuData*, CpuControl*, MMU*, u16);
+    static Instruction decodeGroup_00_02_nn (CpuData*, CpuControl*, MMU*, u16);
+    static Instruction decodeGroup_07_5n_nx (CpuData*, CpuControl*, MMU*, u16);
+    static Instruction decodeGroup_07_nx_xx (CpuData*, CpuControl*, MMU*, u16);
+    static Instruction decodeGroup_10_xx_xx (CpuData*, CpuControl*, MMU*, u16);
+    static Instruction decodeGroup_00_nn_xx (CpuData*, CpuControl*, MMU*, u16);
+    static Instruction decodeGroup_nn_xx_xx (CpuData*, CpuControl*, MMU*, u16);
 };
 
 template <typename T>
-unique_ptr<LSI11Instruction> KD11_NAInstruction::create (CpuData* cpuData,
+static Instruction KD11_NAInstruction::create (CpuData* cpuData,
     CpuControl* cpuControl, MMU* mmu, u16 instruction)
 {
-    return make_unique<T> (cpuData, cpuControl, mmu, instruction);
+    return T (cpuData, cpuControl, mmu, instruction);
 }
 
 #endif // KD11_NAINSTRUCTION_H_

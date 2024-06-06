@@ -1,4 +1,6 @@
 #include "kd11_na_cpucontrol.h"
+#include "kd/kd11_na/cpucontrol/kd11_nainstruction/instructions.h"
+#include "kd/kd11_na/executor/executor.h"
 #include "qbus/qbus.h"
 #include "pdp11peripheral/pdp11peripheral.h"
 #include "float/float.h"
@@ -7,10 +9,9 @@
 
 #include <functional>
 #include <chrono>
-#include <memory>
+#include <variant>
 
-using std::unique_ptr;
-using std::make_unique;
+using std::visit;
 
 // Constructor
 KD11_NA_CpuControl::KD11_NA_CpuControl (Qbus* bus, CpuData* cpuData, MMU* mmu)
@@ -109,7 +110,7 @@ void KD11_NA_CpuControl::execInstr ()
     }
     cpuData_->registers ()[7] += 2;
 
-    unique_ptr<LSI11Instruction> instr = 
+    Instruction instr = 
         kd11_naInstruction.decode (cpuData_, this, mmu_, instructionWord);
 
     // If the trace flag is set, the next instruction has to result in a trace
@@ -121,7 +122,7 @@ void KD11_NA_CpuControl::execInstr ()
     // instruction was completed and false if it was aborted due to an error
     // condition. In that case a trap has been set. Note however that trap
     // instructions set a trap and return true. 
-    instr->execute ();
+    visit (KD11_NA::Executor {}, instr);
 
     if (cpuData_->trap () != CpuData::TrapCondition::None)
         serviceTrap ();
