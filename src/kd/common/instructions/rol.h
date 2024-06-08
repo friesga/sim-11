@@ -37,26 +37,10 @@ inline CommonInstruction::ROL::ROL (CpuData* cpuData, CpuControl* cpuControl,
     SingleOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
+// ToDo: To be removed
 inline bool CommonInstruction::ROL::execute ()
 {
-    CondData<u16> contents;
-    if (!readOperand (&contents))
-        return false;
-
-    u16 cBit = isSet (PSW_C);
-    u16 result = contents << 1;
-    if (cBit)
-        result |= 01;
-
-    if (!writeOperand (result))
-        return false;
-
-    setPSW (ConditionCodes {.N = (bool) (result & 0100000),
-        .Z = result == 0,
-        .V = (bool) (result & 0100000) != (bool) (contents & 0100000),
-        .C = (bool) (contents & 0100000)});
-
-    return true;
+    throw "Should not happen";
 }
 
 #endif // _ROL_H_

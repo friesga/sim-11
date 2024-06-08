@@ -38,11 +38,10 @@ inline CommonInstruction::FDIV::FDIV (CpuData* cpuData, CpuControl* cpuControl,
     FISInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
+// ToDo: To be removed
 inline bool CommonInstruction::FDIV::execute ()
 {
-    return executeFISinstruction (getRegister (),
-        [](Float f1, Float f2) { return f2.value () != 0; },
-        [](Float f1, Float f2) { return f1 / f2; });
+    throw "Should not happen";
 }
 
 #endif // _FDIV_H_

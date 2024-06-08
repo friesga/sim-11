@@ -39,10 +39,10 @@ inline CommonInstruction::TRAP::TRAP (CpuData* cpuData, CpuControl* cpuControl,
     NoOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
+// ToDo: To be removed
 inline bool CommonInstruction::TRAP::execute ()
 {
-    cpuData_->setTrap (CpuData::TrapCondition::TrapInstruction);
-    return true;
+    throw "Should not happen";
 }
 
 #endif // _TRAP_H_

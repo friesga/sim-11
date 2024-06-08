@@ -31,18 +31,10 @@ inline CommonInstruction::TST::TST (CpuData* cpuData, CpuControl* cpuControl,
     SingleOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
+// ToDo: To be removed
 inline bool CommonInstruction::TST::execute ()
 {
-    CondData<u16> contents;
-    if (!readOperand (&contents))
-        return false;
-
-    setPSW (ConditionCodes {.N = (bool) (contents & 0100000),
-        .Z = contents == 0,
-        .V = false,
-        .C = false});
-
-    return true;
+    throw "Should not happen";
 }
 
 #endif // _TST_H_

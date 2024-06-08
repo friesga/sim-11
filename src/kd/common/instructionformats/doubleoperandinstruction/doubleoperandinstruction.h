@@ -27,17 +27,17 @@ public:
 	DoubleOperandInstruction (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
 	u16 getOperationCode ();
 
-protected:
-	// The destination operand location is defined protected as the MOVB
-	// instruction needs to know its type.
-	OperandLocation destinationOperandLocation_ {};
-
 	OperandLocation getSourceOperandLocation (GeneralRegisters &reg);
 	OperandLocation getDestinationOperandLocation (GeneralRegisters &reg);
 	void getOperandLocations (GeneralRegisters &reg);
 	template <typename T> bool readSourceOperand (T *source);
 	template <typename T> bool readDestinationOperand (T *destination);
 	template <typename T> bool writeDestinationOperand (T operand);
+
+protected:
+	// The destination operand location is defined protected as the MOVB
+	// instruction needs to know its type.
+	OperandLocation destinationOperandLocation_ {};
 
 private:
 	// The source and destination operand locations are defined as class

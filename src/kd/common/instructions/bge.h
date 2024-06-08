@@ -30,10 +30,11 @@ inline CommonInstruction::BGE::BGE (CpuData* cpuData, CpuControl* cpuControl,
     BranchInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
+
+// ToDo: To be removed
 inline bool CommonInstruction::BGE::execute ()
 {
-    executeBranchIf ((isSet (PSW_N) ^ isSet (PSW_V)) == 0);
-    return true;
+    throw "Should not happen";
 }
 
 #endif // _BGE_H_

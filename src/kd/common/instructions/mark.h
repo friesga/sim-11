@@ -35,16 +35,10 @@ inline CommonInstruction::MARK::MARK (CpuData* cpuData, CpuControl* cpuControl,
     MarkInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
+// ToDo: To be removed
 inline bool CommonInstruction::MARK::execute ()
 {
-    GeneralRegisters& registers = cpuData_->registers ();
-
-    registers[6] = registers[7] + 2 * numberOfParameters ();
-    registers[7] = registers[5];
-    registers[5] = mmu_->fetchWord (registers[6]);
-    registers[6] += 2;
-
-    return true;
+    throw "Should not happen";
 }
 
 #endif // _MARK_H_

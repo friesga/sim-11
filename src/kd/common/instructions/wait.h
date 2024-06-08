@@ -37,10 +37,10 @@ inline CommonInstruction::WAIT::WAIT (CpuData* cpuData, CpuControl* cpuControl,
     NoOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
+// ToDo: To be removed
 inline bool CommonInstruction::WAIT::execute ()
 {
-    cpuControl_->wait ();
-    return true;
+    throw "Should not happen";
 }
 
 #endif // _WAIT_H_

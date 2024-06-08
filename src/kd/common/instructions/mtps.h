@@ -34,16 +34,10 @@ inline CommonInstruction::MTPS::MTPS (CpuData* cpuData, CpuControl* cpuControl,
     SingleOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
+// ToDo: To be removed
 inline bool CommonInstruction::MTPS::execute ()
 {
-    CondData<u8> newValue;
-    if (!readOperand (&newValue))
-        return false;
-
-    // Allow bits 5/6/7 to be set and cleared
-    cpuData_->psw ().set (PSW::ProtectionMode::MTPS, newValue);
-
-    return true;
+    throw "Should not happen";
 }
 
 #endif // _MTPS_H_

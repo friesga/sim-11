@@ -28,22 +28,10 @@ inline CommonInstruction::DECB::DECB (CpuData* cpuData, CpuControl* cpuControl,
     SingleOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
+// ToDo: To be removed
 inline bool CommonInstruction::DECB::execute ()
 {
-    CondData<u8> source;
-    if (!readOperand (&source))
-        return false;
-
-    u8 result = (u8) (source - 1);
-
-    if (!writeOperand (result))
-        return false;
-
-    setPSW (ConditionCodes {.N = (bool) (result & 0x80),
-        .Z = result == 0,
-        .V = source == 0000200});
-
-    return true;
+    throw "Should not happen";
 }
 
 #endif // _DECB_H_

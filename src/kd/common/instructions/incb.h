@@ -28,22 +28,10 @@ inline CommonInstruction::INCB::INCB (CpuData* cpuData, CpuControl* cpuControl,
     SingleOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
+// ToDo: To be removed
 inline bool CommonInstruction::INCB::execute ()
 {
-    CondData<u8> source;
-    if (!readOperand (&source))
-        return false;
-
-    u8 result = (u8)(source + 1);
-
-    if (!writeOperand (result))
-        return false;
-
-    setPSW (ConditionCodes {.N = (bool) (result & 0x80),
-        .Z = result == 0,
-        .V = source == 000177});
-
-    return true;
+    throw "Should not happen";
 }
 
 #endif // _INCB_H_

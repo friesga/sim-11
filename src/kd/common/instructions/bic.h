@@ -35,24 +35,10 @@ inline CommonInstruction::BIC::BIC (CpuData* cpuData, CpuControl* cpuControl,
     DoubleOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
+// ToDo: To be removed
 inline bool CommonInstruction::BIC::execute ()
 {
-    CondData<u16> source, destination;
-
-    if (!readSourceOperand (&source) ||
-        !readDestinationOperand (&destination))
-        return false;
-
-    u16 result = ~source & destination;
-
-    if (!writeDestinationOperand (result))
-        return false;
-
-    setPSW (ConditionCodes {.N = (bool) (result & 0x8000),
-        .Z = result == 0,
-        .V = false});
-
-    return true;
+    throw "Should not happen";
 }
 
 #endif // _BIC_H_

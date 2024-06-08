@@ -24,14 +24,16 @@ public:
 	SingleOperandInstruction (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
 	u16 getOperationCode () override;
 
+	OperandLocation getOperandLocation (GeneralRegisters &reg);
+	template <typename T> bool readOperand (T *operand);
+	template <typename T> bool writeOperand (T operand);
+
 protected:
 	// The operand location is protected as some instructions (notably the JMP
 	// and MFPS instructions) are special cases and need access to the location.
 	OperandLocation operandLocation_ {};
 
-	OperandLocation getOperandLocation (GeneralRegisters &reg);
-	template <typename T> bool readOperand (T *operand);
-	template <typename T> bool writeOperand (T operand);
+
 };
 
 // The functions below are templated for bytes (type u8 or CondData<u8>) and

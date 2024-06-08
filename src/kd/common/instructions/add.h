@@ -39,25 +39,10 @@ inline CommonInstruction::ADD::ADD (CpuData* cpuData, CpuControl* cpuControl,
     DoubleOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
+// ToDo: To be removed
 inline bool CommonInstruction::ADD::execute ()
 {
-    CondData<u16> source, destination;
-
-    if (!readSourceOperand (&source) ||
-        !readDestinationOperand (&destination))
-        return false;
-
-    u16 result = source + destination;
-
-    if (!writeDestinationOperand (result))
-        return false;
-
-    setPSW (ConditionCodes ({.N = (bool) (result & 0x8000),
-        .Z = result == 0,
-        .V = ((source & 0x8000) == (destination & 0x8000)) && ((destination & 0x8000) != (result & 0x8000)),
-        .C = (bool) (((u32) source + (u32) destination) & 0x10000)}));
-
-    return true;
+    throw "Should not happen";
 }
 
 #endif // _ADD_H_

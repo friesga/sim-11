@@ -34,23 +34,10 @@ inline CommonInstruction::COM::COM (CpuData* cpuData, CpuControl* cpuControl,
     SingleOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
+// ToDo: To be removed
 inline bool CommonInstruction::COM::execute ()
 {
-    CondData<u16> operand;
-    if (!readOperand (&operand))
-        return false;
-
-    // Complement the operand and write it to the operand location
-    operand = ~operand;
-    if (!writeOperand (operand.value ()))
-        return false;
-
-    setPSW ({ConditionCodes {.N = (bool) (operand & 0x8000),
-        .Z = operand == 0,
-        .V = false,
-        .C = true}});
-
-    return true;
+    throw "Should not happen";
 }
 
 #endif // _COM_H_

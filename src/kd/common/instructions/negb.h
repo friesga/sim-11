@@ -28,24 +28,10 @@ inline CommonInstruction::NEGB::NEGB (CpuData* cpuData, CpuControl* cpuControl,
     SingleOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
+// ToDo: To be removed
 inline bool CommonInstruction::NEGB::execute ()
 {
-    CondData<u8> operand;
-    if (!readOperand (&operand))
-        return false;
-
-    if (operand != 0200)
-        operand = -operand;
-
-    if (!writeOperand (operand.value ()))
-        return false;
-
-    setPSW (ConditionCodes {.N = (bool) (operand & 0x80),
-        .Z = operand == 0,
-        .V = operand == 0200,
-        .C = operand != 0});
-
-    return true;
+    throw "Should not happen";
 }
 
 #endif // _NEGB_H_

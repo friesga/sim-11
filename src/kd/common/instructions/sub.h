@@ -34,26 +34,10 @@ inline CommonInstruction::SUB::SUB (CpuData* cpuData, CpuControl* cpuControl,
     DoubleOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
+// ToDo: To be removed
 inline bool CommonInstruction::SUB::execute ()
 {
-    CondData<u16> source, destination;
-
-    if (!readSourceOperand (&source) ||
-        !readDestinationOperand (&destination))
-        return false;
-
-    u16 result = destination - source;
-
-    if (!writeDestinationOperand (result))
-        return false;
-
-    setPSW (ConditionCodes {.N = (bool) (result & 0x8000),
-        .Z = result == 0,
-        .V = ((source & 0x8000) != (destination & 0x8000)) &&
-             ((source & 0x8000) == (result & 0x8000)),
-        .C = (bool) (((u32) destination - (u32) source) & 0x10000)});
-
-    return true;
+    throw "Should not happen";
 }
 
 #endif // _SUB_H_

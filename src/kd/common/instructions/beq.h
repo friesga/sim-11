@@ -31,10 +31,10 @@ inline CommonInstruction::BEQ::BEQ (CpuData* cpuData, CpuControl* cpuControl,
     BranchInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
+// ToDo: To be removed
 inline bool CommonInstruction::BEQ::execute ()
 {
-    executeBranchIf (isSet (PSW_Z));
-    return true;
+    throw "Should not happen";
 }
 
 #endif // _BEQ_H_

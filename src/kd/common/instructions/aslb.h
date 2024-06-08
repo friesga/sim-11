@@ -33,23 +33,10 @@ inline CommonInstruction::ASLB::ASLB (CpuData* cpuData, CpuControl* cpuControl,
     SingleOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
+// ToDo: To be removed
 inline bool CommonInstruction::ASLB::execute ()
 {
-    CondData<u8> source;
-    if (!readOperand (&source))
-        return false;
-
-    u8 result = (u8)(source << 1);
-
-    if (!writeOperand (result))
-        return false;
-
-    setPSW (ConditionCodes {.N = (bool) (result & 0x80),
-        .Z = result == 0,
-        .V = (bool) ((result & 0x80) ^ (source & 0x80)),
-        .C = (bool) (source & 0x80)});
-
-    return true;
+    throw "Should not happen";
 }
 
 #endif // _ASLB_H_

@@ -32,32 +32,10 @@ inline CommonInstruction::MOVB::MOVB (CpuData* cpuData, CpuControl* cpuControl,
     DoubleOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
+// ToDo: To be removed
 inline bool CommonInstruction::MOVB::execute ()
 {
-    CondData<u8> source;
-
-    if (!readSourceOperand (&source))
-        return false;
-
-    s8 tmp = (s8) source;
-
-    // If the destination mode is 0 (Register) the regular operand processing
-    // is bypassed and the signed eight bit value u8 is directly written into
-    // the register, causing sign extension in the register.
-    destinationOperandLocation_ = 
-        getDestinationOperandLocation (cpuData_->registers ());
-
-    if (destinationOperandLocation_.isA<RegisterOperandLocation> ())
-        cpuData_->registers ()[destinationOperandLocation_] = tmp;
-    else
-        if (!destinationOperandLocation_.write<u8> (tmp))
-            return false;
-
-    setPSW (ConditionCodes ({.N = (bool) (tmp & 0x80),
-        .Z = tmp == 0,
-        .V = false}));
-
-    return true;
+    throw "Should not happen";
 }
 
 #endif // _MOVB_H_

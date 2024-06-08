@@ -37,30 +37,10 @@ inline CommonInstruction::ASR::ASR (CpuData* cpuData, CpuControl* cpuControl,
     SingleOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
+// ToDo: To be removed
 inline bool CommonInstruction::ASR::execute ()
 {
-    CondData<u16> contents;
-    if (!readOperand (&contents))
-        return false;
-
-    u16 result = contents;
-    if (result & 0100000)
-    {
-        result >>= 1;
-        result |= 0100000;
-    }
-    else
-        result >>= 1;
-
-    if (!writeOperand (result))
-        return false;
-
-    setPSW (ConditionCodes {.N = (bool) (result & 0100000),
-        .Z = result == 0,
-        .V = (bool) (result & 0100000) != (bool) (contents & 1),
-        .C = (bool) (contents & 1)});
-
-    return true;
+    throw "Should not happen";
 }
 
 #endif // _ASR_H_

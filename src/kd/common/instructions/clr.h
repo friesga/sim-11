@@ -33,17 +33,10 @@ inline CommonInstruction::CLR::CLR (CpuData* cpuData, CpuControl* cpuControl,
     SingleOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
+// ToDo: To be removed
 inline bool CommonInstruction::CLR::execute ()
 {
-    if (!writeOperand ((u16)0))
-        return false;
-
-    setPSW (ConditionCodes {.N = false,
-        .Z = true,
-        .V = false,
-        .C = false});
-
-    return true;
+    throw "Should not happen";
 }
 
 #endif // _CLR_H_

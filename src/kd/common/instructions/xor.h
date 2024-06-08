@@ -34,27 +34,10 @@ inline CommonInstruction::XOR::XOR (CpuData* cpuData, CpuControl* cpuControl,
     EisInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
+// ToDo: To be removed
 inline bool CommonInstruction::XOR::execute ()
 {
-    u16 regNr = getRegisterNr ();
-    GeneralRegisters& registers = cpuData_->registers ();
-
-    u16 source = registers[regNr];
-
-    CondData<u16> destination;
-    if (!readOperand (&destination))
-        return false;
-
-    u16 result = source ^ destination;
-
-    if (!writeOperand (result))
-        return false;
-
-    setPSW (ConditionCodes {.N = (bool) (result & 0x8000),
-        .Z = result == 0,
-        .V = false});
-
-    return true;
+    throw "Should not happen";
 }
 
 #endif // _XOR_H_

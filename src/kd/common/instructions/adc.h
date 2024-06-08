@@ -35,24 +35,10 @@ inline CommonInstruction::ADC::ADC (CpuData* cpuData, CpuControl* cpuControl,
     SingleOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
+// ToDo: To be removed
 inline bool CommonInstruction::ADC::execute ()
 {
-    CondData<u16> contents;
-    if (!readOperand (&contents))
-        return false;
-
-    u16 cBit = isSet (PSW_C) ? 1 : 0;
-    u16 result = contents + cBit;
-
-    if (!writeOperand (result))
-        return false;
-
-     setPSW (ConditionCodes ({.N = (bool) (result & 0x8000),
-        .Z = result == 0,
-        .V = contents == 0077777 && isSet (PSW_C),
-        .C = contents == 0177777 && isSet (PSW_C)}));
-
-    return true;
+    throw "Should not happen";
 }
 
 #endif // _ADC_H_

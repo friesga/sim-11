@@ -33,22 +33,10 @@ inline CommonInstruction::INC::INC (CpuData* cpuData, CpuControl* cpuControl,
     SingleOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
+// ToDo: To be removed
 inline bool CommonInstruction::INC::execute ()
 {
-    CondData<u16> contents;
-    if (!readOperand (&contents))
-        return false;
-
-    // Increment the operand and write it to the operand location
-    u16 result = contents + 1;
-    if (!writeOperand (result))
-        return false;
-
-    setPSW (ConditionCodes {.N = (bool) (result & 0x8000),
-        .Z = result == 0,
-        .V = contents == 077777});
-
-    return true;
+    throw "Should not happen";
 }
 
 #endif // _INC_H_

@@ -28,18 +28,10 @@ inline CommonInstruction::TSTB::TSTB (CpuData* cpuData, CpuControl* cpuControl,
     SingleOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
+// ToDo: To be removed
 inline bool CommonInstruction::TSTB::execute ()
 {
-    CondData<u8> source;
-    if (!readOperand (&source))
-        return false;
-
-    setPSW (ConditionCodes {.N = (bool) (source & 0x80),
-        .Z = source == 0,
-        .V = false,
-        .C = false});
-
-    return true;
+    throw "Should not happen";
 }
 
 #endif // _TSTB_H_

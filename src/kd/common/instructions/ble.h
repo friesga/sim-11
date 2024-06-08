@@ -28,10 +28,10 @@ inline CommonInstruction::BLE::BLE (CpuData* cpuData, CpuControl* cpuControl,
     BranchInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
+// ToDo: To be removed
 inline bool CommonInstruction::BLE::execute ()
 {
-    executeBranchIf (isSet (PSW_Z) || (isSet (PSW_N) ^ isSet (PSW_V)));
-    return true;
+    throw "Should not happen";
 }
 
 #endif // _BLE_H_

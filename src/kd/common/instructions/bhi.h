@@ -31,10 +31,10 @@ inline CommonInstruction::BHI::BHI (CpuData* cpuData, CpuControl* cpuControl,
     BranchInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
+// ToDo: To be removed
 inline bool CommonInstruction::BHI::execute ()
 {
-    executeBranchIf (!isSet (PSW_C) && !isSet (PSW_Z));
-    return true;
+    throw "Should not happen";
 }
 
 #endif // _BHI_H_

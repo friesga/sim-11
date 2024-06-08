@@ -22,7 +22,6 @@ public:
 	MarkInstruction (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
 	u16 getOperationCode () override;
 
-protected:
 	u16 numberOfParameters ();
 };
 

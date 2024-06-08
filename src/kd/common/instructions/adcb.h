@@ -28,24 +28,10 @@ inline CommonInstruction::ADCB::ADCB (CpuData* cpuData, CpuControl* cpuControl,
     SingleOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
+// ToDo: To be removed
 inline bool CommonInstruction::ADCB::execute ()
 {
-    CondData<u8> source;
-    if (!readOperand (&source))
-        return false;
-
-    u16 tmp = isSet (PSW_C) ? 1 : 0;
-    u8 destination = (u8)(source + tmp);
-
-    if (!writeOperand (destination))
-        return false;
-
-    setPSW (ConditionCodes ({.N = (bool) (destination & 0x80),
-        .Z = destination == 0,
-        .V = source == 0177 && isSet (PSW_C),
-        .C = source == 0377 && isSet (PSW_C)}));
-
-    return true;
+    throw "Should not happen";
 }
 
 #endif // _ADCB_H_

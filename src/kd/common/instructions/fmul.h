@@ -37,11 +37,10 @@ inline CommonInstruction::FMUL::FMUL (CpuData* cpuData, CpuControl* cpuControl,
     FISInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
+// ToDo: To be removed
 inline bool CommonInstruction::FMUL::execute ()
 {
-    return executeFISinstruction (getRegister (),
-        [](Float f1, Float f2) { return true; },
-        [](Float f1, Float f2) { return f1 * f2; });
+    throw "Should not happen";
 }
 
 #endif // _FMUL_H_

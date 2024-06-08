@@ -28,10 +28,10 @@ inline CommonInstruction::Unused::Unused (CpuData* cpuData, CpuControl* cpuContr
     NoOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
+// ToDo: To be removed
 inline bool CommonInstruction::Unused::execute ()
 {
-    cpuData_->setTrap (CpuData::TrapCondition::ReservedInstructionTrap);
-    return true;
+    throw "Should not happen";
 }
 
 #endif // _UNUSED_H_

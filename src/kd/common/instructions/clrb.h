@@ -28,17 +28,10 @@ inline CommonInstruction::CLRB::CLRB (CpuData* cpuData, CpuControl* cpuControl,
     SingleOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
+// ToDo: To be removed
 inline bool CommonInstruction::CLRB::execute ()
 {
-    if (!writeOperand ((u8)0))
-        return false;
-
-    setPSW (ConditionCodes {.N = false,
-        .Z = true,
-        .V = false,
-        .C = false});
-
-    return true;
+    throw "Should not happen";
 }
 
 #endif // _CLRB_H_

@@ -35,17 +35,10 @@ inline CommonInstruction::SXT::SXT (CpuData* cpuData, CpuControl* cpuControl,
     SingleOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
+// ToDo: To be removed
 inline bool CommonInstruction::SXT::execute ()
 {
-    u16 result = isSet (PSW_N) ? 0177777 : 0;
-
-    if (!writeOperand (result))
-        return false;
-
-    setPSW (ConditionCodes {.Z = !isSet (PSW_N),
-        .V = false});
-
-    return true;
+    throw "Should not happen";
 }
 
 #endif // _SXT_H_

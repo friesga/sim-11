@@ -34,10 +34,10 @@ inline CommonInstruction::BLT::BLT (CpuData* cpuData, CpuControl* cpuControl,
     BranchInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
+// ToDo: To be removed
 inline bool CommonInstruction::BLT::execute ()
 {
-    executeBranchIf (isSet (PSW_N) ^ isSet (PSW_V));
-    return true;
+    throw "Should not happen";
 }
 
 #endif // _BLT_H_

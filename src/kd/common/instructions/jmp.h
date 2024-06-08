@@ -37,18 +37,10 @@ inline CommonInstruction::JMP::JMP (CpuData* cpuData, CpuControl* cpuControl,
     SingleOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
+// ToDo: To be removed
 inline bool CommonInstruction::JMP::execute ()
 {
-    operandLocation_ = getOperandLocation (cpuData_->registers ());
-    if (operandLocation_.isA<MemoryOperandLocation> ())
-    {
-        cpuData_->registers ()[7] = operandLocation_;
-        return true;
-    }
-
-    // Illegal instruction
-    cpuData_->setTrap (CpuData::TrapCondition::BusError);
-    return false;
+    throw "Should not happen";
 }
 
 

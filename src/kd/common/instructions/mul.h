@@ -36,27 +36,10 @@ inline CommonInstruction::MUL::MUL (CpuData* cpuData, CpuControl* cpuControl,
     EisInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
+// ToDo: To be removed
 inline bool CommonInstruction::MUL::execute ()
 {
-    u16 regNr = getRegisterNr ();
-
-    GeneralRegisters& registers = cpuData_->registers ();
-    u16 destination = registers[regNr];
-
-    CondData<u16> source;
-    if (!readOperand (&source))
-        return false;
-
-    s32 tmps32 = (s32)(s16)destination * (s16)source;
-    registers[regNr] = (u16)(tmps32 >> 16);
-    registers[regNr | 1] = (u16)tmps32;
-
-    setPSW (ConditionCodes {.N = tmps32 < 0,
-        .Z = tmps32 == 0,
-        .V = false,
-        .C = (tmps32 >= 0x7FFF) || (tmps32 < -0x8000)});
-
-    return true;
+    throw "Should not happen";
 }
 
 #endif // _MUL_H_

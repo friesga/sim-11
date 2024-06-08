@@ -38,22 +38,10 @@ inline CommonInstruction::CMP::CMP (CpuData* cpuData, CpuControl* cpuControl,
     DoubleOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
+// ToDo: To be removed
 inline bool CommonInstruction::CMP::execute ()
 {
-    CondData<u16> source, destination;
-
-    if (!readSourceOperand (&source) ||
-        !readDestinationOperand (&destination))
-        return false;
-
-    u16 tmp = source - destination;
-
-    setPSW (ConditionCodes {.N = (bool) (tmp & 0x8000),
-        .Z = tmp == 0,
-        .V = ((source & 0x8000) != (destination & 0x8000)) && ((destination & 0x8000) == (tmp & 0x8000)),
-        .C = (bool) (((u32) source - (u32) destination) & 0x10000)});
-
-    return true;
+    throw "Should not happen";
 }
 
 #endif // _CMP_H_

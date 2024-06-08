@@ -35,19 +35,10 @@ inline CommonInstruction::MOV::MOV (CpuData* cpuData, CpuControl* cpuControl,
     DoubleOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
+// ToDo: To be removed
 inline bool CommonInstruction::MOV::execute ()
 {
-    CondData<u16> source, destination;
-
-    if (!readSourceOperand (&source) ||
-        !writeDestinationOperand (source.value ()))
-        return false;
-
-    setPSW (ConditionCodes ({.N = (bool) (source & 0100000),
-        .Z = source == 0,
-        .V = false}));
-
-    return true;
+    throw "Should not happen";
 }
 
 #endif // _MOV_H_

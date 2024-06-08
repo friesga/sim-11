@@ -29,10 +29,10 @@ inline CommonInstruction::HALT::HALT (CpuData* cpuData, CpuControl* cpuControl,
     NoOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
+// ToDo: To be removed
 inline bool CommonInstruction::HALT::execute ()
 {
-    cpuControl_->halt ();
-    return true;
+    throw "Should not happen";
 }
 
 #endif // _HALT_H_

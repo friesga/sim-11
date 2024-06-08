@@ -99,7 +99,6 @@ namespace KD11_NA {
 class Executor
 {
 public:
-	Executor () = default;
     Executor (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu);
 
     // Single operand instructions
@@ -201,6 +200,7 @@ private:
     MMU* mmu_;
 
     void setPSW (ConditionCodes conditionCodes);
+	constexpr bool isSet (u16 x);
 };
 
 } // namespace KD11_NA

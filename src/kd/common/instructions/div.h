@@ -38,41 +38,10 @@ inline CommonInstruction::DIV::DIV (CpuData* cpuData, CpuControl* cpuControl,
     EisInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
+// ToDo: Should not happen
 inline bool CommonInstruction::DIV::execute ()
 {
-    u16 regNr = getRegisterNr ();
-
-    GeneralRegisters& registers = cpuData_->registers ();
-    s32 tmps32 = (registers[regNr] << 16) | registers[regNr | 1];
-
-    CondData<u16> source;
-    if (!readOperand (&source))
-        return false;
-
-    if (source == 0)
-    {
-        setPSW (ConditionCodes {.V = true, .C = true});
-    }
-    else
-    {
-        s32 quotient = tmps32 / (s16)source;
-        s32 remainder = tmps32 % (s16)source;
-
-        if ((s16)quotient != quotient)
-        {
-            setPSW (ConditionCodes {.V = true, .C = false});
-        }
-        else
-        {
-            registers[regNr] = (u16)quotient;
-            registers[regNr | 1] = (u16)remainder;
-            setPSW (ConditionCodes {.N = quotient < 0,
-                .Z = quotient == 0,
-                .C = false});
-        }
-    }
-
-    return true;
+    throw "Should not happen";
 }
 
 #endif // _DIV_H_

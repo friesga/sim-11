@@ -31,30 +31,10 @@ inline CommonInstruction::ASRB::ASRB (CpuData* cpuData, CpuControl* cpuControl,
     SingleOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
+// ToDo: To be removed
 inline bool CommonInstruction::ASRB::execute ()
 {
-    CondData<u8> source;
-    if (!readOperand (&source))
-        return false;
-
-    u8 result = source;
-    if (result & 0x80)
-    {
-        result >>= 1;
-        result |= 0x80;
-    }
-    else
-        result >>= 1;
-
-    if (!writeOperand (result))
-        return false;
-
-    setPSW (ConditionCodes {.N = (bool) (result & 0x80),
-        .Z = result == 0,
-        .V = (bool) (result & 0x80) != (bool) (source & 1),
-        .C = (bool) (source & 1)});
-
-    return true;
+    throw "Should not happen";
 }
 
 #endif // _ASRB_H_

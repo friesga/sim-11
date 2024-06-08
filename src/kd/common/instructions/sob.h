@@ -32,17 +32,10 @@ inline CommonInstruction::SOB::SOB (CpuData* cpuData, CpuControl* cpuControl,
     SobInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
+// ToDo: To be removed
 inline bool CommonInstruction::SOB::execute ()
 {
-    u16 regNr = getRegisterNr ();
-    u16 offset = getOffset ();
-
-    GeneralRegisters& reg = cpuData_->registers ();
-    reg[regNr]--;
-    if (reg[regNr])
-        reg[7] -= 2 * offset;
-
-    return true;
+    throw "Should not happen";
 }
 
 #endif // _SOB_H_

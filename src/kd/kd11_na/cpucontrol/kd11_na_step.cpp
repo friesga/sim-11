@@ -100,6 +100,9 @@ void KD11_NA_CpuControl::execute ()
 // Execute one instruction
 void KD11_NA_CpuControl::execInstr ()
 {
+    // Create an Executor to execute the instructions
+    KD11_NA::Executor executor (cpuData_, this, mmu_);
+
     // Get next instruction to execute and move PC forward
     CondData<u16> instructionWord = mmu_->fetchWord (cpuData_->registers ()[7]);
     if (!instructionWord.hasValue())
@@ -122,7 +125,7 @@ void KD11_NA_CpuControl::execInstr ()
     // instruction was completed and false if it was aborted due to an error
     // condition. In that case a trap has been set. Note however that trap
     // instructions set a trap and return true. 
-    visit (KD11_NA::Executor {}, instr);
+    visit (executor, instr);
 
     if (cpuData_->trap () != CpuData::TrapCondition::None)
         serviceTrap ();

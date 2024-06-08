@@ -30,10 +30,10 @@ inline CommonInstruction::BVC::BVC (CpuData* cpuData, CpuControl* cpuControl,
     BranchInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
+// ToDo: To be removed
 inline bool CommonInstruction::BVC::execute ()
 {
-    executeBranchIf (!isSet (PSW_V));
-    return true;
+    throw "Should not happen";
 }
 
 #endif // _BVC_H_

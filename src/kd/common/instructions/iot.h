@@ -35,10 +35,10 @@ inline CommonInstruction::IOT::IOT (CpuData* cpuData, CpuControl* cpuControl,
     NoOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
+// ToDo: To be removed
 inline bool CommonInstruction::IOT::execute ()
 {
-    cpuData_->setTrap (CpuData::TrapCondition::InputOutputTrap);
-    return true;
+    throw "Should not happen";
 }
 
 #endif // _IOT_H_

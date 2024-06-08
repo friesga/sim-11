@@ -30,21 +30,7 @@ inline CommonInstruction::COMB::COMB (CpuData* cpuData, CpuControl* cpuControl,
 
 inline bool CommonInstruction::COMB::execute ()
 {
-    CondData<u8> operand;
-    if (!readOperand (&operand))
-        return false;
-
-    // Complement the operand and write it to the operand location
-    operand = ~operand;
-    if (!writeOperand (operand.value ()))
-        return false;
-
-    setPSW ({ConditionCodes {.N = (bool) (operand & 0x80),
-        .Z = (u8) operand == 0,
-        .V = false,
-        .C = true}});
-
-    return true;
+    throw "Should not happen";
 }
 
 #endif // _COMB_H_

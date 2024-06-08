@@ -27,10 +27,10 @@ inline CommonInstruction::BGT::BGT (CpuData* cpuData, CpuControl* cpuControl,
     BranchInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
+// ToDo: To be removed
 inline bool CommonInstruction::BGT::execute ()
 {
-    executeBranchIf ((isSet (PSW_Z) || (isSet (PSW_N) ^ isSet (PSW_V))) == 0);
-    return true;
+    throw "Should not happen";
 }
 
 #endif // _BGT_H_

@@ -29,10 +29,10 @@ inline CommonInstruction::RESET::RESET (CpuData* cpuData, CpuControl* cpuControl
     NoOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
+// ToDo: To be removed
 inline bool CommonInstruction::RESET::execute ()
 {
-    cpuControl_->busReset ();
-    return true;
+    throw "Should not happen";
 }
 
 #endif // _RESET_H_

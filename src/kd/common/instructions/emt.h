@@ -41,10 +41,10 @@ inline CommonInstruction::EMT::EMT (CpuData* cpuData, CpuControl* cpuControl,
     NoOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
+// ToDo: To be removed
 inline bool CommonInstruction::EMT::execute ()
 {
-    cpuData_->setTrap (CpuData::TrapCondition::EmulatorTrap);
-    return true;
+    throw "Should not happen";
 }
 
 #endif // _EMT_H_

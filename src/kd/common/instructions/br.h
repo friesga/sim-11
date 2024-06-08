@@ -28,10 +28,10 @@ inline CommonInstruction::BR::BR (CpuData* cpuData, CpuControl* cpuControl,
     BranchInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
+// ToDo: To be removed
 inline bool CommonInstruction::BR::execute ()
 {
-    executeBranch ();
-    return true;
+    throw "Should not happen";
 }
 
 #endif // _BR_H_

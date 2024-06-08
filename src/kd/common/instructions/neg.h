@@ -37,23 +37,7 @@ inline CommonInstruction::NEG::NEG (CpuData* cpuData, CpuControl* cpuControl,
 
 inline bool CommonInstruction::NEG::execute ()
 {
-    CondData<u16> operand;
-    if (!readOperand (&operand))
-        return false;
-
-    // Negate the operand and write it to the operand location
-    if (operand != 0100000)
-        operand = -operand;
-
-    if (!writeOperand (operand.value ()))
-        return false;
-
-    setPSW (ConditionCodes {.N = (bool) (operand & 0100000),
-        .Z = operand == 0,
-        .V = operand == 0100000,
-        .C = operand != 0});
-
-    return true;
+    throw "Should not happen";
 }
 
 #endif // _NEG_H_

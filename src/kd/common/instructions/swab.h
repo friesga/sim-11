@@ -35,32 +35,10 @@ inline CommonInstruction::SWAB::SWAB (CpuData* cpuData, CpuControl* cpuControl,
     SingleOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
+// ToDo: Should not happen
 inline bool CommonInstruction::SWAB::execute ()
 {
-    CondData<u16> operand;
-    if (!readOperand (&operand))
-        return false;
-
-    // Swap bytes in the operand and write it to the operand location
-    operand = ((operand & 0x00FF) << 8) | ((operand >> 8) & 0xFF);
-
-    if (!writeOperand (operand.value ()))
-        return false;
-
-    /*
-    setConditionCodeIf_ClearElse (PSW_N, operand & 0x80);
-    setConditionCodeIf_ClearElse (PSW_Z, !((u8)operand));
-    clearConditionCode (PSW_V);
-    clearConditionCode (PSW_C);
-    */
-
-    setPSW (ConditionCodes {.N = (bool) (operand & 0x80),
-        .Z = (u8) operand == 0,
-        .V = false,
-        .C = false});
-
-
-    return true;
+    throw "Should not happen";
 }
 
 

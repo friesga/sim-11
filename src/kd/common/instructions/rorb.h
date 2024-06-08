@@ -32,25 +32,10 @@ inline CommonInstruction::RORB::RORB (CpuData* cpuData, CpuControl* cpuControl,
     SingleOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
+// ToDo: To be removed
 inline bool CommonInstruction::RORB::execute ()
 {
-    CondData<u8> source;
-    if (!readOperand (&source))
-        return false;
-
-    u8 result = source >> 1;
-    if (isSet (PSW_C))
-        result |= 0x80;
-
-    if (!writeOperand (result))
-        return false;
-
-    setPSW (ConditionCodes {.N = (bool) (result & 0x80),
-        .Z = result == 0,
-        .V = (bool) (result & 0x80) != (bool) (source & 0x01),
-        .C = (bool) (source & 0x01)});
-
-    return true;
+    throw "Should not happen";
 }
 
 #endif // _RORB_H_

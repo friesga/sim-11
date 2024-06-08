@@ -29,11 +29,10 @@ inline CommonInstruction::CCC::CCC (CpuData* cpuData, CpuControl* cpuControl,
     CcInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
+// ToDo: To be removed
 inline bool CommonInstruction::CCC::execute ()
 {
-    cpuData_->psw ().set (PSW::ProtectionMode::ExplicitAccess,
-        cpuData_->psw () & ~getConditionCodes ());
-    return true;
+    throw "Should not happen";
 }
 
 #endif // _CCC_H_

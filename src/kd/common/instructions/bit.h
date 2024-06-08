@@ -35,21 +35,10 @@ inline CommonInstruction::BIT::BIT (CpuData* cpuData, CpuControl* cpuControl,
     DoubleOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
+// ToDo: To be removed
 inline bool CommonInstruction::BIT::execute ()
 {
-    CondData<u16> source, destination;
-
-    if (!readSourceOperand (&source) ||
-        !readDestinationOperand (&destination))
-        return false;
-
-    u16 tmp = source & destination;
-
-    setPSW (ConditionCodes {.N = (bool) (tmp & 0x8000),
-        .Z = tmp == 0,
-        .V = false});
-
-    return true;
+    throw "Should not happen";
 }
 
 #endif // _BIT_H_

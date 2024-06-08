@@ -28,21 +28,10 @@ inline CommonInstruction::CMPB::CMPB (CpuData* cpuData, CpuControl* cpuControl,
     DoubleOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
+// ToDo: To be removed
 inline bool CommonInstruction::CMPB::execute ()
 {
-    CondData<u8> source, destination;
-
-    if (!readSourceOperand (&source) || !readDestinationOperand (&destination))
-        return false;
-
-    u16 tmp = (u8) (source - destination);
-
-    setPSW (ConditionCodes {.N = (bool) (tmp & 0x80),
-        .Z = tmp == 0,
-        .V = ((source & 0x80) != (destination & 0x80)) && ((destination & 0x80) == (tmp & 0x80)),
-        .C = (bool) ((source - destination) & 0x100)});
-
-    return true;
+    throw "Should not happen";
 }
 
 #endif // _CMPB_H_

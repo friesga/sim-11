@@ -30,10 +30,10 @@ inline CommonInstruction::BPL::BPL (CpuData* cpuData, CpuControl* cpuControl,
     BranchInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
+// ToDo: To be removed
 inline bool CommonInstruction::BPL::execute ()
 {
-    executeBranchIf (!isSet (PSW_N));
-    return true;
+    throw "Should not happen";
 }
 
 #endif // _BPL_H_

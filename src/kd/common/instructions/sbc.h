@@ -35,24 +35,10 @@ inline CommonInstruction::SBC::SBC (CpuData* cpuData, CpuControl* cpuControl,
     SingleOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
+// ToDo: To be removed
 inline bool CommonInstruction::SBC::execute ()
 {
-    CondData<u16> contents;
-    if (!readOperand (&contents))
-        return false;
-
-    u16 cBit = isSet (PSW_C) ? 1 : 0;
-    u16 result = contents - cBit;
-
-    if (!writeOperand (result))
-        return false;
-
-    setPSW (ConditionCodes {.N = (bool) (result & 0x8000),
-        .Z = result == 0,
-        .V = contents == 0100000,
-        .C = contents == 0 && cBit});
-
-    return true;
+    throw "Should not happen";
 }
 
 #endif // _SBC_H_

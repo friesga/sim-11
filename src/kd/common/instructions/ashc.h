@@ -45,57 +45,10 @@ inline CommonInstruction::ASHC::ASHC (CpuData* cpuData, CpuControl* cpuControl,
     EisInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
+// ToDo: To be removed
 inline bool CommonInstruction::ASHC::execute ()
 {
-    u16 regNr = getRegisterNr ();
-    GeneralRegisters& registers = cpuData_->registers ();
-    u16 dst = registers[regNr];
-
-    s32 tmps32 = (registers[regNr] << 16) | registers[regNr | 1];
-
-    CondData<u16> source;
-    if (!readOperand (&source))
-        return false;
-
-    if ((source & 0x3F) == 0x20)
-    {
-        // Negative; 32 right
-        setPSW (ConditionCodes {.V = false, .C = (bool) (tmps32 & 0x80000000)});
-        if (isSet (PSW_C))
-            tmps32 = 0xFFFFFFFF;
-        else
-            tmps32 = 0;
-    }
-    else if (source & 0x20)
-    {
-        // Negative - shift right
-        s32 stmp2;
-        source = (~source & 0x1F) + 1;
-        stmp2 = tmps32 >> (source - 1);
-        tmps32 >>= source;
-        setPSW (ConditionCodes {.C = (bool) (stmp2 & 1)});
-    }
-    else if ((source & 0x1F) == 0)
-    {
-        // Zero - don't shift
-        setPSW (ConditionCodes {.V = false, .C = false});
-    }
-    else
-    {
-        // Positive - shift left
-        s32 stmp2;
-        source = source & 0x1F;
-        stmp2 = tmps32 << (source - 1);
-        tmps32 <<= source;
-        setPSW (ConditionCodes {.V = !!(dst & 0x8000) != !!(tmps32 & 0x80000000),
-            .C =(bool) (stmp2 & 0x80000000)});
-    }
-    registers[regNr] = (u16)(tmps32 >> 16);
-    registers[regNr | 1] = (u16)tmps32;
-    setPSW (ConditionCodes {.N = (bool) (tmps32 & 0x80000000),
-        .Z = tmps32 == 0});
-
-    return true;
+    throw "Should not happen";
 }
 
 #endif // _ASHC_H_

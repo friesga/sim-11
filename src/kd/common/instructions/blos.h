@@ -32,10 +32,10 @@ inline CommonInstruction::BLOS::BLOS (CpuData* cpuData, CpuControl* cpuControl,
     BranchInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
+// ToDo: To be removed
 inline bool CommonInstruction::BLOS::execute ()
 {
-    executeBranchIf (isSet (PSW_C) || isSet (PSW_Z));
-    return true;
+    throw "Should not happen";
 }
 
 #endif // _BLOS_H_

@@ -29,14 +29,10 @@ inline CommonInstruction::RTS::RTS (CpuData* cpuData, CpuControl* cpuControl,
     FISInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
+// ToDo: To be removed
 inline bool CommonInstruction::RTS::execute ()
 {
-    u16 regNr = getRegister ();
-
-    cpuData_->registers ()[7] = cpuData_->registers ()[regNr];
-    mmu_->popWord (&cpuData_->registers ()[regNr]);
-
-    return true;
+    throw "Should not happen";
 }
 
 #endif // _RTS_H_

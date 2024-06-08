@@ -35,10 +35,10 @@ inline CommonInstruction::BPT::BPT (CpuData* cpuData, CpuControl* cpuControl,
     NoOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
+// ToDo: To be removed
 inline bool CommonInstruction::BPT::execute ()
 {
-    cpuData_->setTrap (CpuData::TrapCondition::BreakpointTrap);
-    return true;
+    throw "Should not happen";
 }
 
 #endif // _BPT_H_
