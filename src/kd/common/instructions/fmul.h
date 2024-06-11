@@ -1,7 +1,7 @@
 #ifndef _FMUL_H_
 #define _FMUL_H_
 
-#include "commoninstruction.h"
+
 #include "kd/common/instructionformats/fisinstruction/fisinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/common/operandlocation/operandlocation.h"
@@ -24,21 +24,21 @@
 //
 // A <- A * B
 //
-class CommonInstruction::FMUL : public FISInstruction
+class FMUL : public FISInstruction
 {
 public:
     FMUL (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline CommonInstruction::FMUL::FMUL (CpuData* cpuData, CpuControl* cpuControl,
+inline FMUL::FMUL (CpuData* cpuData, CpuControl* cpuControl,
         MMU* mmu, u16 instruction)
     :
     FISInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
 // ToDo: To be removed
-inline bool CommonInstruction::FMUL::execute ()
+inline bool FMUL::execute ()
 {
     throw "Should not happen";
 }

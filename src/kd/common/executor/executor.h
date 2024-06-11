@@ -5,8 +5,6 @@
 #include "kd/include/cpucontrol.h"
 #include "kd/include/mmu.h"
 
-#include "kd/common/instructions/commoninstruction.h"
-
 #include "kd/common/instructions/adc.h"
 #include "kd/common/instructions/adcb.h"
 #include "kd/common/instructions/add.h"
@@ -85,6 +83,11 @@
 #include "kd/common/instructions/wait.h"
 #include "kd/common/instructions/xor.h"
 
+#include "kd/common/instructions/fadd.h"
+#include "kd/common/instructions/fsub.h"
+#include "kd/common/instructions/fmul.h"
+#include "kd/common/instructions/fdiv.h"
+
 namespace Common {
 
 // The PDP-11 family comprises several processor types. Most instructions
@@ -106,97 +109,97 @@ public:
     Executor (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu);
 
     // Single operand instructions
-    bool operator() (CommonInstruction::CLR& instr);
-	bool operator() (CommonInstruction::CLRB& instr);
-	bool operator() (CommonInstruction::COM& instr);
-	bool operator() (CommonInstruction::COMB& instr);
-	bool operator() (CommonInstruction::INC& instr);
-	bool operator() (CommonInstruction::INCB& instr);
-	bool operator() (CommonInstruction::DEC& instr);
-	bool operator() (CommonInstruction::DECB& instr);
-	bool operator() (CommonInstruction::NEG& instr);
-	bool operator() (CommonInstruction::NEGB& instr);
-	bool operator() (CommonInstruction::TST& instr);
-	bool operator() (CommonInstruction::TSTB& instr);
-	bool operator() (CommonInstruction::ASR& instr);
-	bool operator() (CommonInstruction::ASRB& instr);
-	bool operator() (CommonInstruction::ASL& instr);
-	bool operator() (CommonInstruction::ASLB& instr);
-	bool operator() (CommonInstruction::ROR& instr);
-	bool operator() (CommonInstruction::RORB& instr);
-	bool operator() (CommonInstruction::ROL& instr);
-	bool operator() (CommonInstruction::ROLB& instr);
-	bool operator() (CommonInstruction::SWAB& instr);
-	bool operator() (CommonInstruction::ADC& instr);
-	bool operator() (CommonInstruction::ADCB& instr);
-	bool operator() (CommonInstruction::SBC& instr);
-	bool operator() (CommonInstruction::SBCB& instr);
-	bool operator() (CommonInstruction::SXT& instr);
-	bool operator() (CommonInstruction::MFPS& instr);
-	bool operator() (CommonInstruction::MTPS& instr);
-	bool operator() (CommonInstruction::JMP& instr);
-	bool operator() (CommonInstruction::MARK& instr);
+    bool operator() (CLR& instr);
+	bool operator() (CLRB& instr);
+	bool operator() (COM& instr);
+	bool operator() (COMB& instr);
+	bool operator() (INC& instr);
+	bool operator() (INCB& instr);
+	bool operator() (DEC& instr);
+	bool operator() (DECB& instr);
+	bool operator() (NEG& instr);
+	bool operator() (NEGB& instr);
+	bool operator() (TST& instr);
+	bool operator() (TSTB& instr);
+	bool operator() (ASR& instr);
+	bool operator() (ASRB& instr);
+	bool operator() (ASL& instr);
+	bool operator() (ASLB& instr);
+	bool operator() (ROR& instr);
+	bool operator() (RORB& instr);
+	bool operator() (ROL& instr);
+	bool operator() (ROLB& instr);
+	bool operator() (SWAB& instr);
+	bool operator() (ADC& instr);
+	bool operator() (ADCB& instr);
+	bool operator() (SBC& instr);
+	bool operator() (SBCB& instr);
+	bool operator() (SXT& instr);
+	bool operator() (MFPS& instr);
+	bool operator() (MTPS& instr);
+	bool operator() (JMP& instr);
+	bool operator() (MARK& instr);
 
 	// Double operand instructions
-	bool operator() (CommonInstruction::MOV& instr);
-	bool operator() (CommonInstruction::MOVB& instr);
-	bool operator() (CommonInstruction::CMP& instr);
-	bool operator() (CommonInstruction::CMPB& instr);
-	bool operator() (CommonInstruction::ADD& instr);
-	bool operator() (CommonInstruction::SUB& instr);
-	bool operator() (CommonInstruction::BIT& instr);
-	bool operator() (CommonInstruction::BITB& instr);
-	bool operator() (CommonInstruction::BIC& instr);
-	bool operator() (CommonInstruction::BICB& instr);
-	bool operator() (CommonInstruction::BIS& instr);
-	bool operator() (CommonInstruction::BISB& instr);
+	bool operator() (MOV& instr);
+	bool operator() (MOVB& instr);
+	bool operator() (CMP& instr);
+	bool operator() (CMPB& instr);
+	bool operator() (ADD& instr);
+	bool operator() (SUB& instr);
+	bool operator() (BIT& instr);
+	bool operator() (BITB& instr);
+	bool operator() (BIC& instr);
+	bool operator() (BICB& instr);
+	bool operator() (BIS& instr);
+	bool operator() (BISB& instr);
 
 	// EIS instructions, including JSR and XOR
-	bool operator() (CommonInstruction::JSR& instr);
-	bool operator() (CommonInstruction::MUL& instr);
-	bool operator() (CommonInstruction::DIV& instr);
-	bool operator() (CommonInstruction::ASH& instr);
-	bool operator() (CommonInstruction::ASHC& instr);
-	bool operator() (CommonInstruction::XOR& instr);
-	bool operator() (CommonInstruction::SOB& instr);
+	bool operator() (JSR& instr);
+	bool operator() (MUL& instr);
+	bool operator() (DIV& instr);
+	bool operator() (ASH& instr);
+	bool operator() (ASHC& instr);
+	bool operator() (XOR& instr);
+	bool operator() (SOB& instr);
 
 	// FIS format instructions
-	bool operator() (CommonInstruction::RTS& instr);
-	// bool operator() (CommonInstruction::FADD& instr);
-	// bool operator() (CommonInstruction::FSUB& instr);
-	// bool operator() (CommonInstruction::FMUL& instr);
-	// bool operator() (CommonInstruction::FDIV& instr);
+	bool operator() (RTS& instr);
+	// bool operator() (FADD& instr);
+	// bool operator() (FSUB& instr);
+	// bool operator() (FMUL& instr);
+	// bool operator() (FDIV& instr);
 
 	// Branch instructions
-	bool operator() (CommonInstruction::BR& instr);
-	bool operator() (CommonInstruction::BNE& instr);
-	bool operator() (CommonInstruction::BEQ& instr);
-	bool operator() (CommonInstruction::BPL& instr);
-	bool operator() (CommonInstruction::BMI& instr);
-	bool operator() (CommonInstruction::BVC& instr);
-	bool operator() (CommonInstruction::BVS& instr);
-	bool operator() (CommonInstruction::BCC& instr);
-	bool operator() (CommonInstruction::BCS& instr);
-	bool operator() (CommonInstruction::BGE& instr);
-	bool operator() (CommonInstruction::BLT& instr);
-	bool operator() (CommonInstruction::BGT& instr);
-	bool operator() (CommonInstruction::BLE& instr);
-	bool operator() (CommonInstruction::BHI& instr);
-	bool operator() (CommonInstruction::BLOS& instr);
-	bool operator() (CommonInstruction::EMT& instr);
-	bool operator() (CommonInstruction::TRAP& instr);
+	bool operator() (BR& instr);
+	bool operator() (BNE& instr);
+	bool operator() (BEQ& instr);
+	bool operator() (BPL& instr);
+	bool operator() (BMI& instr);
+	bool operator() (BVC& instr);
+	bool operator() (BVS& instr);
+	bool operator() (BCC& instr);
+	bool operator() (BCS& instr);
+	bool operator() (BGE& instr);
+	bool operator() (BLT& instr);
+	bool operator() (BGT& instr);
+	bool operator() (BLE& instr);
+	bool operator() (BHI& instr);
+	bool operator() (BLOS& instr);
+	bool operator() (EMT& instr);
+	bool operator() (TRAP& instr);
 
 	// No-operand instructions
-	bool operator() (CommonInstruction::HALT& instr);
-	bool operator() (CommonInstruction::WAIT& instr);
-	bool operator() (CommonInstruction::RTI& instr);
-	bool operator() (CommonInstruction::BPT& instr);
-	bool operator() (CommonInstruction::IOT& instr);
-	bool operator() (CommonInstruction::RESET& instr);
-	bool operator() (CommonInstruction::RTT& instr);
-	bool operator() (CommonInstruction::CCC& instr);
-	bool operator() (CommonInstruction::SCC& instr);
-	bool operator() (CommonInstruction::Unused& instr);
+	bool operator() (HALT& instr);
+	bool operator() (WAIT& instr);
+	bool operator() (RTI& instr);
+	bool operator() (BPT& instr);
+	bool operator() (IOT& instr);
+	bool operator() (RESET& instr);
+	bool operator() (RTT& instr);
+	bool operator() (CCC& instr);
+	bool operator() (SCC& instr);
+	bool operator() (Unused& instr);
 
 protected:
     CpuData* cpuData_;

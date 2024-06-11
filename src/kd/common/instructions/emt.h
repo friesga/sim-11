@@ -1,7 +1,7 @@
 #ifndef _EMT_H_
 #define _EMT_H_
 
-#include "commoninstruction.h"
+
 #include "kd/common/instructionformats/nooperandinstruction/nooperandinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/include/cpucontrol.h"
@@ -28,21 +28,21 @@
 // from the word at address 30; the new processor status (PS) is taken from the
 // word at address 32.
 //
-class CommonInstruction::EMT : public NoOperandInstruction
+class EMT : public NoOperandInstruction
 {
 public:
     EMT (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline CommonInstruction::EMT::EMT (CpuData* cpuData, CpuControl* cpuControl,
+inline EMT::EMT (CpuData* cpuData, CpuControl* cpuControl,
         MMU* mmu, u16 instruction)
     :
     NoOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
 // ToDo: To be removed
-inline bool CommonInstruction::EMT::execute ()
+inline bool EMT::execute ()
 {
     throw "Should not happen";
 }

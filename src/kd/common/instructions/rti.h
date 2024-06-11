@@ -1,7 +1,7 @@
 #ifndef _RTI_H_
 #define _RTI_H_
 
-#include "commoninstruction.h"
+
 #include "kd/common/instructionformats/nooperandinstruction/nooperandinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/include/cpucontrol.h"
@@ -24,14 +24,14 @@
 // restored (popped) from-the processor stack. If a trace trap is pending, the
 // first instruction after RTI will not be executed prior to the next T traps.
 //
-class CommonInstruction::RTI : public NoOperandInstruction
+class RTI : public NoOperandInstruction
 {
 public:
     RTI (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline CommonInstruction::RTI::RTI (CpuData* cpuData, CpuControl* cpuControl,
+inline RTI::RTI (CpuData* cpuData, CpuControl* cpuControl,
         MMU* mmu, u16 instruction)
     :
     NoOperandInstruction (cpuData, cpuControl, mmu, instruction)
@@ -39,7 +39,7 @@ inline CommonInstruction::RTI::RTI (CpuData* cpuData, CpuControl* cpuControl,
 
 
 // ToDo:: To be removed
-inline bool CommonInstruction::RTI::execute ()
+inline bool RTI::execute ()
 {
     throw "Should not happen";
 }

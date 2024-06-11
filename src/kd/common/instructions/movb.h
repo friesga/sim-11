@@ -1,7 +1,7 @@
 #ifndef _MOVB_H_
 #define _MOVB_H_
 
-#include "commoninstruction.h"
+
 #include "kd/common/instructionformats/doubleoperandinstruction/doubleoperandinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/common/operandlocation/operandlocation.h"
@@ -19,21 +19,21 @@
 // significant bit of the low order byte (sign extension). Otherwise MOVB
 // operates on bytes exactly as MOV operates on words.
 //
-class CommonInstruction::MOVB : public DoubleOperandInstruction
+class MOVB : public DoubleOperandInstruction
 {
 public:
     MOVB (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline CommonInstruction::MOVB::MOVB (CpuData* cpuData, CpuControl* cpuControl,
+inline MOVB::MOVB (CpuData* cpuData, CpuControl* cpuControl,
         MMU* mmu, u16 instruction)
     :
     DoubleOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
 // ToDo: To be removed
-inline bool CommonInstruction::MOVB::execute ()
+inline bool MOVB::execute ()
 {
     throw "Should not happen";
 }

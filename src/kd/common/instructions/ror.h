@@ -1,7 +1,7 @@
 #ifndef _ROR_H_
 #define _ROR_H_
 
-#include "commoninstruction.h"
+
 #include "kd/common/instructionformats/singleoperandinstruction/singleoperandinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/common/operandlocation/operandlocation.h"
@@ -24,21 +24,21 @@
 // the C-bit and the previous contents of the C-bit are loaded into bit 15 of
 // the destination.
 //
-class CommonInstruction::ROR : public SingleOperandInstruction
+class ROR : public SingleOperandInstruction
 {
 public:
     ROR (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline CommonInstruction::ROR::ROR (CpuData* cpuData, CpuControl* cpuControl,
+inline ROR::ROR (CpuData* cpuData, CpuControl* cpuControl,
         MMU* mmu, u16 instruction)
     :
     SingleOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
 // ToDo: To be removed
-inline bool CommonInstruction::ROR::execute ()
+inline bool ROR::execute ()
 {
     throw "Should not happen";
 }

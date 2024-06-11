@@ -1,7 +1,7 @@
 #ifndef _BIT_H_
 #define _BIT_H_
 
-#include "commoninstruction.h"
+
 #include "kd/common/instructionformats/doubleoperandinstruction/doubleoperandinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/common/operandlocation/operandlocation.h"
@@ -22,21 +22,21 @@
 // and modifies condition codes accordingly. Neither the source nor
 // destination operands are affected.
 //
-class CommonInstruction::BIT : public DoubleOperandInstruction
+class BIT : public DoubleOperandInstruction
 {
 public:
     BIT (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline CommonInstruction::BIT::BIT (CpuData* cpuData, CpuControl* cpuControl,
+inline BIT::BIT (CpuData* cpuData, CpuControl* cpuControl,
         MMU* mmu, u16 instruction)
     :
     DoubleOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
 // ToDo: To be removed
-inline bool CommonInstruction::BIT::execute ()
+inline bool BIT::execute ()
 {
     throw "Should not happen";
 }

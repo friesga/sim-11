@@ -1,7 +1,7 @@
 #ifndef _MARK_H_
 #define _MARK_H_
 
-#include "commoninstruction.h"
+
 #include "kd/common/instructionformats/markinstruction/markinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/common/operandlocation/operandlocation.h"
@@ -22,21 +22,21 @@
 //  (3) contents of the old R5 to be popped into R5 thus completing the
 //      return from subroutine.
 //
-class CommonInstruction::MARK : public MarkInstruction
+class MARK : public MarkInstruction
 {
 public:
     MARK (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline CommonInstruction::MARK::MARK (CpuData* cpuData, CpuControl* cpuControl,
+inline MARK::MARK (CpuData* cpuData, CpuControl* cpuControl,
         MMU* mmu, u16 instruction)
     :
     MarkInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
 // ToDo: To be removed
-inline bool CommonInstruction::MARK::execute ()
+inline bool MARK::execute ()
 {
     throw "Should not happen";
 }

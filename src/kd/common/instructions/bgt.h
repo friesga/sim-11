@@ -1,7 +1,7 @@
 #ifndef _BGT_H_
 #define _BGT_H_
 
-#include "commoninstruction.h"
+
 #include "kd/common/instructionformats/branchinstruction/branchinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/common/operandlocation/operandlocation.h"
@@ -14,21 +14,21 @@
 //
 // Operation of BGT is similar to BGE, except BGT will not cause a branch on
 // a zero result.
-class CommonInstruction::BGT : public BranchInstruction
+class BGT : public BranchInstruction
 {
 public:
     BGT (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline CommonInstruction::BGT::BGT (CpuData* cpuData, CpuControl* cpuControl,
+inline BGT::BGT (CpuData* cpuData, CpuControl* cpuControl,
         MMU* mmu, u16 instruction)
     :
     BranchInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
 // ToDo: To be removed
-inline bool CommonInstruction::BGT::execute ()
+inline bool BGT::execute ()
 {
     throw "Should not happen";
 }

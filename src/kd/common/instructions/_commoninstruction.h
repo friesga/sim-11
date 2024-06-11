@@ -1,9 +1,12 @@
-#ifndef _KD11_NAINSTRUCTION_H_
-#define _KD11_NAINSTRUCTION_H_
+#ifndef _COMMONINSTRUCTION_H_
+#define _COMMONINSTRUCTION_H_
 
 #include "kd/common/lsi11instruction/lsi11instruction.h"
 #include "kd/include/cpudata.h"
-#include "instructions.h"
+
+#include <memory>
+
+using std::unique_ptr;
 
 // This class decodes and executes the KD11_NA the instructions. To this
 // purpose we use an operation code table with function pointers as that
@@ -91,48 +94,97 @@
 //  SUB ---------------- 16 xx xx
 //  unused ------------- 17 xx xx
 //
-class KD11_NAInstruction
+class CommonInstruction
 {
+    // Allow CPU's access to the common instructions
+    friend class KDF11Instruction;
+
 public:
-    Instruction decode (CpuData* cpuData, CpuControl* cpuControl,
+    unique_ptr<LSI11Instruction> decode (CpuData* cpuData, CpuControl* cpuControl,
         MMU* mmu, u16 instruction);
 
-private:
-    typedef Instruction (*InstructionCreator) (CpuData*, CpuControl*, MMU*, u16);
-    using opCodeTable = InstructionCreator[];
-
-    template <typename T>
-    static Instruction create (CpuData* cpuData, 
-        CpuControl* cpuControl, MMU* mmu, u16 instruction);
-
-    // As the dimensions of the opCodeTable's are not specified, the arrays
-    // must be declared as static members. This is ok, as this data will be
-    // the same for all instances of the class (if there are anyway).
-    static opCodeTable const group_00_00_nn;
-    static opCodeTable const group_00_02_nn;
-    static opCodeTable const group_07_5n_nx;
-    static opCodeTable const group_07_nx_xx;
-    static opCodeTable const group_10_xx_xx;
-    static opCodeTable const group_00_nn_xx;
-    static opCodeTable const group_nn_xx_xx;
-
-    // As a consequence the following functions have to be defined static too.
-    // This is fine too, as these functions don't use local variables and
-    // simply walk through the operation code tables declared above.
-    static Instruction decodeGroup_00_00_nn (CpuData*, CpuControl*, MMU*, u16);
-    static Instruction decodeGroup_00_02_nn (CpuData*, CpuControl*, MMU*, u16);
-    static Instruction decodeGroup_07_5n_nx (CpuData*, CpuControl*, MMU*, u16);
-    static Instruction decodeGroup_07_nx_xx (CpuData*, CpuControl*, MMU*, u16);
-    static Instruction decodeGroup_10_xx_xx (CpuData*, CpuControl*, MMU*, u16);
-    static Instruction decodeGroup_00_nn_xx (CpuData*, CpuControl*, MMU*, u16);
-    static Instruction decodeGroup_nn_xx_xx (CpuData*, CpuControl*, MMU*, u16);
+    class HALT;
+    class WAIT;
+    class RTI;
+    class BPT;
+    class IOT;
+    class RESET;
+    class RTT;
+    class JMP;
+    class RTS;
+    class NOP;
+    class SCC;
+    class CCC;
+    class SWAB;
+    class BR;
+    class BNE;
+    class BEQ;
+    class BGE;
+    class BLT;
+    class BGT;
+    class BLE;
+    class JSR;
+    class CLR;
+    class COM;
+    class INC;
+    class DEC;
+    class NEG;
+    class ADC;
+    class SBC;
+    class TST;
+    class ROR;
+    class ROL;
+    class ASR;
+    class ASL;
+    class MARK;
+    class SXT;
+    class MOV;
+    class CMP;
+    class BIT;
+    class BIC;
+    class BIS;
+    class ADD;
+    class MUL;
+    class DIV;
+    class ASH;
+    class ASHC;
+    class XOR;
+    class FADD;
+    class FSUB;
+    class FMUL;
+    class FDIV;
+    class SOB;
+    class BPL;
+    class BMI;
+    class BHI;
+    class BLOS;
+    class BVC;
+    class BVS;
+    class BCC;
+    class BCS;
+    class EMT;
+    class TRAP;
+    class CLRB;
+    class COMB;
+    class INCB;
+    class DECB;
+    class NEGB;
+    class ADCB;
+    class SBCB;
+    class TSTB;
+    class RORB;
+    class ROLB;
+    class ASRB;
+    class ASLB;
+    class MTPS;
+    class MFPS;
+    class MOVB;
+    class CMPB;
+    class BITB;
+    class BICB;
+    class BISB;
+    class SUB;
+    class Unused;
 };
 
-template <typename T>
-static Instruction KD11_NAInstruction::create (CpuData* cpuData,
-    CpuControl* cpuControl, MMU* mmu, u16 instruction)
-{
-    return T (cpuData, cpuControl, mmu, instruction);
-}
-
-#endif // KD11_NAINSTRUCTION_H_
+#endif // COMMONINSTRUCTION_H_

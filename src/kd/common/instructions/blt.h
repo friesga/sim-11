@@ -1,7 +1,7 @@
 #ifndef _BLT_H_
 #define _BLT_H_
 
-#include "commoninstruction.h"
+
 #include "kd/common/instructionformats/branchinstruction/branchinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/common/operandlocation/operandlocation.h"
@@ -21,21 +21,21 @@
 // negative destination. BLT will not cause a branch if the result of the
 // previous operation was zero (without overflow).
 //
-class CommonInstruction::BLT : public BranchInstruction
+class BLT : public BranchInstruction
 {
 public:
     BLT (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline CommonInstruction::BLT::BLT (CpuData* cpuData, CpuControl* cpuControl,
+inline BLT::BLT (CpuData* cpuData, CpuControl* cpuControl,
         MMU* mmu, u16 instruction)
     :
     BranchInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
 // ToDo: To be removed
-inline bool CommonInstruction::BLT::execute ()
+inline bool BLT::execute ()
 {
     throw "Should not happen";
 }

@@ -1,7 +1,7 @@
 #ifndef _SWAB_H_
 #define _SWAB_H_
 
-#include "commoninstruction.h"
+
 #include "kd/common/instructionformats/singleoperandinstruction/singleoperandinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/common/operandlocation/operandlocation.h"
@@ -22,21 +22,21 @@
 // Exchanges high-order byte and low-order byte of the destination
 // word (destination must be a word address).
 //
-class CommonInstruction::SWAB : public SingleOperandInstruction
+class SWAB : public SingleOperandInstruction
 {
 public:
     SWAB (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline CommonInstruction::SWAB::SWAB (CpuData* cpuData, CpuControl* cpuControl,
+inline SWAB::SWAB (CpuData* cpuData, CpuControl* cpuControl,
         MMU* mmu, u16 instruction)
     :
     SingleOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
 // ToDo: Should not happen
-inline bool CommonInstruction::SWAB::execute ()
+inline bool SWAB::execute ()
 {
     throw "Should not happen";
 }

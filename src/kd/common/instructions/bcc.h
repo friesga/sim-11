@@ -1,7 +1,7 @@
 #ifndef _BCC_H_
 #define _BCC_H_
 
-#include "commoninstruction.h"
+
 #include "kd/common/instructionformats/branchinstruction/branchinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/common/operandlocation/operandlocation.h"
@@ -17,21 +17,21 @@
 // Tests the state of the C-bit and causes a branch if C is clear. BCC is
 // the complementary operation to BCS.
 //
-class CommonInstruction::BCC : public BranchInstruction
+class BCC : public BranchInstruction
 {
 public:
     BCC (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline CommonInstruction::BCC::BCC (CpuData* cpuData, CpuControl* cpuControl,
+inline BCC::BCC (CpuData* cpuData, CpuControl* cpuControl,
         MMU* mmu, u16 instruction)
     :
     BranchInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
 // ToDo: To be removed
-inline bool CommonInstruction::BCC::execute ()
+inline bool BCC::execute ()
 {
     throw "Should not happen";
 }

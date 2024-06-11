@@ -1,7 +1,7 @@
 #ifndef _ROL_H_
 #define _ROL_H_
 
-#include "commoninstruction.h"
+
 #include "kd/common/instructionformats/singleoperandinstruction/singleoperandinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/common/operandlocation/operandlocation.h"
@@ -24,21 +24,21 @@
 // the C-bit of the status word and the previous contents of the C-bit are
 // loaded into Bit 0 of the destination.
 //
-class CommonInstruction::ROL : public SingleOperandInstruction
+class ROL : public SingleOperandInstruction
 {
 public:
     ROL (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline CommonInstruction::ROL::ROL (CpuData* cpuData, CpuControl* cpuControl,
+inline ROL::ROL (CpuData* cpuData, CpuControl* cpuControl,
         MMU* mmu, u16 instruction)
     :
     SingleOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
 // ToDo: To be removed
-inline bool CommonInstruction::ROL::execute ()
+inline bool ROL::execute ()
 {
     throw "Should not happen";
 }

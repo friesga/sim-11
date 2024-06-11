@@ -1,7 +1,7 @@
 #ifndef _BLOS_H_
 #define _BLOS_H_
 
-#include "commoninstruction.h"
+
 #include "kd/common/instructionformats/branchinstruction/branchinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/common/operandlocation/operandlocation.h"
@@ -19,21 +19,21 @@
 // in comparison operations as long as the source is equal to, or has a lower
 // unsigned value than the destination.
 //
-class CommonInstruction::BLOS : public BranchInstruction
+class BLOS : public BranchInstruction
 {
 public:
     BLOS (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline CommonInstruction::BLOS::BLOS (CpuData* cpuData, CpuControl* cpuControl,
+inline BLOS::BLOS (CpuData* cpuData, CpuControl* cpuControl,
         MMU* mmu, u16 instruction)
     :
     BranchInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
 // ToDo: To be removed
-inline bool CommonInstruction::BLOS::execute ()
+inline bool BLOS::execute ()
 {
     throw "Should not happen";
 }

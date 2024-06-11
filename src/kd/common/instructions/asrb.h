@@ -1,7 +1,7 @@
 #ifndef _ASRB_H_
 #define _ASRB_H_
 
-#include "commoninstruction.h"
+
 #include "kd/common/instructionformats/singleoperandinstruction/singleoperandinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/common/operandlocation/operandlocation.h"
@@ -18,21 +18,21 @@
 // Same as ASR instruction with the distinction that for odd adresses bit 15
 // is reproduced and for even addresses bit 7 is reproduced.
 //
-class CommonInstruction::ASRB : public SingleOperandInstruction
+class ASRB : public SingleOperandInstruction
 {
 public:
     ASRB (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline CommonInstruction::ASRB::ASRB (CpuData* cpuData, CpuControl* cpuControl,
+inline ASRB::ASRB (CpuData* cpuData, CpuControl* cpuControl,
         MMU* mmu, u16 instruction)
     :
     SingleOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
 // ToDo: To be removed
-inline bool CommonInstruction::ASRB::execute ()
+inline bool ASRB::execute ()
 {
     throw "Should not happen";
 }

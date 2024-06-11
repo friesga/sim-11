@@ -1,5 +1,4 @@
 #include "kdf11instruction.h"
-#include "kd/common/instructions/commoninstruction.h"
 #include "kd/common/instructions/unused.h"
 
 #include <memory>
@@ -19,7 +18,7 @@ unique_ptr<LSI11Instruction> KDF11Instruction::decodeGroup_00_00_nn (CpuData* cp
     if (instruction <= 07)
         return (*group_00_00_nn [instruction]) (cpuData, cpuControl, mmu, instruction);
         
-    return make_unique<CommonInstruction::Unused> (cpuData, cpuControl, mmu, instruction);
+    return make_unique<Unused> (cpuData, cpuControl, mmu, instruction);
 }
 
 unique_ptr<LSI11Instruction> KDF11Instruction::decodeGroup_00_02_nn (CpuData* cpuData,

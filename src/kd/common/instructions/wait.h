@@ -1,7 +1,7 @@
 #ifndef _WAIT_H_
 #define _WAIT_H_
 
-#include "commoninstruction.h"
+
 #include "kd/common/instructionformats/nooperandinstruction/nooperandinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/include/cpucontrol.h"
@@ -24,21 +24,21 @@
 // execution of an RTI instruction) will cause resumption of the interrupted
 // process at the instruction following the WAIT.
 //
-class CommonInstruction::WAIT : public NoOperandInstruction
+class WAIT : public NoOperandInstruction
 {
 public:
     WAIT (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline CommonInstruction::WAIT::WAIT (CpuData* cpuData, CpuControl* cpuControl,
+inline WAIT::WAIT (CpuData* cpuData, CpuControl* cpuControl,
         MMU* mmu, u16 instruction)
     :
     NoOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
 // ToDo: To be removed
-inline bool CommonInstruction::WAIT::execute ()
+inline bool WAIT::execute ()
 {
     throw "Should not happen";
 }

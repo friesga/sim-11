@@ -1,7 +1,7 @@
 #ifndef _ASHC_H_
 #define _ASHC_H_
 
-#include "commoninstruction.h"
+
 #include "kd/common/instructionformats/eisinstruction/eisinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/common/operandlocation/operandlocation.h"
@@ -32,21 +32,21 @@
 // (for up to a shift of 16). The 16 bit word is rotated right the number of
 // bits specified by the shift count.
 //
-class CommonInstruction::ASHC : public EisInstruction
+class ASHC : public EisInstruction
 {
 public:
     ASHC (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline CommonInstruction::ASHC::ASHC (CpuData* cpuData, CpuControl* cpuControl,
+inline ASHC::ASHC (CpuData* cpuData, CpuControl* cpuControl,
         MMU* mmu, u16 instruction)
     :
     EisInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
 // ToDo: To be removed
-inline bool CommonInstruction::ASHC::execute ()
+inline bool ASHC::execute ()
 {
     throw "Should not happen";
 }

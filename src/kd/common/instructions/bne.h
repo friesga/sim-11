@@ -1,7 +1,7 @@
 #ifndef _BNE_H_
 #define _BNE_H_
 
-#include "commoninstruction.h"
+
 #include "kd/common/instructionformats/branchinstruction/branchinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/common/operandlocation/operandlocation.h"
@@ -18,21 +18,21 @@
 // in the source, following a BIT, and generally, to test that the result of
 // the previous operation was not zero.
 //
-class CommonInstruction::BNE : public BranchInstruction
+class BNE : public BranchInstruction
 {
 public:
     BNE (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline CommonInstruction::BNE::BNE (CpuData* cpuData, CpuControl* cpuControl,
+inline BNE::BNE (CpuData* cpuData, CpuControl* cpuControl,
         MMU* mmu, u16 instruction)
     :
     BranchInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
 // ToDo: To be removed
-inline bool CommonInstruction::BNE::execute ()
+inline bool BNE::execute ()
 {
     throw "Should not happen";
 }

@@ -1,7 +1,7 @@
 #ifndef _JSR_H_
 #define _JSR_H_
 
-#include "commoninstruction.h"
+
 #include "kd/common/instructionformats/eisinstruction/eisinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/common/operandlocation/operandlocation.h"
@@ -28,20 +28,20 @@
 // JMP and JSR with register mode destinations are illegal instructions, and
 // trap to vector address 4.
 //
-class CommonInstruction::JSR : public EisInstruction
+class JSR : public EisInstruction
 {
 public:
     JSR (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline CommonInstruction::JSR::JSR (CpuData* cpuData, CpuControl* cpuControl,
+inline JSR::JSR (CpuData* cpuData, CpuControl* cpuControl,
         MMU* mmu, u16 instruction)
     :
     EisInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
-inline bool CommonInstruction::JSR::execute ()
+inline bool JSR::execute ()
 {
     OperandLocation destination = getOperandLocation (cpuData_->registers ());
 

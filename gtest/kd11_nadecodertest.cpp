@@ -1,24 +1,27 @@
-#include "kd/common/lsi11instruction/lsi11instruction.h"
-#include "kd/kd11_na/cpucontrol/kd11_nainstruction/kd11_nainstruction.h"
+#include "kd/common/decoder/decoder.h"
 #include "kd/include/cpudata.h"
 #include "dummycpu/dummycpu.h"
 
 #include <gtest/gtest.h>
 #include <string>
 
-using std::unique_ptr;
-using std::make_unique;
 using std::string;
-
+using std::visit;
 
 // Get the mnemonic from the decoded instruction
 string getInstrMnemonic (u16 instruction)
 {
-    KD11_NAInstruction kd11_naInstruction;
+    Decoder decoder;
+
     DummyCpu cpu;
-    unique_ptr<LSI11Instruction> instr = kd11_naInstruction.decode (cpu.cpuData (),
+    Instruction instr = decoder.decode (cpu.cpuData (),
         cpu.cpuControl (), cpu.mmu (), instruction);
-    return instr->mnemonic ();
+
+    return visit ([](auto& instr)
+        {
+            string typeName = typeid (instr).name ();
+            return typeName.substr (typeName.find (" ") + 1);
+        }, instr);
 }
 
 // Verify that decoding of an instruction word will result in the

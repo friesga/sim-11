@@ -1,7 +1,7 @@
 #ifndef _ADD_H_
 #define _ADD_H_
 
-#include "commoninstruction.h"
+
 #include "kd/common/instructionformats/doubleoperandinstruction/doubleoperandinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/common/operandlocation/operandlocation.h"
@@ -26,21 +26,21 @@
 // The contents of the source are not affected. Two's complement addition is
 // performed.
 //
-class CommonInstruction::ADD : public DoubleOperandInstruction
+class ADD : public DoubleOperandInstruction
 {
 public:
     ADD (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline CommonInstruction::ADD::ADD (CpuData* cpuData, CpuControl* cpuControl,
+inline ADD::ADD (CpuData* cpuData, CpuControl* cpuControl,
         MMU* mmu, u16 instruction)
     :
     DoubleOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
 // ToDo: To be removed
-inline bool CommonInstruction::ADD::execute ()
+inline bool ADD::execute ()
 {
     throw "Should not happen";
 }

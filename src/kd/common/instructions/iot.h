@@ -1,7 +1,7 @@
 #ifndef _IOT_H_
 #define _IOT_H_
 
-#include "commoninstruction.h"
+
 #include "kd/common/instructionformats/nooperandinstruction/nooperandinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/include/cpucontrol.h"
@@ -22,21 +22,21 @@
 //  V: loaded from trap vector
 //  C: loaded from trap vector
 //
-class CommonInstruction::IOT : public NoOperandInstruction
+class IOT : public NoOperandInstruction
 {
 public:
     IOT (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline CommonInstruction::IOT::IOT (CpuData* cpuData, CpuControl* cpuControl,
+inline IOT::IOT (CpuData* cpuData, CpuControl* cpuControl,
         MMU* mmu, u16 instruction)
     :
     NoOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
 // ToDo: To be removed
-inline bool CommonInstruction::IOT::execute ()
+inline bool IOT::execute ()
 {
     throw "Should not happen";
 }

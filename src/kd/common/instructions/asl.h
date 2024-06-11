@@ -1,7 +1,7 @@
 #ifndef _ASL_H_
 #define _ASL_H_
 
-#include "commoninstruction.h"
+
 #include "kd/common/instructionformats/singleoperandinstruction/singleoperandinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/common/operandlocation/operandlocation.h"
@@ -25,21 +25,21 @@
 // of the destination. ASL performs a signed multiplication of the destination
 // by 2 with overflow indication.
 //
-class CommonInstruction::ASL : public SingleOperandInstruction
+class ASL : public SingleOperandInstruction
 {
 public:
     ASL (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline CommonInstruction::ASL::ASL (CpuData* cpuData, CpuControl* cpuControl,
+inline ASL::ASL (CpuData* cpuData, CpuControl* cpuControl,
         MMU* mmu, u16 instruction)
     :
     SingleOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
 // ToDo: To be removed
-inline bool CommonInstruction::ASL::execute ()
+inline bool ASL::execute ()
 {
     throw "Should not happen";
 }

@@ -1,7 +1,7 @@
 #ifndef _BHI_H_
 #define _BHI_H_
 
-#include "commoninstruction.h"
+
 #include "kd/common/instructionformats/branchinstruction/branchinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/common/operandlocation/operandlocation.h"
@@ -18,21 +18,21 @@
 // result. This will happen in comparison (CMP) operations as long as the
 // source has a higher unsigned value than the destination.
 //
-class CommonInstruction::BHI : public BranchInstruction
+class BHI : public BranchInstruction
 {
 public:
     BHI (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline CommonInstruction::BHI::BHI (CpuData* cpuData, CpuControl* cpuControl,
+inline BHI::BHI (CpuData* cpuData, CpuControl* cpuControl,
         MMU* mmu, u16 instruction)
     :
     BranchInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
 // ToDo: To be removed
-inline bool CommonInstruction::BHI::execute ()
+inline bool BHI::execute ()
 {
     throw "Should not happen";
 }

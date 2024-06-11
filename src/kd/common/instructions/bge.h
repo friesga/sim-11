@@ -1,7 +1,7 @@
 #ifndef _BGE_H_
 #define _BGE_H_
 
-#include "commoninstruction.h"
+
 #include "kd/common/instructionformats/branchinstruction/branchinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/common/operandlocation/operandlocation.h"
@@ -17,14 +17,14 @@
 // follows an operation that caused addition of two positive numbers. BGE will
 // also cause a branch on a zero result.
 //
-class CommonInstruction::BGE : public BranchInstruction
+class BGE : public BranchInstruction
 {
 public:
     BGE (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline CommonInstruction::BGE::BGE (CpuData* cpuData, CpuControl* cpuControl,
+inline BGE::BGE (CpuData* cpuData, CpuControl* cpuControl,
         MMU* mmu, u16 instruction)
     :
     BranchInstruction (cpuData, cpuControl, mmu, instruction)
@@ -32,7 +32,7 @@ inline CommonInstruction::BGE::BGE (CpuData* cpuData, CpuControl* cpuControl,
 
 
 // ToDo: To be removed
-inline bool CommonInstruction::BGE::execute ()
+inline bool BGE::execute ()
 {
     throw "Should not happen";
 }

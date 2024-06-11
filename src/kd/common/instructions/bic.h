@@ -1,7 +1,7 @@
 #ifndef _BIC_H_
 #define _BIC_H_
 
-#include "commoninstruction.h"
+
 #include "kd/common/instructionformats/doubleoperandinstruction/doubleoperandinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/common/operandlocation/operandlocation.h"
@@ -22,21 +22,21 @@
 // source. The original contents of the destination are lost. The contents of
 // the source are unaffected.
 //
-class CommonInstruction::BIC : public DoubleOperandInstruction
+class BIC : public DoubleOperandInstruction
 {
 public:
     BIC (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline CommonInstruction::BIC::BIC (CpuData* cpuData, CpuControl* cpuControl,
+inline BIC::BIC (CpuData* cpuData, CpuControl* cpuControl,
         MMU* mmu, u16 instruction)
     :
     DoubleOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
 // ToDo: To be removed
-inline bool CommonInstruction::BIC::execute ()
+inline bool BIC::execute ()
 {
     throw "Should not happen";
 }

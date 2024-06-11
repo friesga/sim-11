@@ -18,7 +18,7 @@ constexpr bool Common::Executor::isSet (u16 x)
 }
 
  // Single operand instructions
-bool Common::Executor::operator() (CommonInstruction::CLR& instr)
+bool Common::Executor::operator() (CLR& instr)
 {
     if (!instr.writeOperand ((u16)0))
         return false;
@@ -31,7 +31,7 @@ bool Common::Executor::operator() (CommonInstruction::CLR& instr)
     return true;
 }
 
-bool Common::Executor::operator() (CommonInstruction::CLRB& instr)
+bool Common::Executor::operator() (CLRB& instr)
 {
     if (!instr.writeOperand ((u8) 0))
         return false;
@@ -44,7 +44,7 @@ bool Common::Executor::operator() (CommonInstruction::CLRB& instr)
     return true;
 }
 
-bool Common::Executor::operator() (CommonInstruction::COM& instr)
+bool Common::Executor::operator() (COM& instr)
 {
     CondData<u16> operand;
     if (!instr.readOperand (&operand))
@@ -63,7 +63,7 @@ bool Common::Executor::operator() (CommonInstruction::COM& instr)
     return true;
 }
 
-bool Common::Executor::operator() (CommonInstruction::COMB& instr)
+bool Common::Executor::operator() (COMB& instr)
 {
     CondData<u8> operand;
     if (!instr.readOperand (&operand))
@@ -82,7 +82,7 @@ bool Common::Executor::operator() (CommonInstruction::COMB& instr)
     return true;
 }
 
-bool Common::Executor::operator() (CommonInstruction::INC& instr)
+bool Common::Executor::operator() (INC& instr)
 {
     CondData<u16> contents;
     if (!instr.readOperand (&contents))
@@ -100,7 +100,7 @@ bool Common::Executor::operator() (CommonInstruction::INC& instr)
     return true;
 }
 
-bool Common::Executor::operator() (CommonInstruction::INCB& instr)
+bool Common::Executor::operator() (INCB& instr)
 {
     CondData<u8> source;
     if (!instr.readOperand (&source))
@@ -118,7 +118,7 @@ bool Common::Executor::operator() (CommonInstruction::INCB& instr)
     return true;
 }
 
-bool Common::Executor::operator() (CommonInstruction::DEC& instr)
+bool Common::Executor::operator() (DEC& instr)
 {
     CondData<u16> contents;
     if (!instr.readOperand (&contents))
@@ -136,7 +136,7 @@ bool Common::Executor::operator() (CommonInstruction::DEC& instr)
     return true;
 }
 
-bool Common::Executor::operator() (CommonInstruction::DECB& instr)
+bool Common::Executor::operator() (DECB& instr)
 {
     CondData<u8> source;
     if (!instr.readOperand (&source))
@@ -154,7 +154,7 @@ bool Common::Executor::operator() (CommonInstruction::DECB& instr)
     return true;
 }
 
-bool Common::Executor::operator() (CommonInstruction::NEG& instr)
+bool Common::Executor::operator() (NEG& instr)
 {
     CondData<u16> operand;
     if (!instr.readOperand (&operand))
@@ -174,7 +174,7 @@ bool Common::Executor::operator() (CommonInstruction::NEG& instr)
 
     return true;
 }
-bool Common::Executor::operator() (CommonInstruction::NEGB& instr)
+bool Common::Executor::operator() (NEGB& instr)
 {
     CondData<u8> operand;
     if (!instr.readOperand (&operand))
@@ -194,7 +194,7 @@ bool Common::Executor::operator() (CommonInstruction::NEGB& instr)
     return true;
 }
 
-bool Common::Executor::operator() (CommonInstruction::TST& instr)
+bool Common::Executor::operator() (TST& instr)
 {
     CondData<u16> contents;
     if (!instr.readOperand (&contents))
@@ -208,7 +208,7 @@ bool Common::Executor::operator() (CommonInstruction::TST& instr)
     return true;
 }
 
-bool Common::Executor::operator() (CommonInstruction::TSTB& instr)
+bool Common::Executor::operator() (TSTB& instr)
 {
     CondData<u8> source;
     if (!instr.readOperand (&source))
@@ -222,7 +222,7 @@ bool Common::Executor::operator() (CommonInstruction::TSTB& instr)
     return true;
 }
 
-bool Common::Executor::operator() (CommonInstruction::ASR& instr)
+bool Common::Executor::operator() (ASR& instr)
 {
     CondData<u16> contents;
     if (!instr.readOperand (&contents))
@@ -248,7 +248,7 @@ bool Common::Executor::operator() (CommonInstruction::ASR& instr)
     return true;
 }
 
-bool Common::Executor::operator() (CommonInstruction::ASRB& instr)
+bool Common::Executor::operator() (ASRB& instr)
 {
     CondData<u8> source;
     if (!instr.readOperand (&source))
@@ -274,7 +274,7 @@ bool Common::Executor::operator() (CommonInstruction::ASRB& instr)
     return true;
 }
 
-bool Common::Executor::operator() (CommonInstruction::ASL& instr)
+bool Common::Executor::operator() (ASL& instr)
 {
     CondData<u16> contents;
     if (!instr.readOperand (&contents))
@@ -293,7 +293,7 @@ bool Common::Executor::operator() (CommonInstruction::ASL& instr)
     return true;
 }
 
-bool Common::Executor::operator() (CommonInstruction::ASLB& instr)
+bool Common::Executor::operator() (ASLB& instr)
 {
     CondData<u8> source;
     if (!instr.readOperand (&source))
@@ -312,7 +312,7 @@ bool Common::Executor::operator() (CommonInstruction::ASLB& instr)
     return true;
 }
 
-bool Common::Executor::operator() (CommonInstruction::ROR& instr)
+bool Common::Executor::operator() (ROR& instr)
 {
     CondData<u16> contents;
     if (!instr.readOperand (&contents))
@@ -333,7 +333,7 @@ bool Common::Executor::operator() (CommonInstruction::ROR& instr)
     return true;
 }
 
-bool Common::Executor::operator() (CommonInstruction::RORB& instr)
+bool Common::Executor::operator() (RORB& instr)
 {
     CondData<u8> source;
     if (!instr.readOperand (&source))
@@ -354,7 +354,7 @@ bool Common::Executor::operator() (CommonInstruction::RORB& instr)
     return true;
 }
 
-bool Common::Executor::operator() (CommonInstruction::ROL& instr)
+bool Common::Executor::operator() (ROL& instr)
 {
     CondData<u16> contents;
     if (!instr.readOperand (&contents))
@@ -376,7 +376,7 @@ bool Common::Executor::operator() (CommonInstruction::ROL& instr)
     return true;
 }
 
-bool Common::Executor::operator() (CommonInstruction::ROLB& instr)
+bool Common::Executor::operator() (ROLB& instr)
 {
     CondData<u8> source;
     if (!instr.readOperand (&source))
@@ -397,7 +397,7 @@ bool Common::Executor::operator() (CommonInstruction::ROLB& instr)
     return true;
 }
 
-bool Common::Executor::operator() (CommonInstruction::SWAB& instr)
+bool Common::Executor::operator() (SWAB& instr)
 {
     CondData<u16> operand;
     if (!instr.readOperand (&operand))
@@ -417,7 +417,7 @@ bool Common::Executor::operator() (CommonInstruction::SWAB& instr)
     return true;
 }
 
-bool Common::Executor::operator() (CommonInstruction::ADC& instr)
+bool Common::Executor::operator() (ADC& instr)
 {
     CondData<u16> contents;
     if (!instr.readOperand (&contents))
@@ -437,7 +437,7 @@ bool Common::Executor::operator() (CommonInstruction::ADC& instr)
     return true;
 }
 
-bool Common::Executor::operator() (CommonInstruction::ADCB& instr)
+bool Common::Executor::operator() (ADCB& instr)
 {
     CondData<u8> source;
     if (!instr.readOperand (&source))
@@ -457,7 +457,7 @@ bool Common::Executor::operator() (CommonInstruction::ADCB& instr)
     return true;
 }
 
-bool Common::Executor::operator() (CommonInstruction::SBC& instr)
+bool Common::Executor::operator() (SBC& instr)
 {
     CondData<u16> contents;
     if (!instr.readOperand (&contents))
@@ -477,7 +477,7 @@ bool Common::Executor::operator() (CommonInstruction::SBC& instr)
     return true;
 }
 
-bool Common::Executor::operator() (CommonInstruction::SBCB& instr)
+bool Common::Executor::operator() (SBCB& instr)
 {
     CondData<u8> source;
     if (!instr.readOperand (&source))
@@ -497,7 +497,7 @@ bool Common::Executor::operator() (CommonInstruction::SBCB& instr)
     return true;
 }
 
-bool Common::Executor::operator() (CommonInstruction::SXT& instr)
+bool Common::Executor::operator() (SXT& instr)
 {
     u16 result = isSet (PSW_N) ? 0177777 : 0;
 
@@ -510,7 +510,7 @@ bool Common::Executor::operator() (CommonInstruction::SXT& instr)
     return true;
 }
 
-bool Common::Executor::operator() (CommonInstruction::MFPS& instr)
+bool Common::Executor::operator() (MFPS& instr)
 {
     u8 contents = (u8) cpuData_->psw ();
     OperandLocation operandLocation_ = 
@@ -536,7 +536,7 @@ bool Common::Executor::operator() (CommonInstruction::MFPS& instr)
     return true;
 }
 
-bool Common::Executor::operator() (CommonInstruction::MTPS& instr)
+bool Common::Executor::operator() (MTPS& instr)
 {
     CondData<u8> newValue;
     if (!instr.readOperand (&newValue))
@@ -548,7 +548,7 @@ bool Common::Executor::operator() (CommonInstruction::MTPS& instr)
     return true;
 }
 
-bool Common::Executor::operator() (CommonInstruction::JMP& instr)
+bool Common::Executor::operator() (JMP& instr)
 {
     OperandLocation operandLocation_ = 
         instr.getOperandLocation (cpuData_->registers ());
@@ -563,7 +563,7 @@ bool Common::Executor::operator() (CommonInstruction::JMP& instr)
     return false;
 }
 
-bool Common::Executor::operator() (CommonInstruction::MARK& instr)
+bool Common::Executor::operator() (MARK& instr)
 {
     GeneralRegisters& registers = cpuData_->registers ();
 
@@ -576,7 +576,7 @@ bool Common::Executor::operator() (CommonInstruction::MARK& instr)
 }
 
 	// Double operand instructions
-bool Common::Executor::operator() (CommonInstruction::MOV& instr)
+bool Common::Executor::operator() (MOV& instr)
 {
     CondData<u16> source, destination;
 
@@ -591,7 +591,7 @@ bool Common::Executor::operator() (CommonInstruction::MOV& instr)
     return true;
 }
 
-bool Common::Executor::operator() (CommonInstruction::MOVB& instr)
+bool Common::Executor::operator() (MOVB& instr)
 {
     CondData<u8> source;
 
@@ -619,7 +619,7 @@ bool Common::Executor::operator() (CommonInstruction::MOVB& instr)
     return true;
 }
 
-bool Common::Executor::operator() (CommonInstruction::CMP& instr)
+bool Common::Executor::operator() (CMP& instr)
 {
     CondData<u16> source, destination;
 
@@ -637,7 +637,7 @@ bool Common::Executor::operator() (CommonInstruction::CMP& instr)
     return true;
 }
 
-bool Common::Executor::operator() (CommonInstruction::CMPB& instr)
+bool Common::Executor::operator() (CMPB& instr)
 {
     CondData<u8> source, destination;
 
@@ -655,7 +655,7 @@ bool Common::Executor::operator() (CommonInstruction::CMPB& instr)
     return true;
 }
 
-bool Common::Executor::operator() (CommonInstruction::ADD& instr)
+bool Common::Executor::operator() (ADD& instr)
 {
     CondData<u16> source, destination;
 
@@ -676,7 +676,7 @@ bool Common::Executor::operator() (CommonInstruction::ADD& instr)
     return true;
 }
 
-bool Common::Executor::operator() (CommonInstruction::SUB& instr)
+bool Common::Executor::operator() (SUB& instr)
 {
     CondData<u16> source, destination;
 
@@ -698,7 +698,7 @@ bool Common::Executor::operator() (CommonInstruction::SUB& instr)
     return true;
 }
 
-bool Common::Executor::operator() (CommonInstruction::BIT& instr)
+bool Common::Executor::operator() (BIT& instr)
 {
     CondData<u16> source, destination;
 
@@ -715,7 +715,7 @@ bool Common::Executor::operator() (CommonInstruction::BIT& instr)
     return true;
 }
 
-bool Common::Executor::operator() (CommonInstruction::BITB& instr)
+bool Common::Executor::operator() (BITB& instr)
 {
     CondData<u8> source, destination;
 
@@ -732,7 +732,7 @@ bool Common::Executor::operator() (CommonInstruction::BITB& instr)
     return true;
 }
 
-bool Common::Executor::operator() (CommonInstruction::BIC& instr)
+bool Common::Executor::operator() (BIC& instr)
 {
     CondData<u16> source, destination;
 
@@ -752,7 +752,7 @@ bool Common::Executor::operator() (CommonInstruction::BIC& instr)
     return true;
 }
 
-bool Common::Executor::operator() (CommonInstruction::BICB& instr)
+bool Common::Executor::operator() (BICB& instr)
 {
     CondData<u8> source, destination;
 
@@ -772,7 +772,7 @@ bool Common::Executor::operator() (CommonInstruction::BICB& instr)
     return true;
 }
 
-bool Common::Executor::operator() (CommonInstruction::BIS& instr)
+bool Common::Executor::operator() (BIS& instr)
 {
     CondData<u16> source, destination;
 
@@ -792,7 +792,7 @@ bool Common::Executor::operator() (CommonInstruction::BIS& instr)
     return true;
 }
 
-bool Common::Executor::operator() (CommonInstruction::BISB& instr)
+bool Common::Executor::operator() (BISB& instr)
 {
     CondData<u8> source, destination;
 
@@ -813,7 +813,7 @@ bool Common::Executor::operator() (CommonInstruction::BISB& instr)
 }
 
 // EIS instructions, including JSR and XOR
-bool Common::Executor::operator() (CommonInstruction::JSR& instr)
+bool Common::Executor::operator() (JSR& instr)
 {
     OperandLocation destination = 
         instr.getOperandLocation (cpuData_->registers ());
@@ -840,7 +840,7 @@ bool Common::Executor::operator() (CommonInstruction::JSR& instr)
     return true;
 }
 
-bool Common::Executor::operator() (CommonInstruction::MUL& instr)
+bool Common::Executor::operator() (MUL& instr)
 {
     u16 regNr = instr.getRegisterNr ();
 
@@ -863,7 +863,7 @@ bool Common::Executor::operator() (CommonInstruction::MUL& instr)
     return true;
 }
 
-bool Common::Executor::operator() (CommonInstruction::DIV& instr)
+bool Common::Executor::operator() (DIV& instr)
 {
     u16 regNr = instr.getRegisterNr ();
 
@@ -900,7 +900,7 @@ bool Common::Executor::operator() (CommonInstruction::DIV& instr)
     return true;
 }
 
-bool Common::Executor::operator() (CommonInstruction::ASH& instr)
+bool Common::Executor::operator() (ASH& instr)
 {
     u16 regNr = instr.getRegisterNr ();
     u16 tmp {0};
@@ -959,7 +959,7 @@ bool Common::Executor::operator() (CommonInstruction::ASH& instr)
     return true;
 }
 
-bool Common::Executor::operator() (CommonInstruction::ASHC& instr)
+bool Common::Executor::operator() (ASHC& instr)
 {
     u16 regNr = instr.getRegisterNr ();
     GeneralRegisters& registers = cpuData_->registers ();
@@ -1012,7 +1012,7 @@ bool Common::Executor::operator() (CommonInstruction::ASHC& instr)
     return true;
 }
 
-bool Common::Executor::operator() (CommonInstruction::XOR& instr)
+bool Common::Executor::operator() (XOR& instr)
 {
     u16 regNr = instr.getRegisterNr ();
     GeneralRegisters& registers = cpuData_->registers ();
@@ -1037,7 +1037,7 @@ bool Common::Executor::operator() (CommonInstruction::XOR& instr)
 
 
 // SOB instruction format
-bool Common::Executor::operator() (CommonInstruction::SOB& instr)
+bool Common::Executor::operator() (SOB& instr)
 {
     u16 regNr = instr.getRegisterNr ();
     u16 offset = instr.getOffset ();
@@ -1051,7 +1051,7 @@ bool Common::Executor::operator() (CommonInstruction::SOB& instr)
 }
 
 // FIS format instructions
-bool Common::Executor::operator() (CommonInstruction::RTS& instr)
+bool Common::Executor::operator() (RTS& instr)
 {
     u16 regNr = instr.getRegister ();
 
@@ -1062,116 +1062,116 @@ bool Common::Executor::operator() (CommonInstruction::RTS& instr)
 }
 
 // Branch instructions
-bool Common::Executor::operator() (CommonInstruction::BR& instr)
+bool Common::Executor::operator() (BR& instr)
 {
     instr.executeBranch ();
     return true;
 }
 
-bool Common::Executor::operator() (CommonInstruction::BNE& instr)
+bool Common::Executor::operator() (BNE& instr)
 {
     instr.executeBranchIf (!isSet (PSW_Z));
     return true;
 }
 
-bool Common::Executor::operator() (CommonInstruction::BEQ& instr)
+bool Common::Executor::operator() (BEQ& instr)
 {
     instr.executeBranchIf (isSet (PSW_Z));
     return true;
 }
 
-bool Common::Executor::operator() (CommonInstruction::BPL& instr)
+bool Common::Executor::operator() (BPL& instr)
 {
     instr.executeBranchIf (!isSet (PSW_N));
     return true;
 }
 
-bool Common::Executor::operator() (CommonInstruction::BMI& instr)
+bool Common::Executor::operator() (BMI& instr)
 {
     instr.executeBranchIf (isSet (PSW_N));
     return true;
 }
 
-bool Common::Executor::operator() (CommonInstruction::BVC& instr)
+bool Common::Executor::operator() (BVC& instr)
 {
     instr.executeBranchIf (!isSet (PSW_V));
     return true;
 }
 
-bool Common::Executor::operator() (CommonInstruction::BVS& instr)
+bool Common::Executor::operator() (BVS& instr)
 {
     instr.executeBranchIf (isSet (PSW_V));
     return true;
 }
 
-bool Common::Executor::operator() (CommonInstruction::BCC& instr)
+bool Common::Executor::operator() (BCC& instr)
 {
     instr.executeBranchIf (!isSet (PSW_C));
     return true;
 }
 
-bool Common::Executor::operator() (CommonInstruction::BCS& instr)
+bool Common::Executor::operator() (BCS& instr)
 {
     instr.executeBranchIf (isSet (PSW_C));
     return true;
 }
 
-bool Common::Executor::operator() (CommonInstruction::BGE& instr)
+bool Common::Executor::operator() (BGE& instr)
 {
     instr.executeBranchIf ((isSet (PSW_N) ^ isSet (PSW_V)) == 0);
     return true;
 }
 
-bool Common::Executor::operator() (CommonInstruction::BLT& instr)
+bool Common::Executor::operator() (BLT& instr)
 {
     instr.executeBranchIf (isSet (PSW_N) ^ isSet (PSW_V));
     return true;
 }
 
-bool Common::Executor::operator() (CommonInstruction::BGT& instr)
+bool Common::Executor::operator() (BGT& instr)
 {
     instr.executeBranchIf ((isSet (PSW_Z) || (isSet (PSW_N) ^ isSet (PSW_V))) == 0);
     return true;
 }
 
-bool Common::Executor::operator() (CommonInstruction::BLE& instr)
+bool Common::Executor::operator() (BLE& instr)
 {
     instr.executeBranchIf (isSet (PSW_Z) || (isSet (PSW_N) ^ isSet (PSW_V)));
     return true;
 }
 
-bool Common::Executor::operator() (CommonInstruction::BHI& instr)
+bool Common::Executor::operator() (BHI& instr)
 {
     instr.executeBranchIf (!isSet (PSW_C) && !isSet (PSW_Z));
     return true;
 }
 
-bool Common::Executor::operator() (CommonInstruction::BLOS& instr)
+bool Common::Executor::operator() (BLOS& instr)
 {
     instr.executeBranchIf (isSet (PSW_C) || isSet (PSW_Z));
     return true;
 }
 
-bool Common::Executor::operator() (CommonInstruction::EMT& instr)
+bool Common::Executor::operator() (EMT& instr)
 {
     cpuData_->setTrap (CpuData::TrapCondition::EmulatorTrap);
     return true;
 }
 
-bool Common::Executor::operator() (CommonInstruction::TRAP& instr)
+bool Common::Executor::operator() (TRAP& instr)
 {
     cpuData_->setTrap (CpuData::TrapCondition::TrapInstruction);
     return true;
 }
 
 // No-operand instructions
-bool Common::Executor::operator() (CommonInstruction::HALT& instr)
+bool Common::Executor::operator() (HALT& instr)
 {
     cpuControl_->halt ();
     return true;
 }
 
-bool Common::Executor::operator() (CommonInstruction::WAIT& instr)
+bool Common::Executor::operator() (WAIT& instr)
 {
     cpuControl_->wait ();
     return true;
@@ -1181,7 +1181,7 @@ bool Common::Executor::operator() (CommonInstruction::WAIT& instr)
 // before the next instruction is executed. (Micro PDP-11 Handbook, pag 322.)
 // This behaviour differs from the other instructionss in which setting the
 // T-bit results in a trace trap on the next instruction.
-bool Common::Executor::operator() (CommonInstruction::RTI& instr)
+bool Common::Executor::operator() (RTI& instr)
 {
     u16 tmp;
 
@@ -1195,19 +1195,19 @@ bool Common::Executor::operator() (CommonInstruction::RTI& instr)
     return true;
 }
 
-bool Common::Executor::operator() (CommonInstruction::BPT& instr)
+bool Common::Executor::operator() (BPT& instr)
 {
     cpuData_->setTrap (CpuData::TrapCondition::BreakpointTrap);
     return true;
 }
 
-bool Common::Executor::operator() (CommonInstruction::IOT& instr)
+bool Common::Executor::operator() (IOT& instr)
 {
     cpuData_->setTrap (CpuData::TrapCondition::InputOutputTrap);
     return true;
 }
 
-bool Common::Executor::operator() (CommonInstruction::RESET& instr)
+bool Common::Executor::operator() (RESET& instr)
 {
     cpuControl_->busReset ();
     return true;
@@ -1216,7 +1216,7 @@ bool Common::Executor::operator() (CommonInstruction::RESET& instr)
 //  If the RTT sets the T bit in the PS, the next instruction will be executed
 // and then the trace trap will be processed. (Micro PDP-11 Handbook,
 // pag 322). This is the normal behaviour for instruction setting the T-bit.
-bool Common::Executor::operator() (CommonInstruction::RTT& instr)
+bool Common::Executor::operator() (RTT& instr)
 {
     u16 tmp;
 
@@ -1229,21 +1229,21 @@ bool Common::Executor::operator() (CommonInstruction::RTT& instr)
 }
 
 // Condition Code instructions
-bool Common::Executor::operator() (CommonInstruction::CCC& instr)
+bool Common::Executor::operator() (CCC& instr)
 {
     cpuData_->psw ().set (PSW::ProtectionMode::ExplicitAccess,
         cpuData_->psw () & ~instr.getConditionCodes ());
     return true;
 }
 
-bool Common::Executor::operator() (CommonInstruction::SCC& instr)
+bool Common::Executor::operator() (SCC& instr)
 {
     cpuData_->psw ().set (PSW::ProtectionMode::ExplicitAccess,
         cpuData_->psw () | instr.getConditionCodes ());
     return true;
 }
 
-bool Common::Executor::operator() (CommonInstruction::Unused& instr)
+bool Common::Executor::operator() (Unused& instr)
 {
     cpuData_->setTrap (CpuData::TrapCondition::ReservedInstructionTrap);
     return true;

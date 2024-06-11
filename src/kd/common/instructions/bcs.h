@@ -1,7 +1,7 @@
 #ifndef _BCS_H_
 #define _BCS_H_
 
-#include "commoninstruction.h"
+
 #include "kd/common/instructionformats/branchinstruction/branchinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/common/operandlocation/operandlocation.h"
@@ -17,21 +17,21 @@
 // Tests the state of the C-bit and causes a branch if C is set. It is used
 // to test for a carry in the result of a previous operation.
 //
-class CommonInstruction::BCS : public BranchInstruction
+class BCS : public BranchInstruction
 {
 public:
     BCS (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline CommonInstruction::BCS::BCS (CpuData* cpuData, CpuControl* cpuControl,
+inline BCS::BCS (CpuData* cpuData, CpuControl* cpuControl,
         MMU* mmu, u16 instruction)
     :
     BranchInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
 // ToDo: To be removed
-inline bool CommonInstruction::BCS::execute ()
+inline bool BCS::execute ()
 {
     throw "Should not happen";
 }

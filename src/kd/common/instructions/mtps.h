@@ -1,7 +1,7 @@
 #ifndef _MTPS_H_
 #define _MTPS_H_
 
-#include "commoninstruction.h"
+
 #include "kd/common/instructionformats/singleoperandinstruction/singleoperandinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/common/operandlocation/operandlocation.h"
@@ -21,21 +21,21 @@
 // remains unchanged. This instruction can be used to change the priority bit
 // (PSW bit 7) in the PSW
 //
-class CommonInstruction::MTPS : public SingleOperandInstruction
+class MTPS : public SingleOperandInstruction
 {
 public:
     MTPS (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline CommonInstruction::MTPS::MTPS (CpuData* cpuData, CpuControl* cpuControl,
+inline MTPS::MTPS (CpuData* cpuData, CpuControl* cpuControl,
         MMU* mmu, u16 instruction)
     :
     SingleOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
 // ToDo: To be removed
-inline bool CommonInstruction::MTPS::execute ()
+inline bool MTPS::execute ()
 {
     throw "Should not happen";
 }

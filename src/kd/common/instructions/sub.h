@@ -1,7 +1,7 @@
 #ifndef _SUB_H_
 #define _SUB_H_
 
-#include "commoninstruction.h"
+
 #include "kd/common/instructionformats/doubleoperandinstruction/doubleoperandinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/common/operandlocation/operandlocation.h"
@@ -21,21 +21,21 @@
 //  C: cleared if there was a carry from the most significant bit of the
 //     result; set otherwise
 //
-class CommonInstruction::SUB : public DoubleOperandInstruction
+class SUB : public DoubleOperandInstruction
 {
 public:
     SUB (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline CommonInstruction::SUB::SUB (CpuData* cpuData, CpuControl* cpuControl,
+inline SUB::SUB (CpuData* cpuData, CpuControl* cpuControl,
         MMU* mmu, u16 instruction)
     :
     DoubleOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
 // ToDo: To be removed
-inline bool CommonInstruction::SUB::execute ()
+inline bool SUB::execute ()
 {
     throw "Should not happen";
 }

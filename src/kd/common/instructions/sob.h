@@ -1,7 +1,7 @@
 #ifndef _SOB_H_
 #define _SOB_H_
 
-#include "commoninstruction.h"
+
 #include "kd/common/instructionformats/sobinstruction/sobinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/common/operandlocation/operandlocation.h"
@@ -19,21 +19,21 @@
 // subtracted from the PC (now pointing to the following word). The offset is
 // interpreted as a sixbit positive number.
 //
-class CommonInstruction::SOB : public SobInstruction
+class SOB : public SobInstruction
 {
 public:
     SOB (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline CommonInstruction::SOB::SOB (CpuData* cpuData, CpuControl* cpuControl,
+inline SOB::SOB (CpuData* cpuData, CpuControl* cpuControl,
         MMU* mmu, u16 instruction)
     :
     SobInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
 // ToDo: To be removed
-inline bool CommonInstruction::SOB::execute ()
+inline bool SOB::execute ()
 {
     throw "Should not happen";
 }

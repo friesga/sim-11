@@ -1,7 +1,7 @@
 #ifndef _ASH_H_
 #define _ASH_H_
 
-#include "commoninstruction.h"
+
 #include "kd/common/instructionformats/eisinstruction/eisinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/common/operandlocation/operandlocation.h"
@@ -24,21 +24,21 @@
 // 6 bits of the source operand. This number ranges from -32 to + 31. Negative
 // is a a right shift and positive is a left shift.
 //
-class CommonInstruction::ASH : public EisInstruction
+class ASH : public EisInstruction
 {
 public:
     ASH (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline CommonInstruction::ASH::ASH (CpuData* cpuData, CpuControl* cpuControl,
+inline ASH::ASH (CpuData* cpuData, CpuControl* cpuControl,
         MMU* mmu, u16 instruction)
     :
     EisInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
 // ToDo: To be removed
-inline bool CommonInstruction::ASH::execute ()
+inline bool ASH::execute ()
 {
     throw "Should not happen";
 }

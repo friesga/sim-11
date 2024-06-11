@@ -1,7 +1,7 @@
 #ifndef _TRAP_H_
 #define _TRAP_H_
 
-#include "commoninstruction.h"
+
 #include "kd/common/instructionformats/nooperandinstruction/nooperandinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/include/cpucontrol.h"
@@ -26,21 +26,21 @@
 // are identical in operation, except that the trap vector for TRAP is at
 // address 34.
 //
-class CommonInstruction::TRAP : public NoOperandInstruction
+class TRAP : public NoOperandInstruction
 {
 public:
     TRAP (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline CommonInstruction::TRAP::TRAP (CpuData* cpuData, CpuControl* cpuControl,
+inline TRAP::TRAP (CpuData* cpuData, CpuControl* cpuControl,
         MMU* mmu, u16 instruction)
     :
     NoOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
 // ToDo: To be removed
-inline bool CommonInstruction::TRAP::execute ()
+inline bool TRAP::execute ()
 {
     throw "Should not happen";
 }

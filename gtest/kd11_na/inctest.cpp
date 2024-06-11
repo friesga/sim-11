@@ -1,21 +1,25 @@
-#include "kd/kd11_na/cpucontrol/kd11_nainstruction/kd11_nainstruction.h"
+#include "kd/common/decoder/decoder.h"
+#include "kd/kd11_na/executor/executor.h"
 #include "../dummycpu/dummycpu.h"
 
 #include <gtest/gtest.h>
+
+using std::visit;
 
 // Verify the INC instruction in mode 0 (Register)
 TEST (KD11_NAINCTEST, IncMode0Functions)
 {
     DummyCpu cpu;
-    KD11_NAInstruction instrDecoder;
+    Decoder instrDecoder;
 
     // INC R1
-    unique_ptr<LSI11Instruction> instruction {instrDecoder.decode (cpu.cpuData (),
+    Instruction instruction {instrDecoder.decode (cpu.cpuData (),
         cpu.cpuControl (), cpu.mmu (), 0005201)};
 
     // Assign R1 a random value and execute the INC on it
     cpu.cpuData()->registers () [1] = 10;
-    instruction->execute ();
+    visit (KD11_NA::Executor {cpu.cpuData (), cpu.cpuControl (), cpu.mmu ()},
+        instruction);
     EXPECT_EQ (cpu.cpuData ()->registers () [1], 11);
 }
 
@@ -23,16 +27,17 @@ TEST (KD11_NAINCTEST, IncMode0Functions)
 TEST (KD11_NAINCTEST, IncMode1Functions)
 {
     DummyCpu cpu;
-    KD11_NAInstruction instrDecoder;
+    Decoder instrDecoder;
 
     // INC @R1
-    unique_ptr<LSI11Instruction> instruction {instrDecoder.decode (cpu.cpuData (),
+    Instruction instruction {instrDecoder.decode (cpu.cpuData (),
         cpu.cpuControl (), cpu.mmu (), 0005211)};
 
     // Increment the address contained in R1
     cpu.cpuData ()-> registers () [1] = 10;
     cpu.mmu ()->putWord (10, 100);
-    instruction->execute ();
+    visit (KD11_NA::Executor {cpu.cpuData (), cpu.cpuControl (), cpu.mmu ()},
+        instruction);
     EXPECT_EQ (cpu.mmu ()->fetchWord (10), 101);
 }
 
@@ -40,10 +45,10 @@ TEST (KD11_NAINCTEST, IncMode1Functions)
 TEST (KD11_NAINCTEST, IncMode2Functions)
 {
     DummyCpu cpu;
-    KD11_NAInstruction instrDecoder;
+    Decoder instrDecoder;
 
     // INC (R1)+
-    unique_ptr<LSI11Instruction> instruction {instrDecoder.decode (cpu.cpuData (),
+    Instruction instruction {instrDecoder.decode (cpu.cpuData (),
         cpu.cpuControl (), cpu.mmu (), 0005221)};
 
     // Address 10 = 100, R1 = 10
@@ -52,7 +57,8 @@ TEST (KD11_NAINCTEST, IncMode2Functions)
 
     // Execution of the INC should result in increment of adress 10 and
     // R1 added with 2.
-    instruction->execute ();
+    visit (KD11_NA::Executor {cpu.cpuData (), cpu.cpuControl (), cpu.mmu ()},
+        instruction);
     EXPECT_EQ (cpu.mmu ()->fetchWord (10),  101);
     EXPECT_EQ (cpu.cpuData ()->registers () [1], 12);
 }
@@ -64,16 +70,17 @@ TEST (KD11_NAINCTEST, IncMode2Functions)
 TEST (KD11_NAINCTEST, IncMode3Functions)
 {
     DummyCpu cpu;
-    KD11_NAInstruction instrDecoder;
+    Decoder instrDecoder;
 
     // INC @(R1)+
-    unique_ptr<LSI11Instruction> instruction {instrDecoder.decode (cpu.cpuData (),
+    Instruction instruction {instrDecoder.decode (cpu.cpuData (),
         cpu.cpuControl (), cpu.mmu (), 0005231)};
 
     cpu.cpuData ()->registers () [1] = 10;
     cpu.mmu ()->putWord (10, 100);
     cpu.mmu ()->putWord (100, 1000);
-    instruction->execute ();
+    visit (KD11_NA::Executor {cpu.cpuData (), cpu.cpuControl (), cpu.mmu ()},
+        instruction);
     EXPECT_EQ (cpu.mmu ()->fetchWord (100), 1001);
     EXPECT_EQ (cpu.cpuData ()->registers () [1], 12);
 }
@@ -82,10 +89,10 @@ TEST (KD11_NAINCTEST, IncMode3Functions)
 TEST (KD11_NAINCTEST, IncMode4Functions)
 {
     DummyCpu cpu;
-    KD11_NAInstruction instrDecoder;
+    Decoder instrDecoder;
 
     // INC -(R1)
-    unique_ptr<LSI11Instruction> instruction {instrDecoder.decode (cpu.cpuData (),
+    Instruction instruction {instrDecoder.decode (cpu.cpuData (),
         cpu.cpuControl (), cpu.mmu (), 0005241)};
 
     // Address 8 = 100, R1 = 10
@@ -94,7 +101,8 @@ TEST (KD11_NAINCTEST, IncMode4Functions)
 
     // Execution of the INC should result in a substraction by 2 of R1 (8)
     // followed by an increment of adress 8
-    instruction->execute ();
+    visit (KD11_NA::Executor {cpu.cpuData (), cpu.cpuControl (), cpu.mmu ()},
+        instruction);
     EXPECT_EQ (cpu.mmu ()->fetchWord (8),  101);
     EXPECT_EQ (cpu.cpuData ()->registers () [1], 8);
 }
@@ -105,16 +113,17 @@ TEST (KD11_NAINCTEST, IncMode4Functions)
 TEST (KD11_NAINCTEST, IncMode5Functions)
 {
     DummyCpu cpu;
-    KD11_NAInstruction instrDecoder;
+    Decoder instrDecoder;
 
     // INC @-(R1)
-    unique_ptr<LSI11Instruction> instruction {instrDecoder.decode (cpu.cpuData (),
+    Instruction instruction {instrDecoder.decode (cpu.cpuData (),
         cpu.cpuControl (), cpu.mmu (), 0005251)};
 
     cpu.cpuData ()->registers () [1] = 10;
     cpu.mmu ()->putWord (8, 100);
     cpu.mmu ()->putWord (100, 1000);
-    instruction->execute ();
+    visit (KD11_NA::Executor {cpu.cpuData (), cpu.cpuControl (), cpu.mmu ()},
+        instruction);
     EXPECT_EQ (cpu.mmu ()->fetchWord (100), 1001);
     EXPECT_EQ (cpu.cpuData ()->registers () [1], 8);
 }
@@ -123,10 +132,10 @@ TEST (KD11_NAINCTEST, IncMode5Functions)
 TEST (KD11_NAINCTEST, IncMode6Functions)
 {
     DummyCpu cpu;
-    KD11_NAInstruction instrDecoder;
+    Decoder instrDecoder;
 
     // INC 2(R1)
-    unique_ptr<LSI11Instruction> instruction {instrDecoder.decode (cpu.cpuData (),
+    Instruction instruction {instrDecoder.decode (cpu.cpuData (),
         cpu.cpuControl (), cpu.mmu (), 0005261)};
 
     // Assume the INC instruction is at address 0, so the index word will
@@ -138,7 +147,8 @@ TEST (KD11_NAINCTEST, IncMode6Functions)
 
     // Execution of the INC should result in an increment of address (10 + 2)
     // and R1 should be unaffected.
-    instruction->execute ();
+    visit (KD11_NA::Executor {cpu.cpuData (), cpu.cpuControl (), cpu.mmu ()},
+        instruction);
     EXPECT_EQ (cpu.mmu ()->fetchWord (12),  101);
     EXPECT_EQ (cpu.cpuData ()->registers () [1], 10);
 }
@@ -150,10 +160,10 @@ TEST (KD11_NAINCTEST, IncMode6Functions)
 TEST (KD11_NAINCTEST, IncMode7Functions)
 {
     DummyCpu cpu;
-    KD11_NAInstruction instrDecoder;
+    Decoder instrDecoder;
 
     // INC @2(R1)
-    unique_ptr<LSI11Instruction> instruction {instrDecoder.decode (cpu.cpuData (),
+    Instruction instruction {instrDecoder.decode (cpu.cpuData (),
         cpu.cpuControl (), cpu.mmu (), 0005271)};
 
     // Assume the INC instruction is at address 0, so the index word will
@@ -166,7 +176,8 @@ TEST (KD11_NAINCTEST, IncMode7Functions)
 
     // Execution of the INC should result in an increment of the address at
     // at address (10 + 2).
-    instruction->execute ();
+    visit (KD11_NA::Executor {cpu.cpuData (), cpu.cpuControl (), cpu.mmu ()},
+        instruction);
     EXPECT_EQ (cpu.mmu ()->fetchWord (100), 1001);
     EXPECT_EQ (cpu.cpuData ()->registers () [1], 10);
 }

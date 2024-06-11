@@ -1,7 +1,7 @@
 #ifndef _DEC_H_
 #define _DEC_H_
 
-#include "commoninstruction.h"
+
 #include "kd/common/instructionformats/singleoperandinstruction/singleoperandinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/common/operandlocation/operandlocation.h"
@@ -20,21 +20,21 @@
 //
 // Subtract 1 from the contents of the destination
 //
-class CommonInstruction::DEC : public SingleOperandInstruction
+class DEC : public SingleOperandInstruction
 {
 public:
     DEC (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline CommonInstruction::DEC::DEC (CpuData* cpuData, CpuControl* cpuControl,
+inline DEC::DEC (CpuData* cpuData, CpuControl* cpuControl,
         MMU* mmu, u16 instruction)
     :
     SingleOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
 // ToDo: To be removed
-inline bool CommonInstruction::DEC::execute ()
+inline bool DEC::execute ()
 {
     throw "Should not happen";
 }

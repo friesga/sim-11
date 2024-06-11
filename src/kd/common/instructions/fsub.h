@@ -1,7 +1,7 @@
 #ifndef _FSUB_H_
 #define _FSUB_H_
 
-#include "commoninstruction.h"
+
 #include "kd/common/instructionformats/fisinstruction/fisinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/common/operandlocation/operandlocation.h"
@@ -24,21 +24,21 @@
 //
 // A <- A - B
 //
-class CommonInstruction::FSUB : public FISInstruction
+class FSUB : public FISInstruction
 {
 public:
     FSUB (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline CommonInstruction::FSUB::FSUB (CpuData* cpuData, CpuControl* cpuControl,
+inline FSUB::FSUB (CpuData* cpuData, CpuControl* cpuControl,
         MMU* mmu, u16 instruction)
     :
     FISInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
 // ToDo: To be removed
-inline bool CommonInstruction::FSUB::execute ()
+inline bool FSUB::execute ()
 {
     throw "Should not happen";
 }

@@ -1,7 +1,7 @@
 #ifndef _CCC_H_
 #define _CCC_H_
 
-#include "commoninstruction.h"
+
 #include "kd/common/instructionformats/ccinstruction/ccinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/common/operandlocation/operandlocation.h"
@@ -16,21 +16,21 @@
 // instruction. The operation code indicates this a CCC instruction without
 // any condition code set and thus the instruction has no effect.
 // 
-class CommonInstruction::CCC : public CcInstruction
+class CCC : public CcInstruction
 {
 public:
     CCC (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline CommonInstruction::CCC::CCC (CpuData* cpuData, CpuControl* cpuControl,
+inline CCC::CCC (CpuData* cpuData, CpuControl* cpuControl,
         MMU* mmu, u16 instruction)
     :
     CcInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
 // ToDo: To be removed
-inline bool CommonInstruction::CCC::execute ()
+inline bool CCC::execute ()
 {
     throw "Should not happen";
 }

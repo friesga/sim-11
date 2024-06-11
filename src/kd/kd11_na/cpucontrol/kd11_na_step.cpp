@@ -1,5 +1,5 @@
 #include "kd11_na_cpucontrol.h"
-#include "kd/kd11_na/cpucontrol/kd11_nainstruction/instructions.h"
+#include "kd/common/decoder/decoder.h"
 #include "kd/kd11_na/executor/executor.h"
 #include "qbus/qbus.h"
 #include "pdp11peripheral/pdp11peripheral.h"
@@ -20,7 +20,7 @@ KD11_NA_CpuControl::KD11_NA_CpuControl (Qbus* bus, CpuData* cpuData, MMU* mmu)
     mmu_ {mmu},
     cpuData_ {cpuData},
     runState {CpuRunState::HALT},
-    kd11_naInstruction {},
+    decoder {},
     haltReason_ {HaltReason::HaltInstruction},
     traceFlag_ {false}
 {
@@ -114,7 +114,7 @@ void KD11_NA_CpuControl::execInstr ()
     cpuData_->registers ()[7] += 2;
 
     Instruction instr = 
-        kd11_naInstruction.decode (cpuData_, this, mmu_, instructionWord);
+        decoder.decode (cpuData_, this, mmu_, instructionWord);
 
     // If the trace flag is set, the next instruction has to result in a trace
     // trap, unless the instruction resulted in another trap.

@@ -1,5 +1,8 @@
-#include "kd/kd11_na/cpucontrol/kd11_nainstruction/kd11_nainstruction.h"
+#include "kd/common/decoder/decoder.h"
+#include "kd/kd11_na/executor/executor.h"
 #include "../dummycpu/dummycpu.h"
+
+using std::visit;
 
 #include <gtest/gtest.h>
 
@@ -14,15 +17,16 @@
 TEST (KD11_NAMOVTEST, MovMode0Mode2Functions)
 {
     DummyCpu cpu;
-    KD11_NAInstruction instrDecoder;
+    Decoder instrDecoder;
 
     // MOV R0, (R0)+
-    unique_ptr<LSI11Instruction> instruction {instrDecoder.decode (cpu.cpuData (),
+    Instruction instruction {instrDecoder.decode (cpu.cpuData (),
         cpu.cpuControl (), cpu.mmu (), 0010020)};
 
     cpu.cpuData ()->registers () [0] = 10;
     cpu.mmu ()->putWord (10, 0);
-    instruction->execute ();
+    visit (KD11_NA::Executor {cpu.cpuData (), cpu.cpuControl (), cpu.mmu ()},
+        instruction);
     EXPECT_EQ (cpu.mmu ()->fetchWord (10), 10);
     EXPECT_EQ (cpu.cpuData ()->registers () [0], 12);
 }

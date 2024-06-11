@@ -33,6 +33,8 @@ set (KD11COMMON_SRCS
     src/kd/common/instructionformats/eisinstruction/eisinstruction.cpp
     src/kd/common/instructionformats/markinstruction/markinstruction.cpp
     src/kd/common/instructionformats/sobinstruction/sobinstruction.cpp
+    src/kd/common/decoder/decoder.cpp
+    src/kd/common/decoder/opcodetables.cpp
     src/kd/common/executor/executor.cpp
     src/kd/common/odt/operatorconsoleaccess/operatorconsoleaccess.cpp)
 
@@ -61,8 +63,6 @@ set (KD11_NA_ODT_SRCS
 set (KD11_NA_CPU_SRCS
     src/kd/kd11_na/cpucontrol/kd11_na_step.cpp
     src/kd/kd11_na/cpucontrol/kd11_na_cpucontrol.cpp
-    src/kd/kd11_na/cpucontrol/kd11_nainstruction/opcodetables.cpp
-    src/kd/kd11_na/cpucontrol/kd11_nainstruction/kd11_nainstruction.cpp
     src/kd/kd11_na/cpucontrol/kd11_na_calcinstructiontime.cpp
     src/kd/kd11_na/cpudata/kd11_naregisters/kd11_naregisters.cpp
     src/kd/kd11_na/pseudommu/pseudommu.cpp

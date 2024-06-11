@@ -1,7 +1,7 @@
 #ifndef _FDIV_H_
 #define _FDIV_H_
 
-#include "commoninstruction.h"
+
 #include "kd/common/instructionformats/fisinstruction/fisinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/common/operandlocation/operandlocation.h"
@@ -25,21 +25,21 @@
 //
 // A <- A / B
 //
-class CommonInstruction::FDIV : public FISInstruction
+class FDIV : public FISInstruction
 {
 public:
     FDIV (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline CommonInstruction::FDIV::FDIV (CpuData* cpuData, CpuControl* cpuControl,
+inline FDIV::FDIV (CpuData* cpuData, CpuControl* cpuControl,
         MMU* mmu, u16 instruction)
     :
     FISInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
 // ToDo: To be removed
-inline bool CommonInstruction::FDIV::execute ()
+inline bool FDIV::execute ()
 {
     throw "Should not happen";
 }

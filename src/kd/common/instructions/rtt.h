@@ -1,7 +1,7 @@
 #ifndef _RTT_H_
 #define _RTT_H_
 
-#include "commoninstruction.h"
+
 #include "kd/common/instructionformats/nooperandinstruction/nooperandinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/include/cpucontrol.h"
@@ -24,21 +24,21 @@
 // RTI permits trace trap. If new PS has T bit set, trap will occur after
 // execution of first instruction after RTT.
 //
-class CommonInstruction::RTT : public NoOperandInstruction
+class RTT : public NoOperandInstruction
 {
 public:
     RTT (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline CommonInstruction::RTT::RTT (CpuData* cpuData, CpuControl* cpuControl,
+inline RTT::RTT (CpuData* cpuData, CpuControl* cpuControl,
         MMU* mmu, u16 instruction)
     :
     NoOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
 // ToDo: To be removed
-inline bool CommonInstruction::RTT::execute ()
+inline bool RTT::execute ()
 {
     throw "Should not happen";
 }

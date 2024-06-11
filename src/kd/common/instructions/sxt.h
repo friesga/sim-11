@@ -1,7 +1,7 @@
 #ifndef _SXT_H_
 #define _SXT_H_
 
-#include "commoninstruction.h"
+
 #include "kd/common/instructionformats/singleoperandinstruction/singleoperandinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/common/operandlocation/operandlocation.h"
@@ -22,21 +22,21 @@
 // If the condition code bit N is set then a -1 is placed in the destination
 // operand: if N bit is clear, then a 0 is placed in the destination operand.
 //
-class CommonInstruction::SXT : public SingleOperandInstruction
+class SXT : public SingleOperandInstruction
 {
 public:
     SXT (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline CommonInstruction::SXT::SXT (CpuData* cpuData, CpuControl* cpuControl,
+inline SXT::SXT (CpuData* cpuData, CpuControl* cpuControl,
         MMU* mmu, u16 instruction)
     :
     SingleOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
 // ToDo: To be removed
-inline bool CommonInstruction::SXT::execute ()
+inline bool SXT::execute ()
 {
     throw "Should not happen";
 }

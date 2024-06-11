@@ -1,7 +1,7 @@
 #ifndef _SBC_H_
 #define _SBC_H_
 
-#include "commoninstruction.h"
+
 #include "kd/common/instructionformats/singleoperandinstruction/singleoperandinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/common/operandlocation/operandlocation.h"
@@ -22,21 +22,21 @@
 // carry from the subtraction of two low-order words to be subtracted from the
 // high order part of the result.
 //
-class CommonInstruction::SBC : public SingleOperandInstruction
+class SBC : public SingleOperandInstruction
 {
 public:
     SBC (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline CommonInstruction::SBC::SBC (CpuData* cpuData, CpuControl* cpuControl,
+inline SBC::SBC (CpuData* cpuData, CpuControl* cpuControl,
         MMU* mmu, u16 instruction)
     :
     SingleOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
 // ToDo: To be removed
-inline bool CommonInstruction::SBC::execute ()
+inline bool SBC::execute ()
 {
     throw "Should not happen";
 }

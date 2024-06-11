@@ -1,7 +1,7 @@
 #ifndef _ASR_H_
 #define _ASR_H_
 
-#include "commoninstruction.h"
+
 #include "kd/common/instructionformats/singleoperandinstruction/singleoperandinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/common/operandlocation/operandlocation.h"
@@ -24,21 +24,21 @@
 // The C-bit is loaded from bit 0 of the destination. ASR performs signed
 // division of the destination by two.
 //
-class CommonInstruction::ASR : public SingleOperandInstruction
+class ASR : public SingleOperandInstruction
 {
 public:
     ASR (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline CommonInstruction::ASR::ASR (CpuData* cpuData, CpuControl* cpuControl,
+inline ASR::ASR (CpuData* cpuData, CpuControl* cpuControl,
         MMU* mmu, u16 instruction)
     :
     SingleOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
 // ToDo: To be removed
-inline bool CommonInstruction::ASR::execute ()
+inline bool ASR::execute ()
 {
     throw "Should not happen";
 }

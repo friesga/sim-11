@@ -1,7 +1,7 @@
 #ifndef _BPT_H_
 #define _BPT_H_
 
-#include "commoninstruction.h"
+
 #include "kd/common/instructionformats/nooperandinstruction/nooperandinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/include/cpucontrol.h"
@@ -22,21 +22,21 @@
 //  V: loaded from trap vector
 //  C: loaded from trap vector
 //
-class CommonInstruction::BPT : public NoOperandInstruction
+class BPT : public NoOperandInstruction
 {
 public:
     BPT (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline CommonInstruction::BPT::BPT (CpuData* cpuData, CpuControl* cpuControl,
+inline BPT::BPT (CpuData* cpuData, CpuControl* cpuControl,
         MMU* mmu, u16 instruction)
     :
     NoOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
 // ToDo: To be removed
-inline bool CommonInstruction::BPT::execute ()
+inline bool BPT::execute ()
 {
     throw "Should not happen";
 }

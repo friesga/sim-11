@@ -1,7 +1,7 @@
 #ifndef _ASLB_H_
 #define _ASLB_H_
 
-#include "commoninstruction.h"
+
 #include "kd/common/instructionformats/singleoperandinstruction/singleoperandinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/common/operandlocation/operandlocation.h"
@@ -20,21 +20,21 @@
 // and for even addresses the carry bit is loaded from bit 7 and bit 0 is
 // loaded with a zero.
 //
-class CommonInstruction::ASLB : public SingleOperandInstruction
+class ASLB : public SingleOperandInstruction
 {
 public:
     ASLB (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline CommonInstruction::ASLB::ASLB (CpuData* cpuData, CpuControl* cpuControl,
+inline ASLB::ASLB (CpuData* cpuData, CpuControl* cpuControl,
         MMU* mmu, u16 instruction)
     :
     SingleOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
 // ToDo: To be removed
-inline bool CommonInstruction::ASLB::execute ()
+inline bool ASLB::execute ()
 {
     throw "Should not happen";
 }

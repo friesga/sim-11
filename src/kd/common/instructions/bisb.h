@@ -1,7 +1,7 @@
 #ifndef _BISB_H_
 #define _BISB_H_
 
-#include "commoninstruction.h"
+
 #include "kd/common/instructionformats/doubleoperandinstruction/doubleoperandinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/common/operandlocation/operandlocation.h"
@@ -15,21 +15,21 @@
 // Condition Codes:
 //  refer to BIS
 //
-class CommonInstruction::BISB : public DoubleOperandInstruction
+class BISB : public DoubleOperandInstruction
 {
 public:
     BISB (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline CommonInstruction::BISB::BISB (CpuData* cpuData, CpuControl* cpuControl,
+inline BISB::BISB (CpuData* cpuData, CpuControl* cpuControl,
         MMU* mmu, u16 instruction)
     :
     DoubleOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
 // ToDo: To be removed
-inline bool CommonInstruction::BISB::execute ()
+inline bool BISB::execute ()
 {
     throw "Should not happen";
 }

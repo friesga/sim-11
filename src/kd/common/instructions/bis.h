@@ -1,7 +1,7 @@
 #ifndef _BIS_H_
 #define _BIS_H_
 
-#include "commoninstruction.h"
+
 #include "kd/common/instructionformats/doubleoperandinstruction/doubleoperandinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/common/operandlocation/operandlocation.h"
@@ -23,21 +23,21 @@
 // corresponding bits set in the source are set in the destination. The
 // contents of the destination are lost.
 //
-class CommonInstruction::BIS : public DoubleOperandInstruction
+class BIS : public DoubleOperandInstruction
 {
 public:
     BIS (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline CommonInstruction::BIS::BIS (CpuData* cpuData, CpuControl* cpuControl,
+inline BIS::BIS (CpuData* cpuData, CpuControl* cpuControl,
         MMU* mmu, u16 instruction)
     :
     DoubleOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
 // ToDo: To be removed
-inline bool CommonInstruction::BIS::execute ()
+inline bool BIS::execute ()
 {
     throw "Should not happen";
 }

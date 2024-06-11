@@ -1,7 +1,7 @@
 #ifndef _HALT_H_
 #define _HALT_H_
 
-#include "commoninstruction.h"
+
 #include "kd/common/instructionformats/nooperandinstruction/nooperandinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/include/cpucontrol.h"
@@ -16,21 +16,21 @@
 // instruction to be executed. The processor goes into the HALT mode.
 // The console mode of operation is enabled.
 //
-class CommonInstruction::HALT : public NoOperandInstruction
+class HALT : public NoOperandInstruction
 {
 public:
     HALT (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline CommonInstruction::HALT::HALT (CpuData* cpuData, CpuControl* cpuControl,
+inline HALT::HALT (CpuData* cpuData, CpuControl* cpuControl,
         MMU* mmu, u16 instruction)
     :
     NoOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
 // ToDo: To be removed
-inline bool CommonInstruction::HALT::execute ()
+inline bool HALT::execute ()
 {
     throw "Should not happen";
 }

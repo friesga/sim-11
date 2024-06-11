@@ -1,7 +1,7 @@
 #ifndef _CMP_H_
 #define _CMP_H_
 
-#include "commoninstruction.h"
+
 #include "kd/common/instructionformats/doubleoperandinstruction/doubleoperandinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/common/operandlocation/operandlocation.h"
@@ -25,21 +25,21 @@
 // which may then be used for arithmetic and logical conditional branches.
 // Both operands are unaffected. The only action is to set the condition codes.
 //
-class CommonInstruction::CMP : public DoubleOperandInstruction
+class CMP : public DoubleOperandInstruction
 {
 public:
     CMP (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline CommonInstruction::CMP::CMP (CpuData* cpuData, CpuControl* cpuControl,
+inline CMP::CMP (CpuData* cpuData, CpuControl* cpuControl,
         MMU* mmu, u16 instruction)
     :
     DoubleOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
 // ToDo: To be removed
-inline bool CommonInstruction::CMP::execute ()
+inline bool CMP::execute ()
 {
     throw "Should not happen";
 }

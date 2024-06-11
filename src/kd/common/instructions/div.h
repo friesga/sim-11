@@ -1,7 +1,7 @@
 #ifndef _DIV_H_
 #define _DIV_H_
 
-#include "commoninstruction.h"
+
 #include "kd/common/instructionformats/eisinstruction/eisinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/common/operandlocation/operandlocation.h"
@@ -25,21 +25,21 @@
 // performed so that the remainder is of the same sign as the dividend. R must
 // be even.
 //
-class CommonInstruction::DIV : public EisInstruction
+class DIV : public EisInstruction
 {
 public:
     DIV (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline CommonInstruction::DIV::DIV (CpuData* cpuData, CpuControl* cpuControl,
+inline DIV::DIV (CpuData* cpuData, CpuControl* cpuControl,
         MMU* mmu, u16 instruction)
     :
     EisInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
 // ToDo: Should not happen
-inline bool CommonInstruction::DIV::execute ()
+inline bool DIV::execute ()
 {
     throw "Should not happen";
 }

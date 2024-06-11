@@ -1,7 +1,7 @@
 #ifndef _XOR_H_
 #define _XOR_H_
 
-#include "commoninstruction.h"
+
 #include "kd/common/instructionformats/eisinstruction/eisinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/common/operandlocation/operandlocation.h"
@@ -21,21 +21,21 @@
 // The exclusive OR of the register and destination operand is stored in the
 // destination address. Contents of register are unaffected.
 //
-class CommonInstruction::XOR : public EisInstruction
+class XOR : public EisInstruction
 {
 public:
     XOR (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline CommonInstruction::XOR::XOR (CpuData* cpuData, CpuControl* cpuControl,
+inline XOR::XOR (CpuData* cpuData, CpuControl* cpuControl,
         MMU* mmu, u16 instruction)
     :
     EisInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
 // ToDo: To be removed
-inline bool CommonInstruction::XOR::execute ()
+inline bool XOR::execute ()
 {
     throw "Should not happen";
 }

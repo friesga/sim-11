@@ -1,7 +1,7 @@
 #ifndef _JMP_H_
 #define _JMP_H_
 
-#include "commoninstruction.h"
+
 #include "kd/common/instructionformats/singleoperandinstruction/singleoperandinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/common/operandlocation/operandlocation.h"
@@ -24,21 +24,21 @@
 // register. Note that instructions are word data and must therefore be
 // fetched from an even-numbered address.
 //
-class CommonInstruction::JMP : public SingleOperandInstruction
+class JMP : public SingleOperandInstruction
 {
 public:
     JMP (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline CommonInstruction::JMP::JMP (CpuData* cpuData, CpuControl* cpuControl,
+inline JMP::JMP (CpuData* cpuData, CpuControl* cpuControl,
         MMU* mmu, u16 instruction)
     :
     SingleOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
 // ToDo: To be removed
-inline bool CommonInstruction::JMP::execute ()
+inline bool JMP::execute ()
 {
     throw "Should not happen";
 }

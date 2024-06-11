@@ -1,7 +1,7 @@
 #ifndef _COM_H_
 #define _COM_H_
 
-#include "commoninstruction.h"
+
 #include "kd/common/instructionformats/singleoperandinstruction/singleoperandinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/common/operandlocation/operandlocation.h"
@@ -21,21 +21,21 @@
 // Replaces the contents of the destination address by their logical
 // complement (each bit equal to 0 is set and each bit equal to 1 is cleared).
 //
-class CommonInstruction::COM : public SingleOperandInstruction
+class COM : public SingleOperandInstruction
 {
 public:
     COM (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline CommonInstruction::COM::COM (CpuData* cpuData, CpuControl* cpuControl,
+inline COM::COM (CpuData* cpuData, CpuControl* cpuControl,
         MMU* mmu, u16 instruction)
     :
     SingleOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
 // ToDo: To be removed
-inline bool CommonInstruction::COM::execute ()
+inline bool COM::execute ()
 {
     throw "Should not happen";
 }

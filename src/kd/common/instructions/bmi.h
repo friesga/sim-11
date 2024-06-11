@@ -1,7 +1,7 @@
 #ifndef _BMI_H_
 #define _BMI_H_
 
-#include "commoninstruction.h"
+
 #include "kd/common/instructionformats/branchinstruction/branchinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/common/operandlocation/operandlocation.h"
@@ -18,21 +18,21 @@
 // to test the sign (most significant bit) of the result of the previous
 // operation), branching if negative. BMI is the complementary function of BPL.
 //
-class CommonInstruction::BMI : public BranchInstruction
+class BMI : public BranchInstruction
 {
 public:
     BMI (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline CommonInstruction::BMI::BMI (CpuData* cpuData, CpuControl* cpuControl,
+inline BMI::BMI (CpuData* cpuData, CpuControl* cpuControl,
         MMU* mmu, u16 instruction)
     :
     BranchInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
 // ToDo: To be removed
-inline bool CommonInstruction::BMI::execute ()
+inline bool BMI::execute ()
 {
     throw "Should not happen";
 }

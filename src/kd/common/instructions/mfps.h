@@ -1,7 +1,7 @@
 #ifndef _MFPS_H_
 #define _MFPS_H_
 
-#include "commoninstruction.h"
+
 #include "kd/common/instructionformats/singleoperandinstruction/singleoperandinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/common/operandlocation/operandlocation.h"
@@ -23,21 +23,21 @@
 // destination is mode 0, PS bit 7 is sign extended through upper byte of the
 // register. The destination operand address is treated as a byte address.
 //
-class CommonInstruction::MFPS : public SingleOperandInstruction
+class MFPS : public SingleOperandInstruction
 {
 public:
     MFPS (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline CommonInstruction::MFPS::MFPS (CpuData* cpuData, CpuControl* cpuControl,
+inline MFPS::MFPS (CpuData* cpuData, CpuControl* cpuControl,
         MMU* mmu, u16 instruction)
     :
     SingleOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
 // ToDo: To be removed
-inline bool CommonInstruction::MFPS::execute ()
+inline bool MFPS::execute ()
 {
     throw "Should not happen";
 }

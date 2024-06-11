@@ -1,7 +1,7 @@
 #ifndef _TST_H_
 #define _TST_H_
 
-#include "commoninstruction.h"
+
 #include "kd/common/instructionformats/singleoperandinstruction/singleoperandinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/common/operandlocation/operandlocation.h"
@@ -18,21 +18,21 @@
 //  V: cleared
 //  C: cleared
 //
-class CommonInstruction::TST : public SingleOperandInstruction
+class TST : public SingleOperandInstruction
 {
 public:
     TST (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline CommonInstruction::TST::TST (CpuData* cpuData, CpuControl* cpuControl,
+inline TST::TST (CpuData* cpuData, CpuControl* cpuControl,
         MMU* mmu, u16 instruction)
     :
     SingleOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
 // ToDo: To be removed
-inline bool CommonInstruction::TST::execute ()
+inline bool TST::execute ()
 {
     throw "Should not happen";
 }

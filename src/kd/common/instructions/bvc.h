@@ -1,7 +1,7 @@
 #ifndef _BVC_H_
 #define _BVC_H_
 
-#include "commoninstruction.h"
+
 #include "kd/common/instructionformats/branchinstruction/branchinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/common/operandlocation/operandlocation.h"
@@ -17,21 +17,21 @@
 // Tests the state of the V bit and causes a branch if the V bit is clear.
 // BVC is complementary operation to BVS.
 //
-class CommonInstruction::BVC : public BranchInstruction
+class BVC : public BranchInstruction
 {
 public:
     BVC (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool execute () override;
 };
 
-inline CommonInstruction::BVC::BVC (CpuData* cpuData, CpuControl* cpuControl,
+inline BVC::BVC (CpuData* cpuData, CpuControl* cpuControl,
         MMU* mmu, u16 instruction)
     :
     BranchInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
 // ToDo: To be removed
-inline bool CommonInstruction::BVC::execute ()
+inline bool BVC::execute ()
 {
     throw "Should not happen";
 }

@@ -1,103 +1,23 @@
-#include "kdf11instruction.h"
-
-#include "adc.h"
-#include "adcb.h"
-#include "add.h"
-#include "kd/common/instructions/ash.h"
-#include "kd/common/instructions/ashc.h"
-#include "asl.h"
-#include "aslb.h"
-#include "asr.h"
-#include "asrb.h"
-#include "kd/common/instructions/bcc.h"
-#include "kd/common/instructions/bcs.h"
-#include "kd/common/instructions/beq.h"
-#include "kd/common/instructions/bge.h"
-#include "kd/common/instructions/bgt.h"
-#include "kd/common/instructions/bhi.h"
-#include "bic.h"
-#include "bicb.h"
-#include "bis.h"
-#include "bisb.h"
-#include "bit.h"
-#include "bitb.h"
-#include "kd/common/instructions/ble.h"
-#include "kd/common/instructions/blos.h"
-#include "kd/common/instructions/blt.h"
-#include "kd/common/instructions/bmi.h"
-#include "kd/common/instructions/bne.h"
-#include "kd/common/instructions/bpl.h"
-#include "kd/common/instructions/bpt.h"
-#include "kd/common/instructions/br.h"
-#include "kd/common/instructions/bvc.h"
-#include "kd/common/instructions/bvs.h"
-#include "kd/common/instructions/ccc.h"
-#include "clr.h"
-#include "clrb.h"
-#include "cmp.h"
-#include "cmpb.h"
-#include "com.h"
-#include "comb.h"
-#include "dec.h"
-#include "decb.h"
-#include "kd/common/instructions/div.h"
-#include "kd/common/instructions/emt.h"
-#include "halt.h"
-#include "inc.h"
-#include "incb.h"
-#include "kd/common/instructions/iot.h"
-#include "kd/common/instructions/jmp.h"
-#include "kd/common/instructions/jsr.h"
-#include "kd/common/instructions/mark.h"
-#include "mfpd.h"
-#include "mfps.h"
-#include "mfpt.h"
-#include "mtpd.h"
-#include "mov.h"
-#include "movb.h"
-#include "kd/common/instructions/mtps.h"
-#include "kd/common/instructions/mul.h"
-#include "neg.h"
-#include "negb.h"
-#include "reset.h"
-#include "rol.h"
-#include "rolb.h"
-#include "ror.h"
-#include "rorb.h"
-#include "kd/common/instructions/rti.h"
-#include "kd/common/instructions/rts.h"
-#include "kd/common/instructions/rtt.h"
-#include "sbc.h"
-#include "sbcb.h"
-#include "kd/common/instructions/scc.h"
-#include "kd/common/instructions/sob.h"
-#include "sub.h"
-#include "swab.h"
-#include "sxt.h"
-#include "kd/common/instructions/trap.h"
-#include "kd/common/instructions/tst.h"
-#include "kd/common/instructions/tstb.h"
-#include "kd/common/instructions/unused.h"
-#include "wait.h"
-#include "xor.h"
+#include "decoder.h"
+// #include "kd/common/instructions/commoninstruction.h"
+// #include "kd/common/instructions/instructions.h"
 
 // Instruction format for Operate Group plus BPT and IOT,
 //
 // and minus NOP instructions.
-KDF11Instruction::opCodeTable const KDF11Instruction::group_00_00_nn
+Decoder::opCodeTable const Decoder::group_00_00_nn
 { 
-    create<KDF11Instruction::HALT>,        // 00 00 00 
-    create<KDF11Instruction::WAIT>,        // 00 00 01
+    create<HALT>,       // 00 00 00 
+    create<WAIT>,       // 00 00 01
     create<RTI>,        // 00 00 02
     create<BPT>,        // 00 00 03
     create<IOT>,        // 00 00 04
-    create<KDF11Instruction::RESET>,       // 00 00 05
-    create<RTT>,        // 00 00 06
-    create<KDF11Instruction::MFPT>         // 00 00 07
+    create<RESET>,      // 00 00 05
+    create<RTT>         // 00 00 06
 };
 
 // Instruction format for RTS and Condition Code Operators instructions
-KDF11Instruction::opCodeTable const KDF11Instruction::group_00_02_nn
+Decoder::opCodeTable const Decoder::group_00_02_nn
 {
     create<RTS>,        // 00 02 00
     create<RTS>,        // 00 02 01
@@ -165,26 +85,45 @@ KDF11Instruction::opCodeTable const KDF11Instruction::group_00_02_nn
     create<SCC>         // 00 02 77
 };
 
+// Instruction format for Fixed and Floating Point Arithmetic instructions
+// (just the FIS part of the instruction format).
+// 
+// Just the operation codes in the range 07 50 0x till 07 50 3x are used.
+// The range 07 51 xx till 07 57 xx is handled in the corresponding function
+// to minimize the size of this opcode table.
+//
+Decoder::opCodeTable const Decoder::group_07_5n_nx
+{
+    create<FADD>,       // 07 50 0x
+    create<FSUB>,       // 07 50 1x
+    create<FMUL>,       // 07 50 2x
+    create<FDIV>,       // 07 50 3x
+    create<Unused>,     // 07 50 4x
+    create<Unused>,     // 07 50 5x
+    create<Unused>,     // 07 50 6x
+    create<Unused>      // 07 50 7x
+};
+
 // Instruction format for Fixed and Floating Point Arithmetic instructions,
 // plus the SOB and XOR instructions.
 // 
 // The FIS instructions are defined in a separate group.
 //
-KDF11Instruction::opCodeTable const KDF11Instruction::group_07_nx_xx
+Decoder::opCodeTable const Decoder::group_07_nx_xx
 {
-    create<MUL>,        // 07 0x xx
-    create<DIV>,        // 07 1x xx
-    create<ASH>,        // 07 2x xx
-    create<ASHC>,       // 07 3x xx
-    create<KDF11Instruction::XOR>,         // 07 4x xx
-    create<Unused>,     // 07 5x xx
-    create<Unused>,     // 07 6x xx
-    create<SOB>         // 07 7x xx
+    create<MUL>,                    // 07 0x xx
+    create<DIV>,                    // 07 1x xx
+    create<ASH>,                    // 07 2x xx
+    create<ASHC>,                   // 07 3x xx
+    create<XOR>,                    // 07 4x xx
+    decodeGroup_07_5n_nx,                              // 07 5x xx
+    create<Unused>,                 // 07 6x xx
+    create<SOB>                     // 07 7x xx
 };
 
 // Instruction format for the Program Control and Single Operand Group
 // instructions.
-KDF11Instruction::opCodeTable const KDF11Instruction::group_10_xx_xx
+Decoder::opCodeTable const Decoder::group_10_xx_xx
 {
     create<BPL>,    // 10 00 xx
     create<BPL>,    // 10 01 xx
@@ -226,22 +165,22 @@ KDF11Instruction::opCodeTable const KDF11Instruction::group_10_xx_xx
     create<TRAP>,   // 10 45 xx
     create<TRAP>,   // 10 46 xx
     create<TRAP>,   // 10 47 xx
-    create<KDF11Instruction::CLRB>,    // 10 50 xx
-    create<KDF11Instruction::COMB>,    // 10 51 xx
-    create<KDF11Instruction::INCB>,    // 10 52 xx
-    create<KDF11Instruction::DECB>,    // 10 53 xx
-    create<KDF11Instruction::NEGB>,    // 10 54 xx
-    create<KDF11Instruction::ADCB>,    // 10 55 xx
-    create<KDF11Instruction::SBCB>,    // 10 56 xx
+    create<CLRB>,   // 10 50 xx
+    create<COMB>,   // 10 51 xx
+    create<INCB>,   // 10 52 xx
+    create<DECB>,   // 10 53 xx
+    create<NEGB>,   // 10 54 xx
+    create<ADCB>,   // 10 55 xx
+    create<SBCB>,   // 10 56 xx
     create<TSTB>,   // 10 57 xx
-    create<KDF11Instruction::RORB>,    // 10 60 xx
-    create<KDF11Instruction::ROLB>,    // 10 61 xx
-    create<KDF11Instruction::ASRB>,    // 10 62 xx
-    create<KDF11Instruction::ASLB>,    // 10 63 xx
+    create<RORB>,   // 10 60 xx
+    create<ROLB>,   // 10 61 xx
+    create<ASRB>,   // 10 62 xx
+    create<ASLB>,   // 10 63 xx
     create<MTPS>,   // 10 64 xx
-    create<KDF11Instruction::MFPD>,    // 10 65 xx MFPD and MFPI are identical instructions
-    create<KDF11Instruction::MTPD>,    // 10 66 xx MTPD and MTPI are identical instructions
-    create<KDF11Instruction::MFPS>,    // 10 67 xx
+    create<Unused>, // 10 65 xx Undefined in the LSI-11 Processor Handbook
+    create<Unused>, // 10 66 xx Undefined in the LSI-11 Processor Handbook
+    create<MFPS>,   // 10 67 xx
     create<Unused>, // 10 70 xx The range 10 70 xx till 10 77 xx is undefined
     create<Unused>, // 10 71 xx in the LSI-11 Processor Handbook
     create<Unused>, // 10 72 xx
@@ -254,12 +193,12 @@ KDF11Instruction::opCodeTable const KDF11Instruction::group_10_xx_xx
 
 // Instruction format for the Program Control and Single Operand Group
 // instructions. 
-KDF11Instruction::opCodeTable const KDF11Instruction::group_00_nn_xx
+Decoder::opCodeTable const Decoder::group_00_nn_xx
 { 
     decodeGroup_00_00_nn,                              // 00 00 NN
     create<JMP>,                    // 00 01 xx
     decodeGroup_00_02_nn,                              // 00 02 NN
-    create<KDF11Instruction::SWAB>,                    // 00 03 xx
+    create<SWAB>,                   // 00 03 xx
     create<BR>,                     // 00 04 xx
     create<BR>,                     // 00 05 xx
     create<BR>,                     // 00 06 xx
@@ -296,22 +235,22 @@ KDF11Instruction::opCodeTable const KDF11Instruction::group_00_nn_xx
     create<JSR>,                    // 00 45 xx
     create<JSR>,                    // 00 46 xx
     create<JSR>,                    // 00 47 xx
-    create<KDF11Instruction::CLR>,                     // 00 50 xx
-    create<KDF11Instruction::COM>,                     // 00 51 xx
-    create<KDF11Instruction::INC>,                     // 00 52 xx
-    create<KDF11Instruction::DEC>,                     // 00 53 xx
-    create<KDF11Instruction::NEG>,                     // 00 54 xx
-    create<KDF11Instruction::ADC>,                     // 00 55 xx
-    create<KDF11Instruction::SBC>,                     // 00 56 xx
+    create<CLR>,                    // 00 50 xx
+    create<COM>,                    // 00 51 xx
+    create<INC>,                    // 00 52 xx
+    create<DEC>,                    // 00 53 xx
+    create<NEG>,                    // 00 54 xx
+    create<ADC>,                    // 00 55 xx
+    create<SBC>,                    // 00 56 xx
     create<TST>,                    // 00 57 xx
-    create<KDF11Instruction::ROR>,                     // 00 60 xx
-    create<KDF11Instruction::ROL>,                     // 00 61 xx
-    create<KDF11Instruction::ASR>,                     // 00 62 xx
-    create<KDF11Instruction::ASL>,                     // 00 63 xx
+    create<ROR>,                    // 00 60 xx
+    create<ROL>,                    // 00 61 xx
+    create<ASR>,                    // 00 62 xx
+    create<ASL>,                    // 00 63 xx
     create<MARK>,                   // 00 64 xx
-    create<KDF11Instruction::MFPD>,                    // 00 65 xx KDF11-A specific instruction
-    create<KDF11Instruction::MTPD>,                    // 00 66 xx idem
-    create<KDF11Instruction::SXT>,                     // 00 67 xx
+    create<Unused>,                 // 00 65 xx Undefined in the LSI-11 Processor Handbook
+    create<Unused>,                 // 00 66 xx idem
+    create<SXT>,                    // 00 67 xx
     create<Unused>,                 // 00 70 xx
     create<Unused>,                 // 00 71 xx
     create<Unused>,                 // 00 72 xx
@@ -323,22 +262,22 @@ KDF11Instruction::opCodeTable const KDF11Instruction::group_00_nn_xx
 };
 
 // This is the main operation code control table.
-KDF11Instruction::opCodeTable const KDF11Instruction::group_nn_xx_xx 
+Decoder::opCodeTable const Decoder::group_nn_xx_xx 
 {
     decodeGroup_00_nn_xx,                              // 00 xx xx
-    create<KDF11Instruction::MOV>,                     // 01 xx xx
-    create<KDF11Instruction::CMP>,                     // 02 xx xx
-    create<KDF11Instruction::BIT>,                     // 03 xx xx
-    create<KDF11Instruction::BIC>,                     // 04 xx xx
-    create<KDF11Instruction::BIS>,                     // 05 xx xx
-    create<KDF11Instruction::ADD>,                     // 06 xx xx
+    create<MOV>,                    // 01 xx xx
+    create<CMP>,                    // 02 xx xx
+    create<BIT>,                    // 03 xx xx
+    create<BIC>,                    // 04 xx xx
+    create<BIS>,                    // 05 xx xx
+    create<ADD>,                    // 06 xx xx
     decodeGroup_07_nx_xx,                              // 07 nx xx
     decodeGroup_10_xx_xx,                              // 10 xx xx
-    create<KDF11Instruction::MOVB>,                    // 11 xx xx
-    create<KDF11Instruction::CMPB>,                    // 12 xx xx
-    create<KDF11Instruction::BITB>,                    // 13 xx xx
-    create<KDF11Instruction::BICB>,                    // 14 xx xx
-    create<KDF11Instruction::BISB>,                    // 15 xx xx
-    create<KDF11Instruction::SUB>,                     // 16 xx xx
+    create<MOVB>,                   // 11 xx xx
+    create<CMPB>,                   // 12 xx xx
+    create<BITB>,                   // 13 xx xx
+    create<BICB>,                   // 14 xx xx
+    create<BISB>,                   // 15 xx xx
+    create<SUB>,                    // 16 xx xx
     create<Unused>                  // 17 xx xx Undefined in the LSI-11 Processor Handbook
 };
