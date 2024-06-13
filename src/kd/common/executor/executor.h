@@ -211,7 +211,7 @@ public:
 	bool operator() (SCC& instr);
 	bool operator() (Unused& instr);
 
-protected:
+private:
     CpuData* cpuData_;
     CpuControl* cpuControl_;
     MMU* mmu_;

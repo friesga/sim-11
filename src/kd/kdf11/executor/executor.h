@@ -8,7 +8,7 @@ namespace KDF11_A {
 // This class contains the KDF11-A specific execution of some instructions.
 // For most instructions the execution is forwarded to the Common::Executor.
 //
-class Executor : public Common::Executor
+class Executor
 {
 public:
     Executor (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu);
@@ -174,6 +174,10 @@ public:
     bool operator() (MFPT& instr);
 
 #endif // KDF11_A_FUNCTIONS
+
+private:
+	Common::Executor commonExecutor;
+	CpuData* cpuData_;
 };
 
 } // namespace KDF11_A

@@ -8,7 +8,7 @@ namespace KD11_NA {
 // This class contains the KD11-NA specific execution of some instructions.
 // For most instructions the execution is forwarded to the Common::Executor.
 //
-class Executor : public Common::Executor
+class Executor
 {
 public:
     Executor (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu);
@@ -112,6 +112,9 @@ public:
     bool operator() (MTPD& instr);
     bool operator() (MFPT& instr);
 
+private:
+	Common::Executor commonExecutor;
+	CpuData* cpuData_;
 };
 
 } // namespace KD11_NA
