@@ -1,4 +1,5 @@
 #include "kdf11_cpucontrol.h"
+#include "kd/kdf11/executor/executor.h"
 #include "pdp11peripheral/pdp11peripheral.h"
 #include "chrono/simulatorclock/simulatorclock.h"
 #include "float/float.h"
@@ -91,6 +92,9 @@ void KDF11_CpuControl::execute ()
 // Execute one instruction
 void KDF11_CpuControl::execInstr ()
 {
+    // Create an Executor to execute the instructions
+    KDF11_A::Executor executor (cpuData_, this, mmu_);
+
     // Get next instruction to execute and move PC forward
     CondData<u16> instructionWord = mmu_->fetchWord (cpuData_->registers ()[7]);
     if (!instructionWord.hasValue())
@@ -106,8 +110,8 @@ void KDF11_CpuControl::execInstr ()
 
     cpuData_->registers ()[7] += 2;
 
-    unique_ptr<LSI11Instruction> instr = 
-        kdf11Instruction.decode (cpuData_, this, mmu_, instructionWord);
+    Instruction instr = 
+        decoder.decode (cpuData_, this, mmu_, instructionWord);
 
     // If the trace flag is set, the next instruction has to result in a trace
     // trap, unless the instruction resulted in another trap.
@@ -128,7 +132,7 @@ void KDF11_CpuControl::execInstr ()
     // instruction was completed and false if it was aborted due to an error
     // condition. In that case a trap has been set. Note however that trap
     // instructions set a trap and return true. 
-    instr->execute ();
+    visit (executor, instr);
 
     if (cpuData_->trap () != CpuData::TrapCondition::None)
         serviceTrap ();

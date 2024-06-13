@@ -43,10 +43,6 @@
 #include "kd/common/instructions/decb.h"
 #include "kd/common/instructions/div.h"
 #include "kd/common/instructions/emt.h"
-#include "kd/common/instructions/fadd.h"
-#include "kd/common/instructions/fdiv.h"
-#include "kd/common/instructions/fmul.h"
-#include "kd/common/instructions/fsub.h"
 #include "kd/common/instructions/halt.h"
 #include "kd/common/instructions/inc.h"
 #include "kd/common/instructions/incb.h"
@@ -82,6 +78,17 @@
 #include "kd/common/instructions/unused.h"
 #include "kd/common/instructions/wait.h"
 #include "kd/common/instructions/xor.h"
+
+// KD11-NA specific instructions
+#include "kd/common/instructions/fadd.h"
+#include "kd/common/instructions/fsub.h"
+#include "kd/common/instructions/fmul.h"
+#include "kd/common/instructions/fdiv.h"
+
+// KDF11-A specific instructions
+#include "kd/common/instructions/mfpd.h"
+#include "kd/common/instructions/mtpd.h"
+#include "kd/common/instructions/mfpt.h"
 
 
 #include <variant>
@@ -169,11 +176,9 @@ using Instruction = variant<
     RTT,
     CCC,
     SCC,
-    // MFPD,
-    // MFPI,
-    // MTPD,
-    // MTPI,
-    // MFPT,
+    MFPD,
+    MTPD,
+    MFPT,
     Unused>;
 
 #endif // _INSTRUCTIONS_H_

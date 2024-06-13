@@ -8,7 +8,7 @@ KDF11_CpuControl::KDF11_CpuControl (Qbus* bus, CpuData* cpuData, MMU* mmu)
     mmu_ {mmu},
     cpuData_ {cpuData},
     runState {CpuRunState::HALT},
-    kdf11Instruction {},
+    decoder {},
     haltReason_ {HaltReason::HaltInstruction},
     traceFlag_ {false}
 {

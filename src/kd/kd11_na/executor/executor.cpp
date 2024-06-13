@@ -1,9 +1,5 @@
 #include "executor.h"
 
-#include "kd/common/instructions/fadd.h"
-#include "kd/common/instructions/fdiv.h"
-#include "kd/common/instructions/fmul.h"
-#include "kd/common/instructions/fsub.h"
 
 KD11_NA::Executor::Executor (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu)
     :
@@ -430,4 +426,22 @@ bool KD11_NA::Executor::operator() (SCC& instr)
 bool KD11_NA::Executor::operator() (Unused& instr)
 {
     return Common::Executor::operator() (instr);
+}
+
+bool KD11_NA::Executor::operator() (MFPD& instr)
+{
+    cpuData_->setTrap (CpuData::TrapCondition::ReservedInstructionTrap);
+    return true;
+}
+
+bool KD11_NA::Executor::operator() (MTPD& instr)
+{
+    cpuData_->setTrap (CpuData::TrapCondition::ReservedInstructionTrap);
+    return true;
+}
+
+bool KD11_NA::Executor::operator() (MFPT& instr)
+{
+    cpuData_->setTrap (CpuData::TrapCondition::ReservedInstructionTrap);
+    return true;
 }

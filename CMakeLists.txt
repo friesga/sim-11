@@ -85,6 +85,7 @@ set (KDF11_ODT_SRCS
 
 set (KDF11_SRCS
     src/kd/kdf11/kdf11_a/kdf11_a.cpp
+    src/kd/kdf11/executor/executor.cpp
     src/kd/kdf11/kdf11_b/kdf11_b.cpp
     src/kd/kdf11/kdf11_b/serial_line_units/serial_line_units.cpp
     src/kd/kdf11/cpucontrol/kdf11_step.cpp
@@ -94,8 +95,6 @@ set (KDF11_SRCS
     src/kd/kdf11/cpudata/kdf11busdevice.cpp
     src/kd/kdf11/registerhandler/registerhandler.cpp
     src/kd/kdf11/kd11doubleoperandinstruction/kd11doubleoperandinstruction.cpp
-    src/kd/kdf11/kdf11instruction/kdf11instruction.cpp
-    src/kd/kdf11/kdf11instruction/opcodetables.cpp
     src/kd/kdf11/ktf11_a/ktf11_a.cpp
     src/kd/kdf11/ktf11_a/ktf11_abusdevice.cpp
     ${KDF11_ODT_SRCS})

@@ -1,6 +1,9 @@
 #ifndef _COMMON_EXECUTOR_H_
 #define _COMMON_EXECUTOR_H_
 
+#include "kd/common/instructions/instructions.h"
+
+/*
 #include "kd/include/cpudata.h"
 #include "kd/include/cpucontrol.h"
 #include "kd/include/mmu.h"
@@ -83,10 +86,17 @@
 #include "kd/common/instructions/wait.h"
 #include "kd/common/instructions/xor.h"
 
+// LSI-11 specific instructions
 #include "kd/common/instructions/fadd.h"
 #include "kd/common/instructions/fsub.h"
 #include "kd/common/instructions/fmul.h"
 #include "kd/common/instructions/fdiv.h"
+
+// KDF11-A specific instructions
+#include "kd/common/instructions/mfpd.h"
+#include "kd/common/instructions/mtpd.h"
+#include "kd/common/instructions/mfpt.h"
+*/
 
 namespace Common {
 

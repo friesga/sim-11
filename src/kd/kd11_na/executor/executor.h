@@ -75,6 +75,7 @@ public:
 	bool operator() (FMUL& instr);
 	bool operator() (FDIV& instr);
 
+
 	// Branch instructions
 	bool operator() (BR& instr);
 	bool operator() (BNE& instr);
@@ -105,6 +106,12 @@ public:
 	bool operator() (CCC& instr);
 	bool operator() (SCC& instr);
 	bool operator() (Unused& instr);
+
+	// Unsupported instructions
+	bool operator() (MFPD& instr);
+    bool operator() (MTPD& instr);
+    bool operator() (MFPT& instr);
+
 };
 
 } // namespace KD11_NA

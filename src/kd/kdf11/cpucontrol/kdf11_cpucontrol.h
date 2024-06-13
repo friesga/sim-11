@@ -1,12 +1,12 @@
 #ifndef _KDF11_A_CPU_H_
 #define _KDF11_A_CPU_H_
 
+#include "kd/common//decoder/decoder.h"
 #include "kd/include/cpudata.h"
 #include "kd/include/cpucontrol.h"
 #include "qbus/qbus.h"
 #include "float/float.h"
 #include "types.h"
-#include "kd/kdf11/kdf11instruction/kdf11instruction.h"
 #include "kd/kdf11/cpudata/kdf11registers/kdf11registers.h"
 #include "kd/kdf11/ktf11_a/ktf11_a.h"
 #include "kd/kdf11/cpucontrol/addresstimes.h"
@@ -159,7 +159,7 @@ private:
 	MMU* mmu_;
 	CpuData* cpuData_;
 	CpuRunState runState;
-	KDF11Instruction kdf11Instruction;
+	Decoder decoder;
 	HaltReason haltReason_;
 	bool traceFlag_;
 

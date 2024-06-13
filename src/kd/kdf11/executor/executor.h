@@ -2,7 +2,6 @@
 #define _KDF11_A_EXECUTOR_H_
 
 #include "kd/common/executor/executor.h"
-#include "kd/kdf11/kdf11instruction/kdf11instruction.h"
 
 namespace KDF11_A {
 
@@ -14,57 +13,167 @@ class Executor : public Common::Executor
 public:
     Executor (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu);
 
+#ifdef KDF11_A_FUNCTIONS
+
     // Single operand instructions
-    bool operator() (KDF11Instruction::CLR& instr);
-	bool operator() (KDF11Instruction::CLRB& instr);
-	bool operator() (KDF11Instruction::COM& instr);
-	bool operator() (KDF11Instruction::COMB& instr);
-	bool operator() (KDF11Instruction::INC& instr);
-	bool operator() (KDF11Instruction::INCB& instr);
-	bool operator() (KDF11Instruction::DEC& instr);
-	bool operator() (KDF11Instruction::DECB& instr);
-	bool operator() (KDF11Instruction::NEG& instr);
-	bool operator() (KDF11Instruction::NEGB& instr);
-	bool operator() (KDF11Instruction::ASR& instr);
-	bool operator() (KDF11Instruction::ASRB& instr);
-	bool operator() (KDF11Instruction::ASL& instr);
-	bool operator() (KDF11Instruction::ASLB& instr);
-	bool operator() (KDF11Instruction::ROR& instr);
-	bool operator() (KDF11Instruction::RORB& instr);
-	bool operator() (KDF11Instruction::ROL& instr);
-	bool operator() (KDF11Instruction::ROLB& instr);
-	bool operator() (KDF11Instruction::SWAB& instr);
-	bool operator() (KDF11Instruction::ADC& instr);
-	bool operator() (KDF11Instruction::ADCB& instr);
-	bool operator() (KDF11Instruction::SBC& instr);
-	bool operator() (KDF11Instruction::SBCB& instr);
-	bool operator() (KDF11Instruction::SXT& instr);
-	bool operator() (KDF11Instruction::MFPS& instr);
+    bool operator() (CLR& instr);
+	bool operator() (CLRB& instr);
+	bool operator() (COM& instr);
+	bool operator() (COMB& instr);
+	bool operator() (INC& instr);
+	bool operator() (INCB& instr);
+	bool operator() (DEC& instr);
+	bool operator() (DECB& instr);
+	bool operator() (NEG& instr);
+	bool operator() (NEGB& instr);
+	bool operator() (ASR& instr);
+	bool operator() (ASRB& instr);
+	bool operator() (ASL& instr);
+	bool operator() (ASLB& instr);
+	bool operator() (ROR& instr);
+	bool operator() (RORB& instr);
+	bool operator() (ROL& instr);
+	bool operator() (ROLB& instr);
+	bool operator() (SWAB& instr);
+	bool operator() (ADC& instr);
+	bool operator() (ADCB& instr);
+	bool operator() (SBC& instr);
+	bool operator() (SBCB& instr);
+	bool operator() (SXT& instr);
+	bool operator() (MFPS& instr);
 
 	// Double operand instructions
-	bool operator() (KDF11Instruction::MOV& instr);
-	bool operator() (KDF11Instruction::MOVB& instr);
-	bool operator() (KDF11Instruction::CMP& instr);
-	bool operator() (KDF11Instruction::CMPB& instr);
-	bool operator() (KDF11Instruction::ADD& instr);
-	bool operator() (KDF11Instruction::SUB& instr);
-	bool operator() (KDF11Instruction::BIT& instr);
-	bool operator() (KDF11Instruction::BITB& instr);
-	bool operator() (KDF11Instruction::BIC& instr);
-	bool operator() (KDF11Instruction::BICB& instr);
-	bool operator() (KDF11Instruction::BIS& instr);
-	bool operator() (KDF11Instruction::BISB& instr);
+	bool operator() (MOV& instr);
+	bool operator() (MOVB& instr);
+	bool operator() (CMP& instr);
+	bool operator() (CMPB& instr);
+	bool operator() (ADD& instr);
+	bool operator() (SUB& instr);
+	bool operator() (BIT& instr);
+	bool operator() (BITB& instr);
+	bool operator() (BIC& instr);
+	bool operator() (BICB& instr);
+	bool operator() (BIS& instr);
+	bool operator() (BISB& instr);
 
 	// EIS instructions, including JSR and XOR
-	bool operator() (KDF11Instruction::XOR& instr);
+	bool operator() (XOR& instr);
 
 	// No-operand instructions
-	bool operator() (KDF11Instruction::HALT& instr);
-	bool operator() (KDF11Instruction::WAIT& instr);
-	bool operator() (KDF11Instruction::RESET& instr);
-	bool operator() (KDF11Instruction::MFPD& instr);
-    bool operator() (KDF11Instruction::MTPD& instr);
-    bool operator() (KDF11Instruction::MFPT& instr);
+	bool operator() (HALT& instr);
+	bool operator() (WAIT& instr);
+	bool operator() (RESET& instr);
+	bool operator() (MFPD& instr);
+    bool operator() (MTPD& instr);
+    bool operator() (MFPT& instr);
+
+	// Unsupported instructions
+	bool operator() (FADD& instr);
+	bool operator() (FSUB& instr);
+	bool operator() (FMUL& instr);
+	bool operator() (FDIV& instr);
+#else
+	// KD11_NA functions
+	   // Single operand instructions
+    bool operator() (CLR& instr);
+	bool operator() (CLRB& instr);
+	bool operator() (COM& instr);
+	bool operator() (COMB& instr);
+	bool operator() (INC& instr);
+	bool operator() (INCB& instr);
+	bool operator() (DEC& instr);
+	bool operator() (DECB& instr);
+	bool operator() (NEG& instr);
+	bool operator() (NEGB& instr);
+	bool operator() (TST& instr);
+	bool operator() (TSTB& instr);
+	bool operator() (ASR& instr);
+	bool operator() (ASRB& instr);
+	bool operator() (ASL& instr);
+	bool operator() (ASLB& instr);
+	bool operator() (ROR& instr);
+	bool operator() (RORB& instr);
+	bool operator() (ROL& instr);
+	bool operator() (ROLB& instr);
+	bool operator() (SWAB& instr);
+	bool operator() (ADC& instr);
+	bool operator() (ADCB& instr);
+	bool operator() (SBC& instr);
+	bool operator() (SBCB& instr);
+	bool operator() (SXT& instr);
+	bool operator() (MFPS& instr);
+	bool operator() (MTPS& instr);
+	bool operator() (JMP& instr);
+	bool operator() (MARK& instr);
+
+	// Double operand instructions
+	bool operator() (MOV& instr);
+	bool operator() (MOVB& instr);
+	bool operator() (CMP& instr);
+	bool operator() (CMPB& instr);
+	bool operator() (ADD& instr);
+	bool operator() (SUB& instr);
+	bool operator() (BIT& instr);
+	bool operator() (BITB& instr);
+	bool operator() (BIC& instr);
+	bool operator() (BICB& instr);
+	bool operator() (BIS& instr);
+	bool operator() (BISB& instr);
+
+	// EIS instructions, including JSR and XOR
+	bool operator() (JSR& instr);
+	bool operator() (MUL& instr);
+	bool operator() (DIV& instr);
+	bool operator() (ASH& instr);
+	bool operator() (ASHC& instr);
+	bool operator() (XOR& instr);
+	bool operator() (SOB& instr);
+
+	// FIS format instructions
+	bool operator() (RTS& instr);
+	bool operator() (FADD& instr);
+	bool operator() (FSUB& instr);
+	bool operator() (FMUL& instr);
+	bool operator() (FDIV& instr);
+
+
+	// Branch instructions
+	bool operator() (BR& instr);
+	bool operator() (BNE& instr);
+	bool operator() (BEQ& instr);
+	bool operator() (BPL& instr);
+	bool operator() (BMI& instr);
+	bool operator() (BVC& instr);
+	bool operator() (BVS& instr);
+	bool operator() (BCC& instr);
+	bool operator() (BCS& instr);
+	bool operator() (BGE& instr);
+	bool operator() (BLT& instr);
+	bool operator() (BGT& instr);
+	bool operator() (BLE& instr);
+	bool operator() (BHI& instr);
+	bool operator() (BLOS& instr);
+	bool operator() (EMT& instr);
+	bool operator() (TRAP& instr);
+
+	// No-operand instructions
+	bool operator() (HALT& instr);
+	bool operator() (WAIT& instr);
+	bool operator() (RTI& instr);
+	bool operator() (BPT& instr);
+	bool operator() (IOT& instr);
+	bool operator() (RESET& instr);
+	bool operator() (RTT& instr);
+	bool operator() (CCC& instr);
+	bool operator() (SCC& instr);
+	bool operator() (Unused& instr);
+
+	// Unsupported instructions
+	bool operator() (MFPD& instr);
+    bool operator() (MTPD& instr);
+    bool operator() (MFPT& instr);
+
+#endif // KDF11_A_FUNCTIONS
 };
 
 } // namespace KDF11_A
