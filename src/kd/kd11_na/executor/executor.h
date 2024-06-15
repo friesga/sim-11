@@ -14,10 +14,10 @@ public:
     Executor (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu);
 
 	// The operator() function is specialized for the instructions specific
-    // for the KD11-NA. The definitions of these specializations is rather
+    // for the KD11-NA. The definition of these specializations is rather
     // peculiar. They cannot be declared in the class definition but have to
-    // be declared and defined outside of the class and they and have to be
-    // defined inline but cannot be defined in a .cpp file.
+    // be declared and defined outside of the class in the same .h file with
+    // the inline specifier.
 	template <typename T>
 	bool operator() (T& instr);
 
