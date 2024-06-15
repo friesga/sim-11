@@ -129,7 +129,7 @@ private:
 };
 
 template <typename T>
-static Instruction Decoder::create (CpuData* cpuData,
+Instruction Decoder::create (CpuData* cpuData,
     CpuControl* cpuControl, MMU* mmu, u16 instruction)
 {
     return T (cpuData, cpuControl, mmu, instruction);
