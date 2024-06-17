@@ -29,14 +29,7 @@ protected:
 	// opcode is necessary as the decoding of the instruction takes places
 	// after LSII11Instruction's constructor is called.
 	virtual u16 getOperationCode () = 0;
-
-	constexpr bool isSet (u16 x);
-	void setPSW (ConditionCodes conditionCodes);
 };
 
-constexpr bool LSI11Instruction::isSet (u16 x)
-{
-	return (cpuData_->psw () & x) ? true : false;
-}
 
 #endif // _LSI11INSTRUCTION_H_

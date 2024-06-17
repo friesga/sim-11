@@ -25,10 +25,6 @@ class FISInstruction : public LSI11Instruction
 public:
 	FISInstruction (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
 	u16 getRegister ();
-	bool returnFISresult (Float result, u16 registerNumber);
-	bool executeFISinstruction (u16 stackPointer, 
-		std::function<bool(Float, Float)> argumentsValid,
-		std::function<Float(Float, Float)>);
 	u16 getOperationCode () override;
 };
 

@@ -12,11 +12,6 @@ Common::Executor::Executor (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu)
 	cpuData_->setCC (conditionCodes);
 }
 
-constexpr bool Common::Executor::isSet (u16 x)
-{
-	return (cpuData_->psw () & x) ? true : false;
-}
-
  // Single operand instructions
 bool Common::Executor::execute (CLR& instr)
 {

@@ -24,6 +24,12 @@ public:
 private:
 	Common::Executor commonExecutor;
 	CpuData* cpuData_;
+    MMU* mmu_;
+
+    bool returnFISresult (Float result, u16 registerNumber);
+    bool executeFISinstruction (u16 stackPointer,
+        std::function<bool (Float, Float)> argumentsValid,
+        std::function<Float (Float, Float)> instruction);
 };
 
 template <typename T>
@@ -36,7 +42,7 @@ bool Executor::operator() (T& instr)
 template <>
 inline bool Executor::operator()<FADD> (FADD& instr)
 {
-    return instr.executeFISinstruction (instr.getRegister (),
+    return executeFISinstruction (instr.getRegister (),
         [](Float f1, Float f2) { return true; },
         [](Float f1, Float f2) { return f1 + f2; });
 }
@@ -44,7 +50,7 @@ inline bool Executor::operator()<FADD> (FADD& instr)
 template <>
 inline bool Executor::operator()<FSUB> (FSUB& instr)
 {
-    return instr.executeFISinstruction (instr.getRegister (),
+    return executeFISinstruction (instr.getRegister (),
         [](Float f1, Float f2) { return true; },
         [](Float f1, Float f2) { return f1 - f2; });
 }
@@ -52,7 +58,7 @@ inline bool Executor::operator()<FSUB> (FSUB& instr)
 template <>
 inline bool Executor::operator()<FMUL> (FMUL& instr)
 {
-    return instr.executeFISinstruction (instr.getRegister (),
+    return executeFISinstruction (instr.getRegister (),
         [](Float f1, Float f2) { return true; },
         [](Float f1, Float f2) { return f1 * f2; });
 }
@@ -60,7 +66,7 @@ inline bool Executor::operator()<FMUL> (FMUL& instr)
 template <>
 inline bool Executor::operator()<FDIV> (FDIV& instr)
 {
-    return instr.executeFISinstruction (instr.getRegister (),
+    return executeFISinstruction (instr.getRegister (),
         [](Float f1, Float f2) { return f2.value () != 0; },
         [](Float f1, Float f2) { return f1 / f2; });
 }

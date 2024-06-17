@@ -134,8 +134,3 @@ bool LSI11Instruction::isByteInstruction ()
 	return (opCode >= 01050 && opCode <= 01067) || 
 		   (opCode >= 011 && opCode <= 015) ? true : false;
 }
-
-void LSI11Instruction::setPSW (ConditionCodes conditionCodes)
-{
-	cpuData_->setCC (conditionCodes);
-}

@@ -121,6 +121,11 @@ private:
     MMU* mmu_;
 };
 
+constexpr bool Common::Executor::isSet (u16 x)
+{
+	return (cpuData_->psw () & x) ? true : false;
+}
+
 } // namespace Common
 
 #endif // _COMMON_EXECUTOR_H_
