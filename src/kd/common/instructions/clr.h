@@ -24,7 +24,6 @@ class CLR : public SingleOperandInstruction
 {
 public:
     CLR (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
-    bool execute () override;
 };
 
 inline CLR::CLR (CpuData* cpuData, CpuControl* cpuControl,
@@ -32,11 +31,5 @@ inline CLR::CLR (CpuData* cpuData, CpuControl* cpuControl,
     :
     SingleOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
-
-// ToDo: To be removed
-inline bool CLR::execute ()
-{
-    throw "Should not happen";
-}
 
 #endif // _CLR_H_

@@ -25,7 +25,6 @@ class MTPS : public SingleOperandInstruction
 {
 public:
     MTPS (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
-    bool execute () override;
 };
 
 inline MTPS::MTPS (CpuData* cpuData, CpuControl* cpuControl,
@@ -33,11 +32,5 @@ inline MTPS::MTPS (CpuData* cpuData, CpuControl* cpuControl,
     :
     SingleOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
-
-// ToDo: To be removed
-inline bool MTPS::execute ()
-{
-    throw "Should not happen";
-}
 
 #endif // _MTPS_H_

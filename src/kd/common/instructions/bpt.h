@@ -26,7 +26,6 @@ class BPT : public NoOperandInstruction
 {
 public:
     BPT (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
-    bool execute () override;
 };
 
 inline BPT::BPT (CpuData* cpuData, CpuControl* cpuControl,
@@ -34,11 +33,5 @@ inline BPT::BPT (CpuData* cpuData, CpuControl* cpuControl,
     :
     NoOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
-
-// ToDo: To be removed
-inline bool BPT::execute ()
-{
-    throw "Should not happen";
-}
 
 #endif // _BPT_H_

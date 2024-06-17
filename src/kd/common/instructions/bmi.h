@@ -22,7 +22,6 @@ class BMI : public BranchInstruction
 {
 public:
     BMI (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
-    bool execute () override;
 };
 
 inline BMI::BMI (CpuData* cpuData, CpuControl* cpuControl,
@@ -30,11 +29,5 @@ inline BMI::BMI (CpuData* cpuData, CpuControl* cpuControl,
     :
     BranchInstruction (cpuData, cpuControl, mmu, instruction)
 {}
-
-// ToDo: To be removed
-inline bool BMI::execute ()
-{
-    throw "Should not happen";
-}
 
 #endif // _BMI_H_

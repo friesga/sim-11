@@ -28,7 +28,6 @@ class FSUB : public FISInstruction
 {
 public:
     FSUB (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
-    bool execute () override;
 };
 
 inline FSUB::FSUB (CpuData* cpuData, CpuControl* cpuControl,
@@ -36,11 +35,5 @@ inline FSUB::FSUB (CpuData* cpuData, CpuControl* cpuControl,
     :
     FISInstruction (cpuData, cpuControl, mmu, instruction)
 {}
-
-// ToDo: To be removed
-inline bool FSUB::execute ()
-{
-    throw "Should not happen";
-}
 
 #endif // _FSUB_H_

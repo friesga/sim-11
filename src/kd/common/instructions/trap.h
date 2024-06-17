@@ -30,7 +30,6 @@ class TRAP : public NoOperandInstruction
 {
 public:
     TRAP (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
-    bool execute () override;
 };
 
 inline TRAP::TRAP (CpuData* cpuData, CpuControl* cpuControl,
@@ -38,11 +37,5 @@ inline TRAP::TRAP (CpuData* cpuData, CpuControl* cpuControl,
     :
     NoOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
-
-// ToDo: To be removed
-inline bool TRAP::execute ()
-{
-    throw "Should not happen";
-}
 
 #endif // _TRAP_H_

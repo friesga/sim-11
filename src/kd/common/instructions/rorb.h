@@ -23,7 +23,6 @@ class RORB : public SingleOperandInstruction
 {
 public:
     RORB (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
-    bool execute () override;
 };
 
 inline RORB::RORB (CpuData* cpuData, CpuControl* cpuControl,
@@ -31,11 +30,5 @@ inline RORB::RORB (CpuData* cpuData, CpuControl* cpuControl,
     :
     SingleOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
-
-// ToDo: To be removed
-inline bool RORB::execute ()
-{
-    throw "Should not happen";
-}
 
 #endif // _RORB_H_

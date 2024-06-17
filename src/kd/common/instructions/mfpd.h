@@ -29,7 +29,6 @@ class MFPD : public SingleOperandInstruction
 {
 public:
     MFPD (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
-    bool execute () override;
 };
 
 inline MFPD::MFPD (CpuData* cpuData, CpuControl* cpuControl,
@@ -37,30 +36,5 @@ inline MFPD::MFPD (CpuData* cpuData, CpuControl* cpuControl,
     :
     SingleOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
-
-inline bool MFPD::execute ()
-{
-    CondData<u16> source;
-
-    // The source operand is determined in the current memory management
-    // mode and then retrieved using the previous mode.
-    operandLocation_ =  getOperandLocation (cpuData_->registers ());
-    source = operandLocation_.prevModeContents<CondData<u16>> ();
-
-    if (!source.hasValue ())
-        return false;
-
-    if (!mmu_->pushWord (source))
-        return false;
-
-    if (cpuData_->stackOverflow ())
-        cpuData_->setTrap (CpuData::TrapCondition::StackOverflow);
-
-    setPSW (ConditionCodes {.N = (bool) (source & 0100000),
-        .Z = source == 0,
-        .V = false});
-
-    return true;
-}
 
 #endif // _MFPD_H_

@@ -27,7 +27,6 @@ class MUL : public EisInstruction
 {
 public:
     MUL (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
-    bool execute () override;
 };
 
 inline MUL::MUL (CpuData* cpuData, CpuControl* cpuControl,
@@ -35,11 +34,5 @@ inline MUL::MUL (CpuData* cpuData, CpuControl* cpuControl,
     :
     EisInstruction (cpuData, cpuControl, mmu, instruction)
 {}
-
-// ToDo: To be removed
-inline bool MUL::execute ()
-{
-    throw "Should not happen";
-}
 
 #endif // _MUL_H_

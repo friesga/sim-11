@@ -28,7 +28,6 @@ class ROR : public SingleOperandInstruction
 {
 public:
     ROR (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
-    bool execute () override;
 };
 
 inline ROR::ROR (CpuData* cpuData, CpuControl* cpuControl,
@@ -36,11 +35,5 @@ inline ROR::ROR (CpuData* cpuData, CpuControl* cpuControl,
     :
     SingleOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
-
-// ToDo: To be removed
-inline bool ROR::execute ()
-{
-    throw "Should not happen";
-}
 
 #endif // _ROR_H_

@@ -19,7 +19,6 @@ class NEGB : public SingleOperandInstruction
 {
 public:
     NEGB (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
-    bool execute () override;
 };
 
 inline NEGB::NEGB (CpuData* cpuData, CpuControl* cpuControl,
@@ -27,11 +26,5 @@ inline NEGB::NEGB (CpuData* cpuData, CpuControl* cpuControl,
     :
     SingleOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
-
-// ToDo: To be removed
-inline bool NEGB::execute ()
-{
-    throw "Should not happen";
-}
 
 #endif // _NEGB_H_

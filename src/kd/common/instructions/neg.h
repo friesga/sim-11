@@ -26,7 +26,6 @@ class NEG : public SingleOperandInstruction
 {
 public:
     NEG (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
-    bool execute () override;
 };
 
 inline NEG::NEG (CpuData* cpuData, CpuControl* cpuControl,
@@ -34,10 +33,5 @@ inline NEG::NEG (CpuData* cpuData, CpuControl* cpuControl,
     :
     SingleOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
-
-inline bool NEG::execute ()
-{
-    throw "Should not happen";
-}
 
 #endif // _NEG_H_

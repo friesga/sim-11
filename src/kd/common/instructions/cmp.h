@@ -29,7 +29,6 @@ class CMP : public DoubleOperandInstruction
 {
 public:
     CMP (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
-    bool execute () override;
 };
 
 inline CMP::CMP (CpuData* cpuData, CpuControl* cpuControl,
@@ -37,11 +36,5 @@ inline CMP::CMP (CpuData* cpuData, CpuControl* cpuControl,
     :
     DoubleOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
-
-// ToDo: To be removed
-inline bool CMP::execute ()
-{
-    throw "Should not happen";
-}
 
 #endif // _CMP_H_

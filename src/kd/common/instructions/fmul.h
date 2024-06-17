@@ -28,7 +28,6 @@ class FMUL : public FISInstruction
 {
 public:
     FMUL (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
-    bool execute () override;
 };
 
 inline FMUL::FMUL (CpuData* cpuData, CpuControl* cpuControl,
@@ -36,11 +35,5 @@ inline FMUL::FMUL (CpuData* cpuData, CpuControl* cpuControl,
     :
     FISInstruction (cpuData, cpuControl, mmu, instruction)
 {}
-
-// ToDo: To be removed
-inline bool FMUL::execute ()
-{
-    throw "Should not happen";
-}
 
 #endif // _FMUL_H_

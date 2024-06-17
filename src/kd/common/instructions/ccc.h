@@ -20,7 +20,6 @@ class CCC : public CcInstruction
 {
 public:
     CCC (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
-    bool execute () override;
 };
 
 inline CCC::CCC (CpuData* cpuData, CpuControl* cpuControl,
@@ -28,11 +27,5 @@ inline CCC::CCC (CpuData* cpuData, CpuControl* cpuControl,
     :
     CcInstruction (cpuData, cpuControl, mmu, instruction)
 {}
-
-// ToDo: To be removed
-inline bool CCC::execute ()
-{
-    throw "Should not happen";
-}
 
 #endif // _CCC_H_

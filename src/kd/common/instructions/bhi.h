@@ -22,7 +22,6 @@ class BHI : public BranchInstruction
 {
 public:
     BHI (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
-    bool execute () override;
 };
 
 inline BHI::BHI (CpuData* cpuData, CpuControl* cpuControl,
@@ -30,11 +29,5 @@ inline BHI::BHI (CpuData* cpuData, CpuControl* cpuControl,
     :
     BranchInstruction (cpuData, cpuControl, mmu, instruction)
 {}
-
-// ToDo: To be removed
-inline bool BHI::execute ()
-{
-    throw "Should not happen";
-}
 
 #endif // _BHI_H_

@@ -22,7 +22,6 @@ class ASRB : public SingleOperandInstruction
 {
 public:
     ASRB (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
-    bool execute () override;
 };
 
 inline ASRB::ASRB (CpuData* cpuData, CpuControl* cpuControl,
@@ -30,11 +29,5 @@ inline ASRB::ASRB (CpuData* cpuData, CpuControl* cpuControl,
     :
     SingleOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
-
-// ToDo: To be removed
-inline bool ASRB::execute ()
-{
-    throw "Should not happen";
-}
 
 #endif // _ASRB_H_

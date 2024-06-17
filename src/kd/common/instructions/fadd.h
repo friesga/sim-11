@@ -29,7 +29,6 @@ class FADD : public FISInstruction
 {
 public:
     FADD (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
-    bool execute () override;
 };
 
 inline FADD::FADD (CpuData* cpuData, CpuControl* cpuControl,
@@ -37,11 +36,5 @@ inline FADD::FADD (CpuData* cpuData, CpuControl* cpuControl,
     :
     FISInstruction (cpuData, cpuControl, mmu, instruction)
 {}
-
-// ToDo: To be removed
-inline bool FADD::execute ()
-{
-    throw "Should not happen";
-}
 
 #endif // _FADD_H_

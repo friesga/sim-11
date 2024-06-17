@@ -24,7 +24,6 @@ class INC : public SingleOperandInstruction
 {
 public:
     INC (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
-    bool execute () override;
 };
 
 inline INC::INC (CpuData* cpuData, CpuControl* cpuControl,
@@ -32,11 +31,5 @@ inline INC::INC (CpuData* cpuData, CpuControl* cpuControl,
     :
     SingleOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
-
-// ToDo: To be removed
-inline bool INC::execute ()
-{
-    throw "Should not happen";
-}
 
 #endif // _INC_H_

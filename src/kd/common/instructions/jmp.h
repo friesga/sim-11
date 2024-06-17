@@ -28,7 +28,6 @@ class JMP : public SingleOperandInstruction
 {
 public:
     JMP (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
-    bool execute () override;
 };
 
 inline JMP::JMP (CpuData* cpuData, CpuControl* cpuControl,
@@ -36,12 +35,5 @@ inline JMP::JMP (CpuData* cpuData, CpuControl* cpuControl,
     :
     SingleOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
-
-// ToDo: To be removed
-inline bool JMP::execute ()
-{
-    throw "Should not happen";
-}
-
 
 #endif // _JMP_H_

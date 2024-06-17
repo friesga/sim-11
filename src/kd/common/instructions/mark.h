@@ -26,7 +26,6 @@ class MARK : public MarkInstruction
 {
 public:
     MARK (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
-    bool execute () override;
 };
 
 inline MARK::MARK (CpuData* cpuData, CpuControl* cpuControl,
@@ -34,11 +33,5 @@ inline MARK::MARK (CpuData* cpuData, CpuControl* cpuControl,
     :
     MarkInstruction (cpuData, cpuControl, mmu, instruction)
 {}
-
-// ToDo: To be removed
-inline bool MARK::execute ()
-{
-    throw "Should not happen";
-}
 
 #endif // _MARK_H_

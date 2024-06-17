@@ -25,7 +25,6 @@ class SUB : public DoubleOperandInstruction
 {
 public:
     SUB (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
-    bool execute () override;
 };
 
 inline SUB::SUB (CpuData* cpuData, CpuControl* cpuControl,
@@ -33,11 +32,5 @@ inline SUB::SUB (CpuData* cpuData, CpuControl* cpuControl,
     :
     DoubleOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
-
-// ToDo: To be removed
-inline bool SUB::execute ()
-{
-    throw "Should not happen";
-}
 
 #endif // _SUB_H_

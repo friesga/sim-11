@@ -25,7 +25,6 @@ class COM : public SingleOperandInstruction
 {
 public:
     COM (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
-    bool execute () override;
 };
 
 inline COM::COM (CpuData* cpuData, CpuControl* cpuControl,
@@ -33,11 +32,5 @@ inline COM::COM (CpuData* cpuData, CpuControl* cpuControl,
     :
     SingleOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
-
-// ToDo: To be removed
-inline bool COM::execute ()
-{
-    throw "Should not happen";
-}
 
 #endif // _COM_H_

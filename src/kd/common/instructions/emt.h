@@ -32,7 +32,6 @@ class EMT : public NoOperandInstruction
 {
 public:
     EMT (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
-    bool execute () override;
 };
 
 inline EMT::EMT (CpuData* cpuData, CpuControl* cpuControl,
@@ -40,11 +39,5 @@ inline EMT::EMT (CpuData* cpuData, CpuControl* cpuControl,
     :
     NoOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
-
-// ToDo: To be removed
-inline bool EMT::execute ()
-{
-    throw "Should not happen";
-}
 
 #endif // _EMT_H_

@@ -28,7 +28,6 @@ class RTI : public NoOperandInstruction
 {
 public:
     RTI (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
-    bool execute () override;
 };
 
 inline RTI::RTI (CpuData* cpuData, CpuControl* cpuControl,
@@ -36,12 +35,5 @@ inline RTI::RTI (CpuData* cpuData, CpuControl* cpuControl,
     :
     NoOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
-
-
-// ToDo:: To be removed
-inline bool RTI::execute ()
-{
-    throw "Should not happen";
-}
 
 #endif // _RTI_H_

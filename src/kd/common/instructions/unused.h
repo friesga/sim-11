@@ -17,7 +17,6 @@ class Unused : public NoOperandInstruction
 {
 public:
     Unused (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
-    bool execute () override;
 };
 
 // The two function members are defined inline as this header file is
@@ -27,11 +26,5 @@ inline Unused::Unused (CpuData* cpuData, CpuControl* cpuControl,
     :
     NoOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
-
-// ToDo: To be removed
-inline bool Unused::execute ()
-{
-    throw "Should not happen";
-}
 
 #endif // _UNUSED_H_

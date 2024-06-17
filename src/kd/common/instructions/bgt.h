@@ -18,7 +18,6 @@ class BGT : public BranchInstruction
 {
 public:
     BGT (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
-    bool execute () override;
 };
 
 inline BGT::BGT (CpuData* cpuData, CpuControl* cpuControl,
@@ -26,11 +25,5 @@ inline BGT::BGT (CpuData* cpuData, CpuControl* cpuControl,
     :
     BranchInstruction (cpuData, cpuControl, mmu, instruction)
 {}
-
-// ToDo: To be removed
-inline bool BGT::execute ()
-{
-    throw "Should not happen";
-}
 
 #endif // _BGT_H_

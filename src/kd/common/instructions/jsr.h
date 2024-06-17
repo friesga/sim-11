@@ -32,7 +32,6 @@ class JSR : public EisInstruction
 {
 public:
     JSR (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
-    bool execute () override;
 };
 
 inline JSR::JSR (CpuData* cpuData, CpuControl* cpuControl,
@@ -40,31 +39,5 @@ inline JSR::JSR (CpuData* cpuData, CpuControl* cpuControl,
     :
     EisInstruction (cpuData, cpuControl, mmu, instruction)
 {}
-
-inline bool JSR::execute ()
-{
-    OperandLocation destination = getOperandLocation (cpuData_->registers ());
-
-    if (!destination.isA<MemoryOperandLocation> ())
-    {
-        // Illegal instruction
-        cpuData_->setTrap (CpuData::TrapCondition::IllegalInstructionTrap);
-        return true;
-    }
-
-    GeneralRegisters& registers = cpuData_->registers ();
-    u16 specifiedRegisterContents = registers[getRegisterNr ()];
-
-    if (!mmu_->pushWord (specifiedRegisterContents))
-        return false;
-
-    if (cpuData_->stackOverflow ())
-        cpuData_->setTrap (CpuData::TrapCondition::StackOverflow);
-
-    registers[getRegisterNr ()] = registers[7];
-    registers[7] = destination;
-
-    return true;
-}
 
 #endif // _JSR_H_

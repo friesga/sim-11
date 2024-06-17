@@ -24,7 +24,6 @@ class DEC : public SingleOperandInstruction
 {
 public:
     DEC (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
-    bool execute () override;
 };
 
 inline DEC::DEC (CpuData* cpuData, CpuControl* cpuControl,
@@ -32,11 +31,5 @@ inline DEC::DEC (CpuData* cpuData, CpuControl* cpuControl,
     :
     SingleOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
-
-// ToDo: To be removed
-inline bool DEC::execute ()
-{
-    throw "Should not happen";
-}
 
 #endif // _DEC_H_

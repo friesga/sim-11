@@ -19,7 +19,6 @@ class ADCB : public SingleOperandInstruction
 {
 public:
     ADCB (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
-    bool execute () override;
 };
 
 inline ADCB::ADCB (CpuData* cpuData, CpuControl* cpuControl,
@@ -28,10 +27,5 @@ inline ADCB::ADCB (CpuData* cpuData, CpuControl* cpuControl,
     SingleOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
-// ToDo: To be removed
-inline bool ADCB::execute ()
-{
-    throw "Should not happen";
-}
 
 #endif // _ADCB_H_

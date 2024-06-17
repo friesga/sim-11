@@ -36,7 +36,6 @@ class ASHC : public EisInstruction
 {
 public:
     ASHC (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
-    bool execute () override;
 };
 
 inline ASHC::ASHC (CpuData* cpuData, CpuControl* cpuControl,
@@ -44,11 +43,5 @@ inline ASHC::ASHC (CpuData* cpuData, CpuControl* cpuControl,
     :
     EisInstruction (cpuData, cpuControl, mmu, instruction)
 {}
-
-// ToDo: To be removed
-inline bool ASHC::execute ()
-{
-    throw "Should not happen";
-}
 
 #endif // _ASHC_H_

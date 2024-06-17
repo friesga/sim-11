@@ -26,7 +26,6 @@ class SWAB : public SingleOperandInstruction
 {
 public:
     SWAB (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
-    bool execute () override;
 };
 
 inline SWAB::SWAB (CpuData* cpuData, CpuControl* cpuControl,
@@ -34,12 +33,5 @@ inline SWAB::SWAB (CpuData* cpuData, CpuControl* cpuControl,
     :
     SingleOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
-
-// ToDo: Should not happen
-inline bool SWAB::execute ()
-{
-    throw "Should not happen";
-}
-
 
 #endif // _SWAB_H_

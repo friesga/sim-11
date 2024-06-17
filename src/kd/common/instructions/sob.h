@@ -23,7 +23,6 @@ class SOB : public SobInstruction
 {
 public:
     SOB (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
-    bool execute () override;
 };
 
 inline SOB::SOB (CpuData* cpuData, CpuControl* cpuControl,
@@ -31,11 +30,5 @@ inline SOB::SOB (CpuData* cpuData, CpuControl* cpuControl,
     :
     SobInstruction (cpuData, cpuControl, mmu, instruction)
 {}
-
-// ToDo: To be removed
-inline bool SOB::execute ()
-{
-    throw "Should not happen";
-}
 
 #endif // _SOB_H_

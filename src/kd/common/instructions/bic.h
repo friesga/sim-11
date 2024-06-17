@@ -26,7 +26,6 @@ class BIC : public DoubleOperandInstruction
 {
 public:
     BIC (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
-    bool execute () override;
 };
 
 inline BIC::BIC (CpuData* cpuData, CpuControl* cpuControl,
@@ -34,11 +33,5 @@ inline BIC::BIC (CpuData* cpuData, CpuControl* cpuControl,
     :
     DoubleOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
-
-// ToDo: To be removed
-inline bool BIC::execute ()
-{
-    throw "Should not happen";
-}
 
 #endif // _BIC_H_

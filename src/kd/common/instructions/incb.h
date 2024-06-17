@@ -19,7 +19,6 @@ class INCB : public SingleOperandInstruction
 {
 public:
     INCB (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
-    bool execute () override;
 };
 
 inline INCB::INCB (CpuData* cpuData, CpuControl* cpuControl,
@@ -27,11 +26,5 @@ inline INCB::INCB (CpuData* cpuData, CpuControl* cpuControl,
     :
     SingleOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
-
-// ToDo: To be removed
-inline bool INCB::execute ()
-{
-    throw "Should not happen";
-}
 
 #endif // _INCB_H_

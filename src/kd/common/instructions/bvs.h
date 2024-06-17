@@ -21,7 +21,6 @@ class BVS : public BranchInstruction
 {
 public:
     BVS (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
-    bool execute () override;
 };
 
 inline BVS::BVS (CpuData* cpuData, CpuControl* cpuControl,
@@ -29,11 +28,5 @@ inline BVS::BVS (CpuData* cpuData, CpuControl* cpuControl,
     :
     BranchInstruction (cpuData, cpuControl, mmu, instruction)
 {}
-
-// ToDo: To be removed
-inline bool BVS::execute ()
-{
-    throw "Should not happen";
-}
 
 #endif // _BVS_H_

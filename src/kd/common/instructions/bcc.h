@@ -21,7 +21,6 @@ class BCC : public BranchInstruction
 {
 public:
     BCC (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
-    bool execute () override;
 };
 
 inline BCC::BCC (CpuData* cpuData, CpuControl* cpuControl,
@@ -29,11 +28,5 @@ inline BCC::BCC (CpuData* cpuData, CpuControl* cpuControl,
     :
     BranchInstruction (cpuData, cpuControl, mmu, instruction)
 {}
-
-// ToDo: To be removed
-inline bool BCC::execute ()
-{
-    throw "Should not happen";
-}
 
 #endif // _BCC_H_

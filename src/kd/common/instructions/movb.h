@@ -24,7 +24,6 @@ class MOVB : public DoubleOperandInstruction
 public:
     MOVB (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
     bool writeDestinationOperands8 (s8 operand);
-    bool execute () override;
 };
 
 inline MOVB::MOVB (CpuData* cpuData, CpuControl* cpuControl,
@@ -45,12 +44,6 @@ inline bool MOVB::writeDestinationOperands8 (s8 operand)
             return false;
 
     return true;
-}
-
-// ToDo: To be removed
-inline bool MOVB::execute ()
-{
-    throw "Should not happen";
 }
 
 #endif // _MOVB_H_

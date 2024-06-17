@@ -30,7 +30,6 @@ class ADD : public DoubleOperandInstruction
 {
 public:
     ADD (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
-    bool execute () override;
 };
 
 inline ADD::ADD (CpuData* cpuData, CpuControl* cpuControl,
@@ -38,11 +37,5 @@ inline ADD::ADD (CpuData* cpuData, CpuControl* cpuControl,
     :
     DoubleOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
-
-// ToDo: To be removed
-inline bool ADD::execute ()
-{
-    throw "Should not happen";
-}
 
 #endif // _ADD_H_

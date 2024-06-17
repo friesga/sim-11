@@ -26,7 +26,6 @@ class SXT : public SingleOperandInstruction
 {
 public:
     SXT (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
-    bool execute () override;
 };
 
 inline SXT::SXT (CpuData* cpuData, CpuControl* cpuControl,
@@ -34,11 +33,5 @@ inline SXT::SXT (CpuData* cpuData, CpuControl* cpuControl,
     :
     SingleOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
-
-// ToDo: To be removed
-inline bool SXT::execute ()
-{
-    throw "Should not happen";
-}
 
 #endif // _SXT_H_

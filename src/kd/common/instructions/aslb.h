@@ -24,7 +24,6 @@ class ASLB : public SingleOperandInstruction
 {
 public:
     ASLB (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
-    bool execute () override;
 };
 
 inline ASLB::ASLB (CpuData* cpuData, CpuControl* cpuControl,
@@ -32,11 +31,5 @@ inline ASLB::ASLB (CpuData* cpuData, CpuControl* cpuControl,
     :
     SingleOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
-
-// ToDo: To be removed
-inline bool ASLB::execute ()
-{
-    throw "Should not happen";
-}
 
 #endif // _ASLB_H_

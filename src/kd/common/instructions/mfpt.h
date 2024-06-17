@@ -27,7 +27,6 @@ class MFPT : public NoOperandInstruction
 {
 public:
     MFPT (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
-    bool execute () override;
 };
 
 inline MFPT::MFPT (CpuData* cpuData, CpuControl* cpuControl,
@@ -35,11 +34,5 @@ inline MFPT::MFPT (CpuData* cpuData, CpuControl* cpuControl,
     :
     NoOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
-
-inline bool MFPT::execute ()
-{
-    cpuData_->registers ()[0] = 3;
-    return true;
-}
 
 #endif // _MFPT_H_

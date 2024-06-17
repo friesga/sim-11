@@ -28,7 +28,6 @@ class RTT : public NoOperandInstruction
 {
 public:
     RTT (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
-    bool execute () override;
 };
 
 inline RTT::RTT (CpuData* cpuData, CpuControl* cpuControl,
@@ -36,11 +35,5 @@ inline RTT::RTT (CpuData* cpuData, CpuControl* cpuControl,
     :
     NoOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
-
-// ToDo: To be removed
-inline bool RTT::execute ()
-{
-    throw "Should not happen";
-}
 
 #endif // _RTT_H_

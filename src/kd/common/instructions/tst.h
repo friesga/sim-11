@@ -22,7 +22,6 @@ class TST : public SingleOperandInstruction
 {
 public:
     TST (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
-    bool execute () override;
 };
 
 inline TST::TST (CpuData* cpuData, CpuControl* cpuControl,
@@ -30,11 +29,5 @@ inline TST::TST (CpuData* cpuData, CpuControl* cpuControl,
     :
     SingleOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
-
-// ToDo: To be removed
-inline bool TST::execute ()
-{
-    throw "Should not happen";
-}
 
 #endif // _TST_H_

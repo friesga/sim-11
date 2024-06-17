@@ -16,7 +16,6 @@ class SCC : public CcInstruction
 {
 public:
     SCC (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
-    bool execute () override;
 };
 
 inline SCC::SCC (CpuData* cpuData, CpuControl* cpuControl,
@@ -24,11 +23,5 @@ inline SCC::SCC (CpuData* cpuData, CpuControl* cpuControl,
     :
     CcInstruction (cpuData, cpuControl, mmu, instruction)
 {}
-
-// ToDo: To be removed
-inline bool SCC::execute ()
-{
-    throw "Should not happen";
-}
 
 #endif // _CCC_H_

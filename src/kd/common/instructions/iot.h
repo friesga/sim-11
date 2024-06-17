@@ -26,7 +26,6 @@ class IOT : public NoOperandInstruction
 {
 public:
     IOT (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
-    bool execute () override;
 };
 
 inline IOT::IOT (CpuData* cpuData, CpuControl* cpuControl,
@@ -34,11 +33,5 @@ inline IOT::IOT (CpuData* cpuData, CpuControl* cpuControl,
     :
     NoOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
-
-// ToDo: To be removed
-inline bool IOT::execute ()
-{
-    throw "Should not happen";
-}
 
 #endif // _IOT_H_

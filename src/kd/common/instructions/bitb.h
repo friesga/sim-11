@@ -19,7 +19,6 @@ class BITB : public DoubleOperandInstruction
 {
 public:
     BITB (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
-    bool execute () override;
 };
 
 inline BITB::BITB (CpuData* cpuData, CpuControl* cpuControl,
@@ -27,11 +26,5 @@ inline BITB::BITB (CpuData* cpuData, CpuControl* cpuControl,
     :
     DoubleOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
-
-// ToDo: To be removed
-inline bool BITB::execute ()
-{
-    throw "Should not happen";
-}
 
 #endif // _BITB_H_

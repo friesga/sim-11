@@ -28,7 +28,6 @@ class ASR : public SingleOperandInstruction
 {
 public:
     ASR (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
-    bool execute () override;
 };
 
 inline ASR::ASR (CpuData* cpuData, CpuControl* cpuControl,
@@ -36,11 +35,5 @@ inline ASR::ASR (CpuData* cpuData, CpuControl* cpuControl,
     :
     SingleOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
-
-// ToDo: To be removed
-inline bool ASR::execute ()
-{
-    throw "Should not happen";
-}
 
 #endif // _ASR_H_

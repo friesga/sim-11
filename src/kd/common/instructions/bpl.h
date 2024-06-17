@@ -21,7 +21,6 @@ class BPL : public BranchInstruction
 {
 public:
     BPL (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
-    bool execute () override;
 };
 
 inline BPL::BPL (CpuData* cpuData, CpuControl* cpuControl,
@@ -29,11 +28,5 @@ inline BPL::BPL (CpuData* cpuData, CpuControl* cpuControl,
     :
     BranchInstruction (cpuData, cpuControl, mmu, instruction)
 {}
-
-// ToDo: To be removed
-inline bool BPL::execute ()
-{
-    throw "Should not happen";
-}
 
 #endif // _BPL_H_

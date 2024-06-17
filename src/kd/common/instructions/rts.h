@@ -20,7 +20,6 @@ class RTS : public FISInstruction
 {
 public:
     RTS (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
-    bool execute () override;
 };
 
 inline RTS::RTS (CpuData* cpuData, CpuControl* cpuControl,
@@ -28,11 +27,5 @@ inline RTS::RTS (CpuData* cpuData, CpuControl* cpuControl,
     :
     FISInstruction (cpuData, cpuControl, mmu, instruction)
 {}
-
-// ToDo: To be removed
-inline bool RTS::execute ()
-{
-    throw "Should not happen";
-}
 
 #endif // _RTS_H_

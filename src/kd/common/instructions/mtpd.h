@@ -32,7 +32,6 @@ class MTPD : public SingleOperandInstruction
 {
 public:
     MTPD (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
-    bool execute () override;
 };
 
 inline MTPD::MTPD (CpuData* cpuData, CpuControl* cpuControl,
@@ -40,24 +39,5 @@ inline MTPD::MTPD (CpuData* cpuData, CpuControl* cpuControl,
     :
     SingleOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
-
-inline bool MTPD::execute ()
-{
-    u16 tmp;
-    
-    // The destination operand and the value popped off the stack are 
-    // retrieved in the current memory management and the tmp value then
-    // is written using the previous mode.
-    operandLocation_ =  getOperandLocation (cpuData_->registers ());
-
-    if (!mmu_->popWord (&tmp) || !operandLocation_.writePrevMode (tmp))
-        return false;
-        
-    setPSW (ConditionCodes {.N = (bool) (tmp & 0100000),
-        .Z = tmp == 0,
-        .V = false});
-
-    return true;
-}
 
 #endif // _MTPD_H_

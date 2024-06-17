@@ -19,7 +19,6 @@ class BISB : public DoubleOperandInstruction
 {
 public:
     BISB (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
-    bool execute () override;
 };
 
 inline BISB::BISB (CpuData* cpuData, CpuControl* cpuControl,
@@ -27,11 +26,5 @@ inline BISB::BISB (CpuData* cpuData, CpuControl* cpuControl,
     :
     DoubleOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
-
-// ToDo: To be removed
-inline bool BISB::execute ()
-{
-    throw "Should not happen";
-}
 
 #endif // _BISB_H_

@@ -15,10 +15,6 @@ using std::string;
 
 class LSI11Instruction
 {
-public:
-	// All derived classes will have to provide an execute function
-	virtual bool execute () = 0;
-
 protected:
 	CpuData* cpuData_;
 	CpuControl* cpuControl_;

@@ -19,7 +19,6 @@ class COMB : public SingleOperandInstruction
 {
 public:
     COMB (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
-    bool execute () override;
 };
 
 inline COMB::COMB (CpuData* cpuData, CpuControl* cpuControl,
@@ -27,10 +26,5 @@ inline COMB::COMB (CpuData* cpuData, CpuControl* cpuControl,
     :
     SingleOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
-
-inline bool COMB::execute ()
-{
-    throw "Should not happen";
-}
 
 #endif // _COMB_H_

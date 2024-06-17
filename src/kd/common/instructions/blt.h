@@ -25,7 +25,6 @@ class BLT : public BranchInstruction
 {
 public:
     BLT (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
-    bool execute () override;
 };
 
 inline BLT::BLT (CpuData* cpuData, CpuControl* cpuControl,
@@ -33,11 +32,5 @@ inline BLT::BLT (CpuData* cpuData, CpuControl* cpuControl,
     :
     BranchInstruction (cpuData, cpuControl, mmu, instruction)
 {}
-
-// ToDo: To be removed
-inline bool BLT::execute ()
-{
-    throw "Should not happen";
-}
 
 #endif // _BLT_H_

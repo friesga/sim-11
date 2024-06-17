@@ -29,7 +29,6 @@ class DIV : public EisInstruction
 {
 public:
     DIV (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
-    bool execute () override;
 };
 
 inline DIV::DIV (CpuData* cpuData, CpuControl* cpuControl,
@@ -37,11 +36,5 @@ inline DIV::DIV (CpuData* cpuData, CpuControl* cpuControl,
     :
     EisInstruction (cpuData, cpuControl, mmu, instruction)
 {}
-
-// ToDo: Should not happen
-inline bool DIV::execute ()
-{
-    throw "Should not happen";
-}
 
 #endif // _DIV_H_

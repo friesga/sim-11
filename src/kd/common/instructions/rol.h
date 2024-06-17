@@ -28,7 +28,6 @@ class ROL : public SingleOperandInstruction
 {
 public:
     ROL (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
-    bool execute () override;
 };
 
 inline ROL::ROL (CpuData* cpuData, CpuControl* cpuControl,
@@ -36,11 +35,5 @@ inline ROL::ROL (CpuData* cpuData, CpuControl* cpuControl,
     :
     SingleOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
-
-// ToDo: To be removed
-inline bool ROL::execute ()
-{
-    throw "Should not happen";
-}
 
 #endif // _ROL_H_

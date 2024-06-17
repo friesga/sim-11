@@ -20,7 +20,6 @@ class HALT : public NoOperandInstruction
 {
 public:
     HALT (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
-    bool execute () override;
 };
 
 inline HALT::HALT (CpuData* cpuData, CpuControl* cpuControl,
@@ -28,11 +27,5 @@ inline HALT::HALT (CpuData* cpuData, CpuControl* cpuControl,
     :
     NoOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
-
-// ToDo: To be removed
-inline bool HALT::execute ()
-{
-    throw "Should not happen";
-}
 
 #endif // _HALT_H_

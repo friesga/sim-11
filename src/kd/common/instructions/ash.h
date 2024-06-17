@@ -28,7 +28,6 @@ class ASH : public EisInstruction
 {
 public:
     ASH (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
-    bool execute () override;
 };
 
 inline ASH::ASH (CpuData* cpuData, CpuControl* cpuControl,
@@ -37,9 +36,4 @@ inline ASH::ASH (CpuData* cpuData, CpuControl* cpuControl,
     EisInstruction (cpuData, cpuControl, mmu, instruction)
 {}
 
-// ToDo: To be removed
-inline bool ASH::execute ()
-{
-    throw "Should not happen";
-}
 #endif // _ASH_H_

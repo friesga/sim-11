@@ -20,7 +20,6 @@ class RESET : public NoOperandInstruction
 {
 public:
     RESET (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
-    bool execute () override;
 };
 
 inline RESET::RESET (CpuData* cpuData, CpuControl* cpuControl,
@@ -28,11 +27,5 @@ inline RESET::RESET (CpuData* cpuData, CpuControl* cpuControl,
     :
     NoOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
-
-// ToDo: To be removed
-inline bool RESET::execute ()
-{
-    throw "Should not happen";
-}
 
 #endif // _RESET_H_

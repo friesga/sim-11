@@ -19,7 +19,6 @@ class BR : public BranchInstruction
 {
 public:
     BR (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
-    bool execute () override;
 };
 
 inline BR::BR (CpuData* cpuData, CpuControl* cpuControl,
@@ -27,11 +26,5 @@ inline BR::BR (CpuData* cpuData, CpuControl* cpuControl,
     :
     BranchInstruction (cpuData, cpuControl, mmu, instruction)
 {}
-
-// ToDo: To be removed
-inline bool BR::execute ()
-{
-    throw "Should not happen";
-}
 
 #endif // _BR_H_

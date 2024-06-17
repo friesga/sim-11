@@ -28,7 +28,6 @@ class WAIT : public NoOperandInstruction
 {
 public:
     WAIT (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
-    bool execute () override;
 };
 
 inline WAIT::WAIT (CpuData* cpuData, CpuControl* cpuControl,
@@ -36,11 +35,5 @@ inline WAIT::WAIT (CpuData* cpuData, CpuControl* cpuControl,
     :
     NoOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
-
-// ToDo: To be removed
-inline bool WAIT::execute ()
-{
-    throw "Should not happen";
-}
 
 #endif // _WAIT_H_

@@ -25,7 +25,6 @@ class XOR : public EisInstruction
 {
 public:
     XOR (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
-    bool execute () override;
 };
 
 inline XOR::XOR (CpuData* cpuData, CpuControl* cpuControl,
@@ -33,11 +32,5 @@ inline XOR::XOR (CpuData* cpuData, CpuControl* cpuControl,
     :
     EisInstruction (cpuData, cpuControl, mmu, instruction)
 {}
-
-// ToDo: To be removed
-inline bool XOR::execute ()
-{
-    throw "Should not happen";
-}
 
 #endif // _XOR_H_

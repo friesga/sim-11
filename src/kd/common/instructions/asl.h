@@ -29,7 +29,6 @@ class ASL : public SingleOperandInstruction
 {
 public:
     ASL (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
-    bool execute () override;
 };
 
 inline ASL::ASL (CpuData* cpuData, CpuControl* cpuControl,
@@ -37,11 +36,5 @@ inline ASL::ASL (CpuData* cpuData, CpuControl* cpuControl,
     :
     SingleOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
-
-// ToDo: To be removed
-inline bool ASL::execute ()
-{
-    throw "Should not happen";
-}
 
 #endif // _ASL_H_

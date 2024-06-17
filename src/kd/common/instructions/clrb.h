@@ -19,7 +19,6 @@ class CLRB : public SingleOperandInstruction
 {
 public:
     CLRB (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
-    bool execute () override;
 };
 
 inline CLRB::CLRB (CpuData* cpuData, CpuControl* cpuControl,
@@ -27,11 +26,5 @@ inline CLRB::CLRB (CpuData* cpuData, CpuControl* cpuControl,
     :
     SingleOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
-
-// ToDo: To be removed
-inline bool CLRB::execute ()
-{
-    throw "Should not happen";
-}
 
 #endif // _CLRB_H_

@@ -27,7 +27,6 @@ class MFPS : public SingleOperandInstruction
 {
 public:
     MFPS (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
-    bool execute () override;
 };
 
 inline MFPS::MFPS (CpuData* cpuData, CpuControl* cpuControl,
@@ -35,11 +34,5 @@ inline MFPS::MFPS (CpuData* cpuData, CpuControl* cpuControl,
     :
     SingleOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
-
-// ToDo: To be removed
-inline bool MFPS::execute ()
-{
-    throw "Should not happen";
-}
 
 #endif // _MFPS_H_

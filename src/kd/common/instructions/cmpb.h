@@ -19,7 +19,6 @@ class CMPB : public DoubleOperandInstruction
 {
 public:
     CMPB (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
-    bool execute () override;
 };
 
 inline CMPB::CMPB (CpuData* cpuData, CpuControl* cpuControl,
@@ -27,11 +26,5 @@ inline CMPB::CMPB (CpuData* cpuData, CpuControl* cpuControl,
     :
     DoubleOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
-
-// ToDo: To be removed
-inline bool CMPB::execute ()
-{
-    throw "Should not happen";
-}
 
 #endif // _CMPB_H_

@@ -26,7 +26,6 @@ class BIT : public DoubleOperandInstruction
 {
 public:
     BIT (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
-    bool execute () override;
 };
 
 inline BIT::BIT (CpuData* cpuData, CpuControl* cpuControl,
@@ -34,11 +33,5 @@ inline BIT::BIT (CpuData* cpuData, CpuControl* cpuControl,
     :
     DoubleOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
-
-// ToDo: To be removed
-inline bool BIT::execute ()
-{
-    throw "Should not happen";
-}
 
 #endif // _BIT_H_
