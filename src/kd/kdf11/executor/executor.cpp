@@ -3,9 +3,12 @@
 KDF11_A::Executor::Executor::Executor (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu)
     :
     commonExecutor (cpuData, cpuControl, mmu),
-    cpuData_ {cpuData}
+    cpuData_ {cpuData},
+    cpuControl_ {cpuControl},
+    mmu_ {mmu}
 {}
 
+/*
 #ifdef KDF11_A_FUNCTIONS 
 bool KDF11_A::Executor::operator() (CLR& instr) { return instr.execute (); }
 bool KDF11_A::Executor::operator() (CLRB& instr) { return instr.execute (); }
@@ -507,5 +510,6 @@ bool KDF11_A::Executor::operator() (MFPT& instr)
     return true;
 }
 
-
 #endif // KDF11_A_FUNCTIONS
+
+*/

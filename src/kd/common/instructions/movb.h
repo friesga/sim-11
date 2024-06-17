@@ -23,6 +23,7 @@ class MOVB : public DoubleOperandInstruction
 {
 public:
     MOVB (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
+    bool writeDestinationOperands8 (s8 operand);
     bool execute () override;
 };
 
@@ -31,6 +32,20 @@ inline MOVB::MOVB (CpuData* cpuData, CpuControl* cpuControl,
     :
     DoubleOperandInstruction (cpuData, cpuControl, mmu, instruction)
 {}
+
+inline bool MOVB::writeDestinationOperands8 (s8 operand)
+{
+    // If the destination mode is 0 (Register) the regular operand processing
+    // is bypassed and the signed eight bit value s8 is directly written into
+    // the register, causing sign extension in the register.
+    if (destinationOperandLocation_.isA<RegisterOperandLocation> ())
+        cpuData_->registers ()[destinationOperandLocation_] = operand;
+    else
+        if (!destinationOperandLocation_.write<u8> (operand))
+            return false;
+
+    return true;
+}
 
 // ToDo: To be removed
 inline bool MOVB::execute ()
