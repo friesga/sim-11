@@ -15,20 +15,19 @@ using std::string;
 
 class LSI11Instruction
 {
+public:
+	// All derived classes have to provide a function returning the operation
+	// code of the instruction. This detour to get at the instruction's
+	// opcode is necessary as the decoding of the instruction takes places
+	// after LSII11Instruction's constructor is called.
+	virtual u16 getOperationCode () = 0;
+
 protected:
 	CpuData* cpuData_;
 	CpuControl* cpuControl_;
 	MMU* mmu_;
 
 	LSI11Instruction (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu);
-	OperandLocation decodeOperand (Operand operand, GeneralRegisters &reg);
-	bool isByteInstruction ();
-
-	// All derived classes have to provide a function returning the operation
-	// code of the instruction. This detour to get at the instruction's
-	// opcode is necessary as the decoding of the instruction takes places
-	// after LSII11Instruction's constructor is called.
-	virtual u16 getOperationCode () = 0;
 };
 
 

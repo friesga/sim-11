@@ -16,6 +16,16 @@ OperandLocation SingleOperandInstruction::getOperandLocation (GeneralRegisters& 
 	return decodeOperand (Operand {instr_.decoded.rn, instr_.decoded.mode}, reg);
 }
 
+u16 SingleOperandInstruction::getRegister ()
+{
+	return instr_.decoded.rn;
+}
+
+u16 SingleOperandInstruction::getMode ()
+{
+	return instr_.decoded.mode;
+}
+
 // Return the instruction's operation code
 u16 SingleOperandInstruction::getOperationCode ()
 {

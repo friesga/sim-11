@@ -15,6 +15,7 @@ Common::Executor::Executor (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu)
  // Single operand instructions
 bool Common::Executor::execute (CLR& instr)
 {
+/*
     if (!instr.writeOperand ((u16)0))
         return false;
 
@@ -24,6 +25,19 @@ bool Common::Executor::execute (CLR& instr)
         .C = false});
 
     return true;
+*/
+    return singleOperandExecutor_.execute ([](SingleOperandInstruction* instr)
+        {
+            if (!instr->writeOperand ((u16)0))
+                return false;
+
+            setPSW (ConditionCodes {.N = false,
+            .Z = true,
+            .V = false,
+            .C = false});
+
+            return true;
+        });
 }
 
 bool Common::Executor::execute (CLRB& instr)

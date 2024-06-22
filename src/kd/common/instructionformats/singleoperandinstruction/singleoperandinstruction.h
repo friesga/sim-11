@@ -22,6 +22,8 @@ class SingleOperandInstruction : public LSI11Instruction
 
 public:
 	SingleOperandInstruction (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
+	u16 getRegister ();
+	u16 getMode ();
 	u16 getOperationCode () override;
 
 	OperandLocation getOperandLocation (GeneralRegisters &reg);
