@@ -1,8 +1,8 @@
 #include "nooperandinstruction.h"
 
-NoOperandInstruction::NoOperandInstruction (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction)
+NoOperandInstruction::NoOperandInstruction (u16 instruction)
     :
-    LSI11Instruction (cpuData, cpuControl, mmu),
+    LSI11Instruction (),
     instr_ {instruction}
 {}
 

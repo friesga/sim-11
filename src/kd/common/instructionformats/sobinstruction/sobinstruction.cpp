@@ -1,9 +1,8 @@
 #include "sobinstruction.h"
 
-SobInstruction::SobInstruction (CpuData* cpuData, CpuControl* cpuControl,
-		MMU* mmu, u16 instruction)
+SobInstruction::SobInstruction (u16 instruction)
 	:
-	LSI11Instruction (cpuData, cpuControl, mmu),
+	LSI11Instruction (),
 	instr_ {instruction}
 {}
 

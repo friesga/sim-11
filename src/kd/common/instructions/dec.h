@@ -23,13 +23,12 @@
 class DEC : public SingleOperandInstruction
 {
 public:
-    DEC (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
+    DEC (u16 instruction);
 };
 
-inline DEC::DEC (CpuData* cpuData, CpuControl* cpuControl,
-        MMU* mmu, u16 instruction)
+inline DEC::DEC (u16 instruction)
     :
-    SingleOperandInstruction (cpuData, cpuControl, mmu, instruction)
+    SingleOperandInstruction (instruction)
 {}
 
 #endif // _DEC_H_

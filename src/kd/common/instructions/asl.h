@@ -28,13 +28,12 @@
 class ASL : public SingleOperandInstruction
 {
 public:
-    ASL (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
+    ASL (u16 instruction);
 };
 
-inline ASL::ASL (CpuData* cpuData, CpuControl* cpuControl,
-        MMU* mmu, u16 instruction)
+inline ASL::ASL (u16 instruction)
     :
-    SingleOperandInstruction (cpuData, cpuControl, mmu, instruction)
+    SingleOperandInstruction (instruction)
 {}
 
 #endif // _ASL_H_

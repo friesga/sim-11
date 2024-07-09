@@ -18,13 +18,12 @@
 class BISB : public DoubleOperandInstruction
 {
 public:
-    BISB (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
+    BISB (u16 instruction);
 };
 
-inline BISB::BISB (CpuData* cpuData, CpuControl* cpuControl,
-        MMU* mmu, u16 instruction)
+inline BISB::BISB (u16 instruction)
     :
-    DoubleOperandInstruction (cpuData, cpuControl, mmu, instruction)
+    DoubleOperandInstruction (instruction)
 {}
 
 #endif // _BISB_H_

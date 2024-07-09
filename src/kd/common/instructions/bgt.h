@@ -17,13 +17,12 @@
 class BGT : public BranchInstruction
 {
 public:
-    BGT (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
+    BGT (u16 instruction);
 };
 
-inline BGT::BGT (CpuData* cpuData, CpuControl* cpuControl,
-        MMU* mmu, u16 instruction)
+inline BGT::BGT (u16 instruction)
     :
-    BranchInstruction (cpuData, cpuControl, mmu, instruction)
+    BranchInstruction (instruction)
 {}
 
 #endif // _BGT_H_

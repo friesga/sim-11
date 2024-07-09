@@ -28,13 +28,12 @@
 class DIV : public EisInstruction
 {
 public:
-    DIV (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
+    DIV (u16 instruction);
 };
 
-inline DIV::DIV (CpuData* cpuData, CpuControl* cpuControl,
-        MMU* mmu, u16 instruction)
+inline DIV::DIV (u16 instruction)
     :
-    EisInstruction (cpuData, cpuControl, mmu, instruction)
+    EisInstruction (instruction)
 {}
 
 #endif // _DIV_H_

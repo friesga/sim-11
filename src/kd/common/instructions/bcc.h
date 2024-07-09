@@ -20,13 +20,12 @@
 class BCC : public BranchInstruction
 {
 public:
-    BCC (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
+    BCC (u16 instruction);
 };
 
-inline BCC::BCC (CpuData* cpuData, CpuControl* cpuControl,
-        MMU* mmu, u16 instruction)
+inline BCC::BCC (u16 instruction)
     :
-    BranchInstruction (cpuData, cpuControl, mmu, instruction)
+    BranchInstruction (instruction)
 {}
 
 #endif // _BCC_H_

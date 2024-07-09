@@ -16,15 +16,14 @@
 class Unused : public NoOperandInstruction
 {
 public:
-    Unused (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
+    Unused (u16 instruction);
 };
 
 // The two function members are defined inline as this header file is
 // included in both opcodetables.cpp and kd11_na.cpp.
-inline Unused::Unused (CpuData* cpuData, CpuControl* cpuControl,
-        MMU* mmu, u16 instruction)
+inline Unused::Unused (u16 instruction)
     :
-    NoOperandInstruction (cpuData, cpuControl, mmu, instruction)
+    NoOperandInstruction (instruction)
 {}
 
 #endif // _UNUSED_H_

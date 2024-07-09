@@ -27,13 +27,12 @@
 class WAIT : public NoOperandInstruction
 {
 public:
-    WAIT (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
+    WAIT (u16 instruction);
 };
 
-inline WAIT::WAIT (CpuData* cpuData, CpuControl* cpuControl,
-        MMU* mmu, u16 instruction)
+inline WAIT::WAIT (u16 instruction)
     :
-    NoOperandInstruction (cpuData, cpuControl, mmu, instruction)
+    NoOperandInstruction (instruction)
 {}
 
 #endif // _WAIT_H_

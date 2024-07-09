@@ -6,10 +6,9 @@
 // we need a return value for the retrieval.
 // 
 // Initialize the instr struct with the first member
-DoubleOperandInstruction::DoubleOperandInstruction (CpuData* cpuData, CpuControl* cpuControl,
-		MMU* mmu, u16 instruction)
+DoubleOperandInstruction::DoubleOperandInstruction (u16 instruction)
 	:
-	LSI11Instruction (cpuData, cpuControl, mmu),
+	LSI11Instruction (),
 	instr_ {instruction}
 {}
 

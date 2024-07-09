@@ -26,13 +26,12 @@
 class BIS : public DoubleOperandInstruction
 {
 public:
-    BIS (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
+    BIS (u16 instruction);
 };
 
-inline BIS::BIS (CpuData* cpuData, CpuControl* cpuControl,
-        MMU* mmu, u16 instruction)
+inline BIS::BIS (u16 instruction)
     :
-    DoubleOperandInstruction (cpuData, cpuControl, mmu, instruction)
+    DoubleOperandInstruction (instruction)
 {}
 
 #endif // _BIS_H_

@@ -21,7 +21,7 @@ class SobInstruction : public LSI11Instruction
 	instr_;
 
 public:
-	SobInstruction (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
+	SobInstruction (u16 instruction);
 	u16 getRegisterNr ();
 	u16 getOffset ();
 	u16 getOperationCode ();

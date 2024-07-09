@@ -19,13 +19,12 @@
 class HALT : public NoOperandInstruction
 {
 public:
-    HALT (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
+    HALT (u16 instruction);
 };
 
-inline HALT::HALT (CpuData* cpuData, CpuControl* cpuControl,
-        MMU* mmu, u16 instruction)
+inline HALT::HALT (u16 instruction)
     :
-    NoOperandInstruction (cpuData, cpuControl, mmu, instruction)
+    NoOperandInstruction (instruction)
 {}
 
 #endif // _HALT_H_

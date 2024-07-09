@@ -35,13 +35,12 @@
 class ASHC : public EisInstruction
 {
 public:
-    ASHC (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
+    ASHC (u16 instruction);
 };
 
-inline ASHC::ASHC (CpuData* cpuData, CpuControl* cpuControl,
-        MMU* mmu, u16 instruction)
+inline ASHC::ASHC (u16 instruction)
     :
-    EisInstruction (cpuData, cpuControl, mmu, instruction)
+    EisInstruction (instruction)
 {}
 
 #endif // _ASHC_H_

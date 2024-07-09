@@ -24,13 +24,12 @@
 class XOR : public EisInstruction
 {
 public:
-    XOR (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
+    XOR (u16 instruction);
 };
 
-inline XOR::XOR (CpuData* cpuData, CpuControl* cpuControl,
-        MMU* mmu, u16 instruction)
+inline XOR::XOR (u16 instruction)
     :
-    EisInstruction (cpuData, cpuControl, mmu, instruction)
+    EisInstruction (instruction)
 {}
 
 #endif // _XOR_H_

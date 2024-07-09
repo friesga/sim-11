@@ -23,13 +23,12 @@
 class INC : public SingleOperandInstruction
 {
 public:
-    INC (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
+    INC (u16 instruction);
 };
 
-inline INC::INC (CpuData* cpuData, CpuControl* cpuControl,
-        MMU* mmu, u16 instruction)
+inline INC::INC (u16 instruction)
     :
-    SingleOperandInstruction (cpuData, cpuControl, mmu, instruction)
+    SingleOperandInstruction (instruction)
 {}
 
 #endif // _INC_H_

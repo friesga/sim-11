@@ -27,13 +27,12 @@
 class FMUL : public FISInstruction
 {
 public:
-    FMUL (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
+    FMUL (u16 instruction);
 };
 
-inline FMUL::FMUL (CpuData* cpuData, CpuControl* cpuControl,
-        MMU* mmu, u16 instruction)
+inline FMUL::FMUL (u16 instruction)
     :
-    FISInstruction (cpuData, cpuControl, mmu, instruction)
+    FISInstruction (instruction)
 {}
 
 #endif // _FMUL_H_

@@ -19,13 +19,12 @@
 class RESET : public NoOperandInstruction
 {
 public:
-    RESET (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
+    RESET (u16 instruction);
 };
 
-inline RESET::RESET (CpuData* cpuData, CpuControl* cpuControl,
-        MMU* mmu, u16 instruction)
+inline RESET::RESET (u16 instruction)
     :
-    NoOperandInstruction (cpuData, cpuControl, mmu, instruction)
+    NoOperandInstruction (instruction)
 {}
 
 #endif // _RESET_H_

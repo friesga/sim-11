@@ -21,13 +21,12 @@
 class BNE : public BranchInstruction
 {
 public:
-    BNE (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
+    BNE (u16 instruction);
 };
 
-inline BNE::BNE (CpuData* cpuData, CpuControl* cpuControl,
-        MMU* mmu, u16 instruction)
+inline BNE::BNE (u16 instruction)
     :
-    BranchInstruction (cpuData, cpuControl, mmu, instruction)
+    BranchInstruction (instruction)
 {}
 
 #endif // _BNE_H_

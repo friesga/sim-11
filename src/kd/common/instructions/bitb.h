@@ -18,13 +18,12 @@
 class BITB : public DoubleOperandInstruction
 {
 public:
-    BITB (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
+    BITB (u16 instruction);
 };
 
-inline BITB::BITB (CpuData* cpuData, CpuControl* cpuControl,
-        MMU* mmu, u16 instruction)
+inline BITB::BITB (u16 instruction)
     :
-    DoubleOperandInstruction (cpuData, cpuControl, mmu, instruction)
+    DoubleOperandInstruction (instruction)
 {}
 
 #endif // _BITB_H_

@@ -114,7 +114,7 @@ void KD11_NA_CpuControl::execInstr ()
     cpuData_->registers ()[7] += 2;
 
     Instruction instr = 
-        decoder.decode (cpuData_, this, mmu_, instructionWord);
+        decoder.decode (instructionWord);
 
     // If the trace flag is set, the next instruction has to result in a trace
     // trap, unless the instruction resulted in another trap.

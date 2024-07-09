@@ -25,13 +25,12 @@
 class NEG : public SingleOperandInstruction
 {
 public:
-    NEG (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
+    NEG (u16 instruction);
 };
 
-inline NEG::NEG (CpuData* cpuData, CpuControl* cpuControl,
-        MMU* mmu, u16 instruction)
+inline NEG::NEG (u16 instruction)
     :
-    SingleOperandInstruction (cpuData, cpuControl, mmu, instruction)
+    SingleOperandInstruction (instruction)
 {}
 
 #endif // _NEG_H_

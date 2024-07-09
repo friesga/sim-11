@@ -26,13 +26,12 @@
 class MFPS : public SingleOperandInstruction
 {
 public:
-    MFPS (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
+    MFPS (u16 instruction);
 };
 
-inline MFPS::MFPS (CpuData* cpuData, CpuControl* cpuControl,
-        MMU* mmu, u16 instruction)
+inline MFPS::MFPS (u16 instruction)
     :
-    SingleOperandInstruction (cpuData, cpuControl, mmu, instruction)
+    SingleOperandInstruction (instruction)
 {}
 
 #endif // _MFPS_H_

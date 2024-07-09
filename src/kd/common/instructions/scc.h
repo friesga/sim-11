@@ -15,13 +15,12 @@
 class SCC : public CcInstruction
 {
 public:
-    SCC (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
+    SCC (u16 instruction);
 };
 
-inline SCC::SCC (CpuData* cpuData, CpuControl* cpuControl,
-        MMU* mmu, u16 instruction)
+inline SCC::SCC (u16 instruction)
     :
-    CcInstruction (cpuData, cpuControl, mmu, instruction)
+    CcInstruction (instruction)
 {}
 
 #endif // _CCC_H_

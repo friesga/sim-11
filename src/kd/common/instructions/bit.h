@@ -25,13 +25,12 @@
 class BIT : public DoubleOperandInstruction
 {
 public:
-    BIT (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
+    BIT (u16 instruction);
 };
 
-inline BIT::BIT (CpuData* cpuData, CpuControl* cpuControl,
-        MMU* mmu, u16 instruction)
+inline BIT::BIT (u16 instruction)
     :
-    DoubleOperandInstruction (cpuData, cpuControl, mmu, instruction)
+    DoubleOperandInstruction (instruction)
 {}
 
 #endif // _BIT_H_

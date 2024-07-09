@@ -28,13 +28,12 @@
 class FDIV : public FISInstruction
 {
 public:
-    FDIV (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
+    FDIV (u16 instruction);
 };
 
-inline FDIV::FDIV (CpuData* cpuData, CpuControl* cpuControl,
-        MMU* mmu, u16 instruction)
+inline FDIV::FDIV (u16 instruction)
     :
-    FISInstruction (cpuData, cpuControl, mmu, instruction)
+    FISInstruction (instruction)
 {}
 
 #endif // _FDIV_H_

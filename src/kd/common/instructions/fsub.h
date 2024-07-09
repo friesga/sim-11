@@ -27,13 +27,12 @@
 class FSUB : public FISInstruction
 {
 public:
-    FSUB (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
+    FSUB (u16 instruction);
 };
 
-inline FSUB::FSUB (CpuData* cpuData, CpuControl* cpuControl,
-        MMU* mmu, u16 instruction)
+inline FSUB::FSUB (u16 instruction)
     :
-    FISInstruction (cpuData, cpuControl, mmu, instruction)
+    FISInstruction (instruction)
 {}
 
 #endif // _FSUB_H_

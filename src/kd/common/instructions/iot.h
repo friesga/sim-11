@@ -25,13 +25,12 @@
 class IOT : public NoOperandInstruction
 {
 public:
-    IOT (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
+    IOT (u16 instruction);
 };
 
-inline IOT::IOT (CpuData* cpuData, CpuControl* cpuControl,
-        MMU* mmu, u16 instruction)
+inline IOT::IOT (u16 instruction)
     :
-    NoOperandInstruction (cpuData, cpuControl, mmu, instruction)
+    NoOperandInstruction (instruction)
 {}
 
 #endif // _IOT_H_

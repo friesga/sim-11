@@ -25,13 +25,12 @@
 class SBC : public SingleOperandInstruction
 {
 public:
-    SBC (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
+    SBC (u16 instruction);
 };
 
-inline SBC::SBC (CpuData* cpuData, CpuControl* cpuControl,
-        MMU* mmu, u16 instruction)
+inline SBC::SBC (u16 instruction)
     :
-    SingleOperandInstruction (cpuData, cpuControl, mmu, instruction)
+    SingleOperandInstruction (instruction)
 {}
 
 #endif // _SBC_H_

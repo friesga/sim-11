@@ -20,13 +20,12 @@
 class BGE : public BranchInstruction
 {
 public:
-    BGE (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
+    BGE (u16 instruction);
 };
 
-inline BGE::BGE (CpuData* cpuData, CpuControl* cpuControl,
-        MMU* mmu, u16 instruction)
+inline BGE::BGE (u16 instruction)
     :
-    BranchInstruction (cpuData, cpuControl, mmu, instruction)
+    BranchInstruction (instruction)
 {}
 
 #endif // _BGE_H_

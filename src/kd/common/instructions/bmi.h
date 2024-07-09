@@ -21,13 +21,12 @@
 class BMI : public BranchInstruction
 {
 public:
-    BMI (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
+    BMI (u16 instruction);
 };
 
-inline BMI::BMI (CpuData* cpuData, CpuControl* cpuControl,
-        MMU* mmu, u16 instruction)
+inline BMI::BMI (u16 instruction)
     :
-    BranchInstruction (cpuData, cpuControl, mmu, instruction)
+    BranchInstruction (instruction)
 {}
 
 #endif // _BMI_H_

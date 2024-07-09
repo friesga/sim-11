@@ -18,13 +18,12 @@
 class INCB : public SingleOperandInstruction
 {
 public:
-    INCB (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
+    INCB (u16 instruction);
 };
 
-inline INCB::INCB (CpuData* cpuData, CpuControl* cpuControl,
-        MMU* mmu, u16 instruction)
+inline INCB::INCB (u16 instruction)
     :
-    SingleOperandInstruction (cpuData, cpuControl, mmu, instruction)
+    SingleOperandInstruction (instruction)
 {}
 
 #endif // _INCB_H_

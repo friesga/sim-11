@@ -31,13 +31,12 @@
 class MTPD : public SingleOperandInstruction
 {
 public:
-    MTPD (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
+    MTPD (u16 instruction);
 };
 
-inline MTPD::MTPD (CpuData* cpuData, CpuControl* cpuControl,
-        MMU* mmu, u16 instruction)
+inline MTPD::MTPD (u16 instruction)
     :
-    SingleOperandInstruction (cpuData, cpuControl, mmu, instruction)
+    SingleOperandInstruction (instruction)
 {}
 
 #endif // _MTPD_H_

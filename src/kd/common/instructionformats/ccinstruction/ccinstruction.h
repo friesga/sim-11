@@ -18,7 +18,7 @@ class CcInstruction : public LSI11Instruction
 	instr_;
 
 public:
-	CcInstruction (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
+	CcInstruction (u16 instruction);
 	u16 getConditionCodes ();
 	u16 getOperationCode () override;
 };

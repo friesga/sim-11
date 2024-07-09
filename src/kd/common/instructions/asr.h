@@ -27,13 +27,12 @@
 class ASR : public SingleOperandInstruction
 {
 public:
-    ASR (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
+    ASR (u16 instruction);
 };
 
-inline ASR::ASR (CpuData* cpuData, CpuControl* cpuControl,
-        MMU* mmu, u16 instruction)
+inline ASR::ASR (u16 instruction)
     :
-    SingleOperandInstruction (cpuData, cpuControl, mmu, instruction)
+    SingleOperandInstruction (instruction)
 {}
 
 #endif // _ASR_H_

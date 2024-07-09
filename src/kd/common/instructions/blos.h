@@ -22,13 +22,12 @@
 class BLOS : public BranchInstruction
 {
 public:
-    BLOS (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
+    BLOS (u16 instruction);
 };
 
-inline BLOS::BLOS (CpuData* cpuData, CpuControl* cpuControl,
-        MMU* mmu, u16 instruction)
+inline BLOS::BLOS (u16 instruction)
     :
-    BranchInstruction (cpuData, cpuControl, mmu, instruction)
+    BranchInstruction (instruction)
 {}
 
 #endif // _BLOS_H_

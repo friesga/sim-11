@@ -24,13 +24,12 @@
 class BLT : public BranchInstruction
 {
 public:
-    BLT (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
+    BLT (u16 instruction);
 };
 
-inline BLT::BLT (CpuData* cpuData, CpuControl* cpuControl,
-        MMU* mmu, u16 instruction)
+inline BLT::BLT (u16 instruction)
     :
-    BranchInstruction (cpuData, cpuControl, mmu, instruction)
+    BranchInstruction (instruction)
 {}
 
 #endif // _BLT_H_

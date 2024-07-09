@@ -23,13 +23,12 @@
 class CLR : public SingleOperandInstruction
 {
 public:
-    CLR (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
+    CLR (u16 instruction);
 };
 
-inline CLR::CLR (CpuData* cpuData, CpuControl* cpuControl,
-        MMU* mmu, u16 instruction)
+inline CLR::CLR (u16 instruction)
     :
-    SingleOperandInstruction (cpuData, cpuControl, mmu, instruction)
+    SingleOperandInstruction (instruction)
 {}
 
 #endif // _CLR_H_

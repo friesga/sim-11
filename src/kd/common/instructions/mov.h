@@ -25,13 +25,12 @@
 class MOV : public DoubleOperandInstruction
 {
 public:
-    MOV (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
+    MOV (u16 instruction);
 };
 
-inline MOV::MOV (CpuData* cpuData, CpuControl* cpuControl,
-        MMU* mmu, u16 instruction)
+inline MOV::MOV (u16 instruction)
     :
-    DoubleOperandInstruction (cpuData, cpuControl, mmu, instruction)
+    DoubleOperandInstruction (instruction)
 {}
 
 #endif // _MOV_H_

@@ -31,13 +31,12 @@
 class JSR : public EisInstruction
 {
 public:
-    JSR (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
+    JSR (u16 instruction);
 };
 
-inline JSR::JSR (CpuData* cpuData, CpuControl* cpuControl,
-        MMU* mmu, u16 instruction)
+inline JSR::JSR (u16 instruction)
     :
-    EisInstruction (cpuData, cpuControl, mmu, instruction)
+    EisInstruction (instruction)
 {}
 
 #endif // _JSR_H_

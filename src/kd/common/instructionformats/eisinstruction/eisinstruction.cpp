@@ -1,10 +1,9 @@
 #include "eisinstruction.h"
 #include "kd/common/operand/operand.h"
 
-EisInstruction::EisInstruction (CpuData* cpuData, CpuControl* cpuControl,
-		MMU* mmu, u16 instruction)
+EisInstruction::EisInstruction (u16 instruction)
     :
-	LSI11Instruction (cpuData, cpuControl, mmu),
+	LSI11Instruction (),
     instr_ {instruction}
 {}
 

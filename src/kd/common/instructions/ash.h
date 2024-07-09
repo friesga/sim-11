@@ -27,13 +27,12 @@
 class ASH : public EisInstruction
 {
 public:
-    ASH (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
+    ASH (u16 instruction);
 };
 
-inline ASH::ASH (CpuData* cpuData, CpuControl* cpuControl,
-        MMU* mmu, u16 instruction)
+inline ASH::ASH (u16 instruction)
     :
-    EisInstruction (cpuData, cpuControl, mmu, instruction)
+    EisInstruction (instruction)
 {}
 
 #endif // _ASH_H_

@@ -18,13 +18,12 @@
 class BLE : public BranchInstruction
 {
 public:
-    BLE (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
+    BLE (u16 instruction);
 };
 
-inline BLE::BLE (CpuData* cpuData, CpuControl* cpuControl,
-        MMU* mmu, u16 instruction)
+inline BLE::BLE (u16 instruction)
     :
-    BranchInstruction (cpuData, cpuControl, mmu, instruction)
+    BranchInstruction (instruction)
 {}
 
 #endif // _BLE_H_

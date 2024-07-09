@@ -25,13 +25,12 @@
 class BIC : public DoubleOperandInstruction
 {
 public:
-    BIC (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
+    BIC (u16 instruction);
 };
 
-inline BIC::BIC (CpuData* cpuData, CpuControl* cpuControl,
-        MMU* mmu, u16 instruction)
+inline BIC::BIC (u16 instruction)
     :
-    DoubleOperandInstruction (cpuData, cpuControl, mmu, instruction)
+    DoubleOperandInstruction (instruction)
 {}
 
 #endif // _BIC_H_

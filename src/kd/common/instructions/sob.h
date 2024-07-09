@@ -22,13 +22,12 @@
 class SOB : public SobInstruction
 {
 public:
-    SOB (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
+    SOB (u16 instruction);
 };
 
-inline SOB::SOB (CpuData* cpuData, CpuControl* cpuControl,
-        MMU* mmu, u16 instruction)
+inline SOB::SOB (u16 instruction)
     :
-    SobInstruction (cpuData, cpuControl, mmu, instruction)
+    SobInstruction (instruction)
 {}
 
 #endif // _SOB_H_

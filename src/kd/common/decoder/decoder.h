@@ -94,16 +94,14 @@
 class Decoder
 {
 public:
-    Instruction decode (CpuData* cpuData, CpuControl* cpuControl,
-        MMU* mmu, u16 instruction);
+    Instruction decode (u16 instruction);
 
 private:
-    typedef Instruction (*InstructionCreator) (CpuData*, CpuControl*, MMU*, u16);
+    typedef Instruction (*InstructionCreator) (u16);
     using opCodeTable = InstructionCreator[];
 
     template <typename T>
-    static Instruction create (CpuData* cpuData, 
-        CpuControl* cpuControl, MMU* mmu, u16 instruction);
+    static Instruction create (u16 instruction);
 
     // As the dimensions of the opCodeTable's are not specified, the arrays
     // must be declared as static members. This is ok, as this data will be
@@ -119,20 +117,19 @@ private:
     // As a consequence the following functions have to be defined static too.
     // This is fine too, as these functions don't use local variables and
     // simply walk through the operation code tables declared above.
-    static Instruction decodeGroup_00_00_nn (CpuData*, CpuControl*, MMU*, u16);
-    static Instruction decodeGroup_00_02_nn (CpuData*, CpuControl*, MMU*, u16);
-    static Instruction decodeGroup_07_5n_nx (CpuData*, CpuControl*, MMU*, u16);
-    static Instruction decodeGroup_07_nx_xx (CpuData*, CpuControl*, MMU*, u16);
-    static Instruction decodeGroup_10_xx_xx (CpuData*, CpuControl*, MMU*, u16);
-    static Instruction decodeGroup_00_nn_xx (CpuData*, CpuControl*, MMU*, u16);
-    static Instruction decodeGroup_nn_xx_xx (CpuData*, CpuControl*, MMU*, u16);
+    static Instruction decodeGroup_00_00_nn (u16);
+    static Instruction decodeGroup_00_02_nn (u16);
+    static Instruction decodeGroup_07_5n_nx (u16);
+    static Instruction decodeGroup_07_nx_xx (u16);
+    static Instruction decodeGroup_10_xx_xx (u16);
+    static Instruction decodeGroup_00_nn_xx (u16);
+    static Instruction decodeGroup_nn_xx_xx (u16);
 };
 
 template <typename T>
-Instruction Decoder::create (CpuData* cpuData,
-    CpuControl* cpuControl, MMU* mmu, u16 instruction)
+Instruction Decoder::create (u16 instruction)
 {
-    return T (cpuData, cpuControl, mmu, instruction);
+    return T (instruction);
 }
 
 #endif // KD11_NAINSTRUCTION_H_

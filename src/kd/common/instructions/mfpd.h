@@ -28,13 +28,12 @@
 class MFPD : public SingleOperandInstruction
 {
 public:
-    MFPD (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
+    MFPD (u16 instruction);
 };
 
-inline MFPD::MFPD (CpuData* cpuData, CpuControl* cpuControl,
-        MMU* mmu, u16 instruction)
+inline MFPD::MFPD (u16 instruction)
     :
-    SingleOperandInstruction (cpuData, cpuControl, mmu, instruction)
+    SingleOperandInstruction (instruction)
 {}
 
 #endif // _MFPD_H_

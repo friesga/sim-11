@@ -19,13 +19,12 @@
 class CCC : public CcInstruction
 {
 public:
-    CCC (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
+    CCC (u16 instruction);
 };
 
-inline CCC::CCC (CpuData* cpuData, CpuControl* cpuControl,
-        MMU* mmu, u16 instruction)
+inline CCC::CCC (u16 instruction)
     :
-    CcInstruction (cpuData, cpuControl, mmu, instruction)
+    CcInstruction (instruction)
 {}
 
 #endif // _CCC_H_

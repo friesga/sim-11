@@ -18,13 +18,12 @@
 class DECB : public SingleOperandInstruction
 {
 public:
-    DECB (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
+    DECB (u16 instruction);
 };
 
-inline DECB::DECB (CpuData* cpuData, CpuControl* cpuControl,
-        MMU* mmu, u16 instruction)
+inline DECB::DECB (u16 instruction)
     :
-    SingleOperandInstruction (cpuData, cpuControl, mmu, instruction)
+    SingleOperandInstruction (instruction)
 {}
 
 #endif // _DECB_H_

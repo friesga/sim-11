@@ -18,13 +18,12 @@
 class ADCB : public SingleOperandInstruction
 {
 public:
-    ADCB (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
+    ADCB (u16 instruction);
 };
 
-inline ADCB::ADCB (CpuData* cpuData, CpuControl* cpuControl,
-        MMU* mmu, u16 instruction)
+inline ADCB::ADCB (u16 instruction)
     :
-    SingleOperandInstruction (cpuData, cpuControl, mmu, instruction)
+    SingleOperandInstruction (instruction)
 {}
 
 

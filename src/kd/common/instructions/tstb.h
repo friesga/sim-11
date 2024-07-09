@@ -18,13 +18,12 @@
 class TSTB : public SingleOperandInstruction
 {
 public:
-    TSTB (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
+    TSTB (u16 instruction);
 };
 
-inline TSTB::TSTB (CpuData* cpuData, CpuControl* cpuControl,
-        MMU* mmu, u16 instruction)
+inline TSTB::TSTB (u16 instruction)
     :
-    SingleOperandInstruction (cpuData, cpuControl, mmu, instruction)
+    SingleOperandInstruction (instruction)
 {}
 
 #endif // _TSTB_H_

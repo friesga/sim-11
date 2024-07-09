@@ -20,13 +20,12 @@
 class BPL : public BranchInstruction
 {
 public:
-    BPL (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
+    BPL (u16 instruction);
 };
 
-inline BPL::BPL (CpuData* cpuData, CpuControl* cpuControl,
-        MMU* mmu, u16 instruction)
+inline BPL::BPL (u16 instruction)
     :
-    BranchInstruction (cpuData, cpuControl, mmu, instruction)
+    BranchInstruction (instruction)
 {}
 
 #endif // _BPL_H_

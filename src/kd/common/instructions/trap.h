@@ -29,13 +29,12 @@
 class TRAP : public NoOperandInstruction
 {
 public:
-    TRAP (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
+    TRAP (u16 instruction);
 };
 
-inline TRAP::TRAP (CpuData* cpuData, CpuControl* cpuControl,
-        MMU* mmu, u16 instruction)
+inline TRAP::TRAP (u16 instruction)
     :
-    NoOperandInstruction (cpuData, cpuControl, mmu, instruction)
+    NoOperandInstruction (instruction)
 {}
 
 #endif // _TRAP_H_

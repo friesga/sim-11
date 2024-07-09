@@ -31,13 +31,12 @@
 class EMT : public NoOperandInstruction
 {
 public:
-    EMT (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
+    EMT (u16 instruction);
 };
 
-inline EMT::EMT (CpuData* cpuData, CpuControl* cpuControl,
-        MMU* mmu, u16 instruction)
+inline EMT::EMT (u16 instruction)
     :
-    NoOperandInstruction (cpuData, cpuControl, mmu, instruction)
+    NoOperandInstruction (instruction)
 {}
 
 #endif // _EMT_H_

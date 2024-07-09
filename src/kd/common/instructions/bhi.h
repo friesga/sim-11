@@ -21,13 +21,12 @@
 class BHI : public BranchInstruction
 {
 public:
-    BHI (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
+    BHI (u16 instruction);
 };
 
-inline BHI::BHI (CpuData* cpuData, CpuControl* cpuControl,
-        MMU* mmu, u16 instruction)
+inline BHI::BHI (u16 instruction)
     :
-    BranchInstruction (cpuData, cpuControl, mmu, instruction)
+    BranchInstruction (instruction)
 {}
 
 #endif // _BHI_H_

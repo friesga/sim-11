@@ -26,13 +26,12 @@
 class MUL : public EisInstruction
 {
 public:
-    MUL (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
+    MUL (u16 instruction);
 };
 
-inline MUL::MUL (CpuData* cpuData, CpuControl* cpuControl,
-        MMU* mmu, u16 instruction)
+inline MUL::MUL (u16 instruction)
     :
-    EisInstruction (cpuData, cpuControl, mmu, instruction)
+    EisInstruction (instruction)
 {}
 
 #endif // _MUL_H_

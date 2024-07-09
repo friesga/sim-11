@@ -29,13 +29,12 @@
 class ADD : public DoubleOperandInstruction
 {
 public:
-    ADD (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
+    ADD (u16 instruction);
 };
 
-inline ADD::ADD (CpuData* cpuData, CpuControl* cpuControl,
-        MMU* mmu, u16 instruction)
+inline ADD::ADD (u16 instruction)
     :
-    DoubleOperandInstruction (cpuData, cpuControl, mmu, instruction)
+    DoubleOperandInstruction (instruction)
 {}
 
 #endif // _ADD_H_

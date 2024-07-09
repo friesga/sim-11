@@ -23,13 +23,12 @@
 class ASLB : public SingleOperandInstruction
 {
 public:
-    ASLB (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
+    ASLB (u16 instruction);
 };
 
-inline ASLB::ASLB (CpuData* cpuData, CpuControl* cpuControl,
-        MMU* mmu, u16 instruction)
+inline ASLB::ASLB (u16 instruction)
     :
-    SingleOperandInstruction (cpuData, cpuControl, mmu, instruction)
+    SingleOperandInstruction (instruction)
 {}
 
 #endif // _ASLB_H_

@@ -27,13 +27,12 @@
 class JMP : public SingleOperandInstruction
 {
 public:
-    JMP (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
+    JMP (u16 instruction);
 };
 
-inline JMP::JMP (CpuData* cpuData, CpuControl* cpuControl,
-        MMU* mmu, u16 instruction)
+inline JMP::JMP (u16 instruction)
     :
-    SingleOperandInstruction (cpuData, cpuControl, mmu, instruction)
+    SingleOperandInstruction (instruction)
 {}
 
 #endif // _JMP_H_

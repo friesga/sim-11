@@ -23,7 +23,7 @@ class FISInstruction : public LSI11Instruction
 	instr_;
 
 public:
-	FISInstruction (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
+	FISInstruction (u16 instruction);
 	u16 getRegister ();
 	u16 getOperationCode () override;
 };

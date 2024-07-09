@@ -24,13 +24,12 @@
 class MTPS : public SingleOperandInstruction
 {
 public:
-    MTPS (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
+    MTPS (u16 instruction);
 };
 
-inline MTPS::MTPS (CpuData* cpuData, CpuControl* cpuControl,
-        MMU* mmu, u16 instruction)
+inline MTPS::MTPS (u16 instruction)
     :
-    SingleOperandInstruction (cpuData, cpuControl, mmu, instruction)
+    SingleOperandInstruction (instruction)
 {}
 
 #endif // _MTPS_H_

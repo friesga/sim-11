@@ -28,13 +28,12 @@
 class FADD : public FISInstruction
 {
 public:
-    FADD (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
+    FADD (u16 instruction);
 };
 
-inline FADD::FADD (CpuData* cpuData, CpuControl* cpuControl,
-        MMU* mmu, u16 instruction)
+inline FADD::FADD (u16 instruction)
     :
-    FISInstruction (cpuData, cpuControl, mmu, instruction)
+    FISInstruction (instruction)
 {}
 
 #endif // _FADD_H_

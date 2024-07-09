@@ -27,8 +27,7 @@ protected:
 	CpuControl* cpuControl_;
 	MMU* mmu_;
 
-	LSI11Instruction (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu);
+	LSI11Instruction ();
 };
-
 
 #endif // _LSI11INSTRUCTION_H_

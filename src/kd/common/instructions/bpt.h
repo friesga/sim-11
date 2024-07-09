@@ -25,13 +25,12 @@
 class BPT : public NoOperandInstruction
 {
 public:
-    BPT (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
+    BPT (u16 instruction);
 };
 
-inline BPT::BPT (CpuData* cpuData, CpuControl* cpuControl,
-        MMU* mmu, u16 instruction)
+inline BPT::BPT (u16 instruction)
     :
-    NoOperandInstruction (cpuData, cpuControl, mmu, instruction)
+    NoOperandInstruction (instruction)
 {}
 
 #endif // _BPT_H_

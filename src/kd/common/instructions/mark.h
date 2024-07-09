@@ -25,13 +25,12 @@
 class MARK : public MarkInstruction
 {
 public:
-    MARK (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
+    MARK (u16 instruction);
 };
 
-inline MARK::MARK (CpuData* cpuData, CpuControl* cpuControl,
-        MMU* mmu, u16 instruction)
+inline MARK::MARK (u16 instruction)
     :
-    MarkInstruction (cpuData, cpuControl, mmu, instruction)
+    MarkInstruction (instruction)
 {}
 
 #endif // _MARK_H_

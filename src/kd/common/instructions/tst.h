@@ -21,13 +21,12 @@
 class TST : public SingleOperandInstruction
 {
 public:
-    TST (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
+    TST (u16 instruction);
 };
 
-inline TST::TST (CpuData* cpuData, CpuControl* cpuControl,
-        MMU* mmu, u16 instruction)
+inline TST::TST (u16 instruction)
     :
-    SingleOperandInstruction (cpuData, cpuControl, mmu, instruction)
+    SingleOperandInstruction (instruction)
 {}
 
 #endif // _TST_H_

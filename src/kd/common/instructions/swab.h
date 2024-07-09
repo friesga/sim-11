@@ -25,13 +25,12 @@
 class SWAB : public SingleOperandInstruction
 {
 public:
-    SWAB (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
+    SWAB (u16 instruction);
 };
 
-inline SWAB::SWAB (CpuData* cpuData, CpuControl* cpuControl,
-        MMU* mmu, u16 instruction)
+inline SWAB::SWAB (u16 instruction)
     :
-    SingleOperandInstruction (cpuData, cpuControl, mmu, instruction)
+    SingleOperandInstruction (instruction)
 {}
 
 #endif // _SWAB_H_

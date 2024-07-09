@@ -18,13 +18,12 @@
 class COMB : public SingleOperandInstruction
 {
 public:
-    COMB (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
+    COMB (u16 instruction);
 };
 
-inline COMB::COMB (CpuData* cpuData, CpuControl* cpuControl,
-        MMU* mmu, u16 instruction)
+inline COMB::COMB (u16 instruction)
     :
-    SingleOperandInstruction (cpuData, cpuControl, mmu, instruction)
+    SingleOperandInstruction (instruction)
 {}
 
 #endif // _COMB_H_

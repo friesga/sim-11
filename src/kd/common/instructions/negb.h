@@ -18,13 +18,12 @@
 class NEGB : public SingleOperandInstruction
 {
 public:
-    NEGB (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
+    NEGB (u16 instruction);
 };
 
-inline NEGB::NEGB (CpuData* cpuData, CpuControl* cpuControl,
-        MMU* mmu, u16 instruction)
+inline NEGB::NEGB (u16 instruction)
     :
-    SingleOperandInstruction (cpuData, cpuControl, mmu, instruction)
+    SingleOperandInstruction (instruction)
 {}
 
 #endif // _NEGB_H_

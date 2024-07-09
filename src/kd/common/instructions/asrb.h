@@ -21,13 +21,12 @@
 class ASRB : public SingleOperandInstruction
 {
 public:
-    ASRB (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
+    ASRB (u16 instruction);
 };
 
-inline ASRB::ASRB (CpuData* cpuData, CpuControl* cpuControl,
-        MMU* mmu, u16 instruction)
+inline ASRB::ASRB (u16 instruction)
     :
-    SingleOperandInstruction (cpuData, cpuControl, mmu, instruction)
+    SingleOperandInstruction (instruction)
 {}
 
 #endif // _ASRB_H_

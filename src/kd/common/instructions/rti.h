@@ -27,13 +27,12 @@
 class RTI : public NoOperandInstruction
 {
 public:
-    RTI (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
+    RTI (u16 instruction);
 };
 
-inline RTI::RTI (CpuData* cpuData, CpuControl* cpuControl,
-        MMU* mmu, u16 instruction)
+inline RTI::RTI (u16 instruction)
     :
-    NoOperandInstruction (cpuData, cpuControl, mmu, instruction)
+    NoOperandInstruction (instruction)
 {}
 
 #endif // _RTI_H_

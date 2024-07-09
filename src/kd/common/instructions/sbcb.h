@@ -18,13 +18,12 @@
 class SBCB : public SingleOperandInstruction
 {
 public:
-    SBCB (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
+    SBCB (u16 instruction);
 };
 
-inline SBCB::SBCB (CpuData* cpuData, CpuControl* cpuControl,
-        MMU* mmu, u16 instruction)
+inline SBCB::SBCB (u16 instruction)
     :
-    SingleOperandInstruction (cpuData, cpuControl, mmu, instruction)
+    SingleOperandInstruction (instruction)
 {}
 
 #endif // _SBCB_H_

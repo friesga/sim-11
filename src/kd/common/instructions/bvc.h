@@ -20,13 +20,12 @@
 class BVC : public BranchInstruction
 {
 public:
-    BVC (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
+    BVC (u16 instruction);
 };
 
-inline BVC::BVC (CpuData* cpuData, CpuControl* cpuControl,
-        MMU* mmu, u16 instruction)
+inline BVC::BVC (u16 instruction)
     :
-    BranchInstruction (cpuData, cpuControl, mmu, instruction)
+    BranchInstruction (instruction)
 {}
 
 #endif // _BVC_H_

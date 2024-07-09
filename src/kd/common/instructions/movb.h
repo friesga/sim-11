@@ -22,13 +22,12 @@
 class MOVB : public DoubleOperandInstruction
 {
 public:
-    MOVB (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
+    MOVB (u16 instruction);
 };
 
-inline MOVB::MOVB (CpuData* cpuData, CpuControl* cpuControl,
-        MMU* mmu, u16 instruction)
+inline MOVB::MOVB (u16 instruction)
     :
-    DoubleOperandInstruction (cpuData, cpuControl, mmu, instruction)
+    DoubleOperandInstruction (instruction)
 {}
 
 

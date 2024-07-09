@@ -18,13 +18,12 @@
 class CMPB : public DoubleOperandInstruction
 {
 public:
-    CMPB (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
+    CMPB (u16 instruction);
 };
 
-inline CMPB::CMPB (CpuData* cpuData, CpuControl* cpuControl,
-        MMU* mmu, u16 instruction)
+inline CMPB::CMPB (u16 instruction)
     :
-    DoubleOperandInstruction (cpuData, cpuControl, mmu, instruction)
+    DoubleOperandInstruction (instruction)
 {}
 
 #endif // _CMPB_H_

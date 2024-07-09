@@ -18,13 +18,12 @@
 class CLRB : public SingleOperandInstruction
 {
 public:
-    CLRB (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
+    CLRB (u16 instruction);
 };
 
-inline CLRB::CLRB (CpuData* cpuData, CpuControl* cpuControl,
-        MMU* mmu, u16 instruction)
+inline CLRB::CLRB (u16 instruction)
     :
-    SingleOperandInstruction (cpuData, cpuControl, mmu, instruction)
+    SingleOperandInstruction (instruction)
 {}
 
 #endif // _CLRB_H_

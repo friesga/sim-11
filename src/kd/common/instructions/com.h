@@ -24,13 +24,12 @@
 class COM : public SingleOperandInstruction
 {
 public:
-    COM (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
+    COM (u16 instruction);
 };
 
-inline COM::COM (CpuData* cpuData, CpuControl* cpuControl,
-        MMU* mmu, u16 instruction)
+inline COM::COM (u16 instruction)
     :
-    SingleOperandInstruction (cpuData, cpuControl, mmu, instruction)
+    SingleOperandInstruction (instruction)
 {}
 
 #endif // _COM_H_

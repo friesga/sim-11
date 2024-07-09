@@ -19,7 +19,7 @@ class MarkInstruction : public LSI11Instruction
 	instr_;
 
 public:
-	MarkInstruction (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
+	MarkInstruction (u16 instruction);
 	u16 getOperationCode () override;
 
 	u16 numberOfParameters ();

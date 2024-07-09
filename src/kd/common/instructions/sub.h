@@ -24,13 +24,12 @@
 class SUB : public DoubleOperandInstruction
 {
 public:
-    SUB (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
+    SUB (u16 instruction);
 };
 
-inline SUB::SUB (CpuData* cpuData, CpuControl* cpuControl,
-        MMU* mmu, u16 instruction)
+inline SUB::SUB (u16 instruction)
     :
-    DoubleOperandInstruction (cpuData, cpuControl, mmu, instruction)
+    DoubleOperandInstruction (instruction)
 {}
 
 #endif // _SUB_H_

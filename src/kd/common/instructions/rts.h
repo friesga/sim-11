@@ -19,13 +19,12 @@
 class RTS : public FISInstruction
 {
 public:
-    RTS (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
+    RTS (u16 instruction);
 };
 
-inline RTS::RTS (CpuData* cpuData, CpuControl* cpuControl,
-        MMU* mmu, u16 instruction)
+inline RTS::RTS (u16 instruction)
     :
-    FISInstruction (cpuData, cpuControl, mmu, instruction)
+    FISInstruction (instruction)
 {}
 
 #endif // _RTS_H_

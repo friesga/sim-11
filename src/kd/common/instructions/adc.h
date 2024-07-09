@@ -24,13 +24,12 @@
 class ADC : public SingleOperandInstruction
 {
 public:
-    ADC (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
+    ADC (u16 instruction);
 };
 
-inline ADC::ADC (CpuData* cpuData, CpuControl* cpuControl,
-        MMU* mmu, u16 instruction)
+inline ADC::ADC (u16 instruction)
     :
-    SingleOperandInstruction (cpuData, cpuControl, mmu, instruction)
+    SingleOperandInstruction (instruction)
 {}
 
 #endif // _ADC_H_

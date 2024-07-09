@@ -21,13 +21,12 @@
 class BEQ : public BranchInstruction
 {
 public:
-    BEQ (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
+    BEQ (u16 instruction);
 };
 
-inline BEQ::BEQ (CpuData* cpuData, CpuControl* cpuControl,
-        MMU* mmu, u16 instruction)
+inline BEQ::BEQ (u16 instruction)
     :
-    BranchInstruction (cpuData, cpuControl, mmu, instruction)
+    BranchInstruction (instruction)
 {}
 
 #endif // _BEQ_H_

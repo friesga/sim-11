@@ -20,13 +20,12 @@
 class BVS : public BranchInstruction
 {
 public:
-    BVS (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
+    BVS (u16 instruction);
 };
 
-inline BVS::BVS (CpuData* cpuData, CpuControl* cpuControl,
-        MMU* mmu, u16 instruction)
+inline BVS::BVS (u16 instruction)
     :
-    BranchInstruction (cpuData, cpuControl, mmu, instruction)
+    BranchInstruction (instruction)
 {}
 
 #endif // _BVS_H_

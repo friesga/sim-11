@@ -25,13 +25,12 @@
 class SXT : public SingleOperandInstruction
 {
 public:
-    SXT (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
+    SXT (u16 instruction);
 };
 
-inline SXT::SXT (CpuData* cpuData, CpuControl* cpuControl,
-        MMU* mmu, u16 instruction)
+inline SXT::SXT (u16 instruction)
     :
-    SingleOperandInstruction (cpuData, cpuControl, mmu, instruction)
+    SingleOperandInstruction (instruction)
 {}
 
 #endif // _SXT_H_

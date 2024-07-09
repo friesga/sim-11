@@ -28,13 +28,12 @@
 class CMP : public DoubleOperandInstruction
 {
 public:
-    CMP (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
+    CMP (u16 instruction);
 };
 
-inline CMP::CMP (CpuData* cpuData, CpuControl* cpuControl,
-        MMU* mmu, u16 instruction)
+inline CMP::CMP (u16 instruction)
     :
-    DoubleOperandInstruction (cpuData, cpuControl, mmu, instruction)
+    DoubleOperandInstruction (instruction)
 {}
 
 #endif // _CMP_H_

@@ -26,13 +26,12 @@
 class MFPT : public NoOperandInstruction
 {
 public:
-    MFPT (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
+    MFPT (u16 instruction);
 };
 
-inline MFPT::MFPT (CpuData* cpuData, CpuControl* cpuControl,
-        MMU* mmu, u16 instruction)
+inline MFPT::MFPT (u16 instruction)
     :
-    NoOperandInstruction (cpuData, cpuControl, mmu, instruction)
+    NoOperandInstruction (instruction)
 {}
 
 #endif // _MFPT_H_

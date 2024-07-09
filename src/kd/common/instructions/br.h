@@ -18,13 +18,12 @@
 class BR : public BranchInstruction
 {
 public:
-    BR (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
+    BR (u16 instruction);
 };
 
-inline BR::BR (CpuData* cpuData, CpuControl* cpuControl,
-        MMU* mmu, u16 instruction)
+inline BR::BR (u16 instruction)
     :
-    BranchInstruction (cpuData, cpuControl, mmu, instruction)
+    BranchInstruction (instruction)
 {}
 
 #endif // _BR_H_

@@ -27,13 +27,12 @@
 class ROR : public SingleOperandInstruction
 {
 public:
-    ROR (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
+    ROR (u16 instruction);
 };
 
-inline ROR::ROR (CpuData* cpuData, CpuControl* cpuControl,
-        MMU* mmu, u16 instruction)
+inline ROR::ROR (u16 instruction)
     :
-    SingleOperandInstruction (cpuData, cpuControl, mmu, instruction)
+    SingleOperandInstruction (instruction)
 {}
 
 #endif // _ROR_H_

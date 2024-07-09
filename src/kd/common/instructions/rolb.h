@@ -22,13 +22,12 @@
 class ROLB : public SingleOperandInstruction
 {
 public:
-    ROLB (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
+    ROLB (u16 instruction);
 };
 
-inline ROLB::ROLB (CpuData* cpuData, CpuControl* cpuControl,
-        MMU* mmu, u16 instruction)
+inline ROLB::ROLB (u16 instruction)
     :
-    SingleOperandInstruction (cpuData, cpuControl, mmu, instruction)
+    SingleOperandInstruction (instruction)
 {}
 
 #endif // _ROLB_H_

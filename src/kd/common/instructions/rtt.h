@@ -27,13 +27,12 @@
 class RTT : public NoOperandInstruction
 {
 public:
-    RTT (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
+    RTT (u16 instruction);
 };
 
-inline RTT::RTT (CpuData* cpuData, CpuControl* cpuControl,
-        MMU* mmu, u16 instruction)
+inline RTT::RTT (u16 instruction)
     :
-    NoOperandInstruction (cpuData, cpuControl, mmu, instruction)
+    NoOperandInstruction (instruction)
 {}
 
 #endif // _RTT_H_
