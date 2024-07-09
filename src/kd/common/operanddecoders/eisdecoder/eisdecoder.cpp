@@ -8,29 +8,34 @@ EisDecoder::EisDecoder (CpuData* cpuData, CpuControl* cpuControl,
 {}
 
 // Derive the location of the operand from the instruction
+// 
+// Make sure the operand location is determined just once to avoid
+// autoincrement or autodecrement being applied to a register twice.
+//
 OperandLocation EisDecoder::getOperandLocation (GeneralRegisters& reg)
 {
-	return decodeOperand (instr_->getOperationCode (), 
-		Operand {instr_->getOperandRegister(), instr_->getOperandMode ()}, reg);
+	if (!operandLocation_.isValid ())
+	{
+		operandLocation_ = decodeOperand (instr_->getOperationCode (),
+			Operand {instr_->getOperandRegister (), instr_->getOperandMode ()}, reg);
+	}
+	return operandLocation_;
 }
 
 // The operand in the EIS instruction format is either a source or
 // a destination operand.
 bool EisDecoder::readOperand (CondData<u16> *source)
 {
-	operandLocation_ = 
+	OperandLocation operandLocation = 
 		getOperandLocation (cpuData_->registers ());
-    *source = operandLocation_.contents<CondData<u16>> ();
+    *source = operandLocation.contents<CondData<u16>> ();
 	return (*source).hasValue ();
 }
 
 bool EisDecoder::writeOperand (u16 operand)
 {
-	if (!operandLocation_.isValid ())
-	{
-		operandLocation_ = 
+	OperandLocation operandLocation = 
 			getOperandLocation (cpuData_->registers ());
-	}
 	
-	return operandLocation_.write (operand);
+	return operandLocation.write (operand);
 }

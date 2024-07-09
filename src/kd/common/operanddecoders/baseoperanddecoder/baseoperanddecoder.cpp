@@ -28,6 +28,10 @@ bool BaseOperandDecoder::isByteInstruction (u16 opCode)
 // be the address of the operand. Contents of registers are stepped (by one
 // for bytes, by two for words, always by two for R6 and R7) to address the
 // next sequential location.
+// 
+// Unfortunately the autoincrement and autodecrement of of registers is a
+// side effect of this function and therefore it can be called only once for
+// an operand. This has to be guaranteed by the caller of this function.
 //
 OperandLocation BaseOperandDecoder::decodeOperand (u16 opCode, Operand operand,
 	GeneralRegisters& reg)

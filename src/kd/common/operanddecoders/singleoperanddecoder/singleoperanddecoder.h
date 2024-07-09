@@ -17,13 +17,9 @@ public:
     template <typename T> bool readOperand (T *operand);
 	template <typename T> bool writeOperand (T operand);
 
-protected:
-	// The operand location is protected as some instructions (notably the JMP
-	// and MFPS instructions) are special cases and need access to the location.
-	OperandLocation operandLocation_ {};
-
 private:
 	SingleOperandInstruction* instr_ {nullptr};
+	OperandLocation operandLocation_ {};
 };
 
 // The functions below are templated for bytes (type u8 or CondData<u8>) and
@@ -32,19 +28,18 @@ private:
 template <typename T>
 bool SingleOperandDecoder::readOperand (T *operand)
 {
-	operandLocation_ =  getOperandLocation (cpuData_->registers ());
-    *operand = operandLocation_.contents<T> ();
+	OperandLocation operandLocation =
+		getOperandLocation (cpuData_->registers ());
+
+	*operand = operandLocation.contents<T> ();
 	return (*operand).hasValue ();
 }
 
 template <typename T>
 bool SingleOperandDecoder::writeOperand (T operand)
 {
-	if (!operandLocation_.isValid ())
-	{
-		operandLocation_ = 
-			getOperandLocation (cpuData_->registers ());
-	}
+	OperandLocation operandLocation =
+		getOperandLocation (cpuData_->registers ());
 	
 	return operandLocation_.write<T> (operand);
 }

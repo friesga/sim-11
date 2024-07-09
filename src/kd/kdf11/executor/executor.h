@@ -609,19 +609,19 @@ inline bool Executor::operator() (MFPS& instr)
          operandDecoderFactory_.createSingleOperandDecoder (&instr);
 
     u8 contents = (u8) cpuData_->psw ();
-    OperandLocation operandLocation_ = 
+    OperandLocation operandLocation = 
         singleOperandDecoder->getOperandLocation (cpuData_->registers ());
 
     commonExecutor.setPSW (ConditionCodes {.N = (bool) (contents & 0x80),
         .Z = (contents & 0xFF) == 0,
         .V = false});
 
-    if (operandLocation_.isA<RegisterOperandLocation> ())
+    if (operandLocation.isA<RegisterOperandLocation> ())
     {
         // If destination is mode 0 (Register), the regular operand processing
         // is bypassed and PS bit 7 is sign extended through the upper byte of
         // the register.
-        cpuData_->registers ()[operandLocation_] = (s8) contents;
+        cpuData_->registers ()[operandLocation] = (s8) contents;
     }
     else
     {
@@ -1030,9 +1030,9 @@ inline bool Executor::operator() (MFPD& instr)
 
     // The source operand is determined in the current memory management
     // mode and then retrieved using the previous mode.
-    OperandLocation operandLocation_ =  
+    OperandLocation operandLocation =  
         singleOperandDecoder->getOperandLocation (cpuData_->registers ());
-    source = operandLocation_.prevModeContents<CondData<u16>> ();
+    source = operandLocation.prevModeContents<CondData<u16>> ();
 
     if (!source.hasValue ())
         return false;
@@ -1060,10 +1060,10 @@ inline bool Executor::operator() (MTPD& instr)
     // The destination operand and the value popped off the stack are 
     // retrieved in the current memory management and the tmp value then
     // is written using the previous mode.
-    OperandLocation operandLocation_ =  
+    OperandLocation operandLocation =  
         singleOperandDecoder->getOperandLocation (cpuData_->registers ());
 
-    if (!mmu_->popWord (&tmp) || !operandLocation_.writePrevMode (tmp))
+    if (!mmu_->popWord (&tmp) || !operandLocation.writePrevMode (tmp))
         return false;
         
     commonExecutor.setPSW (ConditionCodes {.N = (bool) (tmp & 0100000),

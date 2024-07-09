@@ -13,24 +13,45 @@ DoubleOperandDecoder::DoubleOperandDecoder (CpuData* cpuData, CpuControl* cpuCon
 	instr_ {instruction}
 {}
 
+// Make sure the operand location is determined just once to avoid
+// autoincrement or autodecrement being applied to a register twice.
+//
 OperandLocation DoubleOperandDecoder::getSourceOperandLocation (GeneralRegisters &reg)
 {
-	return decodeOperand (instr_->getOperationCode (),
-		Operand {instr_->getSourceRegister(), instr_->getSourceMode ()}, reg);
+	if (!sourceOperandLocation_.isValid ())
+	{
+		sourceOperandLocation_ = decodeOperand (instr_->getOperationCode (),
+			Operand {instr_->getSourceRegister (), instr_->getSourceMode ()}, reg);
+	}
+
+	return sourceOperandLocation_;
 }
 
+// Make sure the operand location is determined just once to avoid
+// autoincrement or autodecrement being applied to a register twice.
+//
 OperandLocation DoubleOperandDecoder::getDestinationOperandLocation (GeneralRegisters &reg)
 {
-	return decodeOperand (instr_->getOperationCode (),
-		Operand {instr_->getDestinationRegister (), instr_->getDestinationMode ()}, reg);
+	if (!destinationOperandLocation_.isValid ())
+	{
+		destinationOperandLocation_ = decodeOperand (instr_->getOperationCode (),
+			Operand {instr_->getDestinationRegister (), instr_->getDestinationMode ()}, reg);
+	}
+
+	return destinationOperandLocation_;
 }
 
 // On most PDP-11's the source operand location is determined before the
 // destination operand location. This is also the case for the KD11-NA.
+//
+// Getting the source and destination operand locations (without using them)
+// will make sure the operand locations are determined. Following calls to
+// getSourceOperandLocation() and getDestiniationOperandLocation will return
+// the already determined operand locations.
 void DoubleOperandDecoder::getOperandLocations (GeneralRegisters &reg)
 {
-	sourceOperandLocation_ = getSourceOperandLocation (reg);
-	destinationOperandLocation_ = getDestinationOperandLocation (reg);
+	(void) getSourceOperandLocation (reg);
+	(void) getDestinationOperandLocation (reg);
 }
 
 bool DoubleOperandDecoder::writeDestinationOperands8 (s8 operand)

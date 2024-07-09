@@ -21,16 +21,12 @@ public:
 	template <typename T> bool writeDestinationOperand (T operand);
 	bool writeDestinationOperands8 (s8 operand);
 
-protected:
-	// The destination operand location is defined protected as the MOVB
-	// instruction needs to know its type.
-	OperandLocation destinationOperandLocation_ {};
-
 private:
 	// The source and destination operand locations are defined as class
 	// members as for the KD11-F in some cases the destination operand
 	// location has to be determined before the source operand is retrieved.
 	OperandLocation sourceOperandLocation_ {};
+	OperandLocation destinationOperandLocation_ {};
 
 	DoubleOperandInstruction* instr_ {nullptr};
 };
@@ -54,13 +50,10 @@ bool DoubleOperandDecoder::readSourceOperand (T *source)
 template <typename T>
 bool DoubleOperandDecoder::readDestinationOperand (T *destination)
 {
-	if (!destinationOperandLocation_.isValid ()) 
-	{
-		destinationOperandLocation_ = 
+	OperandLocation destinationOperandLocation = 
 			getDestinationOperandLocation (cpuData_->registers ());
-	}
 
-    *destination = destinationOperandLocation_.contents<T> ();
+    *destination = destinationOperandLocation.contents<T> ();
 	return (*destination).hasValue ();
 }
 
@@ -71,13 +64,10 @@ bool DoubleOperandDecoder::readDestinationOperand (T *destination)
 template <typename T>
 bool DoubleOperandDecoder::writeDestinationOperand (T operand)
 {
-	if (!destinationOperandLocation_.isValid ())
-	{
-		destinationOperandLocation_ = 
+	OperandLocation destinationOperandLocation = 
 			getDestinationOperandLocation (cpuData_->registers ());
-	}
 	
-	return destinationOperandLocation_.write<T> (operand);
+	return destinationOperandLocation.write<T> (operand);
 }
 
 #endif // _DOUBLE_H_
