@@ -33,11 +33,16 @@ set (KD11COMMON_SRCS
     src/kd/common/instructionformats/eisinstruction/eisinstruction.cpp
     src/kd/common/instructionformats/markinstruction/markinstruction.cpp
     src/kd/common/instructionformats/sobinstruction/sobinstruction.cpp
+    src/kd/common/operanddecoderfactory/operanddecoderfactory.cpp
+    src/kd/common/operanddecoders/baseoperanddecoder/baseoperanddecoder.cpp
+    src/kd/common/operanddecoders/singleoperanddecoder/singleoperanddecoder.cpp
+    src/kd/common/operanddecoders/branchdecoder/branchdecoder.cpp
+    src/kd/common/operanddecoders/doubleoperanddecoder/doubleoperanddecoder.cpp
+    src/kd/common/operanddecoders/eisdecoder/eisdecoder.cpp
     src/kd/common/decoder/decoder.cpp
     src/kd/common/decoder/opcodetables.cpp
     src/kd/common/executor/executor.cpp
     src/kd/common/executor/baseexecutor/baseexecutor.cpp
-    src/kd/common/executor/singleoperandexecutor/singleoperandexecutor.cpp
     src/kd/common/odt/operatorconsoleaccess/operatorconsoleaccess.cpp)
 
 set (KD11CONTROLLOGIC_SRCS

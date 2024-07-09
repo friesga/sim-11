@@ -2,7 +2,7 @@
 #define _COMMON_EXECUTOR_H_
 
 #include "kd/common/instructions/instructions.h"
-#include "singleoperandexecutor/singleoperandexecutor.h"
+#include "kd/common/operanddecoderfactory/operanddecoderfactory.h"
 
 namespace Common {
 
@@ -121,7 +121,7 @@ private:
     CpuControl* cpuControl_;
     MMU* mmu_;
 
-	SingleOperandExecutor singleOperandExecutor_ {cpuData_, cpuControl_, mmu_};
+	OperandDecoderFactory operandDecoderFactory_ {cpuData_, cpuControl_, mmu_};
 };
 
 constexpr bool Common::Executor::isSet (u16 x)

@@ -13,26 +13,29 @@ DoubleOperandInstruction::DoubleOperandInstruction (CpuData* cpuData, CpuControl
 	instr_ {instruction}
 {}
 
-OperandLocation DoubleOperandInstruction::getSourceOperandLocation (GeneralRegisters &reg)
-{
-	return decodeOperand (Operand {instr_.decoded.src_rn, instr_.decoded.src_mode}, reg);
-}
-
-OperandLocation DoubleOperandInstruction::getDestinationOperandLocation (GeneralRegisters &reg)
-{
-	return decodeOperand (Operand {instr_.decoded.dst_rn, instr_.decoded.dst_mode}, reg);
-}
-
-// On most PDP-11's the source operand location is determined before the
-// destination operand location. This is also the case for the KD11-NA.
-void DoubleOperandInstruction::getOperandLocations (GeneralRegisters &reg)
-{
-	sourceOperandLocation_ = getSourceOperandLocation (reg);
-	destinationOperandLocation_ = getDestinationOperandLocation (reg);
-}
 
 // Return the instruction's operation code
 u16 DoubleOperandInstruction::getOperationCode ()
 {
 	return instr_.decoded.opcode;
+}
+
+u16 DoubleOperandInstruction::getSourceRegister ()
+{
+	return instr_.decoded.src_rn;
+}
+
+u16 DoubleOperandInstruction::getSourceMode ()
+{
+	return instr_.decoded.src_mode;
+}
+
+u16 DoubleOperandInstruction::getDestinationRegister ()
+{
+	return instr_.decoded.dst_rn;
+}
+
+u16 DoubleOperandInstruction::getDestinationMode ()
+{
+	return instr_.decoded.dst_mode;
 }

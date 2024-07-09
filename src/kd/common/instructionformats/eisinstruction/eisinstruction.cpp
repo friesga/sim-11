@@ -8,41 +8,24 @@ EisInstruction::EisInstruction (CpuData* cpuData, CpuControl* cpuControl,
     instr_ {instruction}
 {}
 
-// Derive the location of the operand from the instruction
-OperandLocation EisInstruction::getOperandLocation (GeneralRegisters& reg)
-{
-	return decodeOperand (Operand {instr_.decoded.operandRegNr,
-		instr_.decoded.operandMode}, reg);
-}
-
-// The operand in the EIS instruction format is either a source or
-// a destination operand.
-bool EisInstruction::readOperand (CondData<u16> *source)
-{
-	operandLocation_ = 
-		getOperandLocation (cpuData_->registers ());
-    *source = operandLocation_.contents<CondData<u16>> ();
-	return (*source).hasValue ();
-}
-
-bool EisInstruction::writeOperand (u16 operand)
-{
-	if (!operandLocation_.isValid ())
-	{
-		operandLocation_ = 
-			getOperandLocation (cpuData_->registers ());
-	}
-	
-	return operandLocation_.write (operand);
-}
-
 // Return the instruction's operation code
 u16 EisInstruction::getOperationCode ()
 {
 	return instr_.decoded.opcode;
 }
 
+u16 EisInstruction::getOperandRegister ()
+{
+	return instr_.decoded.operandRegNr;
+}
+
+u16 EisInstruction::getOperandMode ()
+{
+	return instr_.decoded.operandMode;
+}
+
 u16 EisInstruction::getRegisterNr ()
 {
 	return instr_.decoded.registerNr;
 }
+

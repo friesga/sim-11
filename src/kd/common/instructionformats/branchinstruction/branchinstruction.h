@@ -21,16 +21,7 @@ class BranchInstruction : public LSI11Instruction
 public:
 	BranchInstruction (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu, u16 instruction);
 	s8 getOffset ();
-	constexpr void executeBranchIf (bool condition);
-	void executeBranch ();
 	u16 getOperationCode () override;
 };
-
-// Execute the branch given in the instruction under the given condition.
-constexpr void BranchInstruction::executeBranchIf (bool condition)
-{
-    if (condition)
-        executeBranch ();
-}
 
 #endif // _BRANCHINSTRUCTION_H_

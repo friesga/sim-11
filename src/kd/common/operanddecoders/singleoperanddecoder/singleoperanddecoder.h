@@ -1,21 +1,21 @@
-#ifndef _SINGLEOPERANDEXECUTOR_H_
-#define _SINGLEOPERANDEXECUTOR_H_
+#ifndef _SINGLEOPERANDDECODER_H_
+#define _SINGLEOPERANDDECODER_H_
 
-#include "kd/common/instructions/instructions.h"
+#include "kd/common/operanddecoders/baseoperanddecoder/baseoperanddecoder.h"
+#include "kd/common/instructionformats/singleoperandinstruction/singleoperandinstruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/include/cpucontrol.h"
 #include "kd/include/mmu.h"
-#include "kd/common/executor/baseexecutor/baseexecutor.h"
 
-#include <functional>
-
-using std::function;
-
-class SingleOperandExecutor : public BaseExecutor
+class SingleOperandDecoder : BaseOperandDecoder
 {
 public:
-    SingleOperandExecutor (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu);
-	bool execute (function<bool(SingleOperandInstruction* instr)> instrFunction);
+    SingleOperandDecoder (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu,
+		SingleOperandInstruction* instr);
+
+	OperandLocation getOperandLocation (GeneralRegisters &reg);
+    template <typename T> bool readOperand (T *operand);
+	template <typename T> bool writeOperand (T operand);
 
 protected:
 	// The operand location is protected as some instructions (notably the JMP
@@ -23,21 +23,14 @@ protected:
 	OperandLocation operandLocation_ {};
 
 private:
-    CpuData* cpuData_;
-    CpuControl* cpuControl_;
-    MMU* mmu_;
 	SingleOperandInstruction* instr_ {nullptr};
-
-	OperandLocation getOperandLocation (GeneralRegisters &reg);
-    template <typename T> bool readOperand (T *operand);
-	template <typename T> bool writeOperand (T operand);
 };
 
 // The functions below are templated for bytes (type u8 or CondData<u8>) and
 // words (type u16 and CondData<u16>). Trying to use the functions for other
 // types will result in compilation errors.
 template <typename T>
-bool SingleOperandExecutor::readOperand (T *operand)
+bool SingleOperandDecoder::readOperand (T *operand)
 {
 	operandLocation_ =  getOperandLocation (cpuData_->registers ());
     *operand = operandLocation_.contents<T> ();
@@ -45,7 +38,7 @@ bool SingleOperandExecutor::readOperand (T *operand)
 }
 
 template <typename T>
-bool SingleOperandExecutor::writeOperand (T operand)
+bool SingleOperandDecoder::writeOperand (T operand)
 {
 	if (!operandLocation_.isValid ())
 	{
@@ -56,4 +49,4 @@ bool SingleOperandExecutor::writeOperand (T operand)
 	return operandLocation_.write<T> (operand);
 }
 
-#endif // _SINGLEOPERANDEXECUTOR_H_
+#endif // _SINGLEOPERANDDECODER_H_
