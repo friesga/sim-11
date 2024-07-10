@@ -8,7 +8,7 @@ Instruction Decoder::decode (u16 instruction)
 
 Instruction Decoder::decodeGroup_00_00_nn (u16 instruction)
 {
-    if (instruction < 07)
+    if (instruction <= 07)
         return (*group_00_00_nn [instruction]) (instruction);
         
     return create<Unused> (instruction);

@@ -1,6 +1,4 @@
 #include "decoder.h"
-// #include "kd/common/instructions/commoninstruction.h"
-// #include "kd/common/instructions/instructions.h"
 
 // Instruction format for Operate Group plus BPT and IOT,
 //
@@ -13,7 +11,8 @@ Decoder::opCodeTable const Decoder::group_00_00_nn
     create<BPT>,        // 00 00 03
     create<IOT>,        // 00 00 04
     create<RESET>,      // 00 00 05
-    create<RTT>         // 00 00 06
+    create<RTT>,        // 00 00 06
+    create<MFPT>        // 00 00 07
 };
 
 // Instruction format for RTS and Condition Code Operators instructions
@@ -178,8 +177,8 @@ Decoder::opCodeTable const Decoder::group_10_xx_xx
     create<ASRB>,   // 10 62 xx
     create<ASLB>,   // 10 63 xx
     create<MTPS>,   // 10 64 xx
-    create<Unused>, // 10 65 xx Undefined in the LSI-11 Processor Handbook
-    create<Unused>, // 10 66 xx Undefined in the LSI-11 Processor Handbook
+    create<MFPD>,   // 10 65 xx 
+    create<MTPD>,   // 10 66 xx
     create<MFPS>,   // 10 67 xx
     create<Unused>, // 10 70 xx The range 10 70 xx till 10 77 xx is undefined
     create<Unused>, // 10 71 xx in the LSI-11 Processor Handbook
@@ -248,8 +247,8 @@ Decoder::opCodeTable const Decoder::group_00_nn_xx
     create<ASR>,                    // 00 62 xx
     create<ASL>,                    // 00 63 xx
     create<MARK>,                   // 00 64 xx
-    create<Unused>,                 // 00 65 xx Undefined in the LSI-11 Processor Handbook
-    create<Unused>,                 // 00 66 xx idem
+    create<MFPD>,                   // 00 65 xx 
+    create<MTPD>,                   // 00 66 xx
     create<SXT>,                    // 00 67 xx
     create<Unused>,                 // 00 70 xx
     create<Unused>,                 // 00 71 xx
