@@ -20,8 +20,7 @@ TEST (KD11_NAMOVTEST, MovMode0Mode2Functions)
     Decoder instrDecoder;
 
     // MOV R0, (R0)+
-    Instruction instruction {instrDecoder.decode (cpu.cpuData (),
-        cpu.cpuControl (), cpu.mmu (), 0010020)};
+    Instruction instruction {instrDecoder.decode (0010020)};
 
     cpu.cpuData ()->registers () [0] = 10;
     cpu.mmu ()->putWord (10, 0);

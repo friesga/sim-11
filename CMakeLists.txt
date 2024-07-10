@@ -409,7 +409,7 @@ set (GTEST_SRCS
     gtest/kd11_naconfiguratortest.cpp
     gtest/instructiondecodertest.cpp
     # gtest/kd11_na/inctest.cpp
-    # gtest/kd11_na/movtest.cpp
+    gtest/kd11_na/movtest.cpp
     gtest/kd11_na/kd11_naregisterstest.cpp
     gtest/kd11_na/kd11_na_odttest.cpp
     # gtest/kdf11_a/pswtest.cpp
