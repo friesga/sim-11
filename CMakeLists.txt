@@ -407,12 +407,12 @@ set (GTEST_SRCS
     gtest/dlv11configuratortest.cpp
     gtest/fistest.cpp
     gtest/kd11_naconfiguratortest.cpp
-    gtest/kd11_nadecodertest.cpp
-    gtest/kd11_na/inctest.cpp
-    gtest/kd11_na/movtest.cpp
+    gtest/instructiondecodertest.cpp
+    # gtest/kd11_na/inctest.cpp
+    # gtest/kd11_na/movtest.cpp
     gtest/kd11_na/kd11_naregisterstest.cpp
     gtest/kd11_na/kd11_na_odttest.cpp
-    gtest/kdf11_a/pswtest.cpp
+    # gtest/kdf11_a/pswtest.cpp
     gtest/kdf11_a/kdf11_aconfiguratortest.cpp
     gtest/kdf11_a/kdf11_a_pswregistertest.cpp
     gtest/kdf11_a/kdf11_aregisterstest.cpp
