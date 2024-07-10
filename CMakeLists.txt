@@ -42,7 +42,6 @@ set (KD11COMMON_SRCS
     src/kd/common/instructiondecoder/instructiondecoder.cpp
     src/kd/common/instructiondecoder/opcodetables.cpp
     src/kd/common/executor/executor.cpp
-    src/kd/common/executor/baseexecutor/baseexecutor.cpp
     src/kd/common/odt/operatorconsoleaccess/operatorconsoleaccess.cpp)
 
 set (KD11CONTROLLOGIC_SRCS
