@@ -1,4 +1,4 @@
-#include "kd/common/decoder/decoder.h"
+#include "kd/common/instructiondecoder/instructiondecoder.h"
 #include "kd/kd11_na/executor/executor.h"
 #include "../dummycpu/dummycpu.h"
 
@@ -17,7 +17,7 @@ using std::visit;
 TEST (KD11_NAMOVTEST, MovMode0Mode2Functions)
 {
     DummyCpu cpu;
-    Decoder instrDecoder;
+    InstructionDecoder instrDecoder;
 
     // MOV R0, (R0)+
     Instruction instruction {instrDecoder.decode (0010020)};

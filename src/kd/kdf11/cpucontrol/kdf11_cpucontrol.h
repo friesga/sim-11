@@ -1,7 +1,7 @@
 #ifndef _KDF11_A_CPU_H_
 #define _KDF11_A_CPU_H_
 
-#include "kd/common//decoder/decoder.h"
+#include "kd/common/instructiondecoder/instructiondecoder.h"
 #include "kd/include/cpudata.h"
 #include "kd/include/cpucontrol.h"
 #include "qbus/qbus.h"
@@ -159,7 +159,7 @@ private:
 	MMU* mmu_;
 	CpuData* cpuData_;
 	CpuRunState runState;
-	Decoder decoder;
+	InstructionDecoder decoder;
 	HaltReason haltReason_;
 	bool traceFlag_;
 

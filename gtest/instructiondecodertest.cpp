@@ -1,4 +1,4 @@
-#include "kd/common/decoder/decoder.h"
+#include "kd/common/instructiondecoder/instructiondecoder.h"
 #include "kd/common/instructions/instructions.h"
 
 #include <gtest/gtest.h>
@@ -9,9 +9,9 @@ using std::holds_alternative;
 // Verify that decoding of an instruction word will result in the
 // creation of the proper instruction. In principle the complete range
 // of instruction words (from 000000 till 1777777) is tested.
-TEST (Decoder, Group_00_00_nn)
+TEST (InstructionDecoder, Group_00_00_nn)
 {
-    Decoder decoder;
+    InstructionDecoder decoder;
 
     EXPECT_TRUE (holds_alternative<HALT> (decoder.decode (000000)));
     EXPECT_TRUE (holds_alternative<WAIT> (decoder.decode (0000001)));

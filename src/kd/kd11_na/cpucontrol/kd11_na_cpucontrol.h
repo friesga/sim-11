@@ -6,7 +6,7 @@
 #include "kd/include/cpucontrol.h"
 #include "float/float.h"
 #include "types.h"
-#include "kd/common/decoder/decoder.h"
+#include "kd/common/instructiondecoder/instructiondecoder.h"
 #include "kd/kd11_na/cpudata/kd11_naregisters/kd11_naregisters.h"
 #include "kd/include/mmu.h"
 #include "kd/common/addresmodetiming/addressingmodetiming.h"
@@ -55,7 +55,7 @@ private:
 	MMU* mmu_;
 	CpuData* cpuData_;
 	CpuRunState runState;
-	Decoder decoder;
+	InstructionDecoder decoder;
 	HaltReason haltReason_;
 	bool traceFlag_;
 

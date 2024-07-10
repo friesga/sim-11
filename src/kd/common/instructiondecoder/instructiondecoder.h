@@ -1,5 +1,5 @@
-#ifndef _DECODER_H_
-#define _DECODER_H_
+#ifndef _INSTRUCTIONDECODER_H_
+#define _INSTRUCTIONDECODER_H_
 
 #include "kd/common/lsi11instruction/lsi11instruction.h"
 #include "kd/include/cpudata.h"
@@ -91,7 +91,7 @@
 //  SUB ---------------- 16 xx xx
 //  unused ------------- 17 xx xx
 //
-class Decoder
+class InstructionDecoder
 {
 public:
     Instruction decode (u16 instruction);
@@ -127,9 +127,9 @@ private:
 };
 
 template <typename T>
-Instruction Decoder::create (u16 instruction)
+Instruction InstructionDecoder::create (u16 instruction)
 {
     return T (instruction);
 }
 
-#endif // KD11_NAINSTRUCTION_H_
+#endif // _INSTRUCTIONDECODER_H_

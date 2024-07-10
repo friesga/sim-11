@@ -1,4 +1,4 @@
-#include "kd/common/decoder/decoder.h"
+#include "kd/common/instructiondecoder/instructiondecoder.h"
 #include "kd/kd11_na/executor/executor.h"
 #include "../dummycpu/dummycpu.h"
 
@@ -10,7 +10,7 @@ using std::visit;
 TEST (KD11_NAINCTEST, IncMode0Functions)
 {
     DummyCpu cpu;
-    Decoder instrDecoder;
+    InstructionDecoder instrDecoder;
 
     // INC R1
     Instruction instruction {instrDecoder.decode (0005201)};
@@ -26,7 +26,7 @@ TEST (KD11_NAINCTEST, IncMode0Functions)
 TEST (KD11_NAINCTEST, IncMode1Functions)
 {
     DummyCpu cpu;
-    Decoder instrDecoder;
+    InstructionDecoder instrDecoder;
 
     // INC @R1
     Instruction instruction {instrDecoder.decode (0005211)};
@@ -43,7 +43,7 @@ TEST (KD11_NAINCTEST, IncMode1Functions)
 TEST (KD11_NAINCTEST, IncMode2Functions)
 {
     DummyCpu cpu;
-    Decoder instrDecoder;
+    InstructionDecoder instrDecoder;
 
     // INC (R1)+
     Instruction instruction {instrDecoder.decode (0005221)};
@@ -67,7 +67,7 @@ TEST (KD11_NAINCTEST, IncMode2Functions)
 TEST (KD11_NAINCTEST, IncMode3Functions)
 {
     DummyCpu cpu;
-    Decoder instrDecoder;
+    InstructionDecoder instrDecoder;
 
     // INC @(R1)+
     Instruction instruction {instrDecoder.decode (0005231)};
@@ -85,7 +85,7 @@ TEST (KD11_NAINCTEST, IncMode3Functions)
 TEST (KD11_NAINCTEST, IncMode4Functions)
 {
     DummyCpu cpu;
-    Decoder instrDecoder;
+    InstructionDecoder instrDecoder;
 
     // INC -(R1)
     Instruction instruction {instrDecoder.decode (0005241)};
@@ -108,7 +108,7 @@ TEST (KD11_NAINCTEST, IncMode4Functions)
 TEST (KD11_NAINCTEST, IncMode5Functions)
 {
     DummyCpu cpu;
-    Decoder instrDecoder;
+    InstructionDecoder instrDecoder;
 
     // INC @-(R1)
     Instruction instruction {instrDecoder.decode (0005251)};
@@ -126,7 +126,7 @@ TEST (KD11_NAINCTEST, IncMode5Functions)
 TEST (KD11_NAINCTEST, IncMode6Functions)
 {
     DummyCpu cpu;
-    Decoder instrDecoder;
+    InstructionDecoder instrDecoder;
 
     // INC 2(R1)
     Instruction instruction {instrDecoder.decode (0005261)};
@@ -153,7 +153,7 @@ TEST (KD11_NAINCTEST, IncMode6Functions)
 TEST (KD11_NAINCTEST, IncMode7Functions)
 {
     DummyCpu cpu;
-    Decoder instrDecoder;
+    InstructionDecoder instrDecoder;
 
     // INC @2(R1)
     Instruction instruction {instrDecoder.decode (0005271)};

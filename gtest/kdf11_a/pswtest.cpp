@@ -1,4 +1,4 @@
-#include "kd/common/decoder/decoder.h"
+#include "kd/common/instructiondecoder/instructiondecoder.h"
 #include "kd/kdf11/executor/executor.h"
 
 #include "qbus/qbus.h"
@@ -19,7 +19,7 @@ protected:
     shared_ptr<KDF11_AConfig> kdf11_aConfig = make_shared<KDF11_AConfig> (true);
     KDF11_A* kdf11a  = new KDF11_A (&qbus, kdf11_aConfig);
     MSV11D*  memory  = new MSV11D (&qbus);
-    Decoder instrDecoder;
+    InstructionDecoder instrDecoder;
     u16 const PswAddress = 0177776;
 
     void SetUp() override

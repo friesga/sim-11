@@ -1,9 +1,9 @@
-#include "decoder.h"
+#include "instructiondecoder.h"
 
 // Instruction format for Operate Group plus BPT and IOT,
 //
 // and minus NOP instructions.
-Decoder::opCodeTable const Decoder::group_00_00_nn
+InstructionDecoder::opCodeTable const InstructionDecoder::group_00_00_nn
 { 
     create<HALT>,       // 00 00 00 
     create<WAIT>,       // 00 00 01
@@ -16,7 +16,7 @@ Decoder::opCodeTable const Decoder::group_00_00_nn
 };
 
 // Instruction format for RTS and Condition Code Operators instructions
-Decoder::opCodeTable const Decoder::group_00_02_nn
+InstructionDecoder::opCodeTable const InstructionDecoder::group_00_02_nn
 {
     create<RTS>,        // 00 02 00
     create<RTS>,        // 00 02 01
@@ -91,7 +91,7 @@ Decoder::opCodeTable const Decoder::group_00_02_nn
 // The range 07 51 xx till 07 57 xx is handled in the corresponding function
 // to minimize the size of this opcode table.
 //
-Decoder::opCodeTable const Decoder::group_07_5n_nx
+InstructionDecoder::opCodeTable const InstructionDecoder::group_07_5n_nx
 {
     create<FADD>,       // 07 50 0x
     create<FSUB>,       // 07 50 1x
@@ -108,7 +108,7 @@ Decoder::opCodeTable const Decoder::group_07_5n_nx
 // 
 // The FIS instructions are defined in a separate group.
 //
-Decoder::opCodeTable const Decoder::group_07_nx_xx
+InstructionDecoder::opCodeTable const InstructionDecoder::group_07_nx_xx
 {
     create<MUL>,                    // 07 0x xx
     create<DIV>,                    // 07 1x xx
@@ -122,7 +122,7 @@ Decoder::opCodeTable const Decoder::group_07_nx_xx
 
 // Instruction format for the Program Control and Single Operand Group
 // instructions.
-Decoder::opCodeTable const Decoder::group_10_xx_xx
+InstructionDecoder::opCodeTable const InstructionDecoder::group_10_xx_xx
 {
     create<BPL>,    // 10 00 xx
     create<BPL>,    // 10 01 xx
@@ -192,7 +192,7 @@ Decoder::opCodeTable const Decoder::group_10_xx_xx
 
 // Instruction format for the Program Control and Single Operand Group
 // instructions. 
-Decoder::opCodeTable const Decoder::group_00_nn_xx
+InstructionDecoder::opCodeTable const InstructionDecoder::group_00_nn_xx
 { 
     decodeGroup_00_00_nn,                              // 00 00 NN
     create<JMP>,                    // 00 01 xx
@@ -261,7 +261,7 @@ Decoder::opCodeTable const Decoder::group_00_nn_xx
 };
 
 // This is the main operation code control table.
-Decoder::opCodeTable const Decoder::group_nn_xx_xx 
+InstructionDecoder::opCodeTable const InstructionDecoder::group_nn_xx_xx 
 {
     decodeGroup_00_nn_xx,                              // 00 xx xx
     create<MOV>,                    // 01 xx xx

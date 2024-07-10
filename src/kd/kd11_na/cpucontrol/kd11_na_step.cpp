@@ -1,5 +1,5 @@
 #include "kd11_na_cpucontrol.h"
-#include "kd/common/decoder/decoder.h"
+#include "kd/common/instructiondecoder/instructiondecoder.h"
 #include "kd/kd11_na/executor/executor.h"
 #include "qbus/qbus.h"
 #include "pdp11peripheral/pdp11peripheral.h"
