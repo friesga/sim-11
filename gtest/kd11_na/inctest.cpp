@@ -13,8 +13,7 @@ TEST (KD11_NAINCTEST, IncMode0Functions)
     Decoder instrDecoder;
 
     // INC R1
-    Instruction instruction {instrDecoder.decode (cpu.cpuData (),
-        cpu.cpuControl (), cpu.mmu (), 0005201)};
+    Instruction instruction {instrDecoder.decode (0005201)};
 
     // Assign R1 a random value and execute the INC on it
     cpu.cpuData()->registers () [1] = 10;
@@ -30,8 +29,7 @@ TEST (KD11_NAINCTEST, IncMode1Functions)
     Decoder instrDecoder;
 
     // INC @R1
-    Instruction instruction {instrDecoder.decode (cpu.cpuData (),
-        cpu.cpuControl (), cpu.mmu (), 0005211)};
+    Instruction instruction {instrDecoder.decode (0005211)};
 
     // Increment the address contained in R1
     cpu.cpuData ()-> registers () [1] = 10;
@@ -48,8 +46,7 @@ TEST (KD11_NAINCTEST, IncMode2Functions)
     Decoder instrDecoder;
 
     // INC (R1)+
-    Instruction instruction {instrDecoder.decode (cpu.cpuData (),
-        cpu.cpuControl (), cpu.mmu (), 0005221)};
+    Instruction instruction {instrDecoder.decode (0005221)};
 
     // Address 10 = 100, R1 = 10
     cpu.mmu ()->putWord (10, 100);
@@ -73,8 +70,7 @@ TEST (KD11_NAINCTEST, IncMode3Functions)
     Decoder instrDecoder;
 
     // INC @(R1)+
-    Instruction instruction {instrDecoder.decode (cpu.cpuData (),
-        cpu.cpuControl (), cpu.mmu (), 0005231)};
+    Instruction instruction {instrDecoder.decode (0005231)};
 
     cpu.cpuData ()->registers () [1] = 10;
     cpu.mmu ()->putWord (10, 100);
@@ -92,8 +88,7 @@ TEST (KD11_NAINCTEST, IncMode4Functions)
     Decoder instrDecoder;
 
     // INC -(R1)
-    Instruction instruction {instrDecoder.decode (cpu.cpuData (),
-        cpu.cpuControl (), cpu.mmu (), 0005241)};
+    Instruction instruction {instrDecoder.decode (0005241)};
 
     // Address 8 = 100, R1 = 10
     cpu.mmu ()->putWord (8, 100);
@@ -116,8 +111,7 @@ TEST (KD11_NAINCTEST, IncMode5Functions)
     Decoder instrDecoder;
 
     // INC @-(R1)
-    Instruction instruction {instrDecoder.decode (cpu.cpuData (),
-        cpu.cpuControl (), cpu.mmu (), 0005251)};
+    Instruction instruction {instrDecoder.decode (0005251)};
 
     cpu.cpuData ()->registers () [1] = 10;
     cpu.mmu ()->putWord (8, 100);
@@ -135,8 +129,7 @@ TEST (KD11_NAINCTEST, IncMode6Functions)
     Decoder instrDecoder;
 
     // INC 2(R1)
-    Instruction instruction {instrDecoder.decode (cpu.cpuData (),
-        cpu.cpuControl (), cpu.mmu (), 0005261)};
+    Instruction instruction {instrDecoder.decode (0005261)};
 
     // Assume the INC instruction is at address 0, so the index word will
     // be at address 2. Address 8 = 100, R1 = 10
@@ -163,8 +156,7 @@ TEST (KD11_NAINCTEST, IncMode7Functions)
     Decoder instrDecoder;
 
     // INC @2(R1)
-    Instruction instruction {instrDecoder.decode (cpu.cpuData (),
-        cpu.cpuControl (), cpu.mmu (), 0005271)};
+    Instruction instruction {instrDecoder.decode (0005271)};
 
     // Assume the INC instruction is at address 0, so the index word will
     // be at address 2. 
