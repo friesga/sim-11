@@ -24,8 +24,9 @@ TEST (KD11_NAMOVTEST, MovMode0Mode2Functions)
 
     cpu.cpuData ()->registers () [0] = 10;
     cpu.mmu ()->putWord (10, 0);
-    visit (KD11_NA::Executor {cpu.cpuData (), cpu.cpuControl (), cpu.mmu ()},
-        instruction);
+    
+    EXPECT_TRUE (visit (KD11_NA::Executor {cpu.cpuData (), cpu.cpuControl (), cpu.mmu ()},
+        instruction));
     EXPECT_EQ (cpu.mmu ()->fetchWord (10), 10);
     EXPECT_EQ (cpu.cpuData ()->registers () [0], 12);
 }
