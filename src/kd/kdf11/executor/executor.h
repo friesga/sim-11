@@ -43,10 +43,7 @@ inline bool Executor::operator() (CLR& instr)
         .V = false,
         .C = false});
 
-    if (!singleOperandDecoder->writeOperand ((u16) 0))
-        return false;
-
-    return true;
+    return singleOperandDecoder->writeOperand ((u16) 0);
 }
 
 template <>
@@ -60,10 +57,7 @@ inline bool Executor::operator() (CLRB& instr)
         .V = false,
         .C = false});
 
-    if (!singleOperandDecoder->writeOperand ((u8) 0))
-        return false;
-
-    return true;
+    return singleOperandDecoder->writeOperand ((u8) 0);
 }
 
 template <>
@@ -85,10 +79,7 @@ inline bool Executor::operator() (COM& instr)
         .V = false,
         .C = true}});
 
-    if (!singleOperandDecoder->writeOperand (operand.value ()))
-        return false;
-
-    return true;
+    return singleOperandDecoder->writeOperand (operand.value ());
 }
 
 template <>
@@ -110,10 +101,7 @@ inline bool Executor::operator() (COMB& instr)
         .V = false,
         .C = true}});
 
-    if (!singleOperandDecoder->writeOperand (operand.value ()))
-        return false;
-
-    return true;
+    return singleOperandDecoder->writeOperand (operand.value ());
 }
 
 template <>
@@ -133,10 +121,7 @@ inline bool Executor::operator() (INC& instr)
         .Z = result == 0,
         .V = contents == 077777});
 
-    if (!singleOperandDecoder->writeOperand (result))
-        return false;
-
-    return true;
+    return singleOperandDecoder->writeOperand (result);
 }
 
 template <>
@@ -155,10 +140,7 @@ inline bool Executor::operator() (INCB& instr)
         .Z = result == 0,
         .V = source == 000177});
 
-    if (!singleOperandDecoder->writeOperand (result))
-        return false;
-
-    return true;
+    return singleOperandDecoder->writeOperand (result);
 }
 
 template <>
@@ -178,10 +160,7 @@ inline bool Executor::operator() (DEC& instr)
         .Z = result == 0,
         .V = contents == 0100000});
 
-    if (!singleOperandDecoder->writeOperand (result))
-        return false;
-
-    return true;
+    return singleOperandDecoder->writeOperand (result);
 }
 
 template <>
@@ -200,10 +179,7 @@ inline bool Executor::operator() (DECB& instr)
         .Z = result == 0,
         .V = source == 0000200});
 
-    if (!singleOperandDecoder->writeOperand (result))
-        return false;
-
-    return true;
+    return singleOperandDecoder->writeOperand (result);
 }
 
 template <>
@@ -226,10 +202,7 @@ inline bool Executor::operator() (NEG& instr)
         .V = operand == 0100000,
         .C = operand != 0});
 
-    if (!singleOperandDecoder->writeOperand (operand.value ()))
-        return false;
-
-    return true;
+    return singleOperandDecoder->writeOperand (operand.value ());
 }
 
 template <>
@@ -250,10 +223,7 @@ inline bool Executor::operator() (NEGB& instr)
         .V = operand == 0200,
         .C = operand != 0});
 
-    if (!singleOperandDecoder->writeOperand (operand.value ()))
-        return false;
-
-    return true;
+    return singleOperandDecoder->writeOperand (operand.value ());
 }
 
 
@@ -281,10 +251,7 @@ inline bool Executor::operator() (ASR& instr)
         .V = (bool) (result & 0100000) != (bool) (contents & 1),
         .C = (bool) (contents & 1)});
 
-    if (!singleOperandDecoder->writeOperand (result))
-        return false;
-
-    return true;
+    return singleOperandDecoder->writeOperand (result);
 }
 
 template <>
@@ -311,10 +278,7 @@ inline bool Executor::operator() (ASRB& instr)
         .V = (bool) (result & 0x80) != (bool) (source & 1),
         .C = (bool) (source & 1)});
 
-    if (!singleOperandDecoder->writeOperand (result))
-        return false;
-
-    return true;
+    return singleOperandDecoder->writeOperand (result);
 }
 
 template <>
@@ -334,10 +298,7 @@ inline bool Executor::operator() (ASL& instr)
         .V = ((bool) (result & 0100000) != (bool) (contents & 0100000)),
         .C = (bool) (contents & 0100000)});
 
-    if (!singleOperandDecoder->writeOperand (result))
-        return false;
-
-    return true;
+    return singleOperandDecoder->writeOperand (result);
 }
 
 template <>
@@ -357,10 +318,7 @@ inline bool Executor::operator() (ASLB& instr)
         .V = (bool) (result & 0x80) != (bool) (source & 0x80),
         .C = (bool) (source & 0x80)});
 
-    if (!singleOperandDecoder->writeOperand (result))
-        return false;
-
-    return true;
+    return singleOperandDecoder->writeOperand (result);
 }
 
 template <>
@@ -382,10 +340,7 @@ inline bool Executor::operator() (ROR& instr)
         .V = (bool) (result & 0100000) != (bool) (contents & 0000001),
         .C = (bool) (contents & 0000001)});
 
-    if (!singleOperandDecoder->writeOperand (result))
-        return false;
-
-    return true;
+    return singleOperandDecoder->writeOperand (result);
 }
 
 template <>
@@ -407,10 +362,7 @@ inline bool Executor::operator() (RORB& instr)
         .V = (bool) (result & 0x80) != (bool) (source & 0x01),
         .C = (bool) (source & 0x01)});
 
-    if (!singleOperandDecoder->writeOperand (result))
-        return false;
-
-    return true;
+    return singleOperandDecoder->writeOperand (result);
 }
 
 template <>
@@ -434,10 +386,7 @@ inline bool Executor::operator() (ROL& instr)
         .C = (bool) (contents & 0100000)});
 
 
-    if (!singleOperandDecoder->writeOperand (result))
-        return false;
-
-    return true;
+    return singleOperandDecoder->writeOperand (result);
 }
 
 template <>
@@ -459,10 +408,7 @@ inline bool Executor::operator() (ROLB& instr)
         .V = (bool) ((result & 0x80) != (source & 0x80)),
         .C = (bool) (source & 0x80)});
 
-    if (!singleOperandDecoder->writeOperand (result))
-        return false;
-
-    return true;
+    return singleOperandDecoder->writeOperand (result);
 }
 
 template <>
@@ -483,10 +429,7 @@ inline bool Executor::operator() (SWAB& instr)
         .V = false,
         .C = false});
 
-    if (!singleOperandDecoder->writeOperand (operand.value ()))
-        return false;
-
-    return true;
+    return singleOperandDecoder->writeOperand (operand.value ());
 }
 
 template <>
@@ -507,10 +450,7 @@ inline bool Executor::operator() (ADC& instr)
         .V = contents == 0077777 && commonExecutor.isSet (PSW_C),
         .C = contents == 0177777 && commonExecutor.isSet (PSW_C)}));
 
-    if (!singleOperandDecoder->writeOperand (result))
-        return false;
-
-    return true;
+    return singleOperandDecoder->writeOperand (result);
 }
 
 template <>
@@ -531,10 +471,7 @@ inline bool Executor::operator() (ADCB& instr)
         .V = source == 0177 && commonExecutor.isSet (PSW_C),
         .C = source == 0377 && commonExecutor.isSet (PSW_C)}));
 
-    if (!singleOperandDecoder->writeOperand (destination))
-        return false;
-
-    return true;
+    return singleOperandDecoder->writeOperand (destination);
 }
 
 template <>
@@ -555,10 +492,7 @@ inline bool Executor::operator() (SBC& instr)
         .V = contents == 0100000,
         .C = contents == 0 && cBit});
 
-    if (!singleOperandDecoder->writeOperand (result))
-        return false;
-
-    return true;
+    return singleOperandDecoder->writeOperand (result);
 }
 
 template <>
@@ -579,10 +513,7 @@ inline bool Executor::operator() (SBCB& instr)
         .V = source == 0200,
         .C = source == 0 && cBit});
 
-    if (!singleOperandDecoder->writeOperand (destination))
-        return false;
-
-    return true;
+    return singleOperandDecoder->writeOperand (destination);
 }
 
 template <>
@@ -596,10 +527,7 @@ inline bool Executor::operator() (SXT& instr)
     commonExecutor.setPSW (ConditionCodes {.Z = !commonExecutor.isSet (PSW_N),
         .V = false});
 
-    if (!singleOperandDecoder->writeOperand (result))
-        return false;
-
-    return true;
+    return singleOperandDecoder->writeOperand (result);
 }
 
 template <>
@@ -652,10 +580,7 @@ inline bool Executor::operator() (MOV& instr)
         .Z = source == 0,
         .V = false}));
     
-    if (!doubleOperandDecoder->writeDestinationOperand (source.value ()))
-        return false;
-
-    return true;
+    return doubleOperandDecoder->writeDestinationOperand (source.value ());
 }
 
 template <>
@@ -681,10 +606,7 @@ inline bool Executor::operator() (MOVB& instr)
         .V = false}));
 
     // Using the overloaded MOVB::writeDestinationOperand()
-    if (!doubleOperandDecoder->writeDestinationOperands8 (tmp))
-        return false;
-
-    return true;
+    return doubleOperandDecoder->writeDestinationOperands8 (tmp);
 }
 
 template <>
@@ -763,10 +685,7 @@ inline bool Executor::operator() (ADD& instr)
             ((destination & 0x8000) != (result & 0x8000)),
         .C = (bool) (((u32) source + (u32) destination) & 0x10000)}));
 
-    if (!doubleOperandDecoder->writeDestinationOperand (result))
-        return false;
-
-    return true;
+    return doubleOperandDecoder->writeDestinationOperand (result);
 }
 
 template <>
@@ -793,10 +712,7 @@ inline bool Executor::operator() (SUB& instr)
              ((source & 0x8000) == (result & 0x8000)),
         .C = (bool) (((u32) destination - (u32) source) & 0x10000)});
 
-    if (!doubleOperandDecoder->writeDestinationOperand (result))
-        return false;
-
-    return true;
+    return doubleOperandDecoder->writeDestinationOperand (result);
 }
 
 template <>
@@ -871,10 +787,7 @@ inline bool Executor::operator() (BIC& instr)
         .Z = result == 0,
         .V = false});
 
-    if (!doubleOperandDecoder->writeDestinationOperand (result))
-        return false;
-
-    return true;
+    return doubleOperandDecoder->writeDestinationOperand (result);
 }
 
 template <>
@@ -899,10 +812,7 @@ inline bool Executor::operator() (BICB& instr)
         .Z = tmp == 0,
         .V = false});
 
-    if (!doubleOperandDecoder->writeDestinationOperand (tmp))
-        return false;
-
-    return true;
+    return doubleOperandDecoder->writeDestinationOperand (tmp);
 }
 
 template <>
@@ -927,10 +837,7 @@ inline bool Executor::operator() (BIS& instr)
         .Z = tmp == 0,
         .V = false});
 
-    if (!doubleOperandDecoder->writeDestinationOperand (tmp))
-        return false;
-
-    return true;
+    return doubleOperandDecoder->writeDestinationOperand (tmp);
 }
 
 template <>
@@ -955,10 +862,7 @@ inline bool Executor::operator() (BISB& instr)
         .Z = tmp == 0,
         .V = false});
 
-    if (!doubleOperandDecoder->writeDestinationOperand (tmp))
-        return false;
-
-    return true;
+    return doubleOperandDecoder->writeDestinationOperand (tmp);
 }
 
 // EIS instructions, including JSR and XOR
@@ -983,10 +887,7 @@ inline bool Executor::operator() (XOR& instr)
         .Z = result == 0,
         .V = false});
 
-    if (!eisDecoder->writeOperand (result))
-        return false;
-
-    return true;
+    return eisDecoder->writeOperand (result);
 }
 
 // No-operand instructions
