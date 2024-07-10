@@ -3,7 +3,7 @@
 
 #include "kd/common/executor/executor.h"
 
-namespace KDF11_A {
+namespace KDF11 {
 
 // This class contains the KDF11-A specific execution of some instructions.
 // For most instructions the execution is forwarded to the Common::Executor.
@@ -1105,6 +1105,6 @@ inline bool Executor::operator() (FDIV& instr)
 	return false;
 }
 
-} // namespace KDF11_A
+} // namespace KDF11
 
 #endif // _KDF11_A_EXECUTOR_H_
