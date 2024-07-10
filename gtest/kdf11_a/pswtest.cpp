@@ -1,3 +1,6 @@
+#include "kd/common/decoder/decoder.h"
+#include "kd/kdf11/executor/executor.h"
+
 #include "qbus/qbus.h"
 #include "kd/kdf11/kdf11_a/kdf11_a.h"
 #include "msv11d/msv11d.h"
@@ -7,6 +10,7 @@
 #include <memory>
 
 using std::make_shared;
+using std::visit;
 
 class KDF11_A_PSWTEST : public ::testing::Test
 {
@@ -15,7 +19,7 @@ protected:
     shared_ptr<KDF11_AConfig> kdf11_aConfig = make_shared<KDF11_AConfig> (true);
     KDF11_A* kdf11a  = new KDF11_A (&qbus, kdf11_aConfig);
     MSV11D*  memory  = new MSV11D (&qbus);
-    KDF11Instruction instrDecoder;
+    Decoder instrDecoder;
     u16 const PswAddress = 0177776;
 
     void SetUp() override
@@ -52,10 +56,10 @@ TEST_F (KDF11_A_PSWTEST, MOVDoesNotSetCC)
     kdf11a->cpuData ()->registers () [7] = 2;
     kdf11a->mmu ()->putWord (2, 0);
     kdf11a->mmu ()->putWord (4, 0177776);
-    unique_ptr<LSI11Instruction> instruction {instrDecoder.decode (kdf11a->cpuData (),
-        kdf11a->cpuControl (), kdf11a->mmu (), 0012737)};
-
-    EXPECT_TRUE (instruction->execute ());
+    Instruction instruction {instrDecoder.decode (0012737)};
+    
+    EXPECT_TRUE (visit (KDF11::Executor {kdf11a->cpuData (), kdf11a->cpuControl (), kdf11a->mmu ()},
+        instruction));
     
     u16 psw;
     EXPECT_EQ (kdf11a->read (PswAddress, &psw), StatusCode::OK);
@@ -75,10 +79,10 @@ TEST_F (KDF11_A_PSWTEST, MOVBDoesNotSetCC)
     kdf11a->cpuData ()->registers () [7] = 2;
     kdf11a->mmu ()->putWord (2, 0);
     kdf11a->mmu ()->putWord (4, 0177776);
-    unique_ptr<LSI11Instruction> instruction {instrDecoder.decode (kdf11a->cpuData (),
-        kdf11a->cpuControl (), kdf11a->mmu (), 0112737)};
+    Instruction instruction {instrDecoder.decode (0112737)};
 
-    EXPECT_TRUE (instruction->execute ());
+    EXPECT_TRUE (visit (KDF11::Executor {kdf11a->cpuData (), kdf11a->cpuControl (), kdf11a->mmu ()},
+        instruction));
     
     u16 psw;
     EXPECT_EQ (kdf11a->read (PswAddress, &psw), StatusCode::OK);
@@ -96,10 +100,10 @@ TEST_F (KDF11_A_PSWTEST, CLRDoesNotSetCC)
     // instruction is at address 2.
     kdf11a->cpuData ()->registers () [7] = 2;
     kdf11a->mmu ()->putWord (2, 0177776);
-    unique_ptr<LSI11Instruction> instruction {instrDecoder.decode (kdf11a->cpuData (),
-        kdf11a->cpuControl (), kdf11a->mmu (), 0005037)};
+    Instruction instruction {instrDecoder.decode (0005037)};
 
-    EXPECT_TRUE (instruction->execute ());
+    EXPECT_TRUE (visit (KDF11::Executor {kdf11a->cpuData (), kdf11a->cpuControl (), kdf11a->mmu ()},
+        instruction));
     
     u16 psw;
     EXPECT_EQ (kdf11a->read (PswAddress, &psw), StatusCode::OK);
@@ -117,11 +121,10 @@ TEST_F (KDF11_A_PSWTEST, CLRBDoesNotSetCC)
     // instruction is at address 2.
     kdf11a->cpuData ()->registers () [7] = 2;
     kdf11a->mmu ()->putWord (2, 0177776);
-    unique_ptr<LSI11Instruction> instruction {instrDecoder.decode (kdf11a->cpuData (),
-        kdf11a->cpuControl (), kdf11a->mmu (), 0105037)};
+    Instruction instruction {instrDecoder.decode (0105037)};
 
-    EXPECT_TRUE (instruction->execute ());
-    
+    EXPECT_TRUE (visit (KDF11::Executor {kdf11a->cpuData (), kdf11a->cpuControl (), kdf11a->mmu ()},
+        instruction));    
     u16 psw;
     EXPECT_EQ (kdf11a->read (PswAddress, &psw), StatusCode::OK);
     EXPECT_EQ (psw, 0177400);
