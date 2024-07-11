@@ -36,7 +36,7 @@ template <>
 inline bool Executor::operator() (CLR& instr)
 {
     auto singleOperandDecoder = 
-         operandDecoderFactory_.createSingleOperandDecoder (&instr);
+         operandDecoderFactory_.create<SingleOperandDecoder> (&instr);
 
     commonExecutor.setPSW (ConditionCodes {.N = false,
         .Z = true,
@@ -50,7 +50,7 @@ template <>
 inline bool Executor::operator() (CLRB& instr)
 {
     auto singleOperandDecoder = 
-         operandDecoderFactory_.createSingleOperandDecoder (&instr);
+         operandDecoderFactory_.create<SingleOperandDecoder> (&instr);
 
     commonExecutor.setPSW (ConditionCodes {.N = false,
         .Z = true,
@@ -64,7 +64,7 @@ template <>
 inline bool Executor::operator() (COM& instr)
 {
     auto singleOperandDecoder = 
-         operandDecoderFactory_.createSingleOperandDecoder (&instr);
+         operandDecoderFactory_.create<SingleOperandDecoder> (&instr);
     CondData<u16> operand;
 
     if (!singleOperandDecoder->readOperand (&operand))
@@ -86,7 +86,7 @@ template <>
 inline bool Executor::operator() (COMB& instr)
 {
     auto singleOperandDecoder = 
-         operandDecoderFactory_.createSingleOperandDecoder (&instr);
+         operandDecoderFactory_.create<SingleOperandDecoder> (&instr);
     CondData<u8> operand;
 
     if (!singleOperandDecoder->readOperand (&operand))
@@ -108,7 +108,7 @@ template <>
 inline bool Executor::operator() (INC& instr)
 {
     auto singleOperandDecoder = 
-         operandDecoderFactory_.createSingleOperandDecoder (&instr);
+         operandDecoderFactory_.create<SingleOperandDecoder> (&instr);
     CondData<u16> contents;
 
     if (!singleOperandDecoder->readOperand (&contents))
@@ -128,7 +128,7 @@ template <>
 inline bool Executor::operator() (INCB& instr)
 {
     auto singleOperandDecoder = 
-         operandDecoderFactory_.createSingleOperandDecoder (&instr);
+         operandDecoderFactory_.create<SingleOperandDecoder> (&instr);
     CondData<u8> source;
 
     if (!singleOperandDecoder->readOperand (&source))
@@ -147,7 +147,7 @@ template <>
 inline bool Executor::operator() (DEC& instr)
 {
     auto singleOperandDecoder = 
-         operandDecoderFactory_.createSingleOperandDecoder (&instr);
+         operandDecoderFactory_.create<SingleOperandDecoder> (&instr);
     CondData<u16> contents;
 
     if (!singleOperandDecoder->readOperand (&contents))
@@ -167,7 +167,7 @@ template <>
 inline bool Executor::operator() (DECB& instr)
 {
     auto singleOperandDecoder = 
-         operandDecoderFactory_.createSingleOperandDecoder (&instr);
+         operandDecoderFactory_.create<SingleOperandDecoder> (&instr);
     CondData<u8> source;
 
     if (!singleOperandDecoder->readOperand (&source))
@@ -186,7 +186,7 @@ template <>
 inline bool Executor::operator() (NEG& instr)
 {
     auto singleOperandDecoder = 
-         operandDecoderFactory_.createSingleOperandDecoder (&instr);
+         operandDecoderFactory_.create<SingleOperandDecoder> (&instr);
     CondData<u16> operand;
 
     if (!singleOperandDecoder->readOperand (&operand))
@@ -209,7 +209,7 @@ template <>
 inline bool Executor::operator() (NEGB& instr)
 {
     auto singleOperandDecoder = 
-         operandDecoderFactory_.createSingleOperandDecoder (&instr);
+         operandDecoderFactory_.create<SingleOperandDecoder> (&instr);
     CondData<u8> operand;
 
     if (!singleOperandDecoder->readOperand (&operand))
@@ -231,7 +231,7 @@ template <>
 inline bool Executor::operator() (ASR& instr)
 {
     auto singleOperandDecoder = 
-         operandDecoderFactory_.createSingleOperandDecoder (&instr);
+         operandDecoderFactory_.create<SingleOperandDecoder> (&instr);
     CondData<u16> contents;
 
     if (!singleOperandDecoder->readOperand (&contents))
@@ -258,7 +258,7 @@ template <>
 inline bool Executor::operator() (ASRB& instr)
 {
     auto singleOperandDecoder = 
-         operandDecoderFactory_.createSingleOperandDecoder (&instr);
+         operandDecoderFactory_.create<SingleOperandDecoder> (&instr);
     CondData<u8> source;
 
     if (!singleOperandDecoder->readOperand (&source))
@@ -285,7 +285,7 @@ template <>
 inline bool Executor::operator() (ASL& instr)
 {
     auto singleOperandDecoder = 
-         operandDecoderFactory_.createSingleOperandDecoder (&instr);
+         operandDecoderFactory_.create<SingleOperandDecoder> (&instr);
     CondData<u16> contents;
 
     if (!singleOperandDecoder->readOperand (&contents))
@@ -305,7 +305,7 @@ template <>
 inline bool Executor::operator() (ASLB& instr)
 {
     auto singleOperandDecoder = 
-         operandDecoderFactory_.createSingleOperandDecoder (&instr);
+         operandDecoderFactory_.create<SingleOperandDecoder> (&instr);
     CondData<u8> source;
 
     if (!singleOperandDecoder->readOperand (&source))
@@ -325,7 +325,7 @@ template <>
 inline bool Executor::operator() (ROR& instr)
 {
     auto singleOperandDecoder = 
-         operandDecoderFactory_.createSingleOperandDecoder (&instr);
+         operandDecoderFactory_.create<SingleOperandDecoder> (&instr);
     CondData<u16> contents;
 
     if (!singleOperandDecoder->readOperand (&contents))
@@ -347,7 +347,7 @@ template <>
 inline bool Executor::operator() (RORB& instr)
 {
     auto singleOperandDecoder = 
-         operandDecoderFactory_.createSingleOperandDecoder (&instr);
+         operandDecoderFactory_.create<SingleOperandDecoder> (&instr);
     CondData<u8> source;
 
     if (!singleOperandDecoder->readOperand (&source))
@@ -369,7 +369,7 @@ template <>
 inline bool Executor::operator() (ROL& instr)
 {
     auto singleOperandDecoder = 
-         operandDecoderFactory_.createSingleOperandDecoder (&instr);
+         operandDecoderFactory_.create<SingleOperandDecoder> (&instr);
     CondData<u16> contents;
 
     if (!singleOperandDecoder->readOperand (&contents))
@@ -393,7 +393,7 @@ template <>
 inline bool Executor::operator() (ROLB& instr)
 {
     auto singleOperandDecoder = 
-         operandDecoderFactory_.createSingleOperandDecoder (&instr);
+         operandDecoderFactory_.create<SingleOperandDecoder> (&instr);
     CondData<u8> source;
 
     if (!singleOperandDecoder->readOperand (&source))
@@ -415,7 +415,7 @@ template <>
 inline bool Executor::operator() (SWAB& instr)
 {
     auto singleOperandDecoder = 
-         operandDecoderFactory_.createSingleOperandDecoder (&instr);
+         operandDecoderFactory_.create<SingleOperandDecoder> (&instr);
     CondData<u16> operand;
 
     if (!singleOperandDecoder->readOperand (&operand))
@@ -436,7 +436,7 @@ template <>
 inline bool Executor::operator() (ADC& instr)
 {
     auto singleOperandDecoder = 
-         operandDecoderFactory_.createSingleOperandDecoder (&instr);
+         operandDecoderFactory_.create<SingleOperandDecoder> (&instr);
     CondData<u16> contents;
 
     if (!singleOperandDecoder->readOperand (&contents))
@@ -457,7 +457,7 @@ template <>
 inline bool Executor::operator() (ADCB& instr)
 {
     auto singleOperandDecoder = 
-         operandDecoderFactory_.createSingleOperandDecoder (&instr);
+         operandDecoderFactory_.create<SingleOperandDecoder> (&instr);
     CondData<u8> source;
 
     if (!singleOperandDecoder->readOperand (&source))
@@ -478,7 +478,7 @@ template <>
 inline bool Executor::operator() (SBC& instr)
 {
     auto singleOperandDecoder = 
-         operandDecoderFactory_.createSingleOperandDecoder (&instr);
+         operandDecoderFactory_.create<SingleOperandDecoder> (&instr);
     CondData<u16> contents;
 
     if (!singleOperandDecoder->readOperand (&contents))
@@ -499,7 +499,7 @@ template <>
 inline bool Executor::operator() (SBCB& instr)
 {
     auto singleOperandDecoder = 
-         operandDecoderFactory_.createSingleOperandDecoder (&instr);
+         operandDecoderFactory_.create<SingleOperandDecoder> (&instr);
     CondData<u8> source;
 
     if (!singleOperandDecoder->readOperand (&source))
@@ -520,7 +520,7 @@ template <>
 inline bool Executor::operator() (SXT& instr)
 {
     auto singleOperandDecoder = 
-         operandDecoderFactory_.createSingleOperandDecoder (&instr);
+         operandDecoderFactory_.create<SingleOperandDecoder> (&instr);
 
     u16 result = commonExecutor.isSet (PSW_N) ? 0177777 : 0;
 
@@ -534,7 +534,7 @@ template <>
 inline bool Executor::operator() (MFPS& instr)
 {
     auto singleOperandDecoder = 
-         operandDecoderFactory_.createSingleOperandDecoder (&instr);
+         operandDecoderFactory_.create<SingleOperandDecoder> (&instr);
 
     u8 contents = (u8) cpuData_->psw ();
     OperandLocation operandLocation = 
@@ -565,7 +565,7 @@ template <>
 inline bool Executor::operator() (MOV& instr)
 {
     auto doubleOperandDecoder = 
-         operandDecoderFactory_.createDoubleOperandDecoder (&instr);
+         operandDecoderFactory_.create<DoubleOperandDecoder> (&instr);
     CondData<u16> source, destination;
 
     // OPR%R, (R)+ or OPR%R, and -(R) using the same register as both
@@ -587,7 +587,7 @@ template <>
 inline bool Executor::operator() (MOVB& instr)
 {
     auto doubleOperandDecoder = 
-         operandDecoderFactory_.createDoubleOperandDecoder (&instr);
+         operandDecoderFactory_.create<DoubleOperandDecoder> (&instr);
     CondData<u8> source;
 
     // OPR%R, (R)+ or OPR%R, and -(R) using the same register as both
@@ -613,7 +613,7 @@ template <>
 inline bool Executor::operator() (CMP& instr)
 {
     auto doubleOperandDecoder = 
-         operandDecoderFactory_.createDoubleOperandDecoder (&instr);
+         operandDecoderFactory_.create<DoubleOperandDecoder> (&instr);
     CondData<u16> source, destination;
 
     // OPR%R, (R)+ or OPR%R, and -(R) using the same register as both
@@ -639,7 +639,7 @@ template <>
 inline bool Executor::operator() (CMPB& instr)
 {
     auto doubleOperandDecoder = 
-         operandDecoderFactory_.createDoubleOperandDecoder (&instr);
+         operandDecoderFactory_.create<DoubleOperandDecoder> (&instr);
     CondData<u8> source, destination;
 
     // OPR%R, (R)+ or OPR%R, and -(R) using the same register as both
@@ -665,7 +665,7 @@ template <>
 inline bool Executor::operator() (ADD& instr)
 {
     auto doubleOperandDecoder = 
-         operandDecoderFactory_.createDoubleOperandDecoder (&instr);
+         operandDecoderFactory_.create<DoubleOperandDecoder> (&instr);
     CondData<u16> source, destination;
 
     // OPR%R, (R)+ or OPR%R, and -(R) using the same register as both
@@ -692,7 +692,7 @@ template <>
 inline bool Executor::operator() (SUB& instr)
 {
     auto doubleOperandDecoder = 
-         operandDecoderFactory_.createDoubleOperandDecoder (&instr);
+         operandDecoderFactory_.create<DoubleOperandDecoder> (&instr);
     CondData<u16> source, destination;
 
     // OPR%R, (R)+ or OPR%R, and -(R) using the same register as both
@@ -719,7 +719,7 @@ template <>
 inline bool Executor::operator() (BIT& instr)
 {
     auto doubleOperandDecoder = 
-         operandDecoderFactory_.createDoubleOperandDecoder (&instr);
+         operandDecoderFactory_.create<DoubleOperandDecoder> (&instr);
     CondData<u16> source, destination;
 
     // OPR%R, (R)+ or OPR%R, and -(R) using the same register as both
@@ -744,7 +744,7 @@ template <>
 inline bool Executor::operator() (BITB& instr)
 {
     auto doubleOperandDecoder = 
-         operandDecoderFactory_.createDoubleOperandDecoder (&instr);
+         operandDecoderFactory_.create<DoubleOperandDecoder> (&instr);
     CondData<u8> source, destination;
 
     // OPR%R, (R)+ or OPR%R, and -(R) using the same register as both
@@ -769,7 +769,7 @@ template <>
 inline bool Executor::operator() (BIC& instr)
 {
     auto doubleOperandDecoder = 
-         operandDecoderFactory_.createDoubleOperandDecoder (&instr);
+         operandDecoderFactory_.create<DoubleOperandDecoder> (&instr);
     CondData<u16> source, destination;
 
     // OPR%R, (R)+ or OPR%R, and -(R) using the same register as both
@@ -794,7 +794,7 @@ template <>
 inline bool Executor::operator() (BICB& instr)
 {
     auto doubleOperandDecoder = 
-         operandDecoderFactory_.createDoubleOperandDecoder (&instr);
+         operandDecoderFactory_.create<DoubleOperandDecoder> (&instr);
     CondData<u8> source, destination;
 
     // OPR%R, (R)+ or OPR%R, and -(R) using the same register as both
@@ -819,7 +819,7 @@ template <>
 inline bool Executor::operator() (BIS& instr)
 {
     auto doubleOperandDecoder = 
-         operandDecoderFactory_.createDoubleOperandDecoder (&instr);
+         operandDecoderFactory_.create<DoubleOperandDecoder> (&instr);
     CondData<u16> source, destination;
 
     // OPR%R, (R)+ or OPR%R, and -(R) using the same register as both
@@ -844,7 +844,7 @@ template <>
 inline bool Executor::operator() (BISB& instr)
 {
     auto doubleOperandDecoder = 
-         operandDecoderFactory_.createDoubleOperandDecoder (&instr);
+         operandDecoderFactory_.create<DoubleOperandDecoder> (&instr);
     CondData<u8> source, destination;
 
     // OPR%R, (R)+ or OPR%R, and -(R) using the same register as both
@@ -870,7 +870,7 @@ template <>
 inline bool Executor::operator() (XOR& instr)
 {
     auto eisDecoder = 
-         operandDecoderFactory_.createEisDecoder (&instr);
+         operandDecoderFactory_.create<EisDecoder> (&instr);
 
     u16 regNr = instr.getRegisterNr ();
     GeneralRegisters& registers = cpuData_->registers ();
@@ -926,7 +926,7 @@ template <>
 inline bool Executor::operator() (MFPD& instr)
 {
     auto singleOperandDecoder = 
-         operandDecoderFactory_.createSingleOperandDecoder (&instr);
+         operandDecoderFactory_.create<SingleOperandDecoder> (&instr);
     CondData<u16> source;
 
     // The source operand is determined in the current memory management
@@ -955,7 +955,7 @@ template <>
 inline bool Executor::operator() (MTPD& instr)
 {
     auto singleOperandDecoder = 
-         operandDecoderFactory_.createSingleOperandDecoder (&instr);
+         operandDecoderFactory_.create<SingleOperandDecoder> (&instr);
     u16 tmp;
     
     // The destination operand and the value popped off the stack are 

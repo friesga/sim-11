@@ -13,20 +13,26 @@
 #include <memory>
 
 using std::unique_ptr;
+using std::make_unique;
 
 class OperandDecoderFactory
 {
 public:
     OperandDecoderFactory (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu);
-    unique_ptr<BranchDecoder> createBranchDecoder (BranchInstruction* instr);
-    unique_ptr<DoubleOperandDecoder> createDoubleOperandDecoder (DoubleOperandInstruction* instr);
-    unique_ptr<EisDecoder> createEisDecoder (EisInstruction* instr);
-    unique_ptr<SingleOperandDecoder> createSingleOperandDecoder (SingleOperandInstruction* instr);
+    template <typename T, typename I>
+    unique_ptr<T> create (I* instr);
 
 private:
     CpuData* cpuData_;
     CpuControl* cpuControl_;
     MMU* mmu_;
 };
+
+
+template <typename T, typename I>
+unique_ptr<T> OperandDecoderFactory::create (I* instr)
+{
+    return make_unique<T> (cpuData_, cpuControl_, mmu_, instr);
+}
 
 #endif //_OPERANDDECODERFACTORY_

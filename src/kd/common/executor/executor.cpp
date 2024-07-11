@@ -16,7 +16,7 @@ Common::Executor::Executor (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu)
  bool Common::Executor::execute (CLR& instr)
  {
      auto singleOperandDecoder = 
-         operandDecoderFactory_.createSingleOperandDecoder (&instr);
+         operandDecoderFactory_.create<SingleOperandDecoder> (&instr);
 
      if (!singleOperandDecoder->writeOperand ((u16) 0))
          return false;
@@ -32,7 +32,7 @@ Common::Executor::Executor (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu)
 bool Common::Executor::execute (CLRB& instr)
 {
     auto singleOperandDecoder = 
-         operandDecoderFactory_.createSingleOperandDecoder (&instr);
+         operandDecoderFactory_.create<SingleOperandDecoder> (&instr);
 
     if (!singleOperandDecoder->writeOperand ((u8) 0))
         return false;
@@ -48,7 +48,7 @@ bool Common::Executor::execute (CLRB& instr)
 bool Common::Executor::execute (COM& instr)
 {
     auto singleOperandDecoder = 
-         operandDecoderFactory_.createSingleOperandDecoder (&instr);
+         operandDecoderFactory_.create<SingleOperandDecoder> (&instr);
     CondData<u16> operand;
 
     if (!singleOperandDecoder->readOperand (&operand))
@@ -70,7 +70,7 @@ bool Common::Executor::execute (COM& instr)
 bool Common::Executor::execute (COMB& instr)
 {
     auto singleOperandDecoder = 
-         operandDecoderFactory_.createSingleOperandDecoder (&instr);
+         operandDecoderFactory_.create<SingleOperandDecoder> (&instr);
     CondData<u8> operand;
 
     if (!singleOperandDecoder->readOperand (&operand))
@@ -92,7 +92,7 @@ bool Common::Executor::execute (COMB& instr)
 bool Common::Executor::execute (INC& instr)
 {
     auto singleOperandDecoder = 
-         operandDecoderFactory_.createSingleOperandDecoder (&instr);
+         operandDecoderFactory_.create<SingleOperandDecoder> (&instr);
     CondData<u16> contents;
 
     if (!singleOperandDecoder->readOperand (&contents))
@@ -113,7 +113,7 @@ bool Common::Executor::execute (INC& instr)
 bool Common::Executor::execute (INCB& instr)
 {
     auto singleOperandDecoder = 
-         operandDecoderFactory_.createSingleOperandDecoder (&instr);
+         operandDecoderFactory_.create<SingleOperandDecoder> (&instr);
     CondData<u8> source;
 
     if (!singleOperandDecoder->readOperand (&source))
@@ -134,7 +134,7 @@ bool Common::Executor::execute (INCB& instr)
 bool Common::Executor::execute (DEC& instr)
 {
     auto singleOperandDecoder = 
-         operandDecoderFactory_.createSingleOperandDecoder (&instr);
+         operandDecoderFactory_.create<SingleOperandDecoder> (&instr);
     CondData<u16> contents;
 
     if (singleOperandDecoder->readOperand (&contents))
@@ -155,7 +155,7 @@ bool Common::Executor::execute (DEC& instr)
 bool Common::Executor::execute (DECB& instr)
 {
     auto singleOperandDecoder = 
-         operandDecoderFactory_.createSingleOperandDecoder (&instr);
+         operandDecoderFactory_.create<SingleOperandDecoder> (&instr);
     CondData<u8> source;
 
     if (!singleOperandDecoder->readOperand (&source))
@@ -176,7 +176,7 @@ bool Common::Executor::execute (DECB& instr)
 bool Common::Executor::execute (NEG& instr)
 {
     auto singleOperandDecoder = 
-         operandDecoderFactory_.createSingleOperandDecoder (&instr);
+         operandDecoderFactory_.create<SingleOperandDecoder> (&instr);
     CondData<u16> operand;
 
     if (!singleOperandDecoder->readOperand (&operand))
@@ -199,7 +199,7 @@ bool Common::Executor::execute (NEG& instr)
 bool Common::Executor::execute (NEGB& instr)
 {
     auto singleOperandDecoder = 
-         operandDecoderFactory_.createSingleOperandDecoder (&instr);
+         operandDecoderFactory_.create<SingleOperandDecoder> (&instr);
     CondData<u8> operand;
 
     if (!singleOperandDecoder->readOperand (&operand))
@@ -222,7 +222,7 @@ bool Common::Executor::execute (NEGB& instr)
 bool Common::Executor::execute (TST& instr)
 {
     auto singleOperandDecoder = 
-         operandDecoderFactory_.createSingleOperandDecoder (&instr);
+         operandDecoderFactory_.create<SingleOperandDecoder> (&instr);
     CondData<u16> contents;
 
     if (!singleOperandDecoder->readOperand (&contents))
@@ -239,7 +239,7 @@ bool Common::Executor::execute (TST& instr)
 bool Common::Executor::execute (TSTB& instr)
 {
     auto singleOperandDecoder = 
-         operandDecoderFactory_.createSingleOperandDecoder (&instr);
+         operandDecoderFactory_.create<SingleOperandDecoder> (&instr);
     CondData<u8> source;
 
     if (!singleOperandDecoder->readOperand (&source))
@@ -256,7 +256,7 @@ bool Common::Executor::execute (TSTB& instr)
 bool Common::Executor::execute (ASR& instr)
 {
     auto singleOperandDecoder = 
-         operandDecoderFactory_.createSingleOperandDecoder (&instr);
+         operandDecoderFactory_.create<SingleOperandDecoder> (&instr);
     CondData<u16> contents;
 
     if (!singleOperandDecoder->readOperand (&contents))
@@ -285,7 +285,7 @@ bool Common::Executor::execute (ASR& instr)
 bool Common::Executor::execute (ASRB& instr)
 {
     auto singleOperandDecoder = 
-         operandDecoderFactory_.createSingleOperandDecoder (&instr);
+         operandDecoderFactory_.create<SingleOperandDecoder> (&instr);
     CondData<u8> source;
 
     if (!singleOperandDecoder->readOperand (&source))
@@ -314,7 +314,7 @@ bool Common::Executor::execute (ASRB& instr)
 bool Common::Executor::execute (ASL& instr)
 {
     auto singleOperandDecoder = 
-         operandDecoderFactory_.createSingleOperandDecoder (&instr);
+         operandDecoderFactory_.create<SingleOperandDecoder> (&instr);
     CondData<u16> contents;
 
     if (!singleOperandDecoder->readOperand (&contents))
@@ -336,7 +336,7 @@ bool Common::Executor::execute (ASL& instr)
 bool Common::Executor::execute (ASLB& instr)
 {
     auto singleOperandDecoder = 
-         operandDecoderFactory_.createSingleOperandDecoder (&instr);
+         operandDecoderFactory_.create<SingleOperandDecoder> (&instr);
     CondData<u8> source;
 
     if (!singleOperandDecoder->readOperand (&source))
@@ -358,7 +358,7 @@ bool Common::Executor::execute (ASLB& instr)
 bool Common::Executor::execute (ROR& instr)
 {
     auto singleOperandDecoder = 
-         operandDecoderFactory_.createSingleOperandDecoder (&instr);
+         operandDecoderFactory_.create<SingleOperandDecoder> (&instr);
     CondData<u16> contents;
 
     if (!singleOperandDecoder->readOperand (&contents))
@@ -382,7 +382,7 @@ bool Common::Executor::execute (ROR& instr)
 bool Common::Executor::execute (RORB& instr)
 {
     auto singleOperandDecoder = 
-         operandDecoderFactory_.createSingleOperandDecoder (&instr);
+         operandDecoderFactory_.create<SingleOperandDecoder> (&instr);
     CondData<u8> source;
 
     if (!singleOperandDecoder->readOperand (&source))
@@ -406,7 +406,7 @@ bool Common::Executor::execute (RORB& instr)
 bool Common::Executor::execute (ROL& instr)
 {
     auto singleOperandDecoder = 
-         operandDecoderFactory_.createSingleOperandDecoder (&instr);
+         operandDecoderFactory_.create<SingleOperandDecoder> (&instr);
     CondData<u16> contents;
 
     if (!singleOperandDecoder->readOperand (&contents))
@@ -431,7 +431,7 @@ bool Common::Executor::execute (ROL& instr)
 bool Common::Executor::execute (ROLB& instr)
 {
     auto singleOperandDecoder = 
-         operandDecoderFactory_.createSingleOperandDecoder (&instr);
+         operandDecoderFactory_.create<SingleOperandDecoder> (&instr);
     CondData<u8> source;
 
     if (!singleOperandDecoder->readOperand (&source))
@@ -455,7 +455,7 @@ bool Common::Executor::execute (ROLB& instr)
 bool Common::Executor::execute (SWAB& instr)
 {
     auto singleOperandDecoder = 
-         operandDecoderFactory_.createSingleOperandDecoder (&instr);
+         operandDecoderFactory_.create<SingleOperandDecoder> (&instr);
     CondData<u16> operand;
 
     if (!singleOperandDecoder->readOperand (&operand))
@@ -478,7 +478,7 @@ bool Common::Executor::execute (SWAB& instr)
 bool Common::Executor::execute (ADC& instr)
 {
     auto singleOperandDecoder = 
-         operandDecoderFactory_.createSingleOperandDecoder (&instr);
+         operandDecoderFactory_.create<SingleOperandDecoder> (&instr);
     CondData<u16> contents;
 
     if (!singleOperandDecoder->readOperand (&contents))
@@ -501,7 +501,7 @@ bool Common::Executor::execute (ADC& instr)
 bool Common::Executor::execute (ADCB& instr)
 {
     auto singleOperandDecoder = 
-         operandDecoderFactory_.createSingleOperandDecoder (&instr);
+         operandDecoderFactory_.create<SingleOperandDecoder> (&instr);
     CondData<u8> source;
 
     if (!singleOperandDecoder->readOperand (&source))
@@ -524,7 +524,7 @@ bool Common::Executor::execute (ADCB& instr)
 bool Common::Executor::execute (SBC& instr)
 {
     auto singleOperandDecoder = 
-         operandDecoderFactory_.createSingleOperandDecoder (&instr);
+         operandDecoderFactory_.create<SingleOperandDecoder> (&instr);
     CondData<u16> contents;
 
     if (!singleOperandDecoder->readOperand (&contents))
@@ -547,7 +547,7 @@ bool Common::Executor::execute (SBC& instr)
 bool Common::Executor::execute (SBCB& instr)
 {
     auto singleOperandDecoder = 
-         operandDecoderFactory_.createSingleOperandDecoder (&instr);
+         operandDecoderFactory_.create<SingleOperandDecoder> (&instr);
     CondData<u8> source;
 
     if (!singleOperandDecoder->readOperand (&source))
@@ -570,7 +570,7 @@ bool Common::Executor::execute (SBCB& instr)
 bool Common::Executor::execute (SXT& instr)
 {
     auto singleOperandDecoder = 
-         operandDecoderFactory_.createSingleOperandDecoder (&instr);
+         operandDecoderFactory_.create<SingleOperandDecoder> (&instr);
     u16 result = isSet (PSW_N) ? 0177777 : 0;
 
     if (!singleOperandDecoder->writeOperand (result))
@@ -585,7 +585,7 @@ bool Common::Executor::execute (SXT& instr)
 bool Common::Executor::execute (MFPS& instr)
 {
     auto singleOperandDecoder = 
-         operandDecoderFactory_.createSingleOperandDecoder (&instr);
+         operandDecoderFactory_.create<SingleOperandDecoder> (&instr);
     u8 contents = (u8) cpuData_->psw ();
 
     OperandLocation operandLocation_ = 
@@ -614,7 +614,7 @@ bool Common::Executor::execute (MFPS& instr)
 bool Common::Executor::execute (MTPS& instr)
 {
     auto singleOperandDecoder = 
-         operandDecoderFactory_.createSingleOperandDecoder (&instr);
+         operandDecoderFactory_.create<SingleOperandDecoder> (&instr);
     CondData<u8> newValue;
 
     if (!singleOperandDecoder->readOperand (&newValue))
@@ -629,7 +629,7 @@ bool Common::Executor::execute (MTPS& instr)
 bool Common::Executor::execute (JMP& instr)
 {
     auto singleOperandDecoder = 
-         operandDecoderFactory_.createSingleOperandDecoder (&instr);
+         operandDecoderFactory_.create<SingleOperandDecoder> (&instr);
 
     OperandLocation operandLocation_ =
         singleOperandDecoder->getOperandLocation (cpuData_->registers ());
@@ -661,7 +661,7 @@ bool Common::Executor::execute (MARK& instr)
 bool Common::Executor::execute (MOV& instr)
 {
     auto doubleOperandDecoder = 
-         operandDecoderFactory_.createDoubleOperandDecoder (&instr);
+         operandDecoderFactory_.create<DoubleOperandDecoder> (&instr);
     CondData<u16> source, destination;
 
 
@@ -679,7 +679,7 @@ bool Common::Executor::execute (MOV& instr)
 bool Common::Executor::execute (MOVB& instr)
 {
     auto doubleOperandDecoder = 
-         operandDecoderFactory_.createDoubleOperandDecoder (&instr);
+         operandDecoderFactory_.create<DoubleOperandDecoder> (&instr);
     CondData<u8> source;
 
     if (!doubleOperandDecoder->readSourceOperand (&source))
@@ -709,7 +709,7 @@ bool Common::Executor::execute (MOVB& instr)
 bool Common::Executor::execute (CMP& instr)
 {
     auto doubleOperandDecoder = 
-         operandDecoderFactory_.createDoubleOperandDecoder (&instr);
+         operandDecoderFactory_.create<DoubleOperandDecoder> (&instr);
     CondData<u16> source, destination;
 
     if (!doubleOperandDecoder->readSourceOperand (&source) ||
@@ -729,7 +729,7 @@ bool Common::Executor::execute (CMP& instr)
 bool Common::Executor::execute (CMPB& instr)
 {
     auto doubleOperandDecoder = 
-         operandDecoderFactory_.createDoubleOperandDecoder (&instr);
+         operandDecoderFactory_.create<DoubleOperandDecoder> (&instr);
     CondData<u8> source, destination;
 
     if (!doubleOperandDecoder->readSourceOperand (&source) || 
@@ -749,7 +749,7 @@ bool Common::Executor::execute (CMPB& instr)
 bool Common::Executor::execute (ADD& instr)
 {
     auto doubleOperandDecoder = 
-         operandDecoderFactory_.createDoubleOperandDecoder (&instr);
+         operandDecoderFactory_.create<DoubleOperandDecoder> (&instr);
     CondData<u16> source, destination;
 
     if (!doubleOperandDecoder->readSourceOperand (&source) ||
@@ -772,7 +772,7 @@ bool Common::Executor::execute (ADD& instr)
 bool Common::Executor::execute (SUB& instr)
 {
     auto doubleOperandDecoder = 
-         operandDecoderFactory_.createDoubleOperandDecoder (&instr);
+         operandDecoderFactory_.create<DoubleOperandDecoder> (&instr);
     CondData<u16> source, destination;
 
     if (!doubleOperandDecoder->readSourceOperand (&source) ||
@@ -796,7 +796,7 @@ bool Common::Executor::execute (SUB& instr)
 bool Common::Executor::execute (BIT& instr)
 {
     auto doubleOperandDecoder = 
-         operandDecoderFactory_.createDoubleOperandDecoder (&instr);
+         operandDecoderFactory_.create<DoubleOperandDecoder> (&instr);
     CondData<u16> source, destination;
 
     if (!doubleOperandDecoder->readSourceOperand (&source) ||
@@ -815,7 +815,7 @@ bool Common::Executor::execute (BIT& instr)
 bool Common::Executor::execute (BITB& instr)
 {
     auto doubleOperandDecoder = 
-         operandDecoderFactory_.createDoubleOperandDecoder (&instr);
+         operandDecoderFactory_.create<DoubleOperandDecoder> (&instr);
     CondData<u8> source, destination;
 
     if (!doubleOperandDecoder->readSourceOperand (&source) || 
@@ -834,7 +834,7 @@ bool Common::Executor::execute (BITB& instr)
 bool Common::Executor::execute (BIC& instr)
 {
     auto doubleOperandDecoder = 
-         operandDecoderFactory_.createDoubleOperandDecoder (&instr);
+         operandDecoderFactory_.create<DoubleOperandDecoder> (&instr);
     CondData<u16> source, destination;
 
     if (!doubleOperandDecoder->readSourceOperand (&source) ||
@@ -856,7 +856,7 @@ bool Common::Executor::execute (BIC& instr)
 bool Common::Executor::execute (BICB& instr)
 {
     auto doubleOperandDecoder = 
-         operandDecoderFactory_.createDoubleOperandDecoder (&instr);
+         operandDecoderFactory_.create<DoubleOperandDecoder> (&instr);
     CondData<u8> source, destination;
 
     if (!doubleOperandDecoder->readSourceOperand (&source) ||
@@ -878,7 +878,7 @@ bool Common::Executor::execute (BICB& instr)
 bool Common::Executor::execute (BIS& instr)
 {
     auto doubleOperandDecoder = 
-         operandDecoderFactory_.createDoubleOperandDecoder (&instr);
+         operandDecoderFactory_.create<DoubleOperandDecoder> (&instr);
     CondData<u16> source, destination;
 
     if (!doubleOperandDecoder->readSourceOperand (&source) ||
@@ -900,7 +900,7 @@ bool Common::Executor::execute (BIS& instr)
 bool Common::Executor::execute (BISB& instr)
 {
     auto doubleOperandDecoder = 
-         operandDecoderFactory_.createDoubleOperandDecoder (&instr);
+         operandDecoderFactory_.create<DoubleOperandDecoder> (&instr);
     CondData<u8> source, destination;
 
     if (!doubleOperandDecoder->readSourceOperand (&source) || 
@@ -923,7 +923,7 @@ bool Common::Executor::execute (BISB& instr)
 bool Common::Executor::execute (JSR& instr)
 {
     auto eisDecoder = 
-         operandDecoderFactory_.createEisDecoder (&instr);
+         operandDecoderFactory_.create<EisDecoder> (&instr);
 
     OperandLocation destination = 
         eisDecoder->getOperandLocation (cpuData_->registers ());
@@ -953,7 +953,7 @@ bool Common::Executor::execute (JSR& instr)
 bool Common::Executor::execute (MUL& instr)
 {
     auto eisDecoder = 
-         operandDecoderFactory_.createEisDecoder (&instr);
+         operandDecoderFactory_.create<EisDecoder> (&instr);
 
     u16 regNr = instr.getRegisterNr ();
 
@@ -979,7 +979,7 @@ bool Common::Executor::execute (MUL& instr)
 bool Common::Executor::execute (DIV& instr)
 {
     auto eisDecoder = 
-         operandDecoderFactory_.createEisDecoder (&instr);
+         operandDecoderFactory_.create<EisDecoder> (&instr);
     u16 regNr = instr.getRegisterNr ();
 
     GeneralRegisters& registers = cpuData_->registers ();
@@ -1018,7 +1018,7 @@ bool Common::Executor::execute (DIV& instr)
 bool Common::Executor::execute (ASH& instr)
 {
     auto eisDecoder = 
-         operandDecoderFactory_.createEisDecoder (&instr);
+         operandDecoderFactory_.create<EisDecoder> (&instr);
 
     u16 regNr = instr.getRegisterNr ();
     u16 tmp {0};
@@ -1080,7 +1080,7 @@ bool Common::Executor::execute (ASH& instr)
 bool Common::Executor::execute (ASHC& instr)
 {
     auto eisDecoder = 
-         operandDecoderFactory_.createEisDecoder (&instr);
+         operandDecoderFactory_.create<EisDecoder> (&instr);
 
     u16 regNr = instr.getRegisterNr ();
     GeneralRegisters& registers = cpuData_->registers ();
@@ -1136,7 +1136,7 @@ bool Common::Executor::execute (ASHC& instr)
 bool Common::Executor::execute (XOR& instr)
 {
     auto eisDecoder = 
-         operandDecoderFactory_.createEisDecoder (&instr);
+         operandDecoderFactory_.create<EisDecoder> (&instr);
 
     u16 regNr = instr.getRegisterNr ();
     GeneralRegisters& registers = cpuData_->registers ();
@@ -1189,7 +1189,7 @@ bool Common::Executor::execute (RTS& instr)
 bool Common::Executor::execute (BR& instr)
 {
     auto branchDecoder = 
-         operandDecoderFactory_.createBranchDecoder (&instr);
+         operandDecoderFactory_.create<BranchDecoder> (&instr);
 
     branchDecoder->executeBranch ();
     return true;
@@ -1198,7 +1198,7 @@ bool Common::Executor::execute (BR& instr)
 bool Common::Executor::execute (BNE& instr)
 {
     auto branchDecoder = 
-         operandDecoderFactory_.createBranchDecoder (&instr);
+         operandDecoderFactory_.create<BranchDecoder> (&instr);
 
     branchDecoder->executeBranchIf (!isSet (PSW_Z));
     return true;
@@ -1207,7 +1207,7 @@ bool Common::Executor::execute (BNE& instr)
 bool Common::Executor::execute (BEQ& instr)
 {
     auto branchDecoder = 
-         operandDecoderFactory_.createBranchDecoder (&instr);
+         operandDecoderFactory_.create<BranchDecoder> (&instr);
 
     branchDecoder->executeBranchIf (isSet (PSW_Z));
     return true;
@@ -1216,7 +1216,7 @@ bool Common::Executor::execute (BEQ& instr)
 bool Common::Executor::execute (BPL& instr)
 {
     auto branchDecoder = 
-         operandDecoderFactory_.createBranchDecoder (&instr);
+         operandDecoderFactory_.create<BranchDecoder> (&instr);
 
     branchDecoder->executeBranchIf (!isSet (PSW_N));
     return true;
@@ -1225,7 +1225,7 @@ bool Common::Executor::execute (BPL& instr)
 bool Common::Executor::execute (BMI& instr)
 {
     auto branchDecoder = 
-         operandDecoderFactory_.createBranchDecoder (&instr);
+         operandDecoderFactory_.create<BranchDecoder> (&instr);
 
     branchDecoder->executeBranchIf (isSet (PSW_N));
     return true;
@@ -1234,7 +1234,7 @@ bool Common::Executor::execute (BMI& instr)
 bool Common::Executor::execute (BVC& instr)
 {
     auto branchDecoder = 
-         operandDecoderFactory_.createBranchDecoder (&instr);
+         operandDecoderFactory_.create<BranchDecoder> (&instr);
 
     branchDecoder->executeBranchIf (!isSet (PSW_V));
     return true;
@@ -1243,7 +1243,7 @@ bool Common::Executor::execute (BVC& instr)
 bool Common::Executor::execute (BVS& instr)
 {
     auto branchDecoder = 
-         operandDecoderFactory_.createBranchDecoder (&instr);
+         operandDecoderFactory_.create<BranchDecoder> (&instr);
 
     branchDecoder->executeBranchIf (isSet (PSW_V));
     return true;
@@ -1252,7 +1252,7 @@ bool Common::Executor::execute (BVS& instr)
 bool Common::Executor::execute (BCC& instr)
 {
     auto branchDecoder = 
-         operandDecoderFactory_.createBranchDecoder (&instr);
+         operandDecoderFactory_.create<BranchDecoder> (&instr);
 
     branchDecoder->executeBranchIf (!isSet (PSW_C));
     return true;
@@ -1261,7 +1261,7 @@ bool Common::Executor::execute (BCC& instr)
 bool Common::Executor::execute (BCS& instr)
 {
     auto branchDecoder = 
-         operandDecoderFactory_.createBranchDecoder (&instr);
+         operandDecoderFactory_.create<BranchDecoder> (&instr);
 
     branchDecoder->executeBranchIf (isSet (PSW_C));
     return true;
@@ -1270,7 +1270,7 @@ bool Common::Executor::execute (BCS& instr)
 bool Common::Executor::execute (BGE& instr)
 {
     auto branchDecoder = 
-         operandDecoderFactory_.createBranchDecoder (&instr);
+         operandDecoderFactory_.create<BranchDecoder> (&instr);
 
     branchDecoder->executeBranchIf ((isSet (PSW_N) ^ isSet (PSW_V)) == 0);
     return true;
@@ -1279,7 +1279,7 @@ bool Common::Executor::execute (BGE& instr)
 bool Common::Executor::execute (BLT& instr)
 {
     auto branchDecoder = 
-         operandDecoderFactory_.createBranchDecoder (&instr);
+         operandDecoderFactory_.create<BranchDecoder> (&instr);
 
     branchDecoder->executeBranchIf (isSet (PSW_N) ^ isSet (PSW_V));
     return true;
@@ -1288,7 +1288,7 @@ bool Common::Executor::execute (BLT& instr)
 bool Common::Executor::execute (BGT& instr)
 {
     auto branchDecoder = 
-         operandDecoderFactory_.createBranchDecoder (&instr);
+         operandDecoderFactory_.create<BranchDecoder> (&instr);
 
     branchDecoder->executeBranchIf ((isSet (PSW_Z) || (isSet (PSW_N) ^ isSet (PSW_V))) == 0);
     return true;
@@ -1297,7 +1297,7 @@ bool Common::Executor::execute (BGT& instr)
 bool Common::Executor::execute (BLE& instr)
 {
     auto branchDecoder = 
-         operandDecoderFactory_.createBranchDecoder (&instr);
+         operandDecoderFactory_.create<BranchDecoder> (&instr);
 
     branchDecoder->executeBranchIf (isSet (PSW_Z) || (isSet (PSW_N) ^ isSet (PSW_V)));
     return true;
@@ -1306,7 +1306,7 @@ bool Common::Executor::execute (BLE& instr)
 bool Common::Executor::execute (BHI& instr)
 {
     auto branchDecoder = 
-         operandDecoderFactory_.createBranchDecoder (&instr);
+         operandDecoderFactory_.create<BranchDecoder> (&instr);
 
     branchDecoder->executeBranchIf (!isSet (PSW_C) && !isSet (PSW_Z));
     return true;
@@ -1315,7 +1315,7 @@ bool Common::Executor::execute (BHI& instr)
 bool Common::Executor::execute (BLOS& instr)
 {
     auto branchDecoder = 
-         operandDecoderFactory_.createBranchDecoder (&instr);
+         operandDecoderFactory_.create<BranchDecoder> (&instr);
 
     branchDecoder->executeBranchIf (isSet (PSW_C) || isSet (PSW_Z));
     return true;
