@@ -13,17 +13,17 @@ u16 EisInstruction::getOperationCode ()
 	return instr_.decoded.opcode;
 }
 
-u16 EisInstruction::getOperandRegister ()
+u16 EisInstruction::getOperandRegister () const
 {
 	return instr_.decoded.operandRegNr;
 }
 
-u16 EisInstruction::getOperandMode ()
+u16 EisInstruction::getOperandMode () const
 {
 	return instr_.decoded.operandMode;
 }
 
-u16 EisInstruction::getRegisterNr ()
+u16 EisInstruction::getRegisterNr () const
 {
 	return instr_.decoded.registerNr;
 }

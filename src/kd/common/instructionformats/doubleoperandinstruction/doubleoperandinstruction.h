@@ -26,10 +26,10 @@ class DoubleOperandInstruction : public LSI11Instruction
 public:
 	DoubleOperandInstruction (u16 instruction);
 	u16 getOperationCode ();
-	u16 getSourceRegister ();
-	u16 getSourceMode ();
-	u16 getDestinationRegister ();
-	u16 getDestinationMode ();
+	u16 getSourceRegister () const;
+	u16 getSourceMode () const;
+	u16 getDestinationRegister () const;
+	u16 getDestinationMode () const;
 };
 
 #endif // _DOUBLEINSTRUCTIONFORMAT_H_

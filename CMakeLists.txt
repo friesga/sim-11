@@ -92,11 +92,12 @@ set (KDF11_ODT_SRCS
 set (KDF11_SRCS
     src/kd/kdf11/kdf11_a/kdf11_a.cpp
     src/kd/kdf11/executor/executor.cpp
+    src/kd/kdf11/calculate/calculate.cpp
     src/kd/kdf11/kdf11_b/kdf11_b.cpp
     src/kd/kdf11/kdf11_b/serial_line_units/serial_line_units.cpp
     src/kd/kdf11/cpucontrol/kdf11_step.cpp
     src/kd/kdf11/cpucontrol/kdf11_cpucontrol.cpp
-    src/kd/kdf11/cpucontrol/calcinstructiontime.cpp
+    # src/kd/kdf11/cpucontrol/calcinstructiontime.cpp
     src/kd/kdf11/cpudata/kdf11registers/kdf11registers.cpp
     src/kd/kdf11/cpudata/kdf11busdevice.cpp
     src/kd/kdf11/registerhandler/registerhandler.cpp
@@ -417,6 +418,7 @@ set (GTEST_SRCS
     gtest/kdf11_a/kdf11_aregisterstest.cpp
     gtest/kdf11_a/kdf11_abusdevicetest.cpp
     gtest/kdf11_a/kdf11_a_odttest.cpp
+    gtest/kdf11_a/kdf11_instr_timingtest.cpp
     gtest/kdf11_b/kdf11_bconfiguratortest.cpp
     gtest/kdf11_b/sluconfiguratortest.cpp
     gtest/kdf11_b/kdf11b_bdv11configuratortest.cpp

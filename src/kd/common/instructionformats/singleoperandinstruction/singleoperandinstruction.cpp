@@ -8,12 +8,12 @@ SingleOperandInstruction::SingleOperandInstruction (u16 instruction)
 	instr_ {instruction}
 {}
 
-u16 SingleOperandInstruction::getRegister ()
+u16 SingleOperandInstruction::getRegister () const
 {
 	return instr_.decoded.rn;
 }
 
-u16 SingleOperandInstruction::getMode ()
+u16 SingleOperandInstruction::getMode () const
 {
 	return instr_.decoded.mode;
 }

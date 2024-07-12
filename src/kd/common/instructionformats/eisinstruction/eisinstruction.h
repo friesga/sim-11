@@ -25,9 +25,9 @@ class EisInstruction : public LSI11Instruction
 public:
 	EisInstruction (u16 instruction);
 
-	u16 getOperandRegister ();
-	u16 getOperandMode ();
-	u16 getRegisterNr ();
+	u16 getOperandRegister () const;
+	u16 getOperandMode () const;
+	u16 getRegisterNr () const;
 	u16 getOperationCode () override;
 };
 

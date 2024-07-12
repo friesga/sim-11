@@ -22,8 +22,8 @@ class SingleOperandInstruction : public LSI11Instruction
 
 public:
 	SingleOperandInstruction (u16 instruction);
-	u16 getRegister ();
-	u16 getMode ();
+	u16 getRegister () const;
+	u16 getMode () const ;
 	u16 getOperationCode () override;
 };
 

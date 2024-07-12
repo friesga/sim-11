@@ -22,8 +22,8 @@ class SobInstruction : public LSI11Instruction
 
 public:
 	SobInstruction (u16 instruction);
-	u16 getRegisterNr ();
-	u16 getOffset ();
+	u16 getRegisterNr () const;
+	u16 getOffset () const;
 	u16 getOperationCode ();
 };
 

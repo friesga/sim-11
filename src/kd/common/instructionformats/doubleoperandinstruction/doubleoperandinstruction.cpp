@@ -19,22 +19,22 @@ u16 DoubleOperandInstruction::getOperationCode ()
 	return instr_.decoded.opcode;
 }
 
-u16 DoubleOperandInstruction::getSourceRegister ()
+u16 DoubleOperandInstruction::getSourceRegister () const
 {
 	return instr_.decoded.src_rn;
 }
 
-u16 DoubleOperandInstruction::getSourceMode ()
+u16 DoubleOperandInstruction::getSourceMode () const
 {
 	return instr_.decoded.src_mode;
 }
 
-u16 DoubleOperandInstruction::getDestinationRegister ()
+u16 DoubleOperandInstruction::getDestinationRegister () const
 {
 	return instr_.decoded.dst_rn;
 }
 
-u16 DoubleOperandInstruction::getDestinationMode ()
+u16 DoubleOperandInstruction::getDestinationMode () const
 {
 	return instr_.decoded.dst_mode;
 }

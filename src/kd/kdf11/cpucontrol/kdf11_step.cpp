@@ -1,5 +1,6 @@
 #include "kdf11_cpucontrol.h"
 #include "kd/kdf11/executor/executor.h"
+#include "kd/kdf11/calculate/calculate.h"
 #include "pdp11peripheral/pdp11peripheral.h"
 #include "chrono/simulatorclock/simulatorclock.h"
 #include "float/float.h"
@@ -94,6 +95,7 @@ void KDF11_CpuControl::execInstr ()
 {
     // Create an Executor to execute the instructions
     KDF11::Executor executor (cpuData_, this, mmu_);
+    KDF11::Calculate calculator {};
 
     // Get next instruction to execute and move PC forward
     CondData<u16> instructionWord = mmu_->fetchWord (cpuData_->registers ()[7]);
@@ -122,7 +124,7 @@ void KDF11_CpuControl::execInstr ()
     // The instruction time is defined in microseconds with an accuracy of
     // nanoseconds. Convert the time in microseconds to the 64-bits integer
     // number of nanoseconds.
-    double instrTime = calcInstructionTime (instructionWord);
+    double instrTime = visit (calculator, instr);
     SimulatorClock::forwardClock
     (
         SimulatorClock::duration (static_cast<uint64_t> (instrTime * 1000))
