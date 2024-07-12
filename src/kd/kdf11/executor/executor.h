@@ -975,6 +975,18 @@ inline bool Executor::operator() (MTPD& instr)
 }
 
 template <>
+inline bool Executor::operator() (MFPI& instr)
+{
+    return this->operator() (reinterpret_cast<MFPD&> (instr));
+}
+
+template <>
+inline bool Executor::operator() (MTPI& instr)
+{
+    return this->operator() (reinterpret_cast<MTPD&> (instr));
+}
+
+template <>
 inline bool Executor::operator() (MFPT& instr)
 {
     cpuData_->registers ()[0] = 3;

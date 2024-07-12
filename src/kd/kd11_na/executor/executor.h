@@ -71,6 +71,7 @@ inline bool Executor::operator()<FDIV> (FDIV& instr)
         [](Float f1, Float f2) { return f1 / f2; });
 }
 
+// Instructions not implemented on the KD11-NA.
 template <>
 inline bool Executor::operator()<MFPD> (MFPD& instr)
 {
@@ -80,6 +81,23 @@ inline bool Executor::operator()<MFPD> (MFPD& instr)
 
 template <>
 inline bool Executor::operator()<MTPD> (MTPD& instr)
+{
+    cpuData_->setTrap (CpuData::TrapCondition::ReservedInstructionTrap);
+    return true;
+}
+
+// Since the KDF11-A doesn't support separate I/D space the behaviour of the
+// MFPD and MTPD on this processor equals to that of the MFPI and MTPI
+// instructions.
+template <>
+inline bool Executor::operator()<MFPI> (MFPI& instr)
+{
+    cpuData_->setTrap (CpuData::TrapCondition::ReservedInstructionTrap);
+    return true;
+}
+
+template <>
+inline bool Executor::operator()<MTPI> (MTPI& instr)
 {
     cpuData_->setTrap (CpuData::TrapCondition::ReservedInstructionTrap);
     return true;

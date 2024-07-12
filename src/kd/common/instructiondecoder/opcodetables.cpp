@@ -177,7 +177,7 @@ InstructionDecoder::opCodeTable const InstructionDecoder::group_10_xx_xx
     create<ASRB>,   // 10 62 xx
     create<ASLB>,   // 10 63 xx
     create<MTPS>,   // 10 64 xx
-    create<MFPD>,   // 10 65 xx 
+    create<MFPI>,   // 10 65 xx 
     create<MTPD>,   // 10 66 xx
     create<MFPS>,   // 10 67 xx
     create<Unused>, // 10 70 xx The range 10 70 xx till 10 77 xx is undefined
@@ -248,7 +248,7 @@ InstructionDecoder::opCodeTable const InstructionDecoder::group_00_nn_xx
     create<ASL>,                    // 00 63 xx
     create<MARK>,                   // 00 64 xx
     create<MFPD>,                   // 00 65 xx 
-    create<MTPD>,                   // 00 66 xx
+    create<MTPI>,                   // 00 66 xx
     create<SXT>,                    // 00 67 xx
     create<Unused>,                 // 00 70 xx
     create<Unused>,                 // 00 71 xx

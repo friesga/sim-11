@@ -88,6 +88,8 @@
 // KDF11-A specific instructions
 #include "kd/common/instructions/mfpd.h"
 #include "kd/common/instructions/mtpd.h"
+#include "kd/common/instructions/mfpi.h"
+#include "kd/common/instructions/mtpi.h"
 #include "kd/common/instructions/mfpt.h"
 
 
@@ -178,6 +180,8 @@ using Instruction = variant<
     SCC,
     MFPD,
     MTPD,
+    MFPI,
+    MTPI,
     MFPT,
     Unused>;
 
