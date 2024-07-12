@@ -38,14 +38,19 @@ size_t SpyWakeUpCall::id_ {0};
 
 TEST (SimulatorClock, clockWakesUp)
 {
-    SimulatorClock simulatorClock;
     SpyWakeUpCall spyWakeUpCall;
 
-    simulatorClock.wakeMeAt (SimulatorClock::time_point {SimulatorClock::duration (200ms)}, &spyWakeUpCall);
-    simulatorClock.forwardClock (100ms);
+    // Reset the clock to start at time point 0 so we can check the
+    // wake up time.
+    SimulatorClock::reset ();
+
+    SimulatorClock::wakeMeAt (SimulatorClock::time_point {SimulatorClock::duration (200ms)}, &spyWakeUpCall);
+    SimulatorClock::forwardClock (100ms);
+
+    // Verify the wake up hasn't yet occurred
     EXPECT_EQ (spyWakeUpCall.calledAt (), 0);
 
-    simulatorClock.forwardClock (200ms);
+    SimulatorClock::forwardClock (200ms);
 
     // The clock keeps track of simulated time in nanoseconds
     EXPECT_EQ (spyWakeUpCall.calledAt (), 300'000'000);

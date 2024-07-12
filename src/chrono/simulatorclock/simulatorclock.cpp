@@ -1,6 +1,11 @@
 #include "simulatorclock.h"
 #include "trace/trace.h"
 
+void SimulatorClock::reset ()
+{
+    currentTime_ = SimulatorClock::time_point {SimulatorClock::duration (0)};
+}
+
 SimulatorClock::time_point SimulatorClock::now () noexcept
 {
     return time_point (currentTime_);

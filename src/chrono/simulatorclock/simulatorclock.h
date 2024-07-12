@@ -30,6 +30,7 @@ public:
 
     static const bool is_steady = true;
 
+    static void reset ();
     static time_point now () noexcept;
     static void forwardClock (duration timeIncrement);
     static bool wakeMeAt (time_point timePoint, WakeUpCall* wakeUpCall);
