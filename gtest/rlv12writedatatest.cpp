@@ -3,13 +3,14 @@
 #include "rlv12/rlv12.h"
 #include "configdata/rl/rlunitconfig/rlunitconfig.h"
 #include "cmdlineoptions/cmdlineoptions.h"
+#include "chrono/simulatorclock/simulatorclock.h"
 
 #include <gtest/gtest.h>
 #include <memory>
 
 using std::make_shared;
 
-// Write to unit tests.
+using namespace std::chrono_literals;
 
 // Definition of the test fixture
 class RLV12WriteDataTest : public ::testing::Test
@@ -64,7 +65,7 @@ protected:
         u16 result;
         do
         {
-            std::this_thread::yield ();
+            SimulatorClock::forwardClock (100ms);
             rlv12Device->read (RLCSR, &result);
         }
         while (!(result & CSR_ControllerReady));

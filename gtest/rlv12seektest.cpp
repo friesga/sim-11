@@ -2,13 +2,15 @@
 #include "msv11d/msv11d.h"
 #include "rlv12/rlv12.h"
 #include "cmdlineoptions/cmdlineoptions.h"
+#include "chrono/simulatorclock/simulatorclock.h"
 
 #include <gtest/gtest.h>
 #include <memory>
+#include <chrono>
 
 using std::make_shared;
 
-// Write to unit tests.
+using namespace std::chrono_literals;
 
 // Definition of the test fixture
 class RLV12SeekTest : public ::testing::Test
@@ -67,6 +69,18 @@ protected:
         while (!(result & CSR_ControllerReady));
     }
 
+    void waitForDriveReady ()
+    {
+        u16 result;
+        do
+        {
+            SimulatorClock::forwardClock (100ms);
+            rlv12Device->read (RLCSR, &result);
+        }
+        while ((result & (CSR_ControllerReady | CSR_DriveReady)) !=
+            (CSR_ControllerReady | CSR_DriveReady));
+    }
+
     void SetUp() override
     {
         // Create a minimal system, conisting of just the bus, memory
@@ -123,7 +137,7 @@ TEST_F (RLV12SeekTest, seekSucceeds)
         CSR_ControllerReady);
 
     // Wait for Drive Ready
-    std::this_thread::sleep_for (std::chrono::milliseconds (100));
+    waitForDriveReady ();
 
     // Verify now both controller and drive are ready
     rlv12Device->read (RLCSR, &result);
@@ -181,7 +195,7 @@ TEST_F (RLV12SeekTest, parallelSeeksSucceed)
     rlv12Device->writeWord (RLCSR, CSR_GetStatusCommand | CSR_Drive1);
 
     // Wait for command completion
-    std::this_thread::sleep_for (std::chrono::milliseconds (50));
+    SimulatorClock::forwardClock (50ms);
 
     // Verify the controller is ready to perform an operation (the drive
     // does not have to be ready)
@@ -199,13 +213,11 @@ TEST_F (RLV12SeekTest, parallelSeeksSucceed)
     rlv12Device->writeWord (RLCSR, CSR_SeekCommand | CSR_Drive0);
 
     // Wait for command completion
-    std::this_thread::sleep_for (std::chrono::milliseconds (10));
+    SimulatorClock::forwardClock (10ms);
 
     // Verify the controller is ready to accept a command for another unit
     // while the drive is not ready
-    rlv12Device->read (RLCSR, &result);
-    ASSERT_EQ (result & (CSR_ControllerReady | CSR_DriveReady), 
-        CSR_ControllerReady);
+    waitForControllerReady ();
 
     // Start the same seek command for unit 1
     rlv12Device->writeWord (RLCSR, CSR_SeekCommand | CSR_Drive1);
@@ -219,9 +231,10 @@ TEST_F (RLV12SeekTest, parallelSeeksSucceed)
         CSR_ControllerReady);
 
     // Wait for command completion
-    std::this_thread::sleep_for (std::chrono::milliseconds (500));
+    SimulatorClock::forwardClock (500ms);
 
     // Verify now both controller and drive 1 are ready
+    waitForDriveReady ();
     rlv12Device->read (RLCSR, &result);
     ASSERT_EQ (result & (CSR_ControllerReady | CSR_DriveReady | CSR_Drive1), 
         CSR_ControllerReady | CSR_DriveReady | CSR_Drive1);
@@ -233,12 +246,10 @@ TEST_F (RLV12SeekTest, parallelSeeksSucceed)
     rlv12Device->writeWord (RLCSR, CSR_ReadHeaderCommand | CSR_Drive1);
 
     // Wait for command completion
-    std::this_thread::sleep_for (std::chrono::milliseconds (500));
+    SimulatorClock::forwardClock (500ms);
 
     // Verify the controller is ready
-    rlv12Device->read (RLCSR, &result);
-    ASSERT_EQ (result, CSR_ControllerReady | CSR_ReadHeaderCommand | 
-        CSR_DriveReady | CSR_Drive1);
+    waitForControllerReady ();
 
     // Expected result in the MPR register: Sector Address, Head Select and
     // Cylinder Address
@@ -266,7 +277,7 @@ TEST_F (RLV12SeekTest, seekOnBusyDriveAccepted)
     rlv12Device->writeWord (RLCSR, CSR_GetStatusCommand | CSR_Drive0);
 
     // Wait for command completion
-    std::this_thread::sleep_for (std::chrono::milliseconds (50));
+    SimulatorClock::forwardClock (50ms);
 
     // Verify controller and drive are ready 
     u16 result;
@@ -295,9 +306,10 @@ TEST_F (RLV12SeekTest, seekOnBusyDriveAccepted)
     rlv12Device->writeWord (RLCSR, CSR_SeekCommand);
 
     // Wait till both seeks are completed
-    std::this_thread::sleep_for (std::chrono::milliseconds (500));
+    SimulatorClock::forwardClock (500ms);
 
     // Verify both controller and drive are ready
+    waitForDriveReady ();
     rlv12Device->read (RLCSR, &result);
     ASSERT_EQ (result & (CSR_ControllerReady | CSR_DriveReady),
         CSR_ControllerReady | CSR_DriveReady);
@@ -306,7 +318,8 @@ TEST_F (RLV12SeekTest, seekOnBusyDriveAccepted)
     rlv12Device->writeWord (RLCSR, CSR_ReadHeaderCommand);
 
     // Wait for command completion
-    std::this_thread::sleep_for (std::chrono::milliseconds (500));
+    SimulatorClock::forwardClock (500ms);
+    waitForControllerReady ();
 
     // Verify both seeks are executed
     u16 mpr;
@@ -334,7 +347,7 @@ TEST_F (RLV12SeekTest, readHeaderAfterSeekSucceeds)
     rlv12Device->writeWord (RLCSR, CSR_GetStatusCommand | CSR_Drive0);
 
     // Wait for command completion
-    std::this_thread::sleep_for (std::chrono::milliseconds (50));
+    SimulatorClock::forwardClock (50ms);
 
     // Verify controller and drive are ready 
     u16 result;
@@ -369,9 +382,10 @@ TEST_F (RLV12SeekTest, readHeaderAfterSeekSucceeds)
     ASSERT_EQ (result & (CSR_ControllerReady | CSR_DriveReady), 0);
 
     // Wait till both Seek and Read Header command are completed
-    std::this_thread::sleep_for (std::chrono::milliseconds (500));
+    SimulatorClock::forwardClock (500ms);
 
     // Verify both controller and drive are ready
+    waitForDriveReady ();
     rlv12Device->read (RLCSR, &result);
     ASSERT_EQ (result & (CSR_ControllerReady | CSR_DriveReady),
         CSR_ControllerReady | CSR_DriveReady);

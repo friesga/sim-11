@@ -2,13 +2,15 @@
 #include "msv11d/msv11d.h"
 #include "rlv12/rlv12.h"
 #include "cmdlineoptions/cmdlineoptions.h"
+#include "chrono/simulatorclock/simulatorclock.h"
 
 #include <gtest/gtest.h>
 #include <memory>
+#include <chrono>
 
 using std::make_shared;
 
-// Write to unit tests.
+using namespace std::chrono_literals;
 
 // Definition of the test fixture
 class RLV12ReadHeaderTest : public ::testing::Test
@@ -63,11 +65,24 @@ protected:
         u16 result;
         do
         {
-            std::this_thread::yield ();
+            SimulatorClock::forwardClock (100ms);
             rlv12Device->read (RLCSR, &result);
         }
         while (!(result & CSR_ControllerReady));
     }
+
+    void waitForDriveReady ()
+    {
+        u16 result;
+        do
+        {
+            SimulatorClock::forwardClock (100ms);
+            rlv12Device->read (RLCSR, &result);
+        }
+        while ((result & (CSR_ControllerReady | CSR_DriveReady)) !=
+            (CSR_ControllerReady | CSR_DriveReady));
+    }
+
 
     void SetUp() override
     {
@@ -152,7 +167,8 @@ TEST_F (RLV12ReadHeaderTest, headerHasCorrectContents)
     rlv12Device->writeWord (RLCSR, CSR_SeekCommand);
 
     // Wait for the seek to be completed
-    std::this_thread::sleep_for (std::chrono::milliseconds (300));
+    SimulatorClock::forwardClock (500ms);
+    waitForDriveReady ();
 
     // Verify both controller and drive are ready and no error is
     // indicated
@@ -165,7 +181,8 @@ TEST_F (RLV12ReadHeaderTest, headerHasCorrectContents)
     rlv12Device->writeWord (RLCSR, CSR_ReadHeaderCommand);
 
     // Wait for command completion
-    std::this_thread::sleep_for (std::chrono::milliseconds (500));
+    SimulatorClock::forwardClock (500ms);
+    waitForDriveReady ();
 
     // Verify both controller and drive are ready again and no error is
     // indicated
