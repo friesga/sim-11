@@ -8,6 +8,16 @@
 // and ASHC instruction and additionally by the JSR and XOR instructions.
 class EisInstruction : public LSI11Instruction
 {
+public:
+	EisInstruction (u16 instruction);
+
+	u16 getOperandRegister () const;
+	u16 getOperandMode () const;
+	u16 getRegisterNr () const;
+	u16 getOperationCode () override;
+	int getShiftCount () const;
+
+private:
 	union instr
 	{
 		u16 word;
@@ -22,13 +32,11 @@ class EisInstruction : public LSI11Instruction
 	} 
 	instr_;
 
-public:
-	EisInstruction (u16 instruction);
+	static const u16 sourceOperandMask {077};
+	static const u16 signBit {040};
+	static const u16 upperBits {0300};
 
-	u16 getOperandRegister () const;
-	u16 getOperandMode () const;
-	u16 getRegisterNr () const;
-	u16 getOperationCode () override;
+	s8 sixBitTwoComplementToInt (u16 source) const;
 };
 
 

@@ -1,6 +1,7 @@
 #include "kd11_na_cpucontrol.h"
 #include "kd/common/instructiondecoder/instructiondecoder.h"
 #include "kd/kd11_na/executor/executor.h"
+#include "kd/kd11_na/calculate/calculate.h"
 #include "qbus/qbus.h"
 #include "pdp11peripheral/pdp11peripheral.h"
 #include "float/float.h"
@@ -100,7 +101,8 @@ void KD11_NA_CpuControl::execute ()
 // Execute one instruction
 void KD11_NA_CpuControl::execInstr ()
 {
-    // Create an Executor to execute the instructions
+    // Create an Calculate and Executor to time and execute the instructions
+    KD11_NA::Calculate calculator {};
     KD11_NA::Executor executor (cpuData_, this, mmu_);
 
     // Get next instruction to execute and move PC forward
@@ -120,6 +122,15 @@ void KD11_NA_CpuControl::execInstr ()
     // trap, unless the instruction resulted in another trap.
     if (traceFlag_)
         cpuData_->setTrap (CpuData::TrapCondition::BreakpointTrap);
+
+    // The instruction time is defined in microseconds with an accuracy of
+    // nanoseconds. Convert the time in microseconds to the 64-bits integer
+    // number of nanoseconds.
+    double instrTime = visit (calculator, instr);
+    SimulatorClock::forwardClock
+    (
+        SimulatorClock::duration (static_cast<uint64_t> (instrTime * 1000))
+    );
 
     // Execute the next instruction. The function returns true if the
     // instruction was completed and false if it was aborted due to an error

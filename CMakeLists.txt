@@ -69,10 +69,11 @@ set (KD11_NA_ODT_SRCS
 set (KD11_NA_CPU_SRCS
     src/kd/kd11_na/cpucontrol/kd11_na_step.cpp
     src/kd/kd11_na/cpucontrol/kd11_na_cpucontrol.cpp
-    src/kd/kd11_na/cpucontrol/kd11_na_calcinstructiontime.cpp
+    # src/kd/kd11_na/cpucontrol/kd11_na_calcinstructiontime.cpp
     src/kd/kd11_na/cpudata/kd11_naregisters/kd11_naregisters.cpp
     src/kd/kd11_na/pseudommu/pseudommu.cpp
-    src/kd/kd11_na/executor/executor.cpp)
+    src/kd/kd11_na/executor/executor.cpp
+    src/kd/kd11_na/calculate/calculate.cpp)
 
 set (KDF11_ODT_SRCS
     src/kd/kdf11/odt/kdf11_odt.cpp
@@ -391,6 +392,7 @@ endif ()
 #
 # Define source files
 set (GTEST_SRCS
+    gtest/ashtest.cpp
     gtest/cmdlineoptionstest.cpp
     gtest/threadsafeprioqueuetest.cpp
     gtest/threadsafecontainertest.cpp
@@ -412,6 +414,7 @@ set (GTEST_SRCS
     gtest/kd11_na/movtest.cpp
     gtest/kd11_na/kd11_naregisterstest.cpp
     gtest/kd11_na/kd11_na_odttest.cpp
+    gtest/kd11_na/kd11_na_instr_timingtest.cpp
     gtest/kdf11_a/pswtest.cpp
     gtest/kdf11_a/kdf11_aconfiguratortest.cpp
     gtest/kdf11_a/kdf11_a_pswregistertest.cpp
