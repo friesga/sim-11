@@ -137,7 +137,7 @@ bool Common::Executor::execute (DEC& instr)
          operandDecoderFactory_.create<SingleOperandDecoder> (&instr);
     CondData<u16> contents;
 
-    if (singleOperandDecoder->readOperand (&contents))
+    if (!singleOperandDecoder->readOperand (&contents))
         return false;
 
     // Increment the operand and write it to the operand location
