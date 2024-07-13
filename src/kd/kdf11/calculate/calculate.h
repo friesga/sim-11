@@ -1,5 +1,5 @@
-#ifndef _CALCULATE_H_
-#define _CALCULATE_H_
+#ifndef _KDF11_CALCULATE_H_
+#define _KDF11_CALCULATE_H_
 
 #include "kd/common/addressingmodetimes/addressingmodetimes.h"
 #include "kd/kdf11/calculate/kdf11_addressingmodetime.h"
@@ -229,4 +229,4 @@ private:
 
 } // namespace KDF11
 
-#endif // !_CALCULATE_H_
+#endif // !_KDF11_CALCULATE_H_
