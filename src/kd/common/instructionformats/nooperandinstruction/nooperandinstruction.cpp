@@ -2,7 +2,7 @@
 
 NoOperandInstruction::NoOperandInstruction (u16 instruction)
     :
-    LSI11Instruction (),
+    PDP11Instruction (),
     instr_ {instruction}
 {}
 

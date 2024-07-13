@@ -3,7 +3,7 @@
 
 EisInstruction::EisInstruction (u16 instruction)
     :
-	LSI11Instruction (),
+	PDP11Instruction (),
     instr_ {instruction}
 {}
 

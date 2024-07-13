@@ -1,9 +1,9 @@
 #ifndef _SINGLEOPERANDINSTRUCTION_H_
 #define _SINGLEOPERANDINSTRUCTION_H_
 
-#include "kd/common/lsi11instruction/lsi11instruction.h"
+#include "kd/common/instructionformats/pdp111instruction/pdp11instruction.h"
 
-class SingleOperandInstruction : public LSI11Instruction
+class SingleOperandInstruction : public PDP11Instruction
 {
 	// Single operand instruction format comprises the operation code and
 	// one operand

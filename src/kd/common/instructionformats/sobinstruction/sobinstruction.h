@@ -1,9 +1,9 @@
 #ifndef _SOBINSTRUCTION_H_
 #define _SOBINSTRUCTION_H_
 
-#include "kd/common/lsi11instruction/lsi11instruction.h"
+#include "kd/common/instructionformats/pdp111instruction/pdp11instruction.h"
 
-class SobInstruction : public LSI11Instruction
+class SobInstruction : public PDP11Instruction
 {
     // The SOB instruction format comprises the operation code, the register
 	// and an offset.

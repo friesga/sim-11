@@ -1,9 +1,9 @@
 #ifndef _DOUBLEINSTRUCTIONFORMAT_H_
 #define _DOUBLEINSTRUCTIONFORMAT_H_
 
-#include "kd/common/lsi11instruction/lsi11instruction.h"
+#include "kd/common/instructionformats/pdp111instruction/pdp11instruction.h"
 
-class DoubleOperandInstruction : public LSI11Instruction
+class DoubleOperandInstruction : public PDP11Instruction
 {
 	// The double operand instruction format comprises the operation code, the
 	// source operand and the destination operand.

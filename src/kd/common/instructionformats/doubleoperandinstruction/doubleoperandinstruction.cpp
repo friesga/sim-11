@@ -8,7 +8,7 @@
 // Initialize the instr struct with the first member
 DoubleOperandInstruction::DoubleOperandInstruction (u16 instruction)
 	:
-	LSI11Instruction (),
+	PDP11Instruction (),
 	instr_ {instruction}
 {}
 

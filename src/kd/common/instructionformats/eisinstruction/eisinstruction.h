@@ -1,12 +1,12 @@
 #ifndef _EISINSTRUCTION_H_
 #define _EISINSTRUCTION_H_
 
-#include "kd/common/lsi11instruction/lsi11instruction.h"
+#include "kd/common/instructionformats/pdp111instruction/pdp11instruction.h"
 #include "kd/common/operandlocation/operandlocation.h"
 
 // The EIS instruction format is used by the EIS instructions MUL, DIV, ASH
 // and ASHC instruction and additionally by the JSR and XOR instructions.
-class EisInstruction : public LSI11Instruction
+class EisInstruction : public PDP11Instruction
 {
 public:
 	EisInstruction (u16 instruction);

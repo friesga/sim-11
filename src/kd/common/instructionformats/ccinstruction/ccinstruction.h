@@ -1,9 +1,9 @@
 #ifndef _CCINSTRUCTION_H_
 #define _CCINSTRUCTION_H_
 
-#include "kd/common/lsi11instruction/lsi11instruction.h"
+#include "kd/common/instructionformats/pdp111instruction/pdp11instruction.h"
 
-class CcInstruction : public LSI11Instruction
+class CcInstruction : public PDP11Instruction
 {
     union instr
 	{

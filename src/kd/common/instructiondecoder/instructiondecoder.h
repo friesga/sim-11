@@ -1,7 +1,7 @@
 #ifndef _INSTRUCTIONDECODER_H_
 #define _INSTRUCTIONDECODER_H_
 
-#include "kd/common/lsi11instruction/lsi11instruction.h"
+#include "kd/common/instructionformats/pdp111instruction/pdp11instruction.h"
 #include "kd/include/cpudata.h"
 #include "kd/common/instructions/instructions.h"
 

@@ -1,10 +1,10 @@
 #ifndef _MARKINSTRUCTION_H_
 #define _MARKINSTRUCTION_H_
 
-#include "kd/common/lsi11instruction/lsi11instruction.h"
+#include "kd/common/instructionformats/pdp111instruction/pdp11instruction.h"
 #include "kd/common/operandlocation/operandlocation.h"
 
-class MarkInstruction : public LSI11Instruction
+class MarkInstruction : public PDP11Instruction
 {
     union instr
 	{
