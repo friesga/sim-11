@@ -17,7 +17,7 @@ u16 SobInstruction::getOffset () const
 }
 
 // Return the instruction's operation code
-u16 SobInstruction::getOperationCode ()
+u16 SobInstruction::getOperationCode () const
 {
 	return instr_.decoded.opcode;
 }

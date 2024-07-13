@@ -10,7 +10,7 @@ class NoOperandInstruction : public LSI11Instruction
 
 public:
 	NoOperandInstruction (u16 instruction);
-	u16 getOperationCode () override;
+	u16 getOperationCode () const override;
 };
 
 #endif // _NOOPERAND_H_

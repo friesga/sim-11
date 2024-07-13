@@ -20,7 +20,7 @@ public:
 	// code of the instruction. This detour to get at the instruction's
 	// opcode is necessary as the decoding of the instruction takes places
 	// after LSII11Instruction's constructor is called.
-	virtual u16 getOperationCode () = 0;
+	virtual u16 getOperationCode () const = 0;
 
 protected:
 	CpuData* cpuData_;

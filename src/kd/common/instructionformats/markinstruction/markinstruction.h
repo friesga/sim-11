@@ -20,7 +20,7 @@ class MarkInstruction : public LSI11Instruction
 
 public:
 	MarkInstruction (u16 instruction);
-	u16 getOperationCode () override;
+	u16 getOperationCode () const override;
 
 	u16 numberOfParameters ();
 };

@@ -25,7 +25,7 @@ class DoubleOperandInstruction : public LSI11Instruction
 
 public:
 	DoubleOperandInstruction (u16 instruction);
-	u16 getOperationCode ();
+	u16 getOperationCode () const;
 	u16 getSourceRegister () const;
 	u16 getSourceMode () const;
 	u16 getDestinationRegister () const;

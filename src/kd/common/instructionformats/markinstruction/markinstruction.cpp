@@ -12,7 +12,7 @@ u16 MarkInstruction::numberOfParameters ()
 }
 
 // Return the instruction's operation code
-u16 MarkInstruction::getOperationCode ()
+u16 MarkInstruction::getOperationCode () const
 {
 	return instr_.decoded.opcode;
 }

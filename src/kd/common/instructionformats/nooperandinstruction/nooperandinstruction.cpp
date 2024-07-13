@@ -8,7 +8,7 @@ NoOperandInstruction::NoOperandInstruction (u16 instruction)
 
 // Return the instruction's operation code. The operation code takes up
 // the complete instruction.
-u16 NoOperandInstruction::getOperationCode ()
+u16 NoOperandInstruction::getOperationCode () const
 {
 	return instr_;
 }

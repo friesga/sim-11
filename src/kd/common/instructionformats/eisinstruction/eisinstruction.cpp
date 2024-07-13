@@ -8,7 +8,7 @@ EisInstruction::EisInstruction (u16 instruction)
 {}
 
 // Return the instruction's operation code
-u16 EisInstruction::getOperationCode ()
+u16 EisInstruction::getOperationCode () const
 {
 	return instr_.decoded.opcode;
 }

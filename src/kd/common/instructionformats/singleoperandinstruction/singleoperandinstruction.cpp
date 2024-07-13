@@ -19,7 +19,7 @@ u16 SingleOperandInstruction::getMode () const
 }
 
 // Return the instruction's operation code
-u16 SingleOperandInstruction::getOperationCode ()
+u16 SingleOperandInstruction::getOperationCode () const
 {
 	return instr_.decoded.opcode;
 }

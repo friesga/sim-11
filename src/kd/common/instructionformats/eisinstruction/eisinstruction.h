@@ -14,7 +14,7 @@ public:
 	u16 getOperandRegister () const;
 	u16 getOperandMode () const;
 	u16 getRegisterNr () const;
-	u16 getOperationCode () override;
+	u16 getOperationCode () const override;
 	int getShiftCount () const;
 
 private:

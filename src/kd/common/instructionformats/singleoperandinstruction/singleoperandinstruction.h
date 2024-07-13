@@ -24,7 +24,7 @@ public:
 	SingleOperandInstruction (u16 instruction);
 	u16 getRegister () const;
 	u16 getMode () const ;
-	u16 getOperationCode () override;
+	u16 getOperationCode () const override;
 };
 
 #endif // !_SINGLEOPERANDINSTRUCTION_H_

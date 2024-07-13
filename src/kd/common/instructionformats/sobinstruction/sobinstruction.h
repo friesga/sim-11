@@ -24,7 +24,7 @@ public:
 	SobInstruction (u16 instruction);
 	u16 getRegisterNr () const;
 	u16 getOffset () const;
-	u16 getOperationCode ();
+	u16 getOperationCode () const;
 };
 
 

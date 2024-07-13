@@ -20,8 +20,8 @@ class BranchInstruction : public LSI11Instruction
 
 public:
 	BranchInstruction (u16 instruction);
-	s8 getOffset ();
-	u16 getOperationCode () override;
+	s8 getOffset () const;
+	u16 getOperationCode () const override;
 };
 
 #endif // _BRANCHINSTRUCTION_H_

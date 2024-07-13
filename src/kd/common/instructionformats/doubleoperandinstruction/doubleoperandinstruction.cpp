@@ -14,7 +14,7 @@ DoubleOperandInstruction::DoubleOperandInstruction (u16 instruction)
 
 
 // Return the instruction's operation code
-u16 DoubleOperandInstruction::getOperationCode ()
+u16 DoubleOperandInstruction::getOperationCode () const
 {
 	return instr_.decoded.opcode;
 }

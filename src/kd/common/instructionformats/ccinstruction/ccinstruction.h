@@ -19,8 +19,8 @@ class CcInstruction : public LSI11Instruction
 
 public:
 	CcInstruction (u16 instruction);
-	u16 getConditionCodes ();
-	u16 getOperationCode () override;
+	u16 getConditionCodes () const;
+	u16 getOperationCode () const override;
 };
 
 #endif // !_CCINSTRUCTION_H_
