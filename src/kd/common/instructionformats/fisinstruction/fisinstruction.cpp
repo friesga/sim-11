@@ -2,7 +2,6 @@
 
 FISInstruction::FISInstruction (u16 instruction)
     :
-    PDP11Instruction (),
     instr_ {instruction}
 {}
 

@@ -4,7 +4,6 @@
 // Initialize the instr struct with the first member
 SingleOperandInstruction::SingleOperandInstruction (u16 instruction)
 	:
-	PDP11Instruction (),
 	instr_ {instruction}
 {}
 
