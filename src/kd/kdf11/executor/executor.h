@@ -997,24 +997,28 @@ inline bool Executor::operator() (MFPT& instr)
 template <>
 inline bool Executor::operator() (FADD& instr)
 {
+    cpuData_->setTrap (CpuData::TrapCondition::ReservedInstructionTrap);
 	return false;
 }
 
 template <>
 inline bool Executor::operator() (FSUB& instr)
 {
+    cpuData_->setTrap (CpuData::TrapCondition::ReservedInstructionTrap);
 	return false;
 }
 
 template <>
 inline bool Executor::operator() (FMUL& instr)
 {
+    cpuData_->setTrap (CpuData::TrapCondition::ReservedInstructionTrap);
 	return false;
 }
 
 template <>
 inline bool Executor::operator() (FDIV& instr)
 {
+    cpuData_->setTrap (CpuData::TrapCondition::ReservedInstructionTrap);
 	return false;
 }
 
