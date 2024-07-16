@@ -50,7 +50,8 @@ bool KDF11_CpuControl::step ()
             return false;
 
         case CpuRunState::WAIT:
-            // If an interrupt request is present resume execution
+            // If an interrupt request is present resume execution else
+            // advance time so devices are awakened at the specified time.
             // ToDo: load trap vector at this point?
             if (bus_->intrptReqAvailable ())
             {
@@ -58,6 +59,8 @@ bool KDF11_CpuControl::step ()
                 runState = CpuRunState::RUN;
                 bus_->SRUN().set (true);
             }
+            else
+                SimulatorClock::forwardClock (microseconds (50));
             return true;
 
         case CpuRunState::RUN:
