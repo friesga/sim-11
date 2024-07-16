@@ -252,10 +252,22 @@ void UART::writeXBUF (u16 value)
 	sendChar (value & 0377);
 }
 
+// The Transmit Break bit is set or reset under program control. When
+// set, a continuous space level is transmitted. However, transmit done
+// and transmit interrupt enable can still operate allowing software
+// timing of the Break signal. When not set, normal character transmission
+// can occur. (EK-DLV1J-UG-001)
+//
+// This implies that when Transmit Break is set Transmit Ready must not
+// be cleared. This behaviour is required by at least JKDBD0 test 402.
+//
 void UART::sendChar (u16 value)
 {
-	xcsr &= ~XCSR_TRANSMIT_READY;
-	trace.dlv11(DLV11RecordType::DLV11_CLR_XMIT_RDY, channelNr_, value);
+	if (!(xcsr & XCSR_TRANSMIT_BREAK))
+	{
+		xcsr &= ~XCSR_TRANSMIT_READY;
+		trace.dlv11 (DLV11RecordType::DLV11_CLR_XMIT_RDY, channelNr_, value);
+	}
 	xbuf = value;
 	charAvailable_ = true;
 	transmitter_.notify_one ();
