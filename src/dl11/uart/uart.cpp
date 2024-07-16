@@ -246,9 +246,18 @@ void UART::clearXmitInterruptIfDisabled (u16 oldCSRvalue, u16 newCSRvalue)
 	}
 }
 
+// Diagnostic JKDJB0 test 623 verifies that when the transmit buffer is loaded
+// the transmit interrupt is cleared. This behaviour seems logical as the
+// transmitter isn't ready anymore, but isn't documented in the DLV11-J User's
+// Guide.
+// 
 // Bits 8-15 are not used.
 void UART::writeXBUF (u16 value)
 {
+	trace.dlv11 (DLV11RecordType::DLV11_CL_TXI, channelNr_, value);
+	bus_->clearInterrupt (TrapPriority::BR4, 6,
+		interruptPriority (Function::Transmit, channelNr_));
+
 	sendChar (value & 0377);
 }
 
