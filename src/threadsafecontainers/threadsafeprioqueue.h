@@ -18,7 +18,7 @@ using std::logic_error;
 
 // Implementation of a thread safe queue. The queue is implemented by
 // means of a set or multiset because sets, contrary to a priority_queue,
-// provide an iterator and an erase() function. A set ordersits elements
+// provide an iterator and an erase() function. A set orders its elements
 // in ascending order. The element with the highest priority is therefore
 // at the end of the set.
 // 
