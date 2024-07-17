@@ -48,9 +48,16 @@ bool SimulatorClock::wakeMeAt (time_point timePoint,
 // while they actually differ (in their WakeUpCall's) and these different
 // objects cannot be added to a std::set (which requires it's object are
 // unique).
+//
+// WakeUpRequest's are stored in a ThreadSafePrioQueue. Such a queue orders
+// its elements in ascending priority order. The WakeUpRequest with the
+// highest priority is the request with the earliest wake up time. When
+// comparing a WakeUpRequest with another (rhs) WakeUpRequest the current
+// request is "larger" than the rhs WakeUpRequest if its wakeUpTime_ is
+// smaller.
 std::strong_ordering SimulatorClock::WakeUpRequest::operator<=> (WakeUpRequest const& rhs) const
 {
-    return wakeUpTime_ <=> rhs.wakeUpTime_;
+    return rhs.wakeUpTime_ <=> wakeUpTime_;
 }
 
 // When halting the clock all threads waiting to wakened up are awaken
