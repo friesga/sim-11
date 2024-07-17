@@ -4,6 +4,7 @@
 #include "qbus/qbus.h"
 #include "pdp11peripheral/pdp11peripheral.h"
 #include "configdata/bdv11config/bdv11config.h"
+#include "chrono/alarmclock/alarmclock.h"
 
 #include <memory>
 #include <array>

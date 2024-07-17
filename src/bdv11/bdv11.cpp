@@ -1,5 +1,6 @@
 #include "trace/trace.h"
 #include "bdv11.h"
+#include "chrono/simulatorclock/simulatorclock.h"
 
 #include <string.h>
 #include <stdlib.h>
@@ -331,15 +332,17 @@ void BDV11::reset ()
 // nanoseconds.
 void BDV11::tick()
 {
-	high_resolution_clock::time_point nextWakeup {high_resolution_clock::now()};
-	constexpr duration<int, std::nano> cycleTime {nanoseconds (1000000000 / LTC_RATE)};
+	AlarmClock alarmClock {};
+	SimulatorClock::time_point nextWakeup {SimulatorClock::now()};
+	constexpr SimulatorClock::duration cycleTime {nanoseconds (1000000000 / LTC_RATE)};
 
 	while (running_)
 	{
 		// Check the line time clock (LTC) is enabled
 		if (ltc & LKS_IE)
 			bus_->setInterrupt (TrapPriority::BR6, 9, 0, 0100);
+	
 		nextWakeup += cycleTime;
-		this_thread::sleep_until (nextWakeup);
+		alarmClock.sleepUntil (nextWakeup);
 	}
 }

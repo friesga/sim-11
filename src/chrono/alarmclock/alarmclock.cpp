@@ -15,3 +15,11 @@ void AlarmClock::sleepFor (SimulatorClock::duration time)
     if (SimulatorClock::wakeMeAt (wakeupTime, &myWakeUpCall))
         myWakeUpCall.waitFor ();
 }
+
+void AlarmClock::sleepUntil (SimulatorClock::time_point wakeUpTime)
+{
+    AlarmWakeUpCall myWakeUpCall;
+
+    if (SimulatorClock::wakeMeAt (wakeUpTime, &myWakeUpCall))
+        myWakeUpCall.waitFor ();
+}

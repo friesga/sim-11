@@ -8,6 +8,7 @@ class AlarmClock
 {
 public:
     void sleepFor (SimulatorClock::duration time);
+    void sleepUntil (SimulatorClock::time_point wakeUpTime);
 };
 
 #endif // _ALARMCLOCK_H_
