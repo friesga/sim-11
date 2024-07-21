@@ -256,9 +256,6 @@ StatusCode BDV11::writeWord (BusAddress busAddress, u16 value)
 void BDV11::writeLKS (u16 value)
 {
 	ltc = value & LKS_IE;
-
-	if (!(ltc & LKS_IE))
-		bus_->clearInterrupt (TrapPriority::BR6, 9, 0);
 }
 
 // As the BDV11 will only be accessed by means of unmapped (16-bit) addresses
@@ -327,9 +324,16 @@ void BDV11::reset ()
 	memoryDump (pcr, 1);
 }
 
-// Generate an Event interrupt on every clock tick To get accurate timing
+// Generate an Event interrupt on every clock tick. To get accurate timing
 // the high_resolution_clock is used with an interval specified in
 // nanoseconds.
+//
+// The interrupt behaviour of the LTC in the BDV11 is curious. Disabling
+// interrupts in the CSR doesn't clear pending interrupts but indicates
+// that in the next clock tick pending interrupts are to be cleared. This
+// behaviour isn't documented but can be deduced from diagnostics JKDBD0
+// test 626 and JKDIB0 test 50.
+//
 void BDV11::tick()
 {
 	AlarmClock alarmClock {};
@@ -341,6 +345,9 @@ void BDV11::tick()
 		// Check the line time clock (LTC) is enabled
 		if (ltc & LKS_IE)
 			bus_->setInterrupt (TrapPriority::BR6, 9, 0, 0100);
+		else
+			// Clear possibly pending interrupts
+			bus_->clearInterrupt (TrapPriority::BR6, 9, 0);
 	
 		nextWakeup += cycleTime;
 		alarmClock.sleepUntil (nextWakeup);
