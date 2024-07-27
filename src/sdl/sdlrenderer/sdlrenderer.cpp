@@ -29,6 +29,13 @@ void SDLRenderer::clear ()
     SDL_RenderClear (sdl_Renderer_);
 }
 
+// Draw (copy/render) the given texture to the frame buffer of the window
+void SDLRenderer::copy (SDL_Texture* texture)
+{
+    SDL_SetRenderTarget (sdl_Renderer_, nullptr);
+    SDL_RenderCopy (sdl_Renderer_, texture, NULL, NULL);
+}
+
 void SDLRenderer::update ()
 {
     SDL_RenderPresent (sdl_Renderer_);

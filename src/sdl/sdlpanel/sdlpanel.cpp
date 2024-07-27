@@ -64,6 +64,19 @@ void SDLPanel::render ()
         button->render ();
 }
 
+void SDLPanel::render (SDL_Texture* texture)
+{
+    // Render all fronts, indicators and buttons
+    for (auto& sdlFront : fronts_)
+        sdlFront->render (texture);
+
+    for (auto& indicator : indicators_)
+        indicator->render (texture);
+
+    for (auto& button : buttons_)
+        button->render (texture);
+}
+
 // Events for a Panel are destined for a button on the panel
 void SDLPanel::handleEvent (SDL_Event const *event)
 {

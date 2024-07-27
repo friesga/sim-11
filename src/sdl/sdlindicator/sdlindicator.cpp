@@ -23,6 +23,12 @@ void SDLIndicator::render ()
         sdlTtexture_->render ();
 }
 
+void SDLIndicator::render (SDL_Texture* texture)
+{
+    if (showIndicator_ == Indicator::State::On)
+        sdlTtexture_->render (texture);
+}
+
 void SDLIndicator::show (Indicator::State showIndicator)
 {
     showIndicator_ = showIndicator;

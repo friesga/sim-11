@@ -24,6 +24,7 @@ public:
 
     virtual void handleEvent (SDL_Event const *event) = 0;
     void render ();
+    void render (SDL_Texture* texture);
 
 protected:
     unique_ptr<SDLTexture> buttonDownTexture_;

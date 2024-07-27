@@ -35,6 +35,7 @@ public:
 
     // SDL implementation specific functions
     virtual void render ();
+    virtual void render (SDL_Texture* texture);
     virtual void handleEvent (SDL_Event const *event);
 
 private:

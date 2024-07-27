@@ -56,9 +56,24 @@ SDLTexture::~SDLTexture ()
     }
 }
 
+// Render this texture to the frame buffer of the window
 void SDLTexture::render ()
 {
-    // Set rendering space and render texture to window
+    if (SDL_SetRenderTarget (sdlRenderer_, NULL) != 0)
+        throw "Unable to set render target: " + string (SDL_GetError ());
+
+    // Set rendering space and render texture
+    SDL_Rect renderQuad {x_, y_, width_, height_};
+    SDL_RenderCopy (sdlRenderer_, sdlTtexture_, NULL, &renderQuad);
+}
+
+// Render this texture to the given target texture
+void SDLTexture::render (SDL_Texture* texture)
+{
+    if (SDL_SetRenderTarget (sdlRenderer_, texture) != 0)
+        throw "Unable to set render target: " + string (SDL_GetError ());
+
+    // Set rendering space and render texture
     SDL_Rect renderQuad {x_, y_, width_, height_};
     SDL_RenderCopy (sdlRenderer_, sdlTtexture_, NULL, &renderQuad);
 }

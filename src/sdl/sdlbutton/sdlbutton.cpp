@@ -47,3 +47,16 @@ void SDLButton::render ()
     }
 }
 
+void SDLButton::render (SDL_Texture* texture)
+{
+    switch (buttonState_)
+    {
+        case State::Down:
+            buttonDownTexture_->render (texture);
+            break;
+        
+        case State::Up:
+            buttonUpTexture_->render (texture);
+    }
+}
+

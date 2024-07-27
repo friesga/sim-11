@@ -21,6 +21,7 @@ public:
     void setDrawColor (unsigned char red, unsigned char green,
         unsigned char blue, unsigned char alpha = 0xff);
     void clear ();
+    void copy (SDL_Texture* texture);
     void update ();
     SDL_Renderer *getSDL_Renderer ();
 };

@@ -23,6 +23,14 @@ SDLWindow::SDLWindow (char const *title, int x, int y, int width, int height)
     // Create renderer for the given window and set background colour
     sdlRenderer_ = make_unique<SDLRenderer> (sdlWindow_);
     sdlRenderer_->setDrawColor (0, 0, 0, 0);
+
+    // ToDo: Make target texture large enough to be able to zoom into it
+    targetTexture_ = SDL_CreateTexture (sdlRenderer_->getSDL_Renderer (),
+        SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_TARGET, width, height);
+
+    if (targetTexture_ == NULL)
+        throw "Target texture could not be created. SDL error: " +
+            string (SDL_GetError ());
 }
 
 SDLWindow::~SDLWindow ()
@@ -40,8 +48,9 @@ void SDLWindow::render ()
 {    
     // Render all Panels in the window
     for (auto& sdlPanel : panels_)
-        sdlPanel->render ();
+        sdlPanel->render (targetTexture_);
 
+    sdlRenderer_->copy (targetTexture_);
     sdlRenderer_->update ();
 }
 

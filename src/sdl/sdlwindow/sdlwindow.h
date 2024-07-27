@@ -32,6 +32,9 @@ private:
 
     vector<unique_ptr<SDLPanel>> panels_;
 
+    // The target texture the panels have to render to
+    SDL_Texture* targetTexture_;
+
     void render () override;
     bool handleEvents () override;
 };

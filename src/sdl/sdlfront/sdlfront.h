@@ -17,10 +17,12 @@ public:
         int x, int y, int width, int height);
     ~SDLFront ();
     void render ();
+    void render (SDL_Texture* texture);
 
 private:
-    // The texture to use for this front
+    // The texture and renderer to use for this front
     unique_ptr<SDLTexture> sdlTtexture_;
+    unique_ptr<SDLRenderer>& sdlRenderer_;
 
     // Image positon and dimensions
     int x_;

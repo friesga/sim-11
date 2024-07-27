@@ -13,6 +13,7 @@ public:
         int width, int height);
     ~SDLTexture ();
     void render ();
+    void render (SDL_Texture* texture);
     bool isWithinBounds (int x, int y);
 
 private:

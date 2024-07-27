@@ -17,6 +17,7 @@ public:
         State showIndicator, int x, int y, int width, int height);
     ~SDLIndicator ();
     void render ();
+    void render (SDL_Texture* texture);
 
     // Definition of functions required for the Figure interface
     void show (Indicator::State showIndicator) override;
