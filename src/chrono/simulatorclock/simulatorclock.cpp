@@ -66,6 +66,11 @@ void SimulatorClock::halt ()
     lock_guard<mutex> lock {SimulatorClock::clockMutex_};
     WakeUpRequest nextWakeup;
 
+    // Make sure the current time isn't zero as ringing a wakeUpCall with
+    // a zero current time won't wake up the thread. This happens when the
+    // simulator window is closed while it has not been switched on.
+    currentTime_ += duration {1};
+
     running_ = false;
 
     while (!wakeUpRequestQueue_.empty ())
