@@ -50,7 +50,7 @@ u16 PDP_11::loadFile ()
             std::stringstream errorText;
             errorText << "Error: invalid signature [0x" <<
                 std::hex << c << "] in load file";
-            throw errorText;
+            throw errorText.str ();
         }
         (void)!fread (&len, 2, 1, f);
         (void)!fread (&addr, 2, 1, f);
