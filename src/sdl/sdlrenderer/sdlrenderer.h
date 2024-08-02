@@ -5,9 +5,7 @@
 
 class SDLRenderer
 {
-    // SDLFigure needs access to the SDL_Renderer
     friend class SDLPanel;
-    friend class SDLFigure;
 
     // The SDL renderer to use in rendering in the given window
     SDL_Renderer *sdl_Renderer_;

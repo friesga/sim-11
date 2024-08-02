@@ -50,7 +50,7 @@ Button *SDLPanel::createMomentaryButton (string buttonDownImage, string buttonUp
     return buttons_.back ().get ();
 }
 
-// Render all Figure's in this window
+// Render all elements in this panel to the window
 void SDLPanel::render ()
 {
     // Render all fronts, indicators and buttons

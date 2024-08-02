@@ -19,7 +19,7 @@ public:
     void render ();
     void render (SDL_Texture* texture);
 
-    // Definition of functions required for the Figure interface
+    // Definition of functions required for the Indicator interface
     void show (Indicator::State showIndicator) override;
 
 private:

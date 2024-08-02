@@ -25,7 +25,6 @@ public:
 private:
     Qbus *bus_;
     Window *frontWindow_;
-    Indicator *frontFigure_;
     Indicator *pwrOkLed_;
     Indicator *runLed_;
     Button *restartSwitch_;
