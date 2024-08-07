@@ -68,7 +68,7 @@ void SDLTexture::render ()
     SDL_RenderCopy (sdlRenderer_, sdlTtexture_, NULL, &renderQuad);
 }
 
-bool SDLTexture::isWithinBounds (int x, int y)
+bool SDLTexture::isWithinBounds (int x, int y) const
 {
     if (x < x_)
     {

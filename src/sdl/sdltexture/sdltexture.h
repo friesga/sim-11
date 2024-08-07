@@ -15,7 +15,7 @@ public:
         SDL_Texture* targetTexture, Panel::BoundingBox boundingBox);
     ~SDLTexture ();
     void render ();
-    bool isWithinBounds (int x, int y);
+    bool isWithinBounds (int x, int y) const;
 
 private:
     // The actual hardware texture
