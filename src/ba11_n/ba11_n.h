@@ -23,6 +23,12 @@ public:
     void SRUNReceiver (bool signalValue);
 
 private:
+    Panel::BoundingBox pwrOkLedBoundingBox       {515, 114, 12, 12};
+    Panel::BoundingBox runLedBoundingBox         {534, 114, 12, 12};
+    Panel::BoundingBox restartSwitchBoundingBox  {600, 111, 20, 20};
+    Panel::BoundingBox haltSwitchBoundingBox     {625, 111, 20, 20};
+    Panel::BoundingBox auxOnOffSwitchBoundingBox {650, 111, 20, 20};
+
     Qbus *bus_;
     Window *frontWindow_;
     Indicator *pwrOkLed_;
