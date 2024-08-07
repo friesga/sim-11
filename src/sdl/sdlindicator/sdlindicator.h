@@ -28,13 +28,6 @@ private:
 
     // Indication whether or not the indicator has to be shown
     Indicator::State showIndicator_;
-
-protected:
-    // Image position and dimensions
-    int x_;
-    int y_;
-    int width_;
-    int height_;
 };
 
 #endif // _SDLINDICATOR_H_

@@ -22,12 +22,6 @@ private:
     // The texture and renderer to use for this front
     unique_ptr<SDLTexture> sdlTtexture_;
     unique_ptr<SDLRenderer>& sdlRenderer_;
-
-    // Image positon and dimensions
-    int x_;
-    int y_;
-    int width_;
-    int height_;
 };
 
 #endif // _SDLFRONT_H_
