@@ -69,7 +69,7 @@ void BA11_N::createBezel ()
     //
     Panel *panel = frontWindow_->createPanel ();
 
-    panel->createFront(frontImage(logo_), Panel::BoundingBox{ 0, 0, 0, 0 });
+    panel->createFront(frontImage(logo_), ba11_nFrontBoundingBox);
     pwrOkLed_ = panel->createIndicator ("../../assets/red led.png", 
         Indicator::State::Off, pwrOkLedBoundingBox);
     runLed_ = panel->createIndicator ("../../assets/red led.png", 

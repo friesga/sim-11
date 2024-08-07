@@ -44,12 +44,16 @@ public:
 class Panel
 {
 public:
+    // The BoundingBox struct defines a rectangle dimensions and position
+    // relative to a canvas (i.e. texture or window). The origin of the
+    // box is at the upper left corner and the down right corner is at the
+    // coordinates (1.0, 1.0).
     struct BoundingBox
     {
-        int x;
-        int y;
-        int width;
-        int height;
+        float x;
+        float y;
+        float width;
+        float height;
     };
 
     // A default value (0) may be specified for the width and height of

@@ -23,11 +23,13 @@ public:
     void SRUNReceiver (bool signalValue);
 
 private:
-    Panel::BoundingBox pwrOkLedBoundingBox       {515, 114, 12, 12};
-    Panel::BoundingBox runLedBoundingBox         {534, 114, 12, 12};
-    Panel::BoundingBox restartSwitchBoundingBox  {600, 111, 20, 20};
-    Panel::BoundingBox haltSwitchBoundingBox     {625, 111, 20, 20};
-    Panel::BoundingBox auxOnOffSwitchBoundingBox {650, 111, 20, 20};
+    // Definition of the front, indicators and buttons on the BA11_N panel
+    Panel::BoundingBox ba11_nFrontBoundingBox    {0, 0, 1.0, 1.0};
+    Panel::BoundingBox pwrOkLedBoundingBox       {0.687, 0.573, 0.016, 0.060};
+    Panel::BoundingBox runLedBoundingBox         {0.712, 0.573, 0.016, 0.060};
+    Panel::BoundingBox restartSwitchBoundingBox  {0.800, 0.558, 0.027, 0.101};
+    Panel::BoundingBox haltSwitchBoundingBox     {0.833, 0.558, 0.027, 0.101};
+    Panel::BoundingBox auxOnOffSwitchBoundingBox {0.867, 0.558, 0.027, 0.101};
 
     Qbus *bus_;
     Window *frontWindow_;

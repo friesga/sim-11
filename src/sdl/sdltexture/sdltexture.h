@@ -5,8 +5,10 @@
 
 #include <SDL.h>
 #include <string>
+#include <utility>
 
 using std::string;
+using std::pair;
 
 class SDLTexture
 {
@@ -26,6 +28,8 @@ private:
 
     // Reference to the target texture to render this texture on
     SDL_Texture* targetTexture_;
+
+    pair<int, int> getTextureDimensions (SDL_Texture* texture);
 
 protected:
     // Image positon and dimensions

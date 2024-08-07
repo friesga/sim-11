@@ -2,8 +2,14 @@
 
 #include <SDL_image.h>
 
+using std::make_pair;
+using std::tie;
+
 SDLTexture::SDLTexture (string imageFile, SDL_Renderer *renderer, 
     SDL_Texture* targetTexture, Panel::BoundingBox boundingBox)
+    :
+    sdlRenderer_ {renderer},
+    targetTexture_ {targetTexture}
 {
     // Load image at specified path
     SDL_Surface* loadedSurface = IMG_Load (imageFile.c_str ());
@@ -20,29 +26,17 @@ SDLTexture::SDLTexture (string imageFile, SDL_Renderer *renderer,
         throw "Unable to create texture from " + imageFile +
             "SDL error: " + SDL_GetError ();
 
-    // Get image dimensions
-    // A width and height of value 0 indicates that the width and height of
-    // the image has to be used.
-    if (boundingBox.width == 0 && boundingBox.height == 0)
-    {
-        width_ = loadedSurface->w;
-        height_ = loadedSurface->h;
-    }
-    else
-    {
-        width_ = boundingBox.width;
-        height_ = boundingBox.height;
-    }
-
     // Get rid of old loaded surface
     SDL_FreeSurface (loadedSurface);
 
-    // Save figure position and renderer to use in rendering
-    // the texture
-    x_ = boundingBox.x;
-    y_ = boundingBox.y;
-    sdlRenderer_ = renderer;
-    targetTexture_ = targetTexture;
+    // The passed bounding box contains positions relative to the target
+    // texture. Calculate the bounding box position and dimensions in pixels
+    // from these relative values.
+    auto [width, height] = getTextureDimensions (targetTexture_);
+    x_ = static_cast<int> (boundingBox.x * width);
+    y_ = static_cast<int> (boundingBox.y * height);
+    width_ = static_cast<int> (boundingBox.width * width);
+    height_ = static_cast<int> (boundingBox.height * height);
 }
 
 SDLTexture::~SDLTexture ()
@@ -96,4 +90,14 @@ bool SDLTexture::isWithinBounds (int x, int y) const
 
     // Inside rectangle
     return true;
+}
+
+pair<int, int> SDLTexture::getTextureDimensions (SDL_Texture* texture)
+{
+    Uint32 format;
+    int access;
+    int width, height;
+
+    SDL_QueryTexture (texture, &format, &access, &width, &height);
+    return make_pair (width, height);
 }
