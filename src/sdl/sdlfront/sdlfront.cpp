@@ -5,12 +5,12 @@
 using std::make_unique;
 
 SDLFront::SDLFront (string imageFile, unique_ptr<SDLRenderer> &sdlRenderer,
-    SDL_Texture* targetTexture, int x, int y, int width, int height)
+    SDL_Texture* targetTexture, Panel::BoundingBox boundingBox)
     : 
     sdlRenderer_ {sdlRenderer}
 {
     sdlTtexture_ = make_unique<SDLTexture> (imageFile,
-        sdlRenderer->getSDL_Renderer (), targetTexture, x, y, width, height);
+        sdlRenderer->getSDL_Renderer (), targetTexture, boundingBox);
 }
 
 SDLFront::~SDLFront ()

@@ -14,17 +14,17 @@ SDLPanel::~SDLPanel ()
 {}
 
 void SDLPanel::createFront (string imageFile, 
-        int x, int y, int width, int height)
+        Panel::BoundingBox boundingBox)
 {
     fronts_.push_back (make_unique<SDLFront> (imageFile, 
-        sdlRenderer_, targetTexture_, x, y, width, height));
+        sdlRenderer_, targetTexture_, boundingBox));
 }
 
-Indicator *SDLPanel::createIndicator (string imageFile, Indicator::State showFigure,
-    int x, int y, int width, int height)
+Indicator *SDLPanel::createIndicator (string imageFile,
+    Indicator::State showFigure, Panel::BoundingBox boundingBox)
 {
     indicators_.push_back (make_unique<SDLIndicator> (imageFile, 
-        sdlRenderer_, showFigure, targetTexture_, x, y, width, height));
+        sdlRenderer_, showFigure, targetTexture_, boundingBox));
     return indicators_.back ().get ();
 }
 
@@ -36,19 +36,19 @@ Indicator *SDLPanel::createIndicator (string imageFile, Indicator::State showFig
 //
 Button *SDLPanel::createLatchingButton (string buttonDownImage, string buttonUpImage,
     Button::State initialState, Button::EventCallback buttonClicked,
-    int x, int y, int width, int height)
+    BoundingBox boundingBox)
 {
     buttons_.push_back (make_unique<SDLLatchingButton> (buttonDownImage, buttonUpImage,
-        initialState, sdlRenderer_, buttonClicked, targetTexture_, x, y, width, height));
+        initialState, sdlRenderer_, buttonClicked, targetTexture_, boundingBox));
     return buttons_.back ().get ();
 }
 
 Button *SDLPanel::createMomentaryButton (string buttonDownImage, string buttonUpImage, 
-        Button::State initialState, Button::EventCallback buttonClicked,
-        int x, int y, int width, int height)
+    Button::State initialState, Button::EventCallback buttonClicked,
+    BoundingBox boundingBox)
 {
     buttons_.push_back (make_unique<SDLMomentaryButton> (buttonDownImage, buttonUpImage,
-        initialState, sdlRenderer_, buttonClicked, targetTexture_, x, y, width, height));
+        initialState, sdlRenderer_, buttonClicked, targetTexture_, boundingBox));
     return buttons_.back ().get ();
 }
 

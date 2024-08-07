@@ -1,6 +1,8 @@
 #ifndef _SDLTEXTURE_H_
 #define _SDLTEXTURE_H_
 
+#include "panel.h"
+
 #include <SDL.h>
 #include <string>
 
@@ -10,7 +12,7 @@ class SDLTexture
 {
 public:
     SDLTexture (string imageFile, SDL_Renderer *renderer, 
-        SDL_Texture* targetTexture, int x, int y, int width, int height);
+        SDL_Texture* targetTexture, Panel::BoundingBox boundingBox);
     ~SDLTexture ();
     void render ();
     bool isWithinBounds (int x, int y);

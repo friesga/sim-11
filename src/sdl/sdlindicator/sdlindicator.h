@@ -15,7 +15,7 @@ class SDLIndicator : public Indicator
 public:
     SDLIndicator (string imageFile, unique_ptr<SDLRenderer> &sdlRenderer,
         State showIndicator, SDL_Texture* targetTexture,
-        int x, int y, int width, int height);
+        Panel::BoundingBox boundingBox);
     ~SDLIndicator ();
     void render ();
 
@@ -30,7 +30,7 @@ private:
     Indicator::State showIndicator_;
 
 protected:
-    // Image positon and dimensions
+    // Image position and dimensions
     int x_;
     int y_;
     int width_;

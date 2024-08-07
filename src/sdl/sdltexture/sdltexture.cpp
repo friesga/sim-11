@@ -3,7 +3,7 @@
 #include <SDL_image.h>
 
 SDLTexture::SDLTexture (string imageFile, SDL_Renderer *renderer, 
-    SDL_Texture* targetTexture, int x, int y, int width, int height)
+    SDL_Texture* targetTexture, Panel::BoundingBox boundingBox)
 {
     // Load image at specified path
     SDL_Surface* loadedSurface = IMG_Load (imageFile.c_str ());
@@ -23,15 +23,15 @@ SDLTexture::SDLTexture (string imageFile, SDL_Renderer *renderer,
     // Get image dimensions
     // A width and height of value 0 indicates that the width and height of
     // the image has to be used.
-    if (width == 0 && height == 0)
+    if (boundingBox.width == 0 && boundingBox.height == 0)
     {
         width_ = loadedSurface->w;
         height_ = loadedSurface->h;
     }
     else
     {
-        width_ = width;
-        height_ = height;
+        width_ = boundingBox.width;
+        height_ = boundingBox.height;
     }
 
     // Get rid of old loaded surface
@@ -39,8 +39,8 @@ SDLTexture::SDLTexture (string imageFile, SDL_Renderer *renderer,
 
     // Save figure position and renderer to use in rendering
     // the texture
-    x_ = x;
-    y_ = y;
+    x_ = boundingBox.x;
+    y_ = boundingBox.y;
     sdlRenderer_ = renderer;
     targetTexture_ = targetTexture;
 }

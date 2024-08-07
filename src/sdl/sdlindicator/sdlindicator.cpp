@@ -6,12 +6,12 @@ using std::make_unique;
 
 SDLIndicator::SDLIndicator (string imageFile,
     unique_ptr<SDLRenderer> &sdlRenderer, State showIndicator, 
-    SDL_Texture* targetTexture, int x, int y, int width, int height)
+    SDL_Texture* targetTexture, Panel::BoundingBox boundingBox)
         :
     showIndicator_ {showIndicator}
 {
     sdlTtexture_ = make_unique<SDLTexture> (imageFile, 
-        sdlRenderer->getSDL_Renderer (), targetTexture, x, y, width, height);
+        sdlRenderer->getSDL_Renderer (), targetTexture, boundingBox);
 }
 
 SDLIndicator::~SDLIndicator ()

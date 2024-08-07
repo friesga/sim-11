@@ -20,7 +20,7 @@ public:
     SDLButton (string buttonDownImage, string buttonUpImage, 
         Button::State initialState, unique_ptr<SDLRenderer> &sdlRenderer,
         EventCallback buttonClicked, 
-        SDL_Texture* targetTexture, int x, int y, int width, int height);
+        SDL_Texture* targetTexture, Panel::BoundingBox boundingBox);
     ~SDLButton ();
 
     virtual void handleEvent (SDL_Event const *event) = 0;

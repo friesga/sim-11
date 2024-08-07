@@ -44,20 +44,28 @@ public:
 class Panel
 {
 public:
+    struct BoundingBox
+    {
+        int x;
+        int y;
+        int width;
+        int height;
+    };
+
     // A default value (0) may be specified for the width and height of
     // images. This indicates that the width and height of the image
     // will be used.
     virtual void createFront (string imageFile, 
-        int x, int y, int width = 0, int height = 0) = 0;
+        BoundingBox boundingBox) = 0;
     virtual Indicator *createIndicator (string imageFile, 
         Indicator::State showFigure,
-        int x, int y, int width = 0, int height = 0) = 0;
+        BoundingBox boundingBox) = 0;
     virtual Button *createLatchingButton (string buttonDownImage, string buttonUpImage,
         Button::State initialState, Button::EventCallback buttonClicked,
-        int x, int y, int width = 0, int height = 0) = 0;
+        BoundingBox boundingBox) = 0;
     virtual Button *createMomentaryButton (string buttonDownImage, string buttonUpImage,
         Button::State initialState, Button::EventCallback buttonClicked,
-        int x, int y, int width = 0, int height = 0) = 0;
+        BoundingBox boundingBox) = 0;
 };
 
 class Window

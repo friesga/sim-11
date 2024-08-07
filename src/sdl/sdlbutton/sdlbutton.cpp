@@ -6,15 +6,15 @@ using std::make_unique;
 SDLButton::SDLButton (string buttonDownImage, string buttonUpImage,
     Button::State initialState, unique_ptr<SDLRenderer> &sdlRenderer,
     EventCallback buttonClicked, 
-    SDL_Texture* targetTexture, int x, int y, int width, int height)
+    SDL_Texture* targetTexture, Panel::BoundingBox boundingBox)
     :
     buttonClicked_ {buttonClicked},
     buttonState_ {initialState}
 {
     buttonDownTexture_ = make_unique<SDLTexture> (buttonDownImage, 
-        sdlRenderer->getSDL_Renderer(), targetTexture, x, y, width, height);
+        sdlRenderer->getSDL_Renderer(), targetTexture, boundingBox);
     buttonUpTexture_   = make_unique<SDLTexture> (buttonUpImage, 
-        sdlRenderer->getSDL_Renderer (), targetTexture, x, y, width, height);
+        sdlRenderer->getSDL_Renderer (), targetTexture, boundingBox);
 }
 
 SDLButton::~SDLButton ()
