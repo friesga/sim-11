@@ -3,7 +3,7 @@
 #include <SDL_image.h>
 
 SDLTexture::SDLTexture (string imageFile, SDL_Renderer *renderer, 
-    int x, int y, int width, int height)
+    SDL_Texture* targetTexture, int x, int y, int width, int height)
 {
     // Load image at specified path
     SDL_Surface* loadedSurface = IMG_Load (imageFile.c_str ());
@@ -42,6 +42,7 @@ SDLTexture::SDLTexture (string imageFile, SDL_Renderer *renderer,
     x_ = x;
     y_ = y;
     sdlRenderer_ = renderer;
+    targetTexture_ = targetTexture;
 }
 
 SDLTexture::~SDLTexture ()
@@ -56,21 +57,10 @@ SDLTexture::~SDLTexture ()
     }
 }
 
-// Render this texture to the frame buffer of the window
+// Render this texture to the target texture
 void SDLTexture::render ()
 {
-    if (SDL_SetRenderTarget (sdlRenderer_, NULL) != 0)
-        throw "Unable to set render target: " + string (SDL_GetError ());
-
-    // Set rendering space and render texture
-    SDL_Rect renderQuad {x_, y_, width_, height_};
-    SDL_RenderCopy (sdlRenderer_, sdlTtexture_, NULL, &renderQuad);
-}
-
-// Render this texture to the given target texture
-void SDLTexture::render (SDL_Texture* texture)
-{
-    if (SDL_SetRenderTarget (sdlRenderer_, texture) != 0)
+    if (SDL_SetRenderTarget (sdlRenderer_, targetTexture_) != 0)
         throw "Unable to set render target: " + string (SDL_GetError ());
 
     // Set rendering space and render texture

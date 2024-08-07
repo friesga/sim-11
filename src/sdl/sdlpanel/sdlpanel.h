@@ -17,7 +17,7 @@ using std::vector;
 class SDLPanel : public Panel
 {
 public:
-    SDLPanel (unique_ptr<SDLRenderer> &sdlRenderer);
+    SDLPanel (unique_ptr<SDLRenderer> &sdlRenderer, SDL_Texture* texture);
     ~SDLPanel ();
 
     // Definition of functions required for the implementation of a Panel
@@ -35,7 +35,6 @@ public:
 
     // SDL implementation specific functions
     virtual void render ();
-    virtual void render (SDL_Texture* texture);
     virtual void handleEvent (SDL_Event const *event);
 
 private:
@@ -47,6 +46,9 @@ private:
     vector<unique_ptr<SDLFront>> fronts_;
     vector<unique_ptr<SDLIndicator>> indicators_;
     vector<unique_ptr<SDLButton>> buttons_;
+
+    // Reference to the panel to draw the panel on
+    SDL_Texture* targetTexture_;
 };
 
 #endif // _SDLPANEL_H_

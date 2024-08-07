@@ -3,9 +3,11 @@
 using std::make_unique;
 using std::string;
 
-SDLPanel::SDLPanel (unique_ptr<SDLRenderer> &sdlRenderer)
+SDLPanel::SDLPanel (unique_ptr<SDLRenderer> &sdlRenderer,
+    SDL_Texture* texture)
     :
-    sdlRenderer_ {sdlRenderer}
+    sdlRenderer_ {sdlRenderer},
+    targetTexture_ {texture}
 {}
 
 SDLPanel::~SDLPanel ()
@@ -15,14 +17,14 @@ void SDLPanel::createFront (string imageFile,
         int x, int y, int width, int height)
 {
     fronts_.push_back (make_unique<SDLFront> (imageFile, 
-        sdlRenderer_, x, y, width, height));
+        sdlRenderer_, targetTexture_, x, y, width, height));
 }
 
 Indicator *SDLPanel::createIndicator (string imageFile, Indicator::State showFigure,
     int x, int y, int width, int height)
 {
     indicators_.push_back (make_unique<SDLIndicator> (imageFile, 
-        sdlRenderer_, showFigure, x, y, width, height));
+        sdlRenderer_, showFigure, targetTexture_, x, y, width, height));
     return indicators_.back ().get ();
 }
 
@@ -37,7 +39,7 @@ Button *SDLPanel::createLatchingButton (string buttonDownImage, string buttonUpI
     int x, int y, int width, int height)
 {
     buttons_.push_back (make_unique<SDLLatchingButton> (buttonDownImage, buttonUpImage,
-        initialState, sdlRenderer_, buttonClicked, x, y, width, height));
+        initialState, sdlRenderer_, buttonClicked, targetTexture_, x, y, width, height));
     return buttons_.back ().get ();
 }
 
@@ -46,7 +48,7 @@ Button *SDLPanel::createMomentaryButton (string buttonDownImage, string buttonUp
         int x, int y, int width, int height)
 {
     buttons_.push_back (make_unique<SDLMomentaryButton> (buttonDownImage, buttonUpImage,
-        initialState, sdlRenderer_, buttonClicked, x, y, width, height));
+        initialState, sdlRenderer_, buttonClicked, targetTexture_, x, y, width, height));
     return buttons_.back ().get ();
 }
 
@@ -62,19 +64,6 @@ void SDLPanel::render ()
 
     for (auto& button : buttons_)
         button->render ();
-}
-
-void SDLPanel::render (SDL_Texture* texture)
-{
-    // Render all fronts, indicators and buttons
-    for (auto& sdlFront : fronts_)
-        sdlFront->render (texture);
-
-    for (auto& indicator : indicators_)
-        indicator->render (texture);
-
-    for (auto& button : buttons_)
-        button->render (texture);
 }
 
 // Events for a Panel are destined for a button on the panel

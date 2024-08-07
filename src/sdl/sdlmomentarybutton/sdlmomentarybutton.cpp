@@ -5,10 +5,11 @@ using std::make_unique;
 
 SDLMomentaryButton::SDLMomentaryButton (string buttonDownImage, string buttonUpImage,
     Button::State initialState, unique_ptr<SDLRenderer> &sdlRenderer,
-    EventCallback buttonClicked, int x, int y, int width, int height)
+    EventCallback buttonClicked, 
+    SDL_Texture* targetTexture, int x, int y, int width, int height)
     :
     SDLButton (buttonDownImage, buttonUpImage, initialState, sdlRenderer,
-        buttonClicked, x, y, width, height),
+        buttonClicked, targetTexture, x, y, width, height),
     naturalState_ {initialState}
 {}
 

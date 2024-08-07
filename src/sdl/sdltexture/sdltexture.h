@@ -9,11 +9,10 @@ using std::string;
 class SDLTexture
 {
 public:
-    SDLTexture (string imageFile, SDL_Renderer *renderer, int x, int y, 
-        int width, int height);
+    SDLTexture (string imageFile, SDL_Renderer *renderer, 
+        SDL_Texture* targetTexture, int x, int y, int width, int height);
     ~SDLTexture ();
     void render ();
-    void render (SDL_Texture* texture);
     bool isWithinBounds (int x, int y);
 
 private:
@@ -22,6 +21,9 @@ private:
 
     // The SDL renderer to use
     SDL_Renderer *sdlRenderer_;
+
+    // Reference to the target texture to render this texture on
+    SDL_Texture* targetTexture_;
 
 protected:
     // Image positon and dimensions

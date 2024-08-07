@@ -14,10 +14,9 @@ class SDLFront
 {
 public:
     SDLFront (string imageFile, unique_ptr<SDLRenderer> &sdlRenderer,
-        int x, int y, int width, int height);
+        SDL_Texture* targetTexture, int x, int y, int width, int height);
     ~SDLFront ();
     void render ();
-    void render (SDL_Texture* texture);
 
 private:
     // The texture and renderer to use for this front

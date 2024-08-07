@@ -40,7 +40,7 @@ SDLWindow::~SDLWindow ()
 
 Panel *SDLWindow::createPanel ()
 {
-    panels_.push_back (make_unique<SDLPanel> (sdlRenderer_));
+    panels_.push_back (make_unique<SDLPanel> (sdlRenderer_, targetTexture_));
     return panels_.back ().get ();
 }
 
@@ -48,7 +48,7 @@ void SDLWindow::render ()
 {    
     // Render all Panels in the window
     for (auto& sdlPanel : panels_)
-        sdlPanel->render (targetTexture_);
+        sdlPanel->render ();
 
     sdlRenderer_->copy (targetTexture_);
     sdlRenderer_->update ();

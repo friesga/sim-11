@@ -19,12 +19,12 @@ class SDLButton : public Button
 public:
     SDLButton (string buttonDownImage, string buttonUpImage, 
         Button::State initialState, unique_ptr<SDLRenderer> &sdlRenderer,
-        EventCallback buttonClicked, int x, int y, int width, int height);
+        EventCallback buttonClicked, 
+        SDL_Texture* targetTexture, int x, int y, int width, int height);
     ~SDLButton ();
 
     virtual void handleEvent (SDL_Event const *event) = 0;
     void render ();
-    void render (SDL_Texture* texture);
 
 protected:
     unique_ptr<SDLTexture> buttonDownTexture_;

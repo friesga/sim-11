@@ -14,10 +14,10 @@ class SDLIndicator : public Indicator
 {
 public:
     SDLIndicator (string imageFile, unique_ptr<SDLRenderer> &sdlRenderer,
-        State showIndicator, int x, int y, int width, int height);
+        State showIndicator, SDL_Texture* targetTexture,
+        int x, int y, int width, int height);
     ~SDLIndicator ();
     void render ();
-    void render (SDL_Texture* texture);
 
     // Definition of functions required for the Indicator interface
     void show (Indicator::State showIndicator) override;
