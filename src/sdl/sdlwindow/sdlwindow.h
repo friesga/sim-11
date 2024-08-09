@@ -25,6 +25,11 @@ public:
 
 
 private:
+    int windowWidth_;
+    int windowHeight_;
+    int textureWidth_;
+    int textureHeight_;
+
     SDL_Window* sdlWindow_;
 
     // The Renderer to use in rendering in the given window

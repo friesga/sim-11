@@ -12,7 +12,11 @@ using std::this_thread::sleep_for;
 
 SDLWindow::SDLWindow (char const *title, int x, int y, int width, int height)
     :
-    SDLInit ()
+    SDLInit (),
+    windowWidth_ {width},
+    windowHeight_ {height},
+    textureWidth_ {width},
+    textureHeight_ {height}
 {
     // Create window
     sdlWindow_ = SDL_CreateWindow (title, x, y, width, height, SDL_WINDOW_SHOWN);
@@ -27,7 +31,8 @@ SDLWindow::SDLWindow (char const *title, int x, int y, int width, int height)
 
     // ToDo: Make target texture large enough to be able to zoom into it
     targetTexture_ = SDL_CreateTexture (sdlRenderer_->getSDL_Renderer (),
-        SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_TARGET, width, height);
+        SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_TARGET,
+        textureWidth_, textureHeight_);
 
     if (targetTexture_ == NULL)
         throw "Target texture could not be created. SDL error: " +
