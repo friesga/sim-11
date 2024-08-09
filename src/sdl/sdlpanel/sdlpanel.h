@@ -7,6 +7,7 @@
 #include "../sdllatchingbutton/sdllatchingbutton.h"
 #include "../sdlmomentarybutton/sdlmomentarybutton.h"
 #include "../sdlrenderer/sdlrenderer.h"
+#include "../sdlevent/sdlevent.h"
 
 #include <memory>
 #include <vector>
@@ -34,7 +35,7 @@ public:
 
     // SDL implementation specific functions
     virtual void render ();
-    virtual void handleEvent (SDL_Event const *event);
+    virtual void handleEvent (SDLEvent const *event);
 
 private:
     // Reference to the renderer to use for fronts, indicators and buttons

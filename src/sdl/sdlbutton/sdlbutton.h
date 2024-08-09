@@ -4,6 +4,7 @@
 #include "panel.h"
 #include "../sdltexture/sdltexture.h"
 #include "../sdlrenderer/sdlrenderer.h"
+#include "../sdlevent/sdlevent.h"
 
 #include <SDL.h>
 #include <string>
@@ -23,7 +24,7 @@ public:
         SDL_Texture* targetTexture, Panel::BoundingBox boundingBox);
     ~SDLButton ();
 
-    virtual void handleEvent (SDL_Event const *event) = 0;
+    virtual void handleEvent (SDLEvent const *event) = 0;
     void render ();
 
 protected:

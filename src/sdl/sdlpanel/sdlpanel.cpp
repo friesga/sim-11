@@ -67,7 +67,7 @@ void SDLPanel::render ()
 }
 
 // Events for a Panel are destined for a button on the panel
-void SDLPanel::handleEvent (SDL_Event const *event)
+void SDLPanel::handleEvent (SDLEvent const *event)
 {
     for (auto& button : buttons_)
         button->handleEvent (event);

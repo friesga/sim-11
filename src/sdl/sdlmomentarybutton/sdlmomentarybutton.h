@@ -20,7 +20,7 @@ public:
         SDL_Texture* targetTexture, Panel::BoundingBox boundingBox);
     ~SDLMomentaryButton ();
 
-    void handleEvent (SDL_Event const *event) override;
+    void handleEvent (SDLEvent const *event) override;
 
 private:
     // The natural state of a momentary button is the state the button will

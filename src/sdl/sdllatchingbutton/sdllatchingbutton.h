@@ -4,6 +4,7 @@
 #include "panel.h"
 #include "../sdlbutton/sdlbutton.h"
 #include "../sdlrenderer/sdlrenderer.h"
+#include "../sdlevent/sdlevent.h"
 
 #include <SDL.h>
 #include <string>
@@ -20,7 +21,7 @@ public:
         SDL_Texture* targetTexture, Panel::BoundingBox boundingBox);
     ~SDLLatchingButton ();
 
-    void handleEvent (SDL_Event const *event) override;
+    void handleEvent (SDLEvent const *event) override;
 };
 
 #endif // _SDLLATCHINGBUTTON_H_

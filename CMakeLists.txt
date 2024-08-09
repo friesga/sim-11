@@ -219,7 +219,8 @@ set (SDL_SRCS
     src/sdl/sdlrenderer/sdlrenderer.cpp
     src/sdl/sdltexture/sdltexture.cpp
     src/sdl/sdlmomentarybutton/sdlmomentarybutton.cpp
-    src/sdl/sdllatchingbutton/sdllatchingbutton.cpp)
+    src/sdl/sdllatchingbutton/sdllatchingbutton.cpp
+    src/sdl/sdlevent/sdlevent.cpp)
 
 set (TRACE_SRCS
     src/trace/trace.cpp

@@ -1,5 +1,6 @@
 #include "sdlwindow.h"
 #include "../sdlpanel/sdlpanel.h"
+#include "../sdlevent/sdlevent.h"
 
 #include <SDL_image.h>
 #include <string>
@@ -63,7 +64,10 @@ bool SDLWindow::handleEvents ()
 				return true;
         
         for (auto& sdlPanel : panels_)
-            sdlPanel->handleEvent (&event);
+        {
+            SDLEvent sdlEvent (&event, 0, 0);
+            sdlPanel->handleEvent (&sdlEvent);
+        }
 	}
 
     return false;

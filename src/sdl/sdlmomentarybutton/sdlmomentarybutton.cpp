@@ -24,11 +24,13 @@ bool SDLMomentaryButton::validMouseEvent (SDL_Event const *event)
         buttonDownTexture_->isWithinBounds (event->motion.x, event->motion.y);
 }
 
-void SDLMomentaryButton::handleEvent (SDL_Event const *event)
+void SDLMomentaryButton::handleEvent (SDLEvent const *event)
 {
-    if (validMouseEvent (event))
+    SDL_Event* sdlEvent = event->getSDL_Event ();
+
+    if (validMouseEvent (sdlEvent))
     {
-        switch (event->type)
+        switch (sdlEvent->type)
         {
             case SDL_MOUSEBUTTONDOWN:
                 buttonState_ = toggleState (naturalState_);
