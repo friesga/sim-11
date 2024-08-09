@@ -5,10 +5,13 @@
 #include <SDL_image.h>
 #include <string>
 #include <thread>
+#include <utility>
 
 using std::string;
 using std::make_unique;
 using std::this_thread::sleep_for;
+using std::pair;
+using std::make_pair;
 
 SDLWindow::SDLWindow (char const *title, int x, int y, int width, int height)
     :
@@ -70,7 +73,8 @@ bool SDLWindow::handleEvents ()
         
         for (auto& sdlPanel : panels_)
         {
-            SDLEvent sdlEvent (&event, 0, 0);
+            auto [x, y] = windowToTexturePosition (event.button.x, event.button.y);
+            SDLEvent sdlEvent (&event, x, y);
             sdlPanel->handleEvent (&sdlEvent);
         }
 	}
@@ -88,4 +92,13 @@ void SDLWindow::handler ()
         sleep_for (std::chrono::milliseconds (10));
 	}
     while (!handleEvents ());
+}
+
+// This function transforms a position in this window (as specified in
+// e.g. a mouse button event) to a position in the target texture.
+pair<int, int> SDLWindow::windowToTexturePosition (int windowPositionX,
+    int windowPositionY)
+{
+    return {windowPositionX * textureWidth_ / windowWidth_,
+        windowPositionY * textureHeight_ / windowHeight_};
 }

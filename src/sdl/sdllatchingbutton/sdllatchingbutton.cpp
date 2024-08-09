@@ -21,7 +21,8 @@ void SDLLatchingButton::handleEvent (SDLEvent const *event)
 
     if (sdlEvent->type == SDL_MOUSEBUTTONDOWN &&
         sdlEvent->button.button == SDL_BUTTON_LEFT &&
-        buttonDownTexture_->isWithinBounds (sdlEvent->motion.x, sdlEvent->motion.y))
+        buttonDownTexture_->isWithinBounds (event->mouseTexturePositionX (),
+            event->mouseTexturePositionY ()))
     {
         buttonState_ = toggleState (buttonState_);
         buttonClicked_ (buttonState_);

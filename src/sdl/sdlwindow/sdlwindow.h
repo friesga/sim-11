@@ -7,8 +7,10 @@
 #include "../sdlinit/sdlinit.h"
 
 #include <vector>
+#include <utility>
 
 using std::vector;
+using std::make_pair;
 
 // Create a Window by means of SDL.
 //
@@ -42,6 +44,9 @@ private:
 
     void render () override;
     bool handleEvents () override;
+
+    pair<int, int> windowToTexturePosition (int windowPositionX,
+        int windowPositionY);
 };
 
 #endif // _SDLWINDOW_H_
