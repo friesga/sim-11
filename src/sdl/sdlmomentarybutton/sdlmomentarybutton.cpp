@@ -16,19 +16,22 @@ SDLMomentaryButton::SDLMomentaryButton (string buttonDownImage, string buttonUpI
 SDLMomentaryButton::~SDLMomentaryButton ()
 {}
 
-bool SDLMomentaryButton::validMouseEvent (SDL_Event const *event)
+bool SDLMomentaryButton::validMouseEvent (SDLEvent const *event)
 {
-    return (event->type == SDL_MOUSEBUTTONDOWN || 
-        event->type == SDL_MOUSEBUTTONUP) &&
-        event->button.button == SDL_BUTTON_LEFT &&
-        buttonDownTexture_->isWithinBounds (event->motion.x, event->motion.y);
+    SDL_Event* sdlEvent = event->getSDL_Event ();
+
+    return (sdlEvent->type == SDL_MOUSEBUTTONDOWN || 
+        sdlEvent->type == SDL_MOUSEBUTTONUP) &&
+        sdlEvent->button.button == SDL_BUTTON_LEFT &&
+        buttonDownTexture_->isWithinBounds (event->mouseTexturePositionX (),
+            event->mouseTexturePositionY ());
 }
 
 void SDLMomentaryButton::handleEvent (SDLEvent const *event)
 {
     SDL_Event* sdlEvent = event->getSDL_Event ();
 
-    if (validMouseEvent (sdlEvent))
+    if (validMouseEvent (event))
     {
         switch (sdlEvent->type)
         {

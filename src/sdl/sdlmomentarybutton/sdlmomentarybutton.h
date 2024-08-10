@@ -4,6 +4,7 @@
 #include "panel.h"
 #include "../sdlbutton/sdlbutton.h"
 #include "../sdlrenderer/sdlrenderer.h"
+#include "../sdlevent/sdlevent.h"
 
 #include <SDL.h>
 #include <string>
@@ -28,7 +29,7 @@ private:
     // indicated by the constructor's initialState parameter.
     State naturalState_;
 
-    bool validMouseEvent (SDL_Event const *event);
+    bool validMouseEvent (SDLEvent const *event);
 };
 
 #endif // _SDLMOMENTARYBUTTON_H_
