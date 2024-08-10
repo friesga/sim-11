@@ -47,8 +47,16 @@ try
 			Trace::Category::RLV12 |
 			Trace::Category::Clock);
 
+	// Definition of the aspect ratio of the panels. A PDP-11 cabinet is a
+	// 19" wide rack which comprises a number of units. Each unit has a height
+	// of 5.25" or 10.5". This leads to an aspect ration of 3.62. The current
+	// front image has an aspect ration of 3.75.
+	static const double cabinetAspectRatio = 3.75;
+	static const int windowWidth = 750;
+
 	// Create the window for the panels
-	SDLWindow sdlWindow {"PDP-11 Console", 100, 100, 750, 200};
+	SDLWindow sdlWindow {"PDP-11 Console", 100, 100, windowWidth,
+		static_cast<int> (windowWidth / cabinetAspectRatio)};
 
 	// Create a pdp-11 with configured (or default) devices.
 	// The devices are created after creation of the window to make sure the
