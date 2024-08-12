@@ -57,6 +57,7 @@ private:
         Position destCenter, int destRadius);
     int RenderDrawCircle (SDL_Renderer* renderer, Position position,
         int radius);
+    void drawLoupe ();
 };
 
 #endif // _SDLWINDOW_H_

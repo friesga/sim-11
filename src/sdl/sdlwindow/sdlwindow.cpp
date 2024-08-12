@@ -63,28 +63,30 @@ void SDLWindow::render ()
     sdlRenderer_->copy (targetTexture_);
 
     if (showLoupe_)
-    {
-        SDL_SetTextureColorMod (targetTexture_, 128, 128, 128);
-
-        // Draw loupe with enlarged view.
-        // The source rectangle is related to a position in the texture
-        // while the destination rectangle is related to a postion in
-        // the window.
-        RenderCopyCircle (sdlRenderer_->getSDL_Renderer (), targetTexture_,
-            texturePosition_, loupeRadius_ / 2,
-            windowPosition_, loupeRadius_);
-
-        // Draw loupe outline
-        SDL_SetRenderDrawColor (sdlRenderer_->getSDL_Renderer (),
-            255, 0, 0, 255);
-        RenderDrawCircle (sdlRenderer_->getSDL_Renderer (), windowPosition_,
-            loupeRadius_);
-    }
+        drawLoupe ();
     else
         SDL_SetTextureColorMod (targetTexture_, 255, 255, 255);
 
-
     sdlRenderer_->update ();
+}
+
+void SDLWindow::drawLoupe ()
+{
+    SDL_SetTextureColorMod (targetTexture_, 128, 128, 128);
+
+    // Draw loupe with enlarged view.
+    // The source rectangle is related to a position in the texture
+    // while the destination rectangle is related to a postion in
+    // the window.
+    RenderCopyCircle (sdlRenderer_->getSDL_Renderer (), targetTexture_,
+        texturePosition_, loupeRadius_ / 2,
+        windowPosition_, loupeRadius_);
+
+    // Draw loupe outline
+    SDL_SetRenderDrawColor (sdlRenderer_->getSDL_Renderer (),
+        255, 0, 0, 255);
+    RenderDrawCircle (sdlRenderer_->getSDL_Renderer (), windowPosition_,
+        loupeRadius_);
 }
 
 bool SDLWindow::handleEvents ()
