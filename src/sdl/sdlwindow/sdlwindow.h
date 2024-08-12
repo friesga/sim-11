@@ -34,7 +34,7 @@ private:
     int windowHeight_;
     int textureWidth_;
     int textureHeight_;
-    bool loupeShown_ = false;
+    bool showLoupe_ = false;
     Position windowPosition_ {0, 0};
     Position texturePosition_ {0, 0};
 

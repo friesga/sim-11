@@ -62,7 +62,7 @@ void SDLWindow::render ()
     // Copy the target texture to the window frame buffer
     sdlRenderer_->copy (targetTexture_);
 
-    if (loupeShown_)
+    if (showLoupe_)
     {
         SDL_SetTextureColorMod (targetTexture_, 128, 128, 128);
 
@@ -114,9 +114,9 @@ bool SDLWindow::handleEvents ()
                 for (auto& sdlPanel : panels_)
                 {
                     if (sdlPanel->isOverButton (texturePosition_))
-                        loupeShown_ = true;
+                        showLoupe_ = true;
                     else
-                        loupeShown_ = false;
+                        showLoupe_ = false;
                 }
                 break;
 
