@@ -71,14 +71,14 @@ void SDLWindow::render ()
         // while the destination rectangle is related to a postion in
         // the window.
         RenderCopyCircle (sdlRenderer_->getSDL_Renderer (), targetTexture_,
-            texturePositionX_, texturePositionY_, loupeRadius_ / 2,
-            windowPositionX_, windowPositionY_, loupeRadius_);
+            texturePosition_, loupeRadius_ / 2,
+            windowPosition_, loupeRadius_);
 
         // Draw loupe outline
         SDL_SetRenderDrawColor (sdlRenderer_->getSDL_Renderer (),
             255, 0, 0, 255);
-        RenderDrawCircle (sdlRenderer_->getSDL_Renderer (),
-            windowPositionX_, windowPositionY_, loupeRadius_);
+        RenderDrawCircle (sdlRenderer_->getSDL_Renderer (), windowPosition_,
+            loupeRadius_);
     }
     else
         SDL_SetTextureColorMod (targetTexture_, 255, 255, 255);
@@ -92,15 +92,12 @@ bool SDLWindow::handleEvents ()
     SDL_Event event;
 	if (SDL_PollEvent (&event))
 	{
-        windowPositionX_ = event.button.x;
-        windowPositionY_ = event.button.y;
-        auto [x, y] = windowToTexturePosition (windowPositionX_, windowPositionY_);
-        texturePositionX_ = x;
-        texturePositionY_ = y;
+        windowPosition_ = {event.button.x, event.button.y};
+        texturePosition_ = windowToTexturePosition (windowPosition_);
 
         for (auto& sdlPanel : panels_)
         {
-            SDLEvent sdlEvent (&event, x, y);
+            SDLEvent sdlEvent (&event, texturePosition_);
             sdlPanel->handleEvent (&sdlEvent);
         }
 
@@ -140,9 +137,8 @@ void SDLWindow::handler ()
 
 // This function transforms a position in this window (as specified in
 // e.g. a mouse button event) to a position in the target texture.
-pair<int, int> SDLWindow::windowToTexturePosition (int windowPositionX,
-    int windowPositionY)
+Position SDLWindow::windowToTexturePosition (Position windowPosition)
 {
-    return {windowPositionX * textureWidth_ / windowWidth_,
-        windowPositionY * textureHeight_ / windowHeight_};
+    return {windowPosition.x * textureWidth_ / windowWidth_,
+        windowPosition.y * textureHeight_ / windowHeight_};
 }

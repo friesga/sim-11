@@ -35,10 +35,8 @@ private:
     int textureWidth_;
     int textureHeight_;
     bool loupeShown_ = false;
-    int windowPositionX_ {0};
-    int windowPositionY_ {0};
-    int texturePositionX_ {0};
-    int texturePositionY_ {0};
+    Position windowPosition_ {0, 0};
+    Position texturePosition_ {0, 0};
 
     SDL_Window* sdlWindow_;
 
@@ -53,12 +51,12 @@ private:
     void render () override;
     bool handleEvents () override;
 
-    pair<int, int> windowToTexturePosition (int windowPositionX,
-        int windowPositionY);
+    Position windowToTexturePosition (Position windowPosition);
     void RenderCopyCircle (SDL_Renderer* renderer, SDL_Texture* texture,
-        int sourceCenterX, int sourceCenterY, int sourceRadius,
-        int destCenterX, int destCenterY, int destRadius);
-    int RenderDrawCircle (SDL_Renderer* renderer, int x, int y, int radius);
+        Position sourceCenter, int sourceRadius,
+        Position destCenter, int destRadius);
+    int RenderDrawCircle (SDL_Renderer* renderer, Position position,
+        int radius);
 };
 
 #endif // _SDLWINDOW_H_

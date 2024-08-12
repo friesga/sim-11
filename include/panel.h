@@ -17,6 +17,13 @@ using std::function;
 // which on their turn comprise a front and one or more Indicators and
 // Buttons.
 //
+
+struct Position
+{
+    int x;
+    int y;
+};
+
 class Indicator
 {
 public:

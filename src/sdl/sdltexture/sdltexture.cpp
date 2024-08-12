@@ -62,27 +62,27 @@ void SDLTexture::render ()
     SDL_RenderCopy (sdlRenderer_, sdlTtexture_, NULL, &renderQuad);
 }
 
-bool SDLTexture::isWithinBounds (int x, int y) const
+bool SDLTexture::isWithinBounds (Position position) const
 {
-    if (x < x_)
+    if (position.x < x_)
     {
         // Too far left
         return false;
     }
 
-    if (x > x_ + width_)
+    if (position.x > x_ + width_)
     {
         // Too far right
         return false;
     }
     
-    if (y < y_)
+    if (position.y < y_)
     {
         // Too high
         return false;
     }
     
-    if (y > y + height_)
+    if (position.y > y_ + height_)
     {
         // Too low
         return false;
