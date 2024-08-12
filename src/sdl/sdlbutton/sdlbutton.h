@@ -26,6 +26,7 @@ public:
 
     virtual void handleEvent (SDLEvent const *event) = 0;
     void render ();
+    bool isWithinBounds (Position position) const;
 
 protected:
     unique_ptr<SDLTexture> buttonDownTexture_;
@@ -33,7 +34,7 @@ protected:
     EventCallback buttonClicked_;
     State buttonState_;
 
-    State toggleState (State oldState);
+    State toggleState (State oldState);    
 };
 
 #endif // _SDLBUTTON_H_

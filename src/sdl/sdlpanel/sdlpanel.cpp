@@ -1,7 +1,10 @@
 #include "sdlpanel.h"
 
+#include <algorithm>
+
 using std::make_unique;
 using std::string;
+using std::ranges::find_if;
 
 SDLPanel::SDLPanel (unique_ptr<SDLRenderer> &sdlRenderer,
     SDL_Texture* texture)
@@ -71,4 +74,15 @@ void SDLPanel::handleEvent (SDLEvent const *event)
 {
     for (auto& button : buttons_)
         button->handleEvent (event);
+}
+
+bool SDLPanel::isOverButton (Position position)
+{
+    // Disclaimer: the for statement could be expressed with a find_if() call
+    // but that makes the intent of this function unclear rather than clear.
+    for (auto& button : buttons_)
+       if (button->isWithinBounds (position))
+           return true;
+
+    return false;
 }

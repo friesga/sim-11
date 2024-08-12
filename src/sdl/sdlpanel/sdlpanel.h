@@ -36,6 +36,7 @@ public:
     // SDL implementation specific functions
     virtual void render ();
     virtual void handleEvent (SDLEvent const *event);
+    bool isOverButton (Position position);
 
 private:
     // Reference to the renderer to use for fronts, indicators and buttons

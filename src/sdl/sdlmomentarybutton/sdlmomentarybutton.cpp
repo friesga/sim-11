@@ -23,7 +23,7 @@ bool SDLMomentaryButton::validMouseEvent (SDLEvent const *event)
     return (sdlEvent->type == SDL_MOUSEBUTTONDOWN || 
         sdlEvent->type == SDL_MOUSEBUTTONUP) &&
         sdlEvent->button.button == SDL_BUTTON_LEFT &&
-        buttonDownTexture_->isWithinBounds (event->mouseTexturePosition ());
+        isWithinBounds (event->mouseTexturePosition ());
 }
 
 void SDLMomentaryButton::handleEvent (SDLEvent const *event)

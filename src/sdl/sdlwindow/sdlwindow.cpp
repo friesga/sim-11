@@ -95,12 +95,6 @@ bool SDLWindow::handleEvents ()
         windowPosition_ = {event.button.x, event.button.y};
         texturePosition_ = windowToTexturePosition (windowPosition_);
 
-        for (auto& sdlPanel : panels_)
-        {
-            SDLEvent sdlEvent (&event, texturePosition_);
-            sdlPanel->handleEvent (&sdlEvent);
-        }
-
         switch (event.type)
         {
             case SDL_QUIT:
@@ -108,10 +102,22 @@ bool SDLWindow::handleEvents ()
 
             case SDL_MOUSEBUTTONDOWN:
                 if (event.button.button == SDL_BUTTON_LEFT)
-                    loupeShown_ = !loupeShown_;
+                {
+                    SDLEvent sdlEvent (&event, texturePosition_);
+
+                    for (auto& sdlPanel : panels_)
+                        sdlPanel->handleEvent (&sdlEvent);
+                }
                 break;
 
             case SDL_MOUSEMOTION:
+                for (auto& sdlPanel : panels_)
+                {
+                    if (sdlPanel->isOverButton (texturePosition_))
+                        loupeShown_ = true;
+                    else
+                        loupeShown_ = false;
+                }
                 break;
 
             default:

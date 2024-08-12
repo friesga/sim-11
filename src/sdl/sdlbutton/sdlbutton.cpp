@@ -48,4 +48,9 @@ void SDLButton::render ()
     }
 }
 
+bool SDLButton::isWithinBounds (Position position) const
+{
+    return buttonUpTexture_->isWithinBounds (position);
+}
+
 
