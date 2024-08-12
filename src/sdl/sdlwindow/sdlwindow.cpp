@@ -18,8 +18,8 @@ SDLWindow::SDLWindow (char const *title, int x, int y, int width, int height)
     SDLInit (),
     windowWidth_ {width},
     windowHeight_ {height},
-    textureWidth_ {width},
-    textureHeight_ {height}
+    textureWidth_ {width * 2},
+    textureHeight_ {height * 2}
 {
     // Create window
     sdlWindow_ = SDL_CreateWindow (title, x, y, width, height, SDL_WINDOW_SHOWN);
@@ -55,11 +55,35 @@ Panel *SDLWindow::createPanel ()
 
 void SDLWindow::render ()
 {    
-    // Render all Panels in the window
+    // Render all Panels to the target texture
     for (auto& sdlPanel : panels_)
         sdlPanel->render ();
 
+    // Copy the target texture to the window frame buffer
     sdlRenderer_->copy (targetTexture_);
+
+    if (loupeShown_)
+    {
+        SDL_SetTextureColorMod (targetTexture_, 128, 128, 128);
+
+        // Draw loupe with enlarged view.
+        // The source rectangle is related to a position in the texture
+        // while the destination rectangle is related to a postion in
+        // the window.
+        RenderCopyCircle (sdlRenderer_->getSDL_Renderer (), targetTexture_,
+            texturePositionX_, texturePositionY_, loupeRadius_ / 2,
+            windowPositionX_, windowPositionY_, loupeRadius_);
+
+        // Draw loupe outline
+        SDL_SetRenderDrawColor (sdlRenderer_->getSDL_Renderer (),
+            255, 0, 0, 255);
+        RenderDrawCircle (sdlRenderer_->getSDL_Renderer (),
+            windowPositionX_, windowPositionY_, loupeRadius_);
+    }
+    else
+        SDL_SetTextureColorMod (targetTexture_, 255, 255, 255);
+
+
     sdlRenderer_->update ();
 }
 
@@ -68,14 +92,34 @@ bool SDLWindow::handleEvents ()
     SDL_Event event;
 	if (SDL_PollEvent (&event))
 	{
-		if (event.type == SDL_QUIT)
-				return true;
-        
+        windowPositionX_ = event.button.x;
+        windowPositionY_ = event.button.y;
+        auto [x, y] = windowToTexturePosition (windowPositionX_, windowPositionY_);
+        texturePositionX_ = x;
+        texturePositionY_ = y;
+
         for (auto& sdlPanel : panels_)
         {
-            auto [x, y] = windowToTexturePosition (event.button.x, event.button.y);
             SDLEvent sdlEvent (&event, x, y);
             sdlPanel->handleEvent (&sdlEvent);
+        }
+
+        switch (event.type)
+        {
+            case SDL_QUIT:
+                return true;
+
+            case SDL_MOUSEBUTTONDOWN:
+                if (event.button.button == SDL_BUTTON_LEFT)
+                    loupeShown_ = !loupeShown_;
+                break;
+
+            case SDL_MOUSEMOTION:
+                break;
+
+            default:
+                // Ignore other events
+                break;
         }
 	}
 

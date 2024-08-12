@@ -27,10 +27,18 @@ public:
 
 
 private:
+    // Lopu circle radius
+    static const int loupeRadius_ = 50;
+
     int windowWidth_;
     int windowHeight_;
     int textureWidth_;
     int textureHeight_;
+    bool loupeShown_ = false;
+    int windowPositionX_ {0};
+    int windowPositionY_ {0};
+    int texturePositionX_ {0};
+    int texturePositionY_ {0};
 
     SDL_Window* sdlWindow_;
 
@@ -47,6 +55,10 @@ private:
 
     pair<int, int> windowToTexturePosition (int windowPositionX,
         int windowPositionY);
+    void RenderCopyCircle (SDL_Renderer* renderer, SDL_Texture* texture,
+        int sourceCenterX, int sourceCenterY, int sourceRadius,
+        int destCenterX, int destCenterY, int destRadius);
+    int RenderDrawCircle (SDL_Renderer* renderer, int x, int y, int radius);
 };
 
 #endif // _SDLWINDOW_H_

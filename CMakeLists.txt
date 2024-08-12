@@ -213,6 +213,7 @@ set (SDL_SRCS
     src/sdl/sdlinit/sdlinit.cpp
     src/sdl/sdlpanel/sdlpanel.cpp
     src/sdl/sdlwindow/sdlwindow.cpp
+    src/sdl/sdlwindow/circle.cpp
     src/sdl/sdlindicator/sdlindicator.cpp
     src/sdl/sdlfront/sdlfront.cpp
     src/sdl/sdlbutton/sdlbutton.cpp
