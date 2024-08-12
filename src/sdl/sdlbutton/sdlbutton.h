@@ -26,7 +26,7 @@ public:
 
     virtual void handleEvent (SDLEvent const *event) = 0;
     void render ();
-    bool isWithinBounds (Position position) const;
+    bool isWithinBounds (Position position, float margin = 0.0) const;
 
 protected:
     unique_ptr<SDLTexture> buttonDownTexture_;

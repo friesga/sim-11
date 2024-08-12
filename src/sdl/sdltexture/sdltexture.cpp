@@ -62,27 +62,35 @@ void SDLTexture::render ()
     SDL_RenderCopy (sdlRenderer_, sdlTtexture_, NULL, &renderQuad);
 }
 
-bool SDLTexture::isWithinBounds (Position position) const
+// Determine if the given position is within the bounds of the texture within
+// an optional margin. The margin is expressed as a floating point number
+// relative to the dimensions of the texture. A margin of 0.0 expresses
+// no margin, a margin of 1.0 indicates the margin equals the width and height
+// of the texture.
+bool SDLTexture::isWithinBounds (Position position, float margin) const
 {
-    if (position.x < x_)
+    float marginX = margin * width_;
+    float marginY = margin * height_;
+
+    if (position.x < x_ - marginX)
     {
         // Too far left
         return false;
     }
 
-    if (position.x > x_ + width_)
+    if (position.x > x_ + width_ + marginX)
     {
         // Too far right
         return false;
     }
     
-    if (position.y < y_)
+    if (position.y < y_ - marginY)
     {
         // Too high
         return false;
     }
     
-    if (position.y > y_ + height_)
+    if (position.y > y_ + height_ + marginY)
     {
         // Too low
         return false;

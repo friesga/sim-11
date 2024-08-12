@@ -81,7 +81,7 @@ bool SDLPanel::isOverButton (Position position)
     // Disclaimer: the for statement could be expressed with a find_if() call
     // but that makes the intent of this function unclear rather than clear.
     for (auto& button : buttons_)
-       if (button->isWithinBounds (position))
+       if (button->isWithinBounds (position, 0.75f))
            return true;
 
     return false;
