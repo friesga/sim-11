@@ -8,9 +8,11 @@
 
 #include <vector>
 #include <utility>
+#include <set>
 
 using std::vector;
 using std::make_pair;
+using std::set;
 
 // Create a Window by means of SDL.
 //
@@ -20,14 +22,16 @@ using std::make_pair;
 class SDLWindow : public Window, public SDLInit
 {
 public:
-    SDLWindow (char const *title, int x, int y, int width, int height);
+    SDLWindow (char const *title, int x, int y, int width, int height,
+        set<Window::Flag> flags = {});
     ~SDLWindow ();
+    void show () override;
     Panel *createPanel () override;
     void handler ();
 
 
 private:
-    // Lopu circle radius
+    // Loupe circle radius
     static const int loupeRadius_ = 50;
 
     int windowWidth_;

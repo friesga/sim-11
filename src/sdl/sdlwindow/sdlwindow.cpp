@@ -13,7 +13,8 @@ using std::this_thread::sleep_for;
 using std::pair;
 using std::make_pair;
 
-SDLWindow::SDLWindow (char const *title, int x, int y, int width, int height)
+SDLWindow::SDLWindow (char const *title, int x, int y, int width, int height,
+    set<Window::Flag> flags)
     :
     SDLInit (),
     windowWidth_ {width},
@@ -22,7 +23,8 @@ SDLWindow::SDLWindow (char const *title, int x, int y, int width, int height)
     textureHeight_ {height * 2}
 {
     // Create window
-    sdlWindow_ = SDL_CreateWindow (title, x, y, width, height, SDL_WINDOW_SHOWN);
+    sdlWindow_ = SDL_CreateWindow (title, x, y, width, height,
+        flags.contains (Window::Flag::WindowHidden) ? SDL_WINDOW_HIDDEN : SDL_WINDOW_SHOWN);
 
     if (sdlWindow_ == NULL)
         throw "Window could not be created. SDL error: " +
@@ -45,6 +47,11 @@ SDLWindow::SDLWindow (char const *title, int x, int y, int width, int height)
 SDLWindow::~SDLWindow ()
 {
     SDL_DestroyWindow (sdlWindow_);
+}
+
+void SDLWindow::show ()
+{
+    SDL_ShowWindow (sdlWindow_);
 }
 
 Panel *SDLWindow::createPanel ()

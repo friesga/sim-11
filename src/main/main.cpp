@@ -54,9 +54,12 @@ try
 	static const double cabinetAspectRatio = 3.75;
 	static const int windowWidth = 750;
 
-	// Create the window for the panels
+	// Create the window for the panels. Set the window initially hidden
+	// as configuring the devices may throw an exception and the required
+	// size of the window is yet unknown.
 	SDLWindow sdlWindow {"PDP-11 Console", 100, 100, windowWidth,
-		static_cast<int> (windowWidth / cabinetAspectRatio)};
+		static_cast<int> (windowWidth / cabinetAspectRatio),
+		{Window::Flag::WindowHidden}};
 
 	// Create a pdp-11 with configured (or default) devices.
 	// The devices are created after creation of the window to make sure the
@@ -74,6 +77,10 @@ try
 			&sdlWindow);
 	else
 		pdp11.configureDevices (&sdlWindow);
+
+	// Configuration succeeded and required size of the window is known so it
+	// can be shown now.
+	sdlWindow.show ();
 
 	// Start the pdp-11. This starts the processor
 	pdp11.run();

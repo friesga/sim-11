@@ -82,6 +82,13 @@ public:
 class Window
 {
 public:
+    enum class Flag
+    {
+        WindowShown,
+        WindowHidden
+    };
+    
+    virtual void show () = 0;
     virtual Panel *createPanel () = 0;
     virtual void render () = 0;
     virtual bool handleEvents () = 0;
