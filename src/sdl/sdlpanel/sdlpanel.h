@@ -23,15 +23,15 @@ public:
 
     // Definition of functions required for the implementation of a Panel
     virtual void createFront (string imageFile, 
-        Frame<float> boundingBox) override;
+        Frame<float> frame) override;
     virtual Indicator *createIndicator (string imageFile, 
-        Indicator::State showFigure, Frame<float> boundingBox) override;
+        Indicator::State showFigure, Frame<float> frame) override;
     virtual Button *createLatchingButton (string buttonDownImage, string buttonUpImage,
         Button::State initialState, Button::EventCallback buttonClicked,
-        Frame<float> boundingBox) override;
+        Frame<float> frame) override;
     virtual Button *createMomentaryButton (string buttonDownImage, string buttonUpImage,
         Button::State initialState, Button::EventCallback buttonClicked,
-        Frame<float> boundingBox) override;
+        Frame<float> frame) override;
 
     // SDL implementation specific functions
     virtual void render ();
@@ -39,6 +39,9 @@ public:
     bool isOverButton (Position position);
 
 private:
+    Panel::Frame<int> placeFrameInTexture (Panel::Frame<float> frame);
+    pair<int, int> getTextureDimensions (SDL_Texture* texture);
+
     // Reference to the renderer to use for fronts, indicators and buttons
     unique_ptr<SDLRenderer> &sdlRenderer_;
 
@@ -50,6 +53,9 @@ private:
 
     // Reference to the panel to draw the panel on
     SDL_Texture* targetTexture_;
+
+    // Position of the panel in the target texture
+    Position panelPosition_ {0, 0};
 };
 
 #endif // _SDLPANEL_H_

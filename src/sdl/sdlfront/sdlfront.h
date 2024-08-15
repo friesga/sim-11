@@ -14,7 +14,7 @@ class SDLFront
 {
 public:
     SDLFront (string imageFile, unique_ptr<SDLRenderer> &sdlRenderer,
-        SDL_Texture* targetTexture, Panel::Frame<float> boundingBox);
+        SDL_Texture* targetTexture, Panel::Frame<int> frame);
     ~SDLFront ();
     void render ();
 

@@ -14,7 +14,7 @@ class SDLTexture
 {
 public:
     SDLTexture (string imageFile, SDL_Renderer *renderer, 
-        SDL_Texture* targetTexture, Panel::Frame<float> boundingBox);
+        SDL_Texture* targetTexture, Panel::Frame<int> frame);
     ~SDLTexture ();
     void render ();
     bool isWithinBounds (Position position, float margin = 0.0) const;

@@ -5,10 +5,10 @@ using std::make_unique;
 SDLLatchingButton::SDLLatchingButton (string buttonDownImage, string buttonUpImage,
     Button::State initialState, unique_ptr<SDLRenderer> &sdlRenderer,
     EventCallback buttonClicked, 
-    SDL_Texture* targetTexture, Panel::Frame<float> boundingBox)
+    SDL_Texture* targetTexture, Panel::Frame<int> frame)
     :
     SDLButton (buttonDownImage, buttonUpImage, initialState, sdlRenderer,
-        buttonClicked, targetTexture, boundingBox)
+        buttonClicked, targetTexture, frame)
 {}
 
 SDLLatchingButton::~SDLLatchingButton ()
