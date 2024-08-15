@@ -79,8 +79,6 @@ void SDLWindow::render ()
 
 void SDLWindow::drawLoupe ()
 {
-    SDL_SetTextureColorMod (targetTexture_, 128, 128, 128);
-
     // Draw loupe with enlarged view.
     // The source rectangle is related to a position in the texture
     // while the destination rectangle is related to a postion in
