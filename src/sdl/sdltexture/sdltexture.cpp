@@ -6,7 +6,7 @@ using std::make_pair;
 using std::tie;
 
 SDLTexture::SDLTexture (string imageFile, SDL_Renderer *renderer, 
-    SDL_Texture* targetTexture, Panel::BoundingBox boundingBox)
+    SDL_Texture* targetTexture, Panel::Frame<float> boundingBox)
     :
     sdlRenderer_ {renderer},
     targetTexture_ {targetTexture}

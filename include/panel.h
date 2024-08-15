@@ -63,32 +63,33 @@ public:
 class Panel
 {
 public:
-    // The BoundingBox struct defines a rectangle dimensions and position
+    // The Frame struct defines a rectangle dimensions and position
     // relative to a canvas (i.e. texture or window). The origin of the
     // box is at the upper left corner and the down right corner is at the
     // coordinates (1.0, 1.0).
-    struct BoundingBox
+    template <typename T>
+    struct Frame
     {
-        float x;
-        float y;
-        float width;
-        float height;
+        T x;
+        T y;
+        T width;
+        T height;
     };
 
     // A default value (0) may be specified for the width and height of
     // images. This indicates that the width and height of the image
     // will be used.
     virtual void createFront (string imageFile, 
-        BoundingBox boundingBox) = 0;
+        Frame<float> boundingBox) = 0;
     virtual Indicator *createIndicator (string imageFile, 
         Indicator::State showFigure,
-        BoundingBox boundingBox) = 0;
+        Frame<float> boundingBox) = 0;
     virtual Button *createLatchingButton (string buttonDownImage, string buttonUpImage,
         Button::State initialState, Button::EventCallback buttonClicked,
-        BoundingBox boundingBox) = 0;
+        Frame<float> boundingBox) = 0;
     virtual Button *createMomentaryButton (string buttonDownImage, string buttonUpImage,
         Button::State initialState, Button::EventCallback buttonClicked,
-        BoundingBox boundingBox) = 0;
+        Frame<float> boundingBox) = 0;
 };
 
 class Window

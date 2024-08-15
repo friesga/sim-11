@@ -18,7 +18,7 @@ public:
     SDLLatchingButton (string buttonDownImage, string buttonUpImage, 
         Button::State initialState, unique_ptr<SDLRenderer> &sdlRenderer,
         EventCallback buttonClicked, 
-        SDL_Texture* targetTexture, Panel::BoundingBox boundingBox);
+        SDL_Texture* targetTexture, Panel::Frame<float> boundingBox);
     ~SDLLatchingButton ();
 
     void handleEvent (SDLEvent const *event) override;

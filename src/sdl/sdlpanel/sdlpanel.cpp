@@ -17,14 +17,14 @@ SDLPanel::~SDLPanel ()
 {}
 
 void SDLPanel::createFront (string imageFile, 
-        Panel::BoundingBox boundingBox)
+        Panel::Frame<float> boundingBox)
 {
     fronts_.push_back (make_unique<SDLFront> (imageFile, 
         sdlRenderer_, targetTexture_, boundingBox));
 }
 
 Indicator *SDLPanel::createIndicator (string imageFile,
-    Indicator::State showFigure, Panel::BoundingBox boundingBox)
+    Indicator::State showFigure, Panel::Frame<float> boundingBox)
 {
     indicators_.push_back (make_unique<SDLIndicator> (imageFile, 
         sdlRenderer_, showFigure, targetTexture_, boundingBox));
@@ -39,7 +39,7 @@ Indicator *SDLPanel::createIndicator (string imageFile,
 //
 Button *SDLPanel::createLatchingButton (string buttonDownImage, string buttonUpImage,
     Button::State initialState, Button::EventCallback buttonClicked,
-    BoundingBox boundingBox)
+    Frame<float> boundingBox)
 {
     buttons_.push_back (make_unique<SDLLatchingButton> (buttonDownImage, buttonUpImage,
         initialState, sdlRenderer_, buttonClicked, targetTexture_, boundingBox));
@@ -48,7 +48,7 @@ Button *SDLPanel::createLatchingButton (string buttonDownImage, string buttonUpI
 
 Button *SDLPanel::createMomentaryButton (string buttonDownImage, string buttonUpImage, 
     Button::State initialState, Button::EventCallback buttonClicked,
-    BoundingBox boundingBox)
+    Frame<float> boundingBox)
 {
     buttons_.push_back (make_unique<SDLMomentaryButton> (buttonDownImage, buttonUpImage,
         initialState, sdlRenderer_, buttonClicked, targetTexture_, boundingBox));

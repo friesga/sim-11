@@ -23,15 +23,15 @@ public:
 
     // Definition of functions required for the implementation of a Panel
     virtual void createFront (string imageFile, 
-        BoundingBox boundingBox) override;
+        Frame<float> boundingBox) override;
     virtual Indicator *createIndicator (string imageFile, 
-        Indicator::State showFigure, BoundingBox boundingBox) override;
+        Indicator::State showFigure, Frame<float> boundingBox) override;
     virtual Button *createLatchingButton (string buttonDownImage, string buttonUpImage,
         Button::State initialState, Button::EventCallback buttonClicked,
-        BoundingBox boundingBox) override;
+        Frame<float> boundingBox) override;
     virtual Button *createMomentaryButton (string buttonDownImage, string buttonUpImage,
         Button::State initialState, Button::EventCallback buttonClicked,
-        BoundingBox boundingBox) override;
+        Frame<float> boundingBox) override;
 
     // SDL implementation specific functions
     virtual void render ();

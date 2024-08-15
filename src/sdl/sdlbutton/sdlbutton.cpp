@@ -6,7 +6,7 @@ using std::make_unique;
 SDLButton::SDLButton (string buttonDownImage, string buttonUpImage,
     Button::State initialState, unique_ptr<SDLRenderer> &sdlRenderer,
     EventCallback buttonClicked, 
-    SDL_Texture* targetTexture, Panel::BoundingBox boundingBox)
+    SDL_Texture* targetTexture, Panel::Frame<float> boundingBox)
     :
     buttonClicked_ {buttonClicked},
     buttonState_ {initialState}
