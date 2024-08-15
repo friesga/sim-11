@@ -91,13 +91,3 @@ bool SDLTexture::isWithinBounds (Position position, float margin) const
     // Inside rectangle
     return true;
 }
-
-pair<int, int> SDLTexture::getTextureDimensions (SDL_Texture* texture)
-{
-    Uint32 format;
-    int access;
-    int width, height;
-
-    SDL_QueryTexture (texture, &format, &access, &width, &height);
-    return make_pair (width, height);
-}
