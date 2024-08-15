@@ -67,7 +67,7 @@ void BA11_N::createBezel ()
     // At least for Windows, event handling has to be performed in the same
     // thread as in which the window has been created.
     //
-    Panel *panel = frontWindow_->createPanel ();
+    Panel *panel = frontWindow_->createPanel ({0, 0});
 
     panel->createFront(frontImage(logo_), ba11_nFrontBoundingBox);
     pwrOkLed_ = panel->createIndicator ("../../assets/red led.png", 

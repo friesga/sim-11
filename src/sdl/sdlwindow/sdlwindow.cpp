@@ -54,7 +54,7 @@ void SDLWindow::show ()
     SDL_ShowWindow (sdlWindow_);
 }
 
-Panel *SDLWindow::createPanel ()
+Panel *SDLWindow::createPanel (CabinetPosition cabinetPosition)
 {
     panels_.push_back (make_unique<SDLPanel> (sdlRenderer_, targetTexture_));
     return panels_.back ().get ();

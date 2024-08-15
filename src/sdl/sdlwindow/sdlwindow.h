@@ -26,7 +26,7 @@ public:
         set<Window::Flag> flags = {});
     ~SDLWindow ();
     void show () override;
-    Panel *createPanel () override;
+    Panel *createPanel (CabinetPosition cabinetPosition) override;
     void handler ();
 
 

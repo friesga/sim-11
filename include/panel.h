@@ -24,6 +24,18 @@ struct Position
     int y;
 };
 
+// Definition of the position of a device in a cabinet. The cabinet number
+// is ranking number, the left-most cabinet is cabinet 0. The height of the
+// device in the cabinet is expressed in "rack units" (U), measured from the top
+// of the device. See https://en.wikipedia.org/wiki/19-inch_rack and
+// https://en.wikipedia.org/wiki/Rack_unit.
+//
+struct CabinetPosition
+{
+    size_t cabinetNr;
+    size_t height;
+};
+
 class Indicator
 {
 public:
@@ -89,7 +101,7 @@ public:
     };
     
     virtual void show () = 0;
-    virtual Panel *createPanel () = 0;
+    virtual Panel *createPanel (CabinetPosition cabinetPosition) = 0;
     virtual void render () = 0;
     virtual bool handleEvents () = 0;
 };
