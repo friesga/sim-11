@@ -2,6 +2,7 @@
 #define _PANEL_H_
 
 #include "cabinet.h"
+#include "rackunit.h"
 
 #include <string>
 #include <memory>
@@ -93,7 +94,7 @@ public:
     
     virtual void show () = 0;
     virtual Panel *createPanel (CabinetPosition cabinetPosition,
-        size_t panelHeight) = 0;
+        RackUnit unitHeight) = 0;
     virtual void render () = 0;
     virtual bool handleEvents () = 0;
 };

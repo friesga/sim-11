@@ -10,14 +10,14 @@ using std::pair;
 using std::make_pair;
 
 SDLPanel::SDLPanel (unique_ptr<SDLRenderer> &sdlRenderer,
-    SDL_Texture* texture, size_t panelHeight)
+    SDL_Texture* texture, RackUnit unitHeight)
     :
     sdlRenderer_ {sdlRenderer},
     targetTexture_ {texture}
 {
     static const size_t h9642Height {20};
     auto [textureWidth, textureHeight] = getTextureDimensions (targetTexture_);
-    panelHeight_ = textureHeight / h9642Height * panelHeight;
+    panelHeight_ = textureHeight / h9642Height * unitHeight;
 }
 
 SDLPanel::~SDLPanel ()

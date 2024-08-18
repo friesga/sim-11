@@ -69,7 +69,7 @@ void BA11_N::createBezel ()
     //
     // The BA11-N unit has a height of three rack units.
     //
-    Panel *panel = frontWindow_->createPanel ({0, 0}, 3);
+    Panel *panel = frontWindow_->createPanel ({0, 0}, 3_ru);
 
     panel->createFront(frontImage(logo_), ba11_nFrontBoundingBox);
     pwrOkLed_ = panel->createIndicator ("../../assets/red led.png", 

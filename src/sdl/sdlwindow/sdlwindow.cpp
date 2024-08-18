@@ -1,6 +1,7 @@
 #include "sdlwindow.h"
 #include "../sdlpanel/sdlpanel.h"
 #include "../sdlevent/sdlevent.h"
+#include "rackunit.h"
 
 #include <SDL_image.h>
 #include <string>
@@ -55,10 +56,10 @@ void SDLWindow::show ()
 }
 
 Panel *SDLWindow::createPanel (CabinetPosition cabinetPosition,
-    size_t panelHeight)
+    RackUnit unitHeight)
 {
     panels_.push_back (make_unique<SDLPanel> (sdlRenderer_, targetTexture_,
-        panelHeight));
+        unitHeight));
     return panels_.back ().get ();
 }
 

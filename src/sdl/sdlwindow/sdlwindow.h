@@ -27,7 +27,7 @@ public:
     ~SDLWindow ();
     void show () override;
     Panel *createPanel (CabinetPosition cabinetPosition,
-        size_t panelHeight) override;
+        RackUnit unitHeight) override;
     void handler ();
 
 
