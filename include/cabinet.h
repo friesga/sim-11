@@ -1,6 +1,8 @@
 #ifndef _CABINET_H_
 #define _CABINET_H_
 
+#include "rackunit.h"
+
 #include <string>
 #include <vector>
 
@@ -14,7 +16,7 @@ using std::vector;
 struct Cabinet
 {
     string typeId;
-    size_t height;
+    RackUnit height;
 };
 
 using CabinetConfiguration = vector<Cabinet>;
@@ -27,7 +29,7 @@ using CabinetConfiguration = vector<Cabinet>;
 struct CabinetPosition
 {
     size_t cabinetNr;
-    size_t height;
+    RackUnit height;
 };
 
 #endif // _CABINET_H_

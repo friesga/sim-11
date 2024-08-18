@@ -15,7 +15,7 @@ SDLPanel::SDLPanel (unique_ptr<SDLRenderer> &sdlRenderer,
     sdlRenderer_ {sdlRenderer},
     targetTexture_ {texture}
 {
-    static const size_t h9642Height {20};
+    static const RackUnit h9642Height {20_ru};
     auto [textureWidth, textureHeight] = getTextureDimensions (targetTexture_);
     panelHeight_ = textureHeight / h9642Height * unitHeight;
 }
