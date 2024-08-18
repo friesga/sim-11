@@ -52,7 +52,7 @@ try
 	// This height corresponds to 20 rack units. The aspect ratio of a H9642
 	// cabinet therefore is 19/35 = 0.54.
 	static const double h9642AspectRatio = 19.0 / 35.0;
-	static const int windowWidth = 750;
+	static const int windowWidth = 500;
 
 	// Create the window with the aspect ratio of a H9642 cabinet for the
 	// panels. Set the window initially hidden as configuring the devices may
