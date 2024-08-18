@@ -10,14 +10,16 @@ using std::pair;
 using std::make_pair;
 
 SDLPanel::SDLPanel (unique_ptr<SDLRenderer> &sdlRenderer,
-    SDL_Texture* texture, RackUnit unitHeight)
+    SDL_Texture* texture, CabinetPosition cabinetPosition, RackUnit unitHeight)
     :
     sdlRenderer_ {sdlRenderer},
-    targetTexture_ {texture}
+    targetTexture_ {texture},
+    cabinetPosition_ {cabinetPosition}
 {
     static const RackUnit h9642Height {20_ru};
     auto [textureWidth, textureHeight] = getTextureDimensions (targetTexture_);
-    panelHeight_ = textureHeight / h9642Height * unitHeight;
+    pixelsPerRackUnit_ = textureHeight / h9642Height;
+    panelHeight_ = pixelsPerRackUnit_ * unitHeight;
 }
 
 SDLPanel::~SDLPanel ()
@@ -75,7 +77,9 @@ Frame<int> SDLPanel::placeFrameInTexture (Frame<float> frame)
     // from these relative values.
     auto [textureWidth, textureHeight] = getTextureDimensions (targetTexture_);
     int x = static_cast<int> (frame.x * textureWidth);
-    int y = static_cast<int> (frame.y * panelHeight_);
+    int y = static_cast<int> (textureHeight - 
+        (cabinetPosition_.height * pixelsPerRackUnit_) +
+        (frame.y * panelHeight_));
     int width_ = static_cast<int> (frame.width * textureWidth);
     int height_ = static_cast<int> (frame.height * panelHeight_);
     return {x, y, width_, height_};

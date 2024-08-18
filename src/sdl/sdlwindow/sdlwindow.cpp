@@ -59,7 +59,7 @@ Panel *SDLWindow::createPanel (CabinetPosition cabinetPosition,
     RackUnit unitHeight)
 {
     panels_.push_back (make_unique<SDLPanel> (sdlRenderer_, targetTexture_,
-        unitHeight));
+        cabinetPosition, unitHeight));
     return panels_.back ().get ();
 }
 
