@@ -22,11 +22,12 @@ using std::set;
 class SDLWindow : public Window, public SDLInit
 {
 public:
-    SDLWindow (char const *title, int x, int y, int width, int height,
+    SDLWindow (char const *title, Frame<int> frame,
         set<Window::Flag> flags = {});
     ~SDLWindow ();
     void show () override;
-    Panel *createPanel (CabinetPosition cabinetPosition) override;
+    Panel *createPanel (CabinetPosition cabinetPosition,
+        size_t panelHeight) override;
     void handler ();
 
 

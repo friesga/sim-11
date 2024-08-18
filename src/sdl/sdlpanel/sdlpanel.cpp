@@ -10,24 +10,28 @@ using std::pair;
 using std::make_pair;
 
 SDLPanel::SDLPanel (unique_ptr<SDLRenderer> &sdlRenderer,
-    SDL_Texture* texture)
+    SDL_Texture* texture, size_t panelHeight)
     :
     sdlRenderer_ {sdlRenderer},
     targetTexture_ {texture}
-{}
+{
+    static const size_t h9642Height {20};
+    auto [textureWidth, textureHeight] = getTextureDimensions (targetTexture_);
+    panelHeight_ = textureHeight / h9642Height * panelHeight;
+}
 
 SDLPanel::~SDLPanel ()
 {}
 
 void SDLPanel::createFront (string imageFile, 
-        Panel::Frame<float> frame)
+        Frame<float> frame)
 {
     fronts_.push_back (make_unique<SDLFront> (imageFile, 
         sdlRenderer_, targetTexture_, placeFrameInTexture (frame)));
 }
 
 Indicator *SDLPanel::createIndicator (string imageFile,
-    Indicator::State showFigure, Panel::Frame<float> frame)
+    Indicator::State showFigure, Frame<float> frame)
 {
     indicators_.push_back (make_unique<SDLIndicator> (imageFile, 
         sdlRenderer_, showFigure, targetTexture_, placeFrameInTexture (frame)));
@@ -64,16 +68,16 @@ Button *SDLPanel::createMomentaryButton (string buttonDownImage, string buttonUp
 // panel, in the target texture. The given panel frame has position and
 // dimensions as fractions relative to the panel dimensions; the target
 // texture frame has absolute values.
-Panel::Frame<int> SDLPanel::placeFrameInTexture (Panel::Frame<float> frame)
+Frame<int> SDLPanel::placeFrameInTexture (Frame<float> frame)
 {
     // The passed frame contains positions relative to the target
-    // texture. Calculate the bounding box position and dimensions in pixels
+    // texture. Calculate the frame's position and dimensions in pixels
     // from these relative values.
-    auto [width, height] = getTextureDimensions (targetTexture_);
-    int x = static_cast<int> (frame.x * width);
-    int y = static_cast<int> (frame.y * height);
-    int width_ = static_cast<int> (frame.width * width);
-    int height_ = static_cast<int> (frame.height * height);
+    auto [textureWidth, textureHeight] = getTextureDimensions (targetTexture_);
+    int x = static_cast<int> (frame.x * textureWidth);
+    int y = static_cast<int> (frame.y * panelHeight_);
+    int width_ = static_cast<int> (frame.width * textureWidth);
+    int height_ = static_cast<int> (frame.height * panelHeight_);
     return {x, y, width_, height_};
 }
 

@@ -18,7 +18,7 @@ public:
     SDLMomentaryButton (string buttonDownImage, string buttonUpImage,
         Button::State initialState, unique_ptr<SDLRenderer> &sdlRenderer, 
         EventCallback buttonClicked,
-        SDL_Texture* targetTexture, Panel::Frame<int> frame);
+        SDL_Texture* targetTexture, Frame<int> frame);
     ~SDLMomentaryButton ();
 
     void handleEvent (SDLEvent const *event) override;

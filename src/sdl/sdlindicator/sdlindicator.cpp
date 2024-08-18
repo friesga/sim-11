@@ -6,7 +6,7 @@ using std::make_unique;
 
 SDLIndicator::SDLIndicator (string imageFile,
     unique_ptr<SDLRenderer> &sdlRenderer, State showIndicator, 
-    SDL_Texture* targetTexture, Panel::Frame<int> frame)
+    SDL_Texture* targetTexture, Frame<int> frame)
         :
     showIndicator_ {showIndicator}
 {

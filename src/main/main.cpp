@@ -1,3 +1,4 @@
+#include "panel.h"
 #include "pdp11/pdp11.h"
 #include "trace/trace.h"
 #include "cmdlineoptions/cmdlineoptions.h"
@@ -47,18 +48,17 @@ try
 			Trace::Category::RLV12 |
 			Trace::Category::Clock);
 
-	// Definition of the aspect ratio of the panels. A PDP-11 cabinet is a
-	// 19" wide rack which comprises a number of units. Each unit has a height
-	// of 5.25" or 10.5". This leads to an aspect ration of 3.62. The current
-	// front image has an aspect ration of 3.75.
-	static const double cabinetAspectRatio = 3.75;
+	// A H9642 cabinet is 19" wide and has an internal height of 35".
+	// This height corresponds to 20 rack units. The aspect ratio of a H9642
+	// cabinet therefore is 19/35 = 0.54.
+	static const double h9642AspectRatio = 19.0 / 35.0;
 	static const int windowWidth = 750;
 
-	// Create the window for the panels. Set the window initially hidden
-	// as configuring the devices may throw an exception and the required
-	// size of the window is yet unknown.
-	SDLWindow sdlWindow {"PDP-11 Console", 100, 100, windowWidth,
-		static_cast<int> (windowWidth / cabinetAspectRatio),
+	// Create the window with the aspect ratio of a H9642 cabinet for the
+	// panels. Set the window initially hidden as configuring the devices may
+	// throw an exception.
+	SDLWindow sdlWindow {"PDP-11 Console", {100, 100, windowWidth,
+		static_cast<int> (windowWidth / h9642AspectRatio)},
 		{Window::Flag::WindowHidden}};
 
 	// Create a pdp-11 with configured (or default) devices.

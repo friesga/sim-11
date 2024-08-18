@@ -1,6 +1,8 @@
 #ifndef _PANEL_H_
 #define _PANEL_H_
 
+#include "cabinet.h"
+
 #include <string>
 #include <memory>
 #include <functional>
@@ -24,16 +26,17 @@ struct Position
     int y;
 };
 
-// Definition of the position of a device in a cabinet. The cabinet number
-// is ranking number, the left-most cabinet is cabinet 0. The height of the
-// device in the cabinet is expressed in "rack units" (U), measured from the top
-// of the device. See https://en.wikipedia.org/wiki/19-inch_rack and
-// https://en.wikipedia.org/wiki/Rack_unit.
-//
-struct CabinetPosition
+// The Frame struct defines a rectangle dimensions and position
+// relative to a canvas (i.e. texture or window). The origin of the
+// box is at the upper left corner and the down right corner is at the
+// coordinates (1.0, 1.0).
+template <typename T>
+struct Frame
 {
-    size_t cabinetNr;
-    size_t height;
+    T x;
+    T y;
+    T width;
+    T height;
 };
 
 class Indicator
@@ -63,19 +66,6 @@ public:
 class Panel
 {
 public:
-    // The Frame struct defines a rectangle dimensions and position
-    // relative to a canvas (i.e. texture or window). The origin of the
-    // box is at the upper left corner and the down right corner is at the
-    // coordinates (1.0, 1.0).
-    template <typename T>
-    struct Frame
-    {
-        T x;
-        T y;
-        T width;
-        T height;
-    };
-
     // A default value (0) may be specified for the width and height of
     // images. This indicates that the width and height of the image
     // will be used.
@@ -102,7 +92,8 @@ public:
     };
     
     virtual void show () = 0;
-    virtual Panel *createPanel (CabinetPosition cabinetPosition) = 0;
+    virtual Panel *createPanel (CabinetPosition cabinetPosition,
+        size_t panelHeight) = 0;
     virtual void render () = 0;
     virtual bool handleEvents () = 0;
 };

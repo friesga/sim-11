@@ -13,17 +13,17 @@ using std::this_thread::sleep_for;
 using std::pair;
 using std::make_pair;
 
-SDLWindow::SDLWindow (char const *title, int x, int y, int width, int height,
+SDLWindow::SDLWindow (char const *title, Frame<int> frame,
     set<Window::Flag> flags)
     :
     SDLInit (),
-    windowWidth_ {width},
-    windowHeight_ {height},
-    textureWidth_ {width * 2},
-    textureHeight_ {height * 2}
+    windowWidth_ {frame.width},
+    windowHeight_ {frame.height},
+    textureWidth_ {frame.width * 2},
+    textureHeight_ {frame.height * 2}
 {
     // Create window
-    sdlWindow_ = SDL_CreateWindow (title, x, y, width, height,
+    sdlWindow_ = SDL_CreateWindow (title, frame.x, frame.y, frame.width, frame.height,
         flags.contains (Window::Flag::WindowHidden) ? SDL_WINDOW_HIDDEN : SDL_WINDOW_SHOWN);
 
     if (sdlWindow_ == NULL)
@@ -54,9 +54,11 @@ void SDLWindow::show ()
     SDL_ShowWindow (sdlWindow_);
 }
 
-Panel *SDLWindow::createPanel (CabinetPosition cabinetPosition)
+Panel *SDLWindow::createPanel (CabinetPosition cabinetPosition,
+    size_t panelHeight)
 {
-    panels_.push_back (make_unique<SDLPanel> (sdlRenderer_, targetTexture_));
+    panels_.push_back (make_unique<SDLPanel> (sdlRenderer_, targetTexture_,
+        panelHeight));
     return panels_.back ().get ();
 }
 

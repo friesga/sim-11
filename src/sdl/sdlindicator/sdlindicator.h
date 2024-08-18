@@ -15,7 +15,7 @@ class SDLIndicator : public Indicator
 public:
     SDLIndicator (string imageFile, unique_ptr<SDLRenderer> &sdlRenderer,
         State showIndicator, SDL_Texture* targetTexture,
-        Panel::Frame<int> frame);
+        Frame<int> frame);
     ~SDLIndicator ();
     void render ();
 

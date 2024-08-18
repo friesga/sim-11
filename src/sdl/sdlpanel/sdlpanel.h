@@ -18,7 +18,8 @@ using std::vector;
 class SDLPanel : public Panel
 {
 public:
-    SDLPanel (unique_ptr<SDLRenderer> &sdlRenderer, SDL_Texture* texture);
+    SDLPanel (unique_ptr<SDLRenderer> &sdlRenderer, SDL_Texture* texture,
+        size_t height);
     ~SDLPanel ();
 
     // Definition of functions required for the implementation of a Panel
@@ -39,7 +40,7 @@ public:
     bool isOverButton (Position position);
 
 private:
-    Panel::Frame<int> placeFrameInTexture (Panel::Frame<float> frame);
+    Frame<int> placeFrameInTexture (Frame<float> frame);
     pair<int, int> getTextureDimensions (SDL_Texture* texture);
 
     // Reference to the renderer to use for fronts, indicators and buttons
@@ -56,6 +57,9 @@ private:
 
     // Position of the panel in the target texture
     Position panelPosition_ {0, 0};
+
+    // The height of the unit in pixels
+    float panelHeight_ {0.0f};
 };
 
 #endif // _SDLPANEL_H_
