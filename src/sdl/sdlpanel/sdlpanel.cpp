@@ -10,7 +10,7 @@ using std::pair;
 using std::make_pair;
 
 SDLPanel::SDLPanel (unique_ptr<SDLRenderer> &sdlRenderer,
-    SDL_Texture* texture, CabinetPosition cabinetPosition, RackUnit unitHeight)
+    SDL_Texture* texture, Cabinet::Position cabinetPosition, RackUnit unitHeight)
     :
     sdlRenderer_ {sdlRenderer},
     targetTexture_ {texture},

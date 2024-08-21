@@ -8,6 +8,7 @@
 #include "../sdlmomentarybutton/sdlmomentarybutton.h"
 #include "../sdlrenderer/sdlrenderer.h"
 #include "../sdlevent/sdlevent.h"
+#include "cabinet/cabinet.h"
 #include "rackunit.h"
 
 #include <memory>
@@ -20,7 +21,7 @@ class SDLPanel : public Panel
 {
 public:
     SDLPanel (unique_ptr<SDLRenderer> &sdlRenderer, SDL_Texture* texture,
-        CabinetPosition cabinetPosition, RackUnit unitHeight);
+        Cabinet::Position cabinetPosition, RackUnit unitHeight);
     ~SDLPanel ();
 
     // Definition of functions required for the implementation of a Panel
@@ -62,7 +63,7 @@ private:
     // The height of the unit in pixels
     float panelHeight_ {0.0f};
     int pixelsPerRackUnit_ {0};
-    CabinetPosition cabinetPosition_;
+    Cabinet::Position cabinetPosition_;
 };
 
 #endif // _SDLPANEL_H_

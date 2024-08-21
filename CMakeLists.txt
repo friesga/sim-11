@@ -392,6 +392,7 @@ endif ()
 # Define source files
 set (GTEST_SRCS
     gtest/ashtest.cpp
+    gtest/cabinettest.cpp
     gtest/cmdlineoptionstest.cpp
     gtest/threadsafeprioqueuetest.cpp
     gtest/threadsafecontainertest.cpp
@@ -455,6 +456,7 @@ set (SIM11_TEST_SRCS
     ${RLV12_SRCS}
     ${FLOAT_SRCS}
     src/abstractbusdevice/writebyte.cpp
+    src/cabinet/cabinet.cpp
     src/pdp11peripheral/pdp11peripheral.cpp
     src/lib/gotapproval.cpp
     ${KD11_NA_SRCS}

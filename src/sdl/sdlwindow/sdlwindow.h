@@ -5,6 +5,7 @@
 #include "../sdlpanel/sdlpanel.h"
 #include "../sdlrenderer/sdlrenderer.h"
 #include "../sdlinit/sdlinit.h"
+#include "cabinet/cabinet.h"
 
 #include <vector>
 #include <utility>
@@ -26,7 +27,7 @@ public:
         set<Window::Flag> flags = {});
     ~SDLWindow ();
     void show () override;
-    Panel *createPanel (CabinetPosition cabinetPosition,
+    Panel *createPanel (Cabinet::Position cabinetPosition,
         RackUnit unitHeight) override;
     void handler ();
 
