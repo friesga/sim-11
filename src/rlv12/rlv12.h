@@ -11,6 +11,7 @@
 #include "rlv12command/rlv12command.h"
 #include "configdata/rl/rlconfig/rlconfig.h"
 #include "cmdprocessor/cmdprocessor.h"
+#include "panel.h"
 
 #include <array>
 #include <memory>               // for std::unique_ptr<>
@@ -263,7 +264,7 @@ class RLV12 : public PDP11Peripheral
 public:
     // Constructors/destructor
     RLV12 (Qbus *bus);
-    RLV12 (Qbus *bus, shared_ptr<RLConfig> rlConfig);
+    RLV12 (Qbus *bus, Window* window, shared_ptr<RLConfig> rlConfig);
     ~RLV12 ();
 
     // Required functions

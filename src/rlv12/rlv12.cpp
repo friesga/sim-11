@@ -44,7 +44,7 @@ RLV12::RLV12 (Qbus *bus)
     cmdProcessor_ = std::make_unique<CmdProcessor> (this);
 }
 
-RLV12::RLV12 (Qbus *bus, shared_ptr<RLConfig> rlConfig)
+RLV12::RLV12 (Qbus *bus, Window* window, shared_ptr<RLConfig> rlConfig)
     :
     PDP11Peripheral (bus),
     csr_ {0},
@@ -83,6 +83,11 @@ RLV12::RLV12 (Qbus *bus, shared_ptr<RLConfig> rlConfig)
 	}
 
     bus_->BINIT().subscribe (bind (&RLV12::BINITReceiver, this, _1));
+
+    // Create the panel in the window
+    Panel* panel = window->createPanel ({0, 14_ru}, 6_ru);
+        panel->createFront ("../../assets/RL02-front.png",
+        {0, 0, 1.0, 1.0});
 
     // Start the command processor
     cmdProcessor_ = std::make_unique<CmdProcessor> (this);
