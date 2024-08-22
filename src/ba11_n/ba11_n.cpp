@@ -71,24 +71,24 @@ void BA11_N::createBezel ()
     //
     Panel *panel = frontWindow_->createPanel ({0, 17_ru}, 3_ru);
 
-    panel->createFront(frontImage(logo_), ba11_nFrontBoundingBox);
+    panel->createFront(frontImage(logo_), ba11_nFrontFrame);
     pwrOkLed_ = panel->createIndicator ("../../assets/red led.png", 
-        Indicator::State::Off, pwrOkLedBoundingBox);
+        Indicator::State::Off, pwrOkLedFrame);
     runLed_ = panel->createIndicator ("../../assets/red led.png", 
-        Indicator::State::Off, runLedBoundingBox);
+        Indicator::State::Off, runLedFrame);
 
     restartSwitch_ = panel->createMomentaryButton ("../../assets/switch down.png",
         "../../assets/switch up.png", 
         Button::State::Down, bind (&BA11_N::restartSwitchClicked, this, _1), 
-        restartSwitchBoundingBox);
+        restartSwitchFrame);
     haltSwitch_ = panel->createLatchingButton ("../../assets/switch down.png",
         "../../assets/switch up.png", 
         Button::State::Down, bind (&BA11_N::haltSwitchToggled, this, _1),
-        haltSwitchBoundingBox);
+        haltSwitchFrame);
     auxOnOffSwitch_ = panel->createLatchingButton ("../../assets/switch down.png",
         "../../assets/switch up.png", 
         Button::State::Down, bind (&BA11_N::auxOnOffSwitchToggled, this, _1),
-        auxOnOffSwitchBoundingBox);
+        auxOnOffSwitchFrame);
 
     // Now the RUN led is created when can subscribe to the signal indicating
     // the state to be shown.

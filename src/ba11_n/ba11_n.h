@@ -24,12 +24,12 @@ public:
 
 private:
     // Definition of the front, indicators and buttons on the BA11_N panel
-    Frame<float> ba11_nFrontBoundingBox    {0, 0, 1.0, 1.0};
-    Frame<float> pwrOkLedBoundingBox       {0.687, 0.573, 0.016, 0.060};
-    Frame<float> runLedBoundingBox         {0.712, 0.573, 0.016, 0.060};
-    Frame<float> restartSwitchBoundingBox  {0.800, 0.558, 0.027, 0.101};
-    Frame<float> haltSwitchBoundingBox     {0.833, 0.558, 0.027, 0.101};
-    Frame<float> auxOnOffSwitchBoundingBox {0.867, 0.558, 0.027, 0.101};
+    Frame<float> ba11_nFrontFrame    {0, 0, 1.0, 1.0};
+    Frame<float> pwrOkLedFrame       {0.687, 0.573, 0.016, 0.060};
+    Frame<float> runLedFrame         {0.712, 0.573, 0.016, 0.060};
+    Frame<float> restartSwitchFrame  {0.800, 0.558, 0.027, 0.101};
+    Frame<float> haltSwitchFrame     {0.833, 0.558, 0.027, 0.101};
+    Frame<float> auxOnOffSwitchFrame {0.867, 0.558, 0.027, 0.101};
 
     Qbus *bus_;
     Window *frontWindow_;
