@@ -1,6 +1,8 @@
 #ifndef _RACK_UNIT_H_
 #define _RACK_UNIT_H_
 
+#include <cstddef>
+
 // Definition of a Rack Unit to avoid confusion with other height definitions.
 class RackUnit
 {
@@ -20,7 +22,7 @@ private:
     // is able to access the constructor.
     explicit RackUnit (size_t value);
 
-    friend RackUnit operator"" _ru (size_t value);
+    friend RackUnit operator"" _ru (unsigned long long value);
 
     size_t value_;
 };
@@ -35,7 +37,7 @@ inline RackUnit::operator int () const
     return static_cast<int> (value_);
 }
 
-inline RackUnit operator"" _ru (size_t value)
+inline RackUnit operator"" _ru (unsigned long long value)
 {
     return RackUnit (value);
 }
