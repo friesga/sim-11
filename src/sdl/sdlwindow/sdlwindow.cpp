@@ -7,12 +7,14 @@
 #include <string>
 #include <thread>
 #include <utility>
+#include <algorithm>
 
 using std::string;
 using std::make_unique;
 using std::this_thread::sleep_for;
 using std::pair;
 using std::make_pair;
+using std::ranges::any_of;
 
 SDLWindow::SDLWindow (char const *title, Frame<int> frame,
     set<Window::Flag> flags)
@@ -121,13 +123,8 @@ bool SDLWindow::handleEvents ()
                 break;
 
             case SDL_MOUSEMOTION:
-                for (auto& sdlPanel : panels_)
-                {
-                    if (sdlPanel->isOverButton (texturePosition_))
-                        showLoupe_ = true;
-                    else
-                        showLoupe_ = false;
-                }
+                showLoupe_ = any_of (panels_, [&] (unique_ptr<SDLPanel>& p)
+                    { return p->isOverButton (texturePosition_); });
                 break;
 
             default:
