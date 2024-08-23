@@ -31,10 +31,10 @@ KD11_NA::KD11_NA (Qbus* bus)
 
 KD11_NA::KD11_NA (Qbus *bus, shared_ptr<KD11_NAConfig> kd11_naConfig)
     :
-    KD11_NA (bus)
+    bus_ (bus),
+    powerUpMode_ {kd11_naConfig->powerUpMode},
+    startAddress_ {stdBootAddress}
 {
-    powerUpMode_ = kd11_naConfig->powerUpMode;
-
     controlLogic_ = make_unique<ControlLogic> (bus_, &cpuData_, &cpuControl_, &pseudoMMU_, powerUpMode_,
         startAddress_, bind (&KD11_NA_ODT::createODT, _1, _2, _3, _4, _5));
 }
