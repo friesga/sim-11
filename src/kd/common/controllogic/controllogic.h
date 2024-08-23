@@ -100,7 +100,7 @@ private:
     bool kd11Running_;
 
     // Definition of a queue for the processing of bus signal events
-    ThreadSafeQueue<Event> signalEventQueue_;
+    ThreadSafeQueue<Event> signalEventQueue_ {};
 
     State powerUpRoutine ();
     void loadTrapVector (CpuData::TrapCondition trap);

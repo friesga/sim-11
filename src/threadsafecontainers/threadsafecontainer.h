@@ -22,7 +22,7 @@ class ThreadSafeContainer
     template <typename U>
     friend class ThreadSafePriorityQueue;
 
-    Cont<T> queue_;
+    Cont<T> queue_ {};
     mutable std::mutex guard;
     std::condition_variable signal;
     bool closed {false};
