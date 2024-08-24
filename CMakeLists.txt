@@ -275,6 +275,7 @@ set (SIM11_SRCS
     ${BA11_N_SRCS}
     ${CONSOLE_SRCS}
     ${CHRONO_SRCS}
+    src/cabinet/cabinet.cpp
     src/abstractbusdevice/writebyte.cpp
     ${BDV11_SRCS}
     src/dl11/dlv11j/dlv11j.cpp

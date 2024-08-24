@@ -31,7 +31,6 @@ public:
         RackUnit unitHeight) override;
     void handler ();
 
-
 private:
     // Loupe circle radius
     static const int loupeRadius_ = 50;
@@ -53,6 +52,10 @@ private:
 
     // The target texture the panels have to render to
     SDL_Texture* targetTexture_;
+
+    // Definition of a cabinet to keep track of occupied positions in
+    // the cabinet. 
+    Cabinet h9642Cabinet {"h9642", 20_ru};
 
     void render () override;
     bool handleEvents () override;

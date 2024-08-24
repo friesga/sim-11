@@ -60,6 +60,11 @@ void SDLWindow::show ()
 Panel *SDLWindow::createPanel (Cabinet::Position cabinetPosition,
     RackUnit unitHeight)
 {
+    // (Try to) add the panel to the cabinet to keep track of the occupied
+    // panel positions.
+    if (!h9642Cabinet.addUnit (cabinetPosition, unitHeight))
+        throw ("Unit position already occupied. Can't add panel to cabinet");
+
     panels_.push_back (make_unique<SDLPanel> (sdlRenderer_, targetTexture_,
         cabinetPosition, unitHeight));
     return panels_.back ().get ();
