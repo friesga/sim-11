@@ -57,7 +57,7 @@ void SDLWindow::show ()
     SDL_ShowWindow (sdlWindow_);
 }
 
-Panel *SDLWindow::createPanel (Cabinet::Position cabinetPosition,
+Panel *SDLWindow::createPanel (shared_ptr<Cabinet::Position> cabinetPosition,
     RackUnit unitHeight)
 {
     // (Try to) add the panel to the cabinet to keep track of the occupied

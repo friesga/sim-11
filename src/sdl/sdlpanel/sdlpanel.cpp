@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <utility>
 
+using std::shared_ptr;
 using std::make_unique;
 using std::string;
 using std::ranges::find_if;
@@ -10,7 +11,7 @@ using std::pair;
 using std::make_pair;
 
 SDLPanel::SDLPanel (unique_ptr<SDLRenderer> &sdlRenderer,
-    SDL_Texture* texture, Cabinet::Position cabinetPosition, RackUnit unitHeight)
+    SDL_Texture* texture, shared_ptr<Cabinet::Position> cabinetPosition, RackUnit unitHeight)
     :
     sdlRenderer_ {sdlRenderer},
     targetTexture_ {texture},
@@ -78,7 +79,7 @@ Frame<int> SDLPanel::placeFrameInTexture (Frame<float> frame)
     auto [textureWidth, textureHeight] = getTextureDimensions (targetTexture_);
     int x = static_cast<int> (frame.x * textureWidth);
     int y = static_cast<int> (textureHeight - 
-        (cabinetPosition_.height * pixelsPerRackUnit_) +
+        (cabinetPosition_->height * pixelsPerRackUnit_) +
         (frame.y * panelHeight_));
     int width_ = static_cast<int> (frame.width * textureWidth);
     int height_ = static_cast<int> (frame.height * panelHeight_);

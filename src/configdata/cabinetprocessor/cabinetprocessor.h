@@ -19,7 +19,7 @@ using std::vector;
 namespace CabinetProcessor
 {
 
-extern Cabinet::Position processCabinetKey (iniparser::Value value);
+extern shared_ptr<Cabinet::Position> processCabinetKey (iniparser::Value value);
 
 // Split the given string by the specified delimiter and return the item
 // in a vector of the specified type.

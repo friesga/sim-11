@@ -3,11 +3,13 @@
 #include <stdexcept>
 
 using std::invalid_argument;
+using std::shared_ptr;
+using std::make_shared;
 
 namespace CabinetProcessor
 {
 
-Cabinet::Position processCabinetKey (iniparser::Value value)
+shared_ptr<Cabinet::Position> processCabinetKey (iniparser::Value value)
 {
     vector<size_t> items;
     Cabinet::Position result {0, 0_ru};
@@ -19,7 +21,7 @@ Cabinet::Position processCabinetKey (iniparser::Value value)
 
     result.cabinetNr = items[0];
     result.height = items[1];
-    return result;
+    return make_shared<Cabinet::Position> (result);
 }
 
 } // namespace CabinetProcessor

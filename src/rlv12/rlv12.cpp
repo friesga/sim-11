@@ -3,11 +3,13 @@
 
 #include <thread>
 #include <chrono>
+#include <memory>
 
 using std::mutex;
 using std::lock_guard;
 using std::bind;
 using std::placeholders::_1;
+using std::make_shared;
 
 // RLV12 constructor
 // Set name and default base address and vector. Set the controller
@@ -85,7 +87,7 @@ RLV12::RLV12 (Qbus *bus, Window* window, shared_ptr<RLConfig> rlConfig)
     bus_->BINIT().subscribe (bind (&RLV12::BINITReceiver, this, _1));
 
     // Create the panel in the window
-    Panel* panel = window->createPanel ({0, 14_ru}, 6_ru);
+    Panel* panel = window->createPanel (make_shared<Cabinet::Position> (0, 14_ru), 6_ru);
         panel->createFront ("../../assets/RL02-front.png",
         {0, 0, 1.0, 1.0});
 

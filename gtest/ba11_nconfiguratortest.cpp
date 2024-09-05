@@ -178,6 +178,6 @@ TEST (BA11_NConfiguratorTest, cabinetPositionIsCorrect)
 	shared_ptr<BA11_NConfig> ba11_nConfig =
 		get<shared_ptr<BA11_NConfig>> (systemConfig[0]);
 
-	EXPECT_EQ (ba11_nConfig->cabinetPosition.cabinetNr, 10);
-	EXPECT_EQ (ba11_nConfig->cabinetPosition.height, 20_ru);
+	EXPECT_EQ (ba11_nConfig->cabinetPosition->cabinetNr, 10);
+	EXPECT_EQ (ba11_nConfig->cabinetPosition->height, 20_ru);
 }

@@ -11,6 +11,7 @@
 using std::string;
 using std::unique_ptr;
 using std::function;
+using std::shared_ptr;
 
 //
 // This header file defines an interface for a panel for the sim-11 GUI.
@@ -93,7 +94,7 @@ public:
     };
     
     virtual void show () = 0;
-    virtual Panel *createPanel (Cabinet::Position cabinetPosition,
+    virtual Panel *createPanel (shared_ptr<Cabinet::Position> cabinetPosition,
         RackUnit unitHeight) = 0;
     virtual void render () = 0;
     virtual bool handleEvents () = 0;

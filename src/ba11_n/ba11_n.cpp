@@ -29,7 +29,7 @@ BA11_N::~BA11_N ()
 {}
 
 // 
-void BA11_N::createBezel (Cabinet::Position cabinetPosition)
+void BA11_N::createBezel (shared_ptr<Cabinet::Position>& cabinetPosition)
 {
     // Create the BA11-N panel at the specified position, width and height
     // and then start a loop handling the events and rendering lamps and
