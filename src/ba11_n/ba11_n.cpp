@@ -21,7 +21,7 @@ BA11_N::BA11_N (Qbus *bus, Window *window, shared_ptr<BA11_NConfig> ba11_nConfig
     frontWindow_ {window},
     logo_ {ba11_nConfig->logo}
 {
-    createBezel ();
+    createBezel (ba11_nConfig->cabinetPosition);
 }
 
 // Destructor
@@ -29,7 +29,7 @@ BA11_N::~BA11_N ()
 {}
 
 // 
-void BA11_N::createBezel ()
+void BA11_N::createBezel (Cabinet::Position cabinetPosition)
 {
     // Create the BA11-N panel at the specified position, width and height
     // and then start a loop handling the events and rendering lamps and
@@ -69,7 +69,7 @@ void BA11_N::createBezel ()
     //
     // The BA11-N unit has a height of three rack units.
     //
-    Panel *panel = frontWindow_->createPanel ({0, 17_ru}, 3_ru);
+    Panel *panel = frontWindow_->createPanel (cabinetPosition, 3_ru);
 
     panel->createFront(frontImage(logo_), ba11_nFrontFrame);
     pwrOkLed_ = panel->createIndicator ("../../assets/red led.png", 

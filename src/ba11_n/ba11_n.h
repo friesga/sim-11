@@ -40,7 +40,7 @@ private:
     Button *auxOnOffSwitch_;
     BA11_NConfig::Logo logo_;
 
-    void createBezel ();
+    void createBezel (Cabinet::Position cabinetPosition);
     string frontImage (BA11_NConfig::Logo logo);
 };
 
