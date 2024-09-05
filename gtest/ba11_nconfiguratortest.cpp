@@ -11,7 +11,8 @@ TEST (BA11_NConfiguratorTest, defaultLogoIsPDP11_03L)
 {
     iniparser::File ft;
 	std::stringstream stream;
-	stream << "[BA11-N]\n";
+	stream << "[BA11-N]\n"
+		"cabinet = 0/0";
 	stream >> ft;
 
 	IniProcessor iniProcessor;
@@ -36,6 +37,7 @@ TEST (BA11_NConfiguratorTest, logoSelected)
     iniparser::File ft;
 	std::stringstream stream;
 	stream << "[BA11-N]\n"
+		"cabinet = 0/0\n"
 		"logo = PDP-11/23\n";
 	stream >> ft;
 
@@ -61,6 +63,7 @@ TEST (BA11_NConfiguratorTest, unknownKeyThrows)
 	iniparser::File ft;
 	std::stringstream stream;
 	stream << "[BA11-N]\n"
+		"cabinet = 0/0\n"
 		"unknown_key = 0\n";
 	stream >> ft;
 
@@ -86,6 +89,7 @@ TEST (BA11_NConfiguratorTest, unavailableLogoThrows)
 	iniparser::File ft;
 	std::stringstream stream;
 	stream << "[BA11-N]\n"
+		"cabinet = 0/0\n"
 		"logo = unknown\n";
 	stream >> ft;
 
@@ -103,6 +107,30 @@ TEST (BA11_NConfiguratorTest, unavailableLogoThrows)
 	catch (...)
 	{
 		FAIL();
+	}
+}
+
+TEST (BA11_NConfiguratorTest, missingCabinetPositionThrows)
+{
+	iniparser::File ft;
+	std::stringstream stream;
+	stream << "[BA11-N]\n";
+	stream >> ft;
+
+	IniProcessor iniProcessor;
+
+	try
+	{
+		iniProcessor.process (ft);
+		FAIL ();
+	}
+	catch (std::invalid_argument const& except)
+	{
+		EXPECT_STREQ (except.what (), "Cabinet position not specified in BA11-N section");
+	}
+	catch (...)
+	{
+		FAIL ();
 	}
 }
 

@@ -24,10 +24,13 @@ void BA11_NProcessor::processValue (iniparser::Section::ValueIterator valueItera
     (this->*processFunction)(valueIterator->second);
 }
 
-// Check the consistency of the configuration of the BA11-N. Currently there
-// are no requirements for the BA11-N.
+// Check the consistency of the configuration of the BA11-N. A valid cabinet
+// position has to be specified.
 void BA11_NProcessor::checkConsistency ()
-{}
+{
+    if (ba11_nConfigPtr->cabinetPosition == nullptr)
+        throw invalid_argument {"Cabinet position not specified in BA11-N section"};
+}
 
 void BA11_NProcessor::processSubsection (iniparser::Section *subSection)
 {}
