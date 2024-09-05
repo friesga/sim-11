@@ -7,6 +7,7 @@
 #include "configdata/kdf11_b/kdf11_bconfig/kdf11_bconfig.h"
 #include "configdata/consistencychecker/consistencychecker.h"
 #include "console/operatorconsole/operatorconsolefactory.h"
+#include "cabinet/cabinet.h"
 
 #include <memory>		// For make_unique
 #include <cstring>		// For memset()
@@ -25,13 +26,15 @@ void PDP_11::configureDevices (Window *window)
     processor_ = new KD11_NA (&bus_);
     msv11_.push_back (new MSV11D (&bus_));
 
-    // Create a DLV11J object with the default condiguration
+    // Create a DLV11J object with the default configuration. The default
+    // position for the BA11-N is at the top of the cabinet (which is 20 RU
+    // high, racks units numbered 0-19).
     dlv11_ = new DLV11J (&bus_, make_shared<DLV11JConfig> ());
     bdv11_ = new BDV11 (&bus_);
     rxv21_ = new RXV21 (&bus_);
     rlv12_ = new RLV12 (&bus_);
     ba11_n_ = std::make_unique<BA11_N> (&bus_, window, 
-        make_shared<BA11_NConfig> ());
+        make_shared<BA11_NConfig> (Cabinet::Position {0, 19_ru}));
 
     installModules ();
     reset ();

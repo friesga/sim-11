@@ -6,9 +6,16 @@
 #include <memory>
 
 using std::shared_ptr;
+using std::make_shared;
 
 struct BA11_NConfig
 {
+    BA11_NConfig () = default;
+    BA11_NConfig (Cabinet::Position cabinetPosition)
+    {
+        this->cabinetPosition = make_shared<Cabinet::Position> (cabinetPosition);
+    }
+
     // Definition of the available front cover logo's. The logo has no
     // part number and there are no separate BA11-N versions for PDP-11/03's
     // and PDP-11/23's, but the logo is separate item as defined in the
