@@ -23,7 +23,8 @@ class BA11_NProcessor : public DeviceConfigProcessor
 	
 	map<string, Process> valueProcessors =
 	{
-		{"logo", &BA11_NProcessor::processLogo}
+		{"logo", &BA11_NProcessor::processLogo},
+		{"cabinet", &BA11_NProcessor::processCabinet},
 	};
 
 	map<string, BA11_NConfig::Logo> availableLogos =
@@ -37,6 +38,7 @@ class BA11_NProcessor : public DeviceConfigProcessor
 	void checkConsistency ();
 	void processSubsection (iniparser::Section *subSection);
 	void processLogo (iniparser::Value value);
+	void processCabinet (iniparser::Value value);
 
 public:
 	BA11_NProcessor ();

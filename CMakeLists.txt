@@ -189,7 +189,8 @@ set (CONFIGURATOR_SRCS
     src/configdata/kdf11_b/sluprocessor/sluprocessor.cpp
     src/configdata/consistencychecker/consistencychecker.cpp
     src/configdata/consistencychecker/checkmsv11consistency.cpp
-    src/configdata/consistencychecker/checkkdf11bconsistency.cpp)
+    src/configdata/consistencychecker/checkkdf11bconsistency.cpp
+    src/configdata/cabinetprocessor/cabinetprocessor.cpp)
 
 set (FLOAT_SRCS
     src/float/float.cpp

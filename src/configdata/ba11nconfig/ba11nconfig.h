@@ -1,6 +1,8 @@
 #ifndef _BA11NCONFIG_H_
 #define _BA11NCONFIG_H_
 
+#include "cabinet/cabinet.h"
+
 struct BA11_NConfig
 {
     // Definition of the available front cover logo's. The logo has no
@@ -15,6 +17,7 @@ struct BA11_NConfig
     };
 
     Logo logo {Logo::PDP_1103L};
+    Cabinet::Position cabinetPosition {0, 0_ru};
 };
 
 #endif // !_BA11NCONFIG_H_

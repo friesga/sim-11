@@ -31,7 +31,6 @@ TEST (BA11_NConfiguratorTest, defaultLogoIsPDP11_03L)
 	EXPECT_EQ (ba11_nConfig->logo, BA11_NConfig::Logo::PDP_1103L);
 }
 
-
 TEST (BA11_NConfiguratorTest, logoSelected)
 {
     iniparser::File ft;
@@ -107,3 +106,78 @@ TEST (BA11_NConfiguratorTest, unavailableLogoThrows)
 	}
 }
 
+TEST (BA11_NConfiguratorTest, incorrectCabinetPositionThrows)
+{
+	iniparser::File ft;
+	std::stringstream stream;
+	stream << "[BA11-N]\n"
+		"cabinet = xxxx\n";
+	stream >> ft;
+
+	IniProcessor iniProcessor;
+
+	try
+	{
+		iniProcessor.process (ft);
+		FAIL ();
+	}
+	catch (std::invalid_argument const& except)
+	{
+		EXPECT_STREQ (except.what (), "Invalid BA11-N cabinet position");
+	}
+	catch (...)
+	{
+		FAIL ();
+	}
+}
+
+TEST (BA11_NConfiguratorTest, missingCabinetHeightThrows)
+{
+	iniparser::File ft;
+	std::stringstream stream;
+	stream << "[BA11-N]\n"
+		"cabinet = 10\n";
+	stream >> ft;
+
+	IniProcessor iniProcessor;
+
+	try
+	{
+		iniProcessor.process (ft);
+		FAIL ();
+	}
+	catch (std::invalid_argument const& except)
+	{
+		EXPECT_STREQ (except.what (), "Invalid BA11-N cabinet position");
+	}
+	catch (...)
+	{
+		FAIL ();
+	}
+}
+
+TEST (BA11_NConfiguratorTest, cabinetPositionIsCorrect)
+{
+	iniparser::File ft;
+	std::stringstream stream;
+	stream << "[BA11-N]\n"
+		"cabinet = 10/20\n";
+	stream >> ft;
+
+	IniProcessor iniProcessor;
+	EXPECT_NO_THROW (iniProcessor.process (ft));
+
+	vector<DeviceConfig> systemConfig =
+		iniProcessor.getSystemConfig ();
+
+	// The only device type in this testset is the BA11-N so if that's
+	// not correct the following tests will fail too.
+	ASSERT_TRUE (holds_alternative<shared_ptr<BA11_NConfig>> (systemConfig[0]));
+
+	// The device's type is BA11_N so the configuration is a BA11_NConfig object
+	shared_ptr<BA11_NConfig> ba11_nConfig =
+		get<shared_ptr<BA11_NConfig>> (systemConfig[0]);
+
+	EXPECT_EQ (ba11_nConfig->cabinetPosition.cabinetNr, 10);
+	EXPECT_EQ (ba11_nConfig->cabinetPosition.height, 20_ru);
+}

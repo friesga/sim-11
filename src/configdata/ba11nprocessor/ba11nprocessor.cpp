@@ -1,5 +1,7 @@
 #include "ba11nprocessor.h"
 #include "../ba11nconfig/ba11nconfig.h"
+#include "../cabinetprocessor/cabinetprocessor.h"
+
 
 using std::make_unique;
 using std::move;
@@ -44,4 +46,10 @@ void BA11_NProcessor::processLogo (iniparser::Value value)
         ba11_nConfigPtr->logo = iter->second;
     else
         throw invalid_argument {"Unavailable BA11-N logo selected"};
+}
+
+void BA11_NProcessor::processCabinet (iniparser::Value value)
+{
+    ba11_nConfigPtr->cabinetPosition = 
+        CabinetProcessor::processCabinetKey (value);
 }
