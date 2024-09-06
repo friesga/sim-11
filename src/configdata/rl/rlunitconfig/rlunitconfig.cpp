@@ -1,5 +1,7 @@
 #include "rlunitconfig.h"
 
+const RackUnit RLUnitConfig::unitHeight {6_ru};
+
 RLUnitConfig::RLUnitConfig ()
 {}
 

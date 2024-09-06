@@ -41,6 +41,9 @@ struct RLUnitConfig
 
     RLUnitConfig ();
 	RLUnitConfig (RLUnitConfigParams const &rlUnitConfigParams);
+
+	// The RL01/02 has a height of six rack units
+	static const RackUnit unitHeight;
 };
 
 #endif // _RLUNITCONFIG_H_

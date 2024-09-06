@@ -67,9 +67,7 @@ void BA11_N::createBezel (shared_ptr<Cabinet::Position> cabinetPosition)
     // At least for Windows, event handling has to be performed in the same
     // thread as in which the window has been created.
     //
-    // The BA11-N unit has a height of three rack units.
-    //
-    Panel *panel = frontWindow_->createPanel (cabinetPosition, 3_ru);
+    Panel *panel = frontWindow_->createPanel (cabinetPosition, BA11_NConfig::unitHeight);
 
     panel->createFront(frontImage(logo_), ba11_nFrontFrame);
     pwrOkLed_ = panel->createIndicator ("../../assets/red led.png", 

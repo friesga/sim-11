@@ -28,15 +28,18 @@ void ConsistencyChecker::checkCabinetConsistency ()
             // The following checks are performed by addUnit too, but
             // executing these checks here too gives the opportunity to
             // generate appropriate error messages.
-            if (h9642Cabinet.sectionOutOfRange (ba11nConfig->cabinetPosition, 3_ru) ||
+            if (h9642Cabinet.sectionOutOfRange (ba11nConfig->cabinetPosition,
+                        BA11_NConfig::unitHeight) ||
                     ba11nConfig->cabinetPosition->cabinetNr != 0)
                 throw out_of_range {"BA11-N cabinet position out of range"};
 
-            if (h9642Cabinet.sectionOccupied (ba11nConfig->cabinetPosition, 3_ru))
+            if (h9642Cabinet.sectionOccupied (ba11nConfig->cabinetPosition,
+                    BA11_NConfig::unitHeight))
                 throw invalid_argument {"BA11-N cabinet position already occupied"};
 
             // The addUnit() shouldn't fail but just to make sure.
-            if (!h9642Cabinet.addUnit (ba11nConfig->cabinetPosition, 3_ru))
+            if (!h9642Cabinet.addUnit (ba11nConfig->cabinetPosition,
+                    BA11_NConfig::unitHeight))
                 throw invalid_argument {"BA11-N couldn't be added to the cabinet"};
         }
         else
@@ -57,15 +60,18 @@ void ConsistencyChecker::checkCabinetConsistency ()
                         continue;
 
                     // See comment above
-                    if (h9642Cabinet.sectionOutOfRange (rlUnitConfig->cabinetPosition, 6_ru) ||
+                    if (h9642Cabinet.sectionOutOfRange (rlUnitConfig->cabinetPosition,
+                                RLUnitConfig::unitHeight) ||
                             rlUnitConfig->cabinetPosition->cabinetNr != 0)
                         throw out_of_range {"RL01/02 cabinet position out of range"};
 
-                    if (h9642Cabinet.sectionOccupied (rlUnitConfig->cabinetPosition, 6_ru))
+                    if (h9642Cabinet.sectionOccupied (rlUnitConfig->cabinetPosition,
+                            RLUnitConfig::unitHeight))
                         throw invalid_argument {"RL01/02 cabinet position already occupied"};
 
                     // The addUnit() shouldn't fail but just to make sure.
-                    if (!h9642Cabinet.addUnit (rlUnitConfig->cabinetPosition, 6_ru))
+                    if (!h9642Cabinet.addUnit (rlUnitConfig->cabinetPosition,
+                            RLUnitConfig::unitHeight))
                         throw invalid_argument {"RL01/02 couldn't be added to the cabinet"};
                 }
             }
