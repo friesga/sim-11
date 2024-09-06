@@ -1,5 +1,6 @@
 #include "rlunitprocessor.h"
 #include "configdata/rl/rlunitconfig/rlunitconfig.h"
+#include "configdata/cabinetprocessor/cabinetprocessor.h"
 
 #include <utility>
 
@@ -64,6 +65,12 @@ void RLUnitProcessor::processReadOnly (iniparser::Value value)
 void RLUnitProcessor::processOverwrite (iniparser::Value value)
 {
 	rlUnitConfigPtr->overwrite = value.asBool();
+}
+
+void RLUnitProcessor::processCabinet (iniparser::Value value)
+{
+	rlUnitConfigPtr->cabinetPosition =
+		CabinetProcessor::processCabinetKey (value);
 }
 
 // Check the consistency of the configuration of a RL unit. Currently

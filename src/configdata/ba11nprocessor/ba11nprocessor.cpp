@@ -2,7 +2,6 @@
 #include "../ba11nconfig/ba11nconfig.h"
 #include "../cabinetprocessor/cabinetprocessor.h"
 
-
 using std::make_unique;
 using std::move;
 using std::invalid_argument;

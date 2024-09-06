@@ -1,9 +1,13 @@
 #ifndef _RLUNITCONFIG_H_
 #define _RLUNITCONFIG_H_
 
+#include "cabinet/cabinet.h"
+
 #include <string>
+#include <memory>
 
 using std::string;
+using std::shared_ptr;
 
 // The struct RLUnitConfigParams and the constructor 
 // RLUnitConfig (RLUnitConfigParams const &rlUnitConfigParams) are used to
@@ -29,6 +33,7 @@ struct RLUnitConfig
 	};
 
 	RLUnitType rlUnitType {RLUnitType::RL01};
+	shared_ptr<Cabinet::Position> cabinetPosition {nullptr};
 	string fileName {};
 	bool newFile {false};
 	bool readOnly {false};

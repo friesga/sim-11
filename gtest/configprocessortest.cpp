@@ -30,6 +30,7 @@ TEST (ConfigProcessorTest, configProcessed)
 
 		"[RL.unit0]\n"
 		"type = RL01\n"
+		"cabinet = 0/0\n"
 		"filename = rl01.dsk\n"
 		"newfile = true\n"
 		"read-only = false\n";
@@ -152,7 +153,8 @@ TEST (ConfigProcessorTest, allSectionsProcessedOnce)
 		"[DLV11-J]\n"
 		"[BDV11]\n"
 		"[RXV21]\n"
-		"[BA11-N]\n";
+		"[BA11-N]\n"
+		"cabinet = 0/0\n";
 		
 	stream >> ft;
 
