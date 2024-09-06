@@ -70,7 +70,7 @@ RLV12::RLV12 (Qbus *bus, Window* window, shared_ptr<RLConfig> rlConfig)
     if (dataBuffer_ == nullptr)
         throw ("Allocating memory for transfer buffer failed");
 
-    // Attach files to the RL units
+    // Attach files to the RL units and create panels for the units
 	for (size_t unitNumber = 0; 
 		unitNumber < rlConfig->numUnits; ++unitNumber)
 	{
@@ -82,14 +82,13 @@ RLV12::RLV12 (Qbus *bus, Window* window, shared_ptr<RLConfig> rlConfig)
 
 		if (unit (unitNumber)->configure (rlUnitConfig) != StatusCode::OK)
 			throw "Error attaching " + rlUnitConfig->fileName;
+
+        Panel* panel = window->createPanel (rlUnitConfig->cabinetPosition, 6_ru);
+        panel->createFront ("../../assets/RL02-front.png", {0, 0, 1.0, 1.0});
 	}
 
     bus_->BINIT().subscribe (bind (&RLV12::BINITReceiver, this, _1));
 
-    // Create the panel in the window
-    Panel* panel = window->createPanel (make_shared<Cabinet::Position> (0, 14_ru), 6_ru);
-        panel->createFront ("../../assets/RL02-front.png",
-        {0, 0, 1.0, 1.0});
 
     // Start the command processor
     cmdProcessor_ = std::make_unique<CmdProcessor> (this);
