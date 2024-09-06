@@ -37,7 +37,8 @@ bool Cabinet::sectionOutOfRange (shared_ptr<Cabinet::Position> position,
     RackUnit unitHeight) const
 { 
     return (position->height >= cabinetHeight_ ||
-        position->height - unitHeight + 1 < 0_ru);
+        position->height - unitHeight + 1 < 0_ru ||
+        position->cabinetNr != 0);
 }
 
 bool Cabinet::sectionOccupied (shared_ptr<Cabinet::Position> position,

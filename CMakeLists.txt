@@ -190,6 +190,7 @@ set (CONFIGURATOR_SRCS
     src/configdata/consistencychecker/consistencychecker.cpp
     src/configdata/consistencychecker/checkmsv11consistency.cpp
     src/configdata/consistencychecker/checkkdf11bconsistency.cpp
+    src/configdata/consistencychecker/checkcabinetconsistency.cpp
     src/configdata/cabinetprocessor/cabinetprocessor.cpp)
 
 set (FLOAT_SRCS
@@ -406,6 +407,7 @@ set (GTEST_SRCS
     gtest/conditioncodestest.cpp
     gtest/configprocessortest.cpp
     gtest/consoleconsistencytest.cpp
+    gtest/cabinetconsistencytest.cpp
     gtest/ba11_nconfiguratortest.cpp
     gtest/bdv11configuratortest.cpp
     gtest/dlv11configuratortest.cpp

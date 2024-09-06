@@ -20,6 +20,7 @@ public:
     void checkConsoleConsistency ();
     void checkMSV11Consistency ();
     void checkKDF11_BConsistency ();
+    void checkCabinetConsistency ();
 
 private:
     vector<DeviceConfig> const& systemConfig_;
