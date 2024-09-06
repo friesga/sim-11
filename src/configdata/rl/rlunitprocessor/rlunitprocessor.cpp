@@ -6,6 +6,7 @@
 
 using std::make_unique;
 using std::move;
+using std::invalid_argument;
 
 RLUnitProcessor::RLUnitProcessor ()
 {
@@ -73,10 +74,12 @@ void RLUnitProcessor::processCabinet (iniparser::Value value)
 		CabinetProcessor::processCabinetKey (value);
 }
 
-// Check the consistency of the configuration of a RL unit. Currently
-// this is a void.
+// Check the consistency of the configuration of a RL unit.  A valid cabinet
+// position has to be specified.
 void RLUnitProcessor::checkConsistency ()
 {
+	if (rlUnitConfigPtr->cabinetPosition == nullptr)
+		throw invalid_argument {"Cabinet position not specified in RL unit section"};
 }
 
 void RLUnitProcessor::processSubsection (iniparser::Section *subSection)

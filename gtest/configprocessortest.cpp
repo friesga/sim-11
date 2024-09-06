@@ -103,12 +103,16 @@ TEST (ConfigProcessorTest, fileName)
 	stream << "[RL]\n"
 		"units = 4\n"
 		"[RL.unit0]\n"
+		"cabinet = 0/0\n"
 		"filename = \\somefile\n"
 		"[RL.unit1]\n"
+		"cabinet = 0/0\n"
 		"filename = Windows:{G:\\windowsFileName}, Linux:{/mnt/g/sim-11/linuxFileName\n"
 		"[RL.unit2]\n"
+		"cabinet = 0/0\n"
 		"filename = Linux:linuxFileName, unqualifiedName\n"
 		"[RL.unit3]\n"
+		"cabinet = 0/0\n"
 		"filename = Windows:windowsFileName, unqualifiedName\n";
 		
 	stream >> ft;
