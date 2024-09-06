@@ -17,6 +17,13 @@ TEST (CabinetTest, verifyCabinetIsEmpty)
     EXPECT_FALSE (testCabinet.sectionOccupied (make_shared<Cabinet::Position> (0, 4_ru), 5_ru));
 }
 
+TEST (CabinetTest, verifyCabinetLimits)
+{
+    Cabinet testCabinet ("H9642", 20_ru);
+    EXPECT_TRUE (testCabinet.sectionOutOfRange (make_shared<Cabinet::Position> (0, 20_ru), 1_ru));
+    EXPECT_TRUE (testCabinet.sectionOutOfRange (make_shared<Cabinet::Position> (0, 0_ru),  2_ru));
+}
+
 // Verify a reference to a section outside the cabinet's dimensions throws
 TEST (CabinetTest, referenceOutsideCabinetThrows1)
 {
