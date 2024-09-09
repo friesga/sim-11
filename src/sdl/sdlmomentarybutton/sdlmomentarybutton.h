@@ -12,7 +12,7 @@
 using std::string;
 using std::unique_ptr;
 
-class SDLMomentaryButton : public SDLButton
+class SDLMomentaryButton : public SDLCommonButton
 {
 public:
     SDLMomentaryButton (string buttonDownImage, string buttonUpImage,

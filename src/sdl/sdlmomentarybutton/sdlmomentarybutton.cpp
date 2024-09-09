@@ -8,7 +8,7 @@ SDLMomentaryButton::SDLMomentaryButton (string buttonDownImage, string buttonUpI
     EventCallback buttonClicked, 
     SDL_Texture* targetTexture, Frame<int> frame)
     :
-    SDLButton (buttonDownImage, buttonUpImage, initialState, sdlRenderer,
+    SDLCommonButton (buttonDownImage, buttonUpImage, initialState, sdlRenderer,
         buttonClicked, targetTexture, frame),
     naturalState_ {initialState}
 {}

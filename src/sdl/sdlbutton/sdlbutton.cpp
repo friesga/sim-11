@@ -3,7 +3,7 @@
 
 using std::make_unique;
 
-SDLButton::SDLButton (string buttonDownImage, string buttonUpImage,
+SDLCommonButton::SDLCommonButton (string buttonDownImage, string buttonUpImage,
     Button::State initialState, unique_ptr<SDLRenderer> &sdlRenderer,
     EventCallback buttonClicked, 
     SDL_Texture* targetTexture, Frame<int> frame)
@@ -17,10 +17,10 @@ SDLButton::SDLButton (string buttonDownImage, string buttonUpImage,
         sdlRenderer->getSDL_Renderer (), targetTexture, frame);
 }
 
-SDLButton::~SDLButton ()
+SDLCommonButton::~SDLCommonButton ()
 {}
 
-Button::State SDLButton::toggleState (State oldState)
+Button::State SDLCommonButton::toggleState (State oldState)
 {
     switch (oldState)
     {
@@ -35,7 +35,7 @@ Button::State SDLButton::toggleState (State oldState)
     throw string ("Cannot happen");
 }
 
-void SDLButton::render ()
+void SDLCommonButton::render ()
 {
     switch (buttonState_)
     {
@@ -48,7 +48,7 @@ void SDLButton::render ()
     }
 }
 
-bool SDLButton::isWithinBounds (Position position, float margin) const
+bool SDLCommonButton::isWithinBounds (Position position, float margin) const
 {
     return buttonUpTexture_->isWithinBounds (position, margin);
 }

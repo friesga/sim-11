@@ -12,17 +12,17 @@
 using std::string;
 using std::unique_ptr;
 
-// SDLButton is an abstract base class for the SDLLatchingButton and
+// SDLCommonButton is an abstract base class for the SDLLatchingButton and
 // SDLMomentary classes. These last two classes differ in handling of the
 // button clicked event.
-class SDLButton : public Button
+class SDLCommonButton : public Button
 {
 public:
-    SDLButton (string buttonDownImage, string buttonUpImage, 
+    SDLCommonButton (string buttonDownImage, string buttonUpImage, 
         Button::State initialState, unique_ptr<SDLRenderer> &sdlRenderer,
         EventCallback buttonClicked, 
         SDL_Texture* targetTexture, Frame<int> frame);
-    ~SDLButton ();
+    ~SDLCommonButton ();
 
     virtual void handleEvent (SDLEvent const *event) = 0;
     void render ();
