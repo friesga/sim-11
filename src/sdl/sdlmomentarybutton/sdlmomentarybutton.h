@@ -2,7 +2,7 @@
 #define _SDLMOMENTARYBUTTON_H_
 
 #include "panel.h"
-#include "../sdlbutton/sdlbutton.h"
+#include "../sdlcommonbutton/sdlcommonbutton.h"
 #include "../sdlrenderer/sdlrenderer.h"
 #include "../sdlevent/sdlevent.h"
 

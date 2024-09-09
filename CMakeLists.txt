@@ -219,11 +219,13 @@ set (SDL_SRCS
     src/sdl/sdlwindow/circle.cpp
     src/sdl/sdlindicator/sdlindicator.cpp
     src/sdl/sdlfront/sdlfront.cpp
-    src/sdl/sdlbutton/sdlbutton.cpp
+    src/sdl/sdlcommonbutton/sdlcommonbutton.cpp
     src/sdl/sdlrenderer/sdlrenderer.cpp
     src/sdl/sdltexture/sdltexture.cpp
     src/sdl/sdlmomentarybutton/sdlmomentarybutton.cpp
     src/sdl/sdllatchingbutton/sdllatchingbutton.cpp
+    # src/sdl/sdlindicatorlatchingbutton/sdlindicatorlatchingbutton.cpp
+    # src/sdl/sdlindicatorlatchingbutton/imagematrix/imagematrix.cpp
     src/sdl/sdlevent/sdlevent.cpp)
 
 set (TRACE_SRCS

@@ -1,4 +1,4 @@
-#include "sdlbutton.h"
+#include "sdlcommonbutton.h"
 #include "../sdlrenderer/sdlrenderer.h"
 
 using std::make_unique;
