@@ -1,5 +1,5 @@
-#ifndef _SDLBUTTON_H_
-#define _SDLBUTTON_H_
+#ifndef _SDLCOMMONBUTTON_H_
+#define _SDLCOMMONBUTTON_H_
 
 #include "panel.h"
 #include "../sdltexture/sdltexture.h"
@@ -37,4 +37,4 @@ protected:
     State toggleState (State oldState);    
 };
 
-#endif // _SDLBUTTON_H_
+#endif // _SDLCOMMONBUTTON_H_
