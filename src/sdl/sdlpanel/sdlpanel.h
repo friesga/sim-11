@@ -52,7 +52,7 @@ private:
     // on this window
     vector<unique_ptr<SDLFront>> fronts_;
     vector<unique_ptr<SDLIndicator>> indicators_;
-    vector<unique_ptr<SDLCommonButton>> buttons_;
+    vector<unique_ptr<SDLButton>> buttons_;
 
     // Reference to the panel to draw the panel on
     SDL_Texture* targetTexture_;

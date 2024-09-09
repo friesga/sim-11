@@ -1,7 +1,7 @@
 #ifndef _SDLCOMMONBUTTON_H_
 #define _SDLCOMMONBUTTON_H_
 
-#include "panel.h"
+#include "../sdlbutton/sdlbutton.h"
 #include "../sdltexture/sdltexture.h"
 #include "../sdlrenderer/sdlrenderer.h"
 #include "../sdlevent/sdlevent.h"
@@ -15,7 +15,7 @@ using std::unique_ptr;
 // SDLCommonButton is an abstract base class for the SDLLatchingButton and
 // SDLMomentary classes. These last two classes differ in handling of the
 // button clicked event.
-class SDLCommonButton : public Button
+class SDLCommonButton : public SDLButton
 {
 public:
     SDLCommonButton (string buttonDownImage, string buttonUpImage, 
