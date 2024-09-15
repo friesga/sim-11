@@ -41,13 +41,15 @@ struct Frame
     T height;
 };
 
+// The State enum constants are given values to be able to use them as
+// indices in an array.
 class Indicator
 {
 public:
-    enum class State
+    enum class State : size_t
     {
-        Off,
-        On
+        Off = 0,
+        On = 1
     };
 
     virtual void show (State showFigure) = 0;
@@ -56,10 +58,10 @@ public:
 class Button
 {
 public:
-    enum class State
+    enum class State : size_t
     {
-        Down,
-        Up
+        Down = 0,
+        Up = 1
     };
 
     using EventCallback = function<void(State)>;
