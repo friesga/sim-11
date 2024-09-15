@@ -63,11 +63,13 @@ public:
     RL01_2 (PDP11Peripheral *owningDevice);
     ~RL01_2 ();
 
+    // Required functions
+    StatusCode configure (shared_ptr<RLUnitConfig> rlUnitConfig);
+
     // Seek timer, started in a separate thread
     void seekTimer ();
 
-    // Required functions
-    StatusCode configure (shared_ptr<RLUnitConfig> rlUnitConfig);
+    bool unitAvailable ();
 };
 
 #endif // _RL012_H_

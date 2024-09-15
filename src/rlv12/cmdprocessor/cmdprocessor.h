@@ -62,7 +62,6 @@ class CmdProcessor
     void updateHeadPosition (CmdProcessor::HeadPositionProcedure procedure,
         RL01_2 *unit, int32_t wordCount);
     bool diskAddressOk (RL01_2 *unit, RLV12Command &rlv12Command);
-    bool unitAvailable (RL01_2 *unit);
     void limitWordCount (RLV12Command &rlv12Command);
 
 public:
