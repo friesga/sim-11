@@ -15,7 +15,7 @@ u16 CmdProcessor::seekCmd (RL01_2 *unit, RLV12Command &rlv12Command)
     int32_t maxCylinder;
 
     // Verify the unit is available
-    if (!unit->unitAvailable ())
+    if (!unit->available ())
     {
         // Set seek time-out. Note that this status differs from
         // the status returned by data transfer commands if the

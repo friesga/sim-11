@@ -69,7 +69,7 @@ public:
     // Seek timer, started in a separate thread
     void seekTimer ();
 
-    bool unitAvailable ();
+    bool available ();
 };
 
 #endif // _RL012_H_

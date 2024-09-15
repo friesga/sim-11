@@ -10,7 +10,7 @@ u16 CmdProcessor::readDataCmd (RL01_2 *unit, RLV12Command &rlv12Command)
     u16 rlcsValue {0};
 
     // Verify the unit is available
-    if (!unit->unitAvailable ())
+    if (!unit->available ())
     {
         // Set spin error and return OPI
         unit->driveStatus_ |=  RLV12::MPR_GS_SpinError;
