@@ -1,5 +1,5 @@
-#ifndef _RL012_H_
-#define _RL012_H_
+#ifndef _RL01_02_H_
+#define _RL01_02_H_
 
 #include "unit/unit.h"
 #include "types.h"
@@ -72,4 +72,4 @@ public:
     bool available ();
 };
 
-#endif // _RL012_H_
+#endif // _RL01_02_H_

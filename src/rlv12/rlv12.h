@@ -2,7 +2,7 @@
 #define _RLV12_H_
 
 #include "trace/trace.h"
-#include "rl01_02/rl012.h"
+#include "rl01_02/rl01_02.h"
 #include "qbus/qbus.h"
 #include "busaddress/busaddress.h"
 #include "pdp11peripheral/pdp11peripheral.h"
