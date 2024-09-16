@@ -6,14 +6,14 @@
 using std::shared_ptr;
 using std::get;
 
-StatusCode RL01_2::configure (shared_ptr<RLUnitConfig> rlUnitConfig)
+StatusCode RL01_02::configure (shared_ptr<RLUnitConfig> rlUnitConfig)
 {
     // Set unit type and size from the given configuration. Note that if
     // the unit type is Auto the unit's capacity is determined after
     // attaching the file to the unit. The capacity is also needed for
     // creation of the bad block table, but the combination of the newFile
     // option and Auto unit type is excluded in the configuration data.
-    // ToDo: RL01_2::configure() needs a rewrite.
+    // ToDo: RL01_02::configure() needs a rewrite.
     if (rlUnitConfig->rlUnitType == RLUnitConfig::RLUnitType::RL01)
     {
         capacity_ = RLV12::RL01_WordsPerCartridge;

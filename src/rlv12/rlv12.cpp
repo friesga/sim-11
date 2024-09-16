@@ -144,7 +144,7 @@ void RLV12::reset ()
     // ToDo: Clear interrupt request
     // CLR_INT(RL);
 
-    // for (RL01_2 unit : units_)
+    // for (RL01_02 unit : units_)
     // {
         // ToDo: Cancel outstanding timer for this unit
         // sim_cancel(uptr);

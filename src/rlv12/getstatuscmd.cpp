@@ -4,7 +4,7 @@
 // Perform a Get Status command for the specified unit with the 
 // specified parameters.
 //
-u16 RLV12::getStatusCmd (RL01_2 *unit)
+u16 RLV12::getStatusCmd (RL01_02 *unit)
 {
     // The Get Status bit (and ToDo: the Marker Bit) in the DAR must
     // be set.

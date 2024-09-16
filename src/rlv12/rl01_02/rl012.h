@@ -34,7 +34,7 @@ enum class RlStatus
 };
 
 // RLO1/RL02 unit
-class RL01_2 : public Unit
+class RL01_02 : public Unit
 {
     // All RLV12Commands need access to the file pointer and unit status
     friend class RLV12;
@@ -60,8 +60,8 @@ class RL01_2 : public Unit
 
 public:
     // Constructor and destructor
-    RL01_2 (PDP11Peripheral *owningDevice);
-    ~RL01_2 ();
+    RL01_02 (PDP11Peripheral *owningDevice);
+    ~RL01_02 ();
 
     // Required functions
     StatusCode configure (shared_ptr<RLUnitConfig> rlUnitConfig);

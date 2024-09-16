@@ -22,7 +22,7 @@ StatusCode RLV12::writeByte (BusAddress busAddress, u8 data)
 StatusCode RLV12::writeWord (BusAddress busAddress, u16 data)
 {
     // Get reference to drive
-    RL01_2 &unit = units_[getDrive (data)];
+    RL01_02 &unit = units_[getDrive (data)];
 
     // Guard against controller register access from the command processor
 	std::unique_lock<std::mutex> lock {controllerMutex_};

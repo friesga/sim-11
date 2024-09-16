@@ -5,7 +5,7 @@
 // command processor and are executed in the RLV12 context. This function
 // should therefore not be called.
 //
-u16 CmdProcessor::getStatusCmd (RL01_2 *unit, RLV12Command &rlv12Command)
+u16 CmdProcessor::getStatusCmd (RL01_02 *unit, RLV12Command &rlv12Command)
 {
     throw ("getStatusCmd call should not happen");
 }

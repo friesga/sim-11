@@ -26,7 +26,7 @@ class CmdProcessor;
 class RLV12 : public PDP11Peripheral
 {
     friend class CmdProcessor;
-    friend class RL01_2;
+    friend class RL01_02;
 
     // RL01 Recording Capacity definitions
     // An RL02 drive has 512 cylinders per cartridge
@@ -222,15 +222,15 @@ class RLV12 : public PDP11Peripheral
     RLConfig::RLType rlType_;
     bool _22bit_;
     
-    // A RLV12 can have a maximum of four units. RL01_2 objects for
+    // A RLV12 can have a maximum of four units. RL01_02 objects for
     // which no unit is connected to the controller will have the status
     // off-line.
-    std::array<RL01_2, maxDrivesPerController> units_
+    std::array<RL01_02, maxDrivesPerController> units_
     {
-        RL01_2 (this),
-        RL01_2 (this),
-        RL01_2 (this),
-        RL01_2 (this)
+        RL01_02 (this),
+        RL01_02 (this),
+        RL01_02 (this),
+        RL01_02 (this)
     };
 
     // Definition of the pointer to the command processor
@@ -258,8 +258,8 @@ class RLV12 : public PDP11Peripheral
 
     // Private functions
     u16 calcCRC (int const wc, u16 const *data);
-    void setDone (RL01_2 &unit, u16 status);
-    u16 getStatusCmd (RL01_2* unit);
+    void setDone (RL01_02 &unit, u16 status);
+    u16 getStatusCmd (RL01_02* unit);
 
 public:
     // Constructors/destructor
@@ -279,14 +279,14 @@ public:
 
     // RLV1[12] specific function
     inline size_t numUnits ();
-    inline RL01_2  *unit (size_t unitNumber);
+    inline RL01_02  *unit (size_t unitNumber);
 
     // Functions to set and get memory adresses consistently for
     // 16-, 18- and 22-bit systems
     void memAddrToRegs (u32 memoryAddress);
     BusAddress memAddrFromRegs ();
     void updateBAE ();
-    u16 rlcsPlusDriveStatus (RL01_2 &unit);
+    u16 rlcsPlusDriveStatus (RL01_02 &unit);
     constexpr u16 getBA16BA17 (u16 csr_);
 };
 
@@ -296,7 +296,7 @@ inline size_t RLV12::numUnits ()
     return maxDrivesPerController;
 }
  
-inline RL01_2  *RLV12::unit (size_t unitNumber)
+inline RL01_02  *RLV12::unit (size_t unitNumber)
 {
     return &units_[unitNumber];
 }

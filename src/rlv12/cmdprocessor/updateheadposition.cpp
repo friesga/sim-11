@@ -13,7 +13,7 @@
 //
 void CmdProcessor::updateHeadPosition 
     (CmdProcessor::HeadPositionProcedure procedure, 
-     RL01_2 *unit, int32_t wordCount)
+     RL01_02 *unit, int32_t wordCount)
 {
     switch (procedure)
     {

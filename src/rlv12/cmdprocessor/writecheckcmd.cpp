@@ -5,7 +5,7 @@
 // Perform a Write Check command for the specified unit with the 
 // specified parameters.
 //
-u16 CmdProcessor::writeCheckCmd (RL01_2 *unit, RLV12Command &rlv12Command)
+u16 CmdProcessor::writeCheckCmd (RL01_02 *unit, RLV12Command &rlv12Command)
 {
     CondData<u16> comp;
     u16 rlcsValue {0};

@@ -5,7 +5,7 @@
 // Perform a Read Data command for the specified unit with the 
 // specified parameters.
 //
-u16 CmdProcessor::readDataCmd (RL01_2 *unit, RLV12Command &rlv12Command)
+u16 CmdProcessor::readDataCmd (RL01_02 *unit, RLV12Command &rlv12Command)
 {
     u16 rlcsValue {0};
 

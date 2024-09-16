@@ -22,7 +22,7 @@
 //
 // The Drive Ready (and Drive Error) bits are taken over from the
 // currently selected drive.
-u16 RLV12::rlcsPlusDriveStatus (RL01_2 &unit)
+u16 RLV12::rlcsPlusDriveStatus (RL01_02 &unit)
 {
     u16 rlcsCombined {csr_};
 

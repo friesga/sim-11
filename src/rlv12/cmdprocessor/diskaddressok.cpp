@@ -1,6 +1,6 @@
 #include "cmdprocessor.h"
 
-bool CmdProcessor::diskAddressOk (RL01_2 *unit, RLV12Command &rlv12Command)
+bool CmdProcessor::diskAddressOk (RL01_02 *unit, RLV12Command &rlv12Command)
 {
     if (RLV12::getCylinder (unit->currentDiskAddress_) != 
             RLV12::getCylinder (rlv12Command.diskAddress_) ||

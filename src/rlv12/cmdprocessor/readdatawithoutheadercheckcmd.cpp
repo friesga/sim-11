@@ -5,7 +5,7 @@
 // Perform a Read Data Without Header Check command for the specified unit with the 
 // specified parameters.
 //
-u16 CmdProcessor::readDataWithoutHeaderCheckCmd (RL01_2 *unit, 
+u16 CmdProcessor::readDataWithoutHeaderCheckCmd (RL01_02 *unit, 
     RLV12Command &rlv12Command)
 {
     u16 rlcsValue {0};

@@ -10,7 +10,7 @@
 // Note that the description of this in EK-RLV12-UG-002 (p.5-3) contains a
 // typo, the octal representation for -511 (0117701) is incorrect.
 //
-u16 CmdProcessor::maintenanceCmd (RL01_2 *unit, RLV12Command &rlv12Command)
+u16 CmdProcessor::maintenanceCmd (RL01_02 *unit, RLV12Command &rlv12Command)
 {
     BusAddress  memoryAddress {0};
     u16 rlcsValue {0};

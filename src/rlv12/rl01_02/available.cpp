@@ -2,7 +2,7 @@
 
 // A unit is available if it is not disconnected, is on-line and 
 // a file is attached
-bool RL01_2::available ()
+bool RL01_02::available ()
 {
     if (unitStatus_ & Status::UNIT_DIS ||
             rlStatus_ & RlStatus::UNIT_OFFL ||

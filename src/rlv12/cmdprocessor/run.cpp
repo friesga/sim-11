@@ -23,7 +23,7 @@ void CmdProcessor::run ()
             break;
 
         // Get a  reference to the unit for which the command is destined.
-        RL01_2 &unit = controller_->units_[RLV12::getDrive (controller_->csr_)];
+        RL01_02 &unit = controller_->units_[RLV12::getDrive (controller_->csr_)];
 
         // Assemble a command from the command given in the CSR and the
         // parameters in the other registers

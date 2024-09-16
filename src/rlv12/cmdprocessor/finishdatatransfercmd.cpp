@@ -5,7 +5,7 @@
 // a Read Data, Read Data Without Header Check, Write Data or Write Check
 // command.
 //
-u16 CmdProcessor::finishDataTransferCmd (RL01_2 *unit,
+u16 CmdProcessor::finishDataTransferCmd (RL01_02 *unit,
     RLV12Command &rlv12Command)
 {
     u16 rlcsValue {0};

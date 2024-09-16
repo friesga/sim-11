@@ -5,7 +5,7 @@ using std::mutex;
 using std::unique_lock;
 
 // Simulate the execution (of the head movement) of a Seek command
-void RL01_2::seekTimer ()
+void RL01_02::seekTimer ()
 {
     // Guard against controller register access from the
     // command processor

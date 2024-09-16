@@ -23,19 +23,19 @@ class CmdProcessor
     std::thread cmdProcessorThread_;
     AlarmClock alarmClock_;
 
-    u16 maintenanceCmd (RL01_2 *unit, RLV12Command &rlv12Command);
-    u16 writeCheckCmd (RL01_2 *unit, RLV12Command &rlv12Command);
-    u16 getStatusCmd (RL01_2 *unit, RLV12Command &rlv12Command);
-    u16 seekCmd (RL01_2 *unit, RLV12Command &rlv12Command);
-    u16 readHeaderCmd (RL01_2 *unit, RLV12Command &rlv12Command);
-    u16 writeDataCmd (RL01_2 *unit, RLV12Command &rlv12Command);
-    u16 readDataCmd (RL01_2 *unit, RLV12Command &rlv12Command);
-    u16 readDataWithoutHeaderCheckCmd (RL01_2 *unit, 
+    u16 maintenanceCmd (RL01_02 *unit, RLV12Command &rlv12Command);
+    u16 writeCheckCmd (RL01_02 *unit, RLV12Command &rlv12Command);
+    u16 getStatusCmd (RL01_02 *unit, RLV12Command &rlv12Command);
+    u16 seekCmd (RL01_02 *unit, RLV12Command &rlv12Command);
+    u16 readHeaderCmd (RL01_02 *unit, RLV12Command &rlv12Command);
+    u16 writeDataCmd (RL01_02 *unit, RLV12Command &rlv12Command);
+    u16 readDataCmd (RL01_02 *unit, RLV12Command &rlv12Command);
+    u16 readDataWithoutHeaderCheckCmd (RL01_02 *unit, 
         RLV12Command &rlv12Command);
 
     // The pointers in the following vector must be in order of their numeric
     // value cf e.g. EK-RLV12-TD-001 page 3-17.
-    typedef u16 (CmdProcessor::*fp) (RL01_2*, RLV12Command &rlv12Command);
+    typedef u16 (CmdProcessor::*fp) (RL01_02*, RLV12Command &rlv12Command);
     std::vector<fp> commands_
     {
         &CmdProcessor::maintenanceCmd,
@@ -58,10 +58,10 @@ class CmdProcessor
         DiskAddressRegister
     };
 
-    u16 finishDataTransferCmd (RL01_2 *unit, RLV12Command &rlv12Command);
+    u16 finishDataTransferCmd (RL01_02 *unit, RLV12Command &rlv12Command);
     void updateHeadPosition (CmdProcessor::HeadPositionProcedure procedure,
-        RL01_2 *unit, int32_t wordCount);
-    bool diskAddressOk (RL01_2 *unit, RLV12Command &rlv12Command);
+        RL01_02 *unit, int32_t wordCount);
+    bool diskAddressOk (RL01_02 *unit, RLV12Command &rlv12Command);
     void limitWordCount (RLV12Command &rlv12Command);
 
 public:
