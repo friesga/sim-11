@@ -31,21 +31,10 @@ u16 CmdProcessor::writeCheckCmd (RL01_02 *unit, RLV12Command &rlv12Command)
     // Revolutional latency is 12.5ms average (EK-RLV-TD-001). 
     alarmClock_.sleepFor (std::chrono::microseconds (12500));
 
-    // Guard against drive access while a seek is running
-	std::lock_guard<std::mutex> guard{ unit->driveMutex_ };
+    auto [success, numBytes] = unit->readData (rlv12Command,
+        controller_->dataBuffer_);
 
-    // Set position in file to the block to be read
-    if (fseek (unit->filePtr_, 
-        filePosition (rlv12Command.diskAddress_), SEEK_SET))
-    {
-        Logger::instance() << "Seek error in writeCheckCmd";
-        return RLV12::CSR_CompositeError | RLV12::CSR_OperationIncomplete;
-    }
-
-    size_t numBytes = fread (controller_->dataBuffer_, sizeof (int16_t), 
-        rlv12Command.wordCount_, unit->filePtr_);
-
-    if (!ferror (unit->filePtr_))
+    if (success)
     {
         // Clear remainder of buffer
         for (size_t index = numBytes; index < rlv12Command.wordCount_; ++index)
@@ -76,7 +65,7 @@ u16 CmdProcessor::writeCheckCmd (RL01_02 *unit, RLV12Command &rlv12Command)
     }
     else
     {
-        Logger::instance() << "Seek error in writeCheckCmd";
+        Logger::instance() << "Error in writeCheckCmd";
         return RLV12::CSR_CompositeError | RLV12::CSR_OperationIncomplete;
     }
 
