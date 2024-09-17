@@ -18,11 +18,8 @@ u16 CmdProcessor::readHeaderCmd (RL01_02 *unit, RLV12Command &rlv12Command)
         return RLV12::CSR_CompositeError | RLV12::CSR_OperationIncomplete;
     }
 
-    // Guard against drive access while a seek is running
-	std::lock_guard<std::mutex> guard{ unit->driveMutex_ };
-
     // Put the header and CRC in the output buffer to be retrieved via the MPR
-    hdr[0] = controller_->dataBuffer_[0] = unit->currentDiskAddress_ & 0177777;
+    hdr[0] = controller_->dataBuffer_[0] = unit->readHeader ();
     hdr[1] = controller_->dataBuffer_[1] = 0;
 
     // Calculate header CRC
