@@ -13,7 +13,7 @@ pair<bool, size_t> RL01_02::readData (RLV12Command& rlv12Command, u16* buffer)
 
     // Set position in file to the block to be read
     if (fseek (filePtr_, filePosition (rlv12Command.diskAddress_),
-        SEEK_SET))
+        SEEK_SET) != 0)
     {
         Logger::instance () << "Seek error in RL01_02::readData";
         return make_pair (false, 0);
