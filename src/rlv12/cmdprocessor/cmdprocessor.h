@@ -48,8 +48,6 @@ class CmdProcessor
         &CmdProcessor::readDataWithoutHeaderCheckCmd
     };
 
-    int32_t filePosition (int32_t diskAddress) const;
-
     // Definition for the procedures to calculate the new head position
     enum class HeadPositionProcedure
     {
