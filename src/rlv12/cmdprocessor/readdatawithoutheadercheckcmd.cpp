@@ -37,22 +37,10 @@ u16 CmdProcessor::readDataWithoutHeaderCheckCmd (RL01_02 *unit,
     // Revolutional latency is 12.5ms average (EK-RLV-TD-001). 
     alarmClock_.sleepFor (std::chrono::microseconds (12500));
 
-    // Guard against drive access while a seek is running
-	std::lock_guard<std::mutex> guard{ unit->driveMutex_ };
+    auto [success, numBytes] = unit->readData (rlv12Command,
+        controller_->dataBuffer_);
 
-    // Set position in file to the block to be read
-    if (fseek (unit->filePtr_, filePosition (rlv12Command.diskAddress_),
-            SEEK_SET))
-    {
-        Logger::instance() << "Seek error in readDataWithoutHeaderCheckCmd";
-        return RLV12::CSR_CompositeError | RLV12::CSR_OperationIncomplete;
-    }
-
-    // Read wordCount * 2 bytes; returned is the number of bytes read 
-    int32_t numBytes = fread (controller_->dataBuffer_, sizeof (int16_t), 
-        rlv12Command.wordCount_, unit->filePtr_);
-
-    if (!ferror (unit->filePtr_))
+    if (success)
     {
         // Clear the part of the buffer not filled by the read
         for (size_t index = numBytes; index < rlv12Command.wordCount_; ++index)
@@ -71,7 +59,7 @@ u16 CmdProcessor::readDataWithoutHeaderCheckCmd (RL01_02 *unit,
     }
     else
     {
-        Logger::instance() << "Read error in readDataWithoutHeaderCheckCmd";
+        Logger::instance() << "Error in readDataWithoutHeaderCheckCmd";
         return RLV12::CSR_CompositeError | RLV12::CSR_OperationIncomplete;
     }
 
