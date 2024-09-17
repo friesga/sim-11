@@ -27,3 +27,11 @@ RL01_02::~RL01_02 ()
     seekTimerThread_.join ();
 }
 
+// Calculate the position of a sector as an offset in the file from
+// the specified diskAddress
+int32_t RL01_02::filePosition (int32_t diskAddress) const
+{
+    return (RLV12::getTrack (diskAddress) * RLV12::sectorsPerSurface +
+        RLV12::getSector (diskAddress)) * RLV12::wordsPerSector *
+        sizeof (int16_t);
+}

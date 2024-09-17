@@ -5,12 +5,15 @@
 #include "types.h"
 #include "statuscodes.h"
 #include "chrono/alarmclock/alarmclock.h"
+#include "../rlv12command/rlv12command.h"
 
 #include <mutex>
 #include <thread>
 #include <condition_variable>
+#include <utility>
 
 using std::shared_ptr;
+using std::pair;
 
 
 // RL01/02 unit status flags. These flags are used in the definition of 
@@ -36,6 +39,21 @@ enum class RlStatus
 // RLO1/RL02 unit
 class RL01_02 : public Unit
 {
+public:
+    // Constructor and destructor
+    RL01_02 (PDP11Peripheral* owningDevice);
+    ~RL01_02 ();
+
+    // Required functions
+    StatusCode configure (shared_ptr<RLUnitConfig> rlUnitConfig);
+
+    // Seek timer, started in a separate thread
+    void seekTimer ();
+
+    bool available ();
+    pair<bool, size_t> readData (RLV12Command& rlv12Command, u16* buffer);
+
+private:
     // All RLV12Commands need access to the file pointer and unit status
     friend class RLV12;
     friend class CmdProcessor;
@@ -58,18 +76,7 @@ class RL01_02 : public Unit
     // Calculated seek time
     SimulatorClock::duration seekTime_;
 
-public:
-    // Constructor and destructor
-    RL01_02 (PDP11Peripheral *owningDevice);
-    ~RL01_02 ();
-
-    // Required functions
-    StatusCode configure (shared_ptr<RLUnitConfig> rlUnitConfig);
-
-    // Seek timer, started in a separate thread
-    void seekTimer ();
-
-    bool available ();
+    int32_t filePosition (int32_t diskAddress) const;
 };
 
 #endif // _RL01_02_H_
