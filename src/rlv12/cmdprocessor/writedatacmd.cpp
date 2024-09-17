@@ -36,9 +36,6 @@ u16 CmdProcessor::writeDataCmd (RL01_02 *unit, RLV12Command &rlv12Command)
     // Check for sector overflow
     limitWordCount (rlv12Command);
 
-    // Revolutional latency is 12.5ms average (EK-RLV-TD-001). 
-    alarmClock_.sleepFor (std::chrono::microseconds (12500));
-
     BusAddress memAddr = rlv12Command.memoryAddress_;
     for (size_t index = 0; index < rlv12Command.wordCount_;
         memAddr += 2, ++index)

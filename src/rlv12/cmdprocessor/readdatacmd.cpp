@@ -24,9 +24,6 @@ u16 CmdProcessor::readDataCmd (RL01_02 *unit, RLV12Command &rlv12Command)
     // Check for sector overflow
     limitWordCount (rlv12Command);
 
-    // Revolutional latency is 12.5ms average (EK-RLV-TD-001). 
-    alarmClock_.sleepFor (std::chrono::microseconds (12500));
-
     auto [success, numBytes] = unit->readData (rlv12Command,
         controller_->dataBuffer_);
 

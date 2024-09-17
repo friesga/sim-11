@@ -9,6 +9,9 @@ using std::make_pair;
 pair<bool, size_t> RL01_02::writeData (RLV12Command& rlv12Command, u16* buffer,
     size_t numWords)
 {
+    // Revolutional latency is 12.5ms average (EK-RLV-TD-001). 
+    alarmClock_.sleepFor (std::chrono::microseconds (12500));
+
     // Guard against drive access while a seek is running
     std::lock_guard<std::mutex> guard {driveMutex_};
 
