@@ -55,6 +55,7 @@ public:
     pair<bool, size_t> writeData (RLV12Command& rlv12Command, u16* buffer,
         size_t numWords);
     s32 readHeader ();
+    void seek (u16 diskAddressRegister);
 
 private:
     // All RLV12Commands need access to the file pointer and unit status

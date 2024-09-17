@@ -120,6 +120,7 @@ set (RLV12_SRCS
     src/rlv12/rl01_02/readdata.cpp
     src/rlv12/rl01_02/writedata.cpp
     src/rlv12/rl01_02/readheader.cpp
+    src/rlv12/rl01_02/seek.cpp
     src/rlv12/rlv12command/rlv12command.cpp
     src/rlv12/cmdprocessor/finishdatatransfercmd.cpp
     src/rlv12/cmdprocessor/cmdprocessor.cpp
