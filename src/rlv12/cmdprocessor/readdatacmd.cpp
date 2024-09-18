@@ -25,7 +25,8 @@ u16 CmdProcessor::readDataCmd (RL01_02 *unit, RLV12Command &rlv12Command)
     limitWordCount (rlv12Command);
 
     auto [success, numBytes] = unit->readData (rlv12Command,
-        controller_->dataBuffer_);
+        controller_->dataBuffer_,
+        RL01_02::HeadPositionProcedure::DiskAddressRegister, controller_->dar_);
 
     if (success)
     {
@@ -49,10 +50,6 @@ u16 CmdProcessor::readDataCmd (RL01_02 *unit, RLV12Command &rlv12Command)
         Logger::instance() << "Error in readDataCmd";
         return RLV12::CSR_CompositeError | RLV12::CSR_OperationIncomplete;
     }
-
-    updateHeadPosition 
-        (CmdProcessor::HeadPositionProcedure::DiskAddressRegister, 
-            unit, rlv12Command.wordCount_);
 
     // Catch errors together in rlcsValue
     rlcsValue |= finishDataTransferCmd (unit, rlv12Command);

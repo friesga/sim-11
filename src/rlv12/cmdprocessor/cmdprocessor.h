@@ -57,8 +57,6 @@ class CmdProcessor
     };
 
     u16 finishDataTransferCmd (RL01_02 *unit, RLV12Command &rlv12Command);
-    void updateHeadPosition (CmdProcessor::HeadPositionProcedure procedure,
-        RL01_02 *unit, int32_t wordCount);
     bool diskAddressOk (RL01_02 *unit, RLV12Command &rlv12Command);
     void limitWordCount (RLV12Command &rlv12Command);
 

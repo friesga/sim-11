@@ -136,10 +136,10 @@ TEST_F (RLV12ReadHeaderTest, readHeaderSucceeds)
         CSR_DriveReady);
 
     // Expected result in the MPR register: Sector Address, Head Select and
-    // Cylinder Address
+    // Cylinder Address. Sequential rotation has taken place.
     u16 mpr;
     rlv12Device->read (RLMPR, &mpr);
-    ASSERT_EQ (mpr, 00);
+    ASSERT_EQ (mpr, 01);
 
     // The second MPR read should deliver all zero's
     rlv12Device->read (RLMPR, &mpr);
@@ -148,7 +148,7 @@ TEST_F (RLV12ReadHeaderTest, readHeaderSucceeds)
     // The third read should deliver the CRC of the header
     // We presume the calculation is correct
     rlv12Device->read (RLMPR, &mpr);
-    ASSERT_EQ (mpr, 00);
+    ASSERT_EQ (mpr, 64513);
 }
 
 // Verify a Read Header Command

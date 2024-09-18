@@ -19,14 +19,13 @@ u16 CmdProcessor::readHeaderCmd (RL01_02 *unit, RLV12Command &rlv12Command)
     }
 
     // Put the header and CRC in the output buffer to be retrieved via the MPR
-    hdr[0] = controller_->dataBuffer_[0] = unit->readHeader ();
+    // Simulate sequential rotation about the current track
+    hdr[0] = controller_->dataBuffer_[0] = unit->readHeader (rlv12Command,
+        RL01_02::HeadPositionProcedure::Rotate, controller_->dar_);
     hdr[1] = controller_->dataBuffer_[1] = 0;
 
     // Calculate header CRC
     controller_->dataBuffer_[2] = controller_->calcCRC (2, &hdr[0]);
-
-    // Simulate sequential rotation about the current track
-    updateHeadPosition (CmdProcessor::HeadPositionProcedure::Rotate, unit, 0);
 
     return 0;
 }

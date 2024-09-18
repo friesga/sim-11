@@ -121,6 +121,7 @@ set (RLV12_SRCS
     src/rlv12/rl01_02/writedata.cpp
     src/rlv12/rl01_02/readheader.cpp
     src/rlv12/rl01_02/seek.cpp
+    src/rlv12/rl01_02/updateheadposition.cpp
     src/rlv12/rlv12command/rlv12command.cpp
     src/rlv12/cmdprocessor/finishdatatransfercmd.cpp
     src/rlv12/cmdprocessor/cmdprocessor.cpp
@@ -133,7 +134,6 @@ set (RLV12_SRCS
     src/rlv12/cmdprocessor/readheadercmd.cpp
     src/rlv12/cmdprocessor/run.cpp
     src/rlv12/cmdprocessor/seekcmd.cpp
-    src/rlv12/cmdprocessor/updateheadposition.cpp
     src/rlv12/cmdprocessor/writecheckcmd.cpp
     src/rlv12/cmdprocessor/writedatacmd.cpp
     src/rlv12/rlcsplusdrivestatus.cpp

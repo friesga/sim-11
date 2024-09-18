@@ -1,4 +1,5 @@
-#include "cmdprocessor.h"
+#include "rl01_02.h"
+#include "rlv12/rlv12.h"
 
 // Calculate and update the new head position from the current disk
 // address and possibly the word count.
@@ -11,36 +12,35 @@
 // In all cases the sector address wraps to zero if the calculated
 // value exceeds the maximum sector address.
 //
-void CmdProcessor::updateHeadPosition 
-    (CmdProcessor::HeadPositionProcedure procedure, 
-     RL01_02 *unit, int32_t wordCount)
+void RL01_02::updateHeadPosition (HeadPositionProcedure procedure,
+    s32 wordCount, u16 diskAddressRegister)
 {
     switch (procedure)
     {
-        case CmdProcessor::HeadPositionProcedure::Increment:
-            unit->currentDiskAddress_ = 
-                (unit->currentDiskAddress_ & ~RLV12::DAR_Sector) |
-                ((unit->currentDiskAddress_ + 
+        case HeadPositionProcedure::Increment:
+            currentDiskAddress_ = 
+                (currentDiskAddress_ & ~RLV12::DAR_Sector) |
+                ((currentDiskAddress_ + 
                 ((wordCount + (RLV12::wordsPerSector - 1)) / 
                     RLV12::wordsPerSector)) & RLV12::DAR_Sector);
             break;
 
-        case CmdProcessor::HeadPositionProcedure::Rotate:
+        case HeadPositionProcedure::Rotate:
             // Simulate sequential rotation about the current track
             // This functionality supports the Read Without Header Check
             // procedure, refer to EK-RLV12-UG-002, par. 5.8.
-            unit->currentDiskAddress_ =
-                (unit->currentDiskAddress_ & ~RLV12::DAR_Sector) |
-                ((unit->currentDiskAddress_ + 1) & RLV12::DAR_Sector);
+            currentDiskAddress_ =
+                (currentDiskAddress_ & ~RLV12::DAR_Sector) |
+                ((currentDiskAddress_ + 1) & RLV12::DAR_Sector);
             break;
 
-        case CmdProcessor::HeadPositionProcedure::DiskAddressRegister:
-            unit->currentDiskAddress_ = controller_->dar_;
+        case HeadPositionProcedure::DiskAddressRegister:
+            currentDiskAddress_ = diskAddressRegister;
             break;
     }
 
-    if (RLV12::getSector (unit->currentDiskAddress_) >= 
+    if (RLV12::getSector (currentDiskAddress_) >= 
             RLV12::sectorsPerSurface)
         // Wrap to sector 0 
-        unit->currentDiskAddress_ &= ~RLV12::DAR_Sector;
+        currentDiskAddress_ &= ~RLV12::DAR_Sector;
 }

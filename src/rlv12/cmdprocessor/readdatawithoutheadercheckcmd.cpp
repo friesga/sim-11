@@ -35,7 +35,8 @@ u16 CmdProcessor::readDataWithoutHeaderCheckCmd (RL01_02 *unit,
         rlv12Command.wordCount_ = maxWordCount;
 
     auto [success, numBytes] = unit->readData (rlv12Command,
-        controller_->dataBuffer_);
+        controller_->dataBuffer_, RL01_02::HeadPositionProcedure::Increment,
+        controller_->dar_);
 
     if (success)
     {
@@ -59,10 +60,6 @@ u16 CmdProcessor::readDataWithoutHeaderCheckCmd (RL01_02 *unit,
         Logger::instance() << "Error in readDataWithoutHeaderCheckCmd";
         return RLV12::CSR_CompositeError | RLV12::CSR_OperationIncomplete;
     }
-
-    updateHeadPosition 
-        (CmdProcessor::HeadPositionProcedure::Increment, 
-         unit, rlv12Command.wordCount_);
 
     // Catch errors together in rlcsValue
     rlcsValue |= finishDataTransferCmd (unit, rlv12Command);

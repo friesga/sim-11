@@ -64,7 +64,9 @@ u16 CmdProcessor::writeDataCmd (RL01_02 *unit, RLV12Command &rlv12Command)
             controller_->dataBuffer_[index] = 0;
 
         auto [success, numBytes] = unit->writeData (rlv12Command,
-            controller_->dataBuffer_, numWordsToWrite);
+            controller_->dataBuffer_, numWordsToWrite,
+            RL01_02::HeadPositionProcedure::DiskAddressRegister,
+            controller_->dar_);
 
         if (!success)
         {
@@ -72,10 +74,6 @@ u16 CmdProcessor::writeDataCmd (RL01_02 *unit, RLV12Command &rlv12Command)
             return RLV12::CSR_CompositeError | RLV12::CSR_OperationIncomplete;
         }
     }
-
-    updateHeadPosition 
-        (CmdProcessor::HeadPositionProcedure::DiskAddressRegister, 
-            unit, rlv12Command.wordCount_);
 
     // Catch erors together in rlcsValue
     rlcsValue |= finishDataTransferCmd (unit, rlv12Command);
