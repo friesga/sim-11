@@ -10,7 +10,7 @@ void CmdProcessor::run ()
     std::unique_lock<std::mutex> lock {controller_->controllerMutex_};
 
     // Report the controller is ready to receive command
-    controller_->csr_ |= RLV12::CSR_ControllerReady;
+    controller_->csr_ |= RLV12const::CSR_ControllerReady;
 
     while (running_)
     {
@@ -23,12 +23,12 @@ void CmdProcessor::run ()
             break;
 
         // Get a  reference to the unit for which the command is destined.
-        RL01_02 &unit = controller_->units_[RLV12::getDrive (controller_->csr_)];
+        RL01_02 &unit = controller_->units_[RLV12const::getDrive (controller_->csr_)];
 
         // Assemble a command from the command given in the CSR and the
         // parameters in the other registers
         // ToDo: Assemble command in the constructor?!
-        RLV12Command rlv12Command {RLV12::getFunction (controller_->csr_), controller_->dar_,
+        RLV12Command rlv12Command {RLV12const::getFunction (controller_->csr_), controller_->dar_,
             controller_->memAddrFromRegs (), 
             (u32) 0200000 - controller_->wordCounter_};
 

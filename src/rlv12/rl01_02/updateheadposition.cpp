@@ -19,10 +19,10 @@ void RL01_02::updateHeadPosition (HeadPositionProcedure procedure,
     {
         case HeadPositionProcedure::Increment:
             currentDiskAddress_ = 
-                (currentDiskAddress_ & ~RLV12::DAR_Sector) |
+                (currentDiskAddress_ & ~RLV12const::DAR_Sector) |
                 ((currentDiskAddress_ + 
-                ((wordCount + (RLV12::wordsPerSector - 1)) / 
-                    RLV12::wordsPerSector)) & RLV12::DAR_Sector);
+                ((wordCount + (RLV12const::wordsPerSector - 1)) / 
+                    RLV12const::wordsPerSector)) & RLV12const::DAR_Sector);
             break;
 
         case HeadPositionProcedure::Rotate:
@@ -30,8 +30,8 @@ void RL01_02::updateHeadPosition (HeadPositionProcedure procedure,
             // This functionality supports the Read Without Header Check
             // procedure, refer to EK-RLV12-UG-002, par. 5.8.
             currentDiskAddress_ =
-                (currentDiskAddress_ & ~RLV12::DAR_Sector) |
-                ((currentDiskAddress_ + 1) & RLV12::DAR_Sector);
+                (currentDiskAddress_ & ~RLV12const::DAR_Sector) |
+                ((currentDiskAddress_ + 1) & RLV12const::DAR_Sector);
             break;
 
         case HeadPositionProcedure::DiskAddressRegister:
@@ -39,8 +39,8 @@ void RL01_02::updateHeadPosition (HeadPositionProcedure procedure,
             break;
     }
 
-    if (RLV12::getSector (currentDiskAddress_) >= 
-            RLV12::sectorsPerSurface)
+    if (RLV12const::getSector (currentDiskAddress_) >= 
+            RLV12const::sectorsPerSurface)
         // Wrap to sector 0 
-        currentDiskAddress_ &= ~RLV12::DAR_Sector;
+        currentDiskAddress_ &= ~RLV12const::DAR_Sector;
 }

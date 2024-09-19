@@ -24,21 +24,21 @@ void RL01_02::seek (u16 diskAddressRegister)
     // Guard against drive access while the seek is running
     std::unique_lock<std::mutex> lock {driveMutex_};
 
-    currentCylinder = RLV12::getCylinder (currentDiskAddress_);
+    currentCylinder = RLV12const::getCylinder (currentDiskAddress_);
 
-    offset = RLV12::getCylinder (diskAddressRegister);
+    offset = RLV12const::getCylinder (diskAddressRegister);
 
     // Seek direction in or out?
     // According to the RL01/RL02 User Guide (EK-RL012-UG-005), par 4.3.4: 
     // If the difference word is large enough that the heads attempt to move
     // past the innermost or outermost limits, the head will stop at the
     // guard band and retreat to the first even-numbered data track.
-    if (diskAddressRegister & RLV12::DAR_Direction)
+    if (diskAddressRegister & RLV12const::DAR_Direction)
     {
         // Outwards
         newCylinder = currentCylinder + offset;
         maxCylinder = (rlStatus_ & RlStatus::UNIT_RL02) ?
-            RLV12::cylindersPerCartridge * 2 : RLV12::cylindersPerCartridge;
+            RLV12const::cylindersPerCartridge * 2 : RLV12const::cylindersPerCartridge;
         if (newCylinder >= maxCylinder)
             newCylinder = maxCylinder - 2;
     }
@@ -60,9 +60,9 @@ void RL01_02::seek (u16 diskAddressRegister)
 
     // ToDo: If a head switch, sector should be sectorsPerSurface/2?
     // Put on track
-    currentDiskAddress_ = (newCylinder << RLV12::DAR_CylinderPosition) |
-        ((diskAddressRegister & RLV12::DAR_HeadSelect) ?
-            RLV12::DAR_Head1 : RLV12::DAR_Head0);
+    currentDiskAddress_ = (newCylinder << RLV12const::DAR_CylinderPosition) |
+        ((diskAddressRegister & RLV12const::DAR_HeadSelect) ?
+            RLV12const::DAR_Head1 : RLV12const::DAR_Head0);
 
     // Real timing (EK-RLV12-TD-001 and EK-RL012-UG-005):
     // minimum 6.5ms, maximum 15ms for head switch,

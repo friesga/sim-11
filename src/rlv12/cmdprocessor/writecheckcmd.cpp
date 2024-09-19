@@ -14,16 +14,16 @@ u16 CmdProcessor::writeCheckCmd (RL01_02 *unit, RLV12Command &rlv12Command)
     if (!unit->available ())
     {
         // Set spin error
-        unit->driveStatus_ |= RLV12::MPR_GS_SpinError;
+        unit->driveStatus_ |= RLV12const::MPR_GS_SpinError;
 
         // Flag error
-        return RLV12::CSR_CompositeError | RLV12::CSR_OperationIncomplete;
+        return RLV12const::CSR_CompositeError | RLV12const::CSR_OperationIncomplete;
     }
 
     // Check the validity of cylinder and sector address
     if (!diskAddressOk (unit, rlv12Command))
-        return RLV12::CSR_CompositeError | RLV12::CSR_HeaderNotFound | 
-               RLV12::CSR_OperationIncomplete;
+        return RLV12const::CSR_CompositeError | RLV12const::CSR_HeaderNotFound | 
+               RLV12const::CSR_OperationIncomplete;
 
     // Check for sector overflow
     limitWordCount (rlv12Command);
@@ -50,21 +50,21 @@ u16 CmdProcessor::writeCheckCmd (RL01_02 *unit, RLV12Command &rlv12Command)
             comp = controller_->bus_->read (memAddr).valueOr (0);
             if (!comp.hasValue ())
             {
-                rlcsValue = RLV12::CSR_CompositeError | 
-                    RLV12::CSR_NonExistentMemory;
+                rlcsValue = RLV12const::CSR_CompositeError | 
+                    RLV12const::CSR_NonExistentMemory;
                 break;
             }
 
             // Check read word with buffer
             // ToDo: Quit for loop when an inequality is detected?
             if (comp != controller_->dataBuffer_[rlv12Command.wordCount_])
-                rlcsValue = RLV12::CSR_CompositeError | RLV12::CSR_ReadDataCRC;
+                rlcsValue = RLV12const::CSR_CompositeError | RLV12const::CSR_ReadDataCRC;
         }
     }
     else
     {
         Logger::instance() << "Error in writeCheckCmd";
-        return RLV12::CSR_CompositeError | RLV12::CSR_OperationIncomplete;
+        return RLV12const::CSR_CompositeError | RLV12const::CSR_OperationIncomplete;
     }
 
     // Catch errors together in rlcsValue

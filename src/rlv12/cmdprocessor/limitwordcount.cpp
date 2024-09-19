@@ -11,9 +11,9 @@
 void CmdProcessor::limitWordCount (RLV12Command &rlv12Command)
 {
     size_t maxWordCount = 
-        (RLV12::sectorsPerSurface - 
-            RLV12::getSector (rlv12Command.diskAddress_)) *
-            RLV12::wordsPerSector;
+        (RLV12const::sectorsPerSurface - 
+            RLV12const::getSector (rlv12Command.diskAddress_)) *
+            RLV12const::wordsPerSector;
 
     if (rlv12Command.wordCount_ > maxWordCount)
         rlv12Command.wordCount_ = maxWordCount;

@@ -15,10 +15,10 @@ u16 CmdProcessor::seekCmd (RL01_02 *unit, RLV12Command &rlv12Command)
         // Set seek time-out. Note that this status differs from
         // the status returned by data transfer commands if the
         // unit is unavailable.
-        unit->driveStatus_ |= RLV12::MPR_GS_SeekTimeOut;
+        unit->driveStatus_ |= RLV12const::MPR_GS_SeekTimeOut;
 
         // Flag error
-        return RLV12::CSR_CompositeError | RLV12::CSR_OperationIncomplete;
+        return RLV12const::CSR_CompositeError | RLV12const::CSR_OperationIncomplete;
     }
 
     unit->seek (controller_->dar_);

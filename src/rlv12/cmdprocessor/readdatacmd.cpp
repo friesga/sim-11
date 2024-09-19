@@ -13,13 +13,13 @@ u16 CmdProcessor::readDataCmd (RL01_02 *unit, RLV12Command &rlv12Command)
     if (!unit->available ())
     {
         // Set spin error and return OPI
-        unit->driveStatus_ |=  RLV12::MPR_GS_SpinError;
-        return RLV12::CSR_OperationIncomplete;
+        unit->driveStatus_ |=  RLV12const::MPR_GS_SpinError;
+        return RLV12const::CSR_OperationIncomplete;
     }
 
     // Check the validity of cylinder and sector address
     if (!diskAddressOk (unit, rlv12Command))
-        return RLV12::CSR_HeaderNotFound | RLV12::CSR_OperationIncomplete;
+        return RLV12const::CSR_HeaderNotFound | RLV12const::CSR_OperationIncomplete;
 
     // Check for sector overflow
     limitWordCount (rlv12Command);
@@ -41,14 +41,14 @@ u16 CmdProcessor::readDataCmd (RL01_02 *unit, RLV12Command &rlv12Command)
         {
             if (!controller_->bus_->writeWord (memAddr, 
                     controller_->dataBuffer_[index]))
-                rlcsValue = RLV12::CSR_CompositeError | 
-                    RLV12::CSR_NonExistentMemory;
+                rlcsValue = RLV12const::CSR_CompositeError | 
+                    RLV12const::CSR_NonExistentMemory;
         }
     }
     else
     {
         Logger::instance() << "Error in readDataCmd";
-        return RLV12::CSR_CompositeError | RLV12::CSR_OperationIncomplete;
+        return RLV12const::CSR_CompositeError | RLV12const::CSR_OperationIncomplete;
     }
 
     // Catch errors together in rlcsValue

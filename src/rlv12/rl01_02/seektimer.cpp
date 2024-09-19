@@ -19,6 +19,6 @@ void RL01_02::seekTimer ()
 
         alarmClock_.sleepFor (seekTime_);
         driveStatus_ =
-            (driveStatus_ & ~RLV12::MPR_GS_State) | RLV12::MPR_GS_LockOn;
+            (driveStatus_ & ~RLV12const::MPR_GS_State) | RLV12const::MPR_GS_LockOn;
     }
 }

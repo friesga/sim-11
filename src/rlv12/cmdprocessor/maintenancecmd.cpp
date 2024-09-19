@@ -43,8 +43,8 @@ u16 CmdProcessor::maintenanceCmd (RL01_02 *unit, RLV12Command &rlv12Command)
     // Must be exactly -511
     if (controller_->wordCounter_ != 0177001)
     {
-        return RLV12::CSR_CompositeError | RLV12::CSR_HeaderNotFound | 
-            RLV12::CSR_OperationIncomplete;
+        return RLV12const::CSR_CompositeError | RLV12const::CSR_HeaderNotFound | 
+            RLV12const::CSR_OperationIncomplete;
     }
 
     // Transfer 256 words to FIFO
@@ -55,7 +55,7 @@ u16 CmdProcessor::maintenanceCmd (RL01_02 *unit, RLV12Command &rlv12Command)
             controller_->dataBuffer_[wordCount] = value;
         else
         {
-            rlcsValue = RLV12::CSR_CompositeError | RLV12::CSR_NonExistentMemory;
+            rlcsValue = RLV12const::CSR_CompositeError | RLV12const::CSR_NonExistentMemory;
             break;
         }
         memoryAddress += 2;
@@ -69,7 +69,7 @@ u16 CmdProcessor::maintenanceCmd (RL01_02 *unit, RLV12Command &rlv12Command)
         if (!controller_->bus_->writeWord (memoryAddress, 
             controller_->dataBuffer_[wordCount]))
         {
-            rlcsValue = RLV12::CSR_CompositeError | RLV12::CSR_NonExistentMemory;
+            rlcsValue = RLV12const::CSR_CompositeError | RLV12const::CSR_NonExistentMemory;
             break;
         }
 

@@ -31,7 +31,7 @@ RL01_02::~RL01_02 ()
 // the specified diskAddress
 int32_t RL01_02::filePosition (int32_t diskAddress) const
 {
-    return (RLV12::getTrack (diskAddress) * RLV12::sectorsPerSurface +
-        RLV12::getSector (diskAddress)) * RLV12::wordsPerSector *
+    return (RLV12const::getTrack (diskAddress) * RLV12const::sectorsPerSurface +
+        RLV12const::getSector (diskAddress)) * RLV12const::wordsPerSector *
         sizeof (int16_t);
 }

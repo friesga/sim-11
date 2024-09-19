@@ -14,22 +14,22 @@ u16 CmdProcessor::readDataWithoutHeaderCheckCmd (RL01_02 *unit,
     if (!unit->available ())
     {
         // Set spin error
-        unit->driveStatus_ |= RLV12::MPR_GS_SpinError;
+        unit->driveStatus_ |= RLV12const::MPR_GS_SpinError;
 
         // Flag error
-        return RLV12::CSR_CompositeError | RLV12::CSR_OperationIncomplete;
+        return RLV12const::CSR_CompositeError | RLV12const::CSR_OperationIncomplete;
     }
 
-    if (RLV12::getSector (unit->currentDiskAddress_) >= 
-            RLV12::sectorsPerSurface)
+    if (RLV12const::getSector (unit->currentDiskAddress_) >= 
+            RLV12const::sectorsPerSurface)
 	    // Bad sector
-	    return RLV12::CSR_CompositeError | RLV12::CSR_HeaderNotFound;
+	    return RLV12const::CSR_CompositeError | RLV12const::CSR_HeaderNotFound;
 
     // Check for sector overflow
     size_t maxWordCount = 
-        (RLV12::sectorsPerSurface - 
-            RLV12::getSector (unit->currentDiskAddress_)) * 
-            RLV12::wordsPerSector;
+        (RLV12const::sectorsPerSurface - 
+            RLV12const::getSector (unit->currentDiskAddress_)) * 
+            RLV12const::wordsPerSector;
 
     if (rlv12Command.wordCount_ > maxWordCount)
         rlv12Command.wordCount_ = maxWordCount;
@@ -51,14 +51,14 @@ u16 CmdProcessor::readDataWithoutHeaderCheckCmd (RL01_02 *unit,
         {
             if (!controller_->bus_->writeWord (memAddr, 
                    controller_->dataBuffer_[index]))
-                rlcsValue = RLV12::CSR_CompositeError | 
-                    RLV12::CSR_NonExistentMemory;
+                rlcsValue = RLV12const::CSR_CompositeError | 
+                    RLV12const::CSR_NonExistentMemory;
         }
     }
     else
     {
         Logger::instance() << "Error in readDataWithoutHeaderCheckCmd";
-        return RLV12::CSR_CompositeError | RLV12::CSR_OperationIncomplete;
+        return RLV12const::CSR_CompositeError | RLV12const::CSR_OperationIncomplete;
     }
 
     // Catch errors together in rlcsValue
