@@ -118,6 +118,9 @@ bool SDLWindow::handleEvents ()
                 return true;
 
             case SDL_MOUSEBUTTONDOWN:
+                [[fallthrough]];
+
+            case SDL_MOUSEBUTTONUP:
                 if (event.button.button == SDL_BUTTON_LEFT)
                 {
                     SDLEvent sdlEvent (&event, texturePosition_);

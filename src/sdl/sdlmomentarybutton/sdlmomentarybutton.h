@@ -25,7 +25,7 @@ public:
 
 private:
     // The natural state of a momentary button is the state the button will
-    // revert to onze it is not actuated. That state is either Up or Down as
+    // revert to once it is not actuated. That state is either Up or Down as
     // indicated by the constructor's initialState parameter.
     State naturalState_;
 
