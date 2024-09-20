@@ -14,7 +14,7 @@ u16 CmdProcessor::readDataWithoutHeaderCheckCmd (RL01_02 *unit,
     if (!unit->available ())
     {
         // Set spin error
-        unit->driveStatus_ |= RLV12const::MPR_GS_SpinError;
+        unit->drive_.driveStatus_ |= RLV12const::MPR_GS_SpinError;
 
         // Flag error
         return RLV12const::CSR_CompositeError | RLV12const::CSR_OperationIncomplete;

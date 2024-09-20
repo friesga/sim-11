@@ -20,9 +20,7 @@ void RL01_02::seek (u16 diskAddressRegister)
     // EK-ORL11-TD-001, p2-3: "If the CPU software initiates another
     // operation on a drive that is busy seeking, the controller will
     // suspend the operation until the seek is completed."
-    // 
-    // Guard against drive access while the seek is running
-    std::unique_lock<std::mutex> lock {driveMutex_};
+    drive_.waitForDriveReady ();
 
     currentCylinder = RLV12const::getCylinder (currentDiskAddress_);
 
@@ -73,9 +71,6 @@ void RL01_02::seek (u16 diskAddressRegister)
     seekTime_ = std::chrono::milliseconds (static_cast<uint64_t>
         (6.5 + (0.04 * abs (newCylinder - currentCylinder))));
 
-    // Wakeup the seekTimer thread for the unit. After the specified seek
-    // time enter position mode with heads locked on cylinder (i.e. seek
-    // completed).
-    lock.unlock ();
-    startSeek_.notify_one ();
+    // Start a drive seek
+    drive_.startSeek (seekTime_);
 }

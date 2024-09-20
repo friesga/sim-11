@@ -6,6 +6,7 @@
 #include "statuscodes.h"
 #include "chrono/alarmclock/alarmclock.h"
 #include "../rlv12command/rlv12command.h"
+#include "rldrive/rldrive.h"
 
 #include <mutex>
 #include <thread>
@@ -72,20 +73,13 @@ private:
     friend class RLV12;
     friend class CmdProcessor;
 
+    // The drive needs access to the drive status. This will be removed
+    // on implementation of the drive state machine.
+    friend class RlDrive;
+
     int32_t currentDiskAddress_;
     Bitmask<RlStatus> rlStatus_;
-    int32_t driveStatus_;
-    bool running_;
     AlarmClock alarmClock_;
-
-    // Thread simulating seek timing
-    std::thread seekTimerThread_;
-
-    // Safe guard against drive access while a seek is in progress
-    std::mutex driveMutex_;
-
-    // Condition variable to wake up the seek timer
-    std::condition_variable startSeek_;
 
     // Calculated seek time
     SimulatorClock::duration seekTime_;
@@ -93,6 +87,9 @@ private:
     int32_t filePosition (int32_t diskAddress) const;
     void updateHeadPosition (HeadPositionProcedure procedure,
         s32 wordCount, u16 diskAddressRegister);
+
+    // The drive for this unit
+    RlDrive drive_ {};
 };
 
 #endif // _RL01_02_H_
