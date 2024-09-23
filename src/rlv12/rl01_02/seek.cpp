@@ -72,5 +72,5 @@ void RL01_02::seek (u16 diskAddressRegister)
         (6.5 + (0.04 * abs (newCylinder - currentCylinder))));
 
     // Start a drive seek
-    drive_.execute (RlDrive::SeekCommand {seekTime_});
+    drive_.startSeek (seekTime_);
 }

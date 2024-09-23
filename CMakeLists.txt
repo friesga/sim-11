@@ -122,6 +122,7 @@ set (RLV12_SRCS
     src/rlv12/rl01_02/seek.cpp
     src/rlv12/rl01_02/updateheadposition.cpp
     src/rlv12/rl01_02/rldrive/rldrive.cpp
+    src/rlv12/rl01_02/rldrive/statemachine.cpp
     src/rlv12/rlv12command/rlv12command.cpp
     src/rlv12/cmdprocessor/finishdatatransfercmd.cpp
     src/rlv12/cmdprocessor/cmdprocessor.cpp

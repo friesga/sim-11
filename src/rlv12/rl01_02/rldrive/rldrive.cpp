@@ -4,12 +4,14 @@
 #include <cassert>
 
 using std::holds_alternative;
+using std::make_unique;
 
 RlDrive::RlDrive ()
     :
     driveStatus_ {0}
 {
     driveThread_ = std::thread (&RlDrive::driveThread, this);
+    stateMachine_ = make_unique<StateMachine> (this);
 }
 
 RlDrive::~RlDrive ()
@@ -24,9 +26,9 @@ RlDrive::~RlDrive ()
 
 // Push the given command in the queue and signal the drive thread a command
 // is waiting to be processed.
-void RlDrive::execute (DriveCommand command)
+void RlDrive::startSeek (SimulatorClock::duration seekTime)
 {
-    commandQueue_.push (command);
+    eventQueue_.push (SeekCommand {seekTime});
     startCommand_.notify_one ();
 }
 
@@ -49,23 +51,15 @@ void RlDrive::driveThread ()
         // wait() unlocks the DriveMutex_.
         startCommand_.wait (lock);
 
-        // The driveMutex_ now is locked. Process commands till the queue
+        // The driveMutex_ now is locked. Process events till the queue
         // is empty.
-        while (!commandQueue_.empty ())
+        while (!eventQueue_.empty ())
         {
-            DriveCommand driveCommand = commandQueue_.front ();
+            Event event = eventQueue_.front ();
+            stateMachine_->dispatch (event);
 
-            // For now the only supported command is a seek.
-            assert (holds_alternative<SeekCommand> (driveCommand));
-                        
-            // After the specified seek time enter position mode with heads
-            // locked on cylinder (i.e. seek completed).
-            alarmClock_.sleepFor (get<SeekCommand> (driveCommand).seekTime);
-            driveStatus_ = (driveStatus_ & ~RLV12const::MPR_GS_State) |
-                RLV12const::MPR_GS_LockOn;
-
-            // The command has been processed
-            commandQueue_.pop ();
+            // The event has been processed
+            eventQueue_.pop ();
         }
     }
 }
