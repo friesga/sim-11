@@ -12,7 +12,7 @@ pair<bool, size_t> RL01_02::readData (RLV12Command& rlv12Command, u16* buffer,
     // Revolutional latency is 12.5ms average (EK-RLV-TD-001). 
     alarmClock_.sleepFor (std::chrono::microseconds (12500));
 
-    drive_.waitForDriveReady ();
+    waitForDriveReady ();
 
     // Set position in file to the block to be read
     if (fseek (filePtr_, filePosition (rlv12Command.diskAddress_),

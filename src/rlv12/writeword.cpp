@@ -49,8 +49,8 @@ StatusCode RLV12::writeWord (BusAddress busAddress, u16 data)
             // guarantee it will be cleared by the command processor before
             // the CSR is read by the host software.
             if (RLV12const::getFunction (csr_) == RLV12const::CSR_Seek)
-                unit.drive_.driveStatus_ = 
-                    (unit.drive_.driveStatus_ & ~RLV12const::MPR_GS_State) | RLV12const::MPR_GS_Seek;
+                unit.driveStatus_ = 
+                    (unit.driveStatus_ & ~RLV12const::MPR_GS_State) | RLV12const::MPR_GS_Seek;
 
             // Load Bus Address Extension Bits (BA16 and BA17) into bits
             // 00 and 01 in the BAE register

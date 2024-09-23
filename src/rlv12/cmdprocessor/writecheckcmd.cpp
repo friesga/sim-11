@@ -14,7 +14,7 @@ u16 CmdProcessor::writeCheckCmd (RL01_02 *unit, RLV12Command &rlv12Command)
     if (!unit->available ())
     {
         // Set spin error
-        unit->drive_.driveStatus_ |= RLV12const::MPR_GS_SpinError;
+        unit->driveStatus_ |= RLV12const::MPR_GS_SpinError;
 
         // Flag error
         return RLV12const::CSR_CompositeError | RLV12const::CSR_OperationIncomplete;

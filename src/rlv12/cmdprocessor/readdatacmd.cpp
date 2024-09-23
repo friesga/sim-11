@@ -13,7 +13,7 @@ u16 CmdProcessor::readDataCmd (RL01_02 *unit, RLV12Command &rlv12Command)
     if (!unit->available ())
     {
         // Set spin error and return OPI
-        unit->drive_.driveStatus_ |=  RLV12const::MPR_GS_SpinError;
+        unit->driveStatus_ |=  RLV12const::MPR_GS_SpinError;
         return RLV12const::CSR_OperationIncomplete;
     }
 

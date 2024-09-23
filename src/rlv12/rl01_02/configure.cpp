@@ -53,7 +53,7 @@ StatusCode RL01_02::configure (shared_ptr<RLUnitConfig> rlUnitConfig)
     currentDiskAddress_ = 0;
 
     // New volume
-    drive_.driveStatus_ = RLV12const::MPR_GS_HeadsOut | 
+    driveStatus_ = RLV12const::MPR_GS_HeadsOut | 
         RLV12const::MPR_GS_BrushHome | RLV12const::MPR_GS_VolumeCheck | RLV12const::MPR_GS_LockOn;
 
     // Set unit on-line
