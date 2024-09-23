@@ -84,6 +84,7 @@ public:
     void seek (u16 diskAddressRegister);
 
     void waitForDriveReady ();
+
 private:
     // All RLV12Commands need access to the file pointer and unit status
     friend class RLV12;
@@ -124,6 +125,8 @@ private:
         s32 wordCount, u16 diskAddressRegister);
 };
 
+// Definition of the state machine for the drive. The class has to be defined
+// in the same compilation unit to prevent incomplete type compilation errors.
 class RL01_02::StateMachine :
     public variantFsm::Fsm<StateMachine, Event, State>,
     public WakeUpCall
