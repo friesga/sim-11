@@ -47,18 +47,6 @@ enum class RlStatus
 class RL01_02 : public Unit
 {
 public:
-    // Definition of the drive states
-    struct LockOn {};       // The drive is locked on a cylinder
-    struct Seeking {};      // The drive is seeking
-
-    using State = std::variant <LockOn, Seeking>;
-
-    // Definition of the drive events
-    struct SeekCommand { SimulatorClock::duration seekTime; };
-    struct TimeElapsed {};
-
-    using Event = std::variant <SeekCommand, TimeElapsed>;
-
     // Definition for the procedures to calculate the new head position
     enum class HeadPositionProcedure
     {
@@ -89,6 +77,18 @@ private:
     // All RLV12Commands need access to the file pointer and unit status
     friend class RLV12;
     friend class CmdProcessor;
+
+    // Definition of the drive states
+    struct LockOn {};       // The drive is locked on a cylinder
+    struct Seeking {};      // The drive is seeking
+
+    using State = std::variant <LockOn, Seeking>;
+
+    // Definition of the drive events
+    struct SeekCommand { SimulatorClock::duration seekTime; };
+    struct TimeElapsed {};
+
+    using Event = std::variant <SeekCommand, TimeElapsed>;
 
     // Use the PIMPL idiom to be able to define the StateMachine outside
     // of the RlDrive class
