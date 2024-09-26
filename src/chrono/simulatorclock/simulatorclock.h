@@ -5,7 +5,6 @@
 #include "../../threadsafecontainers/threadsafeprioqueue.h"
 
 #include <chrono>
-#include <chrono>
 #include <ratio>
 #include <cstdint>
 #include <compare>
