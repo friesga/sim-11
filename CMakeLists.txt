@@ -440,6 +440,7 @@ set (GTEST_SRCS
     gtest/msv11configuratortest.cpp
     gtest/operandlocationtest.cpp
     gtest/dummycpu/dummymmu/dummymmu.cpp
+    gtest/rlv12configprocessortest.cpp
     gtest/rlv12attachtest.cpp
     gtest/rlv12maintenancetest.cpp
     gtest/rlv12getstatustest.cpp

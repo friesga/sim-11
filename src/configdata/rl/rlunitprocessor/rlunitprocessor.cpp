@@ -74,6 +74,11 @@ void RLUnitProcessor::processCabinet (iniparser::Value value)
 		CabinetProcessor::processCabinetKey (value);
 }
 
+void RLUnitProcessor::processSpinUpTime (iniparser::Value value)
+{
+	rlUnitConfigPtr->spinUpTime = value.asInt();
+}
+
 // Check the consistency of the configuration of a RL unit.  A valid cabinet
 // position has to be specified.
 void RLUnitProcessor::checkConsistency ()

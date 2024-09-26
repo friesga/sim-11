@@ -104,6 +104,7 @@ private:
     u16 driveStatus_ {0};
     bool running_ {true};
     AlarmClock alarmClock_;
+    SimulatorClock::duration spinUpTime_;
 
     // Calculated seek time
     SimulatorClock::duration seekTime_;

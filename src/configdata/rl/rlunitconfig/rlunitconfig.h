@@ -38,6 +38,7 @@ struct RLUnitConfig
 	bool newFile {false};
 	bool readOnly {false};
 	bool overwrite {false};
+	size_t spinUpTime {0};
 
     RLUnitConfig ();
 	RLUnitConfig (RLUnitConfigParams const &rlUnitConfigParams);

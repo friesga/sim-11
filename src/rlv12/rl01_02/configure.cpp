@@ -58,6 +58,8 @@ StatusCode RL01_02::configure (shared_ptr<RLUnitConfig> rlUnitConfig)
 
     // Set unit on-line
     rlStatus_ &= ~Bitmask(RlStatus::UNIT_OFFL);
+
+    spinUpTime_ = std::chrono::seconds {rlUnitConfig->spinUpTime};
     
     // Perform a transition from the initial state to the LockOn state.
     eventQueue_.push (SpinUpTime0 {});

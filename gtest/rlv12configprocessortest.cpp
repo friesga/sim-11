@@ -14,7 +14,6 @@ using std::vector;
 using std::string;
 using std::get;
 
-// Minimal tests for the ConfigProcessor class
 TEST (RLV12ConfigProcessorTest, configProcessed)
 {
 	std::stringstream stream;
@@ -142,4 +141,94 @@ TEST (RLV12ConfigProcessorTest, fileName)
 			(rlConfig->rlUnitConfig[3])->fileName.c_str(),
 			expectedFileNameUnit3.c_str());
     }
+}
+
+TEST (RLV12ConfigProcessorTest, spinUpTimeCorrectlyDefaulted)
+{
+	std::stringstream stream;
+	iniparser::File ft;
+
+	stream << "[RL]\n"
+		"units = 4\n"
+		"[RL.unit0]\n"
+		"cabinet = 0/0\n"
+		"[RL.unit1]\n"
+		"cabinet = 0/0\n"
+		"[RL.unit2]\n"
+		"cabinet = 0/0\n"
+		"[RL.unit3]\n"
+		"cabinet = 0/0\n";
+
+	stream >> ft;
+
+	IniProcessor iniProcessor;
+
+	// Verify the configuration is processed without errors
+	EXPECT_NO_THROW (iniProcessor.process (ft));
+
+	vector<DeviceConfig>& configuration =
+		iniProcessor.getSystemConfig ();
+
+	// The first and only device in the configuration should be the RLV12
+	ASSERT_TRUE (holds_alternative<shared_ptr<RLConfig>> (configuration[0]));
+
+	shared_ptr<RLConfig> rlConfig =
+		get<shared_ptr<RLConfig>> (configuration[0]);
+
+	// Verify the spin-up time of all four units is correctly defaulted
+	EXPECT_EQ (static_pointer_cast<RLUnitConfig>
+		(rlConfig->rlUnitConfig[0])->spinUpTime, 0);
+	EXPECT_EQ (static_pointer_cast<RLUnitConfig>
+		(rlConfig->rlUnitConfig[1])->spinUpTime, 0);
+	EXPECT_EQ (static_pointer_cast<RLUnitConfig>
+		(rlConfig->rlUnitConfig[2])->spinUpTime, 0);
+	EXPECT_EQ (static_pointer_cast<RLUnitConfig>
+		(rlConfig->rlUnitConfig[3])->spinUpTime, 0);
+}
+
+TEST (RLV12ConfigProcessorTest, spinUpTimeHasCorrectValues)
+{
+	std::stringstream stream;
+	iniparser::File ft;
+
+	stream << "[RL]\n"
+		"units = 4\n"
+		"[RL.unit0]\n"
+		"spin-up-time = 0\n"
+		"cabinet = 0/0\n"
+		"[RL.unit1]\n"
+		"cabinet = 0/0\n"
+		"spin-up-time = 1\n"
+		"[RL.unit2]\n"
+		"cabinet = 0/0\n"
+		"spin-up-time = 2\n"
+		"[RL.unit3]\n"
+		"cabinet = 0/0\n"
+		"spin-up-time = 3\n";
+
+	stream >> ft;
+
+	IniProcessor iniProcessor;
+
+	// Verify the configuration is processed without errors
+	EXPECT_NO_THROW (iniProcessor.process (ft));
+
+	vector<DeviceConfig>& configuration =
+		iniProcessor.getSystemConfig ();
+
+	// The first and only device in the configuration should be the RLV12
+	ASSERT_TRUE (holds_alternative<shared_ptr<RLConfig>> (configuration[0]));
+
+	shared_ptr<RLConfig> rlConfig =
+		get<shared_ptr<RLConfig>> (configuration[0]);
+
+	// Verify the spin-up time of all four units is correctly defaulted
+	EXPECT_EQ (static_pointer_cast<RLUnitConfig>
+		(rlConfig->rlUnitConfig[0])->spinUpTime, 0);
+	EXPECT_EQ (static_pointer_cast<RLUnitConfig>
+		(rlConfig->rlUnitConfig[1])->spinUpTime, 1);
+	EXPECT_EQ (static_pointer_cast<RLUnitConfig>
+		(rlConfig->rlUnitConfig[2])->spinUpTime, 2);
+	EXPECT_EQ (static_pointer_cast<RLUnitConfig>
+		(rlConfig->rlUnitConfig[3])->spinUpTime, 3);
 }
