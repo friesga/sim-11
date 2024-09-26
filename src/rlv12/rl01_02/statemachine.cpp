@@ -1,9 +1,16 @@
 #include "rl01_02.h"
 #include "rlv12/rlv12const.h"
 
-RL01_02::StateMachine::StateMachine (RL01_02* context)
+RL01_02::StateMachine::StateMachine (RL01_02* context,
+    SimulatorClock::duration spinUpTime)
+    : 
+    context_ {context},
+    spinUpTime_ {spinUpTime}
+{}
+
+RL01_02::State RL01_02::StateMachine::transition (Initial&&, SpinUpTime0)
 {
-    context_ = context;
+    return LockOn {};
 }
 
 // On a transition to the Seeking state a time is started for the given 

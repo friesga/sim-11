@@ -74,22 +74,26 @@ public:
     void waitForDriveReady ();
 
 private:
-    // All RLV12Commands need access to the file pointer and unit status
-    friend class RLV12;
-    friend class CmdProcessor;
-
     // Definition of the drive states
+    struct Initial {};      // State machine initial state
+    struct SpinningUp {};
     struct LockOn {};       // The drive is locked on a cylinder
     struct Seeking {};      // The drive is seeking
 
-    using State = std::variant <LockOn, Seeking>;
+    using State = std::variant <Initial, SpinningUp, LockOn, Seeking>;
 
     // Definition of the drive events
+    struct SpinUpTime0 {};
+    struct SpinUpTimeX {};
     struct SeekCommand { SimulatorClock::duration seekTime; };
     struct TimeElapsed {};
 
-    using Event = std::variant <SeekCommand, TimeElapsed>;
+    using Event = std::variant <SpinUpTime0, SpinUpTimeX, SeekCommand, TimeElapsed>;
 
+    // All RLV12Commands need access to the file pointer and unit status
+    friend class RLV12;
+    friend class CmdProcessor;
+    
     // Use the PIMPL idiom to be able to define the StateMachine outside
     // of the RlDrive class
     class StateMachine;
@@ -132,8 +136,9 @@ class RL01_02::StateMachine :
     public WakeUpCall
 {
 public:
-    StateMachine (RL01_02* context);
+    StateMachine (RL01_02* context, SimulatorClock::duration spinUpTime);
 
+    State transition (Initial&&, SpinUpTime0);  // -> LockOn
     State transition (LockOn&&, SeekCommand);   // -> Seeking
     State transition (Seeking&&, TimeElapsed);  // -> LockOn
 
@@ -153,6 +158,7 @@ public:
 
 private:
     RL01_02* context_ {nullptr};
+    SimulatorClock::duration spinUpTime_;
 };
 
 #endif // _RL01_02_H_
