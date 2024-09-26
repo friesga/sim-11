@@ -7,6 +7,7 @@
 #include "chrono/alarmclock/alarmclock.h"
 #include "variantfsm/fsm.h"
 #include "rlv12/rlv12command/rlv12command.h"
+#include "panel.h"
 
 #include <mutex>
 #include <thread>
@@ -72,6 +73,7 @@ public:
     void seek (u16 diskAddressRegister);
 
     void waitForDriveReady ();
+    void createBezel (Window* window, shared_ptr<Cabinet::Position> cabinetPosition);
 
 private:
     // Definition of the drive states
@@ -104,7 +106,7 @@ private:
     u16 driveStatus_ {0};
     bool running_ {true};
     AlarmClock alarmClock_;
-    SimulatorClock::duration spinUpTime_;
+    SimulatorClock::duration spinUpTime_ {0};
 
     // Calculated seek time
     SimulatorClock::duration seekTime_;

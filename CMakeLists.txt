@@ -123,6 +123,7 @@ set (RLV12_SRCS
     src/rlv12/rl01_02/updateheadposition.cpp
     src/rlv12/rl01_02/drivethread.cpp
     src/rlv12/rl01_02/statemachine.cpp
+    src/rlv12/rl01_02/createbezel.cpp
     src/rlv12/rlv12command/rlv12command.cpp
     src/rlv12/cmdprocessor/finishdatatransfercmd.cpp
     src/rlv12/cmdprocessor/cmdprocessor.cpp

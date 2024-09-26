@@ -83,9 +83,7 @@ RLV12::RLV12 (Qbus *bus, Window* window, shared_ptr<RLConfig> rlConfig)
 		if (unit (unitNumber)->configure (rlUnitConfig) != StatusCode::OK)
 			throw "Error attaching " + rlUnitConfig->fileName;
 
-        Panel* panel = window->createPanel (rlUnitConfig->cabinetPosition,
-            RLUnitConfig::unitHeight);
-        panel->createFront ("../../assets/RL02-front.png", {0, 0, 1.0, 1.0});
+        unit (unitNumber)->createBezel (window, rlUnitConfig->cabinetPosition);
 	}
 
     bus_->BINIT().subscribe (bind (&RLV12::BINITReceiver, this, _1));

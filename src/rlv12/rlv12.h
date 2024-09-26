@@ -12,7 +12,6 @@
 #include "rlv12command/rlv12command.h"
 #include "configdata/rl/rlconfig/rlconfig.h"
 #include "cmdprocessor/cmdprocessor.h"
-#include "panel.h"
 
 #include <array>
 #include <memory>               // for std::unique_ptr<>
