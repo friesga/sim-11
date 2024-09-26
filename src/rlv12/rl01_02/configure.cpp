@@ -59,6 +59,10 @@ StatusCode RL01_02::configure (shared_ptr<RLUnitConfig> rlUnitConfig)
     // Set unit on-line
     rlStatus_ &= ~Bitmask(RlStatus::UNIT_OFFL);
     
+    // Perform a transition from the initial state to the LockOn state.
+    eventQueue_.push (SpinUpTime0 {});
+    startCommand_.notify_one ();
+
     // Create a bad block table on a new disk image (if the 
     // image is not read-only)
     t_offset fileSize;

@@ -16,10 +16,6 @@ RL01_02::RL01_02 (PDP11Peripheral *owningDevice)
 {
     driveThread_ = std::thread (&RL01_02::driveThread, this);
     stateMachine_ = make_unique<StateMachine> (this, 0s);
-
-    // Perform a transition from the initial state to the LockOn state.
-    eventQueue_.push (SpinUpTime0 {});
-    startCommand_.notify_one ();
 }
 
 // Finish the drive thread
