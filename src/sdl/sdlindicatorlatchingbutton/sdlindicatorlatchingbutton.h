@@ -20,23 +20,16 @@ using std::array;
 class SDLIndicatorLatchingButton : public SDLButton, public Indicator
 {
 public:
-    struct Params
-    {
-        string buttonUpIndicatorOff;
-        string buttonUpIndicatorOn;
-        string buttonDownIndicatorOff;
-        string buttonDownIndicatorOn;
-    };
-
-    SDLIndicatorLatchingButton (Params const& params,
+    SDLIndicatorLatchingButton (Button::ImageNames const& imageNames,
         Button::State initialState, unique_ptr<SDLRenderer>& sdlRenderer,
         EventCallback buttonClicked, Indicator::State showIndicator,
         SDL_Texture* targetTexture, Frame<int> frame);
     ~SDLIndicatorLatchingButton ();
 
-    // Definition of functions required for the Button interface
+    // Definition of functions required for the SDLButton interface
     void handleEvent (SDLEvent const* event) override;
     void render () override;
+    bool isWithinBounds (Position position, float margin = 0.0) const;
 
     // Definition of functions required for the Indicator interface
     void show (Indicator::State indicatorState) override;

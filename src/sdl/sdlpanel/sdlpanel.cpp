@@ -33,7 +33,7 @@ void SDLPanel::createFront (string imageFile,
         sdlRenderer_, targetTexture_, placeFrameInTexture (frame)));
 }
 
-Indicator *SDLPanel::createIndicator (string imageFile,
+Indicator* SDLPanel::createIndicator (string imageFile,
     Indicator::State showFigure, Frame<float> frame)
 {
     indicators_.push_back (make_unique<SDLIndicator> (imageFile, 
@@ -47,7 +47,7 @@ Indicator *SDLPanel::createIndicator (string imageFile,
 // the Panel and Button belong to is destroyed. Not following this instruction
 // will lead to undefined behaviour.
 //
-Button *SDLPanel::createLatchingButton (string buttonDownImage, string buttonUpImage,
+Button* SDLPanel::createLatchingButton (string buttonDownImage, string buttonUpImage,
     Button::State initialState, Button::EventCallback buttonClicked,
     Frame<float> frame)
 {
@@ -57,13 +57,24 @@ Button *SDLPanel::createLatchingButton (string buttonDownImage, string buttonUpI
     return buttons_.back ().get ();
 }
 
-Button *SDLPanel::createMomentaryButton (string buttonDownImage, string buttonUpImage, 
+Button* SDLPanel::createMomentaryButton (string buttonDownImage, string buttonUpImage, 
     Button::State initialState, Button::EventCallback buttonClicked,
     Frame<float> frame)
 {
     buttons_.push_back (make_unique<SDLMomentaryButton> (buttonDownImage, buttonUpImage,
         initialState, sdlRenderer_, buttonClicked, targetTexture_,
         placeFrameInTexture (frame)));
+    return buttons_.back ().get ();
+}
+
+Button* SDLPanel::createSDLIndicatorLatchingButton (Button::ImageNames const& imageNames,
+    Button::State initialState,
+    Button::EventCallback buttonClicked, Indicator::State showIndicator,
+    Frame<float> frame)
+{
+    buttons_.push_back (make_unique<SDLIndicatorLatchingButton> (imageNames,
+        initialState, sdlRenderer_, buttonClicked, showIndicator,
+        targetTexture_, placeFrameInTexture (frame)));
     return buttons_.back ().get ();
 }
 

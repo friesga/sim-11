@@ -1,6 +1,6 @@
 #include "sdlindicatorlatchingbutton.h"
 
-SDLIndicatorLatchingButton::SDLIndicatorLatchingButton (Params const& params,
+SDLIndicatorLatchingButton::SDLIndicatorLatchingButton (Button::ImageNames const& imageNames,
     Button::State initialState, unique_ptr<SDLRenderer>& sdlRenderer,
     EventCallback buttonClicked, Indicator::State showIndicator,
     SDL_Texture* targetTexture, Frame<int> frame)
@@ -10,16 +10,16 @@ SDLIndicatorLatchingButton::SDLIndicatorLatchingButton (Params const& params,
     indicatorState_ {Indicator::State::Off}
 {
     textures_[to_integral (Button::State::Up)][to_integral (Indicator::State::Off)] =
-        make_unique<SDLTexture> (params.buttonUpIndicatorOff,
+        make_unique<SDLTexture> (imageNames.buttonUpIndicatorOff,
             sdlRenderer->getSDL_Renderer (), targetTexture, frame);
     textures_[to_integral (Button::State::Down)][to_integral (Indicator::State::Off)] =
-        make_unique<SDLTexture> (params.buttonDownIndicatorOff,
+        make_unique<SDLTexture> (imageNames.buttonDownIndicatorOff,
             sdlRenderer->getSDL_Renderer (), targetTexture, frame);
     textures_[to_integral (Button::State::Up)][to_integral (Indicator::State::On)] =
-        make_unique<SDLTexture> (params.buttonUpIndicatorOn,
+        make_unique<SDLTexture> (imageNames.buttonUpIndicatorOn,
             sdlRenderer->getSDL_Renderer (), targetTexture, frame);
     textures_[to_integral (Button::State::Down)][to_integral (Indicator::State::On)] =
-        make_unique<SDLTexture> (params.buttonDownIndicatorOn,
+        make_unique<SDLTexture> (imageNames.buttonDownIndicatorOn,
             sdlRenderer->getSDL_Renderer (), targetTexture, frame);
 }
 
@@ -50,6 +50,14 @@ void SDLIndicatorLatchingButton::handleEvent (SDLEvent const* event)
 void SDLIndicatorLatchingButton::render ()
 {
     getTexture (buttonState_, indicatorState_)->render ();
+}
+
+bool SDLIndicatorLatchingButton::isWithinBounds (Position position,
+    float margin) const
+{
+    // Any of the textures can be used to check the dimensions
+    return getTexture (Button::State::Up,
+        Indicator::State::Off)->isWithinBounds (position, margin);
 }
 
 // Definition of functions required for the Indicator interface

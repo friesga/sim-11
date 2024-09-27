@@ -64,6 +64,14 @@ public:
         Up = 1
     };
 
+    struct ImageNames
+    {
+        string buttonUpIndicatorOff;
+        string buttonUpIndicatorOn;
+        string buttonDownIndicatorOff;
+        string buttonDownIndicatorOn;
+    };
+
     using EventCallback = function<void(State)>;
 };
 
@@ -77,13 +85,17 @@ public:
         Frame<float> frame) = 0;
     virtual Indicator *createIndicator (string imageFile, 
         Indicator::State showFigure,
-        Frame<float> boundingBox) = 0;
-    virtual Button *createLatchingButton (string buttonDownImage, string buttonUpImage,
+        Frame<float> frame) = 0;
+    virtual Button* createLatchingButton (string buttonDownImage, string buttonUpImage,
         Button::State initialState, Button::EventCallback buttonClicked,
-        Frame<float> boundingBox) = 0;
-    virtual Button *createMomentaryButton (string buttonDownImage, string buttonUpImage,
+        Frame<float> frame) = 0;
+    virtual Button* createMomentaryButton (string buttonDownImage, string buttonUpImage,
         Button::State initialState, Button::EventCallback buttonClicked,
-        Frame<float> boundingBox) = 0;
+        Frame<float> frame) = 0;
+    virtual Button* createSDLIndicatorLatchingButton (Button::ImageNames const& imageNames,
+        Button::State initialState,
+        Button::EventCallback buttonClicked, Indicator::State showIndicator,
+        Frame<float> frame) = 0;
 };
 
 class Window

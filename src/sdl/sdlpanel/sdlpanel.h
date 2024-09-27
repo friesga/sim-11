@@ -6,6 +6,7 @@
 #include "../sdlindicator/sdlindicator.h"
 #include "../sdllatchingbutton/sdllatchingbutton.h"
 #include "../sdlmomentarybutton/sdlmomentarybutton.h"
+#include "../sdlindicatorlatchingbutton/sdlindicatorlatchingbutton.h"
 #include "../sdlrenderer/sdlrenderer.h"
 #include "../sdlevent/sdlevent.h"
 #include "cabinet/cabinet.h"
@@ -34,6 +35,10 @@ public:
         Frame<float> frame) override;
     virtual Button *createMomentaryButton (string buttonDownImage, string buttonUpImage,
         Button::State initialState, Button::EventCallback buttonClicked,
+        Frame<float> frame) override;
+    virtual Button* createSDLIndicatorLatchingButton (Button::ImageNames const& imageNames,
+        Button::State initialState, 
+        Button::EventCallback buttonClicked, Indicator::State showIndicator,
         Frame<float> frame) override;
 
     // SDL implementation specific functions
