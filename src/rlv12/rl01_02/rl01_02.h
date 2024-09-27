@@ -127,9 +127,14 @@ private:
     // The drive thread for this unit
     void driveThread ();
 
+    // Button positions and dimensions
+    Frame<float> loadButtonFrame {0.703, 0.538, 0.030, 0.060};
+
     int32_t filePosition (int32_t diskAddress) const;
     void updateHeadPosition (HeadPositionProcedure procedure,
         s32 wordCount, u16 diskAddressRegister);
+
+    void loadButtonClicked (Button::State state);
 };
 
 // Definition of the state machine for the drive. The class has to be defined
