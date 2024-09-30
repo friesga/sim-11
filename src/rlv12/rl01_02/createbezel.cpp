@@ -21,7 +21,7 @@ void RL01_02::createBezel (Window* window, shared_ptr<Cabinet::Position> cabinet
 
     // READY indicator, default off
     readyIndicator_ = panel->createIndicator ("../../assets/ready_0_off.png",
-        Indicator::State::On, readyIndicatorFrame);
+        "../../assets/ready_0_on.png", Indicator::State::On, readyIndicatorFrame);
 }
 
 void RL01_02::loadButtonClicked (Button::State state)

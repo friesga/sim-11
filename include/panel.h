@@ -133,8 +133,8 @@ public:
     // will be used.
     virtual void createFront (string imageFile, 
         Frame<float> frame) = 0;
-    virtual Indicator *createIndicator (string imageFile, 
-        Indicator::State showFigure,
+    virtual Indicator *createIndicator (string indicatorOffImage,
+        string indicatorOnImage, Indicator::State showFigure,
         Frame<float> frame) = 0;
     virtual Button* createLatchingButton (string buttonDownImage, string buttonUpImage,
         Button::State initialState, Button::EventCallback buttonClicked,

@@ -13,9 +13,9 @@ using std::unique_ptr;
 class SDLIndicator : public Indicator
 {
 public:
-    SDLIndicator (string imageFile, unique_ptr<SDLRenderer> &sdlRenderer,
-        State showIndicator, SDL_Texture* targetTexture,
-        Frame<int> frame);
+    SDLIndicator (string indicatorOffImage, string indicatorOnImage,
+        unique_ptr<SDLRenderer> &sdlRenderer, State showIndicator,
+        SDL_Texture* targetTexture, Frame<int> frame);
     ~SDLIndicator ();
 
     // Definition of functions required for the Indicator interface
@@ -23,8 +23,9 @@ public:
     void render () override;
 
 private:
-    // The texture to use for this indicator
-    unique_ptr<SDLTexture> sdlTtexture_;
+    // The textures to use for this indicator
+    unique_ptr<SDLTexture> indicatorOnTexture_;
+    unique_ptr<SDLTexture> indicatorOffTexture_;
 
     // Indication whether or not the indicator has to be shown
     Indicator::State showIndicator_;

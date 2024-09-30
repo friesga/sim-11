@@ -33,11 +33,12 @@ void SDLPanel::createFront (string imageFile,
         sdlRenderer_, targetTexture_, placeFrameInTexture (frame)));
 }
 
-Indicator* SDLPanel::createIndicator (string imageFile,
-    Indicator::State showFigure, Frame<float> frame)
+Indicator* SDLPanel::createIndicator (string indicatorOffimage,
+    string indicatorOnImage, Indicator::State showFigure, Frame<float> frame)
 {
-    indicators_.push_back (make_unique<SDLIndicator> (imageFile, 
-        sdlRenderer_, showFigure, targetTexture_, placeFrameInTexture (frame)));
+    indicators_.push_back (make_unique<SDLIndicator> (indicatorOffimage, 
+        indicatorOnImage, sdlRenderer_, showFigure, targetTexture_,
+        placeFrameInTexture (frame)));
     return indicators_.back ().get ();
 }
 

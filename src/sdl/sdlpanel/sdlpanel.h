@@ -28,8 +28,9 @@ public:
     // Definition of functions required for the implementation of a Panel
     virtual void createFront (string imageFile, 
         Frame<float> frame) override;
-    virtual Indicator *createIndicator (string imageFile, 
-        Indicator::State showFigure, Frame<float> frame) override;
+    virtual Indicator *createIndicator (string indicatorOffImage,
+        string indicatorOnImage, Indicator::State showFigure,
+        Frame<float> frame) override;
     virtual Button *createLatchingButton (string buttonDownImage, string buttonUpImage,
         Button::State initialState, Button::EventCallback buttonClicked,
         Frame<float> frame) override;
