@@ -17,10 +17,10 @@ public:
         State showIndicator, SDL_Texture* targetTexture,
         Frame<int> frame);
     ~SDLIndicator ();
-    void render ();
 
     // Definition of functions required for the Indicator interface
     void show (Indicator::State showIndicator) override;
+    void render () override;
 
 private:
     // The texture to use for this indicator

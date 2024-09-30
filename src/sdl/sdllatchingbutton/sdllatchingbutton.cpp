@@ -15,13 +15,11 @@ SDLLatchingButton::~SDLLatchingButton ()
 {}
 
 
-void SDLLatchingButton::handleEvent (SDLEvent const *event)
+void SDLLatchingButton::handleEvent (InputEvent const *event)
 {
-    SDL_Event* sdlEvent = event->getSDL_Event ();
-
-    if (sdlEvent->type == SDL_MOUSEBUTTONDOWN &&
-        sdlEvent->button.button == SDL_BUTTON_LEFT &&
-        isWithinBounds (event->mouseTexturePosition ()))
+        if (event->type () == InputEvent::Type::MouseButtonDown &&
+        event->button () == InputEvent::Button::Left &&
+        isWithinBounds (event->mousePosition ()))
     {
         buttonState_ = toggleState (buttonState_);
         buttonClicked_ (buttonState_);

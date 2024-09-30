@@ -21,7 +21,7 @@ public:
         SDL_Texture* targetTexture, Frame<int> frame);
     ~SDLMomentaryButton ();
 
-    void handleEvent (SDLEvent const *event) override;
+    void handleEvent (InputEvent const *event) override;
 
 private:
     // The natural state of a momentary button is the state the button will
@@ -29,7 +29,7 @@ private:
     // indicated by the constructor's initialState parameter.
     State naturalState_;
 
-    bool validMouseEvent (SDLEvent const *event);
+    bool validMouseEvent (InputEvent const *event);
 };
 
 #endif // _SDLMOMENTARYBUTTON_H_

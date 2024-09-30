@@ -21,7 +21,7 @@ public:
         SDL_Texture* targetTexture, Frame<int> frame);
     ~SDLLatchingButton ();
 
-    void handleEvent (SDLEvent const *event) override;
+    void handleEvent (InputEvent const *event) override;
 };
 
 #endif // _SDLLATCHINGBUTTON_H_

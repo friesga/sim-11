@@ -6,12 +6,35 @@ SDLEvent::SDLEvent (SDL_Event* event, Position mouseTexturePosition)
     mouseTexturePosition_ {mouseTexturePosition}
 {}
 
-SDL_Event* SDLEvent::getSDL_Event () const
+InputEvent::Type SDLEvent::type () const
 {
-    return event_;
+    switch (event_->type)
+    {
+        case SDL_QUIT:
+            return InputEvent::Type::Quit;
+
+        case SDL_MOUSEBUTTONDOWN:
+            return InputEvent::Type::MouseButtonDown;
+
+        case SDL_MOUSEBUTTONUP:
+            return InputEvent::Type::MouseButtonUp;
+
+        case SDL_MOUSEMOTION:
+            return InputEvent::Type::MouseMotion;
+
+        default:
+            return InputEvent::Type::Other;
+    }
 }
 
-Position SDLEvent::mouseTexturePosition () const
+InputEvent::Button SDLEvent::button () const
+{
+    return event_->button.button == SDL_BUTTON_LEFT ?
+        InputEvent::Button::Left : InputEvent::Button::Right;
+}
+
+Position SDLEvent::mousePosition () const
 {
     return mouseTexturePosition_;
 }
+

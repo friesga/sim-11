@@ -17,7 +17,7 @@ using std::array;
 
 // This class combines a latching button with an indicator.
 //
-class SDLIndicatorLatchingButton : public SDLButton, public Indicator
+class SDLIndicatorLatchingButton : public Button, public Indicator
 {
 public:
     SDLIndicatorLatchingButton (Button::ImageNames const& imageNames,
@@ -26,8 +26,8 @@ public:
         SDL_Texture* targetTexture, Frame<int> frame);
     ~SDLIndicatorLatchingButton ();
 
-    // Definition of functions required for the SDLButton interface
-    void handleEvent (SDLEvent const* event) override;
+    // Definition of functions required for the Button interface
+    void handleEvent (InputEvent const* event) override;
     void render () override;
     bool isWithinBounds (Position position, float margin = 0.0) const;
 

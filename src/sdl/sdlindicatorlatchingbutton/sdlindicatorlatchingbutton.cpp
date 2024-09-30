@@ -33,13 +33,11 @@ SDLTexture* SDLIndicatorLatchingButton::getTexture (Button::State buttonState,
 }
 
 // Definition of functions required for the Button interface
-void SDLIndicatorLatchingButton::handleEvent (SDLEvent const* event)
+void SDLIndicatorLatchingButton::handleEvent (InputEvent const* event)
 {
-    SDL_Event* sdlEvent = event->getSDL_Event ();
-
-    if (sdlEvent->type == SDL_MOUSEBUTTONDOWN &&
-        sdlEvent->button.button == SDL_BUTTON_LEFT &&
-        isWithinBounds (event->mouseTexturePosition ()))
+    if (event->type () == InputEvent::Type::MouseButtonDown &&
+        event->button () == InputEvent::Button::Left &&
+        isWithinBounds (event->mousePosition ()))
     {
         buttonState_ = (buttonState_ == Button::State::Up) ? 
             Button::State::Down : Button::State::Up; 

@@ -41,6 +41,30 @@ struct Frame
     T height;
 };
 
+// The class Event is an implementation-independend version of input events.
+class InputEvent
+{
+public:
+    enum class Button
+    {
+        Left,
+        Right
+    };
+
+    enum class Type
+    {
+        MouseButtonDown,
+        MouseButtonUp,
+        MouseMotion,
+        Quit,
+        Other
+    };
+
+    virtual Type type () const = 0;
+    virtual Button button () const = 0;
+    virtual Position mousePosition () const = 0;
+};
+
 // The State enum constants are given values to be able to use them as
 // indices in an array.
 class Indicator
@@ -53,6 +77,7 @@ public:
     };
 
     virtual void show (State showFigure) = 0;
+    virtual void render () = 0;
 };
 
 class Button
@@ -73,6 +98,9 @@ public:
     };
 
     using EventCallback = function<void(State)>;
+    virtual void render () = 0;
+    virtual void handleEvent (InputEvent const* event) = 0;
+    virtual bool isWithinBounds (Position position, float margin) const = 0;
 };
 
 class Panel
@@ -96,6 +124,8 @@ public:
         Button::State initialState,
         Button::EventCallback buttonClicked, Indicator::State showIndicator,
         Frame<float> frame) = 0;
+    virtual void render () = 0;
+    virtual void handleEvent (InputEvent const* event) = 0;
 };
 
 class Window

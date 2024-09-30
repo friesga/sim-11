@@ -16,30 +16,30 @@ SDLMomentaryButton::SDLMomentaryButton (string buttonDownImage, string buttonUpI
 SDLMomentaryButton::~SDLMomentaryButton ()
 {}
 
-bool SDLMomentaryButton::validMouseEvent (SDLEvent const *event)
+bool SDLMomentaryButton::validMouseEvent (InputEvent const *event)
 {
-    SDL_Event* sdlEvent = event->getSDL_Event ();
-
-    return (sdlEvent->type == SDL_MOUSEBUTTONDOWN || 
-        sdlEvent->type == SDL_MOUSEBUTTONUP) &&
-        sdlEvent->button.button == SDL_BUTTON_LEFT &&
-        isWithinBounds (event->mouseTexturePosition ());
+    return (event->type () == InputEvent::Type::MouseButtonDown ||
+        event->type () == InputEvent::Type::MouseButtonUp) &&
+        event->button () == InputEvent::Button::Left &&
+        isWithinBounds (event->mousePosition ());
 }
 
-void SDLMomentaryButton::handleEvent (SDLEvent const *event)
+void SDLMomentaryButton::handleEvent (InputEvent const *event)
 {
-    SDL_Event* sdlEvent = event->getSDL_Event ();
-
     if (validMouseEvent (event))
     {
-        switch (sdlEvent->type)
+        switch (event->type ())
         {
-            case SDL_MOUSEBUTTONDOWN:
+            case InputEvent::Type::MouseButtonDown:
                 buttonState_ = toggleState (naturalState_);
                 break;
 
-            case SDL_MOUSEBUTTONUP:
+            case InputEvent::Type::MouseButtonUp:
                 buttonState_ = naturalState_;
+                break;
+
+            default:
+                // Ignore all other events
                 break;
         }
 

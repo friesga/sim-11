@@ -43,7 +43,7 @@ public:
 
     // SDL implementation specific functions
     virtual void render ();
-    virtual void handleEvent (SDLEvent const *event);
+    virtual void handleEvent (InputEvent const *event);
     bool isOverButton (Position position);
 
 private:
@@ -56,8 +56,8 @@ private:
     // Storage for all fronts, indicators and buttons to be rendered
     // on this window
     vector<unique_ptr<SDLFront>> fronts_;
-    vector<unique_ptr<SDLIndicator>> indicators_;
-    vector<unique_ptr<SDLButton>> buttons_;
+    vector<unique_ptr<Indicator>> indicators_;
+    vector<unique_ptr<Button>> buttons_;
 
     // Reference to the panel to draw the panel on
     SDL_Texture* targetTexture_;
