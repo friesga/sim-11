@@ -108,6 +108,8 @@ private:
     AlarmClock alarmClock_;
     SimulatorClock::duration spinUpTime_ {0};
 
+
+
     // Calculated seek time
     SimulatorClock::duration seekTime_;
 
@@ -127,8 +129,12 @@ private:
     // The drive thread for this unit
     void driveThread ();
 
-    // Button positions and dimensions
-    Frame<float> loadButtonFrame {0.703, 0.538, 0.030, 0.060};
+    // Buttons and indicators
+    Indicator* readyIndicator_ {nullptr};
+
+    // Button and indicators positions and dimensions
+    Frame<float> loadButtonFrame     {0.703, 0.538, 0.030, 0.060};
+    Frame<float> readyIndicatorFrame {0.743, 0.538, 0.030, 0.060};
 
     int32_t filePosition (int32_t diskAddress) const;
     void updateHeadPosition (HeadPositionProcedure procedure,
