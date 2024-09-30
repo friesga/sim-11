@@ -70,9 +70,9 @@ void BA11_N::createBezel (shared_ptr<Cabinet::Position> cabinetPosition)
     Panel *panel = frontWindow_->createPanel (cabinetPosition, BA11_NConfig::unitHeight);
 
     panel->createFront(frontImage(logo_), ba11_nFrontFrame);
-    pwrOkLed_ = panel->createIndicator ("../../assets/red led.png", 
+    pwrOkLed_ = panel->createIndicator ("../../assets/red led on.png", 
         Indicator::State::Off, pwrOkLedFrame);
-    runLed_ = panel->createIndicator ("../../assets/red led.png", 
+    runLed_ = panel->createIndicator ("../../assets/red led on.png", 
         Indicator::State::Off, runLedFrame);
 
     restartSwitch_ = panel->createMomentaryButton ("../../assets/switch down.png",
