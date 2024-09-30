@@ -55,7 +55,7 @@ private:
 
     // Storage for all fronts, indicators and buttons to be rendered
     // on this window
-    vector<unique_ptr<SDLFront>> fronts_;
+    vector<unique_ptr<Front>> fronts_;
     vector<unique_ptr<Indicator>> indicators_;
     vector<unique_ptr<Button>> buttons_;
 

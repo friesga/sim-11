@@ -10,7 +10,7 @@
 using std::string;
 using std::unique_ptr;
 
-class SDLFront
+class SDLFront : public Front
 {
 public:
     SDLFront (string imageFile, unique_ptr<SDLRenderer> &sdlRenderer,

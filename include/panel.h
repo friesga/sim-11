@@ -65,6 +65,13 @@ public:
     virtual Position mousePosition () const = 0;
 };
 
+// A Front is the image to be rendered on the panel
+class Front
+{
+public:
+    virtual void render () = 0;
+};
+
 // The State enum constants are given values to be able to use them as
 // indices in an array.
 class Indicator
