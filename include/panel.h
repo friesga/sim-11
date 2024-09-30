@@ -110,6 +110,21 @@ public:
     virtual bool isWithinBounds (Position position, float margin) const = 0;
 };
 
+// An IndicatorButton is the combination of a button and an indicator. i.e.
+// it can be switched up and down and has an indicator that can be switched
+// on and off.
+class IndicatorButton : public Button, public Indicator
+{
+public:
+    // Functions defined in the Button interface
+    virtual void render () = 0;
+    virtual void handleEvent (InputEvent const* event) = 0;
+    virtual bool isWithinBounds (Position position, float margin) const = 0;
+
+    // Additional functions defined in the Indicator interface
+    virtual void show (Indicator::State showFigure) = 0;
+};
+
 class Panel
 {
 public:

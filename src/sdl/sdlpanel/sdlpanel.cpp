@@ -67,15 +67,15 @@ Button* SDLPanel::createMomentaryButton (string buttonDownImage, string buttonUp
     return buttons_.back ().get ();
 }
 
-Button* SDLPanel::createSDLIndicatorLatchingButton (Button::ImageNames const& imageNames,
+IndicatorButton* SDLPanel::createSDLIndicatorLatchingButton (Button::ImageNames const& imageNames,
     Button::State initialState,
     Button::EventCallback buttonClicked, Indicator::State showIndicator,
     Frame<float> frame)
 {
-    buttons_.push_back (make_unique<SDLIndicatorLatchingButton> (imageNames,
-        initialState, sdlRenderer_, buttonClicked, showIndicator,
-        targetTexture_, placeFrameInTexture (frame)));
-    return buttons_.back ().get ();
+    indicatorButtons_.push_back (make_unique<SDLIndicatorLatchingButton> (imageNames,
+            initialState, sdlRenderer_, buttonClicked, showIndicator,
+            targetTexture_, placeFrameInTexture (frame)));
+    return indicatorButtons_.back ().get ();
 }
 
 // Place the given frame, whith positions and dimensions relative to the
@@ -112,7 +112,7 @@ pair<int, int> SDLPanel::getTextureDimensions (SDL_Texture* texture)
 // Render all elements in this panel to the window
 void SDLPanel::render ()
 {
-    // Render all fronts, indicators and buttons
+    // Render all fronts, indicators, buttons, etc.
     for (auto& sdlFront : fronts_)
         sdlFront->render ();
 
@@ -121,6 +121,9 @@ void SDLPanel::render ()
 
     for (auto& button : buttons_)
         button->render ();
+
+    for (auto& indicatorButton : indicatorButtons_)
+        indicatorButton->render ();
 }
 
 // Events for a Panel are destined for a button on the panel

@@ -36,14 +36,14 @@ public:
     virtual Button *createMomentaryButton (string buttonDownImage, string buttonUpImage,
         Button::State initialState, Button::EventCallback buttonClicked,
         Frame<float> frame) override;
-    virtual Button* createSDLIndicatorLatchingButton (Button::ImageNames const& imageNames,
+    virtual IndicatorButton* createSDLIndicatorLatchingButton (Button::ImageNames const& imageNames,
         Button::State initialState, 
         Button::EventCallback buttonClicked, Indicator::State showIndicator,
         Frame<float> frame) override;
 
     // SDL implementation specific functions
-    virtual void render ();
-    virtual void handleEvent (InputEvent const *event);
+    void render () override;
+    void handleEvent (InputEvent const *event) override;
     bool isOverButton (Position position);
 
 private:
@@ -58,6 +58,7 @@ private:
     vector<unique_ptr<Front>> fronts_;
     vector<unique_ptr<Indicator>> indicators_;
     vector<unique_ptr<Button>> buttons_;
+    vector<unique_ptr<IndicatorButton>> indicatorButtons_;
 
     // Reference to the panel to draw the panel on
     SDL_Texture* targetTexture_;

@@ -17,7 +17,7 @@ using std::array;
 
 // This class combines a latching button with an indicator.
 //
-class SDLIndicatorLatchingButton : public Button, public Indicator
+class SDLIndicatorLatchingButton : public IndicatorButton
 {
 public:
     SDLIndicatorLatchingButton (Button::ImageNames const& imageNames,
