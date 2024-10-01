@@ -13,20 +13,41 @@ RL01_02::RL01_02 (PDP11Peripheral *owningDevice)
     currentDiskAddress_ {0},
     rlStatus_ {RlStatus::UNIT_OFFL},
     seekTime_ {}
-{
-    driveThread_ = std::thread (&RL01_02::driveThread, this);
-    stateMachine_ = make_unique<StateMachine> (this, 0s);
-}
+{}
 
 // Finish the drive thread
 RL01_02::~RL01_02 ()
 {
-    // Wakeup the drive thread with the indication to finish
-    running_ = false;
+    // Stop a potentionally running drive thread
+    if (running_)
+    {
+        // Wakeup the drive thread with the indication to finish
+        running_ = false;
+        startCommand_.notify_one ();
+
+        // Wait till the thread has finished
+        driveThread_.join ();
+    }
+}
+
+StatusCode RL01_02::init (shared_ptr<RLUnitConfig> rlUnitConfig,
+    Window* window, shared_ptr<Cabinet::Position> cabinetPosition)
+{
+    if (configure (rlUnitConfig) != StatusCode::OK)
+        return StatusCode::ArgumentError;
+
+    createBezel (window, rlUnitConfig->cabinetPosition);
+
+    running_ = true;
+    driveThread_ = std::thread (&RL01_02::driveThread, this);
+    stateMachine_ = make_unique<StateMachine> (this, 0s);
+
+    // Perform a transition from the initial state to the LockOn state.
+    unique_lock<mutex> lock {driveMutex_};
+    eventQueue_.push (SpinUpTime0 {});
     startCommand_.notify_one ();
 
-    // Wait till the thread has finished
-    driveThread_.join ();
+    return StatusCode::OK;
 }
 
 // Calculate the position of a sector as an offset in the file from

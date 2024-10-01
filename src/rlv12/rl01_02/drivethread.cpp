@@ -9,11 +9,6 @@ void RL01_02::driveThread ()
 
     while (running_)
     {
-        // Wait till we are signalled that a command is ready to be processed
-        // 
-        // wait() unlocks the DriveMutex_.
-        startCommand_.wait (lock);
-
         // The driveMutex_ now is locked. Process events till the queue
         // is empty.
         while (!eventQueue_.empty ())
@@ -24,5 +19,10 @@ void RL01_02::driveThread ()
             // The event has been processed
             eventQueue_.pop ();
         }
+
+        // Wait till we are signalled that a command is ready to be processed
+        // 
+        // wait() unlocks the DriveMutex_.
+        startCommand_.wait (lock);
     }
 }

@@ -60,9 +60,6 @@ public:
     RL01_02 (PDP11Peripheral* owningDevice);
     ~RL01_02 ();
 
-    // Required functions
-    StatusCode configure (shared_ptr<RLUnitConfig> rlUnitConfig);
-
     bool available ();
     pair<bool, size_t> readData (RLV12Command& rlv12Command, u16* buffer,
         HeadPositionProcedure procedure, u16 diskAddressRegister);
@@ -73,7 +70,9 @@ public:
     void seek (u16 diskAddressRegister);
 
     void waitForDriveReady ();
-    void createBezel (Window* window, shared_ptr<Cabinet::Position> cabinetPosition);
+
+    StatusCode init (shared_ptr<RLUnitConfig> rlUnitConfig,
+        Window* window, shared_ptr<Cabinet::Position> cabinetPosition);
 
 private:
     // Definition of the drive states
@@ -104,11 +103,9 @@ private:
     int32_t currentDiskAddress_;
     Bitmask<RlStatus> rlStatus_;
     u16 driveStatus_ {0};
-    bool running_ {true};
+    bool running_ {false};
     AlarmClock alarmClock_;
     SimulatorClock::duration spinUpTime_ {0};
-
-
 
     // Calculated seek time
     SimulatorClock::duration seekTime_;
@@ -136,6 +133,8 @@ private:
     Frame<float> loadButtonFrame     {0.703, 0.538, 0.030, 0.060};
     Frame<float> readyIndicatorFrame {0.743, 0.538, 0.030, 0.060};
 
+    StatusCode configure (shared_ptr<RLUnitConfig> rlUnitConfig);
+    void createBezel (Window* window, shared_ptr<Cabinet::Position> cabinetPosition);
     int32_t filePosition (int32_t diskAddress) const;
     void updateHeadPosition (HeadPositionProcedure procedure,
         s32 wordCount, u16 diskAddressRegister);
@@ -153,7 +152,9 @@ public:
     StateMachine (RL01_02* context, SimulatorClock::duration spinUpTime);
 
     State transition (Initial&&, SpinUpTime0);  // -> LockOn
+    void entry (LockOn);
     State transition (LockOn&&, SeekCommand);   // -> Seeking
+    void exit (LockOn);
     State transition (Seeking&&, TimeElapsed);  // -> LockOn
 
     // Define the default transition for transitions not explicitly
@@ -163,6 +164,11 @@ public:
     {
         return state;
     }
+
+    // As we make use of exit/entry functions, we must handle all cases.
+    // The default entry/exit action is an immediate return.
+    template <typename S> void exit (variantFsm::TagType<S>) {}
+    template <typename S> void entry (S&) {}
 
     // Functions required for the wakeupCall interface. waitFor() and
     // id() are not used for the wakeup calls in the state machine.

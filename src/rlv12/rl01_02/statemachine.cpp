@@ -13,6 +13,17 @@ RL01_02::State RL01_02::StateMachine::transition (Initial&&, SpinUpTime0)
     return LockOn {};
 }
 
+// The READY light indicates the drive is locked on a cylinder
+void RL01_02::StateMachine::entry (LockOn)
+{
+    context_->readyIndicator_->show (Indicator::State::On);
+}
+
+void RL01_02::StateMachine::exit (LockOn)
+{
+    context_->readyIndicator_->show (Indicator::State::Off);
+}
+
 // On a transition to the Seeking state a time is started for the given 
 // seek time. After passage of that time the ring() function is called.
 // A more appropriate place for the start of the timer would be on entry of

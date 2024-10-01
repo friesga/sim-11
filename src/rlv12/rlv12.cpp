@@ -80,10 +80,9 @@ RLV12::RLV12 (Qbus *bus, Window* window, shared_ptr<RLConfig> rlConfig)
         if (rlUnitConfig == nullptr)
             continue;
 
-		if (unit (unitNumber)->configure (rlUnitConfig) != StatusCode::OK)
+		if (unit (unitNumber)->init (rlUnitConfig, window,
+                rlUnitConfig->cabinetPosition) != StatusCode::OK)
 			throw "Error attaching " + rlUnitConfig->fileName;
-
-        unit (unitNumber)->createBezel (window, rlUnitConfig->cabinetPosition);
 	}
 
     bus_->BINIT().subscribe (bind (&RLV12::BINITReceiver, this, _1));

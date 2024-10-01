@@ -73,6 +73,7 @@ void RL01_02::seek (u16 diskAddressRegister)
 
     // Start a drive seek. Push a seek command in the drive event queue and
     // signal the drive thread an event is waiting to be processed.
+    unique_lock<mutex> lock {driveMutex_};
     eventQueue_.push (SeekCommand {seekTime_});
     startCommand_.notify_one ();
 }
