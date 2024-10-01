@@ -8,9 +8,10 @@ using std::make_unique;
 using std::move;
 using std::invalid_argument;
 
-RLUnitProcessor::RLUnitProcessor ()
+RLUnitProcessor::RLUnitProcessor (size_t unitNumber)
 {
 	rlUnitConfigPtr = make_unique<RLUnitConfig> ();
+	rlUnitConfigPtr->unitNumber = unitNumber;
 }
 
 void RLUnitProcessor::processValue (iniparser::Section::ValueIterator valueIterator)

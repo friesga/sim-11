@@ -32,6 +32,7 @@ struct RLUnitConfig
 		Auto
 	};
 
+	size_t unitNumber {0};
 	RLUnitType rlUnitType {RLUnitType::RL01};
 	shared_ptr<Cabinet::Position> cabinetPosition {nullptr};
 	string fileName {};

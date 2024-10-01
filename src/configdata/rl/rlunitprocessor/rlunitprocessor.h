@@ -45,7 +45,7 @@ class RLUnitProcessor : public UnitConfigProcessor
 	void processSpinUpTime (iniparser::Value value);
 
 public:
-	RLUnitProcessor ();
+	RLUnitProcessor (size_t unitNumber);
 	shared_ptr<RLUnitConfig> getConfig ();
 };
 

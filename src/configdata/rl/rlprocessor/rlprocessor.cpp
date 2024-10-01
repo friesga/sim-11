@@ -118,7 +118,7 @@ void RLProcessor::processSubsection (iniparser::Section *subSection)
 		throw std::invalid_argument {"Double specification for RL subsection: " + 
 			subSection->name()};
 
-	RLUnitProcessor rlUnitProcessor {};
+	RLUnitProcessor rlUnitProcessor {unitNumber};
 	rlUnitProcessor.processSection (subSection);
 
 	// Add the unit configuration to the RL device configuration
