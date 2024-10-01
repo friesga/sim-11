@@ -4,6 +4,7 @@
 
 using std::bind;
 using std::placeholders::_1;
+using std::to_string;
 
 void RL01_02::createBezel (Window* window,
     shared_ptr<RLUnitConfig> rlUnitConfig)
@@ -21,8 +22,10 @@ void RL01_02::createBezel (Window* window,
         Indicator::State::On, loadButtonFrame);
 
     // READY indicator, default off
-    readyIndicator_ = panel->createIndicator ("../../assets/ready_0_off.png",
-        "../../assets/ready_0_on.png", Indicator::State::On, readyIndicatorFrame);
+    readyIndicator_ = panel->createIndicator (
+        "../../assets/ready_" + to_string (rlUnitConfig->unitNumber) + "_off.png",
+        "../../assets/ready_" + to_string (rlUnitConfig->unitNumber) + "_on.png",
+        Indicator::State::On, readyIndicatorFrame);
 }
 
 void RL01_02::loadButtonClicked (Button::State state)
