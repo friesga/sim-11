@@ -158,7 +158,7 @@ public:
     State transition (Initial&&, SpinUpTime0);  // -> LockOn
     void entry (LockOn);
     State transition (LockOn&&, SeekCommand);   // -> Seeking
-    void exit (LockOn);
+    void exit (variantFsm::TagType<LockOn>);
     State transition (Seeking&&, TimeElapsed);  // -> LockOn
 
     // Define the default transition for transitions not explicitly

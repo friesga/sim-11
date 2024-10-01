@@ -19,7 +19,7 @@ void RL01_02::StateMachine::entry (LockOn)
     context_->readyIndicator_->show (Indicator::State::On);
 }
 
-void RL01_02::StateMachine::exit (LockOn)
+void RL01_02::StateMachine::exit (variantFsm::TagType<LockOn>)
 {
     context_->readyIndicator_->show (Indicator::State::Off);
 }
