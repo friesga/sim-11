@@ -8,6 +8,7 @@
 #include "variantfsm/fsm.h"
 #include "rlv12/rlv12command/rlv12command.h"
 #include "panel.h"
+#include "dummycontrols.h"
 
 #include <mutex>
 #include <thread>
@@ -73,6 +74,7 @@ public:
 
     StatusCode init (shared_ptr<RLUnitConfig> rlUnitConfig,
         Window* window, shared_ptr<Cabinet::Position> cabinetPosition);
+    StatusCode init (shared_ptr<RLUnitConfig> rlUnitConfig);
 
 private:
     // Definition of the drive states
@@ -126,8 +128,10 @@ private:
     // The drive thread for this unit
     void driveThread ();
 
-    // Buttons and indicators
-    Indicator* readyIndicator_ {nullptr};
+    // Buttons and indicators. The initial value points to a dummy to
+    // avoid null pointer references in the unit tests.
+    DummyIndicator dummyIndicator_ {};
+    Indicator* readyIndicator_ {&dummyIndicator_};
 
     // Button and indicators positions and dimensions
     Frame<float> loadButtonFrame     {0.703, 0.538, 0.030, 0.060};

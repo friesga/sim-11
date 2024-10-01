@@ -95,7 +95,7 @@ protected:
         });
 
         // Attach a new disk to unit 0
-        ASSERT_EQ (rlv12Device->unit (0)->configure (make_shared<RLUnitConfig> (rlUnitConfig)), 
+        ASSERT_EQ (rlv12Device->unit (0)->init (make_shared<RLUnitConfig> (rlUnitConfig)), 
             StatusCode::OK);
 
         // Clear errors and volume check condition

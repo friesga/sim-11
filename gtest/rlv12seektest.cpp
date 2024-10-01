@@ -104,7 +104,7 @@ TEST_F (RLV12SeekTest, seekSucceeds)
     });
 
     // Attach a new disk to unit 0
-    ASSERT_EQ (rlv12Device->unit (0)->configure (make_shared<RLUnitConfig> (seekSucceedsConfig)), 
+    ASSERT_EQ (rlv12Device->unit (0)->init (make_shared<RLUnitConfig> (seekSucceedsConfig)), 
         StatusCode::OK);
 
     // Clear errors and volume check condition
@@ -184,9 +184,9 @@ TEST_F (RLV12SeekTest, parallelSeeksSucceed)
     });
 
     // Attach a new disk to unit 0 and unit 1
-    ASSERT_EQ (rlv12Device->unit (0)->configure (make_shared<RLUnitConfig> (parallelSeeksSucceedConfig0)), 
+    ASSERT_EQ (rlv12Device->unit (0)->init (make_shared<RLUnitConfig> (parallelSeeksSucceedConfig0)), 
         StatusCode::OK);
-    ASSERT_EQ (rlv12Device->unit (1)->configure (make_shared<RLUnitConfig> (parallelSeeksSucceedConfig1)), 
+    ASSERT_EQ (rlv12Device->unit (1)->init (make_shared<RLUnitConfig> (parallelSeeksSucceedConfig1)), 
         StatusCode::OK);
 
     // Clear errors and volume check condition for both units
@@ -269,7 +269,7 @@ TEST_F (RLV12SeekTest, seekOnBusyDriveAccepted)
     });
 
     // Attach a new disk to unit 0
-    ASSERT_EQ (rlv12Device->unit (0)->configure (make_shared<RLUnitConfig> (seekOnBusyDriveAcceptedConfig)), 
+    ASSERT_EQ (rlv12Device->unit (0)->init (make_shared<RLUnitConfig> (seekOnBusyDriveAcceptedConfig)), 
         StatusCode::OK);
 
     // Clear errors and volume check condition
@@ -339,7 +339,7 @@ TEST_F (RLV12SeekTest, readHeaderAfterSeekSucceeds)
     });
 
     // Attach a new disk to unit 0
-    ASSERT_EQ (rlv12Device->unit (0)->configure (make_shared<RLUnitConfig> (rlUnitConfig)), 
+    ASSERT_EQ (rlv12Device->unit (0)->init (make_shared<RLUnitConfig> (rlUnitConfig)), 
         StatusCode::OK);
 
     // Clear errors and volume check condition

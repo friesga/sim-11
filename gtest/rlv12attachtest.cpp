@@ -45,7 +45,7 @@ TEST_F (RLV12AttachTest, attachReturnsOpenError)
         .readOnly = false
     });
  
-    ASSERT_EQ (rlv12Device->unit (0)->configure (make_shared<RLUnitConfig> (rlUnitConfig)), 
+    ASSERT_EQ (rlv12Device->unit (0)->init (make_shared<RLUnitConfig> (rlUnitConfig)), 
         StatusCode::OpenError);
 }
 
@@ -63,11 +63,9 @@ TEST_F (RLV12AttachTest, attachCreatesNewFile)
     remove (fileName);
 
     // This creates a file in the default directory (out\build\<config>)
-    ASSERT_EQ (rlv12Device->unit (0)->configure (make_shared<RLUnitConfig> (attachCreatesNewFileConfig)),
+    ASSERT_EQ (rlv12Device->unit (0)->init (make_shared<RLUnitConfig> (attachCreatesNewFileConfig)),
         StatusCode::OK);
 }
-
-
 
 // This test requires the UNIT_ROABLE flag to be set and depends on the
 // file created in the previous test.
@@ -79,7 +77,7 @@ TEST_F (RLV12AttachTest, attachOpensReadOnly)
         .readOnly = true
     });
 
-    ASSERT_EQ (rlv12Device->unit (0)->configure (make_shared<RLUnitConfig> (attachOpensReadOnlyConfig)), 
+    ASSERT_EQ (rlv12Device->unit (0)->init (make_shared<RLUnitConfig> (attachOpensReadOnlyConfig)), 
         StatusCode::OK);
 }
 
@@ -94,7 +92,7 @@ TEST_F (RLV12AttachTest, existingFileIsNotOverwritten)
         .newFile = true
     });
 
-    ASSERT_EQ (rlv12Device->unit (0)->configure (make_shared<RLUnitConfig> (existingFileIsNotOverwrittenConfig)), 
+    ASSERT_EQ (rlv12Device->unit (0)->init (make_shared<RLUnitConfig> (existingFileIsNotOverwrittenConfig)), 
         StatusCode::ArgumentError);
 }
 
@@ -107,6 +105,6 @@ TEST_F (RLV12AttachTest, existingFileIsOverwritten)
         .overwrite = true
     });
 
-    ASSERT_EQ (rlv12Device->unit (0)->configure (make_shared<RLUnitConfig> (existingFileIsOverwrittenConfig)),
+    ASSERT_EQ (rlv12Device->unit (0)->init (make_shared<RLUnitConfig> (existingFileIsOverwrittenConfig)),
         StatusCode::OK);
 }
