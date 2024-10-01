@@ -138,7 +138,7 @@ private:
     Frame<float> readyIndicatorFrame {0.743, 0.538, 0.030, 0.060};
 
     StatusCode configure (shared_ptr<RLUnitConfig> rlUnitConfig);
-    void createBezel (Window* window, shared_ptr<Cabinet::Position> cabinetPosition);
+    void createBezel (Window* window, shared_ptr<RLUnitConfig> rlUnitConfig);
     int32_t filePosition (int32_t diskAddress) const;
     void updateHeadPosition (HeadPositionProcedure procedure,
         s32 wordCount, u16 diskAddressRegister);

@@ -36,7 +36,7 @@ StatusCode RL01_02::init (shared_ptr<RLUnitConfig> rlUnitConfig,
     if (configure (rlUnitConfig) != StatusCode::OK)
         return StatusCode::ArgumentError;
 
-    createBezel (window, rlUnitConfig->cabinetPosition);
+    createBezel (window, rlUnitConfig);
 
     running_ = true;
     driveThread_ = std::thread (&RL01_02::driveThread, this);

@@ -5,9 +5,10 @@
 using std::bind;
 using std::placeholders::_1;
 
-void RL01_02::createBezel (Window* window, shared_ptr<Cabinet::Position> cabinetPosition)
+void RL01_02::createBezel (Window* window,
+    shared_ptr<RLUnitConfig> rlUnitConfig)
 {
-    Panel* panel = window->createPanel (cabinetPosition,
+    Panel* panel = window->createPanel (rlUnitConfig->cabinetPosition,
         RLUnitConfig::unitHeight);
     panel->createFront ("../../assets/RL02-front.png", {0, 0, 1.0, 1.0});
 
