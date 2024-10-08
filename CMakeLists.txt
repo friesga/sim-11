@@ -154,8 +154,6 @@ set (SIM_FIO_SRCS
 set (UNIT_SRCS     
     src/unit/attach_unit.cpp
     src/unit/createfile.cpp
-    src/unit/ispipe.cpp
-    src/unit/openpipe.cpp
     src/unit/openreadonly.cpp
     src/unit/openreadwrite.cpp
     src/unit/setbuffered.cpp

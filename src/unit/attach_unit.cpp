@@ -19,24 +19,12 @@ StatusCode Unit::attach_unit(std::string fileName, Bitmask<AttachFlags> flags)
     if (!(unitStatus_ & Status::UNIT_ATTABLE))
         return StatusCode::NotAttachable;
 
-    // ToDo: Check raw mode only?
-    // if (dptr->flags & DEV_RAWONLY)
-    //     return SCPE_NOFNC;
-
     // Create a new file if specified
     if (flags & AttachFlags::NewFile)
         statusCode = createFile (fileName, flags);
     else 
-    {    
-        // Check if file exists and is a pipe 
-        if (isPipe (fileName_))
-            statusCode = openPipe (fileName);
-        else if (flags & AttachFlags::ReadOnly)
-            statusCode = openReadOnly (fileName);
-        else 
-            // Open existing file read/write 
-            statusCode = openReadWrite (fileName);
-    }
+        // Open existing file read/write 
+        statusCode = openReadWrite (fileName);
 
     if (statusCode != StatusCode::OK)
         return statusCode;

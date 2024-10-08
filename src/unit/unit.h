@@ -27,14 +27,12 @@ enum class Status
 {
     UNIT_ATTABLE,       /* attachable */
     UNIT_RO,            /* read only */
-    UNIT_SEQ,           /* sequential */
     UNIT_ATT,           /* attached */
     UNIT_BUFABLE,       /* bufferable */
     UNIT_MUSTBUF,       /* must buffer */
     UNIT_BUF,           /* buffered */
     UNIT_ROABLE,        /* read only ok */
     UNIT_DIS,           /* disabled */
-    UNIT_PIPE,          /* file is a pipe */
     _                   /* Required for Bitmask */
 };
 
@@ -49,7 +47,6 @@ class Unit
 
     StatusCode createFile (std::string fileName, Bitmask<AttachFlags> flags);
     StatusCode openPipe (std::string fileName);
-    bool isPipe (std::string fileName);
     StatusCode openReadOnly (std::string fileName);
     StatusCode openReadWrite (std::string fileName);
     void setBuffered ();
