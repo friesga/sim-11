@@ -39,9 +39,7 @@ enum class RlStatus
     UNIT_WLK,           // hwre write lock 
     UNIT_RL02,          // RL01 vs RL02 
     UNIT_AUTO,          // autosize enable 
-    UNIT_DUMMY,         // dummy flag, for SET BADBLOCK 
     UNIT_OFFL,          // unit off line 
-    UNIT_BRUSH,         // unit has brushes 
     _                   // Required for Bitmask
 };
 
