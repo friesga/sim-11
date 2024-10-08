@@ -15,10 +15,6 @@ StatusCode Unit::attach_unit(std::string fileName, Bitmask<AttachFlags> flags)
 {
     StatusCode statusCode;
 
-    // Check if a file can be attached to the unit
-    if (!(unitStatus_ & Status::UNIT_ATTABLE))
-        return StatusCode::NotAttachable;
-
     // Create a new file if specified
     if (flags & AttachFlags::NewFile)
         statusCode = createFile (fileName, flags);

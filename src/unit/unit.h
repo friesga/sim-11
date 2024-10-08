@@ -25,7 +25,6 @@ using std::shared_ptr;
 //
 enum class Status
 {
-    UNIT_ATTABLE,       /* attachable */
     UNIT_RO,            /* read only */
     UNIT_ATT,           /* attached */
     UNIT_BUFABLE,       /* bufferable */
