@@ -10,7 +10,9 @@
 //! - Execute entry() for the initial state,
 //! - Renamed onEntryState() and onExitState() to respectively entry() and
 //!   exit(), in accordance with UML terminology,
-//! - Added distinction between internal and external transitions.
+//! - Added distinction between internal and external transitions,
+//! - Added reset() to reset state machine to the initial state,
+//! - Added inState() to check the current state of the state machine.
 //!
 //! The FSM may be composed of some persistent member variables (shared across
 //! all states) and contextual state (accessible only to one state).
@@ -224,6 +226,7 @@ namespace variantFsm
         // Execute the entry action for the initial state
         Fsm ()
         {
+            initialState = fsmState;
             Implementor* self = static_cast<Implementor*>(this);
             EntranceDispatcher<Implementor> entranceDispatcher(*self);
             std::visit(entranceDispatcher, fsmState);
@@ -244,7 +247,7 @@ namespace variantFsm
                     std::move (fsmState), event);
 
             // Check if State contains the type std::monostate. If it does
-            // the return of that type inidicates that the transition is
+            // the return of that type indicates that the transition is
             // internal, i.e. the state is not affected and entry and exit
             // actions are not to be performed.
             if constexpr (isVariantMember<std::monostate, State>::value)
@@ -266,6 +269,19 @@ namespace variantFsm
             EntranceDispatcher<Implementor> entranceDispatcher(*self);
             std::visit (entranceDispatcher, fsmState);
         }
+        
+        bool inState (StateVariant state) const
+        {
+            return fsmState.index() == state.index();
+        }
+
+        void reset ()
+        {
+            fsmState = initialState;
+            Implementor* self = static_cast<Implementor*>(this);
+            EntranceDispatcher<Implementor> entranceDispatcher (*self);
+            std::visit (entranceDispatcher, fsmState);
+        }
 
     protected:
         // Default handler for when states are exited.
@@ -282,6 +298,7 @@ namespace variantFsm
 
     private:
         State fsmState;
+        State initialState;
 
         friend struct ExitDispatcher<Implementor>;
         friend struct EntranceDispatcher<Implementor>;

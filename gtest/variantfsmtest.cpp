@@ -67,6 +67,8 @@ public:
     // The default entry/exit action is an immediate return.
     template <typename S> void exit(variantFsm::TagType<S>) {}
     template <typename S> void entry(S&) {}
+
+    void resetTest ();
 };
 
 void VariantFsmTest::entry (Off)
@@ -115,6 +117,18 @@ State VariantFsmTest::transition (On &&, SwitchOff)
 void VariantFsmTest::exit (TagType<On>)
 {
     ++stateOnExited_;
+}
+
+void VariantFsmTest::resetTest ()
+{
+    stateOffEntered_ = 0;
+    stateOffExited_ = 0;
+    stateOnEntered_ = 0;
+    stateOnExited_ = 0;
+    transtionOffToOnTaken_ = 0;
+    transtionOnToOnTaken_ = 0;
+
+    reset ();
 }
 
 
@@ -172,4 +186,21 @@ TEST_F (VariantFsmTest, entryExitActionsOnExternalTransition)
     EXPECT_TRUE (transtionOnToOnTaken_ == 1);
     EXPECT_TRUE (stateOnEntered_ == 2);
     EXPECT_TRUE (stateOnExited_ == 1);
+}
+
+TEST_F (VariantFsmTest, resetResetsStateMachine)
+{
+    resetTest ();
+    EXPECT_TRUE (stateOffEntered_ == 1);
+}
+
+TEST_F (VariantFsmTest, inStateReturnsCorrectValue)
+{
+    resetTest ();
+    EXPECT_TRUE (inState (Off {}));
+    EXPECT_FALSE (inState (On {}));
+
+    dispatch (SwitchOn {});
+    EXPECT_TRUE (inState (On {}));
+    EXPECT_FALSE (inState (Off {}));
 }
