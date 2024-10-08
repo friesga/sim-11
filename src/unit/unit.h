@@ -27,7 +27,6 @@ enum class Status
 {
     UNIT_RO,            /* read only */
     UNIT_ATT,           /* attached */
-    UNIT_ROABLE,        /* read only ok */
     _                   /* Required for Bitmask */
 };
 
