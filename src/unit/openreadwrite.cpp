@@ -22,12 +22,7 @@ StatusCode Unit::openReadWrite (std::string fileName)
             // If the user specifies an existing file to open without
             // specifying the read-only file, he expects the file to be
             // opened for read/write. If that doesn't succeed offer to
-            // open the file read-only, if that is allowed.
-            if (!(unitStatus_ & Bitmask(Status::UNIT_RO | Status::UNIT_ROABLE)))
-                // Open for read/write failed and opening read-only
-                // isn't possible
-                return StatusCode::OpenError;
-
+            // open the file read-only.
             if (!gotApproval("File cannot be opened read/write. Open read-only? [N]", false))
                 return StatusCode::OpenError;
 

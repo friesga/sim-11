@@ -5,5 +5,5 @@
 Unit::Unit (PDP11Peripheral *owningDevice)
     :
     owningDevice_ {owningDevice},
-    unitStatus_ {Status::UNIT_ROABLE}
+    unitStatus_ {}
 {}
