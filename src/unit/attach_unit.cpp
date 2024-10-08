@@ -25,9 +25,6 @@ StatusCode Unit::attach_unit(std::string fileName, Bitmask<AttachFlags> flags)
     if (statusCode != StatusCode::OK)
         return statusCode;
 
-    if (unitStatus_ & Status::UNIT_BUFABLE)
-        setBuffered ();
-
     unitStatus_ |= Status::UNIT_ATT;
     fileName_ = fileName;
     position_ = 0;

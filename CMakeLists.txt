@@ -156,7 +156,6 @@ set (UNIT_SRCS
     src/unit/createfile.cpp
     src/unit/openreadonly.cpp
     src/unit/openreadwrite.cpp
-    src/unit/setbuffered.cpp
     src/unit/unit.cpp
     src/unit/createbadblocktable.cpp)
 

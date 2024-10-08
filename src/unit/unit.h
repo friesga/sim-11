@@ -27,9 +27,6 @@ enum class Status
 {
     UNIT_RO,            /* read only */
     UNIT_ATT,           /* attached */
-    UNIT_BUFABLE,       /* bufferable */
-    UNIT_MUSTBUF,       /* must buffer */
-    UNIT_BUF,           /* buffered */
     UNIT_ROABLE,        /* read only ok */
     UNIT_DIS,           /* disabled */
     _                   /* Required for Bitmask */
@@ -48,7 +45,6 @@ class Unit
     StatusCode openPipe (std::string fileName);
     StatusCode openReadOnly (std::string fileName);
     StatusCode openReadWrite (std::string fileName);
-    void setBuffered ();
 
 protected:
     PDP11Peripheral *owningDevice_;       // Pointer to the controller
