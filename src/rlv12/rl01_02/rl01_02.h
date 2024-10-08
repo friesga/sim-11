@@ -125,6 +125,8 @@ private:
     // The drive thread for this unit
     void driveThread ();
 
+    void sendTrigger (Event event);
+
     // Buttons and indicators. The initial value points to a dummy to
     // avoid null pointer references in the unit tests.
     DummyIndicator dummyIndicator_ {};

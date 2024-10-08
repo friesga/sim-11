@@ -43,9 +43,7 @@ StatusCode RL01_02::init (shared_ptr<RLUnitConfig> rlUnitConfig,
     stateMachine_ = make_unique<StateMachine> (this, 0s);
 
     // Perform a transition from the initial state to the LockOn state.
-    unique_lock<mutex> lock {driveMutex_};
-    eventQueue_.push (SpinUpTime0 {});
-    startCommand_.notify_one ();
+    sendTrigger (SpinUpTime0 {});
 
     return StatusCode::OK;
 }
@@ -62,12 +60,20 @@ StatusCode RL01_02::init (shared_ptr<RLUnitConfig> rlUnitConfig)
     stateMachine_ = make_unique<StateMachine> (this, 0s);
 
     // Perform a transition from the initial state to the LockOn state.
-    unique_lock<mutex> lock {driveMutex_};
-    eventQueue_.push (SpinUpTime0 {});
-    startCommand_.notify_one ();
+    sendTrigger (SpinUpTime0 {});
 
     return StatusCode::OK;
 }
+
+// This function puts the specified event in the event queue thereby
+// triggering the state machine to process the event.
+void RL01_02::sendTrigger (Event event)
+{
+    unique_lock<mutex> lock {driveMutex_};
+    eventQueue_.push (SpinUpTime0 {});
+    startCommand_.notify_one ();
+}
+
 // Calculate the position of a sector as an offset in the file from
 // the specified diskAddress
 int32_t RL01_02::filePosition (int32_t diskAddress) const
