@@ -27,25 +27,14 @@ enum class Status
 {
     UNIT_ATTABLE,       /* attachable */
     UNIT_RO,            /* read only */
-    UNIT_FIX,           /* fixed capacity */
     UNIT_SEQ,           /* sequential */
     UNIT_ATT,           /* attached */
-    UNIT_BINK,          /* K = power of 2 */
     UNIT_BUFABLE,       /* bufferable */
     UNIT_MUSTBUF,       /* must buffer */
     UNIT_BUF,           /* buffered */
     UNIT_ROABLE,        /* read only ok */
-    UNIT_DISABLE,       /* disable-able */
     UNIT_DIS,           /* disabled */
-    UNIT_RAW,           /* raw mode */
-    UNIT_TEXT,          /* text mode */
-    UNIT_IDLE,          /* idle eligible */
-
-    // Unit dynamic flags (dynflags) (from simh 4.0)
-    // These flags are only set dynamically
-    UNIT_ATTMULT,       /* allow multiple ATT cmd */
     UNIT_PIPE,          /* file is a pipe */
-    UNIT_EXTEND,        /* extended SIMH tape format is enabled */
     _                   /* Required for Bitmask */
 };
 
