@@ -39,7 +39,6 @@ enum class RlStatus
     UNIT_WLK,           // hwre write lock 
     UNIT_RL02,          // RL01 vs RL02 
     UNIT_AUTO,          // autosize enable 
-    UNIT_OFFL,          // unit off line 
     _                   // Required for Bitmask
 };
 

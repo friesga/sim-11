@@ -36,8 +36,7 @@ u16 RLV12::getStatusCmd (RL01_02 *unit)
             unit->unitStatus_ & Status::UNIT_RO)
         dataBuffer_[0] |= RLV12const::MPR_GS_WriteLock;
 
-    if (unit->unitStatus_ & Status::UNIT_DIS || 
-        unit->rlStatus_ & RlStatus::UNIT_OFFL)
+    if (!(unit->unitStatus_ & Status::UNIT_ATT))
     {
         dataBuffer_[0] |= RLV12const::MPR_GS_DriveSelectError;
         unit->driveStatus_ |= RLV12const::MPR_GS_DriveSelectError;

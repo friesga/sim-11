@@ -56,9 +56,6 @@ StatusCode RL01_02::configure (shared_ptr<RLUnitConfig> rlUnitConfig)
     driveStatus_ = RLV12const::MPR_GS_HeadsOut | 
         RLV12const::MPR_GS_BrushHome | RLV12const::MPR_GS_VolumeCheck | RLV12const::MPR_GS_LockOn;
 
-    // Set unit on-line
-    rlStatus_ &= ~Bitmask(RlStatus::UNIT_OFFL);
-
     spinUpTime_ = std::chrono::seconds {rlUnitConfig->spinUpTime};
     
     // Create a bad block table on a new disk image (if the 

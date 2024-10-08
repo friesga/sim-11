@@ -11,7 +11,7 @@ RL01_02::RL01_02 (PDP11Peripheral *owningDevice)
     :
     Unit (owningDevice),
     currentDiskAddress_ {0},
-    rlStatus_ {RlStatus::UNIT_OFFL},
+    rlStatus_ {},
     seekTime_ {}
 {}
 
