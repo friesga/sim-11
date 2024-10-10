@@ -136,6 +136,8 @@ TEST_F (RLV12GetStatusTest, getStatusFailsOnDisconnectedUnit)
 // Verify the controller can be reset by means of the Get Status Command
 TEST_F (RLV12GetStatusTest, resetSucceeds)
 {
+    // This unit configuration uses the default spin_up_time of zero seconds
+    // so the drive immediately locks on to cylinder 0.
     RLUnitConfig rlUnitConfig
     ({
         .fileName = "rl01.dsk",
@@ -180,6 +182,8 @@ TEST_F (RLV12GetStatusTest, resetSucceeds)
 // Verify the controller can be reset by means of the Get Status Command
 TEST_F (RLV12GetStatusTest, drive3CanBeSelected)
 {
+    // This unit configuration uses the default spin_up_time of zero seconds
+    // so the drive immediately locks on to cylinder 0.
     RLUnitConfig rlUnitConfig
     ({
         .fileName = "rl01.dsk",

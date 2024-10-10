@@ -86,6 +86,8 @@ protected:
 // Verify the correct execution of Write Data command
 TEST_F (RLV12WriteDataTest, writeDataSucceeds)
 {
+    // This unit configuration uses the default spin_up_time of zero seconds
+    // so the drive immediately locks on to cylinder 0.
     RLUnitConfig writeDataSucceedsConfig
     ({
         .fileName = "rl01.dsk",
@@ -173,6 +175,8 @@ TEST_F (RLV12WriteDataTest, writeDataSucceeds)
 // Verify the correct execution of Write Data command of less than 256 bytes
 TEST_F (RLV12WriteDataTest, partialWriteDataSucceeds)
 {
+    // This unit configuration uses the default spin_up_time of zero seconds
+    // so the drive immediately locks on to cylinder 0.
     RLUnitConfig partialWriteDataSucceedsConfig
     ({
         .fileName = "rl01.dsk",

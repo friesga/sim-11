@@ -96,6 +96,8 @@ protected:
 // Verify the correct execution of a Seek command
 TEST_F (RLV12SeekTest, seekSucceeds)
 {
+    // This unit configuration uses the default spin_up_time of zero seconds
+    // so the drive immediately locks on to cylinder 0.
     RLUnitConfig seekSucceedsConfig
     ({
         .fileName = "rl01.dsk",
@@ -169,6 +171,8 @@ TEST_F (RLV12SeekTest, seekSucceeds)
 // execution of the first command
 TEST_F (RLV12SeekTest, parallelSeeksSucceed)
 {
+    // These unit configurations use the default spin_up_time of zero seconds
+    // so the drive immediately locks on to cylinder 0.
     RLUnitConfig parallelSeeksSucceedConfig0
     ({
         .fileName = "rl01_0.dsk",
@@ -261,6 +265,8 @@ TEST_F (RLV12SeekTest, parallelSeeksSucceed)
 // Verify a seek command command can be started while a seek is in progress.
 TEST_F (RLV12SeekTest, seekOnBusyDriveAccepted)
 {
+    // This unit configuration uses the default spin_up_time of zero seconds
+    // so the drive immediately locks on to cylinder 0.
     RLUnitConfig seekOnBusyDriveAcceptedConfig
     ({
         .fileName = "rl01.dsk",
@@ -331,6 +337,8 @@ TEST_F (RLV12SeekTest, seekOnBusyDriveAccepted)
 // command and is immediately executed after completion of the seek.
 TEST_F (RLV12SeekTest, readHeaderAfterSeekSucceeds)
 {
+    // This unit configuration uses the default spin_up_time of zero seconds
+    // so the drive immediately locks on to cylinder 0.
     RLUnitConfig rlUnitConfig
     ({
         .fileName = "rl01.dsk",

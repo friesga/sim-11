@@ -1,6 +1,10 @@
 #include "rl01_02.h"
 #include "../rlv12.h"
 
+#include <chrono>
+
+using std::chrono::seconds;
+
 using std::make_unique;
 using namespace std::chrono_literals;
 
@@ -40,10 +44,15 @@ StatusCode RL01_02::init (shared_ptr<RLUnitConfig> rlUnitConfig,
 
     running_ = true;
     driveThread_ = std::thread (&RL01_02::driveThread, this);
-    stateMachine_ = make_unique<StateMachine> (this, 0s);
+    stateMachine_ = make_unique<StateMachine> (this,
+        seconds (rlUnitConfig->spinUpTime));
 
-    // Perform a transition from the initial state to the LockOn state.
-    sendTrigger (SpinUpTime0 {});
+    // Immediataely lock the drive on cylinder 0 if the spin up time is
+    // zero.
+    if (rlUnitConfig->spinUpTime == 0)
+        stateMachine_->dispatch (SpunUp {});
+    else
+        stateMachine_->dispatch (SpunDown {});
 
     return StatusCode::OK;
 }
@@ -57,10 +66,15 @@ StatusCode RL01_02::init (shared_ptr<RLUnitConfig> rlUnitConfig)
 
     running_ = true;
     driveThread_ = std::thread (&RL01_02::driveThread, this);
-    stateMachine_ = make_unique<StateMachine> (this, 0s);
+    stateMachine_ = make_unique<StateMachine> (this, 
+        seconds (rlUnitConfig->spinUpTime));
 
-    // Perform a transition from the initial state to the LockOn state.
-    sendTrigger (SpinUpTime0 {});
+    // Immediataely lock the drive on cylinder 0 if the spin up time is
+    // zero.
+    if (rlUnitConfig->spinUpTime == 0)
+        stateMachine_->dispatch (SpunUp {});
+    else
+        stateMachine_->dispatch (SpunDown {});
 
     return StatusCode::OK;
 }
@@ -70,7 +84,7 @@ StatusCode RL01_02::init (shared_ptr<RLUnitConfig> rlUnitConfig)
 void RL01_02::sendTrigger (Event event)
 {
     unique_lock<mutex> lock {driveMutex_};
-    eventQueue_.push (SpinUpTime0 {});
+    eventQueue_.push (event);
     startCommand_.notify_one ();
 }
 

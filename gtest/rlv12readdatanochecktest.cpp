@@ -93,6 +93,8 @@ protected:
 // Verify the correct execution of Read Data Without Header Check command
 TEST_F (RLV12ReadDataWithoutHeaderCheckTest, readDataWithoutHeaderCheckSucceeds)
 {
+    // This unit configuration uses the default spin_up_time of zero seconds
+    // so the drive immediately locks on to cylinder 0.
     RLUnitConfig rlUnitConfig
     ({
         .fileName = "rl01.dsk",

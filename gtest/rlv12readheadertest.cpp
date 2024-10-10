@@ -91,6 +91,8 @@ protected:
         bus.installModule (1, msv11);
         bus.installModule (2, rlv12Device);
 
+        // This unit configuration uses the default spin_up_time of zero seconds
+        // so the drive immediately locks on to cylinder 0.
         RLUnitConfig rlUnitConfig
         ({
             .fileName = "rl01.dsk",

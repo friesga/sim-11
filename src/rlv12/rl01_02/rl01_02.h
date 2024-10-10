@@ -76,19 +76,23 @@ public:
 private:
     // Definition of the drive states
     struct Initial {};      // State machine initial state
+    struct Unloaded {};      
     struct SpinningUp {};
     struct LockOn {};       // The drive is locked on a cylinder
     struct Seeking {};      // The drive is seeking
 
-    using State = std::variant <Initial, SpinningUp, LockOn, Seeking>;
+    using State = std::variant <Initial, Unloaded, SpinningUp, LockOn, Seeking>;
 
     // Definition of the drive events
-    struct SpinUpTime0 {};
-    struct SpinUpTimeX {};
+    struct SpinUp {};       // LOAD button pressed down
+    struct SpinDown {};     // LOAD button released
+    struct SpunUp {};       // Spin up is complete
+    struct SpunDown {};     // Spin down is complete
     struct SeekCommand { SimulatorClock::duration seekTime; };
     struct TimeElapsed {};
 
-    using Event = std::variant <SpinUpTime0, SpinUpTimeX, SeekCommand, TimeElapsed>;
+    using Event = std::variant <SpinUp, SpinDown, SpunUp, SpunDown,
+        SeekCommand, TimeElapsed>;
 
     // All RLV12Commands need access to the file pointer and unit status
     friend class RLV12;
@@ -130,6 +134,9 @@ private:
     // Buttons and indicators. The initial value points to a dummy to
     // avoid null pointer references in the unit tests.
     DummyIndicator dummyIndicator_ {};
+    DummyIndicatorButton dummyIndicatorButton_ {};
+
+    IndicatorButton* loadButton_ {&dummyIndicatorButton_};
     Indicator* readyIndicator_ {&dummyIndicator_};
 
     // Button and indicators positions and dimensions
@@ -154,11 +161,14 @@ class RL01_02::StateMachine :
 public:
     StateMachine (RL01_02* context, SimulatorClock::duration spinUpTime);
 
-    State transition (Initial&&, SpinUpTime0);  // -> LockOn
+    State transition (Initial&&, SpunUp);           // -> LockOn
+    State transition (Initial&&, SpunDown);         // -> Unloaded
+    State transition (Unloaded&&, SpinUp);          // -> SpinningUp
+    State transition (SpinningUp&&, TimeElapsed);   // -> LockOn
     void entry (LockOn);
-    State transition (LockOn&&, SeekCommand);   // -> Seeking
+    State transition (LockOn&&, SeekCommand);       // -> Seeking
     void exit (variantFsm::TagType<LockOn>);
-    State transition (Seeking&&, TimeElapsed);  // -> LockOn
+    State transition (Seeking&&, TimeElapsed);      // -> LockOn
 
     // Define the default transition for transitions not explicitly
     // defined above. In these case the event is ignored.

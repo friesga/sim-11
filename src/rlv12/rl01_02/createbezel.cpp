@@ -14,22 +14,25 @@ void RL01_02::createBezel (Window* window,
     panel->createFront ("../../assets/RL02-front.png", {0, 0, 1.0, 1.0});
 
     // LOAD IndicatorButton
-    panel->createSDLIndicatorLatchingButton ({"../../assets/Load_up_off.png",
+    loadButton_ = panel->createSDLIndicatorLatchingButton ({
+        "../../assets/Load_up_off.png",
         "../../assets/Load_up_on.png",
         "../../assets/Load_down_off.png",
         "../../assets/Load_down_on.png"},
-        Button::State::Up, bind (&RL01_02::loadButtonClicked, this, _1) ,
+        Button::State::Up, bind (&RL01_02::loadButtonClicked, this, _1),
         Indicator::State::On, loadButtonFrame);
 
     // READY indicator, default off
     readyIndicator_ = panel->createIndicator (
         "../../assets/ready_" + to_string (rlUnitConfig->unitNumber) + "_off.png",
         "../../assets/ready_" + to_string (rlUnitConfig->unitNumber) + "_on.png",
-        Indicator::State::On, readyIndicatorFrame);
+        Indicator::State::Off, readyIndicatorFrame);
 }
 
 void RL01_02::loadButtonClicked (Button::State state)
 {
-    // if (state == Button::State::Up)
-    //    bus_->RESET ().cycle ();
+    if (state == Button::State::Down)
+        sendTrigger (SpinUp {});
+    else
+        sendTrigger (SpinDown {});
 }

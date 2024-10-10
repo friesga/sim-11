@@ -8,8 +8,37 @@ RL01_02::StateMachine::StateMachine (RL01_02* context,
     spinUpTime_ {spinUpTime}
 {}
 
-RL01_02::State RL01_02::StateMachine::transition (Initial&&, SpinUpTime0)
+// From the Initial state the state machine either transitions to the SpunUp
+// state if a spin up time of 0 seconds is specified or to the SpinningUp state
+// if a spin up time greater than zero is given.
+RL01_02::State RL01_02::StateMachine::transition (Initial&&, SpunUp)
 {
+    context_->loadButton_->show (Indicator::State::Off);
+    context_->loadButton_->setState (Button::State::Down);
+    context_->readyIndicator_->show (Indicator::State::On);
+    return LockOn {};
+}
+
+RL01_02::State RL01_02::StateMachine::transition (Initial&&, SpunDown)
+{
+    return Unloaded {};
+}
+
+// If the LOAD button is pressed, the state machine transitions to the
+// SpinningUp state. The LOAD indicator extinguishes and a spin up
+// timer is started.
+RL01_02::State RL01_02::StateMachine::transition (Unloaded &&, SpinUp)
+{
+    context_->loadButton_->show (Indicator::State::Off);
+    SimulatorClock::wakeMeAt (SimulatorClock::now () + spinUpTime_,
+        this);
+    return SpinningUp {};
+}
+
+// The spin up timer fires and the drive is spun up and locked on cylinder 0.
+RL01_02::State RL01_02::StateMachine::transition (SpinningUp&&, TimeElapsed)
+{
+    context_->readyIndicator_->show (Indicator::State::On);
     return LockOn {};
 }
 
