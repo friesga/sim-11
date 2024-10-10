@@ -20,6 +20,11 @@ SDLCommonButton::SDLCommonButton (string buttonDownImage, string buttonUpImage,
 SDLCommonButton::~SDLCommonButton ()
 {}
 
+void SDLCommonButton::setState (State newState)
+{
+    buttonState_ = newState;
+}
+
 Button::State SDLCommonButton::toggleState (State oldState)
 {
     switch (oldState)

@@ -32,6 +32,11 @@ SDLTexture* SDLIndicatorLatchingButton::getTexture (Button::State buttonState,
     return textures_[to_integral (buttonState)][to_integral (indicatorState)].get ();
 }
 
+void SDLIndicatorLatchingButton::setState (Button::State newState)
+{
+    buttonState_ = newState;
+}
+
 // Definition of functions required for the Button interface
 void SDLIndicatorLatchingButton::handleEvent (InputEvent const* event)
 {
