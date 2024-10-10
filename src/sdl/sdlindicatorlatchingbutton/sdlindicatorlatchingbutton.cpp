@@ -6,8 +6,8 @@ SDLIndicatorLatchingButton::SDLIndicatorLatchingButton (Button::ImageNames const
     SDL_Texture* targetTexture, Frame<int> frame)
     :
     buttonClicked_ {buttonClicked},
-    buttonState_ {Button::State::Up},
-    indicatorState_ {Indicator::State::Off}
+    buttonState_ {initialState},
+    indicatorState_ {showIndicator}
 {
     textures_[to_integral (Button::State::Up)][to_integral (Indicator::State::Off)] =
         make_unique<SDLTexture> (imageNames.buttonUpIndicatorOff,
