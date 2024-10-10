@@ -105,6 +105,7 @@ public:
     };
 
     using EventCallback = function<void(State)>;
+    virtual void setState (State newState) = 0;
     virtual void render () = 0;
     virtual void handleEvent (InputEvent const* event) = 0;
     virtual bool isWithinBounds (Position position, float margin) const = 0;
@@ -118,6 +119,7 @@ class IndicatorButton : public Button, public Indicator
 public:
     // Functions defined in the Button interface
     virtual void render () = 0;
+    virtual void setState (Button::State newState) = 0;
     virtual void handleEvent (InputEvent const* event) = 0;
     virtual bool isWithinBounds (Position position, float margin) const = 0;
 

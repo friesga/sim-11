@@ -12,4 +12,14 @@ public:
     void render () {};
 };
 
+class DummyIndicatorButton : public IndicatorButton
+{
+public:
+    void render () {};
+    void setState (Button::State newState) {};
+    void handleEvent (InputEvent const* event) {};
+    bool isWithinBounds (Position position, float margin) const { return true; };
+    void show (Indicator::State showFigure) {};
+};
+
 #endif // _DUMMYCONTROLS_H_
