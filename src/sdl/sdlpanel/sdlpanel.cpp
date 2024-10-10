@@ -132,6 +132,9 @@ void SDLPanel::handleEvent (InputEvent const *event)
 {
     for (auto& button : buttons_)
         button->handleEvent (event);
+
+    for (auto& indicatorButton : indicatorButtons_)
+        indicatorButton->handleEvent (event);
 }
 
 bool SDLPanel::isOverButton (Position position)
