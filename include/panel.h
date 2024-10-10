@@ -142,7 +142,7 @@ public:
     virtual Button* createMomentaryButton (string buttonDownImage, string buttonUpImage,
         Button::State initialState, Button::EventCallback buttonClicked,
         Frame<float> frame) = 0;
-    virtual Button* createSDLIndicatorLatchingButton (Button::ImageNames const& imageNames,
+    virtual IndicatorButton* createSDLIndicatorLatchingButton (Button::ImageNames const& imageNames,
         Button::State initialState,
         Button::EventCallback buttonClicked, Indicator::State showIndicator,
         Frame<float> frame) = 0;
