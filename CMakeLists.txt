@@ -282,6 +282,7 @@ set (SIM11_SRCS
     ${BA11_N_SRCS}
     ${CONSOLE_SRCS}
     ${CHRONO_SRCS}
+    src/asynctimer/asynctimer.cpp
     src/cabinet/cabinet.cpp
     src/abstractbusdevice/writebyte.cpp
     ${BDV11_SRCS}
@@ -460,6 +461,7 @@ set (SIM11_TEST_SRCS
     ${CMDLINEOPTIONS_SRCS}
     ${CONFIGURATOR_SRCS}
     ${CHRONO_SRCS}
+    src/asynctimer/asynctimer.cpp
     src/interruptrequest/interruptrequest.cpp
     ${QBUS_SRCS}
     ${UNIT_SRCS}

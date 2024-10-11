@@ -29,14 +29,14 @@ public:
 };
 
 // Default constructor
-TimerEvent::TimerEvent ()
+inline TimerEvent::TimerEvent ()
     :
     startTime_ {std::chrono::high_resolution_clock::time_point::max()},
     function_ {nullptr}
 {}
 
 // Construct a TimerEvent from the specified function and given period
-TimerEvent::TimerEvent (std::function<void(void)> func, 
+inline TimerEvent::TimerEvent (std::function<void(void)> func, 
     std::chrono::milliseconds period, void *id)
     :
     startTime_ {std::chrono::high_resolution_clock::now() + period},
@@ -46,23 +46,23 @@ TimerEvent::TimerEvent (std::function<void(void)> func,
 
 // TimerEvents are ordered in increasing starttime; the earliest time point
 // is at the top of the queue
-bool TimerEvent::operator< (TimerEvent const &te) const
+inline bool TimerEvent::operator< (TimerEvent const &te) const
 {
     return te.startTime_ < startTime_;
 }
 
 // Accessors
-std::chrono::high_resolution_clock::time_point TimerEvent::startTime() const
+inline std::chrono::high_resolution_clock::time_point TimerEvent::startTime() const
 {
     return startTime_;
 }
 
-std::function<void(void)> &TimerEvent::function ()
+inline std::function<void(void)> &TimerEvent::function ()
 {
     return function_;
 }
 
-void *TimerEvent::id () const
+inline void *TimerEvent::id () const
 {
     return id_;
 }
