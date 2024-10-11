@@ -1,8 +1,19 @@
 #include "rl01_02.h"
 #include "rlv12/rlv12const.h"
 
+using std::chrono::duration;
+using std::bind;
+
+//
+// The state machine uses two different clocks for its timing:
+// - The SimulatorClock for timing of the seek commands,
+// - The AsyncTimer for timing of the spin and down times.
+//
+// The AsyncTimer is based on real time so the actual spin up time
+// corresponds with the specified spin up time.
+//
 RL01_02::StateMachine::StateMachine (RL01_02* context,
-    SimulatorClock::duration spinUpTime)
+    duration<int, std::ratio<1, 1>> spinUpTime)
     : 
     context_ {context},
     spinUpTime_ {spinUpTime}
@@ -30,8 +41,10 @@ RL01_02::State RL01_02::StateMachine::transition (Initial&&, SpunDown)
 RL01_02::State RL01_02::StateMachine::transition (Unloaded &&, SpinUp)
 {
     context_->loadButton_->show (Indicator::State::Off);
-    SimulatorClock::wakeMeAt (SimulatorClock::now () + spinUpTime_,
-        this);
+    
+    spinUpDownTimer_.start (bind (&RL01_02::StateMachine::spinUpDownTimerExpired,
+        this), spinUpTime_, &timerId_);
+
     return SpinningUp {};
 }
 
@@ -75,12 +88,17 @@ RL01_02::State RL01_02::StateMachine::transition (Seeking&&, TimeElapsed)
     return LockOn {};
 }
 
-
-
-// This function is executed when the started timer elapses. It generates
-// a timer event which will then be processed by the state machine.
-void RL01_02::StateMachine::ring (uint64_t currentTime)
+// This or the following function is executed when a started timer elapses.
+// It generates // a timer event which will then be processed by the state
+// machine.
+void RL01_02::StateMachine::spinUpDownTimerExpired ()
 {
     context_->eventQueue_.push (TimeElapsed {});
     context_->startCommand_.notify_one ();
+}
+
+// This version of the timer expired function is used by the SimulatorClock.
+void RL01_02::StateMachine::ring (uint64_t currentTime)
+{
+    spinUpDownTimerExpired ();
 }

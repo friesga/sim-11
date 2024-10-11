@@ -9,6 +9,7 @@
 #include "rlv12/rlv12command/rlv12command.h"
 #include "panel.h"
 #include "dummycontrols.h"
+#include "asynctimer/asynctimer.h"
 
 #include <mutex>
 #include <thread>
@@ -24,6 +25,7 @@ using std::queue;
 using std::unique_ptr;
 using std::shared_ptr;
 using std::pair;
+using std::chrono::duration;
 
 // RL01/02 unit status flags. These flags are used in the definition of 
 // Bitmask<RlStatus> and provide a compile-time type safety for the use
@@ -129,6 +131,7 @@ private:
     // The drive thread for this unit
     void driveThread ();
 
+
     void sendTrigger (Event event);
 
     // Buttons and indicators. The initial value points to a dummy to
@@ -159,7 +162,8 @@ class RL01_02::StateMachine :
     public WakeUpCall
 {
 public:
-    StateMachine (RL01_02* context, SimulatorClock::duration spinUpTime);
+    StateMachine (RL01_02* context, 
+        duration<int, std::ratio<1, 1>> spinUpTime);
 
     State transition (Initial&&, SpunUp);           // -> LockOn
     State transition (Initial&&, SpunDown);         // -> Unloaded
@@ -183,15 +187,19 @@ public:
     template <typename S> void exit (variantFsm::TagType<S>) {}
     template <typename S> void entry (S&) {}
 
-    // Functions required for the wakeupCall interface. waitFor() and
-    // id() are not used for the wakeup calls in the state machine.
+    AsyncTimer spinUpDownTimer_;
+    int timerId_ {0};
+
+    void spinUpDownTimerExpired ();
+
+    // Functions required for the wakeupCall interface
     void ring (uint64_t currentTime);
     void waitFor () {}
     size_t id () { return 0; }
 
 private:
     RL01_02* context_ {nullptr};
-    SimulatorClock::duration spinUpTime_;
+    duration<int, std::ratio<1, 1>> spinUpTime_;
 };
 
 #endif // _RL01_02_H_
