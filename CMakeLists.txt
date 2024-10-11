@@ -400,6 +400,7 @@ endif ()
 # Define source files
 set (GTEST_SRCS
     gtest/ashtest.cpp
+    gtest/asynctimertest.cpp
     gtest/cabinettest.cpp
     gtest/cmdlineoptionstest.cpp
     gtest/threadsafeprioqueuetest.cpp
