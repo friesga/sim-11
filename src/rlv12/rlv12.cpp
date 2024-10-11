@@ -80,8 +80,7 @@ RLV12::RLV12 (Qbus *bus, Window* window, shared_ptr<RLConfig> rlConfig)
         if (rlUnitConfig == nullptr)
             continue;
 
-		if (unit (unitNumber)->init (rlUnitConfig, window,
-                rlUnitConfig->cabinetPosition) != StatusCode::OK)
+		if (unit (unitNumber)->init (rlUnitConfig, window) != StatusCode::OK)
 			throw "Error attaching " + rlUnitConfig->fileName;
 	}
 

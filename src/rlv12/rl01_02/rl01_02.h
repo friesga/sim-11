@@ -72,7 +72,7 @@ public:
     void waitForDriveReady ();
 
     StatusCode init (shared_ptr<RLUnitConfig> rlUnitConfig,
-        Window* window, shared_ptr<Cabinet::Position> cabinetPosition);
+        Window* window);
     StatusCode init (shared_ptr<RLUnitConfig> rlUnitConfig);
 
 private:
