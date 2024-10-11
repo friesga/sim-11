@@ -13,7 +13,7 @@
 bool RL01_02::available ()
 {
     if (unitStatus_ & Status::UNIT_ATT &&
-            (stateMachine_->inState (LockOn {}) ||
+            (stateMachine_->inState (LockedOn {}) ||
              stateMachine_->inState (Seeking {})))
         return true;
 

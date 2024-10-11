@@ -80,10 +80,10 @@ private:
     struct Initial {};      // State machine initial state
     struct Unloaded {};      
     struct SpinningUp {};
-    struct LockOn {};       // The drive is locked on a cylinder
+    struct LockedOn {};     // The drive is locked on a cylinder
     struct Seeking {};      // The drive is seeking
 
-    using State = std::variant <Initial, Unloaded, SpinningUp, LockOn, Seeking>;
+    using State = std::variant <Initial, Unloaded, SpinningUp, LockedOn, Seeking>;
 
     // Definition of the drive events
     struct SpinUp {};       // LOAD button pressed down
@@ -165,14 +165,14 @@ public:
     StateMachine (RL01_02* context, 
         duration<int, std::ratio<1, 1>> spinUpTime);
 
-    State transition (Initial&&, SpunUp);           // -> LockOn
+    State transition (Initial&&, SpunUp);           // -> LockedOn
     State transition (Initial&&, SpunDown);         // -> Unloaded
     State transition (Unloaded&&, SpinUp);          // -> SpinningUp
-    State transition (SpinningUp&&, TimeElapsed);   // -> LockOn
-    void entry (LockOn);
-    State transition (LockOn&&, SeekCommand);       // -> Seeking
-    void exit (variantFsm::TagType<LockOn>);
-    State transition (Seeking&&, TimeElapsed);      // -> LockOn
+    State transition (SpinningUp&&, TimeElapsed);   // -> LockedOn
+    void entry (LockedOn);
+    State transition (LockedOn&&, SeekCommand);     // -> Seeking
+    void exit (variantFsm::TagType<LockedOn>);
+    State transition (Seeking&&, TimeElapsed);      // -> LockedOn
 
     // Define the default transition for transitions not explicitly
     // defined above. In these case the event is ignored.

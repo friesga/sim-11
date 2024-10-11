@@ -27,7 +27,7 @@ RL01_02::State RL01_02::StateMachine::transition (Initial&&, SpunUp)
     context_->loadButton_->show (Indicator::State::Off);
     context_->loadButton_->setState (Button::State::Down);
     context_->readyIndicator_->show (Indicator::State::On);
-    return LockOn {};
+    return LockedOn {};
 }
 
 RL01_02::State RL01_02::StateMachine::transition (Initial&&, SpunDown)
@@ -52,16 +52,16 @@ RL01_02::State RL01_02::StateMachine::transition (Unloaded &&, SpinUp)
 RL01_02::State RL01_02::StateMachine::transition (SpinningUp&&, TimeElapsed)
 {
     context_->readyIndicator_->show (Indicator::State::On);
-    return LockOn {};
+    return LockedOn {};
 }
 
 // The READY light indicates the drive is locked on a cylinder
-void RL01_02::StateMachine::entry (LockOn)
+void RL01_02::StateMachine::entry (LockedOn)
 {
     context_->readyIndicator_->show (Indicator::State::On);
 }
 
-void RL01_02::StateMachine::exit (variantFsm::TagType<LockOn>)
+void RL01_02::StateMachine::exit (variantFsm::TagType<LockedOn>)
 {
     context_->readyIndicator_->show (Indicator::State::Off);
 }
@@ -71,7 +71,7 @@ void RL01_02::StateMachine::exit (variantFsm::TagType<LockOn>)
 // A more appropriate place for the start of the timer would be on entry of
 // the Seeking state but the required seek time is not available in the
 // entry() function of that state.
-RL01_02::State RL01_02::StateMachine::transition (LockOn&&,
+RL01_02::State RL01_02::StateMachine::transition (LockedOn&&,
     SeekCommand seekCommand)
 {
     SimulatorClock::wakeMeAt (SimulatorClock::now () + seekCommand.seekTime,
@@ -85,7 +85,7 @@ RL01_02::State RL01_02::StateMachine::transition (Seeking&&, TimeElapsed)
 {
     context_->driveStatus_ = (context_->driveStatus_ & ~RLV12const::MPR_GS_State) |
         RLV12const::MPR_GS_LockOn;
-    return LockOn {};
+    return LockedOn {};
 }
 
 // This or the following function is executed when a started timer elapses.
