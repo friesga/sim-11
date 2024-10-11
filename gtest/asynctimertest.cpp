@@ -16,7 +16,7 @@ void onTimer3Elapsed () { timer3Elapsed = true; }
 
 
 // Verify that the specified function is executed
-TEST (AsyncTimer, funcIsExecuted)
+TEST (AsyncTimerTest, funcIsExecuted)
 {
     AsyncTimer timer {};
     int timerId;
@@ -35,7 +35,7 @@ TEST (AsyncTimer, funcIsExecuted)
 }
 
 // Verify a running timer can be cancelled
-TEST (AsyncTimer, canBeCancelled)
+TEST (AsyncTimerTest, canBeCancelled)
 {
     AsyncTimer timer {};
     int timerId;
@@ -56,7 +56,7 @@ TEST (AsyncTimer, canBeCancelled)
 
 // Verify that after a timer has been cancelled a timer with the same
 // id can be restarted
-TEST (AsyncTimer, timerCanBeRestarted)
+TEST (AsyncTimerTest, timerCanBeRestarted)
 {
     AsyncTimer timer {};
     int timerId;
@@ -86,7 +86,7 @@ TEST (AsyncTimer, timerCanBeRestarted)
     EXPECT_FALSE (timer1Elapsed);
 }
 
-TEST (AsyncTimer, multipleTimersCanBeStarted)
+TEST (AsyncTimerTest, multipleTimersCanBeStarted)
 {
     AsyncTimer timer {};
     
@@ -117,7 +117,7 @@ TEST (AsyncTimer, multipleTimersCanBeStarted)
     EXPECT_TRUE (timer3Elapsed);
 }
 
-TEST (AsyncTimer, noSuchTimer)
+TEST (AsyncTimerTest, noSuchTimer)
 {
     AsyncTimer timer;
 
