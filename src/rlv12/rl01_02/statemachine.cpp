@@ -88,6 +88,31 @@ RL01_02::State RL01_02::StateMachine::transition (Seeking&&, TimeElapsed)
     return LockedOn {};
 }
 
+// The operator pressed the LOAD button and the drive has to spin down. In the
+// real world this would take approximately 30 seconds. We'll state it takes
+// half the time of the spin up time.
+RL01_02::State RL01_02::StateMachine::transition (LockedOn&&, SpinDown)
+{
+    context_->readyIndicator_->show (Indicator::State::Off);
+    spinUpDownTimer_.start (bind (&RL01_02::StateMachine::spinUpDownTimerExpired,
+        this), spinUpTime_ / 2, &timerId_);
+    return SpinningDown {};
+}
+
+RL01_02::State RL01_02::StateMachine::transition (Seeking&&, SpinDown)
+{
+    context_->readyIndicator_->show (Indicator::State::Off);
+    spinUpDownTimer_.start (bind (&RL01_02::StateMachine::spinUpDownTimerExpired,
+        this), spinUpTime_ / 2, &timerId_);
+    return SpinningDown {};
+}
+
+RL01_02::State RL01_02::StateMachine::transition (SpinningDown&&, TimeElapsed)
+{
+    context_->loadButton_->show (Indicator::State::On);
+    return Unloaded {};
+}
+
 // This or the following function is executed when a started timer elapses.
 // It generates // a timer event which will then be processed by the state
 // machine.

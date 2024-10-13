@@ -78,12 +78,14 @@ public:
 private:
     // Definition of the drive states
     struct Initial {};      // State machine initial state
-    struct Unloaded {};      
-    struct SpinningUp {};
+    struct Unloaded {};     // No cartridge loaded
+    struct SpinningUp {};   // The drive is spinning up
     struct LockedOn {};     // The drive is locked on a cylinder
     struct Seeking {};      // The drive is seeking
+    struct SpinningDown {}; // The drive is spinning down
 
-    using State = std::variant <Initial, Unloaded, SpinningUp, LockedOn, Seeking>;
+    using State = std::variant <Initial, Unloaded, SpinningUp, LockedOn,
+        Seeking, SpinningDown>;
 
     // Definition of the drive events
     struct SpinUp {};       // LOAD button pressed down
@@ -173,6 +175,9 @@ public:
     State transition (LockedOn&&, SeekCommand);     // -> Seeking
     void exit (variantFsm::TagType<LockedOn>);
     State transition (Seeking&&, TimeElapsed);      // -> LockedOn
+    State transition (LockedOn&&, SpinDown);        // -> SpinningDown
+    State transition (Seeking&&, SpinDown);         // -> SpinningDown
+    State transition (SpinningDown&&, TimeElapsed); // -> Unloaded
 
     // Define the default transition for transitions not explicitly
     // defined above. In these case the event is ignored.
