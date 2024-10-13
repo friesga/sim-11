@@ -179,6 +179,7 @@ public:
     State transition (LockedOn&&, SpinDown);        // -> SpinningDown
     State transition (Seeking&&, SpinDown);         // -> SpinningDown
     State transition (SpinningDown&&, TimeElapsed); // -> Unloaded
+    State transition (SpinningDown&&, SpinUp);      // -> SpinningUp
 
     // Define the default transition for transitions not explicitly
     // defined above. In these case the event is ignored.

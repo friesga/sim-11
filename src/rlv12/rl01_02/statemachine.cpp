@@ -121,6 +121,14 @@ RL01_02::State RL01_02::StateMachine::transition (SpinningDown&&, TimeElapsed)
     return Unloaded {};
 }
 
+RL01_02::State RL01_02::StateMachine::transition (SpinningDown&&, SpinUp)
+{
+    spinUpDownTimer_.cancel (&timerId_);
+    spinUpDownTimer_.start (bind (&RL01_02::StateMachine::spinUpDownTimerExpired,
+        this), spinUpTime_ / 2, &timerId_);
+    return SpinningUp {};
+}
+
 // This or the following function is executed when a started timer elapses.
 // It generates // a timer event which will then be processed by the state
 // machine.
