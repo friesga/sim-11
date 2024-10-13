@@ -55,6 +55,14 @@ RL01_02::State RL01_02::StateMachine::transition (SpinningUp&&, TimeElapsed)
     return LockedOn {};
 }
 
+RL01_02::State RL01_02::StateMachine::transition (SpinningUp&&, SpinDown)
+{
+    spinUpDownTimer_.cancel (&timerId_);
+    spinUpDownTimer_.start (bind (&RL01_02::StateMachine::spinUpDownTimerExpired,
+        this), spinUpTime_ / 2, &timerId_);
+    return SpinningDown {};
+}
+
 // The READY light indicates the drive is locked on a cylinder
 void RL01_02::StateMachine::entry (LockedOn)
 {
@@ -95,7 +103,7 @@ RL01_02::State RL01_02::StateMachine::transition (LockedOn&&, SpinDown)
 {
     context_->readyIndicator_->show (Indicator::State::Off);
     spinUpDownTimer_.start (bind (&RL01_02::StateMachine::spinUpDownTimerExpired,
-        this), spinUpTime_ / 2, &timerId_);
+        this), spinUpTime_, &timerId_);
     return SpinningDown {};
 }
 

@@ -171,6 +171,7 @@ public:
     State transition (Initial&&, SpunDown);         // -> Unloaded
     State transition (Unloaded&&, SpinUp);          // -> SpinningUp
     State transition (SpinningUp&&, TimeElapsed);   // -> LockedOn
+    State transition (SpinningUp&&, SpinDown);      // -> SpinningDown
     void entry (LockedOn);
     State transition (LockedOn&&, SeekCommand);     // -> Seeking
     void exit (variantFsm::TagType<LockedOn>);
