@@ -59,9 +59,9 @@ void RLUnitProcessor::processNewFile (iniparser::Value value)
 	rlUnitConfigPtr->newFile = value.asBool();
 }
 
-void RLUnitProcessor::processReadOnly (iniparser::Value value)
+void RLUnitProcessor::processWriteProtect (iniparser::Value value)
 {
-	rlUnitConfigPtr->readOnly = value.asBool();
+	rlUnitConfigPtr->writeProtect = value.asBool();
 }
 
 void RLUnitProcessor::processOverwrite (iniparser::Value value)

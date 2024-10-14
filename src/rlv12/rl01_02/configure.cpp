@@ -34,7 +34,7 @@ StatusCode RL01_02::configure (shared_ptr<RLUnitConfig> rlUnitConfig)
 	
     Bitmask<AttachFlags> attachFlags {AttachFlags::Default};
 
-	if (rlUnitConfig->readOnly)
+	if (rlUnitConfig->writeProtect)
 		attachFlags |= AttachFlags::ReadOnly;
 	if (rlUnitConfig->newFile) 
 		attachFlags |= AttachFlags::NewFile;

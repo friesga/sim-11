@@ -27,7 +27,7 @@ class RLUnitProcessor : public UnitConfigProcessor
 		{"type", &RLUnitProcessor::processType},
 		{"filename", &RLUnitProcessor::processFileName},
 		{"newfile", &RLUnitProcessor::processNewFile},
-		{"read-only", &RLUnitProcessor::processReadOnly},
+		{"write-protect", &RLUnitProcessor::processWriteProtect},
 		{"overwrite", &RLUnitProcessor::processOverwrite},
 		{"cabinet", &RLUnitProcessor::processCabinet},
 		{"spin-up-time", &RLUnitProcessor::processSpinUpTime}
@@ -39,7 +39,7 @@ class RLUnitProcessor : public UnitConfigProcessor
 	void processType (iniparser::Value value);
 	void processFileName (iniparser::Value value);
 	void processNewFile (iniparser::Value value);
-	void processReadOnly (iniparser::Value value);
+	void processWriteProtect (iniparser::Value value);
 	void processOverwrite (iniparser::Value value);
 	void processCabinet (iniparser::Value value);
 	void processSpinUpTime (iniparser::Value value);

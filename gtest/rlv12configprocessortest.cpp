@@ -30,7 +30,7 @@ TEST (RLV12ConfigProcessorTest, configProcessed)
 		"cabinet = 0/0\n"
 		"filename = rl01.dsk\n"
 		"newfile = true\n"
-		"read-only = false\n";
+		"write-protect = false\n";
 		
 	stream >> ft;
 
@@ -53,6 +53,11 @@ TEST (RLV12ConfigProcessorTest, configProcessed)
 	EXPECT_EQ (rlConfig->address, 0174400);
 	EXPECT_EQ (rlConfig->vector, 0160);
 	EXPECT_EQ (rlConfig->numUnits, 1);
+
+	EXPECT_EQ (static_pointer_cast<RLUnitConfig>
+		(rlConfig->rlUnitConfig[0])->rlUnitType, RLUnitConfig::RLUnitType::RL01);
+	EXPECT_EQ (static_pointer_cast<RLUnitConfig>
+		(rlConfig->rlUnitConfig[0])->writeProtect, false);
 }
 
 TEST (RLV12ConfigProcessorTest, configProcessorThrows)
