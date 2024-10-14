@@ -13,11 +13,11 @@ u16 CmdProcessor::writeDataCmd (RL01_02 *unit, RLV12Command &rlv12Command)
     // Check the unit is available
     if (!unit->available ())
     {
-        // Set spin error
-        unit->driveStatus_ |= RLV12const::MPR_GS_SpinError;
-
-        // Flag error
-        return RLV12const::CSR_CompositeError | RLV12const::CSR_OperationIncomplete;
+        // EK-RLV12-TD-001 Figure 4-12 states a Header Not Found error and
+        // Operation Incomplete are returned when the Write Data command fails.
+        return RLV12const::CSR_CompositeError |
+            RLV12const::CSR_OperationIncomplete |
+            RLV12const::CSR_HeaderNotFound;
     }
 
     // Check the unit is not write-protected

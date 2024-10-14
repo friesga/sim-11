@@ -13,11 +13,10 @@ u16 CmdProcessor::readDataWithoutHeaderCheckCmd (RL01_02 *unit,
     // Verify the unit is available
     if (!unit->available ())
     {
-        // Set spin error
-        unit->driveStatus_ |= RLV12const::MPR_GS_SpinError;
-
-        // Flag error
-        return RLV12const::CSR_CompositeError | RLV12const::CSR_OperationIncomplete;
+        // EK-RLV12-TD-001 Figure 4-18 states a Operation Incomplete is
+        // returned when the Read Data without Header Check command fails.
+        return RLV12const::CSR_CompositeError | 
+            RLV12const::CSR_OperationIncomplete;
     }
 
     if (RLV12const::getSector (unit->currentDiskAddress_) >= 

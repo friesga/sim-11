@@ -10,20 +10,15 @@ u16 CmdProcessor::writeCheckCmd (RL01_02 *unit, RLV12Command &rlv12Command)
     CondData<u16> comp;
     u16 rlcsValue {0};
 
-    // Verify the unit is available
-    if (!unit->available ())
+    // Verify the unit is available and cylinder and sector address are valid
+    if (!unit->available () || !diskAddressOk (unit, rlv12Command))
     {
-        // Set spin error
-        unit->driveStatus_ |= RLV12const::MPR_GS_SpinError;
-
-        // Flag error
-        return RLV12const::CSR_CompositeError | RLV12const::CSR_OperationIncomplete;
+        // EK-RLV12-TD-001 Figure 4-14 states a Header Not Found error and
+        // Operation Incomplete are returned when the Write Check command fails.
+        return RLV12const::CSR_CompositeError |
+            RLV12const::CSR_OperationIncomplete |
+            RLV12const::CSR_HeaderNotFound;
     }
-
-    // Check the validity of cylinder and sector address
-    if (!diskAddressOk (unit, rlv12Command))
-        return RLV12const::CSR_CompositeError | RLV12const::CSR_HeaderNotFound | 
-               RLV12const::CSR_OperationIncomplete;
 
     // Check for sector overflow
     limitWordCount (rlv12Command);

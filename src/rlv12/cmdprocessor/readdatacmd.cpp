@@ -9,17 +9,16 @@ u16 CmdProcessor::readDataCmd (RL01_02 *unit, RLV12Command &rlv12Command)
 {
     u16 rlcsValue {0};
 
-    // Verify the unit is available
-    if (!unit->available ())
+    // Verify the unit is available and the cylinder and sector address
+    // are valid.
+    if (!unit->available () || !diskAddressOk (unit, rlv12Command))
     {
-        // Set spin error and return OPI
-        unit->driveStatus_ |=  RLV12const::MPR_GS_SpinError;
-        return RLV12const::CSR_OperationIncomplete;
+        // EK-RLV12-TD-001 Figure 4-16 states a Header Not Found error and
+        // Operation Incomplete are returned when the Read Data command fails.
+        return RLV12const::CSR_CompositeError | 
+            RLV12const::CSR_OperationIncomplete |
+            RLV12const::CSR_HeaderNotFound;
     }
-
-    // Check the validity of cylinder and sector address
-    if (!diskAddressOk (unit, rlv12Command))
-        return RLV12const::CSR_HeaderNotFound | RLV12const::CSR_OperationIncomplete;
 
     // Check for sector overflow
     limitWordCount (rlv12Command);
