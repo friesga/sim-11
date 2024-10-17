@@ -34,13 +34,10 @@ using std::chrono::duration;
 // be separated easily as some configuration flags (e.g. UNIT_RL02) are
 // updated run-time to reflect the actual situation.
 //
-// ToDo: Clean up unused flags
-//
 enum class RlStatus
 {
-    UNIT_WLK,           // hwre write lock 
     UNIT_RL02,          // RL01 vs RL02 
-    UNIT_AUTO,          // autosize enable 
+    UNIT_AUTO,          // autosize enable
     _                   // Required for Bitmask
 };
 

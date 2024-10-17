@@ -20,6 +20,7 @@ struct RLUnitConfigParams
 	bool newFile {false};
 	bool readOnly {false};
 	bool overwrite {false};
+	bool writeProtect {false};
 };
 
 // Definition of the configuration result of an RL01/02 unit.

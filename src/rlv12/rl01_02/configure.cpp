@@ -47,6 +47,13 @@ StatusCode RL01_02::configure (shared_ptr<RLUnitConfig> rlUnitConfig)
         StatusCode::OK)
             return result;
 
+    // Set the drive default write-protected if that is specified in
+    // the configuration.
+    if (rlUnitConfig->writeProtect)
+    {
+        unitStatus_ |= Bitmask (Status::WRITE_PROTECT);
+    }
+
     // Set the drive state as if the load procedure had already executed.
 
     // Position at cylinder 0
@@ -64,7 +71,7 @@ StatusCode RL01_02::configure (shared_ptr<RLUnitConfig> rlUnitConfig)
     if ((fileSize = sim_fsize (filePtr_)) == 0)
     {   
         // If read-only we're done
-        if (unitStatus_ & Status::UNIT_RO)
+        if (unitStatus_ & Status::WRITE_PROTECT)
             return StatusCode::OK;
 
         // Create a bad block table on the last track of the device.

@@ -16,7 +16,7 @@ StatusCode Unit::openReadOnly(std::string fileName)
         return StatusCode::OpenError;
 
     // Set unit read-only
-    unitStatus_ |= Status::UNIT_RO;
+    unitStatus_ |= Status::WRITE_PROTECT;
 
     Logger::instance() << owningDevice_->name() + ": unit is read only\n";
 

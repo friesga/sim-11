@@ -11,6 +11,6 @@ RLUnitConfig::RLUnitConfig (RLUnitConfigParams const &rlUnitConfigParams)
     :
     fileName {rlUnitConfigParams.fileName},
 	newFile {rlUnitConfigParams.newFile},
-	writeProtect {rlUnitConfigParams.readOnly},
+	writeProtect {rlUnitConfigParams.writeProtect},
 	overwrite {rlUnitConfigParams.overwrite}
 {}

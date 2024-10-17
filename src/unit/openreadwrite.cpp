@@ -31,7 +31,7 @@ StatusCode Unit::openReadWrite (std::string fileName)
             if (filePtr_ == NULL)
                 return StatusCode::OpenError;
 
-            unitStatus_ |= Status::UNIT_RO;
+            unitStatus_ |= Status::WRITE_PROTECT;
 
             Logger::instance() << owningDevice_->name() + ": unit is read only\n";
         }

@@ -21,13 +21,15 @@ using std::shared_ptr;
 // be separated easily as some configuration flags (e.g. UNIT_RO) are updated
 // run-time to reflect the actual situation.
 //
-// ToDo: Clean up unused flags
+// To avoid dependencies a better place for the WRITE_PROTECT flag would be in
+// device specific status flags, but as the unit functions access these flags
+// they have to be defined here.
 //
 enum class Status
 {
-    UNIT_RO,            /* read only */
-    UNIT_ATT,           /* attached */
-    _                   /* Required for Bitmask */
+    UNIT_ATT,           // A file is attached to the unit
+    WRITE_PROTECT,      // The unit is write protected
+    _                   // Required for Bitmask 
 };
 
 // Definition of an abstract base class for the units of a device

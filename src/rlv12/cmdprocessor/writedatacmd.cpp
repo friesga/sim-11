@@ -21,8 +21,7 @@ u16 CmdProcessor::writeDataCmd (RL01_02 *unit, RLV12Command &rlv12Command)
     }
 
     // Check the unit is not write-protected
-    if (unit->unitStatus_ & Status::UNIT_RO || 
-        unit->rlStatus_ & RlStatus::UNIT_WLK)
+    if (unit->unitStatus_ & Status::WRITE_PROTECT)
     {
         unit->driveStatus_ |= RLV12const::MPR_GS_WriteGateError;                     
         return RLV12const::CSR_CompositeError;

@@ -32,8 +32,7 @@ u16 RLV12::getStatusCmd (RL01_02 *unit)
         dataBuffer_[0] |= RLV12const::MPR_GS_DriveType;
 
     // Check if unit is write-protected
-    if (unit->rlStatus_ & RlStatus::UNIT_WLK || 
-            unit->unitStatus_ & Status::UNIT_RO)
+    if (unit->unitStatus_ & Status::WRITE_PROTECT)
         dataBuffer_[0] |= RLV12const::MPR_GS_WriteLock;
 
     if (!(unit->unitStatus_ & Status::UNIT_ATT))

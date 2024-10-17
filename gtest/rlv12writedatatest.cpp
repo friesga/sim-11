@@ -32,7 +32,8 @@ protected:
     static constexpr u16  CSR_WriteDataCommand    = (05 << 1);
     static constexpr u16  CSR_ReadDataCommand     = (06 << 1);
     static constexpr u16  CSR_ControllerReady     = (1 << 7);
-    static constexpr u16  CSR_OperationIncomplete = (1 << 10); 
+    static constexpr u16  CSR_OperationIncomplete = (1 << 10);
+    static constexpr u16  CSR_DriveError          = (1 << 14);
     static constexpr u16  CSR_CompositeError      = (1 << 15); 
     static constexpr u16  CSR_Drive0              = (0 << 8);
     static constexpr u16  CSR_Drive1              = (1 << 8);
@@ -54,6 +55,12 @@ protected:
 
     // MPR bit definitions for a Seek Command
     inline u16 MPR_cylinder (u16 x) { return x >> 07; }
+    static constexpr u16 MPR_BrushHome          = (1 << 3);
+    static constexpr u16 MPR_HeadsOut           = (1 << 4);
+    static constexpr u16 MPR_DriveSelectError   = (1 << 8);
+    static constexpr u16 MPR_WriteGateError     = (1 << 10);
+    static constexpr u16 MPR_WriteLock          = (1 << 13);
+    static const u16 MPR_LockOn                 = 5;
 
     // Create bus structure, an RLV12 device and install the device
     Qbus bus;
@@ -253,4 +260,83 @@ TEST_F (RLV12WriteDataTest, partialWriteDataSucceeds)
         contents = bus.read (address);
         ASSERT_EQ (contents, 0);
     }
+}
+
+TEST_F (RLV12WriteDataTest, writeDataOnWriteProtectedDriveFails)
+{
+    // This unit configuration uses the default spin_up_time of zero seconds
+    // so the drive immediately locks on to cylinder 0. 
+    RLUnitConfig writeDataSucceedsConfig
+    ({
+        .fileName = "rl01.dsk",
+        .newFile = true,
+        .overwrite = true,
+        .writeProtect = true
+        });
+
+    // Attach a new disk to unit 0
+    ASSERT_EQ (rlv12Device->unit (0)->init (make_shared<RLUnitConfig> (writeDataSucceedsConfig)),
+        StatusCode::OK);
+
+    // Clear errors and volume check condition
+    rlv12Device->writeWord (RLDAR, DAR_Reset | DAR_GetStatus | DAR_Marker);
+    rlv12Device->writeWord (RLCSR, CSR_GetStatusCommand | CSR_Drive0);
+
+    waitForControllerReady ();
+
+    // Fill 512 bytes of memory with the values to be written and a marker
+    u16 address;
+    for (address = 0; address < 512; address += 2)
+        bus.writeWord (address, 0177777);
+    bus.writeWord (address, 1);
+
+    // Verify controller and drive are ready
+    u16 result;
+    rlv12Device->read (RLCSR, &result);
+    ASSERT_EQ (result & (CSR_ControllerReady | CSR_DriveReady),
+        CSR_ControllerReady | CSR_DriveReady);
+
+    // Point at memory address 0
+    rlv12Device->writeWord (RLBAR, 0);
+
+    // Load DAR with disk address zero
+    rlv12Device->writeWord (RLDAR, 0);
+
+    // Load MPR with two's complement for 256 words
+    rlv12Device->writeWord (RLMPR, 0xFF00);
+
+    // Load the CSR with drive-select bits for unit 0, a negative GO bit
+    // (i.e. bit 7 cleared), interrupts disabled and a Write Data Command
+    // in the function bits. This write should fail as the drive is
+    // write-protected.
+    rlv12Device->writeWord (RLCSR, CSR_WriteDataCommand);
+
+    waitForControllerReady ();
+
+    // Verify now both controller and drive are ready and the CSR indicates
+    // a drive error. Drive Ready should be negated when a drive error occurs
+    // (EK-RLV12-TD-001 par. 3.2.2.7).
+    rlv12Device->read (RLCSR, &result);
+    ASSERT_EQ (result & 
+        (CSR_CompositeError | CSR_DriveError | CSR_ControllerReady | CSR_DriveReady),
+         CSR_CompositeError | CSR_DriveError | CSR_ControllerReady);
+
+    // Execute a Get Status command to verify a Write Gate Error is reported.
+    // Load DAR with ones in bits 01 and 00, reset bit cleared and
+    // zeros in the other locations
+    rlv12Device->writeWord (RLDAR, DAR_GetStatus | DAR_Marker);
+
+    // Load the CSR with drive-select bits for unit 3, a negative GO bit
+    // (i.e. bit 7 cleared), interrups disabled and a Get Status Command (02)
+    // in the function bits.
+    rlv12Device->writeWord (RLCSR, CSR_GetStatusCommand | CSR_Drive0);
+
+    waitForControllerReady ();
+
+    // Expected result in the MPR register: heads locked on a cylinder,
+    // Write Gate Error and Drive Type RL01
+    u16 mpr;
+    rlv12Device->read (RLMPR, &mpr);
+    ASSERT_EQ (mpr, MPR_WriteLock | MPR_WriteGateError | MPR_HeadsOut |
+        MPR_BrushHome | MPR_LockOn);
 }
