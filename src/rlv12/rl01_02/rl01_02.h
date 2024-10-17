@@ -160,6 +160,7 @@ private:
     void updateHeadPosition (HeadPositionProcedure procedure,
         s32 wordCount, u16 diskAddressRegister);
     void resetDriveError ();
+    u16 driveStatus ();
 
     void loadButtonClicked (Button::State state);
     void writeProtectButtonClicked (Button::State state);

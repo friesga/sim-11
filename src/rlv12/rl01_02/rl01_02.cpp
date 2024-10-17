@@ -73,6 +73,30 @@ void RL01_02::resetDriveError ()
         RLV12const::MPR_GS_VolumeCheck);
 }
 
+// This function returns the drive status as expected in the MPR on a
+// Get Status command.
+u16 RL01_02::driveStatus ()
+{
+    u16 driveStatus {0};
+    driveStatus |= currentDiskAddress_ & RLV12const::MPR_GS_HeadSelect;
+
+    // Set Drive Type; a zero indicates an RL01; a one, an RL02.
+    if (rlStatus_ & RlStatus::UNIT_RL02)
+        driveStatus = RLV12const::MPR_GS_DriveType;
+
+    // Check if unit is write-protected
+    if (unitStatus_ & Status::WRITE_PROTECT)
+        driveStatus |= RLV12const::MPR_GS_WriteLock;
+
+    if (!(unitStatus_ & Status::UNIT_ATT))
+    {
+        driveStatus |= RLV12const::MPR_GS_DriveSelectError;
+        driveStatus_ |= RLV12const::MPR_GS_DriveSelectError;
+    }
+
+    return driveStatus;
+}
+
 // This function puts the specified event in the event queue thereby
 // triggering the state machine to process the event.
 void RL01_02::sendTrigger (Event event)

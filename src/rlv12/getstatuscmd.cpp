@@ -23,9 +23,15 @@ u16 RLV12::getStatusCmd (RL01_02 *unit)
 
     // Develop drive state. The result is put in the output buffer, to be
     // retrieved via the MPR.
-    dataBuffer_[0] = 
-        (u16)(unit->driveStatus_ | 
-        (unit->currentDiskAddress_ & RLV12const::MPR_GS_HeadSelect));
+    dataBuffer_[0] = unit->driveStatus ();
+
+    if (dataBuffer_[0] == RLV12const::MPR_GS_DriveSelectError)
+        return RLV12const::CSR_OperationIncomplete;
+
+    /*
+    dataBuffer_[0] =
+        (u16)(unit->driveStatus_ |
+            (unit->currentDiskAddress_ & RLV12const::MPR_GS_HeadSelect));
 
     // Set Drive Type; a zero indicates an RL01; a one, an RL02.
     if (unit->rlStatus_ & RlStatus::UNIT_RL02)
@@ -41,5 +47,7 @@ u16 RLV12::getStatusCmd (RL01_02 *unit)
         unit->driveStatus_ |= RLV12const::MPR_GS_DriveSelectError;
         return RLV12const::CSR_OperationIncomplete;
     }
+    return 0;
+    */  
     return 0;
 }
