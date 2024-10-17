@@ -159,6 +159,7 @@ private:
     int32_t filePosition (int32_t diskAddress) const;
     void updateHeadPosition (HeadPositionProcedure procedure,
         s32 wordCount, u16 diskAddressRegister);
+    void resetDriveError ();
 
     void loadButtonClicked (Button::State state);
     void writeProtectButtonClicked (Button::State state);

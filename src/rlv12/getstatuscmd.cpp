@@ -14,12 +14,12 @@ u16 RLV12::getStatusCmd (RL01_02 *unit)
         return RLV12const::CSR_CompositeError | RLV12const::CSR_OperationIncomplete;
     }
 
-    // Reset errors
-    // According to Table 4-6 in EK-RL012-UG-005 this also resets the
-    // Volume Check condition
+    // When the get status command is issued with the reset bit set, it will
+    // clear the disk drive soft errors (error conditions no longer present)
+    // before the status word is transferred back to the controller.
+    // (EK-RLV12-TD-001 par. 2.3.1.2)
     if (dar_ & RLV12const::DAR_Reset)
-        unit->driveStatus_ &= 
-        ~(RLV12const::MPR_GS_AnyError | RLV12const::MPR_GS_VolumeCheck);
+        unit->resetDriveError ();
 
     // Develop drive state. The result is put in the output buffer, to be
     // retrieved via the MPR.

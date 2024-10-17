@@ -64,6 +64,15 @@ StatusCode RL01_02::init (shared_ptr<RLUnitConfig> rlUnitConfig)
     return StatusCode::OK;
 }
 
+// Reset errors
+// According to Table 4-6 in EK-RL012-UG-005 this also resets the
+// Volume Check condition
+void RL01_02::resetDriveError ()
+{
+    driveStatus_ &= ~(RLV12const::MPR_GS_AnyError |
+        RLV12const::MPR_GS_VolumeCheck);
+}
+
 // This function puts the specified event in the event queue thereby
 // triggering the state machine to process the event.
 void RL01_02::sendTrigger (Event event)
