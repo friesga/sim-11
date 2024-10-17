@@ -27,27 +27,6 @@ u16 RLV12::getStatusCmd (RL01_02 *unit)
 
     if (dataBuffer_[0] == RLV12const::MPR_GS_DriveSelectError)
         return RLV12const::CSR_OperationIncomplete;
-
-    /*
-    dataBuffer_[0] =
-        (u16)(unit->driveStatus_ |
-            (unit->currentDiskAddress_ & RLV12const::MPR_GS_HeadSelect));
-
-    // Set Drive Type; a zero indicates an RL01; a one, an RL02.
-    if (unit->rlStatus_ & RlStatus::UNIT_RL02)
-        dataBuffer_[0] |= RLV12const::MPR_GS_DriveType;
-
-    // Check if unit is write-protected
-    if (unit->unitStatus_ & Status::WRITE_PROTECT)
-        dataBuffer_[0] |= RLV12const::MPR_GS_WriteLock;
-
-    if (!(unit->unitStatus_ & Status::UNIT_ATT))
-    {
-        dataBuffer_[0] |= RLV12const::MPR_GS_DriveSelectError;
-        unit->driveStatus_ |= RLV12const::MPR_GS_DriveSelectError;
-        return RLV12const::CSR_OperationIncomplete;
-    }
-    return 0;
-    */  
+ 
     return 0;
 }
