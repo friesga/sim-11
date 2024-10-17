@@ -35,6 +35,11 @@ RL01_02::State RL01_02::StateMachine::transition (Initial&&, SpunDown)
     return Unloaded {};
 }
 
+void RL01_02::StateMachine::entry (Unloaded)
+{
+    context_->driveState_ = RLV12const::MPR_GS_LoadCartridge;
+}
+
 // If the LOAD button is pressed, the state machine transitions to the
 // SpinningUp state. The LOAD indicator extinguishes and a spin up
 // timer is started.
@@ -46,6 +51,11 @@ RL01_02::State RL01_02::StateMachine::transition (Unloaded &&, SpinUp)
         this), spinUpTime_, &timerId_);
 
     return SpinningUp {};
+}
+
+void RL01_02::StateMachine::entry (SpinningUp)
+{
+    context_->driveState_ = RLV12const::MPR_GS_SpinUp;
 }
 
 // The spin up timer fires and the drive is spun up and locked on cylinder 0.
@@ -66,12 +76,22 @@ RL01_02::State RL01_02::StateMachine::transition (SpinningUp&&, SpinDown)
 // The READY light indicates the drive is locked on a cylinder
 void RL01_02::StateMachine::entry (LockedOn)
 {
+    context_->driveState_ = RLV12const::MPR_GS_LockOn | 
+        RLV12const::MPR_GS_BrushHome |
+        RLV12const::MPR_GS_HeadsOut;
     context_->readyIndicator_->show (Indicator::State::On);
 }
 
 void RL01_02::StateMachine::exit (variantFsm::TagType<LockedOn>)
 {
     context_->readyIndicator_->show (Indicator::State::Off);
+}
+
+void RL01_02::StateMachine::entry (Seeking)
+{
+    context_->driveState_ = RLV12const::MPR_GS_Seek |
+        RLV12const::MPR_GS_BrushHome |
+        RLV12const::MPR_GS_HeadsOut;
 }
 
 // On a transition to the Seeking state a time is started for the given 
@@ -113,6 +133,11 @@ RL01_02::State RL01_02::StateMachine::transition (Seeking&&, SpinDown)
     spinUpDownTimer_.start (bind (&RL01_02::StateMachine::spinUpDownTimerExpired,
         this), spinUpTime_ / 2, &timerId_);
     return SpinningDown {};
+}
+
+void RL01_02::StateMachine::entry (SpinningDown)
+{
+    context_->driveState_ = RLV12const::MPR_GS_SpinDown;
 }
 
 RL01_02::State RL01_02::StateMachine::transition (SpinningDown&&, TimeElapsed)

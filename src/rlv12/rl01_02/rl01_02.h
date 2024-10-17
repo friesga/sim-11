@@ -106,7 +106,14 @@ private:
 
     int32_t currentDiskAddress_;
     Bitmask<RlStatus> rlStatus_;
+
+    // The driveState_ keeps track of bits 0-5 of the MPR for a Get Status
+    // command. The driveStatus_ is the complete MPR for that command.
+    // The driveState_ is only set in the drive thread and is only read
+    // by the command processor thread.
+    u16 driveState_ {0};
     u16 driveStatus_ {0};
+
     bool running_ {false};
     AlarmClock alarmClock_;
     SimulatorClock::duration spinUpTime_ {0};
@@ -169,15 +176,19 @@ public:
 
     State transition (Initial&&, SpunUp);           // -> LockedOn
     State transition (Initial&&, SpunDown);         // -> Unloaded
+    void entry (Unloaded);
     State transition (Unloaded&&, SpinUp);          // -> SpinningUp
+    void entry (SpinningUp);
     State transition (SpinningUp&&, TimeElapsed);   // -> LockedOn
     State transition (SpinningUp&&, SpinDown);      // -> SpinningDown
     void entry (LockedOn);
     State transition (LockedOn&&, SeekCommand);     // -> Seeking
     void exit (variantFsm::TagType<LockedOn>);
+    void entry (Seeking);
     State transition (Seeking&&, TimeElapsed);      // -> LockedOn
     State transition (LockedOn&&, SpinDown);        // -> SpinningDown
     State transition (Seeking&&, SpinDown);         // -> SpinningDown
+    void entry (SpinningDown);
     State transition (SpinningDown&&, TimeElapsed); // -> Unloaded
     State transition (SpinningDown&&, SpinUp);      // -> SpinningUp
 
