@@ -27,6 +27,14 @@ void RL01_02::createBezel (Window* window,
         "../../assets/ready_" + to_string (rlUnitConfig->unitNumber) + "_off.png",
         "../../assets/ready_" + to_string (rlUnitConfig->unitNumber) + "_on.png",
         Indicator::State::Off, readyIndicatorFrame);
+
+    // WRITE PROTECT switch, initial state depends on unit configuration
+    writeProtectButton_ = panel->createLatchingButton (
+        "../../assets/write_protect_on.png",
+        "../../assets/write_protect_off.png",
+        rlUnitConfig->writeProtect ? Button::State::Down : Button::State::Up,
+        bind (&RL01_02::writeProtectButtonClicked, this, _1),
+        writeProtectButtonFrame);
 }
 
 void RL01_02::loadButtonClicked (Button::State state)
@@ -35,4 +43,12 @@ void RL01_02::loadButtonClicked (Button::State state)
         sendTrigger (SpinUp {});
     else
         sendTrigger (SpinDown {});
+}
+
+void RL01_02::writeProtectButtonClicked (Button::State state)
+{
+    if (state == Button::State::Down)
+        unitStatus_ |= Bitmask (Status::WRITE_PROTECT);
+    else
+        unitStatus_ &= ~Bitmask (Status::WRITE_PROTECT);
 }

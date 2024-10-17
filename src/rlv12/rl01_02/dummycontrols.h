@@ -12,6 +12,15 @@ public:
     void render () {};
 };
 
+class DummyButton : public Button
+{
+public:
+    void setState (State newState) {};
+    void render () {};
+    void handleEvent (InputEvent const* event) {};
+    bool isWithinBounds (Position position, float margin) const { return true; };
+};
+
 class DummyIndicatorButton : public IndicatorButton
 {
 public:

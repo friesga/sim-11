@@ -135,14 +135,17 @@ private:
     // Buttons and indicators. The initial value points to a dummy to
     // avoid null pointer references in the unit tests.
     DummyIndicator dummyIndicator_ {};
+    DummyButton dummyButton_ {};
     DummyIndicatorButton dummyIndicatorButton_ {};
 
     IndicatorButton* loadButton_ {&dummyIndicatorButton_};
     Indicator* readyIndicator_ {&dummyIndicator_};
+    Button* writeProtectButton_ {&dummyButton_};
 
     // Button and indicators positions and dimensions
-    Frame<float> loadButtonFrame     {0.703, 0.538, 0.030, 0.060};
-    Frame<float> readyIndicatorFrame {0.743, 0.538, 0.030, 0.060};
+    Frame<float> loadButtonFrame         {0.703, 0.538, 0.030, 0.060};
+    Frame<float> readyIndicatorFrame     {0.743, 0.538, 0.030, 0.060};
+    Frame<float> writeProtectButtonFrame {0.823, 0.538, 0.030, 0.060};
 
     StatusCode configure (shared_ptr<RLUnitConfig> rlUnitConfig);
     void createBezel (Window* window, shared_ptr<RLUnitConfig> rlUnitConfig);
@@ -151,6 +154,7 @@ private:
         s32 wordCount, u16 diskAddressRegister);
 
     void loadButtonClicked (Button::State state);
+    void writeProtectButtonClicked (Button::State state);
 };
 
 // Definition of the state machine for the drive. The class has to be defined
