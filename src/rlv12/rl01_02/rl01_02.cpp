@@ -77,7 +77,7 @@ void RL01_02::resetDriveError ()
 // Get Status command.
 u16 RL01_02::driveStatus ()
 {
-    u16 driveStatus {0};
+    u16 driveStatus {driveStatus_};
     driveStatus |= currentDiskAddress_ & RLV12const::MPR_GS_HeadSelect;
 
     // Set Drive Type; a zero indicates an RL01; a one, an RL02.

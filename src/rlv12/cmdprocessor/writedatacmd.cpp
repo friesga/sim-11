@@ -20,13 +20,6 @@ u16 CmdProcessor::writeDataCmd (RL01_02 *unit, RLV12Command &rlv12Command)
             RLV12const::CSR_HeaderNotFound;
     }
 
-    // Check the unit is not write-protected
-    if (unit->unitStatus_ & Status::WRITE_PROTECT)
-    {
-        unit->driveStatus_ |= RLV12const::MPR_GS_WriteGateError;                     
-        return RLV12const::CSR_CompositeError;
-    }
-
     // Check the validity of cylinder and sector address
     if (!diskAddressOk (unit, rlv12Command))
         return RLV12const::CSR_CompositeError | RLV12const::CSR_HeaderNotFound | 
