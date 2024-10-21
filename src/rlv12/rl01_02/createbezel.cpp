@@ -1,4 +1,5 @@
 #include "rl01_02.h"
+#include "rlv12/rlv12const.h"
 
 #include <functional>
 
@@ -48,7 +49,13 @@ void RL01_02::loadButtonClicked (Button::State state)
 void RL01_02::writeProtectButtonClicked (Button::State state)
 {
     if (state == Button::State::Down)
+    {
         unitStatus_ |= Bitmask (Status::WRITE_PROTECT);
+        driveStatus_ |= RLV12const::MPR_GS_WriteLock;
+    }
     else
+    {
         unitStatus_ &= ~Bitmask (Status::WRITE_PROTECT);
+        driveStatus_ &= ~RLV12const::MPR_GS_WriteLock;
+    }
 }

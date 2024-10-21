@@ -161,8 +161,7 @@ namespace RLV12const
     static constexpr u16 MPR_GS_WriteDataError = 0100000;
     static constexpr u16 MPR_GS_AnyError =
         MPR_GS_WriteDataError | MPR_GS_CurrentHeadError |
-        MPR_GS_WriteLock | MPR_GS_SeekTimeOut |
-        MPR_GS_SpinError | MPR_GS_WriteGateError |
+        MPR_GS_SeekTimeOut | MPR_GS_SpinError | MPR_GS_WriteGateError |
         MPR_GS_VolumeCheck | MPR_GS_DriveSelectError;
 
     // DR RDY will be negated [i.e. cleared] when a drive error

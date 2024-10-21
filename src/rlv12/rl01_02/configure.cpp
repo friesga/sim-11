@@ -53,6 +53,7 @@ StatusCode RL01_02::configure (shared_ptr<RLUnitConfig> rlUnitConfig)
     if (rlUnitConfig->writeProtect)
     {
         unitStatus_ |= Bitmask (Status::WRITE_PROTECT);
+        driveStatus_ |= RLV12const::MPR_GS_WriteLock;
     }
 
     // Set the drive state as if the load procedure had already executed.

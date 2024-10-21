@@ -80,10 +80,6 @@ u16 RL01_02::driveStatus ()
     u16 driveStatus {driveStatus_};
     driveStatus |= currentDiskAddress_ & RLV12const::MPR_GS_HeadSelect;
 
-    // Check if unit is write-protected
-    if (unitStatus_ & Status::WRITE_PROTECT)
-        driveStatus |= RLV12const::MPR_GS_WriteLock;
-
     if (!(unitStatus_ & Status::UNIT_ATT))
     {
         driveStatus |= RLV12const::MPR_GS_DriveSelectError;
