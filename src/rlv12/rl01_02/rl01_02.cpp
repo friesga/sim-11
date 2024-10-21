@@ -75,11 +75,14 @@ void RL01_02::resetDriveError ()
 
 // This function returns the drive status as expected in the MPR on a
 // Get Status command.
+// 
+// All drive statuses are set at the location at which the status changes,
+// except for the head select bit. That bit is derived from the current
+// disk address which changes often.
+//
 u16 RL01_02::driveStatus ()
 {
-    u16 driveStatus {driveStatus_};
-    driveStatus |= currentDiskAddress_ & RLV12const::MPR_GS_HeadSelect;
-    return driveStatus;
+    return driveStatus_ | (currentDiskAddress_ & RLV12const::MPR_GS_HeadSelect);
 }
 
 // This function puts the specified event in the event queue thereby
