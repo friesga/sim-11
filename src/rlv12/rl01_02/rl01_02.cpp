@@ -82,7 +82,7 @@ u16 RL01_02::driveStatus ()
 
     // Set Drive Type; a zero indicates an RL01; a one, an RL02.
     if (rlStatus_ & RlStatus::UNIT_RL02)
-        driveStatus = RLV12const::MPR_GS_DriveType;
+        driveStatus |= RLV12const::MPR_GS_DriveType;
 
     // Check if unit is write-protected
     if (unitStatus_ & Status::WRITE_PROTECT)
