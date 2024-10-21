@@ -102,38 +102,12 @@ TEST_F (RLV12GetStatusTest, getStatusFails)
         CSR_OperationIncomplete | CSR_ControllerReady | CSR_GetStatusCommand);
 }
 
-// Verify a Get Status Command on a disconnected unit fails
-TEST_F (RLV12GetStatusTest, getStatusFailsOnDisconnectedUnit)
-{
-    // Verify the controller is ready to perform an operation 
-    u16 result;
-    rlv12Device->read (RLCSR, &result);
-    ASSERT_EQ (result & CSR_ControllerReady, CSR_ControllerReady);
+// ToDo: Verify the response of a Get Status Command on a disconnected unit
+// There are at least two possible situations which might or might not result
+// in the same response:
+// 1. The drive is not physically attached to the controller,
+// 2. No attached drive is provided with the required address plug.
 
-    // Load DAR with ones in bits 01 and 00, reset bit cleared and
-    // zeros in the other locations
-    rlv12Device->writeWord (RLDAR, DAR_Reset | DAR_GetStatus | DAR_Marker);
-
-    // Load the CSR with drive-select bits for unit 0, a negative GO bit
-    // (i.e. bit 7 cleared), interrups disabled and a Get Status Command (02)
-    // in the function bits.
-    rlv12Device->writeWord (RLCSR, CSR_GetStatusCommand);
-
-    waitForControllerReady ();
-
-    // Expected result in the MPR register: Drive Select Error
-    u16 mpr;
-    rlv12Device->read (RLMPR, &mpr);
-    ASSERT_EQ (mpr, MPR_DriveSelectError);
-
-    // Verify the controller is ready without error indications
-    rlv12Device->read (RLCSR, &result);
-    ASSERT_EQ (result, CSR_CompositeError | 
-        CSR_DriveError | 
-        CSR_OperationIncomplete | 
-        CSR_ControllerReady | 
-        CSR_GetStatusCommand);
-}
 
 // Verify the controller can be reset by means of the Get Status Command
 TEST_F (RLV12GetStatusTest, resetSucceeds)

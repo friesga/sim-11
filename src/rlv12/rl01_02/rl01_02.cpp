@@ -79,13 +79,6 @@ u16 RL01_02::driveStatus ()
 {
     u16 driveStatus {driveStatus_};
     driveStatus |= currentDiskAddress_ & RLV12const::MPR_GS_HeadSelect;
-
-    if (!(unitStatus_ & Status::UNIT_ATT))
-    {
-        driveStatus |= RLV12const::MPR_GS_DriveSelectError;
-        driveStatus_ |= RLV12const::MPR_GS_DriveSelectError;
-    }
-
     return driveStatus;
 }
 
