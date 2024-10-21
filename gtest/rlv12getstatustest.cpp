@@ -42,7 +42,9 @@ protected:
     // MPR bit definitions
     static constexpr u16 MPR_BrushHome            = (1 << 3);
     static constexpr u16 MPR_HeadsOut             = (1 << 4);
+    static constexpr u16 MPR_DriveType            = (1 << 7);
     static constexpr u16 MPR_DriveSelectError     = (1 << 8);
+    static constexpr u16 MPR_WriteLock            = (1 << 13);
     static const u16 MPR_LockOn                   = 5;
     
 
@@ -199,7 +201,7 @@ TEST_F (RLV12GetStatusTest, drive3CanBeSelected)
     // does not have to be ready)
     waitForControllerReady ();
 
-    // Load DAR with ones in bits 01 and 00, reset bit cleared and
+    // Load DAR with ones in bits 01 and 00, reset bit set and
     // zeros in the other locations
     rlv12Device->writeWord (RLDAR, DAR_Reset | DAR_GetStatus | DAR_Marker);
 
@@ -222,4 +224,84 @@ TEST_F (RLV12GetStatusTest, drive3CanBeSelected)
         CSR_GetStatusCommand | 
         CSR_Drive3 |
         CSR_DriveReady);
+}
+
+// Verify the drive type (RL01 vs RL02) is correctly indicated in the MPR
+TEST_F (RLV12GetStatusTest, rl01CorrectlyIndicated)
+{
+    // This unit configuration uses the default spin_up_time of zero seconds
+    // so the drive immediately locks on to cylinder 0.
+    RLUnitConfig rlUnitConfig
+    ({
+        .fileName = "rl01.dsk",
+        .newFile = true,
+        .overwrite = true,
+        .writeProtect = true,
+        .unitType = RLUnitConfig::RLUnitType::RL01
+        });
+
+    // Attach a new disk to unit 0
+    ASSERT_EQ (rlv12Device->unit (0)->init (make_shared<RLUnitConfig> (rlUnitConfig)),
+        StatusCode::OK);
+
+    // Verify the controller is ready to perform an operation (the drive
+    // does not have to be ready)
+    waitForControllerReady ();
+
+    // Load DAR with ones in bits 01 and 00, reset bit set and
+    // zeros in the other locations
+    rlv12Device->writeWord (RLDAR, DAR_Reset | DAR_GetStatus | DAR_Marker);
+
+    // Load the CSR with drive-select bits for unit 3, a negative GO bit
+    // (i.e. bit 7 cleared), interrups disabled and a Get Status Command (02)
+    // in the function bits.
+    rlv12Device->writeWord (RLCSR, CSR_GetStatusCommand | CSR_Drive0);
+
+    waitForControllerReady ();
+
+    // Expected result in the MPR register: heads locked on a cylinder,
+    // write lock, no errors, Drive Type RL01
+    u16 mpr;
+    rlv12Device->read (RLMPR, &mpr);
+    ASSERT_EQ (mpr, MPR_WriteLock | MPR_LockOn | MPR_BrushHome | MPR_HeadsOut);
+}
+
+TEST_F (RLV12GetStatusTest, rl02CorrectlyIndicated)
+{
+    // This unit configuration uses the default spin_up_time of zero seconds
+    // so the drive immediately locks on to cylinder 0.
+    RLUnitConfig rlUnitConfig
+    ({
+        .fileName = "rl01.dsk",
+        .newFile = true,
+        .overwrite = true,
+        .writeProtect = true,
+        .unitType = RLUnitConfig::RLUnitType::RL02
+        });
+
+    // Attach a new disk to unit 0
+    ASSERT_EQ (rlv12Device->unit (0)->init (make_shared<RLUnitConfig> (rlUnitConfig)),
+        StatusCode::OK);
+
+    // Verify the controller is ready to perform an operation (the drive
+    // does not have to be ready)
+    waitForControllerReady ();
+
+    // Load DAR with ones in bits 01 and 00, reset bit set and
+    // zeros in the other locations
+    rlv12Device->writeWord (RLDAR, DAR_Reset | DAR_GetStatus | DAR_Marker);
+
+    // Load the CSR with drive-select bits for unit 3, a negative GO bit
+    // (i.e. bit 7 cleared), interrups disabled and a Get Status Command (02)
+    // in the function bits.
+    rlv12Device->writeWord (RLCSR, CSR_GetStatusCommand | CSR_Drive0);
+
+    waitForControllerReady ();
+
+    // Expected result in the MPR register: heads locked on a cylinder,
+    // write lock, no errors, Drive Type RL02
+    u16 mpr;
+    rlv12Device->read (RLMPR, &mpr);
+    ASSERT_EQ (mpr, MPR_WriteLock | MPR_DriveType |
+        MPR_LockOn | MPR_BrushHome | MPR_HeadsOut);
 }

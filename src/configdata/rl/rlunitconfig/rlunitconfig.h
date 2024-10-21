@@ -9,19 +9,7 @@
 using std::string;
 using std::shared_ptr;
 
-// The struct RLUnitConfigParams and the constructor 
-// RLUnitConfig (RLUnitConfigParams const &rlUnitConfigParams) are used to
-// initialize RLUnitConfig object in the unit tests by means of a designated
-// initializer list. The RLUnitConfig struct itself cannot be initialized
-// that way as it has a constructor.
-struct RLUnitConfigParams
-{
-	string fileName {};
-	bool newFile {false};
-	bool readOnly {false};
-	bool overwrite {false};
-	bool writeProtect {false};
-};
+struct RLUnitConfigParams;
 
 // Definition of the configuration result of an RL01/02 unit.
 struct RLUnitConfig
@@ -47,6 +35,21 @@ struct RLUnitConfig
 
 	// The RL01/02 has a height of six rack units
 	static const RackUnit unitHeight;
+};
+
+// The struct RLUnitConfigParams and the constructor 
+// RLUnitConfig (RLUnitConfigParams const &rlUnitConfigParams) are used to
+// initialize RLUnitConfig object in the unit tests by means of a designated
+// initializer list. The RLUnitConfig struct itself cannot be initialized
+// that way as it has a constructor.
+struct RLUnitConfigParams
+{
+	string fileName {};
+	bool newFile {false};
+	bool readOnly {false};
+	bool overwrite {false};
+	bool writeProtect {false};
+	RLUnitConfig::RLUnitType unitType {RLUnitConfig::RLUnitType::RL01};
 };
 
 #endif // _RLUNITCONFIG_H_
