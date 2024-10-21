@@ -23,6 +23,7 @@ StatusCode RL01_02::configure (shared_ptr<RLUnitConfig> rlUnitConfig)
     {
         capacity_ = RLV12const::RL02_WordsPerCartridge;
         rlStatus_ |= Bitmask(RlStatus::UNIT_RL02);
+        driveStatus_ |= RLV12const::MPR_GS_DriveType;
     }
     else if (rlUnitConfig->rlUnitType == RLUnitConfig::RLUnitType::Auto)
     {
@@ -60,7 +61,7 @@ StatusCode RL01_02::configure (shared_ptr<RLUnitConfig> rlUnitConfig)
     currentDiskAddress_ = 0;
 
     // New volume
-    driveStatus_ = RLV12const::MPR_GS_HeadsOut | 
+    driveStatus_ |= RLV12const::MPR_GS_HeadsOut | 
         RLV12const::MPR_GS_BrushHome | RLV12const::MPR_GS_VolumeCheck | RLV12const::MPR_GS_LockOn;
 
     spinUpTime_ = std::chrono::seconds {rlUnitConfig->spinUpTime};
@@ -88,6 +89,7 @@ StatusCode RL01_02::configure (shared_ptr<RLUnitConfig> rlUnitConfig)
         {
             rlStatus_ |= RlStatus::UNIT_RL02;
             capacity_ = RLV12const::RL02_WordsPerCartridge;
+            driveStatus_ |= RLV12const::MPR_GS_DriveType;
         }
         else
         {
