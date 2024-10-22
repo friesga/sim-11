@@ -440,16 +440,16 @@ set (GTEST_SRCS
     gtest/msv11configuratortest.cpp
     gtest/operandlocationtest.cpp
     gtest/dummycpu/dummymmu/dummymmu.cpp
-    gtest/rlv12configprocessortest.cpp
-    gtest/rlv12attachtest.cpp
-    gtest/rlv12maintenancetest.cpp
-    gtest/rlv12getstatustest.cpp
-    gtest/rlv12readheadertest.cpp
-    gtest/rlv12readdatatest.cpp
-    gtest/rlv12readdatanochecktest.cpp
-    gtest/rlv12seektest.cpp
-    gtest/rlv12writechecktest.cpp
-    gtest/rlv12writedatatest.cpp
+    gtest/rlv12/rlv12configprocessortest.cpp
+    gtest/rlv12/rlv12attachtest.cpp
+    gtest/rlv12/rlv12maintenancetest.cpp
+    gtest/rlv12/rlv12getstatustest.cpp
+    gtest/rlv12/rlv12readheadertest.cpp
+    gtest/rlv12/rlv12readdatatest.cpp
+    gtest/rlv12/rlv12readdatanochecktest.cpp
+    gtest/rlv12/rlv12seektest.cpp
+    gtest/rlv12/rlv12writechecktest.cpp
+    gtest/rlv12/rlv12writedatatest.cpp
     gtest/rxconfiguratortest.cpp
     gtest/signaltest.cpp
     gtest/simulatorclocktest.cpp
