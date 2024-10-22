@@ -63,7 +63,7 @@ protected:
         u16 result;
         do
         {
-            std::this_thread::yield ();
+            SimulatorClock::forwardClock (10ms);
             rlv12Device->read (RLCSR, &result);
         }
         while (!(result & CSR_ControllerReady));
