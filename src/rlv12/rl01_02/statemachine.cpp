@@ -89,9 +89,9 @@ void RL01_02::StateMachine::exit (variantFsm::TagType<LockedOn>)
 
 void RL01_02::StateMachine::entry (Seeking)
 {
-    context_->driveState_ = RLV12const::MPR_GS_Seek |
-        RLV12const::MPR_GS_BrushHome |
-        RLV12const::MPR_GS_HeadsOut;
+    context_->driveStatus_ = 
+        (context_->driveStatus_ & ~RLV12const::MPR_GS_State) |
+        RLV12const::MPR_GS_Seek;
 }
 
 // On a transition to the Seeking state a time is started for the given 

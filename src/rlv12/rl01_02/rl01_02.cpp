@@ -76,7 +76,13 @@ void RL01_02::resetDriveError ()
 // This function returns the drive status as expected in the MPR on a
 // Get Status command.
 // 
-// All drive statuses are set at the location at which the status changes,
+// The MPR contains information from several sources:
+// - State information from the drive (bits 0-5),
+// - Information resulting from the last access (Head Select),
+// - Configuration information (Drive Type),
+// - Error conditions.
+//
+// These statuses are set at the location at which the status changes,
 // except for the head select bit. That bit is derived from the current
 // disk address which changes often.
 //
