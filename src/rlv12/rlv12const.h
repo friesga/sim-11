@@ -43,7 +43,6 @@ namespace RLV12const
     static constexpr u16 CSR_WriteData = 5;
     static constexpr u16 CSR_ReadData = 6;
     static constexpr u16 CSR_ReadNoHeader = 7;
-    static constexpr u16 CSR_Special = 8;
 
     static constexpr u16 CSR_AddressExtPosition = 4;
     static constexpr u16 CSR_AddressExtMask = 3;
