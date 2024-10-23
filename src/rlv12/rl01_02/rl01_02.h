@@ -108,9 +108,10 @@ private:
     Bitmask<RlStatus> rlStatus_;
 
     // The driveState_ keeps track of bits 0-5 of the MPR for a Get Status
-    // command. The driveStatus_ is the complete MPR for that command.
-    // The driveState_ is only set in the drive thread and is only read
-    // by the command processor thread.
+    // command. The driveState_ is only set in the drive thread and is only
+    // read by the command processor thread.
+    // 
+    // The driveStatus_ is the complete MPR for the Get Status command.
     u16 driveState_ {0};
     u16 driveStatus_ {0};
 
@@ -121,7 +122,7 @@ private:
     // Calculated seek time
     SimulatorClock::duration seekTime_;
 
-    // Safe guard against drive access while a seek is in progress
+    // Safe guard against simultaneous access of the eventQueue_
     mutex driveMutex_;
 
     // Condition variable to wake up the seek timer

@@ -3,8 +3,7 @@
 // The following function is executed in a seperate thread.
 void RL01_02::driveThread ()
 {
-    // Guard against controller register access from the
-    // command processor
+    // Guard against simultaneous access of the eventQueue_.
     unique_lock<mutex> lock {driveMutex_};
 
     while (running_)
