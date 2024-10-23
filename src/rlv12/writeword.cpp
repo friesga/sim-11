@@ -50,6 +50,12 @@ StatusCode RLV12::writeWord (BusAddress busAddress, u16 data)
             csr_ = (csr_ & ~RLV12const::CSR_ReadWriteBits) | 
                 (data & RLV12const::CSR_ReadWriteBits);
 
+            // ToDo: The following statement should be removed. The driveStatus_
+            // should only be accessed from within the RL01_02 class.
+            if (RLV12const::getFunction (csr_) == RLV12const::CSR_Seek)
+                unit.driveStatus_ =
+                (unit.driveStatus_ & ~RLV12const::MPR_GS_State) | RLV12const::MPR_GS_Seek;
+
             // Load Bus Address Extension Bits (BA16 and BA17) into bits
             // 00 and 01 in the BAE register
             updateBAE ();
