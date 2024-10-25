@@ -450,7 +450,7 @@ set (GTEST_SRCS
     gtest/rlv12/rlv12seektest.cpp
     gtest/rlv12/rlv12writechecktest.cpp
     gtest/rlv12/rlv12writedatatest.cpp
-    gtest/rlv12/volumecheck.cpp
+    gtest/rlv12/volumechecktest.cpp
     gtest/rxconfiguratortest.cpp
     gtest/signaltest.cpp
     gtest/simulatorclocktest.cpp
