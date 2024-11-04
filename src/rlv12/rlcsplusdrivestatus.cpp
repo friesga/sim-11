@@ -26,7 +26,7 @@ u16 RLV12::rlcsPlusDriveStatus (RL01_02 &unit)
 {
     u16 rlcsCombined {csr_};
 
-    if (unit.driveStatus_ & RLV12const::MPR_GS_AnyError)
+    if (unit.driveStatus () & RLV12const::MPR_GS_AnyError)
         rlcsCombined |= RLV12const::CSR_DriveError;
     else
         rlcsCombined &= ~RLV12const::CSR_DriveError;
