@@ -41,20 +41,16 @@ StatusCode RLV12::writeWord (BusAddress busAddress, u16 data)
 
             // Set the writable bits in the CSR. CRDY will be cleared by the
             // host software to execute the command specified in the CSR.
-            //
+            csr_ = (csr_ & ~RLV12const::CSR_ReadWriteBits) | 
+                (data & RLV12const::CSR_ReadWriteBits);
+
             // The [DRDY] bit is cleared when a seek or head-select operation
             // is initiated [...] (EK-RLV12-TD-001, Table 3-3).
             // The DRDY bit has to be cleared at this point as we cannot
             // guarantee it will be cleared by the command processor before
             // the CSR is read by the host software.
-            csr_ = (csr_ & ~RLV12const::CSR_ReadWriteBits) | 
-                (data & RLV12const::CSR_ReadWriteBits);
-
-            // ToDo: The following statement should be removed. The driveStatus_
-            // should only be accessed from within the RL01_02 class.
             if (RLV12const::getFunction (csr_) == RLV12const::CSR_Seek)
-                unit.driveStatus_ =
-                (unit.driveStatus_ & ~RLV12const::MPR_GS_State) | RLV12const::MPR_GS_Seek;
+                    unit.clearDriveReady ();
 
             // Load Bus Address Extension Bits (BA16 and BA17) into bits
             // 00 and 01 in the BAE register

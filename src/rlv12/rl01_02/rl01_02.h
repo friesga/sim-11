@@ -66,7 +66,11 @@ public:
         u16 diskAddressRegister);
     void seek (u16 diskAddressRegister);
 
+    void setDriveReady ();
+    void clearDriveReady ();
+    bool driveReady ();
     void waitForDriveReady ();
+    void waitForSeekComplete ();
 
     StatusCode init (shared_ptr<RLUnitConfig> rlUnitConfig,
         Window* window);
@@ -124,6 +128,11 @@ private:
 
     // Safe guard against simultaneous access of the eventQueue_
     mutex driveMutex_;
+
+    // Definitions to keep track of the drive ready state.
+    size_t seeksInProgress_ {0};
+    mutex driveReadyMutex_;
+    condition_variable driveReadyCondition_;
 
     // Condition variable to wake up the seek timer
     condition_variable startCommand_;

@@ -109,7 +109,65 @@ int32_t RL01_02::filePosition (int32_t diskAddress) const
         sizeof (int16_t);
 }
 
+// The variable seeksInProgress_ can have three values:
+// - 0: No seeks are in progress. This is the default value and the value
+//      the variable is set to when a seek is completed.
+// - 1: A Seek Command has been issued. In RLV12::writeWord() clearDeviceReady()
+//      has been called to immediately report the drive no longer ready.
+//      RL01_02::seek() calls waitForSeekComplete() which falls through as the
+//      seek is not yet in progress.
+// - 2: A Seek Command has been issued while another seek is in progress.
+//      RL01_02::seek() has to wait till the first seek has been completed by
+//      calling waitForSeekComplete().
+//
+// This implies that the drive is ready when there is no seek in progress, i.e.
+// seeksInProgress_ equals zero.
+//
+void RL01_02::setDriveReady ()
+{
+    std::lock_guard<std::mutex> guard {driveReadyMutex_};
+    seeksInProgress_ = 0;
+
+    // If a thread is waiting wake up this thread
+    driveReadyCondition_.notify_one ();
+}
+
+void RL01_02::clearDriveReady ()
+{
+    std::lock_guard<std::mutex> guard {driveReadyMutex_};
+    ++seeksInProgress_;
+}
+
+bool RL01_02::driveReady ()
+{
+    std::lock_guard<std::mutex> guard {driveReadyMutex_};
+    return seeksInProgress_ == 0;
+}
+
 void RL01_02::waitForDriveReady ()
 {
-    std::lock_guard<std::mutex> guard {driveMutex_};
+    // Lock the drive ready mutex
+    unique_lock<std::mutex> lock (driveReadyMutex_);
+
+    // wait() calls unlock() on the given lock and blocks the thread.
+    // The thread will be unblocked when setDriveReady() is executed.
+    // As it may also be unblocked spuriously, seeksInProgress_ has to be
+    // tested on wakeup. When the thread is unblocked, it locks the given
+    // lock so we have to unlock it on wakeup.
+    if (seeksInProgress_ > 0)
+        driveReadyCondition_.wait (lock, [this] { return seeksInProgress_ == 0; });
+
+    lock.unlock ();
+}
+
+void RL01_02::waitForSeekComplete ()
+{
+    // Lock the drive ready mutex
+    unique_lock<std::mutex> lock (driveReadyMutex_);
+
+    // See comment in waitForDriveReady()
+    if (seeksInProgress_ > 1)
+        driveReadyCondition_.wait (lock, [this] { return seeksInProgress_ == 0; });
+
+    lock.unlock ();
 }

@@ -20,7 +20,7 @@ void RL01_02::seek (u16 diskAddressRegister)
     // EK-ORL11-TD-001, p2-3: "If the CPU software initiates another
     // operation on a drive that is busy seeking, the controller will
     // suspend the operation until the seek is completed."
-    waitForDriveReady ();
+    waitForSeekComplete ();
 
     currentCylinder = RLV12const::getCylinder (currentDiskAddress_);
 

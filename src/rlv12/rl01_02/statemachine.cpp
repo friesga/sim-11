@@ -113,6 +113,7 @@ RL01_02::State RL01_02::StateMachine::transition (Seeking&&, TimeElapsed)
 {
     context_->driveStatus_ = (context_->driveStatus_ & ~RLV12const::MPR_GS_State) |
         RLV12const::MPR_GS_LockOn;
+    context_->setDriveReady ();
     return LockedOn {};
 }
 

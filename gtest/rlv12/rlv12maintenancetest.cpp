@@ -69,7 +69,8 @@ TEST_F (RLV12MaintenanceTest, maintenance)
 
     waitForControllerReady ();
 
-    // Expected result: CSR CRDY (bit 7) set, all error bits cleared.
+    // Expected result: CSR CRDY (bit 7) set, all error bits cleared,
+    // Drive Ready ckeared (as no unit is attached).
     u16 result;
     rlv12Device->read (RLCSR, &result);
     ASSERT_EQ (result, 0200);
