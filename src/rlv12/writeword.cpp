@@ -49,7 +49,12 @@ StatusCode RLV12::writeWord (BusAddress busAddress, u16 data)
             // The DRDY bit has to be cleared at this point as we cannot
             // guarantee it will be cleared by the command processor before
             // the CSR is read by the host software.
-            if (RLV12const::getFunction (csr_) == RLV12const::CSR_Seek)
+            //
+            // The BDV11 ROM puts a Seek command with the CRDY bit set in the
+            // CSR and then clears the CRDY bit (to execute the command). The
+            // Drive Ready has to be cleared only on execution of the command.
+            if (RLV12const::getFunction (csr_) == RLV12const::CSR_Seek &&
+                (data & RLV12const::CSR_ControllerReady) == 0)
                     unit.clearDriveReady ();
 
             // Load Bus Address Extension Bits (BA16 and BA17) into bits
