@@ -203,3 +203,68 @@ TEST_F (RLV12VolumeCheck, volumeCheckIsReset)
     rlv12Device->read (RLMPR, &mpr);
     ASSERT_EQ (mpr & MPR_VolumeCheck, 0);
 }
+
+
+TEST_F (RLV12VolumeCheck, dataReadOnVolumeCheck)
+{
+    // This unit configuration uses the default spin_up_time of zero seconds
+    // so the drive immediately locks on to cylinder 0.
+    RLUnitConfig rlUnitConfig
+    ({
+        .fileName = "rl01.dsk",
+        .newFile = true,
+        .overwrite = true,
+        .writeProtect = true,
+        .unitType = RLUnitConfig::RLUnitType::RL01
+        });
+
+    // Attach a new disk to unit 0
+    ASSERT_EQ (rlv12Device->unit (0)->init (make_shared<RLUnitConfig> (rlUnitConfig)),
+        StatusCode::OK);
+
+    // Fill 512 bytes of memory with the value 0xff and write a mark at
+    // address 512 to be able to verify the memory is overwritten by the
+    // Read Data command
+    u16 address;
+    for (address = 0; address < 512; address += 2)
+        bus.writeWord (address, 0177777);
+    bus.writeWord (address, 01);
+
+    // Verify the controller is ready to perform an operation (the drive
+    // does not have to be ready)
+    waitForControllerReady ();
+
+    // Try to read data from the drive.
+    // Point at memory address 0
+    rlv12Device->writeWord (RLBAR, 0);
+
+    // Load DAR with disk address zero
+    rlv12Device->writeWord (RLDAR, 0);
+
+    // Load MPR with two's complement for 256 words
+    rlv12Device->writeWord (RLMPR, 0xFF00);
+
+    // Load the CSR with drive-select bits for unit 0, a negative GO bit
+    // (i.e. bit 7 cleared), interrupts disabled and a Read Data Command (06)
+    // in the function bits.
+    rlv12Device->writeWord (RLCSR, CSR_ReadDataCommand);
+
+    waitForControllerReady ();
+
+    // Verify the controller reports a drive error
+    u16 csr;
+    rlv12Device->read (RLCSR, &csr);
+    ASSERT_EQ (csr & (CSR_ControllerReady | CSR_DriveReady |
+        CSR_DriveError | CSR_CompositeError),
+        CSR_ControllerReady | CSR_DriveReady |
+        CSR_DriveError | CSR_CompositeError);
+
+    // Verify the Read Data command hasn't failed and the first 512 bytes
+    // of memory are overwritten.
+    u16 contents;
+    for (address = 0; address < 512; address += 2)
+    {
+        contents = bus.read (address);
+        ASSERT_EQ (contents, 0);
+    }
+}
