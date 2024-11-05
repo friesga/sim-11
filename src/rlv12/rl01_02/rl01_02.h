@@ -58,6 +58,8 @@ public:
     ~RL01_02 ();
 
     bool available ();
+    u16 driveStatus ();
+    bool unitAttached ();
     pair<bool, size_t> readData (RLV12Command& rlv12Command, u16* buffer,
         HeadPositionProcedure procedure, u16 diskAddressRegister);
     pair<bool, size_t> writeData (RLV12Command& rlv12Command, u16* buffer,
@@ -71,6 +73,7 @@ public:
     bool driveReady ();
     void waitForDriveReady ();
     void waitForSeekComplete ();
+    void resetDriveError ();
 
     StatusCode init (shared_ptr<RLUnitConfig> rlUnitConfig,
         Window* window);
@@ -100,7 +103,6 @@ private:
         SeekCommand, TimeElapsed>;
 
     // All RLV12Commands need access to the file pointer and unit status
-    friend class RLV12;
     friend class CmdProcessor;
     
     // Use the PIMPL idiom to be able to define the StateMachine outside
@@ -169,8 +171,6 @@ private:
     int32_t filePosition (int32_t diskAddress) const;
     void updateHeadPosition (HeadPositionProcedure procedure,
         s32 wordCount, u16 diskAddressRegister);
-    void resetDriveError ();
-    u16 driveStatus ();
 
     void loadButtonClicked (Button::State state);
     void writeProtectButtonClicked (Button::State state);

@@ -91,6 +91,13 @@ u16 RL01_02::driveStatus ()
     return driveStatus_ | (currentDiskAddress_ & RLV12const::MPR_GS_HeadSelect);
 }
 
+bool RL01_02::unitAttached ()
+{
+    // Disclaimer: "return unitStatus_ & Bitmask (Status::UNIT_ATT)" should
+    // suffice.
+    return (unitStatus_ & Status::UNIT_ATT) == Bitmask (Status::UNIT_ATT);
+}
+
 // This function puts the specified event in the event queue thereby
 // triggering the state machine to process the event.
 void RL01_02::sendTrigger (Event event)
