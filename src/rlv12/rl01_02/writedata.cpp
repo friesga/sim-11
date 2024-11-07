@@ -14,6 +14,7 @@ pair<bool, size_t> RL01_02::writeData (RLV12Command& rlv12Command, u16* buffer,
     if (unitStatus_ & Status::WRITE_PROTECT)
     {
         driveStatus_ |= RLV12const::MPR_GS_WriteGateError;
+        faultIndicator_->show (Indicator::State::On);
         return make_pair (false, 0);
     }
 

@@ -64,11 +64,13 @@ StatusCode RL01_02::init (shared_ptr<RLUnitConfig> rlUnitConfig)
     return StatusCode::OK;
 }
 
-// Reset errors
+// Reset errors and clear the FAULT indicator
 // According to Table 4-6 in EK-RL012-UG-005 this also resets the
 // Volume Check condition
 void RL01_02::resetDriveError ()
 {
+    faultIndicator_->show (Indicator::State::Off);
+
     driveStatus_ &= ~(RLV12const::MPR_GS_AnyError |
         RLV12const::MPR_GS_VolumeCheck);
 }
