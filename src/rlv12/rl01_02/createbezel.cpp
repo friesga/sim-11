@@ -29,6 +29,12 @@ void RL01_02::createBezel (Window* window,
         "../../assets/ready_" + to_string (rlUnitConfig->unitNumber) + "_on.png",
         Indicator::State::Off, readyIndicatorFrame);
 
+    // FAULT indicator, default off
+    faultIndicator_ = panel->createIndicator (
+        "../../assets/fault_off.png",
+        "../../assets/fault_on.png",
+        Indicator::State::Off, faultIndicatorFrame);
+
     // WRITE PROTECT switch, initial state depends on unit configuration
     writeProtectButton_ = panel->createLatchingButton (
         "../../assets/write_protect_on.png",

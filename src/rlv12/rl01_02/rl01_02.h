@@ -160,11 +160,13 @@ private:
 
     IndicatorButton* loadButton_ {&dummyIndicatorButton_};
     Indicator* readyIndicator_ {&dummyIndicator_};
+    Indicator* faultIndicator_ {&dummyIndicator_};
     Button* writeProtectButton_ {&dummyButton_};
 
     // Button and indicators positions and dimensions
     Frame<float> loadButtonFrame         {0.703, 0.538, 0.030, 0.060};
     Frame<float> readyIndicatorFrame     {0.743, 0.538, 0.030, 0.060};
+    Frame<float> faultIndicatorFrame     {0.783, 0.538, 0.030, 0.060};
     Frame<float> writeProtectButtonFrame {0.823, 0.538, 0.030, 0.060};
 
     StatusCode configure (shared_ptr<RLUnitConfig> rlUnitConfig);
