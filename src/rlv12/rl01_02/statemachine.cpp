@@ -64,7 +64,8 @@ void RL01_02::StateMachine::entry (SpinningUp)
 RL01_02::State RL01_02::StateMachine::transition (SpinningUp&&, TimeElapsed)
 {
     context_->readyIndicator_->show (Indicator::State::On);
-    context_->driveStatus_ |= RLV12const::MPR_GS_VolumeCheck;
+    context_->driveStatus_ |= RLV12const::MPR_GS_VolumeCheck |
+        RLV12const::MPR_GS_HeadsOut;
     return LockedOn {};
 }
 
@@ -142,6 +143,7 @@ RL01_02::State RL01_02::StateMachine::transition (Seeking&&, SpinDown)
 void RL01_02::StateMachine::entry (SpinningDown)
 {
     context_->driveState_ = RLV12const::MPR_GS_SpinDown;
+    context_->driveStatus_ &= ~RLV12const::MPR_GS_HeadsOut;
 }
 
 RL01_02::State RL01_02::StateMachine::transition (SpinningDown&&, TimeElapsed)

@@ -61,10 +61,6 @@ StatusCode RL01_02::configure (shared_ptr<RLUnitConfig> rlUnitConfig)
     // Position at cylinder 0
     currentDiskAddress_ = 0;
 
-    // New volume
-    driveStatus_ |= RLV12const::MPR_GS_HeadsOut | 
-        RLV12const::MPR_GS_BrushHome | RLV12const::MPR_GS_VolumeCheck | RLV12const::MPR_GS_LockOn;
-
     spinUpTime_ = std::chrono::seconds {rlUnitConfig->spinUpTime};
     
     // Create a bad block table on a new disk image (if the 
