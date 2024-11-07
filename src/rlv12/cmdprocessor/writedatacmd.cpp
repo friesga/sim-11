@@ -15,14 +15,13 @@ u16 CmdProcessor::writeDataCmd (RL01_02 *unit, RLV12Command &rlv12Command)
     {
         // EK-RLV12-TD-001 Figure 4-12 states a Header Not Found error and
         // Operation Incomplete are returned when the Write Data command fails.
-        return RLV12const::CSR_CompositeError |
-            RLV12const::CSR_OperationIncomplete |
+        return RLV12const::CSR_OperationIncomplete |
             RLV12const::CSR_HeaderNotFound;
     }
 
     // Check the validity of cylinder and sector address
     if (!diskAddressOk (unit, rlv12Command))
-        return RLV12const::CSR_CompositeError | RLV12const::CSR_HeaderNotFound | 
+        return RLV12const::CSR_HeaderNotFound | 
                RLV12const::CSR_OperationIncomplete;
 
     // Check for sector overflow
@@ -35,8 +34,7 @@ u16 CmdProcessor::writeDataCmd (RL01_02 *unit, RLV12Command &rlv12Command)
         tmpValue = controller_->bus_->read (memAddr).valueOr (0);
         if (!tmpValue.hasValue ())
         {
-            rlcsValue = RLV12const::CSR_CompositeError | 
-                RLV12const::CSR_NonExistentMemory;
+            rlcsValue = RLV12const::CSR_NonExistentMemory;
             // Set adj xfer length
             rlv12Command.wordCount_ -= index;
             break;
@@ -63,7 +61,7 @@ u16 CmdProcessor::writeDataCmd (RL01_02 *unit, RLV12Command &rlv12Command)
         if (!success)
         {
             Logger::instance() << "Write error in writeDataCmd";
-            return RLV12const::CSR_CompositeError | RLV12const::CSR_OperationIncomplete;
+            return RLV12const::CSR_OperationIncomplete;
         }
     }
 

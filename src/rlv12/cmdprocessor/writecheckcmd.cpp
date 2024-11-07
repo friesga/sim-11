@@ -18,8 +18,7 @@ u16 CmdProcessor::writeCheckCmd (RL01_02 *unit, RLV12Command &rlv12Command)
     {
         // EK-RLV12-TD-001 Figure 4-14 states a Header Not Found error and
         // Operation Incomplete are returned when the Write Check command fails.
-        return RLV12const::CSR_CompositeError |
-            RLV12const::CSR_OperationIncomplete |
+        return RLV12const::CSR_OperationIncomplete |
             RLV12const::CSR_HeaderNotFound;
     }
 
@@ -48,21 +47,20 @@ u16 CmdProcessor::writeCheckCmd (RL01_02 *unit, RLV12Command &rlv12Command)
             comp = controller_->bus_->read (memAddr).valueOr (0);
             if (!comp.hasValue ())
             {
-                rlcsValue = RLV12const::CSR_CompositeError | 
-                    RLV12const::CSR_NonExistentMemory;
+                rlcsValue = RLV12const::CSR_NonExistentMemory;
                 break;
             }
 
             // Check read word with buffer
             // ToDo: Quit for loop when an inequality is detected?
             if (comp != controller_->dataBuffer_[rlv12Command.wordCount_])
-                rlcsValue = RLV12const::CSR_CompositeError | RLV12const::CSR_ReadDataCRC;
+                rlcsValue = RLV12const::CSR_ReadDataCRC;
         }
     }
     else
     {
         Logger::instance() << "Error in writeCheckCmd";
-        return RLV12const::CSR_CompositeError | RLV12const::CSR_OperationIncomplete;
+        return RLV12const::CSR_OperationIncomplete;
     }
 
     // Catch errors together in rlcsValue

@@ -15,14 +15,13 @@ u16 CmdProcessor::readDataWithoutHeaderCheckCmd (RL01_02 *unit,
     {
         // EK-RLV12-TD-001 Figure 4-18 states a Operation Incomplete is
         // returned when the Read Data without Header Check command fails.
-        return RLV12const::CSR_CompositeError | 
-            RLV12const::CSR_OperationIncomplete;
+        return RLV12const::CSR_OperationIncomplete;
     }
 
     if (RLV12const::getSector (unit->currentDiskAddress_) >= 
             RLV12const::sectorsPerSurface)
 	    // Bad sector
-	    return RLV12const::CSR_CompositeError | RLV12const::CSR_HeaderNotFound;
+	    return RLV12const::CSR_HeaderNotFound;
 
     // Check for sector overflow
     size_t maxWordCount = 
@@ -50,14 +49,13 @@ u16 CmdProcessor::readDataWithoutHeaderCheckCmd (RL01_02 *unit,
         {
             if (!controller_->bus_->writeWord (memAddr, 
                    controller_->dataBuffer_[index]))
-                rlcsValue = RLV12const::CSR_CompositeError | 
-                    RLV12const::CSR_NonExistentMemory;
+                rlcsValue = RLV12const::CSR_NonExistentMemory;
         }
     }
     else
     {
         Logger::instance() << "Error in readDataWithoutHeaderCheckCmd";
-        return RLV12const::CSR_CompositeError | RLV12const::CSR_OperationIncomplete;
+        return RLV12const::CSR_OperationIncomplete;
     }
 
     // Catch errors together in rlcsValue

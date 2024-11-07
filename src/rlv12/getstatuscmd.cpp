@@ -11,7 +11,7 @@ u16 RLV12::getStatusCmd (RL01_02 *unit)
     if (!(dar_ & RLV12const::DAR_GetStatus))
     {
         // Operation incomplete; set error 
-        return RLV12const::CSR_CompositeError | RLV12const::CSR_OperationIncomplete;
+        return RLV12const::CSR_OperationIncomplete;
     }
 
     // When the get status command is issued with the reset bit set, it will
