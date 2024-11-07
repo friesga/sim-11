@@ -98,6 +98,11 @@ bool RL01_02::unitAttached ()
     return (unitStatus_ & Status::UNIT_ATT) == Bitmask (Status::UNIT_ATT);
 }
 
+bool RL01_02::volumeCheck () const
+{
+    return driveStatus_ & RLV12const::MPR_GS_VolumeCheck;
+}
+
 // This function puts the specified event in the event queue thereby
 // triggering the state machine to process the event.
 void RL01_02::sendTrigger (Event event)

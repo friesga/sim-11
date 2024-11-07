@@ -9,8 +9,8 @@
 //
 u16 CmdProcessor::seekCmd (RL01_02 *unit, RLV12Command &rlv12Command)
 {
-    // Verify the unit is available
-    if (!unit->available ())
+    // Verify the unit is available and no Volume Check condition exists.
+    if (!unit->available () || unit->volumeCheck ())
     {
         // EK-RLV12-TD-001 Figure 4-10 states a Operation Incomplete is
         // returned when the Seek command fails.

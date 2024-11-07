@@ -10,8 +10,8 @@ u16 CmdProcessor::writeDataCmd (RL01_02 *unit, RLV12Command &rlv12Command)
     CondData<u16> tmpValue;
     u16 rlcsValue {0};
 
-    // Check the unit is available
-    if (!unit->available ())
+    // Check the unit is available and no Volume Check condition exists.
+    if (!unit->available () || unit->volumeCheck ())
     {
         // EK-RLV12-TD-001 Figure 4-12 states a Header Not Found error and
         // Operation Incomplete are returned when the Write Data command fails.

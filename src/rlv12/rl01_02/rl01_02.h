@@ -60,6 +60,7 @@ public:
     bool available ();
     u16 driveStatus ();
     bool unitAttached ();
+    bool volumeCheck () const;
     pair<bool, size_t> readData (RLV12Command& rlv12Command, u16* buffer,
         HeadPositionProcedure procedure, u16 diskAddressRegister);
     pair<bool, size_t> writeData (RLV12Command& rlv12Command, u16* buffer,

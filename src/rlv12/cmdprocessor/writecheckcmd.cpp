@@ -10,8 +10,11 @@ u16 CmdProcessor::writeCheckCmd (RL01_02 *unit, RLV12Command &rlv12Command)
     CondData<u16> comp;
     u16 rlcsValue {0};
 
-    // Verify the unit is available and cylinder and sector address are valid
-    if (!unit->available () || !diskAddressOk (unit, rlv12Command))
+    // Verify the unit is available, the cylinder and sector address are valid
+    // and no Volume Check condition exists.
+    if (!unit->available () ||
+        !diskAddressOk (unit, rlv12Command) ||
+        unit->volumeCheck ())
     {
         // EK-RLV12-TD-001 Figure 4-14 states a Header Not Found error and
         // Operation Incomplete are returned when the Write Check command fails.

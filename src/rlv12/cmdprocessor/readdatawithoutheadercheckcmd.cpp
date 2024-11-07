@@ -10,8 +10,8 @@ u16 CmdProcessor::readDataWithoutHeaderCheckCmd (RL01_02 *unit,
 {
     u16 rlcsValue {0};
 
-    // Verify the unit is available
-    if (!unit->available ())
+    // Verify the unit is available and no Volume Check condition exists.
+    if (!unit->available () || unit->volumeCheck ())
     {
         // EK-RLV12-TD-001 Figure 4-18 states a Operation Incomplete is
         // returned when the Read Data without Header Check command fails.

@@ -59,9 +59,12 @@ void RL01_02::StateMachine::entry (SpinningUp)
 }
 
 // The spin up timer fires and the drive is spun up and locked on cylinder 0.
+// A Volume Check condition is "set during transition from a head-load state to
+// a head-on-track state" (EK-RLV12-TD-001).
 RL01_02::State RL01_02::StateMachine::transition (SpinningUp&&, TimeElapsed)
 {
     context_->readyIndicator_->show (Indicator::State::On);
+    context_->driveStatus_ |= RLV12const::MPR_GS_VolumeCheck;
     return LockedOn {};
 }
 

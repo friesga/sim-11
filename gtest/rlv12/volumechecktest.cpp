@@ -205,7 +205,7 @@ TEST_F (RLV12VolumeCheck, volumeCheckIsReset)
 }
 
 
-TEST_F (RLV12VolumeCheck, dataReadOnVolumeCheck)
+TEST_F (RLV12VolumeCheck, noDataReadOnVolumeCheck)
 {
     // This unit configuration uses the default spin_up_time of zero seconds
     // so the drive immediately locks on to cylinder 0.
@@ -223,7 +223,7 @@ TEST_F (RLV12VolumeCheck, dataReadOnVolumeCheck)
         StatusCode::OK);
 
     // Fill 512 bytes of memory with the value 0xff and write a mark at
-    // address 512 to be able to verify the memory is overwritten by the
+    // address 512 to be able to verify the memory is not overwritten by the
     // Read Data command
     u16 address;
     for (address = 0; address < 512; address += 2)
@@ -265,6 +265,6 @@ TEST_F (RLV12VolumeCheck, dataReadOnVolumeCheck)
     for (address = 0; address < 512; address += 2)
     {
         contents = bus.read (address);
-        ASSERT_EQ (contents, 0);
+        ASSERT_EQ (contents, 0177777);
     }
 }
