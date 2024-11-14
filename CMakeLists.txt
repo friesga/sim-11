@@ -191,6 +191,7 @@ set (CONFIGURATOR_SRCS
     src/configdata/kdf11_b/kdf11_bconfig/kdf11_bconfig.cpp
     src/configdata/kdf11_b/kdf11_bprocessor/kdf11_bprocessor.cpp
     src/configdata/kdf11_b/sluprocessor/sluprocessor.cpp
+    src/configdata/ms11pprocessor/ms11pprocessor.cpp
     src/configdata/consistencychecker/consistencychecker.cpp
     src/configdata/consistencychecker/checkmsv11consistency.cpp
     src/configdata/consistencychecker/checkkdf11bconsistency.cpp
@@ -438,6 +439,7 @@ set (GTEST_SRCS
     gtest/kdf11_b/kdf11b_bdv11configuratortest.cpp
     gtest/locationtest.cpp
     gtest/msv11configuratortest.cpp
+    gtest/ms11pconfiguratortest.cpp
     gtest/operandlocationtest.cpp
     gtest/dummycpu/dummymmu/dummymmu.cpp
     gtest/rlv12/rlv12configprocessortest.cpp

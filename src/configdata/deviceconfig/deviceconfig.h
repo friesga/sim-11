@@ -7,6 +7,7 @@
 #include "configdata/kdf11_aconfig/kdf11_aconfig.h"
 #include "configdata/kdf11_b/kdf11_bconfig/kdf11_bconfig.h"
 #include "configdata/msv11config/msv11config.h"
+#include "configdata/ms11pconfig/ms11pconfig.h"
 #include "configdata/rl/rlconfig/rlconfig.h"
 #include "configdata/rxv21/rxv21config/rxv21config.h"
 #include "configdata/serialconfig/dlv11jconfig/dlv11jconfig.h"
@@ -27,6 +28,7 @@ using DeviceConfig = variant<
     shared_ptr<BDV11Config>,
     shared_ptr<RXV21Config>,
     shared_ptr<RLConfig>,
-    shared_ptr<BA11_NConfig>>;
+    shared_ptr<BA11_NConfig>,
+    shared_ptr<MS11PConfig>>;
 
 #endif // _DEVICECONFIGVARIANT_H_

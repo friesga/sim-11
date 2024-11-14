@@ -61,7 +61,8 @@ private:
 		{"RXV21",   &IniProcessor::createRXProcessor},
 		{"KD11-NA", &IniProcessor::createKD11_NAProcessor},
 		{"KDF11-A", &IniProcessor::createKDF11_AProcessor},
-		{"KDF11-B", &IniProcessor::createKDF11_BProcessor}
+		{"KDF11-B", &IniProcessor::createKDF11_BProcessor},
+		{"MS11-P",  &IniProcessor::createMS11_PProcessor}
 	};
 
     void processSection (iniparser::Section* section);
@@ -74,6 +75,7 @@ private:
 	unique_ptr<DeviceConfigProcessor> createKD11_NAProcessor ();
 	unique_ptr<DeviceConfigProcessor> createKDF11_AProcessor ();
 	unique_ptr<DeviceConfigProcessor> createKDF11_BProcessor ();
+	unique_ptr<DeviceConfigProcessor> createMS11_PProcessor ();
 };
 
 #endif // !_INIPROCESSOR_H_
