@@ -193,12 +193,12 @@ TEST (MSV11ConfiguratorTest, maxNrOfCardsExceededThrows)
 	ConsistencyChecker consistencyChecker {systemConfig};
 	try
 	{
-		consistencyChecker.checkMSV11Consistency ();
+		consistencyChecker.checkMS11Consistency<MSV11Config> ();
 		FAIL();
 	}
 	catch (std::out_of_range const &except)
 	{
-		EXPECT_STREQ (except.what(), "Maximum number of MSV11 cards (4) exceeded");
+		EXPECT_STREQ (except.what(), "Maximum number of MSV11/MS11-P cards (4) exceeded");
 	}
 	catch (...)
 	{
@@ -223,12 +223,12 @@ TEST (MSV11ConfiguratorTest, conflictingAddressesThrows)
 	ConsistencyChecker consistencyChecker {systemConfig};
 	try
 	{
-		consistencyChecker.checkMSV11Consistency ();
+		consistencyChecker.checkMS11Consistency<MSV11Config> ();
 		FAIL();
 	}
 	catch (std::invalid_argument const &except)
 	{
-		EXPECT_STREQ (except.what(), "MSV11 starting address conflict");
+		EXPECT_STREQ (except.what(), "MSV11/MS11-P starting address conflict");
 	}
 	catch (...)
 	{
