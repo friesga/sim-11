@@ -134,7 +134,7 @@ TEST_F (RLV12GetStatusTest, resetSucceeds)
     rlv12Device->writeWord (RLDAR, DAR_Reset | DAR_GetStatus | DAR_Marker);
 
     // Load the CSR with drive-select bits for unit 0, a negative GO bit
-    // (i.e. bit 7 cleared), interrups disabled and a Get Status Command (02)
+    // (i.e. bit 7 cleared), interrupts disabled and a Get Status Command (02)
     // in the function bits.
     rlv12Device->writeWord (RLCSR, CSR_GetStatusCommand);
 

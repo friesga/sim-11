@@ -27,6 +27,9 @@ RL01_02::State RL01_02::StateMachine::transition (Initial&&, SpunUp)
     context_->loadButton_->show (Indicator::State::Off);
     context_->loadButton_->setState (Button::State::Down);
     context_->readyIndicator_->show (Indicator::State::On);
+    context_->driveStatus_ |= RLV12const::MPR_GS_VolumeCheck |
+        RLV12const::MPR_GS_BrushHome | RLV12const::MPR_GS_HeadsOut |
+        RLV12const::MPR_GS_LockOn;
     return LockedOn {};
 }
 
