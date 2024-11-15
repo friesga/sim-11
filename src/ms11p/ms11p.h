@@ -8,6 +8,7 @@
 #include <memory>
 
 using std::unique_ptr;
+using std::shared_ptr;
 using std::make_unique;
 
 // Implementation of the MS11-P MOS memory.
@@ -31,6 +32,7 @@ class MS11P : public PDP11Peripheral
 {
 public:
     MS11P (Qbus* bus);
+    MS11P (Qbus* bus, shared_ptr<MS11PConfig> ms11pConfig);
     ~MS11P ();
 
     // Functions required for the ExtendedUnibusDevice interface
@@ -39,7 +41,9 @@ public:
     bool responsible (BusAddress address) override;
 
 private:
+    MS11PConfig::PowerSource powerSource_ {MS11PConfig::PowerSource::System};
     u32 startingAddress_ {0};
+    u32 csrAddress_ {017772100};
     static const size_t memorySize_ = 1024 * 1024;
     unique_ptr<u8[]> memory_;
 };
