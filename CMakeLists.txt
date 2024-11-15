@@ -299,6 +299,7 @@ set (SIM11_SRCS
     src/pdp11/run.cpp
     src/main/main.cpp
     src/msv11d/msv11d.cpp
+    src/ms11p/ms11p.cpp
     ${QBUS_SRCS}
     src/pdp11peripheral/pdp11peripheral.cpp
     ${RLV12_SRCS}
