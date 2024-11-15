@@ -193,7 +193,7 @@ TEST (MSV11ConfiguratorTest, maxNrOfCardsExceededThrows)
 	ConsistencyChecker consistencyChecker {systemConfig};
 	try
 	{
-		consistencyChecker.checkMS11Consistency<MSV11Config> ();
+		consistencyChecker.checkMS11Consistency<MSV11Config, 64 * 1024> ();
 		FAIL();
 	}
 	catch (std::out_of_range const &except)
@@ -223,7 +223,7 @@ TEST (MSV11ConfiguratorTest, conflictingAddressesThrows)
 	ConsistencyChecker consistencyChecker {systemConfig};
 	try
 	{
-		consistencyChecker.checkMS11Consistency<MSV11Config> ();
+		consistencyChecker.checkMS11Consistency<MSV11Config, 64 * 1024> ();
 		FAIL();
 	}
 	catch (std::invalid_argument const &except)

@@ -170,20 +170,20 @@ TEST (MS11PConfiguratorTest, multipleMS11PSectionsAccepted)
 	EXPECT_EQ (ms11pConfig1->startingAddress, 04000000);
 }
 
-/*
+
 TEST (MS11PConfiguratorTest, maxNrOfCardsExceededThrows)
 {
 	iniparser::File ft;
 	std::stringstream stream;
-	stream << "[MSV11]\n"
+	stream << "[MS11-P]\n"
 		"starting_address = 0\n"
-		"[MSV11]\n"
-		"starting_address = 0200000\n"
-		"[MSV11]\n"
-		"starting_address = 0400000\n"
-		"[MSV11]\n"
-		"starting_address = 0600000\n"
-		"[MSV11]\n"
+		"[MS11-P]\n"
+		"starting_address = 04000000\n"
+		"[MS11-P]\n"
+		"starting_address = 010000000\n"
+		"[MS11-P]\n"
+		"starting_address = 014000000\n"
+		"[MS11-P]\n"
 		"starting_address = 0\n";
 	stream >> ft;
 
@@ -194,12 +194,12 @@ TEST (MS11PConfiguratorTest, maxNrOfCardsExceededThrows)
 	ConsistencyChecker consistencyChecker {systemConfig};
 	try
 	{
-		consistencyChecker.checkMSV11Consistency ();
+		consistencyChecker.checkMS11Consistency<MS11PConfig, 1024 * 1024> ();
 		FAIL ();
 	}
 	catch (std::out_of_range const& except)
 	{
-		EXPECT_STREQ (except.what (), "Maximum number of MSV11 cards (4) exceeded");
+		EXPECT_STREQ (except.what (), "Maximum number of MSV11/MS11-P cards (4) exceeded");
 	}
 	catch (...)
 	{
@@ -211,10 +211,10 @@ TEST (MS11PConfiguratorTest, conflictingAddressesThrows)
 {
 	iniparser::File ft;
 	std::stringstream stream;
-	stream << "[MSV11]\n"
+	stream << "[MS11-P]\n"
 		"starting_address = 0\n"
-		"[MSV11]\n"
-		"starting_address = 020000\n";
+		"[MS11-P]\n"
+		"starting_address = 03000000\n";
 	stream >> ft;
 
 	IniProcessor iniProcessor;
@@ -224,16 +224,15 @@ TEST (MS11PConfiguratorTest, conflictingAddressesThrows)
 	ConsistencyChecker consistencyChecker {systemConfig};
 	try
 	{
-		consistencyChecker.checkMSV11Consistency ();
+		consistencyChecker.checkMS11Consistency<MS11PConfig, 1024 * 1024> ();
 		FAIL ();
 	}
 	catch (std::invalid_argument const& except)
 	{
-		EXPECT_STREQ (except.what (), "MSV11 starting address conflict");
+		EXPECT_STREQ (except.what (), "MSV11/MS11-P starting address conflict");
 	}
 	catch (...)
 	{
 		FAIL ();
 	}
 }
-*/

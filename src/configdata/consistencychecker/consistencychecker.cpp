@@ -74,7 +74,8 @@ void ConsistencyChecker::checkAll ()
     if (count_if (presentDevices, &ConsistencyChecker::findDevice<BA11_NConfig>) == 0)
         throw string("No BA11-N Mounting box configured, this system cannot run.");
 
-    checkMS11Consistency<MSV11Config> ();
+    checkMS11Consistency<MSV11Config, 64 * 1024> ();
+    checkMS11Consistency<MS11PConfig, 1024 * 1024> ();
     checkKDF11_BConsistency ();
     checkConsoleConsistency ();
 }

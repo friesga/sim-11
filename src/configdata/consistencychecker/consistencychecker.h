@@ -18,7 +18,7 @@ public:
     ConsistencyChecker (vector<DeviceConfig> const& systemConfig);
     void checkAll ();
     void checkConsoleConsistency ();
-    template<typename TConfig> void checkMS11Consistency ();
+    template<typename TConfig, size_t capacity> void checkMS11Consistency ();
     void checkKDF11_BConsistency ();
     void checkCabinetConsistency ();
 
@@ -27,7 +27,7 @@ private:
 
     template<typename T> static bool findDevice (DeviceConfig device);
     template<typename TConfig> bool conflictsWith (shared_ptr<TConfig> msv11Card1,
-		shared_ptr<TConfig> msv11Card2);
+		shared_ptr<TConfig> msv11Card2, size_t capacity);
 	bool isWithin (u32 address, u32 begin, u32 end);
 };
 
