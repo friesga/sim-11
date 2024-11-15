@@ -77,7 +77,10 @@ void PDP_11::configureDevices (vector<DeviceConfig> systemConfig,
         [this, window] (shared_ptr<BA11_NConfig> ba11_nConfig) 
             {ba11_n_ = std::make_unique<BA11_N> (&bus_, window, ba11_nConfig);},
         [this] (shared_ptr<MS11PConfig> ms11pConfig)
-            {/* Ignore MS11P for now */ }
+            {/* Ignore MS11P for now */ },
+        [this] (shared_ptr<BA11_LConfig> ba11lConfig)
+            {/* Ignore BA11-L for now */
+ }
     };
 
     for (DeviceConfig deviceConfigVariant : systemConfig)

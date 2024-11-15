@@ -2,6 +2,7 @@
 #define _DEVICECONFIGVARIANT_H_
 
 #include "configdata/ba11nconfig/ba11nconfig.h"
+#include "configdata/ba11lconfig/ba11lconfig.h"
 #include "configdata/bdv11config/bdv11config.h"
 #include "configdata/kd11_naconfig/kd11_naconfig.h"
 #include "configdata/kdf11_aconfig/kdf11_aconfig.h"
@@ -29,6 +30,7 @@ using DeviceConfig = variant<
     shared_ptr<RXV21Config>,
     shared_ptr<RLConfig>,
     shared_ptr<BA11_NConfig>,
-    shared_ptr<MS11PConfig>>;
+    shared_ptr<MS11PConfig>,
+    shared_ptr<BA11_LConfig>>;
 
 #endif // _DEVICECONFIGVARIANT_H_

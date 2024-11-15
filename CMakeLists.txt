@@ -176,7 +176,9 @@ set (CONFIGURATOR_SRCS
     src/configdata/rxv21/rxv21processor/rxv21processor.cpp
     src/configdata/rxv21/rxv21unitprocessor/rxv21unitprocessor.cpp
     src/configdata/ba11nconfig/ba11nconfig.cpp
+    src/configdata/ba11lconfig/ba11lconfig.cpp
     src/configdata/ba11nprocessor/ba11nprocessor.cpp
+    src/configdata/ba11lprocessor/ba11lprocessor.cpp
     src/configdata/bdv11processor/bdv11processor.cpp
     src/configdata/serialconfig/dlv11jconfig/dlv11jconfig.cpp 
     src/configdata/serialconfig/uartconfig/uartconfig.cpp
@@ -418,6 +420,7 @@ set (GTEST_SRCS
     gtest/consoleconsistencytest.cpp
     gtest/cabinetconsistencytest.cpp
     gtest/ba11_nconfiguratortest.cpp
+    gtest/ba11lconfiguratortest.cpp
     gtest/bdv11configuratortest.cpp
     gtest/dlv11configuratortest.cpp
     gtest/fistest.cpp

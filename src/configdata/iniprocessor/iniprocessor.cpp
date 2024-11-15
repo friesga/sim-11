@@ -10,6 +10,7 @@
 #include "../kdf11_aprocessor/kdf11_aprocessor.h"
 #include "../kdf11_b/kdf11_bprocessor/kdf11_bprocessor.h"
 #include "../ms11pprocessor/ms11pprocessor.h"
+#include "../ba11lprocessor/ba11lprocessor.h"
 
 using std::make_unique;
 
@@ -35,7 +36,6 @@ unique_ptr<DeviceConfigProcessor> IniProcessor::createBDV11Processor ()
 {
     return make_unique<BDV11Processor> ();
 }
-
 
 unique_ptr<DeviceConfigProcessor> IniProcessor::createDLV11Processor ()
 {
@@ -65,4 +65,9 @@ unique_ptr<DeviceConfigProcessor> IniProcessor::createKDF11_BProcessor ()
 unique_ptr<DeviceConfigProcessor> IniProcessor::createMS11_PProcessor ()
 {
     return make_unique<MS11PProcessor> ();
+}
+
+unique_ptr<DeviceConfigProcessor> IniProcessor::createBA11_LProcessor ()
+{
+    return make_unique<BA11_LProcessor> ();
 }

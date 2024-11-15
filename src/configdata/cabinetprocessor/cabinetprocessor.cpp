@@ -17,7 +17,7 @@ shared_ptr<Cabinet::Position> processCabinetKey (iniparser::Value value)
     items = split<size_t> (value.asString (), '/');
 
     if (items.size () != 2)
-        throw invalid_argument {"Invalid BA11-N cabinet position"};
+        throw invalid_argument {"Invalid BA11 cabinet position"};
 
     result.cabinetNr = items[0];
     result.height = items[1];
