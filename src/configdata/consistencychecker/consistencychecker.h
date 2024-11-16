@@ -17,6 +17,7 @@ class ConsistencyChecker
 public:
     ConsistencyChecker (vector<DeviceConfig> const& systemConfig);
     void checkAll ();
+    void checkBA11Consistency ();
     void checkConsoleConsistency ();
     template<typename TConfig, size_t capacity> void checkMS11Consistency ();
     void checkKDF11_BConsistency ();
