@@ -21,11 +21,6 @@ ConsistencyChecker::ConsistencyChecker (vector<DeviceConfig> const& systemConfig
     systemConfig_ {systemConfig}
 {}
 
-template<typename T>
-bool ConsistencyChecker::findDevice (DeviceConfig device)
-{
-    return var_type (device) == typeid (shared_ptr<T> {});   
-}
 
 // Check the system configuration for the presence of some indispensible
 // controllers, without which the system will not properly run.

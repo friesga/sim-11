@@ -39,9 +39,34 @@ TEST (BA11ConsistencyTest, justOneBA11Configured)
 	}
 }
 
-
 // Verify that either a BA11-L or a BA11-N is configured
+TEST (BA11ConsistencyTest, eitherBA11LOrBA11NConfigured)
+{
+	iniparser::File ft;
+	std::stringstream stream;
+	stream << "";
+	stream >> ft;
 
+	IniProcessor iniProcessor;
+	EXPECT_NO_THROW (iniProcessor.process (ft));
+
+	vector<DeviceConfig> systemConfig = iniProcessor.getSystemConfig ();
+	ConsistencyChecker consistencyChecker {systemConfig};
+	try
+	{
+		consistencyChecker.checkBA11Consistency ();
+		FAIL ();
+	}
+	catch (std::invalid_argument const& except)
+	{
+		EXPECT_STREQ (except.what (),
+			"No BA11 specified, specify either BA11-N or BA11-L");
+	}
+	catch (...)
+	{
+		FAIL ();
+	}
+}
 
 // Verify that a BA11-N is a Qbus machine and contains no Unibus devices
 
