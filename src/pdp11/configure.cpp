@@ -54,7 +54,7 @@ void PDP_11::configureDevices (vector<DeviceConfig> systemConfig,
 {
     // Check for presence of necessary devices
     ConsistencyChecker consistencyChecker {systemConfig};
-    consistencyChecker.checkQbus ();
+    consistencyChecker.checkAll ();
 
     auto configVisitor = overloaded 
     {
