@@ -69,5 +69,63 @@ TEST (BA11ConsistencyTest, eitherBA11LOrBA11NConfigured)
 }
 
 // Verify that a BA11-N is a Qbus machine and contains no Unibus devices
+TEST (BA11ConsistencyTest, noUnibusDevicesOnQbus)
+{
+	iniparser::File ft;
+	std::stringstream stream;
+	stream << "[BA11-N]\n"
+		"cabinet = 0/19\n"
+		"[MS11-P]";
+	stream >> ft;
+
+	IniProcessor iniProcessor;
+	EXPECT_NO_THROW (iniProcessor.process (ft));
+
+	vector<DeviceConfig> systemConfig = iniProcessor.getSystemConfig ();
+	ConsistencyChecker consistencyChecker {systemConfig};
+	try
+	{
+		consistencyChecker.checkBA11Consistency ();
+		FAIL ();
+	}
+	catch (std::invalid_argument const& except)
+	{
+		EXPECT_STREQ (except.what (),
+			"A Qbus system cannot contain Unibus devices");
+	}
+	catch (...)
+	{
+		FAIL ();
+	}
+}
 
 // Verify that a BA11-L is a Unibus machine and contains no Qbus devices
+TEST (BA11ConsistencyTest, noQbusDevicesOnUnibusbus)
+{
+	iniparser::File ft;
+	std::stringstream stream;
+	stream << "[BA11-L]\n"
+		"cabinet = 0/19\n"
+		"[MSV11]";
+	stream >> ft;
+
+	IniProcessor iniProcessor;
+	EXPECT_NO_THROW (iniProcessor.process (ft));
+
+	vector<DeviceConfig> systemConfig = iniProcessor.getSystemConfig ();
+	ConsistencyChecker consistencyChecker {systemConfig};
+	try
+	{
+		consistencyChecker.checkBA11Consistency ();
+		FAIL ();
+	}
+	catch (std::invalid_argument const& except)
+	{
+		EXPECT_STREQ (except.what (),
+			"A Unibus system cannot contain Qbus devices");
+	}
+	catch (...)
+	{
+		FAIL ();
+	}
+}

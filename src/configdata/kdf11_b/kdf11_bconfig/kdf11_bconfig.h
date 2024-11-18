@@ -1,6 +1,7 @@
 #ifndef _KDF11_BCONFIG_H_
 #define _KDF11_BCONFIG_H_
 
+#include "devicetype.h"
 #include "configdata/kd11config/kd11config.h"
 #include "../sluconfig/sluconfig.h"
 #include "configdata/bdv11config/bdv11config.h"
@@ -9,7 +10,7 @@
 
 using std::shared_ptr;
 
-struct KDF11_BConfig
+struct KDF11_BConfig : public DeviceType<BusType::QBus>
 {
     KD11Config::PowerUpMode powerUpMode {KD11Config::PowerUpMode::Bootstrap};
     shared_ptr<SLUConfig> sluConfig;

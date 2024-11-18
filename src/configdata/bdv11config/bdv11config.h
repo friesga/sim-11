@@ -1,7 +1,9 @@
 #ifndef _BDV11CONFIG_H_
 #define _BDV11CONFIG_H_
 
-struct BDV11Config
+#include "devicetype.h"
+
+struct BDV11Config : public DeviceType<BusType::QBus>
 {
     enum class BootROM
     {

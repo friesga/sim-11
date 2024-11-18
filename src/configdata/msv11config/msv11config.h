@@ -1,9 +1,10 @@
 #ifndef _MSV11CONFIG_H_
 #define _MSV11CONFIG_H_
 
+#include "devicetype.h"
 #include "types.h"
 
-struct MSV11Config
+struct MSV11Config : public DeviceType<BusType::QBus>
 {
     // Definition of the power source:
     // - System

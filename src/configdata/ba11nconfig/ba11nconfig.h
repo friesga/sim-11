@@ -1,6 +1,7 @@
 #ifndef _BA11NCONFIG_H_
 #define _BA11NCONFIG_H_
 
+#include "devicetype.h"
 #include "cabinet/cabinet.h"
 
 #include <memory>
@@ -8,7 +9,7 @@
 using std::shared_ptr;
 using std::make_shared;
 
-struct BA11_NConfig
+struct BA11_NConfig : public DeviceType<BusType::QBus>
 {
     BA11_NConfig () = default;
     BA11_NConfig (Cabinet::Position cabinetPosition);

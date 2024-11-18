@@ -28,6 +28,7 @@ private:
 
     void checkEitherBA11_NOrBA11_L ();
     void checkOneBA11 ();
+    void checkBusConsistency ();
 
     template<typename T> static bool findDevice (DeviceConfig device);
     template<typename TConfig> bool conflictsWith (shared_ptr<TConfig> msv11Card1,

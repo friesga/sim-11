@@ -1,6 +1,7 @@
 #ifndef _BA11LCONFIG_H_
 #define _BA11LCONFIG_H_
 
+#include "devicetype.h"
 #include "cabinet/cabinet.h"
 
 #include <memory>
@@ -16,7 +17,7 @@ using std::make_shared;
 // with an -11/24-specific front panel.
 // (Source: https://gunkies.org/wiki/BA11-L_mounting_box)
 //
-struct BA11_LConfig
+struct BA11_LConfig : public DeviceType<BusType::Unibus>
 {
     BA11_LConfig () = default;
     BA11_LConfig (Cabinet::Position cabinetPosition);

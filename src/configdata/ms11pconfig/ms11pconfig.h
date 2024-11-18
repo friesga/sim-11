@@ -1,6 +1,7 @@
 #ifndef _MS11PCONFIG_H_
 #define _MS11PCONFIG_H_
 
+#include "devicetype.h"
 #include "types.h"
 
 // Via the Unibus, 131,072 (128K) words or 262,144 (256K) bytes (18 bits) can
@@ -9,7 +10,7 @@
 //
 // The MS11-PB (M8743-A) is MOS RAM, which provides 512KW of data storage.
 //
-struct MS11PConfig
+struct MS11PConfig : public DeviceType<BusType::Unibus>
 {
     // MOS storage devices are volatile (data is not retained when power is
     // lost), so DIGITAL provides an optial battery backup unit to support

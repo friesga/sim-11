@@ -1,6 +1,7 @@
 #ifndef _RLCONFIG_H_
 #define _RLCONFIG_H_
 
+#include "devicetype.h"
 #include "types.h"
 #include "configdata/rl/rlunitconfig/rlunitconfig.h"
 
@@ -21,7 +22,7 @@ using std::shared_ptr;
 // 
 // Source: RL01/RL02 User Guide (EK-RL012-UG-005)
 //
-struct RLConfig
+struct RLConfig : public DeviceType<BusType::QBus>
 {
 	enum class RLType
 	{	
