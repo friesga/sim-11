@@ -21,6 +21,30 @@ ConsistencyChecker::ConsistencyChecker (vector<DeviceConfig> const& systemConfig
     systemConfig_ {systemConfig}
 {}
 
+bool ConsistencyChecker::isQbusSystem ()
+{
+    auto isBA11_N = [] (DeviceConfig device)
+        {
+            return holds_alternative<shared_ptr<BA11_NConfig>> (device);
+        };
+
+    return find_if (systemConfig_, isBA11_N) != systemConfig_.end ();
+}
+
+// The presence of a BA-L or BA-N mounting box determines if we are dealing
+// with a Unibus or a Qbus system. This is the basis for all configuration
+// checks and we therefore check first of all if the BA11 configuration is
+// in order. We can then determine the type of the system and perform Unibus
+// or Qbus checks.
+void ConsistencyChecker::checkAll ()
+{
+    checkBA11Consistency ();
+
+    if (isQbusSystem ())
+        checkQbusConfiguration ();
+    else
+        checkUnibusConfiguration ();
+}
 
 // Check the system configuration for the presence of some indispensible
 // controllers, without which the system will not properly run.
@@ -28,7 +52,7 @@ ConsistencyChecker::ConsistencyChecker (vector<DeviceConfig> const& systemConfig
 // in a more lifelike way such as setting led indicators.
 //
 // ToDo: Move checks to separate functions.
-void ConsistencyChecker::checkAll ()
+void ConsistencyChecker::checkQbusConfiguration ()
 {
     vector<DeviceConfig> presentDevices {};
 
@@ -69,11 +93,15 @@ void ConsistencyChecker::checkAll ()
     if (count_if (presentDevices, &ConsistencyChecker::findDevice<BA11_NConfig>) == 0)
         throw string("No BA11-N Mounting box configured, this system cannot run.");
 
-    checkBA11Consistency ();
     checkMS11Consistency<MSV11Config, 64 * 1024> ();
-    checkMS11Consistency<MS11PConfig, 1024 * 1024> ();
+
     checkKDF11_BConsistency ();
     checkConsoleConsistency ();
+}
+
+void ConsistencyChecker::checkUnibusConfiguration ()
+{
+    checkMS11Consistency<MS11PConfig, 1024 * 1024> ();
 }
 
 // A system with undefined behaviour is created when it is configured

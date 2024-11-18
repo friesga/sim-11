@@ -45,11 +45,6 @@ void ConsistencyChecker::checkOneBA11 ()
 // Check that a Qbus system does not contain a Unibus device and vice versa
 void ConsistencyChecker::checkBusConsistency ()
 {
-    auto isBA11_N = [] (DeviceConfig device)
-        {
-            return holds_alternative<shared_ptr<BA11_NConfig>> (device);
-        };
-
     auto isUnibusDevice = [] (const auto& device)
         {
             return device->isUnibusDevice ();
@@ -73,9 +68,7 @@ void ConsistencyChecker::checkBusConsistency ()
     // In the previous consistency checks we have assured that either a BA-L
     // or a BA-N mounting box is present in the configuration. A BA-L has
     // a Unibus backplane and a BA-N has a Qbus backplane.
-    bool QbusSystem = find_if (systemConfig_, isBA11_N) != systemConfig_.end ();
-
-    if (QbusSystem)
+    if (isQbusSystem ())
     {
         if (find_if (systemConfig_, unibusDevice) != systemConfig_.end ())
             throw invalid_argument {"A Qbus system cannot contain Unibus devices"};

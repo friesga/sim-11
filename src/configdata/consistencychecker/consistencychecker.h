@@ -17,6 +17,7 @@ class ConsistencyChecker
 public:
     ConsistencyChecker (vector<DeviceConfig> const& systemConfig);
     void checkAll ();
+
     void checkBA11Consistency ();
     void checkConsoleConsistency ();
     template<typename TConfig, size_t capacity> void checkMS11Consistency ();
@@ -26,6 +27,9 @@ public:
 private:
     vector<DeviceConfig> const& systemConfig_;
 
+    bool isQbusSystem ();
+    void checkQbusConfiguration ();
+    void checkUnibusConfiguration ();
     void checkEitherBA11_NOrBA11_L ();
     void checkOneBA11 ();
     void checkBusConsistency ();
