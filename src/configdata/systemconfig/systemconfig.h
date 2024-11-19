@@ -60,6 +60,7 @@ public:
     void addDeviceConfig (const DeviceConfig& device);
     void remove (const Iterator& iter);
     bool empty () const { return devices_.empty (); }
+    size_t size () const { return devices_.size (); }
 
     Iterator begin () const { return Iterator (devices_.begin ()); }
     Iterator end () const { return Iterator (devices_.end ()); }
