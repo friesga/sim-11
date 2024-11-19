@@ -7,8 +7,11 @@
 #include <iterator>
 #include <cstddef>
 #include <ranges>
+#include <initializer_list>
 
 using std::vector;
+using std::size_t;
+using std::initializer_list;
 
 // A system configuration comprises a number of device configurations. The
 // class is equiped with an iterator to be able to iterate over the device
@@ -17,8 +20,6 @@ using std::vector;
 class SystemConfig
 {
 public:
-    void addDeviceConfig (const DeviceConfig& device);
-
     class Iterator
     {
     public:
@@ -48,8 +49,16 @@ public:
         std::vector<DeviceConfig>::const_iterator it_;
     };
 
+    // Allow the system configuration to be initialized with a list of device
+    // configurations
+    SystemConfig (initializer_list<DeviceConfig> devices) : devices_ (devices) {}
+
+    void addDeviceConfig (const DeviceConfig& device);
+
     Iterator begin () const { return Iterator (devices_.begin ()); }
     Iterator end () const { return Iterator (devices_.end ()); }
+
+    DeviceConfig const& operator[] (size_t index) const { return devices_[index]; }
 
     // Call operator voor ranges
     auto operator()() const
