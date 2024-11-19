@@ -463,6 +463,7 @@ set (GTEST_SRCS
     gtest/rxconfiguratortest.cpp
     gtest/signaltest.cpp
     gtest/simulatorclocktest.cpp
+    gtest/systemconfigtest.cpp
     gtest/tracetest.cpp
     gtest/variantfsmtest.cpp)
     
