@@ -162,3 +162,15 @@ TEST (SystemConfigTest, iteratorsCanBeCompared)
     auto it2 = find_if (systemConfig, isKD11_NA);
     ASSERT_TRUE (it1 == it2);
 }
+
+TEST (SystemConfigTest, QbusSystemCorrectlyIdentified)
+{
+    SystemConfig systemConfig
+    {
+        make_shared<BA11_NConfig> (),
+        make_shared<MSV11Config> ()
+    };
+
+    ASSERT_TRUE (systemConfig.isQbusSystem ());
+}
+

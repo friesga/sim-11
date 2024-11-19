@@ -12,6 +12,7 @@
 using std::vector;
 using std::size_t;
 using std::initializer_list;
+using std::ranges::find_if;
 
 // A system configuration comprises a number of device configurations. The
 // class is equiped with an iterator to be able to iterate over the device
@@ -61,6 +62,7 @@ public:
     void remove (const Iterator& iter);
     bool empty () const { return devices_.empty (); }
     size_t size () const { return devices_.size (); }
+    bool isQbusSystem ();
 
     Iterator begin () const { return Iterator (devices_.begin ()); }
     Iterator end () const { return Iterator (devices_.end ()); }
@@ -88,4 +90,16 @@ inline void SystemConfig::remove (const Iterator& iter)
         devices_.begin () + std::distance (devices_.cbegin (), iter.base ());
     devices_.erase (non_const_iter);
 }
+
+// A system configuration is a Qbus system if it contains a Qbus backplane
+inline bool SystemConfig::isQbusSystem ()
+{
+    auto isBA11_N = [] (DeviceConfig device)
+        {
+            return holds_alternative<shared_ptr<BA11_NConfig>> (device);
+        };
+
+    return find_if (devices_, isBA11_N) != devices_.end ();
+}
+
 #endif // _SYSTEMCONFIG_H_
