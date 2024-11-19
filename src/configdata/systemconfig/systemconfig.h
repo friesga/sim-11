@@ -42,6 +42,10 @@ public:
         // Postfix increment
         Iterator operator++ (int) { Iterator tmp = *this; ++(*this); return tmp; }
 
+        // Give access to the underlying const_iterator (required for the
+        // remove() function.
+        std::vector<DeviceConfig>::const_iterator base () const { return it_; }
+
         friend bool operator== (const Iterator& a, const Iterator& b) { return a.it_ == b.it_; }
         friend bool operator!= (const Iterator& a, const Iterator& b) { return a.it_ != b.it_; }
 
@@ -54,6 +58,7 @@ public:
     SystemConfig (initializer_list<DeviceConfig> devices) : devices_ (devices) {}
 
     void addDeviceConfig (const DeviceConfig& device);
+    void remove (const Iterator& iter);
 
     Iterator begin () const { return Iterator (devices_.begin ()); }
     Iterator end () const { return Iterator (devices_.end ()); }
@@ -75,4 +80,10 @@ inline void SystemConfig::addDeviceConfig (const DeviceConfig& device)
     devices_.push_back (device);
 }
 
+inline void SystemConfig::remove (const Iterator& iter)
+{
+    auto non_const_iter = 
+        devices_.begin () + std::distance (devices_.cbegin (), iter.base ());
+    devices_.erase (non_const_iter);
+}
 #endif // _SYSTEMCONFIG_H_
