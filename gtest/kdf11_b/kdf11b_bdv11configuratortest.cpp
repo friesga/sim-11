@@ -1,3 +1,4 @@
+#include "configdata/systemconfig/systemconfig.h"
 #include "configdata/iniprocessor/iniprocessor.h"
 #include "configdata/kdf11_b/kdf11_bconfig/kdf11_bconfig.h"
 #include "configdata/bdv11config/bdv11config.h"
@@ -16,7 +17,7 @@ TEST (KDF11B_BDV11ConfiguratorTest, defaultConfigurationAccepted)
 	IniProcessor iniProcessor;
 	EXPECT_NO_THROW (iniProcessor.process (ft)); 
 
-	vector<DeviceConfig> systemConfig = 
+	SystemConfig systemConfig = 
 		iniProcessor.getSystemConfig ();
 
 	// The only device type in this testset is the KD11 so if that's
@@ -49,7 +50,7 @@ TEST (KDF11B_BDV11ConfiguratorTest, bootROMAccepted)
 	IniProcessor iniProcessor;
 	EXPECT_NO_THROW (iniProcessor.process (ft)); 
 
-	vector<DeviceConfig> systemConfig = 
+	SystemConfig systemConfig = 
 		iniProcessor.getSystemConfig ();
 
 	// The only device type in this testset is the KD11 so if that's
@@ -82,7 +83,7 @@ TEST (KDF11B_BDV11ConfiguratorTest, optionsAccepted)
 	IniProcessor iniProcessor;
 	EXPECT_NO_THROW (iniProcessor.process (ft)); 
 
-	vector<DeviceConfig> systemConfig = 
+	SystemConfig systemConfig = 
 		iniProcessor.getSystemConfig ();
 
 	// The only device type in this testset is the KD11 so if that's
@@ -116,7 +117,7 @@ TEST (KDF11B_BDV11ConfiguratorTest, tu58bootDeviceAccepted)
 	IniProcessor iniProcessor;
 	EXPECT_NO_THROW (iniProcessor.process (ft)); 
 
-	vector<DeviceConfig> systemConfig = 
+	SystemConfig systemConfig = 
 		iniProcessor.getSystemConfig ();
 
 	// The only device type in this testset is the KD11 so if that's

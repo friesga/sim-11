@@ -16,7 +16,7 @@ using std::ranges::count_if;
 using std::ranges::find_if;
 using std::invalid_argument;
 
-ConsistencyChecker::ConsistencyChecker (vector<DeviceConfig> const& systemConfig)
+ConsistencyChecker::ConsistencyChecker (SystemConfig const& systemConfig)
     :
     systemConfig_ {systemConfig}
 {}

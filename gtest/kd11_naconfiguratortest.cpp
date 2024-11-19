@@ -1,3 +1,4 @@
+#include "configdata/systemconfig/systemconfig.h"
 #include "configdata/iniprocessor/iniprocessor.h"
 #include "configdata/kd11_naconfig/kd11_naconfig.h"
 
@@ -17,7 +18,7 @@ TEST (KD11_NAConfiguratorTest, powerUpModeAccepted)
 	IniProcessor iniProcessor;
 	EXPECT_NO_THROW (iniProcessor.process (ft)); 
 
-	vector<DeviceConfig> systemConfig = 
+	SystemConfig systemConfig = 
 		iniProcessor.getSystemConfig ();
 
 	// The only device type in this testset is the KD11 so if that's

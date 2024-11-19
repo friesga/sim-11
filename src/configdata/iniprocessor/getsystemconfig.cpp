@@ -1,6 +1,6 @@
 #include "iniprocessor.h"
 
-vector<DeviceConfig> &IniProcessor::getSystemConfig ()
+SystemConfig &IniProcessor::getSystemConfig ()
 {
     return systemConfig;
 }

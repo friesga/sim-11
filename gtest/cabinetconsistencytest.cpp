@@ -1,3 +1,4 @@
+#include "configdata/systemconfig/systemconfig.h"
 #include "configdata/iniprocessor/iniprocessor.h"
 #include "configdata/consistencychecker/consistencychecker.h"
 
@@ -22,7 +23,7 @@ TEST (CabinetConsistencyTest, unitOutOfRangeThrows)
 	IniProcessor iniProcessor;
 	EXPECT_NO_THROW (iniProcessor.process (ft));
 
-	vector<DeviceConfig> systemConfig = iniProcessor.getSystemConfig ();
+	SystemConfig systemConfig = iniProcessor.getSystemConfig ();
 	ConsistencyChecker consistencyChecker {systemConfig};
 	try
 	{
@@ -51,7 +52,7 @@ TEST (CabinetConsistencyTest, invalidCabinetThrows)
 	IniProcessor iniProcessor;
 	EXPECT_NO_THROW (iniProcessor.process (ft));
 
-	vector<DeviceConfig> systemConfig = iniProcessor.getSystemConfig ();
+	SystemConfig systemConfig = iniProcessor.getSystemConfig ();
 	ConsistencyChecker consistencyChecker {systemConfig};
 	try
 	{
@@ -86,7 +87,7 @@ TEST (CabinetConsistencyTest, overlappingUnitsThrows)
 	IniProcessor iniProcessor;
 	EXPECT_NO_THROW (iniProcessor.process (ft));
 
-	vector<DeviceConfig> systemConfig = iniProcessor.getSystemConfig ();
+	SystemConfig systemConfig = iniProcessor.getSystemConfig ();
 	ConsistencyChecker consistencyChecker {systemConfig};
 	try
 	{

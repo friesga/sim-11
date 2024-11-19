@@ -1,3 +1,4 @@
+#include "configdata/systemconfig/systemconfig.h"
 #include "configdata/iniprocessor/iniprocessor.h"
 #include "configdata/consistencychecker/consistencychecker.h"
 
@@ -19,7 +20,7 @@ TEST (ConsoleConsistencyTest, twoConsolesThrows)
 	IniProcessor iniProcessor;
 	EXPECT_NO_THROW (iniProcessor.process (ft)); 
 
-	vector<DeviceConfig> systemConfig = iniProcessor.getSystemConfig ();
+	SystemConfig systemConfig = iniProcessor.getSystemConfig ();
 	ConsistencyChecker consistencyChecker {systemConfig};
 	try
 	{

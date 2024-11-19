@@ -1,3 +1,4 @@
+#include "configdata/systemconfig/systemconfig.h"
 #include "configdata/iniprocessor/iniprocessor.h"
 #include "configdata/kdf11_b/kdf11_bconfig/kdf11_bconfig.h"
 #include "configdata/serialconfig/uartconfig/uartconfig.h"
@@ -67,7 +68,7 @@ TEST (SLUConfiguratorTest, defaultConfigurationAccepted)
 	IniProcessor iniProcessor;
 	EXPECT_NO_THROW (iniProcessor.process (ft)); 
 
-	vector<DeviceConfig> systemConfig = 
+	SystemConfig systemConfig = 
 		iniProcessor.getSystemConfig ();
 
 	// The only device type in this testset is the KD11 so if that's
@@ -103,7 +104,7 @@ TEST (SLUConfiguratorTest, slu2AddressAccepted)
 	IniProcessor iniProcessor;
 	EXPECT_NO_THROW (iniProcessor.process (ft)); 
 
-	vector<DeviceConfig> systemConfig = 
+	SystemConfig systemConfig = 
 		iniProcessor.getSystemConfig ();
 
 	// The only device type in this testset is the KD11 so if that's
@@ -160,7 +161,7 @@ TEST (SLUConfiguratorTest, sluDisabledAccepted)
 	IniProcessor iniProcessor;
 	EXPECT_NO_THROW (iniProcessor.process (ft)); 
 
-	vector<DeviceConfig> systemConfig = 
+	SystemConfig systemConfig = 
 		iniProcessor.getSystemConfig ();
 
 	// The only device type in this testset is the KD11 so if that's
@@ -189,7 +190,7 @@ TEST (SLUConfiguratorTest, breakResponsedAccepted)
 	IniProcessor iniProcessor;
 	EXPECT_NO_THROW (iniProcessor.process (ft)); 
 
-	vector<DeviceConfig> systemConfig = 
+	SystemConfig systemConfig = 
 		iniProcessor.getSystemConfig ();
 
 	// The only device type in this testset is the KD11 so if that's
@@ -244,7 +245,7 @@ TEST (SLUConfiguratorTest, escBreakKeyAccepted)
 	IniProcessor iniProcessor;
 	EXPECT_NO_THROW (iniProcessor.process (ft)); 
 
-	vector<DeviceConfig> systemConfig = 
+	SystemConfig systemConfig = 
 		iniProcessor.getSystemConfig ();
 
 	// The only device type in this testset is the KD11 so if that's
@@ -272,7 +273,7 @@ TEST (SLUConfiguratorTest, upperCaseControlCharAccepted)
 	IniProcessor iniProcessor;
 	EXPECT_NO_THROW (iniProcessor.process (ft)); 
 
-	vector<DeviceConfig> systemConfig = 
+	SystemConfig systemConfig = 
 		iniProcessor.getSystemConfig ();
 
 	// The only device type in this testset is the KD11 so if that's
@@ -300,7 +301,7 @@ TEST (SLUConfiguratorTest, loopbackAccepted)
 	IniProcessor iniProcessor;
 	EXPECT_NO_THROW (iniProcessor.process (ft)); 
 
-	vector<DeviceConfig> systemConfig = 
+	SystemConfig systemConfig = 
 		iniProcessor.getSystemConfig ();
 
 	// The only device type in this testset is the KD11 so if that's

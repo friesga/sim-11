@@ -1,3 +1,4 @@
+#include "configdata/systemconfig/systemconfig.h"
 #include "configdata/iniprocessor/iniprocessor.h"
 #include "configdata/ms11pconfig/ms11pconfig.h"
 #include "configdata/consistencychecker/consistencychecker.h"
@@ -41,7 +42,7 @@ TEST (MS11PConfiguratorTest, startingAddressAccepted)
 	IniProcessor iniProcessor;
 	EXPECT_NO_THROW (iniProcessor.process (ft));
 
-	vector<DeviceConfig> systemConfig =
+	SystemConfig systemConfig =
 		iniProcessor.getSystemConfig ();
 
 	// The only device type in this testset is the MS11-P so if that's
@@ -148,7 +149,7 @@ TEST (MS11PConfiguratorTest, multipleMS11PSectionsAccepted)
 	IniProcessor iniProcessor;
 	EXPECT_NO_THROW (iniProcessor.process (ft));
 
-	vector<DeviceConfig> systemConfig =
+	SystemConfig systemConfig =
 		iniProcessor.getSystemConfig ();
 
 	// Verify the vector contains two device configurations
@@ -190,7 +191,7 @@ TEST (MS11PConfiguratorTest, maxNrOfCardsExceededThrows)
 	IniProcessor iniProcessor;
 	EXPECT_NO_THROW (iniProcessor.process (ft));
 
-	vector<DeviceConfig> systemConfig = iniProcessor.getSystemConfig ();
+	SystemConfig systemConfig = iniProcessor.getSystemConfig ();
 	ConsistencyChecker consistencyChecker {systemConfig};
 	try
 	{
@@ -220,7 +221,7 @@ TEST (MS11PConfiguratorTest, conflictingAddressesThrows)
 	IniProcessor iniProcessor;
 	EXPECT_NO_THROW (iniProcessor.process (ft));
 
-	vector<DeviceConfig> systemConfig = iniProcessor.getSystemConfig ();
+	SystemConfig systemConfig = iniProcessor.getSystemConfig ();
 	ConsistencyChecker consistencyChecker {systemConfig};
 	try
 	{

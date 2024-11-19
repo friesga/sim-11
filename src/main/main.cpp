@@ -1,3 +1,4 @@
+#include "configdata/systemconfig/systemconfig.h"
 #include "panel.h"
 #include "pdp11/pdp11.h"
 #include "trace/trace.h"
@@ -12,7 +13,7 @@
 // Get rid of SDL's main function
 #undef main
 
-vector<DeviceConfig> createSystemConfig (const char* const &configFile)
+SystemConfig createSystemConfig (const char* const &configFile)
 {
     IniProcessor configProcessor;
     iniparser::File ft;

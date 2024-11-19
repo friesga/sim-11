@@ -2,6 +2,7 @@
 #define _CONSISTENCYCHECKER_H_
 
 #include "../deviceconfig/deviceconfig.h"
+#include "../systemconfig/systemconfig.h"
 
 #include <vector>
 
@@ -15,7 +16,7 @@ using std::vector;
 class ConsistencyChecker
 {
 public:
-    ConsistencyChecker (vector<DeviceConfig> const& systemConfig);
+    ConsistencyChecker (SystemConfig const& systemConfig);
     void checkAll ();
 
     void checkBA11Consistency ();
@@ -25,7 +26,7 @@ public:
     void checkCabinetConsistency ();
 
 private:
-    vector<DeviceConfig> const& systemConfig_;
+    SystemConfig const& systemConfig_;
 
     bool isQbusSystem ();
     void checkQbusConfiguration ();

@@ -1,3 +1,4 @@
+#include "configdata/systemconfig/systemconfig.h"
 #include "configdata/iniprocessor/iniprocessor.h"
 #include "configdata/rxv21/rxv21config/rxv21config.h"
 #include "configdata/rxv21/rxv21unitconfig/rxv21unitconfig.h"
@@ -22,7 +23,7 @@ TEST (RxConfiguratorTest, rxConfigProcessed)
 	IniProcessor configProcessor;
 	EXPECT_NO_THROW (configProcessor.process (ft));
 
-	vector<DeviceConfig> &deviceConfig = 
+	SystemConfig &deviceConfig = 
 		configProcessor.getSystemConfig ();
 
 	auto rxv21Config = 

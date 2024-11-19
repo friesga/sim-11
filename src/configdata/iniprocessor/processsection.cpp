@@ -23,7 +23,7 @@ void IniProcessor::processSection (iniparser::Section* section)
 		deviceConfigProcessor->processSection (section);
 
 		// Add the device configuration to the system configuration
-		systemConfig.push_back (deviceConfigProcessor->getConfig ());
+		systemConfig.addDeviceConfig (deviceConfigProcessor->getConfig ());
 	}
 	else
 		throw string("Unsupported section: ") + section->name ();

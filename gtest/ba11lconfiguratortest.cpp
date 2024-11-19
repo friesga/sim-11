@@ -1,3 +1,4 @@
+#include "configdata/systemconfig/systemconfig.h"
 #include "configdata/iniprocessor/iniprocessor.h"
 #include "configdata/deviceconfig/deviceconfig.h"
 #include "configdata/ba11lconfig/ba11lconfig.h"
@@ -119,7 +120,7 @@ TEST (BA11_LConfiguratorTest, cabinetPositionIsCorrect)
 	IniProcessor iniProcessor;
 	EXPECT_NO_THROW (iniProcessor.process (ft));
 
-	vector<DeviceConfig> systemConfig =
+	SystemConfig systemConfig =
 		iniProcessor.getSystemConfig ();
 
 	// The only device type in this testset is the BA11-N so if that's

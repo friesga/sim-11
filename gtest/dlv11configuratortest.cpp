@@ -1,3 +1,4 @@
+#include "configdata/systemconfig/systemconfig.h"
 #include "configdata/iniprocessor/iniprocessor.h"
 #include "configdata/serialconfig/dlv11jconfig/dlv11jconfig.h"
 #include "configdata/serialconfig/consoleconfig/consoleconfig.h"
@@ -20,7 +21,7 @@ TEST (DLV11JConfiguratorTest, breakResponseAccepted)
 	IniProcessor iniProcessor;
 	EXPECT_NO_THROW (iniProcessor.process (ft)); 
 
-	vector<DeviceConfig> systemConfig = 
+	SystemConfig systemConfig = 
 		iniProcessor.getSystemConfig ();
 
 	// The only device type in this testset is the DLV11-J so if that's
@@ -45,7 +46,7 @@ TEST (DLV11JConfiguratorTest, escCharAccepted)
 	IniProcessor iniProcessor;
 	EXPECT_NO_THROW (iniProcessor.process (ft)); 
 
-	vector<DeviceConfig> systemConfig = 
+	SystemConfig systemConfig = 
 		iniProcessor.getSystemConfig ();
 
 	// The only device type in this testset is the DLV11-J so if that's
@@ -70,7 +71,7 @@ TEST (DLV11JConfiguratorTest, upperCaseControlCharAccepted)
 	IniProcessor iniProcessor;
 	EXPECT_NO_THROW (iniProcessor.process (ft)); 
 
-	vector<DeviceConfig> systemConfig = 
+	SystemConfig systemConfig = 
 		iniProcessor.getSystemConfig ();
 
 	// The only device type in this testset is the DLV11-J so if that's
@@ -95,7 +96,7 @@ TEST (DLV11JConfiguratorTest, lowerCaseControlCharAccepted)
 	IniProcessor iniProcessor;
 	EXPECT_NO_THROW (iniProcessor.process (ft)); 
 
-	vector<DeviceConfig> systemConfig = 
+	SystemConfig systemConfig = 
 		iniProcessor.getSystemConfig ();
 
 	// The only device type in this testset is the DLV11-J so if that's
@@ -197,7 +198,7 @@ TEST (DLV11JConfiguratorTest, baseAddressAndVectorAccepted)
 	IniProcessor iniProcessor;
 	EXPECT_NO_THROW (iniProcessor.process (ft)); 
 
-	vector<DeviceConfig> systemConfig = 
+	SystemConfig systemConfig = 
 		iniProcessor.getSystemConfig ();
 
 	// The only device type in this testset is the DLV11-J so if that's
@@ -248,7 +249,7 @@ TEST (DLV11JConfiguratorTest, consoleSelectionAccepted)
 	IniProcessor iniProcessor;
 	EXPECT_NO_THROW (iniProcessor.process (ft)); 
 
-	vector<DeviceConfig> systemConfig = 
+	SystemConfig systemConfig = 
 		iniProcessor.getSystemConfig ();
 
 	// The only device type in this testset is the DLV11-J so if that's
@@ -299,7 +300,7 @@ TEST (DLV11JConfiguratorTest, loopbackOptionAccepted)
 	IniProcessor iniProcessor;
 	EXPECT_NO_THROW (iniProcessor.process (ft)); 
 
-	vector<DeviceConfig> systemConfig = 
+	SystemConfig systemConfig = 
 		iniProcessor.getSystemConfig ();
 
 	// The only device type in this testset is the DLV11-J so if that's
@@ -349,7 +350,7 @@ TEST (DLV11JConfiguratorTest, uartConfigCreated)
 	IniProcessor iniProcessor;
 	EXPECT_NO_THROW (iniProcessor.process (ft)); 
 
-	vector<DeviceConfig> systemConfig = 
+	SystemConfig systemConfig = 
 		iniProcessor.getSystemConfig ();
 
 	// The only device type in this testset is the DLV11-J so if that's
@@ -392,7 +393,7 @@ TEST (DLV11JConfiguratorTest, consoleUARTConfigCreated)
 	IniProcessor iniProcessor;
 	EXPECT_NO_THROW (iniProcessor.process (ft)); 
 
-	vector<DeviceConfig> systemConfig = 
+	SystemConfig systemConfig = 
 		iniProcessor.getSystemConfig ();
 
 	// The only device type in this testset is the DLV11-J so if that's
@@ -435,7 +436,7 @@ TEST (DLV11JConfiguratorTest, alternativeBaseAddressConfigCreated)
 	IniProcessor iniProcessor;
 	EXPECT_NO_THROW (iniProcessor.process (ft)); 
 
-	vector<DeviceConfig> systemConfig = 
+	SystemConfig systemConfig = 
 		iniProcessor.getSystemConfig ();
 
 	// The only device type in this testset is the DLV11-J so if that's

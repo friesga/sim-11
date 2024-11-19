@@ -49,7 +49,7 @@ template<typename... Ts> struct overloaded : Ts... { using Ts::operator()...; };
 // Configure the devices and install them on the bus.
 // Accessing a non-configured device will result in a bus time-out
 // and the BDV11 boot will halt at address 000010.
-void PDP_11::configureDevices (vector<DeviceConfig> systemConfig,
+void PDP_11::configureDevices (SystemConfig systemConfig,
     Window *window)
 {
     // Check for presence of necessary devices

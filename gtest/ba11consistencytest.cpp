@@ -1,4 +1,5 @@
 #include "configdata/iniprocessor/iniprocessor.h"
+#include "configdata/systemconfig/systemconfig.h"
 #include "configdata/deviceconfig/deviceconfig.h"
 #include "configdata/consistencychecker/consistencychecker.h"
 #include "configdata/ba11nconfig/ba11nconfig.h"
@@ -21,7 +22,7 @@ TEST (BA11ConsistencyTest, justOneBA11Configured)
 	IniProcessor iniProcessor;
 	EXPECT_NO_THROW (iniProcessor.process (ft));
 
-	vector<DeviceConfig> systemConfig = iniProcessor.getSystemConfig ();
+	SystemConfig systemConfig = iniProcessor.getSystemConfig ();
 	ConsistencyChecker consistencyChecker {systemConfig};
 	try
 	{
@@ -50,7 +51,7 @@ TEST (BA11ConsistencyTest, eitherBA11LOrBA11NConfigured)
 	IniProcessor iniProcessor;
 	EXPECT_NO_THROW (iniProcessor.process (ft));
 
-	vector<DeviceConfig> systemConfig = iniProcessor.getSystemConfig ();
+	SystemConfig systemConfig = iniProcessor.getSystemConfig ();
 	ConsistencyChecker consistencyChecker {systemConfig};
 	try
 	{
@@ -81,7 +82,7 @@ TEST (BA11ConsistencyTest, noUnibusDevicesOnQbus)
 	IniProcessor iniProcessor;
 	EXPECT_NO_THROW (iniProcessor.process (ft));
 
-	vector<DeviceConfig> systemConfig = iniProcessor.getSystemConfig ();
+	SystemConfig systemConfig = iniProcessor.getSystemConfig ();
 	ConsistencyChecker consistencyChecker {systemConfig};
 	try
 	{
@@ -112,7 +113,7 @@ TEST (BA11ConsistencyTest, noQbusDevicesOnUnibusbus)
 	IniProcessor iniProcessor;
 	EXPECT_NO_THROW (iniProcessor.process (ft));
 
-	vector<DeviceConfig> systemConfig = iniProcessor.getSystemConfig ();
+	SystemConfig systemConfig = iniProcessor.getSystemConfig ();
 	ConsistencyChecker consistencyChecker {systemConfig};
 	try
 	{

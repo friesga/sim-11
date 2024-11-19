@@ -1,3 +1,4 @@
+#include "configdata/systemconfig/systemconfig.h"
 #include "configdata/iniprocessor/iniprocessor.h"
 #include "configdata/kdf11_aconfig/kdf11_aconfig.h"
 #include "configdata/kd11config/kd11config.h"
@@ -16,7 +17,7 @@ TEST (KDF11_AConfiguratorTest, powerUpModeAccepted)
 	IniProcessor iniProcessor;
 	EXPECT_NO_THROW (iniProcessor.process (ft)); 
 
-	vector<DeviceConfig> systemConfig = 
+	SystemConfig systemConfig = 
 		iniProcessor.getSystemConfig ();
 
 	// The only device type in this testset is the KD11 so if that's
@@ -66,7 +67,7 @@ TEST (KDF11_AConfiguratorTest, KTF11_AisDetected)
 	IniProcessor iniProcessor;
 	iniProcessor.process (ft);
 
-	vector<DeviceConfig> systemConfig = 
+	SystemConfig systemConfig = 
 		iniProcessor.getSystemConfig ();
 
 	// The only device type in this testset is the KDF11-A so if that's
@@ -92,7 +93,7 @@ TEST (KDF11_AConfiguratorTest, KD11AndKDF11_AOptionsAreProcessed)
 	IniProcessor iniProcessor;
 	iniProcessor.process (ft);
 
-	vector<DeviceConfig> systemConfig = 
+	SystemConfig systemConfig = 
 		iniProcessor.getSystemConfig ();
 
 	// The only device type in this testset is the KDF11-A so if that's
@@ -143,7 +144,7 @@ TEST (KDF11_AConfiguratorTest, validStartingAddressAccepted)
 	IniProcessor iniProcessor;
 	iniProcessor.process (ft);
 
-	vector<DeviceConfig> systemConfig = 
+	SystemConfig systemConfig = 
 		iniProcessor.getSystemConfig ();
 
 	// The only device type in this testset is the KDF11-A so if that's

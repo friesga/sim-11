@@ -1,3 +1,4 @@
+#include "configdata/systemconfig/systemconfig.h"
 #include "configdata/iniprocessor/iniprocessor.h"
 #include "configdata/rl/rlconfig/rlconfig.h"
 
@@ -29,7 +30,7 @@ TEST (ConfigProcessorTest, allSectionsProcessedOnce)
 		
 	stream >> ft;
 
-	vector<DeviceConfig> allDevices
+	SystemConfig allDevices
 	{
 		shared_ptr<MSV11Config> {},
 		shared_ptr<DLV11JConfig> {},
@@ -53,7 +54,7 @@ TEST (ConfigProcessorTest, allSectionsProcessedOnce)
 		EXPECT_TRUE (foundIterator != allDevices.end());
 
 		// Mark the device types processed
-		allDevices.erase (foundIterator);
+		allDevices.remove (foundIterator);
 	}
 
 	// Verify all devices are processed

@@ -3,6 +3,7 @@
 
 #include "kd/include/pdp11processor.h"
 #include "configdata/deviceconfig/deviceconfig.h"
+#include "configdata/systemconfig/systemconfig.h"
 #include "ba11_n/ba11_n.h"
 #include "rxv21/rxv21.h"
 #include "rlv12/rlv12.h"
@@ -52,7 +53,7 @@ public:
 	PDP_11 (CmdLineOptions const &cmdLineOptions);
 	~PDP_11 ();
 	void configureDevices (Window *window);
-	void configureDevices (vector<DeviceConfig> systemConfig,
+	void configureDevices (SystemConfig systemConfig,
 		Window *window);
 	void run ();
 	void reset ();

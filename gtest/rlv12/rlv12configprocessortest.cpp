@@ -1,3 +1,4 @@
+#include "configdata/systemconfig/systemconfig.h"
 #include "configdata/iniprocessor/iniprocessor.h"
 #include "configdata/rl/rlconfig/rlconfig.h"
 
@@ -41,7 +42,7 @@ TEST (RLV12ConfigProcessorTest, configProcessed)
 
 	// Verify the device is present in the configuration with all attributes
 	// having their correct value.
-	vector<DeviceConfig> &configuration = 
+	SystemConfig &configuration = 
 		iniProcessor.getSystemConfig ();
 
 	ASSERT_TRUE (holds_alternative<shared_ptr<RLConfig>> (configuration[0]));
@@ -171,7 +172,7 @@ TEST (RLV12ConfigProcessorTest, spinUpTimeCorrectlyDefaulted)
 	// Verify the configuration is processed without errors
 	EXPECT_NO_THROW (iniProcessor.process (ft));
 
-	vector<DeviceConfig>& configuration =
+	SystemConfig& configuration =
 		iniProcessor.getSystemConfig ();
 
 	// The first and only device in the configuration should be the RLV12
@@ -218,7 +219,7 @@ TEST (RLV12ConfigProcessorTest, spinUpTimeHasCorrectValues)
 	// Verify the configuration is processed without errors
 	EXPECT_NO_THROW (iniProcessor.process (ft));
 
-	vector<DeviceConfig>& configuration =
+	SystemConfig& configuration =
 		iniProcessor.getSystemConfig ();
 
 	// The first and only device in the configuration should be the RLV12
@@ -261,7 +262,7 @@ TEST (RLV12ConfigProcessorTest, unitNumberCorrectlySet)
 	// Verify the configuration is processed without errors
 	EXPECT_NO_THROW (iniProcessor.process (ft));
 
-	vector<DeviceConfig>& configuration =
+	SystemConfig& configuration =
 		iniProcessor.getSystemConfig ();
 
 	// The first and only device in the configuration should be the RLV12
