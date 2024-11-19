@@ -8,6 +8,7 @@
 #include "configdata/consistencychecker/consistencychecker.h"
 #include "console/operatorconsole/operatorconsolefactory.h"
 #include "cabinet/cabinet.h"
+#include "overloaded.h"
 
 #include <memory>		// For make_unique
 #include <cstring>		// For memset()
@@ -39,12 +40,6 @@ void PDP_11::configureDevices (Window *window)
     installModules ();
     reset ();
 }
-
-// ”Inherit” all function call operators of passed base types
-template<typename... Ts> struct overloaded : Ts... { using Ts::operator()...; };
-
-// explicit deduction guide (not needed as of C++20)
-// template<typename... Ts> overloaded(Ts...) -> overloaded<Ts...>;
 
 // Configure the devices and install them on the bus.
 // Accessing a non-configured device will result in a bus time-out
