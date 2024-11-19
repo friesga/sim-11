@@ -59,6 +59,7 @@ public:
 
     void addDeviceConfig (const DeviceConfig& device);
     void remove (const Iterator& iter);
+    bool empty () const { return devices_.empty (); }
 
     Iterator begin () const { return Iterator (devices_.begin ()); }
     Iterator end () const { return Iterator (devices_.end ()); }
