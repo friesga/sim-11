@@ -28,7 +28,6 @@ public:
 private:
     SystemConfig const& systemConfig_;
 
-    bool isQbusSystem ();
     void checkQbusConfiguration ();
     void checkUnibusConfiguration ();
     void checkEitherBA11_NOrBA11_L ();

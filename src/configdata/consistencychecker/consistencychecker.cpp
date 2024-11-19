@@ -21,16 +21,6 @@ ConsistencyChecker::ConsistencyChecker (SystemConfig const& systemConfig)
     systemConfig_ {systemConfig}
 {}
 
-bool ConsistencyChecker::isQbusSystem ()
-{
-    auto isBA11_N = [] (DeviceConfig device)
-        {
-            return holds_alternative<shared_ptr<BA11_NConfig>> (device);
-        };
-
-    return find_if (systemConfig_, isBA11_N) != systemConfig_.end ();
-}
-
 // The presence of a BA-L or BA-N mounting box determines if we are dealing
 // with a Unibus or a Qbus system. This is the basis for all configuration
 // checks and we therefore check first of all if the BA11 configuration is
@@ -40,7 +30,7 @@ void ConsistencyChecker::checkAll ()
 {
     checkBA11Consistency ();
 
-    if (isQbusSystem ())
+    if (systemConfig_.isQbusSystem ())
         checkQbusConfiguration ();
     else
         checkUnibusConfiguration ();

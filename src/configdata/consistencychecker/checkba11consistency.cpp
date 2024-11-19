@@ -68,7 +68,7 @@ void ConsistencyChecker::checkBusConsistency ()
     // In the previous consistency checks we have assured that either a BA-L
     // or a BA-N mounting box is present in the configuration. A BA-L has
     // a Unibus backplane and a BA-N has a Qbus backplane.
-    if (isQbusSystem ())
+    if (systemConfig_.isQbusSystem ())
     {
         if (find_if (systemConfig_, unibusDevice) != systemConfig_.end ())
             throw invalid_argument {"A Qbus system cannot contain Unibus devices"};
