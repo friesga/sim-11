@@ -44,3 +44,6 @@ bool MS11P::responsible (BusAddress address)
 	return address >= startingAddress_ &&
 		address < startingAddress_ + memorySize_;
 }
+
+void MS11P::reset ()
+{}

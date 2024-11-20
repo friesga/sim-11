@@ -39,6 +39,7 @@ public:
     StatusCode read (BusAddress address, u16* destAddress) override;
     StatusCode writeWord (BusAddress address, u16 value) override;
     bool responsible (BusAddress address) override;
+    void reset () override;
 
 private:
     MS11PConfig::PowerSource powerSource_ {MS11PConfig::PowerSource::System};
