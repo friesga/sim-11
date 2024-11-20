@@ -51,38 +51,85 @@ void PDP_11::configureDevices (SystemConfig systemConfig,
     ConsistencyChecker consistencyChecker {systemConfig};
     consistencyChecker.checkAll ();
 
-    auto configVisitor = overloaded 
+    if (systemConfig.isQbusSystem ())
+        configureQbusSystem (systemConfig, window);
+    else
+        configureUnibusSystem (systemConfig, window);
+
+    installModules ();
+    reset ();
+}
+
+void PDP_11::configureQbusSystem (SystemConfig systemConfig,
+    Window* window)
+{ 
+    // At this point a Qbus system configuration should not contain
+    // any Unibus device.
+    auto configVisitor = overloaded
     {
         [this] (shared_ptr<KD11_NAConfig> kd11_naConfig)
-            {processor_ = new KD11_NA (&bus_, kd11_naConfig);},
+            {processor_ = new KD11_NA (&bus_, kd11_naConfig); },
         [this] (shared_ptr<KDF11_AConfig> kdf11_aConfig)
-            {processor_ = new KDF11_A (&bus_, kdf11_aConfig);},
+            {processor_ = new KDF11_A (&bus_, kdf11_aConfig); },
         [this] (shared_ptr<KDF11_BConfig> kdf11_bConfig)
-            {processor_ = new KDF11_B (&bus_, kdf11_bConfig);},
+            {processor_ = new KDF11_B (&bus_, kdf11_bConfig); },
         [this] (shared_ptr<MSV11Config> msv11Config)
-            {msv11_.push_back (new MSV11D (&bus_, msv11Config));},
+            {msv11_.push_back (new MSV11D (&bus_, msv11Config)); },
         [this] (shared_ptr<DLV11JConfig> dlv11jConfig)
-            {dlv11_ = new DLV11J (&bus_, dlv11jConfig);},
+            {dlv11_ = new DLV11J (&bus_, dlv11jConfig); },
         [this] (shared_ptr<BDV11Config> bdv11Config)
-            {bdv11_ = new BDV11 (&bus_, bdv11Config);},
+            {bdv11_ = new BDV11 (&bus_, bdv11Config); },
         [this] (shared_ptr<RXV21Config> rxv21Config)
-            {rxv21_ = new RXV21 (&bus_, rxv21Config);},
+            {rxv21_ = new RXV21 (&bus_, rxv21Config); },
         [this, window] (shared_ptr<RLConfig> rlConfig)
-            {rlv12_ = new RLV12 (&bus_, window, rlConfig);},
-        [this, window] (shared_ptr<BA11_NConfig> ba11_nConfig) 
-            {ba11_n_ = std::make_unique<BA11_N> (&bus_, window, ba11_nConfig);},
+            {rlv12_ = new RLV12 (&bus_, window, rlConfig); },
+        [this, window] (shared_ptr<BA11_NConfig> ba11_nConfig)
+            {ba11_n_ = std::make_unique<BA11_N> (&bus_, window, ba11_nConfig); },
+        [this] (shared_ptr<MS11PConfig> ms11pConfig)
+            { throw "Should not happen"; },
+        [this] (shared_ptr<BA11_LConfig> ba11lConfig)
+            { throw "Should not happen"; }
+    };
+
+    for (DeviceConfig deviceConfigVariant : systemConfig)
+    {
+            visit (configVisitor, deviceConfigVariant);
+    }
+}
+
+void PDP_11::configureUnibusSystem (SystemConfig systemConfig,
+    Window* window)
+{
+    // At this point a Unibus system configuration should not contain
+    // any Qbus device.
+    auto configVisitor = overloaded
+    {
+        [this] (shared_ptr<KD11_NAConfig> kd11_naConfig)
+            { throw "Should not happen"; },
+        [this] (shared_ptr<KDF11_AConfig> kdf11_aConfig)
+            { throw "Should not happen"; },
+        [this] (shared_ptr<KDF11_BConfig> kdf11_bConfig)
+            { throw "Should not happen"; },
+        [this] (shared_ptr<MSV11Config> msv11Config)
+            { throw "Should not happen"; },
+        [this] (shared_ptr<DLV11JConfig> dlv11jConfig)
+            { throw "Should not happen"; },
+        [this] (shared_ptr<BDV11Config> bdv11Config)
+            { throw "Should not happen"; },
+        [this] (shared_ptr<RXV21Config> rxv21Config)
+            { throw "Should not happen"; },
+        [this, window] (shared_ptr<RLConfig> rlConfig)
+            { throw "Should not happen"; },
+        [this, window] (shared_ptr<BA11_NConfig> ba11_nConfig)
+            { throw "Should not happen"; },
         [this] (shared_ptr<MS11PConfig> ms11pConfig)
             {/* Ignore MS11P for now */ },
         [this] (shared_ptr<BA11_LConfig> ba11lConfig)
-            {/* Ignore BA11-L for now */
- }
+            {/* Ignore BA11-L for now */ }
     };
 
     for (DeviceConfig deviceConfigVariant : systemConfig)
     {
         visit (configVisitor, deviceConfigVariant);
     }
-
-    installModules ();
-    reset ();
 }

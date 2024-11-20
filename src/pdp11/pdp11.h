@@ -47,6 +47,8 @@ class PDP_11
 	CmdLineOptions const &cmdLineOptions_;
 
 	u16 loadFile ();
+	void configureQbusSystem (SystemConfig systemConfig, Window* window);
+	void configureUnibusSystem (SystemConfig systemConfig, Window* window);
 	void installModules ();
 
 public:
