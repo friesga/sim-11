@@ -3,7 +3,7 @@
 #include "configdata/rxv21/rxv21config/rxv21config.h"
 #include "configdata/msv11config/msv11config.h"
 #include "configdata/bdv11config/bdv11config.h"
-#include "configdata/kdf11_aconfig/kdf11_aconfig.h"
+#include "configdata/kdf11/kdf11_a/kdf11_aconfig/kdf11_aconfig.h"
 #include "configdata/kdf11_b/kdf11_bconfig/kdf11_bconfig.h"
 #include "configdata/consistencychecker/consistencychecker.h"
 #include "console/operatorconsole/operatorconsolefactory.h"

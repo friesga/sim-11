@@ -7,7 +7,7 @@
 #include "configdata/serialconfig/dlv11processor/dlv11processor.h"
 #include "../msv11processor/msv11processor.h"
 #include "../kd11_naprocessor/kd11_naprocessor.h"
-#include "../kdf11_aprocessor/kdf11_aprocessor.h"
+#include "../kdf11/kdf11_a/kdf11_aprocessor/kdf11_aprocessor.h"
 #include "../kdf11_b/kdf11_bprocessor/kdf11_bprocessor.h"
 #include "../ms11pprocessor/ms11pprocessor.h"
 #include "../ba11lprocessor/ba11lprocessor.h"

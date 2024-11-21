@@ -2,7 +2,7 @@
 #define _KDF11_APROCESSOR_H_
 
 #include "configdata/sectionprocessor/deviceconfigprocessor.h"
-#include "../kd11processor/kd11processor.h"
+#include "configdata/kd11processor/kd11processor.h"
 #include "../kdf11_aconfig/kdf11_aconfig.h"
 
 #include <memory>

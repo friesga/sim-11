@@ -4,7 +4,7 @@
 #include "qbus/qbus.h"
 #include "kd/kdf11/kdf11_a/kdf11_a.h"
 #include "msv11d/msv11d.h"
-#include "configdata/kdf11_aconfig/kdf11_aconfig.h"
+#include "configdata/kdf11/kdf11_a/kdf11_aconfig/kdf11_aconfig.h"
 
 #include <gtest/gtest.h>
 #include <memory>
