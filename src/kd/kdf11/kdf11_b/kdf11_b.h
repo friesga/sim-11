@@ -8,7 +8,7 @@
 #include "kd/common/controllogic/controllogic.h"
 #include "kd/kdf11/cpudata/kdf11cpudata.h"
 #include "kd/kdf11/registerhandler/registerhandler.h"
-#include "kd/kdf11/kdf11_b/serial_line_units/serial_line_units.h"
+#include "kd/kdf11/serial_line_units/serial_line_units.h"
 #include "bdv11/bdv11.h"
 
 #include <memory>
