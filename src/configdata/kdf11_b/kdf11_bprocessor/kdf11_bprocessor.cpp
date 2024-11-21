@@ -1,5 +1,5 @@
 #include "kdf11_bprocessor.h"
-#include "../sluprocessor/sluprocessor.h"
+#include "configdata/kdf11/slu/sluprocessor/sluprocessor.h"
 #include "configdata/bdv11processor/bdv11processor.h"
 
 #include <variant>

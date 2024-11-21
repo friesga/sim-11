@@ -4,7 +4,7 @@
 #include "qbus/qbus.h"
 #include "abstractbusdevice/abstractbusdevice.h"
 #include "dl11/uart/uart.h"
-#include "configdata/kdf11/sluconfig/sluconfig.h"
+#include "configdata/kdf11/slu/sluconfig/sluconfig.h"
 
 #include <array>
 #include <memory>

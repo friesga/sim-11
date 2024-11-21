@@ -3,7 +3,7 @@
 
 #include "devicetype.h"
 #include "configdata/kd11config/kd11config.h"
-#include "configdata/kdf11/sluconfig/sluconfig.h"
+#include "configdata/kdf11/slu/sluconfig/sluconfig.h"
 #include "configdata/bdv11config/bdv11config.h"
 
 #include <memory>

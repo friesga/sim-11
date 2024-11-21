@@ -192,7 +192,7 @@ set (CONFIGURATOR_SRCS
     src/configdata/kdf11/kdf11_a/kdf11_aprocessor/kdf11_aprocessor.cpp
     src/configdata/kdf11_b/kdf11_bconfig/kdf11_bconfig.cpp
     src/configdata/kdf11_b/kdf11_bprocessor/kdf11_bprocessor.cpp
-    src/configdata/kdf11_b/sluprocessor/sluprocessor.cpp
+    src/configdata/kdf11/slu/sluprocessor/sluprocessor.cpp
     src/configdata/ms11pprocessor/ms11pprocessor.cpp
     src/configdata/consistencychecker/consistencychecker.cpp
     src/configdata/consistencychecker/checkba11consistency.cpp

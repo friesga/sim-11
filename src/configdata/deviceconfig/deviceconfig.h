@@ -12,7 +12,7 @@
 #include "configdata/rl/rlconfig/rlconfig.h"
 #include "configdata/rxv21/rxv21config/rxv21config.h"
 #include "configdata/serialconfig/dlv11jconfig/dlv11jconfig.h"
-#include "configdata/kdf11/sluconfig/sluconfig.h"
+#include "configdata/kdf11/slu/sluconfig/sluconfig.h"
 
 #include <variant>
 #include <memory>
