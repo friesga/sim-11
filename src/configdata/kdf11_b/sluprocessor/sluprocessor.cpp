@@ -1,5 +1,5 @@
 #include "sluprocessor.h"
-#include "../sluconfig/sluconfig.h"
+#include "../../kdf11/sluconfig/sluconfig.h"
 
 #include <utility>
 #include <string>

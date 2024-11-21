@@ -2,7 +2,7 @@
 #define _SLUPROCESSOR_H_
 
 #include "configdata/sectionprocessor/unitconfigprocessor.h"
-#include "configdata/kdf11_b/sluconfig/sluconfig.h"
+#include "configdata/kdf11/sluconfig/sluconfig.h"
 
 #include <memory>
 #include <map>
