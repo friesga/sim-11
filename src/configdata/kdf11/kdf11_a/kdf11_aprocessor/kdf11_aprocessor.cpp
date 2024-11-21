@@ -1,5 +1,5 @@
 #include "kdf11_aprocessor.h"
-#include "../kd11_naconfig/kd11_naconfig.h"
+#include "configdata/kd11_naconfig/kd11_naconfig.h"
 
 using std::move;
 using std::invalid_argument;

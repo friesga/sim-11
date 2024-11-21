@@ -188,8 +188,8 @@ set (CONFIGURATOR_SRCS
     src/configdata/rl/rlunitprocessor/rlunitprocessor.cpp
     src/configdata/kd11processor/kd11processor.cpp
     src/configdata/kd11_naprocessor/kd11_naprocessor.cpp
-    src/configdata/kdf11_aconfig/kdf11_aconfig.cpp
-    src/configdata/kdf11_aprocessor/kdf11_aprocessor.cpp
+    src/configdata/kdf11/kdf11_a/kdf11_aconfig/kdf11_aconfig.cpp
+    src/configdata/kdf11/kdf11_a/kdf11_aprocessor/kdf11_aprocessor.cpp
     src/configdata/kdf11_b/kdf11_bconfig/kdf11_bconfig.cpp
     src/configdata/kdf11_b/kdf11_bprocessor/kdf11_bprocessor.cpp
     src/configdata/kdf11_b/sluprocessor/sluprocessor.cpp
