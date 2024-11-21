@@ -1,6 +1,6 @@
 #include "configdata/systemconfig/systemconfig.h"
 #include "configdata/iniprocessor/iniprocessor.h"
-#include "configdata/kdf11_b/kdf11_bconfig/kdf11_bconfig.h"
+#include "configdata/kdf11/kdf11_b/kdf11_bconfig/kdf11_bconfig.h"
 #include "configdata/consistencychecker/consistencychecker.h"
 
 #include <fstream>	

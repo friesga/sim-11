@@ -4,7 +4,7 @@
 #include "kd/include/pdp11processor.h"
 #include "kd/kdf11/cpucontrol/kdf11_cpucontrol.h"
 #include "kd/kdf11/odt/kdf11_odt.h"
-#include "configdata/kdf11_b/kdf11_bconfig/kdf11_bconfig.h"
+#include "configdata/kdf11/kdf11_b/kdf11_bconfig/kdf11_bconfig.h"
 #include "kd/common/controllogic/controllogic.h"
 #include "kd/kdf11/cpudata/kdf11cpudata.h"
 #include "kd/kdf11/registerhandler/registerhandler.h"
