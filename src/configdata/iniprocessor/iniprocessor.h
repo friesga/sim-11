@@ -63,6 +63,7 @@ private:
 		{"KD11-NA", &IniProcessor::createKD11_NAProcessor},
 		{"KDF11-A", &IniProcessor::createKDF11_AProcessor},
 		{"KDF11-B", &IniProcessor::createKDF11_BProcessor},
+		{"KDF11-U", &IniProcessor::createKDF11_UProcessor},
 		{"MS11-P",  &IniProcessor::createMS11_PProcessor},
 		{"BA11-L",  &IniProcessor::createBA11_LProcessor}
 	};
@@ -77,6 +78,7 @@ private:
 	unique_ptr<DeviceConfigProcessor> createKD11_NAProcessor ();
 	unique_ptr<DeviceConfigProcessor> createKDF11_AProcessor ();
 	unique_ptr<DeviceConfigProcessor> createKDF11_BProcessor ();
+	unique_ptr<DeviceConfigProcessor> createKDF11_UProcessor ();
 	unique_ptr<DeviceConfigProcessor> createMS11_PProcessor ();
 	unique_ptr<DeviceConfigProcessor> createBA11_LProcessor ();
 };
