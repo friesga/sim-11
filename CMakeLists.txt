@@ -211,8 +211,9 @@ set (CHRONO_SRCS
     src/chrono/alarmclock/alarmclock.cpp
     src/chrono/wakeupcall/alarmwakeupcall/alarmwakeupcall.cpp)
 
-set (BA11_N_SRCS
-    src/ba11_n/ba11_n.cpp)
+set (BA11_SRCS
+    src/ba11_n/ba11_n.cpp
+    src/ba11_l/ba11_l.cpp)
 
 set (BDV11_SRCS
     src/bdv11/bdv11.cpp
@@ -283,7 +284,7 @@ endif ()
 
 # Define source files
 set (SIM11_SRCS
-    ${BA11_N_SRCS}
+    ${BA11_SRCS}
     ${CONSOLE_SRCS}
     ${CHRONO_SRCS}
     src/asynctimer/asynctimer.cpp

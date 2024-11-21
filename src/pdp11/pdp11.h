@@ -5,6 +5,7 @@
 #include "configdata/deviceconfig/deviceconfig.h"
 #include "configdata/systemconfig/systemconfig.h"
 #include "ba11_n/ba11_n.h"
+#include "ba11_l/ba11_l.h"
 #include "rxv21/rxv21.h"
 #include "rlv12/rlv12.h"
 #include "bdv11/bdv11.h"
@@ -44,6 +45,7 @@ class PDP_11
 	DLV11J *dlv11_;
 	BDV11 *bdv11_;
 	unique_ptr<BA11_N> ba11_n_;
+	unique_ptr<BA11_L> ba11_l_;
 	CmdLineOptions const &cmdLineOptions_;
 
 	u16 loadFile ();

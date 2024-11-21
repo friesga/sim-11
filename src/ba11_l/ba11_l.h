@@ -15,7 +15,7 @@ using std::shared_ptr;
 class BA11_L
 {
 public:
-    BA11_L (Qbus* bus, Window* window, shared_ptr<BA11LConfig> ba11lConfig);
+    BA11_L (Qbus* bus, Window* window, shared_ptr<BA11_LConfig> ba11lConfig);
 
 private:
     // Definition of the front, indicators and buttons on the BA11_N panel

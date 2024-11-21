@@ -1,4 +1,4 @@
-#include "ba11l.h"
+#include "ba11_l.h"
 
 //
 // Support for the BA11-L Mounting Box with the PDP-11/24 front panel
@@ -15,17 +15,13 @@ using std::map;
 // Constructor
 // Create a window showing the BA11-L start a thread handling the events
 // and render the lamps and switches.
-BA11_L::BA11_L (Qbus* bus, Window* window, shared_ptr<BA11LConfig> ba11lConfig)
+BA11_L::BA11_L (Qbus* bus, Window* window, shared_ptr<BA11_LConfig> ba11lConfig)
     :
     bus_ {bus},
     frontWindow_ {window}
 {
     createBezel (ba11lConfig->cabinetPosition);
 }
-
-// Destructor
-BA11L::~BA11L ()
-{}
 
 // Create the BA11-L panel at the specified position, width and height
 // and then start a loop handling the events and rendering lamps and
@@ -64,5 +60,6 @@ BA11L::~BA11L ()
 // 
 void BA11_L::createBezel (shared_ptr<Cabinet::Position> cabinetPosition)
 {
-    Panel* panel = frontWindow_->createPanel (cabinetPosition, BA11LConfig::unitHeight);
+    Panel* panel = frontWindow_->createPanel (cabinetPosition, BA11_LConfig::unitHeight);
+    panel->createFront ("../../assets/11_24-front.jpg", ba11_nFrontFrame);
 }

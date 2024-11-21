@@ -124,8 +124,8 @@ void PDP_11::configureUnibusSystem (SystemConfig systemConfig,
             { throw "Should not happen"; },
         [this] (shared_ptr<MS11PConfig> ms11pConfig)
             {/* Ignore MS11P for now */ },
-        [this] (shared_ptr<BA11_LConfig> ba11lConfig)
-            {/* Ignore BA11-L for now */ }
+        [this, window] (shared_ptr<BA11_LConfig> ba11_lConfig)
+            {ba11_l_ = std::make_unique<BA11_L> (&bus_, window, ba11_lConfig); },
     };
 
     for (DeviceConfig deviceConfigVariant : systemConfig)
