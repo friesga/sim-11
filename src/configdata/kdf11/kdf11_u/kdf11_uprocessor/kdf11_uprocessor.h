@@ -26,7 +26,8 @@ private:
 	map<string, Process> valueProcessors =
 	{
 		{"power-up_mode", &KDF11_UProcessor::processPowerUpMode},
-		{"kernel_halt", &KDF11_UProcessor::processKernelHaltMode}
+		{"kernel_halt",   &KDF11_UProcessor::processKernelHaltMode},
+		{"boot_address",  &KDF11_UProcessor::processBootAddress}
 	};
 
 	map<string, KDF11_UConfig::PowerUpMode> validPowerUpModes =
@@ -58,6 +59,7 @@ private:
 	void processSubsection (iniparser::Section* subSection) override;
 	void processPowerUpMode (iniparser::Value value);
 	void processKernelHaltMode (iniparser::Value value);
+	void processBootAddress (iniparser::Value value);
 	void processSLUSubsection (iniparser::Section* subSection);
 };
 

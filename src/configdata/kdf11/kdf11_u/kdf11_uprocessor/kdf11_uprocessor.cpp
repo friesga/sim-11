@@ -65,6 +65,27 @@ void KDF11_UProcessor::processKernelHaltMode (iniparser::Value value)
 		throw invalid_argument {"Incorrect KDF11-U kernel_halt value"};
 }
 
+// The boot address is either 0165000 or 173000.
+void  KDF11_UProcessor::processBootAddress (iniparser::Value value)
+{
+	u16 bootAddress {0};
+	try
+	{
+		bootAddress = touint<u16> (value.asString ());
+	}
+	catch (std::invalid_argument const&)
+	{
+		throw invalid_argument {"Incorrect boot address in KDF11-U section specified: " +
+			value.asString ()};
+	}
+
+	// Check the starting address is on a 256-word boundary
+	if (bootAddress != 0165000 && bootAddress != 0173000)
+		throw invalid_argument {"KDF11-U boot address must be either 0165000 or 0173000"};
+
+	kdf11_uConfigPtr->bootAddress = bootAddress;
+}
+
 void KDF11_UProcessor::processSLUSubsection (iniparser::Section* subSection)
 {
 	SLUProcessor sluProcessor {};

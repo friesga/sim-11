@@ -106,6 +106,81 @@ TEST (KDF11_UConfiguratorTest, invalidKernelHaltModeThrows)
 	}
 }
 
+TEST (KDF11_UConfiguratorTest, validBootAddressAccepted)
+{
+	iniparser::File ft;
+	std::stringstream stream;
+	stream << "[KDF11-U]\n"
+		"boot_address = 0173000\n";
+	stream >> ft;
+
+	IniProcessor iniProcessor;
+	iniProcessor.process (ft);
+
+	SystemConfig systemConfig =
+		iniProcessor.getSystemConfig ();
+
+	// The only device type in this testset is the KDF11-U so if that's
+	// not correct the following tests will fail too.
+	ASSERT_TRUE (holds_alternative<shared_ptr<KDF11_UConfig>> (systemConfig[0]));
+
+	// The device's type is KDF11-U so the configuration is a KDF11_UConfig
+	auto kdf11_uConfig =
+		get<shared_ptr<KDF11_UConfig>> (systemConfig[0]);
+
+	EXPECT_EQ (kdf11_uConfig->bootAddress, 0173000);
+}
+
+TEST (KDF11_UConfiguratorTest, invalidBootAddressThrows)
+{
+	iniparser::File ft;
+	std::stringstream stream;
+	stream << "[KDF11-U]\n"
+		"boot_address = true";
+	stream >> ft;
+
+	IniProcessor iniProcessor;
+
+	try
+	{
+		iniProcessor.process (ft);
+		FAIL ();
+	}
+	catch (std::invalid_argument const& except)
+	{
+		EXPECT_STREQ (except.what (), "Incorrect boot address in KDF11-U section specified: true");
+	}
+	catch (...)
+	{
+		FAIL ();
+	}
+}
+
+TEST (KDF11_UConfiguratorTest, IncorrectBootAddressThrows)
+{
+	iniparser::File ft;
+	std::stringstream stream;
+	stream << "[KDF11-U]\n"
+		"boot_address = 0173010";
+	stream >> ft;
+
+	IniProcessor iniProcessor;
+
+	try
+	{
+		iniProcessor.process (ft);
+		FAIL ();
+	}
+	catch (std::invalid_argument const& except)
+	{
+		EXPECT_STREQ (except.what (), "KDF11-U boot address must be either 0165000 or 0173000");
+	}
+	catch (...)
+	{
+		FAIL ();
+	}
+}
+
 /*
 
 
