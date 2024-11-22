@@ -181,15 +181,13 @@ TEST (KDF11_UConfiguratorTest, IncorrectBootAddressThrows)
 	}
 }
 
-/*
 
-
-TEST (KDF11_BConfiguratorTest, startingAddressThrows)
+TEST (KDF11_UConfiguratorTest, invalidSubSectionThrows)
 {
     iniparser::File ft;
 	std::stringstream stream;
 	stream << "[KDF11-U]\n"
-		"starting_address = 0173000\n";
+		"[KDF11-U.XXX]\n";
 	stream >> ft;
 
 	IniProcessor iniProcessor;
@@ -201,62 +199,10 @@ TEST (KDF11_BConfiguratorTest, startingAddressThrows)
 	}
 	catch (std::invalid_argument const &except)
 	{
-		EXPECT_STREQ (except.what(), "Unknown key in section KDF11-U: starting_address");
+		EXPECT_STREQ (except.what(), "Unknown KDF11-U subsection: XXX");
 	}
 	catch (...)
 	{
 		FAIL();
 	}
 }
-
-TEST (KDF11_BConfiguratorTest, invalidSubSectionThrows)
-{
-    iniparser::File ft;
-	std::stringstream stream;
-	stream << "[KDF11-B]\n"
-		"[KDF11-B.XXX]\n";
-	stream >> ft;
-
-	IniProcessor iniProcessor;
-
-	try
-	{
-		iniProcessor.process (ft);
-		FAIL();
-	}
-	catch (std::invalid_argument const &except)
-	{
-		EXPECT_STREQ (except.what(), "Unknown KDF11-B subsection: XXX");
-	}
-	catch (...)
-	{
-		FAIL();
-	}
-}
-
-TEST (KDF11_BConfiguratorTest, doubleSubSectionDefinitionThrows)
-{
-    iniparser::File ft;
-	std::stringstream stream;
-	stream << "[KDF11-B]\n"
-		"[KDF11-B.BDV11]\n"
-		"[KDF11-B.BDV11]\n";
-	stream >> ft;
-
-	IniProcessor iniProcessor;
-
-	try
-	{
-		iniProcessor.process (ft);
-		FAIL();
-	}
-	catch (std::invalid_argument const &except)
-	{
-		EXPECT_STREQ (except.what(), "Double specification for KDF11-B BDV11");
-	}
-	catch (...)
-	{
-		FAIL();
-	}
-}
-*/
