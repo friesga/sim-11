@@ -426,6 +426,7 @@ set (GTEST_SRCS
     gtest/ba11_nconfiguratortest.cpp
     gtest/ba11lconfiguratortest.cpp
     gtest/ba11consistencytest.cpp
+    gtest/unibusconsistencytest.cpp
     gtest/bdv11configuratortest.cpp
     gtest/dlv11configuratortest.cpp
     gtest/fistest.cpp

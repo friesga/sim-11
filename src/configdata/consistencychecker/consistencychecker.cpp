@@ -31,9 +31,9 @@ void ConsistencyChecker::checkAll ()
     checkBA11Consistency ();
 
     if (systemConfig_.isQbusSystem ())
-        checkQbusConfiguration ();
+        checkQbusConsistency ();
     else
-        checkUnibusConfiguration ();
+        checkUnibusConsistency ();
 }
 
 // Check the system configuration for the presence of some indispensible
@@ -42,7 +42,7 @@ void ConsistencyChecker::checkAll ()
 // in a more lifelike way such as setting led indicators.
 //
 // ToDo: Move checks to separate functions.
-void ConsistencyChecker::checkQbusConfiguration ()
+void ConsistencyChecker::checkQbusConsistency ()
 {
     vector<DeviceConfig> presentDevices {};
 
@@ -89,8 +89,14 @@ void ConsistencyChecker::checkQbusConfiguration ()
     checkConsoleConsistency ();
 }
 
-void ConsistencyChecker::checkUnibusConfiguration ()
+void ConsistencyChecker::checkUnibusConsistency ()
 {
+    size_t numberOFProcessors =
+        count_if (systemConfig_, &ConsistencyChecker::findDevice<KDF11_UConfig>);
+
+    if (numberOFProcessors == 0)
+        throw invalid_argument ("No processor configured, this system cannot run.");
+
     checkMS11Consistency<MS11PConfig, 1024 * 1024> ();
 }
 

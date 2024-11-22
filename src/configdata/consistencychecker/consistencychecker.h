@@ -20,6 +20,8 @@ public:
     void checkAll ();
 
     void checkBA11Consistency ();
+    void checkQbusConsistency ();
+    void checkUnibusConsistency ();
     void checkConsoleConsistency ();
     template<typename TConfig, size_t capacity> void checkMS11Consistency ();
     void checkKDF11_BConsistency ();
@@ -28,8 +30,7 @@ public:
 private:
     SystemConfig const& systemConfig_;
 
-    void checkQbusConfiguration ();
-    void checkUnibusConfiguration ();
+
     void checkEitherBA11_NOrBA11_L ();
     void checkOneBA11 ();
     void checkBusConsistency ();
