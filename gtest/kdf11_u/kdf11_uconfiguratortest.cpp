@@ -31,7 +31,6 @@ TEST (KDF11_UConfiguratorTest, powerUpModeAccepted)
 	EXPECT_EQ (kdf11_uConfig->powerUpMode, KDF11_UConfig::PowerUpMode::Boot);
 }
 
-/*
 TEST (KDF11_UConfiguratorTest, invalidPowerUpModeThrows)
 {
     iniparser::File ft;
@@ -49,7 +48,7 @@ TEST (KDF11_UConfiguratorTest, invalidPowerUpModeThrows)
 	}
 	catch (std::invalid_argument const &except)
 	{
-		EXPECT_STREQ (except.what(), "Incorrect KD11 power-up_mode value");
+		EXPECT_STREQ (except.what(), "Incorrect KDF11-U power-up_mode value");
 	}
 	catch (...)
 	{
@@ -57,12 +56,37 @@ TEST (KDF11_UConfiguratorTest, invalidPowerUpModeThrows)
 	}
 }
 
-TEST (KDF11_UConfiguratorTest, KTF11_AOptionThrows)
+TEST (KDF11_UConfiguratorTest, kernelHaltModeAccepted)
 {
-    iniparser::File ft;
+	iniparser::File ft;
 	std::stringstream stream;
 	stream << "[KDF11-U]\n"
-		"KTF11-A = true";
+		"kernel_halt = allow_halt\n";
+	stream >> ft;
+
+	IniProcessor iniProcessor;
+	EXPECT_NO_THROW (iniProcessor.process (ft));
+
+	SystemConfig systemConfig =
+		iniProcessor.getSystemConfig ();
+
+	// The only device type in this testset is the KDF11-U so if that's
+	// not correct the following tests will fail too.
+	ASSERT_TRUE (holds_alternative<shared_ptr<KDF11_UConfig>> (systemConfig[0]));
+
+	// The device's type is KDF11-U so the configuration is a KDF11_UConfig object
+	auto kdf11_uConfig =
+		get<shared_ptr<KDF11_UConfig>> (systemConfig[0]);
+
+	EXPECT_EQ (kdf11_uConfig->kernelHaltMode, KDF11_UConfig::KernelHaltMode::AllowHalt);
+}
+
+TEST (KDF11_UConfiguratorTest, invalidKernelHaltModeThrows)
+{
+	iniparser::File ft;
+	std::stringstream stream;
+	stream << "[KDF11-U]\n"
+		"kernel_halt = invalid\n";
 	stream >> ft;
 
 	IniProcessor iniProcessor;
@@ -70,17 +94,20 @@ TEST (KDF11_UConfiguratorTest, KTF11_AOptionThrows)
 	try
 	{
 		iniProcessor.process (ft);
-		FAIL();
+		FAIL ();
 	}
-	catch (std::invalid_argument const &except)
+	catch (std::invalid_argument const& except)
 	{
-		EXPECT_STREQ (except.what(), "Unknown key in section KDF11-U: KTF11-A");
+		EXPECT_STREQ (except.what (), "Incorrect KDF11-U kernel_halt value");
 	}
 	catch (...)
 	{
-		FAIL();
+		FAIL ();
 	}
 }
+
+/*
+
 
 TEST (KDF11_BConfiguratorTest, startingAddressThrows)
 {

@@ -51,7 +51,7 @@ void KDF11_UProcessor::processPowerUpMode (iniparser::Value value)
 			validPowerUpModes.end ())
 		kdf11_uConfigPtr->powerUpMode = iter->second;
 	else
-		throw invalid_argument {"Incorrect KDF11 power-up_mode value"};
+		throw invalid_argument {"Incorrect KDF11-U power-up_mode value"};
 }
 
 void KDF11_UProcessor::processKernelHaltMode (iniparser::Value value)
@@ -62,7 +62,7 @@ void KDF11_UProcessor::processKernelHaltMode (iniparser::Value value)
 			validKernelHaltModes.end ())
 		kdf11_uConfigPtr->kernelHaltMode = iter->second;
 	else
-		throw invalid_argument {"Incorrect KDF11 kernel_halt value"};
+		throw invalid_argument {"Incorrect KDF11-U kernel_halt value"};
 }
 
 void KDF11_UProcessor::processSLUSubsection (iniparser::Section* subSection)
