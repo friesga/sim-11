@@ -22,26 +22,7 @@ void KDF11_UProcessor::checkConsistency ()
 }
 
 void KDF11_UProcessor::processSubsection (iniparser::Section* subSection)
-{
-	SectionProcessDef* sectionProcessDef;
-
-	try
-	{
-		sectionProcessDef = &sectionProcess.at (subSection->name ());
-	}
-	catch (std::out_of_range const&)
-	{
-		throw std::invalid_argument {"Unknown KDF11-U subsection: " +
-			subSection->name ()};
-	}
-
-	if (sectionProcessDef->defined)
-		throw std::invalid_argument {"Double specification for KDF11-U " +
-			subSection->name ()};
-	sectionProcessDef->defined = true;
-
-	(this->*sectionProcessDef->sectionProcessor) (subSection);
-}
+{}
 
 void KDF11_UProcessor::processPowerUpMode (iniparser::Value value)
 {
@@ -84,15 +65,6 @@ void  KDF11_UProcessor::processBootAddress (iniparser::Value value)
 		throw invalid_argument {"KDF11-U boot address must be either 0165000 or 0173000"};
 
 	kdf11_uConfigPtr->bootAddress = bootAddress;
-}
-
-void KDF11_UProcessor::processSLUSubsection (iniparser::Section* subSection)
-{
-	SLUProcessor sluProcessor {};
-	sluProcessor.processSection (subSection);
-
-	// Add the configuration to the KDF11-U configuration
-	kdf11_uConfigPtr->sluConfig = sluProcessor.getConfig ();
 }
 
 DeviceConfig KDF11_UProcessor::getConfig ()

@@ -181,28 +181,36 @@ TEST (KDF11_UConfiguratorTest, IncorrectBootAddressThrows)
 	}
 }
 
-
-TEST (KDF11_UConfiguratorTest, invalidSubSectionThrows)
+TEST (KDF11_UConfiguratorTest, slusHaveDefaultConfiguration)
 {
-    iniparser::File ft;
+	iniparser::File ft;
 	std::stringstream stream;
-	stream << "[KDF11-U]\n"
-		"[KDF11-U.XXX]\n";
+	stream << "[KDF11-U]\n";
 	stream >> ft;
 
 	IniProcessor iniProcessor;
+	EXPECT_NO_THROW (iniProcessor.process (ft));
 
-	try
-	{
-		iniProcessor.process (ft);
-		FAIL();
-	}
-	catch (std::invalid_argument const &except)
-	{
-		EXPECT_STREQ (except.what(), "Unknown KDF11-U subsection: XXX");
-	}
-	catch (...)
-	{
-		FAIL();
-	}
+	SystemConfig systemConfig =
+		iniProcessor.getSystemConfig ();
+
+	// The only device type in this testset is the KDF11-U so if that's
+	// not correct the following tests will fail too.
+	ASSERT_TRUE (holds_alternative<shared_ptr<KDF11_UConfig>> (systemConfig[0]));
+
+	// The device's type is KDF11-U so the configuration is a KDF11_UConfig object
+	auto kdf11_uConfig =
+		get<shared_ptr<KDF11_UConfig>> (systemConfig[0]);
+
+	SLUConfig* sluConfig = (SLUConfig*)kdf11_uConfig->sluConfig.get ();
+
+	EXPECT_EQ (sluConfig->uartConfig[0].enabled_, true);
+	EXPECT_EQ (sluConfig->uartConfig[0].baseAddress_, 0177560);
+	EXPECT_EQ (sluConfig->uartConfig[0].baseVector_, 060);
+	EXPECT_EQ (sluConfig->uartConfig[0].loopback_, true);
+
+	EXPECT_EQ (sluConfig->uartConfig[1].enabled_, true);
+	EXPECT_EQ (sluConfig->uartConfig[1].baseAddress_, 0176500);
+	EXPECT_EQ (sluConfig->uartConfig[1].baseVector_, 0300);
+	EXPECT_EQ (sluConfig->uartConfig[1].loopback_, true);
 }

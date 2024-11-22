@@ -44,6 +44,9 @@ struct KDF11_UConfig : public DeviceType<BusType::Unibus>
     // Jumper W14 selects boot address when boot on powerup is enabled,
     // either 0165000 or 0173000.
     u16 bootAddress {0165000};
+
+    // The serial line units in the KDF11-U are fixed at their default addresses
+    // and therefor cannot be configured
     shared_ptr<SLUConfig> sluConfig;
 
     KDF11_UConfig ();

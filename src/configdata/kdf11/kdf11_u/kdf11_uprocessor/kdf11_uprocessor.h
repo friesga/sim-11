@@ -42,25 +42,12 @@ private:
 		{"illegal_instruction", KDF11_UConfig::KernelHaltMode::IllegalInstructionTrap}
 	};
 
-	struct SectionProcessDef
-	{
-		SectionProcess sectionProcessor;
-		bool defined {false};
-	};
-
-	// A KDF11-B module comprises besides the processor two serial line units
-	map<string, SectionProcessDef> sectionProcess =
-	{
-		{"SLU",   {&KDF11_UProcessor::processSLUSubsection, false}},
-	};
-
 	void processValue (iniparser::Section::ValueIterator valueIterator) override;
 	void checkConsistency () override;
 	void processSubsection (iniparser::Section* subSection) override;
 	void processPowerUpMode (iniparser::Value value);
 	void processKernelHaltMode (iniparser::Value value);
 	void processBootAddress (iniparser::Value value);
-	void processSLUSubsection (iniparser::Section* subSection);
 };
 
 #endif // _KDF11_UPROCESSOR_H_

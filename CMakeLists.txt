@@ -445,9 +445,9 @@ set (GTEST_SRCS
     gtest/kdf11_a/kdf11_a_odttest.cpp
     gtest/kdf11_a/kdf11_instr_timingtest.cpp
     gtest/kdf11_b/kdf11_bconfiguratortest.cpp
-    gtest/kdf11_u/kdf11_uconfiguratortest.cpp
     gtest/kdf11_b/sluconfiguratortest.cpp
     gtest/kdf11_b/kdf11b_bdv11configuratortest.cpp
+    gtest/kdf11_u/kdf11_uconfiguratortest.cpp
     gtest/locationtest.cpp
     gtest/msv11configuratortest.cpp
     gtest/ms11pconfiguratortest.cpp
