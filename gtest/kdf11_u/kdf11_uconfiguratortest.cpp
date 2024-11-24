@@ -28,7 +28,7 @@ TEST (KDF11_UConfiguratorTest, powerUpModeAccepted)
 	auto kdf11_uConfig = 
 		get<shared_ptr<KDF11_UConfig>> (systemConfig[0]);
 
-	EXPECT_EQ (kdf11_uConfig->powerUpMode, KDF11_UConfig::PowerUpMode::Boot);
+	EXPECT_EQ (kdf11_uConfig->powerUpMode, KD11Config::PowerUpMode::Bootstrap);
 }
 
 TEST (KDF11_UConfiguratorTest, invalidPowerUpModeThrows)
@@ -48,11 +48,36 @@ TEST (KDF11_UConfiguratorTest, invalidPowerUpModeThrows)
 	}
 	catch (std::invalid_argument const &except)
 	{
-		EXPECT_STREQ (except.what(), "Incorrect KDF11-U power-up_mode value");
+		EXPECT_STREQ (except.what(), "Incorrect KD11 power-up_mode value");
 	}
 	catch (...)
 	{
 		FAIL();
+	}
+}
+
+TEST (KDF11_UConfiguratorTest, odtPowerUpModeThrows)
+{
+	iniparser::File ft;
+	std::stringstream stream;
+	stream << "[KDF11-U]\n"
+		"power-up_mode = ODT\n";
+	stream >> ft;
+
+	IniProcessor iniProcessor;
+
+	try
+	{
+		iniProcessor.process (ft);
+		FAIL ();
+	}
+	catch (std::invalid_argument const& except)
+	{
+		EXPECT_STREQ (except.what (), "Invalid KDF11-U power-up_mode, must be Vector or Bootstrap");
+	}
+	catch (...)
+	{
+		FAIL ();
 	}
 }
 

@@ -18,11 +18,10 @@ struct KDF11_UConfig : public DeviceType<BusType::Unibus>
     // Vector - Power up via location 024 provided the optional battery backup
     //          unit is installed and functioning
     //
-    enum class PowerUpMode
-    {
-        Boot,
-        Vector
-    };
+    // The KD11Config::PowerUpMode is used in all KD11 processors as it is
+    // passed to the processor's ControlLogic component.
+    //
+    KD11Config::PowerUpMode powerUpMode {KD11Config::PowerUpMode::Bootstrap};
 
     // Jumper W3 controls kernel halt enable:
     // 
@@ -38,7 +37,6 @@ struct KDF11_UConfig : public DeviceType<BusType::Unibus>
         IllegalInstructionTrap
     };
 
-    PowerUpMode powerUpMode {PowerUpMode::Boot};
     KernelHaltMode kernelHaltMode {KernelHaltMode::AllowHalt};
 
     // Jumper W14 selects boot address when boot on powerup is enabled,

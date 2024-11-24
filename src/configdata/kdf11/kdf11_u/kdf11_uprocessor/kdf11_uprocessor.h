@@ -30,12 +30,6 @@ private:
 		{"boot_address",  &KDF11_UProcessor::processBootAddress}
 	};
 
-	map<string, KDF11_UConfig::PowerUpMode> validPowerUpModes =
-	{
-		{"bootstrap", KDF11_UConfig::PowerUpMode::Boot},
-		{"vector",    KDF11_UConfig::PowerUpMode::Vector}
-	};
-
 	map<string, KDF11_UConfig::KernelHaltMode> validKernelHaltModes =
 	{
 		{"allow_halt", KDF11_UConfig::KernelHaltMode::AllowHalt},

@@ -26,13 +26,13 @@ void KDF11_UProcessor::processSubsection (iniparser::Section* subSection)
 
 void KDF11_UProcessor::processPowerUpMode (iniparser::Value value)
 {
-	map<string, KDF11_UConfig::PowerUpMode>::iterator iter;
+	KD11Processor kd11Procesor;
+	kdf11_uConfigPtr->powerUpMode =
+		kd11Procesor.processPowerUpMode (value);
 
-	if ((iter = validPowerUpModes.find (value.asString ())) !=
-			validPowerUpModes.end ())
-		kdf11_uConfigPtr->powerUpMode = iter->second;
-	else
-		throw invalid_argument {"Incorrect KDF11-U power-up_mode value"};
+	// Valid power-up options for the KDF11-U are Vector and Bootstrap.
+	if (kdf11_uConfigPtr->powerUpMode == KD11Config::PowerUpMode::ODT)
+        throw invalid_argument {"Invalid KDF11-U power-up_mode, must be Vector or Bootstrap"};
 }
 
 void KDF11_UProcessor::processKernelHaltMode (iniparser::Value value)
