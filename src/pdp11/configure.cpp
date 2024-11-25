@@ -128,7 +128,7 @@ void PDP_11::configureUnibusSystem (SystemConfig systemConfig,
         [this] (shared_ptr<KDF11_UConfig> kdf11_uConfig)
             {processor_ = new KDF11_U (&bus_, kdf11_uConfig); },
         [this] (shared_ptr<MS11PConfig> ms11pConfig)
-            {/* Ignore MS11P for now */ },
+            {ms11p_.push_back (new MS11P (&bus_, ms11pConfig)); },
         [this, window] (shared_ptr<BA11_LConfig> ba11_lConfig)
             {ba11_l_ = std::make_unique<BA11_L> (&bus_, window, ba11_lConfig); },
     };

@@ -11,6 +11,7 @@
 #include "bdv11/bdv11.h"
 #include "dl11/dlv11j/dlv11j.h"
 #include "msv11d/msv11d.h"
+#include "ms11p/ms11p.h"
 #include "kd/kd11_na/kd11_na.h"
 #include "kd/kdf11/kdf11_a/kdf11_a.h"
 #include "kd/kdf11/kdf11_b/kdf11_b.h"
@@ -41,6 +42,7 @@ class PDP_11
 	// The PDP11Processor is either a KD11_NA or a KDF11_A.
 	PDP11Processor *processor_;
 	vector<MSV11D*> msv11_;
+	vector<MS11P*> ms11p_;
 	RXV21 *rxv21_;
 	RLV12 *rlv12_;
 	DLV11J *dlv11_;
