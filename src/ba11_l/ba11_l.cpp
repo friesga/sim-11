@@ -61,5 +61,5 @@ BA11_L::BA11_L (Qbus* bus, Window* window, shared_ptr<BA11_LConfig> ba11lConfig)
 void BA11_L::createBezel (shared_ptr<Cabinet::Position> cabinetPosition)
 {
     Panel* panel = frontWindow_->createPanel (cabinetPosition, BA11_LConfig::unitHeight);
-    panel->createFront ("../../assets/11_24-front.jpg", ba11_nFrontFrame);
+    panel->createFront ("../../assets/11_24-front.png", ba11_nFrontFrame);
 }
