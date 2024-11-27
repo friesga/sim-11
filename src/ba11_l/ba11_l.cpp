@@ -62,4 +62,16 @@ void BA11_L::createBezel (shared_ptr<Cabinet::Position> cabinetPosition)
 {
     Panel* panel = frontWindow_->createPanel (cabinetPosition, BA11_LConfig::unitHeight);
     panel->createFront ("../../assets/11_24-front.png", ba11_nFrontFrame);
+    powerSwitch_ = panel->createFourPositionSwitch (
+        {"../../assets/power_p0.png",
+         "../../assets/power_p1.png",
+         "../../assets/power_p2.png",
+         "../../assets/power_p3.png"},
+        Button::FourPositionsState::P0,
+        bind (&BA11_L::powerSwitchClicked, this, _1),
+        powerSwitchFrame);
+}
+
+void BA11_L::powerSwitchClicked (Button::State state)
+{
 }
