@@ -2,6 +2,7 @@
 #include "../sdlrenderer/sdlrenderer.h"
 
 using std::make_unique;
+using std::get;
 
 SDLCommonButton::SDLCommonButton (string buttonDownImage, string buttonUpImage,
     Button::TwoPositionsState initialState, unique_ptr<SDLRenderer> &sdlRenderer,
@@ -20,9 +21,9 @@ SDLCommonButton::SDLCommonButton (string buttonDownImage, string buttonUpImage,
 SDLCommonButton::~SDLCommonButton ()
 {}
 
-void SDLCommonButton::setState (TwoPositionsState newState)
+void SDLCommonButton::setState (State newState)
 {
-    buttonState_ = newState;
+    buttonState_ = get<TwoPositionsState> (newState);
 }
 
 Button::TwoPositionsState SDLCommonButton::toggleState (TwoPositionsState oldState)

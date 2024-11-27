@@ -44,17 +44,17 @@ void RL01_02::createBezel (Window* window,
         writeProtectButtonFrame);
 }
 
-void RL01_02::loadButtonClicked (Button::TwoPositionsState state)
+void RL01_02::loadButtonClicked (Button::State state)
 {
-    if (state == Button::TwoPositionsState::Down)
+    if (get<Button::TwoPositionsState> (state) == Button::TwoPositionsState::Down)
         sendTrigger (SpinUp {});
     else
         sendTrigger (SpinDown {});
 }
 
-void RL01_02::writeProtectButtonClicked (Button::TwoPositionsState state)
+void RL01_02::writeProtectButtonClicked (Button::State state)
 {
-    if (state == Button::TwoPositionsState::Down)
+    if (get<Button::TwoPositionsState> (state) == Button::TwoPositionsState::Down)
     {
         unitStatus_ |= Bitmask (Status::WRITE_PROTECT);
         driveStatus_ |= RLV12const::MPR_GS_WriteLock;

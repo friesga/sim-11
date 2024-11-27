@@ -7,11 +7,13 @@
 #include <string>
 #include <memory>
 #include <functional>
+#include <variant>
 
 using std::string;
 using std::unique_ptr;
 using std::function;
 using std::shared_ptr;
+using std::variant;
 
 //
 // This header file defines an interface for a panel for the sim-11 GUI.
@@ -96,6 +98,21 @@ public:
         Up = 1
     };
 
+    enum class ThreePositionsState : size_t
+    {
+        Down = 0,
+        Center = 1,
+        Up = 2
+    };
+
+    enum class FourPositionsState : size_t
+    {
+        P0 = 0,
+        P1 = 1,
+        P2 = 2,
+        P3 = 3
+    };
+
     struct ImageNames
     {
         string buttonUpIndicatorOff;
@@ -104,8 +121,9 @@ public:
         string buttonDownIndicatorOn;
     };
 
-    using EventCallback = function<void(TwoPositionsState)>;
-    virtual void setState (TwoPositionsState newState) = 0;
+    using State = variant<TwoPositionsState, ThreePositionsState, FourPositionsState>;
+    using EventCallback = function<void(State)>;
+    virtual void setState (State newState) = 0;
     virtual void render () = 0;
     virtual void handleEvent (InputEvent const* event) = 0;
     virtual bool isWithinBounds (Position position, float margin) const = 0;
@@ -119,7 +137,7 @@ class IndicatorButton : public Button, public Indicator
 public:
     // Functions defined in the Button interface
     virtual void render () = 0;
-    virtual void setState (Button::TwoPositionsState newState) = 0;
+    virtual void setState (Button::State newState) = 0;
     virtual void handleEvent (InputEvent const* event) = 0;
     virtual bool isWithinBounds (Position position, float margin) const = 0;
 

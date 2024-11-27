@@ -11,6 +11,7 @@ using std::shared_ptr;
 using std::bind;
 using std::placeholders::_1;
 using std::map;
+using std::get;
 
 // Constructor
 // Create a window showing the BA11-N and devices and then start a thread
@@ -106,15 +107,15 @@ string BA11_N::frontImage (BA11_NConfig::Logo logo)
     return frontImages[logo];
 }
 
-void BA11_N::restartSwitchClicked (Button::TwoPositionsState state)
+void BA11_N::restartSwitchClicked (Button::State state)
 {
-    if (state == Button::TwoPositionsState::Up)
+    if (get<Button::TwoPositionsState> (state) == Button::TwoPositionsState::Up)
         bus_->RESET ().cycle ();
 }
 
-void BA11_N::haltSwitchToggled (Button::TwoPositionsState state)
+void BA11_N::haltSwitchToggled (Button::State state)
 {
-    switch (state)
+    switch (get<Button::TwoPositionsState> (state))
     {
         case Button::TwoPositionsState::Down:
             bus_->BHALT().set (false);
@@ -126,9 +127,9 @@ void BA11_N::haltSwitchToggled (Button::TwoPositionsState state)
     }
 }
 
-void BA11_N::auxOnOffSwitchToggled (Button::TwoPositionsState state)
+void BA11_N::auxOnOffSwitchToggled (Button::State state)
 {
-    switch (state)
+    switch (get<Button::TwoPositionsState> (state))
     {
         case Button::TwoPositionsState::Down:
             pwrOkLed_->show (Indicator::State::Off);

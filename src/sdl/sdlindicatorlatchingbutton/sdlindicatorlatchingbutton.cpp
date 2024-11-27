@@ -1,5 +1,7 @@
 #include "sdlindicatorlatchingbutton.h"
 
+using std::get;
+
 SDLIndicatorLatchingButton::SDLIndicatorLatchingButton (Button::ImageNames const& imageNames,
     Button::TwoPositionsState initialState, unique_ptr<SDLRenderer>& sdlRenderer,
     EventCallback buttonClicked, Indicator::State showIndicator,
@@ -32,9 +34,9 @@ SDLTexture* SDLIndicatorLatchingButton::getTexture (Button::TwoPositionsState bu
     return textures_[to_integral (buttonState)][to_integral (indicatorState)].get ();
 }
 
-void SDLIndicatorLatchingButton::setState (Button::TwoPositionsState newState)
+void SDLIndicatorLatchingButton::setState (Button::State newState)
 {
-    buttonState_ = newState;
+    buttonState_ = get<Button::TwoPositionsState> (newState);
 }
 
 // Definition of functions required for the Button interface

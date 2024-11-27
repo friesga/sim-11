@@ -17,9 +17,9 @@ class BA11_N
 public:
     BA11_N (Qbus *bus, Window *window, shared_ptr<BA11_NConfig> ba11_nConfig);
     ~BA11_N ();
-    void restartSwitchClicked (Button::TwoPositionsState state);
-    void haltSwitchToggled (Button::TwoPositionsState state);
-    void auxOnOffSwitchToggled (Button::TwoPositionsState state);
+    void restartSwitchClicked (Button::State state);
+    void haltSwitchToggled (Button::State state);
+    void auxOnOffSwitchToggled (Button::State state);
     void SRUNReceiver (bool signalValue);
 
 private:
