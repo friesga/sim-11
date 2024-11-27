@@ -32,13 +32,13 @@ public:
         string indicatorOnImage, Indicator::State showFigure,
         Frame<float> frame) override;
     virtual Button *createLatchingButton (string buttonDownImage, string buttonUpImage,
-        Button::State initialState, Button::EventCallback buttonClicked,
+        Button::TwoPositionsState initialState, Button::EventCallback buttonClicked,
         Frame<float> frame) override;
     virtual Button *createMomentaryButton (string buttonDownImage, string buttonUpImage,
-        Button::State initialState, Button::EventCallback buttonClicked,
+        Button::TwoPositionsState initialState, Button::EventCallback buttonClicked,
         Frame<float> frame) override;
     virtual IndicatorButton* createSDLIndicatorLatchingButton (Button::ImageNames const& imageNames,
-        Button::State initialState, 
+        Button::TwoPositionsState initialState, 
         Button::EventCallback buttonClicked, Indicator::State showIndicator,
         Frame<float> frame) override;
 

@@ -20,7 +20,7 @@ void RL01_02::createBezel (Window* window,
         "../../assets/Load_up_on.png",
         "../../assets/Load_down_off.png",
         "../../assets/Load_down_on.png"},
-        Button::State::Up, bind (&RL01_02::loadButtonClicked, this, _1),
+        Button::TwoPositionsState::Up, bind (&RL01_02::loadButtonClicked, this, _1),
         Indicator::State::On, loadButtonFrame);
 
     // READY indicator, default off
@@ -39,22 +39,22 @@ void RL01_02::createBezel (Window* window,
     writeProtectButton_ = panel->createLatchingButton (
         "../../assets/write_protect_on.png",
         "../../assets/write_protect_off.png",
-        rlUnitConfig->writeProtect ? Button::State::Down : Button::State::Up,
+        rlUnitConfig->writeProtect ? Button::TwoPositionsState::Down : Button::TwoPositionsState::Up,
         bind (&RL01_02::writeProtectButtonClicked, this, _1),
         writeProtectButtonFrame);
 }
 
-void RL01_02::loadButtonClicked (Button::State state)
+void RL01_02::loadButtonClicked (Button::TwoPositionsState state)
 {
-    if (state == Button::State::Down)
+    if (state == Button::TwoPositionsState::Down)
         sendTrigger (SpinUp {});
     else
         sendTrigger (SpinDown {});
 }
 
-void RL01_02::writeProtectButtonClicked (Button::State state)
+void RL01_02::writeProtectButtonClicked (Button::TwoPositionsState state)
 {
-    if (state == Button::State::Down)
+    if (state == Button::TwoPositionsState::Down)
     {
         unitStatus_ |= Bitmask (Status::WRITE_PROTECT);
         driveStatus_ |= RLV12const::MPR_GS_WriteLock;

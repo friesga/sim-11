@@ -16,7 +16,7 @@ class SDLLatchingButton : public SDLCommonButton
 {
 public:
     SDLLatchingButton (string buttonDownImage, string buttonUpImage, 
-        Button::State initialState, unique_ptr<SDLRenderer> &sdlRenderer,
+        Button::TwoPositionsState initialState, unique_ptr<SDLRenderer> &sdlRenderer,
         EventCallback buttonClicked, 
         SDL_Texture* targetTexture, Frame<int> frame);
     ~SDLLatchingButton ();

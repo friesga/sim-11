@@ -21,14 +21,14 @@ class SDLIndicatorLatchingButton : public IndicatorButton
 {
 public:
     SDLIndicatorLatchingButton (Button::ImageNames const& imageNames,
-        Button::State initialState, unique_ptr<SDLRenderer>& sdlRenderer,
+        Button::TwoPositionsState initialState, unique_ptr<SDLRenderer>& sdlRenderer,
         EventCallback buttonClicked, Indicator::State showIndicator,
         SDL_Texture* targetTexture, Frame<int> frame);
     ~SDLIndicatorLatchingButton ();
 
     // Definition of functions required for the Button interface
     void handleEvent (InputEvent const* event) override;
-    void setState (Button::State newState) override;
+    void setState (Button::TwoPositionsState newState) override;
     void render () override;
     bool isWithinBounds (Position position, float margin = 0.0) const;
 
@@ -37,12 +37,12 @@ public:
 
 
 private:
-    SDLTexture* getTexture (Button::State buttonState,
+    SDLTexture* getTexture (Button::TwoPositionsState buttonState,
         Indicator::State indicatorState) const;
 
     EventCallback buttonClicked_;
     array<array<unique_ptr<SDLTexture>, 2>, 2> textures_;
-    Button::State buttonState_;
+    Button::TwoPositionsState buttonState_;
     Indicator::State indicatorState_;
 
 };

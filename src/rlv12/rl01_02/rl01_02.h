@@ -175,8 +175,8 @@ private:
     void updateHeadPosition (HeadPositionProcedure procedure,
         s32 wordCount, u16 diskAddressRegister);
 
-    void loadButtonClicked (Button::State state);
-    void writeProtectButtonClicked (Button::State state);
+    void loadButtonClicked (Button::TwoPositionsState state);
+    void writeProtectButtonClicked (Button::TwoPositionsState state);
 };
 
 // Definition of the state machine for the drive. The class has to be defined

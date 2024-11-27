@@ -49,7 +49,7 @@ Indicator* SDLPanel::createIndicator (string indicatorOffimage,
 // will lead to undefined behaviour.
 //
 Button* SDLPanel::createLatchingButton (string buttonDownImage, string buttonUpImage,
-    Button::State initialState, Button::EventCallback buttonClicked,
+    Button::TwoPositionsState initialState, Button::EventCallback buttonClicked,
     Frame<float> frame)
 {
     buttons_.push_back (make_unique<SDLLatchingButton> (buttonDownImage, buttonUpImage,
@@ -59,7 +59,7 @@ Button* SDLPanel::createLatchingButton (string buttonDownImage, string buttonUpI
 }
 
 Button* SDLPanel::createMomentaryButton (string buttonDownImage, string buttonUpImage, 
-    Button::State initialState, Button::EventCallback buttonClicked,
+    Button::TwoPositionsState initialState, Button::EventCallback buttonClicked,
     Frame<float> frame)
 {
     buttons_.push_back (make_unique<SDLMomentaryButton> (buttonDownImage, buttonUpImage,
@@ -69,7 +69,7 @@ Button* SDLPanel::createMomentaryButton (string buttonDownImage, string buttonUp
 }
 
 IndicatorButton* SDLPanel::createSDLIndicatorLatchingButton (Button::ImageNames const& imageNames,
-    Button::State initialState,
+    Button::TwoPositionsState initialState,
     Button::EventCallback buttonClicked, Indicator::State showIndicator,
     Frame<float> frame)
 {

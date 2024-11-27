@@ -4,7 +4,7 @@
 using std::make_unique;
 
 SDLCommonButton::SDLCommonButton (string buttonDownImage, string buttonUpImage,
-    Button::State initialState, unique_ptr<SDLRenderer> &sdlRenderer,
+    Button::TwoPositionsState initialState, unique_ptr<SDLRenderer> &sdlRenderer,
     EventCallback buttonClicked, 
     SDL_Texture* targetTexture, Frame<int> frame)
     :
@@ -20,20 +20,20 @@ SDLCommonButton::SDLCommonButton (string buttonDownImage, string buttonUpImage,
 SDLCommonButton::~SDLCommonButton ()
 {}
 
-void SDLCommonButton::setState (State newState)
+void SDLCommonButton::setState (TwoPositionsState newState)
 {
     buttonState_ = newState;
 }
 
-Button::State SDLCommonButton::toggleState (State oldState)
+Button::TwoPositionsState SDLCommonButton::toggleState (TwoPositionsState oldState)
 {
     switch (oldState)
     {
-        case State::Down:
-            return State::Up;
+        case TwoPositionsState::Down:
+            return TwoPositionsState::Up;
 
-        case State::Up:
-            return State::Down;
+        case TwoPositionsState::Up:
+            return TwoPositionsState::Down;
     }
 
     // Satisfying the compiler
@@ -44,11 +44,11 @@ void SDLCommonButton::render ()
 {
     switch (buttonState_)
     {
-        case State::Down:
+        case TwoPositionsState::Down:
             buttonDownTexture_->render ();
             break;
         
-        case State::Up:
+        case TwoPositionsState::Up:
             buttonUpTexture_->render ();
     }
 }

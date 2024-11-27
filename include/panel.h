@@ -90,7 +90,7 @@ public:
 class Button
 {
 public:
-    enum class State : size_t
+    enum class TwoPositionsState : size_t
     {
         Down = 0,
         Up = 1
@@ -104,8 +104,8 @@ public:
         string buttonDownIndicatorOn;
     };
 
-    using EventCallback = function<void(State)>;
-    virtual void setState (State newState) = 0;
+    using EventCallback = function<void(TwoPositionsState)>;
+    virtual void setState (TwoPositionsState newState) = 0;
     virtual void render () = 0;
     virtual void handleEvent (InputEvent const* event) = 0;
     virtual bool isWithinBounds (Position position, float margin) const = 0;
@@ -119,7 +119,7 @@ class IndicatorButton : public Button, public Indicator
 public:
     // Functions defined in the Button interface
     virtual void render () = 0;
-    virtual void setState (Button::State newState) = 0;
+    virtual void setState (Button::TwoPositionsState newState) = 0;
     virtual void handleEvent (InputEvent const* event) = 0;
     virtual bool isWithinBounds (Position position, float margin) const = 0;
 
@@ -139,13 +139,13 @@ public:
         string indicatorOnImage, Indicator::State showFigure,
         Frame<float> frame) = 0;
     virtual Button* createLatchingButton (string buttonDownImage, string buttonUpImage,
-        Button::State initialState, Button::EventCallback buttonClicked,
+        Button::TwoPositionsState initialState, Button::EventCallback buttonClicked,
         Frame<float> frame) = 0;
     virtual Button* createMomentaryButton (string buttonDownImage, string buttonUpImage,
-        Button::State initialState, Button::EventCallback buttonClicked,
+        Button::TwoPositionsState initialState, Button::EventCallback buttonClicked,
         Frame<float> frame) = 0;
     virtual IndicatorButton* createSDLIndicatorLatchingButton (Button::ImageNames const& imageNames,
-        Button::State initialState,
+        Button::TwoPositionsState initialState,
         Button::EventCallback buttonClicked, Indicator::State showIndicator,
         Frame<float> frame) = 0;
     virtual void render () = 0;

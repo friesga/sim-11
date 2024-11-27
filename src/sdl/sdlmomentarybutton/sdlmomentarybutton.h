@@ -16,7 +16,7 @@ class SDLMomentaryButton : public SDLCommonButton
 {
 public:
     SDLMomentaryButton (string buttonDownImage, string buttonUpImage,
-        Button::State initialState, unique_ptr<SDLRenderer> &sdlRenderer, 
+        Button::TwoPositionsState initialState, unique_ptr<SDLRenderer> &sdlRenderer, 
         EventCallback buttonClicked,
         SDL_Texture* targetTexture, Frame<int> frame);
     ~SDLMomentaryButton ();
@@ -27,7 +27,7 @@ private:
     // The natural state of a momentary button is the state the button will
     // revert to once it is not actuated. That state is either Up or Down as
     // indicated by the constructor's initialState parameter.
-    State naturalState_;
+    TwoPositionsState naturalState_;
 
     bool validMouseEvent (InputEvent const *event);
 };

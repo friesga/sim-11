@@ -19,14 +19,14 @@ class SDLCommonButton : public Button
 {
 public:
     SDLCommonButton (string buttonDownImage, string buttonUpImage, 
-        Button::State initialState, unique_ptr<SDLRenderer> &sdlRenderer,
+        Button::TwoPositionsState initialState, unique_ptr<SDLRenderer> &sdlRenderer,
         EventCallback buttonClicked, 
         SDL_Texture* targetTexture, Frame<int> frame);
     ~SDLCommonButton ();
 
     // The function handleEvent() is delegated to SDLLatchingButton
     // and SDLMomentaryButton.
-    void setState (State newState) override;
+    void setState (TwoPositionsState newState) override;
     void render () override;
     bool isWithinBounds (Position position, float margin = 0.0) const override;
 
@@ -34,9 +34,9 @@ protected:
     unique_ptr<SDLTexture> buttonDownTexture_;
     unique_ptr<SDLTexture> buttonUpTexture_;
     EventCallback buttonClicked_;
-    State buttonState_;
+    TwoPositionsState buttonState_;
 
-    State toggleState (State oldState);    
+    TwoPositionsState toggleState (TwoPositionsState oldState);    
 };
 
 #endif // _SDLCOMMONBUTTON_H_
