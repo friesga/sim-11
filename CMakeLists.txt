@@ -236,6 +236,7 @@ set (SDL_SRCS
     src/sdl/sdlmomentarybutton/sdlmomentarybutton.cpp
     src/sdl/sdllatchingbutton/sdllatchingbutton.cpp
     src/sdl/sdlindicatorlatchingbutton/sdlindicatorlatchingbutton.cpp
+    src/sdl/sdlfourpositionswitch/sdlfourpositionswitch.cpp
     src/sdl/sdlevent/sdlevent.cpp)
 
 set (TRACE_SRCS
