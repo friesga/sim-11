@@ -40,7 +40,7 @@ public:
     void setState (State newState);
     void render ();
     void handleEvent (InputEvent const* event);
-    bool isWithinBounds (Position position, float margin);
+    bool isWithinBounds (Position position, float margin) const;
 
 private:
     unique_ptr<SDLRenderer>& sdlRenderer_;

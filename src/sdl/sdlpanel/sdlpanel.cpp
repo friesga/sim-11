@@ -79,6 +79,17 @@ IndicatorButton* SDLPanel::createSDLIndicatorLatchingButton (Button::ImageNames 
     return indicatorButtons_.back ().get ();
 }
 
+Button* SDLPanel::createFourPositionSwitch (array<string, 4> positionImages,
+    Button::FourPositionsState initialState,
+    Button::EventCallback switchClicked,
+    Frame<float> frame)
+{
+    buttons_.push_back (make_unique<SDLFourPositionSwitch> (positionImages,
+        initialState, sdlRenderer_, switchClicked, targetTexture_,
+        placeFrameInTexture (frame)));
+    return buttons_.back ().get ();
+}
+
 // Place the given frame, whith positions and dimensions relative to the
 // panel, in the target texture. The given panel frame has position and
 // dimensions as fractions relative to the panel dimensions; the target

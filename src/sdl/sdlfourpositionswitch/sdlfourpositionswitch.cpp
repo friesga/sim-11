@@ -44,7 +44,7 @@ void SDLFourPositionSwitch::handleEvent (InputEvent const* event)
     }
 }
 
-bool SDLFourPositionSwitch::isWithinBounds (Position position, float margin)
+bool SDLFourPositionSwitch::isWithinBounds (Position position, float margin) const
 { 
     return positionTextures_[+switchPosition_]->isWithinBounds (position, margin);
 }

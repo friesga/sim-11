@@ -8,12 +8,14 @@
 #include <memory>
 #include <functional>
 #include <variant>
+#include <array>
 
 using std::string;
 using std::unique_ptr;
 using std::function;
 using std::shared_ptr;
 using std::variant;
+using std::array;
 
 //
 // This header file defines an interface for a panel for the sim-11 GUI.
@@ -165,6 +167,10 @@ public:
     virtual IndicatorButton* createSDLIndicatorLatchingButton (Button::ImageNames const& imageNames,
         Button::TwoPositionsState initialState,
         Button::EventCallback buttonClicked, Indicator::State showIndicator,
+        Frame<float> frame) = 0;
+    virtual Button* createFourPositionSwitch (array<string, 4> positionImages,
+        Button::FourPositionsState initialState,
+        Button::EventCallback switchClicked,
         Frame<float> frame) = 0;
     virtual void render () = 0;
     virtual void handleEvent (InputEvent const* event) = 0;
