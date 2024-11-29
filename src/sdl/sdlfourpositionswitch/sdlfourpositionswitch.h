@@ -50,7 +50,10 @@ private:
     Button::FourPositionsState switchPosition_;
     vector<unique_ptr<SDLTexture>> positionTextures_;
 
+    bool isRightOfCenter (Position position, float margin) const;
+    bool isLeftOfCenter (Position position, float margin) const;
     Button::FourPositionsState nextPosition (Button::FourPositionsState position);
+    Button::FourPositionsState previousPosition (Button::FourPositionsState position);
 };
 
 #endif // _SDLFOURPOSITIONSWITCH_H_

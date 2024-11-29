@@ -91,3 +91,19 @@ bool SDLTexture::isWithinBounds (Position position, float margin) const
     // Inside rectangle
     return true;
 }
+
+bool SDLTexture::isRightOfCenter (Position position, float margin) const
+{
+    float marginX = margin * width_;
+
+    return position.x > x_ + width_ / 2 &&
+        position.x <= x_ + width_ / 2 + marginX;
+}
+
+bool SDLTexture::isLeftOfCenter (Position position, float margin) const
+{
+    float marginX = margin * width_;
+
+    return position.x < x_ + width_ / 2 &&
+        position.x >= x_ + width_ / 2 - marginX;
+}
