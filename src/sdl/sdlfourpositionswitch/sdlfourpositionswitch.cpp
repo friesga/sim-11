@@ -11,7 +11,6 @@ SDLFourPositionSwitch::SDLFourPositionSwitch (array<string, 4> positionImageName
     Frame<int> frame)
     :
     switchPosition_ {initialState},
-    sdlRenderer_ {sdlRenderer},
     switchClicked_ {switchClicked},
     frame_ {frame}
 {

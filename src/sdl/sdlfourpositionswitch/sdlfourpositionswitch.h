@@ -43,7 +43,6 @@ public:
     bool isWithinBounds (Position position, float margin) const;
 
 private:
-    unique_ptr<SDLRenderer>& sdlRenderer_;
     EventCallback switchClicked_;
     Frame<int> frame_;
 
