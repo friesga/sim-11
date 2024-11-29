@@ -70,8 +70,37 @@ void BA11_L::createBezel (shared_ptr<Cabinet::Position> cabinetPosition)
         Button::FourPositionsState::P0,
         bind (&BA11_L::powerSwitchClicked, this, _1),
         powerSwitchFrame);
+    dcOnLed_ = panel->createIndicator ("../../assets/red led off.png",
+        "../../assets/red led on.png", Indicator::State::Off, dcOnLedFrame);
 }
 
 void BA11_L::powerSwitchClicked (Button::State state)
 {
+    switch (get<Button::FourPositionsState> (state))
+    {
+        case Button::FourPositionsState::P0:
+            // DC OFF - DC power is removed from the system; contents of
+            // MOS memory are lost and system cooling fans are off.
+            dcOnLed_->show (Indicator::State::Off);
+            // bus_->BPOK ().set (false);
+            break;
+
+        case Button::FourPositionsState::P1:
+            // LOCAL - Power is applied to the system; enables all functions
+            // and normal operation.
+            dcOnLed_->show (Indicator::State::On);
+            // bus_->BPOK ().set (true);
+            break;
+
+        case Button::FourPositionsState::P2:
+            // LOC DSBL - Power is present throughout the system. However, the
+            // HALT/CONT/BOOT  switch is disabled and the "break" key on the
+            // terminal will not halt the CPU.
+            break;
+
+        case Button::FourPositionsState::P3:
+            // STDBY - DC power to most of the computer is off but dc power is
+            // applied to MOS memory to avoid data loss.
+            break;
+    }
 }
