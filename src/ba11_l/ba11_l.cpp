@@ -72,6 +72,10 @@ void BA11_L::createBezel (shared_ptr<Cabinet::Position> cabinetPosition)
         powerSwitchFrame);
     dcOnLed_ = panel->createIndicator ("../../assets/red led off.png",
         "../../assets/red led on.png", Indicator::State::Off, dcOnLedFrame);
+
+    // As long as the conditions for starting the processor aren't met, the
+    // processor is halted.
+    bus_->BHALT ().set (true);
 }
 
 void BA11_L::powerSwitchClicked (Button::State state)
@@ -82,14 +86,14 @@ void BA11_L::powerSwitchClicked (Button::State state)
             // DC OFF - DC power is removed from the system; contents of
             // MOS memory are lost and system cooling fans are off.
             dcOnLed_->show (Indicator::State::Off);
-            // bus_->BPOK ().set (false);
+            bus_->BPOK ().set (false);
             break;
 
         case Button::FourPositionsState::P1:
             // LOCAL - Power is applied to the system; enables all functions
             // and normal operation.
             dcOnLed_->show (Indicator::State::On);
-            // bus_->BPOK ().set (true);
+            bus_->BPOK ().set (true);
             break;
 
         case Button::FourPositionsState::P2:
