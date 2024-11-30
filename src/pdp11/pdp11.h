@@ -43,10 +43,7 @@ class PDP_11
 	PDP11Processor *processor_;
 	vector<MSV11D*> msv11_;
 	vector<MS11P*> ms11p_;
-	RXV21 *rxv21_;
-	RLV12 *rlv12_;
-	DLV11J *dlv11_;
-	BDV11 *bdv11_;
+	vector<BusDevice*> busDevices_;
 	unique_ptr<BA11_N> ba11_n_;
 	unique_ptr<BA11_L> ba11_l_;
 	CmdLineOptions const &cmdLineOptions_;
