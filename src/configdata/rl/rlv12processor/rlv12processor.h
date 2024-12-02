@@ -23,18 +23,11 @@ class RLV12Processor : public DeviceConfigProcessor
 	
 	map<string, Process> valueProcessors =
 	{
-		{"controller", &RLV12Processor::processController},
-		{"address", &RLV12Processor::processAddress},
-		{"vector", &RLV12Processor::processVector},
-		{"units", &RLV12Processor::processUnits},
 		{"22-bit", &RLV12Processor::process22Bit}
 	};
 
+	void processSection (iniparser::Section* section) override;
     void processValue (iniparser::Section::ValueIterator valueIterator);
-	void processController (iniparser::Value value);
-	void processAddress (iniparser::Value value);
-	void processVector (iniparser::Value value);
-	void processUnits (iniparser::Value value);
 	void process22Bit (iniparser::Value value);
 	void checkConsistency ();
 	void processSubsection (iniparser::Section *subSection);

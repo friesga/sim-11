@@ -1,4 +1,5 @@
 #include "rlv12processor.h"
+#include "configdata/rl/rlprocessor/rlprocessor.h"
 #include "configdata/rl/rlunitconfig/rlunitconfig.h"
 #include "configdata/rl/rlunitprocessor/rlunitprocessor.h"
 #include "touint.h"
@@ -13,58 +14,25 @@ RLV12Processor::RLV12Processor ()
 	rlConfigPtr = make_unique<RLV12Config> ();
 }
 
+// This is a RLV12-specific processSection(). This version first calls the
+// RL configuration processor to process the common keys and then calls the
+// regular ProcessSection() to process the remaining keys. Common keys are
+// deleted from the section so they aren't processed by the regular
+// ProcessSection().
+void RLV12Processor::processSection (iniparser::Section* section)
+{
+	RLProcessor rlProcessor;
+	rlProcessor.processSection (section);
+	rlConfigPtr->common = rlProcessor.getConfig ();
+
+	SectionProcessor::processSection (section);
+}
+
 void RLV12Processor::processValue (iniparser::Section::ValueIterator valueIterator)
 {
     // Throw exception for non-existing key?
     Process processFunction = valueProcessors[valueIterator->first];
     (this->*processFunction)(valueIterator->second);
-}
-
-// 
-// Determine the controller type, either RLV11 or RLV12.
-// 
-void RLV12Processor::processController (iniparser::Value value)
-{
-	if (value.asString() == "RL11")
-		rlConfigPtr->common.rlType = RLConfig::RLType::RL11;
-	else if (value.asString() == "RLV11")
-		rlConfigPtr->common.rlType = RLConfig::RLType::RLV11;
-	else if (value.asString() == "RLV12")
-		rlConfigPtr->common.rlType = RLConfig::RLType::RLV12;
-	else
-		throw std::invalid_argument {"Incorrect RL controller type: " + 
-			value.asString()};
-}
-
-void RLV12Processor::processAddress (iniparser::Value value)
-{
-	try
-	{
-		rlConfigPtr->common.address = touint<u16> (value.asString());
-	}
-	catch (std::invalid_argument const &)
-	{
-		throw std::invalid_argument {"Incorrect address in RL section specified: " + 
-			value.asString()};
-	}
-}
-
-void RLV12Processor::processVector (iniparser::Value value) 
-{ 
-	try
-	{
-		rlConfigPtr->common.vector = touint<u16> (value.asString());
-	}
-	catch (std::invalid_argument const &)
-	{
-		throw std::invalid_argument {"Incorrect vector in RL section specified: " + 
-			value.asString()};
-	}
-}
-
-void RLV12Processor::processUnits (iniparser::Value value)
-{
-	rlConfigPtr->common.numUnits = value.asInt ();
 }
 
 // Explicitly test for "true" and "false" as AsBool() returns no error,

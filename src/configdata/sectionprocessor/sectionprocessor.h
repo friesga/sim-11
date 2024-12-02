@@ -14,7 +14,9 @@ using std::shared_ptr;
 class SectionProcessor
 {
 public:
-    void processSection (iniparser::Section* section);
+    // processSection() is defined virtual to allow configuration processors
+    // to override this function for special purposes.
+    virtual void processSection (iniparser::Section* section);
 
 protected:
     size_t unitNumberFromSectionName (string name, size_t maxUnits);
