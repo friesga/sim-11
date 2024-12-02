@@ -89,6 +89,36 @@ void RLProcessor::processUnits (iniparser::Value value)
 	rlConfigPtr->numUnits = value.asInt ();
 }
 
+// A RL Section can have zero to four subsections, one for each unit.
+void RLProcessor::processSubsection (iniparser::Section* subSection)
+{
+	if (subSection->name().substr(0, 4) != "unit")
+		throw std::invalid_argument {"Unknown RL subsection: " +
+			subSection->name()};
+
+	// Get the unit number from the subsection name. This will throw an
+	// exception if an incorrect unit number is specified. The unit number
+	// is stored in the RlUnitConfig struct so it is clear to which unit
+	// the configuration applies.
+	size_t unitNumber = unitNumberFromSectionName (subSection->name(),
+		rlConfigPtr->maxRlUnits);
+
+	// Check that the configuration for this unit has not already been
+	// specified.
+	if (rlConfigPtr->rlUnitConfig[unitNumber] != nullptr)
+		throw std::invalid_argument {"Double specification for RL subsection: " +
+			subSection->name()};
+
+	RLUnitProcessor rlUnitProcessor {unitNumber};
+	rlUnitProcessor.processSection (subSection);
+
+	// Add the unit configuration to the RL device configuration
+	rlConfigPtr->rlUnitConfig[unitNumber] = rlUnitProcessor.getConfig ();
+}
+
+void RLProcessor::checkConsistency ()
+{}
+
 RLConfig RLProcessor::getConfig ()
 {
 	return *rlConfigPtr;

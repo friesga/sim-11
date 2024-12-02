@@ -3,6 +3,7 @@
 
 #include "configdata/sectionprocessor/deviceconfigprocessor.h"
 #include "configdata/rl/rlconfig/rlconfig.h"
+#include "configdata/rl/rlprocessor/rlprocessor.h"
 
 #include <memory>
 #include <map>
@@ -16,6 +17,7 @@ using std::string;
 class RLV12Processor : public DeviceConfigProcessor
 {
 	unique_ptr<RLV12Config> rlConfigPtr {nullptr};
+	RLProcessor rlProcessor_;
 
     // Define process as a pointer to a RlProcessor member function
 	// with a iniparser::Value argument and returning void.

@@ -1,5 +1,4 @@
 #include "rlv12processor.h"
-#include "configdata/rl/rlprocessor/rlprocessor.h"
 #include "configdata/rl/rlunitconfig/rlunitconfig.h"
 #include "configdata/rl/rlunitprocessor/rlunitprocessor.h"
 #include "touint.h"
@@ -21,10 +20,8 @@ RLV12Processor::RLV12Processor ()
 // ProcessSection().
 void RLV12Processor::processSection (iniparser::Section* section)
 {
-	RLProcessor rlProcessor;
-	rlProcessor.processSection (section);
-	rlConfigPtr->common = rlProcessor.getConfig ();
-
+	rlProcessor_.processSection (section);
+	
 	SectionProcessor::processSection (section);
 }
 
@@ -68,34 +65,14 @@ void RLV12Processor::checkConsistency ()
 			{"The 22-bit option is only allowed on an RLV12 controller"};
 }
 
-// A RL Section can have zero to four subsections, one for each unit.
+// Processing of the unit subsections is delegated to the RLProcessor.
 void RLV12Processor::processSubsection (iniparser::Section *subSection)
 {
-	if (subSection->name().substr(0, 4) != "unit")
-		throw std::invalid_argument {"Unknown RL subsection: " + 
-			subSection->name()};
-
-	// Get the unit number from the subsection name. This will throw an
-	// exception if an incorrect unit number is specified. The unit number
-	// is stored in the RlUnitConfig struct so it is clear to which unit
-	// the configuration applies.
-	size_t unitNumber = unitNumberFromSectionName (subSection->name(),
-		rlConfigPtr->common.maxRlUnits);
-
-	// Check that the configuration for this unit has not already been
-	// specified.
-	if (rlConfigPtr->common.rlUnitConfig[unitNumber] != nullptr)
-		throw std::invalid_argument {"Double specification for RL subsection: " + 
-			subSection->name()};
-
-	RLUnitProcessor rlUnitProcessor {unitNumber};
-	rlUnitProcessor.processSection (subSection);
-
-	// Add the unit configuration to the RL device configuration
-	rlConfigPtr->common.rlUnitConfig[unitNumber] = rlUnitProcessor.getConfig ();
+	rlProcessor_.processSubsection (subSection);
 }
 
 DeviceConfig RLV12Processor::getConfig ()
 {
+	rlConfigPtr->common = rlProcessor_.getConfig ();
 	return move (rlConfigPtr);
 }

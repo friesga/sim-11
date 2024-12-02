@@ -15,7 +15,7 @@ using std::string;
 
 // Definition a configuration processor for options common to the RL11,
 // RLV11 and RLV12.
-class RLProcessor
+class RLProcessor : public SectionProcessor
 {
 	unique_ptr<RLConfig> rlConfigPtr {nullptr};
 
@@ -40,6 +40,8 @@ class RLProcessor
 public:
 	RLProcessor ();
 	void processSection (iniparser::Section* section);
+	void processSubsection (iniparser::Section* subSection);
+	void checkConsistency ();
 	RLConfig getConfig ();
 };
 
