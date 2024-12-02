@@ -20,7 +20,7 @@ TEST (ConfigProcessorTest, allSectionsProcessedOnce)
 	std::stringstream stream;
 	iniparser::File ft;
 
-	stream << "[RL]\n"
+	stream << "[RLV12]\n"
 		"[MSV11]\n"
 		"[DLV11-J]\n"
 		"[BDV11]\n"
@@ -89,8 +89,8 @@ TEST (ConfigProcessorTest, outOfRangeUnitNumberThrows)
 {
     iniparser::File ft;
 	std::stringstream stream;
-	stream << "[RL]\n"
-		"[RL.unit4]\n";
+	stream << "[RLV12]\n"
+		"[RLV12.unit4]\n";
 	stream >> ft;
 
 	IniProcessor iniProcessor;

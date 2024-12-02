@@ -21,7 +21,7 @@ unique_ptr<DeviceConfigProcessor> IniProcessor::createBA11_NProcessor ()
 }
 
 // Factory for the creation of RLV12Processor objects
-unique_ptr<DeviceConfigProcessor> IniProcessor::createRLProcessor ()
+unique_ptr<DeviceConfigProcessor> IniProcessor::createRLV12Processor ()
 {
     return make_unique<RLV12Processor> ();
 }

@@ -20,13 +20,13 @@ TEST (RLV12ConfigProcessorTest, configProcessed)
 	std::stringstream stream;
 	iniparser::File ft;
 
-	stream << "[RL]\n"
+	stream << "[RLV12]\n"
 		"controller = RLV12\n"
 		"address = 0174400\n"
 		"vector = 0160\n"
 		"units = 1\n"
 
-		"[RL.unit0]\n"
+		"[RLV12.unit0]\n"
 		"type = RL01\n"
 		"cabinet = 0/0\n"
 		"filename = rl01.dsk\n"
@@ -65,7 +65,7 @@ TEST (RLV12ConfigProcessorTest, configProcessorThrows)
 {
     iniparser::File ft;
 	std::stringstream stream;
-	stream << "[RL]\n"
+	stream << "[RLV12]\n"
 		"controller = RLV13\n";
 		
 	stream >> ft;
@@ -103,18 +103,18 @@ TEST (RLV12ConfigProcessorTest, fileName)
 {
     iniparser::File ft;
 	std::stringstream stream;
-	stream << "[RL]\n"
+	stream << "[RLV12]\n"
 		"units = 4\n"
-		"[RL.unit0]\n"
+		"[RLV12.unit0]\n"
 		"cabinet = 0/0\n"
 		"filename = \\somefile\n"
-		"[RL.unit1]\n"
+		"[RLV12.unit1]\n"
 		"cabinet = 0/0\n"
 		"filename = Windows:{G:\\windowsFileName}, Linux:{/mnt/g/sim-11/linuxFileName\n"
-		"[RL.unit2]\n"
+		"[RLV12.unit2]\n"
 		"cabinet = 0/0\n"
 		"filename = Linux:linuxFileName, unqualifiedName\n"
-		"[RL.unit3]\n"
+		"[RLV12.unit3]\n"
 		"cabinet = 0/0\n"
 		"filename = Windows:windowsFileName, unqualifiedName\n";
 		
@@ -154,15 +154,15 @@ TEST (RLV12ConfigProcessorTest, spinUpTimeCorrectlyDefaulted)
 	std::stringstream stream;
 	iniparser::File ft;
 
-	stream << "[RL]\n"
+	stream << "[RLV12]\n"
 		"units = 4\n"
-		"[RL.unit0]\n"
+		"[RLV12.unit0]\n"
 		"cabinet = 0/0\n"
-		"[RL.unit1]\n"
+		"[RLV12.unit1]\n"
 		"cabinet = 0/0\n"
-		"[RL.unit2]\n"
+		"[RLV12.unit2]\n"
 		"cabinet = 0/0\n"
-		"[RL.unit3]\n"
+		"[RLV12.unit3]\n"
 		"cabinet = 0/0\n";
 
 	stream >> ft;
@@ -197,18 +197,18 @@ TEST (RLV12ConfigProcessorTest, spinUpTimeHasCorrectValues)
 	std::stringstream stream;
 	iniparser::File ft;
 
-	stream << "[RL]\n"
+	stream << "[RLV12]\n"
 		"units = 4\n"
-		"[RL.unit0]\n"
+		"[RLV12.unit0]\n"
 		"spin-up-time = 0\n"
 		"cabinet = 0/0\n"
-		"[RL.unit1]\n"
+		"[RLV12.unit1]\n"
 		"cabinet = 0/0\n"
 		"spin-up-time = 1\n"
-		"[RL.unit2]\n"
+		"[RLV12.unit2]\n"
 		"cabinet = 0/0\n"
 		"spin-up-time = 2\n"
-		"[RL.unit3]\n"
+		"[RLV12.unit3]\n"
 		"cabinet = 0/0\n"
 		"spin-up-time = 3\n";
 
@@ -244,15 +244,15 @@ TEST (RLV12ConfigProcessorTest, unitNumberCorrectlySet)
 	std::stringstream stream;
 	iniparser::File ft;
 
-	stream << "[RL]\n"
+	stream << "[RLV12]\n"
 		"units = 4\n"
-		"[RL.unit0]\n"
+		"[RLV12.unit0]\n"
 		"cabinet = 0/0\n"
-		"[RL.unit1]\n"
+		"[RLV12.unit1]\n"
 		"cabinet = 0/0\n"
-		"[RL.unit2]\n"
+		"[RLV12.unit2]\n"
 		"cabinet = 0/0\n"
-		"[RL.unit3]\n"
+		"[RLV12.unit3]\n"
 		"cabinet = 0/0\n";
 
 	stream >> ft;

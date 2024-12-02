@@ -58,7 +58,7 @@ private:
 		{"BDV11",   &IniProcessor::createBDV11Processor},
 		{"DLV11-J", &IniProcessor::createDLV11Processor},
 		{"MSV11",   &IniProcessor::createMSV11Processor},
-		{"RL",      &IniProcessor::createRLProcessor},
+		{"RLV12",   &IniProcessor::createRLV12Processor},
 		{"RXV21",   &IniProcessor::createRXProcessor},
 		{"KD11-NA", &IniProcessor::createKD11_NAProcessor},
 		{"KDF11-A", &IniProcessor::createKDF11_AProcessor},
@@ -73,7 +73,7 @@ private:
 	unique_ptr<DeviceConfigProcessor> createBDV11Processor ();
 	unique_ptr<DeviceConfigProcessor> createDLV11Processor ();
 	unique_ptr<DeviceConfigProcessor> createMSV11Processor ();
-	unique_ptr<DeviceConfigProcessor> createRLProcessor ();
+	unique_ptr<DeviceConfigProcessor> createRLV12Processor ();
 	unique_ptr<DeviceConfigProcessor> createRXProcessor ();
 	unique_ptr<DeviceConfigProcessor> createKD11_NAProcessor ();
 	unique_ptr<DeviceConfigProcessor> createKDF11_AProcessor ();

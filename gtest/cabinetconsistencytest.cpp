@@ -75,10 +75,10 @@ TEST (CabinetConsistencyTest, overlappingUnitsThrows)
 	std::stringstream stream;
 	stream << "[BA11-N]\n"
 		"cabinet = 0/10\n"
-		"[RL]\n"
+		"[RLV12]\n"
 		"units = 1\n"
 
-		"[RL.unit0]\n"
+		"[RLV12.unit0]\n"
 		"type = RL01\n"
 		"cabinet = 0/8\n";
 
