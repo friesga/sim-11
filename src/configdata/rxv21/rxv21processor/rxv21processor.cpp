@@ -1,6 +1,7 @@
 #include "types.h"
 #include "rxv21processor.h"
 #include "../rxv21unitprocessor/rxv21unitprocessor.h"
+#include "touint.h"
 
 #include <utility>
 

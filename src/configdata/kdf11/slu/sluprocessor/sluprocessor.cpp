@@ -1,5 +1,6 @@
 #include "sluprocessor.h"
 #include "configdata/kdf11/slu/sluconfig/sluconfig.h"
+#include "touint.h"
 
 #include <utility>
 #include <string>

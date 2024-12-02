@@ -1,5 +1,6 @@
 #include "kdf11_uprocessor.h"
 #include "configdata/kdf11/slu/sluprocessor/sluprocessor.h"
+#include "touint.h"
 
 #include <variant>
 

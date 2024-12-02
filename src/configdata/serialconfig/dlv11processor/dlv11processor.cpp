@@ -1,5 +1,6 @@
 #include "dlv11processor.h"
 #include "configdata/serialconfig/dlv11jconfig/dlv11jconfig.h"
+#include "touint.h"
 
 #include <utility>
 

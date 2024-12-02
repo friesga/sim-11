@@ -1,6 +1,7 @@
 #include "rlv12processor.h"
 #include "configdata/rl/rlunitconfig/rlunitconfig.h"
 #include "configdata/rl/rlunitprocessor/rlunitprocessor.h"
+#include "touint.h"
 
 #include <utility>
 

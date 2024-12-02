@@ -1,4 +1,5 @@
 #include "msv11processor.h"
+#include "touint.h"
 
 #include <utility>
 
