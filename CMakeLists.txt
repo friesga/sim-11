@@ -173,7 +173,7 @@ set (CONFIGURATOR_SRCS
     src/configdata/iniprocessor/processsection.cpp
     src/configdata/iniprocessor/getsystemconfig.cpp
     src/configdata/sectionprocessor/sectionprocessor.cpp
-    src/configdata/rl/rlprocessor/rlprocessor.cpp
+    src/configdata/rl/rlv12processor/rlv12processor.cpp
     src/configdata/rxv21/rxv21processor/rxv21processor.cpp
     src/configdata/rxv21/rxv21unitprocessor/rxv21unitprocessor.cpp
     src/configdata/ba11nconfig/ba11nconfig.cpp

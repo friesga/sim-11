@@ -1,7 +1,7 @@
 #include "iniprocessor.h"
 #include "../sectionprocessor/sectionprocessor.h"
 #include "../ba11nprocessor/ba11nprocessor.h"
-#include "configdata/rl/rlprocessor/rlprocessor.h"
+#include "configdata/rl/rlv12processor/rlv12processor.h"
 #include "configdata/rxv21/rxv21processor/rxv21processor.h"
 #include "../bdv11processor/bdv11processor.h"
 #include "configdata/serialconfig/dlv11processor/dlv11processor.h"
@@ -20,10 +20,10 @@ unique_ptr<DeviceConfigProcessor> IniProcessor::createBA11_NProcessor ()
     return make_unique<BA11_NProcessor> ();
 }
 
-// Factory for the creation of RLProcessor objects
+// Factory for the creation of RLV12Processor objects
 unique_ptr<DeviceConfigProcessor> IniProcessor::createRLProcessor ()
 {
-    return make_unique<RLProcessor> ();
+    return make_unique<RLV12Processor> ();
 }
 
 // Factory for the creation of RXProcessor objects

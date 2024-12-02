@@ -1,4 +1,4 @@
-#include "rlprocessor.h"
+#include "rlv12processor.h"
 #include "configdata/rl/rlunitconfig/rlunitconfig.h"
 #include "configdata/rl/rlunitprocessor/rlunitprocessor.h"
 
@@ -7,12 +7,12 @@
 using std::make_unique;
 using std::move;
 
-RLProcessor::RLProcessor ()
+RLV12Processor::RLV12Processor ()
 {
 	rlConfigPtr = make_unique<RLV12Config> ();
 }
 
-void RLProcessor::processValue (iniparser::Section::ValueIterator valueIterator)
+void RLV12Processor::processValue (iniparser::Section::ValueIterator valueIterator)
 {
     // Throw exception for non-existing key?
     Process processFunction = valueProcessors[valueIterator->first];
@@ -22,7 +22,7 @@ void RLProcessor::processValue (iniparser::Section::ValueIterator valueIterator)
 // 
 // Determine the controller type, either RLV11 or RLV12.
 // 
-void RLProcessor::processController (iniparser::Value value)
+void RLV12Processor::processController (iniparser::Value value)
 {
 	if (value.asString() == "RL11")
 		rlConfigPtr->rlType = RLV12Config::RLType::RL11;
@@ -35,7 +35,7 @@ void RLProcessor::processController (iniparser::Value value)
 			value.asString()};
 }
 
-void RLProcessor::processAddress (iniparser::Value value)
+void RLV12Processor::processAddress (iniparser::Value value)
 {
 	try
 	{
@@ -48,7 +48,7 @@ void RLProcessor::processAddress (iniparser::Value value)
 	}
 }
 
-void RLProcessor::processVector (iniparser::Value value) 
+void RLV12Processor::processVector (iniparser::Value value) 
 { 
 	try
 	{
@@ -61,7 +61,7 @@ void RLProcessor::processVector (iniparser::Value value)
 	}
 }
 
-void RLProcessor::processUnits (iniparser::Value value)
+void RLV12Processor::processUnits (iniparser::Value value)
 {
 	rlConfigPtr->numUnits = value.asInt ();
 }
@@ -69,7 +69,7 @@ void RLProcessor::processUnits (iniparser::Value value)
 // Explicitly test for "true" and "false" as AsBool() returns no error,
 // only checks the first character and returns false except for strings parsed
 // as true.
-void RLProcessor::process22Bit (iniparser::Value value)
+void RLV12Processor::process22Bit (iniparser::Value value)
 {
 	if (value.asString() == "true")
 		rlConfigPtr->_22bit = true;
@@ -88,7 +88,7 @@ void RLProcessor::process22Bit (iniparser::Value value)
 // The RLV12 controller contains a M1-M2 jumper which, when installed, enables
 // the 22-bit option. This option is not present on the RLV11, so allow this
 // option only if the controller type is RLV12. 
-void RLProcessor::checkConsistency ()
+void RLV12Processor::checkConsistency ()
 {
 	if (rlConfigPtr->rlType == RLV12Config::RLType::RL11)
 		throw std::invalid_argument 
@@ -100,7 +100,7 @@ void RLProcessor::checkConsistency ()
 }
 
 // A RL Section can have zero to four subsections, one for each unit.
-void RLProcessor::processSubsection (iniparser::Section *subSection)
+void RLV12Processor::processSubsection (iniparser::Section *subSection)
 {
 	if (subSection->name().substr(0, 4) != "unit")
 		throw std::invalid_argument {"Unknown RL subsection: " + 
@@ -125,7 +125,7 @@ void RLProcessor::processSubsection (iniparser::Section *subSection)
 	rlConfigPtr->rlUnitConfig[unitNumber] = rlUnitProcessor.getConfig ();
 }
 
-DeviceConfig RLProcessor::getConfig ()
+DeviceConfig RLV12Processor::getConfig ()
 {
 	return move (rlConfigPtr);
 }

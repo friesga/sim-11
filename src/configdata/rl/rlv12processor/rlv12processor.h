@@ -1,5 +1,5 @@
-#ifndef _RLPROCESSOR_H_
-#define _RLPROCESSOR_H_
+#ifndef _RLV12PROCESSOR_H_
+#define _RLV12PROCESSOR_H_
 
 #include "configdata/sectionprocessor/deviceconfigprocessor.h"
 #include "configdata/rl/rlconfig/rlconfig.h"
@@ -13,21 +13,21 @@ using std::shared_ptr;
 using std::map;
 using std::string;
 
-class RLProcessor : public DeviceConfigProcessor
+class RLV12Processor : public DeviceConfigProcessor
 {
 	unique_ptr<RLV12Config> rlConfigPtr {nullptr};
 
     // Define process as a pointer to a RlProcessor member function
 	// with a iniparser::Value argument and returning void.
-	typedef void (RLProcessor::*Process)(iniparser::Value);
+	typedef void (RLV12Processor::*Process)(iniparser::Value);
 	
 	map<string, Process> valueProcessors =
 	{
-		{"controller", &RLProcessor::processController},
-		{"address", &RLProcessor::processAddress},
-		{"vector", &RLProcessor::processVector},
-		{"units", &RLProcessor::processUnits},
-		{"22-bit", &RLProcessor::process22Bit}
+		{"controller", &RLV12Processor::processController},
+		{"address", &RLV12Processor::processAddress},
+		{"vector", &RLV12Processor::processVector},
+		{"units", &RLV12Processor::processUnits},
+		{"22-bit", &RLV12Processor::process22Bit}
 	};
 
     void processValue (iniparser::Section::ValueIterator valueIterator);
@@ -40,9 +40,9 @@ class RLProcessor : public DeviceConfigProcessor
 	void processSubsection (iniparser::Section *subSection);
 
 public:
-	RLProcessor ();
+	RLV12Processor ();
 	DeviceConfig getConfig ();
 };
 
 
-#endif // !_RLPROCESSOR_H_
+#endif // !_RLV12PROCESSOR_H_
