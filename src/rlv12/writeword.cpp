@@ -114,7 +114,7 @@ StatusCode RLV12::writeWord (BusAddress busAddress, u16 data)
             // The VRLBC0 diagnostics makes clear that bit 0 can be read and
             // written on the RLV11 and RLV12 and always reads as 0 on an RL11.
             bar_ = data & (rlType_ == 
-                RLConfig::RLType::RL11 ? 0177776 : 0177777);
+                RLV12Config::RLType::RL11 ? 0177776 : 0177777);
             break;
 
         case DAR:
@@ -131,7 +131,7 @@ StatusCode RLV12::writeWord (BusAddress busAddress, u16 data)
             // Bus Address Extension Register
             // Not present in RL11/RLV11 and on an RLV12 with the 22-bit
             // option disabled.
-            if (!(rlType_ == RLConfig::RLType::RLV12 && _22bit_))
+            if (!(rlType_ == RLV12Config::RLType::RLV12 && _22bit_))
                 return StatusCode::NonExistingMemory;
 
             if (busAddress.registerAddress () & 1)

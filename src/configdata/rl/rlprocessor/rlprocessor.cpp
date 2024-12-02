@@ -9,7 +9,7 @@ using std::move;
 
 RLProcessor::RLProcessor ()
 {
-	rlConfigPtr = make_unique<RLConfig> ();
+	rlConfigPtr = make_unique<RLV12Config> ();
 }
 
 void RLProcessor::processValue (iniparser::Section::ValueIterator valueIterator)
@@ -25,11 +25,11 @@ void RLProcessor::processValue (iniparser::Section::ValueIterator valueIterator)
 void RLProcessor::processController (iniparser::Value value)
 {
 	if (value.asString() == "RL11")
-		rlConfigPtr->rlType = RLConfig::RLType::RL11;
+		rlConfigPtr->rlType = RLV12Config::RLType::RL11;
 	else if (value.asString() == "RLV11")
-		rlConfigPtr->rlType = RLConfig::RLType::RLV11;
+		rlConfigPtr->rlType = RLV12Config::RLType::RLV11;
 	else if (value.asString() == "RLV12")
-		rlConfigPtr->rlType = RLConfig::RLType::RLV12;
+		rlConfigPtr->rlType = RLV12Config::RLType::RLV12;
 	else
 		throw std::invalid_argument {"Incorrect RL controller type: " + 
 			value.asString()};
@@ -90,11 +90,11 @@ void RLProcessor::process22Bit (iniparser::Value value)
 // option only if the controller type is RLV12. 
 void RLProcessor::checkConsistency ()
 {
-	if (rlConfigPtr->rlType == RLConfig::RLType::RL11)
+	if (rlConfigPtr->rlType == RLV12Config::RLType::RL11)
 		throw std::invalid_argument 
 			{"The RL11 can only be configured on Unibus systems"};
 
-	if (rlConfigPtr->_22bit && rlConfigPtr->rlType != RLConfig::RLType::RLV12)
+	if (rlConfigPtr->_22bit && rlConfigPtr->rlType != RLV12Config::RLType::RLV12)
 		throw std::invalid_argument 
 			{"The 22-bit option is only allowed on an RLV12 controller"};
 }

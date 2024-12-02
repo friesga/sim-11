@@ -45,12 +45,12 @@ TEST (RLV12ConfigProcessorTest, configProcessed)
 	SystemConfig &configuration = 
 		iniProcessor.getSystemConfig ();
 
-	ASSERT_TRUE (holds_alternative<shared_ptr<RLConfig>> (configuration[0]));
+	ASSERT_TRUE (holds_alternative<shared_ptr<RLV12Config>> (configuration[0]));
 
-	shared_ptr<RLConfig> rlConfig = 
-		get<shared_ptr<RLConfig>> (configuration[0]);
+	shared_ptr<RLV12Config> rlConfig = 
+		get<shared_ptr<RLV12Config>> (configuration[0]);
 
-	EXPECT_EQ (rlConfig->rlType, RLConfig::RLType::RLV12);
+	EXPECT_EQ (rlConfig->rlType, RLV12Config::RLType::RLV12);
 	EXPECT_EQ (rlConfig->address, 0174400);
 	EXPECT_EQ (rlConfig->vector, 0160);
 	EXPECT_EQ (rlConfig->numUnits, 1);
@@ -127,11 +127,11 @@ TEST (RLV12ConfigProcessorTest, fileName)
     {
 		// The only device type in this testset is the RLV12 so if that's
 		// not corrected the following tests will fail too.
-		ASSERT_TRUE (holds_alternative<shared_ptr<RLConfig>> (device));
+		ASSERT_TRUE (holds_alternative<shared_ptr<RLV12Config>> (device));
 
-		// The device's type is RLV12 so the configuration is a RLConfig
+		// The device's type is RLV12 so the configuration is a RLV12Config
 		auto rlConfig = 
-			get<shared_ptr<RLConfig>> (device);
+			get<shared_ptr<RLV12Config>> (device);
 
 		// Now we can check the unit's filenames. The devices in the 
 		// units are of type RLUnitConfig.
@@ -176,10 +176,10 @@ TEST (RLV12ConfigProcessorTest, spinUpTimeCorrectlyDefaulted)
 		iniProcessor.getSystemConfig ();
 
 	// The first and only device in the configuration should be the RLV12
-	ASSERT_TRUE (holds_alternative<shared_ptr<RLConfig>> (configuration[0]));
+	ASSERT_TRUE (holds_alternative<shared_ptr<RLV12Config>> (configuration[0]));
 
-	shared_ptr<RLConfig> rlConfig =
-		get<shared_ptr<RLConfig>> (configuration[0]);
+	shared_ptr<RLV12Config> rlConfig =
+		get<shared_ptr<RLV12Config>> (configuration[0]);
 
 	// Verify the spin-up time of all four units is correctly defaulted
 	EXPECT_EQ (static_pointer_cast<RLUnitConfig>
@@ -223,10 +223,10 @@ TEST (RLV12ConfigProcessorTest, spinUpTimeHasCorrectValues)
 		iniProcessor.getSystemConfig ();
 
 	// The first and only device in the configuration should be the RLV12
-	ASSERT_TRUE (holds_alternative<shared_ptr<RLConfig>> (configuration[0]));
+	ASSERT_TRUE (holds_alternative<shared_ptr<RLV12Config>> (configuration[0]));
 
-	shared_ptr<RLConfig> rlConfig =
-		get<shared_ptr<RLConfig>> (configuration[0]);
+	shared_ptr<RLV12Config> rlConfig =
+		get<shared_ptr<RLV12Config>> (configuration[0]);
 
 	// Verify the spin-up time of all four units is correctly defaulted
 	EXPECT_EQ (static_pointer_cast<RLUnitConfig>
@@ -266,10 +266,10 @@ TEST (RLV12ConfigProcessorTest, unitNumberCorrectlySet)
 		iniProcessor.getSystemConfig ();
 
 	// The first and only device in the configuration should be the RLV12
-	ASSERT_TRUE (holds_alternative<shared_ptr<RLConfig>> (configuration[0]));
+	ASSERT_TRUE (holds_alternative<shared_ptr<RLV12Config>> (configuration[0]));
 
-	shared_ptr<RLConfig> rlConfig =
-		get<shared_ptr<RLConfig>> (configuration[0]);
+	shared_ptr<RLV12Config> rlConfig =
+		get<shared_ptr<RLV12Config>> (configuration[0]);
 
 	// Verify the spin-up time of all four units is correctly defaulted
 	EXPECT_EQ (static_pointer_cast<RLUnitConfig>

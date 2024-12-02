@@ -25,7 +25,7 @@ RLV12::RLV12 (Qbus *bus)
     dar_ {0},
     bae_ {0},
     dataBuffer_ {nullptr},
-    rlType_ {RLConfig::RLType::RLV12},
+    rlType_ {RLV12Config::RLType::RLV12},
     _22bit_ {false},
     wordCounter_ {0},
     fifoIndex_ {0}
@@ -46,7 +46,7 @@ RLV12::RLV12 (Qbus *bus)
     cmdProcessor_ = std::make_unique<CmdProcessor> (this);
 }
 
-RLV12::RLV12 (Qbus *bus, Window* window, shared_ptr<RLConfig> rlConfig)
+RLV12::RLV12 (Qbus *bus, Window* window, shared_ptr<RLV12Config> rlConfig)
     :
     PDP11Peripheral (bus),
     csr_ {0},
@@ -181,7 +181,7 @@ void RLV12::memAddrToRegs (u32 memoryAddress)
         ((upper6Bits & RLV12const::CSR_AddressExtMask) << 
             RLV12const::CSR_AddressExtPosition);
 
-    if (rlType_ == RLConfig::RLType::RLV12 && _22bit_)
+    if (rlType_ == RLV12Config::RLType::RLV12 && _22bit_)
         bae_ = upper6Bits & RLV12const::BAE_Mask;
 }
 
@@ -190,7 +190,7 @@ void RLV12::memAddrToRegs (u32 memoryAddress)
 // used, for 22-bit systems the BAE register is used.
 BusAddress RLV12::memAddrFromRegs ()
 {
-    if (!(rlType_ == RLConfig::RLType::RLV12 && _22bit_))
+    if (!(rlType_ == RLV12Config::RLType::RLV12 && _22bit_))
         return BusAddress ((getBA16BA17 (csr_) << 16) | bar_, BusAddress::Width::_22Bit);
     else
         return BusAddress ((bae_ << 16) | bar_, BusAddress::Width::_18Bit);
@@ -200,7 +200,7 @@ BusAddress RLV12::memAddrFromRegs ()
 // and BA17 bits
 void RLV12::updateBAE ()
 {
-    if (rlType_ == RLConfig::RLType::RLV12 && _22bit_)
+    if (rlType_ == RLV12Config::RLType::RLV12 && _22bit_)
         bae_ = (bae_ & ~RLV12const::CSR_AddressExtMask) |
             ((csr_ >> RLV12const::CSR_AddressExtPosition) & RLV12const::CSR_AddressExtMask);
 }

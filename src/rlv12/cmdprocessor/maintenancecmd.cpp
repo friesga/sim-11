@@ -21,7 +21,7 @@ u16 CmdProcessor::maintenanceCmd (RL01_02 *unit, RLV12Command &rlv12Command)
     alarmClock_.sleepFor (std::chrono::milliseconds (200));
 
     // This command is a NOP on the RL11 controller
-    if (controller_->rlType_ == RLConfig::RLType::RL11)
+    if (controller_->rlType_ == RLV12Config::RLType::RL11)
         return 0;
 
     // Test 1: Check internal logic

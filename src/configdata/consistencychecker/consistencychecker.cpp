@@ -77,7 +77,7 @@ void ConsistencyChecker::checkQbusConsistency ()
     }
 
     if (count_if (presentDevices, &ConsistencyChecker::findDevice<RXV21Config>) == 0 && 
-        count_if (presentDevices, &ConsistencyChecker::findDevice<RLConfig>) == 0)
+        count_if (presentDevices, &ConsistencyChecker::findDevice<RLV12Config>) == 0)
         cout << "Warning: No removable media configured. This system cannot boot.\n";
 
     if (count_if (presentDevices, &ConsistencyChecker::findDevice<BA11_NConfig>) == 0)

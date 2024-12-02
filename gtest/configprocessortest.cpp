@@ -36,7 +36,7 @@ TEST (ConfigProcessorTest, allSectionsProcessedOnce)
 		shared_ptr<DLV11JConfig> {},
 		shared_ptr<BDV11Config> {},
 		shared_ptr<RXV21Config> {},
-		shared_ptr<RLConfig> {},
+		shared_ptr<RLV12Config> {},
 		shared_ptr<BA11_NConfig> {}
 	};
 

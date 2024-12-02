@@ -51,7 +51,7 @@ class RLV12 : public PDP11Peripheral
 
     // Definition of the controller type and the presence of the 22-bit option
     // when configured as a RLV12 controller.
-    RLConfig::RLType rlType_;
+    RLV12Config::RLType rlType_;
     bool _22bit_;
     
     // A RLV12 can have a maximum of four units. RL01_02 objects for
@@ -96,7 +96,7 @@ class RLV12 : public PDP11Peripheral
 public:
     // Constructors/destructor
     RLV12 (Qbus *bus);
-    RLV12 (Qbus *bus, Window* window, shared_ptr<RLConfig> rlConfig);
+    RLV12 (Qbus *bus, Window* window, shared_ptr<RLV12Config> rlConfig);
     ~RLV12 ();
 
     // Required functions

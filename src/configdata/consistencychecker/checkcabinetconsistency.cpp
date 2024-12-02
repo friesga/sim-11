@@ -44,10 +44,10 @@ void ConsistencyChecker::checkCabinetConsistency ()
         }
         else
         {
-            if (holds_alternative<shared_ptr<RLConfig>> (device))
+            if (holds_alternative<shared_ptr<RLV12Config>> (device))
             {
-                shared_ptr<RLConfig> rlConfig =
-                    get<shared_ptr<RLConfig>> (device);
+                shared_ptr<RLV12Config> rlConfig =
+                    get<shared_ptr<RLV12Config>> (device);
 
                 // Check the cabinet position for every configured RL01/02
                 for (size_t unitNumber = 0;

@@ -22,7 +22,7 @@ using std::shared_ptr;
 // 
 // Source: RL01/RL02 User Guide (EK-RL012-UG-005)
 //
-struct RLConfig : public DeviceType<BusType::QBus>
+struct RLV12Config : public DeviceType<BusType::QBus>
 {
 	enum class RLType
 	{	
