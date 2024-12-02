@@ -13,10 +13,10 @@ RLProcessor::RLProcessor ()
 	rlConfigPtr = make_unique<RLConfig> ();
 }
 
-// This is overridden version of SectionProcessor::processSection() with the
-// following differences:
+// This is an overridden version of SectionProcessor::processSection() with
+// the following differences:
 // - After a key is processed it is removed from the section,
-// - No error is reported on unknown keys/
+// - No error is reported on unknown keys.
 //
 // This version of processSection can be used to process a section with keys
 // common to multiple devices (such as the RL11, RLV11 and RLV12). The
@@ -32,7 +32,6 @@ void RLProcessor::processSection (iniparser::Section* section)
 	{
 		processValue (valueIterator);
 		section->removeValue (valueIterator->first);
-
 	}
 }
 
