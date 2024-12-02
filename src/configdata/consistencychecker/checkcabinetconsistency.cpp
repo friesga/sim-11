@@ -51,10 +51,10 @@ void ConsistencyChecker::checkCabinetConsistency ()
 
                 // Check the cabinet position for every configured RL01/02
                 for (size_t unitNumber = 0;
-                    unitNumber < rlConfig->numUnits; ++unitNumber)
+                    unitNumber < rlConfig->common.numUnits; ++unitNumber)
                 {
                     shared_ptr<RLUnitConfig> rlUnitConfig =
-                        rlConfig->rlUnitConfig[unitNumber];
+                        rlConfig->common.rlUnitConfig[unitNumber];
 
                     if (rlUnitConfig == nullptr)
                         continue;

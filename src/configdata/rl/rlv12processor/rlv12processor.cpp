@@ -25,11 +25,11 @@ void RLV12Processor::processValue (iniparser::Section::ValueIterator valueIterat
 void RLV12Processor::processController (iniparser::Value value)
 {
 	if (value.asString() == "RL11")
-		rlConfigPtr->rlType = RLV12Config::RLType::RL11;
+		rlConfigPtr->common.rlType = RLConfig::RLType::RL11;
 	else if (value.asString() == "RLV11")
-		rlConfigPtr->rlType = RLV12Config::RLType::RLV11;
+		rlConfigPtr->common.rlType = RLConfig::RLType::RLV11;
 	else if (value.asString() == "RLV12")
-		rlConfigPtr->rlType = RLV12Config::RLType::RLV12;
+		rlConfigPtr->common.rlType = RLConfig::RLType::RLV12;
 	else
 		throw std::invalid_argument {"Incorrect RL controller type: " + 
 			value.asString()};
@@ -39,7 +39,7 @@ void RLV12Processor::processAddress (iniparser::Value value)
 {
 	try
 	{
-		rlConfigPtr->address = touint<u16> (value.asString());
+		rlConfigPtr->common.address = touint<u16> (value.asString());
 	}
 	catch (std::invalid_argument const &)
 	{
@@ -52,7 +52,7 @@ void RLV12Processor::processVector (iniparser::Value value)
 { 
 	try
 	{
-		rlConfigPtr->vector = touint<u16> (value.asString());
+		rlConfigPtr->common.vector = touint<u16> (value.asString());
 	}
 	catch (std::invalid_argument const &)
 	{
@@ -63,7 +63,7 @@ void RLV12Processor::processVector (iniparser::Value value)
 
 void RLV12Processor::processUnits (iniparser::Value value)
 {
-	rlConfigPtr->numUnits = value.asInt ();
+	rlConfigPtr->common.numUnits = value.asInt ();
 }
 
 // Explicitly test for "true" and "false" as AsBool() returns no error,
@@ -90,11 +90,11 @@ void RLV12Processor::process22Bit (iniparser::Value value)
 // option only if the controller type is RLV12. 
 void RLV12Processor::checkConsistency ()
 {
-	if (rlConfigPtr->rlType == RLV12Config::RLType::RL11)
+	if (rlConfigPtr->common.rlType == RLConfig::RLType::RL11)
 		throw std::invalid_argument 
 			{"The RL11 can only be configured on Unibus systems"};
 
-	if (rlConfigPtr->_22bit && rlConfigPtr->rlType != RLV12Config::RLType::RLV12)
+	if (rlConfigPtr->_22bit && rlConfigPtr->common.rlType != RLConfig::RLType::RLV12)
 		throw std::invalid_argument 
 			{"The 22-bit option is only allowed on an RLV12 controller"};
 }
@@ -110,11 +110,12 @@ void RLV12Processor::processSubsection (iniparser::Section *subSection)
 	// exception if an incorrect unit number is specified. The unit number
 	// is stored in the RlUnitConfig struct so it is clear to which unit
 	// the configuration applies.
-	size_t unitNumber = unitNumberFromSectionName (subSection->name(), rlConfigPtr->maxRlUnits);
+	size_t unitNumber = unitNumberFromSectionName (subSection->name(),
+		rlConfigPtr->common.maxRlUnits);
 
 	// Check that the configuration for this unit has not already been
 	// specified.
-	if (rlConfigPtr->rlUnitConfig[unitNumber] != nullptr)
+	if (rlConfigPtr->common.rlUnitConfig[unitNumber] != nullptr)
 		throw std::invalid_argument {"Double specification for RL subsection: " + 
 			subSection->name()};
 
@@ -122,7 +123,7 @@ void RLV12Processor::processSubsection (iniparser::Section *subSection)
 	rlUnitProcessor.processSection (subSection);
 
 	// Add the unit configuration to the RL device configuration
-	rlConfigPtr->rlUnitConfig[unitNumber] = rlUnitProcessor.getConfig ();
+	rlConfigPtr->common.rlUnitConfig[unitNumber] = rlUnitProcessor.getConfig ();
 }
 
 DeviceConfig RLV12Processor::getConfig ()

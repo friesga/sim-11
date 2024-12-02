@@ -22,10 +22,12 @@ using std::shared_ptr;
 // 
 // Source: RL01/RL02 User Guide (EK-RL012-UG-005)
 //
-struct RLV12Config : public DeviceType<BusType::QBus>
+// Definition of the parameters common to the RL11, RLV11 and RLV12.
+//
+struct RLConfig
 {
 	enum class RLType
-	{	
+	{
 		RL11,
 		RLV11,
 		RLV12
@@ -36,9 +38,16 @@ struct RLV12Config : public DeviceType<BusType::QBus>
 	uint16_t vector {0};
 	size_t numUnits {0};
 	RLType rlType {RLType::RLV12};
-	bool _22bit {false};
 
 	shared_ptr<RLUnitConfig> rlUnitConfig[maxRlUnits] = {};
+};
+
+
+// Configuration parameters specific for the RLV12.
+struct RLV12Config : public DeviceType<BusType::QBus>
+{
+	RLConfig common;
+	bool _22bit {false};
 };
 
 #endif // _RLCONFIG_H_

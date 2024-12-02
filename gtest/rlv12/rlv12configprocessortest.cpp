@@ -50,15 +50,15 @@ TEST (RLV12ConfigProcessorTest, configProcessed)
 	shared_ptr<RLV12Config> rlConfig = 
 		get<shared_ptr<RLV12Config>> (configuration[0]);
 
-	EXPECT_EQ (rlConfig->rlType, RLV12Config::RLType::RLV12);
-	EXPECT_EQ (rlConfig->address, 0174400);
-	EXPECT_EQ (rlConfig->vector, 0160);
-	EXPECT_EQ (rlConfig->numUnits, 1);
+	EXPECT_EQ (rlConfig->common.rlType, RLConfig::RLType::RLV12);
+	EXPECT_EQ (rlConfig->common.address, 0174400);
+	EXPECT_EQ (rlConfig->common.vector, 0160);
+	EXPECT_EQ (rlConfig->common.numUnits, 1);
 
 	EXPECT_EQ (static_pointer_cast<RLUnitConfig>
-		(rlConfig->rlUnitConfig[0])->rlUnitType, RLUnitConfig::RLUnitType::RL01);
+		(rlConfig->common.rlUnitConfig[0])->rlUnitType, RLUnitConfig::RLUnitType::RL01);
 	EXPECT_EQ (static_pointer_cast<RLUnitConfig>
-		(rlConfig->rlUnitConfig[0])->writeProtect, false);
+		(rlConfig->common.rlUnitConfig[0])->writeProtect, false);
 }
 
 TEST (RLV12ConfigProcessorTest, configProcessorThrows)
@@ -136,15 +136,15 @@ TEST (RLV12ConfigProcessorTest, fileName)
 		// Now we can check the unit's filenames. The devices in the 
 		// units are of type RLUnitConfig.
 		EXPECT_STREQ (static_pointer_cast<RLUnitConfig> 
-			(rlConfig->rlUnitConfig[0])->fileName.c_str(), "somefile");
+			(rlConfig->common.rlUnitConfig[0])->fileName.c_str(), "somefile");
 		EXPECT_STREQ (static_pointer_cast<RLUnitConfig> 
-			(rlConfig->rlUnitConfig[1])->fileName.c_str(), 
+			(rlConfig->common.rlUnitConfig[1])->fileName.c_str(), 
 			expectedFileNameUnit1.c_str());
 		EXPECT_STREQ (static_pointer_cast<RLUnitConfig> 
-			(rlConfig->rlUnitConfig[2])->fileName.c_str(),
+			(rlConfig->common.rlUnitConfig[2])->fileName.c_str(),
 			expectedFileNameUnit2.c_str());
 		EXPECT_STREQ (static_pointer_cast<RLUnitConfig> 
-			(rlConfig->rlUnitConfig[3])->fileName.c_str(),
+			(rlConfig->common.rlUnitConfig[3])->fileName.c_str(),
 			expectedFileNameUnit3.c_str());
     }
 }
@@ -183,13 +183,13 @@ TEST (RLV12ConfigProcessorTest, spinUpTimeCorrectlyDefaulted)
 
 	// Verify the spin-up time of all four units is correctly defaulted
 	EXPECT_EQ (static_pointer_cast<RLUnitConfig>
-		(rlConfig->rlUnitConfig[0])->spinUpTime, 0);
+		(rlConfig->common.rlUnitConfig[0])->spinUpTime, 0);
 	EXPECT_EQ (static_pointer_cast<RLUnitConfig>
-		(rlConfig->rlUnitConfig[1])->spinUpTime, 0);
+		(rlConfig->common.rlUnitConfig[1])->spinUpTime, 0);
 	EXPECT_EQ (static_pointer_cast<RLUnitConfig>
-		(rlConfig->rlUnitConfig[2])->spinUpTime, 0);
+		(rlConfig->common.rlUnitConfig[2])->spinUpTime, 0);
 	EXPECT_EQ (static_pointer_cast<RLUnitConfig>
-		(rlConfig->rlUnitConfig[3])->spinUpTime, 0);
+		(rlConfig->common.rlUnitConfig[3])->spinUpTime, 0);
 }
 
 TEST (RLV12ConfigProcessorTest, spinUpTimeHasCorrectValues)
@@ -230,13 +230,13 @@ TEST (RLV12ConfigProcessorTest, spinUpTimeHasCorrectValues)
 
 	// Verify the spin-up time of all four units is correctly defaulted
 	EXPECT_EQ (static_pointer_cast<RLUnitConfig>
-		(rlConfig->rlUnitConfig[0])->spinUpTime, 0);
+		(rlConfig->common.rlUnitConfig[0])->spinUpTime, 0);
 	EXPECT_EQ (static_pointer_cast<RLUnitConfig>
-		(rlConfig->rlUnitConfig[1])->spinUpTime, 1);
+		(rlConfig->common.rlUnitConfig[1])->spinUpTime, 1);
 	EXPECT_EQ (static_pointer_cast<RLUnitConfig>
-		(rlConfig->rlUnitConfig[2])->spinUpTime, 2);
+		(rlConfig->common.rlUnitConfig[2])->spinUpTime, 2);
 	EXPECT_EQ (static_pointer_cast<RLUnitConfig>
-		(rlConfig->rlUnitConfig[3])->spinUpTime, 3);
+		(rlConfig->common.rlUnitConfig[3])->spinUpTime, 3);
 }
 
 TEST (RLV12ConfigProcessorTest, unitNumberCorrectlySet)
@@ -273,11 +273,11 @@ TEST (RLV12ConfigProcessorTest, unitNumberCorrectlySet)
 
 	// Verify the spin-up time of all four units is correctly defaulted
 	EXPECT_EQ (static_pointer_cast<RLUnitConfig>
-		(rlConfig->rlUnitConfig[0])->unitNumber, 0);
+		(rlConfig->common.rlUnitConfig[0])->unitNumber, 0);
 	EXPECT_EQ (static_pointer_cast<RLUnitConfig>
-		(rlConfig->rlUnitConfig[1])->unitNumber, 1);
+		(rlConfig->common.rlUnitConfig[1])->unitNumber, 1);
 	EXPECT_EQ (static_pointer_cast<RLUnitConfig>
-		(rlConfig->rlUnitConfig[2])->unitNumber, 2);
+		(rlConfig->common.rlUnitConfig[2])->unitNumber, 2);
 	EXPECT_EQ (static_pointer_cast<RLUnitConfig>
-		(rlConfig->rlUnitConfig[3])->unitNumber, 3);
+		(rlConfig->common.rlUnitConfig[3])->unitNumber, 3);
 }

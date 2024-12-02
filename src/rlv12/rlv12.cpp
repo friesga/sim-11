@@ -25,7 +25,7 @@ RLV12::RLV12 (Qbus *bus)
     dar_ {0},
     bae_ {0},
     dataBuffer_ {nullptr},
-    rlType_ {RLV12Config::RLType::RLV12},
+    rlType_ {RLConfig::RLType::RLV12},
     _22bit_ {false},
     wordCounter_ {0},
     fifoIndex_ {0}
@@ -54,15 +54,16 @@ RLV12::RLV12 (Qbus *bus, Window* window, shared_ptr<RLV12Config> rlConfig)
     dar_ {0},
     bae_ {0},
     dataBuffer_ {nullptr},
-    rlType_ {rlConfig->rlType},
+    rlType_ {rlConfig->common.rlType},
     _22bit_ {rlConfig->_22bit},
     wordCounter_ {0},
     fifoIndex_ {0}
 {
     name_ = "RL";
-    baseAddress_ = (rlConfig->address > 0) ? 
-        rlConfig->address : RLV12const::RLV_BaseAddress;
-    vector_ = (rlConfig->vector > 0) ? rlConfig->vector : RLV12const::RLV_Vector;
+    baseAddress_ = (rlConfig->common.address > 0) ? 
+        rlConfig->common.address : RLV12const::RLV_BaseAddress;
+    vector_ = (rlConfig->common.vector > 0) ?
+        rlConfig->common.vector : RLV12const::RLV_Vector;
 
     // Allocate the transfer buffer, initializing to zero
     dataBuffer_ = new (std::nothrow) u16[RLV12const::maxTransfer]();
@@ -72,10 +73,10 @@ RLV12::RLV12 (Qbus *bus, Window* window, shared_ptr<RLV12Config> rlConfig)
 
     // Attach files to the RL units and create panels for the units
 	for (size_t unitNumber = 0; 
-		unitNumber < rlConfig->numUnits; ++unitNumber)
+		unitNumber < rlConfig->common.numUnits; ++unitNumber)
 	{
         shared_ptr<RLUnitConfig> rlUnitConfig = 
-            rlConfig->rlUnitConfig[unitNumber];
+            rlConfig->common.rlUnitConfig[unitNumber];
 
         if (rlUnitConfig == nullptr)
             continue;
@@ -181,7 +182,7 @@ void RLV12::memAddrToRegs (u32 memoryAddress)
         ((upper6Bits & RLV12const::CSR_AddressExtMask) << 
             RLV12const::CSR_AddressExtPosition);
 
-    if (rlType_ == RLV12Config::RLType::RLV12 && _22bit_)
+    if (rlType_ == RLConfig::RLType::RLV12 && _22bit_)
         bae_ = upper6Bits & RLV12const::BAE_Mask;
 }
 
@@ -190,7 +191,7 @@ void RLV12::memAddrToRegs (u32 memoryAddress)
 // used, for 22-bit systems the BAE register is used.
 BusAddress RLV12::memAddrFromRegs ()
 {
-    if (!(rlType_ == RLV12Config::RLType::RLV12 && _22bit_))
+    if (!(rlType_ == RLConfig::RLType::RLV12 && _22bit_))
         return BusAddress ((getBA16BA17 (csr_) << 16) | bar_, BusAddress::Width::_22Bit);
     else
         return BusAddress ((bae_ << 16) | bar_, BusAddress::Width::_18Bit);
@@ -200,7 +201,7 @@ BusAddress RLV12::memAddrFromRegs ()
 // and BA17 bits
 void RLV12::updateBAE ()
 {
-    if (rlType_ == RLV12Config::RLType::RLV12 && _22bit_)
+    if (rlType_ == RLConfig::RLType::RLV12 && _22bit_)
         bae_ = (bae_ & ~RLV12const::CSR_AddressExtMask) |
             ((csr_ >> RLV12const::CSR_AddressExtPosition) & RLV12const::CSR_AddressExtMask);
 }
