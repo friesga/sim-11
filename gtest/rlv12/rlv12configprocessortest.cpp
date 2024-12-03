@@ -59,6 +59,42 @@ TEST (RLV12ConfigProcessorTest, configProcessed)
 		(rlConfig->common.rlUnitConfig[0])->writeProtect, false);
 }
 
+TEST (RLV12ConfigProcessorTest, _22bitOptionAccepted)
+{
+	std::stringstream stream;
+	iniparser::File ft;
+
+	stream << "[RLV12]\n"
+		"22-bit = true\n"
+		"units = 1\n"
+
+		"[RLV12.unit0]\n"
+		"type = RL01\n"
+		"cabinet = 0/0\n"
+		"filename = rl01.dsk\n"
+		"newfile = true\n"
+		"write-protect = false\n";
+
+	stream >> ft;
+
+	IniProcessor iniProcessor;
+
+	// Verify the configuration is processed without errors
+	EXPECT_NO_THROW (iniProcessor.process (ft));
+
+	// Verify the device is present in the configuration with all attributes
+	// having their correct value.
+	SystemConfig& configuration =
+		iniProcessor.getSystemConfig ();
+
+	ASSERT_TRUE (holds_alternative<shared_ptr<RLV12Config>> (configuration[0]));
+
+	shared_ptr<RLV12Config> rlConfig =
+		get<shared_ptr<RLV12Config>> (configuration[0]);
+
+	EXPECT_TRUE (rlConfig->_22bit);
+}
+
 TEST (RLV12ConfigProcessorTest, unknownOptionThrows)
 {
     iniparser::File ft;
