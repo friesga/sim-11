@@ -1,6 +1,7 @@
 #include "iniprocessor.h"
 #include "../sectionprocessor/sectionprocessor.h"
 #include "../ba11nprocessor/ba11nprocessor.h"
+#include "configdata/rl/rlv11processor/rlv11processor.h"
 #include "configdata/rl/rlv12processor/rlv12processor.h"
 #include "configdata/rxv21/rxv21processor/rxv21processor.h"
 #include "../bdv11processor/bdv11processor.h"
@@ -18,6 +19,12 @@ using std::make_unique;
 unique_ptr<DeviceConfigProcessor> IniProcessor::createBA11_NProcessor ()
 {
     return make_unique<BA11_NProcessor> ();
+}
+
+// Factory for the creation of RLV12Processor objects
+unique_ptr<DeviceConfigProcessor> IniProcessor::createRLV11Processor ()
+{
+    return make_unique<RLV11Processor> ();
 }
 
 // Factory for the creation of RLV12Processor objects

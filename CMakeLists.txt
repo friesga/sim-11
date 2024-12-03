@@ -174,6 +174,7 @@ set (CONFIGURATOR_SRCS
     src/configdata/iniprocessor/getsystemconfig.cpp
     src/configdata/sectionprocessor/sectionprocessor.cpp
     src/configdata/rl/rlprocessor/rlprocessor.cpp
+    src/configdata/rl/rlv11processor/rlv11processor.cpp
     src/configdata/rl/rlv12processor/rlv12processor.cpp
     src/configdata/rxv21/rxv21processor/rxv21processor.cpp
     src/configdata/rxv21/rxv21unitprocessor/rxv21unitprocessor.cpp
@@ -456,6 +457,7 @@ set (GTEST_SRCS
     gtest/ms11pconfiguratortest.cpp
     gtest/operandlocationtest.cpp
     gtest/dummycpu/dummymmu/dummymmu.cpp
+    gtest/rlv12/rlv11configprocessortest.cpp
     gtest/rlv12/rlv12configprocessortest.cpp
     gtest/rlv12/rlv12attachtest.cpp
     gtest/rlv12/rlv12maintenancetest.cpp

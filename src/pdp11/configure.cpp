@@ -82,6 +82,8 @@ void PDP_11::configureQbusSystem (SystemConfig systemConfig,
             {busDevices_.emplace_back (new BDV11 (&bus_, bdv11Config)); },
         [this] (shared_ptr<RXV21Config> rxv21Config)
             {busDevices_.emplace_back (new RXV21 (&bus_, rxv21Config)); },
+        [this, window] (shared_ptr<RLV11Config> rlConfig)
+            { /* Ignore for now */ },
         [this, window] (shared_ptr<RLV12Config> rlConfig)
             {busDevices_.emplace_back (new RLV12 (&bus_, window, rlConfig)); },
         [this, window] (shared_ptr<BA11_NConfig> ba11_nConfig)
@@ -121,6 +123,8 @@ void PDP_11::configureUnibusSystem (SystemConfig systemConfig,
             { throw "Should not happen"; },
         [this] (shared_ptr<RXV21Config> rxv21Config)
             { throw "Should not happen"; },
+        [this, window] (shared_ptr<RLV11Config> rlConfig)
+            { /* Ignore for now */ },
         [this, window] (shared_ptr<RLV12Config> rlConfig)
             { throw "Should not happen"; },
         [this, window] (shared_ptr<BA11_NConfig> ba11_nConfig)

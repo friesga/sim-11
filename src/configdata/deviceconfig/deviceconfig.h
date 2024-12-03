@@ -29,6 +29,7 @@ using DeviceConfig = variant<
     shared_ptr<DLV11JConfig>,
     shared_ptr<BDV11Config>,
     shared_ptr<RXV21Config>,
+    shared_ptr<RLV11Config>,
     shared_ptr<RLV12Config>,
     shared_ptr<BA11_NConfig>,
     shared_ptr<MS11PConfig>,
