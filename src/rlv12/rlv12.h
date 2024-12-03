@@ -97,7 +97,9 @@ public:
     // Constructors/destructor
     RLV12 (Qbus *bus);
     RLV12 (Qbus* bus, Window* window, RLConfig& rlConfig);
-    RLV12 (Qbus *bus, Window* window, shared_ptr<RLV12Config> rlConfig);
+    RLV12 (Qbus* bus, Window* window, shared_ptr<RL11Config> rl11Config);
+    RLV12 (Qbus* bus, Window* window, shared_ptr<RLV11Config> rlv11Config);
+    RLV12 (Qbus *bus, Window* window, shared_ptr<RLV12Config> rlv12Config);
     ~RLV12 ();
 
     // Required functions

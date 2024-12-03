@@ -54,7 +54,7 @@ RLV12::RLV12 (Qbus *bus, Window* window, RLConfig& rlConfig)
     dar_ {0},
     bae_ {0},
     dataBuffer_ {nullptr},
-    rlType_ {rlConfig.rlType},
+    rlType_ {},
     _22bit_ {false},
     wordCounter_ {0},
     fifoIndex_ {0}
@@ -91,11 +91,26 @@ RLV12::RLV12 (Qbus *bus, Window* window, RLConfig& rlConfig)
     cmdProcessor_ = std::make_unique<CmdProcessor> (this);
 }
 
+RLV12::RLV12 (Qbus* bus, Window* window, shared_ptr<RL11Config> rl11Config)
+    :
+    RLV12 (bus, window, rl11Config->common)
+{
+    rlType_ = RLConfig::RLType::RL11;
+}
+
+RLV12::RLV12 (Qbus* bus, Window* window, shared_ptr<RLV11Config> rlv11Config)
+    :
+    RLV12 (bus, window, rlv11Config->common)
+{
+    rlType_ = RLConfig::RLType::RLV11;
+}
+
 RLV12::RLV12 (Qbus* bus, Window* window, shared_ptr<RLV12Config> rlv12Config)
     :
     RLV12 (bus, window, rlv12Config->common)
 {
     _22bit_  = rlv12Config->_22bit;
+    rlType_ = RLConfig::RLType::RLV12;
 }
 
 // Destructor to deallocate transfer buffer
