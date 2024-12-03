@@ -50,22 +50,6 @@ void RLProcessor::processValue (iniparser::Section::ValueIterator valueIterator)
 	(this->*processFunction)(valueIterator->second);
 }
 
-// 
-// Determine the controller type, either RLV11 or RLV12.
-// 
-void RLProcessor::processController (iniparser::Value value)
-{
-	if (value.asString () == "RL11")
-		rlConfigPtr->rlType = RLConfig::RLType::RL11;
-	else if (value.asString () == "RLV11")
-		rlConfigPtr->rlType = RLConfig::RLType::RLV11;
-	else if (value.asString () == "RLV12")
-		rlConfigPtr->rlType = RLConfig::RLType::RLV12;
-	else
-		throw std::invalid_argument {"Incorrect RL controller type: " +
-			value.asString ()};
-}
-
 void RLProcessor::processAddress (iniparser::Value value)
 {
 	try

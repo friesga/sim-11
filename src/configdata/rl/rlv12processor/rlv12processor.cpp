@@ -59,15 +59,7 @@ void RLV12Processor::process22Bit (iniparser::Value value)
 // the 22-bit option. This option is not present on the RLV11, so allow this
 // option only if the controller type is RLV12. 
 void RLV12Processor::checkConsistency ()
-{
-	if (rlConfigPtr->common.rlType == RLConfig::RLType::RL11)
-		throw std::invalid_argument 
-			{"The RL11 can only be configured on Unibus systems"};
-
-	if (rlConfigPtr->_22bit && rlConfigPtr->common.rlType != RLConfig::RLType::RLV12)
-		throw std::invalid_argument 
-			{"The 22-bit option is only allowed on an RLV12 controller"};
-}
+{}
 
 // Processing of the unit subsections is delegated to the RLProcessor.
 void RLV12Processor::processSubsection (iniparser::Section *subSection)

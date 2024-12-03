@@ -37,7 +37,6 @@ struct RLConfig
 	uint16_t address {0};
 	uint16_t vector {0};
 	size_t numUnits {0};
-	RLType rlType {RLType::RLV12};
 
 	shared_ptr<RLUnitConfig> rlUnitConfig[maxRlUnits] = {};
 };

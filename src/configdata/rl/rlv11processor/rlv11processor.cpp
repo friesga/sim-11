@@ -47,11 +47,7 @@ void RLV11Processor::processValue (iniparser::Section::ValueIterator valueIterat
 // the 22-bit option. This option is not present on the RLV11, so allow this
 // option only if the controller type is RLV12. 
 void RLV11Processor::checkConsistency ()
-{
-	if (rlv11ConfigPtr->common.rlType == RLConfig::RLType::RL11)
-		throw std::invalid_argument
-	{"The RL11 can only be configured on Unibus systems"};
-}
+{}
 
 // Processing of the unit subsections is delegated to the RLProcessor.
 void RLV11Processor::processSubsection (iniparser::Section* subSection)

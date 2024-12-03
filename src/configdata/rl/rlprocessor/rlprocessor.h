@@ -25,14 +25,12 @@ class RLProcessor : public SectionProcessor
 
 	map<string, Process> valueProcessors =
 	{
-		{"controller", &RLProcessor::processController},
 		{"address", &RLProcessor::processAddress},
 		{"vector", &RLProcessor::processVector},
 		{"units", &RLProcessor::processUnits}
 	};
 	
 	void processValue (iniparser::Section::ValueIterator valueIterator);
-	void processController (iniparser::Value value);
 	void processAddress (iniparser::Value value);
 	void processVector (iniparser::Value value);
 	void processUnits (iniparser::Value value);

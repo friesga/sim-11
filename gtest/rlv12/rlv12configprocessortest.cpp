@@ -21,7 +21,6 @@ TEST (RLV12ConfigProcessorTest, configProcessed)
 	iniparser::File ft;
 
 	stream << "[RLV12]\n"
-		"controller = RLV12\n"
 		"address = 0174400\n"
 		"vector = 0160\n"
 		"units = 1\n"
@@ -50,7 +49,6 @@ TEST (RLV12ConfigProcessorTest, configProcessed)
 	shared_ptr<RLV12Config> rlConfig = 
 		get<shared_ptr<RLV12Config>> (configuration[0]);
 
-	EXPECT_EQ (rlConfig->common.rlType, RLConfig::RLType::RLV12);
 	EXPECT_EQ (rlConfig->common.address, 0174400);
 	EXPECT_EQ (rlConfig->common.vector, 0160);
 	EXPECT_EQ (rlConfig->common.numUnits, 1);
@@ -61,37 +59,12 @@ TEST (RLV12ConfigProcessorTest, configProcessed)
 		(rlConfig->common.rlUnitConfig[0])->writeProtect, false);
 }
 
-TEST (RLV11ConfigProcessorTest, unknownOptionThrows)
-{
-	iniparser::File ft;
-	std::stringstream stream;
-	stream << "[RLV12]\n"
-		"unknown-key = true\n";
-
-	stream >> ft;
-
-	IniProcessor iniProcessor;
-	try
-	{
-		iniProcessor.process (ft);
-		FAIL ();
-	}
-	catch (std::invalid_argument const& except)
-	{
-		EXPECT_STREQ (except.what (), "Unknown key in section RLV12: unknown-key");
-	}
-	catch (...)
-	{
-		FAIL ();
-	}
-}
-
-TEST (RLV12ConfigProcessorTest, configProcessorThrows)
+TEST (RLV12ConfigProcessorTest, unknownOptionThrows)
 {
     iniparser::File ft;
 	std::stringstream stream;
 	stream << "[RLV12]\n"
-		"controller = RLV13\n";
+		"controller = RLV12\n";
 		
 	stream >> ft;
 
@@ -103,7 +76,7 @@ TEST (RLV12ConfigProcessorTest, configProcessorThrows)
 	}
 	catch (std::invalid_argument const &except)
 	{
-		EXPECT_STREQ (except.what(), "Incorrect RL controller type: RLV13");
+		EXPECT_STREQ (except.what(), "Unknown key in section RLV12: controller");
 	}
 	catch (...)
 	{

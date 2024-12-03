@@ -21,7 +21,6 @@ TEST (RL11ConfigProcessorTest, configProcessed)
 	iniparser::File ft;
 
 	stream << "[RL11]\n"
-		"controller = RL11\n"
 		"address = 0174400\n"
 		"vector = 0160\n"
 		"units = 1\n"
@@ -50,7 +49,6 @@ TEST (RL11ConfigProcessorTest, configProcessed)
 	shared_ptr<RL11Config> rlConfig = 
 		get<shared_ptr<RL11Config>> (configuration[0]);
 
-	EXPECT_EQ (rlConfig->common.rlType, RLConfig::RLType::RL11);
 	EXPECT_EQ (rlConfig->common.address, 0174400);
 	EXPECT_EQ (rlConfig->common.vector, 0160);
 	EXPECT_EQ (rlConfig->common.numUnits, 1);
@@ -79,7 +77,7 @@ TEST (RL11ConfigProcessorTest, configProcessorThrows)
 	}
 	catch (std::invalid_argument const &except)
 	{
-		EXPECT_STREQ (except.what(), "Incorrect RL controller type: RLV13");
+		EXPECT_STREQ (except.what(), "Unknown key in section RL11: controller");
 	}
 	catch (...)
 	{
