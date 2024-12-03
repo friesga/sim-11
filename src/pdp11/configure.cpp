@@ -82,12 +82,12 @@ void PDP_11::configureQbusSystem (SystemConfig systemConfig,
             {busDevices_.emplace_back (new BDV11 (&bus_, bdv11Config)); },
         [this] (shared_ptr<RXV21Config> rxv21Config)
             {busDevices_.emplace_back (new RXV21 (&bus_, rxv21Config)); },
-        [this, window] (shared_ptr<RL11Config> rlConfig)
-            { /* Ignore for now */ },
-        [this, window] (shared_ptr<RLV11Config> rlConfig)
-            { /* Ignore for now */ },
-        [this, window] (shared_ptr<RLV12Config> rlConfig)
-            {busDevices_.emplace_back (new RLV12 (&bus_, window, rlConfig)); },
+        [this, window] (shared_ptr<RL11Config> rl11Config)
+            {throw "Should not happen"; },
+        [this, window] (shared_ptr<RLV11Config> rlv11Config)
+            {busDevices_.emplace_back (new RLV12 (&bus_, window, rlv11Config)); },
+        [this, window] (shared_ptr<RLV12Config> rlv12Config)
+            {busDevices_.emplace_back (new RLV12 (&bus_, window, rlv12Config)); },
         [this, window] (shared_ptr<BA11_NConfig> ba11_nConfig)
             {ba11_n_ = std::make_unique<BA11_N> (&bus_, window, ba11_nConfig); },
         [this] (shared_ptr<MS11PConfig> ms11pConfig)
@@ -125,10 +125,10 @@ void PDP_11::configureUnibusSystem (SystemConfig systemConfig,
             { throw "Should not happen"; },
         [this] (shared_ptr<RXV21Config> rxv21Config)
             { throw "Should not happen"; },
-        [this, window] (shared_ptr<RL11Config> rlConfig)
-            { /* Ignore for now */ },
+        [this, window] (shared_ptr<RL11Config> rl11Config)
+            { busDevices_.emplace_back (new RLV12 (&bus_, window, rl11Config)); },
         [this, window] (shared_ptr<RLV11Config> rlConfig)
-            { /* Ignore for now */ },
+            { throw "Should not happen"; },
         [this, window] (shared_ptr<RLV12Config> rlConfig)
             { throw "Should not happen"; },
         [this, window] (shared_ptr<BA11_NConfig> ba11_nConfig)
