@@ -28,12 +28,18 @@ void RLProcessor::processSection (iniparser::Section* section)
 {
 	// Process section's Values (i.e. key/value pairs)
 	for (iniparser::Section::ValueIterator valueIterator = section->valuesBegin ();
-		valueIterator != section->valuesEnd (); ++valueIterator)
+		valueIterator != section->valuesEnd ();)
 	{
-		if (valueProcessors.find (valueIterator->first) != valueProcessors.end ())
+		// Erasing an entry in a map causes the iterator to be invalidated.
+		// We therefore make an explicit copy of the iterator, increment it
+		// and remove the entry using the copy of the constructor. See e.g.:
+		// https://www.techiedelight.com/remove-entries-map-iterating-cpp/
+		auto currentIterator = valueIterator++;
+
+		if (valueProcessors.find (currentIterator->first) != valueProcessors.end ())
 		{
-			processValue (valueIterator);
-			section->removeValue (valueIterator->first);
+			processValue (currentIterator); 
+			section->removeValue (currentIterator->first);
 		}
 	}
 }
