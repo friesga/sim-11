@@ -27,8 +27,13 @@ void RLV11Processor::processSection (iniparser::Section* section)
 
 void RLV11Processor::processValue (iniparser::Section::ValueIterator valueIterator)
 {
-	// Throw exception for non-existing key?
+
 	Process processFunction = valueProcessors[valueIterator->first];
+	if (processFunction == nullptr)
+		// This exception will be catched and processed in 
+		// SectionProcessor::processSection().
+		throw std::out_of_range ("Unknown key in RLV11 section");
+
 	(this->*processFunction)(valueIterator->second);
 }
 

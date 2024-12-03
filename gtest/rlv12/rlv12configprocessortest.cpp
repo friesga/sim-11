@@ -61,6 +61,31 @@ TEST (RLV12ConfigProcessorTest, configProcessed)
 		(rlConfig->common.rlUnitConfig[0])->writeProtect, false);
 }
 
+TEST (RLV11ConfigProcessorTest, unknownOptionThrows)
+{
+	iniparser::File ft;
+	std::stringstream stream;
+	stream << "[RLV12]\n"
+		"unknown-key = true\n";
+
+	stream >> ft;
+
+	IniProcessor iniProcessor;
+	try
+	{
+		iniProcessor.process (ft);
+		FAIL ();
+	}
+	catch (std::invalid_argument const& except)
+	{
+		EXPECT_STREQ (except.what (), "Unknown key in section RLV12: unknown-key");
+	}
+	catch (...)
+	{
+		FAIL ();
+	}
+}
+
 TEST (RLV12ConfigProcessorTest, configProcessorThrows)
 {
     iniparser::File ft;

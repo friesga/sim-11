@@ -87,6 +87,31 @@ TEST (RLV11ConfigProcessorTest, configProcessorThrows)
 	}
 }
 
+TEST (RLV11ConfigProcessorTest, _22bitOptionThrows)
+{
+	iniparser::File ft;
+	std::stringstream stream;
+	stream << "[RLV11]\n"
+		"22-bit = true\n";
+
+	stream >> ft;
+
+	IniProcessor iniProcessor;
+	try
+	{
+		iniProcessor.process (ft);
+		FAIL ();
+	}
+	catch (std::invalid_argument const& except)
+	{
+		EXPECT_STREQ (except.what (), "Unknown key in section RLV11: 22-bit");
+	}
+	catch (...)
+	{
+		FAIL ();
+	}
+}
+
 
 #ifdef _WIN32
 static const std::string expectedFileNameUnit0 {"\\somefile"};
