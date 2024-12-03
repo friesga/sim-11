@@ -96,6 +96,7 @@ class RLV12 : public PDP11Peripheral
 public:
     // Constructors/destructor
     RLV12 (Qbus *bus);
+    RLV12 (Qbus* bus, Window* window, RLConfig& rlConfig);
     RLV12 (Qbus *bus, Window* window, shared_ptr<RLV12Config> rlConfig);
     ~RLV12 ();
 

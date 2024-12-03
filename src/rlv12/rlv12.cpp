@@ -46,7 +46,7 @@ RLV12::RLV12 (Qbus *bus)
     cmdProcessor_ = std::make_unique<CmdProcessor> (this);
 }
 
-RLV12::RLV12 (Qbus *bus, Window* window, shared_ptr<RLV12Config> rlConfig)
+RLV12::RLV12 (Qbus *bus, Window* window, RLConfig& rlConfig)
     :
     PDP11Peripheral (bus),
     csr_ {0},
@@ -54,16 +54,16 @@ RLV12::RLV12 (Qbus *bus, Window* window, shared_ptr<RLV12Config> rlConfig)
     dar_ {0},
     bae_ {0},
     dataBuffer_ {nullptr},
-    rlType_ {rlConfig->common.rlType},
-    _22bit_ {rlConfig->_22bit},
+    rlType_ {rlConfig.rlType},
+    _22bit_ {false},
     wordCounter_ {0},
     fifoIndex_ {0}
 {
     name_ = "RL";
-    baseAddress_ = (rlConfig->common.address > 0) ? 
-        rlConfig->common.address : RLV12const::RLV_BaseAddress;
-    vector_ = (rlConfig->common.vector > 0) ?
-        rlConfig->common.vector : RLV12const::RLV_Vector;
+    baseAddress_ = (rlConfig.address > 0) ? 
+        rlConfig.address : RLV12const::RLV_BaseAddress;
+    vector_ = (rlConfig.vector > 0) ?
+        rlConfig.vector : RLV12const::RLV_Vector;
 
     // Allocate the transfer buffer, initializing to zero
     dataBuffer_ = new (std::nothrow) u16[RLV12const::maxTransfer]();
@@ -73,10 +73,10 @@ RLV12::RLV12 (Qbus *bus, Window* window, shared_ptr<RLV12Config> rlConfig)
 
     // Attach files to the RL units and create panels for the units
 	for (size_t unitNumber = 0; 
-		unitNumber < rlConfig->common.numUnits; ++unitNumber)
+		unitNumber < rlConfig.numUnits; ++unitNumber)
 	{
         shared_ptr<RLUnitConfig> rlUnitConfig = 
-            rlConfig->common.rlUnitConfig[unitNumber];
+            rlConfig.rlUnitConfig[unitNumber];
 
         if (rlUnitConfig == nullptr)
             continue;
@@ -89,6 +89,13 @@ RLV12::RLV12 (Qbus *bus, Window* window, shared_ptr<RLV12Config> rlConfig)
 
     // Start the command processor
     cmdProcessor_ = std::make_unique<CmdProcessor> (this);
+}
+
+RLV12::RLV12 (Qbus* bus, Window* window, shared_ptr<RLV12Config> rlv12Config)
+    :
+    RLV12 (bus, window, rlv12Config->common)
+{
+    _22bit_  = rlv12Config->_22bit;
 }
 
 // Destructor to deallocate transfer buffer
