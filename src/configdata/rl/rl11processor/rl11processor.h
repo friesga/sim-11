@@ -1,5 +1,5 @@
-#ifndef _RLV11PROCESSOR_H_
-#define _RLV11PROCESSOR_H_
+#ifndef _RL11PROCESSOR_H_
+#define _RL11PROCESSOR_H_
 
 #include "configdata/sectionprocessor/deviceconfigprocessor.h"
 #include "configdata/rl/rlconfig/rlconfig.h"
@@ -14,16 +14,16 @@ using std::shared_ptr;
 using std::map;
 using std::string;
 
-class RLV11Processor : public DeviceConfigProcessor
+class RL11Processor : public DeviceConfigProcessor
 {
-	unique_ptr<RLV11Config> rlv11ConfigPtr {nullptr};
+	unique_ptr<RL11Config> rl11ConfigPtr {nullptr};
 	RLProcessor rlProcessor_;
 
 	// Define process as a pointer to a RlProcessor member function
 	// with a iniparser::Value argument and returning void.
-	typedef void (RLV11Processor::* Process)(iniparser::Value);
+	typedef void (RL11Processor::* Process)(iniparser::Value);
 
-	// As the RLV11 has no configuration parameters other than the common
+	// As the RL11 has no configuration parameters other than the common
 	// RL configuration parameters.
 	map<string, Process> valueProcessors =
 	{};
@@ -35,9 +35,8 @@ class RLV11Processor : public DeviceConfigProcessor
 	void processSubsection (iniparser::Section* subSection);
 
 public:
-	RLV11Processor ();
+	RL11Processor ();
 	DeviceConfig getConfig ();
 };
 
-
-#endif // !_RLV11PROCESSOR_H_
+#endif // !_RL11PROCESSOR_H_

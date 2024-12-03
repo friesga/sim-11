@@ -42,6 +42,13 @@ struct RLConfig
 	shared_ptr<RLUnitConfig> rlUnitConfig[maxRlUnits] = {};
 };
 
+// The RL configuration has no parameters other than the common
+// configuration parameters.
+struct RL11Config : public DeviceType<BusType::Unibus>
+{
+	RLConfig common;
+};
+
 // The RLV11 configuration has no parameters other than the common
 // configuration parameters.
 struct RLV11Config : public DeviceType<BusType::QBus>
