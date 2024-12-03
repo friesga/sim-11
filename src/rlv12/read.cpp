@@ -46,7 +46,7 @@ StatusCode RLV12::read (BusAddress busAddress, u16* data)
             // Bus Address Extension register
             // Not present in RL11/RLV11 and not enabled on a RLV12 with the
             // 22-bit option disabled
-            if (!(rlType_ == RLConfig::RLType::RLV12 && _22bit_))
+            if (!(rlType_ == RLV12const::RLType::RLV12 && _22bit_))
                return StatusCode::NonExistingMemory;
 
             *data = bae_ & RLV12const::BAE_Mask;

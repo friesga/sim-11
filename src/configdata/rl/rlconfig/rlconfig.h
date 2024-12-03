@@ -26,13 +26,6 @@ using std::shared_ptr;
 //
 struct RLConfig
 {
-	enum class RLType
-	{
-		RL11,
-		RLV11,
-		RLV12
-	};
-
 	static constexpr size_t maxRlUnits = 4;
 	uint16_t address {0};
 	uint16_t vector {0};

@@ -6,6 +6,13 @@
 // Definition of register lay-out and drive geometry for the RLV12.
 namespace RLV12const
 {
+    enum class RLType
+    {
+        RL11,
+        RLV11,
+        RLV12
+    };
+
     // RL01 Recording Capacity definitions
     // An RL02 drive has 512 cylinders per cartridge
     static constexpr int32_t wordsPerSector = 128;

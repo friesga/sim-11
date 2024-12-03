@@ -25,7 +25,7 @@ RLV12::RLV12 (Qbus *bus)
     dar_ {0},
     bae_ {0},
     dataBuffer_ {nullptr},
-    rlType_ {RLConfig::RLType::RLV12},
+    rlType_ {RLV12const::RLType::RLV12},
     _22bit_ {false},
     wordCounter_ {0},
     fifoIndex_ {0}
@@ -95,14 +95,14 @@ RLV12::RLV12 (Qbus* bus, Window* window, shared_ptr<RL11Config> rl11Config)
     :
     RLV12 (bus, window, rl11Config->common)
 {
-    rlType_ = RLConfig::RLType::RL11;
+    rlType_ = RLV12const::RLType::RL11;
 }
 
 RLV12::RLV12 (Qbus* bus, Window* window, shared_ptr<RLV11Config> rlv11Config)
     :
     RLV12 (bus, window, rlv11Config->common)
 {
-    rlType_ = RLConfig::RLType::RLV11;
+    rlType_ = RLV12const::RLType::RLV11;
 }
 
 RLV12::RLV12 (Qbus* bus, Window* window, shared_ptr<RLV12Config> rlv12Config)
@@ -110,7 +110,7 @@ RLV12::RLV12 (Qbus* bus, Window* window, shared_ptr<RLV12Config> rlv12Config)
     RLV12 (bus, window, rlv12Config->common)
 {
     _22bit_  = rlv12Config->_22bit;
-    rlType_ = RLConfig::RLType::RLV12;
+    rlType_ = RLV12const::RLType::RLV12;
 }
 
 // Destructor to deallocate transfer buffer
@@ -204,7 +204,7 @@ void RLV12::memAddrToRegs (u32 memoryAddress)
         ((upper6Bits & RLV12const::CSR_AddressExtMask) << 
             RLV12const::CSR_AddressExtPosition);
 
-    if (rlType_ == RLConfig::RLType::RLV12 && _22bit_)
+    if (rlType_ == RLV12const::RLType::RLV12 && _22bit_)
         bae_ = upper6Bits & RLV12const::BAE_Mask;
 }
 
@@ -213,7 +213,7 @@ void RLV12::memAddrToRegs (u32 memoryAddress)
 // used, for 22-bit systems the BAE register is used.
 BusAddress RLV12::memAddrFromRegs ()
 {
-    if (!(rlType_ == RLConfig::RLType::RLV12 && _22bit_))
+    if (!(rlType_ == RLV12const::RLType::RLV12 && _22bit_))
         return BusAddress ((getBA16BA17 (csr_) << 16) | bar_, BusAddress::Width::_22Bit);
     else
         return BusAddress ((bae_ << 16) | bar_, BusAddress::Width::_18Bit);
@@ -223,7 +223,7 @@ BusAddress RLV12::memAddrFromRegs ()
 // and BA17 bits
 void RLV12::updateBAE ()
 {
-    if (rlType_ == RLConfig::RLType::RLV12 && _22bit_)
+    if (rlType_ == RLV12const::RLType::RLV12 && _22bit_)
         bae_ = (bae_ & ~RLV12const::CSR_AddressExtMask) |
             ((csr_ >> RLV12const::CSR_AddressExtPosition) & RLV12const::CSR_AddressExtMask);
 }

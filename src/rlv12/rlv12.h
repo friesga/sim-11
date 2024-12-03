@@ -51,7 +51,7 @@ class RLV12 : public PDP11Peripheral
 
     // Definition of the controller type and the presence of the 22-bit option
     // when configured as a RLV12 controller.
-    RLConfig::RLType rlType_;
+    RLV12const::RLType rlType_;
     bool _22bit_;
     
     // A RLV12 can have a maximum of four units. RL01_02 objects for
