@@ -46,8 +46,6 @@ private:
 	void checkConsistency () override;
 	void processSubsection (iniparser::Section *subSection) override;
 	void processPowerUpMode (iniparser::Value value);
-	bool sluDefined {false};
-	bool bdv11Defined {false};
 	void processSLUSubsection (iniparser::Section *subSection);
 	void processBDV11Subsection (iniparser::Section *subSection);
 };
