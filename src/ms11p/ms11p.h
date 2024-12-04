@@ -2,7 +2,7 @@
 #define _MS11P_H_
 
 #include "qbus/qbus.h"
-#include "pdp11peripheral/pdp11peripheral.h"
+#include "memorydevice.h"
 #include "configdata/ms11pconfig/ms11pconfig.h"
 
 #include <memory>
@@ -28,20 +28,24 @@ using std::make_unique;
 // 
 // Source: https://gunkies.org/wiki/MS11-P_MOS_memory
 //
-class MS11P : public PDP11Peripheral
+class MS11P : public MemoryDevice
 {
 public:
     MS11P (Qbus* bus);
     MS11P (Qbus* bus, shared_ptr<MS11PConfig> ms11pConfig);
     ~MS11P ();
 
-    // Functions required for the ExtendedUnibusDevice interface
+    // Functions required for the BusDevice interface
     StatusCode read (BusAddress address, u16* destAddress) override;
     StatusCode writeWord (BusAddress address, u16 value) override;
     bool responsible (BusAddress address) override;
     void reset () override;
 
+    // Function required for the MemoryDevice interface
+    u16 loadFile (const char* fileName);
+
 private:
+    Qbus* bus_;
     MS11PConfig::PowerSource powerSource_ {MS11PConfig::PowerSource::System};
     u32 startingAddress_ {0};
     u32 csrAddress_ {017772100};

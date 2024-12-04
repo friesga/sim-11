@@ -295,6 +295,7 @@ set (SIM11_SRCS
     ${CHRONO_SRCS}
     src/asynctimer/asynctimer.cpp
     src/cabinet/cabinet.cpp
+    src/absoluteloader/absoluteloader.cpp
     src/abstractbusdevice/writebyte.cpp
     ${BDV11_SRCS}
     src/dl11/dlv11j/dlv11j.cpp
@@ -305,7 +306,6 @@ set (SIM11_SRCS
     src/pdp11/pdp11.cpp
     src/pdp11/configure.cpp
     src/pdp11/installmodules.cpp
-    src/pdp11/loadfile.cpp
     src/pdp11/run.cpp
     src/main/main.cpp
     src/msv11d/msv11d.cpp

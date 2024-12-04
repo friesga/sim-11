@@ -9,20 +9,20 @@
 //
 // The following information structure is used:
 //
-//			    BusDevice
-//		           ^
-//                 |
-//			AbstractBusDevice
-//				   |
-//        +--------+---------+
-//        |                  |
-//   PDP11Processor  PDP11Peripheral
+//			             BusDevice
+//		                     ^
+//                           |
+//         			AbstractBusDevice
+//				             |
+//        +--------+---------+-------------+
+//        |                  |             |
+//   PDP11Processor  PDP11Peripheral  MemoryDevice
 //
 // BusDevice is the interface for all PDP11Processor's and PDP11Peripheral's.
 // AbstractBusDevice is a partial implementation of the BusDevice interface,
 // providing a writeByte() function. PDP11Processor is an interface for
-// processor implementation and PDP11Peripheral is a base class for the
-// peripheral devices.
+// processor implementations, PDP11Peripheral is a base class for the
+// peripheral devices and MemoryDevice is interface for memory modules.
 //
 class BusDevice
 {

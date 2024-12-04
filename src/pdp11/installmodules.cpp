@@ -13,7 +13,7 @@ void PDP_11::installModules ()
     for (auto device : busDevices_)
         bus_.installModule (slotNr++, device);
 
-    for (auto msv11d : msv11_)
-        bus_.installModule (slotNr++, msv11d);
+    for (auto device : memoryDevices_)
+        bus_.installModule (slotNr++, device);
     
 }

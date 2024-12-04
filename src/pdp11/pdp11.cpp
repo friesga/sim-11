@@ -7,7 +7,6 @@
 PDP_11::PDP_11 (CmdLineOptions const &cmdLineOptions)
 	:
 	processor_ {nullptr},
-	msv11_ {},
 	ba11_n_ {nullptr},
 	cmdLineOptions_ {cmdLineOptions}
 {}
@@ -15,8 +14,9 @@ PDP_11::PDP_11 (CmdLineOptions const &cmdLineOptions)
 PDP_11::~PDP_11 ()
 {
 	delete processor_;
-	for (MSV11D* msv11d : msv11_)
-		delete msv11d;
+	for (auto device : memoryDevices_)
+		delete device;
+
 	for (auto device : busDevices_)
 		delete device;
 }

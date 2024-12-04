@@ -1,5 +1,5 @@
-#include "pdp11.h"
-#include "cmdlineoptions/cmdlineoptions.h"
+#include "absoluteloader.h"
+#include "trace/trace.h"
 
 #include <string>
 #include <sstream>
@@ -8,21 +8,21 @@ using std::string;
 
 // Load the given file in absolute loader format, returning the start address
 // of the loaded binary.
-u16 PDP_11::loadFile ()
+// 
+// Example absolute loader binary files are VKAAC0.BIC and VKADC0.BIC.
+//
+u16 AbsoluteLoader::loadFile (const char* fileName, u8* memory)
 {
-    /* execute absolute loader binary */
-    /* const char* filename = "VKAAC0.BIC"; */
-    /* const char* filename = "VKADC0.BIC"; */
     size_t size;
-    u16 len;
-    u16 addr;
-    u8 cksum;
+    u16 length;
+    u16 loadAddress;
+    u8 checksum;
     size_t bytes = 0;
     u16 startAddress {0};
 
-    FILE* f = fopen (cmdLineOptions_.load_file, "rb");
+    FILE* f = fopen (fileName, "rb");
     if (!f)
-        throw "Error opening load file " + string (cmdLineOptions_.load_file);
+        throw "Error opening load file " + string (fileName);
 
     fseek (f, 0, SEEK_END);
     size = ftell (f);
@@ -52,16 +52,19 @@ u16 PDP_11::loadFile ()
                 std::hex << c << "] in load file";
             throw errorText.str ();
         }
-        (void)!fread (&len, 2, 1, f);
-        (void)!fread (&addr, 2, 1, f);
-        bytes += len;
-        (void)!fread (&msv11_[0]->data[addr], len - 6, 1, f);
-        trace.memoryDump (&msv11_[0]->data[addr], addr, len - 6);
-        (void)!fread (&cksum, 1, 1, f);
-        if (len == 6)
+
+        // Read byte count and load address from the file
+        (void)!fread (&length, 2, 1, f);
+        (void)!fread (&loadAddress, 2, 1, f);
+
+        bytes += length;
+        (void)!fread (&memory[loadAddress], length - 6, 1, f);
+        trace.memoryDump (&memory[loadAddress], loadAddress, length - 6);
+        (void)!fread (&checksum, 1, 1, f);
+        if (length == 6)
         {
-            if ((addr & 1) == 0)
-                startAddress = addr;
+            if ((loadAddress & 1) == 0)
+                startAddress = loadAddress;
             else
                 startAddress = 0200;
             break;

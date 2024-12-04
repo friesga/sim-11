@@ -1,10 +1,11 @@
 #include "ms11p.h"
+#include "absoluteloader/absoluteloader.h"
 
 using std::shared_ptr;
 
 MS11P::MS11P (Qbus* bus)
 	:
-	PDP11Peripheral (bus)
+	bus_ {bus}
 {
 	// Allocate zero-initialized memory
 	memory_ = make_unique<u8[]> (memorySize_);
@@ -43,6 +44,11 @@ bool MS11P::responsible (BusAddress address)
 {
 	return address >= startingAddress_ &&
 		address < startingAddress_ + memorySize_;
+}
+
+u16 MS11P::loadFile (const char* fileName)
+{
+	return AbsoluteLoader::loadFile (fileName, memory_.get ());
 }
 
 void MS11P::reset ()

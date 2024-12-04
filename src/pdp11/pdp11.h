@@ -4,6 +4,7 @@
 #include "kd/include/pdp11processor.h"
 #include "configdata/deviceconfig/deviceconfig.h"
 #include "configdata/systemconfig/systemconfig.h"
+#include "memorydevice.h"
 #include "ba11_n/ba11_n.h"
 #include "ba11_l/ba11_l.h"
 #include "rxv21/rxv21.h"
@@ -41,8 +42,7 @@ class PDP_11
 	//
 	// The PDP11Processor is either a KD11_NA or a KDF11_A.
 	PDP11Processor *processor_;
-	vector<MSV11D*> msv11_;
-	vector<MS11P*> ms11p_;
+	vector<MemoryDevice*> memoryDevices_;
 	vector<BusDevice*> busDevices_;
 	unique_ptr<BA11_N> ba11_n_;
 	unique_ptr<BA11_L> ba11_l_;

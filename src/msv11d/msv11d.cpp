@@ -1,5 +1,6 @@
 #include "types.h"
 #include "msv11d.h"
+#include "absoluteloader/absoluteloader.h"
 
 #include <string.h>
 #include <stdlib.h>
@@ -10,7 +11,7 @@ using std::shared_ptr;
 
 MSV11D::MSV11D (Qbus *bus)
 	:
-	PDP11Peripheral (bus),
+	bus_ {bus},
 	powerSource_ {MSV11Config::PowerSource::System},
 	startingAddress_ {0},
 	bank7Lower2kWEnabled_ {false}
@@ -65,6 +66,11 @@ bool MSV11D::responsible (BusAddress busAddress)
 void MSV11D::reset ()
 {
 	/* nothing */
+}
+
+u16 MSV11D::loadFile (const char* fileName)
+{
+	return AbsoluteLoader::loadFile (fileName, data);
 }
 
 // When the system is powered down the contents of the memory are lost, unless

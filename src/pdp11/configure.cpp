@@ -26,7 +26,7 @@ void PDP_11::configureDevices (Window *window)
 {
     // By default use the KD11-NA processor
     processor_ = new KD11_NA (&bus_);
-    msv11_.push_back (new MSV11D (&bus_));
+    memoryDevices_.push_back (new MSV11D (&bus_));
 
     // Create a DLV11J object with the default configuration. The default
     // position for the BA11-N is at the top of the cabinet (which is 20 RU
@@ -75,7 +75,7 @@ void PDP_11::configureQbusSystem (SystemConfig const & systemConfig,
         [this] (shared_ptr<KDF11_BConfig> kdf11_bConfig)
             {processor_ = new KDF11_B (&bus_, kdf11_bConfig); },
         [this] (shared_ptr<MSV11Config> msv11Config)
-            {msv11_.push_back (new MSV11D (&bus_, msv11Config)); },
+            {memoryDevices_.push_back (new MSV11D (&bus_, msv11Config)); },
         [this] (shared_ptr<DLV11JConfig> dlv11jConfig)
             {busDevices_.emplace_back (new DLV11J (&bus_, dlv11jConfig)); },
         [this] (shared_ptr<BDV11Config> bdv11Config)
@@ -136,7 +136,7 @@ void PDP_11::configureUnibusSystem (SystemConfig const & systemConfig,
         [this] (shared_ptr<KDF11_UConfig> kdf11_uConfig)
             {processor_ = new KDF11_U (&bus_, kdf11_uConfig); },
         [this] (shared_ptr<MS11PConfig> ms11pConfig)
-            {ms11p_.push_back (new MS11P (&bus_, ms11pConfig)); },
+            {memoryDevices_.push_back (new MS11P (&bus_, ms11pConfig)); },
         [this, window] (shared_ptr<BA11_LConfig> ba11_lConfig)
             {ba11_l_ = std::make_unique<BA11_L> (&bus_, window, ba11_lConfig); },
     };
