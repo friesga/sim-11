@@ -10,9 +10,9 @@ SDLFourPositionSwitch::SDLFourPositionSwitch (array<string, 4> positionImageName
     SDL_Texture* targetTexture,
     Frame<int> frame)
     :
-    switchPosition_ {initialState},
     switchClicked_ {switchClicked},
-    frame_ {frame}
+    frame_ {frame},
+    switchPosition_ {initialState}
 {
     for (auto imageName : positionImageNames)
     {
