@@ -168,7 +168,6 @@ set (QBUS_SRCS
     src/qbus/signals.cpp)
 
 set (CONFIGURATOR_SRCS
-    src/configdata/iniprocessor/iniprocessor.cpp
     src/configdata/iniprocessor/process.cpp
     src/configdata/iniprocessor/processsection.cpp
     src/configdata/iniprocessor/getsystemconfig.cpp

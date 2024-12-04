@@ -6,6 +6,20 @@
 #include "configdata/systemconfig/systemconfig.h"
 #include "../sectionprocessor/deviceconfigprocessor.h"
 #include "configdata/msv11config/msv11config.h"
+#include "../ba11nprocessor/ba11nprocessor.h"
+#include "configdata/rl/rl11processor/rl11processor.h"
+#include "configdata/rl/rlv11processor/rlv11processor.h"
+#include "configdata/rl/rlv12processor/rlv12processor.h"
+#include "configdata/rxv21/rxv21processor/rxv21processor.h"
+#include "../bdv11processor/bdv11processor.h"
+#include "configdata/serialconfig/dlv11processor/dlv11processor.h"
+#include "../msv11processor/msv11processor.h"
+#include "../kd11_naprocessor/kd11_naprocessor.h"
+#include "../kdf11/kdf11_a/kdf11_aprocessor/kdf11_aprocessor.h"
+#include "../kdf11/kdf11_b/kdf11_bprocessor/kdf11_bprocessor.h"
+#include "../kdf11/kdf11_u/kdf11_uprocessor/kdf11_uprocessor.h"
+#include "../ms11pprocessor/ms11pprocessor.h"
+#include "../ba11lprocessor/ba11lprocessor.h"
 
 #include <map>
 #include <memory>
@@ -54,37 +68,32 @@ private:
 
     map<string, DeviceConfigProcessorFactory> deviceConfigProcessorFactories =
 	{
-		{"BA11-N",  &IniProcessor::createBA11_NProcessor},
-		{"BDV11",   &IniProcessor::createBDV11Processor},
-		{"DLV11-J", &IniProcessor::createDLV11Processor},
-		{"MSV11",   &IniProcessor::createMSV11Processor},
-		{"RL11",   &IniProcessor::createRL11Processor},
-		{"RLV11",   &IniProcessor::createRLV11Processor},
-		{"RLV12",   &IniProcessor::createRLV12Processor},
-		{"RXV21",   &IniProcessor::createRXProcessor},
-		{"KD11-NA", &IniProcessor::createKD11_NAProcessor},
-		{"KDF11-A", &IniProcessor::createKDF11_AProcessor},
-		{"KDF11-B", &IniProcessor::createKDF11_BProcessor},
-		{"KDF11-U", &IniProcessor::createKDF11_UProcessor},
-		{"MS11-P",  &IniProcessor::createMS11_PProcessor},
-		{"BA11-L",  &IniProcessor::createBA11_LProcessor}
+		{"BA11-N",  &IniProcessor::create<BA11_NProcessor>},
+		{"BDV11",   &IniProcessor::create<BDV11Processor>},
+		{"DLV11-J", &IniProcessor::create<DLV11Processor>},
+		{"MSV11",   &IniProcessor::create<MSV11Processor>},
+		{"RL11",    &IniProcessor::create<RL11Processor>},
+		{"RLV11",   &IniProcessor::create<RLV11Processor>},
+		{"RLV12",   &IniProcessor::create<RLV12Processor>},
+		{"RXV21",   &IniProcessor::create<RXV21Processor>},
+		{"KD11-NA", &IniProcessor::create<KD11_NAProcessor>},
+		{"KDF11-A", &IniProcessor::create<KDF11_AProcessor>},
+		{"KDF11-B", &IniProcessor::create<KDF11_BProcessor>},
+		{"KDF11-U", &IniProcessor::create<KDF11_UProcessor>},
+		{"MS11-P",  &IniProcessor::create<MS11PProcessor>},
+		{"BA11-L",  &IniProcessor::create<BA11_LProcessor>}
 	};
 
     void processSection (iniparser::Section* section);
-	unique_ptr<DeviceConfigProcessor> createBA11_NProcessor ();
-	unique_ptr<DeviceConfigProcessor> createBDV11Processor ();
-	unique_ptr<DeviceConfigProcessor> createDLV11Processor ();
-	unique_ptr<DeviceConfigProcessor> createMSV11Processor ();
-	unique_ptr<DeviceConfigProcessor> createRL11Processor ();
-	unique_ptr<DeviceConfigProcessor> createRLV11Processor ();
-	unique_ptr<DeviceConfigProcessor> createRLV12Processor ();
-	unique_ptr<DeviceConfigProcessor> createRXProcessor ();
-	unique_ptr<DeviceConfigProcessor> createKD11_NAProcessor ();
-	unique_ptr<DeviceConfigProcessor> createKDF11_AProcessor ();
-	unique_ptr<DeviceConfigProcessor> createKDF11_BProcessor ();
-	unique_ptr<DeviceConfigProcessor> createKDF11_UProcessor ();
-	unique_ptr<DeviceConfigProcessor> createMS11_PProcessor ();
-	unique_ptr<DeviceConfigProcessor> createBA11_LProcessor ();
+
+	template <typename T>
+	unique_ptr<DeviceConfigProcessor> create ();
 };
+
+template <typename T>
+unique_ptr<DeviceConfigProcessor> IniProcessor::create ()
+{
+	return make_unique<T> ();
+}
 
 #endif // !_INIPROCESSOR_H_
