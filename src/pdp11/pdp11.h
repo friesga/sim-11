@@ -49,15 +49,15 @@ class PDP_11
 	CmdLineOptions const &cmdLineOptions_;
 
 	u16 loadFile ();
-	void configureQbusSystem (SystemConfig systemConfig, Window* window);
-	void configureUnibusSystem (SystemConfig systemConfig, Window* window);
+	void configureQbusSystem (SystemConfig const & systemConfig, Window* window);
+	void configureUnibusSystem (SystemConfig const & systemConfig, Window* window);
 	void installModules ();
 
 public:
 	PDP_11 (CmdLineOptions const &cmdLineOptions);
 	~PDP_11 ();
 	void configureDevices (Window *window);
-	void configureDevices (SystemConfig systemConfig,
+	void configureDevices (SystemConfig const & systemConfig,
 		Window *window);
 	void run ();
 	void reset ();

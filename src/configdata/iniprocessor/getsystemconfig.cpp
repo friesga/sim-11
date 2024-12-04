@@ -1,6 +1,8 @@
 #include "iniprocessor.h"
 
-SystemConfig &IniProcessor::getSystemConfig ()
+#include <utility>
+
+SystemConfig IniProcessor::getSystemConfig ()
 {
-    return systemConfig;
+    return std::move (systemConfig);
 }

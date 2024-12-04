@@ -41,7 +41,7 @@ TEST (RLV11ConfigProcessorTest, configProcessed)
 
 	// Verify the device is present in the configuration with all attributes
 	// having their correct value.
-	SystemConfig &configuration = 
+	SystemConfig configuration = 
 		iniProcessor.getSystemConfig ();
 
 	ASSERT_TRUE (holds_alternative<shared_ptr<RLV11Config>> (configuration[0]));
@@ -196,7 +196,7 @@ TEST (RLV11ConfigProcessorTest, spinUpTimeCorrectlyDefaulted)
 	// Verify the configuration is processed without errors
 	EXPECT_NO_THROW (iniProcessor.process (ft));
 
-	SystemConfig& configuration =
+	SystemConfig configuration =
 		iniProcessor.getSystemConfig ();
 
 	// The first and only device in the configuration should be the RLV11
@@ -243,7 +243,7 @@ TEST (RLV11ConfigProcessorTest, spinUpTimeHasCorrectValues)
 	// Verify the configuration is processed without errors
 	EXPECT_NO_THROW (iniProcessor.process (ft));
 
-	SystemConfig& configuration =
+	SystemConfig configuration =
 		iniProcessor.getSystemConfig ();
 
 	// The first and only device in the configuration should be the RLV11
@@ -286,7 +286,7 @@ TEST (RLV11ConfigProcessorTest, unitNumberCorrectlySet)
 	// Verify the configuration is processed without errors
 	EXPECT_NO_THROW (iniProcessor.process (ft));
 
-	SystemConfig& configuration =
+	SystemConfig configuration =
 		iniProcessor.getSystemConfig ();
 
 	// The first and only device in the configuration should be the RLV11

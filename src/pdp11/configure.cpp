@@ -45,7 +45,7 @@ void PDP_11::configureDevices (Window *window)
 // Configure the devices and install them on the bus.
 // Accessing a non-configured device will result in a bus time-out
 // and the BDV11 boot will halt at address 000010.
-void PDP_11::configureDevices (SystemConfig systemConfig,
+void PDP_11::configureDevices (SystemConfig const & systemConfig,
     Window *window)
 {
     // Check for presence of necessary devices
@@ -61,7 +61,7 @@ void PDP_11::configureDevices (SystemConfig systemConfig,
     reset ();
 }
 
-void PDP_11::configureQbusSystem (SystemConfig systemConfig,
+void PDP_11::configureQbusSystem (SystemConfig const & systemConfig,
     Window* window)
 { 
     // At this point a Qbus system configuration should not contain
@@ -104,7 +104,7 @@ void PDP_11::configureQbusSystem (SystemConfig systemConfig,
     }
 }
 
-void PDP_11::configureUnibusSystem (SystemConfig systemConfig,
+void PDP_11::configureUnibusSystem (SystemConfig const & systemConfig,
     Window* window)
 {
     // At this point a Unibus system configuration should not contain

@@ -74,8 +74,10 @@ try
 	// specified in that file. If no file is specified use the default
 	// configuration.
 	if (cmdLineOptions.config_file)
-		pdp11.configureDevices (createSystemConfig (cmdLineOptions.config_file),
-			&sdlWindow);
+	{
+		SystemConfig systemConfig = createSystemConfig (cmdLineOptions.config_file);
+		pdp11.configureDevices (systemConfig, &sdlWindow);
+	}
 	else
 		pdp11.configureDevices (&sdlWindow);
 

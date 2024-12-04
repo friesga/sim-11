@@ -43,7 +43,7 @@ class IniProcessor
 public:
     void process (string filename);
 	void process (iniparser::File iniFile);
-	SystemConfig &getSystemConfig ();
+	SystemConfig getSystemConfig ();
 
 private:
 	// Define the system configuration as a vector of (shared) pointers
