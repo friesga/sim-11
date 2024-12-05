@@ -4,6 +4,7 @@
 #include "panel.h"
 #include "../sdltexture/sdltexture.h"
 #include "../sdlrenderer/sdlrenderer.h"
+#include "unary_operator_plus.h"
 
 #include <string>
 #include <array>
@@ -14,17 +15,6 @@ using std::string;
 using std::array;
 using std::vector;
 using std::unique_ptr;
-
-// Definition of operator+ for scoped enums to convert it to the underlying
-// type.
-// Source: https://stackoverflow.com/questions/8357240/how-to-automatically-convert-strongly-typed-enum-into-int
-//
-template <typename T>
-constexpr auto operator+ (T e) noexcept
--> std::enable_if_t<std::is_enum<T>::value, std::underlying_type_t<T>>
-{
-    return static_cast<std::underlying_type_t<T>> (e);
-}
 
 class SDLFourPositionSwitch : public Button
 {
