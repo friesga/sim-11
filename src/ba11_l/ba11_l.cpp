@@ -77,6 +77,8 @@ void BA11_L::createBezel (shared_ptr<Cabinet::Position> cabinetPosition)
         Button::ThreePositionsState::Center,
         bind (&BA11_L::hcbSwitchClicked, this, _1),
         hcbSwitchFrame);
+    runLed_ = panel->createIndicator ("../../assets/red led off.png",
+        "../../assets/red led on.png", Indicator::State::Off, runLedFrame);
     dcOnLed_ = panel->createIndicator ("../../assets/red led off.png",
         "../../assets/red led on.png", Indicator::State::Off, dcOnLedFrame);
 
@@ -122,19 +124,21 @@ void BA11_L::hcbSwitchClicked (Button::State state)
     {
         case Button::ThreePositionsState::Left:
             // HALT - Halt the processor
-            // dcOnLed_->show (Indicator::State::Off);
+            runLed_->show (Indicator::State::Off);
             bus_->BHALT ().set (true);
             break;
 
         case Button::ThreePositionsState::Center:
             // CONT - The processor is enabled for normal operation
-            // dcOnLed_->show (Indicator::State::On);
+            if (bus_->BPOK ())
+                runLed_->show (Indicator::State::On);
+            
             bus_->BHALT ().set (false);
             break;
 
         case Button::ThreePositionsState::Right:
             // BOOT - Initializes the system
-            // bus_->RESET ().cycle ();
+            bus_->RESET ().cycle ();
             break;
     }
 }
