@@ -90,6 +90,17 @@ Button* SDLPanel::createFourPositionSwitch (array<string, 4> positionImages,
     return buttons_.back ().get ();
 }
 
+Button* SDLPanel::createThreePositionSwitch (array<string, 3> positionImages,
+    Button::ThreePositionsState initialState,
+    Button::EventCallback switchClicked,
+    Frame<float> frame)
+{
+    buttons_.push_back (make_unique<SDLThreePositionSwitch> (positionImages,
+        initialState, sdlRenderer_, switchClicked, targetTexture_,
+        placeFrameInTexture (frame)));
+    return buttons_.back ().get ();
+}
+
 // Place the given frame, whith positions and dimensions relative to the
 // panel, in the target texture. The given panel frame has position and
 // dimensions as fractions relative to the panel dimensions; the target

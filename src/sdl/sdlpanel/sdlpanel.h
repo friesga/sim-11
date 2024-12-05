@@ -8,6 +8,7 @@
 #include "../sdlmomentarybutton/sdlmomentarybutton.h"
 #include "../sdlindicatorlatchingbutton/sdlindicatorlatchingbutton.h"
 #include "../sdlfourpositionswitch/sdlfourpositionswitch.h"
+#include "../sdlthreepositionswitch/sdlthreepositionswitch.h"
 #include "../sdlrenderer/sdlrenderer.h"
 #include "../sdlevent/sdlevent.h"
 #include "cabinet/cabinet.h"
@@ -44,6 +45,10 @@ public:
         Frame<float> frame) override;
     virtual Button* createFourPositionSwitch (array<string, 4> positionImages,
         Button::FourPositionsState initialState,
+        Button::EventCallback switchClicked,
+        Frame<float> frame) override;
+    virtual Button* createThreePositionSwitch (array<string, 3> positionImages,
+        Button::ThreePositionsState initialState,
         Button::EventCallback switchClicked,
         Frame<float> frame) override;
 

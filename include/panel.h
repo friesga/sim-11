@@ -172,6 +172,10 @@ public:
         Button::FourPositionsState initialState,
         Button::EventCallback switchClicked,
         Frame<float> frame) = 0;
+    virtual Button* createThreePositionSwitch (array<string, 3> positionImages,
+        Button::ThreePositionsState initialState,
+        Button::EventCallback switchClicked,
+        Frame<float> frame) = 0;
     virtual void render () = 0;
     virtual void handleEvent (InputEvent const* event) = 0;
 };

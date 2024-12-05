@@ -70,12 +70,19 @@ void BA11_L::createBezel (shared_ptr<Cabinet::Position> cabinetPosition)
         Button::FourPositionsState::P0,
         bind (&BA11_L::powerSwitchClicked, this, _1),
         powerSwitchFrame);
+    hcbSwitch_ = panel->createThreePositionSwitch (
+        {"../../assets/hcb_halt.png",
+         "../../assets/hcb_cont.png",
+         "../../assets/hcb_boot.png"},
+        Button::ThreePositionsState::Center,
+        bind (&BA11_L::hcbSwitchClicked, this, _1),
+        hcbSwitchFrame);
     dcOnLed_ = panel->createIndicator ("../../assets/red led off.png",
         "../../assets/red led on.png", Indicator::State::Off, dcOnLedFrame);
 
-    // As long as the conditions for starting the processor aren't met, the
-    // processor is halted.
-    bus_->BHALT ().set (true);
+    // The state of the HALT signal has to correspond with the position
+    // of the HALT/CONT/BOOT switch.
+    bus_->BHALT ().set (false);
 }
 
 void BA11_L::powerSwitchClicked (Button::State state)
@@ -105,6 +112,29 @@ void BA11_L::powerSwitchClicked (Button::State state)
         case Button::FourPositionsState::P3:
             // STDBY - DC power to most of the computer is off but dc power is
             // applied to MOS memory to avoid data loss.
+            break;
+    }
+}
+
+void BA11_L::hcbSwitchClicked (Button::State state)
+{
+    switch (get<Button::ThreePositionsState> (state))
+    {
+        case Button::ThreePositionsState::Left:
+            // HALT - Halt the processor
+            // dcOnLed_->show (Indicator::State::Off);
+            bus_->BHALT ().set (true);
+            break;
+
+        case Button::ThreePositionsState::Center:
+            // CONT - The processor is enabled for normal operation
+            // dcOnLed_->show (Indicator::State::On);
+            bus_->BHALT ().set (false);
+            break;
+
+        case Button::ThreePositionsState::Right:
+            // BOOT - Initializes the system
+            // bus_->RESET ().cycle ();
             break;
     }
 }

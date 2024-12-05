@@ -17,16 +17,19 @@ class BA11_L
 public:
     BA11_L (Qbus* bus, Window* window, shared_ptr<BA11_LConfig> ba11lConfig);
     void powerSwitchClicked (Button::State state);
+    void hcbSwitchClicked (Button::State state);
 
 private:
     // Definition of the front, indicators and buttons on the BA11_N panel
     Frame<float> ba11_nFrontFrame {0, 0, 1.0, 1.0};
     Frame<float> powerSwitchFrame {0.853, 0.599, 0.032, 0.136};
     Frame<float> dcOnLedFrame     {0.705, 0.500, 0.016, 0.060};
+    Frame<float> hcbSwitchFrame   {0.710, 0.673, 0.029, 0.060};
 
     Qbus* bus_;
     Window* frontWindow_;
     Button* powerSwitch_;
+    Button* hcbSwitch_;
     Indicator* dcOnLed_;
 
     void createBezel (shared_ptr<Cabinet::Position> cabinetPosition);
