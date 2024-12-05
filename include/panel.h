@@ -102,9 +102,9 @@ public:
 
     enum class ThreePositionsState : size_t
     {
-        Down = 0,
+        Left = 0,
         Center = 1,
-        Up = 2
+        Right = 2
     };
 
     enum class FourPositionsState : size_t
