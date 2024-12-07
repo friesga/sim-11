@@ -96,6 +96,6 @@ void M9312Processor::processStartingAddress (iniparser::Value value)
 
 bool M9312Processor::addressInRange (u16 address)
 {
-    return (address >= 0173000 && address <= 0174000) ||
-           (address >= 0165000 && address <= 0166000);
+    return (address >= 0173000 && address < 0174000) ||
+           (address >= 0165000 && address < 0166000);
 }

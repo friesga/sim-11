@@ -21,6 +21,8 @@ struct M9312Config : public DeviceType<BusType::Unibus>
 {
     enum class ROMType
     {
+        NONE,        // Default socket contents
+        _23_000F1,   // 11/00 Diagnostic/Console (UBI; M7098 E58)
         _23_248F1,   // (A0) 11/04,34 Diagnostic/Console (M9312 E20)
         _23_446F1,   // 11/44 Diagnostic/Console (UBI; M7098 E58)
         _23_616F1,   // (B0) 11/60,70 Diagnostic (M9312 E20)
@@ -50,9 +52,9 @@ struct M9312Config : public DeviceType<BusType::Unibus>
         _23_E39A9,   // (MU) TMSCP TK50,TU81 magtape
     };
 
-    ROMType diagnosticROM;          // Console emulator and diagnostic ROM
-    array<ROMType, 4> bootROM;      // Bootstrap ROM's
-    u16 startingAddress;            // Bootstrap address
+    ROMType diagnosticROM {ROMType::NONE};      // Console emulator and diagnostic ROM
+    array<ROMType, 4> bootROM {ROMType::NONE};  // Bootstrap ROM's
+    u16 startingAddress {0};                    // Bootstrap address
 };
 
 #endif // _M9312CONFIG_H_
