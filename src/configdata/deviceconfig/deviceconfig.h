@@ -8,6 +8,7 @@
 #include "configdata/kdf11/kdf11_a/kdf11_aconfig/kdf11_aconfig.h"
 #include "configdata/kdf11/kdf11_b/kdf11_bconfig/kdf11_bconfig.h"
 #include "configdata/kdf11/kdf11_u/kdf11_uconfig/kdf11_uconfig.h"
+#include "configdata/m9312/m9312config/m9312config.h"
 #include "configdata/msv11config/msv11config.h"
 #include "configdata/ms11pconfig/ms11pconfig.h"
 #include "configdata/rl/rlconfig/rlconfig.h"
@@ -25,6 +26,7 @@ using DeviceConfig = variant<
     shared_ptr<KD11_NAConfig>,
     shared_ptr<KDF11_AConfig>,
     shared_ptr<KDF11_BConfig>,
+    shared_ptr<M9312Config>,
     shared_ptr<MSV11Config>,
     shared_ptr<DLV11JConfig>,
     shared_ptr<BDV11Config>,

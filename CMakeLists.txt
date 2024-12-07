@@ -198,6 +198,7 @@ set (CONFIGURATOR_SRCS
     src/configdata/kdf11/kdf11_u/kdf11_uconfig/kdf11_uconfig.cpp
     src/configdata/kdf11/kdf11_u/kdf11_uprocessor/kdf11_uprocessor.cpp
     src/configdata/kdf11/slu/sluprocessor/sluprocessor.cpp
+    src/configdata/m9312/m9312processor/m9312processor.cpp
     src/configdata/ms11pprocessor/ms11pprocessor.cpp
     src/configdata/consistencychecker/consistencychecker.cpp
     src/configdata/consistencychecker/checkba11consistency.cpp
@@ -454,6 +455,7 @@ set (GTEST_SRCS
     gtest/kdf11_b/kdf11b_bdv11configuratortest.cpp
     gtest/kdf11_u/kdf11_uconfiguratortest.cpp
     gtest/locationtest.cpp
+    gtest/m9312configuratortest.cpp
     gtest/msv11configuratortest.cpp
     gtest/ms11pconfiguratortest.cpp
     gtest/operandlocationtest.cpp
@@ -484,6 +486,7 @@ set (SIM11_TEST_SRCS
     ${CMDLINEOPTIONS_SRCS}
     ${CONFIGURATOR_SRCS}
     ${CHRONO_SRCS}
+    src/absoluteloader/absoluteloader.cpp
     src/asynctimer/asynctimer.cpp
     src/interruptrequest/interruptrequest.cpp
     ${QBUS_SRCS}
