@@ -17,6 +17,7 @@
 #include "kd/kdf11/kdf11_a/kdf11_a.h"
 #include "kd/kdf11/kdf11_b/kdf11_b.h"
 #include "kd/kdf11/kdf11_u/kdf11_u.h"
+#include "m9312/m9312.h"
 #include "qbus/qbus.h"
 #include "console/console.h"
 #include "cmdlineoptions/cmdlineoptions.h"

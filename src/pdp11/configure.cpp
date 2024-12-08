@@ -6,6 +6,7 @@
 #include "configdata/kdf11/kdf11_a/kdf11_aconfig/kdf11_aconfig.h"
 #include "configdata/kdf11/kdf11_b/kdf11_bconfig/kdf11_bconfig.h"
 #include "configdata/kdf11/kdf11_u/kdf11_uconfig/kdf11_uconfig.h"
+#include "configdata/m9312/m9312config/m9312config.h"
 #include "configdata/consistencychecker/consistencychecker.h"
 #include "console/operatorconsole/operatorconsolefactory.h"
 #include "cabinet/cabinet.h"
@@ -90,6 +91,8 @@ void PDP_11::configureQbusSystem (SystemConfig const & systemConfig,
             {busDevices_.emplace_back (new RLV12 (&bus_, window, rlv12Config)); },
         [this, window] (shared_ptr<BA11_NConfig> ba11_nConfig)
             {ba11_n_ = std::make_unique<BA11_N> (&bus_, window, ba11_nConfig); },
+        [this] (shared_ptr<M9312Config> m9312Config)
+            { throw "Should not happen"; },
         [this] (shared_ptr<MS11PConfig> ms11pConfig)
             { throw "Should not happen"; },
         [this] (shared_ptr<BA11_LConfig> ba11lConfig)
@@ -127,6 +130,8 @@ void PDP_11::configureUnibusSystem (SystemConfig const & systemConfig,
             { throw "Should not happen"; },
         [this, window] (shared_ptr<RL11Config> rl11Config)
             { busDevices_.emplace_back (new RLV12 (&bus_, window, rl11Config)); },
+        [this, window] (shared_ptr<M9312Config> m9312Config)
+            { busDevices_.emplace_back (new M9312 (&bus_, m9312Config)); },
         [this, window] (shared_ptr<RLV11Config> rlConfig)
             { throw "Should not happen"; },
         [this, window] (shared_ptr<RLV12Config> rlConfig)
@@ -139,6 +144,7 @@ void PDP_11::configureUnibusSystem (SystemConfig const & systemConfig,
             {memoryDevices_.push_back (new MS11P (&bus_, ms11pConfig)); },
         [this, window] (shared_ptr<BA11_LConfig> ba11_lConfig)
             {ba11_l_ = std::make_unique<BA11_L> (&bus_, window, ba11_lConfig); },
+
     };
 
     for (DeviceConfig deviceConfigVariant : systemConfig)
