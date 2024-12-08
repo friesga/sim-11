@@ -22,7 +22,6 @@ struct M9312Config : public DeviceType<BusType::Unibus>
     enum class ROMType
     {
         NONE,        // Default socket contents
-        _23_000F1,   // 11/00 Diagnostic/Console (UBI; M7098 E58)
         _23_248F1,   // (A0) 11/04,34 Diagnostic/Console (M9312 E20)
         _23_446F1,   // 11/44 Diagnostic/Console (UBI; M7098 E58)
         _23_616F1,   // (B0) 11/60,70 Diagnostic (M9312 E20)
