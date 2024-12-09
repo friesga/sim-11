@@ -19,13 +19,18 @@ using std::array;
 //
 struct M9312Config : public DeviceType<BusType::Unibus>
 {
-    enum class ROMType : size_t
+    enum class DiagROMType : size_t
     {
         NONE,        // Default socket contents
         _23_248F1,   // (A0) 11/04,34 Diagnostic/Console (M9312 E20)
         _23_446F1,   // 11/44 Diagnostic/Console (UBI; M7098 E58)
         _23_616F1,   // (B0) 11/60,70 Diagnostic (M9312 E20)
         _23_774F1,   // 11/24 Diagnostic/Console (MEM; M7134 E74)
+    };
+
+    enum class BootROMType : size_t
+    {
+        NONE,        // Default socket contents
         _23_751A9,   // (DL) RL01/02 cartridge disk boot ROM
         _23_752A9,   // (DM) RK06/07 cartridge disk
         _23_753A9,   // (DX) RX01 floppy disk, single density
@@ -51,9 +56,9 @@ struct M9312Config : public DeviceType<BusType::Unibus>
         _23_E39A9,   // (MU) TMSCP TK50,TU81 magtape
     };
 
-    ROMType diagnosticROM {ROMType::NONE};      // Console emulator and diagnostic ROM
-    array<ROMType, 4> bootROM {ROMType::NONE};  // Bootstrap ROM's
-    u16 startingAddress {0};                    // Bootstrap address
+    DiagROMType diagnosticROM {DiagROMType::NONE};      // Console emulator and diagnostic ROM
+    array<BootROMType, 4> bootROM {BootROMType::NONE};  // Bootstrap ROM's
+    u16 startingAddress {0};                            // Bootstrap address
 };
 
 #endif // _M9312CONFIG_H_

@@ -29,11 +29,11 @@ TEST (M9312ConfiguratorTest, optionsAccepted)
 	shared_ptr<M9312Config> m9312Config =
 		get<shared_ptr<M9312Config>> (systemConfig[0]);
 
-	EXPECT_EQ (m9312Config->diagnosticROM, M9312Config::ROMType::_23_248F1);
-	EXPECT_EQ (m9312Config->bootROM[0], M9312Config::ROMType::_23_751A9);
-	EXPECT_EQ (m9312Config->bootROM[1], M9312Config::ROMType::_23_752A9);
-	EXPECT_EQ (m9312Config->bootROM[2], M9312Config::ROMType::_23_753A9);
-    EXPECT_EQ (m9312Config->bootROM[3], M9312Config::ROMType::_23_755A9);
+	EXPECT_EQ (m9312Config->diagnosticROM, M9312Config::DiagROMType::_23_248F1);
+	EXPECT_EQ (m9312Config->bootROM[0], M9312Config::BootROMType::_23_751A9);
+	EXPECT_EQ (m9312Config->bootROM[1], M9312Config::BootROMType::_23_752A9);
+	EXPECT_EQ (m9312Config->bootROM[2], M9312Config::BootROMType::_23_753A9);
+    EXPECT_EQ (m9312Config->bootROM[3], M9312Config::BootROMType::_23_755A9);
     EXPECT_EQ (m9312Config->startingAddress, 0173000);
 }
 
@@ -159,11 +159,11 @@ TEST (M9312ConfiguratorTest, defaultInitialized)
 	shared_ptr<M9312Config> m9312Config =
 		get<shared_ptr<M9312Config>> (systemConfig[0]);
 
-	EXPECT_EQ (m9312Config->diagnosticROM, M9312Config::ROMType::NONE);
-	EXPECT_EQ (m9312Config->bootROM[0], M9312Config::ROMType::NONE);
-	EXPECT_EQ (m9312Config->bootROM[1], M9312Config::ROMType::NONE);
-	EXPECT_EQ (m9312Config->bootROM[2], M9312Config::ROMType::NONE);
-	EXPECT_EQ (m9312Config->bootROM[3], M9312Config::ROMType::NONE);
+	EXPECT_EQ (m9312Config->diagnosticROM, M9312Config::DiagROMType::NONE);
+	EXPECT_EQ (m9312Config->bootROM[0], M9312Config::BootROMType::NONE);
+	EXPECT_EQ (m9312Config->bootROM[1], M9312Config::BootROMType::NONE);
+	EXPECT_EQ (m9312Config->bootROM[2], M9312Config::BootROMType::NONE);
+	EXPECT_EQ (m9312Config->bootROM[3], M9312Config::BootROMType::NONE);
 	EXPECT_EQ (m9312Config->startingAddress, 0);
 }
 
