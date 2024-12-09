@@ -1,6 +1,12 @@
 #ifndef _TOUINT_H_
 #define _TOUINT_H_
 
+#include <string>
+#include <stdexcept>
+#include <limits>
+
+using std::string;
+
 // Return the number represented by the string as the specified unsigned
 // integer type (typically u16 or u32). The number's base is determined by
 // stoul. This allows for the specification of an address as an octal numer.
