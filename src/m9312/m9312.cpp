@@ -8,9 +8,12 @@ M9312::M9312 (Qbus* bus, shared_ptr<M9312Config> m9312Config)
 void M9312::reset ()
 {}
 
-bool M9312::responsible (BusAddress addr)
+bool M9312::responsible (BusAddress address)
 {
-    return false;
+    return address >= diagROMBaseAddress &&
+           address < diagROMBaseAddress + diagROMSize * 2 ||
+           address >= bootROMBaseAddress &&
+           address < bootROMBaseAddress + bootROMSize * 2 * numberOfBootROMs;
 }
 
 StatusCode M9312::read (BusAddress busAddress, u16* data)

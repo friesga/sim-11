@@ -61,6 +61,23 @@ struct M9312Config : public DeviceType<BusType::Unibus>
     DiagROMType diagnosticROM {DiagROMType::NONE};      // Console emulator and diagnostic ROM
     array<BootROMType, 4> bootROM {BootROMType::NONE};  // Bootstrap ROM's
     u16 startingAddress {0};                            // Bootstrap address
+
+
+    // This default constructor is required
+    M9312Config ()
+    :
+    DeviceType ()
+    {}
+
+    // Definition of a constructor to easily initialize a M932Config object
+    // in unit tests.
+    M9312Config (DiagROMType diagROM, array<BootROMType, 4> bootROMS, u16 startAddress)
+        :
+        DeviceType (),
+        diagnosticROM {diagROM},
+        bootROM {bootROMS},
+        startingAddress {startAddress}
+    {}
 };
 
 #endif // _M9312CONFIG_H_

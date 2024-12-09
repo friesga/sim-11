@@ -226,6 +226,10 @@ set (BDV11_SRCS
     src/bdv11/bdv11_rom.cpp
     src/bdv11/kdf11b_rom.cpp)
 
+set (M9312_SRCS
+    src/m9312/m9312.cpp
+    src/m9312/romimages.cpp)
+
 set (SDL_SRCS
     src/sdl/sdlinit/sdlinit.cpp
     src/sdl/sdlpanel/sdlpanel.cpp
@@ -310,8 +314,7 @@ set (SIM11_SRCS
     src/pdp11/installmodules.cpp
     src/pdp11/run.cpp
     src/main/main.cpp
-    src/m9312/m9312.cpp
-    src/m9312/romimages.cpp
+    ${M9312_SRCS}
     src/msv11d/msv11d.cpp
     src/ms11p/ms11p.cpp
     ${QBUS_SRCS}
@@ -457,7 +460,8 @@ set (GTEST_SRCS
     gtest/kdf11_b/kdf11b_bdv11configuratortest.cpp
     gtest/kdf11_u/kdf11_uconfiguratortest.cpp
     gtest/locationtest.cpp
-    gtest/m9312configuratortest.cpp
+    gtest/m9312/m9312configuratortest.cpp
+    gtest/m9312/m9312test.cpp
     gtest/msv11configuratortest.cpp
     gtest/ms11pconfiguratortest.cpp
     gtest/operandlocationtest.cpp
@@ -503,6 +507,7 @@ set (SIM11_TEST_SRCS
     ${KD11_NA_SRCS}
     ${KDF11_SRCS}
     ${BDV11_SRCS}
+    ${M9312_SRCS}
     src/msv11d/msv11d.cpp
     src/dl11/uart/uart.cpp
     ${CONSOLE_SRCS}

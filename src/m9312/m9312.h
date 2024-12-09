@@ -27,6 +27,12 @@ using std::array;
 // Diagnostics, bootstrap programs, and the console emulator routine are all
 // selectable through the Address Offset Switch Bank on the M9312.
 //
+// The M9312 has sockets for:
+// - One Console Emulator and Diagnostics ROM. This ROM contains 256 words
+//   and occupies addresses 0765000 upto and including 0765776,
+// - Four Bootstrap ROMs. Each ROM contains 64 words, i.e. in total also
+//   256 words, occupying addresses 0773000 upto and including 0773776.
+//
 class M9312 : public PDP11Peripheral
 {
 public:
@@ -34,14 +40,20 @@ public:
 
     // Functions required by the BusDevice interface
     void reset () override;
-    bool responsible (BusAddress addr) override;
+    bool responsible (BusAddress address) override;
     StatusCode read (BusAddress busAddress, u16* data) override;
     StatusCode writeByte (BusAddress busAddress, u8 data) override;
     StatusCode writeWord (BusAddress busAddress, u16 data) override;
 
 private:
-    using DiagROMImage = array<u16, 256> const;
-    using BootROMImage = array<u16, 64> const;
+    static const u16 diagROMBaseAddress = 0165000;
+    static const u16 diagROMSize = 256;
+    static const u16 bootROMBaseAddress = 0173000;
+    static const u16 bootROMSize = 64;
+    static const u16 numberOfBootROMs = 4;
+
+    using DiagROMImage = array<u16, diagROMSize> const;
+    using BootROMImage = array<u16, bootROMSize> const;
 
     static const DiagROMImage rom_23_248F1;
     static const DiagROMImage rom_23_446F1;
