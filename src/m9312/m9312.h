@@ -4,6 +4,7 @@
 #include "pdp11peripheral/pdp11peripheral.h"
 #include "configdata/m9312/m9312config/m9312config.h"
 #include "statuscodes.h"
+#include "unary_operator_plus.h"
 
 #include <memory>
 #include <array>
@@ -40,10 +41,65 @@ public:
 
 private:
     using DiagROMImage = array<u16, 256> const;
+    using BootROMImage = array<u16, 64> const;
 
-    static DiagROMImage rom_23_248F1;
+    static const DiagROMImage rom_23_248F1;
+    static const DiagROMImage rom_23_446F1;
+    static const DiagROMImage rom_23_616F1;
+    static const DiagROMImage rom_23_774F1;
 
-    DiagROMImage* ptr {&rom_23_248F1};
+    static const BootROMImage rom_23_751A9;
+    static const BootROMImage rom_23_752A9;
+    static const BootROMImage rom_23_753A9;
+    static const BootROMImage rom_23_755A9;
+    static const BootROMImage rom_23_756A9;
+    static const BootROMImage rom_23_757A9;
+    static const BootROMImage rom_23_758A9;
+    static const BootROMImage rom_23_759A9;
+    static const BootROMImage rom_23_760A9;
+    static const BootROMImage rom_23_761A9;
+    static const BootROMImage rom_23_764A9;
+    static const BootROMImage rom_23_765A9;
+    static const BootROMImage rom_23_767A9;
+    static const BootROMImage rom_23_811A9;
+    static const BootROMImage rom_23_862A9;
+    static const BootROMImage rom_23_863A9;
+    static const BootROMImage rom_23_864A9;
+    static const BootROMImage rom_23_E32A9;
+    static const BootROMImage rom_23_E33A9;
+    static const BootROMImage rom_23_E39A9;
+
+    array<DiagROMImage*, +M9312Config::DiagROMType::NUMBER> diagROMImages_ =
+    {
+        &rom_23_248F1,
+        &rom_23_446F1,
+        &rom_23_616F1,
+        &rom_23_774F1
+    };
+
+    array<BootROMImage*, +M9312Config::BootROMType::NUMBER> bootROMImages_ =
+    {
+        &rom_23_751A9,
+        &rom_23_752A9,
+        &rom_23_753A9,
+        &rom_23_755A9,
+        &rom_23_756A9,
+        &rom_23_757A9,
+        &rom_23_758A9,
+        &rom_23_759A9,
+        &rom_23_760A9,
+        &rom_23_761A9,
+        &rom_23_764A9,
+        &rom_23_765A9,
+        &rom_23_767A9,
+        &rom_23_811A9,
+        &rom_23_862A9,
+        &rom_23_863A9,
+        &rom_23_864A9,
+        &rom_23_E32A9,
+        &rom_23_E33A9,
+        &rom_23_E39A9
+    };
 };
 
 

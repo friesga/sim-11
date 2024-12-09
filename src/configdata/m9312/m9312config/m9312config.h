@@ -26,6 +26,7 @@ struct M9312Config : public DeviceType<BusType::Unibus>
         _23_446F1,   // 11/44 Diagnostic/Console (UBI; M7098 E58)
         _23_616F1,   // (B0) 11/60,70 Diagnostic (M9312 E20)
         _23_774F1,   // 11/24 Diagnostic/Console (MEM; M7134 E74)
+        NUMBER       // NUmber of ROM types in this enum
     };
 
     enum class BootROMType : size_t
@@ -54,6 +55,7 @@ struct M9312Config : public DeviceType<BusType::Unibus>
         _23_E32A9,   // (XE) Ethernet DEUNA/DELUA Net Boot (v2) ROM0
         _23_E33A9,   // (XE) Ethernet DEUNA/DELUA Net Boot (v2) ROM1
         _23_E39A9,   // (MU) TMSCP TK50,TU81 magtape
+        NUMBER       // NUmber of ROM types in this enum
     };
 
     DiagROMType diagnosticROM {DiagROMType::NONE};      // Console emulator and diagnostic ROM
