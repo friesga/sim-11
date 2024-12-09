@@ -310,6 +310,8 @@ set (SIM11_SRCS
     src/pdp11/installmodules.cpp
     src/pdp11/run.cpp
     src/main/main.cpp
+    src/m9312/m9312.cpp
+    src/m9312/romimages.cpp
     src/msv11d/msv11d.cpp
     src/ms11p/ms11p.cpp
     ${QBUS_SRCS}

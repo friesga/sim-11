@@ -19,7 +19,7 @@ using std::array;
 //
 struct M9312Config : public DeviceType<BusType::Unibus>
 {
-    enum class ROMType
+    enum class ROMType : size_t
     {
         NONE,        // Default socket contents
         _23_248F1,   // (A0) 11/04,34 Diagnostic/Console (M9312 E20)
