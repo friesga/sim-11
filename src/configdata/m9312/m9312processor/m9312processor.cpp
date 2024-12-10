@@ -58,7 +58,7 @@ void M9312Processor::processBootROMs (iniparser::Value value)
     if (specifiedROMs.size () > 4)
         throw invalid_argument {"M9312 can have at most four boot ROMs"};
 
-    for (size_t slotNr = 0; slotNr < 4; ++slotNr)
+    for (size_t slotNr = 0; slotNr < 4 && slotNr < specifiedROMs.size (); ++slotNr)
     {
         try
         {

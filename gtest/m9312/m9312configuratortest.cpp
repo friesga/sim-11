@@ -137,6 +137,34 @@ TEST (M9312ConfiguratorTest, invalidBootROMThrows)
 	}
 }
 
+TEST (M9312ConfiguratorTest, oneBootROMAccepted)
+{
+	iniparser::File ft;
+	std::stringstream stream;
+	stream << "[M9312]\n"
+		"boot-roms = 23-751A9\n";
+	stream >> ft;
+
+	IniProcessor iniProcessor;
+	EXPECT_NO_THROW (iniProcessor.process (ft));
+
+	SystemConfig systemConfig =
+		iniProcessor.getSystemConfig ();
+
+	// The only device type in this testset is the M9312 so if that's
+	// not correct the following tests will fail too.
+	ASSERT_TRUE (holds_alternative<shared_ptr<M9312Config>> (systemConfig[0]));
+
+	// The device's type is M9312 so the configuration is a M9312Config object
+	shared_ptr<M9312Config> m9312Config =
+		get<shared_ptr<M9312Config>> (systemConfig[0]);
+
+	EXPECT_EQ (m9312Config->bootROM[0], M9312Config::BootROMType::_23_751A9);
+	EXPECT_EQ (m9312Config->bootROM[1], M9312Config::BootROMType::NONE);
+	EXPECT_EQ (m9312Config->bootROM[2], M9312Config::BootROMType::NONE);
+	EXPECT_EQ (m9312Config->bootROM[3], M9312Config::BootROMType::NONE);
+}
+
 TEST (M9312ConfiguratorTest, defaultInitialized)
 {
 	iniparser::File ft;
