@@ -47,12 +47,12 @@ StatusCode M9312::read (BusAddress busAddress, u16* data)
 
 StatusCode M9312::writeByte (BusAddress busAddress, u8 data)
 {
-    return StatusCode::FunctionNotImplemented;
+    return StatusCode::NonExistingMemory;
 }
 
 StatusCode M9312::writeWord (BusAddress busAddress, u16 data)
 {
-    return StatusCode::FunctionNotImplemented;
+    return StatusCode::NonExistingMemory;
 }
 
 bool M9312::addressInDiagnosticROM (BusAddress address)

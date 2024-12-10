@@ -100,3 +100,22 @@ TEST (M9312Test, bootROMsreadCorrectly)
     EXPECT_EQ (m9312.read (0173600, &data), StatusCode::OK);
     EXPECT_EQ (data, 0x4450);
 }
+
+TEST (M9312Test, romCannotBeWritten)
+{
+    M9312Config config =
+    {
+        M9312Config::DiagROMType::_23_248F1,
+        {M9312Config::BootROMType::_23_751A9, M9312Config::BootROMType::_23_752A9,
+        M9312Config::BootROMType::_23_753A9, M9312Config::BootROMType::_23_755A9},
+        0173000
+    };
+
+    shared_ptr<M9312Config> m9312ConfigPtr = make_shared<M9312Config> (config);
+
+    Qbus bus;
+    M9312 m9312 (&bus, m9312ConfigPtr);
+
+    u16 data {0};
+    EXPECT_EQ (m9312.writeWord (0165000, data), StatusCode::NonExistingMemory);
+}
