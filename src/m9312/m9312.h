@@ -126,6 +126,9 @@ private:
     DiagROMImage* diagnosticROM_ {nullptr};
     array<BootROMImage*, numberOfBootROMs> bootROM_ {nullptr};
     u16 startingAddress_ {0173000};
+
+    bool addressInDiagnosticROM (BusAddress address);
+    bool addressInBootRom (BusAddress address);
 };
 
 inline const array<u16, M9312::numberOfBootROMs> M9312::bootROMBaseAddresses =

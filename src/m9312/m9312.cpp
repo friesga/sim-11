@@ -17,27 +17,21 @@ void M9312::reset ()
 
 bool M9312::responsible (BusAddress address)
 {
-    return address >= diagROMBaseAddress &&
-           address < diagROMBaseAddress + diagROMSize * 2 ||
-           address >= bootROMBaseAddress &&
-           address < bootROMBaseAddress + bootROMSize * 2 * numberOfBootROMs;
+    return addressInDiagnosticROM (address) || addressInBootRom (address);
 }
 
 StatusCode M9312::read (BusAddress busAddress, u16* data)
 {
-    if (busAddress >= diagROMBaseAddress &&
-        busAddress < diagROMBaseAddress + diagROMSize * 2)
+    if (addressInDiagnosticROM (busAddress))
     {
         if (diagnosticROM_ == nullptr)
             return StatusCode::NonExistingMemory;
 
-        u16 address = busAddress - diagROMBaseAddress;
-        *data = (*diagnosticROM_)[address];
+        *data = (*diagnosticROM_)[busAddress - diagROMBaseAddress];
         return StatusCode::OK;
     }
 
-    if (busAddress >= bootROMBaseAddress &&
-        busAddress < bootROMBaseAddress + bootROMSize * 2 * numberOfBootROMs)
+    if (addressInBootRom (busAddress))
     {
         u16 romNumber = getBootRomNumber (busAddress);
 
@@ -59,4 +53,16 @@ StatusCode M9312::writeByte (BusAddress busAddress, u8 data)
 StatusCode M9312::writeWord (BusAddress busAddress, u16 data)
 {
     return StatusCode::FunctionNotImplemented;
+}
+
+bool M9312::addressInDiagnosticROM (BusAddress address)
+{
+    return address >= diagROMBaseAddress &&
+           address < diagROMBaseAddress + diagROMSize * 2;
+}
+
+bool M9312::addressInBootRom (BusAddress address)
+{
+    return address >= bootROMBaseAddress &&
+        address < bootROMBaseAddress + bootROMSize * 2 * numberOfBootROMs;
 }
