@@ -32,3 +32,71 @@ TEST (M9312Test, m93isResponsibleForCorrectAddresses)
     EXPECT_FALSE (m9312.responsible (0166000));
     EXPECT_FALSE (m9312.responsible (0174000));
 }
+
+TEST (M9312Test, diagROMreadCorrectly)
+{
+    M9312Config config =
+    {
+        M9312Config::DiagROMType::_23_248F1,
+        {M9312Config::BootROMType::_23_751A9, M9312Config::BootROMType::_23_752A9,
+        M9312Config::BootROMType::_23_753A9, M9312Config::BootROMType::_23_755A9},
+        0173000
+    };
+
+    shared_ptr<M9312Config> m9312ConfigPtr = make_shared<M9312Config> (config);
+
+    Qbus bus;
+    M9312 m9312 (&bus, m9312ConfigPtr);
+
+    u16 data;
+    EXPECT_EQ (m9312.read (0165000, &data), StatusCode::OK);
+    EXPECT_EQ (data, 0xEA00);
+}
+
+TEST (M9312Test, readOfEmptySocketReturnsError)
+{
+    M9312Config config =
+    {
+        M9312Config::DiagROMType::NONE,
+        {M9312Config::BootROMType::_23_751A9, M9312Config::BootROMType::_23_752A9,
+        M9312Config::BootROMType::_23_753A9, M9312Config::BootROMType::_23_755A9},
+        0173000
+    };
+
+    shared_ptr<M9312Config> m9312ConfigPtr = make_shared<M9312Config> (config);
+
+    Qbus bus;
+    M9312 m9312 (&bus, m9312ConfigPtr);
+
+    u16 data;
+    EXPECT_EQ (m9312.read (0165000, &data), StatusCode::NonExistingMemory);
+}
+
+TEST (M9312Test, bootROMsreadCorrectly)
+{
+    M9312Config config =
+    {
+        M9312Config::DiagROMType::_23_248F1,
+        {M9312Config::BootROMType::_23_751A9, M9312Config::BootROMType::_23_752A9,
+        M9312Config::BootROMType::_23_753A9, M9312Config::BootROMType::_23_755A9},
+        0173000
+    };
+
+    shared_ptr<M9312Config> m9312ConfigPtr = make_shared<M9312Config> (config);
+
+    Qbus bus;
+    M9312 m9312 (&bus, m9312ConfigPtr);
+
+    u16 data;
+    EXPECT_EQ (m9312.read (0173000, &data), StatusCode::OK);
+    EXPECT_EQ (data, 0x444C);
+
+    EXPECT_EQ (m9312.read (0173200, &data), StatusCode::OK);
+    EXPECT_EQ (data, 0x444D);
+
+    EXPECT_EQ (m9312.read (0173400, &data), StatusCode::OK);
+    EXPECT_EQ (data, 0x4458);
+
+    EXPECT_EQ (m9312.read (0173600, &data), StatusCode::OK);
+    EXPECT_EQ (data, 0x4450);
+}

@@ -51,6 +51,10 @@ private:
     static const u16 bootROMBaseAddress = 0173000;
     static const u16 bootROMSize = 64;
     static const u16 numberOfBootROMs = 4;
+    static const array<u16, numberOfBootROMs> bootROMBaseAddresses;
+
+    constexpr u16 getBootRomNumber (u16 address) const
+    { return ((address & 0600) >> 7); }
 
     using DiagROMImage = array<u16, diagROMSize> const;
     using BootROMImage = array<u16, bootROMSize> const;
@@ -81,8 +85,13 @@ private:
     static const BootROMImage rom_23_E33A9;
     static const BootROMImage rom_23_E39A9;
 
+    // A nullptr indicates an empty slot. This can arise if no ROMType is
+    // specified in the configuration file. diagnosticROM will then have the
+    // value DiagROMType::NONE which translates to zero.
+    // 
     array<DiagROMImage*, +M9312Config::DiagROMType::NUMBER> diagROMImages_ =
     {
+        nullptr,
         &rom_23_248F1,
         &rom_23_446F1,
         &rom_23_616F1,
@@ -91,6 +100,7 @@ private:
 
     array<BootROMImage*, +M9312Config::BootROMType::NUMBER> bootROMImages_ =
     {
+        nullptr,
         &rom_23_751A9,
         &rom_23_752A9,
         &rom_23_753A9,
@@ -112,7 +122,13 @@ private:
         &rom_23_E33A9,
         &rom_23_E39A9
     };
+
+    DiagROMImage* diagnosticROM_ {nullptr};
+    array<BootROMImage*, numberOfBootROMs> bootROM_ {nullptr};
+    u16 startingAddress_ {0173000};
 };
 
+inline const array<u16, M9312::numberOfBootROMs> M9312::bootROMBaseAddresses =
+    {0173000, 0173200, 0173400, 0173600};
 
 #endif // _M9312_H_
