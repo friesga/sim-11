@@ -51,6 +51,8 @@ TEST (M9312Test, diagROMreadCorrectly)
     u16 data;
     EXPECT_EQ (m9312.read (0165000, &data), StatusCode::OK);
     EXPECT_EQ (data, 0xEA00);
+    EXPECT_EQ (m9312.read (0165002, &data), StatusCode::OK);
+    EXPECT_EQ (data, 0xEA00);
 }
 
 TEST (M9312Test, readOfEmptySocketReturnsError)
@@ -90,6 +92,10 @@ TEST (M9312Test, bootROMsreadCorrectly)
     u16 data;
     EXPECT_EQ (m9312.read (0173000, &data), StatusCode::OK);
     EXPECT_EQ (data, 0x444C);
+    EXPECT_EQ (m9312.read (0173002, &data), StatusCode::OK);
+    EXPECT_EQ (data, 0x007E);
+    EXPECT_EQ (m9312.read (0173004, &data), StatusCode::OK);
+    EXPECT_EQ (data, 0x00B1);
 
     EXPECT_EQ (m9312.read (0173200, &data), StatusCode::OK);
     EXPECT_EQ (data, 0x444D);

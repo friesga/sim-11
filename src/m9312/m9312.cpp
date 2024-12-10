@@ -20,28 +20,18 @@ bool M9312::responsible (BusAddress address)
     return addressInDiagnosticROM (address) || addressInBootRom (address);
 }
 
+// This function returns the data at the specified address from the ROM image
+// (if present). The address is a byte address and as the ROM images are
+// defined as word arrays the byte address has to be converted to a word
+// address (by dividing it by two).
 StatusCode M9312::read (BusAddress busAddress, u16* data)
 {
     if (addressInDiagnosticROM (busAddress))
-    {
-        if (diagnosticROM_ == nullptr)
-            return StatusCode::NonExistingMemory;
-
-        *data = (*diagnosticROM_)[busAddress - diagROMBaseAddress];
-        return StatusCode::OK;
-    }
+        return readDiagnosticROM (busAddress, data);
 
     if (addressInBootRom (busAddress))
-    {
-        u16 romNumber = getBootRomNumber (busAddress);
+        return readBootROM (busAddress, data);
 
-        if (bootROM_[romNumber] == nullptr)
-            return StatusCode::NonExistingMemory;
-
-        u16 address = busAddress - bootROMBaseAddresses[romNumber];
-        *data = (*bootROM_[romNumber])[address];
-        return StatusCode::OK;
-    }
     return StatusCode::NonExistingMemory;
 }
 
@@ -65,4 +55,26 @@ bool M9312::addressInBootRom (BusAddress address)
 {
     return address >= bootROMBaseAddress &&
         address < bootROMBaseAddress + bootROMSize * 2 * numberOfBootROMs;
+}
+
+StatusCode M9312::readDiagnosticROM (BusAddress busAddress, u16* data)
+{
+    if (diagnosticROM_ == nullptr)
+        return StatusCode::NonExistingMemory;
+
+    u16 imageIndex = busAddress - diagROMBaseAddress >> 1;
+    *data = (*diagnosticROM_)[imageIndex];
+    return StatusCode::OK;
+}
+
+StatusCode M9312::readBootROM (BusAddress busAddress, u16* data)
+{
+    u16 romNumber = getBootRomNumber (busAddress);
+
+    if (bootROM_[romNumber] == nullptr)
+        return StatusCode::NonExistingMemory;
+
+    u16 imageIndex = busAddress - bootROMBaseAddresses[romNumber] >> 1;
+    *data = (*bootROM_[romNumber])[imageIndex];
+    return StatusCode::OK;
 }

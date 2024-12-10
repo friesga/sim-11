@@ -53,6 +53,10 @@ private:
     static const u16 numberOfBootROMs = 4;
     static const array<u16, numberOfBootROMs> bootROMBaseAddresses;
 
+    // This function converts an address in the range 0173000 - 0173776
+    // to a boot ROM number (starting from zero). Addresses in the range
+    // 0173000-0173176 are in ROM 0, addresses 173200-173276 in ROM 1, etc.
+    // The ROM number therefore is determined by bits 7 and 8 of the address.
     constexpr u16 getBootRomNumber (u16 address) const
     { return ((address & 0600) >> 7); }
 
@@ -129,6 +133,8 @@ private:
 
     bool addressInDiagnosticROM (BusAddress address);
     bool addressInBootRom (BusAddress address);
+    StatusCode readDiagnosticROM (BusAddress busAddress, u16* data);
+    StatusCode readBootROM (BusAddress busAddress, u16* data);
 };
 
 inline const array<u16, M9312::numberOfBootROMs> M9312::bootROMBaseAddresses =
