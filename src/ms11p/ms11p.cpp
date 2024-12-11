@@ -42,8 +42,9 @@ StatusCode MS11P::writeWord (BusAddress address, u16 value)
 
 bool MS11P::responsible (BusAddress address)
 {
-	return address >= startingAddress_ &&
-		address < startingAddress_ + memorySize_;
+	return !address.isInIOpage () && 
+		   address >= startingAddress_ &&
+		   address < startingAddress_ + memorySize_;
 }
 
 u16 MS11P::loadFile (const char* fileName)
