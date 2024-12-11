@@ -47,14 +47,16 @@ StatusCode M9312::writeWord (BusAddress busAddress, u16 data)
 
 bool M9312::addressInDiagnosticROM (BusAddress address)
 {
-    return address >= diagROMBaseAddress &&
+    return address.isInIOpage () && 
+           address >= diagROMBaseAddress &&
            address < diagROMBaseAddress + diagROMSize * 2;
 }
 
 bool M9312::addressInBootRom (BusAddress address)
 {
-    return address >= bootROMBaseAddress &&
-        address < bootROMBaseAddress + bootROMSize * 2 * numberOfBootROMs;
+    return address.isInIOpage () &&
+           address >= bootROMBaseAddress &&
+           address < bootROMBaseAddress + bootROMSize * 2 * numberOfBootROMs;
 }
 
 StatusCode M9312::readDiagnosticROM (BusAddress busAddress, u16* data)
@@ -62,7 +64,7 @@ StatusCode M9312::readDiagnosticROM (BusAddress busAddress, u16* data)
     if (diagnosticROM_ == nullptr)
         return StatusCode::NonExistingMemory;
 
-    u16 imageIndex = busAddress - diagROMBaseAddress >> 1;
+    u16 imageIndex = busAddress.registerAddress () - diagROMBaseAddress >> 1;
     *data = (*diagnosticROM_)[imageIndex];
     return StatusCode::OK;
 }
@@ -74,7 +76,8 @@ StatusCode M9312::readBootROM (BusAddress busAddress, u16* data)
     if (bootROM_[romNumber] == nullptr)
         return StatusCode::NonExistingMemory;
 
-    u16 imageIndex = busAddress - bootROMBaseAddresses[romNumber] >> 1;
+    u16 imageIndex = busAddress.registerAddress () - 
+        bootROMBaseAddresses[romNumber] >> 1;
     *data = (*bootROM_[romNumber])[imageIndex];
     return StatusCode::OK;
 }
