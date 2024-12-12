@@ -94,6 +94,7 @@ set (KDF11_SRCS
     src/kd/kdf11/calculate/calculate.cpp
     src/kd/kdf11/kdf11_b/kdf11_b.cpp
     src/kd/kdf11/kdf11_u/kdf11_u.cpp
+    src/kd/kdf11/kdf11_u/displayregister/displayregister.cpp
     src/kd/kdf11/serial_line_units/serial_line_units.cpp
     src/kd/kdf11/cpucontrol/kdf11_step.cpp
     src/kd/kdf11/cpucontrol/kdf11_cpucontrol.cpp
@@ -459,6 +460,7 @@ set (GTEST_SRCS
     gtest/kdf11_b/sluconfiguratortest.cpp
     gtest/kdf11_b/kdf11b_bdv11configuratortest.cpp
     gtest/kdf11_u/kdf11_uconfiguratortest.cpp
+    gtest/kdf11_u/kdf11_udisplayregistertest.cpp
     gtest/locationtest.cpp
     gtest/m9312/m9312configuratortest.cpp
     gtest/m9312/m9312test.cpp

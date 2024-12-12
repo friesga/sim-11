@@ -9,6 +9,7 @@
 #include "kd/kdf11/cpudata/kdf11cpudata.h"
 #include "kd/kdf11/registerhandler/registerhandler.h"
 #include "kd/kdf11/serial_line_units/serial_line_units.h"
+#include "kd/kdf11/kdf11_u/displayregister/displayregister.h"
 
 #include <memory>
 #include <vector>
@@ -29,6 +30,10 @@ using std::vector;
 // Note the KDF11-U has, unlike the KDF11-B, no BDV11 incorporated. Boot
 // ROMS are provided by either a M9312 bootstrap/terminator module or the
 // optional Unibus map module (M7134).
+//
+// As the the KDF11-U contains no BDV11 it also doesn't contain the BDV11's
+// display register. This register is provided as 11/70 compatible register
+// at address 0177570.
 //
 class KDF11_U : public PDP11Processor
 {
@@ -52,13 +57,13 @@ private:
 
     Qbus* bus_;
 
-    // Definition of the KDF11-A components. The KTF11-A (MMU) is an optional
-    // component.
+    // Definition of the KDF11-U components
     KDF11CpuData cpuData_ {};
     KTF11_A mmu_ {bus_, &cpuData_};
     KDF11_CpuControl cpuControl_ {bus_, &cpuData_, &mmu_};
     unique_ptr<ControlLogic> controlLogic_;
     unique_ptr<SerialLineUnits> serialLineUnits;
+    DisplayRegister displayRegister_;
 
     // RegisterHandler performs the functions required by the BusDevice
     // interface. These functions are put in a separate class as they are

@@ -23,7 +23,8 @@ KDF11_U::KDF11_U (Qbus *bus, shared_ptr<KDF11_UConfig> kdf11_uConfig)
     serialLineUnits = make_unique<SerialLineUnits> (bus,
         (SLUConfig*) kdf11_uConfig->sluConfig.get());
 
-    vector<BusDevice*> devices {&cpuData_, &mmu_, serialLineUnits.get ()};
+    vector<BusDevice*> devices {&cpuData_, &mmu_, serialLineUnits.get (),
+        &displayRegister_};
     registerHandler_ = make_unique<RegisterHandler> (devices);
 
     // Besides a pointer to the bus, a reference to our cpu, the start address
