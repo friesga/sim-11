@@ -48,15 +48,16 @@ StatusCode M9312::writeWord (BusAddress busAddress, u16 data)
 bool M9312::addressInDiagnosticROM (BusAddress address)
 {
     return address.isInIOpage () && 
-           address >= diagROMBaseAddress &&
-           address < diagROMBaseAddress + diagROMSize * 2;
+           address.registerAddress () >= diagROMBaseAddress &&
+           address.registerAddress () < diagROMBaseAddress + diagROMSize * 2;
 }
 
 bool M9312::addressInBootRom (BusAddress address)
 {
     return address.isInIOpage () &&
-           address >= bootROMBaseAddress &&
-           address < bootROMBaseAddress + bootROMSize * 2 * numberOfBootROMs;
+           address.registerAddress () >= bootROMBaseAddress &&
+           address.registerAddress () < bootROMBaseAddress +
+                bootROMSize * 2 * numberOfBootROMs;
 }
 
 StatusCode M9312::readDiagnosticROM (BusAddress busAddress, u16* data)
