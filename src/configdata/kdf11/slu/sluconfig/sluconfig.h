@@ -27,8 +27,8 @@ struct SLUConfig
 
     vector<UARTConfig> uartConfig = 
     {
-        UARTConfig {defaultSLU1Address, defaultSLU1Vector, true},
-        UARTConfig {defaultSLU2Address, defaultSLU2Vector, true},
+        UARTConfig {defaultSLU1Address, defaultSLU1Vector, false},
+        UARTConfig {defaultSLU2Address, defaultSLU2Vector, false},
     };
     ConsoleConfig consoleConfig;
 };
