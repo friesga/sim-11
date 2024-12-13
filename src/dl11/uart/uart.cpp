@@ -71,6 +71,7 @@ void UART::reset ()
 	rcsr &= ~(RCSR_RCVR_IE | RCSR_RCVR_DONE | RCSR_READER_ENABLE);
 	rbuf &= ~RBUF_ERROR_MASK;
 	xcsr = XCSR_TRANSMIT_READY;
+	loopback_ = false;
 
 	bus_->clearInterrupt (TrapPriority::BR4, 6, 
 		interruptPriority (Function::Receive, channelNr_));
@@ -410,7 +411,7 @@ void UART::receiveMutExcluded (Character c)
 {
 	if (bus_->BPOK ())
 	{
-		if (console_ && c == breakKey_)
+		if (console_ && c == breakKey_ && !loopback_)
 		{
 			// Process the BREAK, not queueing it as a received character
 			processBreak ();
