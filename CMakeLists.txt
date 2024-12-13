@@ -487,6 +487,7 @@ set (GTEST_SRCS
     gtest/simulatorclocktest.cpp
     gtest/systemconfigtest.cpp
     gtest/tracetest.cpp
+    gtest/serial/uartmaintmodetest.cpp
     gtest/variantfsmtest.cpp)
     
 set (SIM11_TEST_SRCS

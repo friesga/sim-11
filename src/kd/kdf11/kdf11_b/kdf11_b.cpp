@@ -1,5 +1,6 @@
 #include "kdf11_b.h"
 #include "qbus/qbus.h"
+#include "configdata/serialconfig/uarttypeconfig/uarttypeconfig.h"
 
 #include <memory>
 #include <thread>
@@ -19,8 +20,9 @@ KDF11_B::KDF11_B (Qbus *bus, shared_ptr<KDF11_BConfig> kdf11_bConfig)
     bus_ {bus},
     startAddress_ {stdBootAddress}
 {
-    // The KDF11-B comes with the KTF11-A MMU, two serial lines and a BDV11-11.
+    // The KDF11-B comes with the KTF11-A MMU, two serial lines and a BDV-11.
     serialLineUnits = make_unique<SerialLineUnits> (bus,
+        UARTTypeConfig {.maintenanceModeSupported = false},
         (SLUConfig*) kdf11_bConfig->sluConfig.get());
     bdv11 = make_unique<BDV11> (bus,
         static_pointer_cast<BDV11Config> (kdf11_bConfig->bdv11Config));

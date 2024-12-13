@@ -1,5 +1,6 @@
 #include "trace/trace.h"
 #include "dlv11j.h"
+#include "configdata/serialconfig/uarttypeconfig/uarttypeconfig.h"
 
 #include <string.h>
 #include <stdlib.h>
@@ -42,7 +43,8 @@ void DLV11J::initialize ()
 	for (u16 channelNr = 0; channelNr < numChannels; ++channelNr)
 	{
 		channel_[channelNr] = make_unique<UART> (bus_,
-				dlConfig_->uarts[channelNr], channelNr, dlConfig_->consoleConfig);
+			UARTTypeConfig {.maintenanceModeSupported = false},
+			dlConfig_->uarts[channelNr], channelNr, dlConfig_->consoleConfig);
 	}
 
 	bus_->BINIT().subscribe (bind (&DLV11J::BINITReceiver, this, _1));

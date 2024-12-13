@@ -16,13 +16,14 @@ using std::chrono::high_resolution_clock;
 using std::chrono::duration;
 
 // Constructor
-UART::UART (Qbus* bus, UARTConfig& uartConfig,
-	u16 channelNr, ConsoleConfig consoleConfig)
+UART::UART (Qbus* bus, UARTTypeConfig const & uartTypeConfig,
+	UARTConfig& uartConfig, u16 channelNr, ConsoleConfig consoleConfig)
 	:
 	baseAddress {uartConfig.baseAddress_},
 	vector {uartConfig.baseVector_},
 	enabled_ {uartConfig.enabled_},
 	bus_ {bus},
+	maintenanceModeSupported_ {uartTypeConfig.maintenanceModeSupported},
 	breakResponse_ {consoleConfig.breakResponse},
 	breakKey_ {consoleConfig.breakKey},
 	loopback_ {uartConfig.loopback_},
@@ -39,6 +40,10 @@ UART::UART (Qbus* bus, UARTConfig& uartConfig,
 		console_->setReceiver (bind (&UART::receive, this, _1));
 	}
 
+	// If Maintenance Mode is supported the XCSR MAINT bit is writable too
+	if (maintenanceModeSupported_)
+		XCSR_WR_MASK |= XCSR_TRANSMIT_MAINT;
+
 	// Create a thread running the transmitter
     transmitterThread_ = thread (&UART::transmitter, this);
 	
@@ -49,8 +54,11 @@ UART::UART (Qbus* bus, UARTConfig& uartConfig,
 UART::~UART ()
 {
 	// Signal the transmitter to exit
-	channelRunning_ = false;
-	transmitter_.notify_one ();
+	{
+		lock_guard<mutex> lock {registerAccessMutex_};
+		channelRunning_ = false;
+		transmitter_.notify_one ();
+	}
 
 	// And then wait for its exit
 	transmitterThread_.join ();
@@ -218,6 +226,14 @@ void UART::writeXCSR (u16 value)
 	u16 old = xcsr;
 	xcsr = (xcsr & ~XCSR_WR_MASK) | (value & XCSR_WR_MASK);
 
+	if (maintenanceModeSupported_)
+	{
+		if (xcsr & XCSR_TRANSMIT_MAINT)
+			loopback_ = true;
+		else
+			loopback_ = false;
+	}
+
 	if (xcsr & XCSR_TRANSMIT_BREAK)
 		sendChar (0);
 	
@@ -310,7 +326,7 @@ void UART::transmitter ()
 	while (channelRunning_)
 	{
 		// Get a lock on the registerAccessMutex_. This lock will be released by
-		// the transmitter_.wait() call and lock again on return of that call.
+		// the transmitter_.wait() call and locked again on return of that call.
 		unique_lock<mutex> lock {registerAccessMutex_};
 
 		if (!charAvailable_)
@@ -320,7 +336,7 @@ void UART::transmitter ()
 		if (!channelRunning_)
 			break;
 
-		if (console_)
+		if (console_ && !loopback_)
 			console_->print ((unsigned char) xbuf);
 
 		xcsr |= XCSR_TRANSMIT_READY;
@@ -335,7 +351,7 @@ void UART::transmitter ()
 
 		// If loopback is enabled send the character to the receiver of this
 		// channel.
-		if (loopback_ && !console_)
+		if (loopback_)
 			receiveMutExcluded (Character {lowByte (xbuf), 
 					(xcsr & XCSR_TRANSMIT_BREAK) == XCSR_TRANSMIT_BREAK});
 

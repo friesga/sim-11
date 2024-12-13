@@ -9,10 +9,13 @@ using std::placeholders::_1;
 using std::make_unique;
 using std::ranges::find_if;
 
-SerialLineUnits::SerialLineUnits (Qbus *bus, SLUConfig* sluConfig)
+SerialLineUnits::SerialLineUnits (Qbus *bus,
+    UARTTypeConfig const& uartTypeConfig, SLUConfig* sluConfig)
 {
-    uarts_[0] = make_unique<UART> (bus, sluConfig->uartConfig[0], 0, sluConfig->consoleConfig);
-    uarts_[1] = make_unique<UART> (bus, sluConfig->uartConfig[1], 1, sluConfig->consoleConfig);
+    uarts_[0] = make_unique<UART> (bus, uartTypeConfig,
+        sluConfig->uartConfig[0], 0, sluConfig->consoleConfig);
+    uarts_[1] = make_unique<UART> (bus, uartTypeConfig,
+        sluConfig->uartConfig[1], 1, sluConfig->consoleConfig);
     bus->BINIT().subscribe (bind (&SerialLineUnits::BINITReceiver, this, _1));
 }
 

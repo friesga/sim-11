@@ -1,5 +1,6 @@
 #include "kdf11_u.h"
 #include "qbus/qbus.h"
+#include "configdata/serialconfig/uarttypeconfig/uarttypeconfig.h"
 
 #include <memory>
 #include <thread>
@@ -21,6 +22,7 @@ KDF11_U::KDF11_U (Qbus *bus, shared_ptr<KDF11_UConfig> kdf11_uConfig)
 {
     // The KDF11-U comes with the KTF11-A MMU and two serial lines
     serialLineUnits = make_unique<SerialLineUnits> (bus,
+        UARTTypeConfig {.maintenanceModeSupported = true},
         (SLUConfig*) kdf11_uConfig->sluConfig.get());
 
     vector<BusDevice*> devices {&cpuData_, &mmu_, serialLineUnits.get (),

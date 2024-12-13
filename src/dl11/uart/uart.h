@@ -6,6 +6,7 @@
 #include "statuscodes.h"
 #include "configdata/serialconfig/dlv11jconfig/dlv11jconfig.h"
 #include "configdata/serialconfig/uartconfig/uartconfig.h"
+#include "configdata/serialconfig/uarttypeconfig/uarttypeconfig.h"
 #include "configdata/serialconfig/consoleconfig/consoleconfig.h"
 #include "console/console.h"
 #include "characterbuffer/characterbuffer.h"
@@ -37,8 +38,8 @@ using std::condition_variable;
 class UART : public AbstractBusDevice
 {
 public:
-	UART (Qbus* bus, UARTConfig& uartConfig,
-		u16 channelNr, ConsoleConfig consoleConfig);
+	UART (Qbus* bus, UARTTypeConfig const & uartTypeConfig,
+		UARTConfig& uartConfig, u16 channelNr, ConsoleConfig consoleConfig);
 	~UART ();
 	StatusCode read (BusAddress busAddress, u16 *destAddress);
 	StatusCode writeWord (BusAddress busAddress, u16 value);
@@ -68,9 +69,14 @@ private:
 										   RBUF_PARITY_ERROR | RBUF_ERROR;
 	
 	static const u16 XCSR_TRANSMIT_BREAK = bitValue (0);
+	static const u16 XCSR_TRANSMIT_MAINT = bitValue (2);
 	static const u16 XCSR_TRANSMIT_IE	 = bitValue (6);
 	static const u16 XCSR_TRANSMIT_READY = bitValue (7);
-	static const u16 XCSR_WR_MASK		 = XCSR_TRANSMIT_IE | XCSR_TRANSMIT_BREAK;
+
+	// Definitions of the XCSR writable bits. This definition depends on the
+	// support of the Maintenance Mode. If this mode is supported the
+	// XCSR_TRANSMIT_MAINT bit is writable too.
+	u16 XCSR_WR_MASK = XCSR_TRANSMIT_IE | XCSR_TRANSMIT_BREAK;
 
 	u16	rcsr {0};
 	u16	rbuf {0};
@@ -95,6 +101,7 @@ private:
 	u8 interruptPriority (Function function, u16 channelNr);
 
 	Qbus* bus_;
+	bool maintenanceModeSupported_;
 	ConsoleConfig::BreakResponse breakResponse_;
     unsigned char breakKey_;
 	bool loopback_;
