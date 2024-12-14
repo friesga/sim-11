@@ -15,9 +15,19 @@ u16 CmdProcessor::maintenanceCmd (RL01_02 *unit, RLV12Command &rlv12Command)
     BusAddress  memoryAddress {0};
     u16 rlcsValue {0};
 
+    // This command is a NOP on the RL11 controller
+    if (controller_->rlType_ == RLV12const::RLType::RL11)
+        return 0;
+
     // The VRLBC0 diagnostic test 25 expects a reaction on a Maintenance
     // command between 155 and 650 milliseconds. This time is determined
     // by executing a number of instructions.
+    //
+    // This sleep must not be performed for the RL11 NOP command. The 11/24
+    // RL bootstrap executes a NOP and in the next statement writes the
+    // DAR. The RL controller would then be still in this sleep and the
+    // processor thread would hang on the lock of the controllerMutex_
+    // as the simulator clock time is not incremented.
     alarmClock_.sleepFor (std::chrono::milliseconds (200));
 
     // This command is a NOP on the RL11 controller
