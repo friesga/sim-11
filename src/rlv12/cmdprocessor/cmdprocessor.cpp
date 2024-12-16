@@ -19,6 +19,9 @@ CmdProcessor::~CmdProcessor()
 // SignalX the command processor to stop processing
 void CmdProcessor::finish ()
 {
+    // Guard against controller register access from writeWord()
+    std::unique_lock<std::mutex> lock {controller_->controllerMutex_};
+
     running_ = false;
 
     // Wake up the command processor
