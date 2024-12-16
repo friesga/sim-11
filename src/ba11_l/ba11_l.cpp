@@ -106,12 +106,14 @@ void BA11_L::powerSwitchClicked (Button::State state)
             // and normal operation.
             dcOnLed_->show (Indicator::State::On);
             bus_->BPOK ().set (true);
+            enableHCBSwitch ();
             break;
 
         case Button::FourPositionsState::P2:
             // LOC DSBL - Power is present throughout the system. However, the
             // HALT/CONT/BOOT  switch is disabled and the "break" key on the
             // terminal will not halt the CPU.
+            disableHCBSwitch ();
             break;
 
         case Button::FourPositionsState::P3:
@@ -146,4 +148,36 @@ void BA11_L::hcbSwitchClicked (Button::State state)
 void BA11_L::SRUNReceiver (bool signalValue)
 {
     runLed_->show (signalValue ? Indicator::State::On : Indicator::State::Off);
+}
+
+// When the power switch is set to the LOCAL DISABLE position, the
+// HALT/CONT/BOOT switch and the console break key must be disabled.
+// This is done by blocking the relevant signals.
+void BA11_L::disableHCBSwitch ()
+{
+    blockSignals ();
+}
+
+// When the power switch is set to any other position then LOCAL DISABLE,
+// the blocked signals have to be unblocked. The position of the
+// HALT/CONT/BOOT switch may have be changed while the power key was in the
+// LOCAL DISABLE position, so when the power switch is put in another
+// position, the current position of the HALT/CONT/BOOT switch must be
+// processed.
+void BA11_L::enableHCBSwitch ()
+{
+    unblockSignals ();
+    hcbSwitchClicked (hcbSwitch_->currentState ());
+}
+
+void BA11_L::blockSignals ()
+{
+    bus_->BHALT ().block ();
+    bus_->RESET ().block ();
+}
+
+void BA11_L::unblockSignals ()
+{
+    bus_->BHALT ().unblock ();
+    bus_->RESET ().unblock ();
 }

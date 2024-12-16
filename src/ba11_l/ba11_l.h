@@ -36,6 +36,10 @@ private:
     Indicator* dcOnLed_;
 
     void createBezel (shared_ptr<Cabinet::Position> cabinetPosition);
+    void disableHCBSwitch ();
+    void enableHCBSwitch ();
+    void blockSignals ();
+    void unblockSignals ();
 };
 
 #endif // _BA11L_H_
