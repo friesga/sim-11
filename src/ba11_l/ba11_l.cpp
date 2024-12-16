@@ -85,6 +85,9 @@ void BA11_L::createBezel (shared_ptr<Cabinet::Position> cabinetPosition)
     // The state of the HALT signal has to correspond with the position
     // of the HALT/CONT/BOOT switch.
     bus_->BHALT ().set (false);
+
+    // Subscribe to the signal indicating the state to be shown
+    bus_->SRUN ().subscribe (bind (&BA11_L::SRUNReceiver, this, _1));
 }
 
 void BA11_L::powerSwitchClicked (Button::State state)
@@ -130,9 +133,6 @@ void BA11_L::hcbSwitchClicked (Button::State state)
 
         case Button::ThreePositionsState::Center:
             // CONT - The processor is enabled for normal operation
-            if (bus_->BPOK ())
-                runLed_->show (Indicator::State::On);
-            
             bus_->BHALT ().set (false);
             break;
 
@@ -141,4 +141,10 @@ void BA11_L::hcbSwitchClicked (Button::State state)
             bus_->RESET ().cycle ();
             break;
     }
+}
+
+// The RUN led reflects the state of the SRUN signal.
+void BA11_L::SRUNReceiver (bool signalValue)
+{
+    runLed_->show (signalValue ? Indicator::State::On : Indicator::State::Off);
 }

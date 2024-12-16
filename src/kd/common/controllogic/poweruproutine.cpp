@@ -53,7 +53,10 @@ ControlLogic::State ControlLogic::powerUpRoutine ()
             // If BHALT is set immediately transition to the Halted state,
             // before even one instruction is executed cf Table 11-4.
             if (bus_->BHALT ())
+            {
+                cpuControl_->halt ();
                 return Halted {};
+            }
 
             return Running {};
     }

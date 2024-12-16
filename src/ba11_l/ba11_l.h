@@ -18,6 +18,7 @@ public:
     BA11_L (Qbus* bus, Window* window, shared_ptr<BA11_LConfig> ba11lConfig);
     void powerSwitchClicked (Button::State state);
     void hcbSwitchClicked (Button::State state);
+    void SRUNReceiver (bool signalValue);
 
 private:
     // Definition of the front, indicators and buttons on the BA11_N panel
