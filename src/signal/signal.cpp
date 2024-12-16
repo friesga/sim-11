@@ -3,6 +3,7 @@
 Signal::Signal (bool initialValue)
     :
     value_ {initialValue},
+    blocked_ {false},
     subscribers_ {}
 {}
 
@@ -11,15 +12,36 @@ Signal::Signal ()
     Signal (false)
 {}
 
-// Set the signal to the specified value. If that value differs
-// from the set value, the subscribers are notified.
+// Set the signal to the specified value if it is not blocked
 void Signal::set (bool value, SubscriberKey sender)
 {
     // Guard against simultaneous setting in different threads
     lock_guard<mutex> guard {signalMutex_};
 
-    value_ = value;
-    notifyObservers (sender);
+    if (!blocked_)
+    {
+        value_ = value;
+        notifyObservers (sender);
+    }
+}
+
+// A signal can be blocked so its value cannot be changed. This is useful
+// to ensure that a certain signal cannot be send when e.g. a switch is
+// disabled.
+void Signal::block ()
+{
+    // Guard against simultaneous setting in different threads
+    lock_guard<mutex> guard {signalMutex_};
+
+    blocked_ = true;
+}
+
+void Signal::unblock ()
+{
+    // Guard against simultaneous setting in different threads
+    lock_guard<mutex> guard {signalMutex_};
+
+    blocked_ = false;
 }
 
 Signal::operator bool ()

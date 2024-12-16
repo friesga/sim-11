@@ -20,12 +20,15 @@ public:
     Signal ();
     ~Signal () = default;
     void set (bool value, SubscriberKey sender = 0);
+    void block ();
+    void unblock ();
     operator bool ();
     void cycle (SubscriberKey sender = 0);
     SubscriberKey subscribe (Subscriber);
 
 private:
     bool value_;
+    bool blocked_;
     vector<Subscriber> subscribers_;
     mutex signalMutex_;
 

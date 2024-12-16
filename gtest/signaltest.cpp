@@ -128,3 +128,32 @@ TEST_F (SignalTest, initTrueSignalCanBeCycled)
     EXPECT_TRUE (subscriberA.receivedSignalValues (vector<bool> {false, true}));
     EXPECT_TRUE (subscriberB.receivedSignalValues (vector<bool> {false, true}));
 }
+
+TEST_F (SignalTest, signalCanBeBlockedAndUnblocked)
+{
+    initFalseSignal.block ();
+    initFalseSignal.set (true);
+
+    // The value of the signal should not be changed
+    EXPECT_FALSE (static_cast<bool> (initFalseSignal));
+
+    initFalseSignal.unblock ();
+    initFalseSignal.set (true);
+
+    // The value of the signal should now be changed
+    EXPECT_TRUE (static_cast<bool> (initFalseSignal));
+}
+
+TEST_F (SignalTest, noNotificationOnblockedSignal)
+{
+    Subscriber subscriberA {initFalseSignal};
+    Subscriber subscriberB {initFalseSignal};
+
+    initFalseSignal.block ();
+
+    subscriberA.cycleSignal ();
+
+    // Verify no subscribers are notified
+    EXPECT_TRUE (subscriberA.receivedSignalValues (vector<bool> {}));
+    EXPECT_TRUE (subscriberB.receivedSignalValues (vector<bool> {}));
+}
