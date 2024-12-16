@@ -127,7 +127,6 @@ void BA11_L::hcbSwitchClicked (Button::State state)
     {
         case Button::ThreePositionsState::Left:
             // HALT - Halt the processor
-            runLed_->show (Indicator::State::Off);
             bus_->BHALT ().set (true);
             break;
 
