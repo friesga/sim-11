@@ -39,6 +39,11 @@ void SDLIndicatorLatchingButton::setState (Button::State newState)
     buttonState_ = get<Button::TwoPositionsState> (newState);
 }
 
+Button::State SDLIndicatorLatchingButton::currentState () const
+{
+    return buttonState_;
+}
+
 // Definition of functions required for the Button interface
 void SDLIndicatorLatchingButton::handleEvent (InputEvent const* event)
 {

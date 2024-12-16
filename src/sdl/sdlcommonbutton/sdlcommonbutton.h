@@ -27,6 +27,7 @@ public:
     // The function handleEvent() is delegated to SDLLatchingButton
     // and SDLMomentaryButton.
     void setState (State newState) override;
+    State currentState () const override;
     void render () override;
     bool isWithinBounds (Position position, float margin = 0.0) const override;
 

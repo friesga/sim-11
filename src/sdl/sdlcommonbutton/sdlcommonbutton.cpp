@@ -26,6 +26,11 @@ void SDLCommonButton::setState (State newState)
     buttonState_ = get<TwoPositionsState> (newState);
 }
 
+Button::State SDLCommonButton::currentState () const
+{
+    return buttonState_;
+}
+
 Button::TwoPositionsState SDLCommonButton::toggleState (TwoPositionsState oldState)
 {
     switch (oldState)

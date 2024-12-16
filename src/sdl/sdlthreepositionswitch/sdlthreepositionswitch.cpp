@@ -26,6 +26,11 @@ void SDLThreePositionSwitch::setState (State newState)
     switchPosition_ = get<Button::ThreePositionsState> (newState);
 }
 
+Button::State SDLThreePositionSwitch::currentState () const
+{
+    return switchPosition_;
+}
+
 void SDLThreePositionSwitch::render ()
 {
     positionTextures_[+switchPosition_]->render ();

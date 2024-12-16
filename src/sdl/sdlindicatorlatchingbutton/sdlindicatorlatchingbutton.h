@@ -29,6 +29,7 @@ public:
     // Definition of functions required for the Button interface
     void handleEvent (InputEvent const* event) override;
     void setState (Button::State newState) override;
+    Button::State currentState () const override;
     void render () override;
     bool isWithinBounds (Position position, float margin = 0.0) const;
 

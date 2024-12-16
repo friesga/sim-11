@@ -33,6 +33,7 @@ public:
 
     // Functions required for the Button interface
     void setState (State newState);
+    State currentState () const override;
     void render ();
     void handleEvent (InputEvent const* event);
     bool isWithinBounds (Position position, float margin) const;

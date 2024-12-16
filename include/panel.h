@@ -126,6 +126,7 @@ public:
     using State = variant<TwoPositionsState, ThreePositionsState, FourPositionsState>;
     using EventCallback = function<void(State)>;
     virtual void setState (State newState) = 0;
+    virtual State currentState () const = 0;
     virtual void render () = 0;
     virtual void handleEvent (InputEvent const* event) = 0;
     virtual bool isWithinBounds (Position position, float margin) const = 0;
