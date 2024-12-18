@@ -52,5 +52,10 @@ u16 MS11P::loadFile (const char* fileName)
 	return AbsoluteLoader::loadFile (fileName, memory_.get ());
 }
 
+// On a power-up the memory is cleared or - in case of a functioning
+// battery back-up - kept in order.
 void MS11P::reset ()
-{}
+{
+	if (!bus_->BatteryPower ())
+		memory_ = make_unique<u8[]> (memorySize_);
+}
