@@ -81,6 +81,8 @@ void BA11_L::createBezel (shared_ptr<Cabinet::Position> cabinetPosition)
         "../../assets/red led on.png", Indicator::State::Off, runLedFrame);
     dcOnLed_ = panel->createIndicator ("../../assets/red led off.png",
         "../../assets/red led on.png", Indicator::State::Off, dcOnLedFrame);
+    batteryLed_ = panel->createIndicator ("../../assets/red led off.png",
+        "../../assets/red led on.png", Indicator::State::Off, batteryLedFrame);
 
     // The state of the HALT signal has to correspond with the position
     // of the HALT/CONT/BOOT switch.
@@ -98,6 +100,7 @@ void BA11_L::powerSwitchClicked (Button::State state)
             // DC OFF - DC power is removed from the system; contents of
             // MOS memory are lost and system cooling fans are off.
             dcOnLed_->show (Indicator::State::Off);
+            batteryLed_->show (Indicator::State::Off);
             bus_->BPOK ().set (false);
             bus_->BatteryPower ().set (false);
             break;
@@ -106,6 +109,7 @@ void BA11_L::powerSwitchClicked (Button::State state)
             // LOCAL - Power is applied to the system; enables all functions
             // and normal operation.
             dcOnLed_->show (Indicator::State::On);
+            batteryLed_->show (Indicator::State::On);
             bus_->BPOK ().set (true);
             enableHCBSwitch ();
             break;
