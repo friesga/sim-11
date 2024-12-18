@@ -8,6 +8,11 @@ ControlLogic::State ControlLogic::StateMachine::transition (PowerOff&&, BPOK_hig
     return context_->powerUpRoutine ();
 }
 
+ControlLogic::State ControlLogic::StateMachine::transition (Standby&&, BPOK_high)
+{
+    return context_->powerUpRoutine ();
+}
+
 void ControlLogic::StateMachine::entry (Running)
 {
     while (!context_->signalAvailable ())
@@ -94,14 +99,12 @@ void ControlLogic::StateMachine::entry (PowerFail)
 
 ControlLogic::State ControlLogic::StateMachine::transition (PowerFail&&, BDCOK_low)
 {
-    context_->bus_->SRUN ().set (false);
-    return PowerOff {};
+    return context_->powerDownRoutine ();
 }
 
 ControlLogic::State ControlLogic::StateMachine::transition (PowerFail&&, Halt)
 {
-    context_->bus_->SRUN ().set (false);
-    return PowerOff {};
+    return context_->powerDownRoutine ();
 }
 
 void ControlLogic::StateMachine::entry (ExitPoint)

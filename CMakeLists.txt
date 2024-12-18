@@ -46,6 +46,7 @@ set (KD11COMMON_SRCS
 set (KD11CONTROLLOGIC_SRCS
     src/kd/common/controllogic/controllogic.cpp
     src/kd/common/controllogic/poweruproutine.cpp
+    src/kd/common/controllogic/powerdownroutine.cpp
     src/kd/common/controllogic/runodt.cpp
     src/kd/common/controllogic/signalreceivers.cpp
     src/kd/common/controllogic/statemachine.cpp)

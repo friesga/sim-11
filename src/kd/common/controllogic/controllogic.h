@@ -24,7 +24,9 @@ using std::placeholders::_3;
 // Halted    - The processor is halted and ODT is executed,
 // Running   - The processor is running,
 // PowerFail - The AC power is failing and DC power will drop in a few
-//             milliseonds.
+//             milliseonds,
+// Standby   - The system is switched off but memory is kept intact by
+//              means of the battery power.
 //
 // The control logic transitions through these states on the basis of the
 // bus signals.
@@ -76,11 +78,13 @@ private:
     struct Halted {};
     struct PowerFail {};
     struct ExitPoint {};
+    struct Standby {};
 
     using State = std::variant<PowerOff,
         Running,
         Halted,
         PowerFail,
+        Standby,
         ExitPoint,
         monostate>;
 
@@ -103,6 +107,7 @@ private:
     ThreadSafeQueue<Event> signalEventQueue_ {};
 
     State powerUpRoutine ();
+    State powerDownRoutine ();
     void loadTrapVector (CpuData::TrapCondition trap);
     void subscribeToSignals ();
     void runODT ();
@@ -125,6 +130,7 @@ public:
 
     // Definition of the control logic state machine
     State transition (PowerOff&&, BPOK_high);		// -> Halted/Running
+    State transition (Standby&&, BPOK_high);		// -> Halted/Running
     void entry (Running);
     State transition (Running&&, Reset);			// -> Halted/Running
     State transition (Running&&, Halt);				// -> Halted

@@ -99,6 +99,7 @@ void BA11_L::powerSwitchClicked (Button::State state)
             // MOS memory are lost and system cooling fans are off.
             dcOnLed_->show (Indicator::State::Off);
             bus_->BPOK ().set (false);
+            bus_->BatteryPower ().set (false);
             break;
 
         case Button::FourPositionsState::P1:
@@ -113,12 +114,20 @@ void BA11_L::powerSwitchClicked (Button::State state)
             // LOC DSBL - Power is present throughout the system. However, the
             // HALT/CONT/BOOT  switch is disabled and the "break" key on the
             // terminal will not halt the CPU.
+            // 
+            // This state may be entered from both the LOCAL state and the 
+            // STANDBY state.
+            dcOnLed_->show (Indicator::State::On);
+            bus_->BPOK ().set (true);
             disableHCBSwitch ();
             break;
 
         case Button::FourPositionsState::P3:
-            // STDBY - DC power to most of the computer is off but dc power is
+            // STANDBY - DC power to most of the computer is off but dc power is
             // applied to MOS memory to avoid data loss.
+            dcOnLed_->show (Indicator::State::Off);
+            bus_->BPOK ().set (false);
+            bus_->BatteryPower ().set (true);
             break;
     }
 }

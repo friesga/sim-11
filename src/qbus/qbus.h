@@ -91,6 +91,7 @@ public:
 	Signal &RESET ();
 	Signal &BHALT ();
 	Signal &BINIT ();
+	Signal& BatteryPower ();
 
 	Qbus ();
 	void setInterrupt (TrapPriority priority, unsigned char busOrder,
@@ -117,12 +118,16 @@ private:
 	using IntrptReqQueue = ThreadSafePrioQueue<InterruptRequest>;
 	IntrptReqQueue intrptReqQueue_;
 
-	// Definition of the bus signals
+	// Definition of the bus signals. The BatteryPower signal is present
+	// only on systems with battery backup. The initial value of the
+	// BatteryPower signal is false and in systems without battery backup
+	// that signal remains false.
 	Signal SRUN_;
 	Signal BPOK_;
 	Signal RESET_;
 	Signal BHALT_;
 	Signal BINIT_;
+	Signal BatteryPower_;
 
 	// Signal administration
 	Signal::SubscriberKey ourKey_;
