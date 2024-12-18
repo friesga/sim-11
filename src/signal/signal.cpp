@@ -18,7 +18,7 @@ void Signal::set (bool value, SubscriberKey sender)
     // Guard against simultaneous setting in different threads
     lock_guard<mutex> guard {signalMutex_};
 
-    if (!blocked_)
+    if (!blocked_ && value != value_)
     {
         value_ = value;
         notifyObservers (sender);
