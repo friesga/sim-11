@@ -107,6 +107,13 @@ void Qbus::reset ()
 	clearInterrupts ();
 
 	delay_ = 0;
+
+	// Reset all devices on the bus
+	for (BusDevice* module : slots)
+	{
+		if (module != nullptr)
+			module->reset ();
+	}
 }
 
 // Wait a random number (max INTRPT_LATENCY) of steps till processing of an
