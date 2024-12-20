@@ -59,7 +59,45 @@ class PDP11Peripheral;
 //
 class Qbus
 {
+private:
+	BusDevice* slots[LSI11_SIZE] {nullptr};
+
 public:
+	// The bus contains a number of BusDevice pointers. This iterator iterates
+	// over these pointers. The iterator therefore points to BusDevice pointers.
+	class Iterator
+	{
+	public:
+		using iterator_category = std::forward_iterator_tag;
+		using difference_type   = std::ptrdiff_t;
+		using value_type        = BusDevice*;
+		using pointer           = BusDevice**;  // or also value_type*
+		using reference         = const value_type&;
+
+		// In the default constructor initialize the iterator with a default
+		// null pointer.
+		Iterator () : ptr_ {nullptr} {}
+		Iterator (pointer it) : ptr_ (it) {}
+		reference operator* () const { return *ptr_; }
+		pointer operator-> () { return &(*ptr_); }
+
+		// Prefix increment
+		Iterator& operator++ () { ++ptr_; return *this; }
+
+		// Postfix increment
+		Iterator operator++ (int) { Iterator tmp = *this; ++(*this); return tmp; }
+
+		friend bool operator== (const Iterator& a, const Iterator& b) { return a.ptr_ == b.ptr_; }
+		friend bool operator!= (const Iterator& a, const Iterator& b) { return a.ptr_ != b.ptr_; }
+
+	private:
+		pointer ptr_;
+	};
+
+	Iterator begin () { return Iterator (&slots[0]); }
+	Iterator end () { return Iterator (&slots[LSI11_SIZE - 1]); }
+	Iterator operator[] (int index) { return Iterator (&slots[index]); }
+
 	// The Qbus contains a set of control signals that can be set, cycled
 	// and tested.
 	//
@@ -112,8 +150,6 @@ public:
 	void installModule (int slot, BusDevice *module);
 
 private:
-	BusDevice *slots[LSI11_SIZE] {nullptr};
-
 	// This queue keeps all interrupt requests, ordered in interrupt priority
 	using IntrptReqQueue = ThreadSafePrioQueue<InterruptRequest>;
 	IntrptReqQueue intrptReqQueue_;

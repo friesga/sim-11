@@ -468,6 +468,7 @@ set (GTEST_SRCS
     gtest/msv11configuratortest.cpp
     gtest/ms11pconfiguratortest.cpp
     gtest/operandlocationtest.cpp
+    gtest/qbusinstalltest.cpp
     gtest/dummycpu/dummymmu/dummymmu.cpp
     gtest/rlv12/rl11configprocessortest.cpp
     gtest/rlv12/rlv11configprocessortest.cpp
