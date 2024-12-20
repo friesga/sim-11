@@ -19,9 +19,6 @@ using std::array;
 using std::function;
 using std::vector;
 
-// A BA11-N backplane has nine slots, numbered 1 to 9.
-#define	LSI11_SIZE		9
-
 // Qbus interrupt latency, defined as the maximum number of instructions
 // after which the interrupt will be processed. The INTRPT_LATENCY_JITTER
 // is a random number of instructions. The minimum latency will be
@@ -60,7 +57,11 @@ class PDP11Peripheral;
 class Qbus
 {
 private:
-	BusDevice* slots[LSI11_SIZE] {nullptr};
+	// A BA11-N backplane has nine slots, named ROW 1 to ROW 9. ROW 1 corresponds
+	// with slot[0], ROW 9 with slot [8].
+	// ToDo: This should be parameterizable per backplane.
+	static const size_t numberOfSlots {9};
+	BusDevice* slots[numberOfSlots] {nullptr};
 
 public:
 	// The bus contains a number of BusDevice pointers. This iterator iterates
@@ -95,7 +96,7 @@ public:
 	};
 
 	Iterator begin () { return Iterator (&slots[0]); }
-	Iterator end () { return Iterator (&slots[LSI11_SIZE - 1]); }
+	Iterator end () { return Iterator (&slots[numberOfSlots - 1]); }
 	Iterator operator[] (int index) { return Iterator (&slots[index]); }
 
 	// The Qbus contains a set of control signals that can be set, cycled

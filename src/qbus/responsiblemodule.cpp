@@ -3,7 +3,7 @@
 
 BusDevice *Qbus::responsibleModule (BusAddress address)
 {
-	for (size_t index = 0; index < LSI11_SIZE; ++index)
+	for (size_t index = 0; index < numberOfSlots; ++index)
 	{
 		auto module = slots[index];
 		if (!module)

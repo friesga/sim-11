@@ -167,6 +167,6 @@ bool Qbus::getIntrptReq(InterruptRequest &intrptReq)
 // the pointer is already used in the constructor.
 void Qbus::installModule (int slot, BusDevice *module)
 {
-	if (slot < LSI11_SIZE && module != nullptr)
+	if (slot < numberOfSlots && module != nullptr)
 		slots[slot] = module;
 }
