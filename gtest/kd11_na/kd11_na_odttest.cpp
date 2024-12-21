@@ -50,7 +50,7 @@ protected:
         PseudoMMU mmu {&bus, &cpuData};
         KD11_NA_CpuControl kd11cpu (&bus, &cpuData, &mmu);
         MSV11D msv11d (&bus);
-        bus.installModule (1, &msv11d);
+        bus.installModule (&msv11d);
 
         // Create a KD11ODT instance and let it process a character sequence
         KD11_NA_ODT kd11odt {&bus, &cpuData, &kd11cpu, &mmu, move (console)};

@@ -23,6 +23,12 @@ using std::get;
 
 // Configure the LSI-11 with a default configuration. Create a bare system
 // without any files attached.
+//
+// Every PDP11Peripheral contains a pointer to the bus it is installed on.
+// This pointer has to be specified in the device's constructor. There is
+// something to be said for setting the pointer when installing the module
+// but in e.g. the KD11_NA device the pointer is already used in the
+// constructor.
 void PDP_11::configureDevices (Window *window)
 {
     // By default use the KD11-NA processor

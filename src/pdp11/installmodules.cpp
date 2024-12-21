@@ -8,12 +8,11 @@ void PDP_11::installModules ()
 {
     size_t slotNr {0};
 
-    bus_.installModule (slotNr++, processor_);
+    bus_.installModule (processor_);
 
     for (auto device : busDevices_)
-        bus_.installModule (slotNr++, device);
+        bus_.installModule (device);
 
     for (auto device : memoryDevices_)
-        bus_.installModule (slotNr++, device);
-    
+        bus_.installModule (device);
 }

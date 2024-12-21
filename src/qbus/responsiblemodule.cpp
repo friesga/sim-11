@@ -5,7 +5,7 @@ BusDevice *Qbus::responsibleModule (BusAddress address)
 {
 	for (size_t index = 0; index < numberOfSlots; ++index)
 	{
-		auto module = slots[index];
+		auto module = slots_[index];
 		if (!module)
 			continue;
 

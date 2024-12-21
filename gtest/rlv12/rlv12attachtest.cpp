@@ -30,7 +30,7 @@ protected:
 
     void SetUp() override
     {
-        bus.installModule (1, rlv12Device);
+        bus.installModule (rlv12Device);
     }
 };
 

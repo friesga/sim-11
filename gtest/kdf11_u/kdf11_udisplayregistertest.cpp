@@ -18,7 +18,7 @@ TEST (KDF11_UDisplayRegistertest, displayRegisterCanBeWritten)
 
     Qbus bus;
     KDF11_U kdf11_u (&bus, kdf11_uConfigPtr);
-    bus.installModule (0, &kdf11_u);
+    bus.installModule (&kdf11_u);
 
     // The KDF11-U has to be started to be able to process the exit event
     kdf11_u.start ();
@@ -35,7 +35,7 @@ TEST (KDF11_UDisplayRegistertest, displayRegisterCanNotBeRead)
 
     Qbus bus;
     KDF11_U kdf11_u (&bus, kdf11_uConfigPtr);
-    bus.installModule (0, &kdf11_u);
+    bus.installModule (&kdf11_u);
 
     // The KDF11-U has to be started to be able to process the exit event
     kdf11_u.start ();

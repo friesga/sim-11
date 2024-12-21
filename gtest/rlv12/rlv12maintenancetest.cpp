@@ -34,8 +34,8 @@ protected:
     {
         // Create a minimal system, conisting of just the bus, memory
         // and the RLV12 device to be tested.
-        bus.installModule (1, msv11);
-        bus.installModule (2, rlv12Device);
+        bus.installModule (msv11);
+        bus.installModule (rlv12Device);
     }
 
     void waitForControllerReady ()

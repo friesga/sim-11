@@ -24,8 +24,8 @@ protected:
 
     void SetUp() override
     {
-        qbus.installModule (1, kdf11a);
-        qbus.installModule (2, memory);
+        qbus.installModule (kdf11a);
+        qbus.installModule (memory);
 
         kdf11a->start ();
     }

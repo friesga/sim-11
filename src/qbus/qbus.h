@@ -56,12 +56,14 @@ class PDP11Peripheral;
 //
 class Qbus
 {
+public:
+	static const size_t numberOfSlots {9};
+
 private:
 	// A BA11-N backplane has nine slots, named ROW 1 to ROW 9. ROW 1 corresponds
 	// with slot[0], ROW 9 with slot [8].
-	// ToDo: This should be parameterizable per backplane.
-	static const size_t numberOfSlots {9};
-	BusDevice* slots[numberOfSlots] {nullptr};
+	size_t numDevices_ {0};
+	BusDevice* slots_[numberOfSlots] {nullptr};
 
 public:
 	// The bus contains a number of BusDevice pointers. This iterator iterates
@@ -95,9 +97,9 @@ public:
 		pointer ptr_;
 	};
 
-	Iterator begin () { return Iterator (&slots[0]); }
-	Iterator end () { return Iterator (&slots[numberOfSlots - 1]); }
-	Iterator operator[] (int index) { return Iterator (&slots[index]); }
+	Iterator begin () { return Iterator (&slots_[0]); }
+	Iterator end () { return Iterator (&slots_[numDevices_ - 1]); }
+	Iterator operator[] (int index) { return Iterator (&slots_[index]); }
 
 	// The Qbus contains a set of control signals that can be set, cycled
 	// and tested.
@@ -148,7 +150,8 @@ public:
 	CondData<u16> read (BusAddress address);
 	bool writeWord (BusAddress address, u16 value);
 	bool writeByte (BusAddress address, u8 val);
-	void installModule (int slot, BusDevice *module);
+	bool installModuleAtPosition (BusDevice* module, size_t position);
+	bool installModule (BusDevice* module);
 
 private:
 	// This queue keeps all interrupt requests, ordered in interrupt priority
