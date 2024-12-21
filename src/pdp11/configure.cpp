@@ -137,7 +137,7 @@ void PDP_11::configureUnibusSystem (SystemConfig const & systemConfig,
         [this, window] (shared_ptr<RL11Config> rl11Config)
             { busDevices_.emplace_back (new RLV12 (&bus_, window, rl11Config)); },
         [this, window] (shared_ptr<M9312Config> m9312Config)
-            { busDevices_.emplace_back (new M9312 (&bus_, m9312Config)); },
+            { m9312_ = new M9312 (&bus_, m9312Config); },
         [this, window] (shared_ptr<RLV11Config> rlConfig)
             { throw "Should not happen"; },
         [this, window] (shared_ptr<RLV12Config> rlConfig)

@@ -45,6 +45,7 @@ class PDP_11
 	PDP11Processor *processor_;
 	vector<MemoryDevice*> memoryDevices_;
 	vector<BusDevice*> busDevices_;
+	BusDevice* m9312_ {nullptr};
 	unique_ptr<BA11_N> ba11_n_;
 	unique_ptr<BA11_L> ba11_l_;
 	CmdLineOptions const &cmdLineOptions_;
