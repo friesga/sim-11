@@ -9,7 +9,7 @@ M9312::M9312 (Qbus* bus, shared_ptr<M9312Config> m9312Config)
     for (size_t socketNr = 0; socketNr < numberOfBootROMs; ++socketNr)
         bootROM_[socketNr] = bootROMImages_[+m9312Config->bootROM[socketNr]];
 
-    startingAddress_ = m9312Config->startingAddress;
+    startingAddress_ = m9312Config->addressOffset;
 }
 
 void M9312::reset ()

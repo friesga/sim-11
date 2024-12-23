@@ -12,7 +12,7 @@ TEST (M9312ConfiguratorTest, optionsAccepted)
 	stream << "[M9312]\n"
 		"diag-rom = 23-248F1\n"
 		"boot-roms = 23-751A9, 23-752A9, 23-753A9, 23-755A9\n"
-		"starting-address = 0173000\n";
+		"address-offset = 0376\n";
 	stream >> ft;
 
 	IniProcessor iniProcessor;
@@ -34,7 +34,7 @@ TEST (M9312ConfiguratorTest, optionsAccepted)
 	EXPECT_EQ (m9312Config->bootROM[1], M9312Config::BootROMType::_23_752A9);
 	EXPECT_EQ (m9312Config->bootROM[2], M9312Config::BootROMType::_23_753A9);
     EXPECT_EQ (m9312Config->bootROM[3], M9312Config::BootROMType::_23_755A9);
-    EXPECT_EQ (m9312Config->startingAddress, 0173000);
+    EXPECT_EQ (m9312Config->addressOffset, 0376);
 }
 
 TEST (M9312ConfiguratorTest, invalidOptionThrows)
@@ -192,15 +192,15 @@ TEST (M9312ConfiguratorTest, defaultInitialized)
 	EXPECT_EQ (m9312Config->bootROM[1], M9312Config::BootROMType::NONE);
 	EXPECT_EQ (m9312Config->bootROM[2], M9312Config::BootROMType::NONE);
 	EXPECT_EQ (m9312Config->bootROM[3], M9312Config::BootROMType::NONE);
-	EXPECT_EQ (m9312Config->startingAddress, 0);
+	EXPECT_EQ (m9312Config->addressOffset, 0);
 }
 
-TEST (M9312ConfiguratorTest, invalidStartingAddressThrows)
+TEST (M9312ConfiguratorTest, invalidAddressOffsetThrows)
 {
 	iniparser::File ft;
 	std::stringstream stream;
 	stream << "[M9312]\n"
-		"starting-address = 0174000\n";
+		"address-offset = 0400\n";
 	stream >> ft;
 
 	IniProcessor iniProcessor;
@@ -213,7 +213,34 @@ TEST (M9312ConfiguratorTest, invalidStartingAddressThrows)
 	catch (std::invalid_argument const& except)
 	{
 		EXPECT_STREQ (except.what (),
-			"M9312 starting address must be in the range 0173000 to 0174000 or 0165000 to 0166000");
+			"The M9312 address offset maximum value is 0376");
+	}
+	catch (...)
+	{
+		FAIL ();
+	}
+}
+
+
+TEST (M9312ConfiguratorTest, oddAddressOffsetThrows)
+{
+	iniparser::File ft;
+	std::stringstream stream;
+	stream << "[M9312]\n"
+		"address-offset = 0001\n";
+	stream >> ft;
+
+	IniProcessor iniProcessor;
+
+	try
+	{
+		iniProcessor.process (ft);
+		FAIL ();
+	}
+	catch (std::invalid_argument const& except)
+	{
+		EXPECT_STREQ (except.what (),
+			"The M9312 address offset must be even");
 	}
 	catch (...)
 	{
