@@ -9,7 +9,7 @@ M9312::M9312 (Qbus* bus, shared_ptr<M9312Config> m9312Config)
     for (size_t socketNr = 0; socketNr < numberOfBootROMs; ++socketNr)
         bootROM_[socketNr] = bootROMImages_[+m9312Config->bootROM[socketNr]];
 
-    startingAddress_ = m9312Config->addressOffset;
+    addressOffset_ = m9312Config->addressOffset;
 }
 
 void M9312::reset ()
@@ -20,12 +20,22 @@ bool M9312::responsible (BusAddress address)
     return addressInDiagnosticROM (address) || addressInBootRom (address);
 }
 
-// This function returns the data at the specified address from the ROM image
-// (if present). The address is a byte address and as the ROM images are
-// defined as word arrays the byte address has to be converted to a word
-// address (by dividing it by two).
+// This function returns the data at the specified address plus a configured 
+// offset from the ROM image (if present). The address is a byte address
+// and as the ROM images are defined as word arrays the byte address has to
+// be converted to a word address (by dividing it by two).
+//
+// The address offset is used to switch from a predefined address, i.e. 173000
+// for a boot ROM and 165000 for the console and diagnostic ROM, to a specific
+// ROM. With an address offset of e.g. 4 the processor starts at address
+// 173000 and the contents of the location 173004 are returned (the starting
+// address for a boot from RL0 without diagnostics). This address remains
+// applied while the processor is running code located in one of the ROMs.
+//
 StatusCode M9312::read (BusAddress busAddress, u16* data)
 {
+    busAddress += addressOffset_;
+
     if (addressInDiagnosticROM (busAddress))
         return readDiagnosticROM (busAddress, data);
 

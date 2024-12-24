@@ -129,7 +129,7 @@ private:
 
     DiagROMImage* diagnosticROM_ {nullptr};
     array<BootROMImage*, numberOfBootROMs> bootROM_ {nullptr};
-    u16 startingAddress_ {0173000};
+    u16 addressOffset_ {0};
 
     bool addressInDiagnosticROM (BusAddress address);
     bool addressInBootRom (BusAddress address);

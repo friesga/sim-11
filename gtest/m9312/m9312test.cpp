@@ -15,7 +15,7 @@ TEST (M9312Test, m93isResponsibleForCorrectAddresses)
         M9312Config::DiagROMType::_23_248F1,
         {M9312Config::BootROMType::_23_751A9, M9312Config::BootROMType::_23_752A9,
         M9312Config::BootROMType::_23_753A9, M9312Config::BootROMType::_23_755A9},
-        0173000
+        0
     };
     
     shared_ptr<M9312Config> m9312ConfigPtr =
@@ -40,7 +40,7 @@ TEST (M9312Test, diagROMreadCorrectly)
         M9312Config::DiagROMType::_23_248F1,
         {M9312Config::BootROMType::_23_751A9, M9312Config::BootROMType::_23_752A9,
         M9312Config::BootROMType::_23_753A9, M9312Config::BootROMType::_23_755A9},
-        0173000
+        0
     };
 
     shared_ptr<M9312Config> m9312ConfigPtr = make_shared<M9312Config> (config);
@@ -62,7 +62,7 @@ TEST (M9312Test, readOfEmptySocketReturnsError)
         M9312Config::DiagROMType::NONE,
         {M9312Config::BootROMType::_23_751A9, M9312Config::BootROMType::_23_752A9,
         M9312Config::BootROMType::_23_753A9, M9312Config::BootROMType::_23_755A9},
-        0173000
+        0
     };
 
     shared_ptr<M9312Config> m9312ConfigPtr = make_shared<M9312Config> (config);
@@ -81,7 +81,7 @@ TEST (M9312Test, bootROMsreadCorrectly)
         M9312Config::DiagROMType::_23_248F1,
         {M9312Config::BootROMType::_23_751A9, M9312Config::BootROMType::_23_752A9,
         M9312Config::BootROMType::_23_753A9, M9312Config::BootROMType::_23_755A9},
-        0173000
+        0
     };
 
     shared_ptr<M9312Config> m9312ConfigPtr = make_shared<M9312Config> (config);
@@ -114,7 +114,7 @@ TEST (M9312Test, romCannotBeWritten)
         M9312Config::DiagROMType::_23_248F1,
         {M9312Config::BootROMType::_23_751A9, M9312Config::BootROMType::_23_752A9,
         M9312Config::BootROMType::_23_753A9, M9312Config::BootROMType::_23_755A9},
-        0173000
+        0
     };
 
     shared_ptr<M9312Config> m9312ConfigPtr = make_shared<M9312Config> (config);
@@ -124,4 +124,48 @@ TEST (M9312Test, romCannotBeWritten)
 
     u16 data {0};
     EXPECT_EQ (m9312.writeWord (0165000, data), StatusCode::NonExistingMemory);
+}
+
+
+TEST (M9312Test, bootROMAddressOffsetIsApplied)
+{
+    M9312Config config =
+    {
+        M9312Config::DiagROMType::_23_248F1,
+        {M9312Config::BootROMType::_23_751A9, M9312Config::BootROMType::_23_752A9,
+        M9312Config::BootROMType::_23_753A9, M9312Config::BootROMType::_23_755A9},
+        024
+    };
+
+    shared_ptr<M9312Config> m9312ConfigPtr = make_shared<M9312Config> (config);
+
+    Qbus bus;
+    M9312 m9312 (&bus, m9312ConfigPtr);
+
+    u16 data;
+    EXPECT_EQ (m9312.read (0173000, &data), StatusCode::OK);
+    EXPECT_EQ (data, 0173000);
+}
+
+// The following test verifies that the address offset is applied to addresses
+// in the diagnostic ROM. Diagnostic ROM 23-248F1 contains a 0177777 at offset
+// 6.
+TEST (M9312Test, diagROMAddressOffsetIsApplied)
+{
+    M9312Config config =
+    {
+        M9312Config::DiagROMType::_23_248F1,
+        {M9312Config::BootROMType::_23_751A9, M9312Config::BootROMType::_23_752A9,
+        M9312Config::BootROMType::_23_753A9, M9312Config::BootROMType::_23_755A9},
+        6
+    };
+
+    shared_ptr<M9312Config> m9312ConfigPtr = make_shared<M9312Config> (config);
+
+    Qbus bus;
+    M9312 m9312 (&bus, m9312ConfigPtr);
+
+    u16 data;
+    EXPECT_EQ (m9312.read (0165000, &data), StatusCode::OK);
+    EXPECT_EQ (data, 0177777);
 }
