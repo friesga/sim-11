@@ -1,4 +1,5 @@
 #include "m9312.h"
+#include "qbus/qbus.h"
 
 M9312::M9312 (Qbus* bus, shared_ptr<M9312Config> m9312Config)
     :
@@ -15,9 +16,20 @@ M9312::M9312 (Qbus* bus, shared_ptr<M9312Config> m9312Config)
 void M9312::reset ()
 {}
 
+// Ony if the first two reads to after a power-up are for the powerfail
+// vector and no battery backup is provided, and the power-up boot is enabled,
+// the M9312 "steals" the read from memory and returns the vector as provided
+// in the boot ROM in slot 0. Any read to an address other than the powerfail
+// vector indicates that no boot via the powerfail vector is in progress.
 bool M9312::responsible (BusAddress address)
 {
-    return addressInDiagnosticROM (address) || addressInBootRom (address);
+    if (addressIsPowerfailVector (address) && powerUpViaVector)
+        return true;
+    else
+    {
+        powerUpViaVector = false;
+        return addressInDiagnosticROM (address) || addressInBootRom (address);
+    }
 }
 
 // This function returns the data at the specified address plus a configured 
@@ -32,8 +44,22 @@ bool M9312::responsible (BusAddress address)
 // address for a boot from RL0 without diagnostics). This address remains
 // applied while the processor is running code located in one of the ROMs.
 //
+// The first two reads to the power vector after a power-up without
+// battery backup are redirected to the boot ROM in slot 0.
 StatusCode M9312::read (BusAddress busAddress, u16* data)
 {
+    if (busAddress == 024)
+    {
+        *data = 0173000;
+        return StatusCode::OK;
+    }
+
+    if (busAddress == 026)
+    {
+        *data = 0340;
+        return StatusCode::OK;
+    }
+
     busAddress += addressOffset_;
 
     if (addressInDiagnosticROM (busAddress))
@@ -70,6 +96,11 @@ bool M9312::addressInBootRom (BusAddress address)
                 bootROMSize * 2 * numberOfBootROMs;
 }
 
+bool M9312::addressIsPowerfailVector (BusAddress address)
+{ 
+    return (address == 024 || address == 026);
+}
+
 StatusCode M9312::readDiagnosticROM (BusAddress busAddress, u16* data)
 {
     if (diagnosticROM_ == nullptr)
@@ -91,4 +122,11 @@ StatusCode M9312::readBootROM (BusAddress busAddress, u16* data)
         bootROMBaseAddresses[romNumber] >> 1;
     *data = (*bootROM_[romNumber])[imageIndex];
     return StatusCode::OK;
+}
+
+// On power down switch off the line time clock.
+void M9312::BPOKReceiver (bool signalValue)
+{
+    if (signalValue)
+        powerUpViaVector = true;
 }

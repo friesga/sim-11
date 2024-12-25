@@ -58,7 +58,9 @@ private:
     // 0173000-0173176 are in ROM 0, addresses 173200-173276 in ROM 1, etc.
     // The ROM number therefore is determined by bits 7 and 8 of the address.
     constexpr u16 getBootRomNumber (u16 address) const
-    { return ((address & 0600) >> 7); }
+    {
+        return ((address & 0600) >> 7);
+    }
 
     using DiagROMImage = array<u16, diagROMSize> const;
     using BootROMImage = array<u16, bootROMSize> const;
@@ -130,11 +132,14 @@ private:
     DiagROMImage* diagnosticROM_ {nullptr};
     array<BootROMImage*, numberOfBootROMs> bootROM_ {nullptr};
     u16 addressOffset_ {0};
+    bool powerUpViaVector {true};
 
     bool addressInDiagnosticROM (BusAddress address);
     bool addressInBootRom (BusAddress address);
+    bool addressIsPowerfailVector (BusAddress address);
     StatusCode readDiagnosticROM (BusAddress busAddress, u16* data);
     StatusCode readBootROM (BusAddress busAddress, u16* data);
+    void BPOKReceiver (bool signalValue);
 };
 
 inline const array<u16, M9312::numberOfBootROMs> M9312::bootROMBaseAddresses =
