@@ -220,3 +220,29 @@ TEST (M9312ConfiguratorTest, invalidStartingAddressThrows)
 		FAIL ();
 	}
 }
+
+TEST (M9312ConfiguratorTest, oddStartingAddressThrows)
+{
+	iniparser::File ft;
+	std::stringstream stream;
+	stream << "[M9312]\n"
+		"starting-address = 0173001\n";
+	stream >> ft;
+
+	IniProcessor iniProcessor;
+
+	try
+	{
+		iniProcessor.process (ft);
+		FAIL ();
+	}
+	catch (std::invalid_argument const& except)
+	{
+		EXPECT_STREQ (except.what (),
+			"M9312 starting address must be even");
+	}
+	catch (...)
+	{
+		FAIL ();
+	}
+}

@@ -86,9 +86,13 @@ void M9312Processor::processStartingAddress (iniparser::Value value)
             value.asString ()};
     }
 
-    // Check is either in the 0173000 to 0174000 or 165000 to 166000.
+    // Check address is either in the 0173000 to 0174000 or 165000 to 166000.
     if (!addressInRange (startingAddress))
         throw invalid_argument {"M9312 starting address must be in the range 0173000 to 0174000 or 0165000 to 0166000"};
+
+    // Check an even address is specified
+    if (startingAddress & 1)
+        throw invalid_argument {"M9312 starting address must be even"};
 
     m9312ConfigPtr->startingAddress = startingAddress;
 }
