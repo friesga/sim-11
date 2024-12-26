@@ -127,14 +127,14 @@ TEST (M9312Test, romCannotBeWritten)
 }
 
 
-TEST (M9312Test, bootROMAddressOffsetIsApplied)
+TEST (M9312Test, addressOffsetSwitchBankCanBeRead)
 {
     M9312Config config =
     {
         M9312Config::DiagROMType::_23_248F1,
         {M9312Config::BootROMType::_23_751A9, M9312Config::BootROMType::_23_752A9,
         M9312Config::BootROMType::_23_753A9, M9312Config::BootROMType::_23_755A9},
-        024
+        0165000
     };
 
     shared_ptr<M9312Config> m9312ConfigPtr = make_shared<M9312Config> (config);
@@ -143,29 +143,6 @@ TEST (M9312Test, bootROMAddressOffsetIsApplied)
     M9312 m9312 (&bus, m9312ConfigPtr);
 
     u16 data;
-    EXPECT_EQ (m9312.read (0173000, &data), StatusCode::OK);
-    EXPECT_EQ (data, 0173000);
-}
-
-// The following test verifies that the address offset is applied to addresses
-// in the diagnostic ROM. Diagnostic ROM 23-248F1 contains a 0177777 at offset
-// 6.
-TEST (M9312Test, diagROMAddressOffsetIsApplied)
-{
-    M9312Config config =
-    {
-        M9312Config::DiagROMType::_23_248F1,
-        {M9312Config::BootROMType::_23_751A9, M9312Config::BootROMType::_23_752A9,
-        M9312Config::BootROMType::_23_753A9, M9312Config::BootROMType::_23_755A9},
-        6
-    };
-
-    shared_ptr<M9312Config> m9312ConfigPtr = make_shared<M9312Config> (config);
-
-    Qbus bus;
-    M9312 m9312 (&bus, m9312ConfigPtr);
-
-    u16 data;
-    EXPECT_EQ (m9312.read (0165000, &data), StatusCode::OK);
-    EXPECT_EQ (data, 0177777);
+    EXPECT_EQ (m9312.read (0173024, &data), StatusCode::OK);
+    EXPECT_EQ (data, 0165000);
 }

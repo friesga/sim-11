@@ -25,7 +25,7 @@ class M9312Processor : public DeviceConfigProcessor
 	{
 		{"diag-rom",  &M9312Processor::processDiagnosticROM},
 		{"boot-roms", &M9312Processor::processBootROMs},
-		{"address-offset", &M9312Processor::processAddressOffset}
+		{"starting-address", &M9312Processor::processStartingAddress}
 	};
 
 	map<string, M9312Config::DiagROMType> diagROMSpec =
@@ -65,7 +65,8 @@ class M9312Processor : public DeviceConfigProcessor
 	void processSubsection (iniparser::Section* subSection);
 	void processDiagnosticROM (iniparser::Value value);
 	void processBootROMs (iniparser::Value value);
-    void processAddressOffset (iniparser::Value value);
+    void processStartingAddress (iniparser::Value value);
+	bool addressInRange (u16 address);
 
 public:
 	M9312Processor ();

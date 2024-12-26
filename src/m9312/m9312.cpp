@@ -10,7 +10,7 @@ M9312::M9312 (Qbus* bus, shared_ptr<M9312Config> m9312Config)
     for (size_t socketNr = 0; socketNr < numberOfBootROMs; ++socketNr)
         bootROM_[socketNr] = bootROMImages_[+m9312Config->bootROM[socketNr]];
 
-    addressOffset_ = m9312Config->addressOffset;
+    startingAddress_ = m9312Config->startingAddress;
 }
 
 void M9312::reset ()
@@ -23,11 +23,11 @@ void M9312::reset ()
 // vector indicates that no boot via the powerfail vector is in progress.
 bool M9312::responsible (BusAddress address)
 {
-    if (addressIsPowerfailVector (address) && powerUpViaVector)
+    if (addressIsPowerfailVector (address) && powerUpViaVector_)
         return true;
     else
     {
-        powerUpViaVector = false;
+        powerUpViaVector_ = false;
         return addressInDiagnosticROM (address) || addressInBootRom (address);
     }
 }
@@ -50,7 +50,10 @@ bool M9312::responsible (BusAddress address)
 StatusCode M9312::read (BusAddress busAddress, u16* data)
 {
     if (addressIsPowerfailVector (busAddress))
-        busAddress = 0173000 | addressOffset_;
+        busAddress += 0173000;
+
+    if (busAddress == 0173024)
+        return readAddressOffsetSwitchBank (data);
 
     if (addressInDiagnosticROM (busAddress))
         return readDiagnosticROM (busAddress, data);
@@ -114,9 +117,15 @@ StatusCode M9312::readBootROM (BusAddress busAddress, u16* data)
     return StatusCode::OK;
 }
 
+StatusCode M9312::readAddressOffsetSwitchBank (u16* data)
+{
+    *data = startingAddress_;
+    return StatusCode::OK;
+}
+
 // On power down switch off the line time clock.
 void M9312::BPOKReceiver (bool signalValue)
 {
     if (signalValue)
-        powerUpViaVector = true;
+        powerUpViaVector_ = true;
 }

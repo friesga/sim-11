@@ -73,24 +73,28 @@ void M9312Processor::processBootROMs (iniparser::Value value)
     }
 }
 
-void M9312Processor::processAddressOffset (iniparser::Value value)
+void M9312Processor::processStartingAddress (iniparser::Value value)
 {
-    u16 addressOffset {0};
+    u16 startingAddress {0};
     try
     {
-        addressOffset = touint<u16> (value.asString ());
+        startingAddress = touint<u16> (value.asString ());
     }
     catch (std::invalid_argument const&)
     {
-        throw invalid_argument {"Incorrect address offset in M9312 section specified: " +
+        throw invalid_argument {"Incorrect starting address in M9312 section specified: " +
             value.asString ()};
     }
 
-    if (addressOffset >= 0400)
-        throw invalid_argument {"The M9312 address offset maximum value is 0376"};
+    // Check is either in the 0173000 to 0174000 or 165000 to 166000.
+    if (!addressInRange (startingAddress))
+        throw invalid_argument {"M9312 starting address must be in the range 0173000 to 0174000 or 0165000 to 0166000"};
 
-    if (addressOffset & 1)
-        throw invalid_argument {"The M9312 address offset must be even"};
+    m9312ConfigPtr->startingAddress = startingAddress;
+}
 
-    m9312ConfigPtr->addressOffset = addressOffset;
+bool M9312Processor::addressInRange (u16 address)
+{
+    return (address >= 0173000 && address < 0174000) ||
+           (address >= 0165000 && address < 0166000);
 }

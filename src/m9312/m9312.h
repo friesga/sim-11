@@ -132,13 +132,15 @@ private:
     DiagROMImage* diagnosticROM_ {nullptr};
     array<BootROMImage*, numberOfBootROMs> bootROM_ {nullptr};
     u16 addressOffset_ {0};
-    bool powerUpViaVector {true};
+    u16 startingAddress_ {0};
+    bool powerUpViaVector_ {true};
 
     bool addressInDiagnosticROM (BusAddress address);
     bool addressInBootRom (BusAddress address);
     bool addressIsPowerfailVector (BusAddress address);
     StatusCode readDiagnosticROM (BusAddress busAddress, u16* data);
     StatusCode readBootROM (BusAddress busAddress, u16* data);
+    StatusCode readAddressOffsetSwitchBank (u16* data);
     void BPOKReceiver (bool signalValue);
 };
 
