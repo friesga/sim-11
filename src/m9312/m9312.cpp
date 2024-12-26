@@ -44,23 +44,13 @@ bool M9312::responsible (BusAddress address)
 // address for a boot from RL0 without diagnostics). This address remains
 // applied while the processor is running code located in one of the ROMs.
 //
-// The first two reads to the power vector after a power-up without
-// battery backup are redirected to the boot ROM in slot 0.
+// If the system is powered up via the powerfailvector, no battery backup is
+// provided and the power-up-boot is enabled, reads from the powerfail vector
+// are taken care of by the M9312, resulting in a cold boot.
 StatusCode M9312::read (BusAddress busAddress, u16* data)
 {
-    if (busAddress == 024)
-    {
-        *data = 0173000;
-        return StatusCode::OK;
-    }
-
-    if (busAddress == 026)
-    {
-        *data = 0340;
-        return StatusCode::OK;
-    }
-
-    busAddress += addressOffset_;
+    if (addressIsPowerfailVector (busAddress))
+        busAddress = 0173000 | addressOffset_;
 
     if (addressInDiagnosticROM (busAddress))
         return readDiagnosticROM (busAddress, data);
