@@ -124,14 +124,18 @@ public:
 	// On assertion of this signal all bus devices - including the bus itself -
 	// are initialized.
 	// 
-	// The Qbus defines a number of (not bused) spare signals. Analoguously
-	// we define an exit signal indicating the simulator has to exit.
+	// These signals are (or will become) abstraction of the actual bus
+	// Unibus or Qbus signals and not every system will contain all of these
+	// signals. These signals are generic and a system can take use of it to
+	// provide specific functionality. The 11/24 e.g. uses the BOOT signal
+	// which is not used by the 11/03 and 11/23 systems.
 	//
-	Signal &SRUN ();
-	Signal &BPOK ();
-	Signal &RESET ();
-	Signal &BHALT ();
-	Signal &BINIT ();
+	Signal& SRUN ();
+	Signal& BPOK ();
+	Signal& RESET ();
+	Signal& BHALT ();
+	Signal& BINIT ();
+	Signal& BOOT ();
 	Signal& BatteryPower ();
 
 	Qbus ();
@@ -167,6 +171,7 @@ private:
 	Signal RESET_;
 	Signal BHALT_;
 	Signal BINIT_;
+	Signal BOOT_;
 	Signal BatteryPower_;
 
 	// Signal administration

@@ -25,6 +25,11 @@ Signal &Qbus::BINIT ()
     return BINIT_;
 }
 
+Signal& Qbus::BOOT ()
+{
+    return BOOT_;
+}
+
 Signal& Qbus::BatteryPower ()
 {
     return BatteryPower_;

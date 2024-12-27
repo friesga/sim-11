@@ -53,6 +53,7 @@ public:
     void BPOKReceiver (bool signalValue);
     void ExitReceiver (bool signalValue);
     void ResetReceiver (bool signalValue);
+    void BootReceiver (bool signalValue);
 
 private:
     // Definition of the events to be processed by the state machine
@@ -60,6 +61,7 @@ private:
     struct Halt {};
     struct Start {};
     struct Reset {};
+    struct Boot {};
     struct BPOK_low {};
     struct BDCOK_low {};
     struct Exit {};
@@ -68,6 +70,7 @@ private:
         Halt,
         Start,
         Reset,
+        Boot,
         BPOK_low,
         BDCOK_low,
         Exit>;
@@ -108,6 +111,7 @@ private:
 
     State powerUpRoutine ();
     State powerDownRoutine ();
+    State bootRoutine ();
     void loadTrapVector (CpuData::TrapCondition trap);
     void subscribeToSignals ();
     void runODT ();
@@ -133,11 +137,13 @@ public:
     State transition (Standby&&, BPOK_high);		// -> Halted/Running
     void entry (Running);
     State transition (Running&&, Reset);			// -> Halted/Running
+    State transition (Running&&, Boot); 			// -> Running
     State transition (Running&&, Halt);				// -> Halted
     State transition (Running&&, BPOK_low);			// -> PowerFail
     void entry (Halted);
     State transition (Halted&&, Start);				// -> Running
     State transition (Halted&&, Reset);				// -> Halted/Running
+    State transition (Halted&&, Boot);				// -> Running
     State transition (Halted&&, BPOK_low);			// -> PowerOff
     void entry (PowerFail);
     State transition (PowerFail&&, BDCOK_low);		// -> PowerOff

@@ -152,7 +152,7 @@ void BA11_L::hcbSwitchClicked (Button::State state)
 
         case Button::ThreePositionsState::Right:
             // BOOT - Initializes the system
-            bus_->RESET ().cycle ();
+            bus_->BOOT ().cycle ();
             break;
     }
 }

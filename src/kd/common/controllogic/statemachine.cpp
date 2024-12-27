@@ -36,11 +36,15 @@ ControlLogic::State ControlLogic::StateMachine::transition (Running&&, Reset)
     return context_->powerUpRoutine ();
 }
 
+ControlLogic::State ControlLogic::StateMachine::transition (Running&&, Boot)
+{
+    return context_->bootRoutine ();
+}
+
 ControlLogic::State ControlLogic::StateMachine::transition (Running&&, Halt)
 {
     return Halted {};
 }
-
 
 ControlLogic::State ControlLogic::StateMachine::transition (Running&&, BPOK_low)
 {
@@ -65,6 +69,11 @@ ControlLogic::State ControlLogic::StateMachine::transition (Halted&&, Start)
 ControlLogic::State ControlLogic::StateMachine::transition (Halted&&, Reset)
 {
     return context_->powerUpRoutine ();
+}
+
+ControlLogic::State ControlLogic::StateMachine::transition (Halted&&, Boot)
+{
+    return context_->bootRoutine ();
 }
  
 ControlLogic::State ControlLogic::StateMachine::transition (Halted&&, BPOK_low)

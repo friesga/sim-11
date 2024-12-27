@@ -18,7 +18,7 @@ using std::placeholders::_5;
 KDF11_U::KDF11_U (Qbus *bus, shared_ptr<KDF11_UConfig> kdf11_uConfig)
     :
     bus_ {bus},
-    startAddress_ {stdBootAddress}
+    startAddress_ {kdf11_uConfig->bootAddress}
 {
     // The KDF11-U comes with the KTF11-A MMU and two serial lines
     serialLineUnits = make_unique<SerialLineUnits> (bus,

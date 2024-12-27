@@ -9,6 +9,7 @@ void ControlLogic::subscribeToSignals ()
     bus_->BHALT().subscribe (bind (&ControlLogic::BHALTReceiver, this, _1));
     bus_->BPOK().subscribe (bind (&ControlLogic::BPOKReceiver, this, _1));
     bus_->RESET().subscribe (bind (&ControlLogic::ResetReceiver, this, _1));
+    bus_->BOOT ().subscribe (bind (&ControlLogic::BootReceiver, this, _1));
 }
 
 // The BHALT signal halts the processor. 
@@ -44,4 +45,10 @@ void ControlLogic::ResetReceiver (bool signalValue)
 {
     if (signalValue)
         signalEventQueue_.push (Reset {});
+}
+
+void ControlLogic::BootReceiver (bool signalValue)
+{
+    if (signalValue)
+        signalEventQueue_.push (Boot {});
 }
