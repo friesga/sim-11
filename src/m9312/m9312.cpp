@@ -1,6 +1,9 @@
 #include "m9312.h"
 #include "qbus/qbus.h"
 
+using std::bind;
+using std::placeholders::_1;
+
 M9312::M9312 (Qbus* bus, shared_ptr<M9312Config> m9312Config)
     :
     PDP11Peripheral (bus)
@@ -11,6 +14,10 @@ M9312::M9312 (Qbus* bus, shared_ptr<M9312Config> m9312Config)
         bootROM_[socketNr] = bootROMImages_[+m9312Config->bootROM[socketNr]];
 
     startingAddress_ = m9312Config->startingAddress;
+
+    // Make sure the m9312 is notified of power-up's so it can "steal" the
+    // powerfail vector if needed.
+    bus_->BPOK ().subscribe (bind (&M9312::BPOKReceiver, this, _1));
 }
 
 void M9312::reset ()
