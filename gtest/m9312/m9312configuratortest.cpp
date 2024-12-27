@@ -12,7 +12,8 @@ TEST (M9312ConfiguratorTest, optionsAccepted)
 	stream << "[M9312]\n"
 		"diag-rom = 23-248F1\n"
 		"boot-roms = 23-751A9, 23-752A9, 23-753A9, 23-755A9\n"
-		"starting-address = 0173000\n";
+		"starting-address = 0173000\n"
+		"power-up-boot-enable = true\n";
 	stream >> ft;
 
 	IniProcessor iniProcessor;
@@ -35,6 +36,7 @@ TEST (M9312ConfiguratorTest, optionsAccepted)
 	EXPECT_EQ (m9312Config->bootROM[2], M9312Config::BootROMType::_23_753A9);
     EXPECT_EQ (m9312Config->bootROM[3], M9312Config::BootROMType::_23_755A9);
     EXPECT_EQ (m9312Config->startingAddress, 0173000);
+	EXPECT_TRUE (m9312Config->powerUpBootEnable);
 }
 
 TEST (M9312ConfiguratorTest, invalidOptionThrows)
@@ -137,6 +139,31 @@ TEST (M9312ConfiguratorTest, invalidBootROMThrows)
 	}
 }
 
+TEST (M9312ConfiguratorTest, invalidPowerUpBootEnableThrows)
+{
+	iniparser::File ft;
+	std::stringstream stream;
+	stream << "[M9312]\n"
+		"power-up-boot-enable = xxx\n";
+	stream >> ft;
+
+	IniProcessor iniProcessor;
+
+	try
+	{
+		iniProcessor.process (ft);
+		FAIL ();
+	}
+	catch (std::invalid_argument const& except)
+	{
+		EXPECT_STREQ (except.what (), "M9312 power-up-boot-enable must be either true or false");
+	}
+	catch (...)
+	{
+		FAIL ();
+	}
+}
+
 TEST (M9312ConfiguratorTest, oneBootROMAccepted)
 {
 	iniparser::File ft;
@@ -193,6 +220,7 @@ TEST (M9312ConfiguratorTest, defaultInitialized)
 	EXPECT_EQ (m9312Config->bootROM[2], M9312Config::BootROMType::NONE);
 	EXPECT_EQ (m9312Config->bootROM[3], M9312Config::BootROMType::NONE);
 	EXPECT_EQ (m9312Config->startingAddress, 0);
+	EXPECT_FALSE (m9312Config->powerUpBootEnable);
 }
 
 TEST (M9312ConfiguratorTest, invalidStartingAddressThrows)

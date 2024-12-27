@@ -102,3 +102,16 @@ bool M9312Processor::addressInRange (u16 address)
     return (address >= 0173000 && address < 0174000) ||
            (address >= 0165000 && address < 0166000);
 }
+
+// Explicitly test for "true" and "false" as AsBool() returns no error,
+// only checks the first character and returns false except for strings parsed
+// as true.
+void M9312Processor::processPowerUpBootEnable (iniparser::Value value)
+{
+    if (value.asString () == "true")
+        m9312ConfigPtr->powerUpBootEnable = true;
+    else if (value.asString () == "false")
+        m9312ConfigPtr->powerUpBootEnable = false;
+    else
+        throw std::invalid_argument {"M9312 power-up-boot-enable must be either true or false"};
+}

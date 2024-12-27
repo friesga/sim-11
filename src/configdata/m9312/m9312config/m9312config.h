@@ -61,6 +61,7 @@ struct M9312Config : public DeviceType<BusType::Unibus>
     DiagROMType diagnosticROM {DiagROMType::NONE};      // Console emulator and diagnostic ROM
     array<BootROMType, 4> bootROM {BootROMType::NONE};  // Bootstrap ROM's
     u16 startingAddress {0};                            // Bootstrap address
+    bool powerUpBootEnable {false};                     // Power up boot enable switch
 
 
     // This default constructor is required
