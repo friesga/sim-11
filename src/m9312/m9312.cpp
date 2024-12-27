@@ -30,7 +30,8 @@ void M9312::reset ()
 // vector indicates that no boot via the powerfail vector is in progress.
 bool M9312::responsible (BusAddress address)
 {
-    if (addressIsPowerfailVector (address) && powerUpViaVector_)
+    if (addressIsPowerfailVector (address) && powerUpViaVector_ &&
+            !bus_->BatteryPower ())
         return true;
     else
     {
