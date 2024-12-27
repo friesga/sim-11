@@ -32,27 +32,23 @@ bool M9312::responsible (BusAddress address)
     }
 }
 
-// This function returns the data at the specified address plus a configured 
-// offset from the ROM image (if present). The address is a byte address
-// and as the ROM images are defined as word arrays the byte address has to
-// be converted to a word address (by dividing it by two).
-//
-// The address offset is used to switch from a predefined address, i.e. 173000
-// for a boot ROM and 165000 for the console and diagnostic ROM, to a specific
-// ROM. With an address offset of e.g. 4 the processor starts at address
-// 173000 and the contents of the location 173004 are returned (the starting
-// address for a boot from RL0 without diagnostics). This address remains
-// applied while the processor is running code located in one of the ROMs.
+// This function returns the data at the specified address from the ROM
+// image (if present). The address is a byte address and as the ROM images
+// are defined as word arrays the byte address has to be converted to a
+// word address (by dividing it by two).
 //
 // If the system is powered up via the powerfailvector, no battery backup is
 // provided and the power-up-boot is enabled, reads from the powerfail vector
-// are taken care of by the M9312, resulting in a cold boot.
+// are taken care of by the M9312, resulting in a cold boot. In this case
+// the starting address is the address specified in the address offset
+// switch bank.
+// 
 StatusCode M9312::read (BusAddress busAddress, u16* data)
 {
     if (addressIsPowerfailVector (busAddress))
-        busAddress += 0173000;
+        busAddress += bootROMBaseAddress;
 
-    if (busAddress == 0173024)
+    if (busAddress == addressOffsetSwitchBankAddress)
         return readAddressOffsetSwitchBank (data);
 
     if (addressInDiagnosticROM (busAddress))

@@ -52,6 +52,7 @@ private:
     static const u16 bootROMSize = 64;
     static const u16 numberOfBootROMs = 4;
     static const array<u16, numberOfBootROMs> bootROMBaseAddresses;
+    static const u16 addressOffsetSwitchBankAddress = 0173024;
 
     // This function converts an address in the range 0173000 - 0173776
     // to a boot ROM number (starting from zero). Addresses in the range
