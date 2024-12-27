@@ -24,6 +24,17 @@ M9312::M9312 (Qbus* bus, shared_ptr<M9312Config> m9312Config)
 void M9312::reset ()
 {}
 
+// Automatic booting on power-up can be enabled or disabled using the power-up
+// boot enable switch (S1-2). If this switch is set to the OFF position, the
+// processor will execute its power-up routine normally, obtaining a new
+// program counter (PC) from memory location 024 and a new processor status
+// word (PSW) from location 026. When the switch is in the ON position during
+// a power-up, the processor will obtain its new PC and PSW from locations
+// 0773024 and 0773026 respectively. The address of the Offset Switch Bank
+// (S1-1 and S1-3 through S1-10) is 0773024 (0773224 if the processor traps
+// to 0224 on power-up).
+// Source: M9312 bootstrap/terminator module technical manual (EK-M9312-TM-003)
+// 
 // Ony if the first two reads to after a power-up are for the powerfail
 // vector and no battery backup is provided, and the power-up boot is enabled,
 // the M9312 "steals" the read from memory and returns the vector as provided
