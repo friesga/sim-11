@@ -465,6 +465,7 @@ set (GTEST_SRCS
     gtest/locationtest.cpp
     gtest/m9312/m9312configuratortest.cpp
     gtest/m9312/m9312test.cpp
+    gtest/m9312/m9312powerfailvectortest.cpp
     gtest/msv11configuratortest.cpp
     gtest/ms11pconfiguratortest.cpp
     gtest/operandlocationtest.cpp
