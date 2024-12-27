@@ -15,7 +15,8 @@ TEST (M9312Test, m93isResponsibleForCorrectAddresses)
         M9312Config::DiagROMType::_23_248F1,
         {M9312Config::BootROMType::_23_751A9, M9312Config::BootROMType::_23_752A9,
         M9312Config::BootROMType::_23_753A9, M9312Config::BootROMType::_23_755A9},
-        0
+        0,
+        true
     };
     
     shared_ptr<M9312Config> m9312ConfigPtr =
@@ -40,7 +41,8 @@ TEST (M9312Test, diagROMreadCorrectly)
         M9312Config::DiagROMType::_23_248F1,
         {M9312Config::BootROMType::_23_751A9, M9312Config::BootROMType::_23_752A9,
         M9312Config::BootROMType::_23_753A9, M9312Config::BootROMType::_23_755A9},
-        0
+        0,
+        true
     };
 
     shared_ptr<M9312Config> m9312ConfigPtr = make_shared<M9312Config> (config);
@@ -62,7 +64,8 @@ TEST (M9312Test, readOfEmptySocketReturnsError)
         M9312Config::DiagROMType::NONE,
         {M9312Config::BootROMType::_23_751A9, M9312Config::BootROMType::_23_752A9,
         M9312Config::BootROMType::_23_753A9, M9312Config::BootROMType::_23_755A9},
-        0
+        0,
+        true
     };
 
     shared_ptr<M9312Config> m9312ConfigPtr = make_shared<M9312Config> (config);
@@ -81,7 +84,8 @@ TEST (M9312Test, bootROMsreadCorrectly)
         M9312Config::DiagROMType::_23_248F1,
         {M9312Config::BootROMType::_23_751A9, M9312Config::BootROMType::_23_752A9,
         M9312Config::BootROMType::_23_753A9, M9312Config::BootROMType::_23_755A9},
-        0
+        0,
+        true
     };
 
     shared_ptr<M9312Config> m9312ConfigPtr = make_shared<M9312Config> (config);
@@ -114,7 +118,8 @@ TEST (M9312Test, romCannotBeWritten)
         M9312Config::DiagROMType::_23_248F1,
         {M9312Config::BootROMType::_23_751A9, M9312Config::BootROMType::_23_752A9,
         M9312Config::BootROMType::_23_753A9, M9312Config::BootROMType::_23_755A9},
-        0
+        0,
+        true
     };
 
     shared_ptr<M9312Config> m9312ConfigPtr = make_shared<M9312Config> (config);
@@ -134,7 +139,8 @@ TEST (M9312Test, addressOffsetSwitchBankCanBeRead)
         M9312Config::DiagROMType::_23_248F1,
         {M9312Config::BootROMType::_23_751A9, M9312Config::BootROMType::_23_752A9,
         M9312Config::BootROMType::_23_753A9, M9312Config::BootROMType::_23_755A9},
-        0165000
+        0165000,
+        true
     };
 
     shared_ptr<M9312Config> m9312ConfigPtr = make_shared<M9312Config> (config);

@@ -134,6 +134,7 @@ private:
     array<BootROMImage*, numberOfBootROMs> bootROM_ {nullptr};
     u16 addressOffset_ {0};
     u16 startingAddress_ {0};
+    bool powerUpBootEnable_ {false};
     bool powerUpViaVector_ {true};
 
     bool addressInDiagnosticROM (BusAddress address);

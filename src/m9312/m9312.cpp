@@ -14,6 +14,7 @@ M9312::M9312 (Qbus* bus, shared_ptr<M9312Config> m9312Config)
         bootROM_[socketNr] = bootROMImages_[+m9312Config->bootROM[socketNr]];
 
     startingAddress_ = m9312Config->startingAddress;
+    powerUpBootEnable_ = m9312Config->powerUpBootEnable;
 
     // Make sure the m9312 is notified of power-up's so it can "steal" the
     // powerfail vector if needed.
@@ -30,8 +31,8 @@ void M9312::reset ()
 // vector indicates that no boot via the powerfail vector is in progress.
 bool M9312::responsible (BusAddress address)
 {
-    if (addressIsPowerfailVector (address) && powerUpViaVector_ &&
-            !bus_->BatteryPower ())
+    if (powerUpBootEnable_ && addressIsPowerfailVector (address)
+            && powerUpViaVector_ && !bus_->BatteryPower ())
         return true;
     else
     {

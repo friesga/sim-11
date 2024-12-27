@@ -19,7 +19,8 @@ TEST (M9312PowerfailVectorTest, noBatteryBackup)
         M9312Config::DiagROMType::_23_248F1,
         {M9312Config::BootROMType::_23_751A9, M9312Config::BootROMType::_23_752A9,
         M9312Config::BootROMType::_23_753A9, M9312Config::BootROMType::_23_755A9},
-        0
+        0,
+        true
     };
 
     shared_ptr<M9312Config> m9312ConfigPtr = make_shared<M9312Config> (config);
@@ -42,7 +43,8 @@ TEST (M9312PowerfailVectorTest, batteryBackup)
         M9312Config::DiagROMType::_23_248F1,
         {M9312Config::BootROMType::_23_751A9, M9312Config::BootROMType::_23_752A9,
         M9312Config::BootROMType::_23_753A9, M9312Config::BootROMType::_23_755A9},
-        0
+        0,
+        true
     };
 
     shared_ptr<M9312Config> m9312ConfigPtr = make_shared<M9312Config> (config);
@@ -66,7 +68,8 @@ TEST (M9312PowerfailVectorTest, notFirstRead)
         M9312Config::DiagROMType::_23_248F1,
         {M9312Config::BootROMType::_23_751A9, M9312Config::BootROMType::_23_752A9,
         M9312Config::BootROMType::_23_753A9, M9312Config::BootROMType::_23_755A9},
-        0
+        0,
+        true
     };
 
     shared_ptr<M9312Config> m9312ConfigPtr = make_shared<M9312Config> (config);
@@ -89,7 +92,8 @@ TEST (M9312PowerfailVectorTest, afterPowerUp)
         M9312Config::DiagROMType::_23_248F1,
         {M9312Config::BootROMType::_23_751A9, M9312Config::BootROMType::_23_752A9,
         M9312Config::BootROMType::_23_753A9, M9312Config::BootROMType::_23_755A9},
-        0
+        0,
+        true
     };
 
     shared_ptr<M9312Config> m9312ConfigPtr = make_shared<M9312Config> (config);
@@ -112,4 +116,28 @@ TEST (M9312PowerfailVectorTest, afterPowerUp)
 
     EXPECT_TRUE (m9312.responsible (024));
     EXPECT_TRUE (m9312.responsible (026));
+}
+
+// Verify the M9312 is not responsible for the powerfail vector when the 
+// power-up-boot-enable option is set false
+TEST (M9312PowerfailVectorTest, powerUpBootEnableFalse)
+{
+    M9312Config config =
+    {
+        M9312Config::DiagROMType::_23_248F1,
+        {M9312Config::BootROMType::_23_751A9, M9312Config::BootROMType::_23_752A9,
+        M9312Config::BootROMType::_23_753A9, M9312Config::BootROMType::_23_755A9},
+        0,
+        false
+    };
+
+    shared_ptr<M9312Config> m9312ConfigPtr = make_shared<M9312Config> (config);
+
+    Qbus bus;
+    M9312 m9312 (&bus, m9312ConfigPtr);
+
+    bus.BatteryPower ().set (true);
+
+    EXPECT_FALSE (m9312.responsible (024));
+    EXPECT_FALSE (m9312.responsible (026));
 }

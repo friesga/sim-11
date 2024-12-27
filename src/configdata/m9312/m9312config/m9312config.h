@@ -72,12 +72,14 @@ struct M9312Config : public DeviceType<BusType::Unibus>
 
     // Definition of a constructor to easily initialize a M932Config object
     // in unit tests.
-    M9312Config (DiagROMType diagROM, array<BootROMType, 4> bootROMS, u16 startAddress)
+    M9312Config (DiagROMType diagROM, array<BootROMType, 4> bootROMS,
+        u16 startAddress, bool powerUpBootEnable)
         :
         DeviceType (),
         diagnosticROM {diagROM},
         bootROM {bootROMS},
-        startingAddress {startAddress}
+        startingAddress {startAddress},
+        powerUpBootEnable {powerUpBootEnable}
     {}
 };
 
