@@ -17,6 +17,7 @@
 #include "kd/kdf11/kdf11_a/kdf11_a.h"
 #include "kd/kdf11/kdf11_b/kdf11_b.h"
 #include "kd/kdf11/kdf11_u/kdf11_u.h"
+#include "kt24/kt24.h"
 #include "m9312/m9312.h"
 #include "qbus/qbus.h"
 #include "console/console.h"
@@ -45,6 +46,7 @@ class PDP_11
 	PDP11Processor *processor_;
 	vector<MemoryDevice*> memoryDevices_;
 	vector<BusDevice*> busDevices_;
+	BusDevice* kt24_ {nullptr};
 	BusDevice* m9312_ {nullptr};
 	unique_ptr<BA11_N> ba11_n_;
 	unique_ptr<BA11_L> ba11_l_;

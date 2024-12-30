@@ -4,10 +4,13 @@
 #include "unibusmap.h"
 #include "qbus/qbus.h"
 #include "abstractbusdevice/abstractbusdevice.h"
+#include "configdata/kt24/kt24config/kt24config.h"
 
 #include <array>
+#include <memory>
 
 using std::array;
+using std::shared_ptr;
 
 // The KT24 is the Unibus map option for the PDP-11/24. It provides standard
 // Unibus map functionality, extended with M9312-compatible functions and ROM
@@ -17,6 +20,7 @@ class KT24 : public UnibusMap
 {
 public:
 	KT24 (Qbus* bus);
+	KT24 (Qbus* bus, shared_ptr<KT24Config> kt24Config);
 
     // Functions required for the BusDevice interface
 	StatusCode read (BusAddress address, u16* destination);

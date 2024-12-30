@@ -201,6 +201,7 @@ set (CONFIGURATOR_SRCS
     src/configdata/kdf11/kdf11_u/kdf11_uconfig/kdf11_uconfig.cpp
     src/configdata/kdf11/kdf11_u/kdf11_uprocessor/kdf11_uprocessor.cpp
     src/configdata/kdf11/slu/sluprocessor/sluprocessor.cpp
+    src/configdata/kt24/kt24processor/kt24processor.cpp
     src/configdata/m9312/m9312processor/m9312processor.cpp
     src/configdata/ms11pprocessor/ms11pprocessor.cpp
     src/configdata/consistencychecker/consistencychecker.cpp
@@ -468,6 +469,7 @@ set (GTEST_SRCS
     gtest/kdf11_u/kdf11_uconfiguratortest.cpp
     gtest/kdf11_u/kdf11_udisplayregistertest.cpp
     gtest/locationtest.cpp
+    gtest/kt24/kt24configuratortest.cpp
     gtest/kt24/kt24test.cpp
     gtest/m9312/m9312configuratortest.cpp
     gtest/m9312/m9312test.cpp

@@ -7,6 +7,11 @@ KT24::KT24 (Qbus* bus)
     bus_ {bus}
 {}
 
+KT24::KT24 (Qbus* bus, shared_ptr<KT24Config> kt24Config)
+    :
+    bus_ {bus}
+{}
+
 void KT24::enable ()
 {
     enabled_ = true;

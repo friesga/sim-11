@@ -9,11 +9,15 @@
 // with slot[0], ROW 9 with slot [8].
 void PDP_11::installModules ()
 {
-    // Install a possibly present M9312 as the first device on the bus
-    // so it has the highest priority for address resolution on the
-    // bus.
+    // Install a possibly present M9312 or KT24 as the first device on the bus
+    // so it has the highest priority for address resolution on the bus.
+    // A Unibus configuration will contain either a M9312 or a KT24 but not
+    // both
     if (m9312_ != nullptr)
         bus_.installModule (m9312_);
+
+    if (kt24_ != nullptr)
+        bus_.installModule (kt24_);
     
     for (auto device : memoryDevices_)
         bus_.installModule (device);
