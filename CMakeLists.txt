@@ -282,6 +282,9 @@ set (TRACE_SRCS
     src/trace/memorydumprecord/ostreaminsertoperator.cpp
     src/trace/ktf11_arecord/operator.cpp)
 
+    set (KT24_SRCS
+        src/kt24/kt24.cpp)
+
 # Handling of the console is system-specific
 if (MSVC)
 set (CONSOLE_SRCS
@@ -341,6 +344,7 @@ set (SIM11_SRCS
     ${FLOAT_SRCS}
     ${CMDLINEOPTIONS_SRCS}
     ${CONFIGURATOR_SRCS}
+    ${KT24_SRCS}
     src/interruptrequest/interruptrequest.cpp)
 
 # Add source to this project's executable.
@@ -464,6 +468,7 @@ set (GTEST_SRCS
     gtest/kdf11_u/kdf11_uconfiguratortest.cpp
     gtest/kdf11_u/kdf11_udisplayregistertest.cpp
     gtest/locationtest.cpp
+    gtest/kt24/kt24test.cpp
     gtest/m9312/m9312configuratortest.cpp
     gtest/m9312/m9312test.cpp
     gtest/m9312/m9312powerfailvectortest.cpp
@@ -516,10 +521,12 @@ set (SIM11_TEST_SRCS
     ${BDV11_SRCS}
     ${M9312_SRCS}
     src/msv11d/msv11d.cpp
+    src/ms11p/ms11p.cpp
     src/dl11/uart/uart.cpp
     ${CONSOLE_SRCS}
     src/signal/signal.cpp
     ${TRACE_SRCS}
+    ${KT24_SRCS}
     src/logger/logger.cpp
     src/logger/data.cpp)
 
