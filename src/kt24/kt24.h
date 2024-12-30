@@ -60,6 +60,10 @@ private:
 		{ return (address % 4) == 0;}
 	constexpr bool highMappingRegister (u16 address) const
 		{ return (address % 4) == 2; }
+
+	StatusCode mappedWrite (BusAddress address, u16 value);
+	StatusCode writePhysical (u32 physicalAddress, u16 value);
+	u32 physicalAddressFrom18BitBusAddress (BusAddress busAddress);
 };
 
 #endif // _KT24_H_

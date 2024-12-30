@@ -31,9 +31,6 @@ TEST (KT24, writePassthrough)
 
 // Verify that if the KT24 is disabled data is read from the
 // lower 18-bit address space of the given 22-bit address
-// 
-// ToDo: Extend tests
-//
 TEST (KT24, readPassthrough)
 {
     Qbus bus;
@@ -44,6 +41,8 @@ TEST (KT24, readPassthrough)
 
     // Install devices on the bus
     bus.installModule (&ms11p);
+
+    // KT24 is disabled by default
 
     EXPECT_EQ (ms11p.writeWord (0, dataWritten), StatusCode::OK);
     EXPECT_EQ (kt24.dmaRead (0, &dataRead), StatusCode::OK);
@@ -80,7 +79,7 @@ TEST (KT24, kt24RegistersAreIntizalised)
     EXPECT_EQ (value, 0);
 }
 
-TEST (KT24, addressIsMapped)
+TEST (KT24, dmaWriteAddressIsMapped)
 {
     struct TestCase
     {
@@ -126,4 +125,78 @@ TEST (KT24, addressIsMapped)
         EXPECT_EQ (ms11p.read (testCase.physicalAddress, &dataRead), StatusCode::OK);
         EXPECT_EQ (dataWritten, dataRead);
     }
+}
+
+/*
+TEST (KT24, dmaReadAddressIsMapped)
+{
+    struct TestCase
+    {
+        u16 mapRegisterLowAddress {0};
+        u16 mapRegisterLowContents {0};
+        u16 mapRegisterHighAddress {0};
+        u16 mapRegisterHighContents {0};
+        BusAddress _18BitAddress {0};
+        u32 physicalAddress {0};
+    };
+
+    vector<TestCase> testData =
+    {
+        {0170200, 0, 0170202, 0, BusAddress (0, BusAddress::Width::_18Bit), 0},
+        {0170200, 0200, 0170202, 0, BusAddress (0, BusAddress::Width::_18Bit), 0200},
+        {0170200, 0200, 0170202, 0, BusAddress (017776, BusAddress::Width::_18Bit), 020176},
+        {0170200, 0200, 0170202, 0, BusAddress (020000, BusAddress::Width::_18Bit), 0},
+        {0170200, 0, 0170202, 1, BusAddress (0, BusAddress::Width::_18Bit), 000200000},
+        {0170200, 0, 0170202, 077, BusAddress (017776, BusAddress::Width::_18Bit), 017600000},
+        {0170374, 0, 0170376, 0, BusAddress (0740000, BusAddress::Width::_18Bit), 0},
+        {0170374, 0, 0170376, 0, BusAddress (0757776, BusAddress::Width::_18Bit), 017776},
+    };
+
+    Qbus bus;
+    KT24 kt24 (&bus);
+    MS11P ms11p (&bus);
+    u16 dataWritten {0177777};
+    u16 dataRead {0};
+
+    // Install devices on the bus
+    bus.installModule (&ms11p);
+
+    kt24.enable ();
+
+    for (TestCase& testCase : testData)
+    {
+        kt24.writeWord (testCase.mapRegisterLowAddress,
+            testCase.mapRegisterLowContents);
+        kt24.writeWord (testCase.mapRegisterHighAddress,
+            testCase.mapRegisterHighContents);
+
+        EXPECT_EQ (ms11p.writeWord (testCase.physicalAddress, dataWritten), StatusCode::OK);
+        EXPECT_EQ (kt24.dmaRead (testCase._18BitAddress, &dataRead), StatusCode::OK);
+
+        EXPECT_EQ (dataRead, dataWritten);
+    }
+}
+*/
+
+// Bit 0 of the low mapping register is ignored as Qbus::writeWord() and
+// Qbus::read() prevent writes to and reads from odd addresses.
+TEST (KT24, lowMappingRegisterBit0IsIgnored)
+{
+    Qbus bus;
+    KT24 kt24 (&bus);
+    MS11P ms11p (&bus);
+    u16 dataWritten {0177777};
+    u16 dataRead {0};
+
+    // Install devices on the bus
+    bus.installModule (&ms11p);
+
+    kt24.enable ();
+
+    kt24.writeWord (0170200, 0);
+    kt24.writeWord (0170200, 1);
+
+    EXPECT_EQ (kt24.dmaWrite (0, dataWritten), StatusCode::OK);
+    EXPECT_EQ (ms11p.read (0, &dataRead), StatusCode::OK);
+    EXPECT_EQ (dataWritten, dataRead);
 }

@@ -86,6 +86,9 @@ void KT24::reset ()
 // selected map register is added to the 12-bit offset in the Unibus address
 // to form the physical address. (EK-11024-TM-003)
 //
+// Bit 0 of the low mapping register is ignored as Qbus::writeWord() and
+// Qbus::read() prevent writes to and reads from odd addresses.
+//
 StatusCode KT24::dmaRead (BusAddress address, u16* destination)
 {
     CondData<u16> data = bus_->read (address);
@@ -100,30 +103,43 @@ StatusCode KT24::dmaRead (BusAddress address, u16* destination)
 
 StatusCode KT24::dmaWrite (BusAddress address, u16 value)
 {
-    // When the KT24 is disabled, the physical address equals the given
-    // bus address.
-    u32 physicalAddress = address;
+    return enabled_ ? mappedWrite (address, value) :
+        writePhysical (address, value);
+}
 
-    if (enabled_)
-    {
-        size_t registerIndex = indexFrom18BitBusAddress (address.registerAddress ());
-        // std::cout << "address.registerAddress(): " << address.registerAddress () << '\n';
-        // std::cout << "registerIndex: " << registerIndex << '\n';
+StatusCode KT24::mappedWrite (BusAddress address, u16 value)
+{
+    return writePhysical (physicalAddressFrom18BitBusAddress (address),
+        value);
+}
 
-        u16 low = mappingRegisters_[registerIndex].low;
-        u16 high = mappingRegisters_[registerIndex].high;
+// StatusCode KT24::mappedRead (BusAddress address, u16 value)
+// {
+// }
 
-        // std::cout << "low: " << low << '\n';
-        // std::cout << "high: " << high << '\n';
-
-        physicalAddress = ((high << 16) | low) +
-            (static_cast<u16> (address) & 017777);
-    }
-
-    // std::cout << "physicalAddress: " << physicalAddress << '\n';
-
+StatusCode KT24::writePhysical (u32 physicalAddress, u16 value)
+{
     if (bus_->writeWord (physicalAddress, value))
         return StatusCode::OK;
 
     return StatusCode::NonExistingMemory;
+}
+
+// StatusCode KT24::readPhysical (u32 physicalAddress, u16* destination)
+// {}
+
+u32 KT24::physicalAddressFrom18BitBusAddress (BusAddress busAddress)
+{
+    size_t registerIndex = 
+        indexFrom18BitBusAddress (busAddress.registerAddress ());
+    // std::cout << "address.registerAddress(): " << address.registerAddress () << '\n';
+    // std::cout << "registerIndex: " << registerIndex << '\n';
+
+    u16 low = mappingRegisters_[registerIndex].low;
+    u16 high = mappingRegisters_[registerIndex].high;
+
+    // std::cout << "low: " << low << '\n';
+    // std::cout << "high: " << high << '\n';
+
+    return ((high << 16) | low) + (static_cast<u16> (busAddress) & 017777);
 }
