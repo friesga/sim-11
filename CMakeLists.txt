@@ -473,7 +473,8 @@ set (GTEST_SRCS
     gtest/m9312/m9312test.cpp
     gtest/m9312/m9312powerfailvectortest.cpp
     gtest/msv11configuratortest.cpp
-    gtest/ms11pconfiguratortest.cpp
+    gtest/ms11p/ms11pconfiguratortest.cpp
+    gtest/ms11p/ms11ptest.cpp
     gtest/operandlocationtest.cpp
     gtest/qbusinstalltest.cpp
     gtest/dummycpu/dummymmu/dummymmu.cpp
