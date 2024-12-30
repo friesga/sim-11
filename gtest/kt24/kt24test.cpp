@@ -197,3 +197,30 @@ TEST (KT24, lowMappingRegisterBit0IsIgnored)
     EXPECT_EQ (ms11p.read (0, &dataRead), StatusCode::OK);
     EXPECT_EQ (dataWritten, dataRead);
 }
+
+// Verify the I/O page cannot be mapped to a memory address
+TEST (KT24, mappingRegister32IsUnused)
+{
+    Qbus bus;
+    KT24 kt24 (&bus);
+    MS11P ms11p (&bus);
+    u16 dataWritten {0177777};
+    u16 dataRead {0};
+
+    // Install devices on the bus
+    bus.installModule (&ms11p);
+
+    kt24.enable ();
+
+    kt24.writeWord (0170374, 0);
+    kt24.writeWord (0170376, 0);
+
+    // Try to map the I/O page to memory address 0. The write should fail
+    // as no device is responsible for this address
+    EXPECT_EQ (kt24.dmaWrite (BusAddress (0760000, BusAddress::Width::_18Bit),
+        dataWritten), StatusCode::NonExistingMemory);
+    EXPECT_EQ (ms11p.read (0, &dataRead), StatusCode::OK);
+
+    // The memory address must not have been changed
+    EXPECT_EQ (dataRead, 0);
+}

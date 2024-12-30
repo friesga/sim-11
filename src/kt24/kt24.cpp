@@ -88,16 +88,23 @@ void KT24::reset ()
 //
 // Bit 0 of the low mapping register is ignored as Qbus::writeWord() and
 // Qbus::read() prevent writes to and reads from odd addresses.
+// 
+// It should be noted that the last mapping register (addresses 017770374 and
+// 017770376) can be read or written, but cannot be used to map Unibus
+// addresses because it would be used by addresses in the range of the
+// I/O page (017760000 - 017777777).
 //
 StatusCode KT24::dmaRead (BusAddress address, u16* destination)
 {
-    return enabled_ ? mappedRead (address, destination) :
+    return enabled_ && !address.isInIOpage () ? 
+        mappedRead (address, destination) :
         readPhysical (address, destination);
 }
 
 StatusCode KT24::dmaWrite (BusAddress address, u16 value)
 {
-    return enabled_ ? mappedWrite (address, value) :
+    return enabled_  && !address.isInIOpage () ?
+        mappedWrite (address, value) :
         writePhysical (address, value);
 }
 
