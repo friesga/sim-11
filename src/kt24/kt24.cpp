@@ -137,7 +137,7 @@ u32 KT24::physicalAddressFrom18BitBusAddress (BusAddress busAddress)
 {
     size_t registerIndex = 
         indexFrom18BitBusAddress (busAddress.registerAddress ());
-    // std::cout << "address.registerAddress(): " << address.registerAddress () << '\n';
+    // std::cout << "address.registerAddress(): " << busAddress.registerAddress () << '\n';
     // std::cout << "registerIndex: " << registerIndex << '\n';
 
     u16 low = mappingRegisters_[registerIndex].low;
@@ -145,6 +145,9 @@ u32 KT24::physicalAddressFrom18BitBusAddress (BusAddress busAddress)
 
     // std::cout << "low: " << low << '\n';
     // std::cout << "high: " << high << '\n';
+
+    //std::cout << "physicalAddress: " << 
+    //    ((high << 16) | low) + (static_cast<u16> (busAddress) & 017777) << '\n';
 
     return ((high << 16) | low) + (static_cast<u16> (busAddress) & 017777);
 }
