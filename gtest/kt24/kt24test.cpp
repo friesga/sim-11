@@ -127,7 +127,6 @@ TEST (KT24, dmaWriteAddressIsMapped)
     }
 }
 
-/*
 TEST (KT24, dmaReadAddressIsMapped)
 {
     struct TestCase
@@ -142,14 +141,15 @@ TEST (KT24, dmaReadAddressIsMapped)
 
     vector<TestCase> testData =
     {
-        {0170200, 0, 0170202, 0, BusAddress (0, BusAddress::Width::_18Bit), 0},
-        {0170200, 0200, 0170202, 0, BusAddress (0, BusAddress::Width::_18Bit), 0200},
-        {0170200, 0200, 0170202, 0, BusAddress (017776, BusAddress::Width::_18Bit), 020176},
-        {0170200, 0200, 0170202, 0, BusAddress (020000, BusAddress::Width::_18Bit), 0},
-        {0170200, 0, 0170202, 1, BusAddress (0, BusAddress::Width::_18Bit), 000200000},
-        {0170200, 0, 0170202, 077, BusAddress (017776, BusAddress::Width::_18Bit), 017600000},
-        {0170374, 0, 0170376, 0, BusAddress (0740000, BusAddress::Width::_18Bit), 0},
-        {0170374, 0, 0170376, 0, BusAddress (0757776, BusAddress::Width::_18Bit), 017776},
+        // {0170200, 0, 0170202, 0, BusAddress (0, BusAddress::Width::_18Bit), 0},
+        // {0170200, 0200, 0170202, 0, BusAddress (0, BusAddress::Width::_18Bit), 0200},
+        // {0170200, 0200, 0170202, 0, BusAddress (017776, BusAddress::Width::_18Bit), 020176},
+        // {0170200, 0200, 0170202, 0, BusAddress (020000, BusAddress::Width::_18Bit), 0},
+        // {0170200, 0, 0170202, 1, BusAddress (0, BusAddress::Width::_18Bit), 000200000},
+        {0170200, 0, 0170202, 077, BusAddress (017776, BusAddress::Width::_18Bit),
+            BusAddress (017600000, BusAddress::Width::_18Bit)},
+        // {0170374, 0, 0170376, 0, BusAddress (0740000, BusAddress::Width::_18Bit), 0},
+        // {0170374, 0, 0170376, 0, BusAddress (0757776, BusAddress::Width::_18Bit), 017776},
     };
 
     Qbus bus;
@@ -176,7 +176,6 @@ TEST (KT24, dmaReadAddressIsMapped)
         EXPECT_EQ (dataRead, dataWritten);
     }
 }
-*/
 
 // Bit 0 of the low mapping register is ignored as Qbus::writeWord() and
 // Qbus::read() prevent writes to and reads from odd addresses.

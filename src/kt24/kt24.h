@@ -61,7 +61,9 @@ private:
 	constexpr bool highMappingRegister (u16 address) const
 		{ return (address % 4) == 2; }
 
+	StatusCode mappedRead (BusAddress address, u16* destination);
 	StatusCode mappedWrite (BusAddress address, u16 value);
+	StatusCode readPhysical (u32 physicalAddress, u16* destination);
 	StatusCode writePhysical (u32 physicalAddress, u16 value);
 	u32 physicalAddressFrom18BitBusAddress (BusAddress busAddress);
 };

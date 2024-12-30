@@ -91,14 +91,8 @@ void KT24::reset ()
 //
 StatusCode KT24::dmaRead (BusAddress address, u16* destination)
 {
-    CondData<u16> data = bus_->read (address);
-    if (data.hasValue ())
-    {
-        *destination = data.value ();
-        return StatusCode::OK;
-    }
-
-    return StatusCode::NonExistingMemory;
+    return enabled_ ? mappedRead (address, destination) :
+        readPhysical (address, destination);
 }
 
 StatusCode KT24::dmaWrite (BusAddress address, u16 value)
@@ -113,9 +107,11 @@ StatusCode KT24::mappedWrite (BusAddress address, u16 value)
         value);
 }
 
-// StatusCode KT24::mappedRead (BusAddress address, u16 value)
-// {
-// }
+StatusCode KT24::mappedRead (BusAddress address, u16* destination)
+{
+    return readPhysical (physicalAddressFrom18BitBusAddress (address),
+        destination);
+}
 
 StatusCode KT24::writePhysical (u32 physicalAddress, u16 value)
 {
@@ -125,8 +121,17 @@ StatusCode KT24::writePhysical (u32 physicalAddress, u16 value)
     return StatusCode::NonExistingMemory;
 }
 
-// StatusCode KT24::readPhysical (u32 physicalAddress, u16* destination)
-// {}
+StatusCode KT24::readPhysical (u32 physicalAddress, u16* destination)
+{
+    CondData<u16> data = bus_->read (physicalAddress);
+    if (data.hasValue ())
+    {
+        *destination = data.value ();
+        return StatusCode::OK;
+    }
+
+    return StatusCode::NonExistingMemory;
+}
 
 u32 KT24::physicalAddressFrom18BitBusAddress (BusAddress busAddress)
 {
