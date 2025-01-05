@@ -41,9 +41,9 @@ public:
 	UART (Qbus* bus, UARTTypeConfig const & uartTypeConfig,
 		UARTConfig& uartConfig, u16 channelNr, ConsoleConfig consoleConfig);
 	~UART ();
-	StatusCode read (BusAddress busAddress, u16 *destAddress);
-	StatusCode writeWord (BusAddress busAddress, u16 value);
-	bool responsible (BusAddress address);
+	StatusCode read (BusAddress<> busAddress, u16 *destAddress);
+	StatusCode writeWord (BusAddress<> busAddress, u16 value);
+	bool responsible (BusAddress<> address);
 	void reset ();
 
 private:

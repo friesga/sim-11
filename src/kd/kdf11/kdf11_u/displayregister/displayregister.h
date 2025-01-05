@@ -24,9 +24,9 @@ class DisplayRegister : public AbstractBusDevice
 {
 public:
 	// Functions required for the BusDevice interface.
-	StatusCode read (BusAddress address, u16* destination);
-	StatusCode writeWord (BusAddress address, u16 value);
-	bool responsible (BusAddress address);
+	StatusCode read (BusAddress<> address, u16* destination);
+	StatusCode writeWord (BusAddress<> address, u16 value);
+	bool responsible (BusAddress<> address);
 	void reset ();
 
 private:

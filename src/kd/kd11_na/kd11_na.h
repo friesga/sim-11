@@ -33,13 +33,13 @@ public:
     // The KD11_NA is a PDP11Peripheral without registers so the read and write 
     // register functions are dummies. The reset function is called on a
     // bus reset and has no function for the KD11_NA either.
-    StatusCode read (BusAddress address, u16* destination) override
+    StatusCode read (BusAddress<> address, u16* destination) override
         { return StatusCode::FunctionNotImplemented; };
-    StatusCode writeWord (BusAddress address, u16 value) override
+    StatusCode writeWord (BusAddress<> address, u16 value) override
         { return StatusCode::FunctionNotImplemented; };
-    StatusCode writeByte (BusAddress address, u8 value) override
+    StatusCode writeByte (BusAddress<> address, u8 value) override
         { return StatusCode::FunctionNotImplemented; };
-    bool responsible (BusAddress address) override
+    bool responsible (BusAddress<> address) override
         { return false; }
     void reset () override {};
 

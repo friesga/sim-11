@@ -12,7 +12,7 @@ OperatorConsoleAccess::OperatorConsoleAccess (Qbus* bus)
 // lead to an error transition in the command parser.
 CondData<u16> OperatorConsoleAccess::readDLV11J (u16 address)
 {
-    return bus_->read (address);
+    return bus_->read (BusAddress<16> (address));
 }
 
 // Determine if the DLV11J has a character available to be read
@@ -46,5 +46,5 @@ void OperatorConsoleAccess::write (u8 c)
     while (!transmitReady ())
         SimulatorClock::forwardClock (microseconds (50));
 
-    bus_->writeWord (0177566, static_cast<u8> (c));
+    bus_->writeWord (BusAddress<16> (0177566), static_cast<u8> (c));
 }

@@ -17,8 +17,8 @@
 class UnibusMap : public BusDevice
 {
 public:
-	virtual StatusCode dmaRead (BusAddress address, u16* destination) = 0;
-	virtual StatusCode dmaWrite (BusAddress address, u16 value) = 0;
+	virtual StatusCode dmaRead (BusAddress<> address, u16* destination) = 0;
+	virtual StatusCode dmaWrite (BusAddress<> address, u16 value) = 0;
 	virtual void reset () = 0;
 	virtual ~UnibusMap () {};
 };

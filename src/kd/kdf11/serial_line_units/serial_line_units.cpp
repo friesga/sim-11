@@ -19,7 +19,7 @@ SerialLineUnits::SerialLineUnits (Qbus *bus,
     bus->BINIT().subscribe (bind (&SerialLineUnits::BINITReceiver, this, _1));
 }
 
-StatusCode SerialLineUnits::read (BusAddress address, u16 *destination)
+StatusCode SerialLineUnits::read (BusAddress<> address, u16 *destination)
 {
     auto slu = find_if (uarts_, [address] (auto &uart)
         {return uart->responsible (address);} );
@@ -27,14 +27,14 @@ StatusCode SerialLineUnits::read (BusAddress address, u16 *destination)
 
 }
 
-StatusCode SerialLineUnits::writeWord (BusAddress address, u16 value)
+StatusCode SerialLineUnits::writeWord (BusAddress<> address, u16 value)
 {
     auto slu = find_if (uarts_, [address] (auto &uart)
         {return uart->responsible (address);} );
     return (*slu)->writeWord (address, value);
 }
 
-bool SerialLineUnits::responsible (BusAddress address)
+bool SerialLineUnits::responsible (BusAddress<> address)
 {
     return uarts_[0]->responsible (address) || uarts_[1]->responsible (address);
 }

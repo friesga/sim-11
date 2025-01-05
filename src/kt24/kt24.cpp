@@ -22,7 +22,7 @@ void KT24::disable ()
     enabled_ = false;
 }
 
-StatusCode KT24::read (BusAddress address, u16* destination)
+StatusCode KT24::read (BusAddress<> address, u16* destination)
 {
     u16 registerAddress= address.registerAddress ();
 
@@ -36,7 +36,7 @@ StatusCode KT24::read (BusAddress address, u16* destination)
     return StatusCode::OK;
 }
 
-StatusCode KT24::writeWord (BusAddress address, u16 value)
+StatusCode KT24::writeWord (BusAddress<> address, u16 value)
 {
     u16 registerAddress= address.registerAddress ();
 
@@ -48,7 +48,7 @@ StatusCode KT24::writeWord (BusAddress address, u16 value)
     return StatusCode::OK;
 }
 
-StatusCode KT24::writeByte (BusAddress address, u8 value)
+StatusCode KT24::writeByte (BusAddress<> address, u8 value)
 {
     BusAddress wordAddress = address & 0xFFFFFFFE;
     u16 tmp;
@@ -61,7 +61,7 @@ StatusCode KT24::writeByte (BusAddress address, u8 value)
     return writeWord (wordAddress, tmp);
 }
 
-bool KT24::responsible (BusAddress address)
+bool KT24::responsible (BusAddress<> address)
 {
     return address.registerAddress () >= mappingRegistersBaseAddress &&
         address.registerAddress () < mappingRegistersBaseAddress + (mappingRegisters_.size () * 4);
@@ -99,27 +99,27 @@ void KT24::reset ()
 // addresses because it would be used by addresses in the range of the
 // I/O page (017760000 - 017777777).
 //
-StatusCode KT24::dmaRead (BusAddress address, u16* destination)
+StatusCode KT24::dmaRead (BusAddress<> address, u16* destination)
 {
     return enabled_ && !address.isInIOpage () ? 
         mappedRead (address, destination) :
         readPhysical (address, destination);
 }
 
-StatusCode KT24::dmaWrite (BusAddress address, u16 value)
+StatusCode KT24::dmaWrite (BusAddress<> address, u16 value)
 {
     return enabled_  && !address.isInIOpage () ?
         mappedWrite (address, value) :
         writePhysical (address, value);
 }
 
-StatusCode KT24::mappedWrite (BusAddress address, u16 value)
+StatusCode KT24::mappedWrite (BusAddress<> address, u16 value)
 {
     return writePhysical (physicalAddressFrom18BitBusAddress (address),
         value);
 }
 
-StatusCode KT24::mappedRead (BusAddress address, u16* destination)
+StatusCode KT24::mappedRead (BusAddress<> address, u16* destination)
 {
     return readPhysical (physicalAddressFrom18BitBusAddress (address),
         destination);
@@ -145,7 +145,7 @@ StatusCode KT24::readPhysical (u32 physicalAddress, u16* destination)
     return StatusCode::NonExistingMemory;
 }
 
-u32 KT24::physicalAddressFrom18BitBusAddress (BusAddress busAddress)
+u32 KT24::physicalAddressFrom18BitBusAddress (BusAddress<> busAddress)
 {
     size_t registerIndex = 
         indexFrom18BitBusAddress (busAddress.registerAddress ());

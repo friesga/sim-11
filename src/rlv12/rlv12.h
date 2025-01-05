@@ -104,10 +104,10 @@ public:
 
     // Required functions
     void reset () override;
-    bool responsible (BusAddress addr) override;
-    StatusCode read (BusAddress busAddress, u16* data) override;
-    StatusCode writeByte (BusAddress busAddress, u8 data) override;
-    StatusCode writeWord (BusAddress busAddress, u16 data) override;
+    bool responsible (BusAddress<> addr) override;
+    StatusCode read (BusAddress<> busAddress, u16* data) override;
+    StatusCode writeByte (BusAddress<> busAddress, u8 data) override;
+    StatusCode writeWord (BusAddress<> busAddress, u16 data) override;
 
     // Declare the signal receivers
 	void BINITReceiver (bool signalValue);
@@ -119,7 +119,7 @@ public:
     // Functions to set and get memory adresses consistently for
     // 16-, 18- and 22-bit systems
     void memAddrToRegs (u32 memoryAddress);
-    BusAddress memAddrFromRegs ();
+    BusAddress<> memAddrFromRegs ();
     void updateBAE ();
     u16 rlcsPlusDriveStatus (RL01_02 &unit);
     constexpr u16 getBA16BA17 (u16 csr_);

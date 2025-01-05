@@ -81,7 +81,7 @@ void UART::reset ()
 	trace.dlv11 (DLV11RecordType::DLV11_RESET, channelNr_, rcsr);
 }
 
-bool UART::responsible (BusAddress address)
+bool UART::responsible (BusAddress<> address)
 {
 	return enabled_ &&
 		address.registerAddress () >= baseAddress &&
@@ -90,7 +90,7 @@ bool UART::responsible (BusAddress address)
 
 // This function allows the host system to read a word from one of the
 // UART's registers.
-StatusCode UART::read (BusAddress busAddress, u16 *destAddress)
+StatusCode UART::read (BusAddress<> busAddress, u16 *destAddress)
 {
 	lock_guard<mutex> lock {registerAccessMutex_};
 
@@ -148,7 +148,7 @@ void UART::readRBUF (u16 *destAddress)
 // 
 // Each of these functions therefore has to lock the registerAccessMutex_.
 //
-StatusCode UART::writeWord (BusAddress busAddress, u16 value)
+StatusCode UART::writeWord (BusAddress<> busAddress, u16 value)
 {
 	lock_guard<mutex> lock {registerAccessMutex_};
 

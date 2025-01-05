@@ -6,7 +6,7 @@
 #include "basicregister/readonlyregister.h"
 #include "trace/trace.h"
 
-Register* KTF11_A::registerPointer (BusAddress busAddress)
+Register* KTF11_A::registerPointer (BusAddress<> busAddress)
 {
     switch (busAddress.registerAddress ())
     {
@@ -58,7 +58,7 @@ Register* KTF11_A::registerPointer (BusAddress busAddress)
 
 // Return the contents of the given registers at the given destination
 // address
-StatusCode KTF11_A::read (BusAddress address, u16 *destination)
+StatusCode KTF11_A::read (BusAddress<> address, u16 *destination)
 {
     Register* regPtr = registerPointer (address);
     if (regPtr != nullptr)
@@ -70,7 +70,7 @@ StatusCode KTF11_A::read (BusAddress address, u16 *destination)
     return StatusCode::NonExistingMemory;
 }
 
-StatusCode KTF11_A::writeWord (BusAddress address, u16 value)
+StatusCode KTF11_A::writeWord (BusAddress<> address, u16 value)
 {
     Register* regPtr = registerPointer (address);
     if (regPtr != nullptr)
@@ -83,7 +83,7 @@ StatusCode KTF11_A::writeWord (BusAddress address, u16 value)
     return StatusCode::NonExistingMemory;
 }
 
-bool KTF11_A::responsible (BusAddress address)
+bool KTF11_A::responsible (BusAddress<> address)
 {
     return registerPointer (address) != nullptr;
 }

@@ -131,9 +131,9 @@ namespace rxv21
 		RXV21 (Qbus *bus);
 		RXV21 (Qbus* bus, shared_ptr<RXV21Config> rxConfig);
 		~RXV21 ();
-		StatusCode read (BusAddress address, u16 *destAddress) override;
-		StatusCode writeWord (BusAddress address, u16 value) override;
-		bool responsible (BusAddress address) override;
+		StatusCode read (BusAddress<> address, u16 *destAddress) override;
+		StatusCode writeWord (BusAddress<> address, u16 value) override;
+		bool responsible (BusAddress<> address) override;
 		void reset ();
 
 		// Declare the signal receivers

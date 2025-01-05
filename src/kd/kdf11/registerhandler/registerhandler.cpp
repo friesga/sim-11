@@ -5,7 +5,7 @@ RegisterHandler::RegisterHandler (vector<BusDevice*> cpuModules)
     cpuModules_ {cpuModules}
 {}
 
-StatusCode RegisterHandler::read (BusAddress address, u16* destination)
+StatusCode RegisterHandler::read (BusAddress<> address, u16* destination)
 {
     for (BusDevice* module : cpuModules_)
         if (module->responsible (address))
@@ -14,7 +14,7 @@ StatusCode RegisterHandler::read (BusAddress address, u16* destination)
     return StatusCode::NonExistingMemory;
 }
 
-StatusCode RegisterHandler::writeWord (BusAddress address, u16 value)
+StatusCode RegisterHandler::writeWord (BusAddress<> address, u16 value)
 {
     for (BusDevice* module : cpuModules_)
         if (module->responsible (address))
@@ -24,7 +24,7 @@ StatusCode RegisterHandler::writeWord (BusAddress address, u16 value)
 
 }
 
-bool RegisterHandler::responsible (BusAddress busAddress)
+bool RegisterHandler::responsible (BusAddress<> busAddress)
 {
     if (!busAddress.isInIOpage ())
         return false;

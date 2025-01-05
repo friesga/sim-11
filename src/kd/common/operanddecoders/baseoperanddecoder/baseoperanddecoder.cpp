@@ -72,7 +72,7 @@ OperandLocation BaseOperandDecoder::decodeOperand (u16 opCode, Operand operand,
 			address = reg[operand.registerNr_];
 			reg[operand.registerNr_] += 2;
 			return OperandLocation (MemoryOperandLocation {cpuData_, mmu_,
-				CondData<u16> (mmu_->fetchWord (static_cast<BusAddress> (address)))});
+				CondData<u16> (mmu_->fetchWord (static_cast<BusAddress<>> (address)))});
 
 		case 4:
 			// Auto-decrement mode. Register is decremented and then used as a
@@ -102,7 +102,7 @@ OperandLocation BaseOperandDecoder::decodeOperand (u16 opCode, Operand operand,
 				cpuData_->setTrap (CpuData::TrapCondition::StackOverflow);  
 
 			return OperandLocation (MemoryOperandLocation {cpuData_, mmu_,
-				CondData<u16> (mmu_->fetchWord (static_cast<BusAddress> (address)))});
+				CondData<u16> (mmu_->fetchWord (static_cast<BusAddress<>> (address)))});
 
 		case 6:
 			// Index mode. The contents of the in the instruction specified
@@ -127,7 +127,7 @@ OperandLocation BaseOperandDecoder::decodeOperand (u16 opCode, Operand operand,
 			reg[7] += 2;
 			address = reg[operand.registerNr_] + index;
 			return OperandLocation (MemoryOperandLocation {cpuData_, mmu_,
-				CondData<u16> (mmu_->fetchWord (static_cast<BusAddress> (address)))});
+				CondData<u16> (mmu_->fetchWord (static_cast<BusAddress<>> (address)))});
 
 		default:
 			// Satisfy the compiler. This cannot happen as the mode bit field

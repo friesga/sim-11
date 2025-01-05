@@ -23,7 +23,7 @@ MS11P::MS11P (Qbus* bus, shared_ptr<MS11PConfig> ms11pConfig)
 MS11P::~MS11P ()
 {}
 
-StatusCode MS11P::read (BusAddress address, u16* destAddress)
+StatusCode MS11P::read (BusAddress<> address, u16* destAddress)
 {
 	// Get the contents of the specified address via a u16 pointer
 	// as data is an array of bytes.
@@ -32,7 +32,7 @@ StatusCode MS11P::read (BusAddress address, u16* destAddress)
 	return StatusCode::OK;
 }
 
-StatusCode MS11P::writeWord (BusAddress address, u16 value)
+StatusCode MS11P::writeWord (BusAddress<> address, u16 value)
 {
 	u16* mem = (u16*)&memory_[address - startingAddress_];
 	*mem = value;
@@ -40,7 +40,7 @@ StatusCode MS11P::writeWord (BusAddress address, u16 value)
 	return StatusCode::OK;
 }
 
-bool MS11P::responsible (BusAddress address)
+bool MS11P::responsible (BusAddress<> address)
 {
 	return !address.isInIOpage () && 
 		   address >= startingAddress_ &&

@@ -65,17 +65,17 @@ void KDF11_A::start (u16 startAddress)
 
 // Registers accesses are forwarded to the register handler.
 //
-StatusCode KDF11_A::read (BusAddress address, u16* destination)
+StatusCode KDF11_A::read (BusAddress<> address, u16* destination)
 {
     return registerHandler_->read (address, destination);
 }
 
-StatusCode KDF11_A::writeWord (BusAddress address, u16 value)
+StatusCode KDF11_A::writeWord (BusAddress<> address, u16 value)
 {
     return registerHandler_->writeWord (address, value);
 }
 
-bool KDF11_A::responsible (BusAddress address)
+bool KDF11_A::responsible (BusAddress<> address)
 {
     return registerHandler_->responsible (address);
 }

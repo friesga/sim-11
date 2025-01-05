@@ -151,9 +151,9 @@ public:
 	bool getIntrptReq (InterruptRequest &ir);
 
 	void step ();
-	CondData<u16> read (BusAddress address);
-	bool writeWord (BusAddress address, u16 value);
-	bool writeByte (BusAddress address, u8 val);
+	template <ValidBusAddress T> CondData<u16> read (T address);
+	template <ValidBusAddress T> bool writeWord (T address, u16 value);
+	template <ValidBusAddress T> bool writeByte (T, u8 val);
 	bool installModuleAtPosition (BusDevice* module, size_t position);
 	bool installModule (BusDevice* module);
 
@@ -181,10 +181,26 @@ private:
 	u16	delay_;
 
 	void reset ();
-	BusDevice *responsibleModule (BusAddress address);
+	template <ValidBusAddress T> BusDevice* responsibleModule (T address);
 	void pushInterruptRequest (InterruptRequest interruptReq);
 	void BINITReceiver (bool signalValue);
 };
 
+// Explicit template instantations
+template CondData<u16> Qbus::read<BusAddress<16>> (BusAddress<16> address);
+template CondData<u16> Qbus::read<BusAddress<18>> (BusAddress<18> address);
+template CondData<u16> Qbus::read<BusAddress<22>> (BusAddress<22> address);
+
+template bool Qbus::writeWord<BusAddress<16>> (BusAddress<16> address, u16 value);
+template bool Qbus::writeWord<BusAddress<18>> (BusAddress<18> address, u16 value);
+template bool Qbus::writeWord<BusAddress<22>> (BusAddress<22> address, u16 value);
+
+template bool Qbus::writeByte<BusAddress<16>> (BusAddress<16> address, u8 val);
+template bool Qbus::writeByte<BusAddress<18>> (BusAddress<18> address, u8 val);
+template bool Qbus::writeByte<BusAddress<22>> (BusAddress<22> address, u8 val);
+
+template BusDevice* Qbus::responsibleModule<BusAddress<16>> (BusAddress<16> address);
+template BusDevice* Qbus::responsibleModule<BusAddress<18>> (BusAddress<18> address);
+template BusDevice* Qbus::responsibleModule<BusAddress<22>> (BusAddress<22> address);
 
 #endif // !_QBUS_H_

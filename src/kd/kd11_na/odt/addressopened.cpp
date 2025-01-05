@@ -58,7 +58,8 @@ KD11_NA_ODT::State KD11_NA_ODT::StateMachine::transition (AddressOpened_3 &&, Op
 KD11_NA_ODT::State KD11_NA_ODT::StateMachine::transition (AddressOpened_3 &&, AtSignCmdEntered)
 {
     context_->writeString ("\n");
-    return context_->openNextAddress ([this] () {return context_->bus_->read (context_->location_.inputAddress ());});
+    return context_->openNextAddress ([this] ()
+        {return context_->bus_->read (BusAddress<16> (context_->location_.inputAddress ()));});
 }
 
 // This command is used once a location has been opened to open
@@ -75,7 +76,8 @@ KD11_NA_ODT::State KD11_NA_ODT::StateMachine::transition (AddressOpened_3 &&, At
  {
     context_->writeString ("\n");
     return context_->openNextAddress ([this] () 
-        {return context_->location_.wordAddress () + context_->bus_->read (context_->location_.wordAddress ()) + 2;});
+        {return context_->location_.wordAddress () + 
+            context_->bus_->read (BusAddress<16> (context_->location_.wordAddress ())) + 2;});
  }
 
 // Micronote 050 (Micro ODT Differences - LSI-11 vs. LSI-11/23) states that

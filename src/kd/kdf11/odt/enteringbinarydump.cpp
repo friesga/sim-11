@@ -36,8 +36,7 @@ KDF11_ODT::State KDF11_ODT::StateMachine::transition (AtPrompt_1 &&, BinaryDumpC
     // Dump 10 bytes i.e. 5 words as binaries
     for (size_t numWords = 0; numWords < 5; ++numWords)
     {
-        context_->console_->write (context_->bus_->read (BusAddress (startAddress,
-            BusAddress::Width::_18Bit)));
+        context_->console_->write (context_->bus_->read<18> (BusAddress (startAddress)));
         startAddress += 2;
     }
 

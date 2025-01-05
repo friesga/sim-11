@@ -11,7 +11,7 @@
 class AbstractBusDevice : public BusDevice
 {
 public:
-	StatusCode writeByte (BusAddress address, u8 value) override;
+	StatusCode writeByte (BusAddress<> address, u8 value) override;
 };
 
 #endif // !_ABSTRACTBUSDEVICE_H_

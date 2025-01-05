@@ -93,10 +93,9 @@ void KDF11_ODT::writeString (string str)
 KDF11_ODT::State KDF11_ODT::writeAddressContents (u32 address)
 {
     location_ = AddressLocation<u32> {address};
-    if (bus_->read (BusAddress (address, BusAddress::Width::_18Bit)).hasValue ())
+    if (bus_->read (BusAddress<18> (address)).hasValue ())
     {
-        writeString (octalNumberToString (bus_->read (BusAddress (location_.wordAddress (),
-            BusAddress::Width::_18Bit))) + ' ');
+        writeString (octalNumberToString (bus_->read (BusAddress<18> (location_.wordAddress ()))) + ' ');
         return AddressOpened_3{};
     }
     else

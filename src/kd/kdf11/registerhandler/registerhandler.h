@@ -19,9 +19,9 @@ public:
 
     // Functions required by the BusDevice interface
     // The function writeByte() is implemented by AbstractBusDevice
-    StatusCode read (BusAddress address, u16* destination) override;
-    StatusCode writeWord (BusAddress address, u16 value) override;
-    bool responsible (BusAddress address) override;
+    StatusCode read (BusAddress<> address, u16* destination) override;
+    StatusCode writeWord (BusAddress<> address, u16 value) override;
+    bool responsible (BusAddress<> address) override;
     void reset () override;
 
 private:

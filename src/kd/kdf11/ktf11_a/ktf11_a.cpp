@@ -165,12 +165,12 @@ CondData<u16> KTF11_A::readWithoutTrap (u16 address)
 {
     return (sr0_.managementEnabled ()) ? 
         bus_->read (physicalAddress (address)) :
-        bus_->read (address);
+        bus_->read (BusAddress<16> (address));
 }
 
 // Return the word at the given physical address, generating a bus error trap
 // in case the read fails.
-CondData<u16> KTF11_A::readPhysical (BusAddress busAddress)
+CondData<u16> KTF11_A::readPhysical (BusAddress<> busAddress)
 {
     CondData<u16> value = bus_->read (busAddress);
     if (!value.hasValue ())
@@ -184,7 +184,7 @@ CondData<u16> KTF11_A::readPhysical (BusAddress busAddress)
 
 // Write the given value to the given physical address, generating a bus
 // error trap in case the write fails.
-bool KTF11_A::writePhysicalWord (BusAddress busAddress, u16 value)
+bool KTF11_A::writePhysicalWord (BusAddress<> busAddress, u16 value)
 {
     if (!bus_->writeWord (busAddress, value))
     {
@@ -196,7 +196,7 @@ bool KTF11_A::writePhysicalWord (BusAddress busAddress, u16 value)
     return true;
 }
 
-bool KTF11_A::writePhysicalByte (BusAddress busAddress, u16 value)
+bool KTF11_A::writePhysicalByte (BusAddress<> busAddress, u16 value)
 {
     if (!bus_->writeByte (busAddress, value))
     {
@@ -267,7 +267,7 @@ ActivePageRegister *KTF11_A::activePageRegister (u16 address, u16 mode)
 // 
 // Source: EK-KDF11-UG-PR2
 //
-BusAddress KTF11_A::physicalAddress (VirtualAddress address)
+auto KTF11_A::physicalAddress (VirtualAddress address)
 {
     return physicalAddress (address, 
         activePageRegister (address, currentMemoryManagementMode ()));
@@ -275,25 +275,23 @@ BusAddress KTF11_A::physicalAddress (VirtualAddress address)
 
 // Return the 18- or 22-bit physical address for the given 16-bit virtual address
 // using the already determined page address field.
-BusAddress KTF11_A::physicalAddress (VirtualAddress address, ActivePageRegister* apr)
+auto KTF11_A::physicalAddress (VirtualAddress address, ActivePageRegister* apr)
 {
     return sr3_._22BitMappingEnabled () ? 
         _22bitPhysicalAddress (address, apr) :
         _18bitPhysicalAddress (address, apr);
 }
 
-BusAddress KTF11_A::_18bitPhysicalAddress (VirtualAddress address, ActivePageRegister* apr)
+BusAddress<18> KTF11_A::_18bitPhysicalAddress (VirtualAddress address, ActivePageRegister* apr)
 {
     u32 physicalBlockNr = (apr->pageAddressRegister_ & 07777) + blockNumber (address);
-    return BusAddress ((physicalBlockNr << 6) | displacementInBlock (address),
-        BusAddress::Width::_18Bit);
+    return BusAddress<18> ((physicalBlockNr << 6) | displacementInBlock (address));
 }
 
-BusAddress KTF11_A::_22bitPhysicalAddress (VirtualAddress address, ActivePageRegister* apr)
+BusAddress<22> KTF11_A::_22bitPhysicalAddress (VirtualAddress address, ActivePageRegister* apr)
 {
     u32 physicalBlockNr = apr->pageAddressRegister_ + blockNumber (address);
-    return BusAddress ((physicalBlockNr << 6) | displacementInBlock (address),
-        BusAddress::Width::_22Bit);
+    return BusAddress<22> ((physicalBlockNr << 6) | displacementInBlock (address));
 }
 
 // The content of SR2 (the virtual program counter) is frozen whenever one of

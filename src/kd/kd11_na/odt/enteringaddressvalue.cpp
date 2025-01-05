@@ -73,7 +73,8 @@ KD11_NA_ODT::State KD11_NA_ODT::StateMachine::transition (EnteringAddressValue_7
     context_->writeString ("\n");
     context_->setAddressValue ();
     return context_->openNextAddress ([this] () 
-        {return context_->location_.wordAddress () + context_->bus_->read (context_->location_.wordAddress ()) + 2;});
+        {return context_->location_.wordAddress () +
+            context_->bus_->read (BusAddress<16> (context_->location_.wordAddress ())) + 2;});
 }
 
 // When an address location is open, another location can be opened without

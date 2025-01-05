@@ -104,7 +104,7 @@ void RXV21::done ()
 }
 
 // Read operation on either the RX2CS or RX2DB
-StatusCode RXV21::read (BusAddress busAddress, u16 *destAddress)
+StatusCode RXV21::read (BusAddress<> busAddress, u16 *destAddress)
 {
 	if (busAddress.registerAddress () == base) 
 		// Return value of the RX2CS
@@ -123,7 +123,7 @@ StatusCode RXV21::read (BusAddress busAddress, u16 *destAddress)
 // 2. Writing parameters of the command to the RX2DB, such as the sector
 //	  and track address or the bus address.
 //
-StatusCode RXV21::writeWord (BusAddress busAddress, u16 value)
+StatusCode RXV21::writeWord (BusAddress<> busAddress, u16 value)
 {
 	if (busAddress.registerAddress () == base) 
 	{ 
@@ -160,7 +160,7 @@ StatusCode RXV21::writeWord (BusAddress busAddress, u16 value)
 	return StatusCode::OK;
 }
 
-bool RXV21::responsible (BusAddress busAddress)
+bool RXV21::responsible (BusAddress<> busAddress)
 {
 	if (!busAddress.isInIOpage ())
 		return false;

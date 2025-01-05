@@ -23,15 +23,15 @@ public:
 	KT24 (Qbus* bus, shared_ptr<KT24Config> kt24Config);
 
     // Functions required for the BusDevice interface
-	StatusCode read (BusAddress address, u16* destination);
-	StatusCode writeWord (BusAddress address, u16 value);
-	StatusCode writeByte (BusAddress address, u8 value);
-	bool responsible (BusAddress address);
+	StatusCode read (BusAddress<> address, u16* destination);
+	StatusCode writeWord (BusAddress<> address, u16 value);
+	StatusCode writeByte (BusAddress<> address, u8 value);
+	bool responsible (BusAddress<> address);
 	void reset ();
 
 	// Functions required for the UnibusMap interface
-	StatusCode dmaRead (BusAddress address, u16* destination);
-	StatusCode dmaWrite (BusAddress address, u16 value);
+	StatusCode dmaRead (BusAddress<> address, u16* destination);
+	StatusCode dmaWrite (BusAddress<> address, u16 value);
 
 	void enable ();
 	void disable ();
@@ -65,11 +65,11 @@ private:
 	constexpr bool highMappingRegister (u16 address) const
 		{ return (address % 4) == 2; }
 
-	StatusCode mappedRead (BusAddress address, u16* destination);
-	StatusCode mappedWrite (BusAddress address, u16 value);
+	StatusCode mappedRead (BusAddress<> address, u16* destination);
+	StatusCode mappedWrite (BusAddress<> address, u16 value);
 	StatusCode readPhysical (u32 physicalAddress, u16* destination);
 	StatusCode writePhysical (u32 physicalAddress, u16 value);
-	u32 physicalAddressFrom18BitBusAddress (BusAddress busAddress);
+	u32 physicalAddressFrom18BitBusAddress (BusAddress<> busAddress);
 };
 
 #endif // _KT24_H_

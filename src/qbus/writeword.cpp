@@ -1,7 +1,8 @@
 #include "qbus.h"
 #include "trace/trace.h"
 
-bool Qbus::writeWord (BusAddress address, u16 value)
+template <ValidBusAddress T>
+bool Qbus::writeWord (T address, u16 value)
 {
 	BusDevice *module;
 	

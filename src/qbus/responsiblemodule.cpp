@@ -1,7 +1,8 @@
 #include "qbus.h"
 #include "trace/trace.h"
 
-BusDevice *Qbus::responsibleModule (BusAddress address)
+template <ValidBusAddress T>
+BusDevice* Qbus::responsibleModule (T address)
 {
 	for (size_t index = 0; index < numberOfSlots; ++index)
 	{

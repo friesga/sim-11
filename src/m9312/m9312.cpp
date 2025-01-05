@@ -40,7 +40,7 @@ void M9312::reset ()
 // the M9312 "steals" the read from memory and returns the vector as provided
 // in the boot ROM in slot 0. Any read to an address other than the powerfail
 // vector indicates that no boot via the powerfail vector is in progress.
-bool M9312::responsible (BusAddress address)
+bool M9312::responsible (BusAddress<> address)
 {
     if (powerUpBootEnable_ && addressIsPowerfailVector (address)
             && powerUpViaVector_ && !bus_->BatteryPower ())
@@ -63,7 +63,7 @@ bool M9312::responsible (BusAddress address)
 // the starting address is the address specified in the address offset
 // switch bank.
 // 
-StatusCode M9312::read (BusAddress busAddress, u16* data)
+StatusCode M9312::read (BusAddress<> busAddress, u16* data)
 {
     if (addressIsPowerfailVector (busAddress))
         busAddress += bootROMBaseAddress;
@@ -80,24 +80,24 @@ StatusCode M9312::read (BusAddress busAddress, u16* data)
     return StatusCode::NonExistingMemory;
 }
 
-StatusCode M9312::writeByte (BusAddress busAddress, u8 data)
+StatusCode M9312::writeByte (BusAddress<> busAddress, u8 data)
 {
     return StatusCode::NonExistingMemory;
 }
 
-StatusCode M9312::writeWord (BusAddress busAddress, u16 data)
+StatusCode M9312::writeWord (BusAddress<> busAddress, u16 data)
 {
     return StatusCode::NonExistingMemory;
 }
 
-bool M9312::addressInDiagnosticROM (BusAddress address)
+bool M9312::addressInDiagnosticROM (BusAddress<> address)
 {
     return address.isInIOpage () && 
            address.registerAddress () >= diagROMBaseAddress &&
            address.registerAddress () < diagROMBaseAddress + diagROMSize * 2;
 }
 
-bool M9312::addressInBootRom (BusAddress address)
+bool M9312::addressInBootRom (BusAddress<> address)
 {
     return address.isInIOpage () &&
            address.registerAddress () >= bootROMBaseAddress &&
@@ -105,12 +105,12 @@ bool M9312::addressInBootRom (BusAddress address)
                 bootROMSize * 2 * numberOfBootROMs;
 }
 
-bool M9312::addressIsPowerfailVector (BusAddress address)
+bool M9312::addressIsPowerfailVector (BusAddress<> address)
 { 
     return (address == 024 || address == 026);
 }
 
-StatusCode M9312::readDiagnosticROM (BusAddress busAddress, u16* data)
+StatusCode M9312::readDiagnosticROM (BusAddress<> busAddress, u16* data)
 {
     if (diagnosticROM_ == nullptr)
         return StatusCode::NonExistingMemory;
@@ -120,7 +120,7 @@ StatusCode M9312::readDiagnosticROM (BusAddress busAddress, u16* data)
     return StatusCode::OK;
 }
 
-StatusCode M9312::readBootROM (BusAddress busAddress, u16* data)
+StatusCode M9312::readBootROM (BusAddress<> busAddress, u16* data)
 {
     u16 romNumber = getBootRomNumber (busAddress);
 

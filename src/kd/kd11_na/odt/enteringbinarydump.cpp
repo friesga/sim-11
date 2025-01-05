@@ -23,13 +23,14 @@ KD11_NA_ODT::State KD11_NA_ODT::StateMachine::transition (AtPrompt_1 &&, BinaryD
     // Expect two bytes and transform it into the starting address.
     // The two bytes forming the address have to be read in two separate
     // statements to make sure the high byte of the address is read first.
+    // As the address is composed of two bytes it is a 16-bit address.
     u16 highByte = context_->console_->read () << 8;
     u16 startAddress = highByte | context_->console_->read ();
 
     // Dump 10 bytes i.e. 5 words as binaries
     for (size_t numWords = 0; numWords < 5; ++numWords)
     {
-        context_->console_->write (context_->bus_->read (startAddress));
+        context_->console_->write (context_->bus_->read (BusAddress<16> (startAddress)));
         startAddress += 2;
     }
 

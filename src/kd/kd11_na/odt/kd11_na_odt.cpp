@@ -93,9 +93,9 @@ void KD11_NA_ODT::writeString (string str)
 KD11_NA_ODT::State KD11_NA_ODT::writeAddressContents (u16 address)
 {
     location_ = AddressLocation<u16> {address};
-    if (bus_->read (address).hasValue ())
+    if (bus_->read (BusAddress<16> (address)).hasValue ())
     {
-        writeString (octalNumberToString (bus_->read (location_.wordAddress ())) + ' ');
+        writeString (octalNumberToString (bus_->read (BusAddress<16> (location_.wordAddress ()))) + ' ');
         return AddressOpened_3{};
     }
     else
@@ -167,7 +167,7 @@ KD11_NA_ODT::State KD11_NA_ODT::openAddress ()
 void KD11_NA_ODT::setAddressValue ()
 {
     if (stringTou16 (digitSeries_, 6, &newValue_))
-        bus_->writeWord (location_.wordAddress (), newValue_);
+        bus_->writeWord (BusAddress<16> (location_.wordAddress ()), newValue_);
     else
         writeString ("?\n");
 }

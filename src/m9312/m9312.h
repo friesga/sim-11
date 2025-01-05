@@ -40,10 +40,10 @@ public:
 
     // Functions required by the BusDevice interface
     void reset () override;
-    bool responsible (BusAddress address) override;
-    StatusCode read (BusAddress busAddress, u16* data) override;
-    StatusCode writeByte (BusAddress busAddress, u8 data) override;
-    StatusCode writeWord (BusAddress busAddress, u16 data) override;
+    bool responsible (BusAddress<> address) override;
+    StatusCode read (BusAddress<> busAddress, u16* data) override;
+    StatusCode writeByte (BusAddress<> busAddress, u8 data) override;
+    StatusCode writeWord (BusAddress<> busAddress, u16 data) override;
 
 private:
     static const u16 diagROMBaseAddress = 0165000;
@@ -137,11 +137,11 @@ private:
     bool powerUpBootEnable_ {false};
     bool powerUpViaVector_ {true};
 
-    bool addressInDiagnosticROM (BusAddress address);
-    bool addressInBootRom (BusAddress address);
-    bool addressIsPowerfailVector (BusAddress address);
-    StatusCode readDiagnosticROM (BusAddress busAddress, u16* data);
-    StatusCode readBootROM (BusAddress busAddress, u16* data);
+    bool addressInDiagnosticROM (BusAddress<> address);
+    bool addressInBootRom (BusAddress<> address);
+    bool addressIsPowerfailVector (BusAddress<> address);
+    StatusCode readDiagnosticROM (BusAddress<> busAddress, u16* data);
+    StatusCode readBootROM (BusAddress<> busAddress, u16* data);
     StatusCode readAddressOffsetSwitchBank (u16* data);
     void BPOKReceiver (bool signalValue);
 };

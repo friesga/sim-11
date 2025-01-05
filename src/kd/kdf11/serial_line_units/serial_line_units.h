@@ -18,9 +18,9 @@ class SerialLineUnits : public AbstractBusDevice
 {
 public:
 	SerialLineUnits (Qbus *bus, UARTTypeConfig const & uartTypeConfig, SLUConfig* sluConfig);
-    StatusCode read (BusAddress address, u16 *destination);
-	StatusCode writeWord (BusAddress address, u16 value);
-	bool responsible (BusAddress address);
+    StatusCode read (BusAddress<> address, u16 *destination);
+	StatusCode writeWord (BusAddress<> address, u16 value);
+	bool responsible (BusAddress<> address);
 	void reset ();
 	void BINITReceiver (bool signalValue);
 

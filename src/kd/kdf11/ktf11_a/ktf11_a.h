@@ -50,9 +50,9 @@ public:
 
 	// Functions required by the BusDevice interface and not implemented by
 	// AbstractBusDevice.
-	StatusCode read (BusAddress address, u16 *destination) override;
-	StatusCode writeWord (BusAddress address, u16 value) override;
-	bool responsible (BusAddress address) override;
+	StatusCode read (BusAddress<> address, u16 *destination) override;
+	StatusCode writeWord (BusAddress<> address, u16 value) override;
+	bool responsible (BusAddress<> address) override;
 	void reset () override;
 
 private:
@@ -124,10 +124,10 @@ private:
 	bool mappedWriteByte (VirtualAddress address, u8 value, u16 mode);
 
 	u16 modeNumber (PSW::Mode memMgtmtMode);
-	BusAddress physicalAddress (VirtualAddress address);
-	BusAddress physicalAddress (VirtualAddress address, ActivePageRegister* apr);
-	BusAddress _18bitPhysicalAddress (VirtualAddress address, ActivePageRegister* apr);
-	BusAddress _22bitPhysicalAddress (VirtualAddress address, ActivePageRegister* apr);
+	auto physicalAddress (VirtualAddress address);
+	auto physicalAddress (VirtualAddress address, ActivePageRegister* apr);
+	BusAddress<18> _18bitPhysicalAddress (VirtualAddress address, ActivePageRegister* apr);
+	BusAddress<22> _22bitPhysicalAddress (VirtualAddress address, ActivePageRegister* apr);
 	ActivePageRegister *activePageRegister (u16 address, u16 mode);
 	constexpr u16 activePageField (u16 address);
 	constexpr u16 blockNumber (u16 address);
@@ -135,14 +135,14 @@ private:
 	u16 pageAddressField (u16 activePageField);
 	constexpr u16 currentMemoryManagementMode ();
 	constexpr u16 previousMemoryManagementMode ();
-	Register* registerPointer (BusAddress address);
+	Register* registerPointer (BusAddress<> address);
 	bool pageResident (PDR const & pdr);
 	bool writeAllowed (PDR const & pdr);
 	bool withinPage (u16 blockNumber, PDR const & pdr);
 	bool abortAccess (SR0::AbortReason reason, u16 address);
-	CondData<u16> readPhysical (BusAddress busAddress);
-	bool writePhysicalWord (BusAddress busAddress, u16 value);
-	bool writePhysicalByte (BusAddress busAddress, u16 value);
+	CondData<u16> readPhysical (BusAddress<> busAddress);
+	bool writePhysicalWord (BusAddress<> busAddress, u16 value);
+	bool writePhysicalByte (BusAddress<> busAddress, u16 value);
 };
 
 
