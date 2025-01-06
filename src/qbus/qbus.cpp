@@ -20,8 +20,7 @@ using std::copy_backward;
 //
 Qbus::Qbus ()
 	:
-	processorRunning_ {false},
-	delay_ {0}
+	processorRunning_ {false}
 {
 	ourKey_ = BINIT().subscribe (bind (&Qbus::BINITReceiver, this, _1));
 }
@@ -104,8 +103,6 @@ void Qbus::reset ()
 	// Clear pending interrupts
 	clearInterrupts ();
 
-	delay_ = 0;
-
 	// Reset all devices on the bus
 	for (BusDevice* module : slots_)
 	{
@@ -132,7 +129,6 @@ bool Qbus::getIntrptReq(InterruptRequest &intrptReq)
 	{
 		bool result = intrptReqQueue_.fetchTop (intrptReq);
 		trace.irq (IrqRecordType::IRQ_SIG, intrptReq.vector());
-		delay_ = 0;
 		return result;
 	}
 	else
