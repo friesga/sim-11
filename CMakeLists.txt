@@ -536,13 +536,13 @@ set (SIM11_TEST_SRCS
 add_executable (sim-11-test ${SIM11_TEST_SRCS})
 
 set(GTEST_INCLUDE_DIRS 
-    G:/src/gtest-1.10.0/googletest/include/
+    D:/src/gtest-1.10.0/googletest/include/
     # C:/Tools/gtest-1.10.0/include
     )
 
 set (GTESTUNIT_LIBS
-    "G:/src/gtest-1.10.0/build/x64-Release/lib/gtest.lib"
-    "G:/src/gtest-1.10.0/build/x64-Release/lib/gtest_main.lib"
+    "D:/src/gtest-1.10.0/build/x64-Release/lib/gtest.lib"
+    "D:/src/gtest-1.10.0/build/x64-Release/lib/gtest_main.lib"
     # C:/Tools/gtest-1.10.0/lib/gtest.lib
     # C:/Tools/gtest-1.10.0/lib/gtest_main.lib
     )
