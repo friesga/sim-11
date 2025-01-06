@@ -1,6 +1,7 @@
 #ifndef _CONTROLLOGIC_H_
 #define _CONTROLLOGIC_H_
 
+#include "bus.h"
 #include "kd/include/kd11odt.h"
 #include "kd/kd11_na/cpucontrol/kd11_na_cpucontrol.h"
 #include "kd/include/mmu.h"
@@ -41,7 +42,7 @@ public:
     // startAddress - The address to set the PC to when starting up,
     // odtCreator - A std::function for a function to create an ODT object
     //
-    ControlLogic (Qbus* bus, CpuData* cpuData,
+    ControlLogic (Bus* bus, CpuData* cpuData,
         CpuControl* cpuControl, MMU* mmu,
         KD11Config::PowerUpMode powerUpMode, u16 startAddress,
         KD11ODT::Creator odtCreator);
@@ -96,7 +97,7 @@ private:
     class StateMachine;
     unique_ptr<StateMachine> stateMachine_;
 
-    Qbus* bus_;
+    Bus* bus_;
     CpuData* cpuData_;
     CpuControl* cpuControl_;
     MMU* mmu_;

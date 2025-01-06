@@ -29,7 +29,7 @@
 class KTF11_A : public MMU, public AbstractBusDevice
 {
 public:
-	KTF11_A (Qbus* bus, CpuData* cpuData);
+	KTF11_A (Bus* bus, CpuData* cpuData);
 
 	// Functions reuiqred by the MMU interface
 	CondData<u16> fetchWord (VirtualAddress address, 
@@ -77,7 +77,7 @@ private:
 	static const u16 statusRegister2 = 0177576;
 	static const u16 statusRegister3 = 0172516;
 
-	Qbus* bus_;
+	Bus* bus_;
 	CpuData* cpuData_;
 
 	// Definition of status registers

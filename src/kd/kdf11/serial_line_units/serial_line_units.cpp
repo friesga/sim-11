@@ -9,7 +9,7 @@ using std::placeholders::_1;
 using std::make_unique;
 using std::ranges::find_if;
 
-SerialLineUnits::SerialLineUnits (Qbus *bus,
+SerialLineUnits::SerialLineUnits (Bus *bus,
     UARTTypeConfig const& uartTypeConfig, SLUConfig* sluConfig)
 {
     uarts_[0] = make_unique<UART> (bus, uartTypeConfig,

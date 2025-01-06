@@ -1,6 +1,7 @@
 #ifndef _QBUS_H_
 #define _QBUS_H_
 
+#include "bus.h"
 #include "types.h"
 #include "statuscodes.h"
 #include "conddata/conddata.h"
@@ -35,7 +36,7 @@ class PDP11Peripheral;
 // page can be limited to 16-bits. The 32-bit bus address will be truncated
 // to a 16 bit address to be used by the device.
 //
-class Qbus
+class Qbus : public Bus
 {
 public:
 	static const size_t numberOfSlots {9};

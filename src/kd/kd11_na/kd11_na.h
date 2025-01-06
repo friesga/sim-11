@@ -1,6 +1,7 @@
 #ifndef _KD11_NA_H_
 #define _KD11_NA_H_
 
+#include "bus.h"
 #include "kd/include/pdp11processor.h"
 #include "cpucontrol/kd11_na_cpucontrol.h"
 #include "odt/kd11_na_odt.h"
@@ -19,8 +20,8 @@ using std::shared_ptr;
 class KD11_NA : public PDP11Processor
 {
 public:
-    KD11_NA (Qbus* bus);
-    KD11_NA (Qbus* bus, shared_ptr<KD11_NAConfig> kd11_naConfig);
+    KD11_NA (Bus* bus);
+    KD11_NA (Bus* bus, shared_ptr<KD11_NAConfig> kd11_naConfig);
     ~KD11_NA ();
     void start (u16 startAddress);
     void start ();
@@ -46,7 +47,7 @@ public:
 private:
     enum { stdBootAddress = 0173000 };
 
-    Qbus* bus_;
+    Bus* bus_;
     KD11_NACpuData cpuData_;
     KD11_NA_CpuControl cpuControl_ {bus_, &cpuData_, &pseudoMMU_};
     PseudoMMU pseudoMMU_ {bus_, &cpuData_};

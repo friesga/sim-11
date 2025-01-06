@@ -13,7 +13,7 @@ using std::make_unique;
 using std::ranges::any_of;
 
 // Construct a DLV11-J object with the given configuration
-DLV11J::DLV11J (Qbus *bus, shared_ptr<DLV11JConfig> dlConfig)
+DLV11J::DLV11J (Bus *bus, shared_ptr<DLV11JConfig> dlConfig)
 	:
 	PDP11Peripheral (bus),
 	baseAddress_ {dlConfig->baseAddress},

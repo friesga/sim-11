@@ -1,3 +1,4 @@
+#include "qbus/qbus.h"
 #include "configdata/serialconfig/uartconfig/uartconfig.h"
 #include "configdata/serialconfig/uarttypeconfig/uarttypeconfig.h"
 #include "configdata/serialconfig/consoleconfig/consoleconfig.h"

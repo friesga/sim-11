@@ -11,7 +11,7 @@ using std::placeholders::_2;
 using namespace rxv21;
 
 // Constructor for a default RXV21 device without attached files
-RXV21::RXV21 (Qbus *bus)
+RXV21::RXV21 (Bus *bus)
 	:
 	PDP11Peripheral (bus),
 
@@ -29,7 +29,7 @@ RXV21::RXV21 (Qbus *bus)
 	bus_->BINIT().subscribe (bind (&RXV21::BINITReceiver, this, _1));
 }
 
-RXV21::RXV21 (Qbus *bus, shared_ptr<RXV21Config> rxConfig)
+RXV21::RXV21 (Bus *bus, shared_ptr<RXV21Config> rxConfig)
 	:
 	PDP11Peripheral (bus)
 {

@@ -2,12 +2,12 @@
 
 #include <iostream>
 
-KT24::KT24 (Qbus* bus)
+KT24::KT24 (Bus* bus)
     :
     bus_ {bus}
 {}
 
-KT24::KT24 (Qbus* bus, shared_ptr<KT24Config> kt24Config)
+KT24::KT24 (Bus* bus, shared_ptr<KT24Config> kt24Config)
     :
     bus_ {bus}
 {}

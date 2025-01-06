@@ -17,7 +17,7 @@ using std::make_shared;
 // The base class protected data members cannot be accessed in an
 // initializer list
 // ToDo: Remove default RLV12 constructor
-RLV12::RLV12 (Qbus *bus)
+RLV12::RLV12 (Bus* bus)
     :
     PDP11Peripheral (bus),
     csr_ {0},
@@ -46,7 +46,7 @@ RLV12::RLV12 (Qbus *bus)
     cmdProcessor_ = std::make_unique<CmdProcessor> (this);
 }
 
-RLV12::RLV12 (Qbus *bus, Window* window, RLConfig& rlConfig)
+RLV12::RLV12 (Bus* bus, Window* window, RLConfig& rlConfig)
     :
     PDP11Peripheral (bus),
     csr_ {0},
@@ -91,21 +91,21 @@ RLV12::RLV12 (Qbus *bus, Window* window, RLConfig& rlConfig)
     cmdProcessor_ = std::make_unique<CmdProcessor> (this);
 }
 
-RLV12::RLV12 (Qbus* bus, Window* window, shared_ptr<RL11Config> rl11Config)
+RLV12::RLV12 (Bus* bus, Window* window, shared_ptr<RL11Config> rl11Config)
     :
     RLV12 (bus, window, rl11Config->common)
 {
     rlType_ = RLV12const::RLType::RL11;
 }
 
-RLV12::RLV12 (Qbus* bus, Window* window, shared_ptr<RLV11Config> rlv11Config)
+RLV12::RLV12 (Bus* bus, Window* window, shared_ptr<RLV11Config> rlv11Config)
     :
     RLV12 (bus, window, rlv11Config->common)
 {
     rlType_ = RLV12const::RLType::RLV11;
 }
 
-RLV12::RLV12 (Qbus* bus, Window* window, shared_ptr<RLV12Config> rlv12Config)
+RLV12::RLV12 (Bus* bus, Window* window, shared_ptr<RLV12Config> rlv12Config)
     :
     RLV12 (bus, window, rlv12Config->common)
 {

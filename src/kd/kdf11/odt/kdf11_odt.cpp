@@ -12,7 +12,7 @@ using std::to_string;
 using std::make_unique;
 using std::move;
 
-KDF11_ODT::KDF11_ODT (Qbus *bus, CpuData* cpuData, CpuControl* cpuControl,
+KDF11_ODT::KDF11_ODT (Bus *bus, CpuData* cpuData, CpuControl* cpuControl,
         MMU* mmu, unique_ptr<ConsoleAccess> consoleAccess)
     : 
     bus_ {bus},
@@ -31,7 +31,7 @@ KDF11_ODT::KDF11_ODT (Qbus *bus, CpuData* cpuData, CpuControl* cpuControl,
     stateMachine_->dispatch (StartFsm {});
 }
 
-unique_ptr<KDF11_ODT> KDF11_ODT::createODT (Qbus *bus, CpuData* cpuData,
+unique_ptr<KDF11_ODT> KDF11_ODT::createODT (Bus *bus, CpuData* cpuData,
     CpuControl* cpuControl, MMU* mmu, unique_ptr<ConsoleAccess> consoleAccess)
 {
     return make_unique<KDF11_ODT> (bus, cpuData, cpuControl, mmu,

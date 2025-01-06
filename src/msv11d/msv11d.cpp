@@ -9,7 +9,7 @@ using std::bind;
 using std::placeholders::_1;
 using std::shared_ptr;
 
-MSV11D::MSV11D (Qbus *bus)
+MSV11D::MSV11D (Bus *bus)
 	:
 	bus_ {bus},
 	powerSource_ {MSV11Config::PowerSource::System},
@@ -23,7 +23,7 @@ MSV11D::MSV11D (Qbus *bus)
 	bus_->BPOK().subscribe (bind (&MSV11D::BPOKReceiver, this, _1));
 }
 
-MSV11D::MSV11D (Qbus* bus, shared_ptr<MSV11Config> msv11Config)
+MSV11D::MSV11D (Bus* bus, shared_ptr<MSV11Config> msv11Config)
 	:
 	MSV11D (bus)
 {

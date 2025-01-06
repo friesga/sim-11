@@ -1,6 +1,7 @@
 #ifndef _M9312_H_
 #define _M9312_H_
 
+#include "bus.h"
 #include "pdp11peripheral/pdp11peripheral.h"
 #include "configdata/m9312/m9312config/m9312config.h"
 #include "statuscodes.h"
@@ -36,7 +37,7 @@ using std::array;
 class M9312 : public PDP11Peripheral
 {
 public:
-    M9312 (Qbus* bus, shared_ptr<M9312Config> m9312Config);
+    M9312 (Bus* bus, shared_ptr<M9312Config> m9312Config);
 
     // Functions required by the BusDevice interface
     void reset () override;

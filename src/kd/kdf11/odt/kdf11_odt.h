@@ -2,7 +2,7 @@
 #define _KDF11_ODT_H_
 
 #include "kd/include/kd11odt.h"
-#include "qbus/qbus.h"
+#include "bus.h"
 #include "kd/kd11_na/cpucontrol/kd11_na_cpucontrol.h"
 #include "variantfsm/fsm.h"
 #include "kd/common/odt/location/location.h"
@@ -20,13 +20,13 @@ using std::monostate;
 class KDF11_ODT : public KD11ODT
 {
 public:
-    KDF11_ODT (Qbus* bus, CpuData* cpuData, CpuControl* cpuControl,
+    KDF11_ODT (Bus* bus, CpuData* cpuData, CpuControl* cpuControl,
         MMU* mmu, unique_ptr<ConsoleAccess> consoleAccess);
 
     // Definition of the function required by the KD11ODT interface
     bool processCharacter (u8 character) override;
 
-    static unique_ptr<KDF11_ODT> createODT (Qbus *bus, CpuData* cpuData,
+    static unique_ptr<KDF11_ODT> createODT (Bus *bus, CpuData* cpuData,
         CpuControl* cpuControl, MMU* mmu, unique_ptr<ConsoleAccess> consoleAccess);
 
 private:
@@ -116,7 +116,7 @@ private:
     class StateMachine;
     unique_ptr<StateMachine> stateMachine_;
 
-    Qbus* bus_;
+    Bus* bus_;
     CpuData* cpuData_;
     CpuControl* cpuControl_;
     MMU* mmu_;

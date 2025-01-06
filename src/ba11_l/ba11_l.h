@@ -1,7 +1,7 @@
 #ifndef _BA11L_H_
 #define _BA11L_H_
 
-#include "qbus/qbus.h"
+#include "bus.h"
 #include "panel.h"
 #include "configdata/ba11lconfig/ba11lconfig.h"
 
@@ -15,7 +15,7 @@ using std::shared_ptr;
 class BA11_L
 {
 public:
-    BA11_L (Qbus* bus, Window* window, shared_ptr<BA11_LConfig> ba11lConfig);
+    BA11_L (Bus* bus, Window* window, shared_ptr<BA11_LConfig> ba11lConfig);
     void powerSwitchClicked (Button::State state);
     void hcbSwitchClicked (Button::State state);
     void SRUNReceiver (bool signalValue);
@@ -29,7 +29,7 @@ private:
     Frame<float> batteryLedFrame  {0.736, 0.502, 0.016, 0.060};
     Frame<float> hcbSwitchFrame   {0.710, 0.673, 0.029, 0.060};
 
-    Qbus* bus_;
+    Bus* bus_;
     Window* frontWindow_;
     Button* powerSwitch_;
     Button* hcbSwitch_;

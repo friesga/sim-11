@@ -1,7 +1,7 @@
 #ifndef _DLV11CHANNEL_H_
 #define _DLV11CHANNEL_H_
 
-#include "qbus/qbus.h"
+#include "bus.h"
 #include "abstractbusdevice/abstractbusdevice.h"
 #include "statuscodes.h"
 #include "configdata/serialconfig/dlv11jconfig/dlv11jconfig.h"
@@ -38,7 +38,7 @@ using std::condition_variable;
 class UART : public AbstractBusDevice
 {
 public:
-	UART (Qbus* bus, UARTTypeConfig const & uartTypeConfig,
+	UART (Bus* bus, UARTTypeConfig const & uartTypeConfig,
 		UARTConfig& uartConfig, u16 channelNr, ConsoleConfig consoleConfig);
 	~UART ();
 	StatusCode read (BusAddress busAddress, u16 *destAddress);
@@ -100,7 +100,7 @@ private:
 
 	u8 interruptPriority (Function function, u16 channelNr);
 
-	Qbus* bus_;
+	Bus* bus_;
 	bool maintenanceModeSupported_;
 	ConsoleConfig::BreakResponse breakResponse_;
     unsigned char breakKey_;

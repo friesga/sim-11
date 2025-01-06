@@ -1,7 +1,7 @@
 #ifndef _MSV11D_H_
 #define _MSV11D_H_
 
-#include "qbus/qbus.h"
+#include "bus.h"
 #include "memorydevice.h"
 #include "configdata/msv11config/msv11config.h"
 
@@ -10,8 +10,8 @@ using std::shared_ptr;
 class MSV11D : public MemoryDevice
 {
 public:
-	MSV11D (Qbus* bus);
-	MSV11D (Qbus* bus, shared_ptr<MSV11Config> msv11Config);
+	MSV11D (Bus* bus);
+	MSV11D (Bus* bus, shared_ptr<MSV11Config> msv11Config);
 	~MSV11D ();
 
 	// Functions required for the BusDevice interface
@@ -31,7 +31,7 @@ private:
 	static const size_t MSV11D_SIZE {65536};
 	u8* data;
 
-	Qbus* bus_;
+	Bus* bus_;
 	MSV11Config::PowerSource powerSource_;
 	u32 startingAddress_;
 	bool bank7Lower2kWEnabled_;

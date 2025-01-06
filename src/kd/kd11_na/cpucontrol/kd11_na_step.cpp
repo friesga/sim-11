@@ -16,7 +16,7 @@ using std::visit;
 using std::chrono::microseconds;
 
 // Constructor
-KD11_NA_CpuControl::KD11_NA_CpuControl (Qbus* bus, CpuData* cpuData, MMU* mmu)
+KD11_NA_CpuControl::KD11_NA_CpuControl (Bus* bus, CpuData* cpuData, MMU* mmu)
     :
     bus_ {bus},
     mmu_ {mmu},

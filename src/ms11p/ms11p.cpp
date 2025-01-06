@@ -3,7 +3,7 @@
 
 using std::shared_ptr;
 
-MS11P::MS11P (Qbus* bus)
+MS11P::MS11P (Bus* bus)
 	:
 	bus_ {bus}
 {
@@ -11,7 +11,7 @@ MS11P::MS11P (Qbus* bus)
 	memory_ = make_unique<u8[]> (memorySize_);
 }
 
-MS11P::MS11P (Qbus* bus, shared_ptr<MS11PConfig> ms11pConfig)
+MS11P::MS11P (Bus* bus, shared_ptr<MS11PConfig> ms11pConfig)
 	:
 	MS11P (bus)
 {

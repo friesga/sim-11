@@ -13,7 +13,7 @@ using std::bind;
 using std::placeholders::_1;
 using std::shared_ptr;
 
-BDV11::BDV11 (Qbus *bus)
+BDV11::BDV11 (Bus *bus)
 	:
 	PDP11Peripheral (bus),
 	pcr {0},
@@ -31,7 +31,7 @@ BDV11::BDV11 (Qbus *bus)
 }
 
 
-BDV11::BDV11 (Qbus *bus, shared_ptr<BDV11Config> bdv11Config)
+BDV11::BDV11 (Bus *bus, shared_ptr<BDV11Config> bdv11Config)
 	:
 	BDV11 (bus)
 {

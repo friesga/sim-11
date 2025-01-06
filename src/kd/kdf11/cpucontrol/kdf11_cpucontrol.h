@@ -20,7 +20,7 @@ class KDF11_CpuControl : public CpuControl
 public:
 	friend class PDP_11;
 	
-	KDF11_CpuControl (Qbus *bus, CpuData*, MMU* mmu);
+	KDF11_CpuControl (Bus *bus, CpuData*, MMU* mmu);
 
 	// Definition of functions required by the CpuControl interface.
 	void cpuReset () override;
@@ -41,7 +41,7 @@ private:
 		WAIT
 	};
 
-	Qbus* bus_;
+	Bus* bus_;
 	MMU* mmu_;
 	CpuData* cpuData_;
 	CpuRunState runState;

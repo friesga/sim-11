@@ -52,7 +52,6 @@ class PDP_11
 	unique_ptr<BA11_L> ba11_l_;
 	CmdLineOptions const &cmdLineOptions_;
 
-	u16 loadFile ();
 	void configureQbusSystem (SystemConfig const & systemConfig, Window* window);
 	void configureUnibusSystem (SystemConfig const & systemConfig, Window* window);
 	void installModules ();

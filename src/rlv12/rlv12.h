@@ -4,7 +4,7 @@
 #include "rlv12const.h"
 #include "trace/trace.h"
 #include "rl01_02/rl01_02.h"
-#include "qbus/qbus.h"
+#include "bus.h"
 #include "busaddress/busaddress.h"
 #include "pdp11peripheral/pdp11peripheral.h"
 #include "threadsafecontainers/threadsafequeue.h"
@@ -95,11 +95,11 @@ class RLV12 : public PDP11Peripheral
 
 public:
     // Constructors/destructor
-    RLV12 (Qbus *bus);
-    RLV12 (Qbus* bus, Window* window, RLConfig& rlConfig);
-    RLV12 (Qbus* bus, Window* window, shared_ptr<RL11Config> rl11Config);
-    RLV12 (Qbus* bus, Window* window, shared_ptr<RLV11Config> rlv11Config);
-    RLV12 (Qbus *bus, Window* window, shared_ptr<RLV12Config> rlv12Config);
+    RLV12 (Bus *bus);
+    RLV12 (Bus* bus, Window* window, RLConfig& rlConfig);
+    RLV12 (Bus* bus, Window* window, shared_ptr<RL11Config> rl11Config);
+    RLV12 (Bus* bus, Window* window, shared_ptr<RLV11Config> rlv11Config);
+    RLV12 (Bus *bus, Window* window, shared_ptr<RLV12Config> rlv12Config);
     ~RLV12 ();
 
     // Required functions

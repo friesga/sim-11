@@ -15,7 +15,7 @@ using std::map;
 // Constructor
 // Create a window showing the BA11-L start a thread handling the events
 // and render the lamps and switches.
-BA11_L::BA11_L (Qbus* bus, Window* window, shared_ptr<BA11_LConfig> ba11lConfig)
+BA11_L::BA11_L (Bus* bus, Window* window, shared_ptr<BA11_LConfig> ba11lConfig)
     :
     bus_ {bus},
     frontWindow_ {window}

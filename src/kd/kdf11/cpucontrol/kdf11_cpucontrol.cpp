@@ -2,7 +2,7 @@
 #include "trace/trace.h"
 
 // Constructor
-KDF11_CpuControl::KDF11_CpuControl (Qbus* bus, CpuData* cpuData, MMU* mmu)
+KDF11_CpuControl::KDF11_CpuControl (Bus* bus, CpuData* cpuData, MMU* mmu)
     :
     bus_ {bus},
     mmu_ {mmu},

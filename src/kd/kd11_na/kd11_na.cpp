@@ -16,7 +16,7 @@ using std::placeholders::_5;
 // The factory power-up mode configuration is mode 0 (get vector at address
 // 24 and 26), but we'll set it to Bootstrap as that's more convenient for
 // the user.
-KD11_NA::KD11_NA (Qbus* bus)
+KD11_NA::KD11_NA (Bus* bus)
     :
     bus_ (bus),
     powerUpMode_ {KD11Config::PowerUpMode::Bootstrap},
@@ -29,7 +29,7 @@ KD11_NA::KD11_NA (Qbus* bus)
         startAddress_, bind (&KD11_NA_ODT::createODT, _1, _2, _3, _4, _5));
 }
 
-KD11_NA::KD11_NA (Qbus *bus, shared_ptr<KD11_NAConfig> kd11_naConfig)
+KD11_NA::KD11_NA (Bus *bus, shared_ptr<KD11_NAConfig> kd11_naConfig)
     :
     bus_ (bus),
     powerUpMode_ {kd11_naConfig->powerUpMode},

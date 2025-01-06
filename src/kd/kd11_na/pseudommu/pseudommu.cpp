@@ -1,7 +1,7 @@
 #include "pseudommu.h"
 #include "trace/trace.h"
 
-PseudoMMU::PseudoMMU (Qbus* bus, CpuData* cpuData)
+PseudoMMU::PseudoMMU (Bus* bus, CpuData* cpuData)
     :
     bus_ {bus},
     cpuData_ {cpuData}

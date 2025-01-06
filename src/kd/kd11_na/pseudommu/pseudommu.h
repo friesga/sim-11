@@ -2,7 +2,7 @@
 #define _PSEUDOMMU_H_
 
 #include "kd/include/mmu.h"
-#include "qbus/qbus.h"
+#include "bus.h"
 #include "conddata/conddata.h"
 #include "kd/include/cpudata.h"
 
@@ -17,7 +17,7 @@ class PseudoMMU : public MMU
 {
 public:
 	void reset ();
-	PseudoMMU (Qbus* bus, CpuData* cpuData);
+	PseudoMMU (Bus* bus, CpuData* cpuData);
     CondData<u16> fetchWord (VirtualAddress address, 
 		PSW::Mode mode = PSW::Mode::Default) override;
 	CondData<u8> fetchByte (VirtualAddress address, 
@@ -32,7 +32,7 @@ public:
 	void setVirtualPC (u16 value) override;
 
 private:
-	Qbus* bus_;
+	Bus* bus_;
 	CpuData* cpuData_;
 
 	CondData<u16> mappedRead (u16 address);

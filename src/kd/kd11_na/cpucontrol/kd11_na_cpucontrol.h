@@ -1,7 +1,7 @@
 #ifndef _KD11_NA_CPU_H_
 #define _KD11_NA_CPU_H_
 
-#include "qbus/qbus.h"
+#include "bus.h"
 #include "kd/include/cpudata.h"
 #include "kd/include/cpucontrol.h"
 #include "float/float.h"
@@ -28,7 +28,7 @@ class KD11_NA_CpuControl : public CpuControl
 public:
 	friend class PDP_11;
 	
-	KD11_NA_CpuControl (Qbus *bus, CpuData* cpuData, MMU* mmu);
+	KD11_NA_CpuControl (Bus *bus, CpuData* cpuData, MMU* mmu);
 
 	// Definition of functions required by the CpuControl interface.
 	void cpuReset () override;
@@ -49,7 +49,7 @@ private:
 		WAIT
 	};
 
-	Qbus* bus_;
+	Bus* bus_;
 	MMU* mmu_;
 	CpuData* cpuData_;
 	CpuRunState runState;

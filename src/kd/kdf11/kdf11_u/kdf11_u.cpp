@@ -15,7 +15,7 @@ using std::placeholders::_3;
 using std::placeholders::_4;
 using std::placeholders::_5;
 
-KDF11_U::KDF11_U (Qbus *bus, shared_ptr<KDF11_UConfig> kdf11_uConfig)
+KDF11_U::KDF11_U (Bus* bus, shared_ptr<KDF11_UConfig> kdf11_uConfig)
     :
     bus_ {bus},
     startAddress_ {kdf11_uConfig->bootAddress}

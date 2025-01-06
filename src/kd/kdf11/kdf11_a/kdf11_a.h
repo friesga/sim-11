@@ -33,7 +33,7 @@ using std::thread;
 class KDF11_A : public PDP11Processor
 {
 public:
-    KDF11_A (Qbus* bus, shared_ptr<KDF11_AConfig> kdf11_aConfig);
+    KDF11_A (Bus* bus, shared_ptr<KDF11_AConfig> kdf11_aConfig);
     ~KDF11_A ();
 
     // Functions required by the BusDevice interface. The function writeByte()
@@ -53,7 +53,7 @@ public:
     constexpr MMU* mmu ();
 
 private:
-    Qbus* bus_;
+    Bus* bus_;
 
     // Definition of the KDF11-A components. The KTF11-A (MMU) is optional.
     KDF11CpuData cpuData_ {};

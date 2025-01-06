@@ -38,7 +38,7 @@ using std::vector;
 class KDF11_U : public PDP11Processor
 {
 public:
-    KDF11_U (Qbus* bus, shared_ptr<KDF11_UConfig> kdf11_uConfig);
+    KDF11_U (Bus* bus, shared_ptr<KDF11_UConfig> kdf11_uConfig);
     ~KDF11_U ();
     
     // Functions required by the BusDevice interface. The function writeByte()
@@ -55,7 +55,7 @@ public:
 private:
     enum { stdBootAddress = 0173000 };
 
-    Qbus* bus_;
+    Bus* bus_;
 
     // Definition of the KDF11-U components
     KDF11CpuData cpuData_ {};

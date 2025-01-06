@@ -2,7 +2,7 @@
 #define _KT24_H_
 
 #include "unibusmap.h"
-#include "qbus/qbus.h"
+#include "bus.h"
 #include "abstractbusdevice/abstractbusdevice.h"
 #include "configdata/kt24/kt24config/kt24config.h"
 
@@ -19,8 +19,8 @@ using std::shared_ptr;
 class KT24 : public UnibusMap
 {
 public:
-	KT24 (Qbus* bus);
-	KT24 (Qbus* bus, shared_ptr<KT24Config> kt24Config);
+	KT24 (Bus* bus);
+	KT24 (Bus* bus, shared_ptr<KT24Config> kt24Config);
 
     // Functions required for the BusDevice interface
 	StatusCode read (BusAddress address, u16* destination);
@@ -37,7 +37,7 @@ public:
 	void disable ();
 
 private:
-    Qbus* bus_;
+    Bus* bus_;
 	bool enabled_ {false};
 
 	// The mapping registers are defined as an array of u16 low/high pairs

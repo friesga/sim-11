@@ -3,7 +3,7 @@
 
 using std::chrono::microseconds;
 
-OperatorConsoleAccess::OperatorConsoleAccess (Qbus* bus)
+OperatorConsoleAccess::OperatorConsoleAccess (Bus* bus)
     : bus_ {bus}
 {}
 

@@ -1,7 +1,7 @@
 #ifndef _SERIALLINEUNITS_H_
 #define _SERIALLINEUNITS_H_
 
-#include "qbus/qbus.h"
+#include "bus.h"
 #include "abstractbusdevice/abstractbusdevice.h"
 #include "dl11/uart/uart.h"
 #include "configdata/kdf11/slu/sluconfig/sluconfig.h"
@@ -17,7 +17,7 @@ using std::unique_ptr;
 class SerialLineUnits : public AbstractBusDevice
 {
 public:
-	SerialLineUnits (Qbus *bus, UARTTypeConfig const & uartTypeConfig, SLUConfig* sluConfig);
+	SerialLineUnits (Bus* bus, UARTTypeConfig const & uartTypeConfig, SLUConfig* sluConfig);
     StatusCode read (BusAddress address, u16 *destination);
 	StatusCode writeWord (BusAddress address, u16 value);
 	bool responsible (BusAddress address);

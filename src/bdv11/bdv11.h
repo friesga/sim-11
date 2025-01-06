@@ -1,7 +1,7 @@
 #ifndef _BDV11_H_
 #define _BDV11_H_
 
-#include "qbus/qbus.h"
+#include "bus.h"
 #include "pdp11peripheral/pdp11peripheral.h"
 #include "configdata/bdv11config/bdv11config.h"
 #include "chrono/alarmclock/alarmclock.h"
@@ -66,8 +66,8 @@ consteval u16 B (size_t x)
 class BDV11 : public PDP11Peripheral
 {
 public:
-	BDV11 (Qbus *bus);
-	BDV11 (Qbus *bus, shared_ptr<BDV11Config> bdv11Config);
+	BDV11 (Bus *bus);
+	BDV11 (Bus *bus, shared_ptr<BDV11Config> bdv11Config);
 	~BDV11 ();
 	StatusCode read (BusAddress address, u16 *destAddress) override;
 	StatusCode writeWord (BusAddress address, u16 value) override;

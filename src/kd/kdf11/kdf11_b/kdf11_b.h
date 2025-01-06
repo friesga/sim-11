@@ -40,7 +40,7 @@ using std::vector;
 class KDF11_B : public PDP11Processor
 {
 public:
-    KDF11_B (Qbus* bus, shared_ptr<KDF11_BConfig> kdf11_bConfig);
+    KDF11_B (Bus* bus, shared_ptr<KDF11_BConfig> kdf11_bConfig);
     ~KDF11_B ();
     
     // Functions required by the BusDevice interface. The function writeByte()
@@ -57,7 +57,7 @@ public:
 private:
     enum { stdBootAddress = 0173000 };
 
-    Qbus* bus_;
+    Bus* bus_;
 
     // Definition of the KDF11-A components. The KTF11-A (MMU) is an optional
     // component.

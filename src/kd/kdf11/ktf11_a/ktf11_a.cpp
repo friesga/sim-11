@@ -1,7 +1,7 @@
 #include "ktf11_a.h"
 #include "kd/include/psw.h"
 
-KTF11_A::KTF11_A (Qbus* bus, CpuData* cpuData)
+KTF11_A::KTF11_A (Bus* bus, CpuData* cpuData)
     :
     bus_ {bus},
     cpuData_ {cpuData}

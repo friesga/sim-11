@@ -8,7 +8,7 @@
 #include <string>
 #include <memory>
 
-class Qbus;
+class Bus;
 class Unit;
 
 // Definition of some data members and functions common to all PDP-11
@@ -16,13 +16,13 @@ class Unit;
 class PDP11Peripheral : public AbstractBusDevice
 {
 protected:
-	Qbus* bus_;
+	Bus* bus_;
     std::string name_;          // Device name
     u16 baseAddress_;           // Device registers base address
     u16 vector_;                // Device vector
 
 public:
-	PDP11Peripheral (Qbus *bus);
+	PDP11Peripheral (Bus *bus);
 	virtual ~PDP11Peripheral () {};
 	
 	std::string name() { return name_; }

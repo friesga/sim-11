@@ -16,7 +16,7 @@ using std::get;
 // Constructor
 // Create a window showing the BA11-N and devices and then start a thread
 // handling the events and render the lamps and switches.
-BA11_N::BA11_N (Qbus *bus, Window *window, shared_ptr<BA11_NConfig> ba11_nConfig)
+BA11_N::BA11_N (Bus* bus, Window *window, shared_ptr<BA11_NConfig> ba11_nConfig)
     :
     bus_ {bus},
     frontWindow_ {window},

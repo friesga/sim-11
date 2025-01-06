@@ -1,7 +1,7 @@
 #ifndef _DLV11J_H_
 #define _DLV11J_H_
 
-#include "qbus/qbus.h"
+#include "bus.h"
 #include "pdp11peripheral/pdp11peripheral.h"
 #include "configdata/serialconfig/dlv11jconfig/dlv11jconfig.h"
 #include "dl11/uart/uart.h"
@@ -14,7 +14,7 @@ using std::shared_ptr;
 class DLV11J : public PDP11Peripheral
 {
 public:
-	DLV11J (Qbus *bus, shared_ptr<DLV11JConfig> dlConfig);
+	DLV11J (Bus *bus, shared_ptr<DLV11JConfig> dlConfig);
 
 	// Define the obligatory functions
 	StatusCode read (BusAddress busAddress, u16 *destAddress) override;

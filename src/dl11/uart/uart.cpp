@@ -16,7 +16,7 @@ using std::chrono::high_resolution_clock;
 using std::chrono::duration;
 
 // Constructor
-UART::UART (Qbus* bus, UARTTypeConfig const & uartTypeConfig,
+UART::UART (Bus* bus, UARTTypeConfig const & uartTypeConfig,
 	UARTConfig& uartConfig, u16 channelNr, ConsoleConfig consoleConfig)
 	:
 	baseAddress {uartConfig.baseAddress_},

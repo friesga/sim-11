@@ -1,7 +1,7 @@
 #ifndef _RXV21_H_
 #define _RXV21_H_
 
-#include "qbus/qbus.h"
+#include "bus.h"
 #include "pdp11peripheral/pdp11peripheral.h"
 #include "conddata/conddata.h"
 #include "configdata/rxv21/rxv21config/rxv21config.h"
@@ -128,8 +128,8 @@ namespace rxv21
 		void readErrorCode ();
 
 	public:
-		RXV21 (Qbus *bus);
-		RXV21 (Qbus* bus, shared_ptr<RXV21Config> rxConfig);
+		RXV21 (Bus* bus);
+		RXV21 (Bus* bus, shared_ptr<RXV21Config> rxConfig);
 		~RXV21 ();
 		StatusCode read (BusAddress address, u16 *destAddress) override;
 		StatusCode writeWord (BusAddress address, u16 value) override;
