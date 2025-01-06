@@ -7,15 +7,20 @@
 
 using std::array;
 
-// This class abstracts a 16-, 18- or 22-bit bus address.
+// This class abstracts a bus address with the given width, i.e. the number
+// of address bits. Regular PDP-11 values are:
+// - 16-bit for an unmapped physical address,
+// - 18-bit for an Unibus address or 18-bit Qbus address,
+// - 22-bit for a 22-bit Qbus address or Extended Unibus (EUB).
+//
 class BusAddress
 {
 public:
     enum class Width
     {
-        _16Bit = 0,
-        _18Bit = 1,
-        _22Bit = 2
+        _16Bit = 16,
+        _18Bit = 18,
+        _22Bit = 22
     };
 
     BusAddress (u32 value);
@@ -29,28 +34,8 @@ public:
 
 private:
     u32 value_;
+    u32 maxNumber_;
     u32 ioPageBase_;
-    static const array<u32, 3> maxNumber_;
-    static const array<u32, 3> ioPageBases_;
-};
-
-// Definition of the used bits for 16-, 18- and 22-bits wide busses.
-inline const array<u32, 3>  BusAddress::maxNumber_ =
-{
-    0177777,    // 16-bit
-    0777777,    // 18-bit
-    017777777   // 22-bit
-};
-
-// Definition of the I/O page base address for 16-, 18- and 22-bits
-// wide busses. These constants could be derived from the maxNumber_
-// constants (maxNumber_[x] - (8 * 1024) + 1) but we'll keep them as
-// separate constants for reference puposes.
-inline const array<u32, 3>  BusAddress::ioPageBases_ =
-{
-    0160000,    // 16-bit
-    0760000,    // 18-bit
-    017760000   // 22-bit
 };
 
 
@@ -61,14 +46,16 @@ inline const array<u32, 3>  BusAddress::ioPageBases_ =
 // test 24.
 inline BusAddress::BusAddress (u32 value, Width width)
 {
-    value_ = value & maxNumber_.at (static_cast<size_t> (width));
-    ioPageBase_ = ioPageBases_.at (static_cast<size_t> (width));
+    maxNumber_ = (1 << static_cast<u32> (width)) - 1;
+    ioPageBase_ = maxNumber_ - (8 * 1024) + 1;
+    value_ = value & maxNumber_;
 }
 
 inline BusAddress::BusAddress (u32 value)
     :
     BusAddress (value, Width::_16Bit)
-{}
+{
+}
 
 inline BusAddress::operator u32 ()
 {
