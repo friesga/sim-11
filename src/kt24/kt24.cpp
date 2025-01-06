@@ -99,50 +99,39 @@ void KT24::reset ()
 // addresses because it would be used by addresses in the range of the
 // I/O page (017760000 - 017777777).
 //
-StatusCode KT24::dmaRead (BusAddress address, u16* destination)
+CondData<u16> KT24::dmaRead (BusAddress address)
 {
     return enabled_ && !address.isInIOpage () ? 
-        mappedRead (address, destination) :
-        readPhysical (address, destination);
+        mappedRead (address) :
+        readPhysical (address);
 }
 
-StatusCode KT24::dmaWrite (BusAddress address, u16 value)
+bool KT24::dmaWrite (BusAddress address, u16 value)
 {
     return enabled_  && !address.isInIOpage () ?
         mappedWrite (address, value) :
         writePhysical (address, value);
 }
 
-StatusCode KT24::mappedWrite (BusAddress address, u16 value)
+bool KT24::mappedWrite (BusAddress address, u16 value)
 {
     return writePhysical (physicalAddressFrom18BitBusAddress (address),
         value);
 }
 
-StatusCode KT24::mappedRead (BusAddress address, u16* destination)
+CondData<u16> KT24::mappedRead (BusAddress address)
 {
-    return readPhysical (physicalAddressFrom18BitBusAddress (address),
-        destination);
+    return readPhysical (physicalAddressFrom18BitBusAddress (address));
 }
 
-StatusCode KT24::writePhysical (u32 physicalAddress, u16 value)
+bool KT24::writePhysical (u32 physicalAddress, u16 value)
 {
-    if (bus_->writeWord (physicalAddress, value))
-        return StatusCode::OK;
-
-    return StatusCode::NonExistingMemory;
+    return bus_->writeWord (physicalAddress, value);
 }
 
-StatusCode KT24::readPhysical (u32 physicalAddress, u16* destination)
+CondData<u16> KT24::readPhysical (u32 physicalAddress)
 {
-    CondData<u16> data = bus_->read (physicalAddress);
-    if (data.hasValue ())
-    {
-        *destination = data.value ();
-        return StatusCode::OK;
-    }
-
-    return StatusCode::NonExistingMemory;
+    return bus_->read (physicalAddress);
 }
 
 u32 KT24::physicalAddressFrom18BitBusAddress (BusAddress busAddress)

@@ -30,8 +30,8 @@ public:
 	void reset ();
 
 	// Functions required for the UnibusMap interface
-	StatusCode dmaRead (BusAddress address, u16* destination);
-	StatusCode dmaWrite (BusAddress address, u16 value);
+	CondData<u16> dmaRead (BusAddress address);
+	bool dmaWrite (BusAddress address, u16 value);
 
 	void enable ();
 	void disable ();
@@ -65,10 +65,10 @@ private:
 	constexpr bool highMappingRegister (u16 address) const
 		{ return (address % 4) == 2; }
 
-	StatusCode mappedRead (BusAddress address, u16* destination);
-	StatusCode mappedWrite (BusAddress address, u16 value);
-	StatusCode readPhysical (u32 physicalAddress, u16* destination);
-	StatusCode writePhysical (u32 physicalAddress, u16 value);
+	CondData<u16> mappedRead (BusAddress address);
+	bool mappedWrite (BusAddress address, u16 value);
+	CondData<u16> readPhysical (u32 physicalAddress);
+	bool writePhysical (u32 physicalAddress, u16 value);
 	u32 physicalAddressFrom18BitBusAddress (BusAddress busAddress);
 };
 

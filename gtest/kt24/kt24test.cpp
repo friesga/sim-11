@@ -20,9 +20,8 @@ TEST (KT24, writePassthrough)
     // Install devices on the bus
     bus.installModule (&ms11p);
 
-    EXPECT_EQ (kt24.dmaWrite (0, dataWritten), StatusCode::OK);
+    EXPECT_TRUE (kt24.dmaWrite (0, dataWritten));
     EXPECT_EQ (ms11p.read (0, &dataRead), StatusCode::OK);
-
     EXPECT_EQ (dataWritten, dataRead);
 }
 
@@ -34,7 +33,7 @@ TEST (KT24, readPassthrough)
     KT24 kt24 (&bus);
     MS11P ms11p (&bus);
     u16 dataWritten {0177777};
-    u16 dataRead {0};
+    CondData<u16> dataRead {0};
 
     // Install devices on the bus
     bus.installModule (&ms11p);
@@ -42,8 +41,8 @@ TEST (KT24, readPassthrough)
     // KT24 is disabled by default
 
     EXPECT_EQ (ms11p.writeWord (0, dataWritten), StatusCode::OK);
-    EXPECT_EQ (kt24.dmaRead (0, &dataRead), StatusCode::OK);
-    
+    dataRead = kt24.dmaRead (0);
+    EXPECT_TRUE (dataRead.hasValue ());
     EXPECT_EQ (dataWritten, dataRead);
 }
 
@@ -119,7 +118,7 @@ TEST (KT24, dmaWriteAddressIsMapped)
         kt24.writeWord (testCase.mapRegisterHighAddress,
             testCase.mapRegisterHighContents);
 
-        EXPECT_EQ (kt24.dmaWrite (testCase._18BitAddress, dataWritten), StatusCode::OK);
+        EXPECT_TRUE (kt24.dmaWrite (testCase._18BitAddress, dataWritten));
         EXPECT_EQ (ms11p.read (testCase.physicalAddress, &dataRead), StatusCode::OK);
         EXPECT_EQ (dataWritten, dataRead);
     }
@@ -154,7 +153,7 @@ TEST (KT24, dmaReadAddressIsMapped)
     KT24 kt24 (&bus);
     MS11P ms11p (&bus);
     u16 dataWritten {0177777};
-    u16 dataRead {0};
+    CondData<u16> dataRead {0};
 
     // Install devices on the bus
     bus.installModule (&ms11p);
@@ -169,8 +168,8 @@ TEST (KT24, dmaReadAddressIsMapped)
             testCase.mapRegisterHighContents);
 
         EXPECT_EQ (ms11p.writeWord (testCase.physicalAddress, dataWritten), StatusCode::OK);
-        EXPECT_EQ (kt24.dmaRead (testCase._18BitAddress, &dataRead), StatusCode::OK);
-
+        dataRead = kt24.dmaRead (testCase._18BitAddress);
+        EXPECT_TRUE (dataRead.hasValue ());
         EXPECT_EQ (dataRead, dataWritten);
     }
 }
@@ -193,7 +192,7 @@ TEST (KT24, lowMappingRegisterBit0IsIgnored)
     kt24.writeWord (0170200, 0);
     kt24.writeWord (0170200, 1);
 
-    EXPECT_EQ (kt24.dmaWrite (0, dataWritten), StatusCode::OK);
+    EXPECT_TRUE (kt24.dmaWrite (0, dataWritten));
     EXPECT_EQ (ms11p.read (0, &dataRead), StatusCode::OK);
     EXPECT_EQ (dataWritten, dataRead);
 }
@@ -217,8 +216,8 @@ TEST (KT24, mappingRegister32IsUnused)
 
     // Try to map the I/O page to memory address 0. The write should fail
     // as no device is responsible for this address
-    EXPECT_EQ (kt24.dmaWrite (BusAddress (0760000, BusAddress::Width::_18Bit),
-        dataWritten), StatusCode::NonExistingMemory);
+    EXPECT_FALSE (kt24.dmaWrite (BusAddress (0760000, BusAddress::Width::_18Bit),
+        dataWritten));
     EXPECT_EQ (ms11p.read (0, &dataRead), StatusCode::OK);
 
     // The memory address must not have been changed

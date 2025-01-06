@@ -2,6 +2,7 @@
 #define _UNIBUSMAP_H_
 
 #include "busdevice.h"
+#include "conddata/conddata.h"
 
 // PDP-11 systems which have a Unibus and more than 248 Kbytes of main memory
 // are equipped with a Unibus map to allow DMA devices on the Unibus access to
@@ -17,8 +18,8 @@
 class UnibusMap : public BusDevice
 {
 public:
-	virtual StatusCode dmaRead (BusAddress address, u16* destination) = 0;
-	virtual StatusCode dmaWrite (BusAddress address, u16 value) = 0;
+	virtual CondData<u16> dmaRead (BusAddress address) = 0;
+	virtual bool dmaWrite (BusAddress address, u16 value) = 0;
 	virtual void reset () = 0;
 	virtual ~UnibusMap () {};
 };
