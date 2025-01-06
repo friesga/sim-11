@@ -33,6 +33,8 @@ public:
 	virtual CondData<u16> read (BusAddress address) = 0;
 	virtual bool writeWord (BusAddress address, u16 value) = 0;
 	virtual bool writeByte (BusAddress address, u8 val) = 0;
+	virtual CondData<u16> dmaRead (BusAddress address) = 0;
+	virtual bool dmaWrite (BusAddress address, u16 value) = 0;
 	virtual bool installModuleAtPosition (BusDevice* module, size_t position) = 0;
 	virtual bool installModule (BusDevice* module) = 0;
 };

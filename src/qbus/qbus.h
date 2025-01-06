@@ -135,6 +135,8 @@ public:
 	CondData<u16> read (BusAddress address);
 	bool writeWord (BusAddress address, u16 value);
 	bool writeByte (BusAddress address, u8 val);
+	CondData<u16> dmaRead (BusAddress address);
+	bool dmaWrite (BusAddress address, u16 value);
 	bool installModuleAtPosition (BusDevice* module, size_t position);
 	bool installModule (BusDevice* module);
 

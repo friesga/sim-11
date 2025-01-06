@@ -59,7 +59,7 @@ void RXV21::fillBuffer ()
 	for (wc = rx2wc, ptr = 0; wc > 0; wc--, ptr++) 
 	{
 		/* Transfer words */
-		buffer[ptr] = bus_->read(rx2ba);
+		buffer[ptr] = bus_->dmaRead (rx2ba);
 		rx2ba += 2;
 	}
 

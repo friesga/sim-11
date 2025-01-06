@@ -47,7 +47,7 @@ u16 CmdProcessor::readDataWithoutHeaderCheckCmd (RL01_02 *unit,
         for (size_t index = 0; index < rlv12Command.wordCount_;
             memAddr += 2, ++index)
         {
-            if (!controller_->bus_->writeWord (memAddr, 
+            if (!controller_->bus_->dmaWrite (memAddr, 
                    controller_->dataBuffer_[index]))
                 rlcsValue = RLV12const::CSR_NonExistentMemory;
         }

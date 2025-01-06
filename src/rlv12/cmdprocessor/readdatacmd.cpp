@@ -39,7 +39,7 @@ u16 CmdProcessor::readDataCmd (RL01_02 *unit, RLV12Command &rlv12Command)
         for (size_t index = 0; index < rlv12Command.wordCount_;
             memAddr += 2, ++index)
         {
-            if (!controller_->bus_->writeWord (memAddr, 
+            if (!controller_->bus_->dmaWrite (memAddr, 
                     controller_->dataBuffer_[index]))
                 rlcsValue = RLV12const::CSR_NonExistentMemory;
         }

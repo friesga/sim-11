@@ -44,7 +44,7 @@ u16 CmdProcessor::writeCheckCmd (RL01_02 *unit, RLV12Command &rlv12Command)
             memAddr += 2, ++rlv12Command.wordCount_)
         {
             // Loop through buffer
-            comp = controller_->bus_->read (memAddr).valueOr (0);
+            comp = controller_->bus_->dmaRead (memAddr).valueOr (0);
             if (!comp.hasValue ())
             {
                 rlcsValue = RLV12const::CSR_NonExistentMemory;
