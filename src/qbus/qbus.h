@@ -139,6 +139,7 @@ public:
 	bool dmaWrite (BusAddress address, u16 value);
 	bool installModuleAtPosition (BusDevice* module, size_t position);
 	bool installModule (BusDevice* module);
+	void installUnibusMap (UnibusMap* device);
 
 private:
 	// This queue keeps all interrupt requests, ordered in interrupt priority
@@ -161,7 +162,7 @@ private:
 	Signal::SubscriberKey ourKey_;
 
 	bool processorRunning_;
-	u16	delay_;
+	UnibusMap* unibusMap_ {nullptr};
 
 	void reset ();
 	BusDevice *responsibleModule (BusAddress address);

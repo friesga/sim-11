@@ -176,3 +176,8 @@ bool Qbus::installModule (BusDevice* device)
 	slots_[numDevices_++] = device;
 	return true;
 }
+
+void Qbus::installUnibusMap (UnibusMap* device)
+{
+	unibusMap_ = device;
+}
