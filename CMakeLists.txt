@@ -469,6 +469,7 @@ set (GTEST_SRCS
     gtest/kdf11_b/kdf11b_bdv11configuratortest.cpp
     gtest/kdf11_u/kdf11_uconfiguratortest.cpp
     gtest/kdf11_u/kdf11_udisplayregistertest.cpp
+    gtest/ktf11_a/ktf11_atest.cpp
     gtest/locationtest.cpp
     gtest/kt24/kt24configuratortest.cpp
     gtest/kt24/kt24test.cpp

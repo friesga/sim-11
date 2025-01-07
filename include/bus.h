@@ -20,6 +20,7 @@ public:
 	virtual Signal& BINIT () = 0;
 	virtual Signal& BOOT () = 0;
 	virtual Signal& BatteryPower () = 0;
+	virtual Signal& IOMapEnable () = 0;
 
 	// Functions for interrupt handling
 	virtual void setInterrupt (TrapPriority priority, unsigned char busOrder,

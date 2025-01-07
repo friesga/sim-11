@@ -119,6 +119,7 @@ public:
 	Signal& BINIT ();
 	Signal& BOOT ();
 	Signal& BatteryPower ();
+	Signal& IOMapEnable ();
 
 	Qbus ();
 	void setInterrupt (TrapPriority priority, unsigned char busOrder,
@@ -157,6 +158,7 @@ private:
 	Signal BINIT_;
 	Signal BOOT_;
 	Signal BatteryPower_;
+	Signal IOMapEnable_;
 
 	// Signal administration
 	Signal::SubscriberKey ourKey_;

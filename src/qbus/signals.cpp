@@ -34,3 +34,8 @@ Signal& Qbus::BatteryPower ()
 {
     return BatteryPower_;
 }
+
+Signal& Qbus::IOMapEnable ()
+{
+    return IOMapEnable_;
+}

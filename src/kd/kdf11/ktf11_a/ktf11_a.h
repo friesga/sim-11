@@ -100,7 +100,7 @@ private:
 	SR0 sr0_ {0};
 	BasicRegister const sr1_ {0};
 	BasicRegister sr2_ {0};
-	SR3 sr3_ {0};
+	SR3 sr3_ {bus_, 0};
 
 	// The ReadonlyRegisters form a kind of facade or decorator which
 	// removes the possibility to write to a register from the specified
