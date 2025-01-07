@@ -482,6 +482,7 @@ set (GTEST_SRCS
     gtest/operandlocationtest.cpp
     gtest/qbusinstalltest.cpp
     gtest/dummycpu/dummymmu/dummymmu.cpp
+    gtest/registers/twowordregistertest.cpp
     gtest/rlv12/rl11configprocessortest.cpp
     gtest/rlv12/rlv11configprocessortest.cpp
     gtest/rlv12/rlv12configprocessortest.cpp
