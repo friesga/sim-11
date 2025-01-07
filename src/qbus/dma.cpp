@@ -2,10 +2,12 @@
 
 CondData<u16> Qbus::dmaRead (BusAddress address)
 {
-    return read (address);
+    return (unibusMap_ != nullptr) ? 
+        unibusMap_->dmaRead (address) : read (address);
 }
 
 bool Qbus::dmaWrite (BusAddress address, u16 value)
 {
-    return writeWord (address, value);
+    return (unibusMap_ != nullptr) ?
+        unibusMap_->dmaWrite (address, value) : writeWord (address, value);
 }
