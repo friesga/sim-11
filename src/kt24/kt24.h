@@ -33,12 +33,14 @@ public:
 	CondData<u16> dmaRead (BusAddress address);
 	bool dmaWrite (BusAddress address, u16 value);
 
+	// The enable() and disable() functions are added to be able to control
+	// the KT24 state from the unit tests.
 	void enable ();
 	void disable ();
 
 private:
     Bus* bus_;
-	bool enabled_ {false};
+	bool ioMapEnabled_ {false};
 
 	// The mapping registers are defined as an array of u16 low/high pairs
 	// to be easily indexed by bus address <17:13>.
@@ -70,6 +72,7 @@ private:
 	CondData<u16> readPhysical (u32 physicalAddress);
 	bool writePhysical (u32 physicalAddress, u16 value);
 	u32 physicalAddressFrom18BitBusAddress (BusAddress busAddress);
+	void ioMapEnableReceiver (bool signalValue);
 };
 
 #endif // _KT24_H_

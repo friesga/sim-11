@@ -14,12 +14,12 @@ KT24::KT24 (Bus* bus, shared_ptr<KT24Config> kt24Config)
 
 void KT24::enable ()
 {
-    enabled_ = true;
+    ioMapEnabled_ = true;
 }
 
 void KT24::disable ()
 {
-    enabled_ = false;
+    ioMapEnabled_ = false;
 }
 
 StatusCode KT24::read (BusAddress address, u16* destination)
@@ -101,14 +101,14 @@ void KT24::reset ()
 //
 CondData<u16> KT24::dmaRead (BusAddress address)
 {
-    return enabled_ && !address.isInIOpage () ? 
+    return ioMapEnabled_ && !address.isInIOpage () ? 
         mappedRead (address) :
         readPhysical (address);
 }
 
 bool KT24::dmaWrite (BusAddress address, u16 value)
 {
-    return enabled_  && !address.isInIOpage () ?
+    return ioMapEnabled_  && !address.isInIOpage () ?
         mappedWrite (address, value) :
         writePhysical (address, value);
 }
@@ -151,4 +151,9 @@ u32 KT24::physicalAddressFrom18BitBusAddress (BusAddress busAddress)
     //    ((high << 16) | low) + (static_cast<u16> (busAddress) & 017777) << '\n';
 
     return ((high << 16) | low) + (static_cast<u16> (busAddress) & 017777);
+}
+
+void KT24::ioMapEnableReceiver (bool signalValue)
+{
+    ioMapEnabled_ = signalValue;
 }
