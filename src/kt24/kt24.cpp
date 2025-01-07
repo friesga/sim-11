@@ -113,25 +113,28 @@ bool KT24::dmaWrite (BusAddress address, u16 value)
         writePhysical (address, value);
 }
 
-bool KT24::mappedWrite (BusAddress address, u16 value)
-{
-    return writePhysical (physicalAddressFrom18BitBusAddress (address),
-        value);
-}
-
 CondData<u16> KT24::mappedRead (BusAddress address)
 {
-    return readPhysical (physicalAddressFrom18BitBusAddress (address));
+    u32 physicalAddress = physicalAddressFrom18BitBusAddress (address);
+    lmaRegister_ = physicalAddress;
+    return readPhysical (physicalAddress);
 }
 
-bool KT24::writePhysical (u32 physicalAddress, u16 value)
+bool KT24::mappedWrite (BusAddress address, u16 value)
 {
-    return bus_->writeWord (physicalAddress, value);
+    u32 physicalAddress = physicalAddressFrom18BitBusAddress (address);
+    lmaRegister_ = physicalAddress;
+    return writePhysical (physicalAddress, value);
 }
 
 CondData<u16> KT24::readPhysical (u32 physicalAddress)
 {
     return bus_->read (physicalAddress);
+}
+
+bool KT24::writePhysical (u32 physicalAddress, u16 value)
+{
+    return bus_->writeWord (physicalAddress, value);
 }
 
 u32 KT24::physicalAddressFrom18BitBusAddress (BusAddress busAddress)

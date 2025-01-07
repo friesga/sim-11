@@ -5,6 +5,7 @@
 #include "bus.h"
 #include "abstractbusdevice/abstractbusdevice.h"
 #include "configdata/kt24/kt24config/kt24config.h"
+#include "basicregister/twowordregister.h"
 
 #include <array>
 #include <memory>
@@ -42,18 +43,26 @@ private:
     Bus* bus_;
 	bool ioMapEnabled_ {false};
 
+	// There are 32 mapping registers, each containing a 21-bit mapping
+	// offset. Each mapping register is contained in two 16-bit registers;
+	// one register contains bits (15:01) (low word), and the other register
+	// contains bits (21:16) (high word).
+	//
 	// The mapping registers are defined as an array of u16 low/high pairs
 	// to be easily indexed by bus address <17:13>.
-	struct MappingRegister
-	{
-		u16 low;
-        u16 high;
-	};
-
+	//
 	static const size_t numMappingRegisters {32};
 	static const u16 mappingRegistersBaseAddress {0170200};
+	array<TwoWordRegister, numMappingRegisters> mappingRegisters_ {0};
 
-	array<MappingRegister, numMappingRegisters> mappingRegisters_ {0};
+	// The LMA is a two-word register located at addresses 017777734
+	// (low word) and 0177777368 (high word) that contains the 22-bit memory
+	// (EUB) address of the last mapped address.This register is used for
+	// maintenance purposes and also contains the memory control lines, C1
+	// and C0, and the force jumpers bit.
+	//
+	static const u16 lmaRegisterBaseAddress {0177734};
+	TwoWordRegister lmaRegister_ {0};
 
 	// Calculate the array index from the bus address. The division by four
 	// stems from the facts that a mapping register comprises two words each
