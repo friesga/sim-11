@@ -29,19 +29,11 @@ StatusCode KT24::read (BusAddress address, u16* destination)
     switch (findRegister (registerAddress))
     {
         case MappingRegister:
-            if (isLowRegister (registerAddress))
-                *destination =
-                    mappingRegisters_[indexFromRegisterAddress (registerAddress)].low;
-            else if (isHighRegister (registerAddress))
-                *destination =
-                    mappingRegisters_[indexFromRegisterAddress (registerAddress)].high;
+            readMappingRegister (registerAddress, destination);
             break;
 
         case KT24Registers::LMARegister:
-            if (isLowRegister (registerAddress))
-                *destination = lmaRegister_.low;
-            else
-                *destination = lmaRegister_.high;
+            readLMARegister (registerAddress, destination);
             break;
 
         case KT24Registers::CpuErrorRegister:
@@ -62,17 +54,11 @@ StatusCode KT24::writeWord (BusAddress address, u16 value)
     switch (findRegister (registerAddress))
     {
         case MappingRegister:
-            if (isLowRegister (registerAddress))
-                mappingRegisters_[indexFromRegisterAddress (registerAddress)].low = value;
-            else if (isHighRegister (registerAddress))
-                mappingRegisters_[indexFromRegisterAddress (registerAddress)].high = value;
+            writeMappingRegister (registerAddress, value);
             break;
 
         case KT24Registers::LMARegister:
-            if (isLowRegister (registerAddress))
-                lmaRegister_.low = value;
-            else
-                lmaRegister_.high = value;
+            writeLMARegister (registerAddress, value);
             break;
 
         case KT24Registers::CpuErrorRegister:
@@ -115,6 +101,40 @@ KT24::KT24Registers KT24::findRegister (BusAddress address) const
     }
 
     return KT24Registers::End;
+}
+
+void KT24::readMappingRegister (u16 registerAddress, u16* destination)
+{
+    if (isLowRegister (registerAddress))
+        *destination =
+        mappingRegisters_[indexFromRegisterAddress (registerAddress)].low;
+    else if (isHighRegister (registerAddress))
+        *destination =
+        mappingRegisters_[indexFromRegisterAddress (registerAddress)].high;
+}
+
+void KT24::readLMARegister (u16 registerAddress, u16* destination)
+{
+    if (isLowRegister (registerAddress))
+        *destination = lmaRegister_.low;
+    else
+        *destination = lmaRegister_.high;
+}
+
+void KT24::writeMappingRegister (u16 registerAddress, u16 value)
+{
+    if (isLowRegister (registerAddress))
+        mappingRegisters_[indexFromRegisterAddress (registerAddress)].low = value;
+    else if (isHighRegister (registerAddress))
+        mappingRegisters_[indexFromRegisterAddress (registerAddress)].high = value;
+}
+
+void KT24::writeLMARegister (u16 registerAddress, u16 value)
+{
+    if (isLowRegister (registerAddress))
+        lmaRegister_.low = value;
+    else
+        lmaRegister_.high = value;
 }
 
 void KT24::reset ()

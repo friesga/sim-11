@@ -96,6 +96,10 @@ private:
 		{ return (address % 4) == 2; }
 
 	KT24Registers findRegister (BusAddress address) const;
+	void readMappingRegister (u16 registerAddress, u16* destination);
+	void readLMARegister (u16 registerAddress, u16* destination);
+	void writeMappingRegister (u16 registerAddress, u16 value);
+	void writeLMARegister (u16 registerAddress, u16 value);
 	CondData<u16> mappedRead (BusAddress address);
 	bool mappedWrite (BusAddress address, u16 value);
 	CondData<u16> readPhysical (u32 physicalAddress);
