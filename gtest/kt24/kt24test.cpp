@@ -245,3 +245,15 @@ TEST (KT24, lmaRegisterCanBeReadAndWritten)
     EXPECT_EQ (kt24.read (0177736, &dataRead), StatusCode::OK);
     EXPECT_EQ (dataWritten, dataRead);
 }
+
+TEST (KT24, cpuErrorRegisterCanBeReadAndWritten)
+{
+    Qbus bus;
+    KT24 kt24 (&bus);
+    u16 dataWritten {0177777};
+    u16 dataRead {0};
+
+    EXPECT_EQ (kt24.writeWord (0177766, dataWritten), StatusCode::OK);
+    EXPECT_EQ (kt24.read (0177766, &dataRead), StatusCode::OK);
+    EXPECT_EQ (dataWritten, dataRead);
+}
