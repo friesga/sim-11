@@ -46,8 +46,9 @@ TEST (KT24, readPassthrough)
     EXPECT_EQ (dataWritten, dataRead);
 }
 
-// Verify the KT24 is responsible for the registers in the range 0170200
-// up to and including 0170376.
+// Verify the KT24 is responsible for the mapping registers (i.e. registers
+// in the range 0170200 up to and including 0170376), the Last Mapped Address
+// Register (0177734 and 0177736) and the CPU Error Register (0177766).
 TEST (KT24, kt24IsResponsible)
 {
     Qbus bus;
@@ -57,6 +58,11 @@ TEST (KT24, kt24IsResponsible)
     EXPECT_TRUE  (kt24.responsible (0170200));
     EXPECT_TRUE  (kt24.responsible (0170376));
     EXPECT_FALSE (kt24.responsible (0170400));
+
+    EXPECT_TRUE (kt24.responsible (0177734));
+    EXPECT_TRUE (kt24.responsible (0177736));
+
+    EXPECT_TRUE (kt24.responsible (0177766));
 }
 
 TEST (KT24, kt24RegistersAreIntizalised)
@@ -222,4 +228,20 @@ TEST (KT24, mappingRegister32IsUnused)
 
     // The memory address must not have been changed
     EXPECT_EQ (dataRead, 0);
+}
+
+TEST (KT24, lmaRegisterCanBeReadAndWritten)
+{
+    Qbus bus;
+    KT24 kt24 (&bus);
+    u16 dataWritten {0177777};
+    u16 dataRead {0};
+
+    EXPECT_EQ (kt24.writeWord (0177734, dataWritten), StatusCode::OK);
+    EXPECT_EQ (kt24.read (0177734, &dataRead), StatusCode::OK);
+    EXPECT_EQ (dataWritten, dataRead);
+
+    EXPECT_EQ (kt24.writeWord (0177736, dataWritten), StatusCode::OK);
+    EXPECT_EQ (kt24.read (0177736, &dataRead), StatusCode::OK);
+    EXPECT_EQ (dataWritten, dataRead);
 }

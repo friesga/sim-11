@@ -26,12 +26,31 @@ StatusCode KT24::read (BusAddress address, u16* destination)
 {
     u16 registerAddress= address.registerAddress ();
 
-    if (lowMappingRegister (registerAddress))
-        *destination = 
-            mappingRegisters_[indexFromRegisterAddress (registerAddress)].low;
-    else
-        *destination = 
-            mappingRegisters_[indexFromRegisterAddress (registerAddress)].high;
+    switch (findRegister (registerAddress))
+    {
+        case MappingRegister:
+            if (isLowRegister (registerAddress))
+                *destination =
+                    mappingRegisters_[indexFromRegisterAddress (registerAddress)].low;
+            else if (isHighRegister (registerAddress))
+                *destination =
+                    mappingRegisters_[indexFromRegisterAddress (registerAddress)].high;
+            break;
+
+        case KT24Registers::LMARegister:
+            if (isLowRegister (registerAddress))
+                *destination = lmaRegister_.low;
+            else
+                *destination = lmaRegister_.high;
+            break;
+
+        case KT24Registers::CpuErrorRegister:
+            *destination = cpuErrorRegister_;
+            break;
+
+        default:
+            throw "Should not happen";
+    }
 
     return StatusCode::OK;
 }
@@ -40,10 +59,29 @@ StatusCode KT24::writeWord (BusAddress address, u16 value)
 {
     u16 registerAddress= address.registerAddress ();
 
-    if (lowMappingRegister (registerAddress))
-        mappingRegisters_[indexFromRegisterAddress (registerAddress)].low = value;
-    else
-        mappingRegisters_[indexFromRegisterAddress (registerAddress)].high = value;
+    switch (findRegister (registerAddress))
+    {
+        case MappingRegister:
+            if (isLowRegister (registerAddress))
+                mappingRegisters_[indexFromRegisterAddress (registerAddress)].low = value;
+            else if (isHighRegister (registerAddress))
+                mappingRegisters_[indexFromRegisterAddress (registerAddress)].high = value;
+            break;
+
+        case KT24Registers::LMARegister:
+            if (isLowRegister (registerAddress))
+                lmaRegister_.low = value;
+            else
+                lmaRegister_.high = value;
+            break;
+
+        case KT24Registers::CpuErrorRegister:
+            cpuErrorRegister_ = value;
+            break;
+
+        default:
+            throw "Should not happen";
+    }
 
     return StatusCode::OK;
 }
@@ -61,10 +99,22 @@ StatusCode KT24::writeByte (BusAddress address, u8 value)
     return writeWord (wordAddress, tmp);
 }
 
+// The KT24 is responsible for the given address if it is an address in one
+// the defined kt24registers_ intervals.
 bool KT24::responsible (BusAddress address)
 {
-    return address.registerAddress () >= mappingRegistersBaseAddress &&
-        address.registerAddress () < mappingRegistersBaseAddress + (mappingRegisters_.size () * 4);
+    return findRegister (address) != KT24Registers::End;
+}
+
+KT24::KT24Registers KT24::findRegister (BusAddress address) const
+{
+    for (size_t index = 0; index < KT24Registers::End; index++)
+    {
+        if (kt24Registers_[index].contains (address))
+            return static_cast<KT24Registers> (index);
+    }
+
+    return KT24Registers::End;
 }
 
 void KT24::reset ()
