@@ -32,11 +32,11 @@ StatusCode KT24::read (BusAddress address, u16* destination)
             readMappingRegister (registerAddress, destination);
             break;
 
-        case KT24Registers::LMARegister:
+        case LMARegister:
             readLMARegister (registerAddress, destination);
             break;
 
-        case KT24Registers::CpuErrorRegister:
+        case CpuErrorRegister:
             *destination = cpuErrorRegister_;
             break;
 
@@ -57,11 +57,11 @@ StatusCode KT24::writeWord (BusAddress address, u16 value)
             writeMappingRegister (registerAddress, value);
             break;
 
-        case KT24Registers::LMARegister:
+        case LMARegister:
             writeLMARegister (registerAddress, value);
             break;
 
-        case KT24Registers::CpuErrorRegister:
+        case CpuErrorRegister:
             cpuErrorRegister_ = value;
             break;
 
@@ -94,9 +94,9 @@ bool KT24::responsible (BusAddress address)
 
 KT24::KT24Registers KT24::findRegister (BusAddress address) const
 {
-    for (size_t index = 0; index < KT24Registers::End; index++)
+    for (size_t index = 0; index < KT24Registers::End; ++index)
     {
-        if (kt24Registers_[index].contains (address))
+        if (kt24Registers_[index].contains (address.registerAddress ()))
             return static_cast<KT24Registers> (index);
     }
 
