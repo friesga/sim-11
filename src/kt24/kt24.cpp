@@ -62,7 +62,7 @@ StatusCode KT24::writeWord (BusAddress address, u16 value)
             break;
 
         case CpuErrorRegister:
-            cpuErrorRegister_ = value;
+            writeCpuErrorRegister ();
             break;
 
         default:
@@ -107,10 +107,10 @@ void KT24::readMappingRegister (u16 registerAddress, u16* destination)
 {
     if (isLowRegister (registerAddress))
         *destination =
-        mappingRegisters_[indexFromRegisterAddress (registerAddress)].low;
-    else if (isHighRegister (registerAddress))
+            mappingRegisters_[indexFromRegisterAddress (registerAddress)].low;
+    else 
         *destination =
-        mappingRegisters_[indexFromRegisterAddress (registerAddress)].high;
+            mappingRegisters_[indexFromRegisterAddress (registerAddress)].high;
 }
 
 void KT24::readLMARegister (u16 registerAddress, u16* destination)
@@ -125,7 +125,7 @@ void KT24::writeMappingRegister (u16 registerAddress, u16 value)
 {
     if (isLowRegister (registerAddress))
         mappingRegisters_[indexFromRegisterAddress (registerAddress)].low = value;
-    else if (isHighRegister (registerAddress))
+    else 
         mappingRegisters_[indexFromRegisterAddress (registerAddress)].high = value;
 }
 
@@ -135,6 +135,13 @@ void KT24::writeLMARegister (u16 registerAddress, u16 value)
         lmaRegister_.low = value;
     else
         lmaRegister_.high = value;
+}
+
+// The CPU error register is located at address 017 777 766. This register is
+// read-only; any attempt to write to it will clear the power-fail bit.
+void KT24::writeCpuErrorRegister ()
+{
+    cpuErrorRegister_ &= 0177776;
 }
 
 void KT24::reset ()
