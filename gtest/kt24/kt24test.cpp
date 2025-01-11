@@ -7,6 +7,19 @@
 
 using std::vector;
 
+TEST (KT24, lowMappingRegisterBit0IsReadOnly)
+{
+    Qbus bus;
+    KT24 kt24 (&bus);
+    u16 dataWritten {0177777};
+    u16 dataRead {0};
+
+    EXPECT_EQ (kt24.writeWord (0170200, 0177777), StatusCode::OK);
+    EXPECT_EQ (kt24.read (0170200, &dataRead), StatusCode::OK);
+
+    EXPECT_EQ (dataRead, 0177776);
+}
+
 // Verify that if the KT24 is disabled data is written to the
 // lower 18-bit address space of the given 22-bit address
 TEST (KT24, writePassthrough)
@@ -246,6 +259,8 @@ TEST (KT24, lmaRegisterCanBeReadAndWritten)
     EXPECT_EQ (dataWritten, dataRead);
 }
 
+// The CPU error register cannot be written, but when it is written bit 0
+// (i.e. the powerfail bit) is cleared.
 TEST (KT24, cpuErrorRegisterCanBeReadAndWritten)
 {
     Qbus bus;
@@ -255,5 +270,5 @@ TEST (KT24, cpuErrorRegisterCanBeReadAndWritten)
 
     EXPECT_EQ (kt24.writeWord (0177766, dataWritten), StatusCode::OK);
     EXPECT_EQ (kt24.read (0177766, &dataRead), StatusCode::OK);
-    EXPECT_EQ (dataWritten, dataRead);
+    EXPECT_EQ (dataRead, 0);
 }

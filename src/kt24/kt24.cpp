@@ -121,10 +121,14 @@ void KT24::readLMARegister (u16 registerAddress, u16* destination)
         *destination = lmaRegister_.high;
 }
 
+// The mapping registers are 21-bits wide and are stored in two 16-bit words,
+// i.e. a low and a high word. Bit 0 of the low word is not writable and reads
+// as zero. This is confirmed by diagnostic KKUAE0 test 2.
 void KT24::writeMappingRegister (u16 registerAddress, u16 value)
 {
     if (isLowRegister (registerAddress))
-        mappingRegisters_[indexFromRegisterAddress (registerAddress)].low = value;
+        mappingRegisters_[indexFromRegisterAddress (registerAddress)].low = 
+            value & 0177776;
     else 
         mappingRegisters_[indexFromRegisterAddress (registerAddress)].high = value;
 }
