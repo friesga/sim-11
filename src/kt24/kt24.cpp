@@ -94,10 +94,13 @@ bool KT24::responsible (BusAddress address)
 
 KT24::KT24Registers KT24::findRegister (BusAddress address) const
 {
-    for (size_t index = 0; index < KT24Registers::End; ++index)
+    if (address.isInIOpage ())
     {
-        if (kt24Registers_[index].contains (address.registerAddress ()))
-            return static_cast<KT24Registers> (index);
+        for (size_t index = 0; index < KT24Registers::End; ++index)
+        {
+            if (kt24Registers_[index].contains (address.registerAddress ()))
+                return static_cast<KT24Registers> (index);
+        }
     }
 
     return KT24Registers::End;
