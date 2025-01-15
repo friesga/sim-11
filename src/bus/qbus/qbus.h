@@ -4,6 +4,7 @@
 #include "bus/include/bus.h"
 #include "bus/signalhandler/signalhandler.h"
 #include "bus/interrupthandler/interrupthandler.h"
+#include "bus/iterator/iterator.h"
 
 #include "threadsafecontainers/threadsafeprioqueue.h"
 
@@ -45,37 +46,6 @@ private:
 	BusDevice* slots_[numberOfSlots] {nullptr};
 
 public:
-	// The bus contains a number of BusDevice pointers. This iterator iterates
-	// over these pointers. The iterator therefore points to BusDevice pointers.
-	class Iterator
-	{
-	public:
-		using iterator_category = std::forward_iterator_tag;
-		using difference_type   = std::ptrdiff_t;
-		using value_type        = BusDevice*;
-		using pointer           = BusDevice**;  // or also value_type*
-		using reference         = const value_type&;
-
-		// In the default constructor initialize the iterator with a default
-		// null pointer.
-		Iterator () : ptr_ {nullptr} {}
-		Iterator (pointer it) : ptr_ (it) {}
-		reference operator* () const { return *ptr_; }
-		pointer operator-> () { return &(*ptr_); }
-
-		// Prefix increment
-		Iterator& operator++ () { ++ptr_; return *this; }
-
-		// Postfix increment
-		Iterator operator++ (int) { Iterator tmp = *this; ++(*this); return tmp; }
-
-		friend bool operator== (const Iterator& a, const Iterator& b) { return a.ptr_ == b.ptr_; }
-		friend bool operator!= (const Iterator& a, const Iterator& b) { return a.ptr_ != b.ptr_; }
-
-	private:
-		pointer ptr_;
-	};
-
 	Iterator begin () { return Iterator (&slots_[0]); }
 	Iterator end () { return Iterator (&slots_[numDevices_ - 1]); }
 	Iterator operator[] (int index) { return Iterator (&slots_[index]); }
@@ -104,12 +74,12 @@ public:
 
 	Qbus ();
 
-
 	CondData<u16> read (BusAddress address);
 	bool writeWord (BusAddress address, u16 value);
 	bool writeByte (BusAddress address, u8 val);
 	CondData<u16> dmaRead (BusAddress address);
 	bool dmaWrite (BusAddress address, u16 value);
+
 	bool installModuleAtPosition (BusDevice* module, size_t position);
 	bool installModule (BusDevice* module);
 	void installUnibusMap (UnibusMap* device);

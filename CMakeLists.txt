@@ -172,6 +172,7 @@ set (BUS_SRCS
     src/bus/qbus/bussignals.cpp
     src/bus/qbus/businterrupts.cpp
     src/bus/signalhandler/signalhandler.cpp
+    src/bus/iterator/iterator.cpp
     src/bus/interrupthandler/interrupthandler.cpp)
 
 set (CONFIGURATOR_SRCS
@@ -542,15 +543,15 @@ set (SIM11_TEST_SRCS
 add_executable (sim-11-test ${SIM11_TEST_SRCS})
 
 set(GTEST_INCLUDE_DIRS 
-    D:/src/gtest-1.10.0/googletest/include/
-    # C:/Tools/gtest-1.10.0/include
+    # D:/src/gtest-1.10.0/googletest/include/
+    C:/Tools/gtest-1.10.0/include
     )
 
 set (GTESTUNIT_LIBS
-    "D:/src/gtest-1.10.0/build/x64-Release/lib/gtest.lib"
-    "D:/src/gtest-1.10.0/build/x64-Release/lib/gtest_main.lib"
-    # C:/Tools/gtest-1.10.0/lib/gtest.lib
-    # C:/Tools/gtest-1.10.0/lib/gtest_main.lib
+    # "D:/src/gtest-1.10.0/build/x64-Release/lib/gtest.lib"
+    # "D:/src/gtest-1.10.0/build/x64-Release/lib/gtest_main.lib"
+    C:/Tools/gtest-1.10.0/lib/gtest.lib
+    C:/Tools/gtest-1.10.0/lib/gtest_main.lib
     )
 
 set (SDL_INCLUDE_DIRS
