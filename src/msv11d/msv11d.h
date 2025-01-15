@@ -1,7 +1,7 @@
 #ifndef _MSV11D_H_
 #define _MSV11D_H_
 
-#include "bus.h"
+#include "bus/bus.h"
 #include "memorydevice.h"
 #include "configdata/msv11config/msv11config.h"
 

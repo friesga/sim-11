@@ -1,7 +1,7 @@
 #ifndef _SERIALLINEUNITS_H_
 #define _SERIALLINEUNITS_H_
 
-#include "bus.h"
+#include "bus/bus.h"
 #include "abstractbusdevice/abstractbusdevice.h"
 #include "dl11/uart/uart.h"
 #include "configdata/kdf11/slu/sluconfig/sluconfig.h"

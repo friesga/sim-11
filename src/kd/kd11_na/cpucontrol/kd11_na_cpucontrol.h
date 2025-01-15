@@ -1,7 +1,7 @@
 #ifndef _KD11_NA_CPU_H_
 #define _KD11_NA_CPU_H_
 
-#include "bus.h"
+#include "bus/bus.h"
 #include "kd/include/cpudata.h"
 #include "kd/include/cpucontrol.h"
 #include "float/float.h"

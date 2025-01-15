@@ -1,7 +1,7 @@
 #ifndef _RXV21_H_
 #define _RXV21_H_
 
-#include "bus.h"
+#include "bus/bus.h"
 #include "pdp11peripheral/pdp11peripheral.h"
 #include "conddata/conddata.h"
 #include "configdata/rxv21/rxv21config/rxv21config.h"

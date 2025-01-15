@@ -1,7 +1,7 @@
 #ifndef _MS11P_H_
 #define _MS11P_H_
 
-#include "bus.h"
+#include "bus/bus.h"
 #include "memorydevice.h"
 #include "configdata/ms11pconfig/ms11pconfig.h"
 

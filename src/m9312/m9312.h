@@ -1,7 +1,7 @@
 #ifndef _M9312_H_
 #define _M9312_H_
 
-#include "bus.h"
+#include "bus/bus.h"
 #include "pdp11peripheral/pdp11peripheral.h"
 #include "configdata/m9312/m9312config/m9312config.h"
 #include "statuscodes.h"

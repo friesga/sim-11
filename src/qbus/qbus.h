@@ -1,7 +1,7 @@
 #ifndef _QBUS_H_
 #define _QBUS_H_
 
-#include "bus.h"
+#include "bus/bus.h"
 #include "types.h"
 #include "statuscodes.h"
 #include "conddata/conddata.h"

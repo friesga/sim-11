@@ -4,7 +4,7 @@
 #include "rlv12const.h"
 #include "trace/trace.h"
 #include "rl01_02/rl01_02.h"
-#include "bus.h"
+#include "bus/bus.h"
 #include "busaddress/busaddress.h"
 #include "pdp11peripheral/pdp11peripheral.h"
 #include "threadsafecontainers/threadsafequeue.h"

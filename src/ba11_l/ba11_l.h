@@ -1,7 +1,7 @@
 #ifndef _BA11L_H_
 #define _BA11L_H_
 
-#include "bus.h"
+#include "bus/bus.h"
 #include "panel.h"
 #include "configdata/ba11lconfig/ba11lconfig.h"
 

@@ -1,7 +1,7 @@
 #ifndef _KD11_NA_H_
 #define _KD11_NA_H_
 
-#include "bus.h"
+#include "bus/bus.h"
 #include "kd/include/pdp11processor.h"
 #include "cpucontrol/kd11_na_cpucontrol.h"
 #include "odt/kd11_na_odt.h"

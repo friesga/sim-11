@@ -1,7 +1,7 @@
 #ifndef _DLV11CHANNEL_H_
 #define _DLV11CHANNEL_H_
 
-#include "bus.h"
+#include "bus/bus.h"
 #include "abstractbusdevice/abstractbusdevice.h"
 #include "statuscodes.h"
 #include "configdata/serialconfig/dlv11jconfig/dlv11jconfig.h"

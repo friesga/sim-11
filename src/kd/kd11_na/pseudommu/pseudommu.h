@@ -2,7 +2,7 @@
 #define _PSEUDOMMU_H_
 
 #include "kd/include/mmu.h"
-#include "bus.h"
+#include "bus/bus.h"
 #include "conddata/conddata.h"
 #include "kd/include/cpudata.h"
 
