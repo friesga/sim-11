@@ -3,6 +3,7 @@
 
 #include "bus/include/bus.h"
 #include "bus/signalhandler/signalhandler.h"
+#include "bus/interrupthandler/interrupthandler.h"
 
 #include "threadsafecontainers/threadsafeprioqueue.h"
 
@@ -89,7 +90,7 @@ public:
 	Signal& BatteryPower ();
 	Signal& IOMapEnable ();
 
-	Qbus ();
+	// Functions required for the BusInterrupts interface
 	void setInterrupt (TrapPriority priority, unsigned char busOrder,
 		u8 functionOrder, unsigned char vector);
 	bool containsInterrupt (TrapPriority priority, unsigned char busOrder,
@@ -99,7 +100,10 @@ public:
 	void clearInterrupts ();
 	bool intrptReqAvailable ();
 	u8 intrptPriority ();
-	bool getIntrptReq (InterruptRequest &ir);
+	bool getIntrptReq (InterruptRequest& ir);
+
+	Qbus ();
+
 
 	CondData<u16> read (BusAddress address);
 	bool writeWord (BusAddress address, u16 value);
@@ -111,12 +115,9 @@ public:
 	void installUnibusMap (UnibusMap* device);
 
 private:
-	// This queue keeps all interrupt requests, ordered in interrupt priority
-	using IntrptReqQueue = ThreadSafePrioQueue<InterruptRequest>;
-	IntrptReqQueue intrptReqQueue_;
-
 	// Definition of the handlers
 	SignalHandler signalHandler_;
+	InterruptHandler interruptHandler_;
 
 
 	// Signal administration
@@ -127,7 +128,7 @@ private:
 
 	void reset ();
 	BusDevice *responsibleModule (BusAddress address);
-	void pushInterruptRequest (InterruptRequest interruptReq);
+
 	void BINITReceiver (bool signalValue);
 };
 

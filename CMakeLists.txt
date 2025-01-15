@@ -170,7 +170,9 @@ set (BUS_SRCS
     src/bus/qbus/dma.cpp
     src/bus/qbus/responsiblemodule.cpp
     src/bus/qbus/bussignals.cpp
-    src/bus/signalhandler/signalhandler.cpp)
+    src/bus/qbus/businterrupts.cpp
+    src/bus/signalhandler/signalhandler.cpp
+    src/bus/interrupthandler/interrupthandler.cpp)
 
 set (CONFIGURATOR_SRCS
     src/configdata/iniprocessor/process.cpp
