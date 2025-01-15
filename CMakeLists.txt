@@ -163,13 +163,14 @@ set (UNIT_SRCS
     src/unit/unit.cpp
     src/unit/createbadblocktable.cpp)
 
-set (QBUS_SRCS     
+set (BUS_SRCS     
     src/bus/qbus/qbus.cpp
     src/bus/qbus/writebyte.cpp
     src/bus/qbus/writeword.cpp
     src/bus/qbus/dma.cpp
     src/bus/qbus/responsiblemodule.cpp
-    src/bus/qbus/signals.cpp)
+    src/bus/qbus/bussignals.cpp
+    src/bus/signalhandler/signalhandler.cpp)
 
 set (CONFIGURATOR_SRCS
     src/configdata/iniprocessor/process.cpp
@@ -325,7 +326,7 @@ set (SIM11_SRCS
     ${M9312_SRCS}
     src/msv11d/msv11d.cpp
     src/ms11p/ms11p.cpp
-    ${QBUS_SRCS}
+    ${BUS_SRCS}
     src/pdp11peripheral/pdp11peripheral.cpp
     ${RLV12_SRCS}
     ${SDL_SRCS}
@@ -513,7 +514,7 @@ set (SIM11_TEST_SRCS
     src/absoluteloader/absoluteloader.cpp
     src/asynctimer/asynctimer.cpp
     src/interruptrequest/interruptrequest.cpp
-    ${QBUS_SRCS}
+    ${BUS_SRCS}
     ${UNIT_SRCS}
     ${SIM_FIO_SRCS}
     ${RLV12_SRCS}

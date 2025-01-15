@@ -14,6 +14,9 @@
 //
 class Bus : public BusSignals, public BusInterrupts,
     public BusDataTransfer, public BusConfiguration
-{};
+{
+public:
+    virtual ~Bus() {}
+};
 
 #endif // _BUS_H_
