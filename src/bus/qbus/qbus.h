@@ -4,6 +4,7 @@
 #include "bus/include/bus.h"
 #include "bus/signalhandler/signalhandler.h"
 #include "bus/interrupthandler/interrupthandler.h"
+#include "bus/configurationhandler/configurationhandler.h"
 #include "bus/iterator/iterator.h"
 
 #include "threadsafecontainers/threadsafeprioqueue.h"
@@ -39,16 +40,7 @@ class Qbus : public Bus
 public:
 	static const size_t numberOfSlots {9};
 
-private:
-	// A BA11-N backplane has nine slots, named ROW 1 to ROW 9. ROW 1 corresponds
-	// with slot[0], ROW 9 with slot [8].
-	size_t numDevices_ {0};
-	BusDevice* slots_[numberOfSlots] {nullptr};
-
-public:
-	Iterator begin () { return Iterator (&slots_[0]); }
-	Iterator end () { return Iterator (&slots_[numDevices_ - 1]); }
-	Iterator operator[] (int index) { return Iterator (&slots_[index]); }
+	Qbus ();
 
 	// Functions required for the BusSignals interface
 	Signal& SRUN ();
@@ -72,7 +64,15 @@ public:
 	u8 intrptPriority ();
 	bool getIntrptReq (InterruptRequest& ir);
 
-	Qbus ();
+	// Functions required for the BusConfiguration interface
+	bool installModuleAtPosition (BusDevice* module, size_t position);
+	bool installModule (BusDevice* module);
+	void installUnibusMap (UnibusMap* device);
+	BusDevice* responsibleModule (BusAddress address);
+	Iterator begin ();
+	Iterator end ();
+	Iterator operator[] (int index);
+	void reset ();
 
 	CondData<u16> read (BusAddress address);
 	bool writeWord (BusAddress address, u16 value);
@@ -80,24 +80,16 @@ public:
 	CondData<u16> dmaRead (BusAddress address);
 	bool dmaWrite (BusAddress address, u16 value);
 
-	bool installModuleAtPosition (BusDevice* module, size_t position);
-	bool installModule (BusDevice* module);
-	void installUnibusMap (UnibusMap* device);
-
 private:
 	// Definition of the handlers
 	SignalHandler signalHandler_;
 	InterruptHandler interruptHandler_;
-
+	ConfigurationHandler configurationHandler_;
 
 	// Signal administration
 	Signal::SubscriberKey ourKey_;
 
 	bool processorRunning_;
-	UnibusMap* unibusMap_ {nullptr};
-
-	void reset ();
-	BusDevice *responsibleModule (BusAddress address);
 
 	void BINITReceiver (bool signalValue);
 };

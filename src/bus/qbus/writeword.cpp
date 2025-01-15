@@ -8,7 +8,7 @@ bool Qbus::writeWord (BusAddress address, u16 value)
 	// Prevent write's to odd addresses
 	address &= 0xFFFFFFFE;
 
-	if ((module = responsibleModule(address)) != nullptr)
+	if ((module = configurationHandler_.responsibleModule(address)) != nullptr)
 	{
 		trace.bus (BusRecordType::Write, address, value);
 		module->writeWord (address, value);

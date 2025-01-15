@@ -1,4 +1,3 @@
-
 #include "iterator.h"
 
 Iterator::Iterator ()
@@ -42,4 +41,3 @@ bool operator!= (const Iterator& a, const Iterator& b)
 {
     return a.ptr_ != b.ptr_;
 }
-

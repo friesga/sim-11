@@ -1,7 +1,7 @@
-#include "qbus.h"
-#include "trace/trace.h"
+#include "configurationhandler.h"
 
-BusDevice *Qbus::responsibleModule (BusAddress address)
+
+BusDevice* ConfigurationHandler::responsibleModule (BusAddress address)
 {
 	for (size_t index = 0; index < numberOfSlots; ++index)
 	{

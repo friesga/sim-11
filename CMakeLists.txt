@@ -168,10 +168,12 @@ set (BUS_SRCS
     src/bus/qbus/writebyte.cpp
     src/bus/qbus/writeword.cpp
     src/bus/qbus/dma.cpp
-    src/bus/qbus/responsiblemodule.cpp
     src/bus/qbus/bussignals.cpp
     src/bus/qbus/businterrupts.cpp
+    src/bus/qbus/busconfiguration.cpp
     src/bus/signalhandler/signalhandler.cpp
+    src/bus/configurationhandler/configurationhandler.cpp
+    src/bus/configurationhandler/responsiblemodule.cpp
     src/bus/iterator/iterator.cpp
     src/bus/interrupthandler/interrupthandler.cpp)
 
