@@ -1,5 +1,5 @@
 #include "controllogic.h"
-#include "qbus/qbus.h"
+#include "bus/qbus/qbus.h"
 #include "kd/common/odt/operatorconsoleaccess/operatorconsoleaccess.h"
 
 #include <memory>

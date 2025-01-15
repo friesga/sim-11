@@ -1,5 +1,5 @@
 #include "kdf11_b.h"
-#include "qbus/qbus.h"
+#include "bus/qbus/qbus.h"
 #include "configdata/serialconfig/uarttypeconfig/uarttypeconfig.h"
 
 #include <memory>

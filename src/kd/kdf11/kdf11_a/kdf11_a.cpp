@@ -1,5 +1,5 @@
 #include "kdf11_a.h"
-#include "qbus/qbus.h"
+#include "bus/qbus/qbus.h"
 
 #include <memory>
 #include <thread>

@@ -164,12 +164,12 @@ set (UNIT_SRCS
     src/unit/createbadblocktable.cpp)
 
 set (QBUS_SRCS     
-    src/qbus/qbus.cpp
-    src/qbus/writebyte.cpp
-    src/qbus/writeword.cpp
-    src/qbus/dma.cpp
-    src/qbus/responsiblemodule.cpp
-    src/qbus/signals.cpp)
+    src/bus/qbus/qbus.cpp
+    src/bus/qbus/writebyte.cpp
+    src/bus/qbus/writeword.cpp
+    src/bus/qbus/dma.cpp
+    src/bus/qbus/responsiblemodule.cpp
+    src/bus/qbus/signals.cpp)
 
 set (CONFIGURATOR_SRCS
     src/configdata/iniprocessor/process.cpp

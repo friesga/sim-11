@@ -4,7 +4,7 @@
 #include "kd/common/instructiondecoder/instructiondecoder.h"
 #include "kd/include/cpudata.h"
 #include "kd/include/cpucontrol.h"
-#include "qbus/qbus.h"
+#include "bus/qbus/qbus.h"
 #include "float/float.h"
 #include "types.h"
 #include "kd/kdf11/cpudata/kdf11registers/kdf11registers.h"

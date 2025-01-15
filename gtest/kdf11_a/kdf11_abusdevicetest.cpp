@@ -1,4 +1,4 @@
-#include "qbus/qbus.h"
+#include "bus/qbus/qbus.h"
 #include "kd/kdf11/kdf11_a/kdf11_a.h"
 #include "configdata/kdf11/kdf11_a/kdf11_aconfig/kdf11_aconfig.h"
 

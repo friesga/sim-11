@@ -1,5 +1,5 @@
 #include "m9312.h"
-#include "qbus/qbus.h"
+#include "bus/qbus/qbus.h"
 
 using std::bind;
 using std::placeholders::_1;

@@ -1,7 +1,7 @@
 #ifndef _KTF11A_H_
 #define _KTF11A_H_
 
-#include "qbus/qbus.h"
+#include "bus/qbus/qbus.h"
 #include "kd/include/cpudata.h"
 #include "kd/include/mmu.h"
 #include "abstractbusdevice/abstractbusdevice.h"

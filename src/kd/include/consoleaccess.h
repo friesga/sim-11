@@ -1,7 +1,7 @@
 #ifndef _CONSOLEACCESS_H_
 #define _CONSOLEACCESS_H_
 
-#include "qbus/qbus.h"
+#include "bus/qbus/qbus.h"
 #include "conddata/conddata.h"
 
 // This class defines the interface to a Console.

@@ -1,7 +1,7 @@
 #ifndef _REGISTERHANDLER_H_
 #define _REGISTERHANDLER_H_
 
-#include "qbus/qbus.h"
+#include "bus/qbus/qbus.h"
 #include "abstractbusdevice/abstractbusdevice.h"
 #include "kd/common/controllogic/controllogic.h"
 #include "kd/kdf11/odt/kdf11_odt.h"

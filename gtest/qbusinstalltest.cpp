@@ -1,4 +1,4 @@
-#include "qbus/qbus.h"
+#include "bus/qbus/qbus.h"
 
 #include <gtest/gtest.h>
 #include <array>
