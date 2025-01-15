@@ -2,7 +2,7 @@
 #define _KD11_NA_ODT_H_
 
 #include "kd/include/kd11odt.h"
-#include "bus/bus.h"
+#include "bus/include/bus.h"
 #include "kd/kd11_na/cpucontrol/kd11_na_cpucontrol.h"
 #include "variantfsm/fsm.h"
 #include "kd/common/odt/location/location.h"

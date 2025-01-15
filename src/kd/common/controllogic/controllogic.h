@@ -1,7 +1,7 @@
 #ifndef _CONTROLLOGIC_H_
 #define _CONTROLLOGIC_H_
 
-#include "bus/bus.h"
+#include "bus/include/bus.h"
 #include "kd/include/kd11odt.h"
 #include "kd/kd11_na/cpucontrol/kd11_na_cpucontrol.h"
 #include "kd/include/mmu.h"

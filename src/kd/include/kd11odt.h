@@ -2,7 +2,7 @@
 #define _KD11ODT_H_
 
 #include "types.h"
-#include "bus/bus.h"
+#include "bus/include/bus.h"
 #include "kd/include/cpudata.h"
 #include "kd/include/cpucontrol.h"
 #include "kd/include/mmu.h"

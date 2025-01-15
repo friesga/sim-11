@@ -1,7 +1,7 @@
 #ifndef _DLV11J_H_
 #define _DLV11J_H_
 
-#include "bus/bus.h"
+#include "bus/include/bus.h"
 #include "pdp11peripheral/pdp11peripheral.h"
 #include "configdata/serialconfig/dlv11jconfig/dlv11jconfig.h"
 #include "dl11/uart/uart.h"

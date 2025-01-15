@@ -3,7 +3,7 @@
 
 #include "types.h"
 #include "basicregister/basicregister.h"
-#include "bus/bus.h"
+#include "bus/include/bus.h"
 
 // Definition of KTF11-A Status Register 3
 //

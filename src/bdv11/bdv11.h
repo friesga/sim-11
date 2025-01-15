@@ -1,7 +1,7 @@
 #ifndef _BDV11_H_
 #define _BDV11_H_
 
-#include "bus/bus.h"
+#include "bus/include/bus.h"
 #include "pdp11peripheral/pdp11peripheral.h"
 #include "configdata/bdv11config/bdv11config.h"
 #include "chrono/alarmclock/alarmclock.h"

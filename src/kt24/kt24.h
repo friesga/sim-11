@@ -2,7 +2,7 @@
 #define _KT24_H_
 
 #include "unibusmap.h"
-#include "bus/bus.h"
+#include "bus/include/bus.h"
 #include "abstractbusdevice/abstractbusdevice.h"
 #include "configdata/kt24/kt24config/kt24config.h"
 #include "basicregister/twowordregister.h"

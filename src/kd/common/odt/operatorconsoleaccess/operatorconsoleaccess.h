@@ -2,7 +2,7 @@
 #define _OPERATORCONSOLEACCESS_H_
 
 #include "kd/include/consoleaccess.h"
-#include "bus/bus.h"
+#include "bus/include/bus.h"
 #include "conddata/conddata.h"
 
 // This class handles character reads and writes to the console DLV11-J
