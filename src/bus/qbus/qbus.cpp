@@ -1,4 +1,3 @@
-#include "trace/trace.h"
 #include "qbus.h"
 
 #include <stdlib.h>
@@ -20,29 +19,6 @@ Qbus::Qbus ()
 {
 	ourKey_ = BINIT().subscribe (bind (&Qbus::BINITReceiver, this, _1));
 }
-
-CondData<u16> Qbus::read (BusAddress address)
-{
-	BusDevice *module;
-
-	// Prevent read's from odd addresses
-	address &= 0xFFFFFFFE;
-
-	if ((module = configurationHandler_.responsibleModule (address)) != nullptr)
-	{
-		u16 value;
-		if (module->read (address, &value) == StatusCode::OK)
-		{
-			trace.bus (BusRecordType::Read, address, value);
-			return value;
-		}
-		else
-			return {};
-	}
-
-	return {};
-}
-
 
 // The bus itself is defined as a BINIT signal receiver too as it not
 // only has to pass on the signal to all subscribed devices, but has to

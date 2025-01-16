@@ -165,6 +165,7 @@ set (UNIT_SRCS
 
 set (BUS_SRCS     
     src/bus/qbus/qbus.cpp
+    src/bus/qbus/read.cpp
     src/bus/qbus/writebyte.cpp
     src/bus/qbus/writeword.cpp
     src/bus/qbus/dma.cpp
