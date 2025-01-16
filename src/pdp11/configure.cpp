@@ -32,18 +32,21 @@ using std::get;
 // constructor.
 void PDP_11::configureDevices (Window *window)
 {
+    // Create the Qbus to be used in this system
+    bus_ = new Qbus ();
+
     // By default use the KD11-NA processor
-    processor_ = new KD11_NA (&bus_);
-    memoryDevices_.push_back (new MSV11D (&bus_));
+    processor_ = new KD11_NA (bus_);
+    memoryDevices_.push_back (new MSV11D (bus_));
 
     // Create a DLV11J object with the default configuration. The default
     // position for the BA11-N is at the top of the cabinet (which is 20 RU
     // high, racks units numbered 0-19).
-    busDevices_.emplace_back (new DLV11J (&bus_, make_shared<DLV11JConfig> ()));
-    busDevices_.emplace_back (new BDV11 (&bus_));
-    busDevices_.emplace_back (new RXV21 (&bus_));
-    busDevices_.emplace_back (new RLV12 (&bus_));
-    ba11_n_ = std::make_unique<BA11_N> (&bus_, window, 
+    busDevices_.emplace_back (new DLV11J (bus_, make_shared<DLV11JConfig> ()));
+    busDevices_.emplace_back (new BDV11 (bus_));
+    busDevices_.emplace_back (new RXV21 (bus_));
+    busDevices_.emplace_back (new RLV12 (bus_));
+    ba11_n_ = std::make_unique<BA11_N> (bus_, window, 
         make_shared<BA11_NConfig> (Cabinet::Position {0, 19_ru}));
 
     installModules ();
@@ -72,32 +75,35 @@ void PDP_11::configureDevices (SystemConfig const & systemConfig,
 void PDP_11::configureQbusSystem (SystemConfig const & systemConfig,
     Window* window)
 { 
+    // Create the Qbus to be used in this system
+    bus_ = new Qbus ();
+
     // At this point a Qbus system configuration should not contain
     // any Unibus device.
     auto configVisitor = overloaded
     {
         [this] (shared_ptr<KD11_NAConfig> kd11_naConfig)
-            {processor_ = new KD11_NA (&bus_, kd11_naConfig); },
+            {processor_ = new KD11_NA (bus_, kd11_naConfig); },
         [this] (shared_ptr<KDF11_AConfig> kdf11_aConfig)
-            {processor_ = new KDF11_A (&bus_, kdf11_aConfig); },
+            {processor_ = new KDF11_A (bus_, kdf11_aConfig); },
         [this] (shared_ptr<KDF11_BConfig> kdf11_bConfig)
-            {processor_ = new KDF11_B (&bus_, kdf11_bConfig); },
+            {processor_ = new KDF11_B (bus_, kdf11_bConfig); },
         [this] (shared_ptr<MSV11Config> msv11Config)
-            {memoryDevices_.push_back (new MSV11D (&bus_, msv11Config)); },
+            {memoryDevices_.push_back (new MSV11D (bus_, msv11Config)); },
         [this] (shared_ptr<DLV11JConfig> dlv11jConfig)
-            {busDevices_.emplace_back (new DLV11J (&bus_, dlv11jConfig)); },
+            {busDevices_.emplace_back (new DLV11J (bus_, dlv11jConfig)); },
         [this] (shared_ptr<BDV11Config> bdv11Config)
-            {busDevices_.emplace_back (new BDV11 (&bus_, bdv11Config)); },
+            {busDevices_.emplace_back (new BDV11 (bus_, bdv11Config)); },
         [this] (shared_ptr<RXV21Config> rxv21Config)
-            {busDevices_.emplace_back (new RXV21 (&bus_, rxv21Config)); },
+            {busDevices_.emplace_back (new RXV21 (bus_, rxv21Config)); },
         [this, window] (shared_ptr<RL11Config> rl11Config)
             {throw "Should not happen"; },
         [this, window] (shared_ptr<RLV11Config> rlv11Config)
-            {busDevices_.emplace_back (new RLV12 (&bus_, window, rlv11Config)); },
+            {busDevices_.emplace_back (new RLV12 (bus_, window, rlv11Config)); },
         [this, window] (shared_ptr<RLV12Config> rlv12Config)
-            {busDevices_.emplace_back (new RLV12 (&bus_, window, rlv12Config)); },
+            {busDevices_.emplace_back (new RLV12 (bus_, window, rlv12Config)); },
         [this, window] (shared_ptr<BA11_NConfig> ba11_nConfig)
-            {ba11_n_ = std::make_unique<BA11_N> (&bus_, window, ba11_nConfig); },
+            {ba11_n_ = std::make_unique<BA11_N> (bus_, window, ba11_nConfig); },
         [this] (shared_ptr<KT24Config> kt24Config)
             { throw "Should not happen"; },
         [this] (shared_ptr<M9312Config> m9312Config)
@@ -119,6 +125,9 @@ void PDP_11::configureQbusSystem (SystemConfig const & systemConfig,
 void PDP_11::configureUnibusSystem (SystemConfig const & systemConfig,
     Window* window)
 {
+    // Create the Qbus to be used in this system
+    bus_ = new Qbus ();
+
     // At this point a Unibus system configuration should not contain
     // any Qbus device.
     auto configVisitor = overloaded
@@ -138,11 +147,11 @@ void PDP_11::configureUnibusSystem (SystemConfig const & systemConfig,
         [this] (shared_ptr<RXV21Config> rxv21Config)
             { throw "Should not happen"; },
         [this, window] (shared_ptr<RL11Config> rl11Config)
-            { busDevices_.emplace_back (new RLV12 (&bus_, window, rl11Config)); },
+            { busDevices_.emplace_back (new RLV12 (bus_, window, rl11Config)); },
         [this, window] (shared_ptr<KT24Config> kt24Config)
-            { kt24_ = new KT24 (&bus_, kt24Config); },
+            { kt24_ = new KT24 (bus_, kt24Config); },
         [this, window] (shared_ptr<M9312Config> m9312Config)
-            { m9312_ = new M9312 (&bus_, m9312Config); },
+            { m9312_ = new M9312 (bus_, m9312Config); },
         [this, window] (shared_ptr<RLV11Config> rlConfig)
             { throw "Should not happen"; },
         [this, window] (shared_ptr<RLV12Config> rlConfig)
@@ -150,11 +159,11 @@ void PDP_11::configureUnibusSystem (SystemConfig const & systemConfig,
         [this, window] (shared_ptr<BA11_NConfig> ba11_nConfig)
             { throw "Should not happen"; },
         [this] (shared_ptr<KDF11_UConfig> kdf11_uConfig)
-            {processor_ = new KDF11_U (&bus_, kdf11_uConfig); },
+            {processor_ = new KDF11_U (bus_, kdf11_uConfig); },
         [this] (shared_ptr<MS11PConfig> ms11pConfig)
-            {memoryDevices_.push_back (new MS11P (&bus_, ms11pConfig)); },
+            {memoryDevices_.push_back (new MS11P (bus_, ms11pConfig)); },
         [this, window] (shared_ptr<BA11_LConfig> ba11_lConfig)
-            {ba11_l_ = std::make_unique<BA11_L> (&bus_, window, ba11_lConfig); },
+            {ba11_l_ = std::make_unique<BA11_L> (bus_, window, ba11_lConfig); },
 
     };
 

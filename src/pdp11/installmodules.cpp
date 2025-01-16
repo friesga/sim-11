@@ -14,16 +14,16 @@ void PDP_11::installModules ()
     // A Unibus configuration will contain either a M9312 or a KT24 but not
     // both
     if (m9312_ != nullptr)
-        bus_.installModule (m9312_);
+        bus_->installModule (m9312_);
 
     if (kt24_ != nullptr)
-        bus_.installModule (kt24_);
+        bus_->installModule (kt24_);
     
     for (auto device : memoryDevices_)
-        bus_.installModule (device);
+        bus_->installModule (device);
 
     for (auto device : busDevices_)
-        bus_.installModule (device);
+        bus_->installModule (device);
 
-    bus_.installModule (processor_);
+    bus_->installModule (processor_);
 }

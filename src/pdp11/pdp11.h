@@ -35,7 +35,9 @@ using namespace rxv21;
 
 class PDP_11
 {
-	Qbus bus_;
+	// A PDP-11 is using either a Unibus or a Qbus.
+	Bus* bus_ {nullptr};
+
 	// We would prefer using shared_ptr's as pointers to the devices but the
 	// use of shared_ptr's makes debugging in MSVC terrribly slow. The use
 	// of unique_ptr's for the decice pointers results in complicated code

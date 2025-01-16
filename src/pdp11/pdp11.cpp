@@ -19,6 +19,8 @@ PDP_11::~PDP_11 ()
 
 	for (auto device : busDevices_)
 		delete device;
+
+	delete bus_;
 }
 
 // Reset the bus and all devices on the bus. The bus will forward the BINIT
@@ -26,6 +28,6 @@ PDP_11::~PDP_11 ()
 // the bus itself.
 void PDP_11::reset ()
 {
-	bus_.BINIT().cycle ();
+	bus_->BINIT().cycle ();
 }
 
