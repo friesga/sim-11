@@ -1,8 +1,6 @@
 #include "qbus.h"
 
-#include <stdlib.h>
-#include <string.h>
-#include <algorithm>
+#include <functional>
 
 using std::bind;
 using std::placeholders::_1;

@@ -7,20 +7,6 @@
 #include "bus/configurationhandler/configurationhandler.h"
 #include "bus/iterator/iterator.h"
 
-#include "threadsafecontainers/threadsafeprioqueue.h"
-
-#include <string>
-#include <array>
-#include <functional>
-#include <vector>
-
-using std::string;
-using std::array;
-using std::function;
-using std::vector;
-
-class PDP11Peripheral;
-
 // This class implements the Qbus backplane. Two variants of the backplane
 // exist: 18-bit and 22-bit wide. As the 18-bit backplanes can be upgraded
 // to a 22-bit without impact on the functionality of the system we implement
