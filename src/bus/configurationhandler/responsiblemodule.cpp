@@ -3,7 +3,7 @@
 
 BusDevice* ConfigurationHandler::responsibleModule (BusAddress address)
 {
-	for (size_t index = 0; index < numberOfSlots; ++index)
+	for (size_t index = 0; index < numberOfSlots_; ++index)
 	{
 		auto module = slots_[index];
 		if (!module)

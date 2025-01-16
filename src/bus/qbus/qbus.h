@@ -38,8 +38,6 @@ class PDP11Peripheral;
 class Qbus : public Bus
 {
 public:
-	static const size_t numberOfSlots {9};
-
 	Qbus ();
 
 	// Functions required for the BusSignals interface
@@ -71,6 +69,7 @@ public:
 	BusDevice* responsibleModule (BusAddress address);
 	Iterator begin ();
 	Iterator end ();
+	size_t capacity ();
 	Iterator operator[] (int index);
 	void reset ();
 

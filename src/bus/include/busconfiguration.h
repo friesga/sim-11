@@ -14,8 +14,14 @@ public:
 	virtual void installUnibusMap (UnibusMap* device) = 0;
 	virtual BusDevice* responsibleModule (BusAddress address) = 0;
 
+	// Iterators
 	virtual Iterator begin () = 0;
 	virtual Iterator end ()  = 0;
+
+	// Capacity
+	virtual size_t capacity () = 0;
+
+	// Element access
 	virtual Iterator operator[] (int index) = 0;
 
 	virtual void reset () = 0;

@@ -18,7 +18,7 @@ using std::copy_backward;
 bool ConfigurationHandler::installModuleAtPosition (BusDevice* device, size_t position)
 {
 	if (device == nullptr ||
-		numDevices_ >= numberOfSlots ||
+		numDevices_ >= numberOfSlots_ ||
 		position > numDevices_)
 		return false;
 
@@ -34,7 +34,7 @@ bool ConfigurationHandler::installModuleAtPosition (BusDevice* device, size_t po
 
 bool ConfigurationHandler::installModule (BusDevice* device)
 {
-	if (device == nullptr || numDevices_ >= numberOfSlots)
+	if (device == nullptr || numDevices_ >= numberOfSlots_)
 		return false;
 
 	slots_[numDevices_++] = device;
@@ -54,6 +54,11 @@ Iterator ConfigurationHandler::begin ()
 Iterator ConfigurationHandler::end ()
 {
     return Iterator (&slots_[numDevices_ - 1]);
+}
+
+size_t ConfigurationHandler::capacity ()
+{
+	return numberOfSlots_;
 }
 
 Iterator ConfigurationHandler::operator[] (int index)

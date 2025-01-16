@@ -27,7 +27,7 @@ private:
 
 TEST (QbusInstallTest, devicesCanBeInstalled)
 {
-	array<DummyBusDevice, Qbus::numberOfSlots> devices =
+	vector<DummyBusDevice> devices =
 	{
 		DummyBusDevice (0),
 		DummyBusDevice (1),
@@ -65,7 +65,7 @@ TEST (QbusInstallTest, devicesCanBeInstalled)
 
 TEST (QbusInstallTest, cannotInstallMoreThanNumberOfSlots)
 {
-	array<DummyBusDevice, Qbus::numberOfSlots> devices =
+	vector<DummyBusDevice> devices =
 	{
 		DummyBusDevice (0),
 		DummyBusDevice (1),
@@ -78,6 +78,7 @@ TEST (QbusInstallTest, cannotInstallMoreThanNumberOfSlots)
 		DummyBusDevice (8)
 	};
 	Qbus testBus;
+
 
 	// Install a device in every slot
 	u16 slotNumber {0};
@@ -104,7 +105,7 @@ TEST (QbusInstallTest, cannotInstallAtPositionOutOfRange)
     Qbus testBus;
 	DummyBusDevice dummyBusDevice (0);
     EXPECT_FALSE (testBus.installModuleAtPosition (&dummyBusDevice,
-		Qbus::numberOfSlots + 1));
+		testBus.capacity () + 1));
 }
 
 // Verify that - while there are unoccupied slots - a device can be installed

@@ -30,6 +30,11 @@ Iterator Qbus::end ()
     return configurationHandler_.end ();
 }
 
+size_t Qbus::capacity ()
+{
+    return configurationHandler_.capacity ();
+}
+
 Iterator Qbus::operator[] (int index)
 {
     return configurationHandler_.operator[] (index);
