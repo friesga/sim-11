@@ -17,8 +17,6 @@ using std::placeholders::_1;
 // Source: https://retrocomputing.stackexchange.com/questions/13262/how-movb-tstb-and-all-byte-instructions-works-in-odd-address-read-in-pdp11
 //
 Qbus::Qbus ()
-	:
-	processorRunning_ {false}
 {
 	ourKey_ = BINIT().subscribe (bind (&Qbus::BINITReceiver, this, _1));
 }

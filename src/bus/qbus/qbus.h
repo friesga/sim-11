@@ -73,6 +73,7 @@ public:
 	Iterator operator[] (int index);
 	void reset ();
 
+	// Functions required for the BusDataTransfer interface
 	CondData<u16> read (BusAddress address);
 	bool writeWord (BusAddress address, u16 value);
 	bool writeByte (BusAddress address, u8 val);
@@ -87,8 +88,6 @@ private:
 
 	// Signal administration
 	Signal::SubscriberKey ourKey_;
-
-	bool processorRunning_;
 
 	void BINITReceiver (bool signalValue);
 };
