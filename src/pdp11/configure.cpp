@@ -1,4 +1,6 @@
 #include "pdp11.h"
+#include "bus/qbus/qbus.h"
+#include "bus/unibus/unibus.h"
 #include "configdata/iniprocessor/iniprocessor.h"
 #include "configdata/rxv21/rxv21config/rxv21config.h"
 #include "configdata/msv11config/msv11config.h"
@@ -125,8 +127,8 @@ void PDP_11::configureQbusSystem (SystemConfig const & systemConfig,
 void PDP_11::configureUnibusSystem (SystemConfig const & systemConfig,
     Window* window)
 {
-    // Create the Qbus to be used in this system
-    bus_ = new Qbus ();
+    // Create the Unibus to be used in this system
+    bus_ = new Unibus ();
 
     // At this point a Unibus system configuration should not contain
     // any Qbus device.
