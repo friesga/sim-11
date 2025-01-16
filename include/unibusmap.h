@@ -18,9 +18,7 @@
 class UnibusMap : public BusDevice
 {
 public:
-	virtual CondData<u16> dmaRead (BusAddress address) = 0;
-	virtual bool dmaWrite (BusAddress address, u16 value) = 0;
-	virtual void reset () = 0;
+	virtual BusAddress physicalAddressFrom18bitAddress (BusAddress address) = 0;
 	virtual ~UnibusMap () {};
 };
 

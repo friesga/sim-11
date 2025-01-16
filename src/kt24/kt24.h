@@ -32,8 +32,7 @@ public:
 	void reset ();
 
 	// Functions required for the UnibusMap interface
-	CondData<u16> dmaRead (BusAddress address);
-	bool dmaWrite (BusAddress address, u16 value);
+	BusAddress physicalAddressFrom18bitAddress (BusAddress address);
 
 	// The enable() and disable() functions are added to be able to control
 	// the KT24 state from the unit tests.
@@ -101,11 +100,7 @@ private:
 	void writeMappingRegister (u16 registerAddress, u16 value);
 	void writeLMARegister (u16 registerAddress, u16 value);
 	void writeCpuErrorRegister ();
-	CondData<u16> mappedRead (BusAddress address);
-	bool mappedWrite (BusAddress address, u16 value);
-	CondData<u16> readPhysical (u32 physicalAddress);
-	bool writePhysical (u32 physicalAddress, u16 value);
-	u32 physicalAddressFrom18BitBusAddress (BusAddress busAddress);
+	u32 _32bitAddressFrom18BitBusAddress (BusAddress busAddress);
 	void ioMapEnableReceiver (bool signalValue);
 };
 

@@ -183,45 +183,19 @@ void KT24::reset ()
 // addresses because it would be used by addresses in the range of the
 // I/O page (017760000 - 017777777).
 //
-CondData<u16> KT24::dmaRead (BusAddress address)
+BusAddress KT24::physicalAddressFrom18bitAddress (BusAddress address)
 {
-    return ioMapEnabled_ && !address.isInIOpage () ? 
-        mappedRead (address) :
-        readPhysical (address);
+    if (ioMapEnabled_ && !address.isInIOpage ())
+    {
+        u32 physicalAddress = _32bitAddressFrom18BitBusAddress (address);
+        lmaRegister_ = physicalAddress;
+        return BusAddress (physicalAddress, BusAddress::Width::_22Bit);
+    }
+    else
+        return address;
 }
 
-bool KT24::dmaWrite (BusAddress address, u16 value)
-{
-    return ioMapEnabled_  && !address.isInIOpage () ?
-        mappedWrite (address, value) :
-        writePhysical (address, value);
-}
-
-CondData<u16> KT24::mappedRead (BusAddress address)
-{
-    u32 physicalAddress = physicalAddressFrom18BitBusAddress (address);
-    lmaRegister_ = physicalAddress;
-    return readPhysical (physicalAddress);
-}
-
-bool KT24::mappedWrite (BusAddress address, u16 value)
-{
-    u32 physicalAddress = physicalAddressFrom18BitBusAddress (address);
-    lmaRegister_ = physicalAddress;
-    return writePhysical (physicalAddress, value);
-}
-
-CondData<u16> KT24::readPhysical (u32 physicalAddress)
-{
-    return bus_->read (physicalAddress);
-}
-
-bool KT24::writePhysical (u32 physicalAddress, u16 value)
-{
-    return bus_->writeWord (physicalAddress, value);
-}
-
-u32 KT24::physicalAddressFrom18BitBusAddress (BusAddress busAddress)
+u32 KT24::_32bitAddressFrom18BitBusAddress (BusAddress busAddress)
 {
     size_t registerIndex = 
         indexFrom18BitBusAddress (busAddress.registerAddress ());
