@@ -172,6 +172,13 @@ set (BUS_SRCS
     src/bus/qbus/bussignals.cpp
     src/bus/qbus/businterrupts.cpp
     src/bus/qbus/busconfiguration.cpp
+    src/bus/unibus/unibus.cpp
+    src/bus/unibus/read.cpp
+    src/bus/unibus/writeword.cpp
+    src/bus/unibus/writebyte.cpp
+    src/bus/unibus/bussignals.cpp
+    src/bus/unibus/businterrupts.cpp
+    src/bus/unibus/busconfiguration.cpp
     src/bus/signalhandler/signalhandler.cpp
     src/bus/configurationhandler/configurationhandler.cpp
     src/bus/configurationhandler/responsiblemodule.cpp
