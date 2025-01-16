@@ -1,6 +1,5 @@
 #include "trace/trace.h"
 #include "qbus.h"
-#include "interruptrequest/interruptrequest.h"
 
 #include <stdlib.h>
 #include <string.h>
@@ -56,13 +55,3 @@ void Qbus::BINITReceiver (bool signalValue)
 		reset ();
 }
 
-void Qbus::reset ()
-{
-	trace.bus (BusRecordType::BusReset, 0, 0);
-
-	// Clear pending interrupts
-	clearInterrupts ();
-
-	// Reset all devices on the bus
-	configurationHandler_.reset ();
-}

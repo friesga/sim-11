@@ -1,4 +1,5 @@
 #include "qbus.h"
+#include "trace/trace.h"
 
 bool Qbus::installModuleAtPosition (BusDevice* module, size_t position)
 {
@@ -38,4 +39,15 @@ size_t Qbus::capacity ()
 Iterator Qbus::operator[] (int index)
 {
     return configurationHandler_.operator[] (index);
+}
+
+void Qbus::reset ()
+{
+    trace.bus (BusRecordType::BusReset, 0, 0);
+
+    // Clear pending interrupts
+    clearInterrupts ();
+
+    // Reset all devices on the bus
+    configurationHandler_.reset ();
 }
