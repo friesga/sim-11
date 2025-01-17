@@ -6,6 +6,7 @@
 #include "bus/interrupthandler/interrupthandler.h"
 #include "bus/configurationhandler/configurationhandler.h"
 #include "bus/iterator/iterator.h"
+#include "unibusmap.h"
 
 // This class implements both the Unibus and the Extended Unibus (EUB).
 // 
@@ -106,7 +107,6 @@ public:
 	// Functions required for the BusConfiguration interface
 	bool installModuleAtPosition (BusDevice* module, size_t position);
 	bool installModule (BusDevice* module);
-	void installUnibusMap (UnibusMap* device);
 	BusDevice* responsibleModule (BusAddress address);
 	Iterator begin ();
 	Iterator end ();
@@ -129,8 +129,10 @@ private:
 
 	// Signal administration
 	Signal::SubscriberKey ourKey_;
-
 	void BINITReceiver (bool signalValue);
+
+	// A Unibus optionally contains a Unibus Map
+	UnibusMap* unibusMap_;
 };
 
 

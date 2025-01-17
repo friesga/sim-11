@@ -41,11 +41,6 @@ bool ConfigurationHandler::installModule (BusDevice* device)
 	return true;
 }
 
-void ConfigurationHandler::installUnibusMap (UnibusMap* device)
-{
-	unibusMap_ = device;
-}
-
 Iterator ConfigurationHandler::begin ()
 {
     return Iterator (&slots_[0]);

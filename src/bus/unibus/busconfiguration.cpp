@@ -6,14 +6,16 @@ bool Unibus::installModuleAtPosition (BusDevice* module, size_t position)
     return configurationHandler_.installModuleAtPosition (module, position);
 }
 
+// If the given module is a Unibus Map option save the pointer to this
+// specific module. The dynamic_cast operator will retun a pointer to the
+// module if it implements the UnibusMap or null if that interface is not
+// supported.
 bool Unibus::installModule (BusDevice* module)
 {
-    return configurationHandler_.installModule (module);
-}
+    if (dynamic_cast<UnibusMap*> (module) != nullptr)
+        unibusMap_ = static_cast<UnibusMap*> (module);
 
-void Unibus::installUnibusMap (UnibusMap* device)
-{
-    return configurationHandler_.installUnibusMap (device);
+    return configurationHandler_.installModule (module);
 }
 
 BusDevice* Unibus::responsibleModule (BusAddress address)

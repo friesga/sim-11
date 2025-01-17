@@ -11,11 +11,6 @@ bool Qbus::installModule (BusDevice* module)
     return configurationHandler_.installModule (module);
 }
 
-void Qbus::installUnibusMap (UnibusMap* device)
-{
-    return configurationHandler_.installUnibusMap (device);
-}
-
 BusDevice* Qbus::responsibleModule (BusAddress address)
 {
     return configurationHandler_.responsibleModule (address);

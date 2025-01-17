@@ -51,7 +51,6 @@ public:
 	// Functions required for the BusConfiguration interface
 	bool installModuleAtPosition (BusDevice* module, size_t position);
 	bool installModule (BusDevice* module);
-	void installUnibusMap (UnibusMap* device);
 	BusDevice* responsibleModule (BusAddress address);
 	Iterator begin ();
 	Iterator end ();

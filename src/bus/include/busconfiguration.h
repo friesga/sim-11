@@ -11,7 +11,6 @@ class BusConfiguration
 public:
 	virtual bool installModuleAtPosition (BusDevice* module, size_t position) = 0;
 	virtual bool installModule (BusDevice* module) = 0;
-	virtual void installUnibusMap (UnibusMap* device) = 0;
 	virtual BusDevice* responsibleModule (BusAddress address) = 0;
 
 	// Iterators
