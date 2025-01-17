@@ -25,6 +25,7 @@ public:
 
     BusAddress (u32 value);
     BusAddress (u32 value, Width width);
+    Width width ();
     operator u32 ();
     BusAddress& operator += (u32 value);
     BusAddress& operator &= (u32 mask);
@@ -33,6 +34,7 @@ public:
     u16 registerAddress ();
 
 private:
+    Width width_;
     u32 value_;
     u32 maxNumber_;
     u32 ioPageBase_;
@@ -46,6 +48,7 @@ private:
 // test 24.
 inline BusAddress::BusAddress (u32 value, Width width)
 {
+    width_ = width;
     maxNumber_ = (1 << static_cast<u32> (width)) - 1;
     ioPageBase_ = maxNumber_ - (8 * 1024) + 1;
     value_ = value & maxNumber_;
@@ -55,6 +58,11 @@ inline BusAddress::BusAddress (u32 value)
     :
     BusAddress (value, Width::_16Bit)
 {
+}
+
+inline BusAddress::Width BusAddress::width ()
+{
+    return width_;
 }
 
 inline BusAddress::operator u32 ()

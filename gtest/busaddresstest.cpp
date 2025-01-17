@@ -2,6 +2,22 @@
 
 #include <gtest/gtest.h>
 
+TEST (BusAddressTest, correctWidthReturned)
+{
+    // Verify thee default width is 16 bit
+    BusAddress address {0};
+    ASSERT_EQ (address.width (), BusAddress::Width::_16Bit);
+
+    BusAddress _16bitAddress {0, BusAddress::Width::_16Bit};
+    ASSERT_EQ (_16bitAddress.width (), BusAddress::Width::_16Bit);
+
+    BusAddress _18bitAddress {0, BusAddress::Width::_18Bit};
+    ASSERT_EQ (_18bitAddress.width (), BusAddress::Width::_18Bit);
+
+    BusAddress _22bitAddress {0, BusAddress::Width::_22Bit};
+    ASSERT_EQ (_22bitAddress.width (), BusAddress::Width::_22Bit);
+}
+
 TEST (BusAddressTest, ConversionToU16Succeeds)
 {
     BusAddress address {100};
