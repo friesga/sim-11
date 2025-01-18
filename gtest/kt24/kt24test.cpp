@@ -111,15 +111,35 @@ TEST (KT24, _18bitAddressIsMapped)
 
     vector<TestCase> testData =
     {
+        // 000000 + 00000 -> 000000
         {0170200, 0, 0170202, 0, BusAddress (0, BusAddress::Width::_18Bit), 0},
+
+        // 000000 + 000200 -> 000200
         {0170200, 0200, 0170202, 0, BusAddress (0, BusAddress::Width::_18Bit), 0200},
+
+        // 017776 + 000200 -> 020176
         {0170200, 0200, 0170202, 0, BusAddress (017776, BusAddress::Width::_18Bit), 020176},
+
+        // Address not mapped
         {0170200, 0200, 0170202, 0, BusAddress (020000, BusAddress::Width::_18Bit), 0},
+
+        // 000000 + 000200000 -> 000200000
         {0170200, 0, 0170202, 1, BusAddress (0, BusAddress::Width::_18Bit), 000200000},
+
+        // 000000 + 017600000 -> 017600000
         {0170200, 0, 0170202, 077, BusAddress (0, BusAddress::Width::_18Bit), 017600000},
+
+        // 017776 + 017600000 -> 017617776
         {0170200, 0, 0170202, 077, BusAddress (017776, BusAddress::Width::_18Bit), 017617776},
+
+        // Address not mapped
+        {0170370, 010000, 0170372, 0, BusAddress (0740000, BusAddress::Width::_18Bit), 010000},
+
+        // Map register 037 not used
         {0170374, 0, 0170376, 0, BusAddress (0740000, BusAddress::Width::_18Bit), 0},
-        {0170374, 0, 0170376, 0, BusAddress (0757776, BusAddress::Width::_18Bit), 017776},
+        
+        // 0760000 -> 017760000 (I/O page address isn't mapped)
+        {0170374, 0, 0170376, 0, BusAddress (0760000, BusAddress::Width::_18Bit), 0760000},
     };
 
     Qbus bus;
@@ -129,6 +149,7 @@ TEST (KT24, _18bitAddressIsMapped)
 
     for (TestCase &testCase : testData)
     {
+        kt24.reset ();
         kt24.writeWord (testCase.mapRegisterLowAddress,
             testCase.mapRegisterLowContents);
         kt24.writeWord (testCase.mapRegisterHighAddress,
