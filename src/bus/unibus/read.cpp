@@ -2,27 +2,18 @@
 #include "trace/trace.h"
 
 // 18-bit addresses and 22-bit addresses with the four highest bit set
-// re mapped via the Unibus Map (if present). All other addresses are
+// are mapped via the Unibus Map (if present). All other addresses are
 // physical and can be routed directly to the device.
 CondData<u16> Unibus::read (BusAddress address)
 {
-	if (unibusMap_ != nullptr && 
-		(address.width () == BusAddress::Width::_18Bit) ||
-		(address.width () == BusAddress::Width::_22Bit && 
-		(static_cast<u32> (address) & 017000000) == 017000000))
-    {
-        return mappedRead (address);
-    }
-    else
-        return physicalRead (address);
-
+	return addressMustBeMapped (address) ? 
+		mappedRead (address) : physicalRead (address);
 }
 
 CondData<u16> Unibus::dmaRead (BusAddress address)
 {
     return read (address);
 }
-
 
 CondData<u16> Unibus::mappedRead (BusAddress address)
 {

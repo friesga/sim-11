@@ -19,3 +19,14 @@ void Unibus::BINITReceiver (bool signalValue)
 		reset ();
 }
 
+// A given address must be mapped if:
+// - A Unibus Map option is present, and
+// - The address is a 18-bit address, or
+// - The address is a 22-bit address with the highest four bits set.
+bool Unibus::addressMustBeMapped (BusAddress address)
+{
+	return unibusMap_ != nullptr &&
+		(address.width () == BusAddress::Width::_18Bit) ||
+		(address.width () == BusAddress::Width::_22Bit &&
+			(static_cast<u32> (address) & 017000000) == 017000000);
+}
