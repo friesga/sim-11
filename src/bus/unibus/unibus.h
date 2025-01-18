@@ -139,7 +139,8 @@ private:
 	CondData<u16> physicalRead (BusAddress address);
 	bool mappedWriteWord (BusAddress address, u16 value);
 	bool physicalWriteWord (BusAddress address, u16 value);
-
+	bool mappedWriteByte (BusAddress address, u8 value);
+	bool physicalWriteByte (BusAddress address, u8 value);
 };
 
 

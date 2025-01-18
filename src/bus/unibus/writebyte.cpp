@@ -3,7 +3,21 @@
 
 bool Unibus::writeByte (BusAddress address, u8 value)
 {
+	return addressMustBeMapped (address) ?
+		mappedWriteWord (address, value) : physicalWriteWord (address, value);
+}
+
+bool Unibus::mappedWriteByte (BusAddress address, u8 value)
+{
+	return physicalWriteWord (unibusMap_->physicalAddressFrom18bitAddress (address), value);
+}
+
+bool Unibus::physicalWriteByte (BusAddress address, u8 value)
+{
 	BusDevice* module;
+
+	// Prevent write's to odd addresses
+	address &= 0xFFFFFFFE;
 
 	if ((module = configurationHandler_.responsibleModule (address)) != nullptr)
 	{
