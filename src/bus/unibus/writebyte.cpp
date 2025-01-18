@@ -4,7 +4,7 @@
 bool Unibus::writeByte (BusAddress address, u8 value)
 {
 	return addressMustBeMapped (address) ?
-		mappedWriteWord (address, value) : physicalWriteWord (address, value);
+		mappedWriteByte (address, value) : physicalWriteByte (address, value);
 }
 
 bool Unibus::mappedWriteByte (BusAddress address, u8 value)
@@ -15,9 +15,6 @@ bool Unibus::mappedWriteByte (BusAddress address, u8 value)
 bool Unibus::physicalWriteByte (BusAddress address, u8 value)
 {
 	BusDevice* module;
-
-	// Prevent write's to odd addresses
-	address &= 0xFFFFFFFE;
 
 	if ((module = configurationHandler_.responsibleModule (address)) != nullptr)
 	{
