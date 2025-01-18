@@ -97,3 +97,11 @@ TEST (BusAddressTest, _22bitIOPageIsCorrect)
     BusAddress address3 (017760000 + 8192, BusAddress::Width::_22Bit);
     EXPECT_EQ (static_cast<u16> (address3), 0);
 }
+
+TEST (BusAddressTest, widthCanBeChanged)
+{
+    BusAddress _18bitAddress (075776, BusAddress::Width::_18Bit);
+    BusAddress _22bitAddress (_18bitAddress, BusAddress::Width::_22Bit);
+
+    EXPECT_EQ (static_cast<u32> (_22bitAddress), 075776);
+}
