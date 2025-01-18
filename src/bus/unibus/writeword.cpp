@@ -3,6 +3,17 @@
 
 bool Unibus::writeWord (BusAddress address, u16 value)
 {
+	return addressMustBeMapped (address) ?
+		mappedWriteWord (address, value) : physicalWriteWord (address, value);
+}
+
+bool Unibus::mappedWriteWord (BusAddress address, u16 value)
+{
+    return physicalWriteWord (unibusMap_->physicalAddressFrom18bitAddress (address), value);
+}
+
+bool Unibus::physicalWriteWord (BusAddress address, u16 value)
+{
 	BusDevice* module;
 
 	// Prevent write's to odd addresses

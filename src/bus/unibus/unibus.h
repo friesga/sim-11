@@ -137,6 +137,9 @@ private:
 	bool addressMustBeMapped (BusAddress address);
 	CondData<u16> mappedRead (BusAddress address);
 	CondData<u16> physicalRead (BusAddress address);
+	bool mappedWriteWord (BusAddress address, u16 value);
+	bool physicalWriteWord (BusAddress address, u16 value);
+
 };
 
 
