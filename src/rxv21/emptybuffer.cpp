@@ -55,7 +55,7 @@ void RXV21::emptyBuffer ()
 	for (wc = rx2wc, ptr = 0; wc > 0; wc--, ptr++) 
 	{
 		/* Transfer words */
-		bus_->dmaWrite (rx2ba, buffer[ptr]);
+		bus_->writeWord (rx2ba, buffer[ptr]);
 		rx2ba += 2;
 	}
 	done ();

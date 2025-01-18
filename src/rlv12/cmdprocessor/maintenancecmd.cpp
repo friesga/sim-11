@@ -60,7 +60,7 @@ u16 CmdProcessor::maintenanceCmd (RL01_02 *unit, RLV12Command &rlv12Command)
     // Transfer 256 words to FIFO
     for (size_t wordCount = 0; wordCount < 256; ++wordCount)
     {
-        CondData<u16> value = controller_->bus_->dmaRead (memoryAddress);
+        CondData<u16> value = controller_->bus_->read (memoryAddress);
         if (value.hasValue())
             controller_->dataBuffer_[wordCount] = value;
         else
@@ -76,7 +76,7 @@ u16 CmdProcessor::maintenanceCmd (RL01_02 *unit, RLV12Command &rlv12Command)
     // plus 512 (using memoryAddress from the previous loop).
     for (size_t wordCount = 0; wordCount < 255; wordCount++)
     {
-        if (!controller_->bus_->dmaWrite (memoryAddress, 
+        if (!controller_->bus_->writeWord (memoryAddress, 
             controller_->dataBuffer_[wordCount]))
         {
             rlcsValue = RLV12const::CSR_NonExistentMemory;
