@@ -13,6 +13,11 @@ using std::array;
 // - 18-bit for an Unibus address or 18-bit Qbus address,
 // - 22-bit for a 22-bit Qbus address or Extended Unibus (EUB).
 //
+// I/O page base addresses:
+// - 16-bit address: 0160000
+// - 18-bit address: 0760000
+// - 22-bit address: 017760000
+//
 class BusAddress
 {
 public:
