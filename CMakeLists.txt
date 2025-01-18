@@ -168,7 +168,6 @@ set (BUS_SRCS
     src/bus/qbus/read.cpp
     src/bus/qbus/writebyte.cpp
     src/bus/qbus/writeword.cpp
-    src/bus/qbus/dma.cpp
     src/bus/qbus/bussignals.cpp
     src/bus/qbus/businterrupts.cpp
     src/bus/qbus/busconfiguration.cpp

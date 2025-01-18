@@ -29,8 +29,3 @@ bool Unibus::physicalWriteWord (BusAddress address, u16 value)
 	// No responsible module found
 	return false;
 }
-
-bool Unibus::dmaWrite (BusAddress address, u16 value)
-{
-	return writeWord (address, value);
-}

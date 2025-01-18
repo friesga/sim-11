@@ -10,11 +10,6 @@ CondData<u16> Unibus::read (BusAddress address)
 		mappedRead (address) : physicalRead (address);
 }
 
-CondData<u16> Unibus::dmaRead (BusAddress address)
-{
-    return read (address);
-}
-
 CondData<u16> Unibus::mappedRead (BusAddress address)
 {
 	return physicalRead (unibusMap_->physicalAddressFrom18bitAddress (address));

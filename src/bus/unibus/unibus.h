@@ -118,8 +118,6 @@ public:
 	CondData<u16> read (BusAddress address);
 	bool writeWord (BusAddress address, u16 value);
 	bool writeByte (BusAddress address, u8 val);
-	CondData<u16> dmaRead (BusAddress address);
-	bool dmaWrite (BusAddress address, u16 value);
 
 private:
 	// Definition of the handlers
