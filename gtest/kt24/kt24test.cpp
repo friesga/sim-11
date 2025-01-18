@@ -32,29 +32,6 @@ TEST (KT24, addressReturnedAsIsWhenDisabled)
         (kt24.physicalAddressFrom18bitAddress (address)), 0377777);
 }
 
-/*
-// Verify that if the KT24 is disabled data is read from the
-// lower 18-bit address space of the given 22-bit address
-TEST (KT24, readPassthrough)
-{
-    Qbus bus;
-    KT24 kt24 (&bus);
-    MS11P ms11p (&bus);
-    u16 dataWritten {0177777};
-    CondData<u16> dataRead {0};
-
-    // Install devices on the bus
-    bus.installModule (&ms11p);
-
-    // KT24 is disabled by default
-
-    EXPECT_EQ (ms11p.writeWord (0, dataWritten), StatusCode::OK);
-    dataRead = kt24.dmaRead (0);
-    EXPECT_TRUE (dataRead.hasValue ());
-    EXPECT_EQ (dataWritten, dataRead);
-}
-*/
-
 // Verify the KT24 is responsible for the mapping registers (i.e. registers
 // in the range 0170200 up to and including 0170376), the Last Mapped Address
 // Register (0177734 and 0177736) and the CPU Error Register (0177766).
