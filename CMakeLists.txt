@@ -516,6 +516,7 @@ set (GTEST_SRCS
     gtest/simulatorclocktest.cpp
     gtest/systemconfigtest.cpp
     gtest/tracetest.cpp
+    gtest/unibustest.cpp
     gtest/serial/uartmaintmodetest.cpp
     gtest/variantfsmtest.cpp)
     

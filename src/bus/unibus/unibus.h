@@ -133,6 +133,9 @@ private:
 
 	// A Unibus optionally contains a Unibus Map
 	UnibusMap* unibusMap_;
+
+	CondData<u16> mappedRead (BusAddress address);
+	CondData<u16> physicalRead (BusAddress address);
 };
 
 
