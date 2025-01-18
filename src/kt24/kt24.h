@@ -100,7 +100,7 @@ private:
 	void writeMappingRegister (u16 registerAddress, u16 value);
 	void writeLMARegister (u16 registerAddress, u16 value);
 	void writeCpuErrorRegister ();
-	u32 _32bitAddressFrom18BitBusAddress (BusAddress busAddress);
+	u32 _22bitAddressFrom18BitBusAddress (BusAddress busAddress);
 	void ioMapEnableReceiver (bool signalValue);
 };
 

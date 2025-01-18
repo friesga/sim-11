@@ -151,8 +151,12 @@ void KT24::writeCpuErrorRegister ()
     cpuErrorRegister_ &= 0177776;
 }
 
+// A reset clears all mapping registers
 void KT24::reset ()
-{}
+{
+    for (auto& mappingRegister : mappingRegisters_)
+        mappingRegister = 0;
+}
 
 // Relocation expands the 18-bit Unibus address to the 22-bit main memory
 // address. This allows the Unibus to access any location in main memory.
@@ -185,31 +189,45 @@ void KT24::reset ()
 //
 BusAddress KT24::physicalAddressFrom18bitAddress (BusAddress address)
 {
-    if (ioMapEnabled_ && !address.isInIOpage ())
+    if (!ioMapEnabled_)
+        return address;
+
+    if (!address.isInIOpage ())
     {
-        u32 physicalAddress = _32bitAddressFrom18BitBusAddress (address);
+        u32 physicalAddress = _22bitAddressFrom18BitBusAddress (address);
         lmaRegister_ = physicalAddress;
         return BusAddress (physicalAddress, BusAddress::Width::_22Bit);
     }
     else
+        // Return the given address as an 18-bit address. As the address is
+        // in the I/O page, it does not matter if it's an 18- or 22-bit
+        // address.
         return address;
+
 }
 
-u32 KT24::_32bitAddressFrom18BitBusAddress (BusAddress busAddress)
+#define DEBUG 0
+
+u32 KT24::_22bitAddressFrom18BitBusAddress (BusAddress busAddress)
 {
-    size_t registerIndex = 
-        indexFrom18BitBusAddress (busAddress.registerAddress ());
-    // std::cout << "address.registerAddress(): " << busAddress.registerAddress () << '\n';
-    // std::cout << "registerIndex: " << registerIndex << '\n';
+    size_t registerIndex =
+        indexFrom18BitBusAddress (static_cast<u32> (busAddress));
+
+#if DEBUG
+    std::cout << "address: " << static_cast<u32> (busAddress) << '\n';
+    std::cout << "registerIndex: " << registerIndex << '\n';
+#endif
 
     u16 low = mappingRegisters_[registerIndex].low;
     u16 high = mappingRegisters_[registerIndex].high;
 
-    // std::cout << "low: " << low << '\n';
-    // std::cout << "high: " << high << '\n';
+#if DEBUG
+    std::cout << "low: " << low << '\n';
+    std::cout << "high: " << high << '\n';
 
-    //std::cout << "physicalAddress: " << 
-    //    ((high << 16) | low) + (static_cast<u16> (busAddress) & 017777) << '\n';
+    std::cout << "physicalAddress: " << 
+        ((high << 16) | low) + (static_cast<u16> (busAddress) & 017777) << '\n';
+#endif
 
     return ((high << 16) | low) + (static_cast<u16> (busAddress) & 017777);
 }
