@@ -1,15 +1,21 @@
 #include "kt24.h"
+#include "trace/trace.h"
 
 #include <iostream>
+
+using std::bind;
+using std::placeholders::_1;
 
 KT24::KT24 (Bus* bus)
     :
     bus_ {bus}
-{}
+{
+    bus_->IOMapEnable ().subscribe (bind (&KT24::ioMapEnableReceiver, this, _1));
+}
 
 KT24::KT24 (Bus* bus, shared_ptr<KT24Config> kt24Config)
     :
-    bus_ {bus}
+    KT24 (bus)
 {}
 
 void KT24::enable ()
@@ -211,30 +217,22 @@ BusAddress KT24::physicalAddressFrom18bitAddress (BusAddress address)
 
 }
 
-#define DEBUG 0
 
 u32 KT24::_22bitAddressFrom18BitBusAddress (BusAddress busAddress)
 {
     size_t registerIndex =
         indexFrom18BitBusAddress (static_cast<u32> (busAddress));
 
-#if DEBUG
-    std::cout << "address: " << static_cast<u32> (busAddress) << '\n';
-    std::cout << "registerIndex: " << registerIndex << '\n';
-#endif
-
     u16 low = mappingRegisters_[registerIndex].low;
     u16 high = mappingRegisters_[registerIndex].high;
 
-#if DEBUG
-    std::cout << "low: " << low << '\n';
-    std::cout << "high: " << high << '\n';
+    u32 physicalAddress = ((high << 16) | low) +
+        (static_cast<u16> (busAddress) & 017777);
 
-    std::cout << "physicalAddress: " << 
-        ((high << 16) | low) + (static_cast<u16> (busAddress) & 017777) << '\n';
-#endif
+    trace.unibusMap (static_cast<u32> (busAddress), busAddress.width (),
+        registerIndex, low, high, physicalAddress);
 
-    return ((high << 16) | low) + (static_cast<u16> (busAddress) & 017777);
+    return physicalAddress;
 }
 
 void KT24::ioMapEnableReceiver (bool signalValue)
