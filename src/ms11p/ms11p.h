@@ -44,6 +44,8 @@ public:
     // Function required for the MemoryDevice interface
     u16 loadFile (const char* fileName);
 
+    void BPOKReceiver (bool signalValue);
+
 private:
     Bus* bus_;
     MS11PConfig::PowerSource powerSource_ {MS11PConfig::PowerSource::System};

@@ -2,6 +2,8 @@
 #include "absoluteloader/absoluteloader.h"
 
 using std::shared_ptr;
+using std::bind;
+using std::placeholders::_1;
 
 MS11P::MS11P (Bus* bus)
 	:
@@ -9,6 +11,8 @@ MS11P::MS11P (Bus* bus)
 {
 	// Allocate zero-initialized memory
 	memory_ = make_unique<u8[]> (memorySize_);
+
+	bus_->BPOK ().subscribe (bind (&MS11P::BPOKReceiver, this, _1));
 }
 
 MS11P::MS11P (Bus* bus, shared_ptr<MS11PConfig> ms11pConfig)
@@ -52,10 +56,12 @@ u16 MS11P::loadFile (const char* fileName)
 	return AbsoluteLoader::loadFile (fileName, memory_.get ());
 }
 
-// On a power-up the memory is cleared or - in case of a functioning
-// battery back-up - kept in order.
 void MS11P::reset ()
+{}
+
+// If power is lost and no battery backup is available the memory is cleared.
+void MS11P::BPOKReceiver (bool signalValue)
 {
-	if (!bus_->BatteryPower ())
+	if (!signalValue && !bus_->BatteryPower ())
 		memory_ = make_unique<u8[]> (memorySize_);
 }
