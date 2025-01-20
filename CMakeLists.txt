@@ -289,6 +289,7 @@ set (TRACE_SRCS
     src/trace/rlv12registersrecord/ostreaminsertopreator.cpp 
     src/trace/rlv12commandrecord/operator.cpp
     src/trace/rlv12commandrecord/getcommandname.cpp
+    src/trace/unibusmaprecord/operator.cpp
     src/trace/clockrecord/tracefileinsertoperator.cpp
     src/trace/clockrecord/extractionoperator.cpp
     src/trace/clockrecord/ostreaminsertoperator.cpp

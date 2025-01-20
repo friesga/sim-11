@@ -82,6 +82,10 @@ void processTraceRecord(Magic magic, TracefileInStream &tracefile)
             readAndPrintRecord<KTF11_ARecord> (tracefile);
             break;
 
+        case Magic::UBM0:
+            readAndPrintRecord<UnibusMapRecord> (tracefile);
+            break;
+
         default:
             throw string("Unknown magic");
     }

@@ -123,6 +123,14 @@ void Trace::rlv12Command (u16 command)
         tracefileOut_ << TraceRecord<RLV12CommandRecord> (command);
 }
 
+void Trace::unibusMap (u32 inputAddress, BusAddress::Width width,
+    u16 registerIndex, u16 low, u16 high, u32 physicalAddress)
+{
+    if (traceEnabled && (flags_ & Trace::Category::UnibusMap))
+        tracefileOut_ << TraceRecord<UnibusMapRecord> (inputAddress, width,
+            registerIndex, low, high, physicalAddress);
+}
+
 // This functions logs a time record in the logfile. It has to be passed a
 // SimulatorClock::duration which can be used to log either a point in
 // time (i.e. the simulated time elapsed since the start of the simulator)

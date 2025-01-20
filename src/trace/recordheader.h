@@ -31,7 +31,8 @@ enum class Magic
 	RL2A = 0x524C3241,	// RLV12 register
 	RL2C = 0x524C3243,	// RLV12 command
 	CLCK = 0x434c434b,
-	MMU0 = 0x4D4D5530
+	MMU0 = 0x4D4D5530,
+	UBM0 = 0x55424D30	// Unibus Map
 };
 
 // Definition of the type to discriminate the trace records in the template

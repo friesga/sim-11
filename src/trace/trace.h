@@ -4,6 +4,7 @@
 #include "types.h"
 #include "cpueventrecord/cpueventrecord.h"
 #include "busrecord/busrecord.h"
+#include "busaddress/busaddress.h"
 #include "memorydumprecord/memorydumprecord.h"
 #include "cpusteprecord/cpusteprecord.h"
 #include "traprecord/traprecord.h"
@@ -15,6 +16,7 @@
 #include "dlv11record/dlv11record.h"
 #include "rlv12registersrecord/rlv12registersrecord.h"
 #include "rlv12commandrecord/rlv12commandrecord.h"
+#include "unibusmaprecord/unibusmaprecord.h"
 #include "clockrecord/clockrecord.h"
 #include "ktf11_arecord/ktf11_arecord.h"
 #include "chrono/simulatorclock/simulatorclock.h"
@@ -51,7 +53,8 @@ public:
         RXV21Disk  = (1 << 11),     // RXV21DiskRecord
         RLV12	   = (1 << 12),     // RLV12RegistersRecord, RLV12CommandRecord
         Clock      = (1 << 13),     // TimeRecord
-        MMUAPR     = (1 << 14)      // KTF11_ARecord
+        MMUAPR     = (1 << 14),     // KTF11_ARecord
+        UnibusMap  = (1 << 15)      // UnibusMapRecord
     };
 
     Trace ();
@@ -75,6 +78,8 @@ public:
     void rxv21Error (RXV21ErrorRecordType type, u16 info);
     void rlv12Registers (string msg, u16 rlcs, u16 rlba, u16 rlda, u16 rlmpr, u16 rlbae);
     void rlv12Command (u16 command);
+    void unibusMap (u32 inputAddress, BusAddress::Width width,
+        u16 registerIndex, u16 low, u16 high, u32 physicalAddress);
     void clock (string msg, SimulatorClock::duration duration);
     void MmuApr (ActivePageRegisterSet const& aprSet);
     void setIgnoreBus ();
