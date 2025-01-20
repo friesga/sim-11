@@ -187,10 +187,15 @@ void KT24::reset ()
 // addresses because it would be used by addresses in the range of the
 // I/O page (017760000 - 017777777).
 //
+// Diagnostic KKUAE0 test 5 confirms that 22-bit addresses with the highest
+// four bits set and with Unibus Map disabled have to be transformed to their
+// 18-bit equivalent (i.e. the highest for bits have to be masked off).
+//
 BusAddress KT24::physicalAddressFrom18bitAddress (BusAddress address)
 {
     if (!ioMapEnabled_)
-        return address;
+        return BusAddress (static_cast<u32> (address) & 0777777,
+            BusAddress::Width::_18Bit);
 
     if (!address.isInIOpage ())
     {
