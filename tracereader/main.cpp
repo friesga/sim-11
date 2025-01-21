@@ -79,7 +79,7 @@ void processTraceRecord(Magic magic, TracefileInStream &tracefile)
             break;
 
         case Magic::MMU0:
-            readAndPrintRecord<KTF11_ARecord> (tracefile);
+            readAndPrintRecord<APRRecord> (tracefile);
             break;
 
         case Magic::UBM0:

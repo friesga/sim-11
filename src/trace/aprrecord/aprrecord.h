@@ -10,15 +10,15 @@
 
 // Definition of the type to discriminate the trace records in the template
 // classes.
-struct KTF11_ARecord {};
+struct APRRecord {};
 
-// Specialization of the TraceRecord for the KTF11_ARecord record
+// Specialization of the TraceRecord for the APRRecord record
 template <>
-class TraceRecord<KTF11_ARecord>
+class TraceRecord<APRRecord>
 {
 public:
 	friend std::ostream& operator<< (std::ostream& os, 
-		TraceRecord<KTF11_ARecord> record);
+		TraceRecord<APRRecord> record);
 
 	TraceRecord ();
 	TraceRecord (ActivePageRegisterSet const& aprSet);
@@ -28,12 +28,12 @@ private:
 	ActivePageRegisterSet aprSet_;
 };
 
-inline TraceRecord<KTF11_ARecord>::TraceRecord ()
+inline TraceRecord<APRRecord>::TraceRecord ()
 	:
 	aprSet_ {}
 {}
 
-inline TraceRecord<KTF11_ARecord>::TraceRecord (ActivePageRegisterSet const & aprSet)
+inline TraceRecord<APRRecord>::TraceRecord (ActivePageRegisterSet const & aprSet)
 	:
 	aprSet_ {aprSet}
 {}

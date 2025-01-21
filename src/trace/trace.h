@@ -18,7 +18,7 @@
 #include "rlv12commandrecord/rlv12commandrecord.h"
 #include "unibusmaprecord/unibusmaprecord.h"
 #include "clockrecord/clockrecord.h"
-#include "ktf11_arecord/ktf11_arecord.h"
+#include "aprrecord/aprrecord.h"
 #include "chrono/simulatorclock/simulatorclock.h"
 
 #include "tracefileoutstream/tracefileoutstream.h"
@@ -53,7 +53,7 @@ public:
         RXV21Disk  = (1 << 11),     // RXV21DiskRecord
         RLV12	   = (1 << 12),     // RLV12RegistersRecord, RLV12CommandRecord
         Clock      = (1 << 13),     // TimeRecord
-        MMUAPR     = (1 << 14),     // KTF11_ARecord
+        MMUAPR     = (1 << 14),     // APRRecord
         UnibusMap  = (1 << 15)      // UnibusMapRecord
     };
 

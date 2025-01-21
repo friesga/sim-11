@@ -146,7 +146,7 @@ void Trace::clock (string msg, SimulatorClock::duration duration)
 void Trace::MmuApr (ActivePageRegisterSet const& aprSet)
 {
     if (traceEnabled && (flags_ & Trace::Category::MMUAPR))
-        tracefileOut_ << TraceRecord<KTF11_ARecord> (aprSet);
+        tracefileOut_ << TraceRecord<APRRecord> (aprSet);
 }
 
 void Trace::setIgnoreBus ()

@@ -1,4 +1,4 @@
-#include "ktf11_arecord.h"
+#include "aprrecord.h"
 
 #include <iomanip>
 
@@ -8,9 +8,9 @@ using std::setfill;
 using std::endl;
 
 // Print the given record to the given output stream
-std::ostream& operator<< (std::ostream& os, TraceRecord<KTF11_ARecord> record)
+std::ostream& operator<< (std::ostream& os, TraceRecord<APRRecord> record)
 {
-    os << "[MMU ] ";
+    os << "[APR ] ";
     for (size_t index = 0; index < 8; ++index)
     {
         os << "KPAR" << index << '=' << 
