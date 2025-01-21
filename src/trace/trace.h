@@ -19,6 +19,7 @@
 #include "unibusmaprecord/unibusmaprecord.h"
 #include "clockrecord/clockrecord.h"
 #include "aprrecord/aprrecord.h"
+#include "mmurecord/mmurecord.h"
 #include "chrono/simulatorclock/simulatorclock.h"
 
 #include "tracefileoutstream/tracefileoutstream.h"
@@ -54,7 +55,8 @@ public:
         RLV12	   = (1 << 12),     // RLV12RegistersRecord, RLV12CommandRecord
         Clock      = (1 << 13),     // TimeRecord
         MMUAPR     = (1 << 14),     // APRRecord
-        UnibusMap  = (1 << 15)      // UnibusMapRecord
+        MMUAddress = (1 << 15),     // MMU mapped address
+        UnibusMap  = (1 << 16)      // UnibusMapRecord
     };
 
     Trace ();
@@ -81,7 +83,8 @@ public:
     void unibusMap (u32 inputAddress, BusAddress::Width width,
         u16 registerIndex, u16 low, u16 high, u32 physicalAddress);
     void clock (string msg, SimulatorClock::duration duration);
-    void MmuApr (ActivePageRegisterSet const& aprSet);
+    void mmuApr (ActivePageRegisterSet const& aprSet);
+    void mmuAddress (BusAddress address);
     void setIgnoreBus ();
     void clearIgnoreBus();
 };

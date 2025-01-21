@@ -143,10 +143,16 @@ void Trace::clock (string msg, SimulatorClock::duration duration)
         tracefileOut_ << TraceRecord<ClockRecord> (msg, duration);
 }
 
-void Trace::MmuApr (ActivePageRegisterSet const& aprSet)
+void Trace::mmuApr (ActivePageRegisterSet const& aprSet)
 {
     if (traceEnabled && (flags_ & Trace::Category::MMUAPR))
         tracefileOut_ << TraceRecord<APRRecord> (aprSet);
+}
+
+void Trace::mmuAddress (BusAddress address)
+{
+    if (traceEnabled && (flags_ & Trace::Category::MMUAddress))
+        tracefileOut_ << TraceRecord<MMURecord> (address);
 }
 
 void Trace::setIgnoreBus ()

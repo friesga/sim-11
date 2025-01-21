@@ -82,6 +82,10 @@ void processTraceRecord(Magic magic, TracefileInStream &tracefile)
             readAndPrintRecord<APRRecord> (tracefile);
             break;
 
+        case Magic::MMUA:
+            readAndPrintRecord<MMURecord> (tracefile);
+            break;
+
         case Magic::UBM0:
             readAndPrintRecord<UnibusMapRecord> (tracefile);
             break;

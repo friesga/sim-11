@@ -32,6 +32,7 @@ enum class Magic
 	RL2C = 0x524C3243,	// RLV12 command
 	CLCK = 0x434c434b,
 	MMU0 = 0x4D4D5530,
+	MMUA = 0x4D4D5541,	// MMU mapped address
 	UBM0 = 0x55424D30	// Unibus Map
 };
 
