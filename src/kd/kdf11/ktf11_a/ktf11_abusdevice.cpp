@@ -76,7 +76,7 @@ StatusCode KTF11_A::writeWord (BusAddress address, u16 value)
     if (regPtr != nullptr)
     {
         *regPtr = value;
-        trace.MmuApr (activePageRegisterSet_[static_cast<u16> (PSW::Mode::Kernel)]);
+        trace.mmuApr (activePageRegisterSet_[static_cast<u16> (PSW::Mode::Kernel)]);
         return StatusCode::OK;
     }
 
