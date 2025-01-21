@@ -3,6 +3,7 @@
 
 #include "types.h"
 #include "../recordheader.h"
+#include "busaddress/busaddress.h"
 
 #include <iomanip>
 
@@ -28,12 +29,12 @@ class TraceRecord<BusRecord>
 
 	BusRecordType type_;
 	u32	address_;
+    u16 width_;
 	u16	value_;
-	u16	pad_;
 
 public:
 	TraceRecord ();
-	TraceRecord (BusRecordType type, u32 address, u16 value);
+	TraceRecord (BusRecordType type, BusAddress address, u16 value);
     Magic magic () {return Magic::BUS0;}
 };
 
@@ -42,18 +43,18 @@ inline TraceRecord<BusRecord>::TraceRecord ()
 	:
     type_ {BusRecordType::Read},
 	address_ {0},
-    value_ {0},
-	pad_ {0}
+    width_ {0},
+    value_ {0}
 {}
 
 
 inline TraceRecord<BusRecord>::TraceRecord (BusRecordType type,
-    u32 address, u16 value)
+    BusAddress address, u16 value)
 	:
     type_ {type},
 	address_ {address},
-    value_ {value},
-	pad_ {0}
+    width_ {static_cast<u16> (address.width())},
+    value_ {value}
 {}
 
 #endif // !_BUSRECORD_H_
