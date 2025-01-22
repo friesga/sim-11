@@ -43,11 +43,9 @@ try
 	CmdLineOptions cmdLineOptions (argc, argv);
 
 	// Activate the tracing facility when specified on the command line
-	if (cmdLineOptions.trace_file) 
-		trace.activate (cmdLineOptions.trace_file, 
-			Trace::Category::CpuStep |
-			Trace::Category::RLV12 |
-			Trace::Category::Clock);
+	if (cmdLineOptions.trace_file)
+		trace.activate (cmdLineOptions.trace_file,
+			Trace::Category::CpuStep);
 
 	// A H9642 cabinet is 19" wide and has an internal height of 35".
 	// This height corresponds to 20 rack units. The aspect ratio of a H9642
