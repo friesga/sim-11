@@ -105,3 +105,13 @@ TEST (BusAddressTest, widthCanBeChanged)
 
     EXPECT_EQ (static_cast<u32> (_22bitAddress), 075776);
 }
+
+TEST (BusAddressTest, andOperatorWorksAsExpected)
+{
+    BusAddress _18bitAddress {0777777, BusAddress::Width::_18Bit};
+
+    _18bitAddress &= 0xFFFFFFFE;
+
+    EXPECT_EQ (static_cast<u32> (_18bitAddress), 0777776);
+    EXPECT_EQ (_18bitAddress.width (), BusAddress::Width::_18Bit);
+}
