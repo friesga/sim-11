@@ -297,7 +297,10 @@ set (TRACE_SRCS
     src/trace/memorydumprecord/extractionoperator.cpp
     src/trace/memorydumprecord/ostreaminsertoperator.cpp
     src/trace/aprrecord/operator.cpp
-    src/trace/mmurecord/operator.cpp)
+    src/trace/mmurecord/operator.cpp
+    src/trace/debugrecord/tracefileinsertoperator.cpp
+    src/trace/debugrecord/extractionoperator.cpp
+    src/trace/debugrecord/ostreaminsertoperator.cpp)
 
     set (KT24_SRCS
         src/kt24/kt24.cpp)

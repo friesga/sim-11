@@ -155,6 +155,12 @@ void Trace::mmuAddress (BusAddress address)
         tracefileOut_ << TraceRecord<MMURecord> (address);
 }
 
+void Trace::debug (string msg)
+{
+    if (traceEnabled && (flags_ & Trace::Category::Debug))
+        tracefileOut_ << TraceRecord<DebugRecord> (msg);
+}
+
 void Trace::setIgnoreBus ()
 {
     flags_ |= Trace::Category::IgnoreBus;

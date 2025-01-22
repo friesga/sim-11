@@ -90,6 +90,10 @@ void processTraceRecord(Magic magic, TracefileInStream &tracefile)
             readAndPrintRecord<UnibusMapRecord> (tracefile);
             break;
 
+        case Magic::DBUG:
+            readAndPrintRecord<DebugRecord> (tracefile);
+            break;
+
         default:
             throw string("Unknown magic");
     }

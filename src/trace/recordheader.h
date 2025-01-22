@@ -33,7 +33,8 @@ enum class Magic
 	CLCK = 0x434c434b,
 	MMU0 = 0x4D4D5530,
 	MMUA = 0x4D4D5541,	// MMU mapped address
-	UBM0 = 0x55424D30	// Unibus Map
+	UBM0 = 0x55424D30,	// Unibus Map
+	DBUG = 0x44425547	// For debugging purposes
 };
 
 // Definition of the type to discriminate the trace records in the template

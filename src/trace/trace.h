@@ -20,6 +20,7 @@
 #include "clockrecord/clockrecord.h"
 #include "aprrecord/aprrecord.h"
 #include "mmurecord/mmurecord.h"
+#include "debugrecord/debugrecord.h"
 #include "chrono/simulatorclock/simulatorclock.h"
 
 #include "tracefileoutstream/tracefileoutstream.h"
@@ -56,7 +57,8 @@ public:
         Clock      = (1 << 13),     // TimeRecord
         MMUAPR     = (1 << 14),     // APRRecord
         MMUAddress = (1 << 15),     // MMU mapped address
-        UnibusMap  = (1 << 16)      // UnibusMapRecord
+        UnibusMap  = (1 << 16),     // UnibusMapRecord
+        Debug	   = (1 << 17)      // DebugRecord
     };
 
     Trace ();
@@ -85,6 +87,7 @@ public:
     void clock (string msg, SimulatorClock::duration duration);
     void mmuApr (ActivePageRegisterSet const& aprSet);
     void mmuAddress (BusAddress address);
+    void debug (string msg);
     void setIgnoreBus ();
     void clearIgnoreBus();
 };
