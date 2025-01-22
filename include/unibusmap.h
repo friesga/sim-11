@@ -18,7 +18,12 @@
 class UnibusMap : public BusDevice
 {
 public:
+	// The LMA also contains the memory control lines C1 and C0
+	static const u16 C1 {1 << 15};
+	static const u16 C0 {1 << 14};
+
 	virtual BusAddress physicalAddressFrom18bitAddress (BusAddress address) = 0;
+	virtual void setControlLines (u16 controlLines) = 0;
 	virtual ~UnibusMap () {};
 };
 

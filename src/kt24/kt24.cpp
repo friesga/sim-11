@@ -2,6 +2,8 @@
 #include "trace/trace.h"
 
 #include <iostream>
+#include <sstream>
+#include "chrono/simulatorclock/simulatorclock.h"
 
 using std::bind;
 using std::placeholders::_1;
@@ -164,6 +166,25 @@ void KT24::reset ()
         mappingRegister = 0;
 }
 
+// The LMA also contains the memory control lines C1 and C0. According to
+// Table 4-2 in the 11/24 Technical Manual both these bits are set on DATO
+// (write) and DATOB (write byte) cycles. Diagnostic KKUAE0 test 26 and test
+// 27 however check that just LMA bit 15 (C1) is set on a DATO cycle and both
+// bit 14 (C0) and 15 (C1) are set on a DATOB cycle.
+//
+// In test 27 it is noted that the DATIP (read-modify-write) cycle cannot be
+// checked because the LMA is written twice when a DATIP is executed,
+// destroying the DATIP state that was written first.
+//
+void KT24::setControlLines (u16 controlLines)
+{
+    // lmaRegister_.high &= ~(UnibusMap::C0 | UnibusMap::C1) | 
+    //    (controlLines & (UnibusMap::C0 | UnibusMap::C1));
+
+    lmaRegister_.high = lmaRegister_.high & ~(UnibusMap::C0 | UnibusMap::C1) |
+        (controlLines & (UnibusMap::C0 | UnibusMap::C1));
+}
+
 // Relocation expands the 18-bit Unibus address to the 22-bit main memory
 // address. This allows the Unibus to access any location in main memory.
 // This relocation or mapping of addresses is done by adding the contents
@@ -206,7 +227,8 @@ BusAddress KT24::physicalAddressFrom18bitAddress (BusAddress address)
     if (!address.isInIOpage ())
     {
         u32 physicalAddress = _22bitAddressFrom18BitBusAddress (address);
-        lmaRegister_ = physicalAddress;
+        lmaRegister_.low = physicalAddress & 0177777;
+        lmaRegister_.high = (physicalAddress >> 16) & 077;
         return BusAddress (physicalAddress, BusAddress::Width::_22Bit);
     }
     else

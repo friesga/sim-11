@@ -12,6 +12,7 @@ CondData<u16> Unibus::read (BusAddress address)
 
 CondData<u16> Unibus::mappedRead (BusAddress address)
 {
+	unibusMap_->setControlLines (0);
 	return physicalRead (unibusMap_->physicalAddressFrom18bitAddress (address));
 }
 

@@ -9,6 +9,7 @@ bool Unibus::writeByte (BusAddress address, u8 value)
 
 bool Unibus::mappedWriteByte (BusAddress address, u8 value)
 {
+	unibusMap_->setControlLines (UnibusMap::C1 | UnibusMap::C0);
 	return physicalWriteByte (unibusMap_->physicalAddressFrom18bitAddress (address), value);
 }
 

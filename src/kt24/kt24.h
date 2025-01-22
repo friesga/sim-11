@@ -33,6 +33,7 @@ public:
 
 	// Functions required for the UnibusMap interface
 	BusAddress physicalAddressFrom18bitAddress (BusAddress address);
+	void setControlLines (u16 controlLines);
 
 	// The enable() and disable() functions are added to be able to control
 	// the KT24 state from the unit tests.

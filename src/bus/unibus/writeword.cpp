@@ -9,6 +9,7 @@ bool Unibus::writeWord (BusAddress address, u16 value)
 
 bool Unibus::mappedWriteWord (BusAddress address, u16 value)
 {
+	unibusMap_->setControlLines (UnibusMap::C1);
     return physicalWriteWord (unibusMap_->physicalAddressFrom18bitAddress (address), value);
 }
 
