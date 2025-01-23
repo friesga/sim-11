@@ -43,6 +43,9 @@ set (KD11COMMON_SRCS
     src/kd/common/executor/executor.cpp
     src/kd/common/odt/operatorconsoleaccess/operatorconsoleaccess.cpp)
 
+set (DEVICECOMMON_SRCS
+    src/devicecommon/registerhandler/registerhandler.cpp)
+
 set (KD11CONTROLLOGIC_SRCS
     src/kd/common/controllogic/controllogic.cpp
     src/kd/common/controllogic/poweruproutine.cpp
@@ -102,7 +105,6 @@ set (KDF11_SRCS
     src/kd/kdf11/cpucontrol/kdf11_cpucontrol.cpp
     src/kd/kdf11/cpudata/kdf11registers/kdf11registers.cpp
     src/kd/kdf11/cpudata/kdf11busdevice.cpp
-    src/kd/kdf11/registerhandler/registerhandler.cpp
     src/kd/kdf11/ktf11_a/ktf11_a.cpp
     src/kd/kdf11/ktf11_a/ktf11_abusdevice.cpp
     ${KDF11_ODT_SRCS})
@@ -366,7 +368,8 @@ set (SIM11_SRCS
     ${CMDLINEOPTIONS_SRCS}
     ${CONFIGURATOR_SRCS}
     ${KT24_SRCS}
-    src/interruptrequest/interruptrequest.cpp)
+    src/interruptrequest/interruptrequest.cpp
+    ${DEVICECOMMON_SRCS})
 
 # Add source to this project's executable.
 add_executable (${TARGET} ${SIM11_SRCS})
@@ -554,6 +557,7 @@ set (SIM11_TEST_SRCS
     src/signal/signal.cpp
     ${TRACE_SRCS}
     ${KT24_SRCS}
+    ${DEVICECOMMON_SRCS}
     src/logger/logger.cpp
     src/logger/data.cpp)
 

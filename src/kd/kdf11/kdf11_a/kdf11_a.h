@@ -7,7 +7,7 @@
 #include "kd/kdf11/odt/kdf11_odt.h"
 #include "configdata/kdf11/kdf11_a/kdf11_aconfig/kdf11_aconfig.h"
 #include "kd/common/controllogic/controllogic.h"
-#include "kd/kdf11/registerhandler/registerhandler.h"
+#include "devicecommon/registerhandler/registerhandler.h"
 
 #include <memory>
 #include <vector>

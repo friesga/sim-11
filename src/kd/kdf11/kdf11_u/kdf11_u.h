@@ -7,7 +7,7 @@
 #include "configdata/kdf11/kdf11_u/kdf11_uconfig/kdf11_uconfig.h"
 #include "kd/common/controllogic/controllogic.h"
 #include "kd/kdf11/cpudata/kdf11cpudata.h"
-#include "kd/kdf11/registerhandler/registerhandler.h"
+#include "devicecommon/registerhandler/registerhandler.h"
 #include "kd/kdf11/serial_line_units/serial_line_units.h"
 #include "kd/kdf11/kdf11_u/displayregister/displayregister.h"
 
