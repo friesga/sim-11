@@ -22,7 +22,7 @@ void M9312Processor::processValue (iniparser::Section::ValueIterator valueIterat
     if (processFunction == nullptr)
         // This exception will be catched and processed in 
         // SectionProcessor::processSection().
-        throw std::out_of_range ("Unknown key in M9312 section");
+        throw std::out_of_range ("Unknown key in section " + sectionName ());
 
     (this->*processFunction)(valueIterator->second);
 }
@@ -46,8 +46,8 @@ void M9312Processor::processDiagnosticROM (iniparser::Value value)
     }
     catch (out_of_range const&)
     {
-        throw invalid_argument {"Incorrect M9312 diagnostic rom: " +
-            value.asString ()};
+        throw invalid_argument {"Incorrect diagnostic rom in " + sectionName () +
+            ": " + value.asString ()};
     }
 }
 
@@ -56,7 +56,7 @@ void M9312Processor::processBootROMs (iniparser::Value value)
     vector<string> specifiedROMs = value.asArray ().ToVector<string> ();
 
     if (specifiedROMs.size () > 4)
-        throw invalid_argument {"M9312 can have at most four boot ROMs"};
+        throw invalid_argument {sectionName () + " can have at most four boot ROMs"};
 
     for (size_t slotNr = 0; slotNr < 4 && slotNr < specifiedROMs.size (); ++slotNr)
     {
@@ -67,8 +67,8 @@ void M9312Processor::processBootROMs (iniparser::Value value)
         }
         catch (out_of_range const&)
         {
-            throw invalid_argument {"Incorrect M9312 boot rom: " +
-                specifiedROMs[slotNr]};
+            throw invalid_argument {"Incorrect boot rom in " + sectionName () +
+                ": " + specifiedROMs[slotNr]};
         }
     }
 }
@@ -82,17 +82,18 @@ void M9312Processor::processStartingAddress (iniparser::Value value)
     }
     catch (std::invalid_argument const&)
     {
-        throw invalid_argument {"Incorrect starting address in M9312 section specified: " +
-            value.asString ()};
+        throw invalid_argument {"Incorrect starting address in " +
+            sectionName () + " section specified: " + value.asString ()};
     }
 
     // Check address is either in the 0173000 to 0174000 or 165000 to 166000.
     if (!addressInRange (startingAddress))
-        throw invalid_argument {"M9312 starting address must be in the range 0173000 to 0174000 or 0165000 to 0166000"};
+        throw invalid_argument {sectionName () +
+        " starting address must be in the range 0173000 to 0174000 or 0165000 to 0166000"};
 
     // Check an even address is specified
     if (startingAddress & 1)
-        throw invalid_argument {"M9312 starting address must be even"};
+        throw invalid_argument {sectionName () + " starting address must be even"};
 
     m9312ConfigPtr->startingAddress = startingAddress;
 }
@@ -113,5 +114,6 @@ void M9312Processor::processPowerUpBootEnable (iniparser::Value value)
     else if (value.asString () == "false")
         m9312ConfigPtr->powerUpBootEnable = false;
     else
-        throw std::invalid_argument {"M9312 power-up-boot-enable must be either true or false"};
+        throw std::invalid_argument {sectionName () +
+            " power-up-boot-enable must be either true or false"};
 }

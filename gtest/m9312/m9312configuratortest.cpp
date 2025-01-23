@@ -81,7 +81,7 @@ TEST (M9312ConfiguratorTest, invalidDiagROMThrows)
 	}
 	catch (std::invalid_argument const& except)
 	{
-		EXPECT_STREQ (except.what (), "Incorrect M9312 diagnostic rom: 23-751A9");
+		EXPECT_STREQ (except.what (), "Incorrect diagnostic rom in M9312: 23-751A9");
 	}
 	catch (...)
 	{
@@ -131,7 +131,7 @@ TEST (M9312ConfiguratorTest, invalidBootROMThrows)
 	}
 	catch (std::invalid_argument const& except)
 	{
-		EXPECT_STREQ (except.what (), "Incorrect M9312 boot rom: 23-751B9");
+		EXPECT_STREQ (except.what (), "Incorrect boot rom in M9312: 23-751B9");
 	}
 	catch (...)
 	{
@@ -221,6 +221,33 @@ TEST (M9312ConfiguratorTest, defaultInitialized)
 	EXPECT_EQ (m9312Config->bootROM[3], M9312Config::BootROMType::NONE);
 	EXPECT_EQ (m9312Config->startingAddress, 0);
 	EXPECT_FALSE (m9312Config->powerUpBootEnable);
+}
+
+
+TEST (M9312ConfiguratorTest, incorrectStartingAddressThrows)
+{
+	iniparser::File ft;
+	std::stringstream stream;
+	stream << "[M9312]\n"
+		"starting-address = xyz\n";
+	stream >> ft;
+
+	IniProcessor iniProcessor;
+
+	try
+	{
+		iniProcessor.process (ft);
+		FAIL ();
+	}
+	catch (std::invalid_argument const& except)
+	{
+		EXPECT_STREQ (except.what (),
+			"Incorrect starting address in M9312 section specified: xyz");
+	}
+	catch (...)
+	{
+		FAIL ();
+	}
 }
 
 TEST (M9312ConfiguratorTest, invalidStartingAddressThrows)
