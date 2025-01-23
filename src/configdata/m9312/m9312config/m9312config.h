@@ -2,6 +2,7 @@
 #define _M9312CONFIG_H_
 
 #include "devicetype.h"
+#include "types.h"
 
 #include <array>
 
