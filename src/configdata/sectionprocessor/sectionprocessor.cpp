@@ -4,6 +4,11 @@
 
 using std::to_string;
 
+string SectionProcessor::sectionName () const
+{
+	return currentSection_->name ();
+}
+
 size_t SectionProcessor::unitNumberFromSectionName (string name, size_t maxUnits)
 {
 	size_t unitNumber;
@@ -26,6 +31,10 @@ size_t SectionProcessor::unitNumberFromSectionName (string name, size_t maxUnits
 
 void SectionProcessor::processSection (iniparser::Section* section)
 {
+	// Save a pointer to the section so value processors can access the
+	// section's name.
+	currentSection_ = section;
+
     // Process section's Values (i.e. key/value pairs)
 	for (iniparser::Section::ValueIterator valueIterator = section->valuesBegin();
 			valueIterator != section->valuesEnd(); ++valueIterator)

@@ -19,9 +19,12 @@ public:
     virtual void processSection (iniparser::Section* section);
 
 protected:
+    string sectionName () const;
     size_t unitNumberFromSectionName (string name, size_t maxUnits);
 
 private:
+    iniparser::Section* currentSection_ {nullptr};
+
     virtual void processValue (iniparser::Section::ValueIterator valueIterator) = 0;
     virtual void checkConsistency () = 0;
     virtual void processSubsection (iniparser::Section *subSection) = 0;
