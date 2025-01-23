@@ -223,6 +223,7 @@ set (CONFIGURATOR_SRCS
     src/configdata/consistencychecker/checkms11consistency.cpp
     src/configdata/consistencychecker/checkkdf11bconsistency.cpp
     src/configdata/consistencychecker/checkcabinetconsistency.cpp
+    src/configdata/consistencychecker/checkm9312consistency.cpp
     src/configdata/cabinetprocessor/cabinetprocessor.cpp)
 
 set (FLOAT_SRCS
@@ -492,6 +493,7 @@ set (GTEST_SRCS
     gtest/kt24/kt24configuratortest.cpp
     gtest/kt24/kt24test.cpp
     gtest/m9312/m9312configuratortest.cpp
+    gtest/m9312/m9312consistencytest.cpp
     gtest/m9312/m9312test.cpp
     gtest/m9312/m9312powerfailvectortest.cpp
     gtest/msv11configuratortest.cpp

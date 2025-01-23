@@ -19,6 +19,8 @@ public:
     ConsistencyChecker (SystemConfig const& systemConfig);
     void checkAll ();
 
+    // The following consistency checkers are defined public to be able
+    // to execute them from unit tests.
     void checkBA11Consistency ();
     void checkQbusConsistency ();
     void checkUnibusConsistency ();
@@ -26,14 +28,16 @@ public:
     template<typename TConfig, size_t capacity> void checkMS11Consistency ();
     void checkKDF11_BConsistency ();
     void checkCabinetConsistency ();
+    void checkM9312Consistency ();
 
 private:
     SystemConfig const& systemConfig_;
 
-
     void checkEitherBA11_NOrBA11_L ();
     void checkOneBA11 ();
     void checkBusConsistency ();
+    void checkNotBothM9312AndKT24 ();
+    void checkM9312OrKT24 ();
 
     template<typename T> static bool findDevice (DeviceConfig device);
     template<typename TConfig> bool conflictsWith (shared_ptr<TConfig> msv11Card1,
