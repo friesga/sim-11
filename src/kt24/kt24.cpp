@@ -3,14 +3,9 @@
 using std::make_shared;
 
 KT24::KT24 (Bus* bus)
-{
-    m9312_ = make_unique<M9312> (bus, make_shared<M9312Config> ());
-    unibusMapLogic_ = make_unique<UnibusMapLogic> (bus,
-        make_shared<KT24Config> ());
-    registerHandler_ = 
-        make_unique<RegisterHandler> (vector<BusDevice*> {m9312_.get (),
-            unibusMapLogic_.get ()});
-}
+    :
+    KT24 (bus, make_shared<KT24Config> ())
+{}
 
 KT24::KT24 (Bus* bus, shared_ptr<KT24Config> kt24Config)
 {
@@ -34,7 +29,6 @@ StatusCode KT24::writeByte (BusAddress address, u8 value)
 {
     return registerHandler_->writeByte (address, value);
 }
-
 
 // For this function RegisterHandler::responsible() isn't used as it tests
 // if the given address in in the I/O page and the M9312 needs responsibility
