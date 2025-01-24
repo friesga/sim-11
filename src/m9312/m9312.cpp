@@ -35,8 +35,8 @@ void M9312::reset ()
 // to 0224 on power-up).
 // Source: M9312 bootstrap/terminator module technical manual (EK-M9312-TM-003)
 // 
-// Ony if the first two reads to after a power-up are for the powerfail
-// vector and no battery backup is provided, and the power-up boot is enabled,
+// Ony if the first two reads after a power-up are for the powerfail vector
+// and no battery backup is provided, and the power-up boot is enabled,
 // the M9312 "steals" the read from memory and returns the vector as provided
 // in the boot ROM in slot 0. Any read to an address other than the powerfail
 // vector indicates that no boot via the powerfail vector is in progress.
@@ -139,7 +139,6 @@ StatusCode M9312::readAddressOffsetSwitchBank (u16* data)
     return StatusCode::OK;
 }
 
-// On power down switch off the line time clock.
 void M9312::BPOKReceiver (bool signalValue)
 {
     if (signalValue)

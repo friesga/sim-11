@@ -306,7 +306,8 @@ set (TRACE_SRCS
     src/trace/debugrecord/ostreaminsertoperator.cpp)
 
     set (KT24_SRCS
-        src/kt24/kt24.cpp)
+        src/kt24/kt24.cpp
+        src/kt24/unibusmaplogic/unibusmaplogic.cpp)
 
 # Handling of the console is system-specific
 if (MSVC)
