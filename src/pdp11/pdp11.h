@@ -1,5 +1,5 @@
-#ifndef _LSI11_H_
-#define _LSI11_H_
+#ifndef _PDP11_H_
+#define _PDP11_H_
 
 #include "kd/include/pdp11processor.h"
 #include "configdata/deviceconfig/deviceconfig.h"
@@ -68,4 +68,4 @@ public:
 	void reset ();
 };
 
-#endif // !_LSI11_H_
+#endif // !_PDP11_H_
