@@ -178,9 +178,6 @@ void UnibusMapLogic::reset ()
 //
 void UnibusMapLogic::setControlLines (u16 controlLines)
 {
-    // lmaRegister_.high &= ~(UnibusMap::C0 | UnibusMap::C1) | 
-    //    (controlLines & (UnibusMap::C0 | UnibusMap::C1));
-
     lmaRegister_.high = lmaRegister_.high & ~(UnibusMap::C0 | UnibusMap::C1) |
         (controlLines & (UnibusMap::C0 | UnibusMap::C1));
 }
