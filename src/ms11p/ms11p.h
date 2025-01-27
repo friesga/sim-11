@@ -47,12 +47,29 @@ public:
     void BPOKReceiver (bool signalValue);
 
 private:
+    // CSR bit definitions
+    static const u16 UncorrectableErrIndicationEnable   = 1 << 0;
+    static const u16 ErrorCorrectionDisable             = 1 << 1;
+    static const u16 DiagnosticCheck                    = 1 << 2;
+    static const u16 InhibitModePointer                 = 1 << 3;
+    static const u16 SingleErrorIndication              = 1 << 4;
+    static const u16 A17                                = 1 << 11;
+    static const u16 InhibitModeEnable                  = 1 << 13;
+    static const u16 EUBErrorAddressRetrieval           = 1 << 14;
+    static const u16 OncorrectableErrorIndication       = 1 << 15;
+
+    static const u16 SyndromeBitsMask                   = 03740;
+
     Bus* bus_;
     MS11PConfig::PowerSource powerSource_ {MS11PConfig::PowerSource::System};
     u32 startingAddress_ {0};
-    u32 csrAddress_ {017772100};
+    u16 csrAddress_ {0172100};
+    u16 csr_ {0};
     static const size_t memorySize_ = 1024 * 1024;
     unique_ptr<u8[]> memory_;
+
+    void readCSR (u16* destAddress);
+    void writeCSR (u16 value);
 };
 
 #endif // _MS11P_H_

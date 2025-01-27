@@ -29,26 +29,66 @@ MS11P::~MS11P ()
 
 StatusCode MS11P::read (BusAddress address, u16* destAddress)
 {
-	// Get the contents of the specified address via a u16 pointer
-	// as data is an array of bytes.
-	u16* mem = (u16*)&memory_[address - startingAddress_];
-	*destAddress = *mem;
+	if (address.registerAddress () == csrAddress_)
+        readCSR (destAddress);
+	else
+	{
+		// Get the contents of the specified address via a u16 pointer
+		// as data is an array of bytes.
+		u16* mem = (u16*)&memory_[address - startingAddress_];
+		*destAddress = *mem;
+	}
 	return StatusCode::OK;
 }
+
+void MS11P::readCSR (u16* destAddress)
+{
+	u16 result = csr_;
+
+	// To read syndrome bits from the CSR, CSR bit 2 mustbe set to 1
+	// (diagnostic mode) and the CSR read. (EK-MS11P-TM-001)
+	if (csr_ & DiagnosticCheck)
+		csr_ |= SyndromeBitsMask;
+
+	// A one is read in CSR bit 11 if CSR bits 2, 23 and 14 are set to indicate
+	// that the memory under test is an MS11-P. (EK-MS11P-TM-001)
+	if ((csr_ & (DiagnosticCheck | InhibitModeEnable | EUBErrorAddressRetrieval)) ==
+			(DiagnosticCheck | InhibitModeEnable | EUBErrorAddressRetrieval))
+		result |= A17;
+
+	*destAddress = result;
+}
+
 
 StatusCode MS11P::writeWord (BusAddress address, u16 value)
 {
-	u16* mem = (u16*)&memory_[address - startingAddress_];
-	*mem = value;
+	if (address.registerAddress () == csrAddress_)
+		writeCSR (value);
+	else
+	{
+		u16* mem = (u16*)&memory_[address - startingAddress_];
+		*mem = value;
+	}
 
 	return StatusCode::OK;
 }
 
+// Bit 13 of the CSR is "not used" on the MS11-L and is read/write on the
+// MS11-M and MS11-P. This is used by diagnostics to discriminate between
+// ECC modules (MS11-M and MS11-P) and non-ECC modules (MS11-L).
+//
+void MS11P::writeCSR (u16 value)
+{
+	csr_ = value;
+}
+
+// The MS11-P is responsible for its CSR and for its memory
 bool MS11P::responsible (BusAddress address)
 {
-	return !address.isInIOpage () && 
+	return address.registerAddress () == csrAddress_ ||
+		(!address.isInIOpage () && 
 		   address >= startingAddress_ &&
-		   address < startingAddress_ + memorySize_;
+		   address < startingAddress_ + memorySize_);
 }
 
 u16 MS11P::loadFile (const char* fileName)
