@@ -453,6 +453,7 @@ endif ()
 set (GTEST_SRCS
     gtest/ashtest.cpp
     gtest/asynctimertest.cpp
+    gtest/bitfieldtest.cpp
     gtest/cabinettest.cpp
     gtest/cmdlineoptionstest.cpp
     gtest/threadsafeprioqueuetest.cpp
