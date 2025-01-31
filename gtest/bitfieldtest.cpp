@@ -1,16 +1,17 @@
 #include "bitfield.h"
+#include "types.h"
 
 #include <gtest/gtest.h>
 
-TEST (U16BitFieldTest, fieldsCanBeSet)
+TEST (BitFieldTest, fieldsCanBeSet)
 {
     union Register
     {
         uint16_t value;
-        U16BitField<0, 2> field1; // field1 is bits [0-1]
-        U16BitField<2, 3> field2; // field2 is bits [2-4]
-        U16BitField<5, 3> field3; // field3 is bits [5-7]
-        U16BitField<8, 8> field4; // field4 is bits [8-15]
+        BitField<u16, 0, 2> field1; // field1 is bits [0-1]
+        BitField<u16, 2, 3> field2; // field2 is bits [2-4]
+        BitField<u16, 5, 3> field3; // field3 is bits [5-7]
+        BitField<u16, 8, 8> field4; // field4 is bits [8-15]
     };
 
     Register r {0};
@@ -21,27 +22,27 @@ TEST (U16BitFieldTest, fieldsCanBeSet)
     EXPECT_EQ (r.value, 0177435);
 }
 
-TEST (U16BitFieldTest, bitsCanBeSet)
+TEST (BitFieldTest, bitsCanBeSet)
 {
     union Register
     {
         uint16_t value;
-        U16BitField<0, 1> bit0;
-        U16BitField<1, 1> bit1;
-        U16BitField<2, 1> bit2;
-        U16BitField<3, 1> bit3;
-        U16BitField<4, 1> bit4;
-        U16BitField<5, 1> bit5;
-        U16BitField<6, 1> bit6;
-        U16BitField<7, 1> bit7;
-        U16BitField<8, 1> bit8;
-        U16BitField<9, 1> bit9;
-        U16BitField<10, 1> bit10;
-        U16BitField<11, 1> bit11;
-        U16BitField<12, 1> bit12;
-        U16BitField<13, 1> bit13;
-        U16BitField<14, 1> bit14;
-        U16BitField<15, 1> bit15;
+        BitField<u16, 0, 1> bit0;
+        BitField<u16, 1, 1> bit1;
+        BitField<u16, 2, 1> bit2;
+        BitField<u16, 3, 1> bit3;
+        BitField<u16, 4, 1> bit4;
+        BitField<u16, 5, 1> bit5;
+        BitField<u16, 6, 1> bit6;
+        BitField<u16, 7, 1> bit7;
+        BitField<u16, 8, 1> bit8;
+        BitField<u16, 9, 1> bit9;
+        BitField<u16, 10, 1> bit10;
+        BitField<u16, 11, 1> bit11;
+        BitField<u16, 12, 1> bit12;
+        BitField<u16, 13, 1> bit13;
+        BitField<u16, 14, 1> bit14;
+        BitField<u16, 15, 1> bit15;
     };
 
     Register r {0};
@@ -65,27 +66,27 @@ TEST (U16BitFieldTest, bitsCanBeSet)
     EXPECT_EQ (r.value, 0177777);
 }
 
-TEST (U16BitFieldTest, correctBitsAreSet)
+TEST (BitFieldTest, correctBitsAreSet)
 {
     union Register
     {
         uint16_t value;
-        U16BitField<0, 1> bit0;
-        U16BitField<1, 1> bit1;
-        U16BitField<2, 1> bit2;
-        U16BitField<3, 1> bit3;
-        U16BitField<4, 1> bit4;
-        U16BitField<5, 1> bit5;
-        U16BitField<6, 1> bit6;
-        U16BitField<7, 1> bit7;
-        U16BitField<8, 1> bit8;
-        U16BitField<9, 1> bit9;
-        U16BitField<10, 1> bit10;
-        U16BitField<11, 1> bit11;
-        U16BitField<12, 1> bit12;
-        U16BitField<13, 1> bit13;
-        U16BitField<14, 1> bit14;
-        U16BitField<15, 1> bit15;
+        BitField<u16, 0, 1> bit0;
+        BitField<u16, 1, 1> bit1;
+        BitField<u16, 2, 1> bit2;
+        BitField<u16, 3, 1> bit3;
+        BitField<u16, 4, 1> bit4;
+        BitField<u16, 5, 1> bit5;
+        BitField<u16, 6, 1> bit6;
+        BitField<u16, 7, 1> bit7;
+        BitField<u16, 8, 1> bit8;
+        BitField<u16, 9, 1> bit9;
+        BitField<u16, 10, 1> bit10;
+        BitField<u16, 11, 1> bit11;
+        BitField<u16, 12, 1> bit12;
+        BitField<u16, 13, 1> bit13;
+        BitField<u16, 14, 1> bit14;
+        BitField<u16, 15, 1> bit15;
     };
 
     Register r {0};
@@ -109,23 +110,23 @@ TEST (U16BitFieldTest, correctBitsAreSet)
     EXPECT_EQ (r.value, 0052525);
 }
 
-TEST (U16BitFieldTest, combinationOfFielsAndBits)
+TEST (BitFieldTest, combinationOfFielsAndBits)
 {
     union Register
     {
         uint16_t value;
-        U16BitField<0, 1> bit0;    // bit 0
-        U16BitField<1, 1> bit1;    // bit 1
-        U16BitField<2, 1> bit2;    // bit 2
-        U16BitField<3, 3> field1;  // field 1 is bits [3-5]
-        U16BitField<4, 1> bit6;    // bit 6
-        U16BitField<5, 1> bit7;    // bit 7
-        U16BitField<6, 1> bit8;    // bit 8
-        U16BitField<9, 3> field2;  // field 2 is bits [9-11]
-        U16BitField<10, 1> bit12;  // bit 12
-        U16BitField<13, 1> bit13;  // bit 13
-        U16BitField<14, 1> bit14;  // bit 14
-        U16BitField<15, 1> bit15;  // bit 15
+        BitField<u16, 0, 1> bit0;    // bit 0
+        BitField<u16, 1, 1> bit1;    // bit 1
+        BitField<u16, 2, 1> bit2;    // bit 2
+        BitField<u16, 3, 3> field1;  // field 1 is bits [3-5]
+        BitField<u16, 4, 1> bit6;    // bit 6
+        BitField<u16, 5, 1> bit7;    // bit 7
+        BitField<u16, 6, 1> bit8;    // bit 8
+        BitField<u16, 9, 3> field2;  // field 2 is bits [9-11]
+        BitField<u16, 10, 1> bit12;  // bit 12
+        BitField<u16, 13, 1> bit13;  // bit 13
+        BitField<u16, 14, 1> bit14;  // bit 14
+        BitField<u16, 15, 1> bit15;  // bit 15
     };
 
     Register r {0};
@@ -138,23 +139,23 @@ TEST (U16BitFieldTest, combinationOfFielsAndBits)
 }
 
 
-TEST (U16BitFieldTest, valueCanBeSet)
+TEST (BitFieldTest, valueCanBeSet)
 {
     union Register
     {
         uint16_t value;
-        U16BitField<0, 1> bit0;    // bit 0
-        U16BitField<1, 1> bit1;    // bit 1
-        U16BitField<2, 1> bit2;    // bit 2
-        U16BitField<3, 3> field1;  // field 1 is bits [3-5]
-        U16BitField<4, 1> bit6;    // bit 6
-        U16BitField<5, 1> bit7;    // bit 7
-        U16BitField<6, 1> bit8;    // bit 8
-        U16BitField<9, 3> field2;  // field 2 is bits [9-11]
-        U16BitField<10, 1> bit12;  // bit 12
-        U16BitField<13, 1> bit13;  // bit 13
-        U16BitField<14, 1> bit14;  // bit 14
-        U16BitField<15, 1> bit15;  // bit 15
+        BitField<u16, 0, 1> bit0;    // bit 0
+        BitField<u16, 1, 1> bit1;    // bit 1
+        BitField<u16, 2, 1> bit2;    // bit 2
+        BitField<u16, 3, 3> field1;  // field 1 is bits [3-5]
+        BitField<u16, 4, 1> bit6;    // bit 6
+        BitField<u16, 5, 1> bit7;    // bit 7
+        BitField<u16, 6, 1> bit8;    // bit 8
+        BitField<u16, 9, 3> field2;  // field 2 is bits [9-11]
+        BitField<u16, 10, 1> bit12;  // bit 12
+        BitField<u16, 13, 1> bit13;  // bit 13
+        BitField<u16, 14, 1> bit14;  // bit 14
+        BitField<u16, 15, 1> bit15;  // bit 15
     };
 
     Register r {0107071};

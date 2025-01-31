@@ -53,17 +53,17 @@ private:
     union csr
     {
         u16 value;
-        U16BitField<0, 1> uncorrectableErrIndicationEnable;
-        U16BitField<1, 1> errorCorrectionDisable;
-        U16BitField<2, 1> diagnosticCheck;
-        U16BitField<3, 1> inhibitModePointer;
-        U16BitField<4, 1> singleErrorIndication;
-        U16BitField<5, 7> errorAddressAndCheckBits;
-        U16BitField<11, 1> a17;
-        U16BitField<12, 1> notUsed;
-        U16BitField<13, 1> inhibitModeEnable;
-        U16BitField<14, 1> eubErrorAddressRetrieval;
-        U16BitField<15, 1> uncorrectableErrorIndication;
+        BitField<u16, 0, 1> uncorrectableErrIndicationEnable;
+        BitField<u16, 1, 1> errorCorrectionDisable;
+        BitField<u16, 2, 1> diagnosticCheck;
+        BitField<u16, 3, 1> inhibitModePointer;
+        BitField<u16, 4, 1> singleErrorIndication;
+        BitField<u16, 5, 7> errorAddressAndCheckBits;
+        BitField<u16, 11, 1> a17;
+        BitField<u16, 12, 1> notUsed;
+        BitField<u16, 13, 1> inhibitModeEnable;
+        BitField<u16, 14, 1> eubErrorAddressRetrieval;
+        BitField<u16, 15, 1> uncorrectableErrorIndication;
     }
     csr_ {0};
 
