@@ -4,6 +4,7 @@
 #include "bus/include/bus.h"
 #include "memorydevice.h"
 #include "configdata/ms11pconfig/ms11pconfig.h"
+#include "bitfield.h"
 
 #include <memory>
 
@@ -48,23 +49,30 @@ public:
 
 private:
     // CSR bit definitions
-    static const u16 UncorrectableErrIndicationEnable   = 1 << 0;
-    static const u16 ErrorCorrectionDisable             = 1 << 1;
-    static const u16 DiagnosticCheck                    = 1 << 2;
-    static const u16 InhibitModePointer                 = 1 << 3;
-    static const u16 SingleErrorIndication              = 1 << 4;
-    static const u16 A17                                = 1 << 11;
-    static const u16 InhibitModeEnable                  = 1 << 13;
-    static const u16 EUBErrorAddressRetrieval           = 1 << 14;
-    static const u16 OncorrectableErrorIndication       = 1 << 15;
-
-    static const u16 SyndromeBitsMask                   = 03740;
+    // An initialization will apply to the first element in the union.
+    union csr
+    {
+        u16 value;
+        U16BitField<0, 1> uncorrectableErrIndicationEnable;
+        U16BitField<1, 1> errorCorrectionDisable;
+        U16BitField<2, 1> diagnosticCheck;
+        U16BitField<3, 1> inhibitModePointer;
+        U16BitField<4, 1> singleErrorIndication;
+        U16BitField<5, 7> errorAddressAndCheckBits;
+        U16BitField<11, 1> a17;
+        U16BitField<12, 1> notUsed;
+        U16BitField<13, 1> inhibitModeEnable;
+        U16BitField<14, 1> eubErrorAddressRetrieval;
+        U16BitField<15, 1> uncorrectableErrorIndication;
+    }
+    csr_ {0};
 
     Bus* bus_;
     MS11PConfig::PowerSource powerSource_ {MS11PConfig::PowerSource::System};
     u32 startingAddress_ {0};
     u16 csrAddress_ {0172100};
-    u16 csr_ {0};
+    u16 syndromeBits_ {077};
+
     static const size_t memorySize_ = 1024 * 1024;
     unique_ptr<u8[]> memory_;
 

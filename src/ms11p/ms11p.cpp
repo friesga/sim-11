@@ -43,20 +43,18 @@ StatusCode MS11P::read (BusAddress address, u16* destAddress)
 
 void MS11P::readCSR (u16* destAddress)
 {
-	u16 result = csr_;
-
-	// To read syndrome bits from the CSR, CSR bit 2 mustbe set to 1
+	// To read syndrome bits from the CSR, CSR bit 2 must be set to 1
 	// (diagnostic mode) and the CSR read. (EK-MS11P-TM-001)
-	if (csr_ & DiagnosticCheck)
-		csr_ |= SyndromeBitsMask;
+	if (csr_.diagnosticCheck)
+		csr_.errorAddressAndCheckBits = syndromeBits_;
 
 	// A one is read in CSR bit 11 if CSR bits 2, 23 and 14 are set to indicate
 	// that the memory under test is an MS11-P. (EK-MS11P-TM-001)
-	if ((csr_ & (DiagnosticCheck | InhibitModeEnable | EUBErrorAddressRetrieval)) ==
-			(DiagnosticCheck | InhibitModeEnable | EUBErrorAddressRetrieval))
-		result |= A17;
+	if (csr_.diagnosticCheck && csr_.inhibitModeEnable &&
+			csr_.eubErrorAddressRetrieval)
+		csr_.a17 = 1;
 
-	*destAddress = result;
+	*destAddress = csr_.value;
 }
 
 
@@ -79,7 +77,7 @@ StatusCode MS11P::writeWord (BusAddress address, u16 value)
 //
 void MS11P::writeCSR (u16 value)
 {
-	csr_ = value;
+	csr_.value = value;
 }
 
 // The MS11-P is responsible for its CSR and for its memory
