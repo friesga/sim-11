@@ -501,6 +501,7 @@ set (GTEST_SRCS
     gtest/m9312/m9312consistencytest.cpp
     gtest/m9312/m9312test.cpp
     gtest/m9312/m9312powerfailvectortest.cpp
+    gtest/memorysizetest.cpp
     gtest/msv11configuratortest.cpp
     gtest/ms11p/ms11pconfiguratortest.cpp
     gtest/ms11p/ms11ptest.cpp
