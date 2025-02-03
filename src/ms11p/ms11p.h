@@ -8,6 +8,7 @@
 #include "memorysize.h"
 
 #include <memory>
+#include <bit>
 
 using std::unique_ptr;
 using std::shared_ptr;
@@ -72,6 +73,27 @@ private:
     }
     csr_ {0};
 
+    // Definition of the checkbits per memory word
+    union CheckBits
+    {
+        u8 value;
+        BitField<u8, 0, 1> CX;
+        BitField<u8, 1, 1> C0;
+        BitField<u8, 2, 1> C1;
+        BitField<u8, 3, 1> C2;
+        BitField<u8, 4, 1> C4;
+        BitField<u8, 5, 1> C8;
+    };
+
+    // Definition of the masks to generate the check bits as defined
+    // in EK-MS11P-TM-001 Table 3-1.
+    static const u16 cxMask {0b0100101100101110};
+    static const u16 c0Mask {0b0001010101010111};
+    static const u16 c1Mask {0b1010011010011001};
+    static const u16 c2Mask {0b0011100011100011};
+    static const u16 c4Mask {0b1100000011111100};
+    static const u16 c8Mask {0b1111111100000000};
+
     Bus* bus_;
     MS11PConfig::PowerSource powerSource_ {MS11PConfig::PowerSource::System};
     u32 startingAddress_ {0};
@@ -80,9 +102,15 @@ private:
 
     static constexpr MemorySize memorySize_ {512_KiW};
     unique_ptr<u16[]> memory_;
+    unique_ptr<u8[]> checkBits_;
 
     void readCSR (u16* destAddress);
     void writeCSR (u16 value);
+    u8 generateCheckBits (u16 word);
+    u8 evenParity (u16 word, u16 mask);
+    u8 oddParity (u16 word, u16 mask);
+    bool isEven (u16 word);
+    bool isOdd (u16 word);
 };
 
 #endif // _MS11P_H_
