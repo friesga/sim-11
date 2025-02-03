@@ -79,7 +79,7 @@ private:
     u16 syndromeBits_ {077};
 
     static constexpr MemorySize memorySize_ {512_KiW};
-    unique_ptr<u8[]> memory_;
+    unique_ptr<u16[]> memory_;
 
     void readCSR (u16* destAddress);
     void writeCSR (u16 value);

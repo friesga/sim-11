@@ -10,7 +10,7 @@ MS11P::MS11P (Bus* bus)
 	bus_ {bus}
 {
 	// Allocate zero-initialized memory
-	memory_ = make_unique<u8[]> (memorySize_.byteCapacity ());
+	memory_ = make_unique<u16[]> (memorySize_.wordCapacity ());
 
 	bus_->BPOK ().subscribe (bind (&MS11P::BPOKReceiver, this, _1));
 }
@@ -33,9 +33,10 @@ StatusCode MS11P::read (BusAddress address, u16* destAddress)
         readCSR (destAddress);
 	else
 	{
-		// Get the contents of the specified address via a u16 pointer
-		// as data is an array of bytes.
-		u16* mem = (u16*)&memory_[address - startingAddress_];
+		// Get the contents of the memory location converting the byte address
+		// to an index into the word array (which is allowed as all addresses
+		// are even word addresses).
+		u16* mem = &memory_[(address >> 1) - startingAddress_];
 		*destAddress = *mem;
 	}
 	return StatusCode::OK;
@@ -64,7 +65,7 @@ StatusCode MS11P::writeWord (BusAddress address, u16 value)
 		writeCSR (value);
 	else
 	{
-		u16* mem = (u16*)&memory_[address - startingAddress_];
+		u16* mem = &memory_[(address >> 1) - startingAddress_];
 		*mem = value;
 	}
 
@@ -91,7 +92,7 @@ bool MS11P::responsible (BusAddress address)
 
 u16 MS11P::loadFile (const char* fileName)
 {
-	return AbsoluteLoader::loadFile (fileName, memory_.get ());
+	return AbsoluteLoader::loadFile (fileName, reinterpret_cast<u8*> (memory_.get ()));
 }
 
 void MS11P::reset ()
@@ -101,5 +102,5 @@ void MS11P::reset ()
 void MS11P::BPOKReceiver (bool signalValue)
 {
 	if (!signalValue && !bus_->BatteryPower ())
-		memory_ = make_unique<u8[]> (memorySize_.byteCapacity ());
+		memory_ = make_unique<u16[]> (memorySize_.wordCapacity ());
 }
