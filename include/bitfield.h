@@ -33,7 +33,11 @@ public:
     }
 
     operator T () const { return (value_ >> Index) & Mask; }
-    operator bool () const { return value_ & (Mask << Index); }
+
+    // Define operator bool explicit to avoid ambiguity with the
+    // operator T().
+    explicit operator bool () const { return value_ & (Mask << Index); }
+
     BitField& operator++() { return *this = *this + 1; }
     T operator++(int) { T r = *this; ++*this; return r; }
     BitField& operator--() { return *this = *this - 1; }
