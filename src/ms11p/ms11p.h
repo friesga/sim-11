@@ -5,6 +5,7 @@
 #include "memorydevice.h"
 #include "configdata/ms11pconfig/ms11pconfig.h"
 #include "bitfield.h"
+#include "memorysize.h"
 
 #include <memory>
 
@@ -14,6 +15,10 @@ using std::make_unique;
 
 // Implementation of the MS11-P MOS memory.
 //
+// The MS11-PB (M8743-BA) is a metal oxide semiconductor (MOS) random access
+// memory (RAM), which provides 512K x 16 bits of data storage. The MS11-PB is
+// designed for use with the PDP-11 extended Unibus. (EK-MS11P-TM-001)
+// 
 // The MS11-P (formally, the MS11-PB; if there was an MS11-PA, nothing is
 // now known of it) is a Extended Unibus (EUB) MOS DRAM main memory card. As
 // an EUB card, it can therefore only be plugged into the EUB slots on the
@@ -73,7 +78,7 @@ private:
     u16 csrAddress_ {0172100};
     u16 syndromeBits_ {077};
 
-    static const size_t memorySize_ = 1024 * 1024;
+    static constexpr MemorySize memorySize_ {512_KiW};
     unique_ptr<u8[]> memory_;
 
     void readCSR (u16* destAddress);

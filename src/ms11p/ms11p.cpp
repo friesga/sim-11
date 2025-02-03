@@ -10,7 +10,7 @@ MS11P::MS11P (Bus* bus)
 	bus_ {bus}
 {
 	// Allocate zero-initialized memory
-	memory_ = make_unique<u8[]> (memorySize_);
+	memory_ = make_unique<u8[]> (memorySize_.byteCapacity ());
 
 	bus_->BPOK ().subscribe (bind (&MS11P::BPOKReceiver, this, _1));
 }
@@ -86,7 +86,7 @@ bool MS11P::responsible (BusAddress address)
 	return address.registerAddress () == csrAddress_ ||
 		(!address.isInIOpage () && 
 		   address >= startingAddress_ &&
-		   address < startingAddress_ + memorySize_);
+		   address < startingAddress_ + memorySize_.byteCapacity ());
 }
 
 u16 MS11P::loadFile (const char* fileName)
@@ -101,5 +101,5 @@ void MS11P::reset ()
 void MS11P::BPOKReceiver (bool signalValue)
 {
 	if (!signalValue && !bus_->BatteryPower ())
-		memory_ = make_unique<u8[]> (memorySize_);
+		memory_ = make_unique<u8[]> (memorySize_.byteCapacity ());
 }
