@@ -11,13 +11,13 @@ struct Bytes
 };
 
 // Definition of the memory capacity in number of bytes
-class memorySize
+class MemorySize
 {
 public:
     // Define the memory capacity via a Bytes object. This prevents the
     // definition of capacity by means of an integer thus preventing confusion
     // about the used unit.
-    constexpr memorySize (Bytes bytes)
+    constexpr MemorySize (Bytes bytes)
         :
         numBytes_ {bytes}
     {}
@@ -38,12 +38,12 @@ private:
     const Bytes numBytes_;
 };
 
-constexpr memorySize operator"" _KiB (unsigned long long num)
+constexpr MemorySize operator"" _KiB (unsigned long long num)
 {
     return Bytes {num * 1024};
 }
 
-constexpr memorySize operator"" _KiW (unsigned long long num)
+constexpr MemorySize operator"" _KiW (unsigned long long num)
 {
     return Bytes {num * 1024 * 2};
 }

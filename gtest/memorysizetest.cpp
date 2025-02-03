@@ -4,15 +4,15 @@
 
 TEST (MemorySizeTest, compilationSucceeds) 
 {
-    constexpr memorySize mem1 = 2_KiB;
+    constexpr MemorySize mem1 = 2_KiB;
     static_assert(mem1.wordCapacity () == 1024);
     static_assert(mem1.byteCapacity () == 2048);
 
-    constexpr memorySize mem2 = 1_KiW;
+    constexpr MemorySize mem2 = 1_KiW;
     static_assert(mem2.wordCapacity () == 1024);
     static_assert(mem2.byteCapacity () == 2048);
 
-    constexpr memorySize mem3 = Bytes {16};
+    constexpr MemorySize mem3 = Bytes {16};
     static_assert(mem3.wordCapacity () == 8);
     static_assert(mem3.byteCapacity () == 16);
 
