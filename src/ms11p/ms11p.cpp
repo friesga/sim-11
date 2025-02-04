@@ -39,9 +39,9 @@ StatusCode MS11P::read (BusAddress address, u16* destAddress)
 		// are even word addresses).
         *destAddress = memory_[(address >> 1) - startingAddress_];
 
-		if (diagnosticCheckMode_)
+		if (diagnosticCheckMode_ && !inhibited (address))
 			csr_.errorAddressAndCheckBits = 
-			checkBits_[(address >> 1) - startingAddress_];
+				checkBits_[(address >> 1) - startingAddress_];
 	}
 	return StatusCode::OK;
 }

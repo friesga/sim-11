@@ -119,6 +119,7 @@ private:
     u8 oddParity (u16 word, u16 mask);
     bool isEven (u16 word);
     bool isOdd (u16 word);
+    bool inhibited (BusAddress address);
 };
 
 #endif // _MS11P_H_

@@ -37,3 +37,14 @@ bool MS11P::isOdd (u16 word)
 {
     return popcount (word) % 2 != 0;
 }
+
+// When the inhibit mode is set, the inhibit mode pointer points to an
+// memory area which is inhibited from going into diagnostic check mode.
+// When the inhibit mode pointer is set to 0 the first 16K are being
+// inhibited, when set to 1 the second 16K of memory are inhibited.
+bool MS11P::inhibited (BusAddress address)
+{
+    return csr_.inhibitModeEnable && 
+        ((!csr_.inhibitModePointer && address < 040000) ||
+          (csr_.inhibitModePointer && address >= 040000 && address < 0100000));
+}
