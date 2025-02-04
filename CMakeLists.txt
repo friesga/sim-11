@@ -309,6 +309,10 @@ set (TRACE_SRCS
         src/kt24/kt24.cpp
         src/kt24/unibusmaplogic/unibusmaplogic.cpp)
 
+    set (MS11P_SRCS
+        src/ms11p/ms11p.cpp
+        src/ms11p/checkbits.cpp)
+
 # Handling of the console is system-specific
 if (MSVC)
 set (CONSOLE_SRCS
@@ -346,7 +350,7 @@ set (SIM11_SRCS
     src/main/main.cpp
     ${M9312_SRCS}
     src/msv11d/msv11d.cpp
-    src/ms11p/ms11p.cpp
+    ${MS11P_SRCS}
     ${BUS_SRCS}
     src/pdp11peripheral/pdp11peripheral.cpp
     ${RLV12_SRCS}
@@ -554,7 +558,7 @@ set (SIM11_TEST_SRCS
     ${BDV11_SRCS}
     ${M9312_SRCS}
     src/msv11d/msv11d.cpp
-    src/ms11p/ms11p.cpp
+    ${MS11P_SRCS}
     src/dl11/uart/uart.cpp
     ${CONSOLE_SRCS}
     src/signal/signal.cpp

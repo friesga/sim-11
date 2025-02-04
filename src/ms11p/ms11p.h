@@ -59,19 +59,23 @@ private:
     union csr
     {
         u16 value;
-        BitField<u16, 0, 1> uncorrectableErrIndicationEnable;
-        BitField<u16, 1, 1> errorCorrectionDisable;
-        BitField<u16, 2, 1> diagnosticCheck;
-        BitField<u16, 3, 1> inhibitModePointer;
-        BitField<u16, 4, 1> singleErrorIndication;
+        BitField<u16, 0> uncorrectableErrIndicationEnable;
+        BitField<u16, 1> errorCorrectionDisable;
+        BitField<u16, 2> diagnosticCheck;
+        BitField<u16, 3> inhibitModePointer;
+        BitField<u16, 4> singleErrorIndication;
         BitField<u16, 5, 7> errorAddressAndCheckBits;
-        BitField<u16, 11, 1> a17;
-        BitField<u16, 12, 1> notUsed;
-        BitField<u16, 13, 1> inhibitModeEnable;
-        BitField<u16, 14, 1> eubErrorAddressRetrieval;
-        BitField<u16, 15, 1> uncorrectableErrorIndication;
+        BitField<u16, 11> a17;
+        BitField<u16, 12> notUsed;
+        BitField<u16, 13> inhibitModeEnable;
+        BitField<u16, 14> eubErrorAddressRetrieval;
+        BitField<u16, 15> uncorrectableErrorIndication;
     }
     csr_ {0};
+
+    // Bit 11 (A17) is read-only
+    static const u16 writeMask {0173777};
+
 
     // Definition of the checkbits per memory word
     union CheckBits
@@ -100,9 +104,13 @@ private:
     u16 csrAddress_ {0172100};
     u16 syndromeBits_ {077};
 
+    // Definition of the MS11-P memory
     static constexpr MemorySize memorySize_ {512_KiW};
     unique_ptr<u16[]> memory_;
     unique_ptr<u8[]> checkBits_;
+
+    // Definition of the MS11-P modes
+    bool diagnosticCheckMode_ {false};
 
     void readCSR (u16* destAddress);
     void writeCSR (u16 value);
