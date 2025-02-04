@@ -46,3 +46,28 @@ TEST (MS11PTest, identifiedAsMS11P)
     EXPECT_TRUE (dataRead & bit13);
 }
 
+// Verify correct checkbits are generated for the value 0123456. The expected
+// result (040) is based on ZMSPC0 test 1.
+TEST (MS11PTest, correctCheckBitsGenerated)
+{
+    Qbus bus;
+    MS11P ms11p {&bus};
+    u16 bit13 {0020000};
+    u16 dataRead {0};
+
+    EXPECT_EQ (ms11p.writeWord (BusAddress (0172100), 0), StatusCode::OK);
+
+    // Write checkbits to memory
+    EXPECT_EQ (ms11p.writeWord (BusAddress (0), 0123456), StatusCode::OK);
+
+    // Set Diagnostic check mode
+    EXPECT_EQ (ms11p.writeWord (BusAddress (0172100), 4), StatusCode::OK);
+
+    // Read checkbits in CSR
+    EXPECT_EQ (ms11p.read (BusAddress (0), &dataRead), StatusCode::OK);
+    EXPECT_EQ (dataRead, 0123456);
+
+    // Read checkbits from CSR
+    EXPECT_EQ (ms11p.read (BusAddress (0172100), &dataRead), StatusCode::OK);
+    EXPECT_EQ ((dataRead >> 5) & 077, 040);
+}
