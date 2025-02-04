@@ -31,3 +31,18 @@ TEST (MS11PTest, capacityIsOneMB)
     EXPECT_TRUE (ms11p.responsible (BusAddress (03777776, BusAddress::Width::_22Bit)));
     EXPECT_FALSE (ms11p.responsible (BusAddress (04000000, BusAddress::Width::_22Bit)));
 }
+
+// This test verifies that bit 13 of the CSR can be set and read back. This
+// discriminates a MS11-P/M from a MS11-L.
+TEST (MS11PTest, identifiedAsMS11P)
+{
+    Qbus bus;
+    MS11P ms11p {&bus};
+    u16 bit13 {0020000};
+    u16 dataRead {0};
+
+    EXPECT_EQ (ms11p.writeWord (BusAddress (0172100), bit13), StatusCode::OK);
+    EXPECT_EQ (ms11p.read (BusAddress (0172100), &dataRead), StatusCode::OK);
+    EXPECT_TRUE (dataRead & bit13);
+}
+
