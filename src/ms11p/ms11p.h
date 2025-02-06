@@ -117,6 +117,8 @@ private:
     u8 generateCheckBits (u16 word);
     u8 evenParity (u16 word, u16 mask);
     u8 oddParity (u16 word, u16 mask);
+    u16 XOR (u16 word, u16 mask);
+    u16 NXOR (u16 word, u16 mask);
     bool isEven (u16 word);
     bool isOdd (u16 word);
     bool inhibited (BusAddress address);

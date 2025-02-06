@@ -24,13 +24,25 @@ u8 MS11P::generateCheckBits (u16 word)
 // Even parity is determined for an XOR of the given word and mask
 u8 MS11P::evenParity (u16 word, u16 mask)
 {
-    return (isEven ((word & mask) ^ mask) ? 0 : 1);
+    return isEven (XOR (word, mask)) ? 0 : 1;
 }
 
 // Odd parity is determined for a NXOR of the given word and mask
 u8 MS11P::oddParity (u16 word, u16 mask)
 {
-    return (isOdd (~((word & mask) ^ mask)) ? 0 : 1);
+    return (isOdd (NXOR (word, mask)) ? 0 : 1);
+}
+
+// Definition of the XOR function as defined in EK-MS11P-TM-001 par 3.2.2.
+u16 MS11P:: XOR (u16 word, u16 mask)
+{
+    return (word & mask) ^ mask;
+}
+
+// Definition of the NXOR function as defined in EK-MS11P-TM-001 par 3.2.2.
+u16 MS11P::NXOR (u16 word, u16 mask)
+{
+    return ~((word & mask) ^ mask);
 }
 
 bool MS11P::isEven (u16 word)
