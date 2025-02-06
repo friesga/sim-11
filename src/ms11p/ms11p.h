@@ -122,6 +122,8 @@ private:
     bool isEven (u16 word);
     bool isOdd (u16 word);
     bool inhibited (BusAddress address);
+    bool inInhibitedFirst16KW (BusAddress address);
+    bool inInhibitedSecond16KW (BusAddress address);
 };
 
 #endif // _MS11P_H_

@@ -55,14 +55,27 @@ bool MS11P::isOdd (u16 word)
     return popcount (word) % 2 != 0;
 }
 
-// When the inhibit mode is set, the inhibit mode pointer points to an
-// memory area which is inhibited from going into diagnostic check mode.
-// When the inhibit mode pointer is set to 0 the first 16KW (see ZMSPB0
-// test 4) are being inhibited, when set to 1 the second 16KW of memory
-// are inhibited.
+// This function determines if the given address is inhibited (c.q. protected)
+// from going into Diagnostic Check Mode.  When the inhibit mode is set, the
+// inhibit mode pointer points to an memory area which is inhibited from going
+// into diagnostic check mode. When the inhibit mode pointer is set to 0 the
+// first 16KW (see ZMSPB0 test 4) are being inhibited, when set to 1 the second
+// 16KW of memory are inhibited.
 bool MS11P::inhibited (BusAddress address)
 {
     return csr_.inhibitModeEnable && 
-        ((!csr_.inhibitModePointer && address < 0100000) ||
-          (csr_.inhibitModePointer && address >= 0100000 && address < 0200000));
+        (inInhibitedFirst16KW (address) || inInhibitedSecond16KW (address));
+}
+
+bool MS11P::inInhibitedFirst16KW (BusAddress address)
+{
+    u16 const _16KW {16 * 2048};
+    return !csr_.inhibitModePointer && address < _16KW;
+}
+
+bool MS11P::inInhibitedSecond16KW (BusAddress address)
+{
+    u16 const _16KW {16 * 2048};
+    u16 const _32KW {static_cast<u16> (32 * 2048)};
+    return csr_.inhibitModePointer && address >= _16KW && address < _32KW;
 }
