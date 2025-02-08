@@ -95,3 +95,36 @@ TEST (MS11PTest, checkBitsCanBeWritten)
     EXPECT_EQ (ms11p.read (BusAddress (0172100), &dataRead), StatusCode::OK);
     EXPECT_EQ ((dataRead >> 5) & 077, 077);
 }
+
+TEST (MS11PTest, singleErrorReported)
+{
+    Qbus bus;
+    MS11P ms11p {&bus};
+    u16 bit13 {0020000};
+    u16 dataRead {0};
+
+    EXPECT_EQ (ms11p.writeWord (BusAddress (0172100), 0), StatusCode::OK);
+
+    // Write checkbits to CSR and set Diagnostic Check Mode
+    EXPECT_EQ (ms11p.writeWord (BusAddress (0172100, BusAddress::Width::_22Bit),
+        (077 << 5) | 4), StatusCode::OK);
+
+    // Write data to memory with incorrect check bits from CSR using an addres
+    // with some of the seven highest bits set so the contents of the CSR
+    // Address Error and Syndrome Storage can be checked.
+    EXPECT_EQ (ms11p.writeWord (BusAddress (0174000), 0123456), StatusCode::OK);
+
+    // Reset Diagnostic Check Mode
+    EXPECT_EQ (ms11p.writeWord (BusAddress (0172100), 0), StatusCode::OK);
+
+    // Read data with incorrect checkbits
+    EXPECT_EQ (ms11p.read (BusAddress (0174000, BusAddress::Width::_22Bit), &dataRead),
+        StatusCode::OK);
+    EXPECT_EQ (dataRead, 0123456);
+    
+    // Verify Single Error bit set and Address Error and Syndrome Storage
+    // contains bits A17-A11 of the address.
+    EXPECT_EQ (ms11p.read (BusAddress (0172100), &dataRead), StatusCode::OK);
+    EXPECT_TRUE (dataRead & 020);
+    EXPECT_EQ ((dataRead >> 5) & 037, 037);
+}

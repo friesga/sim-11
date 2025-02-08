@@ -98,6 +98,13 @@ private:
     static const u16 c4Mask {0b1100000011111100};
     static const u16 c8Mask {0b1111111100000000};
 
+    struct ErrorLog
+    {
+        BusAddress address {0};
+        u8 syndromeBits {0};
+    }
+    errorLog_;
+
     Bus* bus_;
     MS11PConfig::PowerSource powerSource_ {MS11PConfig::PowerSource::System};
     u32 startingAddress_ {0};
@@ -125,6 +132,10 @@ private:
     bool inhibited (BusAddress address);
     bool inInhibitedFirst16KW (BusAddress address);
     bool inInhibitedSecond16KW (BusAddress address);
+    void handleSingleError (BusAddress address, u8 storedCheckBits,
+        u8 generatedCheckBits);
+    u8 addressBitsA17_A11 (BusAddress address);
+    u8 generateSyndromeBits (u8 checkBits1, u8 checkBits2);
 };
 
 #endif // _MS11P_H_

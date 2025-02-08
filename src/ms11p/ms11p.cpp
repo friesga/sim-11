@@ -38,10 +38,11 @@ StatusCode MS11P::read (BusAddress address, u16* destAddress)
 		// to an index into the word array (which is allowed as all addresses
 		// are even word addresses).
         *destAddress = memory_[(address >> 1) - startingAddress_];
+		u8 storedCheckBits = checkBits_[(address >> 1) - startingAddress_];
+		u8 generatedCheckBits = newCheckBits (address, *destAddress);
 
-		if (diagnosticCheckMode_ && !inhibited (address))
-			csr_.errorAddressAndCheckBits = 
-				checkBits_[(address >> 1) - startingAddress_];
+        if (storedCheckBits != generatedCheckBits)
+            handleSingleError (address, storedCheckBits, generatedCheckBits);
 	}
 	return StatusCode::OK;
 }
