@@ -39,7 +39,7 @@ StatusCode MS11P::read (BusAddress address, u16* destAddress)
 		// are even word addresses).
         *destAddress = memory_[(address >> 1) - startingAddress_];
 		u8 storedCheckBits = checkBits_[(address >> 1) - startingAddress_];
-		u8 generatedCheckBits = newCheckBits (address, *destAddress);
+		u8 generatedCheckBits = generateCheckBits (*destAddress);
 
 		if (storedCheckBits != generatedCheckBits)
 			handleSingleError (address, storedCheckBits, generatedCheckBits);
