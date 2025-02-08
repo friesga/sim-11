@@ -114,6 +114,7 @@ private:
 
     void readCSR (u16* destAddress);
     void writeCSR (u16 value);
+    u8 newCheckBits (BusAddress address, u16 value);
     u8 generateCheckBits (u16 word);
     u8 evenParity (u16 word);
     u8 oddParity (u16 word);

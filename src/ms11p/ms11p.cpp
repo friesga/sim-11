@@ -71,7 +71,7 @@ StatusCode MS11P::writeWord (BusAddress address, u16 value)
 	{
 		memory_[(address >> 1) - startingAddress_] = value;
 		checkBits_[(address >> 1) - startingAddress_] = 
-			generateCheckBits (value);
+			newCheckBits (address, value);
 	}
 
 	return StatusCode::OK;

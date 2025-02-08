@@ -2,6 +2,13 @@
 
 using std::popcount;
 
+u8 MS11P::newCheckBits (BusAddress address, u16 value)
+{
+    return (diagnosticCheckMode_ && !inhibited (address)) ?
+        csr_.errorAddressAndCheckBits :
+        generateCheckBits (value);
+}
+
 // The check bits are generated according to a modified Hamming code. The
 // check bits are generated as either an xor or a nxor for the eight set data 
 // bits in the mask corresponding to the specific check bit. Every bit in
