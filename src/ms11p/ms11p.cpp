@@ -41,24 +41,34 @@ StatusCode MS11P::read (BusAddress address, u16* destAddress)
 		u8 storedCheckBits = checkBits_[(address >> 1) - startingAddress_];
 		u8 generatedCheckBits = newCheckBits (address, *destAddress);
 
-        if (storedCheckBits != generatedCheckBits)
-            handleSingleError (address, storedCheckBits, generatedCheckBits);
+		if (storedCheckBits != generatedCheckBits)
+			handleSingleError (address, storedCheckBits, generatedCheckBits);
+		else
+			// Clear error log
+			errorLog_.syndromeBits = 0;
 	}
 	return StatusCode::OK;
 }
 
 void MS11P::readCSR (u16* destAddress)
 {
-	// To read syndrome bits from the CSR, CSR bit 2 must be set to 1
-	// (diagnostic mode) and the CSR read. (EK-MS11P-TM-001)
-	// if (csr_.diagnosticCheck)
-	//	csr_.errorAddressAndCheckBits = syndromeBits_;
-
 	// A one is read in CSR bit 11 if CSR bits 2, 23 and 14 are set to indicate
 	// that the memory under test is an MS11-P. (EK-MS11P-TM-001)
 	if (csr_.diagnosticCheck && csr_.inhibitModeEnable &&
 			csr_.eubErrorAddressRetrieval)
 		csr_.a17 = 1;
+
+	// When a single error has occurred the highest order bits of the error
+	// address can be read from the CSR by setting bit 14 (EUB Address
+	// retrieval) and clearing bit 2 (diagnostic check). To read the syndrome
+	// bits both bit 14 and bit 2 must be set to 1. 
+	if (errorLog_.syndromeBits != 0 && csr_.eubErrorAddressRetrieval)
+	{
+		if (!diagnosticCheckMode_)
+			csr_.errorAddressAndCheckBits = addressBitsA21_A18 (errorLog_.address);
+		else
+			csr_.errorAddressAndCheckBits = errorLog_.syndromeBits;
+	}
 
 	*destAddress = csr_.value;
 }

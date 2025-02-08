@@ -135,6 +135,7 @@ private:
     void handleSingleError (BusAddress address, u8 storedCheckBits,
         u8 generatedCheckBits);
     u8 addressBitsA17_A11 (BusAddress address);
+    u8 addressBitsA21_A18 (BusAddress address);
     u8 generateSyndromeBits (u8 checkBits1, u8 checkBits2);
 };
 

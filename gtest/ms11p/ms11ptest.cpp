@@ -15,6 +15,7 @@ protected:
     static constexpr u16  SingleError     = 1 << 4;
     static constexpr u16  ErrorStorage    = 1 << 5;
     static constexpr u16  InhibitMode     = 1 << 13;
+    static constexpr u16  EUBAddress      = 1 << 14;
 
     static constexpr u16  errorStorageContents (u16 csr) 
         { return (csr >> 5) & 0177; }
@@ -55,7 +56,6 @@ TEST_F (MS11PTest, identifiedAsMS11P)
 {
     Qbus bus;
     MS11P ms11p {&bus};
-    u16 bit13 {0020000};
     u16 dataRead {0};
 
     EXPECT_EQ (ms11p.writeWord (BusAddress (MS11P_CSR), InhibitMode), StatusCode::OK);
@@ -69,7 +69,6 @@ TEST_F (MS11PTest, correctCheckBitsGenerated)
 {
     Qbus bus;
     MS11P ms11p {&bus};
-    u16 bit13 {0020000};
     u16 dataRead {0};
 
     EXPECT_EQ (ms11p.writeWord (BusAddress (MS11P_CSR), 0), StatusCode::OK);
@@ -93,7 +92,6 @@ TEST_F (MS11PTest, checkBitsCanBeWritten)
 {
     Qbus bus;
     MS11P ms11p {&bus};
-    u16 bit13 {0020000};
     u16 dataRead {0};
 
     EXPECT_EQ (ms11p.writeWord (BusAddress (MS11P_CSR), 0), StatusCode::OK);
@@ -118,13 +116,12 @@ TEST_F (MS11PTest, singleErrorReported)
 {
     Qbus bus;
     MS11P ms11p {&bus};
-    u16 bit13 {0020000};
     u16 dataRead {0};
 
     EXPECT_EQ (ms11p.writeWord (BusAddress (MS11P_CSR), 0), StatusCode::OK);
 
     // Write checkbits to CSR and set Diagnostic Check Mode
-    EXPECT_EQ (ms11p.writeWord (BusAddress (MS11P_CSR, BusAddress::Width::_22Bit),
+    EXPECT_EQ (ms11p.writeWord (BusAddress (MS11P_CSR),
         (077 << 5) | DiagnosticCheck), StatusCode::OK);
 
     // Write data to memory with incorrect check bits from CSR using an addres
@@ -136,7 +133,7 @@ TEST_F (MS11PTest, singleErrorReported)
     EXPECT_EQ (ms11p.writeWord (BusAddress (MS11P_CSR), 0), StatusCode::OK);
 
     // Read data with incorrect checkbits
-    EXPECT_EQ (ms11p.read (BusAddress (0174000, BusAddress::Width::_22Bit), &dataRead),
+    EXPECT_EQ (ms11p.read (BusAddress (0174000), &dataRead),
         StatusCode::OK);
     EXPECT_EQ (dataRead, 0123456);
     
@@ -144,5 +141,51 @@ TEST_F (MS11PTest, singleErrorReported)
     // contains bits A17-A11 of the address.
     EXPECT_EQ (ms11p.read (BusAddress (MS11P_CSR), &dataRead), StatusCode::OK);
     EXPECT_TRUE (dataRead & SingleError);
+    EXPECT_EQ (errorStorageContents (dataRead), 037);
+}
+
+
+TEST_F (MS11PTest, extractErrorLog)
+{
+    Qbus bus;
+    MS11P ms11p {&bus};
+    u16 dataRead {0};
+
+    EXPECT_EQ (ms11p.writeWord (BusAddress (MS11P_CSR), 0), StatusCode::OK);
+
+    // Write checkbits to CSR and set Diagnostic Check Mode
+    EXPECT_EQ (ms11p.writeWord (BusAddress (MS11P_CSR),
+        (077 << 5) | DiagnosticCheck), StatusCode::OK);
+
+    // Write data to memory with incorrect check bits from CSR using the
+    // highest available addres.
+    EXPECT_EQ (ms11p.writeWord (BusAddress (03777776, BusAddress::Width::_22Bit), 0123456),
+        StatusCode::OK);
+
+    // Reset Diagnostic Check Mode
+    EXPECT_EQ (ms11p.writeWord (BusAddress (MS11P_CSR), 0), StatusCode::OK);
+
+    // Read data with incorrect checkbits
+    EXPECT_EQ (ms11p.read (BusAddress (03777776, BusAddress::Width::_22Bit), &dataRead),
+        StatusCode::OK);
+    EXPECT_EQ (dataRead, 0123456);
+
+    // Verify Single Error bit set and Address Error and Syndrome Storage
+    // contains bits A17-A11 of the address.
+    EXPECT_EQ (ms11p.read (BusAddress (MS11P_CSR), &dataRead), StatusCode::OK);
+    EXPECT_TRUE (dataRead & SingleError);
+    EXPECT_EQ (errorStorageContents (dataRead), 0177);
+
+    // Read high order address bits from CSR
+    EXPECT_EQ (ms11p.writeWord (BusAddress (MS11P_CSR), EUBAddress),
+        StatusCode::OK);
+    EXPECT_EQ (ms11p.read (BusAddress (MS11P_CSR), &dataRead), StatusCode::OK);
+    EXPECT_EQ (errorStorageContents (dataRead), 03);
+
+    // And finally read the syndrome bits. Stored checkbits (077) xor xorrect
+    // checkbits (040) is 037.
+    EXPECT_EQ (ms11p.writeWord (BusAddress (MS11P_CSR), EUBAddress | DiagnosticCheck),
+        StatusCode::OK);
+    EXPECT_EQ (ms11p.read (BusAddress (MS11P_CSR), &dataRead), StatusCode::OK);
     EXPECT_EQ (errorStorageContents (dataRead), 037);
 }
