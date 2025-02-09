@@ -41,11 +41,16 @@ StatusCode MS11P::read (BusAddress address, u16* destAddress)
 		u8 storedCheckBits = checkBits_[(address >> 1) - startingAddress_];
 		u8 generatedCheckBits = generateCheckBits (*destAddress);
 
-		if (storedCheckBits != generatedCheckBits)
-			handleSingleError (address, storedCheckBits, generatedCheckBits);
+		if (csr_.diagnosticCheck && !inhibited (address))
+			csr_.errorAddressAndCheckBits = storedCheckBits;
 		else
-			// Clear error log
-			errorLog_.syndromeBits = 0;
+		{
+			if (storedCheckBits != generatedCheckBits)
+				handleSingleError (address, storedCheckBits, generatedCheckBits);
+			else
+				// Clear error log
+				errorLog_.syndromeBits = 0;
+		}
 	}
 	return StatusCode::OK;
 }
