@@ -1,9 +1,12 @@
 #include "ms11p.h"
 #include "absoluteloader/absoluteloader.h"
 
+#include <bit>
+
 using std::shared_ptr;
 using std::bind;
 using std::placeholders::_1;
+using std::popcount;
 
 MS11P::MS11P (Bus* bus)
 	:
@@ -41,18 +44,39 @@ StatusCode MS11P::read (BusAddress address, u16* destAddress)
 		u8 storedCheckBits = checkBits_[(address >> 1) - startingAddress_];
 		u8 generatedCheckBits = generateCheckBits (*destAddress);
 
-		if (csr_.diagnosticCheck && !inhibited (address))
-			csr_.errorAddressAndCheckBits = storedCheckBits;
-		else
+		switch (checkParity (address, storedCheckBits, generatedCheckBits))
 		{
-			if (storedCheckBits != generatedCheckBits)
-				handleSingleError (address, storedCheckBits, generatedCheckBits);
-			else
+			case BitError::None:
 				// Clear error log
+				if (csr_.diagnosticCheck && !inhibited (address))
+					csr_.errorAddressAndCheckBits = storedCheckBits;
 				errorLog_.syndromeBits = 0;
+				break;
+
+			case BitError::Single:
+				handleSingleError (address, storedCheckBits, generatedCheckBits);
+				break;
+
+			case BitError::Double:
+                handleDoubleError (address, storedCheckBits, generatedCheckBits);
+                break;
 		}
 	}
 	return StatusCode::OK;
+}
+
+MS11P::BitError MS11P::checkParity (BusAddress address, u8 storedCheckBits,
+	u8 generatedCheckBits)
+{
+	if (storedCheckBits == generatedCheckBits)
+        return BitError::None;
+
+	errorLog_.address = address;
+	errorLog_.syndromeBits =
+		generateSyndromeBits (storedCheckBits, generatedCheckBits);
+
+	return popcount (errorLog_.syndromeBits) == 1 ?
+		BitError::Single : BitError::Double;
 }
 
 void MS11P::readCSR (u16* destAddress)

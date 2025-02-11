@@ -105,6 +105,13 @@ private:
     }
     errorLog_;
 
+    enum class BitError
+    {
+        None,
+        Single,
+        Double
+    };
+
     Bus* bus_;
     MS11PConfig::PowerSource powerSource_ {MS11PConfig::PowerSource::System};
     u32 startingAddress_ {0};
@@ -121,6 +128,9 @@ private:
 
     void readCSR (u16* destAddress);
     void writeCSR (u16 value);
+
+    BitError checkParity (BusAddress address, u8 storedCheckBits,
+        u8 generatedCheckBits);
     u8 newCheckBits (BusAddress address, u16 value);
     u8 generateCheckBits (u16 word);
     u8 evenParity (u16 word);
@@ -133,6 +143,8 @@ private:
     bool inInhibitedFirst16KW (BusAddress address);
     bool inInhibitedSecond16KW (BusAddress address);
     void handleSingleError (BusAddress address, u8 storedCheckBits,
+        u8 generatedCheckBits);
+    void handleDoubleError (BusAddress address, u8 storedCheckBits,
         u8 generatedCheckBits);
     u8 addressBitsA17_A11 (BusAddress address);
     u8 addressBitsA21_A18 (BusAddress address);
