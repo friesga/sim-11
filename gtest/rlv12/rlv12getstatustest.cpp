@@ -59,7 +59,7 @@ protected:
         do
         {
             std::this_thread::yield();
-            rlv12Device->read (RLCSR, &result);
+            result = rlv12Device->read (RLCSR);
         }
         while (!(result & CSR_ControllerReady));
     }
@@ -81,8 +81,7 @@ TEST_F (RLV12GetStatusTest, getStatusFails)
 {
     // Verify the controller is ready to perform an operation (the drive
     // does not have to be ready)
-    u16 result;
-    rlv12Device->read (RLCSR, &result);
+    u16 result = rlv12Device->read (RLCSR);
     ASSERT_EQ (result & CSR_ControllerReady, CSR_ControllerReady);
 
     // Load DAR without Reset and Get Status bits
@@ -97,7 +96,7 @@ TEST_F (RLV12GetStatusTest, getStatusFails)
     waitForControllerReady ();
 
     // Verify the controller reports an Operation Incomplete
-    rlv12Device->read (RLCSR, &result);
+    result = rlv12Device->read (RLCSR);
     ASSERT_EQ (result, CSR_CompositeError |
         CSR_OperationIncomplete | CSR_ControllerReady | CSR_GetStatusCommand);
 }
@@ -142,13 +141,11 @@ TEST_F (RLV12GetStatusTest, resetSucceeds)
 
     // Expected result in the MPR register: heads locked on a cylinder,
     // no errors, Drive Type RL01
-    u16 mpr;
-    rlv12Device->read (RLMPR, &mpr);
+    u16 mpr = rlv12Device->read (RLMPR);
     ASSERT_EQ (mpr, MPR_LockOn | MPR_BrushHome | MPR_HeadsOut);
 
     // Verify the controller is ready without error indications
-    u16 result;
-    rlv12Device->read (RLCSR, &result);
+    u16 result = rlv12Device->read (RLCSR);
     ASSERT_EQ (result, CSR_ControllerReady |
         CSR_GetStatusCommand | 
         CSR_DriveReady);
@@ -188,12 +185,10 @@ TEST_F (RLV12GetStatusTest, drive3CanBeSelected)
 
     // Expected result in the MPR register: heads locked on a cylinder,
     // no errors, Drive Type RL01
-    u16 mpr;
-    rlv12Device->read (RLMPR, &mpr);
+    u16 mpr = rlv12Device->read (RLMPR);
     
     // Verify the controller is ready without error indications
-    u16 result;
-    rlv12Device->read (RLCSR, &result);
+    u16 result = rlv12Device->read (RLCSR);
     ASSERT_EQ (result, CSR_ControllerReady |
         CSR_GetStatusCommand | 
         CSR_Drive3 |
@@ -235,8 +230,7 @@ TEST_F (RLV12GetStatusTest, rl01CorrectlyIndicated)
 
     // Expected result in the MPR register: heads locked on a cylinder,
     // write lock, no errors, Drive Type RL01
-    u16 mpr;
-    rlv12Device->read (RLMPR, &mpr);
+    u16 mpr = rlv12Device->read (RLMPR);
     ASSERT_EQ (mpr, MPR_WriteLock | MPR_LockOn | MPR_BrushHome | MPR_HeadsOut);
 }
 
@@ -274,8 +268,7 @@ TEST_F (RLV12GetStatusTest, rl02CorrectlyIndicated)
 
     // Expected result in the MPR register: heads locked on a cylinder,
     // write lock, no errors, Drive Type RL02
-    u16 mpr;
-    rlv12Device->read (RLMPR, &mpr);
+    u16 mpr = rlv12Device->read (RLMPR);
     ASSERT_EQ (mpr, MPR_WriteLock | MPR_DriveType |
         MPR_LockOn | MPR_BrushHome | MPR_HeadsOut);
 }
@@ -314,7 +307,6 @@ TEST_F (RLV12GetStatusTest, writeProtectOffCorrectlyIndicated)
 
     // Expected result in the MPR register: heads locked on a cylinder,
     // no write lock, no errors, Drive Type RL02
-    u16 mpr;
-    rlv12Device->read (RLMPR, &mpr);
+    u16 mpr = rlv12Device->read (RLMPR);
     ASSERT_EQ (mpr, MPR_DriveType | MPR_LockOn | MPR_BrushHome | MPR_HeadsOut);
 }

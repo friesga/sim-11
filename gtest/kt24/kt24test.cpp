@@ -12,12 +12,13 @@ TEST (KT24, lowMappingRegisterBit0IsReadOnly)
     Qbus bus;
     KT24 kt24 (&bus);
     u16 dataWritten {0177777};
-    u16 dataRead {0};
+    CondData<u16> dataRead {0};
 
     EXPECT_EQ (kt24.writeWord (0170200, 0177777), StatusCode::Success);
-    EXPECT_EQ (kt24.read (0170200, &dataRead), StatusCode::Success);
-
+    
+    dataRead = kt24.read (0170200);
     EXPECT_EQ (dataRead, 0177776);
+    EXPECT_EQ (dataRead.statusCode (), StatusCode::Success);
 }
 
 // Verify that if the KT24 is disabled the given 18-bit address is returned
@@ -55,16 +56,23 @@ TEST (KT24, kt24RegistersAreIntizalised)
 {
     Qbus bus;
     KT24 kt24 (&bus);
-    u16 value;
+    CondData<u16> value;
 
-    EXPECT_EQ (kt24.read (0170200, &value), StatusCode::Success);
+    value = kt24.read (0170200);
     EXPECT_EQ (value, 0);
-    EXPECT_EQ (kt24.read (0170202, &value), StatusCode::Success);
+    EXPECT_EQ (value.statusCode (), StatusCode::Success);
+
+    value = kt24.read (0170202);
     EXPECT_EQ (value, 0);
-    EXPECT_EQ (kt24.read (0170374, &value), StatusCode::Success);
+    EXPECT_EQ (value.statusCode (), StatusCode::Success);
+
+    value = kt24.read (0170374);
     EXPECT_EQ (value, 0);
-    EXPECT_EQ (kt24.read (0170376, &value), StatusCode::Success);
+    EXPECT_EQ (value.statusCode (), StatusCode::Success);
+
+    value = kt24.read (0170376);
     EXPECT_EQ (value, 0);
+    EXPECT_EQ (value.statusCode (), StatusCode::Success);
 }
 
 TEST (KT24, _18bitAddressIsMapped)
@@ -166,15 +174,17 @@ TEST (KT24, lmaRegisterCanBeReadAndWritten)
     Qbus bus;
     KT24 kt24 (&bus);
     u16 dataWritten {0177777};
-    u16 dataRead {0};
+    CondData<u16> dataRead {0};
 
     EXPECT_EQ (kt24.writeWord (0177734, dataWritten), StatusCode::Success);
-    EXPECT_EQ (kt24.read (0177734, &dataRead), StatusCode::Success);
+    dataRead = kt24.read (0177734);
     EXPECT_EQ (dataWritten, dataRead);
+    EXPECT_EQ (dataRead.statusCode (), StatusCode::Success);
 
     EXPECT_EQ (kt24.writeWord (0177736, dataWritten), StatusCode::Success);
-    EXPECT_EQ (kt24.read (0177736, &dataRead), StatusCode::Success);
+    dataRead = kt24.read (0177736);
     EXPECT_EQ (dataWritten, dataRead);
+    EXPECT_EQ (dataRead.statusCode (), StatusCode::Success);
 }
 
 // The CPU error register cannot be written, but when it is written bit 0
@@ -184,9 +194,10 @@ TEST (KT24, cpuErrorRegisterCanBeReadAndWritten)
     Qbus bus;
     KT24 kt24 (&bus);
     u16 dataWritten {0177777};
-    u16 dataRead {0};
+    CondData<u16> dataRead {0};
 
     EXPECT_EQ (kt24.writeWord (0177766, dataWritten), StatusCode::Success);
-    EXPECT_EQ (kt24.read (0177766, &dataRead), StatusCode::Success);
+    dataRead = kt24.read (0177766);
     EXPECT_EQ (dataRead, 0);
+    EXPECT_EQ (dataRead.statusCode (), StatusCode::Success);
 }

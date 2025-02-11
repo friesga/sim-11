@@ -17,7 +17,7 @@ public:
 	DLV11J (Bus *bus, shared_ptr<DLV11JConfig> dlConfig);
 
 	// Define the obligatory functions
-	StatusCode read (BusAddress busAddress, u16 *destAddress) override;
+	CondData<u16> read (BusAddress busAddress) override;
 	StatusCode writeWord (BusAddress busAddress, u16 value) override;
 	bool responsible (BusAddress address) override;
 	void reset ();

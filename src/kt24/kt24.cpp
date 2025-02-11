@@ -15,9 +15,9 @@ KT24::KT24 (Bus* bus, shared_ptr<KT24Config> kt24Config)
         make_unique<RegisterHandler> (vector<BusDevice*> {m9312_.get(), unibusMapLogic_.get()});
 }
 
-StatusCode KT24::read (BusAddress address, u16* destination)
+CondData<u16> KT24::read (BusAddress address)
 {
-    return registerHandler_->read (address, destination);
+    return registerHandler_->read (address);
 }
 
 StatusCode KT24::writeWord (BusAddress address, u16 value)

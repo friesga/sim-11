@@ -44,7 +44,7 @@ protected:
         do
         {
             SimulatorClock::forwardClock (100ms);
-            rlv12Device->read (RLCSR, &result);
+            result = rlv12Device->read (RLCSR);
         }
         while (!(result & CSR_ControllerReady));
     }
@@ -71,7 +71,6 @@ TEST_F (RLV12MaintenanceTest, maintenance)
 
     // Expected result: CSR CRDY (bit 7) set, all error bits cleared,
     // Drive Ready ckeared (as no unit is attached).
-    u16 result;
-    rlv12Device->read (RLCSR, &result);
+    u16 result = rlv12Device->read (RLCSR);
     ASSERT_EQ (result, 0200);
 }

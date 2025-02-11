@@ -50,11 +50,12 @@ TEST (M9312Test, diagROMreadCorrectly)
     Qbus bus;
     M9312 m9312 (&bus, m9312ConfigPtr);
 
-    u16 data;
-    EXPECT_EQ (m9312.read (0165000, &data), StatusCode::Success);
+    CondData<u16> data = m9312.read (0165000);
     EXPECT_EQ (data, 0xEA00);
-    EXPECT_EQ (m9312.read (0165002, &data), StatusCode::Success);
+    EXPECT_EQ (data.statusCode (), StatusCode::Success);
+    data = m9312.read (0165002);
     EXPECT_EQ (data, 0xEA00);
+    EXPECT_EQ (data.statusCode (), StatusCode::Success);
 }
 
 TEST (M9312Test, readOfEmptySocketReturnsError)
@@ -73,8 +74,8 @@ TEST (M9312Test, readOfEmptySocketReturnsError)
     Qbus bus;
     M9312 m9312 (&bus, m9312ConfigPtr);
 
-    u16 data;
-    EXPECT_EQ (m9312.read (0165000, &data), StatusCode::NonExistingMemory);
+    CondData<u16> data = m9312.read (0165000);
+    EXPECT_EQ (data.statusCode (), StatusCode::NonExistingMemory);
 }
 
 TEST (M9312Test, bootROMsreadCorrectly)
@@ -93,22 +94,29 @@ TEST (M9312Test, bootROMsreadCorrectly)
     Qbus bus;
     M9312 m9312 (&bus, m9312ConfigPtr);
 
-    u16 data;
-    EXPECT_EQ (m9312.read (0173000, &data), StatusCode::Success);
+    CondData<u16> data = m9312.read (0173000);
     EXPECT_EQ (data, 0x444C);
-    EXPECT_EQ (m9312.read (0173002, &data), StatusCode::Success);
+    EXPECT_EQ (data.statusCode (), StatusCode::Success);
+
+    data = m9312.read (0173002);
     EXPECT_EQ (data, 0x007E);
-    EXPECT_EQ (m9312.read (0173004, &data), StatusCode::Success);
+    EXPECT_EQ (data.statusCode (), StatusCode::Success);
+
+    data = m9312.read (0173004);
     EXPECT_EQ (data, 0x00B1);
+    EXPECT_EQ (data.statusCode (), StatusCode::Success);
 
-    EXPECT_EQ (m9312.read (0173200, &data), StatusCode::Success);
+    data = m9312.read (0173200);
     EXPECT_EQ (data, 0x444D);
+    EXPECT_EQ (data.statusCode (), StatusCode::Success);
 
-    EXPECT_EQ (m9312.read (0173400, &data), StatusCode::Success);
+    data = m9312.read (0173400);
     EXPECT_EQ (data, 0x4458);
+    EXPECT_EQ (data.statusCode (), StatusCode::Success);
 
-    EXPECT_EQ (m9312.read (0173600, &data), StatusCode::Success);
+    data = m9312.read (0173600);
     EXPECT_EQ (data, 0x4450);
+    EXPECT_EQ (data.statusCode (), StatusCode::Success);
 }
 
 TEST (M9312Test, romCannotBeWritten)
@@ -148,7 +156,7 @@ TEST (M9312Test, addressOffsetSwitchBankCanBeRead)
     Qbus bus;
     M9312 m9312 (&bus, m9312ConfigPtr);
 
-    u16 data;
-    EXPECT_EQ (m9312.read (0173024, &data), StatusCode::Success);
+    CondData<u16> data = m9312.read (0173024);
     EXPECT_EQ (data, 0165000);
+    EXPECT_EQ (data.statusCode (), StatusCode::Success);
 }

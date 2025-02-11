@@ -65,7 +65,7 @@ protected:
         do
         {
             SimulatorClock::forwardClock (100ms);
-            rlv12Device->read (RLCSR, &result);
+            result = rlv12Device->read (RLCSR);
         } while (!(result & CSR_ControllerReady));
     }
 
@@ -75,8 +75,9 @@ protected:
         do
         {
             SimulatorClock::forwardClock (100ms);
-            rlv12Device->read (RLCSR, &result);
-        } while ((result & (CSR_ControllerReady | CSR_DriveReady)) !=
+            result = rlv12Device->read (RLCSR);
+        }
+        while ((result & (CSR_ControllerReady | CSR_DriveReady)) !=
             (CSR_ControllerReady | CSR_DriveReady));
     }
 
@@ -116,8 +117,7 @@ TEST_F (DriveReadyTest, driveReadyTrueAfterReadCommand)
     // Verify the controller is ready to perform an operation (the drive
     // does not have to be ready)
     // ToDo: Volume check has to be cleared?!
-    u16 result;
-    rlv12Device->read (RLCSR, &result);
+    u16 result = rlv12Device->read (RLCSR);
     ASSERT_EQ (result & CSR_ControllerReady, CSR_ControllerReady);
 
     // Point at memory address 0
@@ -137,7 +137,7 @@ TEST_F (DriveReadyTest, driveReadyTrueAfterReadCommand)
     waitForControllerReady ();
 
     // Read back the CSR to verify DriveReady is true
-    rlv12Device->read (RLCSR, &result);
+    result = rlv12Device->read (RLCSR);
     ASSERT_EQ (result & CSR_DriveReady, CSR_DriveReady);
 }
 
@@ -151,8 +151,7 @@ TEST_F (DriveReadyTest, driveReadyFalseAfterSeekCommand)
 
     // Verify the controller is ready to perform an operation (the drive
     // does not have to be ready)
-    u16 result;
-    rlv12Device->read (RLCSR, &result);
+    u16 result = rlv12Device->read (RLCSR);
     ASSERT_EQ (result & CSR_ControllerReady, CSR_ControllerReady);
 
     // Load DAR with seek parameters
@@ -168,6 +167,6 @@ TEST_F (DriveReadyTest, driveReadyFalseAfterSeekCommand)
 
     // Read back the CSR to verify DriveReady is false while Controller
     // Ready is true.
-    rlv12Device->read (RLCSR, &result);
+    result = rlv12Device->read (RLCSR);
     ASSERT_EQ (result & CSR_DriveReady, 0);
 }

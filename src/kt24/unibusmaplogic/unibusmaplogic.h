@@ -24,7 +24,7 @@ public:
 	UnibusMapLogic (Bus* bus, shared_ptr<KT24Config> kt24Config);
 
     // Functions required for the BusDevice interface
-	StatusCode read (BusAddress address, u16* destination);
+	CondData<u16> read (BusAddress address);
 	StatusCode writeWord (BusAddress address, u16 value);
 	StatusCode writeByte (BusAddress address, u8 value);
 	bool responsible (BusAddress address);
@@ -95,8 +95,8 @@ private:
 		{ return (address % 4) == 2; }
 
 	UBMLRegisters findRegister (BusAddress address) const;
-	void readMappingRegister (u16 registerAddress, u16* destination);
-	void readLMARegister (u16 registerAddress, u16* destination);
+	CondData<u16> readMappingRegister (u16 registerAddress);
+	CondData<u16> readLMARegister (u16 registerAddress);
 	void writeMappingRegister (u16 registerAddress, u16 value);
 	void writeLMARegister (u16 registerAddress, u16 value);
 	void writeCpuErrorRegister ();

@@ -39,7 +39,7 @@ protected:
         do
         {
             SimulatorClock::forwardClock (100ms);
-            uart->read (BusAddress (RCSR, BusAddress::Width::_16Bit), &result);
+            result = uart->read (BusAddress (RCSR, BusAddress::Width::_16Bit));
         }
         while (!(result & RCSR_RCVR_DONE));
     }
@@ -50,7 +50,7 @@ TEST_F (UARTMaintModeTest, maintenanceModeCanBeSet)
     UARTConfig uartConfig {0177560, 060, false};
     ConsoleConfig consoleConfig {};
     Qbus bus;
-    u16 data;
+    CondData<u16> data;
 
     // Power must be Success for the UART receiver to function
     bus.BPOK ().set (true);
@@ -64,9 +64,9 @@ TEST_F (UARTMaintModeTest, maintenanceModeCanBeSet)
         StatusCode::Success);
 
     // Check Transmitter Ready
-    EXPECT_EQ (uart->read (BusAddress (XCSR, BusAddress::Width::_16Bit), &data),
-        StatusCode::Success);
+    data = uart->read (BusAddress (XCSR, BusAddress::Width::_16Bit));
     EXPECT_TRUE (data & XCSR_XMIT_READY);
+    EXPECT_EQ (data.statusCode (), StatusCode::Success);
 
     // Write character to the transmit buffer
     EXPECT_EQ (uart->writeWord (BusAddress (XBUF, BusAddress::Width::_16Bit), '@'),
@@ -76,9 +76,9 @@ TEST_F (UARTMaintModeTest, maintenanceModeCanBeSet)
     waitForRecvDone (uart.get ());
 
     // Read the character back
-    EXPECT_EQ (uart->read (BusAddress (RBUF, BusAddress::Width::_16Bit), &data),
-        StatusCode::Success);
+    data = uart->read (BusAddress (RBUF, BusAddress::Width::_16Bit));
     EXPECT_EQ (data, '@');
+    EXPECT_EQ (data.statusCode (), StatusCode::Success);
 
     // Halt the simulator's clock to wake up the transmitter from its transmit
     // delay. This is required to allow the destructor to finish the

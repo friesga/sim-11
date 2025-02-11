@@ -66,7 +66,7 @@ protected:
         do
         {
             SimulatorClock::forwardClock (100ms);
-            rlv12Device->read (RLCSR, &result);
+            result = rlv12Device->read (RLCSR);
         }
         while (!(result & CSR_ControllerReady));
     }
@@ -77,7 +77,7 @@ protected:
         do
         {
             SimulatorClock::forwardClock (100ms);
-            rlv12Device->read (RLCSR, &result);
+            result = rlv12Device->read (RLCSR);
         }
         while ((result & (CSR_ControllerReady | CSR_DriveReady)) !=
             (CSR_ControllerReady | CSR_DriveReady));
@@ -122,7 +122,7 @@ TEST_F (RLV12ReadHeaderTest, readHeaderSucceeds)
     // Verify the controller is ready to perform an operation (the drive
     // does not have to be ready)
     u16 result;
-    rlv12Device->read (RLCSR, &result);
+    result = rlv12Device->read (RLCSR);
     ASSERT_EQ (result & CSR_ControllerReady, CSR_ControllerReady);
 
     // Load the CSR with drive-select bits for unit 0, a negative GO bit
@@ -133,23 +133,22 @@ TEST_F (RLV12ReadHeaderTest, readHeaderSucceeds)
     waitForControllerReady ();
 
     // Verify the controller is ready
-    rlv12Device->read (RLCSR, &result);
+    result = rlv12Device->read (RLCSR);
     ASSERT_EQ (result, CSR_ControllerReady | CSR_ReadHeaderCommand | 
         CSR_DriveReady);
 
     // Expected result in the MPR register: Sector Address, Head Select and
     // Cylinder Address. Sequential rotation has taken place.
-    u16 mpr;
-    rlv12Device->read (RLMPR, &mpr);
+    u16 mpr = rlv12Device->read (RLMPR);
     ASSERT_EQ (mpr, 01);
 
     // The second MPR read should deliver all zero's
-    rlv12Device->read (RLMPR, &mpr);
+    mpr = rlv12Device->read (RLMPR);
     ASSERT_EQ (mpr, 00);
 
     // The third read should deliver the CRC of the header
     // We presume the calculation is correct
-    rlv12Device->read (RLMPR, &mpr);
+    mpr = rlv12Device->read (RLMPR);
     ASSERT_EQ (mpr, 64513);
 }
 
@@ -157,8 +156,7 @@ TEST_F (RLV12ReadHeaderTest, readHeaderSucceeds)
 TEST_F (RLV12ReadHeaderTest, headerHasCorrectContents)
 {
     // Verify both controller and drive are ready
-    u16 result;
-    rlv12Device->read (RLCSR, &result);
+    u16 result = rlv12Device->read (RLCSR);
     ASSERT_EQ (result & (CSR_ControllerReady | CSR_DriveReady), 
         CSR_ControllerReady | CSR_DriveReady);
 
@@ -174,7 +172,7 @@ TEST_F (RLV12ReadHeaderTest, headerHasCorrectContents)
 
     // Verify both controller and drive are ready and no error is
     // indicated
-    rlv12Device->read (RLCSR, &result);
+    result = rlv12Device->read (RLCSR);
     ASSERT_EQ (result & 
         (CSR_CompositeError | CSR_ControllerReady | CSR_DriveReady),
         CSR_ControllerReady | CSR_DriveReady);
@@ -188,14 +186,13 @@ TEST_F (RLV12ReadHeaderTest, headerHasCorrectContents)
 
     // Verify both controller and drive are ready again and no error is
     // indicated
-    rlv12Device->read (RLCSR, &result);
+    result = rlv12Device->read (RLCSR);
     ASSERT_EQ (result & 
         (CSR_CompositeError | CSR_ControllerReady | CSR_DriveReady),
         CSR_ControllerReady | CSR_DriveReady);
 
     // Expected result in the MPR register: Sector Address, Head Select and
     // Cylinder Address
-    u16 mpr;
-    rlv12Device->read (RLMPR, &mpr);
+    u16 mpr = rlv12Device->read (RLMPR);
     ASSERT_EQ (MPR_cylinder (mpr), 10);
 }

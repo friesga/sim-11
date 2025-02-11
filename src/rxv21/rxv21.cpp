@@ -104,16 +104,16 @@ void RXV21::done ()
 }
 
 // Read operation on either the RX2CS or RX2DB
-StatusCode RXV21::read (BusAddress busAddress, u16 *destAddress)
+CondData<u16> RXV21::read (BusAddress busAddress)
 {
 	if (busAddress.registerAddress () == base) 
 		// Return value of the RX2CS
-		*destAddress = rx2cs & RX_RMASK;
+		return {static_cast<u16> (rx2cs & RX_RMASK)};
 	else if (busAddress.registerAddress () == base + 2) 
 		// Return value of the RX2DB
-		*destAddress = rx2db;
+		return {rx2db};
 
-	return StatusCode::Success;
+	return {StatusCode::NonExistingMemory};
 }
 
 // Write operation on either the RX2CS or RX2DB

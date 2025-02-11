@@ -105,7 +105,7 @@ public:
     // Required functions
     void reset () override;
     bool responsible (BusAddress addr) override;
-    StatusCode read (BusAddress busAddress, u16* data) override;
+    CondData<u16> read (BusAddress busAddress) override;
     StatusCode writeByte (BusAddress busAddress, u8 data) override;
     StatusCode writeWord (BusAddress busAddress, u16 data) override;
 

@@ -31,18 +31,18 @@ MS11P::MS11P (Bus* bus, shared_ptr<MS11PConfig> ms11pConfig)
 MS11P::~MS11P ()
 {}
 
-StatusCode MS11P::read (BusAddress address, u16* destAddress)
+CondData<u16> MS11P::read (BusAddress address)
 {
 	if (address.registerAddress () == csrAddress_)
-        readCSR (destAddress);
+        return readCSR ();
 	else
 	{
 		// Get the contents of the memory location converting the byte address
 		// to an index into the word array (which is allowed as all addresses
 		// are even word addresses).
-        *destAddress = memory_[(address >> 1) - startingAddress_];
+        u16 data = memory_[(address >> 1) - startingAddress_];
 		u8 storedCheckBits = checkBits_[(address >> 1) - startingAddress_];
-		u8 generatedCheckBits = generateCheckBits (*destAddress);
+		u8 generatedCheckBits = generateCheckBits (data);
 
 		switch (checkParity (address, storedCheckBits, generatedCheckBits))
 		{
@@ -61,8 +61,9 @@ StatusCode MS11P::read (BusAddress address, u16* destAddress)
                 handleDoubleError (address, storedCheckBits, generatedCheckBits);
                 break;
 		}
+
+		return {data};
 	}
-	return StatusCode::Success;
 }
 
 MS11P::BitError MS11P::checkParity (BusAddress address, u8 storedCheckBits,
@@ -79,7 +80,7 @@ MS11P::BitError MS11P::checkParity (BusAddress address, u8 storedCheckBits,
 		BitError::Single : BitError::Double;
 }
 
-void MS11P::readCSR (u16* destAddress)
+CondData<u16> MS11P::readCSR ()
 {
 	// A one is read in CSR bit 11 if CSR bits 2, 23 and 14 are set to indicate
 	// that the memory under test is an MS11-P. (EK-MS11P-TM-001)
@@ -99,7 +100,7 @@ void MS11P::readCSR (u16* destAddress)
 			csr_.errorAddressAndCheckBits = errorLog_.syndromeBits;
 	}
 
-	*destAddress = csr_.value;
+	return {csr_.value};
 }
 
 

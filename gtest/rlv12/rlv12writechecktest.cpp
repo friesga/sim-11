@@ -72,7 +72,7 @@ protected:
         do
         {
             SimulatorClock::forwardClock (100ms);
-            rlv12Device->read (RLCSR, &result);
+            result = rlv12Device->read (RLCSR);
         }
         while (!(result & CSR_ControllerReady));
     }
@@ -118,8 +118,7 @@ protected:
 TEST_F (RLV12WriteCheckTest, writeCheckSucceeds)
 {
     // Verify controller and drive are ready
-    u16 result;
-    rlv12Device->read (RLCSR, &result);
+    u16 result = rlv12Device->read (RLCSR);
     ASSERT_EQ (result & (CSR_ControllerReady | CSR_DriveReady), 
         CSR_ControllerReady | CSR_DriveReady);
 
@@ -133,7 +132,7 @@ TEST_F (RLV12WriteCheckTest, writeCheckSucceeds)
 
     // Verify both controller and drive are ready and no error is
     // indicated
-    rlv12Device->read (RLCSR, &result);
+    result = rlv12Device->read (RLCSR);
     ASSERT_EQ (result & 
         (CSR_CompositeError | CSR_ControllerReady | CSR_DriveReady),
         CSR_ControllerReady | CSR_DriveReady);
@@ -147,7 +146,7 @@ TEST_F (RLV12WriteCheckTest, writeCheckSucceeds)
     waitForControllerReady ();
 
     // Verify the Write Check indicates no error
-    rlv12Device->read (RLCSR, &result);
+    result = rlv12Device->read (RLCSR);
     ASSERT_EQ (result & 
         (CSR_CompositeError | CSR_ControllerReady | CSR_DriveReady),
         CSR_ControllerReady | CSR_DriveReady);
@@ -158,8 +157,7 @@ TEST_F (RLV12WriteCheckTest, writeCheckSucceeds)
 TEST_F (RLV12WriteCheckTest, writeCheckFails)
 {
     // Verify controller and drive are ready
-    u16 result;
-    rlv12Device->read (RLCSR, &result);
+    u16 result = rlv12Device->read (RLCSR);
     ASSERT_EQ (result & (CSR_ControllerReady | CSR_DriveReady), 
         CSR_ControllerReady | CSR_DriveReady);
 
@@ -173,7 +171,7 @@ TEST_F (RLV12WriteCheckTest, writeCheckFails)
 
     // Verify both controller and drive are ready and no error is
     // indicated
-    rlv12Device->read (RLCSR, &result);
+    result = rlv12Device->read (RLCSR);
     ASSERT_EQ (result & 
         (CSR_CompositeError | CSR_ControllerReady | CSR_DriveReady),
         CSR_ControllerReady | CSR_DriveReady);
@@ -190,7 +188,7 @@ TEST_F (RLV12WriteCheckTest, writeCheckFails)
     waitForControllerReady ();
 
     // Verify the CSR indicates the appropriate errors
-    rlv12Device->read (RLCSR, &result);
+    result = rlv12Device->read (RLCSR);
     ASSERT_EQ (result & CSR_CompositeError, CSR_CompositeError);
     ASSERT_EQ (CSR_ErrorCode (result), CSR_WriteCheckEror);
 }

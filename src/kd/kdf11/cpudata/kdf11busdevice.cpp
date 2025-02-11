@@ -15,15 +15,12 @@
 // setPSW() is be used to set the PSW to the new value to prevent the 
 // T-bit from being set or cleared.
 //
-StatusCode KDF11CpuData::read (BusAddress busAddress, u16 *destination)
+CondData<u16> KDF11CpuData::read (BusAddress busAddress)
 {
     if (busAddress.registerAddress () == PSWAddress)
-    {
-        *destination = psw_;
-        return StatusCode::Success;
-    }
+        return {psw_, StatusCode::Success};
 
-    return StatusCode::NonExistingMemory;
+    return {StatusCode::NonExistingMemory};
 }
 
 

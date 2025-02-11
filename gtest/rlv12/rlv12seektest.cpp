@@ -64,7 +64,7 @@ protected:
         do
         {
             SimulatorClock::forwardClock (10ms);
-            rlv12Device->read (RLCSR, &result);
+            result = rlv12Device->read (RLCSR);
         }
         while (!(result & CSR_ControllerReady));
     }
@@ -75,7 +75,7 @@ protected:
         do
         {
             SimulatorClock::forwardClock (100ms);
-            rlv12Device->read (RLCSR, &result);
+            result = rlv12Device->read (RLCSR);
         }
         while ((result & (CSR_ControllerReady | CSR_DriveReady)) !=
             (CSR_ControllerReady | CSR_DriveReady));
@@ -117,8 +117,7 @@ TEST_F (RLV12SeekTest, seekSucceeds)
 
     // Verify the controller is ready to perform an operation (the drive
     // does not have to be ready)
-    u16 result;
-    rlv12Device->read (RLCSR, &result);
+    u16 result = rlv12Device->read (RLCSR);
     ASSERT_EQ (result & CSR_ControllerReady, CSR_ControllerReady);
 
     // Load DAR with seek parameters
@@ -134,7 +133,7 @@ TEST_F (RLV12SeekTest, seekSucceeds)
 
     // Verify the controller is ready to accept a command for another unit
     // while the drive is not ready
-    rlv12Device->read (RLCSR, &result);
+    result = rlv12Device->read (RLCSR);
     ASSERT_EQ (result & (CSR_ControllerReady | CSR_DriveReady), 
         CSR_ControllerReady);
 
@@ -142,7 +141,7 @@ TEST_F (RLV12SeekTest, seekSucceeds)
     waitForDriveReady ();
 
     // Verify now both controller and drive are ready
-    rlv12Device->read (RLCSR, &result);
+    result = rlv12Device->read (RLCSR);
     ASSERT_EQ (result & (CSR_ControllerReady | CSR_DriveReady), 
         CSR_ControllerReady | CSR_DriveReady);
 
@@ -155,14 +154,13 @@ TEST_F (RLV12SeekTest, seekSucceeds)
     waitForControllerReady ();
 
     // Verify the controller is ready
-    rlv12Device->read (RLCSR, &result);
+    result = rlv12Device->read (RLCSR);
     ASSERT_EQ (result, CSR_ControllerReady | CSR_ReadHeaderCommand | 
         CSR_DriveReady);
 
     // Expected result in the MPR register: Sector Address, Head Select and
     // Cylinder Address
-    u16 mpr;
-    rlv12Device->read (RLMPR, &mpr);
+    u16 mpr = rlv12Device->read (RLMPR);
     ASSERT_EQ (MPR_cylinder (mpr), 20);
 }
 
@@ -203,8 +201,7 @@ TEST_F (RLV12SeekTest, parallelSeeksSucceed)
 
     // Verify the controller is ready to perform an operation (the drive
     // does not have to be ready)
-    u16 result;
-    rlv12Device->read (RLCSR, &result);
+    u16 result = rlv12Device->read (RLCSR);
     ASSERT_EQ (result & CSR_ControllerReady, CSR_ControllerReady);
 
     // Load DAR with seek parameters
@@ -230,7 +227,7 @@ TEST_F (RLV12SeekTest, parallelSeeksSucceed)
     std::this_thread::sleep_for (std::chrono::milliseconds (10));
 
     // Verify the controller is ready and no errors are indicated
-    rlv12Device->read (RLCSR, &result);
+    result = rlv12Device->read (RLCSR);
     ASSERT_EQ (result & (CSR_ControllerReady | CSR_CompositeError), 
         CSR_ControllerReady);
 
@@ -239,7 +236,7 @@ TEST_F (RLV12SeekTest, parallelSeeksSucceed)
 
     // Verify now both controller and drive 1 are ready
     waitForDriveReady ();
-    rlv12Device->read (RLCSR, &result);
+    result = rlv12Device->read (RLCSR);
     ASSERT_EQ (result & (CSR_ControllerReady | CSR_DriveReady | CSR_Drive1), 
         CSR_ControllerReady | CSR_DriveReady | CSR_Drive1);
 
@@ -257,8 +254,7 @@ TEST_F (RLV12SeekTest, parallelSeeksSucceed)
 
     // Expected result in the MPR register: Sector Address, Head Select and
     // Cylinder Address
-    u16 mpr;
-    rlv12Device->read (RLMPR, &mpr);
+    u16 mpr = rlv12Device->read (RLMPR);
     ASSERT_EQ (MPR_cylinder (mpr), 5);
 }
 
@@ -286,8 +282,7 @@ TEST_F (RLV12SeekTest, seekOnBusyDriveAccepted)
     SimulatorClock::forwardClock (50ms);
 
     // Verify controller and drive are ready 
-    u16 result;
-    rlv12Device->read (RLCSR, &result);
+    u16 result = rlv12Device->read (RLCSR);
     ASSERT_EQ (result & CSR_ControllerReady | CSR_DriveReady,
         CSR_ControllerReady | CSR_DriveReady);
 
@@ -304,7 +299,7 @@ TEST_F (RLV12SeekTest, seekOnBusyDriveAccepted)
     waitForControllerReady ();
 
     // ...while the drive is not ready
-    rlv12Device->read (RLCSR, &result);
+    result = rlv12Device->read (RLCSR);
     ASSERT_EQ (result & (CSR_ControllerReady | CSR_DriveReady), 
         CSR_ControllerReady);
 
@@ -316,7 +311,7 @@ TEST_F (RLV12SeekTest, seekOnBusyDriveAccepted)
 
     // Verify both controller and drive are ready
     waitForDriveReady ();
-    rlv12Device->read (RLCSR, &result);
+    result = rlv12Device->read (RLCSR);
     ASSERT_EQ (result & (CSR_ControllerReady | CSR_DriveReady),
         CSR_ControllerReady | CSR_DriveReady);
 
@@ -328,8 +323,7 @@ TEST_F (RLV12SeekTest, seekOnBusyDriveAccepted)
     waitForControllerReady ();
 
     // Verify both seeks are executed
-    u16 mpr;
-    rlv12Device->read (RLMPR, &mpr);
+    u16 mpr = rlv12Device->read (RLMPR);
     ASSERT_EQ (MPR_cylinder (mpr), 10);
 }
 
@@ -358,8 +352,7 @@ TEST_F (RLV12SeekTest, readHeaderAfterSeekSucceeds)
     SimulatorClock::forwardClock (50ms);
 
     // Verify controller and drive are ready 
-    u16 result;
-    rlv12Device->read (RLCSR, &result);
+    u16 result = rlv12Device->read (RLCSR);
     ASSERT_EQ (result & CSR_ControllerReady | CSR_DriveReady,
         CSR_ControllerReady | CSR_DriveReady);
 
@@ -377,7 +370,7 @@ TEST_F (RLV12SeekTest, readHeaderAfterSeekSucceeds)
 
     // Verify the controller is ready to accept a command
     // while the drive is not ready
-    rlv12Device->read (RLCSR, &result);
+    result = rlv12Device->read (RLCSR);
     ASSERT_EQ (result & (CSR_ControllerReady | CSR_DriveReady), 
         CSR_ControllerReady);
 
@@ -386,7 +379,7 @@ TEST_F (RLV12SeekTest, readHeaderAfterSeekSucceeds)
 
     // Assert execution of the Read Header command doesn't set the
     // Controller Ready bit (because the seek is still in progress).
-    rlv12Device->read (RLCSR, &result);
+    result = rlv12Device->read (RLCSR);
     ASSERT_EQ (result & (CSR_ControllerReady | CSR_DriveReady), 0);
 
     // Wait till both Seek and Read Header command are completed
@@ -394,12 +387,11 @@ TEST_F (RLV12SeekTest, readHeaderAfterSeekSucceeds)
 
     // Verify both controller and drive are ready
     waitForDriveReady ();
-    rlv12Device->read (RLCSR, &result);
+    result = rlv12Device->read (RLCSR);
     ASSERT_EQ (result & (CSR_ControllerReady | CSR_DriveReady),
         CSR_ControllerReady | CSR_DriveReady);
 
     // Verify the Read Header confirms the head is at the correct cylinder
-    u16 mpr;
-    rlv12Device->read (RLMPR, &mpr);
+    u16 mpr = rlv12Device->read (RLMPR);
     ASSERT_EQ (MPR_cylinder (mpr), 100);
 }

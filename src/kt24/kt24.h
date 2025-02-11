@@ -26,7 +26,7 @@ public:
 	KT24 (Bus* bus, shared_ptr<KT24Config> kt24Config);
 
     // Functions required for the BusDevice interface
-	StatusCode read (BusAddress address, u16* destination);
+	CondData<u16> read (BusAddress address);
 	StatusCode writeWord (BusAddress address, u16 value);
 	StatusCode writeByte (BusAddress address, u8 value);
 	bool responsible (BusAddress address);

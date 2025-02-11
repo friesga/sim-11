@@ -15,7 +15,7 @@ public:
 	~MSV11D ();
 
 	// Functions required for the BusDevice interface
-	StatusCode read (BusAddress address, u16 *destAddress) override;
+	CondData<u16> read (BusAddress address) override;
 	StatusCode writeWord (BusAddress address, u16 value) override;
 	bool responsible (BusAddress address) override;
 	void reset ();

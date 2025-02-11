@@ -73,7 +73,7 @@ protected:
         do
         {
             SimulatorClock::forwardClock (100ms);
-            rlv12Device->read (RLCSR, &result);
+            result = rlv12Device->read (RLCSR);
         }
         while (!(result & CSR_ControllerReady));
     }
@@ -113,8 +113,7 @@ TEST_F (RLV12ReadDataWithoutHeaderCheckTest, readDataWithoutHeaderCheckSucceeds)
     waitForControllerReady ();
 
     // Verify both controller and drive are ready
-    u16 result;
-    rlv12Device->read (RLCSR, &result);
+    u16 result = rlv12Device->read (RLCSR);
     ASSERT_EQ (result & (CSR_ControllerReady | CSR_DriveReady), 
         CSR_ControllerReady | CSR_DriveReady);
 
@@ -128,7 +127,7 @@ TEST_F (RLV12ReadDataWithoutHeaderCheckTest, readDataWithoutHeaderCheckSucceeds)
 
     // Verify now both controller and drive are ready and no error is
     // indicated
-    rlv12Device->read (RLCSR, &result);
+    result = rlv12Device->read (RLCSR);
     ASSERT_EQ (result &
         (CSR_CompositeError | CSR_ControllerReady | CSR_DriveReady), 
         CSR_ControllerReady | CSR_DriveReady);

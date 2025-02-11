@@ -42,7 +42,7 @@ public:
     // Functions required by the BusDevice interface
     void reset () override;
     bool responsible (BusAddress address) override;
-    StatusCode read (BusAddress busAddress, u16* data) override;
+    CondData<u16> read (BusAddress busAddress) override;
     StatusCode writeByte (BusAddress busAddress, u8 data) override;
     StatusCode writeWord (BusAddress busAddress, u16 data) override;
 
@@ -141,9 +141,9 @@ private:
     bool addressInDiagnosticROM (BusAddress address);
     bool addressInBootRom (BusAddress address);
     bool addressIsPowerfailVector (BusAddress address);
-    StatusCode readDiagnosticROM (BusAddress busAddress, u16* data);
-    StatusCode readBootROM (BusAddress busAddress, u16* data);
-    StatusCode readAddressOffsetSwitchBank (u16* data);
+    CondData<u16> readDiagnosticROM (BusAddress busAddress);
+    CondData<u16> readBootROM (BusAddress busAddress);
+    CondData<u16> readAddressOffsetSwitchBank ();
     void BPOKReceiver (bool signalValue);
 };
 

@@ -5,13 +5,13 @@ RegisterHandler::RegisterHandler (vector<BusDevice*> cpuModules)
     cpuModules_ {cpuModules}
 {}
 
-StatusCode RegisterHandler::read (BusAddress address, u16* destination)
+CondData<u16> RegisterHandler::read (BusAddress address)
 {
     for (BusDevice* module : cpuModules_)
         if (module->responsible (address))
-            return module->read (address, destination);
+            return module->read (address);
 
-    return StatusCode::NonExistingMemory;
+    return {StatusCode::NonExistingMemory};
 }
 
 StatusCode RegisterHandler::writeWord (BusAddress address, u16 value)

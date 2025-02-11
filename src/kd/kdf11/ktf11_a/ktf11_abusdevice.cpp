@@ -58,16 +58,13 @@ Register* KTF11_A::registerPointer (BusAddress busAddress)
 
 // Return the contents of the given registers at the given destination
 // address
-StatusCode KTF11_A::read (BusAddress address, u16 *destination)
+CondData<u16> KTF11_A::read (BusAddress address)
 {
     Register* regPtr = registerPointer (address);
     if (regPtr != nullptr)
-    {
-        *destination = *regPtr;
-        return StatusCode::Success;
-    }
+        return {*regPtr, StatusCode::Success};
 
-    return StatusCode::NonExistingMemory;
+    return {StatusCode::NonExistingMemory};
 }
 
 StatusCode KTF11_A::writeWord (BusAddress address, u16 value)

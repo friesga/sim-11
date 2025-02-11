@@ -43,7 +43,7 @@ public:
     ~MS11P ();
 
     // Functions required for the BusDevice interface
-    StatusCode read (BusAddress address, u16* destAddress) override;
+    CondData<u16> read (BusAddress address) override;
     StatusCode writeWord (BusAddress address, u16 value) override;
     bool responsible (BusAddress address) override;
     void reset () override;
@@ -126,7 +126,7 @@ private:
     // Definition of the MS11-P modes
     bool diagnosticCheckMode_ {false};
 
-    void readCSR (u16* destAddress);
+    CondData<u16> readCSR ();
     void writeCSR (u16 value);
 
     BitError checkParity (BusAddress address, u8 storedCheckBits,

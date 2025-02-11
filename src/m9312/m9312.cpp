@@ -63,21 +63,21 @@ bool M9312::responsible (BusAddress address)
 // the starting address is the address specified in the address offset
 // switch bank.
 // 
-StatusCode M9312::read (BusAddress busAddress, u16* data)
+CondData<u16> M9312::read (BusAddress busAddress)
 {
     if (addressIsPowerfailVector (busAddress))
         busAddress += bootROMBaseAddress;
 
     if (busAddress == addressOffsetSwitchBankAddress)
-        return readAddressOffsetSwitchBank (data);
+        return readAddressOffsetSwitchBank ();
 
     if (addressInDiagnosticROM (busAddress))
-        return readDiagnosticROM (busAddress, data);
+        return readDiagnosticROM (busAddress);
 
     if (addressInBootRom (busAddress))
-        return readBootROM (busAddress, data);
+        return readBootROM (busAddress);
 
-    return StatusCode::NonExistingMemory;
+    return {StatusCode::NonExistingMemory};
 }
 
 StatusCode M9312::writeByte (BusAddress busAddress, u8 data)
@@ -110,33 +110,30 @@ bool M9312::addressIsPowerfailVector (BusAddress address)
     return (address == 024 || address == 026);
 }
 
-StatusCode M9312::readDiagnosticROM (BusAddress busAddress, u16* data)
+CondData<u16> M9312::readDiagnosticROM (BusAddress busAddress)
 {
     if (diagnosticROM_ == nullptr)
         return StatusCode::NonExistingMemory;
 
     u16 imageIndex = busAddress.registerAddress () - diagROMBaseAddress >> 1;
-    *data = (*diagnosticROM_)[imageIndex];
-    return StatusCode::Success;
+    return {(*diagnosticROM_)[imageIndex]};
 }
 
-StatusCode M9312::readBootROM (BusAddress busAddress, u16* data)
+CondData<u16> M9312::readBootROM (BusAddress busAddress)
 {
     u16 romNumber = getBootRomNumber (busAddress);
 
     if (bootROM_[romNumber] == nullptr)
-        return StatusCode::NonExistingMemory;
+        return {StatusCode::NonExistingMemory};
 
     u16 imageIndex = busAddress.registerAddress () - 
         bootROMBaseAddresses[romNumber] >> 1;
-    *data = (*bootROM_[romNumber])[imageIndex];
-    return StatusCode::Success;
+    return {(*bootROM_[romNumber])[imageIndex]};
 }
 
-StatusCode M9312::readAddressOffsetSwitchBank (u16* data)
+CondData<u16> M9312::readAddressOffsetSwitchBank ()
 {
-    *data = startingAddress_;
-    return StatusCode::Success;
+    return {startingAddress_};
 }
 
 void M9312::BPOKReceiver (bool signalValue)

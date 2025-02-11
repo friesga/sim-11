@@ -131,7 +131,7 @@ namespace rxv21
 		RXV21 (Bus* bus);
 		RXV21 (Bus* bus, shared_ptr<RXV21Config> rxConfig);
 		~RXV21 ();
-		StatusCode read (BusAddress address, u16 *destAddress) override;
+		CondData<u16> read (BusAddress address) override;
 		StatusCode writeWord (BusAddress address, u16 value) override;
 		bool responsible (BusAddress address) override;
 		void reset ();

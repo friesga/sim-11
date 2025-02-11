@@ -41,7 +41,7 @@ public:
 	UART (Bus* bus, UARTTypeConfig const & uartTypeConfig,
 		UARTConfig& uartConfig, u16 channelNr, ConsoleConfig consoleConfig);
 	~UART ();
-	StatusCode read (BusAddress busAddress, u16 *destAddress);
+	CondData<u16> read (BusAddress busAddress);
 	StatusCode writeWord (BusAddress busAddress, u16 value);
 	bool responsible (BusAddress address);
 	void reset ();
@@ -113,7 +113,7 @@ private:
 	condition_variable transmitter_;
 	bool charAvailable_;
 
-	void readRBUF (u16 *destAddress);
+	CondData<u16> readRBUF ();
 	void writeRCSR (u16 value);
 	void writeXCSR (u16 value);
 	void writeXBUF (u16 value);

@@ -28,14 +28,15 @@ TEST_F (KDF11_ADeviceBus, statusRegister0)
     kdf11_a.start ();
 
     // Verify SR0 initially has value 0
-    u16 value {0177777};
-    EXPECT_EQ (kdf11_a.read (SR0, &value), StatusCode::Success);
+    CondData<u16> value = kdf11_a.read (SR0);
     EXPECT_EQ (value, 0);
+    EXPECT_EQ (value.statusCode (), StatusCode::Success);
 
     // Verify a new value can be written
     EXPECT_EQ (kdf11_a.writeWord (SR0, 0177777), StatusCode::Success);
-    EXPECT_EQ (kdf11_a.read (SR0, &value), StatusCode::Success);
+    value = kdf11_a.read (SR0);
     EXPECT_EQ (value, 0177777);
+    EXPECT_EQ (value.statusCode (), StatusCode::Success);
 }
 
 // Verify SR1 is a read-only register that reads as zero and writes to the
@@ -46,14 +47,15 @@ TEST_F (KDF11_ADeviceBus, statusRegister1)
     kdf11_a.start ();
 
     // Verify SR0 initially has value 0
-    u16 value {0177777};
-    EXPECT_EQ (kdf11_a.read (SR1, &value), StatusCode::Success);
+    CondData<u16> value = kdf11_a.read (SR1);
     EXPECT_EQ (value, 0);
+    EXPECT_EQ (value.statusCode (), StatusCode::Success);
 
     // Verify a new value cannot be written
     EXPECT_EQ (kdf11_a.writeWord (SR1, 0177777), StatusCode::Success);
-    EXPECT_EQ (kdf11_a.read (SR1, &value), StatusCode::Success);
+    value = kdf11_a.read (SR1);
     EXPECT_EQ (value, 0);
+    EXPECT_EQ (value.statusCode (), StatusCode::Success);
 }
 
 // Verify an illegal address is detected
@@ -62,8 +64,8 @@ TEST_F (KDF11_ADeviceBus, illegalAddress)
     // The KDF11-A has to be started to be able to process the exit event
     kdf11_a.start ();
 
-    u16 value {0177777};
-    EXPECT_EQ (kdf11_a.read (0176600, &value), StatusCode::NonExistingMemory);
+    CondData<u16> value = kdf11_a.read (0176600);
+    EXPECT_EQ (value.statusCode (), StatusCode::NonExistingMemory);
 }
 
 // Verify Kernel PAR register 7 can be read and written
@@ -73,14 +75,15 @@ TEST_F (KDF11_ADeviceBus, kernelPAR7)
     kdf11_a.start ();
 
     // Verify PAR initially has value 0
-    u16 value {0177777};
-    EXPECT_EQ (kdf11_a.read (KernelPar7, &value), StatusCode::Success);
+    CondData<u16> value = kdf11_a.read (KernelPar7);
     EXPECT_EQ (value, 0);
+    EXPECT_EQ (value.statusCode (), StatusCode::Success);
 
     // Verify a new value can be written
     EXPECT_EQ (kdf11_a.writeWord (KernelPar7, 0177777), StatusCode::Success);
-    EXPECT_EQ (kdf11_a.read (KernelPar7, &value), StatusCode::Success);
+    value = kdf11_a.read (KernelPar7);
     EXPECT_EQ (value, 0177777);
+    EXPECT_EQ (value.statusCode (), StatusCode::Success);
 }
 
 // Verify Kernel D space PDR 0 is not present
@@ -89,8 +92,8 @@ TEST_F (KDF11_ADeviceBus, kernelDSpaceNotPresent)
     // The KDF11-A has to be started to be able to process the exit event
     kdf11_a.start ();
 
-    u16 value {0177777};
-    EXPECT_EQ (kdf11_a.read (KernelDspacePDR0, &value), StatusCode::NonExistingMemory);
+    CondData<u16> value = kdf11_a.read (KernelDspacePDR0);
+    EXPECT_EQ (value.statusCode (), StatusCode::NonExistingMemory);
 }
 
 // Verify SR2 is read-only
@@ -100,14 +103,15 @@ TEST_F (KDF11_ADeviceBus, statusRegister2)
     kdf11_a.start ();
 
     // Verify SR2 initially has value 0
-    u16 value {0177777};
-    EXPECT_EQ (kdf11_a.read (SR2, &value), StatusCode::Success);
+    CondData<u16> value = kdf11_a.read (SR2);
     EXPECT_EQ (value, 0);
+    EXPECT_EQ (value.statusCode (), StatusCode::Success);
 
     // Verify a new value cannot be written
     EXPECT_EQ (kdf11_a.writeWord (SR2, 0177777), StatusCode::Success);
-    EXPECT_EQ (kdf11_a.read (SR2, &value), StatusCode::Success);
+    value = kdf11_a.read (SR2);
     EXPECT_EQ (value, 0);
+    EXPECT_EQ (value.statusCode (), StatusCode::Success);
 }
 
 // Verify PSW can be read and written without the T-bit being set
@@ -117,12 +121,13 @@ TEST_F (KDF11_ADeviceBus, ProcessorStatusWord)
     kdf11_a.start ();
 
     // Verify SR0 initially has value 0
-    u16 value {0177777};
-    EXPECT_EQ (kdf11_a.read (PSW, &value), StatusCode::Success);
+    CondData<u16> value = kdf11_a.read (PSW);
     EXPECT_EQ (value, 0);
+    EXPECT_EQ (value.statusCode (), StatusCode::Success);
 
     // Verify a new value can be written
     EXPECT_EQ (kdf11_a.writeWord (PSW, 0177777), StatusCode::Success);
-    EXPECT_EQ (kdf11_a.read (PSW, &value), StatusCode::Success);
+    value = kdf11_a.read (PSW);
     EXPECT_EQ (value, 0177757);
+    EXPECT_EQ (value.statusCode (), StatusCode::Success);
 }

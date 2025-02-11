@@ -64,7 +64,7 @@ protected:
         do
         {
             SimulatorClock::forwardClock (100ms);
-            rlv12Device->read (RLCSR, &result);
+            result = rlv12Device->read (RLCSR);
         }
         while (!(result & CSR_ControllerReady));
     }
@@ -114,8 +114,7 @@ TEST_F (RLV12VolumeCheck, volumeCheckReported)
     waitForControllerReady ();
 
     // Expected volume check reported in the MPR register
-    u16 mpr;
-    rlv12Device->read (RLMPR, &mpr);
+    u16 mpr = rlv12Device->read (RLMPR);
     ASSERT_EQ (mpr & MPR_VolumeCheck, MPR_VolumeCheck);
 }
 
@@ -158,8 +157,7 @@ TEST_F (RLV12VolumeCheck, readDataWithVolumeCheckReportsDriveError)
     waitForControllerReady ();
 
     // Verify the controller reports a drive error
-    u16 csr;
-    rlv12Device->read (RLCSR, &csr);
+    u16 csr = rlv12Device->read (RLCSR);
     ASSERT_EQ (csr & (CSR_ControllerReady | CSR_DriveReady | 
         CSR_DriveError | CSR_CompositeError),
         CSR_ControllerReady | CSR_DriveReady |
@@ -199,8 +197,7 @@ TEST_F (RLV12VolumeCheck, volumeCheckIsReset)
     waitForControllerReady ();
 
     // Expected no volume check reported in the MPR register
-    u16 mpr;
-    rlv12Device->read (RLMPR, &mpr);
+    u16 mpr = rlv12Device->read (RLMPR);
     ASSERT_EQ (mpr & MPR_VolumeCheck, 0);
 }
 
@@ -252,8 +249,7 @@ TEST_F (RLV12VolumeCheck, noDataReadOnVolumeCheck)
     waitForControllerReady ();
 
     // Verify the controller reports a drive error
-    u16 csr;
-    rlv12Device->read (RLCSR, &csr);
+    u16 csr = rlv12Device->read (RLCSR);
     ASSERT_EQ (csr & (CSR_ControllerReady | CSR_DriveReady |
         CSR_DriveError | CSR_CompositeError),
         CSR_ControllerReady | CSR_DriveReady |

@@ -36,11 +36,10 @@ protected:
 //
 TEST_F (KDF11_A_PSWTEST, PswCanBeAccessedViaAddress)
 {
-    u16 psw;
-
     kdf11a->writeWord (PswAddress, 0177777);
-    EXPECT_EQ (kdf11a->read (PswAddress, &psw), StatusCode::Success);
+    CondData<u16> psw = kdf11a->read (PswAddress);
     EXPECT_EQ (psw, 0177757);
+    EXPECT_EQ (psw.statusCode (), StatusCode::Success);
 }
 
 
@@ -61,9 +60,9 @@ TEST_F (KDF11_A_PSWTEST, MOVDoesNotSetCC)
     EXPECT_TRUE (visit (KDF11::Executor {kdf11a->cpuData (), kdf11a->cpuControl (), kdf11a->mmu ()},
         instruction));
     
-    u16 psw;
-    EXPECT_EQ (kdf11a->read (PswAddress, &psw), StatusCode::Success);
+    CondData<u16> psw = kdf11a->read (PswAddress);
     EXPECT_EQ (psw, 0);
+    EXPECT_EQ (psw.statusCode (), StatusCode::Success);
 }
 
 
@@ -84,9 +83,9 @@ TEST_F (KDF11_A_PSWTEST, MOVBDoesNotSetCC)
     EXPECT_TRUE (visit (KDF11::Executor {kdf11a->cpuData (), kdf11a->cpuControl (), kdf11a->mmu ()},
         instruction));
     
-    u16 psw;
-    EXPECT_EQ (kdf11a->read (PswAddress, &psw), StatusCode::Success);
+    CondData<u16> psw = kdf11a->read (PswAddress);
     EXPECT_EQ (psw, 0177400);
+    EXPECT_EQ (psw.statusCode (), StatusCode::Success);
 }
 
 // Verify that a CLR @#PS instruction actually clears the PSW (and does
@@ -105,9 +104,9 @@ TEST_F (KDF11_A_PSWTEST, CLRDoesNotSetCC)
     EXPECT_TRUE (visit (KDF11::Executor {kdf11a->cpuData (), kdf11a->cpuControl (), kdf11a->mmu ()},
         instruction));
     
-    u16 psw;
-    EXPECT_EQ (kdf11a->read (PswAddress, &psw), StatusCode::Success);
+    CondData<u16> psw = kdf11a->read (PswAddress);
     EXPECT_EQ (psw, 0);
+    EXPECT_EQ (psw.statusCode (), StatusCode::Success);
 }
 
 // Verify that a CLRB @#PS instruction actually clears the PSW (and does
@@ -125,7 +124,7 @@ TEST_F (KDF11_A_PSWTEST, CLRBDoesNotSetCC)
 
     EXPECT_TRUE (visit (KDF11::Executor {kdf11a->cpuData (), kdf11a->cpuControl (), kdf11a->mmu ()},
         instruction));    
-    u16 psw;
-    EXPECT_EQ (kdf11a->read (PswAddress, &psw), StatusCode::Success);
+    CondData<u16> psw = kdf11a->read (PswAddress);
     EXPECT_EQ (psw, 0177400);
+    EXPECT_EQ (psw.statusCode (), StatusCode::Success);
 }

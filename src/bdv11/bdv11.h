@@ -69,7 +69,7 @@ public:
 	BDV11 (Bus *bus);
 	BDV11 (Bus *bus, shared_ptr<BDV11Config> bdv11Config);
 	~BDV11 ();
-	StatusCode read (BusAddress address, u16 *destAddress) override;
+	CondData<u16> read (BusAddress address) override;
 	StatusCode writeWord (BusAddress address, u16 value) override;
 	bool responsible (BusAddress address) override;
 	void reset ();

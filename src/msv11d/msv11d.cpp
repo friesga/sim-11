@@ -37,13 +37,12 @@ MSV11D::~MSV11D ()
 	delete[] data;
 }
 
-StatusCode MSV11D::read (BusAddress address, u16 *destAddress)
+CondData<u16> MSV11D::read (BusAddress address)
 {
 	// Get the contents of the specified address via a u16 pointer
 	// as data is an array of bytes.
 	u16* mem = (u16*) &data[address - startingAddress_];
-	*destAddress = *mem;
-	return StatusCode::Success;
+	return {*mem, StatusCode::Success};
 }
 
 StatusCode MSV11D::writeWord (BusAddress address, u16 value)

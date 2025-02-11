@@ -1,8 +1,8 @@
 #include "displayregister.h"
 
-StatusCode DisplayRegister::read (BusAddress address, u16* destination)
+CondData<u16> DisplayRegister::read (BusAddress address)
 {
-    return StatusCode::NonExistingMemory;
+    return {StatusCode::NonExistingMemory};
 }
 
 StatusCode DisplayRegister::writeWord (BusAddress address, u16 value)

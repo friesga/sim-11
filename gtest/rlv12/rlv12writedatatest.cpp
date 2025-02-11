@@ -73,7 +73,7 @@ protected:
         do
         {
             SimulatorClock::forwardClock (100ms);
-            rlv12Device->read (RLCSR, &result);
+            result = rlv12Device->read (RLCSR);
         }
         while (!(result & CSR_ControllerReady));
     }
@@ -119,8 +119,7 @@ TEST_F (RLV12WriteDataTest, writeDataSucceeds)
     bus.writeWord (address, 1);
     
     // Verify controller and drive are ready
-    u16 result;
-    rlv12Device->read (RLCSR, &result);
+    u16 result = rlv12Device->read (RLCSR);
     ASSERT_EQ (result & (CSR_ControllerReady | CSR_DriveReady), 
         CSR_ControllerReady | CSR_DriveReady);
 
@@ -142,7 +141,7 @@ TEST_F (RLV12WriteDataTest, writeDataSucceeds)
 
     // Verify now both controller and drive are ready and no error is
     // indicated
-    rlv12Device->read (RLCSR, &result);
+    result = rlv12Device->read (RLCSR);
     ASSERT_EQ (result & 
         (CSR_CompositeError | CSR_ControllerReady | CSR_DriveReady),
         CSR_ControllerReady | CSR_DriveReady);
@@ -160,7 +159,7 @@ TEST_F (RLV12WriteDataTest, writeDataSucceeds)
     waitForControllerReady ();
 
     // Verify Read Data is executed without errors
-    rlv12Device->read (RLCSR, &result);
+    result = rlv12Device->read (RLCSR);
     ASSERT_EQ (result & 
         (CSR_CompositeError | CSR_ControllerReady | CSR_DriveReady),
         CSR_ControllerReady | CSR_DriveReady);
@@ -207,8 +206,7 @@ TEST_F (RLV12WriteDataTest, partialWriteDataSucceeds)
         bus.writeWord (address, 0177777);
     
     // Verify controller and drive are ready
-    u16 result;
-    rlv12Device->read (RLCSR, &result);
+    u16 result = rlv12Device->read (RLCSR);
     ASSERT_EQ (result & (CSR_ControllerReady | CSR_DriveReady), 
         CSR_ControllerReady | CSR_DriveReady);
 
@@ -222,7 +220,7 @@ TEST_F (RLV12WriteDataTest, partialWriteDataSucceeds)
 
     // Verify now both controller and drive are ready and no error is
     // indicated
-    rlv12Device->read (RLCSR, &result);
+    result = rlv12Device->read (RLCSR);
     ASSERT_EQ (result & 
         (CSR_CompositeError | CSR_ControllerReady | CSR_DriveReady),
         CSR_ControllerReady | CSR_DriveReady);
@@ -241,7 +239,7 @@ TEST_F (RLV12WriteDataTest, partialWriteDataSucceeds)
     waitForControllerReady ();
 
     // Verify Read Data is executed without errors
-    rlv12Device->read (RLCSR, &result);
+    result = rlv12Device->read (RLCSR);
     ASSERT_EQ (result & 
         (CSR_CompositeError | CSR_ControllerReady | CSR_DriveReady),
         CSR_ControllerReady | CSR_DriveReady);
@@ -291,8 +289,7 @@ TEST_F (RLV12WriteDataTest, writeDataOnWriteProtectedDriveFails)
     bus.writeWord (address, 1);
 
     // Verify controller and drive are ready
-    u16 result;
-    rlv12Device->read (RLCSR, &result);
+    u16 result = rlv12Device->read (RLCSR);
     ASSERT_EQ (result & (CSR_ControllerReady | CSR_DriveReady),
         CSR_ControllerReady | CSR_DriveReady);
 
@@ -316,7 +313,7 @@ TEST_F (RLV12WriteDataTest, writeDataOnWriteProtectedDriveFails)
     // Verify now both controller and drive are ready and the CSR indicates
     // a drive error. Drive Ready should be negated when a drive error occurs
     // (EK-RLV12-TD-001 par. 3.2.2.7).
-    rlv12Device->read (RLCSR, &result);
+    result = rlv12Device->read (RLCSR);
     ASSERT_EQ (result & 
         (CSR_CompositeError | CSR_DriveError | CSR_ControllerReady | CSR_DriveReady),
          CSR_CompositeError | CSR_DriveError | CSR_ControllerReady);
@@ -335,8 +332,7 @@ TEST_F (RLV12WriteDataTest, writeDataOnWriteProtectedDriveFails)
 
     // Expected result in the MPR register: heads locked on a cylinder,
     // Write Gate Error and Drive Type RL01
-    u16 mpr;
-    rlv12Device->read (RLMPR, &mpr);
+    u16 mpr = rlv12Device->read (RLMPR);
     ASSERT_EQ (mpr, MPR_WriteLock | MPR_WriteGateError | MPR_HeadsOut |
         MPR_BrushHome | MPR_LockOn);
 }

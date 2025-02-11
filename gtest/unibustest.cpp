@@ -82,7 +82,7 @@ TEST (UnibusTest, _18bitAddresWriteWordIsMapped)
     KT24 kt24 (&bus);
 
     u16 dataWritten {0177777};
-    u16 dataRead {0};
+    CondData<u16> dataRead {0};
 
     // Install devices on the bus
     bus.installModule (&ms11p);
@@ -95,8 +95,9 @@ TEST (UnibusTest, _18bitAddresWriteWordIsMapped)
 
     // 074000 -> 010000
     EXPECT_TRUE (bus.writeWord (BusAddress (0740000, BusAddress::Width::_18Bit), dataWritten));
-    EXPECT_EQ (ms11p.read (010000, &dataRead), StatusCode::Success);
+    dataRead = ms11p.read (010000);
     EXPECT_EQ (dataWritten, dataRead);
+    EXPECT_EQ (dataRead.statusCode (), StatusCode::Success);
 }
 
 TEST (UnibusTest, _22bitAddresWithHighestBitSetWriteWordIsMapped)
@@ -106,7 +107,7 @@ TEST (UnibusTest, _22bitAddresWithHighestBitSetWriteWordIsMapped)
     KT24 kt24 (&bus);
 
     u16 dataWritten {0177777};
-    u16 dataRead {0};
+    CondData<u16> dataRead {0};
 
     // Install devices on the bus
     bus.installModule (&ms11p);
@@ -119,6 +120,7 @@ TEST (UnibusTest, _22bitAddresWithHighestBitSetWriteWordIsMapped)
 
     // 01774000 -> 010000
     EXPECT_TRUE (bus.writeWord (BusAddress (017740000, BusAddress::Width::_18Bit), dataWritten));
-    EXPECT_EQ (ms11p.read (010000, &dataRead), StatusCode::Success);
+    dataRead = ms11p.read (010000);
     EXPECT_EQ (dataWritten, dataRead);
+    EXPECT_EQ (dataRead.statusCode (), StatusCode::Success);
 }

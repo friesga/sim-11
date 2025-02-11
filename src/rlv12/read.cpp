@@ -9,37 +9,37 @@
  *  17774406 RLMP    read/write
  *  17774410 RLBAE   read/write
  */
-StatusCode RLV12::read (BusAddress busAddress, u16* data)
+CondData<u16> RLV12::read (BusAddress busAddress)
 {
     // Decode registerAddress<3:1>
     switch (busAddress.registerAddress () & 016)
     {
         case CSR:
+        {
             // Control/Status Register
             // Add the Drive Ready and Drive Error bits to the CSR be 
             // returned. This avoids having to change the actual CSR and
             // having to lock the controller mutex.
-            *data = rlcsPlusDriveStatus (units_[RLV12const::getDrive (csr_)]);
-            trace.rlv12Registers ("read CSR", *data, bar_, dar_, 
+            u16 data = rlcsPlusDriveStatus (units_[RLV12const::getDrive (csr_)]);
+            trace.rlv12Registers ("read CSR", data, bar_, dar_,
                 dataBuffer_[0], bae_);
-            break;
+            return {data};
+        }
 
         case BAR:
             // Bus Address register
-            *data = bar_ & RLV12const::BAR_Mask;
-            break;
+            return {static_cast<u16> (bar_ & RLV12const::BAR_Mask)};
 
         case DAR:
             // Disk Address register
-            *data = dar_;
-            break;
+            return {dar_};
 
         case MPR: 
             // Multipurpose register
             // *data = rlmpr;
             // rlmpr = rlmpr1;         // ripple data
             // rlmpr1 = rlmpr2;
-            *data = dataBuffer_[fifoIndex_++];
+            return {dataBuffer_[fifoIndex_++]};
             break;
 
         case BAE:
@@ -49,7 +49,7 @@ StatusCode RLV12::read (BusAddress busAddress, u16* data)
             if (!(rlType_ == RLV12const::RLType::RLV12 && _22bit_))
                return StatusCode::NonExistingMemory;
 
-            *data = bae_ & RLV12const::BAE_Mask;
+            return {static_cast<u16> (bae_ & RLV12const::BAE_Mask)};
             break;
 
         default:

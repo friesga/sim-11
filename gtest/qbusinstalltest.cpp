@@ -11,10 +11,9 @@ class DummyBusDevice : public BusDevice
 {
 public:
 	DummyBusDevice (int id) : id_ {id} {}
-	StatusCode read (BusAddress address, u16* destination)
+	CondData<u16> read (BusAddress address)
 	{
-		*destination = id_;
-		return StatusCode::Success;
+		return {static_cast<u16> (id_), StatusCode::Success};
 	}
 	StatusCode writeWord (BusAddress address, u16 value) { return StatusCode::Success; }
 	StatusCode writeByte (BusAddress address, u8 value) { return StatusCode::Success; }
@@ -51,15 +50,17 @@ TEST (QbusInstallTest, devicesCanBeInstalled)
 
 	// Verify all devices are installed in their expected slot
 	int slotId {0};
-	u16 deviceId;
+	CondData<u16> deviceId;
 	for (auto slot : testBus)
 	{
-		EXPECT_EQ (slot->read (0, &deviceId), StatusCode::Success);
+		deviceId = slot->read (0);
+		EXPECT_EQ (deviceId.statusCode (), StatusCode::Success);
 		EXPECT_EQ (deviceId, slotId++);
 	}
 
 	auto module = *testBus[0];
-	EXPECT_EQ (module->read (0, &deviceId), StatusCode::Success);
+	deviceId = module->read (0);
+	EXPECT_EQ (deviceId.statusCode (), StatusCode::Success);
 	EXPECT_EQ (deviceId, 0);
 }
 
@@ -138,10 +139,11 @@ TEST (QbusInstallTest, deviceCanBeInstalledAtOccupiedPosition)
 	// Verify all devices are installed in their expected slot
 	array<int, 6> expectedDeviceIds {10, 0, 1, 2, 3, 4};
 	int slotId {0};
-	u16 deviceId;
+	CondData<u16> deviceId;
 	for (auto device : testBus)
 	{
-		EXPECT_EQ (device->read (0, &deviceId), StatusCode::Success);
+		deviceId = device->read (0);
+		EXPECT_EQ (deviceId.statusCode (), StatusCode::Success);
 		EXPECT_EQ (deviceId, expectedDeviceIds[slotId++]);
 	}
 }

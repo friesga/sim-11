@@ -19,11 +19,11 @@ SerialLineUnits::SerialLineUnits (Bus *bus,
     bus->BINIT().subscribe (bind (&SerialLineUnits::BINITReceiver, this, _1));
 }
 
-StatusCode SerialLineUnits::read (BusAddress address, u16 *destination)
+CondData<u16> SerialLineUnits::read (BusAddress address)
 {
     auto slu = find_if (uarts_, [address] (auto &uart)
         {return uart->responsible (address);} );
-    return (*slu)->read (address, destination);
+    return (*slu)->read (address);
 
 }
 

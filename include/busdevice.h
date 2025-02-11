@@ -4,6 +4,7 @@
 #include "types.h"
 #include "statuscodes.h"
 #include "busaddress/busaddress.h"
+#include "conddata/conddata.h"
 
 // Definition of the functions every Qbus module must provide.
 //
@@ -27,7 +28,7 @@
 class BusDevice
 {
 public:
-	virtual StatusCode read (BusAddress address, u16 *destination) = 0;
+	virtual CondData<u16> read (BusAddress address) = 0;
 	virtual StatusCode writeWord (BusAddress address, u16 value) = 0;
 	virtual StatusCode writeByte (BusAddress address, u8 value) = 0;
 	virtual bool responsible (BusAddress address) = 0;

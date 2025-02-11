@@ -163,48 +163,44 @@ void BDV11::memoryDump (u16 pcr, int hi)
 	}
 }
 
-StatusCode BDV11::read (BusAddress busAddress, u16 *destAddress)
+CondData<u16> BDV11::read (BusAddress busAddress)
 {
 	switch (busAddress.registerAddress ()) 
 	{
 		case PCR:
 			// Page Control Register
-			*destAddress = pcr;
-			break;
+			return {pcr, StatusCode::Success};
 
 		case RWR:
 			// Read/Write Register
-			*destAddress = scratch;
-			break;
+			return {scratch, StatusCode::Success};
 
 		case SDR:
 			// Switch and Display Register
-			*destAddress = switchRegister_;
-			break;
+			return {switchRegister_, StatusCode::Success};
 
 		case LKS:
 			// Line Clock Status Register. According to the BDV11 technical
 			// manual (EK-BDV11-TM-001) this is a write-only register.
-			*destAddress = ltc;
-			break;
+			return {ltc, StatusCode::Success};
 
 		default:
 			if (busAddress.registerAddress () >= 0173000 && 
 				busAddress.registerAddress () < 0173400)
 			{
-				*destAddress = getWordLow ((busAddress.registerAddress () - 0173000) / 2);
-				break;
+				return {getWordLow ((busAddress.registerAddress () - 0173000) / 2),
+					StatusCode::Success};
 			} 
 			else if (busAddress.registerAddress () >= 0173400 &&
 				busAddress.registerAddress () <= 0173776) 
 			{
-				*destAddress = getWordHigh ((busAddress.registerAddress () - 0173400) / 2);
-				break;
+				return {getWordHigh ((busAddress.registerAddress () - 0173400) / 2), 
+                    StatusCode::Success};
 			}
 			else
-				return StatusCode::NonExistingMemory;
+				return {StatusCode::NonExistingMemory};
 	}
-	return StatusCode::Success;
+	return {StatusCode::Success};
 }
 
 StatusCode BDV11::writeWord (BusAddress busAddress, u16 value)

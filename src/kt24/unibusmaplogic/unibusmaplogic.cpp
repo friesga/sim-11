@@ -30,29 +30,26 @@ void UnibusMapLogic::disable ()
     ioMapEnabled_ = false;
 }
 
-StatusCode UnibusMapLogic::read (BusAddress address, u16* destination)
+CondData<u16> UnibusMapLogic::read (BusAddress address)
 {
     u16 registerAddress= address.registerAddress ();
 
     switch (findRegister (registerAddress))
     {
         case MappingRegister:
-            readMappingRegister (registerAddress, destination);
-            break;
+            return readMappingRegister (registerAddress);
 
         case LMARegister:
-            readLMARegister (registerAddress, destination);
-            break;
+            return readLMARegister (registerAddress);
 
         case CpuErrorRegister:
-            *destination = cpuErrorRegister_;
-            break;
+            return {cpuErrorRegister_};
 
         default:
             throw "Should not happen";
     }
 
-    return StatusCode::Success;
+    return {StatusCode::Success};
 }
 
 StatusCode UnibusMapLogic::writeWord (BusAddress address, u16 value)
@@ -83,8 +80,7 @@ StatusCode UnibusMapLogic::writeWord (BusAddress address, u16 value)
 StatusCode UnibusMapLogic::writeByte (BusAddress address, u8 value)
 {
     BusAddress wordAddress = address & 0xFFFFFFFE;
-    u16 tmp;
-    read (wordAddress, &tmp);
+    u16 tmp = read (wordAddress);
     if (address & static_cast<u32> (1))
         tmp = (tmp & 0x00FF) | (value << 8);
     else
@@ -114,22 +110,20 @@ UnibusMapLogic::UBMLRegisters UnibusMapLogic::findRegister (BusAddress address) 
     return UnibusMapLogic::End;
 }
 
-void UnibusMapLogic::readMappingRegister (u16 registerAddress, u16* destination)
+CondData<u16> UnibusMapLogic::readMappingRegister (u16 registerAddress)
 {
     if (isLowRegister (registerAddress))
-        *destination =
-            mappingRegisters_[indexFromRegisterAddress (registerAddress)].low;
+        return {mappingRegisters_[indexFromRegisterAddress (registerAddress)].low};
     else 
-        *destination =
-            mappingRegisters_[indexFromRegisterAddress (registerAddress)].high;
+        return {mappingRegisters_[indexFromRegisterAddress (registerAddress)].high};
 }
 
-void UnibusMapLogic::readLMARegister (u16 registerAddress, u16* destination)
+CondData<u16> UnibusMapLogic::readLMARegister (u16 registerAddress)
 {
     if (isLowRegister (registerAddress))
-        *destination = lmaRegister_.low;
+        return {lmaRegister_.low};
     else
-        *destination = lmaRegister_.high;
+        return {lmaRegister_.high};
 }
 
 // The mapping registers are 21-bits wide and are stored in two 16-bit words,

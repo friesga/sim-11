@@ -90,35 +90,35 @@ bool UART::responsible (BusAddress address)
 
 // This function allows the host system to read a word from one of the
 // UART's registers.
-StatusCode UART::read (BusAddress busAddress, u16 *destAddress)
+CondData<u16> UART::read (BusAddress busAddress)
 {
 	lock_guard<mutex> lock {registerAccessMutex_};
 
 	switch (busAddress.registerAddress () & 06)
 	{
 		case RCSR:
-			*destAddress = rcsr;
+			return {rcsr, StatusCode::Success};
 			break;
 
 		case RBUF:
-			readRBUF (destAddress);
+			return readRBUF ();
 			break;
 
 		case XCSR:
-			*destAddress = xcsr;
+			return {xcsr, StatusCode::Success};
 			break;
 
 		case XBUF:
-			*destAddress = xbuf;
+			return {xbuf, StatusCode::Success};
 			break;
 
 		default:
-			return StatusCode::NonExistingMemory;
+			return {StatusCode::NonExistingMemory};
 	}
 	return StatusCode::Success;
 }
 
-void UART::readRBUF (u16 *destAddress)
+CondData<u16> UART::readRBUF ()
 {
 	if (!receiveBuffer_.empty ())
 	{
@@ -127,11 +127,11 @@ void UART::readRBUF (u16 *destAddress)
 		trace.dlv11 (DLV11RecordType::DLV11_RX, channelNr_, rbuf);
 	} 
 
-	*destAddress = rbuf;
-
 	trace.dlv11 (DLV11RecordType::DLV11_CL_RXI, channelNr_, rcsr);
 	bus_->clearInterrupt (TrapPriority::BR4, 6, 
 		interruptPriority (Function::Receive, channelNr_));
+
+	return {rbuf, StatusCode::Success};
 }
 
 // This function allows the processor to write a word to one of the

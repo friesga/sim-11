@@ -65,7 +65,7 @@ protected:
         do
         {
             SimulatorClock::forwardClock (100ms);
-            rlv12Device->read (RLCSR, &result);
+            result = rlv12Device->read (RLCSR);
         }
         while (!(result & CSR_ControllerReady));
     }
@@ -114,8 +114,7 @@ TEST_F (RLV12ReadDataTest, readDataSucceeds)
 
     // Verify the controller is ready to perform an operation (the drive
     // does not have to be ready)
-    u16 result;
-    rlv12Device->read (RLCSR, &result);
+    u16 result = rlv12Device->read (RLCSR);
     ASSERT_EQ (result & CSR_ControllerReady, CSR_ControllerReady);
 
     // Point at memory address 0
@@ -135,7 +134,7 @@ TEST_F (RLV12ReadDataTest, readDataSucceeds)
     waitForControllerReady ();
 
     // Verify now both controller and drive are ready
-    rlv12Device->read (RLCSR, &result);
+    result = rlv12Device->read (RLCSR);
     ASSERT_EQ (result & (CSR_ControllerReady | CSR_DriveReady), 
         CSR_ControllerReady | CSR_DriveReady);
 
@@ -157,8 +156,7 @@ TEST_F (RLV12ReadDataTest, readDataSucceeds)
 TEST_F (RLV12ReadDataTest, readDataFails)
 {
     // Verify the controller and drive are ready
-    u16 result;
-    rlv12Device->read (RLCSR, &result);
+    u16 result = rlv12Device->read (RLCSR);
     ASSERT_EQ (result & (CSR_ControllerReady | CSR_DriveReady), 
         CSR_ControllerReady | CSR_DriveReady);
 
@@ -186,7 +184,7 @@ TEST_F (RLV12ReadDataTest, readDataFails)
     waitForControllerReady ();
 
     // Verify the CSR indicates an error
-    rlv12Device->read (RLCSR, &result);
+    result = rlv12Device->read (RLCSR);
     ASSERT_EQ (result & (CSR_CompositeError | CSR_OperationIncomplete),
         CSR_CompositeError | CSR_OperationIncomplete);
 }
@@ -195,8 +193,7 @@ TEST_F (RLV12ReadDataTest, readDataFails)
 TEST_F (RLV12ReadDataTest, spiralReadFails)
 {
     // Verify controller and drive are ready
-    u16 result;
-    rlv12Device->read (RLCSR, &result);
+    u16 result = rlv12Device->read (RLCSR);
     ASSERT_EQ (result & (CSR_ControllerReady | CSR_DriveReady), 
         CSR_ControllerReady | CSR_DriveReady);
 
@@ -216,7 +213,7 @@ TEST_F (RLV12ReadDataTest, spiralReadFails)
     waitForControllerReady ();
 
     // Verify an error is reported
-    rlv12Device->read (RLCSR, &result);
+    result = rlv12Device->read (RLCSR);
     ASSERT_EQ (result & CSR_CompositeError, CSR_CompositeError);
 
     // The first 256 bytes should be read from disk
