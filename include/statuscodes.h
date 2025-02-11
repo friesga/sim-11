@@ -11,10 +11,8 @@ enum class StatusCode
     FunctionNotImplemented,
     IOError,
     NonExistingMemory,
-    NotAttachable,
     OpenError,
     ReadOnly,
-    ReadOnlyNotAllowed,
     UnAttached
 };
 
