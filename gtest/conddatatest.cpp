@@ -30,6 +30,30 @@ TEST (CondDataTest, objectCanBeConstructedWithValue)
     EXPECT_TRUE (cd0.hasValue ());
 }
 
+TEST (CondDataTest, objectCanBeConstructedWithStatusCode)
+{
+    CondData<int> cd0 {StatusCode::NonExistingMemory};
+    EXPECT_FALSE (cd0.hasValue ());
+    EXPECT_EQ (cd0.statusCode (), StatusCode::NonExistingMemory);
+}
+
+TEST (CondDataTest, objectCanBeCopyConstructed)
+{
+    CondData<int> cd0 {5};
+    CondData<int> cd1 {cd0};
+    EXPECT_EQ (cd0.value (), cd1.value ());
+    EXPECT_EQ (cd0.statusCode (), cd1.statusCode ());
+}
+
+TEST (CondDataTest, objectCanBeCopied)
+{
+    CondData<int> cd0 {5, StatusCode::ArgumentError};
+    CondData<int> cd1 {10, StatusCode::Success};
+    cd0 = cd1;
+    EXPECT_EQ (cd0.value (), 10);
+    EXPECT_EQ (cd0.statusCode (), StatusCode::Success);
+}
+
 TEST (CondDataTest, objectCanBeAssignedTo)
 {
     CondData<int> cd0;
@@ -69,14 +93,6 @@ TEST (CondDataTest, objectCanBeSubtractedFromAndAssignedTo)
     EXPECT_TRUE (cd0 == 4);
 }
 
-TEST (CondDataTest, objectCanBeCopied)
-{
-    CondData<int> cd0 {6};
-    CondData<int> cd1;
-    cd1 = cd0;
-    EXPECT_TRUE (cd1 == 6);
-}
-
 TEST (CondDataTest, objectCanBeCopiedToAnotherType)
 {
     CondData<short> cd0 {6};
@@ -84,6 +100,7 @@ TEST (CondDataTest, objectCanBeCopiedToAnotherType)
     cd1 = cd0;
     EXPECT_TRUE (cd1.hasValue ());
 }
+
 
 // The following two tests are not verifying CondData functionality.
 // In the tests a CondData object is converted to the native type on which
