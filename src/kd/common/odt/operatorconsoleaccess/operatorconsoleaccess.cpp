@@ -32,7 +32,7 @@ CondData<u8> OperatorConsoleAccess::read ()
         SimulatorClock::forwardClock (microseconds (50));
 
     // Read the character
-    return (readDLV11J (0177562));
+    return static_cast<u8> (readDLV11J (0177562) & 0377);
 }
 
 // Determine if the DLV11J is ready to accept a character
