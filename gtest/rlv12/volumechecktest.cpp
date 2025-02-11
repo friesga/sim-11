@@ -96,7 +96,7 @@ TEST_F (RLV12VolumeCheck, volumeCheckReported)
 
     // Attach a new disk to unit 0
     ASSERT_EQ (rlv12Device->unit (0)->init (make_shared<RLUnitConfig> (rlUnitConfig)),
-        StatusCode::OK);
+        StatusCode::Success);
 
     // Verify the controller is ready to perform an operation (the drive
     // does not have to be ready)
@@ -134,7 +134,7 @@ TEST_F (RLV12VolumeCheck, readDataWithVolumeCheckReportsDriveError)
 
     // Attach a new disk to unit 0
     ASSERT_EQ (rlv12Device->unit (0)->init (make_shared<RLUnitConfig> (rlUnitConfig)),
-        StatusCode::OK);
+        StatusCode::Success);
 
     // Verify the controller is ready to perform an operation (the drive
     // does not have to be ready)
@@ -181,7 +181,7 @@ TEST_F (RLV12VolumeCheck, volumeCheckIsReset)
 
     // Attach a new disk to unit 0
     ASSERT_EQ (rlv12Device->unit (0)->init (make_shared<RLUnitConfig> (rlUnitConfig)),
-        StatusCode::OK);
+        StatusCode::Success);
 
     // Verify the controller is ready to perform an operation (the drive
     // does not have to be ready)
@@ -220,7 +220,7 @@ TEST_F (RLV12VolumeCheck, noDataReadOnVolumeCheck)
 
     // Attach a new disk to unit 0
     ASSERT_EQ (rlv12Device->unit (0)->init (make_shared<RLUnitConfig> (rlUnitConfig)),
-        StatusCode::OK);
+        StatusCode::Success);
 
     // Fill 512 bytes of memory with the value 0xff and write a mark at
     // address 512 to be able to verify the memory is not overwritten by the

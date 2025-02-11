@@ -115,7 +115,7 @@ StatusCode UART::read (BusAddress busAddress, u16 *destAddress)
 		default:
 			return StatusCode::NonExistingMemory;
 	}
-	return StatusCode::OK;
+	return StatusCode::Success;
 }
 
 void UART::readRBUF (u16 *destAddress)
@@ -171,7 +171,7 @@ StatusCode UART::writeWord (BusAddress busAddress, u16 value)
 			break;
 	}
 
-	return StatusCode::OK;
+	return StatusCode::Success;
 }
 
 // Reader Enable - Write only bit - Setting this bit [...] clears receiver

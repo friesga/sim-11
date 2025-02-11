@@ -29,12 +29,12 @@ TEST_F (KDF11_ADeviceBus, statusRegister0)
 
     // Verify SR0 initially has value 0
     u16 value {0177777};
-    EXPECT_EQ (kdf11_a.read (SR0, &value), StatusCode::OK);
+    EXPECT_EQ (kdf11_a.read (SR0, &value), StatusCode::Success);
     EXPECT_EQ (value, 0);
 
     // Verify a new value can be written
-    EXPECT_EQ (kdf11_a.writeWord (SR0, 0177777), StatusCode::OK);
-    EXPECT_EQ (kdf11_a.read (SR0, &value), StatusCode::OK);
+    EXPECT_EQ (kdf11_a.writeWord (SR0, 0177777), StatusCode::Success);
+    EXPECT_EQ (kdf11_a.read (SR0, &value), StatusCode::Success);
     EXPECT_EQ (value, 0177777);
 }
 
@@ -47,12 +47,12 @@ TEST_F (KDF11_ADeviceBus, statusRegister1)
 
     // Verify SR0 initially has value 0
     u16 value {0177777};
-    EXPECT_EQ (kdf11_a.read (SR1, &value), StatusCode::OK);
+    EXPECT_EQ (kdf11_a.read (SR1, &value), StatusCode::Success);
     EXPECT_EQ (value, 0);
 
     // Verify a new value cannot be written
-    EXPECT_EQ (kdf11_a.writeWord (SR1, 0177777), StatusCode::OK);
-    EXPECT_EQ (kdf11_a.read (SR1, &value), StatusCode::OK);
+    EXPECT_EQ (kdf11_a.writeWord (SR1, 0177777), StatusCode::Success);
+    EXPECT_EQ (kdf11_a.read (SR1, &value), StatusCode::Success);
     EXPECT_EQ (value, 0);
 }
 
@@ -74,12 +74,12 @@ TEST_F (KDF11_ADeviceBus, kernelPAR7)
 
     // Verify PAR initially has value 0
     u16 value {0177777};
-    EXPECT_EQ (kdf11_a.read (KernelPar7, &value), StatusCode::OK);
+    EXPECT_EQ (kdf11_a.read (KernelPar7, &value), StatusCode::Success);
     EXPECT_EQ (value, 0);
 
     // Verify a new value can be written
-    EXPECT_EQ (kdf11_a.writeWord (KernelPar7, 0177777), StatusCode::OK);
-    EXPECT_EQ (kdf11_a.read (KernelPar7, &value), StatusCode::OK);
+    EXPECT_EQ (kdf11_a.writeWord (KernelPar7, 0177777), StatusCode::Success);
+    EXPECT_EQ (kdf11_a.read (KernelPar7, &value), StatusCode::Success);
     EXPECT_EQ (value, 0177777);
 }
 
@@ -101,12 +101,12 @@ TEST_F (KDF11_ADeviceBus, statusRegister2)
 
     // Verify SR2 initially has value 0
     u16 value {0177777};
-    EXPECT_EQ (kdf11_a.read (SR2, &value), StatusCode::OK);
+    EXPECT_EQ (kdf11_a.read (SR2, &value), StatusCode::Success);
     EXPECT_EQ (value, 0);
 
     // Verify a new value cannot be written
-    EXPECT_EQ (kdf11_a.writeWord (SR2, 0177777), StatusCode::OK);
-    EXPECT_EQ (kdf11_a.read (SR2, &value), StatusCode::OK);
+    EXPECT_EQ (kdf11_a.writeWord (SR2, 0177777), StatusCode::Success);
+    EXPECT_EQ (kdf11_a.read (SR2, &value), StatusCode::Success);
     EXPECT_EQ (value, 0);
 }
 
@@ -118,11 +118,11 @@ TEST_F (KDF11_ADeviceBus, ProcessorStatusWord)
 
     // Verify SR0 initially has value 0
     u16 value {0177777};
-    EXPECT_EQ (kdf11_a.read (PSW, &value), StatusCode::OK);
+    EXPECT_EQ (kdf11_a.read (PSW, &value), StatusCode::Success);
     EXPECT_EQ (value, 0);
 
     // Verify a new value can be written
-    EXPECT_EQ (kdf11_a.writeWord (PSW, 0177777), StatusCode::OK);
-    EXPECT_EQ (kdf11_a.read (PSW, &value), StatusCode::OK);
+    EXPECT_EQ (kdf11_a.writeWord (PSW, 0177777), StatusCode::Success);
+    EXPECT_EQ (kdf11_a.read (PSW, &value), StatusCode::Success);
     EXPECT_EQ (value, 0177757);
 }

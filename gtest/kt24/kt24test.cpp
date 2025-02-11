@@ -14,8 +14,8 @@ TEST (KT24, lowMappingRegisterBit0IsReadOnly)
     u16 dataWritten {0177777};
     u16 dataRead {0};
 
-    EXPECT_EQ (kt24.writeWord (0170200, 0177777), StatusCode::OK);
-    EXPECT_EQ (kt24.read (0170200, &dataRead), StatusCode::OK);
+    EXPECT_EQ (kt24.writeWord (0170200, 0177777), StatusCode::Success);
+    EXPECT_EQ (kt24.read (0170200, &dataRead), StatusCode::Success);
 
     EXPECT_EQ (dataRead, 0177776);
 }
@@ -57,13 +57,13 @@ TEST (KT24, kt24RegistersAreIntizalised)
     KT24 kt24 (&bus);
     u16 value;
 
-    EXPECT_EQ (kt24.read (0170200, &value), StatusCode::OK);
+    EXPECT_EQ (kt24.read (0170200, &value), StatusCode::Success);
     EXPECT_EQ (value, 0);
-    EXPECT_EQ (kt24.read (0170202, &value), StatusCode::OK);
+    EXPECT_EQ (kt24.read (0170202, &value), StatusCode::Success);
     EXPECT_EQ (value, 0);
-    EXPECT_EQ (kt24.read (0170374, &value), StatusCode::OK);
+    EXPECT_EQ (kt24.read (0170374, &value), StatusCode::Success);
     EXPECT_EQ (value, 0);
-    EXPECT_EQ (kt24.read (0170376, &value), StatusCode::OK);
+    EXPECT_EQ (kt24.read (0170376, &value), StatusCode::Success);
     EXPECT_EQ (value, 0);
 }
 
@@ -168,12 +168,12 @@ TEST (KT24, lmaRegisterCanBeReadAndWritten)
     u16 dataWritten {0177777};
     u16 dataRead {0};
 
-    EXPECT_EQ (kt24.writeWord (0177734, dataWritten), StatusCode::OK);
-    EXPECT_EQ (kt24.read (0177734, &dataRead), StatusCode::OK);
+    EXPECT_EQ (kt24.writeWord (0177734, dataWritten), StatusCode::Success);
+    EXPECT_EQ (kt24.read (0177734, &dataRead), StatusCode::Success);
     EXPECT_EQ (dataWritten, dataRead);
 
-    EXPECT_EQ (kt24.writeWord (0177736, dataWritten), StatusCode::OK);
-    EXPECT_EQ (kt24.read (0177736, &dataRead), StatusCode::OK);
+    EXPECT_EQ (kt24.writeWord (0177736, dataWritten), StatusCode::Success);
+    EXPECT_EQ (kt24.read (0177736, &dataRead), StatusCode::Success);
     EXPECT_EQ (dataWritten, dataRead);
 }
 
@@ -186,7 +186,7 @@ TEST (KT24, cpuErrorRegisterCanBeReadAndWritten)
     u16 dataWritten {0177777};
     u16 dataRead {0};
 
-    EXPECT_EQ (kt24.writeWord (0177766, dataWritten), StatusCode::OK);
-    EXPECT_EQ (kt24.read (0177766, &dataRead), StatusCode::OK);
+    EXPECT_EQ (kt24.writeWord (0177766, dataWritten), StatusCode::Success);
+    EXPECT_EQ (kt24.read (0177766, &dataRead), StatusCode::Success);
     EXPECT_EQ (dataRead, 0);
 }

@@ -19,7 +19,7 @@ CondData<u16> Qbus::read (BusAddress address)
 	if ((module = configurationHandler_.responsibleModule (address)) != nullptr)
 	{
 		u16 value;
-		if (module->read (address, &value) == StatusCode::OK)
+		if (module->read (address, &value) == StatusCode::Success)
 		{
 			trace.bus (BusRecordType::Read, address, value);
 			return value;

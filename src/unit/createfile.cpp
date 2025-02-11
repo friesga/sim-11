@@ -28,5 +28,5 @@ StatusCode Unit::createFile(std::string fileName, Bitmask<AttachFlags> flags)
 
      Logger::instance() << owningDevice_->name() + ": creating new file\n";
 
-    return StatusCode::OK;
+    return StatusCode::Success;
 }

@@ -14,10 +14,10 @@ public:
 	StatusCode read (BusAddress address, u16* destination)
 	{
 		*destination = id_;
-		return StatusCode::OK;
+		return StatusCode::Success;
 	}
-	StatusCode writeWord (BusAddress address, u16 value) { return StatusCode::OK; }
-	StatusCode writeByte (BusAddress address, u8 value) { return StatusCode::OK; }
+	StatusCode writeWord (BusAddress address, u16 value) { return StatusCode::Success; }
+	StatusCode writeByte (BusAddress address, u8 value) { return StatusCode::Success; }
 	bool responsible (BusAddress address) { return true; }
 	void reset () {}
 
@@ -54,12 +54,12 @@ TEST (QbusInstallTest, devicesCanBeInstalled)
 	u16 deviceId;
 	for (auto slot : testBus)
 	{
-		EXPECT_EQ (slot->read (0, &deviceId), StatusCode::OK);
+		EXPECT_EQ (slot->read (0, &deviceId), StatusCode::Success);
 		EXPECT_EQ (deviceId, slotId++);
 	}
 
 	auto module = *testBus[0];
-	EXPECT_EQ (module->read (0, &deviceId), StatusCode::OK);
+	EXPECT_EQ (module->read (0, &deviceId), StatusCode::Success);
 	EXPECT_EQ (deviceId, 0);
 }
 
@@ -141,7 +141,7 @@ TEST (QbusInstallTest, deviceCanBeInstalledAtOccupiedPosition)
 	u16 deviceId;
 	for (auto device : testBus)
 	{
-		EXPECT_EQ (device->read (0, &deviceId), StatusCode::OK);
+		EXPECT_EQ (device->read (0, &deviceId), StatusCode::Success);
 		EXPECT_EQ (deviceId, expectedDeviceIds[slotId++]);
 	}
 }

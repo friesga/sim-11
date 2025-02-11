@@ -39,7 +39,7 @@ TEST_F (KDF11_A_PSWTEST, PswCanBeAccessedViaAddress)
     u16 psw;
 
     kdf11a->writeWord (PswAddress, 0177777);
-    EXPECT_EQ (kdf11a->read (PswAddress, &psw), StatusCode::OK);
+    EXPECT_EQ (kdf11a->read (PswAddress, &psw), StatusCode::Success);
     EXPECT_EQ (psw, 0177757);
 }
 
@@ -62,7 +62,7 @@ TEST_F (KDF11_A_PSWTEST, MOVDoesNotSetCC)
         instruction));
     
     u16 psw;
-    EXPECT_EQ (kdf11a->read (PswAddress, &psw), StatusCode::OK);
+    EXPECT_EQ (kdf11a->read (PswAddress, &psw), StatusCode::Success);
     EXPECT_EQ (psw, 0);
 }
 
@@ -85,7 +85,7 @@ TEST_F (KDF11_A_PSWTEST, MOVBDoesNotSetCC)
         instruction));
     
     u16 psw;
-    EXPECT_EQ (kdf11a->read (PswAddress, &psw), StatusCode::OK);
+    EXPECT_EQ (kdf11a->read (PswAddress, &psw), StatusCode::Success);
     EXPECT_EQ (psw, 0177400);
 }
 
@@ -106,7 +106,7 @@ TEST_F (KDF11_A_PSWTEST, CLRDoesNotSetCC)
         instruction));
     
     u16 psw;
-    EXPECT_EQ (kdf11a->read (PswAddress, &psw), StatusCode::OK);
+    EXPECT_EQ (kdf11a->read (PswAddress, &psw), StatusCode::Success);
     EXPECT_EQ (psw, 0);
 }
 
@@ -126,6 +126,6 @@ TEST_F (KDF11_A_PSWTEST, CLRBDoesNotSetCC)
     EXPECT_TRUE (visit (KDF11::Executor {kdf11a->cpuData (), kdf11a->cpuControl (), kdf11a->mmu ()},
         instruction));    
     u16 psw;
-    EXPECT_EQ (kdf11a->read (PswAddress, &psw), StatusCode::OK);
+    EXPECT_EQ (kdf11a->read (PswAddress, &psw), StatusCode::Success);
     EXPECT_EQ (psw, 0177400);
 }

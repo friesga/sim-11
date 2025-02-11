@@ -8,7 +8,7 @@ StatusCode DisplayRegister::read (BusAddress address, u16* destination)
 StatusCode DisplayRegister::writeWord (BusAddress address, u16 value)
 {
     displayRegister_ = value;
-    return StatusCode::OK;
+    return StatusCode::Success;
 }
 
 bool DisplayRegister::responsible (BusAddress address)

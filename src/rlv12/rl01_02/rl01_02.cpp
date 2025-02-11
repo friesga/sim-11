@@ -46,7 +46,7 @@ StatusCode RL01_02::init (shared_ptr<RLUnitConfig> rlUnitConfig,
 // to be called by the unit tests.
 StatusCode RL01_02::init (shared_ptr<RLUnitConfig> rlUnitConfig)
 {
-    if (StatusCode status = configure (rlUnitConfig); status != StatusCode::OK)
+    if (StatusCode status = configure (rlUnitConfig); status != StatusCode::Success)
         return status;
 
     running_ = true;
@@ -61,7 +61,7 @@ StatusCode RL01_02::init (shared_ptr<RLUnitConfig> rlUnitConfig)
     else
         stateMachine_->dispatch (SpunDown {});
 
-    return StatusCode::OK;
+    return StatusCode::Success;
 }
 
 // Reset errors and clear the FAULT indicator

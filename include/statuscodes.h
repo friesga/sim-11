@@ -6,7 +6,7 @@
 //
 enum class StatusCode
 {
-    OK,
+    Success,
     ArgumentError,
     FunctionNotImplemented,
     IOError,

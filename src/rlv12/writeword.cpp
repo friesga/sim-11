@@ -75,7 +75,7 @@ StatusCode RLV12::writeWord (BusAddress busAddress, u16 data)
                         == RLV12const::CSR_ControllerReady)
                     bus_->setInterrupt (TrapPriority::BR4, 4, 0, vector_);
 
-                return StatusCode::OK;
+                return StatusCode::Success;
             }
 
             bus_->clearInterrupt (TrapPriority::BR4, 0, 4);
@@ -135,7 +135,7 @@ StatusCode RLV12::writeWord (BusAddress busAddress, u16 data)
                 return StatusCode::NonExistingMemory;
 
             if (busAddress.registerAddress () & 1)
-                return StatusCode::OK;
+                return StatusCode::Success;
 
             bae_ = data & RLV12const::BAE_Mask;
 
@@ -151,5 +151,5 @@ StatusCode RLV12::writeWord (BusAddress busAddress, u16 data)
             return StatusCode::NonExistingMemory;
     }                                           
 
-    return StatusCode::OK;
+    return StatusCode::Success;
 }

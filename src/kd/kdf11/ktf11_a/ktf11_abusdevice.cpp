@@ -64,7 +64,7 @@ StatusCode KTF11_A::read (BusAddress address, u16 *destination)
     if (regPtr != nullptr)
     {
         *destination = *regPtr;
-        return StatusCode::OK;
+        return StatusCode::Success;
     }
 
     return StatusCode::NonExistingMemory;
@@ -77,7 +77,7 @@ StatusCode KTF11_A::writeWord (BusAddress address, u16 value)
     {
         *regPtr = value;
         trace.mmuApr (activePageRegisterSet_[static_cast<u16> (PSW::Mode::Kernel)]);
-        return StatusCode::OK;
+        return StatusCode::Success;
     }
 
     return StatusCode::NonExistingMemory;

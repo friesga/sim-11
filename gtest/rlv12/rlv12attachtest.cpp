@@ -64,7 +64,7 @@ TEST_F (RLV12AttachTest, attachCreatesNewFile)
 
     // This creates a file in the default directory (out\build\<config>)
     ASSERT_EQ (rlv12Device->unit (0)->init (make_shared<RLUnitConfig> (attachCreatesNewFileConfig)),
-        StatusCode::OK);
+        StatusCode::Success);
 }
 
 // This test requires the UNIT_ROABLE flag to be set and depends on the
@@ -78,7 +78,7 @@ TEST_F (RLV12AttachTest, attachOpensReadOnly)
     });
 
     ASSERT_EQ (rlv12Device->unit (0)->init (make_shared<RLUnitConfig> (attachOpensReadOnlyConfig)), 
-        StatusCode::OK);
+        StatusCode::Success);
 }
 
 
@@ -106,5 +106,5 @@ TEST_F (RLV12AttachTest, existingFileIsOverwritten)
     });
 
     ASSERT_EQ (rlv12Device->unit (0)->init (make_shared<RLUnitConfig> (existingFileIsOverwrittenConfig)),
-        StatusCode::OK);
+        StatusCode::Success);
 }

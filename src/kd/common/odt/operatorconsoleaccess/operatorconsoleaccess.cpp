@@ -8,7 +8,7 @@ OperatorConsoleAccess::OperatorConsoleAccess (Bus* bus)
 {}
 
 // Read a word from the given address. If dlv11j_.read() returns a
-// StatusCode other than OK, the value 0 will be returned which will
+// StatusCode other than Success, the value 0 will be returned which will
 // lead to an error transition in the command parser.
 CondData<u16> OperatorConsoleAccess::readDLV11J (u16 address)
 {

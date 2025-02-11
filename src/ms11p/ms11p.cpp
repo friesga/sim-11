@@ -62,7 +62,7 @@ StatusCode MS11P::read (BusAddress address, u16* destAddress)
                 break;
 		}
 	}
-	return StatusCode::OK;
+	return StatusCode::Success;
 }
 
 MS11P::BitError MS11P::checkParity (BusAddress address, u8 storedCheckBits,
@@ -114,7 +114,7 @@ StatusCode MS11P::writeWord (BusAddress address, u16 value)
 			newCheckBits (address, value);
 	}
 
-	return StatusCode::OK;
+	return StatusCode::Success;
 }
 
 // Bit 13 of the CSR is "not used" on the MS11-L and is read/write on the

@@ -123,7 +123,7 @@ TEST_F (RLV12GetStatusTest, resetSucceeds)
 
     // Attach a new disk to unit 0
     ASSERT_EQ (rlv12Device->unit (0)->init (make_shared<RLUnitConfig> (rlUnitConfig)), 
-        StatusCode::OK);
+        StatusCode::Success);
 
     // Verify the controller is ready to perform an operation (the drive
     // does not have to be ready)
@@ -169,7 +169,7 @@ TEST_F (RLV12GetStatusTest, drive3CanBeSelected)
 
     // Attach a new disk to unit 3
     ASSERT_EQ (rlv12Device->unit (3)->init (make_shared<RLUnitConfig> (rlUnitConfig)), 
-        StatusCode::OK);
+        StatusCode::Success);
 
     // Verify the controller is ready to perform an operation (the drive
     // does not have to be ready)
@@ -216,7 +216,7 @@ TEST_F (RLV12GetStatusTest, rl01CorrectlyIndicated)
 
     // Attach a new disk to unit 0
     ASSERT_EQ (rlv12Device->unit (0)->init (make_shared<RLUnitConfig> (rlUnitConfig)),
-        StatusCode::OK);
+        StatusCode::Success);
 
     // Verify the controller is ready to perform an operation (the drive
     // does not have to be ready)
@@ -255,7 +255,7 @@ TEST_F (RLV12GetStatusTest, rl02CorrectlyIndicated)
 
     // Attach a new disk to unit 0
     ASSERT_EQ (rlv12Device->unit (0)->init (make_shared<RLUnitConfig> (rlUnitConfig)),
-        StatusCode::OK);
+        StatusCode::Success);
 
     // Verify the controller is ready to perform an operation (the drive
     // does not have to be ready)
@@ -295,7 +295,7 @@ TEST_F (RLV12GetStatusTest, writeProtectOffCorrectlyIndicated)
 
     // Attach a new disk to unit 0
     ASSERT_EQ (rlv12Device->unit (0)->init (make_shared<RLUnitConfig> (rlUnitConfig)),
-        StatusCode::OK);
+        StatusCode::Success);
 
     // Verify the controller is ready to perform an operation (the drive
     // does not have to be ready)

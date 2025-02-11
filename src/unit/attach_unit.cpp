@@ -22,11 +22,11 @@ StatusCode Unit::attach_unit(std::string fileName, Bitmask<AttachFlags> flags)
         // Open existing file read/write 
         statusCode = openReadWrite (fileName);
 
-    if (statusCode != StatusCode::OK)
+    if (statusCode != StatusCode::Success)
         return statusCode;
 
     unitStatus_ |= Status::UNIT_ATT;
     fileName_ = fileName;
     position_ = 0;
-    return StatusCode::OK;
+    return StatusCode::Success;
 }

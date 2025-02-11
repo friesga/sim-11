@@ -81,7 +81,7 @@ RLV12::RLV12 (Bus* bus, Window* window, RLConfig& rlConfig)
         if (rlUnitConfig == nullptr)
             continue;
 
-		if (unit (unitNumber)->init (rlUnitConfig, window) != StatusCode::OK)
+		if (unit (unitNumber)->init (rlUnitConfig, window) != StatusCode::Success)
 			throw "Error attaching " + rlUnitConfig->fileName;
 	}
 

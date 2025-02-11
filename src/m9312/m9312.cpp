@@ -117,7 +117,7 @@ StatusCode M9312::readDiagnosticROM (BusAddress busAddress, u16* data)
 
     u16 imageIndex = busAddress.registerAddress () - diagROMBaseAddress >> 1;
     *data = (*diagnosticROM_)[imageIndex];
-    return StatusCode::OK;
+    return StatusCode::Success;
 }
 
 StatusCode M9312::readBootROM (BusAddress busAddress, u16* data)
@@ -130,13 +130,13 @@ StatusCode M9312::readBootROM (BusAddress busAddress, u16* data)
     u16 imageIndex = busAddress.registerAddress () - 
         bootROMBaseAddresses[romNumber] >> 1;
     *data = (*bootROM_[romNumber])[imageIndex];
-    return StatusCode::OK;
+    return StatusCode::Success;
 }
 
 StatusCode M9312::readAddressOffsetSwitchBank (u16* data)
 {
     *data = startingAddress_;
-    return StatusCode::OK;
+    return StatusCode::Success;
 }
 
 void M9312::BPOKReceiver (bool signalValue)

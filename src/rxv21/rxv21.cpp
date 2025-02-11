@@ -113,7 +113,7 @@ StatusCode RXV21::read (BusAddress busAddress, u16 *destAddress)
 		// Return value of the RX2DB
 		*destAddress = rx2db;
 
-	return StatusCode::OK;
+	return StatusCode::Success;
 }
 
 // Write operation on either the RX2CS or RX2DB
@@ -137,7 +137,7 @@ StatusCode RXV21::writeWord (BusAddress busAddress, u16 value)
 		{
 			// Initialize command given
 			dispatch (rxv21Init {});
-			return StatusCode::OK;
+			return StatusCode::Success;
 		}
 
 		if (rx2cs & RX_GO) 
@@ -157,7 +157,7 @@ StatusCode RXV21::writeWord (BusAddress busAddress, u16 value)
 		dispatch (rxv21Rx2dbFilled {});
 	}
 
-	return StatusCode::OK;
+	return StatusCode::Success;
 }
 
 bool RXV21::responsible (BusAddress busAddress)

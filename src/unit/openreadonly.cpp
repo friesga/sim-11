@@ -20,5 +20,5 @@ StatusCode Unit::openReadOnly(std::string fileName)
 
     Logger::instance() << owningDevice_->name() + ": unit is read only\n";
 
-    return StatusCode::OK;
+    return StatusCode::Success;
 }

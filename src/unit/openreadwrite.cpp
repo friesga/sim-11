@@ -39,5 +39,5 @@ StatusCode Unit::openReadWrite (std::string fileName)
         return StatusCode::OpenError;
     }
 
-    return StatusCode::OK;
+    return StatusCode::Success;
 }

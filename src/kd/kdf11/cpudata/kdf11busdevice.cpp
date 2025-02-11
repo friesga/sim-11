@@ -20,7 +20,7 @@ StatusCode KDF11CpuData::read (BusAddress busAddress, u16 *destination)
     if (busAddress.registerAddress () == PSWAddress)
     {
         *destination = psw_;
-        return StatusCode::OK;
+        return StatusCode::Success;
     }
 
     return StatusCode::NonExistingMemory;
@@ -32,7 +32,7 @@ StatusCode KDF11CpuData::writeWord (BusAddress busAddress, u16 value)
     if (busAddress.registerAddress () == PSWAddress)
     {
         psw_.set (PSW::ProtectionMode::ExplicitAccess, value);
-        return StatusCode::OK;
+        return StatusCode::Success;
     }
 
     return StatusCode::NonExistingMemory;

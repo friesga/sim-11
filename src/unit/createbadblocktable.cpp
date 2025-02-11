@@ -85,5 +85,5 @@ StatusCode Unit::createBadBlockTable (int32_t sectorsPerSurface,
     if (ferror (filePtr_))
         return StatusCode::IOError;
 
-    return StatusCode::OK;
+    return StatusCode::Success;
 }

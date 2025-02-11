@@ -45,7 +45,7 @@ StatusCode RL01_02::configure (shared_ptr<RLUnitConfig> rlUnitConfig)
     // Try to attach the specified file to this unit
     StatusCode result;
     if ((result = attach_unit (rlUnitConfig->fileName, attachFlags)) !=
-        StatusCode::OK)
+        StatusCode::Success)
             return result;
 
     // Set the drive default write-protected if that is specified in
@@ -70,7 +70,7 @@ StatusCode RL01_02::configure (shared_ptr<RLUnitConfig> rlUnitConfig)
     {   
         // If read-only we're done
         if (unitStatus_ & Status::WRITE_PROTECT)
-            return StatusCode::OK;
+            return StatusCode::Success;
 
         // Create a bad block table on the last track of the device.
         // The position of the last track is also based on the unit's
@@ -94,5 +94,5 @@ StatusCode RL01_02::configure (shared_ptr<RLUnitConfig> rlUnitConfig)
             capacity_ = RLV12const::RL01_WordsPerCartridge;
         }
     }
-    return StatusCode::OK;
+    return StatusCode::Success;
 }

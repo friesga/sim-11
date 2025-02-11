@@ -52,7 +52,7 @@ StatusCode UnibusMapLogic::read (BusAddress address, u16* destination)
             throw "Should not happen";
     }
 
-    return StatusCode::OK;
+    return StatusCode::Success;
 }
 
 StatusCode UnibusMapLogic::writeWord (BusAddress address, u16 value)
@@ -77,7 +77,7 @@ StatusCode UnibusMapLogic::writeWord (BusAddress address, u16 value)
             throw "Should not happen";
     }
 
-    return StatusCode::OK;
+    return StatusCode::Success;
 }
 
 StatusCode UnibusMapLogic::writeByte (BusAddress address, u8 value)

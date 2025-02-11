@@ -52,7 +52,7 @@ TEST_F (UARTMaintModeTest, maintenanceModeCanBeSet)
     Qbus bus;
     u16 data;
 
-    // Power must be OK for the UART receiver to function
+    // Power must be Success for the UART receiver to function
     bus.BPOK ().set (true);
 
     unique_ptr<UART> uart = make_unique<UART> (&bus,
@@ -61,23 +61,23 @@ TEST_F (UARTMaintModeTest, maintenanceModeCanBeSet)
 
     // Set Maintenance Mode
     EXPECT_EQ (uart->writeWord (BusAddress (XCSR, BusAddress::Width::_16Bit), XCSR_MAINT),
-        StatusCode::OK);
+        StatusCode::Success);
 
     // Check Transmitter Ready
     EXPECT_EQ (uart->read (BusAddress (XCSR, BusAddress::Width::_16Bit), &data),
-        StatusCode::OK);
+        StatusCode::Success);
     EXPECT_TRUE (data & XCSR_XMIT_READY);
 
     // Write character to the transmit buffer
     EXPECT_EQ (uart->writeWord (BusAddress (XBUF, BusAddress::Width::_16Bit), '@'),
-        StatusCode::OK);
+        StatusCode::Success);
 
     // Check Receiver Done
     waitForRecvDone (uart.get ());
 
     // Read the character back
     EXPECT_EQ (uart->read (BusAddress (RBUF, BusAddress::Width::_16Bit), &data),
-        StatusCode::OK);
+        StatusCode::Success);
     EXPECT_EQ (data, '@');
 
     // Halt the simulator's clock to wake up the transmitter from its transmit

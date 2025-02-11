@@ -183,7 +183,7 @@ TEST_F (FISTest, Subtractions)
         {{0177777, 0177777}, Float::Result::OK},        // Test 36
         // {{0000000, 0000000}, Float::Result::Underflow}, // Test 37
         {{0000000, 0000000}, Float::Result::Overflow},  // Test 40
-        // {{0100400, 0000000}, Float::Result::OK}         // Test 47
+        // {{0100400, 0000000}, Float::Result::Success}         // Test 47
     };
 
     uint16_t f1High, f1Low;

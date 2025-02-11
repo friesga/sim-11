@@ -28,8 +28,8 @@ TEST_F (MS11PTest, dataCanBeWrittenAndReadBack)
     u16 dataWritten {0177777};
     u16 dataRead {0};
 
-    EXPECT_EQ (ms11p.writeWord (0, dataWritten), StatusCode::OK);
-    EXPECT_EQ (ms11p.read (0, &dataRead), StatusCode::OK );
+    EXPECT_EQ (ms11p.writeWord (0, dataWritten), StatusCode::Success);
+    EXPECT_EQ (ms11p.read (0, &dataRead), StatusCode::Success );
     EXPECT_EQ (dataWritten, dataRead);
 }
 
@@ -41,9 +41,9 @@ TEST_F (MS11PTest, capacityIsOneMB)
     u16 dataRead {0};
 
     EXPECT_EQ (ms11p.writeWord (BusAddress (03777776, BusAddress::Width::_22Bit),
-        dataWritten), StatusCode::OK);
+        dataWritten), StatusCode::Success);
     EXPECT_EQ (ms11p.read (BusAddress (03777776, BusAddress::Width::_22Bit),
-        &dataRead), StatusCode::OK);
+        &dataRead), StatusCode::Success);
     EXPECT_EQ (dataWritten, dataRead);
 
     EXPECT_TRUE (ms11p.responsible (BusAddress (03777776, BusAddress::Width::_22Bit)));
@@ -58,8 +58,8 @@ TEST_F (MS11PTest, identifiedAsMS11P)
     MS11P ms11p {&bus};
     u16 dataRead {0};
 
-    EXPECT_EQ (ms11p.writeWord (BusAddress (MS11P_CSR), InhibitMode), StatusCode::OK);
-    EXPECT_EQ (ms11p.read (BusAddress (MS11P_CSR), &dataRead), StatusCode::OK);
+    EXPECT_EQ (ms11p.writeWord (BusAddress (MS11P_CSR), InhibitMode), StatusCode::Success);
+    EXPECT_EQ (ms11p.read (BusAddress (MS11P_CSR), &dataRead), StatusCode::Success);
     EXPECT_TRUE (dataRead & InhibitMode);
 }
 
@@ -71,20 +71,20 @@ TEST_F (MS11PTest, correctCheckBitsGenerated)
     MS11P ms11p {&bus};
     u16 dataRead {0};
 
-    EXPECT_EQ (ms11p.writeWord (BusAddress (MS11P_CSR), 0), StatusCode::OK);
+    EXPECT_EQ (ms11p.writeWord (BusAddress (MS11P_CSR), 0), StatusCode::Success);
 
     // Write checkbits to memory
-    EXPECT_EQ (ms11p.writeWord (BusAddress (0), 0123456), StatusCode::OK);
+    EXPECT_EQ (ms11p.writeWord (BusAddress (0), 0123456), StatusCode::Success);
 
     // Set Diagnostic check mode
-    EXPECT_EQ (ms11p.writeWord (BusAddress (MS11P_CSR), DiagnosticCheck), StatusCode::OK);
+    EXPECT_EQ (ms11p.writeWord (BusAddress (MS11P_CSR), DiagnosticCheck), StatusCode::Success);
 
     // Read checkbits in CSR
-    EXPECT_EQ (ms11p.read (BusAddress (0), &dataRead), StatusCode::OK);
+    EXPECT_EQ (ms11p.read (BusAddress (0), &dataRead), StatusCode::Success);
     EXPECT_EQ (dataRead, 0123456);
 
     // Read checkbits from CSR
-    EXPECT_EQ (ms11p.read (BusAddress (MS11P_CSR), &dataRead), StatusCode::OK);
+    EXPECT_EQ (ms11p.read (BusAddress (MS11P_CSR), &dataRead), StatusCode::Success);
     EXPECT_EQ (errorStorageContents (dataRead), 040);
 }
 
@@ -94,21 +94,21 @@ TEST_F (MS11PTest, checkBitsCanBeWritten)
     MS11P ms11p {&bus};
     u16 dataRead {0};
 
-    EXPECT_EQ (ms11p.writeWord (BusAddress (MS11P_CSR), 0), StatusCode::OK);
+    EXPECT_EQ (ms11p.writeWord (BusAddress (MS11P_CSR), 0), StatusCode::Success);
 
     // Write checkbits to CSR and set Diagnostic Check Mode
     EXPECT_EQ (ms11p.writeWord (BusAddress (MS11P_CSR), (077 << 5) | DiagnosticCheck),
-        StatusCode::OK);
+        StatusCode::Success);
 
     // Write data to memory with check bits from CSR
-    EXPECT_EQ (ms11p.writeWord (BusAddress (0), 0123456), StatusCode::OK);
+    EXPECT_EQ (ms11p.writeWord (BusAddress (0), 0123456), StatusCode::Success);
 
     // Read data plus checkbits in CSR
-    EXPECT_EQ (ms11p.read (BusAddress (0), &dataRead), StatusCode::OK);
+    EXPECT_EQ (ms11p.read (BusAddress (0), &dataRead), StatusCode::Success);
     EXPECT_EQ (dataRead, 0123456);
 
     // Read checkbits from CSR
-    EXPECT_EQ (ms11p.read (BusAddress (MS11P_CSR), &dataRead), StatusCode::OK);
+    EXPECT_EQ (ms11p.read (BusAddress (MS11P_CSR), &dataRead), StatusCode::Success);
     EXPECT_EQ (errorStorageContents (dataRead), 077);
 }
 
@@ -118,29 +118,29 @@ TEST_F (MS11PTest, singleErrorReported)
     MS11P ms11p {&bus};
     u16 dataRead {0};
 
-    EXPECT_EQ (ms11p.writeWord (BusAddress (MS11P_CSR), 0), StatusCode::OK);
+    EXPECT_EQ (ms11p.writeWord (BusAddress (MS11P_CSR), 0), StatusCode::Success);
 
     // Write checkbits that will generate a single bit error to CSR (correct
     // checkbits are 040) and set Diagnostic Check Mode
     EXPECT_EQ (ms11p.writeWord (BusAddress (MS11P_CSR),
-        (041 << 5) | DiagnosticCheck), StatusCode::OK);
+        (041 << 5) | DiagnosticCheck), StatusCode::Success);
 
     // Write data to memory with incorrect check bits from CSR using an addres
     // with some of the seven highest bits set so the contents of the CSR
     // Address Error and Syndrome Storage can be checked.
-    EXPECT_EQ (ms11p.writeWord (BusAddress (0174000), 0123456), StatusCode::OK);
+    EXPECT_EQ (ms11p.writeWord (BusAddress (0174000), 0123456), StatusCode::Success);
 
     // Reset Diagnostic Check Mode
-    EXPECT_EQ (ms11p.writeWord (BusAddress (MS11P_CSR), 0), StatusCode::OK);
+    EXPECT_EQ (ms11p.writeWord (BusAddress (MS11P_CSR), 0), StatusCode::Success);
 
     // Read data with incorrect checkbits
     EXPECT_EQ (ms11p.read (BusAddress (0174000), &dataRead),
-        StatusCode::OK);
+        StatusCode::Success);
     EXPECT_EQ (dataRead, 0123456);
     
     // Verify Single Error bit set and Address Error and Syndrome Storage
     // contains bits A17-A11 of the address.
-    EXPECT_EQ (ms11p.read (BusAddress (MS11P_CSR), &dataRead), StatusCode::OK);
+    EXPECT_EQ (ms11p.read (BusAddress (MS11P_CSR), &dataRead), StatusCode::Success);
     EXPECT_TRUE (dataRead & SingleError);
     EXPECT_EQ (errorStorageContents (dataRead), 037);
 }
@@ -152,41 +152,41 @@ TEST_F (MS11PTest, extractErrorLog)
     MS11P ms11p {&bus};
     u16 dataRead {0};
 
-    EXPECT_EQ (ms11p.writeWord (BusAddress (MS11P_CSR), 0), StatusCode::OK);
+    EXPECT_EQ (ms11p.writeWord (BusAddress (MS11P_CSR), 0), StatusCode::Success);
 
     // Write incorrect checkbits to CSR and set Diagnostic Check Mode
     EXPECT_EQ (ms11p.writeWord (BusAddress (MS11P_CSR),
-        (041 << 5) | DiagnosticCheck), StatusCode::OK);
+        (041 << 5) | DiagnosticCheck), StatusCode::Success);
 
     // Write data to memory with incorrect check bits from CSR using the
     // highest available addres.
     EXPECT_EQ (ms11p.writeWord (BusAddress (03777776, BusAddress::Width::_22Bit), 0123456),
-        StatusCode::OK);
+        StatusCode::Success);
 
     // Reset Diagnostic Check Mode
-    EXPECT_EQ (ms11p.writeWord (BusAddress (MS11P_CSR), 0), StatusCode::OK);
+    EXPECT_EQ (ms11p.writeWord (BusAddress (MS11P_CSR), 0), StatusCode::Success);
 
     // Read data with incorrect checkbits
     EXPECT_EQ (ms11p.read (BusAddress (03777776, BusAddress::Width::_22Bit), &dataRead),
-        StatusCode::OK);
+        StatusCode::Success);
     EXPECT_EQ (dataRead, 0123456);
 
     // Verify Single Error bit set and Address Error and Syndrome Storage
     // contains bits A17-A11 of the address.
-    EXPECT_EQ (ms11p.read (BusAddress (MS11P_CSR), &dataRead), StatusCode::OK);
+    EXPECT_EQ (ms11p.read (BusAddress (MS11P_CSR), &dataRead), StatusCode::Success);
     EXPECT_TRUE (dataRead & SingleError);
     EXPECT_EQ (errorStorageContents (dataRead), 0177);
 
     // Read high order address bits from CSR
     EXPECT_EQ (ms11p.writeWord (BusAddress (MS11P_CSR), EUBAddress),
-        StatusCode::OK);
-    EXPECT_EQ (ms11p.read (BusAddress (MS11P_CSR), &dataRead), StatusCode::OK);
+        StatusCode::Success);
+    EXPECT_EQ (ms11p.read (BusAddress (MS11P_CSR), &dataRead), StatusCode::Success);
     EXPECT_EQ (errorStorageContents (dataRead), 03);
 
     // And finally read the syndrome bits. Stored checkbits (041) xor xorrect
     // checkbits (040) is 001.
     EXPECT_EQ (ms11p.writeWord (BusAddress (MS11P_CSR), EUBAddress | DiagnosticCheck),
-        StatusCode::OK);
-    EXPECT_EQ (ms11p.read (BusAddress (MS11P_CSR), &dataRead), StatusCode::OK);
+        StatusCode::Success);
+    EXPECT_EQ (ms11p.read (BusAddress (MS11P_CSR), &dataRead), StatusCode::Success);
     EXPECT_EQ (errorStorageContents (dataRead), 001);
 }

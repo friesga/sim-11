@@ -204,7 +204,7 @@ StatusCode BDV11::read (BusAddress busAddress, u16 *destAddress)
 			else
 				return StatusCode::NonExistingMemory;
 	}
-	return StatusCode::OK;
+	return StatusCode::Success;
 }
 
 StatusCode BDV11::writeWord (BusAddress busAddress, u16 value)
@@ -249,7 +249,7 @@ StatusCode BDV11::writeWord (BusAddress busAddress, u16 value)
 			break;
 	}
 
-	return StatusCode::OK;
+	return StatusCode::Success;
 }
 
 // Write the Line Time Clock Status Register.

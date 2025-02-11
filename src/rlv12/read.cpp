@@ -56,5 +56,5 @@ StatusCode RLV12::read (BusAddress busAddress, u16* data)
             return (StatusCode::NonExistingMemory);
     }
 
-    return StatusCode::OK;
+    return StatusCode::Success;
 }
