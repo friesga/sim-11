@@ -18,7 +18,7 @@
 CondData<u16> KDF11CpuData::read (BusAddress busAddress)
 {
     if (busAddress.registerAddress () == PSWAddress)
-        return {psw_, StatusCode::Success};
+        return {psw_};
 
     return {StatusCode::NonExistingMemory};
 }

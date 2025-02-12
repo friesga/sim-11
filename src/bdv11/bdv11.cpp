@@ -169,20 +169,20 @@ CondData<u16> BDV11::read (BusAddress busAddress)
 	{
 		case PCR:
 			// Page Control Register
-			return {pcr, StatusCode::Success};
+			return {pcr};
 
 		case RWR:
 			// Read/Write Register
-			return {scratch, StatusCode::Success};
+			return {scratch};
 
 		case SDR:
 			// Switch and Display Register
-			return {switchRegister_, StatusCode::Success};
+			return {switchRegister_};
 
 		case LKS:
 			// Line Clock Status Register. According to the BDV11 technical
 			// manual (EK-BDV11-TM-001) this is a write-only register.
-			return {ltc, StatusCode::Success};
+			return {ltc};
 
 		default:
 			if (busAddress.registerAddress () >= 0173000 && 
@@ -194,8 +194,7 @@ CondData<u16> BDV11::read (BusAddress busAddress)
 			else if (busAddress.registerAddress () >= 0173400 &&
 				busAddress.registerAddress () <= 0173776) 
 			{
-				return {getWordHigh ((busAddress.registerAddress () - 0173400) / 2), 
-                    StatusCode::Success};
+				return {getWordHigh ((busAddress.registerAddress () - 0173400) / 2)};
 			}
 			else
 				return {StatusCode::NonExistingMemory};

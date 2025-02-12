@@ -62,7 +62,7 @@ CondData<u16> KTF11_A::read (BusAddress address)
 {
     Register* regPtr = registerPointer (address);
     if (regPtr != nullptr)
-        return {*regPtr, StatusCode::Success};
+        return {*regPtr};
 
     return {StatusCode::NonExistingMemory};
 }

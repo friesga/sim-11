@@ -97,7 +97,7 @@ CondData<u16> UART::read (BusAddress busAddress)
 	switch (busAddress.registerAddress () & 06)
 	{
 		case RCSR:
-			return {rcsr, StatusCode::Success};
+			return {rcsr};
 			break;
 
 		case RBUF:
@@ -105,11 +105,11 @@ CondData<u16> UART::read (BusAddress busAddress)
 			break;
 
 		case XCSR:
-			return {xcsr, StatusCode::Success};
+			return {xcsr};
 			break;
 
 		case XBUF:
-			return {xbuf, StatusCode::Success};
+			return {xbuf};
 			break;
 
 		default:
@@ -131,7 +131,7 @@ CondData<u16> UART::readRBUF ()
 	bus_->clearInterrupt (TrapPriority::BR4, 6, 
 		interruptPriority (Function::Receive, channelNr_));
 
-	return {rbuf, StatusCode::Success};
+	return {rbuf};
 }
 
 // This function allows the processor to write a word to one of the
