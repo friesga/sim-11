@@ -13,7 +13,8 @@ enum class StatusCode
     NonExistingMemory,
     OpenError,
     ReadOnly,
-    UnAttached
+    UnAttached,
+    ParityError
 };
 
 

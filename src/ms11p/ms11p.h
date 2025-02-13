@@ -142,10 +142,10 @@ private:
     bool inhibited (BusAddress address);
     bool inInhibitedFirst16KW (BusAddress address);
     bool inInhibitedSecond16KW (BusAddress address);
-    void handleSingleError (BusAddress address, u8 storedCheckBits,
-        u8 generatedCheckBits);
-    void handleDoubleError (BusAddress address, u8 storedCheckBits,
-        u8 generatedCheckBits);
+    CondData<u16> handleSingleError (BusAddress address, u16 data,
+        u8 storedCheckBits, u8 generatedCheckBits);
+    CondData<u16> handleDoubleError (BusAddress address, u16 data,
+        u8 storedCheckBits, u8 generatedCheckBits);
     u8 addressBitsA17_A11 (BusAddress address);
     u8 addressBitsA21_A18 (BusAddress address);
     u8 generateSyndromeBits (u8 checkBits1, u8 checkBits2);

@@ -17,7 +17,8 @@ enum class BusRecordType
     Write,
     ReadFail,
     WriteFail,
-    BusReset
+    BusReset,
+    ParityError
 };
 
 // Specialization of the TraceRecord for the TraceBus record

@@ -51,18 +51,16 @@ CondData<u16> MS11P::read (BusAddress address)
 				if (csr_.diagnosticCheck && !inhibited (address))
 					csr_.errorAddressAndCheckBits = storedCheckBits;
 				errorLog_.syndromeBits = 0;
-				break;
+				return {data};
 
 			case BitError::Single:
-				handleSingleError (address, storedCheckBits, generatedCheckBits);
-				break;
+				return handleSingleError (address, data, storedCheckBits,
+					generatedCheckBits);
 
 			case BitError::Double:
-                handleDoubleError (address, storedCheckBits, generatedCheckBits);
-                break;
+                return handleDoubleError (address, data, storedCheckBits,
+					generatedCheckBits);
 		}
-
-		return {data};
 	}
 }
 

@@ -33,6 +33,12 @@ std::ostream& operator<< (std::ostream& os, TraceRecord<BusRecord> record)
         case BusRecordType::BusReset:
             os << std::oct << "[Bus ] reset\n";
             break;
+
+        case BusRecordType::ParityError:
+            os << "[Bus ] read (parity error)" << oct << record.address_ <<
+                " (" << dec << record.width_ << "bit)" <<
+                " = " << oct << record.value_ << '\n';
+            break;
     }
     return os;
 }

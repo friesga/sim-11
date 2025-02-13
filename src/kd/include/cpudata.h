@@ -39,6 +39,7 @@ public:
 		TrapInstruction,			// TRAP instruction
 		FIS,						// Floating point
 		StackOverflow,				// Stack overflow
+		ParityError,				// Memory parity error
 		MemoryManagementTrap		// Memory management abort
 	};
 

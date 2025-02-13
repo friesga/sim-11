@@ -173,10 +173,21 @@ CondData<u16> KTF11_A::readWithoutTrap (u16 address)
 CondData<u16> KTF11_A::readPhysical (BusAddress busAddress)
 {
     CondData<u16> value = bus_->read (busAddress);
-    if (!value.hasValue ())
+
+    switch (value.statusCode ())
     {
-        trace.bus (BusRecordType::ReadFail, busAddress, 0);
-        cpuData_->setTrap (CpuData::TrapCondition::BusError);
+        case StatusCode::Success:
+            break;
+
+        case StatusCode::ParityError:
+            trace.bus (BusRecordType::ParityError, busAddress, value);
+            cpuData_->setTrap (CpuData::TrapCondition::ParityError);
+            break;
+
+        default:
+            trace.bus (BusRecordType::ReadFail, busAddress, 0);
+            cpuData_->setTrap (CpuData::TrapCondition::BusError);
+            break;
     }
 
     return value;

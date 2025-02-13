@@ -1,7 +1,7 @@
 #include "ms11p.h"
 
-void MS11P::handleSingleError (BusAddress address, u8 storedCheckBits,
-	u8 generatedCheckBits)
+CondData<u16> MS11P::handleSingleError (BusAddress address, u16 data,
+	u8 storedCheckBits, u8 generatedCheckBits)
 {
 	// The Single Error bit is set unless Disable Correction Mode is set
 	// and the error address is inhibited.
@@ -30,6 +30,8 @@ void MS11P::handleSingleError (BusAddress address, u8 storedCheckBits,
 			generateSyndromeBits (storedCheckBits, generatedCheckBits);
 		csr_.errorAddressAndCheckBits = addressBitsA17_A11 (address);
 	}
+
+	return {data};
 }
 
 u8 MS11P::addressBitsA17_A11 (BusAddress address)
