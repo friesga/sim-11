@@ -92,7 +92,7 @@ CondData<u16> MS11P::readCSR ()
 	// bits both bit 14 and bit 2 must be set to 1. 
 	if (errorLog_.syndromeBits != 0 && csr_.eubErrorAddressRetrieval)
 	{
-		if (!diagnosticCheckMode_)
+		if (!csr_.diagnosticCheck)
 			csr_.errorAddressAndCheckBits = addressBitsA21_A18 (errorLog_.address);
 		else
 			csr_.errorAddressAndCheckBits = errorLog_.syndromeBits;
@@ -123,7 +123,6 @@ StatusCode MS11P::writeWord (BusAddress address, u16 value)
 void MS11P::writeCSR (u16 value)
 {
 	csr_.value = value;
-	diagnosticCheckMode_ = csr_.diagnosticCheck;
 }
 
 // The MS11-P is responsible for its CSR and for its memory

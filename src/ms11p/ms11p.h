@@ -123,9 +123,6 @@ private:
     unique_ptr<u16[]> memory_;
     unique_ptr<u8[]> checkBits_;
 
-    // Definition of the MS11-P modes
-    bool diagnosticCheckMode_ {false};
-
     CondData<u16> readCSR ();
     void writeCSR (u16 value);
 
