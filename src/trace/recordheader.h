@@ -34,7 +34,8 @@ enum class Magic
 	MMU0 = 0x4D4D5530,
 	MMUA = 0x4D4D5541,	// MMU mapped address
 	UBM0 = 0x55424D30,	// Unibus Map
-	DBUG = 0x44425547	// For debugging purposes
+	DBUG = 0x44425547,	// For debugging purposes
+	MS1P = 0x4D533150,	// MS11-P register and memory
 };
 
 // Definition of the type to discriminate the trace records in the template

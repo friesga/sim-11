@@ -161,6 +161,14 @@ void Trace::debug (string msg)
         tracefileOut_ << TraceRecord<DebugRecord> (msg);
 }
 
+void Trace::ms11_p (MS11_PRecordType type, u16 csr, BusAddress address,
+    u16 value, u8 checkBits)
+{
+    if (traceEnabled && (flags_ & Trace::Category::MS11_P))
+        tracefileOut_ << TraceRecord<MS11_PRecord> (type, csr, address,
+            value, checkBits);
+}
+
 void Trace::setIgnoreBus ()
 {
     flags_ |= Trace::Category::IgnoreBus;

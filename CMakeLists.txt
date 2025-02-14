@@ -303,7 +303,8 @@ set (TRACE_SRCS
     src/trace/mmurecord/operator.cpp
     src/trace/debugrecord/tracefileinsertoperator.cpp
     src/trace/debugrecord/extractionoperator.cpp
-    src/trace/debugrecord/ostreaminsertoperator.cpp)
+    src/trace/debugrecord/ostreaminsertoperator.cpp
+    src/trace/ms11precord/operator.cpp)
 
     set (KT24_SRCS
         src/kt24/kt24.cpp

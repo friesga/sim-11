@@ -94,6 +94,10 @@ void processTraceRecord(Magic magic, TracefileInStream &tracefile)
             readAndPrintRecord<DebugRecord> (tracefile);
             break;
 
+        case Magic::MS1P:
+            readAndPrintRecord<MS11_PRecord> (tracefile);
+            break;
+
         default:
             throw string("Unknown magic");
     }

@@ -1,5 +1,6 @@
 #include "ms11p.h"
 #include "absoluteloader/absoluteloader.h"
+#include "trace/trace.h"
 
 #include <bit>
 
@@ -44,6 +45,9 @@ CondData<u16> MS11P::read (BusAddress address)
 		u8 storedCheckBits = checkBits_[(address >> 1) - startingAddress_];
 		u8 generatedCheckBits = generateCheckBits (data);
 
+		// trace.ms11_p (MS11_PRecordType::ReadMemory, csr_.value, address, data,
+		//	storedCheckBits);
+
 		switch (checkParity (address, storedCheckBits, generatedCheckBits))
 		{
 			case BitError::None:
@@ -62,6 +66,9 @@ CondData<u16> MS11P::read (BusAddress address)
 					generatedCheckBits);
 		}
 	}
+
+	// Satisfy the compiler
+	throw "Should not happen";
 }
 
 MS11P::BitError MS11P::checkParity (BusAddress address, u8 storedCheckBits,
@@ -98,6 +105,7 @@ CondData<u16> MS11P::readCSR ()
 			csr_.errorAddressAndCheckBits = errorLog_.syndromeBits;
 	}
 
+	// trace.ms11_p (MS11_PRecordType::ReadCSR, csr_.value, 0, 0, 0);
 	return {csr_.value};
 }
 
@@ -113,6 +121,8 @@ StatusCode MS11P::writeWord (BusAddress address, u16 value)
 			newCheckBits (address, value);
 	}
 
+	// trace.ms11_p (MS11_PRecordType::WriteMemory, csr_.value, address, value,
+	//	newCheckBits (address, value));
 	return StatusCode::Success;
 }
 
@@ -123,6 +133,7 @@ StatusCode MS11P::writeWord (BusAddress address, u16 value)
 void MS11P::writeCSR (u16 value)
 {
 	csr_.value = value;
+	// trace.ms11_p (MS11_PRecordType::WriteCSR, value, 0, 0, 0);
 }
 
 // The MS11-P is responsible for its CSR and for its memory

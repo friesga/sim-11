@@ -21,6 +21,7 @@
 #include "aprrecord/aprrecord.h"
 #include "mmurecord/mmurecord.h"
 #include "debugrecord/debugrecord.h"
+#include "ms11precord/ms11precord.h"
 #include "chrono/simulatorclock/simulatorclock.h"
 
 #include "tracefileoutstream/tracefileoutstream.h"
@@ -58,7 +59,8 @@ public:
         MMUAPR     = (1 << 14),     // APRRecord
         MMUAddress = (1 << 15),     // MMU mapped address
         UnibusMap  = (1 << 16),     // UnibusMapRecord
-        Debug	   = (1 << 17)      // DebugRecord
+        Debug	   = (1 << 17),     // DebugRecord
+        MS11_P     = (1 << 18)      // MS11_PRecord
     };
 
     Trace ();
@@ -88,6 +90,8 @@ public:
     void mmuApr (ActivePageRegisterSet const& aprSet);
     void mmuAddress (BusAddress address);
     void debug (string msg);
+    void ms11_p (MS11_PRecordType type, u16 csr, BusAddress address,
+        u16 value, u8 checkBits);
     void setIgnoreBus ();
     void clearIgnoreBus();
 };
