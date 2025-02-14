@@ -50,11 +50,11 @@ void Trace::cpuEvent (CpuEventRecordType type, u16 value)
         tracefileOut_ << TraceRecord<CpuEventRecord> (type, value);
 }
 
-void Trace::bus (BusRecordType type, u32 address, u16 value) 
+void Trace::bus (BusRecordType type, u32 address, CondData<u16> value) 
 {
     if (traceEnabled && (flags_ & Trace::Category::Bus) && 
             !(flags_ & Trace::Category::IgnoreBus))
-        tracefileOut_ << TraceRecord<BusRecord> (type, address, value);
+        tracefileOut_ << TraceRecord<BusRecord> (type, address, value.valueOr (0));
 }
 
 void Trace::memoryDump (u8* ptr, u16 address, u16 length) 

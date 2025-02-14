@@ -2,6 +2,7 @@
 #define _TRACE_H_
 
 #include "types.h"
+#include "conddata/conddata.h"
 #include "cpueventrecord/cpueventrecord.h"
 #include "busrecord/busrecord.h"
 #include "busaddress/busaddress.h"
@@ -73,7 +74,7 @@ public:
     bool isActive ();
     void cpuStep (u16* r, u16 psw, u16* insn);
     void cpuEvent (CpuEventRecordType type, u16 value);
-    void bus (BusRecordType type, u32 address, u16 value);
+    void bus (BusRecordType type, u32 address, CondData<u16> value);
     void memoryDump (u8* ptr, u16 address, u16 length);
     void irq (IrqRecordType type, int vector);
     void trap (TrapRecordType cause, int vector);
