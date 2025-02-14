@@ -34,13 +34,8 @@ CondData<u16> Unibus::physicalRead (BusAddress address)
 	if ((module = configurationHandler_.responsibleModule (address)) != nullptr)
 	{
 		CondData<u16> value = module->read (address);
-		if (value.statusCode () == StatusCode::Success)
-		{
-			trace.bus (BusRecordType::Read, address, value);
-			return value;
-		}
-		else
-			return {StatusCode::NonExistingMemory};
+		trace.bus (BusRecordType::Read, address, value);
+		return value;
 	}
 
 	return {StatusCode::NonExistingMemory};
