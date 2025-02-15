@@ -15,18 +15,18 @@ CondData<u16> MS11P::handleSingleError (BusAddress address, u16 data,
 
 	// The CSR ErrorAddress and Check Bit Storage contains the check bits
 	// when the Diagnostic Mode is set and the error address is not inhibited.
-	if (csr_.diagnosticCheck && !inhibited (address))
-		csr_.checkBitsStorage = storedCheckBits;
-
+	//
 	// The CSR ErrorAddress and Check Bit Storage contains bits A17 - A11
 	// of the error address when in Normal Mode (i.e. Diagnostic Mode and 
 	// Disable Correction Mode both not set) or Disable Correction mode is
-    // set and the error address is not inhibited.
-	if ((!csr_.diagnosticCheck && !csr_.errorCorrectionDisable) ||
-		csr_.errorCorrectionDisable && !inhibited (address))
+	// set and the error address is not inhibited.
+	//
+	if (csr_.diagnosticCheck && !inhibited (address))
+		csr_.checkBitsStorage = storedCheckBits;
+	else
 	{
 		errorLog_.address = address;
-        errorLog_.syndromeBits = 
+		errorLog_.syndromeBits =
 			generateSyndromeBits (storedCheckBits, generatedCheckBits);
 		csr_.errorAddressStorage = addressBitsA17_A11 (address);
 	}
