@@ -18,13 +18,15 @@ std::ostream& operator<< (std::ostream& os, TraceRecord<MS11_PRecord> record)
         case MS11_PRecordType::ReadMemory:
             os << "[MS1P] read memory " << oct << record.address_ <<
                 ": " << record.value_ << '/' << 
-                oct << +record.checkBits_ << '\n';
+                oct << +record.checkBits_ << 
+                " CSR: " << oct << record.csr_ << '\n';
             break;
 
         case MS11_PRecordType::WriteMemory:
             os << "[MS1P] write memory " << oct << record.address_ <<
                 ": " << record.value_ << '/' <<
-                oct << +record.checkBits_ << '\n';
+                oct << +record.checkBits_ << 
+                " CSR: " << oct << record.csr_ << '\n';
             break;
     }
     return os;
