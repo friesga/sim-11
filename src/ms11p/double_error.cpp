@@ -14,14 +14,17 @@ CondData<u16> MS11P::handleDoubleError (BusAddress address, u16 data,
 	{
 		if (!inhibited (address))
 			csr_.checkBitsStorage = storedCheckBits;
-		return {data, StatusCode::ParityError};
 	}
 	else
-	{
 		csr_.errorAddressStorage = addressBitsA17_A11 (address);
-		if (csr_.uncorrectableErrorIndication)
-			return {data, StatusCode::ParityError};
-		else
-			return {data};
-	}
+
+	// PIf a double error coccurs with ECC enabled, or a single or double
+	// error occurs with ECC disabled and bit 0 [Uncorrectable Error Indicator
+	// Enable] set, then during a DATI or DATIP cycle to memory, BUS PB L
+	// is asserted on the Unibus [generating a parity error trap] at the
+	// same time as data. (EK-MS11P-TM-001, par. 2.3.1).
+	if (csr_.uncorrectableErrIndicationEnable)
+		return {data, StatusCode::ParityError};
+	else
+		return {data};
 }
