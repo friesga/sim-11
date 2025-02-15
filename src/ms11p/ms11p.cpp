@@ -34,7 +34,7 @@ MS11P::~MS11P ()
 
 CondData<u16> MS11P::read (BusAddress address)
 {
-	if (address.registerAddress () == csrAddress_)
+	if (address.isInIOpage () && (address.registerAddress () == csrAddress_))
         return readCSR ();
 	else
 	{
@@ -112,7 +112,7 @@ CondData<u16> MS11P::readCSR ()
 
 StatusCode MS11P::writeWord (BusAddress address, u16 value)
 {
-	if (address.registerAddress () == csrAddress_)
+	if (address.isInIOpage () && (address.registerAddress () == csrAddress_))
 		writeCSR (value & writeMask);
 	else
 	{
@@ -139,10 +139,11 @@ void MS11P::writeCSR (u16 value)
 // The MS11-P is responsible for its CSR and for its memory
 bool MS11P::responsible (BusAddress address)
 {
-	return address.registerAddress () == csrAddress_ ||
-		(!address.isInIOpage () && 
-		   address >= startingAddress_ &&
-		   address < startingAddress_ + memorySize_.byteCapacity ());
+	if (address.isInIOpage ())
+        return address.registerAddress () == csrAddress_;
+    else
+        return address >= startingAddress_ &&
+            address < startingAddress_ + memorySize_.byteCapacity ();
 }
 
 u16 MS11P::loadFile (const char* fileName)
