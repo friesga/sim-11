@@ -71,10 +71,17 @@ CondData<u16> MS11P::read (BusAddress address)
 	throw "Should not happen";
 }
 
+// Compare the stored checkbits with the newly generated check bits and return
+// a single or double bit error if they differ. In that case the syndrome bits
+// and error address are stored in the error log.
+//
+// In case an address is read before it has been written the stored check
+// bits are zero and the those check bits cannot be compared with the
+// generated check bits.
 MS11P::BitError MS11P::checkParity (BusAddress address, u8 storedCheckBits,
 	u8 generatedCheckBits)
 {
-	if (storedCheckBits == generatedCheckBits)
+	if ((storedCheckBits == 0) || (storedCheckBits == generatedCheckBits))
         return BitError::None;
 
 	errorLog_.address = address;
