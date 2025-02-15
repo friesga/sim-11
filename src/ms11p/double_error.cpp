@@ -13,12 +13,12 @@ CondData<u16> MS11P::handleDoubleError (BusAddress address, u16 data,
 	if (csr_.diagnosticCheck)
 	{
 		if (!inhibited (address))
-			csr_.errorAddressAndCheckBits = storedCheckBits;
+			csr_.checkBitsStorage = storedCheckBits;
 		return {data, StatusCode::ParityError};
 	}
 	else
 	{
-		csr_.errorAddressAndCheckBits = addressBitsA17_A11 (address);
+		csr_.errorAddressStorage = addressBitsA17_A11 (address);
 		if (csr_.uncorrectableErrorIndication)
 			return {data, StatusCode::ParityError};
 		else

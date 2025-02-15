@@ -5,7 +5,7 @@ using std::popcount;
 u8 MS11P::newCheckBits (BusAddress address, u16 value)
 {
     return (csr_.diagnosticCheck && !inhibited (address)) ?
-        csr_.errorAddressAndCheckBits :
+        csr_.checkBitsStorage :
         generateCheckBits (value);
 }
 

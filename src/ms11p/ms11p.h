@@ -56,6 +56,12 @@ public:
 private:
     // CSR bit definitions
     // An initialization will apply to the first element in the union.
+    //
+    // Bits 11 through 5 of the CSR are used for different purposes. It
+    // contains either address bits A17-A11, address bits A21-A18, the
+    // check bits (C8-CX) or the syndrome bits (S8-SX). As for these purposes
+    // a different number of bits are used, two overlaying fields are
+    // defined.
     union csr
     {
         u16 value;
@@ -64,7 +70,8 @@ private:
         BitField<u16, 2> diagnosticCheck;
         BitField<u16, 3> inhibitModePointer;
         BitField<u16, 4> singleErrorIndication;
-        BitField<u16, 5, 7> errorAddressAndCheckBits;
+        BitField<u16, 5, 6> checkBitsStorage;
+        BitField<u16, 5, 7> errorAddressStorage;
         BitField<u16, 11> a17;
         BitField<u16, 12> notUsed;
         BitField<u16, 13> inhibitModeEnable;

@@ -53,7 +53,7 @@ CondData<u16> MS11P::read (BusAddress address)
 			case BitError::None:
 				// Clear error log
 				if (csr_.diagnosticCheck && !inhibited (address))
-					csr_.errorAddressAndCheckBits = storedCheckBits;
+					csr_.checkBitsStorage = storedCheckBits;
 				errorLog_.syndromeBits = 0;
 				return {data};
 
@@ -100,9 +100,9 @@ CondData<u16> MS11P::readCSR ()
 	if (errorLog_.syndromeBits != 0 && csr_.eubErrorAddressRetrieval)
 	{
 		if (!csr_.diagnosticCheck)
-			csr_.errorAddressAndCheckBits = addressBitsA21_A18 (errorLog_.address);
+			csr_.errorAddressStorage = addressBitsA21_A18 (errorLog_.address);
 		else
-			csr_.errorAddressAndCheckBits = errorLog_.syndromeBits;
+			csr_.checkBitsStorage = errorLog_.syndromeBits;
 	}
 
 	// trace.ms11_p (MS11_PRecordType::ReadCSR, csr_.value, 0, 0, 0);
