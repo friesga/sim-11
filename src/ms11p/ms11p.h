@@ -105,12 +105,14 @@ private:
     static const u16 c4Mask {0b1100000011111100};
     static const u16 c8Mask {0b1111111100000000};
 
-    struct ErrorLog
+    struct AccessLog_
     {
         BusAddress address {0};
         u8 syndromeBits {0};
+        u8 checkBits;
     }
-    errorLog_;
+    accessLog_;
+    
 
     enum class BitError
     {

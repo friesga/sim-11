@@ -6,19 +6,17 @@ CondData<u16> MS11P::handleDoubleError (BusAddress address, u16 data,
 	// Set Double Error bit
 	csr_.uncorrectableErrorIndication = 1;
 
-	// When the Diagnostic Mode is set and the error address is not inhibited
-	// the CSR ErrorAddress and Check Bit Storage contains the check bits.
-	// In all other cases the storage contains bits A17 through A11 of the
-	// error address.
-	if (csr_.diagnosticCheck)
+	// In Diagnostic/unprotected (c.q. not inhibited) mode the check bits
+	// read from memory are logged in the Check Bit Storage. No addresses or
+	// error syndromes are logged in the storage.
+	if (csr_.diagnosticCheck && !inhibited (address))
 	{
-		if (!inhibited (address))
-			csr_.checkBitsStorage = storedCheckBits;
+		csr_.checkBitsStorage = storedCheckBits;
+		accessLog_.syndromeBits = 0;
+		return {data};
 	}
-	else
-		csr_.errorAddressStorage = addressBitsA17_A11 (address);
 
-	// PIf a double error coccurs with ECC enabled, or a single or double
+	// If a double error coccurs with ECC enabled, or a single or double
 	// error occurs with ECC disabled and bit 0 [Uncorrectable Error Indicator
 	// Enable] set, then during a DATI or DATIP cycle to memory, BUS PB L
 	// is asserted on the Unibus [generating a parity error trap] at the
