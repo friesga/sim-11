@@ -107,7 +107,8 @@ TEST_F (MS11PTest, checkBitsCanBeWritten)
     // Write data to memory with check bits from CSR
     EXPECT_EQ (ms11p.writeWord (BusAddress (0), 0123456), StatusCode::Success);
 
-    // Read data plus checkbits in CSR
+    // Read data plus checkbits in CSR. This generates a double error but no
+    // error is logged as the MS11-P is in Diagnostic Mode.
     dataRead = ms11p.read (BusAddress (0));
     EXPECT_EQ (dataRead, 0123456);
     EXPECT_EQ (dataRead.statusCode (), StatusCode::Success);
