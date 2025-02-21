@@ -14,6 +14,13 @@ CondData<u16> MS11P::handleDoubleError (BusAddress address, u16 data,
 		csr_.checkBitsStorage = storedCheckBits;
 		accessLog_.syndromeBits = 0;
 	}
+	else
+	{
+		// Log error
+		accessLog_.address = address;
+		accessLog_.syndromeBits = 
+			generateSyndromeBits (storedCheckBits, generatedCheckBits);
+	}
 
 	// If a double error coccurs with ECC enabled, or a single or double
 	// error occurs with ECC disabled and bit 0 [Uncorrectable Error Indicator
