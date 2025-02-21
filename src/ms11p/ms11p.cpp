@@ -198,7 +198,10 @@ u16 MS11P::loadFile (const char* fileName)
 }
 
 void MS11P::reset ()
-{}
+{
+	// Clear error log
+	accessLog_.syndromeBits = 0;
+}
 
 // If power is lost and no battery backup is available the memory is cleared.
 void MS11P::BPOKReceiver (bool signalValue)
