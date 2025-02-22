@@ -144,7 +144,10 @@ CondData<u16> MS11P::readCSR ()
 	return {csr_.value};
 }
 
-
+// If bit 1 is set to 1, you can clear a soft double error in memory
+// by writing new data into one or both PDP-11 memory locations of the
+// bad 22-bit word. (EK-MS11P-TM-001 par 2.3.10)
+//
 StatusCode MS11P::writeWord (BusAddress address, u16 value)
 {
 	if (address.isInIOpage () && (address.registerAddress () == csrAddress_))
