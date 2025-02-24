@@ -45,17 +45,14 @@ CondData<u16> MS11P::read (BusAddress address)
 		u8 storedCheckBits = checkBits_[(address >> 1) - startingAddress_];
 		u8 generatedCheckBits = generateCheckBits (data);
 
-		trace.ms11_p (MS11_PRecordType::ReadMemory, csr_.value, address, data,
-			storedCheckBits);
+		// trace.ms11_p (MS11_PRecordType::ReadMemory, csr_.value, address, data,
+		//	storedCheckBits);
 
 		switch (checkParity (address, storedCheckBits, generatedCheckBits))
 		{
 			case BitError::None:
 				if (csr_.diagnosticCheck && !inhibited (address))
-					csr_.checkBitsStorage = storedCheckBits;
-
-				// Clear error log
-				accessLog_.syndromeBits = 0;
+					checkSyndromeBits_ = storedCheckBits;
 				return {data};
 
 			case BitError::Single:
@@ -85,21 +82,19 @@ MS11P::BitError MS11P::checkParity (BusAddress address, u8 storedCheckBits,
 	if ((storedCheckBits == 0) || (storedCheckBits == generatedCheckBits))
         return BitError::None;
 
-	accessLog_.address = address;
-	accessLog_.syndromeBits =
-		generateSyndromeBits (storedCheckBits, generatedCheckBits);
+	u8 syndromeBits = generateSyndromeBits (storedCheckBits, generatedCheckBits);
 
-	return popcount (accessLog_.syndromeBits) == 1 ?
+	return popcount (syndromeBits) == 1 ?
 		BitError::Single : BitError::Double;
 }
 
-// If during normal operation, a double or sinle error occurs during a DATI,
-// DATIP or DATAOB cycle [i.e. AccessLog_.syndromeBits is filled], and if CSR
-// bit 2 is set to zero [i.e. no diagnostic mode set], CSR bits 5 through 10
-// store syndrome bits X, 0, 1, 2, 4, and 8. To read syndrome bits from the
-// CSR, CSR bit 2 must be set to 1 (diagnostic mode) and the CSR read. This
-// operation allows syndrome bits for a single or double failure to be read,
-// instead of the address bits normally read when CSR 2 is set to zero.
+// If during normal operation, a double or single error occurs during a DATI,
+// DATIP or DATAOB cycle, and if CSR bit 2 is set to zero [i.e. no diagnostic
+// mode set], CSR bits 5 through 10 store syndrome bits X, 0, 1, 2, 4, and 8.
+// To read syndrome bits from the CSR, CSR bit 2 must be set to 1 (diagnostic
+// mode) and the CSR read. This operation allows syndrome bits for a single
+// or double failure to be read, instead of the address bits normally read
+// when CSR 2 is set to zero.
 //
 // When a single error has occurred the highest order bits of the error
 // address can be read from the CSR by setting bit 14 (EUB Address
@@ -107,36 +102,48 @@ MS11P::BitError MS11P::checkParity (BusAddress address, u8 storedCheckBits,
 // bits both bit 14 and bit 2 must be set to 1. 
 // Source: EK-MS11P-TM-001
 //
-// This leads to the following table:
+// This leads to the following table (see EK-MS11P-TM-001, Table 3-5):
 //
 // EUB Address (14) | Diag check (2)  | Storage contents |
 // -----------------+-----------------+------------------+
 //  	0			|	 0   		  |	A11-A17		     |
 // 		1			|	 0			  |	A18-A21          |
 //		0			|	 1			  |	Syndrome bits    |
+//		1			|	 1			  |	Syndrome bits    |
 // -----------------+-----------------+------------------+
 //
 // Note that in Normal Operating Mode (no read errors) with diagnostic check
 // enabled, the Check Bit Storage is written when the memory is read.
+// 
+// When the memory is not in diagnostic mode (CSR bit 2 equals 0), data
+// previously loaded into CSR bits 11-5 cannot be read. (EK-MS11P-TM-001,
+// par 2.3.10)
 //
 CondData<u16> MS11P::readCSR ()
 {
 	// A one is read in CSR bit 11 if CSR bits 2, 23 and 14 are set to indicate
 	// that the memory under test is an MS11-P. (EK-MS11P-TM-001 par. 2.3.6.1)
 	if (csr_.diagnosticCheck && csr_.inhibitModeEnable &&
-			csr_.eubErrorAddressRetrieval)
-		csr_.a17 = 1;
-
-	if (accessLog_.syndromeBits != 0)
+		csr_.eubErrorAddressRetrieval)
 	{
-		if (csr_.diagnosticCheck)
-			csr_.checkBitsStorage = accessLog_.syndromeBits;
-		else
+		csr_.a17 = 1;
+		trace.ms11_p (MS11_PRecordType::ReadCSR, csr_.value, 0, 0, 0);
+		return {csr_.value};
+	}
+
+	if (csr_.diagnosticCheck)
+	{
+		csr_.errorAddressStorage = checkSyndromeBits_;
+		checkSyndromeBits_ = 0;
+	}
+	else
+	{
+		if (csr_.singleErrorIndication || csr_.uncorrectableErrorIndication)
 		{
 			if (csr_.eubErrorAddressRetrieval)
-				csr_.errorAddressStorage = addressBitsA21_A18 (accessLog_.address);
+				csr_.errorAddressStorage = addressBitsA21_A18 (errorAddress_);
 			else
-				csr_.errorAddressStorage = addressBitsA17_A11 (accessLog_.address);
+				csr_.errorAddressStorage = addressBitsA17_A11 (errorAddress_);
 		}
 	}
 
@@ -158,8 +165,8 @@ StatusCode MS11P::writeWord (BusAddress address, u16 value)
 		checkBits_[(address >> 1) - startingAddress_] = 
 			newCheckBits (address, value);
 
-		trace.ms11_p (MS11_PRecordType::WriteMemory, csr_.value, address, value,
-			newCheckBits (address, value));
+		// trace.ms11_p (MS11_PRecordType::WriteMemory, csr_.value, address, value,
+		//	newCheckBits (address, value));
 	}
 
 	return StatusCode::Success;
@@ -178,10 +185,17 @@ StatusCode MS11P::writeWord (BusAddress address, u16 value)
 // should not contain the check bits from a previous memory access in
 // diagnostic mode. This feature too is used to discriminate a MS11-P from
 // other memory modules.
+// 
+// Note that a DATO cycle to the CSR destroys the retrieved check bits, but
+// an error address recorded in the CSR is preserved. (EK-MS11P-TM-001,
+// par 2.3.10)
 //
 void MS11P::writeCSR (u16 value)
 {
 	csr_.value = value & writeMask;
+	if (checkSyndromeBits_ == 0)
+		checkSyndromeBits_ = (value & CheckBitStorageMask) >> 5;
+
 	trace.ms11_p (MS11_PRecordType::WriteCSR, value, 0, 0, 0);
 }
 
@@ -201,10 +215,7 @@ u16 MS11P::loadFile (const char* fileName)
 }
 
 void MS11P::reset ()
-{
-	// Clear error log
-	accessLog_.syndromeBits = 0;
-}
+{}
 
 // If power is lost and no battery backup is available the memory is cleared.
 void MS11P::BPOKReceiver (bool signalValue)

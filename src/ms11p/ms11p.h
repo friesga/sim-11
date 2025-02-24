@@ -62,6 +62,15 @@ private:
     // check bits (C8-CX) or the syndrome bits (S8-SX). As for these purposes
     // a different number of bits are used, two overlaying fields are
     // defined.
+    //
+    // Check Bit Storage (Diagnostic Check Bit 2 = 1, Disable Correction Bit 1
+    // = Do Not Care) -- These bits are read/write bits in diagnostic check
+    // mode. They store the check bits to be written into, or read from,
+    // memory. (EK-MS11P-TM-001, par. 2.3.6.1)
+    //
+    // Diagnostic Register -- This internal six-bit register holds the
+    // contents of CSR 5-10. It is loaded on a write CSR or write CSR
+    // diagnostic cycle. (EK-MS11P-TM-001, par 3.2.3)
     union csr
     {
         u16 value;
@@ -82,7 +91,7 @@ private:
 
     // Bit 11 (A17) is read-only
     static const u16 writeMask {0173777};
-
+    static const u16 CheckBitStorageMask {03740};
 
     // Definition of the checkbits per memory word
     union CheckBits
@@ -105,14 +114,11 @@ private:
     static const u16 c4Mask {0b1100000011111100};
     static const u16 c8Mask {0b1111111100000000};
 
-    struct AccessLog_
-    {
-        BusAddress address {0};
-        u8 syndromeBits {0};
-        u8 checkBits;
-    }
-    accessLog_;
-    
+    // Definition of the MS11-P internal registers. The checkSyndromeBits
+    // is used for both check bits and syndrome bits and contains the one
+    // or the other, depending on the executed commands.
+    BusAddress errorAddress_ {0};
+    u8 checkSyndromeBits_ {0};
 
     enum class BitError
     {

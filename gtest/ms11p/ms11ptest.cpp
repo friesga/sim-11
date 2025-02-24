@@ -14,6 +14,7 @@ protected:
     static constexpr u16  DiagnosticCheck    = 1 << 2;
     static constexpr u16  SingleError        = 1 << 4;
     static constexpr u16  ErrorStorage       = 1 << 5;
+    static constexpr u16  A17                = 1 << 11;
     static constexpr u16  InhibitMode        = 1 << 13;
     static constexpr u16  EUBAddress         = 1 << 14;
     static constexpr u16  UncorrectableError = 1 << 15;
@@ -54,7 +55,7 @@ TEST_F (MS11PTest, capacityIsOneMB)
 
 // This test verifies that bit 13 of the CSR can be set and read back. This
 // discriminates a MS11-P/M from a MS11-L.
-TEST_F (MS11PTest, identifiedAsMS11P)
+TEST_F (MS11PTest, identifiedAsMS11MP)
 {
     Qbus bus;
     MS11P ms11p {&bus};
@@ -64,6 +65,50 @@ TEST_F (MS11PTest, identifiedAsMS11P)
     dataRead = ms11p.read (BusAddress (MS11P_CSR));
     EXPECT_TRUE (dataRead & InhibitMode);
     EXPECT_EQ (dataRead.statusCode (), StatusCode::Success);
+}
+
+// This test verifies that CSR bit 11 is set if bits 2, 13 and 14 are set. This
+// indicates the module is a MS11-P
+TEST_F (MS11PTest, identifiedAsMS11P)
+{
+    Qbus bus;
+    MS11P ms11p {&bus};
+    CondData<u16> csr {0};
+
+    EXPECT_EQ (ms11p.writeWord (BusAddress (MS11P_CSR), 060004), StatusCode::Success);
+    csr = ms11p.read (BusAddress (MS11P_CSR));
+    EXPECT_EQ (csr.statusCode (), StatusCode::Success);
+    EXPECT_TRUE (csr & A17);
+}
+
+/*
+TEST_F (MS11PTest, csrCanBeOverwritten)
+{
+    Qbus bus;
+    MS11P ms11p {&bus};
+    CondData<u16> csr {0};
+
+    EXPECT_EQ (ms11p.writeWord (BusAddress (MS11P_CSR), 020046), StatusCode::Success);
+    EXPECT_EQ (ms11p.writeWord (BusAddress (MS11P_CSR), 023706), StatusCode::Success);
+    csr = ms11p.read (BusAddress (MS11P_CSR));
+    EXPECT_EQ (csr.statusCode (), StatusCode::Success);
+    EXPECT_EQ (csr, 023706);
+}
+*/
+
+// This test verifies that the MS11-P uses six parity bits. This is determined
+// by writing seven checks bits and checking six check bits are stored
+// in the CSR. This test is used by ZMSPC0 to determine the module's type.
+TEST_F (MS11PTest, sixParityBitsRead)
+{
+    Qbus bus;
+    MS11P ms11p {&bus};
+    CondData<u16> csr {0};
+
+    EXPECT_EQ (ms11p.writeWord (BusAddress (MS11P_CSR), 027744), StatusCode::Success);
+    csr = ms11p.read (BusAddress (MS11P_CSR));
+    EXPECT_EQ (csr, 023744);
+    EXPECT_EQ (csr.statusCode (), StatusCode::Success);
 }
 
 // Verify correct checkbits are generated for the value 0123456. The expected
@@ -160,6 +205,7 @@ TEST_F (MS11PTest, singleErrorFillsErrorLog)
     Qbus bus;
     MS11P ms11p {&bus};
     CondData<u16> dataRead {0};
+    CondData<u16> csr {0};
 
     EXPECT_EQ (ms11p.writeWord (BusAddress (MS11P_CSR), 0), StatusCode::Success);
 
@@ -183,24 +229,24 @@ TEST_F (MS11PTest, singleErrorFillsErrorLog)
 
     // Verify Single Error bit set and Address Error and Syndrome Storage
     // contains bits A17-A11 of the address.
-    dataRead = ms11p.read (BusAddress (MS11P_CSR));
-    EXPECT_TRUE (dataRead & SingleError);
-    EXPECT_EQ (errorStorageContents (dataRead), 0177);
+    csr = ms11p.read (BusAddress (MS11P_CSR));
+    EXPECT_TRUE (csr & SingleError);
+    EXPECT_EQ (errorStorageContents (csr), 0177);
     EXPECT_EQ (dataRead.statusCode (), StatusCode::Success);
 
     // Read high order address bits from CSR
-    EXPECT_EQ (ms11p.writeWord (BusAddress (MS11P_CSR), EUBAddress),
+    EXPECT_EQ (ms11p.writeWord (BusAddress (MS11P_CSR), csr | EUBAddress),
         StatusCode::Success);
-    dataRead = ms11p.read (BusAddress (MS11P_CSR));
-    EXPECT_EQ (errorStorageContents (dataRead), 03);
+    csr = ms11p.read (BusAddress (MS11P_CSR));
+    EXPECT_EQ (errorStorageContents (csr), 03);
     EXPECT_EQ (dataRead.statusCode (), StatusCode::Success);
 
     // And finally read the syndrome bits. Stored checkbits (041) xor correct
     // checkbits (040) is 001.
-    EXPECT_EQ (ms11p.writeWord (BusAddress (MS11P_CSR), EUBAddress | DiagnosticCheck),
-        StatusCode::Success);
-    dataRead = ms11p.read (BusAddress (MS11P_CSR));
-    EXPECT_EQ (errorStorageContents (dataRead), 001);
+    EXPECT_EQ (ms11p.writeWord (BusAddress (MS11P_CSR),
+        csr | EUBAddress | DiagnosticCheck), StatusCode::Success);
+    csr = ms11p.read (BusAddress (MS11P_CSR));
+    EXPECT_EQ (errorStorageContents (csr), 001);
     EXPECT_EQ (dataRead.statusCode (), StatusCode::Success);
 }
 
@@ -209,6 +255,7 @@ TEST_F (MS11PTest, doubleErrorFillsErrorLog)
     Qbus bus;
     MS11P ms11p {&bus};
     CondData<u16> dataRead {0};
+    CondData<u16> csr {0};
 
     EXPECT_EQ (ms11p.writeWord (BusAddress (MS11P_CSR), 0), StatusCode::Success);
 
@@ -232,23 +279,23 @@ TEST_F (MS11PTest, doubleErrorFillsErrorLog)
 
     // Verify Double Error bit set and Address Error and Syndrome Storage
     // contains bits A17-A11 of the address.
-    dataRead = ms11p.read (BusAddress (MS11P_CSR));
-    EXPECT_TRUE (dataRead & UncorrectableError);
-    EXPECT_EQ (errorStorageContents (dataRead), 0177);
+    csr = ms11p.read (BusAddress (MS11P_CSR));
+    EXPECT_TRUE (csr & UncorrectableError);
+    EXPECT_EQ (errorStorageContents (csr), 0177);
     EXPECT_EQ (dataRead.statusCode (), StatusCode::Success);
 
     // Read high order address bits from CSR
-    EXPECT_EQ (ms11p.writeWord (BusAddress (MS11P_CSR), EUBAddress),
+    EXPECT_EQ (ms11p.writeWord (BusAddress (MS11P_CSR), csr | EUBAddress),
         StatusCode::Success);
-    dataRead = ms11p.read (BusAddress (MS11P_CSR));
-    EXPECT_EQ (errorStorageContents (dataRead), 03);
+    csr = ms11p.read (BusAddress (MS11P_CSR));
+    EXPECT_EQ (errorStorageContents (csr), 03);
     EXPECT_EQ (dataRead.statusCode (), StatusCode::Success);
 
     // And finally read the syndrome bits. Stored checkbits (043) xor correct
     // checkbits (040) is 003.
-    EXPECT_EQ (ms11p.writeWord (BusAddress (MS11P_CSR), EUBAddress | DiagnosticCheck),
-        StatusCode::Success);
-    dataRead = ms11p.read (BusAddress (MS11P_CSR));
-    EXPECT_EQ (errorStorageContents (dataRead), 003);
+    EXPECT_EQ (ms11p.writeWord (BusAddress (MS11P_CSR),
+        csr | EUBAddress | DiagnosticCheck), StatusCode::Success);
+    csr = ms11p.read (BusAddress (MS11P_CSR));
+    EXPECT_EQ (errorStorageContents (csr), 003);
     EXPECT_EQ (dataRead.statusCode (), StatusCode::Success);
 }

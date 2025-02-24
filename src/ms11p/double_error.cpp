@@ -10,15 +10,11 @@ CondData<u16> MS11P::handleDoubleError (BusAddress address, u16 data,
 	// read from memory are logged in the Check Bit Storage. No addresses or
 	// error syndromes are logged in the storage.
 	if (csr_.diagnosticCheck && !inhibited (address))
-	{
-		csr_.checkBitsStorage = storedCheckBits;
-		accessLog_.syndromeBits = 0;
-	}
+		checkSyndromeBits_ = storedCheckBits;
 	else
 	{
-		// Log error
-		accessLog_.address = address;
-		accessLog_.syndromeBits = 
+		errorAddress_ = address;
+		checkSyndromeBits_ =
 			generateSyndromeBits (storedCheckBits, generatedCheckBits);
 	}
 
