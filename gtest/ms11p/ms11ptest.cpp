@@ -81,7 +81,6 @@ TEST_F (MS11PTest, identifiedAsMS11P)
     EXPECT_TRUE (csr & A17);
 }
 
-/*
 TEST_F (MS11PTest, csrCanBeOverwritten)
 {
     Qbus bus;
@@ -94,7 +93,6 @@ TEST_F (MS11PTest, csrCanBeOverwritten)
     EXPECT_EQ (csr.statusCode (), StatusCode::Success);
     EXPECT_EQ (csr, 023706);
 }
-*/
 
 // This test verifies that the MS11-P uses six parity bits. This is determined
 // by writing seven checks bits and checking six check bits are stored
