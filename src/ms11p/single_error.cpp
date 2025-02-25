@@ -41,9 +41,9 @@ u8 MS11P::addressBitsA21_A18 (BusAddress address)
 	return (address >> 18) & 0177;
 }
 
-// The syndrome bits are produced by an exclusivr or of the two sets of
+// The syndrome bits are produced by an exclusive or of the two sets of
 // checkbits. If the two sets of check bits are identical (there are no
-// errors) the syndrome bits are all zeros.
+// errors) the syndrome bits are all zeros. (EK-MS11P-TM-001, par. 3.2.2)
 u8 MS11P::generateSyndromeBits (u8 checkBitSet1, u8 checkBitset2)
 {
 	return checkBitSet1 ^ checkBitset2;
