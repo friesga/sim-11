@@ -297,3 +297,49 @@ TEST_F (MS11PTest, doubleErrorFillsErrorLog)
     EXPECT_EQ (errorStorageContents (csr), 003);
     EXPECT_EQ (dataRead.statusCode (), StatusCode::Success);
 }
+
+TEST_F (MS11PTest, syndromeBitsRetrieved)
+{
+    Qbus bus;
+    MS11P ms11p {&bus};
+    CondData<u16> dataRead {0};
+    CondData<u16> csr {0};
+
+    // Generate a double bit error on a word so the syndrome bits register
+    // is filled. Set diagnostic mode and double error check bits. Use
+    // these checkbits when writing the word and then read it back, generating
+    // the double bit error.
+    EXPECT_EQ (ms11p.writeWord (BusAddress (MS11P_CSR), 023144), StatusCode::Success);
+    EXPECT_EQ (ms11p.writeWord (BusAddress (0200002, BusAddress::Width::_22Bit), 0),
+        StatusCode::Success);
+    dataRead = ms11p.read (BusAddress (0200000, BusAddress::Width::_22Bit));
+
+    // Set Inhibit Mode plus Diagnostic Check Mode
+    EXPECT_EQ (ms11p.writeWord (BusAddress (MS11P_CSR), 020004), StatusCode::Success);
+
+    // Set Double Error Check bits to be written to address
+    EXPECT_EQ (ms11p.writeWord (BusAddress (MS11P_CSR), 023144), StatusCode::Success);
+
+    // Write data plus double error check bits
+    EXPECT_EQ (ms11p.writeWord (BusAddress (0200000, BusAddress::Width::_22Bit), 0),
+        StatusCode::Success);
+
+    // Reset diagnostic check mode
+    EXPECT_EQ (ms11p.writeWord (BusAddress (MS11P_CSR), 020000), StatusCode::Success);
+
+    // Read data with double error checkbits to get double error
+    dataRead = ms11p.read (BusAddress (0200000, BusAddress::Width::_22Bit));
+    EXPECT_EQ (dataRead.statusCode (), StatusCode::Success);
+    EXPECT_EQ (dataRead, 0);
+
+    // Verify Double Error bit is set
+    csr = ms11p.read (BusAddress (MS11P_CSR));
+    EXPECT_TRUE (csr & UncorrectableError);
+
+    // Enable Syndrome bit register
+    EXPECT_EQ (ms11p.writeWord (BusAddress (MS11P_CSR), 020004), StatusCode::Success);
+
+    // Verify correct syndrome bits are read
+    csr = ms11p.read (BusAddress (MS11P_CSR));
+    EXPECT_EQ (csr & 03744, 03744);
+}
