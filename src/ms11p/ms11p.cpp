@@ -45,14 +45,17 @@ CondData<u16> MS11P::read (BusAddress address)
 		u8 storedCheckBits = checkBits_[(address >> 1) - startingAddress_];
 		u8 generatedCheckBits = generateCheckBits (data);
 
-		// trace.ms11_p (MS11_PRecordType::ReadMemory, csr_.value, address, data,
-		//	storedCheckBits);
+		trace.ms11_p (MS11_PRecordType::ReadMemory, csr_.value, address, data,
+			storedCheckBits);
 
 		switch (checkParity (address, storedCheckBits, generatedCheckBits))
 		{
 			case BitError::None:
 				if (csr_.diagnosticCheck && !inhibited (address))
+				{
 					checkSyndromeBits_ = storedCheckBits;
+					checkSyndromeBitsState_ = CheckSyndromeBitsState::SourceMemory;
+				}
 				return {data};
 
 			case BitError::Single:
@@ -134,7 +137,7 @@ CondData<u16> MS11P::readCSR ()
 	if (csr_.diagnosticCheck)
 	{
 		csr_.errorAddressStorage = checkSyndromeBits_;
-		checkSyndromeBits_ = 0;
+		checkSyndromeBitsState_ = CheckSyndromeBitsState::Empty;
 	}
 	else
 	{
@@ -165,8 +168,8 @@ StatusCode MS11P::writeWord (BusAddress address, u16 value)
 		checkBits_[(address >> 1) - startingAddress_] = 
 			newCheckBits (address, value);
 
-		// trace.ms11_p (MS11_PRecordType::WriteMemory, csr_.value, address, value,
-		//	newCheckBits (address, value));
+		trace.ms11_p (MS11_PRecordType::WriteMemory, csr_.value, address, value,
+			newCheckBits (address, value));
 	}
 
 	return StatusCode::Success;
@@ -193,8 +196,9 @@ StatusCode MS11P::writeWord (BusAddress address, u16 value)
 void MS11P::writeCSR (u16 value)
 {
 	csr_.value = value & writeMask;
-	if (checkSyndromeBits_ == 0)
-		checkSyndromeBits_ = (value & CheckBitStorageMask) >> 5;
+	if (checkSyndromeBitsState_ == CheckSyndromeBitsState::Empty ||
+		checkSyndromeBitsState_ == CheckSyndromeBitsState::SourceCSR)
+			checkSyndromeBits_ = (value & CheckBitStorageMask) >> 5;
 
 	trace.ms11_p (MS11_PRecordType::WriteCSR, value, 0, 0, 0);
 }

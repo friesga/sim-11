@@ -120,6 +120,45 @@ private:
     BusAddress errorAddress_ {0};
     u8 checkSyndromeBits_ {0};
 
+    // The checkSyndromeBits_ register can be in (one of) the following
+    // states:
+    // - SourceCSR, the register is written by a value from the CSR,
+    // - SourceMemory, the register is filled by check or syndrome bits from
+    //   memory,
+    // - Empty, the register has not yet been filled or check/syndrome bits
+    //   are read via the CSR.
+    //
+    // The following actions can be executed on the register:
+    // - writeCSR, write the value from (bits A5-A10) in the CSR into the
+    //   register,
+    // - cb_syn, check or syndrome bits from memory are written into the
+    //   register,
+    // - readCSR, the register is read via the register.
+    //
+    // This leads to the following state machine:
+    //
+    //                            +-----+
+    //                            |     | writeCSR
+    //           writeCSR         v     | 
+    //         +----------> SourceCSR --+
+    //         |              |   |
+    //         |     readCSR  |   | cb_syn
+    //  +-- Empty <-----------+   |
+    //  |   ^  |              |   |
+    //  |   |  |              |   v
+    //  +---+  +----------> SourceMemory ---+
+    // readCSR  cb_syn            ^         |
+    //                            |         | cb_syn
+    //                            +---------+
+    //
+    enum class CheckSyndromeBitsState
+    {
+        Empty,
+        SourceCSR,
+        SourceMemory
+    }
+    checkSyndromeBitsState_ {CheckSyndromeBitsState::Empty};
+
     enum class BitError
     {
         None,
