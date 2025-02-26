@@ -18,14 +18,14 @@ CondData<u16> MS11P::handleSingleError (BusAddress address, u16 data,
 	if (csr_.diagnosticCheck && !inhibited (address))
 	{
 		checkSyndromeBits_ = storedCheckBits;
-		checkSyndromeBitsState_ = CheckSyndromeBitsState::SourceMemory;
+		checkSyndromeBitsState_ = CheckSyndromeBitsState::CbSynRegisterFilled;
 	}
 	else
 	{
 		errorAddress_ = address;
 		checkSyndromeBits_ = 
 			generateSyndromeBits (storedCheckBits, generatedCheckBits);
-		checkSyndromeBitsState_ = CheckSyndromeBitsState::SourceMemory;
+		checkSyndromeBitsState_ = CheckSyndromeBitsState::CbSynRegisterFilled;
 	}
 
 	return {data};
