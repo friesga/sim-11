@@ -94,20 +94,6 @@ TEST_F (MS11PTest, csrCanBeOverwritten)
     EXPECT_EQ (csr, 023706);
 }
 
-// Verify the check/syndrome bits in the CSR can be set and read back while
-// not in diagnostic check mode.
-TEST_F (MS11PTest, csrCanBeSetAndReadBack)
-{
-    Qbus bus;
-    MS11P ms11p {&bus};
-    CondData<u16> csr {0};
-
-    EXPECT_EQ (ms11p.writeWord (BusAddress (MS11P_CSR), 03740), StatusCode::Success);
-    csr = ms11p.read (BusAddress (MS11P_CSR));
-    EXPECT_EQ (csr.statusCode (), StatusCode::Success);
-    EXPECT_EQ (csr, 03740);
-}
-
 // This test verifies that the MS11-P uses six parity bits. This is determined
 // by writing seven checks bits and checking six check bits are stored
 // in the CSR. This test is used by ZMSPC0 to determine the module's type.
@@ -312,6 +298,8 @@ TEST_F (MS11PTest, doubleErrorFillsErrorLog)
     EXPECT_EQ (dataRead.statusCode (), StatusCode::Success);
 }
 
+// This test is the functional equivalent of ZMSPC0 subtest MTP045.
+//
 TEST_F (MS11PTest, syndromeBitsRetrieved)
 {
     Qbus bus;
@@ -351,7 +339,9 @@ TEST_F (MS11PTest, syndromeBitsRetrieved)
     EXPECT_TRUE (csr & UncorrectableError);
 
     // Enable Syndrome bit register
-    EXPECT_EQ (ms11p.writeWord (BusAddress (MS11P_CSR), 020004), StatusCode::Success);
+    // EXPECT_EQ (ms11p.writeWord (BusAddress (MS11P_CSR), 020004), StatusCode::Success);
+    EXPECT_EQ (ms11p.writeWord (BusAddress (MS11P_CSR), csr | DiagnosticCheck),
+        StatusCode::Success);
 
     // Verify correct syndrome bits are read
     csr = ms11p.read (BusAddress (MS11P_CSR));
