@@ -10,16 +10,12 @@ CondData<u16> MS11P::handleDoubleError (BusAddress address, u16 data,
 	// read from memory are logged in the Check Bit Storage. No addresses or
 	// error syndromes are logged in the storage.
 	if (csr_.diagnosticCheck && !inhibited (address))
-	{
 		checkSyndromeBits_ = storedCheckBits;
-		checkSyndromeBitsState_ = CheckSyndromeBitsState::CbSynRegisterFilled;
-	}
 	else
 	{
 		errorAddress_ = address;
 		checkSyndromeBits_ =
 			generateSyndromeBits (storedCheckBits, generatedCheckBits);
-		checkSyndromeBitsState_ = CheckSyndromeBitsState::CbSynRegisterFilled;
 	}
 
 	// If a double error coccurs with ECC enabled, or a single or double

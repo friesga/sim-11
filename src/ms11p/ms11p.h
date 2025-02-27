@@ -91,7 +91,7 @@ private:
 
     // Bit 11 (A17) is read-only
     static const u16 writeMask {0173777};
-    static const u16 CheckBitStorageMask {03740};
+    static const u16 checkBitStorageMask {03740};
 
     // Definition of the checkbits per memory word
     union CheckBits
@@ -119,47 +119,6 @@ private:
     // or the other, depending on the executed commands.
     BusAddress errorAddress_ {0};
     u8 checkSyndromeBits_ {0};
-    u8 diagnosticRegister_ {0};
-
-    // The diagnosticRegister_ and checkSyndromeBits_ register can be in
-    // (one of) the following states:
-    // - DiagnosticRegisterSet, the diagnostic register is written by a
-    //   value from the CSR,
-    // - Check_SyndromeBitsFilled, the checkSyndromeBits_ register is filled
-    //   by check or syndrome bits from memory.
-    //
-    // The following events can be triggered on the registers:
-    // - writeCSR, write the value from (bits A5-A10) into the
-    //   diagnosticRegister_,
-    // - writeMem, a memory word is written in diagnostic check mode, using
-    //   the checkbits from the diagnostic register,
-    // - cb_syn, check or syndrome bits from memory are written into the
-    //   register,
-    // - readCSR, the diagnostic or checkSyndromeBits_ register is read
-    //   via the CSR.
-    //
-    // This leads to the following state machine:
-    //
-    //    setCSR          readCSR
-    //   +----+           +----+
-    //   |    |           |    |
-    //   |    v           v    |
-    //   +-- DiagRegisterSet --+
-    //        ^   |       |
-    //  setCSR|   |cb/syn |writeMem
-    //        |   v       v
-    //   +-- CbSynRegisterFilled --+
-    //   |        ^       ^        |
-    //   |        |       |        |
-    //   +--------+       +--------+
-    //     cb/syn           readCSR
-    //
-    enum class CheckSyndromeBitsState
-    {
-        DiagRegisterSet,
-        CbSynRegisterFilled
-    }
-    checkSyndromeBitsState_ {CheckSyndromeBitsState::CbSynRegisterFilled};
 
     enum class BitError
     {

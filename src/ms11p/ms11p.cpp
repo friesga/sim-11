@@ -45,17 +45,14 @@ CondData<u16> MS11P::read (BusAddress address)
 		u8 storedCheckBits = checkBits_[(address >> 1) - startingAddress_];
 		u8 generatedCheckBits = generateCheckBits (data);
 
-		trace.ms11_p (MS11_PRecordType::ReadMemory, csr_.value, address, data,
-			storedCheckBits);
+		// trace.ms11_p (MS11_PRecordType::ReadMemory, csr_.value, address, data,
+		//	storedCheckBits);
 
 		switch (checkParity (address, storedCheckBits, generatedCheckBits))
 		{
 			case BitError::None:
 				if (csr_.diagnosticCheck && !inhibited (address))
-				{
 					checkSyndromeBits_ = storedCheckBits;
-					checkSyndromeBitsState_ = CheckSyndromeBitsState::CbSynRegisterFilled;
-				}
 				return {data};
 
 			case BitError::Single:
@@ -135,12 +132,7 @@ CondData<u16> MS11P::readCSR ()
 	}
 
 	if (csr_.diagnosticCheck)
-	{
-		csr_.errorAddressStorage = 
-			(checkSyndromeBitsState_ == CheckSyndromeBitsState::CbSynRegisterFilled) ?
-			checkSyndromeBits_ :
-			diagnosticRegister_;
-	}
+		csr_.errorAddressStorage = checkSyndromeBits_;
 	else
 	{
 		if (csr_.singleErrorIndication || csr_.uncorrectableErrorIndication)
@@ -170,8 +162,8 @@ StatusCode MS11P::writeWord (BusAddress address, u16 value)
 		checkBits_[(address >> 1) - startingAddress_] = 
 			newCheckBits (address, value);
 
-		trace.ms11_p (MS11_PRecordType::WriteMemory, csr_.value, address, value,
-			newCheckBits (address, value));
+		// trace.ms11_p (MS11_PRecordType::WriteMemory, csr_.value, address, value,
+		//	newCheckBits (address, value));
 	}
 
 	return StatusCode::Success;
@@ -195,11 +187,24 @@ StatusCode MS11P::writeWord (BusAddress address, u16 value)
 // an error address recorded in the CSR is preserved. (EK-MS11P-TM-001,
 // par 2.3.10)
 //
+// The EUB address A21 through A18 [in fact the Error Address/Syndrome Bits
+// storage] is read only when CSR 14 equals 1. (EK-MS11P-TM-001, par. 2.3.6.3)
+// See also the CSR examples in par. 2.3.11.
+//
 void MS11P::writeCSR (u16 value)
 {
-	csr_.value = value & writeMask;
-	diagnosticRegister_ = (value & CheckBitStorageMask) >> 5;
-	checkSyndromeBitsState_ = CheckSyndromeBitsState::DiagRegisterSet;
+	// Set all CSR bits to to the given value except for the syndrome storage
+	// and bit 13
+	csr_.value = (csr_.value & checkBitStorageMask) |
+		(value &writeMask & ~checkBitStorageMask);
+
+	// Next determine if the syndrome storage must be written
+	if (csr_.diagnosticCheck && !csr_.eubErrorAddressRetrieval &&
+		(((value & checkBitStorageMask) >> 5) != csr_.checkBitsStorage))
+	{
+		checkSyndromeBits_ = (value & checkBitStorageMask) >> 5;
+		csr_.errorAddressStorage = value & checkBitStorageMask;
+	}
 
 	trace.ms11_p (MS11_PRecordType::WriteCSR, value, 0, 0, 0);
 }

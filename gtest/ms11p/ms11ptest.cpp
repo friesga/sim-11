@@ -347,3 +347,36 @@ TEST_F (MS11PTest, syndromeBitsRetrieved)
     csr = ms11p.read (BusAddress (MS11P_CSR));
     EXPECT_EQ (csr & 03744, 03744);
 }
+
+TEST_F (MS11PTest, MTP044)
+{
+    Qbus bus;
+    MS11P ms11p {&bus};
+    CondData<u16> csr {0};
+    CondData<u16> dataRead {0};
+
+    // Set Diagnostic Check Mode plus Correction disable
+    EXPECT_EQ (ms11p.writeWord (BusAddress (MS11P_CSR), 020006), StatusCode::Success);
+
+    // Write Single bit error check bits to CSR
+    EXPECT_EQ (ms11p.writeWord (BusAddress (MS11P_CSR), 020046), StatusCode::Success);
+
+    // Write data with single error check bits
+    EXPECT_EQ (ms11p.writeWord (BusAddress (0200000, BusAddress::Width::_22Bit), 0),
+        StatusCode::Success);
+
+    // Load CSR with complement check bits
+    EXPECT_EQ (ms11p.writeWord (BusAddress (MS11P_CSR), 023706), StatusCode::Success);
+
+    // Check CSR for complement check bits
+    csr = ms11p.read (BusAddress (MS11P_CSR));
+    EXPECT_EQ (csr, 023706);
+
+    // Read Check bits at A=0 into CSR
+    dataRead = ms11p.read (BusAddress (0200000, BusAddress::Width::_22Bit));
+    EXPECT_EQ (dataRead.statusCode (), StatusCode::Success);
+
+    // Read CSR for correct check bits
+    csr = ms11p.read (BusAddress (MS11P_CSR));
+    EXPECT_EQ (errorStorageContents (csr), 1);
+}

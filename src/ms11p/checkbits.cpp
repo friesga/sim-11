@@ -4,21 +4,9 @@ using std::popcount;
 
 u8 MS11P::newCheckBits (BusAddress address, u16 value)
 {
-    /*
     return (csr_.diagnosticCheck && !inhibited (address)) ?
         checkSyndromeBits_ :
         generateCheckBits (value);
-    */
-
-    if (csr_.diagnosticCheck && !inhibited (address))
-    {
-        checkSyndromeBits_ = diagnosticRegister_;
-        checkSyndromeBitsState_ = 
-            CheckSyndromeBitsState::CbSynRegisterFilled;
-        return diagnosticRegister_;
-    }
-    else
-        return generateCheckBits (value);
 }
 
 // The check bits are generated according to a modified Hamming code. The
