@@ -6,32 +6,35 @@ CondData<u16> MS11P::read (BusAddress address)
 	if (address.isInIOpage () && (address.registerAddress () == csrAddress_))
 		return readCSR ();
 	else
+		return readMemory (address);
+}
+
+CondData<u16> MS11P::readMemory (BusAddress address)
+{	
+	// Get the contents of the memory location converting the byte address
+	// to an index into the word array (which is allowed as all addresses
+	// are even word addresses).
+	u16 data = memory_[(address >> 1) - startingAddress_];
+	u8 storedCheckBits = checkBits_[(address >> 1) - startingAddress_];
+	u8 generatedCheckBits = generateCheckBits (data);
+
+	// trace.ms11_p (MS11_PRecordType::ReadMemory, csr_.value, address, data,
+	//	storedCheckBits);
+
+	switch (checkParity (address, storedCheckBits, generatedCheckBits))
 	{
-		// Get the contents of the memory location converting the byte address
-		// to an index into the word array (which is allowed as all addresses
-		// are even word addresses).
-		u16 data = memory_[(address >> 1) - startingAddress_];
-		u8 storedCheckBits = checkBits_[(address >> 1) - startingAddress_];
-		u8 generatedCheckBits = generateCheckBits (data);
+		case BitError::None:
+			if (csr_.diagnosticCheck && !inhibited (address))
+				checkSyndromeBits_ = storedCheckBits;
+			return {data};
 
-		// trace.ms11_p (MS11_PRecordType::ReadMemory, csr_.value, address, data,
-		//	storedCheckBits);
+		case BitError::Single:
+			return handleSingleError (address, data, storedCheckBits,
+				generatedCheckBits);
 
-		switch (checkParity (address, storedCheckBits, generatedCheckBits))
-		{
-			case BitError::None:
-				if (csr_.diagnosticCheck && !inhibited (address))
-					checkSyndromeBits_ = storedCheckBits;
-				return {data};
-
-			case BitError::Single:
-				return handleSingleError (address, data, storedCheckBits,
-					generatedCheckBits);
-
-			case BitError::Double:
-				return handleDoubleError (address, data, storedCheckBits,
-					generatedCheckBits);
-		}
+		case BitError::Double:
+			return handleDoubleError (address, data, storedCheckBits,
+				generatedCheckBits);
 	}
 
 	// Satisfy the compiler

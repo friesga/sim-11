@@ -10,16 +10,19 @@ StatusCode MS11P::writeWord (BusAddress address, u16 value)
 	if (address.isInIOpage () && (address.registerAddress () == csrAddress_))
 		writeCSR (value);
 	else
-	{
-		memory_[(address >> 1) - startingAddress_] = value;
-		checkBits_[(address >> 1) - startingAddress_] =
-			newCheckBits (address, value);
-
-		// trace.ms11_p (MS11_PRecordType::WriteMemory, csr_.value, address, value,
-		//	newCheckBits (address, value));
-	}
+		writeMemory (address, value);
 
 	return StatusCode::Success;
+}
+
+void MS11P::writeMemory (BusAddress address, u16 value)
+{
+	memory_[(address >> 1) - startingAddress_] = value;
+	checkBits_[(address >> 1) - startingAddress_] =
+		newCheckBits (address, value);
+
+	// trace.ms11_p (MS11_PRecordType::WriteMemory, csr_.value, address, value,
+	//	newCheckBits (address, value));
 }
 
 // Bit 13 of the CSR is "not used" on the MS11-L and is read/write on the

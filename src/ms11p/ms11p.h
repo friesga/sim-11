@@ -139,7 +139,9 @@ private:
     unique_ptr<u8[]> checkBits_;
 
     CondData<u16> readCSR ();
+    CondData<u16> readMemory (BusAddress address);
     void writeCSR (u16 value);
+    void writeMemory (BusAddress address, u16 value);
 
     BitError checkParity (BusAddress address, u8 storedCheckBits,
         u8 generatedCheckBits);
