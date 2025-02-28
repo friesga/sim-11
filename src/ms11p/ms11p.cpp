@@ -193,17 +193,17 @@ StatusCode MS11P::writeWord (BusAddress address, u16 value)
 //
 void MS11P::writeCSR (u16 value)
 {
-	// Set all CSR bits to to the given value except for the syndrome storage
+
+	// Set all CSR bits to to the given value except for the syndrome storage	
 	// and bit 13
 	csr_.value = (csr_.value & checkBitStorageMask) |
 		(value &writeMask & ~checkBitStorageMask);
 
 	// Next determine if the syndrome storage must be written
-	if (csr_.diagnosticCheck && !csr_.eubErrorAddressRetrieval &&
-		(((value & checkBitStorageMask) >> 5) != csr_.checkBitsStorage))
+	if (csr_.diagnosticCheck && !csr_.eubErrorAddressRetrieval)
 	{
 		checkSyndromeBits_ = (value & checkBitStorageMask) >> 5;
-		csr_.errorAddressStorage = value & checkBitStorageMask;
+		csr_.errorAddressStorage = (value & checkBitStorageMask) >> 5;
 	}
 
 	trace.ms11_p (MS11_PRecordType::WriteCSR, value, 0, 0, 0);
