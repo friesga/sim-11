@@ -313,6 +313,8 @@ set (TRACE_SRCS
     set (MS11P_SRCS
         src/ms11p/ms11p.cpp
         src/ms11p/checkbits.cpp
+        src/ms11p/read.cpp
+        src/ms11p/write.cpp
         src/ms11p/single_error.cpp
         src/ms11p/double_error.cpp)
 
