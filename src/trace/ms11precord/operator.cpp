@@ -12,7 +12,9 @@ std::ostream& operator<< (std::ostream& os, TraceRecord<MS11_PRecord> record)
             break;
 
         case MS11_PRecordType::WriteCSR:
-            os << "[MS1P] write CSR: " << oct << record.csr_ << '\n';
+            os << "[MS1P] write CSR " << oct << record.csr_ << 
+                " to " << oct << record.value_ <<
+                " current CB/SYN: " << oct << +record.checkBits_ << '\n';
             break;
 
         case MS11_PRecordType::ReadMemory:
