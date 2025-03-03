@@ -1,5 +1,9 @@
 #include "ms11p.h"
 
+// For single errors, the error correction logic complements (corrects)
+// the single bit in error. [...] If the single error is one of the check
+// bits, the correction logic does not place corrected check bits on the
+// syndrome/check bit outputs. EK-MS11P-TM-001, p. 3-12.
 CondData<u16> MS11P::handleSingleError (BusAddress address, u16 data,
 	u8 storedCheckBits, u8 generatedCheckBits)
 {
@@ -20,8 +24,15 @@ CondData<u16> MS11P::handleSingleError (BusAddress address, u16 data,
 	else
 	{
 		errorAddress_ = address;
-		checkSyndromeBits_ = 
-			generateSyndromeBits (storedCheckBits, generatedCheckBits);
+		checkSyndromeBits_ = syndromeBits_;
+	}
+
+	// Try to correct the error
+	if (!csr_.errorCorrectionDisable && !inhibited (address))
+	{
+		if (syndromeDecodeTable_ [syndromeBits_].key == 
+				SyndromeDecodeKey::DataBit)
+			data = correctSingleError (data, syndromeBits_);
 	}
 
 	return {data};

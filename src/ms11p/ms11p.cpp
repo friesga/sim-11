@@ -45,10 +45,9 @@ MS11P::BitError MS11P::checkParity (BusAddress address, u8 storedCheckBits,
 	if ((storedCheckBits == 0) || (storedCheckBits == generatedCheckBits))
         return BitError::None;
 
-	u8 syndromeBits = generateSyndromeBits (storedCheckBits, generatedCheckBits);
+	syndromeBits_ = generateSyndromeBits (storedCheckBits, generatedCheckBits);
 
-	return popcount (syndromeBits) == 1 ?
-		BitError::Single : BitError::Double;
+	return detectedErrors (syndromeBits_);
 }
 
 // The MS11-P is responsible for its CSR and for its memory

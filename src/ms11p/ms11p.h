@@ -9,10 +9,12 @@
 
 #include <memory>
 #include <bit>
+#include <array>
 
 using std::unique_ptr;
 using std::shared_ptr;
 using std::make_unique;
+using std::array;
 
 // Implementation of the MS11-P MOS memory.
 //
@@ -127,6 +129,108 @@ private:
         Double
     };
 
+    // The SyndromeDecodeKey and the syndroneDecodeTable_ contain the
+    // information as defined in EK-MS11P-TM-001 Table 3-2.
+    enum class SyndromeDecodeKey
+    {
+        NoError,
+        DataBit,
+        CheckBit,
+        TwoErrors,
+        MultipleErrors
+    };
+
+    struct SyndromeDecodeCell
+    {
+        SyndromeDecodeKey key;
+        u8 bit;
+    };
+
+    // This table decodes the value of the syndrome bits to the bit in error.
+    // Each cell contains a pair <SyndromeDecodeKey, error bit number>
+    array<SyndromeDecodeCell, 64> syndromeDecodeTable_
+    {
+        // Column 0
+        SyndromeDecodeCell {SyndromeDecodeKey::NoError, 0},
+        SyndromeDecodeCell {SyndromeDecodeKey::CheckBit, 0},
+        SyndromeDecodeCell {SyndromeDecodeKey::CheckBit, 1},
+        SyndromeDecodeCell {SyndromeDecodeKey::TwoErrors, 0},
+        SyndromeDecodeCell {SyndromeDecodeKey::CheckBit, 2},
+        SyndromeDecodeCell {SyndromeDecodeKey::TwoErrors, 0},
+        SyndromeDecodeCell {SyndromeDecodeKey::TwoErrors, 0},
+        SyndromeDecodeCell {SyndromeDecodeKey::MultipleErrors, 0},
+
+        // Column 1
+        SyndromeDecodeCell {SyndromeDecodeKey::CheckBit, 3},
+        SyndromeDecodeCell {SyndromeDecodeKey::TwoErrors, 0},
+        SyndromeDecodeCell {SyndromeDecodeKey::TwoErrors, 0},
+        SyndromeDecodeCell {SyndromeDecodeKey::DataBit, 1},
+        SyndromeDecodeCell {SyndromeDecodeKey::TwoErrors, 0},
+        SyndromeDecodeCell {SyndromeDecodeKey::MultipleErrors, 0},
+        SyndromeDecodeCell {SyndromeDecodeKey::DataBit, 0},
+        SyndromeDecodeCell {SyndromeDecodeKey::TwoErrors, 0},
+
+        // Column 2
+        SyndromeDecodeCell {SyndromeDecodeKey::CheckBit, 4},
+        SyndromeDecodeCell {SyndromeDecodeKey::TwoErrors, 0},
+        SyndromeDecodeCell {SyndromeDecodeKey::TwoErrors, 0},
+        SyndromeDecodeCell {SyndromeDecodeKey::DataBit, 2},
+        SyndromeDecodeCell {SyndromeDecodeKey::TwoErrors, 0},
+        SyndromeDecodeCell {SyndromeDecodeKey::DataBit, 3},
+        SyndromeDecodeCell {SyndromeDecodeKey::DataBit, 4},
+        SyndromeDecodeCell {SyndromeDecodeKey::TwoErrors, 0},
+
+        // Column 3
+        SyndromeDecodeCell {SyndromeDecodeKey::TwoErrors, 0},
+        SyndromeDecodeCell {SyndromeDecodeKey::DataBit, 5},
+        SyndromeDecodeCell {SyndromeDecodeKey::DataBit, 6},
+        SyndromeDecodeCell {SyndromeDecodeKey::TwoErrors, 0},
+        SyndromeDecodeCell {SyndromeDecodeKey::DataBit, 7},
+        SyndromeDecodeCell {SyndromeDecodeKey::TwoErrors, 0},
+        SyndromeDecodeCell {SyndromeDecodeKey::TwoErrors, 0},
+        SyndromeDecodeCell {SyndromeDecodeKey::MultipleErrors, 0},
+
+        // Column 4
+        SyndromeDecodeCell {SyndromeDecodeKey::CheckBit, 5},
+        SyndromeDecodeCell {SyndromeDecodeKey::TwoErrors, 0},
+        SyndromeDecodeCell {SyndromeDecodeKey::TwoErrors, 0},
+        SyndromeDecodeCell {SyndromeDecodeKey::DataBit, 8},
+        SyndromeDecodeCell {SyndromeDecodeKey::TwoErrors, 0},
+        SyndromeDecodeCell {SyndromeDecodeKey::DataBit, 9},
+        SyndromeDecodeCell {SyndromeDecodeKey::DataBit, 10},
+        SyndromeDecodeCell {SyndromeDecodeKey::TwoErrors, 0},
+
+        // Column 5
+        SyndromeDecodeCell {SyndromeDecodeKey::TwoErrors, 0},
+        SyndromeDecodeCell {SyndromeDecodeKey::DataBit, 11},
+        SyndromeDecodeCell {SyndromeDecodeKey::DataBit, 12},
+        SyndromeDecodeCell {SyndromeDecodeKey::TwoErrors, 0},
+        SyndromeDecodeCell {SyndromeDecodeKey::DataBit, 13},
+        SyndromeDecodeCell {SyndromeDecodeKey::TwoErrors, 0},
+        SyndromeDecodeCell {SyndromeDecodeKey::TwoErrors, 0},
+        SyndromeDecodeCell {SyndromeDecodeKey::MultipleErrors, 0},
+
+        // Column 6
+        SyndromeDecodeCell {SyndromeDecodeKey::TwoErrors, 0},
+        SyndromeDecodeCell {SyndromeDecodeKey::DataBit, 14},
+        SyndromeDecodeCell {SyndromeDecodeKey::MultipleErrors},
+        SyndromeDecodeCell {SyndromeDecodeKey::TwoErrors, 0},
+        SyndromeDecodeCell {SyndromeDecodeKey::DataBit, 15},
+        SyndromeDecodeCell {SyndromeDecodeKey::TwoErrors, 0},
+        SyndromeDecodeCell {SyndromeDecodeKey::TwoErrors, 0},
+        SyndromeDecodeCell {SyndromeDecodeKey::MultipleErrors, 0},
+
+        // Column 7
+        SyndromeDecodeCell {SyndromeDecodeKey::MultipleErrors, 0},
+        SyndromeDecodeCell {SyndromeDecodeKey::TwoErrors, 0},
+        SyndromeDecodeCell {SyndromeDecodeKey::TwoErrors, 0},
+        SyndromeDecodeCell {SyndromeDecodeKey::MultipleErrors, 0},
+        SyndromeDecodeCell {SyndromeDecodeKey::TwoErrors, 0},
+        SyndromeDecodeCell {SyndromeDecodeKey::MultipleErrors, 0},
+        SyndromeDecodeCell {SyndromeDecodeKey::MultipleErrors, 0},
+        SyndromeDecodeCell {SyndromeDecodeKey::TwoErrors, 0}
+    };
+
     Bus* bus_;
     MS11PConfig::PowerSource powerSource_ {MS11PConfig::PowerSource::System};
     u32 startingAddress_ {0};
@@ -163,6 +267,8 @@ private:
     u8 addressBitsA17_A11 (BusAddress address);
     u8 addressBitsA21_A18 (BusAddress address);
     u8 generateSyndromeBits (u8 checkBits1, u8 checkBits2);
+    BitError detectedErrors (u8 syndromeBits);
+    u16 correctSingleError (u16 data, u8 syndromeBits);
 };
 
 #endif // _MS11P_H_
