@@ -10,7 +10,8 @@ u16 MS11P::correctSingleError (u16 data, u8 syndromeBits)
 // error occurred.
 MS11P::BitError MS11P::detectedErrors (u8 syndromeBits)
 { 
-    SyndromeDecodeKey key = syndromeDecodeTable_[checkSyndromeBits_].key;
+    SyndromeDecodeKey key = syndromeDecodeTable_[syndromeBits].key;
+
 
     switch (key)
     {
