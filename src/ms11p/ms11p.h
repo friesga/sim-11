@@ -235,7 +235,7 @@ private:
     MS11PConfig::PowerSource powerSource_ {MS11PConfig::PowerSource::System};
     u32 startingAddress_ {0};
     u16 csrAddress_ {0172100};
-    u16 syndromeBits_ {077};
+    u8 syndromeBits_ {0};
 
     // Definition of the MS11-P memory
     static constexpr MemorySize memorySize_ {512_KiW};
