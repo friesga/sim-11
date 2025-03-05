@@ -50,12 +50,6 @@ MS11P::BitError MS11P::checkParity (BusAddress address, u8 storedCheckBits,
 
 	syndromeBits_ = generateSyndromeBits (storedCheckBits, generatedCheckBits);
 
-	stringstream ss;
-	ss << "storedCheckBits: " << std::oct << +storedCheckBits <<
-		" generatedCheckBits: " << std::oct << +generatedCheckBits <<
-		" syndromeBits_: " << std::oct << +syndromeBits_ << '\n';
-	trace.debug (ss.str ());
-
 	return detectedErrors (syndromeBits_);
 }
 
