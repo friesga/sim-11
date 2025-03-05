@@ -86,16 +86,10 @@ CondData<u16> MS11P::readCSR ()
 
 	if (csr_.diagnosticCheck)
 		csr_.errorAddressStorage = checkSyndromeBits_;
-	else
-	{
-		if (csr_.singleErrorIndication || csr_.uncorrectableErrorIndication)
-		{
-			if (csr_.eubErrorAddressRetrieval)
-				csr_.errorAddressStorage = addressBitsA21_A18 (errorAddress_);
-			else
-				csr_.errorAddressStorage = addressBitsA17_A11 (errorAddress_);
-		}
-	}
+	else if (csr_.singleErrorIndication || csr_.uncorrectableErrorIndication)
+		csr_.errorAddressStorage = addressBitsA17_A11 (errorAddress_);
+	else if (csr_.eubErrorAddressRetrieval)
+		csr_.errorAddressStorage = addressBitsA21_A18 (errorAddress_);
 
 	trace.ms11_p (MS11_PRecordType::ReadCSR, csr_.value, 0, 0, 0);
 	return {csr_.value};
