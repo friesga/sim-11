@@ -33,7 +33,9 @@ CondData<u16> MS11P::handleSingleError (BusAddress address, u16 data,
 		if (syndromeDecodeTable_ [syndromeBits_].key == 
 				SyndromeDecodeKey::DataBit)
 			data = correctSingleError (data, syndromeBits_);
-	}
+	} 
+	else if (csr_.uncorrectableErrIndicationEnable)
+		return {data, StatusCode::ParityError};
 
 	return {data};
 }
