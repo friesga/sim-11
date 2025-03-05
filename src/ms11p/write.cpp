@@ -51,9 +51,6 @@ void MS11P::writeCSR (u16 value)
 {
 	trace.ms11_p (MS11_PRecordType::WriteCSR, csr_.value, 0, value, checkSyndromeBits_);
 
-	bool syndromeBitsProtected = (csr_.uncorrectableErrorIndication
-		|| csr_.singleErrorIndication) && !(value & 02);
-
 	// Set all CSR bits to to the given value except for the syndrome storage	
 	// and bit 13
 	csr_.value = (csr_.value & checkBitStorageMask) |
@@ -61,7 +58,7 @@ void MS11P::writeCSR (u16 value)
 
 	// Next determine if the syndrome storage must be written
 	if (csr_.diagnosticCheck && !csr_.eubErrorAddressRetrieval &&
-		!syndromeBitsProtected)
+		(value & checkBitStorageMask) != 0)
 	{
 		checkSyndromeBits_ = (value & checkBitStorageMask) >> 5;
 		csr_.errorAddressStorage = (value & checkBitStorageMask) >> 5;
