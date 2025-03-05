@@ -233,7 +233,7 @@ TEST_F (MS11PTest, singleErrorFillsErrorLog)
     EXPECT_EQ (dataRead.statusCode (), StatusCode::Success);
 
     // Read high order address bits from CSR
-    EXPECT_EQ (ms11p.writeWord (BusAddress (MS11P_CSR), csr | EUBAddress),
+    EXPECT_EQ (ms11p.writeWord (BusAddress (MS11P_CSR), EUBAddress),
         StatusCode::Success);
     csr = ms11p.read (BusAddress (MS11P_CSR));
     EXPECT_EQ (errorStorageContents (csr), 03);
@@ -242,7 +242,7 @@ TEST_F (MS11PTest, singleErrorFillsErrorLog)
     // And finally read the syndrome bits. Stored checkbits (050) xor correct
     // checkbits (040) is 010.
     EXPECT_EQ (ms11p.writeWord (BusAddress (MS11P_CSR),
-        csr | EUBAddress | DiagnosticCheck), StatusCode::Success);
+        EUBAddress | DiagnosticCheck), StatusCode::Success);
     csr = ms11p.read (BusAddress (MS11P_CSR));
     EXPECT_EQ (errorStorageContents (csr), 010);
     EXPECT_EQ (dataRead.statusCode (), StatusCode::Success);
@@ -283,7 +283,7 @@ TEST_F (MS11PTest, doubleErrorFillsErrorLog)
     EXPECT_EQ (dataRead.statusCode (), StatusCode::Success);
 
     // Read high order address bits from CSR
-    EXPECT_EQ (ms11p.writeWord (BusAddress (MS11P_CSR), csr | EUBAddress),
+    EXPECT_EQ (ms11p.writeWord (BusAddress (MS11P_CSR), EUBAddress),
         StatusCode::Success);
     csr = ms11p.read (BusAddress (MS11P_CSR));
     EXPECT_EQ (errorStorageContents (csr), 03);
@@ -292,7 +292,7 @@ TEST_F (MS11PTest, doubleErrorFillsErrorLog)
     // And finally read the syndrome bits. Stored checkbits (020) xor correct
     // checkbits (040) is 060.
     EXPECT_EQ (ms11p.writeWord (BusAddress (MS11P_CSR),
-        csr | EUBAddress | DiagnosticCheck), StatusCode::Success);
+        EUBAddress | DiagnosticCheck), StatusCode::Success);
     csr = ms11p.read (BusAddress (MS11P_CSR));
     EXPECT_EQ (errorStorageContents (csr), 060);
     EXPECT_EQ (dataRead.statusCode (), StatusCode::Success);
@@ -339,9 +339,7 @@ TEST_F (MS11PTest, syndromeBitsRetrieved)
     EXPECT_TRUE (csr & UncorrectableError);
 
     // Enable Syndrome bit register
-    // EXPECT_EQ (ms11p.writeWord (BusAddress (MS11P_CSR), 020004), StatusCode::Success);
-    EXPECT_EQ (ms11p.writeWord (BusAddress (MS11P_CSR), csr | DiagnosticCheck),
-        StatusCode::Success);
+    EXPECT_EQ (ms11p.writeWord (BusAddress (MS11P_CSR), 020004), StatusCode::Success);
 
     // Verify correct syndrome bits are read
     csr = ms11p.read (BusAddress (MS11P_CSR));
