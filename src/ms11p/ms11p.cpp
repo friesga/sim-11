@@ -3,6 +3,9 @@
 #include "trace/trace.h"
 
 #include <bit>
+#include <iostream>
+#include <iomanip>
+#include <sstream>
 
 using std::shared_ptr;
 using std::bind;
@@ -46,6 +49,12 @@ MS11P::BitError MS11P::checkParity (BusAddress address, u8 storedCheckBits,
         return BitError::None;
 
 	syndromeBits_ = generateSyndromeBits (storedCheckBits, generatedCheckBits);
+
+	stringstream ss;
+	ss << "storedCheckBits: " << std::oct << +storedCheckBits <<
+		" generatedCheckBits: " << std::oct << +generatedCheckBits <<
+		" syndromeBits_: " << std::oct << +syndromeBits_ << '\n';
+	trace.debug (ss.str ());
 
 	return detectedErrors (syndromeBits_);
 }
