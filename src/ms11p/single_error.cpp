@@ -12,30 +12,40 @@ CondData<u16> MS11P::handleSingleError (BusAddress address, u16 data,
 	csr_.singleErrorIndication =
 		csr_.errorCorrectionDisable && inhibited (address) ? 0 : 1;
 
-	// The Double Error bit is set when Disable Correction Mode is set
-	// and the error address is not inhibited.
-	csr_.uncorrectableErrorIndication = 
-		csr_.errorCorrectionDisable && !inhibited (address) ? 1 : 0;
-
-	// In Diagnostic/unprotected (c.q. not inhibited) mode the check bits
-	// read from memory are logged in the Check Bit Storage.
-	if (csr_.diagnosticCheck && !inhibited (address))
-		checkSyndromeBits_ = storedCheckBits;
-	else
+	// If CSR 15 H was set on a previous DBE, but not cleared by software,
+	// there is no logging of the SBE so information from previous can be
+	// read. (EK-MS11P-TM-001, p. 2-20)
+	//
+	// On top of that ZMSPC0 test 47 checks that in such a case the error
+	// address and syndrome bits are not changed.
+	// not changed.
+	if (!csr_.uncorrectableErrorIndication)
 	{
-		errorAddress_ = address;
-		checkSyndromeBits_ = syndromeBits_;
-	}
+		// The Double Error bit is set when Disable Correction Mode is set
+		// and the error address is not inhibited.
+		csr_.uncorrectableErrorIndication =
+			csr_.errorCorrectionDisable && !inhibited (address) ? 1 : 0;
 
-	// Try to correct the error
-	if (!csr_.errorCorrectionDisable && !inhibited (address))
-	{
-		if (syndromeDecodeTable_ [syndromeBits_].key == 
+		// In Diagnostic/unprotected (c.q. not inhibited) mode the check bits
+		// read from memory are logged in the Check Bit Storage.
+		if (csr_.diagnosticCheck && !inhibited (address))
+			checkSyndromeBits_ = storedCheckBits;
+		else
+		{
+			errorAddress_ = address;
+			checkSyndromeBits_ = syndromeBits_;
+		}
+
+		// Try to correct the error
+		if (!csr_.errorCorrectionDisable && !inhibited (address))
+		{
+			if (syndromeDecodeTable_[syndromeBits_].key ==
 				SyndromeDecodeKey::DataBit)
-			data = correctSingleError (data, syndromeBits_);
-	} 
-	else if (csr_.uncorrectableErrIndicationEnable)
-		return {data, StatusCode::ParityError};
+				data = correctSingleError (data, syndromeBits_);
+		}
+		else if (csr_.uncorrectableErrIndicationEnable)
+			return {data, StatusCode::ParityError};
+	}
 
 	return {data};
 }
