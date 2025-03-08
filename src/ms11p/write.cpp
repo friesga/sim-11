@@ -56,12 +56,14 @@ void MS11P::writeCSR (u16 value)
 	csr_.value = (csr_.value & checkBitStorageMask) |
 		(value & writeMask & ~checkBitStorageMask);
 
-	// Next determine if the syndrome storage must be written
+	// Next determine if the syndrome storage must be written. The fact that
+	// the storage bits cannot be overwritten with all zero's is not
+	// documented in EK-MS11P-TM-001, but can be concluded from the logic
+	// in ZMSPC0 tests 36, 44 and 45.
 	if (csr_.diagnosticCheck && !csr_.eubErrorAddressRetrieval &&
 		(value & checkBitStorageMask) != 0)
 	{
 		checkSyndromeBits_ = (value & checkBitStorageMask) >> 5;
 		csr_.errorAddressStorage = (value & checkBitStorageMask) >> 5;
-		trace.debug ("checkSyndromeBits set: " + to_string (checkSyndromeBits_));
 	}
 }

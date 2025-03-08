@@ -18,7 +18,6 @@ CondData<u16> MS11P::handleSingleError (BusAddress address, u16 data,
 	//
 	// On top of that ZMSPC0 test 47 checks that in such a case the error
 	// address and syndrome bits are not changed.
-	// not changed.
 	if (!csr_.uncorrectableErrorIndication)
 	{
 		// The Double Error bit is set when Disable Correction Mode is set

@@ -36,12 +36,12 @@ MS11P::~MS11P ()
 {}
 
 // Compare the stored checkbits with the newly generated check bits and return
-// a single or double bit error if they differ. In that case the syndrome bits
-// and error address are stored in the error log.
+// a single or double bit error if they differ.
 //
 // In case an address is read before it has been written the stored check
 // bits are zero and the those check bits cannot be compared with the
 // generated check bits.
+//
 MS11P::BitError MS11P::checkParity (BusAddress address, u8 storedCheckBits,
 	u8 generatedCheckBits)
 {
