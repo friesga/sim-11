@@ -4,6 +4,7 @@
 #include "types.h"
 
 #include <array>
+#include <cassert>
 
 using std::array;
 
@@ -99,9 +100,11 @@ inline bool BusAddress::isInIOpageLower2K ()
 }
 
 // Return the bus address as a register address, i.e. an u16 address of
-// a register in the I/O space.
+// a register in the I/O space. To prevent future issues assert that the
+// address actually is in the I/O space.
 inline u16 BusAddress::registerAddress ()
 {
+    assert (isInIOpage ());
     return value_ & 0177777;
 }
 
