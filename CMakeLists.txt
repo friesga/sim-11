@@ -272,36 +272,40 @@ set (TRACE_SRCS
     src/trace/trace.cpp
     src/trace/tracefileoutstream/tracefileoutstream.cpp 
     src/trace/tracefileoutstream/header.cpp
+    src/trace/clockrecord/tracefileinsertoperator.cpp
+    src/trace/rlv12registersrecord/tracefileinsertoperator.cpp
+    src/trace/memorydumprecord/tracefileinsertoperator.cpp 
+    src/trace/debugrecord/tracefileinsertoperator.cpp)
+
+set (TRACEREADER_SRCS
+    src/trace/tracefileoutstream/tracefileoutstream.cpp 
+    src/trace/tracefileoutstream/header.cpp
     src/trace/tracefileinstream/tracefileinstream.cpp
-    src/trace/cpueventrecord/operator.cpp
+    src/trace/clockrecord/extractionoperator.cpp
     src/trace/cpusteprecord/disas.cpp
-    src/trace/cpusteprecord/operator.cpp
-    src/trace/busrecord/operator.cpp
     src/trace/traprecord/gettrapname.cpp 
-    src/trace/traprecord/operator.cpp
-    src/trace/irqrecord/operator.cpp 
-    src/trace/rxv21diskrecord/operator.cpp 
     src/trace/rxv21commandrecord/getcommandname.cpp
+    src/trace/rxv21errorrecord/geterrorname.cpp 
+    src/trace/rlv12registersrecord/extractionoperator.cpp
+    src/trace/rlv12commandrecord/getcommandname.cpp
+    src/trace/cpueventrecord/operator.cpp
+    src/trace/cpusteprecord/operator.cpp
+    src/trace/memorydumprecord/extractionoperator.cpp
+    src/trace/busrecord/operator.cpp
+    src/trace/traprecord/operator.cpp
+    src/trace/irqrecord/operator.cpp
+    src/trace/rxv21diskrecord/operator.cpp 
     src/trace/rxv21commandrecord/operator.cpp
     src/trace/rxv21dmarecord/operator.cpp 
-    src/trace/rxv21errorrecord/geterrorname.cpp 
     src/trace/rxv21errorrecord/operator.cpp 
     src/trace/dlv11record/operator.cpp 
-    src/trace/rlv12registersrecord/tracefileinsertoperator.cpp
-    src/trace/rlv12registersrecord/extractionoperator.cpp
-    src/trace/rlv12registersrecord/ostreaminsertopreator.cpp 
     src/trace/rlv12commandrecord/operator.cpp
-    src/trace/rlv12commandrecord/getcommandname.cpp
+    src/trace/rlv12registersrecord/ostreaminsertopreator.cpp 
     src/trace/unibusmaprecord/operator.cpp
-    src/trace/clockrecord/tracefileinsertoperator.cpp
-    src/trace/clockrecord/extractionoperator.cpp
     src/trace/clockrecord/ostreaminsertoperator.cpp
-    src/trace/memorydumprecord/tracefileinsertoperator.cpp 
-    src/trace/memorydumprecord/extractionoperator.cpp
     src/trace/memorydumprecord/ostreaminsertoperator.cpp
     src/trace/aprrecord/operator.cpp
     src/trace/mmurecord/operator.cpp
-    src/trace/debugrecord/tracefileinsertoperator.cpp
     src/trace/debugrecord/extractionoperator.cpp
     src/trace/debugrecord/ostreaminsertoperator.cpp
     src/trace/ms11precord/operator.cpp)
@@ -605,7 +609,7 @@ enable_testing ()
 # Create trace reader
 add_executable (tracereader 
     tracereader/main.cpp
-    ${TRACE_SRCS})
+    ${TRACEREADER_SRCS})
 
 target_include_directories (tracereader PRIVATE include src)
 
