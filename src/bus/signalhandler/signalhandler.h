@@ -60,4 +60,4 @@ private:
 	Signal IOMapEnable_;
 };
 
-#endif _SIGNALHANDLER_H_
+#endif // _SIGNALHANDLER_H_

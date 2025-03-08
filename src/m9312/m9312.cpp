@@ -115,7 +115,7 @@ CondData<u16> M9312::readDiagnosticROM (BusAddress busAddress)
     if (diagnosticROM_ == nullptr)
         return StatusCode::NonExistingMemory;
 
-    u16 imageIndex = busAddress.registerAddress () - diagROMBaseAddress >> 1;
+    u16 imageIndex = (busAddress.registerAddress () - diagROMBaseAddress) >> 1;
     return {(*diagnosticROM_)[imageIndex]};
 }
 
@@ -126,8 +126,8 @@ CondData<u16> M9312::readBootROM (BusAddress busAddress)
     if (bootROM_[romNumber] == nullptr)
         return {StatusCode::NonExistingMemory};
 
-    u16 imageIndex = busAddress.registerAddress () - 
-        bootROMBaseAddresses[romNumber] >> 1;
+    u16 imageIndex = (busAddress.registerAddress () - 
+        bootROMBaseAddresses[romNumber]) >> 1;
     return {(*bootROM_[romNumber])[imageIndex]};
 }
 
