@@ -37,7 +37,7 @@ This emulator passes the following XXDP diagnostics:
 - VKAHA1 (4K system exerciser),
 - JKDBD0 (11/23 Basic CPU test),
 - JKDAD1 (11/23 Mamory Management test),
-- VMSAC0 (0-4 Megabute Memory Exerciser),
+- VMSAC0 (0-4 Megabyte Memory Exerciser),
 - VRLBC0 (RLV11 diskless controller test),
 - ZRLGE0 (RLV11 controller test 1),
 - ZRLHB1 (RLV11 controller test 2),
@@ -62,12 +62,14 @@ The simuator has the following features:
 - Support for BA11-N and BA11-L mounting boxes, showing status LEDs and switches
   to control the CPU,
 - Power-up and powerfail support,
-- Configurable by means of an ini-files,
+- Configurable by means of a ini-files,
 - FIS instruction support (accurate except for one-bit edge cases),
-- Complete Micro-ODT support that implements the original ODT realistically
-  for both the KD11-NA and the reduced command set in the KDF11-A,
+- Complete Micro-ODT support that implements the original ODT realistically for
+  both the KD11-NA and the reduced command set in the KDF11-A and KDF11-U,
 - Realistic timing of device actions,
 - Functionality verified by unit tests.
+
+sim-11 is inspired by [Open SIMH](https://github.com/open-simh/simh) and [LSI-11](https://github.com/hackyourlife/lsi-11).
 
 Usage
 -----
