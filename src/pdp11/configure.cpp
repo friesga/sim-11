@@ -24,7 +24,7 @@ using std::static_pointer_cast;
 using std::string;
 using std::get;
 
-// Configure the LSI-11 with a default configuration. Create a bare system
+// Configure the system with a default configuration. Create a bare system
 // without any files attached.
 //
 // Every PDP11Peripheral contains a pointer to the bus it is installed on.
