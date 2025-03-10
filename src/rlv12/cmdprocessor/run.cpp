@@ -3,8 +3,12 @@
 
 #include <mutex>
 #include <condition_variable>
+#include <iostream>
+
+using std::cerr;
 
 void CmdProcessor::run ()
+try
 {
     // Guard against controller register access from writeWord()
     std::unique_lock<std::mutex> lock {controller_->controllerMutex_};
@@ -40,4 +44,8 @@ void CmdProcessor::run ()
         // Set Controller Ready for the next command.
         controller_->setDone (unit, rlcsValue);
     }
+}
+catch (const std::exception& ex)
+{
+    cerr << "CmdProcessor::run exception: " << ex.what () << '\n';
 }

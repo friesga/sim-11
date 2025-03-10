@@ -5,8 +5,10 @@
 #include <stdexcept>
 
 using std::runtime_error;
+using std::cerr;
 
 void WindowsConsole::sender ()
+try
 {
     HANDLE stdInputHandle;
     HANDLE stdOutputHandle;
@@ -41,4 +43,8 @@ void WindowsConsole::sender ()
 		if (readCharacter (stdInputHandle, &c, 1))
             send (c);
     }
+}
+catch (const std::exception& ex)
+{
+    cerr << "WindowsConsole::sender exception: " << ex.what () << '\n';
 }

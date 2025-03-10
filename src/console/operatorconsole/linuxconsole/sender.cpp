@@ -9,6 +9,7 @@
 using std::runtime_error;
 
 void LinuxConsole::sender ()
+try
 {
     struct termios original_tio;
 	struct termios tio;
@@ -67,4 +68,8 @@ void LinuxConsole::sender ()
 	}
 
 	tcsetattr (0, TCSANOW, &original_tio);
+}
+catch (const std::exception& ex)
+{
+	cerr << "LinuxConsole::sender exception: " << ex.what () << '\n';
 }

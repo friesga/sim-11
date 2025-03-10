@@ -6,9 +6,11 @@
 #include <thread>
 #include <chrono>
 #include <string>
+#include <iostream>
 
 using std::shared_ptr;
 using std::make_unique;
+using std::cerr;
 
 // The factory power-up mode configuration is mode 0 (get vector at address
 // 24 and 26), but we'll set it to Bootstrap as that's more convenient for
@@ -33,6 +35,7 @@ ControlLogic::ControlLogic (Bus* bus, CpuData* cpuData,
 
 // Run the ControlLogic state machine
 void ControlLogic::run ()
+try
 {
     Event event;
 
@@ -43,6 +46,10 @@ void ControlLogic::run ()
         signalEventQueue_.waitAndPop (event);
         stateMachine_->dispatch (event);
     }
+}
+catch (const std::exception& ex)
+{
+    cerr << "ControlLogic::run exception: " << ex.what () << '\n';
 }
 
 void ControlLogic::exit ()

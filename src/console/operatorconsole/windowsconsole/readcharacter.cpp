@@ -1,12 +1,15 @@
 #include "windowsconsole.h"
 
+#include <iostream>
 #include <string>
 #include <stdexcept>
 
 using std::runtime_error;
+using std::cerr;
 
 // Read one character from console input
 bool WindowsConsole::readCharacter (HANDLE hStdin, char* buffer, int count)
+try
 {
     INPUT_RECORD irBuffer[128];
     DWORD cNumRead;
@@ -41,5 +44,10 @@ bool WindowsConsole::readCharacter (HANDLE hStdin, char* buffer, int count)
                 break;
         }
     }
+    return false;
+}
+catch (const std::exception& ex)
+{
+    cerr << "WindowsConsole::readCharacter exception: " << ex.what () << '\n';
     return false;
 }

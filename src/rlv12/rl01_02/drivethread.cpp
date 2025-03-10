@@ -1,7 +1,12 @@
 #include "rl01_02.h"
 
+#include <iostream>
+
+using std::cerr;
+
 // The following function is executed in a seperate thread.
 void RL01_02::driveThread ()
+try
 {
     // Guard against simultaneous access of the eventQueue_.
     unique_lock<mutex> lock {driveMutex_};
@@ -24,4 +29,8 @@ void RL01_02::driveThread ()
         // wait() unlocks the DriveMutex_.
         startCommand_.wait (lock);
     }
+}
+catch (const std::exception& ex)
+{
+    cerr << "RL01_02::driveThread exception: " << ex.what () << '\n';
 }
