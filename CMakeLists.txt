@@ -573,6 +573,7 @@ set (SIM11_TEST_SRCS
     ${CONSOLE_SRCS}
     src/signal/signal.cpp
     ${TRACE_SRCS}
+    ${TRACEREADER_SRCS}
     ${KT24_SRCS}
     ${DEVICECOMMON_SRCS}
     src/logger/logger.cpp
