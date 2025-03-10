@@ -5,8 +5,10 @@
 #include "basicregister/basicregister.h"
 
 #include <array>
+#include <stdexcept>
 
 using std::array;
+using std::runtime_error;
 
 class KD11_NA_PSW : public PSW, public BasicRegister
 {
@@ -73,12 +75,12 @@ inline void KD11_NA_PSW::setPriorityLevel (u16 level)
 // Memory Management Modes are not implemented on the KD11-NA.
 inline PSW::Mode KD11_NA_PSW::currentMode () const
 {
-    throw "Memory Management Mode not implemented";
+    throw runtime_error ("Memory Management Mode not implemented");
 }
 
 inline PSW::Mode KD11_NA_PSW::previousMode () const
 {
-    throw "Memory Management Mode not implemented";
+    throw runtime_error ("Memory Management Mode not implemented");
 }
 
 #endif // _KD11_NA_PSW_H_

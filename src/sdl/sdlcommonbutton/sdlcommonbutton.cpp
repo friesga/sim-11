@@ -1,8 +1,11 @@
 #include "sdlcommonbutton.h"
 #include "../sdlrenderer/sdlrenderer.h"
 
+#include <stdexcept>
+
 using std::make_unique;
 using std::get;
+using std::logic_error;
 
 SDLCommonButton::SDLCommonButton (string buttonDownImage, string buttonUpImage,
     Button::TwoPositionsState initialState, unique_ptr<SDLRenderer> &sdlRenderer,
@@ -43,7 +46,7 @@ Button::TwoPositionsState SDLCommonButton::toggleState (TwoPositionsState oldSta
     }
 
     // Satisfying the compiler
-    throw string ("Cannot happen");
+    throw logic_error ("Cannot happen");
 }
 
 void SDLCommonButton::render ()

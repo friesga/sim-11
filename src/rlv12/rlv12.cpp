@@ -4,12 +4,14 @@
 #include <thread>
 #include <chrono>
 #include <memory>
+#include <stdexcept>
 
 using std::mutex;
 using std::lock_guard;
 using std::bind;
 using std::placeholders::_1;
 using std::make_shared;
+using std::runtime_error;
 
 // RLV12 constructor
 // Set name and default base address and vector. Set the controller
@@ -38,7 +40,7 @@ RLV12::RLV12 (Bus* bus)
     dataBuffer_ = new (std::nothrow) u16[RLV12const::maxTransfer]();
 
     if (dataBuffer_ == nullptr)
-        throw ("Allocating memory for transfer buffer failed");
+        throw runtime_error ("Allocating memory for transfer buffer failed");
 
     bus_->BINIT().subscribe (bind (&RLV12::BINITReceiver, this, _1));
 
@@ -69,7 +71,7 @@ RLV12::RLV12 (Bus* bus, Window* window, RLConfig& rlConfig)
     dataBuffer_ = new (std::nothrow) u16[RLV12const::maxTransfer]();
 
     if (dataBuffer_ == nullptr)
-        throw ("Allocating memory for transfer buffer failed");
+        throw runtime_error ("Allocating memory for transfer buffer failed");
 
     // Attach files to the RL units and create panels for the units
 	for (size_t unitNumber = 0; 
@@ -82,7 +84,7 @@ RLV12::RLV12 (Bus* bus, Window* window, RLConfig& rlConfig)
             continue;
 
 		if (unit (unitNumber)->init (rlUnitConfig, window) != StatusCode::Success)
-			throw "Error attaching " + rlUnitConfig->fileName;
+			throw runtime_error ("Error attaching " + rlUnitConfig->fileName);
 	}
 
     bus_->BINIT().subscribe (bind (&RLV12::BINITReceiver, this, _1));

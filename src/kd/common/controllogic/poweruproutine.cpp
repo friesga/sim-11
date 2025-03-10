@@ -1,5 +1,7 @@
 #include "controllogic.h"
 
+using std::invalid_argument;
+
 // The reaction on a power-up is configured by the power-up mode. Three
 // power-up modes can be selected:
 // 1. Trap to location 24/26,
@@ -62,5 +64,5 @@ ControlLogic::State ControlLogic::powerUpRoutine ()
     }
 
     // Satisfying the compiler
-    throw string ("Unknown PowerUpMode");
+    throw invalid_argument ("Unknown PowerUpMode");
 }

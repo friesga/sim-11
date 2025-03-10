@@ -8,6 +8,7 @@
 #include <thread>
 #include <utility>
 #include <algorithm>
+#include <stdexcept>
 
 using std::string;
 using std::make_unique;
@@ -15,6 +16,8 @@ using std::this_thread::sleep_for;
 using std::pair;
 using std::make_pair;
 using std::ranges::any_of;
+using std::runtime_error;
+using std::invalid_argument;
 
 SDLWindow::SDLWindow (char const *title, Frame<int> frame,
     set<Window::Flag> flags)
@@ -30,8 +33,8 @@ SDLWindow::SDLWindow (char const *title, Frame<int> frame,
         flags.contains (Window::Flag::WindowHidden) ? SDL_WINDOW_HIDDEN : SDL_WINDOW_SHOWN);
 
     if (sdlWindow_ == NULL)
-        throw "Window could not be created. SDL error: " +
-            string (SDL_GetError ());
+        throw runtime_error ("Window could not be created. SDL error: " +
+            string (SDL_GetError ()));
 
     // Create renderer for the given window and set background colour
     sdlRenderer_ = make_unique<SDLRenderer> (sdlWindow_);
@@ -43,8 +46,8 @@ SDLWindow::SDLWindow (char const *title, Frame<int> frame,
         textureWidth_, textureHeight_);
 
     if (targetTexture_ == NULL)
-        throw "Target texture could not be created. SDL error: " +
-            string (SDL_GetError ());
+        throw runtime_error ("Target texture could not be created. SDL error: " +
+            string (SDL_GetError ()));
 }
 
 SDLWindow::~SDLWindow ()
@@ -63,7 +66,7 @@ Panel *SDLWindow::createPanel (shared_ptr<Cabinet::Position> cabinetPosition,
     // (Try to) add the panel to the cabinet to keep track of the occupied
     // panel positions.
     if (!h9642Cabinet.addUnit (cabinetPosition, unitHeight))
-        throw ("Unit position already occupied. Can't add panel to cabinet");
+        throw invalid_argument ("Unit position already occupied. Can't add panel to cabinet");
 
     panels_.push_back (make_unique<SDLPanel> (sdlRenderer_, targetTexture_,
         cabinetPosition, unitHeight));

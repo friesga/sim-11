@@ -3,6 +3,7 @@
 #include <string>
 
 using std::string;
+using std::invalid_argument;
 
 void IniProcessor::processSection (iniparser::Section* section)
 {
@@ -26,5 +27,5 @@ void IniProcessor::processSection (iniparser::Section* section)
 		systemConfig.addDeviceConfig (deviceConfigProcessor->getConfig ());
 	}
 	else
-		throw string("Unsupported section: ") + section->name ();
+		throw invalid_argument ("Unsupported section: " + section->name ());
 }

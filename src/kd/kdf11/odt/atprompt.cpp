@@ -1,8 +1,11 @@
 #include "kdf11_odt.h"
 #include "trace/trace.h"
 
+#include <stdexcept>
+
 using std::move;
 using std::to_string;
+using std::runtime_error;
 
 // This file contains the entry actions and state transitions for
 // the state AtPrompt_1.
@@ -58,7 +61,7 @@ KDF11_ODT::State KDF11_ODT::StateMachine::transition (AtPrompt_1 && currentState
     }
 
     // Satisfy the compiler
-    throw "Cannot happen";
+    throw runtime_error ("Cannot happen");
 }
 
 // On a Proceed command set the CPU into the running state and exit ODT

@@ -1,9 +1,11 @@
 #include "windowsconsole.h"
 
 #include <string>
+#include <stdexcept>
+
+using std::runtime_error;
 
 // Read one character from console input
-
 bool WindowsConsole::readCharacter (HANDLE hStdin, char* buffer, int count)
 {
     INPUT_RECORD irBuffer[128];
@@ -28,14 +30,14 @@ bool WindowsConsole::readCharacter (HANDLE hStdin, char* buffer, int count)
                 break;
 
             case WAIT_FAILED:
-                throw std::string ("WaitForSingleObject failed");
+                throw runtime_error ("WaitForSingleObject failed");
                 break;
 
             case WAIT_ABANDONED:
-                throw std::string ("WaitForSingleObject abandoned");
+                throw runtime_error ("WaitForSingleObject abandoned");
 
             default:
-                throw std::string ("Unexpected return from WaitForSingleObject");
+                throw runtime_error ("Unexpected return from WaitForSingleObject");
                 break;
         }
     }

@@ -6,6 +6,8 @@
 #include <termios.h>
 #include <iostream>
 
+using std::runtime_error;
+
 void LinuxConsole::sender ()
 {
     struct termios original_tio;
@@ -14,7 +16,7 @@ void LinuxConsole::sender ()
 	struct timeval timeout;
 
     if (tcgetattr (0, &original_tio) == -1)
-		throw (std::string("Failed to retrieve TTY configuration"));
+		throw runtime_error ("Failed to retrieve TTY configuration");
 
 	consoleRunning_ = true;
 
@@ -50,7 +52,7 @@ void LinuxConsole::sender ()
 			select (highestFileDescriptor, &fds, NULL, NULL, &timeout);
 		if (numFileDescriptors == -1)
 			// An error occurred
-			throw std::string ("select error");
+			throw runtime_error ("select error");
 		else if (numFileDescriptors == 0)
 			// A time-out occurred
 			continue;
@@ -58,7 +60,7 @@ void LinuxConsole::sender ()
 		{
 			// There is data to read; read one character from stdin
 			if (read (0, &c, 1) != 1)
-				throw std::string("Read console error");
+				throw runtime_error ("Read console error");
 
 			send (c);
 		}

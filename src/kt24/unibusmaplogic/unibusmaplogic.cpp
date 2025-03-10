@@ -46,7 +46,7 @@ CondData<u16> UnibusMapLogic::read (BusAddress address)
             return {cpuErrorRegister_};
 
         default:
-            throw "Should not happen";
+            throw invalid_argument ("Should not happen");
     }
 
     return {StatusCode::Success};
@@ -71,7 +71,7 @@ StatusCode UnibusMapLogic::writeWord (BusAddress address, u16 value)
             break;
 
         default:
-            throw "Should not happen";
+            throw invalid_argument ("Should not happen");
     }
 
     return StatusCode::Success;

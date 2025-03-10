@@ -3,7 +3,7 @@
 #include <string>
 
 using std::string;
-
+using std::invalid_argument;
 
 EmptyOperandLocation::EmptyOperandLocation ()
 {}
@@ -16,6 +16,6 @@ bool EmptyOperandLocation::isValid ()
 
 EmptyOperandLocation::operator u16 ()
 {
-    throw string ("Read access on empty operand location");    
+    throw invalid_argument ("Read access on empty operand location");    
 }
 

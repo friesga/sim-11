@@ -4,6 +4,9 @@
 #include "statuscodes.h"
 
 #include <string>
+#include <stdexcept>
+
+using std::invalid_argument;
 
 // The CondData class contains a pair of a templated value and a StatusCode,
 // to be used e.g. as return value from functions.
@@ -117,7 +120,7 @@ CondData<T>& CondData<T>::operator+= (T const &value)
     if (statusCode_ == StatusCode::Success)
         value_ += value;
     else
-        throw (std::string("Addition on invalid CondData object"));
+        throw invalid_argument ("Addition on invalid CondData object");
     return *this;
 }
 
@@ -128,7 +131,7 @@ CondData<T>& CondData<T>::operator-= (T const &value)
     if (statusCode_ == StatusCode::Success)
         value_ -= value;
     else
-        throw (std::string("Subtraction on invalid CondData object"));
+        throw invalid_argument ("Subtraction on invalid CondData object");
     return *this;
 }
 
@@ -139,7 +142,7 @@ CondData<T>& CondData<T>::operator++ ()
     if (statusCode_ == StatusCode::Success)
         ++value_;
     else
-        throw (std::string ("Increment on invalid CondData object"));
+        throw invalid_argument ("Increment on invalid CondData object");
     return *this;
 }
 
@@ -150,7 +153,7 @@ CondData<T>& CondData<T>::operator-- ()
     if (statusCode_ == StatusCode::Success)
         --value_;
     else
-        throw (std::string ("Decrement on invalid CondData object"));
+        throw invalid_argument ("Decrement on invalid CondData object");
     return *this;
 }
 
@@ -167,7 +170,7 @@ CondData<T> CondData<T>::operator++ (int)
         return copy;
     }
     else
-        throw (std::string ("Increment on invalid CondData object"));
+        throw invalid_argument ("Increment on invalid CondData object");
 }
 
 // Post-decrement oerator
@@ -181,7 +184,7 @@ CondData<T> CondData<T>::operator-- (int)
         return tmp;
     }
     else
-        throw (std::string ("Increment on invalid CondData object"));
+        throw invalid_argument ("Increment on invalid CondData object");
 }
 
 // Try to convert the object to the native type, throwing an exception
@@ -190,7 +193,7 @@ template <typename T>
 CondData<T>::operator T() const
 {
     if (statusCode_ != StatusCode::Success)
-        throw (std::string("Conversion on invalid CondData object"));
+        throw invalid_argument ("Conversion on invalid CondData object");
 
     return value_;
 }
@@ -207,7 +210,7 @@ template <typename T>
 T CondData<T>::value() const
 {
     if (statusCode_ != StatusCode::Success)
-        throw (std::string("CondData object has no valid value"));
+        throw invalid_argument ("CondData object has no valid value");
     return value_;    
 }
 

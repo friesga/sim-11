@@ -5,6 +5,7 @@
 #include <sstream>
 
 using std::string;
+using std::invalid_argument;
 
 // Load the given file in absolute loader format, returning the start address
 // of the loaded binary.
@@ -22,7 +23,7 @@ u16 AbsoluteLoader::loadFile (const char* fileName, u8* memory)
 
     FILE* f = fopen (fileName, "rb");
     if (!f)
-        throw "Error opening load file " + string (fileName);
+        throw invalid_argument ("Error opening load file " + string (fileName));
 
     fseek (f, 0, SEEK_END);
     size = ftell (f);
@@ -42,7 +43,7 @@ u16 AbsoluteLoader::loadFile (const char* fileName, u8* memory)
         if (c == EOF)
         {
             fclose (f);
-            throw "Error: unexpected EOF in load file";
+            throw invalid_argument ("Error: unexpected EOF in load file");
         }
         else if (c != 0)
         {
@@ -50,7 +51,7 @@ u16 AbsoluteLoader::loadFile (const char* fileName, u8* memory)
             std::stringstream errorText;
             errorText << "Error: invalid signature [0x" <<
                 std::hex << c << "] in load file";
-            throw errorText.str ();
+            throw invalid_argument (errorText.str ());
         }
 
         // Read byte count and load address from the file

@@ -60,7 +60,7 @@ TEST_F (KDF11_ARegistersTest, RegistersCanBeAssignedTo)
 
 TEST_F (KDF11_ARegistersTest, ExceptionOnIllegalRegisterNr)
 {
-    EXPECT_THROW (registers [8], string);
+    EXPECT_THROW (registers [8], std::exception );
 }
 
 // Verify all stack pointers are independent

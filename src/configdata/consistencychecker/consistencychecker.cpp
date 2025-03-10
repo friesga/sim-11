@@ -60,20 +60,20 @@ void ConsistencyChecker::checkQbusConsistency ()
         count_if (presentDevices, &ConsistencyChecker::findDevice<KDF11_BConfig>);
 
     if (numberOFProcessors == 0)
-        throw string("No processor configured, this system cannot run.");
+        throw invalid_argument ("No processor configured, this system cannot run.");
 
     if (numberOFProcessors > 1)
-        throw string("More than one processor configured, this system cannot run.");
+        throw invalid_argument ("More than one processor configured, this system cannot run.");
 
     // The system has to contain terminal interfaces and a boot module,
     // either provided by a DLV11-J and a BDV11 or by a KDF11-B.
     if (count_if (presentDevices, &ConsistencyChecker::findDevice<KDF11_BConfig>) == 0)
     {
         if (count_if (presentDevices, &ConsistencyChecker::findDevice<DLV11JConfig>) == 0)
-            throw string("No DLV11 configured, this system cannot run.");
+            throw invalid_argument ("No DLV11 configured, this system cannot run.");
 
         if (count_if (presentDevices, &ConsistencyChecker::findDevice<BDV11Config>) == 0)
-            throw string("No BDV11 configured, this system cannot run.");
+            throw invalid_argument ("No BDV11 configured, this system cannot run.");
     }
 
     if (count_if (presentDevices, &ConsistencyChecker::findDevice<RXV21Config>) == 0 && 
@@ -81,7 +81,7 @@ void ConsistencyChecker::checkQbusConsistency ()
         cout << "Warning: No removable media configured. This system cannot boot.\n";
 
     if (count_if (presentDevices, &ConsistencyChecker::findDevice<BA11_NConfig>) == 0)
-        throw string("No BA11-N Mounting box configured, this system cannot run.");
+        throw invalid_argument ("No BA11-N Mounting box configured, this system cannot run.");
 
     checkMS11Consistency<MSV11Config, 64 * 1024> ();
 

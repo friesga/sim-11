@@ -3,10 +3,12 @@
 
 #include <stdlib.h>
 #include <string.h>
+#include <stdexcept>
 
 using std::bind;
 using std::placeholders::_1;
 using std::placeholders::_2;
+using std::runtime_error;
 
 using namespace rxv21;
 
@@ -24,7 +26,7 @@ RXV21::RXV21 (Bus *bus)
 
 	data = (u8*) malloc(77 * 26 * 256);
 	if (!data) 
-		throw "Error: cannot allocate memory for rxv21";
+		throw runtime_error ("Error: cannot allocate memory for rxv21");
 
 	bus_->BINIT().subscribe (bind (&RXV21::BINITReceiver, this, _1));
 }
@@ -46,7 +48,7 @@ RXV21::RXV21 (Bus *bus, shared_ptr<RXV21Config> rxConfig)
 	// buffer.
 	data = (u8*) malloc(77 * 26 * 256);
 	if (!data) 
-		throw "Error: cannot allocate memory for rxv21";
+		throw runtime_error ("Error: cannot allocate memory for rxv21");
 
 	bus_->BINIT().subscribe (bind (&RXV21::BINITReceiver, this, _1));
 
@@ -63,8 +65,8 @@ RXV21::RXV21 (Bus *bus, shared_ptr<RXV21Config> rxConfig)
 		if (!floppy_file) 
 		{
 			free(data);
-			throw "Error: cannot open file " + static_pointer_cast<RXV21UnitConfig> 
-				(rxConfig->rxv21UnitConfig[0])->fileName;
+			throw invalid_argument ("Error: cannot open file " +
+				static_pointer_cast<RXV21UnitConfig> (rxConfig->rxv21UnitConfig[0])->fileName);
 		}
 		(void) !fread (data, 77 * 26 * 256, 1, floppy_file);
 		fclose (floppy_file);

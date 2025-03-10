@@ -10,6 +10,8 @@
 
 #include <iostream>
 
+using std::cerr;
+
 // Get rid of SDL's main function
 #undef main
 
@@ -19,7 +21,8 @@ SystemConfig createSystemConfig (const char* const &configFile)
     iniparser::File ft;
 
     if (!ft.load (configFile))
-        throw "Error: cannot open file " + string (configFile);
+        throw invalid_argument ("Error: cannot open file " +
+			string (configFile));
 
     try
     {
@@ -27,7 +30,8 @@ SystemConfig createSystemConfig (const char* const &configFile)
     }
     catch (std::invalid_argument const& except)
     {
-        throw "Error in configuration file: " + string (except.what ());
+        throw invalid_argument ("Error in configuration file: " +
+			string (except.what ()));
     }
 
 	return configProcessor.getSystemConfig ();
@@ -96,8 +100,8 @@ try
 	// Necessary for linux to get the command line prompt on the next line
 	std::cout << std::endl;
 }
-catch (std::string msg)
+catch (const std::exception& ex)
 {
-	std::cerr << msg << '\n';
+	cerr << ex.what () << '\n';
 	return 1;
 }

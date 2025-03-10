@@ -1,7 +1,11 @@
 #include "sdlrenderer.h"
 #include "../sdlwindow/sdlwindow.h"
 
+#include <stdexcept>
 #include <string>
+
+using std::runtime_error;
+using std::string;
 
 SDLRenderer::SDLRenderer (SDL_Window *sdlWindow, int index, unsigned long flags)
 {
@@ -9,8 +13,8 @@ SDLRenderer::SDLRenderer (SDL_Window *sdlWindow, int index, unsigned long flags)
     sdl_Renderer_ = SDL_CreateRenderer (sdlWindow, index, flags);
 
     if (sdl_Renderer_ == NULL)
-        throw "Renderer could not be created. SDL error: " +
-        std::string (SDL_GetError ());
+        throw runtime_error ("Renderer could not be created. SDL error: " +
+            string (SDL_GetError ()));
 }
 
 SDLRenderer::~SDLRenderer ()

@@ -4,9 +4,9 @@
 #include "types.h"
 #include "conddata/conddata.h"
 
-#include <string>
+#include <stdexcept>
 
-using std::string;
+using std::invalid_argument;
 
 class EmptyOperandLocation
 {
@@ -29,56 +29,56 @@ template <typename T>
 requires std::same_as<T, CondData<u16>>
 T EmptyOperandLocation::contents ()
 {
-    throw string ("Read access on empty operand location");
+    throw invalid_argument ("Read access on empty operand location");
 }
 
 template <typename T>
 requires std::same_as<T, CondData<u8>>
 T EmptyOperandLocation::contents ()
 {
-    throw string ("Read access on empty operand location");
+    throw invalid_argument ("Read access on empty operand location");
 }
 
 template <typename T>
 requires std::same_as<T, CondData<u16>>
 T EmptyOperandLocation::prevModeContents ()
 {
-    throw string ("Read access on empty operand location");
+    throw invalid_argument ("Read access on empty operand location");
 }
 
 template <typename T>
 requires std::same_as<T, CondData<u8>>
 T EmptyOperandLocation::prevModeContents ()
 {
-    throw string ("Read access on empty operand location");
+    throw invalid_argument ("Read access on empty operand location");
 }
 
 template <typename T>
 requires std::same_as<T, u16>
 bool EmptyOperandLocation::write (T contents)
 {
-    throw string ("Write access on empty operand location");
+    throw invalid_argument ("Write access on empty operand location");
 }
 
 template <typename T>
 requires std::same_as<T, u8>
 bool EmptyOperandLocation::write (T contents)
 {
-    throw string ("Write access on empty operand location");
+    throw invalid_argument ("Write access on empty operand location");
 }
 
 template <typename T>
 requires std::same_as<T, u16>
 bool EmptyOperandLocation::writePrevMode (T contents)
 {
-    throw string ("Write access on empty operand location");
+    throw invalid_argument ("Write access on empty operand location");
 }
 
 template <typename T>
 requires std::same_as<T, u8>
 bool EmptyOperandLocation::writePrevMode (T contents)
 {
-    throw string ("Write access on empty operand location");
+    throw invalid_argument ("Write access on empty operand location");
 }
 
 #endif // !_EMPTYOPERANDLOCATION_H_

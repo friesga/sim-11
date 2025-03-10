@@ -135,13 +135,13 @@ TEST (OperandLocationTest, WriteToInvalidMemoryOperationLocationFails)
 TEST (OperandLocationTest, WriteToInvalidOperationLocationFails)
 {
     OperandLocation operandLocation {};
-    EXPECT_THROW (operandLocation.write<u16> (255), string);
+    EXPECT_THROW (operandLocation.write<u16> (255), std::exception);
 }
 
 TEST (OperandLocationTest, ReadFromInvalidOperationLocationFails)
 {
     OperandLocation operandLocation {};
-    EXPECT_THROW (operandLocation.contents<CondData<u16>> ().value (), string);
+    EXPECT_THROW (operandLocation.contents<CondData<u16>> ().value (), std::exception);
 }
 
 TEST (OperandLocationTest, RegisterLocationCanBeConvertedTou16)

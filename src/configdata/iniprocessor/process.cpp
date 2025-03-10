@@ -1,5 +1,7 @@
 #include "iniprocessor.h"
 
+using std::invalid_argument;
+
 // This function is the entry point for the processing of the configuration
 // file. It gets a vector with the data on the top level sections in
 // the configuration file and then processes these sections.
@@ -8,7 +10,7 @@ void IniProcessor::process (string filename)
 	iniparser::File iniFile;
 
 	if (!iniFile.load (filename))
-		throw "Error: cannot open file " + string (filename);
+		throw invalid_argument ("Error: cannot open file " + string (filename));
 
 	process (iniFile);
 }

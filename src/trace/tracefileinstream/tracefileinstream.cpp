@@ -3,17 +3,19 @@
 
 #include <string>
 #include <utility>
+#include <stdexcept>
 
 using std::string;
 using std::pair;
 using std::shared_ptr;
 using std::make_shared;
+using std::invalid_argument;
 
 TracefileInStream::TracefileInStream (char const *filename)
 {
 	ifstream::open (filename, ifstream::binary);
 	if (!ifstream::is_open())
-		throw "Cannot open " +  string (filename);
+		throw invalid_argument ("Cannot open " +  string (filename));
 
 	// Retrieve contents and size of the trace file header from the
 	// TracefileOutStream.
@@ -30,7 +32,7 @@ TracefileInStream::TracefileInStream (char const *filename)
 
 	if (static_cast<size_t> (ifstream::gcount()) != headerSize_ || 
 			!isHeader (buffer))
-		throw string(filename) + string (" is not a valid trace file\n");
+		throw invalid_argument (string(filename) + string (" is not a valid trace file\n"));
 }
 
 bool TracefileInStream::isHeader (shared_ptr<char[]> buffer)

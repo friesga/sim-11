@@ -14,6 +14,7 @@
 
 using std::visit;
 using std::chrono::microseconds;
+using std::runtime_error;
 
 // Constructor
 KD11_NA_CpuControl::KD11_NA_CpuControl (Bus* bus, CpuData* cpuData, MMU* mmu)
@@ -78,7 +79,7 @@ bool KD11_NA_CpuControl::step ()
 
         default:
             // Satisfy the compiler
-            throw ("Cannot happen");
+            throw runtime_error ("Cannot happen");
     }
 }
 

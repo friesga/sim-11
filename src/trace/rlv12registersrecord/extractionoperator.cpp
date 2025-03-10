@@ -1,6 +1,10 @@
 #include "rlv12registersrecord.h"
 #include "../tracefileinstream/tracefileinstream.h"
 
+#include <stdexcept>
+
+using std::invalid_argument;
+
 // Definition of the overloaded operator>>() function to read RLV12Registers
 // records from the tracefile. These records contain the fixed members as
 // defined in the class (minus the msg_) plus a variable length character
@@ -18,7 +22,7 @@ TracefileInStream &operator>> (TracefileInStream &is,
     size_t constexpr maxStringSize = 128;
 
     if (record.length_ > maxStringSize)
-        throw "String in RLV12RegistersRecord record too long";
+        throw invalid_argument ("String in RLV12RegistersRecord record too long");
 
     char buffer[maxStringSize] {0};
     is.read (buffer, record.length_);

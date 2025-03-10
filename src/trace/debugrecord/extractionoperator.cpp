@@ -1,6 +1,9 @@
 #include "debugrecord.h"
-
 #include "../tracefileinstream/tracefileinstream.h"
+
+#include <stdexcept>
+
+using std::invalid_argument;
 
 // Definition of the overloaded operator>>() function to read TraceDuration
 // records from the tracefile. These records contain a fixed member as
@@ -15,7 +18,7 @@ TracefileInStream &operator>> (TracefileInStream &is, TraceRecord<DebugRecord> &
     size_t constexpr maxStringSize = 128;
 
     if (record.length_ > maxStringSize)
-        throw "String in DebugRecord too long";
+        throw invalid_argument ("String in DebugRecord too long");
 
     char buffer[maxStringSize] {0};
     is.read (buffer, record.length_);

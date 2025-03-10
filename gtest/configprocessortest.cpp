@@ -74,9 +74,9 @@ TEST (ConfigProcessorTest, unsupportedSectionThrows)
 		iniProcessor.process (ft);
 		FAIL();
 	}
-	catch (string const &msg)
+	catch (const std::exception& ex)
 	{
-		EXPECT_STREQ (msg.c_str(), "Unsupported section: UNKNOWN");
+		EXPECT_STREQ (ex.what (), "Unsupported section: UNKNOWN");
 	}
 	catch (...)
 	{

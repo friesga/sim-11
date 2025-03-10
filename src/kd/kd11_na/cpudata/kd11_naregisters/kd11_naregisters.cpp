@@ -2,11 +2,13 @@
 
 #include <string>
 #include <algorithm>
+#include <stdexcept>
 
 using std::string;
 using std::copy;
 using std::begin;
 using std::end;
+using std::invalid_argument;
 
 // The psw argument is ignored. It is required by the KDF11Registers'
 // constructor but isn't used on the KD11-NA.
@@ -18,7 +20,7 @@ KD11_NARegisters::KD11_NARegisters (u16 const &psw)
 u16& KD11_NARegisters::operator[] (u16 registerNr)
 {
     if (registerNr >= numRegisters)
-        throw string ("Illegal register number");
+        throw invalid_argument ("Illegal register number");
 
     return registers_ [registerNr];
 }

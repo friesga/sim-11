@@ -2,11 +2,13 @@
 
 #include <string>
 #include <algorithm>
+#include <stdexcept>
 
 using std::string;
 using std::copy;
 using std::begin;
 using std::end;
+using std::invalid_argument;
 
 KDF11Registers::KDF11Registers (PSW const& psw)
     :
@@ -30,7 +32,7 @@ u16& KDF11Registers::prevModeContents (u16 registerNr)
 u16& KDF11Registers::contents (u16 registerNr, u16 mode)
 {
     if (registerNr >= numRegisters)
-        throw string ("Illegal register number");
+        throw invalid_argument ("Illegal register number");
 
     if (registerNr == 6)
         return R6_ [mode];
@@ -43,7 +45,7 @@ u16& KDF11Registers::contents (u16 registerNr, u16 mode)
 void KDF11Registers::writePrevMode (u16 registerNr, u16 contents)
 {
     if (registerNr >= numRegisters)
-        throw string ("Illegal register number");
+        throw invalid_argument ("Illegal register number");
 
     if (registerNr == 6)
         R6_ [static_cast<u16> (psw_.previousMode ())] = contents;

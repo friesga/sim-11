@@ -1,5 +1,9 @@
 #include "ms11p.h"
 
+#include <stdexcept>
+
+using std::logic_error;
+
 u16 MS11P::correctSingleError (u16 data, u8 syndromeBits)
 {
     u8 errorBit = syndromeDecodeTable_[syndromeBits].bit;
@@ -27,5 +31,5 @@ MS11P::BitError MS11P::detectedErrors (u8 syndromeBits)
             return BitError::Double;
     }
 
-    throw "Should not happen";
+    throw logic_error ("Should not happen");
 }

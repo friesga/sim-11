@@ -3,9 +3,11 @@
 #include "cpusteprecord.h"
 
 #include <string>
+#include <stdexcept>
 
 using std::string;
 using std::to_string;
+using std::logic_error;
 
 typedef struct {
 	u16	rn:3;
@@ -91,7 +93,7 @@ string TraceRecord<CpuStepRecord>::LSI11DisassemblePCOperand (u8 rn, u8 mode, co
 			return "@" + octalToString (*pc + *(x++));
 
 		default:
-			throw string ("Illegal PC operand");
+			throw logic_error ("Illegal PC operand");
 	}
 }
 
@@ -139,7 +141,7 @@ string TraceRecord<CpuStepRecord>::LSI11DisassembleOperand (u8 rn, u8 mode, cons
 			return "@" + octalToString (*(x++)) + '(' + writeRn (rn) + ')';
 
 		default:
-			throw string ("Illegal operand");
+			throw logic_error ("Illegal operand");
 	}
 }
 

@@ -1,10 +1,12 @@
 #include "tracefileoutstream.h"
 
 #include <string>
+#include <stdexcept>
 
 using std::make_pair;
 using std::string;
 using std::to_string;
+using std::invalid_argument;
 
 TracefileOutStream::TracefileOutStream (char const *filename)
 {
@@ -27,7 +29,8 @@ void TracefileOutStream::open (char const *filename)
         ofstream::out | ofstream::binary | ofstream::trunc);
 
 	if (!ofstream::is_open())
-		 throw "Error: cannot open tracefile " + std::string(filename);
+		 throw invalid_argument ("Error: cannot open tracefile " +
+             std::string(filename));
 
 	// Write a header to the tracefile so it can be recognized as a valid
 	// tracefile.

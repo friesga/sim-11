@@ -1,4 +1,3 @@
-
 // Factory bad block table creation routine
 //
 // This routine writes a DEC standard 044 compliant bad block table on the
@@ -32,6 +31,10 @@
 #include "statuscodes.h"
 #include "sim_fio/sim_fio.h"
 
+#include <stdexcept>
+
+using std::logic_error;
+
 StatusCode Unit::createBadBlockTable (int32_t sectorsPerSurface, 
     int32_t physWordsPerSector)
 {
@@ -64,7 +67,7 @@ StatusCode Unit::createBadBlockTable (int32_t sectorsPerSurface,
     // Use new() instead of make_unique as make_unique has no nothrow version.
     if ((badSectorInfo = new (std::nothrow) 
             u16[badSectorFileBlockSize]()) == nullptr)
-        throw ("Allocating memory for bad block table failed");
+        throw logic_error ("Allocating memory for bad block table failed");
 
     // Fill the block conform the standard specified above
     badSectorInfo[0] = 067000u;

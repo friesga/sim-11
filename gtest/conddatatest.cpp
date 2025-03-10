@@ -2,6 +2,7 @@
 
 #include <gtest/gtest.h>
 #include <string>
+#include <stdexcept>
 
 using std::string;
 
@@ -14,7 +15,7 @@ TEST (CondDataTest, defaultConstructorCreatesEmptyObject)
 TEST (CondDataTest, accessingEmptyObjectThrows)
 {
     CondData<int> cd0;
-    EXPECT_THROW (cd0.value (), string);
+    EXPECT_THROW (cd0.value (), std::exception);
 }
 
 TEST (CondDataTest, valueOrCanAccessEmptyObject)

@@ -1,5 +1,7 @@
 #include "baseoperanddecoder.h"
 
+using std::runtime_error;
+
 BaseOperandDecoder::BaseOperandDecoder (CpuData* cpuData,
     CpuControl* cpuControl, MMU* mmu)
     :
@@ -132,6 +134,6 @@ OperandLocation BaseOperandDecoder::decodeOperand (u16 opCode, Operand operand,
 		default:
 			// Satisfy the compiler. This cannot happen as the mode bit field
 			// is three bits wide.
-			throw "Cannot happen";
+			throw runtime_error ("Cannot happen");
 	}
 }

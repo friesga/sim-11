@@ -38,7 +38,7 @@ CondData<u16> MS11P::readMemory (BusAddress address)
 	}
 
 	// Satisfy the compiler
-	throw "Should not happen";
+	throw logic_error ("Should not happen");
 }
 
 // If during normal operation, a double or single error occurs during a DATI,

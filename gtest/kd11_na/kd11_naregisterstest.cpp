@@ -34,7 +34,7 @@ TEST (KD11_NARegistersTest, ExceptionOnIllegalRegisterNr)
     u16 psw;
     KD11_NARegisters registers {psw};
 
-    EXPECT_THROW (registers [8], string);
+    EXPECT_THROW (registers [8], std::exception);
 }
 
 TEST (KD11_NARegistersTest, RegistersCanBeConvertedToArray)

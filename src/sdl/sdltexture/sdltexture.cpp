@@ -1,9 +1,11 @@
 #include "sdltexture.h"
 
 #include <SDL_image.h>
+#include <stdexcept>
 
 using std::make_pair;
 using std::tie;
+using std::runtime_error;
 
 SDLTexture::SDLTexture (string imageFile, SDL_Renderer *renderer, 
     SDL_Texture* targetTexture, Frame<int> frame)
@@ -18,14 +20,14 @@ SDLTexture::SDLTexture (string imageFile, SDL_Renderer *renderer,
     // Load image at specified path
     SDL_Surface* loadedSurface = IMG_Load (imageFile.c_str ());
     if (loadedSurface == NULL)
-        throw "Unable to load image " + imageFile +
-            " SDL_image error: " + IMG_GetError ();
+        throw runtime_error ("Unable to load image " + imageFile +
+            " SDL_image error: " + IMG_GetError ());
 
     // Create texture from surface pixels
     sdlTtexture_ = SDL_CreateTextureFromSurface (renderer, loadedSurface);
     if (sdlTtexture_ == NULL)
-        throw "Unable to create texture from " + imageFile +
-            "SDL error: " + SDL_GetError ();
+        throw runtime_error ("Unable to create texture from " + imageFile +
+            "SDL error: " + SDL_GetError ());
 
     // Get rid of old loaded surface
     SDL_FreeSurface (loadedSurface);
@@ -47,7 +49,8 @@ SDLTexture::~SDLTexture ()
 void SDLTexture::render ()
 {
     if (SDL_SetRenderTarget (sdlRenderer_, targetTexture_) != 0)
-        throw "Unable to set render target: " + string (SDL_GetError ());
+        throw runtime_error ("Unable to set render target: " +
+            string (SDL_GetError ()));
 
     // Set rendering space and render texture
     SDL_Rect renderQuad {x_, y_, width_, height_};

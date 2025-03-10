@@ -5,6 +5,8 @@
 #include <cstring>
 #include <iostream>
 
+using std::invalid_argument;
+
 CmdLineOptions::CmdLineOptions(int argc, char const **argv) 
     :
     load_file {load_file_},
@@ -47,12 +49,12 @@ CmdLineOptions::CmdLineOptions(int argc, char const **argv)
 					"  -c file       Use configuration from specified ini file\n"
 					"  -t file.trc   Record execution trace to file.trc\n"
 					"  -h            Show this message";			
-			 throw (msg.str());
+			 throw invalid_argument (msg.str());
 		} 
 		else 
 		{
 			msg << "Unknown option: " << *argv;
-			throw (msg.str());
+			throw invalid_argument (msg.str());
 		}
 	}
 };

@@ -69,7 +69,7 @@ bool KDF11_CpuControl::step ()
 
         default:
             // Satisfy the compiler
-            throw ("Cannot happen");
+            throw runtime_error ("Cannot happen");
     }
 }
 

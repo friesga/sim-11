@@ -33,7 +33,7 @@ State RXV21::transition (rxv21Idle&&, rxv21Go)
 
         case RX_SET_MEDIA_DENSITY:
             clearErrors();
-            throw (std::string("[RXV21] NOT IMPLEMENTED: Set Media Density"));
+            throw invalid_argument ("[RXV21] NOT IMPLEMENTED: Set Media Density");
             
         case RX_READ_STATUS:
             readStatus();
@@ -41,12 +41,12 @@ State RXV21::transition (rxv21Idle&&, rxv21Go)
 
         case RX_WRITE_DELETED_DATA:
             clearErrors();
-            throw (std::string("[RXV21] NOT IMPLEMENTED: Write Deleted Data"));
+            throw invalid_argument ("[RXV21] NOT IMPLEMENTED: Write Deleted Data");
             
         case RX_READ_ERROR_CODE:
             return rxv21ReadErrorCodeRx2ba {};
     }
 
     // All possibilities are defined above, so this "cannot happen"
-    throw ("[RXV21] Function code panic");
+    throw logic_error ("[RXV21] Function code panic");
 }
