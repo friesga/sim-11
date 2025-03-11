@@ -157,6 +157,14 @@ set (SIM_FIO_SRCS
     src/sim_fio/sim_ftell.cpp
     src/sim_fio/sim_fwrite.cpp)
 
+set (FIO_SRCS
+    src/fio/fopen.cpp
+    src/fio/fread.cpp
+    src/fio/fseek.cpp
+    src/fio/fsize.cpp
+    src/fio/ftell.cpp
+    src/fio/fwrite.cpp)
+
 set (UNIT_SRCS     
     src/unit/attach_unit.cpp
     src/unit/createfile.cpp
@@ -375,6 +383,7 @@ set (SIM11_SRCS
     src/rxv21/writesector.cpp
     src/signal/signal.cpp
     ${SIM_FIO_SRCS}
+    ${FIO_SRCS}
     ${UNIT_SRCS}
     ${TRACE_SRCS}
     src/logger/logger.cpp
@@ -487,6 +496,7 @@ set (GTEST_SRCS
     gtest/unibusconsistencytest.cpp
     gtest/bdv11configuratortest.cpp
     gtest/dlv11configuratortest.cpp
+    gtest/fiotest.cpp
     gtest/fistest.cpp
     gtest/kd11_naconfiguratortest.cpp
     gtest/instructiondecodertest.cpp
@@ -557,6 +567,7 @@ set (SIM11_TEST_SRCS
     ${BUS_SRCS}
     ${UNIT_SRCS}
     ${SIM_FIO_SRCS}
+    ${FIO_SRCS}
     ${RLV12_SRCS}
     ${FLOAT_SRCS}
     src/abstractbusdevice/writebyte.cpp
