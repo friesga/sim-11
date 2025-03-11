@@ -1,5 +1,5 @@
 #include "../rlv12.h"
-#include "sim_fio/sim_fio.h"
+#include "fio/fio.h"
 
 #include <variant>
 
@@ -66,7 +66,7 @@ StatusCode RL01_02::configure (shared_ptr<RLUnitConfig> rlUnitConfig)
     // Create a bad block table on a new disk image (if the 
     // image is not read-only)
     t_offset fileSize;
-    if ((fileSize = sim_fsize (filePtr_)) == 0)
+    if ((fileSize = fio::fsize (filePtr_)) == 0)
     {   
         // If read-only we're done
         if (unitStatus_ & Status::WRITE_PROTECT)

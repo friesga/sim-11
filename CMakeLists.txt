@@ -150,13 +150,6 @@ set (RLV12_SRCS
     src/rlv12/writeword.cpp
     src/rlv12/getstatuscmd.cpp)
 
-set (SIM_FIO_SRCS
-    src/sim_fio/sim_fopen.cpp
-    src/sim_fio/sim_fread.cpp
-    src/sim_fio/sim_fsize.cpp
-    src/sim_fio/sim_ftell.cpp
-    src/sim_fio/sim_fwrite.cpp)
-
 set (FIO_SRCS
     src/fio/fopen.cpp
     src/fio/fread.cpp
@@ -381,7 +374,6 @@ set (SIM11_SRCS
     src/rxv21/readstatus.cpp
     src/rxv21/writesector.cpp
     src/signal/signal.cpp
-    ${SIM_FIO_SRCS}
     ${FIO_SRCS}
     ${UNIT_SRCS}
     ${TRACE_SRCS}
@@ -565,7 +557,6 @@ set (SIM11_TEST_SRCS
     src/interruptrequest/interruptrequest.cpp
     ${BUS_SRCS}
     ${UNIT_SRCS}
-    ${SIM_FIO_SRCS}
     ${FIO_SRCS}
     ${RLV12_SRCS}
     ${FLOAT_SRCS}

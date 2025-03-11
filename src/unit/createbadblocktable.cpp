@@ -29,7 +29,7 @@
 
 #include "unit.h"
 #include "statuscodes.h"
-#include "sim_fio/sim_fio.h"
+#include "fio/fio.h"
 
 #include <stdexcept>
 
@@ -60,7 +60,7 @@ StatusCode Unit::createBadBlockTable (int32_t sectorsPerSurface,
 
     // Position file at last track
     da = (capacity_ - (sectorsPerSurface * physWordsPerSector)) * sizeof(u16);
-    if (sim_fseek (filePtr_, da, SEEK_SET))
+    if (fio::fseek (filePtr_, da, SEEK_SET))
         return StatusCode::IOError;
 
     // Allocate a buffer of physWordsPerSector u16's
@@ -80,7 +80,7 @@ StatusCode Unit::createBadBlockTable (int32_t sectorsPerSurface,
     for (int32_t blockNr = 0; 
         blockNr < 10 && blockNr * physSectorsPerInfoBlock < sectorsPerSurface;
         ++blockNr)
-            sim_fwrite(badSectorInfo, sizeof(u16), 
+            fio::fwrite(badSectorInfo, sizeof(u16), 
                 badSectorFileBlockSize, filePtr_);
 
     // Clean up.

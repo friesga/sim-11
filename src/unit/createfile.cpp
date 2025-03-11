@@ -1,12 +1,8 @@
 #include "unit.h"
 #include "cmdlineoptions/cmdlineoptions.h"
 #include "logger/logger.h"
+#include "fio/fio.h"
 
-#include <iostream>
-#include <sys/stat.h>
-
-// Functions defined sim_fio library
-extern FILE* sim_fopen(const char* file, const char* mode);
 
 StatusCode Unit::createFile(std::string fileName, Bitmask<AttachFlags> flags)
 {
@@ -19,7 +15,7 @@ StatusCode Unit::createFile(std::string fileName, Bitmask<AttachFlags> flags)
     if (!stat (fileName.c_str(), &info) && !(flags & AttachFlags::Overwrite))
         return StatusCode::ArgumentError;
 
-    filePtr_ = sim_fopen (fileName.c_str(), "wb+");
+    filePtr_ = fio::fopen (fileName.c_str(), "wb+");
     if (filePtr_ == NULL)
         return StatusCode::OpenError;
 
