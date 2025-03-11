@@ -8,9 +8,6 @@
 extern FILE *sim_fopen (const char *file, const char *mode);
 extern size_t sim_fread (void* bptr, size_t size, size_t count, FILE* fptr);
 
-// Functions defined in lib
-extern bool gotApproval(std::string question, bool defaultAnswer);
-
 StatusCode Unit::attach_unit(std::string fileName, Bitmask<AttachFlags> flags)
 {
     StatusCode statusCode;
@@ -18,9 +15,15 @@ StatusCode Unit::attach_unit(std::string fileName, Bitmask<AttachFlags> flags)
     // Create a new file if specified
     if (flags & AttachFlags::NewFile)
         statusCode = createFile (fileName, flags);
-    else 
+    else
+    {
         // Open existing file read/write 
         statusCode = openReadWrite (fileName);
+
+        // If that doesn't succeed open the file read-only
+        if (statusCode != StatusCode::Success)
+            statusCode = openReadOnly (fileName);
+    }
 
     if (statusCode != StatusCode::Success)
         return statusCode;

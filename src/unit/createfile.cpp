@@ -8,9 +8,6 @@
 // Functions defined sim_fio library
 extern FILE* sim_fopen(const char* file, const char* mode);
 
-// Functions defined in lib
-extern bool gotApproval(std::string question, bool defaultAnswer);
-
 StatusCode Unit::createFile(std::string fileName, Bitmask<AttachFlags> flags)
 {
     struct stat info;

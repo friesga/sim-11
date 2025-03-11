@@ -360,7 +360,6 @@ set (SIM11_SRCS
     src/dl11/uart/uart.cpp
     ${KD11_NA_SRCS}
     ${KDF11_SRCS}
-    src/lib/gotapproval.cpp
     src/pdp11/pdp11.cpp
     src/pdp11/configure.cpp
     src/pdp11/installmodules.cpp
@@ -573,7 +572,6 @@ set (SIM11_TEST_SRCS
     src/abstractbusdevice/writebyte.cpp
     src/cabinet/cabinet.cpp
     src/pdp11peripheral/pdp11peripheral.cpp
-    src/lib/gotapproval.cpp
     ${KD11_NA_SRCS}
     ${KDF11_SRCS}
     ${BDV11_SRCS}
