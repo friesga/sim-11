@@ -32,14 +32,15 @@ KDF11_B::KDF11_B (Bus *bus, shared_ptr<KDF11_BConfig> kdf11_bConfig)
 
     // Besides a pointer to the bus, a reference to our cpu, the start address
     // and the power-up mode, the ControlLogic also gets passed a
-    // std::function to the function to create ODT objects.
+    // std::function to the function to create ODT objects.  The last parameter
+    // to that function indicates if the ODT HALT command is supported.
     controlLogic_ = make_unique<ControlLogic> (bus_,
         &cpuData_,
         &cpuControl_,
         &mmu_,
         kdf11_bConfig->powerUpMode,
         startAddress_,
-        bind (&KDF11_ODT::createODT, _1, _2, _3, _4, _5));
+        bind (&KDF11_ODT::createODT, _1, _2, _3, _4, _5, false));
 }
 
 KDF11_B::~KDF11_B ()

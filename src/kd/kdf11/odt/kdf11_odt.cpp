@@ -13,13 +13,14 @@ using std::make_unique;
 using std::move;
 
 KDF11_ODT::KDF11_ODT (Bus *bus, CpuData* cpuData, CpuControl* cpuControl,
-        MMU* mmu, unique_ptr<ConsoleAccess> consoleAccess)
+        MMU* mmu, unique_ptr<ConsoleAccess> consoleAccess, bool haltCmdSupported)
     : 
     bus_ {bus},
     cpuData_ {cpuData},
     cpuControl_ {cpuControl},
     mmu_ {mmu},
     console_ {move (consoleAccess)},
+    haltCmdSupported_ {haltCmdSupported},
     odtRunning_ {true},
     newValue_ {0},
     registerSeries_ {},
@@ -32,10 +33,11 @@ KDF11_ODT::KDF11_ODT (Bus *bus, CpuData* cpuData, CpuControl* cpuControl,
 }
 
 unique_ptr<KDF11_ODT> KDF11_ODT::createODT (Bus *bus, CpuData* cpuData,
-    CpuControl* cpuControl, MMU* mmu, unique_ptr<ConsoleAccess> consoleAccess)
+    CpuControl* cpuControl, MMU* mmu, unique_ptr<ConsoleAccess> consoleAccess,
+    bool haltCmdSupported)
 {
     return make_unique<KDF11_ODT> (bus, cpuData, cpuControl, mmu,
-        make_unique<OperatorConsoleAccess> (bus));
+        make_unique<OperatorConsoleAccess> (bus), haltCmdSupported);
 }
 
 CondData<u8> KDF11_ODT::echoCharacter (CondData<u8> c)

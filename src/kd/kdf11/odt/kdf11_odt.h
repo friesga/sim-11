@@ -21,13 +21,14 @@ class KDF11_ODT : public KD11ODT
 {
 public:
     KDF11_ODT (Bus* bus, CpuData* cpuData, CpuControl* cpuControl,
-        MMU* mmu, unique_ptr<ConsoleAccess> consoleAccess);
+        MMU* mmu, unique_ptr<ConsoleAccess> consoleAccess, bool haltCmdSupported);
 
     // Definition of the function required by the KD11ODT interface
     bool processCharacter (u8 character) override;
 
     static unique_ptr<KDF11_ODT> createODT (Bus *bus, CpuData* cpuData,
-        CpuControl* cpuControl, MMU* mmu, unique_ptr<ConsoleAccess> consoleAccess);
+        CpuControl* cpuControl, MMU* mmu,
+        unique_ptr<ConsoleAccess> consoleAccess, bool haltCmdSupported);
 
 private:
     enum { BASE8 = 8 };
@@ -121,6 +122,7 @@ private:
     CpuControl* cpuControl_;
     MMU* mmu_;
     unique_ptr<ConsoleAccess> console_;
+    bool haltCmdSupported_;
     bool odtRunning_;
     string digitSeries_;
     u16 newValue_;

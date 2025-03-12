@@ -17,7 +17,7 @@ class KD11ODT
 {
 public:
     using Creator = function<unique_ptr<KD11ODT>(Bus*, CpuData*, CpuControl*,
-        MMU*, unique_ptr<ConsoleAccess>)>;
+        MMU*, unique_ptr<ConsoleAccess>, bool)>;
 
     virtual bool processCharacter (u8 character) = 0;
 };
