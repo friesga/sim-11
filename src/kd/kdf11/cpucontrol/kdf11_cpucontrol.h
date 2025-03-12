@@ -23,9 +23,15 @@ public:
 	KDF11_CpuControl (Bus *bus, CpuData*, MMU* mmu);
 
 	// Definition of functions required by the CpuControl interface.
+	// 
+	// The HaltMode implements the halt flip-flop located in the CPU. The ODT
+	// in this CPU entails a  "Toggle Halt" command which toggles that
+	// flip-flop.
 	void cpuReset () override;
 	void busReset () override;
 	void halt () override;
+	void setHaltMode (bool haltMode) override;
+	bool inHaltMode () override;
 	void wait () override;
     void start (u16 address) override;
 	void proceed () override;
@@ -48,6 +54,7 @@ private:
 	InstructionDecoder decoder;
 	HaltReason haltReason_;
 	bool traceFlag_;
+	bool haltMode_ {false};
 
 	constexpr bool inKernelMode ();
 	void execInstr ();

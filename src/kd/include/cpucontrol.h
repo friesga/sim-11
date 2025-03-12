@@ -24,6 +24,14 @@ public:
     virtual void cpuReset () = 0;
     virtual void busReset () = 0;
     virtual void halt () = 0;
+
+    // The HaltMode is used by the KDF11-U. The ODT in this CPU entails a 
+    // "Toggle Halt" command which toggles a halt flip-flop located in the CPU.
+    // CPU's not supporting this command should implement a dummy version of
+    // setHaltMode and return false on inHaltMode().
+    virtual void setHaltMode (bool haltMode) = 0;
+    virtual bool inHaltMode () = 0;
+
     virtual void wait () = 0;
     virtual void start (u16 address) = 0;
     virtual void proceed () = 0;

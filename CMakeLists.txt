@@ -73,6 +73,7 @@ set (KD11_NA_ODT_SRCS
 set (KD11_NA_CPU_SRCS
     src/kd/kd11_na/cpucontrol/kd11_na_step.cpp
     src/kd/kd11_na/cpucontrol/kd11_na_cpucontrol.cpp
+    src/kd/kd11_na/cpucontrol/kd11_na_haltmode.cpp
     src/kd/kd11_na/cpudata/kd11_naregisters/kd11_naregisters.cpp
     src/kd/kd11_na/pseudommu/pseudommu.cpp
     src/kd/kd11_na/executor/executor.cpp
@@ -103,6 +104,7 @@ set (KDF11_SRCS
     src/kd/kdf11/serial_line_units/serial_line_units.cpp
     src/kd/kdf11/cpucontrol/kdf11_step.cpp
     src/kd/kdf11/cpucontrol/kdf11_cpucontrol.cpp
+    src/kd/kdf11/cpucontrol/kdf11_haltmode.cpp
     src/kd/kdf11/cpudata/kdf11registers/kdf11registers.cpp
     src/kd/kdf11/cpudata/kdf11busdevice.cpp
     src/kd/kdf11/ktf11_a/ktf11_a.cpp

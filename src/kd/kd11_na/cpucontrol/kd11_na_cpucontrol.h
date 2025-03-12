@@ -31,9 +31,13 @@ public:
 	KD11_NA_CpuControl (Bus *bus, CpuData* cpuData, MMU* mmu);
 
 	// Definition of functions required by the CpuControl interface.
+	//
+	// The HaltMode is not implemented in the KD11-NA.
 	void cpuReset () override;
 	void busReset () override;
 	void halt () override;
+	void setHaltMode (bool haltMode) override;
+	bool inHaltMode () override;
 	void wait () override;
     void start (u16 address) override;
 	void proceed () override;
