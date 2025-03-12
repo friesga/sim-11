@@ -78,3 +78,29 @@ KDF11_ODT::State KDF11_ODT::StateMachine::transition (AtPrompt_1 &&, GoCmdEntere
     context_->startCPU (000000);
     return ExitPoint {};
 }
+
+// ODT in the KDF11-U implements the "Toggle Halt" command:
+// The CPU may be single stepped by a second method.Instead of placing the
+// HALT/CONT/BOOT switch in the HALT position, the user can type an H on the
+// console terminal. This action has the effect of toggling the halt flip-flop
+// located in the CPU.This action is the same as that done by setting the
+// HALT/CONT/BOOT switch to the HALT position. The CPU may now be single stepped
+// by using the G and P commands, previously discussed.When exiting the
+// single-step mode, type H and the halt flip-flop will be cleared.
+// (EK-11024-TM-001, p. 3-9).
+// 
+// On the KDF11-A and KDF11-B this is a reserved command: An ASCII H (110) is
+// reserved for future use by Digital. If it is accidently typed, ODT will
+// echo the H and print a prompt character rayther than a ", which is the
+// invalid character response. No other operation is performed.
+// (Ek-KDF11-UG-PR2, par 3.4.9 and EK-KDFEB-UG-001 par. 3.5.9)
+// 
+// The behaviour of the flip-flop is implemented by the CpuControl halt mode.
+// 
+KDF11_ODT::State KDF11_ODT::StateMachine::transition (AtPrompt_1&&, HaltCmdEntered)
+{
+    if (context_->haltCmdSupported_)
+        context_->cpuControl_->setHaltMode (context_->cpuControl_->inHaltMode () ? false : true);
+    context_->writeString ("\n");
+    return AtPrompt_1 {};
+}

@@ -47,6 +47,7 @@ private:
     struct DiscardCharEntered {};               // ;
     struct ProceedCmdEntered {};                // P
     struct GoCmdEntered {};                     // G
+    struct HaltCmdEntered {};                   // H
     struct OpenLocationCmdEntered {};           // /
     struct CloseLocationCmdEntered {};          // <CR>
     struct OpenNextLocationCmdEntered {};       // <LF>
@@ -91,6 +92,7 @@ private:
         DiscardCharEntered,
         ProceedCmdEntered,
         GoCmdEntered,
+        HaltCmdEntered,
         OpenLocationCmdEntered,
         CloseLocationCmdEntered,
         OpenNextLocationCmdEntered,
@@ -165,6 +167,7 @@ public:
     State transition (AtPrompt_1&&, OpenLocationCmdEntered);                       // -> AddressOpenend__3/RegisterOpened_4
     State transition (AtPrompt_1&&, ProceedCmdEntered);                            // -> ExitPoint
     State transition (AtPrompt_1&&, GoCmdEntered);                                 // -> ExitPoint
+    State transition (AtPrompt_1&&, HaltCmdEntered);                               // -> AtPrompt_1
     State transition (AtPrompt_1&&, BinaryDumpCmdEntered);                         // -> EnteringBinaryDump_10
 
     State transition (EnteringAddress_5&&, DigitEntered);                          // -> EnteringAddress_5

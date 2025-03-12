@@ -48,6 +48,10 @@ KDF11_ODT::Event KDF11_ODT::createEvent (CondData<u8> c)
             // Proceed command
             return ProceedCmdEntered {};
 
+        case 'H':
+            // Halt command
+            return HaltCmdEntered {};
+
         case 'R':
         case '$':
             return RegisterCmdEntered {};
