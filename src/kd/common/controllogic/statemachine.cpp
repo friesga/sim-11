@@ -89,7 +89,7 @@ void ControlLogic::StateMachine::entry (PowerFail)
     // On a powerfail trap to the vector at address 24/26
     context_->cpuData_->setTrap (CpuData::TrapCondition::PowerFail);
 
-    while (!context_->signalAvailable () && maxInstructions-- > 0)
+    while (!context_->signalAvailable () && --maxInstructions > 0)
     {
         if (!context_->cpuControl_->step ())
         {
