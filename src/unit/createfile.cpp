@@ -3,6 +3,7 @@
 #include "logger/logger.h"
 #include "fio/fio.h"
 
+#include <sys/stat.h>   // Required for stat
 
 StatusCode Unit::createFile(std::string fileName, Bitmask<AttachFlags> flags)
 {

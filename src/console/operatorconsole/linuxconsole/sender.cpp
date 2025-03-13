@@ -7,6 +7,7 @@
 #include <iostream>
 
 using std::runtime_error;
+using std::cerr;
 
 void LinuxConsole::sender ()
 try
