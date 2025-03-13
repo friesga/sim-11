@@ -101,8 +101,8 @@ void BA11_L::powerSwitchClicked (Button::State state)
             // MOS memory are lost and system cooling fans are off.
             dcOnLed_->show (Indicator::State::Off);
             batteryLed_->show (Indicator::State::Off);
-            bus_->BPOK ().set (false);
             bus_->BatteryPower ().set (false);
+            bus_->BPOK ().set (false);
             break;
 
         case Button::FourPositionsState::P1:
@@ -130,8 +130,8 @@ void BA11_L::powerSwitchClicked (Button::State state)
             // STANDBY - DC power to most of the computer is off but dc power is
             // applied to MOS memory to avoid data loss.
             dcOnLed_->show (Indicator::State::Off);
-            bus_->BPOK ().set (false);
             bus_->BatteryPower ().set (true);
+            bus_->BPOK ().set (false);
             break;
     }
 }
