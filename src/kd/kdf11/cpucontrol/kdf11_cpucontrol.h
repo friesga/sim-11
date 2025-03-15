@@ -66,6 +66,7 @@ private:
 	bool fetchFromVector (u16 address, u16* dest);
 	void traceStep ();
     double calcInstructionTime (u16 instruction);
+	bool signalSet ();
 };
 
  constexpr CpuControl::HaltReason KDF11_CpuControl::haltReason ()

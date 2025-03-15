@@ -44,33 +44,8 @@ using namespace std::chrono;
 // instruction was executed.
 bool KDF11_CpuControl::step ()
 {
-    switch (runState)
-    {
-        case CpuRunState::HALT:
-            return false;
-
-        case CpuRunState::WAIT:
-            // If an interrupt request is present resume execution else
-            // advance time so devices are awakened at the specified time.
-            // ToDo: load trap vector at this point?
-            if (bus_->intrptReqAvailable ())
-            {
-                trace.cpuEvent (CpuEventRecordType::CPU_RUN, cpuData_->registers ()[7]);
-                runState = CpuRunState::RUN;
-                bus_->SRUN().set (true);
-            }
-            else
-                SimulatorClock::forwardClock (microseconds (50));
-            return true;
-
-        case CpuRunState::RUN:
-            execute ();
-            return runState != CpuRunState::HALT; 
-
-        default:
-            // Satisfy the compiler
-            throw runtime_error ("Cannot happen");
-    }
+    execute ();
+    return runState != CpuRunState::HALT;
 }
 
 void KDF11_CpuControl::execute ()
@@ -81,7 +56,9 @@ void KDF11_CpuControl::execute ()
     // current CPU priority. (The LSI-11 has just two priority levels,
     // zero and BR4.) Note that the numerical value of the TrapPriority enum
     // is used as bus request level. Traps in HALT mode are ignored.
-    if (bus_->intrptReqAvailable () && bus_->intrptPriority () > cpuPriority ())
+    if (cpuData_->trap () != CpuData::TrapCondition::None)
+        serviceTrap ();
+    else if (bus_->intrptReqAvailable () && bus_->intrptPriority () > cpuPriority ())
         serviceInterrupt ();
 
     if(trace.isActive ())
@@ -133,14 +110,11 @@ void KDF11_CpuControl::execInstr ()
         SimulatorClock::duration (static_cast<uint64_t> (instrTime * 1000))
     );
 
-    // Execute the next instruction. The function returns true if the
+    // Execute the next instructsion. The function returns true if the
     // instruction was completed and false if it was aborted due to an error
     // condition. In that case a trap has been set. Note however that trap
     // instructions set a trap and return true. 
     visit (executor, instr);
-
-    if (cpuData_->trap () != CpuData::TrapCondition::None)
-        serviceTrap ();
 
     // Trace Trap is enabled by bit 4 of the PSW and causes processor traps at
     // the end of instruction execution. The instruction-that is executed

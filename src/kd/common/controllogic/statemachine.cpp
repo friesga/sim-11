@@ -99,7 +99,10 @@ void ControlLogic::StateMachine::entry (PowerFail)
     }
 
     if (maxInstructions == 0)
+    {
         context_->signalEventQueue_.push (BDCOK_low {});
+        return;
+    }
 }
 
 ControlLogic::State ControlLogic::StateMachine::transition (PowerFail&&, BDCOK_low)
