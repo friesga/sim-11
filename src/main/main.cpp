@@ -49,8 +49,6 @@ try
 	// Activate the tracing facility when specified on the command line
 	if (cmdLineOptions.trace_file)
 		trace.activate (cmdLineOptions.trace_file,
-            Trace::Category::MS11_P |
-			Trace::Category::Debug |
 			Trace::Category::CpuStep);
 
 	// A H9642 cabinet is 19" wide and has an internal height of 35".
