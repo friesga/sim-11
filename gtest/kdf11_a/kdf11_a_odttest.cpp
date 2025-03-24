@@ -54,7 +54,7 @@ protected:
         bus.installModule (&msv11d);
 
         // Create a KD11ODT instance and let it process a character sequence
-        KDF11_ODT kd11odt {&bus, &cpuData, &kd11cpu, &mmu, move (console)};
+        KDF11_ODT kd11odt {&bus, &cpuData, &kd11cpu, &mmu, move (console), false};
 
         // Read the characters from the input sequence and feed them to ODT.
         // The characters could be retrieved from the input sequence directly,

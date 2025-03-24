@@ -10,12 +10,13 @@ public:
     void cpuReset () {};
     void busReset () {};
     void halt () {};
+    void setHaltMode (bool haltMode) {};
+    bool inHaltMode () { return false; };
     void wait () {};
     void start (u16 address) {};
     void proceed () {};
     HaltReason haltReason () { return HaltReason::HaltInstruction; };
     bool step () { return false; };
 };
-
 
 #endif // _DUMMYCPUCONTROL_H_
