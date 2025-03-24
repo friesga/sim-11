@@ -39,14 +39,6 @@ public:
 	bool step () override;
 
 private:
-	// Definition of CPU run states
-	enum class CpuRunState
-	{
-		HALT,
-		RUN,
-		WAIT
-	};
-
 	Bus* bus_;
 	MMU* mmu_;
 	CpuData* cpuData_;

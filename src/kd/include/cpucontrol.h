@@ -9,6 +9,14 @@
 class CpuControl
 {
 public:
+    // Definition of CPU run states
+    enum class CpuRunState
+    {
+        HALT,
+        RUN,
+        WAIT
+    };
+
     // This enum holds the reason for halting the system. This data is printed
 	// by the ODT Maintenance command.
 	// (LSI11 PDP11/03 Processor Handbook)
