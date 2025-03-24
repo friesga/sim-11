@@ -52,8 +52,9 @@ KD11_NA_CpuControl::KD11_NA_CpuControl (Bus* bus, CpuData* cpuData, MMU* mmu)
 // This function will return true if the CPU is in the state RUN and another
 // instruction can be executed, false otherwise. In the latter case a HALT
 // instruction was executed.
-bool KD11_NA_CpuControl::step ()
+CpuControl::CpuRunState KD11_NA_CpuControl::step ()
 {
+    /*
     switch (runState)
     {
         case CpuRunState::HALT:
@@ -81,6 +82,11 @@ bool KD11_NA_CpuControl::step ()
             // Satisfy the compiler
             throw runtime_error ("Cannot happen");
     }
+    */
+
+    execute ();
+    return runState;
+
 }
 
 void KD11_NA_CpuControl::execute ()

@@ -53,6 +53,7 @@ void KDF11_CpuControl::halt ()
 // are awakened at the specified time.
 void KDF11_CpuControl::wait ()
 {
+    runState = CpuRunState::WAIT;
     trace.cpuEvent (CpuEventRecordType::CPU_WAIT, cpuData_->registers ()[7]);
     
     while (!signalSet () && !bus_->intrptReqAvailable ())

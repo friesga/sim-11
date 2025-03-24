@@ -39,13 +39,11 @@ using namespace std::chrono;
 // or RESET bus signal. These signals are handled in their corresponding KD11_NA
 // receivers which then calls a KD11_NA_CpuControl control function.
 //
-// This function will return true if the CPU is in the state RUN and another
-// instruction can be executed, false otherwise. In the latter case a HALT
-// instruction was executed.
-bool KDF11_CpuControl::step ()
+// This function returns the new CpuRunState
+CpuControl::CpuRunState KDF11_CpuControl::step ()
 {
     execute ();
-    return runState != CpuRunState::HALT;
+    return runState;
 }
 
 void KDF11_CpuControl::execute ()

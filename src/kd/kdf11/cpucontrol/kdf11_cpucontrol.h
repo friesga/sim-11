@@ -36,7 +36,7 @@ public:
     void start (u16 address) override;
 	void proceed () override;
 	constexpr HaltReason haltReason ();
-	bool step () override;
+	CpuControl::CpuRunState step () override;
 
 private:
 	Bus* bus_;

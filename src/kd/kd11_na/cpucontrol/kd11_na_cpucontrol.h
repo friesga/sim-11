@@ -42,17 +42,9 @@ public:
     void start (u16 address) override;
 	void proceed () override;
 	constexpr HaltReason haltReason ();
-	bool step () override;
+	CpuControl::CpuRunState step () override;
 
 private:
-	// Definition of CPU run states
-	enum class CpuRunState
-	{
-		HALT,
-		RUN,
-		WAIT
-	};
-
 	Bus* bus_;
 	MMU* mmu_;
 	CpuData* cpuData_;
