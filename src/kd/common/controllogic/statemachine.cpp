@@ -32,7 +32,7 @@ void ControlLogic::StateMachine::entry (Running)
 {
     while (!context_->signalAvailable ())
     {
-        CpuControl::CpuRunState nextState = context_->cpuControl_->step ();
+        CpuControl::CpuRunState nextState = context_->cpuControl_->execute ();
 
         if (nextState == CpuControl::CpuRunState::HALT ||
             context_->bus_->BHALT () || context_->cpuControl_->inHaltMode ())
@@ -151,7 +151,7 @@ void ControlLogic::StateMachine::entry (PowerFail)
 
     while (!context_->signalAvailable () && --maxInstructions > 0)
     {
-        if (context_->cpuControl_->step () != CpuControl::CpuRunState::RUN)
+        if (context_->cpuControl_->execute () != CpuControl::CpuRunState::RUN)
         {
             context_->signalEventQueue_.push (Halt {});
             return;

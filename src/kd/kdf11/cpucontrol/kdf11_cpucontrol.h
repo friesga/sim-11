@@ -36,7 +36,7 @@ public:
     void start (u16 address) override;
 	void proceed () override;
 	constexpr HaltReason haltReason ();
-	CpuControl::CpuRunState step () override;
+	CpuControl::CpuRunState execute () override;
 
 private:
 	Bus* bus_;
@@ -52,7 +52,6 @@ private:
 	void serviceTrap ();
 	void serviceInterrupt ();
 	u8 cpuPriority ();
-	void execute ();
 	void swapPcPSW (u16 vectorAddress);
 	bool fetchFromVector (u16 address, u16* dest);
 	void traceStep ();

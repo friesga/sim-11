@@ -45,8 +45,8 @@ public:
     virtual void proceed () = 0;
     virtual HaltReason haltReason () = 0;
 
-    // The step funtion returns the new CpuRunState
-    virtual CpuRunState step () = 0;
+    // The execute function returns the new CpuRunState
+    virtual CpuRunState execute () = 0;
 };
 
 

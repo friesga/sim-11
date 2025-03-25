@@ -20,33 +20,32 @@ using std::cout;
 
 using namespace std::chrono;
 
-// Perform a CPU step. The step mainly comprises three actions:
+// Execute an instruction. This mainly comprises three actions:
 // 1. Execution of an instruction,
 // 2. Handle the trace bit,
 // 3. Handling of traps and interrupts that might have arisen during execution
 //    of the instruction, either a trap as a result of an instruction, or an
 //    interrupt requested by a bus device.
 // 
-// The cpu always is in of the following states:
-// - HALT: the CPU is halted and cannot execute the step, return false,
+// When the CPU is in the ControlLogic Running state, the CPU always is in of
+// the following sub states:
+// - HALT: the CPU is halted and cannot execute the step,
 // - RUN: the CPU will execute the next instruction,
-// - WAIT: the CPU is running but is still waiting for an interrupt, return true.
+// - WAIT: the CPU is running but is still waiting for an interrupt,
+// 
+// The HALT and WAIT state will cause a transition in the ControlLogic state
+// machine.
 // 
 // As the power-up mode can be set to trap to the vector at address 024, the
 // presence of traps is checked before an instruction is executed.
 //
 // The normal instruction flow can be interrupted by the setting of the BHALT
-// or RESET bus signal. These signals are handled in their corresponding KD11_NA
-// receivers which then calls a KD11_NA_CpuControl control function.
+// or RESET bus signal. These signals are handled in their corresponding 
+// receivers which then call a CpuControl control function.
 //
-// This function returns the new CpuRunState
-CpuControl::CpuRunState KDF11_CpuControl::step ()
-{
-    execute ();
-    return runState;
-}
-
-void KDF11_CpuControl::execute ()
+// This function returns the new CPU state.
+//
+CpuControl::CpuRunState KDF11_CpuControl::execute ()
 {
     // If there is a pending bus interrupt that can be executed, process
     // that interrupt first, else execute the next instruction
@@ -64,8 +63,9 @@ void KDF11_CpuControl::execute ()
 
     execInstr ();
 
-    // Instructions leave the run state unchanged except for the WAIT
-    // instcution which sets the state to WAIT.
+    // Instructions leave the run state unchanged except for the WAIT and HALT
+    // instruction which sets the state to respectively WAIT and HALT.
+    return runState;
 }
 
 // Execute one instruction
