@@ -48,7 +48,6 @@ private:
 	bool traceFlag_;
 	bool haltMode_ {false};
 
-	constexpr bool inKernelMode ();
 	void execInstr ();
 	void serviceTrap ();
 	void serviceInterrupt ();
@@ -57,8 +56,6 @@ private:
 	void swapPcPSW (u16 vectorAddress);
 	bool fetchFromVector (u16 address, u16* dest);
 	void traceStep ();
-    double calcInstructionTime (u16 instruction);
-	bool signalSet ();
 };
 
  constexpr CpuControl::HaltReason KDF11_CpuControl::haltReason ()

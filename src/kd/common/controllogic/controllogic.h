@@ -61,6 +61,7 @@ private:
     struct BPOK_high {};
     struct Halt {};
     struct Start {};
+    struct Wait {};
     struct Reset {};
     struct Boot {};
     struct BPOK_low {};
@@ -70,6 +71,7 @@ private:
     using Event = std::variant<BPOK_high,
         Halt,
         Start,
+        Wait,
         Reset,
         Boot,
         BPOK_low,
@@ -80,6 +82,7 @@ private:
     struct PowerOff {};
     struct Running {};
     struct Halted {};
+    struct Waiting {};
     struct PowerFail {};
     struct ExitPoint {};
     struct Standby {};
@@ -87,6 +90,7 @@ private:
     using State = std::variant<PowerOff,
         Running,
         Halted,
+        Waiting,
         PowerFail,
         Standby,
         ExitPoint,
@@ -146,6 +150,12 @@ public:
     State transition (Halted&&, Reset);				// -> Halted/Running
     State transition (Halted&&, Boot);				// -> Running
     State transition (Halted&&, BPOK_low);			// -> PowerOff
+    void entry (Waiting);
+    State transition (Waiting&&, Start);			// -> Running
+    State transition (Waiting&&, Boot);				// -> Running
+    State transition (Waiting&&, Reset);			// -> Halted/Running
+    State transition (Waiting&&, BPOK_low);			// -> PowerOff
+    State transition (Waiting&&, Halt);				// -> Halted
     void entry (PowerFail);
     State transition (PowerFail&&, BDCOK_low);		// -> PowerOff
     State transition (PowerFail&&, Halt);			// -> PowerOff

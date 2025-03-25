@@ -1,7 +1,10 @@
 #include "controllogic.h"
+#include "chrono/simulatorclock/simulatorclock.h"
 
 using std::make_unique;
 using std::monostate;
+
+using namespace std::chrono;
 
 ControlLogic::State ControlLogic::StateMachine::transition (PowerOff&&, BPOK_high)
 {
@@ -13,18 +16,34 @@ ControlLogic::State ControlLogic::StateMachine::transition (Standby&&, BPOK_high
     return context_->powerUpRoutine ();
 }
 
+// The CPU is run by calling the CPU's step() function to execute intructions.
+// Every instruction execution returns the next state for the state machine.
+// 
+// If the CPU is halted or BHALT is true ODT must be started. In the
+// latter case one instruction is executed and thus the CPU is single
+// stepped.
+//
+// If the CPU executes a WAIT instruction the state machine transitions to the
+// Waiting state. This actually is a sub state of the Running state but as the
+// variantfsm state machine doesn't support sub states the Waiting state is
+// implemented as a separate state.
+//
 void ControlLogic::StateMachine::entry (Running)
 {
     while (!context_->signalAvailable ())
     {
-        // If the CPU is halted or BHALT is true ODT must be started. In the
-        // latter case one instruction is executed and thus the CPU is single
-        // stepped.
-        if (context_->cpuControl_->step () == CpuControl::CpuRunState::HALT ||
-            context_->bus_->BHALT() || context_->cpuControl_->inHaltMode ())
-                context_->signalEventQueue_.push (Halt {});
+
+        CpuControl::CpuRunState nextState = context_->cpuControl_->step ();
+
+        if (nextState == CpuControl::CpuRunState::HALT ||
+            context_->bus_->BHALT () || context_->cpuControl_->inHaltMode ())
+        {
+            context_->signalEventQueue_.push (Halt {});
+            context_->bus_->SRUN ().set (false);
+        }
+        else if (nextState == CpuControl::CpuRunState::WAIT)
+            context_->signalEventQueue_.push (Wait {});
     }
-    context_->bus_->SRUN ().set (false);
 }
 
 ControlLogic::State ControlLogic::StateMachine::transition (Running&&, Reset)
@@ -75,6 +94,47 @@ ControlLogic::State ControlLogic::StateMachine::transition (Halted&&, Boot)
 ControlLogic::State ControlLogic::StateMachine::transition (Halted&&, BPOK_low)
 {
     return PowerOff {};
+}
+
+// This function is called on the execution of a WAIT instruction. It waits
+// for a signal or interrupt request finishing the WAIT instruction.
+// If no signal or an interrupt request is present advance time so devices
+// are awakened at the specified time.
+void ControlLogic::StateMachine::entry (Waiting)
+{
+    trace.cpuEvent (CpuEventRecordType::CPU_WAIT,
+        context_->cpuData_->registers ()[7]);
+
+    while (!context_->signalAvailable () && !context_->bus_->intrptReqAvailable ())
+        SimulatorClock::forwardClock (microseconds (50));
+
+    trace.cpuEvent (CpuEventRecordType::CPU_RUN,
+        context_->cpuData_->registers ()[7]);
+}
+
+ControlLogic::State ControlLogic::StateMachine::transition (Waiting&&, Start)
+{
+    return Running {};			
+};
+
+ControlLogic::State ControlLogic::StateMachine::transition (Waiting&&, Boot)
+{
+    return context_->bootRoutine ();
+};
+
+ControlLogic::State ControlLogic::StateMachine::transition (Waiting&&, Reset)
+{
+    return context_->powerUpRoutine ();
+};
+
+ControlLogic::State ControlLogic::StateMachine::transition (Waiting&&, BPOK_low)
+{
+    return PowerOff {};
+}
+
+ControlLogic::State ControlLogic::StateMachine::transition (Waiting&&, Halt)
+{
+    return Halted {};
 }
 
 // Execute the powerfail routine until either a HALT is executed

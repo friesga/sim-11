@@ -1,8 +1,5 @@
 #include "kdf11_cpucontrol.h"
 #include "trace/trace.h"
-#include "chrono/simulatorclock/simulatorclock.h"
-
-using namespace std::chrono;
 
 // Constructor
 KDF11_CpuControl::KDF11_CpuControl (Bus* bus, CpuData* cpuData, MMU* mmu)
@@ -47,20 +44,9 @@ void KDF11_CpuControl::halt ()
     trace.cpuEvent (CpuEventRecordType::CPU_HALT, cpuData_->registers ()[7]);
 }
 
-// This function is called on the execution of a WAIT instruction. It waits
-// for a signal or interrupt request finishing the WAIT instruction.
-// If no signal or an interrupt request is present advance time so devices
-// are awakened at the specified time.
 void KDF11_CpuControl::wait ()
 {
     runState = CpuRunState::WAIT;
-    trace.cpuEvent (CpuEventRecordType::CPU_WAIT, cpuData_->registers ()[7]);
-    
-    while (!signalSet () && !bus_->intrptReqAvailable ())
-        SimulatorClock::forwardClock (microseconds (50));
-    
-    trace.cpuEvent (CpuEventRecordType::CPU_RUN, cpuData_->registers ()[7]);
-    bus_->SRUN ().set (true);
 }
 
 // Start the processor at the given address
@@ -80,17 +66,4 @@ void KDF11_CpuControl::proceed ()
     trace.cpuEvent (CpuEventRecordType::CPU_ODT_P, cpuData_->registers ()[7]);
 }
 
-// The function return true if any for the wait state relevant signals changes
-// to a relevant state.
-bool KDF11_CpuControl::signalSet ()
-{
-    if (!bus_->BPOK () ||
-         bus_->RESET () ||
-         bus_->BHALT () ||
-         bus_->BINIT () ||
-         bus_->BOOT ())
-            return true;
-
-    return false;
-}
 
