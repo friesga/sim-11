@@ -32,7 +32,6 @@ void ControlLogic::StateMachine::entry (Running)
 {
     while (!context_->signalAvailable ())
     {
-
         CpuControl::CpuRunState nextState = context_->cpuControl_->step ();
 
         if (nextState == CpuControl::CpuRunState::HALT ||
@@ -59,6 +58,11 @@ ControlLogic::State ControlLogic::StateMachine::transition (Running&&, Boot)
 ControlLogic::State ControlLogic::StateMachine::transition (Running&&, Halt)
 {
     return Halted {};
+}
+
+ControlLogic::State ControlLogic::StateMachine::transition (Running&&, Wait)
+{
+    return Waiting {};
 }
 
 ControlLogic::State ControlLogic::StateMachine::transition (Running&&, BPOK_low)
@@ -102,14 +106,10 @@ ControlLogic::State ControlLogic::StateMachine::transition (Halted&&, BPOK_low)
 // are awakened at the specified time.
 void ControlLogic::StateMachine::entry (Waiting)
 {
-    trace.cpuEvent (CpuEventRecordType::CPU_WAIT,
-        context_->cpuData_->registers ()[7]);
-
     while (!context_->signalAvailable () && !context_->bus_->intrptReqAvailable ())
         SimulatorClock::forwardClock (microseconds (50));
 
-    trace.cpuEvent (CpuEventRecordType::CPU_RUN,
-        context_->cpuData_->registers ()[7]);
+    context_->cpuControl_->proceed ();
 }
 
 ControlLogic::State ControlLogic::StateMachine::transition (Waiting&&, Start)
@@ -129,7 +129,7 @@ ControlLogic::State ControlLogic::StateMachine::transition (Waiting&&, Reset)
 
 ControlLogic::State ControlLogic::StateMachine::transition (Waiting&&, BPOK_low)
 {
-    return PowerOff {};
+    return PowerFail {};
 }
 
 ControlLogic::State ControlLogic::StateMachine::transition (Waiting&&, Halt)

@@ -46,6 +46,7 @@ void KDF11_CpuControl::halt ()
 
 void KDF11_CpuControl::wait ()
 {
+    trace.cpuEvent (CpuEventRecordType::CPU_WAIT, cpuData_->registers ()[7]);
     runState = CpuRunState::WAIT;
 }
 

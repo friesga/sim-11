@@ -144,6 +144,7 @@ public:
     State transition (Running&&, Reset);			// -> Halted/Running
     State transition (Running&&, Boot); 			// -> Running
     State transition (Running&&, Halt);				// -> Halted
+    State transition (Running&&, Wait);			    // -> Waiting
     State transition (Running&&, BPOK_low);			// -> PowerFail
     void entry (Halted);
     State transition (Halted&&, Start);				// -> Running
