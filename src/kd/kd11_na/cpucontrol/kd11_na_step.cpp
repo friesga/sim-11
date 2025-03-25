@@ -54,36 +54,6 @@ KD11_NA_CpuControl::KD11_NA_CpuControl (Bus* bus, CpuData* cpuData, MMU* mmu)
 // instruction was executed.
 CpuControl::CpuRunState KD11_NA_CpuControl::step ()
 {
-    /*
-    switch (runState)
-    {
-        case CpuRunState::HALT:
-            return false;
-
-        case CpuRunState::WAIT:
-            // If an interrupt request is present resume execution else
-            // advance time so devices are awakened at the specified time.
-            // ToDo: load trap vector at this point?
-            if (bus_->intrptReqAvailable ())
-            {
-                trace.cpuEvent (CpuEventRecordType::CPU_RUN, cpuData_->registers ()[7]);
-                runState = CpuRunState::RUN;
-                bus_->SRUN().set (true);
-            }
-            else
-                SimulatorClock::forwardClock (microseconds (50));
-            return true;
-
-        case CpuRunState::RUN:
-            execute ();
-            return runState != CpuRunState::HALT; 
-
-        default:
-            // Satisfy the compiler
-            throw runtime_error ("Cannot happen");
-    }
-    */
-
     execute ();
     return runState;
 
