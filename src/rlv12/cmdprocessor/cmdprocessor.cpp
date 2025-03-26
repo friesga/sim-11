@@ -16,7 +16,7 @@ CmdProcessor::~CmdProcessor()
     cmdProcessorThread_.join();
 }
 
-// SignalX the command processor to stop processing
+// Signal the command processor to stop processing
 void CmdProcessor::finish ()
 {
     // Guard against controller register access from writeWord()

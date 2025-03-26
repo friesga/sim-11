@@ -152,10 +152,14 @@ void RL01_02::clearDriveReady ()
     ++seeksInProgress_;
 }
 
+// In principle the drive is ready when it is in the LockedOn state. That is
+// not a sufficient condition however as the drive isn't ready anymore when
+// a seek is initiated (in RLV12::writeWord()). At that point clearDriveReady()
+// is called.
 bool RL01_02::driveReady ()
 {
     std::lock_guard<std::mutex> guard {driveReadyMutex_};
-    return seeksInProgress_ == 0;
+    return stateMachine_->inState (LockedOn {}) && seeksInProgress_ == 0;
 }
 
 void RL01_02::waitForDriveReady ()
