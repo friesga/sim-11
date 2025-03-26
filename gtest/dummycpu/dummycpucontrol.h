@@ -16,7 +16,7 @@ public:
     void start (u16 address) {};
     void proceed () {};
     HaltReason haltReason () { return HaltReason::HaltInstruction; };
-    bool step () { return false; };
+    CpuRunState execute () { return CpuRunState::RUN; };
 };
 
 #endif // _DUMMYCPUCONTROL_H_
