@@ -73,6 +73,7 @@ public:
     void clearDriveReady ();
     bool driveReady ();
     void waitForDriveReady ();
+    void setSeekIncomplete ();
     void waitForSeekComplete ();
     void resetDriveError ();
 

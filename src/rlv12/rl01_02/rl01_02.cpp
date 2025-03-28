@@ -2,8 +2,12 @@
 #include "../rlv12.h"
 
 #include <chrono>
+#include <sstream>
+#include <iomanip>
 
 using std::chrono::seconds;
+using std::stringstream;
+using std::oct;
 
 using std::make_unique;
 using namespace std::chrono_literals;
@@ -142,6 +146,10 @@ void RL01_02::setDriveReady ()
     std::lock_guard<std::mutex> guard {driveReadyMutex_};
     seeksInProgress_ = 0;
 
+    stringstream ss {};
+    ss << "setDriveReady: " << seeksInProgress_;
+    trace.debug (ss.str ());
+
     // If a thread is waiting wake up this thread
     driveReadyCondition_.notify_one ();
 }
@@ -150,6 +158,10 @@ void RL01_02::clearDriveReady ()
 {
     std::lock_guard<std::mutex> guard {driveReadyMutex_};
     ++seeksInProgress_;
+
+    stringstream ss {};
+    ss << "clearDriveReady: " << seeksInProgress_;
+    trace.debug (ss.str ());
 }
 
 // In principle the drive is ready when it is in the LockedOn state. That is
@@ -159,6 +171,11 @@ void RL01_02::clearDriveReady ()
 bool RL01_02::driveReady ()
 {
     std::lock_guard<std::mutex> guard {driveReadyMutex_};
+
+    stringstream ss {};
+    ss << "driveReady: " << seeksInProgress_;
+    trace.debug (ss.str ());
+
     return stateMachine_->inState (LockedOn {}) && seeksInProgress_ == 0;
 }
 
@@ -166,6 +183,10 @@ void RL01_02::waitForDriveReady ()
 {
     // Lock the drive ready mutex
     unique_lock<std::mutex> lock (driveReadyMutex_);
+
+    stringstream ss1 {};
+    ss1 << "waitForDriveReady entry: " << seeksInProgress_;
+    trace.debug (ss1.str ());
 
     // wait() calls unlock() on the given lock and blocks the thread.
     // The thread will be unblocked when setDriveReady() is executed.
@@ -175,7 +196,22 @@ void RL01_02::waitForDriveReady ()
     if (seeksInProgress_ > 0)
         driveReadyCondition_.wait (lock, [this] { return seeksInProgress_ == 0; });
 
+    stringstream ss2 {};
+    ss2 << "waitForDriveReady exit: " << seeksInProgress_;
+    trace.debug (ss2.str ());
+
     lock.unlock ();
+}
+
+// In situations in which the drive is not ready and a seek command is
+// initiated in RLV12::writeWord(), the seek is aborted in
+// CmdProcessor::seekCmd(). In that case the number of seeks in progress
+// has to be reset.
+void RL01_02::setSeekIncomplete ()
+{
+    // Lock the drive ready mutex
+    unique_lock<std::mutex> lock (driveReadyMutex_);
+    seeksInProgress_ = 0;
 }
 
 void RL01_02::waitForSeekComplete ()
@@ -183,9 +219,17 @@ void RL01_02::waitForSeekComplete ()
     // Lock the drive ready mutex
     unique_lock<std::mutex> lock (driveReadyMutex_);
 
+    stringstream ss1 {};
+    ss1 << "waitForSeekComplete entry: " << seeksInProgress_;
+    trace.debug (ss1.str ());
+
     // See comment in waitForDriveReady()
     if (seeksInProgress_ > 1)
         driveReadyCondition_.wait (lock, [this] { return seeksInProgress_ == 0; });
+
+    stringstream ss2 {};
+    ss2 << "waitSeekComplete exit: " << seeksInProgress_;
+    trace.debug (ss2.str ());
 
     lock.unlock ();
 }
