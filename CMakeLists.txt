@@ -550,6 +550,7 @@ set (GTEST_SRCS
     gtest/variantfsmtest.cpp)
     
 set (SIM11_TEST_SRCS
+    gtest/main/main.cpp
     ${GTEST_SRCS}
     ${CMDLINEOPTIONS_SRCS}
     ${CONFIGURATOR_SRCS}
@@ -592,7 +593,7 @@ set (GTESTUNIT_LIBS
     # "D:/src/gtest-1.10.0/build/x64-Release/lib/gtest.lib"
     # "D:/src/gtest-1.10.0/build/x64-Release/lib/gtest_main.lib"
     C:/Tools/gtest-1.10.0/lib/gtest.lib
-    C:/Tools/gtest-1.10.0/lib/gtest_main.lib
+    # C:/Tools/gtest-1.10.0/lib/gtest_main.lib
     )
 
 set (SDL_INCLUDE_DIRS
