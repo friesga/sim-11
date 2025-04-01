@@ -20,29 +20,29 @@ try
     {
         // Wait to be signalled by writeWord() that a command has been
         // given in the CSR or the controller has to quit
-        // ToDo: Take into account spurious wakeups
-        controller_->signal_.wait(lock);
+        controller_->signal_.wait (lock,
+            [this] () {return !controller_->commandQueue_.empty () || !running_;});
 
         if (!running_)
             break;
 
-        // Get a  reference to the unit for which the command is destined.
-        RL01_02 &unit = controller_->units_[RLV12const::getDrive (controller_->csr_)];
+        while (!controller_->commandQueue_.empty ())
+        {
+            RLV12Command rlv12Command =  controller_->commandQueue_.front ();
 
-        // Assemble a command from the command given in the CSR and the
-        // parameters in the other registers
-        // ToDo: Assemble command in the constructor?!
-        RLV12Command rlv12Command {RLV12const::getFunction (controller_->csr_), controller_->dar_,
-            controller_->memAddrFromRegs (), 
-            (u32) 0200000 - controller_->wordCounter_};
+            // Get a  reference to the unit for which the command is destined.
+            RL01_02& unit = controller_->units_[rlv12Command.unit_];
 
-        // Execute the command
-        // ToDo: Merge the command pointer with the function pointer?
-        u16 rlcsValue = (this->*commands_[rlv12Command.function_])
-            (&unit, rlv12Command);
+            // Execute the command
+            u16 rlcsValue = (this->*commands_[rlv12Command.function_])
+                (&unit, rlv12Command);
 
-        // Set Controller Ready for the next command.
-        controller_->setDone (unit, rlcsValue);
+            // The event has been processed
+            controller_->commandQueue_.pop ();
+
+            // Set Controller Ready for the next command.
+            controller_->setDone (unit, rlcsValue);
+        }
     }
 }
 catch (const std::exception& ex)

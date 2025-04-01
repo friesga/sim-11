@@ -22,10 +22,10 @@ StatusCode RLV12::writeByte (BusAddress busAddress, u8 data)
 StatusCode RLV12::writeWord (BusAddress busAddress, u16 data)
 {
     // Get reference to drive
-    RL01_02 &unit = units_[RLV12const::getDrive (data)];
+    RL01_02& unit = units_[RLV12const::getDrive (data)];
 
     // Guard against controller register access from the command processor
-	std::unique_lock<std::mutex> lock {controllerMutex_};
+    std::unique_lock<std::mutex> lock {controllerMutex_};
 
     // Any write to a register resets the FIFO buffer index
     fifoIndex_ = 0;
@@ -34,6 +34,7 @@ StatusCode RLV12::writeWord (BusAddress busAddress, u16 data)
     switch (busAddress.registerAddress () & 016)
     {
         case CSR:
+        {
             // Control/Status Register
             // The next statement is superfluous as the BA16 ans BA17 bits
             // are immediately overwritten by the next statement
@@ -41,7 +42,7 @@ StatusCode RLV12::writeWord (BusAddress busAddress, u16 data)
 
             // Set the writable bits in the CSR. CRDY will be cleared by the
             // host software to execute the command specified in the CSR.
-            csr_ = (csr_ & ~RLV12const::CSR_ReadWriteBits) | 
+            csr_ = (csr_ & ~RLV12const::CSR_ReadWriteBits) |
                 (data & RLV12const::CSR_ReadWriteBits);
 
             // The [DRDY] bit is cleared when a seek or head-select operation
@@ -55,24 +56,24 @@ StatusCode RLV12::writeWord (BusAddress busAddress, u16 data)
             // Drive Ready has to be cleared only on execution of the command.
             if (RLV12const::getFunction (csr_) == RLV12const::CSR_Seek &&
                 (data & RLV12const::CSR_ControllerReady) == 0)
-                    unit.clearDriveReady ();
+                unit.clearDriveReady ();
 
             // Load Bus Address Extension Bits (BA16 and BA17) into bits
             // 00 and 01 in the BAE register
             updateBAE ();
 
-            trace.rlv12Registers ("write CSR", csr_, bar_, dar_, 
+            trace.rlv12Registers ("write CSR", csr_, bar_, dar_,
                 dataBuffer_[0], bae_);
 
             // Commands to the controller are only executed with the CRDY (DONE)
             // bit is cleared by software.  If set, check for interrupts and return.
             if (data & RLV12const::CSR_ControllerReady)
-            {                              
+            {
                 // Ready set?
                 if ((data & RLV12const::CSR_InterruptEnable) == 0)
                     bus_->clearInterrupt (TrapPriority::BR4, 0, 4);
                 else if ((csr_ & (RLV12const::CSR_ControllerReady + RLV12const::CSR_InterruptEnable))
-                        == RLV12const::CSR_ControllerReady)
+                    == RLV12const::CSR_ControllerReady)
                     bus_->setInterrupt (TrapPriority::BR4, 4, 0, vector_);
 
                 return StatusCode::Success;
@@ -98,11 +99,23 @@ StatusCode RLV12::writeWord (BusAddress busAddress, u16 data)
                 break;
             }
 
-            // We're done using the registers this call. Notify the
-            // command processor a command has been issued.
+            // Assemble a command from the command given in the CSR and the
+            // parameters in the other registers and pass it on to the command
+            // processor.
+            RLV12Command rlv12Command {RLV12const::getDrive (csr_),
+                RLV12const::getFunction (csr_),
+                dar_,
+                memAddrFromRegs (),
+                (u32)0200000 - wordCounter_};
+
+            commandQueue_.push (std::move (rlv12Command));
+
+            // We're done using the registers this call. Signal the command
+            // processor a command waits to be processed.
             lock.unlock ();
             signal_.notify_one ();
             break;
+        }
 
         case BAR:
             // Bus Address Register
@@ -113,7 +126,7 @@ StatusCode RLV12::writeWord (BusAddress busAddress, u16 data)
             //
             // The VRLBC0 diagnostics makes clear that bit 0 can be read and
             // written on the RLV11 and RLV12 and always reads as 0 on an RL11.
-            bar_ = data & (rlType_ == 
+            bar_ = data & (rlType_ ==
                 RLV12const::RLType::RL11 ? 0177776 : 0177777);
             break;
 
@@ -144,12 +157,12 @@ StatusCode RLV12::writeWord (BusAddress busAddress, u16 data)
             // ToDo: This is an undocumented feature?
             // rlcs = (rlcs & ~RLCS_MEX) | ((bae_ & RLCS_M_MEX) << RLCS_V_MEX);
             csr_ = (csr_ & ~RLV12const::CSR_AddressExtension) |
-                    ((bae_ & RLV12const::CSR_AddressExtMask) << RLV12const::CSR_AddressExtPosition);
+                ((bae_ & RLV12const::CSR_AddressExtMask) << RLV12const::CSR_AddressExtPosition);
             break;
 
         default:
             return StatusCode::NonExistingMemory;
-    }                                           
+    }
 
     return StatusCode::Success;
 }

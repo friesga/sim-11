@@ -18,6 +18,7 @@
 #include <thread>               // for std::thread
 #include <mutex>                // for std::mutex
 #include <condition_variable>   // for std::condition_variable
+#include <queue>                // for std::queue
 
 // Forward declaration
 class CmdProcessor;
@@ -29,7 +30,7 @@ class RLV12 : public PDP11Peripheral
 
     // Define RLV12 registers as offsets from the controllers base address
     enum
-    { 
+    {
         CSR = 00,
         BAR = 02,
         DAR = 04,
@@ -47,13 +48,13 @@ class RLV12 : public PDP11Peripheral
     u16 bae_;       // Bus Address Extension register
 
     // Define transfer buffer
-    u16 *dataBuffer_;
+    u16* dataBuffer_;
 
     // Definition of the controller type and the presence of the 22-bit option
     // when configured as a RLV12 controller.
     RLV12const::RLType rlType_;
     bool _22bit_;
-    
+
     // A RLV12 can have a maximum of four units. RL01_02 objects for
     // which no unit is connected to the controller will have the status
     // off-line.
@@ -67,6 +68,9 @@ class RLV12 : public PDP11Peripheral
 
     // Definition of the pointer to the command processor
     std::unique_ptr<CmdProcessor> cmdProcessor_;
+
+    // Definition of a queue for commands to the command processor
+    std::queue<RLV12Command> commandQueue_ {};
 
     // Safe guard against controller access from multiple service threads
     std::mutex controllerMutex_;
@@ -89,17 +93,17 @@ class RLV12 : public PDP11Peripheral
     size_t fifoIndex_;
 
     // Private functions
-    u16 calcCRC (int const wc, u16 const *data);
-    void setDone (RL01_02 &unit, u16 status);
+    u16 calcCRC (int const wc, u16 const* data);
+    void setDone (RL01_02& unit, u16 status);
     u16 getStatusCmd (RL01_02* unit);
 
 public:
     // Constructors/destructor
-    RLV12 (Bus *bus);
+    RLV12 (Bus* bus);
     RLV12 (Bus* bus, Window* window, RLConfig& rlConfig);
     RLV12 (Bus* bus, Window* window, shared_ptr<RL11Config> rl11Config);
     RLV12 (Bus* bus, Window* window, shared_ptr<RLV11Config> rlv11Config);
-    RLV12 (Bus *bus, Window* window, shared_ptr<RLV12Config> rlv12Config);
+    RLV12 (Bus* bus, Window* window, shared_ptr<RLV12Config> rlv12Config);
     ~RLV12 ();
 
     // Required functions
@@ -110,18 +114,18 @@ public:
     StatusCode writeWord (BusAddress busAddress, u16 data) override;
 
     // Declare the signal receivers
-	void BINITReceiver (bool signalValue);
+    void BINITReceiver (bool signalValue);
 
     // RLV1[12] specific function
     inline size_t numUnits ();
-    inline RL01_02  *unit (size_t unitNumber);
+    inline RL01_02* unit (size_t unitNumber);
 
     // Functions to set and get memory adresses consistently for
     // 16-, 18- and 22-bit systems
     void memAddrToRegs (u32 memoryAddress);
     BusAddress memAddrFromRegs ();
     void updateBAE ();
-    u16 rlcsPlusDriveStatus (RL01_02 &unit);
+    u16 rlcsPlusDriveStatus (RL01_02& unit);
     constexpr u16 getBA16BA17 (u16 csr_);
 };
 
@@ -130,8 +134,8 @@ inline size_t RLV12::numUnits ()
 {
     return RLV12const::maxDrivesPerController;
 }
- 
-inline RL01_02  *RLV12::unit (size_t unitNumber)
+
+inline RL01_02* RLV12::unit (size_t unitNumber)
 {
     return &units_[unitNumber];
 }
