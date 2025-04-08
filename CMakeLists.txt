@@ -57,6 +57,7 @@ add_subdirectory (src/msv11d)
 add_subdirectory (src/pdp11peripheral)
 add_subdirectory (src/interruptrequest)
 add_subdirectory (src/signal)
+add_subdirectory (gtest)
   
 # At least C++17 is needed for use of std::variant in variantfsm.
 # set(CMAKE_CXX_STANDARD 20) is useless as that not translates to /std:c++20
@@ -127,101 +128,7 @@ endif ()
 
 #
 # Create sim-11 test executable
-#
-# N.B. This configuration on x64 only produces a correct executable using
-# the x64-Release configuration (in the folder x64-Release)!
-#
-# Define source files
-set (GTEST_SRCS
-    gtest/ashtest.cpp
-    gtest/asynctimertest.cpp
-    gtest/bitfieldtest.cpp
-    gtest/cabinettest.cpp
-    gtest/cmdlineoptionstest.cpp
-    gtest/threadsafeprioqueuetest.cpp
-    gtest/threadsafecontainertest.cpp
-    gtest/interruptrequesttest.cpp
-    gtest/bitmasktest.cpp
-    gtest/busaddresstest.cpp
-    gtest/characterbuffertest.cpp
-    gtest/conddatatest.cpp
-    gtest/conditioncodestest.cpp
-    gtest/configprocessortest.cpp
-    gtest/consoleconsistencytest.cpp
-    gtest/cabinetconsistencytest.cpp
-    gtest/ba11_nconfiguratortest.cpp
-    gtest/ba11lconfiguratortest.cpp
-    gtest/ba11consistencytest.cpp
-    gtest/unibusconsistencytest.cpp
-    gtest/bdv11configuratortest.cpp
-    gtest/dlv11configuratortest.cpp
-    gtest/fiotest.cpp
-    gtest/fistest.cpp
-    gtest/kd11_naconfiguratortest.cpp
-    gtest/instructiondecodertest.cpp
-    gtest/kd11_na/inctest.cpp
-    gtest/kd11_na/movtest.cpp
-    gtest/kd11_na/kd11_naregisterstest.cpp
-    gtest/kd11_na/kd11_na_odttest.cpp
-    gtest/kd11_na/kd11_na_instr_timingtest.cpp
-    gtest/kdf11_a/pswtest.cpp
-    gtest/kdf11_a/kdf11_aconfiguratortest.cpp
-    gtest/kdf11_a/kdf11_a_pswregistertest.cpp
-    gtest/kdf11_a/kdf11_aregisterstest.cpp
-    gtest/kdf11_a/kdf11_abusdevicetest.cpp
-    gtest/kdf11_a/kdf11_a_odttest.cpp
-    gtest/kdf11_a/kdf11_instr_timingtest.cpp
-    gtest/kdf11_b/kdf11_bconfiguratortest.cpp
-    gtest/kdf11_b/sluconfiguratortest.cpp
-    gtest/kdf11_b/kdf11b_bdv11configuratortest.cpp
-    gtest/kdf11_u/kdf11_uconfiguratortest.cpp
-    gtest/kdf11_u/kdf11_udisplayregistertest.cpp
-    gtest/ktf11_a/ktf11_atest.cpp
-    gtest/locationtest.cpp
-    gtest/kt24/kt24configuratortest.cpp
-    gtest/kt24/kt24test.cpp
-    gtest/m9312/m9312configuratortest.cpp
-    gtest/m9312/m9312consistencytest.cpp
-    gtest/m9312/m9312test.cpp
-    gtest/m9312/m9312powerfailvectortest.cpp
-    gtest/memorysizetest.cpp
-    gtest/msv11configuratortest.cpp
-    gtest/ms11p/ms11pconfiguratortest.cpp
-    gtest/ms11p/ms11ptest.cpp
-    gtest/operandlocationtest.cpp
-    gtest/qbusinstalltest.cpp
-    gtest/dummycpu/dummymmu/dummymmu.cpp
-    gtest/registers/twowordregistertest.cpp
-    gtest/rlv12/rl11configprocessortest.cpp
-    gtest/rlv12/rlv11configprocessortest.cpp
-    gtest/rlv12/rlv12configprocessortest.cpp
-    gtest/rlv12/rlv12attachtest.cpp
-    gtest/rlv12/rlv12maintenancetest.cpp
-    gtest/rlv12/rlv12getstatustest.cpp
-    gtest/rlv12/rlv12readheadertest.cpp
-    gtest/rlv12/rlv12readdatatest.cpp
-    gtest/rlv12/rlv12readdatanochecktest.cpp
-    gtest/rlv12/rlv12seektest.cpp
-    gtest/rlv12/rlv12writechecktest.cpp
-    gtest/rlv12/rlv12writedatatest.cpp
-    gtest/rlv12/volumechecktest.cpp
-    gtest/rlv12/drivereadytest.cpp
-    gtest/rxconfiguratortest.cpp
-    gtest/signaltest.cpp
-    gtest/simulatorclocktest.cpp
-    gtest/systemconfigtest.cpp
-    gtest/tracetest.cpp
-    gtest/unibustest.cpp
-    gtest/serial/uartmaintmodetest.cpp
-    gtest/variantfsmtest.cpp)
-    
-set (SIM11_TEST_SRCS
-    gtest/main/main.cpp
-    gtest/cmdlineparser/cmdlineparser.cpp
-    ${GTEST_SRCS})
 
-# add_executable (sim-11-test ${SIM11_TEST_SRCS})
-target_sources (sim-11-test PRIVATE ${SIM11_TEST_SRCS})
 
 set(GTEST_INCLUDE_DIRS 
     # D:/src/gtest-1.10.0/googletest/include/
