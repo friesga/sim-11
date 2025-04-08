@@ -14,24 +14,8 @@ option (BUILD_WITH_ASAN "Build with Address Sanitizer" OFF)
 # Define our target once
 set (TARGET sim-11)
 
-# Handling of the console is system-specific
-if (MSVC)
-set (CONSOLE_SRCS
-    src/console/operatorconsole/operatorconsole.cpp
-    src/console/operatorconsole/windowsconsole/sender.cpp
-    src/console/operatorconsole/windowsconsole/readcharacter.cpp
-    src/console/operatorconsole/windowsconsole/getasciichar.cpp)
-endif ()
-
-if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-set (CONSOLE_SRCS
-    src/console/operatorconsole/operatorconsole.cpp
-    src/console/operatorconsole/linuxconsole/sender.cpp)
-endif ()
-
 # Define source files
 set (SIM11_SRCS
-    ${CONSOLE_SRCS}
     src/asynctimer/asynctimer.cpp
     src/cabinet/cabinet.cpp
     src/absoluteloader/absoluteloader.cpp
@@ -88,6 +72,7 @@ add_subdirectory (src/configdata)
 add_subdirectory (src/sdl)
 add_subdirectory (src/trace)
 add_subdirectory (tracereader)
+add_subdirectory (src/console)
   
 # At least C++17 is needed for use of std::variant in variantfsm.
 # set(CMAKE_CXX_STANDARD 20) is useless as that not translates to /std:c++20
@@ -258,7 +243,6 @@ set (SIM11_TEST_SRCS
     src/pdp11peripheral/pdp11peripheral.cpp
     src/msv11d/msv11d.cpp
     src/dl11/uart/uart.cpp
-    ${CONSOLE_SRCS}
     src/signal/signal.cpp
     src/logger/logger.cpp
     src/logger/data.cpp)
