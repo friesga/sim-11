@@ -14,22 +14,9 @@ option (BUILD_WITH_ASAN "Build with Address Sanitizer" OFF)
 # Define our target once
 set (TARGET sim-11)
 
-# Define source files
-set (SIM11_SRCS
-    src/asynctimer/asynctimer.cpp
-    src/cabinet/cabinet.cpp
-    src/absoluteloader/absoluteloader.cpp
-    src/abstractbusdevice/writebyte.cpp
-    src/main/main.cpp
-    src/msv11d/msv11d.cpp
-    src/pdp11peripheral/pdp11peripheral.cpp
-    src/signal/signal.cpp
-    src/interruptrequest/interruptrequest.cpp)
 
-# Add source to this project's executable.
-# add_executable (${TARGET} ${SIM11_SRCS})
 add_executable (${TARGET})
-target_sources (${TARGET} PRIVATE ${SIM11_SRCS})
+
 #set_property(TARGET ${TARGET} PROPERTY C_STANDARD 90)
 
 add_executable (sim-11-test)
@@ -61,6 +48,15 @@ add_subdirectory (src/rxv21)
 add_subdirectory (src/pdp11)
 add_subdirectory (src/dl11)
 add_subdirectory (src/logger)
+add_subdirectory (src/asynctimer)
+add_subdirectory (src/cabinet)
+add_subdirectory (src/absoluteloader)
+add_subdirectory (src/abstractbusdevice)
+add_subdirectory (src/main)
+add_subdirectory (src/msv11d)
+add_subdirectory (src/pdp11peripheral)
+add_subdirectory (src/interruptrequest)
+add_subdirectory (src/signal)
   
 # At least C++17 is needed for use of std::variant in variantfsm.
 # set(CMAKE_CXX_STANDARD 20) is useless as that not translates to /std:c++20
@@ -222,15 +218,7 @@ set (GTEST_SRCS
 set (SIM11_TEST_SRCS
     gtest/main/main.cpp
     gtest/cmdlineparser/cmdlineparser.cpp
-    ${GTEST_SRCS}
-    src/absoluteloader/absoluteloader.cpp
-    src/asynctimer/asynctimer.cpp
-    src/interruptrequest/interruptrequest.cpp
-    src/abstractbusdevice/writebyte.cpp
-    src/cabinet/cabinet.cpp
-    src/pdp11peripheral/pdp11peripheral.cpp
-    src/msv11d/msv11d.cpp
-    src/signal/signal.cpp)
+    ${GTEST_SRCS})
 
 # add_executable (sim-11-test ${SIM11_TEST_SRCS})
 target_sources (sim-11-test PRIVATE ${SIM11_TEST_SRCS})
