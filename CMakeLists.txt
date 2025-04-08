@@ -14,263 +14,6 @@ option (BUILD_WITH_ASAN "Build with Address Sanitizer" OFF)
 # Define our target once
 set (TARGET sim-11)
 
-set (CMDLINEOPTIONS_SRCS 
-    src/cmdlineoptions/cmdlineoptions.cpp
-    src/cmdlineoptions/data.cpp)
-
-set (KD11COMMON_SRCS
-    src/kd/common/operandlocation/operandlocation.cpp
-    src/kd/common/operandlocation/emptyoperandlocation/emptyoperandlocation.cpp
-    src/kd/common/operandlocation/registeroperandlocation/registeroperandlocation.cpp
-    src/kd/common/operandlocation/memoryoperandlocation/memoryoperandlocation.cpp
-    src/kd/common/instructionformats/nooperandinstruction/nooperandinstruction.cpp
-    src/kd/common/instructionformats/singleoperandinstruction/singleoperandinstruction.cpp
-    src/kd/common/instructionformats/doubleoperandinstruction/doubleoperandinstruction.cpp
-    src/kd/common/instructionformats/fisinstruction/fisinstruction.cpp
-    src/kd/common/instructionformats/ccinstruction/ccinstruction.cpp
-    src/kd/common/instructionformats/branchinstruction/branchinstruction.cpp
-    src/kd/common/instructionformats/eisinstruction/eisinstruction.cpp
-    src/kd/common/instructionformats/markinstruction/markinstruction.cpp
-    src/kd/common/instructionformats/sobinstruction/sobinstruction.cpp
-    src/kd/common/operanddecoderfactory/operanddecoderfactory.cpp
-    src/kd/common/operanddecoders/baseoperanddecoder/baseoperanddecoder.cpp
-    src/kd/common/operanddecoders/singleoperanddecoder/singleoperanddecoder.cpp
-    src/kd/common/operanddecoders/branchdecoder/branchdecoder.cpp
-    src/kd/common/operanddecoders/doubleoperanddecoder/doubleoperanddecoder.cpp
-    src/kd/common/operanddecoders/eisdecoder/eisdecoder.cpp
-    src/kd/common/instructiondecoder/instructiondecoder.cpp
-    src/kd/common/instructiondecoder/opcodetables.cpp
-    src/kd/common/executor/executor.cpp
-    src/kd/common/odt/operatorconsoleaccess/operatorconsoleaccess.cpp)
-
-set (DEVICECOMMON_SRCS
-    src/devicecommon/registerhandler/registerhandler.cpp)
-
-set (KD11CONTROLLOGIC_SRCS
-    src/kd/common/controllogic/controllogic.cpp
-    src/kd/common/controllogic/poweruproutine.cpp
-    src/kd/common/controllogic/powerdownroutine.cpp
-    src/kd/common/controllogic/bootroutine.cpp
-    src/kd/common/controllogic/runodt.cpp
-    src/kd/common/controllogic/signalreceivers.cpp
-    src/kd/common/controllogic/statemachine.cpp)
-
-set (KD11_NA_ODT_SRCS
-    src/kd/kd11_na/odt/kd11_na_odt.cpp
-    src/kd/kd11_na/odt/addressopened.cpp
-    src/kd/kd11_na/odt/atprompt.cpp
-    src/kd/kd11_na/odt/createevent.cpp
-    src/kd/kd11_na/odt/enteringaddress.cpp
-    src/kd/kd11_na/odt/enteringaddressvalue.cpp
-    src/kd/kd11_na/odt/enteringbinarydump.cpp
-    src/kd/kd11_na/odt/enteringregister.cpp
-    src/kd/kd11_na/odt/enteringregistervalue.cpp
-    src/kd/kd11_na/odt/entrypoint.cpp
-    src/kd/kd11_na/odt/exitpoint.cpp
-    src/kd/kd11_na/odt/registeropened.cpp
-    src/kd/kd11_na/odt/startingregister.cpp)
-
-set (KD11_NA_CPU_SRCS
-    src/kd/kd11_na/cpucontrol/kd11_na_step.cpp
-    src/kd/kd11_na/cpucontrol/kd11_na_cpucontrol.cpp
-    src/kd/kd11_na/cpucontrol/kd11_na_haltmode.cpp
-    src/kd/kd11_na/cpudata/kd11_naregisters/kd11_naregisters.cpp
-    src/kd/kd11_na/pseudommu/pseudommu.cpp
-    src/kd/kd11_na/executor/executor.cpp
-    src/kd/kd11_na/calculate/calculate.cpp)
-
-set (KDF11_ODT_SRCS
-    src/kd/kdf11/odt/kdf11_odt.cpp
-    src/kd/kdf11/odt/addressopened.cpp
-    src/kd/kdf11/odt/atprompt.cpp
-    src/kd/kdf11/odt/createevent.cpp
-    src/kd/kdf11/odt/enteringaddress.cpp
-    src/kd/kdf11/odt/enteringaddressvalue.cpp
-    src/kd/kdf11/odt/enteringbinarydump.cpp
-    src/kd/kdf11/odt/enteringregister.cpp
-    src/kd/kdf11/odt/enteringregistervalue.cpp
-    src/kd/kdf11/odt/entrypoint.cpp
-    src/kd/kdf11/odt/exitpoint.cpp
-    src/kd/kdf11/odt/registeropened.cpp
-    src/kd/kdf11/odt/startingregister.cpp)
-
-set (KDF11_SRCS
-    src/kd/kdf11/kdf11_a/kdf11_a.cpp
-    src/kd/kdf11/executor/executor.cpp
-    src/kd/kdf11/calculate/calculate.cpp
-    src/kd/kdf11/kdf11_b/kdf11_b.cpp
-    src/kd/kdf11/kdf11_u/kdf11_u.cpp
-    src/kd/kdf11/kdf11_u/displayregister/displayregister.cpp
-    src/kd/kdf11/serial_line_units/serial_line_units.cpp
-    src/kd/kdf11/cpucontrol/kdf11_step.cpp
-    src/kd/kdf11/cpucontrol/kdf11_cpucontrol.cpp
-    src/kd/kdf11/cpucontrol/kdf11_haltmode.cpp
-    src/kd/kdf11/cpudata/kdf11registers/kdf11registers.cpp
-    src/kd/kdf11/cpudata/kdf11busdevice.cpp
-    src/kd/kdf11/ktf11_a/ktf11_a.cpp
-    src/kd/kdf11/ktf11_a/ktf11_abusdevice.cpp
-    ${KDF11_ODT_SRCS})
-
- set (KD11_NA_SRCS
-    src/kd/kd11_na/kd11_na.cpp
-    ${KD11COMMON_SRCS}
-    ${KD11CONTROLLOGIC_SRCS}
-    ${KD11_NA_CPU_SRCS}
-    ${KD11_NA_ODT_SRCS})
-
-set (RLV12_SRCS
-    src/rlv12/calccrc.cpp
-    src/rlv12/rlv12.cpp
-    src/rlv12/rl01_02/configure.cpp
-    src/rlv12/rl01_02/rl01_02.cpp
-    src/rlv12/rl01_02/available.cpp
-    src/rlv12/rl01_02/readdata.cpp
-    src/rlv12/rl01_02/writedata.cpp
-    src/rlv12/rl01_02/readheader.cpp
-    src/rlv12/rl01_02/seek.cpp
-    src/rlv12/rl01_02/updateheadposition.cpp
-    src/rlv12/rl01_02/drivethread.cpp
-    src/rlv12/rl01_02/statemachine.cpp
-    src/rlv12/rl01_02/createbezel.cpp
-    src/rlv12/rlv12command/rlv12command.cpp
-    src/rlv12/cmdprocessor/finishdatatransfercmd.cpp
-    src/rlv12/cmdprocessor/cmdprocessor.cpp
-    src/rlv12/cmdprocessor/diskaddressok.cpp
-    src/rlv12/cmdprocessor/getstatuscmd.cpp
-    src/rlv12/cmdprocessor/limitwordcount.cpp
-    src/rlv12/cmdprocessor/maintenancecmd.cpp
-    src/rlv12/cmdprocessor/readdatacmd.cpp
-    src/rlv12/cmdprocessor/readdatawithoutheadercheckcmd.cpp
-    src/rlv12/cmdprocessor/readheadercmd.cpp
-    src/rlv12/cmdprocessor/run.cpp
-    src/rlv12/cmdprocessor/seekcmd.cpp
-    src/rlv12/cmdprocessor/writecheckcmd.cpp
-    src/rlv12/cmdprocessor/writedatacmd.cpp
-    src/rlv12/rlcsplusdrivestatus.cpp
-    src/rlv12/read.cpp
-    src/rlv12/setdone.cpp
-    src/rlv12/writeword.cpp
-    src/rlv12/getstatuscmd.cpp)
-
-set (FIO_SRCS
-    src/fio/fopen.cpp
-    src/fio/fread.cpp
-    src/fio/fseek.cpp
-    src/fio/fsize.cpp
-    src/fio/ftell.cpp
-    src/fio/fwrite.cpp)
-
-set (UNIT_SRCS     
-    src/unit/attach_unit.cpp
-    src/unit/createfile.cpp
-    src/unit/openreadonly.cpp
-    src/unit/openreadwrite.cpp
-    src/unit/unit.cpp
-    src/unit/createbadblocktable.cpp)
-
-set (BUS_SRCS     
-    src/bus/qbus/qbus.cpp
-    src/bus/qbus/read.cpp
-    src/bus/qbus/writebyte.cpp
-    src/bus/qbus/writeword.cpp
-    src/bus/qbus/bussignals.cpp
-    src/bus/qbus/businterrupts.cpp
-    src/bus/qbus/busconfiguration.cpp
-    src/bus/unibus/unibus.cpp
-    src/bus/unibus/read.cpp
-    src/bus/unibus/writeword.cpp
-    src/bus/unibus/writebyte.cpp
-    src/bus/unibus/bussignals.cpp
-    src/bus/unibus/businterrupts.cpp
-    src/bus/unibus/busconfiguration.cpp
-    src/bus/signalhandler/signalhandler.cpp
-    src/bus/configurationhandler/configurationhandler.cpp
-    src/bus/configurationhandler/responsiblemodule.cpp
-    src/bus/iterator/iterator.cpp
-    src/bus/interrupthandler/interrupthandler.cpp)
-
-set (CONFIGURATOR_SRCS
-    src/configdata/iniprocessor/process.cpp
-    src/configdata/iniprocessor/processsection.cpp
-    src/configdata/iniprocessor/getsystemconfig.cpp
-    src/configdata/sectionprocessor/sectionprocessor.cpp
-    src/configdata/rl/rlprocessor/rlprocessor.cpp
-    src/configdata/rl/rl11processor/rl11processor.cpp
-    src/configdata/rl/rlv11processor/rlv11processor.cpp
-    src/configdata/rl/rlv12processor/rlv12processor.cpp
-    src/configdata/rxv21/rxv21processor/rxv21processor.cpp
-    src/configdata/rxv21/rxv21unitprocessor/rxv21unitprocessor.cpp
-    src/configdata/ba11nconfig/ba11nconfig.cpp
-    src/configdata/ba11lconfig/ba11lconfig.cpp
-    src/configdata/ba11nprocessor/ba11nprocessor.cpp
-    src/configdata/ba11lprocessor/ba11lprocessor.cpp
-    src/configdata/bdv11processor/bdv11processor.cpp
-    src/configdata/serialconfig/dlv11jconfig/dlv11jconfig.cpp 
-    src/configdata/serialconfig/uartconfig/uartconfig.cpp
-    src/configdata/serialconfig/dlv11processor/dlv11processor.cpp
-    src/configdata/msv11processor/msv11processor.cpp
-    src/configdata/rl/rlunitconfig/rlunitconfig.cpp
-    src/configdata/rl/rlunitprocessor/rlunitprocessor.cpp
-    src/configdata/kd11processor/kd11processor.cpp
-    src/configdata/kd11_naprocessor/kd11_naprocessor.cpp
-    src/configdata/kdf11/kdf11_a/kdf11_aconfig/kdf11_aconfig.cpp
-    src/configdata/kdf11/kdf11_a/kdf11_aprocessor/kdf11_aprocessor.cpp
-    src/configdata/kdf11/kdf11_b/kdf11_bconfig/kdf11_bconfig.cpp
-    src/configdata/kdf11/kdf11_b/kdf11_bprocessor/kdf11_bprocessor.cpp
-    src/configdata/kdf11/kdf11_u/kdf11_uconfig/kdf11_uconfig.cpp
-    src/configdata/kdf11/kdf11_u/kdf11_uprocessor/kdf11_uprocessor.cpp
-    src/configdata/kdf11/slu/sluprocessor/sluprocessor.cpp
-    src/configdata/kt24/kt24processor/kt24processor.cpp
-    src/configdata/m9312/m9312processor/m9312processor.cpp
-    src/configdata/ms11pprocessor/ms11pprocessor.cpp
-    src/configdata/consistencychecker/consistencychecker.cpp
-    src/configdata/consistencychecker/checkba11consistency.cpp
-    src/configdata/consistencychecker/checkms11consistency.cpp
-    src/configdata/consistencychecker/checkkdf11bconsistency.cpp
-    src/configdata/consistencychecker/checkcabinetconsistency.cpp
-    src/configdata/consistencychecker/checkm9312consistency.cpp
-    src/configdata/cabinetprocessor/cabinetprocessor.cpp)
-
-set (FLOAT_SRCS
-    src/float/float.cpp
-    src/float/ieeetopdp11.cpp
-    src/float/pdp11toieee.cpp)
-
-set (CHRONO_SRCS
-    src/chrono/simulatorclock/simulatorclock.cpp
-    src/chrono/alarmclock/alarmclock.cpp
-    src/chrono/wakeupcall/alarmwakeupcall/alarmwakeupcall.cpp)
-
-set (BA11_SRCS
-    src/ba11_n/ba11_n.cpp
-    src/ba11_l/ba11_l.cpp)
-
-set (BDV11_SRCS
-    src/bdv11/bdv11.cpp
-    src/bdv11/bdv11_rom.cpp
-    src/bdv11/kdf11b_rom.cpp)
-
-set (M9312_SRCS
-    src/m9312/m9312.cpp
-    src/m9312/romimages.cpp)
-
-set (SDL_SRCS
-    src/sdl/sdlinit/sdlinit.cpp
-    src/sdl/sdlpanel/sdlpanel.cpp
-    src/sdl/sdlwindow/sdlwindow.cpp
-    src/sdl/sdlwindow/circle.cpp
-    src/sdl/sdlindicator/sdlindicator.cpp
-    src/sdl/sdlfront/sdlfront.cpp
-    src/sdl/sdlcommonbutton/sdlcommonbutton.cpp
-    src/sdl/sdlrenderer/sdlrenderer.cpp
-    src/sdl/sdltexture/sdltexture.cpp
-    src/sdl/sdlmomentarybutton/sdlmomentarybutton.cpp
-    src/sdl/sdllatchingbutton/sdllatchingbutton.cpp
-    src/sdl/sdlindicatorlatchingbutton/sdlindicatorlatchingbutton.cpp
-    src/sdl/sdlthreepositionswitch/sdlthreepositionswitch.cpp
-    src/sdl/sdlfourpositionswitch/sdlfourpositionswitch.cpp
-    src/sdl/sdlevent/sdlevent.cpp)
-
 set (TRACE_SRCS
     src/trace/trace.cpp
     src/trace/tracefileoutstream/tracefileoutstream.cpp 
@@ -313,19 +56,6 @@ set (TRACEREADER_SRCS
     src/trace/debugrecord/ostreaminsertoperator.cpp
     src/trace/ms11precord/operator.cpp)
 
-    set (KT24_SRCS
-        src/kt24/kt24.cpp
-        src/kt24/unibusmaplogic/unibusmaplogic.cpp)
-
-    set (MS11P_SRCS
-        src/ms11p/ms11p.cpp
-        src/ms11p/checkbits.cpp
-        src/ms11p/errorcorrection.cpp
-        src/ms11p/read.cpp
-        src/ms11p/write.cpp
-        src/ms11p/single_error.cpp
-        src/ms11p/double_error.cpp)
-
 # Handling of the console is system-specific
 if (MSVC)
 set (CONSOLE_SRCS
@@ -343,30 +73,20 @@ endif ()
 
 # Define source files
 set (SIM11_SRCS
-    ${BA11_SRCS}
     ${CONSOLE_SRCS}
-    ${CHRONO_SRCS}
     src/asynctimer/asynctimer.cpp
     src/cabinet/cabinet.cpp
     src/absoluteloader/absoluteloader.cpp
     src/abstractbusdevice/writebyte.cpp
-    ${BDV11_SRCS}
     src/dl11/dlv11j/dlv11j.cpp
     src/dl11/uart/uart.cpp
-    ${KD11_NA_SRCS}
-    ${KDF11_SRCS}
     src/pdp11/pdp11.cpp
     src/pdp11/configure.cpp
     src/pdp11/installmodules.cpp
     src/pdp11/run.cpp
     src/main/main.cpp
-    ${M9312_SRCS}
     src/msv11d/msv11d.cpp
-    ${MS11P_SRCS}
-    ${BUS_SRCS}
     src/pdp11peripheral/pdp11peripheral.cpp
-    ${RLV12_SRCS}
-    ${SDL_SRCS}
     src/rxv21/rxv21.cpp
     src/rxv21/initiatecommand.cpp
     src/rxv21/emptybuffer.cpp
@@ -376,21 +96,35 @@ set (SIM11_SRCS
     src/rxv21/readstatus.cpp
     src/rxv21/writesector.cpp
     src/signal/signal.cpp
-    ${FIO_SRCS}
-    ${UNIT_SRCS}
     ${TRACE_SRCS}
     src/logger/logger.cpp
     src/logger/data.cpp
-    ${FLOAT_SRCS}
-    ${CMDLINEOPTIONS_SRCS}
-    ${CONFIGURATOR_SRCS}
-    ${KT24_SRCS}
-    src/interruptrequest/interruptrequest.cpp
-    ${DEVICECOMMON_SRCS})
+    src/interruptrequest/interruptrequest.cpp)
 
 # Add source to this project's executable.
-add_executable (${TARGET} ${SIM11_SRCS})
+# add_executable (${TARGET} ${SIM11_SRCS})
+add_executable (${TARGET})
+target_sources (${TARGET} PRIVATE ${SIM11_SRCS})
 #set_property(TARGET ${TARGET} PROPERTY C_STANDARD 90)
+
+add_executable (sim-11-test)
+add_subdirectory (src/ms11p)
+add_subdirectory (src/cmdlineoptions)
+add_subdirectory (src/devicecommon)
+add_subdirectory (src/fio)
+add_subdirectory (src/unit)
+add_subdirectory (src/float)
+add_subdirectory (src/bdv11)
+add_subdirectory (src/m9312)
+add_subdirectory (src/kt24)
+add_subdirectory (src/chrono)
+add_subdirectory (src/ba11_l)
+add_subdirectory (src/ba11_n)
+add_subdirectory (src/kd)
+add_subdirectory (src/rlv12)
+add_subdirectory (src/bus)
+add_subdirectory (src/configdata)
+add_subdirectory (src/sdl)
   
 # At least C++17 is needed for use of std::variant in variantfsm.
 # set(CMAKE_CXX_STANDARD 20) is useless as that not translates to /std:c++20
@@ -553,37 +287,23 @@ set (SIM11_TEST_SRCS
     gtest/main/main.cpp
     gtest/cmdlineparser/cmdlineparser.cpp
     ${GTEST_SRCS}
-    ${CMDLINEOPTIONS_SRCS}
-    ${CONFIGURATOR_SRCS}
-    ${CHRONO_SRCS}
     src/absoluteloader/absoluteloader.cpp
     src/asynctimer/asynctimer.cpp
     src/interruptrequest/interruptrequest.cpp
-    ${BUS_SRCS}
-    ${UNIT_SRCS}
-    ${FIO_SRCS}
-    ${RLV12_SRCS}
-    ${FLOAT_SRCS}
     src/abstractbusdevice/writebyte.cpp
     src/cabinet/cabinet.cpp
     src/pdp11peripheral/pdp11peripheral.cpp
-    ${KD11_NA_SRCS}
-    ${KDF11_SRCS}
-    ${BDV11_SRCS}
-    ${M9312_SRCS}
     src/msv11d/msv11d.cpp
-    ${MS11P_SRCS}
     src/dl11/uart/uart.cpp
     ${CONSOLE_SRCS}
     src/signal/signal.cpp
     ${TRACE_SRCS}
     ${TRACEREADER_SRCS}
-    ${KT24_SRCS}
-    ${DEVICECOMMON_SRCS}
     src/logger/logger.cpp
     src/logger/data.cpp)
 
-add_executable (sim-11-test ${SIM11_TEST_SRCS})
+# add_executable (sim-11-test ${SIM11_TEST_SRCS})
+target_sources (sim-11-test PRIVATE ${SIM11_TEST_SRCS})
 
 set(GTEST_INCLUDE_DIRS 
     # D:/src/gtest-1.10.0/googletest/include/
