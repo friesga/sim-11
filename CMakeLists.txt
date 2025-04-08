@@ -22,21 +22,9 @@ set (SIM11_SRCS
     src/abstractbusdevice/writebyte.cpp
     src/dl11/dlv11j/dlv11j.cpp
     src/dl11/uart/uart.cpp
-    src/pdp11/pdp11.cpp
-    src/pdp11/configure.cpp
-    src/pdp11/installmodules.cpp
-    src/pdp11/run.cpp
     src/main/main.cpp
     src/msv11d/msv11d.cpp
     src/pdp11peripheral/pdp11peripheral.cpp
-    src/rxv21/rxv21.cpp
-    src/rxv21/initiatecommand.cpp
-    src/rxv21/emptybuffer.cpp
-    src/rxv21/fillbuffer.cpp
-    src/rxv21/readerrorcode.cpp
-    src/rxv21/readsector.cpp
-    src/rxv21/readstatus.cpp
-    src/rxv21/writesector.cpp
     src/signal/signal.cpp
     src/logger/logger.cpp
     src/logger/data.cpp
@@ -73,6 +61,8 @@ add_subdirectory (src/sdl)
 add_subdirectory (src/trace)
 add_subdirectory (tracereader)
 add_subdirectory (src/console)
+add_subdirectory (src/rxv21)
+add_subdirectory (src/pdp11)
   
 # At least C++17 is needed for use of std::variant in variantfsm.
 # set(CMAKE_CXX_STANDARD 20) is useless as that not translates to /std:c++20
