@@ -14,48 +14,6 @@ option (BUILD_WITH_ASAN "Build with Address Sanitizer" OFF)
 # Define our target once
 set (TARGET sim-11)
 
-set (TRACE_SRCS
-    src/trace/trace.cpp
-    src/trace/tracefileoutstream/tracefileoutstream.cpp 
-    src/trace/tracefileoutstream/header.cpp
-    src/trace/clockrecord/tracefileinsertoperator.cpp
-    src/trace/rlv12registersrecord/tracefileinsertoperator.cpp
-    src/trace/memorydumprecord/tracefileinsertoperator.cpp 
-    src/trace/debugrecord/tracefileinsertoperator.cpp)
-
-set (TRACEREADER_SRCS
-    src/trace/tracefileoutstream/tracefileoutstream.cpp 
-    src/trace/tracefileoutstream/header.cpp
-    src/trace/tracefileinstream/tracefileinstream.cpp
-    src/trace/clockrecord/extractionoperator.cpp
-    src/trace/cpusteprecord/disas.cpp
-    src/trace/traprecord/gettrapname.cpp 
-    src/trace/rxv21commandrecord/getcommandname.cpp
-    src/trace/rxv21errorrecord/geterrorname.cpp 
-    src/trace/rlv12registersrecord/extractionoperator.cpp
-    src/trace/rlv12commandrecord/getcommandname.cpp
-    src/trace/cpueventrecord/operator.cpp
-    src/trace/cpusteprecord/operator.cpp
-    src/trace/memorydumprecord/extractionoperator.cpp
-    src/trace/busrecord/operator.cpp
-    src/trace/traprecord/operator.cpp
-    src/trace/irqrecord/operator.cpp
-    src/trace/rxv21diskrecord/operator.cpp 
-    src/trace/rxv21commandrecord/operator.cpp
-    src/trace/rxv21dmarecord/operator.cpp 
-    src/trace/rxv21errorrecord/operator.cpp 
-    src/trace/dlv11record/operator.cpp 
-    src/trace/rlv12commandrecord/operator.cpp
-    src/trace/rlv12registersrecord/ostreaminsertopreator.cpp 
-    src/trace/unibusmaprecord/operator.cpp
-    src/trace/clockrecord/ostreaminsertoperator.cpp
-    src/trace/memorydumprecord/ostreaminsertoperator.cpp
-    src/trace/aprrecord/operator.cpp
-    src/trace/mmurecord/operator.cpp
-    src/trace/debugrecord/extractionoperator.cpp
-    src/trace/debugrecord/ostreaminsertoperator.cpp
-    src/trace/ms11precord/operator.cpp)
-
 # Handling of the console is system-specific
 if (MSVC)
 set (CONSOLE_SRCS
@@ -96,7 +54,6 @@ set (SIM11_SRCS
     src/rxv21/readstatus.cpp
     src/rxv21/writesector.cpp
     src/signal/signal.cpp
-    ${TRACE_SRCS}
     src/logger/logger.cpp
     src/logger/data.cpp
     src/interruptrequest/interruptrequest.cpp)
@@ -108,6 +65,10 @@ target_sources (${TARGET} PRIVATE ${SIM11_SRCS})
 #set_property(TARGET ${TARGET} PROPERTY C_STANDARD 90)
 
 add_executable (sim-11-test)
+
+# Create trace reader
+add_executable (tracereader)
+
 add_subdirectory (src/ms11p)
 add_subdirectory (src/cmdlineoptions)
 add_subdirectory (src/devicecommon)
@@ -125,6 +86,8 @@ add_subdirectory (src/rlv12)
 add_subdirectory (src/bus)
 add_subdirectory (src/configdata)
 add_subdirectory (src/sdl)
+add_subdirectory (src/trace)
+add_subdirectory (tracereader)
   
 # At least C++17 is needed for use of std::variant in variantfsm.
 # set(CMAKE_CXX_STANDARD 20) is useless as that not translates to /std:c++20
@@ -297,8 +260,6 @@ set (SIM11_TEST_SRCS
     src/dl11/uart/uart.cpp
     ${CONSOLE_SRCS}
     src/signal/signal.cpp
-    ${TRACE_SRCS}
-    ${TRACEREADER_SRCS}
     src/logger/logger.cpp
     src/logger/data.cpp)
 
@@ -327,11 +288,6 @@ target_include_directories (sim-11-test PUBLIC
 target_link_libraries(sim-11-test ${GTESTUNIT_LIBS})
 
 enable_testing ()
-
-# Create trace reader
-add_executable (tracereader 
-    tracereader/main.cpp
-    ${TRACEREADER_SRCS})
 
 target_include_directories (tracereader PRIVATE include src)
 
