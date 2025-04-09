@@ -11,19 +11,13 @@ include (GoogleTest)
 # Define our build options
 option (BUILD_WITH_ASAN "Build with Address Sanitizer" OFF)
 
-# Define our target once
+# Define our target executables
 set (TARGET sim-11)
-
-
 add_executable (${TARGET})
-
-#set_property(TARGET ${TARGET} PROPERTY C_STANDARD 90)
-
 add_executable (sim-11-test)
-
-# Create trace reader
 add_executable (tracereader)
 
+# Define the source subdirectories
 add_subdirectory (src/ms11p)
 add_subdirectory (src/cmdlineoptions)
 add_subdirectory (src/devicecommon)
@@ -42,7 +36,7 @@ add_subdirectory (src/bus)
 add_subdirectory (src/configdata)
 add_subdirectory (src/sdl)
 add_subdirectory (src/trace)
-add_subdirectory (tracereader)
+add_subdirectory (tracereader_src)
 add_subdirectory (src/console)
 add_subdirectory (src/rxv21)
 add_subdirectory (src/pdp11)
@@ -104,21 +98,17 @@ endif () # BUILD_WITH_ASAN
 endif ()
 
 # Build against SDL2 libraries
-if (MSVC)
-target_include_directories (${TARGET} PRIVATE 
-    C:/Libraries/SDL2-2.24.2/include
-    C:/Libraries/SDL2_image-2.6.2/include)
+#
+# Note that the target_link_libraries command requires the use of
+# semicolon-separated lists.
+#
+target_include_directories (${TARGET} PRIVATE
+    $<$<CXX_COMPILER_ID:MSVC>: C:/Libraries/SDL2-2.24.2/include C:/Libraries/SDL2_image-2.6.2/include>
+    $<$<CXX_COMPILER_ID:GNU>:  /usr/include/SDL2>)
 
 target_link_libraries (${TARGET}
-    C:/Libraries/SDL2-2.24.2/lib/x64/SDL2.lib
-    C:/Libraries/SDL2_image-2.6.2/lib/x64/SDL2_image.lib)
-
-elseif (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-target_include_directories (${TARGET} PRIVATE 
-    /usr/include/SDL2)
-
-target_link_libraries (${TARGET} SDL2 SDL2_image)
-endif ()
+    "$<$<CXX_COMPILER_ID:MSVC>:C:/Libraries/SDL2-2.24.2/lib/x64/SDL2.lib;C:/Libraries/SDL2_image-2.6.2/lib/x64/SDL2_image.lib>"
+    "$<$<CXX_COMPILER_ID:GNU>:SDL2;SDL2_image>")
 
 # The /PROFILE option is needed to be able to collect profiling data.
 # Unfortunately profiling doesn't function in Windows 10.
@@ -126,18 +116,12 @@ endif ()
 #target_link_options (${TARGET} PRIVATE /PROFILE)
 #endif ()
 
+# Definition of include directories, compiler options and libraries for
+# the sim-11-test target. This executable is only built for Windows.
 #
-# Create sim-11 test executable
-
-
-set(GTEST_INCLUDE_DIRS 
+set (GTEST_INCLUDE_DIRS 
     # D:/src/gtest-1.10.0/googletest/include/
-    C:/Tools/gtest-1.10.0/include
-    )
-
-set (GTESTUNIT_LIBS
-    # "D:/src/gtest-1.10.0/build/x64-Release/lib/gtest.lib"
-    C:/Tools/gtest-1.10.0/lib/gtest.lib)
+    C:/Tools/gtest-1.10.0/include)
 
 set (SDL_INCLUDE_DIRS
     C:/Libraries/SDL2-2.24.2/include
@@ -148,6 +132,12 @@ target_include_directories (sim-11-test PUBLIC
     ${CMAKE_SOURCE_DIR}/src
     ${GTEST_INCLUDE_DIRS}
     ${SDL_INCLUDE_DIRS})
+
+target_compile_options (sim-11-test PRIVATE /std:c++20)
+
+set (GTESTUNIT_LIBS
+    # "D:/src/gtest-1.10.0/build/x64-Release/lib/gtest.lib"
+    C:/Tools/gtest-1.10.0/lib/gtest.lib)
     
 target_link_libraries(sim-11-test ${GTESTUNIT_LIBS})
 
@@ -155,17 +145,8 @@ enable_testing ()
 
 target_include_directories (tracereader PRIVATE include src)
 
-# GCC specific compiler options
-if (CMAKE_C_COMPILER_ID STREQUAL "GNU")
-target_compile_options (tracereader PRIVATE -Wall --std=c++20)
-endif ()
-
-# MSVC specific compiler options
-if (CMAKE_C_COMPILER_ID STREQUAL "MSVC")
-target_compile_options (tracereader PRIVATE /std:c++20)
-endif ()
+# Definition of the compile options for the tracereader target.
+target_compile_options (tracereader PRIVATE
+    $<$<CXX_COMPILER_ID:MSVC>: /std:c++20>
+    $<$<CXX_COMPILER_ID:GNU>: -Wall --std=c++20>)
     
-# MSVC specific compiler options
-if (CMAKE_C_COMPILER_ID STREQUAL "MSVC")
-target_compile_options (sim-11-test PRIVATE /std:c++20)
-endif ()
