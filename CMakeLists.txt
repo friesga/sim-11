@@ -53,49 +53,30 @@ add_subdirectory (src/interruptrequest)
 add_subdirectory (src/signal)
 add_subdirectory (gtest)
   
+# Definition of include directories and build options for the sim-11 target.
+#
 # At least C++17 is needed for use of std::variant in variantfsm.
 # set(CMAKE_CXX_STANDARD 20) is useless as that not translates to /std:c++20
 # but to std:c++latest
 
-# GCC specific compiler options
-if (CMAKE_C_COMPILER_ID STREQUAL "GNU")
-target_compile_options (${TARGET} PRIVATE 
-    -Wall --std=c++20 -ffunction-sections -fdata-sections -DUNIX)
+target_compile_options (${TARGET} PRIVATE
+    $<$<CXX_COMPILER_ID:MSVC>: /std:c++20>
+    $<$<CXX_COMPILER_ID:GNU>: -pthread -Wall --std=c++20 -ffunction-sections -fdata-sections -DUNIX>
+    $<$<AND:$<CXX_COMPILER_ID:GNU>,$<BOOL:${BUILD_WITH_ASAN}>>: -fsanitize=address>)
 
-if (BUILD_WITH_ASAN)
-target_compile_options (${TARGET} PRIVATE -fsanitize=address)
-endif () # BUILD_WITH_ASAN
+target_compile_definitions (${TARGET} PRIVATE
+    $<$<CXX_COMPILER_ID:MSVC>: CRT_SECURE_NO_WARNINGS>)
 
-# Add pthread for gcc
-set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread")
-endif () # GCC-specific
-    
-# MSVC specific compiler options
-if (CMAKE_C_COMPILER_ID STREQUAL "MSVC")
-target_compile_definitions (${TARGET} PRIVATE _CRT_SECURE_NO_WARNINGS)
-target_compile_options (${TARGET} PRIVATE /std:c++20)
-endif ()
+target_include_directories (${TARGET} PRIVATE include ${CMAKE_SOURCE_DIR}/src
+    $<$<CXX_COMPILER_ID:MSVC>:
+        contrib/termio/include
+        contrib/clock_gettime/include
+        contrib/sys_time_h
+        contrib/unistd_h>)
 
-# Define directory with include files
-target_include_directories (${TARGET} PRIVATE include ${CMAKE_SOURCE_DIR}/src)
-
-# Windows-specific includes
-if (MSVC)
-target_include_directories (${TARGET} PRIVATE 
-    contrib/termio/include
-    contrib/clock_gettime/include
-    contrib/sys_time_h
-    contrib/unistd_h) 
-endif ()
-
-# GCC specific linker options
-if (CMAKE_C_COMPILER_ID STREQUAL "GNU")
-target_link_options (${TARGET} PRIVATE -Wl,-x -Wl,--gc-sections)
-
-if (BUILD_WITH_ASAN)
-target_link_options (${TARGET} PRIVATE -fsanitize=address)
-endif () # BUILD_WITH_ASAN
-endif ()
+target_link_options (${TARGET} PRIVATE
+    $<$<CXX_COMPILER_ID:GNU>: -pthread -Wl,-x -Wl,--gc-sections>
+    $<$<AND:$<CXX_COMPILER_ID:GNU>,$<BOOL:${BUILD_WITH_ASAN}>>: -fsanitize=address>)
 
 # Build against SDL2 libraries
 #
