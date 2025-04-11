@@ -19,6 +19,7 @@ class WindowsConsole : public OperatorConsole
 
 public:
     WindowsConsole ();
+    void print (char const c) override;
     void sender () override;
 };
 

@@ -5,7 +5,8 @@ set (CONSOLE_SRCS
     operatorconsole/windowsconsole/windowsconsole.cpp
     operatorconsole/windowsconsole/sender.cpp
     operatorconsole/windowsconsole/readcharacter.cpp
-    operatorconsole/windowsconsole/getasciichar.cpp)
+    operatorconsole/windowsconsole/getasciichar.cpp
+    operatorconsole/windowsconsole/print.cpp)
     
 endif ()
 
