@@ -2,9 +2,11 @@
 if (MSVC)
 set (CONSOLE_SRCS
     operatorconsole/operatorconsole.cpp
+    operatorconsole/windowsconsole/windowsconsole.cpp
     operatorconsole/windowsconsole/sender.cpp
     operatorconsole/windowsconsole/readcharacter.cpp
     operatorconsole/windowsconsole/getasciichar.cpp)
+    
 endif ()
 
 if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")

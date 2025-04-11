@@ -9,12 +9,16 @@
 // Implementation of the Console reader function for Windows.
 class WindowsConsole : public OperatorConsole
 {
+    HANDLE stdInputHandle_;
+    HANDLE stdOutputHandle_;
+
     bool shiftKeyPressed {false};
 
     bool readCharacter (HANDLE hStdin, char* buffer, int count);
     bool getAsciiChar (INPUT_RECORD* input_record, char *c);
 
 public:
+    WindowsConsole ();
     void sender () override;
 };
 
