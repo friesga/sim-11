@@ -52,7 +52,8 @@ add_subdirectory (src/pdp11peripheral)
 add_subdirectory (src/interruptrequest)
 add_subdirectory (src/signal)
 add_subdirectory (gtest)
-  
+ 
+
 # Definition of include directories and build options for the sim-11 target.
 #
 # At least C++17 is needed for use of std::variant in variantfsm.
@@ -130,4 +131,14 @@ target_include_directories (tracereader PRIVATE include src)
 target_compile_options (tracereader PRIVATE
     $<$<CXX_COMPILER_ID:MSVC>: /std:c++20>
     $<$<CXX_COMPILER_ID:GNU>: -Wall --std=c++20>)
-    
+
+# Installation of the sim-11 target
+#
+install (TARGETS ${TARGET} DESTINATION .)
+install (DIRECTORY config DESTINATION ..)
+install (DIRECTORY resources DESTINATION ..)
+install (FILES 
+        externals/SDL2.dll
+        externals/SDL2_image.dll
+        externals/SDL2d.dll
+        DESTINATION .)
