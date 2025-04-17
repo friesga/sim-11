@@ -59,7 +59,7 @@ void RK11DProcessor::processUnits (iniparser::Value value)
 // A RL Section can have zero to four subsections, one for each unit.
 void RK11DProcessor::processSubsection (iniparser::Section* subSection)
 {
-	if (subSection->name ().substr (0, 4) != "unit")
+	if (subSection->name ().substr (0, 5) != "RK05-")
 		throw std::invalid_argument {"Unknown RK11-D subsection: " +
 			subSection->name ()};
 

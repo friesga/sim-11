@@ -101,7 +101,7 @@ TEST (ConfigProcessorTest, outOfRangeUnitNumberThrows)
 	}
 	catch (std::invalid_argument const &except)
 	{
-		EXPECT_STREQ (except.what(), "Unit number out of range 0-3");
+		EXPECT_STREQ (except.what(), "Unit number out of range 0-3: unit4");
 	}
 	catch (...)
 	{
