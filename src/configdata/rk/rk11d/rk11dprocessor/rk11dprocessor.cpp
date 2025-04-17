@@ -50,15 +50,25 @@ void RK11DProcessor::processAddress (iniparser::Value value)
 
 void RK11DProcessor::processVector (iniparser::Value value)
 {
+	u16 vector {0};
+
 	try
 	{
-		rk11dConfigPtr->vector = touint<u16> (value.asString ());
+		vector = touint<u16> (value.asString ());
 	}
 	catch (std::invalid_argument const&)
 	{
 		throw std::invalid_argument {"Incorrect vector in RK11-D section specified: " +
 			value.asString ()};
 	}
+
+	if (vector & 1)
+        throw std::invalid_argument {"RK11-D vector must be even"};
+
+	if (vector > 0740)
+        throw std::invalid_argument {"RK11-D vector must be in the range 0000-0740"};
+
+	rk11dConfigPtr->vector = vector;
 }
 
 void RK11DProcessor::processBRLevel (iniparser::Value value)

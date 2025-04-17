@@ -411,3 +411,55 @@ TEST (RKConfigProcessorTest, addressOnIncorrectBoundaryThrows)
 		FAIL ();
 	}
 }
+
+TEST (RKConfigProcessorTest, vectorOutOfRangeThrows)
+{
+	std::stringstream stream;
+	iniparser::File ft;
+
+	stream << "[RK11-D]\n"
+		"vector = 01000\n";
+
+	stream >> ft;
+
+	IniProcessor iniProcessor;
+	try
+	{
+		iniProcessor.process (ft);
+		FAIL ();
+	}
+	catch (std::invalid_argument const& except)
+	{
+		EXPECT_STREQ (except.what (), "RK11-D vector must be in the range 0000-0740");
+	}
+	catch (...)
+	{
+		FAIL ();
+	}
+}
+
+TEST (RKConfigProcessorTest, oddVectorThrows)
+{
+	std::stringstream stream;
+	iniparser::File ft;
+
+	stream << "[RK11-D]\n"
+		"vector = 0221\n";
+
+	stream >> ft;
+
+	IniProcessor iniProcessor;
+	try
+	{
+		iniProcessor.process (ft);
+		FAIL ();
+	}
+	catch (std::invalid_argument const& except)
+	{
+		EXPECT_STREQ (except.what (), "RK11-D vector must be even");
+	}
+	catch (...)
+	{
+		FAIL ();
+	}
+}
