@@ -12,6 +12,7 @@
 #include "configdata/m9312/m9312config/m9312config.h"
 #include "configdata/msv11config/msv11config.h"
 #include "configdata/ms11pconfig/ms11pconfig.h"
+#include "configdata/rk/rk11d/rk11dconfig/rk11dconfig.h"
 #include "configdata/rl/rlconfig/rlconfig.h"
 #include "configdata/rxv21/rxv21config/rxv21config.h"
 #include "configdata/serialconfig/dlv11jconfig/dlv11jconfig.h"
@@ -33,6 +34,7 @@ using DeviceConfig = variant<
     shared_ptr<DLV11JConfig>,
     shared_ptr<BDV11Config>,
     shared_ptr<RXV21Config>,
+    shared_ptr<RK11DConfig>,
     shared_ptr<RL11Config>,
     shared_ptr<RLV11Config>,
     shared_ptr<RLV12Config>,

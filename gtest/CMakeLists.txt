@@ -63,6 +63,7 @@ set (GTEST_SRCS
     qbusinstalltest.cpp
     dummycpu/dummymmu/dummymmu.cpp
     registers/twowordregistertest.cpp
+    rk/rkconfigprocessortest.cpp
     rlv12/rl11configprocessortest.cpp
     rlv12/rlv11configprocessortest.cpp
     rlv12/rlv12configprocessortest.cpp

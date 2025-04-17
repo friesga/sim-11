@@ -18,6 +18,10 @@ set (CONFIGURATOR_SRCS
     serialconfig/uartconfig/uartconfig.cpp
     serialconfig/dlv11processor/dlv11processor.cpp
     msv11processor/msv11processor.cpp
+    rk/rk11d/rk11dprocessor/rk11dprocessor.cpp
+    rk/rk05/rk05config/rk05config.cpp
+    rk/rk05/rk05processor/rk05processor.cpp
+    rk/rk11d/rk11dprocessor/rk11dprocessor.cpp
     rl/rlunitconfig/rlunitconfig.cpp
     rl/rlunitprocessor/rlunitprocessor.cpp
     kd11processor/kd11processor.cpp
