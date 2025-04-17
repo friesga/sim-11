@@ -26,13 +26,15 @@ class RK11DProcessor : public DeviceConfigProcessor
 	{
 		{"address", &RK11DProcessor::processAddress},
 		{"vector", &RK11DProcessor::processVector},
-		{"units", &RK11DProcessor::processUnits}
+		{"units", &RK11DProcessor::processUnits},
+		{"bus_request_level", &RK11DProcessor::processBRLevel}
 	};
 
 	void processValue (iniparser::Section::ValueIterator valueIterator);
 	void processAddress (iniparser::Value value);
 	void processVector (iniparser::Value value);
 	void processUnits (iniparser::Value value);
+	void processBRLevel (iniparser::Value value);
 
 public:
 	RK11DProcessor ();

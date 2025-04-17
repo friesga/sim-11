@@ -23,6 +23,7 @@ TEST (RKConfigProcessorTest, configProcessed)
 	stream << "[RK11-D]\n"
 		"address = 0177400\n"
 		"vector = 0220\n"
+		"bus_request_level = 5\n"
 		"units = 1\n"
 
 		"[RK11-D.RK05-0]\n"
@@ -50,6 +51,7 @@ TEST (RKConfigProcessorTest, configProcessed)
 
 	EXPECT_EQ (rk11dConfig->address, 0177400);
 	EXPECT_EQ (rk11dConfig->vector, 0220);
+	EXPECT_EQ (rk11dConfig->busRequestLevel, 5);
 	EXPECT_EQ (rk11dConfig->numUnits, 1);
 
 	EXPECT_EQ (static_pointer_cast<RK05Config>
@@ -325,6 +327,32 @@ TEST (RKConfigProcessorTest, invalidUnitNumberThrows)
 	catch (std::invalid_argument const& except)
 	{
 		EXPECT_STREQ (except.what (), "Invalid unit number: RK05-A");
+	}
+	catch (...)
+	{
+		FAIL ();
+	}
+}
+
+TEST (RKConfigProcessorTest, busRequestLevelOutOfRangeThrows)
+{
+	std::stringstream stream;
+	iniparser::File ft;
+
+	stream << "[RK11-D]\n"
+		"bus_request_level = 0\n";
+
+	stream >> ft;
+
+	IniProcessor iniProcessor;
+	try
+	{
+		iniProcessor.process (ft);
+		FAIL ();
+	}
+	catch (std::invalid_argument const& except)
+	{
+		EXPECT_STREQ (except.what (), "RK11-D bus request level must be between 4 and 7");
 	}
 	catch (...)
 	{

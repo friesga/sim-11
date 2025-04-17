@@ -51,6 +51,26 @@ void RK11DProcessor::processVector (iniparser::Value value)
 	}
 }
 
+void RK11DProcessor::processBRLevel (iniparser::Value value)
+{
+	u8 busRequestLevel = 0;
+
+	try
+	{
+		busRequestLevel = touint<u16> (value.asString ());
+	}
+	catch (std::invalid_argument const&)
+	{
+		throw std::invalid_argument {"Incorrect bus request level in RK11-D section specified: " +
+			value.asString ()};
+	}
+
+	if (busRequestLevel < 4 || busRequestLevel > 7)
+        throw std::invalid_argument {"RK11-D bus request level must be between 4 and 7"};
+
+	rk11dConfigPtr->busRequestLevel = busRequestLevel;
+}
+
 void RK11DProcessor::processUnits (iniparser::Value value)
 {
 	rk11dConfigPtr->numUnits = value.asInt ();
