@@ -27,15 +27,25 @@ void RK11DProcessor::processValue (iniparser::Section::ValueIterator valueIterat
 
 void RK11DProcessor::processAddress (iniparser::Value value)
 {
+	u16 address {0};
+
 	try
 	{
-		rk11dConfigPtr->address = touint<u16> (value.asString ());
+		address = touint<u16> (value.asString ());
 	}
 	catch (std::invalid_argument const&)
 	{
 		throw std::invalid_argument {"Incorrect address in RK11-D section specified: " +
 			value.asString ()};
 	}
+
+	if (address & 07)
+		throw std::invalid_argument {"RK11-D address must be on a eight byte boundary"};
+
+	if (address < 0160000 || address > 0177770)
+		throw std::invalid_argument {"RK11-D address must be in the range 0160000-0177770"};
+
+	rk11dConfigPtr->address = address;
 }
 
 void RK11DProcessor::processVector (iniparser::Value value)
@@ -53,7 +63,7 @@ void RK11DProcessor::processVector (iniparser::Value value)
 
 void RK11DProcessor::processBRLevel (iniparser::Value value)
 {
-	u8 busRequestLevel = 0;
+	u8 busRequestLevel {0};
 
 	try
 	{

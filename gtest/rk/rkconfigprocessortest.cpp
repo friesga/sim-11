@@ -359,3 +359,55 @@ TEST (RKConfigProcessorTest, busRequestLevelOutOfRangeThrows)
 		FAIL ();
 	}
 }
+
+TEST (RKConfigProcessorTest, addressOutOfRangeThrows)
+{
+	std::stringstream stream;
+	iniparser::File ft;
+
+	stream << "[RK11-D]\n"
+		"address = 0157760\n";
+
+	stream >> ft;
+
+	IniProcessor iniProcessor;
+	try
+	{
+		iniProcessor.process (ft);
+		FAIL ();
+	}
+	catch (std::invalid_argument const& except)
+	{
+		EXPECT_STREQ (except.what (), "RK11-D address must be in the range 0160000-0177770");
+	}
+	catch (...)
+	{
+		FAIL ();
+	}
+}
+
+TEST (RKConfigProcessorTest, addressOnIncorrectBoundaryThrows)
+{
+	std::stringstream stream;
+	iniparser::File ft;
+
+	stream << "[RK11-D]\n"
+		"address = 0160002\n";
+
+	stream >> ft;
+
+	IniProcessor iniProcessor;
+	try
+	{
+		iniProcessor.process (ft);
+		FAIL ();
+	}
+	catch (std::invalid_argument const& except)
+	{
+		EXPECT_STREQ (except.what (), "RK11-D address must be on a eight byte boundary");
+	}
+	catch (...)
+	{
+		FAIL ();
+	}
+}
