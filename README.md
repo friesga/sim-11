@@ -66,7 +66,6 @@ The simuator has the following features:
 - FIS instruction support (accurate except for one-bit edge cases),
 - Complete Micro-ODT support that implements the original ODT realistically for
   both the KD11-NA and the reduced command set in the KDF11-A and KDF11-U,
-- Realistic timing of device actions,
 - Functionality verified by unit tests.
 
 sim-11 is inspired by [Open SIMH](https://github.com/open-simh/simh) and [LSI-11](https://github.com/hackyourlife/lsi-11).
@@ -93,12 +92,44 @@ the AUX ON/OFF switch in the upper position, for the 11/24 to set the switch to 
 LOCAL position (click at the right of the switch). The system should boot the
 XXDP monitor.
 
-Implementation Details
-----------------------
+Simulator configuration
+-----------------------
 
-- The simulator is configured by means of a .ini file. Every section defines the
-  configuration of one device, i.e. a board, a device unit or the mounting box.
-  Every section contains a number of key-value pairs, defining a specific
-  device setting.
+- The simulator is configured by means of a ini-file. Every section in the ini-file
+defines the configuration of one device, i.e. a board, a device unit or the mounting box.
+Every section contains a number of key-value pairs, defining a specific
+device setting. See the provided ini-files for details.
 
- 
+Installation instructions
+-------------------------
+
+Building sim-11 requires at least gcc version 12. Running sim-11 requires a
+libstdc++6 supporting at least version 3.4.31.
+
+Perform the following actions to build and install sim-11 under linux:
+- Install the build tools:<br>
+`$ sudo apt install build-essential`
+
+- Install cmake:<br>
+`$ sudo apt install cmake`
+
+- Install sdl2:<br>
+`$ sudo apt install libsdl2-dev libsdl2-2.0-0 -y`
+
+- Install sdl2_image:<br>
+`$ sudo apt install libsdl2-image-dev libsdl2-image-2.0-0 -y`
+
+- Download source code tar file from https://github.com/friesga/sim-11/releases/
+
+- Assuming the downloaded version is 1.0.0, extract the tar file:<br>
+`$  tar xvf v1.0.0.tar.gz`
+
+- Build sim-11:<br>
+`$ cd sim-11-1.0.0`<br>
+`$ cmake -S . -B build`<br>
+`$ cd build`<br>
+`$ make`
+
+- Install sim-11:<br>
+`$ sudo make install`<br>
+This will install the binary, resources and config directory in /usr/local/sim-11.
