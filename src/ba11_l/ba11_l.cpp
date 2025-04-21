@@ -61,28 +61,28 @@ BA11_L::BA11_L (Bus* bus, Window* window, shared_ptr<BA11_LConfig> ba11lConfig)
 void BA11_L::createBezel (shared_ptr<Cabinet::Position> cabinetPosition)
 {
     Panel* panel = frontWindow_->createPanel (cabinetPosition, BA11_LConfig::unitHeight);
-    panel->createFront ("../../resources/11_24 front.png", ba11_nFrontFrame);
+    panel->createFront ("resources/11_24 front.png", ba11_nFrontFrame);
     powerSwitch_ = panel->createFourPositionSwitch (
-        {"../../resources/power_p0.png",
-         "../../resources/power_p1.png",
-         "../../resources/power_p2.png",
-         "../../resources/power_p3.png"},
+        {"resources/power_p0.png",
+         "resources/power_p1.png",
+         "resources/power_p2.png",
+         "resources/power_p3.png"},
         Button::FourPositionsState::P0,
         bind (&BA11_L::powerSwitchClicked, this, _1),
         powerSwitchFrame);
     hcbSwitch_ = panel->createThreePositionSwitch (
-        {"../../resources/hcb_halt.png",
-         "../../resources/hcb_cont.png",
-         "../../resources/hcb_boot.png"},
+        {"resources/hcb_halt.png",
+         "resources/hcb_cont.png",
+         "resources/hcb_boot.png"},
         Button::ThreePositionsState::Center,
         bind (&BA11_L::hcbSwitchClicked, this, _1),
         hcbSwitchFrame);
-    runLed_ = panel->createIndicator ("../../resources/red led off.png",
-        "../../resources/red led on.png", Indicator::State::Off, runLedFrame);
-    dcOnLed_ = panel->createIndicator ("../../resources/red led off.png",
-        "../../resources/red led on.png", Indicator::State::Off, dcOnLedFrame);
-    batteryLed_ = panel->createIndicator ("../../resources/red led off.png",
-        "../../resources/red led on.png", Indicator::State::Off, batteryLedFrame);
+    runLed_ = panel->createIndicator ("resources/red led off.png",
+        "resources/red led on.png", Indicator::State::Off, runLedFrame);
+    dcOnLed_ = panel->createIndicator ("resources/red led off.png",
+        "resources/red led on.png", Indicator::State::Off, dcOnLedFrame);
+    batteryLed_ = panel->createIndicator ("resources/red led off.png",
+        "resources/red led on.png", Indicator::State::Off, batteryLedFrame);
 
     // The state of the HALT signal has to correspond with the position
     // of the HALT/CONT/BOOT switch.

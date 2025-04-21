@@ -137,11 +137,21 @@ target_compile_options (tracereader PRIVATE
 
 # Installation of the sim-11 target
 #
-install (TARGETS ${TARGET} DESTINATION .)
+# The binary, resources and config directories are all installed in the same
+# destination directory. Releases for Windows and Linux have to be installed
+# separately. Before creating the release the x64-Release and WSL-GCC-Release
+# directories have to be removed.
+#
+# The SDL2 dll's are only to be installed on Windows.
+#
+install (TARGETS ${TARGET} DESTINATION ..)
 install (DIRECTORY config DESTINATION ..)
 install (DIRECTORY resources DESTINATION ..)
+
+if (CXX_COMPILER_ID STREQUAL "MSVC")
 install (FILES 
         externals/SDL2.dll
         externals/SDL2_image.dll
         externals/SDL2d.dll
-        DESTINATION .)
+        DESTINATION ..)
+endif ()
