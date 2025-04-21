@@ -138,20 +138,21 @@ target_compile_options (tracereader PRIVATE
 # Installation of the sim-11 target
 #
 # The binary, resources and config directories are all installed in the same
-# destination directory. Releases for Windows and Linux have to be installed
-# separately. Before creating the release the x64-Release and WSL-GCC-Release
-# directories have to be removed.
+# destination directory. On Windows the SDL2 dll's are installed in that
+# directory too.
 #
-# The SDL2 dll's are only to be installed on Windows.
+# In Visual Studio 2022 the destination directory is
+# CMAKE_SOURCE_DIR\out\install\<Configuration Name>\sim-11; on Linux the
+# destination directory is /usr/local/sim-11.
 #
-install (TARGETS ${TARGET} DESTINATION ..)
-install (DIRECTORY config DESTINATION ..)
-install (DIRECTORY resources DESTINATION ..)
+install (TARGETS ${TARGET} DESTINATION ./sim-11)
+install (DIRECTORY config DESTINATION ./sim-11)
+install (DIRECTORY resources DESTINATION ./sim-11)
 
-if (CXX_COMPILER_ID STREQUAL "MSVC")
+if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
 install (FILES 
-        externals/SDL2.dll
-        externals/SDL2_image.dll
-        externals/SDL2d.dll
-        DESTINATION ..)
+    externals/SDL2.dll
+    externals/SDL2_image.dll
+    externals/SDL2d.dll
+    DESTINATION ./sim-11)
 endif ()
