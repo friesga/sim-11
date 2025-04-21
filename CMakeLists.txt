@@ -17,6 +17,9 @@ add_executable (${TARGET})
 add_executable (sim-11-test)
 add_executable (tracereader)
 
+# Prevent sim-11-test being build on distributed releases
+set_target_properties (sim-11-test PROPERTIES EXCLUDE_FROM_ALL true)
+
 # Define the source subdirectories
 add_subdirectory (src/ms11p)
 add_subdirectory (src/cmdlineoptions)
