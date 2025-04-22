@@ -18,6 +18,10 @@ using std::shared_ptr;
 // - The number of RK05 drives attached to this controller,
 // - References to the attached drives.
 //
+// A RK11-D also contains "seven inhibit strobe jumpers on the M7257 module
+// which, when cut, inhibit the loading of a particular programmable
+// register". This feature is currently not implemented.
+//
 struct RK11DConfig : public DeviceType<BusType::Unibus>
 {
 	static constexpr size_t maxRK05Units = 8;
