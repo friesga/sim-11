@@ -103,10 +103,10 @@ device setting. See the provided ini-files for details.
 Installation instructions
 -------------------------
 
-Building sim-11 requires at least gcc version 12. Running sim-11 requires a
+Building sim-11 under linux requires at least gcc version 12. Running sim-11 requires a
 libstdc++6 supporting at least version 3.4.31.
 
-Perform the following actions to build and install sim-11 under linux:
+Perform the following actions to build and install sim-11:
 - Install the build tools:<br>
 `$ sudo apt install build-essential`
 
