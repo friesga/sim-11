@@ -46,7 +46,7 @@ class Unit
     StatusCode openReadWrite (std::string fileName);
 
 protected:
-    PDP11Peripheral *owningDevice_;       // Pointer to the controller
+    PDP11Peripheral *owningDevice_; // Pointer to the controller
     FILE *filePtr_;                 // The disk file
     u32 capacity_;                  // Drive capacity in words
     u32 flags_;                     // Bit flags
@@ -54,7 +54,8 @@ protected:
 
     // Helper functions for the concrete units
     StatusCode attachUnit (std::string fileName, Bitmask<AttachFlags> flags);
-    StatusCode createBadBlockTable (int32_t sec, int32_t wds);
+    StatusCode createBadBlockTable (int32_t sectorsPerSurface,
+        int32_t physWordsPerSector);
 
 public:
     // Constructor
