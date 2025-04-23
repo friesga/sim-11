@@ -71,21 +71,21 @@ void BA11_N::createBezel (shared_ptr<Cabinet::Position> cabinetPosition)
     Panel *panel = frontWindow_->createPanel (cabinetPosition, BA11_NConfig::unitHeight);
 
     panel->createFront(frontImage(logo_), ba11_nFrontFrame);
-    pwrOkLed_ = panel->createIndicator ("../../resources/red led off.png",
-        "../../resources/red led on.png", Indicator::State::Off, pwrOkLedFrame);
-    runLed_ = panel->createIndicator ("../../resources/red led off.png", 
-        "../../resources/red led on.png", Indicator::State::Off, runLedFrame);
+    pwrOkLed_ = panel->createIndicator ("../resources/red led off.png",
+        "../resources/red led on.png", Indicator::State::Off, pwrOkLedFrame);
+    runLed_ = panel->createIndicator ("../resources/red led off.png", 
+        "../resources/red led on.png", Indicator::State::Off, runLedFrame);
 
-    restartSwitch_ = panel->createMomentaryButton ("../../resources/switch down.png",
-        "../../resources/switch up.png", 
+    restartSwitch_ = panel->createMomentaryButton ("../resources/switch down.png",
+        "../resources/switch up.png", 
         Button::TwoPositionsState::Down, bind (&BA11_N::restartSwitchClicked, this, _1), 
         restartSwitchFrame);
-    haltSwitch_ = panel->createLatchingButton ("../../resources/switch down.png",
-        "../../resources/switch up.png", 
+    haltSwitch_ = panel->createLatchingButton ("../resources/switch down.png",
+        "../resources/switch up.png", 
         Button::TwoPositionsState::Down, bind (&BA11_N::haltSwitchToggled, this, _1),
         haltSwitchFrame);
-    auxOnOffSwitch_ = panel->createLatchingButton ("../../resources/switch down.png",
-        "../../resources/switch up.png", 
+    auxOnOffSwitch_ = panel->createLatchingButton ("../resources/switch down.png",
+        "../resources/switch up.png", 
         Button::TwoPositionsState::Down, bind (&BA11_N::auxOnOffSwitchToggled, this, _1),
         auxOnOffSwitchFrame);
 
@@ -99,9 +99,9 @@ string BA11_N::frontImage (BA11_NConfig::Logo logo)
 {
     map <BA11_NConfig::Logo, string> frontImages =
     {
-        {BA11_NConfig::Logo::PDP_1103L,       "../../resources/11_03 front.png"},
-        {BA11_NConfig::Logo::PDP_1123,        "../../resources/11_23 front.png"},
-        {BA11_NConfig::Logo::PDP_1123_PLUS,   "../../resources/11_23+ front.png"}
+        {BA11_NConfig::Logo::PDP_1103L,       "../resources/11_03 front.png"},
+        {BA11_NConfig::Logo::PDP_1123,        "../resources/11_23 front.png"},
+        {BA11_NConfig::Logo::PDP_1123_PLUS,   "../resources/11_23+ front.png"}
     };
 
     return frontImages[logo];

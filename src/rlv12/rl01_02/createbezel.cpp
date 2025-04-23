@@ -12,33 +12,33 @@ void RL01_02::createBezel (Window* window,
 {
     Panel* panel = window->createPanel (rlUnitConfig->cabinetPosition,
         RLUnitConfig::unitHeight);
-    panel->createFront ("../../resources/RL02-front.png", {0, 0, 1.0, 1.0});
+    panel->createFront ("../resources/RL02-front.png", {0, 0, 1.0, 1.0});
 
     // LOAD IndicatorButton
     loadButton_ = panel->createSDLIndicatorLatchingButton ({
-        "../../resources/Load_up_off.png",
-        "../../resources/Load_up_on.png",
-        "../../resources/Load_down_off.png",
-        "../../resources/Load_down_on.png"},
+        "../resources/Load_up_off.png",
+        "../resources/Load_up_on.png",
+        "../resources/Load_down_off.png",
+        "../resources/Load_down_on.png"},
         Button::TwoPositionsState::Up, bind (&RL01_02::loadButtonClicked, this, _1),
         Indicator::State::On, loadButtonFrame);
 
     // READY indicator, default off
     readyIndicator_ = panel->createIndicator (
-        "../../resources/ready_" + to_string (rlUnitConfig->unitNumber) + "_off.png",
-        "../../resources/ready_" + to_string (rlUnitConfig->unitNumber) + "_on.png",
+        "../resources/ready_" + to_string (rlUnitConfig->unitNumber) + "_off.png",
+        "../resources/ready_" + to_string (rlUnitConfig->unitNumber) + "_on.png",
         Indicator::State::Off, readyIndicatorFrame);
 
     // FAULT indicator, default off
     faultIndicator_ = panel->createIndicator (
-        "../../resources/fault_off.png",
-        "../../resources/fault_on.png",
+        "../resources/fault_off.png",
+        "../resources/fault_on.png",
         Indicator::State::Off, faultIndicatorFrame);
 
     // WRITE PROTECT switch, initial state depends on unit configuration
     writeProtectButton_ = panel->createLatchingButton (
-        "../../resources/write_protect_on.png",
-        "../../resources/write_protect_off.png",
+        "../resources/write_protect_on.png",
+        "../resources/write_protect_off.png",
         rlUnitConfig->writeProtect ? Button::TwoPositionsState::Down : Button::TwoPositionsState::Up,
         bind (&RL01_02::writeProtectButtonClicked, this, _1),
         writeProtectButtonFrame);
