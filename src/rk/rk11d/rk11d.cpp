@@ -16,24 +16,18 @@ RK11D::RK11D (Bus* bus, Window* window, RK11DConfig& rk11dConfig)
     RK11D (bus, rk11dConfig)
 {}
 
-CondData<u16> RK11D::read (BusAddress address)
-{
-    return 0;
-}
-
-
-StatusCode RK11D::writeWord (BusAddress address, u16 value)
+StatusCode RK11D::writeWord (BusAddress busAddress, u16 value)
 {
     return StatusCode::Success;
 }
 
-bool RK11D::responsible (BusAddress address)
+bool RK11D::responsible (BusAddress busAddress)
 {
-    if (!address.isInIOpage ())
+    if (!busAddress.isInIOpage ())
         return false;
 
-    return address.registerAddress () >= baseAddress_ &&
-        address.registerAddress () <= (baseAddress_ + RKDB) ?
+    return busAddress.registerAddress () >= baseAddress_ &&
+        busAddress.registerAddress () <= (baseAddress_ + RKDB) ?
         true : false;
 }
 
