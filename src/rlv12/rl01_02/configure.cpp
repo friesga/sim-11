@@ -44,7 +44,7 @@ StatusCode RL01_02::configure (shared_ptr<RLUnitConfig> rlUnitConfig)
 
     // Try to attach the specified file to this unit
     StatusCode result;
-    if ((result = attach_unit (rlUnitConfig->fileName, attachFlags)) !=
+    if ((result = attachUnit (rlUnitConfig->fileName, attachFlags)) !=
         StatusCode::Success)
             return result;
 

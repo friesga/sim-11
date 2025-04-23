@@ -1,7 +1,7 @@
 #include "unit.h"
 #include "cmdlineoptions/cmdlineoptions.h"
 
-StatusCode Unit::attach_unit(std::string fileName, Bitmask<AttachFlags> flags)
+StatusCode Unit::attachUnit(std::string fileName, Bitmask<AttachFlags> flags)
 {
     StatusCode statusCode;
 

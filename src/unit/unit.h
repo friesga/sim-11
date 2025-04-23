@@ -42,7 +42,6 @@ class Unit
     int32_t position_;          // File position
 
     StatusCode createFile (std::string fileName, Bitmask<AttachFlags> flags);
-    StatusCode openPipe (std::string fileName);
     StatusCode openReadOnly (std::string fileName);
     StatusCode openReadWrite (std::string fileName);
 
@@ -54,7 +53,7 @@ protected:
     Bitmask<Status> unitStatus_;    // Naming discriminate
 
     // Helper functions for the concrete units
-    StatusCode attach_unit (std::string fileName, Bitmask<AttachFlags> flags);
+    StatusCode attachUnit (std::string fileName, Bitmask<AttachFlags> flags);
     StatusCode createBadBlockTable (int32_t sec, int32_t wds);
 
 public:
