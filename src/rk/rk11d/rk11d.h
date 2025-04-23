@@ -3,8 +3,15 @@
 
 #include "pdp11peripheral/pdp11peripheral.h"
 #include "configdata/rk/rk11d/rk11dconfig/rk11dconfig.h"
+#include "rk/rk05/rk05.h"
 #include "panel.h"
 #include "bitfield.h"
+
+#include <vector>
+#include <string>
+
+using std::vector;
+using std::unique_ptr;
 
 class RK11D : public PDP11Peripheral
 {
@@ -87,10 +94,10 @@ private:
     rkcs_ {0};
 
     // Word Count register. This is a read/write register. 
-    u16 rkwc_;
+    u16 rkwc_ {0};
 
     // Current Bus Address register. This is a read/write register.
-    u16 rkba_;
+    u16 rkba_ {0};
 
     // Disk Address register. This is a read/write register.
     union rkda
@@ -104,7 +111,10 @@ private:
     rkda_ {0};
 
     // Data Buffer register. This is a read/write register.
-    u16 rkdb_;
+    u16 rkdb_ {0};
+
+    // Definition of (pointers to) the attached RK05 drives
+    vector<unique_ptr<RK05>> rk05Drives_ {};
 
 public:
 	RK11D (Bus* bus, RK11DConfig& rk11dConfig);

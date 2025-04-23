@@ -1,5 +1,6 @@
 #include "rk11d.h"
 
+using std::make_unique;
 
 // This constructor is meant to be used in unit tests that don't
 // require a window. It's also called by the regular constructor
@@ -9,6 +10,9 @@ RK11D::RK11D (Bus* bus, RK11DConfig& rk11dConfig)
     PDP11Peripheral (bus)
 {
     baseAddress_  = rk11dConfig.address;
+
+    for (auto rk05Config : rk11dConfig.rk05Config)
+        rk05Drives_.push_back (make_unique<RK05> (bus, this, rk05Config));
 }
 
 RK11D::RK11D (Bus* bus, Window* window, RK11DConfig& rk11dConfig)
