@@ -8,6 +8,7 @@
 #include "ba11_n/ba11_n.h"
 #include "ba11_l/ba11_l.h"
 #include "rxv21/rxv21.h"
+#include "rk/rk11d/rk11d.h"
 #include "rlv12/rlv12.h"
 #include "bdv11/bdv11.h"
 #include "dl11/dlv11j/dlv11j.h"

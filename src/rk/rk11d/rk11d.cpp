@@ -2,23 +2,21 @@
 
 using std::make_unique;
 
-// This constructor is meant to be used in unit tests that don't
-// require a window. It's also called by the regular constructor
-// to define common actions in just one place.
-RK11D::RK11D (Bus* bus, RK11DConfig& rk11dConfig)
+// This constructor can be called in the initialization of both sim-11 and
+// the unit tests. In the latter case the window is not available.
+//
+RK11D::RK11D (Bus* bus, Window* window, shared_ptr<RK11DConfig> rk11dConfig)
     :
     PDP11Peripheral (bus)
 {
-    baseAddress_  = rk11dConfig.address;
+    baseAddress_  = rk11dConfig->address;
 
-    for (auto rk05Config : rk11dConfig.rk05Config)
-        rk05Drives_.push_back (make_unique<RK05> (bus, this, rk05Config));
+    for (auto rk05Config : rk11dConfig->rk05Config)
+    {
+        if (rk05Config != nullptr)
+            rk05Drives_.push_back (make_unique<RK05> (bus, this, window, rk05Config));
+    }
 }
-
-RK11D::RK11D (Bus* bus, Window* window, RK11DConfig& rk11dConfig)
-    :
-    RK11D (bus, rk11dConfig)
-{}
 
 StatusCode RK11D::writeWord (BusAddress busAddress, u16 value)
 {

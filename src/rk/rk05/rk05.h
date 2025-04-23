@@ -4,6 +4,7 @@
 #include "unit/unit.h"
 #include "configdata/rk/rk05/rk05config/rk05config.h"
 #include "pdp11peripheral/pdp11peripheral.h"
+#include "panel.h"
 
 #include <memory>
 
@@ -11,8 +12,15 @@ using std::shared_ptr;
 
 class RK05 : public Unit
 {
+    Bus* bus_ {nullptr};
+    PDP11Peripheral* controller_ {nullptr};
+
 public:
-    RK05 (Bus* bus, PDP11Peripheral* controller, shared_ptr<RK05Config> configPtr);
+    RK05 (Bus* bus, PDP11Peripheral* controller, Window* window,
+        shared_ptr<RK05Config> configPtr);
+
+private:
+    void createBezel (Window* window, shared_ptr<RK05Config> rk05Config);
 };
 
 

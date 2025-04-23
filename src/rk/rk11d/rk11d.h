@@ -117,8 +117,7 @@ private:
     vector<unique_ptr<RK05>> rk05Drives_ {};
 
 public:
-	RK11D (Bus* bus, RK11DConfig& rk11dConfig);
-    RK11D (Bus* bus, Window* window, RK11DConfig& rk11dConfig);
+    RK11D (Bus* bus, Window* window, shared_ptr<RK11DConfig> rk11dConfig);
 	CondData<u16> read (BusAddress busAddress) override;
 	StatusCode writeWord (BusAddress busAddress, u16 value) override;
 	bool responsible (BusAddress busAddress) override;
