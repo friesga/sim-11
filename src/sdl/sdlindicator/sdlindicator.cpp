@@ -31,3 +31,8 @@ void SDLIndicator::show (Indicator::State showIndicator)
 {
     showIndicator_ = showIndicator;
 }
+
+bool SDLIndicator::isWithinBounds (Position position, float margin) const
+{
+    return indicatorOnTexture_->isWithinBounds (position, margin);
+}

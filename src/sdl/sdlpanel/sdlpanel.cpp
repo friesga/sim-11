@@ -171,5 +171,9 @@ bool SDLPanel::isOverButton (Position position)
         if (indicatorButton->isWithinBounds (position, 0.75f))
             return true;
 
+    for (auto& indicator : indicators_)
+        if (indicator->isWithinBounds (position, 0.75f))
+            return true;
+
     return false;
 }

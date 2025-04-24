@@ -22,6 +22,8 @@ public:
     void show (Indicator::State showIndicator) override;
     void render () override;
 
+    bool isWithinBounds (Position position, float margin) const override;
+
 private:
     // The textures to use for this indicator
     unique_ptr<SDLTexture> indicatorOnTexture_;

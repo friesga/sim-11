@@ -10,6 +10,7 @@ class DummyIndicator : public Indicator
 public:
     void show (State showFigure) {};
     void render () {};
+    bool isWithinBounds (Position position, float margin) const { return true; };
 };
 
 class DummyButton : public Button

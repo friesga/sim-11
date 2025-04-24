@@ -89,6 +89,7 @@ public:
 
     virtual void show (State showFigure) = 0;
     virtual void render () = 0;
+    virtual bool isWithinBounds (Position position, float margin) const = 0;
 };
 
 class Button
