@@ -15,6 +15,12 @@ class RK05 : public Unit
     Bus* bus_ {nullptr};
     PDP11Peripheral* controller_ {nullptr};
 
+    // Definitions of buttons and indicatores
+    Indicator* pwrIndicator_ {};
+
+    // Button and indicators positions and dimensions
+    Frame<float> pwrIndicatorFrame {0.674, 0.605, 0.024, 0.048};
+
 public:
     RK05 (Bus* bus, PDP11Peripheral* controller, Window* window,
         shared_ptr<RK05Config> configPtr);
