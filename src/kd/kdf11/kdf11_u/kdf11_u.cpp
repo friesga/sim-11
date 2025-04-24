@@ -45,7 +45,8 @@ KDF11_U::KDF11_U (Bus* bus, shared_ptr<KDF11_UConfig> kdf11_uConfig)
 KDF11_U::~KDF11_U ()
 {
     controlLogic_->exit ();
-    kd11Thread_.join ();
+    if (kd11Thread_.joinable ())
+        kd11Thread_.join ();
 }
 
 void KDF11_U::start ()

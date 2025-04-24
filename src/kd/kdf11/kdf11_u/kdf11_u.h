@@ -71,7 +71,7 @@ private:
     unique_ptr<RegisterHandler> registerHandler_;
 
     // The KDF11_U is started in its own thread
-    thread kd11Thread_;
+    thread kd11Thread_ {};
 
     u16 startAddress_;
 };
