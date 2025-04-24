@@ -39,5 +39,8 @@ CondData<u16> RK11D::read (BusAddress busAddress)
             // Data Buffer register
             return rkdb_;
             break;
+
+        default:
+            return (StatusCode::NonExistingMemory);
     }
 }

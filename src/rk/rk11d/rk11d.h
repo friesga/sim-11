@@ -1,6 +1,7 @@
 #ifndef _RK11D_H_
 #define _RK11D_H_
 
+#include "bus/include/bus.h"
 #include "pdp11peripheral/pdp11peripheral.h"
 #include "configdata/rk/rk11d/rk11dconfig/rk11dconfig.h"
 #include "rk/rk05/rk05.h"
@@ -9,9 +10,11 @@
 
 #include <vector>
 #include <string>
+#include <mutex>
 
 using std::vector;
 using std::unique_ptr;
+using std::mutex;
 
 class RK11D : public PDP11Peripheral
 {
@@ -116,6 +119,8 @@ private:
     // Definition of (pointers to) the attached RK05 drives
     vector<unique_ptr<RK05>> rk05Drives_ {};
 
+    Bus* bus_ {nullptr};
+
 public:
     RK11D (Bus* bus, Window* window, shared_ptr<RK11DConfig> rk11dConfig);
 	CondData<u16> read (BusAddress busAddress) override;
@@ -123,6 +128,11 @@ public:
 	bool responsible (BusAddress busAddress) override;
 	void reset () override;
 
+private:
+    // Safe guard against controller access from multiple threads
+    mutex controllerMutex_;
+
+    void BINITReceiver (bool signalValue);
 
 };
 
