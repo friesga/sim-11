@@ -17,9 +17,23 @@ class RK05 : public Unit
 
     // Definitions of buttons and indicatores
     Indicator* pwrIndicator_ {};
+    Indicator* rdyIndicator_ {};
+    Indicator* oncylIndicator_ {};
+    Indicator* faultIndicator_ {};
+    Indicator* wtprotIndicator_ {};
+    Indicator* loadIndicator_ {};
+    Indicator* wtIndicator_ {};
+    Indicator* rdIndicator_ {};
 
     // Button and indicators positions and dimensions
-    Frame<float> pwrIndicatorFrame {0.674, 0.605, 0.024, 0.048};
+    Frame<float> pwrIndicatorFrame    {0.674, 0.605, 0.024, 0.048};
+    Frame<float> readyIndicatorFrame  {0.703, 0.605, 0.024, 0.048};
+    Frame<float> oncylIndicatorFrame  {0.732, 0.605, 0.024, 0.048};
+    Frame<float> faultIndicatorFrame  {0.761, 0.605, 0.024, 0.048};
+    Frame<float> wtprotIndicatorFrame {0.674, 0.690, 0.024, 0.048};
+    Frame<float> loadIndicatorFrame   {0.703, 0.690, 0.024, 0.048};
+    Frame<float> wtIndicatorFrame     {0.732, 0.690, 0.024, 0.048};
+    Frame<float> rdIndicatorFrame     {0.761, 0.690, 0.024, 0.048};
 
 public:
     RK05 (Bus* bus, PDP11Peripheral* controller, Window* window,
