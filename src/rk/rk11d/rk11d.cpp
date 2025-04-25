@@ -31,11 +31,6 @@ RK11D::RK11D (Bus* bus, Window* window, shared_ptr<RK11DConfig> rk11dConfig)
     reset ();
 }
 
-StatusCode RK11D::writeWord (BusAddress busAddress, u16 value)
-{
-    return StatusCode::Success;
-}
-
 bool RK11D::responsible (BusAddress busAddress)
 {
     if (!busAddress.isInIOpage ())
