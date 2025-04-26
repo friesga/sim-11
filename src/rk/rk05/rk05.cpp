@@ -14,3 +14,10 @@ RK05::RK05 (Bus* bus, PDP11Peripheral* controller, Window* window,
     if (window != nullptr)
         createBezel (window, configPtr);
 }
+
+void RK05::runLoadSwitchClicked (Button::State state)
+{}
+
+void RK05::wtprotSwitchClicked (Button::State state)
+{
+}

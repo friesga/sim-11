@@ -1,5 +1,10 @@
 #include "rk05.h"
 
+#include <functional>
+
+using std::bind;
+using std::placeholders::_1;
+
 void RK05::createBezel (Window* window, shared_ptr<RK05Config> rk05Config)
 {
     Panel* panel = window->createPanel (rk05Config->cabinetPosition,
@@ -53,4 +58,22 @@ void RK05::createBezel (Window* window, shared_ptr<RK05Config> rk05Config)
         "resources/FAULT off.png",
         "resources/FAULT on.png",
         Indicator::State::Off, faultIndicatorFrame);
+
+    // RUN/LOAD switch, initial state up. The RUN/LOAD switch is a rocker
+    // switch with two latched positions.
+    runLoadSwitch_ = panel->createLatchingButton (
+        "resources/rocker switch up.png",
+        "resources/rocker switch down.png",
+        Button::TwoPositionsState::Down,
+        bind (&RK05::runLoadSwitchClicked, this, _1),
+        runLoadSwitchFrame);
+
+    // WTPROT switch, initial state up. The WTPROT switch is a rocker switch,
+    // spring loaded in the off position.
+    wtprotSwitch_ = panel->createMomentaryButton (
+        "resources/rocker switch up.png",
+        "resources/rocker switch down.png",
+        Button::TwoPositionsState::Down,
+        bind (&RK05::wtprotSwitchClicked, this, _1),
+        wtprotSwitchFrame);
 }

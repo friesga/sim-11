@@ -24,6 +24,8 @@ class RK05 : public Unit
     Indicator* loadIndicator_ {};
     Indicator* wtIndicator_ {};
     Indicator* rdIndicator_ {};
+    Button* runLoadSwitch_ {};
+    Button* wtprotSwitch_ {};
 
     // Button and indicators positions and dimensions
     Frame<float> pwrIndicatorFrame    {0.674, 0.605, 0.024, 0.048};
@@ -34,6 +36,8 @@ class RK05 : public Unit
     Frame<float> loadIndicatorFrame   {0.703, 0.690, 0.024, 0.048};
     Frame<float> wtIndicatorFrame     {0.732, 0.690, 0.024, 0.048};
     Frame<float> rdIndicatorFrame     {0.761, 0.690, 0.024, 0.048};
+    Frame<float> runLoadSwitchFrame   {0.585, 0.605, 0.029, 0.122};
+    Frame<float> wtprotSwitchFrame    {0.613, 0.605, 0.029, 0.122};
 
 public:
     RK05 (Bus* bus, PDP11Peripheral* controller, Window* window,
@@ -41,6 +45,8 @@ public:
 
 private:
     void createBezel (Window* window, shared_ptr<RK05Config> rk05Config);
+    void runLoadSwitchClicked (Button::State state);
+    void wtprotSwitchClicked (Button::State state);
 };
 
 
