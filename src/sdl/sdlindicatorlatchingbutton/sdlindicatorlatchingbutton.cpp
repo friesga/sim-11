@@ -11,16 +11,16 @@ SDLIndicatorLatchingButton::SDLIndicatorLatchingButton (Button::ImageNames const
     buttonState_ {initialState},
     indicatorState_ {showIndicator}
 {
-    textures_[to_integral (Button::TwoPositionsState::Up)][to_integral (Indicator::State::Off)] =
+    textures_[to_integral (Button::TwoPositionsState::Off)][to_integral (Indicator::State::Off)] =
         make_unique<SDLTexture> (imageNames.buttonUpIndicatorOff,
             sdlRenderer->getSDL_Renderer (), targetTexture, frame);
-    textures_[to_integral (Button::TwoPositionsState::Down)][to_integral (Indicator::State::Off)] =
+    textures_[to_integral (Button::TwoPositionsState::On)][to_integral (Indicator::State::Off)] =
         make_unique<SDLTexture> (imageNames.buttonDownIndicatorOff,
             sdlRenderer->getSDL_Renderer (), targetTexture, frame);
-    textures_[to_integral (Button::TwoPositionsState::Up)][to_integral (Indicator::State::On)] =
+    textures_[to_integral (Button::TwoPositionsState::Off)][to_integral (Indicator::State::On)] =
         make_unique<SDLTexture> (imageNames.buttonUpIndicatorOn,
             sdlRenderer->getSDL_Renderer (), targetTexture, frame);
-    textures_[to_integral (Button::TwoPositionsState::Down)][to_integral (Indicator::State::On)] =
+    textures_[to_integral (Button::TwoPositionsState::On)][to_integral (Indicator::State::On)] =
         make_unique<SDLTexture> (imageNames.buttonDownIndicatorOn,
             sdlRenderer->getSDL_Renderer (), targetTexture, frame);
 }
@@ -51,8 +51,8 @@ void SDLIndicatorLatchingButton::handleEvent (InputEvent const* event)
         event->button () == InputEvent::Button::Left &&
         isWithinBounds (event->mousePosition ()))
     {
-        buttonState_ = (buttonState_ == Button::TwoPositionsState::Up) ? 
-            Button::TwoPositionsState::Down : Button::TwoPositionsState::Up; 
+        buttonState_ = (buttonState_ == Button::TwoPositionsState::Off) ? 
+            Button::TwoPositionsState::On : Button::TwoPositionsState::Off; 
         buttonClicked_ (buttonState_);
     }
 }
@@ -66,7 +66,7 @@ bool SDLIndicatorLatchingButton::isWithinBounds (Position position,
     float margin) const
 {
     // Any of the textures can be used to check the dimensions
-    return getTexture (Button::TwoPositionsState::Up,
+    return getTexture (Button::TwoPositionsState::Off,
         Indicator::State::Off)->isWithinBounds (position, margin);
 }
 

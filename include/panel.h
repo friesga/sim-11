@@ -97,8 +97,8 @@ class Button
 public:
     enum class TwoPositionsState : size_t
     {
-        Down = 0,
-        Up = 1
+        On = 0,
+        Off = 1
     };
 
     enum class ThreePositionsState : size_t

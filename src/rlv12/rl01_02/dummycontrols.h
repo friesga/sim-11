@@ -17,7 +17,7 @@ class DummyButton : public Button
 {
 public:
     void setState (State newState) {};
-    State currentState () const { return TwoPositionsState::Up; };
+    State currentState () const { return TwoPositionsState::Off; };
     void render () {};
     void handleEvent (InputEvent const* event) {};
     bool isWithinBounds (Position position, float margin) const { return true; };
@@ -28,7 +28,7 @@ class DummyIndicatorButton : public IndicatorButton
 public:
     void render () {};
     void setState (Button::State newState) {};
-    Button::State currentState () const { return TwoPositionsState::Up; };
+    Button::State currentState () const { return TwoPositionsState::Off; };
     void handleEvent (InputEvent const* event) {};
     bool isWithinBounds (Position position, float margin) const { return true; };
     void show (Indicator::State showFigure) {};

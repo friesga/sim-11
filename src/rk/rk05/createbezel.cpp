@@ -64,7 +64,7 @@ void RK05::createBezel (Window* window, shared_ptr<RK05Config> rk05Config)
     runLoadSwitch_ = panel->createLatchingButton (
         "resources/rocker switch up.png",
         "resources/rocker switch down.png",
-        Button::TwoPositionsState::Down,
+        Button::TwoPositionsState::On,
         bind (&RK05::runLoadSwitchClicked, this, _1),
         runLoadSwitchFrame);
 
@@ -73,7 +73,7 @@ void RK05::createBezel (Window* window, shared_ptr<RK05Config> rk05Config)
     wtprotSwitch_ = panel->createMomentaryButton (
         "resources/rocker switch up.png",
         "resources/rocker switch down.png",
-        Button::TwoPositionsState::Down,
+        Button::TwoPositionsState::On,
         bind (&RK05::wtprotSwitchClicked, this, _1),
         wtprotSwitchFrame);
 }
