@@ -15,7 +15,7 @@ void RK05::createBezel (Window* window, shared_ptr<RK05Config> rk05Config)
     pwrIndicator_ = panel->createIndicator (
         "resources/white led off.png",
         "resources/white led on.png",
-        Indicator::State::Off, pwrIndicatorFrame);
+        Indicator::State::On, pwrIndicatorFrame);
 
     // RDY indicator, default off
     rdyIndicator_ = panel->createIndicator (
@@ -35,11 +35,11 @@ void RK05::createBezel (Window* window, shared_ptr<RK05Config> rk05Config)
         "resources/white led on.png",
         Indicator::State::Off, wtprotIndicatorFrame);
 
-    // LOAD indicator, default off
+    // LOAD indicator, default on
     loadIndicator_ = panel->createIndicator (
         "resources/white led off.png",
         "resources/white led on.png",
-        Indicator::State::Off, loadIndicatorFrame);
+        Indicator::State::On, loadIndicatorFrame);
 
     // WT indicator, default off
     wtIndicator_ = panel->createIndicator (
