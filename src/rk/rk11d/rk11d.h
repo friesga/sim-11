@@ -116,6 +116,24 @@ private:
     // Data Buffer register. This is a read/write register.
     u16 rkdb_ {0};
 
+    // Definition of the RK11-D functions
+    // 
+    // Disclaimer: use of an enum instead of an enum class as the enum class
+    // makes comparing with u16 values cumbersome, even if the enum class is
+    // derived from u16.
+    //
+    enum Function
+    {
+        ControlReset,
+        Write,
+        Read,
+        WriteCheck,
+        Seek,
+        ReadCheck,
+        DriveReset,
+        WriteLock
+    };
+
     // Definition of (pointers to) the attached RK05 drives
     vector<unique_ptr<RK05>> rk05Drives_ {};
 
@@ -133,6 +151,7 @@ private:
     mutex controllerMutex_;
 
     void BINITReceiver (bool signalValue);
+    void processFunction (u16 function);
 
 };
 

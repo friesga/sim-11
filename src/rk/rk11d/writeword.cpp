@@ -20,6 +20,8 @@ StatusCode RK11D::writeWord (BusAddress busAddress, u16 value)
 
         case RKCS:
             // Control Status register
+            if (rkcs_.go)
+                processFunction (rkcs_.function);
             return StatusCode::Success;
             break;
 

@@ -1,5 +1,6 @@
 #include "rk/rk11d/rk11d.h"
 #include "bus/unibus/unibus.h"
+#include "statuscodes.h"
 
 #include <gtest/gtest.h>
 #include <memory>
@@ -60,5 +61,35 @@ TEST_F (RK11DRegistersTest, registersInitialised)
     EXPECT_EQ (rk11dDevice->read (BusAddress {RKCS}), RKCS_RDY);
     EXPECT_EQ (rk11dDevice->read (BusAddress {RKWC}), 0);
     EXPECT_EQ (rk11dDevice->read (BusAddress {RKBA}), 0);
+    EXPECT_EQ (rk11dDevice->read (BusAddress {RKDB}), 0);
+}
+
+// Veridy that a Control Reset function resets the registers and sets the
+// controller ready bit.
+TEST_F (RK11DRegistersTest, controlResetFunction)
+{
+    RK11DConfig rk11dConfig {};
+
+    Unibus bus;
+    RK11D* rk11dDevice = new RK11D (&bus, nullptr,
+        make_shared<RK11DConfig> (rk11dConfig));
+
+    EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKWC}, 0177777),
+        StatusCode::Success);
+    EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKBA}, 0177777),
+        StatusCode::Success);
+    EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKDA}, 0177777),
+        StatusCode::Success);
+    EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKDB}, 0177777),
+        StatusCode::Success);
+
+    EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKCS}, RKCS_FUNCTON (0) | RKCS_GO),
+        StatusCode::Success);
+
+    EXPECT_EQ (rk11dDevice->read (BusAddress {RKER}), 0);
+    EXPECT_EQ (rk11dDevice->read (BusAddress {RKCS}), RKCS_RDY);
+    EXPECT_EQ (rk11dDevice->read (BusAddress {RKWC}), 0);
+    EXPECT_EQ (rk11dDevice->read (BusAddress {RKBA}), 0);
+    EXPECT_EQ (rk11dDevice->read (BusAddress {RKDA}), 0);
     EXPECT_EQ (rk11dDevice->read (BusAddress {RKDB}), 0);
 }

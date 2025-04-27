@@ -41,13 +41,27 @@ bool RK11D::responsible (BusAddress busAddress)
         true : false;
 }
 
-// RK11-D device reset 
+// RK11-D controller reset 
+// 
+// This function is executed on a BUS INIT and the receipt of a Control[ler]
+// Reset function.
+// 
+// The Control Reset function initializes all internal registers and
+// flip-flops and clears all of the bits of the seven programmable registers
+// except RKCS 07 (READY), which it sets and RKDS 01 through 11, which are
+// not affected. (EK-RK11D-MM-002, par. 1.3.2.1)
 //
 void RK11D::reset ()
 {
-    // Clear all RKCS bits and set Controller Ready.
+    rkds_.drivePowerLow = 0;
+    rkds_.driveId = 0;
+    rker_.value = 0;
     rkcs_.value = 0;
     rkcs_.controlReady = 1;
+    rkwc_ = 0;
+    rkba_ = 0;
+    rkda_.value = 0;
+    rkdb_ = 0;
 }
 
 // On assertion of the BINIT signal initialize the device.
