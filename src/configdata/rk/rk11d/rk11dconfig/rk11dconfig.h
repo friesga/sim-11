@@ -21,6 +21,13 @@ using std::shared_ptr;
 // A RK11-D also contains "seven inhibit strobe jumpers on the M7257 module
 // which, when cut, inhibit the loading of a particular programmable
 // register". This feature is currently not implemented.
+// 
+// On an original RK11-D if an incorrect cylinder address is detected 16
+// attempts are made to establish the correct cylinder address before the
+// function is aborted. Compatibility with the RK11-C, which makes only one
+// attempt, may be achieved by cutting a jumper on the Status Control module.
+// (EK-RK11D-MM-002, par. 1.3.2.5) This option is not supported as it makes
+// no sense in a simulator.
 //
 struct RK11DConfig : public DeviceType<BusType::Unibus>
 {
