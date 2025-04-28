@@ -21,7 +21,18 @@ StatusCode RK11D::writeWord (BusAddress busAddress, u16 value)
         case RKCS:
             // Control Status register
             if (rkcs_.go)
-                processFunction (rkcs_.function);
+            {
+                // Disclaimer: the u16 resulting from the BitField conversion operator
+                // cannot be cast directly to an Function enum.
+                //
+                // ToDo: Add Memory Extension bits to bus address
+                //
+                u16 function = rkcs_.function;
+                processFunction (
+                    RKDefinitions::RKCommand {
+                    static_cast<RKDefinitions::Function> (function),
+                    rkda_.value, rkwc_, rkba_});
+            }
             return StatusCode::Success;
             break;
 

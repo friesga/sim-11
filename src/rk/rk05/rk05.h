@@ -3,14 +3,15 @@
 
 #include "unit/unit.h"
 #include "configdata/rk/rk05/rk05config/rk05config.h"
+#include "rk/rkdefinitions/rkdefinitions.h"
 #include "pdp11peripheral/pdp11peripheral.h"
 #include "panel.h"
 #include "asynctimer/asynctimer.h"
 #include "variantfsm/fsm.h"
 #include "chrono/simulatorclock/simulatorclock.h"
+
 #include <thread>
 #include <queue>
-
 #include <memory>
 
 using std::shared_ptr;
@@ -19,6 +20,13 @@ using std::queue;
 
 class RK05 : public Unit
 {
+public:
+    RK05 (Bus* bus, PDP11Peripheral* controller, Window* window,
+        shared_ptr<RK05Config> rk05Config);
+    ~RK05 ();
+    void processCommand (RKDefinitions::RKCommand rkCommand);
+
+private:
     Bus* bus_ {nullptr};
     PDP11Peripheral* controller_ {nullptr};
 
@@ -35,23 +43,17 @@ class RK05 : public Unit
     Button* wtprotSwitch_ {};
 
     // Button and indicators positions and dimensions
-    Frame<float> pwrIndicatorFrame    {0.674, 0.605, 0.024, 0.048};
-    Frame<float> readyIndicatorFrame  {0.703, 0.605, 0.024, 0.048};
-    Frame<float> oncylIndicatorFrame  {0.732, 0.605, 0.024, 0.048};
-    Frame<float> faultIndicatorFrame  {0.761, 0.605, 0.024, 0.048};
+    Frame<float> pwrIndicatorFrame {0.674, 0.605, 0.024, 0.048};
+    Frame<float> readyIndicatorFrame {0.703, 0.605, 0.024, 0.048};
+    Frame<float> oncylIndicatorFrame {0.732, 0.605, 0.024, 0.048};
+    Frame<float> faultIndicatorFrame {0.761, 0.605, 0.024, 0.048};
     Frame<float> wtprotIndicatorFrame {0.674, 0.690, 0.024, 0.048};
-    Frame<float> loadIndicatorFrame   {0.703, 0.690, 0.024, 0.048};
-    Frame<float> wtIndicatorFrame     {0.732, 0.690, 0.024, 0.048};
-    Frame<float> rdIndicatorFrame     {0.761, 0.690, 0.024, 0.048};
-    Frame<float> runLoadSwitchFrame   {0.585, 0.605, 0.029, 0.122};
-    Frame<float> wtprotSwitchFrame    {0.613, 0.605, 0.029, 0.122};
+    Frame<float> loadIndicatorFrame {0.703, 0.690, 0.024, 0.048};
+    Frame<float> wtIndicatorFrame {0.732, 0.690, 0.024, 0.048};
+    Frame<float> rdIndicatorFrame {0.761, 0.690, 0.024, 0.048};
+    Frame<float> runLoadSwitchFrame {0.585, 0.605, 0.029, 0.122};
+    Frame<float> wtprotSwitchFrame {0.613, 0.605, 0.029, 0.122};
 
-public:
-    RK05 (Bus* bus, PDP11Peripheral* controller, Window* window,
-        shared_ptr<RK05Config> rk05Config);
-    ~RK05 ();
-
-private:
     // Definition of the drive states
     struct Initial {};      // State machine initial state
     struct Unloaded {};     // No cartridge loaded
@@ -63,7 +65,8 @@ private:
     using State = std::variant <Initial, Unloaded, SpinningUp, LockedOn,
         Seeking, SpinningDown>;
 
-    // Definition of the drive events
+    // Definition of the drive events. This includes the RKCommand defined
+    // in rkcommand.h.
     struct SpinUp {};       // LOAD button pressed down
     struct SpinDown {};     // LOAD button released
     struct SpunUp {};       // Spin up is complete
@@ -72,7 +75,7 @@ private:
     struct TimeElapsed {};
 
     using Event = std::variant <SpinUp, SpinDown, SpunUp, SpunDown,
-        SeekCommand, TimeElapsed>;
+        SeekCommand, TimeElapsed, RKDefinitions::RKCommand>;
 
     // Use the PIMPL idiom to be able to define the StateMachine outside
     // of the RK05 class
