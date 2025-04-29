@@ -3,7 +3,6 @@
 #include "kd/kd11_na/executor/executor.h"
 #include "kd/kd11_na/calculate/calculate.h"
 #include "bus/qbus/qbus.h"
-#include "pdp11peripheral/pdp11peripheral.h"
 #include "float/float.h"
 #include "trace/trace.h"
 #include "bitmask.h"

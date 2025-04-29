@@ -2,7 +2,7 @@
 #define _RXV21_H_
 
 #include "bus/include/bus.h"
-#include "pdp11peripheral/pdp11peripheral.h"
+#include "abstractbusdevice/abstractbusdevice.h"
 #include "conddata/conddata.h"
 #include "configdata/rxv21/rxv21config/rxv21config.h"
 #include "variantfsm/fsm.h"
@@ -91,8 +91,11 @@ namespace rxv21
 		rxv21ReadSectorRx2sa,  rxv21ReadSectorRx2ta,
 		rxv21ReadErrorCodeRx2ba>;
 
-	class RXV21 : public PDP11Peripheral, public variantFsm::Fsm<RXV21, Event, State>
+	class RXV21 : public AbstractBusDevice, public variantFsm::Fsm<RXV21, Event, State>
 	{
+		// Pointer to the bus we are connected to
+		Bus* bus_;
+
 		u16	base;
 		u16	vector;
 

@@ -1,7 +1,7 @@
 #ifndef _UNIT_H_
 #define _UNIT_H_
 
-#include "pdp11peripheral/pdp11peripheral.h"
+#include "abstractbusdevice/abstractbusdevice.h"
 #include "statuscodes.h"
 #include "types.h"
 #include "bitmask.h"
@@ -46,11 +46,11 @@ class Unit
     StatusCode openReadWrite (std::string fileName);
 
 protected:
-    PDP11Peripheral *owningDevice_; // Pointer to the controller
-    FILE *filePtr_;                 // The disk file
-    u32 capacity_;                  // Drive capacity in words
-    u32 flags_;                     // Bit flags
-    Bitmask<Status> unitStatus_;    // Naming discriminate
+    AbstractBusDevice* owningDevice_;   // Pointer to the controller
+    FILE *filePtr_;                     // The disk file
+    u32 capacity_;                      // Drive capacity in words
+    u32 flags_;                         // Bit flags
+    Bitmask<Status> unitStatus_;        // Naming discriminate
 
     // Helper functions for the concrete units
     StatusCode attachUnit (std::string fileName, Bitmask<AttachFlags> flags);
@@ -59,7 +59,7 @@ protected:
 
 public:
     // Constructor
-    Unit (PDP11Peripheral *owningDevice);
+    Unit (AbstractBusDevice* owningDevice);
 };
 
 #endif // !_UNIT_H_

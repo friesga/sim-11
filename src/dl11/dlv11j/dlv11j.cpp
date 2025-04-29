@@ -15,7 +15,7 @@ using std::ranges::any_of;
 // Construct a DLV11-J object with the given configuration
 DLV11J::DLV11J (Bus *bus, shared_ptr<DLV11JConfig> dlConfig)
 	:
-	PDP11Peripheral (bus),
+	bus_ {bus},
 	baseAddress_ {dlConfig->baseAddress},
 	baseVector_ {dlConfig->baseVector},
 	dlConfig_ {dlConfig}

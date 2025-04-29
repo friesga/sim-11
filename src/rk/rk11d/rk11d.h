@@ -2,7 +2,7 @@
 #define _RK11D_H_
 
 #include "bus/include/bus.h"
-#include "pdp11peripheral/pdp11peripheral.h"
+#include "abstractbusdevice/abstractbusdevice.h"
 #include "configdata/rk/rk11d/rk11dconfig/rk11dconfig.h"
 #include "rk/rk05/rk05.h"
 #include "rk/rkdefinitions/rkdefinitions.h"
@@ -17,7 +17,7 @@ using std::vector;
 using std::unique_ptr;
 using std::mutex;
 
-class RK11D : public PDP11Peripheral
+class RK11D : public AbstractBusDevice
 {
 private:
     // Define RK11-D registers as offsets from the controller's base address
@@ -56,6 +56,10 @@ public:
 	void reset () override;
 
 private:
+    // Definition of the controller's base address and vector
+    u16 baseAddress_ {0};
+    u16 vector_ {0};
+
     // Safe guard against controller access from multiple threads
     mutex controllerMutex_;
 

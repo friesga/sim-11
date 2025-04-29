@@ -2,7 +2,7 @@
 #define _BDV11_H_
 
 #include "bus/include/bus.h"
-#include "pdp11peripheral/pdp11peripheral.h"
+#include "abstractbusdevice/abstractbusdevice.h"
 #include "configdata/bdv11config/bdv11config.h"
 #include "chrono/alarmclock/alarmclock.h"
 
@@ -63,7 +63,7 @@ consteval u16 B (size_t x)
 {
     return 1 << (x + 7);
 }
-class BDV11 : public PDP11Peripheral
+class BDV11 : public AbstractBusDevice
 {
 public:
 	BDV11 (Bus *bus);
@@ -141,6 +141,7 @@ private:
 		{BDV11Config::BootDevice::BDV11ROM, BDV11_ROM}
 	};
 
+	Bus* bus_;
 	u16	pcr;
 	u16	scratch;
 	u16	option;

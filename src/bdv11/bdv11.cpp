@@ -15,7 +15,7 @@ using std::shared_ptr;
 
 BDV11::BDV11 (Bus *bus)
 	:
-	PDP11Peripheral (bus),
+	bus_ {bus},
 	pcr {0},
 	scratch {0},
 	option {0},

@@ -6,7 +6,7 @@ using std::placeholders::_1;
 
 M9312::M9312 (Bus* bus, shared_ptr<M9312Config> m9312Config)
     :
-    PDP11Peripheral (bus)
+    bus_ {bus}
 {
     diagnosticROM_ = diagROMImages_[+m9312Config->diagnosticROM];
 

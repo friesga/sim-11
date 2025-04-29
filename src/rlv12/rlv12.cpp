@@ -21,7 +21,7 @@ using std::runtime_error;
 // ToDo: Remove default RLV12 constructor
 RLV12::RLV12 (Bus* bus)
     :
-    PDP11Peripheral (bus),
+    bus_ {bus},
     csr_ {0},
     bar_ {0},
     dar_ {0},
@@ -32,7 +32,6 @@ RLV12::RLV12 (Bus* bus)
     wordCounter_ {0},
     fifoIndex_ {0}
 {
-    name_ = "RL";
     baseAddress_ = RLV12const::RLV_BaseAddress;
     vector_ = RLV12const::RLV_Vector;
 
@@ -50,7 +49,7 @@ RLV12::RLV12 (Bus* bus)
 
 RLV12::RLV12 (Bus* bus, Window* window, RLConfig& rlConfig)
     :
-    PDP11Peripheral (bus),
+    bus_ {bus},
     csr_ {0},
     bar_ {0},
     dar_ {0},
@@ -61,7 +60,6 @@ RLV12::RLV12 (Bus* bus, Window* window, RLConfig& rlConfig)
     wordCounter_ {0},
     fifoIndex_ {0}
 {
-    name_ = "RL";
     baseAddress_ = (rlConfig.address > 0) ? 
         rlConfig.address : RLV12const::RLV_BaseAddress;
     vector_ = (rlConfig.vector > 0) ?

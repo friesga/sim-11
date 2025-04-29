@@ -6,7 +6,7 @@
 #include "rl01_02/rl01_02.h"
 #include "bus/include/bus.h"
 #include "busaddress/busaddress.h"
-#include "pdp11peripheral/pdp11peripheral.h"
+#include "abstractbusdevice/abstractbusdevice.h"
 #include "threadsafecontainers/threadsafequeue.h"
 #include "statuscodes.h"
 #include "rlv12command/rlv12command.h"
@@ -24,7 +24,7 @@
 class CmdProcessor;
 
 // Implementation of the RL11, RLV11 and RLV12 controllers.
-class RLV12 : public PDP11Peripheral
+class RLV12 : public AbstractBusDevice
 {
     friend class CmdProcessor;
 
@@ -46,6 +46,13 @@ class RLV12 : public PDP11Peripheral
     u16 bar_;       // Bus Address register
     u16 dar_;       // Disk address register
     u16 bae_;       // Bus Address Extension register
+
+    // Definition of the controller's base address and vector
+    u16 baseAddress_ {0};
+    u16 vector_ {0};
+
+    // Pointer to the bus we are connected to
+    Bus* bus_;
 
     // Define transfer buffer
     u16* dataBuffer_;

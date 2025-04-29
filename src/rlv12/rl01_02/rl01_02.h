@@ -54,7 +54,7 @@ public:
     };
 
     // Constructor and destructor
-    RL01_02 (PDP11Peripheral* owningDevice);
+    RL01_02 (AbstractBusDevice* owningDevice);
     ~RL01_02 ();
 
     bool available ();

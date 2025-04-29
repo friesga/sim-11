@@ -2,7 +2,7 @@
 #define _DLV11J_H_
 
 #include "bus/include/bus.h"
-#include "pdp11peripheral/pdp11peripheral.h"
+#include "abstractbusdevice/abstractbusdevice.h"
 #include "configdata/serialconfig/dlv11jconfig/dlv11jconfig.h"
 #include "dl11/uart/uart.h"
 
@@ -11,7 +11,7 @@
 using std::unique_ptr;
 using std::shared_ptr;
 
-class DLV11J : public PDP11Peripheral
+class DLV11J : public AbstractBusDevice
 {
 public:
 	DLV11J (Bus *bus, shared_ptr<DLV11JConfig> dlConfig);
@@ -34,6 +34,9 @@ private:
 	u16	baseAddress_;
 	u16 baseVector_;
 	shared_ptr<DLV11JConfig> dlConfig_;
+
+	// Pointer to the bus we are connected to
+	Bus* bus_;
 
 	void initialize ();
 	u16 extractChannelNr (BusAddress busAddress);

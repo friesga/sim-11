@@ -15,7 +15,5 @@ StatusCode Unit::openReadOnly(std::string fileName)
     // Set unit read-only
     unitStatus_ |= Status::WRITE_PROTECT;
 
-    Logger::instance() << owningDevice_->name() + ": unit is read only\n";
-
     return StatusCode::Success;
 }

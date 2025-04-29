@@ -15,15 +15,13 @@ using namespace rxv21;
 // Constructor for a default RXV21 device without attached files
 RXV21::RXV21 (Bus *bus)
 	:
-	PDP11Peripheral (bus),
+	bus_ {bus},
 
 	// Factory configuration
 	base {0177170},
 	vector {0264},
 	data {nullptr}
 {
-	name_ = "RX";
-
 	data = (u8*) malloc(77 * 26 * 256);
 	if (!data) 
 		throw runtime_error ("Error: cannot allocate memory for rxv21");
@@ -33,10 +31,8 @@ RXV21::RXV21 (Bus *bus)
 
 RXV21::RXV21 (Bus *bus, shared_ptr<RXV21Config> rxConfig)
 	:
-	PDP11Peripheral (bus)
+	bus_ {bus}
 {
-	name_ = "RX";
-
 	// Factory configuration
 	base = 0177170;
 	vector = 0264;

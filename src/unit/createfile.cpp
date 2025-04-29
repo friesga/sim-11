@@ -20,7 +20,5 @@ StatusCode Unit::createFile(std::string fileName, Bitmask<AttachFlags> flags)
     if (filePtr_ == NULL)
         return StatusCode::OpenError;
 
-     Logger::instance() << owningDevice_->name() + ": creating new file\n";
-
     return StatusCode::Success;
 }

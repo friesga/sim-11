@@ -2,9 +2,10 @@
 #define _RK05_H_
 
 #include "unit/unit.h"
+#include "bus/include/bus.h"
 #include "configdata/rk/rk05/rk05config/rk05config.h"
 #include "rk/rkdefinitions/rkdefinitions.h"
-#include "pdp11peripheral/pdp11peripheral.h"
+#include "abstractbusdevice/abstractbusdevice.h"
 #include "panel.h"
 #include "asynctimer/asynctimer.h"
 #include "variantfsm/fsm.h"
@@ -21,14 +22,14 @@ using std::queue;
 class RK05 : public Unit
 {
 public:
-    RK05 (Bus* bus, PDP11Peripheral* controller, Window* window,
+    RK05 (Bus* bus, AbstractBusDevice* controller, Window* window,
         shared_ptr<RK05Config> rk05Config);
     ~RK05 ();
     void processCommand (RKDefinitions::RKCommand rkCommand);
 
 private:
     Bus* bus_ {nullptr};
-    PDP11Peripheral* controller_ {nullptr};
+    AbstractBusDevice* controller_ {nullptr};
 
     // Definitions of buttons and indicatores
     Indicator* pwrIndicator_ {};

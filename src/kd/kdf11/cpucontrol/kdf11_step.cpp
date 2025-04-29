@@ -1,7 +1,6 @@
 #include "kdf11_cpucontrol.h"
 #include "kd/kdf11/executor/executor.h"
 #include "kd/kdf11/calculate/calculate.h"
-#include "pdp11peripheral/pdp11peripheral.h"
 #include "chrono/simulatorclock/simulatorclock.h"
 #include "float/float.h"
 #include "trace/trace.h"

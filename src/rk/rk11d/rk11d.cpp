@@ -14,7 +14,6 @@ using std::placeholders::_1;
 //
 RK11D::RK11D (Bus* bus, Window* window, shared_ptr<RK11DConfig> rk11dConfig)
     :
-    PDP11Peripheral (bus),
     bus_ {bus}
 {
     baseAddress_  = rk11dConfig->address;

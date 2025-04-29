@@ -31,7 +31,7 @@ public:
     constexpr CpuData* cpuData ();
     constexpr MMU* mmu ();
 
-    // The KD11_NA is a PDP11Peripheral without registers so the read and write 
+    // The KD11_NA is a peripheral without registers so the read and write 
     // register functions are dummies. The reset function is called on a
     // bus reset and has no function for the KD11_NA either.
     CondData<u16> read (BusAddress address) override

@@ -7,7 +7,7 @@ using std::shared_ptr;
 using std::make_unique;
 using std::chrono::seconds;
 
-RK05::RK05 (Bus* bus, PDP11Peripheral* controller, Window* window,
+RK05::RK05 (Bus* bus, AbstractBusDevice* controller, Window* window,
     shared_ptr<RK05Config> rk05Config)
     : 
     Unit (controller),

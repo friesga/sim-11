@@ -10,7 +10,7 @@ using namespace std::chrono_literals;
 // Constructor
 // By default the unit is off-line. It is set on-line when a file is
 // attached.
-RL01_02::RL01_02 (PDP11Peripheral *owningDevice)
+RL01_02::RL01_02 (AbstractBusDevice* owningDevice)
     :
     Unit (owningDevice),
     currentDiskAddress_ {0},
