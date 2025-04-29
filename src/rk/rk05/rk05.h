@@ -5,7 +5,7 @@
 #include "bus/include/bus.h"
 #include "configdata/rk/rk05/rk05config/rk05config.h"
 #include "rk/include/rkdefinitions.h"
-#include "abstractbusdevice/abstractbusdevice.h"
+#include "rk/include/rk11.h"
 #include "panel.h"
 #include "asynctimer/asynctimer.h"
 #include "variantfsm/fsm.h"
@@ -22,7 +22,7 @@ using std::queue;
 class RK05 : public Unit
 {
 public:
-    RK05 (Bus* bus, AbstractBusDevice* controller, Window* window,
+    RK05 (Bus* bus, RK11* controller, Window* window,
         shared_ptr<RK05Config> rk05Config);
     ~RK05 ();
     void processCommand (RKDefinitions::RKCommand rkCommand);

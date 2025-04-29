@@ -2,7 +2,7 @@
 #define _RK11D_H_
 
 #include "bus/include/bus.h"
-#include "abstractbusdevice/abstractbusdevice.h"
+#include "rk/include/rk11.h"
 #include "configdata/rk/rk11d/rk11dconfig/rk11dconfig.h"
 #include "rk/rk05/rk05.h"
 #include "rk/include/rkdefinitions.h"
@@ -17,7 +17,7 @@ using std::vector;
 using std::unique_ptr;
 using std::mutex;
 
-class RK11D : public AbstractBusDevice
+class RK11D : public RK11
 {
 private:
     // Define RK11-D registers as offsets from the controller's base address
@@ -49,11 +49,17 @@ private:
     Bus* bus_ {nullptr};
 
 public:
+    // Constructor
     RK11D (Bus* bus, Window* window, shared_ptr<RK11DConfig> rk11dConfig);
-	CondData<u16> read (BusAddress busAddress) override;
-	StatusCode writeWord (BusAddress busAddress, u16 value) override;
-	bool responsible (BusAddress busAddress) override;
-	void reset () override;
+
+    // Functions required by the BusDevice interface
+    CondData<u16> read (BusAddress busAddress) override;
+    StatusCode writeWord (BusAddress busAddress, u16 value) override;
+    bool responsible (BusAddress busAddress) override;
+    void reset () override;
+
+    // Functions required by the RK11 interface
+    void processResult (RKDefinitions::Result result) override;
 
 private:
     // Definition of the controller's base address and vector
@@ -65,7 +71,6 @@ private:
 
     void BINITReceiver (bool signalValue);
     void processFunction (RKDefinitions::RKCommand command);
-    void processResult (RKDefinitions::Result result);
 };
 
 
