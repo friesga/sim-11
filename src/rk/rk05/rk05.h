@@ -4,7 +4,7 @@
 #include "unit/unit.h"
 #include "bus/include/bus.h"
 #include "configdata/rk/rk05/rk05config/rk05config.h"
-#include "rk/rkdefinitions/rkdefinitions.h"
+#include "rk/include/rkdefinitions.h"
 #include "abstractbusdevice/abstractbusdevice.h"
 #include "panel.h"
 #include "asynctimer/asynctimer.h"
