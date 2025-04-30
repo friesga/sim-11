@@ -38,6 +38,10 @@ StatusCode RK11D::writeWord (BusAddress busAddress, u16 value)
                     static_cast<RKDefinitions::Function> (function),
                     rkda_.value, rkwc_, rkba_});
             }
+
+            // The controller is ready to accept a new command
+            rkcs_.controlReady = 1;
+
             return StatusCode::Success;
             break;
 

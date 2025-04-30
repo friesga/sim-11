@@ -74,6 +74,7 @@ private:
 
     void BINITReceiver (bool signalValue);
     void processFunction (RKDefinitions::RKCommand command);
+    void setNonExistingDisk (u16 driveId);
 };
 
 

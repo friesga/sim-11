@@ -21,10 +21,18 @@ protected:
     static constexpr u16 RKDA = RK11D_BASE + 012;
     static constexpr u16 RKDB = RK11D_BASE + 016;
 
+    // RKDS bit definitions
+    static constexpr u16  RKDS_DRY = (1 << 7);
+    inline u16 getRKDSdriveId (u16 rkds) { return (rkds & 7) >> 13; }
+
+    // RKER bit definitions
+    static constexpr u16  RKER_NXD = (1 << 7);
+
     // RKCS bit definitions
     static constexpr u16  RKCS_GO = (1 << 0);
     static constexpr u16  RKCS_RDY = (1 << 7);
     inline u16 RKCS_FUNCTON (u16 function) { return (function & 7) << 1; }
+
 
     // Function definitions
     enum Function
@@ -46,7 +54,20 @@ protected:
         {
             // SimulatorClock::forwardClock (100ms);
             result = controller->read (RKCS);
-        } while (!(result & RKCS_RDY));
+        }
+        while (!(result & RKCS_RDY));
+    }
+
+    void waitForDriveReady (RK11D* controller, u16 driveId)
+    {
+        u16 result;
+        do
+        {
+            // SimulatorClock::forwardClock (100ms);
+            result = controller->read (RKDS);
+        }
+        while (!((result & RKDS_DRY) && getRKDSdriveId (result) == driveId));
+        
     }
 };
 
@@ -117,6 +138,23 @@ TEST_F (RK11DRegistersTest, controlResetFunction)
     EXPECT_EQ (rk11dDevice->read (BusAddress {RKDB}), 0);
 }
 
+// Verify that a function for a not-connected drive returns a drive error
+TEST_F (RK11DRegistersTest, nonExistingDriveReturnsError)
+{
+    RK11DConfig rk11dConfig {};
+    Unibus bus;
+    RK11D* rk11dDevice = new RK11D (&bus, nullptr,
+        make_shared<RK11DConfig> (rk11dConfig));
+
+    EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKCS}, RKCS_FUNCTON (DriveReset) | RKCS_GO),
+        StatusCode::Success);
+
+    waitForControllerReady (rk11dDevice);
+
+    EXPECT_EQ (rk11dDevice->read (BusAddress {RKER}), RKER_NXD);
+}
+
+#if 0
 // Verify that a function other than the Control Reset function returns a
 // drive error.
 TEST_F (RK11DRegistersTest, driveResetReturnsError)
@@ -140,3 +178,4 @@ TEST_F (RK11DRegistersTest, driveResetReturnsError)
 
     EXPECT_EQ (rk11dDevice->read (BusAddress {RKER}), 0100000);
 }
+#endif
