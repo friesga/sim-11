@@ -8,7 +8,7 @@
 #include "variantfsm/fsm.h"
 #include "rlv12/rlv12command/rlv12command.h"
 #include "panel.h"
-#include "dummycontrols.h"
+#include "dummycontrols/dummycontrols.h"
 #include "asynctimer/asynctimer.h"
 
 #include <mutex>
