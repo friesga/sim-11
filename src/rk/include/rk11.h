@@ -8,6 +8,7 @@
 //
 class RK11 : public AbstractBusDevice
 {
+public:
     virtual void processResult (RKDefinitions::Result result) = 0;
 };
 

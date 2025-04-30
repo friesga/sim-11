@@ -43,6 +43,9 @@ private:
     RKDefinitions::RKDA rkda_ {0};
     u16 rkdb_ {0};
 
+    // RKCS writable bits mask
+    static const u16 rkcsWritableBits {06577};
+
     // Definition of (pointers to) the attached RK05 drives
     vector<unique_ptr<RK05>> rk05Drives_ {};
 

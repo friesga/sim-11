@@ -2,7 +2,7 @@
 
 StatusCode RK11D::writeWord (BusAddress busAddress, u16 value)
 {
-    // Guard against controller register access from the command processor
+    // Guard against controller register access from RK05 threads
     std::unique_lock<std::mutex> lock {controllerMutex_};
 
     // Decode registerAddress<3:1>
@@ -20,8 +20,13 @@ StatusCode RK11D::writeWord (BusAddress busAddress, u16 value)
 
         case RKCS:
             // Control Status register
+            rkcs_.value = value & rkcsWritableBits;
+
             if (rkcs_.go)
             {
+                // The Control Ready bit is to be cleared by GO being set
+                rkcs_.controlReady = 0;
+
                 // Disclaimer: the u16 resulting from the BitField conversion operator
                 // cannot be cast directly to an Function enum.
                 //

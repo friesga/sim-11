@@ -25,6 +25,29 @@ protected:
     static constexpr u16  RKCS_GO = (1 << 0);
     static constexpr u16  RKCS_RDY = (1 << 7);
     inline u16 RKCS_FUNCTON (u16 function) { return (function & 7) << 1; }
+
+    // Function definitions
+    enum Function
+    {
+        ControlReset = 0,
+        Write,
+        Read,
+        WriteCheck,
+        Seek,
+        ReadCheck,
+        DriveReset,
+        WriteLock
+    };
+
+    void waitForControllerReady (RK11D* controller)
+    {
+        u16 result;
+        do
+        {
+            // SimulatorClock::forwardClock (100ms);
+            result = controller->read (RKCS);
+        } while (!(result & RKCS_RDY));
+    }
 };
 
 
@@ -64,7 +87,7 @@ TEST_F (RK11DRegistersTest, registersInitialised)
     EXPECT_EQ (rk11dDevice->read (BusAddress {RKDB}), 0);
 }
 
-// Veridy that a Control Reset function resets the registers and sets the
+// Verify that a Control Reset function resets the registers and sets the
 // controller ready bit.
 TEST_F (RK11DRegistersTest, controlResetFunction)
 {
@@ -92,4 +115,28 @@ TEST_F (RK11DRegistersTest, controlResetFunction)
     EXPECT_EQ (rk11dDevice->read (BusAddress {RKBA}), 0);
     EXPECT_EQ (rk11dDevice->read (BusAddress {RKDA}), 0);
     EXPECT_EQ (rk11dDevice->read (BusAddress {RKDB}), 0);
+}
+
+// Verify that a function other than the Control Reset function returns a
+// drive error.
+TEST_F (RK11DRegistersTest, driveResetReturnsError)
+{
+    RK11DConfig rk11dConfig {};
+    rk11dConfig.rk05Config[0] = make_shared<RK05Config> (RK05Config
+    ({
+        .fileName = "rk05.dsk",
+        .newFile = true,
+        .overwrite = true
+        }));
+
+    Unibus bus;
+    RK11D* rk11dDevice = new RK11D (&bus, nullptr,
+        make_shared<RK11DConfig> (rk11dConfig));
+
+    EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKCS}, RKCS_FUNCTON (DriveReset) | RKCS_GO),
+        StatusCode::Success);
+
+    waitForControllerReady (rk11dDevice);
+
+    EXPECT_EQ (rk11dDevice->read (BusAddress {RKER}), 0100000);
 }

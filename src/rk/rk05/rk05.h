@@ -10,6 +10,7 @@
 #include "asynctimer/asynctimer.h"
 #include "variantfsm/fsm.h"
 #include "chrono/simulatorclock/simulatorclock.h"
+#include "dummycontrols/dummycontrols.h"
 
 #include <thread>
 #include <queue>
@@ -29,19 +30,23 @@ public:
 
 private:
     Bus* bus_ {nullptr};
-    AbstractBusDevice* controller_ {nullptr};
+    RK11* controller_ {nullptr};
 
-    // Definitions of buttons and indicatores
-    Indicator* pwrIndicator_ {};
-    Indicator* rdyIndicator_ {};
-    Indicator* oncylIndicator_ {};
-    Indicator* faultIndicator_ {};
-    Indicator* wtprotIndicator_ {};
-    Indicator* loadIndicator_ {};
-    Indicator* wtIndicator_ {};
-    Indicator* rdIndicator_ {};
-    Button* runLoadSwitch_ {};
-    Button* wtprotSwitch_ {};
+    // Buttons and indicators. The initial value points to a dummy to
+    // avoid null pointer references in the unit tests.
+    DummyIndicator dummyIndicator_ {};
+    DummyButton dummyButton_ {};
+
+    Indicator* pwrIndicator_ {&dummyIndicator_};
+    Indicator* rdyIndicator_ {&dummyIndicator_};
+    Indicator* oncylIndicator_ {&dummyIndicator_};
+    Indicator* faultIndicator_ {&dummyIndicator_};
+    Indicator* wtprotIndicator_ {&dummyIndicator_};
+    Indicator* loadIndicator_ {&dummyIndicator_};
+    Indicator* wtIndicator_ {&dummyIndicator_};
+    Indicator* rdIndicator_ {&dummyIndicator_};
+    Button* runLoadSwitch_ {&dummyButton_};
+    Button* wtprotSwitch_ {&dummyButton_};
 
     // Button and indicators positions and dimensions
     Frame<float> pwrIndicatorFrame {0.674, 0.605, 0.024, 0.048};
@@ -132,6 +137,21 @@ public:
     void entry (SpinningDown);
     State transition (SpinningDown&&, TimeElapsed); // -> Unloaded
     State transition (SpinningDown&&, SpinUp);      // -> SpinningUp
+
+    // Define the default transition for transitions on the receipt
+    // of a RKCommand not explicitly defined above. In these cases
+    // an error is returned to the controller.  
+    //
+    template <typename S>
+    State transition (S&& state, RKDefinitions::RKCommand)
+    {
+        RKDefinitions::RKER rker {};
+        rker.driveError = 1;
+
+        context_->controller_->processResult (RKDefinitions::Result {
+            0, rker, 0, 0});
+        return state;
+    }
 
     // Define the default transition for transitions not explicitly
     // defined above. In these case the event is ignored.
