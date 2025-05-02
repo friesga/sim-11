@@ -33,7 +33,7 @@ u16 RLV12::rlcsPlusDriveStatus (RL01_02 &unit)
 
     // The drive is ready if it is not disconnected, no error is
     // reported by the drive and the heads are locked on a cylinder.
-    if (unit.unitAttached () &&
+    if (unit.isAttached () &&
             !(unit.driveStatus () & RLV12const::DriveReadyNegate) &&
             unit.driveReady ())
         rlcsCombined |= RLV12const::CSR_DriveReady;

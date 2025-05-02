@@ -21,6 +21,10 @@ StatusCode Unit::attachUnit(std::string fileName, Bitmask<AttachFlags> flags)
     if (statusCode != StatusCode::Success)
         return statusCode;
 
-    unitStatus_ |= Status::UNIT_ATT;
     return StatusCode::Success;
+}
+
+bool Unit::isAttached () const
+{
+    return (filePtr_ != nullptr);
 }

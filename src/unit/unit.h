@@ -27,7 +27,6 @@ using std::shared_ptr;
 //
 enum class Status
 {
-    UNIT_ATT,           // A file is attached to the unit
     WRITE_PROTECT,      // The unit is write protected
     _                   // Required for Bitmask 
 };
@@ -36,20 +35,24 @@ enum class Status
 // ToDo: Rename filePtr to something more meaningful
 class Unit
 {
-    StatusCode createFile (std::string fileName, Bitmask<AttachFlags> flags);
-    StatusCode openReadOnly (std::string fileName);
-    StatusCode openReadWrite (std::string fileName);
+public:
+    bool isAttached () const;
 
 protected:
-    FILE *filePtr_;                     // The disk file
+    FILE* filePtr_ {nullptr};           // The disk file
     u32 capacity_;                      // Drive capacity in words
-    u32 flags_;                         // Bit flags
     Bitmask<Status> unitStatus_ {};     // Naming discriminate
 
     // Helper functions for the concrete units
     StatusCode attachUnit (std::string fileName, Bitmask<AttachFlags> flags);
     StatusCode createBadBlockTable (int32_t sectorsPerSurface,
         int32_t physWordsPerSector);
+
+
+private:
+    StatusCode createFile (std::string fileName, Bitmask<AttachFlags> flags);
+    StatusCode openReadOnly (std::string fileName);
+    StatusCode openReadWrite (std::string fileName);
 };
 
 #endif // !_UNIT_H_

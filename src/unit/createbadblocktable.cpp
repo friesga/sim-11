@@ -49,7 +49,7 @@ StatusCode Unit::createBadBlockTable (int32_t sectorsPerSurface,
     if ((sectorsPerSurface < 2) || (physWordsPerSector < 16))
         return StatusCode::ArgumentError;
 
-    if (!(unitStatus_ & Status::UNIT_ATT))
+    if (!isAttached ())
         return StatusCode::UnAttached;
 
     if (unitStatus_ & Status::WRITE_PROTECT)
