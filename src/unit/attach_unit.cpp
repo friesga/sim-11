@@ -26,11 +26,11 @@ StatusCode Unit::attachUnit(std::string fileName, Bitmask<AttachFlags> flags)
 
 bool Unit::isAttached () const
 {
-    return (filePtr_ != nullptr);
+    return (diskFileStream != nullptr);
 }
 
 // Return the size of the attached file in bytes
 t_offset Unit::attachedFileSize () const
 {
-    return fio::fsize (filePtr_);
+    return fio::fsize (diskFileStream);
 }

@@ -5,8 +5,8 @@
 
 StatusCode Unit::openReadWrite (std::string fileName)
 {
-    filePtr_ = fio::fopen(fileName.c_str(), "rb+");
-    if (filePtr_ == NULL)
+    diskFileStream = fio::fopen(fileName.c_str(), "rb+");
+    if (diskFileStream == NULL)
         return StatusCode::OpenError;
 
     return StatusCode::Success;

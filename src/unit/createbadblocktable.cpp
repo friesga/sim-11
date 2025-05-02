@@ -60,7 +60,7 @@ StatusCode Unit::createBadBlockTable (int32_t sectorsPerSurface,
 
     // Position file at last track
     da = (capacity - (sectorsPerSurface * physWordsPerSector)) * sizeof(u16);
-    if (fio::fseek (filePtr_, da, SEEK_SET))
+    if (fio::fseek (diskFileStream, da, SEEK_SET))
         return StatusCode::IOError;
 
     // Allocate a buffer of physWordsPerSector u16's
@@ -81,11 +81,11 @@ StatusCode Unit::createBadBlockTable (int32_t sectorsPerSurface,
         blockNr < 10 && blockNr * physSectorsPerInfoBlock < sectorsPerSurface;
         ++blockNr)
             fio::fwrite(badSectorInfo, sizeof(u16), 
-                badSectorFileBlockSize, filePtr_);
+                badSectorFileBlockSize, diskFileStream);
 
     // Clean up.
     delete[] badSectorInfo;
-    if (ferror (filePtr_))
+    if (ferror (diskFileStream))
         return StatusCode::IOError;
 
     return StatusCode::Success;

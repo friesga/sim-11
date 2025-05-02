@@ -7,9 +7,9 @@
 StatusCode Unit::openReadOnly(std::string fileName)
 {
     // Open file read-only
-    filePtr_ = fio::fopen (fileName.c_str(), "rb");
+    diskFileStream = fio::fopen (fileName.c_str(), "rb");
 
-    if (filePtr_ == NULL)
+    if (diskFileStream == NULL)
         return StatusCode::OpenError;
 
     // Set unit read-only
