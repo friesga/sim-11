@@ -5,6 +5,7 @@ set (UNIT_SRCS
     openreadwrite.cpp
     createbadblocktable.cpp
     readdatafromsector.cpp
+    writedatatosector.cpp
     writeprotect.cpp)
 
 target_sources (${TARGET} PRIVATE ${UNIT_SRCS})

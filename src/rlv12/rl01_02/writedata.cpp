@@ -23,20 +23,8 @@ pair<bool, size_t> RL01_02::writeData (RLV12Command& rlv12Command, u16* buffer,
 
     waitForDriveReady ();
 
-    // Set position in file to the block to be written
-    if (fseek (filePtr_, filePosition (rlv12Command.diskAddress_), SEEK_SET) != 0)
-    {
-        Logger::instance () << "Seek error in RL01_02::writeData";
-        return make_pair (false, 0);
-    }
-
-    size_t numBytes = fwrite (buffer, sizeof (int16_t), numWords, filePtr_);
-
-    if (ferror (filePtr_))
-    {
-        Logger::instance () << "Write error in RL01_02::writeDataCmd";
-        return make_pair (false, 0);
-    }
+    size_t numBytes = writeDataToSector (filePosition (rlv12Command.diskAddress_),
+        buffer, numWords);
 
     updateHeadPosition (procedure, rlv12Command.wordCount_, diskAddressRegister);
 

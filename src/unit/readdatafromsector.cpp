@@ -6,7 +6,7 @@ size_t Unit::readDataFromSector (int32_t offset, u16* buffer, u32 wordCount)
     // Set position in file to the block to be read
     if (fseek (filePtr_, offset, SEEK_SET) != 0)
     {
-        Logger::instance () << "Seek error in RL01_02::readData";
+        Logger::instance () << "fseek error in Unit::readDataFromSector";
         return 0;
     }
 
@@ -15,7 +15,7 @@ size_t Unit::readDataFromSector (int32_t offset, u16* buffer, u32 wordCount)
 
     if (ferror (filePtr_))
     {
-        Logger::instance () << "Read error in RL01_02::readData";
+        Logger::instance () << "fread error in Unit::readDataFromSector";
         return 0;
     }
 

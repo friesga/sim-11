@@ -20,6 +20,7 @@ class Unit
 {
 public:
     size_t readDataFromSector (int32_t offset, u16* buffer, u32 wordCount);
+    size_t writeDataToSector (int32_t offset, u16* buffer, size_t numWords);
     bool isAttached () const;
     void setWriteProtected (bool writeProtected);
     bool isWriteProtected () const;
