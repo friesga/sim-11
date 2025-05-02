@@ -36,11 +36,6 @@ enum class Status
 // ToDo: Rename filePtr to something more meaningful
 class Unit
 {
-    std::string fileName_;      // Name of attached file
-    u16 *fileBuffer_;           // Memory pointer for buffered I/O
-    size_t hwmark_;             // High water mark
-    int32_t position_;          // File position
-
     StatusCode createFile (std::string fileName, Bitmask<AttachFlags> flags);
     StatusCode openReadOnly (std::string fileName);
     StatusCode openReadWrite (std::string fileName);

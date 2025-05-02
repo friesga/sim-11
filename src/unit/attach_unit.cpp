@@ -22,7 +22,5 @@ StatusCode Unit::attachUnit(std::string fileName, Bitmask<AttachFlags> flags)
         return statusCode;
 
     unitStatus_ |= Status::UNIT_ATT;
-    fileName_ = fileName;
-    position_ = 0;
     return StatusCode::Success;
 }
