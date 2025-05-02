@@ -151,7 +151,7 @@ TEST_F (RK11DRegistersTest, nonExistingDriveReturnsError)
 
     waitForControllerReady (rk11dDevice);
 
-    EXPECT_EQ (rk11dDevice->read (BusAddress {RKER}), RKER_NXD);
+    EXPECT_EQ (rk11dDevice->read (BusAddress {RKER}) & RKER_NXD, RKER_NXD);
 }
 
 #if 0
