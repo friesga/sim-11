@@ -14,25 +14,14 @@ pair<bool, size_t> RL01_02::readData (RLV12Command& rlv12Command, u16* buffer,
 
     waitForDriveReady ();
 
-    // Set position in file to the block to be read
-    if (fseek (filePtr_, filePosition (rlv12Command.diskAddress_),
-        SEEK_SET) != 0)
+    size_t numBytes =  readDataFromSector (filePosition (rlv12Command.diskAddress_),
+        buffer, rlv12Command.wordCount_);
+
+    if (numBytes != 0)
     {
-        Logger::instance () << "Seek error in RL01_02::readData";
-        return make_pair (false, 0);
+        updateHeadPosition (procedure, rlv12Command.wordCount_, diskAddressRegister);
+        return make_pair (true, numBytes);
     }
-
-    // Read wordCount * 2 bytes; returned is the number of bytes read 
-    size_t numBytes = fread (buffer, sizeof (int16_t), 
-        rlv12Command.wordCount_, filePtr_);
-
-    if (ferror (filePtr_))
-    {
-        Logger::instance () << "Read error in RL01_02::readData";
+    else
         return make_pair (false, 0);
-    }
-
-    updateHeadPosition (procedure, rlv12Command.wordCount_, diskAddressRegister);
-
-    return make_pair (true, numBytes);
 }

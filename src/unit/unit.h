@@ -19,6 +19,7 @@ using std::shared_ptr;
 class Unit
 {
 public:
+    size_t readDataFromSector (int32_t offset, u16* buffer, u32 wordCount);
     bool isAttached () const;
     void setWriteProtected (bool writeProtected);
     bool isWriteProtected () const;
@@ -39,6 +40,7 @@ private:
     StatusCode createFile (std::string fileName, Bitmask<AttachFlags> flags);
     StatusCode openReadOnly (std::string fileName);
     StatusCode openReadWrite (std::string fileName);
+    int32_t filePosition (int32_t diskAddress) const;
 };
 
 #endif // !_UNIT_H_
