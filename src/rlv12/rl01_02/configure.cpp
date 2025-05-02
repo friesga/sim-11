@@ -52,7 +52,7 @@ StatusCode RL01_02::configure (shared_ptr<RLUnitConfig> rlUnitConfig)
     // the configuration.
     if (rlUnitConfig->writeProtect)
     {
-        unitStatus_ |= Bitmask (Status::WRITE_PROTECT);
+        setWriteProtected (true);
         driveStatus_ |= RLV12const::MPR_GS_WriteLock;
     }
 
@@ -69,7 +69,7 @@ StatusCode RL01_02::configure (shared_ptr<RLUnitConfig> rlUnitConfig)
     if ((fileSize = fio::fsize (filePtr_)) == 0)
     {   
         // If read-only we're done
-        if (unitStatus_ & Status::WRITE_PROTECT)
+        if (isWriteProtected ())
             return StatusCode::Success;
 
         // Create a bad block table on the last track of the device.

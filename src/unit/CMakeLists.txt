@@ -3,7 +3,8 @@ set (UNIT_SRCS
     createfile.cpp
     openreadonly.cpp
     openreadwrite.cpp
-    createbadblocktable.cpp)
+    createbadblocktable.cpp
+    writeprotect.cpp)
 
 target_sources (${TARGET} PRIVATE ${UNIT_SRCS})
 target_sources (sim-11-test PRIVATE ${UNIT_SRCS})

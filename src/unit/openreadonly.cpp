@@ -13,7 +13,7 @@ StatusCode Unit::openReadOnly(std::string fileName)
         return StatusCode::OpenError;
 
     // Set unit read-only
-    unitStatus_ |= Status::WRITE_PROTECT;
+    writeProtected_ = true;
 
     return StatusCode::Success;
 }

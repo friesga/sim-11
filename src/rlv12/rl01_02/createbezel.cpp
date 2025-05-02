@@ -56,12 +56,12 @@ void RL01_02::writeProtectButtonClicked (Button::State state)
 {
     if (get<Button::TwoPositionsState> (state) == Button::TwoPositionsState::On)
     {
-        unitStatus_ |= Bitmask (Status::WRITE_PROTECT);
+        setWriteProtected (true);
         driveStatus_ |= RLV12const::MPR_GS_WriteLock;
     }
     else
     {
-        unitStatus_ &= ~Bitmask (Status::WRITE_PROTECT);
+        setWriteProtected (false);
         driveStatus_ &= ~RLV12const::MPR_GS_WriteLock;
     }
 }

@@ -52,7 +52,7 @@ StatusCode Unit::createBadBlockTable (int32_t sectorsPerSurface,
     if (!isAttached ())
         return StatusCode::UnAttached;
 
-    if (unitStatus_ & Status::WRITE_PROTECT)
+    if (writeProtected_)
         return StatusCode::ReadOnly;
 
     // Don't ask for approval to overwrite the last track as this function
