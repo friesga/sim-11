@@ -28,3 +28,9 @@ bool Unit::isAttached () const
 {
     return (filePtr_ != nullptr);
 }
+
+// Return the size of the attached file in bytes
+t_offset Unit::attachedFileSize () const
+{
+    return fio::fsize (filePtr_);
+}

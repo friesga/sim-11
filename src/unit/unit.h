@@ -7,6 +7,7 @@
 #include "bitmask.h"
 #include "attachflags.h"
 #include "configdata/deviceconfig/deviceconfig.h"
+#include "fio/fio.h"
 
 #include <cstdio>
 #include <string>
@@ -24,19 +25,17 @@ public:
     bool isAttached () const;
     void setWriteProtected (bool writeProtected);
     bool isWriteProtected () const;
+    t_offset attachedFileSize () const;
 
 protected:
-    FILE* filePtr_ {nullptr};           // The disk file
-    
-
     // Helper functions for the concrete units
     StatusCode attachUnit (std::string fileName, Bitmask<AttachFlags> flags);
     StatusCode createBadBlockTable (int32_t sectorsPerSurface,
         int32_t physWordsPerSector, u32 capacity);
 
-
 private:
     bool writeProtected_ {false};
+    FILE* filePtr_ {nullptr};           // The disk file
 
     StatusCode createFile (std::string fileName, Bitmask<AttachFlags> flags);
     StatusCode openReadOnly (std::string fileName);

@@ -66,7 +66,7 @@ StatusCode RL01_02::configure (shared_ptr<RLUnitConfig> rlUnitConfig)
     // Create a bad block table on a new disk image (if the 
     // image is not read-only)
     t_offset fileSize;
-    if ((fileSize = fio::fsize (filePtr_)) == 0)
+    if ((fileSize = attachedFileSize ()) == 0)
     {   
         // If read-only we're done
         if (isWriteProtected ())
