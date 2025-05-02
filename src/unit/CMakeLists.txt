@@ -3,7 +3,6 @@ set (UNIT_SRCS
     createfile.cpp
     openreadonly.cpp
     openreadwrite.cpp
-    unit.cpp
     createbadblocktable.cpp)
 
 target_sources (${TARGET} PRIVATE ${UNIT_SRCS})

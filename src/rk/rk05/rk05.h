@@ -20,7 +20,7 @@ using std::shared_ptr;
 using std::thread;
 using std::queue;
 
-class RK05 : public Unit
+class RK05
 {
 public:
     RK05 (Bus* bus, RK11* controller, Window* window,

@@ -10,7 +10,6 @@ using std::chrono::seconds;
 RK05::RK05 (Bus* bus, RK11* controller, Window* window,
     shared_ptr<RK05Config> rk05Config)
     : 
-    Unit (controller),
     bus_ {bus},
     controller_ {controller}
 {

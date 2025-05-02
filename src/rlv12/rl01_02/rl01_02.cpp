@@ -12,7 +12,6 @@ using namespace std::chrono_literals;
 // attached.
 RL01_02::RL01_02 (AbstractBusDevice* owningDevice)
     :
-    Unit (owningDevice),
     currentDiskAddress_ {0},
     rlStatus_ {},
     seekTime_ {}
