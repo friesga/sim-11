@@ -36,7 +36,7 @@
 using std::logic_error;
 
 StatusCode Unit::createBadBlockTable (int32_t sectorsPerSurface, 
-    int32_t physWordsPerSector)
+    int32_t physWordsPerSector, u32 capacity)
 {
     u32 da;
     u16 *badSectorInfo;
@@ -59,7 +59,7 @@ StatusCode Unit::createBadBlockTable (int32_t sectorsPerSurface,
     // will only be executed for newly created files.
 
     // Position file at last track
-    da = (capacity_ - (sectorsPerSurface * physWordsPerSector)) * sizeof(u16);
+    da = (capacity - (sectorsPerSurface * physWordsPerSector)) * sizeof(u16);
     if (fio::fseek (filePtr_, da, SEEK_SET))
         return StatusCode::IOError;
 

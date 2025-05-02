@@ -25,13 +25,12 @@ public:
 
 protected:
     FILE* filePtr_ {nullptr};           // The disk file
-    u32 capacity_;                      // Drive capacity in words
     
 
     // Helper functions for the concrete units
     StatusCode attachUnit (std::string fileName, Bitmask<AttachFlags> flags);
     StatusCode createBadBlockTable (int32_t sectorsPerSurface,
-        int32_t physWordsPerSector);
+        int32_t physWordsPerSector, u32 capacity);
 
 
 private:

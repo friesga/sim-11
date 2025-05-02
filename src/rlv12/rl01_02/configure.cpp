@@ -76,7 +76,7 @@ StatusCode RL01_02::configure (shared_ptr<RLUnitConfig> rlUnitConfig)
         // The position of the last track is also based on the unit's
         // capacity!
         return createBadBlockTable (RLV12const::sectorsPerSurface, 
-            RLV12const::wordsPerSector);
+            RLV12const::wordsPerSector, capacity_);
     }
 
     // If auto-sizing is set, determine drive type on the file size
