@@ -10,7 +10,7 @@ void RK11D::processFunction (RKDefinitions::RKCommand command)
     {
         u16 driveId = command.diskAddress.driveSelect;
 
-        if (rk05Drives_[driveId] != nullptr)
+        if (rk05Drives_.size () > driveId)
             rk05Drives_[driveId]->processCommand (command);
         else
             setNonExistingDisk (driveId);
