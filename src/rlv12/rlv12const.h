@@ -106,6 +106,11 @@ namespace RLV12const
     static constexpr u16 DAR_Track =
         DAR_TrackMask << DAR_TrackPosition;
 
+    static constexpr u16 DAR_HeadPosition = 6;
+    static constexpr u16 DAR_HeadMask = 01;
+    static constexpr u16 DAR_Head =
+        DAR_HeadMask << DAR_HeadPosition;
+
     static constexpr u16 DAR_Head0 = 0 << DAR_TrackPosition;
     static constexpr u16 DAR_Head1 = 1u << DAR_TrackPosition;
 
@@ -114,6 +119,10 @@ namespace RLV12const
     static constexpr u16 DAR_Cylinder =
         DAR_CylinderMask << DAR_CylinderPosition;
 
+    static constexpr int32_t getHead (int32_t diskAddress)
+    {
+        return (diskAddress >> DAR_HeadPosition) & DAR_HeadMask;
+    }
 
     static constexpr int32_t getCylinder (int32_t diskAddress)
     {
