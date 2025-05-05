@@ -3,6 +3,9 @@
 
 size_t Unit::writeDataToSector (int32_t offset, u16* buffer, size_t numWords)
 {
+    if (writeProtected_)
+        return 0;
+
     // Set position in file to the block to be written
     if (fseek (diskFileStream, offset, SEEK_SET) != 0)
     {
