@@ -85,6 +85,7 @@ set (GTEST_SRCS
     systemconfigtest.cpp
     tracetest.cpp
     unibustest.cpp
+    unit/unittest.cpp
     serial/uartmaintmodetest.cpp
     variantfsmtest.cpp)
     
