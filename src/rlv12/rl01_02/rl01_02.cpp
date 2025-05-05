@@ -141,11 +141,28 @@ void RL01_02::sendTrigger (Event event)
 //
 int32_t RL01_02::filePosition (int32_t diskAddress) const
 {
+    Unit::Geometry rl0102Geometry
+    {
+        RLV12const::sectorsPerSurface,
+        RLV12const::surfacesPerCylinder,
+        RLV12const::cylindersPerCartridge,
+        RLV12const::wordsPerSector
+    };
+
+    Unit::DiskAddress rl0102DiskAddress
+    {
+        RLV12const::getSector (diskAddress),
+        RLV12const::getHead (diskAddress),
+        RLV12const::getCylinder (diskAddress)
+    };
+
     u16 LBN = (RLV12const::getCylinder (diskAddress) * RLV12const::surfacesPerCylinder +
         RLV12const::getHead (diskAddress)) *
         RLV12const::sectorsPerSurface + RLV12const::getSector (diskAddress);
 
     return LBN * RLV12const::wordsPerSector * sizeof (int16_t);
+
+    // return Unit::filePosition (rl0102Geometry, rl0102DiskAddress);
 }
 
 // The variable seeksInProgress_ can have three values:

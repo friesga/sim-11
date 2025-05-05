@@ -4,6 +4,7 @@ set (UNIT_SRCS
     openreadonly.cpp
     openreadwrite.cpp
     createbadblocktable.cpp
+    fileposition.cpp
     readdatafromsector.cpp
     writedatatosector.cpp
     writeprotect.cpp)
