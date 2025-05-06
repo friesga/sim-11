@@ -33,14 +33,8 @@ StatusCode RL01_02::configure (shared_ptr<RLUnitConfig> rlUnitConfig)
     if (rlUnitConfig->fileName.empty()) 
         return StatusCode::ArgumentError;
 	
-    Bitmask<AttachFlags> attachFlags {AttachFlags::Default};
-
-	if (rlUnitConfig->writeProtect)
-		attachFlags |= AttachFlags::ReadOnly;
-	if (rlUnitConfig->newFile) 
-		attachFlags |= AttachFlags::NewFile;
-	if (rlUnitConfig->overwrite)
-		attachFlags |= AttachFlags::Overwrite;
+    Bitmask<AttachFlags> attachFlags = 
+        getAttachFlagsFromConfig (rlUnitConfig);
 
     // Try to attach the specified file to this unit
     StatusCode result;
@@ -95,4 +89,19 @@ StatusCode RL01_02::configure (shared_ptr<RLUnitConfig> rlUnitConfig)
         }
     }
     return StatusCode::Success;
+}
+
+Bitmask<AttachFlags> RL01_02::getAttachFlagsFromConfig (
+    shared_ptr<RLUnitConfig> rlUnitConfig)
+{
+    Bitmask<AttachFlags> attachFlags {AttachFlags::Default};
+
+    if (rlUnitConfig->writeProtect)
+        attachFlags |= AttachFlags::ReadOnly;
+    if (rlUnitConfig->newFile)
+        attachFlags |= AttachFlags::NewFile;
+    if (rlUnitConfig->overwrite)
+        attachFlags |= AttachFlags::Overwrite;
+
+    return attachFlags;
 }

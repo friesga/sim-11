@@ -178,6 +178,8 @@ private:
 
     void loadButtonClicked (Button::State state);
     void writeProtectButtonClicked (Button::State state);
+    Bitmask<AttachFlags> getAttachFlagsFromConfig (
+        shared_ptr<RLUnitConfig> rlUnitConfig);
 };
 
 // Definition of the state machine for the drive. The class has to be defined
