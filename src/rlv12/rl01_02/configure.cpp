@@ -20,27 +20,12 @@ StatusCode RL01_02::configure (shared_ptr<RLUnitConfig> rlUnitConfig)
         StatusCode::Success)
         return result;
 
-    // Set unit type and size from the given configuration. Note that if
-    // the unit type is Auto the unit's capacity is determined after
-    // attaching the file to the unit. The capacity is also needed for
-    // creation of the bad block table, but the combination of the newFile
-    // option and Auto unit type is excluded in the configuration data.
-    // ToDo: RL01_02::configure() needs a rewrite.
-    if (rlUnitConfig->rlUnitType == RLUnitConfig::RLUnitType::RL01)
-    {
-        capacity_ = RLV12const::RL01_WordsPerCartridge;
-        rlStatus_ &= ~Bitmask(RlStatus::UNIT_RL02);
-    }
-    else if (rlUnitConfig->rlUnitType == RLUnitConfig::RLUnitType::RL02)
-    {
-        capacity_ = RLV12const::RL02_WordsPerCartridge;
-        rlStatus_ |= Bitmask(RlStatus::UNIT_RL02);
-        driveStatus_ |= RLV12const::MPR_GS_DriveType;
-    }
-    else if (rlUnitConfig->rlUnitType == RLUnitConfig::RLUnitType::Auto)
-    {
-        rlStatus_ |= Bitmask(RlStatus::UNIT_AUTO);
-    }
+    // The file size will be the size of an existing file or zero if a
+    // new file has been created
+    t_offset fileSize = attachedFileSize ();
+
+    // Set unit size and type from the configuration and actual file size
+    setDriveParameters (rlUnitConfig->rlUnitType, fileSize);
 
     // Set the drive default write-protected if that is specified in
     // the configuration.
@@ -50,8 +35,6 @@ StatusCode RL01_02::configure (shared_ptr<RLUnitConfig> rlUnitConfig)
         driveStatus_ |= RLV12const::MPR_GS_WriteLock;
     }
 
-    // Set the drive state as if the load procedure had already executed.
-
     // Position at cylinder 0
     currentDiskAddress_ = 0;
 
@@ -59,7 +42,6 @@ StatusCode RL01_02::configure (shared_ptr<RLUnitConfig> rlUnitConfig)
     
     // Create a bad block table on a new disk image (if the 
     // image is not read-only)
-    t_offset fileSize;
     if ((fileSize = attachedFileSize ()) == 0)
     {   
         // If read-only we're done
@@ -73,21 +55,6 @@ StatusCode RL01_02::configure (shared_ptr<RLUnitConfig> rlUnitConfig)
             RLV12const::wordsPerSector, capacity_);
     }
 
-    // If auto-sizing is set, determine drive type on the file size
-    if (rlStatus_ & RlStatus::UNIT_AUTO)
-    {
-        if (fileSize > (RLV12const::RL01_WordsPerCartridge * sizeof (u16)))
-        {
-            rlStatus_ |= RlStatus::UNIT_RL02;
-            capacity_ = RLV12const::RL02_WordsPerCartridge;
-            driveStatus_ |= RLV12const::MPR_GS_DriveType;
-        }
-        else
-        {
-            rlStatus_ &= ~Bitmask(RlStatus::UNIT_RL02);
-            capacity_ = RLV12const::RL01_WordsPerCartridge;
-        }
-    }
     return StatusCode::Success;
 }
 
@@ -104,4 +71,43 @@ Bitmask<AttachFlags> RL01_02::getAttachFlagsFromConfig (
         attachFlags |= AttachFlags::Overwrite;
 
     return attachFlags;
+}
+
+// Set unit type and size from the given drive type. Note that if
+// the unit type is Auto the unit's capacity is determined after
+// attaching the file to the unit. The capacity is also needed for
+// creation of the bad block table, but the combination of the newFile
+// option and Auto unit type is excluded in the configuration data.
+//
+void RL01_02::setDriveParameters (RLUnitConfig::RLUnitType unitType,
+    t_offset fileSize)
+{
+    if (unitType == RLUnitConfig::RLUnitType::RL01)
+    {
+        capacity_ = RLV12const::RL01_WordsPerCartridge;
+        rlStatus_ &= ~Bitmask (RlStatus::UNIT_RL02);
+    }
+    else if (unitType == RLUnitConfig::RLUnitType::RL02)
+    {
+        capacity_ = RLV12const::RL02_WordsPerCartridge;
+        rlStatus_ |= Bitmask (RlStatus::UNIT_RL02);
+        driveStatus_ |= RLV12const::MPR_GS_DriveType;
+    }
+    else if (unitType == RLUnitConfig::RLUnitType::Auto)
+    {
+        rlStatus_ |= Bitmask (RlStatus::UNIT_AUTO);
+
+        // If auto-sizing is set, determine drive type on the file size
+        if (fileSize > (RLV12const::RL01_WordsPerCartridge * sizeof (u16)))
+        {
+            rlStatus_ |= RlStatus::UNIT_RL02;
+            capacity_ = RLV12const::RL02_WordsPerCartridge;
+            driveStatus_ |= RLV12const::MPR_GS_DriveType;
+        }
+        else
+        {
+            rlStatus_ &= ~Bitmask (RlStatus::UNIT_RL02);
+            capacity_ = RLV12const::RL01_WordsPerCartridge;
+        }
+    }
 }
