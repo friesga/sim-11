@@ -13,7 +13,6 @@ using namespace std::chrono_literals;
 RL01_02::RL01_02 (AbstractBusDevice* owningDevice)
     :
     currentDiskAddress_ {0},
-    rlStatus_ {},
     seekTime_ {}
 {}
 

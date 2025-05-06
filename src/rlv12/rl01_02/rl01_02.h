@@ -28,20 +28,6 @@ using std::shared_ptr;
 using std::pair;
 using std::chrono::duration;
 
-// RL01/02 unit status flags. These flags are used in the definition of 
-// Bitmask<RlStatus> and provide a compile-time type safety for the use
-// of these flags.
-// The flags are used for configuration and/or run-time status. This cannot
-// be separated easily as some configuration flags (e.g. UNIT_RL02) are
-// updated run-time to reflect the actual situation.
-//
-enum class RlStatus
-{
-    UNIT_RL02,          // RL01 vs RL02 
-    UNIT_AUTO,          // autosize enable
-    _                   // Required for Bitmask
-};
-
 // RLO1/RL02 unit
 class RL01_02 : public Unit
 {
@@ -115,7 +101,6 @@ private:
     Geometry geometry_;
     u32 capacity_;                      // Drive capacity in words
     int32_t currentDiskAddress_;
-    Bitmask<RlStatus> rlStatus_;
 
     // The driveState_ keeps track of bits 0-5 of the MPR for a Get Status
     // command. The driveState_ is only set in the drive thread and is only
