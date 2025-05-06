@@ -6,6 +6,7 @@
 class Geometry
 {
 public:
+    Geometry () = default;
     Geometry (u16 sectorsPerSurface, u16 numberOfHeads, u16 cylindersPerDisk,
         u16 wordsPerSector);
     u16 sectorsPerSurface () const;
