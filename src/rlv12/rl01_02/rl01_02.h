@@ -99,7 +99,6 @@ private:
     unique_ptr<StateMachine> stateMachine_;
 
     Geometry geometry_;
-    u32 capacity_;                      // Drive capacity in words
     int32_t currentDiskAddress_;
 
     // The driveState_ keeps track of bits 0-5 of the MPR for a Get Status

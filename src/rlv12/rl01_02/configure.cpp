@@ -94,12 +94,10 @@ void RL01_02::setDriveParameters (RLUnitConfig::RLUnitType unitType,
     if (unitType == RLUnitConfig::RLUnitType::RL01)
     {
         geometry_ = rl01Geometry;
-        capacity_ = RLV12const::RL01_WordsPerCartridge;
     }
     else if (unitType == RLUnitConfig::RLUnitType::RL02)
     {
         geometry_ = rl02Geometry;
-        capacity_ = RLV12const::RL02_WordsPerCartridge;
         driveStatus_ |= RLV12const::MPR_GS_DriveType;
     }
     else if (unitType == RLUnitConfig::RLUnitType::Auto)
@@ -109,13 +107,11 @@ void RL01_02::setDriveParameters (RLUnitConfig::RLUnitType unitType,
         if (fileSize > (RLV12const::RL01_WordsPerCartridge * sizeof (u16)))
         {
             geometry_ = rl02Geometry;
-            capacity_ = RLV12const::RL02_WordsPerCartridge;
             driveStatus_ |= RLV12const::MPR_GS_DriveType;
         }
         else
         {
             geometry_ = rl01Geometry;
-            capacity_ = RLV12const::RL01_WordsPerCartridge;
         }
     }
 }
