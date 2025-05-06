@@ -1,4 +1,5 @@
 #include "unit/unit.h"
+#include "unit/geometry/geometry.h"
 
 #include <gtest/gtest.h>
 #include <array>
@@ -56,8 +57,10 @@ TEST (UnitTest, badBlockTableWritten)
         RL01cylindersPerCartridge * surfacesPerCylinder * sectorsPerSurface *
         wordsPerSector;
 
-    EXPECT_EQ (unit.createBadBlockTable (sectorsPerSurface, wordsPerSector,
-        RL01_WordsPerCartridge), StatusCode::Success);
+    Geometry rl01Geometry {sectorsPerSurface, surfacesPerCylinder,
+        RL01cylindersPerCartridge, wordsPerSector};
+
+    EXPECT_EQ (unit.createBadBlockTable (rl01Geometry), StatusCode::Success);
 
     int32_t Offset1stSectorOfLastTrack =
         (RL01cylindersPerCartridge * surfacesPerCylinder - 1) *

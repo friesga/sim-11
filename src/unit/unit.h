@@ -40,8 +40,7 @@ public:
     size_t writeDataToSector (int32_t offset, u16* buffer, size_t numWords);
     void setWriteProtected (bool writeProtected);
     bool isWriteProtected () const;
-    StatusCode createBadBlockTable (int32_t sectorsPerSurface,
-        int32_t physWordsPerSector, u32 capacity);
+    StatusCode createBadBlockTable (Geometry geometry);
     int32_t filePosition (Geometry geometry, DiskAddress diskAddress) const;
 
 private:

@@ -49,10 +49,7 @@ StatusCode RL01_02::configure (shared_ptr<RLUnitConfig> rlUnitConfig)
             return StatusCode::Success;
 
         // Create a bad block table on the last track of the device.
-        // The position of the last track is also based on the unit's
-        // capacity!
-        return createBadBlockTable (RLV12const::sectorsPerSurface, 
-            RLV12const::wordsPerSector, capacity_);
+        return createBadBlockTable (geometry_);
     }
 
     return StatusCode::Success;
