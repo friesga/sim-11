@@ -113,7 +113,7 @@ void RL01_02::sendTrigger (Event event)
 //
 int32_t RL01_02::filePosition (int32_t diskAddress) const
 {
-    Unit::Geometry rl0102Geometry
+    Geometry rl0102Geometry
     {
         RLV12const::sectorsPerSurface,
         RLV12const::surfacesPerCylinder,

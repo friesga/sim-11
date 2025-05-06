@@ -36,8 +36,8 @@
 //
 int32_t Unit::filePosition (Geometry geometry, DiskAddress diskAddress) const
 {
-    u16 LBN = (diskAddress.cylinder * geometry.numberOfHeads + diskAddress.head) *
-        geometry.sectorsPerSurface + diskAddress.sector;
+    u16 LBN = (diskAddress.cylinder * geometry.numberOfHeads () + 
+        diskAddress.head) * geometry.sectorsPerSurface () + diskAddress.sector;
 
-    return LBN * geometry.wordsPerSector * sizeof (int16_t);
+    return LBN * geometry.wordsPerSector () * sizeof (int16_t);
 }

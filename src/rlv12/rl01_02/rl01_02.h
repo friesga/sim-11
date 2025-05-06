@@ -2,6 +2,7 @@
 #define _RL01_02_H_
 
 #include "unit/unit.h"
+#include "unit/geometry/geometry.h"
 #include "types.h"
 #include "statuscodes.h"
 #include "chrono/alarmclock/alarmclock.h"

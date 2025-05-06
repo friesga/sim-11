@@ -8,6 +8,7 @@
 #include "attachflags.h"
 #include "configdata/deviceconfig/deviceconfig.h"
 #include "fio/fio.h"
+#include "geometry/geometry.h"
 
 #include <cstdio>
 #include <string>
@@ -30,14 +31,6 @@ public:
         u16 sector {0};
         u16 head {0};
         u16 cylinder {0};
-    };
-
-    struct Geometry
-    {
-        u16 sectorsPerSurface {};
-        u16 numberOfHeads {};
-        u16 cylindersPerDisk {};
-        u16 wordsPerSector {};
     };
 
     StatusCode attachUnit (std::string fileName, Bitmask<AttachFlags> flags);
