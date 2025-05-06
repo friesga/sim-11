@@ -166,7 +166,7 @@ private:
     void writeProtectButtonClicked (Button::State state);
     Bitmask<AttachFlags> getAttachFlagsFromConfig (
         shared_ptr<RLUnitConfig> rlUnitConfig);
-    void setDriveParameters (RLUnitConfig::RLUnitType unitType,
+    void setDriveGeometry (RLUnitConfig::RLUnitType unitType,
         t_offset fileSize);
 };
 

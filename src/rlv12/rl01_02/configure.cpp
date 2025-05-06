@@ -25,7 +25,7 @@ StatusCode RL01_02::configure (shared_ptr<RLUnitConfig> rlUnitConfig)
     t_offset fileSize = attachedFileSize ();
 
     // Set unit size and type from the configuration and actual file size
-    setDriveParameters (rlUnitConfig->rlUnitType, fileSize);
+    setDriveGeometry (rlUnitConfig->rlUnitType, fileSize);
 
     // Set the drive default write-protected if that is specified in
     // the configuration.
@@ -70,13 +70,11 @@ Bitmask<AttachFlags> RL01_02::getAttachFlagsFromConfig (
     return attachFlags;
 }
 
-// Set unit type and size from the given drive type. Note that if
-// the unit type is Auto the unit's capacity is determined after
-// attaching the file to the unit. The capacity is also needed for
-// creation of the bad block table, but the combination of the newFile
-// option and Auto unit type is excluded in the configuration data.
+// Set unit geometry from the configured drive type and possibly file size.
+// If the configured drive type is "automatic" the drive type is determined
+// from the file size.
 //
-void RL01_02::setDriveParameters (RLUnitConfig::RLUnitType unitType,
+void RL01_02::setDriveGeometry (RLUnitConfig::RLUnitType unitType,
     t_offset fileSize)
 {
     Geometry rl01Geometry {
@@ -91,27 +89,13 @@ void RL01_02::setDriveParameters (RLUnitConfig::RLUnitType unitType,
         RLV12const::RL02cylindersPerCartridge,
         RLV12const::wordsPerSector};
 
-    if (unitType == RLUnitConfig::RLUnitType::RL01)
-    {
-        geometry_ = rl01Geometry;
-    }
-    else if (unitType == RLUnitConfig::RLUnitType::RL02)
+    geometry_ = rl01Geometry;
+
+    if (unitType == RLUnitConfig::RLUnitType::RL02 ||
+       (unitType == RLUnitConfig::RLUnitType::Auto && 
+            fileSize > (RLV12const::RL01_WordsPerCartridge * sizeof (u16))))
     {
         geometry_ = rl02Geometry;
         driveStatus_ |= RLV12const::MPR_GS_DriveType;
-    }
-    else if (unitType == RLUnitConfig::RLUnitType::Auto)
-    {
-
-        // If auto-sizing is set, determine drive type on the file size
-        if (fileSize > (RLV12const::RL01_WordsPerCartridge * sizeof (u16)))
-        {
-            geometry_ = rl02Geometry;
-            driveStatus_ |= RLV12const::MPR_GS_DriveType;
-        }
-        else
-        {
-            geometry_ = rl01Geometry;
-        }
     }
 }
