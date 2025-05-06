@@ -8,6 +8,18 @@ using std::get;
 
 StatusCode RL01_02::configure (shared_ptr<RLUnitConfig> rlUnitConfig)
 {
+    if (rlUnitConfig->fileName.empty ())
+        return StatusCode::ArgumentError;
+
+    Bitmask<AttachFlags> attachFlags =
+        getAttachFlagsFromConfig (rlUnitConfig);
+
+    // Try to attach the specified file to this unit
+    StatusCode result;
+    if ((result = attachUnit (rlUnitConfig->fileName, attachFlags)) !=
+        StatusCode::Success)
+        return result;
+
     // Set unit type and size from the given configuration. Note that if
     // the unit type is Auto the unit's capacity is determined after
     // attaching the file to the unit. The capacity is also needed for
@@ -29,18 +41,6 @@ StatusCode RL01_02::configure (shared_ptr<RLUnitConfig> rlUnitConfig)
     {
         rlStatus_ |= Bitmask(RlStatus::UNIT_AUTO);
     }
-
-    if (rlUnitConfig->fileName.empty()) 
-        return StatusCode::ArgumentError;
-	
-    Bitmask<AttachFlags> attachFlags = 
-        getAttachFlagsFromConfig (rlUnitConfig);
-
-    // Try to attach the specified file to this unit
-    StatusCode result;
-    if ((result = attachUnit (rlUnitConfig->fileName, attachFlags)) !=
-        StatusCode::Success)
-            return result;
 
     // Set the drive default write-protected if that is specified in
     // the configuration.
