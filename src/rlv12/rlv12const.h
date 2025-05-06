@@ -161,7 +161,11 @@ namespace RLV12const
     static constexpr u16 MPR_GS_LockOn = 5;
     static constexpr u16 MPR_GS_UnloadHeads = 6;
     static constexpr u16 MPR_GS_SpinDown = 7;
+    
     // Definition of MPR bits 3:15
+    // The Drive Type bit is only defined for the RL11 and RLV12. A zero
+    // indicates an RL01, a one, an RL02. For the RLV11 the bit is reserved
+    // and must have the value zero.
     static constexpr u16 MPR_GS_BrushHome = 0000010;
     static constexpr u16 MPR_GS_HeadsOut = 0000020;
     static constexpr u16 MPR_GS_CoverOpen = 0000040;
