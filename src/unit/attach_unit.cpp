@@ -1,13 +1,13 @@
 #include "unit.h"
 #include "cmdlineoptions/cmdlineoptions.h"
 
-StatusCode Unit::attachUnit(std::string fileName, Bitmask<AttachFlags> flags)
+StatusCode Unit::attachUnit(std::string fileName, Bitmask<AttachFlags> attachMode)
 {
     StatusCode statusCode;
 
     // Create a new file if specified
-    if (flags & AttachFlags::NewFile)
-        statusCode = createFile (fileName, flags);
+    if (attachMode & AttachFlags::NewFile)
+        statusCode = createFile (fileName, attachMode);
     else
     {
         // Open existing file read/write 

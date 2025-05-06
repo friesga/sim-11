@@ -11,13 +11,10 @@ StatusCode RL01_02::configure (shared_ptr<RLUnitConfig> rlUnitConfig)
     if (rlUnitConfig->fileName.empty ())
         return StatusCode::ArgumentError;
 
-    Bitmask<AttachFlags> attachFlags =
-        getAttachFlagsFromConfig (rlUnitConfig);
-
     // Try to attach the specified file to this unit
-    StatusCode result;
-    if ((result = attachUnit (rlUnitConfig->fileName, attachFlags)) !=
-        StatusCode::Success)
+    if (StatusCode result = 
+            attachUnit (rlUnitConfig->fileName, getAttachMode (rlUnitConfig));
+        result != StatusCode::Success)
         return result;
 
     // The file size will be the size of an existing file or zero if a
@@ -35,39 +32,29 @@ StatusCode RL01_02::configure (shared_ptr<RLUnitConfig> rlUnitConfig)
         driveStatus_ |= RLV12const::MPR_GS_WriteLock;
     }
 
-    // Position at cylinder 0
-    currentDiskAddress_ = 0;
-
     spinUpTime_ = std::chrono::seconds {rlUnitConfig->spinUpTime};
     
     // Create a bad block table on a new disk image (if the 
     // image is not read-only)
-    if (fileSize == 0)
-    {   
-        // If read-only we're done
-        if (isWriteProtected ())
-            return StatusCode::Success;
-
-        // Create a bad block table on the last track of the device.
+    if (fileSize == 0 && !isWriteProtected ())
         return createBadBlockTable (geometry_);
-    }
 
     return StatusCode::Success;
 }
 
-Bitmask<AttachFlags> RL01_02::getAttachFlagsFromConfig (
+Bitmask<AttachFlags> RL01_02::getAttachMode (
     shared_ptr<RLUnitConfig> rlUnitConfig)
 {
-    Bitmask<AttachFlags> attachFlags {AttachFlags::Default};
+    Bitmask<AttachFlags> attachMode {AttachFlags::Default};
 
     if (rlUnitConfig->writeProtect)
-        attachFlags |= AttachFlags::ReadOnly;
+        attachMode |= AttachFlags::ReadOnly;
     if (rlUnitConfig->newFile)
-        attachFlags |= AttachFlags::NewFile;
+        attachMode |= AttachFlags::NewFile;
     if (rlUnitConfig->overwrite)
-        attachFlags |= AttachFlags::Overwrite;
+        attachMode |= AttachFlags::Overwrite;
 
-    return attachFlags;
+    return attachMode;
 }
 
 // Set unit geometry from the configured drive type and possibly file size.

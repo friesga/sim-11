@@ -99,7 +99,7 @@ private:
     unique_ptr<StateMachine> stateMachine_;
 
     Geometry geometry_;
-    int32_t currentDiskAddress_;
+    int32_t currentDiskAddress_ {0};
 
     // The driveState_ keeps track of bits 0-5 of the MPR for a Get Status
     // command. The driveState_ is only set in the drive thread and is only
@@ -164,7 +164,7 @@ private:
 
     void loadButtonClicked (Button::State state);
     void writeProtectButtonClicked (Button::State state);
-    Bitmask<AttachFlags> getAttachFlagsFromConfig (
+    Bitmask<AttachFlags> getAttachMode (
         shared_ptr<RLUnitConfig> rlUnitConfig);
     void setDriveGeometry (RLUnitConfig::RLUnitType unitType,
         t_offset fileSize);

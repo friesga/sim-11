@@ -33,7 +33,7 @@ public:
         u16 cylinder {0};
     };
 
-    StatusCode attachUnit (std::string fileName, Bitmask<AttachFlags> flags);
+    StatusCode attachUnit (std::string fileName, Bitmask<AttachFlags> attachMode);
     bool isAttached () const;
     t_offset attachedFileSize () const;
     size_t readDataFromSector (int32_t offset, u16* buffer, u32 wordCount);
@@ -47,7 +47,7 @@ private:
     bool writeProtected_ {false};
     FILE* diskFileStream {nullptr};
 
-    StatusCode createFile (std::string fileName, Bitmask<AttachFlags> flags);
+    StatusCode createFile (std::string fileName, Bitmask<AttachFlags> attachMode);
     StatusCode openReadOnly (std::string fileName);
     StatusCode openReadWrite (std::string fileName);
 };

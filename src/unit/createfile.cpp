@@ -5,7 +5,7 @@
 
 #include <sys/stat.h>   // Required for stat
 
-StatusCode Unit::createFile(std::string fileName, Bitmask<AttachFlags> flags)
+StatusCode Unit::createFile(std::string fileName, Bitmask<AttachFlags> attachMode)
 {
     struct stat info;
 
@@ -13,7 +13,7 @@ StatusCode Unit::createFile(std::string fileName, Bitmask<AttachFlags> flags)
     // overwritten, so check if a file with the specified name already
     // exists and if that's the case ask the user if it is ok to overwrite
     // the file.
-    if (!stat (fileName.c_str(), &info) && !(flags & AttachFlags::Overwrite))
+    if (!stat (fileName.c_str(), &info) && !(attachMode & AttachFlags::Overwrite))
         return StatusCode::ArgumentError;
 
     diskFileStream = fio::fopen (fileName.c_str(), "wb+");
