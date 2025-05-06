@@ -113,14 +113,6 @@ void RL01_02::sendTrigger (Event event)
 //
 int32_t RL01_02::filePosition (int32_t diskAddress) const
 {
-    Geometry rl0102Geometry
-    {
-        RLV12const::sectorsPerSurface,
-        RLV12const::surfacesPerCylinder,
-        RLV12const::RL01cylindersPerCartridge,
-        RLV12const::wordsPerSector
-    };
-
     Unit::DiskAddress rl0102DiskAddress
     {
         RLV12const::getSector (diskAddress),
@@ -128,7 +120,7 @@ int32_t RL01_02::filePosition (int32_t diskAddress) const
         RLV12const::getCylinder (diskAddress)
     };
 
-    return Unit::filePosition (rl0102Geometry, rl0102DiskAddress);
+    return Unit::filePosition (geometry_, rl0102DiskAddress);
 }
 
 // The variable seeksInProgress_ can have three values:

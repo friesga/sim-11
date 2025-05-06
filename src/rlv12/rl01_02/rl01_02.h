@@ -112,6 +112,7 @@ private:
     class StateMachine;
     unique_ptr<StateMachine> stateMachine_;
 
+    Geometry geometry_;
     u32 capacity_;                      // Drive capacity in words
     int32_t currentDiskAddress_;
     Bitmask<RlStatus> rlStatus_;

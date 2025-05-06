@@ -82,13 +82,27 @@ Bitmask<AttachFlags> RL01_02::getAttachFlagsFromConfig (
 void RL01_02::setDriveParameters (RLUnitConfig::RLUnitType unitType,
     t_offset fileSize)
 {
+    Geometry rl01Geometry {
+        RLV12const::sectorsPerSurface,
+        RLV12const::surfacesPerCylinder,
+        RLV12const::RL01cylindersPerCartridge,
+        RLV12const::wordsPerSector};
+
+    Geometry rl02Geometry {
+        RLV12const::sectorsPerSurface,
+        RLV12const::surfacesPerCylinder,
+        RLV12const::RL02cylindersPerCartridge,
+        RLV12const::wordsPerSector};
+
     if (unitType == RLUnitConfig::RLUnitType::RL01)
     {
+        geometry_ = rl01Geometry;
         capacity_ = RLV12const::RL01_WordsPerCartridge;
         rlStatus_ &= ~Bitmask (RlStatus::UNIT_RL02);
     }
     else if (unitType == RLUnitConfig::RLUnitType::RL02)
     {
+        geometry_ = rl02Geometry;
         capacity_ = RLV12const::RL02_WordsPerCartridge;
         rlStatus_ |= Bitmask (RlStatus::UNIT_RL02);
         driveStatus_ |= RLV12const::MPR_GS_DriveType;
@@ -100,12 +114,14 @@ void RL01_02::setDriveParameters (RLUnitConfig::RLUnitType unitType,
         // If auto-sizing is set, determine drive type on the file size
         if (fileSize > (RLV12const::RL01_WordsPerCartridge * sizeof (u16)))
         {
+            geometry_ = rl02Geometry;
             rlStatus_ |= RlStatus::UNIT_RL02;
             capacity_ = RLV12const::RL02_WordsPerCartridge;
             driveStatus_ |= RLV12const::MPR_GS_DriveType;
         }
         else
         {
+            geometry_ = rl01Geometry;
             rlStatus_ &= ~Bitmask (RlStatus::UNIT_RL02);
             capacity_ = RLV12const::RL01_WordsPerCartridge;
         }
