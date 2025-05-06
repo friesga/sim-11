@@ -117,7 +117,7 @@ int32_t RL01_02::filePosition (int32_t diskAddress) const
     {
         RLV12const::sectorsPerSurface,
         RLV12const::surfacesPerCylinder,
-        RLV12const::cylindersPerCartridge,
+        RLV12const::RL01cylindersPerCartridge,
         RLV12const::wordsPerSector
     };
 

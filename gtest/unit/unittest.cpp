@@ -51,16 +51,16 @@ TEST (UnitTest, badBlockTableWritten)
     static constexpr int32_t wordsPerSector = 128;
     static constexpr int32_t sectorsPerSurface = 40;
     static constexpr int32_t surfacesPerCylinder = 2;
-    static constexpr int32_t cylindersPerCartridge = 256;
+    static constexpr int32_t RL01cylindersPerCartridge = 256;
     static constexpr int32_t RL01_WordsPerCartridge =
-        cylindersPerCartridge * surfacesPerCylinder * sectorsPerSurface *
+        RL01cylindersPerCartridge * surfacesPerCylinder * sectorsPerSurface *
         wordsPerSector;
 
     EXPECT_EQ (unit.createBadBlockTable (sectorsPerSurface, wordsPerSector,
         RL01_WordsPerCartridge), StatusCode::Success);
 
     int32_t Offset1stSectorOfLastTrack =
-        (cylindersPerCartridge * surfacesPerCylinder - 1) *
+        (RL01cylindersPerCartridge * surfacesPerCylinder - 1) *
             sectorsPerSurface * wordsPerSector * sizeof (u16);
 
     array<uint16_t, 512> buffer {};

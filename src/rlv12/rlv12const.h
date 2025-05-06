@@ -13,21 +13,22 @@ namespace RLV12const
         RLV12
     };
 
-    // RL01 Recording Capacity definitions
-    // An RL02 drive has 512 cylinders per cartridge
+    // RL01/02 Recording Capacity definitions
     static constexpr int32_t wordsPerSector = 128;
     static constexpr int32_t sectorsPerSurface = 40;
     static constexpr int32_t surfacesPerCylinder = 2;
-    static constexpr int32_t cylindersPerCartridge = 256;
+    static constexpr int32_t RL01cylindersPerCartridge = 256;
+    static constexpr int32_t RL02cylindersPerCartridge = 512;
 
     static constexpr int32_t maxDrivesPerController = 4;
     static constexpr int32_t maxTransfer = sectorsPerSurface * wordsPerSector;
 
     static constexpr int32_t RL01_WordsPerCartridge =
-        cylindersPerCartridge * surfacesPerCylinder * sectorsPerSurface *
+        RL01cylindersPerCartridge * surfacesPerCylinder * sectorsPerSurface *
         wordsPerSector;
     static constexpr int32_t RL02_WordsPerCartridge =
-        RL01_WordsPerCartridge * 2;
+        RL02cylindersPerCartridge * surfacesPerCylinder * sectorsPerSurface *
+        wordsPerSector;
 
     // Define the base address of the registers in the I/O page as
     // a 16-bit address.
