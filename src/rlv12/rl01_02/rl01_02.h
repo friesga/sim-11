@@ -18,6 +18,7 @@
 #include <utility>
 #include <queue>
 #include <memory>
+#include <filesystem>
 
 using std::thread;
 using std::mutex;
@@ -168,6 +169,7 @@ private:
         shared_ptr<RLUnitConfig> rlUnitConfig);
     void setDriveGeometry (RLUnitConfig::RLUnitType unitType,
         t_offset fileSize);
+    size_t fileSize (string filePath) const;
 };
 
 // Definition of the state machine for the drive. The class has to be defined

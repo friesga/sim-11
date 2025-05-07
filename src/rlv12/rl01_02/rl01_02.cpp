@@ -6,6 +6,8 @@
 using std::chrono::seconds;
 using std::make_unique;
 using namespace std::chrono_literals;
+using std::filesystem::path;
+using std::filesystem::file_size;
 
 // Constructor
 // By default the unit is off-line. It is set on-line when a file is
@@ -198,4 +200,16 @@ void RL01_02::waitForSeekComplete ()
         driveReadyCondition_.wait (lock, [this] { return seeksInProgress_ == 0; });
 
     lock.unlock ();
+}
+
+size_t RL01_02::fileSize (string filePath) const
+{
+    try
+    {
+        return file_size (path (filePath));
+    }
+    catch (const std::filesystem::filesystem_error& e)
+    {
+        return 0;
+    }
 }
