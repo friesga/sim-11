@@ -1,5 +1,6 @@
 #include "rl01_02.h"
 #include "../rlv12.h"
+#include "unit/diskaddress/diskaddress.h"
 
 #include <chrono>
 
@@ -114,7 +115,7 @@ void RL01_02::sendTrigger (Event event)
 //
 int32_t RL01_02::filePosition (int32_t diskAddress) const
 {
-    Unit::DiskAddress rl0102DiskAddress
+    DiskAddress rl0102DiskAddress
     {
         RLV12const::getSector (diskAddress),
         RLV12const::getHead (diskAddress),

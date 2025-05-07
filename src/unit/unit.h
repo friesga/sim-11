@@ -9,6 +9,7 @@
 #include "configdata/deviceconfig/deviceconfig.h"
 #include "fio/fio.h"
 #include "geometry/geometry.h"
+#include "diskaddress/diskaddress.h"
 
 #include <cstdio>
 #include <string>
@@ -26,13 +27,6 @@ using std::shared_ptr;
 class Unit
 {
 public:
-    struct DiskAddress
-    {
-        u16 sector {0};
-        u16 head {0};
-        u16 cylinder {0};
-    };
-
     StatusCode attachUnit (std::string fileName, Bitmask<AttachFlags> attachMode);
     bool isAttached () const;
     t_offset attachedFileSize () const;
