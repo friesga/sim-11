@@ -33,6 +33,9 @@ using std::chrono::duration;
 class RL01_02 : public Unit
 {
 public:
+    // All RLV12Commands need access to the file pointer and unit status
+    friend class CmdProcessor;
+
     // Definition for the procedures to calculate the new head position
     enum class HeadPositionProcedure
     {
@@ -63,7 +66,6 @@ public:
     void setSeekIncomplete ();
     void waitForSeekComplete ();
     void resetDriveError ();
-
     StatusCode init (shared_ptr<RLUnitConfig> rlUnitConfig,
         Window* window);
     StatusCode init (shared_ptr<RLUnitConfig> rlUnitConfig);
@@ -90,14 +92,16 @@ private:
 
     using Event = std::variant <SpinUp, SpinDown, SpunUp, SpunDown,
         SeekCommand, TimeElapsed>;
-
-    // All RLV12Commands need access to the file pointer and unit status
-    friend class CmdProcessor;
     
     // Use the PIMPL idiom to be able to define the StateMachine outside
     // of the RlDrive class
     class StateMachine;
     unique_ptr<StateMachine> stateMachine_;
+
+    // Definition of drive type. The type will be determined in configure(),
+    // called from the constructor.
+    enum class DriveType { RL01, RL02 };
+    DriveType driveType_;
 
     Geometry geometry_;
     int32_t currentDiskAddress_ {0};
@@ -167,8 +171,8 @@ private:
     void writeProtectButtonClicked (Button::State state);
     Bitmask<AttachFlags> getAttachMode (
         shared_ptr<RLUnitConfig> rlUnitConfig);
-    void setDriveGeometry (RLUnitConfig::RLUnitType unitType,
-        t_offset fileSize);
+    Geometry driveGeometry (DriveType driveType);
+    DriveType determineDriveType (shared_ptr<RLUnitConfig> rlUnitConfig);
     size_t fileSize (string filePath) const;
 };
 

@@ -2,14 +2,22 @@
 #include "fio/fio.h"
 
 #include <variant>
+#include <stdexcept>
 
 using std::shared_ptr;
 using std::get;
+using std::invalid_argument;
 
 StatusCode RL01_02::configure (shared_ptr<RLUnitConfig> rlUnitConfig)
 {
     if (rlUnitConfig->fileName.empty ())
         return StatusCode::ArgumentError;
+
+    // Now determine the actual drive type as soon as possible, to get
+    // rid of the RLUnitType Auto and be able to determine the drive geometry.
+    driveType_ = determineDriveType (rlUnitConfig);
+
+    geometry_ = driveGeometry (driveType_);
 
     // Try to attach the specified file to this unit
     if (StatusCode result = 
@@ -17,12 +25,9 @@ StatusCode RL01_02::configure (shared_ptr<RLUnitConfig> rlUnitConfig)
         result != StatusCode::Success)
         return result;
 
-    // The file size will be the size of an existing file or zero if a
-    // new file has been created
-    t_offset fileSize = attachedFileSize ();
-
-    // Set unit size and type from the configuration and actual file size
-    setDriveGeometry (rlUnitConfig->rlUnitType, fileSize);
+    // Set the drive type in the MPR
+    if (driveType_ == DriveType::RL02)
+        driveStatus_ |= RLV12const::MPR_GS_DriveType;
 
     // Set the drive default write-protected if that is specified in
     // the configuration.
@@ -36,7 +41,7 @@ StatusCode RL01_02::configure (shared_ptr<RLUnitConfig> rlUnitConfig)
     
     // Create a bad block table on a new disk image (if the 
     // image is not read-only)
-    if (fileSize == 0 && !isWriteProtected ())
+    if (attachedFileSize () == 0 && !isWriteProtected ())
         return createBadBlockTable (geometry_);
 
     return StatusCode::Success;
@@ -57,12 +62,8 @@ Bitmask<AttachFlags> RL01_02::getAttachMode (
     return attachMode;
 }
 
-// Set unit geometry from the configured drive type and possibly file size.
-// If the configured drive type is "automatic" the drive type is determined
-// from the file size.
-//
-void RL01_02::setDriveGeometry (RLUnitConfig::RLUnitType unitType,
-    t_offset fileSize)
+// Get unit geometry from the given drive type
+Geometry RL01_02::driveGeometry (DriveType driveType)
 {
     Geometry rl01Geometry {
         RLV12const::sectorsPerSurface,
@@ -76,13 +77,26 @@ void RL01_02::setDriveGeometry (RLUnitConfig::RLUnitType unitType,
         RLV12const::RL02cylindersPerCartridge,
         RLV12const::wordsPerSector};
 
-    geometry_ = rl01Geometry;
+    return (driveType == DriveType::RL01) ? rl01Geometry : rl02Geometry;
+}
 
-    if (unitType == RLUnitConfig::RLUnitType::RL02 ||
-       (unitType == RLUnitConfig::RLUnitType::Auto && 
-            fileSize > (RLV12const::RL01_WordsPerCartridge * sizeof (u16))))
+RL01_02::DriveType RL01_02::determineDriveType (shared_ptr<RLUnitConfig> rlUnitConfig)
+{
+    switch (rlUnitConfig->rlUnitType)
     {
-        geometry_ = rl02Geometry;
-        driveStatus_ |= RLV12const::MPR_GS_DriveType;
+        case RLUnitConfig::RLUnitType::RL01:
+            return DriveType::RL01;
+
+        case RLUnitConfig::RLUnitType::RL02:
+            return DriveType::RL02;
+
+        case RLUnitConfig::RLUnitType::Auto:
+            return (fileSize (rlUnitConfig->fileName) >
+                    RLV12const::RL01_WordsPerCartridge * sizeof (u16)) ?
+                DriveType::RL02 : DriveType::RL01;
+
+        default:
+           // Should not happen
+            throw invalid_argument ("Unknown RLunitType");
     }
 }

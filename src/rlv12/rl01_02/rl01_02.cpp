@@ -202,6 +202,9 @@ void RL01_02::waitForSeekComplete ()
     lock.unlock ();
 }
 
+// Get the size of the given file in bytes. The size will be the actual file
+// size of an existing file and also zero if the file doesn't exist. That's
+// not very clean but suffices for now.
 size_t RL01_02::fileSize (string filePath) const
 {
     try
