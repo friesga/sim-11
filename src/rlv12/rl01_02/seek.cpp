@@ -24,6 +24,10 @@ void RL01_02::seek (u16 diskAddressRegister)
 
     currentCylinder = RLV12const::getCylinder (currentDiskAddress_);
 
+    // Retrieve the cylinder *difference* from the contents of the disk
+    // address register during a seek command. This cylinder difference
+    // happens to be at the same bit position in the register as the
+    // cylinder number during a read/write command.
     offset = RLV12const::getCylinder (diskAddressRegister);
 
     // Seek direction in or out?
