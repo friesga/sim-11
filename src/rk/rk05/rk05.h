@@ -1,7 +1,7 @@
 #ifndef _RK05_H_
 #define _RK05_H_
 
-#include "unit/unit.h"
+#include "diskdrive/diskdrive.h"
 #include "bus/include/bus.h"
 #include "configdata/rk/rk05/rk05config/rk05config.h"
 #include "rk/include/rkdefinitions.h"

@@ -1,4 +1,4 @@
-#include "unit.h"
+#include "diskdrive.h"
 
 void DiskDrive::setWriteProtected (bool writeProtected)
 {

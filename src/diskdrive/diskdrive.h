@@ -1,5 +1,5 @@
-#ifndef _UNIT_H_
-#define _UNIT_H_
+#ifndef _DISKDRIVE_H_
+#define _DISKDRIVE_H_
 
 #include "abstractbusdevice/abstractbusdevice.h"
 #include "statuscodes.h"
@@ -50,4 +50,4 @@ private:
     int32_t filePosition (DiskAddress diskAddress) const;
 };
 
-#endif // !_UNIT_H_
+#endif // !_DISKDRIVE_H_

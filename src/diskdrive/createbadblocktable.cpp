@@ -27,7 +27,7 @@
 // sector in the format specified above and the second sector comprising all
 // ones.
 
-#include "unit.h"
+#include "diskdrive.h"
 #include "statuscodes.h"
 #include "fio/fio.h"
 
