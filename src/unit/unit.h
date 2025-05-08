@@ -37,7 +37,7 @@ public:
         size_t numWords);
     void setWriteProtected (bool writeProtected);
     bool isWriteProtected () const;
-    StatusCode createBadBlockTable (Geometry geometry);
+    StatusCode createBadBlockTable ();
 
 private:
     Geometry geometry_ {};

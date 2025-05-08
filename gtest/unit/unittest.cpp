@@ -64,7 +64,7 @@ TEST (UnitTest, badBlockTableWritten)
         Bitmask<AttachFlags> {AttachFlags::NewFile | AttachFlags::Overwrite}),
         StatusCode::Success);
 
-    EXPECT_EQ (unit.createBadBlockTable (rl01Geometry), StatusCode::Success);
+    EXPECT_EQ (unit.createBadBlockTable (), StatusCode::Success);
 
     DiskAddress firstSectorOfLastTrack {0, 1, RL01cylindersPerCartridge - 1};
 

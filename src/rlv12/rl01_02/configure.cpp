@@ -41,7 +41,7 @@ StatusCode RL01_02::configure (shared_ptr<RLUnitConfig> rlUnitConfig)
     // Create a bad block table on a new disk image (if the 
     // image is not read-only)
     if (attachedFileSize () == 0 && !isWriteProtected ())
-        return createBadBlockTable (geometry_);
+        return createBadBlockTable ();
 
     return StatusCode::Success;
 }

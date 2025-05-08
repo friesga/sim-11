@@ -35,9 +35,7 @@
 
 using std::logic_error;
 
-// StatusCode Unit::createBadBlockTable (int32_t sectorsPerSurface, 
-//     int32_t physWordsPerSector, u32 capacity)
-StatusCode Unit::createBadBlockTable (Geometry geometry)
+StatusCode Unit::createBadBlockTable ()
 {
     u32 da;
     u16 *badSectorInfo;
@@ -45,9 +43,9 @@ StatusCode Unit::createBadBlockTable (Geometry geometry)
     // sectors
     static int32_t const badSectorFileBlockSize = 256 * 2;
     static int32_t const physSectorsPerInfoBlock = 
-        badSectorFileBlockSize / geometry.wordsPerSector ();
+        badSectorFileBlockSize / geometry_.wordsPerSector ();
 
-    if (geometry.sectorsPerSurface () < 2 || geometry.wordsPerSector () < 16)
+    if (geometry_.sectorsPerSurface () < 2 || geometry_.wordsPerSector () < 16)
         return StatusCode::ArgumentError;
 
     if (!isAttached ())
@@ -60,8 +58,8 @@ StatusCode Unit::createBadBlockTable (Geometry geometry)
     // will only be executed for newly created files.
 
     // Position file at last track
-    da = (geometry.wordCapacity () - (geometry.sectorsPerSurface () *
-        geometry.wordsPerSector ())) * sizeof (u16);
+    da = (geometry_.wordCapacity () - (geometry_.sectorsPerSurface () *
+        geometry_.wordsPerSector ())) * sizeof (u16);
 
     if (fio::fseek (diskFileStream, da, SEEK_SET))
         return StatusCode::IOError;
@@ -82,7 +80,7 @@ StatusCode Unit::createBadBlockTable (Geometry geometry)
     // Write the bad block tables
     for (int32_t blockNr = 0;
         blockNr < 10 && 
-            blockNr * physSectorsPerInfoBlock < geometry.sectorsPerSurface ();
+            blockNr * physSectorsPerInfoBlock < geometry_.sectorsPerSurface ();
         ++blockNr)
     {
         fio::fwrite (badSectorInfo, sizeof (u16),
