@@ -1,13 +1,13 @@
 #include "unit.h"
 #include "logger/logger.h"
 
-size_t Unit::writeDataToSector (int32_t offset, u16* buffer, size_t numWords)
+size_t Unit::writeDataToSector (DiskAddress diskAddress, u16* buffer, size_t numWords)
 {
     if (writeProtected_)
         return 0;
 
     // Set position in file to the block to be written
-    if (fseek (diskFileStream, offset, SEEK_SET) != 0)
+    if (fseek (diskFileStream, filePosition (diskAddress), SEEK_SET) != 0)
     {
         Logger::instance () << "fseek error in Unit::writeDataToSector";
         return 0;

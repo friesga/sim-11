@@ -23,7 +23,7 @@ pair<bool, size_t> RL01_02::writeData (RLV12Command& rlv12Command, u16* buffer,
 
     waitForDriveReady ();
 
-    size_t numBytes = writeDataToSector (filePosition (rlv12Command.diskAddress_),
+    size_t numBytes = writeDataToSector (darToDiskAddress (rlv12Command.diskAddress_),
         buffer, numWords);
 
     updateHeadPosition (procedure, rlv12Command.wordCount_, diskAddressRegister);

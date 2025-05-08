@@ -107,22 +107,16 @@ void RL01_02::sendTrigger (Event event)
     startCommand_.notify_one ();
 }
 
-// Calculate the position of a sector as an offset in the file from
-// the specified diskAddress.
-// 
-// In the RL Disk Address Register the bits for head selection and cylinder
-// are situated side by side and together define the track number.
-//
-int32_t RL01_02::filePosition (int32_t diskAddress) const
+// Convert the disk address as given in the Disk Address Register to
+// a DiskAddress the Unit class needs.
+DiskAddress RL01_02::darToDiskAddress (int32_t diskAddress) const
 {
-    DiskAddress rl0102DiskAddress
+    return DiskAddress
     {
         RLV12const::getSector (diskAddress),
         RLV12const::getHead (diskAddress),
         RLV12const::getCylinder (diskAddress)
     };
-
-    return Unit::filePosition (geometry_, rl0102DiskAddress);
 }
 
 // The variable seeksInProgress_ can have three values:

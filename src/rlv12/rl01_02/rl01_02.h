@@ -163,7 +163,7 @@ private:
 
     StatusCode configure (shared_ptr<RLUnitConfig> rlUnitConfig);
     void createBezel (Window* window, shared_ptr<RLUnitConfig> rlUnitConfig);
-    int32_t filePosition (int32_t diskAddress) const;
+    DiskAddress darToDiskAddress (int32_t diskAddress) const;
     void updateHeadPosition (HeadPositionProcedure procedure,
         s32 wordCount, u16 diskAddressRegister);
 

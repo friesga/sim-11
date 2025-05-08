@@ -27,23 +27,27 @@ using std::shared_ptr;
 class Unit
 {
 public:
-    StatusCode attachUnit (std::string fileName, Bitmask<AttachFlags> attachMode);
+    StatusCode attachUnit (std::string fileName, Geometry geometry,
+        Bitmask<AttachFlags> attachMode);
     bool isAttached () const;
     t_offset attachedFileSize () const;
-    size_t readDataFromSector (int32_t offset, u16* buffer, u32 wordCount);
-    size_t writeDataToSector (int32_t offset, u16* buffer, size_t numWords);
+    size_t readDataFromSector (DiskAddress diskAddress, u16* buffer,
+        u32 wordCount);
+    size_t writeDataToSector (DiskAddress diskAddress, u16* buffer,
+        size_t numWords);
     void setWriteProtected (bool writeProtected);
     bool isWriteProtected () const;
     StatusCode createBadBlockTable (Geometry geometry);
-    int32_t filePosition (Geometry geometry, DiskAddress diskAddress) const;
 
 private:
+    Geometry geometry_ {};
     bool writeProtected_ {false};
     FILE* diskFileStream {nullptr};
 
     StatusCode createFile (std::string fileName, Bitmask<AttachFlags> attachMode);
     StatusCode openReadOnly (std::string fileName);
     StatusCode openReadWrite (std::string fileName);
+    int32_t filePosition (DiskAddress diskAddress) const;
 };
 
 #endif // !_UNIT_H_

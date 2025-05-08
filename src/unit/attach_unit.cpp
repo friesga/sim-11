@@ -1,9 +1,14 @@
 #include "unit.h"
 #include "cmdlineoptions/cmdlineoptions.h"
 
-StatusCode Unit::attachUnit(std::string fileName, Bitmask<AttachFlags> attachMode)
+StatusCode Unit::attachUnit(std::string fileName, Geometry geometry,
+    Bitmask<AttachFlags> attachMode)
 {
     StatusCode statusCode;
+
+    // Save the given geometry for this drive so it can be used to
+    // calculate file positions.
+    geometry_ = geometry;
 
     // Create a new file if specified
     if (attachMode & AttachFlags::NewFile)

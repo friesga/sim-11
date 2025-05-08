@@ -22,7 +22,7 @@
 // LBN = (cyl * numHeads + head) * numSectorsPerSurface + sector
 //
 // The LBN is then converted to a file position by the formula:
-// filePosition = LBN * wordsPerSector * numBitsPerWord
+// darToDiskAddress = LBN * wordsPerSector * numBitsPerWord
 //
 // As the PDP-11 is a 16-bit machine the value for numBitsPerWord is 16.
 // 
@@ -34,10 +34,10 @@
 // for cylinder and head, situated side by side with the lower bits defining
 // the head.
 //
-int32_t Unit::filePosition (Geometry geometry, DiskAddress diskAddress) const
+int32_t Unit::filePosition (DiskAddress diskAddress) const
 {
-    u16 LBN = (diskAddress.cylinder * geometry.numberOfHeads () + 
-        diskAddress.head) * geometry.sectorsPerSurface () + diskAddress.sector;
+    u16 LBN = (diskAddress.cylinder * geometry_.numberOfHeads () + 
+        diskAddress.head) * geometry_.sectorsPerSurface () + diskAddress.sector;
 
-    return LBN * geometry.wordsPerSector () * sizeof (int16_t);
+    return LBN * geometry_.wordsPerSector () * sizeof (int16_t);
 }

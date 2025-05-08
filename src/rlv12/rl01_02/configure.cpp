@@ -16,12 +16,11 @@ StatusCode RL01_02::configure (shared_ptr<RLUnitConfig> rlUnitConfig)
     // Now determine the actual drive type as soon as possible, to get
     // rid of the RLUnitType Auto and be able to determine the drive geometry.
     driveType_ = determineDriveType (rlUnitConfig);
-
     geometry_ = driveGeometry (driveType_);
 
     // Try to attach the specified file to this unit
-    if (StatusCode result = 
-            attachUnit (rlUnitConfig->fileName, getAttachMode (rlUnitConfig));
+    if (StatusCode result = attachUnit (rlUnitConfig->fileName, geometry_,
+            getAttachMode (rlUnitConfig));
         result != StatusCode::Success)
         return result;
 

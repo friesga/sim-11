@@ -9,7 +9,7 @@ using std::array;
 TEST (UnitTest, fileCanBeCreated)
 {
     Unit unit {};
-    EXPECT_EQ (unit.attachUnit ("test.dsk",
+    EXPECT_EQ (unit.attachUnit ("test.dsk", Geometry {},
         Bitmask<AttachFlags> {AttachFlags::NewFile | AttachFlags::Overwrite}),
         StatusCode::Success);
 
@@ -19,19 +19,22 @@ TEST (UnitTest, fileCanBeCreated)
 TEST (UnitTest, fileCanBeWrittenAndReadBack)
 {
     Unit unit {};
-    EXPECT_EQ (unit.attachUnit ("test.dsk",
+    Geometry geometry {40, 2, 256, 128};
+    DiskAddress diskAdress {0, 0, 0};
+
+    EXPECT_EQ (unit.attachUnit ("test.dsk", geometry,
         Bitmask<AttachFlags> {AttachFlags::NewFile | AttachFlags::Overwrite}),
         StatusCode::Success);
 
     array<uint16_t, 512> buffer {};
     buffer.fill (0177777);
 
-    EXPECT_EQ (unit.writeDataToSector (0, buffer.data (), buffer.size ()),
+    EXPECT_EQ (unit.writeDataToSector (diskAdress, buffer.data (), buffer.size ()),
         buffer.size ());
 
     // Verify the written data can be read back
     buffer.fill (0);
-    EXPECT_EQ (unit.readDataFromSector (0, buffer.data (), buffer.size ()),
+    EXPECT_EQ (unit.readDataFromSector (diskAdress, buffer.data (), buffer.size ()),
         buffer.size ());
 
     for (int i = 0; i < buffer.size (); ++i)
@@ -45,9 +48,6 @@ TEST (UnitTest, fileCanBeWrittenAndReadBack)
 TEST (UnitTest, badBlockTableWritten)
 {
     Unit unit {};
-    EXPECT_EQ (unit.attachUnit ("test.dsk",
-        Bitmask<AttachFlags> {AttachFlags::NewFile | AttachFlags::Overwrite}),
-        StatusCode::Success);
 
     static constexpr int32_t wordsPerSector = 128;
     static constexpr int32_t sectorsPerSurface = 40;
@@ -60,14 +60,16 @@ TEST (UnitTest, badBlockTableWritten)
     Geometry rl01Geometry {sectorsPerSurface, surfacesPerCylinder,
         RL01cylindersPerCartridge, wordsPerSector};
 
+    EXPECT_EQ (unit.attachUnit ("test.dsk", rl01Geometry,
+        Bitmask<AttachFlags> {AttachFlags::NewFile | AttachFlags::Overwrite}),
+        StatusCode::Success);
+
     EXPECT_EQ (unit.createBadBlockTable (rl01Geometry), StatusCode::Success);
 
-    int32_t Offset1stSectorOfLastTrack =
-        (RL01cylindersPerCartridge * surfacesPerCylinder - 1) *
-            sectorsPerSurface * wordsPerSector * sizeof (u16);
+    DiskAddress firstSectorOfLastTrack {0, 1, RL01cylindersPerCartridge - 1};
 
-    array<uint16_t, 512> buffer {};
-    EXPECT_EQ (unit.readDataFromSector (Offset1stSectorOfLastTrack,
+    array<uint16_t, 128> buffer {};
+    EXPECT_EQ (unit.readDataFromSector (firstSectorOfLastTrack,
         buffer.data (), buffer.size ()), buffer.size ());
 
     EXPECT_EQ (buffer[0], 067000);
