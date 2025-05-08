@@ -29,7 +29,13 @@ using std::shared_ptr;
 using std::pair;
 using std::chrono::duration;
 
-// RLO1/RL02 unit
+// RL01/RL02 disk drive
+//
+// This class is derived from the class DiskDrive as a RL01/02 *is* a disk
+// drive and does not *contain* a disk drive. If desired, changing the
+// relation to a containment relation should be trivial as the DiskDrive class
+// only provides public functions.
+//
 class RL01_02 : public DiskDrive
 {
 public:

@@ -17,12 +17,19 @@
 
 using std::shared_ptr;
 
-// Definition of an abstract base class for the units of a device
+// Definition of the functions common to all disk drives. The class offers
+// common functions for the support of disk drives:
+// 
+// - Attaching a file to the disk drive,
+// - Reading/write a sector to the disk, thereby translating the disk address
+//   to a position in the attached file,
+// - Keeping track of write protect status
+// - Creation of a bad block table on the drive.
 //
 // Disk images are represented in the simh file format, i.e. as unstructured
 // binary files consisting of 16 bit data items. Sectors are numbered from
 // sector 0 of surface 0 of cylinder 0 to the last sector on the disk. This
-// allows easy transcription of real disks to files usable by a simulator.
+// allows easy transcription of real disks to files useable by a simulator.
 //
 class DiskDrive
 {
