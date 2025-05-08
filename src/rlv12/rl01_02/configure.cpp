@@ -19,7 +19,7 @@ StatusCode RL01_02::configure (shared_ptr<RLUnitConfig> rlUnitConfig)
     geometry_ = driveGeometry (driveType_);
 
     // Try to attach the specified file to this unit
-    if (StatusCode result = attachUnit (rlUnitConfig->fileName, geometry_,
+    if (StatusCode result = attachFile (rlUnitConfig->fileName, geometry_,
             getAttachMode (rlUnitConfig));
         result != StatusCode::Success)
         return result;

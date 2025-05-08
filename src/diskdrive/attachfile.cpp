@@ -1,7 +1,7 @@
 #include "diskdrive.h"
 #include "cmdlineoptions/cmdlineoptions.h"
 
-StatusCode DiskDrive::attachUnit(std::string fileName, Geometry geometry,
+StatusCode DiskDrive::attachFile (std::string fileName, Geometry geometry,
     Bitmask<AttachFlags> attachMode)
 {
     StatusCode statusCode;

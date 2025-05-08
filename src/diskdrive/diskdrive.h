@@ -34,7 +34,7 @@ using std::shared_ptr;
 class DiskDrive
 {
 public:
-    StatusCode attachUnit (std::string fileName, Geometry geometry,
+    StatusCode attachFile (std::string fileName, Geometry geometry,
         Bitmask<AttachFlags> attachMode);
     bool isAttached () const;
     t_offset attachedFileSize () const;

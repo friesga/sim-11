@@ -9,7 +9,7 @@ using std::array;
 TEST (UnitTest, fileCanBeCreated)
 {
     DiskDrive unit {};
-    EXPECT_EQ (unit.attachUnit ("test.dsk", Geometry {},
+    EXPECT_EQ (unit.attachFile ("test.dsk", Geometry {},
         Bitmask<AttachFlags> {AttachFlags::NewFile | AttachFlags::Overwrite}),
         StatusCode::Success);
 
@@ -22,7 +22,7 @@ TEST (UnitTest, fileCanBeWrittenAndReadBack)
     Geometry geometry {40, 2, 256, 128};
     DiskAddress diskAdress {0, 0, 0};
 
-    EXPECT_EQ (unit.attachUnit ("test.dsk", geometry,
+    EXPECT_EQ (unit.attachFile ("test.dsk", geometry,
         Bitmask<AttachFlags> {AttachFlags::NewFile | AttachFlags::Overwrite}),
         StatusCode::Success);
 
@@ -60,7 +60,7 @@ TEST (UnitTest, badBlockTableWritten)
     Geometry rl01Geometry {sectorsPerSurface, surfacesPerCylinder,
         RL01cylindersPerCartridge, wordsPerSector};
 
-    EXPECT_EQ (unit.attachUnit ("test.dsk", rl01Geometry,
+    EXPECT_EQ (unit.attachFile ("test.dsk", rl01Geometry,
         Bitmask<AttachFlags> {AttachFlags::NewFile | AttachFlags::Overwrite}),
         StatusCode::Success);
 
