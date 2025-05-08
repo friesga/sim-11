@@ -35,7 +35,7 @@
 
 using std::logic_error;
 
-StatusCode Unit::createBadBlockTable ()
+StatusCode DiskDrive::createBadBlockTable ()
 {
     u32 da;
     u16 *badSectorInfo;

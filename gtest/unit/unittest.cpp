@@ -8,7 +8,7 @@ using std::array;
 
 TEST (UnitTest, fileCanBeCreated)
 {
-    Unit unit {};
+    DiskDrive unit {};
     EXPECT_EQ (unit.attachUnit ("test.dsk", Geometry {},
         Bitmask<AttachFlags> {AttachFlags::NewFile | AttachFlags::Overwrite}),
         StatusCode::Success);
@@ -18,7 +18,7 @@ TEST (UnitTest, fileCanBeCreated)
 
 TEST (UnitTest, fileCanBeWrittenAndReadBack)
 {
-    Unit unit {};
+    DiskDrive unit {};
     Geometry geometry {40, 2, 256, 128};
     DiskAddress diskAdress {0, 0, 0};
 
@@ -47,7 +47,7 @@ TEST (UnitTest, fileCanBeWrittenAndReadBack)
 // geometry of a RL01 disk.
 TEST (UnitTest, badBlockTableWritten)
 {
-    Unit unit {};
+    DiskDrive unit {};
 
     static constexpr int32_t wordsPerSector = 128;
     static constexpr int32_t sectorsPerSurface = 40;

@@ -1,7 +1,7 @@
 #include "unit.h"
 #include "cmdlineoptions/cmdlineoptions.h"
 
-StatusCode Unit::attachUnit(std::string fileName, Geometry geometry,
+StatusCode DiskDrive::attachUnit(std::string fileName, Geometry geometry,
     Bitmask<AttachFlags> attachMode)
 {
     StatusCode statusCode;
@@ -29,13 +29,13 @@ StatusCode Unit::attachUnit(std::string fileName, Geometry geometry,
     return StatusCode::Success;
 }
 
-bool Unit::isAttached () const
+bool DiskDrive::isAttached () const
 {
     return (diskFileStream != nullptr);
 }
 
 // Return the size of the attached file in bytes
-t_offset Unit::attachedFileSize () const
+t_offset DiskDrive::attachedFileSize () const
 {
     return fio::fsize (diskFileStream);
 }

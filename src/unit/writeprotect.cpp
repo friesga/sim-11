@@ -1,12 +1,12 @@
 #include "unit.h"
 
-void Unit::setWriteProtected (bool writeProtected)
+void DiskDrive::setWriteProtected (bool writeProtected)
 {
     writeProtected_ = writeProtected;
 }
 
 
-bool Unit::isWriteProtected () const
+bool DiskDrive::isWriteProtected () const
 {
     return writeProtected_;
 }

@@ -24,7 +24,7 @@ using std::shared_ptr;
 // sector 0 of surface 0 of cylinder 0 to the last sector on the disk. This
 // allows easy transcription of real disks to files usable by a simulator.
 //
-class Unit
+class DiskDrive
 {
 public:
     StatusCode attachUnit (std::string fileName, Geometry geometry,

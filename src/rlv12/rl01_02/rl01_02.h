@@ -30,7 +30,7 @@ using std::pair;
 using std::chrono::duration;
 
 // RLO1/RL02 unit
-class RL01_02 : public Unit
+class RL01_02 : public DiskDrive
 {
 public:
     // All RLV12Commands need access to the file pointer and unit status

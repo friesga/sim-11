@@ -34,7 +34,7 @@
 // for cylinder and head, situated side by side with the lower bits defining
 // the head.
 //
-int32_t Unit::filePosition (DiskAddress diskAddress) const
+int32_t DiskDrive::filePosition (DiskAddress diskAddress) const
 {
     u16 LBN = (diskAddress.cylinder * geometry_.numberOfHeads () + 
         diskAddress.head) * geometry_.sectorsPerSurface () + diskAddress.sector;

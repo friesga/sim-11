@@ -5,7 +5,7 @@
 
 #include <sys/stat.h>   // Required for stat
 
-StatusCode Unit::createFile (std::string fileName, Bitmask<AttachFlags> attachMode)
+StatusCode DiskDrive::createFile (std::string fileName, Bitmask<AttachFlags> attachMode)
 {
     struct stat info;
 

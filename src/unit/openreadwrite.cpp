@@ -3,7 +3,7 @@
 #include "logger/logger.h"
 #include "fio/fio.h"
 
-StatusCode Unit::openReadWrite (std::string fileName)
+StatusCode DiskDrive::openReadWrite (std::string fileName)
 {
     diskFileStream = fio::fopen(fileName.c_str(), "rb+");
     if (diskFileStream == NULL)

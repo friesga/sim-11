@@ -4,7 +4,7 @@
 
 #include "fio/fio.h"
 
-StatusCode Unit::openReadOnly(std::string fileName)
+StatusCode DiskDrive::openReadOnly(std::string fileName)
 {
     // Open file read-only
     diskFileStream = fio::fopen (fileName.c_str(), "rb");
