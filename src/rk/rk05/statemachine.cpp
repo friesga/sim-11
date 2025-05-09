@@ -59,7 +59,6 @@ RK05::State RK05::StateMachine::transition (Unloaded&&, SpinUp)
 
 void RK05::StateMachine::entry (SpinningUp)
 {
-
 }
 
 // The spin up timer fires and the drive is spun up and locked on cylinder 0.
@@ -100,13 +99,23 @@ void RK05::StateMachine::entry (Seeking)
 // A more appropriate place for the start of the timer would be on entry of
 // the Seeking state but the required seek time is not available in the
 // entry() function of that state.
-RK05::State RK05::StateMachine::transition (LockedOn&&,
+RK05::State RK05::StateMachine::transition (LockedOn&&, 
     SeekCommand seekCommand)
 {
     SimulatorClock::wakeMeAt (SimulatorClock::now () + seekCommand.seekTime,
         this);
 
     return Seeking {};
+}
+
+
+// Proces the received RKCommand and return the result to the controller
+RK05::State RK05::StateMachine::transition (LockedOn&&,
+    RKDefinitions::RKCommand rkCommand)
+{
+    handleFunction (rkCommand);
+
+    return LockedOn {};
 }
 
 // This function is executed when a seek is completed.

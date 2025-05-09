@@ -72,7 +72,7 @@ private:
         Seeking, SpinningDown>;
 
     // Definition of the drive events. This includes the RKCommand defined
-    // in rkcommand.h.
+    // in rkdefinitions.h.
     struct SpinUp {};       // LOAD button pressed down
     struct SpinDown {};     // LOAD button released
     struct SpunUp {};       // Spin up is complete
@@ -129,10 +129,11 @@ public:
     State transition (SpinningUp&&, SpinDown);      // -> SpinningDown
     void entry (LockedOn);
     State transition (LockedOn&&, SeekCommand);     // -> Seeking
+    State transition (LockedOn&&, RKDefinitions::RKCommand);    // -> LockedOn
+    State transition (LockedOn&&, SpinDown);        // -> SpinningDown
     void exit (variantFsm::TagType<LockedOn>);
     void entry (Seeking);
     State transition (Seeking&&, TimeElapsed);      // -> LockedOn
-    State transition (LockedOn&&, SpinDown);        // -> SpinningDown
     State transition (Seeking&&, SpinDown);         // -> SpinningDown
     void entry (SpinningDown);
     State transition (SpinningDown&&, TimeElapsed); // -> Unloaded
@@ -179,6 +180,8 @@ public:
 private:
     RK05* context_ {nullptr};
     duration<int, std::ratio<1, 1>> spinUpTime_;
+
+    void handleFunction (RKDefinitions::RKCommand rkCommand);
 };
 
 #endif // _RK05_H_

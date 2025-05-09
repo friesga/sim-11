@@ -154,7 +154,7 @@ TEST_F (RK11DRegistersTest, nonExistingDriveReturnsError)
     EXPECT_EQ (rk11dDevice->read (BusAddress {RKER}) & RKER_NXD, RKER_NXD);
 }
 
-#if 0
+#if 1
 // Verify that a function other than the Control Reset function returns a
 // drive error.
 TEST_F (RK11DRegistersTest, driveResetReturnsError)
@@ -174,7 +174,7 @@ TEST_F (RK11DRegistersTest, driveResetReturnsError)
     EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKCS}, RKCS_FUNCTON (DriveReset) | RKCS_GO),
         StatusCode::Success);
 
-    waitForControllerReady (rk11dDevice);
+    waitForDriveReady (rk11dDevice, 0);
 
     EXPECT_EQ (rk11dDevice->read (BusAddress {RKER}), 0100000);
 }
