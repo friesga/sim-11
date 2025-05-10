@@ -17,6 +17,7 @@
 #include <memory>
 
 using std::shared_ptr;
+using std::unique_ptr;
 using std::thread;
 using std::queue;
 
@@ -31,6 +32,16 @@ public:
 private:
     Bus* bus_ {nullptr};
     RK11* controller_ {nullptr};
+
+    // Definition of the RK05 drive format:
+    // - 12 sectors/track
+    // - 2 disk surfaces/disk
+    // - 203 cylinders/disk drive
+    // - 256 words/sector
+    Geometry rk05Geometry {12, 2, 203, 256};
+
+    DiskDrive diskDrive_ {};
+    unique_ptr<u16[]> buffer_ {};
 
     // Buttons and indicators. The initial value points to a dummy to
     // avoid null pointer references in the unit tests.
@@ -107,6 +118,8 @@ private:
     void wtprotSwitchClicked (Button::State state);
     void driveThread ();
     void sendTrigger (Event event);
+    Bitmask<AttachFlags> getAttachMode (
+        shared_ptr<RK05Config> rk05Config);
 };
 
 

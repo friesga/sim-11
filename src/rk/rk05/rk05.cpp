@@ -18,6 +18,13 @@ RK05::RK05 (Bus* bus, RK11* controller, Window* window,
     if (window != nullptr)
         createBezel (window, rk05Config);
 
+    // The maximum number of words that can be transferred in one read
+    // or write command is 2^16
+    buffer_ = make_unique<u16[]> (1 << 16);
+
+    diskDrive_.attachFile (rk05Config->fileName, rk05Geometry,
+        getAttachMode (rk05Config));
+
     stateMachine_ = make_unique<StateMachine> (this,
         seconds (rk05Config->spinUpTime));
 
@@ -66,4 +73,20 @@ void RK05::sendTrigger (Event event)
 
 void RK05::wtprotSwitchClicked (Button::State state)
 {
+}
+
+// ToDo: This function is a double with RL01_02::getAttachMode()
+Bitmask<AttachFlags> RK05::getAttachMode (
+    shared_ptr<RK05Config> rk05Config)
+{
+    Bitmask<AttachFlags> attachMode {AttachFlags::Default};
+
+    if (rk05Config->writeProtect)
+        attachMode |= AttachFlags::ReadOnly;
+    if (rk05Config->newFile)
+        attachMode |= AttachFlags::NewFile;
+    if (rk05Config->overwrite)
+        attachMode |= AttachFlags::Overwrite;
+
+    return attachMode;
 }
