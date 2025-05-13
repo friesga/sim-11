@@ -47,16 +47,19 @@ StatusCode RK11D::writeWord (BusAddress busAddress, u16 value)
 
         case RKWC:
             // Word Count register
+            rkwc_ = value;
             return StatusCode::Success;
             break;
 
         case RKBA:
             // Current Bus Address register
+            rkba_ = value;
             return StatusCode::Success;
             break;
 
         case RKDA:
             // Disk Address register
+            rkda_.value = value;
             return StatusCode::Success;
             break;
 

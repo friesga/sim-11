@@ -65,6 +65,7 @@ set (GTEST_SRCS
     registers/twowordregistertest.cpp
     rk/rkconfigprocessortest.cpp
     rk/rk11dregisterstest.cpp
+    rk/rkreadwritetest.cpp
     rlv12/rl11configprocessortest.cpp
     rlv12/rlv11configprocessortest.cpp
     rlv12/rlv12configprocessortest.cpp
