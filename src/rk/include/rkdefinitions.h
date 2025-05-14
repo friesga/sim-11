@@ -3,7 +3,11 @@
 
 #include "bitfield.h"
 
-namespace RKDefinitions
+#include <variant>
+
+using std::variant;
+
+namespace RKTypes
 {
 
     // Definition of the RK11-D register bit assignments
@@ -112,6 +116,11 @@ namespace RKDefinitions
         u16 wordCount;
         BusAddress busAddress;
     };
+
+    // Actions to be processed by the action processor are either a Function,
+    // issued by the running program, or a DriveCondition, originating from an
+    // RK05 drive.
+    using Action = std::variant<Function, DriveCondition>;
 };
 
 #endif // _RKDEFINITIONS_H_

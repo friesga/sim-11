@@ -18,7 +18,7 @@ try
         // is empty.
         while (!rk11ActionQueue_.empty ())
         {
-            RKDefinitions::Function action = rk11ActionQueue_.front ();
+            RKTypes::Function action = rk11ActionQueue_.front ();
 
             // ToDo: Process action
 

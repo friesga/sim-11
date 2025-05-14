@@ -26,7 +26,7 @@ public:
     RK05 (Bus* bus, AbstractBusDevice* controller, Window* window,
         shared_ptr<RK05Config> rk05Config);
     ~RK05 ();
-    void processCommand (RKDefinitions::Function action);
+    void processCommand (RKTypes::Function action);
 
 private:
     Bus* bus_ {nullptr};
@@ -91,7 +91,7 @@ private:
     struct TimeElapsed {};
 
     using Event = std::variant <SpinUp, SpinDown, SpunUp, SpunDown,
-        SeekCommand, TimeElapsed, RKDefinitions::Function>;
+        SeekCommand, TimeElapsed, RKTypes::Function>;
 
     // Use the PIMPL idiom to be able to define the StateMachine outside
     // of the RK05 class
@@ -141,7 +141,7 @@ public:
     State transition (SpinningUp&&, SpinDown);      // -> SpinningDown
     void entry (LockedOn);
     State transition (LockedOn&&, SeekCommand);     // -> Seeking
-    State transition (LockedOn&&, RKDefinitions::Function);    // -> LockedOn
+    State transition (LockedOn&&, RKTypes::Function);    // -> LockedOn
     State transition (LockedOn&&, SpinDown);        // -> SpinningDown
     void exit (variantFsm::TagType<LockedOn>);
     void entry (Seeking);
@@ -156,12 +156,12 @@ public:
     // an error is returned to the controller.  
     //
     template <typename S>
-    State transition (S&& state, RKDefinitions::Function)
+    State transition (S&& state, RKTypes::Function)
     {
-        RKDefinitions::RKER rker {};
+        RKTypes::RKER rker {};
         rker.driveError = 1;
 
-        // context_->controller_->processResult (RKDefinitions::Result {
+        // context_->controller_->processResult (RKTypes::Result {
         //    0, rker, 0, 0});
         return state;
     }
@@ -193,7 +193,7 @@ private:
     RK05* context_ {nullptr};
     duration<int, std::ratio<1, 1>> spinUpTime_;
 
-    void handleFunction (RKDefinitions::Function action);
+    void handleFunction (RKTypes::Function action);
 };
 
 #endif // _RK05_H_

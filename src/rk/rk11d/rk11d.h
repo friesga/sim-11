@@ -41,12 +41,12 @@ private:
     };
 
     // Definition of the controller's registers
-    RKDefinitions::RKDS rkds_ {0};
-    RKDefinitions::RKER rker_ {0};
-    RKDefinitions::RKCS rkcs_ {0};
+    RKTypes::RKDS rkds_ {0};
+    RKTypes::RKER rker_ {0};
+    RKTypes::RKCS rkcs_ {0};
     u16 rkwc_ {0};
     u16 rkba_ {0};
-    RKDefinitions::RKDA rkda_ {0};
+    RKTypes::RKDA rkda_ {0};
     u16 rkdb_ {0};
 
     // RKCS writable bits mask
@@ -82,14 +82,14 @@ private:
     // Definition of the queue for forwarding actions to the action processor.
     // The queue is accessed from multiple threads ans its consistency has to
     // be safe-guarded by the controllerMutex_.
-    queue<RKDefinitions::Function> rk11ActionQueue_;
+    queue<RKTypes::Function> rk11ActionQueue_;
 
     // Condition variable to wake up the action processor when an action has
     // been queued.
     condition_variable actionAvailable_;
 
     void actionProcessor ();
-    void processAction (RKDefinitions::Function action);
+    void processAction (RKTypes::Function action);
     void BINITReceiver (bool signalValue);
     void setNonExistingDisk (u16 driveId);
 };

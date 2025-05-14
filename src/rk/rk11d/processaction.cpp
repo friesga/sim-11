@@ -1,6 +1,6 @@
 #include "rk11d.h"
 
-void RK11D::processAction (RKDefinitions::Function action)
+void RK11D::processAction (RKTypes::Function action)
 {
     u16 driveId = action.diskAddress.driveSelect;
 
@@ -12,17 +12,17 @@ void RK11D::processAction (RKDefinitions::Function action)
 
     switch (action.operation)
     {
-        case RKDefinitions::ControlReset:
+        case RKTypes::ControlReset:
             reset ();
             break;
 
-        case RKDefinitions::Write:
-        case RKDefinitions::Read:
-        case RKDefinitions::WriteCheck:
-        case RKDefinitions::Seek:
-        case RKDefinitions::ReadCheck:
-        case RKDefinitions::DriveReset:
-        case RKDefinitions::WriteLock:
+        case RKTypes::Write:
+        case RKTypes::Read:
+        case RKTypes::WriteCheck:
+        case RKTypes::Seek:
+        case RKTypes::ReadCheck:
+        case RKTypes::DriveReset:
+        case RKTypes::WriteLock:
 
         default:
             throw logic_error ("Invalid function in RK11D::processAction");
@@ -35,7 +35,7 @@ void RK11D::processAction (RKDefinitions::Function action)
 
 // This function is called by the RK05 to pass the result of the execution
 // of a command to the controller and is executed in an RK05 thread.
-void RK11D::processResult (RKDefinitions::Result result)
+void RK11D::processResult (RKTypes::Result result)
 {
     // Guard against controller register access from the processor thread
     std::unique_lock<std::mutex> lock {controllerMutex_};

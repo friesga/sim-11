@@ -4,13 +4,13 @@
 
 using std::logic_error;
 
-void RK05::StateMachine::handleFunction (RKDefinitions::Function action)
+void RK05::StateMachine::handleFunction (RKTypes::Function action)
 {
     // Note that the ControlReset function is handled in the RK11-D and isn't
     // sent to the RK05.
     switch (action.operation)
     {
-        case RKDefinitions::Write:
+        case RKTypes::Write:
         {
             DiskAddress diskAddress
             {
@@ -21,7 +21,7 @@ void RK05::StateMachine::handleFunction (RKDefinitions::Function action)
             size_t wordCount = context_->diskDrive_.writeDataToSector (diskAddress,
                 context_->buffer_.get (), action.wordCount);
 
-            RKDefinitions::RKDS rkds {0};
+            RKTypes::RKDS rkds {0};
             rkds.sectorCounter = action.diskAddress.sectorAddress +
                 wordCount / context_->rk05Geometry.wordsPerSector ();
             rkds.sectorCounterEqualsSectorAddress = 1;
@@ -34,14 +34,14 @@ void RK05::StateMachine::handleFunction (RKDefinitions::Function action)
             // It is safe to cast the size_t wordCount to an u16 as the
             // maximum word count is 2^16.
             // 
-            // context_->controller_->processResult (RKDefinitions::Result {
+            // context_->controller_->processResult (RKTypes::Result {
             //    rkds, 0, static_cast<u16> (wordCount), 0});
 
             // ToDo: Transfer has to be done via RKDB?!
             break;
         }
 
-        case RKDefinitions::Read:
+        case RKTypes::Read:
         {
             DiskAddress diskAddress
             {
@@ -52,7 +52,7 @@ void RK05::StateMachine::handleFunction (RKDefinitions::Function action)
             size_t wordCount = context_->diskDrive_.readDataFromSector (diskAddress,
                 context_->buffer_.get (), action.wordCount);
 
-            RKDefinitions::RKDS rkds {0};
+            RKTypes::RKDS rkds {0};
             rkds.sectorCounter = action.diskAddress.sectorAddress +
                 wordCount / context_->rk05Geometry.wordsPerSector ();
             rkds.sectorCounterEqualsSectorAddress = 1;
@@ -65,26 +65,26 @@ void RK05::StateMachine::handleFunction (RKDefinitions::Function action)
             // It is safe to cast the size_t wordCount to an u16 as the
             // maximum word count is 2^16.
             // 
-            // context_->controller_->processResult (RKDefinitions::Result {
+            // context_->controller_->processResult (RKTypes::Result {
             //    rkds, 0, static_cast<u16> (wordCount), 0});
 
             // ToDo: Transfer has to be done via RKDB?!
             break;
         }
 
-        case RKDefinitions::WriteCheck:
-        case RKDefinitions::Seek:
-        case RKDefinitions::ReadCheck:
-        case RKDefinitions::DriveReset:
-        case RKDefinitions::WriteLock:
+        case RKTypes::WriteCheck:
+        case RKTypes::Seek:
+        case RKTypes::ReadCheck:
+        case RKTypes::DriveReset:
+        case RKTypes::WriteLock:
 
         default:
             throw logic_error ("Invalid function in RK05::StateMachine::handleFunction");
     }
 
-    RKDefinitions::RKER rker {};
+    RKTypes::RKER rker {};
     rker.driveError = 1;
 
-    // context_->controller_->processResult (RKDefinitions::Result {
+    // context_->controller_->processResult (RKTypes::Result {
     //    0, rker, 0, 0});
 }
