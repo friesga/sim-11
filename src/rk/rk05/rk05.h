@@ -4,7 +4,7 @@
 #include "diskdrive/diskdrive.h"
 #include "bus/include/bus.h"
 #include "configdata/rk/rk05/rk05config/rk05config.h"
-#include "rk/include/rkdefinitions.h"
+#include "rk/include/rktypes.h"
 #include "panel.h"
 #include "asynctimer/asynctimer.h"
 #include "variantfsm/fsm.h"
@@ -82,7 +82,7 @@ private:
         Seeking, SpinningDown>;
 
     // Definition of the drive events. This includes the RKCommand defined
-    // in rkdefinitions.h.
+    // in rktypes.h.
     struct SpinUp {};       // LOAD button pressed down
     struct SpinDown {};     // LOAD button released
     struct SpunUp {};       // Spin up is complete

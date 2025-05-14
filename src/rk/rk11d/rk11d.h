@@ -4,7 +4,7 @@
 #include "bus/include/bus.h"
 #include "configdata/rk/rk11d/rk11dconfig/rk11dconfig.h"
 #include "rk/rk05/rk05.h"
-#include "rk/include/rkdefinitions.h"
+#include "rk/include/rktypes.h"
 #include "panel.h"
 #include "bitfield.h"
 
