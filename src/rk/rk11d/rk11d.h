@@ -2,7 +2,6 @@
 #define _RK11D_H_
 
 #include "bus/include/bus.h"
-#include "rk/include/rk11.h"
 #include "configdata/rk/rk11d/rk11dconfig/rk11dconfig.h"
 #include "rk/rk05/rk05.h"
 #include "rk/include/rkdefinitions.h"
@@ -12,17 +11,24 @@
 #include <vector>
 #include <string>
 #include <mutex>
+#include <queue>
+#include <thread>
 
 using std::vector;
 using std::unique_ptr;
 using std::mutex;
+using std::queue;
+using std::thread;
+using std::condition_variable;
 
-class RK11D : public RK11
+class RK11D : public AbstractBusDevice
 {
 private:
     // Define RK11-D registers as offsets from the controller's base address
     //
-    // Address 777414 is unused.
+    // Address 777414 is the Maintenance Register in a RK11-C but is unused
+    // on the RK11-D.
+    //
     enum
     {
         RKDS = 00,      // Drive Status register
@@ -61,19 +67,30 @@ public:
     bool responsible (BusAddress busAddress) override;
     void reset () override;
 
-    // Functions required by the RK11 interface
-    void processResult (RKDefinitions::Result result) override;
-
 private:
     // Definition of the controller's base address and vector
     u16 baseAddress_ {0};
     u16 vector_ {0};
 
+    // Action processor thread
+    bool running_ {false};
+    thread actionProcessorThread_;
+
     // Safe guard against controller access from multiple threads
     mutex controllerMutex_;
 
+    // Definition of the queue for forwarding actions to the action processor.
+    // The queue is accessed from multiple threads ans its consistency has to
+    // be safe-guarded by the controllerMutex_.
+    queue<RKDefinitions::Function> rk11ActionQueue_;
+
+    // Condition variable to wake up the action processor when an action has
+    // been queued.
+    condition_variable actionAvailable_;
+
+    void actionProcessor ();
+    void processAction (RKDefinitions::Function action);
     void BINITReceiver (bool signalValue);
-    void processFunction (RKDefinitions::RKCommand command);
     void setNonExistingDisk (u16 driveId);
 };
 

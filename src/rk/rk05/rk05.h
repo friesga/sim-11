@@ -5,7 +5,6 @@
 #include "bus/include/bus.h"
 #include "configdata/rk/rk05/rk05config/rk05config.h"
 #include "rk/include/rkdefinitions.h"
-#include "rk/include/rk11.h"
 #include "panel.h"
 #include "asynctimer/asynctimer.h"
 #include "variantfsm/fsm.h"
@@ -24,14 +23,14 @@ using std::queue;
 class RK05
 {
 public:
-    RK05 (Bus* bus, RK11* controller, Window* window,
+    RK05 (Bus* bus, AbstractBusDevice* controller, Window* window,
         shared_ptr<RK05Config> rk05Config);
     ~RK05 ();
-    void processCommand (RKDefinitions::RKCommand rkCommand);
+    void processCommand (RKDefinitions::Function action);
 
 private:
     Bus* bus_ {nullptr};
-    RK11* controller_ {nullptr};
+    AbstractBusDevice* controller_ {nullptr};
 
     // Definition of the RK05 drive format:
     // - 12 sectors/track
@@ -92,7 +91,7 @@ private:
     struct TimeElapsed {};
 
     using Event = std::variant <SpinUp, SpinDown, SpunUp, SpunDown,
-        SeekCommand, TimeElapsed, RKDefinitions::RKCommand>;
+        SeekCommand, TimeElapsed, RKDefinitions::Function>;
 
     // Use the PIMPL idiom to be able to define the StateMachine outside
     // of the RK05 class
@@ -142,7 +141,7 @@ public:
     State transition (SpinningUp&&, SpinDown);      // -> SpinningDown
     void entry (LockedOn);
     State transition (LockedOn&&, SeekCommand);     // -> Seeking
-    State transition (LockedOn&&, RKDefinitions::RKCommand);    // -> LockedOn
+    State transition (LockedOn&&, RKDefinitions::Function);    // -> LockedOn
     State transition (LockedOn&&, SpinDown);        // -> SpinningDown
     void exit (variantFsm::TagType<LockedOn>);
     void entry (Seeking);
@@ -157,13 +156,13 @@ public:
     // an error is returned to the controller.  
     //
     template <typename S>
-    State transition (S&& state, RKDefinitions::RKCommand)
+    State transition (S&& state, RKDefinitions::Function)
     {
         RKDefinitions::RKER rker {};
         rker.driveError = 1;
 
-        context_->controller_->processResult (RKDefinitions::Result {
-            0, rker, 0, 0});
+        // context_->controller_->processResult (RKDefinitions::Result {
+        //    0, rker, 0, 0});
         return state;
     }
 
@@ -194,7 +193,7 @@ private:
     RK05* context_ {nullptr};
     duration<int, std::ratio<1, 1>> spinUpTime_;
 
-    void handleFunction (RKDefinitions::RKCommand rkCommand);
+    void handleFunction (RKDefinitions::Function action);
 };
 
 #endif // _RK05_H_

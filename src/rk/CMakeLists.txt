@@ -1,5 +1,6 @@
 set (RK11D_SRCS
-    rk11d/processfunction.cpp
+    rk11d/actionprocessor.cpp
+    rk11d/processaction.cpp
     rk11d/read.cpp
     rk11d/rk11d.cpp
     rk11d/writeword.cpp

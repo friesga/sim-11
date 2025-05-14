@@ -8,9 +8,12 @@ using std::make_unique;
 using std::mutex;
 using std::lock_guard;
 using std::placeholders::_1;
+using std::thread;
 
+//
 // This constructor can be called in the initialization of both sim-11 and
-// the unit tests. In the latter case the window is not available.
+// the unit tests. In the latter case the window is not available and is a
+// nullptr.
 //
 RK11D::RK11D (Bus* bus, Window* window, shared_ptr<RK11DConfig> rk11dConfig)
     :
@@ -25,6 +28,10 @@ RK11D::RK11D (Bus* bus, Window* window, shared_ptr<RK11DConfig> rk11dConfig)
     }
 
     bus_->BINIT ().subscribe (bind (&RK11D::BINITReceiver, this, _1));
+
+    // Start the action processor
+    running_ = true;
+    actionProcessorThread_ = thread (&RK11D::actionProcessor, this);
 
     // Initialize the controller
     reset ();

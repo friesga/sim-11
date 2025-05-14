@@ -31,11 +31,11 @@ protected:
     // RKCS bit definitions
     static constexpr u16  RKCS_GO = (1 << 0);
     static constexpr u16  RKCS_RDY = (1 << 7);
-    inline u16 RKCS_FUNCTON (u16 function) { return (function & 7) << 1; }
+    inline u16 RKCS_OPERATION (u16 function) { return (function & 7) << 1; }
 
 
     // Function definitions
-    enum Function
+    enum Operation
     {
         ControlReset = 0,
         Write,
@@ -127,7 +127,7 @@ TEST_F (RK11DRegistersTest, controlResetFunction)
     EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKDB}, 0177777),
         StatusCode::Success);
 
-    EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKCS}, RKCS_FUNCTON (0) | RKCS_GO),
+    EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKCS}, RKCS_OPERATION (0) | RKCS_GO),
         StatusCode::Success);
 
     EXPECT_EQ (rk11dDevice->read (BusAddress {RKER}), 0);
@@ -146,7 +146,7 @@ TEST_F (RK11DRegistersTest, nonExistingDriveReturnsError)
     RK11D* rk11dDevice = new RK11D (&bus, nullptr,
         make_shared<RK11DConfig> (rk11dConfig));
 
-    EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKCS}, RKCS_FUNCTON (DriveReset) | RKCS_GO),
+    EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKCS}, RKCS_OPERATION (DriveReset) | RKCS_GO),
         StatusCode::Success);
 
     waitForControllerReady (rk11dDevice);
@@ -171,7 +171,7 @@ TEST_F (RK11DRegistersTest, driveResetReturnsError)
     RK11D* rk11dDevice = new RK11D (&bus, nullptr,
         make_shared<RK11DConfig> (rk11dConfig));
 
-    EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKCS}, RKCS_FUNCTON (DriveReset) | RKCS_GO),
+    EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKCS}, RKCS_OPERATION (DriveReset) | RKCS_GO),
         StatusCode::Success);
 
     waitForDriveReady (rk11dDevice, 0);

@@ -1,6 +1,6 @@
 #include "rk05.h"
 
-void RK05::processCommand (RKDefinitions::RKCommand rkCommand)
+void RK05::processCommand (RKDefinitions::Function action)
 {
-    sendTrigger (rkCommand);
+    sendTrigger (action);
 }

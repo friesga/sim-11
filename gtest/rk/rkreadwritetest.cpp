@@ -32,11 +32,11 @@ protected:
     // RKCS bit definitions
     static constexpr u16  RKCS_GO = (1 << 0);
     static constexpr u16  RKCS_RDY = (1 << 7);
-    inline u16 RKCS_FUNCTON (u16 function) { return (function & 7) << 1; }
+    inline u16 RKCS_OPERATION (u16 function) { return (function & 7) << 1; }
 
 
     // Function definitions
-    enum Function
+    enum Operation
     {
         ControlReset = 0,
         Write,
@@ -105,7 +105,7 @@ TEST_F (RK11DReadwriteTest, readWriteSector)
     EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKDA}, 0),
         StatusCode::Success);
     EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKCS},
-        RKCS_FUNCTON (Function::Write) | RKCS_GO),
+        RKCS_OPERATION (Operation::Write) | RKCS_GO),
         StatusCode::Success);
 
     for (u16 address = 0; address < 512; address += 2)
@@ -124,7 +124,7 @@ TEST_F (RK11DReadwriteTest, readWriteSector)
     EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKDA}, 0),
         StatusCode::Success);
     EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKCS},
-        RKCS_FUNCTON (Function::Read) | RKCS_GO),
+        RKCS_OPERATION (Operation::Read) | RKCS_GO),
         StatusCode::Success);
 
     for (u16 contents = 0, address = 0; address < 512; address += 2)

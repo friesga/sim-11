@@ -1,21 +1,37 @@
 #include "rk11d.h"
 
-// All functions are to be processed by the RK05 drive, except for the
-// ControlReset functions.
-void RK11D::processFunction (RKDefinitions::RKCommand command)
+void RK11D::processAction (RKDefinitions::Function action)
 {
-    if (command.function == RKDefinitions::Function::ControlReset)
-        reset ();
-    else
-    {
-        u16 driveId = command.diskAddress.driveSelect;
+    u16 driveId = action.diskAddress.driveSelect;
 
-        if (rk05Drives_.size () > driveId)
-            rk05Drives_[driveId]->processCommand (command);
-        else
-            setNonExistingDisk (driveId);
+    if (driveId >= rk05Drives_.size ())
+    {
+        setNonExistingDisk (driveId);
+        return;
     }
+
+    switch (action.operation)
+    {
+        case RKDefinitions::ControlReset:
+            reset ();
+            break;
+
+        case RKDefinitions::Write:
+        case RKDefinitions::Read:
+        case RKDefinitions::WriteCheck:
+        case RKDefinitions::Seek:
+        case RKDefinitions::ReadCheck:
+        case RKDefinitions::DriveReset:
+        case RKDefinitions::WriteLock:
+
+        default:
+            throw logic_error ("Invalid function in RK11D::processAction");
+    }
+
 }
+
+#if 0       // To be deleted
+
 
 // This function is called by the RK05 to pass the result of the execution
 // of a command to the controller and is executed in an RK05 thread.
@@ -39,6 +55,7 @@ void RK11D::processResult (RKDefinitions::Result result)
     rkds_.driveId = result.rkds.driveId;
     rkds_.driveReady = 1;
 }
+#endif
 
 void RK11D::setNonExistingDisk (u16 driveId)
 {

@@ -53,7 +53,7 @@ namespace RKDefinitions
     {
         u16 value;
         BitField<u16, 0> go;                        // Write Only
-        BitField<u16, 1, 3> function;               // Read/Write
+        BitField<u16, 1, 3> operation;              // Read/Write
         BitField<u16, 4, 5> memoryExtension;        // Read/Write
         BitField<u16, 6> interruptOnDoneEnable;     // Read/Write
         BitField<u16, 7> controlReady;              // Read Only
@@ -77,13 +77,13 @@ namespace RKDefinitions
         BitField<u16, 13, 15> driveSelect;
     };
 
-    // Definition of the RK11-D functions
+    // Definition of the RK11-D Operations
     // 
     // Disclaimer: use of an enum instead of an enum class as the enum class
     // makes comparing with u16 values cumbersome, even if the enum class is
     // derived from u16.
     //
-    enum Function
+    enum Operation
     {
         ControlReset,
         Write,
@@ -95,17 +95,17 @@ namespace RKDefinitions
         WriteLock
     };
 
-    // Definition of the commands to be passed to the RK05
-    struct RKCommand
+    // Definition of the function to be processed by the RK11D action processor
+    struct Function
     {
-        Function function;
+        Operation operation;
         RKDA diskAddress;
         u16 wordCount;
         BusAddress busAddress;
     };
 
-    // Definition of the result of the execution of a command
-    struct Result
+    // Definition of a change in drive condition
+    struct DriveCondition
     {
         RKDS rkds;
         RKER rker;

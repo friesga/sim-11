@@ -111,9 +111,9 @@ RK05::State RK05::StateMachine::transition (LockedOn&&,
 
 // Proces the received RKCommand and return the result to the controller
 RK05::State RK05::StateMachine::transition (LockedOn&&,
-    RKDefinitions::RKCommand rkCommand)
+    RKDefinitions::Function action)
 {
-    handleFunction (rkCommand);
+    handleFunction (action);
 
     return LockedOn {};
 }

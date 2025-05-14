@@ -32,11 +32,14 @@ StatusCode RK11D::writeWord (BusAddress busAddress, u16 value)
                 //
                 // ToDo: Add Memory Extension bits to bus address
                 //
-                u16 function = rkcs_.function;
-                processFunction (
-                    RKDefinitions::RKCommand {
-                    static_cast<RKDefinitions::Function> (function),
-                    rkda_.value, rkwc_, rkba_});
+                u16 function = rkcs_.operation;
+                rk11ActionQueue_.push (RKDefinitions::Function
+                    {
+                        static_cast<RKDefinitions::Operation> (function),
+                        rkda_.value, rkwc_, rkba_
+                    });
+
+                actionAvailable_.notify_one ();
             }
 
             // The controller is ready to accept a new command
