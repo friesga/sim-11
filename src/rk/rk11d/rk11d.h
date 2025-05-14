@@ -5,6 +5,7 @@
 #include "configdata/rk/rk11d/rk11dconfig/rk11dconfig.h"
 #include "rk/rk05/rk05.h"
 #include "rk/include/rktypes.h"
+#include "rk/include/driveinterface.h"
 #include "panel.h"
 #include "bitfield.h"
 
@@ -21,7 +22,7 @@ using std::queue;
 using std::thread;
 using std::condition_variable;
 
-class RK11D : public AbstractBusDevice
+class RK11D : public AbstractBusDevice, public DriveInterface
 {
 private:
     // Define RK11-D registers as offsets from the controller's base address
@@ -67,6 +68,9 @@ public:
     bool responsible (BusAddress busAddress) override;
     void reset () override;
 
+    // Functions required by the DriveInterface interface
+    void setDriveCondition (RKTypes::DriveCondition condition);
+
 private:
     // Definition of the controller's base address and vector
     u16 baseAddress_ {0};
@@ -80,18 +84,20 @@ private:
     mutex controllerMutex_;
 
     // Definition of the queue for forwarding actions to the action processor.
-    // The queue is accessed from multiple threads ans its consistency has to
+    // The queue is accessed from multiple threads and its consistency has to
     // be safe-guarded by the controllerMutex_.
-    queue<RKTypes::Function> rk11ActionQueue_;
+    queue<RKTypes::Action> actionQueue_;
 
     // Condition variable to wake up the action processor when an action has
     // been queued.
     condition_variable actionAvailable_;
 
     void actionProcessor ();
-    void processAction (RKTypes::Function action);
+    void processFunction (RKTypes::Function function);
+    void processDriveCondition (RKTypes::DriveCondition driveCondition);
     void BINITReceiver (bool signalValue);
     void setNonExistingDisk (u16 driveId);
+    void setControlReady ();
 };
 
 

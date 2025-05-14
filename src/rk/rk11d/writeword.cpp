@@ -25,6 +25,7 @@ StatusCode RK11D::writeWord (BusAddress busAddress, u16 value)
             if (rkcs_.go)
             {
                 // The Control Ready bit is to be cleared by GO being set
+                // (EK-RK11D-MM-002 p. 3-6)
                 rkcs_.controlReady = 0;
 
                 // Disclaimer: the u16 resulting from the BitField conversion operator
@@ -32,10 +33,10 @@ StatusCode RK11D::writeWord (BusAddress busAddress, u16 value)
                 //
                 // ToDo: Add Memory Extension bits to bus address
                 //
-                u16 function = rkcs_.operation;
-                rk11ActionQueue_.push (RKTypes::Function
+                u16 operation = rkcs_.operation;
+                actionQueue_.push (RKTypes::Function
                     {
-                        static_cast<RKTypes::Operation> (function),
+                        static_cast<RKTypes::Operation> (operation),
                         rkda_.value, rkwc_, rkba_
                     });
 
@@ -43,7 +44,11 @@ StatusCode RK11D::writeWord (BusAddress busAddress, u16 value)
             }
 
             // The controller is ready to accept a new command
-            rkcs_.controlReady = 1;
+            // According to EK-RK11D-MM-002 p. 3-4, the GO bit remains set
+            // until the control actually begins to respond to GO, which may
+            // take from 1 microsecond to 3.3 milliseconds, depending on the
+            // current operation of the selected drive.
+            rkcs_.go = 0;
 
             return StatusCode::Success;
             break;

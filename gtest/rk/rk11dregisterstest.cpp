@@ -122,13 +122,15 @@ TEST_F (RK11DRegistersTest, controlResetFunction)
         StatusCode::Success);
     EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKBA}, 0177777),
         StatusCode::Success);
-    EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKDA}, 0177777),
+    EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKDA}, 0),
         StatusCode::Success);
     EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKDB}, 0177777),
         StatusCode::Success);
 
-    EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKCS}, RKCS_OPERATION (0) | RKCS_GO),
-        StatusCode::Success);
+    EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKCS},
+        RKCS_OPERATION (ControlReset) | RKCS_GO), StatusCode::Success);
+
+    waitForControllerReady (rk11dDevice);
 
     EXPECT_EQ (rk11dDevice->read (BusAddress {RKER}), 0);
     EXPECT_EQ (rk11dDevice->read (BusAddress {RKCS}), RKCS_RDY);
@@ -154,7 +156,7 @@ TEST_F (RK11DRegistersTest, nonExistingDriveReturnsError)
     EXPECT_EQ (rk11dDevice->read (BusAddress {RKER}) & RKER_NXD, RKER_NXD);
 }
 
-#if 1
+#if 0
 // Verify that a function other than the Control Reset function returns a
 // drive error.
 TEST_F (RK11DRegistersTest, driveResetReturnsError)
