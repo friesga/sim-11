@@ -27,6 +27,7 @@ public:
         shared_ptr<RK05Config> rk05Config);
     ~RK05 ();
     void executeFunction (RKTypes::Function function);
+    void seek (u16 cylinderAddress);
 
 private:
     Bus* bus_ {nullptr};
@@ -112,6 +113,13 @@ private:
     // Condition variable to wake up the drive thread when a command is issued
     condition_variable startCommand_;
 
+    // RK05 state definitions. The drive keeps track of its own copies
+    // of the drive status and error register the controller can use to
+    // assign to the actual register.
+    u16 currentCylinderAddress_ {0};
+    RKTypes::RKDS driveStatus_ {0};
+    RKTypes::RKER driveError_ {0};
+
     void createBezel (Window* window, shared_ptr<RK05Config> rk05Config);
     void runLoadSwitchClicked (Button::State state);
     void wtprotSwitchClicked (Button::State state);
@@ -119,6 +127,9 @@ private:
     void sendTrigger (Event event);
     Bitmask<AttachFlags> getAttachMode (
         shared_ptr<RK05Config> rk05Config);
+    SimulatorClock::duration seekTime (u16 currentCylinderAddress,
+        u16 newCylinderAddress);
+    void seekCompleted ();
 };
 
 
