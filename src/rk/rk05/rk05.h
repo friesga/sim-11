@@ -26,7 +26,7 @@ public:
     RK05 (Bus* bus, AbstractBusDevice* controller, Window* window,
         shared_ptr<RK05Config> rk05Config);
     ~RK05 ();
-    void processCommand (RKTypes::Function action);
+    void executeFunction (RKTypes::Function function);
 
 private:
     Bus* bus_ {nullptr};

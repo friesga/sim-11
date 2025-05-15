@@ -8,7 +8,6 @@ set (RK11D_SRCS
     rk05/handlefunction.cpp
     rk05/createbezel.cpp
     rk05/drivethread.cpp
-    rk05/processcommand.cpp
     rk05/statemachine.cpp)
 
 target_sources (${TARGET} PRIVATE ${RK11D_SRCS})

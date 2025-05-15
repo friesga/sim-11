@@ -75,6 +75,11 @@ void RK05::wtprotSwitchClicked (Button::State state)
 {
 }
 
+void RK05::executeFunction (RKTypes::Function function)
+{
+    sendTrigger (function);
+}
+
 // ToDo: This function is a double with RL01_02::getAttachMode()
 Bitmask<AttachFlags> RK05::getAttachMode (
     shared_ptr<RK05Config> rk05Config)
