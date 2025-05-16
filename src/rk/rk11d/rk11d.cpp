@@ -20,6 +20,7 @@ RK11D::RK11D (Bus* bus, Window* window, shared_ptr<RK11DConfig> rk11dConfig)
     bus_ {bus}
 {
     baseAddress_  = rk11dConfig->address;
+    vector_ = rk11dConfig->vector;
 
     for (auto rk05Config : rk11dConfig->rk05Config)
     {

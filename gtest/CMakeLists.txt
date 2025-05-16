@@ -66,6 +66,7 @@ set (GTEST_SRCS
     rk/rkconfigprocessortest.cpp
     rk/rk11dregisterstest.cpp
     rk/rkreadwritetest.cpp
+    rk/rkseektest.cpp
     rlv12/rl11configprocessortest.cpp
     rlv12/rlv11configprocessortest.cpp
     rlv12/rlv12configprocessortest.cpp

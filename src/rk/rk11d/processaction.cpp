@@ -24,10 +24,16 @@ void RK11D::processFunction (RKTypes::Function function)
         case RKTypes::Write:
         case RKTypes::Read:
         case RKTypes::WriteCheck:
+            break;
+
         case RKTypes::Seek:
+            executeSeek (function.diskAddress);
+            break;
+
         case RKTypes::ReadCheck:
         case RKTypes::DriveReset:
         case RKTypes::WriteLock:
+            break;
             
         default:
             throw logic_error ("Invalid function in RK11D::processFunction");
@@ -43,6 +49,9 @@ void RK11D::processFunction (RKTypes::Function function)
 void RK11D::setControlReady ()
 {
     rkcs_.controlReady = 1;
+
+    if (rkcs_.interruptOnDoneEnable)
+        bus_->setInterrupt (TrapPriority::BR5, 5, 0, vector_);
 }
 
 // The RK05 uses this function to indicate a changed drive condition to the
@@ -68,8 +77,6 @@ void RK11D::processDriveCondition (RKTypes::DriveCondition driveCondition)
 
     rkds_.value = driveCondition.rkds.value;
     rker_.value = driveCondition.rker.value;
-    rkwc_ = driveCondition.wordCount;
-    rkba_ = driveCondition.busAddress;
 
     if (rker_.value != 0)
         rkcs_.error = 1;
@@ -78,8 +85,10 @@ void RK11D::processDriveCondition (RKTypes::DriveCondition driveCondition)
         rkcs_.hardError = 1;
 
     // The drive is ready to accept a new command
-    rkds_.driveId = driveCondition.rkds.driveId;
-    rkds_.driveReady = 1;
+    // rkds_.driveId = driveCondition.rkds.driveId;
+    // rkds_.driveReady = 1;
+    setControlReady ();
+    
 }
 
 

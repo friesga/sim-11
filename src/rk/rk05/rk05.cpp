@@ -1,5 +1,6 @@
 #include "rk05.h"
 #include "chrono/alarmclock/alarmclock.h"
+#include "bitfield.h"
 
 #include <memory>
 #include <chrono>
@@ -11,7 +12,9 @@ using std::chrono::seconds;
 using std::abs;
 using std::chrono::duration;
 
-RK05::RK05 (Bus* bus, AbstractBusDevice* controller, Window* window,
+using namespace RKTypes;
+
+RK05::RK05 (Bus* bus, DriveInterface* controller, Window* window,
     shared_ptr<RK05Config> rk05Config)
     : 
     bus_ {bus},
@@ -43,11 +46,11 @@ RK05::RK05 (Bus* bus, AbstractBusDevice* controller, Window* window,
         stateMachine_->dispatch (SpunDown {});
 
     // Initialize the drive status
-    driveStatus_.sectorCounterEqualsSectorAddress = 1;
-    driveStatus_.readWriteSeekReady = 1;
-    driveStatus_.sectorCounterOK = 1;
-    driveStatus_.rk05DiskOnLine = 1;
-    driveStatus_.driveId = rk05Config->unitNumber;
+    driveStatus_.value = +RKDS::SectorCounterEqualsSectorAddress {1} |
+        +RKDS::ReadWriteSeekReady {1} |
+        +RKDS::SectorCounterOK {1} |
+        +RKDS::Rk05DiskOnLine {1} |
+        +RKDS::DriveId {rk05Config->unitNumber};
 }
 
 // Finish the drive thread
@@ -121,6 +124,8 @@ SimulatorClock::duration RK05::seekTime (u16 currentCylinderAddress,
 
 void RK05::seekCompleted ()
 {
+    controller_->setDriveCondition (DriveCondition {driveStatus_,
+        driveError_});
 }
 
 // ToDo: This function is a double with RL01_02::getAttachMode()

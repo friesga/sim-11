@@ -9,6 +9,15 @@ using std::variant;
 
 namespace RKTypes
 {
+    // Definition of the RK05 drive format:
+    // - 12 sectors/track
+    // - 2 disk surfaces/disk
+    // - 203 cylinders/disk drive
+    // - 256 words/sector
+    u16 const SectorsPerSurface = 12;
+    u16 const NumberOfHeads = 2;
+    u16 const CylindersPerDisk = 203;
+    u16 const WordsPerSector = 256;
 
     // Definition of the RK11-D register bit assignments
     // 
@@ -17,18 +26,30 @@ namespace RKTypes
     //
     union RKDS
     {
+        using SectorCounter = BitField<u16, 0, 3>;
+        using SectorCounterEqualsSectorAddress = BitField<u16, 4>;
+        using WriteProtectStatus = BitField<u16, 5>;
+        using ReadWriteSeekReady = BitField<u16, 6>;
+        using DriveReady = BitField<u16, 7>;
+        using SectorCounterOK = BitField<u16, 8>;
+        using SeekIncomplete = BitField<u16, 9>;
+        using DriveUnsafe = BitField<u16, 10>;
+        using Rk05DiskOnLine = BitField<u16, 11>;
+        using DrivePowerLow = BitField<u16, 12>;
+        using DriveId = BitField<u16, 13, 15>;
+
         u16 value;
-        BitField<u16, 0, 3> sectorCounter;
-        BitField<u16, 4> sectorCounterEqualsSectorAddress;
-        BitField<u16, 5> writeProtectStatus;
-        BitField<u16, 6> readWriteSeekReady;
-        BitField<u16, 7> driveReady;
-        BitField<u16, 8> sectorCounterOK;
-        BitField<u16, 9> seekIncomplete;
-        BitField<u16, 10> driveUnsafe;
-        BitField<u16, 11> rk05DiskOnLine;
-        BitField<u16, 12> drivePowerLow;
-        BitField<u16, 13, 15> driveId;
+        SectorCounter sectorCounter;
+        SectorCounterEqualsSectorAddress sectorCounterEqualsSectorAddress;
+        WriteProtectStatus writeProtectStatus;
+        ReadWriteSeekReady readWriteSeekReady;
+        DriveReady driveReady;
+        SectorCounterOK sectorCounterOK;
+        SeekIncomplete seekIncomplete;
+        DriveUnsafe driveUnsafe;
+        Rk05DiskOnLine rk05DiskOnLine;
+        DrivePowerLow drivePowerLow;
+        DriveId driveId;
     };
 
     // Error register. This is a read-only register.
@@ -113,8 +134,6 @@ namespace RKTypes
     {
         RKDS rkds;
         RKER rker;
-        u16 wordCount;
-        BusAddress busAddress;
     };
 
     // Actions to be processed by the action processor are either a Function,

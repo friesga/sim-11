@@ -94,6 +94,7 @@ private:
 
     void actionProcessor ();
     void processFunction (RKTypes::Function function);
+    void executeSeek (RKTypes::RKDA diskAddress);
     void processDriveCondition (RKTypes::DriveCondition driveCondition);
     void BINITReceiver (bool signalValue);
     void setNonExistingDisk (u16 driveId);

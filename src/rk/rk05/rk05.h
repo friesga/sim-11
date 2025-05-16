@@ -5,6 +5,7 @@
 #include "bus/include/bus.h"
 #include "configdata/rk/rk05/rk05config/rk05config.h"
 #include "rk/include/rktypes.h"
+#include "rk/include/driveinterface.h"
 #include "panel.h"
 #include "asynctimer/asynctimer.h"
 #include "variantfsm/fsm.h"
@@ -23,7 +24,7 @@ using std::queue;
 class RK05
 {
 public:
-    RK05 (Bus* bus, AbstractBusDevice* controller, Window* window,
+    RK05 (Bus* bus, DriveInterface* controller, Window* window,
         shared_ptr<RK05Config> rk05Config);
     ~RK05 ();
     void executeFunction (RKTypes::Function function);
@@ -31,14 +32,11 @@ public:
 
 private:
     Bus* bus_ {nullptr};
-    AbstractBusDevice* controller_ {nullptr};
+    DriveInterface* controller_ {nullptr};
 
-    // Definition of the RK05 drive format:
-    // - 12 sectors/track
-    // - 2 disk surfaces/disk
-    // - 203 cylinders/disk drive
-    // - 256 words/sector
-    Geometry rk05Geometry {12, 2, 203, 256};
+    // Definition of the RK05 drive format
+    Geometry rk05Geometry {RKTypes::SectorsPerSurface, RKTypes::NumberOfHeads,
+        RKTypes::CylindersPerDisk, RKTypes::WordsPerSector};
 
     DiskDrive diskDrive_ {};
     unique_ptr<u16[]> buffer_ {};

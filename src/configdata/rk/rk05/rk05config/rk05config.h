@@ -2,6 +2,7 @@
 #define _RK05CONFIG_H_
 
 #include "cabinet/cabinet.h"
+#include "types.h"
 
 #include <memory>
 
@@ -12,7 +13,7 @@ struct RK05ConfigParams;
 // Definition of the configuration options of an RK05 unit
 struct RK05Config
 {
-	size_t unitNumber {0};
+	u16 unitNumber {0};
 	shared_ptr<Cabinet::Position> cabinetPosition {nullptr};
 	string fileName {};
 	bool newFile {false};
