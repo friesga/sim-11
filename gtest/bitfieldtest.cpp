@@ -164,3 +164,23 @@ TEST (BitFieldTest, valueCanBeSet)
     EXPECT_TRUE (r.bit0);
     EXPECT_TRUE (r.bit15);
 }
+
+TEST (BitFieldTest, constructorSetsBitValue)
+{
+    uint16_t value {0};
+
+    value = +BitField<u16, 8, 8> {0377};
+
+    EXPECT_EQ (value, 0177400);
+}
+
+TEST (BitFieldTest, bitFieldsCanBeOred)
+{
+    uint16_t value = +BitField<u16, 8, 8> {0377} | +BitField<u16, 8, 8> {0377};
+
+    EXPECT_EQ (value, 0177400);
+
+    value = +BitField<u16, 8, 8> {0377} | +BitField<u16, 0, 8> {0377};
+
+    EXPECT_EQ (value, 0177777);
+}
