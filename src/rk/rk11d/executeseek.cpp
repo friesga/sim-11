@@ -8,15 +8,22 @@
 // RKER is set. RKCS 06 (Interrupt Done Enable) then determines the program
 // reaction. (EK-RK11D-MM-002 par. 1.3.2.2)
 //
+// The acceptance (Address Acknowledge) of a Seek or Srive Reset function by
+// the selected drive generates an interrupt request.
+// (EK-RK11D-MM-002, par. 3.4)
+// 
+// Presumably the interrupt is only generated when RKCS IDE is set.
+//
 void RK11D::executeSeek (RKTypes::RKDA diskAddress)
 {
-    if (diskAddress.cylinderAddress >= RKTypes::CylindersPerDisk)
+    if (diskAddress.cylinderAddress < RKTypes::CylindersPerDisk)
+        rk05Drives_[diskAddress.driveSelect]->seek (diskAddress.cylinderAddress);
+    else
     {
         rker_.nonexistentCylinder = 1;
         rkcs_.error = 1;
         rkcs_.hardError = 1;
-        return;
     }
 
-    rk05Drives_[diskAddress.driveSelect]->seek (diskAddress.cylinderAddress);
+    setControlReady ();
 }

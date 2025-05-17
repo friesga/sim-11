@@ -3,6 +3,7 @@
 #include "bus/unibus/unibus.h"
 #include "statuscodes.h"
 #include "chrono/simulatorclock/simulatorclock.h"
+#include "interruptrequest/interruptrequest.h"
 
 #include <gtest/gtest.h>
 #include <memory>
@@ -40,6 +41,7 @@ protected:
     // RKCS bit definitions
     static constexpr u16  RKCS_GO = (1 << 0);
     static constexpr u16  RKCS_RDY = (1 << 7);
+    static constexpr u16  RKCS_IDE = (1 << 6);
     static constexpr u16  RKCS_HE = (1 << 14);
     static constexpr u16  RKCS_ERR = (1 << 15);
     inline u16 RKCS_OPERATION (u16 function) { return (function & 7) << 1; }
@@ -137,6 +139,33 @@ TEST_F (RK11DSeekTest, seekToExistentCylinder)
 
     waitForDriveReady (rk11dDevice, 0);
 
+    // Verify no error and correct status indicated
+    EXPECT_EQ (rk11dDevice->read (BusAddress {RKDS}),
+        RKDS_SC_SA | RKDS_RWS_READY | RKDS_DRY | RKDS_SOK | RKDS_RK05);
+    EXPECT_EQ (rk11dDevice->read (BusAddress {RKER}), 0);
+    EXPECT_EQ (rk11dDevice->read (BusAddress {RKCS}) & (RKCS_ERR | RKCS_HE), 0);
+}
+
+TEST_F (RK11DSeekTest, seekGeneratedInterrupts)
+{
+    // Try to seek to cylinder 1
+    EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKDA}, 0000040),
+        StatusCode::Success);
+    EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKCS},
+        RKCS_OPERATION (Operation::Seek) | RKCS_IDE | RKCS_GO),
+        StatusCode::Success);
+   
+    // The acceptance of the Seek function should generate an interrupt request
+    waitForControllerReady (rk11dDevice);
+    EXPECT_TRUE (bus.intrptReqAvailable ());
+    EXPECT_TRUE (bus.containsInterrupt (TrapPriority::BR5, 5, 0));
+
+    // After completion of the seek another interrupt request should be
+    // generated and the drive should be ready
+    waitForDriveReady (rk11dDevice, 0);
+    EXPECT_TRUE (bus.intrptReqAvailable ());
+    EXPECT_TRUE (bus.containsInterrupt (TrapPriority::BR5, 5, 0));
+    
     // Verify no error and correct status indicated
     EXPECT_EQ (rk11dDevice->read (BusAddress {RKDS}),
         RKDS_SC_SA | RKDS_RWS_READY | RKDS_DRY | RKDS_SOK | RKDS_RK05);
