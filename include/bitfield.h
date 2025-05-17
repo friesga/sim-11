@@ -72,6 +72,11 @@ public:
         return *this;
     }
 
+    // Definition of the unary plus operator for Bitfields. This allows 
+    // statements such as 'u16 bits = +BitField<u16, 8, 8> {0377};' 
+    // returning the bit value of bits instead of the integer value.
+    T operator+ () const { return value_; }
+
     operator bool () const { return value_ & (Mask << Index); }
 
 private:
