@@ -60,6 +60,32 @@ protected:
         WriteLock
     };
 
+    RK11DConfig rk11dConfig {};
+    Unibus bus;
+    MS11P ms11p {&bus};
+    RK11D* rk11dDevice;
+
+    void SetUp () override
+    {
+        RK11DConfig rk11dConfig {};
+        rk11dConfig.rk05Config[0] =
+            make_shared<RK05Config> (RK05Config
+            ({
+                .fileName = "rk05.dsk",
+                .newFile = true,
+                .overwrite = true
+                }));
+
+
+        rk11dDevice = new RK11D (&bus, nullptr,
+            make_shared<RK11DConfig> (rk11dConfig));
+
+        // Create a minimal system, consisting of just the bus, memory
+        // and the RK11-D/RK05 to be tested.
+        bus.installModule (&ms11p);
+        bus.installModule (rk11dDevice);
+    }
+
     void waitForControllerReady (RK11D* controller)
     {
         u16 result;
@@ -85,25 +111,6 @@ protected:
 
 TEST_F (RK11DSeekTest, seekToNonExistentCylinder)
 {
-    RK11DConfig rk11dConfig {};
-    rk11dConfig.rk05Config[0] =
-        make_shared<RK05Config> (RK05Config
-            ({
-                .fileName = "rk05.dsk",
-                .newFile = true,
-                .overwrite = true
-            }));
-
-    Unibus bus;
-    MS11P ms11p {&bus};
-    RK11D* rk11dDevice = new RK11D (&bus, nullptr,
-        make_shared<RK11DConfig> (rk11dConfig));
-
-    // Create a minimal system, consisting of just the bus, memory
-    // and the RK11-D/RK05 to be tested.
-    bus.installModule (&ms11p);
-    bus.installModule (rk11dDevice);
-
     // Try to seek to cylinder 203
     EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKDA}, 0014540),
         StatusCode::Success);
@@ -121,25 +128,6 @@ TEST_F (RK11DSeekTest, seekToNonExistentCylinder)
 
 TEST_F (RK11DSeekTest, seekToExistentCylinder)
 {
-    RK11DConfig rk11dConfig {};
-    rk11dConfig.rk05Config[0] =
-        make_shared<RK05Config> (RK05Config
-        ({
-            .fileName = "rk05.dsk",
-            .newFile = true,
-            .overwrite = true
-            }));
-
-    Unibus bus;
-    MS11P ms11p {&bus};
-    RK11D* rk11dDevice = new RK11D (&bus, nullptr,
-        make_shared<RK11DConfig> (rk11dConfig));
-
-    // Create a minimal system, consisting of just the bus, memory
-    // and the RK11-D/RK05 to be tested.
-    bus.installModule (&ms11p);
-    bus.installModule (rk11dDevice);
-
     // Try to seek to cylinder 1
     EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKDA}, 0000040),
         StatusCode::Success);
