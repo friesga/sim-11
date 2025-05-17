@@ -28,7 +28,7 @@ RK05::State RK05::StateMachine::transition (Initial&&, SpunUp)
     context_->rdyIndicator_->show (Indicator::State::On);
     context_->oncylIndicator_->show (Indicator::State::On);
 
-    // context_->setDriveReady ();
+    context_->driveStatus_.driveReady = 1;
     return LockedOn {};
 }
 
@@ -66,7 +66,7 @@ RK05::State RK05::StateMachine::transition (SpinningUp&&, TimeElapsed)
 {
     context_->rdyIndicator_->show (Indicator::State::On);
 
-    // context_->setDriveReady ();
+    context_->driveStatus_.driveReady = 1;
     return LockedOn {};
 }
 
@@ -121,7 +121,7 @@ RK05::State RK05::StateMachine::transition (LockedOn&&,
 // This function is executed when a seek is completed.
 RK05::State RK05::StateMachine::transition (Seeking&&, TimeElapsed)
 {
-    // context_->setDriveReady ();
+    context_->seekCompleted ();
     return LockedOn {};
 }
 
@@ -130,6 +130,7 @@ RK05::State RK05::StateMachine::transition (Seeking&&, TimeElapsed)
 // it takes half the time of the spin up time.
 RK05::State RK05::StateMachine::transition (LockedOn&&, SpinDown)
 {
+    context_->driveStatus_.driveReady = 0;
     context_->rdyIndicator_->show (Indicator::State::Off);
     context_->oncylIndicator_->show (Indicator::State::Off);
     spinUpDownTimer_.start (bind (&RK05::StateMachine::spinUpDownTimerExpired,
@@ -139,6 +140,7 @@ RK05::State RK05::StateMachine::transition (LockedOn&&, SpinDown)
 
 RK05::State RK05::StateMachine::transition (Seeking&&, SpinDown)
 {
+    context_->driveStatus_.driveReady = 0;
     context_->rdyIndicator_->show (Indicator::State::Off);
     context_->oncylIndicator_->show (Indicator::State::Off);
     spinUpDownTimer_.start (bind (&RK05::StateMachine::spinUpDownTimerExpired,

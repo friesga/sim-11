@@ -2,11 +2,15 @@
 #include "ms11p/ms11p.h"
 #include "bus/unibus/unibus.h"
 #include "statuscodes.h"
+#include "chrono/simulatorclock/simulatorclock.h"
 
 #include <gtest/gtest.h>
 #include <memory>
+#include <chrono>
 
 using std::make_shared;
+
+using namespace std::chrono_literals;
 
 // Definition of the test fixture
 class RK11DSeekTest : public ::testing::Test
@@ -23,7 +27,11 @@ protected:
     static constexpr u16 RKDB = RK11D_BASE + 016;
 
     // RKDS bit definitions
-    static constexpr u16  RKDS_DRY = (1 << 7);
+    static constexpr u16  RKDS_SC_SA     = (1 << 4);
+    static constexpr u16  RKDS_RWS_READY = (1 << 6);
+    static constexpr u16  RKDS_DRY       = (1 << 7);
+    static constexpr u16  RKDS_SOK       = (1 << 8);
+    static constexpr u16  RKDS_RK05      = (1 << 11);
     inline u16 getRKDSdriveId (u16 rkds) { return (rkds & 7) >> 13; }
 
     // RKER bit definitions
@@ -57,7 +65,7 @@ protected:
         u16 result;
         do
         {
-            // SimulatorClock::forwardClock (100ms);
+            SimulatorClock::forwardClock (10ms);
             result = controller->read (RKCS);
         } while (!(result & RKCS_RDY));
     }
@@ -67,7 +75,7 @@ protected:
         u16 result;
         do
         {
-            // SimulatorClock::forwardClock (100ms);
+            SimulatorClock::forwardClock (10ms);
             result = controller->read (RKDS);
         } while (!((result & RKDS_DRY) && getRKDSdriveId (result) == driveId));
 
@@ -109,4 +117,41 @@ TEST_F (RK11DSeekTest, seekToNonExistentCylinder)
     EXPECT_EQ (rk11dDevice->read (BusAddress {RKCS}) & (RKCS_ERR | RKCS_HE),
         RKCS_ERR | RKCS_HE);
     EXPECT_EQ (rk11dDevice->read (BusAddress {RKER}) & RKER_NXC, RKER_NXC);
+}
+
+TEST_F (RK11DSeekTest, seekToExistentCylinder)
+{
+    RK11DConfig rk11dConfig {};
+    rk11dConfig.rk05Config[0] =
+        make_shared<RK05Config> (RK05Config
+        ({
+            .fileName = "rk05.dsk",
+            .newFile = true,
+            .overwrite = true
+            }));
+
+    Unibus bus;
+    MS11P ms11p {&bus};
+    RK11D* rk11dDevice = new RK11D (&bus, nullptr,
+        make_shared<RK11DConfig> (rk11dConfig));
+
+    // Create a minimal system, consisting of just the bus, memory
+    // and the RK11-D/RK05 to be tested.
+    bus.installModule (&ms11p);
+    bus.installModule (rk11dDevice);
+
+    // Try to seek to cylinder 1
+    EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKDA}, 0000040),
+        StatusCode::Success);
+    EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKCS},
+        RKCS_OPERATION (Operation::Seek) | RKCS_GO),
+        StatusCode::Success);
+
+    waitForDriveReady (rk11dDevice, 0);
+
+    // Verify no error and correct status indicated
+    EXPECT_EQ (rk11dDevice->read (BusAddress {RKDS}),
+        RKDS_SC_SA | RKDS_RWS_READY | RKDS_DRY | RKDS_SOK | RKDS_RK05);
+    EXPECT_EQ (rk11dDevice->read (BusAddress {RKER}), 0);
+    EXPECT_EQ (rk11dDevice->read (BusAddress {RKCS}) & (RKCS_ERR | RKCS_HE), 0);
 }

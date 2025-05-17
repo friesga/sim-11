@@ -32,6 +32,15 @@ RK05::RK05 (Bus* bus, DriveInterface* controller, Window* window,
     diskDrive_.attachFile (rk05Config->fileName, rk05Geometry,
         getAttachMode (rk05Config));
 
+    // Initialize the drive status before an event is dispatched to the
+    // state machine as the drive status is changed by the state machine
+    // and the initialization would overwrite those changes.
+    driveStatus_.value = +RKDS::SectorCounterEqualsSectorAddress {1} |
+        +RKDS::ReadWriteSeekReady {1} |
+        +RKDS::SectorCounterOK {1} |
+        +RKDS::Rk05DiskOnLine {1} |
+        +RKDS::DriveId {rk05Config->unitNumber};
+
     stateMachine_ = make_unique<StateMachine> (this,
         seconds (rk05Config->spinUpTime));
 
@@ -44,13 +53,6 @@ RK05::RK05 (Bus* bus, DriveInterface* controller, Window* window,
         stateMachine_->dispatch (SpunUp {});
     else
         stateMachine_->dispatch (SpunDown {});
-
-    // Initialize the drive status
-    driveStatus_.value = +RKDS::SectorCounterEqualsSectorAddress {1} |
-        +RKDS::ReadWriteSeekReady {1} |
-        +RKDS::SectorCounterOK {1} |
-        +RKDS::Rk05DiskOnLine {1} |
-        +RKDS::DriveId {rk05Config->unitNumber};
 }
 
 // Finish the drive thread

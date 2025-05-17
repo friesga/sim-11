@@ -41,7 +41,7 @@ try
 
         // Wait till we are signalled that a command is ready to be processed
         // 
-        // wait() unlocks the DriveMutex_.
+        // wait() unlocks the controllerMutex_.
         actionAvailable_.wait (lock);
     }
 }

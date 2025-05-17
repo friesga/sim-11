@@ -1,5 +1,8 @@
 #include "rk11d.h"
 
+// The function is already safeguarded against register access by the
+// CPU thread as the controllerMutex_ is locked by the action processor.
+//
 void RK11D::processFunction (RKTypes::Function function)
 {
     // A Control Reset can be performed without any RK05 drive attached
@@ -60,7 +63,7 @@ void RK11D::setControlReady ()
 void RK11D::setDriveCondition (RKTypes::DriveCondition condition)
 {
     // Guard against controller register access from the RK11D thread
-    std::unique_lock<std::mutex> lock {controllerMutex_};
+    std::lock_guard<std::mutex> guard {controllerMutex_};
 
     actionQueue_.push (condition);
 
@@ -70,11 +73,12 @@ void RK11D::setDriveCondition (RKTypes::DriveCondition condition)
 
 // This function is called by the RK05 to pass the result of the execution
 // of a command to the controller and is executed in an RK05 thread.
+// 
+// The function is already safeguarded against register access by the
+// CPU thread as the controllerMutex_ is locked by the action processor.
+//
 void RK11D::processDriveCondition (RKTypes::DriveCondition driveCondition)
 {
-    // Guard against controller register access from the processor thread
-    std::unique_lock<std::mutex> lock {controllerMutex_};
-
     rkds_.value = driveCondition.rkds.value;
     rker_.value = driveCondition.rker.value;
 
