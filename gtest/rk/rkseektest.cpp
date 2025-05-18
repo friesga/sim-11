@@ -108,6 +108,11 @@ protected:
         } while (!((result & RKDS_DRY) && getRKDSdriveId (result) == driveId));
 
     }
+
+    void waitForInterruptAvailable ()
+    {
+        while (!bus.intrptReqAvailable ()) {}
+    }
 };
 
 
@@ -146,7 +151,7 @@ TEST_F (RK11DSeekTest, seekToExistentCylinder)
     EXPECT_EQ (rk11dDevice->read (BusAddress {RKCS}) & (RKCS_ERR | RKCS_HE), 0);
 }
 
-TEST_F (RK11DSeekTest, seekGeneratedInterrupts)
+TEST_F (RK11DSeekTest, seekGeneratesInterrupts)
 {
     // Try to seek to cylinder 1
     EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKDA}, 0000040),
@@ -159,12 +164,13 @@ TEST_F (RK11DSeekTest, seekGeneratedInterrupts)
     waitForControllerReady (rk11dDevice);
     EXPECT_TRUE (bus.intrptReqAvailable ());
     EXPECT_TRUE (bus.containsInterrupt (TrapPriority::BR5, 5, 0));
+    InterruptRequest ir;
+    EXPECT_TRUE (bus.getIntrptReq (ir));
 
     // After completion of the seek another interrupt request should be
     // generated and the drive should be ready
     waitForDriveReady (rk11dDevice, 0);
-    EXPECT_TRUE (bus.intrptReqAvailable ());
-    EXPECT_TRUE (bus.containsInterrupt (TrapPriority::BR5, 5, 0));
+    waitForInterruptAvailable ();
     
     // Verify no error and correct status indicated
     EXPECT_EQ (rk11dDevice->read (BusAddress {RKDS}),
