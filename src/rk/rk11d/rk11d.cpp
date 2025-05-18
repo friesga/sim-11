@@ -38,6 +38,13 @@ RK11D::RK11D (Bus* bus, Window* window, shared_ptr<RK11DConfig> rk11dConfig)
     reset ();
 }
 
+// Signal the action processor to stop and wait for it to finish
+RK11D::~RK11D ()
+{
+    finish ();
+    actionProcessorThread_.join ();
+}
+
 bool RK11D::responsible (BusAddress busAddress)
 {
     if (!busAddress.isInIOpage ())

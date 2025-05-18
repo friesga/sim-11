@@ -49,3 +49,14 @@ catch (const std::exception& ex)
 {
     cerr << "RK11D::actionProcessor exception: " << ex.what () << '\n';
 }
+
+void RK11D::finish ()
+{
+    // Guard against controller register access from main thread
+    std::lock_guard<std::mutex> guard {controllerMutex_};
+
+    running_ = false;
+
+    // Wake up the action processor
+    actionAvailable_.notify_one ();
+}
