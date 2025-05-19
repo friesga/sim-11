@@ -15,11 +15,13 @@
 #include <thread>
 #include <queue>
 #include <memory>
+#include <functional>
 
 using std::shared_ptr;
 using std::unique_ptr;
 using std::thread;
 using std::queue;
+using std::function;
 
 class RK05
 {
@@ -75,7 +77,7 @@ private:
     struct Unloaded {};     // No cartridge loaded
     struct SpinningUp {};   // The drive is spinning up
     struct LockedOn {};     // The drive is locked on a cylinder
-    struct Seeking {};      // The drive is seeking
+    struct Seeking { function<void ()> seekCompleted {nullptr}; };  // The drive is seeking
     struct SpinningDown {}; // The drive is spinning down
 
     using State = std::variant <Initial, Unloaded, SpinningUp, LockedOn,
@@ -87,7 +89,8 @@ private:
     struct SpinDown {};     // LOAD button released
     struct SpunUp {};       // Spin up is complete
     struct SpunDown {};     // Spin down is complete
-    struct SeekCommand { SimulatorClock::duration seekTime; };
+    struct SeekCommand { SimulatorClock::duration seekTime;
+                            function<void ()> seekCompleted {nullptr}; };
     struct TimeElapsed {};
 
     using Event = std::variant <SpinUp, SpinDown, SpunUp, SpunDown,

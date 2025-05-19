@@ -5,12 +5,14 @@
 #include <memory>
 #include <chrono>
 #include <cstdlib>
+#include <functional>
 
 using std::shared_ptr;
 using std::make_unique;
 using std::chrono::seconds;
 using std::abs;
 using std::chrono::duration;
+using std::bind;
 
 using namespace RKTypes;
 
@@ -106,7 +108,7 @@ bool RK05::isReady ()
 void RK05::seek (u16 cylinderAddress)
 {
     sendTrigger (SeekCommand {seekTime (currentCylinderAddress_,
-        cylinderAddress)});
+        cylinderAddress), bind (&RK05::seekCompleted, this)});
 
     // The current cylinder address actually should be set only when the
     // seek is completed, but as the seek cannot fail and the new cylinder

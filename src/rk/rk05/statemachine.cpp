@@ -106,7 +106,7 @@ RK05::State RK05::StateMachine::transition (LockedOn&&,
     SimulatorClock::wakeMeAt (SimulatorClock::now () + seekCommand.seekTime,
         this);
 
-    return Seeking {};
+    return Seeking {seekCommand.seekCompleted};
 }
 
 
@@ -120,9 +120,12 @@ RK05::State RK05::StateMachine::transition (LockedOn&&,
 }
 
 // This function is executed when a seek is completed.
-RK05::State RK05::StateMachine::transition (Seeking&&, TimeElapsed)
+RK05::State RK05::StateMachine::transition (Seeking&& currentState, TimeElapsed)
 {
-    context_->seekCompleted ();
+    if (currentState.seekCompleted != nullptr)
+        currentState.seekCompleted ();
+
+    // context_->seekCompleted ();
     return LockedOn {};
 }
 
@@ -170,6 +173,7 @@ RK05::State RK05::StateMachine::transition (SpinningDown&&, SpinUp)
 // machine.
 void RK05::StateMachine::spinUpDownTimerExpired ()
 {
+    lock_guard<mutex> lock {context_->driveMutex_};
     context_->eventQueue_.push (TimeElapsed {});
     context_->startCommand_.notify_one ();
 }
