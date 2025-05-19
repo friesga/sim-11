@@ -28,6 +28,7 @@ public:
         shared_ptr<RK05Config> rk05Config);
     ~RK05 ();
     void executeFunction (RKTypes::Function function);
+    bool isReady ();
     void seek (u16 cylinderAddress);
 
 private:

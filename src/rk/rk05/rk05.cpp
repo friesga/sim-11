@@ -96,6 +96,13 @@ void RK05::executeFunction (RKTypes::Function function)
     sendTrigger (function);
 }
 
+// The drive is ready when it is in the LockedOn or Seeking state
+bool RK05::isReady ()
+{
+    return stateMachine_->inState (LockedOn {}) ||
+        stateMachine_->inState (Seeking {});
+}
+
 void RK05::seek (u16 cylinderAddress)
 {
     sendTrigger (SeekCommand {seekTime (currentCylinderAddress_,
