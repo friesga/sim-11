@@ -170,6 +170,7 @@ RL01_02::State RL01_02::StateMachine::transition (SpinningDown&&, SpinUp)
 // machine.
 void RL01_02::StateMachine::spinUpDownTimerExpired ()
 {
+    lock_guard<mutex> lock {context_->driveMutex_};
     context_->eventQueue_.push (TimeElapsed {});
     context_->startCommand_.notify_one ();
 }
