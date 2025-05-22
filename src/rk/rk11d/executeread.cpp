@@ -1,0 +1,51 @@
+#include "rk11d.h"
+
+void RK11D::executeRead (RKTypes::Function function)
+{ 
+    u16 bytesRead {};
+    u16 driveId = function.diskAddress.driveSelect;
+
+    // Check the unit is available
+    if (rk05Drives_[driveId]->isReady ())
+    {
+        // Check parameters
+        
+        // Check for sector overflow
+        
+        // Command RK05 to read data from disk to buffer
+        rk05Drives_[driveId]->read (
+            DiskAddress {function.diskAddress.sectorAddress,
+            function.diskAddress.surface,
+            function.diskAddress.cylinderAddress},
+            absValueFromTwosComplement (function.wordCount),
+            buffer_.get ());
+
+        // Await the result of the execution of the read
+        commandCompletionQueue_.waitAndPop (bytesRead);
+
+
+        // Clear the part of the buffer not filled by the read
+
+        // Transfer words in buffer
+        transferDataFromBuffer (function.busAddress, bytesRead, buffer_);
+
+        // Adjust RKBA, RKWC registers
+    }
+
+    // Else indicate error
+
+    // Set controller ready
+    setControlReady ();
+}
+
+StatusCode RK11D::transferDataFromBuffer (BusAddress memoryAddress,
+    u16 wordCount, unique_ptr<u16[]>& buffer)
+{
+    for (size_t index = 0; index < wordCount; memoryAddress += 2, ++index)
+    {
+        if (!bus_->writeWord (memoryAddress, buffer_[index]))
+            return StatusCode::NonExistingMemory;
+    }
+
+    return StatusCode::Success;
+}

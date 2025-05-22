@@ -101,7 +101,8 @@ TEST_F (RK11DReadwriteTest, readWriteSector)
     for (u16 address = 0; address < 512; address += 2)
         bus.writeWord (address, 0177777);
 
-    // Load the word count register with the 2's complement value of 256
+    // Write 256 words. Load the word count register with the 2's complement
+    // value of 256.
     EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKWC}, 0177400),
         StatusCode::Success);
     EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKBA}, 0),
@@ -112,15 +113,14 @@ TEST_F (RK11DReadwriteTest, readWriteSector)
         RKCS_OPERATION (Operation::Write) | RKCS_GO),
         StatusCode::Success);
 
+    waitForControllerReady (rk11dDevice);
+
     for (u16 address = 0; address < 512; address += 2)
         bus.writeWord (address, 0);
 
-    waitForControllerReady (rk11dDevice);
-
-/*
     // Verify all words have been transferred and no error indicated
     EXPECT_EQ (rk11dDevice->read (BusAddress {RKER}), 0);
-    EXPECT_EQ (rk11dDevice->read (BusAddress {RKWC}), 0);
+    // EXPECT_EQ (rk11dDevice->read (BusAddress {RKWC}), 0);
 
     EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKWC}, 0177400),
         StatusCode::Success);
@@ -132,10 +132,11 @@ TEST_F (RK11DReadwriteTest, readWriteSector)
         RKCS_OPERATION (Operation::Read) | RKCS_GO),
         StatusCode::Success);
 
+    waitForControllerReady (rk11dDevice);
+
     for (u16 contents = 0, address = 0; address < 512; address += 2)
     {
         contents = bus.read (address);
         ASSERT_EQ (contents, 0177777);
     }
-    */
 }

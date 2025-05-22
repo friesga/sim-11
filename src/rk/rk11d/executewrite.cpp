@@ -9,14 +9,18 @@ void RK11D::executeWrite (RKTypes::Function function)
     // Check the unit is available
     if (rk05Drives_[driveId]->isReady ())
     {
-        // WordCount is 2's complement
-        
         // Check wordCount
         // Check the validity of diskAddress
         // Check for sector overflow
 
         // Transfer memory data from busAddress to internal buffer
         // while adjusting wordCount en BusAddress register
+        if (transferDataToBuffer (function.busAddress, function.wordCount,
+            buffer_) != StatusCode::Success)
+        {
+            // Set error condition
+            return;
+        }
 
         // Clear to end of block
 
@@ -34,6 +38,8 @@ void RK11D::executeWrite (RKTypes::Function function)
         // Adjust RKBA, RKWC registers
     }
 
+    // Else indicate error
+
     // Set controller ready
     setControlReady ();
 }
@@ -44,6 +50,22 @@ u32 RK11D::absValueFromTwosComplement (u16 value) const
 {
     return static_cast<u32> (0200000 - value);
 }
+
+StatusCode RK11D::transferDataToBuffer (BusAddress memoryAddress,
+    u16 wordCount, unique_ptr<u16[]>& buffer)
+{
+    for (size_t index = 0; index < wordCount; memoryAddress += 2, ++index)
+    {
+        CondData<u16> value = bus_->read (memoryAddress).valueOr (0);
+        if (!value.hasValue ())
+            return StatusCode::NonExistingMemory;
+
+        buffer_[index] = value;
+    }
+
+    return StatusCode::Success;
+}
+
 
 void RK11D::dataTransferComplete (u16 wordsTransferred)
 {

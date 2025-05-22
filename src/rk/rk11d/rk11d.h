@@ -105,7 +105,12 @@ private:
     void actionProcessor ();
     void processFunction (RKTypes::Function function);
     void executeSeek (RKTypes::RKDA diskAddress);
+    void executeRead (RKTypes::Function function);
     void executeWrite (RKTypes::Function function);
+    StatusCode transferDataToBuffer (BusAddress memoryAddress,
+        u16 wordCount, unique_ptr<u16[]>& buffer);
+    StatusCode transferDataFromBuffer (BusAddress memoryAddress,
+        u16 wordCount, unique_ptr<u16[]>& buffer);
     void processDriveCondition (RKTypes::DriveCondition driveCondition);
     void BINITReceiver (bool signalValue);
     void setNonExistingDisk (u16 driveId);

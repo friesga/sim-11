@@ -29,6 +29,9 @@ void RK11D::processFunction (RKTypes::Function function)
             break;
 
         case RKTypes::Read:
+            executeRead (function);
+            break;
+
         case RKTypes::WriteCheck:
             break;
 
