@@ -8,6 +8,7 @@
 #include "rk/include/driveinterface.h"
 #include "panel.h"
 #include "bitfield.h"
+#include "threadsafecontainers/threadsafequeue.h"
 
 #include <vector>
 #include <string>
@@ -71,6 +72,7 @@ public:
 
     // Functions required by the DriveInterface interface
     void setDriveCondition (RKTypes::DriveCondition condition);
+    void dataTransferComplete (u16 wordTransferred);
 
 private:
     // Definition of the controller's base address and vector
@@ -93,14 +95,24 @@ private:
     // been queued.
     condition_variable actionAvailable_;
 
+    // The functions transferring data await the result of execution of the
+    // command by the RK05 drive in this queue.
+    ThreadSafeQueue<u16> commandCompletionQueue_;
+
+    // Definition of a buffer for the data to be transferred to/from the RK05 drive
+    unique_ptr<u16[]> buffer_;
+
     void actionProcessor ();
     void processFunction (RKTypes::Function function);
     void executeSeek (RKTypes::RKDA diskAddress);
+    void executeWrite (RKTypes::Function function);
     void processDriveCondition (RKTypes::DriveCondition driveCondition);
     void BINITReceiver (bool signalValue);
     void setNonExistingDisk (u16 driveId);
     void setControlReady ();
     void finish ();
+    u32 absValueFromTwosComplement (u16 value) const;
+    
 };
 
 

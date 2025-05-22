@@ -25,6 +25,9 @@ void RK11D::processFunction (RKTypes::Function function)
     switch (function.operation)
     {
         case RKTypes::Write:
+            executeWrite (function);
+            break;
+
         case RKTypes::Read:
         case RKTypes::WriteCheck:
             break;

@@ -9,6 +9,7 @@ using std::mutex;
 using std::lock_guard;
 using std::placeholders::_1;
 using std::thread;
+using std::numeric_limits;
 
 //
 // This constructor can be called in the initialization of both sim-11 and
@@ -27,6 +28,9 @@ RK11D::RK11D (Bus* bus, Window* window, shared_ptr<RK11DConfig> rk11dConfig)
         if (rk05Config != nullptr)
             rk05Drives_.push_back (make_unique<RK05> (bus, this, window, rk05Config));
     }
+
+    // Allocate a buffer for the data to be transferred to/from the RK05 drive
+    buffer_ = make_unique<u16[]> (numeric_limits<u16>::max ());
 
     bus_->BINIT ().subscribe (bind (&RK11D::BINITReceiver, this, _1));
 

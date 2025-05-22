@@ -32,8 +32,11 @@ public:
     void executeFunction (RKTypes::Function function);
     bool isReady ();
     void seek (u16 cylinderAddress);
+    void write (DiskAddress diskAddress, u16 wordCount, u16* data);
 
 private:
+    class WriteCompletion;
+
     Bus* bus_ {nullptr};
     DriveInterface* controller_ {nullptr};
 
@@ -73,6 +76,15 @@ private:
     Frame<float> wtprotSwitchFrame {0.613, 0.605, 0.029, 0.122};
 
     // Definition of the drive states
+    //
+    // To both the SeekCommand and the Seeking state a function pointer
+    // can be passed. This function will be called after completion of
+    // a seek. This allows different action on a async seek command initiated
+    // by the controller and synced seeks for read and write commands.
+    // The function pointer must be passed to the SeekCommand which will
+    // then forward it to the Seeking state. On a transition from the
+    // Seeking state to the LockedOn state the function will then be called.
+    //
     struct Initial {};      // State machine initial state
     struct Unloaded {};     // No cartridge loaded
     struct SpinningUp {};   // The drive is spinning up

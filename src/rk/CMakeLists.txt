@@ -1,6 +1,7 @@
 set (RK11D_SRCS
     rk11d/actionprocessor.cpp
     rk11d/executeseek.cpp
+    rk11d/executewrite.cpp
     rk11d/processaction.cpp
     rk11d/read.cpp
     rk11d/rk11d.cpp
@@ -9,7 +10,8 @@ set (RK11D_SRCS
     rk05/handlefunction.cpp
     rk05/createbezel.cpp
     rk05/drivethread.cpp
-    rk05/statemachine.cpp)
+    rk05/statemachine.cpp
+    rk05/write.cpp)
 
 target_sources (${TARGET} PRIVATE ${RK11D_SRCS})
 target_sources (sim-11-test PRIVATE ${RK11D_SRCS})
