@@ -40,6 +40,7 @@ struct RK05ConfigParams
 	bool readOnly {false};
 	bool overwrite {false};
 	bool writeProtect {false};
+	size_t spinUpTime {0};
 };
 
 #endif // _RK05CONFIG_H_
