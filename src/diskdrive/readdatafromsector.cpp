@@ -12,7 +12,7 @@ size_t DiskDrive::readDataFromSector (DiskAddress diskAddress, u16* buffer,
     }
 
     // Read wordCount * 2 bytes; returned is the number of bytes read 
-    size_t numBytes = fread (buffer, sizeof (int16_t), wordCount, diskFileStream);
+    size_t wordsRead = fread (buffer, sizeof (int16_t), wordCount, diskFileStream);
 
     if (ferror (diskFileStream))
     {
@@ -20,5 +20,5 @@ size_t DiskDrive::readDataFromSector (DiskAddress diskAddress, u16* buffer,
         return 0;
     }
 
-    return numBytes;
+    return wordsRead;
 }

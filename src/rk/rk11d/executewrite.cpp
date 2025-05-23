@@ -3,7 +3,7 @@
 // ToDo: Pass Function as argument?
 void RK11D::executeWrite (RKTypes::Function function)
 {
-    u16 completion {};
+    u16 wordsWritten {};
     u16 driveId = function.diskAddress.driveSelect;
 
     // Check the unit is available
@@ -33,9 +33,13 @@ void RK11D::executeWrite (RKTypes::Function function)
             buffer_.get ());
 
         // Await the result of the execution of the write
-        commandCompletionQueue_.waitAndPop (completion);
+        commandCompletionQueue_.waitAndPop (wordsWritten);
 
+        // Check for errors
+        
         // Adjust RKBA, RKWC registers
+        rkwc_ += wordsWritten;
+        rkba_ += wordsWritten;
     }
 
     // Else indicate error
