@@ -5,34 +5,38 @@ void RK11D::executeRead (RKTypes::Function function)
     u16 wordsRead {};
     u16 driveId = function.diskAddress.driveSelect;
 
-    // Check the unit is available
-    if (rk05Drives_[driveId]->isReady ())
+    // Check the drive is ready
+    if (!rk05Drives_[driveId]->isReady ())
     {
-        // Check parameters
-        
-        // Check for sector overflow
-        
-        // Command RK05 to read data from disk to buffer
-        rk05Drives_[driveId]->read (
-            DiskAddress {function.diskAddress.sectorAddress,
-            function.diskAddress.surface,
-            function.diskAddress.cylinderAddress},
-            absValueFromTwosComplement (function.wordCount),
-            buffer_.get ());
-
-        // Await the result of the execution of the read
-        commandCompletionQueue_.waitAndPop (wordsRead);
-
-
-        // Clear the part of the buffer not filled by the read
-
-        // Transfer words in buffer
-        transferDataFromBuffer (function.busAddress, wordsRead, buffer_);
-
-        // Adjust RKBA, RKWC registers
-        rkwc_ += wordsRead;
-        rkba_ += wordsRead;
+        setDriveError ();
+        setControlReady ();
+        return;
     }
+
+    // Check parameters
+
+    // Check for sector overflow
+
+    // Command RK05 to read data from disk to buffer
+    rk05Drives_[driveId]->read (
+        DiskAddress {function.diskAddress.sectorAddress,
+        function.diskAddress.surface,
+        function.diskAddress.cylinderAddress},
+        absValueFromTwosComplement (function.wordCount),
+        buffer_.get ());
+
+    // Await the result of the execution of the read
+    commandCompletionQueue_.waitAndPop (wordsRead);
+
+
+    // Clear the part of the buffer not filled by the read
+
+    // Transfer words in buffer
+    transferDataFromBuffer (function.busAddress, wordsRead, buffer_);
+
+    // Adjust RKBA, RKWC registers
+    rkwc_ += wordsRead;
+    rkba_ += wordsRead;
 
     // Else indicate error
 

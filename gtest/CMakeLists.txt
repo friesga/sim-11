@@ -64,6 +64,7 @@ set (GTEST_SRCS
     dummycpu/dummymmu/dummymmu.cpp
     registers/twowordregistertest.cpp
     rk/rkconfigprocessortest.cpp
+    rk/rkerrors.cpp
     rk/rk11dregisterstest.cpp
     rk/rkreadwritetest.cpp
     rk/rkseektest.cpp

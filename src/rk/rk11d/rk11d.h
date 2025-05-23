@@ -117,6 +117,7 @@ private:
     void setControlReady ();
     void finish ();
     u32 absValueFromTwosComplement (u16 value) const;
+    void setDriveError ();
     
 };
 

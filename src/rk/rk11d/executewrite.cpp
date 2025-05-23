@@ -6,41 +6,45 @@ void RK11D::executeWrite (RKTypes::Function function)
     u16 wordsWritten {};
     u16 driveId = function.diskAddress.driveSelect;
 
-    // Check the unit is available
-    if (rk05Drives_[driveId]->isReady ())
+    // Check the drive is ready
+    if (!rk05Drives_[driveId]->isReady ())
     {
-        // Check wordCount
-        // Check the validity of diskAddress
-        // Check for sector overflow
-
-        // Transfer memory data from busAddress to internal buffer
-        // while adjusting wordCount en BusAddress register
-        if (transferDataToBuffer (function.busAddress, function.wordCount,
-            buffer_) != StatusCode::Success)
-        {
-            // Set error condition
-            return;
-        }
-
-        // Clear to end of block
-
-        // Command RK05 to write data from buffer to disk
-        rk05Drives_[driveId]->write (
-            DiskAddress {function.diskAddress.sectorAddress,
-            function.diskAddress.surface,
-            function.diskAddress.cylinderAddress},
-            absValueFromTwosComplement (function.wordCount),
-            buffer_.get ());
-
-        // Await the result of the execution of the write
-        commandCompletionQueue_.waitAndPop (wordsWritten);
-
-        // Check for errors
-        
-        // Adjust RKBA, RKWC registers
-        rkwc_ += wordsWritten;
-        rkba_ += wordsWritten;
+        setDriveError ();
+        setControlReady ();
+        return;
     }
+
+    // Check wordCount
+    // Check the validity of diskAddress
+    // Check for sector overflow
+
+    // Transfer memory data from busAddress to internal buffer
+    // while adjusting wordCount en BusAddress register
+    if (transferDataToBuffer (function.busAddress, function.wordCount,
+        buffer_) != StatusCode::Success)
+    {
+        // Set error condition
+        return;
+    }
+
+    // Clear to end of block
+
+    // Command RK05 to write data from buffer to disk
+    rk05Drives_[driveId]->write (
+        DiskAddress {function.diskAddress.sectorAddress,
+        function.diskAddress.surface,
+        function.diskAddress.cylinderAddress},
+        absValueFromTwosComplement (function.wordCount),
+        buffer_.get ());
+
+    // Await the result of the execution of the write
+    commandCompletionQueue_.waitAndPop (wordsWritten);
+
+    // Check for errors
+
+    // Adjust RKBA, RKWC registers
+    rkwc_ += wordsWritten;
+    rkba_ += wordsWritten;
 
     // Else indicate error
 
