@@ -9,7 +9,7 @@ void RK11D::executeWrite (RKTypes::Function function)
     // Check the drive is ready
     if (!rk05Drives_[driveId]->isReady ())
     {
-        setDriveError ();
+        setError ([&] {rker_.driveError = 1; });
         setControlReady ();
         return;
     }

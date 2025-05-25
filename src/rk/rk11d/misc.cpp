@@ -33,16 +33,8 @@ void RK11D::setNonExistingDisk (u16 driveId)
     rkds_.driveUnsafe = 1;
     rkds_.driveReady = 0;
     rker_.driveError = 1;
-    rker_.nonExistentDisk = 1;
-    rkcs_.error = 1;
-    rkcs_.hardError = 1;
-}
 
-void RK11D::setDriveError ()
-{
-    rker_.driveError = 1;
-    rkcs_.error = 1;
-    rkcs_.hardError = 1;
+    setError ([&] {rker_.nonExistentDisk = 1;});
 }
 
 void RK11D::setError (function<void ()> function)

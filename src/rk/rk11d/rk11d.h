@@ -119,10 +119,7 @@ private:
     void setControlReady ();
     void finish ();
     u32 absValueFromTwosComplement (u16 value) const;
-    void setDriveError ();
     void setError (function<void ()> function);
-    
 };
-
 
 #endif // _RK11D_H_
