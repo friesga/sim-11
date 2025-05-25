@@ -13,7 +13,7 @@ using std::make_shared;
 using namespace std::chrono_literals;
 
 // Definition of the test fixture
-class RK11DErrorsTest : public ::testing::Test
+class RK11DReadTest : public ::testing::Test
 {
 protected:
     // Use our own set of definitions to avoid common cause issues
@@ -79,36 +79,81 @@ protected:
     }
 };
 
-// Verify an drive error is reported for a non-ready drive. The specification
-// of a spin up time in the configuration causes the drive not be spun up.
-TEST_F (RK11DErrorsTest, writeOnNonReadyDriveReportsError)
+// Before we can verify the read function a sector has to be written first
+//
+TEST_F (RK11DReadTest, readSectorSucceeds)
 {
     RK11DConfig rk11dConfig {};
     rk11dConfig.rk05Config[0] =
         make_shared<RK05Config> (RK05Config
-        ({
-            .fileName = "rk05.dsk",
-            .newFile = true,
-            .overwrite = true,
-            .spinUpTime = 100
+            ({
+                .fileName = "rk05.dsk",
+                .newFile = true,
+                .overwrite = true
             }));
 
     Unibus bus;
+    MS11P ms11p {&bus};
     RK11D* rk11dDevice = new RK11D (&bus, nullptr,
         make_shared<RK11DConfig> (rk11dConfig));
 
+    // Create a minimal system, consisting of just the bus, memory
+    // and the RK11-D/RK05 to be tested.
+    bus.installModule (&ms11p);
+    bus.installModule (rk11dDevice);
+
+    // Fill the memory's first 512 words with a value to verify that the
+    // written sector is read back
+    for (u16 address = 0; address < 512; address += 2)
+        bus.writeWord (address, 0177777);
+
+    // Write 256 words. Load the word count register with the 2's complement
+    // value of 256.
+    EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKWC}, 0177400),
+        StatusCode::Success);
+    EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKBA}, 0),
+        StatusCode::Success);
+    EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKDA}, 0),
+        StatusCode::Success);
     EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKCS},
-        RKCS_OPERATION (Write) | RKCS_GO), StatusCode::Success);
+        RKCS_OPERATION (Operation::Write) | RKCS_GO),
+        StatusCode::Success);
 
     waitForControllerReady (rk11dDevice);
 
-    EXPECT_EQ (rk11dDevice->read (BusAddress {RKER}) & RKER_DRE, RKER_DRE);
-    EXPECT_EQ (rk11dDevice->read (BusAddress {RKDS}) & RKDS_DRY, 0);
-    EXPECT_EQ (rk11dDevice->read (BusAddress {RKCS}) & (RKCS_ERR | RKCS_HE),
-        RKCS_ERR | RKCS_HE);
+    // Verify all words have been transferred and no error indicated
+    EXPECT_EQ (rk11dDevice->read (BusAddress {RKER}), 0);
+    EXPECT_EQ (rk11dDevice->read (BusAddress {RKWC}), 0);
+    EXPECT_EQ (rk11dDevice->read (BusAddress {RKBA}), 0400);
+
+    for (u16 address = 0; address < 512; address += 2)
+        bus.writeWord (address, 0);
+
+    EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKWC}, 0177400),
+        StatusCode::Success);
+    EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKBA}, 0),
+        StatusCode::Success);
+    EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKDA}, 0),
+        StatusCode::Success);
+    EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKCS},
+        RKCS_OPERATION (Operation::Read) | RKCS_GO),
+        StatusCode::Success);
+
+    waitForControllerReady (rk11dDevice);
+
+    // Verify all words have been transferred and no error indicated
+    EXPECT_EQ (rk11dDevice->read (BusAddress {RKER}), 0);
+    EXPECT_EQ (rk11dDevice->read (BusAddress {RKWC}), 0);
+    EXPECT_EQ (rk11dDevice->read (BusAddress {RKBA}), 0400);
+
+    for (u16 contents = 0, address = 0; address < 512; address += 2)
+    {
+        contents = bus.read (address);
+        ASSERT_EQ (contents, 0177777);
+    }
 }
 
-TEST_F (RK11DErrorsTest, readOnNonReadyDriveReportsError)
+TEST_F (RK11DReadTest, readOnNonReadyDriveReportsError)
 {
     RK11DConfig rk11dConfig {};
     rk11dConfig.rk05Config[0] =
@@ -136,7 +181,7 @@ TEST_F (RK11DErrorsTest, readOnNonReadyDriveReportsError)
 }
 
 // Attempt to read from sector 12
-TEST_F (RK11DErrorsTest, readFromNonExistentSectorFails)
+TEST_F (RK11DReadTest, readFromNonExistentSectorFails)
 {
     RK11DConfig rk11dConfig {};
     rk11dConfig.rk05Config[0] =
@@ -170,7 +215,7 @@ TEST_F (RK11DErrorsTest, readFromNonExistentSectorFails)
 }
 
 // Attempt to read from cylinder 203
-TEST_F (RK11DErrorsTest, readFromNonExistentCylinderFails)
+TEST_F (RK11DReadTest, readFromNonExistentCylinderFails)
 {
     RK11DConfig rk11dConfig {};
     rk11dConfig.rk05Config[0] =
@@ -201,4 +246,37 @@ TEST_F (RK11DErrorsTest, readFromNonExistentCylinderFails)
     EXPECT_EQ (rk11dDevice->read (BusAddress {RKCS}) & (RKCS_ERR | RKCS_HE),
         RKCS_ERR | RKCS_HE);
 
+}
+
+// Attempt to read from drive 4
+TEST_F (RK11DReadTest, readFromNonExistentDriveFails)
+{
+    RK11DConfig rk11dConfig {};
+    rk11dConfig.rk05Config[0] =
+        make_shared<RK05Config> (RK05Config
+        ({
+            .fileName = "rk05.dsk",
+            .newFile = true,
+            .overwrite = true
+            }));
+
+    Unibus bus;
+    RK11D* rk11dDevice = new RK11D (&bus, nullptr,
+        make_shared<RK11DConfig> (rk11dConfig));
+
+    EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKWC}, 0177400),
+        StatusCode::Success);
+    EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKBA}, 0),
+        StatusCode::Success);
+    EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKDA}, 0100000),
+        StatusCode::Success);
+    EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKCS},
+        RKCS_OPERATION (Operation::Read) | RKCS_GO),
+        StatusCode::Success);
+
+    waitForControllerReady (rk11dDevice);
+
+    EXPECT_EQ (rk11dDevice->read (BusAddress {RKER}) & RKER_NXD, RKER_NXD);
+    EXPECT_EQ (rk11dDevice->read (BusAddress {RKCS}) & (RKCS_ERR | RKCS_HE),
+        RKCS_ERR | RKCS_HE);
 }
