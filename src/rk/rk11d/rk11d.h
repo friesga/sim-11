@@ -119,6 +119,7 @@ private:
     void setControlReady ();
     void finish ();
     u32 absValueFromTwosComplement (u16 value) const;
+    bool functionParametersOk (RKTypes::Function function);
     void setError (function<void ()> function);
 };
 

@@ -14,8 +14,10 @@ void RK11D::executeWrite (RKTypes::Function function)
         return;
     }
 
-    // Check wordCount
-    // Check the validity of diskAddress
+    // Check validity of the function's parameters
+    if (!functionParametersOk (function))
+        return;
+
     // Check for sector overflow
 
     // Transfer memory data from busAddress to internal buffer

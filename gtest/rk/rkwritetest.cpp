@@ -107,3 +107,104 @@ TEST_F (RK11DWriteTest, writeOnNonReadyDriveReportsError)
     EXPECT_EQ (rk11dDevice->read (BusAddress {RKCS}) & (RKCS_ERR | RKCS_HE),
         RKCS_ERR | RKCS_HE);
 }
+
+// Attempt to write to sector 12
+TEST_F (RK11DWriteTest, readFromNonExistentSectorFails)
+{
+    RK11DConfig rk11dConfig {};
+    rk11dConfig.rk05Config[0] =
+        make_shared<RK05Config> (RK05Config
+        ({
+            .fileName = "rk05.dsk",
+            .newFile = true,
+            .overwrite = true
+            }));
+
+    Unibus bus;
+    RK11D* rk11dDevice = new RK11D (&bus, nullptr,
+        make_shared<RK11DConfig> (rk11dConfig));
+
+    EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKWC}, 0177400),
+        StatusCode::Success);
+    EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKBA}, 0),
+        StatusCode::Success);
+    EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKDA}, 014),
+        StatusCode::Success);
+    EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKCS},
+        RKCS_OPERATION (Operation::Write) | RKCS_GO),
+        StatusCode::Success);
+
+    waitForControllerReady (rk11dDevice);
+
+    EXPECT_EQ (rk11dDevice->read (BusAddress {RKER}) & RKER_NXS, RKER_NXS);
+    EXPECT_EQ (rk11dDevice->read (BusAddress {RKCS}) & (RKCS_ERR | RKCS_HE),
+        RKCS_ERR | RKCS_HE);
+
+}
+
+// Attempt to write to cylinder 203
+TEST_F (RK11DWriteTest, readFromNonExistentCylinderFails)
+{
+    RK11DConfig rk11dConfig {};
+    rk11dConfig.rk05Config[0] =
+        make_shared<RK05Config> (RK05Config
+        ({
+            .fileName = "rk05.dsk",
+            .newFile = true,
+            .overwrite = true
+            }));
+
+    Unibus bus;
+    RK11D* rk11dDevice = new RK11D (&bus, nullptr,
+        make_shared<RK11DConfig> (rk11dConfig));
+
+    EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKWC}, 0177400),
+        StatusCode::Success);
+    EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKBA}, 0),
+        StatusCode::Success);
+    EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKDA}, 014540),
+        StatusCode::Success);
+    EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKCS},
+        RKCS_OPERATION (Operation::Write) | RKCS_GO),
+        StatusCode::Success);
+
+    waitForControllerReady (rk11dDevice);
+
+    EXPECT_EQ (rk11dDevice->read (BusAddress {RKER}) & RKER_NXC, RKER_NXC);
+    EXPECT_EQ (rk11dDevice->read (BusAddress {RKCS}) & (RKCS_ERR | RKCS_HE),
+        RKCS_ERR | RKCS_HE);
+
+}
+
+// Attempt to write to drive 4
+TEST_F (RK11DWriteTest, readFromNonExistentDriveFails)
+{
+    RK11DConfig rk11dConfig {};
+    rk11dConfig.rk05Config[0] =
+        make_shared<RK05Config> (RK05Config
+        ({
+            .fileName = "rk05.dsk",
+            .newFile = true,
+            .overwrite = true
+            }));
+
+    Unibus bus;
+    RK11D* rk11dDevice = new RK11D (&bus, nullptr,
+        make_shared<RK11DConfig> (rk11dConfig));
+
+    EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKWC}, 0177400),
+        StatusCode::Success);
+    EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKBA}, 0),
+        StatusCode::Success);
+    EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKDA}, 0100000),
+        StatusCode::Success);
+    EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKCS},
+        RKCS_OPERATION (Operation::Write) | RKCS_GO),
+        StatusCode::Success);
+
+    waitForControllerReady (rk11dDevice);
+
+    EXPECT_EQ (rk11dDevice->read (BusAddress {RKER}) & RKER_NXD, RKER_NXD);
+    EXPECT_EQ (rk11dDevice->read (BusAddress {RKCS}) & (RKCS_ERR | RKCS_HE),
+        RKCS_ERR | RKCS_HE);
+}

@@ -14,19 +14,8 @@ void RK11D::executeRead (RKTypes::Function function)
     }
 
     // Check validity of the function's parameters
-    if (function.diskAddress.sectorAddress >= RKTypes::SectorsPerSurface)
-    {
-        setError ([&] {rker_.nonexistentSector = 1;});
-        setControlReady ();
+    if (!functionParametersOk (function))
         return;
-    }
-
-    if (function.diskAddress.cylinderAddress >= RKTypes::CylindersPerDisk)
-    {
-        setError ([&] {rker_.nonexistentCylinder = 1;});
-        setControlReady ();
-        return;
-    }
 
     // Check for sector overflow
 
