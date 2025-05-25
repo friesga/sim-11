@@ -21,6 +21,13 @@ void RK11D::executeRead (RKTypes::Function function)
         return;
     }
 
+    if (function.diskAddress.cylinderAddress >= RKTypes::CylindersPerDisk)
+    {
+        setError ([&] {rker_.nonexistentCylinder = 1;});
+        setControlReady ();
+        return;
+    }
+
     // Check for sector overflow
 
     // Command RK05 to read data from disk to buffer
