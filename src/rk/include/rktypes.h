@@ -26,7 +26,7 @@ namespace RKTypes
     //
     union RKDS
     {
-        using SectorCounter = BitField<u16, 0, 3>;
+        using SectorCounter = BitField<u16, 0, 4>;
         using SectorCounterEqualsSectorAddress = BitField<u16, 4>;
         using WriteProtectStatus = BitField<u16, 5>;
         using ReadWriteSeekReady = BitField<u16, 6>;
@@ -58,7 +58,7 @@ namespace RKTypes
         u16 value;
         BitField<u16, 0> writeCheckError;
         BitField<u16, 1> checksumError;
-        BitField<u16, 2, 4> unused;
+        BitField<u16, 2, 3> unused;
         BitField<u16, 5> nonexistentSector;
         BitField<u16, 5, 11> hardError;
         BitField<u16, 6> nonexistentCylinder;
@@ -79,7 +79,7 @@ namespace RKTypes
         u16 value;
         BitField<u16, 0> go;                        // Write Only
         BitField<u16, 1, 3> operation;              // Read/Write
-        BitField<u16, 4, 5> memoryExtension;        // Read/Write
+        BitField<u16, 4, 2> memoryExtension;        // Read/Write
         BitField<u16, 6> interruptOnDoneEnable;     // Read/Write
         BitField<u16, 7> controlReady;              // Read Only
         BitField<u16, 8> stopOnSoftError;           // Read/Write
@@ -96,10 +96,10 @@ namespace RKTypes
     union RKDA
     {
         u16 value;
-        BitField<u16, 0, 3> sectorAddress;
+        BitField<u16, 0, 4> sectorAddress;
         BitField<u16, 4> surface;
-        BitField<u16, 5, 12> cylinderAddress;
-        BitField<u16, 13, 15> driveSelect;
+        BitField<u16, 5, 8> cylinderAddress;
+        BitField<u16, 13, 3> driveSelect;
     };
 
     // Definition of the RK11-D Operations
