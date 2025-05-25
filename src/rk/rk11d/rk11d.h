@@ -15,6 +15,7 @@
 #include <mutex>
 #include <queue>
 #include <thread>
+#include <functional>
 
 using std::vector;
 using std::unique_ptr;
@@ -22,6 +23,7 @@ using std::mutex;
 using std::queue;
 using std::thread;
 using std::condition_variable;
+using std::function;
 
 class RK11D : public AbstractBusDevice, public DriveInterface
 {
@@ -118,6 +120,7 @@ private:
     void finish ();
     u32 absValueFromTwosComplement (u16 value) const;
     void setDriveError ();
+    void setError (function<void ()> function);
     
 };
 

@@ -31,6 +31,7 @@ protected:
     inline u16 getRKDSdriveId (u16 rkds) { return (rkds & 7) >> 13; }
 
     // RKER bit definitions
+    static constexpr u16  RKER_NXS = (1 << 5);
     static constexpr u16  RKER_NXD = (1 << 7);
     static constexpr u16  RKER_DRE = (1 << 15);
 
@@ -131,4 +132,37 @@ TEST_F (RK11DErrorsTest, readOnNonReadyDriveReportsError)
     EXPECT_EQ (rk11dDevice->read (BusAddress {RKDS}) & RKDS_DRY, 0);
     EXPECT_EQ (rk11dDevice->read (BusAddress {RKCS}) & (RKCS_ERR | RKCS_HE),
         RKCS_ERR | RKCS_HE);
+}
+
+TEST_F (RK11DErrorsTest, readFromNonExistentSectorFails)
+{
+    RK11DConfig rk11dConfig {};
+    rk11dConfig.rk05Config[0] =
+        make_shared<RK05Config> (RK05Config
+        ({
+            .fileName = "rk05.dsk",
+            .newFile = true,
+            .overwrite = true
+            }));
+
+    Unibus bus;
+    RK11D* rk11dDevice = new RK11D (&bus, nullptr,
+        make_shared<RK11DConfig> (rk11dConfig));
+
+    EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKWC}, 0177400),
+        StatusCode::Success);
+    EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKBA}, 0),
+        StatusCode::Success);
+    EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKDA}, 014),
+        StatusCode::Success);
+    EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKCS},
+        RKCS_OPERATION (Operation::Read) | RKCS_GO),
+        StatusCode::Success);
+
+    waitForControllerReady (rk11dDevice);
+
+    EXPECT_EQ (rk11dDevice->read (BusAddress {RKER}) & RKER_NXS, RKER_NXS);
+    EXPECT_EQ (rk11dDevice->read (BusAddress {RKCS}) & (RKCS_ERR | RKCS_HE),
+        RKCS_ERR | RKCS_HE);
+
 }

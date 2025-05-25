@@ -1,5 +1,7 @@
 #include "rk11d.h"
 
+using std::function;
+
 // The Control Ready bit indicates the controller is ready to perform
 // a function. Set by INIT, a hard error condition, or by the termination
 // of a function.
@@ -41,4 +43,14 @@ void RK11D::setDriveError ()
     rker_.driveError = 1;
     rkcs_.error = 1;
     rkcs_.hardError = 1;
+}
+
+void RK11D::setError (function<void ()> function)
+{
+    function ();
+
+    rkcs_.error = 1;
+
+    if (rker_.hardError != 0)
+        rkcs_.hardError = 1;
 }
