@@ -5,7 +5,7 @@ size_t DiskDrive::readDataFromSector (DiskAddress diskAddress, u16* buffer,
     u32 wordCount)
 {
     // Set position in file to the block to be read
-    if (fseek (diskFileStream, filePosition (diskAddress), SEEK_SET) != 0)
+    if (fseek (diskFileStream, byteOffset (diskAddress), SEEK_SET) != 0)
     {
         Logger::instance () << "fseek error in DiskDrive::readDataFromSector";
         return 0;

@@ -8,7 +8,7 @@ size_t DiskDrive::writeDataToSector (DiskAddress diskAddress, u16* buffer,
         return 0;
 
     // Set position in file to the block to be written
-    if (fseek (diskFileStream, filePosition (diskAddress), SEEK_SET) != 0)
+    if (fseek (diskFileStream, byteOffset (diskAddress), SEEK_SET) != 0)
     {
         Logger::instance () << "fseek error in DiskDrive::writeDataToSector";
         return 0;
