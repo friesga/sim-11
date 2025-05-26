@@ -18,8 +18,6 @@ void RK11D::executeWrite (RKTypes::Function function)
     if (!functionParametersOk (function))
         return;
 
-    // Check for sector overflow
-
     // Transfer memory data from busAddress to internal buffer
     // while adjusting wordCount en BusAddress register
     if (transferDataToBuffer (function.busAddress, function.wordCount,
@@ -42,13 +40,12 @@ void RK11D::executeWrite (RKTypes::Function function)
     // Await the result of the execution of the write
     commandCompletionQueue_.waitAndPop (wordsWritten);
 
-    // Check for errors
-
     // Adjust RKBA, RKWC registers
     rkwc_ += wordsWritten;
     rkba_ += wordsWritten;
 
-    // Else indicate error
+    if (wordsWritten < absValueFromTwosComplement (function.wordCount))
+        setError ([&] {rker_.overrun = 1; });
 
     // Set controller ready
     setControlReady ();

@@ -11,7 +11,9 @@ size_t DiskDrive::readDataFromSector (DiskAddress diskAddress, u16* buffer,
         return 0;
     }
 
-    // Read wordCount * 2 bytes; returned is the number of bytes read 
+    // Read wordCount * 2 bytes; returned is the number of objects
+    // (i.e. words) read. A read beyond the disk's capacity is prevented by
+    // the file's size.
     size_t wordsRead = fread (buffer, sizeof (int16_t), wordCount, diskFileStream);
 
     if (ferror (diskFileStream))

@@ -34,6 +34,7 @@ protected:
     static constexpr u16  RKER_NXS = (1 << 5);
     static constexpr u16  RKER_NXC = (1 << 6);
     static constexpr u16  RKER_NXD = (1 << 7);
+    static constexpr u16  RKER_OVR = (1 << 14);
     static constexpr u16  RKER_DRE = (1 << 15);
 
     // RKCS bit definitions
@@ -205,6 +206,40 @@ TEST_F (RK11DWriteTest, readFromNonExistentDriveFails)
     waitForControllerReady (rk11dDevice);
 
     EXPECT_EQ (rk11dDevice->read (BusAddress {RKER}) & RKER_NXD, RKER_NXD);
+    EXPECT_EQ (rk11dDevice->read (BusAddress {RKCS}) & (RKCS_ERR | RKCS_HE),
+        RKCS_ERR | RKCS_HE);
+}
+
+// Try to write 512 word starting from the last sector (cylinder 202,
+// sector 11, head 1). This should result in an overrun.
+TEST_F (RK11DWriteTest, writePastEndOfDiskFails)
+{
+    RK11DConfig rk11dConfig {};
+    rk11dConfig.rk05Config[0] =
+        make_shared<RK05Config> (RK05Config
+        ({
+            .fileName = "rk05.dsk",
+            .newFile = true,
+            .overwrite = true
+            }));
+
+    Unibus bus;
+    RK11D* rk11dDevice = new RK11D (&bus, nullptr,
+        make_shared<RK11DConfig> (rk11dConfig));
+
+    EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKWC}, 0177000),
+        StatusCode::Success);
+    EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKBA}, 0),
+        StatusCode::Success);
+    EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKDA}, 014533),
+        StatusCode::Success);
+    EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKCS},
+        RKCS_OPERATION (Operation::Write) | RKCS_GO),
+        StatusCode::Success);
+
+    waitForControllerReady (rk11dDevice);
+
+    EXPECT_EQ (rk11dDevice->read (BusAddress {RKER}) & RKER_OVR, RKER_OVR);
     EXPECT_EQ (rk11dDevice->read (BusAddress {RKCS}) & (RKCS_ERR | RKCS_HE),
         RKCS_ERR | RKCS_HE);
 }

@@ -41,7 +41,7 @@ public:
     size_t readDataFromSector (DiskAddress diskAddress, u16* buffer,
         u32 wordCount);
     size_t writeDataToSector (DiskAddress diskAddress, u16* buffer,
-        size_t numWords);
+        u32 numWords);
     void setWriteProtected (bool writeProtected);
     bool isWriteProtected () const;
     StatusCode createBadBlockTable ();
