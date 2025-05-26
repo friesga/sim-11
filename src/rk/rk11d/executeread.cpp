@@ -30,17 +30,19 @@ void RK11D::executeRead (RKTypes::Function function)
     // Await the result of the execution of the read
     commandCompletionQueue_.waitAndPop (wordsRead);
 
-
-    // Clear the part of the buffer not filled by the read
-
-    // Transfer words in buffer
-    transferDataFromBuffer (function.busAddress, wordsRead, buffer_);
-
     // Adjust RKBA, RKWC registers
     rkwc_ += wordsRead;
     rkba_ += wordsRead;
 
-    // Else indicate error
+
+    // Clear the part of the buffer not filled by the read
+
+
+    // Transfer words in buffer
+    transferDataFromBuffer (function.busAddress, wordsRead, buffer_);
+
+    if (wordsRead < absValueFromTwosComplement (function.wordCount))
+        setError ([&] {rker_.overrun = 1; });
 
     // Set controller ready
     setControlReady ();
