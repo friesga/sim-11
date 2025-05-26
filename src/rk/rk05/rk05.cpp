@@ -102,8 +102,9 @@ bool RK05::isReady ()
 
 void RK05::seek (u16 cylinderAddress)
 {
-    sendTrigger (SeekCommand {seekTime (currentCylinderAddress_,
-        cylinderAddress), bind (&RK05::seekCompleted, this)});
+    sendTrigger (SeekCommand {seekTime (currentCylinderAddress_, cylinderAddress),
+        [&] {controller_->setDriveCondition (DriveCondition {driveStatus_,
+            driveError_}); }});
 
     // The current cylinder address actually should be set only when the
     // seek is completed, but as the seek cannot fail and the new cylinder
@@ -126,12 +127,6 @@ SimulatorClock::duration RK05::seekTime (u16 currentCylinderAddress,
     u16 numCylinders = abs (newCylinderAddress - currentCylinderAddress);
     return std::chrono::milliseconds (static_cast <uint64_t>
         (10 + (numCylinders * 0.375)));
-}
-
-void RK05::seekCompleted ()
-{
-    controller_->setDriveCondition (DriveCondition {driveStatus_,
-        driveError_});
 }
 
 // ToDo: This function is a double with RL01_02::getAttachMode()

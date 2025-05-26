@@ -143,7 +143,6 @@ private:
         shared_ptr<RK05Config> rk05Config);
     SimulatorClock::duration seekTime (u16 currentCylinderAddress,
         u16 newCylinderAddress);
-    void seekCompleted ();
 };
 
 
