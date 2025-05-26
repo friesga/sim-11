@@ -13,14 +13,14 @@ public:
     u16 numberOfHeads () const;
     u16 cylindersPerDisk () const;
     u16 wordsPerSector () const;
-    s32 wordCapacity () const;
+    u32 wordCapacity () const;
 
 private:
     u16 sectorsPerSurface_ {};
     u16 numberOfHeads_ {};
     u16 cylindersPerDisk_ {};
     u16 wordsPerSector_ {};
-    s32 wordCapacity_ {};
+    u32 wordCapacity_ {};
 };
 
 

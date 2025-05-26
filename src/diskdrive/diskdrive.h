@@ -54,9 +54,9 @@ private:
     StatusCode createFile (std::string fileName, Bitmask<AttachFlags> attachMode);
     StatusCode openReadOnly (std::string fileName);
     StatusCode openReadWrite (std::string fileName);
-    int32_t LBN (DiskAddress diskAddress) const;
-    int32_t wordOffset (DiskAddress diskAddress) const;
-    int32_t byteOffset (DiskAddress diskAddress) const;
+    u32 LBN (DiskAddress diskAddress) const;
+    u32 wordOffset (DiskAddress diskAddress) const;
+    u32 byteOffset (DiskAddress diskAddress) const;
 };
 
 #endif // !_DISKDRIVE_H_
