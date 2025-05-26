@@ -10,7 +10,6 @@ set (RK11D_SRCS
     rk11d/writeword.cpp
     rk05/commands.cpp
     rk05/rk05.cpp
-    rk05/handlefunction.cpp
     rk05/createbezel.cpp
     rk05/drivethread.cpp
     rk05/statemachine.cpp)

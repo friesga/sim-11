@@ -109,16 +109,6 @@ RK05::State RK05::StateMachine::transition (LockedOn&&,
     return Seeking {seekCommand.seekCompleted};
 }
 
-
-// Proces the received RKCommand and return the result to the controller
-RK05::State RK05::StateMachine::transition (LockedOn&&,
-    RKTypes::Function action)
-{
-    handleFunction (action);
-
-    return LockedOn {};
-}
-
 // This function is executed when a seek is completed.
 RK05::State RK05::StateMachine::transition (Seeking&& currentState, TimeElapsed)
 {

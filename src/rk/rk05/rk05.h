@@ -167,7 +167,6 @@ public:
     State transition (SpinningUp&&, SpinDown);      // -> SpinningDown
     void entry (LockedOn);
     State transition (LockedOn&&, SeekCommand);     // -> Seeking
-    State transition (LockedOn&&, RKTypes::Function);    // -> LockedOn
     State transition (LockedOn&&, SpinDown);        // -> SpinningDown
     void exit (variantFsm::TagType<LockedOn>);
     void entry (Seeking);
@@ -218,8 +217,6 @@ public:
 private:
     RK05* context_ {nullptr};
     duration<int, std::ratio<1, 1>> spinUpTime_;
-
-    void handleFunction (RKTypes::Function action);
 };
 
 #endif // _RK05_H_
