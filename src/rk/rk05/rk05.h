@@ -29,7 +29,6 @@ public:
     RK05 (Bus* bus, DriveInterface* controller, Window* window,
         shared_ptr<RK05Config> rk05Config);
     ~RK05 ();
-    void executeFunction (RKTypes::Function function);
     bool isReady ();
     void seek (u16 cylinderAddress);
     void write (DiskAddress diskAddress, u16 wordCount, u16* data);
@@ -107,7 +106,7 @@ private:
     struct TimeElapsed {};
 
     using Event = std::variant <SpinUp, SpinDown, SpunUp, SpunDown,
-        SeekCommand, TimeElapsed, RKTypes::Function>;
+        SeekCommand, TimeElapsed>;
 
     // Use the PIMPL idiom to be able to define the StateMachine outside
     // of the RK05 class

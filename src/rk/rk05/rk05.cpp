@@ -93,11 +93,6 @@ void RK05::wtprotSwitchClicked (Button::State state)
 {
 }
 
-void RK05::executeFunction (RKTypes::Function function)
-{
-    sendTrigger (function);
-}
-
 // The drive is ready when it is in the LockedOn or Seeking state
 bool RK05::isReady ()
 {
