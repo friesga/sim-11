@@ -3,12 +3,16 @@
 
 #include "interruptrequest/interruptrequest.h"
 
+#include <functional>
+
+using std::function;
+
 // This interfaces declares the bus functions for interrupt handling
 class BusInterrupts
 {
 public:
 	virtual void setInterrupt (TrapPriority priority, unsigned char busOrder,
-		u8 functionOrder, unsigned char vector) = 0;
+		u8 functionOrder, unsigned char vector, function<void()> ack = 0) = 0;
 	virtual bool containsInterrupt (TrapPriority priority, unsigned char busOrder,
 		u8 functionOrder) = 0;
 	virtual void clearInterrupt (TrapPriority priority, unsigned char busOrder,

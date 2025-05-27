@@ -1,10 +1,12 @@
 #include "unibus.h"
 
-void Unibus::setInterrupt (TrapPriority priority,
-	unsigned char busOrder, u8 functionOrder, unsigned char vector)
+using std::function;
+
+void Unibus::setInterrupt (TrapPriority priority, unsigned char busOrder,
+	u8 functionOrder, unsigned char vector, function<void ()> ack)
 {
 	return interruptHandler_.setInterrupt (priority, busOrder, functionOrder,
-		vector);
+		vector, ack);
 }
 
 bool Unibus::containsInterrupt (TrapPriority priority, unsigned char busOrder,

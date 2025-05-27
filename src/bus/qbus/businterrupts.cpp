@@ -1,10 +1,12 @@
 #include "qbus.h"
 
-void Qbus::setInterrupt (TrapPriority priority,
-	unsigned char busOrder, u8 functionOrder, unsigned char vector)
+using std::function;
+
+void Qbus::setInterrupt (TrapPriority priority, unsigned char busOrder,
+	u8 functionOrder, unsigned char vector, function<void ()> ack)
 {
 	return interruptHandler_.setInterrupt (priority, busOrder, functionOrder,
-		vector);
+		vector, ack);
 }
 
 bool Qbus::containsInterrupt (TrapPriority priority, unsigned char busOrder,
