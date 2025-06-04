@@ -8,6 +8,10 @@
 #include "bus/iterator/iterator.h"
 #include "unibusmap.h"
 
+#include <functional>
+
+using std::function;
+
 // This class implements both the Unibus and the Extended Unibus (EUB).
 // 
 // Addresses on the Unibus are 18-bits wide while addresses on the EUB are
@@ -94,7 +98,7 @@ public:
 
 	// Functions required for the BusInterrupts interface
 	void setInterrupt (TrapPriority priority, unsigned char busOrder,
-		u8 functionOrder, unsigned char vector);
+		u8 functionOrder, unsigned char vector, function<void ()> ack = 0);
 	bool containsInterrupt (TrapPriority priority, unsigned char busOrder,
 		u8 functionOrder);
 	void clearInterrupt (TrapPriority priority, unsigned char busOrder,

@@ -5,6 +5,7 @@
 #include "bus/include/bus.h"
 #include "configdata/rk/rk05/rk05config/rk05config.h"
 #include "rk/include/rktypes.h"
+#include "rk/include/driveinterface.h"
 #include "panel.h"
 #include "asynctimer/asynctimer.h"
 #include "variantfsm/fsm.h"
@@ -14,31 +15,34 @@
 #include <thread>
 #include <queue>
 #include <memory>
+#include <functional>
 
 using std::shared_ptr;
 using std::unique_ptr;
 using std::thread;
 using std::queue;
+using std::function;
 
 class RK05
 {
 public:
-    RK05 (Bus* bus, AbstractBusDevice* controller, Window* window,
+    RK05 (Bus* bus, DriveInterface* controller, Window* window,
         shared_ptr<RK05Config> rk05Config);
     ~RK05 ();
-    void executeFunction (RKTypes::Function function);
+    bool isReady ();
     void seek (u16 cylinderAddress);
+    void write (DiskAddress diskAddress, u16 wordCount, u16* data);
+    void read (DiskAddress diskAddress, u16 wordCount, u16* data);
 
 private:
-    Bus* bus_ {nullptr};
-    AbstractBusDevice* controller_ {nullptr};
+    class WriteCompletion;
 
-    // Definition of the RK05 drive format:
-    // - 12 sectors/track
-    // - 2 disk surfaces/disk
-    // - 203 cylinders/disk drive
-    // - 256 words/sector
-    Geometry rk05Geometry {12, 2, 203, 256};
+    Bus* bus_ {nullptr};
+    DriveInterface* controller_ {nullptr};
+
+    // Definition of the RK05 drive format
+    Geometry rk05Geometry {RKTypes::SectorsPerSurface, RKTypes::NumberOfHeads,
+        RKTypes::CylindersPerDisk, RKTypes::WordsPerSector};
 
     DiskDrive diskDrive_ {};
     unique_ptr<u16[]> buffer_ {};
@@ -72,11 +76,20 @@ private:
     Frame<float> wtprotSwitchFrame {0.613, 0.605, 0.029, 0.122};
 
     // Definition of the drive states
+    //
+    // To both the SeekCommand and the Seeking state a function pointer
+    // can be passed. This function will be called after completion of
+    // a seek. This allows different action on a async seek command initiated
+    // by the controller and synced seeks for read and write commands.
+    // The function pointer must be passed to the SeekCommand which will
+    // then forward it to the Seeking state. On a transition from the
+    // Seeking state to the LockedOn state the function will then be called.
+    //
     struct Initial {};      // State machine initial state
     struct Unloaded {};     // No cartridge loaded
     struct SpinningUp {};   // The drive is spinning up
     struct LockedOn {};     // The drive is locked on a cylinder
-    struct Seeking {};      // The drive is seeking
+    struct Seeking { function<void ()> seekCompleted {nullptr}; };  // The drive is seeking
     struct SpinningDown {}; // The drive is spinning down
 
     using State = std::variant <Initial, Unloaded, SpinningUp, LockedOn,
@@ -88,11 +101,12 @@ private:
     struct SpinDown {};     // LOAD button released
     struct SpunUp {};       // Spin up is complete
     struct SpunDown {};     // Spin down is complete
-    struct SeekCommand { SimulatorClock::duration seekTime; };
+    struct SeekCommand { SimulatorClock::duration seekTime;
+                            function<void ()> seekCompleted {nullptr}; };
     struct TimeElapsed {};
 
     using Event = std::variant <SpinUp, SpinDown, SpunUp, SpunDown,
-        SeekCommand, TimeElapsed, RKTypes::Function>;
+        SeekCommand, TimeElapsed>;
 
     // Use the PIMPL idiom to be able to define the StateMachine outside
     // of the RK05 class
@@ -129,7 +143,6 @@ private:
         shared_ptr<RK05Config> rk05Config);
     SimulatorClock::duration seekTime (u16 currentCylinderAddress,
         u16 newCylinderAddress);
-    void seekCompleted ();
 };
 
 
@@ -152,7 +165,6 @@ public:
     State transition (SpinningUp&&, SpinDown);      // -> SpinningDown
     void entry (LockedOn);
     State transition (LockedOn&&, SeekCommand);     // -> Seeking
-    State transition (LockedOn&&, RKTypes::Function);    // -> LockedOn
     State transition (LockedOn&&, SpinDown);        // -> SpinningDown
     void exit (variantFsm::TagType<LockedOn>);
     void entry (Seeking);
@@ -203,8 +215,6 @@ public:
 private:
     RK05* context_ {nullptr};
     duration<int, std::ratio<1, 1>> spinUpTime_;
-
-    void handleFunction (RKTypes::Function action);
 };
 
 #endif // _RK05_H_

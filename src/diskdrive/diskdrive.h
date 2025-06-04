@@ -41,7 +41,7 @@ public:
     size_t readDataFromSector (DiskAddress diskAddress, u16* buffer,
         u32 wordCount);
     size_t writeDataToSector (DiskAddress diskAddress, u16* buffer,
-        size_t numWords);
+        u32 numWords);
     void setWriteProtected (bool writeProtected);
     bool isWriteProtected () const;
     StatusCode createBadBlockTable ();
@@ -54,7 +54,9 @@ private:
     StatusCode createFile (std::string fileName, Bitmask<AttachFlags> attachMode);
     StatusCode openReadOnly (std::string fileName);
     StatusCode openReadWrite (std::string fileName);
-    int32_t filePosition (DiskAddress diskAddress) const;
+    u32 LBN (DiskAddress diskAddress) const;
+    u32 wordOffset (DiskAddress diskAddress) const;
+    u32 byteOffset (DiskAddress diskAddress) const;
 };
 
 #endif // !_DISKDRIVE_H_

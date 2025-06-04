@@ -12,6 +12,7 @@ set (GTEST_SRCS
     threadsafeprioqueuetest.cpp
     threadsafecontainertest.cpp
     interruptrequesttest.cpp
+    interrupttest.cpp
     bitmasktest.cpp
     busaddresstest.cpp
     characterbuffertest.cpp
@@ -64,8 +65,10 @@ set (GTEST_SRCS
     dummycpu/dummymmu/dummymmu.cpp
     registers/twowordregistertest.cpp
     rk/rkconfigprocessortest.cpp
+    rk/rkreadtest.cpp
     rk/rk11dregisterstest.cpp
-    rk/rkreadwritetest.cpp
+    rk/rkseektest.cpp
+    rk/rkwritetest.cpp
     rlv12/rl11configprocessortest.cpp
     rlv12/rlv11configprocessortest.cpp
     rlv12/rlv12configprocessortest.cpp

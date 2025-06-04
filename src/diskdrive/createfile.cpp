@@ -20,5 +20,9 @@ StatusCode DiskDrive::createFile (std::string fileName, Bitmask<AttachFlags> att
     if (diskFileStream == NULL)
         return StatusCode::OpenError;
 
+    // Extend the file to the drive's capacity
+    fseek (diskFileStream, geometry_.wordCapacity () * sizeof (u16), SEEK_SET);
+    fputc ('\0', diskFileStream);
+
     return StatusCode::Success;
 }

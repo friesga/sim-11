@@ -1,17 +1,22 @@
 #include "rk05.h"
 #include "chrono/alarmclock/alarmclock.h"
+#include "bitfield.h"
 
 #include <memory>
 #include <chrono>
 #include <cstdlib>
+#include <functional>
 
 using std::shared_ptr;
 using std::make_unique;
 using std::chrono::seconds;
 using std::abs;
 using std::chrono::duration;
+using std::bind;
 
-RK05::RK05 (Bus* bus, AbstractBusDevice* controller, Window* window,
+using namespace RKTypes;
+
+RK05::RK05 (Bus* bus, DriveInterface* controller, Window* window,
     shared_ptr<RK05Config> rk05Config)
     : 
     bus_ {bus},
@@ -29,6 +34,15 @@ RK05::RK05 (Bus* bus, AbstractBusDevice* controller, Window* window,
     diskDrive_.attachFile (rk05Config->fileName, rk05Geometry,
         getAttachMode (rk05Config));
 
+    // Initialize the drive status before an event is dispatched to the
+    // state machine as the drive status is changed by the state machine
+    // and the initialization would overwrite those changes.
+    driveStatus_.value = +RKDS::SectorCounterEqualsSectorAddress {1} |
+        +RKDS::ReadWriteSeekReady {1} |
+        +RKDS::SectorCounterOK {1} |
+        +RKDS::Rk05DiskOnLine {1} |
+        +RKDS::DriveId {rk05Config->unitNumber};
+
     stateMachine_ = make_unique<StateMachine> (this,
         seconds (rk05Config->spinUpTime));
 
@@ -41,13 +55,6 @@ RK05::RK05 (Bus* bus, AbstractBusDevice* controller, Window* window,
         stateMachine_->dispatch (SpunUp {});
     else
         stateMachine_->dispatch (SpunDown {});
-
-    // Initialize the drive status
-    driveStatus_.sectorCounterEqualsSectorAddress = 1;
-    driveStatus_.readWriteSeekReady = 1;
-    driveStatus_.sectorCounterOK = 1;
-    driveStatus_.rk05DiskOnLine = 1;
-    driveStatus_.driveId = rk05Config->unitNumber;
 }
 
 // Finish the drive thread
@@ -86,15 +93,18 @@ void RK05::wtprotSwitchClicked (Button::State state)
 {
 }
 
-void RK05::executeFunction (RKTypes::Function function)
+// The drive is ready when it is in the LockedOn or Seeking state
+bool RK05::isReady ()
 {
-    sendTrigger (function);
+    return stateMachine_->inState (LockedOn {}) ||
+        stateMachine_->inState (Seeking {});
 }
 
 void RK05::seek (u16 cylinderAddress)
 {
-    sendTrigger (SeekCommand {seekTime (currentCylinderAddress_,
-        cylinderAddress)});
+    sendTrigger (SeekCommand {seekTime (currentCylinderAddress_, cylinderAddress),
+        [&] {controller_->setDriveCondition (DriveCondition {driveStatus_,
+            driveError_}); }});
 
     // The current cylinder address actually should be set only when the
     // seek is completed, but as the seek cannot fail and the new cylinder
@@ -117,10 +127,6 @@ SimulatorClock::duration RK05::seekTime (u16 currentCylinderAddress,
     u16 numCylinders = abs (newCylinderAddress - currentCylinderAddress);
     return std::chrono::milliseconds (static_cast <uint64_t>
         (10 + (numCylinders * 0.375)));
-}
-
-void RK05::seekCompleted ()
-{
 }
 
 // ToDo: This function is a double with RL01_02::getAttachMode()

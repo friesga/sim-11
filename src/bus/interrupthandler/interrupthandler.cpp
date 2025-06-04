@@ -1,13 +1,15 @@
 #include "interrupthandler.h"
 #include "trace/trace.h"
 
-// Set an interrupt request. The only reason this could fail is when
-// a device already has set an interrupt. That would be an error on the
-// part of the device and wouldn't harm.
+// Set an interrupt request. To allow synchronization between multiple
+// interrupt request from the same device an interrupt request can be
+// acknowledged, indicating to the device the interrupt
 void InterruptHandler::setInterrupt (TrapPriority priority,
-	unsigned char busOrder, u8 functionOrder, unsigned char vector)
+	unsigned char busOrder, u8 functionOrder, unsigned char vector,
+	function<void ()> ack)
 {
-	InterruptRequest intrptReq {priority, busOrder, functionOrder, vector};
+	InterruptRequest intrptReq {priority, busOrder, functionOrder,
+		vector, ack};
 	pushInterruptRequest (intrptReq);
 }
 
@@ -59,6 +61,7 @@ bool InterruptHandler::getIntrptReq (InterruptRequest& intrptReq)
 	{
 		bool result = intrptReqQueue_.fetchTop (intrptReq);
 		trace.irq (IrqRecordType::IRQ_SIG, intrptReq.vector ());
+		intrptReq.acknowledge ();
 		return result;
 	}
 	else

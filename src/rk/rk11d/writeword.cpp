@@ -3,7 +3,7 @@
 StatusCode RK11D::writeWord (BusAddress busAddress, u16 value)
 {
     // Guard against controller register access from RK05 threads
-    std::unique_lock<std::mutex> lock {controllerMutex_};
+    std::lock_guard<std::mutex> guard {controllerMutex_};
 
     // Decode registerAddress<3:1>
     switch (busAddress.registerAddress () & 016)

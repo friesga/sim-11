@@ -7,6 +7,10 @@
 #include "bus/configurationhandler/configurationhandler.h"
 #include "bus/iterator/iterator.h"
 
+#include <functional>
+
+using std::function;
+
 // This class implements the Qbus backplane. Two variants of the backplane
 // exist: 18-bit and 22-bit wide. As the 18-bit backplanes can be upgraded
 // to a 22-bit without impact on the functionality of the system we implement
@@ -38,7 +42,7 @@ public:
 
 	// Functions required for the BusInterrupts interface
 	void setInterrupt (TrapPriority priority, unsigned char busOrder,
-		u8 functionOrder, unsigned char vector);
+		u8 functionOrder, unsigned char vector, function<void ()> ack = 0);
 	bool containsInterrupt (TrapPriority priority, unsigned char busOrder,
 		u8 functionOrder);
 	void clearInterrupt (TrapPriority priority, unsigned char busOrder,

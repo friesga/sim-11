@@ -3,6 +3,10 @@
 
 #include "types.h"
 
+#include <functional>
+
+using std::function;
+
 // Definition of trap priorities. The BR4-BR7 priorities concur with
 // the CPU priority as indicated in the PSW (bits 5-7).
 enum class TrapPriority
@@ -24,7 +28,9 @@ enum class TrapPriority
 // - The trap priority,
 // - The bus order. With equal bus request levels, devices on the bus
 //   closer to the processor have higher priority,
-// - The trap/interrupt vector.
+// - The trap/interrupt vector,
+// - An optional callback function, acknowledging the processing of the
+//   interrupt.
 //
 // The vector range is 0 to 0376 and the maximum number of vectors therefore
 // is 256. This number is therefore also the maximum number of devices in a
@@ -34,9 +40,11 @@ class InterruptRequest
 public:
     InterruptRequest();
     InterruptRequest(TrapPriority priority, unsigned char busOrder,
-        u8 functionOrder, unsigned char vector);
+        u8 functionOrder, unsigned char vector,
+        function<void ()> ack = nullptr);
     bool operator< (InterruptRequest const &ir) const;
     bool operator== (InterruptRequest const &ir) const;
+    void acknowledge ();
 
     // Accessors
     TrapPriority priority() const;
@@ -48,6 +56,7 @@ private:
     unsigned char busOrder_;
     u8 functionOrder_;
     unsigned char vector_;
+    function<void ()> ack_;
 
     long intrptPriority (TrapPriority trapPriority, unsigned char busOrder,
         u8 functionOrder) const;

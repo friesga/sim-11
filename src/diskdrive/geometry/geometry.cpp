@@ -7,8 +7,8 @@ Geometry::Geometry (u16 sectorsPerSurface, u16 numberOfHeads, u16 cylindersPerDi
     numberOfHeads_ {numberOfHeads},
     cylindersPerDisk_ {cylindersPerDisk},
     wordsPerSector_ {wordsPerSector},
-    wordCapacity_ {cylindersPerDisk * numberOfHeads *
-        sectorsPerSurface * wordsPerSector}
+    wordCapacity_ {static_cast<u32> (cylindersPerDisk * numberOfHeads *
+        sectorsPerSurface * wordsPerSector)}
 {}
 
 u16 Geometry::sectorsPerSurface () const
@@ -31,7 +31,7 @@ u16 Geometry::wordsPerSector () const
     return wordsPerSector_;
 }
 
-s32 Geometry::wordCapacity () const
+u32 Geometry::wordCapacity () const
 {
     return wordCapacity_;
 }
