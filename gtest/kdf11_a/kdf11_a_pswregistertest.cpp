@@ -15,15 +15,6 @@ TEST (KDF11_A_PSWREGISTERTEST, TraceBitSet)
     ASSERT_TRUE (psw.traceBitSet ());
 }
 
-TEST (KDF11_A_PSWREGISTERTEST, PriorityLevel)
-{
-    KDF11_PSW psw {0};
-    psw.setPriorityLevel (7);
-
-    ASSERT_EQ ((u16) psw, 0000340);
-    ASSERT_EQ (psw.priorityLevel (), 7);
-}
-
 TEST (KDF11_A_PSWREGISTERTEST, CurrentAndPreviousMode)
 {
     KDF11_PSW psw {0170000};

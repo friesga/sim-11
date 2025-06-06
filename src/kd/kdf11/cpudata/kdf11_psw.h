@@ -18,7 +18,6 @@ public:
     void set (PSW::ProtectionMode protectionMode, u16 value) override;
     bool traceBitSet () override;
     u16 priorityLevel () override;
-    void setPriorityLevel (u16 level) override;
     constexpr PSW::Mode currentMode () const override;
     constexpr PSW::Mode previousMode () const override;
 
@@ -94,13 +93,6 @@ inline bool KDF11_PSW::traceBitSet ()
 inline u16 KDF11_PSW::priorityLevel ()
 {
     return (value_ & PriorityLevelMask) >> PriorityLevelIndex;
-}
-
-// Set the priority level to the given level. The level is masked with the
-// three lowest bits to make sure no level exceeding level 7 can be set.
-inline void KDF11_PSW::setPriorityLevel (u16 level)
-{
-    value_ = (value_ & ~PriorityLevelMask) | ((level & 07) << PriorityLevelIndex);
 }
 
 inline constexpr PSW::Mode KDF11_PSW::currentMode () const

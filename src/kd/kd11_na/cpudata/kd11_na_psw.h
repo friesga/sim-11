@@ -20,7 +20,6 @@ public:
     void set (PSW::ProtectionMode protectionMode, u16 value) override;
     bool traceBitSet () override;
     u16 priorityLevel () override;
-    void setPriorityLevel (u16 level) override;
     PSW::Mode currentMode () const override;
     PSW::Mode previousMode () const override;
 
@@ -63,13 +62,6 @@ inline bool KD11_NA_PSW::traceBitSet ()
 inline u16 KD11_NA_PSW::priorityLevel ()
 {
     return (value_ & PriorityLevelMask) >> PriorityLevelIndex;
-}
-
-// Set the priority level to the given level. The level is masked with the
-// three lowest bits to make sure no level exceeding level 7 can be set.
-inline void KD11_NA_PSW::setPriorityLevel (u16 level)
-{
-    value_ = (value_ & ~PriorityLevelMask) | ((level & 07) << PriorityLevelIndex);
 }
 
 // Memory Management Modes are not implemented on the KD11-NA.

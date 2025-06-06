@@ -75,7 +75,6 @@ public:
     virtual void set (ProtectionMode protectionde, u16 value) = 0;
     virtual bool traceBitSet () = 0;
     virtual u16 priorityLevel () = 0;
-    virtual void setPriorityLevel (u16 level) = 0;
     virtual Mode currentMode () const = 0;
     virtual Mode previousMode () const = 0;
 };
