@@ -97,6 +97,8 @@ public:
 	Signal& IOMapEnable ();
 
 	// Functions required for the BusInterrupts interface
+	void busRequest (TrapPriority priority, unsigned char busOrder,
+		u8 functionOrder, function<void ()> busGrant = 0);
 	void setInterrupt (TrapPriority priority, unsigned char busOrder,
 		u8 functionOrder, unsigned char vector, function<void ()> ack = 0);
 	bool containsInterrupt (TrapPriority priority, unsigned char busOrder,

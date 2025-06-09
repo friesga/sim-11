@@ -2,6 +2,12 @@
 
 using std::function;
 
+void Unibus::busRequest (TrapPriority priority, unsigned char busOrder,
+	u8 functionOrder, function<void ()> busGrant)
+{
+
+}
+
 void Unibus::setInterrupt (TrapPriority priority, unsigned char busOrder,
 	u8 functionOrder, unsigned char vector, function<void ()> ack)
 {

@@ -7,10 +7,11 @@
 #include "busconfiguration.h"
 
 // The bus has to perform four different functions:
-// 1. It has to distribute bus signals between the connected devices,
-// 2. It has to handle interrupts from the connected devices,
-// 3. It has to transfer data between the connected devices,
-// 4. It has to provide functionality to connect devices to the bus.
+// 1. Distribute bus signals between the connected devices,
+// 2. Priority arbitration between the devices,
+// 2. Handle interrupts from the connected devices,
+// 3. Transfer data between the connected devices,
+// 4. Provide functionality to connect devices to the bus.
 //
 class Bus : public BusSignals, public BusInterrupts,
     public BusDataTransfer, public BusConfiguration
