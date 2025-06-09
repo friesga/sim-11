@@ -3,6 +3,7 @@ set (RK11D_SRCS
     rk11d/executeread.cpp
     rk11d/executeseek.cpp
     rk11d/executewrite.cpp
+    rk11d/hardwarepoll.cpp
     rk11d/misc.cpp
     rk11d/processaction.cpp
     rk11d/read.cpp

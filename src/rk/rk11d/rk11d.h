@@ -101,10 +101,20 @@ private:
     // command by the RK05 drive in this queue.
     ThreadSafeQueue<u16> commandCompletionQueue_;
 
-    // Definition of a buffer for the data to be transferred to/from the RK05 drive
+    // Definition of a buffer for the data to be transferred to/from the
+    // RK05 drive
     unique_ptr<u16[]> buffer_;
 
+    // Definition of the hardware poll event queue. It contains the hardware
+    // poll events, ordered in priority.
+    ThreadSafePrioQueue<RKTypes::PollEvent> pollEventQueue_;
+
+    // Condition variable to wake up the hardware poll when a seek function
+    // is completed.
+    condition_variable seekComplete_;
+
     void actionProcessor ();
+    void hardwarePoll ();
     void processFunction (RKTypes::Function function);
     void executeSeek (RKTypes::RKDA diskAddress);
     void executeRead (RKTypes::Function function);
