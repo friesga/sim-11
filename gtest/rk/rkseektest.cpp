@@ -3,7 +3,7 @@
 #include "bus/unibus/unibus.h"
 #include "statuscodes.h"
 #include "chrono/simulatorclock/simulatorclock.h"
-#include "interruptrequest/interruptrequest.h"
+#include "bus/interruptrequest/interruptrequest.h"
 
 #include <gtest/gtest.h>
 #include <memory>

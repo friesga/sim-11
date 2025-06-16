@@ -1,7 +1,7 @@
 #ifndef _BUSINTERRUPTS_H_
 #define _BUSINTERRUPTS_H_
 
-#include "interruptrequest/interruptrequest.h"
+#include "bus/interruptrequest/interruptrequest.h"
 
 #include <functional>
 

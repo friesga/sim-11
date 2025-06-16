@@ -1,4 +1,4 @@
-#include "interruptrequest/interruptrequest.h"
+#include "bus/interruptrequest/interruptrequest.h"
 #include "threadsafecontainers/threadsafeprioqueue.h"
 
 #include <gtest/gtest.h>

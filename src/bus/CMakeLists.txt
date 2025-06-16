@@ -17,6 +17,7 @@ set (BUS_SRCS
     configurationhandler/configurationhandler.cpp
     configurationhandler/responsiblemodule.cpp
     iterator/iterator.cpp
+    interruptrequest/interruptrequest.cpp
     interrupthandler/interrupthandler.cpp)
 
 target_sources (${TARGET} PRIVATE ${BUS_SRCS})

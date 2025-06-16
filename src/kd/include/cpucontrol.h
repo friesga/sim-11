@@ -1,7 +1,7 @@
 #ifndef _CPUCONTROL_H_
 #define _CPUCONTROL_H_
 
-#include "interruptrequest/interruptrequest.h"
+#include "bus/interruptrequest/interruptrequest.h"
 #include "types.h"
 
 // This interface defines the function a cpu has to implement to be able to

@@ -3,7 +3,7 @@
 
 #include "types.h"
 #include "conddata/conddata.h"
-#include "interruptrequest/interruptrequest.h"
+#include "bus/interruptrequest/interruptrequest.h"
 #include "kd/include/generalregisters.h"
 #include "kd/include/psw.h"
 #include "kd/common/conditioncodes/conditioncodes.h"
