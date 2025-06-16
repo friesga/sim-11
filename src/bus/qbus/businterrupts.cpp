@@ -2,13 +2,6 @@
 
 using std::function;
 
-void Qbus::busRequest (TrapPriority priority, unsigned char busOrder,
-	u8 functionOrder, function<void ()> busGrant)
-{
-
-
-}
-
 void Qbus::setInterrupt (TrapPriority priority, unsigned char busOrder,
 	u8 functionOrder, unsigned char vector, function<void ()> ack)
 {
