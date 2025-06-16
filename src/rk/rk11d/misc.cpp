@@ -21,7 +21,7 @@ void RK11D::setControlReady ()
     // to facilitate the unit tests waiting for the interrupt. This might not
     // be actually correct behaviour.
     if (rkcs_.interruptOnDoneEnable)
-        bus_->setInterrupt (TrapPriority::BR5, 5, 0, vector_);
+        bus_->requestInterrupt (TrapPriority::BR5, 5, 0, [&] {return vector_; });
 
     rkcs_.controlReady = 1;
 }

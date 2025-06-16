@@ -2,11 +2,11 @@
 
 using std::function;
 
-void Qbus::setInterrupt (TrapPriority priority, unsigned char busOrder,
-	u8 functionOrder, unsigned char vector, function<void ()> ack)
+void Qbus::requestInterrupt (TrapPriority priority, unsigned char busOrder,
+	u8 functionOrder, function<u16 ()> requestGrant)
 {
 	return interruptHandler_.setInterrupt (priority, busOrder, functionOrder,
-		vector, ack);
+		requestGrant ());
 }
 
 bool Qbus::containsInterrupt (TrapPriority priority, unsigned char busOrder,

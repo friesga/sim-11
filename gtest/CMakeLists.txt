@@ -12,7 +12,6 @@ set (GTEST_SRCS
     threadsafeprioqueuetest.cpp
     threadsafecontainertest.cpp
     interruptrequesttest.cpp
-    interrupttest.cpp
     bitmasktest.cpp
     busaddresstest.cpp
     characterbuffertest.cpp

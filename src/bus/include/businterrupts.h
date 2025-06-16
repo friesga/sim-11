@@ -7,12 +7,18 @@
 
 using std::function;
 
-// This interfaces declares the bus functions for interrupt handling
+// This interfaces declares the bus functions for interrupt handling.
+//
+// The requestInterrupt() function calls the requestGrant() callback when the
+// requested interrupt is to be processed. This vector should then retun the
+// interrupt vector. This setup allows devices to set e.g. the device
+// registers to the correct state.
+//
 class BusInterrupts
 {
 public:
-	virtual void setInterrupt (TrapPriority priority, unsigned char busOrder,
-		u8 functionOrder, unsigned char vector, function<void()> ack = 0) = 0;
+	virtual void requestInterrupt (TrapPriority priority, unsigned char busOrder,
+		u8 functionOrder, function<u16 ()> requestGrant) = 0;
 	virtual bool containsInterrupt (TrapPriority priority, unsigned char busOrder,
 		u8 functionOrder) = 0;
 	virtual void clearInterrupt (TrapPriority priority, unsigned char busOrder,
