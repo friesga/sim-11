@@ -71,4 +71,7 @@ void RK11D::finish ()
 
     // Wake up the action processor
     actionAvailable_.notify_one ();
+
+    // Finish the harware poll function
+    pollEventQueue_.close ();
 }

@@ -17,7 +17,12 @@
 void RK11D::executeSeek (RKTypes::RKDA diskAddress)
 {
     if (diskAddress.cylinderAddress < RKTypes::CylindersPerDisk)
+    {
+        // ToDo: Possible race condition, seekComplete might be pushed before 
+        // startPoll is processed
+        pollEventQueue_.push (StartPoll {});
         rk05Drives_[diskAddress.driveSelect]->seek (diskAddress.cylinderAddress);
+    }
     else
     {
         rker_.nonexistentCylinder = 1;

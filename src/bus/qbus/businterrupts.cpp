@@ -6,7 +6,7 @@ void Qbus::requestInterrupt (TrapPriority priority, unsigned char busOrder,
 	u8 functionOrder, function<u16 ()> requestGrant)
 {
 	return interruptHandler_.setInterrupt (priority, busOrder, functionOrder,
-		requestGrant ());
+		requestGrant);
 }
 
 bool Qbus::containsInterrupt (TrapPriority priority, unsigned char busOrder,

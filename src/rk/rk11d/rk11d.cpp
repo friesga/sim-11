@@ -38,6 +38,11 @@ RK11D::RK11D (Bus* bus, Window* window, shared_ptr<RK11DConfig> rk11dConfig)
     running_ = true;
     actionProcessorThread_ = thread (&RK11D::actionProcessor, this);
 
+    // Create the state machine to be executed in the hardware poll thread and
+    // start the thread.
+    pollStateMachine_ = make_unique<PollStateMachine> (this);
+    pollThread_ = thread (&RK11D::hardwarePoll, this);
+
     // Initialize the controller
     reset ();
 }
@@ -47,6 +52,7 @@ RK11D::~RK11D ()
 {
     finish ();
     actionProcessorThread_.join ();
+    pollThread_.join ();
 }
 
 bool RK11D::responsible (BusAddress busAddress)

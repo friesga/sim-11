@@ -9,6 +9,7 @@
 #include "panel.h"
 #include "bitfield.h"
 #include "threadsafecontainers/threadsafequeue.h"
+#include "variantfsm/fsm.h"
 
 #include <vector>
 #include <string>
@@ -24,6 +25,7 @@ using std::queue;
 using std::thread;
 using std::condition_variable;
 using std::function;
+using std::monostate;
 
 class RK11D : public AbstractBusDevice, public DriveInterface
 {
@@ -85,6 +87,9 @@ private:
     bool running_ {false};
     thread actionProcessorThread_;
 
+    // Hardware poll thread
+    thread pollThread_;
+
     // Safe guard against controller access from multiple threads
     mutex controllerMutex_;
 
@@ -101,13 +106,38 @@ private:
     // command by the RK05 drive in this queue.
     ThreadSafeQueue<u16> commandCompletionQueue_;
 
+    // Definition of the hardware poll states
+    struct Off {};
+    struct Active {};
+    struct Processing {};
+
+    using State = variant<Off, Active, Processing, monostate>;
+
+    // Definition of the hardware poll events
+    struct StartPoll {};
+    struct StopPoll {};
+    struct SeekComplete {};
+    struct ProcessingFinished {};
+
+    using PollEvent = variant<StartPoll, StopPoll,
+        SeekComplete, ProcessingFinished>;
+
+    // Use the PIMPL idiom to be able to define the PollStateMachine outside
+    // of the RK05 class
+    class PollStateMachine;
+    unique_ptr<PollStateMachine> pollStateMachine_;
+
+    // Definition of the queue containing events to be dispatched by the
+    // hardware poll function.
+    ThreadSafeQueue<PollEvent> pollEventQueue_;
+
+    // Async seek completions are reported as DriveConditions and are
+    // processed by the hardware poll function.
+    ThreadSafeQueue <RKTypes::DriveCondition> driveConditionQueue_;
+
     // Definition of a buffer for the data to be transferred to/from the
     // RK05 drive
     unique_ptr<u16[]> buffer_;
-
-    // Definition of the hardware poll event queue. It contains the hardware
-    // poll events, ordered in priority.
-    ThreadSafePrioQueue<RKTypes::PollEvent> pollEventQueue_;
 
     // Condition variable to wake up the hardware poll when a seek function
     // is completed.
@@ -131,6 +161,38 @@ private:
     u32 absValueFromTwosComplement (u16 value) const;
     bool functionParametersOk (RKTypes::Function function);
     void setError (function<void ()> function);
+};
+
+// Definition of the state machine for the hardware poll. The class has
+// to be defined in the same compilation unit to prevent incomplete type
+// compilation errors.
+class RK11D::PollStateMachine :
+    public variantFsm::Fsm<PollStateMachine, PollEvent, State>
+{
+public:
+    PollStateMachine (RK11D* context);
+
+    State transition (Off&&, StartPoll);                  // -> Active
+    State transition (Active&&, SeekComplete);            // -> Processing
+    State transition (Active&&, StopPoll);                // -> Off
+    void entry (Processing);
+    State transition (Processing&&, ProcessingFinished);  // -> Active
+    State transition (Processing&&, StopPoll);            // -> Off
+    
+    // Define the default transition for transitions not explicitly
+    // defined above. The default transition implies the event is ignored.
+    template <typename S, typename E>
+    State transition (S&& state, E)
+    {
+        return monostate {};
+    }
+
+    // As we make use of entry functions, we must handle all cases.
+    // The default entry action is an immediate return.
+    template <typename S> void entry (S&) {}
+
+private:
+    RK11D* context_;
 };
 
 #endif // _RK11D_H_

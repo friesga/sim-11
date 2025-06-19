@@ -6,7 +6,7 @@ void Unibus::requestInterrupt (TrapPriority priority, unsigned char busOrder,
 	u8 functionOrder, function<u16 ()> requestGrant)
 {
 	return interruptHandler_.setInterrupt (priority, busOrder, functionOrder,
-		requestGrant ());
+		requestGrant);
 }
 
 bool Unibus::containsInterrupt (TrapPriority priority, unsigned char busOrder,

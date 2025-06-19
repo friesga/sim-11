@@ -5,11 +5,10 @@
 // interrupt request from the same device an interrupt request can be
 // acknowledged, indicating to the device the interrupt
 void InterruptHandler::setInterrupt (TrapPriority priority,
-	unsigned char busOrder, u8 functionOrder, unsigned char vector,
-	function<void ()> ack)
+	unsigned char busOrder, u8 functionOrder, function<u16 ()> requestGrant)
 {
 	InterruptRequest intrptReq {priority, busOrder, functionOrder,
-		vector, ack};
+		requestGrant};
 	pushInterruptRequest (intrptReq);
 }
 
@@ -61,7 +60,6 @@ bool InterruptHandler::getIntrptReq (InterruptRequest& intrptReq)
 	{
 		bool result = intrptReqQueue_.fetchTop (intrptReq);
 		trace.irq (IrqRecordType::IRQ_SIG, intrptReq.vector ());
-		intrptReq.acknowledge ();
 		return result;
 	}
 	else

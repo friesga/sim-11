@@ -58,9 +58,14 @@ void RK11D::setDriveCondition (RKTypes::DriveCondition condition)
     // Guard against controller register access from the RK11D thread
     std::lock_guard<std::mutex> guard {controllerMutex_};
 
+#ifdef OLD
     actionQueue_.push (condition);
 
     actionAvailable_.notify_one ();
+#endif
+
+    driveConditionQueue_.push (condition);
+    pollEventQueue_.push (SeekComplete {});
 }
 
 

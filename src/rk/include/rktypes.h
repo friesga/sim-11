@@ -1,5 +1,5 @@
-#ifndef _RKDEFINITIONS_H_
-#define _RKDEFINITIONS_H_
+#ifndef _RKTYPES_H_
+#define _RKTYPES_H_
 
 #include "bitfield.h"
 
@@ -140,16 +140,6 @@ namespace RKTypes
     // issued by the running program, or a DriveCondition, originating from an
     // RK05 drive.
     using Action = std::variant<Function, DriveCondition>;
-
-    // Definition of the events for the hardware poll. The events are ordered
-    // in priority, with StopPoll having the highest priority.
-    enum class PollEvent
-    {
-        StartPoll = 0,
-        DriveCondition,
-        BusPriorityLevelChanged,
-        StopPoll
-    };
 };
 
-#endif // _RKDEFINITIONS_H_
+#endif // _RKTYPES_H_

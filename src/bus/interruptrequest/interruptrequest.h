@@ -38,13 +38,11 @@ enum class TrapPriority
 class InterruptRequest
 {
 public:
-    InterruptRequest();
-    InterruptRequest(TrapPriority priority, unsigned char busOrder,
-        u8 functionOrder, unsigned char vector,
-        function<void ()> ack = nullptr);
+    InterruptRequest ();
+    InterruptRequest (TrapPriority priority, unsigned char busOrder,
+        u8 functionOrder, function<u16 ()> requestGrant);
     bool operator< (InterruptRequest const &ir) const;
     bool operator== (InterruptRequest const &ir) const;
-    void acknowledge ();
 
     // Accessors
     TrapPriority priority() const;
@@ -55,8 +53,7 @@ private:
     TrapPriority priority_;
     unsigned char busOrder_;
     u8 functionOrder_;
-    unsigned char vector_;
-    function<void ()> ack_;
+    function<u16 ()> requestGrant_;
 
     long intrptPriority (TrapPriority trapPriority, unsigned char busOrder,
         u8 functionOrder) const;

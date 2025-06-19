@@ -6,19 +6,16 @@ InterruptRequest::InterruptRequest()
     priority_ {TrapPriority::None},
     busOrder_ {0},
     functionOrder_ {0},
-    vector_{0},
-    ack_ {nullptr}
+    requestGrant_ {nullptr}
 {}
 
-InterruptRequest::InterruptRequest(TrapPriority priority,
-        unsigned char busOrder, u8 functionOrder, unsigned char vector,
-        function<void ()> ack)
+InterruptRequest::InterruptRequest (TrapPriority priority,
+        unsigned char busOrder, u8 functionOrder, function<u16 ()> requestGrant)
     :
     priority_ {priority},
     busOrder_ {busOrder},
     functionOrder_ {functionOrder},
-    vector_ {vector},
-    ack_ {ack}
+    requestGrant_ {requestGrant}
 {}
 
 
@@ -52,18 +49,14 @@ unsigned char InterruptRequest::busOrder() const
     return busOrder_;
 }
 
+// To retrieve the vector for this interrupt, the request granted callback
+// is called which should return the vector to use.
 unsigned char InterruptRequest::vector() const
 {
-    return vector_;
+    return requestGrant_ ();
 }
 
 TrapPriority InterruptRequest::priority() const
 {
     return priority_;
-}
-
-void InterruptRequest::acknowledge ()
-{
-    if (ack_)
-        ack_();
 }
