@@ -98,7 +98,7 @@ public:
 
 	// Functions required for the BusInterrupts interface
 	void requestInterrupt (TrapPriority priority, unsigned char busOrder,
-		u8 functionOrder, function<u16 ()> requestGrant);
+		u8 functionOrder, u16 vector, function<void ()> requestGrant = 0);
 	bool containsInterrupt (TrapPriority priority, unsigned char busOrder,
 		u8 functionOrder);
 	void clearInterrupt (TrapPriority priority, unsigned char busOrder,

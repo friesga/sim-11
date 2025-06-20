@@ -10,11 +10,13 @@ InterruptRequest::InterruptRequest()
 {}
 
 InterruptRequest::InterruptRequest (TrapPriority priority,
-        unsigned char busOrder, u8 functionOrder, function<u16 ()> requestGrant)
+        unsigned char busOrder, u8 functionOrder, u16 vector,
+        function<void ()> requestGrant)
     :
     priority_ {priority},
     busOrder_ {busOrder},
     functionOrder_ {functionOrder},
+    vector_ {vector},
     requestGrant_ {requestGrant}
 {}
 
@@ -53,10 +55,18 @@ unsigned char InterruptRequest::busOrder() const
 // is called which should return the vector to use.
 unsigned char InterruptRequest::vector() const
 {
-    return requestGrant_ ();
+    return vector_;
 }
 
 TrapPriority InterruptRequest::priority() const
 {
     return priority_;
+}
+
+// Call the request grant function if a function to that purpose has
+// been provided.
+void InterruptRequest::requestGrant ()
+{
+    if (requestGrant_!= nullptr)
+        requestGrant_ ();
 }

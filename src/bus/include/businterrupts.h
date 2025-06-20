@@ -18,7 +18,7 @@ class BusInterrupts
 {
 public:
 	virtual void requestInterrupt (TrapPriority priority, unsigned char busOrder,
-		u8 functionOrder, function<u16 ()> requestGrant) = 0;
+		u8 functionOrder, u16 vector, function<void ()> requestGrant = 0) = 0;
 	virtual bool containsInterrupt (TrapPriority priority, unsigned char busOrder,
 		u8 functionOrder) = 0;
 	virtual void clearInterrupt (TrapPriority priority, unsigned char busOrder,

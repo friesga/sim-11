@@ -3,10 +3,10 @@
 using std::function;
 
 void Unibus::requestInterrupt (TrapPriority priority, unsigned char busOrder,
-	u8 functionOrder, function<u16 ()> requestGrant)
+	u8 functionOrder, u16 vector, function<void ()> requestGrant)
 {
 	return interruptHandler_.setInterrupt (priority, busOrder, functionOrder,
-		requestGrant);
+		vector, requestGrant);
 }
 
 bool Unibus::containsInterrupt (TrapPriority priority, unsigned char busOrder,

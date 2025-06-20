@@ -57,7 +57,7 @@ void RK11D::PollStateMachine::entry (Processing)
     {
         latch interruptRequestGranted {1};
 
-        context_->bus_->requestInterrupt (TrapPriority::BR5, 5, 0,
+        context_->bus_->requestInterrupt (TrapPriority::BR5, 5, 0, context_->vector_,
             [&] {
                 // Guard against controller register access from other threads
                 std::lock_guard<std::mutex> guard {context_->controllerMutex_};
@@ -69,7 +69,6 @@ void RK11D::PollStateMachine::entry (Processing)
                 context_->rkds_.value = condition.rkds.value;
                 context_->rker_.value = condition.rker.value;
                 interruptRequestGranted.count_down ();
-                return context_->vector_;
             });
 
         interruptRequestGranted.wait ();

@@ -339,7 +339,7 @@ void BDV11::tick()
 	{
 		// Check the line time clock (LTC) is enabled
 		if (ltc & LKS_IE)
-			bus_->requestInterrupt (TrapPriority::BR6, 9, 0, [] {return 0100; });
+			bus_->requestInterrupt (TrapPriority::BR6, 9, 0, 0100);
 		else
 			// Clear possibly pending interrupts
 			bus_->clearInterrupt (TrapPriority::BR6, 9, 0);

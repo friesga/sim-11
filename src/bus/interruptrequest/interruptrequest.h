@@ -40,7 +40,7 @@ class InterruptRequest
 public:
     InterruptRequest ();
     InterruptRequest (TrapPriority priority, unsigned char busOrder,
-        u8 functionOrder, function<u16 ()> requestGrant);
+        u8 functionOrder, u16 vector, function<void ()> requestGrant = 0);
     bool operator< (InterruptRequest const &ir) const;
     bool operator== (InterruptRequest const &ir) const;
 
@@ -48,12 +48,14 @@ public:
     TrapPriority priority() const;
     unsigned char busOrder() const;
     unsigned char vector() const;
+    void requestGrant ();
 
 private:
     TrapPriority priority_;
     unsigned char busOrder_;
     u8 functionOrder_;
-    function<u16 ()> requestGrant_;
+    u16 vector_;
+    function<void ()> requestGrant_;
 
     long intrptPriority (TrapPriority trapPriority, unsigned char busOrder,
         u8 functionOrder) const;

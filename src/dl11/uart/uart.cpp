@@ -200,7 +200,7 @@ void UART::setRecvInterruptIfEnabled (u16 oldCSRvalue, u16 newCSRvalue)
 	{
 		trace.dlv11 (DLV11RecordType::DLV11_SET_RXI, channelNr_, newCSRvalue);
 		bus_->requestInterrupt (TrapPriority::BR4, 6, 
-			interruptPriority (Function::Receive, channelNr_), [&] {return vector; });
+			interruptPriority (Function::Receive, channelNr_), vector);
 	}
 }
 
@@ -249,8 +249,7 @@ void UART::setXmitInterruptIfEnabled (u16 oldCSRvalue, u16 newCSRvalue)
 	{
 		trace.dlv11 (DLV11RecordType::DLV11_SET_TXI, channelNr_, newCSRvalue);
 		bus_->requestInterrupt (TrapPriority::BR4, 6, 
-			interruptPriority (Function::Transmit, channelNr_),
-			[&] {return vector + 4; });
+			interruptPriority (Function::Transmit, channelNr_), vector + 4);
 	}
 }
 
@@ -349,7 +348,7 @@ void UART::transmitter ()
 			trace.dlv11 (DLV11RecordType::DLV11_SET_TXI, channelNr_, xbuf);
 			bus_->requestInterrupt (TrapPriority::BR4, 6, 
 				interruptPriority (Function::Transmit, channelNr_),
-				[&] {return vector + 4; });
+				vector + 4);
 		}
 
 		// If loopback is enabled send the character to the receiver of this
@@ -482,8 +481,7 @@ void UART::receiveDone ()
 	{
 		trace.dlv11 (DLV11RecordType::DLV11_SET_RXI, channelNr_, 0);
 		bus_->requestInterrupt (TrapPriority::BR4, 6, 
-			interruptPriority (Function::Receive, channelNr_),
-			[&] {return vector; });
+			interruptPriority (Function::Receive, channelNr_), vector);
 	}
 }
 

@@ -74,7 +74,7 @@ StatusCode RLV12::writeWord (BusAddress busAddress, u16 data)
                     bus_->clearInterrupt (TrapPriority::BR4, 0, 4);
                 else if ((csr_ & (RLV12const::CSR_ControllerReady + RLV12const::CSR_InterruptEnable))
                     == RLV12const::CSR_ControllerReady)
-                    bus_->requestInterrupt (TrapPriority::BR4, 4, 0, [&] {return vector_; });
+                    bus_->requestInterrupt (TrapPriority::BR4, 4, 0, vector_);
 
                 return StatusCode::Success;
             }
