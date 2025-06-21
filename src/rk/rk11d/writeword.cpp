@@ -68,6 +68,7 @@ StatusCode RK11D::writeWord (BusAddress busAddress, u16 value)
         case RKDA:
             // Disk Address register
             rkda_.value = value;
+            selectedDrive_ = rkda_.driveSelect;
             return StatusCode::Success;
             break;
 

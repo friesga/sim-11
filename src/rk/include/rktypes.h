@@ -132,7 +132,7 @@ namespace RKTypes
     // Definition of a change in drive condition
     struct DriveCondition
     {
-        RKDS rkds;
+        u16 driveId;
         RKER rker;
     };
 

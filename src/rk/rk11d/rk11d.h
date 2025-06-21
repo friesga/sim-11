@@ -46,8 +46,8 @@ private:
         RKDB = 016,     // Data Buffer register
     };
 
-    // Definition of the controller's registers
-    RKTypes::RKDS rkds_ {0};
+    // Definition of the controller's registers. The RKDS is maintained by
+    // the drives and is retrieved from the drive when the RKDS is read.
     RKTypes::RKER rker_ {0};
     RKTypes::RKCS rkcs_ {0};
     u16 rkwc_ {0};
@@ -82,6 +82,11 @@ private:
     // Definition of the controller's base address and vector
     u16 baseAddress_ {0};
     u16 vector_ {0};
+
+    // Definition of the currently selected drive. The drive is selected by
+    // either setting the Drive Select bits in the RKDA or by an interrupt
+    // from a drive.
+    u16 selectedDrive_ {0};
 
     // Action processor thread
     bool running_ {false};

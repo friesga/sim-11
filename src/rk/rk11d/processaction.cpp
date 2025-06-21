@@ -77,7 +77,7 @@ void RK11D::setDriveCondition (RKTypes::DriveCondition condition)
 //
 void RK11D::processDriveCondition (RKTypes::DriveCondition driveCondition)
 {
-    rkds_.value = driveCondition.rkds.value;
+    selectedDrive_ = driveCondition.driveId;
     rker_.value = driveCondition.rker.value;
 
     if (rker_.value != 0)

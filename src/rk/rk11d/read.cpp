@@ -7,8 +7,17 @@ CondData<u16> RK11D::read (BusAddress busAddress)
     {
         case RKDS:
             // Drive Status register
-            return rkds_.value;
-            break;
+            if (selectedDrive_ > rk05Drives_.size ())
+                return rk05Drives_[selectedDrive_]->driveStatus ();
+            else
+            {
+                RKTypes::RKDS rkds {};
+                rkds.driveId = selectedDrive_;
+                rkds.drivePowerLow = 1;
+                rkds.driveUnsafe = 1;
+                rkds.driveReady = 0;
+                return rkds.value;
+            }
 
         case RKER:
             // Error register

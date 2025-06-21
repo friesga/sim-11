@@ -66,7 +66,7 @@ void RK11D::PollStateMachine::entry (Processing)
                     context_->driveConditionQueue_.first ();
 
                 context_->driveConditionQueue_.tryPop (condition);
-                context_->rkds_.value = condition.rkds.value;
+                context_->selectedDrive_ = condition.driveId;
                 context_->rker_.value = condition.rker.value;
                 interruptRequestGranted.count_down ();
             });

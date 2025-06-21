@@ -20,7 +20,8 @@ RK05::RK05 (Bus* bus, DriveInterface* controller, Window* window,
     shared_ptr<RK05Config> rk05Config)
     : 
     bus_ {bus},
-    controller_ {controller}
+    controller_ {controller},
+    driveId_ {rk05Config->unitNumber}
 {
     // In case the constructor is called in the unit tests, the window is
     // not available.
@@ -72,6 +73,11 @@ RK05::~RK05 ()
     }
 }
 
+u16 RK05::driveStatus () const
+{ 
+    return driveStatus_.value;
+}
+
 void RK05::runLoadSwitchClicked (Button::State state)
 {
     if (get<Button::TwoPositionsState> (state) == Button::TwoPositionsState::On)
@@ -103,7 +109,7 @@ bool RK05::isReady ()
 void RK05::seek (u16 cylinderAddress)
 {
     sendTrigger (SeekCommand {seekTime (currentCylinderAddress_, cylinderAddress),
-        [&] {controller_->setDriveCondition (DriveCondition {driveStatus_,
+        [&] {controller_->setDriveCondition (DriveCondition {driveId_,
             driveError_}); }});
 
     // The current cylinder address actually should be set only when the

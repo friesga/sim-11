@@ -33,12 +33,14 @@ public:
     void seek (u16 cylinderAddress);
     void write (DiskAddress diskAddress, u16 wordCount, u16* data);
     void read (DiskAddress diskAddress, u16 wordCount, u16* data);
+    u16 driveStatus () const;
 
 private:
     class WriteCompletion;
 
     Bus* bus_ {nullptr};
     DriveInterface* controller_ {nullptr};
+    u16 driveId_;
 
     // Definition of the RK05 drive format
     Geometry rk05Geometry {RKTypes::SectorsPerSurface, RKTypes::NumberOfHeads,
