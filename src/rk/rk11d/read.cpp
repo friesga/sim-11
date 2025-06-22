@@ -7,7 +7,7 @@ CondData<u16> RK11D::read (BusAddress busAddress)
     {
         case RKDS:
             // Drive Status register
-            if (selectedDrive_ > rk05Drives_.size ())
+            if (selectedDrive_ < rk05Drives_.size ())
                 return rk05Drives_[selectedDrive_]->driveStatus ();
             else
             {
