@@ -115,7 +115,8 @@ RK05::State RK05::StateMachine::transition (Seeking&& currentState, TimeElapsed)
     if (currentState.seekCompleted != nullptr)
         currentState.seekCompleted ();
 
-    // context_->seekCompleted ();
+    context_->driveStatus_.driveReady = 1;
+    context_->oncylIndicator_->show (Indicator::State::On);
     return LockedOn {};
 }
 
