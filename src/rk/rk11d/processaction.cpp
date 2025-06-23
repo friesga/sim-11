@@ -59,7 +59,7 @@ void RK11D::setDriveCondition (RKTypes::DriveCondition condition)
     std::lock_guard<std::mutex> guard {controllerMutex_};
 
 #ifdef OLD
-    actionQueue_.push (condition);
+    functionQueue_.push (condition);
 
     actionAvailable_.notify_one ();
 #endif

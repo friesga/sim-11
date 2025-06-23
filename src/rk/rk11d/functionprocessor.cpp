@@ -12,17 +12,12 @@ using std::visit;
 // in nature; data transfer functions are handled synchronously and Seek and
 // Control Reset functions are processed asynchronously.
 // 
-// The action processor processes both newly started functions (started by
-// the program running on the CPU) and seek completions. When a Seek function
-// is initiated, the action processor becomes active and continues polling for
-// seek completions. However, if a transfer function follows, the action
-// processor is stopped and the transfer command is processed, up to and
-// including a command complete return notification. After that, the action
-// processor continues again.
+// The function processor processes newly initiated functions (started by
+// the program running on the CPU).
 // 
-// The action processor is executed in a seperate thread.
+// The function processor is executed in a seperate thread.
 //
-void RK11D::actionProcessor ()
+void RK11D::functionProcessor ()
 try
 {
     // Guard against controller register access from writeWord()
@@ -31,10 +26,9 @@ try
     while (running_)
     {
         // The controllerMutex_ now is locked. Process events till the queue
-        // is empty. The queue contains either functions issued by the running
-        // program or drive conditions reported by a RK05 drive.
+        // is empty.
         //
-        while (!actionQueue_.empty ())
+        while (!functionQueue_.empty ())
         {
             // Use an overloaded visitor to process either a function or a
             // drive condition.
@@ -45,10 +39,10 @@ try
                     [this] (RKTypes::DriveCondition driveCondition)
                         { processDriveCondition (driveCondition); }
                 },
-                actionQueue_.front ());
+                functionQueue_.front ());
 
             // The event has been processed
-            actionQueue_.pop ();
+            functionQueue_.pop ();
         }
 
         // Wait till we are signalled that a command is ready to be processed

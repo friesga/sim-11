@@ -34,7 +34,7 @@ StatusCode RK11D::writeWord (BusAddress busAddress, u16 value)
                 // ToDo: Add Memory Extension bits to bus address
                 //
                 u16 operation = rkcs_.operation;
-                actionQueue_.push (RKTypes::Function
+                functionQueue_.push (RKTypes::Function
                     {
                         static_cast<RKTypes::Operation> (operation),
                         rkda_.value, rkwc_, rkba_

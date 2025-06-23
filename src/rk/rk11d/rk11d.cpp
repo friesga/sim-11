@@ -36,7 +36,7 @@ RK11D::RK11D (Bus* bus, Window* window, shared_ptr<RK11DConfig> rk11dConfig)
 
     // Start the action processor
     running_ = true;
-    actionProcessorThread_ = thread (&RK11D::actionProcessor, this);
+    actionProcessorThread_ = thread (&RK11D::functionProcessor, this);
 
     // Create the state machine to be executed in the hardware poll thread and
     // start the thread.

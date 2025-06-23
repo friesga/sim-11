@@ -98,12 +98,12 @@ private:
     // Safe guard against controller access from multiple threads
     mutex controllerMutex_;
 
-    // Definition of the queue for forwarding actions to the action processor.
-    // The queue is accessed from multiple threads and its consistency has to
-    // be safe-guarded by the controllerMutex_.
-    queue<RKTypes::Action> actionQueue_;
+    // Definition of the queue for forwarding issued function to the function
+    // processor. The queue is accessed from multiple threads and its consistency
+    // has to be safe-guarded by the controllerMutex_.
+    queue<RKTypes::Action> functionQueue_;
 
-    // Condition variable to wake up the action processor when an action has
+    // Condition variable to wake up the function processor when an action has
     // been queued.
     condition_variable actionAvailable_;
 
@@ -148,7 +148,7 @@ private:
     // is completed.
     condition_variable seekComplete_;
 
-    void actionProcessor ();
+    void functionProcessor ();
     void hardwarePoll ();
     void processFunction (RKTypes::Function function);
     void executeSeek (RKTypes::RKDA diskAddress);
