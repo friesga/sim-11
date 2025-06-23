@@ -33,7 +33,7 @@ protected:
     static constexpr u16  RKDS_DRY       = (1 << 7);
     static constexpr u16  RKDS_SOK       = (1 << 8);
     static constexpr u16  RKDS_RK05      = (1 << 11);
-    inline u16 getRKDSdriveId (u16 rkds) { return (rkds & 7) >> 13; }
+    inline u16 getRKDSdriveId (u16 rkds) { return (rkds >> 13); }
 
     // RKER bit definitions
     static constexpr u16  RKER_NXD = (1 << 7);
@@ -73,11 +73,22 @@ protected:
         rk11dConfig.rk05Config[0] =
             make_shared<RK05Config> (RK05Config
             ({
+                .unitNumber = 0,
                 .fileName = "rk05.dsk",
                 .newFile = true,
                 .overwrite = true
                 }));
 
+        rk11dConfig.rk05Config[1] =
+            make_shared<RK05Config> (RK05Config
+            ({
+                .unitNumber = 1,
+                .fileName = "rk05-1.dsk",
+                .newFile = true,
+                .overwrite = true
+                }));
+
+        rk11dConfig.numUnits = 2;
 
         rk11dDevice = new RK11D (&bus, nullptr,
             make_shared<RK11DConfig> (rk11dConfig));
@@ -111,7 +122,8 @@ protected:
 
     void waitForInterruptAvailable ()
     {
-        while (!bus.intrptReqAvailable ()) {}
+        while (!bus.intrptReqAvailable ())
+            SimulatorClock::forwardClock (10ms);
     }
 };
 
@@ -151,15 +163,17 @@ TEST_F (RK11DSeekTest, seekToExistentCylinder)
     EXPECT_EQ (rk11dDevice->read (BusAddress {RKCS}) & (RKCS_ERR | RKCS_HE), 0);
 }
 
+
 TEST_F (RK11DSeekTest, seekGeneratesInterrupts)
 {
-    // Try to seek to cylinder 1
-    EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKDA}, 0000040),
+    // Try to seek to cylinder 202 ond drive 0 to make sure that seeking
+    // takes more time than issueing a function to the controller
+    EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKDA}, 0014500),
         StatusCode::Success);
     EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKCS},
         RKCS_OPERATION (Operation::Seek) | RKCS_IDE | RKCS_GO),
         StatusCode::Success);
-   
+
     // The acceptance of the Seek function should generate an interrupt request
     waitForControllerReady (rk11dDevice);
     EXPECT_TRUE (bus.intrptReqAvailable ());
@@ -171,9 +185,64 @@ TEST_F (RK11DSeekTest, seekGeneratesInterrupts)
     // generated and the drive should be ready
     waitForDriveReady (rk11dDevice, 0);
     waitForInterruptAvailable ();
-    
+
     // Verify no error and correct status indicated
     EXPECT_EQ (rk11dDevice->read (BusAddress {RKDS}),
+        RKDS_SC_SA | RKDS_RWS_READY | RKDS_DRY | RKDS_SOK | RKDS_RK05);
+    EXPECT_EQ (rk11dDevice->read (BusAddress {RKER}), 0);
+    EXPECT_EQ (rk11dDevice->read (BusAddress {RKCS}) & (RKCS_ERR | RKCS_HE), 0);
+}
+
+TEST_F (RK11DSeekTest, overlappedSeeks)
+{
+    // Try to seek to cylinder 202 to make sure that seeking takes more time
+    // than issueing a function to the controller
+    EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKDA}, 0014500),
+        StatusCode::Success);
+    EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKCS},
+        RKCS_OPERATION (Operation::Seek) | RKCS_IDE | RKCS_GO),
+        StatusCode::Success);
+
+    // The acceptance of the Seek function should generate an interrupt request
+    waitForControllerReady (rk11dDevice);
+    EXPECT_TRUE (bus.intrptReqAvailable ());
+    EXPECT_TRUE (bus.containsInterrupt (TrapPriority::BR5, 5, 0));
+    InterruptRequest ir;
+    EXPECT_TRUE (bus.getIntrptReq (ir));
+
+    // A seek on drive 1 to sector 202 should be accepted
+    EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKDA}, 0034500),
+        StatusCode::Success);
+    EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKCS},
+        RKCS_OPERATION (Operation::Seek) | RKCS_IDE | RKCS_GO),
+        StatusCode::Success);
+
+    // The acceptance of the Seek function should generate an interrupt request.
+    waitForControllerReady (rk11dDevice);
+    EXPECT_TRUE (bus.intrptReqAvailable ());
+    EXPECT_TRUE (bus.containsInterrupt (TrapPriority::BR5, 5, 0));
+    EXPECT_TRUE (bus.getIntrptReq (ir));
+
+    // After completion of the first seek an interrupt should be available.
+    // This interrupt request is granted, after which an interrupt for
+    // completion of the second seek should be available.
+    // The RKDS should contain the drive number for which the interrupt was
+    // generated.
+    waitForInterruptAvailable ();
+    EXPECT_TRUE (bus.getIntrptReq (ir));
+    u16 firstDrive = getRKDSdriveId (rk11dDevice->read (BusAddress {RKDS}));
+
+    waitForInterruptAvailable ();
+    EXPECT_TRUE (bus.getIntrptReq (ir));
+    u16 secondDrive = getRKDSdriveId (rk11dDevice->read (BusAddress {RKDS}));
+
+    // Interrupts should be generated for drive 0 and drive 1
+    EXPECT_TRUE ((firstDrive == 0 && secondDrive == 1) ||
+        (firstDrive == 1 && secondDrive == 0));
+
+    // Verify no error and correct status indicated
+    EXPECT_EQ (rk11dDevice->read (BusAddress {RKDS}) & 
+        RKDS_SC_SA | RKDS_RWS_READY | RKDS_DRY | RKDS_SOK | RKDS_RK05,
         RKDS_SC_SA | RKDS_RWS_READY | RKDS_DRY | RKDS_SOK | RKDS_RK05);
     EXPECT_EQ (rk11dDevice->read (BusAddress {RKER}), 0);
     EXPECT_EQ (rk11dDevice->read (BusAddress {RKCS}) & (RKCS_ERR | RKCS_HE), 0);
