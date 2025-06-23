@@ -35,6 +35,7 @@ struct RK05Config
 // that way as it has a constructor.
 struct RK05ConfigParams
 {
+	u16 unitNumber {0};
 	string fileName {};
 	bool newFile {false};
 	bool readOnly {false};

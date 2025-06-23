@@ -9,6 +9,7 @@ RK05Config::RK05Config ()
 // designated initializers.
 RK05Config::RK05Config (RK05ConfigParams const& rk05ConfigParams)
 	:
+	unitNumber {rk05ConfigParams.unitNumber},
 	fileName {rk05ConfigParams.fileName},
 	newFile {rk05ConfigParams.newFile},
 	writeProtect {rk05ConfigParams.writeProtect},
