@@ -247,3 +247,52 @@ TEST_F (RK11DSeekTest, overlappedSeeks)
     EXPECT_EQ (rk11dDevice->read (BusAddress {RKER}), 0);
     EXPECT_EQ (rk11dDevice->read (BusAddress {RKCS}) & (RKCS_ERR | RKCS_HE), 0);
 }
+
+#if 0
+// We would like to verify that a transfer function stops the hardware
+// poll. This functionality cannot be verified reliable in a test however
+// as the outcome depends on thread scheduling (the rk05 drive threads might
+// be executed before the transfer command is executed).
+TEST_F (RK11DSeekTest, transferFunctionCancelsSeekInterrupts)
+{
+    InterruptRequest ir;
+
+    // Start a seek on drive 0
+    EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKDA}, 0014500),
+        StatusCode::Success);
+    EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKCS},
+        RKCS_OPERATION (Operation::Seek) | RKCS_IDE | RKCS_GO),
+        StatusCode::Success);
+
+    // The acceptance of the Seek function should generate an interrupt request
+    waitForInterruptAvailable ();
+    EXPECT_TRUE (bus.getIntrptReq (ir));
+
+    // Start a seek on drive 1
+    EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKDA}, 0034500),
+        StatusCode::Success);
+    EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKCS},
+        RKCS_OPERATION (Operation::Seek) | RKCS_IDE | RKCS_GO),
+        StatusCode::Success);
+
+    // The acceptance of the Seek function should generate an interrupt request
+    waitForInterruptAvailable ();
+    EXPECT_TRUE (bus.getIntrptReq (ir));
+
+    // Start a read on drive 0
+    EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKWC}, 0177400),
+        StatusCode::Success);
+    EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKBA}, 0),
+        StatusCode::Success);
+    EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKDA}, 0),
+        StatusCode::Success);
+    EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKCS},
+        RKCS_OPERATION (Operation::Read) | RKCS_GO),
+        StatusCode::Success);
+
+    // No interrupts should be generated any more while the seeks are
+    // completed (the seeks take 85 msec).
+    SimulatorClock::forwardClock (100ms);
+    EXPECT_FALSE (bus.intrptReqAvailable ());
+}
+#endif
