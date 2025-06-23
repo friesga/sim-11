@@ -81,6 +81,12 @@ void RK11D::PollStateMachine::entry (Processing)
         context_->pollEventQueue_.push (ProcessingFinished {});
 }
 
+// Another seek completion has arrived while processing seek completions
+RK11D::State RK11D::PollStateMachine::transition (Processing&&, SeekComplete)
+{
+    return Processing {};
+}
+
 // When no seek completions are available anymore the polling returns to
 // the Active state, awaiting further seek completions.
 RK11D::State RK11D::PollStateMachine::transition (Processing&&, ProcessingFinished)

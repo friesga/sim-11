@@ -181,6 +181,7 @@ public:
     State transition (Active&&, SeekComplete);            // -> Processing
     State transition (Active&&, StopPoll);                // -> Off
     void entry (Processing);
+    State transition (Processing&&, SeekComplete);        // -> Processing
     State transition (Processing&&, ProcessingFinished);  // -> Active
     State transition (Processing&&, StopPoll);            // -> Off
     
