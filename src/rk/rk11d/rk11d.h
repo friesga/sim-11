@@ -138,7 +138,7 @@ private:
 
     // Async seek completions are reported as SeekCompleteReport's and are
     // processed by the hardware poll function.
-    ThreadSafeQueue <RKTypes::SeekCompleteReport> driveConditionQueue_;
+    ThreadSafeQueue <RKTypes::SeekCompleteReport> seekCompleteQueue_;
 
     // Definition of a buffer for the data to be transferred to/from the
     // RK05 drive

@@ -34,7 +34,7 @@ RK11D::State RK11D::PollStateMachine::transition (Off&&, StartPoll)
 
 // On a seek completion reported by an RK05 drive, processing of seek
 // completions starts. Seek completions are reported as SeekCompleteReport's
-// pushed to the driveConditionQueue_.
+// pushed to the seekCompleteQueue_.
 RK11D::State RK11D::PollStateMachine::transition (Active&&, SeekComplete)
 {
     return Processing {};
@@ -52,7 +52,7 @@ RK11D::State RK11D::PollStateMachine::transition (Active&&, StopPoll)
 // granted the next seek completion (if available) can be requested.
 void RK11D::PollStateMachine::entry (Processing)
 {
-    while (context_->driveConditionQueue_.size () > 0 &&
+    while (context_->seekCompleteQueue_.size () > 0 &&
         context_->pollEventQueue_.empty ())
     {
         latch interruptRequestGranted {1};
@@ -63,9 +63,9 @@ void RK11D::PollStateMachine::entry (Processing)
                 std::lock_guard<std::mutex> guard {context_->controllerMutex_};
 
                 RKTypes::SeekCompleteReport report =
-                    context_->driveConditionQueue_.first ();
+                    context_->seekCompleteQueue_.first ();
 
-                context_->driveConditionQueue_.tryPop (report);
+                context_->seekCompleteQueue_.tryPop (report);
                 context_->selectedDrive_ = report.driveId;
                 context_->rker_.value = report.rker.value;
                 interruptRequestGranted.count_down ();
@@ -77,7 +77,7 @@ void RK11D::PollStateMachine::entry (Processing)
     if (context_->pollEventQueue_.size () > 0)
         return;
 
-    if (context_->driveConditionQueue_.empty ())
+    if (context_->seekCompleteQueue_.empty ())
         context_->pollEventQueue_.push (ProcessingFinished {});
 }
 
