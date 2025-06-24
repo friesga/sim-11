@@ -23,6 +23,7 @@ protected:
 
     // RKDS bit definitions
     static constexpr u16  RKDS_DRY = (1 << 7);
+    static constexpr u16  RKDS_IDE = (1 << 6);
     inline u16 getRKDSdriveId (u16 rkds) { return (rkds & 7) >> 13; }
 
     // RKER bit definitions
@@ -106,6 +107,24 @@ TEST_F (RK11DRegistersTest, registersInitialised)
     EXPECT_EQ (rk11dDevice->read (BusAddress {RKWC}), 0);
     EXPECT_EQ (rk11dDevice->read (BusAddress {RKBA}), 0);
     EXPECT_EQ (rk11dDevice->read (BusAddress {RKDB}), 0);
+}
+
+// Verify the RDY remains set when IDE is set. This resembles ZRKJE0 test 5.
+TEST_F (RK11DRegistersTest, rdyRemainsSet)
+{
+    RK11DConfig rk11dConfig {};
+
+    Unibus bus;
+    RK11D* rk11dDevice = new RK11D (&bus, nullptr,
+        make_shared<RK11DConfig> (rk11dConfig));
+
+    EXPECT_EQ (rk11dDevice->read (BusAddress {RKCS}), RKCS_RDY);
+
+    EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKCS}, RKDS_IDE),
+        StatusCode::Success);
+
+    EXPECT_EQ (rk11dDevice->read (BusAddress {RKCS}),
+        RKCS_RDY | RKDS_IDE);
 }
 
 // Verify that a Control Reset function resets the registers and sets the
