@@ -33,6 +33,7 @@ void RK11D::processFunction (RKTypes::Function function)
             break;
 
         case RKTypes::WriteCheck:
+            executeWriteCheck (function);
             break;
 
         case RKTypes::Seek:
