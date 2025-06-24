@@ -62,23 +62,3 @@ void RK11D::setDriveCondition (RKTypes::DriveCondition condition)
     pollEventQueue_.push (SeekComplete {});
 }
 
-
-// This function is called by the RK05 to pass the result of the execution
-// of a command to the controller and is executed in an RK05 thread.
-// 
-// The function is already safeguarded against register access by the
-// CPU thread as the controllerMutex_ is locked by the action processor.
-//
-void RK11D::processDriveCondition (RKTypes::DriveCondition driveCondition)
-{
-    selectedDrive_ = driveCondition.driveId;
-    rker_.value = driveCondition.rker.value;
-
-    if (rker_.value != 0)
-        rkcs_.error = 1;
-
-    if (rker_.hardError != 0)
-        rkcs_.hardError = 1;
-
-    setControlReady ();
-}

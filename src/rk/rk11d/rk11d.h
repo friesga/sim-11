@@ -158,7 +158,6 @@ private:
         u16 wordCount, unique_ptr<u16[]>& buffer);
     StatusCode transferDataFromBuffer (BusAddress memoryAddress,
         u16 wordCount, unique_ptr<u16[]>& buffer);
-    void processDriveCondition (RKTypes::DriveCondition driveCondition);
     void BINITReceiver (bool signalValue);
     void setNonExistingDisk (u16 driveId);
     void setControlReady ();
