@@ -41,6 +41,9 @@ void RK11D::processFunction (RKTypes::Function function)
             break;
 
         case RKTypes::ReadCheck:
+            executeReadCheck (function);
+            break;
+
         case RKTypes::DriveReset:
         case RKTypes::WriteLock:
             break;

@@ -153,6 +153,7 @@ private:
     void processFunction (RKTypes::Function function);
     void executeSeek (RKTypes::RKDA diskAddress);
     void executeRead (RKTypes::Function function);
+    void executeReadCheck (RKTypes::Function function);
     void executeWriteCheck (RKTypes::Function function);
     void executeWrite (RKTypes::Function function);
     StatusCode transferDataToBuffer (BusAddress memoryAddress,
