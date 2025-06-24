@@ -5,7 +5,7 @@ set (RK11D_SRCS
     rk11d/executewrite.cpp
     rk11d/hardwarepoll.cpp
     rk11d/misc.cpp
-    rk11d/processaction.cpp
+    rk11d/processfunction.cpp
     rk11d/read.cpp
     rk11d/rk11d.cpp
     rk11d/setseekcomplete.cpp
