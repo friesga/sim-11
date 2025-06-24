@@ -8,6 +8,7 @@ set (RK11D_SRCS
     rk11d/processaction.cpp
     rk11d/read.cpp
     rk11d/rk11d.cpp
+    rk11d/setseekcomplete.cpp
     rk11d/writeword.cpp
     rk05/commands.cpp
     rk05/rk05.cpp
