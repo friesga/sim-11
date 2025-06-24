@@ -109,7 +109,7 @@ bool RK05::isReady ()
 void RK05::seek (u16 cylinderAddress)
 {
     sendTrigger (SeekCommand {seekTime (currentCylinderAddress_, cylinderAddress),
-        [&] {controller_->setSeekComplete (SeekCompleteReport {driveId_,
+        [&] {controller_->reportSeekComplete (SeekCompleteReport {driveId_,
             driveError_}); }});
 
     // The current cylinder address actually should be set only when the

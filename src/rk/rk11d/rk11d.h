@@ -75,7 +75,7 @@ public:
     void reset () override;
 
     // Functions required by the DriveInterface interface
-    void setSeekComplete (RKTypes::SeekCompleteReport report);
+    void reportSeekComplete (RKTypes::SeekCompleteReport report);
     void dataTransferComplete (u16 wordTransferred);
 
 private:
