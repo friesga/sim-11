@@ -40,7 +40,7 @@ StatusCode RK11D::writeWord (BusAddress busAddress, u16 value)
                         rkda_.value, rkwc_, rkba_
                     });
 
-                actionAvailable_.notify_one ();
+                functionAvailable_.notify_one ();
             }
 
             // The controller is ready to accept a new command

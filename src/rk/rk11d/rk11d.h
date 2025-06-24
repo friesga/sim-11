@@ -98,14 +98,14 @@ private:
     // Safe guard against controller access from multiple threads
     mutex controllerMutex_;
 
-    // Definition of the queue for forwarding issued function to the function
+    // Definition of the queue for forwarding issued functions to the function
     // processor. The queue is accessed from multiple threads and its consistency
     // has to be safe-guarded by the controllerMutex_.
-    queue<RKTypes::Action> functionQueue_;
+    queue<RKTypes::Function> functionQueue_;
 
-    // Condition variable to wake up the function processor when an action has
+    // Condition variable to wake up the function processor when a function has
     // been queued.
-    condition_variable actionAvailable_;
+    condition_variable functionAvailable_;
 
     // The functions transferring data await the result of execution of the
     // command by the RK05 drive in this queue.

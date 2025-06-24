@@ -30,30 +30,19 @@ try
         //
         while (!functionQueue_.empty ())
         {
-            // Use an overloaded visitor to process either a function or a
-            // drive condition.
-            visit (overloaded
-                {
-                    [this] (RKTypes::Function function)
-                        { processFunction (function); },
-                    [this] (RKTypes::DriveCondition driveCondition)
-                        { processDriveCondition (driveCondition); }
-                },
-                functionQueue_.front ());
-
-            // The event has been processed
+            processFunction (functionQueue_.front ());
             functionQueue_.pop ();
         }
 
-        // Wait till we are signalled that a command is ready to be processed
+        // Wait till we are signalled that a function is ready to be processed
         // 
         // wait() unlocks the controllerMutex_.
-        actionAvailable_.wait (lock);
+        functionAvailable_.wait (lock);
     }
 }
 catch (const std::exception& ex)
 {
-    cerr << "RK11D::actionProcessor exception: " << ex.what () << '\n';
+    cerr << "RK11D::functionProcessor exception: " << ex.what () << '\n';
 }
 
 void RK11D::finish ()
@@ -64,7 +53,7 @@ void RK11D::finish ()
     running_ = false;
 
     // Wake up the action processor
-    actionAvailable_.notify_one ();
+    functionAvailable_.notify_one ();
 
     // Finish the harware poll function
     pollEventQueue_.close ();

@@ -135,11 +135,6 @@ namespace RKTypes
         u16 driveId;
         RKER rker;
     };
-
-    // Actions to be processed by the action processor are either a Function,
-    // issued by the running program, or a DriveCondition, originating from an
-    // RK05 drive.
-    using Action = std::variant<Function, DriveCondition>;
 };
 
 #endif // _RKTYPES_H_
