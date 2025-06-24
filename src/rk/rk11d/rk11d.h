@@ -75,7 +75,7 @@ public:
     void reset () override;
 
     // Functions required by the DriveInterface interface
-    void setDriveCondition (RKTypes::DriveCondition condition);
+    void setSeekComplete (RKTypes::DriveCondition condition);
     void dataTransferComplete (u16 wordTransferred);
 
 private:

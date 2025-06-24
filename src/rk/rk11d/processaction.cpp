@@ -50,10 +50,9 @@ void RK11D::processFunction (RKTypes::Function function)
 }
 
 
-// The RK05 uses this function to indicate a changed drive condition to the
-// controller.
+// The RK05 uses this function to indicate a seek function completed
 //
-void RK11D::setDriveCondition (RKTypes::DriveCondition condition)
+void RK11D::setSeekComplete (RKTypes::DriveCondition condition)
 {
     // Guard against controller register access from the RK11D thread
     std::lock_guard<std::mutex> guard {controllerMutex_};
