@@ -156,6 +156,7 @@ private:
     void executeReadCheck (RKTypes::Function function);
     void executeWriteCheck (RKTypes::Function function);
     void executeWrite (RKTypes::Function function);
+    void executeDriveReset (RKTypes::Function function);
     StatusCode transferDataToBuffer (BusAddress memoryAddress,
         u16 wordCount, unique_ptr<u16[]>& buffer);
     StatusCode transferDataFromBuffer (BusAddress memoryAddress,
