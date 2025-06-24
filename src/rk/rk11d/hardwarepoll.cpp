@@ -33,7 +33,7 @@ RK11D::State RK11D::PollStateMachine::transition (Off&&, StartPoll)
 }
 
 // On a seek completion reported by an RK05 drive, processing of seek
-// completions starts. Seek completions are reported as DriveConditions
+// completions starts. Seek completions are reported as SeekCompleteReport's
 // pushed to the driveConditionQueue_.
 RK11D::State RK11D::PollStateMachine::transition (Active&&, SeekComplete)
 {
@@ -62,12 +62,12 @@ void RK11D::PollStateMachine::entry (Processing)
                 // Guard against controller register access from other threads
                 std::lock_guard<std::mutex> guard {context_->controllerMutex_};
 
-                RKTypes::DriveCondition condition = 
+                RKTypes::SeekCompleteReport report =
                     context_->driveConditionQueue_.first ();
 
-                context_->driveConditionQueue_.tryPop (condition);
-                context_->selectedDrive_ = condition.driveId;
-                context_->rker_.value = condition.rker.value;
+                context_->driveConditionQueue_.tryPop (report);
+                context_->selectedDrive_ = report.driveId;
+                context_->rker_.value = report.rker.value;
                 interruptRequestGranted.count_down ();
             });
 

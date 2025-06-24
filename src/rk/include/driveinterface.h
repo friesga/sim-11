@@ -8,7 +8,7 @@
 class DriveInterface
 {
 public:
-    virtual void setSeekComplete (RKTypes::DriveCondition condition) = 0;
+    virtual void setSeekComplete (RKTypes::SeekCompleteReport report) = 0;
     virtual void dataTransferComplete (u16 wordsTransferred) = 0;
 };
 

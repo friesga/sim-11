@@ -75,7 +75,7 @@ public:
     void reset () override;
 
     // Functions required by the DriveInterface interface
-    void setSeekComplete (RKTypes::DriveCondition condition);
+    void setSeekComplete (RKTypes::SeekCompleteReport report);
     void dataTransferComplete (u16 wordTransferred);
 
 private:
@@ -136,9 +136,9 @@ private:
     // hardware poll function.
     ThreadSafeQueue<PollEvent> pollEventQueue_;
 
-    // Async seek completions are reported as DriveConditions and are
+    // Async seek completions are reported as SeekCompleteReport's and are
     // processed by the hardware poll function.
-    ThreadSafeQueue <RKTypes::DriveCondition> driveConditionQueue_;
+    ThreadSafeQueue <RKTypes::SeekCompleteReport> driveConditionQueue_;
 
     // Definition of a buffer for the data to be transferred to/from the
     // RK05 drive

@@ -129,8 +129,8 @@ namespace RKTypes
         BusAddress busAddress;
     };
 
-    // Definition of a change in drive condition
-    struct DriveCondition
+    // Definition of a seek complete report by a RK05 drive
+    struct SeekCompleteReport
     {
         u16 driveId;
         RKER rker;
