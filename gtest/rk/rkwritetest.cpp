@@ -110,7 +110,7 @@ TEST_F (RK11DWriteTest, writeOnNonReadyDriveReportsError)
 }
 
 // Attempt to write to sector 12
-TEST_F (RK11DWriteTest, readFromNonExistentSectorFails)
+TEST_F (RK11DWriteTest, writeToNonExistentSectorFails)
 {
     RK11DConfig rk11dConfig {};
     rk11dConfig.rk05Config[0] =
@@ -144,7 +144,7 @@ TEST_F (RK11DWriteTest, readFromNonExistentSectorFails)
 }
 
 // Attempt to write to cylinder 203
-TEST_F (RK11DWriteTest, readFromNonExistentCylinderFails)
+TEST_F (RK11DWriteTest, writeToNonExistentCylinderFails)
 {
     RK11DConfig rk11dConfig {};
     rk11dConfig.rk05Config[0] =
@@ -178,7 +178,7 @@ TEST_F (RK11DWriteTest, readFromNonExistentCylinderFails)
 }
 
 // Attempt to write to drive 4
-TEST_F (RK11DWriteTest, readFromNonExistentDriveFails)
+TEST_F (RK11DWriteTest, writeToNonExistentDriveFails)
 {
     RK11DConfig rk11dConfig {};
     rk11dConfig.rk05Config[0] =
