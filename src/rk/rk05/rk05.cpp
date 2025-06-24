@@ -106,18 +106,6 @@ bool RK05::isReady ()
         stateMachine_->inState (Seeking {});
 }
 
-void RK05::seek (u16 cylinderAddress)
-{
-    sendTrigger (SeekCommand {seekTime (currentCylinderAddress_, cylinderAddress),
-        [&] {controller_->reportSeekComplete (SeekCompleteReport {driveId_,
-            driveError_}); }});
-
-    // The current cylinder address actually should be set only when the
-    // seek is completed, but as the seek cannot fail and the new cylinder
-    // isn't available in the state machine transition we'll set it now.
-    currentCylinderAddress_ = cylinderAddress;
-}
-
 // Head positioning performance specifcations:
 //  10ms - for adjacent tracks,
 //  50ms - average
