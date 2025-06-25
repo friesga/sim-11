@@ -30,10 +30,11 @@ using std::monostate;
 class RK11D : public AbstractBusDevice, public DriveInterface
 {
 private:
-    // Define RK11-D registers as offsets from the controller's base address
+    // Define RK11-D registers as offsets from the controller's base address.
     //
     // Address 777414 is the Maintenance Register in a RK11-C but is unused
-    // on the RK11-D.
+    // on the RK11-D. The registers reads as 0, and writes to it are discarded.
+    // (https://gunkies.org/wiki/RK11_disk_controller#777414:_Maintenance_Register_.28RKMR.29)
     //
     enum
     {
@@ -43,6 +44,7 @@ private:
         RKWC = 06,      // Word Count register
         RKBA = 010,     // Current Bus Address register
         RKDA = 012,     // Disk Address register
+        RKMR = 014,     // Maintenance register
         RKDB = 016,     // Data Buffer register
     };
 

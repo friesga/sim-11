@@ -73,6 +73,11 @@ StatusCode RK11D::writeWord (BusAddress busAddress, u16 value)
             return StatusCode::Success;
             break;
 
+        case RKMR:
+            // Maintenance register. Write's to it are ignored
+            return StatusCode::Success;
+            break;
+
         case RKDB:
             // Data Buffer register
             return StatusCode::Success;

@@ -44,6 +44,11 @@ CondData<u16> RK11D::read (BusAddress busAddress)
             return rkda_.value;
             break;
 
+        case RKMR:
+            // Maintenance register
+            return 0;
+            break;
+
         case RKDB:
             // Data Buffer register
             return rkdb_;

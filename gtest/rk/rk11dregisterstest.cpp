@@ -19,6 +19,7 @@ protected:
     static constexpr u16 RKWC = RK11D_BASE + 06;
     static constexpr u16 RKBA = RK11D_BASE + 010;
     static constexpr u16 RKDA = RK11D_BASE + 012;
+    static constexpr u16 RKMR = RK11D_BASE + 014;
     static constexpr u16 RKDB = RK11D_BASE + 016;
 
     // RKDS bit definitions
@@ -145,6 +146,32 @@ TEST_F (RK11DRegistersTest, exbBitIsReadWrite)
         RKCS_RDY | RKDS_EXB);
 }
 
+TEST_F (RK11DRegistersTest, rkmrReadsAsZero)
+{
+    RK11DConfig rk11dConfig {};
+
+    Unibus bus;
+    RK11D* rk11dDevice = new RK11D (&bus, nullptr,
+        make_shared<RK11DConfig> (rk11dConfig));
+
+    EXPECT_EQ (rk11dDevice->read (BusAddress {RKMR}), 0);
+}
+
+// Write to the maintenance register are discarded
+TEST_F (RK11DRegistersTest, rkmrCanBeWritten)
+{
+    RK11DConfig rk11dConfig {};
+
+    Unibus bus;
+    RK11D* rk11dDevice = new RK11D (&bus, nullptr,
+        make_shared<RK11DConfig> (rk11dConfig));
+
+    EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKMR}, 0177777),
+        StatusCode::Success);
+    
+    EXPECT_EQ (rk11dDevice->read (BusAddress {RKMR}), 0);
+}
+
 // Verify that a Control Reset function resets the registers and sets the
 // controller ready bit.
 TEST_F (RK11DRegistersTest, controlResetFunction)
@@ -193,28 +220,3 @@ TEST_F (RK11DRegistersTest, nonExistingDriveReturnsError)
     EXPECT_EQ (rk11dDevice->read (BusAddress {RKER}) & RKER_NXD, RKER_NXD);
 }
 
-#if 0
-// Verify that a function other than the Control Reset function returns a
-// drive error.
-TEST_F (RK11DRegistersTest, driveResetReturnsError)
-{
-    RK11DConfig rk11dConfig {};
-    rk11dConfig.rk05Config[0] = make_shared<RK05Config> (RK05Config
-    ({
-        .fileName = "rk05.dsk",
-        .newFile = true,
-        .overwrite = true
-        }));
-
-    Unibus bus;
-    RK11D* rk11dDevice = new RK11D (&bus, nullptr,
-        make_shared<RK11DConfig> (rk11dConfig));
-
-    EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKCS}, RKCS_OPERATION (DriveReset) | RKCS_GO),
-        StatusCode::Success);
-
-    waitForDriveReady (rk11dDevice, 0);
-
-    EXPECT_EQ (rk11dDevice->read (BusAddress {RKER}), 0100000);
-}
-#endif
