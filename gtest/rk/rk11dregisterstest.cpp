@@ -24,6 +24,7 @@ protected:
     // RKDS bit definitions
     static constexpr u16  RKDS_DRY = (1 << 7);
     static constexpr u16  RKDS_IDE = (1 << 6);
+    static constexpr u16  RKDS_EXB = (1 << 9);
     inline u16 getRKDSdriveId (u16 rkds) { return (rkds & 7) >> 13; }
 
     // RKER bit definitions
@@ -120,11 +121,28 @@ TEST_F (RK11DRegistersTest, rdyRemainsSet)
 
     EXPECT_EQ (rk11dDevice->read (BusAddress {RKCS}), RKCS_RDY);
 
-    EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKCS}, RKDS_IDE),
+    EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKCS}, RKCS_RDY | RKDS_IDE),
         StatusCode::Success);
 
     EXPECT_EQ (rk11dDevice->read (BusAddress {RKCS}),
         RKCS_RDY | RKDS_IDE);
+}
+
+TEST_F (RK11DRegistersTest, exbBitIsReadWrite)
+{
+    RK11DConfig rk11dConfig {};
+
+    Unibus bus;
+    RK11D* rk11dDevice = new RK11D (&bus, nullptr,
+        make_shared<RK11DConfig> (rk11dConfig));
+
+    EXPECT_EQ (rk11dDevice->read (BusAddress {RKCS}), RKCS_RDY);
+
+    EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKCS}, RKDS_EXB),
+        StatusCode::Success);
+
+    EXPECT_EQ (rk11dDevice->read (BusAddress {RKCS}),
+        RKCS_RDY | RKDS_EXB);
 }
 
 // Verify that a Control Reset function resets the registers and sets the

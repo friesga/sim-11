@@ -55,8 +55,10 @@ private:
     RKTypes::RKDA rkda_ {0};
     u16 rkdb_ {0};
 
-    // RKCS writable bits mask
-    static const u16 rkcsWritableBits       {06577};
+    // RKCS writable bits mask. Bits 0-11 are read/write, except for bit 7
+    // (Control Ready), and bits 12-15 are write protected. Bit 9 (Extra Bit)
+    // is unused but is read/write.
+    static const u16 rkcsWritableBits       {07577};
 
     // Definition of (pointers to) the attached RK05 drives
     vector<unique_ptr<RK05>> rk05Drives_ {};
