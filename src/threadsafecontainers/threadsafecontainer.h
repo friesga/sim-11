@@ -25,7 +25,7 @@ class ThreadSafeContainer
     Cont<T> queue_ {};
     mutable std::mutex guard;
     std::condition_variable signal;
-    bool closed {false};
+    bool closed_ {false};
 
 public:
     // bool fetchFirst(T &dest);
@@ -35,6 +35,7 @@ public:
     bool push (T const &ir);
     size_t size();
     void close();
+    bool closed () const;
 
 private:
     virtual T const &first() = 0;
@@ -49,7 +50,7 @@ bool ThreadSafeContainer<T, Cont>::tryPop(T &dest)
 {
     std::lock_guard<std::mutex> lock(guard);
 
-    if (queue_.empty() || closed)
+    if (queue_.empty() || closed_)
         return false;
 
     // If this throws, nothing has been removed
@@ -65,12 +66,12 @@ bool ThreadSafeContainer<T, Cont>::waitAndPop(T& dest)
 {
     std::unique_lock<std::mutex> lock(guard);
 
-    while (queue_.empty() && !closed)
+    while (queue_.empty() && !closed_)
         signal.wait(lock);
 
     // We are awakened because either a element is pushed or the
     // queue is closed.
-    if (closed)
+    if (closed_)
         return false;
 
     // If this throws, nothing has been removed
@@ -85,7 +86,7 @@ template <typename T,
 bool ThreadSafeContainer<T, Cont>::push(T const& elem)
 {
     // No elements can be pushed onto a closed queue
-    if (closed)
+    if (closed_)
         return false;
 
     {
@@ -108,7 +109,14 @@ template <typename T,
           template <typename Elem> class Cont>
 void ThreadSafeContainer<T, Cont>::close()
 {
-    closed = true;
+    closed_ = true;
     signal.notify_all();
+}
+
+template <typename T,
+    template <typename Elem> class Cont>
+bool ThreadSafeContainer<T, Cont>::closed () const
+{
+    return closed_;
 }
 #endif // !_THREADSAFECONTAINER_H_
