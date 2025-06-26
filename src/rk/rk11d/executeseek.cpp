@@ -29,6 +29,4 @@ void RK11D::executeSeek (RKTypes::RKDA diskAddress)
         rkcs_.error = 1;
         rkcs_.hardError = 1;
     }
-
-    setControlReady ();
 }

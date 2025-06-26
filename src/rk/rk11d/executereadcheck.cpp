@@ -19,7 +19,6 @@ void RK11D::executeReadCheck (RKTypes::Function function)
     if (!rk05Drives_[driveId]->isReady ())
     {
         setError ([&] {rker_.driveError = 1; });
-        setControlReady ();
         return;
     }
 

@@ -27,7 +27,6 @@ void RK11D::executeWriteCheck (RKTypes::Function function)
     if (!rk05Drives_[driveId]->isReady ())
     {
         setError ([&] {rker_.driveError = 1; });
-        setControlReady ();
         return;
     }
 
@@ -64,9 +63,6 @@ void RK11D::executeWriteCheck (RKTypes::Function function)
 
     if (status != StatusCode::Success)
         setError ([&] {rker_.writeCheckError = 1; });
-
-    // Set controller ready
-    setControlReady ();
 }
 
 StatusCode RK11D::compareDataWithBuffer (BusAddress memoryAddress,

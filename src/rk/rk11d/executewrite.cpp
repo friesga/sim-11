@@ -10,7 +10,6 @@ void RK11D::executeWrite (RKTypes::Function function)
     if (!rk05Drives_[driveId]->isReady ())
     {
         setError ([&] {rker_.driveError = 1; });
-        setControlReady ();
         return;
     }
 
@@ -49,9 +48,6 @@ void RK11D::executeWrite (RKTypes::Function function)
 
     if (wordsWritten < absValueFromTwosComplement (function.wordCount))
         setError ([&] {rker_.overrun = 1; });
-
-    // Set controller ready
-    setControlReady ();
 }
 
 // The word count in the RKWC register is given as a two's complement

@@ -32,6 +32,7 @@ try
         {
             processFunction (functionQueue_.front ());
             functionQueue_.pop ();
+            setControlReady ();
         }
 
         // Wait till we are signalled that a function is ready to be processed

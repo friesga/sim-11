@@ -32,14 +32,12 @@ bool RK11D::functionParametersOk (RKTypes::Function function)
     if (function.diskAddress.sectorAddress >= RKTypes::SectorsPerSurface)
     {
         setError ([&] {rker_.nonexistentSector = 1; });
-        setControlReady ();
         return false;
     }
 
     if (function.diskAddress.cylinderAddress >= RKTypes::CylindersPerDisk)
     {
         setError ([&] {rker_.nonexistentCylinder = 1; });
-        setControlReady ();
         return false;
     }
 

@@ -9,7 +9,6 @@ void RK11D::executeRead (RKTypes::Function function)
     if (!rk05Drives_[driveId]->isReady ())
     {
         setError ([&] {rker_.driveError = 1;});
-        setControlReady ();
         return;
     }
 
@@ -46,9 +45,6 @@ void RK11D::executeRead (RKTypes::Function function)
 
     if (wordsRead < absValueFromTwosComplement (function.wordCount))
         setError ([&] {rker_.overrun = 1; });
-
-    // Set controller ready
-    setControlReady ();
 }
 
 StatusCode RK11D::transferDataFromBuffer (BusAddress memoryAddress,
