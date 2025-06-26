@@ -53,7 +53,8 @@ RK11D::State RK11D::PollStateMachine::transition (Active&&, StopPoll)
 void RK11D::PollStateMachine::entry (Processing)
 {
     while (context_->seekCompleteQueue_.size () > 0 &&
-        context_->pollEventQueue_.empty ())
+        context_->pollEventQueue_.empty () && 
+        !context_->pollEventQueue_.closed ())
     {
         latch interruptRequestGranted {1};
 

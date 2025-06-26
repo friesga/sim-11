@@ -53,7 +53,7 @@ void RK11D::finish ()
 
     running_ = false;
 
-    // Wake up the action processor
+    // Wake up the function processor
     functionAvailable_.notify_one ();
 
     // Finish the harware poll function
