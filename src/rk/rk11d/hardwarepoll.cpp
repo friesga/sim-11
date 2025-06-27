@@ -58,23 +58,26 @@ void RK11D::PollStateMachine::entry (Processing)
         context_->pollEventQueue_.empty () && 
         !context_->pollEventQueue_.closed ())
     {
-        context_->bus_->requestInterrupt (TrapPriority::BR5, 5, 0, context_->vector_,
-            [&] {
-                // Guard against controller register access from other threads
-                std::lock_guard<std::mutex> guard {context_->controllerMutex_};
+        if (context_->rkcs_.interruptOnDoneEnable)
+        {
+            context_->bus_->requestInterrupt (TrapPriority::BR5, 5, 0, context_->vector_,
+                [&] {
+                    // Guard against controller register access from other threads
+                    std::lock_guard<std::mutex> guard {context_->controllerMutex_};
 
-                RKTypes::SeekCompleteReport report =
-                    context_->seekCompleteQueue_.first ();
+                    RKTypes::SeekCompleteReport report =
+                        context_->seekCompleteQueue_.first ();
 
-                context_->seekCompleteQueue_.tryPop (report);
-                context_->selectedDrive_ = report.driveId;
-                context_->rker_.value |= report.rker.value;
-                
-                // interruptRequestGranted.count_down ();
-                context_->interruptRequestGranted_.release ();
-            });
+                    context_->seekCompleteQueue_.tryPop (report);
+                    context_->selectedDrive_ = report.driveId;
+                    context_->rker_.value |= report.rker.value;
 
-        context_->interruptRequestGranted_.acquire ();
+                    // interruptRequestGranted.count_down ();
+                    context_->interruptRequestGranted_.release ();
+                });
+
+            context_->interruptRequestGranted_.acquire ();
+        }
     }
 
     if (context_->pollEventQueue_.size () > 0)
