@@ -3,9 +3,11 @@
 #include <exception>
 #include <iostream>
 #include <latch>
+#include <semaphore>
 
 using std::cerr;
 using std::latch;
+using std::binary_semaphore;
 
 RK11D::PollStateMachine::PollStateMachine (RK11D* context)
     :
@@ -56,8 +58,6 @@ void RK11D::PollStateMachine::entry (Processing)
         context_->pollEventQueue_.empty () && 
         !context_->pollEventQueue_.closed ())
     {
-        latch interruptRequestGranted {1};
-
         context_->bus_->requestInterrupt (TrapPriority::BR5, 5, 0, context_->vector_,
             [&] {
                 // Guard against controller register access from other threads
@@ -69,10 +69,12 @@ void RK11D::PollStateMachine::entry (Processing)
                 context_->seekCompleteQueue_.tryPop (report);
                 context_->selectedDrive_ = report.driveId;
                 context_->rker_.value |= report.rker.value;
-                interruptRequestGranted.count_down ();
+                
+                // interruptRequestGranted.count_down ();
+                context_->interruptRequestGranted_.release ();
             });
 
-        interruptRequestGranted.wait ();
+        context_->interruptRequestGranted_.acquire ();
     }
 
     if (context_->pollEventQueue_.size () > 0)

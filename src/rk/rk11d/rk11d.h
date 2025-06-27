@@ -17,6 +17,7 @@
 #include <queue>
 #include <thread>
 #include <functional>
+#include <semaphore>
 
 using std::vector;
 using std::unique_ptr;
@@ -26,6 +27,7 @@ using std::thread;
 using std::condition_variable;
 using std::function;
 using std::monostate;
+using std::binary_semaphore;
 
 class RK11D : public AbstractBusDevice, public DriveInterface
 {
@@ -114,6 +116,8 @@ private:
     // The functions transferring data await the result of execution of the
     // command by the RK05 drive in this queue.
     ThreadSafeQueue<u16> commandCompletionQueue_;
+
+    binary_semaphore interruptRequestGranted_ {0};
 
     // Definition of the hardware poll states
     struct Off {};

@@ -58,4 +58,5 @@ void RK11D::finish ()
 
     // Finish the harware poll function
     pollEventQueue_.close ();
+    interruptRequestGranted_.release ();
 }
