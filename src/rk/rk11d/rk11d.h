@@ -211,6 +211,8 @@ public:
 
 private:
     RK11D* context_;
+
+    void completeSeek ();
 };
 
 #endif // _RK11D_H_
