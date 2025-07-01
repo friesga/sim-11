@@ -23,8 +23,12 @@ public:
 	bool getIntrptReq (InterruptRequest& ir);
 
 private:
-	// This queue keeps all interrupt requests, ordered in interrupt priority
-	using IntrptReqQueue = ThreadSafePrioQueue<InterruptRequest>;
+	// The IntrptReqQueue_ keeps track of all interrupt requests, ordered in
+	// interrupt priority. The queue needs a multiset as the underlying type
+	// as the queue must be able to contain multiple interrupt requests coming
+	// from the same device and thus having the same contents.
+	using IntrptReqQueue = ThreadSafePrioQueue<InterruptRequest,
+		std::multiset<InterruptRequest>>;
 	IntrptReqQueue intrptReqQueue_;
 
 	void pushInterruptRequest (InterruptRequest interruptReq);
