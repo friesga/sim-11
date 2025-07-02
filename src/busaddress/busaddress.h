@@ -29,6 +29,7 @@ public:
         _22Bit = 22
     };
 
+    BusAddress ();
     BusAddress (u32 value);
     BusAddress (u32 value, Width width);
     Width width ();
@@ -63,8 +64,12 @@ inline BusAddress::BusAddress (u32 value, Width width)
 inline BusAddress::BusAddress (u32 value)
     :
     BusAddress (value, Width::_16Bit)
-{
-}
+{}
+
+inline BusAddress::BusAddress ()
+    :
+    BusAddress (0)
+{}
 
 inline BusAddress::Width BusAddress::width ()
 {
