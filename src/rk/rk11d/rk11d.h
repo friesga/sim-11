@@ -114,7 +114,9 @@ private:
     condition_variable functionAvailable_;
 
     // The functions transferring data await the result of execution of the
-    // command by the RK05 drive in this queue.
+    // command by the RK05 drive in this queue. One queue for all drives
+    // suffices as the commands transferring data are synchronous and thus
+    // commands are handled one at a time.
     ThreadSafeQueue<u16> commandCompletionQueue_;
 
     binary_semaphore interruptRequestGranted_ {0};
@@ -189,6 +191,7 @@ class RK11D::PollStateMachine :
 public:
     PollStateMachine (RK11D* context);
 
+    State transition (Off&&, SeekComplete);               // -> Off
     State transition (Off&&, StartPoll);                  // -> Active
     State transition (Active&&, SeekComplete);            // -> Processing
     State transition (Active&&, StopPoll);                // -> Off
