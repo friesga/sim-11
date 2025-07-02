@@ -7,6 +7,9 @@
 #include "rk/include/rktypes.h"
 
 #include <fstream>
+#include <string>
+
+using std::string;
 
 // Definition of the type to discriminate the trace records in the template
 // classes.
@@ -26,9 +29,8 @@ public:
 	TraceRecord (RKTypes::Function function);
 	Magic magic () { return Magic::RK1F; }
 
-	const char* getFunctionName ();
+	string getFunctionName () const;
 };
-
 
 inline TraceRecord<RK11FunctionRecord>::TraceRecord ()
 	:

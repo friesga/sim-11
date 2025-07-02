@@ -1,18 +1,22 @@
 #include "rk11functionrecord.h"
 
-const char* TraceRecord<RK11FunctionRecord>::getFunctionName ()
+#include <array>
+
+using std::array;
+
+string TraceRecord<RK11FunctionRecord>::getFunctionName () const
 {
-    const char* functionName[] =
+    static array<string, 8> const functionName =
     {
         "Control Reset",
         "Write",
-        "Read"
-        "WriteCheck",
+        "Read",
+        "Write Check",
         "Seek",
         "Read Check",
         "Drive Reset",
         "Write Lock"
     };
 
-    return functionName[function_.operation];
+    return functionName[static_cast<int> (function_.operation)];
 }
