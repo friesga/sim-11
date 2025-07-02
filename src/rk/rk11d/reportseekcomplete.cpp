@@ -4,9 +4,6 @@
 //
 void RK11D::reportSeekComplete (RKTypes::SeekCompleteReport report)
 {
-    // Guard against controller register access from the RK11D thread
-    std::lock_guard<std::mutex> guard {controllerMutex_};
-
     seekCompleteQueue_.push (report);
     pollEventQueue_.push (SeekComplete {});
 }

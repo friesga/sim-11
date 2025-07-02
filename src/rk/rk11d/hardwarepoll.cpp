@@ -1,4 +1,5 @@
 #include "rk11d.h"
+#include "trace/trace.h"
 
 #include <exception>
 #include <iostream>
@@ -25,6 +26,19 @@ try
 catch (const std::exception& ex)
 {
     cerr << "RK11D::hardwarePoll exception: " << ex.what () << '\n';
+}
+
+// Discard seek completions arriving while the hardware poll is not active
+// or processing.
+RK11D::State RK11D::PollStateMachine::transition (Off&& currentState,
+    SeekComplete)
+{
+    RKTypes::SeekCompleteReport report = 
+        context_->seekCompleteQueue_.first ();
+
+    context_->seekCompleteQueue_.tryPop (report);
+
+    return move (currentState);
 }
 
 // The hardware poll is started by a StartPoll event issued by the function
@@ -54,6 +68,8 @@ RK11D::State RK11D::PollStateMachine::transition (Active&&, StopPoll)
 // granted the next seek completion (if available) can be requested.
 void RK11D::PollStateMachine::entry (Processing)
 {
+    trace.debug ("Start RK11D::hardwarePoll processing");
+
     while (context_->seekCompleteQueue_.size () > 0 &&
         context_->pollEventQueue_.empty () && 
         !context_->pollEventQueue_.closed ())
@@ -63,10 +79,13 @@ void RK11D::PollStateMachine::entry (Processing)
             context_->bus_->requestInterrupt (TrapPriority::BR5, 5, 0, context_->vector_,
                 [&] {
                     completeSeek ();
+                    trace.debug ("RK11D::hardwarePoll - interruptRequestGranted_.release ()");
                     context_->interruptRequestGranted_.release ();
                 });
 
+            trace.debug ("RK11D::hardwarePoll - at interruptRequestGranted_.aquire ()");
             context_->interruptRequestGranted_.acquire ();
+            trace.debug ("RK11D::hardwarePoll - after interruptRequestGranted_.aquire ()");
         }
         else
             completeSeek ();
