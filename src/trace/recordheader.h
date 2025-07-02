@@ -36,6 +36,7 @@ enum class Magic
 	UBM0 = 0x55424D30,	// Unibus Map
 	DBUG = 0x44425547,	// For debugging purposes
 	MS1P = 0x4D533150,	// MS11-P register and memory
+	RK1F = 0x524B3146,	// RK11Function record
 };
 
 // Definition of the type to discriminate the trace records in the template

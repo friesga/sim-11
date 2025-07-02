@@ -1,6 +1,6 @@
 #include "rk11d.h"
-
 #include "overloaded.h"
+#include "trace/trace.h"
 
 #include <iostream>
 #include <variant>
@@ -30,6 +30,7 @@ try
         //
         while (!functionQueue_.empty ())
         {
+            trace.rk11Function (functionQueue_.front ());
             processFunction (functionQueue_.front ());
             functionQueue_.pop ();
             setControlReady ();

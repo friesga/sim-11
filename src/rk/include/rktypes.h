@@ -2,6 +2,7 @@
 #define _RKTYPES_H_
 
 #include "bitfield.h"
+#include "busaddress/busaddress.h"
 
 #include <variant>
 

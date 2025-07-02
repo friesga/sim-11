@@ -83,6 +83,12 @@ void Trace::dlv11 (DLV11RecordType type, int channel, u16 value)
         tracefileOut_ << TraceRecord<DLV11Record> (type, channel, value);
 }
 
+void Trace::rk11Function (RKTypes::Function function)
+{
+    if (traceEnabled && (flags_ & Trace::Category::RK11Func))
+        tracefileOut_ << TraceRecord<RK11FunctionRecord> (function);
+}
+
 // This function takes a value take from the RX2CS register and casts it
 // to the appropriate enum value.
 void Trace::rxv21Command (int command, u16 rx2cs)

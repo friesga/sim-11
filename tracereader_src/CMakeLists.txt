@@ -19,6 +19,8 @@ set (TRACEREADER_SRCS
     ${CMAKE_SOURCE_DIR}/src/trace/busrecord/operator.cpp
     ${CMAKE_SOURCE_DIR}/src/trace/traprecord/operator.cpp
     ${CMAKE_SOURCE_DIR}/src/trace/irqrecord/operator.cpp
+    ${CMAKE_SOURCE_DIR}/src/trace/rk11functionrecord/operator.cpp
+    ${CMAKE_SOURCE_DIR}/src/trace/rk11functionrecord/getfunctionname.cpp
     ${CMAKE_SOURCE_DIR}/src/trace/rxv21diskrecord/operator.cpp 
     ${CMAKE_SOURCE_DIR}/src/trace/rxv21commandrecord/operator.cpp
     ${CMAKE_SOURCE_DIR}/src/trace/rxv21dmarecord/operator.cpp 
