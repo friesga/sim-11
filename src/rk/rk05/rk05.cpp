@@ -73,6 +73,11 @@ RK05::~RK05 ()
     }
 }
 
+void RK05::clearDriveReady ()
+{
+    driveStatus_.driveReady = 0;
+}
+
 u16 RK05::driveStatus () const
 { 
     return driveStatus_.value;

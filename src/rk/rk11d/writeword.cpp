@@ -31,10 +31,16 @@ StatusCode RK11D::writeWord (BusAddress busAddress, u16 value)
 
                 // Disclaimer: the u16 resulting from the BitField conversion operator
                 // cannot be cast directly to an Function enum.
-                //
-                // ToDo: Add Memory Extension bits to bus address
-                //
                 u16 operation = rkcs_.operation;
+
+                // For functions that are to be processed by the drive,
+                // Drive Ready has to be cleared in the CPU thread as the
+                // running program might check the status of that bit
+                // immediately following setting of the the GO bit.
+                if (operation != RKTypes::Operation::ControlReset)
+                    rk05Drives_[rkda_.driveSelect]->clearDriveReady ();
+
+                // ToDo: Add Memory Extension bits to bus address
                 functionQueue_.push (RKTypes::Function
                     {
                         static_cast<RKTypes::Operation> (operation),
@@ -68,6 +74,9 @@ StatusCode RK11D::writeWord (BusAddress busAddress, u16 value)
 
         case RKDA:
             // Disk Address register
+            // The drive selection logic selects one of eight possible disk drives
+            // on DR BUS from either the programmable RKDA 13—15 or the hardware
+            // poll logic. (EK-RK11D-MM-002, par. 4.3.4)
             rkda_.value = value;
             selectedDrive_ = rkda_.driveSelect;
             return StatusCode::Success;

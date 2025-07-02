@@ -33,6 +33,7 @@ public:
     void seek (u16 cylinderAddress);
     void write (DiskAddress diskAddress, u16 wordCount, u16* data);
     void read (DiskAddress diskAddress, u16 wordCount, u16* data);
+    void clearDriveReady ();
     u16 driveStatus () const;
 
 private:
