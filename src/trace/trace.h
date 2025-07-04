@@ -12,6 +12,7 @@
 #include "irqrecord/irqrecord.h"
 #include "rk/include/rktypes.h"
 #include "rk11functionrecord/rk11functionrecord.h"
+#include "rk11registersrecord/rk11registersrecord.h"
 #include "rxv21diskrecord/rxv21diskrecord.h"
 #include "rxv21commandrecord/rxv21commandrecord.h"
 #include "rxv21dmarecord/rxv21dmarecord.h"
@@ -64,7 +65,7 @@ public:
         UnibusMap  = (1 << 16),     // UnibusMapRecord
         Debug	   = (1 << 17),     // DebugRecord
         MS11_P     = (1 << 18),     // MS11_PRecord
-        RK11Func   = (1 << 19)      // RK11FunctionRecord
+        RK11       = (1 << 19),     // RK11Function- and RK11RegistersRecord
     };
 
     Trace ();
@@ -87,6 +88,9 @@ public:
     void rxv21Disk (RXV21DiskCmd type, int drive, int density, u16 rx2sa, u16 rx2ta);
     void rxv21Error (RXV21ErrorRecordType type, u16 info);
     void rk11Function (RKTypes::Function function);
+    void rk11Registers (BusAddress busAddress, RKTypes::RKER rker,
+        RKTypes::RKDS rkds, RKTypes::RKCS rkcs, u16 rkwc, u16 rkba,
+        RKTypes::RKDA rkda, u16 rkdb);
     void rlv12Registers (string msg, u16 rlcs, u16 rlba, u16 rlda, u16 rlmpr, u16 rlbae);
     void rlv12Command (u16 command);
     void unibusMap (u32 inputAddress, BusAddress::Width width,

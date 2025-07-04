@@ -85,8 +85,17 @@ void Trace::dlv11 (DLV11RecordType type, int channel, u16 value)
 
 void Trace::rk11Function (RKTypes::Function function)
 {
-    if (traceEnabled && (flags_ & Trace::Category::RK11Func))
+    if (traceEnabled && (flags_ & Trace::Category::RK11))
         tracefileOut_ << TraceRecord<RK11FunctionRecord> (function);
+}
+
+void Trace::rk11Registers (BusAddress busAddress, RKTypes::RKER rker,
+    RKTypes::RKDS rkds, RKTypes::RKCS rkcs, u16 rkwc, u16 rkba,
+    RKTypes::RKDA rkda, u16 rkdb)
+{
+    if (traceEnabled && (flags_ & Trace::Category::RK11))
+        tracefileOut_ << TraceRecord<RK11RegistersRecord> (busAddress, rker,
+            rkds, rkcs, rkwc, rkba, rkda, rkdb);
 }
 
 // This function takes a value take from the RX2CS register and casts it

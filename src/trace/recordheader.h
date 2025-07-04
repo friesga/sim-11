@@ -37,6 +37,7 @@ enum class Magic
 	DBUG = 0x44425547,	// For debugging purposes
 	MS1P = 0x4D533150,	// MS11-P register and memory
 	RK1F = 0x524B3146,	// RK11Function record
+	RK1R = 0x524B3152,	// RK11Registers record
 };
 
 // Definition of the type to discriminate the trace records in the template
