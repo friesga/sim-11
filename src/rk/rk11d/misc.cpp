@@ -46,7 +46,7 @@ bool RK11D::functionParametersOk (RKTypes::Function function)
 
 // The drive status for a non-existing disk is returned when the RKDS
 // is read for the non-existing disk.
-void RK11D::setNonExistingDisk (u16 driveId)
+void RK11D::setNonExistingDisk ()
 {
     rker_.driveError = 1;
 
@@ -61,4 +61,19 @@ void RK11D::setError (function<void ()> function)
 
     if (rker_.hardError != 0)
         rkcs_.hardError = 1;
+}
+
+RKTypes::RKDS RK11D::getDriveStatus (u16 driveId)
+{
+    if (selectedDrive_ < rk05Drives_.size ())
+        return rk05Drives_[selectedDrive_]->driveStatus ();
+    else
+    {
+        RKTypes::RKDS rkds {};
+        rkds.driveId = selectedDrive_;
+        rkds.drivePowerLow = 1;
+        rkds.driveUnsafe = 1;
+        rkds.driveReady = 0;
+        return rkds;
+    }
 }

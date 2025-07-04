@@ -13,15 +13,6 @@ void RK11D::processFunction (RKTypes::Function function)
         return;
     }
 
-    u16 driveId = function.diskAddress.driveSelect;
-
-    if (driveId >= rk05Drives_.size ())
-    {
-        setNonExistingDisk (driveId);
-        setControlReady ();
-        return;
-    }
-
     switch (function.operation)
     {
         case RKTypes::Write:

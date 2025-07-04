@@ -1,4 +1,5 @@
 #include "rk11d.h"
+#include "trace/trace.h"
 
 StatusCode RK11D::writeWord (BusAddress busAddress, u16 value)
 {
@@ -10,12 +11,10 @@ StatusCode RK11D::writeWord (BusAddress busAddress, u16 value)
     {
         case RKDS:
             // Drive Status register
-            return StatusCode::Success;
             break;
 
         case RKER:
             // Error register
-            return StatusCode::Success;
             break;
 
         case RKCS:
@@ -29,16 +28,26 @@ StatusCode RK11D::writeWord (BusAddress busAddress, u16 value)
                 // (EK-RK11D-MM-002 p. 3-6)
                 rkcs_.controlReady = 0;
 
-                // Disclaimer: the u16 resulting from the BitField conversion operator
-                // cannot be cast directly to an Function enum.
+                // Disclaimer: the u16 resulting from the BitField conversion
+                // operator cannot be cast directly to an Function enum.
                 u16 operation = rkcs_.operation;
+
+                // Except for the Control Reset function a valid drive has
+                // to be selected.
+                if (selectedDrive_ >= rk05Drives_.size () &&
+                    operation != RKTypes::Operation::ControlReset)
+                {
+                    setNonExistingDisk ();
+                    setControlReady ();
+                    break;
+                }
 
                 // For functions that are to be processed by the drive,
                 // Drive Ready has to be cleared in the CPU thread as the
                 // running program might check the status of that bit
                 // immediately following setting of the the GO bit.
                 if (operation != RKTypes::Operation::ControlReset)
-                    rk05Drives_[rkda_.driveSelect]->clearDriveReady ();
+                    rk05Drives_[selectedDrive_]->clearDriveReady ();
 
                 // ToDo: Add Memory Extension bits to bus address
                 functionQueue_.push (RKTypes::Function
@@ -56,20 +65,16 @@ StatusCode RK11D::writeWord (BusAddress busAddress, u16 value)
             // take from 1 microsecond to 3.3 milliseconds, depending on the
             // current operation of the selected drive.
             rkcs_.go = 0;
-
-            return StatusCode::Success;
             break;
 
         case RKWC:
             // Word Count register
             rkwc_ = value;
-            return StatusCode::Success;
             break;
 
         case RKBA:
             // Current Bus Address register
             rkba_ = value;
-            return StatusCode::Success;
             break;
 
         case RKDA:
@@ -79,22 +84,22 @@ StatusCode RK11D::writeWord (BusAddress busAddress, u16 value)
             // poll logic. (EK-RK11D-MM-002, par. 4.3.4)
             rkda_.value = value;
             selectedDrive_ = rkda_.driveSelect;
-            return StatusCode::Success;
             break;
 
         case RKMR:
             // Maintenance register. Write's to it are ignored
-            return StatusCode::Success;
             break;
 
         case RKDB:
             // Data Buffer register
-            return StatusCode::Success;
             break;
 
         default:
             return (StatusCode::NonExistingMemory);
     }
+
+    trace.rk11Registers (busAddress, rker_, getDriveStatus (selectedDrive_),
+        rkcs_, rkwc_, rkba_, rkda_, rkdb_);
 
     return StatusCode::Success;
 }

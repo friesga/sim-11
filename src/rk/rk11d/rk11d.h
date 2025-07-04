@@ -174,12 +174,13 @@ private:
     StatusCode compareDataWithBuffer (BusAddress memoryAddress,
         u16 wordCount, unique_ptr<u16[]>& buffer);
     void BINITReceiver (bool signalValue);
-    void setNonExistingDisk (u16 driveId);
+    void setNonExistingDisk ();
     void setControlReady ();
     void finish ();
     u32 absValueFromTwosComplement (u16 value) const;
     bool functionParametersOk (RKTypes::Function function);
     void setError (function<void ()> function);
+    RKTypes::RKDS getDriveStatus (u16 driveÍd);
 };
 
 // Definition of the state machine for the hardware poll. The class has
