@@ -42,6 +42,7 @@ void RK05::StateMachine::entry (Unloaded)
     context_->loadIndicator_->show (Indicator::State::On);
     context_->rdyIndicator_->show (Indicator::State::Off);
     context_->oncylIndicator_->show (Indicator::State::Off);
+    context_->driveStatus_.readWriteSeekReady = 0;
 }
 
 // If the RUN/LOAD button is pressed, the state machine transitions to the
@@ -83,17 +84,17 @@ RK05::State RK05::StateMachine::transition (SpinningUp&&, SpinDown)
 void RK05::StateMachine::entry (LockedOn)
 {
     context_->oncylIndicator_->show (Indicator::State::On);
+    context_->driveStatus_.readWriteSeekReady = 1;
 }
 
 void RK05::StateMachine::exit (variantFsm::TagType<LockedOn>)
 {
     context_->oncylIndicator_->show (Indicator::State::Off);
+    context_->driveStatus_.readWriteSeekReady = 0;
 }
 
 void RK05::StateMachine::entry (Seeking)
-{
-    
-}
+{}
 
 // On a transition to the Seeking state a time is started for the given 
 // seek time. After passage of that time the ring() function is called.
@@ -115,8 +116,9 @@ RK05::State RK05::StateMachine::transition (Seeking&& currentState, TimeElapsed)
     if (currentState.seekCompleted != nullptr)
         currentState.seekCompleted ();
 
-    context_->driveStatus_.driveReady = 1;
+    context_->driveStatus_.readWriteSeekReady = 1;
     context_->oncylIndicator_->show (Indicator::State::On);
+
     return LockedOn {};
 }
 

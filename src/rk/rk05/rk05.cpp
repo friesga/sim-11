@@ -75,12 +75,12 @@ RK05::~RK05 ()
 
 void RK05::clearDriveReady ()
 {
-    driveStatus_.driveReady = 0;
+    driveStatus_.readWriteSeekReady = 0;
 }
 
-u16 RK05::driveStatus () const
+RKTypes::RKDS RK05::driveStatus () const
 { 
-    return driveStatus_.value;
+    return driveStatus_;
 }
 
 void RK05::runLoadSwitchClicked (Button::State state)

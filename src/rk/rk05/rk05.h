@@ -34,7 +34,7 @@ public:
     void write (DiskAddress diskAddress, u16 wordCount, u16* data);
     void read (DiskAddress diskAddress, u16 wordCount, u16* data);
     void clearDriveReady ();
-    u16 driveStatus () const;
+    RKTypes::RKDS driveStatus () const;
 
 private:
     class WriteCompletion;

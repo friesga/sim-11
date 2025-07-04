@@ -120,6 +120,18 @@ protected:
 
     }
 
+    void waitForRWSReady (RK11D* controller, u16 driveId)
+    {
+        u16 result;
+        do
+        {
+            SimulatorClock::forwardClock (10ms);
+            result = controller->read (RKDS);
+        } while (!((result & RKDS_RWS_READY) &&
+            getRKDSdriveId (result) == driveId));
+
+    }
+
     void waitForInterruptAvailable ()
     {
         while (!bus.intrptReqAvailable ())
@@ -153,7 +165,7 @@ TEST_F (RK11DSeekTest, seekToExistentCylinder)
         RKCS_OPERATION (Operation::Seek) | RKCS_GO),
         StatusCode::Success);
 
-    waitForDriveReady (rk11dDevice, 0);
+    waitForRWSReady (rk11dDevice, 0);
 
     // Verify no error and correct status indicated
     EXPECT_EQ (rk11dDevice->read (BusAddress {RKDS}),
@@ -182,7 +194,7 @@ TEST_F (RK11DSeekTest, seekGeneratesInterrupts)
 
     // After completion of the seek another interrupt request should be
     // generated and the drive should be ready
-    waitForDriveReady (rk11dDevice, 0);
+    waitForRWSReady (rk11dDevice, 0);
     waitForInterruptAvailable ();
 
     // Verify no error and correct status indicated
@@ -275,7 +287,7 @@ TEST_F (RK11DSeekTest, transferFunctionCancelsSeekInterrupts)
         StatusCode::Success);
 
     waitForControllerReady (rk11dDevice);
-    waitForDriveReady (rk11dDevice, 0);
+    waitForRWSReady (rk11dDevice, 0);
 
     // No interrupts should be generated
     EXPECT_FALSE (bus.intrptReqAvailable ());
