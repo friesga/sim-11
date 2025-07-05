@@ -146,6 +146,10 @@ private:
         shared_ptr<RK05Config> rk05Config);
     SimulatorClock::duration seekTime (u16 currentCylinderAddress,
         u16 newCylinderAddress);
+    size_t readDataFromDrive (DiskAddress diskAddress, u16* buffer,
+        u32 wordCount);
+    size_t writeDataToDrive (DiskAddress diskAddress, u16* buffer,
+        u32 numWords);
 };
 
 
