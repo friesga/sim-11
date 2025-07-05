@@ -36,6 +36,9 @@ void RK11D::processFunction (RKTypes::Function function)
             break;
 
         case RKTypes::DriveReset:
+            executeDriveReset (function);
+            break;
+
         case RKTypes::WriteLock:
             break;
             
