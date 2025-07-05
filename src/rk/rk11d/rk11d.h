@@ -181,6 +181,7 @@ private:
     bool functionParametersOk (RKTypes::Function function);
     void setError (function<void ()> function);
     RKTypes::RKDS getDriveStatus (u16 driveÍd);
+    void startFunction ();
 };
 
 // Definition of the state machine for the hardware poll. The class has
