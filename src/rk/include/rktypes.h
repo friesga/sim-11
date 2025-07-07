@@ -124,7 +124,7 @@ namespace RKTypes
     // Definition of the function to be processed by the RK11D action processor
     struct Function
     {
-        Operation operation;
+        RKCS rkcs;
         RKDA diskAddress;
         u16 wordCount;
         BusAddress busAddress;

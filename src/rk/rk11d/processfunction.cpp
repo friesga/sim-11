@@ -5,16 +5,13 @@
 //
 void RK11D::processFunction (RKTypes::Function function)
 {
-    // A Control Reset can be performed without any RK05 drive attached
-    if (function.operation == RKTypes::ControlReset)
+    switch (function.rkcs.operation)
     {
-        reset ();
-        setControlReady ();
-        return;
-    }
+        case RKTypes::ControlReset:
+            reset ();
+            setControlReady ();
+            break;
 
-    switch (function.operation)
-    {
         case RKTypes::Write:
             executeWrite (function);
             break;

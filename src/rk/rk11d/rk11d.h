@@ -180,7 +180,7 @@ private:
     u32 absValueFromTwosComplement (u16 value) const;
     bool functionParametersOk (RKTypes::Function function);
     void setError (function<void ()> function);
-    RKTypes::RKDS getDriveStatus (u16 driveÍd);
+    RKTypes::RKDS getDriveStatus (u16 driveId);
     void startFunction ();
 };
 

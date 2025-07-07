@@ -8,4 +8,4 @@ struct DiskAddress
     u16 cylinder {0};
 };
 
-#endif _DISKADDRESS_H
+#endif // _DISKADDRESS_H

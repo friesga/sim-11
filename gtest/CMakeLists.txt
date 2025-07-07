@@ -66,6 +66,7 @@ set (GTEST_SRCS
     rk/rkconfigprocessortest.cpp
     rk/rkdriveresettest.cpp
     rk/rkreadtest.cpp
+    rk/rkreadheadertest.cpp
     rk/rk11dregisterstest.cpp
     rk/rkseektest.cpp
     rk/rkwritetest.cpp

@@ -10,7 +10,7 @@ std::ostream& operator<< (std::ostream& os,
     TraceRecord<RK11FunctionRecord> record)
 {
     os << "[RK11] Function: " << record.getFunctionName () <<
-        " (" << record.function_.operation << ')' <<
+        " (" << record.function_.rkcs.operation << ')' <<
           " DA: " << setw (7) << oct << record.function_.diskAddress.value;
     os << " WC: " << record.function_.wordCount <<
           " BA: " << setw (7) << oct << record.function_.busAddress << '\n';

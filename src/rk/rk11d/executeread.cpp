@@ -16,18 +16,28 @@ void RK11D::executeRead (RKTypes::Function function)
     if (!functionParametersOk (function))
         return;
 
-    // Check for sector overflow
+    // ToDo: Check for sector overflow
 
     // Stop possible running hardware poll
     pollEventQueue_.push (StopPoll {});
 
-    // Command RK05 to read data from disk to buffer
-    rk05Drives_[driveId]->read (
-        DiskAddress {function.diskAddress.sectorAddress,
-        function.diskAddress.surface,
-        function.diskAddress.cylinderAddress},
-        absValueFromTwosComplement (function.wordCount),
-        buffer_.get ());
+    // Get the parameters ready for the read() or readHeader() call
+    // to avoid code duplication
+    DiskAddress diskAddress
+    {
+         function.diskAddress.sectorAddress,
+         function.diskAddress.surface,
+         function.diskAddress.cylinderAddress
+    };
+    u32 wordCount = absValueFromTwosComplement (function.wordCount);
+
+    // Either read the header of the given sector(s) in Format Mode or
+    // the sector(s) itself/themselves.
+    if (function.rkcs.format)
+        rk05Drives_[driveId]->readHeader (diskAddress, wordCount,
+            buffer_.get ());
+    else
+        rk05Drives_[driveId]->read (diskAddress, wordCount, buffer_.get ());
 
     // Await the result of the execution of the read
     commandCompletionQueue_.waitAndPop (wordsRead);

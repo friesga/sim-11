@@ -45,6 +45,7 @@ public:
     void setWriteProtected (bool writeProtected);
     bool isWriteProtected () const;
     StatusCode createBadBlockTable ();
+    u32 LBN (DiskAddress diskAddress) const;
 
 private:
     Geometry geometry_ {};
@@ -54,7 +55,7 @@ private:
     StatusCode createFile (std::string fileName, Bitmask<AttachFlags> attachMode);
     StatusCode openReadOnly (std::string fileName);
     StatusCode openReadWrite (std::string fileName);
-    u32 LBN (DiskAddress diskAddress) const;
+    
     u32 wordOffset (DiskAddress diskAddress) const;
     u32 byteOffset (DiskAddress diskAddress) const;
 };

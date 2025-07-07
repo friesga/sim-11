@@ -51,3 +51,38 @@ void RK05::seek (u16 cylinderAddress)
     // isn't available in the state machine transition we'll set it now.
     currentCylinderAddress_ = cylinderAddress;
 }
+
+// The RKCS FMT bit alters the normal Read operation in that only one word,
+// the header word, is transferred to memory per sector. For example,
+// a 3-word Read function in Format mode will transfer header words from three
+// consecutive sectors to three consecutive memory locations for software checking.
+// (EK-RK11D-MM-002, p 3-6).
+// 
+// The header word contains just the cylinder address in the format of the
+// RKDA (i.e. bits 5-12 filled).
+// 
+// This function reads the header from the given number of sectors, starting
+// at the given disk address. The header isn't actually read (it isn't stored
+// in the disk file) but is simply extracted from the disk address and stored
+// in the correct format.
+//
+void RK05::readHeader (DiskAddress diskAddress, u16 wordCount, u16* data)
+{
+    size_t wordsRead = 0;
+    RKDA rkda {};
+
+    for (u32 lbn = diskDrive_.LBN (diskAddress); wordsRead < wordCount;
+        ++wordsRead, ++lbn)
+    {
+        rkda.cylinderAddress = cylinderFromLBN (lbn);
+        data[wordsRead] = rkda.value;
+    }
+
+    controller_->dataTransferComplete (wordsRead);
+}
+
+u16 RK05::cylinderFromLBN (u32 lbn)
+{
+    return lbn / (rk05Geometry.sectorsPerSurface () *
+        rk05Geometry.numberOfHeads ());
+}

@@ -33,6 +33,7 @@ public:
     void seek (u16 cylinderAddress);
     void write (DiskAddress diskAddress, u16 wordCount, u16* data);
     void read (DiskAddress diskAddress, u16 wordCount, u16* data);
+    void readHeader (DiskAddress diskAddress, u16 wordCount, u16* data);
     void clearDriveReady ();
     RKTypes::RKDS driveStatus () const;
 
@@ -150,6 +151,7 @@ private:
         u32 wordCount);
     size_t writeDataToDrive (DiskAddress diskAddress, u16* buffer,
         u32 numWords);
+    u16 cylinderFromLBN (u32 lbn);
 };
 
 

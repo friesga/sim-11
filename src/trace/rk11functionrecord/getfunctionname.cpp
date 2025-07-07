@@ -18,5 +18,5 @@ string TraceRecord<RK11FunctionRecord>::getFunctionName () const
         "Write Lock"
     };
 
-    return functionName[static_cast<int> (function_.operation)];
+    return functionName[static_cast<int> (function_.rkcs.operation)];
 }
