@@ -53,6 +53,8 @@ void RK11D::setNonExistingDisk ()
     setError ([&] {rker_.nonExistentDisk = 1;});
 }
 
+// RKCS HE sets when any of RKER 05—15 are set. RKCS ERR sets when any bit
+// of the RKER sets.
 void RK11D::setError (function<void ()> function)
 {
     function ();
