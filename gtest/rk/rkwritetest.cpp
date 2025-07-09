@@ -311,7 +311,7 @@ TEST_F (RK11DWriteTest, writeWithIBASetSucceeds)
     // Verify all words have been transferred and no error indicated
     EXPECT_EQ (rk11dDevice->read (BusAddress {RKER}), 0);
     EXPECT_EQ (rk11dDevice->read (BusAddress {RKWC}), 0);
-    EXPECT_EQ (rk11dDevice->read (BusAddress {RKBA}), 0400);
+    EXPECT_EQ (rk11dDevice->read (BusAddress {RKBA}), 01000);
 
     // The sector read back should contain the pattern
     for (u16 contents = 0, address = 0; address < 512; address += 2)

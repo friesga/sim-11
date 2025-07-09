@@ -126,7 +126,7 @@ TEST_F (RK11DReadTest, readSectorSucceeds)
     // Verify all words have been transferred and no error indicated
     EXPECT_EQ (rk11dDevice->read (BusAddress {RKER}), 0);
     EXPECT_EQ (rk11dDevice->read (BusAddress {RKWC}), 0);
-    EXPECT_EQ (rk11dDevice->read (BusAddress {RKBA}), 0400);
+    EXPECT_EQ (rk11dDevice->read (BusAddress {RKBA}), 01000);
 
     for (u16 address = 0; address < 512; address += 2)
         bus.writeWord (address, 0);
@@ -146,7 +146,7 @@ TEST_F (RK11DReadTest, readSectorSucceeds)
     // Verify all words have been transferred and no error indicated
     EXPECT_EQ (rk11dDevice->read (BusAddress {RKER}), 0);
     EXPECT_EQ (rk11dDevice->read (BusAddress {RKWC}), 0);
-    EXPECT_EQ (rk11dDevice->read (BusAddress {RKBA}), 0400);
+    EXPECT_EQ (rk11dDevice->read (BusAddress {RKBA}), 01000);
 
     for (u16 contents = 0, address = 0; address < 512; address += 2)
     {
@@ -361,7 +361,7 @@ TEST_F (RK11DReadTest, readWithIBASetSucceeds)
     // Verify all words have been transferred and no error indicated
     EXPECT_EQ (rk11dDevice->read (BusAddress {RKER}), 0);
     EXPECT_EQ (rk11dDevice->read (BusAddress {RKWC}), 0);
-    EXPECT_EQ (rk11dDevice->read (BusAddress {RKBA}), 0400);
+    EXPECT_EQ (rk11dDevice->read (BusAddress {RKBA}), 01000);
 
     // Reset the pattern word so the complete memory has value 0
     bus.writeWord (0, 0);

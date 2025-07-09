@@ -133,7 +133,7 @@ TEST_F (RK11DWriteCheckTest, writeCheckReportsNoError)
     // Verify all words have been transferred and no error indicated
     EXPECT_EQ (rk11dDevice->read (BusAddress {RKER}), 0);
     EXPECT_EQ (rk11dDevice->read (BusAddress {RKWC}), 0);
-    EXPECT_EQ (rk11dDevice->read (BusAddress {RKBA}), 0400);
+    EXPECT_EQ (rk11dDevice->read (BusAddress {RKBA}), 01000);
 
     EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKWC}, 0177400),
         StatusCode::Success);
@@ -149,7 +149,7 @@ TEST_F (RK11DWriteCheckTest, writeCheckReportsNoError)
 
     EXPECT_EQ (rk11dDevice->read (BusAddress {RKER}), 0);
     EXPECT_EQ (rk11dDevice->read (BusAddress {RKWC}), 0);
-    EXPECT_EQ (rk11dDevice->read (BusAddress {RKBA}), 0400);
+    EXPECT_EQ (rk11dDevice->read (BusAddress {RKBA}), 01000);
 }
 
 TEST_F (RK11DWriteCheckTest, writeCheckReportsError)
@@ -178,7 +178,7 @@ TEST_F (RK11DWriteCheckTest, writeCheckReportsError)
     // Verify all words have been transferred and no error indicated
     EXPECT_EQ (rk11dDevice->read (BusAddress {RKER}), 0);
     EXPECT_EQ (rk11dDevice->read (BusAddress {RKWC}), 0);
-    EXPECT_EQ (rk11dDevice->read (BusAddress {RKBA}), 0400);
+    EXPECT_EQ (rk11dDevice->read (BusAddress {RKBA}), 01000);
 
     EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKWC}, 0177400),
         StatusCode::Success);
@@ -194,5 +194,5 @@ TEST_F (RK11DWriteCheckTest, writeCheckReportsError)
 
     EXPECT_EQ (rk11dDevice->read (BusAddress {RKER}), RKER_WCE);
     EXPECT_EQ (rk11dDevice->read (BusAddress {RKWC}), 0);
-    EXPECT_EQ (rk11dDevice->read (BusAddress {RKBA}), 0400);
+    EXPECT_EQ (rk11dDevice->read (BusAddress {RKBA}), 01000);
 }

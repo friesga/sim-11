@@ -54,7 +54,7 @@ void RK11D::executeRead (RKTypes::Function function)
     else
     {
         transferDataFromBuffer (function.busAddress, wordsRead, buffer_);
-        rkba_ += wordsRead;
+        rkba_ += (wordsRead * 2);
     }
 
     rkwc_ += wordsRead;

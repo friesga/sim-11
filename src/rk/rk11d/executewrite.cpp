@@ -55,7 +55,7 @@ void RK11D::executeWrite (RKTypes::Function function)
     // Adjust RKWC and - in case IBA isn't set - the RKBA
     rkwc_ += wordsWritten;
     if (!function.rkcs.inhibitIncrementingRKBA)
-        rkba_ += wordsWritten;
+        rkba_ += (wordsWritten * 2);
 
     if (wordsWritten < absValueFromTwosComplement (function.wordCount))
         setError ([&] {rker_.overrun = 1; });
