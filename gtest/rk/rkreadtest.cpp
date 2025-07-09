@@ -40,6 +40,7 @@ protected:
     // RKCS bit definitions
     static constexpr u16  RKCS_GO  = (1 << 0);
     static constexpr u16  RKCS_RDY = (1 << 7);
+    static constexpr u16  RKCS_IBA = (1 << 11);
     static constexpr u16  RKCS_HE  = (1 << 14);
     static constexpr u16  RKCS_ERR = (1 << 15);
     inline u16 RKCS_OPERATION (u16 function) { return (function & 7) << 1; }
@@ -314,4 +315,76 @@ TEST_F (RK11DReadTest, readPastEndOfDiskFails)
     EXPECT_EQ (rk11dDevice->read (BusAddress {RKER}) & RKER_OVR, RKER_OVR);
     EXPECT_EQ (rk11dDevice->read (BusAddress {RKCS}) & (RKCS_ERR | RKCS_HE),
         RKCS_ERR | RKCS_HE);
+}
+
+// Setting the RKCS IBA bit inhbits the RKBA from incrementing during a normal
+// transfer function.
+TEST_F (RK11DReadTest, readWithIBASetSucceeds)
+{
+    RK11DConfig rk11dConfig {};
+    rk11dConfig.rk05Config[0] =
+        make_shared<RK05Config> (RK05Config
+        ({
+            .fileName = "rk05.dsk",
+            .newFile = true,
+            .overwrite = true
+            }));
+
+    Unibus bus;
+    MS11P ms11p {&bus};
+    RK11D* rk11dDevice = new RK11D (&bus, nullptr,
+        make_shared<RK11DConfig> (rk11dConfig));
+
+    // Create a minimal system, consisting of just the bus, memory
+    // and the RK11-D/RK05 to be tested.
+    bus.installModule (&ms11p);
+    bus.installModule (rk11dDevice);
+
+    // Set just the last word of the sector to be written to the pattern
+    // to be read back. The rest of the memory is initialized to the value 0.
+    bus.writeWord (0776, 0177777);
+
+    // Write 256 words. Load the word count register with the 2's complement
+    // value of 256.
+    EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKWC}, 0177400),
+        StatusCode::Success);
+    EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKBA}, 0),
+        StatusCode::Success);
+    EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKDA}, 0),
+        StatusCode::Success);
+    EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKCS},
+        RKCS_OPERATION (Operation::Write) | RKCS_GO),
+        StatusCode::Success);
+
+    waitForControllerReady (rk11dDevice);
+
+    // Verify all words have been transferred and no error indicated
+    EXPECT_EQ (rk11dDevice->read (BusAddress {RKER}), 0);
+    EXPECT_EQ (rk11dDevice->read (BusAddress {RKWC}), 0);
+    EXPECT_EQ (rk11dDevice->read (BusAddress {RKBA}), 0400);
+
+    // Reset the pattern word so the complete memory has value 0
+    bus.writeWord (0, 0);
+
+    // Now read 256 words from the first sector with the IBA bit set
+    EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKWC}, 0177400),
+        StatusCode::Success);
+    EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKBA}, 0),
+        StatusCode::Success);
+    EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKDA}, 0),
+        StatusCode::Success);
+    EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKCS},
+        RKCS_OPERATION (Operation::Read) | RKCS_IBA | RKCS_GO),
+        StatusCode::Success);
+
+    waitForControllerReady (rk11dDevice);
+
+    // Verify 256 words have been read while the BA hasn't been incremented
+    // and no error indicated
+    EXPECT_EQ (rk11dDevice->read (BusAddress {RKER}), 0);
+    EXPECT_EQ (rk11dDevice->read (BusAddress {RKWC}), 0);
+    EXPECT_EQ (rk11dDevice->read (BusAddress {RKBA}), 0);
+
+    // Address zero now should contain the last word of the sector
+    ASSERT_EQ (bus.read (0), 0177777);
 }

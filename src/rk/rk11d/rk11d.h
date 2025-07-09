@@ -169,9 +169,15 @@ private:
     void executeDriveReset (RKTypes::Function function);
     StatusCode transferDataToBuffer (BusAddress memoryAddress,
         u16 wordCount, unique_ptr<u16[]>& buffer);
+    StatusCode transferPatternToBuffer (BusAddress memoryAddress,
+        u16 wordCount, unique_ptr<u16[]>& buffer);
     StatusCode transferDataFromBuffer (BusAddress memoryAddress,
         u16 wordCount, unique_ptr<u16[]>& buffer);
+    StatusCode transferWordFromBuffer (BusAddress memoryAddress,
+        u16 wordCount, unique_ptr<u16[]>& buffer);
     StatusCode compareDataWithBuffer (BusAddress memoryAddress,
+        u16 wordCount, unique_ptr<u16[]>& buffer);
+    StatusCode comparePatternWithBuffer (BusAddress memoryAddress,
         u16 wordCount, unique_ptr<u16[]>& buffer);
     void BINITReceiver (bool signalValue);
     void setNonExistingDisk ();

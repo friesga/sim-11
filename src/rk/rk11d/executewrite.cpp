@@ -17,10 +17,20 @@ void RK11D::executeWrite (RKTypes::Function function)
     if (!functionParametersOk (function))
         return;
 
-    // Transfer memory data from busAddress to internal buffer
-    // while adjusting wordCount en BusAddress register
-    if (transferDataToBuffer (function.busAddress, function.wordCount,
-        buffer_) != StatusCode::Success)
+    // In the normal case the wordCount words starting at the address in
+    // the RKBA are read into the buffer. Setting the RKCS IBA bit inhbits
+    // the RKBA from incrementing during the transfer function. This means
+    // the buffer will be filled with the pattern from the address in the
+    // RKBA.
+    StatusCode status {};
+    if (function.rkcs.inhibitIncrementingRKBA)
+        status = transferPatternToBuffer (function.busAddress,
+            function.wordCount, buffer_);
+    else
+        status = transferDataToBuffer (function.busAddress,
+            function.wordCount, buffer_);
+
+    if (status != StatusCode::Success)
     {
         // Set error condition
         return;
@@ -42,9 +52,10 @@ void RK11D::executeWrite (RKTypes::Function function)
     // Await the result of the execution of the write
     commandCompletionQueue_.waitAndPop (wordsWritten);
 
-    // Adjust RKBA, RKWC registers
+    // Adjust RKWC and - in case IBA isn't set - the RKBA
     rkwc_ += wordsWritten;
-    rkba_ += wordsWritten;
+    if (!function.rkcs.inhibitIncrementingRKBA)
+        rkba_ += wordsWritten;
 
     if (wordsWritten < absValueFromTwosComplement (function.wordCount))
         setError ([&] {rker_.overrun = 1; });
@@ -72,6 +83,18 @@ StatusCode RK11D::transferDataToBuffer (BusAddress memoryAddress,
     return StatusCode::Success;
 }
 
+StatusCode RK11D::transferPatternToBuffer (BusAddress memoryAddress,
+    u16 wordCount, unique_ptr<u16[]>& buffer)
+{
+    CondData<u16> pattern = bus_->read (memoryAddress).valueOr (0);
+    if (!pattern.hasValue ())
+        return StatusCode::NonExistingMemory;
+
+    for (size_t index = 0; index < wordCount; ++index)
+        buffer_[index] = pattern;
+
+    return StatusCode::Success;
+}
 
 void RK11D::dataTransferComplete (u16 wordsTransferred)
 {

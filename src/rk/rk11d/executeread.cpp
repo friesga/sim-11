@@ -42,16 +42,22 @@ void RK11D::executeRead (RKTypes::Function function)
     // Await the result of the execution of the read
     commandCompletionQueue_.waitAndPop (wordsRead);
 
-    // Adjust RKBA, RKWC registers
+    // ToDo: Clear the part of the buffer not filled by the read
+
+    // In the normal case the wordCount words starting at the address in
+    // the RKBA are written to memory. Setting the RKCS IBA bit inhbits the
+    // RKBA from incrementing during the transfer function. This means that
+    // just the last word in the buffer will be written to the address in
+    // the RKBA.
+    if (function.rkcs.inhibitIncrementingRKBA)
+        transferWordFromBuffer (function.busAddress, wordsRead, buffer_);
+    else
+    {
+        transferDataFromBuffer (function.busAddress, wordsRead, buffer_);
+        rkba_ += wordsRead;
+    }
+
     rkwc_ += wordsRead;
-    rkba_ += wordsRead;
-
-
-    // Clear the part of the buffer not filled by the read
-
-
-    // Transfer words in buffer
-    transferDataFromBuffer (function.busAddress, wordsRead, buffer_);
 
     if (wordsRead < absValueFromTwosComplement (function.wordCount))
         setError ([&] {rker_.overrun = 1; });
@@ -65,6 +71,18 @@ StatusCode RK11D::transferDataFromBuffer (BusAddress memoryAddress,
         if (!bus_->writeWord (memoryAddress, buffer_[index]))
             return StatusCode::NonExistingMemory;
     }
+
+    return StatusCode::Success;
+}
+
+// Transfer the data in the buffer to memory without incrementing the
+// bus address. This corresponds to transferring the last word of the buffer
+// to the given bus address.
+StatusCode RK11D::transferWordFromBuffer (BusAddress memoryAddress,
+    u16 wordCount, unique_ptr<u16[]>& buffer)
+{
+    if (!bus_->writeWord (memoryAddress, buffer_[wordCount - 1]))
+        return StatusCode::NonExistingMemory;
 
     return StatusCode::Success;
 }
