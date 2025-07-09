@@ -164,13 +164,13 @@ TEST_F (RK11DReadHeaderTest, readHeaderOneSectorSucceeds)
     EXPECT_EQ (rk11dDevice->read (BusAddress {RKER}), 0);
     EXPECT_EQ (rk11dDevice->read (BusAddress {RKWC}), 0);
 
-    // Sector 12 is on track 1
-     ASSERT_EQ (bus.read (0), 1);
+    // Sector 12 is on track 1. The cylinder number is encoded in RKDA format
+     ASSERT_EQ (bus.read (0), 040);
 }
 
 
 // Verify a Read Header from three consecutive sectors, crossing a track
-// boundary success
+// boundary
 TEST_F (RK11DReadHeaderTest, readHeaderThreeSectorsSucceeds)
 {
     // Read three sectors, starting a sector 11, head 1 and cylinder 1
@@ -194,7 +194,7 @@ TEST_F (RK11DReadHeaderTest, readHeaderThreeSectorsSucceeds)
     EXPECT_EQ (rk11dDevice->read (BusAddress {RKWC}), 0);
 
     // The three sectors are on cylinders 1 and 2
-    ASSERT_EQ (bus.read (0), 1);
-    ASSERT_EQ (bus.read (2), 2);
-    ASSERT_EQ (bus.read (4), 2);
+    ASSERT_EQ (bus.read (0), 040);
+    ASSERT_EQ (bus.read (2), 0100);
+    ASSERT_EQ (bus.read (4), 0100);
 }
