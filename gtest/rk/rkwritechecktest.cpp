@@ -41,6 +41,7 @@ protected:
     // RKCS bit definitions
     static constexpr u16  RKCS_GO  = (1 << 0);
     static constexpr u16  RKCS_RDY = (1 << 7);
+    static constexpr u16  RKCS_IBA  = (1 << 11);
     static constexpr u16  RKCS_HE  = (1 << 14);
     static constexpr u16  RKCS_ERR = (1 << 15);
     inline u16 RKCS_OPERATION (u16 function) { return (function & 7) << 1; }
@@ -195,4 +196,49 @@ TEST_F (RK11DWriteCheckTest, writeCheckReportsError)
     EXPECT_EQ (rk11dDevice->read (BusAddress {RKER}), RKER_WCE);
     EXPECT_EQ (rk11dDevice->read (BusAddress {RKWC}), 0);
     EXPECT_EQ (rk11dDevice->read (BusAddress {RKBA}), 01000);
+}
+
+
+TEST_F (RK11DWriteCheckTest, writeCheckWithIBASet)
+{
+    // Fill the memory's first 512 words with a value that will then be
+    // checked by a write check
+    for (u16 address = 0; address < 512; address += 2)
+        bus.writeWord (address, 0177777);
+
+    // Write 256 words. Load the word count register with the 2's complement
+    // value of 256.
+    EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKWC}, 0177400),
+        StatusCode::Success);
+    EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKBA}, 0),
+        StatusCode::Success);
+    EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKDA}, 0),
+        StatusCode::Success);
+    EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKCS},
+        RKCS_OPERATION (Operation::Write) | RKCS_GO),
+        StatusCode::Success);
+
+    waitForControllerReady (rk11dDevice);
+
+    // Verify all words have been transferred and no error indicated
+    EXPECT_EQ (rk11dDevice->read (BusAddress {RKER}), 0);
+    EXPECT_EQ (rk11dDevice->read (BusAddress {RKWC}), 0);
+    EXPECT_EQ (rk11dDevice->read (BusAddress {RKBA}), 01000);
+
+    // Check the written sector contains the pattern a address 0
+    EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKWC}, 0177400),
+        StatusCode::Success);
+    EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKBA}, 0),
+        StatusCode::Success);
+    EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKDA}, 0),
+        StatusCode::Success);
+    EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKCS},
+        RKCS_OPERATION (Operation::WriteCheck) | RKCS_IBA | RKCS_GO),
+        StatusCode::Success);
+
+    waitForControllerReady (rk11dDevice);
+
+    EXPECT_EQ (rk11dDevice->read (BusAddress {RKER}), 0);
+    EXPECT_EQ (rk11dDevice->read (BusAddress {RKWC}), 0);
+    EXPECT_EQ (rk11dDevice->read (BusAddress {RKBA}), 0);
 }
