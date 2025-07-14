@@ -28,6 +28,7 @@ set (GTEST_SRCS
     dlv11configuratortest.cpp
     fiotest.cpp
     fistest.cpp
+    geometrytest.cpp
     kd11_naconfiguratortest.cpp
     instructiondecodertest.cpp
     kd11_na/inctest.cpp

@@ -2,6 +2,7 @@
 #define _GEOMETRY_H_
 
 #include "types.h"
+#include "diskdrive/diskaddress/diskaddress.h"
 
 class Geometry
 {
@@ -14,6 +15,9 @@ public:
     u16 cylindersPerDisk () const;
     u16 wordsPerSector () const;
     u32 wordCapacity () const;
+
+    u32 LBN (DiskAddress diskAddress) const;
+    DiskAddress lbnTodiskAddress (u32 lbn) const;
 
 private:
     u16 sectorsPerSurface_ {};

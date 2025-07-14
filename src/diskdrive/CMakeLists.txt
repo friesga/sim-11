@@ -8,7 +8,9 @@ set (UNIT_SRCS
     readdatafromsector.cpp
     writedatatosector.cpp
     writeprotect.cpp
-    geometry/geometry.cpp)
+    geometry/geometry.cpp
+    geometry/lbn.cpp
+    geometry/lbntodiskaddress.cpp)
 
 target_sources (${TARGET} PRIVATE ${UNIT_SRCS})
 target_sources (sim-11-test PRIVATE ${UNIT_SRCS})
