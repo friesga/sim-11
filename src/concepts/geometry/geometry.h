@@ -2,7 +2,7 @@
 #define _GEOMETRY_H_
 
 #include "types.h"
-#include "diskdrive/diskaddress/diskaddress.h"
+#include "concepts/diskaddress/diskaddress.h"
 
 class Geometry
 {

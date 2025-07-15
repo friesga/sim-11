@@ -8,8 +8,8 @@
 #include "attachflags.h"
 #include "configdata/deviceconfig/deviceconfig.h"
 #include "fio/fio.h"
-#include "geometry/geometry.h"
-#include "diskaddress/diskaddress.h"
+#include "concepts/geometry/geometry.h"
+#include "concepts/diskaddress/diskaddress.h"
 
 #include <cstdio>
 #include <string>

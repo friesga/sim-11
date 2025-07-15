@@ -19,6 +19,7 @@ add_executable (tracereader)
 
 # Define the source subdirectories
 add_subdirectory (src/ms11p)
+add_subdirectory (src/concepts)
 add_subdirectory (src/cmdlineoptions)
 add_subdirectory (src/devicecommon)
 add_subdirectory (src/fio)

@@ -1,5 +1,5 @@
 #include "diskdrive/diskdrive.h"
-#include "diskdrive/geometry/geometry.h"
+#include "concepts/geometry/geometry.h"
 
 #include <gtest/gtest.h>
 #include <array>
