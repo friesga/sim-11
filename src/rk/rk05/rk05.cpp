@@ -32,7 +32,7 @@ RK05::RK05 (Bus* bus, DriveInterface* controller, Window* window,
     // or write command is 2^16
     buffer_ = make_unique<u16[]> (1 << 16);
 
-    diskDrive_.attachFile (rk05Config->fileName, rk05Geometry,
+    diskDrive_.attachFile (rk05Config->fileName, rk05Geometry_,
         getAttachMode (rk05Config));
 
     // Initialize the drive status before an event is dispatched to the

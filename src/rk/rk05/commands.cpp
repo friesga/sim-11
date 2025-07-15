@@ -71,7 +71,7 @@ void RK05::readHeader (DiskAddress diskAddress, u16 wordCount, u16* data)
     size_t wordsRead = 0;
     RKDA rkda {};
 
-    for (u32 lbn = diskDrive_.LBN (diskAddress); wordsRead < wordCount;
+    for (u32 lbn = rk05Geometry_.LBN (diskAddress); wordsRead < wordCount;
         ++wordsRead, ++lbn)
     {
         rkda.cylinderAddress = cylinderFromLBN (lbn);
@@ -83,6 +83,6 @@ void RK05::readHeader (DiskAddress diskAddress, u16 wordCount, u16* data)
 
 u16 RK05::cylinderFromLBN (u32 lbn)
 {
-    return lbn / (rk05Geometry.sectorsPerSurface () *
-        rk05Geometry.numberOfHeads ());
+    return lbn / (rk05Geometry_.sectorsPerSurface () *
+        rk05Geometry_.numberOfHeads ());
 }

@@ -13,27 +13,27 @@ TEST (GeometryTest, getters)
 
 TEST (GeometryTest, lbnCalculatedCorrectly)
 {
-    Geometry rk05Geometry {12, 2, 203, 256};
-    EXPECT_EQ (rk05Geometry.LBN (DiskAddress {0, 0, 0}), 0);
-    EXPECT_EQ (rk05Geometry.LBN (DiskAddress {11, 0, 0}), 11);
-    EXPECT_EQ (rk05Geometry.LBN (DiskAddress {0, 1, 0}), 12);
-    EXPECT_EQ (rk05Geometry.LBN (DiskAddress {11, 1, 0}), 23);
-    EXPECT_EQ (rk05Geometry.LBN (DiskAddress {0, 0, 1}), 24);
-    EXPECT_EQ (rk05Geometry.LBN (DiskAddress {0, 1, 1}), 36);
-    EXPECT_EQ (rk05Geometry.LBN (DiskAddress {1, 1, 1}), 37);
-    EXPECT_EQ (rk05Geometry.LBN (DiskAddress {0, 0, 202}), 4848);
+    Geometry rk05Geometry_ {12, 2, 203, 256};
+    EXPECT_EQ (rk05Geometry_.LBN (DiskAddress {0, 0, 0}), 0);
+    EXPECT_EQ (rk05Geometry_.LBN (DiskAddress {11, 0, 0}), 11);
+    EXPECT_EQ (rk05Geometry_.LBN (DiskAddress {0, 1, 0}), 12);
+    EXPECT_EQ (rk05Geometry_.LBN (DiskAddress {11, 1, 0}), 23);
+    EXPECT_EQ (rk05Geometry_.LBN (DiskAddress {0, 0, 1}), 24);
+    EXPECT_EQ (rk05Geometry_.LBN (DiskAddress {0, 1, 1}), 36);
+    EXPECT_EQ (rk05Geometry_.LBN (DiskAddress {1, 1, 1}), 37);
+    EXPECT_EQ (rk05Geometry_.LBN (DiskAddress {0, 0, 202}), 4848);
 }
 
 TEST (GeometryTest, diskAddressCalculatedCorrectly)
 {
-    Geometry rk05Geometry {12, 2, 203, 256};
+    Geometry rk05Geometry_ {12, 2, 203, 256};
 
-    EXPECT_EQ (rk05Geometry.lbnTodiskAddress (0),  DiskAddress (0, 0, 0));
-    EXPECT_EQ (rk05Geometry.lbnTodiskAddress (11), DiskAddress (11, 0, 0));
-    EXPECT_EQ (rk05Geometry.lbnTodiskAddress (12), DiskAddress (0, 1, 0));
-    EXPECT_EQ (rk05Geometry.lbnTodiskAddress (23), DiskAddress (11, 1, 0));
-    EXPECT_EQ (rk05Geometry.lbnTodiskAddress (24), DiskAddress (0, 0, 1));
-    EXPECT_EQ (rk05Geometry.lbnTodiskAddress (36), DiskAddress (0, 1, 1));
-    EXPECT_EQ (rk05Geometry.lbnTodiskAddress (37), DiskAddress (1, 1, 1));
-    EXPECT_EQ (rk05Geometry.lbnTodiskAddress (4848), DiskAddress (0, 0, 202));
+    EXPECT_EQ (rk05Geometry_.lbnTodiskAddress (0),  DiskAddress (0, 0, 0));
+    EXPECT_EQ (rk05Geometry_.lbnTodiskAddress (11), DiskAddress (11, 0, 0));
+    EXPECT_EQ (rk05Geometry_.lbnTodiskAddress (12), DiskAddress (0, 1, 0));
+    EXPECT_EQ (rk05Geometry_.lbnTodiskAddress (23), DiskAddress (11, 1, 0));
+    EXPECT_EQ (rk05Geometry_.lbnTodiskAddress (24), DiskAddress (0, 0, 1));
+    EXPECT_EQ (rk05Geometry_.lbnTodiskAddress (36), DiskAddress (0, 1, 1));
+    EXPECT_EQ (rk05Geometry_.lbnTodiskAddress (37), DiskAddress (1, 1, 1));
+    EXPECT_EQ (rk05Geometry_.lbnTodiskAddress (4848), DiskAddress (0, 0, 202));
 }
