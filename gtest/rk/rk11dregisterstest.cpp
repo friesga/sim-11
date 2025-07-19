@@ -220,3 +220,64 @@ TEST_F (RK11DRegistersTest, nonExistingDriveReturnsError)
     EXPECT_EQ (rk11dDevice->read (BusAddress {RKER}) & RKER_NXD, RKER_NXD);
 }
 
+TEST_F (RK11DRegistersTest, rkdaCenBeAssignedTo)
+{
+    RKTypes::RKDA rkda {020000};
+    EXPECT_EQ (rkda.driveSelect, 1);
+
+    rkda = DiskAddress {1, 0, 0};
+    EXPECT_EQ (rkda.value, 020001);
+
+    rkda = DiskAddress {0, 1, 0};
+    EXPECT_EQ (rkda.value, 020020);
+
+
+    rkda = DiskAddress {0, 0, 1};
+    EXPECT_EQ (rkda.value, 020040);
+}
+
+TEST_F (RK11DRegistersTest, rkdaCanBeAdded)
+{
+    RKTypes::RKDA rkda {0160000};
+    EXPECT_EQ (rkda.driveSelect, 7);
+
+    rkda = rkda + 256;
+    EXPECT_EQ (rkda.driveSelect, 7);
+    EXPECT_EQ (rkda.sectorAddress, 1);
+
+    rkda.value = 0160000;
+    rkda = rkda + 3072;
+    EXPECT_EQ (rkda.driveSelect, 7);
+    EXPECT_EQ (rkda.sectorAddress, 0);
+    EXPECT_EQ (rkda.surface, 1);
+
+    rkda.value = 0160000;
+    rkda = rkda + 6144;
+    EXPECT_EQ (rkda.driveSelect, 7);
+    EXPECT_EQ (rkda.sectorAddress, 0);
+    EXPECT_EQ (rkda.surface, 0);
+    EXPECT_EQ (rkda.cylinderAddress, 1);
+}
+
+TEST_F (RK11DRegistersTest, rkdaCanBeAddedTo)
+{
+    RKTypes::RKDA rkda {0160000};
+    EXPECT_EQ (rkda.driveSelect, 7);
+
+    rkda += 256;
+    EXPECT_EQ (rkda.driveSelect, 7);
+    EXPECT_EQ (rkda.sectorAddress, 1);
+
+    rkda.value = 0160000;
+    rkda += 3072;
+    EXPECT_EQ (rkda.driveSelect, 7);
+    EXPECT_EQ (rkda.sectorAddress, 0);
+    EXPECT_EQ (rkda.surface, 1);
+
+    rkda.value = 0160000;
+    rkda += 6144;
+    EXPECT_EQ (rkda.driveSelect, 7);
+    EXPECT_EQ (rkda.sectorAddress, 0);
+    EXPECT_EQ (rkda.surface, 0);
+    EXPECT_EQ (rkda.cylinderAddress, 1);
+}

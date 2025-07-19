@@ -99,6 +99,14 @@ namespace RKTypes
     };
 
     // Disk Address register. This is a read/write register.
+    // 
+    // The RKDA is incremented automatically at the end of each disk sector
+    // (EK-RK11D-MM-002, p. 3-8). To this end the register is equipped with
+    // the assignment and addition operators. The argument for the addition
+    // operators is the numbers of bytes (instead of number of sectors as
+    // might be expected). This ensures the RK11D doesn't require knowledge
+    // of the RK05 geometry.
+    //
     union RKDA
     {
         u16 value;
@@ -106,6 +114,30 @@ namespace RKTypes
         BitField<u16, 4> surface;
         BitField<u16, 5, 8> cylinderAddress;
         BitField<u16, 13, 3> driveSelect;
+
+        RKDA& operator= (DiskAddress const& da)
+        {
+            sectorAddress = da.sector;
+            surface = da.head;
+            cylinderAddress = da.cylinder;
+            this->driveSelect = driveSelect;
+            return *this;
+        }
+
+        RKDA operator+ (u16 numWords)
+        {
+            u32 lbn = rk05Geometry_.LBN (DiskAddress {sectorAddress, surface,
+                cylinderAddress});
+            *this = rk05Geometry_.lbnTodiskAddress (lbn +
+                numWords / rk05Geometry_.wordsPerSector ());
+            return *this;
+        }
+
+        RKDA& operator+= (u16 numWords)
+        {
+            *this = *this + numWords;
+            return *this;
+        }
     };
 
     // Definition of the RK11-D Operations
