@@ -3,6 +3,7 @@
 
 #include "bitfield.h"
 #include "busaddress/busaddress.h"
+#include "concepts/geometry/geometry.h"
 
 #include <variant>
 
@@ -19,6 +20,10 @@ namespace RKTypes
     u16 const NumberOfHeads = 2;
     u16 const CylindersPerDisk = 203;
     u16 const WordsPerSector = 256;
+
+    // Definition of the RK05 drive format
+    Geometry const rk05Geometry_ {RKTypes::SectorsPerSurface, RKTypes::NumberOfHeads,
+        RKTypes::CylindersPerDisk, RKTypes::WordsPerSector};
 
     // Definition of the RK11-D register bit assignments
     // 

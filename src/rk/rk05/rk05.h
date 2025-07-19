@@ -44,10 +44,6 @@ private:
     DriveInterface* controller_ {nullptr};
     u16 driveId_;
 
-    // Definition of the RK05 drive format
-    Geometry rk05Geometry_ {RKTypes::SectorsPerSurface, RKTypes::NumberOfHeads,
-        RKTypes::CylindersPerDisk, RKTypes::WordsPerSector};
-
     DiskDrive diskDrive_ {};
     unique_ptr<u16[]> buffer_ {};
 
