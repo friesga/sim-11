@@ -52,8 +52,10 @@ void RK11D::executeWrite (RKTypes::Function function)
     // Await the result of the execution of the write
     commandCompletionQueue_.waitAndPop (commandCompletion);
 
-    // Adjust RKWC and - in case IBA isn't set - the RKBA
+    // Adjust RKWC, RKDA and - in case IBA isn't set - the RKBA
     rkwc_ += commandCompletion.wordsTransferred;
+    rkda_ += commandCompletion.sectorsProcessed;
+
     if (!function.rkcs.inhibitIncrementingRKBA)
         rkba_ += (commandCompletion.wordsTransferred * 2);
 

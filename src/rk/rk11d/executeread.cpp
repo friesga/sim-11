@@ -60,6 +60,7 @@ void RK11D::executeRead (RKTypes::Function function)
     }
 
     rkwc_ += commandCompletion.wordsTransferred;
+    rkda_ += commandCompletion.sectorsProcessed;
 
     if (commandCompletion.wordsTransferred < 
             absValueFromTwosComplement (function.wordCount))

@@ -127,6 +127,7 @@ TEST_F (RK11DReadTest, readSectorSucceeds)
     EXPECT_EQ (rk11dDevice->read (BusAddress {RKER}), 0);
     EXPECT_EQ (rk11dDevice->read (BusAddress {RKWC}), 0);
     EXPECT_EQ (rk11dDevice->read (BusAddress {RKBA}), 01000);
+    EXPECT_EQ (rk11dDevice->read (BusAddress {RKDA}), 1);
 
     for (u16 address = 0; address < 512; address += 2)
         bus.writeWord (address, 0);
@@ -147,6 +148,7 @@ TEST_F (RK11DReadTest, readSectorSucceeds)
     EXPECT_EQ (rk11dDevice->read (BusAddress {RKER}), 0);
     EXPECT_EQ (rk11dDevice->read (BusAddress {RKWC}), 0);
     EXPECT_EQ (rk11dDevice->read (BusAddress {RKBA}), 01000);
+    EXPECT_EQ (rk11dDevice->read (BusAddress {RKDA}), 1);
 
     for (u16 contents = 0, address = 0; address < 512; address += 2)
     {
@@ -362,6 +364,7 @@ TEST_F (RK11DReadTest, readWithIBASetSucceeds)
     EXPECT_EQ (rk11dDevice->read (BusAddress {RKER}), 0);
     EXPECT_EQ (rk11dDevice->read (BusAddress {RKWC}), 0);
     EXPECT_EQ (rk11dDevice->read (BusAddress {RKBA}), 01000);
+    EXPECT_EQ (rk11dDevice->read (BusAddress {RKDA}), 1);
 
     // Reset the pattern word so the complete memory has value 0
     bus.writeWord (0, 0);
@@ -384,6 +387,7 @@ TEST_F (RK11DReadTest, readWithIBASetSucceeds)
     EXPECT_EQ (rk11dDevice->read (BusAddress {RKER}), 0);
     EXPECT_EQ (rk11dDevice->read (BusAddress {RKWC}), 0);
     EXPECT_EQ (rk11dDevice->read (BusAddress {RKBA}), 0);
+    EXPECT_EQ (rk11dDevice->read (BusAddress {RKDA}), 1);
 
     // Address zero now should contain the last word of the sector
     ASSERT_EQ (bus.read (0), 0177777);

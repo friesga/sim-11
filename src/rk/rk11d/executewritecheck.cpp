@@ -72,7 +72,7 @@ void RK11D::executeWriteCheck (RKTypes::Function function)
         rkba_ += (commandCompletion.wordsTransferred * 2);
     }
     rkwc_ += commandCompletion.wordsTransferred;
-
+    rkda_ += commandCompletion.sectorsProcessed;
 
     if (status != StatusCode::Success)
         setError ([&] {rker_.writeCheckError = 1; });
