@@ -82,7 +82,7 @@ public:
 
     // Functions required by the DriveInterface interface
     void reportSeekComplete (RKTypes::SeekCompleteReport report);
-    void dataTransferComplete (u16 wordTransferred);
+    void dataTransferComplete (u16 wordTransferred, u16 sectorsProcessed);
 
 private:
     // Definition of the controller's base address and vector
@@ -113,11 +113,19 @@ private:
     // been queued.
     condition_variable functionAvailable_;
 
+    // The completed execution of a command is reported by the number of
+    // words transferred and the number of sectors processed.
+    struct CommandCompletion
+    {
+        u16 wordsTransferred {0};
+        u16 sectorsProcessed {0};
+    };
+
     // The functions transferring data await the result of execution of the
     // command by the RK05 drive in this queue. One queue for all drives
     // suffices as the commands transferring data are synchronous and thus
     // commands are handled one at a time.
-    ThreadSafeQueue<u16> commandCompletionQueue_;
+    ThreadSafeQueue<CommandCompletion> commandCompletionQueue_;
 
     binary_semaphore interruptRequestGranted_ {0};
 

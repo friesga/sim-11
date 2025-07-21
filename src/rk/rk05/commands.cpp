@@ -9,9 +9,14 @@ using namespace RKTypes;
 // ToDo: Uniform parameters with writeDataToSector()
 void RK05::write (DiskAddress diskAddress, u16 wordCount, u16* data)
 {
-    sendTrigger (SeekCommand {seekTime (currentCylinderAddress_, diskAddress.cylinder),
-        [&] { size_t wordsWritten = writeDataToDrive (diskAddress, data, wordCount);
-                controller_->dataTransferComplete (wordsWritten); }});
+    sendTrigger (SeekCommand {seekTime (currentCylinderAddress_,
+        diskAddress.cylinder),
+        [&] {
+            size_t wordsWritten = writeDataToDrive (diskAddress, data,
+                wordCount);
+            controller_->dataTransferComplete (wordsWritten,
+                wordsWritten / rk05Geometry_.wordsPerSector ());
+        }});
 }
 
 size_t RK05::writeDataToDrive (DiskAddress diskAddress, u16* buffer, u32 numWords)
@@ -26,8 +31,12 @@ size_t RK05::writeDataToDrive (DiskAddress diskAddress, u16* buffer, u32 numWord
 void RK05::read (DiskAddress diskAddress, u16 wordCount, u16* data)
 {
     sendTrigger (SeekCommand {seekTime (currentCylinderAddress_, diskAddress.cylinder),
-        [&] { size_t wordsRead = diskDrive_.readDataFromSector (diskAddress, data, wordCount);
-              controller_->dataTransferComplete (wordsRead); }});
+        [&] {
+            size_t wordsRead = readDataFromDrive (diskAddress, data,
+                wordCount);
+            controller_->dataTransferComplete (wordsRead,
+                wordsRead / rk05Geometry_.wordsPerSector ());
+        }});
 }
 
 size_t RK05::readDataFromDrive (DiskAddress diskAddress, u16* buffer,
@@ -78,7 +87,9 @@ void RK05::readHeader (DiskAddress diskAddress, u16 wordCount, u16* data)
         data[wordsRead] = rkda.value;
     }
 
-    controller_->dataTransferComplete (wordsRead);
+    // One word per sector is read, so the number of sectors equals the
+    // number of words read.
+    controller_->dataTransferComplete (wordsRead, wordsRead);
 }
 
 u16 RK05::cylinderFromLBN (u32 lbn)

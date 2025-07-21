@@ -2,7 +2,7 @@
 
 void RK11D::executeRead (RKTypes::Function function)
 { 
-    u16 wordsRead {};
+    CommandCompletion commandCompletion {};
     u16 driveId = function.diskAddress.driveSelect;
 
     // Check the drive is ready
@@ -40,7 +40,7 @@ void RK11D::executeRead (RKTypes::Function function)
         rk05Drives_[driveId]->read (diskAddress, wordCount, buffer_.get ());
 
     // Await the result of the execution of the read
-    commandCompletionQueue_.waitAndPop (wordsRead);
+    commandCompletionQueue_.waitAndPop (commandCompletion);
 
     // ToDo: Clear the part of the buffer not filled by the read
 
@@ -50,16 +50,19 @@ void RK11D::executeRead (RKTypes::Function function)
     // just the last word in the buffer will be written to the address in
     // the RKBA.
     if (function.rkcs.inhibitIncrementingRKBA)
-        transferWordFromBuffer (function.busAddress, wordsRead, buffer_);
+        transferWordFromBuffer (function.busAddress,
+            commandCompletion.wordsTransferred, buffer_);
     else
     {
-        transferDataFromBuffer (function.busAddress, wordsRead, buffer_);
-        rkba_ += (wordsRead * 2);
+        transferDataFromBuffer (function.busAddress,
+            commandCompletion.wordsTransferred, buffer_);
+        rkba_ += (commandCompletion.wordsTransferred * 2);
     }
 
-    rkwc_ += wordsRead;
+    rkwc_ += commandCompletion.wordsTransferred;
 
-    if (wordsRead < absValueFromTwosComplement (function.wordCount))
+    if (commandCompletion.wordsTransferred < 
+            absValueFromTwosComplement (function.wordCount))
         setError ([&] {rker_.overrun = 1; });
 }
 

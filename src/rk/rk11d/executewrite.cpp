@@ -3,7 +3,7 @@
 // ToDo: Pass Function as argument?
 void RK11D::executeWrite (RKTypes::Function function)
 {
-    u16 wordsWritten {};
+    CommandCompletion commandCompletion {};
     u16 driveId = function.diskAddress.driveSelect;
 
     // Check the drive is ready
@@ -50,14 +50,15 @@ void RK11D::executeWrite (RKTypes::Function function)
         buffer_.get ());
 
     // Await the result of the execution of the write
-    commandCompletionQueue_.waitAndPop (wordsWritten);
+    commandCompletionQueue_.waitAndPop (commandCompletion);
 
     // Adjust RKWC and - in case IBA isn't set - the RKBA
-    rkwc_ += wordsWritten;
+    rkwc_ += commandCompletion.wordsTransferred;
     if (!function.rkcs.inhibitIncrementingRKBA)
-        rkba_ += (wordsWritten * 2);
+        rkba_ += (commandCompletion.wordsTransferred * 2);
 
-    if (wordsWritten < absValueFromTwosComplement (function.wordCount))
+    if (commandCompletion.wordsTransferred <
+            absValueFromTwosComplement (function.wordCount))
         setError ([&] {rker_.overrun = 1; });
 }
 
@@ -96,7 +97,8 @@ StatusCode RK11D::transferPatternToBuffer (BusAddress memoryAddress,
     return StatusCode::Success;
 }
 
-void RK11D::dataTransferComplete (u16 wordsTransferred)
+void RK11D::dataTransferComplete (u16 wordsTransferred, u16 sectorsProcessed)
 {
-    commandCompletionQueue_.push (wordsTransferred);
+    commandCompletionQueue_.push (CommandCompletion {wordsTransferred,
+        sectorsProcessed});
 }

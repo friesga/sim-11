@@ -241,18 +241,18 @@ TEST_F (RK11DRegistersTest, rkdaCanBeAdded)
     RKTypes::RKDA rkda {0160000};
     EXPECT_EQ (rkda.driveSelect, 7);
 
-    rkda = rkda + 256;
+    rkda = rkda + 1;
     EXPECT_EQ (rkda.driveSelect, 7);
     EXPECT_EQ (rkda.sectorAddress, 1);
 
     rkda.value = 0160000;
-    rkda = rkda + 3072;
+    rkda = rkda + 12;
     EXPECT_EQ (rkda.driveSelect, 7);
     EXPECT_EQ (rkda.sectorAddress, 0);
     EXPECT_EQ (rkda.surface, 1);
 
     rkda.value = 0160000;
-    rkda = rkda + 6144;
+    rkda = rkda + 24;
     EXPECT_EQ (rkda.driveSelect, 7);
     EXPECT_EQ (rkda.sectorAddress, 0);
     EXPECT_EQ (rkda.surface, 0);
@@ -264,18 +264,18 @@ TEST_F (RK11DRegistersTest, rkdaCanBeAddedTo)
     RKTypes::RKDA rkda {0160000};
     EXPECT_EQ (rkda.driveSelect, 7);
 
-    rkda += 256;
+    rkda += 1;
     EXPECT_EQ (rkda.driveSelect, 7);
     EXPECT_EQ (rkda.sectorAddress, 1);
 
     rkda.value = 0160000;
-    rkda += 3072;
+    rkda += 12;
     EXPECT_EQ (rkda.driveSelect, 7);
     EXPECT_EQ (rkda.sectorAddress, 0);
     EXPECT_EQ (rkda.surface, 1);
 
     rkda.value = 0160000;
-    rkda += 6144;
+    rkda += 24;
     EXPECT_EQ (rkda.driveSelect, 7);
     EXPECT_EQ (rkda.sectorAddress, 0);
     EXPECT_EQ (rkda.surface, 0);

@@ -22,8 +22,9 @@ namespace RKTypes
     u16 const WordsPerSector = 256;
 
     // Definition of the RK05 drive format
-    Geometry const rk05Geometry_ {RKTypes::SectorsPerSurface, RKTypes::NumberOfHeads,
-        RKTypes::CylindersPerDisk, RKTypes::WordsPerSector};
+    Geometry const rk05Geometry_ {RKTypes::SectorsPerSurface,
+        RKTypes::NumberOfHeads, RKTypes::CylindersPerDisk,
+        RKTypes::WordsPerSector};
 
     // Definition of the RK11-D register bit assignments
     // 
@@ -102,10 +103,7 @@ namespace RKTypes
     // 
     // The RKDA is incremented automatically at the end of each disk sector
     // (EK-RK11D-MM-002, p. 3-8). To this end the register is equipped with
-    // the assignment and addition operators. The argument for the addition
-    // operators is the numbers of bytes (instead of number of sectors as
-    // might be expected). This ensures the RK11D doesn't require knowledge
-    // of the RK05 geometry.
+    // the assignment and addition operators.
     //
     union RKDA
     {
@@ -124,18 +122,17 @@ namespace RKTypes
             return *this;
         }
 
-        RKDA operator+ (u16 numWords)
+        RKDA operator+ (u16 numSectors)
         {
             u32 lbn = rk05Geometry_.LBN (DiskAddress {sectorAddress, surface,
                 cylinderAddress});
-            *this = rk05Geometry_.lbnTodiskAddress (lbn +
-                numWords / rk05Geometry_.wordsPerSector ());
+            *this = rk05Geometry_.lbnTodiskAddress (lbn + numSectors);
             return *this;
         }
 
-        RKDA& operator+= (u16 numWords)
+        RKDA& operator+= (u16 numSectors)
         {
-            *this = *this + numWords;
+            *this = *this + numSectors;
             return *this;
         }
     };

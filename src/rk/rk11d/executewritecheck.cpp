@@ -20,7 +20,7 @@
 //
 void RK11D::executeWriteCheck (RKTypes::Function function)
 {
-    u16 wordsRead {};
+    CommandCompletion commandCompletion {};
     u16 driveId = function.diskAddress.driveSelect;
 
     // Check the drive is ready
@@ -48,9 +48,10 @@ void RK11D::executeWriteCheck (RKTypes::Function function)
         buffer_.get ());
 
     // Await the result of the execution of the read
-    commandCompletionQueue_.waitAndPop (wordsRead);
+    commandCompletionQueue_.waitAndPop (commandCompletion);
 
-    if (wordsRead < absValueFromTwosComplement (function.wordCount))
+    if (commandCompletion.wordsTransferred <
+            absValueFromTwosComplement (function.wordCount))
         setError ([&] {rker_.overrun = 1; });
 
     // In the normal case wordCount words starting at the address in the
@@ -61,16 +62,16 @@ void RK11D::executeWriteCheck (RKTypes::Function function)
     StatusCode status {};
     if (function.rkcs.inhibitIncrementingRKBA)
     {
-        status = comparePatternWithBuffer (function.busAddress, wordsRead,
-            buffer_);
+        status = comparePatternWithBuffer (function.busAddress,
+            commandCompletion.wordsTransferred, buffer_);
     }
     else
     {
-        status = compareDataWithBuffer (function.busAddress, wordsRead,
-            buffer_);
-        rkba_ += (wordsRead * 2);
+        status = compareDataWithBuffer (function.busAddress,
+            commandCompletion.wordsTransferred, buffer_);
+        rkba_ += (commandCompletion.wordsTransferred * 2);
     }
-    rkwc_ += wordsRead;
+    rkwc_ += commandCompletion.wordsTransferred;
 
 
     if (status != StatusCode::Success)
