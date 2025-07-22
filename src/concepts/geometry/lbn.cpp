@@ -1,5 +1,9 @@
 #include "geometry.h"
 
+#include <stdexcept>
+
+using std::out_of_range;
+
 // Calculate the position of a sector as an offset in the file from
 // the specified diskAddress.
 // 
@@ -36,6 +40,16 @@
 //
 u32 Geometry::LBN (DiskAddress diskAddress) const
 {
+    if (!validDiskAddress (diskAddress))
+        throw out_of_range ("invalid DiskAddress");
+
     return (diskAddress.cylinder * numberOfHeads () +
         diskAddress.head) * sectorsPerSurface () + diskAddress.sector;
+}
+
+bool Geometry::validDiskAddress (DiskAddress diskAddress) const
+{
+    return diskAddress.cylinder < cylindersPerDisk_ &&
+        diskAddress.head < numberOfHeads_ &&
+        diskAddress.sector < sectorsPerSurface_;
 }

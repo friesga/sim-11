@@ -25,6 +25,8 @@ private:
     u16 cylindersPerDisk_ {};
     u16 wordsPerSector_ {};
     u32 wordCapacity_ {};
+
+    bool validDiskAddress (DiskAddress diskAddress) const;
 };
 
 
