@@ -61,3 +61,11 @@ TEST (GeometryTest, incorrectCylinderThrows)
 
     EXPECT_THROW (rk05Geometry_.LBN (DiskAddress {0, 0, 203}), out_of_range);
 }
+
+TEST (GeometryTest, invalidLBNThrows)
+{
+    Geometry rk05Geometry_ {12, 2, 203, 256};
+
+    EXPECT_NO_THROW (rk05Geometry_.lbnTodiskAddress (4871));
+    EXPECT_THROW (rk05Geometry_.lbnTodiskAddress (4872), out_of_range);
+}

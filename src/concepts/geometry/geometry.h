@@ -14,6 +14,7 @@ public:
     u16 numberOfHeads () const;
     u16 cylindersPerDisk () const;
     u16 wordsPerSector () const;
+    u32 diskCapacity () const;
     u32 wordCapacity () const;
 
     u32 LBN (DiskAddress diskAddress) const;
@@ -24,9 +25,11 @@ private:
     u16 numberOfHeads_ {};
     u16 cylindersPerDisk_ {};
     u16 wordsPerSector_ {};
+    u32 diskCapacity_ {};
     u32 wordCapacity_ {};
 
     bool validDiskAddress (DiskAddress diskAddress) const;
+    bool validLBN (u32 lbn) const;
 };
 
 

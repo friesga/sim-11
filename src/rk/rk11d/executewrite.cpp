@@ -1,4 +1,10 @@
 #include "rk11d.h"
+#include "rk/include/rktypes.h"
+
+#include <stdexcept>
+
+using std::out_of_range;
+using RKTypes::rk05Geometry_;
 
 // ToDo: Pass Function as argument?
 void RK11D::executeWrite (RKTypes::Function function)
@@ -52,16 +58,31 @@ void RK11D::executeWrite (RKTypes::Function function)
     // Await the result of the execution of the write
     commandCompletionQueue_.waitAndPop (commandCompletion);
 
-    // Adjust RKWC, RKDA and - in case IBA isn't set - the RKBA
+    // Adjust RKWC and - in case IBA isn't set - the RKBA
     rkwc_ += commandCompletion.wordsTransferred;
-    rkda_ += commandCompletion.sectorsProcessed;
 
     if (!function.rkcs.inhibitIncrementingRKBA)
         rkba_ += (commandCompletion.wordsTransferred * 2);
 
-    if (commandCompletion.wordsTransferred <
+    // An increment of the RKDA might overflow the logical block number.
+    // 
+    // RKER OVR indicates that, during a Read, Write, Read Check, or Write
+    // Check function, operations on sector 013, surface 1 of cylinder address
+    // 0312 were finished, and the RKWC has not yet overflowed.This is
+    // essentially an attempt to overflow out of a disk drive.
+    // (EK-RK11D-MM-002, p. 3-4)
+    try
+    {
+        rkda_ += commandCompletion.sectorsProcessed;
+    }
+    catch (out_of_range)
+    {
+        rkda_ = rk05Geometry_.lbnTodiskAddress (rk05Geometry_.diskCapacity () - 1);
+
+        if (commandCompletion.wordsTransferred <
             absValueFromTwosComplement (function.wordCount))
-        setError ([&] {rker_.overrun = 1; });
+            setError ([&] {rker_.overrun = 1; });
+    }
 }
 
 // The word count in the RKWC register is given as a two's complement
