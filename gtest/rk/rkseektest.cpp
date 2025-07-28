@@ -33,7 +33,8 @@ protected:
     static constexpr u16  RKDS_DRY       = (1 << 7);
     static constexpr u16  RKDS_SOK       = (1 << 8);
     static constexpr u16  RKDS_RK05      = (1 << 11);
-    inline u16 getRKDSdriveId (u16 rkds) { return (rkds >> 13); }
+    constexpr u16 getRKDSdriveId (u16 rkds) { return (rkds >> 13); }
+    constexpr u16 rkdsExceptSectorCounter (u16 rkds) { return (rkds & ~017); }
 
     // RKER bit definitions
     static constexpr u16  RKER_NXD = (1 << 7);
@@ -168,7 +169,7 @@ TEST_F (RK11DSeekTest, seekToExistentCylinder)
     waitForRWSReady (rk11dDevice, 0);
 
     // Verify no error and correct status indicated
-    EXPECT_EQ (rk11dDevice->read (BusAddress {RKDS}),
+    EXPECT_EQ (rkdsExceptSectorCounter (rk11dDevice->read (BusAddress {RKDS})),
         RKDS_SC_SA | RKDS_RWS_READY | RKDS_DRY | RKDS_SOK | RKDS_RK05);
     EXPECT_EQ (rk11dDevice->read (BusAddress {RKER}), 0);
     EXPECT_EQ (rk11dDevice->read (BusAddress {RKCS}) & (RKCS_ERR | RKCS_HE), 0);
@@ -198,7 +199,7 @@ TEST_F (RK11DSeekTest, seekGeneratesInterrupts)
     waitForInterruptAvailable ();
 
     // Verify no error and correct status indicated
-    EXPECT_EQ (rk11dDevice->read (BusAddress {RKDS}),
+    EXPECT_EQ (rkdsExceptSectorCounter (rk11dDevice->read (BusAddress {RKDS})),
         RKDS_SC_SA | RKDS_RWS_READY | RKDS_DRY | RKDS_SOK | RKDS_RK05);
     EXPECT_EQ (rk11dDevice->read (BusAddress {RKER}), 0);
     EXPECT_EQ (rk11dDevice->read (BusAddress {RKCS}) & (RKCS_ERR | RKCS_HE), 0);

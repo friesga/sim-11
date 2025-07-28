@@ -29,7 +29,7 @@ protected:
     static constexpr u16  RKDS_DRY = (1 << 7);
     static constexpr u16  RKDS_IDE = (1 << 6);
     static constexpr u16  RKDS_EXB = (1 << 9);
-    inline u16 getRKDSdriveId (u16 rkds) { return (rkds & 7) >> 13; }
+    constexpr u16 getRKDSdriveId (u16 rkds) { return (rkds >> 13); }
     constexpr u16 sectorCounter (u16 rkds) { return (rkds & 017); }
 
     // RKER bit definitions
@@ -301,6 +301,9 @@ TEST_F (RK11DRegistersTest, sectorCounterIsIncremented)
     Unibus bus;
     RK11D* rk11dDevice = new RK11D (&bus, nullptr,
         make_shared<RK11DConfig> (rk11dConfig));
+
+    // Start at time point 0
+    SimulatorClock::reset ();
 
     EXPECT_EQ (sectorCounter (rk11dDevice->read (BusAddress {RKDS})), 0);
 

@@ -28,7 +28,7 @@ protected:
 
     // RKDS bit definitions
     static constexpr u16  RKDS_DRY = (1 << 7);
-    inline u16 getRKDSdriveId (u16 rkds) { return (rkds & 7) >> 13; }
+    constexpr u16 getRKDSdriveId (u16 rkds) { return (rkds >> 13); }
 
     // RKER bit definitions
     static constexpr u16  RKER_NXS = (1 << 5);
