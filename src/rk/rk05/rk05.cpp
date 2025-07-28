@@ -112,8 +112,29 @@ void RK05::sendTrigger (Event event)
     startCommand_.notify_one ();
 }
 
+// Placing [the WT PROT] momentary contact switch in the WT PROT position
+// lights the WT PROT indicator and prevents a write operatopn; it also
+// turns off the FAULT indicator, if that is lit.
+//
+// Depressing this switch in the WT PROT position a second time turns off
+// the WT PROT indicator and allows a write operation.
+// (EK-RK05-OP-001, p.1-5)
+//
 void RK05::wtprotSwitchClicked (Button::State state)
 {
+    if (get<Button::TwoPositionsState> (state) == Button::TwoPositionsState::On)
+    {
+        if (driveStatus_.writeProtectStatus == 0)
+        {
+            driveStatus_.writeProtectStatus = 1;
+            wtprotIndicator_->show (Indicator::State::On);
+        }
+        else
+        {
+            driveStatus_.writeProtectStatus = 0;
+            wtprotIndicator_->show (Indicator::State::Off);
+        }
+    }
 }
 
 // The drive is ready when it is in the LockedOn or Seeking state
