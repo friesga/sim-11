@@ -6,6 +6,7 @@
 #include <chrono>
 #include <cstdlib>
 #include <functional>
+#include <cmath>
 
 using std::shared_ptr;
 using std::make_unique;
@@ -13,6 +14,7 @@ using std::chrono::seconds;
 using std::abs;
 using std::chrono::duration;
 using std::bind;
+using std::sqrt;
 
 using namespace RKTypes;
 
@@ -135,7 +137,7 @@ SimulatorClock::duration RK05::seekTime (u16 currentCylinderAddress,
 {
     u16 numCylinders = abs (newCylinderAddress - currentCylinderAddress);
     return std::chrono::milliseconds (static_cast <uint64_t>
-        (10 + (numCylinders * 0.375)));
+        (3 + 6.25 * sqrt (numCylinders)));
 }
 
 // ToDo: This function is a double with RL01_02::getAttachMode()
