@@ -87,6 +87,12 @@ void RK05::clearDriveReady ()
     driveStatus_.readWriteSeekReady = 0;
 }
 
+void RK05::writeLock ()
+{
+    driveStatus_.writeProtectStatus = 1;
+    wtprotIndicator_->show (Indicator::State::On);
+}
+
 // The RKDS contains a four-bit sector counter. This counter indicates the
 // current sector passing the head.
 RKTypes::RKDS RK05::driveStatus ()

@@ -33,14 +33,20 @@ public:
     RK05 (Bus* bus, DriveInterface* controller, Window* window,
         shared_ptr<RK05Config> rk05Config);
     ~RK05 ();
+
+    // Functions getting the state of the drive
     bool isReady ();
     bool isWriteProtected ();
+    RKTypes::RKDS driveStatus ();
+
+    // Functions implementing the RK11 function
     void seek (u16 cylinderAddress);
     void write (DiskAddress diskAddress, u16 wordCount, u16* data);
     void read (DiskAddress diskAddress, u16 wordCount, u16* data);
     void readHeader (DiskAddress diskAddress, u16 wordCount, u16* data);
     void clearDriveReady ();
-    RKTypes::RKDS driveStatus ();
+    void writeLock ();
+
 
 private:
     class WriteCompletion;

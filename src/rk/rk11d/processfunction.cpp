@@ -37,6 +37,7 @@ void RK11D::processFunction (RKTypes::Function function)
             break;
 
         case RKTypes::WriteLock:
+            executeWriteLock (function);
             break;
             
         default:

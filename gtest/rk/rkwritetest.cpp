@@ -427,3 +427,68 @@ TEST_F (RK11DWriteTest, writeToWriteProtectedDiskFails)
         RKCS_ERR | RKCS_HE);
 
 }
+
+TEST_F (RK11DWriteTest, diskCanBeWriteLocked)
+{
+    RK11DConfig rk11dConfig {};
+    rk11dConfig.rk05Config[0] =
+        make_shared<RK05Config> (RK05Config
+        ({
+            .fileName = "rk05.dsk",
+            .newFile = true,
+            .overwrite = true
+            }));
+
+    Unibus bus;
+    MS11P ms11p {&bus};
+    RK11D* rk11dDevice = new RK11D (&bus, nullptr,
+        make_shared<RK11DConfig> (rk11dConfig));
+
+    // Create a minimal system, consisting of just the bus, memory
+    // and the RK11-D/RK05 to be tested.
+    bus.installModule (&ms11p);
+    bus.installModule (rk11dDevice);
+
+    // Write 256 words. Load the word count register with the 2's complement
+    // value of 256.
+    EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKWC}, 0177400),
+        StatusCode::Success);
+    EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKBA}, 040000),
+        StatusCode::Success);
+    EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKDA}, 07740),
+        StatusCode::Success);
+    EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKCS},
+        RKCS_OPERATION (Operation::Write) | RKCS_GO),
+        StatusCode::Success);
+
+    waitForControllerReady (rk11dDevice);
+
+    // Verify all words have been transferred and no error indicated
+    EXPECT_EQ (rk11dDevice->read (BusAddress {RKER}), 0);
+    EXPECT_EQ (rk11dDevice->read (BusAddress {RKWC}), 0);
+    EXPECT_EQ (rk11dDevice->read (BusAddress {RKBA}), 041000);
+
+    // Write Lock the device
+    EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKCS},
+        RKCS_OPERATION (Operation::WriteLock) | RKCS_GO),
+        StatusCode::Success);
+
+    waitForControllerReady (rk11dDevice);
+
+    // Try to write to the disk
+    EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKWC}, 0177400),
+        StatusCode::Success);
+    EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKBA}, 040000),
+        StatusCode::Success);
+    EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKDA}, 07740),
+        StatusCode::Success);
+    EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKCS},
+        RKCS_OPERATION (Operation::Write) | RKCS_GO),
+        StatusCode::Success);
+
+    waitForControllerReady (rk11dDevice);
+
+    EXPECT_EQ (rk11dDevice->read (BusAddress {RKER}) & RKER_WLO, RKER_WLO);
+    EXPECT_EQ (rk11dDevice->read (BusAddress {RKCS}) & (RKCS_ERR | RKCS_HE),
+        RKCS_ERR | RKCS_HE);
+}
