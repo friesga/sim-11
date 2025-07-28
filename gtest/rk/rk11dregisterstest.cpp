@@ -1,11 +1,14 @@
 #include "rk/rk11d/rk11d.h"
 #include "bus/unibus/unibus.h"
 #include "statuscodes.h"
+#include "chrono/simulatorclock/simulatorclock.h"
 
 #include <gtest/gtest.h>
 #include <memory>
+#include <chrono>
 
 using std::make_shared;
+using std::chrono_literals::operator""ms;
 
 // Definition of the test fixture
 class RK11DRegistersTest : public ::testing::Test
@@ -27,6 +30,7 @@ protected:
     static constexpr u16  RKDS_IDE = (1 << 6);
     static constexpr u16  RKDS_EXB = (1 << 9);
     inline u16 getRKDSdriveId (u16 rkds) { return (rkds & 7) >> 13; }
+    constexpr u16 sectorCounter (u16 rkds) { return (rkds & 017); }
 
     // RKER bit definitions
     static constexpr u16  RKER_NXD = (1 << 7);
@@ -35,7 +39,6 @@ protected:
     static constexpr u16  RKCS_GO = (1 << 0);
     static constexpr u16  RKCS_RDY = (1 << 7);
     inline u16 RKCS_OPERATION (u16 function) { return (function & 7) << 1; }
-
 
     // Function definitions
     enum Operation
@@ -280,4 +283,39 @@ TEST_F (RK11DRegistersTest, rkdaCanBeAddedTo)
     EXPECT_EQ (rkda.sectorAddress, 0);
     EXPECT_EQ (rkda.surface, 0);
     EXPECT_EQ (rkda.cylinderAddress, 1);
+}
+
+
+// Verify the sector counter in the RKDS is incremented every 3.3 ms.
+TEST_F (RK11DRegistersTest, sectorCounterIsIncremented)
+{
+    RK11DConfig rk11dConfig {};
+    rk11dConfig.rk05Config[0] =
+        make_shared<RK05Config> (RK05Config
+        ({
+            .fileName = "rk05.dsk",
+            .newFile = true,
+            .overwrite = true
+            }));
+
+    Unibus bus;
+    RK11D* rk11dDevice = new RK11D (&bus, nullptr,
+        make_shared<RK11DConfig> (rk11dConfig));
+
+    EXPECT_EQ (sectorCounter (rk11dDevice->read (BusAddress {RKDS})), 0);
+
+    SimulatorClock::forwardClock (4ms);
+    EXPECT_EQ (sectorCounter (rk11dDevice->read (BusAddress {RKDS})), 1);
+
+    SimulatorClock::forwardClock (4ms);
+    EXPECT_EQ (sectorCounter (rk11dDevice->read (BusAddress {RKDS})), 2);
+
+    SimulatorClock::forwardClock (28ms);
+    EXPECT_EQ (sectorCounter (rk11dDevice->read (BusAddress {RKDS})), 10);
+
+    SimulatorClock::forwardClock (2ms);
+    EXPECT_EQ (sectorCounter (rk11dDevice->read (BusAddress {RKDS})), 11);
+
+    SimulatorClock::forwardClock (2ms);
+    EXPECT_EQ (sectorCounter (rk11dDevice->read (BusAddress {RKDS})), 0);
 }

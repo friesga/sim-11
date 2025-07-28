@@ -78,8 +78,18 @@ void RK05::clearDriveReady ()
     driveStatus_.readWriteSeekReady = 0;
 }
 
-RKTypes::RKDS RK05::driveStatus () const
+// The RKDS contains a four-bit sector counter. This counter indicates the
+// current sector passing the head.
+RKTypes::RKDS RK05::driveStatus ()
 { 
+    SimulatorClock::duration d1 = SimulatorClock::now ().time_since_epoch ();
+
+    SimulatorClock::duration elapsedTimeSinceLastIndexPulse =
+        SimulatorClock::now ().time_since_epoch () % indexPulseTime;
+
+    driveStatus_.sectorCounter = 
+        elapsedTimeSinceLastIndexPulse / sectorRevolutionTime;
+
     return driveStatus_;
 }
 

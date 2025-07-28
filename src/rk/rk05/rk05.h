@@ -11,17 +11,21 @@
 #include "variantfsm/fsm.h"
 #include "chrono/simulatorclock/simulatorclock.h"
 #include "dummycontrols/dummycontrols.h"
+#include "chrono/simulatorclock/simulatorclock.h"
 
 #include <thread>
 #include <queue>
 #include <memory>
 #include <functional>
+#include <chrono>
 
 using std::shared_ptr;
 using std::unique_ptr;
 using std::thread;
 using std::queue;
 using std::function;
+
+using namespace std::chrono_literals;
 
 class RK05
 {
@@ -35,10 +39,14 @@ public:
     void read (DiskAddress diskAddress, u16 wordCount, u16* data);
     void readHeader (DiskAddress diskAddress, u16 wordCount, u16* data);
     void clearDriveReady ();
-    RKTypes::RKDS driveStatus () const;
+    RKTypes::RKDS driveStatus ();
 
 private:
     class WriteCompletion;
+
+    // Define revolution times for a RK05 disk
+    SimulatorClock::duration indexPulseTime {40ms};
+    SimulatorClock::duration sectorRevolutionTime {indexPulseTime / 12};
 
     Bus* bus_ {nullptr};
     DriveInterface* controller_ {nullptr};
