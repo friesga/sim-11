@@ -14,8 +14,8 @@ void RK05::write (DiskAddress diskAddress, u16 wordCount, u16* data)
         [&] {
             size_t wordsWritten = writeDataToDrive (diskAddress, data,
                 wordCount);
-            controller_->dataTransferComplete (wordsWritten,
-                wordsWritten / rk05Geometry_.wordsPerSector ());
+            controller_->dataTransferComplete (StatusCode::Success,
+                wordsWritten, wordsWritten / rk05Geometry_.wordsPerSector ());
         }});
 }
 
@@ -34,7 +34,7 @@ void RK05::read (DiskAddress diskAddress, u16 wordCount, u16* data)
         [&] {
             size_t wordsRead = readDataFromDrive (diskAddress, data,
                 wordCount);
-            controller_->dataTransferComplete (wordsRead,
+            controller_->dataTransferComplete (StatusCode::Success, wordsRead,
                 wordsRead / rk05Geometry_.wordsPerSector ());
         }});
 }
@@ -89,7 +89,8 @@ void RK05::readHeader (DiskAddress diskAddress, u16 wordCount, u16* data)
 
     // One word per sector is read, so the number of sectors equals the
     // number of words read.
-    controller_->dataTransferComplete (wordsRead, wordsRead);
+    controller_->dataTransferComplete (StatusCode::Success, wordsRead,
+        wordsRead);
 }
 
 u16 RK05::cylinderFromLBN (u32 lbn)

@@ -10,6 +10,7 @@
 #include "bitfield.h"
 #include "threadsafecontainers/threadsafequeue.h"
 #include "variantfsm/fsm.h"
+#include "statuscodes.h"
 
 #include <vector>
 #include <string>
@@ -82,7 +83,7 @@ public:
 
     // Functions required by the DriveInterface interface
     void reportSeekComplete (RKTypes::SeekCompleteReport report);
-    void dataTransferComplete (u16 wordTransferred, u16 sectorsProcessed);
+    void dataTransferComplete (StatusCode statusCode, u16 wordTransferred, u16 sectorsProcessed);
 
 private:
     // Definition of the controller's base address and vector
@@ -117,6 +118,7 @@ private:
     // words transferred and the number of sectors processed.
     struct CommandCompletion
     {
+        StatusCode statusCode {};
         u16 wordsTransferred {0};
         u16 sectorsProcessed {0};
     };
