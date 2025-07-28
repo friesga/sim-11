@@ -19,6 +19,13 @@ void RK11D::executeWrite (RKTypes::Function function)
         return;
     }
 
+    // Check the drive is not write-protected
+    if (rk05Drives_[driveId]->isWriteProtected ())
+    {
+        setError ([&] {rker_.writeLockoutViolation = 1; });
+        return;
+    }
+
     // Check validity of the function's parameters
     if (!functionParametersOk (function))
         return;

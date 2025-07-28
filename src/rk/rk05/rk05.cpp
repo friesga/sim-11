@@ -58,6 +58,13 @@ RK05::RK05 (Bus* bus, DriveInterface* controller, Window* window,
         stateMachine_->dispatch (SpunUp {});
     else
         stateMachine_->dispatch (SpunDown {});
+
+    // Set the Write Protect status according to the configuration option
+    if (rk05Config->writeProtect)
+    {
+        driveStatus_.writeProtectStatus = 1;
+        wtprotIndicator_->show (Indicator::State::On);
+    }
 }
 
 // Finish the drive thread
@@ -142,6 +149,11 @@ bool RK05::isReady ()
 {
     return stateMachine_->inState (LockedOn {}) ||
         stateMachine_->inState (Seeking {});
+}
+
+bool RK05::isWriteProtected ()
+{
+    return driveStatus_.writeProtectStatus == 1;
 }
 
 // Head positioning performance specifcations:

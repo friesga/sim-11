@@ -34,6 +34,7 @@ public:
         shared_ptr<RK05Config> rk05Config);
     ~RK05 ();
     bool isReady ();
+    bool isWriteProtected ();
     void seek (u16 cylinderAddress);
     void write (DiskAddress diskAddress, u16 wordCount, u16* data);
     void read (DiskAddress diskAddress, u16 wordCount, u16* data);
