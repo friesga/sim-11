@@ -102,8 +102,20 @@ void RK11D::startFunction ()
     // ToDo: Add Memory Extension bits to bus address
     functionQueue_.push (RKTypes::Function
         {
-            rkcs_, rkda_.value, rkwc_, rkba_
+            rkcs_, rkda_.value, rkwc_, busAddressFromRegs (),
         });
 
     functionAvailable_.notify_one ();
+}
+
+BusAddress RK11D::busAddressFromRegs ()
+{
+    return BusAddress {static_cast<u32> ((rkcs_.memoryExtension << 16) | rkba_),
+        BusAddress::Width::_18Bit};
+}
+
+void RK11D::busAddressToRegs (u32 busAddress)
+{
+    rkcs_.memoryExtension = ((busAddress >> 16) & 03);
+    rkba_ = busAddress & 0177777;
 }

@@ -1,6 +1,7 @@
 #include "rk/rk11d/rk11d.h"
 #include "ms11p/ms11p.h"
 #include "bus/unibus/unibus.h"
+#include "kt24/kt24.h"
 #include "statuscodes.h"
 #include "chrono/simulatorclock/simulatorclock.h"
 
@@ -44,7 +45,12 @@ protected:
     static constexpr u16  RKCS_HE  = (1 << 14);
     static constexpr u16  RKCS_ERR = (1 << 15);
     inline u16 RKCS_OPERATION (u16 function) { return (function & 7) << 1; }
+    constexpr u16 getMexBits (u16 rkcs) { return rkcs & 000060; }
 
+    // Expressions to split a 18-bit address into RKCS Memory Extension bits
+    // and a 16-bit RKBA.
+    constexpr u16 RKCS_MEX_BITS (u32 address) { return (address >> 16) << 4; }
+    constexpr u16 RKBA_BITS (u32 address) { return address & 0177777; }
 
     // Function definitions
     enum Operation
@@ -391,4 +397,128 @@ TEST_F (RK11DReadTest, readWithIBASetSucceeds)
 
     // Address zero now should contain the last word of the sector
     ASSERT_EQ (bus.read (0), 0177777);
+}
+
+// This test verifies that the RKCS Memory Extension bits are used to
+// construct the bus address. To this end a sector is written with the
+// contents from a buffer starting at address 0, which is then read back
+// at address 01401000.
+// 
+TEST_F (RK11DReadTest, memoryExtensionBitsAreUsed)
+{
+    RK11DConfig rk11dConfig {};
+    rk11dConfig.rk05Config[0] =
+        make_shared<RK05Config> (RK05Config
+        ({
+            .fileName = "rk05.dsk",
+            .newFile = true,
+            .overwrite = true
+            }));
+
+    Unibus bus;
+    MS11P ms11p {&bus};
+    RK11D* rk11dDevice = new RK11D (&bus, nullptr,
+        make_shared<RK11DConfig> (rk11dConfig));
+
+    // Create a minimal system, consisting of just the bus, memory
+    // and the RK11-D/RK05 to be tested.
+    bus.installModule (&ms11p);
+    bus.installModule (rk11dDevice);
+
+    static const u32 memoryAddress {01401000};
+
+    // Fill the memory's first 512 words with a value to verify that the
+    // written sector is read back
+    for (u16 address = 0; address < 512; address += 2)
+        bus.writeWord (address, 0177777);
+
+    // Write 256 words. Load the word count register with the 2's complement
+    // value of 256.
+    EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKWC}, 0177400),
+        StatusCode::Success);
+    EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKBA}, 0),
+        StatusCode::Success);
+    EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKDA}, 0),
+        StatusCode::Success);
+    EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKCS},
+        RKCS_OPERATION (Operation::Write) | RKCS_GO),
+        StatusCode::Success);
+
+    waitForControllerReady (rk11dDevice);
+
+    // Verify all words have been transferred and no error indicated
+    EXPECT_EQ (rk11dDevice->read (BusAddress {RKER}), 0);
+    EXPECT_EQ (rk11dDevice->read (BusAddress {RKWC}), 0);
+    EXPECT_EQ (rk11dDevice->read (BusAddress {RKBA}), 01000);
+    EXPECT_EQ (rk11dDevice->read (BusAddress {RKDA}), 1);
+
+    // Read the sector back at memory address 01400000
+    EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKWC}, 0177400),
+        StatusCode::Success);
+    EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKBA}, 
+        RKBA_BITS (memoryAddress)), StatusCode::Success);
+    EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKDA}, 0),
+        StatusCode::Success);
+    EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKCS},
+        RKCS_MEX_BITS (memoryAddress) | RKCS_OPERATION (Operation::Read) | RKCS_GO),
+        StatusCode::Success);
+
+    waitForControllerReady (rk11dDevice);
+
+    // Verify all words have been transferred and no error indicated
+    EXPECT_EQ (rk11dDevice->read (BusAddress {RKER}), 0);
+    EXPECT_EQ (rk11dDevice->read (BusAddress {RKWC}), 0);
+    EXPECT_EQ (rk11dDevice->read (BusAddress {RKBA}),
+        RKBA_BITS (memoryAddress) + 01000);
+    EXPECT_EQ (rk11dDevice->read (BusAddress {RKDA}), 1);
+
+    EXPECT_EQ (bus.read (BusAddress {memoryAddress, BusAddress::Width::_18Bit}), 0177777);
+    EXPECT_EQ (bus.read (BusAddress {memoryAddress + 510, BusAddress::Width::_18Bit}), 0177777);
+}
+
+TEST_F (RK11DReadTest, memoryExtensionBitsAreIncremented)
+{
+    RK11DConfig rk11dConfig {};
+    rk11dConfig.rk05Config[0] =
+        make_shared<RK05Config> (RK05Config
+        ({
+            .fileName = "rk05.dsk",
+            .newFile = true,
+            .overwrite = true
+            }));
+
+    Unibus bus;
+    MS11P ms11p {&bus};
+    RK11D* rk11dDevice = new RK11D (&bus, nullptr,
+        make_shared<RK11DConfig> (rk11dConfig));
+
+    // Create a minimal system, consisting of just the bus, memory
+    // and the RK11-D/RK05 to be tested.
+    bus.installModule (&ms11p);
+    bus.installModule (rk11dDevice);
+
+    static u32 memoryAddress {0177000};
+
+    EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKWC}, 0177400),
+        StatusCode::Success);
+    EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKBA},
+        RKBA_BITS (memoryAddress)), StatusCode::Success);
+    EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKDA}, 0),
+        StatusCode::Success);
+    EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKCS},
+        RKCS_MEX_BITS (memoryAddress) | RKCS_OPERATION (Operation::Read) | RKCS_GO),
+        StatusCode::Success);
+
+    waitForControllerReady (rk11dDevice);
+
+    // Verify all words have been transferred and no error indicated
+    EXPECT_EQ (rk11dDevice->read (BusAddress {RKER}), 0);
+    EXPECT_EQ (rk11dDevice->read (BusAddress {RKWC}), 0);
+
+    // Verify the correct bus address is indicated
+    memoryAddress += 01000;
+    EXPECT_EQ (rk11dDevice->read (BusAddress {RKBA}),
+        RKBA_BITS (memoryAddress));
+    EXPECT_EQ (getMexBits (rk11dDevice->read (BusAddress {RKCS})),
+        RKCS_MEX_BITS (memoryAddress));
 }

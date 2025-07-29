@@ -69,7 +69,10 @@ void RK11D::executeWrite (RKTypes::Function function)
     rkwc_ += commandCompletion.wordsTransferred;
 
     if (!function.rkcs.inhibitIncrementingRKBA)
-        rkba_ += (commandCompletion.wordsTransferred * 2);
+    {
+        busAddressToRegs (function.busAddress +
+            commandCompletion.wordsTransferred * 2);
+    }
 
     // An increment of the RKDA might overflow the logical block number.
     // 

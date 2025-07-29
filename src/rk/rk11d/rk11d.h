@@ -199,6 +199,8 @@ private:
     void setError (function<void ()> function);
     RKTypes::RKDS getDriveStatus (u16 driveId);
     void startFunction ();
+    BusAddress busAddressFromRegs ();
+    void busAddressToRegs (u32 busAddress);
 };
 
 // Definition of the state machine for the hardware poll. The class has

@@ -75,7 +75,8 @@ void RK11D::executeWriteCheck (RKTypes::Function function)
     {
         status = compareDataWithBuffer (function.busAddress,
             commandCompletion.wordsTransferred, buffer_);
-        rkba_ += (commandCompletion.wordsTransferred * 2);
+        busAddressToRegs (function.busAddress +
+            commandCompletion.wordsTransferred * 2);
     }
     rkwc_ += commandCompletion.wordsTransferred;
     
