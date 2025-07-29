@@ -134,7 +134,7 @@ private:
 	void BINITReceiver (bool signalValue);
 
 	// A Unibus optionally contains a Unibus Map
-	UnibusMap* unibusMap_;
+	UnibusMap* unibusMap_ {nullptr};
 
 	bool addressMustBeMapped (BusAddress address);
 	CondData<u16> mappedRead (BusAddress address);
