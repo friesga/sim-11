@@ -26,9 +26,9 @@ using std::out_of_range;
 // LBN = (cyl * numHeads + head) * numSectorsPerSurface + sector
 //
 // The LBN is then converted to a file position by the formula:
-// darToDiskAddress = LBN * wordsPerSector * numBitsPerWord
+// darToDiskAddress = LBN * wordsPerSector * numBytesPerWord
 //
-// As the PDP-11 is a 16-bit machine the value for numBitsPerWord is 16.
+// As the PDP-11 is a 16-bit machine the value for numBytesPerWord is 2.
 // 
 // An alternative formula for the calculation of the LBN resulting in the
 // same mapping is:
