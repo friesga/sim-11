@@ -136,7 +136,15 @@ TEST_F (RK11DWriteCheckTest, writeCheckReportsNoError)
     EXPECT_EQ (rk11dDevice->read (BusAddress {RKWC}), 0);
     EXPECT_EQ (rk11dDevice->read (BusAddress {RKBA}), 01000);
     EXPECT_EQ (rk11dDevice->read (BusAddress {RKDA}), 1);
+    EXPECT_EQ (rk11dDevice->read (BusAddress {RKDB}), 0177777);
 
+    // Reset the controller to clear the registers
+    EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKCS},
+        RKCS_OPERATION (Operation::ControlReset) | RKCS_GO),
+        StatusCode::Success);
+    waitForControllerReady (rk11dDevice);
+
+    // Execute the Write Check
     EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKWC}, 0177400),
         StatusCode::Success);
     EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKBA}, 0),
@@ -153,6 +161,7 @@ TEST_F (RK11DWriteCheckTest, writeCheckReportsNoError)
     EXPECT_EQ (rk11dDevice->read (BusAddress {RKWC}), 0);
     EXPECT_EQ (rk11dDevice->read (BusAddress {RKBA}), 01000);
     EXPECT_EQ (rk11dDevice->read (BusAddress {RKDA}), 1);
+    EXPECT_EQ (rk11dDevice->read (BusAddress {RKDB}), 0177777);
 }
 
 TEST_F (RK11DWriteCheckTest, writeCheckReportsError)

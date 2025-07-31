@@ -66,7 +66,15 @@ void RK11D::executeWrite (RKTypes::Function function)
     commandCompletionQueue_.waitAndPop (commandCompletion);
 
     // Adjust RKWC and - in case IBA isn't set - the RKBA
+    // The bits of [the RKDB] register work as a general data handler in that
+    // all information transferred between the control[ler] and the disk drive
+    // must pass through this register. (EK-RK11D-MM-002, p. 3-8). 
+    // 
+    // After 1 sector read RKDB contains for RK11C the checksum for that sector,
+    // for RK11D the last word transferred to memory. (CZRKKF0, line 3074)
+    //
     rkwc_ += commandCompletion.wordsTransferred;
+    rkdb_ = buffer_[commandCompletion.wordsTransferred - 1];
 
     if (!function.rkcs.inhibitIncrementingRKBA)
     {

@@ -134,6 +134,7 @@ TEST_F (RK11DReadTest, readSectorSucceeds)
     EXPECT_EQ (rk11dDevice->read (BusAddress {RKWC}), 0);
     EXPECT_EQ (rk11dDevice->read (BusAddress {RKBA}), 01000);
     EXPECT_EQ (rk11dDevice->read (BusAddress {RKDA}), 1);
+    EXPECT_EQ (rk11dDevice->read (BusAddress {RKDB}), 0177777);
 
     for (u16 address = 0; address < 512; address += 2)
         bus.writeWord (address, 0);
@@ -150,11 +151,13 @@ TEST_F (RK11DReadTest, readSectorSucceeds)
 
     waitForControllerReady (rk11dDevice);
 
-    // Verify all words have been transferred and no error indicated
+    // Verify all words have been transferred and no error indicated. 
+    // The RKDB should contain the last word transferred.
     EXPECT_EQ (rk11dDevice->read (BusAddress {RKER}), 0);
     EXPECT_EQ (rk11dDevice->read (BusAddress {RKWC}), 0);
     EXPECT_EQ (rk11dDevice->read (BusAddress {RKBA}), 01000);
     EXPECT_EQ (rk11dDevice->read (BusAddress {RKDA}), 1);
+    EXPECT_EQ (rk11dDevice->read (BusAddress {RKDB}), 0177777);
 
     for (u16 contents = 0, address = 0; address < 512; address += 2)
     {

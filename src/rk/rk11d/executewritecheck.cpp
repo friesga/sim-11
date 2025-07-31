@@ -78,6 +78,15 @@ void RK11D::executeWriteCheck (RKTypes::Function function)
         busAddressToRegs (function.busAddress +
             commandCompletion.wordsTransferred * 2);
     }
+
+    // The bits of [the RKDB] register work as a general data handler in that
+    // all information transferred between the control[ler] and the disk drive
+    // must pass through this register. (EK-RK11D-MM-002, p. 3-8). 
+    // 
+    // After 1 sector read RKDB contains for RK11C the checksum for that sector,
+    // for RK11D the last word transferred to memory. (CZRKKF0, line 3074)
+    //
+    rkdb_ = buffer_[commandCompletion.wordsTransferred - 1];
     rkwc_ += commandCompletion.wordsTransferred;
     
     // An increment of the RKDA might overflow the logical block number.

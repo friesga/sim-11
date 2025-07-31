@@ -163,6 +163,7 @@ TEST_F (RK11DReadHeaderTest, readHeaderOneSectorSucceeds)
     // Verify the sector header has been transferred and no error indicated
     EXPECT_EQ (rk11dDevice->read (BusAddress {RKER}), 0);
     EXPECT_EQ (rk11dDevice->read (BusAddress {RKWC}), 0);
+    EXPECT_EQ (rk11dDevice->read (BusAddress {RKDB}), 040);
 
     // Sector 12 is on track 1. The cylinder number is encoded in RKDA format
      ASSERT_EQ (bus.read (0), 040);
@@ -192,6 +193,7 @@ TEST_F (RK11DReadHeaderTest, readHeaderThreeSectorsSucceeds)
     // Verify the sector header has been transferred and no error indicated
     EXPECT_EQ (rk11dDevice->read (BusAddress {RKER}), 0);
     EXPECT_EQ (rk11dDevice->read (BusAddress {RKWC}), 0);
+    EXPECT_EQ (rk11dDevice->read (BusAddress {RKDB}), 0100);
 
     // The three sectors are on cylinders 1 and 2
     ASSERT_EQ (bus.read (0), 040);
