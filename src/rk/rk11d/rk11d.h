@@ -170,6 +170,10 @@ private:
 
     // Definition of the RK11 function steps
     bool driveReady (RKTypes::Function function);
+    void driveRead (RKTypes::Function function,
+        CommandCompletion& commandCompletion);
+    void driveReadHeader (RKTypes::Function function,
+        CommandCompletion& commandCompletion);
 
     void functionProcessor ();
     void hardwarePoll ();

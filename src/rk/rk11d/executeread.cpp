@@ -23,26 +23,10 @@ void RK11D::executeRead (RKTypes::Function function)
     // Stop possible running hardware poll
     pollEventQueue_.push (StopPoll {});
 
-    // Get the parameters ready for the read() or readHeader() call
-    // to avoid code duplication
-    DiskAddress diskAddress
-    {
-         function.diskAddress.sectorAddress,
-         function.diskAddress.surface,
-         function.diskAddress.cylinderAddress
-    };
-    u32 wordCount = absValueFromTwosComplement (function.wordCount);
-
-    // Either read the header of the given sector(s) in Format Mode or
-    // the sector(s) itself/themselves.
     if (function.rkcs.format)
-        rk05Drives_[driveId]->readHeader (diskAddress, wordCount,
-            buffer_.get ());
+        driveReadHeader (function, commandCompletion);
     else
-        rk05Drives_[driveId]->read (diskAddress, wordCount, buffer_.get ());
-
-    // Await the result of the execution of the read
-    commandCompletionQueue_.waitAndPop (commandCompletion);
+        driveRead (function, commandCompletion);
 
     // ToDo: Clear the part of the buffer not filled by the read
 

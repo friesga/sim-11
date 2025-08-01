@@ -19,3 +19,49 @@ bool RK11D::driveReady (RKTypes::Function function)
 
     return true;
 }
+
+// Read the given numer of words from the given disk address into the
+// controller's buffer.
+void RK11D::driveRead (RKTypes::Function function,
+    CommandCompletion& commandCompletion)
+{
+    u16 driveId = function.diskAddress.driveSelect;
+
+    DiskAddress diskAddress
+    {
+         function.diskAddress.sectorAddress,
+         function.diskAddress.surface,
+         function.diskAddress.cylinderAddress
+    };
+
+    u32 wordCount = absValueFromTwosComplement (function.wordCount);
+
+    rk05Drives_[driveId]->read (diskAddress,
+        wordCount, buffer_.get ());
+
+    // Await the result of the execution of the read
+    commandCompletionQueue_.waitAndPop (commandCompletion);
+}
+
+// Read the given number of headers from the given starting disk address
+// into the controller's buffer.
+void RK11D::driveReadHeader (RKTypes::Function function,
+    CommandCompletion& commandCompletion)
+{
+    u16 driveId = function.diskAddress.driveSelect;
+
+    DiskAddress diskAddress
+    {
+         function.diskAddress.sectorAddress,
+         function.diskAddress.surface,
+         function.diskAddress.cylinderAddress
+    };
+
+    u32 wordCount = absValueFromTwosComplement (function.wordCount);
+
+    rk05Drives_[driveId]->readHeader (diskAddress, wordCount,
+        buffer_.get ());
+
+    // Await the result of the execution of the read
+    commandCompletionQueue_.waitAndPop (commandCompletion);
+}
