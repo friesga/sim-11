@@ -12,12 +12,8 @@ void RK11D::executeWrite (RKTypes::Function function)
     CommandCompletion commandCompletion {};
     u16 driveId = function.diskAddress.driveSelect;
 
-    // Check the drive is ready
-    if (!rk05Drives_[driveId]->isReady ())
-    {
-        setError ([&] {rker_.driveError = 1; });
+    if (!driveReady (function))
         return;
-    }
 
     // Check the drive is not write-protected
     if (rk05Drives_[driveId]->isWriteProtected ())

@@ -15,12 +15,8 @@ void RK11D::executeReadCheck (RKTypes::Function function)
 {
     u16 driveId = function.diskAddress.driveSelect;
 
-    // Check the drive is ready
-    if (!rk05Drives_[driveId]->isReady ())
-    {
-        setError ([&] {rker_.driveError = 1; });
+    if (!driveReady (function))
         return;
-    }
 
     // Check validity of the function's parameters
     if (!functionParametersOk (function))

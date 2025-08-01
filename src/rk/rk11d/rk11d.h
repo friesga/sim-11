@@ -168,6 +168,9 @@ private:
     // is completed.
     condition_variable seekComplete_;
 
+    // Definition of the RK11 function steps
+    bool driveReady (RKTypes::Function function);
+
     void functionProcessor ();
     void hardwarePoll ();
     void processFunction (RKTypes::Function function);

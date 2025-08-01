@@ -13,6 +13,7 @@ set (RK11D_SRCS
     rk11d/read.cpp
     rk11d/rk11d.cpp
     rk11d/reportseekcomplete.cpp
+    rk11d/steps.cpp
     rk11d/writeword.cpp
     rk05/commands.cpp
     rk05/rk05.cpp
