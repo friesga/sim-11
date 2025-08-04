@@ -1,5 +1,9 @@
 #include "rk11d.h"
 
+#include <variant>
+
+using std::get;
+
 // The function is already safeguarded against register access by the
 // CPU thread as the controllerMutex_ is locked by the action processor.
 //

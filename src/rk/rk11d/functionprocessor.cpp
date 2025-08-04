@@ -7,6 +7,7 @@
 
 using std::cerr;
 using std::visit;
+using std::get;
 
 // The RK11-D functionality is partly synchronous and partly asynchronous
 // in nature; data transfer functions are handled synchronously and Seek and
@@ -30,8 +31,8 @@ try
         //
         while (!functionQueue_.empty ())
         {
-            trace.rk11Function (functionQueue_.front ());
-            processFunction (functionQueue_.front ());
+            trace.rk11Function (get<RKTypes::Function> (functionQueue_.front ()));
+            functionProcessorStateMachine_->dispatch (functionQueue_.front ());
             functionQueue_.pop ();
             setControlReady ();
         }
@@ -46,6 +47,20 @@ catch (const std::exception& ex)
 {
     cerr << "RK11D::functionProcessor exception: " << ex.what () << '\n';
 }
+
+RK11D::FunctionProcessorStateMachine::FunctionProcessorStateMachine (RK11D* context)
+    :
+    context_ {context}
+{}
+
+
+RK11D::FunctionProcessorState RK11D::FunctionProcessorStateMachine::transition (WaitingForFunction&& currentState,
+    FunctionProcessorEvent event)
+{
+    context_->processFunction (get <RKTypes::Function> (event));
+    return move (currentState);
+}
+
 
 void RK11D::finish ()
 {

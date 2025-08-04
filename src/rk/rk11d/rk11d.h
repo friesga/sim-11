@@ -97,18 +97,13 @@ private:
 
     // Action processor thread
     bool running_ {false};
-    thread actionProcessorThread_;
+    thread functionProcessorThread_;
 
     // Hardware poll thread
     thread pollThread_;
 
     // Safe guard against controller access from multiple threads
     mutex controllerMutex_;
-
-    // Definition of the queue for forwarding issued functions to the function
-    // processor. The queue is accessed from multiple threads and its consistency
-    // has to be safe-guarded by the controllerMutex_.
-    queue<RKTypes::Function> functionQueue_;
 
     // Condition variable to wake up the function processor when a function has
     // been queued.
@@ -159,6 +154,24 @@ private:
     // Async seek completions are reported as SeekCompleteReport's and are
     // processed by the hardware poll function.
     ThreadSafeQueue <RKTypes::SeekCompleteReport> seekCompleteQueue_;
+
+    // Definition of the function processor states
+    struct WaitingForFunction {};
+
+    using FunctionProcessorState = variant<WaitingForFunction>;
+
+    // Definition of the function processor events
+    using FunctionProcessorEvent = variant<RKTypes::Function>;
+
+    // Use the PIMPL idiom to be able to define the FunctionProcessorStateMachine outside
+    // of the RK05 class
+    class FunctionProcessorStateMachine;
+    unique_ptr<FunctionProcessorStateMachine> functionProcessorStateMachine_;
+
+    // Definition of the queue for forwarding issued functions to the function
+    // processor. The queue is accessed from multiple threads and its consistency
+    // has to be safe-guarded by the controllerMutex_.
+    queue<FunctionProcessorEvent> functionQueue_;
 
     // Definition of a buffer for the data to be transferred to/from the
     // RK05 drive
@@ -244,6 +257,24 @@ private:
     RK11D* context_;
 
     void completeSeek ();
+};
+
+// Definition of the state machine for the function processor. The class has
+// to be defined in the same compilation unit to prevent incomplete type
+// compilation errors.
+class RK11D::FunctionProcessorStateMachine :
+    public variantFsm::Fsm<FunctionProcessorStateMachine,
+        FunctionProcessorEvent, FunctionProcessorState>
+{
+public:
+    FunctionProcessorStateMachine (RK11D* context);
+
+    FunctionProcessorState transition (WaitingForFunction&&,
+        FunctionProcessorEvent event);
+
+private:
+    RK11D* context_;
+
 };
 
 #endif // _RK11D_H_

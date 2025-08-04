@@ -34,14 +34,16 @@ RK11D::RK11D (Bus* bus, Window* window, shared_ptr<RK11DConfig> rk11dConfig)
 
     bus_->BINIT ().subscribe (bind (&RK11D::BINITReceiver, this, _1));
 
-    // Start the action processor
-    running_ = true;
-    actionProcessorThread_ = thread (&RK11D::functionProcessor, this);
-
     // Create the state machine to be executed in the hardware poll thread and
     // start the thread.
     pollStateMachine_ = make_unique<PollStateMachine> (this);
     pollThread_ = thread (&RK11D::hardwarePoll, this);
+
+    // Create the function processor state machine to be executed in the
+    // function processor thread and start the thread.
+    functionProcessorStateMachine_ = make_unique<FunctionProcessorStateMachine> (this);
+    running_ = true;
+    functionProcessorThread_ = thread (&RK11D::functionProcessor, this);
 
     // Initialize the controller
     reset ();
@@ -51,7 +53,7 @@ RK11D::RK11D (Bus* bus, Window* window, shared_ptr<RK11DConfig> rk11dConfig)
 RK11D::~RK11D ()
 {
     finish ();
-    actionProcessorThread_.join ();
+    functionProcessorThread_.join ();
     pollThread_.join ();
 }
 
