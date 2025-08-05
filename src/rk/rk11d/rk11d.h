@@ -124,7 +124,7 @@ private:
     // commands are handled one at a time.
     ThreadSafeQueue<CommandCompletion> commandCompletionQueue_;
 
-    binary_semaphore interruptRequestGranted_ {0};
+    binary_semaphore interruptRequestGranted_ {1};
 
     // Definition of the hardware poll states
     struct Off {};
@@ -157,11 +157,13 @@ private:
 
     // Definition of the function processor states
     struct WaitingForFunction {};
+    struct Polling {};
 
-    using FunctionProcessorState = variant<WaitingForFunction>;
+    using FunctionProcessorState = variant<WaitingForFunction, Polling>;
 
     // Definition of the function processor events
-    using FunctionProcessorEvent = variant<RKTypes::Function>;
+    using FunctionProcessorEvent = variant<RKTypes::Function,
+        RKTypes::SeekCompleteReport>;
 
     // Use the PIMPL idiom to be able to define the FunctionProcessorStateMachine outside
     // of the RK05 class
@@ -270,11 +272,18 @@ public:
     FunctionProcessorStateMachine (RK11D* context);
 
     FunctionProcessorState transition (WaitingForFunction&&,
-        FunctionProcessorEvent event);
+        RKTypes::Function);                                 // -> WaitingForFunction
+    FunctionProcessorState transition (WaitingForFunction&&,
+        RKTypes::SeekCompleteReport);                       // -> WaitingForFunction
+    FunctionProcessorState transition (Polling&&,
+        RKTypes::SeekCompleteReport);                       // -> Polling
+    FunctionProcessorState transition (Polling&&,
+        RKTypes::Function);                                 // WaitingForFunction
 
 private:
     RK11D* context_;
 
+    void completeSeek (RKTypes::SeekCompleteReport report);
 };
 
 #endif // _RK11D_H_

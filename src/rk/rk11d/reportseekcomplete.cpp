@@ -4,6 +4,9 @@
 //
 void RK11D::reportSeekComplete (RKTypes::SeekCompleteReport report)
 {
-    seekCompleteQueue_.push (report);
-    pollEventQueue_.push (SeekComplete {});
+    // seekCompleteQueue_.push (report);
+    // pollEventQueue_.push (SeekComplete {});
+
+    functionQueue_.push (report);
+    functionAvailable_.notify_one ();
 }

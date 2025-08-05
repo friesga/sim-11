@@ -12,7 +12,7 @@ using std::vector;
 void traceOption (string value)
 {
     trace.activate (value.c_str (),
-        Trace::Category::Irq |
+        Trace::Category::RK11 |
         Trace::Category::Debug);
 }
 

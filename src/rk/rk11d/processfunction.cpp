@@ -13,7 +13,6 @@ void RK11D::processFunction (RKTypes::Function function)
     {
         case RKTypes::ControlReset:
             reset ();
-            setControlReady ();
             break;
 
         case RKTypes::Write:
@@ -47,6 +46,8 @@ void RK11D::processFunction (RKTypes::Function function)
         default:
             throw logic_error ("Invalid function in RK11D::processFunction");
     }
+
+    setControlReady ();
 }
 
 

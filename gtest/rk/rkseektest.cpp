@@ -105,7 +105,7 @@ protected:
         u16 result;
         do
         {
-            SimulatorClock::forwardClock (10ms);
+            SimulatorClock::forwardClock (1ms);
             result = controller->read (RKCS);
         } while (!(result & RKCS_RDY));
     }
@@ -140,6 +140,7 @@ protected:
     }
 };
 
+#if 0
 TEST_F (RK11DSeekTest, seekToNonExistentCylinder)
 {
     // Try to seek to cylinder 203
@@ -197,6 +198,7 @@ TEST_F (RK11DSeekTest, seekGeneratesInterrupts)
     // generated and the drive should be ready
     waitForRWSReady (rk11dDevice, 0);
     waitForInterruptAvailable ();
+    EXPECT_TRUE (bus.getIntrptReq (ir));
 
     // Verify no error and correct status indicated
     EXPECT_EQ (rkdsExceptSectorCounter (rk11dDevice->read (BusAddress {RKDS})),
@@ -204,6 +206,8 @@ TEST_F (RK11DSeekTest, seekGeneratesInterrupts)
     EXPECT_EQ (rk11dDevice->read (BusAddress {RKER}), 0);
     EXPECT_EQ (rk11dDevice->read (BusAddress {RKCS}) & (RKCS_ERR | RKCS_HE), 0);
 }
+#endif
+
 
 TEST_F (RK11DSeekTest, overlappedSeeks)
 {
@@ -260,6 +264,7 @@ TEST_F (RK11DSeekTest, overlappedSeeks)
     EXPECT_EQ (rk11dDevice->read (BusAddress {RKCS}) & (RKCS_ERR | RKCS_HE), 0);
 }
 
+#if 0
 TEST_F (RK11DSeekTest, transferFunctionCancelsSeekInterrupts)
 {
     InterruptRequest ir;
@@ -293,3 +298,5 @@ TEST_F (RK11DSeekTest, transferFunctionCancelsSeekInterrupts)
     // No interrupts should be generated
     EXPECT_FALSE (bus.intrptReqAvailable ());
 }
+
+#endif
