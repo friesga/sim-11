@@ -38,9 +38,6 @@ void RK11D::executeWriteCheck (RKTypes::Function function)
 
     // Check for sector overflow
 
-    // Stop possible running hardware poll
-    pollEventQueue_.push (StopPoll {});
-
     // Command RK05 to read data from disk to buffer
     rk05Drives_[driveId]->read (
         DiskAddress {function.diskAddress.sectorAddress,

@@ -20,9 +20,6 @@ void RK11D::executeRead (RKTypes::Function function)
 
     // ToDo: Check for sector overflow
 
-    // Stop possible running hardware poll
-    pollEventQueue_.push (StopPoll {});
-
     if (function.rkcs.format)
         driveReadHeader (function, commandCompletion);
     else

@@ -5,9 +5,6 @@
 //
 void RK11D::reportSeekComplete (RKTypes::SeekCompleteReport report)
 {
-    // seekCompleteQueue_.push (report);
-    // pollEventQueue_.push (SeekComplete {});
-
     trace.debug ("Seek completed for drive " + std::to_string (report.driveId));
 
     functionQueue_.push (report);

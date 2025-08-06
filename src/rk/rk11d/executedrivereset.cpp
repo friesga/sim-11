@@ -12,6 +12,5 @@
 //
 void RK11D::executeDriveReset (RKTypes::Function function)
 {
-    pollEventQueue_.push (StartPoll {});
     rk05Drives_[function.diskAddress.driveSelect]->seek (0);
 }

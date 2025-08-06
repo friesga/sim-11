@@ -120,17 +120,10 @@ void RK11D::FunctionProcessorStateMachine::completeSeek (RKTypes::SeekCompleteRe
 
 void RK11D::finish ()
 {
-    // Guard against controller register access from main thread
-    // std::lock_guard<std::mutex> guard {controllerMutex_};
-
-    // running_ = false;
     functionQueue_.close ();
 
     interruptRequestGranted_.release ();
 
     // Wake up the function processor
     functionAvailable_.notify_one ();
-
-    // Finish the harware poll function
-    // pollEventQueue_.close ();
 }

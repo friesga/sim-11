@@ -47,9 +47,6 @@ void RK11D::executeWrite (RKTypes::Function function)
 
     // Clear to end of block
 
-    // Stop possible running hardware poll
-    pollEventQueue_.push (StopPoll {});
-
     // Command RK05 to write data from buffer to disk
     rk05Drives_[driveId]->write (
         DiskAddress {function.diskAddress.sectorAddress,

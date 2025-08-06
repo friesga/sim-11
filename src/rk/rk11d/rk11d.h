@@ -99,9 +99,6 @@ private:
     bool running_ {false};
     thread functionProcessorThread_;
 
-    // Hardware poll thread
-    thread pollThread_;
-
     // Safe guard against controller access from multiple threads
     mutex controllerMutex_;
 
@@ -125,31 +122,6 @@ private:
     ThreadSafeQueue<CommandCompletion> commandCompletionQueue_;
 
     binary_semaphore interruptRequestGranted_ {1};
-
-    // Definition of the hardware poll states
-    struct Off {};
-    struct Active {};
-    struct Processing {};
-
-    using State = variant<Off, Active, Processing, monostate>;
-
-    // Definition of the hardware poll events
-    struct StartPoll {};
-    struct StopPoll {};
-    struct SeekComplete {};
-    struct ProcessingFinished {};
-
-    using PollEvent = variant<StartPoll, StopPoll,
-        SeekComplete, ProcessingFinished>;
-
-    // Use the PIMPL idiom to be able to define the PollStateMachine outside
-    // of the RK05 class
-    class PollStateMachine;
-    unique_ptr<PollStateMachine> pollStateMachine_;
-
-    // Definition of the queue containing events to be dispatched by the
-    // hardware poll function.
-    ThreadSafeQueue<PollEvent> pollEventQueue_;
 
     // Async seek completions are reported as SeekCompleteReport's and are
     // processed by the hardware poll function.
@@ -179,10 +151,6 @@ private:
     // RK05 drive
     unique_ptr<u16[]> buffer_;
 
-    // Condition variable to wake up the hardware poll when a seek function
-    // is completed.
-    condition_variable seekComplete_;
-
     // Definition of the RK11 function steps
     bool driveReady (RKTypes::Function function);
     void driveRead (RKTypes::Function function,
@@ -191,7 +159,6 @@ private:
         CommandCompletion& commandCompletion);
 
     void functionProcessor ();
-    void hardwarePoll ();
     void processFunction (RKTypes::Function function);
     void executeSeek (RKTypes::RKDA diskAddress);
     void executeRead (RKTypes::Function function);
@@ -223,42 +190,6 @@ private:
     void startFunction ();
     BusAddress busAddressFromRegs ();
     void busAddressToRegs (u32 busAddress);
-};
-
-// Definition of the state machine for the hardware poll. The class has
-// to be defined in the same compilation unit to prevent incomplete type
-// compilation errors.
-class RK11D::PollStateMachine :
-    public variantFsm::Fsm<PollStateMachine, PollEvent, State>
-{
-public:
-    PollStateMachine (RK11D* context);
-
-    State transition (Off&&, SeekComplete);               // -> Off
-    State transition (Off&&, StartPoll);                  // -> Active
-    State transition (Active&&, SeekComplete);            // -> Processing
-    State transition (Active&&, StopPoll);                // -> Off
-    void entry (Processing);
-    State transition (Processing&&, SeekComplete);        // -> Processing
-    State transition (Processing&&, ProcessingFinished);  // -> Active
-    State transition (Processing&&, StopPoll);            // -> Off
-    
-    // Define the default transition for transitions not explicitly
-    // defined above. The default transition implies the event is ignored.
-    template <typename S, typename E>
-    State transition (S&& state, E)
-    {
-        return monostate {};
-    }
-
-    // As we make use of entry functions, we must handle all cases.
-    // The default entry action is an immediate return.
-    template <typename S> void entry (S&) {}
-
-private:
-    RK11D* context_;
-
-    void completeSeek ();
 };
 
 // Definition of the state machine for the function processor. The class has
