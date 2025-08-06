@@ -140,7 +140,6 @@ protected:
     }
 };
 
-#if 0
 TEST_F (RK11DSeekTest, seekToNonExistentCylinder)
 {
     // Try to seek to cylinder 203
@@ -206,7 +205,6 @@ TEST_F (RK11DSeekTest, seekGeneratesInterrupts)
     EXPECT_EQ (rk11dDevice->read (BusAddress {RKER}), 0);
     EXPECT_EQ (rk11dDevice->read (BusAddress {RKCS}) & (RKCS_ERR | RKCS_HE), 0);
 }
-#endif
 
 
 TEST_F (RK11DSeekTest, overlappedSeeks)
@@ -264,7 +262,6 @@ TEST_F (RK11DSeekTest, overlappedSeeks)
     EXPECT_EQ (rk11dDevice->read (BusAddress {RKCS}) & (RKCS_ERR | RKCS_HE), 0);
 }
 
-#if 0
 TEST_F (RK11DSeekTest, transferFunctionCancelsSeekInterrupts)
 {
     InterruptRequest ir;
@@ -298,5 +295,3 @@ TEST_F (RK11DSeekTest, transferFunctionCancelsSeekInterrupts)
     // No interrupts should be generated
     EXPECT_FALSE (bus.intrptReqAvailable ());
 }
-
-#endif
