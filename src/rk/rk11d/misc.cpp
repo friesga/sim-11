@@ -1,4 +1,5 @@
 #include "rk11d.h"
+#include "trace/trace.h"
 
 using std::function;
 
@@ -21,7 +22,10 @@ void RK11D::setControlReady ()
     // to facilitate the unit tests waiting for the interrupt. This might not
     // be actually correct behaviour.
     if (rkcs_.interruptOnDoneEnable)
+    {
+        trace.debug ("setControlReady - Request interrupt");
         bus_->requestInterrupt (TrapPriority::BR5, 5, 0, vector_);
+    }
 
     rkcs_.controlReady = 1;
 }

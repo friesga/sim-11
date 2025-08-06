@@ -23,26 +23,11 @@ using std::bind;
 void RK11D::functionProcessor ()
 try
 {
-    // Guard against controller register access from writeWord()
-    unique_lock<mutex> lock {controllerMutex_};
+    // The FunctionProcessorEvent variant needs an explicicit initialization
+    FunctionProcessorEvent event {RKTypes::Function {}};
 
-    while (running_)
-    {
-        // The controllerMutex_ now is locked. Process events till the queue
-        // is empty.
-        //
-        while (!functionQueue_.empty ())
-        {
-            // trace.rk11Function (get<RKTypes::Function> (functionQueue_.front ()));
-            functionProcessorStateMachine_->dispatch (functionQueue_.front ());
-            functionQueue_.pop ();
-        }
-
-        // Wait till we are signalled that a function is ready to be processed
-        // 
-        // wait() unlocks the controllerMutex_.
-        functionAvailable_.wait (lock);
-    }
+    while (functionQueue_.waitAndPop (event))
+        functionProcessorStateMachine_->dispatch (event);
 }
 catch (const std::exception& ex)
 {
@@ -92,17 +77,10 @@ RK11D::FunctionProcessorState RK11D::FunctionProcessorStateMachine::transition (
     {
         context_->interruptRequestGranted_.acquire ();
 
-        // trace.debug ("Requesting interrupt for drive " + std::to_string (report.driveId));
+        trace.debug ("Requesting interrupt for drive " + std::to_string (report.driveId));
 
         context_->bus_->requestInterrupt (TrapPriority::BR5, 5, 0, context_->vector_,
             bind (&RK11D::FunctionProcessorStateMachine::completeSeek, this, report));
-            /*
-            [&] {
-                completeSeek (report);
-                trace.debug ("RK11D::FunctionProcessorStateMachine - interruptRequestGranted_.release ()");
-                context_->interruptRequestGranted_.release ();
-            });
-            */
     }
     else
         completeSeek (report);
@@ -135,7 +113,7 @@ void RK11D::FunctionProcessorStateMachine::completeSeek (RKTypes::SeekCompleteRe
     context_->selectedDrive_ = report.driveId;
     context_->rker_.value |= report.rker.value;
 
-    //trace.debug ("Interrupt handled for drive " + std::to_string (report.driveId));
+    trace.debug ("Interrupt handled for drive " + std::to_string (report.driveId));
 
     context_->interruptRequestGranted_.release ();
 }
@@ -143,14 +121,16 @@ void RK11D::FunctionProcessorStateMachine::completeSeek (RKTypes::SeekCompleteRe
 void RK11D::finish ()
 {
     // Guard against controller register access from main thread
-    std::lock_guard<std::mutex> guard {controllerMutex_};
+    // std::lock_guard<std::mutex> guard {controllerMutex_};
 
-    running_ = false;
+    // running_ = false;
+    functionQueue_.close ();
+
+    interruptRequestGranted_.release ();
 
     // Wake up the function processor
     functionAvailable_.notify_one ();
 
     // Finish the harware poll function
     // pollEventQueue_.close ();
-    interruptRequestGranted_.release ();
 }

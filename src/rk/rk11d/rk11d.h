@@ -173,7 +173,7 @@ private:
     // Definition of the queue for forwarding issued functions to the function
     // processor. The queue is accessed from multiple threads and its consistency
     // has to be safe-guarded by the controllerMutex_.
-    queue<FunctionProcessorEvent> functionQueue_;
+    ThreadSafeQueue<FunctionProcessorEvent> functionQueue_;
 
     // Definition of a buffer for the data to be transferred to/from the
     // RK05 drive
