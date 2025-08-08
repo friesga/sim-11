@@ -96,7 +96,6 @@ private:
     u16 selectedDrive_ {0};
 
     // Action processor thread
-    bool running_ {false};
     thread functionProcessorThread_;
 
     // Safe guard against controller access from multiple threads
@@ -122,10 +121,6 @@ private:
     ThreadSafeQueue<CommandCompletion> commandCompletionQueue_;
 
     binary_semaphore interruptRequestGranted_ {1};
-
-    // Async seek completions are reported as SeekCompleteReport's and are
-    // processed by the hardware poll function.
-    ThreadSafeQueue <RKTypes::SeekCompleteReport> seekCompleteQueue_;
 
     // Definition of the function processor states
     struct WaitingForFunction {};

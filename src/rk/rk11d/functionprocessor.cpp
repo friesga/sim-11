@@ -106,10 +106,6 @@ RK11D::FunctionProcessorState RK11D::FunctionProcessorStateMachine::transition (
 // is locked and register access is allowed.
 void RK11D::FunctionProcessorStateMachine::completeSeek (RKTypes::SeekCompleteReport report)
 {
-    // RKTypes::SeekCompleteReport report =
-    //    context_->seekCompleteQueue_.first ();
-
-    // context_->seekCompleteQueue_.tryPop (report);
     context_->selectedDrive_ = report.driveId;
     context_->rker_.value |= report.rker.value;
 

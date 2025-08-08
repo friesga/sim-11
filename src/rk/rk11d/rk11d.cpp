@@ -37,7 +37,6 @@ RK11D::RK11D (Bus* bus, Window* window, shared_ptr<RK11DConfig> rk11dConfig)
     // Create the function processor state machine to be executed in the
     // function processor thread and start the thread.
     functionProcessorStateMachine_ = make_unique<FunctionProcessorStateMachine> (this);
-    running_ = true;
     functionProcessorThread_ = thread (&RK11D::functionProcessor, this);
 
     // Initialize the controller
