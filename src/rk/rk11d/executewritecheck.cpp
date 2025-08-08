@@ -26,7 +26,7 @@ using RKTypes::rk05Geometry_;
 //
 void RK11D::executeWriteCheck (RKTypes::Function function)
 {
-    CommandCompletion commandCompletion {};
+    RKTypes::CommandCompletion commandCompletion {};
     u16 driveId = function.diskAddress.driveSelect;
 
     if (!driveReady (function))

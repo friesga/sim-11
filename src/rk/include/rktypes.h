@@ -4,6 +4,7 @@
 #include "bitfield.h"
 #include "busaddress/busaddress.h"
 #include "concepts/geometry/geometry.h"
+#include "statuscodes.h"
 
 #include <variant>
 
@@ -169,6 +170,15 @@ namespace RKTypes
     {
         u16 driveId;
         RKER rker;
+    };
+
+    // The completed execution of a command is reported by the number of
+    // words transferred and the number of sectors processed.
+    struct CommandCompletion
+    {
+        StatusCode statusCode {};
+        size_t wordsTransferred {0};
+        size_t sectorsProcessed {0};
     };
 };
 

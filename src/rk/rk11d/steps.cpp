@@ -22,8 +22,8 @@ bool RK11D::driveReady (RKTypes::Function function)
 
 // Read the given numer of words from the given disk address into the
 // controller's buffer.
-void RK11D::driveRead (RKTypes::Function function,
-    CommandCompletion& commandCompletion)
+RKTypes::CommandCompletion RK11D::driveRead (RKTypes::Function function,
+    RKTypes::CommandCompletion& commandCompletion)
 {
     u16 driveId = function.diskAddress.driveSelect;
 
@@ -36,17 +36,17 @@ void RK11D::driveRead (RKTypes::Function function,
 
     u32 wordCount = absValueFromTwosComplement (function.wordCount);
 
-    rk05Drives_[driveId]->read (diskAddress,
+    return rk05Drives_[driveId]->read (diskAddress,
         wordCount, buffer_.get ());
 
     // Await the result of the execution of the read
-    commandCompletionQueue_.waitAndPop (commandCompletion);
+    // commandCompletionQueue_.waitAndPop (commandCompletion);
 }
 
 // Read the given number of headers from the given starting disk address
 // into the controller's buffer.
 void RK11D::driveReadHeader (RKTypes::Function function,
-    CommandCompletion& commandCompletion)
+    RKTypes::CommandCompletion& commandCompletion)
 {
     u16 driveId = function.diskAddress.driveSelect;
 
@@ -64,4 +64,34 @@ void RK11D::driveReadHeader (RKTypes::Function function,
 
     // Await the result of the execution of the read
     commandCompletionQueue_.waitAndPop (commandCompletion);
+}
+
+bool RK11D::driveSeek (RKTypes::Function function,
+    RKTypes::CommandCompletion& commandCompletion)
+{
+    if (function.diskAddress.cylinderAddress < RKTypes::CylindersPerDisk)
+    {
+        rk05Drives_[function.diskAddress.driveSelect]->seek (function.diskAddress.cylinderAddress);
+        waitTillSeekCompleted ();
+        return true;
+    }
+    else
+    {
+        rker_.nonexistentCylinder = 1;
+        rkcs_.error = 1;
+        rkcs_.hardError = 1;
+        return false;
+    }
+}
+
+void RK11D::waitTillSeekCompleted ()
+{
+    // The FunctionProcessorEvent variant needs an explicicit initialization
+    FunctionProcessorEvent event {RKTypes::Function {}};
+
+    // Await the result of the execution of the seek
+    functionQueue_.waitAndPop (event);
+
+    // ToDo: Ignore seek completion for other drives than the one for
+    // which the seek was initiated.
 }

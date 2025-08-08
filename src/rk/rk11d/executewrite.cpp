@@ -9,7 +9,7 @@ using RKTypes::rk05Geometry_;
 // ToDo: Pass Function as argument?
 void RK11D::executeWrite (RKTypes::Function function)
 {
-    CommandCompletion commandCompletion {};
+    RKTypes::CommandCompletion commandCompletion {};
     u16 driveId = function.diskAddress.driveSelect;
 
     if (!driveReady (function))
@@ -47,16 +47,16 @@ void RK11D::executeWrite (RKTypes::Function function)
 
     // Clear to end of block
 
+    if (!driveSeek (function, commandCompletion))
+        return;
+
     // Command RK05 to write data from buffer to disk
-    rk05Drives_[driveId]->write (
+    commandCompletion = rk05Drives_[driveId]->write (
         DiskAddress {function.diskAddress.sectorAddress,
         function.diskAddress.surface,
         function.diskAddress.cylinderAddress},
         absValueFromTwosComplement (function.wordCount),
         buffer_.get ());
-
-    // Await the result of the execution of the write
-    commandCompletionQueue_.waitAndPop (commandCompletion);
 
     // Adjust RKWC and - in case IBA isn't set - the RKBA
     // The bits of [the RKDB] register work as a general data handler in that
@@ -134,6 +134,6 @@ StatusCode RK11D::transferPatternToBuffer (BusAddress memoryAddress,
 void RK11D::dataTransferComplete (StatusCode statusCode, u16 wordsTransferred,
     u16 sectorsProcessed)
 {
-    commandCompletionQueue_.push (CommandCompletion {statusCode, wordsTransferred,
-        sectorsProcessed});
+    commandCompletionQueue_.push (RKTypes::CommandCompletion {statusCode,
+        wordsTransferred, sectorsProcessed});
 }

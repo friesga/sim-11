@@ -105,20 +105,11 @@ private:
     // been queued.
     condition_variable functionAvailable_;
 
-    // The completed execution of a command is reported by the number of
-    // words transferred and the number of sectors processed.
-    struct CommandCompletion
-    {
-        StatusCode statusCode {};
-        u16 wordsTransferred {0};
-        u16 sectorsProcessed {0};
-    };
-
     // The functions transferring data await the result of execution of the
     // command by the RK05 drive in this queue. One queue for all drives
     // suffices as the commands transferring data are synchronous and thus
     // commands are handled one at a time.
-    ThreadSafeQueue<CommandCompletion> commandCompletionQueue_;
+    ThreadSafeQueue<RKTypes::CommandCompletion> commandCompletionQueue_;
 
     binary_semaphore interruptRequestGranted_ {1};
 
@@ -148,10 +139,13 @@ private:
 
     // Definition of the RK11 function steps
     bool driveReady (RKTypes::Function function);
-    void driveRead (RKTypes::Function function,
-        CommandCompletion& commandCompletion);
+    RKTypes::CommandCompletion driveRead (RKTypes::Function function,
+        RKTypes::CommandCompletion& commandCompletion);
     void driveReadHeader (RKTypes::Function function,
-        CommandCompletion& commandCompletion);
+        RKTypes::CommandCompletion& commandCompletion);
+    bool driveSeek (RKTypes::Function function,
+        RKTypes::CommandCompletion& commandCompletion);
+    void waitTillSeekCompleted ();
 
     void functionProcessor ();
     void processFunction (RKTypes::Function function);

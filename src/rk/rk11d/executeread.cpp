@@ -8,7 +8,7 @@ using RKTypes::rk05Geometry_;
 
 void RK11D::executeRead (RKTypes::Function function)
 { 
-    CommandCompletion commandCompletion {};
+    RKTypes::CommandCompletion commandCompletion {};
     u16 driveId = function.diskAddress.driveSelect;
 
     if (!driveReady (function))
@@ -23,7 +23,12 @@ void RK11D::executeRead (RKTypes::Function function)
     if (function.rkcs.format)
         driveReadHeader (function, commandCompletion);
     else
-        driveRead (function, commandCompletion);
+    {
+        if (!driveSeek (function, commandCompletion))
+            return;
+
+        commandCompletion = driveRead (function, commandCompletion);
+    }
 
     // ToDo: Clear the part of the buffer not filled by the read
 
