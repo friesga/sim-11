@@ -70,7 +70,8 @@ void RK05::seek (u16 cylinderAddress)
 // in the disk file) but is simply extracted from the disk address and stored
 // in the correct format.
 //
-void RK05::readHeader (DiskAddress diskAddress, u16 wordCount, u16* data)
+RKTypes::CommandCompletion RK05::readHeader (DiskAddress diskAddress,
+    u16 wordCount, u16* data)
 {
     size_t wordsRead = 0;
     RKDA rkda {};
@@ -84,8 +85,8 @@ void RK05::readHeader (DiskAddress diskAddress, u16 wordCount, u16* data)
 
     // One word per sector is read, so the number of sectors equals the
     // number of words read.
-    controller_->dataTransferComplete (StatusCode::Success, wordsRead,
-        wordsRead);
+    return RKTypes::CommandCompletion {StatusCode::Success, wordsRead,
+        wordsRead};
 }
 
 u16 RK05::cylinderFromLBN (u32 lbn)

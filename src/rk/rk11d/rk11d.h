@@ -141,7 +141,7 @@ private:
     bool driveReady (RKTypes::Function function);
     RKTypes::CommandCompletion driveRead (RKTypes::Function function,
         RKTypes::CommandCompletion& commandCompletion);
-    void driveReadHeader (RKTypes::Function function,
+    RKTypes::CommandCompletion driveReadHeader (RKTypes::Function function,
         RKTypes::CommandCompletion& commandCompletion);
     bool driveSeek (RKTypes::Function function,
         RKTypes::CommandCompletion& commandCompletion);

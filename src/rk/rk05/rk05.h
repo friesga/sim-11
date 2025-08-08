@@ -45,7 +45,8 @@ public:
         u16 wordCount, u16* data);
     RKTypes::CommandCompletion read (DiskAddress diskAddress,
         u16 wordCount, u16* data);
-    void readHeader (DiskAddress diskAddress, u16 wordCount, u16* data);
+    RKTypes::CommandCompletion readHeader (DiskAddress diskAddress,
+        u16 wordCount, u16* data);
     void clearDriveReady ();
     void writeLock ();
 

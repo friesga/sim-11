@@ -20,15 +20,14 @@ void RK11D::executeRead (RKTypes::Function function)
 
     // ToDo: Check for sector overflow
 
-    if (function.rkcs.format)
-        driveReadHeader (function, commandCompletion);
-    else
-    {
-        if (!driveSeek (function, commandCompletion))
-            return;
+    if (!driveSeek (function, commandCompletion))
+        return;
 
+    if (function.rkcs.format)
+        commandCompletion = driveReadHeader (function,
+            commandCompletion);
+    else
         commandCompletion = driveRead (function, commandCompletion);
-    }
 
     // ToDo: Clear the part of the buffer not filled by the read
 
