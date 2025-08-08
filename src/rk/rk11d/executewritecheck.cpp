@@ -38,16 +38,16 @@ void RK11D::executeWriteCheck (RKTypes::Function function)
 
     // Check for sector overflow
 
+    if (!driveSeek (function, commandCompletion))
+        return;
+
     // Command RK05 to read data from disk to buffer
-    rk05Drives_[driveId]->read (
+    commandCompletion = rk05Drives_[driveId]->read (
         DiskAddress {function.diskAddress.sectorAddress,
         function.diskAddress.surface,
         function.diskAddress.cylinderAddress},
         absValueFromTwosComplement (function.wordCount),
         buffer_.get ());
-
-    // Await the result of the execution of the read
-    commandCompletionQueue_.waitAndPop (commandCompletion);
 
     if (commandCompletion.wordsTransferred <
             absValueFromTwosComplement (function.wordCount))
