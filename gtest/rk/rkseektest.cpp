@@ -140,6 +140,7 @@ protected:
     }
 };
 
+
 TEST_F (RK11DSeekTest, seekToNonExistentCylinder)
 {
     // Try to seek to cylinder 203
@@ -205,7 +206,6 @@ TEST_F (RK11DSeekTest, seekGeneratesInterrupts)
     EXPECT_EQ (rk11dDevice->read (BusAddress {RKER}), 0);
     EXPECT_EQ (rk11dDevice->read (BusAddress {RKCS}) & (RKCS_ERR | RKCS_HE), 0);
 }
-
 
 TEST_F (RK11DSeekTest, overlappedSeeks)
 {
