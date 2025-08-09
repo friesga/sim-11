@@ -10,6 +10,7 @@ using std::cerr;
 using std::visit;
 using std::get;
 using std::bind;
+using std::monostate;
 
 // The RK11-D functionality is partly synchronous and partly asynchronous
 // in nature; data transfer functions are handled synchronously and Seek and
@@ -39,20 +40,22 @@ RK11D::FunctionProcessorStateMachine::FunctionProcessorStateMachine (RK11D* cont
     context_ {context}
 {}
 
+// No actions to be executed at the entry of the WaitingForFunction state.
+// The function is defined to satisfy the compiler.
+void RK11D::FunctionProcessorStateMachine::entry (WaitingForFunction)
+{}
+
 // As its name suggests in the WaitingForFunction state, the function processor
-// waits for a function to be processed. On the reception of a function, that
-// function is executed, followed by a transition to either the current state,
-// or - in case of a Seek function - to the Polling state.
+// waits for a function to be processed. On the reception of a function a 
+// transition is performed to either the ProcessingFunction or Polling state.
 //
-RK11D::FunctionProcessorState RK11D::FunctionProcessorStateMachine::transition (WaitingForFunction&& currentState,
+RK11D::FunctionProcessorState RK11D::FunctionProcessorStateMachine::transition (WaitingForFunction&&,
     RKTypes::Function function)
 {
-    context_->processFunction (function);
-    
     if (function.rkcs.operation == RKTypes::Seek)
-        return Polling {};
-
-    return move (currentState);
+        return Polling {function};
+    else
+        return ProcessingFunction {function};
 }
 
 // In the WaitingForFunction states SeekCompleteReports are ignored
@@ -62,6 +65,34 @@ RK11D::FunctionProcessorState RK11D::FunctionProcessorStateMachine::transition (
     return move (currentState);
 }
 
+// At entry of the ProcessingFunction state the function defined in the
+// transition to this state is processed. The state then waits for either
+// another non-seek function (in which case the entry function is executed
+// again) or a seek function. In that case a transition to the Polling state
+// is taken. SeekCompleteEvents are ignored and the state machine transitions
+// to the WaitingForFunction state.
+//
+void  RK11D::FunctionProcessorStateMachine::entry (ProcessingFunction current)
+{
+    context_->processFunction (current.function);
+}
+
+RK11D::FunctionProcessorState RK11D::FunctionProcessorStateMachine::transition (ProcessingFunction&&,
+    RKTypes::Function function)
+{
+    if (function.rkcs.operation == RKTypes::Seek)
+        return Polling {function};
+    else
+        return ProcessingFunction {function};
+}
+
+RK11D::FunctionProcessorState RK11D::FunctionProcessorStateMachine::transition (ProcessingFunction&&,
+    RKTypes::SeekCompleteReport)
+{
+    return WaitingForFunction {};
+}
+
+
 // This state corresponds to the RK11-D's hardware polling functionality.
 // In this state the function processor waits for seekCompleteReport's from
 // the drives for which a seek is oustanding. In this state additional Seek
@@ -70,7 +101,12 @@ RK11D::FunctionProcessorState RK11D::FunctionProcessorStateMachine::transition (
 // For every seek completion an interrupt is requested. When the interrupt is
 // granted the next seek completion (if available) can be requested.
 //
-RK11D::FunctionProcessorState RK11D::FunctionProcessorStateMachine::transition (Polling&& currentState,
+void RK11D::FunctionProcessorStateMachine::entry (Polling current)
+{
+    context_->processFunction (current.function);
+}
+
+RK11D::FunctionProcessorState RK11D::FunctionProcessorStateMachine::transition (Polling&&,
     RKTypes::SeekCompleteReport report)
 {
     if (context_->rkcs_.interruptOnDoneEnable)
@@ -85,19 +121,16 @@ RK11D::FunctionProcessorState RK11D::FunctionProcessorStateMachine::transition (
     else
         completeSeek (report);
 
-    return move (currentState);
+    return monostate {};
 }
 
-RK11D::FunctionProcessorState RK11D::FunctionProcessorStateMachine::transition (Polling&& currentState,
+RK11D::FunctionProcessorState RK11D::FunctionProcessorStateMachine::transition (Polling&&,
     RKTypes::Function function)
 {
     if (function.rkcs.operation == RKTypes::Seek)
-    {
-        context_->processFunction (function);
-        return move (currentState);
-    }
-
-    return WaitingForFunction {};
+        return Polling {function};
+    else
+        return ProcessingFunction {function};
 }
 
 

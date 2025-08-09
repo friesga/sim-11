@@ -115,9 +115,11 @@ private:
 
     // Definition of the function processor states
     struct WaitingForFunction {};
-    struct Polling {};
+    struct ProcessingFunction { RKTypes::Function function; };
+    struct Polling { RKTypes::Function function; };
 
-    using FunctionProcessorState = variant<WaitingForFunction, Polling>;
+    using FunctionProcessorState = variant<WaitingForFunction,
+        ProcessingFunction, Polling, monostate>;
 
     // Definition of the function processor events
     using FunctionProcessorEvent = variant<RKTypes::Function,
@@ -191,14 +193,35 @@ class RK11D::FunctionProcessorStateMachine :
 public:
     FunctionProcessorStateMachine (RK11D* context);
 
+    void entry (WaitingForFunction);
     FunctionProcessorState transition (WaitingForFunction&&,
-        RKTypes::Function);                                 // -> WaitingForFunction
+        RKTypes::Function);                                 // -> ProcessingFunction
     FunctionProcessorState transition (WaitingForFunction&&,
-        RKTypes::SeekCompleteReport);                       // -> WaitingForFunction
+        RKTypes::SeekCompleteReport);
+    
+    void entry (ProcessingFunction);
+    FunctionProcessorState transition (ProcessingFunction&&,
+        RKTypes::Function);                                 // -> ProcessingFunction/Polling
+    FunctionProcessorState transition (ProcessingFunction&&,
+        RKTypes::SeekCompleteReport);
+    
+    void entry (Polling);
     FunctionProcessorState transition (Polling&&,
         RKTypes::SeekCompleteReport);                       // -> Polling
     FunctionProcessorState transition (Polling&&,
-        RKTypes::Function);                                 // WaitingForFunction
+        RKTypes::Function);                                 // -> Polling/ProcessingFunction
+
+    // Define the default transition for transitions not explicitly
+    // defined above. The default transition implies the event is ignored.
+    template <typename S, typename E>
+    State transition (S&& state, E)
+    {
+        return monostate {};
+    }
+
+    // As we make use of entry functions, we must handle all cases.
+    // The default entry action is an immediate return.
+    template <typename S> void entry (S&) {}
 
 private:
     RK11D* context_;
