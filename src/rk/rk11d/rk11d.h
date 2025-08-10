@@ -118,10 +118,10 @@ private:
     using FunctionProcessorEvent = variant<RKTypes::Function,
         RKTypes::SeekCompleteReport>;
 
-    // Use the PIMPL idiom to be able to define the FunctionProcessorStateMachine outside
+    // Use the PIMPL idiom to be able to define the StateMachine outside
     // of the RK05 class
-    class FunctionProcessorStateMachine;
-    unique_ptr<FunctionProcessorStateMachine> functionProcessorStateMachine_;
+    class StateMachine;
+    unique_ptr<StateMachine> functionProcessorStateMachine_;
 
     // Definition of the queue for forwarding issued functions to the function
     // processor. The queue is accessed from multiple threads and its consistency
@@ -179,12 +179,12 @@ private:
 // Definition of the state machine for the function processor. The class has
 // to be defined in the same compilation unit to prevent incomplete type
 // compilation errors.
-class RK11D::FunctionProcessorStateMachine :
-    public variantFsm::Fsm<FunctionProcessorStateMachine,
+class RK11D::StateMachine :
+    public variantFsm::Fsm<StateMachine,
         FunctionProcessorEvent, FunctionProcessorState>
 {
 public:
-    FunctionProcessorStateMachine (RK11D* context);
+    StateMachine (RK11D* context);
 
     void entry (WaitingForFunction);
     FunctionProcessorState transition (WaitingForFunction&&,

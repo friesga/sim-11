@@ -35,21 +35,21 @@ catch (const std::exception& ex)
     cerr << "RK11D::functionProcessor exception: " << ex.what () << '\n';
 }
 
-RK11D::FunctionProcessorStateMachine::FunctionProcessorStateMachine (RK11D* context)
+RK11D::StateMachine::StateMachine (RK11D* context)
     :
     context_ {context}
 {}
 
 // No actions to be executed at the entry of the WaitingForFunction state.
 // The function is defined to satisfy the compiler.
-void RK11D::FunctionProcessorStateMachine::entry (WaitingForFunction)
+void RK11D::StateMachine::entry (WaitingForFunction)
 {}
 
 // As its name suggests in the WaitingForFunction state, the function processor
 // waits for a function to be processed. On the reception of a function a 
 // transition is performed to either the ProcessingFunction or Polling state.
 //
-RK11D::FunctionProcessorState RK11D::FunctionProcessorStateMachine::transition (WaitingForFunction&&,
+RK11D::FunctionProcessorState RK11D::StateMachine::transition (WaitingForFunction&&,
     RKTypes::Function function)
 {
     if (function.rkcs.operation == RKTypes::Seek)
@@ -59,7 +59,7 @@ RK11D::FunctionProcessorState RK11D::FunctionProcessorStateMachine::transition (
 }
 
 // In the WaitingForFunction states SeekCompleteReports are ignored
-RK11D::FunctionProcessorState RK11D::FunctionProcessorStateMachine::transition (WaitingForFunction&& currentState,
+RK11D::FunctionProcessorState RK11D::StateMachine::transition (WaitingForFunction&& currentState,
     RKTypes::SeekCompleteReport)
 {
     return move (currentState);
@@ -72,12 +72,12 @@ RK11D::FunctionProcessorState RK11D::FunctionProcessorStateMachine::transition (
 // is taken. SeekCompleteEvents are ignored and the state machine transitions
 // to the WaitingForFunction state.
 //
-void  RK11D::FunctionProcessorStateMachine::entry (ProcessingFunction current)
+void  RK11D::StateMachine::entry (ProcessingFunction current)
 {
     context_->processFunction (current.function);
 }
 
-RK11D::FunctionProcessorState RK11D::FunctionProcessorStateMachine::transition (ProcessingFunction&&,
+RK11D::FunctionProcessorState RK11D::StateMachine::transition (ProcessingFunction&&,
     RKTypes::Function function)
 {
     if (function.rkcs.operation == RKTypes::Seek)
@@ -86,7 +86,7 @@ RK11D::FunctionProcessorState RK11D::FunctionProcessorStateMachine::transition (
         return ProcessingFunction {function};
 }
 
-RK11D::FunctionProcessorState RK11D::FunctionProcessorStateMachine::transition (ProcessingFunction&&,
+RK11D::FunctionProcessorState RK11D::StateMachine::transition (ProcessingFunction&&,
     RKTypes::SeekCompleteReport)
 {
     return WaitingForFunction {};
@@ -101,14 +101,14 @@ RK11D::FunctionProcessorState RK11D::FunctionProcessorStateMachine::transition (
 // For every seek completion an interrupt is requested. When the interrupt is
 // granted the next seek completion (if available) can be requested.
 //
-void RK11D::FunctionProcessorStateMachine::entry (Polling current)
+void RK11D::StateMachine::entry (Polling current)
 {
     context_->processFunction (current.function);
 }
 
 // By returning a monostate object this transition is internal which means
 // the state's entry action is not executed.
-RK11D::FunctionProcessorState RK11D::FunctionProcessorStateMachine::transition (Polling&&,
+RK11D::FunctionProcessorState RK11D::StateMachine::transition (Polling&&,
     RKTypes::SeekCompleteReport report)
 {
     if (context_->rkcs_.interruptOnDoneEnable)
@@ -122,7 +122,7 @@ RK11D::FunctionProcessorState RK11D::FunctionProcessorStateMachine::transition (
         trace.debug ("Requesting interrupt for drive " + std::to_string (report.driveId));
 
         context_->bus_->requestInterrupt (TrapPriority::BR5, 5, 0, context_->vector_,
-            bind (&RK11D::FunctionProcessorStateMachine::completeSeek, this, report));
+            bind (&RK11D::StateMachine::completeSeek, this, report));
     }
     else
         completeSeek (report);
@@ -130,7 +130,7 @@ RK11D::FunctionProcessorState RK11D::FunctionProcessorStateMachine::transition (
     return monostate {};
 }
 
-RK11D::FunctionProcessorState RK11D::FunctionProcessorStateMachine::transition (Polling&&,
+RK11D::FunctionProcessorState RK11D::StateMachine::transition (Polling&&,
     RKTypes::Function function)
 {
     if (function.rkcs.operation == RKTypes::Seek)
@@ -141,9 +141,9 @@ RK11D::FunctionProcessorState RK11D::FunctionProcessorStateMachine::transition (
 
 
 // This function is executed in the context of a transition of the
-// FunctionProcessorStateMachine which means that the controller mutex
+// StateMachine which means that the controller mutex
 // is locked and register access is allowed.
-void RK11D::FunctionProcessorStateMachine::completeSeek (RKTypes::SeekCompleteReport report)
+void RK11D::StateMachine::completeSeek (RKTypes::SeekCompleteReport report)
 {
     context_->selectedDrive_ = report.driveId;
     context_->rker_.value |= report.rker.value;
