@@ -106,11 +106,17 @@ void RK11D::FunctionProcessorStateMachine::entry (Polling current)
     context_->processFunction (current.function);
 }
 
+// By returning a monostate object this transition is internal which means
+// the state's entry action is not executed.
 RK11D::FunctionProcessorState RK11D::FunctionProcessorStateMachine::transition (Polling&&,
     RKTypes::SeekCompleteReport report)
 {
     if (context_->rkcs_.interruptOnDoneEnable)
     {
+        // Wait for the previous interrupt request to be granted. As the
+        // semaphore is initialized with the value one, the first aquire
+        // will succeed. A subsequent aquire call will block until a release
+        // of the semaphore (in completeSeek()) has been executed.
         context_->interruptRequestGranted_.acquire ();
 
         trace.debug ("Requesting interrupt for drive " + std::to_string (report.driveId));
