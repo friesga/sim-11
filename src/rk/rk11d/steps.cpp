@@ -38,9 +38,6 @@ RKTypes::CommandCompletion RK11D::driveRead (RKTypes::Function function,
 
     return rk05Drives_[driveId]->read (diskAddress,
         wordCount, buffer_.get ());
-
-    // Await the result of the execution of the read
-    // commandCompletionQueue_.waitAndPop (commandCompletion);
 }
 
 // Read the given number of headers from the given starting disk address

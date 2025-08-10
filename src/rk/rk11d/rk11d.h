@@ -83,7 +83,6 @@ public:
 
     // Functions required by the DriveInterface interface
     void reportSeekComplete (RKTypes::SeekCompleteReport report);
-    void dataTransferComplete (StatusCode statusCode, u16 wordTransferred, u16 sectorsProcessed);
 
 private:
     // Definition of the controller's base address and vector
@@ -104,12 +103,6 @@ private:
     // Condition variable to wake up the function processor when a function has
     // been queued.
     condition_variable functionAvailable_;
-
-    // The functions transferring data await the result of execution of the
-    // command by the RK05 drive in this queue. One queue for all drives
-    // suffices as the commands transferring data are synchronous and thus
-    // commands are handled one at a time.
-    ThreadSafeQueue<RKTypes::CommandCompletion> commandCompletionQueue_;
 
     binary_semaphore interruptRequestGranted_ {1};
 

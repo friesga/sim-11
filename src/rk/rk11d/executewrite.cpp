@@ -130,10 +130,3 @@ StatusCode RK11D::transferPatternToBuffer (BusAddress memoryAddress,
 
     return StatusCode::Success;
 }
-
-void RK11D::dataTransferComplete (StatusCode statusCode, u16 wordsTransferred,
-    u16 sectorsProcessed)
-{
-    commandCompletionQueue_.push (RKTypes::CommandCompletion {statusCode,
-        wordsTransferred, sectorsProcessed});
-}

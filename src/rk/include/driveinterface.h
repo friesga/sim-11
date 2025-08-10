@@ -10,8 +10,6 @@ class DriveInterface
 {
 public:
     virtual void reportSeekComplete (RKTypes::SeekCompleteReport report) = 0;
-    virtual void dataTransferComplete (StatusCode statusCode,
-        u16 wordsTransferred, u16 sectorsProcessed) = 0;
 };
 
 
