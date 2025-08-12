@@ -142,6 +142,8 @@ private:
     bool driveSeek (RKTypes::Function function,
         RKTypes::CommandCompletion& commandCompletion);
     void waitTillSeekCompleted (u16 driveId);
+    bool updateRegisters (RKTypes::Function function,
+        RKTypes::CommandCompletion& commandCompletion);
 
     void functionProcessor ();
     void processFunction (RKTypes::Function function);

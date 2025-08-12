@@ -58,42 +58,8 @@ void RK11D::executeWrite (RKTypes::Function function)
         absValueFromTwosComplement (function.wordCount),
         buffer_.get ());
 
-    // Adjust RKWC and - in case IBA isn't set - the RKBA
-    // The bits of [the RKDB] register work as a general data handler in that
-    // all information transferred between the control[ler] and the disk drive
-    // must pass through this register. (EK-RK11D-MM-002, p. 3-8). 
-    // 
-    // After 1 sector read RKDB contains for RK11C the checksum for that sector,
-    // for RK11D the last word transferred to memory. (CZRKKF0, line 3074)
-    //
-    rkwc_ += commandCompletion.wordsTransferred;
-    rkdb_ = buffer_[commandCompletion.wordsTransferred - 1];
 
-    if (!function.rkcs.inhibitIncrementingRKBA)
-    {
-        busAddressToRegs (function.busAddress +
-            commandCompletion.wordsTransferred * 2);
-    }
-
-    // An increment of the RKDA might overflow the logical block number.
-    // 
-    // RKER OVR indicates that, during a Read, Write, Read Check, or Write
-    // Check function, operations on sector 013, surface 1 of cylinder address
-    // 0312 were finished, and the RKWC has not yet overflowed.This is
-    // essentially an attempt to overflow out of a disk drive.
-    // (EK-RK11D-MM-002, p. 3-4)
-    try
-    {
-        rkda_ += commandCompletion.sectorsProcessed;
-    }
-    catch (out_of_range)
-    {
-        rkda_ = rk05Geometry_.lbnTodiskAddress (rk05Geometry_.diskCapacity () - 1);
-
-        if (commandCompletion.wordsTransferred <
-            absValueFromTwosComplement (function.wordCount))
-            setError ([&] {rker_.overrun = 1; });
-    }
+    updateRegisters (function, commandCompletion);
 }
 
 // The word count in the RKWC register is given as a two's complement
