@@ -39,11 +39,9 @@ set (TRACEREADER_SRCS
     ${CMAKE_SOURCE_DIR}/src/trace/mmurecord/operator.cpp
     ${CMAKE_SOURCE_DIR}/src/trace/debugrecord/extractionoperator.cpp
     ${CMAKE_SOURCE_DIR}/src/trace/debugrecord/ostreaminsertoperator.cpp
-    ${CMAKE_SOURCE_DIR}/src/trace/ms11precord/operator.cpp
+    ${CMAKE_SOURCE_DIR}/src/trace/ms11precord/operator.cpp)
 
-    ${CMAKE_SOURCE_DIR}/src/concepts/geometry/geometry.cpp
-    ${CMAKE_SOURCE_DIR}/src/concepts/geometry/lbn.cpp
-    ${CMAKE_SOURCE_DIR}/src/concepts/geometry/lbntodiskaddress.cpp)
+    add_subdirectory (${CMAKE_SOURCE_DIR}/src/concepts src/concepts)
 
 target_sources (sim-11-test PRIVATE ${TRACEREADER_SRCS})
 target_sources (tracereader PRIVATE main.cpp ${TRACEREADER_SRCS})

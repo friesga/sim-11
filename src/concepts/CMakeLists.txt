@@ -5,3 +5,4 @@ set (CONCEPTS_SRCS
 
 target_sources (${TARGET} PRIVATE ${CONCEPTS_SRCS})
 target_sources (sim-11-test PRIVATE ${CONCEPTS_SRCS})
+target_sources (tracereader PRIVATE ${CONCEPTS_SRCS})
