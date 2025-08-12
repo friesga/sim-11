@@ -50,6 +50,10 @@ void processTraceRecord(Magic magic, TracefileInStream &tracefile)
             readAndPrintRecord<RK11FunctionRecord> (tracefile);
             break;
 
+        case Magic::RK1E:
+            readAndPrintRecord<RK11EventRecord> (tracefile);
+            break;
+
         case Magic::RK1R:
             readAndPrintRecord<RK11RegistersRecord> (tracefile);
             break;

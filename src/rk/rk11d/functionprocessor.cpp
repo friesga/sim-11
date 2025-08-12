@@ -28,7 +28,10 @@ try
     Event event {RKTypes::Function {}};
 
     while (functionQueue_.waitAndPop (event))
+    {
+        trace.rk11Event (functionProcessorStateMachine_->currentState (), event);
         functionProcessorStateMachine_->dispatch (event);
+    }
 }
 catch (const std::exception& ex)
 {
@@ -119,8 +122,6 @@ RK11D::State RK11D::StateMachine::transition (Polling&&,
         // of the semaphore (in completeSeek()) has been executed.
         context_->interruptRequestGranted_.acquire ();
 
-        trace.debug ("Requesting interrupt for drive " + std::to_string (report.driveId));
-
         context_->bus_->requestInterrupt (TrapPriority::BR5, 5, 0, context_->vector_,
             bind (&RK11D::StateMachine::completeSeek, this, report));
     }
@@ -147,8 +148,6 @@ void RK11D::StateMachine::completeSeek (RKTypes::SeekCompleteReport report)
 {
     context_->selectedDrive_ = report.driveId;
     context_->rker_.value |= report.rker.value;
-
-    trace.debug ("Interrupt handled for drive " + std::to_string (report.driveId));
 
     context_->interruptRequestGranted_.release ();
 }

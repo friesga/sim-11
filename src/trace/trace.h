@@ -11,6 +11,7 @@
 #include "traprecord/traprecord.h"
 #include "irqrecord/irqrecord.h"
 #include "rk/include/rktypes.h"
+#include "rk11eventrecord/rk11eventrecord.h"
 #include "rk11functionrecord/rk11functionrecord.h"
 #include "rk11registersrecord/rk11registersrecord.h"
 #include "rxv21diskrecord/rxv21diskrecord.h"
@@ -88,6 +89,7 @@ public:
     void rxv21Disk (RXV21DiskCmd type, int drive, int density, u16 rx2sa, u16 rx2ta);
     void rxv21Error (RXV21ErrorRecordType type, u16 info);
     void rk11Function (RKTypes::Function function);
+    void rk11Event (RK11D::State state, RK11D::Event event);
     void rk11Registers (BusAddress busAddress, RKTypes::RKER rker,
         RKTypes::RKDS rkds, RKTypes::RKCS rkcs, u16 rkwc, u16 rkba,
         RKTypes::RKDA rkda, u16 rkdb);

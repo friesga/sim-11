@@ -5,8 +5,6 @@
 //
 void RK11D::reportSeekComplete (RKTypes::SeekCompleteReport report)
 {
-    trace.debug ("Seek completed for drive " + std::to_string (report.driveId));
-
     functionQueue_.push (report);
     functionAvailable_.notify_one ();
 }

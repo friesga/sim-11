@@ -84,6 +84,19 @@ public:
     // Functions required by the DriveInterface interface
     void reportSeekComplete (RKTypes::SeekCompleteReport report);
 
+    // The function processor states and events are defined public to be
+    // able to use them in the trace functions.
+    struct WaitingForFunction {};
+    struct ProcessingFunction { RKTypes::Function function; };
+    struct Polling { RKTypes::Function function; };
+
+    using State = variant<WaitingForFunction,
+        ProcessingFunction, Polling, monostate>;
+
+    // Definition of the function processor events
+    using Event = variant<RKTypes::Function,
+        RKTypes::SeekCompleteReport>;
+
 private:
     // Definition of the controller's base address and vector
     u16 baseAddress_ {0};
@@ -105,18 +118,6 @@ private:
     condition_variable functionAvailable_;
 
     binary_semaphore interruptRequestGranted_ {1};
-
-    // Definition of the function processor states
-    struct WaitingForFunction {};
-    struct ProcessingFunction { RKTypes::Function function; };
-    struct Polling { RKTypes::Function function; };
-
-    using State = variant<WaitingForFunction,
-        ProcessingFunction, Polling, monostate>;
-
-    // Definition of the function processor events
-    using Event = variant<RKTypes::Function,
-        RKTypes::SeekCompleteReport>;
 
     // Use the PIMPL idiom to be able to define the StateMachine outside
     // of the RK05 class

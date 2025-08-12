@@ -12,7 +12,8 @@
 //!   exit(), in accordance with UML terminology,
 //! - Added distinction between internal and external transitions,
 //! - Added reset() to reset state machine to the initial state,
-//! - Added inState() to check the current state of the state machine.
+//! - Added inState() to check the current state of the state machine,
+//! - Added currentState() to be able to trace state machines.
 //!
 //! The FSM may be composed of some persistent member variables (shared across
 //! all states) and contextual state (accessible only to one state).
@@ -273,6 +274,11 @@ namespace variantFsm
         bool inState (StateVariant state) const
         {
             return fsmState.index() == state.index();
+        }
+
+        StateVariant currentState () const
+        {
+            return fsmState;
         }
 
         void reset ()

@@ -89,6 +89,12 @@ void Trace::rk11Function (RKTypes::Function function)
         tracefileOut_ << TraceRecord<RK11FunctionRecord> (function);
 }
 
+void Trace::rk11Event (RK11D::State state, RK11D::Event event)
+{
+    if (traceEnabled && (flags_ & Trace::Category::RK11))
+        tracefileOut_ << TraceRecord<RK11EventRecord> (state, event);
+}
+
 void Trace::rk11Registers (BusAddress busAddress, RKTypes::RKER rker,
     RKTypes::RKDS rkds, RKTypes::RKCS rkcs, u16 rkwc, u16 rkba,
     RKTypes::RKDA rkda, u16 rkdb)

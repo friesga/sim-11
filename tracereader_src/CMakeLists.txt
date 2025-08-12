@@ -20,8 +20,11 @@ set (TRACEREADER_SRCS
     ${CMAKE_SOURCE_DIR}/src/trace/traprecord/operator.cpp
     ${CMAKE_SOURCE_DIR}/src/trace/irqrecord/operator.cpp
     ${CMAKE_SOURCE_DIR}/src/trace/rk11functionrecord/operator.cpp
-    ${CMAKE_SOURCE_DIR}/src/trace/rk11registersrecord/operator.cpp
     ${CMAKE_SOURCE_DIR}/src/trace/rk11functionrecord/getfunctionname.cpp
+    ${CMAKE_SOURCE_DIR}/src/trace/rk11registersrecord/operator.cpp
+    ${CMAKE_SOURCE_DIR}/src/trace/rk11eventrecord/operator.cpp
+    ${CMAKE_SOURCE_DIR}/src/trace/rk11eventrecord/getfunctionname.cpp
+    ${CMAKE_SOURCE_DIR}/src/trace/rk11eventrecord/getstatename.cpp
     ${CMAKE_SOURCE_DIR}/src/trace/rxv21diskrecord/operator.cpp 
     ${CMAKE_SOURCE_DIR}/src/trace/rxv21commandrecord/operator.cpp
     ${CMAKE_SOURCE_DIR}/src/trace/rxv21dmarecord/operator.cpp 
@@ -36,7 +39,11 @@ set (TRACEREADER_SRCS
     ${CMAKE_SOURCE_DIR}/src/trace/mmurecord/operator.cpp
     ${CMAKE_SOURCE_DIR}/src/trace/debugrecord/extractionoperator.cpp
     ${CMAKE_SOURCE_DIR}/src/trace/debugrecord/ostreaminsertoperator.cpp
-    ${CMAKE_SOURCE_DIR}/src/trace/ms11precord/operator.cpp)
+    ${CMAKE_SOURCE_DIR}/src/trace/ms11precord/operator.cpp
+
+    ${CMAKE_SOURCE_DIR}/src/concepts/geometry/geometry.cpp
+    ${CMAKE_SOURCE_DIR}/src/concepts/geometry/lbn.cpp
+    ${CMAKE_SOURCE_DIR}/src/concepts/geometry/lbntodiskaddress.cpp)
 
 target_sources (sim-11-test PRIVATE ${TRACEREADER_SRCS})
 target_sources (tracereader PRIVATE main.cpp ${TRACEREADER_SRCS})
