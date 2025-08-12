@@ -122,7 +122,7 @@ private:
     // Use the PIMPL idiom to be able to define the StateMachine outside
     // of the RK05 class
     class StateMachine;
-    unique_ptr<StateMachine> functionProcessorStateMachine_;
+    unique_ptr<StateMachine> stateMachine_;
 
     // Definition of the queue for forwarding issued functions to the function
     // processor. The queue is accessed from multiple threads and its consistency

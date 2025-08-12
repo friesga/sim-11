@@ -29,8 +29,8 @@ try
 
     while (functionQueue_.waitAndPop (event))
     {
-        trace.rk11Event (functionProcessorStateMachine_->currentState (), event);
-        functionProcessorStateMachine_->dispatch (event);
+        trace.rk11Event (stateMachine_->currentState (), event);
+        stateMachine_->dispatch (event);
     }
 }
 catch (const std::exception& ex)
