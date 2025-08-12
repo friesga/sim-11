@@ -140,7 +140,7 @@ private:
         RKTypes::CommandCompletion& commandCompletion);
     bool driveSeek (RKTypes::Function function,
         RKTypes::CommandCompletion& commandCompletion);
-    void waitTillSeekCompleted ();
+    void waitTillSeekCompleted (u16 driveId);
 
     void functionProcessor ();
     void processFunction (RKTypes::Function function);

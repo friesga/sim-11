@@ -66,7 +66,7 @@ bool RK11D::driveSeek (RKTypes::Function function,
     if (function.diskAddress.cylinderAddress < RKTypes::CylindersPerDisk)
     {
         rk05Drives_[function.diskAddress.driveSelect]->seek (function.diskAddress.cylinderAddress);
-        waitTillSeekCompleted ();
+        waitTillSeekCompleted (function.diskAddress.driveSelect);
         return true;
     }
     else
@@ -78,14 +78,19 @@ bool RK11D::driveSeek (RKTypes::Function function,
     }
 }
 
-void RK11D::waitTillSeekCompleted ()
+// Wait till the sync seek for the given drive is completed. Seek completions
+// for other drives are ignored. By definition all received events are
+// seek completions as all non-seek functions are synchronous.
+void RK11D::waitTillSeekCompleted (u16 driveId)
 {
-    // The FunctionProcessorEvent variant needs an explicicit initialization
-    Event event {RKTypes::Function {}};
+    RKTypes::SeekCompleteReport report {};
 
-    // Await the result of the execution of the seek
-    functionQueue_.waitAndPop (event);
+    do
+    {
+        // The Event variant needs an explicicit initialization
+        Event event {RKTypes::Function {}};
 
-    // ToDo: Ignore seek completion for other drives than the one for
-    // which the seek was initiated.
+        functionQueue_.waitAndPop (event);
+        report = std::get<RKTypes::SeekCompleteReport> (event);
+    } while (report.driveId != driveId);
 }
