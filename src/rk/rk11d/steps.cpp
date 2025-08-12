@@ -81,7 +81,7 @@ bool RK11D::driveSeek (RKTypes::Function function,
 void RK11D::waitTillSeekCompleted ()
 {
     // The FunctionProcessorEvent variant needs an explicicit initialization
-    FunctionProcessorEvent event {RKTypes::Function {}};
+    Event event {RKTypes::Function {}};
 
     // Await the result of the execution of the seek
     functionQueue_.waitAndPop (event);

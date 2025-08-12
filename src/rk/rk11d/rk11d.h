@@ -111,11 +111,11 @@ private:
     struct ProcessingFunction { RKTypes::Function function; };
     struct Polling { RKTypes::Function function; };
 
-    using FunctionProcessorState = variant<WaitingForFunction,
+    using State = variant<WaitingForFunction,
         ProcessingFunction, Polling, monostate>;
 
     // Definition of the function processor events
-    using FunctionProcessorEvent = variant<RKTypes::Function,
+    using Event = variant<RKTypes::Function,
         RKTypes::SeekCompleteReport>;
 
     // Use the PIMPL idiom to be able to define the StateMachine outside
@@ -126,7 +126,7 @@ private:
     // Definition of the queue for forwarding issued functions to the function
     // processor. The queue is accessed from multiple threads and its consistency
     // has to be safe-guarded by the controllerMutex_.
-    ThreadSafeQueue<FunctionProcessorEvent> functionQueue_;
+    ThreadSafeQueue<Event> functionQueue_;
 
     // Definition of a buffer for the data to be transferred to/from the
     // RK05 drive
@@ -181,27 +181,27 @@ private:
 // compilation errors.
 class RK11D::StateMachine :
     public variantFsm::Fsm<StateMachine,
-        FunctionProcessorEvent, FunctionProcessorState>
+        Event, State>
 {
 public:
     StateMachine (RK11D* context);
 
     void entry (WaitingForFunction);
-    FunctionProcessorState transition (WaitingForFunction&&,
+    State transition (WaitingForFunction&&,
         RKTypes::Function);                                 // -> ProcessingFunction
-    FunctionProcessorState transition (WaitingForFunction&&,
+    State transition (WaitingForFunction&&,
         RKTypes::SeekCompleteReport);
     
     void entry (ProcessingFunction);
-    FunctionProcessorState transition (ProcessingFunction&&,
+    State transition (ProcessingFunction&&,
         RKTypes::Function);                                 // -> ProcessingFunction/Polling
-    FunctionProcessorState transition (ProcessingFunction&&,
+    State transition (ProcessingFunction&&,
         RKTypes::SeekCompleteReport);
     
     void entry (Polling);
-    FunctionProcessorState transition (Polling&&,
+    State transition (Polling&&,
         RKTypes::SeekCompleteReport);                       // -> Polling
-    FunctionProcessorState transition (Polling&&,
+    State transition (Polling&&,
         RKTypes::Function);                                 // -> Polling/ProcessingFunction
 
     // Define the default transition for transitions not explicitly

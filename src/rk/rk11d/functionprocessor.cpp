@@ -24,8 +24,8 @@ using std::monostate;
 void RK11D::functionProcessor ()
 try
 {
-    // The FunctionProcessorEvent variant needs an explicicit initialization
-    FunctionProcessorEvent event {RKTypes::Function {}};
+    // The Event variant needs an explicicit initialization
+    Event event {RKTypes::Function {}};
 
     while (functionQueue_.waitAndPop (event))
         functionProcessorStateMachine_->dispatch (event);
@@ -49,7 +49,7 @@ void RK11D::StateMachine::entry (WaitingForFunction)
 // waits for a function to be processed. On the reception of a function a 
 // transition is performed to either the ProcessingFunction or Polling state.
 //
-RK11D::FunctionProcessorState RK11D::StateMachine::transition (WaitingForFunction&&,
+RK11D::State RK11D::StateMachine::transition (WaitingForFunction&&,
     RKTypes::Function function)
 {
     if (function.rkcs.operation == RKTypes::Seek)
@@ -59,7 +59,7 @@ RK11D::FunctionProcessorState RK11D::StateMachine::transition (WaitingForFunctio
 }
 
 // In the WaitingForFunction states SeekCompleteReports are ignored
-RK11D::FunctionProcessorState RK11D::StateMachine::transition (WaitingForFunction&& currentState,
+RK11D::State RK11D::StateMachine::transition (WaitingForFunction&& currentState,
     RKTypes::SeekCompleteReport)
 {
     return move (currentState);
@@ -77,7 +77,7 @@ void  RK11D::StateMachine::entry (ProcessingFunction current)
     context_->processFunction (current.function);
 }
 
-RK11D::FunctionProcessorState RK11D::StateMachine::transition (ProcessingFunction&&,
+RK11D::State RK11D::StateMachine::transition (ProcessingFunction&&,
     RKTypes::Function function)
 {
     if (function.rkcs.operation == RKTypes::Seek)
@@ -86,7 +86,7 @@ RK11D::FunctionProcessorState RK11D::StateMachine::transition (ProcessingFunctio
         return ProcessingFunction {function};
 }
 
-RK11D::FunctionProcessorState RK11D::StateMachine::transition (ProcessingFunction&&,
+RK11D::State RK11D::StateMachine::transition (ProcessingFunction&&,
     RKTypes::SeekCompleteReport)
 {
     return WaitingForFunction {};
@@ -108,7 +108,7 @@ void RK11D::StateMachine::entry (Polling current)
 
 // By returning a monostate object this transition is internal which means
 // the state's entry action is not executed.
-RK11D::FunctionProcessorState RK11D::StateMachine::transition (Polling&&,
+RK11D::State RK11D::StateMachine::transition (Polling&&,
     RKTypes::SeekCompleteReport report)
 {
     if (context_->rkcs_.interruptOnDoneEnable)
@@ -130,7 +130,7 @@ RK11D::FunctionProcessorState RK11D::StateMachine::transition (Polling&&,
     return monostate {};
 }
 
-RK11D::FunctionProcessorState RK11D::StateMachine::transition (Polling&&,
+RK11D::State RK11D::StateMachine::transition (Polling&&,
     RKTypes::Function function)
 {
     if (function.rkcs.operation == RKTypes::Seek)
