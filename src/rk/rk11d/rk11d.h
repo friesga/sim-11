@@ -142,10 +142,13 @@ private:
     // CommandCompletion struct which gets the result of the execution of
     // the function. Not all step functions use the CommandCompletion 
     bool driveReady (RKTypes::Function function);
+    bool notWriteProtected (RKTypes::Function function);
     void driveRead (RKTypes::Function function,
         RKTypes::CommandCompletion& commandCompletion);
     void driveReadHeader (RKTypes::Function function,
         RKTypes::CommandCompletion& commandCompletion);
+    void driveWrite (RKTypes::Function function,
+        RKTypes::CommandCompletion&);
     bool driveSeek (RKTypes::Function function,
         RKTypes::CommandCompletion& commandCompletion);
     void waitTillSeekCompleted (u16 driveId);
@@ -153,12 +156,34 @@ private:
         RKTypes::CommandCompletion& commandCompletion);
     bool writeBufferToMemory (RKTypes::Function function,
         RKTypes::CommandCompletion& commandCompletion);
+    bool readBufferFromMemory (RKTypes::Function function,
+        RKTypes::CommandCompletion& commandCompletion);
 
     using Step = function<bool (RKTypes::Function,
         RKTypes::CommandCompletion&)>;
 
     // Disclaimer: The syntax is extremely ugly but using lambdas instead
     // of function pointers allows more flexibility in the calling sequence.
+    vector<Step> writeFunction_ =
+    {
+        [this] (RKTypes::Function function, RKTypes::CommandCompletion& commandCompletion)
+            { return driveReady (function); },
+        [this] (RKTypes::Function function, RKTypes::CommandCompletion& commandCompletion)
+            { return notWriteProtected (function); },
+        [this] (RKTypes::Function function, RKTypes::CommandCompletion& commandCompletion)
+            { return functionParametersOk (function); },
+        [this] (RKTypes::Function function, RKTypes::CommandCompletion& commandCompletion)
+            { return readBufferFromMemory (function, commandCompletion); },
+        // ToDo: Set error condition on false retun
+        // ToDo: Clear to end of block
+        [this] (RKTypes::Function function, RKTypes::CommandCompletion& commandCompletion)
+            { return driveSeek (function, commandCompletion); },
+        [this] (RKTypes::Function function, RKTypes::CommandCompletion& commandCompletion)
+            { driveWrite (function, commandCompletion); return true; },
+        [this] (RKTypes::Function function, RKTypes::CommandCompletion& commandCompletion)
+            { return updateRegisters (function, commandCompletion); }
+    };
+
     vector<Step> readFunction_ =
     {
         [this] (RKTypes::Function function, RKTypes::CommandCompletion& commandCompletion)

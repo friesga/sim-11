@@ -26,6 +26,17 @@ bool RK11D::driveReady (RKTypes::Function function)
     return true;
 }
 
+bool RK11D::notWriteProtected (RKTypes::Function function)
+{
+    if (rk05Drives_[function.diskAddress.driveSelect]->isWriteProtected ())
+    {
+        setError ([&] {rker_.writeLockoutViolation = 1; });
+        return false;
+    }
+
+    return true;
+}
+
 // Read the given numer of words from the given disk address into the
 // controller's buffer.
 void RK11D::driveRead (RKTypes::Function function,

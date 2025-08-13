@@ -2,64 +2,20 @@
 #include "rk/include/rktypes.h"
 
 #include <stdexcept>
+#include <algorithm>
 
 using std::out_of_range;
+using std::ranges::all_of;
+
 using RKTypes::rk05Geometry_;
 
 // ToDo: Pass Function as argument?
 void RK11D::executeWrite (RKTypes::Function function)
 {
     RKTypes::CommandCompletion commandCompletion {};
-    u16 driveId = function.diskAddress.driveSelect;
 
-    if (!driveReady (function))
-        return;
-
-    // Check the drive is not write-protected
-    if (rk05Drives_[driveId]->isWriteProtected ())
-    {
-        setError ([&] {rker_.writeLockoutViolation = 1; });
-        return;
-    }
-
-    // Check validity of the function's parameters
-    if (!functionParametersOk (function))
-        return;
-
-    // In the normal case the wordCount words starting at the address in
-    // the RKBA are read into the buffer. Setting the RKCS IBA bit inhbits
-    // the RKBA from incrementing during the transfer function. This means
-    // the buffer will be filled with the pattern from the address in the
-    // RKBA.
-    StatusCode status {};
-    if (function.rkcs.inhibitIncrementingRKBA)
-        status = transferPatternToBuffer (function.busAddress,
-            function.wordCount, buffer_);
-    else
-        status = transferDataToBuffer (function.busAddress,
-            function.wordCount, buffer_);
-
-    if (status != StatusCode::Success)
-    {
-        // Set error condition
-        return;
-    }
-
-    // Clear to end of block
-
-    if (!driveSeek (function, commandCompletion))
-        return;
-
-    // Command RK05 to write data from buffer to disk
-    commandCompletion = rk05Drives_[driveId]->write (
-        DiskAddress {function.diskAddress.sectorAddress,
-        function.diskAddress.surface,
-        function.diskAddress.cylinderAddress},
-        absValueFromTwosComplement (function.wordCount),
-        buffer_.get ());
-
-
-    updateRegisters (function, commandCompletion);
+    all_of (writeFunction_, [&] (auto& f)
+        { return f (function, commandCompletion); });
 }
 
 // The word count in the RKWC register is given as a two's complement
@@ -68,6 +24,25 @@ u32 RK11D::absValueFromTwosComplement (u16 value) const
 {
     return static_cast<u32> (0200000 - value);
 }
+
+bool RK11D::readBufferFromMemory (RKTypes::Function function,
+    RKTypes::CommandCompletion& commandCompletion)
+{
+    // In the normal case the wordCount words starting at the address in
+    // the RKBA are read into the buffer. Setting the RKCS IBA bit inhbits
+    // the RKBA from incrementing during the transfer function. This means
+    // the buffer will be filled with the pattern from the address in the
+    // RKBA.
+    if (function.rkcs.inhibitIncrementingRKBA)
+        commandCompletion.statusCode =
+            transferPatternToBuffer (function.busAddress,
+                function.wordCount, buffer_);
+    else
+        commandCompletion.statusCode = transferDataToBuffer (function.busAddress,
+            function.wordCount, buffer_);
+
+    return commandCompletion.statusCode == StatusCode::Success;
+}  
 
 StatusCode RK11D::transferDataToBuffer (BusAddress memoryAddress,
     u16 wordCount, unique_ptr<u16[]>& buffer)
@@ -95,4 +70,15 @@ StatusCode RK11D::transferPatternToBuffer (BusAddress memoryAddress,
         buffer_[index] = pattern;
 
     return StatusCode::Success;
+}
+
+void RK11D::driveWrite (RKTypes::Function function,
+    RKTypes::CommandCompletion& commandCompletion)
+{
+    commandCompletion = rk05Drives_[function.diskAddress.driveSelect]->write (
+        DiskAddress {function.diskAddress.sectorAddress,
+        function.diskAddress.surface,
+        function.diskAddress.cylinderAddress},
+        absValueFromTwosComplement (function.wordCount),
+        buffer_.get ());
 }
