@@ -144,7 +144,7 @@ private:
     bool driveReady (RKTypes::Function function);
     void driveRead (RKTypes::Function function,
         RKTypes::CommandCompletion& commandCompletion);
-    RKTypes::CommandCompletion driveReadHeader (RKTypes::Function function,
+    void driveReadHeader (RKTypes::Function function,
         RKTypes::CommandCompletion& commandCompletion);
     bool driveSeek (RKTypes::Function function,
         RKTypes::CommandCompletion& commandCompletion);
@@ -187,7 +187,7 @@ private:
         [this] (RKTypes::Function function, RKTypes::CommandCompletion& commandCompletion)
             { return driveSeek (function, commandCompletion); },
         [this] (RKTypes::Function function, RKTypes::CommandCompletion& commandCompletion)
-            { commandCompletion = driveReadHeader (function, commandCompletion); return true; },
+            { driveReadHeader (function, commandCompletion); return true; },
         [this] (RKTypes::Function function, RKTypes::CommandCompletion& commandCompletion)
             { writeBufferToMemory (function, commandCompletion); return true; },
         // ToDo: Clear the part of the buffer not filled by the read
