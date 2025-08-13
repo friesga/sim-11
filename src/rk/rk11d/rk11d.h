@@ -27,6 +27,7 @@ using std::queue;
 using std::thread;
 using std::condition_variable;
 using std::function;
+using std::bind;
 using std::monostate;
 using std::binary_semaphore;
 
@@ -133,9 +134,15 @@ private:
     // RK05 drive
     unique_ptr<u16[]> buffer_;
 
-    // Definition of the RK11 function steps
+    // The RK11 functions are executed in a sequence of steps. Every function
+    // has its own sequence. Every step returns a boolean, indicating if an
+    // error occurred and the step sequence can be continued or has to be
+    // aborted.
+    // Every step function has two parameters, the RK11 function and the
+    // CommandCompletion struct which gets the result of the execution of
+    // the function. Not all step functions use the CommandCompletion 
     bool driveReady (RKTypes::Function function);
-    RKTypes::CommandCompletion driveRead (RKTypes::Function function,
+    void driveRead (RKTypes::Function function,
         RKTypes::CommandCompletion& commandCompletion);
     RKTypes::CommandCompletion driveReadHeader (RKTypes::Function function,
         RKTypes::CommandCompletion& commandCompletion);
@@ -144,11 +151,55 @@ private:
     void waitTillSeekCompleted (u16 driveId);
     bool updateRegisters (RKTypes::Function function,
         RKTypes::CommandCompletion& commandCompletion);
+    bool writeBufferToMemory (RKTypes::Function function,
+        RKTypes::CommandCompletion& commandCompletion);
+
+    using Step = function<bool (RKTypes::Function,
+        RKTypes::CommandCompletion&)>;
+
+    // Disclaimer: The syntax is extremely ugly but using lambdas instead
+    // of function pointers allows more flexibility in the calling sequence.
+    vector<Step> readFunction_ =
+    {
+        [this] (RKTypes::Function function, RKTypes::CommandCompletion& commandCompletion)
+            { return driveReady (function); },
+        [this] (RKTypes::Function function, RKTypes::CommandCompletion& commandCompletion)
+            { return functionParametersOk (function); },
+        // ToDo: Check for sector overflow
+        [this] (RKTypes::Function function, RKTypes::CommandCompletion& commandCompletion)
+            { return driveSeek (function, commandCompletion); },
+        [this] (RKTypes::Function function, RKTypes::CommandCompletion& commandCompletion)
+            { driveRead (function, commandCompletion); return true; },
+        [this] (RKTypes::Function function, RKTypes::CommandCompletion& commandCompletion)
+            { writeBufferToMemory (function, commandCompletion); return true; },
+        // ToDo: Clear the part of the buffer not filled by the read
+        [this] (RKTypes::Function function, RKTypes::CommandCompletion& commandCompletion)
+            { return updateRegisters (function, commandCompletion); }
+    };
+
+    vector<Step> readHeaderFunction_ =
+    {
+        [this] (RKTypes::Function function, RKTypes::CommandCompletion& commandCompletion)
+            { return driveReady (function); },
+        [this] (RKTypes::Function function, RKTypes::CommandCompletion& commandCompletion)
+            { return functionParametersOk (function); },
+        // ToDo: Check for sector overflow
+        [this] (RKTypes::Function function, RKTypes::CommandCompletion& commandCompletion)
+            { return driveSeek (function, commandCompletion); },
+        [this] (RKTypes::Function function, RKTypes::CommandCompletion& commandCompletion)
+            { commandCompletion = driveReadHeader (function, commandCompletion); return true; },
+        [this] (RKTypes::Function function, RKTypes::CommandCompletion& commandCompletion)
+            { writeBufferToMemory (function, commandCompletion); return true; },
+        // ToDo: Clear the part of the buffer not filled by the read
+        [this] (RKTypes::Function function, RKTypes::CommandCompletion& commandCompletion)
+            { return updateRegisters (function, commandCompletion); }
+    };
 
     void functionProcessor ();
     void processFunction (RKTypes::Function function);
     void executeSeek (RKTypes::RKDA diskAddress);
     void executeRead (RKTypes::Function function);
+    void executeReadHeader (RKTypes::Function function);
     void executeReadCheck (RKTypes::Function function);
     void executeWriteCheck (RKTypes::Function function);
     void executeWrite (RKTypes::Function function);

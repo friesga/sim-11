@@ -20,7 +20,10 @@ void RK11D::processFunction (RKTypes::Function function)
             break;
 
         case RKTypes::Read:
-            executeRead (function);
+            if (function.rkcs.format)
+                executeReadHeader (function);
+            else
+                executeRead (function);
             break;
 
         case RKTypes::WriteCheck:

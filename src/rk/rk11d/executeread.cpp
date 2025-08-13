@@ -2,50 +2,41 @@
 #include "rk/include/rktypes.h"
 
 #include <stdexcept>
+#include <algorithm>
 
 using std::out_of_range;
+using std::ranges::all_of;
+
 using RKTypes::rk05Geometry_;
 
 void RK11D::executeRead (RKTypes::Function function)
 { 
     RKTypes::CommandCompletion commandCompletion {};
-    u16 driveId = function.diskAddress.driveSelect;
 
-    if (!driveReady (function))
-        return;
+    all_of (readFunction_, [&] (auto& f)
+        { return f (function, commandCompletion); });
+}
 
-    // Check validity of the function's parameters
-    if (!functionParametersOk (function))
-        return;
-
-    // ToDo: Check for sector overflow
-
-    if (!driveSeek (function, commandCompletion))
-        return;
-
-    if (function.rkcs.format)
-        commandCompletion = driveReadHeader (function,
-            commandCompletion);
-    else
-        commandCompletion = driveRead (function, commandCompletion);
-
-    // ToDo: Clear the part of the buffer not filled by the read
-
+bool RK11D::writeBufferToMemory (RKTypes::Function function,
+    RKTypes::CommandCompletion& commandCompletion)
+{
     // In the normal case the wordCount words starting at the address in
     // the RKBA are written to memory. Setting the RKCS IBA bit inhbits the
     // RKBA from incrementing during the transfer function. This means that
     // just the last word in the buffer will be written to the address in
     // the RKBA.
     if (function.rkcs.inhibitIncrementingRKBA)
-        transferWordFromBuffer (function.busAddress,
-            commandCompletion.wordsTransferred, buffer_);
+        commandCompletion.statusCode = 
+            transferWordFromBuffer (function.busAddress,
+                commandCompletion.wordsTransferred, buffer_);
     else
     {
-        transferDataFromBuffer (function.busAddress,
-            commandCompletion.wordsTransferred, buffer_);
+        commandCompletion.statusCode = 
+            transferDataFromBuffer (function.busAddress,
+                commandCompletion.wordsTransferred, buffer_);
     }
 
-    updateRegisters (function, commandCompletion);
+    return commandCompletion.statusCode == StatusCode::Success;
 }
 
 StatusCode RK11D::transferDataFromBuffer (BusAddress memoryAddress,

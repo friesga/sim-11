@@ -28,7 +28,7 @@ bool RK11D::driveReady (RKTypes::Function function)
 
 // Read the given numer of words from the given disk address into the
 // controller's buffer.
-RKTypes::CommandCompletion RK11D::driveRead (RKTypes::Function function,
+void RK11D::driveRead (RKTypes::Function function,
     RKTypes::CommandCompletion& commandCompletion)
 {
     u16 driveId = function.diskAddress.driveSelect;
@@ -42,7 +42,7 @@ RKTypes::CommandCompletion RK11D::driveRead (RKTypes::Function function,
 
     u32 wordCount = absValueFromTwosComplement (function.wordCount);
 
-    return rk05Drives_[driveId]->read (diskAddress,
+    commandCompletion = rk05Drives_[driveId]->read (diskAddress,
         wordCount, buffer_.get ());
 }
 
