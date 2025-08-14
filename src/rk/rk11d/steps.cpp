@@ -156,3 +156,16 @@ bool RK11D::updateRegisters (RKTypes::Function function,
 
     return true;
 }
+
+bool RK11D::resultOk (RKTypes::Function function,
+    RKTypes::CommandCompletion& commandCompletion)
+{
+    if (commandCompletion.wordsTransferred <
+        absValueFromTwosComplement (function.wordCount))
+    {
+        setError ([&] {rker_.overrun = 1; });
+        return false;
+    }
+
+    return true;
+}

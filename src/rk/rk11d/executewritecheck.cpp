@@ -2,8 +2,12 @@
 #include "rk/include/rktypes.h"
 
 #include <stdexcept>
+#include <algorithm>
+#include <iostream>
 
 using std::out_of_range;
+using std::ranges::all_of;
+
 using RKTypes::rk05Geometry_;
 
 // The Write Check function is used to compare the contents of memory to the
@@ -27,6 +31,15 @@ using RKTypes::rk05Geometry_;
 void RK11D::executeWriteCheck (RKTypes::Function function)
 {
     RKTypes::CommandCompletion commandCompletion {};
+
+#if 0
+    all_of (writeCheckFunction_, [&] (auto& f)
+        { return f (function, commandCompletion); });
+
+    if (commandCompletion.statusCode != StatusCode::Success)
+        setError ([&] {rker_.writeCheckError = 1; });
+#endif
+
     u16 driveId = function.diskAddress.driveSelect;
 
     if (!driveReady (function))
@@ -104,6 +117,26 @@ void RK11D::executeWriteCheck (RKTypes::Function function)
 
     if (status != StatusCode::Success)
         setError ([&] {rker_.writeCheckError = 1; });
+}
+
+bool RK11D::compareBufferWithMemory (RKTypes::Function function,
+    RKTypes::CommandCompletion& commandCompletion)
+{
+    if (function.rkcs.inhibitIncrementingRKBA)
+    {
+        commandCompletion.statusCode =
+            comparePatternWithBuffer (function.busAddress,
+                commandCompletion.wordsTransferred, buffer_);
+    }
+    else
+    {
+        commandCompletion.statusCode = 
+            compareDataWithBuffer (function.busAddress,
+                commandCompletion.wordsTransferred, buffer_);
+    }
+
+    std::cout << "compareBufferWithMemory: " << static_cast<int> (commandCompletion.statusCode) << std::endl;
+    return commandCompletion.statusCode == StatusCode::Success;
 }
 
 // Compare the memory contents with the data in the buffer

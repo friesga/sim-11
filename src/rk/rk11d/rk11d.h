@@ -158,6 +158,10 @@ private:
         RKTypes::CommandCompletion& commandCompletion);
     bool readBufferFromMemory (RKTypes::Function function,
         RKTypes::CommandCompletion& commandCompletion);
+    bool compareBufferWithMemory (RKTypes::Function function,
+        RKTypes::CommandCompletion& commandCompletion);
+    bool resultOk (RKTypes::Function function,
+        RKTypes::CommandCompletion& commandCompletion);
 
     using Step = function<bool (RKTypes::Function,
         RKTypes::CommandCompletion&)>;
@@ -216,6 +220,25 @@ private:
         [this] (RKTypes::Function function, RKTypes::CommandCompletion& commandCompletion)
             { writeBufferToMemory (function, commandCompletion); return true; },
         // ToDo: Clear the part of the buffer not filled by the read
+        [this] (RKTypes::Function function, RKTypes::CommandCompletion& commandCompletion)
+            { return updateRegisters (function, commandCompletion); }
+    };
+
+    vector<Step> writeCheckFunction_ =
+    {
+        [this] (RKTypes::Function function, RKTypes::CommandCompletion& commandCompletion)
+            { return driveReady (function); },
+        [this] (RKTypes::Function function, RKTypes::CommandCompletion& commandCompletion)
+            { return functionParametersOk (function); },
+        // ToDo: Check for sector overflow
+        [this] (RKTypes::Function function, RKTypes::CommandCompletion& commandCompletion)
+            { return driveSeek (function, commandCompletion); },
+        [this] (RKTypes::Function function, RKTypes::CommandCompletion& commandCompletion)
+            { return resultOk (function, commandCompletion); },
+        [this] (RKTypes::Function function, RKTypes::CommandCompletion& commandCompletion)
+            { driveRead (function, commandCompletion); return true; },
+        [this] (RKTypes::Function function, RKTypes::CommandCompletion& commandCompletion)
+            { compareBufferWithMemory (function, commandCompletion); return true; },
         [this] (RKTypes::Function function, RKTypes::CommandCompletion& commandCompletion)
             { return updateRegisters (function, commandCompletion); }
     };
