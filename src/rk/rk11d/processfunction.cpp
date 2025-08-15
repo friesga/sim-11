@@ -31,7 +31,7 @@ void RK11D::processFunction (RKTypes::Function function)
             break;
 
         case RKTypes::Seek:
-            executeSeek (function.diskAddress);
+            executeSeek (function);
             break;
 
         case RKTypes::ReadCheck:

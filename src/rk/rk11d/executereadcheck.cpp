@@ -20,13 +20,4 @@ void RK11D::executeReadCheck (RKTypes::Function function)
 
     all_of (readCheckFunction_, [&] (auto& f)
         { return f (function, commandCompletion); });
-
-#if 0
-    if (!driveReady (function))
-        return;
-
-    // Check validity of the function's parameters
-    if (!functionParametersOk (function))
-        return;
-#endif
 }

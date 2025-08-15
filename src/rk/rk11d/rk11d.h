@@ -143,14 +143,16 @@ private:
     // the function. Not all step functions use the CommandCompletion 
     bool driveReady (RKTypes::Function function);
     bool notWriteProtected (RKTypes::Function function);
+    bool cylinderAddressOk (RKTypes::Function function);
     void driveRead (RKTypes::Function function,
         RKTypes::CommandCompletion& commandCompletion);
     void driveReadHeader (RKTypes::Function function,
         RKTypes::CommandCompletion& commandCompletion);
     void driveWrite (RKTypes::Function function,
         RKTypes::CommandCompletion&);
-    bool driveSeek (RKTypes::Function function,
+    bool syncSeek (RKTypes::Function function,
         RKTypes::CommandCompletion& commandCompletion);
+    bool asyncSeek (RKTypes::Function function);
     void waitTillSeekCompleted (u16 driveId);
     bool updateRegisters (RKTypes::Function function,
         RKTypes::CommandCompletion& commandCompletion);
@@ -182,7 +184,7 @@ private:
         // ToDo: Set error condition on false retun
         // ToDo: Clear to end of block
         [this] (RKTypes::Function function, RKTypes::CommandCompletion& commandCompletion)
-            { return driveSeek (function, commandCompletion); },
+            { return syncSeek (function, commandCompletion); },
         [this] (RKTypes::Function function, RKTypes::CommandCompletion& commandCompletion)
             { driveWrite (function, commandCompletion); return true; },
         [this] (RKTypes::Function function, RKTypes::CommandCompletion& commandCompletion)
@@ -197,7 +199,7 @@ private:
             { return functionParametersOk (function); },
         // ToDo: Check for sector overflow
         [this] (RKTypes::Function function, RKTypes::CommandCompletion& commandCompletion)
-            { return driveSeek (function, commandCompletion); },
+            { return syncSeek (function, commandCompletion); },
         [this] (RKTypes::Function function, RKTypes::CommandCompletion& commandCompletion)
             { driveRead (function, commandCompletion); return true; },
         [this] (RKTypes::Function function, RKTypes::CommandCompletion& commandCompletion)
@@ -215,7 +217,7 @@ private:
             { return functionParametersOk (function); },
         // ToDo: Check for sector overflow
         [this] (RKTypes::Function function, RKTypes::CommandCompletion& commandCompletion)
-            { return driveSeek (function, commandCompletion); },
+            { return syncSeek (function, commandCompletion); },
         [this] (RKTypes::Function function, RKTypes::CommandCompletion& commandCompletion)
             { driveReadHeader (function, commandCompletion); return true; },
         [this] (RKTypes::Function function, RKTypes::CommandCompletion& commandCompletion)
@@ -237,7 +239,7 @@ private:
             { return functionParametersOk (function); },
         // ToDo: Check for sector overflow
         [this] (RKTypes::Function function, RKTypes::CommandCompletion& commandCompletion)
-            { return driveSeek (function, commandCompletion); },
+            { return syncSeek (function, commandCompletion); },
         [this] (RKTypes::Function function, RKTypes::CommandCompletion& commandCompletion)
             { driveRead (function, commandCompletion); return true; },
         [this] (RKTypes::Function function, RKTypes::CommandCompletion& commandCompletion)
@@ -258,9 +260,21 @@ private:
             { return functionParametersOk (function); },
     };
 
+    vector<Step> controlResetFunction_ =
+    {
+        [this] (RKTypes::Function function, RKTypes::CommandCompletion& commandCompletion)
+            { reset (); return true; },
+    };
+
+    vector<Step> seekFunction_ =
+    {
+        [this] (RKTypes::Function function, RKTypes::CommandCompletion& commandCompletion)
+            { return asyncSeek (function); },
+    };
+
     void functionProcessor ();
     void processFunction (RKTypes::Function function);
-    void executeSeek (RKTypes::RKDA diskAddress);
+    void executeSeek (RKTypes::Function function);
     void executeRead (RKTypes::Function function);
     void executeReadHeader (RKTypes::Function function);
     void executeReadCheck (RKTypes::Function function);

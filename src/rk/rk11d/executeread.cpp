@@ -17,6 +17,26 @@ void RK11D::executeRead (RKTypes::Function function)
         { return f (function, commandCompletion); });
 }
 
+// Read the given numer of words from the given disk address into the
+// controller's buffer.
+void RK11D::driveRead (RKTypes::Function function,
+    RKTypes::CommandCompletion& commandCompletion)
+{
+    u16 driveId = function.diskAddress.driveSelect;
+
+    DiskAddress diskAddress
+    {
+         function.diskAddress.sectorAddress,
+         function.diskAddress.surface,
+         function.diskAddress.cylinderAddress
+    };
+
+    u32 wordCount = absValueFromTwosComplement (function.wordCount);
+
+    commandCompletion = rk05Drives_[driveId]->read (diskAddress,
+        wordCount, buffer_.get ());
+}
+
 bool RK11D::writeBufferToMemory (RKTypes::Function function,
     RKTypes::CommandCompletion& commandCompletion)
 {
