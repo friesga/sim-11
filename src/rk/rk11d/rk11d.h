@@ -272,6 +272,12 @@ private:
             { return asyncSeek (function); },
     };
 
+    vector<Step> driveResetFunction_ =
+    {
+        [this] (RKTypes::Function function, RKTypes::CommandCompletion& commandCompletion)
+            { return asyncSeek (function); },
+    };
+
     void functionProcessor ();
     void processFunction (RKTypes::Function function);
     void executeSeek (RKTypes::Function function);

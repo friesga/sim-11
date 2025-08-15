@@ -1,5 +1,9 @@
 #include "rk11d.h"
 
+#include <algorithm>
+
+using std::ranges::all_of;
+
 // For a Drive Reset function, the controller directs the selected disk drive
 // to move its head mechanism to cylinder address 000 and reset all active
 // error status lines. To the controller, the Drive Reset function is the same
@@ -12,5 +16,8 @@
 //
 void RK11D::executeDriveReset (RKTypes::Function function)
 {
-    rk05Drives_[function.diskAddress.driveSelect]->seek (0);
+    RKTypes::CommandCompletion commandCompletion {};
+
+    all_of (driveResetFunction_, [&] (auto& f)
+        { return f (function, commandCompletion); });
 }
