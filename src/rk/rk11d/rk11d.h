@@ -165,6 +165,7 @@ private:
     bool resultOk (RKTypes::Function function,
         RKTypes::CommandCompletion& commandCompletion);
     void setWritCheckOnError (RKTypes::CommandCompletion& commandCompletion);
+    void driveWriteLock (RKTypes::Function function);
 
     using Step = function<bool (RKTypes::Function,
         RKTypes::CommandCompletion&)>;
@@ -276,6 +277,12 @@ private:
     {
         [this] (RKTypes::Function function, RKTypes::CommandCompletion& commandCompletion)
             { return asyncSeek (function); },
+    };
+
+    vector<Step> writeLockFunction_ =
+    {
+        [this] (RKTypes::Function function, RKTypes::CommandCompletion& commandCompletion)
+            { driveWriteLock (function); return true; },
     };
 
     void functionProcessor ();
