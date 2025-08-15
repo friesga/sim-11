@@ -1,54 +1,24 @@
 #include "rk11d.h"
 
-#include <variant>
+#include <algorithm>
 
-using std::get;
+using std::ranges::all_of;
 
 // The function is already safeguarded against register access by the
 // CPU thread as the controllerMutex_ is locked by the action processor.
 //
 void RK11D::processFunction (RKTypes::Function function)
 {
-    switch (function.rkcs.operation)
-    {
-        case RKTypes::ControlReset:
-            reset ();
-            break;
+    RKTypes::CommandCompletion commandCompletion {};
+    StepVector sequenceToBeExecuted {};
 
-        case RKTypes::Write:
-            executeWrite (function);
-            break;
+    if (function.rkcs.operation == RKTypes::Read && function.rkcs.format)
+        sequenceToBeExecuted = readHeaderFunction_;
+    else
+        sequenceToBeExecuted = rk11dFunctions[function.rkcs.operation];
 
-        case RKTypes::Read:
-            if (function.rkcs.format)
-                executeReadHeader (function);
-            else
-                executeRead (function);
-            break;
-
-        case RKTypes::WriteCheck:
-            executeWriteCheck (function);
-            break;
-
-        case RKTypes::Seek:
-            executeSeek (function);
-            break;
-
-        case RKTypes::ReadCheck:
-            executeReadCheck (function);
-            break;
-
-        case RKTypes::DriveReset:
-            executeDriveReset (function);
-            break;
-
-        case RKTypes::WriteLock:
-            executeWriteLock (function);
-            break;
-            
-        default:
-            throw logic_error ("Invalid function in RK11D::processFunction");
-    }
+    all_of (sequenceToBeExecuted, [&] (auto& f)
+        { return f (function, commandCompletion); });
 
     setControlReady ();
 }

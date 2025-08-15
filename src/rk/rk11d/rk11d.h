@@ -169,10 +169,11 @@ private:
 
     using Step = function<bool (RKTypes::Function,
         RKTypes::CommandCompletion&)>;
+    using StepVector = vector<Step>;
 
     // Disclaimer: The syntax is extremely ugly but using lambdas instead
     // of function pointers allows more flexibility in the calling sequence.
-    vector<Step> writeFunction_ =
+    StepVector writeFunction_ =
     {
         [this] (RKTypes::Function function, RKTypes::CommandCompletion& commandCompletion)
             { return driveReady (function); },
@@ -192,7 +193,7 @@ private:
             { return updateRegisters (function, commandCompletion); }
     };
 
-    vector<Step> readFunction_ =
+    StepVector readFunction_ =
     {
         [this] (RKTypes::Function function, RKTypes::CommandCompletion& commandCompletion)
             { return driveReady (function); },
@@ -210,7 +211,7 @@ private:
             { return updateRegisters (function, commandCompletion); }
     };
 
-    vector<Step> readHeaderFunction_ =
+    StepVector readHeaderFunction_ =
     {
         [this] (RKTypes::Function function, RKTypes::CommandCompletion& commandCompletion)
             { return driveReady (function); },
@@ -232,7 +233,7 @@ private:
     // as that would terminate the sequence. On an error the commandCompletion
     // status code is set which in the last step will set the write check
     // error.
-    vector<Step> writeCheckFunction_ =
+    StepVector writeCheckFunction_ =
     {
         [this] (RKTypes::Function function, RKTypes::CommandCompletion& commandCompletion)
             { return driveReady (function); },
@@ -253,7 +254,7 @@ private:
             { setWritCheckOnError (commandCompletion); return true; }
     };
 
-    vector<Step> readCheckFunction_ =
+    StepVector readCheckFunction_ =
     {
         [this] (RKTypes::Function function, RKTypes::CommandCompletion& commandCompletion)
             { return driveReady (function); },
@@ -261,28 +262,43 @@ private:
             { return functionParametersOk (function); },
     };
 
-    vector<Step> controlResetFunction_ =
+    StepVector controlResetFunction_ =
     {
         [this] (RKTypes::Function function, RKTypes::CommandCompletion& commandCompletion)
             { reset (); return true; },
     };
 
-    vector<Step> seekFunction_ =
+    StepVector seekFunction_ =
     {
         [this] (RKTypes::Function function, RKTypes::CommandCompletion& commandCompletion)
             { return asyncSeek (function); },
     };
 
-    vector<Step> driveResetFunction_ =
+    StepVector driveResetFunction_ =
     {
         [this] (RKTypes::Function function, RKTypes::CommandCompletion& commandCompletion)
             { return asyncSeek (function); },
     };
 
-    vector<Step> writeLockFunction_ =
+    StepVector writeLockFunction_ =
     {
         [this] (RKTypes::Function function, RKTypes::CommandCompletion& commandCompletion)
             { driveWriteLock (function); return true; },
+    };
+
+    // The step vectors have to be ordered in Operation sequence as the 
+    // Operation is used as in index into the vector by the function
+    // processor.
+    vector<StepVector> rk11dFunctions =
+    {
+        controlResetFunction_,
+        writeFunction_,
+        readFunction_,
+        writeCheckFunction_,
+        seekFunction_,
+        readCheckFunction_,
+        driveResetFunction_,
+        writeLockFunction_
     };
 
     void functionProcessor ();
