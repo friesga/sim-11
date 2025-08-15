@@ -162,6 +162,7 @@ private:
         RKTypes::CommandCompletion& commandCompletion);
     bool resultOk (RKTypes::Function function,
         RKTypes::CommandCompletion& commandCompletion);
+    void setWritCheckOnError (RKTypes::CommandCompletion& commandCompletion);
 
     using Step = function<bool (RKTypes::Function,
         RKTypes::CommandCompletion&)>;
@@ -224,6 +225,10 @@ private:
             { return updateRegisters (function, commandCompletion); }
     };
 
+    // In this sequence the result of compareBufferWithMemory() is ignored
+    // as that would terminate the sequence. On an error the commandCompletion
+    // status code is set which in the last step will set the write check
+    // error.
     vector<Step> writeCheckFunction_ =
     {
         [this] (RKTypes::Function function, RKTypes::CommandCompletion& commandCompletion)
@@ -234,13 +239,15 @@ private:
         [this] (RKTypes::Function function, RKTypes::CommandCompletion& commandCompletion)
             { return driveSeek (function, commandCompletion); },
         [this] (RKTypes::Function function, RKTypes::CommandCompletion& commandCompletion)
-            { return resultOk (function, commandCompletion); },
-        [this] (RKTypes::Function function, RKTypes::CommandCompletion& commandCompletion)
             { driveRead (function, commandCompletion); return true; },
+        [this] (RKTypes::Function function, RKTypes::CommandCompletion& commandCompletion)
+            { return resultOk (function, commandCompletion); },
         [this] (RKTypes::Function function, RKTypes::CommandCompletion& commandCompletion)
             { compareBufferWithMemory (function, commandCompletion); return true; },
         [this] (RKTypes::Function function, RKTypes::CommandCompletion& commandCompletion)
-            { return updateRegisters (function, commandCompletion); }
+            { return updateRegisters (function, commandCompletion); },
+        [this] (RKTypes::Function function, RKTypes::CommandCompletion& commandCompletion)
+            { setWritCheckOnError (commandCompletion); return true; }
     };
 
     void functionProcessor ();

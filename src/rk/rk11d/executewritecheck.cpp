@@ -32,91 +32,8 @@ void RK11D::executeWriteCheck (RKTypes::Function function)
 {
     RKTypes::CommandCompletion commandCompletion {};
 
-#if 0
     all_of (writeCheckFunction_, [&] (auto& f)
         { return f (function, commandCompletion); });
-
-    if (commandCompletion.statusCode != StatusCode::Success)
-        setError ([&] {rker_.writeCheckError = 1; });
-#endif
-
-    u16 driveId = function.diskAddress.driveSelect;
-
-    if (!driveReady (function))
-        return;
-
-    // Check validity of the function's parameters
-    if (!functionParametersOk (function))
-        return;
-
-    // Check for sector overflow
-
-    if (!driveSeek (function, commandCompletion))
-        return;
-
-    // Command RK05 to read data from disk to buffer
-    commandCompletion = rk05Drives_[driveId]->read (
-        DiskAddress {function.diskAddress.sectorAddress,
-        function.diskAddress.surface,
-        function.diskAddress.cylinderAddress},
-        absValueFromTwosComplement (function.wordCount),
-        buffer_.get ());
-
-    if (commandCompletion.wordsTransferred <
-            absValueFromTwosComplement (function.wordCount))
-        setError ([&] {rker_.overrun = 1; });
-
-    // In the normal case wordCount words starting at the address in the
-    // RKBA are compared with the buffer contents. Setting the RKCS IBA bit
-    // inhbits the RKBA from incrementing during the transfer function. This
-    // means that the buffer is compared with a pattern at the memory address
-    // indicated by the RKBA.
-    StatusCode status {};
-    if (function.rkcs.inhibitIncrementingRKBA)
-    {
-        status = comparePatternWithBuffer (function.busAddress,
-            commandCompletion.wordsTransferred, buffer_);
-    }
-    else
-    {
-        status = compareDataWithBuffer (function.busAddress,
-            commandCompletion.wordsTransferred, buffer_);
-        busAddressToRegs (function.busAddress +
-            commandCompletion.wordsTransferred * 2);
-    }
-
-    // The bits of [the RKDB] register work as a general data handler in that
-    // all information transferred between the control[ler] and the disk drive
-    // must pass through this register. (EK-RK11D-MM-002, p. 3-8). 
-    // 
-    // After 1 sector read RKDB contains for RK11C the checksum for that sector,
-    // for RK11D the last word transferred to memory. (CZRKKF0, line 3074)
-    //
-    rkdb_ = buffer_[commandCompletion.wordsTransferred - 1];
-    rkwc_ += commandCompletion.wordsTransferred;
-    
-    // An increment of the RKDA might overflow the logical block number.
-    // 
-    // RKER OVR indicates that, during a Read, Write, Read Check, or Write
-    // Check function, operations on sector 013, surface 1 of cylinder address
-    // 0312 were finished, and the RKWC has not yet overflowed.This is
-    // essentially an attempt to overflow out of a disk drive.
-    // (EK-RK11D-MM-002, p. 3-4)
-    try
-    {
-        rkda_ += commandCompletion.sectorsProcessed;
-    }
-    catch (out_of_range)
-    {
-        rkda_ = rk05Geometry_.lbnTodiskAddress (rk05Geometry_.diskCapacity () - 1);
-
-        if (commandCompletion.wordsTransferred <
-            absValueFromTwosComplement (function.wordCount))
-            setError ([&] {rker_.overrun = 1; });
-    }
-
-    if (status != StatusCode::Success)
-        setError ([&] {rker_.writeCheckError = 1; });
 }
 
 bool RK11D::compareBufferWithMemory (RKTypes::Function function,
@@ -135,7 +52,6 @@ bool RK11D::compareBufferWithMemory (RKTypes::Function function,
                 commandCompletion.wordsTransferred, buffer_);
     }
 
-    std::cout << "compareBufferWithMemory: " << static_cast<int> (commandCompletion.statusCode) << std::endl;
     return commandCompletion.statusCode == StatusCode::Success;
 }
 
@@ -173,4 +89,10 @@ StatusCode RK11D::comparePatternWithBuffer (BusAddress memoryAddress,
     }
 
     return StatusCode::Success;
+}
+
+void RK11D::setWritCheckOnError (RKTypes::CommandCompletion& commandCompletion)
+{
+    if (commandCompletion.statusCode != StatusCode::Success)
+        rker_.writeCheckError = 1;
 }
