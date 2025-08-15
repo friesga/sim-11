@@ -250,6 +250,14 @@ private:
             { setWritCheckOnError (commandCompletion); return true; }
     };
 
+    vector<Step> readCheckFunction_ =
+    {
+        [this] (RKTypes::Function function, RKTypes::CommandCompletion& commandCompletion)
+            { return driveReady (function); },
+        [this] (RKTypes::Function function, RKTypes::CommandCompletion& commandCompletion)
+            { return functionParametersOk (function); },
+    };
+
     void functionProcessor ();
     void processFunction (RKTypes::Function function);
     void executeSeek (RKTypes::RKDA diskAddress);

@@ -1,5 +1,8 @@
 #include "rk11d.h"
 
+#include <algorithm>
+
+using std::ranges::all_of;
 
 // The Read Check function is identical to a normal Read function, except
 // that no NPRs occur. Only the checksum is calculated and compared with the
@@ -13,12 +16,17 @@
 //
 void RK11D::executeReadCheck (RKTypes::Function function)
 {
-    u16 driveId = function.diskAddress.driveSelect;
+    RKTypes::CommandCompletion commandCompletion {};
 
+    all_of (readCheckFunction_, [&] (auto& f)
+        { return f (function, commandCompletion); });
+
+#if 0
     if (!driveReady (function))
         return;
 
     // Check validity of the function's parameters
     if (!functionParametersOk (function))
         return;
+#endif
 }
