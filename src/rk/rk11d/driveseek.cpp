@@ -1,18 +1,5 @@
 #include "rk11d.h"
 
-bool RK11D::cylinderAddressOk (RKTypes::Function function)
-{
-    if (function.diskAddress.cylinderAddress < RKTypes::CylindersPerDisk)
-        return true;
-    else
-    {
-        rker_.nonexistentCylinder = 1;
-        rkcs_.error = 1;
-        rkcs_.hardError = 1;
-        return false;
-    }
-}
-
 // Execute an asynchronous seek, i.e. start a seek not waiting for its
 // completion.
 bool RK11D::asyncSeek (RKTypes::Function function)
@@ -36,6 +23,19 @@ bool RK11D::syncSeek (RKTypes::Function function,
         waitTillSeekCompleted (function.diskAddress.driveSelect);
         return true;
     }
+    else
+    {
+        rker_.nonexistentCylinder = 1;
+        rkcs_.error = 1;
+        rkcs_.hardError = 1;
+        return false;
+    }
+}
+
+bool RK11D::cylinderAddressOk (RKTypes::Function function)
+{
+    if (function.diskAddress.cylinderAddress < RKTypes::CylindersPerDisk)
+        return true;
     else
     {
         rker_.nonexistentCylinder = 1;
