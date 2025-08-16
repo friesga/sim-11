@@ -2,7 +2,7 @@ set (RK11D_SRCS
     rk11d/functionprocessor.cpp
     rk11d/driveread.cpp
     rk11d/driveseek.cpp
-    rk11d/executewrite.cpp
+    rk11d/drivewrite.cpp
     rk11d/executewritecheck.cpp
     rk11d/executewritelock.cpp
     rk11d/misc.cpp

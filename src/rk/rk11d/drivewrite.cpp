@@ -7,6 +7,17 @@ using std::out_of_range;
 
 using RKTypes::rk05Geometry_;
 
+void RK11D::driveWrite (RKTypes::Function function,
+    RKTypes::CommandCompletion& commandCompletion)
+{
+    commandCompletion = rk05Drives_[function.diskAddress.driveSelect]->write (
+        DiskAddress {function.diskAddress.sectorAddress,
+        function.diskAddress.surface,
+        function.diskAddress.cylinderAddress},
+        absValueFromTwosComplement (function.wordCount),
+        buffer_.get ());
+}
+
 // The word count in the RKWC register is given as a two's complement
 // negative number. To be able to use this value as a word counter 
 u32 RK11D::absValueFromTwosComplement (u16 value) const
@@ -59,15 +70,4 @@ StatusCode RK11D::transferPatternToBuffer (BusAddress memoryAddress,
         buffer_[index] = pattern;
 
     return StatusCode::Success;
-}
-
-void RK11D::driveWrite (RKTypes::Function function,
-    RKTypes::CommandCompletion& commandCompletion)
-{
-    commandCompletion = rk05Drives_[function.diskAddress.driveSelect]->write (
-        DiskAddress {function.diskAddress.sectorAddress,
-        function.diskAddress.surface,
-        function.diskAddress.cylinderAddress},
-        absValueFromTwosComplement (function.wordCount),
-        buffer_.get ());
 }
