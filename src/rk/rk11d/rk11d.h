@@ -233,6 +233,24 @@ private:
             { return updateRegisters (function, commandCompletion); }
     };
 
+    // The Write Check function is used to compare the contents of memory to the
+    // contents of a continuous block of data on a disk cartridge. The controller
+    // first performs a Seek function, just as for a Write function, and then
+    // reads and checks the next header word. If the cylinder address is correct,
+    // the controller waits for SC = SA, then begins reading the rest of the
+    // sector (Data and Checksum) while performing BUS NPR transfers for each data
+    // word. Each data word from the disk drive is compared, bit by bit, with
+    // memory data from the Unibus. The disk drive checksum, in turn, is compared
+    // with the checksum calculated by the controller. If any bit is found to be
+    // in error, RKER 00 (Write Check Error) is set. Controller reaction is then
+    // determined by RKCS 06 (IDE) and RKCS 08 (SSE). The Write Check function may
+    // be performed on a short sector (less than 256 data words) as long as the
+    // number of words write checked is equal to the number of words previously
+    // written into the sector. (EK-RK11D-MM-002 par. 1.3.2.7)
+    //
+    // ToDo: Value of RKBA and RKWC probably has to be adapted to the result of
+    // the data comparison.
+    //
     // In this sequence the result of compareBufferWithMemory() is ignored
     // as that would terminate the sequence. On an error the commandCompletion
     // status code is set which in the last step will set the write check
@@ -258,6 +276,16 @@ private:
             { setWritCheckOnError (commandCompletion); return true; }
     };
 
+    // The Read Check function is identical to a normal Read function, except
+    // that no NPRs occur. Only the checksum is calculated and compared with the
+    // checksum read from the disk drive. This function enables the program to
+    // know beforehand if a given block of data is readable and error free.
+    // Because the Read Check is essentially a parity check, it must be performed
+    // on a whole-sector basis only. (EK-RK11D-MM-002)
+    // 
+    // As the parity check is not implemented this function essentially is a NOP
+    // and just checks the parameters.
+    //
     StepVector const readCheckFunction_ =
     {
         [this] (RKTypes::Function function, RKTypes::CommandCompletion& commandCompletion)
@@ -272,18 +300,50 @@ private:
             { reset (); return true; },
     };
 
+    // For a Seek function, the RK11 directs the selected disk drive to move its
+    // head mechanism to the cylinder address specified by RKDA 05 through 12.
+    // When this portion of a Seek has been initiated, the controller returns to
+    // the Ready state (RKCS 07). But if the specified cylinder address is greater
+    // than 0312, the function is aborted and bit 06 (nonexistent Cylinder) of the
+    // RKER is set. RKCS 06 (Interrupt Done Enable) then determines the program
+    // reaction. (EK-RK11D-MM-002 par. 1.3.2.2)
+    //
+    // The acceptance (Address Acknowledge) of a Seek or Srive Reset function by
+    // the selected drive generates an interrupt request.
+    // (EK-RK11D-MM-002, par. 3.4)
+    // 
+    // Presumably the interrupt is only generated when RKCS IDE is set.
+    //
     StepVector const seekFunction_ =
     {
         [this] (RKTypes::Function function, RKTypes::CommandCompletion& commandCompletion)
             { return asyncSeek (function); },
     };
 
+    // For a Drive Reset function, the controller directs the selected disk drive
+    // to move its head mechanism to cylinder address 000 and reset all active
+    // error status lines. To the controller, the Drive Reset function is the same
+    // as a Seek function, even to the manner in which the hardware poll logic is
+    // used; however, a Drive Reset function can take much longer than a Seek
+    // function to execute. The time required to complete a Drive Reset function
+    // depends on the physical position of the head mechanism at the time the
+    // function is initiated, and therefore may take up to a maximum of two
+    // seconds. (EK-RK11D-MM-002)
+    //
     StepVector const driveResetFunction_ =
     {
         [this] (RKTypes::Function function, RKTypes::CommandCompletion& commandCompletion)
             { return asyncSeek (function); },
     };
 
+    // The Write Lock function write-protects a selected disk drive until the
+    // condition is overridden by operation of the corresponding WT PROT
+    // (Write Protect) switch on the disk drive (refer to RK05 Disk Drive
+    // Maintenance Manual, DEC-00-HRKO05-C-D). The disk drive is automatically
+    // write-enabled when power is first applied, or when the disk drive RUN/LOAD
+    // switch is set to RUN.
+    // (EK-RK11D-MM-002, par. 1.3.2.4)
+    //
     StepVector const writeLockFunction_ =
     {
         [this] (RKTypes::Function function, RKTypes::CommandCompletion& commandCompletion)
