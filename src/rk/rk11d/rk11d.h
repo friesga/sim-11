@@ -165,8 +165,6 @@ private:
         RKTypes::CommandCompletion& commandCompletion);
     bool compareBufferWithMemory (RKTypes::Function function,
         RKTypes::CommandCompletion& commandCompletion);
-    bool resultOk (RKTypes::Function function,
-        RKTypes::CommandCompletion& commandCompletion);
     void setWritCheckOnError (RKTypes::CommandCompletion& commandCompletion);
     void driveWriteLock (RKTypes::Function function);
 
@@ -269,8 +267,6 @@ private:
             { return syncSeek (function, commandCompletion); },
         [this] (RKTypes::Function function, RKTypes::CommandCompletion& commandCompletion)
             { driveRead (function, commandCompletion); return true; },
-        [this] (RKTypes::Function function, RKTypes::CommandCompletion& commandCompletion)
-            { return resultOk (function, commandCompletion); },
         [this] (RKTypes::Function function, RKTypes::CommandCompletion& commandCompletion)
             { compareBufferWithMemory (function, commandCompletion); return true; },
         [this] (RKTypes::Function function, RKTypes::CommandCompletion& commandCompletion)

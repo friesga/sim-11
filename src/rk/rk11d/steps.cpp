@@ -80,6 +80,12 @@ bool RK11D::updateRegisters (RKTypes::Function function,
     }
     catch (out_of_range)
     {
+        // [If] during a Read, Write, Read Check, or Write Check function,
+        // operations on sector 13(8), surface 1 of cylinder address 312(8)
+        // were finished, and the RKWC has not yet overflowed, this is
+        // essentially an attempt to overflow out of a disk drive.
+        // (EK-RK11D-MM-002 p. 3-4)
+        //
         rkda_ = rk05Geometry_.lbnTodiskAddress (rk05Geometry_.diskCapacity () - 1);
 
         if (commandCompletion.wordsTransferred <
@@ -93,15 +99,3 @@ bool RK11D::updateRegisters (RKTypes::Function function,
     return true;
 }
 
-bool RK11D::resultOk (RKTypes::Function function,
-    RKTypes::CommandCompletion& commandCompletion)
-{
-    if (commandCompletion.wordsTransferred <
-        absValueFromTwosComplement (function.wordCount))
-    {
-        setError ([&] {rker_.overrun = 1; });
-        return false;
-    }
-
-    return true;
-}
