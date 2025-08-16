@@ -4,7 +4,7 @@ set (RK11D_SRCS
     rk11d/driveseek.cpp
     rk11d/drivewrite.cpp
     rk11d/drivewritecheck.cpp
-    rk11d/executewritelock.cpp
+    rk11d/drivewritelock.cpp
     rk11d/misc.cpp
     rk11d/processfunction.cpp
     rk11d/read.cpp
