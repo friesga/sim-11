@@ -173,7 +173,11 @@ private:
 
     // Disclaimer: The syntax is extremely ugly but using lambdas instead
     // of function pointers allows more flexibility in the calling sequence.
-    StepVector writeFunction_ =
+    // 
+    // Ideally the definition of the step vectors would be static and would
+    // be defined as in that case we lose the reference to the current object
+    // via the this pointer.
+    StepVector const writeFunction_ =
     {
         [this] (RKTypes::Function function, RKTypes::CommandCompletion& commandCompletion)
             { return driveReady (function); },
@@ -193,7 +197,7 @@ private:
             { return updateRegisters (function, commandCompletion); }
     };
 
-    StepVector readFunction_ =
+    StepVector const readFunction_ =
     {
         [this] (RKTypes::Function function, RKTypes::CommandCompletion& commandCompletion)
             { return driveReady (function); },
@@ -211,7 +215,7 @@ private:
             { return updateRegisters (function, commandCompletion); }
     };
 
-    StepVector readHeaderFunction_ =
+    StepVector const readHeaderFunction_ =
     {
         [this] (RKTypes::Function function, RKTypes::CommandCompletion& commandCompletion)
             { return driveReady (function); },
@@ -233,7 +237,7 @@ private:
     // as that would terminate the sequence. On an error the commandCompletion
     // status code is set which in the last step will set the write check
     // error.
-    StepVector writeCheckFunction_ =
+    StepVector const writeCheckFunction_ =
     {
         [this] (RKTypes::Function function, RKTypes::CommandCompletion& commandCompletion)
             { return driveReady (function); },
@@ -254,7 +258,7 @@ private:
             { setWritCheckOnError (commandCompletion); return true; }
     };
 
-    StepVector readCheckFunction_ =
+    StepVector const readCheckFunction_ =
     {
         [this] (RKTypes::Function function, RKTypes::CommandCompletion& commandCompletion)
             { return driveReady (function); },
@@ -262,25 +266,25 @@ private:
             { return functionParametersOk (function); },
     };
 
-    StepVector controlResetFunction_ =
+    StepVector const controlResetFunction_ =
     {
         [this] (RKTypes::Function function, RKTypes::CommandCompletion& commandCompletion)
             { reset (); return true; },
     };
 
-    StepVector seekFunction_ =
+    StepVector const seekFunction_ =
     {
         [this] (RKTypes::Function function, RKTypes::CommandCompletion& commandCompletion)
             { return asyncSeek (function); },
     };
 
-    StepVector driveResetFunction_ =
+    StepVector const driveResetFunction_ =
     {
         [this] (RKTypes::Function function, RKTypes::CommandCompletion& commandCompletion)
             { return asyncSeek (function); },
     };
 
-    StepVector writeLockFunction_ =
+    StepVector const writeLockFunction_ =
     {
         [this] (RKTypes::Function function, RKTypes::CommandCompletion& commandCompletion)
             { driveWriteLock (function); return true; },
@@ -289,7 +293,7 @@ private:
     // The step vectors have to be ordered in Operation sequence as the 
     // Operation is used as in index into the vector by the function
     // processor.
-    vector<StepVector> rk11dFunctions =
+    vector<StepVector> const rk11dFunctions =
     {
         controlResetFunction_,
         writeFunction_,
