@@ -19,6 +19,24 @@ bool RK11D::driveReady (RKTypes::Function function)
     return true;
 }
 
+bool RK11D::functionParametersOk (RKTypes::Function function)
+{
+    // Check validity of the function's parameters
+    if (function.diskAddress.sectorAddress >= RKTypes::SectorsPerSurface)
+    {
+        setError ([&] {rker_.nonexistentSector = 1; });
+        return false;
+    }
+
+    if (function.diskAddress.cylinderAddress >= RKTypes::CylindersPerDisk)
+    {
+        setError ([&] {rker_.nonexistentCylinder = 1; });
+        return false;
+    }
+
+    return true;
+}
+
 bool RK11D::notWriteProtected (RKTypes::Function function)
 {
     if (rk05Drives_[function.diskAddress.driveSelect]->isWriteProtected ())

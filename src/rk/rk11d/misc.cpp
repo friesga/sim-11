@@ -27,24 +27,6 @@ void RK11D::setControlReady ()
     rkcs_.controlReady = 1;
 }
 
-bool RK11D::functionParametersOk (RKTypes::Function function)
-{
-    // Check validity of the function's parameters
-    if (function.diskAddress.sectorAddress >= RKTypes::SectorsPerSurface)
-    {
-        setError ([&] {rker_.nonexistentSector = 1; });
-        return false;
-    }
-
-    if (function.diskAddress.cylinderAddress >= RKTypes::CylindersPerDisk)
-    {
-        setError ([&] {rker_.nonexistentCylinder = 1; });
-        return false;
-    }
-
-    return true;
-}
-
 // The drive status for a non-existing disk is returned when the RKDS
 // is read for the non-existing disk.
 void RK11D::setNonExistingDisk ()
