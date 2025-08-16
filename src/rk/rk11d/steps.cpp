@@ -6,13 +6,6 @@ using std::out_of_range;
 
 using RKTypes::rk05Geometry_;
 
-// Every RK11 function is executed in a number of steps. Every step is a
-// C++ function, returning true if the function is executed succesfully and
-// false if not and the RK11 function has to be aborted.
-// 
-// This file contains the steps for the RK11 functions
-//
-
 // Check the in the disk address specified drive is ready
 bool RK11D::driveReady (RKTypes::Function function)
 {
@@ -35,26 +28,6 @@ bool RK11D::notWriteProtected (RKTypes::Function function)
     }
 
     return true;
-}
-
-// Read the given number of headers from the given starting disk address
-// into the controller's buffer.
-void RK11D::driveReadHeader (RKTypes::Function function,
-    RKTypes::CommandCompletion& commandCompletion)
-{
-    u16 driveId = function.diskAddress.driveSelect;
-
-    DiskAddress diskAddress
-    {
-         function.diskAddress.sectorAddress,
-         function.diskAddress.surface,
-         function.diskAddress.cylinderAddress
-    };
-
-    u32 wordCount = absValueFromTwosComplement (function.wordCount);
-
-    commandCompletion = rk05Drives_[driveId]->readHeader (diskAddress,
-        wordCount, buffer_.get ());
 }
 
 bool RK11D::updateRegisters (RKTypes::Function function,

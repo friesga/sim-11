@@ -134,13 +134,16 @@ private:
     // RK05 drive
     unique_ptr<u16[]> buffer_;
 
-    // The RK11 functions are executed in a sequence of steps. Every function
-    // has its own sequence. Every step returns a boolean, indicating if an
-    // error occurred and the step sequence can be continued or has to be
+    // The RK11 functions are executed in a sequence of steps. Every RK11
+    // function has its own sequence. Every step is a C++ function, returning
+    // true if the function is executed succesfully and the step sequence can
+    // be continued and false if not, indicating the RK11 function has to be
     // aborted.
-    // Every step function has two parameters, the RK11 function and the
-    // CommandCompletion struct which gets the result of the execution of
-    // the function. Not all step functions use the CommandCompletion 
+    // 
+    // Every step function has one or two parameters, the RK11 function and
+    // the CommandCompletion struct which gets the result of the execution of
+    // the function.
+    //
     bool driveReady (RKTypes::Function function);
     bool notWriteProtected (RKTypes::Function function);
     bool cylinderAddressOk (RKTypes::Function function);

@@ -1,6 +1,7 @@
 set (RK11D_SRCS
     rk11d/functionprocessor.cpp
     rk11d/driveread.cpp
+    rk11d/drivereadheader.cpp
     rk11d/driveseek.cpp
     rk11d/drivewrite.cpp
     rk11d/drivewritecheck.cpp
