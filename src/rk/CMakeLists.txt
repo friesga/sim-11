@@ -1,9 +1,6 @@
 set (RK11D_SRCS
     rk11d/functionprocessor.cpp
-    rk11d/executedrivereset.cpp
     rk11d/executeread.cpp
-     rk11d/executereadheader.cpp
-    rk11d/executereadcheck.cpp
     rk11d/executeseek.cpp
     rk11d/executewrite.cpp
     rk11d/executewritecheck.cpp

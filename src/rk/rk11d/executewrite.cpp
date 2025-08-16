@@ -2,21 +2,10 @@
 #include "rk/include/rktypes.h"
 
 #include <stdexcept>
-#include <algorithm>
 
 using std::out_of_range;
-using std::ranges::all_of;
 
 using RKTypes::rk05Geometry_;
-
-// ToDo: Pass Function as argument?
-void RK11D::executeWrite (RKTypes::Function function)
-{
-    RKTypes::CommandCompletion commandCompletion {};
-
-    all_of (writeFunction_, [&] (auto& f)
-        { return f (function, commandCompletion); });
-}
 
 // The word count in the RKWC register is given as a two's complement
 // negative number. To be able to use this value as a word counter 

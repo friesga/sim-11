@@ -2,20 +2,10 @@
 #include "rk/include/rktypes.h"
 
 #include <stdexcept>
-#include <algorithm>
 
 using std::out_of_range;
-using std::ranges::all_of;
 
 using RKTypes::rk05Geometry_;
-
-void RK11D::executeRead (RKTypes::Function function)
-{ 
-    RKTypes::CommandCompletion commandCompletion {};
-
-    all_of (readFunction_, [&] (auto& f)
-        { return f (function, commandCompletion); });
-}
 
 // Read the given numer of words from the given disk address into the
 // controller's buffer.
