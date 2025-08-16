@@ -6,7 +6,7 @@
 // The function is already safeguarded against register access by the
 // CPU thread as the controllerMutex_ is locked by the function processor.
 //
-void RK11D::processFunction (RKTypes::Function function)
+void RK11D::processFunction (RKTypes::Function const& function)
 {
     RKTypes::CommandCompletion commandCompletion {};
     StepVector sequenceToBeExecuted {};

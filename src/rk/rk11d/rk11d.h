@@ -144,29 +144,30 @@ private:
     // the CommandCompletion struct which gets the result of the execution of
     // the function.
     //
-    bool driveReady (RKTypes::Function function);
-    bool notWriteProtected (RKTypes::Function function);
-    bool cylinderAddressOk (RKTypes::Function function);
-    void driveRead (RKTypes::Function function,
+    bool driveReady (RKTypes::Function const & function);
+    bool functionParametersOk (RKTypes::Function const& function);
+    bool notWriteProtected (RKTypes::Function const& function);
+    bool cylinderAddressOk (RKTypes::Function const& function);
+    void driveRead (RKTypes::Function const& function,
         RKTypes::CommandCompletion& commandCompletion);
-    void driveReadHeader (RKTypes::Function function,
+    void driveReadHeader (RKTypes::Function const& function,
         RKTypes::CommandCompletion& commandCompletion);
-    void driveWrite (RKTypes::Function function,
+    void driveWrite (RKTypes::Function const& function,
         RKTypes::CommandCompletion&);
-    bool syncSeek (RKTypes::Function function,
+    bool syncSeek (RKTypes::Function const& function,
         RKTypes::CommandCompletion& commandCompletion);
-    bool asyncSeek (RKTypes::Function function);
+    bool asyncSeek (RKTypes::Function const& function);
     void waitTillSeekCompleted (u16 driveId);
-    bool updateRegisters (RKTypes::Function function,
+    bool updateRegisters (RKTypes::Function const& function,
         RKTypes::CommandCompletion& commandCompletion);
-    bool writeBufferToMemory (RKTypes::Function function,
+    bool writeBufferToMemory (RKTypes::Function const& function,
         RKTypes::CommandCompletion& commandCompletion);
-    bool readBufferFromMemory (RKTypes::Function function,
+    bool readBufferFromMemory (RKTypes::Function const& function,
         RKTypes::CommandCompletion& commandCompletion);
-    bool compareBufferWithMemory (RKTypes::Function function,
+    bool compareBufferWithMemory (RKTypes::Function const& function,
         RKTypes::CommandCompletion& commandCompletion);
     void setWritCheckOnError (RKTypes::CommandCompletion& commandCompletion);
-    void driveWriteLock (RKTypes::Function function);
+    void driveWriteLock (RKTypes::Function const& function);
 
     using Step = function<bool (RKTypes::Function,
         RKTypes::CommandCompletion&)>;
@@ -180,57 +181,57 @@ private:
     // via the this pointer.
     StepVector const writeFunction_ =
     {
-        [this] (RKTypes::Function function, RKTypes::CommandCompletion& commandCompletion)
+        [this] (RKTypes::Function const & function, RKTypes::CommandCompletion& commandCompletion)
             { return driveReady (function); },
-        [this] (RKTypes::Function function, RKTypes::CommandCompletion& commandCompletion)
+        [this] (RKTypes::Function const& function, RKTypes::CommandCompletion& commandCompletion)
             { return notWriteProtected (function); },
-        [this] (RKTypes::Function function, RKTypes::CommandCompletion& commandCompletion)
+        [this] (RKTypes::Function const& function, RKTypes::CommandCompletion& commandCompletion)
             { return functionParametersOk (function); },
-        [this] (RKTypes::Function function, RKTypes::CommandCompletion& commandCompletion)
+        [this] (RKTypes::Function const& function, RKTypes::CommandCompletion& commandCompletion)
             { return readBufferFromMemory (function, commandCompletion); },
         // ToDo: Set error condition on false retun
         // ToDo: Clear to end of block
-        [this] (RKTypes::Function function, RKTypes::CommandCompletion& commandCompletion)
+        [this] (RKTypes::Function const& function, RKTypes::CommandCompletion& commandCompletion)
             { return syncSeek (function, commandCompletion); },
-        [this] (RKTypes::Function function, RKTypes::CommandCompletion& commandCompletion)
+        [this] (RKTypes::Function const& function, RKTypes::CommandCompletion& commandCompletion)
             { driveWrite (function, commandCompletion); return true; },
-        [this] (RKTypes::Function function, RKTypes::CommandCompletion& commandCompletion)
+        [this] (RKTypes::Function const& function, RKTypes::CommandCompletion& commandCompletion)
             { return updateRegisters (function, commandCompletion); }
     };
 
     StepVector const readFunction_ =
     {
-        [this] (RKTypes::Function function, RKTypes::CommandCompletion& commandCompletion)
+        [this] (RKTypes::Function const& function, RKTypes::CommandCompletion& commandCompletion)
             { return driveReady (function); },
-        [this] (RKTypes::Function function, RKTypes::CommandCompletion& commandCompletion)
+        [this] (RKTypes::Function const& function, RKTypes::CommandCompletion& commandCompletion)
             { return functionParametersOk (function); },
         // ToDo: Check for sector overflow
-        [this] (RKTypes::Function function, RKTypes::CommandCompletion& commandCompletion)
+        [this] (RKTypes::Function const& function, RKTypes::CommandCompletion& commandCompletion)
             { return syncSeek (function, commandCompletion); },
-        [this] (RKTypes::Function function, RKTypes::CommandCompletion& commandCompletion)
+        [this] (RKTypes::Function const& function, RKTypes::CommandCompletion& commandCompletion)
             { driveRead (function, commandCompletion); return true; },
-        [this] (RKTypes::Function function, RKTypes::CommandCompletion& commandCompletion)
+        [this] (RKTypes::Function const& function, RKTypes::CommandCompletion& commandCompletion)
             { writeBufferToMemory (function, commandCompletion); return true; },
         // ToDo: Clear the part of the buffer not filled by the read
-        [this] (RKTypes::Function function, RKTypes::CommandCompletion& commandCompletion)
+        [this] (RKTypes::Function const& function, RKTypes::CommandCompletion& commandCompletion)
             { return updateRegisters (function, commandCompletion); }
     };
 
     StepVector const readHeaderFunction_ =
     {
-        [this] (RKTypes::Function function, RKTypes::CommandCompletion& commandCompletion)
+        [this] (RKTypes::Function const& function, RKTypes::CommandCompletion& commandCompletion)
             { return driveReady (function); },
-        [this] (RKTypes::Function function, RKTypes::CommandCompletion& commandCompletion)
+        [this] (RKTypes::Function const& function, RKTypes::CommandCompletion& commandCompletion)
             { return functionParametersOk (function); },
         // ToDo: Check for sector overflow
-        [this] (RKTypes::Function function, RKTypes::CommandCompletion& commandCompletion)
+        [this] (RKTypes::Function const& function, RKTypes::CommandCompletion& commandCompletion)
             { return syncSeek (function, commandCompletion); },
-        [this] (RKTypes::Function function, RKTypes::CommandCompletion& commandCompletion)
+        [this] (RKTypes::Function const& function, RKTypes::CommandCompletion& commandCompletion)
             { driveReadHeader (function, commandCompletion); return true; },
-        [this] (RKTypes::Function function, RKTypes::CommandCompletion& commandCompletion)
+        [this] (RKTypes::Function const& function, RKTypes::CommandCompletion& commandCompletion)
             { writeBufferToMemory (function, commandCompletion); return true; },
         // ToDo: Clear the part of the buffer not filled by the read
-        [this] (RKTypes::Function function, RKTypes::CommandCompletion& commandCompletion)
+        [this] (RKTypes::Function const& function, RKTypes::CommandCompletion& commandCompletion)
             { return updateRegisters (function, commandCompletion); }
     };
 
@@ -258,20 +259,20 @@ private:
     // error.
     StepVector const writeCheckFunction_ =
     {
-        [this] (RKTypes::Function function, RKTypes::CommandCompletion& commandCompletion)
+        [this] (RKTypes::Function const& function, RKTypes::CommandCompletion& commandCompletion)
             { return driveReady (function); },
-        [this] (RKTypes::Function function, RKTypes::CommandCompletion& commandCompletion)
+        [this] (RKTypes::Function const& function, RKTypes::CommandCompletion& commandCompletion)
             { return functionParametersOk (function); },
         // ToDo: Check for sector overflow
-        [this] (RKTypes::Function function, RKTypes::CommandCompletion& commandCompletion)
+        [this] (RKTypes::Function const& function, RKTypes::CommandCompletion& commandCompletion)
             { return syncSeek (function, commandCompletion); },
-        [this] (RKTypes::Function function, RKTypes::CommandCompletion& commandCompletion)
+        [this] (RKTypes::Function const& function, RKTypes::CommandCompletion& commandCompletion)
             { driveRead (function, commandCompletion); return true; },
-        [this] (RKTypes::Function function, RKTypes::CommandCompletion& commandCompletion)
+        [this] (RKTypes::Function const& function, RKTypes::CommandCompletion& commandCompletion)
             { compareBufferWithMemory (function, commandCompletion); return true; },
-        [this] (RKTypes::Function function, RKTypes::CommandCompletion& commandCompletion)
+        [this] (RKTypes::Function const& function, RKTypes::CommandCompletion& commandCompletion)
             { return updateRegisters (function, commandCompletion); },
-        [this] (RKTypes::Function function, RKTypes::CommandCompletion& commandCompletion)
+        [this] (RKTypes::Function const& function, RKTypes::CommandCompletion& commandCompletion)
             { setWritCheckOnError (commandCompletion); return true; }
     };
 
@@ -287,15 +288,15 @@ private:
     //
     StepVector const readCheckFunction_ =
     {
-        [this] (RKTypes::Function function, RKTypes::CommandCompletion& commandCompletion)
+        [this] (RKTypes::Function const& function, RKTypes::CommandCompletion& commandCompletion)
             { return driveReady (function); },
-        [this] (RKTypes::Function function, RKTypes::CommandCompletion& commandCompletion)
+        [this] (RKTypes::Function const& function, RKTypes::CommandCompletion& commandCompletion)
             { return functionParametersOk (function); },
     };
 
     StepVector const controlResetFunction_ =
     {
-        [this] (RKTypes::Function function, RKTypes::CommandCompletion& commandCompletion)
+        [this] (RKTypes::Function const& function, RKTypes::CommandCompletion& commandCompletion)
             { reset (); return true; },
     };
 
@@ -315,7 +316,7 @@ private:
     //
     StepVector const seekFunction_ =
     {
-        [this] (RKTypes::Function function, RKTypes::CommandCompletion& commandCompletion)
+        [this] (RKTypes::Function const& function, RKTypes::CommandCompletion& commandCompletion)
             { return asyncSeek (function); },
     };
 
@@ -331,7 +332,7 @@ private:
     //
     StepVector const driveResetFunction_ =
     {
-        [this] (RKTypes::Function function, RKTypes::CommandCompletion& commandCompletion)
+        [this] (RKTypes::Function const& function, RKTypes::CommandCompletion& commandCompletion)
             { return asyncSeek (function); },
     };
 
@@ -345,7 +346,7 @@ private:
     //
     StepVector const writeLockFunction_ =
     {
-        [this] (RKTypes::Function function, RKTypes::CommandCompletion& commandCompletion)
+        [this] (RKTypes::Function const& function, RKTypes::CommandCompletion& commandCompletion)
             { driveWriteLock (function); return true; },
     };
 
@@ -365,15 +366,8 @@ private:
     };
 
     void functionProcessor ();
-    void processFunction (RKTypes::Function function);
-    void executeSeek (RKTypes::Function function);
-    void executeRead (RKTypes::Function function);
-    void executeReadHeader (RKTypes::Function function);
-    void executeReadCheck (RKTypes::Function function);
-    void executeWriteCheck (RKTypes::Function function);
-    void executeWrite (RKTypes::Function function);
-    void executeDriveReset (RKTypes::Function function);
-    void executeWriteLock (RKTypes::Function function);
+    void processFunction (RKTypes::Function const& function);
+
     StatusCode transferDataToBuffer (BusAddress memoryAddress,
         u16 wordCount, unique_ptr<u16[]>& buffer);
     StatusCode transferPatternToBuffer (BusAddress memoryAddress,
@@ -391,7 +385,6 @@ private:
     void setControlReady ();
     void finish ();
     u32 absValueFromTwosComplement (u16 value) const;
-    bool functionParametersOk (RKTypes::Function function);
     void setError (function<void ()> function);
     RKTypes::RKDS getDriveStatus (u16 driveId);
     void startFunction ();
@@ -411,13 +404,13 @@ public:
 
     void entry (WaitingForFunction);
     State transition (WaitingForFunction&&,
-        RKTypes::Function);                                 // -> ProcessingFunction
+        RKTypes::Function const&);                                 // -> ProcessingFunction
     State transition (WaitingForFunction&&,
         RKTypes::SeekCompleteReport);
     
     void entry (ProcessingFunction);
     State transition (ProcessingFunction&&,
-        RKTypes::Function);                                 // -> ProcessingFunction/Polling
+        RKTypes::Function const&);                                 // -> ProcessingFunction/Polling
     State transition (ProcessingFunction&&,
         RKTypes::SeekCompleteReport);
     
@@ -425,7 +418,7 @@ public:
     State transition (Polling&&,
         RKTypes::SeekCompleteReport);                       // -> Polling
     State transition (Polling&&,
-        RKTypes::Function);                                 // -> Polling/ProcessingFunction
+        RKTypes::Function const&);                                 // -> Polling/ProcessingFunction
 
     // Define the default transition for transitions not explicitly
     // defined above. The default transition implies the event is ignored.

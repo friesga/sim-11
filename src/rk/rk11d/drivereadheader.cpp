@@ -2,7 +2,7 @@
 
 // Read the given number of headers from the given starting disk address
 // into the controller's buffer.
-void RK11D::driveReadHeader (RKTypes::Function function,
+void RK11D::driveReadHeader (RKTypes::Function const& function,
     RKTypes::CommandCompletion& commandCompletion)
 {
     u16 driveId = function.diskAddress.driveSelect;

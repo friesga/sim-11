@@ -2,7 +2,7 @@
 
 // Execute an asynchronous seek, i.e. start a seek not waiting for its
 // completion.
-bool RK11D::asyncSeek (RKTypes::Function function)
+bool RK11D::asyncSeek (RKTypes::Function const& function)
 {
     if (cylinderAddressOk (function))
     {
@@ -14,7 +14,7 @@ bool RK11D::asyncSeek (RKTypes::Function function)
 }
 
 // Execute a synchronous seek, i.e. start a seek and wait for its completion.
-bool RK11D::syncSeek (RKTypes::Function function,
+bool RK11D::syncSeek (RKTypes::Function const& function,
     RKTypes::CommandCompletion& commandCompletion)
 {
     if (function.diskAddress.cylinderAddress < RKTypes::CylindersPerDisk)
@@ -32,7 +32,7 @@ bool RK11D::syncSeek (RKTypes::Function function,
     }
 }
 
-bool RK11D::cylinderAddressOk (RKTypes::Function function)
+bool RK11D::cylinderAddressOk (RKTypes::Function const& function)
 {
     if (function.diskAddress.cylinderAddress < RKTypes::CylindersPerDisk)
         return true;

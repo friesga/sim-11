@@ -7,7 +7,7 @@ using std::out_of_range;
 using RKTypes::rk05Geometry_;
 
 // Check the in the disk address specified drive is ready
-bool RK11D::driveReady (RKTypes::Function function)
+bool RK11D::driveReady (RKTypes::Function const & function)
 {
 
     if (!rk05Drives_[function.diskAddress.driveSelect]->isReady ())
@@ -19,7 +19,7 @@ bool RK11D::driveReady (RKTypes::Function function)
     return true;
 }
 
-bool RK11D::functionParametersOk (RKTypes::Function function)
+bool RK11D::functionParametersOk (RKTypes::Function const& function)
 {
     // Check validity of the function's parameters
     if (function.diskAddress.sectorAddress >= RKTypes::SectorsPerSurface)
@@ -37,7 +37,7 @@ bool RK11D::functionParametersOk (RKTypes::Function function)
     return true;
 }
 
-bool RK11D::notWriteProtected (RKTypes::Function function)
+bool RK11D::notWriteProtected (RKTypes::Function const& function)
 {
     if (rk05Drives_[function.diskAddress.driveSelect]->isWriteProtected ())
     {
@@ -48,7 +48,7 @@ bool RK11D::notWriteProtected (RKTypes::Function function)
     return true;
 }
 
-bool RK11D::updateRegisters (RKTypes::Function function,
+bool RK11D::updateRegisters (RKTypes::Function const& function,
     RKTypes::CommandCompletion& commandCompletion)
 {
     if (!function.rkcs.inhibitIncrementingRKBA)

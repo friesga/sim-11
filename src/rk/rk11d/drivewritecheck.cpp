@@ -8,7 +8,7 @@ using std::out_of_range;
 using RKTypes::rk05Geometry_;
 
 
-bool RK11D::compareBufferWithMemory (RKTypes::Function function,
+bool RK11D::compareBufferWithMemory (RKTypes::Function const& function,
     RKTypes::CommandCompletion& commandCompletion)
 {
     if (function.rkcs.inhibitIncrementingRKBA)

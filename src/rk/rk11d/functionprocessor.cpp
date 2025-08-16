@@ -53,7 +53,7 @@ void RK11D::StateMachine::entry (WaitingForFunction)
 // transition is performed to either the ProcessingFunction or Polling state.
 //
 RK11D::State RK11D::StateMachine::transition (WaitingForFunction&&,
-    RKTypes::Function function)
+    RKTypes::Function const& function)
 {
     if (function.rkcs.operation == RKTypes::Seek)
         return Polling {function};
@@ -81,7 +81,7 @@ void  RK11D::StateMachine::entry (ProcessingFunction current)
 }
 
 RK11D::State RK11D::StateMachine::transition (ProcessingFunction&&,
-    RKTypes::Function function)
+    RKTypes::Function const& function)
 {
     if (function.rkcs.operation == RKTypes::Seek)
         return Polling {function};
@@ -132,7 +132,7 @@ RK11D::State RK11D::StateMachine::transition (Polling&&,
 }
 
 RK11D::State RK11D::StateMachine::transition (Polling&&,
-    RKTypes::Function function)
+    RKTypes::Function const& function)
 {
     if (function.rkcs.operation == RKTypes::Seek)
         return Polling {function};

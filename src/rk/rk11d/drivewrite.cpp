@@ -7,7 +7,7 @@ using std::out_of_range;
 
 using RKTypes::rk05Geometry_;
 
-void RK11D::driveWrite (RKTypes::Function function,
+void RK11D::driveWrite (RKTypes::Function const& function,
     RKTypes::CommandCompletion& commandCompletion)
 {
     commandCompletion = rk05Drives_[function.diskAddress.driveSelect]->write (
@@ -25,7 +25,7 @@ u32 RK11D::absValueFromTwosComplement (u16 value) const
     return static_cast<u32> (0200000 - value);
 }
 
-bool RK11D::readBufferFromMemory (RKTypes::Function function,
+bool RK11D::readBufferFromMemory (RKTypes::Function const& function,
     RKTypes::CommandCompletion& commandCompletion)
 {
     // In the normal case the wordCount words starting at the address in

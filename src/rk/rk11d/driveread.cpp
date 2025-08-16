@@ -9,7 +9,7 @@ using RKTypes::rk05Geometry_;
 
 // Read the given numer of words from the given disk address into the
 // controller's buffer.
-void RK11D::driveRead (RKTypes::Function function,
+void RK11D::driveRead (RKTypes::Function const& function,
     RKTypes::CommandCompletion& commandCompletion)
 {
     u16 driveId = function.diskAddress.driveSelect;
@@ -27,7 +27,7 @@ void RK11D::driveRead (RKTypes::Function function,
         wordCount, buffer_.get ());
 }
 
-bool RK11D::writeBufferToMemory (RKTypes::Function function,
+bool RK11D::writeBufferToMemory (RKTypes::Function const& function,
     RKTypes::CommandCompletion& commandCompletion)
 {
     // In the normal case the wordCount words starting at the address in

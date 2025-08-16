@@ -33,7 +33,7 @@ public:
     BusAddress (u32 value);
     BusAddress (u32 value, Width width);
     Width width ();
-    operator u32 ();
+    operator u32 () const;
     BusAddress& operator += (u32 value);
     BusAddress& operator &= (u32 mask);
     bool isInIOpage ();
@@ -76,7 +76,7 @@ inline BusAddress::Width BusAddress::width ()
     return width_;
 }
 
-inline BusAddress::operator u32 ()
+inline BusAddress::operator u32 () const
 {
     return value_;
 }
