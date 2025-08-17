@@ -9,22 +9,22 @@ using RKTypes::rk05Geometry_;
 
 
 bool RK11D::compareBufferWithMemory (RKTypes::Function const& function,
-    RKTypes::CommandCompletion& commandCompletion)
+    RKTypes::FunctionResult& functionResult)
 {
     if (function.rkcs.inhibitIncrementingRKBA)
     {
-        commandCompletion.statusCode =
+        functionResult.statusCode =
             comparePatternWithBuffer (function.busAddress,
-                commandCompletion.wordsTransferred, buffer_);
+                functionResult.wordsTransferred, buffer_);
     }
     else
     {
-        commandCompletion.statusCode = 
+        functionResult.statusCode = 
             compareDataWithBuffer (function.busAddress,
-                commandCompletion.wordsTransferred, buffer_);
+                functionResult.wordsTransferred, buffer_);
     }
 
-    return commandCompletion.statusCode == StatusCode::Success;
+    return functionResult.statusCode == StatusCode::Success;
 }
 
 // Compare the memory contents with the data in the buffer
@@ -63,8 +63,8 @@ StatusCode RK11D::comparePatternWithBuffer (BusAddress memoryAddress,
     return StatusCode::Success;
 }
 
-void RK11D::setWritCheckOnError (RKTypes::CommandCompletion& commandCompletion)
+void RK11D::setWritCheckOnError (RKTypes::FunctionResult& functionResult)
 {
-    if (commandCompletion.statusCode != StatusCode::Success)
+    if (functionResult.statusCode != StatusCode::Success)
         rker_.writeCheckError = 1;
 }

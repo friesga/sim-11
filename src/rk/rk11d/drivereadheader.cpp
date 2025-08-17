@@ -3,7 +3,7 @@
 // Read the given number of headers from the given starting disk address
 // into the controller's buffer.
 void RK11D::driveReadHeader (RKTypes::Function const& function,
-    RKTypes::CommandCompletion& commandCompletion)
+    RKTypes::FunctionResult& functionResult)
 {
     u16 driveId = function.diskAddress.driveSelect;
 
@@ -16,6 +16,6 @@ void RK11D::driveReadHeader (RKTypes::Function const& function,
 
     u32 wordCount = absValueFromTwosComplement (function.wordCount);
 
-    commandCompletion = rk05Drives_[driveId]->readHeader (diskAddress,
+    functionResult = rk05Drives_[driveId]->readHeader (diskAddress,
         wordCount, buffer_.get ());
 }

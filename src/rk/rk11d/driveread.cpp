@@ -10,7 +10,7 @@ using RKTypes::rk05Geometry_;
 // Read the given numer of words from the given disk address into the
 // controller's buffer.
 void RK11D::driveRead (RKTypes::Function const& function,
-    RKTypes::CommandCompletion& commandCompletion)
+    RKTypes::FunctionResult& functionResult)
 {
     u16 driveId = function.diskAddress.driveSelect;
 
@@ -23,12 +23,12 @@ void RK11D::driveRead (RKTypes::Function const& function,
 
     u32 wordCount = absValueFromTwosComplement (function.wordCount);
 
-    commandCompletion = rk05Drives_[driveId]->read (diskAddress,
+    functionResult = rk05Drives_[driveId]->read (diskAddress,
         wordCount, buffer_.get ());
 }
 
 bool RK11D::writeBufferToMemory (RKTypes::Function const& function,
-    RKTypes::CommandCompletion& commandCompletion)
+    RKTypes::FunctionResult& functionResult)
 {
     // In the normal case the wordCount words starting at the address in
     // the RKBA are written to memory. Setting the RKCS IBA bit inhbits the
@@ -36,17 +36,17 @@ bool RK11D::writeBufferToMemory (RKTypes::Function const& function,
     // just the last word in the buffer will be written to the address in
     // the RKBA.
     if (function.rkcs.inhibitIncrementingRKBA)
-        commandCompletion.statusCode = 
+        functionResult.statusCode = 
             transferWordFromBuffer (function.busAddress,
-                commandCompletion.wordsTransferred, buffer_);
+                functionResult.wordsTransferred, buffer_);
     else
     {
-        commandCompletion.statusCode = 
+        functionResult.statusCode = 
             transferDataFromBuffer (function.busAddress,
-                commandCompletion.wordsTransferred, buffer_);
+                functionResult.wordsTransferred, buffer_);
     }
 
-    return commandCompletion.statusCode == StatusCode::Success;
+    return functionResult.statusCode == StatusCode::Success;
 }
 
 StatusCode RK11D::transferDataFromBuffer (BusAddress memoryAddress,

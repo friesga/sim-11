@@ -15,7 +15,7 @@ bool RK11D::asyncSeek (RKTypes::Function const& function)
 
 // Execute a synchronous seek, i.e. start a seek and wait for its completion.
 bool RK11D::syncSeek (RKTypes::Function const& function,
-    RKTypes::CommandCompletion& commandCompletion)
+    RKTypes::FunctionResult& functionResult)
 {
     if (function.diskAddress.cylinderAddress < RKTypes::CylindersPerDisk)
     {

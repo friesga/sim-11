@@ -7,12 +7,12 @@ using std::bind;
 using namespace RKTypes;
 
 // ToDo: Uniform parameters with writeDataToSector()
-RKTypes::CommandCompletion RK05::write (DiskAddress diskAddress,
+RKTypes::FunctionResult RK05::write (DiskAddress diskAddress,
     u16 wordCount, u16* data)
 {
     size_t wordsWritten = writeDataToDrive (diskAddress, data,
         wordCount);
-    return RKTypes::CommandCompletion {StatusCode::Success,
+    return RKTypes::FunctionResult {StatusCode::Success,
         wordsWritten, wordsWritten / rk05Geometry_.wordsPerSector ()};
 }
 
@@ -25,12 +25,12 @@ size_t RK05::writeDataToDrive (DiskAddress diskAddress, u16* buffer, u32 numWord
     return wordsWritten;
 }
 
-RKTypes::CommandCompletion RK05::read (DiskAddress diskAddress,
+RKTypes::FunctionResult RK05::read (DiskAddress diskAddress,
     u16 wordCount, u16* data)
 {
     size_t wordsRead = readDataFromDrive (diskAddress, data,
         wordCount);
-    return RKTypes::CommandCompletion {StatusCode::Success, wordsRead,
+    return RKTypes::FunctionResult {StatusCode::Success, wordsRead,
         wordsRead / rk05Geometry_.wordsPerSector ()};
 }
 
@@ -70,7 +70,7 @@ void RK05::seek (u16 cylinderAddress)
 // in the disk file) but is simply extracted from the disk address and stored
 // in the correct format.
 //
-RKTypes::CommandCompletion RK05::readHeader (DiskAddress diskAddress,
+RKTypes::FunctionResult RK05::readHeader (DiskAddress diskAddress,
     u16 wordCount, u16* data)
 {
     size_t wordsRead = 0;
@@ -85,7 +85,7 @@ RKTypes::CommandCompletion RK05::readHeader (DiskAddress diskAddress,
 
     // One word per sector is read, so the number of sectors equals the
     // number of words read.
-    return RKTypes::CommandCompletion {StatusCode::Success, wordsRead,
+    return RKTypes::FunctionResult {StatusCode::Success, wordsRead,
         wordsRead};
 }
 

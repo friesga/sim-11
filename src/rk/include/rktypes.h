@@ -174,7 +174,7 @@ namespace RKTypes
 
     // The completed execution of a command is reported by the number of
     // words transferred and the number of sectors processed.
-    struct CommandCompletion
+    struct FunctionResult
     {
         StatusCode statusCode {};
         size_t wordsTransferred {0};

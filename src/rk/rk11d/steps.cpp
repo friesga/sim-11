@@ -49,12 +49,12 @@ bool RK11D::notWriteProtected (RKTypes::Function const& function)
 }
 
 bool RK11D::updateRegisters (RKTypes::Function const& function,
-    RKTypes::CommandCompletion& commandCompletion)
+    RKTypes::FunctionResult& functionResult)
 {
     if (!function.rkcs.inhibitIncrementingRKBA)
     {
         busAddressToRegs (function.busAddress +
-            commandCompletion.wordsTransferred * 2);
+            functionResult.wordsTransferred * 2);
     }
 
     // The bits of [the RKDB] register work as a general data handler in that
@@ -64,8 +64,8 @@ bool RK11D::updateRegisters (RKTypes::Function const& function,
     // After 1 sector read RKDB contains for RK11C the checksum for that sector,
     // for RK11D the last word transferred to memory. (CZRKKF0, line 3074)
     //
-    rkwc_ += commandCompletion.wordsTransferred;
-    rkdb_ = buffer_[commandCompletion.wordsTransferred - 1];
+    rkwc_ += functionResult.wordsTransferred;
+    rkdb_ = buffer_[functionResult.wordsTransferred - 1];
 
     // An increment of the RKDA might overflow the logical block number.
     // 
@@ -76,7 +76,7 @@ bool RK11D::updateRegisters (RKTypes::Function const& function,
     // (EK-RK11D-MM-002, p. 3-4)
     try
     {
-        rkda_ += commandCompletion.sectorsProcessed;
+        rkda_ += functionResult.sectorsProcessed;
     }
     catch (out_of_range)
     {
@@ -88,7 +88,7 @@ bool RK11D::updateRegisters (RKTypes::Function const& function,
         //
         rkda_ = rk05Geometry_.lbnTodiskAddress (rk05Geometry_.diskCapacity () - 1);
 
-        if (commandCompletion.wordsTransferred <
+        if (functionResult.wordsTransferred <
             absValueFromTwosComplement (function.wordCount))
         {
             setError ([&] {rker_.overrun = 1; });

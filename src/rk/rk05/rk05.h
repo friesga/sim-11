@@ -41,11 +41,11 @@ public:
 
     // Functions implementing the RK11 function
     void seek (u16 cylinderAddress);
-    RKTypes::CommandCompletion write (DiskAddress diskAddress,
+    RKTypes::FunctionResult write (DiskAddress diskAddress,
         u16 wordCount, u16* data);
-    RKTypes::CommandCompletion read (DiskAddress diskAddress,
+    RKTypes::FunctionResult read (DiskAddress diskAddress,
         u16 wordCount, u16* data);
-    RKTypes::CommandCompletion readHeader (DiskAddress diskAddress,
+    RKTypes::FunctionResult readHeader (DiskAddress diskAddress,
         u16 wordCount, u16* data);
     void clearDriveReady ();
     void writeLock ();

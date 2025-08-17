@@ -8,9 +8,9 @@ using std::out_of_range;
 using RKTypes::rk05Geometry_;
 
 void RK11D::driveWrite (RKTypes::Function const& function,
-    RKTypes::CommandCompletion& commandCompletion)
+    RKTypes::FunctionResult& functionResult)
 {
-    commandCompletion = rk05Drives_[function.diskAddress.driveSelect]->write (
+    functionResult = rk05Drives_[function.diskAddress.driveSelect]->write (
         DiskAddress {function.diskAddress.sectorAddress,
         function.diskAddress.surface,
         function.diskAddress.cylinderAddress},
@@ -26,7 +26,7 @@ u32 RK11D::absValueFromTwosComplement (u16 value) const
 }
 
 bool RK11D::readBufferFromMemory (RKTypes::Function const& function,
-    RKTypes::CommandCompletion& commandCompletion)
+    RKTypes::FunctionResult& functionResult)
 {
     // In the normal case the wordCount words starting at the address in
     // the RKBA are read into the buffer. Setting the RKCS IBA bit inhbits
@@ -34,14 +34,14 @@ bool RK11D::readBufferFromMemory (RKTypes::Function const& function,
     // the buffer will be filled with the pattern from the address in the
     // RKBA.
     if (function.rkcs.inhibitIncrementingRKBA)
-        commandCompletion.statusCode =
+        functionResult.statusCode =
             transferPatternToBuffer (function.busAddress,
                 function.wordCount, buffer_);
     else
-        commandCompletion.statusCode = transferDataToBuffer (function.busAddress,
+        functionResult.statusCode = transferDataToBuffer (function.busAddress,
             function.wordCount, buffer_);
 
-    return commandCompletion.statusCode == StatusCode::Success;
+    return functionResult.statusCode == StatusCode::Success;
 }  
 
 StatusCode RK11D::transferDataToBuffer (BusAddress memoryAddress,

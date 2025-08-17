@@ -8,7 +8,7 @@
 //
 void RK11D::processFunction (RKTypes::Function const& function)
 {
-    RKTypes::CommandCompletion commandCompletion {};
+    RKTypes::FunctionResult functionResult {};
     StepVector sequenceToBeExecuted {};
 
     // The Read Header function is a special case in the sense that it
@@ -22,7 +22,7 @@ void RK11D::processFunction (RKTypes::Function const& function)
 
     for (auto step : sequenceToBeExecuted)
     {
-        if (!(step)(function, commandCompletion))
+        if (!(step)(function, functionResult))
             break;
     }
 
