@@ -13,17 +13,9 @@ void RK11D::driveRead (RKTypes::Function const& function,
     RKTypes::FunctionResult& functionResult)
 {
     u16 driveId = function.diskAddress.driveSelect;
-
-    DiskAddress diskAddress
-    {
-         function.diskAddress.sectorAddress,
-         function.diskAddress.surface,
-         function.diskAddress.cylinderAddress
-    };
-
     u32 wordCount = absValueFromTwosComplement (function.wordCount);
 
-    functionResult = rk05Drives_[driveId]->read (diskAddress,
+    functionResult = rk05Drives_[driveId]->read (function.diskAddress,
         wordCount, buffer_.get ());
 }
 

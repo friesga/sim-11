@@ -11,10 +11,7 @@ void RK11D::driveWrite (RKTypes::Function const& function,
     RKTypes::FunctionResult& functionResult)
 {
     functionResult = rk05Drives_[function.diskAddress.driveSelect]->write (
-        DiskAddress {function.diskAddress.sectorAddress,
-        function.diskAddress.surface,
-        function.diskAddress.cylinderAddress},
-        absValueFromTwosComplement (function.wordCount),
+        function.diskAddress, absValueFromTwosComplement (function.wordCount),
         buffer_.get ());
 }
 

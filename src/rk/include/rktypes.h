@@ -136,6 +136,11 @@ namespace RKTypes
             *this = *this + numSectors;
             return *this;
         }
+
+        operator DiskAddress () const
+        {
+            return DiskAddress {sectorAddress, surface, cylinderAddress};
+        }
     };
 
     // Definition of the RK11-D Operations
