@@ -134,6 +134,8 @@ private:
     // RK05 drive
     unique_ptr<u16[]> buffer_;
 
+    enum class SeekMode {Sync, Async};
+
     // The RK11 functions are executed in a sequence of steps. Every RK11
     // function has its own sequence. Every step is a C++ function, returning
     // true if the function is executed succesfully and the step sequence can
@@ -154,9 +156,7 @@ private:
         RKTypes::FunctionResult& functionResult);
     void driveWrite (RKTypes::Function const& function,
         RKTypes::FunctionResult&);
-    bool syncSeek (RKTypes::Function const& function,
-        RKTypes::FunctionResult& functionResult);
-    bool asyncSeek (RKTypes::Function const& function);
+    bool seek (RKTypes::Function const& function, SeekMode mode);
     void waitTillSeekCompleted (u16 driveId);
     bool updateRegisters (RKTypes::Function const& function,
         RKTypes::FunctionResult& functionResult);
@@ -192,7 +192,7 @@ private:
         // ToDo: Set error condition on false retun
         // ToDo: Clear to end of block
         [this] (RKTypes::Function const& function, RKTypes::FunctionResult& functionResult)
-            { return syncSeek (function, functionResult); },
+            { return seek (function, SeekMode::Sync); },
         [this] (RKTypes::Function const& function, RKTypes::FunctionResult& functionResult)
             { driveWrite (function, functionResult); return true; },
         [this] (RKTypes::Function const& function, RKTypes::FunctionResult& functionResult)
@@ -207,7 +207,7 @@ private:
             { return functionParametersOk (function); },
         // ToDo: Check for sector overflow
         [this] (RKTypes::Function const& function, RKTypes::FunctionResult& functionResult)
-            { return syncSeek (function, functionResult); },
+            { return seek (function, SeekMode::Sync); },
         [this] (RKTypes::Function const& function, RKTypes::FunctionResult& functionResult)
             { driveRead (function, functionResult); return true; },
         [this] (RKTypes::Function const& function, RKTypes::FunctionResult& functionResult)
@@ -225,7 +225,7 @@ private:
             { return functionParametersOk (function); },
         // ToDo: Check for sector overflow
         [this] (RKTypes::Function const& function, RKTypes::FunctionResult& functionResult)
-            { return syncSeek (function, functionResult); },
+            { return seek (function, SeekMode::Sync); },
         [this] (RKTypes::Function const& function, RKTypes::FunctionResult& functionResult)
             { driveReadHeader (function, functionResult); return true; },
         [this] (RKTypes::Function const& function, RKTypes::FunctionResult& functionResult)
@@ -265,7 +265,7 @@ private:
             { return functionParametersOk (function); },
         // ToDo: Check for sector overflow
         [this] (RKTypes::Function const& function, RKTypes::FunctionResult& functionResult)
-            { return syncSeek (function, functionResult); },
+            { return seek (function, SeekMode::Sync); },
         [this] (RKTypes::Function const& function, RKTypes::FunctionResult& functionResult)
             { driveRead (function, functionResult); return true; },
         [this] (RKTypes::Function const& function, RKTypes::FunctionResult& functionResult)
@@ -317,7 +317,7 @@ private:
     StepVector const seekFunction_ =
     {
         [this] (RKTypes::Function const& function, RKTypes::FunctionResult& functionResult)
-            { return asyncSeek (function); },
+            { return seek (function, SeekMode::Async); },
     };
 
     // For a Drive Reset function, the controller directs the selected disk drive
@@ -333,7 +333,7 @@ private:
     StepVector const driveResetFunction_ =
     {
         [this] (RKTypes::Function const& function, RKTypes::FunctionResult& functionResult)
-            { return asyncSeek (function); },
+            { return seek (function, SeekMode::Async); },
     };
 
     // The Write Lock function write-protects a selected disk drive until the
@@ -390,6 +390,7 @@ private:
     void startFunction ();
     BusAddress busAddressFromRegs ();
     void busAddressToRegs (u32 busAddress);
+    void setSeekError ();
 };
 
 // Definition of the state machine for the function processor. The class has

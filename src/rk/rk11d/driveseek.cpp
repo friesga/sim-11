@@ -1,48 +1,33 @@
 #include "rk11d.h"
 
-// Execute an asynchronous seek, i.e. start a seek not waiting for its
-// completion.
-bool RK11D::asyncSeek (RKTypes::Function const& function)
+// Seek operations are executed either in synchronous or asyncchronous
+// mode. In synchronous mode the completion of the seek is waited for,
+// in asynchronous mode the seek is simply started and the function
+// returns.
+bool RK11D::seek (RKTypes::Function const& function, RK11D::SeekMode mode)
 {
-    if (cylinderAddressOk (function))
+    if (!cylinderAddressOk (function))
     {
-        rk05Drives_[function.diskAddress.driveSelect]->seek (function.diskAddress.cylinderAddress);
-        return true;
-    }
-    else
+        setSeekError ();
         return false;
-}
+    }
 
-// Execute a synchronous seek, i.e. start a seek and wait for its completion.
-bool RK11D::syncSeek (RKTypes::Function const& function,
-    RKTypes::FunctionResult& functionResult)
-{
-    if (function.diskAddress.cylinderAddress < RKTypes::CylindersPerDisk)
-    {
-        rk05Drives_[function.diskAddress.driveSelect]->seek (function.diskAddress.cylinderAddress);
+    rk05Drives_[function.diskAddress.driveSelect]->seek (function.diskAddress.cylinderAddress);
+
+    if (mode == SeekMode::Sync)
         waitTillSeekCompleted (function.diskAddress.driveSelect);
-        return true;
-    }
-    else
-    {
-        rker_.nonexistentCylinder = 1;
-        rkcs_.error = 1;
-        rkcs_.hardError = 1;
-        return false;
-    }
+    
+    return true;
 }
 
 bool RK11D::cylinderAddressOk (RKTypes::Function const& function)
 {
-    if (function.diskAddress.cylinderAddress < RKTypes::CylindersPerDisk)
-        return true;
-    else
-    {
-        rker_.nonexistentCylinder = 1;
-        rkcs_.error = 1;
-        rkcs_.hardError = 1;
-        return false;
-    }
+    return (function.diskAddress.cylinderAddress < RKTypes::CylindersPerDisk);
+}
+
+void RK11D::setSeekError ()
+{
+    setError ([&] {rker_.nonexistentCylinder = 1; });
 }
 
 // Wait till the sync seek for the given drive is completed. Seek completions
@@ -59,5 +44,6 @@ void RK11D::waitTillSeekCompleted (u16 driveId)
 
         functionQueue_.waitAndPop (event);
         report = std::get<RKTypes::SeekCompleteReport> (event);
-    } while (report.driveId != driveId);
+    }
+    while (report.driveId != driveId);
 }
