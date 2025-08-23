@@ -394,7 +394,6 @@ TEST_F (RK11DWriteTest, writeSectorSucceeds)
     }
 }
 
-#if 0
 // In this test a number of words, unequal to the sector size, are written
 // to the disk. The controller should fill the remaing words upto the sector
 // size with zero's before writing the sector to the disk.
@@ -420,9 +419,8 @@ TEST_F (RK11DWriteTest, writeUnequalSectorSizeSucceeds)
     bus.installModule (&ms11p);
     bus.installModule (rk11dDevice);
 
-
-    // First write the sector with a random value, so we chan check that
-    // the sector is correctly overwritten
+    // First write a sector with a random value, so buffers are dirty and
+    // we chan check that the sector is correctly overwritten.
     for (u16 address = 040000; address < 041000; address += 2)
         bus.writeWord (address, 0133333);
 
@@ -499,14 +497,13 @@ TEST_F (RK11DWriteTest, writeUnequalSectorSizeSucceeds)
         ASSERT_EQ (contents, 0177777);
     }
 
-    // The scond part should contain zero's
+    // The second part should contain zero's
     for (u16 contents = 0, address = 040400; address < 041000; address += 2)
     {
         contents = bus.read (address);
         ASSERT_EQ (contents, 0);
     }
 }
-#endif
 
 TEST_F (RK11DWriteTest, writeToWriteProtectedDiskFails)
 {

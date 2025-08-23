@@ -1,12 +1,22 @@
 #include "rk05.h"
 
 #include <functional>
+#include <algorithm>
 
 using std::bind;
+using std::min;
 
 using namespace RKTypes;
 
+// Data is written to the disk as complete sectors.
+// 
+// Short portions (less than 256 data words) of a sector may be read or
+// written as long as this short sector is the last sector of the data
+// transfer. When a short sector is written, the remainder of the sector is
+// automatically written with zeroes. (EK-RK11D-MM-002, p.3-9)
+// 
 // ToDo: Uniform parameters with writeDataToSector()
+//
 RKTypes::FunctionResult RK05::write (DiskAddress diskAddress,
     u16 wordCount, u16* data)
 {
@@ -16,13 +26,16 @@ RKTypes::FunctionResult RK05::write (DiskAddress diskAddress,
         wordsWritten, wordsWritten / rk05Geometry_.wordsPerSector ()};
 }
 
-size_t RK05::writeDataToDrive (DiskAddress diskAddress, u16* buffer, u32 numWords)
+// Write data to the disk as a number of complete sectors. The returned
+// number of words written cannot be larger than the original word count.
+//
+size_t RK05::writeDataToDrive (DiskAddress diskAddress, u16* buffer, u16 numWords)
 {
     wtIndicator_->show (Indicator::State::On);
-    size_t wordsWritten = diskDrive_.writeDataToSector (diskAddress, buffer,
-        numWords);
+    u16 wordsWritten = diskDrive_.writeDataToSector (diskAddress, buffer,
+        RKTypes::wordCountForEntireSectors (numWords));
     wtIndicator_->show (Indicator::State::Off);
-    return wordsWritten;
+    return min (wordsWritten, numWords);
 }
 
 RKTypes::FunctionResult RK05::read (DiskAddress diskAddress,

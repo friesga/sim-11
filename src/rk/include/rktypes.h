@@ -27,6 +27,9 @@ namespace RKTypes
         RKTypes::NumberOfHeads, RKTypes::CylindersPerDisk,
         RKTypes::WordsPerSector};
 
+    constexpr size_t wordCountForEntireSectors (u16 wordCount)
+    { return (wordCount + (WordsPerSector - 1)) & ~(WordsPerSector - 1);}
+
     // Definition of the RK11-D register bit assignments
     // 
     // Drive Status register. This is a read-only register and contains the

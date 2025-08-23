@@ -163,7 +163,7 @@ private:
     size_t readDataFromDrive (DiskAddress diskAddress, u16* buffer,
         u32 wordCount);
     size_t writeDataToDrive (DiskAddress diskAddress, u16* buffer,
-        u32 numWords);
+        u16 numWords);
     u16 cylinderFromLBN (u32 lbn);
 };
 

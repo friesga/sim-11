@@ -190,8 +190,8 @@ private:
             { return functionParametersOk (function); },
         [this] (RKTypes::Function const& function, RKTypes::FunctionResult& functionResult)
             { return readBufferFromMemory (function, functionResult); },
-    //    [this] (RKTypes::Function const& function, RKTypes::FunctionResult& functionResult)
-    //        { clearBufferToEndOfSector (function); return true; },
+        [this] (RKTypes::Function const& function, RKTypes::FunctionResult& functionResult)
+            { clearBufferToEndOfSector (function); return true; },
         [this] (RKTypes::Function const& function, RKTypes::FunctionResult& functionResult)
             { return seek (function, SeekMode::Sync); },
         [this] (RKTypes::Function const& function, RKTypes::FunctionResult& functionResult)

@@ -7,6 +7,11 @@ using std::out_of_range;
 
 using RKTypes::rk05Geometry_;
 
+// Short portions (less than 256 data words) of a sector may be read or
+// written as long as this short sector is the last sector of the data
+// transfer. When a short sector is written, the remainder of the sector is
+// automatically written with zeroes.
+//
 void RK11D::driveWrite (RKTypes::Function const& function,
     RKTypes::FunctionResult& functionResult)
 {
