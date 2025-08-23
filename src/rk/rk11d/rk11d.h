@@ -209,7 +209,6 @@ private:
             { driveRead (function, functionResult); return true; },
         [this] (RKTypes::Function const& function, RKTypes::FunctionResult& functionResult)
             { writeBufferToMemory (function, functionResult); return true; },
-        // ToDo: Clear the part of the buffer not filled by the read
         [this] (RKTypes::Function const& function, RKTypes::FunctionResult& functionResult)
             { return updateRegisters (function, functionResult); }
     };
@@ -226,7 +225,6 @@ private:
             { driveReadHeader (function, functionResult); return true; },
         [this] (RKTypes::Function const& function, RKTypes::FunctionResult& functionResult)
             { writeBufferToMemory (function, functionResult); return true; },
-        // ToDo: Clear the part of the buffer not filled by the read
         [this] (RKTypes::Function const& function, RKTypes::FunctionResult& functionResult)
             { return updateRegisters (function, functionResult); }
     };
