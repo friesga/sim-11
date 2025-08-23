@@ -74,13 +74,5 @@ StatusCode RK11D::transferPatternToBuffer (BusAddress memoryAddress,
     return StatusCode::Success;
 }
 
-void RK11D::clearBufferToEndOfSector (RKTypes::Function const& function)
-{
-    for (u16 index = function.wordCount;
-        index < RKTypes::wordCountForEntireSectors (function.wordCount); ++index)
-    {
-        buffer_[index] = 0;
-    }
-}
 
 

@@ -164,6 +164,7 @@ private:
         u32 wordCount);
     size_t writeDataToDrive (DiskAddress diskAddress, u16* buffer,
         u16 numWords);
+    void clearBufferToEndOfSector (u16* buffer, u16 numWords);
     u16 cylinderFromLBN (u32 lbn);
 };
 

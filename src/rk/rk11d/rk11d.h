@@ -168,7 +168,6 @@ private:
         RKTypes::FunctionResult& functionResult);
     void setWritCheckOnError (RKTypes::FunctionResult& functionResult);
     void driveWriteLock (RKTypes::Function const& function);
-    void clearBufferToEndOfSector (RKTypes::Function const& function);
 
     using Step = function<bool (RKTypes::Function,
         RKTypes::FunctionResult&)>;
@@ -190,8 +189,6 @@ private:
             { return functionParametersOk (function); },
         [this] (RKTypes::Function const& function, RKTypes::FunctionResult& functionResult)
             { return readBufferFromMemory (function, functionResult); },
-        [this] (RKTypes::Function const& function, RKTypes::FunctionResult& functionResult)
-            { clearBufferToEndOfSector (function); return true; },
         [this] (RKTypes::Function const& function, RKTypes::FunctionResult& functionResult)
             { return seek (function, SeekMode::Sync); },
         [this] (RKTypes::Function const& function, RKTypes::FunctionResult& functionResult)

@@ -32,10 +32,23 @@ RKTypes::FunctionResult RK05::write (DiskAddress diskAddress,
 size_t RK05::writeDataToDrive (DiskAddress diskAddress, u16* buffer, u16 numWords)
 {
     wtIndicator_->show (Indicator::State::On);
+
+    clearBufferToEndOfSector (buffer, numWords);
+
     u16 wordsWritten = diskDrive_.writeDataToSector (diskAddress, buffer,
         RKTypes::wordCountForEntireSectors (numWords));
+
     wtIndicator_->show (Indicator::State::Off);
     return min (wordsWritten, numWords);
+}
+
+void RK05::clearBufferToEndOfSector (u16* buffer, u16 numWords)
+{
+    for (u16 index = numWords;
+        index < RKTypes::wordCountForEntireSectors (numWords); ++index)
+    {
+        buffer[index] = 0;
+    }
 }
 
 RKTypes::FunctionResult RK05::read (DiskAddress diskAddress,
