@@ -168,6 +168,7 @@ private:
         RKTypes::FunctionResult& functionResult);
     void setWritCheckOnError (RKTypes::FunctionResult& functionResult);
     void driveWriteLock (RKTypes::Function const& function);
+    void clearBufferToEndOfSector (RKTypes::Function const& function);
 
     using Step = function<bool (RKTypes::Function,
         RKTypes::FunctionResult&)>;
@@ -176,9 +177,9 @@ private:
     // Disclaimer: The syntax is extremely ugly but using lambdas instead
     // of function pointers allows more flexibility in the calling sequence.
     // 
-    // Ideally the definition of the step vectors would be static and would
-    // be defined as in that case we lose the reference to the current object
-    // via the this pointer.
+    // Ideally the definition of the step vectors would be static. In that
+    // case howver we would lose the reference to the current object via
+    // the this pointer.
     StepVector const writeFunction_ =
     {
         [this] (RKTypes::Function const & function, RKTypes::FunctionResult& functionResult)
@@ -189,8 +190,8 @@ private:
             { return functionParametersOk (function); },
         [this] (RKTypes::Function const& function, RKTypes::FunctionResult& functionResult)
             { return readBufferFromMemory (function, functionResult); },
-        // ToDo: Set error condition on false retun
-        // ToDo: Clear to end of block
+    //    [this] (RKTypes::Function const& function, RKTypes::FunctionResult& functionResult)
+    //        { clearBufferToEndOfSector (function); return true; },
         [this] (RKTypes::Function const& function, RKTypes::FunctionResult& functionResult)
             { return seek (function, SeekMode::Sync); },
         [this] (RKTypes::Function const& function, RKTypes::FunctionResult& functionResult)
@@ -205,7 +206,6 @@ private:
             { return driveReady (function); },
         [this] (RKTypes::Function const& function, RKTypes::FunctionResult& functionResult)
             { return functionParametersOk (function); },
-        // ToDo: Check for sector overflow
         [this] (RKTypes::Function const& function, RKTypes::FunctionResult& functionResult)
             { return seek (function, SeekMode::Sync); },
         [this] (RKTypes::Function const& function, RKTypes::FunctionResult& functionResult)
@@ -223,7 +223,6 @@ private:
             { return driveReady (function); },
         [this] (RKTypes::Function const& function, RKTypes::FunctionResult& functionResult)
             { return functionParametersOk (function); },
-        // ToDo: Check for sector overflow
         [this] (RKTypes::Function const& function, RKTypes::FunctionResult& functionResult)
             { return seek (function, SeekMode::Sync); },
         [this] (RKTypes::Function const& function, RKTypes::FunctionResult& functionResult)
@@ -263,7 +262,6 @@ private:
             { return driveReady (function); },
         [this] (RKTypes::Function const& function, RKTypes::FunctionResult& functionResult)
             { return functionParametersOk (function); },
-        // ToDo: Check for sector overflow
         [this] (RKTypes::Function const& function, RKTypes::FunctionResult& functionResult)
             { return seek (function, SeekMode::Sync); },
         [this] (RKTypes::Function const& function, RKTypes::FunctionResult& functionResult)
@@ -384,7 +382,7 @@ private:
     void setNonExistingDisk ();
     void setControlReady ();
     void finish ();
-    u32 absValueFromTwosComplement (u16 value) const;
+    u16 absValueFromTwosComplement (u16 value) const;
     void setError (function<void ()> function);
     RKTypes::RKDS getDriveStatus (u16 driveId);
     void startFunction ();

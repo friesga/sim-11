@@ -13,10 +13,9 @@ void RK11D::driveRead (RKTypes::Function const& function,
     RKTypes::FunctionResult& functionResult)
 {
     u16 driveId = function.diskAddress.driveSelect;
-    u32 wordCount = absValueFromTwosComplement (function.wordCount);
 
     functionResult = rk05Drives_[driveId]->read (function.diskAddress,
-        wordCount, buffer_.get ());
+        function.wordCount, buffer_.get ());
 }
 
 bool RK11D::writeBufferToMemory (RKTypes::Function const& function,

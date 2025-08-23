@@ -11,15 +11,15 @@ void RK11D::driveWrite (RKTypes::Function const& function,
     RKTypes::FunctionResult& functionResult)
 {
     functionResult = rk05Drives_[function.diskAddress.driveSelect]->write (
-        function.diskAddress, absValueFromTwosComplement (function.wordCount),
-        buffer_.get ());
+        function.diskAddress, function.wordCount, buffer_.get ());
 }
 
 // The word count in the RKWC register is given as a two's complement
 // negative number. To be able to use this value as a word counter 
-u32 RK11D::absValueFromTwosComplement (u16 value) const
+// it has to be converted to an integer.
+u16 RK11D::absValueFromTwosComplement (u16 value) const
 {
-    return static_cast<u32> (0200000 - value);
+    return static_cast<u16> (0200000 - value);
 }
 
 bool RK11D::readBufferFromMemory (RKTypes::Function const& function,
@@ -68,3 +68,14 @@ StatusCode RK11D::transferPatternToBuffer (BusAddress memoryAddress,
 
     return StatusCode::Success;
 }
+
+void RK11D::clearBufferToEndOfSector (RKTypes::Function const& function)
+{
+    for (u16 index = function.wordCount;
+        index < RKTypes::wordCountForEntireSectors (function.wordCount); ++index)
+    {
+        buffer_[index] = 0;
+    }
+}
+
+

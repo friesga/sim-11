@@ -88,8 +88,7 @@ bool RK11D::updateRegisters (RKTypes::Function const& function,
         //
         rkda_ = rk05Geometry_.lbnTodiskAddress (rk05Geometry_.diskCapacity () - 1);
 
-        if (functionResult.wordsTransferred <
-            absValueFromTwosComplement (function.wordCount))
+        if (functionResult.wordsTransferred < function.wordCount)
         {
             setError ([&] {rker_.overrun = 1; });
             return false;

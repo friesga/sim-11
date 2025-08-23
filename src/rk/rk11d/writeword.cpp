@@ -102,7 +102,8 @@ void RK11D::startFunction ()
     // ToDo: Add Memory Extension bits to bus address
     functionQueue_.push (RKTypes::Function
         {
-            rkcs_, rkda_.value, rkwc_, busAddressFromRegs (),
+            rkcs_, rkda_.value, absValueFromTwosComplement (rkwc_),
+            busAddressFromRegs (),
         });
 
     functionAvailable_.notify_one ();
