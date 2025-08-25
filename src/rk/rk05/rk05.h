@@ -91,6 +91,7 @@ private:
     Frame<float> rdIndicatorFrame {0.761, 0.690, 0.024, 0.048};
     Frame<float> runLoadSwitchFrame {0.585, 0.605, 0.029, 0.122};
     Frame<float> wtprotSwitchFrame {0.613, 0.605, 0.029, 0.122};
+    Frame<float> numberLabelFrame {0.815, 0.605, 0.055, 0.085};
 
     // Definition of the drive states
     //

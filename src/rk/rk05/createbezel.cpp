@@ -4,6 +4,7 @@
 
 using std::bind;
 using std::placeholders::_1;
+using std::to_string;
 
 void RK05::createBezel (Window* window, shared_ptr<RK05Config> rk05Config)
 {
@@ -76,4 +77,7 @@ void RK05::createBezel (Window* window, shared_ptr<RK05Config> rk05Config)
         Button::TwoPositionsState::Off,
         bind (&RK05::wtprotSwitchClicked, this, _1),
         wtprotSwitchFrame);
+
+    panel->createFront ("resources/RK05 drive " +
+        to_string (rk05Config->unitNumber) + ".png", numberLabelFrame);
 }
