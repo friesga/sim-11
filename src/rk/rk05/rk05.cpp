@@ -15,6 +15,7 @@ using std::abs;
 using std::chrono::duration;
 using std::bind;
 using std::sqrt;
+using std::invalid_argument;
 
 using namespace RKTypes;
 
@@ -34,8 +35,11 @@ RK05::RK05 (Bus* bus, DriveInterface* controller, Window* window,
     // or write command is 2^16
     buffer_ = make_unique<u16[]> (1 << 16);
 
-    diskDrive_.attachFile (rk05Config->fileName, rk05Geometry_,
-        getAttachMode (rk05Config));
+    if (diskDrive_.attachFile (rk05Config->fileName, rk05Geometry_,
+        getAttachMode (rk05Config)) != StatusCode::Success)
+    {
+        throw invalid_argument ("Cannot open file " + rk05Config->fileName);
+    }
 
     // Initialize the drive status before an event is dispatched to the
     // state machine as the drive status is changed by the state machine

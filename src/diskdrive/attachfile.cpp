@@ -23,10 +23,7 @@ StatusCode DiskDrive::attachFile (std::string fileName, Geometry geometry,
             statusCode = openReadOnly (fileName);
     }
 
-    if (statusCode != StatusCode::Success)
-        return statusCode;
-
-    return StatusCode::Success;
+    return statusCode;
 }
 
 bool DiskDrive::isAttached () const
