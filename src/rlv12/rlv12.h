@@ -38,6 +38,9 @@ class RLV12 : public AbstractBusDevice
         BAE = 010
     };
 
+    // Pointer to the bus we are connected to
+    Bus* bus_;
+
     // Define controller registers
     // The MPR is not a single physical entity like the other registers. It
     // consists of two separate registers, the word counter and the FIFO output
@@ -50,9 +53,6 @@ class RLV12 : public AbstractBusDevice
     // Definition of the controller's base address and vector
     u16 baseAddress_ {0};
     u16 vector_ {0};
-
-    // Pointer to the bus we are connected to
-    Bus* bus_;
 
     // Define transfer buffer
     u16* dataBuffer_;

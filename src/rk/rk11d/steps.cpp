@@ -78,7 +78,7 @@ bool RK11D::updateRegisters (RKTypes::Function const& function,
     {
         rkda_ += functionResult.sectorsProcessed;
     }
-    catch (out_of_range)
+    catch (const std::exception& ex)
     {
         // [If] during a Read, Write, Read Check, or Write Check function,
         // operations on sector 13(8), surface 1 of cylinder address 312(8)
