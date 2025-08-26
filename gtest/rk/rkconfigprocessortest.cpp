@@ -26,7 +26,7 @@ TEST (RKConfigProcessorTest, configProcessed)
 		"bus_request_level = 5\n"
 		"units = 1\n"
 
-		"[RK11-D.RK05-0]\n"
+		"[RK11-D.unit0]\n"
 		"cabinet = 0/0\n"
 		"filename = rk05.dsk\n"
 		"newfile = true\n"
