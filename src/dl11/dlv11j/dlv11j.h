@@ -30,13 +30,13 @@ private:
 	enum {defaultCh3Address_ = 0177560};
 	enum {defaultCh3Vector_ = 060};
 
+	// Pointer to the bus we are connected to
+	Bus* bus_;
+
 	unique_ptr<UART> channel_[4];
 	u16	baseAddress_;
 	u16 baseVector_;
 	shared_ptr<DLV11JConfig> dlConfig_;
-
-	// Pointer to the bus we are connected to
-	Bus* bus_;
 
 	void initialize ();
 	u16 extractChannelNr (BusAddress busAddress);
