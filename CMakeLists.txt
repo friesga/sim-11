@@ -51,6 +51,7 @@ add_subdirectory (src/abstractbusdevice)
 add_subdirectory (src/main)
 add_subdirectory (src/msv11d)
 add_subdirectory (src/signal)
+add_subdirectory (src/imagedata)
 add_subdirectory (gtest)
  
 

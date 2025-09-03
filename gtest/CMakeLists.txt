@@ -60,6 +60,7 @@ set (GTEST_SRCS
     msv11configuratortest.cpp
     ms11p/ms11pconfiguratortest.cpp
     ms11p/ms11ptest.cpp
+    openrastertest.cpp
     operandlocationtest.cpp
     qbusinstalltest.cpp
     dummycpu/dummymmu/dummymmu.cpp
