@@ -23,6 +23,7 @@
 #include "../kdf11/kdf11_u/kdf11_uprocessor/kdf11_uprocessor.h"
 #include "../ms11pprocessor/ms11pprocessor.h"
 #include "../ba11lprocessor/ba11lprocessor.h"
+#include "../ba11cprocessor/ba11cprocessor.h"
 
 #include <map>
 #include <memory>
@@ -71,6 +72,8 @@ private:
 
     map<string, DeviceConfigProcessorFactory> deviceConfigProcessorFactories =
 	{
+		{"BA11-L",  &IniProcessor::create<BA11_LProcessor>},
+        {"BA11-C",  &IniProcessor::create<BA11_CProcessor>},
 		{"BA11-N",  &IniProcessor::create<BA11_NProcessor>},
 		{"BDV11",   &IniProcessor::create<BDV11Processor>},
 		{"DLV11-J", &IniProcessor::create<DLV11Processor>},
@@ -87,7 +90,6 @@ private:
 		{"KDF11-B", &IniProcessor::create<KDF11_BProcessor>},
 		{"KDF11-U", &IniProcessor::create<KDF11_UProcessor>},
 		{"MS11-P",  &IniProcessor::create<MS11PProcessor>},
-		{"BA11-L",  &IniProcessor::create<BA11_LProcessor>}
 	};
 
     void processSection (iniparser::Section* section);

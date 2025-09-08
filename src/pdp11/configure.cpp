@@ -109,6 +109,8 @@ void PDP_11::configureQbusSystem (SystemConfig const & systemConfig,
             { throw logic_error ("Should not happen"); },
         [this] (shared_ptr<MS11PConfig> ms11pConfig)
             { throw logic_error ("Should not happen"); },
+        [this] (shared_ptr<BA11_CConfig> ba11lConfig)
+            { throw logic_error ("Should not happen"); },
         [this] (shared_ptr<BA11_LConfig> ba11lConfig)
             { throw logic_error ("Should not happen"); },
         [this] (shared_ptr<KDF11_UConfig> kdf11_uConfig)
@@ -165,6 +167,8 @@ void PDP_11::configureUnibusSystem (SystemConfig const & systemConfig,
             {memoryDevices_.push_back (new MS11P (bus_, ms11pConfig)); },
         [this, window] (shared_ptr<BA11_LConfig> ba11_lConfig)
             {ba11_l_ = std::make_unique<BA11_L> (bus_, window, ba11_lConfig); },
+        [this] (shared_ptr<BA11_CConfig> ba11lConfig)
+            { throw logic_error ("To be implemented"); },
 
     };
 

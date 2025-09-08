@@ -21,6 +21,7 @@ set (GTEST_SRCS
     consoleconsistencytest.cpp
     cabinetconsistencytest.cpp
     ba11_nconfiguratortest.cpp
+    ba11cconfiguratortest.cpp
     ba11lconfiguratortest.cpp
     ba11consistencytest.cpp
     unibusconsistencytest.cpp
