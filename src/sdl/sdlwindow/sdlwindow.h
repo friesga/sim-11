@@ -27,7 +27,7 @@ public:
         set<Window::Flag> flags = {});
     ~SDLWindow ();
     void show () override;
-    Panel *createPanel (shared_ptr<Cabinet::Position> cabinetPosition,
+    Panel *createPanel (Cabinet::Position cabinetPosition,
         RackUnit unitHeight) override;
     void handler ();
 

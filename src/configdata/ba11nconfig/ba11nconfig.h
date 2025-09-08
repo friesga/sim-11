@@ -6,8 +6,10 @@
 
 #include <memory>
 
-using std::shared_ptr;
-using std::make_shared;
+#include <optional>
+
+using std::optional;
+using std::nullopt;
 
 struct BA11_NConfig : public DeviceType<BusType::QBus>
 {
@@ -26,7 +28,7 @@ struct BA11_NConfig : public DeviceType<BusType::QBus>
     };
 
     Logo logo {Logo::PDP_1103L};
-    shared_ptr<Cabinet::Position> cabinetPosition {nullptr};
+    optional<Cabinet::Position> cabinetPosition {nullopt};
 
     // The BA11-N has a height of three rack units
     static const RackUnit unitHeight;

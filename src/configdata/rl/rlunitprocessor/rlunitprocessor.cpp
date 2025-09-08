@@ -84,7 +84,7 @@ void RLUnitProcessor::processSpinUpTime (iniparser::Value value)
 // position has to be specified.
 void RLUnitProcessor::checkConsistency ()
 {
-	if (rlUnitConfigPtr->cabinetPosition == nullptr)
+	if (!rlUnitConfigPtr->cabinetPosition.has_value ())
 		throw invalid_argument {"Cabinet position not specified in RL unit section"};
 }
 

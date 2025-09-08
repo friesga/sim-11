@@ -20,7 +20,7 @@ BA11_L::BA11_L (Bus* bus, Window* window, shared_ptr<BA11_LConfig> ba11lConfig)
     bus_ {bus},
     frontWindow_ {window}
 {
-    createBezel (ba11lConfig->cabinetPosition);
+    createBezel (ba11lConfig->cabinetPosition.value ());
 }
 
 // Create the BA11-L panel at the specified position, width and height
@@ -58,7 +58,7 @@ BA11_L::BA11_L (Bus* bus, Window* window, shared_ptr<BA11_LConfig> ba11lConfig)
 // At least for Windows, event handling has to be performed in the same
 // thread as in which the window has been created.
 // 
-void BA11_L::createBezel (shared_ptr<Cabinet::Position> cabinetPosition)
+void BA11_L::createBezel (Cabinet::Position cabinetPosition)
 {
     Panel* panel = frontWindow_->createPanel (cabinetPosition, BA11_LConfig::unitHeight);
     panel->createFront ("resources/11_24 front.png", ba11_nFrontFrame);

@@ -24,7 +24,7 @@ class SDLPanel : public Panel
 {
 public:
     SDLPanel (unique_ptr<SDLRenderer> &sdlRenderer, SDL_Texture* texture,
-        shared_ptr<Cabinet::Position> cabinetPosition, RackUnit unitHeight);
+        Cabinet::Position cabinetPosition, RackUnit unitHeight);
     ~SDLPanel ();
 
     // Definition of functions required for the implementation of a Panel
@@ -80,7 +80,7 @@ private:
     // The height of the unit in pixels
     float panelHeight_ {0.0f};
     int pixelsPerRackUnit_ {0};
-    shared_ptr<Cabinet::Position> cabinetPosition_;
+    Cabinet::Position cabinetPosition_;
 };
 
 #endif // _SDLPANEL_H_

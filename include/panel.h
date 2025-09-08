@@ -192,7 +192,7 @@ public:
     };
     
     virtual void show () = 0;
-    virtual Panel *createPanel (shared_ptr<Cabinet::Position> cabinetPosition,
+    virtual Panel *createPanel (Cabinet::Position cabinetPosition,
         RackUnit unitHeight) = 0;
     virtual void render () = 0;
     virtual bool handleEvents () = 0;

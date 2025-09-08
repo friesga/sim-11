@@ -4,10 +4,11 @@
 #include "cabinet/cabinet.h"
 
 #include <string>
-#include <memory>
+#include <optional>
 
 using std::string;
-using std::shared_ptr;
+using std::optional;
+using std::nullopt;
 
 struct RLUnitConfigParams;
 
@@ -23,7 +24,7 @@ struct RLUnitConfig
 
 	size_t unitNumber {0};
 	RLUnitType rlUnitType {RLUnitType::RL01};
-	shared_ptr<Cabinet::Position> cabinetPosition {nullptr};
+	optional<Cabinet::Position> cabinetPosition {nullopt};
 	string fileName {};
 	bool newFile {false};
 	bool writeProtect {false};

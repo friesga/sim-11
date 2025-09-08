@@ -20,35 +20,35 @@ RackUnit Cabinet::height () const
 }
 
 // The unit position refers to the position of the top of the unit.
-bool Cabinet::addUnit (shared_ptr<Cabinet::Position> unitPosition,
+bool Cabinet::addUnit (Cabinet::Position unitPosition,
     RackUnit unitHeight)
 {
     if (sectionOutOfRange (unitPosition, unitHeight) ||
             sectionOccupied (unitPosition, unitHeight))
         return false;
 
-    for (RackUnit unit = unitPosition->height;
-            unit > unitPosition->height - unitHeight; --unit)
+    for (RackUnit unit = unitPosition.height;
+            unit > unitPosition.height - unitHeight; --unit)
         sectionOccupied_[unit] = true;
 
     return true;
 }
-bool Cabinet::sectionOutOfRange (shared_ptr<Cabinet::Position> position,
+bool Cabinet::sectionOutOfRange (Cabinet::Position position,
     RackUnit unitHeight) const
 { 
-    return (position->height >= cabinetHeight_ ||
-        position->height - unitHeight + 1 < 0_ru ||
-        position->cabinetNr != 0);
+    return (position.height >= cabinetHeight_ ||
+        position.height - unitHeight + 1 < 0_ru ||
+        position.cabinetNr != 0);
 }
 
-bool Cabinet::sectionOccupied (shared_ptr<Cabinet::Position> position,
+bool Cabinet::sectionOccupied (Cabinet::Position position,
     RackUnit unitHeight) const
 {
     if (sectionOutOfRange (position, unitHeight))
         throw invalid_argument ("Reference outside the cabinet");
 
-    for (RackUnit unit = position->height; 
-        unit > position->height - unitHeight; --unit)
+    for (RackUnit unit = position.height; 
+        unit > position.height - unitHeight; --unit)
     {
         if (sectionOccupied_[unit])
             return true;

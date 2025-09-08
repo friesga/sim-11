@@ -27,7 +27,7 @@ void BA11_NProcessor::processValue (iniparser::Section::ValueIterator valueItera
 // position has to be specified.
 void BA11_NProcessor::checkConsistency ()
 {
-    if (ba11_nConfigPtr->cabinetPosition == nullptr)
+    if (!ba11_nConfigPtr->cabinetPosition.has_value ())
         throw invalid_argument {"Cabinet position not specified in BA11-N section"};
 }
 

@@ -4,11 +4,10 @@
 #include "devicetype.h"
 #include "cabinet/cabinet.h"
 
-#include <memory>
+#include <optional>
 
-using std::shared_ptr;
-using std::make_shared;
-
+using std::optional;
+using std::nullopt;
 
 // The BA11-L is the mounting box for several models, at least the PDP-11/04,
 // the PDP-11/34 and the PDP-11/24. The mounting box can be provided with
@@ -22,7 +21,7 @@ struct BA11_LConfig : public DeviceType<BusType::Unibus>
     BA11_LConfig () = default;
     BA11_LConfig (Cabinet::Position cabinetPosition);
 
-    shared_ptr<Cabinet::Position> cabinetPosition {nullptr};
+    optional<Cabinet::Position> cabinetPosition {nullopt};
 
     // The BA11-L has a height of three rack units
     static const RackUnit unitHeight;

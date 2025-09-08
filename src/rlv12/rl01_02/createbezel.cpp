@@ -10,7 +10,7 @@ using std::to_string;
 void RL01_02::createBezel (Window* window,
     shared_ptr<RLUnitConfig> rlUnitConfig)
 {
-    Panel* panel = window->createPanel (rlUnitConfig->cabinetPosition,
+    Panel* panel = window->createPanel (rlUnitConfig->cabinetPosition.value (),
         RLUnitConfig::unitHeight);
     panel->createFront ("resources/RL02-front.png", {0, 0, 1.0, 1.0});
 

@@ -22,7 +22,7 @@ BA11_N::BA11_N (Bus* bus, Window *window, shared_ptr<BA11_NConfig> ba11_nConfig)
     frontWindow_ {window},
     logo_ {ba11_nConfig->logo}
 {
-    createBezel (ba11_nConfig->cabinetPosition);
+    createBezel (ba11_nConfig->cabinetPosition.value ());
 }
 
 // Destructor
@@ -30,7 +30,7 @@ BA11_N::~BA11_N ()
 {}
 
 // 
-void BA11_N::createBezel (shared_ptr<Cabinet::Position> cabinetPosition)
+void BA11_N::createBezel (Cabinet::Position cabinetPosition)
 {
     // Create the BA11-N panel at the specified position, width and height
     // and then start a loop handling the events and rendering lamps and

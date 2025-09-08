@@ -31,9 +31,9 @@ public:
 
     Cabinet (string typeId, RackUnit cabinetHeight);
     RackUnit height () const;
-    bool addUnit (shared_ptr<Cabinet::Position> position, RackUnit unitHeight);
-    bool sectionOutOfRange (shared_ptr<Cabinet::Position> position, RackUnit unitHeight) const;
-    bool sectionOccupied (shared_ptr<Cabinet::Position> position, RackUnit unitHeight) const;
+    bool addUnit (Cabinet::Position position, RackUnit unitHeight);
+    bool sectionOutOfRange (Cabinet::Position position, RackUnit unitHeight) const;
+    bool sectionOccupied (Cabinet::Position position, RackUnit unitHeight) const;
 
 private:
     string typeId_;

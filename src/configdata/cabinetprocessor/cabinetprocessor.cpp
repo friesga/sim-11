@@ -9,7 +9,7 @@ using std::make_shared;
 namespace CabinetProcessor
 {
 
-shared_ptr<Cabinet::Position> processCabinetKey (iniparser::Value value)
+Cabinet::Position processCabinetKey (iniparser::Value value)
 {
     vector<size_t> items;
     Cabinet::Position result {0, 0_ru};
@@ -21,7 +21,7 @@ shared_ptr<Cabinet::Position> processCabinetKey (iniparser::Value value)
 
     result.cabinetNr = items[0];
     result.height = items[1];
-    return make_shared<Cabinet::Position> (result);
+    return result;
 }
 
 } // namespace CabinetProcessor

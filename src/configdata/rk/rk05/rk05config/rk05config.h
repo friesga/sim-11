@@ -4,9 +4,10 @@
 #include "cabinet/cabinet.h"
 #include "types.h"
 
-#include <memory>
+#include <optional>
 
-using std::shared_ptr;
+using std::optional;
+using std::nullopt;
 
 struct RK05ConfigParams;
 
@@ -14,7 +15,7 @@ struct RK05ConfigParams;
 struct RK05Config
 {
 	u16 unitNumber {0};
-	shared_ptr<Cabinet::Position> cabinetPosition {nullptr};
+	optional<Cabinet::Position> cabinetPosition {nullopt};
 	string fileName {};
 	bool newFile {false};
 	bool writeProtect {false};

@@ -37,7 +37,7 @@ private:
     Indicator* dcOnLed_;
     Indicator* batteryLed_;
 
-    void createBezel (shared_ptr<Cabinet::Position> cabinetPosition);
+    void createBezel (Cabinet::Position cabinetPosition);
     void disableHCBSwitch ();
     void enableHCBSwitch ();
     void blockSignals ();

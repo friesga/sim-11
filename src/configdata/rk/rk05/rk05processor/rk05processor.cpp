@@ -71,7 +71,7 @@ void RK05Processor::processSpinUpTime (iniparser::Value value)
 // position has to be specified.
 void RK05Processor::checkConsistency ()
 {
-	if (rk05ConfigPtr->cabinetPosition == nullptr)
+	if (!rk05ConfigPtr->cabinetPosition.has_value ())
 		throw invalid_argument {"Cabinet position not specified in RK05 section"};
 }
 
