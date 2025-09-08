@@ -401,10 +401,12 @@ public:
                 case 2: bitptr = decode_variable (dest, dest_max, src, src_max, bitptr); break;
                 default: return false;
             }
-        } while (!is_last_block && bitptr != ~0);
+        }
+        while (!is_last_block && bitptr != static_cast<unsigned> (~0));
+
         if (debug) printf ("%p %p\n", dest, dest_max);
         if (debug) printf ("%p %p\n", src + bitptr / 8, src_max);
-        return is_last_block && bitptr != ~0 && dest == dest_max;
+        return is_last_block && bitptr != static_cast<unsigned> (~0) && dest == dest_max;
     }
 };
 

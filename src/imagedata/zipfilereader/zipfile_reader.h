@@ -159,19 +159,19 @@ public:
     {
         // https://en.wikipedia.org/wiki/Zip_(file_format)
         //  0 4 Local file header signature = 0x04034b50 (read as a little-endian number)
-        uint32_t sig = u4 (p + 0);
+        // uint32_t sig = u4 (p + 0);
         //  4 2 Version needed to extract (minimum)
-        uint16_t version = u2 (p + 4);
+        // uint16_t version = u2 (p + 4);
         //  6 2 General purpose bit flag
-        uint16_t flags = u2 (p + 6);
+        // uint16_t flags = u2 (p + 6);
         //  8 2 Compression method
         uint16_t method = u2 (p + 8);
         // 10 2 File last modification time
-        uint16_t time = u2 (p + 10);
+        // uint16_t time = u2 (p + 10);
         // 12 2 File last modification date
-        uint16_t date = u2 (p + 12);
+        // uint16_t date = u2 (p + 12);
         // 14 4 CRC-32
-        uint32_t crc = u4 (p + 14);
+        // uint32_t crc = u4 (p + 14);
         // 18 4 Compressed size
         uint32_t csize = u4 (p + 18);
         // 22 4 Uncompressed size
@@ -208,7 +208,6 @@ public:
     // Convert a filename to a directory entry.
     const uint8_t* getDirEntry (const std::string& filename) const
     {
-        uint8_t c0 = filename[0];
         uint16_t len = (uint16_t)filename.size ();
         for (const uint8_t* p = central_dir_begin_; p < central_dir_end_; )
         {

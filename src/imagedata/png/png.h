@@ -3,6 +3,7 @@
 
 #include "imagedata/include/imagemetadata.h"
 
+#include <cstdint>
 #include <vector>
 
 using std::vector;

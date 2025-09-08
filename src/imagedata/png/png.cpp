@@ -15,7 +15,7 @@ bool PNG::isValid ()
     // Check if the header is a valid PNG header
     const vector<uint8_t> expectedSignature = {0x89,'P','N','G',0x0D,0x0A,0x1A,0x0A};
 
-    for (int i = 0; i < expectedSignature.size (); ++i)
+    for (size_t i = 0; i < expectedSignature.size (); ++i)
     {
         if (data_[i] != expectedSignature[i])
             return false;
