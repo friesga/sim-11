@@ -47,7 +47,7 @@ RLV12::RLV12 (Bus* bus)
     cmdProcessor_ = std::make_unique<CmdProcessor> (this);
 }
 
-RLV12::RLV12 (Bus* bus, Window* window, RLConfig& rlConfig)
+RLV12::RLV12 (Bus* bus, Window* window, const RLConfig& rlConfig)
     :
     bus_ {bus},
     csr_ {0},
@@ -91,25 +91,25 @@ RLV12::RLV12 (Bus* bus, Window* window, RLConfig& rlConfig)
     cmdProcessor_ = std::make_unique<CmdProcessor> (this);
 }
 
-RLV12::RLV12 (Bus* bus, Window* window, shared_ptr<RL11Config> rl11Config)
+RLV12::RLV12 (Bus* bus, Window* window, const RL11Config& rl11Config)
     :
-    RLV12 (bus, window, rl11Config->common)
+    RLV12 (bus, window, rl11Config.common)
 {
     rlType_ = RLV12const::RLType::RL11;
 }
 
-RLV12::RLV12 (Bus* bus, Window* window, shared_ptr<RLV11Config> rlv11Config)
+RLV12::RLV12 (Bus* bus, Window* window, const RLV11Config& rlv11Config)
     :
-    RLV12 (bus, window, rlv11Config->common)
+    RLV12 (bus, window, rlv11Config.common)
 {
     rlType_ = RLV12const::RLType::RLV11;
 }
 
-RLV12::RLV12 (Bus* bus, Window* window, shared_ptr<RLV12Config> rlv12Config)
+RLV12::RLV12 (Bus* bus, Window* window, const RLV12Config& rlv12Config)
     :
-    RLV12 (bus, window, rlv12Config->common)
+    RLV12 (bus, window, rlv12Config.common)
 {
-    _22bit_  = rlv12Config->_22bit;
+    _22bit_  = rlv12Config._22bit;
     rlType_ = RLV12const::RLType::RLV12;
 }
 

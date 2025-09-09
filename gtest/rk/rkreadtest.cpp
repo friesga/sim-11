@@ -102,8 +102,7 @@ TEST_F (RK11DReadTest, readSectorSucceeds)
 
     Unibus bus;
     MS11P ms11p {&bus};
-    RK11D* rk11dDevice = new RK11D (&bus, nullptr,
-        make_shared<RK11DConfig> (rk11dConfig));
+    RK11D* rk11dDevice = new RK11D (&bus, nullptr, rk11dConfig);
 
     // Create a minimal system, consisting of just the bus, memory
     // and the RK11-D/RK05 to be tested.
@@ -179,8 +178,7 @@ TEST_F (RK11DReadTest, readOnNonReadyDriveReportsError)
             }));
 
     Unibus bus;
-    RK11D* rk11dDevice = new RK11D (&bus, nullptr,
-        make_shared<RK11DConfig> (rk11dConfig));
+    RK11D* rk11dDevice = new RK11D (&bus, nullptr, rk11dConfig);
 
     EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKCS},
         RKCS_OPERATION (Read) | RKCS_GO), StatusCode::Success);
@@ -206,8 +204,7 @@ TEST_F (RK11DReadTest, readFromNonExistentSectorFails)
             }));
 
     Unibus bus;
-    RK11D* rk11dDevice = new RK11D (&bus, nullptr,
-        make_shared<RK11DConfig> (rk11dConfig));
+    RK11D* rk11dDevice = new RK11D (&bus, nullptr, rk11dConfig);
 
     EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKWC}, 0177400),
         StatusCode::Success);
@@ -240,8 +237,7 @@ TEST_F (RK11DReadTest, readFromNonExistentCylinderFails)
             }));
 
     Unibus bus;
-    RK11D* rk11dDevice = new RK11D (&bus, nullptr,
-        make_shared<RK11DConfig> (rk11dConfig));
+    RK11D* rk11dDevice = new RK11D (&bus, nullptr, rk11dConfig);
 
     EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKWC}, 0177400),
         StatusCode::Success);
@@ -274,8 +270,7 @@ TEST_F (RK11DReadTest, readFromNonExistentDriveFails)
             }));
 
     Unibus bus;
-    RK11D* rk11dDevice = new RK11D (&bus, nullptr,
-        make_shared<RK11DConfig> (rk11dConfig));
+    RK11D* rk11dDevice = new RK11D (&bus, nullptr, rk11dConfig);
 
     EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKWC}, 0177400),
         StatusCode::Success);
@@ -308,8 +303,7 @@ TEST_F (RK11DReadTest, readPastEndOfDiskFails)
             }));
 
     Unibus bus;
-    RK11D* rk11dDevice = new RK11D (&bus, nullptr,
-        make_shared<RK11DConfig> (rk11dConfig));
+    RK11D* rk11dDevice = new RK11D (&bus, nullptr, rk11dConfig);
 
     EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKWC}, 0177000),
         StatusCode::Success);
@@ -343,8 +337,7 @@ TEST_F (RK11DReadTest, readWithIBASetSucceeds)
 
     Unibus bus;
     MS11P ms11p {&bus};
-    RK11D* rk11dDevice = new RK11D (&bus, nullptr,
-        make_shared<RK11DConfig> (rk11dConfig));
+    RK11D* rk11dDevice = new RK11D (&bus, nullptr, rk11dConfig);
 
     // Create a minimal system, consisting of just the bus, memory
     // and the RK11-D/RK05 to be tested.
@@ -420,8 +413,7 @@ TEST_F (RK11DReadTest, memoryExtensionBitsAreUsed)
 
     Unibus bus;
     MS11P ms11p {&bus};
-    RK11D* rk11dDevice = new RK11D (&bus, nullptr,
-        make_shared<RK11DConfig> (rk11dConfig));
+    RK11D* rk11dDevice = new RK11D (&bus, nullptr, rk11dConfig);
 
     // Create a minimal system, consisting of just the bus, memory
     // and the RK11-D/RK05 to be tested.
@@ -492,8 +484,7 @@ TEST_F (RK11DReadTest, memoryExtensionBitsAreIncremented)
 
     Unibus bus;
     MS11P ms11p {&bus};
-    RK11D* rk11dDevice = new RK11D (&bus, nullptr,
-        make_shared<RK11DConfig> (rk11dConfig));
+    RK11D* rk11dDevice = new RK11D (&bus, nullptr, rk11dConfig);
 
     // Create a minimal system, consisting of just the bus, memory
     // and the RK11-D/RK05 to be tested.

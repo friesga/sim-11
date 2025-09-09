@@ -15,7 +15,7 @@ using std::shared_ptr;
 class BA11_N
 {
 public:
-    BA11_N (Bus *bus, Window *window, shared_ptr<BA11_NConfig> ba11_nConfig);
+    BA11_N (Bus *bus, Window *window, const BA11_NConfig& ba11_nConfig);
     ~BA11_N ();
     void restartSwitchClicked (Button::State state);
     void haltSwitchToggled (Button::State state);

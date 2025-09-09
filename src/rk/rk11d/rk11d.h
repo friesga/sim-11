@@ -73,7 +73,7 @@ private:
 
 public:
     // Constructor
-    RK11D (Bus* bus, Window* window, shared_ptr<RK11DConfig> rk11dConfig);
+    RK11D (Bus* bus, Window* window, const RK11DConfig& rk11dConfig);
     ~RK11D ();
 
     // Functions required by the BusDevice interface

@@ -91,8 +91,7 @@ protected:
 
         rk11dConfig.numUnits = 2;
 
-        rk11dDevice = new RK11D (&bus, nullptr,
-            make_shared<RK11DConfig> (rk11dConfig));
+        rk11dDevice = new RK11D (&bus, nullptr, rk11dConfig);
 
         // Create a minimal system, consisting of just the bus, memory
         // and the RK11-D/RK05 to be tested.

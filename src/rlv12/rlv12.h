@@ -107,10 +107,10 @@ class RLV12 : public AbstractBusDevice
 public:
     // Constructors/destructor
     RLV12 (Bus* bus);
-    RLV12 (Bus* bus, Window* window, RLConfig& rlConfig);
-    RLV12 (Bus* bus, Window* window, shared_ptr<RL11Config> rl11Config);
-    RLV12 (Bus* bus, Window* window, shared_ptr<RLV11Config> rlv11Config);
-    RLV12 (Bus* bus, Window* window, shared_ptr<RLV12Config> rlv12Config);
+    RLV12 (Bus* bus, Window* window, const RLConfig& rlConfig);
+    RLV12 (Bus* bus, Window* window, const RL11Config& rl11Config);
+    RLV12 (Bus* bus, Window* window, const RLV11Config& rlv11Config);
+    RLV12 (Bus* bus, Window* window, const RLV12Config& rlv12Config);
     ~RLV12 ();
 
     // Required functions

@@ -16,14 +16,14 @@ using std::numeric_limits;
 // the unit tests. In the latter case the window is not available and is a
 // nullptr.
 //
-RK11D::RK11D (Bus* bus, Window* window, shared_ptr<RK11DConfig> rk11dConfig)
+RK11D::RK11D (Bus* bus, Window* window, const RK11DConfig& rk11dConfig)
     :
     bus_ {bus}
 {
-    baseAddress_  = rk11dConfig->address;
-    vector_ = rk11dConfig->vector;
+    baseAddress_  = rk11dConfig.address;
+    vector_ = rk11dConfig.vector;
 
-    for (auto rk05Config : rk11dConfig->rk05Config)
+    for (auto rk05Config : rk11dConfig.rk05Config)
     {
         if (rk05Config != nullptr)
             rk05Drives_.push_back (make_unique<RK05> (bus, this, window, rk05Config));

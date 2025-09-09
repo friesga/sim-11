@@ -83,8 +83,7 @@ TEST_F (RK11DRegistersTest, controllerIsResponsibleForDefaultAddress)
     RK11DConfig rk11dConfig {};
 
     Unibus bus;
-    RK11D* rk11dDevice = new RK11D (&bus, nullptr, 
-        make_shared<RK11DConfig> (rk11dConfig));
+    RK11D* rk11dDevice = new RK11D (&bus, nullptr, rk11dConfig);
 
     // Check that the controller is responsible for its base address
     BusAddress busAddress {RKDS};
@@ -104,8 +103,7 @@ TEST_F (RK11DRegistersTest, registersInitialised)
     RK11DConfig rk11dConfig {};
 
     Unibus bus;
-    RK11D* rk11dDevice = new RK11D (&bus, nullptr,
-        make_shared<RK11DConfig> (rk11dConfig));
+    RK11D* rk11dDevice = new RK11D (&bus, nullptr, rk11dConfig);
 
     EXPECT_EQ (rk11dDevice->read (BusAddress {RKER}), 0);
     EXPECT_EQ (rk11dDevice->read (BusAddress {RKCS}), RKCS_RDY);
@@ -120,8 +118,7 @@ TEST_F (RK11DRegistersTest, rdyRemainsSet)
     RK11DConfig rk11dConfig {};
 
     Unibus bus;
-    RK11D* rk11dDevice = new RK11D (&bus, nullptr,
-        make_shared<RK11DConfig> (rk11dConfig));
+    RK11D* rk11dDevice = new RK11D (&bus, nullptr, rk11dConfig);
 
     EXPECT_EQ (rk11dDevice->read (BusAddress {RKCS}), RKCS_RDY);
 
@@ -137,8 +134,7 @@ TEST_F (RK11DRegistersTest, exbBitIsReadWrite)
     RK11DConfig rk11dConfig {};
 
     Unibus bus;
-    RK11D* rk11dDevice = new RK11D (&bus, nullptr,
-        make_shared<RK11DConfig> (rk11dConfig));
+    RK11D* rk11dDevice = new RK11D (&bus, nullptr, rk11dConfig);
 
     EXPECT_EQ (rk11dDevice->read (BusAddress {RKCS}), RKCS_RDY);
 
@@ -154,8 +150,7 @@ TEST_F (RK11DRegistersTest, rkmrReadsAsZero)
     RK11DConfig rk11dConfig {};
 
     Unibus bus;
-    RK11D* rk11dDevice = new RK11D (&bus, nullptr,
-        make_shared<RK11DConfig> (rk11dConfig));
+    RK11D* rk11dDevice = new RK11D (&bus, nullptr, rk11dConfig);
 
     EXPECT_EQ (rk11dDevice->read (BusAddress {RKMR}), 0);
 }
@@ -166,8 +161,7 @@ TEST_F (RK11DRegistersTest, rkmrCanBeWritten)
     RK11DConfig rk11dConfig {};
 
     Unibus bus;
-    RK11D* rk11dDevice = new RK11D (&bus, nullptr,
-        make_shared<RK11DConfig> (rk11dConfig));
+    RK11D* rk11dDevice = new RK11D (&bus, nullptr, rk11dConfig);
 
     EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKMR}, 0177777),
         StatusCode::Success);
@@ -182,8 +176,7 @@ TEST_F (RK11DRegistersTest, controlResetFunction)
     RK11DConfig rk11dConfig {};
 
     Unibus bus;
-    RK11D* rk11dDevice = new RK11D (&bus, nullptr,
-        make_shared<RK11DConfig> (rk11dConfig));
+    RK11D* rk11dDevice = new RK11D (&bus, nullptr, rk11dConfig);
 
     EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKWC}, 0177777),
         StatusCode::Success);
@@ -212,8 +205,7 @@ TEST_F (RK11DRegistersTest, nonExistingDriveReturnsError)
 {
     RK11DConfig rk11dConfig {};
     Unibus bus;
-    RK11D* rk11dDevice = new RK11D (&bus, nullptr,
-        make_shared<RK11DConfig> (rk11dConfig));
+    RK11D* rk11dDevice = new RK11D (&bus, nullptr, rk11dConfig);
 
     EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKCS}, RKCS_OPERATION (DriveReset) | RKCS_GO),
         StatusCode::Success);
@@ -299,8 +291,7 @@ TEST_F (RK11DRegistersTest, sectorCounterIsIncremented)
             }));
 
     Unibus bus;
-    RK11D* rk11dDevice = new RK11D (&bus, nullptr,
-        make_shared<RK11DConfig> (rk11dConfig));
+    RK11D* rk11dDevice = new RK11D (&bus, nullptr, rk11dConfig);
 
     // Start at time point 0
     SimulatorClock::reset ();

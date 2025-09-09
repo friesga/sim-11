@@ -44,7 +44,7 @@ void PDP_11::configureDevices (Window *window)
     busDevices_.emplace_back (new RXV21 (bus_));
     busDevices_.emplace_back (new RLV12 (bus_));
     ba11_n_ = std::make_unique<BA11_N> (bus_, window, 
-        make_shared<BA11_NConfig> (Cabinet::Position {0, 19_ru}));
+        BA11_NConfig {Cabinet::Position {0, 19_ru}});
 
     installModules ();
     reset ();
@@ -98,11 +98,11 @@ void PDP_11::configureQbusSystem (SystemConfig const & systemConfig,
         [this, window] (shared_ptr<RL11Config> rl11Config)
             {throw logic_error ("Should not happen"); },
         [this, window] (shared_ptr<RLV11Config> rlv11Config)
-            {busDevices_.emplace_back (new RLV12 (bus_, window, rlv11Config)); },
+            {busDevices_.emplace_back (new RLV12 (bus_, window, *rlv11Config)); },
         [this, window] (shared_ptr<RLV12Config> rlv12Config)
-            {busDevices_.emplace_back (new RLV12 (bus_, window, rlv12Config)); },
+            {busDevices_.emplace_back (new RLV12 (bus_, window, *rlv12Config)); },
         [this, window] (shared_ptr<BA11_NConfig> ba11_nConfig)
-            {ba11_n_ = std::make_unique<BA11_N> (bus_, window, ba11_nConfig); },
+            {ba11_n_ = std::make_unique<BA11_N> (bus_, window, *ba11_nConfig); },
         [this] (shared_ptr<KT24Config> kt24Config)
             { throw logic_error ("Should not happen"); },
         [this] (shared_ptr<M9312Config> m9312Config)
@@ -148,9 +148,9 @@ void PDP_11::configureUnibusSystem (SystemConfig const & systemConfig,
         [this] (shared_ptr<RXV21Config> rxv21Config)
             { throw logic_error ("Should not happen"); },
         [this, window] (shared_ptr<RK11DConfig> rk11dConfig)
-            { busDevices_.emplace_back (new RK11D (bus_, window, rk11dConfig)); },
+            { busDevices_.emplace_back (new RK11D (bus_, window, *rk11dConfig)); },
         [this, window] (shared_ptr<RL11Config> rl11Config)
-            { busDevices_.emplace_back (new RLV12 (bus_, window, rl11Config)); },
+            { busDevices_.emplace_back (new RLV12 (bus_, window, *rl11Config)); },
         [this, window] (shared_ptr<KT24Config> kt24Config)
             { kt24_ = new KT24 (bus_, kt24Config); },
         [this, window] (shared_ptr<M9312Config> m9312Config)
