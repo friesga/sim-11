@@ -15,15 +15,15 @@ using std::placeholders::_3;
 using std::placeholders::_4;
 using std::placeholders::_5;
 
-KDF11_U::KDF11_U (Bus* bus, shared_ptr<KDF11_UConfig> kdf11_uConfig)
+KDF11_U::KDF11_U (Bus* bus, const KDF11_UConfig& kdf11_uConfig)
     :
     bus_ {bus},
-    startAddress_ {kdf11_uConfig->bootAddress}
+    startAddress_ {kdf11_uConfig.bootAddress}
 {
     // The KDF11-U comes with the KTF11-A MMU and two serial lines
     serialLineUnits = make_unique<SerialLineUnits> (bus,
         UARTTypeConfig {.maintenanceModeSupported = true},
-        (SLUConfig*) kdf11_uConfig->sluConfig.get());
+        (SLUConfig*) kdf11_uConfig.sluConfig.get());
 
     vector<BusDevice*> devices {&cpuData_, &mmu_, serialLineUnits.get (),
         &displayRegister_};
@@ -37,7 +37,7 @@ KDF11_U::KDF11_U (Bus* bus, shared_ptr<KDF11_UConfig> kdf11_uConfig)
         &cpuData_,
         &cpuControl_,
         &mmu_,
-        kdf11_uConfig->powerUpMode,
+        kdf11_uConfig.powerUpMode,
         startAddress_,
         bind (&KDF11_ODT::createODT, _1, _2, _3, _4, _5, true));
 }

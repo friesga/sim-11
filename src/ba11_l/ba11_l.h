@@ -15,7 +15,7 @@ using std::shared_ptr;
 class BA11_L
 {
 public:
-    BA11_L (Bus* bus, Window* window, shared_ptr<BA11_LConfig> ba11lConfig);
+    BA11_L (Bus* bus, Window* window, const BA11_LConfig& ba11lConfig);
     void powerSwitchClicked (Button::State state);
     void hcbSwitchClicked (Button::State state);
     void SRUNReceiver (bool signalValue);

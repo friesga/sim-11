@@ -23,13 +23,13 @@ MS11P::MS11P (Bus* bus)
 	bus_->BPOK ().subscribe (bind (&MS11P::BPOKReceiver, this, _1));
 }
 
-MS11P::MS11P (Bus* bus, shared_ptr<MS11PConfig> ms11pConfig)
+MS11P::MS11P (Bus* bus, const MS11PConfig& ms11pConfig)
 	:
 	MS11P (bus)
 {
-	powerSource_ = ms11pConfig->powerSource;
-	startingAddress_ = ms11pConfig->startingAddress;
-	csrAddress_ = ms11pConfig->csrAddress;
+	powerSource_ = ms11pConfig.powerSource;
+	startingAddress_ = ms11pConfig.startingAddress;
+	csrAddress_ = ms11pConfig.csrAddress;
 }
 
 MS11P::~MS11P ()

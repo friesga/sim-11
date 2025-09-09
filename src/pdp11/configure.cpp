@@ -162,11 +162,11 @@ void PDP_11::configureUnibusSystem (SystemConfig const & systemConfig,
         [this, window] (shared_ptr<BA11_NConfig> ba11_nConfig)
             { throw logic_error ("Should not happen"); },
         [this] (shared_ptr<KDF11_UConfig> kdf11_uConfig)
-            {processor_ = new KDF11_U (bus_, kdf11_uConfig); },
+            {processor_ = new KDF11_U (bus_, *kdf11_uConfig); },
         [this] (shared_ptr<MS11PConfig> ms11pConfig)
-            {memoryDevices_.push_back (new MS11P (bus_, ms11pConfig)); },
+            {memoryDevices_.push_back (new MS11P (bus_, *ms11pConfig)); },
         [this, window] (shared_ptr<BA11_LConfig> ba11_lConfig)
-            {ba11_l_ = std::make_unique<BA11_L> (bus_, window, ba11_lConfig); },
+            {ba11_l_ = std::make_unique<BA11_L> (bus_, window, *ba11_lConfig); },
         [this] (shared_ptr<BA11_CConfig> ba11lConfig)
             { throw logic_error ("To be implemented"); },
 
