@@ -8,9 +8,7 @@ using std::move;
 using std::get;
 
 KT24Processor::KT24Processor()
-{
-    kt24ConfigPtr = make_unique<KT24Config> ();
-}
+{}
 
 void KT24Processor::processSection (iniparser::Section* section)
 {
@@ -30,7 +28,7 @@ DeviceConfig KT24Processor::getConfig ()
 {
     shared_ptr<M9312Config> m9312ConfigPtr = 
         std::get<shared_ptr<M9312Config>> (m9312Processor.getConfig ());
-    kt24ConfigPtr->m9312Config =  *m9312ConfigPtr;
+    kt24Config.m9312Config =  *m9312ConfigPtr;
 
-    return move (kt24ConfigPtr);
+    return make_shared<KT24Config> (kt24Config);
 }

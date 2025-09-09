@@ -28,11 +28,11 @@ void KD11_NAProcessor::processSubsection (iniparser::Section *subSection)
 void KD11_NAProcessor::processPowerUpMode (iniparser::Value value)
 {
 	KD11Processor kd11Procesor;
-	kd11_naConfigPtr->powerUpMode = 
+	kd11_naConfig.powerUpMode = 
 		kd11Procesor.processPowerUpMode (value);
 }
 
 DeviceConfig KD11_NAProcessor::getConfig ()
 {
-	return move (kd11_naConfigPtr);
+	return make_shared<KD11_NAConfig> (kd11_naConfig);
 }

@@ -19,7 +19,7 @@ public:
 	void processSection (iniparser::Section* section) override;
 
 private:
-	unique_ptr<KT24Config> kt24ConfigPtr {nullptr};
+	KT24Config kt24Config {};
 	M9312Processor m9312Processor {};
 
 	void processValue (iniparser::Section::ValueIterator valueIterator);

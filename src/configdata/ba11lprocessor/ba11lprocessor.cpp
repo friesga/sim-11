@@ -7,9 +7,7 @@ using std::move;
 using std::invalid_argument;
 
 BA11_LProcessor::BA11_LProcessor ()
-{
-    ba11_lConfigPtr = make_unique<BA11_LConfig> ();
-}
+{}
 
 void BA11_LProcessor::processValue (iniparser::Section::ValueIterator valueIterator)
 {
@@ -27,7 +25,7 @@ void BA11_LProcessor::processValue (iniparser::Section::ValueIterator valueItera
 // position has to be specified.
 void BA11_LProcessor::checkConsistency ()
 {
-    if (!ba11_lConfigPtr->cabinetPosition.has_value ())
+    if (!ba11_lConfig.cabinetPosition.has_value ())
         throw invalid_argument {"Cabinet position not specified in BA11-L section"};
 }
 
@@ -36,11 +34,11 @@ void BA11_LProcessor::processSubsection (iniparser::Section* subSection)
 
 DeviceConfig BA11_LProcessor::getConfig ()
 {
-    return move (ba11_lConfigPtr);
+    return make_shared<BA11_LConfig> (ba11_lConfig);
 }
 
 void BA11_LProcessor::processCabinet (iniparser::Value value)
 {
-    ba11_lConfigPtr->cabinetPosition =
+    ba11_lConfig.cabinetPosition =
         CabinetProcessor::processCabinetKey (value);
 }

@@ -9,9 +9,7 @@ using std::make_unique;
 using std::move;
 
 RLProcessor::RLProcessor ()
-{
-	rlConfigPtr = make_unique<RLConfig> ();
-}
+{}
 
 // This is an overridden version of SectionProcessor::processSection() with
 // the following differences:
@@ -54,7 +52,7 @@ void RLProcessor::processAddress (iniparser::Value value)
 {
 	try
 	{
-		rlConfigPtr->address = touint<u16> (value.asString ());
+		rlConfig.address = touint<u16> (value.asString ());
 	}
 	catch (std::invalid_argument const&)
 	{
@@ -67,7 +65,7 @@ void RLProcessor::processVector (iniparser::Value value)
 {
 	try
 	{
-		rlConfigPtr->vector = touint<u16> (value.asString ());
+		rlConfig.vector = touint<u16> (value.asString ());
 	}
 	catch (std::invalid_argument const&)
 	{
@@ -78,7 +76,7 @@ void RLProcessor::processVector (iniparser::Value value)
 
 void RLProcessor::processUnits (iniparser::Value value)
 {
-	rlConfigPtr->numUnits = value.asInt ();
+	rlConfig.numUnits = value.asInt ();
 }
 
 // A RL Section can have zero to four subsections, one for each unit.
@@ -93,11 +91,11 @@ void RLProcessor::processSubsection (iniparser::Section* subSection)
 	// is stored in the RlUnitConfig struct so it is clear to which unit
 	// the configuration applies.
 	size_t unitNumber = unitNumberFromSectionName (subSection->name(),
-		rlConfigPtr->maxRlUnits);
+		rlConfig.maxRlUnits);
 
 	// Check that the configuration for this unit has not already been
 	// specified.
-	if (rlConfigPtr->rlUnitConfig[unitNumber] != nullptr)
+	if (rlConfig.rlUnitConfig[unitNumber] != nullptr)
 		throw std::invalid_argument {"Double specification for RL subsection: " +
 			subSection->name()};
 
@@ -105,7 +103,7 @@ void RLProcessor::processSubsection (iniparser::Section* subSection)
 	rlUnitProcessor.processSection (subSection);
 
 	// Add the unit configuration to the RL device configuration
-	rlConfigPtr->rlUnitConfig[unitNumber] = rlUnitProcessor.getConfig ();
+	rlConfig.rlUnitConfig[unitNumber] = rlUnitProcessor.getConfig ();
 }
 
 void RLProcessor::checkConsistency ()
@@ -113,5 +111,5 @@ void RLProcessor::checkConsistency ()
 
 RLConfig RLProcessor::getConfig ()
 {
-	return *rlConfigPtr;
+	return rlConfig;
 }

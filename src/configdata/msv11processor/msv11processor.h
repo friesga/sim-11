@@ -15,7 +15,7 @@ using std::string;
 
 class MSV11Processor : public DeviceConfigProcessor
 {
-	unique_ptr<MSV11Config> msv11ConfigPtr {nullptr};
+	MSV11Config msv11Config {};
 
     // Define process as a pointer to a BDV11Processor member function
 	// with a iniparser::Value argument and returning void.

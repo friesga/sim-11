@@ -15,7 +15,7 @@ using std::string;
 
 class MS11PProcessor : public DeviceConfigProcessor
 {
-	unique_ptr<MS11PConfig> ms11pConfigPtr {nullptr};
+	MS11PConfig ms11pConfig {};
 
 	typedef void (MS11PProcessor::* Process)(iniparser::Value);
 

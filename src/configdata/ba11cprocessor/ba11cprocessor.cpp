@@ -7,9 +7,7 @@ using std::move;
 using std::invalid_argument;
 
 BA11_CProcessor::BA11_CProcessor ()
-{
-    ba11_cConfigPtr = make_unique<BA11_CConfig> ();
-}
+{}
 
 void BA11_CProcessor::processValue (iniparser::Section::ValueIterator valueIterator)
 {
@@ -27,10 +25,10 @@ void BA11_CProcessor::processValue (iniparser::Section::ValueIterator valueItera
 // position has to be specified.
 void BA11_CProcessor::checkConsistency ()
 {
-    if (!ba11_cConfigPtr->cabinetPosition.has_value ())
+    if (!ba11_cConfig.cabinetPosition.has_value ())
         throw invalid_argument {"Cabinet position not specified in BA11-C section"};
 
-    if (!ba11_cConfigPtr->operatorConsole.has_value ())
+    if (!ba11_cConfig.operatorConsole.has_value ())
         throw invalid_argument {"No (valid) operator console specified in BA11-C section"};
 }
 
@@ -39,12 +37,12 @@ void BA11_CProcessor::processSubsection (iniparser::Section* subSection)
 
 DeviceConfig BA11_CProcessor::getConfig ()
 {
-    return move (ba11_cConfigPtr);
+    return make_shared<BA11_CConfig> (ba11_cConfig);
 }
 
 void BA11_CProcessor::processCabinet (iniparser::Value value)
 {
-    ba11_cConfigPtr->cabinetPosition =
+    ba11_cConfig.cabinetPosition =
         CabinetProcessor::processCabinetKey (value);
 }
 
@@ -54,7 +52,7 @@ void BA11_CProcessor::processOperatorConsole (iniparser::Value value)
 
     if ((iter = availableConsoles.find (value.asString ())) !=
             availableConsoles.end ())
-        ba11_cConfigPtr->operatorConsole = iter->second;
+        ba11_cConfig.operatorConsole = iter->second;
     else
         throw invalid_argument {"Invalid BA11-C console specified"};
 }

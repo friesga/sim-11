@@ -15,7 +15,7 @@ using std::string;
 
 class RK05Processor : public UnitConfigProcessor
 {
-	unique_ptr<RK05Config> rk05ConfigPtr {nullptr};
+	RK05Config rk05Config {};
 
 	// Define process as a pointer to a RK05Processor member function
 	// with a iniparser::Value argument and returning void.

@@ -15,7 +15,7 @@ using std::string;
 
 class RLUnitProcessor : public UnitConfigProcessor
 {
-	unique_ptr<RLUnitConfig> rlUnitConfigPtr {nullptr};
+	RLUnitConfig rlUnitConfig {};
 
     // Define process as a pointer to a BDV11Processor member function
 	// with a iniparser::Value argument and returning void.

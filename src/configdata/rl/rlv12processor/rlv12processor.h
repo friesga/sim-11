@@ -16,7 +16,7 @@ using std::string;
 
 class RLV12Processor : public DeviceConfigProcessor
 {
-	unique_ptr<RLV12Config> rlConfigPtr {nullptr};
+	RLV12Config rlConfig;
 	RLProcessor rlProcessor_;
 
     // Define process as a pointer to a RlProcessor member function

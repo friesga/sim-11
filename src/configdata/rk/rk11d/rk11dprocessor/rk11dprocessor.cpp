@@ -9,9 +9,7 @@ using std::make_unique;
 using std::move;
 
 RK11DProcessor::RK11DProcessor ()
-{
-	rk11dConfigPtr = make_unique<RK11DConfig> ();
-}
+{}
 
 void RK11DProcessor::processValue (iniparser::Section::ValueIterator valueIterator)
 {
@@ -45,7 +43,7 @@ void RK11DProcessor::processAddress (iniparser::Value value)
 	if (address < 0160000 || address > 0177770)
 		throw std::invalid_argument {"RK11-D address must be in the range 0160000-0177770"};
 
-	rk11dConfigPtr->address = address;
+	rk11dConfig.address = address;
 }
 
 void RK11DProcessor::processVector (iniparser::Value value)
@@ -68,7 +66,7 @@ void RK11DProcessor::processVector (iniparser::Value value)
 	if (vector > 0740)
         throw std::invalid_argument {"RK11-D vector must be in the range 0000-0740"};
 
-	rk11dConfigPtr->vector = vector;
+	rk11dConfig.vector = vector;
 }
 
 void RK11DProcessor::processBRLevel (iniparser::Value value)
@@ -88,12 +86,12 @@ void RK11DProcessor::processBRLevel (iniparser::Value value)
 	if (busRequestLevel < 4 || busRequestLevel > 7)
         throw std::invalid_argument {"RK11-D bus request level must be between 4 and 7"};
 
-	rk11dConfigPtr->busRequestLevel = busRequestLevel;
+	rk11dConfig.busRequestLevel = busRequestLevel;
 }
 
 void RK11DProcessor::processUnits (iniparser::Value value)
 {
-	rk11dConfigPtr->numUnits = value.asInt ();
+	rk11dConfig.numUnits = value.asInt ();
 }
 
 // A RL Section can have zero to four subsections, one for each unit.
@@ -108,11 +106,11 @@ void RK11DProcessor::processSubsection (iniparser::Section* subSection)
 	// is stored in the RlUnitConfig struct so it is clear to which unit
 	// the configuration applies.
 	size_t unitNumber = unitNumberFromSectionName (subSection->name (),
-		rk11dConfigPtr->maxRK05Units);
+		rk11dConfig.maxRK05Units);
 
 	// Check that the configuration for this unit has not already been
 	// specified.
-	if (rk11dConfigPtr->rk05Config[unitNumber] != nullptr)
+	if (rk11dConfig.rk05Config[unitNumber] != nullptr)
 		throw std::invalid_argument {"Double specification for RK11-D subsection: " +
 			subSection->name ()};
 
@@ -120,7 +118,7 @@ void RK11DProcessor::processSubsection (iniparser::Section* subSection)
 	rk05Processor.processSection (subSection);
 
 	// Add the unit configuration to the RL device configuration
-	rk11dConfigPtr->rk05Config[unitNumber] = rk05Processor.getConfig ();
+	rk11dConfig.rk05Config[unitNumber] = rk05Processor.getConfig ();
 }
 
 void RK11DProcessor::checkConsistency ()
@@ -129,5 +127,5 @@ void RK11DProcessor::checkConsistency ()
 
 DeviceConfig RK11DProcessor::getConfig ()
 {
-	return move (rk11dConfigPtr);
+	return make_shared<RK11DConfig> (rk11dConfig);
 }

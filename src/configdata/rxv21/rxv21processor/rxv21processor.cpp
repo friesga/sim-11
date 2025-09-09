@@ -9,9 +9,7 @@ using std::make_unique;
 using std::move;
 
 RXV21Processor::RXV21Processor ()
-{
-	rxConfigPtr = make_unique<RXV21Config> ();
-}
+{}
 
 void RXV21Processor::processValue (iniparser::Section::ValueIterator valueIterator)
 {
@@ -24,7 +22,7 @@ void RXV21Processor::processAddress (iniparser::Value value)
 {
 	try
 	{
-		rxConfigPtr->address = touint<u16> (value.asString());
+		rxConfig.address = touint<u16> (value.asString());
 	}
 	catch (std::invalid_argument const &)
 	{
@@ -37,7 +35,7 @@ void RXV21Processor::processVector (iniparser::Value value)
 { 
 	try
 	{
-		rxConfigPtr->vector = touint<u16> (value.asString());
+		rxConfig.vector = touint<u16> (value.asString());
 	}
 	catch (std::invalid_argument const &)
 	{
@@ -81,5 +79,5 @@ void RXV21Processor::processSubsection (iniparser::Section *subSection)
 
 DeviceConfig RXV21Processor::getConfig ()
 {
-	return move (rxConfigPtr);
+	return make_shared<RXV21Config> (rxConfig);
 }

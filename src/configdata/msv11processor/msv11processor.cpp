@@ -8,9 +8,7 @@ using std::move;
 using std::invalid_argument;
 
 MSV11Processor::MSV11Processor ()
-{
-	msv11ConfigPtr = make_unique<MSV11Config> ();
-}
+{}
 
 void MSV11Processor::processValue (iniparser::Section::ValueIterator valueIterator)
 {
@@ -28,7 +26,7 @@ void MSV11Processor::processPowerSource (iniparser::Value value)
 
     if ((iter = validPowerSources.find (value.asString ())) != 
             validPowerSources.end ())
-        msv11ConfigPtr->powerSource = iter->second;
+        msv11Config.powerSource = iter->second;
     else
         throw invalid_argument {"Incorrect MSV11 power_source value"};
 }
@@ -37,7 +35,7 @@ void MSV11Processor::processStartingAddress (iniparser::Value value)
 {
 	try
 	{
-		msv11ConfigPtr->startingAddress = touint<u32> (value.asString());
+		msv11Config.startingAddress = touint<u32> (value.asString());
 	}
 	catch (std::invalid_argument const &)
 	{
@@ -50,7 +48,7 @@ void MSV11Processor::processBank7Lower2kW (iniparser::Value value)
 {
 	try
 	{
-		msv11ConfigPtr->bank7Lower2kWEnabled = value.asBool ();
+		msv11Config.bank7Lower2kWEnabled = value.asBool ();
 	}
 	catch (invalid_argument const &)
 	{
@@ -61,10 +59,10 @@ void MSV11Processor::processBank7Lower2kW (iniparser::Value value)
 // Check the consistency of the configuration of the MSV11 memory.
 void MSV11Processor::checkConsistency ()
 {
-	if (msv11ConfigPtr->startingAddress > 0760000)
+	if (msv11Config.startingAddress > 0760000)
 		throw invalid_argument {"MSV11 maximum starting address is 0760000"};
 
-	if (msv11ConfigPtr->startingAddress % 020000 != 0)
+	if (msv11Config.startingAddress % 020000 != 0)
 		throw invalid_argument {"MSV11 address must start at 4K boundary"};
 }
 
@@ -73,5 +71,5 @@ void MSV11Processor::processSubsection (iniparser::Section *subSection)
 
 DeviceConfig MSV11Processor::getConfig ()
 {
-	return move (msv11ConfigPtr);
+	return make_shared<MSV11Config> (msv11Config);
 }

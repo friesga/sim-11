@@ -15,7 +15,7 @@ using std::string;
 
 class BA11_LProcessor : public DeviceConfigProcessor
 {
-	unique_ptr<BA11_LConfig> ba11_lConfigPtr {nullptr};
+	BA11_LConfig ba11_lConfig;
 
 	// Define Process as a pointer to a BDV11Processor member function
 	// with a iniparser::Value argument and returning void.

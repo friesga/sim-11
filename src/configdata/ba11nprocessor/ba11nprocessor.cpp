@@ -7,9 +7,7 @@ using std::move;
 using std::invalid_argument;
 
 BA11_NProcessor::BA11_NProcessor ()
-{
-	ba11_nConfigPtr = make_unique<BA11_NConfig> ();
-}
+{}
 
 void BA11_NProcessor::processValue (iniparser::Section::ValueIterator valueIterator)
 {
@@ -27,7 +25,7 @@ void BA11_NProcessor::processValue (iniparser::Section::ValueIterator valueItera
 // position has to be specified.
 void BA11_NProcessor::checkConsistency ()
 {
-    if (!ba11_nConfigPtr->cabinetPosition.has_value ())
+    if (!ba11_nConfig.cabinetPosition.has_value ())
         throw invalid_argument {"Cabinet position not specified in BA11-N section"};
 }
 
@@ -36,7 +34,7 @@ void BA11_NProcessor::processSubsection (iniparser::Section *subSection)
 
 DeviceConfig BA11_NProcessor::getConfig ()
 {
-	return move (ba11_nConfigPtr);
+	return make_shared<BA11_NConfig> (ba11_nConfig);
 }
 
 void BA11_NProcessor::processLogo (iniparser::Value value)
@@ -45,13 +43,13 @@ void BA11_NProcessor::processLogo (iniparser::Value value)
 
     if ((iter = availableLogos.find (value.asString ())) != 
             availableLogos.end ())
-        ba11_nConfigPtr->logo = iter->second;
+        ba11_nConfig.logo = iter->second;
     else
         throw invalid_argument {"Unavailable BA11-N logo selected"};
 }
 
 void BA11_NProcessor::processCabinet (iniparser::Value value)
 {
-    ba11_nConfigPtr->cabinetPosition = 
+    ba11_nConfig.cabinetPosition = 
         CabinetProcessor::processCabinetKey (value);
 }

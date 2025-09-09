@@ -28,11 +28,11 @@ void KDF11_UProcessor::processSubsection (iniparser::Section* subSection)
 void KDF11_UProcessor::processPowerUpMode (iniparser::Value value)
 {
 	KD11Processor kd11Procesor;
-	kdf11_uConfigPtr->powerUpMode =
+	kdf11_uConfig.powerUpMode =
 		kd11Procesor.processPowerUpMode (value);
 
 	// Valid power-up options for the KDF11-U are Vector and Bootstrap.
-	if (kdf11_uConfigPtr->powerUpMode == KD11Config::PowerUpMode::ODT)
+	if (kdf11_uConfig.powerUpMode == KD11Config::PowerUpMode::ODT)
         throw invalid_argument {"Invalid KDF11-U power-up_mode, must be Vector or Bootstrap"};
 }
 
@@ -42,7 +42,7 @@ void KDF11_UProcessor::processKernelHaltMode (iniparser::Value value)
 
 	if ((iter = validKernelHaltModes.find (value.asString ())) !=
 			validKernelHaltModes.end ())
-		kdf11_uConfigPtr->kernelHaltMode = iter->second;
+		kdf11_uConfig.kernelHaltMode = iter->second;
 	else
 		throw invalid_argument {"Incorrect KDF11-U kernel_halt value"};
 }
@@ -65,10 +65,10 @@ void  KDF11_UProcessor::processBootAddress (iniparser::Value value)
 	if (bootAddress != 0165000 && bootAddress != 0173000)
 		throw invalid_argument {"KDF11-U boot address must be either 0165000 or 0173000"};
 
-	kdf11_uConfigPtr->bootAddress = bootAddress;
+	kdf11_uConfig.bootAddress = bootAddress;
 }
 
 DeviceConfig KDF11_UProcessor::getConfig ()
 {
-	return move (kdf11_uConfigPtr);
+	return make_shared<KDF11_UConfig> (kdf11_uConfig);
 }

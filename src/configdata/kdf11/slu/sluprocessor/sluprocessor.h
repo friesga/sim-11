@@ -15,7 +15,7 @@ using std::string;
 
 class SLUProcessor : public UnitConfigProcessor
 {
-	unique_ptr<SLUConfig> sluConfigPtr {nullptr};
+	SLUConfig sluConfig;
 
 	typedef void (SLUProcessor::*Process)(iniparser::Value);
 	

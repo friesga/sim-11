@@ -9,9 +9,7 @@ using std::make_unique;
 using std::move;
 
 RLV11Processor::RLV11Processor ()
-{
-	rlv11ConfigPtr = make_unique<RLV11Config> ();
-}
+{}
 
 // This is a RLV11-specific processSection(). This version first calls the
 // RL configuration processor to process the common keys and then calls the
@@ -57,6 +55,6 @@ void RLV11Processor::processSubsection (iniparser::Section* subSection)
 
 DeviceConfig RLV11Processor::getConfig ()
 {
-	rlv11ConfigPtr->common = rlProcessor_.getConfig ();
-	return move (rlv11ConfigPtr);
+	rlv11Config.common = rlProcessor_.getConfig ();
+	return make_shared<RLV11Config> (rlv11Config);
 }

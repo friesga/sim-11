@@ -16,7 +16,7 @@ using std::string;
 // Definition a configuration processor for the RK11-D options.
 class RK11DProcessor : public DeviceConfigProcessor
 {
-	unique_ptr<RK11DConfig> rk11dConfigPtr {nullptr};
+	RK11DConfig rk11dConfig {};
 
 	// Define process as a pointer to a RK11DProcessor member function
 	// with a iniparser::Value argument and returning void.

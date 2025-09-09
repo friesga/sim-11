@@ -16,7 +16,7 @@ public:
 	DeviceConfig getConfig () override;
 
 private:
-	unique_ptr<KDF11_UConfig> kdf11_uConfigPtr {make_unique<KDF11_UConfig> ()};
+	KDF11_UConfig kdf11_uConfig {};
 
 	// Define process as a pointer to a KDF11_UProcessor member function
 	// with a iniparser::Value argument and returning void.

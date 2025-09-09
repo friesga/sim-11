@@ -25,7 +25,7 @@ void KDF11_AProcessor::processKTF11_A (iniparser::Value value)
 {
 	try
 	{
-		kd11ConfigPtr->ktf11_a_present = value.asBool ();
+		kd11Config.ktf11_a_present = value.asBool ();
 	}
 	catch (invalid_argument const &)
 	{
@@ -53,17 +53,17 @@ void KDF11_AProcessor::processStartingAddress (iniparser::Value value)
 	if ((startingAddress % 01000) != 0)
 		throw invalid_argument {"KDF11-A starting address must reside on 256-word boundary"};
 
-	kd11ConfigPtr->startingAddress = startingAddress;
+	kd11Config.startingAddress = startingAddress;
 }
 
 void KDF11_AProcessor::processPowerUpMode (iniparser::Value value)
 {
 	KD11Processor kd11Procesor;
-	kd11ConfigPtr->powerUpMode = 
+	kd11Config.powerUpMode = 
 		kd11Procesor.processPowerUpMode (value);
 }
 
 DeviceConfig KDF11_AProcessor::getConfig ()
 {
-	return move (kd11ConfigPtr);
+	return make_shared<KDF11_AConfig> (kd11Config);
 }

@@ -10,8 +10,7 @@ using std::invalid_argument;
 
 RK05Processor::RK05Processor (size_t unitNumber)
 {
-	rk05ConfigPtr = make_unique<RK05Config> ();
-	rk05ConfigPtr->unitNumber = unitNumber;
+	rk05Config.unitNumber = unitNumber;
 }
 
 void RK05Processor::processValue (iniparser::Section::ValueIterator valueIterator)
@@ -36,42 +35,42 @@ void RK05Processor::processFileName (iniparser::Value value)
 
 	// If no system-specific filename is found in the given value map,
 	// the unqualified name is returned
-	rk05ConfigPtr->fileName =
+	rk05Config.fileName =
 		aMap.getValue (iniparser::Value (systemType),
 			aMap.getValue (iniparser::Value (""))).asString ();
 }
 
 void RK05Processor::processNewFile (iniparser::Value value)
 {
-	rk05ConfigPtr->newFile = value.asBool ();
+	rk05Config.newFile = value.asBool ();
 }
 
 void RK05Processor::processWriteProtect (iniparser::Value value)
 {
-	rk05ConfigPtr->writeProtect = value.asBool ();
+	rk05Config.writeProtect = value.asBool ();
 }
 
 void RK05Processor::processOverwrite (iniparser::Value value)
 {
-	rk05ConfigPtr->overwrite = value.asBool ();
+	rk05Config.overwrite = value.asBool ();
 }
 
 void RK05Processor::processCabinet (iniparser::Value value)
 {
-	rk05ConfigPtr->cabinetPosition =
+	rk05Config.cabinetPosition =
 		CabinetProcessor::processCabinetKey (value);
 }
 
 void RK05Processor::processSpinUpTime (iniparser::Value value)
 {
-	rk05ConfigPtr->spinUpTime = value.asInt ();
+	rk05Config.spinUpTime = value.asInt ();
 }
 
 // Check the consistency of the configuration of a RL unit.  A valid cabinet
 // position has to be specified.
 void RK05Processor::checkConsistency ()
 {
-	if (!rk05ConfigPtr->cabinetPosition.has_value ())
+	if (!rk05Config.cabinetPosition.has_value ())
 		throw invalid_argument {"Cabinet position not specified in RK05 section"};
 }
 
@@ -80,5 +79,5 @@ void RK05Processor::processSubsection (iniparser::Section* subSection)
 
 shared_ptr<RK05Config> RK05Processor::getConfig ()
 {
-	return move (rk05ConfigPtr);
+	return make_shared<RK05Config> (rk05Config);
 }

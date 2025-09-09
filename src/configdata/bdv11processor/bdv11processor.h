@@ -20,7 +20,7 @@ public:
 	DeviceConfig getConfig ();
 
 private:
-	unique_ptr<BDV11Config> bdv11ConfigPtr {nullptr};
+	BDV11Config bdv11Config;
 
     // Define process as a pointer to a BDV11Processor member function
 	// with a iniparser::Value argument and returning void.

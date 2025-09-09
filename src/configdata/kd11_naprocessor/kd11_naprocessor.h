@@ -31,7 +31,7 @@ private:
 	void processSubsection (iniparser::Section *subSection) override;
 	void processPowerUpMode (iniparser::Value value);
 
-	unique_ptr<KD11_NAConfig> kd11_naConfigPtr {make_unique<KD11_NAConfig> ()};
+	KD11_NAConfig kd11_naConfig {};
 };
 
 #endif // _KD11_NAPROCESSOR_H_

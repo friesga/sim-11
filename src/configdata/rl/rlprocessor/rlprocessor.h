@@ -17,7 +17,7 @@ using std::string;
 // RLV11 and RLV12.
 class RLProcessor : public SectionProcessor
 {
-	unique_ptr<RLConfig> rlConfigPtr {nullptr};
+	RLConfig rlConfig {};
 
 	// Define process as a pointer to a RLProcessor member function
 	// with a iniparser::Value argument and returning void.
