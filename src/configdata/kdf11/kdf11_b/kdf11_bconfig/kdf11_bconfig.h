@@ -14,7 +14,7 @@ struct KDF11_BConfig : public DeviceType<BusType::QBus>
 {
     KD11Config::PowerUpMode powerUpMode {KD11Config::PowerUpMode::Bootstrap};
     shared_ptr<SLUConfig> sluConfig;
-    shared_ptr<BDV11Config> bdv11Config;
+    BDV11Config bdv11Config;
 
     KDF11_BConfig ();
 };

@@ -28,14 +28,14 @@ TEST (KDF11B_BDV11ConfiguratorTest, defaultConfigurationAccepted)
 	auto kdf11_bConfig = 
 		get<shared_ptr<KDF11_BConfig>> (systemConfig[0]);
 
-	BDV11Config* bdv11Config = (BDV11Config*) kdf11_bConfig->bdv11Config.get ();
+	BDV11Config bdv11Config = kdf11_bConfig->bdv11Config;
 	
-	EXPECT_TRUE (bdv11Config->cpuTests);
-	EXPECT_TRUE (bdv11Config->memoryTests);
-	EXPECT_FALSE (bdv11Config->decnetBoot);
-	EXPECT_TRUE (bdv11Config->consoleDialog);
-	EXPECT_EQ (bdv11Config->bootDevice, BDV11Config::BootDevice::RX02);
-	EXPECT_EQ (bdv11Config->bootROM, BDV11Config::BootROM::BDV11);
+	EXPECT_TRUE (bdv11Config.cpuTests);
+	EXPECT_TRUE (bdv11Config.memoryTests);
+	EXPECT_FALSE (bdv11Config.decnetBoot);
+	EXPECT_TRUE (bdv11Config.consoleDialog);
+	EXPECT_EQ (bdv11Config.bootDevice, BDV11Config::BootDevice::RX02);
+	EXPECT_EQ (bdv11Config.bootROM, BDV11Config::BootROM::BDV11);
 }
 
 TEST (KDF11B_BDV11ConfiguratorTest, bootROMAccepted)
@@ -61,9 +61,9 @@ TEST (KDF11B_BDV11ConfiguratorTest, bootROMAccepted)
 	auto kdf11_bConfig = 
 		get<shared_ptr<KDF11_BConfig>> (systemConfig[0]);
 
-	BDV11Config* bdv11Config = (BDV11Config*) kdf11_bConfig->bdv11Config.get ();
+	BDV11Config bdv11Config = kdf11_bConfig->bdv11Config;
 	
-	EXPECT_EQ (bdv11Config->bootROM, BDV11Config::BootROM::KDF11_BA);
+	EXPECT_EQ (bdv11Config.bootROM, BDV11Config::BootROM::KDF11_BA);
 }
 
 TEST (KDF11B_BDV11ConfiguratorTest, optionsAccepted)
@@ -94,14 +94,14 @@ TEST (KDF11B_BDV11ConfiguratorTest, optionsAccepted)
 	auto kdf11_bConfig = 
 		get<shared_ptr<KDF11_BConfig>> (systemConfig[0]);
 
-	BDV11Config* bdv11Config = (BDV11Config*) kdf11_bConfig->bdv11Config.get ();
+	BDV11Config bdv11Config = kdf11_bConfig->bdv11Config;
 	
-	EXPECT_EQ (bdv11Config->bootROM, BDV11Config::BootROM::KDF11_BA);
-	EXPECT_FALSE (bdv11Config->cpuTests);
-	EXPECT_FALSE (bdv11Config->memoryTests);
-	EXPECT_TRUE (bdv11Config->decnetBoot);
-	EXPECT_FALSE (bdv11Config->consoleDialog);
-	EXPECT_EQ (bdv11Config->bootDevice, BDV11Config::BootDevice::RK05);
+	EXPECT_EQ (bdv11Config.bootROM, BDV11Config::BootROM::KDF11_BA);
+	EXPECT_FALSE (bdv11Config.cpuTests);
+	EXPECT_FALSE (bdv11Config.memoryTests);
+	EXPECT_TRUE (bdv11Config.decnetBoot);
+	EXPECT_FALSE (bdv11Config.consoleDialog);
+	EXPECT_EQ (bdv11Config.bootDevice, BDV11Config::BootDevice::RK05);
 }
 
 TEST (KDF11B_BDV11ConfiguratorTest, tu58bootDeviceAccepted)
@@ -128,7 +128,7 @@ TEST (KDF11B_BDV11ConfiguratorTest, tu58bootDeviceAccepted)
 	auto kdf11_bConfig = 
 		get<shared_ptr<KDF11_BConfig>> (systemConfig[0]);
 
-	BDV11Config* bdv11Config = (BDV11Config*) kdf11_bConfig->bdv11Config.get ();
+	BDV11Config bdv11Config = kdf11_bConfig->bdv11Config;
 	
-	EXPECT_EQ (bdv11Config->bootDevice, BDV11Config::BootDevice::TU58);
+	EXPECT_EQ (bdv11Config.bootDevice, BDV11Config::BootDevice::TU58);
 }

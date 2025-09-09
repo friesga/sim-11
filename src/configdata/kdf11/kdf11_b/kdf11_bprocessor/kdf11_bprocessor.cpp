@@ -66,7 +66,7 @@ void KDF11_BProcessor::processBDV11Subsection (iniparser::Section *subSection)
 
 	// Add the unit configuration to the Rl device configuration
 	kdf11_bConfigPtr->bdv11Config = 
-		get<shared_ptr<BDV11Config>> (bdv11Processor.getConfig ());
+		*get<shared_ptr<BDV11Config>> (bdv11Processor.getConfig ());
 }
 
 DeviceConfig KDF11_BProcessor::getConfig ()

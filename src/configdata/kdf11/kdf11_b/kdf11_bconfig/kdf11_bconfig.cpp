@@ -3,6 +3,4 @@
 using std::make_unique;
 
 KDF11_BConfig::KDF11_BConfig ()
-{
-    sluConfig = make_unique<SLUConfig> ();
-}
+{}
