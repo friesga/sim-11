@@ -21,7 +21,7 @@ class UnibusMapLogic : public UnibusMap
 {
 public:
 	UnibusMapLogic (Bus* bus);
-	UnibusMapLogic (Bus* bus, shared_ptr<KT24Config> kt24Config);
+	UnibusMapLogic (Bus* bus, const KT24Config& kt24Config);
 
     // Functions required for the BusDevice interface
 	CondData<u16> read (BusAddress address);

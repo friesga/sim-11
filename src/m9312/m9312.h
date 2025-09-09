@@ -37,7 +37,7 @@ using std::array;
 class M9312 : public AbstractBusDevice
 {
 public:
-    M9312 (Bus* bus, shared_ptr<M9312Config> m9312Config);
+    M9312 (Bus* bus, const M9312Config& m9312Config);
 
     // Functions required by the BusDevice interface
     void reset () override;

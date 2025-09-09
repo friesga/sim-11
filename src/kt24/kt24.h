@@ -23,7 +23,7 @@ class KT24 : public UnibusMap
 {
 public:
 	KT24 (Bus* bus);
-	KT24 (Bus* bus, shared_ptr<KT24Config> kt24Config);
+	KT24 (Bus* bus, const KT24Config& kt24Config);
 
     // Functions required for the BusDevice interface
 	CondData<u16> read (BusAddress address);

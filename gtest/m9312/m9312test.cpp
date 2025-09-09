@@ -19,11 +19,8 @@ TEST (M9312Test, m93isResponsibleForCorrectAddresses)
         true
     };
     
-    shared_ptr<M9312Config> m9312ConfigPtr =
-        make_shared<M9312Config> (config);
-
     Qbus bus;
-    M9312 m9312 (&bus, m9312ConfigPtr);
+    M9312 m9312 (&bus, M9312Config {config});
 
     EXPECT_TRUE (m9312.responsible (0165000));
     EXPECT_TRUE (m9312.responsible (0165776));
@@ -48,7 +45,7 @@ TEST (M9312Test, diagROMreadCorrectly)
     shared_ptr<M9312Config> m9312ConfigPtr = make_shared<M9312Config> (config);
 
     Qbus bus;
-    M9312 m9312 (&bus, m9312ConfigPtr);
+    M9312 m9312 (&bus, M9312Config {config});
 
     CondData<u16> data = m9312.read (0165000);
     EXPECT_EQ (data, 0xEA00);
@@ -69,10 +66,8 @@ TEST (M9312Test, readOfEmptySocketReturnsError)
         true
     };
 
-    shared_ptr<M9312Config> m9312ConfigPtr = make_shared<M9312Config> (config);
-
     Qbus bus;
-    M9312 m9312 (&bus, m9312ConfigPtr);
+    M9312 m9312 (&bus, M9312Config {config});
 
     CondData<u16> data = m9312.read (0165000);
     EXPECT_EQ (data.statusCode (), StatusCode::NonExistingMemory);
@@ -89,10 +84,8 @@ TEST (M9312Test, bootROMsreadCorrectly)
         true
     };
 
-    shared_ptr<M9312Config> m9312ConfigPtr = make_shared<M9312Config> (config);
-
     Qbus bus;
-    M9312 m9312 (&bus, m9312ConfigPtr);
+    M9312 m9312 (&bus, M9312Config {config});
 
     CondData<u16> data = m9312.read (0173000);
     EXPECT_EQ (data, 0x444C);
@@ -130,10 +123,8 @@ TEST (M9312Test, romCannotBeWritten)
         true
     };
 
-    shared_ptr<M9312Config> m9312ConfigPtr = make_shared<M9312Config> (config);
-
     Qbus bus;
-    M9312 m9312 (&bus, m9312ConfigPtr);
+    M9312 m9312 (&bus, M9312Config {config});
 
     u16 data {0};
     EXPECT_EQ (m9312.writeWord (0165000, data), StatusCode::NonExistingMemory);
@@ -151,10 +142,8 @@ TEST (M9312Test, addressOffsetSwitchBankCanBeRead)
         true
     };
 
-    shared_ptr<M9312Config> m9312ConfigPtr = make_shared<M9312Config> (config);
-
     Qbus bus;
-    M9312 m9312 (&bus, m9312ConfigPtr);
+    M9312 m9312 (&bus, M9312Config {config});
 
     CondData<u16> data = m9312.read (0173024);
     EXPECT_EQ (data, 0165000);

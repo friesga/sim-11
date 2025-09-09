@@ -1,15 +1,16 @@
 #include "kt24.h"
 
 using std::make_shared;
+using std::make_unique;
 
 KT24::KT24 (Bus* bus)
     :
-    KT24 (bus, make_shared<KT24Config> ())
+    KT24 (bus, KT24Config {})
 {}
 
-KT24::KT24 (Bus* bus, shared_ptr<KT24Config> kt24Config)
+KT24::KT24 (Bus* bus, const KT24Config& kt24Config)
 {
-    m9312_ = make_unique<M9312> (bus, make_shared<M9312Config> (kt24Config->m9312Config));
+    m9312_ = make_unique<M9312> (bus, kt24Config.m9312Config);
     unibusMapLogic_ = make_unique<UnibusMapLogic> (bus, kt24Config);
     registerHandler_ = 
         make_unique<RegisterHandler> (vector<BusDevice*> {m9312_.get(), unibusMapLogic_.get()});
