@@ -27,7 +27,7 @@ void KT24Processor::processSubsection (iniparser::Section* subSection)
 
 DeviceConfig KT24Processor::getConfig ()
 {
-    kt24ConfigPtr->m9312ConfigPtr = 
-        get<shared_ptr<M9312Config>> (m9312Processor.getConfig ());
+    kt24ConfigPtr->m9312Config =  m9312Processor.getConfigData ();
+
     return move (kt24ConfigPtr);
 }

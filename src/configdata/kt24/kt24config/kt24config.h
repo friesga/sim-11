@@ -18,16 +18,7 @@ using std::make_shared;
 //
 struct KT24Config : public DeviceType<BusType::Unibus>
 {
-    KT24Config ();
-
-    shared_ptr<M9312Config> m9312ConfigPtr {};
+    M9312Config m9312Config;
 };
-
-// The default constructor creates a usable KT24Config object
-inline KT24Config::KT24Config ()
-{
-    m9312ConfigPtr = make_shared<M9312Config> ();
-}
-
 
 #endif // _KT24CONFIG_H_

@@ -15,7 +15,7 @@ using std::string;
 
 class M9312Processor : public DeviceConfigProcessor
 {
-	unique_ptr<M9312Config> m9312ConfigPtr {nullptr};
+	M9312Config m9312Config;
 
 	// Define Process as a pointer to a M9312Processor member function
 	// with a iniparser::Value argument and returning void.
@@ -73,6 +73,7 @@ class M9312Processor : public DeviceConfigProcessor
 public:
 	M9312Processor ();
 	DeviceConfig getConfig () override;
+	M9312Config getConfigData ();
 };
 
 
