@@ -33,7 +33,7 @@ using std::thread;
 class KDF11_A : public PDP11Processor
 {
 public:
-    KDF11_A (Bus* bus, shared_ptr<KDF11_AConfig> kdf11_aConfig);
+    KDF11_A (Bus* bus, const KDF11_AConfig& kdf11_aConfig);
     ~KDF11_A ();
 
     // Functions required by the BusDevice interface. The function writeByte()

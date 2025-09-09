@@ -80,11 +80,11 @@ void PDP_11::configureQbusSystem (SystemConfig const & systemConfig,
     auto configVisitor = overloaded
     {
         [this] (shared_ptr<KD11_NAConfig> kd11_naConfig)
-            {processor_ = new KD11_NA (bus_, kd11_naConfig); },
+            {processor_ = new KD11_NA (bus_, *kd11_naConfig); },
         [this] (shared_ptr<KDF11_AConfig> kdf11_aConfig)
-            {processor_ = new KDF11_A (bus_, kdf11_aConfig); },
+            {processor_ = new KDF11_A (bus_, *kdf11_aConfig); },
         [this] (shared_ptr<KDF11_BConfig> kdf11_bConfig)
-            {processor_ = new KDF11_B (bus_, kdf11_bConfig); },
+            {processor_ = new KDF11_B (bus_, *kdf11_bConfig); },
         [this] (shared_ptr<MSV11Config> msv11Config)
             {memoryDevices_.push_back (new MSV11D (bus_, msv11Config)); },
         [this] (shared_ptr<DLV11JConfig> dlv11jConfig)

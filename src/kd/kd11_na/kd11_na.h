@@ -21,7 +21,7 @@ class KD11_NA : public PDP11Processor
 {
 public:
     KD11_NA (Bus* bus);
-    KD11_NA (Bus* bus, shared_ptr<KD11_NAConfig> kd11_naConfig);
+    KD11_NA (Bus* bus, const KD11_NAConfig& kd11_naConfig);
     ~KD11_NA ();
     void start (u16 startAddress);
     void start ();

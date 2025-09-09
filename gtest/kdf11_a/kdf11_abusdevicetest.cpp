@@ -18,7 +18,7 @@ protected:
     static const int KernelDspacePDR0 {0172320};
 
     Qbus bus_;
-    KDF11_A kdf11_a {&bus_, make_shared<KDF11_AConfig> (true)};
+    KDF11_A kdf11_a {&bus_, KDF11_AConfig {true}};
 };
 
 // Verify SR0 can be read and written

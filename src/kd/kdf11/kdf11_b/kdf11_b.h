@@ -40,7 +40,7 @@ using std::vector;
 class KDF11_B : public PDP11Processor
 {
 public:
-    KDF11_B (Bus* bus, shared_ptr<KDF11_BConfig> kdf11_bConfig);
+    KDF11_B (Bus* bus, const KDF11_BConfig& kdf11_bConfig);
     ~KDF11_B ();
     
     // Functions required by the BusDevice interface. The function writeByte()

@@ -15,10 +15,10 @@ using std::placeholders::_3;
 using std::placeholders::_4;
 using std::placeholders::_5;
 
-KDF11_A::KDF11_A (Bus *bus, shared_ptr<KDF11_AConfig> kdf11_aConfig)
+KDF11_A::KDF11_A (Bus *bus, const KDF11_AConfig& kdf11_aConfig)
     :
     bus_ {bus},
-    startAddress_ {kdf11_aConfig->startingAddress}
+    startAddress_ {kdf11_aConfig.startingAddress}
 {
     // If the KTF11-A is configured add it to the CPU modules. If it is not
     // configured its registers will not be available on the bus and
@@ -27,7 +27,7 @@ KDF11_A::KDF11_A (Bus *bus, shared_ptr<KDF11_AConfig> kdf11_aConfig)
     // I would have liked to state 'make_unique<RegisterHandler> ({&cpuData_})'
     // but unfortunately make_unique cannot accept an initializer_list.
     vector<BusDevice*> modules {&cpuData_};
-    if (kdf11_aConfig->ktf11_a_present)
+    if (kdf11_aConfig.ktf11_a_present)
         modules.push_back (&mmu_);
 
     registerHandler_ = make_unique<RegisterHandler> (modules);
@@ -40,7 +40,7 @@ KDF11_A::KDF11_A (Bus *bus, shared_ptr<KDF11_AConfig> kdf11_aConfig)
         &cpuData_,
         &cpuControl_,
         &mmu_,
-        kdf11_aConfig->powerUpMode,
+        kdf11_aConfig.powerUpMode,
         startAddress_,
         bind (&KDF11_ODT::createODT, _1, _2, _3, _4, _5, false));
 }

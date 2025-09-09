@@ -16,8 +16,7 @@ class KDF11_A_PSWTEST : public ::testing::Test
 {
 protected:
     Qbus qbus;
-    shared_ptr<KDF11_AConfig> kdf11_aConfig = make_shared<KDF11_AConfig> (true);
-    KDF11_A* kdf11a  = new KDF11_A (&qbus, kdf11_aConfig);
+    KDF11_A* kdf11a  = new KDF11_A (&qbus, KDF11_AConfig {true});
     MSV11D*  memory  = new MSV11D (&qbus);
     InstructionDecoder instrDecoder;
     u16 const PswAddress = 0177776;
