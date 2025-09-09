@@ -109,12 +109,39 @@ TEST (BA11_CConfiguratorTest, missingCabinetHeightThrows)
 	}
 }
 
-TEST (BA11_CConfiguratorTest, cabinetPositionIsCorrect)
+TEST (BA11_CConfiguratorTest, missingConsoleThrows)
 {
 	iniparser::File ft;
 	std::stringstream stream;
 	stream << "[BA11-C]\n"
 		"cabinet = 10/20\n";
+	stream >> ft;
+
+	IniProcessor iniProcessor;
+
+	try
+	{
+		iniProcessor.process (ft);
+		FAIL ();
+	}
+	catch (std::invalid_argument const& except)
+	{
+		EXPECT_STREQ (except.what (), "No (valid) operator console specified in BA11-C section");
+	}
+	catch (...)
+	{
+		FAIL ();
+	}
+}
+
+TEST (BA11_CConfiguratorTest, cabinetPositionIsCorrect)
+{
+	iniparser::File ft;
+	std::stringstream stream;
+	stream << "[BA11-C]\n"
+		"cabinet = 10/20\n"
+		"console = KY11-A\n";
+
 	stream >> ft;
 
 	IniProcessor iniProcessor;
@@ -133,4 +160,57 @@ TEST (BA11_CConfiguratorTest, cabinetPositionIsCorrect)
 
 	EXPECT_EQ (ba11_cConfig->cabinetPosition->cabinetNr, 10);
 	EXPECT_EQ (ba11_cConfig->cabinetPosition->height, 20_ru);
+}
+
+TEST (BA11_CConfiguratorTest, incorrectConsoleThrows)
+{
+	iniparser::File ft;
+	std::stringstream stream;
+	stream << "[BA11-C]\n"
+		"cabinet = 10/20\n"
+		"console = XXXX\n";
+	stream >> ft;
+
+	IniProcessor iniProcessor;
+
+	try
+	{
+		iniProcessor.process (ft);
+		FAIL ();
+	}
+	catch (std::invalid_argument const& except)
+	{
+		EXPECT_STREQ (except.what (), "Invalid BA11-C console specified");
+	}
+	catch (...)
+	{
+		FAIL ();
+	}
+}
+
+TEST (BA11_CConfiguratorTest, consoleIsCorrect)
+{
+	iniparser::File ft;
+	std::stringstream stream;
+	stream << "[BA11-C]\n"
+		"cabinet = 10/20\n"
+		"console = KY11-A\n";
+
+	stream >> ft;
+
+	IniProcessor iniProcessor;
+	EXPECT_NO_THROW (iniProcessor.process (ft));
+
+	SystemConfig systemConfig =
+		iniProcessor.getSystemConfig ();
+
+	// The only device type in this testset is the BA11-C so if that's
+	// not correct the following tests will fail too.
+	ASSERT_TRUE (holds_alternative<shared_ptr<BA11_CConfig>> (systemConfig[0]));
+
+	// The device's type is BA11_C so the configuration is a BA11_CConfig object
+	shared_ptr<BA11_CConfig> ba11_cConfig =
+		get<shared_ptr<BA11_CConfig>> (systemConfig[0]);
+
+	EXPECT_EQ (ba11_cConfig->operatorConsole, BA11_CConfig::OperatorConsole::KY11_A);
 }

@@ -29,6 +29,9 @@ void BA11_CProcessor::checkConsistency ()
 {
     if (!ba11_cConfigPtr->cabinetPosition.has_value ())
         throw invalid_argument {"Cabinet position not specified in BA11-C section"};
+
+    if (!ba11_cConfigPtr->operatorConsole.has_value ())
+        throw invalid_argument {"No (valid) operator console specified in BA11-C section"};
 }
 
 void BA11_CProcessor::processSubsection (iniparser::Section* subSection)
@@ -43,4 +46,15 @@ void BA11_CProcessor::processCabinet (iniparser::Value value)
 {
     ba11_cConfigPtr->cabinetPosition =
         CabinetProcessor::processCabinetKey (value);
+}
+
+void BA11_CProcessor::processOperatorConsole (iniparser::Value value)
+{
+    map<string, BA11_CConfig::OperatorConsole>::iterator iter;
+
+    if ((iter = availableConsoles.find (value.asString ())) !=
+            availableConsoles.end ())
+        ba11_cConfigPtr->operatorConsole = iter->second;
+    else
+        throw invalid_argument {"Invalid BA11-C console specified"};
 }

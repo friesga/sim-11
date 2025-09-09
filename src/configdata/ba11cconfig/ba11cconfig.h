@@ -20,10 +20,17 @@ using std::optional;
 //
 struct BA11_CConfig : public DeviceType<BusType::Unibus>
 {
+    // Definition of the available operator consoles
+    enum class OperatorConsole
+    {
+        KY11_A
+    };
+
     BA11_CConfig () = default;
     BA11_CConfig (Cabinet::Position cabinetPosition);
 
     optional<Cabinet::Position> cabinetPosition;
+    optional<OperatorConsole> operatorConsole;
 
     // The BA11-L has a height of 10.5 inch, i.e. six rack units
     static const RackUnit unitHeight;

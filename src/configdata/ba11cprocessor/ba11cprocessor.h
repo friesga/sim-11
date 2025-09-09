@@ -24,13 +24,19 @@ class BA11_CProcessor : public DeviceConfigProcessor
 	map<string, Process> valueProcessors =
 	{
 		{"cabinet", &BA11_CProcessor::processCabinet},
+		{"console", &BA11_CProcessor::processOperatorConsole},
 	};
 
+	map<string, BA11_CConfig::OperatorConsole> availableConsoles =
+	{
+		{"KY11-A",     BA11_CConfig::OperatorConsole::KY11_A},
+	};
 
 	void processValue (iniparser::Section::ValueIterator valueIterator);
 	void checkConsistency ();
 	void processSubsection (iniparser::Section* subSection);
 	void processCabinet (iniparser::Value value);
+	void processOperatorConsole (iniparser::Value value);
 
 public:
 	BA11_CProcessor ();
