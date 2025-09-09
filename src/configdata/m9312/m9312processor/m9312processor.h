@@ -73,7 +73,6 @@ class M9312Processor : public DeviceConfigProcessor
 public:
 	M9312Processor ();
 	DeviceConfig getConfig () override;
-	M9312Config getConfigData ();
 };
 
 

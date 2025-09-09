@@ -37,11 +37,6 @@ DeviceConfig M9312Processor::getConfig ()
     return make_shared<M9312Config> (m9312Config);
 }
 
-M9312Config M9312Processor::getConfigData ()
-{
-    return m9312Config;
-}
-
 void M9312Processor::processDiagnosticROM (iniparser::Value value)
 {
     try

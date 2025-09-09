@@ -1,6 +1,7 @@
 #include "kt24processor.h"
 
 #include <utility>
+#include <variant>
 
 using std::make_unique;
 using std::move;
@@ -27,7 +28,9 @@ void KT24Processor::processSubsection (iniparser::Section* subSection)
 
 DeviceConfig KT24Processor::getConfig ()
 {
-    kt24ConfigPtr->m9312Config =  m9312Processor.getConfigData ();
+    shared_ptr<M9312Config> m9312ConfigPtr = 
+        std::get<shared_ptr<M9312Config>> (m9312Processor.getConfig ());
+    kt24ConfigPtr->m9312Config =  *m9312ConfigPtr;
 
     return move (kt24ConfigPtr);
 }
