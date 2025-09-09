@@ -16,8 +16,9 @@ using std::chrono::high_resolution_clock;
 using std::chrono::duration;
 
 // Constructor
-UART::UART (Bus* bus, UARTTypeConfig const & uartTypeConfig,
-	UARTConfig& uartConfig, u16 channelNr, ConsoleConfig consoleConfig)
+UART::UART (Bus* bus, const UARTTypeConfig& uartTypeConfig,
+	const UARTConfig& uartConfig, u16 channelNr,
+	const ConsoleConfig& consoleConfig)
 	:
 	baseAddress {uartConfig.baseAddress_},
 	vector {uartConfig.baseVector_},

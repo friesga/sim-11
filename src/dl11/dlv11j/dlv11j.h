@@ -14,7 +14,7 @@ using std::shared_ptr;
 class DLV11J : public AbstractBusDevice
 {
 public:
-	DLV11J (Bus *bus, shared_ptr<DLV11JConfig> dlConfig);
+	DLV11J (Bus *bus, const DLV11JConfig& dlConfig);
 
 	// Define the obligatory functions
 	CondData<u16> read (BusAddress busAddress) override;
@@ -36,7 +36,7 @@ private:
 	unique_ptr<UART> channel_[4];
 	u16	baseAddress_;
 	u16 baseVector_;
-	shared_ptr<DLV11JConfig> dlConfig_;
+	const DLV11JConfig& dlConfig_;
 
 	void initialize ();
 	u16 extractChannelNr (BusAddress busAddress);

@@ -39,7 +39,7 @@ void PDP_11::configureDevices (Window *window)
     // Create a DLV11J object with the default configuration. The default
     // position for the BA11-N is at the top of the cabinet (which is 20 RU
     // high, racks units numbered 0-19).
-    busDevices_.emplace_back (new DLV11J (bus_, make_shared<DLV11JConfig> ()));
+    busDevices_.emplace_back (new DLV11J (bus_, DLV11JConfig {}));
     busDevices_.emplace_back (new BDV11 (bus_));
     busDevices_.emplace_back (new RXV21 (bus_));
     busDevices_.emplace_back (new RLV12 (bus_));
@@ -86,13 +86,13 @@ void PDP_11::configureQbusSystem (SystemConfig const & systemConfig,
         [this] (shared_ptr<KDF11_BConfig> kdf11_bConfig)
             {processor_ = new KDF11_B (bus_, *kdf11_bConfig); },
         [this] (shared_ptr<MSV11Config> msv11Config)
-            {memoryDevices_.push_back (new MSV11D (bus_, msv11Config)); },
+            {memoryDevices_.push_back (new MSV11D (bus_, *msv11Config)); },
         [this] (shared_ptr<DLV11JConfig> dlv11jConfig)
-            {busDevices_.emplace_back (new DLV11J (bus_, dlv11jConfig)); },
+            {busDevices_.emplace_back (new DLV11J (bus_, *dlv11jConfig)); },
         [this] (shared_ptr<BDV11Config> bdv11Config)
-            {busDevices_.emplace_back (new BDV11 (bus_, bdv11Config)); },
+            {busDevices_.emplace_back (new BDV11 (bus_, *bdv11Config)); },
         [this] (shared_ptr<RXV21Config> rxv21Config)
-            {busDevices_.emplace_back (new RXV21 (bus_, rxv21Config)); },
+            {busDevices_.emplace_back (new RXV21 (bus_, *rxv21Config)); },
         [this, window] (shared_ptr<RK11DConfig> rk11dConfig)
             {throw logic_error ("Should not happen"); },
         [this, window] (shared_ptr<RL11Config> rl11Config)

@@ -31,7 +31,7 @@ BDV11::BDV11 (Bus *bus)
 }
 
 
-BDV11::BDV11 (Bus *bus, shared_ptr<BDV11Config> bdv11Config)
+BDV11::BDV11 (Bus *bus, const BDV11Config& bdv11Config)
 	:
 	BDV11 (bus)
 {
@@ -47,30 +47,30 @@ BDV11::~BDV11 ()
 	ltcThread_.join();
 }
 
-u16 BDV11::switchRegisterProgramSelection (shared_ptr<BDV11Config> bdv11Config)
+u16 BDV11::switchRegisterProgramSelection (const BDV11Config& bdv11Config)
 {
 	u16 switchRegister {0};
 
-	if (bdv11Config->cpuTests)
+	if (bdv11Config.cpuTests)
 		switchRegister |= BDV11_CPU_TEST;
-	if (bdv11Config->memoryTests)
+	if (bdv11Config.memoryTests)
 		switchRegister |= BDV11_MEM_TEST;
-	if (bdv11Config->decnetBoot)
+	if (bdv11Config.decnetBoot)
 		switchRegister |= BDV11_DECNET;
-	if (bdv11Config->consoleDialog)
+	if (bdv11Config.consoleDialog)
 		switchRegister |= BDV11_DIALOG;
 
 	return switchRegister;
 }
 
-u16 BDV11::switchRegisterBootDevice (shared_ptr<BDV11Config> bdv11Config)
+u16 BDV11::switchRegisterBootDevice (const BDV11Config& bdv11Config)
 {
-	return bootDevices.find (bdv11Config->bootDevice)->second;
+	return bootDevices.find (bdv11Config.bootDevice)->second;
 }
 
-BDV11::ROMimage* BDV11::romToUse (shared_ptr<BDV11Config> bdv11Config)
+BDV11::ROMimage* BDV11::romToUse (const BDV11Config& bdv11Config)
 {
-	return &availableROMs.find (bdv11Config->bootROM)->second;
+	return &availableROMs.find (bdv11Config.bootROM)->second;
 }
 
 // A block of 256 LSI-11 bus addresses is reserved for use in addressing ROM

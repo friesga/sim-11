@@ -24,8 +24,7 @@ KDF11_B::KDF11_B (Bus *bus, const KDF11_BConfig& kdf11_bConfig)
     serialLineUnits = make_unique<SerialLineUnits> (bus,
         UARTTypeConfig {.maintenanceModeSupported = false},
         (SLUConfig*) kdf11_bConfig.sluConfig.get());
-    bdv11 = make_unique<BDV11> (bus,
-        make_shared<BDV11Config> (kdf11_bConfig.bdv11Config));
+    bdv11 = make_unique<BDV11> (bus, kdf11_bConfig.bdv11Config);
 
     vector<BusDevice*> devices {&cpuData_, &mmu_, serialLineUnits.get (), bdv11.get ()};
     registerHandler_ = make_unique<RegisterHandler> (devices);

@@ -29,7 +29,7 @@ RXV21::RXV21 (Bus *bus)
 	bus_->BINIT().subscribe (bind (&RXV21::BINITReceiver, this, _1));
 }
 
-RXV21::RXV21 (Bus *bus, shared_ptr<RXV21Config> rxConfig)
+RXV21::RXV21 (Bus *bus, const RXV21Config& rxConfig)
 	:
 	bus_ {bus}
 {
@@ -53,16 +53,16 @@ RXV21::RXV21 (Bus *bus, shared_ptr<RXV21Config> rxConfig)
 	// if (rxConfig->rxv21UnitConfig[0] != nullptr &&
 	//	!static_pointer_cast<RXV21UnitConfig> 
 	// 		(rxConfig->rxv21UnitConfig[0])->fileName.empty ())
-	if (rxConfig->rxv21UnitConfig[0] != nullptr &&
-		!rxConfig->rxv21UnitConfig[0]->fileName.empty ())
+	if (rxConfig.rxv21UnitConfig[0] != nullptr &&
+		!rxConfig.rxv21UnitConfig[0]->fileName.empty ())
 	{
 		FILE* floppy_file = 
-			fopen (rxConfig->rxv21UnitConfig[0]->fileName.c_str(), "rb");
+			fopen (rxConfig.rxv21UnitConfig[0]->fileName.c_str(), "rb");
 		if (!floppy_file) 
 		{
 			free(data);
 			throw invalid_argument ("Error: cannot open file " +
-				static_pointer_cast<RXV21UnitConfig> (rxConfig->rxv21UnitConfig[0])->fileName);
+				rxConfig.rxv21UnitConfig[0]->fileName);
 		}
 		(void) !fread (data, 77 * 26 * 256, 1, floppy_file);
 		fclose (floppy_file);

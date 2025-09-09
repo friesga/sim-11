@@ -132,7 +132,7 @@ namespace rxv21
 
 	public:
 		RXV21 (Bus* bus);
-		RXV21 (Bus* bus, shared_ptr<RXV21Config> rxConfig);
+		RXV21 (Bus* bus, const RXV21Config& rxConfig);
 		~RXV21 ();
 		CondData<u16> read (BusAddress address) override;
 		StatusCode writeWord (BusAddress address, u16 value) override;

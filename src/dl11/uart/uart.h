@@ -38,8 +38,9 @@ using std::condition_variable;
 class UART : public AbstractBusDevice
 {
 public:
-	UART (Bus* bus, UARTTypeConfig const & uartTypeConfig,
-		UARTConfig& uartConfig, u16 channelNr, ConsoleConfig consoleConfig);
+	UART (Bus* bus, const UARTTypeConfig& uartTypeConfig,
+		const UARTConfig& uartConfig, u16 channelNr,
+		const ConsoleConfig& consoleConfig);
 	~UART ();
 	CondData<u16> read (BusAddress busAddress);
 	StatusCode writeWord (BusAddress busAddress, u16 value);

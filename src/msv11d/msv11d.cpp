@@ -23,13 +23,13 @@ MSV11D::MSV11D (Bus *bus)
 	bus_->BPOK().subscribe (bind (&MSV11D::BPOKReceiver, this, _1));
 }
 
-MSV11D::MSV11D (Bus* bus, shared_ptr<MSV11Config> msv11Config)
+MSV11D::MSV11D (Bus* bus, const MSV11Config& msv11Config)
 	:
 	MSV11D (bus)
 {
-	powerSource_ = msv11Config->powerSource;
-	startingAddress_ = msv11Config->startingAddress;
-	bank7Lower2kWEnabled_ = msv11Config->bank7Lower2kWEnabled;
+	powerSource_ = msv11Config.powerSource;
+	startingAddress_ = msv11Config.startingAddress;
+	bank7Lower2kWEnabled_ = msv11Config.bank7Lower2kWEnabled;
 }
 
 MSV11D::~MSV11D ()

@@ -67,7 +67,7 @@ class BDV11 : public AbstractBusDevice
 {
 public:
 	BDV11 (Bus *bus);
-	BDV11 (Bus *bus, shared_ptr<BDV11Config> bdv11Config);
+	BDV11 (Bus *bus, const BDV11Config& bdv11Config);
 	~BDV11 ();
 	CondData<u16> read (BusAddress address) override;
 	StatusCode writeWord (BusAddress address, u16 value) override;
@@ -109,9 +109,9 @@ private:
 
 	using ROMimage = const array<u16, 2048>;
 
-	ROMimage* romToUse (shared_ptr<BDV11Config> bdv11Config);
-	u16 switchRegisterProgramSelection (shared_ptr<BDV11Config> bdv11Config);
-	u16 switchRegisterBootDevice (shared_ptr<BDV11Config> bdv11Config);
+	ROMimage* romToUse (const BDV11Config& bdv11Config);
+	u16 switchRegisterProgramSelection (const BDV11Config& bdv11Config);
+	u16 switchRegisterBootDevice (const BDV11Config& bdv11Config);
 	u16 getWordLow (u16 word);
 	u16 getWordHigh (u16 word);
 	void memoryDump (u16 pcr, int hi);
