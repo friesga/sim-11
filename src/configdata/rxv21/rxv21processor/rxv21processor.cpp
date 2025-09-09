@@ -61,11 +61,11 @@ void RXV21Processor::processSubsection (iniparser::Section *subSection)
 	// exception if an incorrect unit number is specified. The unit number
 	// is stored in the RXV21UnitConfig struct so it is clear to which unit
 	// the configuration applies.
-	size_t unitNumber = unitNumberFromSectionName (subSection->name(), rxConfigPtr->numRxUnits);
+	size_t unitNumber = unitNumberFromSectionName (subSection->name(), rxConfig.numRxUnits);
 
 	// Check that the configuration for this unit has not already been
 	// specified.
-	if (rxConfigPtr->rxv21UnitConfig[unitNumber] != nullptr)
+	if (rxConfig.rxv21UnitConfig[unitNumber] != nullptr)
 		throw std::invalid_argument {"Double specification for RXV21 subsection: " + 
 			subSection->name()};
 
@@ -73,7 +73,7 @@ void RXV21Processor::processSubsection (iniparser::Section *subSection)
 	rxv21UnitProcessor.processSection (subSection);
 
 	// Add the unit configuration to the RXV21 device configuration
-	rxConfigPtr->rxv21UnitConfig[unitNumber] = 
+	rxConfig.rxv21UnitConfig[unitNumber] = 
 		rxv21UnitProcessor.getConfig ();
 }
 

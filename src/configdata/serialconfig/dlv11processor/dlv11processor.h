@@ -27,7 +27,7 @@ private:
 	enum {defaultCh3Address_ = 0177560};
 	enum {defaultCh3Vector_ = 060};
 
-	unique_ptr<DLV11JConfig> dlConfigPtr {nullptr};
+	DLV11JConfig dlConfig {};
 
     // Define process as a pointer to a DLV11Processor member function
 	// with a iniparser::Value argument and returning void.
