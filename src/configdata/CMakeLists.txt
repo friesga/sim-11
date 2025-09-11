@@ -31,7 +31,6 @@ set (CONFIGURATOR_SRCS
     kdf11/kdf11_a/kdf11_aconfig/kdf11_aconfig.cpp
     kdf11/kdf11_a/kdf11_aprocessor/kdf11_aprocessor.cpp
     kdf11/kdf11_b/kdf11_bprocessor/kdf11_bprocessor.cpp
-    kdf11/kdf11_u/kdf11_uconfig/kdf11_uconfig.cpp
     kdf11/kdf11_u/kdf11_uprocessor/kdf11_uprocessor.cpp
     kdf11/slu/sluprocessor/sluprocessor.cpp
     kt24/kt24processor/kt24processor.cpp

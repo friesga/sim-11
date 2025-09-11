@@ -42,8 +42,6 @@ struct KDF11_UConfig : public DeviceType<BusType::Unibus>
     // The serial line units in the KDF11-U are fixed at their default addresses
     // and therefore cannot be configured
     SLUConfig sluConfig;
-
-    KDF11_UConfig ();
 };
 
 #endif // _KDF11_UCONFIG_H_
