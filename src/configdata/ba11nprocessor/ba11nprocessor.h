@@ -41,7 +41,6 @@ class BA11_NProcessor : public DeviceConfigProcessor
 	void processCabinet (iniparser::Value value);
 
 public:
-	BA11_NProcessor ();
 	DeviceConfig getConfig () override;
 };
 

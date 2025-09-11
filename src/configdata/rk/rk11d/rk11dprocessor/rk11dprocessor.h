@@ -37,7 +37,6 @@ class RK11DProcessor : public DeviceConfigProcessor
 	void processBRLevel (iniparser::Value value);
 
 public:
-	RK11DProcessor ();
 	void processSubsection (iniparser::Section* subSection);
 	void checkConsistency ();
 	DeviceConfig getConfig ();

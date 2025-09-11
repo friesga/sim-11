@@ -39,7 +39,6 @@ class BA11_CProcessor : public DeviceConfigProcessor
 	void processOperatorConsole (iniparser::Value value);
 
 public:
-	BA11_CProcessor ();
 	DeviceConfig getConfig () override;
 };
 

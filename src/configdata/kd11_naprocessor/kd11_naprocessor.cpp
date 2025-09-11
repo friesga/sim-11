@@ -4,9 +4,6 @@
 using std::move;
 using std::invalid_argument;
 
-KD11_NAProcessor::KD11_NAProcessor ()
-{}
-
 void KD11_NAProcessor::processValue (iniparser::Section::ValueIterator valueIterator)
 {
     Process processFunction = valueProcessors[valueIterator->first];

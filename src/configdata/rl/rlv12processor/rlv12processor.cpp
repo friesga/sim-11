@@ -8,9 +8,6 @@
 using std::make_unique;
 using std::move;
 
-RLV12Processor::RLV12Processor ()
-{}
-
 // This is a RLV12-specific processSection(). This version first calls the
 // RL configuration processor to process the common keys and then calls the
 // regular ProcessSection() to process the remaining keys. Common keys are

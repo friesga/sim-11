@@ -33,7 +33,6 @@ class BA11_LProcessor : public DeviceConfigProcessor
 	void processCabinet (iniparser::Value value);
 
 public:
-	BA11_LProcessor ();
 	DeviceConfig getConfig () override;
 };
 

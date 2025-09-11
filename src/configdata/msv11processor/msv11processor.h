@@ -43,7 +43,6 @@ class MSV11Processor : public DeviceConfigProcessor
 	void processBank7Lower2kW (iniparser::Value value);
 
 public:
-	MSV11Processor ();
 	DeviceConfig getConfig ();
 };
 

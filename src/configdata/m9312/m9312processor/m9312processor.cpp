@@ -11,9 +11,6 @@ using std::invalid_argument;
 using std::out_of_range;
 using std::vector;
 
-M9312Processor::M9312Processor ()
-{}
-
 void M9312Processor::processValue (iniparser::Section::ValueIterator valueIterator)
 {
     Process processFunction = valueProcessors[valueIterator->first];

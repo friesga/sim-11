@@ -15,9 +15,6 @@ using std::ranges::find_if;
 using std::vector;
 using std::pair;
 
-SLUProcessor::SLUProcessor ()
-{}
-
 void SLUProcessor::processValue (iniparser::Section::ValueIterator valueIterator)
 {
     // Throw exception for non-existing key?

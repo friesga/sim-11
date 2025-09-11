@@ -8,9 +8,6 @@
 using std::make_unique;
 using std::move;
 
-RXV21Processor::RXV21Processor ()
-{}
-
 void RXV21Processor::processValue (iniparser::Section::ValueIterator valueIterator)
 {
     // Throw exception for non-existing key?

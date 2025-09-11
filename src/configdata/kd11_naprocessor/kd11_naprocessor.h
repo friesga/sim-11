@@ -13,7 +13,6 @@ using std::make_unique;
 class KD11_NAProcessor : public DeviceConfigProcessor
 {
 public:
-	KD11_NAProcessor ();
 	DeviceConfig getConfig () override;
 
 private:

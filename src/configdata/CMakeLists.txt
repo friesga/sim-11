@@ -30,7 +30,6 @@ set (CONFIGURATOR_SRCS
     kd11_naprocessor/kd11_naprocessor.cpp
     kdf11/kdf11_a/kdf11_aconfig/kdf11_aconfig.cpp
     kdf11/kdf11_a/kdf11_aprocessor/kdf11_aprocessor.cpp
-    kdf11/kdf11_b/kdf11_bconfig/kdf11_bconfig.cpp
     kdf11/kdf11_b/kdf11_bprocessor/kdf11_bprocessor.cpp
     kdf11/kdf11_u/kdf11_uconfig/kdf11_uconfig.cpp
     kdf11/kdf11_u/kdf11_uprocessor/kdf11_uprocessor.cpp

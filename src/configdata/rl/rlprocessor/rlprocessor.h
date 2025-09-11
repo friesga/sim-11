@@ -36,7 +36,6 @@ class RLProcessor : public SectionProcessor
 	void processUnits (iniparser::Value value);
 
 public:
-	RLProcessor ();
 	void processSection (iniparser::Section* section);
 	void processSubsection (iniparser::Section* subSection);
 	void checkConsistency ();

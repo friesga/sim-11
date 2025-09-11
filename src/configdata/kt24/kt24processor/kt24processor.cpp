@@ -7,9 +7,6 @@ using std::make_unique;
 using std::move;
 using std::get;
 
-KT24Processor::KT24Processor()
-{}
-
 void KT24Processor::processSection (iniparser::Section* section)
 {
     m9312Processor.processSection (section);

@@ -6,9 +6,6 @@ using std::make_unique;
 using std::move;
 using std::invalid_argument;
 
-BA11_CProcessor::BA11_CProcessor ()
-{}
-
 void BA11_CProcessor::processValue (iniparser::Section::ValueIterator valueIterator)
 {
     Process processFunction = valueProcessors[valueIterator->first];

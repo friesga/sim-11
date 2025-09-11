@@ -14,7 +14,6 @@ using std::unique_ptr;
 class KT24Processor : public DeviceConfigProcessor
 {
 public:
-	KT24Processor ();
 	DeviceConfig getConfig () override;
 	void processSection (iniparser::Section* section) override;
 

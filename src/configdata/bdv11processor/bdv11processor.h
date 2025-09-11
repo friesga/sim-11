@@ -16,7 +16,6 @@ using std::string;
 class BDV11Processor : public DeviceConfigProcessor
 {
 public:
-	BDV11Processor ();
 	DeviceConfig getConfig ();
 
 private:

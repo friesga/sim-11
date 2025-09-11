@@ -26,7 +26,6 @@ class RXV21Processor : public DeviceConfigProcessor
 
 
 public:
-	RXV21Processor ();
 	DeviceConfig getConfig ();
 };
 

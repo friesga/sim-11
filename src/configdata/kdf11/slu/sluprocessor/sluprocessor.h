@@ -48,7 +48,6 @@ class SLUProcessor : public UnitConfigProcessor
 	void processLoopback (iniparser::Value value);
 
 public:
-	SLUProcessor ();
 	SLUConfig getConfig ();
 };
 

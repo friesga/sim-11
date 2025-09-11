@@ -19,7 +19,6 @@ using std::vector;
 class DLV11Processor : public DeviceConfigProcessor
 {
 public:
-	DLV11Processor ();
 	DeviceConfig getConfig ();
 
 private:

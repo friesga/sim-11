@@ -7,9 +7,6 @@ using std::move;
 using std::invalid_argument;
 using std::out_of_range;
 
-BDV11Processor::BDV11Processor ()
-{}
-
 void BDV11Processor::processValue (iniparser::Section::ValueIterator valueIterator)
 {
     // Throw exception for non-existing key?

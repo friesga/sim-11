@@ -8,9 +8,6 @@
 using std::make_unique;
 using std::move;
 
-RLProcessor::RLProcessor ()
-{}
-
 // This is an overridden version of SectionProcessor::processSection() with
 // the following differences:
 // - Unknown keys are ignored,

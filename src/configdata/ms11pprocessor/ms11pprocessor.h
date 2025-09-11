@@ -40,7 +40,6 @@ class MS11PProcessor : public DeviceConfigProcessor
 	void processCsrAddress (iniparser::Value value);
 
 public:
-	MS11PProcessor ();
 	DeviceConfig getConfig ();
 };
 

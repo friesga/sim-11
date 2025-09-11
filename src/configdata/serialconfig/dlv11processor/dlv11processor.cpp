@@ -8,9 +8,6 @@ using std::make_unique;
 using std::move;
 using std::invalid_argument;
 
-DLV11Processor::DLV11Processor ()
-{}
-
 void DLV11Processor::processValue (iniparser::Section::ValueIterator valueIterator)
 {
     // Throw exception for non-existing key?

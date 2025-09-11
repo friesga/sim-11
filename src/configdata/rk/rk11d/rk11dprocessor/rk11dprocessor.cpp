@@ -8,9 +8,6 @@
 using std::make_unique;
 using std::move;
 
-RK11DProcessor::RK11DProcessor ()
-{}
-
 void RK11DProcessor::processValue (iniparser::Section::ValueIterator valueIterator)
 {
 	Process processFunction = valueProcessors[valueIterator->first];

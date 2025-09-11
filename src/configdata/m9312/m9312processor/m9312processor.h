@@ -71,7 +71,6 @@ class M9312Processor : public DeviceConfigProcessor
 	bool addressInRange (u16 address);
 
 public:
-	M9312Processor ();
 	DeviceConfig getConfig () override;
 };
 

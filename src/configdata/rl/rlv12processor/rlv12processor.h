@@ -35,7 +35,6 @@ class RLV12Processor : public DeviceConfigProcessor
 	void processSubsection (iniparser::Section *subSection);
 
 public:
-	RLV12Processor ();
 	DeviceConfig getConfig ();
 };
 
