@@ -46,7 +46,7 @@ class RLUnitProcessor : public UnitConfigProcessor
 
 public:
 	RLUnitProcessor (size_t unitNumber);
-	shared_ptr<RLUnitConfig> getConfig ();
+	RLUnitConfig getConfig ();
 };
 
 

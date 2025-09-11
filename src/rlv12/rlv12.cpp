@@ -75,13 +75,12 @@ RLV12::RLV12 (Bus* bus, Window* window, const RLConfig& rlConfig)
 	for (size_t unitNumber = 0; 
 		unitNumber < rlConfig.numUnits; ++unitNumber)
 	{
-        shared_ptr<RLUnitConfig> rlUnitConfig = 
-            rlConfig.rlUnitConfig[unitNumber];
+        optional<RLUnitConfig> rlUnitConfig = rlConfig.rlUnitConfig[unitNumber];
 
-        if (rlUnitConfig == nullptr)
+        if (!rlUnitConfig.has_value ())
             continue;
 
-		if (unit (unitNumber)->init (rlUnitConfig, window) != StatusCode::Success)
+		if (unit (unitNumber)->init (rlUnitConfig.value (), window) != StatusCode::Success)
 			throw runtime_error ("Error attaching " + rlUnitConfig->fileName);
 	}
 

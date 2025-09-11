@@ -34,7 +34,7 @@ RL01_02::~RL01_02 ()
     }
 }
 
-StatusCode RL01_02::init (shared_ptr<RLUnitConfig> rlUnitConfig,
+StatusCode RL01_02::init (const RLUnitConfig& rlUnitConfig,
     Window* window)
 {
     createBezel (window, rlUnitConfig);
@@ -44,7 +44,7 @@ StatusCode RL01_02::init (shared_ptr<RLUnitConfig> rlUnitConfig,
 
 // This version of the init function doesn't create a bezel and is meant
 // to be called by the unit tests.
-StatusCode RL01_02::init (shared_ptr<RLUnitConfig> rlUnitConfig)
+StatusCode RL01_02::init (const RLUnitConfig& rlUnitConfig)
 {
     if (StatusCode status = configure (rlUnitConfig); status != StatusCode::Success)
         return status;
@@ -52,11 +52,11 @@ StatusCode RL01_02::init (shared_ptr<RLUnitConfig> rlUnitConfig)
     running_ = true;
     driveThread_ = std::thread (&RL01_02::driveThread, this);
     stateMachine_ = make_unique<StateMachine> (this, 
-        seconds (rlUnitConfig->spinUpTime));
+        seconds (rlUnitConfig.spinUpTime));
 
     // Immediataely lock the drive on cylinder 0 if the spin up time is
     // zero.
-    if (rlUnitConfig->spinUpTime == 0)
+    if (rlUnitConfig.spinUpTime == 0)
         stateMachine_->dispatch (SpunUp {});
     else
         stateMachine_->dispatch (SpunDown {});

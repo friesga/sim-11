@@ -1,9 +1,11 @@
 #include "consistencychecker.h"
 
 #include <stdexcept>
+#include <optional>
 
 using std::out_of_range;
 using std::invalid_argument;
+using std::optional;
 
 // Check the (consistency of) the cabinet specifications for (currently)
 // the BA11-N and RL01/02 drives.
@@ -51,10 +53,9 @@ void ConsistencyChecker::checkCabinetConsistency ()
                 for (size_t unitNumber = 0;
                     unitNumber < rlConfig.common.numUnits; ++unitNumber)
                 {
-                    shared_ptr<RLUnitConfig> rlUnitConfig =
-                        rlConfig.common.rlUnitConfig[unitNumber];
+                    optional<RLUnitConfig> rlUnitConfig = rlConfig.common.rlUnitConfig[unitNumber];
 
-                    if (rlUnitConfig == nullptr)
+                    if (!rlUnitConfig.has_value ())
                         continue;
 
                     // See comment above

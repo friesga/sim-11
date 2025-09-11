@@ -103,7 +103,7 @@ TEST_F (RLV12WriteDataTest, writeDataSucceeds)
     });
 
     // Attach a new disk to unit 0
-    ASSERT_EQ (rlv12Device->unit (0)->init (make_shared<RLUnitConfig> (writeDataSucceedsConfig)), 
+    ASSERT_EQ (rlv12Device->unit (0)->init (RLUnitConfig {writeDataSucceedsConfig}),
         StatusCode::Success);
 
     // Clear errors and volume check condition
@@ -191,7 +191,7 @@ TEST_F (RLV12WriteDataTest, partialWriteDataSucceeds)
     });
 
     // Attach a new disk to unit 0
-    ASSERT_EQ (rlv12Device->unit (0)->init (make_shared<RLUnitConfig> (partialWriteDataSucceedsConfig)), 
+    ASSERT_EQ (rlv12Device->unit (0)->init (RLUnitConfig {partialWriteDataSucceedsConfig}),
         StatusCode::Success);
 
     // Clear errors and volume check condition
@@ -273,7 +273,7 @@ TEST_F (RLV12WriteDataTest, writeDataOnWriteProtectedDriveFails)
         });
 
     // Attach a new disk to unit 0
-    ASSERT_EQ (rlv12Device->unit (0)->init (make_shared<RLUnitConfig> (writeDataSucceedsConfig)),
+    ASSERT_EQ (rlv12Device->unit (0)->init (RLUnitConfig {writeDataSucceedsConfig}),
         StatusCode::Success);
 
     // Clear errors and volume check condition

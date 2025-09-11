@@ -72,9 +72,8 @@ public:
     void setSeekIncomplete ();
     void waitForSeekComplete ();
     void resetDriveError ();
-    StatusCode init (shared_ptr<RLUnitConfig> rlUnitConfig,
-        Window* window);
-    StatusCode init (shared_ptr<RLUnitConfig> rlUnitConfig);
+    StatusCode init (const RLUnitConfig& rlUnitConfig, Window* window);
+    StatusCode init (const RLUnitConfig& rlUnitConfig);
 
 private:
     // Definition of the drive states
@@ -167,18 +166,17 @@ private:
     Frame<float> faultIndicatorFrame     {0.783, 0.538, 0.030, 0.060};
     Frame<float> writeProtectButtonFrame {0.823, 0.538, 0.030, 0.060};
 
-    StatusCode configure (shared_ptr<RLUnitConfig> rlUnitConfig);
-    void createBezel (Window* window, shared_ptr<RLUnitConfig> rlUnitConfig);
+    StatusCode configure (const RLUnitConfig& rlUnitConfig);
+    void createBezel (Window* window, const RLUnitConfig& rlUnitConfig);
     DiskAddress darToDiskAddress (int32_t diskAddress) const;
     void updateHeadPosition (HeadPositionProcedure procedure,
         s32 wordCount, u16 diskAddressRegister);
 
     void loadButtonClicked (Button::State state);
     void writeProtectButtonClicked (Button::State state);
-    Bitmask<AttachFlags> getAttachMode (
-        shared_ptr<RLUnitConfig> rlUnitConfig);
+    Bitmask<AttachFlags> getAttachMode (const RLUnitConfig& rlUnitConfig);
     Geometry driveGeometry (DriveType driveType);
-    DriveType determineDriveType (shared_ptr<RLUnitConfig> rlUnitConfig);
+    DriveType determineDriveType (const RLUnitConfig& rlUnitConfig);
     size_t fileSize (string filePath) const;
 };
 

@@ -8,9 +8,9 @@ using std::shared_ptr;
 using std::get;
 using std::invalid_argument;
 
-StatusCode RL01_02::configure (shared_ptr<RLUnitConfig> rlUnitConfig)
+StatusCode RL01_02::configure (const RLUnitConfig& rlUnitConfig)
 {
-    if (rlUnitConfig->fileName.empty ())
+    if (rlUnitConfig.fileName.empty ())
         return StatusCode::ArgumentError;
 
     // Now determine the actual drive type as soon as possible, to get
@@ -19,7 +19,7 @@ StatusCode RL01_02::configure (shared_ptr<RLUnitConfig> rlUnitConfig)
     geometry_ = driveGeometry (driveType_);
 
     // Try to attach the specified file to this unit
-    if (StatusCode result = attachFile (rlUnitConfig->fileName, geometry_,
+    if (StatusCode result = attachFile (rlUnitConfig.fileName, geometry_,
             getAttachMode (rlUnitConfig));
         result != StatusCode::Success)
         return result;
@@ -30,13 +30,13 @@ StatusCode RL01_02::configure (shared_ptr<RLUnitConfig> rlUnitConfig)
 
     // Set the drive default write-protected if that is specified in
     // the configuration.
-    if (rlUnitConfig->writeProtect)
+    if (rlUnitConfig.writeProtect)
     {
         setWriteProtected (true);
         driveStatus_ |= RLV12const::MPR_GS_WriteLock;
     }
 
-    spinUpTime_ = std::chrono::seconds {rlUnitConfig->spinUpTime};
+    spinUpTime_ = std::chrono::seconds {rlUnitConfig.spinUpTime};
     
     // Create a bad block table on a new disk image (if the 
     // image is not read-only)
@@ -47,15 +47,15 @@ StatusCode RL01_02::configure (shared_ptr<RLUnitConfig> rlUnitConfig)
 }
 
 Bitmask<AttachFlags> RL01_02::getAttachMode (
-    shared_ptr<RLUnitConfig> rlUnitConfig)
+    const RLUnitConfig& rlUnitConfig)
 {
     Bitmask<AttachFlags> attachMode {AttachFlags::Default};
 
-    if (rlUnitConfig->writeProtect)
+    if (rlUnitConfig.writeProtect)
         attachMode |= AttachFlags::ReadOnly;
-    if (rlUnitConfig->newFile)
+    if (rlUnitConfig.newFile)
         attachMode |= AttachFlags::NewFile;
-    if (rlUnitConfig->overwrite)
+    if (rlUnitConfig.overwrite)
         attachMode |= AttachFlags::Overwrite;
 
     return attachMode;
@@ -79,9 +79,9 @@ Geometry RL01_02::driveGeometry (DriveType driveType)
     return (driveType == DriveType::RL01) ? rl01Geometry : rl02Geometry;
 }
 
-RL01_02::DriveType RL01_02::determineDriveType (shared_ptr<RLUnitConfig> rlUnitConfig)
+RL01_02::DriveType RL01_02::determineDriveType (const RLUnitConfig& rlUnitConfig)
 {
-    switch (rlUnitConfig->rlUnitType)
+    switch (rlUnitConfig.rlUnitType)
     {
         case RLUnitConfig::RLUnitType::RL01:
             return DriveType::RL01;
@@ -90,7 +90,7 @@ RL01_02::DriveType RL01_02::determineDriveType (shared_ptr<RLUnitConfig> rlUnitC
             return DriveType::RL02;
 
         case RLUnitConfig::RLUnitType::Auto:
-            return (fileSize (rlUnitConfig->fileName) >
+            return (fileSize (rlUnitConfig.fileName) >
                     RLV12const::RL01_WordsPerCartridge * sizeof (u16)) ?
                 DriveType::RL02 : DriveType::RL01;
 

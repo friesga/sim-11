@@ -95,7 +95,7 @@ void RLProcessor::processSubsection (iniparser::Section* subSection)
 
 	// Check that the configuration for this unit has not already been
 	// specified.
-	if (rlConfig.rlUnitConfig[unitNumber] != nullptr)
+	if (rlConfig.rlUnitConfig[unitNumber].has_value ())
 		throw std::invalid_argument {"Double specification for RL subsection: " +
 			subSection->name()};
 

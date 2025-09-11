@@ -8,9 +8,9 @@ using std::placeholders::_1;
 using std::to_string;
 
 void RL01_02::createBezel (Window* window,
-    shared_ptr<RLUnitConfig> rlUnitConfig)
+    const RLUnitConfig& rlUnitConfig)
 {
-    Panel* panel = window->createPanel (rlUnitConfig->cabinetPosition.value (),
+    Panel* panel = window->createPanel (rlUnitConfig.cabinetPosition.value (),
         RLUnitConfig::unitHeight);
     panel->createFront ("resources/RL02-front.png", {0, 0, 1.0, 1.0});
 
@@ -25,8 +25,8 @@ void RL01_02::createBezel (Window* window,
 
     // READY indicator, default off
     readyIndicator_ = panel->createIndicator (
-        "resources/ready_" + to_string (rlUnitConfig->unitNumber) + "_off.png",
-        "resources/ready_" + to_string (rlUnitConfig->unitNumber) + "_on.png",
+        "resources/ready_" + to_string (rlUnitConfig.unitNumber) + "_off.png",
+        "resources/ready_" + to_string (rlUnitConfig.unitNumber) + "_on.png",
         Indicator::State::Off, readyIndicatorFrame);
 
     // FAULT indicator, default off
@@ -39,7 +39,7 @@ void RL01_02::createBezel (Window* window,
     writeProtectButton_ = panel->createLatchingButton (
         "resources/write_protect_on.png",
         "resources/write_protect_off.png",
-        rlUnitConfig->writeProtect ? Button::TwoPositionsState::On : Button::TwoPositionsState::Off,
+        rlUnitConfig.writeProtect ? Button::TwoPositionsState::On : Button::TwoPositionsState::Off,
         bind (&RL01_02::writeProtectButtonClicked, this, _1),
         writeProtectButtonFrame);
 }

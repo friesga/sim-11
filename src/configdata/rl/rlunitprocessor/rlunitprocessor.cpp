@@ -90,7 +90,7 @@ void RLUnitProcessor::checkConsistency ()
 void RLUnitProcessor::processSubsection (iniparser::Section *subSection)
 {}
 
-shared_ptr<RLUnitConfig> RLUnitProcessor::getConfig ()
+RLUnitConfig RLUnitProcessor::getConfig ()
 {
-	return make_shared<RLUnitConfig> (rlUnitConfig);
+	return rlUnitConfig;
 }

@@ -101,7 +101,7 @@ protected:
         waitForControllerReady ();
 
         // Attach a new disk to unit 0
-        ASSERT_EQ (rlv12Device->unit (0)->init (make_shared<RLUnitConfig> (rlUnitConfig)),
+        ASSERT_EQ (rlv12Device->unit (0)->init (RLUnitConfig {rlUnitConfig}),
             StatusCode::Success);
 
         // Clear errors and volume check condition

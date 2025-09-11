@@ -7,9 +7,11 @@
 
 #include <vector>
 #include <memory>
+#include <optional>
 
 using std::vector;
 using std::shared_ptr;
+using std::optional;
 
 // Definition of the configuration of an RL controller.
 // 
@@ -31,7 +33,7 @@ struct RLConfig
 	uint16_t vector {0};
 	size_t numUnits {0};
 
-	shared_ptr<RLUnitConfig> rlUnitConfig[maxRlUnits] = {};
+	optional<RLUnitConfig> rlUnitConfig[maxRlUnits] = {};
 };
 
 // The RL configuration has no parameters other than the common
