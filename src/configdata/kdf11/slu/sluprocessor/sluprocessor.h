@@ -49,7 +49,7 @@ class SLUProcessor : public UnitConfigProcessor
 
 public:
 	SLUProcessor ();
-	shared_ptr<SLUConfig> getConfig ();
+	SLUConfig getConfig ();
 };
 
 

@@ -112,7 +112,7 @@ void ConsistencyChecker::checkConsoleConsistency ()
         {
             KDF11_BConfig kdf11bConfig = 
                 get<KDF11_BConfig> (device);
-            return kdf11bConfig.sluConfig->uartConfig[0].enabled_;
+            return kdf11bConfig.sluConfig.uartConfig[0].enabled_;
         }
         return false;
     };

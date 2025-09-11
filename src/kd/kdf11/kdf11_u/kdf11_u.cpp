@@ -23,7 +23,7 @@ KDF11_U::KDF11_U (Bus* bus, const KDF11_UConfig& kdf11_uConfig)
     // The KDF11-U comes with the KTF11-A MMU and two serial lines
     serialLineUnits = make_unique<SerialLineUnits> (bus,
         UARTTypeConfig {.maintenanceModeSupported = true},
-        (SLUConfig*) kdf11_uConfig.sluConfig.get());
+        kdf11_uConfig.sluConfig);
 
     vector<BusDevice*> devices {&cpuData_, &mmu_, serialLineUnits.get (),
         &displayRegister_};

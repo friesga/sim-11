@@ -223,15 +223,15 @@ TEST (KDF11_UConfiguratorTest, slusHaveDefaultConfiguration)
 	// The device's type is KDF11-U so the configuration is a KDF11_UConfig object
 	auto kdf11_uConfig = get<KDF11_UConfig> (systemConfig[0]);
 
-	SLUConfig* sluConfig = (SLUConfig*)kdf11_uConfig.sluConfig.get ();
+	SLUConfig sluConfig = kdf11_uConfig.sluConfig;
 
-	EXPECT_EQ (sluConfig->uartConfig[0].enabled_, true);
-	EXPECT_EQ (sluConfig->uartConfig[0].baseAddress_, 0177560);
-	EXPECT_EQ (sluConfig->uartConfig[0].baseVector_, 060);
-	EXPECT_EQ (sluConfig->uartConfig[0].loopback_, false);
+	EXPECT_EQ (sluConfig.uartConfig[0].enabled_, true);
+	EXPECT_EQ (sluConfig.uartConfig[0].baseAddress_, 0177560);
+	EXPECT_EQ (sluConfig.uartConfig[0].baseVector_, 060);
+	EXPECT_EQ (sluConfig.uartConfig[0].loopback_, false);
 
-	EXPECT_EQ (sluConfig->uartConfig[1].enabled_, true);
-	EXPECT_EQ (sluConfig->uartConfig[1].baseAddress_, 0176500);
-	EXPECT_EQ (sluConfig->uartConfig[1].baseVector_, 0300);
-	EXPECT_EQ (sluConfig->uartConfig[1].loopback_, false);
+	EXPECT_EQ (sluConfig.uartConfig[1].enabled_, true);
+	EXPECT_EQ (sluConfig.uartConfig[1].baseAddress_, 0176500);
+	EXPECT_EQ (sluConfig.uartConfig[1].baseVector_, 0300);
+	EXPECT_EQ (sluConfig.uartConfig[1].loopback_, false);
 }

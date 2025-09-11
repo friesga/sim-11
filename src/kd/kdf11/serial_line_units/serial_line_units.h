@@ -17,7 +17,8 @@ using std::unique_ptr;
 class SerialLineUnits : public AbstractBusDevice
 {
 public:
-	SerialLineUnits (Bus* bus, UARTTypeConfig const & uartTypeConfig, SLUConfig* sluConfig);
+	SerialLineUnits (Bus* bus, const UARTTypeConfig& uartTypeConfig,
+		const SLUConfig& sluConfig);
     CondData<u16> read (BusAddress address);
 	StatusCode writeWord (BusAddress address, u16 value);
 	bool responsible (BusAddress address);

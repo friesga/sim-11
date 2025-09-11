@@ -78,17 +78,17 @@ TEST (SLUConfiguratorTest, defaultConfigurationAccepted)
 	// The device's type is KD11 so the configuration is a KD11Config object
 	auto kdf11_bConfig = get<KDF11_BConfig> (systemConfig[0]);
 
-	SLUConfig* sluConfig = (SLUConfig*) kdf11_bConfig.sluConfig.get ();
+	SLUConfig sluConfig = kdf11_bConfig.sluConfig;
 	
-	EXPECT_EQ (sluConfig->uartConfig[0].enabled_, true);
-	EXPECT_EQ (sluConfig->uartConfig[0].baseAddress_, 0177560);
-	EXPECT_EQ (sluConfig->uartConfig[0].baseVector_, 060);
-	EXPECT_EQ (sluConfig->uartConfig[0].loopback_, false);
+	EXPECT_EQ (sluConfig.uartConfig[0].enabled_, true);
+	EXPECT_EQ (sluConfig.uartConfig[0].baseAddress_, 0177560);
+	EXPECT_EQ (sluConfig.uartConfig[0].baseVector_, 060);
+	EXPECT_EQ (sluConfig.uartConfig[0].loopback_, false);
 
-	EXPECT_EQ (sluConfig->uartConfig[1].enabled_, true);
-	EXPECT_EQ (sluConfig->uartConfig[1].baseAddress_, 0176500);
-	EXPECT_EQ (sluConfig->uartConfig[1].baseVector_, 0300);
-	EXPECT_EQ (sluConfig->uartConfig[1].loopback_, false);
+	EXPECT_EQ (sluConfig.uartConfig[1].enabled_, true);
+	EXPECT_EQ (sluConfig.uartConfig[1].baseAddress_, 0176500);
+	EXPECT_EQ (sluConfig.uartConfig[1].baseVector_, 0300);
+	EXPECT_EQ (sluConfig.uartConfig[1].loopback_, false);
 }
 
 TEST (SLUConfiguratorTest, slu2AddressAccepted)
@@ -113,10 +113,10 @@ TEST (SLUConfiguratorTest, slu2AddressAccepted)
 	// The device's type is KD11 so the configuration is a KD11Config object
 	auto kdf11_bConfig = get<KDF11_BConfig> (systemConfig[0]);
 
-	SLUConfig* sluConfig = (SLUConfig*) kdf11_bConfig.sluConfig.get ();
+	SLUConfig sluConfig = kdf11_bConfig.sluConfig;
 
-	EXPECT_EQ (sluConfig->uartConfig[1].baseAddress_, 0176540);
-	EXPECT_EQ (sluConfig->uartConfig[1].baseVector_, 0340);
+	EXPECT_EQ (sluConfig.uartConfig[1].baseAddress_, 0176540);
+	EXPECT_EQ (sluConfig.uartConfig[1].baseVector_, 0340);
 }
 
 TEST (SLUConfiguratorTest, incorrectSLU2AddressRejected)
@@ -169,10 +169,10 @@ TEST (SLUConfiguratorTest, sluDisabledAccepted)
 	// The device's type is KD11 so the configuration is a KD11Config object
 	auto kdf11_bConfig = get<KDF11_BConfig> (systemConfig[0]);
 
-	SLUConfig* sluConfig = (SLUConfig*) kdf11_bConfig.sluConfig.get ();
+	SLUConfig sluConfig = kdf11_bConfig.sluConfig;
 	
-	EXPECT_EQ (sluConfig->uartConfig[0].enabled_, false);
-	EXPECT_EQ (sluConfig->uartConfig[1].enabled_, false);
+	EXPECT_EQ (sluConfig.uartConfig[0].enabled_, false);
+	EXPECT_EQ (sluConfig.uartConfig[1].enabled_, false);
 }
 
 TEST (SLUConfiguratorTest, breakResponsedAccepted)
@@ -197,9 +197,9 @@ TEST (SLUConfiguratorTest, breakResponsedAccepted)
 	// The device's type is KD11 so the configuration is a KD11Config object
 	auto kdf11_bConfig = get<KDF11_BConfig> (systemConfig[0]);
 
-	SLUConfig* sluConfig = (SLUConfig*) kdf11_bConfig.sluConfig.get ();
+	SLUConfig sluConfig = kdf11_bConfig.sluConfig;
 	
-	EXPECT_EQ (sluConfig->consoleConfig.breakResponse, ConsoleConfig::BreakResponse::Boot);
+	EXPECT_EQ (sluConfig.consoleConfig.breakResponse, ConsoleConfig::BreakResponse::Boot);
 }
 
 TEST (SLUConfiguratorTest, invalidBreakResponseRejected)
@@ -251,9 +251,9 @@ TEST (SLUConfiguratorTest, escBreakKeyAccepted)
 	// The device's type is KD11 so the configuration is a KD11Config object
 	auto kdf11_bConfig = get<KDF11_BConfig> (systemConfig[0]);
 
-	SLUConfig* sluConfig = (SLUConfig*) kdf11_bConfig.sluConfig.get ();
+	SLUConfig sluConfig = kdf11_bConfig.sluConfig;
 	
-	EXPECT_EQ (sluConfig->consoleConfig.breakKey, 27);
+	EXPECT_EQ (sluConfig.consoleConfig.breakKey, 27);
 }
 
 TEST (SLUConfiguratorTest, upperCaseControlCharAccepted)
@@ -278,9 +278,9 @@ TEST (SLUConfiguratorTest, upperCaseControlCharAccepted)
 	// The device's type is KD11 so the configuration is a KD11Config object
 	auto kdf11_bConfig = get<KDF11_BConfig> (systemConfig[0]);
 
-	SLUConfig* sluConfig = (SLUConfig*) kdf11_bConfig.sluConfig.get ();
+	SLUConfig sluConfig = kdf11_bConfig.sluConfig;
 	
-	EXPECT_EQ (sluConfig->consoleConfig.breakKey, 8);
+	EXPECT_EQ (sluConfig.consoleConfig.breakKey, 8);
 }
 
 TEST (SLUConfiguratorTest, loopbackAccepted)
@@ -305,8 +305,8 @@ TEST (SLUConfiguratorTest, loopbackAccepted)
 	// The device's type is KD11 so the configuration is a KD11Config object
 	auto kdf11_bConfig = get<KDF11_BConfig> (systemConfig[0]);
 
-	SLUConfig* sluConfig = (SLUConfig*) kdf11_bConfig.sluConfig.get ();
+	SLUConfig sluConfig = kdf11_bConfig.sluConfig;
 	
-	EXPECT_EQ (sluConfig->uartConfig[0].loopback_, false);
-	EXPECT_EQ (sluConfig->uartConfig[1].loopback_, false);
+	EXPECT_EQ (sluConfig.uartConfig[0].loopback_, false);
+	EXPECT_EQ (sluConfig.uartConfig[1].loopback_, false);
 }

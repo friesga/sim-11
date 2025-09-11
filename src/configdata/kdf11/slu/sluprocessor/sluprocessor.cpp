@@ -115,7 +115,7 @@ void SLUProcessor::processLoopback (iniparser::Value value)
 	sluConfig.uartConfig[1].loopback_ = loopback;
 }
 
-shared_ptr<SLUConfig> SLUProcessor::getConfig ()
+SLUConfig SLUProcessor::getConfig ()
 {
-	return make_shared<SLUConfig> (sluConfig);
+	return sluConfig;
 }

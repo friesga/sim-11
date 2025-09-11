@@ -23,7 +23,8 @@ KDF11_B::KDF11_B (Bus *bus, const KDF11_BConfig& kdf11_bConfig)
     // The KDF11-B comes with the KTF11-A MMU, two serial lines and a BDV-11.
     serialLineUnits = make_unique<SerialLineUnits> (bus,
         UARTTypeConfig {.maintenanceModeSupported = false},
-        (SLUConfig*) kdf11_bConfig.sluConfig.get());
+        kdf11_bConfig.sluConfig);
+
     bdv11 = make_unique<BDV11> (bus, kdf11_bConfig.bdv11Config);
 
     vector<BusDevice*> devices {&cpuData_, &mmu_, serialLineUnits.get (), bdv11.get ()};

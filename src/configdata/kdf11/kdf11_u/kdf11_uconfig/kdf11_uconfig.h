@@ -44,8 +44,8 @@ struct KDF11_UConfig : public DeviceType<BusType::Unibus>
     u16 bootAddress {0165000};
 
     // The serial line units in the KDF11-U are fixed at their default addresses
-    // and therefor cannot be configured
-    shared_ptr<SLUConfig> sluConfig;
+    // and therefore cannot be configured
+    SLUConfig sluConfig;
 
     KDF11_UConfig ();
 };

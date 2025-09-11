@@ -13,7 +13,7 @@ using std::shared_ptr;
 struct KDF11_BConfig : public DeviceType<BusType::QBus>
 {
     KD11Config::PowerUpMode powerUpMode {KD11Config::PowerUpMode::Bootstrap};
-    shared_ptr<SLUConfig> sluConfig;
+    SLUConfig sluConfig;
     BDV11Config bdv11Config;
 
     KDF11_BConfig ();

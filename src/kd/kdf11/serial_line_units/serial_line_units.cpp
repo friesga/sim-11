@@ -10,12 +10,12 @@ using std::make_unique;
 using std::ranges::find_if;
 
 SerialLineUnits::SerialLineUnits (Bus *bus,
-    UARTTypeConfig const& uartTypeConfig, SLUConfig* sluConfig)
+    const UARTTypeConfig& uartTypeConfig, const SLUConfig& sluConfig)
 {
     uarts_[0] = make_unique<UART> (bus, uartTypeConfig,
-        sluConfig->uartConfig[0], 0, sluConfig->consoleConfig);
+        sluConfig.uartConfig[0], 0, sluConfig.consoleConfig);
     uarts_[1] = make_unique<UART> (bus, uartTypeConfig,
-        sluConfig->uartConfig[1], 1, sluConfig->consoleConfig);
+        sluConfig.uartConfig[1], 1, sluConfig.consoleConfig);
     bus->BINIT().subscribe (bind (&SerialLineUnits::BINITReceiver, this, _1));
 }
 
