@@ -88,13 +88,13 @@ TEST_F (RK11DWriteTest, writeOnNonReadyDriveReportsError)
 {
     RK11DConfig rk11dConfig {};
     rk11dConfig.rk05Config[0] =
-        make_shared<RK05Config> (RK05Config
+        RK05Config (RK05Config
         ({
             .fileName = "rk05.dsk",
             .newFile = true,
             .overwrite = true,
             .spinUpTime = 100
-            }));
+        }));
 
     Unibus bus;
     RK11D* rk11dDevice = new RK11D (&bus, nullptr, rk11dConfig);
@@ -115,12 +115,12 @@ TEST_F (RK11DWriteTest, writeToNonExistentSectorFails)
 {
     RK11DConfig rk11dConfig {};
     rk11dConfig.rk05Config[0] =
-        make_shared<RK05Config> (RK05Config
+        RK05Config (RK05Config
         ({
             .fileName = "rk05.dsk",
             .newFile = true,
             .overwrite = true
-            }));
+        }));
 
     Unibus bus;
     RK11D* rk11dDevice = new RK11D (&bus, nullptr, rk11dConfig);
@@ -148,12 +148,12 @@ TEST_F (RK11DWriteTest, writeToNonExistentCylinderFails)
 {
     RK11DConfig rk11dConfig {};
     rk11dConfig.rk05Config[0] =
-        make_shared<RK05Config> (RK05Config
+        RK05Config (RK05Config
         ({
             .fileName = "rk05.dsk",
             .newFile = true,
             .overwrite = true
-            }));
+        }));
 
     Unibus bus;
     RK11D* rk11dDevice = new RK11D (&bus, nullptr, rk11dConfig);
@@ -181,12 +181,12 @@ TEST_F (RK11DWriteTest, writeToNonExistentDriveFails)
 {
     RK11DConfig rk11dConfig {};
     rk11dConfig.rk05Config[0] =
-        make_shared<RK05Config> (RK05Config
+        RK05Config (RK05Config
         ({
             .fileName = "rk05.dsk",
             .newFile = true,
             .overwrite = true
-            }));
+        }));
 
     Unibus bus;
     RK11D* rk11dDevice = new RK11D (&bus, nullptr, rk11dConfig);
@@ -214,12 +214,12 @@ TEST_F (RK11DWriteTest, writePastEndOfDiskFails)
 {
     RK11DConfig rk11dConfig {};
     rk11dConfig.rk05Config[0] =
-        make_shared<RK05Config> (RK05Config
+        RK05Config (RK05Config
         ({
             .fileName = "rk05.dsk",
             .newFile = true,
             .overwrite = true
-            }));
+        }));
 
     Unibus bus;
     RK11D* rk11dDevice = new RK11D (&bus, nullptr, rk11dConfig);
@@ -247,12 +247,12 @@ TEST_F (RK11DWriteTest, writeWithIBASetSucceeds)
 {
     RK11DConfig rk11dConfig {};
     rk11dConfig.rk05Config[0] =
-        make_shared<RK05Config> (RK05Config
+        RK05Config (RK05Config
         ({
             .fileName = "rk05.dsk",
             .newFile = true,
             .overwrite = true
-            }));
+        }));
 
     Unibus bus;
     MS11P ms11p {&bus};
@@ -320,12 +320,12 @@ TEST_F (RK11DWriteTest, writeSectorSucceeds)
 {
     RK11DConfig rk11dConfig {};
     rk11dConfig.rk05Config[0] =
-        make_shared<RK05Config> (RK05Config
+        RK05Config (RK05Config
         ({
             .fileName = "rk05.dsk",
             .newFile = true,
             .overwrite = true
-            }));
+        }));
 
     Unibus bus;
     MS11P ms11p {&bus};
@@ -395,12 +395,12 @@ TEST_F (RK11DWriteTest, writeUnequalSectorSizeSucceeds)
 {
     RK11DConfig rk11dConfig {};
     rk11dConfig.rk05Config[0] =
-        make_shared<RK05Config> (RK05Config
+        RK05Config (RK05Config
         ({
             .fileName = "rk05.dsk",
             .newFile = true,
             .overwrite = true
-            }));
+        }));
 
     Unibus bus;
     MS11P ms11p {&bus};
@@ -501,13 +501,13 @@ TEST_F (RK11DWriteTest, writeToWriteProtectedDiskFails)
 {
     RK11DConfig rk11dConfig {};
     rk11dConfig.rk05Config[0] =
-        make_shared<RK05Config> (RK05Config
+        RK05Config (RK05Config
         ({
             .fileName = "rk05.dsk",
             .newFile = true,
             .overwrite = true,
             .writeProtect = true
-            }));
+        }));
 
     Unibus bus;
     RK11D* rk11dDevice = new RK11D (&bus, nullptr, rk11dConfig);
@@ -534,12 +534,12 @@ TEST_F (RK11DWriteTest, diskCanBeWriteLocked)
 {
     RK11DConfig rk11dConfig {};
     rk11dConfig.rk05Config[0] =
-        make_shared<RK05Config> (RK05Config
+        RK05Config (RK05Config
         ({
             .fileName = "rk05.dsk",
             .newFile = true,
             .overwrite = true
-            }));
+        }));
 
     Unibus bus;
     MS11P ms11p {&bus};

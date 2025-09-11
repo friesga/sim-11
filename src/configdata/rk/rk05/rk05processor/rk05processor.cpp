@@ -77,7 +77,7 @@ void RK05Processor::checkConsistency ()
 void RK05Processor::processSubsection (iniparser::Section* subSection)
 {}
 
-shared_ptr<RK05Config> RK05Processor::getConfig ()
+RK05Config RK05Processor::getConfig ()
 {
-	return make_shared<RK05Config> (rk05Config);
+	return rk05Config;
 }

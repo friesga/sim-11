@@ -72,7 +72,7 @@ protected:
     {
         RK11DConfig rk11dConfig {};
         rk11dConfig.rk05Config[0] =
-            make_shared<RK05Config> (RK05Config
+            RK05Config (RK05Config
             ({
                 .unitNumber = 0,
                 .fileName = "rk05.dsk",
@@ -81,7 +81,7 @@ protected:
                 }));
 
         rk11dConfig.rk05Config[1] =
-            make_shared<RK05Config> (RK05Config
+            RK05Config (RK05Config
             ({
                 .unitNumber = 1,
                 .fileName = "rk05-1.dsk",
@@ -106,7 +106,8 @@ protected:
         {
             SimulatorClock::forwardClock (10ms);
             result = controller->read (RKCS);
-        } while (!(result & RKCS_RDY));
+        }
+        while (!(result & RKCS_RDY));
     }
 
     void waitForDriveReady (RK11D* controller, u16 driveId)
@@ -116,7 +117,8 @@ protected:
         {
             SimulatorClock::forwardClock (10ms);
             result = controller->read (RKDS);
-        } while (!((result & RKDS_DRY) && getRKDSdriveId (result) == driveId));
+        }
+        while (!((result & RKDS_DRY) && getRKDSdriveId (result) == driveId));
 
     }
 
@@ -127,7 +129,8 @@ protected:
         {
             SimulatorClock::forwardClock (10ms);
             result = controller->read (RKDS);
-        } while (!((result & RKDS_RWS_READY) &&
+        }
+        while (!((result & RKDS_RWS_READY) &&
             getRKDSdriveId (result) == driveId));
 
     }

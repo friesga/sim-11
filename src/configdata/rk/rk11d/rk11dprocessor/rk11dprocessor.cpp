@@ -110,7 +110,7 @@ void RK11DProcessor::processSubsection (iniparser::Section* subSection)
 
 	// Check that the configuration for this unit has not already been
 	// specified.
-	if (rk11dConfig.rk05Config[unitNumber] != nullptr)
+	if (rk11dConfig.rk05Config[unitNumber].has_value ())
 		throw std::invalid_argument {"Double specification for RK11-D subsection: " +
 			subSection->name ()};
 

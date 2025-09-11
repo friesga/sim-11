@@ -93,7 +93,7 @@ TEST_F (RK11DReadTest, readSectorSucceeds)
 {
     RK11DConfig rk11dConfig {};
     rk11dConfig.rk05Config[0] =
-        make_shared<RK05Config> (RK05Config
+        RK05Config (RK05Config
             ({
                 .fileName = "rk05.dsk",
                 .newFile = true,
@@ -169,13 +169,13 @@ TEST_F (RK11DReadTest, readOnNonReadyDriveReportsError)
 {
     RK11DConfig rk11dConfig {};
     rk11dConfig.rk05Config[0] =
-        make_shared<RK05Config> (RK05Config
+        RK05Config (RK05Config
         ({
             .fileName = "rk05.dsk",
             .newFile = true,
             .overwrite = true,
             .spinUpTime = 100
-            }));
+        }));
 
     Unibus bus;
     RK11D* rk11dDevice = new RK11D (&bus, nullptr, rk11dConfig);
@@ -196,12 +196,12 @@ TEST_F (RK11DReadTest, readFromNonExistentSectorFails)
 {
     RK11DConfig rk11dConfig {};
     rk11dConfig.rk05Config[0] =
-        make_shared<RK05Config> (RK05Config
+        RK05Config (RK05Config
         ({
             .fileName = "rk05.dsk",
             .newFile = true,
             .overwrite = true
-            }));
+        }));
 
     Unibus bus;
     RK11D* rk11dDevice = new RK11D (&bus, nullptr, rk11dConfig);
@@ -229,12 +229,12 @@ TEST_F (RK11DReadTest, readFromNonExistentCylinderFails)
 {
     RK11DConfig rk11dConfig {};
     rk11dConfig.rk05Config[0] =
-        make_shared<RK05Config> (RK05Config
+        RK05Config (RK05Config
         ({
             .fileName = "rk05.dsk",
             .newFile = true,
             .overwrite = true
-            }));
+        }));
 
     Unibus bus;
     RK11D* rk11dDevice = new RK11D (&bus, nullptr, rk11dConfig);
@@ -262,12 +262,12 @@ TEST_F (RK11DReadTest, readFromNonExistentDriveFails)
 {
     RK11DConfig rk11dConfig {};
     rk11dConfig.rk05Config[0] =
-        make_shared<RK05Config> (RK05Config
+        RK05Config (RK05Config
         ({
             .fileName = "rk05.dsk",
             .newFile = true,
             .overwrite = true
-            }));
+        }));
 
     Unibus bus;
     RK11D* rk11dDevice = new RK11D (&bus, nullptr, rk11dConfig);
@@ -295,12 +295,12 @@ TEST_F (RK11DReadTest, readPastEndOfDiskFails)
 {
     RK11DConfig rk11dConfig {};
     rk11dConfig.rk05Config[0] =
-        make_shared<RK05Config> (RK05Config
+        RK05Config (RK05Config
         ({
             .fileName = "rk05.dsk",
             .newFile = true,
             .overwrite = true
-            }));
+        }));
 
     Unibus bus;
     RK11D* rk11dDevice = new RK11D (&bus, nullptr, rk11dConfig);
@@ -328,12 +328,12 @@ TEST_F (RK11DReadTest, readWithIBASetSucceeds)
 {
     RK11DConfig rk11dConfig {};
     rk11dConfig.rk05Config[0] =
-        make_shared<RK05Config> (RK05Config
+        RK05Config (RK05Config
         ({
             .fileName = "rk05.dsk",
             .newFile = true,
             .overwrite = true
-            }));
+        }));
 
     Unibus bus;
     MS11P ms11p {&bus};
@@ -404,12 +404,12 @@ TEST_F (RK11DReadTest, memoryExtensionBitsAreUsed)
 {
     RK11DConfig rk11dConfig {};
     rk11dConfig.rk05Config[0] =
-        make_shared<RK05Config> (RK05Config
+        RK05Config (RK05Config
         ({
             .fileName = "rk05.dsk",
             .newFile = true,
             .overwrite = true
-            }));
+        }));
 
     Unibus bus;
     MS11P ms11p {&bus};
@@ -475,12 +475,12 @@ TEST_F (RK11DReadTest, memoryExtensionBitsAreIncremented)
 {
     RK11DConfig rk11dConfig {};
     rk11dConfig.rk05Config[0] =
-        make_shared<RK05Config> (RK05Config
+        RK05Config (RK05Config
         ({
             .fileName = "rk05.dsk",
             .newFile = true,
             .overwrite = true
-            }));
+        }));
 
     Unibus bus;
     MS11P ms11p {&bus};

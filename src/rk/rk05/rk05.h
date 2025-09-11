@@ -31,7 +31,7 @@ class RK05
 {
 public:
     RK05 (Bus* bus, DriveInterface* controller, Window* window,
-        shared_ptr<RK05Config> rk05Config);
+        const RK05Config& rk05Config);
     ~RK05 ();
 
     // Functions getting the state of the drive
@@ -153,13 +153,12 @@ private:
     RKTypes::RKDS driveStatus_ {0};
     RKTypes::RKER driveError_ {0};
 
-    void createBezel (Window* window, shared_ptr<RK05Config> rk05Config);
+    void createBezel (Window* window, const RK05Config& rk05Config);
     void runLoadSwitchClicked (Button::State state);
     void wtprotSwitchClicked (Button::State state);
     void driveThread ();
     void sendTrigger (Event event);
-    Bitmask<AttachFlags> getAttachMode (
-        shared_ptr<RK05Config> rk05Config);
+    Bitmask<AttachFlags> getAttachMode (const RK05Config& rk05Config);
     SimulatorClock::duration seekTime (u16 currentCylinderAddress,
         u16 newCylinderAddress);
     size_t readDataFromDrive (DiskAddress diskAddress, u16* buffer,

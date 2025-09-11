@@ -72,7 +72,7 @@ protected:
     {
         RK11DConfig rk11dConfig {};
         rk11dConfig.rk05Config[0] =
-            make_shared<RK05Config> (RK05Config
+            RK05Config (RK05Config
             ({
                 .unitNumber = 0,
                 .fileName = "rk05.dsk",
@@ -81,7 +81,7 @@ protected:
                 }));
 
         rk11dConfig.rk05Config[1] =
-            make_shared<RK05Config> (RK05Config
+            RK05Config (RK05Config
             ({
                 .unitNumber = 1,
                 .fileName = "rk05-1.dsk",

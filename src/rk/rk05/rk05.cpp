@@ -20,11 +20,11 @@ using std::invalid_argument;
 using namespace RKTypes;
 
 RK05::RK05 (Bus* bus, DriveInterface* controller, Window* window,
-    shared_ptr<RK05Config> rk05Config)
+    const RK05Config& rk05Config)
     : 
     bus_ {bus},
     controller_ {controller},
-    driveId_ {rk05Config->unitNumber}
+    driveId_ {rk05Config.unitNumber}
 {
     // In case the constructor is called in the unit tests, the window is
     // not available.
@@ -35,10 +35,10 @@ RK05::RK05 (Bus* bus, DriveInterface* controller, Window* window,
     // or write command is 2^16
     buffer_ = make_unique<u16[]> (1 << 16);
 
-    if (diskDrive_.attachFile (rk05Config->fileName, rk05Geometry_,
+    if (diskDrive_.attachFile (rk05Config.fileName, rk05Geometry_,
         getAttachMode (rk05Config)) != StatusCode::Success)
     {
-        throw invalid_argument ("Cannot open file " + rk05Config->fileName);
+        throw invalid_argument ("Cannot open file " + rk05Config.fileName);
     }
 
     // Initialize the drive status before an event is dispatched to the
@@ -48,23 +48,23 @@ RK05::RK05 (Bus* bus, DriveInterface* controller, Window* window,
         +RKDS::ReadWriteSeekReady {1} |
         +RKDS::SectorCounterOK {1} |
         +RKDS::Rk05DiskOnLine {1} |
-        +RKDS::DriveId {rk05Config->unitNumber};
+        +RKDS::DriveId {rk05Config.unitNumber};
 
     stateMachine_ = make_unique<StateMachine> (this,
-        seconds (rk05Config->spinUpTime));
+        seconds (rk05Config.spinUpTime));
 
     running_ = true;
     driveThread_ = thread (&RK05::driveThread, this);
 
     // Immediately lock the drive on cylinder 0 if the spin up time is
     // zero.
-    if (rk05Config->spinUpTime == 0)
+    if (rk05Config.spinUpTime == 0)
         stateMachine_->dispatch (SpunUp {});
     else
         stateMachine_->dispatch (SpunDown {});
 
     // Set the Write Protect status according to the configuration option
-    if (rk05Config->writeProtect)
+    if (rk05Config.writeProtect)
     {
         driveStatus_.writeProtectStatus = 1;
         wtprotIndicator_->show (Indicator::State::On);
@@ -184,16 +184,15 @@ SimulatorClock::duration RK05::seekTime (u16 currentCylinderAddress,
 }
 
 // ToDo: This function is a double with RL01_02::getAttachMode()
-Bitmask<AttachFlags> RK05::getAttachMode (
-    shared_ptr<RK05Config> rk05Config)
+Bitmask<AttachFlags> RK05::getAttachMode (const RK05Config& rk05Config)
 {
     Bitmask<AttachFlags> attachMode {AttachFlags::Default};
 
-    if (rk05Config->writeProtect)
+    if (rk05Config.writeProtect)
         attachMode |= AttachFlags::ReadOnly;
-    if (rk05Config->newFile)
+    if (rk05Config.newFile)
         attachMode |= AttachFlags::NewFile;
-    if (rk05Config->overwrite)
+    if (rk05Config.overwrite)
         attachMode |= AttachFlags::Overwrite;
 
     return attachMode;

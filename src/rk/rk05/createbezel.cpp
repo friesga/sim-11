@@ -6,9 +6,9 @@ using std::bind;
 using std::placeholders::_1;
 using std::to_string;
 
-void RK05::createBezel (Window* window, shared_ptr<RK05Config> rk05Config)
+void RK05::createBezel (Window* window, const RK05Config& rk05Config)
 {
-    Panel* panel = window->createPanel (rk05Config->cabinetPosition.value (),
+    Panel* panel = window->createPanel (rk05Config.cabinetPosition.value (),
         RK05Config::unitHeight);
     panel->createFront ("resources/RK05-front.png", {0, 0, 1.0, 1.0});
 
@@ -79,5 +79,5 @@ void RK05::createBezel (Window* window, shared_ptr<RK05Config> rk05Config)
         wtprotSwitchFrame);
 
     panel->createFront ("resources/RK05 drive " +
-        to_string (rk05Config->unitNumber) + ".png", numberLabelFrame);
+        to_string (rk05Config.unitNumber) + ".png", numberLabelFrame);
 }

@@ -43,7 +43,7 @@ class RK05Processor : public UnitConfigProcessor
 
 public:
 	RK05Processor (size_t unitNumber);
-	shared_ptr<RK05Config> getConfig ();
+	RK05Config getConfig ();
 };
 
 #endif // _RK05PROCESSOR_H_

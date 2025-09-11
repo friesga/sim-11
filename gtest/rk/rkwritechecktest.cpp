@@ -69,13 +69,13 @@ protected:
     {
         RK11DConfig rk11dConfig {};
         rk11dConfig.rk05Config[0] =
-            make_shared<RK05Config> (RK05Config
+            RK05Config (RK05Config
             ({
                 .unitNumber = 0,
                 .fileName = "rk05.dsk",
                 .newFile = true,
                 .overwrite = true
-                }));
+            }));
 
         rk11dConfig.numUnits = 1;
 

@@ -283,12 +283,12 @@ TEST_F (RK11DRegistersTest, sectorCounterIsIncremented)
 {
     RK11DConfig rk11dConfig {};
     rk11dConfig.rk05Config[0] =
-        make_shared<RK05Config> (RK05Config
+        RK05Config (RK05Config
         ({
             .fileName = "rk05.dsk",
             .newFile = true,
             .overwrite = true
-            }));
+        }));
 
     Unibus bus;
     RK11D* rk11dDevice = new RK11D (&bus, nullptr, rk11dConfig);

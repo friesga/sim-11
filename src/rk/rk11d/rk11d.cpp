@@ -2,6 +2,7 @@
 
 #include <functional>
 #include <mutex>
+#include <optional>
 
 using std::bind;
 using std::make_unique;
@@ -25,8 +26,8 @@ RK11D::RK11D (Bus* bus, Window* window, const RK11DConfig& rk11dConfig)
 
     for (auto rk05Config : rk11dConfig.rk05Config)
     {
-        if (rk05Config != nullptr)
-            rk05Drives_.push_back (make_unique<RK05> (bus, this, window, rk05Config));
+        if (rk05Config.has_value ())
+            rk05Drives_.push_back (make_unique<RK05> (bus, this, window, rk05Config.value ()));
     }
 
     // Allocate a buffer for the data to be transferred to/from the RK05 drive

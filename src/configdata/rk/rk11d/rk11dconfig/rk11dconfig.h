@@ -5,9 +5,9 @@
 #include "devicetype.h"
 #include "configdata/rk/rk05/rk05config/rk05config.h"
 
-#include <memory>
+#include <optional>
 
-using std::shared_ptr;
+using std::optional;
 
 // Definition of the configuration of a RK11-D controller
 //
@@ -37,7 +37,7 @@ struct RK11DConfig : public DeviceType<BusType::Unibus>
 	u8 busRequestLevel {5};
 	size_t numUnits {0};
 
-	shared_ptr<RK05Config> rk05Config[maxRK05Units] = {};
+	optional<RK05Config> rk05Config[maxRK05Units] = {nullopt};
 };
 
 #endif // _RK11DCONFIG_H_
