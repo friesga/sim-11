@@ -19,7 +19,6 @@
 #include <functional>
 #include <chrono>
 
-using std::shared_ptr;
 using std::unique_ptr;
 using std::thread;
 using std::queue;

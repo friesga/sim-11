@@ -4,7 +4,6 @@
 #include <variant>
 #include <stdexcept>
 
-using std::shared_ptr;
 using std::get;
 using std::invalid_argument;
 

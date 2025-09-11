@@ -25,7 +25,6 @@ using std::mutex;
 using std::condition_variable;
 using std::queue;
 using std::unique_ptr;
-using std::shared_ptr;
 using std::pair;
 using std::chrono::duration;
 

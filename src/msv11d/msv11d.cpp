@@ -7,7 +7,6 @@
 
 using std::bind;
 using std::placeholders::_1;
-using std::shared_ptr;
 
 MSV11D::MSV11D (Bus *bus)
 	:

@@ -15,7 +15,6 @@
 #include <vector>
 
 using std::unique_ptr;
-using std::shared_ptr;
 using std::vector;
 
 // The KDF11-BA is a quad-height PDP-11 CPU module (M8189). This module

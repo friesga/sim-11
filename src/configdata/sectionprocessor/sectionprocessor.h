@@ -4,12 +4,10 @@
 #include "../iniprocessor/iniparser.h"
 #include "configdata/deviceconfig/deviceconfig.h"
 
-#include <memory>
 #include <limits>
 #include <string>
 
 using std::string;
-using std::shared_ptr;
 
 class SectionProcessor
 {

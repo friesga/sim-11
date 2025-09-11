@@ -13,7 +13,6 @@
 #include <memory>
 
 using std::unique_ptr;
-using std::shared_ptr;
 
 // The class KD11_NA starta the control logic which on its turn has to run
 // the KD11_NA's cpu and start the KD11_NA's ODT.

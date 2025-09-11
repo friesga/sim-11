@@ -8,7 +8,6 @@
 #include <exception>
 
 using std::vector;
-using std::shared_ptr;
 using std::set;
 using std::cout;
 using std::string;

@@ -12,7 +12,6 @@
 #include <memory>
 
 using std::array;
-using std::shared_ptr;
 
 // The KT24 in principle contains two devices, the Unibus Map logic and a
 // M9312 compatible device. This class implements the Unibus Map logic.

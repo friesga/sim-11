@@ -7,10 +7,8 @@
 #include "statuscodes.h"
 #include "unary_operator_plus.h"
 
-#include <memory>
 #include <array>
 
-using std::shared_ptr;
 using std::array;
 
 // The M9312 Bootstrap/Terminator Module contains a complete set of Unibus

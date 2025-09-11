@@ -4,12 +4,9 @@
 #include "configdata/sectionprocessor/deviceconfigprocessor.h"
 #include "configdata/rl/rlconfig/rlconfig.h"
 
-#include <memory>
 #include <map>
 #include <string>
 
-using std::unique_ptr;
-using std::shared_ptr;
 using std::map;
 using std::string;
 

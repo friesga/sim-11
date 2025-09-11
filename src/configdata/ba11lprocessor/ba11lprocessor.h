@@ -4,12 +4,9 @@
 #include "../sectionprocessor/deviceconfigprocessor.h"
 #include "../ba11lconfig/ba11lconfig.h"
 
-#include <memory>
 #include <map>
 #include <string>
 
-using std::shared_ptr;
-using std::unique_ptr;
 using std::map;
 using std::string;
 
@@ -25,7 +22,6 @@ class BA11_LProcessor : public DeviceConfigProcessor
 	{
 		{"cabinet", &BA11_LProcessor::processCabinet},
 	};
-
 
 	void processValue (iniparser::Section::ValueIterator valueIterator);
 	void checkConsistency ();

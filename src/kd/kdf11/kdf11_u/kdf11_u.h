@@ -15,7 +15,6 @@
 #include <vector>
 
 using std::unique_ptr;
-using std::shared_ptr;
 using std::vector;
 
 // The KDF11-UA is a module which contains the following features:

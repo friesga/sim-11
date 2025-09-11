@@ -4,7 +4,6 @@
 #include <memory>
 #include <thread>
 
-using std::shared_ptr;
 using std::make_unique;
 using std::thread;
 using std::placeholders::_1;

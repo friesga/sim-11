@@ -8,7 +8,6 @@
 #include <functional>
 #include <cmath>
 
-using std::shared_ptr;
 using std::make_unique;
 using std::chrono::seconds;
 using std::abs;

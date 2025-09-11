@@ -5,7 +5,6 @@
 #include <thread>
 #include <vector>
 
-using std::shared_ptr;
 using std::make_unique;
 using std::thread;
 using std::vector;

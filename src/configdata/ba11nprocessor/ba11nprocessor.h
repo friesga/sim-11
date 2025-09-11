@@ -4,12 +4,9 @@
 #include "../sectionprocessor/deviceconfigprocessor.h"
 #include "../ba11nconfig/ba11nconfig.h"
 
-#include <memory>
 #include <map>
 #include <string>
 
-using std::shared_ptr;
-using std::unique_ptr;
 using std::map;
 using std::string;
 

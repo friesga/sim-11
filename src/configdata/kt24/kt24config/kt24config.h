@@ -4,11 +4,6 @@
 #include "devicetype.h"
 #include "configdata/m9312/m9312config/m9312config.h"
 
-#include <memory>
-
-using std::shared_ptr;
-using std::make_shared;
-
 // The KT24 principally comprises two devices the Unibus Map logic
 // and a M9312 (compatible) device. The KT24 therefore has all M9312
 // options. Apart from the M9312 options the KT24 also has a "Diagnostic

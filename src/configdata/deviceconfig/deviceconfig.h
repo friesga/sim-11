@@ -20,10 +20,8 @@
 #include "configdata/kdf11/slu/sluconfig/sluconfig.h"
 
 #include <variant>
-#include <memory>
 
 using std::variant;
-using std::shared_ptr;
 
 using DeviceConfig = variant<
     KD11_NAConfig,

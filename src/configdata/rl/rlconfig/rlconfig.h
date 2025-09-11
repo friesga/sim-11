@@ -6,11 +6,9 @@
 #include "configdata/rl/rlunitconfig/rlunitconfig.h"
 
 #include <vector>
-#include <memory>
 #include <optional>
 
 using std::vector;
-using std::shared_ptr;
 using std::optional;
 
 // Definition of the configuration of an RL controller.

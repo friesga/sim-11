@@ -4,12 +4,9 @@
 #include "configdata/sectionprocessor/unitconfigprocessor.h"
 #include "configdata/kdf11/slu/sluconfig/sluconfig.h"
 
-#include <memory>
 #include <map>
 #include <string>
 
-using std::unique_ptr;
-using std::shared_ptr;
 using std::map;
 using std::string;
 

@@ -4,12 +4,9 @@
 #include "configdata/sectionprocessor/deviceconfigprocessor.h"
 #include "../m9312config/m9312config.h"
 
-#include <memory>
 #include <map>
 #include <string>
 
-using std::shared_ptr;
-using std::unique_ptr;
 using std::map;
 using std::string;
 

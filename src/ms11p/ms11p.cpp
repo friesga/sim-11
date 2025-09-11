@@ -7,7 +7,6 @@
 #include <iomanip>
 #include <sstream>
 
-using std::shared_ptr;
 using std::bind;
 using std::placeholders::_1;
 using std::popcount;

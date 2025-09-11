@@ -4,12 +4,9 @@
 #include "../sectionprocessor/deviceconfigprocessor.h"
 #include "../ms11pconfig/ms11pconfig.h"
 
-#include <memory>
 #include <map>
 #include <string>
 
-using std::unique_ptr;
-using std::shared_ptr;
 using std::map;
 using std::string;
 

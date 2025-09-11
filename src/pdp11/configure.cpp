@@ -15,12 +15,8 @@
 #include "cabinet/cabinet.h"
 #include "overloaded.h"
 
-#include <memory>		// For make_unique
 #include <cstring>		// For memset()
 
-using std::shared_ptr;
-using std::make_shared;
-using std::static_pointer_cast;
 using std::string;
 using std::get;
 

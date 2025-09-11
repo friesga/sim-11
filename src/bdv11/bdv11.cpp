@@ -11,7 +11,6 @@ using namespace std;
 using namespace std::chrono;
 using std::bind;
 using std::placeholders::_1;
-using std::shared_ptr;
 
 BDV11::BDV11 (Bus *bus)
 	:

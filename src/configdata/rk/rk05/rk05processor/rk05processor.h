@@ -4,12 +4,9 @@
 #include "configdata/sectionprocessor/unitconfigprocessor.h"
 #include "configdata/rk/rk05/rk05config/rk05config.h"
 
-#include <memory>
 #include <map>
 #include <string>
 
-using std::unique_ptr;
-using std::shared_ptr;
 using std::map;
 using std::string;
 

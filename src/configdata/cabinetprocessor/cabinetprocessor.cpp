@@ -3,8 +3,6 @@
 #include <stdexcept>
 
 using std::invalid_argument;
-using std::shared_ptr;
-using std::make_shared;
 
 namespace CabinetProcessor
 {

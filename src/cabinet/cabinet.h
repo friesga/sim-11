@@ -5,11 +5,9 @@
 
 #include <string>
 #include <vector>
-#include <memory>
 
 using std::string;
 using std::vector;
-using std::shared_ptr;
 
 // The height of the cabinet is expressed in "rack units"(U).
 // See https://en.wikipedia.org/wiki/19-inch_rack and 

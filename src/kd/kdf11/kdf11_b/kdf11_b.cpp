@@ -5,7 +5,6 @@
 #include <memory>
 #include <thread>
 
-using std::shared_ptr;
 using std::make_unique;
 using std::static_pointer_cast;
 using std::thread;

@@ -4,12 +4,9 @@
 #include "../sectionprocessor/deviceconfigprocessor.h"
 #include "../msv11config/msv11config.h"
 
-#include <memory>
 #include <map>
 #include <string>
 
-using std::unique_ptr;
-using std::shared_ptr;
 using std::map;
 using std::string;
 
@@ -45,6 +42,5 @@ class MSV11Processor : public DeviceConfigProcessor
 public:
 	DeviceConfig getConfig ();
 };
-
 
 #endif // _MSV11PROCESSOR_H_

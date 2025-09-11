@@ -5,10 +5,6 @@
 #include "memorydevice.h"
 #include "configdata/msv11config/msv11config.h"
 
-#include <memory>
-
-using std::shared_ptr;
-
 class MSV11D : public MemoryDevice
 {
 public:

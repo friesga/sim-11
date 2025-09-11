@@ -4,12 +4,9 @@
 #include "configdata/sectionprocessor/deviceconfigprocessor.h"
 #include "configdata/rk/rk11d/rk11dconfig/rk11dconfig.h"
 
-#include <memory>
 #include <map>
 #include <string>
 
-using std::unique_ptr;
-using std::shared_ptr;
 using std::map;
 using std::string;
 

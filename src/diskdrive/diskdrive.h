@@ -13,9 +13,6 @@
 
 #include <cstdio>
 #include <string>
-#include <memory>
-
-using std::shared_ptr;
 
 // Definition of the functions common to all disk drives. The class offers
 // common functions for the support of disk drives:

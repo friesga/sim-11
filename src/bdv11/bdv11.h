@@ -6,12 +6,10 @@
 #include "configdata/bdv11config/bdv11config.h"
 #include "chrono/alarmclock/alarmclock.h"
 
-#include <memory>
 #include <array>
 #include <map>
 #include <string>
 
-using std::shared_ptr;
 using std::array;
 using std::map;
 using std::string;

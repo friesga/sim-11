@@ -26,13 +26,10 @@
 #include "../ba11cprocessor/ba11cprocessor.h"
 
 #include <map>
-#include <memory>
 #include <string>
 #include <vector>
 
 using std::map;
-using std::shared_ptr;
-using std::unique_ptr;
 using std::string;
 using std::vector;
 

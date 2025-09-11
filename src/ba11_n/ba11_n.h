@@ -6,11 +6,7 @@
 #include "configdata/ba11nconfig/ba11nconfig.h"
 
 #include <thread>
-#include <memory>
 #include <string>
-
-using std::unique_ptr;
-using std::shared_ptr;
 
 class BA11_N
 {

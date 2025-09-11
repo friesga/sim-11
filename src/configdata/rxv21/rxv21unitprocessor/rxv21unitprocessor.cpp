@@ -2,8 +2,9 @@
 #include "configdata/rxv21/rxv21unitconfig/rxv21unitconfig.h"
 
 #include <utility>
+#include <memory>
 
-using std::make_unique;
+using std::make_shared;
 using std::move;
 
 void RXV21UnitProcessor::processValue (iniparser::Section::ValueIterator valueIterator)

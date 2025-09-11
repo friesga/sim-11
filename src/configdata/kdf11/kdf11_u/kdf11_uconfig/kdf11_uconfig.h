@@ -5,10 +5,6 @@
 #include "configdata/kd11config/kd11config.h"
 #include "configdata/kdf11/slu/sluconfig/sluconfig.h"
 
-#include <memory>
-
-using std::shared_ptr;
-
 struct KDF11_UConfig : public DeviceType<BusType::Unibus>
 {
     // Jumper W2 controls the powerfail power-up action:

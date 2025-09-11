@@ -14,7 +14,6 @@
 #include <thread>
 
 using std::unique_ptr;
-using std::shared_ptr;
 using std::vector;
 using std::thread;
 

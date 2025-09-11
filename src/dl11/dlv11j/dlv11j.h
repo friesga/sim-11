@@ -6,11 +6,6 @@
 #include "configdata/serialconfig/dlv11jconfig/dlv11jconfig.h"
 #include "dl11/uart/uart.h"
 
-#include <memory>
-
-using std::unique_ptr;
-using std::shared_ptr;
-
 class DLV11J : public AbstractBusDevice
 {
 public:

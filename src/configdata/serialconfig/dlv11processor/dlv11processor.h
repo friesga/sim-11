@@ -5,13 +5,10 @@
 #include "configdata/serialconfig/dlv11jconfig/dlv11jconfig.h"
 #include "configdata/serialconfig/uartconfig/uartconfig.h"
 
-#include <memory>
 #include <map>
 #include <string>
 #include <vector>
 
-using std::unique_ptr;
-using std::shared_ptr;
 using std::map;
 using std::string;
 using std::vector;
