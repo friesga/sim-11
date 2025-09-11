@@ -73,13 +73,12 @@ TEST (SLUConfiguratorTest, defaultConfigurationAccepted)
 
 	// The only device type in this testset is the KD11 so if that's
 	// not correct the following tests will fail too.
-	ASSERT_TRUE (holds_alternative<shared_ptr<KDF11_BConfig>> (systemConfig[0]));
+	ASSERT_TRUE (holds_alternative<KDF11_BConfig> (systemConfig[0]));
 
 	// The device's type is KD11 so the configuration is a KD11Config object
-	auto kdf11_bConfig = 
-		get<shared_ptr<KDF11_BConfig>> (systemConfig[0]);
+	auto kdf11_bConfig = get<KDF11_BConfig> (systemConfig[0]);
 
-	SLUConfig* sluConfig = (SLUConfig*) kdf11_bConfig->sluConfig.get ();
+	SLUConfig* sluConfig = (SLUConfig*) kdf11_bConfig.sluConfig.get ();
 	
 	EXPECT_EQ (sluConfig->uartConfig[0].enabled_, true);
 	EXPECT_EQ (sluConfig->uartConfig[0].baseAddress_, 0177560);
@@ -109,13 +108,12 @@ TEST (SLUConfiguratorTest, slu2AddressAccepted)
 
 	// The only device type in this testset is the KD11 so if that's
 	// not correct the following tests will fail too.
-	ASSERT_TRUE (holds_alternative<shared_ptr<KDF11_BConfig>> (systemConfig[0]));
+	ASSERT_TRUE (holds_alternative<KDF11_BConfig> (systemConfig[0]));
 
 	// The device's type is KD11 so the configuration is a KD11Config object
-	auto kdf11_bConfig = 
-		get<shared_ptr<KDF11_BConfig>> (systemConfig[0]);
+	auto kdf11_bConfig = get<KDF11_BConfig> (systemConfig[0]);
 
-	SLUConfig* sluConfig = (SLUConfig*) kdf11_bConfig->sluConfig.get ();
+	SLUConfig* sluConfig = (SLUConfig*) kdf11_bConfig.sluConfig.get ();
 
 	EXPECT_EQ (sluConfig->uartConfig[1].baseAddress_, 0176540);
 	EXPECT_EQ (sluConfig->uartConfig[1].baseVector_, 0340);
@@ -166,13 +164,12 @@ TEST (SLUConfiguratorTest, sluDisabledAccepted)
 
 	// The only device type in this testset is the KD11 so if that's
 	// not correct the following tests will fail too.
-	ASSERT_TRUE (holds_alternative<shared_ptr<KDF11_BConfig>> (systemConfig[0]));
+	ASSERT_TRUE (holds_alternative<KDF11_BConfig> (systemConfig[0]));
 
 	// The device's type is KD11 so the configuration is a KD11Config object
-	auto kdf11_bConfig = 
-		get<shared_ptr<KDF11_BConfig>> (systemConfig[0]);
+	auto kdf11_bConfig = get<KDF11_BConfig> (systemConfig[0]);
 
-	SLUConfig* sluConfig = (SLUConfig*) kdf11_bConfig->sluConfig.get ();
+	SLUConfig* sluConfig = (SLUConfig*) kdf11_bConfig.sluConfig.get ();
 	
 	EXPECT_EQ (sluConfig->uartConfig[0].enabled_, false);
 	EXPECT_EQ (sluConfig->uartConfig[1].enabled_, false);
@@ -195,13 +192,12 @@ TEST (SLUConfiguratorTest, breakResponsedAccepted)
 
 	// The only device type in this testset is the KD11 so if that's
 	// not correct the following tests will fail too.
-	ASSERT_TRUE (holds_alternative<shared_ptr<KDF11_BConfig>> (systemConfig[0]));
+	ASSERT_TRUE (holds_alternative<KDF11_BConfig> (systemConfig[0]));
 
 	// The device's type is KD11 so the configuration is a KD11Config object
-	auto kdf11_bConfig = 
-		get<shared_ptr<KDF11_BConfig>> (systemConfig[0]);
+	auto kdf11_bConfig = get<KDF11_BConfig> (systemConfig[0]);
 
-	SLUConfig* sluConfig = (SLUConfig*) kdf11_bConfig->sluConfig.get ();
+	SLUConfig* sluConfig = (SLUConfig*) kdf11_bConfig.sluConfig.get ();
 	
 	EXPECT_EQ (sluConfig->consoleConfig.breakResponse, ConsoleConfig::BreakResponse::Boot);
 }
@@ -250,13 +246,12 @@ TEST (SLUConfiguratorTest, escBreakKeyAccepted)
 
 	// The only device type in this testset is the KD11 so if that's
 	// not correct the following tests will fail too.
-	ASSERT_TRUE (holds_alternative<shared_ptr<KDF11_BConfig>> (systemConfig[0]));
+	ASSERT_TRUE (holds_alternative<KDF11_BConfig> (systemConfig[0]));
 
 	// The device's type is KD11 so the configuration is a KD11Config object
-	auto kdf11_bConfig = 
-		get<shared_ptr<KDF11_BConfig>> (systemConfig[0]);
+	auto kdf11_bConfig = get<KDF11_BConfig> (systemConfig[0]);
 
-	SLUConfig* sluConfig = (SLUConfig*) kdf11_bConfig->sluConfig.get ();
+	SLUConfig* sluConfig = (SLUConfig*) kdf11_bConfig.sluConfig.get ();
 	
 	EXPECT_EQ (sluConfig->consoleConfig.breakKey, 27);
 }
@@ -278,13 +273,12 @@ TEST (SLUConfiguratorTest, upperCaseControlCharAccepted)
 
 	// The only device type in this testset is the KD11 so if that's
 	// not correct the following tests will fail too.
-	ASSERT_TRUE (holds_alternative<shared_ptr<KDF11_BConfig>> (systemConfig[0]));
+	ASSERT_TRUE (holds_alternative<KDF11_BConfig> (systemConfig[0]));
 
 	// The device's type is KD11 so the configuration is a KD11Config object
-	auto kdf11_bConfig = 
-		get<shared_ptr<KDF11_BConfig>> (systemConfig[0]);
+	auto kdf11_bConfig = get<KDF11_BConfig> (systemConfig[0]);
 
-	SLUConfig* sluConfig = (SLUConfig*) kdf11_bConfig->sluConfig.get ();
+	SLUConfig* sluConfig = (SLUConfig*) kdf11_bConfig.sluConfig.get ();
 	
 	EXPECT_EQ (sluConfig->consoleConfig.breakKey, 8);
 }
@@ -306,13 +300,12 @@ TEST (SLUConfiguratorTest, loopbackAccepted)
 
 	// The only device type in this testset is the KD11 so if that's
 	// not correct the following tests will fail too.
-	ASSERT_TRUE (holds_alternative<shared_ptr<KDF11_BConfig>> (systemConfig[0]));
+	ASSERT_TRUE (holds_alternative<KDF11_BConfig> (systemConfig[0]));
 
 	// The device's type is KD11 so the configuration is a KD11Config object
-	auto kdf11_bConfig = 
-		get<shared_ptr<KDF11_BConfig>> (systemConfig[0]);
+	auto kdf11_bConfig = get<KDF11_BConfig> (systemConfig[0]);
 
-	SLUConfig* sluConfig = (SLUConfig*) kdf11_bConfig->sluConfig.get ();
+	SLUConfig* sluConfig = (SLUConfig*) kdf11_bConfig.sluConfig.get ();
 	
 	EXPECT_EQ (sluConfig->uartConfig[0].loopback_, false);
 	EXPECT_EQ (sluConfig->uartConfig[1].loopback_, false);

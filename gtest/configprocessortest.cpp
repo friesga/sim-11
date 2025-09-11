@@ -4,12 +4,10 @@
 
 #include <fstream>	
 #include <gtest/gtest.h>
-#include <memory>
 #include <vector>
 #include <string>
 #include <ranges>
 
-using std::shared_ptr;
 using std::vector;
 using std::string;
 using std::ranges::find_if;
@@ -32,12 +30,12 @@ TEST (ConfigProcessorTest, allSectionsProcessedOnce)
 
 	SystemConfig allDevices
 	{
-		shared_ptr<MSV11Config> {},
-		shared_ptr<DLV11JConfig> {},
-		shared_ptr<BDV11Config> {},
-		shared_ptr<RXV21Config> {},
-		shared_ptr<RLV12Config> {},
-		shared_ptr<BA11_NConfig> {}
+		MSV11Config {},
+		DLV11JConfig {},
+		BDV11Config {},
+		RXV21Config {},
+		RLV12Config {},
+		BA11_NConfig {}
 	};
 
 	IniProcessor iniProcessor;

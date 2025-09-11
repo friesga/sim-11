@@ -37,7 +37,7 @@ void BA11_CProcessor::processSubsection (iniparser::Section* subSection)
 
 DeviceConfig BA11_CProcessor::getConfig ()
 {
-    return make_shared<BA11_CConfig> (ba11_cConfig);
+    return ba11_cConfig;
 }
 
 void BA11_CProcessor::processCabinet (iniparser::Value value)

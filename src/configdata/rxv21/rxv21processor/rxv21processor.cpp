@@ -79,5 +79,5 @@ void RXV21Processor::processSubsection (iniparser::Section *subSection)
 
 DeviceConfig RXV21Processor::getConfig ()
 {
-	return make_shared<RXV21Config> (rxConfig);
+	return rxConfig;
 }

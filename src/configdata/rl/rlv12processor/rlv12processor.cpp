@@ -68,5 +68,5 @@ void RLV12Processor::processSubsection (iniparser::Section *subSection)
 DeviceConfig RLV12Processor::getConfig ()
 {
 	rlConfig.common = rlProcessor_.getConfig ();
-	return make_shared<RLV12Config> (rlConfig);
+	return rlConfig;
 }

@@ -34,5 +34,5 @@ void KD11_NAProcessor::processPowerUpMode (iniparser::Value value)
 
 DeviceConfig KD11_NAProcessor::getConfig ()
 {
-	return make_shared<KD11_NAConfig> (kd11_naConfig);
+	return kd11_naConfig;
 }

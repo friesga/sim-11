@@ -73,5 +73,5 @@ void MS11PProcessor::processSubsection (iniparser::Section* subSection)
 
 DeviceConfig MS11PProcessor::getConfig ()
 {
-	return make_shared<MS11PConfig> (ms11pConfig);
+	return ms11pConfig;
 }

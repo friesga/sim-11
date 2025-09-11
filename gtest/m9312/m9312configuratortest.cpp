@@ -24,19 +24,18 @@ TEST (M9312ConfiguratorTest, optionsAccepted)
 
 	// The only device type in this testset is the M9312 so if that's
 	// not correct the following tests will fail too.
-	ASSERT_TRUE (holds_alternative<shared_ptr<M9312Config>> (systemConfig[0]));
+	ASSERT_TRUE (holds_alternative<M9312Config> (systemConfig[0]));
 
 	// The device's type is M9312 so the configuration is a M9312Config object
-	shared_ptr<M9312Config> m9312Config =
-		get<shared_ptr<M9312Config>> (systemConfig[0]);
+	auto m9312Config = get<M9312Config> (systemConfig[0]);
 
-	EXPECT_EQ (m9312Config->diagnosticROM, M9312Config::DiagROMType::_23_248F1);
-	EXPECT_EQ (m9312Config->bootROM[0], M9312Config::BootROMType::_23_751A9);
-	EXPECT_EQ (m9312Config->bootROM[1], M9312Config::BootROMType::_23_752A9);
-	EXPECT_EQ (m9312Config->bootROM[2], M9312Config::BootROMType::_23_753A9);
-    EXPECT_EQ (m9312Config->bootROM[3], M9312Config::BootROMType::_23_755A9);
-    EXPECT_EQ (m9312Config->startingAddress, 0173000);
-	EXPECT_TRUE (m9312Config->powerUpBootEnable);
+	EXPECT_EQ (m9312Config.diagnosticROM, M9312Config::DiagROMType::_23_248F1);
+	EXPECT_EQ (m9312Config.bootROM[0], M9312Config::BootROMType::_23_751A9);
+	EXPECT_EQ (m9312Config.bootROM[1], M9312Config::BootROMType::_23_752A9);
+	EXPECT_EQ (m9312Config.bootROM[2], M9312Config::BootROMType::_23_753A9);
+    EXPECT_EQ (m9312Config.bootROM[3], M9312Config::BootROMType::_23_755A9);
+    EXPECT_EQ (m9312Config.startingAddress, 0173000);
+	EXPECT_TRUE (m9312Config.powerUpBootEnable);
 }
 
 TEST (M9312ConfiguratorTest, invalidOptionThrows)
@@ -180,16 +179,15 @@ TEST (M9312ConfiguratorTest, oneBootROMAccepted)
 
 	// The only device type in this testset is the M9312 so if that's
 	// not correct the following tests will fail too.
-	ASSERT_TRUE (holds_alternative<shared_ptr<M9312Config>> (systemConfig[0]));
+	ASSERT_TRUE (holds_alternative<M9312Config> (systemConfig[0]));
 
 	// The device's type is M9312 so the configuration is a M9312Config object
-	shared_ptr<M9312Config> m9312Config =
-		get<shared_ptr<M9312Config>> (systemConfig[0]);
+	auto m9312Config = get<M9312Config> (systemConfig[0]);
 
-	EXPECT_EQ (m9312Config->bootROM[0], M9312Config::BootROMType::_23_751A9);
-	EXPECT_EQ (m9312Config->bootROM[1], M9312Config::BootROMType::NONE);
-	EXPECT_EQ (m9312Config->bootROM[2], M9312Config::BootROMType::NONE);
-	EXPECT_EQ (m9312Config->bootROM[3], M9312Config::BootROMType::NONE);
+	EXPECT_EQ (m9312Config.bootROM[0], M9312Config::BootROMType::_23_751A9);
+	EXPECT_EQ (m9312Config.bootROM[1], M9312Config::BootROMType::NONE);
+	EXPECT_EQ (m9312Config.bootROM[2], M9312Config::BootROMType::NONE);
+	EXPECT_EQ (m9312Config.bootROM[3], M9312Config::BootROMType::NONE);
 }
 
 TEST (M9312ConfiguratorTest, defaultInitialized)
@@ -208,21 +206,19 @@ TEST (M9312ConfiguratorTest, defaultInitialized)
 
 	// The only device type in this testset is the M9312 so if that's
 	// not correct the following tests will fail too.
-	ASSERT_TRUE (holds_alternative<shared_ptr<M9312Config>> (systemConfig[0]));
+	ASSERT_TRUE (holds_alternative<M9312Config> (systemConfig[0]));
 
 	// The device's type is M9312 so the configuration is a M9312Config object
-	shared_ptr<M9312Config> m9312Config =
-		get<shared_ptr<M9312Config>> (systemConfig[0]);
+	auto m9312Config = get<M9312Config> (systemConfig[0]);
 
-	EXPECT_EQ (m9312Config->diagnosticROM, M9312Config::DiagROMType::NONE);
-	EXPECT_EQ (m9312Config->bootROM[0], M9312Config::BootROMType::NONE);
-	EXPECT_EQ (m9312Config->bootROM[1], M9312Config::BootROMType::NONE);
-	EXPECT_EQ (m9312Config->bootROM[2], M9312Config::BootROMType::NONE);
-	EXPECT_EQ (m9312Config->bootROM[3], M9312Config::BootROMType::NONE);
-	EXPECT_EQ (m9312Config->startingAddress, 0);
-	EXPECT_FALSE (m9312Config->powerUpBootEnable);
+	EXPECT_EQ (m9312Config.diagnosticROM, M9312Config::DiagROMType::NONE);
+	EXPECT_EQ (m9312Config.bootROM[0], M9312Config::BootROMType::NONE);
+	EXPECT_EQ (m9312Config.bootROM[1], M9312Config::BootROMType::NONE);
+	EXPECT_EQ (m9312Config.bootROM[2], M9312Config::BootROMType::NONE);
+	EXPECT_EQ (m9312Config.bootROM[3], M9312Config::BootROMType::NONE);
+	EXPECT_EQ (m9312Config.startingAddress, 0);
+	EXPECT_FALSE (m9312Config.powerUpBootEnable);
 }
-
 
 TEST (M9312ConfiguratorTest, incorrectStartingAddressThrows)
 {

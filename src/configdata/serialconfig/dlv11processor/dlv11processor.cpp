@@ -131,5 +131,5 @@ void DLV11Processor::processSubsection (iniparser::Section *subSection)
 
 DeviceConfig DLV11Processor::getConfig ()
 {
-	return make_shared<DLV11JConfig> (dlConfig);
+	return dlConfig;
 }

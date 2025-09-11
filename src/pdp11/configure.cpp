@@ -79,41 +79,41 @@ void PDP_11::configureQbusSystem (SystemConfig const & systemConfig,
     // any Unibus device.
     auto configVisitor = overloaded
     {
-        [this] (shared_ptr<KD11_NAConfig> kd11_naConfig)
-            {processor_ = new KD11_NA (bus_, *kd11_naConfig); },
-        [this] (shared_ptr<KDF11_AConfig> kdf11_aConfig)
-            {processor_ = new KDF11_A (bus_, *kdf11_aConfig); },
-        [this] (shared_ptr<KDF11_BConfig> kdf11_bConfig)
-            {processor_ = new KDF11_B (bus_, *kdf11_bConfig); },
-        [this] (shared_ptr<MSV11Config> msv11Config)
-            {memoryDevices_.push_back (new MSV11D (bus_, *msv11Config)); },
-        [this] (shared_ptr<DLV11JConfig> dlv11jConfig)
-            {busDevices_.emplace_back (new DLV11J (bus_, *dlv11jConfig)); },
-        [this] (shared_ptr<BDV11Config> bdv11Config)
-            {busDevices_.emplace_back (new BDV11 (bus_, *bdv11Config)); },
-        [this] (shared_ptr<RXV21Config> rxv21Config)
-            {busDevices_.emplace_back (new RXV21 (bus_, *rxv21Config)); },
-        [this, window] (shared_ptr<RK11DConfig> rk11dConfig)
+        [this] (KD11_NAConfig kd11_naConfig)
+            {processor_ = new KD11_NA (bus_, kd11_naConfig); },
+        [this] (KDF11_AConfig kdf11_aConfig)
+            {processor_ = new KDF11_A (bus_, kdf11_aConfig); },
+        [this] (KDF11_BConfig kdf11_bConfig)
+            {processor_ = new KDF11_B (bus_, kdf11_bConfig); },
+        [this] (MSV11Config msv11Config)
+            {memoryDevices_.push_back (new MSV11D (bus_, msv11Config)); },
+        [this] (DLV11JConfig dlv11jConfig)
+            {busDevices_.emplace_back (new DLV11J (bus_, dlv11jConfig)); },
+        [this] (BDV11Config bdv11Config)
+            {busDevices_.emplace_back (new BDV11 (bus_, bdv11Config)); },
+        [this] (RXV21Config rxv21Config)
+            {busDevices_.emplace_back (new RXV21 (bus_, rxv21Config)); },
+        [this, window] (RK11DConfig rk11dConfig)
             {throw logic_error ("Should not happen"); },
-        [this, window] (shared_ptr<RL11Config> rl11Config)
+        [this, window] (RL11Config rl11Config)
             {throw logic_error ("Should not happen"); },
-        [this, window] (shared_ptr<RLV11Config> rlv11Config)
-            {busDevices_.emplace_back (new RLV12 (bus_, window, *rlv11Config)); },
-        [this, window] (shared_ptr<RLV12Config> rlv12Config)
-            {busDevices_.emplace_back (new RLV12 (bus_, window, *rlv12Config)); },
-        [this, window] (shared_ptr<BA11_NConfig> ba11_nConfig)
-            {ba11_n_ = std::make_unique<BA11_N> (bus_, window, *ba11_nConfig); },
-        [this] (shared_ptr<KT24Config> kt24Config)
+        [this, window] (RLV11Config rlv11Config)
+            {busDevices_.emplace_back (new RLV12 (bus_, window, rlv11Config)); },
+        [this, window] (RLV12Config rlv12Config)
+            {busDevices_.emplace_back (new RLV12 (bus_, window, rlv12Config)); },
+        [this, window] (BA11_NConfig ba11_nConfig)
+            {ba11_n_ = std::make_unique<BA11_N> (bus_, window, ba11_nConfig); },
+        [this] (KT24Config kt24Config)
             { throw logic_error ("Should not happen"); },
-        [this] (shared_ptr<M9312Config> m9312Config)
+        [this] (M9312Config m9312Config)
             { throw logic_error ("Should not happen"); },
-        [this] (shared_ptr<MS11PConfig> ms11pConfig)
+        [this] (MS11PConfig ms11pConfig)
             { throw logic_error ("Should not happen"); },
-        [this] (shared_ptr<BA11_CConfig> ba11lConfig)
+        [this] (BA11_CConfig ba11lConfig)
             { throw logic_error ("Should not happen"); },
-        [this] (shared_ptr<BA11_LConfig> ba11lConfig)
+        [this] (BA11_LConfig ba11lConfig)
             { throw logic_error ("Should not happen"); },
-        [this] (shared_ptr<KDF11_UConfig> kdf11_uConfig)
+        [this] (KDF11_UConfig kdf11_uConfig)
             { throw logic_error ("Should not happen"); }
     };
 
@@ -133,41 +133,41 @@ void PDP_11::configureUnibusSystem (SystemConfig const & systemConfig,
     // any Qbus device.
     auto configVisitor = overloaded
     {
-        [this] (shared_ptr<KD11_NAConfig> kd11_naConfig)
+        [this] (KD11_NAConfig kd11_naConfig)
             { throw logic_error ("Should not happen"); },
-        [this] (shared_ptr<KDF11_AConfig> kdf11_aConfig)
+        [this] (KDF11_AConfig kdf11_aConfig)
             { throw logic_error ("Should not happen"); },
-        [this] (shared_ptr<KDF11_BConfig> kdf11_bConfig)
+        [this] (KDF11_BConfig kdf11_bConfig)
             { throw logic_error ("Should not happen"); },
-        [this] (shared_ptr<MSV11Config> msv11Config)
+        [this] (MSV11Config msv11Config)
             { throw logic_error ("Should not happen"); },
-        [this] (shared_ptr<DLV11JConfig> dlv11jConfig)
+        [this] (DLV11JConfig dlv11jConfig)
             { throw logic_error ("Should not happen"); },
-        [this] (shared_ptr<BDV11Config> bdv11Config)
+        [this] (BDV11Config bdv11Config)
             { throw logic_error ("Should not happen"); },
-        [this] (shared_ptr<RXV21Config> rxv21Config)
+        [this] (RXV21Config rxv21Config)
             { throw logic_error ("Should not happen"); },
-        [this, window] (shared_ptr<RK11DConfig> rk11dConfig)
-            { busDevices_.emplace_back (new RK11D (bus_, window, *rk11dConfig)); },
-        [this, window] (shared_ptr<RL11Config> rl11Config)
-            { busDevices_.emplace_back (new RLV12 (bus_, window, *rl11Config)); },
-        [this, window] (shared_ptr<KT24Config> kt24Config)
-            { kt24_ = new KT24 (bus_, *kt24Config); },
-        [this, window] (shared_ptr<M9312Config> m9312Config)
-            { m9312_ = new M9312 (bus_, *m9312Config); },
-        [this, window] (shared_ptr<RLV11Config> rlConfig)
+        [this, window] (RK11DConfig rk11dConfig)
+            { busDevices_.emplace_back (new RK11D (bus_, window, rk11dConfig)); },
+        [this, window] (RL11Config rl11Config)
+            { busDevices_.emplace_back (new RLV12 (bus_, window, rl11Config)); },
+        [this, window] (KT24Config kt24Config)
+            { kt24_ = new KT24 (bus_, kt24Config); },
+        [this, window] (M9312Config m9312Config)
+            { m9312_ = new M9312 (bus_, m9312Config); },
+        [this, window] (RLV11Config rlConfig)
             { throw logic_error ("Should not happen"); },
-        [this, window] (shared_ptr<RLV12Config> rlConfig)
+        [this, window] (RLV12Config rlConfig)
             { throw logic_error ("Should not happen"); },
-        [this, window] (shared_ptr<BA11_NConfig> ba11_nConfig)
+        [this, window] (BA11_NConfig ba11_nConfig)
             { throw logic_error ("Should not happen"); },
-        [this] (shared_ptr<KDF11_UConfig> kdf11_uConfig)
-            {processor_ = new KDF11_U (bus_, *kdf11_uConfig); },
-        [this] (shared_ptr<MS11PConfig> ms11pConfig)
-            {memoryDevices_.push_back (new MS11P (bus_, *ms11pConfig)); },
-        [this, window] (shared_ptr<BA11_LConfig> ba11_lConfig)
-            {ba11_l_ = std::make_unique<BA11_L> (bus_, window, *ba11_lConfig); },
-        [this] (shared_ptr<BA11_CConfig> ba11lConfig)
+        [this] (KDF11_UConfig kdf11_uConfig)
+            {processor_ = new KDF11_U (bus_, kdf11_uConfig); },
+        [this] (MS11PConfig ms11pConfig)
+            {memoryDevices_.push_back (new MS11P (bus_, ms11pConfig)); },
+        [this, window] (BA11_LConfig ba11_lConfig)
+            {ba11_l_ = std::make_unique<BA11_L> (bus_, window, ba11_lConfig); },
+        [this] (BA11_CConfig ba11lConfig)
             { throw logic_error ("To be implemented"); },
 
     };

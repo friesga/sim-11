@@ -64,12 +64,11 @@ void KDF11_BProcessor::processBDV11Subsection (iniparser::Section *subSection)
 	BDV11Processor bdv11Processor {};
 	bdv11Processor.processSection (subSection);
 
-	// Add the unit configuration to the Rl device configuration
-	kdf11_bConfig.bdv11Config = 
-		*get<shared_ptr<BDV11Config>> (bdv11Processor.getConfig ());
+	// Add the unit configuration to the KDF11-B device configuration
+	kdf11_bConfig.bdv11Config = get<BDV11Config> (bdv11Processor.getConfig ());
 }
 
 DeviceConfig KDF11_BProcessor::getConfig ()
 {
-	return make_shared<KDF11_BConfig> (kdf11_bConfig);
+	return kdf11_bConfig;
 }

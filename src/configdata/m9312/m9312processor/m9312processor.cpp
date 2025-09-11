@@ -34,7 +34,7 @@ void M9312Processor::processSubsection (iniparser::Section* subSection)
 
 DeviceConfig M9312Processor::getConfig ()
 {
-    return make_shared<M9312Config> (m9312Config);
+    return m9312Config;
 }
 
 void M9312Processor::processDiagnosticROM (iniparser::Value value)

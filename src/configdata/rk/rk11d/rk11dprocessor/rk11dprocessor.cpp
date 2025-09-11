@@ -127,5 +127,5 @@ void RK11DProcessor::checkConsistency ()
 
 DeviceConfig RK11DProcessor::getConfig ()
 {
-	return make_shared<RK11DConfig> (rk11dConfig);
+	return rk11dConfig;
 }

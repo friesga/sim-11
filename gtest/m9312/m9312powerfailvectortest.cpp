@@ -3,10 +3,6 @@
 #include "configdata/m9312/m9312config/m9312config.h"
 
 #include <gtest/gtest.h>
-#include <memory>
-
-using std::shared_ptr;
-using std::make_shared;
 
 // Verify the M9312 is responsible for the powerfail vector when battery
 // backup is not available and the first read's after power-up are for

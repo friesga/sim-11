@@ -22,11 +22,12 @@ void ConsistencyChecker::checkEitherBA11_NOrBA11_L ()
 {
     auto isBA11_N = [] (DeviceConfig device)
         {
-            return holds_alternative<shared_ptr<BA11_NConfig>> (device);
+            return holds_alternative<BA11_NConfig> (device);
         };
+
     auto isBA11_L = [] (DeviceConfig device)
         {
-            return holds_alternative<shared_ptr<BA11_LConfig>> (device);
+            return holds_alternative<BA11_LConfig> (device);
         };
 
     if (find_if (systemConfig_, isBA11_N) != systemConfig_.end () &&
@@ -47,7 +48,7 @@ void ConsistencyChecker::checkBusConsistency ()
 {
     auto isUnibusDevice = [] (const auto& device)
         {
-            return device->isUnibusDevice ();
+            return device.isUnibusDevice ();
         };
 
     auto unibusDevice = [isUnibusDevice] (DeviceConfig device)
@@ -57,7 +58,7 @@ void ConsistencyChecker::checkBusConsistency ()
 
     auto isQbusDevice = [] (const auto& device)
         {
-            return device->isQbusDevice ();
+            return device.isQbusDevice ();
         };
 
     auto qbusDevice = [isQbusDevice] (DeviceConfig device)

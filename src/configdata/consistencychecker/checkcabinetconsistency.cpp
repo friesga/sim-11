@@ -20,41 +20,39 @@ void ConsistencyChecker::checkCabinetConsistency ()
 
     for (auto device : systemConfig_)
     {
-        if (holds_alternative<shared_ptr<BA11_NConfig>> (device))
+        if (holds_alternative<BA11_NConfig> (device))
         {
-            shared_ptr<BA11_NConfig> ba11nConfig = 
-                get<shared_ptr<BA11_NConfig>> (device);
+            BA11_NConfig ba11nConfig = get<BA11_NConfig> (device);
 
             // The following checks are performed by addUnit too, but
             // executing these checks here too gives the opportunity to
             // generate appropriate error messages.
-            if (h9642Cabinet.sectionOutOfRange (ba11nConfig->cabinetPosition.value (),
+            if (h9642Cabinet.sectionOutOfRange (ba11nConfig.cabinetPosition.value (),
                         BA11_NConfig::unitHeight) ||
-                    ba11nConfig->cabinetPosition->cabinetNr != 0)
+                    ba11nConfig.cabinetPosition->cabinetNr != 0)
                 throw out_of_range {"BA11-N cabinet position out of range"};
 
-            if (h9642Cabinet.sectionOccupied (ba11nConfig->cabinetPosition.value (),
+            if (h9642Cabinet.sectionOccupied (ba11nConfig.cabinetPosition.value (),
                     BA11_NConfig::unitHeight))
                 throw invalid_argument {"BA11-N cabinet position already occupied"};
 
             // The addUnit() shouldn't fail but just to make sure.
-            if (!h9642Cabinet.addUnit (ba11nConfig->cabinetPosition.value (),
+            if (!h9642Cabinet.addUnit (ba11nConfig.cabinetPosition.value (),
                     BA11_NConfig::unitHeight))
                 throw invalid_argument {"BA11-N couldn't be added to the cabinet"};
         }
         else
         {
-            if (holds_alternative<shared_ptr<RLV12Config>> (device))
+            if (holds_alternative<RLV12Config> (device))
             {
-                shared_ptr<RLV12Config> rlConfig =
-                    get<shared_ptr<RLV12Config>> (device);
+                RLV12Config rlConfig = get<RLV12Config> (device);
 
                 // Check the cabinet position for every configured RL01/02
                 for (size_t unitNumber = 0;
-                    unitNumber < rlConfig->common.numUnits; ++unitNumber)
+                    unitNumber < rlConfig.common.numUnits; ++unitNumber)
                 {
                     shared_ptr<RLUnitConfig> rlUnitConfig =
-                        rlConfig->common.rlUnitConfig[unitNumber];
+                        rlConfig.common.rlUnitConfig[unitNumber];
 
                     if (rlUnitConfig == nullptr)
                         continue;

@@ -22,13 +22,12 @@ TEST (KDF11_AConfiguratorTest, powerUpModeAccepted)
 
 	// The only device type in this testset is the KD11 so if that's
 	// not correct the following tests will fail too.
-	ASSERT_TRUE (holds_alternative<shared_ptr<KDF11_AConfig>> (systemConfig[0]));
+	ASSERT_TRUE (holds_alternative<KDF11_AConfig> (systemConfig[0]));
 
 	// The device's type is KD11 so the configuration is a KD11Config object
-	auto kdf11_aConfig = 
-		get<shared_ptr<KDF11_AConfig>> (systemConfig[0]);
+	auto kdf11_aConfig = get<KDF11_AConfig> (systemConfig[0]);
 
-	EXPECT_EQ (kdf11_aConfig->powerUpMode, KD11Config::PowerUpMode::ODT);
+	EXPECT_EQ (kdf11_aConfig.powerUpMode, KD11Config::PowerUpMode::ODT);
 }
 
 TEST (KDF11_AConfiguratorTest, invalidPowerUpModeThrows)
@@ -72,13 +71,12 @@ TEST (KDF11_AConfiguratorTest, KTF11_AisDetected)
 
 	// The only device type in this testset is the KDF11-A so if that's
 	// not correct the following tests will fail too.
-	ASSERT_TRUE (holds_alternative<shared_ptr<KDF11_AConfig>> (systemConfig[0]));
+	ASSERT_TRUE (holds_alternative<KDF11_AConfig> (systemConfig[0]));
 
 	// The device's type is DLV11J so the configuration is a 
-	auto kdf11_aConfig = 
-		get<shared_ptr<KDF11_AConfig>> (systemConfig[0]);
+	auto kdf11_aConfig = get<KDF11_AConfig> (systemConfig[0]);
 
-	EXPECT_TRUE (kdf11_aConfig->ktf11_a_present);
+	EXPECT_TRUE (kdf11_aConfig.ktf11_a_present);
 }
 
 TEST (KDF11_AConfiguratorTest, KD11AndKDF11_AOptionsAreProcessed)
@@ -98,14 +96,13 @@ TEST (KDF11_AConfiguratorTest, KD11AndKDF11_AOptionsAreProcessed)
 
 	// The only device type in this testset is the KDF11-A so if that's
 	// not correct the following tests will fail too.
-	ASSERT_TRUE (holds_alternative<shared_ptr<KDF11_AConfig>> (systemConfig[0]));
+	ASSERT_TRUE (holds_alternative<KDF11_AConfig> (systemConfig[0]));
 
 	// The device's type is DLV11J so the configuration is a 
-	auto kdf11_aConfig = 
-		get<shared_ptr<KDF11_AConfig>> (systemConfig[0]);
+	auto kdf11_aConfig = get<KDF11_AConfig> (systemConfig[0]);
 
-	EXPECT_EQ (kdf11_aConfig->powerUpMode, KD11Config::PowerUpMode::ODT);
-	EXPECT_TRUE (kdf11_aConfig->ktf11_a_present);
+	EXPECT_EQ (kdf11_aConfig.powerUpMode, KD11Config::PowerUpMode::ODT);
+	EXPECT_TRUE (kdf11_aConfig.ktf11_a_present);
 }
 
 TEST (KDF11_AConfiguratorTest, unknownOptionThrows)
@@ -149,13 +146,12 @@ TEST (KDF11_AConfiguratorTest, validStartingAddressAccepted)
 
 	// The only device type in this testset is the KDF11-A so if that's
 	// not correct the following tests will fail too.
-	ASSERT_TRUE (holds_alternative<shared_ptr<KDF11_AConfig>> (systemConfig[0]));
+	ASSERT_TRUE (holds_alternative<KDF11_AConfig> (systemConfig[0]));
 
 	// The device's type is DLV11J so the configuration is a 
-	auto kdf11_aConfig = 
-		get<shared_ptr<KDF11_AConfig>> (systemConfig[0]);
+	auto kdf11_aConfig = get<KDF11_AConfig> (systemConfig[0]);
 
-	EXPECT_EQ (kdf11_aConfig->startingAddress, 0173000);
+	EXPECT_EQ (kdf11_aConfig.startingAddress, 0173000);
 }
 
 TEST (KDF11_AConfiguratorTest, invalidStartingAddressThrows)

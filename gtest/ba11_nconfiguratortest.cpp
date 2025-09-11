@@ -24,13 +24,13 @@ TEST (BA11_NConfiguratorTest, defaultLogoIsPDP11_03L)
 
 	// The only device type in this testset is the BA11-N so if that's
 	// not correct the following tests will fail too.
-	ASSERT_TRUE (holds_alternative<shared_ptr<BA11_NConfig>> (systemConfig[0]));
+	ASSERT_TRUE (holds_alternative<BA11_NConfig> (systemConfig[0]));
 
 	// The device's type is BA11_N so the configuration is a BA11_NConfig object
-	shared_ptr<BA11_NConfig> ba11_nConfig = 
-		get<shared_ptr<BA11_NConfig>> (systemConfig[0]);
+	BA11_NConfig ba11_nConfig = 
+		get<BA11_NConfig> (systemConfig[0]);
 
-	EXPECT_EQ (ba11_nConfig->logo, BA11_NConfig::Logo::PDP_1103L);
+	EXPECT_EQ (ba11_nConfig.logo, BA11_NConfig::Logo::PDP_1103L);
 }
 
 TEST (BA11_NConfiguratorTest, logoSelected)
@@ -50,13 +50,13 @@ TEST (BA11_NConfiguratorTest, logoSelected)
 
 	// The only device type in this testset is the BA11-N so if that's
 	// not correct the following tests will fail too.
-	ASSERT_TRUE (holds_alternative<shared_ptr<BA11_NConfig>> (systemConfig[0]));
+	ASSERT_TRUE (holds_alternative<BA11_NConfig> (systemConfig[0]));
 
 	// The device's type is BA11_N so the configuration is a BA11_NConfig object
-	shared_ptr<BA11_NConfig> ba11_nConfig = 
-		get<shared_ptr<BA11_NConfig>> (systemConfig[0]);
+	BA11_NConfig ba11_nConfig = 
+		get<BA11_NConfig> (systemConfig[0]);
 
-	EXPECT_EQ (ba11_nConfig->logo, BA11_NConfig::Logo::PDP_1123);
+	EXPECT_EQ (ba11_nConfig.logo, BA11_NConfig::Logo::PDP_1123);
 }
 
 TEST (BA11_NConfiguratorTest, unknownKeyThrows)
@@ -201,12 +201,11 @@ TEST (BA11_NConfiguratorTest, cabinetPositionIsCorrect)
 
 	// The only device type in this testset is the BA11-N so if that's
 	// not correct the following tests will fail too.
-	ASSERT_TRUE (holds_alternative<shared_ptr<BA11_NConfig>> (systemConfig[0]));
+	ASSERT_TRUE (holds_alternative<BA11_NConfig> (systemConfig[0]));
 
 	// The device's type is BA11_N so the configuration is a BA11_NConfig object
-	shared_ptr<BA11_NConfig> ba11_nConfig =
-		get<shared_ptr<BA11_NConfig>> (systemConfig[0]);
+	BA11_NConfig ba11_nConfig = get<BA11_NConfig> (systemConfig[0]);
 
-	EXPECT_EQ (ba11_nConfig->cabinetPosition->cabinetNr, 10);
-	EXPECT_EQ (ba11_nConfig->cabinetPosition->height, 20_ru);
+	EXPECT_EQ (ba11_nConfig.cabinetPosition->cabinetNr, 10);
+	EXPECT_EQ (ba11_nConfig.cabinetPosition->height, 20_ru);
 }

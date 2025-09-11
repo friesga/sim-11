@@ -26,23 +26,23 @@ using std::variant;
 using std::shared_ptr;
 
 using DeviceConfig = variant<
-    shared_ptr<KD11_NAConfig>,
-    shared_ptr<KDF11_AConfig>,
-    shared_ptr<KDF11_BConfig>,
-    shared_ptr<KT24Config>,
-    shared_ptr<M9312Config>,
-    shared_ptr<MSV11Config>,
-    shared_ptr<DLV11JConfig>,
-    shared_ptr<BDV11Config>,
-    shared_ptr<RXV21Config>,
-    shared_ptr<RK11DConfig>,
-    shared_ptr<RL11Config>,
-    shared_ptr<RLV11Config>,
-    shared_ptr<RLV12Config>,
-    shared_ptr<BA11_CConfig>,
-    shared_ptr<BA11_LConfig>,
-    shared_ptr<BA11_NConfig>,
-    shared_ptr<MS11PConfig>,
-    shared_ptr<KDF11_UConfig>>;
+    KD11_NAConfig,
+    KDF11_AConfig,
+    KDF11_BConfig,
+    KT24Config,
+    M9312Config,
+    MSV11Config,
+    DLV11JConfig,
+    BDV11Config,
+    RXV21Config,
+    RK11DConfig,
+    RL11Config,
+    RLV11Config,
+    RLV12Config,
+    BA11_CConfig,
+    BA11_LConfig,
+    BA11_NConfig,
+    MS11PConfig,
+    KDF11_UConfig>;
 
 #endif // _DEVICECONFIGVARIANT_H_

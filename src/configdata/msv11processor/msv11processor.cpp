@@ -71,5 +71,5 @@ void MSV11Processor::processSubsection (iniparser::Section *subSection)
 
 DeviceConfig MSV11Processor::getConfig ()
 {
-	return make_shared<MSV11Config> (msv11Config);
+	return msv11Config;
 }

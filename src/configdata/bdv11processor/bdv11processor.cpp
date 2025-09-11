@@ -77,5 +77,5 @@ void BDV11Processor::processSubsection (iniparser::Section *subSection)
 
 DeviceConfig BDV11Processor::getConfig ()
 {
-	return make_shared<BDV11Config> (bdv11Config);
+	return bdv11Config;
 }

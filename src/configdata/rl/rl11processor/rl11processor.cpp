@@ -56,5 +56,5 @@ void RL11Processor::processSubsection (iniparser::Section* subSection)
 DeviceConfig RL11Processor::getConfig ()
 {
 	rl11Config.common = rlProcessor_.getConfig ();
-	return make_shared<RL11Config> (rl11Config);
+	return rl11Config;
 }

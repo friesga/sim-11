@@ -26,13 +26,11 @@ TEST (RxConfiguratorTest, rxConfigProcessed)
 	SystemConfig deviceConfig = 
 		configProcessor.getSystemConfig ();
 
-	auto rxv21Config = 
-		get<shared_ptr<RXV21Config>> (deviceConfig[0]);
+	auto rxv21Config = get<RXV21Config> (deviceConfig[0]);
 
-	EXPECT_EQ (rxv21Config->address, 0174400);
-	EXPECT_EQ (rxv21Config->vector, 0160);
+	EXPECT_EQ (rxv21Config.address, 0174400);
+	EXPECT_EQ (rxv21Config.vector, 0160);
 
-	EXPECT_STREQ (static_pointer_cast<RXV21UnitConfig> 
-			(rxv21Config->rxv21UnitConfig[0])->fileName.c_str(), 
-			"rx01.dsk");
+	EXPECT_STREQ (rxv21Config.rxv21UnitConfig[0]->fileName.c_str(), 
+		"rx01.dsk");
 }

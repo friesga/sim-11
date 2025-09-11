@@ -65,5 +65,5 @@ void KDF11_AProcessor::processPowerUpMode (iniparser::Value value)
 
 DeviceConfig KDF11_AProcessor::getConfig ()
 {
-	return make_shared<KDF11_AConfig> (kd11Config);
+	return kd11Config;
 }

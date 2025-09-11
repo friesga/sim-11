@@ -34,7 +34,7 @@ void BA11_NProcessor::processSubsection (iniparser::Section *subSection)
 
 DeviceConfig BA11_NProcessor::getConfig ()
 {
-	return make_shared<BA11_NConfig> (ba11_nConfig);
+	return ba11_nConfig;
 }
 
 void BA11_NProcessor::processLogo (iniparser::Value value)

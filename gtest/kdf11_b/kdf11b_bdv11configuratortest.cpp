@@ -22,13 +22,12 @@ TEST (KDF11B_BDV11ConfiguratorTest, defaultConfigurationAccepted)
 
 	// The only device type in this testset is the KD11 so if that's
 	// not correct the following tests will fail too.
-	ASSERT_TRUE (holds_alternative<shared_ptr<KDF11_BConfig>> (systemConfig[0]));
+	ASSERT_TRUE (holds_alternative<KDF11_BConfig> (systemConfig[0]));
 
 	// The device's type is KD11 so the configuration is a KD11Config object
-	auto kdf11_bConfig = 
-		get<shared_ptr<KDF11_BConfig>> (systemConfig[0]);
+	auto kdf11_bConfig = get<KDF11_BConfig> (systemConfig[0]);
 
-	BDV11Config bdv11Config = kdf11_bConfig->bdv11Config;
+	BDV11Config bdv11Config = kdf11_bConfig.bdv11Config;
 	
 	EXPECT_TRUE (bdv11Config.cpuTests);
 	EXPECT_TRUE (bdv11Config.memoryTests);
@@ -55,13 +54,12 @@ TEST (KDF11B_BDV11ConfiguratorTest, bootROMAccepted)
 
 	// The only device type in this testset is the KD11 so if that's
 	// not correct the following tests will fail too.
-	ASSERT_TRUE (holds_alternative<shared_ptr<KDF11_BConfig>> (systemConfig[0]));
+	ASSERT_TRUE (holds_alternative<KDF11_BConfig> (systemConfig[0]));
 
 	// The device's type is KD11 so the configuration is a KD11Config object
-	auto kdf11_bConfig = 
-		get<shared_ptr<KDF11_BConfig>> (systemConfig[0]);
+	auto kdf11_bConfig = get<KDF11_BConfig> (systemConfig[0]);
 
-	BDV11Config bdv11Config = kdf11_bConfig->bdv11Config;
+	BDV11Config bdv11Config = kdf11_bConfig.bdv11Config;
 	
 	EXPECT_EQ (bdv11Config.bootROM, BDV11Config::BootROM::KDF11_BA);
 }
@@ -88,13 +86,12 @@ TEST (KDF11B_BDV11ConfiguratorTest, optionsAccepted)
 
 	// The only device type in this testset is the KD11 so if that's
 	// not correct the following tests will fail too.
-	ASSERT_TRUE (holds_alternative<shared_ptr<KDF11_BConfig>> (systemConfig[0]));
+	ASSERT_TRUE (holds_alternative<KDF11_BConfig> (systemConfig[0]));
 
 	// The device's type is KD11 so the configuration is a KD11Config object
-	auto kdf11_bConfig = 
-		get<shared_ptr<KDF11_BConfig>> (systemConfig[0]);
+	auto kdf11_bConfig = get<KDF11_BConfig> (systemConfig[0]);
 
-	BDV11Config bdv11Config = kdf11_bConfig->bdv11Config;
+	BDV11Config bdv11Config = kdf11_bConfig.bdv11Config;
 	
 	EXPECT_EQ (bdv11Config.bootROM, BDV11Config::BootROM::KDF11_BA);
 	EXPECT_FALSE (bdv11Config.cpuTests);
@@ -122,13 +119,12 @@ TEST (KDF11B_BDV11ConfiguratorTest, tu58bootDeviceAccepted)
 
 	// The only device type in this testset is the KD11 so if that's
 	// not correct the following tests will fail too.
-	ASSERT_TRUE (holds_alternative<shared_ptr<KDF11_BConfig>> (systemConfig[0]));
+	ASSERT_TRUE (holds_alternative<KDF11_BConfig> (systemConfig[0]));
 
 	// The device's type is KD11 so the configuration is a KD11Config object
-	auto kdf11_bConfig = 
-		get<shared_ptr<KDF11_BConfig>> (systemConfig[0]);
+	auto kdf11_bConfig = get<KDF11_BConfig> (systemConfig[0]);
 
-	BDV11Config bdv11Config = kdf11_bConfig->bdv11Config;
+	BDV11Config bdv11Config = kdf11_bConfig.bdv11Config;
 	
 	EXPECT_EQ (bdv11Config.bootDevice, BDV11Config::BootDevice::TU58);
 }

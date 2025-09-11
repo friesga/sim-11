@@ -108,22 +108,22 @@ void ConsistencyChecker::checkConsoleConsistency ()
 {
     auto hasKDF11BConsole = [] (DeviceConfig device)
     {
-        if (holds_alternative<shared_ptr<KDF11_BConfig>> (device))
+        if (holds_alternative<KDF11_BConfig> (device))
         {
-            shared_ptr<KDF11_BConfig> kdf11bConfig = 
-                get<shared_ptr<KDF11_BConfig>> (device);
-            return kdf11bConfig->sluConfig->uartConfig[0].enabled_;
+            KDF11_BConfig kdf11bConfig = 
+                get<KDF11_BConfig> (device);
+            return kdf11bConfig.sluConfig->uartConfig[0].enabled_;
         }
         return false;
     };
 
     auto hasDLV11JConsole = [] (DeviceConfig device)
     {
-        if (holds_alternative<shared_ptr<DLV11JConfig>> (device))
+        if (holds_alternative<DLV11JConfig> (device))
         {
-            shared_ptr<DLV11JConfig> dlv11jConfig = 
-                get<shared_ptr<DLV11JConfig>> (device);
-            return dlv11jConfig->ch3ConsoleEnabled;
+            DLV11JConfig dlv11jConfig = 
+                get<DLV11JConfig> (device);
+            return dlv11jConfig.ch3ConsoleEnabled;
         }
         return false;
     };

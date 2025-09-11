@@ -3,10 +3,6 @@
 #include "configdata/m9312/m9312config/m9312config.h"
 
 #include <gtest/gtest.h>
-#include <memory>
-
-using std::shared_ptr;
-using std::make_shared;
 
 TEST (M9312Test, m93isResponsibleForCorrectAddresses)
 {
@@ -41,8 +37,6 @@ TEST (M9312Test, diagROMreadCorrectly)
         0,
         true
     };
-
-    shared_ptr<M9312Config> m9312ConfigPtr = make_shared<M9312Config> (config);
 
     Qbus bus;
     M9312 m9312 (&bus, M9312Config {config});

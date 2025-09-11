@@ -22,13 +22,12 @@ TEST (KDF11_UConfiguratorTest, powerUpModeAccepted)
 
 	// The only device type in this testset is the KDF11-U so if that's
 	// not correct the following tests will fail too.
-	ASSERT_TRUE (holds_alternative<shared_ptr<KDF11_UConfig>> (systemConfig[0]));
+	ASSERT_TRUE (holds_alternative<KDF11_UConfig> (systemConfig[0]));
 
 	// The device's type is KDF11-U so the configuration is a KDF11_UConfig object
-	auto kdf11_uConfig = 
-		get<shared_ptr<KDF11_UConfig>> (systemConfig[0]);
+	auto kdf11_uConfig = get<KDF11_UConfig> (systemConfig[0]);
 
-	EXPECT_EQ (kdf11_uConfig->powerUpMode, KD11Config::PowerUpMode::Bootstrap);
+	EXPECT_EQ (kdf11_uConfig.powerUpMode, KD11Config::PowerUpMode::Bootstrap);
 }
 
 TEST (KDF11_UConfiguratorTest, invalidPowerUpModeThrows)
@@ -97,13 +96,12 @@ TEST (KDF11_UConfiguratorTest, kernelHaltModeAccepted)
 
 	// The only device type in this testset is the KDF11-U so if that's
 	// not correct the following tests will fail too.
-	ASSERT_TRUE (holds_alternative<shared_ptr<KDF11_UConfig>> (systemConfig[0]));
+	ASSERT_TRUE (holds_alternative<KDF11_UConfig> (systemConfig[0]));
 
 	// The device's type is KDF11-U so the configuration is a KDF11_UConfig object
-	auto kdf11_uConfig =
-		get<shared_ptr<KDF11_UConfig>> (systemConfig[0]);
+	auto kdf11_uConfig = get<KDF11_UConfig> (systemConfig[0]);
 
-	EXPECT_EQ (kdf11_uConfig->kernelHaltMode, KDF11_UConfig::KernelHaltMode::AllowHalt);
+	EXPECT_EQ (kdf11_uConfig.kernelHaltMode, KDF11_UConfig::KernelHaltMode::AllowHalt);
 }
 
 TEST (KDF11_UConfiguratorTest, invalidKernelHaltModeThrows)
@@ -147,13 +145,12 @@ TEST (KDF11_UConfiguratorTest, validBootAddressAccepted)
 
 	// The only device type in this testset is the KDF11-U so if that's
 	// not correct the following tests will fail too.
-	ASSERT_TRUE (holds_alternative<shared_ptr<KDF11_UConfig>> (systemConfig[0]));
+	ASSERT_TRUE (holds_alternative<KDF11_UConfig> (systemConfig[0]));
 
 	// The device's type is KDF11-U so the configuration is a KDF11_UConfig
-	auto kdf11_uConfig =
-		get<shared_ptr<KDF11_UConfig>> (systemConfig[0]);
+	auto kdf11_uConfig = get<KDF11_UConfig> (systemConfig[0]);
 
-	EXPECT_EQ (kdf11_uConfig->bootAddress, 0173000);
+	EXPECT_EQ (kdf11_uConfig.bootAddress, 0173000);
 }
 
 TEST (KDF11_UConfiguratorTest, invalidBootAddressThrows)
@@ -221,13 +218,12 @@ TEST (KDF11_UConfiguratorTest, slusHaveDefaultConfiguration)
 
 	// The only device type in this testset is the KDF11-U so if that's
 	// not correct the following tests will fail too.
-	ASSERT_TRUE (holds_alternative<shared_ptr<KDF11_UConfig>> (systemConfig[0]));
+	ASSERT_TRUE (holds_alternative<KDF11_UConfig> (systemConfig[0]));
 
 	// The device's type is KDF11-U so the configuration is a KDF11_UConfig object
-	auto kdf11_uConfig =
-		get<shared_ptr<KDF11_UConfig>> (systemConfig[0]);
+	auto kdf11_uConfig = get<KDF11_UConfig> (systemConfig[0]);
 
-	SLUConfig* sluConfig = (SLUConfig*)kdf11_uConfig->sluConfig.get ();
+	SLUConfig* sluConfig = (SLUConfig*)kdf11_uConfig.sluConfig.get ();
 
 	EXPECT_EQ (sluConfig->uartConfig[0].enabled_, true);
 	EXPECT_EQ (sluConfig->uartConfig[0].baseAddress_, 0177560);

@@ -70,5 +70,5 @@ void  KDF11_UProcessor::processBootAddress (iniparser::Value value)
 
 DeviceConfig KDF11_UProcessor::getConfig ()
 {
-	return make_shared<KDF11_UConfig> (kdf11_uConfig);
+	return kdf11_uConfig;
 }

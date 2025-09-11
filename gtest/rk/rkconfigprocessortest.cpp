@@ -4,13 +4,10 @@
 
 #include <fstream>	
 #include <gtest/gtest.h>
-#include <memory>
 #include <vector>
 #include <string>
 #include <variant>
 
-using std::shared_ptr;
-using std::static_pointer_cast;
 using std::vector;
 using std::string;
 using std::get;
@@ -44,18 +41,16 @@ TEST (RKConfigProcessorTest, configProcessed)
 	SystemConfig configuration =
 		iniProcessor.getSystemConfig ();
 
-	ASSERT_TRUE (holds_alternative<shared_ptr<RK11DConfig>> (configuration[0]));
+	ASSERT_TRUE (holds_alternative<RK11DConfig> (configuration[0]));
 
-	shared_ptr<RK11DConfig> rk11dConfig =
-		get<shared_ptr<RK11DConfig>> (configuration[0]);
+	auto rk11dConfig = get<RK11DConfig> (configuration[0]);
 
-	EXPECT_EQ (rk11dConfig->address, 0177400);
-	EXPECT_EQ (rk11dConfig->vector, 0220);
-	EXPECT_EQ (rk11dConfig->busRequestLevel, 5);
-	EXPECT_EQ (rk11dConfig->numUnits, 1);
+	EXPECT_EQ (rk11dConfig.address, 0177400);
+	EXPECT_EQ (rk11dConfig.vector, 0220);
+	EXPECT_EQ (rk11dConfig.busRequestLevel, 5);
+	EXPECT_EQ (rk11dConfig.numUnits, 1);
 
-	EXPECT_EQ (static_pointer_cast<RK05Config>
-		(rk11dConfig->rk05Config[0])->writeProtect, false);
+	EXPECT_EQ (rk11dConfig.rk05Config[0]->writeProtect, false);
 }
 
 TEST (RKConfigProcessorTest, configProcessorThrows)
@@ -124,24 +119,19 @@ TEST (RKConfigProcessorTest, fileName)
 	{
 		// The only device type in this testset is the RK11-D so if that's
 		// not corrected the following tests will fail too.
-		ASSERT_TRUE (holds_alternative<shared_ptr<RK11DConfig>> (device));
+		ASSERT_TRUE (holds_alternative<RK11DConfig> (device));
 
 		// The device's type is RK11-D so the configuration is a RK11DConfig
-		auto rk11dConfig =
-			get<shared_ptr<RK11DConfig>> (device);
+		auto rk11dConfig = get<RK11DConfig> (device);
 
 		// Now we can check the unit's filenames. The devices in the 
 		// units are of type RK05Config.
-		EXPECT_STREQ (static_pointer_cast<RK05Config>
-			(rk11dConfig->rk05Config[0])->fileName.c_str (), "somefile");
-		EXPECT_STREQ (static_pointer_cast<RK05Config>
-			(rk11dConfig->rk05Config[1])->fileName.c_str (),
+		EXPECT_STREQ (rk11dConfig.rk05Config[0]->fileName.c_str (), "somefile");
+		EXPECT_STREQ (rk11dConfig.rk05Config[1]->fileName.c_str (),
 			expectedFileNameUnit1.c_str ());
-		EXPECT_STREQ (static_pointer_cast<RK05Config>
-			(rk11dConfig->rk05Config[2])->fileName.c_str (),
+		EXPECT_STREQ (rk11dConfig.rk05Config[2]->fileName.c_str (),
 			expectedFileNameUnit2.c_str ());
-		EXPECT_STREQ (static_pointer_cast<RK05Config>
-			(rk11dConfig->rk05Config[3])->fileName.c_str (),
+		EXPECT_STREQ (rk11dConfig.rk05Config[3]->fileName.c_str (),
 			expectedFileNameUnit3.c_str ());
 	}
 }
@@ -173,20 +163,15 @@ TEST (RKConfigProcessorTest, spinUpTimeCorrectlyDefaulted)
 		iniProcessor.getSystemConfig ();
 
 	// The first and only device in the configuration should be the RK11-D
-	ASSERT_TRUE (holds_alternative<shared_ptr<RK11DConfig>> (configuration[0]));
+	ASSERT_TRUE (holds_alternative<RK11DConfig> (configuration[0]));
 
-	shared_ptr<RK11DConfig> rk11dConfig =
-		get<shared_ptr<RK11DConfig>> (configuration[0]);
+	auto rk11dConfig = get<RK11DConfig> (configuration[0]);
 
 	// Verify the spin-up time of all four units is correctly defaulted
-	EXPECT_EQ (static_pointer_cast<RK05Config>
-		(rk11dConfig->rk05Config[0])->spinUpTime, 0);
-	EXPECT_EQ (static_pointer_cast<RK05Config>
-		(rk11dConfig->rk05Config[1])->spinUpTime, 0);
-	EXPECT_EQ (static_pointer_cast<RK05Config>
-		(rk11dConfig->rk05Config[2])->spinUpTime, 0);
-	EXPECT_EQ (static_pointer_cast<RK05Config>
-		(rk11dConfig->rk05Config[3])->spinUpTime, 0);
+	EXPECT_EQ (rk11dConfig.rk05Config[0]->spinUpTime, 0);
+	EXPECT_EQ (rk11dConfig.rk05Config[1]->spinUpTime, 0);
+	EXPECT_EQ (rk11dConfig.rk05Config[2]->spinUpTime, 0);
+	EXPECT_EQ (rk11dConfig.rk05Config[3]->spinUpTime, 0);
 }
 
 TEST (RKConfigProcessorTest, spinUpTimeHasCorrectValues)
@@ -220,20 +205,15 @@ TEST (RKConfigProcessorTest, spinUpTimeHasCorrectValues)
 		iniProcessor.getSystemConfig ();
 
 	// The first and only device in the configuration should be the RK11-D
-	ASSERT_TRUE (holds_alternative<shared_ptr<RK11DConfig>> (configuration[0]));
+	ASSERT_TRUE (holds_alternative<RK11DConfig> (configuration[0]));
 
-	shared_ptr<RK11DConfig> rk11dConfig =
-		get<shared_ptr<RK11DConfig>> (configuration[0]);
+	auto rk11dConfig = get<RK11DConfig> (configuration[0]);
 
 	// Verify the spin-up time of all four units is correctly defaulted
-	EXPECT_EQ (static_pointer_cast<RK05Config>
-		(rk11dConfig->rk05Config[0])->spinUpTime, 0);
-	EXPECT_EQ (static_pointer_cast<RK05Config>
-		(rk11dConfig->rk05Config[1])->spinUpTime, 1);
-	EXPECT_EQ (static_pointer_cast<RK05Config>
-		(rk11dConfig->rk05Config[2])->spinUpTime, 2);
-	EXPECT_EQ (static_pointer_cast<RK05Config>
-		(rk11dConfig->rk05Config[3])->spinUpTime, 3);
+	EXPECT_EQ (rk11dConfig.rk05Config[0]->spinUpTime, 0);
+	EXPECT_EQ (rk11dConfig.rk05Config[1]->spinUpTime, 1);
+	EXPECT_EQ (rk11dConfig.rk05Config[2]->spinUpTime, 2);
+	EXPECT_EQ (rk11dConfig.rk05Config[3]->spinUpTime, 3);
 }
 
 TEST (RKConfigProcessorTest, unitNumberCorrectlySet)
@@ -263,22 +243,16 @@ TEST (RKConfigProcessorTest, unitNumberCorrectlySet)
 		iniProcessor.getSystemConfig ();
 
 	// The first and only device in the configuration should be the RK11-D
-	ASSERT_TRUE (holds_alternative<shared_ptr<RK11DConfig>> (configuration[0]));
+	ASSERT_TRUE (holds_alternative<RK11DConfig> (configuration[0]));
 
-	shared_ptr<RK11DConfig> rk11dConfig =
-		get<shared_ptr<RK11DConfig>> (configuration[0]);
+	auto rk11dConfig = get<RK11DConfig> (configuration[0]);
 
 	// Verify the spin-up time of all four units is correctly defaulted
-	EXPECT_EQ (static_pointer_cast<RK05Config>
-		(rk11dConfig->rk05Config[0])->unitNumber, 0);
-	EXPECT_EQ (static_pointer_cast<RK05Config>
-		(rk11dConfig->rk05Config[1])->unitNumber, 1);
-	EXPECT_EQ (static_pointer_cast<RK05Config>
-		(rk11dConfig->rk05Config[2])->unitNumber, 2);
-	EXPECT_EQ (static_pointer_cast<RK05Config>
-		(rk11dConfig->rk05Config[3])->unitNumber, 3);
+	EXPECT_EQ (rk11dConfig.rk05Config[0]->unitNumber, 0);
+	EXPECT_EQ (rk11dConfig.rk05Config[1]->unitNumber, 1);
+	EXPECT_EQ (rk11dConfig.rk05Config[2]->unitNumber, 2);
+	EXPECT_EQ (rk11dConfig.rk05Config[3]->unitNumber, 3);
 }
-
 
 TEST (RKConfigProcessorTest, unitNumberOutOfRangeThrows)
 {

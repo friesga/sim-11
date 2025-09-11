@@ -22,11 +22,12 @@ void ConsistencyChecker::checkNotBothM9312AndKT24 ()
 {
     auto isM9312 = [] (DeviceConfig device)
         {
-            return holds_alternative<shared_ptr<M9312Config>> (device);
+            return holds_alternative<M9312Config> (device);
         };
+
     auto isKT24 = [] (DeviceConfig device)
         {
-            return holds_alternative<shared_ptr<KT24Config>> (device);
+            return holds_alternative<KT24Config> (device);
         };
 
     if (find_if (systemConfig_, isM9312) != systemConfig_.end () &&

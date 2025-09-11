@@ -152,14 +152,13 @@ TEST (BA11_CConfiguratorTest, cabinetPositionIsCorrect)
 
 	// The only device type in this testset is the BA11-N so if that's
 	// not correct the following tests will fail too.
-	ASSERT_TRUE (holds_alternative<shared_ptr<BA11_CConfig>> (systemConfig[0]));
+	ASSERT_TRUE (holds_alternative<BA11_CConfig> (systemConfig[0]));
 
 	// The device's type is BA11_C so the configuration is a BA11_NConfig object
-	shared_ptr<BA11_CConfig> ba11_cConfig =
-		get<shared_ptr<BA11_CConfig>> (systemConfig[0]);
+	BA11_CConfig ba11_cConfig = get<BA11_CConfig> (systemConfig[0]);
 
-	EXPECT_EQ (ba11_cConfig->cabinetPosition->cabinetNr, 10);
-	EXPECT_EQ (ba11_cConfig->cabinetPosition->height, 20_ru);
+	EXPECT_EQ (ba11_cConfig.cabinetPosition->cabinetNr, 10);
+	EXPECT_EQ (ba11_cConfig.cabinetPosition->height, 20_ru);
 }
 
 TEST (BA11_CConfiguratorTest, incorrectConsoleThrows)
@@ -206,11 +205,10 @@ TEST (BA11_CConfiguratorTest, consoleIsCorrect)
 
 	// The only device type in this testset is the BA11-C so if that's
 	// not correct the following tests will fail too.
-	ASSERT_TRUE (holds_alternative<shared_ptr<BA11_CConfig>> (systemConfig[0]));
+	ASSERT_TRUE (holds_alternative<BA11_CConfig> (systemConfig[0]));
 
 	// The device's type is BA11_C so the configuration is a BA11_CConfig object
-	shared_ptr<BA11_CConfig> ba11_cConfig =
-		get<shared_ptr<BA11_CConfig>> (systemConfig[0]);
+	BA11_CConfig ba11_cConfig = get<BA11_CConfig> (systemConfig[0]);
 
-	EXPECT_EQ (ba11_cConfig->operatorConsole, BA11_CConfig::OperatorConsole::KY11_A);
+	EXPECT_EQ (ba11_cConfig.operatorConsole, BA11_CConfig::OperatorConsole::KY11_A);
 }

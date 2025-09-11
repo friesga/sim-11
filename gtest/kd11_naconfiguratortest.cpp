@@ -23,13 +23,12 @@ TEST (KD11_NAConfiguratorTest, powerUpModeAccepted)
 
 	// The only device type in this testset is the KD11 so if that's
 	// not correct the following tests will fail too.
-	ASSERT_TRUE (holds_alternative<shared_ptr<KD11_NAConfig>> (systemConfig[0]));
+	ASSERT_TRUE (holds_alternative<KD11_NAConfig> (systemConfig[0]));
 
 	// The configuration is a KD11Config object
-	shared_ptr<KD11_NAConfig> kd11_naConfig = 
-		get<shared_ptr<KD11_NAConfig>> (systemConfig[0]);
+	KD11_NAConfig kd11_naConfig = get<KD11_NAConfig> (systemConfig[0]);
 
-	EXPECT_EQ (kd11_naConfig->powerUpMode, KD11Config::PowerUpMode::ODT);
+	EXPECT_EQ (kd11_naConfig.powerUpMode, KD11Config::PowerUpMode::ODT);
 }
 
 TEST (KD11_NAConfiguratorTest, invalidPowerUpModeThrows)

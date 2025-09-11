@@ -4,10 +4,6 @@
 #include "busaddress/busaddress.h"
 
 #include <gtest/gtest.h>
-#include <memory>
-
-using std::shared_ptr;
-using std::make_shared;
 
 TEST (KDF11_UDisplayRegistertest, displayRegisterCanBeWritten)
 {

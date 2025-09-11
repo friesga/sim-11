@@ -26,13 +26,12 @@ TEST (DLV11JConfiguratorTest, breakResponseAccepted)
 
 	// The only device type in this testset is the DLV11-J so if that's
 	// not correct the following tests will fail too.
-	ASSERT_TRUE (holds_alternative<shared_ptr<DLV11JConfig>> (systemConfig[0]));
+	ASSERT_TRUE (holds_alternative<DLV11JConfig> (systemConfig[0]));
 
 	// The device's type is DLV11J so the configuration is a DLV11JConfig object
-	auto dlConfig = 
-		get<shared_ptr<DLV11JConfig>> (systemConfig[0]);
+	auto dlConfig = get<DLV11JConfig> (systemConfig[0]);
 
-	EXPECT_EQ (dlConfig->consoleConfig.breakResponse, ConsoleConfig::BreakResponse::Boot);
+	EXPECT_EQ (dlConfig.consoleConfig.breakResponse, ConsoleConfig::BreakResponse::Boot);
 }
 
 TEST (DLV11JConfiguratorTest, escCharAccepted)
@@ -51,13 +50,12 @@ TEST (DLV11JConfiguratorTest, escCharAccepted)
 
 	// The only device type in this testset is the DLV11-J so if that's
 	// not correct the following tests will fail too.
-	ASSERT_TRUE (holds_alternative<shared_ptr<DLV11JConfig>> (systemConfig[0]));
+	ASSERT_TRUE (holds_alternative<DLV11JConfig> (systemConfig[0]));
 
 	// The device's type is DLV11J so the configuration is a 
-	auto dlConfig = 
-		get<shared_ptr<DLV11JConfig>> (systemConfig[0]);
+	auto dlConfig = get<DLV11JConfig> (systemConfig[0]);
 
-	EXPECT_EQ (dlConfig->consoleConfig.breakKey, 27);
+	EXPECT_EQ (dlConfig.consoleConfig.breakKey, 27);
 }
 
 TEST (DLV11JConfiguratorTest, upperCaseControlCharAccepted)
@@ -76,13 +74,12 @@ TEST (DLV11JConfiguratorTest, upperCaseControlCharAccepted)
 
 	// The only device type in this testset is the DLV11-J so if that's
 	// not correct the following tests will fail too.
-	ASSERT_TRUE (holds_alternative<shared_ptr<DLV11JConfig>> (systemConfig[0]));
+	ASSERT_TRUE (holds_alternative<DLV11JConfig> (systemConfig[0]));
 
 	// The device's type is DLV11J so the configuration is a 
-	auto dlConfig = 
-		get<shared_ptr<DLV11JConfig>> (systemConfig[0]);
+	auto dlConfig = get<DLV11JConfig> (systemConfig[0]);
 
-	EXPECT_EQ (dlConfig->consoleConfig.breakKey, 8);
+	EXPECT_EQ (dlConfig.consoleConfig.breakKey, 8);
 }
 
 TEST (DLV11JConfiguratorTest, lowerCaseControlCharAccepted)
@@ -101,13 +98,12 @@ TEST (DLV11JConfiguratorTest, lowerCaseControlCharAccepted)
 
 	// The only device type in this testset is the DLV11-J so if that's
 	// not correct the following tests will fail too.
-	ASSERT_TRUE (holds_alternative<shared_ptr<DLV11JConfig>> (systemConfig[0]));
+	ASSERT_TRUE (holds_alternative<DLV11JConfig> (systemConfig[0]));
 
 	// The device's type is DLV11J so the configuration is a 
-	auto dlConfig = 
-		get<shared_ptr<DLV11JConfig>> (systemConfig[0]);
+	auto dlConfig = get<DLV11JConfig> (systemConfig[0]);
 
-	EXPECT_EQ (dlConfig->consoleConfig.breakKey, 8);
+	EXPECT_EQ (dlConfig.consoleConfig.breakKey, 8);
 }
 
 TEST (DLV11JConfiguratorTest, invalidBreakResponseThrows)
@@ -203,14 +199,13 @@ TEST (DLV11JConfiguratorTest, baseAddressAndVectorAccepted)
 
 	// The only device type in this testset is the DLV11-J so if that's
 	// not correct the following tests will fail too.
-	ASSERT_TRUE (holds_alternative<shared_ptr<DLV11JConfig>> (systemConfig[0]));
+	ASSERT_TRUE (holds_alternative<DLV11JConfig> (systemConfig[0]));
 
 	// The device's type is DLV11J so the configuration is a 
-	auto dlConfig = 
-		get<shared_ptr<DLV11JConfig>> (systemConfig[0]);
+	auto dlConfig = get<DLV11JConfig> (systemConfig[0]);
 
-	EXPECT_EQ (dlConfig->baseAddress, 0176500);
-	EXPECT_EQ (dlConfig->baseVector, 0300);
+	EXPECT_EQ (dlConfig.baseAddress, 0176500);
+	EXPECT_EQ (dlConfig.baseVector, 0300);
 }
 
 TEST (DLV11JConfiguratorTest, invalidBaseAddressThrows)
@@ -254,13 +249,12 @@ TEST (DLV11JConfiguratorTest, consoleSelectionAccepted)
 
 	// The only device type in this testset is the DLV11-J so if that's
 	// not correct the following tests will fail too.
-	ASSERT_TRUE (holds_alternative<shared_ptr<DLV11JConfig>> (systemConfig[0]));
+	ASSERT_TRUE (holds_alternative<DLV11JConfig> (systemConfig[0]));
 
 	// The device's type is DLV11J so the configuration is a 
-	auto dlConfig = 
-		get<shared_ptr<DLV11JConfig>> (systemConfig[0]);
+	auto dlConfig = get<DLV11JConfig> (systemConfig[0]);
 
-	EXPECT_TRUE (dlConfig->ch3ConsoleEnabled);
+	EXPECT_TRUE (dlConfig.ch3ConsoleEnabled);
 }
 
 TEST (DLV11JConfiguratorTest, consoleEnabledinvalidBaseAddressThrows)
@@ -305,36 +299,35 @@ TEST (DLV11JConfiguratorTest, loopbackOptionAccepted)
 
 	// The only device type in this testset is the DLV11-J so if that's
 	// not correct the following tests will fail too.
-	ASSERT_TRUE (holds_alternative<shared_ptr<DLV11JConfig>> (systemConfig[0]));
+	ASSERT_TRUE (holds_alternative<DLV11JConfig> (systemConfig[0]));
 
 	// The device's type is DLV11J so the configuration is a 
-	auto dlConfig = 
-		get<shared_ptr<DLV11JConfig>> (systemConfig[0]);
+	auto dlConfig = get<DLV11JConfig> (systemConfig[0]);
 
-	EXPECT_TRUE (dlConfig->loopback);
+	EXPECT_TRUE (dlConfig.loopback);
 }
 
 TEST (DLV11JConfiguratorTest, defaultUARTConfigCreated)
 {
-	unique_ptr<DLV11JConfig>dlConfig = make_unique<DLV11JConfig> ();
+	DLV11JConfig dlConfig {};
 
-	EXPECT_EQ (dlConfig->baseAddress, 0176500);
-	EXPECT_EQ (dlConfig->baseVector, 0300);
+	EXPECT_EQ (dlConfig.baseAddress, 0176500);
+	EXPECT_EQ (dlConfig.baseVector, 0300);
 
 	// The configuration should contain four UARTConfig objects with the
 	// correct base address and vector
-	EXPECT_EQ (dlConfig->uarts.size (), 4);
-	EXPECT_EQ (dlConfig->uarts[0].baseAddress_, 0176500);
-	EXPECT_EQ (dlConfig->uarts[0].baseVector_, 0300);
+	EXPECT_EQ (dlConfig.uarts.size (), 4);
+	EXPECT_EQ (dlConfig.uarts[0].baseAddress_, 0176500);
+	EXPECT_EQ (dlConfig.uarts[0].baseVector_, 0300);
 
-	EXPECT_EQ (dlConfig->uarts[1].baseAddress_, 0176510);
-	EXPECT_EQ (dlConfig->uarts[1].baseVector_, 0310);
+	EXPECT_EQ (dlConfig.uarts[1].baseAddress_, 0176510);
+	EXPECT_EQ (dlConfig.uarts[1].baseVector_, 0310);
 
-	EXPECT_EQ (dlConfig->uarts[2].baseAddress_, 0176520);
-	EXPECT_EQ (dlConfig->uarts[2].baseVector_, 0320);
+	EXPECT_EQ (dlConfig.uarts[2].baseAddress_, 0176520);
+	EXPECT_EQ (dlConfig.uarts[2].baseVector_, 0320);
 
-	EXPECT_EQ (dlConfig->uarts[3].baseAddress_, 0177560);
-	EXPECT_EQ (dlConfig->uarts[3].baseVector_, 060);
+	EXPECT_EQ (dlConfig.uarts[3].baseAddress_, 0177560);
+	EXPECT_EQ (dlConfig.uarts[3].baseVector_, 060);
 }
 
 TEST (DLV11JConfiguratorTest, uartConfigCreated)
@@ -355,29 +348,28 @@ TEST (DLV11JConfiguratorTest, uartConfigCreated)
 
 	// The only device type in this testset is the DLV11-J so if that's
 	// not correct the following tests will fail too.
-	ASSERT_TRUE (holds_alternative<shared_ptr<DLV11JConfig>> (systemConfig[0]));
+	ASSERT_TRUE (holds_alternative<DLV11JConfig> (systemConfig[0]));
 
 	// The device's type is DLV11J so the configuration is a 
-	auto dlConfig = 
-		get<shared_ptr<DLV11JConfig>> (systemConfig[0]);
+	auto dlConfig = get<DLV11JConfig> (systemConfig[0]);
 
-	EXPECT_EQ (dlConfig->baseAddress, 0176500);
-	EXPECT_EQ (dlConfig->baseVector, 0300);
+	EXPECT_EQ (dlConfig.baseAddress, 0176500);
+	EXPECT_EQ (dlConfig.baseVector, 0300);
 
 	// The configuration should contain four UARTConfig objects with the
 	// correct base address and vector
-	EXPECT_EQ (dlConfig->uarts.size (), 4);
-	EXPECT_EQ (dlConfig->uarts[0].baseAddress_, 0176500);
-	EXPECT_EQ (dlConfig->uarts[0].baseVector_, 0300);
+	EXPECT_EQ (dlConfig.uarts.size (), 4);
+	EXPECT_EQ (dlConfig.uarts[0].baseAddress_, 0176500);
+	EXPECT_EQ (dlConfig.uarts[0].baseVector_, 0300);
 
-	EXPECT_EQ (dlConfig->uarts[1].baseAddress_, 0176510);
-	EXPECT_EQ (dlConfig->uarts[1].baseVector_, 0310);
+	EXPECT_EQ (dlConfig.uarts[1].baseAddress_, 0176510);
+	EXPECT_EQ (dlConfig.uarts[1].baseVector_, 0310);
 
-	EXPECT_EQ (dlConfig->uarts[2].baseAddress_, 0176520);
-	EXPECT_EQ (dlConfig->uarts[2].baseVector_, 0320);
+	EXPECT_EQ (dlConfig.uarts[2].baseAddress_, 0176520);
+	EXPECT_EQ (dlConfig.uarts[2].baseVector_, 0320);
 
-	EXPECT_EQ (dlConfig->uarts[3].baseAddress_, 0176530);
-	EXPECT_EQ (dlConfig->uarts[3].baseVector_, 0330);
+	EXPECT_EQ (dlConfig.uarts[3].baseAddress_, 0176530);
+	EXPECT_EQ (dlConfig.uarts[3].baseVector_, 0330);
 }
 
 TEST (DLV11JConfiguratorTest, consoleUARTConfigCreated)
@@ -398,29 +390,28 @@ TEST (DLV11JConfiguratorTest, consoleUARTConfigCreated)
 
 	// The only device type in this testset is the DLV11-J so if that's
 	// not correct the following tests will fail too.
-	ASSERT_TRUE (holds_alternative<shared_ptr<DLV11JConfig>> (systemConfig[0]));
+	ASSERT_TRUE (holds_alternative<DLV11JConfig> (systemConfig[0]));
 
 	// The device's type is DLV11J so the configuration is a 
-	auto dlConfig = 
-		get<shared_ptr<DLV11JConfig>> (systemConfig[0]);
+	auto dlConfig = get<DLV11JConfig> (systemConfig[0]);
 
-	EXPECT_EQ (dlConfig->baseAddress, 0176500);
-	EXPECT_EQ (dlConfig->baseVector, 0300);
+	EXPECT_EQ (dlConfig.baseAddress, 0176500);
+	EXPECT_EQ (dlConfig.baseVector, 0300);
 
 	// The configuration should contain four UARTConfig objects with the
 	// correct base address and vector
-	EXPECT_EQ (dlConfig->uarts.size (), 4);
-	EXPECT_EQ (dlConfig->uarts[0].baseAddress_, 0176500);
-	EXPECT_EQ (dlConfig->uarts[0].baseVector_, 0300);
+	EXPECT_EQ (dlConfig.uarts.size (), 4);
+	EXPECT_EQ (dlConfig.uarts[0].baseAddress_, 0176500);
+	EXPECT_EQ (dlConfig.uarts[0].baseVector_, 0300);
 
-	EXPECT_EQ (dlConfig->uarts[1].baseAddress_, 0176510);
-	EXPECT_EQ (dlConfig->uarts[1].baseVector_, 0310);
+	EXPECT_EQ (dlConfig.uarts[1].baseAddress_, 0176510);
+	EXPECT_EQ (dlConfig.uarts[1].baseVector_, 0310);
 
-	EXPECT_EQ (dlConfig->uarts[2].baseAddress_, 0176520);
-	EXPECT_EQ (dlConfig->uarts[2].baseVector_, 0320);
+	EXPECT_EQ (dlConfig.uarts[2].baseAddress_, 0176520);
+	EXPECT_EQ (dlConfig.uarts[2].baseVector_, 0320);
 
-	EXPECT_EQ (dlConfig->uarts[3].baseAddress_, 0177560);
-	EXPECT_EQ (dlConfig->uarts[3].baseVector_, 060);
+	EXPECT_EQ (dlConfig.uarts[3].baseAddress_, 0177560);
+	EXPECT_EQ (dlConfig.uarts[3].baseVector_, 060);
 }
 
 TEST (DLV11JConfiguratorTest, alternativeBaseAddressConfigCreated)
@@ -441,27 +432,26 @@ TEST (DLV11JConfiguratorTest, alternativeBaseAddressConfigCreated)
 
 	// The only device type in this testset is the DLV11-J so if that's
 	// not correct the following tests will fail too.
-	ASSERT_TRUE (holds_alternative<shared_ptr<DLV11JConfig>> (systemConfig[0]));
+	ASSERT_TRUE (holds_alternative<DLV11JConfig> (systemConfig[0]));
 
 	// The device's type is DLV11J so the configuration is a 
-	auto dlConfig = 
-		get<shared_ptr<DLV11JConfig>> (systemConfig[0]);
+	auto dlConfig = get<DLV11JConfig> (systemConfig[0]);
 
-	EXPECT_EQ (dlConfig->baseAddress, 0176540);
-	EXPECT_EQ (dlConfig->baseVector, 0200);
+	EXPECT_EQ (dlConfig.baseAddress, 0176540);
+	EXPECT_EQ (dlConfig.baseVector, 0200);
 
 	// The configuration should contain four UARTConfig objects with the
 	// correct base address and vector
-	EXPECT_EQ (dlConfig->uarts.size (), 4);
-	EXPECT_EQ (dlConfig->uarts[0].baseAddress_, 0176540);
-	EXPECT_EQ (dlConfig->uarts[0].baseVector_, 0200);
+	EXPECT_EQ (dlConfig.uarts.size (), 4);
+	EXPECT_EQ (dlConfig.uarts[0].baseAddress_, 0176540);
+	EXPECT_EQ (dlConfig.uarts[0].baseVector_, 0200);
 
-	EXPECT_EQ (dlConfig->uarts[1].baseAddress_, 0176550);
-	EXPECT_EQ (dlConfig->uarts[1].baseVector_, 0210);
+	EXPECT_EQ (dlConfig.uarts[1].baseAddress_, 0176550);
+	EXPECT_EQ (dlConfig.uarts[1].baseVector_, 0210);
 
-	EXPECT_EQ (dlConfig->uarts[2].baseAddress_, 0176560);
-	EXPECT_EQ (dlConfig->uarts[2].baseVector_, 0220);
+	EXPECT_EQ (dlConfig.uarts[2].baseAddress_, 0176560);
+	EXPECT_EQ (dlConfig.uarts[2].baseVector_, 0220);
 
-	EXPECT_EQ (dlConfig->uarts[3].baseAddress_, 0176570);
-	EXPECT_EQ (dlConfig->uarts[3].baseVector_, 0230);
+	EXPECT_EQ (dlConfig.uarts[3].baseAddress_, 0176570);
+	EXPECT_EQ (dlConfig.uarts[3].baseVector_, 0230);
 }

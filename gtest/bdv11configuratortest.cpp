@@ -25,17 +25,16 @@ TEST (BDV11ConfiguratorTest, optionsAccepted)
 
 	// The only device type in this testset is the DLV11-J so if that's
 	// not correct the following tests will fail too.
-	ASSERT_TRUE (holds_alternative<shared_ptr<BDV11Config>> (systemConfig[0]));
+	ASSERT_TRUE (holds_alternative<BDV11Config> (systemConfig[0]));
 
 	// The device's type is BDV11 so the configuration is a BDV11Config object
-	shared_ptr<BDV11Config> bdv11Config = 
-		get<shared_ptr<BDV11Config>> (systemConfig[0]);
+	BDV11Config bdv11Config = get<BDV11Config> (systemConfig[0]);
 
-	EXPECT_TRUE (bdv11Config->cpuTests);
-	EXPECT_TRUE (bdv11Config->memoryTests);
-	EXPECT_TRUE (bdv11Config->decnetBoot);
-	EXPECT_TRUE (bdv11Config->consoleDialog);
-	EXPECT_EQ (bdv11Config->bootDevice, BDV11Config::BootDevice::RK05);
+	EXPECT_TRUE (bdv11Config.cpuTests);
+	EXPECT_TRUE (bdv11Config.memoryTests);
+	EXPECT_TRUE (bdv11Config.decnetBoot);
+	EXPECT_TRUE (bdv11Config.consoleDialog);
+	EXPECT_EQ (bdv11Config.bootDevice, BDV11Config::BootDevice::RK05);
 }
 
 TEST (BDV11ConfiguratorTest, invalidBootDeviceThrows)
@@ -78,17 +77,16 @@ TEST (BDV11ConfiguratorTest, defaultsOk)
 
 	// The only device type in this testset is the DLV11-J so if that's
 	// not correct the following tests will fail too.
-	ASSERT_TRUE (holds_alternative<shared_ptr<BDV11Config>> (systemConfig[0]));
+	ASSERT_TRUE (holds_alternative<BDV11Config> (systemConfig[0]));
 
 	// The device's type is BDV11 so the configuration is a BDV11Config object
-	shared_ptr<BDV11Config> bdv11Config = 
-		get<shared_ptr<BDV11Config>> (systemConfig[0]);
+	BDV11Config bdv11Config = get<BDV11Config> (systemConfig[0]);
 
-	EXPECT_TRUE (bdv11Config->cpuTests);
-	EXPECT_TRUE (bdv11Config->memoryTests);
-	EXPECT_FALSE (bdv11Config->decnetBoot);
-	EXPECT_TRUE (bdv11Config->consoleDialog);
-	EXPECT_EQ (bdv11Config->bootDevice, BDV11Config::BootDevice::RX02);
+	EXPECT_TRUE (bdv11Config.cpuTests);
+	EXPECT_TRUE (bdv11Config.memoryTests);
+	EXPECT_FALSE (bdv11Config.decnetBoot);
+	EXPECT_TRUE (bdv11Config.consoleDialog);
+	EXPECT_EQ (bdv11Config.bootDevice, BDV11Config::BootDevice::RX02);
 }
 
 TEST (BDV11ConfiguratorTest, bootROMAccepted)
@@ -107,13 +105,12 @@ TEST (BDV11ConfiguratorTest, bootROMAccepted)
 
 	// The only device type in this testset is the DLV11-J so if that's
 	// not correct the following tests will fail too.
-	ASSERT_TRUE (holds_alternative<shared_ptr<BDV11Config>> (systemConfig[0]));
+	ASSERT_TRUE (holds_alternative<BDV11Config> (systemConfig[0]));
 
 	// The device's type is BDV11 so the configuration is a BDV11Config object
-	shared_ptr<BDV11Config> bdv11Config = 
-		get<shared_ptr<BDV11Config>> (systemConfig[0]);
+	BDV11Config bdv11Config = get<BDV11Config> (systemConfig[0]);
 
-	EXPECT_EQ (bdv11Config->bootROM, BDV11Config::BootROM::KDF11_BA);
+	EXPECT_EQ (bdv11Config.bootROM, BDV11Config::BootROM::KDF11_BA);
 }
 
 TEST (BDV11ConfiguratorTest, invalidBootROMThrows)
