@@ -39,8 +39,7 @@ class RXV21UnitProcessor : public UnitConfigProcessor
 	void processOverwrite (iniparser::Value value);
 
 public:
-	shared_ptr<RXV21UnitConfig> getConfig ();
+	RXV21UnitConfig getConfig ();
 };
-
 
 #endif // _RXV21UNITPROCESSOR_H_

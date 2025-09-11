@@ -59,7 +59,7 @@ void RXV21UnitProcessor::checkConsistency ()
 void RXV21UnitProcessor::processSubsection (iniparser::Section *subSection)
 {}
 
-shared_ptr<RXV21UnitConfig> RXV21UnitProcessor::getConfig ()
+RXV21UnitConfig RXV21UnitProcessor::getConfig ()
 {
-	return make_shared<RXV21UnitConfig> (rxv21UnitConfig);
+	return rxv21UnitConfig;
 }

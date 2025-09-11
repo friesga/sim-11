@@ -53,7 +53,7 @@ RXV21::RXV21 (Bus *bus, const RXV21Config& rxConfig)
 	// if (rxConfig->rxv21UnitConfig[0] != nullptr &&
 	//	!static_pointer_cast<RXV21UnitConfig> 
 	// 		(rxConfig->rxv21UnitConfig[0])->fileName.empty ())
-	if (rxConfig.rxv21UnitConfig[0] != nullptr &&
+	if (rxConfig.rxv21UnitConfig[0].has_value () &&
 		!rxConfig.rxv21UnitConfig[0]->fileName.empty ())
 	{
 		FILE* floppy_file = 

@@ -62,7 +62,7 @@ void RXV21Processor::processSubsection (iniparser::Section *subSection)
 
 	// Check that the configuration for this unit has not already been
 	// specified.
-	if (rxConfig.rxv21UnitConfig[unitNumber] != nullptr)
+	if (rxConfig.rxv21UnitConfig[unitNumber].has_value ())
 		throw std::invalid_argument {"Double specification for RXV21 subsection: " + 
 			subSection->name()};
 
@@ -70,8 +70,7 @@ void RXV21Processor::processSubsection (iniparser::Section *subSection)
 	rxv21UnitProcessor.processSection (subSection);
 
 	// Add the unit configuration to the RXV21 device configuration
-	rxConfig.rxv21UnitConfig[unitNumber] = 
-		rxv21UnitProcessor.getConfig ();
+	rxConfig.rxv21UnitConfig[unitNumber] = rxv21UnitProcessor.getConfig ();
 }
 
 DeviceConfig RXV21Processor::getConfig ()
