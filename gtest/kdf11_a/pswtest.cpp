@@ -7,9 +7,7 @@
 #include "configdata/kdf11/kdf11_a/kdf11_aconfig/kdf11_aconfig.h"
 
 #include <gtest/gtest.h>
-#include <memory>
 
-using std::make_shared;
 using std::visit;
 
 class KDF11_A_PSWTEST : public ::testing::Test

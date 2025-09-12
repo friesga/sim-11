@@ -1,9 +1,6 @@
 #include "cabinet/cabinet.h"
 
 #include <gtest/gtest.h>
-#include <memory>
-
-using std::make_shared;
 
 TEST (CabinetTest, verifyCabinetIsEmpty)
 {

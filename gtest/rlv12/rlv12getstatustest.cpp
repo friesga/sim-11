@@ -4,9 +4,6 @@
 #include "cmdlineoptions/cmdlineoptions.h"
 
 #include <gtest/gtest.h>
-#include <memory>
-
-using std::make_shared;
 
 // Write to unit tests.
 

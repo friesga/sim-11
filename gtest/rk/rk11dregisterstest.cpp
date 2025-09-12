@@ -4,10 +4,8 @@
 #include "chrono/simulatorclock/simulatorclock.h"
 
 #include <gtest/gtest.h>
-#include <memory>
 #include <chrono>
 
-using std::make_shared;
 using std::chrono_literals::operator""ms;
 
 // Definition of the test fixture

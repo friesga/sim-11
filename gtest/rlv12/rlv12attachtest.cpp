@@ -4,9 +4,6 @@
 #include "diskdrive/attachflags.h"
 
 #include <gtest/gtest.h>
-#include <memory>
-
-using std::make_shared;
 
 // Attach file to unit tests.
 // 

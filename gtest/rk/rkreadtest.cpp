@@ -6,10 +6,7 @@
 #include "chrono/simulatorclock/simulatorclock.h"
 
 #include <gtest/gtest.h>
-#include <memory>
 #include <chrono>
-
-using std::make_shared;
 
 using namespace std::chrono_literals;
 
