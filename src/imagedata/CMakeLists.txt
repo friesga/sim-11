@@ -1,7 +1,7 @@
 set (IMAGEDATA_SRCS
-    openraster/openraster.cpp
-    openraster/parsestackxml.cpp
-    openraster/readfiledata.cpp
+    openrasterfile/openrasterfile.cpp
+    openrasterfile/parsestackxml.cpp
+    openrasterfile/readfiledata.cpp
     png/png.cpp)
 
 target_sources (${TARGET} PRIVATE ${IMAGEDATA_SRCS})

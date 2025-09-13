@@ -1,4 +1,4 @@
-#include "openraster.h"
+#include "openrasterfile.h"
 
 #include <iostream>
 #include <fstream>

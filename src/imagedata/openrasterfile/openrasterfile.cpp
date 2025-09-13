@@ -1,4 +1,4 @@
-#include "openraster.h"
+#include "openrasterfile.h"
 #include "imagedata/zipfilereader/zipfile_reader.h"
 #include "imagedata/png/png.h"
 

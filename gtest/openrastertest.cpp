@@ -1,4 +1,4 @@
-#include "imagedata/openraster/openraster.h"
+#include "imagedata/openrasterfile/openrasterfile.h"
 #include "imagedata/png/png.h"
 
 #include <gtest/gtest.h>
