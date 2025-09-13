@@ -3,7 +3,7 @@
 
 #include "bus/include/bus.h"
 #include "panel.h"
-#include "configdata/ba11cconfig/ba11cconfig.h"
+#include "configdata/ba11/ba11c/ba11cconfig/ba11cconfig.h"
 
 #include <thread>
 #include <string>

@@ -1,7 +1,7 @@
 #include "configdata/systemconfig/systemconfig.h"
 #include "configdata/iniprocessor/iniprocessor.h"
 #include "configdata/deviceconfig/deviceconfig.h"
-#include "configdata/ba11lconfig/ba11lconfig.h"
+#include "configdata/ba11/ba11l/ba11lconfig/ba11lconfig.h"
 
 #include <fstream>	
 #include <gtest/gtest.h>

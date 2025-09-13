@@ -9,12 +9,6 @@ set (CONFIGURATOR_SRCS
     rl/rlv12processor/rlv12processor.cpp
     rxv21/rxv21processor/rxv21processor.cpp
     rxv21/rxv21unitprocessor/rxv21unitprocessor.cpp
-    ba11cconfig/ba11cconfig.cpp
-    ba11lconfig/ba11lconfig.cpp
-    ba11nconfig/ba11nconfig.cpp
-    ba11cprocessor/ba11cprocessor.cpp
-    ba11lprocessor/ba11lprocessor.cpp
-    ba11nprocessor/ba11nprocessor.cpp
     bdv11processor/bdv11processor.cpp
     serialconfig/dlv11jconfig/dlv11jconfig.cpp 
     serialconfig/uartconfig/uartconfig.cpp
@@ -46,3 +40,5 @@ set (CONFIGURATOR_SRCS
 
 target_sources (${TARGET} PRIVATE ${CONFIGURATOR_SRCS})
 target_sources (sim-11-test PRIVATE ${CONFIGURATOR_SRCS})
+
+add_subdirectory (ba11)

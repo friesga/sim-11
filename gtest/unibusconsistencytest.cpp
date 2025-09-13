@@ -2,8 +2,8 @@
 #include "configdata/systemconfig/systemconfig.h"
 #include "configdata/deviceconfig/deviceconfig.h"
 #include "configdata/consistencychecker/consistencychecker.h"
-#include "configdata/ba11nconfig/ba11nconfig.h"
-#include "configdata/ba11lconfig/ba11lconfig.h"
+#include "configdata/ba11/ba11n/ba11nconfig/ba11nconfig.h"
+#include "configdata/ba11/ba11l/ba11lconfig/ba11lconfig.h"
 
 #include <fstream>	
 #include <gtest/gtest.h>

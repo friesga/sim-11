@@ -1,6 +1,6 @@
 #include "ba11cprocessor.h"
-#include "../ba11cconfig/ba11cconfig.h"
-#include "../cabinetprocessor/cabinetprocessor.h"
+#include "configdata/ba11/ba11c/ba11cconfig/ba11cconfig.h"
+#include "configdata/cabinetprocessor/cabinetprocessor.h"
 
 using std::make_unique;
 using std::move;

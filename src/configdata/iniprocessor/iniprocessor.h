@@ -6,7 +6,7 @@
 #include "configdata/systemconfig/systemconfig.h"
 #include "../sectionprocessor/deviceconfigprocessor.h"
 #include "configdata/msv11config/msv11config.h"
-#include "../ba11nprocessor/ba11nprocessor.h"
+#include "configdata/ba11/ba11n/ba11nprocessor/ba11nprocessor.h"
 #include "configdata/kt24/kt24processor/kt24processor.h"
 #include "configdata/m9312/m9312processor/m9312processor.h"
 #include "configdata/rk/rk11d/rk11dprocessor/rk11dprocessor.h"
@@ -22,8 +22,8 @@
 #include "../kdf11/kdf11_b/kdf11_bprocessor/kdf11_bprocessor.h"
 #include "../kdf11/kdf11_u/kdf11_uprocessor/kdf11_uprocessor.h"
 #include "../ms11pprocessor/ms11pprocessor.h"
-#include "../ba11lprocessor/ba11lprocessor.h"
-#include "../ba11cprocessor/ba11cprocessor.h"
+#include "configdata/ba11/ba11l/ba11lprocessor/ba11lprocessor.h"
+#include "configdata/ba11/ba11c/ba11cprocessor/ba11cprocessor.h"
 
 #include <map>
 #include <string>

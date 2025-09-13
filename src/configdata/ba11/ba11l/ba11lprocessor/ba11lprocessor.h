@@ -1,8 +1,8 @@
 #ifndef _BA11LPROCESSOR_H_
 #define _BA11LPROCESSOR_H_
 
-#include "../sectionprocessor/deviceconfigprocessor.h"
-#include "../ba11lconfig/ba11lconfig.h"
+#include "configdata/sectionprocessor/deviceconfigprocessor.h"
+#include "configdata/ba11/ba11l/ba11lconfig/ba11lconfig.h"
 
 #include <map>
 #include <string>

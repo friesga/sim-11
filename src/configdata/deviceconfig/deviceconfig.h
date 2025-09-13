@@ -1,9 +1,9 @@
 #ifndef _DEVICECONFIGVARIANT_H_
 #define _DEVICECONFIGVARIANT_H_
 
-#include "configdata/ba11cconfig/ba11cconfig.h"
-#include "configdata/ba11lconfig/ba11lconfig.h"
-#include "configdata/ba11nconfig/ba11nconfig.h"
+#include "configdata/ba11/ba11c/ba11cconfig/ba11cconfig.h"
+#include "configdata/ba11/ba11l/ba11lconfig/ba11lconfig.h"
+#include "configdata/ba11/ba11n/ba11nconfig/ba11nconfig.h"
 #include "configdata/bdv11config/bdv11config.h"
 #include "configdata/kd11_naconfig/kd11_naconfig.h"
 #include "configdata/kdf11/kdf11_a/kdf11_aconfig/kdf11_aconfig.h"
