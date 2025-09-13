@@ -8,7 +8,7 @@
 #include <fstream>	
 #include <gtest/gtest.h>
 
-// Verify that not both a BA11-L and a BA11-N are configured
+// Verify that not both a BA11-L and a BA11-N can be configured
 TEST (BA11ConsistencyTest, justOneBA11Configured)
 {
 	iniparser::File ft;
@@ -61,7 +61,7 @@ TEST (BA11ConsistencyTest, eitherBA11LOrBA11NConfigured)
 	catch (std::invalid_argument const& except)
 	{
 		EXPECT_STREQ (except.what (),
-			"No BA11 specified, specify either BA11-N or BA11-L");
+			"No BA11 specified, specify a BA11-C, BA11-N or BA11-L");
 	}
 	catch (...)
 	{

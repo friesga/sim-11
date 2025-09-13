@@ -35,12 +35,16 @@ void ConsistencyChecker::checkEitherBA11_NOrBA11_L ()
         throw invalid_argument {"Double BA11 specification, specify either BA11-N or BA11-L"};
 }
 
-// Check that a BA11-L or a BA11-N is specified
+// Check that just one BA11, i.e. a BA11-C, a BA11-L or a BA11-N is specified.
 void ConsistencyChecker::checkOneBA11 ()
 {
-    if (count_if (systemConfig_, &ConsistencyChecker::findDevice<BA11_NConfig>) == 0 &&
-        count_if (systemConfig_, &ConsistencyChecker::findDevice<BA11_LConfig>) == 0)
-        throw invalid_argument {"No BA11 specified, specify either BA11-N or BA11-L"};
+    size_t numBA11s = 
+        count_if (systemConfig_, &ConsistencyChecker::findDevice<BA11_NConfig>) +
+        count_if (systemConfig_, &ConsistencyChecker::findDevice<BA11_LConfig>) +
+        count_if (systemConfig_, &ConsistencyChecker::findDevice<BA11_CConfig>);
+
+    if (numBA11s == 0)
+        throw invalid_argument {"No BA11 specified, specify a BA11-C, BA11-N or BA11-L"};
 }
 
 // Check that a Qbus system does not contain a Unibus device and vice versa
