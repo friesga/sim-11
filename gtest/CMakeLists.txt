@@ -20,10 +20,10 @@ set (GTEST_SRCS
     configprocessortest.cpp
     consoleconsistencytest.cpp
     cabinetconsistencytest.cpp
-    ba11_nconfiguratortest.cpp
-    ba11cconfiguratortest.cpp
-    ba11lconfiguratortest.cpp
-    ba11consistencytest.cpp
+    ba11/ba11_nconfiguratortest.cpp
+    ba11/ba11cconfiguratortest.cpp
+    ba11/ba11lconfiguratortest.cpp
+    ba11/ba11consistencytest.cpp
     unibusconsistencytest.cpp
     bdv11configuratortest.cpp
     dlv11configuratortest.cpp
