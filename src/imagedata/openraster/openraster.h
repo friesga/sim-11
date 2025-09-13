@@ -27,11 +27,11 @@ using ImageMetaData::Metadata;
 // files plus an XML file (stack.xml) describing the layers and other metadata.
 // See https://www.openraster.org/baseline/file-layout-spec.html for details.
 //
-class OpenRaster
+class OpenRasterFile
 {
 public:
-    OpenRaster (vector<unsigned char> buffer);
-    OpenRaster (const string& fileName);
+    OpenRasterFile (vector<unsigned char> buffer);
+    OpenRasterFile (const string& fileName);
     Dimensions imageDimensions ();
     string getFileName (string layerName);
     PNG readPNGFile (string fileName);

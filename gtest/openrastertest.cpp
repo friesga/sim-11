@@ -4496,30 +4496,30 @@ vector <unsigned char> oraData =
 
 TEST (OpenRasterTest, openErrorThrows)
 {
-    EXPECT_THROW (OpenRaster ora ("non-existing file"),
+    EXPECT_THROW (OpenRasterFile oraFile ("non-existing file"),
         std::filesystem::filesystem_error);
 }
 
 TEST (OpenRasterTest, imageDimensionsAreCorrect)
 {
-    OpenRaster ora (oraData);
-    ImageMetaData::Dimensions dim = ora.imageDimensions ();
+    OpenRasterFile oraFile (oraData);
+    ImageMetaData::Dimensions dim = oraFile.imageDimensions ();
     EXPECT_EQ (dim.width, 2710);
     EXPECT_EQ (dim.height, 1250);
 }
 
 TEST (OpenRasterTest, fileNameCanBeRetrieved)
 {
-    OpenRaster ora (oraData);
-    EXPECT_STREQ (ora.getFileName ("keyswitch lock").c_str (),  "data/000.png");
-    EXPECT_STREQ (ora.getFileName ("keyswitch power").c_str (), "data/001.png");
-    EXPECT_STREQ (ora.getFileName ("keyswitch off").c_str (),   "data/002.png");
+    OpenRasterFile oraFile (oraData);
+    EXPECT_STREQ (oraFile.getFileName ("keyswitch lock").c_str (),  "data/000.png");
+    EXPECT_STREQ (oraFile.getFileName ("keyswitch power").c_str (), "data/001.png");
+    EXPECT_STREQ (oraFile.getFileName ("keyswitch off").c_str (),   "data/002.png");
 }
 
 TEST (OpenRasterTest, pngDataCanBeRetrievedByFileName)
 {
-    OpenRaster ora (oraData);
-    PNG png = ora.readPNGFile ("data/000.png");
+    OpenRasterFile oraFile (oraData);
+    PNG png = oraFile.readPNGFile ("data/000.png");
 
     EXPECT_EQ (png.data ()[0], 0x89);
 }
@@ -4527,22 +4527,22 @@ TEST (OpenRasterTest, pngDataCanBeRetrievedByFileName)
 
 TEST (OpenRasterTest, pngDataCanBeRetrievedByLayerName)
 {
-    OpenRaster ora (oraData);
-    PNG png = ora.readPNGFile (ora.getFileName ("keyswitch lock"));
+    OpenRasterFile oraFile (oraData);
+    PNG png = oraFile.readPNGFile (oraFile.getFileName ("keyswitch lock"));
 
     EXPECT_EQ (png.data ()[0], 0x89);
 }
 
 TEST (OpenRasterTest, layerMetadataCanBeRetrieved)
 {
-    OpenRaster ora (oraData);
-    ImageMetaData::Layer metadata = ora.getLayerMetadata ("keyswitch lock");
+    OpenRasterFile oraFile (oraData);
+    ImageMetaData::Layer metadata = oraFile.getLayerMetadata ("keyswitch lock");
     EXPECT_EQ (metadata.position.x, 253);
     EXPECT_EQ (metadata.position.y, 917);
     EXPECT_EQ (metadata.dimensions.width, 118);
     EXPECT_EQ (metadata.dimensions.height, 116);
 
-    metadata = ora.getLayerMetadata ("keyswitch power");
+    metadata = oraFile.getLayerMetadata ("keyswitch power");
     EXPECT_EQ (metadata.position.x, 252);
     EXPECT_EQ (metadata.position.y, 911);
     EXPECT_EQ (metadata.dimensions.width, 115);

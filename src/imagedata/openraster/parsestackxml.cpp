@@ -13,7 +13,7 @@ using std::stoi;
 // checks its contents for image and layer tags. From these tags it extracts
 // the relevant attributes and fills the Metadata structure.
 //
-ImageMetaData::Metadata OpenRaster::parseStackXML ()
+ImageMetaData::Metadata OpenRasterFile::parseStackXML ()
 {
     vector<uint8_t> data = zipReader_->read ("stack.xml");
     string text {reinterpret_cast<char*> (data.data ())};
@@ -35,7 +35,7 @@ ImageMetaData::Metadata OpenRaster::parseStackXML ()
     return metadata;
 }
 
-ImageMetaData::Dimensions OpenRaster::extractImageDimensions (const string& line)
+ImageMetaData::Dimensions OpenRasterFile::extractImageDimensions (const string& line)
 {
     Dimensions imageDimensions {0, 0};
 
@@ -45,7 +45,7 @@ ImageMetaData::Dimensions OpenRaster::extractImageDimensions (const string& line
     return imageDimensions;
 }
 
-ImageMetaData::Layer OpenRaster::extractLayer (const string& line)
+ImageMetaData::Layer OpenRasterFile::extractLayer (const string& line)
 {
     Layer layer {};
     
@@ -57,7 +57,7 @@ ImageMetaData::Layer OpenRaster::extractLayer (const string& line)
     return layer;
 }
 
-string OpenRaster::extractAttribute (const string& attributeName, const string& line)
+string OpenRasterFile::extractAttribute (const string& attributeName, const string& line)
 {
     auto pos = line.find (attributeName);
     if (pos != std::string::npos)

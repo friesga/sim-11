@@ -7,7 +7,10 @@
 
 using std::make_unique;
 
-OpenRaster::OpenRaster (vector<unsigned char> buffer)
+// This constructor is used by the unit tests to open an OpenRaster
+// file stored in a byte array.
+//
+OpenRasterFile::OpenRasterFile (vector<unsigned char> buffer)
     :
     buffer_ {buffer}
 {
@@ -26,18 +29,18 @@ OpenRaster::OpenRaster (vector<unsigned char> buffer)
 // will throw a std::filesystem::filesystem_error if the file doesn't
 // exist or cannot be read.
 //
-OpenRaster::OpenRaster (const string& fileName)
+OpenRasterFile::OpenRasterFile (const string& fileName)
     :
-    OpenRaster (readFileData (fileName))
+    OpenRasterFile (readFileData (fileName))
 {}
 
-ImageMetaData::Dimensions OpenRaster::imageDimensions ()
+ImageMetaData::Dimensions OpenRasterFile::imageDimensions ()
 {
     return metadata_.imageDimensions;
 }
 
 // This function gets the the file name from the given layer name.
-string OpenRaster::getFileName (string layerName)
+string OpenRasterFile::getFileName (string layerName)
 {
     // Disclaimer: we could use std::find_if here, but that doesn't make
     // the code any clearer, so we use a simple for-loop instead.
@@ -48,7 +51,7 @@ string OpenRaster::getFileName (string layerName)
     return "";
 }
 
-PNG OpenRaster::readPNGFile (string fileName)
+PNG OpenRasterFile::readPNGFile (string fileName)
 {
     return PNG {zipReader_->read (fileName)};
 }
@@ -56,7 +59,7 @@ PNG OpenRaster::readPNGFile (string fileName)
 // This functions returns the dimensions of a PNG file in the ORA data,
 // given its filename. The functions reads the PNG file from the zip-file
 // and extracts the width and height from the PNG header.
-ImageMetaData::Dimensions OpenRaster::getLayerDimensions (string fileName)
+ImageMetaData::Dimensions OpenRasterFile::getLayerDimensions (string fileName)
 {
     PNG png {zipReader_->read (fileName)};
     
@@ -69,7 +72,7 @@ ImageMetaData::Dimensions OpenRaster::getLayerDimensions (string fileName)
     return png.dimensions ();
 }
 
-ImageMetaData::Layer OpenRaster::getLayerMetadata (string layerName)
+ImageMetaData::Layer OpenRasterFile::getLayerMetadata (string layerName)
 {
     for (auto layer : metadata_.layers)
         if (layer.name == layerName)

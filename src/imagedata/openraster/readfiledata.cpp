@@ -13,7 +13,7 @@ using std::ifstream;
 // The function file_size will thrown an exception if the file with the
 // given name does not exist.
 //
-vector<unsigned char> OpenRaster::readFileData (const string& name)
+vector<unsigned char> OpenRasterFile::readFileData (const string& name)
 {
     path inputFilePath {name};
     auto length = file_size (inputFilePath);

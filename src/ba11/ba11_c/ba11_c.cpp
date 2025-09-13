@@ -15,5 +15,6 @@ BA11_C::BA11_C (Bus* bus, Window* window, const BA11_CConfig& ba11cConfig)
 
 void BA11_C::createBezel (Cabinet::Position cabinetPosition)
 {
-    // Panel* panel = frontWindow_->createPanel (cabinetPosition, BA11_LConfig::unitHeight);
+    Panel* panel = 
+        frontWindow_->createPanel (cabinetPosition, BA11_CConfig::unitHeight);
 }
