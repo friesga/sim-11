@@ -30,23 +30,24 @@ void ConsistencyChecker::checkMS11Consistency ()
     for (auto iter1 = begin (ms11Cards); iter1 != end (ms11Cards); ++iter1)
     {
         // Check the address range of this card with the other cards
-        for (auto iter2 = begin (ms11Cards); iter2 != end (ms11Cards); ++iter2)
+        for (auto iter2 = iter1 + 1; iter2 != end (ms11Cards); ++iter2)
         {
-            if (iter2 == iter1)
-                continue;
-
             if (conflictsWith (*iter1, *iter2, capacity))
                     throw invalid_argument {"MSV11/MS11-P starting address conflict"};
         }
     }
 }
 
+// Two cards have conflicting address if the starting address of card1 is
+// within the address range of card2 or vice versa.
 template<typename TConfig>
 bool ConsistencyChecker::conflictsWith (TConfig ms11Card1, TConfig ms11Card2,
     size_t capacity)
 {
     return isWithin (ms11Card1.startingAddress, ms11Card2.startingAddress,
-        ms11Card2.startingAddress + capacity - 1);
+            ms11Card2.startingAddress + capacity - 1) ||
+        isWithin (ms11Card2.startingAddress, ms11Card1.startingAddress,
+            ms11Card1.startingAddress + capacity - 1);
 }
 
 bool ConsistencyChecker::isWithin (u32 address, u32 begin, u32 end)
@@ -55,6 +56,6 @@ bool ConsistencyChecker::isWithin (u32 address, u32 begin, u32 end)
 }
 
 // As the template function checkMS11Consistency() is defined outside of 
-// the header file, all template instantiations have to be defined explcitly.
+// the header file, all template instantiations have to be defined explicitly.
 template void ConsistencyChecker::checkMS11Consistency<MSV11Config, 64 * 1024> ();
 template void ConsistencyChecker::checkMS11Consistency<MS11PConfig, 1024 * 1024> ();
