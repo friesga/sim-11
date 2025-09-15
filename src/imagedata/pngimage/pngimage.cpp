@@ -1,11 +1,11 @@
-#include "png.h"
+#include "pngimage.h"
 
-PNG::PNG (vector<uint8_t> data)
+PNGImage::PNGImage (vector<uint8_t> data)
     :
     data_ {data}
 { }
 
-bool PNG::isValid ()
+bool PNGImage::isValid ()
 {
     // Minimum number of bytes is 8 (signature) + 4 (length) + 4 (chunk type)
     // + 8 (width+height)
@@ -24,17 +24,17 @@ bool PNG::isValid ()
     return true;
 }
 
-// This functions checks if the PNG data contain a IHDR chunk immediately 
+// This functions checks if the PNG image contains a IHDR chunk immediately 
 // following the signature.
 // Chunk layout: [4-byte length][4-byte type][data]
 //
-bool PNG::containsValidIHDRChunk ()
+bool PNGImage::containsValidIHDRChunk ()
 {
     return data_[12] == 'I' && data_[13] == 'H' &&
            data_[14] == 'D' && data_[15] == 'R';
 }
 
-ImageMetaData::Dimensions PNG::dimensions ()
+Image::Dimensions PNGImage::dimensions ()
 {
     auto readBigEndian32 = [&] (int offset) -> int
         {
@@ -51,7 +51,7 @@ ImageMetaData::Dimensions PNG::dimensions ()
     return {width, height};
 }
 
-const vector<uint8_t>& PNG::data ()
+const vector<uint8_t>& PNGImage::data ()
 {
     return data_;
 }

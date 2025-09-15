@@ -1,6 +1,7 @@
+#include "imagedata/include/image.h"
 #include "openrasterfile.h"
 #include "imagedata/zipfilereader/zipfile_reader.h"
-#include "imagedata/png/png.h"
+#include "imagedata/pngimage/pngimage.h"
 
 #include <memory>
 #include <stdexcept>
@@ -20,7 +21,7 @@ OpenRasterFile::OpenRasterFile (vector<unsigned char> buffer)
     // Parse the stack.xml file to get metadata about the layers in the file
     metadata_ = parseStackXML ();
 
-    // Set the dimensions of each layer by reading the PNG files
+    // Set the dimensions of each layer by reading the PNG images
     for (auto& layer : metadata_.layers)
         layer.dimensions = getLayerDimensions (layer.src);
 }
@@ -34,7 +35,7 @@ OpenRasterFile::OpenRasterFile (const string& fileName)
     OpenRasterFile (readFileData (fileName))
 {}
 
-ImageMetaData::Dimensions OpenRasterFile::imageDimensions ()
+Image::Dimensions OpenRasterFile::imageDimensions ()
 {
     return metadata_.imageDimensions;
 }
@@ -51,20 +52,20 @@ string OpenRasterFile::getFileName (string layerName)
     return "";
 }
 
-PNG OpenRasterFile::readPNGFile (string fileName)
+unique_ptr<Image> OpenRasterFile::getImage (string fileName)
 {
-    return PNG {zipReader_->read (fileName)};
+    return make_unique<PNGImage> (zipReader_->read (fileName));
 }
 
-// This functions returns the dimensions of a PNG file in the ORA data,
-// given its filename. The functions reads the PNG file from the zip-file
+// This functions returns the dimensions of a PNG image in the ORA data,
+// given its filename. The functions reads the PNG image from the zip-file
 // and extracts the width and height from the PNG header.
-ImageMetaData::Dimensions OpenRasterFile::getLayerDimensions (string fileName)
+Image::Dimensions OpenRasterFile::getLayerDimensions (string fileName)
 {
-    PNG png {zipReader_->read (fileName)};
+    PNGImage png {zipReader_->read (fileName)};
     
     if (!png.isValid ())
-        throw std::runtime_error ("Invalid PNG data");
+        throw std::runtime_error ("Invalid PNG image");
 
     if (!png.containsValidIHDRChunk ())
         throw std::runtime_error ("IHDR chunk not found where expected");
@@ -72,7 +73,7 @@ ImageMetaData::Dimensions OpenRasterFile::getLayerDimensions (string fileName)
     return png.dimensions ();
 }
 
-ImageMetaData::Layer OpenRasterFile::getLayerMetadata (string layerName)
+ImageContainer::Layer OpenRasterFile::getLayerMetadata (string layerName)
 {
     for (auto layer : metadata_.layers)
         if (layer.name == layerName)

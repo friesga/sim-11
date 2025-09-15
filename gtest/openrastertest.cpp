@@ -1,12 +1,14 @@
 #include "imagedata/openrasterfile/openrasterfile.h"
-#include "imagedata/png/png.h"
+#include "imagedata/pngimage/pngimage.h"
 
 #include <gtest/gtest.h>
 #include <vector>
 #include <filesystem>
+#include <memory>
 
 using std::vector;
 using std::invalid_argument;
+using std::unique_ptr;
 
 //
 // Definition of a simple OpenRaster file in a byte vector. The file contains
@@ -4503,7 +4505,7 @@ TEST (OpenRasterTest, openErrorThrows)
 TEST (OpenRasterTest, imageDimensionsAreCorrect)
 {
     OpenRasterFile oraFile (oraData);
-    ImageMetaData::Dimensions dim = oraFile.imageDimensions ();
+    Image::Dimensions dim = oraFile.imageDimensions ();
     EXPECT_EQ (dim.width, 2710);
     EXPECT_EQ (dim.height, 1250);
 }
@@ -4519,24 +4521,25 @@ TEST (OpenRasterTest, fileNameCanBeRetrieved)
 TEST (OpenRasterTest, pngDataCanBeRetrievedByFileName)
 {
     OpenRasterFile oraFile (oraData);
-    PNG png = oraFile.readPNGFile ("data/000.png");
+    unique_ptr<Image> pngImage = oraFile.getImage ("data/000.png");
 
-    EXPECT_EQ (png.data ()[0], 0x89);
+    EXPECT_EQ (pngImage->data ()[0], 0x89);
 }
 
 
 TEST (OpenRasterTest, pngDataCanBeRetrievedByLayerName)
 {
     OpenRasterFile oraFile (oraData);
-    PNG png = oraFile.readPNGFile (oraFile.getFileName ("keyswitch lock"));
+    unique_ptr<Image> pngImage = 
+        oraFile.getImage (oraFile.getFileName ("keyswitch lock"));
 
-    EXPECT_EQ (png.data ()[0], 0x89);
+    EXPECT_EQ (pngImage->data ()[0], 0x89);
 }
 
 TEST (OpenRasterTest, layerMetadataCanBeRetrieved)
 {
     OpenRasterFile oraFile (oraData);
-    ImageMetaData::Layer metadata = oraFile.getLayerMetadata ("keyswitch lock");
+    ImageContainer::Layer metadata = oraFile.getLayerMetadata ("keyswitch lock");
     EXPECT_EQ (metadata.position.x, 253);
     EXPECT_EQ (metadata.position.y, 917);
     EXPECT_EQ (metadata.dimensions.width, 118);
