@@ -19,6 +19,10 @@ public:
         Button::TwoPositionsState initialState, unique_ptr<SDLRenderer> &sdlRenderer,
         EventCallback buttonClicked, 
         SDL_Texture* targetTexture, Frame<int> frame);
+    SDLLatchingButton (unique_ptr<SDLTexture> buttonDownTexture,
+        unique_ptr<SDLTexture> buttonUpTexture,
+        Button::TwoPositionsState initialState,
+        EventCallback buttonClicked);
     ~SDLLatchingButton ();
 
     void handleEvent (InputEvent const *event) override;

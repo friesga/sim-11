@@ -22,6 +22,10 @@ public:
         Button::TwoPositionsState initialState, unique_ptr<SDLRenderer> &sdlRenderer,
         EventCallback buttonClicked, 
         SDL_Texture* targetTexture, Frame<int> frame);
+    SDLCommonButton (unique_ptr<SDLTexture> buttonDownTexture,
+        unique_ptr<SDLTexture> buttonUpTexture,
+        Button::TwoPositionsState initialState,
+        EventCallback buttonClicked);
     ~SDLCommonButton ();
 
     // The function handleEvent() is delegated to SDLLatchingButton

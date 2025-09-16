@@ -21,6 +21,17 @@ SDLCommonButton::SDLCommonButton (string buttonDownImage, string buttonUpImage,
         sdlRenderer->getSDL_Renderer (), targetTexture, frame);
 }
 
+SDLCommonButton::SDLCommonButton (unique_ptr<SDLTexture> buttonDownTexture,
+    unique_ptr<SDLTexture> buttonUpTexture,
+    Button::TwoPositionsState initialState, 
+    EventCallback buttonClicked)
+    :
+    buttonDownTexture_ {move (buttonDownTexture)},
+    buttonUpTexture_ {move (buttonUpTexture)},
+    buttonClicked_ {buttonClicked},
+    buttonState_ {initialState}
+{}
+
 SDLCommonButton::~SDLCommonButton ()
 {}
 

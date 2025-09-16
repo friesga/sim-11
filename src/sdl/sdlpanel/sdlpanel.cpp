@@ -73,9 +73,17 @@ Button* SDLPanel::createLatchingButton (string buttonDownImage, string buttonUpI
     Button::TwoPositionsState initialState, Button::EventCallback buttonClicked,
     Frame<float> frame)
 {
-    buttons_.push_back (make_unique<SDLLatchingButton> (buttonDownImage, buttonUpImage,
-        initialState, sdlRenderer_, buttonClicked, targetTexture_,
-        placeFrameInTexture (frame)));
+    unique_ptr<SDLTexture> buttonDownTexture =
+        make_unique<SDLTexture> (buttonDownImage, sdlRenderer_->getSDL_Renderer (),
+            targetTexture_, placeFrameInTexture (frame));
+
+    unique_ptr<SDLTexture> buttonUpTexture =
+        make_unique<SDLTexture> (buttonUpImage, sdlRenderer_->getSDL_Renderer (),
+            targetTexture_, placeFrameInTexture (frame));
+
+    buttons_.push_back (make_unique<SDLLatchingButton> (move (buttonDownTexture),
+        move (buttonUpTexture), initialState, buttonClicked));
+
     return buttons_.back ().get ();
 }
 

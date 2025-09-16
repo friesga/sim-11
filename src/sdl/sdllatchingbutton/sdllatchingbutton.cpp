@@ -1,6 +1,7 @@
 #include "sdllatchingbutton.h"
 
 using std::make_unique;
+using std::move;
 
 SDLLatchingButton::SDLLatchingButton (string buttonDownImage, string buttonUpImage,
     Button::TwoPositionsState initialState, unique_ptr<SDLRenderer> &sdlRenderer,
@@ -11,9 +12,17 @@ SDLLatchingButton::SDLLatchingButton (string buttonDownImage, string buttonUpIma
         buttonClicked, targetTexture, frame)
 {}
 
-SDLLatchingButton::~SDLLatchingButton ()
+SDLLatchingButton::SDLLatchingButton (unique_ptr<SDLTexture> buttonDownTexture,
+    unique_ptr<SDLTexture> buttonUpTexture,
+    Button::TwoPositionsState initialState,
+    EventCallback buttonClicked)
+    :
+    SDLCommonButton (move (buttonDownTexture), move (buttonUpTexture),
+        initialState, buttonClicked)
 {}
 
+SDLLatchingButton::~SDLLatchingButton ()
+{}
 
 void SDLLatchingButton::handleEvent (InputEvent const *event)
 {
