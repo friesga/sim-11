@@ -42,12 +42,24 @@ void SDLPanel::createFront (string imageFile,
     // SDLTexture.
 }
 
-Indicator* SDLPanel::createIndicator (string indicatorOffimage,
+Indicator* SDLPanel::createIndicator (string indicatorOffImage,
     string indicatorOnImage, Indicator::State showFigure, Frame<float> frame)
 {
-    indicators_.push_back (make_unique<SDLIndicator> (indicatorOffimage, 
-        indicatorOnImage, sdlRenderer_, showFigure, targetTexture_,
-        placeFrameInTexture (frame)));
+    unique_ptr<SDLTexture> indicatorOffTexture =
+        make_unique<SDLTexture> (indicatorOffImage, sdlRenderer_->getSDL_Renderer (),
+            targetTexture_, placeFrameInTexture (frame));
+
+    unique_ptr<SDLTexture> indicatorOnTexture =
+        make_unique<SDLTexture> (indicatorOnImage, sdlRenderer_->getSDL_Renderer (),
+            targetTexture_, placeFrameInTexture (frame));
+
+    indicators_.push_back (make_unique<SDLIndicator> (move (indicatorOffTexture),
+        move (indicatorOnTexture), showFigure));
+
+    // indicatorOffTexture and indicatorOnTexture are lno onger valid pointers
+    // to the SDLTexture's but that's ok since they are moved and SDLIndicator
+    // now has ownership of the SDLTexture's.
+
     return indicators_.back ().get ();
 }
 

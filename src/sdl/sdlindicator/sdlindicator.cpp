@@ -3,6 +3,7 @@
 #include <SDL_image.h>
 
 using std::make_unique;
+using std::move;
 
 SDLIndicator::SDLIndicator (string indicatorOffImage, string indicatorOnImage,
     unique_ptr<SDLRenderer> &sdlRenderer, State showIndicator, 
@@ -15,6 +16,14 @@ SDLIndicator::SDLIndicator (string indicatorOffImage, string indicatorOnImage,
     indicatorOnTexture_ = make_unique<SDLTexture> (indicatorOnImage, 
         sdlRenderer->getSDL_Renderer (), targetTexture, frame);
 }
+
+SDLIndicator::SDLIndicator (unique_ptr<SDLTexture> indicatorOffTexture,
+    unique_ptr<SDLTexture> indicatorOnTexture, State showIndicator)
+    :
+    showIndicator_ {showIndicator},
+    indicatorOffTexture_ {move (indicatorOffTexture)},
+    indicatorOnTexture_ {move (indicatorOnTexture)}
+{}
 
 SDLIndicator::~SDLIndicator ()
 {}
