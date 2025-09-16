@@ -15,13 +15,13 @@ class SDLFront : public Front
 public:
     SDLFront (string imageFile, unique_ptr<SDLRenderer> &sdlRenderer,
         SDL_Texture* targetTexture, Frame<int> frame);
+    SDLFront (unique_ptr<SDLTexture> frontTexture);
     ~SDLFront ();
     void render ();
 
 private:
-    // The texture and renderer to use for this front
+    // The texture to use for this front
     unique_ptr<SDLTexture> sdlTtexture_;
-    unique_ptr<SDLRenderer>& sdlRenderer_;
 };
 
 #endif // _SDLFRONT_H_

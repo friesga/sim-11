@@ -3,8 +3,10 @@
 #include <algorithm>
 #include <utility>
 
+using std::unique_ptr;
 using std::shared_ptr;
 using std::make_unique;
+using std::move;
 using std::string;
 using std::ranges::find_if;
 using std::pair;
@@ -29,8 +31,15 @@ SDLPanel::~SDLPanel ()
 void SDLPanel::createFront (string imageFile, 
         Frame<float> frame)
 {
-    fronts_.push_back (make_unique<SDLFront> (imageFile, 
-        sdlRenderer_, targetTexture_, placeFrameInTexture (frame)));
+    unique_ptr<SDLTexture> frontTexture = 
+        make_unique<SDLTexture> (imageFile, sdlRenderer_->getSDL_Renderer (),
+            targetTexture_, placeFrameInTexture (frame));
+
+    fronts_.push_back (make_unique<SDLFront> (move (frontTexture)));
+
+    // frontTexture no longer is a valid pointer to the SDLTexture but
+    // that's ok since it's moved and SDLFront now has ownership of the
+    // SDLTexture.
 }
 
 Indicator* SDLPanel::createIndicator (string indicatorOffimage,
