@@ -10,7 +10,6 @@ SDLThreePositionSwitch::SDLThreePositionSwitch (array<string, 3> positionImageNa
     Frame<int> frame)
     :
     switchClicked_ {switchClicked},
-    frame_ {frame},
     switchPosition_ {initialState}
 {
     for (auto imageName : positionImageNames)
@@ -19,6 +18,15 @@ SDLThreePositionSwitch::SDLThreePositionSwitch (array<string, 3> positionImageNa
             sdlRenderer->getSDL_Renderer (), targetTexture, frame));
     }
 }
+
+SDLThreePositionSwitch::SDLThreePositionSwitch (PositionTextures positionTextures,
+    Button::ThreePositionsState initialState,
+    EventCallback switchClicked)
+    :
+    positionTextures_ {move (positionTextures)},
+    switchClicked_ {switchClicked},
+    switchPosition_ {initialState}
+{}
 
 // Functions required for the Button interface
 void SDLThreePositionSwitch::setState (State newState)

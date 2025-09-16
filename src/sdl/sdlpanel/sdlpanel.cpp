@@ -181,9 +181,23 @@ Button* SDLPanel::createThreePositionSwitch (array<string, 3> positionImages,
     Button::EventCallback switchClicked,
     Frame<float> frame)
 {
-    buttons_.push_back (make_unique<SDLThreePositionSwitch> (positionImages,
-        initialState, sdlRenderer_, switchClicked, targetTexture_,
-        placeFrameInTexture (frame)));
+    SDLThreePositionSwitch::PositionTextures positionTextures;
+
+    for (auto imageName : positionImages)
+    {
+        positionTextures.emplace_back (make_unique<SDLTexture> (imageName,
+            sdlRenderer_->getSDL_Renderer (), targetTexture_,
+            placeFrameInTexture (frame)));
+    }
+
+    buttons_.push_back (make_unique<SDLThreePositionSwitch> (move (positionTextures),
+        initialState, switchClicked));
+
+    // The texture pointers in the PositionsTextures vector are no longer
+    // valid pointers to the SDLTexture's but that's ok since the vector
+    // is moved to SDLThreePositionSwitch and that function now has ownership
+    // of the SDLTexture's.
+
     return buttons_.back ().get ();
 }
 

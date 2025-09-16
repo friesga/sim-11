@@ -24,12 +24,17 @@ using std::unique_ptr;
 class SDLThreePositionSwitch : public Button
 {
 public:
+    using PositionTextures = vector<unique_ptr<SDLTexture>>;
+
     SDLThreePositionSwitch (array<string, 3> positionImageNames,
         Button::ThreePositionsState initialState,
         unique_ptr<SDLRenderer>& sdlRenderer,
         EventCallback switchClicked,
         SDL_Texture* targetTexture,
         Frame<int> frame);
+    SDLThreePositionSwitch (PositionTextures positionTextures,
+        Button::ThreePositionsState initialState,
+        EventCallback switchClicked);
 
     // Functions required for the Button interface
     void setState (State newState);
@@ -40,10 +45,8 @@ public:
 
 private:
     EventCallback switchClicked_;
-    Frame<int> frame_;
-
     Button::ThreePositionsState switchPosition_;
-    vector<unique_ptr<SDLTexture>> positionTextures_;
+    PositionTextures positionTextures_;
 
     bool isRightOfCenter (Position position, float margin) const;
     bool isLeftOfCenter (Position position, float margin) const;
