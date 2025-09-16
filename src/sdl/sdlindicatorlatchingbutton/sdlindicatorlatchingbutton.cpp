@@ -2,29 +2,6 @@
 
 using std::get;
 
-SDLIndicatorLatchingButton::SDLIndicatorLatchingButton (Button::ImageNames const& imageNames,
-    Button::TwoPositionsState initialState, unique_ptr<SDLRenderer>& sdlRenderer,
-    EventCallback buttonClicked, Indicator::State showIndicator,
-    SDL_Texture* targetTexture, Frame<int> frame)
-    :
-    buttonClicked_ {buttonClicked},
-    buttonState_ {initialState},
-    indicatorState_ {showIndicator}
-{
-    textures_[to_integral (Button::TwoPositionsState::Off)][to_integral (Indicator::State::Off)] =
-        make_unique<SDLTexture> (imageNames.buttonUpIndicatorOff,
-            sdlRenderer->getSDL_Renderer (), targetTexture, frame);
-    textures_[to_integral (Button::TwoPositionsState::On)][to_integral (Indicator::State::Off)] =
-        make_unique<SDLTexture> (imageNames.buttonDownIndicatorOff,
-            sdlRenderer->getSDL_Renderer (), targetTexture, frame);
-    textures_[to_integral (Button::TwoPositionsState::Off)][to_integral (Indicator::State::On)] =
-        make_unique<SDLTexture> (imageNames.buttonUpIndicatorOn,
-            sdlRenderer->getSDL_Renderer (), targetTexture, frame);
-    textures_[to_integral (Button::TwoPositionsState::On)][to_integral (Indicator::State::On)] =
-        make_unique<SDLTexture> (imageNames.buttonDownIndicatorOn,
-            sdlRenderer->getSDL_Renderer (), targetTexture, frame);
-}
-
 SDLIndicatorLatchingButton::SDLIndicatorLatchingButton (TextureGrid textures,
     Button::TwoPositionsState initialState, EventCallback buttonClicked,
     Indicator::State showIndicator)

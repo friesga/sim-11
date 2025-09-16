@@ -1,24 +1,6 @@
 #include "sdlfourpositionswitch.h"
 
-using std::make_unique;
 using std::get;
-
-SDLFourPositionSwitch::SDLFourPositionSwitch (array<string, 4> positionImageNames,
-    Button::FourPositionsState initialState,
-    unique_ptr<SDLRenderer>& sdlRenderer,
-    EventCallback switchClicked,
-    SDL_Texture* targetTexture,
-    Frame<int> frame)
-    :
-    switchClicked_ {switchClicked},
-    switchPosition_ {initialState}
-{
-    for (auto imageName : positionImageNames)
-    {
-        positionTextures_.emplace_back (make_unique<SDLTexture> (imageName,
-            sdlRenderer->getSDL_Renderer (), targetTexture, frame));
-    }
-}
 
 SDLFourPositionSwitch::SDLFourPositionSwitch (PositionTextures positionTextures,
     Button::FourPositionsState initialState,

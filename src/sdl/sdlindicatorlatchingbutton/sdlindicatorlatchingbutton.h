@@ -25,10 +25,6 @@ public:
     // button in the on state and the indicator in the off state.
     using TextureGrid = array<array<unique_ptr<SDLTexture>, 2>, 2>;
 
-    SDLIndicatorLatchingButton (Button::ImageNames const& imageNames,
-        Button::TwoPositionsState initialState, unique_ptr<SDLRenderer>& sdlRenderer,
-        EventCallback buttonClicked, Indicator::State showIndicator,
-        SDL_Texture* targetTexture, Frame<int> frame);
     SDLIndicatorLatchingButton (TextureGrid textures,
         Button::TwoPositionsState initialState, EventCallback buttonClicked,
         Indicator::State showIndicator);

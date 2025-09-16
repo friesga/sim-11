@@ -13,9 +13,6 @@ using std::unique_ptr;
 class SDLIndicator : public Indicator
 {
 public:
-    SDLIndicator (string indicatorOffImage, string indicatorOnImage,
-        unique_ptr<SDLRenderer> &sdlRenderer, State showIndicator,
-        SDL_Texture* targetTexture, Frame<int> frame);
     SDLIndicator (unique_ptr<SDLTexture> indicatorOffTexture,
         unique_ptr<SDLTexture> indicatorOnTexture, State showIndicator);
     ~SDLIndicator ();

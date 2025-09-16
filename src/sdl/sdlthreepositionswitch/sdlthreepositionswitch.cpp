@@ -2,23 +2,6 @@
 
 using std::get;
 
-SDLThreePositionSwitch::SDLThreePositionSwitch (array<string, 3> positionImageNames,
-    Button::ThreePositionsState initialState,
-    unique_ptr<SDLRenderer>& sdlRenderer,
-    EventCallback switchClicked,
-    SDL_Texture* targetTexture,
-    Frame<int> frame)
-    :
-    switchClicked_ {switchClicked},
-    switchPosition_ {initialState}
-{
-    for (auto imageName : positionImageNames)
-    {
-        positionTextures_.emplace_back (make_unique<SDLTexture> (imageName,
-            sdlRenderer->getSDL_Renderer (), targetTexture, frame));
-    }
-}
-
 SDLThreePositionSwitch::SDLThreePositionSwitch (PositionTextures positionTextures,
     Button::ThreePositionsState initialState,
     EventCallback switchClicked)

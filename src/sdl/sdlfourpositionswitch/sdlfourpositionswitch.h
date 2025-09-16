@@ -21,13 +21,6 @@ class SDLFourPositionSwitch : public Button
 public:
     using PositionTextures = vector<unique_ptr<SDLTexture>>;
 
-    SDLFourPositionSwitch (array<string, 4> positionImages,
-        Button::FourPositionsState initialState,
-        unique_ptr<SDLRenderer>& sdlRenderer,
-        EventCallback switchClicked,
-        SDL_Texture* targetTexture,
-        Frame<int> frame);
-
     SDLFourPositionSwitch (PositionTextures positionTextures,
         Button::FourPositionsState initialState,
         EventCallback switchClicked);

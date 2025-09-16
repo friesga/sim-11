@@ -15,10 +15,6 @@ using std::unique_ptr;
 class SDLLatchingButton : public SDLCommonButton
 {
 public:
-    SDLLatchingButton (string buttonDownImage, string buttonUpImage, 
-        Button::TwoPositionsState initialState, unique_ptr<SDLRenderer> &sdlRenderer,
-        EventCallback buttonClicked, 
-        SDL_Texture* targetTexture, Frame<int> frame);
     SDLLatchingButton (unique_ptr<SDLTexture> buttonDownTexture,
         unique_ptr<SDLTexture> buttonUpTexture,
         Button::TwoPositionsState initialState,

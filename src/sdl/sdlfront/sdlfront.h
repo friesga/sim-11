@@ -13,8 +13,6 @@ using std::unique_ptr;
 class SDLFront : public Front
 {
 public:
-    SDLFront (string imageFile, unique_ptr<SDLRenderer> &sdlRenderer,
-        SDL_Texture* targetTexture, Frame<int> frame);
     SDLFront (unique_ptr<SDLTexture> frontTexture);
     ~SDLFront ();
     void render ();
