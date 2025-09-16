@@ -11,7 +11,6 @@ SDLFourPositionSwitch::SDLFourPositionSwitch (array<string, 4> positionImageName
     Frame<int> frame)
     :
     switchClicked_ {switchClicked},
-    frame_ {frame},
     switchPosition_ {initialState}
 {
     for (auto imageName : positionImageNames)
@@ -20,6 +19,15 @@ SDLFourPositionSwitch::SDLFourPositionSwitch (array<string, 4> positionImageName
             sdlRenderer->getSDL_Renderer (), targetTexture, frame));
     }
 }
+
+SDLFourPositionSwitch::SDLFourPositionSwitch (PositionTextures positionTextures,
+    Button::FourPositionsState initialState,
+    EventCallback switchClicked)
+    :
+    positionTextures_ {move (positionTextures)},
+    switchClicked_ {switchClicked},
+    switchPosition_ {initialState}
+{}
 
 void SDLFourPositionSwitch::setState (State newState)
 {
