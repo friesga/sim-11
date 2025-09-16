@@ -13,6 +13,15 @@ SDLMomentaryButton::SDLMomentaryButton (string buttonDownImage, string buttonUpI
     naturalState_ {initialState}
 {}
 
+SDLMomentaryButton::SDLMomentaryButton (unique_ptr<SDLTexture> buttonDownTexture,
+    unique_ptr<SDLTexture> buttonUpTexture,
+    Button::TwoPositionsState initialState, EventCallback buttonClicked)
+    :
+    SDLCommonButton (move (buttonDownTexture), move (buttonUpTexture),
+        initialState, buttonClicked),
+    naturalState_ {initialState}
+{}
+
 SDLMomentaryButton::~SDLMomentaryButton ()
 {}
 

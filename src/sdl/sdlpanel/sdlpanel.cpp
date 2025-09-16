@@ -56,7 +56,7 @@ Indicator* SDLPanel::createIndicator (string indicatorOffImage,
     indicators_.push_back (make_unique<SDLIndicator> (move (indicatorOffTexture),
         move (indicatorOnTexture), showFigure));
 
-    // indicatorOffTexture and indicatorOnTexture are lno onger valid pointers
+    // indicatorOffTexture and indicatorOnTexture are no onger valid pointers
     // to the SDLTexture's but that's ok since they are moved and SDLIndicator
     // now has ownership of the SDLTexture's.
 
@@ -84,6 +84,10 @@ Button* SDLPanel::createLatchingButton (string buttonDownImage, string buttonUpI
     buttons_.push_back (make_unique<SDLLatchingButton> (move (buttonDownTexture),
         move (buttonUpTexture), initialState, buttonClicked));
 
+    // buttonDownTexture and buttonUpTexture are lno onger valid pointers
+    // to the SDLTexture's but that's ok since they are moved and
+    // SDLLatchingButton now has ownership of the SDLTexture's.
+
     return buttons_.back ().get ();
 }
 
@@ -91,9 +95,21 @@ Button* SDLPanel::createMomentaryButton (string buttonDownImage, string buttonUp
     Button::TwoPositionsState initialState, Button::EventCallback buttonClicked,
     Frame<float> frame)
 {
-    buttons_.push_back (make_unique<SDLMomentaryButton> (buttonDownImage, buttonUpImage,
-        initialState, sdlRenderer_, buttonClicked, targetTexture_,
-        placeFrameInTexture (frame)));
+    unique_ptr<SDLTexture> buttonDownTexture =
+        make_unique<SDLTexture> (buttonDownImage, sdlRenderer_->getSDL_Renderer (),
+            targetTexture_, placeFrameInTexture (frame));
+
+    unique_ptr<SDLTexture> buttonUpTexture =
+        make_unique<SDLTexture> (buttonUpImage, sdlRenderer_->getSDL_Renderer (),
+            targetTexture_, placeFrameInTexture (frame));
+
+    buttons_.push_back (make_unique<SDLMomentaryButton> (move (buttonDownTexture),
+        move (buttonUpTexture), initialState, buttonClicked));
+
+    // buttonDownTexture and buttonUpTexture are lno onger valid pointers
+    // to the SDLTexture's but that's ok since they are moved and
+    // SDLMomentaryButton now has ownership of the SDLTexture's.
+
     return buttons_.back ().get ();
 }
 
