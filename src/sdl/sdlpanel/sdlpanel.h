@@ -16,9 +16,11 @@
 
 #include <memory>
 #include <vector>
+#include <array>
 
 using std::unique_ptr;
 using std::vector;
+using std::array;
 
 class SDLPanel : public Panel
 {

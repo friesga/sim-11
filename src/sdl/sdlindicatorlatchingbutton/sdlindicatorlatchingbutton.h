@@ -20,10 +20,18 @@ using std::array;
 class SDLIndicatorLatchingButton : public IndicatorButton
 {
 public:
+    // The TextureGrid is indexed first by the button state and then by
+    // the indicator state. So TextureGrid[0][0] is the texture for the
+    // button in the on state and the indicator in the off state.
+    using TextureGrid = array<array<unique_ptr<SDLTexture>, 2>, 2>;
+
     SDLIndicatorLatchingButton (Button::ImageNames const& imageNames,
         Button::TwoPositionsState initialState, unique_ptr<SDLRenderer>& sdlRenderer,
         EventCallback buttonClicked, Indicator::State showIndicator,
         SDL_Texture* targetTexture, Frame<int> frame);
+    SDLIndicatorLatchingButton (TextureGrid textures,
+        Button::TwoPositionsState initialState, EventCallback buttonClicked,
+        Indicator::State showIndicator);
     ~SDLIndicatorLatchingButton ();
 
     // Definition of functions required for the Button interface
@@ -42,7 +50,7 @@ private:
         Indicator::State indicatorState) const;
 
     EventCallback buttonClicked_;
-    array<array<unique_ptr<SDLTexture>, 2>, 2> textures_;
+    TextureGrid textures_;
     Button::TwoPositionsState buttonState_;
     Indicator::State indicatorState_;
 

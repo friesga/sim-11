@@ -25,6 +25,16 @@ SDLIndicatorLatchingButton::SDLIndicatorLatchingButton (Button::ImageNames const
             sdlRenderer->getSDL_Renderer (), targetTexture, frame);
 }
 
+SDLIndicatorLatchingButton::SDLIndicatorLatchingButton (TextureGrid textures,
+    Button::TwoPositionsState initialState, EventCallback buttonClicked,
+    Indicator::State showIndicator)
+    :
+    textures_ {move (textures)},
+    buttonClicked_ {buttonClicked},
+    buttonState_ {initialState},
+    indicatorState_ {showIndicator}
+{}
+
 SDLIndicatorLatchingButton::~SDLIndicatorLatchingButton ()
 {}
 

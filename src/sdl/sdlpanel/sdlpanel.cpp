@@ -106,7 +106,7 @@ Button* SDLPanel::createMomentaryButton (string buttonDownImage, string buttonUp
     buttons_.push_back (make_unique<SDLMomentaryButton> (move (buttonDownTexture),
         move (buttonUpTexture), initialState, buttonClicked));
 
-    // buttonDownTexture and buttonUpTexture are lno onger valid pointers
+    // buttonDownTexture and buttonUpTexture are no onger valid pointers
     // to the SDLTexture's but that's ok since they are moved and
     // SDLMomentaryButton now has ownership of the SDLTexture's.
 
@@ -118,9 +118,36 @@ IndicatorButton* SDLPanel::createSDLIndicatorLatchingButton (Button::ImageNames 
     Button::EventCallback buttonClicked, Indicator::State showIndicator,
     Frame<float> frame)
 {
-    indicatorButtons_.push_back (make_unique<SDLIndicatorLatchingButton> (imageNames,
-            initialState, sdlRenderer_, buttonClicked, showIndicator,
-            targetTexture_, placeFrameInTexture (frame)));
+    SDLIndicatorLatchingButton::TextureGrid textures;
+
+    textures[to_integral (Button::TwoPositionsState::Off)][to_integral (Indicator::State::Off)] =
+        make_unique<SDLTexture> (imageNames.buttonUpIndicatorOff,
+            sdlRenderer_->getSDL_Renderer (), targetTexture_,
+            placeFrameInTexture (frame));
+
+    textures[to_integral (Button::TwoPositionsState::On)][to_integral (Indicator::State::Off)] =
+        make_unique<SDLTexture> (imageNames.buttonDownIndicatorOff,
+            sdlRenderer_->getSDL_Renderer (), targetTexture_,
+            placeFrameInTexture (frame));
+
+    textures[to_integral (Button::TwoPositionsState::Off)][to_integral (Indicator::State::On)] =
+        make_unique<SDLTexture> (imageNames.buttonUpIndicatorOn,
+            sdlRenderer_->getSDL_Renderer (), targetTexture_,
+            placeFrameInTexture (frame));
+
+    textures[to_integral (Button::TwoPositionsState::On)][to_integral (Indicator::State::On)] =
+        make_unique<SDLTexture> (imageNames.buttonDownIndicatorOn,
+            sdlRenderer_->getSDL_Renderer (), targetTexture_,
+            placeFrameInTexture (frame));
+
+    indicatorButtons_.push_back (make_unique<SDLIndicatorLatchingButton> (move (textures),
+            initialState, buttonClicked, showIndicator));
+
+    // The texture pointers in the TextureGrid array are no onger valid pointers
+    // to the SDLTexture's but that's ok since the array is moved to 
+    // SDLIndicatorLatchingButton and that function now has ownership of the
+    // SDLTexture's.
+
     return indicatorButtons_.back ().get ();
 }
 
