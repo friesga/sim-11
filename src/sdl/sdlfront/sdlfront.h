@@ -6,8 +6,8 @@
 #include "../sdlrenderer/sdlrenderer.h"
 
 #include <SDL.h>
+#include <memory>
 
-using std::string;
 using std::unique_ptr;
 
 class SDLFront : public Front
