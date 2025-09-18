@@ -21,9 +21,9 @@ Button::State SDLFourPositionSwitch::currentState () const
     return switchPosition_;
 }
 
-void SDLFourPositionSwitch::render ()
+void SDLFourPositionSwitch::render (GraphicsContext& context)
 {
-    positionTextures_[+switchPosition_]->render ();
+    positionTextures_[+switchPosition_]->render (context);
 }
 
 void SDLFourPositionSwitch::handleEvent (InputEvent const* event)

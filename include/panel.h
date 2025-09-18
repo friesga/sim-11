@@ -69,11 +69,17 @@ public:
     virtual Position mousePosition () const = 0;
 };
 
+class GraphicsContext
+{
+public:
+    virtual void setAsTarget () = 0;
+};
+
 // A Front is the image to be rendered on the panel
 class Front
 {
 public:
-    virtual void render () = 0;
+    virtual void render (GraphicsContext& context) = 0;
 };
 
 // The State enum constants are given values to be able to use them as
@@ -88,7 +94,7 @@ public:
     };
 
     virtual void show (State showFigure) = 0;
-    virtual void render () = 0;
+    virtual void render (GraphicsContext& context) = 0;
     virtual bool isWithinBounds (Position position, float margin) const = 0;
 };
 
@@ -128,7 +134,7 @@ public:
     using EventCallback = function<void(State)>;
     virtual void setState (State newState) = 0;
     virtual State currentState () const = 0;
-    virtual void render () = 0;
+    virtual void render (GraphicsContext& context) = 0;
     virtual void handleEvent (InputEvent const* event) = 0;
     virtual bool isWithinBounds (Position position, float margin) const = 0;
 };
@@ -140,7 +146,7 @@ class IndicatorButton : public Button, public Indicator
 {
 public:
     // Functions defined in the Button interface
-    virtual void render () = 0;
+    virtual void render (GraphicsContext& context) = 0;
     virtual void setState (Button::State newState) = 0;
     virtual void handleEvent (InputEvent const* event) = 0;
     virtual bool isWithinBounds (Position position, float margin) const = 0;
@@ -178,7 +184,7 @@ public:
         Button::ThreePositionsState initialState,
         Button::EventCallback switchClicked,
         Frame<float> frame) = 0;
-    virtual void render () = 0;
+    virtual void render (GraphicsContext& context) = 0;
     virtual void handleEvent (InputEvent const* event) = 0;
 };
 

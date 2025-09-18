@@ -12,8 +12,8 @@ SDLFront::SDLFront (unique_ptr<SDLTexture> frontTexture)
 SDLFront::~SDLFront ()
 {}
 
-void SDLFront::render ()
+void SDLFront::render (GraphicsContext& context)
 {
-    sdlTtexture_->render ();
+    sdlTtexture_->render (context);
 }
 

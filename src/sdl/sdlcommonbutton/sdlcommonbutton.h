@@ -28,7 +28,7 @@ public:
     // and SDLMomentaryButton.
     void setState (State newState) override;
     State currentState () const override;
-    void render () override;
+    void render (GraphicsContext& context) override;
     bool isWithinBounds (Position position, float margin = 0.0) const override;
 
 protected:

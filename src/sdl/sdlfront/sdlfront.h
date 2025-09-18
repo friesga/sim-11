@@ -15,7 +15,7 @@ class SDLFront : public Front
 public:
     SDLFront (unique_ptr<SDLTexture> frontTexture);
     ~SDLFront ();
-    void render ();
+    void render (GraphicsContext& context);
 
 private:
     // The texture to use for this front

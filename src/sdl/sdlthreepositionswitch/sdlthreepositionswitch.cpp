@@ -22,9 +22,9 @@ Button::State SDLThreePositionSwitch::currentState () const
     return switchPosition_;
 }
 
-void SDLThreePositionSwitch::render ()
+void SDLThreePositionSwitch::render (GraphicsContext& context)
 {
-    positionTextures_[+switchPosition_]->render ();
+    positionTextures_[+switchPosition_]->render (context);
 }
 
 void SDLThreePositionSwitch::handleEvent (InputEvent const* event)

@@ -46,11 +46,10 @@ SDLTexture::~SDLTexture ()
 }
 
 // Render this texture to the target texture
-void SDLTexture::render ()
+void SDLTexture::render (GraphicsContext& context)
 {
-    if (SDL_SetRenderTarget (sdlRenderer_, targetTexture_) != 0)
-        throw runtime_error ("Unable to set render target: " +
-            string (SDL_GetError ()));
+    // Set render target to the target texture
+    context.setAsTarget ();
 
     // Set rendering space and render texture
     SDL_Rect renderQuad {x_, y_, width_, height_};

@@ -1,6 +1,7 @@
 #include "sdlwindow.h"
-#include "../sdlpanel/sdlpanel.h"
-#include "../sdlevent/sdlevent.h"
+#include "sdl/sdlpanel/sdlpanel.h"
+#include "sdl/sdlevent/sdlevent.h"
+#include "sdl/sdlgraphicscontext/sdlgraphicscontext.h"
 #include "rackunit.h"
 
 #include <SDL_image.h>
@@ -48,6 +49,10 @@ SDLWindow::SDLWindow (char const *title, Frame<int> frame,
     if (targetTexture_ == NULL)
         throw runtime_error ("Target texture could not be created. SDL error: " +
             string (SDL_GetError ()));
+
+    graphicsContext_ = 
+        make_unique<SDLGraphicsContext> (sdlRenderer_->getSDL_Renderer (),
+            targetTexture_);
 }
 
 SDLWindow::~SDLWindow ()
@@ -77,7 +82,7 @@ void SDLWindow::render ()
 {    
     // Render all Panels to the target texture
     for (auto& sdlPanel : panels_)
-        sdlPanel->render ();
+        sdlPanel->render (*graphicsContext_);
 
     // Copy the target texture to the window frame buffer
     sdlRenderer_->copy (targetTexture_);

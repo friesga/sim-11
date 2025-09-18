@@ -16,7 +16,7 @@ public:
     SDLTexture (string imageFile, SDL_Renderer *renderer, 
         SDL_Texture* targetTexture, Frame<int> frame);
     ~SDLTexture ();
-    void render ();
+    void render (GraphicsContext& context);
     bool isWithinBounds (Position position, float margin = 0.0) const;
     bool isRightOfCenter (Position position, float margin = 0.0) const;
     bool isLeftOfCenter (Position position, float margin = 0.0) const;

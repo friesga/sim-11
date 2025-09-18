@@ -16,12 +16,12 @@ SDLIndicator::SDLIndicator (unique_ptr<SDLTexture> indicatorOffTexture,
 SDLIndicator::~SDLIndicator ()
 {}
 
-void SDLIndicator::render ()
+void SDLIndicator::render (GraphicsContext& context)
 {
     if (showIndicator_ == Indicator::State::On)
-        indicatorOnTexture_->render ();
+        indicatorOnTexture_->render (context);
     else
-        indicatorOffTexture_->render ();
+        indicatorOffTexture_->render (context);
 }
 
 void SDLIndicator::show (Indicator::State showIndicator)
