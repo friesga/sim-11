@@ -26,9 +26,12 @@ public:
     SDLWindow (char const *title, Frame<int> frame,
         set<Window::Flag> flags = {});
     ~SDLWindow ();
+
+    // Functions required by the Window interface
     void show () override;
     Panel *createPanel (Cabinet::Position cabinetPosition,
         RackUnit unitHeight) override;
+
     void handler ();
 
 private:
@@ -57,6 +60,7 @@ private:
     // the cabinet. 
     Cabinet h9642Cabinet {"h9642", 20_ru};
 
+    // Functions required by the Window interface
     void render () override;
     bool handleEvents () override;
 
