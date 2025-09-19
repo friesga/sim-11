@@ -19,7 +19,7 @@ public:
 
     // Definition of functions required for the Indicator interface
     void show (Indicator::State showIndicator) override;
-    void render (GraphicsContext& context) override;
+    void render () override;
 
     bool isWithinBounds (Position position, float margin) const override;
 

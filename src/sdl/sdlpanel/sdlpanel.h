@@ -55,7 +55,7 @@ public:
         Frame<float> frame) override;
 
     // SDL implementation specific functions
-    void render (GraphicsContext& context) override;
+    void render () override;
     void handleEvent (InputEvent const *event) override;
     bool isOverButton (Position position);
 

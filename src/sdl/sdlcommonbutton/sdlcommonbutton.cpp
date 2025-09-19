@@ -46,16 +46,16 @@ Button::TwoPositionsState SDLCommonButton::toggleState (TwoPositionsState oldSta
     throw logic_error ("Cannot happen");
 }
 
-void SDLCommonButton::render (GraphicsContext& context)
+void SDLCommonButton::render ()
 {
     switch (buttonState_)
     {
         case TwoPositionsState::On:
-            buttonDownTexture_->render (context);
+            buttonDownTexture_->render ();
             break;
         
         case TwoPositionsState::Off:
-            buttonUpTexture_->render (context);
+            buttonUpTexture_->render ();
     }
 }
 

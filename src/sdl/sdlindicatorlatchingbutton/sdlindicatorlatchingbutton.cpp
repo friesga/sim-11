@@ -44,9 +44,9 @@ void SDLIndicatorLatchingButton::handleEvent (InputEvent const* event)
     }
 }
 
-void SDLIndicatorLatchingButton::render (GraphicsContext& context)
+void SDLIndicatorLatchingButton::render ()
 {
-    getTexture (buttonState_, indicatorState_)->render (context);
+    getTexture (buttonState_, indicatorState_)->render ();
 }
 
 bool SDLIndicatorLatchingButton::isWithinBounds (Position position,

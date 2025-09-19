@@ -1,7 +1,6 @@
 set (SDL_SRCS
     filepanelbuilder/filepanelbuilder.cpp
     sdlinit/sdlinit.cpp
-    sdlgraphicscontext/sdlgraphicscontext.cpp
     sdlpanel/sdlpanel.cpp
     sdlwindow/sdlwindow.cpp
     sdlwindow/circle.cpp

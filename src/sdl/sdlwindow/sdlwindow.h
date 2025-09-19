@@ -2,21 +2,18 @@
 #define _SDLWINDOW_H_
 
 #include "panel.h"
-#include "sdl/sdlpanel/sdlpanel.h"
-#include "sdl/sdlrenderer/sdlrenderer.h"
-#include "sdl/sdlinit/sdlinit.h"
-#include "sdl/sdlgraphicscontext/sdlgraphicscontext.h"
+#include "../sdlpanel/sdlpanel.h"
+#include "../sdlrenderer/sdlrenderer.h"
+#include "../sdlinit/sdlinit.h"
 #include "cabinet/cabinet.h"
 
 #include <vector>
 #include <utility>
 #include <set>
-#include <memory>
 
 using std::vector;
 using std::make_pair;
 using std::set;
-using std::unique_ptr;
 
 // Create a Window by means of SDL.
 //
@@ -55,10 +52,6 @@ private:
 
     // The target texture the panels have to render to
     SDL_Texture* targetTexture_;
-
-    // (Pointer to) the SDL graphics context to be use in rendering the
-    // textures
-    unique_ptr<SDLGraphicsContext> graphicsContext_;
 
     // Definition of a cabinet to keep track of occupied positions in
     // the cabinet. 

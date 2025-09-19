@@ -233,20 +233,20 @@ pair<int, int> SDLPanel::getTextureDimensions (SDL_Texture* texture)
 }
 
 // Render all elements in this panel to the window
-void SDLPanel::render (GraphicsContext& context)
+void SDLPanel::render ()
 {
     // Render all fronts, indicators, buttons, etc.
     for (auto& sdlFront : fronts_)
-        sdlFront->render (context);
+        sdlFront->render ();
 
     for (auto& indicator : indicators_)
-        indicator->render (context);
+        indicator->render ();
 
     for (auto& button : buttons_)
-        button->render (context);
+        button->render ();
 
     for (auto& indicatorButton : indicatorButtons_)
-        indicatorButton->render (context);
+        indicatorButton->render ();
 }
 
 // Events for a Panel are destined for a button on the panel
