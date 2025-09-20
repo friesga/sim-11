@@ -18,8 +18,8 @@ using std::unique_ptr;
 class SDLCommonButton : public Button
 {
 public:
-    SDLCommonButton (unique_ptr<SDLTile> buttonDownTexture,
-        unique_ptr<SDLTile> buttonUpTexture,
+    SDLCommonButton (unique_ptr<SDLTile> buttonDownTile,
+        unique_ptr<SDLTile> buttonUpTile,
         Button::TwoPositionsState initialState,
         EventCallback buttonClicked);
     ~SDLCommonButton ();
@@ -32,8 +32,8 @@ public:
     bool isWithinBounds (Position position, float margin = 0.0) const override;
 
 protected:
-    unique_ptr<SDLTile> buttonDownTexture_;
-    unique_ptr<SDLTile> buttonUpTexture_;
+    unique_ptr<SDLTile> buttonDownTile_;
+    unique_ptr<SDLTile> buttonUpTile_;
     EventCallback buttonClicked_;
     TwoPositionsState buttonState_;
 

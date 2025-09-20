@@ -2,11 +2,11 @@
 
 using std::get;
 
-SDLIndicatorLatchingButton::SDLIndicatorLatchingButton (TextureGrid textures,
+SDLIndicatorLatchingButton::SDLIndicatorLatchingButton (TileGrid tiles,
     Button::TwoPositionsState initialState, EventCallback buttonClicked,
     Indicator::State showIndicator)
     :
-    textures_ {move (textures)},
+    tiles_ {move (tiles)},
     buttonClicked_ {buttonClicked},
     buttonState_ {initialState},
     indicatorState_ {showIndicator}
@@ -15,10 +15,10 @@ SDLIndicatorLatchingButton::SDLIndicatorLatchingButton (TextureGrid textures,
 SDLIndicatorLatchingButton::~SDLIndicatorLatchingButton ()
 {}
 
-SDLTile* SDLIndicatorLatchingButton::getTexture (Button::TwoPositionsState buttonState,
+SDLTile* SDLIndicatorLatchingButton::getTile (Button::TwoPositionsState buttonState,
     Indicator::State indicatorState) const
 {
-    return textures_[to_integral (buttonState)][to_integral (indicatorState)].get ();
+    return tiles_[to_integral (buttonState)][to_integral (indicatorState)].get ();
 }
 
 void SDLIndicatorLatchingButton::setState (Button::State newState)
@@ -46,14 +46,14 @@ void SDLIndicatorLatchingButton::handleEvent (InputEvent const* event)
 
 void SDLIndicatorLatchingButton::render ()
 {
-    getTexture (buttonState_, indicatorState_)->render ();
+    getTile (buttonState_, indicatorState_)->render ();
 }
 
 bool SDLIndicatorLatchingButton::isWithinBounds (Position position,
     float margin) const
 {
-    // Any of the textures can be used to check the dimensions
-    return getTexture (Button::TwoPositionsState::Off,
+    // Any of the tiles can be used to check the dimensions
+    return getTile (Button::TwoPositionsState::Off,
         Indicator::State::Off)->isWithinBounds (position, margin);
 }
 

@@ -2,11 +2,11 @@
 
 using std::get;
 
-SDLThreePositionSwitch::SDLThreePositionSwitch (PositionTextures positionTextures,
+SDLThreePositionSwitch::SDLThreePositionSwitch (PositionTiles positionTiles,
     Button::ThreePositionsState initialState,
     EventCallback switchClicked)
     :
-    positionTextures_ {move (positionTextures)},
+    positionTiles_ {move (positionTiles)},
     switchClicked_ {switchClicked},
     switchPosition_ {initialState}
 {}
@@ -24,7 +24,7 @@ Button::State SDLThreePositionSwitch::currentState () const
 
 void SDLThreePositionSwitch::render ()
 {
-    positionTextures_[+switchPosition_]->render ();
+    positionTiles_[+switchPosition_]->render ();
 }
 
 void SDLThreePositionSwitch::handleEvent (InputEvent const* event)
@@ -59,17 +59,17 @@ void SDLThreePositionSwitch::handleEvent (InputEvent const* event)
 
 bool SDLThreePositionSwitch::isWithinBounds (Position position, float margin) const
 {
-    return positionTextures_[+switchPosition_]->isWithinBounds (position, margin);
+    return positionTiles_[+switchPosition_]->isWithinBounds (position, margin);
 }
 
 bool SDLThreePositionSwitch::isRightOfCenter (Position position, float margin) const
 {
-    return positionTextures_[+switchPosition_]->isRightOfCenter (position, margin);
+    return positionTiles_[+switchPosition_]->isRightOfCenter (position, margin);
 }
 
 bool SDLThreePositionSwitch::isLeftOfCenter (Position position, float margin) const
 {
-    return positionTextures_[+switchPosition_]->isLeftOfCenter (position, margin);
+    return positionTiles_[+switchPosition_]->isLeftOfCenter (position, margin);
 }
 
 Button::ThreePositionsState SDLThreePositionSwitch::nextPosition (Button::ThreePositionsState position)

@@ -7,13 +7,13 @@ using std::make_unique;
 using std::get;
 using std::logic_error;
 
-SDLCommonButton::SDLCommonButton (unique_ptr<SDLTile> buttonDownTexture,
-    unique_ptr<SDLTile> buttonUpTexture,
+SDLCommonButton::SDLCommonButton (unique_ptr<SDLTile> buttonDownTile,
+    unique_ptr<SDLTile> buttonUpTile,
     Button::TwoPositionsState initialState, 
     EventCallback buttonClicked)
     :
-    buttonDownTexture_ {move (buttonDownTexture)},
-    buttonUpTexture_ {move (buttonUpTexture)},
+    buttonDownTile_ {move (buttonDownTile)},
+    buttonUpTile_ {move (buttonUpTile)},
     buttonClicked_ {buttonClicked},
     buttonState_ {initialState}
 {}
@@ -51,17 +51,17 @@ void SDLCommonButton::render ()
     switch (buttonState_)
     {
         case TwoPositionsState::On:
-            buttonDownTexture_->render ();
+            buttonDownTile_->render ();
             break;
         
         case TwoPositionsState::Off:
-            buttonUpTexture_->render ();
+            buttonUpTile_->render ();
     }
 }
 
 bool SDLCommonButton::isWithinBounds (Position position, float margin) const
 {
-    return buttonUpTexture_->isWithinBounds (position, margin);
+    return buttonUpTile_->isWithinBounds (position, margin);
 }
 
 

@@ -45,7 +45,7 @@ SDLTile::~SDLTile ()
     }
 }
 
-// Render this texture to the target texture
+// Render this tile to the target texture
 void SDLTile::render ()
 {
     if (SDL_SetRenderTarget (sdlRenderer_, targetTexture_) != 0)
@@ -57,7 +57,7 @@ void SDLTile::render ()
     SDL_RenderCopy (sdlRenderer_, sdlTtexture_, NULL, &renderQuad);
 }
 
-// Determine if the given position is within the bounds of the texture within
+// Determine if the given position is within the bounds of the tile within
 // an optional margin. The margin is expressed as a floating point number
 // relative to the dimensions of the texture. A margin of 0.0 expresses
 // no margin, a margin of 1.0 indicates the margin equals the width and height

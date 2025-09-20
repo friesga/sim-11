@@ -31,13 +31,13 @@ SDLPanel::~SDLPanel ()
 void SDLPanel::createFront (string imageFile, 
         Frame<float> frame)
 {
-    unique_ptr<SDLTile> frontTexture = 
+    unique_ptr<SDLTile> frontTile = 
         make_unique<SDLTile> (imageFile, sdlRenderer_->getSDL_Renderer (),
             targetTexture_, placeFrameInTexture (frame));
 
-    fronts_.push_back (make_unique<SDLFront> (move (frontTexture)));
+    fronts_.push_back (make_unique<SDLFront> (move (frontTile)));
 
-    // frontTexture no longer is a valid pointer to the SDLTile but
+    // frontTile no longer is a valid pointer to the SDLTile but
     // that's ok since it's moved and SDLFront now has ownership of the
     // SDLTile.
 }
@@ -45,18 +45,18 @@ void SDLPanel::createFront (string imageFile,
 Indicator* SDLPanel::createIndicator (string indicatorOffImage,
     string indicatorOnImage, Indicator::State showFigure, Frame<float> frame)
 {
-    unique_ptr<SDLTile> indicatorOffTexture =
+    unique_ptr<SDLTile> indicatorOffTile =
         make_unique<SDLTile> (indicatorOffImage, sdlRenderer_->getSDL_Renderer (),
             targetTexture_, placeFrameInTexture (frame));
 
-    unique_ptr<SDLTile> indicatorOnTexture =
+    unique_ptr<SDLTile> indicatorOnTile =
         make_unique<SDLTile> (indicatorOnImage, sdlRenderer_->getSDL_Renderer (),
             targetTexture_, placeFrameInTexture (frame));
 
-    indicators_.push_back (make_unique<SDLIndicator> (move (indicatorOffTexture),
-        move (indicatorOnTexture), showFigure));
+    indicators_.push_back (make_unique<SDLIndicator> (move (indicatorOffTile),
+        move (indicatorOnTile), showFigure));
 
-    // indicatorOffTexture and indicatorOnTexture are no longer valid pointers
+    // indicatorOffTile and indicatorOnTile are no longer valid pointers
     // to the SDLTile's but that's ok since they are moved and SDLIndicator
     // now has ownership of the SDLTile's.
 
@@ -73,18 +73,18 @@ Button* SDLPanel::createLatchingButton (string buttonDownImage, string buttonUpI
     Button::TwoPositionsState initialState, Button::EventCallback buttonClicked,
     Frame<float> frame)
 {
-    unique_ptr<SDLTile> buttonDownTexture =
+    unique_ptr<SDLTile> buttonDownTile =
         make_unique<SDLTile> (buttonDownImage, sdlRenderer_->getSDL_Renderer (),
             targetTexture_, placeFrameInTexture (frame));
 
-    unique_ptr<SDLTile> buttonUpTexture =
+    unique_ptr<SDLTile> buttonUpTile =
         make_unique<SDLTile> (buttonUpImage, sdlRenderer_->getSDL_Renderer (),
             targetTexture_, placeFrameInTexture (frame));
 
-    buttons_.push_back (make_unique<SDLLatchingButton> (move (buttonDownTexture),
-        move (buttonUpTexture), initialState, buttonClicked));
+    buttons_.push_back (make_unique<SDLLatchingButton> (move (buttonDownTile),
+        move (buttonUpTile), initialState, buttonClicked));
 
-    // buttonDownTexture and buttonUpTexture are no longer valid pointers
+    // buttonDownTile and buttonUpTile are no longer valid pointers
     // to the SDLTile's but that's ok since they are moved and
     // SDLLatchingButton now has ownership of the SDLTile's.
 
@@ -95,18 +95,18 @@ Button* SDLPanel::createMomentaryButton (string buttonDownImage, string buttonUp
     Button::TwoPositionsState initialState, Button::EventCallback buttonClicked,
     Frame<float> frame)
 {
-    unique_ptr<SDLTile> buttonDownTexture =
+    unique_ptr<SDLTile> buttonDownTile =
         make_unique<SDLTile> (buttonDownImage, sdlRenderer_->getSDL_Renderer (),
             targetTexture_, placeFrameInTexture (frame));
 
-    unique_ptr<SDLTile> buttonUpTexture =
+    unique_ptr<SDLTile> buttonUpTile =
         make_unique<SDLTile> (buttonUpImage, sdlRenderer_->getSDL_Renderer (),
             targetTexture_, placeFrameInTexture (frame));
 
-    buttons_.push_back (make_unique<SDLMomentaryButton> (move (buttonDownTexture),
-        move (buttonUpTexture), initialState, buttonClicked));
+    buttons_.push_back (make_unique<SDLMomentaryButton> (move (buttonDownTile),
+        move (buttonUpTile), initialState, buttonClicked));
 
-    // buttonDownTexture and buttonUpTexture are no longer valid pointers
+    // buttonDownTile and buttonUpTile are no longer valid pointers
     // to the SDLTile's but that's ok since they are moved and
     // SDLMomentaryButton now has ownership of the SDLTile's.
 
@@ -118,32 +118,32 @@ IndicatorButton* SDLPanel::createSDLIndicatorLatchingButton (Button::ImageNames 
     Button::EventCallback buttonClicked, Indicator::State showIndicator,
     Frame<float> frame)
 {
-    SDLIndicatorLatchingButton::TextureGrid textures;
+    SDLIndicatorLatchingButton::TileGrid tiles;
 
-    textures[to_integral (Button::TwoPositionsState::Off)][to_integral (Indicator::State::Off)] =
+    tiles[to_integral (Button::TwoPositionsState::Off)][to_integral (Indicator::State::Off)] =
         make_unique<SDLTile> (imageNames.buttonUpIndicatorOff,
             sdlRenderer_->getSDL_Renderer (), targetTexture_,
             placeFrameInTexture (frame));
 
-    textures[to_integral (Button::TwoPositionsState::On)][to_integral (Indicator::State::Off)] =
+    tiles[to_integral (Button::TwoPositionsState::On)][to_integral (Indicator::State::Off)] =
         make_unique<SDLTile> (imageNames.buttonDownIndicatorOff,
             sdlRenderer_->getSDL_Renderer (), targetTexture_,
             placeFrameInTexture (frame));
 
-    textures[to_integral (Button::TwoPositionsState::Off)][to_integral (Indicator::State::On)] =
+    tiles[to_integral (Button::TwoPositionsState::Off)][to_integral (Indicator::State::On)] =
         make_unique<SDLTile> (imageNames.buttonUpIndicatorOn,
             sdlRenderer_->getSDL_Renderer (), targetTexture_,
             placeFrameInTexture (frame));
 
-    textures[to_integral (Button::TwoPositionsState::On)][to_integral (Indicator::State::On)] =
+    tiles[to_integral (Button::TwoPositionsState::On)][to_integral (Indicator::State::On)] =
         make_unique<SDLTile> (imageNames.buttonDownIndicatorOn,
             sdlRenderer_->getSDL_Renderer (), targetTexture_,
             placeFrameInTexture (frame));
 
-    indicatorButtons_.push_back (make_unique<SDLIndicatorLatchingButton> (move (textures),
+    indicatorButtons_.push_back (make_unique<SDLIndicatorLatchingButton> (move (tiles),
             initialState, buttonClicked, showIndicator));
 
-    // The texture pointers in the TextureGrid array are no longer valid pointers
+    // The tile pointers in the TileGrid array are no longer valid pointers
     // to the SDLTile's but that's ok since the array is moved to 
     // SDLIndicatorLatchingButton and that function now has ownership of the
     // SDLTile's.
@@ -156,19 +156,19 @@ Button* SDLPanel::createFourPositionSwitch (array<string, 4> positionImages,
     Button::EventCallback switchClicked,
     Frame<float> frame)
 {
-    SDLFourPositionSwitch::PositionTextures positionTextures;
+    SDLFourPositionSwitch::PositionTiles positionTiles;
 
     for (auto imageName : positionImages)
     {
-        positionTextures.emplace_back (make_unique<SDLTile> (imageName,
+        positionTiles.emplace_back (make_unique<SDLTile> (imageName,
             sdlRenderer_->getSDL_Renderer (), targetTexture_,
             placeFrameInTexture (frame)));
     }
 
-    buttons_.push_back (make_unique<SDLFourPositionSwitch> (move (positionTextures),
+    buttons_.push_back (make_unique<SDLFourPositionSwitch> (move (positionTiles),
         initialState, switchClicked));
         
-    // The texture pointers in the PositionsTextures vector are no longer
+    // The tile pointers in the PositionsTiles vector are no longer
     // valid pointers to the SDLTile's but that's ok since the vector
     // is moved to SDLFourPositionSwitch and that function now has ownership
     // of the SDLTile's.
@@ -181,19 +181,19 @@ Button* SDLPanel::createThreePositionSwitch (array<string, 3> positionImages,
     Button::EventCallback switchClicked,
     Frame<float> frame)
 {
-    SDLThreePositionSwitch::PositionTextures positionTextures;
+    SDLThreePositionSwitch::PositionTiles positionTiles;
 
     for (auto imageName : positionImages)
     {
-        positionTextures.emplace_back (make_unique<SDLTile> (imageName,
+        positionTiles.emplace_back (make_unique<SDLTile> (imageName,
             sdlRenderer_->getSDL_Renderer (), targetTexture_,
             placeFrameInTexture (frame)));
     }
 
-    buttons_.push_back (make_unique<SDLThreePositionSwitch> (move (positionTextures),
+    buttons_.push_back (make_unique<SDLThreePositionSwitch> (move (positionTiles),
         initialState, switchClicked));
 
-    // The texture pointers in the PositionsTextures vector are no longer
+    // The tile pointers in the PositionsTiles vector are no longer
     // valid pointers to the SDLTile's but that's ok since the vector
     // is moved to SDLThreePositionSwitch and that function now has ownership
     // of the SDLTile's.

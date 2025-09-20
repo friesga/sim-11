@@ -13,13 +13,13 @@ using std::unique_ptr;
 class SDLFront : public Front
 {
 public:
-    SDLFront (unique_ptr<SDLTile> frontTexture);
+    SDLFront (unique_ptr<SDLTile> frontTile);
     ~SDLFront ();
     void render ();
 
 private:
-    // The texture to use for this front
-    unique_ptr<SDLTile> sdlTtexture_;
+    // The tile to use for this front
+    unique_ptr<SDLTile> sdlTile_;
 };
 
 #endif // _SDLFRONT_H_

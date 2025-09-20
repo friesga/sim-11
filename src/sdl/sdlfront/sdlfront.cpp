@@ -4,9 +4,9 @@
 
 using std::make_unique;
 
-SDLFront::SDLFront (unique_ptr<SDLTile> frontTexture)
+SDLFront::SDLFront (unique_ptr<SDLTile> frontTile)
     : 
-    sdlTtexture_ (move (frontTexture))
+    sdlTile_ (move (frontTile))
 {}
 
 SDLFront::~SDLFront ()
@@ -14,6 +14,6 @@ SDLFront::~SDLFront ()
 
 void SDLFront::render ()
 {
-    sdlTtexture_->render ();
+    sdlTile_->render ();
 }
 
