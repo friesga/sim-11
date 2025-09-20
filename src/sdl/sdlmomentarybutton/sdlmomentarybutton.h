@@ -15,8 +15,8 @@ using std::unique_ptr;
 class SDLMomentaryButton : public SDLCommonButton
 {
 public:
-    SDLMomentaryButton (unique_ptr<SDLTile> buttonDownTexture,
-        unique_ptr<SDLTile> buttonUpTexture,
+    SDLMomentaryButton (unique_ptr<SDLTile> buttonDownTile,
+        unique_ptr<SDLTile> buttonUpTile,
         Button::TwoPositionsState initialState, EventCallback buttonClicked);
     ~SDLMomentaryButton ();
 

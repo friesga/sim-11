@@ -19,9 +19,9 @@ using std::unique_ptr;
 class SDLFourPositionSwitch : public Button
 {
 public:
-    using PositionTextures = vector<unique_ptr<SDLTile>>;
+    using PositionTiles = vector<unique_ptr<SDLTile>>;
 
-    SDLFourPositionSwitch (PositionTextures positionTextures,
+    SDLFourPositionSwitch (PositionTiles positionTiles,
         Button::FourPositionsState initialState,
         EventCallback switchClicked);
 
@@ -35,7 +35,7 @@ public:
 private:
     EventCallback switchClicked_;
     Button::FourPositionsState switchPosition_;
-    PositionTextures positionTextures_;
+    PositionTiles positionTiles_;
 
     bool isRightOfCenter (Position position, float margin) const;
     bool isLeftOfCenter (Position position, float margin) const;

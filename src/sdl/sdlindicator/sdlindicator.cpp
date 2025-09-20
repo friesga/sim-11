@@ -5,12 +5,12 @@
 using std::make_unique;
 using std::move;
 
-SDLIndicator::SDLIndicator (unique_ptr<SDLTile> indicatorOffTexture,
-    unique_ptr<SDLTile> indicatorOnTexture, State showIndicator)
+SDLIndicator::SDLIndicator (unique_ptr<SDLTile> indicatorOffTile,
+    unique_ptr<SDLTile> indicatorOnTile, State showIndicator)
     :
     showIndicator_ {showIndicator},
-    indicatorOffTexture_ {move (indicatorOffTexture)},
-    indicatorOnTexture_ {move (indicatorOnTexture)}
+    indicatorOffTile_ {move (indicatorOffTile)},
+    indicatorOnTile_ {move (indicatorOnTile)}
 {}
 
 SDLIndicator::~SDLIndicator ()
@@ -19,9 +19,9 @@ SDLIndicator::~SDLIndicator ()
 void SDLIndicator::render ()
 {
     if (showIndicator_ == Indicator::State::On)
-        indicatorOnTexture_->render ();
+        indicatorOnTile_->render ();
     else
-        indicatorOffTexture_->render ();
+        indicatorOffTile_->render ();
 }
 
 void SDLIndicator::show (Indicator::State showIndicator)
@@ -31,5 +31,5 @@ void SDLIndicator::show (Indicator::State showIndicator)
 
 bool SDLIndicator::isWithinBounds (Position position, float margin) const
 {
-    return indicatorOnTexture_->isWithinBounds (position, margin);
+    return indicatorOnTile_->isWithinBounds (position, margin);
 }

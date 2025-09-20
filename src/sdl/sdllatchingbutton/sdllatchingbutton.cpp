@@ -3,12 +3,12 @@
 using std::make_unique;
 using std::move;
 
-SDLLatchingButton::SDLLatchingButton (unique_ptr<SDLTile> buttonDownTexture,
-    unique_ptr<SDLTile> buttonUpTexture,
+SDLLatchingButton::SDLLatchingButton (unique_ptr<SDLTile> buttonDownTile,
+    unique_ptr<SDLTile> buttonUpTile,
     Button::TwoPositionsState initialState,
     EventCallback buttonClicked)
     :
-    SDLCommonButton (move (buttonDownTexture), move (buttonUpTexture),
+    SDLCommonButton (move (buttonDownTile), move (buttonUpTile),
         initialState, buttonClicked)
 {}
 

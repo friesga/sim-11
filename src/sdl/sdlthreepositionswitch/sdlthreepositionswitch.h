@@ -24,9 +24,9 @@ using std::unique_ptr;
 class SDLThreePositionSwitch : public Button
 {
 public:
-    using PositionTextures = vector<unique_ptr<SDLTile>>;
+    using PositionTiles = vector<unique_ptr<SDLTile>>;
 
-    SDLThreePositionSwitch (PositionTextures positionTextures,
+    SDLThreePositionSwitch (PositionTiles positionTiles,
         Button::ThreePositionsState initialState,
         EventCallback switchClicked);
 
@@ -40,7 +40,7 @@ public:
 private:
     EventCallback switchClicked_;
     Button::ThreePositionsState switchPosition_;
-    PositionTextures positionTextures_;
+    PositionTiles positionTiles_;
 
     bool isRightOfCenter (Position position, float margin) const;
     bool isLeftOfCenter (Position position, float margin) const;
