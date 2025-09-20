@@ -2,7 +2,7 @@
 #define _SDLINDICATOR_H_
 
 #include "panel.h"
-#include "../sdltexture/sdltexture.h"
+#include "../sdltile/sdltile.h"
 #include "../sdlrenderer/sdlrenderer.h"
 
 #include <SDL.h>
@@ -13,8 +13,8 @@ using std::unique_ptr;
 class SDLIndicator : public Indicator
 {
 public:
-    SDLIndicator (unique_ptr<SDLTexture> indicatorOffTexture,
-        unique_ptr<SDLTexture> indicatorOnTexture, State showIndicator);
+    SDLIndicator (unique_ptr<SDLTile> indicatorOffTexture,
+        unique_ptr<SDLTile> indicatorOnTexture, State showIndicator);
     ~SDLIndicator ();
 
     // Definition of functions required for the Indicator interface
@@ -25,8 +25,8 @@ public:
 
 private:
     // The textures to use for this indicator
-    unique_ptr<SDLTexture> indicatorOnTexture_;
-    unique_ptr<SDLTexture> indicatorOffTexture_;
+    unique_ptr<SDLTile> indicatorOnTexture_;
+    unique_ptr<SDLTile> indicatorOffTexture_;
 
     // Indication whether or not the indicator has to be shown
     Indicator::State showIndicator_;

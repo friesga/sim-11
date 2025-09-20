@@ -1,4 +1,4 @@
-#include "sdltexture.h"
+#include "sdltile.h"
 
 #include <SDL_image.h>
 #include <stdexcept>
@@ -7,7 +7,7 @@ using std::make_pair;
 using std::tie;
 using std::runtime_error;
 
-SDLTexture::SDLTexture (string imageFile, SDL_Renderer *renderer, 
+SDLTile::SDLTile (string imageFile, SDL_Renderer *renderer, 
     SDL_Texture* targetTexture, Frame<int> frame)
     :
     sdlRenderer_ {renderer},
@@ -33,7 +33,7 @@ SDLTexture::SDLTexture (string imageFile, SDL_Renderer *renderer,
     SDL_FreeSurface (loadedSurface);
 }
 
-SDLTexture::~SDLTexture ()
+SDLTile::~SDLTile ()
 {
     // Deallocate texture if allocated
     if (sdlTtexture_ != NULL)
@@ -46,7 +46,7 @@ SDLTexture::~SDLTexture ()
 }
 
 // Render this texture to the target texture
-void SDLTexture::render ()
+void SDLTile::render ()
 {
     if (SDL_SetRenderTarget (sdlRenderer_, targetTexture_) != 0)
         throw runtime_error ("Unable to set render target: " +
@@ -62,7 +62,7 @@ void SDLTexture::render ()
 // relative to the dimensions of the texture. A margin of 0.0 expresses
 // no margin, a margin of 1.0 indicates the margin equals the width and height
 // of the texture.
-bool SDLTexture::isWithinBounds (Position position, float margin) const
+bool SDLTile::isWithinBounds (Position position, float margin) const
 {
     float marginX = margin * width_;
     float marginY = margin * height_;
@@ -95,7 +95,7 @@ bool SDLTexture::isWithinBounds (Position position, float margin) const
     return true;
 }
 
-bool SDLTexture::isRightOfCenter (Position position, float margin) const
+bool SDLTile::isRightOfCenter (Position position, float margin) const
 {
     float marginX = margin * width_;
 
@@ -103,7 +103,7 @@ bool SDLTexture::isRightOfCenter (Position position, float margin) const
         position.x <= x_ + width_ / 2 + marginX;
 }
 
-bool SDLTexture::isLeftOfCenter (Position position, float margin) const
+bool SDLTile::isLeftOfCenter (Position position, float margin) const
 {
     float marginX = margin * width_;
 

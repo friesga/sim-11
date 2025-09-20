@@ -3,7 +3,7 @@
 
 #include "panel.h"
 #include "sdl/include/panelbuilder.h"
-#include "sdl/sdltexture/sdltexture.h"
+#include "sdl/sdltile/sdltile.h"
 #include "sdl/sdlrenderer/sdlrenderer.h"
 #include "sdl/sdlindicator/sdlindicator.h"
 #include "sdl/sdllatchingbutton/sdllatchingbutton.h"

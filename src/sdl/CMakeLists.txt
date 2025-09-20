@@ -8,7 +8,7 @@ set (SDL_SRCS
     sdlfront/sdlfront.cpp
     sdlcommonbutton/sdlcommonbutton.cpp
     sdlrenderer/sdlrenderer.cpp
-    sdltexture/sdltexture.cpp
+    sdltile/sdltile.cpp
     sdlmomentarybutton/sdlmomentarybutton.cpp
     sdllatchingbutton/sdllatchingbutton.cpp
     sdlindicatorlatchingbutton/sdlindicatorlatchingbutton.cpp

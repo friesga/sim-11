@@ -3,8 +3,8 @@
 using std::make_unique;
 using std::move;
 
-SDLLatchingButton::SDLLatchingButton (unique_ptr<SDLTexture> buttonDownTexture,
-    unique_ptr<SDLTexture> buttonUpTexture,
+SDLLatchingButton::SDLLatchingButton (unique_ptr<SDLTile> buttonDownTexture,
+    unique_ptr<SDLTile> buttonUpTexture,
     Button::TwoPositionsState initialState,
     EventCallback buttonClicked)
     :

@@ -3,7 +3,7 @@
 
 #include "panel.h"
 
-#include "../sdltexture/sdltexture.h"
+#include "../sdltile/sdltile.h"
 #include "../sdlrenderer/sdlrenderer.h"
 #include "unary_operator_plus.h"
 
@@ -24,7 +24,7 @@ using std::unique_ptr;
 class SDLThreePositionSwitch : public Button
 {
 public:
-    using PositionTextures = vector<unique_ptr<SDLTexture>>;
+    using PositionTextures = vector<unique_ptr<SDLTile>>;
 
     SDLThreePositionSwitch (PositionTextures positionTextures,
         Button::ThreePositionsState initialState,

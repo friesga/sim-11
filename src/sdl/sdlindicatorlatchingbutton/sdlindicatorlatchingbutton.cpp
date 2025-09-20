@@ -15,7 +15,7 @@ SDLIndicatorLatchingButton::SDLIndicatorLatchingButton (TextureGrid textures,
 SDLIndicatorLatchingButton::~SDLIndicatorLatchingButton ()
 {}
 
-SDLTexture* SDLIndicatorLatchingButton::getTexture (Button::TwoPositionsState buttonState,
+SDLTile* SDLIndicatorLatchingButton::getTexture (Button::TwoPositionsState buttonState,
     Indicator::State indicatorState) const
 {
     return textures_[to_integral (buttonState)][to_integral (indicatorState)].get ();

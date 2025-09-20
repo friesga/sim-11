@@ -1,5 +1,5 @@
-#ifndef _SDLTEXTURE_H_
-#define _SDLTEXTURE_H_
+#ifndef _SDLTILE_H_
+#define _SDLTILE_H_
 
 #include "panel.h"
 
@@ -10,12 +10,12 @@
 using std::string;
 using std::pair;
 
-class SDLTexture
+class SDLTile
 {
 public:
-    SDLTexture (string imageFile, SDL_Renderer *renderer, 
+    SDLTile (string imageFile, SDL_Renderer *renderer, 
         SDL_Texture* targetTexture, Frame<int> frame);
-    ~SDLTexture ();
+    ~SDLTile ();
     void render ();
     bool isWithinBounds (Position position, float margin = 0.0) const;
     bool isRightOfCenter (Position position, float margin = 0.0) const;
@@ -39,4 +39,4 @@ protected:
     int height_;
 };
 
-#endif // _SDLTEXTURUE_H_
+#endif // _SDLTILE_H_

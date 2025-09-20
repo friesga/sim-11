@@ -2,7 +2,7 @@
 #define _SDLFRONT_H_
 
 #include "panel.h"
-#include "../sdltexture/sdltexture.h"
+#include "../sdltile/sdltile.h"
 #include "../sdlrenderer/sdlrenderer.h"
 
 #include <SDL.h>
@@ -13,13 +13,13 @@ using std::unique_ptr;
 class SDLFront : public Front
 {
 public:
-    SDLFront (unique_ptr<SDLTexture> frontTexture);
+    SDLFront (unique_ptr<SDLTile> frontTexture);
     ~SDLFront ();
     void render ();
 
 private:
     // The texture to use for this front
-    unique_ptr<SDLTexture> sdlTtexture_;
+    unique_ptr<SDLTile> sdlTtexture_;
 };
 
 #endif // _SDLFRONT_H_

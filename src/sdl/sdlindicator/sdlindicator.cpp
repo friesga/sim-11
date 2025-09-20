@@ -5,8 +5,8 @@
 using std::make_unique;
 using std::move;
 
-SDLIndicator::SDLIndicator (unique_ptr<SDLTexture> indicatorOffTexture,
-    unique_ptr<SDLTexture> indicatorOnTexture, State showIndicator)
+SDLIndicator::SDLIndicator (unique_ptr<SDLTile> indicatorOffTexture,
+    unique_ptr<SDLTile> indicatorOnTexture, State showIndicator)
     :
     showIndicator_ {showIndicator},
     indicatorOffTexture_ {move (indicatorOffTexture)},

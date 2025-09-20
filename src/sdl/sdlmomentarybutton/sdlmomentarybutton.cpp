@@ -1,7 +1,7 @@
 #include "sdlmomentarybutton.h"
 
-SDLMomentaryButton::SDLMomentaryButton (unique_ptr<SDLTexture> buttonDownTexture,
-    unique_ptr<SDLTexture> buttonUpTexture,
+SDLMomentaryButton::SDLMomentaryButton (unique_ptr<SDLTile> buttonDownTexture,
+    unique_ptr<SDLTile> buttonUpTexture,
     Button::TwoPositionsState initialState, EventCallback buttonClicked)
     :
     SDLCommonButton (move (buttonDownTexture), move (buttonUpTexture),

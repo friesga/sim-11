@@ -7,8 +7,8 @@ using std::make_unique;
 using std::get;
 using std::logic_error;
 
-SDLCommonButton::SDLCommonButton (unique_ptr<SDLTexture> buttonDownTexture,
-    unique_ptr<SDLTexture> buttonUpTexture,
+SDLCommonButton::SDLCommonButton (unique_ptr<SDLTile> buttonDownTexture,
+    unique_ptr<SDLTile> buttonUpTexture,
     Button::TwoPositionsState initialState, 
     EventCallback buttonClicked)
     :

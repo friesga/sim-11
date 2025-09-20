@@ -4,7 +4,7 @@
 #include "panel.h"
 #include "../sdlcommonbutton/sdlcommonbutton.h"
 #include "../sdlrenderer/sdlrenderer.h"
-#include "../sdltexture/sdltexture.h"
+#include "../sdltile/sdltile.h"
 #include "../sdlevent/sdlevent.h"
 
 #include <SDL.h>
@@ -23,7 +23,7 @@ public:
     // The TextureGrid is indexed first by the button state and then by
     // the indicator state. So TextureGrid[0][0] is the texture for the
     // button in the on state and the indicator in the off state.
-    using TextureGrid = array<array<unique_ptr<SDLTexture>, 2>, 2>;
+    using TextureGrid = array<array<unique_ptr<SDLTile>, 2>, 2>;
 
     SDLIndicatorLatchingButton (TextureGrid textures,
         Button::TwoPositionsState initialState, EventCallback buttonClicked,
@@ -42,7 +42,7 @@ public:
 
 
 private:
-    SDLTexture* getTexture (Button::TwoPositionsState buttonState,
+    SDLTile* getTexture (Button::TwoPositionsState buttonState,
         Indicator::State indicatorState) const;
 
     EventCallback buttonClicked_;

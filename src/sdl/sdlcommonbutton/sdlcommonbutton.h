@@ -2,7 +2,7 @@
 #define _SDLCOMMONBUTTON_H_
 
 #include "panel.h"
-#include "../sdltexture/sdltexture.h"
+#include "../sdltile/sdltile.h"
 #include "../sdlrenderer/sdlrenderer.h"
 #include "../sdlevent/sdlevent.h"
 
@@ -18,8 +18,8 @@ using std::unique_ptr;
 class SDLCommonButton : public Button
 {
 public:
-    SDLCommonButton (unique_ptr<SDLTexture> buttonDownTexture,
-        unique_ptr<SDLTexture> buttonUpTexture,
+    SDLCommonButton (unique_ptr<SDLTile> buttonDownTexture,
+        unique_ptr<SDLTile> buttonUpTexture,
         Button::TwoPositionsState initialState,
         EventCallback buttonClicked);
     ~SDLCommonButton ();
@@ -32,8 +32,8 @@ public:
     bool isWithinBounds (Position position, float margin = 0.0) const override;
 
 protected:
-    unique_ptr<SDLTexture> buttonDownTexture_;
-    unique_ptr<SDLTexture> buttonUpTexture_;
+    unique_ptr<SDLTile> buttonDownTexture_;
+    unique_ptr<SDLTile> buttonUpTexture_;
     EventCallback buttonClicked_;
     TwoPositionsState buttonState_;
 
