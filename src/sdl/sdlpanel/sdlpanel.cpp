@@ -13,14 +13,14 @@ using std::pair;
 using std::make_pair;
 
 SDLPanel::SDLPanel (unique_ptr<SDLRenderer> &sdlRenderer,
-    SDL_Texture* texture, Cabinet::Position cabinetPosition, RackUnit unitHeight)
+    SDLTexture& texture, Cabinet::Position cabinetPosition, RackUnit unitHeight)
     :
     sdlRenderer_ {sdlRenderer},
     targetTexture_ {texture},
     cabinetPosition_ {cabinetPosition}
 {
     static const RackUnit h9642Height {20_ru};
-    auto [textureWidth, textureHeight] = getTextureDimensions (targetTexture_);
+    auto [textureWidth, textureHeight] = targetTexture_.dimensions ();
     pixelsPerRackUnit_ = textureHeight / h9642Height;
     panelHeight_ = pixelsPerRackUnit_ * unitHeight;
 }
@@ -33,7 +33,7 @@ void SDLPanel::createFront (string imageFile,
 {
     unique_ptr<SDLTile> frontTile = 
         make_unique<SDLTile> (imageFile, sdlRenderer_->getSDL_Renderer (),
-            targetTexture_, placeFrameInTexture (frame));
+            targetTexture_.getSDL_Texture (), placeFrameInTexture (frame));
 
     fronts_.push_back (make_unique<SDLFront> (move (frontTile)));
 
@@ -47,11 +47,11 @@ Indicator* SDLPanel::createIndicator (string indicatorOffImage,
 {
     unique_ptr<SDLTile> indicatorOffTile =
         make_unique<SDLTile> (indicatorOffImage, sdlRenderer_->getSDL_Renderer (),
-            targetTexture_, placeFrameInTexture (frame));
+            targetTexture_.getSDL_Texture (), placeFrameInTexture (frame));
 
     unique_ptr<SDLTile> indicatorOnTile =
         make_unique<SDLTile> (indicatorOnImage, sdlRenderer_->getSDL_Renderer (),
-            targetTexture_, placeFrameInTexture (frame));
+            targetTexture_.getSDL_Texture (), placeFrameInTexture (frame));
 
     indicators_.push_back (make_unique<SDLIndicator> (move (indicatorOffTile),
         move (indicatorOnTile), showFigure));
@@ -75,11 +75,11 @@ Button* SDLPanel::createLatchingButton (string buttonDownImage, string buttonUpI
 {
     unique_ptr<SDLTile> buttonDownTile =
         make_unique<SDLTile> (buttonDownImage, sdlRenderer_->getSDL_Renderer (),
-            targetTexture_, placeFrameInTexture (frame));
+            targetTexture_.getSDL_Texture (), placeFrameInTexture (frame));
 
     unique_ptr<SDLTile> buttonUpTile =
         make_unique<SDLTile> (buttonUpImage, sdlRenderer_->getSDL_Renderer (),
-            targetTexture_, placeFrameInTexture (frame));
+            targetTexture_.getSDL_Texture (), placeFrameInTexture (frame));
 
     buttons_.push_back (make_unique<SDLLatchingButton> (move (buttonDownTile),
         move (buttonUpTile), initialState, buttonClicked));
@@ -97,11 +97,11 @@ Button* SDLPanel::createMomentaryButton (string buttonDownImage, string buttonUp
 {
     unique_ptr<SDLTile> buttonDownTile =
         make_unique<SDLTile> (buttonDownImage, sdlRenderer_->getSDL_Renderer (),
-            targetTexture_, placeFrameInTexture (frame));
+            targetTexture_.getSDL_Texture (), placeFrameInTexture (frame));
 
     unique_ptr<SDLTile> buttonUpTile =
         make_unique<SDLTile> (buttonUpImage, sdlRenderer_->getSDL_Renderer (),
-            targetTexture_, placeFrameInTexture (frame));
+            targetTexture_.getSDL_Texture (), placeFrameInTexture (frame));
 
     buttons_.push_back (make_unique<SDLMomentaryButton> (move (buttonDownTile),
         move (buttonUpTile), initialState, buttonClicked));
@@ -122,22 +122,22 @@ IndicatorButton* SDLPanel::createSDLIndicatorLatchingButton (Button::ImageNames 
 
     tiles[to_integral (Button::TwoPositionsState::Off)][to_integral (Indicator::State::Off)] =
         make_unique<SDLTile> (imageNames.buttonUpIndicatorOff,
-            sdlRenderer_->getSDL_Renderer (), targetTexture_,
+            sdlRenderer_->getSDL_Renderer (), targetTexture_.getSDL_Texture (),
             placeFrameInTexture (frame));
 
     tiles[to_integral (Button::TwoPositionsState::On)][to_integral (Indicator::State::Off)] =
         make_unique<SDLTile> (imageNames.buttonDownIndicatorOff,
-            sdlRenderer_->getSDL_Renderer (), targetTexture_,
+            sdlRenderer_->getSDL_Renderer (), targetTexture_.getSDL_Texture (),
             placeFrameInTexture (frame));
 
     tiles[to_integral (Button::TwoPositionsState::Off)][to_integral (Indicator::State::On)] =
         make_unique<SDLTile> (imageNames.buttonUpIndicatorOn,
-            sdlRenderer_->getSDL_Renderer (), targetTexture_,
+            sdlRenderer_->getSDL_Renderer (), targetTexture_.getSDL_Texture (),
             placeFrameInTexture (frame));
 
     tiles[to_integral (Button::TwoPositionsState::On)][to_integral (Indicator::State::On)] =
         make_unique<SDLTile> (imageNames.buttonDownIndicatorOn,
-            sdlRenderer_->getSDL_Renderer (), targetTexture_,
+            sdlRenderer_->getSDL_Renderer (), targetTexture_.getSDL_Texture (),
             placeFrameInTexture (frame));
 
     indicatorButtons_.push_back (make_unique<SDLIndicatorLatchingButton> (move (tiles),
@@ -161,7 +161,7 @@ Button* SDLPanel::createFourPositionSwitch (array<string, 4> positionImages,
     for (auto imageName : positionImages)
     {
         positionTiles.emplace_back (make_unique<SDLTile> (imageName,
-            sdlRenderer_->getSDL_Renderer (), targetTexture_,
+            sdlRenderer_->getSDL_Renderer (), targetTexture_.getSDL_Texture (),
             placeFrameInTexture (frame)));
     }
 
@@ -186,7 +186,7 @@ Button* SDLPanel::createThreePositionSwitch (array<string, 3> positionImages,
     for (auto imageName : positionImages)
     {
         positionTiles.emplace_back (make_unique<SDLTile> (imageName,
-            sdlRenderer_->getSDL_Renderer (), targetTexture_,
+            sdlRenderer_->getSDL_Renderer (), targetTexture_.getSDL_Texture (),
             placeFrameInTexture (frame)));
     }
 
@@ -212,7 +212,7 @@ Frame<int> SDLPanel::placeFrameInTexture (Frame<float> frame)
     // from these relative values.
     // The cabinet's height is a rack unit, starting from zero, hence
     // the addition by one.
-    auto [textureWidth, textureHeight] = getTextureDimensions (targetTexture_);
+    auto [textureWidth, textureHeight] = targetTexture_.dimensions ();
     int x = static_cast<int> (frame.x * textureWidth);
     int y = static_cast<int> (textureHeight - 
         ((cabinetPosition_.height + 1) * pixelsPerRackUnit_) +
@@ -220,16 +220,6 @@ Frame<int> SDLPanel::placeFrameInTexture (Frame<float> frame)
     int width_ = static_cast<int> (frame.width * textureWidth);
     int height_ = static_cast<int> (frame.height * panelHeight_);
     return {x, y, width_, height_};
-}
-
-pair<int, int> SDLPanel::getTextureDimensions (SDL_Texture* texture)
-{
-    Uint32 format;
-    int access;
-    int width, height;
-
-    SDL_QueryTexture (texture, &format, &access, &width, &height);
-    return make_pair (width, height);
 }
 
 // Render all elements in this panel to the window

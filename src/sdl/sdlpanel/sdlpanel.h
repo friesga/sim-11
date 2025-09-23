@@ -25,7 +25,7 @@ using std::array;
 class SDLPanel : public Panel
 {
 public:
-    SDLPanel (unique_ptr<SDLRenderer> &sdlRenderer, SDL_Texture* texture,
+    SDLPanel (unique_ptr<SDLRenderer> &sdlRenderer, SDLTexture& texture,
         Cabinet::Position cabinetPosition, RackUnit unitHeight);
     ~SDLPanel ();
 
@@ -61,7 +61,6 @@ public:
 
 private:
     Frame<int> placeFrameInTexture (Frame<float> frame);
-    pair<int, int> getTextureDimensions (SDL_Texture* texture);
 
     // Reference to the renderer to use for fronts, indicators and buttons
     unique_ptr<SDLRenderer> &sdlRenderer_;
@@ -74,7 +73,7 @@ private:
     vector<unique_ptr<IndicatorButton>> indicatorButtons_;
 
     // Reference to the panel to draw the panel on
-    SDL_Texture* targetTexture_;
+    SDLTexture& targetTexture_;
 
     // Position of the panel in the target texture
     Position panelPosition_ {0, 0};

@@ -2,6 +2,9 @@
 #define _SDLTEXTURE_H_
 
 #include <SDL.h>
+#include <utility>
+
+using std::pair;
 
 class SDLTexture
 {
@@ -29,6 +32,7 @@ public:
     }
 
     void setColorModulation (uint8_t red, uint8_t green, uint8_t blue);
+    pair<int, int> dimensions () const;
 
     // ToDo: Remove this function
     SDL_Texture* getSDL_Texture () const { return sdlTexture_; }
