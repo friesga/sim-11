@@ -32,7 +32,7 @@ void SDLPanel::createFront (string imageFile,
         Frame<float> frame)
 {
     unique_ptr<SDLTile> frontTile = 
-        make_unique<SDLTile> (imageFile, sdlRenderer_->getSDL_Renderer (),
+        make_unique<SDLTile> (imageFile, *sdlRenderer_,
             targetTexture_.getSDL_Texture (), placeFrameInTexture (frame));
 
     fronts_.push_back (make_unique<SDLFront> (move (frontTile)));
@@ -46,11 +46,11 @@ Indicator* SDLPanel::createIndicator (string indicatorOffImage,
     string indicatorOnImage, Indicator::State showFigure, Frame<float> frame)
 {
     unique_ptr<SDLTile> indicatorOffTile =
-        make_unique<SDLTile> (indicatorOffImage, sdlRenderer_->getSDL_Renderer (),
+        make_unique<SDLTile> (indicatorOffImage, *sdlRenderer_,
             targetTexture_.getSDL_Texture (), placeFrameInTexture (frame));
 
     unique_ptr<SDLTile> indicatorOnTile =
-        make_unique<SDLTile> (indicatorOnImage, sdlRenderer_->getSDL_Renderer (),
+        make_unique<SDLTile> (indicatorOnImage, *sdlRenderer_,
             targetTexture_.getSDL_Texture (), placeFrameInTexture (frame));
 
     indicators_.push_back (make_unique<SDLIndicator> (move (indicatorOffTile),
@@ -74,11 +74,11 @@ Button* SDLPanel::createLatchingButton (string buttonDownImage, string buttonUpI
     Frame<float> frame)
 {
     unique_ptr<SDLTile> buttonDownTile =
-        make_unique<SDLTile> (buttonDownImage, sdlRenderer_->getSDL_Renderer (),
+        make_unique<SDLTile> (buttonDownImage, *sdlRenderer_,
             targetTexture_.getSDL_Texture (), placeFrameInTexture (frame));
 
     unique_ptr<SDLTile> buttonUpTile =
-        make_unique<SDLTile> (buttonUpImage, sdlRenderer_->getSDL_Renderer (),
+        make_unique<SDLTile> (buttonUpImage, *sdlRenderer_,
             targetTexture_.getSDL_Texture (), placeFrameInTexture (frame));
 
     buttons_.push_back (make_unique<SDLLatchingButton> (move (buttonDownTile),
@@ -96,11 +96,11 @@ Button* SDLPanel::createMomentaryButton (string buttonDownImage, string buttonUp
     Frame<float> frame)
 {
     unique_ptr<SDLTile> buttonDownTile =
-        make_unique<SDLTile> (buttonDownImage, sdlRenderer_->getSDL_Renderer (),
+        make_unique<SDLTile> (buttonDownImage, *sdlRenderer_,
             targetTexture_.getSDL_Texture (), placeFrameInTexture (frame));
 
     unique_ptr<SDLTile> buttonUpTile =
-        make_unique<SDLTile> (buttonUpImage, sdlRenderer_->getSDL_Renderer (),
+        make_unique<SDLTile> (buttonUpImage, *sdlRenderer_,
             targetTexture_.getSDL_Texture (), placeFrameInTexture (frame));
 
     buttons_.push_back (make_unique<SDLMomentaryButton> (move (buttonDownTile),
@@ -122,22 +122,22 @@ IndicatorButton* SDLPanel::createSDLIndicatorLatchingButton (Button::ImageNames 
 
     tiles[to_integral (Button::TwoPositionsState::Off)][to_integral (Indicator::State::Off)] =
         make_unique<SDLTile> (imageNames.buttonUpIndicatorOff,
-            sdlRenderer_->getSDL_Renderer (), targetTexture_.getSDL_Texture (),
+            *sdlRenderer_, targetTexture_.getSDL_Texture (),
             placeFrameInTexture (frame));
 
     tiles[to_integral (Button::TwoPositionsState::On)][to_integral (Indicator::State::Off)] =
         make_unique<SDLTile> (imageNames.buttonDownIndicatorOff,
-            sdlRenderer_->getSDL_Renderer (), targetTexture_.getSDL_Texture (),
+            *sdlRenderer_, targetTexture_.getSDL_Texture (),
             placeFrameInTexture (frame));
 
     tiles[to_integral (Button::TwoPositionsState::Off)][to_integral (Indicator::State::On)] =
         make_unique<SDLTile> (imageNames.buttonUpIndicatorOn,
-            sdlRenderer_->getSDL_Renderer (), targetTexture_.getSDL_Texture (),
+            *sdlRenderer_, targetTexture_.getSDL_Texture (),
             placeFrameInTexture (frame));
 
     tiles[to_integral (Button::TwoPositionsState::On)][to_integral (Indicator::State::On)] =
         make_unique<SDLTile> (imageNames.buttonDownIndicatorOn,
-            sdlRenderer_->getSDL_Renderer (), targetTexture_.getSDL_Texture (),
+            *sdlRenderer_, targetTexture_.getSDL_Texture (),
             placeFrameInTexture (frame));
 
     indicatorButtons_.push_back (make_unique<SDLIndicatorLatchingButton> (move (tiles),
@@ -161,7 +161,7 @@ Button* SDLPanel::createFourPositionSwitch (array<string, 4> positionImages,
     for (auto imageName : positionImages)
     {
         positionTiles.emplace_back (make_unique<SDLTile> (imageName,
-            sdlRenderer_->getSDL_Renderer (), targetTexture_.getSDL_Texture (),
+            *sdlRenderer_, targetTexture_.getSDL_Texture (),
             placeFrameInTexture (frame)));
     }
 
@@ -186,7 +186,7 @@ Button* SDLPanel::createThreePositionSwitch (array<string, 3> positionImages,
     for (auto imageName : positionImages)
     {
         positionTiles.emplace_back (make_unique<SDLTile> (imageName,
-            sdlRenderer_->getSDL_Renderer (), targetTexture_.getSDL_Texture (),
+            *sdlRenderer_, targetTexture_.getSDL_Texture (),
             placeFrameInTexture (frame)));
     }
 

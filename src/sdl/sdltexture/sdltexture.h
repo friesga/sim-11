@@ -3,8 +3,10 @@
 
 #include <SDL.h>
 #include <utility>
+#include <string>
 
 using std::pair;
+using std::string;
 
 class SDLTexture
 {
@@ -12,6 +14,7 @@ class SDLTexture
     friend class SDLRenderer;
 
 public:
+    ~SDLTexture ();
 
     // SDLTextures are non-copyable, only movable
     SDLTexture (const SDLTexture&) = delete;
@@ -39,6 +42,7 @@ public:
 
 private:
     SDLTexture (SDL_Renderer* renderer, int textureWidth, int textureHeight);
+    SDLTexture (SDL_Renderer* renderer, string imageFile);
 
     SDL_Texture* sdlTexture_;
 };

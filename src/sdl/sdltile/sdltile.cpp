@@ -7,7 +7,7 @@ using std::make_pair;
 using std::tie;
 using std::runtime_error;
 
-SDLTile::SDLTile (string imageFile, SDL_Renderer *renderer, 
+SDLTile::SDLTile (string imageFile, SDLRenderer& renderer, 
     SDL_Texture* targetTexture, Frame<int> frame)
     :
     sdlRenderer_ {renderer},
@@ -18,43 +18,17 @@ SDLTile::SDLTile (string imageFile, SDL_Renderer *renderer,
     height_ {frame.height}
 {
     // Load image at specified path
-    SDL_Surface* loadedSurface = IMG_Load (imageFile.c_str ());
-    if (loadedSurface == NULL)
-        throw runtime_error ("Unable to load image " + imageFile +
-            " SDL_image error: " + IMG_GetError ());
-
-    // Create texture from surface pixels
-    sdlTtexture_ = SDL_CreateTextureFromSurface (renderer, loadedSurface);
-    if (sdlTtexture_ == NULL)
-        throw runtime_error ("Unable to create texture from " + imageFile +
-            "SDL error: " + SDL_GetError ());
-
-    // Get rid of old loaded surface
-    SDL_FreeSurface (loadedSurface);
-}
-
-SDLTile::~SDLTile ()
-{
-    // Deallocate texture if allocated
-    if (sdlTtexture_ != NULL)
-    {
-        SDL_DestroyTexture (sdlTtexture_);
-        sdlTtexture_ = NULL;
-        width_ = 0;
-        height_ = 0;
-    }
+    sdlTtexture_ = renderer.createTexture (imageFile);
 }
 
 // Render this tile to the target texture
 void SDLTile::render ()
 {
-    if (SDL_SetRenderTarget (sdlRenderer_, targetTexture_) != 0)
-        throw runtime_error ("Unable to set render target: " +
-            string (SDL_GetError ()));
+    sdlRenderer_.setTarget (targetTexture_);
 
     // Set rendering space and render texture
-    SDL_Rect renderQuad {x_, y_, width_, height_};
-    SDL_RenderCopy (sdlRenderer_, sdlTtexture_, NULL, &renderQuad);
+    sdlRenderer_.copy (sdlTtexture_->getSDL_Texture (),
+        Frame<int> {x_, y_, width_, height_});
 }
 
 // Determine if the given position is within the bounds of the tile within

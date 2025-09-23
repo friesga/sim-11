@@ -6,8 +6,10 @@
 
 #include <SDL.h>
 #include <memory>
+#include <string>
 
 using std::unique_ptr;
+using std::string;
 
 class SDLRenderer
 {
@@ -27,11 +29,14 @@ public:
     // in a C++ wrapper and to avoid this we create just references from
     // SDLRenderer to the textures using this renderer.
     unique_ptr<SDLTexture> createTexture (int textureWidth, int textureHeight);
+    unique_ptr<SDLTexture> createTexture (string imageFile);
 
+    void setTarget (SDL_Texture* texture);
     void setDrawColor (unsigned char red, unsigned char green,
         unsigned char blue, unsigned char alpha = 0xff);
     void clear ();
     void copy (SDLTexture& texture);
+    void copy (SDL_Texture* texture, Frame<int> renderFrame);
     void update ();
 
     void copyCircle (SDLTexture& texture, Position sourceCenter,

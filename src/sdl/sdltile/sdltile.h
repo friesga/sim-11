@@ -2,20 +2,23 @@
 #define _SDLTILE_H_
 
 #include "panel.h"
+#include "sdl/sdlrenderer/sdlrenderer.h"
 
 #include <SDL.h>
 #include <string>
 #include <utility>
+#include <memory>
 
 using std::string;
 using std::pair;
+using std::unique_ptr;
 
 class SDLTile
 {
 public:
-    SDLTile (string imageFile, SDL_Renderer *renderer, 
+    SDLTile (string imageFile, SDLRenderer& renderer, 
         SDL_Texture* targetTexture, Frame<int> frame);
-    ~SDLTile ();
+
     void render ();
     bool isWithinBounds (Position position, float margin = 0.0) const;
     bool isRightOfCenter (Position position, float margin = 0.0) const;
@@ -23,10 +26,10 @@ public:
 
 private:
     // The actual hardware texture
-    SDL_Texture* sdlTtexture_;
+    unique_ptr<SDLTexture> sdlTtexture_;
 
     // The SDL renderer to use
-    SDL_Renderer *sdlRenderer_;
+    SDLRenderer& sdlRenderer_;
 
     // Reference to the target texture to render this texture on
     SDL_Texture* targetTexture_;

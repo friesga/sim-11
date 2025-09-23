@@ -1,5 +1,6 @@
 #include "sdltexture.h"
 
+#include <SDL_image.h>
 #include <stdexcept>
 #include <string>
 
@@ -18,6 +19,26 @@ SDLTexture::SDLTexture (SDL_Renderer* renderer, int textureWidth, int textureHei
     if (sdlTexture_ == NULL)
         throw runtime_error ("Target texture could not be created. SDL error: " +
             string (SDL_GetError ()));
+}
+
+SDLTexture::SDLTexture (SDL_Renderer* renderer, string imageFile)
+{
+    // Load image at specified path
+    sdlTexture_ = IMG_LoadTexture (renderer, imageFile.c_str ());
+
+    if (sdlTexture_ == NULL)
+        throw runtime_error ("Unable to create texture from " + imageFile +
+            "SDL error: " + SDL_GetError ());
+}
+
+SDLTexture::~SDLTexture ()
+{
+    // Deallocate texture if allocated
+    if (sdlTexture_ != NULL)
+    {
+        SDL_DestroyTexture (sdlTexture_);
+        sdlTexture_ = NULL;
+    }
 }
 
 void SDLTexture::setColorModulation (uint8_t red, uint8_t green, uint8_t blue)

@@ -34,6 +34,20 @@ unique_ptr<SDLTexture> SDLRenderer::createTexture (int textureWidth,
         textureWidth, textureHeight));
 }
 
+// Create a texture from the given image file
+unique_ptr<SDLTexture> SDLRenderer::createTexture (string imageFile)
+{
+    return unique_ptr<SDLTexture> (new SDLTexture (this->sdl_Renderer_,
+        imageFile));
+}
+
+void SDLRenderer::setTarget (SDL_Texture* texture)
+{
+    if (SDL_SetRenderTarget (sdl_Renderer_, texture) != 0)
+        throw runtime_error ("Unable to set render target: " +
+            string (SDL_GetError ()));
+}
+
 void SDLRenderer::setDrawColor (unsigned char red, unsigned char green,
         unsigned char blue, unsigned char alpha)
 {
@@ -50,6 +64,14 @@ void SDLRenderer::copy (SDLTexture& texture)
 {
     SDL_SetRenderTarget (sdl_Renderer_, nullptr);
     SDL_RenderCopy (sdl_Renderer_, texture.sdlTexture_, NULL, NULL);
+}
+
+void SDLRenderer::copy (SDL_Texture* texture, Frame<int> renderFrame)
+{
+    // Set rendering space and render texture
+    SDL_Rect renderQuad {renderFrame.x, renderFrame.y, renderFrame.width,
+        renderFrame.height};
+    SDL_RenderCopy (sdl_Renderer_, texture, NULL, &renderQuad);
 }
 
 void SDLRenderer::update ()
