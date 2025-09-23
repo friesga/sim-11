@@ -10,7 +10,8 @@ using std::string;
 
 class SDLTexture
 {
-    // Just SDLRenderer can create textures
+    // Just SDLRenderer can create textures and SDLRenderer also needs access
+    // to the texture for rendering the texture.
     friend class SDLRenderer;
 
 public:
