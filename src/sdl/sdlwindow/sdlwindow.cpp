@@ -99,8 +99,7 @@ void SDLWindow::drawLoupe ()
         windowPosition_, loupeRadius_);
 
     // Draw loupe outline
-    SDL_SetRenderDrawColor (sdlRenderer_->getSDL_Renderer (),
-        255, 0, 0, 255);
+    sdlRenderer_->setDrawColor (255, 0, 0, 255);
     sdlRenderer_->drawCircle (windowPosition_, loupeRadius_);
 }
 
