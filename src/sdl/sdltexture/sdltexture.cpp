@@ -41,6 +41,24 @@ SDLTexture::~SDLTexture ()
     }
 }
 
+SDLTexture::SDLTexture (SDLTexture&& other) noexcept
+    : 
+    sdlTexture_ (other.sdlTexture_)
+{
+    other.sdlTexture_ = nullptr;
+}
+
+SDLTexture& SDLTexture::operator= (SDLTexture&& other) noexcept
+{
+    if (this != &other)
+    {
+        if (sdlTexture_) SDL_DestroyTexture (sdlTexture_);
+        sdlTexture_ = other.sdlTexture_;
+        other.sdlTexture_ = nullptr;
+    }
+    return *this;
+}
+
 void SDLTexture::setColorModulation (uint8_t red, uint8_t green, uint8_t blue)
 {
     SDL_SetTextureColorMod (sdlTexture_, red, green, blue);

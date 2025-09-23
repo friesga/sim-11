@@ -18,26 +18,16 @@ public:
 
     // SDLTextures are non-copyable, only movable
     SDLTexture (const SDLTexture&) = delete;
-    SDLTexture& operator=(const SDLTexture&) = delete;
-    SDLTexture (SDLTexture&& other) noexcept : sdlTexture_ (other.sdlTexture_)
-    {
-        other.sdlTexture_ = nullptr;
-    }
-    SDLTexture& operator=(SDLTexture&& other) noexcept
-    {
-        if (this != &other)
-        {
-            if (sdlTexture_) SDL_DestroyTexture (sdlTexture_);
-            sdlTexture_ = other.sdlTexture_;
-            other.sdlTexture_ = nullptr;
-        }
-        return *this;
-    }
+    SDLTexture& operator= (const SDLTexture&) = delete;
+    
+    SDLTexture (SDLTexture&& other) noexcept;
+    SDLTexture& operator= (SDLTexture&& other) noexcept;
 
     void setColorModulation (uint8_t red, uint8_t green, uint8_t blue);
     pair<int, int> dimensions () const;
 
 private:
+    // Textures can only be created by the SDLRenderer
     SDLTexture (SDL_Renderer* renderer, int textureWidth, int textureHeight);
     SDLTexture (SDL_Renderer* renderer, string imageFile);
 
