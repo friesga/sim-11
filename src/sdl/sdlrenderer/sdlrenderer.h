@@ -1,6 +1,7 @@
 #ifndef _SDLRENDERER_H_
 #define _SDLRENDERER_H_
 
+#include "panel.h"
 #include "sdl/sdltexture/sdltexture.h"
 
 #include <SDL.h>
@@ -30,8 +31,13 @@ public:
     void setDrawColor (unsigned char red, unsigned char green,
         unsigned char blue, unsigned char alpha = 0xff);
     void clear ();
-    void copy (SDL_Texture* texture);
+    void copy (SDLTexture& texture);
     void update ();
+
+    void copyCircle (SDLTexture& texture, Position sourceCenter,
+        int sourceRadius, Position destCenter, int destRadius);
+    int drawCircle (Position position, int radius);
+
     SDL_Renderer *getSDL_Renderer ();
 };
 

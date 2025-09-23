@@ -17,3 +17,8 @@ SDLTexture::SDLTexture (SDL_Renderer* renderer, int textureWidth, int textureHei
         throw runtime_error ("Target texture could not be created. SDL error: " +
             string (SDL_GetError ()));
 }
+
+void SDLTexture::setColorModulation (uint8_t red, uint8_t green, uint8_t blue)
+{
+    SDL_SetTextureColorMod (sdlTexture_, red, green, blue);
+}

@@ -10,8 +10,7 @@ class SDLTexture
 
 public:
 
-#if 0
-    // Non-copyable, only movable
+    // SDLTextures are non-copyable, only movable
     SDLTexture (const SDLTexture&) = delete;
     SDLTexture& operator=(const SDLTexture&) = delete;
     SDLTexture (SDLTexture&& other) noexcept : sdlTexture_ (other.sdlTexture_)
@@ -28,8 +27,11 @@ public:
         }
         return *this;
     }
-#endif
 
+    void setColorModulation (uint8_t red, uint8_t green, uint8_t blue);
+
+    // ToDo: Remove this function
+    SDL_Texture* getSDL_Texture () const { return sdlTexture_; }
 
 private:
     SDLTexture (SDL_Renderer* renderer, int textureWidth, int textureHeight);

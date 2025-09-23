@@ -41,9 +41,7 @@ SDLWindow::SDLWindow (char const *title, Frame<int> frame,
     sdlRenderer_->setDrawColor (0, 0, 0, 0);
 
     // ToDo: Make target texture large enough to be able to zoom into it
-    targetTexture_ = SDL_CreateTexture (sdlRenderer_->getSDL_Renderer (),
-        SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_TARGET,
-        textureWidth_, textureHeight_);
+    targetTexture_ = sdlRenderer_->createTexture (textureWidth_, textureHeight_);
 
     if (targetTexture_ == NULL)
         throw runtime_error ("Target texture could not be created. SDL error: " +
@@ -68,7 +66,7 @@ Panel *SDLWindow::createPanel (Cabinet::Position cabinetPosition,
     if (!h9642Cabinet.addUnit (cabinetPosition, unitHeight))
         throw invalid_argument ("Unit position already occupied. Can't add panel to cabinet");
 
-    panels_.push_back (make_unique<SDLPanel> (sdlRenderer_, targetTexture_,
+    panels_.push_back (make_unique<SDLPanel> (sdlRenderer_, targetTexture_->getSDL_Texture (),
         cabinetPosition, unitHeight));
     return panels_.back ().get ();
 }
@@ -80,12 +78,12 @@ void SDLWindow::render ()
         sdlPanel->render ();
 
     // Copy the target texture to the window frame buffer
-    sdlRenderer_->copy (targetTexture_);
+    sdlRenderer_->copy (*targetTexture_);
 
     if (showLoupe_)
         drawLoupe ();
     else
-        SDL_SetTextureColorMod (targetTexture_, 255, 255, 255);
+        targetTexture_->setColorModulation (255, 255, 255);
 
     sdlRenderer_->update ();
 }
@@ -96,15 +94,14 @@ void SDLWindow::drawLoupe ()
     // The source rectangle is related to a position in the texture
     // while the destination rectangle is related to a postion in
     // the window.
-    RenderCopyCircle (sdlRenderer_->getSDL_Renderer (), targetTexture_,
+    sdlRenderer_->copyCircle (*targetTexture_,
         texturePosition_, loupeRadius_ / 2,
         windowPosition_, loupeRadius_);
 
     // Draw loupe outline
     SDL_SetRenderDrawColor (sdlRenderer_->getSDL_Renderer (),
         255, 0, 0, 255);
-    RenderDrawCircle (sdlRenderer_->getSDL_Renderer (), windowPosition_,
-        loupeRadius_);
+    sdlRenderer_->drawCircle (windowPosition_, loupeRadius_);
 }
 
 bool SDLWindow::handleEvents ()

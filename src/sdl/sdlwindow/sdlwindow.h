@@ -54,7 +54,7 @@ private:
     vector<unique_ptr<SDLPanel>> panels_;
 
     // The target texture the panels have to render to
-    SDL_Texture* targetTexture_;
+    unique_ptr<SDLTexture> targetTexture_;
 
     // Definition of a cabinet to keep track of occupied positions in
     // the cabinet. 
@@ -65,11 +65,6 @@ private:
     bool handleEvents () override;
 
     Position windowToTexturePosition (Position windowPosition);
-    void RenderCopyCircle (SDL_Renderer* renderer, SDL_Texture* texture,
-        Position sourceCenter, int sourceRadius,
-        Position destCenter, int destRadius);
-    int RenderDrawCircle (SDL_Renderer* renderer, Position position,
-        int radius);
     void drawLoupe ();
 };
 
