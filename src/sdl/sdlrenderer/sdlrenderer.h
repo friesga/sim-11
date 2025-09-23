@@ -42,8 +42,6 @@ public:
     void copyCircle (SDLTexture& texture, Position sourceCenter,
         int sourceRadius, Position destCenter, int destRadius);
     int drawCircle (Position position, int radius);
-
-    SDL_Renderer *getSDL_Renderer ();
 };
 
 #endif // _SDLRENDERER_H_
