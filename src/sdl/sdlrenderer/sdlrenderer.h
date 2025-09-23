@@ -36,7 +36,7 @@ public:
         unsigned char blue, unsigned char alpha = 0xff);
     void clear ();
     void copy (SDLTexture& texture);
-    void copy (SDL_Texture* texture, Frame<int> renderFrame);
+    void copy (SDLTexture& texture, Frame<int> renderFrame);
     void update ();
 
     void copyCircle (SDLTexture& texture, Position sourceCenter,

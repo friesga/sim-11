@@ -37,9 +37,6 @@ public:
     void setColorModulation (uint8_t red, uint8_t green, uint8_t blue);
     pair<int, int> dimensions () const;
 
-    // ToDo: Remove this function
-    SDL_Texture* getSDL_Texture () const { return sdlTexture_; }
-
 private:
     SDLTexture (SDL_Renderer* renderer, int textureWidth, int textureHeight);
     SDLTexture (SDL_Renderer* renderer, string imageFile);

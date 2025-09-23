@@ -66,12 +66,12 @@ void SDLRenderer::copy (SDLTexture& texture)
     SDL_RenderCopy (sdl_Renderer_, texture.sdlTexture_, NULL, NULL);
 }
 
-void SDLRenderer::copy (SDL_Texture* texture, Frame<int> renderFrame)
+void SDLRenderer::copy (SDLTexture& texture, Frame<int> renderFrame)
 {
     // Set rendering space and render texture
     SDL_Rect renderQuad {renderFrame.x, renderFrame.y, renderFrame.width,
         renderFrame.height};
-    SDL_RenderCopy (sdl_Renderer_, texture, NULL, &renderQuad);
+    SDL_RenderCopy (sdl_Renderer_, texture.sdlTexture_, NULL, &renderQuad);
 }
 
 void SDLRenderer::update ()

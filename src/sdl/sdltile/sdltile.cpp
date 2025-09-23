@@ -27,7 +27,7 @@ void SDLTile::render ()
     sdlRenderer_.setTarget (targetTexture_);
 
     // Set rendering space and render texture
-    sdlRenderer_.copy (sdlTtexture_->getSDL_Texture (),
+    sdlRenderer_.copy (*sdlTtexture_,
         Frame<int> {x_, y_, width_, height_});
 }
 
