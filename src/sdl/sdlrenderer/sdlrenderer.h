@@ -1,7 +1,12 @@
 #ifndef _SDLRENDERER_H_
 #define _SDLRENDERER_H_
 
+#include "sdl/sdltexture/sdltexture.h"
+
 #include <SDL.h>
+#include <memory>
+
+using std::unique_ptr;
 
 class SDLRenderer
 {
@@ -15,6 +20,12 @@ public:
         int index = -1, 
         unsigned long flags = SDL_RENDERER_ACCELERATED);
     ~SDLRenderer ();
+
+    // The renderer also is factory for textures. In SDL the relationship
+    // between textures and renderer is bidirectional. This create issues
+    // in a C++ wrapper and to avoid this we create just references from
+    // SDLRenderer to the textures using this renderer.
+    unique_ptr<SDLTexture> createTexture (int textureWidth, int textureHeight);
 
     void setDrawColor (unsigned char red, unsigned char green,
         unsigned char blue, unsigned char alpha = 0xff);

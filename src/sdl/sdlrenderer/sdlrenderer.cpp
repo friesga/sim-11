@@ -6,6 +6,7 @@
 
 using std::runtime_error;
 using std::string;
+using std::unique_ptr;
 
 SDLRenderer::SDLRenderer (SDL_Window *sdlWindow, int index, unsigned long flags)
 {
@@ -20,6 +21,17 @@ SDLRenderer::SDLRenderer (SDL_Window *sdlWindow, int index, unsigned long flags)
 SDLRenderer::~SDLRenderer ()
 {
     SDL_DestroyRenderer (sdl_Renderer_);
+}
+
+
+// Create an empty texture with the given dimensions
+unique_ptr<SDLTexture> SDLRenderer::createTexture (int textureWidth,
+    int textureHeight)
+{
+    // The SDLTexture object has to be created using new() as make_unique()
+    // has no access to the private constructor of SDLTexture
+    return unique_ptr<SDLTexture> (new SDLTexture (this->sdl_Renderer_,
+        textureWidth, textureHeight));
 }
 
 void SDLRenderer::setDrawColor (unsigned char red, unsigned char green,
