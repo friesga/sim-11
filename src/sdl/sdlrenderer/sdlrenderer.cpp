@@ -41,9 +41,9 @@ unique_ptr<SDLTexture> SDLRenderer::createTexture (string imageFile)
         imageFile));
 }
 
-void SDLRenderer::setTarget (SDL_Texture* texture)
+void SDLRenderer::setTarget (SDLTexture& texture)
 {
-    if (SDL_SetRenderTarget (sdl_Renderer_, texture) != 0)
+    if (SDL_SetRenderTarget (sdl_Renderer_, texture.sdlTexture_) != 0)
         throw runtime_error ("Unable to set render target: " +
             string (SDL_GetError ()));
 }

@@ -17,7 +17,7 @@ class SDLTile
 {
 public:
     SDLTile (string imageFile, SDLRenderer& renderer, 
-        SDL_Texture* targetTexture, Frame<int> frame);
+        SDLTexture& targetTexture, Frame<int> frame);
 
     void render ();
     bool isWithinBounds (Position position, float margin = 0.0) const;
@@ -32,7 +32,7 @@ private:
     SDLRenderer& sdlRenderer_;
 
     // Reference to the target texture to render this texture on
-    SDL_Texture* targetTexture_;
+    SDLTexture& targetTexture_;
 
 protected:
     // Image positon and dimensions

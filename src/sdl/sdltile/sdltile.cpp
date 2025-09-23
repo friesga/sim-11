@@ -8,7 +8,7 @@ using std::tie;
 using std::runtime_error;
 
 SDLTile::SDLTile (string imageFile, SDLRenderer& renderer, 
-    SDL_Texture* targetTexture, Frame<int> frame)
+    SDLTexture& targetTexture, Frame<int> frame)
     :
     sdlRenderer_ {renderer},
     targetTexture_ {targetTexture},

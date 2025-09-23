@@ -31,7 +31,7 @@ public:
     unique_ptr<SDLTexture> createTexture (int textureWidth, int textureHeight);
     unique_ptr<SDLTexture> createTexture (string imageFile);
 
-    void setTarget (SDL_Texture* texture);
+    void setTarget (SDLTexture& texture);
     void setDrawColor (unsigned char red, unsigned char green,
         unsigned char blue, unsigned char alpha = 0xff);
     void clear ();
