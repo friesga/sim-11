@@ -1,5 +1,6 @@
 set (SDL_SRCS
     sdlinit/sdlinit.cpp
+    filepanelbuilder/filepanelbuilder.cpp
     sdlpanel/sdlpanel.cpp
     sdlwindow/sdlwindow.cpp
     sdlindicator/sdlindicator.cpp

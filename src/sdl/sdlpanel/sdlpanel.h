@@ -29,7 +29,7 @@ public:
         Cabinet::Position cabinetPosition, RackUnit unitHeight);
     ~SDLPanel ();
 
-    // Definition of functions required for the implementation of a Panel
+    // Definition of functions required by the PanelBuilder interface
     virtual void createFront (string imageFile, 
         Frame<float> frame) override;
     virtual Indicator *createIndicator (string indicatorOffImage,
@@ -54,9 +54,14 @@ public:
         Button::EventCallback switchClicked,
         Frame<float> frame) override;
 
-    // SDL implementation specific functions
+    // ToDo: To be removed when PanelBuilder interface is removed
+    PanelComposition getPanelComposition () override { return PanelComposition {}; };
+
+    // Functions required by the Panel interface
     void render () override;
     void handleEvent (InputEvent const *event) override;
+
+    // SDL implementation specific functions
     bool isOverButton (Position position);
 
 private:

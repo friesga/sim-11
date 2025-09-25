@@ -149,15 +149,23 @@ public:
     virtual void show (Indicator::State showFigure) = 0;
 };
 
-class Panel
+struct PanelComposition
+{
+    vector<unique_ptr<Front>> fronts_;
+    vector<unique_ptr<Indicator>> indicators_;
+    vector<unique_ptr<Button>> buttons_;
+    vector<unique_ptr<IndicatorButton>> indicatorButtons_;
+};
+
+class PanelBuilder
 {
 public:
     // A default value (0) may be specified for the width and height of
     // images. This indicates that the width and height of the image
     // will be used.
-    virtual void createFront (string imageFile, 
+    virtual void createFront (string imageFile,
         Frame<float> frame) = 0;
-    virtual Indicator *createIndicator (string indicatorOffImage,
+    virtual Indicator* createIndicator (string indicatorOffImage,
         string indicatorOnImage, Indicator::State showFigure,
         Frame<float> frame) = 0;
     virtual Button* createLatchingButton (string buttonDownImage, string buttonUpImage,
@@ -178,6 +186,12 @@ public:
         Button::ThreePositionsState initialState,
         Button::EventCallback switchClicked,
         Frame<float> frame) = 0;
+    virtual PanelComposition getPanelComposition () = 0;
+};
+
+class Panel : public PanelBuilder
+{
+public:
     virtual void render () = 0;
     virtual void handleEvent (InputEvent const* event) = 0;
 };
@@ -193,6 +207,8 @@ public:
     
     virtual void show () = 0;
     virtual Panel *createPanel (Cabinet::Position cabinetPosition,
+        RackUnit unitHeight) = 0;
+    virtual unique_ptr<PanelBuilder> createFilePanelBuilder (Cabinet::Position cabinetPosition,
         RackUnit unitHeight) = 0;
     virtual void render () = 0;
     virtual bool handleEvents () = 0;

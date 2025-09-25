@@ -1,23 +1,26 @@
 #include "filepanelbuilder.h"
 
-#include "sdl/sdlfront/sdlfront.h"
+#include <algorithm>
+#include <utility>
 
-#include <string>
-#include <memory>
-
-using std::string;
+using std::unique_ptr;
+using std::shared_ptr;
 using std::make_unique;
+using std::move;
+using std::string;
+using std::ranges::find_if;
+using std::pair;
 using std::make_pair;
 
 FilePanelBuilder::FilePanelBuilder (unique_ptr<SDLRenderer>& sdlRenderer,
-    SDL_Texture* texture, Cabinet::Position cabinetPosition, RackUnit unitHeight)
+    SDLTexture& texture, Cabinet::Position cabinetPosition, RackUnit unitHeight)
     :
     sdlRenderer_ {sdlRenderer},
     targetTexture_ {texture},
     cabinetPosition_ {cabinetPosition}
 {
     static const RackUnit h9642Height {20_ru};
-    auto [textureWidth, textureHeight] = getTextureDimensions (targetTexture_);
+    auto [textureWidth, textureHeight] = targetTexture_.dimensions ();
     pixelsPerRackUnit_ = textureHeight / h9642Height;
     panelHeight_ = pixelsPerRackUnit_ * unitHeight;
 }
@@ -26,7 +29,7 @@ void FilePanelBuilder::createFront (string imageFile,
     Frame<float> frame)
 {
     unique_ptr<SDLTile> frontTile =
-        make_unique<SDLTile> (imageFile, sdlRenderer_->getSDL_Renderer (),
+        make_unique<SDLTile> (imageFile, *sdlRenderer_,
             targetTexture_, placeFrameInTexture (frame));
 
     fronts_.push_back (make_unique<SDLFront> (move (frontTile)));
@@ -37,15 +40,14 @@ void FilePanelBuilder::createFront (string imageFile,
 }
 
 Indicator* FilePanelBuilder::createIndicator (string indicatorOffImage,
-    string indicatorOnImage, Indicator::State showFigure,
-    Frame<float> frame)
+    string indicatorOnImage, Indicator::State showFigure, Frame<float> frame)
 {
     unique_ptr<SDLTile> indicatorOffTile =
-        make_unique<SDLTile> (indicatorOffImage, sdlRenderer_->getSDL_Renderer (),
+        make_unique<SDLTile> (indicatorOffImage, *sdlRenderer_,
             targetTexture_, placeFrameInTexture (frame));
 
     unique_ptr<SDLTile> indicatorOnTile =
-        make_unique<SDLTile> (indicatorOnImage, sdlRenderer_->getSDL_Renderer (),
+        make_unique<SDLTile> (indicatorOnImage, *sdlRenderer_,
             targetTexture_, placeFrameInTexture (frame));
 
     indicators_.push_back (make_unique<SDLIndicator> (move (indicatorOffTile),
@@ -69,11 +71,11 @@ Button* FilePanelBuilder::createLatchingButton (string buttonDownImage, string b
     Frame<float> frame)
 {
     unique_ptr<SDLTile> buttonDownTile =
-        make_unique<SDLTile> (buttonDownImage, sdlRenderer_->getSDL_Renderer (),
+        make_unique<SDLTile> (buttonDownImage, *sdlRenderer_,
             targetTexture_, placeFrameInTexture (frame));
 
     unique_ptr<SDLTile> buttonUpTile =
-        make_unique<SDLTile> (buttonUpImage, sdlRenderer_->getSDL_Renderer (),
+        make_unique<SDLTile> (buttonUpImage, *sdlRenderer_,
             targetTexture_, placeFrameInTexture (frame));
 
     buttons_.push_back (make_unique<SDLLatchingButton> (move (buttonDownTile),
@@ -91,11 +93,11 @@ Button* FilePanelBuilder::createMomentaryButton (string buttonDownImage, string 
     Frame<float> frame)
 {
     unique_ptr<SDLTile> buttonDownTile =
-        make_unique<SDLTile> (buttonDownImage, sdlRenderer_->getSDL_Renderer (),
+        make_unique<SDLTile> (buttonDownImage, *sdlRenderer_,
             targetTexture_, placeFrameInTexture (frame));
 
     unique_ptr<SDLTile> buttonUpTile =
-        make_unique<SDLTile> (buttonUpImage, sdlRenderer_->getSDL_Renderer (),
+        make_unique<SDLTile> (buttonUpImage, *sdlRenderer_,
             targetTexture_, placeFrameInTexture (frame));
 
     buttons_.push_back (make_unique<SDLMomentaryButton> (move (buttonDownTile),
@@ -113,29 +115,25 @@ IndicatorButton* FilePanelBuilder::createSDLIndicatorLatchingButton (Button::Ima
     Button::EventCallback buttonClicked, Indicator::State showIndicator,
     Frame<float> frame)
 {
-    SDLIndicatorLatchingButton::TileGrid textures;
+    SDLIndicatorLatchingButton::TileGrid tiles;
 
-    textures[to_integral (Button::TwoPositionsState::Off)][to_integral (Indicator::State::Off)] =
+    tiles[to_integral (Button::TwoPositionsState::Off)][to_integral (Indicator::State::Off)] =
         make_unique<SDLTile> (imageNames.buttonUpIndicatorOff,
-            sdlRenderer_->getSDL_Renderer (), targetTexture_,
-            placeFrameInTexture (frame));
+            *sdlRenderer_, targetTexture_, placeFrameInTexture (frame));
 
-    textures[to_integral (Button::TwoPositionsState::On)][to_integral (Indicator::State::Off)] =
+    tiles[to_integral (Button::TwoPositionsState::On)][to_integral (Indicator::State::Off)] =
         make_unique<SDLTile> (imageNames.buttonDownIndicatorOff,
-            sdlRenderer_->getSDL_Renderer (), targetTexture_,
-            placeFrameInTexture (frame));
+            *sdlRenderer_, targetTexture_, placeFrameInTexture (frame));
 
-    textures[to_integral (Button::TwoPositionsState::Off)][to_integral (Indicator::State::On)] =
+    tiles[to_integral (Button::TwoPositionsState::Off)][to_integral (Indicator::State::On)] =
         make_unique<SDLTile> (imageNames.buttonUpIndicatorOn,
-            sdlRenderer_->getSDL_Renderer (), targetTexture_,
-            placeFrameInTexture (frame));
+            *sdlRenderer_, targetTexture_, placeFrameInTexture (frame));
 
-    textures[to_integral (Button::TwoPositionsState::On)][to_integral (Indicator::State::On)] =
+    tiles[to_integral (Button::TwoPositionsState::On)][to_integral (Indicator::State::On)] =
         make_unique<SDLTile> (imageNames.buttonDownIndicatorOn,
-            sdlRenderer_->getSDL_Renderer (), targetTexture_,
-            placeFrameInTexture (frame));
+            *sdlRenderer_, targetTexture_, placeFrameInTexture (frame));
 
-    indicatorButtons_.push_back (make_unique<SDLIndicatorLatchingButton> (move (textures),
+    indicatorButtons_.push_back (make_unique<SDLIndicatorLatchingButton> (move (tiles),
         initialState, buttonClicked, showIndicator));
 
     // The tile pointers in the TileGrid array are no longer valid pointers
@@ -151,16 +149,15 @@ Button* FilePanelBuilder::createFourPositionSwitch (array<string, 4> positionIma
     Button::EventCallback switchClicked,
     Frame<float> frame)
 {
-    SDLFourPositionSwitch::PositionTiles positionTextures;
+    SDLFourPositionSwitch::PositionTiles positionTiles;
 
     for (auto imageName : positionImages)
     {
-        positionTextures.emplace_back (make_unique<SDLTile> (imageName,
-            sdlRenderer_->getSDL_Renderer (), targetTexture_,
-            placeFrameInTexture (frame)));
+        positionTiles.emplace_back (make_unique<SDLTile> (imageName,
+            *sdlRenderer_, targetTexture_, placeFrameInTexture (frame)));
     }
 
-    buttons_.push_back (make_unique<SDLFourPositionSwitch> (move (positionTextures),
+    buttons_.push_back (make_unique<SDLFourPositionSwitch> (move (positionTiles),
         initialState, switchClicked));
 
     // The tile pointers in the PositionsTiles vector are no longer
@@ -176,16 +173,15 @@ Button* FilePanelBuilder::createThreePositionSwitch (array<string, 3> positionIm
     Button::EventCallback switchClicked,
     Frame<float> frame)
 {
-    SDLThreePositionSwitch::PositionTiles positionTextures;
+    SDLThreePositionSwitch::PositionTiles positionTiles;
 
     for (auto imageName : positionImages)
     {
-        positionTextures.emplace_back (make_unique<SDLTile> (imageName,
-            sdlRenderer_->getSDL_Renderer (), targetTexture_,
-            placeFrameInTexture (frame)));
+        positionTiles.emplace_back (make_unique<SDLTile> (imageName,
+            *sdlRenderer_, targetTexture_, placeFrameInTexture (frame)));
     }
 
-    buttons_.push_back (make_unique<SDLThreePositionSwitch> (move (positionTextures),
+    buttons_.push_back (make_unique<SDLThreePositionSwitch> (move (positionTiles),
         initialState, switchClicked));
 
     // The tile pointers in the PositionsTiles vector are no longer
@@ -207,7 +203,7 @@ Frame<int> FilePanelBuilder::placeFrameInTexture (Frame<float> frame)
     // from these relative values.
     // The cabinet's height is a rack unit, starting from zero, hence
     // the addition by one.
-    auto [textureWidth, textureHeight] = getTextureDimensions (targetTexture_);
+    auto [textureWidth, textureHeight] = targetTexture_.dimensions ();
     int x = static_cast<int> (frame.x * textureWidth);
     int y = static_cast<int> (textureHeight -
         ((cabinetPosition_.height + 1) * pixelsPerRackUnit_) +
@@ -217,23 +213,8 @@ Frame<int> FilePanelBuilder::placeFrameInTexture (Frame<float> frame)
     return {x, y, width_, height_};
 }
 
-pair<int, int> FilePanelBuilder::getTextureDimensions (SDL_Texture* texture)
-{
-    Uint32 format;
-    int access;
-    int width, height;
-
-    SDL_QueryTexture (texture, &format, &access, &width, &height);
-    return make_pair (width, height);
-}
-
 PanelComposition FilePanelBuilder::getPanelComposition ()
 {
-    return PanelComposition
-    {
-        move (fronts_),
-        move (indicators_),
-        move (buttons_),
-        move (indicatorButtons_)
-    };
+    return PanelComposition {move (fronts_), move (indicators_),
+        move (buttons_), move (indicatorButtons_)};
 }
