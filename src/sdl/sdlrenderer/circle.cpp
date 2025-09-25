@@ -19,7 +19,7 @@ void SDLRenderer::copyCircle (SDLTexture& texture,
                 SDL_Rect sourcePixel = {sourceX, sourceY, 1, 1};
                 SDL_Rect destPixel = {x, y, 1, 1};
 
-                SDL_RenderCopy (sdl_Renderer_, texture.sdl2_Texture_, &sourcePixel, &destPixel);
+                SDL_RenderCopy (sdl2_Renderer_, texture.sdl2_Texture_, &sourcePixel, &destPixel);
             }
         }
     }
@@ -40,21 +40,21 @@ int SDLRenderer::drawCircle (Position position, int radius)
 
     while (offsety >= offsetx)
     {
-        status += SDL_RenderDrawPoint (sdl_Renderer_, position.x + offsetx,
+        status += SDL_RenderDrawPoint (sdl2_Renderer_, position.x + offsetx,
             position.y + offsety);
-        status += SDL_RenderDrawPoint (sdl_Renderer_, position.x + offsety,
+        status += SDL_RenderDrawPoint (sdl2_Renderer_, position.x + offsety,
             position.y + offsetx);
-        status += SDL_RenderDrawPoint (sdl_Renderer_, position.x - offsetx,
+        status += SDL_RenderDrawPoint (sdl2_Renderer_, position.x - offsetx,
             position.y + offsety);
-        status += SDL_RenderDrawPoint (sdl_Renderer_, position.x - offsety,
+        status += SDL_RenderDrawPoint (sdl2_Renderer_, position.x - offsety,
             position.y + offsetx);
-        status += SDL_RenderDrawPoint (sdl_Renderer_, position.x + offsetx,
+        status += SDL_RenderDrawPoint (sdl2_Renderer_, position.x + offsetx,
             position.y - offsety);
-        status += SDL_RenderDrawPoint (sdl_Renderer_, position.x + offsety,
+        status += SDL_RenderDrawPoint (sdl2_Renderer_, position.x + offsety,
             position.y - offsetx);
-        status += SDL_RenderDrawPoint (sdl_Renderer_, position.x - offsetx,
+        status += SDL_RenderDrawPoint (sdl2_Renderer_, position.x - offsetx,
             position.y - offsety);
-        status += SDL_RenderDrawPoint (sdl_Renderer_, position.x - offsety,
+        status += SDL_RenderDrawPoint (sdl2_Renderer_, position.x - offsety,
             position.y - offsetx);
 
         if (status < 0)
@@ -99,13 +99,13 @@ int SDLRenderer::fillCircle (int x, int y, int radius)
     while (offsety >= offsetx)
     {
 
-        status += SDL_RenderDrawLine (sdl_Renderer_, x - offsety, y + offsetx,
+        status += SDL_RenderDrawLine (sdl2_Renderer_, x - offsety, y + offsetx,
             x + offsety, y + offsetx);
-        status += SDL_RenderDrawLine (sdl_Renderer_, x - offsetx, y + offsety,
+        status += SDL_RenderDrawLine (sdl2_Renderer_, x - offsetx, y + offsety,
             x + offsetx, y + offsety);
-        status += SDL_RenderDrawLine (sdl_Renderer_, x - offsetx, y - offsety,
+        status += SDL_RenderDrawLine (sdl2_Renderer_, x - offsetx, y - offsety,
             x + offsetx, y - offsety);
-        status += SDL_RenderDrawLine (sdl_Renderer_, x - offsety, y - offsetx,
+        status += SDL_RenderDrawLine (sdl2_Renderer_, x - offsety, y - offsetx,
             x + offsety, y - offsetx);
 
         if (status < 0)

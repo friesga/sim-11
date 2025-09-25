@@ -16,7 +16,7 @@ class SDLRenderer
     friend class SDLPanel;
 
     // The SDL renderer to use in rendering in the given window
-    SDL_Renderer *sdl_Renderer_;
+    SDL_Renderer* sdl2_Renderer_;
 
 public:
     SDLRenderer (SDL_Window *sdlWindow, 
