@@ -12,11 +12,11 @@ using std::make_pair;
 // The default constructor creates an empty texture with the given dimensions
 SDLTexture::SDLTexture (SDL_Renderer* renderer, int textureWidth, int textureHeight)
 {
-    sdlTexture_ = SDL_CreateTexture (renderer,
+    sdl2_Texture_ = SDL_CreateTexture (renderer,
         SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_TARGET,
         textureWidth, textureHeight);
 
-    if (sdlTexture_ == NULL)
+    if (sdl2_Texture_ == NULL)
         throw runtime_error ("Target texture could not be created. SDL error: " +
             string (SDL_GetError ()));
 }
@@ -24,9 +24,9 @@ SDLTexture::SDLTexture (SDL_Renderer* renderer, int textureWidth, int textureHei
 SDLTexture::SDLTexture (SDL_Renderer* renderer, string imageFile)
 {
     // Load image at specified path
-    sdlTexture_ = IMG_LoadTexture (renderer, imageFile.c_str ());
+    sdl2_Texture_ = IMG_LoadTexture (renderer, imageFile.c_str ());
 
-    if (sdlTexture_ == NULL)
+    if (sdl2_Texture_ == NULL)
         throw runtime_error ("Unable to create texture from " + imageFile +
             "SDL error: " + SDL_GetError ());
 }
@@ -34,34 +34,36 @@ SDLTexture::SDLTexture (SDL_Renderer* renderer, string imageFile)
 SDLTexture::~SDLTexture ()
 {
     // Deallocate texture if allocated
-    if (sdlTexture_ != NULL)
+    if (sdl2_Texture_ != NULL)
     {
-        SDL_DestroyTexture (sdlTexture_);
-        sdlTexture_ = NULL;
+        SDL_DestroyTexture (sdl2_Texture_);
+        sdl2_Texture_ = NULL;
     }
 }
 
 SDLTexture::SDLTexture (SDLTexture&& other) noexcept
     : 
-    sdlTexture_ (other.sdlTexture_)
+    sdl2_Texture_ (other.sdl2_Texture_)
 {
-    other.sdlTexture_ = nullptr;
+    other.sdl2_Texture_ = nullptr;
 }
 
 SDLTexture& SDLTexture::operator= (SDLTexture&& other) noexcept
 {
     if (this != &other)
     {
-        if (sdlTexture_) SDL_DestroyTexture (sdlTexture_);
-        sdlTexture_ = other.sdlTexture_;
-        other.sdlTexture_ = nullptr;
+        if (sdl2_Texture_)
+            SDL_DestroyTexture (sdl2_Texture_);
+
+        sdl2_Texture_ = other.sdl2_Texture_;
+        other.sdl2_Texture_ = nullptr;
     }
     return *this;
 }
 
 void SDLTexture::setColorModulation (uint8_t red, uint8_t green, uint8_t blue)
 {
-    SDL_SetTextureColorMod (sdlTexture_, red, green, blue);
+    SDL_SetTextureColorMod (sdl2_Texture_, red, green, blue);
 }
 
 pair<int, int> SDLTexture::dimensions () const
@@ -70,6 +72,6 @@ pair<int, int> SDLTexture::dimensions () const
     int access;
     int width, height;
 
-    SDL_QueryTexture (sdlTexture_, &format, &access, &width, &height);
+    SDL_QueryTexture (sdl2_Texture_, &format, &access, &width, &height);
     return make_pair (width, height);
 }

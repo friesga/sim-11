@@ -19,7 +19,7 @@ void SDLRenderer::copyCircle (SDLTexture& texture,
                 SDL_Rect sourcePixel = {sourceX, sourceY, 1, 1};
                 SDL_Rect destPixel = {x, y, 1, 1};
 
-                SDL_RenderCopy (sdl_Renderer_, texture.sdlTexture_, &sourcePixel, &destPixel);
+                SDL_RenderCopy (sdl_Renderer_, texture.sdl2_Texture_, &sourcePixel, &destPixel);
             }
         }
     }

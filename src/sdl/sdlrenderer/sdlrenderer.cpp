@@ -43,7 +43,7 @@ unique_ptr<SDLTexture> SDLRenderer::createTexture (string imageFile)
 
 void SDLRenderer::setTarget (SDLTexture& texture)
 {
-    if (SDL_SetRenderTarget (sdl_Renderer_, texture.sdlTexture_) != 0)
+    if (SDL_SetRenderTarget (sdl_Renderer_, texture.sdl2_Texture_) != 0)
         throw runtime_error ("Unable to set render target: " +
             string (SDL_GetError ()));
 }
@@ -63,7 +63,7 @@ void SDLRenderer::clear ()
 void SDLRenderer::copy (SDLTexture& texture)
 {
     SDL_SetRenderTarget (sdl_Renderer_, nullptr);
-    SDL_RenderCopy (sdl_Renderer_, texture.sdlTexture_, NULL, NULL);
+    SDL_RenderCopy (sdl_Renderer_, texture.sdl2_Texture_, NULL, NULL);
 }
 
 void SDLRenderer::copy (SDLTexture& texture, Frame<int> renderFrame)
@@ -71,7 +71,7 @@ void SDLRenderer::copy (SDLTexture& texture, Frame<int> renderFrame)
     // Set rendering space and render texture
     SDL_Rect renderQuad {renderFrame.x, renderFrame.y, renderFrame.width,
         renderFrame.height};
-    SDL_RenderCopy (sdl_Renderer_, texture.sdlTexture_, NULL, &renderQuad);
+    SDL_RenderCopy (sdl_Renderer_, texture.sdl2_Texture_, NULL, &renderQuad);
 }
 
 void SDLRenderer::update ()

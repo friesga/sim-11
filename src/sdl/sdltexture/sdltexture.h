@@ -32,7 +32,7 @@ private:
     SDLTexture (SDL_Renderer* renderer, int textureWidth, int textureHeight);
     SDLTexture (SDL_Renderer* renderer, string imageFile);
 
-    SDL_Texture* sdlTexture_;
+    SDL_Texture* sdl2_Texture_;
 };
 
 #endif // _SDLTEXTURE_H_
