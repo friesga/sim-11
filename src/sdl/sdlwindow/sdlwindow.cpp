@@ -1,6 +1,7 @@
 #include "sdlwindow.h"
-#include "../sdlpanel/sdlpanel.h"
-#include "../sdlevent/sdlevent.h"
+#include "sdl/sdlpanel/sdlpanel.h"
+#include "sdl/filepanelbuilder/filepanelbuilder.h"
+#include "sdl/sdlevent/sdlevent.h"
 #include "rackunit.h"
 
 #include <SDL_image.h>
@@ -69,6 +70,13 @@ Panel *SDLWindow::createPanel (Cabinet::Position cabinetPosition,
     panels_.push_back (make_unique<SDLPanel> (sdlRenderer_, *targetTexture_,
         cabinetPosition, unitHeight));
     return panels_.back ().get ();
+}
+
+unique_ptr<PanelBuilder> SDLWindow::createFilePanelBuilder (Cabinet::Position cabinetPosition,
+    RackUnit unitHeight)
+{
+    return make_unique<FilePanelBuilder> (sdlRenderer_, *targetTexture_,
+        cabinetPosition, unitHeight);
 }
 
 void SDLWindow::render ()

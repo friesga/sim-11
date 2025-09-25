@@ -31,6 +31,8 @@ public:
     void show () override;
     Panel *createPanel (Cabinet::Position cabinetPosition,
         RackUnit unitHeight) override;
+    unique_ptr<PanelBuilder> createFilePanelBuilder (Cabinet::Position cabinetPosition,
+        RackUnit unitHeight) override;
 
     void handler ();
 
