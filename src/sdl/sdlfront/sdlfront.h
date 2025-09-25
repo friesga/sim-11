@@ -19,7 +19,7 @@ public:
 
 private:
     // The tile to use for this front
-    unique_ptr<SDLTile> sdlTile_;
+    unique_ptr<SDLTile> frontTile_;
 };
 
 #endif // _SDLFRONT_H_
