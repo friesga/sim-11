@@ -34,7 +34,6 @@ private:
     // Reference to the target texture to render this texture on
     SDLTexture& targetTexture_;
 
-protected:
     // Image positon and dimensions
     int x_;
     int y_;
