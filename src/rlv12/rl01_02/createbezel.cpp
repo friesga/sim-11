@@ -10,12 +10,14 @@ using std::to_string;
 void RL01_02::createBezel (Window* window,
     const RLUnitConfig& rlUnitConfig)
 {
-    Panel* panel = window->createPanel (rlUnitConfig.cabinetPosition.value (),
-        RLUnitConfig::unitHeight);
-    panel->createFront ("resources/RL02-front.png", {0, 0, 1.0, 1.0});
+    unique_ptr<PanelBuilder> panelBuilder =
+        window->createFilePanelBuilder (rlUnitConfig.cabinetPosition.value (),
+            RLUnitConfig::unitHeight);
+
+    panelBuilder->createFront ("resources/RL02-front.png", {0, 0, 1.0, 1.0});
 
     // LOAD IndicatorButton
-    loadButton_ = panel->createSDLIndicatorLatchingButton ({
+    loadButton_ = panelBuilder->createSDLIndicatorLatchingButton ({
         "resources/Load_up_off.png",
         "resources/Load_up_on.png",
         "resources/Load_down_off.png",
@@ -24,24 +26,26 @@ void RL01_02::createBezel (Window* window,
         Indicator::State::On, loadButtonFrame);
 
     // READY indicator, default off
-    readyIndicator_ = panel->createIndicator (
+    readyIndicator_ = panelBuilder->createIndicator (
         "resources/ready_" + to_string (rlUnitConfig.unitNumber) + "_off.png",
         "resources/ready_" + to_string (rlUnitConfig.unitNumber) + "_on.png",
         Indicator::State::Off, readyIndicatorFrame);
 
     // FAULT indicator, default off
-    faultIndicator_ = panel->createIndicator (
+    faultIndicator_ = panelBuilder->createIndicator (
         "resources/fault_off.png",
         "resources/fault_on.png",
         Indicator::State::Off, faultIndicatorFrame);
 
     // WRITE PROTECT switch, initial state depends on unit configuration
-    writeProtectButton_ = panel->createLatchingButton (
+    writeProtectButton_ = panelBuilder->createLatchingButton (
         "resources/write_protect_on.png",
         "resources/write_protect_off.png",
         rlUnitConfig.writeProtect ? Button::TwoPositionsState::On : Button::TwoPositionsState::Off,
         bind (&RL01_02::writeProtectButtonClicked, this, _1),
         writeProtectButtonFrame);
+
+    window->addPanel (panelBuilder->getPanel ());
 }
 
 void RL01_02::loadButtonClicked (Button::State state)
