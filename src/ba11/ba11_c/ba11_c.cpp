@@ -1,9 +1,13 @@
 #include "ba11_c.h"
 
+#include <memory>
+
+using std::unique_ptr;
+using std::make_unique;
+
 //
 // Support for the BA11-C Mounting Box
 //
-
 // Constructor
 BA11_C::BA11_C (Bus* bus, Window* window, const BA11_CConfig& ba11cConfig)
     :
@@ -15,6 +19,8 @@ BA11_C::BA11_C (Bus* bus, Window* window, const BA11_CConfig& ba11cConfig)
 
 void BA11_C::createBezel (Cabinet::Position cabinetPosition)
 {
-    Panel* panel = 
-        frontWindow_->createPanel (cabinetPosition, BA11_CConfig::unitHeight);
+    unique_ptr<PanelBuilder> panelBuilder = 
+       frontWindow_->createFilePanelBuilder (cabinetPosition, BA11_CConfig::unitHeight);
+    
+    frontWindow_->addPanel (panelBuilder->getPanel ());
 }

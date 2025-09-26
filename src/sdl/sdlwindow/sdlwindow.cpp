@@ -75,8 +75,18 @@ Panel *SDLWindow::createPanel (Cabinet::Position cabinetPosition,
 unique_ptr<PanelBuilder> SDLWindow::createFilePanelBuilder (Cabinet::Position cabinetPosition,
     RackUnit unitHeight)
 {
+    // (Try to) add the panel to the cabinet to keep track of the occupied
+    // panel positions.
+    if (!h9642Cabinet.addUnit (cabinetPosition, unitHeight))
+        throw invalid_argument ("Unit position already occupied. Can't add panel to cabinet");
+
     return make_unique<FilePanelBuilder> (sdlRenderer_, *targetTexture_,
         cabinetPosition, unitHeight);
+}
+
+void SDLWindow::addPanel (unique_ptr<Panel> panel)
+{
+    panels_.push_back (move (panel));
 }
 
 void SDLWindow::render ()
@@ -138,7 +148,7 @@ bool SDLWindow::handleEvents ()
                 break;
 
             case InputEvent::Type::MouseMotion:
-                showLoupe_ = any_of (panels_, [&] (unique_ptr<SDLPanel>& p)
+                showLoupe_ = any_of (panels_, [&] (unique_ptr<Panel>& p)
                     { return p->isOverButton (texturePosition_); });
                 break;
 

@@ -1,4 +1,5 @@
 #include "filepanelbuilder.h"
+#include "sdl/sdlpanel/sdlpanel.h"
 
 #include <algorithm>
 #include <utility>
@@ -17,7 +18,8 @@ FilePanelBuilder::FilePanelBuilder (unique_ptr<SDLRenderer>& sdlRenderer,
     :
     sdlRenderer_ {sdlRenderer},
     targetTexture_ {texture},
-    cabinetPosition_ {cabinetPosition}
+    cabinetPosition_ {cabinetPosition},
+    unitHeight_ {unitHeight}
 {
     static const RackUnit h9642Height {20_ru};
     auto [textureWidth, textureHeight] = targetTexture_.dimensions ();
@@ -213,8 +215,10 @@ Frame<int> FilePanelBuilder::placeFrameInTexture (Frame<float> frame)
     return {x, y, width_, height_};
 }
 
-PanelComposition FilePanelBuilder::getPanelComposition ()
+unique_ptr<Panel> FilePanelBuilder::getPanel ()
 {
-    return PanelComposition {move (fronts_), move (indicators_),
-        move (buttons_), move (indicatorButtons_)};
+    return make_unique<SDLPanel> (sdlRenderer_,
+        targetTexture_, cabinetPosition_, unitHeight_,
+        PanelComposition {move (fronts_), move (indicators_),
+        move (buttons_), move (indicatorButtons_)});
 }

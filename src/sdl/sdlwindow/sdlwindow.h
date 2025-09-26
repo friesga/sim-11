@@ -33,6 +33,7 @@ public:
         RackUnit unitHeight) override;
     unique_ptr<PanelBuilder> createFilePanelBuilder (Cabinet::Position cabinetPosition,
         RackUnit unitHeight) override;
+    void addPanel (unique_ptr<Panel> panel) override;
 
     void handler ();
 
@@ -53,7 +54,7 @@ private:
     // The Renderer to use in rendering in the given window
     unique_ptr<SDLRenderer> sdlRenderer_; 
 
-    vector<unique_ptr<SDLPanel>> panels_;
+    vector<unique_ptr<Panel>> panels_;
 
     // The target texture the panels have to render to
     unique_ptr<SDLTexture> targetTexture_;

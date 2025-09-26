@@ -50,7 +50,7 @@ public:
         Button::ThreePositionsState initialState,
         Button::EventCallback switchClicked,
         Frame<float> frame) override;
-    virtual PanelComposition getPanelComposition () override;
+    virtual unique_ptr<Panel> getPanel () override;
 
 private:
     Frame<int> placeFrameInTexture (Frame<float> frame);
@@ -75,6 +75,7 @@ private:
     float panelHeight_ {0.0f};
     int pixelsPerRackUnit_ {0};
     Cabinet::Position cabinetPosition_;
+    RackUnit unitHeight_;
 };
 
 #endif // _SDLFILEPANELBUILDER_H_

@@ -19,6 +19,7 @@
 #include <array>
 
 using std::unique_ptr;
+using std::make_unique;
 using std::vector;
 using std::array;
 
@@ -27,6 +28,9 @@ class SDLPanel : public Panel
 public:
     SDLPanel (unique_ptr<SDLRenderer> &sdlRenderer, SDLTexture& texture,
         Cabinet::Position cabinetPosition, RackUnit unitHeight);
+    SDLPanel (unique_ptr<SDLRenderer>& sdlRenderer,
+        SDLTexture& texture, Cabinet::Position cabinetPosition,
+        RackUnit unitHeight, PanelComposition panelComposition);
     ~SDLPanel ();
 
     // Definition of functions required by the PanelBuilder interface
@@ -54,15 +58,10 @@ public:
         Button::EventCallback switchClicked,
         Frame<float> frame) override;
 
-    // ToDo: To be removed when PanelBuilder interface is removed
-    PanelComposition getPanelComposition () override { return PanelComposition {}; };
-
     // Functions required by the Panel interface
     void render () override;
     void handleEvent (InputEvent const *event) override;
-
-    // SDL implementation specific functions
-    bool isOverButton (Position position);
+    bool isOverButton (Position position) override;
 
 private:
     Frame<int> placeFrameInTexture (Frame<float> frame);

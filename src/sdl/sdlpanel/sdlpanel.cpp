@@ -25,6 +25,20 @@ SDLPanel::SDLPanel (unique_ptr<SDLRenderer> &sdlRenderer,
     panelHeight_ = pixelsPerRackUnit_ * unitHeight;
 }
 
+// Create a panel from the given PanelComposition.
+SDLPanel::SDLPanel (unique_ptr<SDLRenderer>& sdlRenderer,
+    SDLTexture& texture, Cabinet::Position cabinetPosition,
+    RackUnit unitHeight, PanelComposition panelComposition)
+    :
+    sdlRenderer_ {sdlRenderer},
+    targetTexture_ {texture},
+    cabinetPosition_ {cabinetPosition},
+    fronts_ {move (panelComposition.fronts_)},
+    indicators_ {move (panelComposition.indicators_)},
+    buttons_ {move (panelComposition.buttons_)},
+    indicatorButtons_ {move (panelComposition.indicatorButtons_)}
+{ }
+
 SDLPanel::~SDLPanel ()
 {}
 
