@@ -33,39 +33,12 @@ public:
         RackUnit unitHeight, PanelComposition panelComposition);
     ~SDLPanel ();
 
-    // Definition of functions required by the PanelBuilder interface
-    virtual void createFront (string imageFile, 
-        Frame<float> frame) override;
-    virtual Indicator *createIndicator (string indicatorOffImage,
-        string indicatorOnImage, Indicator::State showFigure,
-        Frame<float> frame) override;
-    virtual Button *createLatchingButton (string buttonDownImage, string buttonUpImage,
-        Button::TwoPositionsState initialState, Button::EventCallback buttonClicked,
-        Frame<float> frame) override;
-    virtual Button *createMomentaryButton (string buttonDownImage, string buttonUpImage,
-        Button::TwoPositionsState initialState, Button::EventCallback buttonClicked,
-        Frame<float> frame) override;
-    virtual IndicatorButton* createSDLIndicatorLatchingButton (Button::ImageNames const& imageNames,
-        Button::TwoPositionsState initialState, 
-        Button::EventCallback buttonClicked, Indicator::State showIndicator,
-        Frame<float> frame) override;
-    virtual Button* createFourPositionSwitch (array<string, 4> positionImages,
-        Button::FourPositionsState initialState,
-        Button::EventCallback switchClicked,
-        Frame<float> frame) override;
-    virtual Button* createThreePositionSwitch (array<string, 3> positionImages,
-        Button::ThreePositionsState initialState,
-        Button::EventCallback switchClicked,
-        Frame<float> frame) override;
-
     // Functions required by the Panel interface
     void render () override;
     void handleEvent (InputEvent const *event) override;
     bool isOverButton (Position position) override;
 
 private:
-    Frame<int> placeFrameInTexture (Frame<float> frame);
-
     // Reference to the renderer to use for fronts, indicators and buttons
     unique_ptr<SDLRenderer> &sdlRenderer_;
 

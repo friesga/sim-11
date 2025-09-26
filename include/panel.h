@@ -157,9 +157,13 @@ struct PanelComposition
     vector<unique_ptr<IndicatorButton>> indicatorButtons_;
 };
 
-// Forward declaration
-// ToDo: Can be removed when Panel no longer derives from PanelBuilder
-class Panel;
+class Panel
+{
+public:
+    virtual void render () = 0;
+    virtual void handleEvent (InputEvent const* event) = 0;
+    virtual bool isOverButton (Position position) = 0;
+};
 
 class PanelBuilder
 {
@@ -191,42 +195,6 @@ public:
         Button::EventCallback switchClicked,
         Frame<float> frame) = 0;
     virtual unique_ptr<Panel> getPanel () = 0;
-};
-
-class Panel 
-{
-public:
-    // A default value (0) may be specified for the width and height of
-    // images. This indicates that the width and height of the image
-    // will be used.
-    virtual void createFront (string imageFile,
-        Frame<float> frame) = 0;
-    virtual Indicator* createIndicator (string indicatorOffImage,
-        string indicatorOnImage, Indicator::State showFigure,
-        Frame<float> frame) = 0;
-    virtual Button* createLatchingButton (string buttonDownImage, string buttonUpImage,
-        Button::TwoPositionsState initialState, Button::EventCallback buttonClicked,
-        Frame<float> frame) = 0;
-    virtual Button* createMomentaryButton (string buttonDownImage, string buttonUpImage,
-        Button::TwoPositionsState initialState, Button::EventCallback buttonClicked,
-        Frame<float> frame) = 0;
-    virtual IndicatorButton* createSDLIndicatorLatchingButton (Button::ImageNames const& imageNames,
-        Button::TwoPositionsState initialState,
-        Button::EventCallback buttonClicked, Indicator::State showIndicator,
-        Frame<float> frame) = 0;
-    virtual Button* createFourPositionSwitch (array<string, 4> positionImages,
-        Button::FourPositionsState initialState,
-        Button::EventCallback switchClicked,
-        Frame<float> frame) = 0;
-    virtual Button* createThreePositionSwitch (array<string, 3> positionImages,
-        Button::ThreePositionsState initialState,
-        Button::EventCallback switchClicked,
-        Frame<float> frame) = 0;
-
-
-    virtual void render () = 0;
-    virtual void handleEvent (InputEvent const* event) = 0;
-    virtual bool isOverButton (Position position) = 0;
 };
 
 class Window
