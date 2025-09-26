@@ -66,26 +66,33 @@ void BA11_N::createBezel (Cabinet::Position cabinetPosition)
     // At least for Windows, event handling has to be performed in the same
     // thread as in which the window has been created.
     //
-    Panel *panel = frontWindow_->createPanel (cabinetPosition, BA11_NConfig::unitHeight);
+    unique_ptr<PanelBuilder> panelBuilder =
+        frontWindow_->createFilePanelBuilder (cabinetPosition, BA11_NConfig::unitHeight);
 
-    panel->createFront(frontImage(logo_), ba11_nFrontFrame);
-    pwrOkLed_ = panel->createIndicator ("resources/red led off.png",
+    panelBuilder->createFront(frontImage(logo_), ba11_nFrontFrame);
+
+    pwrOkLed_ = panelBuilder->createIndicator ("resources/red led off.png",
         "resources/red led on.png", Indicator::State::Off, pwrOkLedFrame);
-    runLed_ = panel->createIndicator ("resources/red led off.png", 
+
+    runLed_ = panelBuilder->createIndicator ("resources/red led off.png", 
         "resources/red led on.png", Indicator::State::Off, runLedFrame);
 
-    restartSwitch_ = panel->createMomentaryButton ("resources/switch down.png",
+    restartSwitch_ = panelBuilder->createMomentaryButton ("resources/switch down.png",
         "resources/switch up.png", 
         Button::TwoPositionsState::On, bind (&BA11_N::restartSwitchClicked, this, _1), 
         restartSwitchFrame);
-    haltSwitch_ = panel->createLatchingButton ("resources/switch down.png",
+
+    haltSwitch_ = panelBuilder->createLatchingButton ("resources/switch down.png",
         "resources/switch up.png", 
         Button::TwoPositionsState::On, bind (&BA11_N::haltSwitchToggled, this, _1),
         haltSwitchFrame);
-    auxOnOffSwitch_ = panel->createLatchingButton ("resources/switch down.png",
+
+    auxOnOffSwitch_ = panelBuilder->createLatchingButton ("resources/switch down.png",
         "resources/switch up.png", 
         Button::TwoPositionsState::On, bind (&BA11_N::auxOnOffSwitchToggled, this, _1),
         auxOnOffSwitchFrame);
+
+    frontWindow_->addPanel (panelBuilder->getPanel ());
 
     // Now the RUN led is created when can subscribe to the signal indicating
     // the state to be shown.
