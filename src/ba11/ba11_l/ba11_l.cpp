@@ -58,9 +58,12 @@ BA11_L::BA11_L (Bus* bus, Window* window, const BA11_LConfig& ba11lConfig)
 // 
 void BA11_L::createBezel (Cabinet::Position cabinetPosition)
 {
-    Panel* panel = frontWindow_->createPanel (cabinetPosition, BA11_LConfig::unitHeight);
-    panel->createFront ("resources/11_24 front.png", ba11_nFrontFrame);
-    powerSwitch_ = panel->createFourPositionSwitch (
+    unique_ptr<PanelBuilder> panelBuilder =
+        frontWindow_->createFilePanelBuilder (cabinetPosition, BA11_LConfig::unitHeight);
+
+    panelBuilder->createFront ("resources/11_24 front.png", ba11_nFrontFrame);
+
+    powerSwitch_ = panelBuilder->createFourPositionSwitch (
         {"resources/power_p0.png",
          "resources/power_p1.png",
          "resources/power_p2.png",
@@ -68,19 +71,23 @@ void BA11_L::createBezel (Cabinet::Position cabinetPosition)
         Button::FourPositionsState::P0,
         bind (&BA11_L::powerSwitchClicked, this, _1),
         powerSwitchFrame);
-    hcbSwitch_ = panel->createThreePositionSwitch (
+
+    hcbSwitch_ = panelBuilder->createThreePositionSwitch (
         {"resources/hcb_halt.png",
          "resources/hcb_cont.png",
          "resources/hcb_boot.png"},
         Button::ThreePositionsState::Center,
         bind (&BA11_L::hcbSwitchClicked, this, _1),
         hcbSwitchFrame);
-    runLed_ = panel->createIndicator ("resources/red led off.png",
+
+    runLed_ = panelBuilder->createIndicator ("resources/red led off.png",
         "resources/red led on.png", Indicator::State::Off, runLedFrame);
-    dcOnLed_ = panel->createIndicator ("resources/red led off.png",
+    dcOnLed_ = panelBuilder->createIndicator ("resources/red led off.png",
         "resources/red led on.png", Indicator::State::Off, dcOnLedFrame);
-    batteryLed_ = panel->createIndicator ("resources/red led off.png",
+    batteryLed_ = panelBuilder->createIndicator ("resources/red led off.png",
         "resources/red led on.png", Indicator::State::Off, batteryLedFrame);
+
+    frontWindow_->addPanel (panelBuilder->getPanel ());
 
     // The state of the HALT signal has to correspond with the position
     // of the HALT/CONT/BOOT switch.
