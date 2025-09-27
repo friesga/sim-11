@@ -41,6 +41,13 @@ unique_ptr<SDLTexture> SDLRenderer::createTexture (string imageFile)
         imageFile));
 }
 
+// Create a texture from the given image data
+unique_ptr<SDLTexture> SDLRenderer::createTexture (Image& image)
+{
+    return unique_ptr<SDLTexture> (new SDLTexture (this->sdl2_Renderer_,
+        image));
+}
+
 void SDLRenderer::setTarget (SDLTexture& texture)
 {
     if (SDL_SetRenderTarget (sdl2_Renderer_, texture.sdl2_Texture_) != 0)

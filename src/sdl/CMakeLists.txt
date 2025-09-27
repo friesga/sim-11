@@ -1,5 +1,6 @@
 set (SDL_SRCS
     sdlinit/sdlinit.cpp
+    datapanelbuilder/datapanelbuilder.cpp
     filepanelbuilder/filepanelbuilder.cpp
     sdlpanel/sdlpanel.cpp
     sdlwindow/sdlwindow.cpp

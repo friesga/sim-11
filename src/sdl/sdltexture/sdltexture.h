@@ -1,6 +1,8 @@
 #ifndef _SDLTEXTURE_H_
 #define _SDLTEXTURE_H_
 
+#include "imagedata/include/image.h"
+
 #include <SDL.h>
 #include <utility>
 #include <string>
@@ -31,6 +33,7 @@ private:
     // Textures can only be created by the SDLRenderer
     SDLTexture (SDL_Renderer* renderer, int textureWidth, int textureHeight);
     SDLTexture (SDL_Renderer* renderer, string imageFile);
+    SDLTexture (SDL_Renderer* renderer, Image& image);
 
     SDL_Texture* sdl2_Texture_;
 };

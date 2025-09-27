@@ -3,6 +3,7 @@
 
 #include "panel.h"
 #include "sdl/sdltexture/sdltexture.h"
+#include "imagedata/include/image.h"
 
 #include <SDL.h>
 #include <memory>
@@ -30,6 +31,7 @@ public:
     // SDLRenderer to the textures using this renderer.
     unique_ptr<SDLTexture> createTexture (int textureWidth, int textureHeight);
     unique_ptr<SDLTexture> createTexture (string imageFile);
+    unique_ptr<SDLTexture> createTexture (Image& image);
 
     void setTarget (SDLTexture& texture);
     void setDrawColor (unsigned char red, unsigned char green,

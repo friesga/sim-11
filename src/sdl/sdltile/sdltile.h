@@ -3,6 +3,7 @@
 
 #include "panel.h"
 #include "sdl/sdlrenderer/sdlrenderer.h"
+#include "imagedata/include/image.h"
 
 #include <SDL.h>
 #include <string>
@@ -17,6 +18,8 @@ class SDLTile
 {
 public:
     SDLTile (string imageFile, SDLRenderer& renderer, 
+        SDLTexture& targetTexture, Frame<int> frame);
+    SDLTile (Image& image, SDLRenderer& renderer,
         SDLTexture& targetTexture, Frame<int> frame);
 
     void render ();

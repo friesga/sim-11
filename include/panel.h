@@ -172,7 +172,7 @@ public:
     // images. This indicates that the width and height of the image
     // will be used.
     virtual void createFront (string imageFile,
-        Frame<float> frame) = 0;
+        Frame<float> frame = Frame<float> (0, 0, 0, 0)) = 0;
     virtual Indicator* createIndicator (string indicatorOffImage,
         string indicatorOnImage, Indicator::State showFigure,
         Frame<float> frame) = 0;

@@ -21,6 +21,19 @@ SDLTile::SDLTile (string imageFile, SDLRenderer& renderer,
     sdlTtexture_ = renderer.createTexture (imageFile);
 }
 
+SDLTile::SDLTile (Image& image, SDLRenderer& renderer,
+    SDLTexture& targetTexture, Frame<int> frame)
+    :
+    sdlRenderer_ {renderer},
+    targetTexture_ {targetTexture},
+    x_ {frame.x},
+    y_ {frame.y},
+    width_ {frame.width},
+    height_ {frame.height}
+{
+    sdlTtexture_ = renderer.createTexture (image);
+}
+
 // Render this tile to the target texture
 void SDLTile::render ()
 {

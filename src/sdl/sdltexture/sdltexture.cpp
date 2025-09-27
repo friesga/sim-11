@@ -31,6 +31,13 @@ SDLTexture::SDLTexture (SDL_Renderer* renderer, string imageFile)
             "SDL error: " + SDL_GetError ());
 }
 
+SDLTexture::SDLTexture (SDL_Renderer* renderer, Image& image)
+{
+    SDL_RWops* rw = SDL_RWFromConstMem (image.data ().data (),
+        image.data ().size ());
+    sdl2_Texture_ = IMG_LoadTexture_RW (renderer, rw, 1);
+}
+
 SDLTexture::~SDLTexture ()
 {
     // Deallocate texture if allocated
