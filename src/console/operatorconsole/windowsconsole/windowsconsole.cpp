@@ -27,8 +27,16 @@ try
     if (!SetConsoleMode (stdOutputHandle_,
         ENABLE_PROCESSED_OUTPUT | ENABLE_VIRTUAL_TERMINAL_PROCESSING))
         throw runtime_error ("Setting console mode failure");
+
+    senderThread_ = std::thread (&WindowsConsole::sender, this);
 }
 catch (const std::exception& ex)
 {
     cerr << "WindowsConsole::WindowsConsole exception: " << ex.what () << '\n';
+}
+
+WindowsConsole::~WindowsConsole ()
+{
+    consoleRunning_ = false;
+    senderThread_.join ();
 }

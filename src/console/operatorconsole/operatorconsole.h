@@ -16,8 +16,6 @@
 class OperatorConsole : public Console
 {
 public:
-    OperatorConsole ();
-    ~OperatorConsole ();
     virtual void sender () = 0;
 
     // Console functions to implement

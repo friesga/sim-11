@@ -7,12 +7,12 @@ set (CONSOLE_SRCS
     operatorconsole/windowsconsole/readcharacter.cpp
     operatorconsole/windowsconsole/getasciichar.cpp
     operatorconsole/windowsconsole/print.cpp)
-    
 endif ()
 
 if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
 set (CONSOLE_SRCS
     operatorconsole/operatorconsole.cpp
+    operatorconsole/linuxconsole/linuxconsole.cpp
     operatorconsole/linuxconsole/sender.cpp)
 endif ()
 
