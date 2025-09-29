@@ -70,9 +70,9 @@ private:
     // Reference to the panel to draw the panel on
     SDLTexture& targetTexture_;
 
-    // Position of the panel in the target texture
+    // Position of the panel in the target texture. The X position
+    // currently is unused as just one cabinet is supported.
     Position panelPosition_ {0, 0};
-    int panelY_ {0};
 
     // The height of the unit in pixels
     float panelHeight_ {0.0f};

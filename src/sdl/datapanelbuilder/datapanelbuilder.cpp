@@ -17,10 +17,14 @@ DataPanelBuilder::DataPanelBuilder (ImageContainer& imageContainer,
     // panel is located at the cabinet position (in rack units) multiplied
     // by the number of pixels per RU. Cabinet positions start at 0, hence
     // the addition by 1.
-    panelY_ = static_cast<int> (textureHeight (targetTexture_) -
+    panelPosition_.y = static_cast<int> (textureHeight (targetTexture_) -
         ((cabinetPosition_.height + 1) * pixelsPerRackUnit ()));
 }
 
+// The PanelBuilder::createFront function has an optional frame parameter.
+// For a DataPanelBuilder the frame parameter is ignored and the frame
+// is determined from the image metadata in the image container.
+//
 void DataPanelBuilder::createFront (string imageFile,
     Frame<float> frame)
 {
@@ -100,6 +104,9 @@ Button* DataPanelBuilder::createThreePositionSwitch (array<string, 3> positionIm
     return buttons_.back ().get ();
 }
 
+// Determine the relative position and dimension of the given image layer
+// in the image container.
+// 
 Frame<float> DataPanelBuilder::getFrameFromImage (string layerName)
 {
     ImageContainer::Layer metadata = 
@@ -144,7 +151,7 @@ Frame<int> DataPanelBuilder::placeFrameInTexture (Frame<float> frame)
     auto [textureWidth, textureHeight] = targetTexture_.dimensions ();
 
     int x = static_cast<int> (frame.x * textureWidth);
-    int y = panelY_ + frame.y * panelHeight_;
+    int y = panelPosition_.y + frame.y * panelHeight_;
 
     int width_ = static_cast<int> (frame.width * textureWidth);
     int height_ = static_cast<int> (frame.height * panelHeight_);
