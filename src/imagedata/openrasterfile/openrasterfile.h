@@ -33,7 +33,7 @@ public:
     Image::Dimensions imageDimensions () override;
     string getFileName (string layerName) override;
     unique_ptr<Image> getImage (string fileName) override;
-    Layer getLayerMetadata (string layerName) override;
+    LayerDescription getLayerMetadata (string layerName) override;
 
 private:
     vector<unsigned char> buffer_;
@@ -43,7 +43,7 @@ private:
     vector<unsigned char> readFileData (const string& name);
     Metadata parseStackXML ();
     Image::Dimensions extractImageDimensions (const string& line);
-    Layer extractLayer (const string& line);
+    LayerDescription extractLayer (const string& line);
     string extractAttribute (const string& attributeName, const string& line);
     Image::Dimensions getLayerDimensions (string fileName);
 };

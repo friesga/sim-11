@@ -73,7 +73,7 @@ Image::Dimensions OpenRasterFile::getLayerDimensions (string fileName)
     return png.dimensions ();
 }
 
-ImageContainer::Layer OpenRasterFile::getLayerMetadata (string layerName)
+ImageContainer::LayerDescription OpenRasterFile::getLayerMetadata (string layerName)
 {
     for (auto layer : metadata_.layers)
         if (layer.name == layerName)

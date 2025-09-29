@@ -45,9 +45,9 @@ Image::Dimensions OpenRasterFile::extractImageDimensions (const string& line)
     return imageDimensions;
 }
 
-ImageContainer::Layer OpenRasterFile::extractLayer (const string& line)
+ImageContainer::LayerDescription OpenRasterFile::extractLayer (const string& line)
 {
-    ImageContainer::Layer layer {};
+    ImageContainer::LayerDescription layer {};
     
     layer.src = extractAttribute ("src=", line);
     layer.name = extractAttribute ("name=", line);

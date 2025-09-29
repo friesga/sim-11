@@ -23,7 +23,7 @@ public:
 
     // The Layer description contains the source PNG file name (src), the
     // layer's name and its position (x,y) in the image.
-    struct Layer
+    struct LayerDescription
     {
         string src;
         string name;
@@ -34,14 +34,14 @@ public:
     struct Metadata
     {
         Image::Dimensions imageDimensions;
-        vector<Layer> layers;
+        vector<LayerDescription> layers;
     };
 
     virtual ~ImageContainer () {};
     virtual Image::Dimensions imageDimensions () = 0;
     virtual string getFileName (string layerName) = 0;
     virtual unique_ptr<Image> getImage (string fileName) = 0;
-    virtual Layer getLayerMetadata (string layerName) = 0;
+    virtual LayerDescription getLayerMetadata (string layerName) = 0;
 };
 
 #endif // _IMAGECONTAINER_H_

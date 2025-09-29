@@ -4539,7 +4539,7 @@ TEST (OpenRasterTest, pngDataCanBeRetrievedByLayerName)
 TEST (OpenRasterTest, layerMetadataCanBeRetrieved)
 {
     OpenRasterFile oraFile (oraData);
-    ImageContainer::Layer metadata = oraFile.getLayerMetadata ("keyswitch lock");
+    ImageContainer::LayerDescription metadata = oraFile.getLayerMetadata ("keyswitch lock");
     EXPECT_EQ (metadata.position.x, 253);
     EXPECT_EQ (metadata.position.y, 917);
     EXPECT_EQ (metadata.dimensions.width, 118);

@@ -109,7 +109,7 @@ Button* DataPanelBuilder::createThreePositionSwitch (array<string, 3> positionIm
 // 
 Frame<float> DataPanelBuilder::getFrameFromImage (string layerName)
 {
-    ImageContainer::Layer metadata = 
+    ImageContainer::LayerDescription metadata = 
         imageContainer_.getLayerMetadata (layerName);
 
     Image::Dimensions imageDimensions = 
