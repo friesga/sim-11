@@ -21,10 +21,14 @@ FilePanelBuilder::FilePanelBuilder (unique_ptr<SDLRenderer>& sdlRenderer,
     cabinetPosition_ {cabinetPosition},
     unitHeight_ {unitHeight}
 {
-    static const RackUnit h9642Height {20_ru};
-    auto [textureWidth, textureHeight] = targetTexture_.dimensions ();
-    pixelsPerRackUnit_ = textureHeight / h9642Height;
-    panelHeight_ = pixelsPerRackUnit_ * unitHeight;
+    panelHeight_ = unitHeight * pixelsPerRackUnit ();
+
+    // Calculated from the bottom of the texture, the top position of the
+    // panel is located at the cabinet position (in rack units) multiplied
+    // by the number of pixels per RU. Cabinet positions start at 0, hence
+    // the addition by 1.
+    panelY_ = static_cast<int> (textureHeight (targetTexture_) -
+        ((cabinetPosition_.height + 1) * pixelsPerRackUnit ()));
 }
 
 void FilePanelBuilder::createFront (string imageFile,
@@ -194,10 +198,31 @@ Button* FilePanelBuilder::createThreePositionSwitch (array<string, 3> positionIm
     return buttons_.back ().get ();
 }
 
+int FilePanelBuilder::textureHeight (SDLTexture& texture) const
+{
+    auto [textureWidth, textureHeight] = targetTexture_.dimensions ();
+    return textureHeight;
+}
+
+// For now Panels are placed in a H9642 cabinet which has a height of 20RU.
+// From this the height in pixels of one RU can be calculated and with
+// that value the height of the panel in pixels.
+//
+int FilePanelBuilder::pixelsPerRackUnit () const
+{
+    static const RackUnit h9642Height {20_ru};
+    return textureHeight (targetTexture_) / h9642Height;
+}
+
 // Place the given frame, whith positions and dimensions relative to the
 // panel, in the target texture. The given panel frame has position and
 // dimensions as fractions relative to the panel dimensions; the target
 // texture frame has absolute values.
+//
+// Cabinet positions are given in rack units (RU), starting from zero, which
+// is the lowest position in the cabinet. On position 0RU a panel with a
+// height of one RU can be placed.
+//
 Frame<int> FilePanelBuilder::placeFrameInTexture (Frame<float> frame)
 {
     // The passed frame contains positions relative to the target
@@ -206,10 +231,10 @@ Frame<int> FilePanelBuilder::placeFrameInTexture (Frame<float> frame)
     // The cabinet's height is a rack unit, starting from zero, hence
     // the addition by one.
     auto [textureWidth, textureHeight] = targetTexture_.dimensions ();
+
     int x = static_cast<int> (frame.x * textureWidth);
-    int y = static_cast<int> (textureHeight -
-        ((cabinetPosition_.height + 1) * pixelsPerRackUnit_) +
-        (frame.y * panelHeight_));
+    int y = panelY_ + frame.y * panelHeight_;
+
     int width_ = static_cast<int> (frame.width * textureWidth);
     int height_ = static_cast<int> (frame.height * panelHeight_);
     return {x, y, width_, height_};
