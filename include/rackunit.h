@@ -4,6 +4,9 @@
 #include <cstddef>
 
 // Definition of a Rack Unit to avoid confusion with other height definitions.
+// 
+// A Rack Unit is a standard height of 1.75 inch (44.45 mm).
+//
 class RackUnit
 {
 public:
