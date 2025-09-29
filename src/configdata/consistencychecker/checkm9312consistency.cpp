@@ -38,7 +38,7 @@ void ConsistencyChecker::checkNotBothM9312AndKT24 ()
 // Check that a BA11-L or a BA11-N is specified
 void ConsistencyChecker::checkM9312OrKT24 ()
 {
-    if (count_if (systemConfig_, &ConsistencyChecker::findDevice<BA11_NConfig>) == 0 &&
-        count_if (systemConfig_, &ConsistencyChecker::findDevice<BA11_LConfig>) == 0)
+    if (count_if (systemConfig_, &ConsistencyChecker::findDevice<M9312Config>) == 0 &&
+        count_if (systemConfig_, &ConsistencyChecker::findDevice<KT24Config>) == 0)
         throw invalid_argument {"No diagnostic/boot ROM specified, specify M9312 or KT24"};
 }
