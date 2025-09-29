@@ -3,6 +3,7 @@
 
 #include "cabinet/cabinet.h"
 #include "rackunit.h"
+#include "imagedata/include/imagecontainer.h"
 
 #include <string>
 #include <memory>
@@ -211,6 +212,8 @@ public:
         RackUnit unitHeight) = 0;
     virtual unique_ptr<PanelBuilder> createFilePanelBuilder (Cabinet::Position cabinetPosition,
         RackUnit unitHeight) = 0;
+    virtual unique_ptr<PanelBuilder> createDataPanelBuilder (ImageContainer& imageContainer,
+        Cabinet::Position cabinetPosition, RackUnit unitHeight) = 0;
     virtual void addPanel (unique_ptr<Panel> panel) = 0;
     virtual void render () = 0;
     virtual bool handleEvents () = 0;

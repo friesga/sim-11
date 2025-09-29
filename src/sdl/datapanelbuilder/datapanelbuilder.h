@@ -58,8 +58,10 @@ public:
     virtual unique_ptr<Panel> getPanel () override;
 
 private:
+    int textureHeight (SDLTexture& texture) const;
+    int pixelsPerRackUnit () const;
     Frame<int> placeFrameInTexture (Frame<float> frame);
-    Frame<int> getFrameFromImage (string layerName);
+    Frame<float> getFrameFromImage (string layerName);
 
     // Reference to the image container to use for loading images
     ImageContainer& imageContainer_;
@@ -79,10 +81,11 @@ private:
 
     // Position of the panel in the target texture
     Position panelPosition_ {0, 0};
+    int panelY_ {0};
 
     // The height of the unit in pixels
     float panelHeight_ {0.0f};
-    int pixelsPerRackUnit_ {0};
+
     Cabinet::Position cabinetPosition_;
     RackUnit unitHeight_;
 };

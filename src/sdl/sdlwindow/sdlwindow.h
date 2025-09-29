@@ -33,6 +33,8 @@ public:
         RackUnit unitHeight) override;
     unique_ptr<PanelBuilder> createFilePanelBuilder (Cabinet::Position cabinetPosition,
         RackUnit unitHeight) override;
+    unique_ptr<PanelBuilder> createDataPanelBuilder (ImageContainer& imageContainer,
+        Cabinet::Position cabinetPosition, RackUnit unitHeight) override;
     void addPanel (unique_ptr<Panel> panel) override;
 
     void handler ();

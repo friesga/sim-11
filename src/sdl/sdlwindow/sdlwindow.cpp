@@ -1,6 +1,7 @@
 #include "sdlwindow.h"
 #include "sdl/sdlpanel/sdlpanel.h"
 #include "sdl/filepanelbuilder/filepanelbuilder.h"
+#include "sdl/datapanelbuilder/datapanelbuilder.h"
 #include "sdl/sdlevent/sdlevent.h"
 #include "rackunit.h"
 
@@ -82,6 +83,18 @@ unique_ptr<PanelBuilder> SDLWindow::createFilePanelBuilder (Cabinet::Position ca
 
     return make_unique<FilePanelBuilder> (sdlRenderer_, *targetTexture_,
         cabinetPosition, unitHeight);
+}
+
+unique_ptr<PanelBuilder> SDLWindow::createDataPanelBuilder (ImageContainer& imageContainer,
+    Cabinet::Position cabinetPosition, RackUnit unitHeight)
+{
+    // (Try to) add the panel to the cabinet to keep track of the occupied
+    // panel positions.
+    if (!h9642Cabinet.addUnit (cabinetPosition, unitHeight))
+        throw invalid_argument ("Unit position already occupied. Can't add panel to cabinet");
+
+    return make_unique<DataPanelBuilder> (imageContainer, sdlRenderer_,
+        *targetTexture_, cabinetPosition, unitHeight);
 }
 
 void SDLWindow::addPanel (unique_ptr<Panel> panel)

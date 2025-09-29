@@ -11,6 +11,14 @@ DataPanelBuilder::DataPanelBuilder (ImageContainer& imageContainer,
     cabinetPosition_ {cabinetPosition},
     unitHeight_ {unitHeight}
 {
+    panelHeight_ = unitHeight * pixelsPerRackUnit ();
+
+    // Calculated from the bottom of the texture, the top position of the
+    // panel is located at the cabinet position (in rack units) multiplied
+    // by the number of pixels per RU. Cabinet positions start at 0, hence
+    // the addition by 1.
+    panelY_ = static_cast<int> (textureHeight (targetTexture_) -
+        ((cabinetPosition_.height + 1) * pixelsPerRackUnit ()));
 }
 
 void DataPanelBuilder::createFront (string imageFile,
@@ -20,8 +28,8 @@ void DataPanelBuilder::createFront (string imageFile,
         imageContainer_.getImage (imageContainer_.getFileName (imageFile));
 
     unique_ptr<SDLTile> frontTile =
-        make_unique<SDLTile> (*pngImage, *sdlRenderer_,
-            targetTexture_, placeFrameInTexture (frame));
+        make_unique<SDLTile> (*pngImage, *sdlRenderer_, targetTexture_, 
+            placeFrameInTexture (getFrameFromImage (imageFile)));
 
     fronts_.push_back (make_unique<SDLFront> (move (frontTile)));
 
@@ -92,13 +100,34 @@ Button* DataPanelBuilder::createThreePositionSwitch (array<string, 3> positionIm
     return buttons_.back ().get ();
 }
 
-Frame<int> DataPanelBuilder::getFrameFromImage (string layerName)
+Frame<float> DataPanelBuilder::getFrameFromImage (string layerName)
 {
     ImageContainer::Layer metadata = 
         imageContainer_.getLayerMetadata (layerName);
 
-    return {metadata.position.x, metadata.position.y,
-        metadata.dimensions.width, metadata.dimensions.height};
+    Image::Dimensions imageDimensions = 
+        imageContainer_.imageDimensions ();
+
+    return {static_cast<float> (metadata.position.x / imageDimensions.width),
+        static_cast<float> (metadata.position.y / imageDimensions.height),
+        static_cast<float> (metadata.dimensions.width / imageDimensions.width),
+        static_cast<float> (metadata.dimensions.height / imageDimensions.height)};
+}
+
+int DataPanelBuilder::textureHeight (SDLTexture& texture) const
+{
+    auto [textureWidth, textureHeight] = targetTexture_.dimensions ();
+    return textureHeight;
+}
+
+// For now Panels are placed in a H9642 cabinet which has a height of 20RU.
+// From this the height in pixels of one RU can be calculated and with
+// that value the height of the panel in pixels.
+//
+int DataPanelBuilder::pixelsPerRackUnit () const
+{
+    static const RackUnit h9642Height {20_ru};
+    return textureHeight (targetTexture_) / h9642Height;
 }
 
 // Place the given frame, whith positions and dimensions relative to the
@@ -113,10 +142,10 @@ Frame<int> DataPanelBuilder::placeFrameInTexture (Frame<float> frame)
     // The cabinet's height is a rack unit, starting from zero, hence
     // the addition by one.
     auto [textureWidth, textureHeight] = targetTexture_.dimensions ();
+
     int x = static_cast<int> (frame.x * textureWidth);
-    int y = static_cast<int> (textureHeight -
-        ((cabinetPosition_.height + 1) * pixelsPerRackUnit_) +
-        (frame.y * panelHeight_));
+    int y = panelY_ + frame.y * panelHeight_;
+
     int width_ = static_cast<int> (frame.width * textureWidth);
     int height_ = static_cast<int> (frame.height * panelHeight_);
     return {x, y, width_, height_};
