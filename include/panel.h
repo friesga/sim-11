@@ -194,7 +194,7 @@ public:
     virtual Button* createThreePositionSwitch (array<string, 3> positionImages,
         Button::ThreePositionsState initialState,
         Button::EventCallback switchClicked,
-        Frame<float> frame) = 0;
+        Frame<float> frame = Frame<float> (0, 0, 0, 0)) = 0;
     virtual unique_ptr<Panel> getPanel () = 0;
 };
 

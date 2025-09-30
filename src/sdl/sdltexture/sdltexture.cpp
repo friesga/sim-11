@@ -28,7 +28,7 @@ SDLTexture::SDLTexture (SDL_Renderer* renderer, string imageFile)
 
     if (sdl2_Texture_ == NULL)
         throw runtime_error ("Unable to create texture from " + imageFile +
-            "SDL error: " + SDL_GetError ());
+            " SDL error: " + SDL_GetError ());
 }
 
 SDLTexture::SDLTexture (SDL_Renderer* renderer, Image& image)

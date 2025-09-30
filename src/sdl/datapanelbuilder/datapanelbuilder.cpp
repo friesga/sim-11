@@ -94,12 +94,33 @@ Button* DataPanelBuilder::createFourPositionSwitch (array<string, 4> positionIma
     return buttons_.back ().get ();
 }
 
+// The frame parameter is ignored as the frame is determined from the image
+// metadata in the image container.
+//
 Button* DataPanelBuilder::createThreePositionSwitch (array<string, 3> positionImages,
     Button::ThreePositionsState initialState,
     Button::EventCallback switchClicked,
     Frame<float> frame)
 {
-    // To be implemented
+    SDLThreePositionSwitch::PositionTiles positionTiles;
+
+    for (auto imageName : positionImages)
+    {
+        unique_ptr<Image> pngImage =
+            imageContainer_.getImage (imageContainer_.getFileName (imageName));
+
+        positionTiles.emplace_back (make_unique<SDLTile> (*pngImage,
+            *sdlRenderer_, targetTexture_,
+            placeFrameInTexture (getFrameFromImage (imageName))));
+    }
+
+    buttons_.push_back (make_unique<SDLThreePositionSwitch> (move (positionTiles),
+        initialState, switchClicked));
+
+    // The tile pointers in the PositionsTiles vector are no longer
+    // valid pointers to the SDLTile's but that's ok since the vector
+    // is moved to SDLThreePositionSwitch and that function now has ownership
+    // of the SDLTile's.
 
     return buttons_.back ().get ();
 }
@@ -115,10 +136,10 @@ Frame<float> DataPanelBuilder::getFrameFromImage (string layerName)
     Image::Dimensions imageDimensions = 
         imageContainer_.imageDimensions ();
 
-    return {static_cast<float> (metadata.position.x / imageDimensions.width),
-        static_cast<float> (metadata.position.y / imageDimensions.height),
-        static_cast<float> (metadata.dimensions.width / imageDimensions.width),
-        static_cast<float> (metadata.dimensions.height / imageDimensions.height)};
+    return {static_cast<float> (metadata.position.x) / imageDimensions.width,
+        static_cast<float> (metadata.position.y) / imageDimensions.height,
+        static_cast<float> (metadata.dimensions.width) / imageDimensions.width,
+        static_cast<float> (metadata.dimensions.height) / imageDimensions.height};
 }
 
 int DataPanelBuilder::textureHeight (SDLTexture& texture) const

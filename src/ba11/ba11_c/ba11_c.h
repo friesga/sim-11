@@ -26,8 +26,10 @@ public:
 private:
     Bus* bus_;
     Window* frontWindow_;
+    Button* powerSwitch_;
     
     void createBezel (Cabinet::Position cabinetPosition);
+    void powerSwitchClicked (Button::State state);
 };
 
 #endif // _BA11C_H_
