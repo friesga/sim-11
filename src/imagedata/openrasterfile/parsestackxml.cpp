@@ -45,14 +45,19 @@ Image::Dimensions OpenRasterFile::extractImageDimensions (const string& line)
     return imageDimensions;
 }
 
+// Apart from the y attribute the layer tag also contains an opacity
+// attribute and as the order of attributes in the tag is not fixed the
+// opacity attribute might appear before the y attribute. We therefore have
+// to search for " x=" instead of taking the substring after "x=".
+//
 ImageContainer::LayerDescription OpenRasterFile::extractLayer (const string& line)
 {
     ImageContainer::LayerDescription layer {};
     
     layer.src = extractAttribute ("src=", line);
     layer.name = extractAttribute ("name=", line);
-    layer.position.x = stoi (extractAttribute ("x=", line));
-    layer.position.y = stoi (extractAttribute ("y=", line));
+    layer.position.x = stoi (extractAttribute (" x=", line));
+    layer.position.y = stoi (extractAttribute (" y=", line));
     
     return layer;
 }
