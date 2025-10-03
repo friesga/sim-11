@@ -16,6 +16,7 @@ set (SDL_SRCS
     sdlindicatorlatchingbutton/sdlindicatorlatchingbutton.cpp
     sdlthreepositionswitch/sdlthreepositionswitch.cpp
     sdlfourpositionswitch/sdlfourpositionswitch.cpp
+    sdlnpositionswitch/sdlnpositionswitch.cpp
     sdlevent/sdlevent.cpp)
 
 target_sources (${TARGET} PRIVATE ${SDL_SRCS})

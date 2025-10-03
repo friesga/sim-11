@@ -1,5 +1,6 @@
 #include "datapanelbuilder.h"
 #include "sdl/sdlpanel/sdlpanel.h"
+#include "sdl/sdlnpositionswitch/sdlnpositionswitch.h"
 
 DataPanelBuilder::DataPanelBuilder (ImageContainer& imageContainer,
     unique_ptr<SDLRenderer>& sdlRenderer, SDLTexture& texture,
@@ -114,7 +115,7 @@ Button* DataPanelBuilder::createThreePositionSwitch (array<string, 3> positionIm
             placeFrameInTexture (getFrameFromImage (imageName))));
     }
 
-    buttons_.push_back (make_unique<SDLThreePositionSwitch> (move (positionTiles),
+    buttons_.push_back (make_unique<SDLNPositionSwitch<Button::ThreePositionsState>> (move (positionTiles),
         initialState, switchClicked));
 
     // The tile pointers in the PositionsTiles vector are no longer

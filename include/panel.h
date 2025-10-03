@@ -134,6 +134,21 @@ public:
     virtual bool isWithinBounds (Position position, float margin) const = 0;
 };
 
+// Definition of type traits for the Button position enums to be able to refer
+// to the first and last enum values.
+//
+template <typename T>
+struct EnumValue;
+
+template <>
+struct EnumValue<Button::ThreePositionsState>
+{
+    static constexpr Button::ThreePositionsState first =
+        Button::ThreePositionsState::Left;
+    static constexpr Button::ThreePositionsState last =
+        Button::ThreePositionsState::Right;
+};
+
 // An IndicatorButton is the combination of a button and an indicator. i.e.
 // it can be switched up and down and has an indicator that can be switched
 // on and off.
