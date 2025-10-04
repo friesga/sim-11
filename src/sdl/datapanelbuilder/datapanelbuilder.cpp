@@ -99,11 +99,11 @@ Button* DataPanelBuilder::createFourPositionSwitch (array<string, 4> positionIma
 // metadata in the image container.
 //
 Button* DataPanelBuilder::createThreePositionSwitch (array<string, 3> positionImages,
-    Button::ThreePositionsState initialState,
+    Button::MomentaryThreePositionsState initialState,
     Button::EventCallback switchClicked,
     Frame<float> frame)
 {
-    SDLNPositionSwitch<Button::ThreePositionsState>::PositionTiles positionTiles;
+    SDLNPositionSwitch<Button::MomentaryThreePositionsState>::PositionTiles positionTiles;
 
     for (auto imageName : positionImages)
     {
@@ -115,7 +115,7 @@ Button* DataPanelBuilder::createThreePositionSwitch (array<string, 3> positionIm
             placeFrameInTexture (getFrameFromImage (imageName))));
     }
 
-    buttons_.push_back (make_unique<SDLNPositionSwitch<Button::ThreePositionsState>> (move (positionTiles),
+    buttons_.push_back (make_unique<SDLNPositionSwitch<Button::MomentaryThreePositionsState>> (move (positionTiles),
         initialState, switchClicked));
 
     // The tile pointers in the PositionsTiles vector are no longer

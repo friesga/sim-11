@@ -51,7 +51,7 @@ void BA11_C::createBezel (Cabinet::Position cabinetPosition)
         "keyswitch power",
         "keyswitch lock",
          },
-        Button::ThreePositionsState::Left,
+        Button::MomentaryThreePositionsState::Left,
         bind (&BA11_C::powerSwitchClicked, this, _1));
     
     frontWindow_->addPanel (panelBuilder->getPanel ());

@@ -76,7 +76,7 @@ void BA11_L::createBezel (Cabinet::Position cabinetPosition)
         {"resources/hcb_halt.png",
          "resources/hcb_cont.png",
          "resources/hcb_boot.png"},
-        Button::ThreePositionsState::Center,
+        Button::MomentaryThreePositionsState::Center,
         bind (&BA11_L::hcbSwitchClicked, this, _1),
         hcbSwitchFrame);
 
@@ -143,19 +143,19 @@ void BA11_L::powerSwitchClicked (Button::State state)
 
 void BA11_L::hcbSwitchClicked (Button::State state)
 {
-    switch (get<Button::ThreePositionsState> (state))
+    switch (get<Button::MomentaryThreePositionsState> (state))
     {
-        case Button::ThreePositionsState::Left:
+        case Button::MomentaryThreePositionsState::Left:
             // HALT - Halt the processor
             bus_->BHALT ().set (true);
             break;
 
-        case Button::ThreePositionsState::Center:
+        case Button::MomentaryThreePositionsState::Center:
             // CONT - The processor is enabled for normal operation
             bus_->BHALT ().set (false);
             break;
 
-        case Button::ThreePositionsState::Right:
+        case Button::MomentaryThreePositionsState::Right:
             // BOOT - Initializes the system
             bus_->BOOT ().cycle ();
             break;

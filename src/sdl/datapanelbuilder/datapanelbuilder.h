@@ -51,7 +51,7 @@ public:
         Button::EventCallback switchClicked,
         Frame<float> frame) override;
     virtual Button* createThreePositionSwitch (array<string, 3> positionImages,
-        Button::ThreePositionsState initialState,
+        Button::MomentaryThreePositionsState initialState,
         Button::EventCallback switchClicked,
         Frame<float> frame = Frame<float> (0, 0, 0, 0)) override;
     virtual unique_ptr<Panel> getPanel () override;

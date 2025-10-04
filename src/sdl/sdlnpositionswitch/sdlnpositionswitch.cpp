@@ -102,4 +102,4 @@ TPositions SDLNPositionSwitch<TPositions>::previousPosition (TPositions position
 
 // Explicit template instantiation to be able to define the methods in
 // a separate .cpp file.
-template class SDLNPositionSwitch<Button::ThreePositionsState>;
+template class SDLNPositionSwitch<Button::MomentaryThreePositionsState>;

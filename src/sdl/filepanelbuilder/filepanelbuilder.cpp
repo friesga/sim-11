@@ -176,11 +176,11 @@ Button* FilePanelBuilder::createFourPositionSwitch (array<string, 4> positionIma
 }
 
 Button* FilePanelBuilder::createThreePositionSwitch (array<string, 3> positionImages,
-    Button::ThreePositionsState initialState,
+    Button::MomentaryThreePositionsState initialState,
     Button::EventCallback switchClicked,
     Frame<float> frame)
 {
-    SDLNPositionSwitch<Button::ThreePositionsState>::PositionTiles positionTiles;
+    SDLNPositionSwitch<Button::MomentaryThreePositionsState>::PositionTiles positionTiles;
 
     for (auto imageName : positionImages)
     {
@@ -188,7 +188,7 @@ Button* FilePanelBuilder::createThreePositionSwitch (array<string, 3> positionIm
             *sdlRenderer_, targetTexture_, placeFrameInTexture (frame)));
     }
 
-    buttons_.push_back (make_unique<SDLNPositionSwitch<Button::ThreePositionsState>> (move (positionTiles),
+    buttons_.push_back (make_unique<SDLNPositionSwitch<Button::MomentaryThreePositionsState>> (move (positionTiles),
         initialState, switchClicked));
 
     // The tile pointers in the PositionsTiles vector are no longer

@@ -102,7 +102,9 @@ public:
         Off = 1
     };
 
-    enum class ThreePositionsState : size_t
+    // Definition of a three position switch the last position of which
+    // is  momentary.
+    enum class MomentaryThreePositionsState : size_t
     {
         Left = 0,
         Center = 1,
@@ -125,7 +127,7 @@ public:
         string buttonDownIndicatorOn;
     };
 
-    using State = variant<TwoPositionsState, ThreePositionsState, FourPositionsState>;
+    using State = variant<TwoPositionsState, MomentaryThreePositionsState, FourPositionsState>;
     using EventCallback = function<void(State)>;
     virtual void setState (State newState) = 0;
     virtual State currentState () const = 0;
@@ -145,12 +147,12 @@ template <typename T>
 struct EnumValue;
 
 template <>
-struct EnumValue<Button::ThreePositionsState>
+struct EnumValue<Button::MomentaryThreePositionsState>
 {
-    static constexpr Button::ThreePositionsState first =
-        Button::ThreePositionsState::Left;
-    static constexpr Button::ThreePositionsState last =
-        Button::ThreePositionsState::Right;
+    static constexpr Button::MomentaryThreePositionsState first =
+        Button::MomentaryThreePositionsState::Left;
+    static constexpr Button::MomentaryThreePositionsState last =
+        Button::MomentaryThreePositionsState::Right;
     static const bool isLatching = false;
 };
 
@@ -212,7 +214,7 @@ public:
         Button::EventCallback switchClicked,
         Frame<float> frame) = 0;
     virtual Button* createThreePositionSwitch (array<string, 3> positionImages,
-        Button::ThreePositionsState initialState,
+        Button::MomentaryThreePositionsState initialState,
         Button::EventCallback switchClicked,
         Frame<float> frame = Frame<float> (0, 0, 0, 0)) = 0;
     virtual unique_ptr<Panel> getPanel () = 0;
