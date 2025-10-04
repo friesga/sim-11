@@ -97,10 +97,11 @@ TPositions SDLNPositionSwitch<TPositions>::previousPosition (TPositions position
     if (switchPosition_ != EnumValue<TPositions>::first)
         return static_cast<TPositions> ((+position) - 1);
 
-    return EnumValue<TPositions>::last;
+    return EnumValue<TPositions>::first;
 }
 
 // Explicit template instantiation to be able to define the methods in
 // a separate .cpp file.
+template class SDLNPositionSwitch<Button::TwoPositionsState>;
 template class SDLNPositionSwitch<Button::MomentaryThreePositionsState>;
 template class SDLNPositionSwitch<Button::FourPositionsState>;
