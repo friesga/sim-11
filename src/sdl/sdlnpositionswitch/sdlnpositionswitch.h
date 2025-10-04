@@ -42,10 +42,16 @@ private:
     TPositions switchPosition_;
     PositionTiles positionTiles_;
 
+    bool switchedUp (InputEvent const* event) const;
+    bool switchedDown (InputEvent const* event) const;
     bool isRightOfCenter (Position position, float margin) const;
     bool isLeftOfCenter (Position position, float margin) const;
+    bool isAboveCenter (Position position, float margin) const;
+    bool isBelowCenter (Position position, float margin) const;
     TPositions nextPosition (TPositions position);
     TPositions previousPosition (TPositions position);
+
+    const float centerMargin_ {0.5f};
 };
 
 

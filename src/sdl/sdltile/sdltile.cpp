@@ -97,3 +97,19 @@ bool SDLTile::isLeftOfCenter (Position position, float margin) const
     return position.x < x_ + width_ / 2 &&
         position.x >= x_ + width_ / 2 - marginX;
 }
+
+bool SDLTile::isAboveCenter (Position position, float margin) const
+{
+    float marginY = margin * height_;
+
+    return position.y < y_ + height_ / 2 &&
+        position.y >= y_ + height_ / 2 - marginY;
+}
+
+bool SDLTile::isBelowCenter (Position position, float margin) const
+{
+    float marginY = margin * height_;
+
+    return position.y > y_ + height_ / 2 &&
+        position.y <= y_ + height_ / 2 + marginY;
+}

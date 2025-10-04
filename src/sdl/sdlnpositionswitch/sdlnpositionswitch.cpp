@@ -37,16 +37,16 @@ void SDLNPositionSwitch<TPositions>::handleEvent (InputEvent const* event)
 {
     if (event->type () == InputEvent::Type::MouseButtonDown &&
         event->button () == InputEvent::Button::Left &&
-        isWithinBounds (event->mousePosition (), 0.75f))
+        isWithinBounds (event->mousePosition (), centerMargin_))
     {
-        if (isRightOfCenter (event->mousePosition (), 0.75f))
+        if (switchedUp (event))
         {
             switchPosition_ = nextPosition (switchPosition_);
             switchClicked_ (switchPosition_);
             return;
         }
 
-        if (isLeftOfCenter (event->mousePosition (), 0.75f))
+        if (switchedDown (event))
         {
             switchPosition_ = previousPosition (switchPosition_);
             switchClicked_ (switchPosition_);
@@ -83,6 +83,18 @@ bool SDLNPositionSwitch<TPositions>::isLeftOfCenter (Position position, float ma
 }
 
 template <typename TPositions>
+bool SDLNPositionSwitch<TPositions>::isAboveCenter (Position position, float margin) const
+{
+    return positionTiles_[+switchPosition_]->isAboveCenter (position, margin);
+}
+
+template <typename TPositions>
+bool SDLNPositionSwitch<TPositions>::isBelowCenter (Position position, float margin) const
+{
+    return positionTiles_[+switchPosition_]->isBelowCenter (position, margin);
+}
+
+template <typename TPositions>
 TPositions SDLNPositionSwitch<TPositions>::nextPosition (TPositions position)
 {
     if (switchPosition_ != EnumValue<TPositions>::last)
@@ -98,6 +110,24 @@ TPositions SDLNPositionSwitch<TPositions>::previousPosition (TPositions position
         return static_cast<TPositions> ((+position) - 1);
 
     return EnumValue<TPositions>::first;
+}
+
+template <typename TPositions>
+bool SDLNPositionSwitch<TPositions>::switchedUp (InputEvent const* event) const
+{
+    return (EnumValue<TPositions>::orientation == Orientation::Horizontal &&
+        isRightOfCenter (event->mousePosition (), centerMargin_)) ||
+        (EnumValue<TPositions>::orientation == Orientation::Vertical &&
+            isAboveCenter (event->mousePosition (), centerMargin_));
+}
+
+template <typename TPositions>
+bool SDLNPositionSwitch<TPositions>::switchedDown (InputEvent const* event) const
+{
+    return EnumValue<TPositions>::orientation == Orientation::Horizontal &&
+        isLeftOfCenter (event->mousePosition (), centerMargin_) ||
+        (EnumValue<TPositions>::orientation == Orientation::Vertical &&
+            isBelowCenter (event->mousePosition (), centerMargin_));
 }
 
 // Explicit template instantiation to be able to define the methods in

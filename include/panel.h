@@ -139,12 +139,35 @@ public:
 // Definition of type traits for the different types of switches. For every
 // Button enum type defined to be handled by SDLNPositionSwitch, the first
 // and last enum values have to be defined. These type traits are used by
-// SDLNPositionSwitch to switch the Button to the correct position. The
-// isLatching trait indicates whether the the last position of the switch
+// SDLNPositionSwitch to switch the Button to the correct position.
+// 
+// The isLatching trait indicates whether the the last position of the switch
 // is latching or momentary.
 //
+// The orientation trait indicates whether the switch is oriented horizontally
+// or vertically. This is used to determine whether a click on the left or
+// right side (horizontal) or the upper or lower side (vertical) of the
+// switch updates the switch position.
+//
+enum class Orientation
+{
+    Horizontal,
+    Vertical
+};
+
 template <typename T>
 struct EnumValue;
+
+template <>
+struct EnumValue<Button::TwoPositionsState>
+{
+    static constexpr Button::TwoPositionsState first =
+        Button::TwoPositionsState::On;
+    static constexpr Button::TwoPositionsState last =
+        Button::TwoPositionsState::Off;
+    static const bool isLatching = true;
+    static const Orientation orientation = Orientation::Vertical;
+};
 
 template <>
 struct EnumValue<Button::MomentaryThreePositionsState>
@@ -154,6 +177,7 @@ struct EnumValue<Button::MomentaryThreePositionsState>
     static constexpr Button::MomentaryThreePositionsState last =
         Button::MomentaryThreePositionsState::Right;
     static const bool isLatching = false;
+    static const Orientation orientation = Orientation::Horizontal;
 };
 
 template <>
@@ -164,6 +188,8 @@ struct EnumValue<Button::FourPositionsState>
     static constexpr Button::FourPositionsState last =
         Button::FourPositionsState::P3;
     static const bool isLatching = true;
+    static const Orientation orientation = Orientation::Horizontal;
+
 };
 
 // An IndicatorButton is the combination of a button and an indicator. i.e.
