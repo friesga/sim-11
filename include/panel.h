@@ -156,6 +156,16 @@ struct EnumValue<Button::MomentaryThreePositionsState>
     static const bool isLatching = false;
 };
 
+template <>
+struct EnumValue<Button::FourPositionsState>
+{
+    static constexpr Button::FourPositionsState first =
+        Button::FourPositionsState::P0;
+    static constexpr Button::FourPositionsState last =
+        Button::FourPositionsState::P3;
+    static const bool isLatching = true;
+};
+
 // An IndicatorButton is the combination of a button and an indicator. i.e.
 // it can be switched up and down and has an indicator that can be switched
 // on and off.

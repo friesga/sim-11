@@ -156,7 +156,7 @@ Button* FilePanelBuilder::createFourPositionSwitch (array<string, 4> positionIma
     Button::EventCallback switchClicked,
     Frame<float> frame)
 {
-    SDLFourPositionSwitch::PositionTiles positionTiles;
+    SDLNPositionSwitch<Button::FourPositionsState>::PositionTiles positionTiles;
 
     for (auto imageName : positionImages)
     {
@@ -164,7 +164,7 @@ Button* FilePanelBuilder::createFourPositionSwitch (array<string, 4> positionIma
             *sdlRenderer_, targetTexture_, placeFrameInTexture (frame)));
     }
 
-    buttons_.push_back (make_unique<SDLFourPositionSwitch> (move (positionTiles),
+    buttons_.push_back (make_unique<SDLNPositionSwitch<Button::FourPositionsState>> (move (positionTiles),
         initialState, switchClicked));
 
     // The tile pointers in the PositionsTiles vector are no longer

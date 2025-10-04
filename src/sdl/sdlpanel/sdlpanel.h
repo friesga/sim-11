@@ -7,7 +7,6 @@
 #include "../sdllatchingbutton/sdllatchingbutton.h"
 #include "../sdlmomentarybutton/sdlmomentarybutton.h"
 #include "../sdlindicatorlatchingbutton/sdlindicatorlatchingbutton.h"
-#include "../sdlfourpositionswitch/sdlfourpositionswitch.h"
 #include "../sdlrenderer/sdlrenderer.h"
 #include "../sdlevent/sdlevent.h"
 #include "cabinet/cabinet.h"

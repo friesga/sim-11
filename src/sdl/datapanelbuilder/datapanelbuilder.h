@@ -7,7 +7,6 @@
 #include "sdl/sdllatchingbutton/sdllatchingbutton.h"
 #include "sdl/sdlmomentarybutton/sdlmomentarybutton.h"
 #include "sdl/sdlindicatorlatchingbutton/sdlindicatorlatchingbutton.h"
-#include "sdl/sdlfourpositionswitch/sdlfourpositionswitch.h"
 #include "sdl/sdlrenderer/sdlrenderer.h"
 #include "sdl/sdlevent/sdlevent.h"
 #include "imagedata/include/imagecontainer.h"
