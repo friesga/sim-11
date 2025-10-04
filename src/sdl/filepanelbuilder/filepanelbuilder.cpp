@@ -1,5 +1,6 @@
 #include "filepanelbuilder.h"
 #include "sdl/sdlpanel/sdlpanel.h"
+#include "sdl/sdlnpositionswitch/sdlnpositionswitch.h"
 
 #include <algorithm>
 #include <utility>
@@ -179,7 +180,7 @@ Button* FilePanelBuilder::createThreePositionSwitch (array<string, 3> positionIm
     Button::EventCallback switchClicked,
     Frame<float> frame)
 {
-    SDLThreePositionSwitch::PositionTiles positionTiles;
+    SDLNPositionSwitch<Button::ThreePositionsState>::PositionTiles positionTiles;
 
     for (auto imageName : positionImages)
     {
@@ -187,7 +188,7 @@ Button* FilePanelBuilder::createThreePositionSwitch (array<string, 3> positionIm
             *sdlRenderer_, targetTexture_, placeFrameInTexture (frame)));
     }
 
-    buttons_.push_back (make_unique<SDLThreePositionSwitch> (move (positionTiles),
+    buttons_.push_back (make_unique<SDLNPositionSwitch<Button::ThreePositionsState>> (move (positionTiles),
         initialState, switchClicked));
 
     // The tile pointers in the PositionsTiles vector are no longer

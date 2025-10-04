@@ -134,8 +134,12 @@ public:
     virtual bool isWithinBounds (Position position, float margin) const = 0;
 };
 
-// Definition of type traits for the Button position enums to be able to refer
-// to the first and last enum values.
+// Definition of type traits for the different types of switches. For every
+// Button enum type defined to be handled by SDLNPositionSwitch, the first
+// and last enum values have to be defined. These type traits are used by
+// SDLNPositionSwitch to switch the Button to the correct position. The
+// isLatching trait indicates whether the the last position of the switch
+// is latching or momentary.
 //
 template <typename T>
 struct EnumValue;
@@ -147,6 +151,7 @@ struct EnumValue<Button::ThreePositionsState>
         Button::ThreePositionsState::Left;
     static constexpr Button::ThreePositionsState last =
         Button::ThreePositionsState::Right;
+    static const bool isLatching = false;
 };
 
 // An IndicatorButton is the combination of a button and an indicator. i.e.

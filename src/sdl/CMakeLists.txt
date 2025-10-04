@@ -14,7 +14,6 @@ set (SDL_SRCS
     sdlmomentarybutton/sdlmomentarybutton.cpp
     sdllatchingbutton/sdllatchingbutton.cpp
     sdlindicatorlatchingbutton/sdlindicatorlatchingbutton.cpp
-    sdlthreepositionswitch/sdlthreepositionswitch.cpp
     sdlfourpositionswitch/sdlfourpositionswitch.cpp
     sdlnpositionswitch/sdlnpositionswitch.cpp
     sdlevent/sdlevent.cpp)

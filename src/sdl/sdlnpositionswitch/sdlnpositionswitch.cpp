@@ -54,9 +54,10 @@ void SDLNPositionSwitch<TPositions>::handleEvent (InputEvent const* event)
         }
     }
 
-    if (event->type () == InputEvent::Type::MouseButtonUp &&
+    if (!EnumValue<TPositions>::isLatching &&
+        event->type () == InputEvent::Type::MouseButtonUp &&
         event->button () == InputEvent::Button::Left &&
-        switchPosition_ == Button::ThreePositionsState::Right)
+        switchPosition_ == EnumValue<TPositions>::last)
     {
         switchPosition_ = previousPosition (switchPosition_);
         switchClicked_ (switchPosition_);

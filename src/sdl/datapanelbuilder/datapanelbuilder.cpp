@@ -103,7 +103,7 @@ Button* DataPanelBuilder::createThreePositionSwitch (array<string, 3> positionIm
     Button::EventCallback switchClicked,
     Frame<float> frame)
 {
-    SDLThreePositionSwitch::PositionTiles positionTiles;
+    SDLNPositionSwitch<Button::ThreePositionsState>::PositionTiles positionTiles;
 
     for (auto imageName : positionImages)
     {
