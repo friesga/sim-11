@@ -11,7 +11,6 @@ set (SDL_SRCS
     sdlrenderer/circle.cpp
     sdltexture/sdltexture.cpp
     sdltile/sdltile.cpp
-    sdlmomentarybutton/sdlmomentarybutton.cpp
     sdlindicatorlatchingbutton/sdlindicatorlatchingbutton.cpp
     sdlnpositionswitch/sdlnpositionswitch.cpp
     sdlevent/sdlevent.cpp)

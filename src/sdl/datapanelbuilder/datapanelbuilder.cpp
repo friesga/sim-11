@@ -67,7 +67,7 @@ Button* DataPanelBuilder::createLatchingButton (string buttonDownImage, string b
 }
 
 Button* DataPanelBuilder::createMomentaryButton (string buttonDownImage, string buttonUpImage,
-    Button::TwoPositionsState initialState, Button::EventCallback buttonClicked,
+    Button::MomentaryTwoPositionsState initialState, Button::EventCallback buttonClicked,
     Frame<float> frame)
 {
     // To be implemented.

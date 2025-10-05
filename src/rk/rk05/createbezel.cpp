@@ -76,7 +76,7 @@ void RK05::createBezel (Window* window, const RK05Config& rk05Config)
     wtprotSwitch_ = panelBuilder->createMomentaryButton (
         "resources/rocker switch up.png",
         "resources/rocker switch down.png",
-        Button::TwoPositionsState::Off,
+        Button::MomentaryTwoPositionsState::Off,
         bind (&RK05::wtprotSwitchClicked, this, _1),
         wtprotSwitchFrame);
 

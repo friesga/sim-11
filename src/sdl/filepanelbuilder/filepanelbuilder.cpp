@@ -95,20 +95,20 @@ Button* FilePanelBuilder::createLatchingButton (string buttonDownImage, string b
     return buttons_.back ().get ();
 }
 
-Button* FilePanelBuilder::createMomentaryButton (string buttonDownImage, string buttonUpImage,
-    Button::TwoPositionsState initialState, Button::EventCallback buttonClicked,
-    Frame<float> frame)
+Button* FilePanelBuilder::createMomentaryButton (string buttonDownImage,
+    string buttonUpImage, Button::MomentaryTwoPositionsState initialState,
+    Button::EventCallback buttonClicked, Frame<float> frame)
 {
-    unique_ptr<SDLTile> buttonDownTile =
-        make_unique<SDLTile> (buttonDownImage, *sdlRenderer_,
-            targetTexture_, placeFrameInTexture (frame));
+    SDLNPositionSwitch<Button::MomentaryTwoPositionsState>::PositionTiles positionTiles;
 
-    unique_ptr<SDLTile> buttonUpTile =
-        make_unique<SDLTile> (buttonUpImage, *sdlRenderer_,
-            targetTexture_, placeFrameInTexture (frame));
+    positionTiles.emplace_back (make_unique<SDLTile> (buttonDownImage,
+        *sdlRenderer_, targetTexture_, placeFrameInTexture (frame)));
 
-    buttons_.push_back (make_unique<SDLMomentaryButton> (move (buttonDownTile),
-        move (buttonUpTile), initialState, buttonClicked));
+    positionTiles.emplace_back (make_unique<SDLTile> (buttonUpImage,
+        *sdlRenderer_, targetTexture_, placeFrameInTexture (frame)));
+
+    buttons_.push_back (make_unique<SDLNPositionSwitch<Button::MomentaryTwoPositionsState>> (move (positionTiles),
+        initialState, buttonClicked));
 
     // buttonDownTile and buttonUpTile are no longer valid pointers
     // to the SDLTile's but that's ok since they are moved and

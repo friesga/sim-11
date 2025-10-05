@@ -4,7 +4,6 @@
 #include "panel.h"
 #include "../sdlfront/sdlfront.h"
 #include "../sdlindicator/sdlindicator.h"
-#include "../sdlmomentarybutton/sdlmomentarybutton.h"
 #include "../sdlindicatorlatchingbutton/sdlindicatorlatchingbutton.h"
 #include "../sdlrenderer/sdlrenderer.h"
 #include "../sdlevent/sdlevent.h"

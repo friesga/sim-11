@@ -4,7 +4,6 @@
 #include "panel.h"
 #include "sdl/sdlfront/sdlfront.h"
 #include "sdl/sdlindicator/sdlindicator.h"
-#include "sdl/sdlmomentarybutton/sdlmomentarybutton.h"
 #include "sdl/sdlindicatorlatchingbutton/sdlindicatorlatchingbutton.h"
 #include "sdl/sdlrenderer/sdlrenderer.h"
 #include "sdl/sdlevent/sdlevent.h"
@@ -38,7 +37,7 @@ public:
         Button::TwoPositionsState initialState, Button::EventCallback buttonClicked,
         Frame<float> frame) override;
     virtual Button* createMomentaryButton (string buttonDownImage, string buttonUpImage,
-        Button::TwoPositionsState initialState, Button::EventCallback buttonClicked,
+        Button::MomentaryTwoPositionsState initialState, Button::EventCallback buttonClicked,
         Frame<float> frame) override;
     virtual IndicatorButton* createSDLIndicatorLatchingButton (Button::ImageNames const& imageNames,
         Button::TwoPositionsState initialState,

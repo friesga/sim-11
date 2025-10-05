@@ -102,6 +102,12 @@ public:
         Off = 1
     };
 
+    enum class MomentaryTwoPositionsState : size_t
+    {
+        On = 0,
+        Off = 1
+    };
+
     // Definition of a three position switch the last position of which
     // is  momentary.
     enum class MomentaryThreePositionsState : size_t
@@ -127,7 +133,8 @@ public:
         string buttonDownIndicatorOn;
     };
 
-    using State = variant<TwoPositionsState, MomentaryThreePositionsState, FourPositionsState>;
+    using State = variant<TwoPositionsState, MomentaryTwoPositionsState,
+        MomentaryThreePositionsState, FourPositionsState>;
     using EventCallback = function<void(State)>;
     virtual void setState (State newState) = 0;
     virtual State currentState () const = 0;
@@ -166,6 +173,17 @@ struct EnumValue<Button::TwoPositionsState>
     static constexpr Button::TwoPositionsState last =
         Button::TwoPositionsState::Off;
     static const bool isLatching = true;
+    static const Orientation orientation = Orientation::Vertical;
+};
+
+template <>
+struct EnumValue<Button::MomentaryTwoPositionsState>
+{
+    static constexpr Button::MomentaryTwoPositionsState first =
+        Button::MomentaryTwoPositionsState::On;
+    static constexpr Button::MomentaryTwoPositionsState last =
+        Button::MomentaryTwoPositionsState::Off;
+    static const bool isLatching = false;
     static const Orientation orientation = Orientation::Vertical;
 };
 
@@ -239,7 +257,7 @@ public:
         Button::TwoPositionsState initialState, Button::EventCallback buttonClicked,
         Frame<float> frame) = 0;
     virtual Button* createMomentaryButton (string buttonDownImage, string buttonUpImage,
-        Button::TwoPositionsState initialState, Button::EventCallback buttonClicked,
+        Button::MomentaryTwoPositionsState initialState, Button::EventCallback buttonClicked,
         Frame<float> frame) = 0;
     virtual IndicatorButton* createSDLIndicatorLatchingButton (Button::ImageNames const& imageNames,
         Button::TwoPositionsState initialState,
