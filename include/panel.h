@@ -108,6 +108,12 @@ public:
         Up = 1
     };
 
+    enum class IndicatorTwoPositionsState : size_t
+    {
+        Down = 0,
+        Up = 1
+    };
+
     // Definition of a three position switch the last position of which
     // is  momentary.
     enum class MomentaryThreePositionsState : size_t
@@ -151,15 +157,16 @@ public:
 // The isLatching trait indicates whether the the last position of the switch
 // is latching or momentary.
 //
-// The orientation trait indicates whether the switch is oriented horizontally
-// or vertically. This is used to determine whether a click on the left or
-// right side (horizontal) or the upper or lower side (vertical) of the
-// switch updates the switch position.
+// The orientation trait indicates whether the switch is oriented horizontally,
+// vertically or is centered. This is used to determine whether a click on the
+// left or right side (horizontal), the upper or lower side (vertical) or the
+// center of the switch updates the switch position.
 //
 enum class Orientation
 {
     Horizontal,
-    Vertical
+    Vertical,
+    Centered
 };
 
 template <typename T>
@@ -185,6 +192,17 @@ struct EnumValue<Button::MomentaryTwoPositionsState>
         Button::MomentaryTwoPositionsState::Up;
     static const bool isLatching = false;
     static const Orientation orientation = Orientation::Vertical;
+};
+
+template <>
+struct EnumValue<Button::IndicatorTwoPositionsState>
+{
+    static constexpr Button::IndicatorTwoPositionsState first =
+        Button::IndicatorTwoPositionsState::Down;
+    static constexpr Button::IndicatorTwoPositionsState last =
+        Button::IndicatorTwoPositionsState::Up;
+    static const bool isLatching = false;
+    static const Orientation orientation = Orientation::Centered;
 };
 
 template <>
