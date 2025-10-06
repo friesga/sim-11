@@ -150,9 +150,11 @@ public:
 };
 
 // Definition of type traits for the different types of switches. For every
-// Button enum type defined to be handled by SDLNPositionSwitch, the first
-// and last enum values have to be defined. These type traits are used by
-// SDLNPositionSwitch to switch the Button to the correct position.
+// Button enum type to be handled by SDLNPositionSwitch, these type traits
+// have to be defined. They configure the behaviour of the switch. 
+// 
+// The first and last enum values are used to switch the Button to the
+// correct position.
 // 
 // The isLatching trait indicates whether the the last position of the switch
 // is latching or momentary.
