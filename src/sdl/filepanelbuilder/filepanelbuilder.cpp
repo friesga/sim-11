@@ -69,55 +69,6 @@ Indicator* FilePanelBuilder::createIndicator (string indicatorOffImage,
     return indicators_.back ().get ();
 }
 
-// Add a Button to the Panel, returning a pointer to the added Button.
-//
-// It's the user's responsibility not to use this pointer when the Window
-// the Panel and Button belong to is destroyed. Not following this instruction
-// will lead to undefined behaviour.
-//
-Button* FilePanelBuilder::createLatchingButton (string buttonDownImage, string buttonUpImage,
-    Button::TwoPositionsState initialState, Button::EventCallback buttonClicked,
-    Frame<float> frame)
-{
-    SDLNPositionSwitch<Button::TwoPositionsState>::PositionTiles positionTiles;
-
-    positionTiles.emplace_back (make_unique<SDLTile> (buttonDownImage,
-        *sdlRenderer_, targetTexture_, placeFrameInTexture (frame)));
-
-    positionTiles.emplace_back (make_unique<SDLTile> (buttonUpImage,
-        *sdlRenderer_, targetTexture_, placeFrameInTexture (frame)));
-
-    buttons_.push_back (make_unique<SDLNPositionSwitch<Button::TwoPositionsState>> (move (positionTiles),
-        initialState, buttonClicked));
-
-    // buttonDownTile and buttonUpTile are no longer valid pointers
-    // to the SDLTile's but that's ok since they are moved and
-    // SDLLatchingButton now has ownership of the SDLTile's.
-
-    return buttons_.back ().get ();
-}
-
-Button* FilePanelBuilder::createMomentaryButton (string buttonDownImage,
-    string buttonUpImage, Button::MomentaryTwoPositionsState initialState,
-    Button::EventCallback buttonClicked, Frame<float> frame)
-{
-    SDLNPositionSwitch<Button::MomentaryTwoPositionsState>::PositionTiles positionTiles;
-
-    positionTiles.emplace_back (make_unique<SDLTile> (buttonDownImage,
-        *sdlRenderer_, targetTexture_, placeFrameInTexture (frame)));
-
-    positionTiles.emplace_back (make_unique<SDLTile> (buttonUpImage,
-        *sdlRenderer_, targetTexture_, placeFrameInTexture (frame)));
-
-    buttons_.push_back (make_unique<SDLNPositionSwitch<Button::MomentaryTwoPositionsState>> (move (positionTiles),
-        initialState, buttonClicked));
-
-    // buttonDownTile and buttonUpTile are no longer valid pointers
-    // to the SDLTile's but that's ok since they are moved and
-    // SDLMomentaryButton now has ownership of the SDLTile's.
-
-    return buttons_.back ().get ();
-}
 
 IndicatorButton* FilePanelBuilder::createSDLIndicatorLatchingButton (Button::ImageNames const& imageNames,
     Button::TwoPositionsState initialState,
@@ -153,53 +104,6 @@ IndicatorButton* FilePanelBuilder::createSDLIndicatorLatchingButton (Button::Ima
     return indicatorButtons_.back ().get ();
 }
 
-Button* FilePanelBuilder::createFourPositionSwitch (array<string, 4> positionImages,
-    Button::FourPositionsState initialState,
-    Button::EventCallback switchClicked,
-    Frame<float> frame)
-{
-    SDLNPositionSwitch<Button::FourPositionsState>::PositionTiles positionTiles;
-
-    for (auto imageName : positionImages)
-    {
-        positionTiles.emplace_back (make_unique<SDLTile> (imageName,
-            *sdlRenderer_, targetTexture_, placeFrameInTexture (frame)));
-    }
-
-    buttons_.push_back (make_unique<SDLNPositionSwitch<Button::FourPositionsState>> (move (positionTiles),
-        initialState, switchClicked));
-
-    // The tile pointers in the PositionsTiles vector are no longer
-    // valid pointers to the SDLTile's but that's ok since the vector
-    // is moved to SDLFourPositionSwitch and that function now has ownership
-    // of the SDLTile's.
-
-    return buttons_.back ().get ();
-}
-
-Button* FilePanelBuilder::createThreePositionSwitch (array<string, 3> positionImages,
-    Button::MomentaryThreePositionsState initialState,
-    Button::EventCallback switchClicked,
-    Frame<float> frame)
-{
-    SDLNPositionSwitch<Button::MomentaryThreePositionsState>::PositionTiles positionTiles;
-
-    for (auto imageName : positionImages)
-    {
-        positionTiles.emplace_back (make_unique<SDLTile> (imageName,
-            *sdlRenderer_, targetTexture_, placeFrameInTexture (frame)));
-    }
-
-    buttons_.push_back (make_unique<SDLNPositionSwitch<Button::MomentaryThreePositionsState>> (move (positionTiles),
-        initialState, switchClicked));
-
-    // The tile pointers in the PositionsTiles vector are no longer
-    // valid pointers to the SDLTile's but that's ok since the vector
-    // is moved to SDLThreePositionSwitch and that function now has ownership
-    // of the SDLTile's.
-
-    return buttons_.back ().get ();
-}
 
 Button* FilePanelBuilder::createNPositionSwitch (vector<string> positionImages,
     Button::State initialState,

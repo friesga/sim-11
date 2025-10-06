@@ -28,30 +28,15 @@ public:
     virtual Indicator* createIndicator (string indicatorOffImage,
         string indicatorOnImage, Indicator::State showFigure,
         Frame<float> frame) override;
-    virtual Button* createLatchingButton (string buttonDownImage, string buttonUpImage,
-        Button::TwoPositionsState initialState, Button::EventCallback buttonClicked,
-        Frame<float> frame) override;
-    virtual Button* createMomentaryButton (string buttonDownImage, string buttonUpImage,
-        Button::MomentaryTwoPositionsState initialState, Button::EventCallback buttonClicked,
+    Button* createNPositionSwitch (vector<string> positionImages,
+        Button::State initialState,
+        Button::EventCallback switchClicked,
         Frame<float> frame) override;
     virtual IndicatorButton* createSDLIndicatorLatchingButton (Button::ImageNames const& imageNames,
         Button::TwoPositionsState initialState,
         Button::EventCallback buttonClicked, Indicator::State showIndicator,
         Frame<float> frame) override;
-    virtual Button* createFourPositionSwitch (array<string, 4> positionImages,
-        Button::FourPositionsState initialState,
-        Button::EventCallback switchClicked,
-        Frame<float> frame) override;
-    virtual Button* createThreePositionSwitch (array<string, 3> positionImages,
-        Button::MomentaryThreePositionsState initialState,
-        Button::EventCallback switchClicked,
-        Frame<float> frame) override;
     virtual unique_ptr<Panel> getPanel () override;
-    
-    Button* createNPositionSwitch (vector<string> positionImages,
-        Button::State initialState,
-        Button::EventCallback switchClicked,
-        Frame<float> frame) override;
 
 private:
     int textureHeight (SDLTexture& texture) const;

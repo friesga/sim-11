@@ -271,31 +271,15 @@ public:
     virtual Indicator* createIndicator (string indicatorOffImage,
         string indicatorOnImage, Indicator::State showFigure,
         Frame<float> frame) = 0;
-    virtual Button* createLatchingButton (string buttonDownImage, string buttonUpImage,
-        Button::TwoPositionsState initialState, Button::EventCallback buttonClicked,
-        Frame<float> frame) = 0;
-    virtual Button* createMomentaryButton (string buttonDownImage, string buttonUpImage,
-        Button::MomentaryTwoPositionsState initialState, Button::EventCallback buttonClicked,
-        Frame<float> frame) = 0;
     virtual IndicatorButton* createSDLIndicatorLatchingButton (Button::ImageNames const& imageNames,
         Button::TwoPositionsState initialState,
         Button::EventCallback buttonClicked, Indicator::State showIndicator,
         Frame<float> frame) = 0;
-    virtual Button* createFourPositionSwitch (array<string, 4> positionImages,
-        Button::FourPositionsState initialState,
-        Button::EventCallback switchClicked,
-        Frame<float> frame) = 0;
-    virtual Button* createThreePositionSwitch (array<string, 3> positionImages,
-        Button::MomentaryThreePositionsState initialState,
-        Button::EventCallback switchClicked,
-        Frame<float> frame = Frame<float> (0, 0, 0, 0)) = 0;
-    virtual unique_ptr<Panel> getPanel () = 0;
-
     virtual Button* createNPositionSwitch (vector<string> positionImages,
         Button::State initialState,
         Button::EventCallback switchClicked,
-        Frame<float> frame) = 0;
-
+        Frame<float> frame = Frame<float> (0, 0, 0, 0)) = 0;
+    virtual unique_ptr<Panel> getPanel () = 0;
     virtual ~PanelBuilder () = default;
 };
 

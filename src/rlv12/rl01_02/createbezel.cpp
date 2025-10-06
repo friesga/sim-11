@@ -38,9 +38,9 @@ void RL01_02::createBezel (Window* window,
         Indicator::State::Off, faultIndicatorFrame);
 
     // WRITE PROTECT switch, initial state depends on unit configuration
-    writeProtectButton_ = panelBuilder->createLatchingButton (
-        "resources/write_protect_on.png",
-        "resources/write_protect_off.png",
+    writeProtectButton_ = panelBuilder->createNPositionSwitch (
+        {"resources/write_protect_on.png",
+        "resources/write_protect_off.png"},
         rlUnitConfig.writeProtect ? Button::TwoPositionsState::Down : Button::TwoPositionsState::Up,
         bind (&RL01_02::writeProtectButtonClicked, this, _1),
         writeProtectButtonFrame);

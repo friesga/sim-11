@@ -63,7 +63,7 @@ void BA11_L::createBezel (Cabinet::Position cabinetPosition)
 
     panelBuilder->createFront ("resources/11_24 front.png", ba11_nFrontFrame);
 
-    powerSwitch_ = panelBuilder->createFourPositionSwitch (
+    powerSwitch_ = panelBuilder->createNPositionSwitch (
         {"resources/power_p0.png",
          "resources/power_p1.png",
          "resources/power_p2.png",
@@ -72,7 +72,7 @@ void BA11_L::createBezel (Cabinet::Position cabinetPosition)
         bind (&BA11_L::powerSwitchClicked, this, _1),
         powerSwitchFrame);
 
-    hcbSwitch_ = panelBuilder->createThreePositionSwitch (
+    hcbSwitch_ = panelBuilder->createNPositionSwitch (
         {"resources/hcb_halt.png",
          "resources/hcb_cont.png",
          "resources/hcb_boot.png"},

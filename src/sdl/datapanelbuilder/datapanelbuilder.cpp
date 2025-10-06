@@ -1,6 +1,7 @@
 #include "datapanelbuilder.h"
 #include "sdl/sdlpanel/sdlpanel.h"
 #include "sdl/sdlnpositionswitch/sdlnpositionswitch.h"
+#include "overloaded.h"
 
 DataPanelBuilder::DataPanelBuilder (ImageContainer& imageContainer,
     unique_ptr<SDLRenderer>& sdlRenderer, SDLTexture& texture,
@@ -51,30 +52,6 @@ Indicator* DataPanelBuilder::createIndicator (string indicatorOffImage,
     return indicators_.back ().get ();
 }
 
-// Add a Button to the Panel, returning a pointer to the added Button.
-//
-// It's the user's responsibility not to use this pointer when the Window
-// the Panel and Button belong to is destroyed. Not following this instruction
-// will lead to undefined behaviour.
-//
-Button* DataPanelBuilder::createLatchingButton (string buttonDownImage, string buttonUpImage,
-    Button::TwoPositionsState initialState, Button::EventCallback buttonClicked,
-    Frame<float> frame)
-{
-    // To be implemented
-
-    return buttons_.back ().get ();
-}
-
-Button* DataPanelBuilder::createMomentaryButton (string buttonDownImage, string buttonUpImage,
-    Button::MomentaryTwoPositionsState initialState, Button::EventCallback buttonClicked,
-    Frame<float> frame)
-{
-    // To be implemented.
-
-    return buttons_.back ().get ();
-}
-
 IndicatorButton* DataPanelBuilder::createSDLIndicatorLatchingButton (Button::ImageNames const& imageNames,
     Button::TwoPositionsState initialState,
     Button::EventCallback buttonClicked, Indicator::State showIndicator,
@@ -85,53 +62,53 @@ IndicatorButton* DataPanelBuilder::createSDLIndicatorLatchingButton (Button::Ima
     return indicatorButtons_.back ().get ();
 }
 
-Button* DataPanelBuilder::createFourPositionSwitch (array<string, 4> positionImages,
-    Button::FourPositionsState initialState,
-    Button::EventCallback switchClicked,
-    Frame<float> frame)
-{
-    // To be implemented
-
-    return buttons_.back ().get ();
-}
-
-// The frame parameter is ignored as the frame is determined from the image
-// metadata in the image container.
+// This function is doubled with the one in FilePanelBuilder. This is
+// acceptable as FilePanelBuilder si deprecated and will be removed.
 //
-Button* DataPanelBuilder::createThreePositionSwitch (array<string, 3> positionImages,
-    Button::MomentaryThreePositionsState initialState,
-    Button::EventCallback switchClicked,
-    Frame<float> frame)
-{
-    SDLNPositionSwitch<Button::MomentaryThreePositionsState>::PositionTiles positionTiles;
-
-    for (auto imageName : positionImages)
-    {
-        unique_ptr<Image> pngImage =
-            imageContainer_.getImage (imageContainer_.getFileName (imageName));
-
-        positionTiles.emplace_back (make_unique<SDLTile> (*pngImage,
-            *sdlRenderer_, targetTexture_,
-            placeFrameInTexture (getFrameFromImage (imageName))));
-    }
-
-    buttons_.push_back (make_unique<SDLNPositionSwitch<Button::MomentaryThreePositionsState>> (move (positionTiles),
-        initialState, switchClicked));
-
-    // The tile pointers in the PositionsTiles vector are no longer
-    // valid pointers to the SDLTile's but that's ok since the vector
-    // is moved to SDLThreePositionSwitch and that function now has ownership
-    // of the SDLTile's.
-
-    return buttons_.back ().get ();
-}
-
 Button* DataPanelBuilder::createNPositionSwitch (vector<string> positionImages,
     Button::State initialState,
     Button::EventCallback switchClicked,
     Frame<float> frame)
 {
-    return nullptr;
+    vector<unique_ptr<SDLTile>> positionTiles;
+
+    for (auto imageName : positionImages)
+    {
+        positionTiles.emplace_back (make_unique<SDLTile> (imageName,
+            *sdlRenderer_, targetTexture_, placeFrameInTexture (frame)));
+    }
+
+    auto switchVisitor = overloaded
+    {
+        [&] (Button::TwoPositionsState initialState)
+        {
+            buttons_.push_back (make_unique<SDLNPositionSwitch<Button::TwoPositionsState>> (move (positionTiles),
+                initialState, switchClicked));
+        },
+
+        [&] (Button::MomentaryTwoPositionsState initialState)
+        {
+            buttons_.push_back (make_unique<SDLNPositionSwitch<Button::MomentaryTwoPositionsState>> (move (positionTiles),
+                initialState, switchClicked));
+        },
+
+        [&] (Button::MomentaryThreePositionsState initialState)
+        {
+            buttons_.push_back (make_unique<SDLNPositionSwitch<Button::MomentaryThreePositionsState>> (move (positionTiles),
+                initialState, switchClicked));
+        },
+
+        [&] (Button::FourPositionsState initialState)
+        {
+            buttons_.push_back (make_unique<SDLNPositionSwitch<Button::FourPositionsState>> (move (positionTiles),
+                initialState, switchClicked));
+        }
+    };
+
+
+    visit (switchVisitor, initialState);
+
+    return buttons_.back ().get ();
 }
 
 // Determine the relative position and dimension of the given image layer
