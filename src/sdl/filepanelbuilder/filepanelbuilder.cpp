@@ -124,19 +124,19 @@ IndicatorButton* FilePanelBuilder::createSDLIndicatorLatchingButton (Button::Ima
 {
     SDLIndicatorLatchingButton::TileGrid tiles;
 
-    tiles[to_integral (Button::TwoPositionsState::Off)][to_integral (Indicator::State::Off)] =
+    tiles[to_integral (Button::TwoPositionsState::Up)][to_integral (Indicator::State::Off)] =
         make_unique<SDLTile> (imageNames.buttonUpIndicatorOff,
             *sdlRenderer_, targetTexture_, placeFrameInTexture (frame));
 
-    tiles[to_integral (Button::TwoPositionsState::On)][to_integral (Indicator::State::Off)] =
+    tiles[to_integral (Button::TwoPositionsState::Down)][to_integral (Indicator::State::Off)] =
         make_unique<SDLTile> (imageNames.buttonDownIndicatorOff,
             *sdlRenderer_, targetTexture_, placeFrameInTexture (frame));
 
-    tiles[to_integral (Button::TwoPositionsState::Off)][to_integral (Indicator::State::On)] =
+    tiles[to_integral (Button::TwoPositionsState::Up)][to_integral (Indicator::State::On)] =
         make_unique<SDLTile> (imageNames.buttonUpIndicatorOn,
             *sdlRenderer_, targetTexture_, placeFrameInTexture (frame));
 
-    tiles[to_integral (Button::TwoPositionsState::On)][to_integral (Indicator::State::On)] =
+    tiles[to_integral (Button::TwoPositionsState::Down)][to_integral (Indicator::State::On)] =
         make_unique<SDLTile> (imageNames.buttonDownIndicatorOn,
             *sdlRenderer_, targetTexture_, placeFrameInTexture (frame));
 

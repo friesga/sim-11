@@ -79,17 +79,17 @@ void BA11_N::createBezel (Cabinet::Position cabinetPosition)
 
     restartSwitch_ = panelBuilder->createMomentaryButton ("resources/switch down.png",
         "resources/switch up.png", 
-        Button::MomentaryTwoPositionsState::On, bind (&BA11_N::restartSwitchClicked, this, _1), 
+        Button::MomentaryTwoPositionsState::Down, bind (&BA11_N::restartSwitchClicked, this, _1), 
         restartSwitchFrame);
 
     haltSwitch_ = panelBuilder->createLatchingButton ("resources/switch down.png",
         "resources/switch up.png", 
-        Button::TwoPositionsState::On, bind (&BA11_N::haltSwitchToggled, this, _1),
+        Button::TwoPositionsState::Down, bind (&BA11_N::haltSwitchToggled, this, _1),
         haltSwitchFrame);
 
     auxOnOffSwitch_ = panelBuilder->createLatchingButton ("resources/switch down.png",
         "resources/switch up.png", 
-        Button::TwoPositionsState::On, bind (&BA11_N::auxOnOffSwitchToggled, this, _1),
+        Button::TwoPositionsState::Down, bind (&BA11_N::auxOnOffSwitchToggled, this, _1),
         auxOnOffSwitchFrame);
 
     frontWindow_->addPanel (panelBuilder->getPanel ());
@@ -115,7 +115,7 @@ string BA11_N::frontImage (BA11_NConfig::Logo logo)
 void BA11_N::restartSwitchClicked (Button::State state)
 {
     if (get<Button::MomentaryTwoPositionsState> (state) == 
-            Button::MomentaryTwoPositionsState::Off)
+            Button::MomentaryTwoPositionsState::Up)
         bus_->RESET ().cycle ();
 }
 
@@ -123,11 +123,11 @@ void BA11_N::haltSwitchToggled (Button::State state)
 {
     switch (get<Button::TwoPositionsState> (state))
     {
-        case Button::TwoPositionsState::On:
+        case Button::TwoPositionsState::Down:
             bus_->BHALT().set (false);
             break;
 
-        case Button::TwoPositionsState::Off:
+        case Button::TwoPositionsState::Up:
             bus_->BHALT().set (true);
             break;
     }
@@ -137,12 +137,12 @@ void BA11_N::auxOnOffSwitchToggled (Button::State state)
 {
     switch (get<Button::TwoPositionsState> (state))
     {
-        case Button::TwoPositionsState::On:
+        case Button::TwoPositionsState::Down:
             pwrOkLed_->show (Indicator::State::Off);
             bus_->BPOK ().set (false);
             break;
 
-        case Button::TwoPositionsState::Off:
+        case Button::TwoPositionsState::Up:
             // Set Power Success
             pwrOkLed_->show (Indicator::State::On);
             bus_->BPOK ().set (true);

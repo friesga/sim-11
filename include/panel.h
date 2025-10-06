@@ -98,14 +98,14 @@ class Button
 public:
     enum class TwoPositionsState : size_t
     {
-        On = 0,
-        Off = 1
+        Down = 0,
+        Up = 1
     };
 
     enum class MomentaryTwoPositionsState : size_t
     {
-        On = 0,
-        Off = 1
+        Down = 0,
+        Up = 1
     };
 
     // Definition of a three position switch the last position of which
@@ -169,9 +169,9 @@ template <>
 struct EnumValue<Button::TwoPositionsState>
 {
     static constexpr Button::TwoPositionsState first =
-        Button::TwoPositionsState::On;
+        Button::TwoPositionsState::Down;
     static constexpr Button::TwoPositionsState last =
-        Button::TwoPositionsState::Off;
+        Button::TwoPositionsState::Up;
     static const bool isLatching = true;
     static const Orientation orientation = Orientation::Vertical;
 };
@@ -180,9 +180,9 @@ template <>
 struct EnumValue<Button::MomentaryTwoPositionsState>
 {
     static constexpr Button::MomentaryTwoPositionsState first =
-        Button::MomentaryTwoPositionsState::On;
+        Button::MomentaryTwoPositionsState::Down;
     static constexpr Button::MomentaryTwoPositionsState last =
-        Button::MomentaryTwoPositionsState::Off;
+        Button::MomentaryTwoPositionsState::Up;
     static const bool isLatching = false;
     static const Orientation orientation = Orientation::Vertical;
 };

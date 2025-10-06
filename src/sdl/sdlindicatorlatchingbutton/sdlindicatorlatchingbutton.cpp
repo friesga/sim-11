@@ -38,8 +38,8 @@ void SDLIndicatorLatchingButton::handleEvent (InputEvent const* event)
         event->button () == InputEvent::Button::Left &&
         isWithinBounds (event->mousePosition ()))
     {
-        buttonState_ = (buttonState_ == Button::TwoPositionsState::Off) ? 
-            Button::TwoPositionsState::On : Button::TwoPositionsState::Off; 
+        buttonState_ = (buttonState_ == Button::TwoPositionsState::Up) ? 
+            Button::TwoPositionsState::Down : Button::TwoPositionsState::Up; 
         buttonClicked_ (buttonState_);
     }
 }
@@ -53,7 +53,7 @@ bool SDLIndicatorLatchingButton::isWithinBounds (Position position,
     float margin) const
 {
     // Any of the tiles can be used to check the dimensions
-    return getTile (Button::TwoPositionsState::Off,
+    return getTile (Button::TwoPositionsState::Up,
         Indicator::State::Off)->isWithinBounds (position, margin);
 }
 

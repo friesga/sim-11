@@ -113,7 +113,7 @@ RKTypes::RKDS RK05::driveStatus ()
 
 void RK05::runLoadSwitchClicked (Button::State state)
 {
-    if (get<Button::TwoPositionsState> (state) == Button::TwoPositionsState::On)
+    if (get<Button::TwoPositionsState> (state) == Button::TwoPositionsState::Down)
         sendTrigger (SpinUp {});
     else
         sendTrigger (SpinDown {});
@@ -139,7 +139,7 @@ void RK05::sendTrigger (Event event)
 void RK05::wtprotSwitchClicked (Button::State state)
 {
     if (get<Button::MomentaryTwoPositionsState> (state) == 
-        Button::MomentaryTwoPositionsState::On)
+        Button::MomentaryTwoPositionsState::Down)
     {
         if (driveStatus_.writeProtectStatus == 0)
         {

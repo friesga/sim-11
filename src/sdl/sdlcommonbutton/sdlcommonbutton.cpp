@@ -35,11 +35,11 @@ Button::TwoPositionsState SDLCommonButton::toggleState (TwoPositionsState oldSta
 {
     switch (oldState)
     {
-        case TwoPositionsState::On:
-            return TwoPositionsState::Off;
+        case TwoPositionsState::Down:
+            return TwoPositionsState::Up;
 
-        case TwoPositionsState::Off:
-            return TwoPositionsState::On;
+        case TwoPositionsState::Up:
+            return TwoPositionsState::Down;
     }
 
     // Satisfying the compiler
@@ -50,11 +50,11 @@ void SDLCommonButton::render ()
 {
     switch (buttonState_)
     {
-        case TwoPositionsState::On:
+        case TwoPositionsState::Down:
             buttonDownTile_->render ();
             break;
         
-        case TwoPositionsState::Off:
+        case TwoPositionsState::Up:
             buttonUpTile_->render ();
     }
 }
