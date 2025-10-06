@@ -1,6 +1,8 @@
 #include "filepanelbuilder.h"
 #include "sdl/sdlpanel/sdlpanel.h"
 #include "sdl/sdlnpositionswitch/sdlnpositionswitch.h"
+#include "cabinet/cabinet.h"
+#include "overloaded.h"
 
 #include <algorithm>
 #include <utility>
@@ -195,6 +197,52 @@ Button* FilePanelBuilder::createThreePositionSwitch (array<string, 3> positionIm
     // valid pointers to the SDLTile's but that's ok since the vector
     // is moved to SDLThreePositionSwitch and that function now has ownership
     // of the SDLTile's.
+
+    return buttons_.back ().get ();
+}
+
+Button* FilePanelBuilder::createNPositionSwitch (vector<string> positionImages,
+    Button::State initialState,
+    Button::EventCallback switchClicked,
+    Frame<float> frame)
+{
+    vector<unique_ptr<SDLTile>> positionTiles;
+
+    for (auto imageName : positionImages)
+    {
+        positionTiles.emplace_back (make_unique<SDLTile> (imageName,
+            *sdlRenderer_, targetTexture_, placeFrameInTexture (frame)));
+    }
+
+    auto switchVisitor = overloaded
+    {
+        [&] (Button::TwoPositionsState initialState)
+        { 
+            buttons_.push_back (make_unique<SDLNPositionSwitch<Button::TwoPositionsState>> (move (positionTiles),
+                initialState, switchClicked));
+        },
+
+        [&] (Button::MomentaryTwoPositionsState initialState)
+        {
+            buttons_.push_back (make_unique<SDLNPositionSwitch<Button::MomentaryTwoPositionsState>> (move (positionTiles),
+                initialState, switchClicked));
+        },
+
+        [&] (Button::MomentaryThreePositionsState initialState)
+        {
+            buttons_.push_back (make_unique<SDLNPositionSwitch<Button::MomentaryThreePositionsState>> (move (positionTiles),
+                initialState, switchClicked));
+        },
+
+        [&] (Button::FourPositionsState initialState)
+        {
+            buttons_.push_back (make_unique<SDLNPositionSwitch<Button::FourPositionsState>> (move (positionTiles),
+                initialState, switchClicked));
+        }
+    };
+
+
+    visit (switchVisitor, initialState);
 
     return buttons_.back ().get ();
 }

@@ -126,6 +126,14 @@ Button* DataPanelBuilder::createThreePositionSwitch (array<string, 3> positionIm
     return buttons_.back ().get ();
 }
 
+Button* DataPanelBuilder::createNPositionSwitch (vector<string> positionImages,
+    Button::State initialState,
+    Button::EventCallback switchClicked,
+    Frame<float> frame)
+{
+    return nullptr;
+}
+
 // Determine the relative position and dimension of the given image layer
 // in the image container.
 // 

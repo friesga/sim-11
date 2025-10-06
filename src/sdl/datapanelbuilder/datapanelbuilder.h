@@ -53,6 +53,11 @@ public:
         Frame<float> frame = Frame<float> (0, 0, 0, 0)) override;
     virtual unique_ptr<Panel> getPanel () override;
 
+    Button* createNPositionSwitch (vector<string> positionImages,
+        Button::State initialState,
+        Button::EventCallback switchClicked,
+        Frame<float> frame) override;
+
 private:
     int textureHeight (SDLTexture& texture) const;
     int pixelsPerRackUnit () const;

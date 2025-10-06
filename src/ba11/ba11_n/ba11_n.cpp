@@ -77,18 +77,18 @@ void BA11_N::createBezel (Cabinet::Position cabinetPosition)
     runLed_ = panelBuilder->createIndicator ("resources/red led off.png", 
         "resources/red led on.png", Indicator::State::Off, runLedFrame);
 
-    restartSwitch_ = panelBuilder->createMomentaryButton ("resources/switch down.png",
-        "resources/switch up.png", 
+    restartSwitch_ = panelBuilder->createNPositionSwitch ({"resources/switch down.png",
+        "resources/switch up.png"},
         Button::MomentaryTwoPositionsState::Down, bind (&BA11_N::restartSwitchClicked, this, _1), 
         restartSwitchFrame);
 
-    haltSwitch_ = panelBuilder->createLatchingButton ("resources/switch down.png",
-        "resources/switch up.png", 
+    haltSwitch_ = panelBuilder->createNPositionSwitch ({"resources/switch down.png",
+        "resources/switch up.png"},
         Button::TwoPositionsState::Down, bind (&BA11_N::haltSwitchToggled, this, _1),
         haltSwitchFrame);
 
-    auxOnOffSwitch_ = panelBuilder->createLatchingButton ("resources/switch down.png",
-        "resources/switch up.png", 
+    auxOnOffSwitch_ = panelBuilder->createNPositionSwitch ({"resources/switch down.png",
+        "resources/switch up.png"},
         Button::TwoPositionsState::Down, bind (&BA11_N::auxOnOffSwitchToggled, this, _1),
         auxOnOffSwitchFrame);
 

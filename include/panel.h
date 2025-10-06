@@ -290,6 +290,13 @@ public:
         Button::EventCallback switchClicked,
         Frame<float> frame = Frame<float> (0, 0, 0, 0)) = 0;
     virtual unique_ptr<Panel> getPanel () = 0;
+
+    virtual Button* createNPositionSwitch (vector<string> positionImages,
+        Button::State initialState,
+        Button::EventCallback switchClicked,
+        Frame<float> frame) = 0;
+
+    virtual ~PanelBuilder () = default;
 };
 
 class Window
