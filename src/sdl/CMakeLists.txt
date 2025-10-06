@@ -6,7 +6,6 @@ set (SDL_SRCS
     sdlwindow/sdlwindow.cpp
     sdlindicator/sdlindicator.cpp
     sdlfront/sdlfront.cpp
-    sdlcommonbutton/sdlcommonbutton.cpp
     sdlrenderer/sdlrenderer.cpp
     sdlrenderer/circle.cpp
     sdltexture/sdltexture.cpp

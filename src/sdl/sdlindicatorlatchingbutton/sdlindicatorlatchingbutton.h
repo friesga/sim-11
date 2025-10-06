@@ -2,7 +2,6 @@
 #define _SDLINDICATORLATCHINGBUTTON_H_
 
 #include "panel.h"
-#include "../sdlcommonbutton/sdlcommonbutton.h"
 #include "../sdlrenderer/sdlrenderer.h"
 #include "../sdltile/sdltile.h"
 #include "../sdlevent/sdlevent.h"
