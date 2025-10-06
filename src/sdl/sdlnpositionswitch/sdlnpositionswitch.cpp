@@ -39,6 +39,14 @@ void SDLNPositionSwitch<TPositions>::handleEvent (InputEvent const* event)
         event->button () == InputEvent::Button::Left &&
         isWithinBounds (event->mousePosition (), centerMargin_))
     {
+        if (EnumValue<TPositions>::orientation == Orientation::Centered)
+        {
+            switchPosition_ = togglePosition (switchPosition_);
+            switchClicked_ (switchPosition_);
+            return;
+        }
+
+        // The orientation is either horizontal or vertical.
         if (switchedUp (event))
         {
             switchPosition_ = nextPosition (switchPosition_);
@@ -104,6 +112,13 @@ TPositions SDLNPositionSwitch<TPositions>::nextPosition (TPositions position)
 }
 
 template <typename TPositions>
+TPositions SDLNPositionSwitch<TPositions>::togglePosition (TPositions position)
+{
+    return switchPosition_ == EnumValue<TPositions>::first ?
+        EnumValue<TPositions>::last : EnumValue<TPositions>::first;
+}
+
+template <typename TPositions>
 TPositions SDLNPositionSwitch<TPositions>::previousPosition (TPositions position)
 {
     if (switchPosition_ != EnumValue<TPositions>::first)
@@ -134,5 +149,6 @@ bool SDLNPositionSwitch<TPositions>::switchedDown (InputEvent const* event) cons
 // a separate .cpp file.
 template class SDLNPositionSwitch<Button::TwoPositionsState>;
 template class SDLNPositionSwitch<Button::MomentaryTwoPositionsState>;
+template class SDLNPositionSwitch<Button::CenteredTwoPositionsState>;
 template class SDLNPositionSwitch<Button::MomentaryThreePositionsState>;
 template class SDLNPositionSwitch<Button::FourPositionsState>;

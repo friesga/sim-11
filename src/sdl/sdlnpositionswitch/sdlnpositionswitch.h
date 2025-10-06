@@ -50,6 +50,7 @@ private:
     bool isBelowCenter (Position position, float margin) const;
     TPositions nextPosition (TPositions position);
     TPositions previousPosition (TPositions position);
+    TPositions togglePosition (TPositions position);
 
     const float centerMargin_ {0.5f};
 };

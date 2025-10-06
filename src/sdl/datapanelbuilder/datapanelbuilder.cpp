@@ -92,6 +92,12 @@ Button* DataPanelBuilder::createNPositionSwitch (vector<string> positionImages,
                 initialState, switchClicked));
         },
 
+        [&] (Button::CenteredTwoPositionsState initialState)
+        {
+            buttons_.push_back (make_unique<SDLNPositionSwitch<Button::CenteredTwoPositionsState>> (move (positionTiles),
+                initialState, switchClicked));
+        },
+
         [&] (Button::MomentaryThreePositionsState initialState)
         {
             buttons_.push_back (make_unique<SDLNPositionSwitch<Button::MomentaryThreePositionsState>> (move (positionTiles),

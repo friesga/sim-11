@@ -108,7 +108,7 @@ public:
         Up = 1
     };
 
-    enum class IndicatorTwoPositionsState : size_t
+    enum class CenteredTwoPositionsState : size_t
     {
         Down = 0,
         Up = 1
@@ -140,7 +140,7 @@ public:
     };
 
     using State = variant<TwoPositionsState, MomentaryTwoPositionsState,
-        MomentaryThreePositionsState, FourPositionsState>;
+        CenteredTwoPositionsState, MomentaryThreePositionsState, FourPositionsState>;
     using EventCallback = function<void(State)>;
     virtual void setState (State newState) = 0;
     virtual State currentState () const = 0;
@@ -195,13 +195,13 @@ struct EnumValue<Button::MomentaryTwoPositionsState>
 };
 
 template <>
-struct EnumValue<Button::IndicatorTwoPositionsState>
+struct EnumValue<Button::CenteredTwoPositionsState>
 {
-    static constexpr Button::IndicatorTwoPositionsState first =
-        Button::IndicatorTwoPositionsState::Down;
-    static constexpr Button::IndicatorTwoPositionsState last =
-        Button::IndicatorTwoPositionsState::Up;
-    static const bool isLatching = false;
+    static constexpr Button::CenteredTwoPositionsState first =
+        Button::CenteredTwoPositionsState::Down;
+    static constexpr Button::CenteredTwoPositionsState last =
+        Button::CenteredTwoPositionsState::Up;
+    static const bool isLatching = true;
     static const Orientation orientation = Orientation::Centered;
 };
 
