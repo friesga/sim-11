@@ -52,7 +52,7 @@ Indicator* DataPanelBuilder::createIndicator (string indicatorOffImage,
     return indicators_.back ().get ();
 }
 
-IndicatorButton* DataPanelBuilder::createSDLIndicatorLatchingButton (Button::ImageNames const& imageNames,
+IndicatorButton* DataPanelBuilder::createIndicatorLatchingButton (Button::ImageNames const& imageNames,
     Button::TwoPositionsState initialState,
     Button::EventCallback buttonClicked, Indicator::State showIndicator,
     Frame<float> frame)

@@ -17,7 +17,7 @@ void RL01_02::createBezel (Window* window,
     panelBuilder->createFront ("resources/RL02-front.png", {0, 0, 1.0, 1.0});
 
     // LOAD IndicatorButton
-    loadButton_ = panelBuilder->createSDLIndicatorLatchingButton ({
+    loadButton_ = panelBuilder->createIndicatorLatchingButton ({
         "resources/Load_up_off.png",
         "resources/Load_up_on.png",
         "resources/Load_down_off.png",

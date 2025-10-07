@@ -32,7 +32,7 @@ public:
         Button::State initialState,
         Button::EventCallback switchClicked,
         Frame<float> frame) override;
-    virtual IndicatorButton* createSDLIndicatorLatchingButton (Button::ImageNames const& imageNames,
+    virtual IndicatorButton* createIndicatorLatchingButton (Button::ImageNames const& imageNames,
         Button::TwoPositionsState initialState,
         Button::EventCallback buttonClicked, Indicator::State showIndicator,
         Frame<float> frame) override;

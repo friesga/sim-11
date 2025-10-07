@@ -273,7 +273,7 @@ public:
     virtual Indicator* createIndicator (string indicatorOffImage,
         string indicatorOnImage, Indicator::State showFigure,
         Frame<float> frame) = 0;
-    virtual IndicatorButton* createSDLIndicatorLatchingButton (Button::ImageNames const& imageNames,
+    virtual IndicatorButton* createIndicatorLatchingButton (Button::ImageNames const& imageNames,
         Button::TwoPositionsState initialState,
         Button::EventCallback buttonClicked, Indicator::State showIndicator,
         Frame<float> frame) = 0;

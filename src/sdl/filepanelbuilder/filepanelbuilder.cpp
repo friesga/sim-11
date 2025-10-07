@@ -70,7 +70,7 @@ Indicator* FilePanelBuilder::createIndicator (string indicatorOffImage,
 }
 
 
-IndicatorButton* FilePanelBuilder::createSDLIndicatorLatchingButton (Button::ImageNames const& imageNames,
+IndicatorButton* FilePanelBuilder::createIndicatorLatchingButton (Button::ImageNames const& imageNames,
     Button::TwoPositionsState initialState,
     Button::EventCallback buttonClicked, Indicator::State showIndicator,
     Frame<float> frame)
