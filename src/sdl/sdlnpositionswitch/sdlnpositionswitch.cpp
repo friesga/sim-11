@@ -39,7 +39,7 @@ void SDLMultiPositionSwitch<TPositions>::handleEvent (InputEvent const* event)
         event->button () == InputEvent::Button::Left &&
         isWithinBounds (event->mousePosition (), centerMargin_))
     {
-        if (EnumValue<TPositions>::orientation == Orientation::Centered)
+        if (ButtonTrait<TPositions>::orientation == Orientation::Centered)
         {
             switchPosition_ = togglePosition (switchPosition_);
             switchClicked_ (switchPosition_);
@@ -62,10 +62,10 @@ void SDLMultiPositionSwitch<TPositions>::handleEvent (InputEvent const* event)
         }
     }
 
-    if (!EnumValue<TPositions>::isLatching &&
+    if (!ButtonTrait<TPositions>::isLatching &&
         event->type () == InputEvent::Type::MouseButtonUp &&
         event->button () == InputEvent::Button::Left &&
-        switchPosition_ == EnumValue<TPositions>::last)
+        switchPosition_ == ButtonTrait<TPositions>::last)
     {
         switchPosition_ = previousPosition (switchPosition_);
         switchClicked_ (switchPosition_);
@@ -105,43 +105,43 @@ bool SDLMultiPositionSwitch<TPositions>::isBelowCenter (Position position, float
 template <typename TPositions>
 TPositions SDLMultiPositionSwitch<TPositions>::nextPosition (TPositions position)
 {
-    if (switchPosition_ != EnumValue<TPositions>::last)
+    if (switchPosition_ != ButtonTrait<TPositions>::last)
         return static_cast<TPositions> ((+position) + 1);
 
-    return EnumValue<TPositions>::last;
+    return ButtonTrait<TPositions>::last;
 }
 
 template <typename TPositions>
 TPositions SDLMultiPositionSwitch<TPositions>::togglePosition (TPositions position)
 {
-    return switchPosition_ == EnumValue<TPositions>::first ?
-        EnumValue<TPositions>::last : EnumValue<TPositions>::first;
+    return switchPosition_ == ButtonTrait<TPositions>::first ?
+        ButtonTrait<TPositions>::last : ButtonTrait<TPositions>::first;
 }
 
 template <typename TPositions>
 TPositions SDLMultiPositionSwitch<TPositions>::previousPosition (TPositions position)
 {
-    if (switchPosition_ != EnumValue<TPositions>::first)
+    if (switchPosition_ != ButtonTrait<TPositions>::first)
         return static_cast<TPositions> ((+position) - 1);
 
-    return EnumValue<TPositions>::first;
+    return ButtonTrait<TPositions>::first;
 }
 
 template <typename TPositions>
 bool SDLMultiPositionSwitch<TPositions>::switchedUp (InputEvent const* event) const
 {
-    return (EnumValue<TPositions>::orientation == Orientation::Horizontal &&
+    return (ButtonTrait<TPositions>::orientation == Orientation::Horizontal &&
         isRightOfCenter (event->mousePosition (), centerMargin_)) ||
-        (EnumValue<TPositions>::orientation == Orientation::Vertical &&
+        (ButtonTrait<TPositions>::orientation == Orientation::Vertical &&
             isAboveCenter (event->mousePosition (), centerMargin_));
 }
 
 template <typename TPositions>
 bool SDLMultiPositionSwitch<TPositions>::switchedDown (InputEvent const* event) const
 {
-    return EnumValue<TPositions>::orientation == Orientation::Horizontal &&
+    return ButtonTrait<TPositions>::orientation == Orientation::Horizontal &&
         isLeftOfCenter (event->mousePosition (), centerMargin_) ||
-        (EnumValue<TPositions>::orientation == Orientation::Vertical &&
+        (ButtonTrait<TPositions>::orientation == Orientation::Vertical &&
             isBelowCenter (event->mousePosition (), centerMargin_));
 }
 

@@ -172,10 +172,10 @@ enum class Orientation
 };
 
 template <typename T>
-struct EnumValue;
+struct ButtonTrait;
 
 template <>
-struct EnumValue<Button::TwoPositionsState>
+struct ButtonTrait<Button::TwoPositionsState>
 {
     static constexpr Button::TwoPositionsState first =
         Button::TwoPositionsState::Down;
@@ -186,7 +186,7 @@ struct EnumValue<Button::TwoPositionsState>
 };
 
 template <>
-struct EnumValue<Button::MomentaryTwoPositionsState>
+struct ButtonTrait<Button::MomentaryTwoPositionsState>
 {
     static constexpr Button::MomentaryTwoPositionsState first =
         Button::MomentaryTwoPositionsState::Down;
@@ -197,7 +197,7 @@ struct EnumValue<Button::MomentaryTwoPositionsState>
 };
 
 template <>
-struct EnumValue<Button::CenteredTwoPositionsState>
+struct ButtonTrait<Button::CenteredTwoPositionsState>
 {
     static constexpr Button::CenteredTwoPositionsState first =
         Button::CenteredTwoPositionsState::Down;
@@ -208,7 +208,7 @@ struct EnumValue<Button::CenteredTwoPositionsState>
 };
 
 template <>
-struct EnumValue<Button::MomentaryThreePositionsState>
+struct ButtonTrait<Button::MomentaryThreePositionsState>
 {
     static constexpr Button::MomentaryThreePositionsState first =
         Button::MomentaryThreePositionsState::Left;
@@ -219,7 +219,7 @@ struct EnumValue<Button::MomentaryThreePositionsState>
 };
 
 template <>
-struct EnumValue<Button::FourPositionsState>
+struct ButtonTrait<Button::FourPositionsState>
 {
     static constexpr Button::FourPositionsState first =
         Button::FourPositionsState::P0;
