@@ -1,4 +1,4 @@
-#include "sdlnpositionswitch.h"
+#include "sdlmultipositionswitch.h"
 
 using std::get;
 

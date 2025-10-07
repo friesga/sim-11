@@ -11,7 +11,7 @@ set (SDL_SRCS
     sdltexture/sdltexture.cpp
     sdltile/sdltile.cpp
     sdlindicatorlatchingbutton/sdlindicatorlatchingbutton.cpp
-    sdlnpositionswitch/sdlnpositionswitch.cpp
+    sdlmultipositionswitch/sdlmultipositionswitch.cpp
     sdlevent/sdlevent.cpp)
 
 target_sources (${TARGET} PRIVATE ${SDL_SRCS})
