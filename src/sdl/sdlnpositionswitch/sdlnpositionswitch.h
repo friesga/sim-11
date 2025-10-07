@@ -21,12 +21,12 @@ using std::unique_ptr;
 // template parameter TPositions.
 //
 template <typename TPositions>
-class SDLNPositionSwitch : public Button
+class SDLMultiPositionSwitch : public Button
 {
 public:
     using PositionTiles = vector<unique_ptr<SDLTile>>;
 
-    SDLNPositionSwitch<TPositions> (PositionTiles positionTiles,
+    SDLMultiPositionSwitch<TPositions> (PositionTiles positionTiles,
         TPositions initialState,
         EventCallback switchClicked);
 

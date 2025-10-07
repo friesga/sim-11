@@ -150,7 +150,7 @@ public:
 };
 
 // Definition of type traits for the different types of switches. For every
-// Button enum type to be handled by SDLNPositionSwitch, these type traits
+// Button enum type to be handled by SDLMultiPositionSwitch, these type traits
 // have to be defined. They configure the behaviour of the switch. 
 // 
 // The first and last enum values are used to switch the Button to the

@@ -122,32 +122,32 @@ Button* FilePanelBuilder::createNPositionSwitch (vector<string> positionImages,
     {
         [&] (Button::TwoPositionsState initialState)
         { 
-            buttons_.push_back (make_unique<SDLNPositionSwitch<Button::TwoPositionsState>> (move (positionTiles),
+            buttons_.push_back (make_unique<SDLMultiPositionSwitch<Button::TwoPositionsState>> (move (positionTiles),
                 initialState, switchClicked));
         },
 
         [&] (Button::MomentaryTwoPositionsState initialState)
         {
-            buttons_.push_back (make_unique<SDLNPositionSwitch<Button::MomentaryTwoPositionsState>> (move (positionTiles),
+            buttons_.push_back (make_unique<SDLMultiPositionSwitch<Button::MomentaryTwoPositionsState>> (move (positionTiles),
                 initialState, switchClicked));
         },
 
         [&] (Button::CenteredTwoPositionsState initialState)
         {
-            buttons_.push_back (make_unique<SDLNPositionSwitch<Button::CenteredTwoPositionsState>> (move (positionTiles),
+            buttons_.push_back (make_unique<SDLMultiPositionSwitch<Button::CenteredTwoPositionsState>> (move (positionTiles),
                 initialState, switchClicked));
         },
 
 
         [&] (Button::MomentaryThreePositionsState initialState)
         {
-            buttons_.push_back (make_unique<SDLNPositionSwitch<Button::MomentaryThreePositionsState>> (move (positionTiles),
+            buttons_.push_back (make_unique<SDLMultiPositionSwitch<Button::MomentaryThreePositionsState>> (move (positionTiles),
                 initialState, switchClicked));
         },
 
         [&] (Button::FourPositionsState initialState)
         {
-            buttons_.push_back (make_unique<SDLNPositionSwitch<Button::FourPositionsState>> (move (positionTiles),
+            buttons_.push_back (make_unique<SDLMultiPositionSwitch<Button::FourPositionsState>> (move (positionTiles),
                 initialState, switchClicked));
         }
     };
