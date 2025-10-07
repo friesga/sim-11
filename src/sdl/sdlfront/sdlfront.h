@@ -15,7 +15,7 @@ class SDLFront : public Front
 public:
     SDLFront (unique_ptr<SDLTile> frontTile);
     ~SDLFront ();
-    void render ();
+    void render () override;
 
 private:
     // The tile to use for this front
