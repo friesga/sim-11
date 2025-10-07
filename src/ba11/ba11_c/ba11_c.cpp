@@ -46,7 +46,7 @@ void BA11_C::createBezel (Cabinet::Position cabinetPosition)
 
     panelBuilder->createFront ("panel");
 
-    powerSwitch_ = panelBuilder->createNPositionSwitch (
+    powerSwitch_ = panelBuilder->createMultiPositionSwitch (
         {"keyswitch off",
         "keyswitch power",
         "keyswitch lock",

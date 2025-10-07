@@ -105,7 +105,7 @@ IndicatorButton* FilePanelBuilder::createIndicatorLatchingButton (Button::ImageN
 }
 
 
-Button* FilePanelBuilder::createNPositionSwitch (vector<string> positionImages,
+Button* FilePanelBuilder::createMultiPositionSwitch (vector<string> positionImages,
     Button::State initialState,
     Button::EventCallback switchClicked,
     Frame<float> frame)

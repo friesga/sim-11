@@ -65,7 +65,7 @@ IndicatorButton* DataPanelBuilder::createIndicatorLatchingButton (Button::ImageN
 // This function is doubled with the one in FilePanelBuilder. This is
 // acceptable as FilePanelBuilder si deprecated and will be removed.
 //
-Button* DataPanelBuilder::createNPositionSwitch (vector<string> positionImages,
+Button* DataPanelBuilder::createMultiPositionSwitch (vector<string> positionImages,
     Button::State initialState,
     Button::EventCallback switchClicked,
     Frame<float> frame)

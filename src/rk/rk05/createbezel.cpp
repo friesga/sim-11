@@ -64,7 +64,7 @@ void RK05::createBezel (Window* window, const RK05Config& rk05Config)
 
     // RUN/LOAD switch, initial state up. The RUN/LOAD switch is a rocker
     // switch with two latched positions.
-    runLoadSwitch_ = panelBuilder->createNPositionSwitch (
+    runLoadSwitch_ = panelBuilder->createMultiPositionSwitch (
         {"resources/rocker switch down.png",
         "resources/rocker switch up.png"},
         Button::TwoPositionsState::Down,
@@ -73,7 +73,7 @@ void RK05::createBezel (Window* window, const RK05Config& rk05Config)
 
     // WTPROT switch, initial state up. The WTPROT switch is a rocker switch,
     // spring loaded in the off position.
-    wtprotSwitch_ = panelBuilder->createNPositionSwitch (
+    wtprotSwitch_ = panelBuilder->createMultiPositionSwitch (
         {"resources/rocker switch down.png",
         "resources/rocker switch up.png"},
         Button::MomentaryTwoPositionsState::Down,

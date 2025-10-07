@@ -28,7 +28,7 @@ public:
     virtual Indicator* createIndicator (string indicatorOffImage,
         string indicatorOnImage, Indicator::State showFigure,
         Frame<float> frame) override;
-    Button* createNPositionSwitch (vector<string> positionImages,
+    Button* createMultiPositionSwitch (vector<string> positionImages,
         Button::State initialState,
         Button::EventCallback switchClicked,
         Frame<float> frame) override;
