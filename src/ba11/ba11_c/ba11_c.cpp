@@ -53,6 +53,10 @@ void BA11_C::createBezel (Cabinet::Position cabinetPosition)
          },
         Button::ThreePositionsState::Left,
         bind (&BA11_C::powerSwitchClicked, this, _1));
+
+    runLight_ = panelBuilder->createIndicator ("run_off", "run_on",
+        Indicator::State::On);
+
     
     frontWindow_->addPanel (panelBuilder->getPanel ());
 }

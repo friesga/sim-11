@@ -47,10 +47,30 @@ void DataPanelBuilder::createFront (string imageFile,
 Indicator* DataPanelBuilder::createIndicator (string indicatorOffImage,
     string indicatorOnImage, Indicator::State showFigure, Frame<float> frame)
 {
-    // To be implemented
+    unique_ptr<Image> pngImage =
+        imageContainer_.getImage (imageContainer_.getFileName (indicatorOffImage));
+
+    unique_ptr<SDLTile> indicatorOffTile =
+        make_unique<SDLTile> (*pngImage, *sdlRenderer_, targetTexture_,
+            placeFrameInTexture (getFrameFromImage (indicatorOffImage)));
+
+    pngImage =
+        imageContainer_.getImage (imageContainer_.getFileName (indicatorOnImage));
+
+    unique_ptr<SDLTile> indicatorOnTile =
+        make_unique<SDLTile> (*pngImage, *sdlRenderer_, targetTexture_,
+            placeFrameInTexture (getFrameFromImage (indicatorOnImage)));
+
+    indicators_.push_back (make_unique<SDLIndicator> (move (indicatorOffTile),
+        move (indicatorOnTile), showFigure));
+
+    // indicatorOffTile and indicatorOnTile are no longer valid pointers
+    // to the SDLTile's but that's ok since they are moved and SDLIndicator
+    // now has ownership of the SDLTile's.
 
     return indicators_.back ().get ();
 }
+
 
 IndicatorButton* DataPanelBuilder::createIndicatorLatchingButton (Button::ImageNames const& imageNames,
     Button::TwoPositionsState initialState,

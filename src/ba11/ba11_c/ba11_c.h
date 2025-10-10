@@ -27,6 +27,8 @@ private:
     Bus* bus_;
     Window* frontWindow_;
     Button* powerSwitch_;
+
+    Indicator* runLight_;
     
     void createBezel (Cabinet::Position cabinetPosition);
     void powerSwitchClicked (Button::State state);

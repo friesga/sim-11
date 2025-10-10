@@ -285,14 +285,19 @@ public:
 class PanelBuilder
 {
 public:
+    // The frame parameter is optional as it is not required for use with
+    // the DataPanelBuilder where the frame is determined from the image
+    // metadata in the image container.
+    //
     // A default value (0) may be specified for the width and height of
     // images. This indicates that the width and height of the image
     // will be used.
+    //
     virtual void createFront (string imageFile,
         Frame<float> frame = Frame<float> (0, 0, 0, 0)) = 0;
     virtual Indicator* createIndicator (string indicatorOffImage,
         string indicatorOnImage, Indicator::State showFigure,
-        Frame<float> frame) = 0;
+        Frame<float> frame = Frame<float> (0, 0, 0, 0)) = 0;
     virtual IndicatorButton* createIndicatorLatchingButton (Button::ImageNames const& imageNames,
         Button::TwoPositionsState initialState,
         Button::EventCallback buttonClicked, Indicator::State showIndicator,

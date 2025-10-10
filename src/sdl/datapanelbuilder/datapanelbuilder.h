@@ -32,7 +32,7 @@ public:
         Frame<float> frame = Frame<float> (0, 0, 0, 0)) override;
     Indicator* createIndicator (string indicatorOffImage,
         string indicatorOnImage, Indicator::State showFigure,
-        Frame<float> frame) override;
+        Frame<float> frame = Frame<float> (0, 0, 0, 0)) override;
     Button* createMultiPositionSwitch (vector<string> positionImages,
         Button::State initialState,
         Button::EventCallback switchClicked,
