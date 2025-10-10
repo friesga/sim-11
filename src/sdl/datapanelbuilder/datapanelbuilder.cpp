@@ -70,19 +70,7 @@ Button* DataPanelBuilder::createMultiPositionSwitch (vector<string> positionImag
     Button::EventCallback switchClicked,
     Frame<float> frame)
 {
-    vector<unique_ptr<SDLTile>> positionTiles;
-
-    for (auto imageName : positionImages)
-    {
-        unique_ptr<Image> pngImage =
-            imageContainer_.getImage (imageContainer_.getFileName (imageName));
-
-        unique_ptr<SDLTile> switchPositionTile =
-            make_unique<SDLTile> (*pngImage, *sdlRenderer_, targetTexture_,
-                placeFrameInTexture (getFrameFromImage (imageName)));
-
-        positionTiles.emplace_back (move (switchPositionTile));
-    }
+    vector<unique_ptr<SDLTile>> positionTiles = createTiles (positionImages);
 
     auto switchVisitor = overloaded
     {
@@ -127,6 +115,25 @@ Button* DataPanelBuilder::createMultiPositionSwitch (vector<string> positionImag
     visit (switchVisitor, initialState);
 
     return buttons_.back ().get ();
+}
+
+vector<unique_ptr<SDLTile>> DataPanelBuilder::createTiles (vector<string> imageNames)
+{
+    vector<unique_ptr<SDLTile>> positionTiles;
+
+    for (auto imageName : imageNames)
+    {
+        unique_ptr<Image> pngImage =
+            imageContainer_.getImage (imageContainer_.getFileName (imageName));
+
+        unique_ptr<SDLTile> switchPositionTile =
+            make_unique<SDLTile> (*pngImage, *sdlRenderer_, targetTexture_,
+                placeFrameInTexture (getFrameFromImage (imageName)));
+
+        positionTiles.emplace_back (move (switchPositionTile));
+    }
+
+    return positionTiles;
 }
 
 // Determine the relative position and dimension of the given image layer

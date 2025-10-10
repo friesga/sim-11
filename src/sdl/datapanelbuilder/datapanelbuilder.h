@@ -48,6 +48,7 @@ private:
     int pixelsPerRackUnit () const;
     Frame<int> placeFrameInTexture (Frame<float> frame);
     Frame<float> getFrameFromImage (string layerName);
+    vector<unique_ptr<SDLTile>> createTiles (vector<string> imageNames);
 
     // Reference to the image container to use for loading images
     ImageContainer& imageContainer_;
