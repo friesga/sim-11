@@ -49,6 +49,8 @@ private:
     Frame<int> placeFrameInTexture (Frame<float> frame);
     Frame<float> getFrameFromImage (string layerName);
     vector<unique_ptr<SDLTile>> createTiles (vector<string> imageNames);
+    unique_ptr<Button> createButton (vector<unique_ptr<SDLTile>>,
+        Button::State initialState, Button::EventCallback switchClicked);
 
     // Reference to the image container to use for loading images
     ImageContainer& imageContainer_;

@@ -62,6 +62,10 @@ IndicatorButton* DataPanelBuilder::createIndicatorLatchingButton (Button::ImageN
     return indicatorButtons_.back ().get ();
 }
 
+// This function create a MultiPositionSwitch button with the given
+// position images, initial state and callback function, pushes it to the
+// buttons_ vector and returns a raw pointer to the created button.
+// 
 // This function is partly doubled with the one in FilePanelBuilder. This is
 // acceptable as FilePanelBuilder is deprecated and will be removed.
 //
@@ -72,51 +76,16 @@ Button* DataPanelBuilder::createMultiPositionSwitch (vector<string> positionImag
 {
     vector<unique_ptr<SDLTile>> positionTiles = createTiles (positionImages);
 
-    auto switchVisitor = overloaded
-    {
-        [&] (Button::TwoPositionsState initialState)
-        {
-            buttons_.push_back (make_unique<SDLMultiPositionSwitch<Button::TwoPositionsState>> (move (positionTiles),
-                initialState, switchClicked));
-        },
-
-        [&] (Button::MomentaryTwoPositionsState initialState)
-        {
-            buttons_.push_back (make_unique<SDLMultiPositionSwitch<Button::MomentaryTwoPositionsState>> (move (positionTiles),
-                initialState, switchClicked));
-        },
-
-        [&] (Button::CenteredTwoPositionsState initialState)
-        {
-            buttons_.push_back (make_unique<SDLMultiPositionSwitch<Button::CenteredTwoPositionsState>> (move (positionTiles),
-                initialState, switchClicked));
-        },
-
-        [&] (Button::ThreePositionsState initialState)
-        {
-            buttons_.push_back (make_unique<SDLMultiPositionSwitch<Button::ThreePositionsState>> (move (positionTiles),
-                initialState, switchClicked));
-        },
-
-        [&] (Button::MomentaryThreePositionsState initialState)
-        {
-            buttons_.push_back (make_unique<SDLMultiPositionSwitch<Button::MomentaryThreePositionsState>> (move (positionTiles),
-                initialState, switchClicked));
-        },
-
-        [&] (Button::FourPositionsState initialState)
-        {
-            buttons_.push_back (make_unique<SDLMultiPositionSwitch<Button::FourPositionsState>> (move (positionTiles),
-                initialState, switchClicked));
-        }
-    };
-
-
-    visit (switchVisitor, initialState);
+    buttons_.push_back (createButton (move (positionTiles), initialState,
+        switchClicked));
 
     return buttons_.back ().get ();
 }
 
+// This function creates a vector of SDLTiles from the given image names by
+// looking up the image name in the image container and loading the image
+// with the retrieved file name.
+//
 vector<unique_ptr<SDLTile>> DataPanelBuilder::createTiles (vector<string> imageNames)
 {
     vector<unique_ptr<SDLTile>> positionTiles;
@@ -135,6 +104,59 @@ vector<unique_ptr<SDLTile>> DataPanelBuilder::createTiles (vector<string> imageN
 
     return positionTiles;
 }
+
+// This function creates a unique pointer to a Button object of the correct
+// type based on the type of the initialState parameter. The function uses
+// an overloaded visitor to determine the type of the initialState parameter.
+// 
+// Note the explcicit return type of the lambdas in the visitor to make the
+// return type equal for all lambda's as required by std::visit.
+//
+unique_ptr<Button> DataPanelBuilder::createButton (vector<unique_ptr<SDLTile>> positionTiles,
+    Button::State initialState, Button::EventCallback switchClicked)
+{
+    auto switchVisitor = overloaded
+    {
+        [&] (Button::TwoPositionsState initialState) -> unique_ptr<Button>
+        {
+            return make_unique<SDLMultiPositionSwitch<Button::TwoPositionsState>> (move (positionTiles),
+                initialState, switchClicked);
+        },
+
+        [&] (Button::MomentaryTwoPositionsState initialState) -> unique_ptr<Button>
+        {
+            return make_unique<SDLMultiPositionSwitch<Button::MomentaryTwoPositionsState>> (move (positionTiles),
+                initialState, switchClicked);
+        },
+
+        [&] (Button::CenteredTwoPositionsState initialState) -> unique_ptr<Button>
+        {
+            return make_unique<SDLMultiPositionSwitch<Button::CenteredTwoPositionsState>> (move (positionTiles),
+                initialState, switchClicked);
+        },
+
+        [&] (Button::ThreePositionsState initialState) -> unique_ptr<Button>
+        {
+            return make_unique<SDLMultiPositionSwitch<Button::ThreePositionsState>> (move (positionTiles),
+                initialState, switchClicked);
+        },
+
+        [&] (Button::MomentaryThreePositionsState initialState) -> unique_ptr<Button>
+        {
+            return make_unique<SDLMultiPositionSwitch<Button::MomentaryThreePositionsState>> (move (positionTiles),
+                initialState, switchClicked);
+        },
+
+        [&] (Button::FourPositionsState initialState) -> unique_ptr<Button>
+        {
+            return make_unique<SDLMultiPositionSwitch<Button::FourPositionsState>> (move (positionTiles),
+                initialState, switchClicked);
+        }
+    };
+
+    return visit (switchVisitor, initialState);
+}
+
 
 // Determine the relative position and dimension of the given image layer
 // in the image container.
