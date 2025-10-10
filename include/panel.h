@@ -114,6 +114,13 @@ public:
         Up = 1
     };
 
+    enum class ThreePositionsState : size_t
+    {
+        Left = 0,
+        Center = 1,
+        Right = 2
+    };
+
     // Definition of a three position switch the last position of which
     // is  momentary.
     enum class MomentaryThreePositionsState : size_t
@@ -140,7 +147,9 @@ public:
     };
 
     using State = variant<TwoPositionsState, MomentaryTwoPositionsState,
-        CenteredTwoPositionsState, MomentaryThreePositionsState, FourPositionsState>;
+        CenteredTwoPositionsState, ThreePositionsState,
+        MomentaryThreePositionsState, FourPositionsState>;
+
     using EventCallback = function<void(State)>;
     virtual void setState (State newState) = 0;
     virtual State currentState () const = 0;
@@ -205,6 +214,17 @@ struct ButtonTrait<Button::CenteredTwoPositionsState>
         Button::CenteredTwoPositionsState::Up;
     static const bool isLatching = true;
     static const Orientation orientation = Orientation::Centered;
+};
+
+template <>
+struct ButtonTrait<Button::ThreePositionsState>
+{
+    static constexpr Button::ThreePositionsState first =
+        Button::ThreePositionsState::Left;
+    static constexpr Button::ThreePositionsState last =
+        Button::ThreePositionsState::Right;
+    static const bool isLatching = true;
+    static const Orientation orientation = Orientation::Horizontal;
 };
 
 template <>

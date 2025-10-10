@@ -62,8 +62,8 @@ IndicatorButton* DataPanelBuilder::createIndicatorLatchingButton (Button::ImageN
     return indicatorButtons_.back ().get ();
 }
 
-// This function is doubled with the one in FilePanelBuilder. This is
-// acceptable as FilePanelBuilder si deprecated and will be removed.
+// This function is partly doubled with the one in FilePanelBuilder. This is
+// acceptable as FilePanelBuilder is deprecated and will be removed.
 //
 Button* DataPanelBuilder::createMultiPositionSwitch (vector<string> positionImages,
     Button::State initialState,
@@ -74,8 +74,14 @@ Button* DataPanelBuilder::createMultiPositionSwitch (vector<string> positionImag
 
     for (auto imageName : positionImages)
     {
-        positionTiles.emplace_back (make_unique<SDLTile> (imageName,
-            *sdlRenderer_, targetTexture_, placeFrameInTexture (frame)));
+        unique_ptr<Image> pngImage =
+            imageContainer_.getImage (imageContainer_.getFileName (imageName));
+
+        unique_ptr<SDLTile> switchPositionTile =
+            make_unique<SDLTile> (*pngImage, *sdlRenderer_, targetTexture_,
+                placeFrameInTexture (getFrameFromImage (imageName)));
+
+        positionTiles.emplace_back (move (switchPositionTile));
     }
 
     auto switchVisitor = overloaded
@@ -95,6 +101,12 @@ Button* DataPanelBuilder::createMultiPositionSwitch (vector<string> positionImag
         [&] (Button::CenteredTwoPositionsState initialState)
         {
             buttons_.push_back (make_unique<SDLMultiPositionSwitch<Button::CenteredTwoPositionsState>> (move (positionTiles),
+                initialState, switchClicked));
+        },
+
+        [&] (Button::ThreePositionsState initialState)
+        {
+            buttons_.push_back (make_unique<SDLMultiPositionSwitch<Button::ThreePositionsState>> (move (positionTiles),
                 initialState, switchClicked));
         },
 

@@ -138,6 +138,11 @@ Button* FilePanelBuilder::createMultiPositionSwitch (vector<string> positionImag
                 initialState, switchClicked));
         },
 
+        [&] (Button::ThreePositionsState initialState)
+        {
+            buttons_.push_back (make_unique<SDLMultiPositionSwitch<Button::ThreePositionsState>> (move (positionTiles),
+                initialState, switchClicked));
+        },
 
         [&] (Button::MomentaryThreePositionsState initialState)
         {
