@@ -77,7 +77,43 @@ IndicatorButton* DataPanelBuilder::createIndicatorLatchingButton (Button::ImageN
     Button::EventCallback buttonClicked, Indicator::State showIndicator,
     Frame<float> frame)
 {
-    // To be implemented
+    SDLIndicatorLatchingButton::TileGrid tiles;
+
+    unique_ptr<Image> buttonUpOffImage =
+        imageContainer_.getImage (imageContainer_.getFileName (imageNames.buttonUpIndicatorOff));
+
+    tiles[to_integral (Button::TwoPositionsState::Up)][to_integral (Indicator::State::Off)] =
+        make_unique<SDLTile> (*buttonUpOffImage, *sdlRenderer_, targetTexture_,
+            placeFrameInTexture (getFrameFromImage (imageNames.buttonUpIndicatorOff)));
+
+    unique_ptr<Image> buttonDownOffImage =
+        imageContainer_.getImage (imageContainer_.getFileName (imageNames.buttonDownIndicatorOff));
+
+    tiles[to_integral (Button::TwoPositionsState::Down)][to_integral (Indicator::State::Off)] =
+        make_unique<SDLTile> (*buttonDownOffImage, *sdlRenderer_, targetTexture_,
+            placeFrameInTexture (getFrameFromImage (imageNames.buttonDownIndicatorOff)));
+
+    unique_ptr<Image> buttonUpOnImage =
+        imageContainer_.getImage (imageContainer_.getFileName (imageNames.buttonUpIndicatorOn));
+
+    tiles[to_integral (Button::TwoPositionsState::Up)][to_integral (Indicator::State::On)] =
+        make_unique<SDLTile> (*buttonUpOnImage, *sdlRenderer_, targetTexture_,
+            placeFrameInTexture (getFrameFromImage (imageNames.buttonUpIndicatorOn)));
+
+    unique_ptr<Image> buttonDownOnImage =
+        imageContainer_.getImage (imageContainer_.getFileName (imageNames.buttonDownIndicatorOn));
+
+    tiles[to_integral (Button::TwoPositionsState::Down)][to_integral (Indicator::State::On)] =
+        make_unique<SDLTile> (*buttonDownOnImage, *sdlRenderer_, targetTexture_,
+            placeFrameInTexture (getFrameFromImage (imageNames.buttonDownIndicatorOn)));
+
+    indicatorButtons_.push_back (make_unique<SDLIndicatorLatchingButton> (move (tiles),
+        initialState, buttonClicked, showIndicator));
+
+    // The tile pointers in the TileGrid array are no longer valid pointers
+    // to the SDLTile's but that's ok since the array is moved to 
+    // SDLIndicatorLatchingButton and that function now has ownership of the
+    // SDLTile's.
 
     return indicatorButtons_.back ().get ();
 }
