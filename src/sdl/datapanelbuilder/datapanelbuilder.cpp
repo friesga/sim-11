@@ -79,33 +79,17 @@ IndicatorButton* DataPanelBuilder::createIndicatorLatchingButton (Button::ImageN
 {
     SDLIndicatorLatchingButton::TileGrid tiles;
 
-    unique_ptr<Image> buttonUpOffImage =
-        imageContainer_.getImage (imageContainer_.getFileName (imageNames.buttonUpIndicatorOff));
-
     tiles[to_integral (Button::TwoPositionsState::Up)][to_integral (Indicator::State::Off)] =
-        make_unique<SDLTile> (*buttonUpOffImage, *sdlRenderer_, targetTexture_,
-            placeFrameInTexture (getFrameFromImage (imageNames.buttonUpIndicatorOff)));
-
-    unique_ptr<Image> buttonDownOffImage =
-        imageContainer_.getImage (imageContainer_.getFileName (imageNames.buttonDownIndicatorOff));
+        createTile (imageNames.buttonUpIndicatorOff);
 
     tiles[to_integral (Button::TwoPositionsState::Down)][to_integral (Indicator::State::Off)] =
-        make_unique<SDLTile> (*buttonDownOffImage, *sdlRenderer_, targetTexture_,
-            placeFrameInTexture (getFrameFromImage (imageNames.buttonDownIndicatorOff)));
-
-    unique_ptr<Image> buttonUpOnImage =
-        imageContainer_.getImage (imageContainer_.getFileName (imageNames.buttonUpIndicatorOn));
+        createTile (imageNames.buttonDownIndicatorOff);
 
     tiles[to_integral (Button::TwoPositionsState::Up)][to_integral (Indicator::State::On)] =
-        make_unique<SDLTile> (*buttonUpOnImage, *sdlRenderer_, targetTexture_,
-            placeFrameInTexture (getFrameFromImage (imageNames.buttonUpIndicatorOn)));
-
-    unique_ptr<Image> buttonDownOnImage =
-        imageContainer_.getImage (imageContainer_.getFileName (imageNames.buttonDownIndicatorOn));
+        createTile (imageNames.buttonUpIndicatorOn);
 
     tiles[to_integral (Button::TwoPositionsState::Down)][to_integral (Indicator::State::On)] =
-        make_unique<SDLTile> (*buttonDownOnImage, *sdlRenderer_, targetTexture_,
-            placeFrameInTexture (getFrameFromImage (imageNames.buttonDownIndicatorOn)));
+        createTile (imageNames.buttonDownIndicatorOn);
 
     indicatorButtons_.push_back (make_unique<SDLIndicatorLatchingButton> (move (tiles),
         initialState, buttonClicked, showIndicator));
@@ -148,18 +132,27 @@ vector<unique_ptr<SDLTile>> DataPanelBuilder::createTiles (vector<string> imageN
 
     for (auto imageName : imageNames)
     {
-        unique_ptr<Image> pngImage =
-            imageContainer_.getImage (imageContainer_.getFileName (imageName));
-
-        unique_ptr<SDLTile> switchPositionTile =
-            make_unique<SDLTile> (*pngImage, *sdlRenderer_, targetTexture_,
-                placeFrameInTexture (getFrameFromImage (imageName)));
+        unique_ptr<SDLTile> switchPositionTile = createTile (imageName);
 
         positionTiles.emplace_back (move (switchPositionTile));
     }
 
     return positionTiles;
 }
+
+// This function creates a unique pointer to an SDLTile from the given
+// image name by looking up the image name in the image container, 
+// loading the image with the retrieved file name and creating an SDLTile
+// from the loaded image.
+unique_ptr<SDLTile> DataPanelBuilder::createTile (string imageName)
+{ 
+    unique_ptr<Image> pngImage =
+        imageContainer_.getImage (imageContainer_.getFileName (imageName));
+
+    return make_unique<SDLTile> (*pngImage, *sdlRenderer_, targetTexture_,
+        placeFrameInTexture (getFrameFromImage (imageName)));
+}
+
 
 // This function creates a unique pointer to a Button object of the correct
 // type based on the type of the initialState parameter. The function uses
