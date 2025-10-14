@@ -30,6 +30,95 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
+ * 
+ * Provided functions:
+ * - size_t sectionsSize()
+     Returns number of sections in the file.
+
+ * - SectionIterator sectionsBegin()
+     Returns iterator to the first section.
+
+ * - SectionIterator sectionsEnd()
+     Returns iterator to the last section.
+
+ * - Value getValue (const std::string& name, const Value& def_val = Value())
+ *   Gets value with specified name from the file. 
+ * 
+ * - void setValue(const std::string& name, const Value& value, const std::string& comment)
+ *   Sets value with specified name in the file.
+ * 
+ * - void setArrayValue(const std::string& key, size_t pos, const Value& val)
+ *   Sets array Value to array.
+ * 
+ * - Section* getSection(const std::string& name)
+ *   Returns pointer to section with specified name. If section does not
+ *   exist creates it.
+ * 
+ * - Section* findSection(const std::string& name)
+ *   Finds an existing section by name. Returns NULL if section does not exist.
+ *       
+ * - void deleteSection(const std::string& name)
+ *   Deletes section with specified name.
+ * 
+ * - Section* findSubSection(const Section* sect, const std::string& name)
+ *   Finds the subsection of specified section with specified name. Returns NULL
+ *   if the subsection does not exist.
+ * 
+ * - Section* getSubSection(Section* sect, const std::string& name)
+ *   Gets the subsection of specified section with specified name. Creates the
+ *   section if it does not exist.
+ * 
+ * - Section* findParentSection(const Section* sect)
+ *   Finds the parent section of the specified section, Returns NULL if the
+ *   section has no parent.
+ * 
+ * - Section* getParentSection(const Section* sect)
+ *   Gets the parent section of the specified section. Creates the section if
+ *   needed.
+ * 
+ * - SectionVector findSubSections(const Section* sect)
+ *   Find subsections of the specified section.
+ * 
+ * - SectionVector getTopLevelSections()
+ *   Gets the top-level sections (i.e. the sections that are not a child of
+ *    any other section).
+ *
+ * - int load(std::istream& stream, bool unload_prev = false, 
+ *        const std::string& rpath = std::string())
+ *   Loads file from the given input stream, which must be properly opened and
+ *   prepared for reading. Set unload_prev to true for unloading any stuff
+ *   currently in memory before loading.
+ *   Set rpath to be used as relative path when searching for inclusions in files.
+ *   The function returns 1 if load succeeds, 0 if not. In case the load
+ *   was not succesful you can access extended information by calling
+ *   ParseResult().
+ * 
+ * - int load(const std::string& fname, bool unload_prev = true)
+ *   Load ini from file in system.
+ *   Set unload_prev to false for not unloading any stuff currently in memory
+ *   before loading.
+ * 
+ * - void save(std::ostream& stream)
+ *   Save ini-file to stream.
+ * 
+ * - int save(const std::string& fname)
+ *   Save ini-file to file.
+ * 
+ * - void save(std::ostream& stream, const Section* sect)
+ *   Save only one section to specifed stream.
+ * 
+ * - void addCommentToStream(std::ostream& stream, const std::string& str)
+ *   Adds comment line to provided stream. For it to be not associated with 
+ *   anything you should add a newline after it.
+ * 
+ * - void addIncludeToStream(std::ostream& stream, const std::string& path)
+ *   Adds inclusion line to stream.
+ * 
+ * - void unload()
+ *   Unloads all data currently in memory.
+ * 
+ * - PResult& lastResult()
+ *   Returns the result of the last operation.
  */
 
 #ifndef _INIPARSER_H
