@@ -17,20 +17,23 @@ set (GTEST_SRCS
     characterbuffertest.cpp
     conddatatest.cpp
     conditioncodestest.cpp
-    configprocessortest.cpp
-    consoleconsistencytest.cpp
-    cabinetconsistencytest.cpp
-    ba11/ba11_nconfiguratortest.cpp
-    ba11/ba11cconfiguratortest.cpp
-    ba11/ba11lconfiguratortest.cpp
-    ba11/ba11consistencytest.cpp
-    unibusconsistencytest.cpp
-    bdv11configuratortest.cpp
-    dlv11configuratortest.cpp
+    configdata/configprocessortest.cpp
+    configdata/consoleconsistencytest.cpp
+    configdata/cabinetconsistencytest.cpp
+    configdata/bdv11configuratortest.cpp
+    configdata/dlv11configuratortest.cpp
+    configdata/kd11_naconfiguratortest.cpp
+    configdata/msv11configuratortest.cpp
+    configdata/rxconfiguratortest.cpp
+    configdata/systemconfigtest.cpp
+    configdata/ba11/ba11_nconfiguratortest.cpp
+    configdata/ba11/ba11cconfiguratortest.cpp
+    configdata/ba11/ba11lconfiguratortest.cpp
+    configdata/ba11/ba11consistencytest.cpp
+    configdata/unibusconsistencytest.cpp
     fiotest.cpp
     fistest.cpp
     geometrytest.cpp
-    kd11_naconfiguratortest.cpp
     instructiondecodertest.cpp
     kd11_na/inctest.cpp
     kd11_na/movtest.cpp
@@ -58,7 +61,6 @@ set (GTEST_SRCS
     m9312/m9312test.cpp
     m9312/m9312powerfailvectortest.cpp
     memorysizetest.cpp
-    msv11configuratortest.cpp
     ms11p/ms11pconfiguratortest.cpp
     ms11p/ms11ptest.cpp
     openrastertest.cpp
@@ -88,10 +90,8 @@ set (GTEST_SRCS
     rlv12/rlv12writedatatest.cpp
     rlv12/volumechecktest.cpp
     rlv12/drivereadytest.cpp
-    rxconfiguratortest.cpp
     signaltest.cpp
     simulatorclocktest.cpp
-    systemconfigtest.cpp
     tracetest.cpp
     unibustest.cpp
     unit/unittest.cpp
