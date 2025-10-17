@@ -43,13 +43,9 @@ size_t SectionProcessor::unitNumberFromUnitKey (iniparser::Section* subSection,
 	size_t unitNumber;
 
 	// Get the unit number from the unit key in this subsection.
-	iniparser::Value unitValue = subSection->getValue ("unit");
+	iniparser::Value unitValue = subSection->getValue ("unit", 0);
 
-	if (!unitValue.isValid ())
-		throw std::invalid_argument {"Unit number not specified in section: " +
-			subSection->fullName ()};
-
-	// Remove the unit key from the subsection
+	// Remove the unit key from the subsection (if present)
 	subSection->removeValue ("unit");
 
 	try

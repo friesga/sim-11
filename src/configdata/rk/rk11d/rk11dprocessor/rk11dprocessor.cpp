@@ -93,7 +93,7 @@ void RK11DProcessor::processUnits (iniparser::Value value)
 }
 
 // A RK11-D section can have zero to four subsections, one for each unit.
-// The unit number is specified by the mandatory unit key. After use in this
+// The unit number is specified by the optional unit key. After use in this
 // function, the unit number is removed from the section to avoid it being
 // processed again by the SectionProcessor base class.
 //

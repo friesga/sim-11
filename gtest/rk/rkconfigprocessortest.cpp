@@ -24,7 +24,6 @@ TEST (RKConfigProcessorTest, configProcessed)
 		"units = 1\n"
 
 		"[RK11-D.RK05]\n"
-		"unit = 0\n"
 		"cabinet = 0/0\n"
 		"filename = rk05.dsk\n"
 		"newfile = true\n"
@@ -51,6 +50,7 @@ TEST (RKConfigProcessorTest, configProcessed)
 	EXPECT_EQ (rk11dConfig.busRequestLevel, 5);
 	EXPECT_EQ (rk11dConfig.numUnits, 1);
 
+	EXPECT_EQ (rk11dConfig.rk05Config[0]->newFile, true);
 	EXPECT_EQ (rk11dConfig.rk05Config[0]->writeProtect, false);
 }
 
