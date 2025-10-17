@@ -58,14 +58,14 @@
  *   Save only one section to specifed stream.
  * 
  * - size_t sectionsSize ()
-     Returns number of sections in the file.
-
+ *   Returns number of sections in the file.
+ *
  * - SectionIterator sectionsBegin ()
-     Returns iterator to the first section.
-
+ *    Returns iterator to the first section.
+ *
  * - SectionIterator sectionsEnd ()
-     Returns iterator to the last section.
-
+ *    Returns iterator to the last section.
+ *
  * - Value getValue (const std::string& name, const Value& def_val = Value())
  *   Gets value with specified name from the file. 
  * 
@@ -570,6 +570,8 @@ namespace iniparser
                 return false;
             return (_val.Data() < rgh._val.Data());
         }
+
+        bool isValid () const { return _val.isValid (); }
 
         // Template function to convert value to any type
         template<class T> T get() const { return string_to_t<T>(_val.DataObj());}
