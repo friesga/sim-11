@@ -18,6 +18,10 @@ class RK05Processor : public UnitConfigProcessor
 	// with a iniparser::Value argument and returning void.
 	typedef void (RK05Processor::* Process)(iniparser::Value);
 
+    // A mandatory key in an RK05 section is "unit". This key is
+    // processed in RK11DProcessor::processSubsection() to get the unit number
+    // and then is removed from the section to avoid being processed again
+    // here.
 	map<string, Process> valueProcessors =
 	{
 		{"filename", &RK05Processor::processFileName},

@@ -23,7 +23,8 @@ TEST (RKConfigProcessorTest, configProcessed)
 		"bus_request_level = 5\n"
 		"units = 1\n"
 
-		"[RK11-D.unit0]\n"
+		"[RK11-D.RK05]\n"
+		"unit = 0\n"
 		"cabinet = 0/0\n"
 		"filename = rk05.dsk\n"
 		"newfile = true\n"
@@ -97,16 +98,20 @@ TEST (RKConfigProcessorTest, fileName)
 	std::stringstream stream;
 	stream << "[RK11-D]\n"
 		"units = 4\n"
-		"[RK11-D.unit0]\n"
+		"[RK11-D.RK05]\n"
+		"unit = 0\n"
 		"cabinet = 0/0\n"
 		"filename = \\somefile\n"
-		"[RK11-D.unit1]\n"
+		"[RK11-D.RK05]\n"
+		"unit = 1\n"
 		"cabinet = 0/0\n"
 		"filename = Windows:{G:\\windowsFileName}, Linux:{/mnt/g/sim-11/linuxFileName\n"
-		"[RK11-D.unit2]\n"
+		"[RK11-D.RK05]\n"
+		"unit = 2\n"
 		"cabinet = 0/0\n"
 		"filename = Linux:linuxFileName, unqualifiedName\n"
-		"[RK11-D.unit3]\n"
+		"[RK11-D.RK05]\n"
+		"unit = 3\n"
 		"cabinet = 0/0\n"
 		"filename = Windows:windowsFileName, unqualifiedName\n";
 
@@ -143,13 +148,17 @@ TEST (RKConfigProcessorTest, spinUpTimeCorrectlyDefaulted)
 
 	stream << "[RK11-D]\n"
 		"units = 4\n"
-		"[RK11-D.unit0]\n"
+		"[RK11-D.RK05]\n"
+		"unit = 0\n"
 		"cabinet = 0/0\n"
-		"[RK11-D.unit1]\n"
+		"[RK11-D.RK05]\n"
+		"unit = 1\n"
 		"cabinet = 0/0\n"
-		"[RK11-D.unit2]\n"
+		"[RK11-D.RK05]\n"
+		"unit = 2\n"
 		"cabinet = 0/0\n"
-		"[RK11-D.unit3]\n"
+		"[RK11-D.RK05]\n"
+		"unit = 3\n"
 		"cabinet = 0/0\n";
 
 	stream >> ft;
@@ -181,16 +190,20 @@ TEST (RKConfigProcessorTest, spinUpTimeHasCorrectValues)
 
 	stream << "[RK11-D]\n"
 		"units = 4\n"
-		"[RK11-D.unit0]\n"
+		"[RK11-D.RK05]\n"
+		"unit = 0\n"
 		"spin-up-time = 0\n"
 		"cabinet = 0/0\n"
-		"[RK11-D.unit1]\n"
+		"[RK11-D.RK05]\n"
+		"unit = 1\n"
 		"cabinet = 0/0\n"
 		"spin-up-time = 1\n"
-		"[RK11-D.unit2]\n"
+		"[RK11-D.RK05]\n"
+		"unit = 2\n"
 		"cabinet = 0/0\n"
 		"spin-up-time = 2\n"
-		"[RK11-D.unit3]\n"
+		"[RK11-D.RK05]\n"
+		"unit = 3\n"
 		"cabinet = 0/0\n"
 		"spin-up-time = 3\n";
 
@@ -223,13 +236,17 @@ TEST (RKConfigProcessorTest, unitNumberCorrectlySet)
 
 	stream << "[RK11-D]\n"
 		"units = 4\n"
-		"[RK11-D.unit0]\n"
+		"[RK11-D.RK05]\n"
+		"unit = 0\n"
 		"cabinet = 0/0\n"
-		"[RK11-D.unit1]\n"
+		"[RK11-D.RK05]\n"
+		"unit = 1\n"
 		"cabinet = 0/0\n"
-		"[RK11-D.unit2]\n"
+		"[RK11-D.RK05]\n"
+		"unit = 2\n"
 		"cabinet = 0/0\n"
-		"[RK11-D.unit3]\n"
+		"[RK11-D.RK05]\n"
+		"unit = 3\n"
 		"cabinet = 0/0\n";
 
 	stream >> ft;
@@ -261,7 +278,8 @@ TEST (RKConfigProcessorTest, unitNumberOutOfRangeThrows)
 
 	stream << "[RK11-D]\n"
 		"units = 1\n"
-		"[RK11-D.unit8]\n";
+		"[RK11-D.RK05]\n"
+		"unit = 8\n";
 
 	stream >> ft;
 
@@ -273,7 +291,7 @@ TEST (RKConfigProcessorTest, unitNumberOutOfRangeThrows)
 	}
 	catch (std::invalid_argument const& except)
 	{
-		EXPECT_STREQ (except.what (), "Unit number out of range 0-7: unit8");
+		EXPECT_STREQ (except.what (), "Unit number out of range 0-7 in section RK11-D.RK05");
 	}
 	catch (...)
 	{
@@ -288,7 +306,8 @@ TEST (RKConfigProcessorTest, invalidUnitNumberThrows)
 
 	stream << "[RK11-D]\n"
 		"units = 1\n"
-		"[RK11-D.unitA]\n";
+		"[RK11-D.RK05]\n"
+		"unit = A\n";
 
 	stream >> ft;
 
@@ -300,7 +319,7 @@ TEST (RKConfigProcessorTest, invalidUnitNumberThrows)
 	}
 	catch (std::invalid_argument const& except)
 	{
-		EXPECT_STREQ (except.what (), "Invalid unit number: unitA");
+		EXPECT_STREQ (except.what (), "Invalid unit number in section RK11-D.RK05");
 	}
 	catch (...)
 	{
