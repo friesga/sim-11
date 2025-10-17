@@ -287,6 +287,16 @@ namespace iniparser
         T out;
         ss << v;
         ss >> out;
+
+        // Check for conversion errors
+        if (ss.fail () || ss.bad ())
+            throw std::invalid_argument ("Invalid conversion of " + v);
+
+        // Check there are no additional characters after the value
+        std::string rest;
+        if (ss >> rest)
+            throw std::invalid_argument ("Additional characters after value " + v);
+
         return out;
     }
 
