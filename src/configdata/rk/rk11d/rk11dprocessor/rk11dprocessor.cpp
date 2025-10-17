@@ -92,40 +92,14 @@ void RK11DProcessor::processUnits (iniparser::Value value)
 	rk11dConfig.numUnits = value.asInt ();
 }
 
-// A RL Section can have zero to four subsections, one for each unit.
+// A RK11-D section can have zero to four subsections, one for each unit.
 // The unit number is specified by the mandatory unit key. After use in this
 // function, the unit number is removed from the section to avoid it being
 // processed again by the SectionProcessor base class.
+//
 void RK11DProcessor::processSubsection (iniparser::Section* subSection)
 {
-	size_t unitNumber;
-
-	// Get the unit number from the unit key in this subsection.
-	iniparser::Value unitValue = subSection->getValue ("unit");
-
-	if (!unitValue.isValid ())
-		throw std::invalid_argument {"Unit number not specified in section: " +
-			subSection->fullName ()};
-
-    // Remove the unit key from the subsection
-    subSection->removeValue ("unit");
-
-	// The unit number is stored in the RlUnitConfig struct so it is clear
-	// to which unit the configuration applies.
-	try
-	{
-		unitNumber = unitValue.asInt ();
-	}
-	catch (std::invalid_argument const&)
-    {
-        throw std::invalid_argument {"Invalid unit number in section " +
-			subSection->fullName ()};
-    }
-
-    // Check validity of the unit number
-	if (unitNumber >= rk11dConfig.maxRK05Units)
-		throw std::invalid_argument {"Unit number out of range 0-" +
-			to_string (rk11dConfig.maxRK05Units - 1) + " in section " + subSection->fullName ()};
+	size_t unitNumber = unitNumberFromUnitKey (subSection, rk11dConfig.maxRK05Units);
 
 	// Check that the configuration for this unit has not already been
 	// specified.

@@ -35,6 +35,41 @@ size_t SectionProcessor::unitNumberFromSectionName (string name, size_t maxUnits
 	return unitNumber;
 }
 
+// After use in this function, the unit number is removed from the section
+// to avoid it being processed again by the SectionProcessor base class.
+size_t SectionProcessor::unitNumberFromUnitKey (iniparser::Section* subSection,
+	size_t maxUnits)
+{
+	size_t unitNumber;
+
+	// Get the unit number from the unit key in this subsection.
+	iniparser::Value unitValue = subSection->getValue ("unit");
+
+	if (!unitValue.isValid ())
+		throw std::invalid_argument {"Unit number not specified in section: " +
+			subSection->fullName ()};
+
+	// Remove the unit key from the subsection
+	subSection->removeValue ("unit");
+
+	try
+	{
+		unitNumber = unitValue.asInt ();
+	}
+	catch (std::invalid_argument const&)
+	{
+		throw std::invalid_argument {"Invalid unit number in section " +
+			subSection->fullName ()};
+	}
+
+	// Check validity of the unit number
+	if (unitNumber >= maxUnits)
+		throw std::invalid_argument {"Unit number out of range 0-" +
+			to_string (maxUnits - 1) + " in section " + subSection->fullName ()};
+
+	return unitNumber;
+}
+
 void SectionProcessor::processSection (iniparser::Section* section)
 {
 	// Save a pointer to the section so value processors can access the
