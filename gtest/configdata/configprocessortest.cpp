@@ -88,7 +88,8 @@ TEST (ConfigProcessorTest, outOfRangeUnitNumberThrows)
     iniparser::File ft;
 	std::stringstream stream;
 	stream << "[RLV12]\n"
-		"[RLV12.unit4]\n";
+		"[RLV12.RL01]\n"
+		"unit = 4\n";
 	stream >> ft;
 
 	IniProcessor iniProcessor;
@@ -99,7 +100,7 @@ TEST (ConfigProcessorTest, outOfRangeUnitNumberThrows)
 	}
 	catch (std::invalid_argument const &except)
 	{
-		EXPECT_STREQ (except.what(), "Unit number out of range 0-3: unit4");
+		EXPECT_STREQ (except.what(), "Unit number out of range 0-3 in section RLV12.RL01");
 	}
 	catch (...)
 	{

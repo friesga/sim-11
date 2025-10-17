@@ -22,7 +22,7 @@ TEST (RLV11ConfigProcessorTest, configProcessed)
 		"vector = 0160\n"
 		"units = 1\n"
 
-		"[RLV11.unit0]\n"
+		"[RLV11.RL01]\n"
 		"type = RL01\n"
 		"cabinet = 0/0\n"
 		"filename = rl01.dsk\n"
@@ -122,16 +122,20 @@ TEST (RLV11ConfigProcessorTest, fileName)
 	std::stringstream stream;
 	stream << "[RLV11]\n"
 		"units = 4\n"
-		"[RLV11.unit0]\n"
+		"[RLV11.RL01]\n"
+		"unit = 0\n"
 		"cabinet = 0/0\n"
 		"filename = \\somefile\n"
-		"[RLV11.unit1]\n"
+		"[RLV11.RL01]\n"
+		"unit = 1\n"
 		"cabinet = 0/0\n"
 		"filename = Windows:{G:\\windowsFileName}, Linux:{/mnt/g/sim-11/linuxFileName\n"
-		"[RLV11.unit2]\n"
+		"[RLV11.RL01]\n"
+		"unit = 2\n"
 		"cabinet = 0/0\n"
 		"filename = Linux:linuxFileName, unqualifiedName\n"
-		"[RLV11.unit3]\n"
+		"[RLV11.RL01]\n"
+		"unit = 3\n"
 		"cabinet = 0/0\n"
 		"filename = Windows:windowsFileName, unqualifiedName\n";
 		
@@ -168,13 +172,17 @@ TEST (RLV11ConfigProcessorTest, spinUpTimeCorrectlyDefaulted)
 
 	stream << "[RLV11]\n"
 		"units = 4\n"
-		"[RLV11.unit0]\n"
+		"[RLV11.RL01]\n"
+		"unit = 0\n"
 		"cabinet = 0/0\n"
-		"[RLV11.unit1]\n"
+		"[RLV11.RL01]\n"
+		"unit = 1\n"
 		"cabinet = 0/0\n"
-		"[RLV11.unit2]\n"
+		"[RLV11.RL01]\n"
+		"unit = 2\n"
 		"cabinet = 0/0\n"
-		"[RLV11.unit3]\n"
+		"[RLV11.RL01]\n"
+		"unit = 3\n"
 		"cabinet = 0/0\n";
 
 	stream >> ft;
@@ -206,16 +214,20 @@ TEST (RLV11ConfigProcessorTest, spinUpTimeHasCorrectValues)
 
 	stream << "[RLV11]\n"
 		"units = 4\n"
-		"[RLV11.unit0]\n"
+		"[RLV11.RL01]\n"
+		"unit = 0\n"
 		"spin-up-time = 0\n"
 		"cabinet = 0/0\n"
-		"[RLV11.unit1]\n"
+		"[RLV11.RL01]\n"
+		"unit = 1\n"
 		"cabinet = 0/0\n"
 		"spin-up-time = 1\n"
-		"[RLV11.unit2]\n"
+		"[RLV11.RL01]\n"
+		"unit = 2\n"
 		"cabinet = 0/0\n"
 		"spin-up-time = 2\n"
-		"[RLV11.unit3]\n"
+		"[RLV11.RL01]\n"
+		"unit = 3\n"
 		"cabinet = 0/0\n"
 		"spin-up-time = 3\n";
 
@@ -248,13 +260,17 @@ TEST (RLV11ConfigProcessorTest, unitNumberCorrectlySet)
 
 	stream << "[RLV11]\n"
 		"units = 4\n"
-		"[RLV11.unit0]\n"
+		"[RLV11.RL01]\n"
+		"unit = 0\n"
 		"cabinet = 0/0\n"
-		"[RLV11.unit1]\n"
+		"[RLV11.RL01]\n"
+		"unit = 1\n"
 		"cabinet = 0/0\n"
-		"[RLV11.unit2]\n"
+		"[RLV11.RL01]\n"
+		"unit = 2\n"
 		"cabinet = 0/0\n"
-		"[RLV11.unit3]\n"
+		"[RLV11.RL01]\n"
+		"unit = 3\n"
 		"cabinet = 0/0\n";
 
 	stream >> ft;

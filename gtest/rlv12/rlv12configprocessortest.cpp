@@ -22,7 +22,7 @@ TEST (RLV12ConfigProcessorTest, configProcessed)
 		"vector = 0160\n"
 		"units = 1\n"
 
-		"[RLV12.unit0]\n"
+		"[RLV12.RL01]\n"
 		"type = RL01\n"
 		"cabinet = 0/0\n"
 		"filename = rl01.dsk\n"
@@ -63,7 +63,7 @@ TEST (RLV12ConfigProcessorTest, _22bitOptionAccepted)
 		"22-bit = true\n"
 		"units = 1\n"
 
-		"[RLV12.unit0]\n"
+		"[RLV12.RL01]\n"
 		"type = RL01\n"
 		"cabinet = 0/0\n"
 		"filename = rl01.dsk\n"
@@ -133,16 +133,20 @@ TEST (RLV12ConfigProcessorTest, fileName)
 	std::stringstream stream;
 	stream << "[RLV12]\n"
 		"units = 4\n"
-		"[RLV12.unit0]\n"
+		"[RLV12.RL01]\n"
+		"unit = 0\n"
 		"cabinet = 0/0\n"
 		"filename = \\somefile\n"
-		"[RLV12.unit1]\n"
+		"[RLV12.RL01]\n"
+		"unit = 1\n"
 		"cabinet = 0/0\n"
 		"filename = Windows:{G:\\windowsFileName}, Linux:{/mnt/g/sim-11/linuxFileName\n"
-		"[RLV12.unit2]\n"
+		"[RLV12.RL01]\n"
+		"unit = 2\n"
 		"cabinet = 0/0\n"
 		"filename = Linux:linuxFileName, unqualifiedName\n"
-		"[RLV12.unit3]\n"
+		"[RLV12.RL01]\n"
+		"unit = 3\n"
 		"cabinet = 0/0\n"
 		"filename = Windows:windowsFileName, unqualifiedName\n";
 		
@@ -179,13 +183,17 @@ TEST (RLV12ConfigProcessorTest, spinUpTimeCorrectlyDefaulted)
 
 	stream << "[RLV12]\n"
 		"units = 4\n"
-		"[RLV12.unit0]\n"
+		"[RLV12.RL01]\n"
+		"unit = 0\n"
 		"cabinet = 0/0\n"
-		"[RLV12.unit1]\n"
+		"[RLV12.RL01]\n"
+		"unit = 1\n"
 		"cabinet = 0/0\n"
-		"[RLV12.unit2]\n"
+		"[RLV12.RL01]\n"
+		"unit = 2\n"
 		"cabinet = 0/0\n"
-		"[RLV12.unit3]\n"
+		"[RLV12.RL01]\n"
+		"unit = 3\n"
 		"cabinet = 0/0\n";
 
 	stream >> ft;
@@ -217,16 +225,20 @@ TEST (RLV12ConfigProcessorTest, spinUpTimeHasCorrectValues)
 
 	stream << "[RLV12]\n"
 		"units = 4\n"
-		"[RLV12.unit0]\n"
+		"[RLV12.RL01]\n"
+		"unit = 0\n"
 		"spin-up-time = 0\n"
 		"cabinet = 0/0\n"
-		"[RLV12.unit1]\n"
+		"[RLV12.RL01]\n"
+		"unit = 1\n"
 		"cabinet = 0/0\n"
 		"spin-up-time = 1\n"
-		"[RLV12.unit2]\n"
+		"[RLV12.RL01]\n"
+		"unit = 2\n"
 		"cabinet = 0/0\n"
 		"spin-up-time = 2\n"
-		"[RLV12.unit3]\n"
+		"[RLV12.RL01]\n"
+		"unit = 3\n"
 		"cabinet = 0/0\n"
 		"spin-up-time = 3\n";
 
@@ -259,13 +271,17 @@ TEST (RLV12ConfigProcessorTest, unitNumberCorrectlySet)
 
 	stream << "[RLV12]\n"
 		"units = 4\n"
-		"[RLV12.unit0]\n"
+		"[RLV12.RL01]\n"
+		"unit = 0\n"
 		"cabinet = 0/0\n"
-		"[RLV12.unit1]\n"
+		"[RLV12.RL01]\n"
+		"unit = 1\n"
 		"cabinet = 0/0\n"
-		"[RLV12.unit2]\n"
+		"[RLV12.RL01]\n"
+		"unit = 2\n"
 		"cabinet = 0/0\n"
-		"[RLV12.unit3]\n"
+		"[RLV12.RL01]\n"
+		"unit = 3\n"
 		"cabinet = 0/0\n";
 
 	stream >> ft;

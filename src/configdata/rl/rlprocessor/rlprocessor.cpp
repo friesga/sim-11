@@ -76,19 +76,14 @@ void RLProcessor::processUnits (iniparser::Value value)
 	rlConfig.numUnits = value.asInt ();
 }
 
-// A RL Section can have zero to four subsections, one for each unit.
+// A RL section can have zero to four subsections, one for each unit.
+// The unit number is specified by the optional unit key. After use in this
+// function, the unit number is removed from the section to avoid it being
+// processed again by the SectionProcessor base class.
+//
 void RLProcessor::processSubsection (iniparser::Section* subSection)
 {
-	if (subSection->name().substr(0, 4) != "unit")
-		throw std::invalid_argument {"Unknown RL subsection: " +
-			subSection->name()};
-
-	// Get the unit number from the subsection name. This will throw an
-	// exception if an incorrect unit number is specified. The unit number
-	// is stored in the RlUnitConfig struct so it is clear to which unit
-	// the configuration applies.
-	size_t unitNumber = unitNumberFromSectionName (subSection->name(),
-		rlConfig.maxRlUnits);
+	size_t unitNumber = unitNumberFromUnitKey (subSection, rlConfig.maxRlUnits);
 
 	// Check that the configuration for this unit has not already been
 	// specified.
