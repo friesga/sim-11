@@ -15,7 +15,7 @@ TEST (RxConfiguratorTest, rxConfigProcessed)
 		"address = 0174400\n"
 		"vector = 0160\n"
 
-		"[RXV21.unit0]\n"
+		"[RXV21.RX01]\n"
 		"filename = rx01.dsk\n";
 		
 	stream >> ft;

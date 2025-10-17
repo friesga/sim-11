@@ -50,15 +50,7 @@ void RXV21Processor::checkConsistency ()
 // Process a section with a unit specification.
 void RXV21Processor::processSubsection (iniparser::Section *subSection)
 {
-	if (subSection->name().substr(0, 4) != "unit")
-		throw std::invalid_argument {"Unknown RXV21 subsection: " + 
-			subSection->name()};
-
-	// Get the unit number from the subsection name. This will throw an
-	// exception if an incorrect unit number is specified. The unit number
-	// is stored in the RXV21UnitConfig struct so it is clear to which unit
-	// the configuration applies.
-	size_t unitNumber = unitNumberFromSectionName (subSection->name(), rxConfig.numRxUnits);
+	size_t unitNumber = unitNumberFromUnitKey (subSection, rxConfig.numRxUnits);
 
 	// Check that the configuration for this unit has not already been
 	// specified.
