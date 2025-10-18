@@ -21,6 +21,7 @@ set (CONFIGURATOR_SRCS
     rl/rlunitconfig/rlunitconfig.cpp
     rl/rlunitprocessor/rlunitprocessor.cpp
     ka11/ka11processor/ka11processor.cpp
+    ka11/ky11_aprocessor/ky11_aprocessor.cpp
     kd11processor/kd11processor.cpp
     kd11_naprocessor/kd11_naprocessor.cpp
     kdf11/kdf11_a/kdf11_aconfig/kdf11_aconfig.cpp
