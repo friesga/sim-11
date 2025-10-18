@@ -23,7 +23,6 @@ TEST (RL11ConfigProcessorTest, configProcessed)
 		"units = 1\n"
 
 		"[RL11.RL01]\n"
-		"type = RL01\n"
 		"cabinet = 0/0\n"
 		"filename = rl01.dsk\n"
 		"newfile = true\n"

@@ -78,8 +78,7 @@ TEST (CabinetConsistencyTest, overlappingUnitsThrows)
 		"[RLV12]\n"
 		"units = 1\n"
 
-		"[RLV12.unit0]\n"
-		"type = RL01\n"
+		"[RLV12.RL01]\n"
 		"cabinet = 0/8\n";
 
 	stream >> ft;

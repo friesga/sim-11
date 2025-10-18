@@ -21,7 +21,6 @@ class RLUnitProcessor : public UnitConfigProcessor
 	map<string, Process> valueProcessors =
 	{
 		{"unit", &RLUnitProcessor::processUnitNumber},
-		{"type", &RLUnitProcessor::processType},
 		{"filename", &RLUnitProcessor::processFileName},
 		{"newfile", &RLUnitProcessor::processNewFile},
 		{"write-protect", &RLUnitProcessor::processWriteProtect},
@@ -43,7 +42,7 @@ class RLUnitProcessor : public UnitConfigProcessor
 	void processSpinUpTime (iniparser::Value value);
 
 public:
-	RLUnitProcessor ();
+	RLUnitProcessor (iniparser::Section* subSection);
 	RLUnitConfig getConfig ();
 };
 

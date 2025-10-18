@@ -8,8 +8,9 @@ using std::make_unique;
 using std::move;
 using std::invalid_argument;
 
-RLUnitProcessor::RLUnitProcessor ()
+RLUnitProcessor::RLUnitProcessor (iniparser::Section* subSection)
 {
+    processType (subSection->name ());
 }
 
 void RLUnitProcessor::processValue (iniparser::Section::ValueIterator valueIterator)

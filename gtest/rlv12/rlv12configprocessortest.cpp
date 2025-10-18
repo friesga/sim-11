@@ -23,7 +23,6 @@ TEST (RLV12ConfigProcessorTest, configProcessed)
 		"units = 1\n"
 
 		"[RLV12.RL01]\n"
-		"type = RL01\n"
 		"cabinet = 0/0\n"
 		"filename = rl01.dsk\n"
 		"newfile = true\n"
@@ -64,7 +63,6 @@ TEST (RLV12ConfigProcessorTest, _22bitOptionAccepted)
 		"units = 1\n"
 
 		"[RLV12.RL01]\n"
-		"type = RL01\n"
 		"cabinet = 0/0\n"
 		"filename = rl01.dsk\n"
 		"newfile = true\n"
