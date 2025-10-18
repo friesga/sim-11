@@ -8,10 +8,6 @@ using std::make_unique;
 using std::move;
 using std::invalid_argument;
 
-RK05Processor::RK05Processor ()
-{
-}
-
 void RK05Processor::processValue (iniparser::Section::ValueIterator valueIterator)
 {
 	// Throw exception for non-existing key?

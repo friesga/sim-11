@@ -41,7 +41,6 @@ class RK05Processor : public UnitConfigProcessor
 	void processSpinUpTime (iniparser::Value value);
 
 public:
-	RK05Processor ();
 	RK05Config getConfig ();
 };
 
