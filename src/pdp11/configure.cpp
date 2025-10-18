@@ -5,6 +5,7 @@
 #include "configdata/rxv21/rxv21config/rxv21config.h"
 #include "configdata/msv11config/msv11config.h"
 #include "configdata/bdv11config/bdv11config.h"
+#include "configdata/ka11/ka11config/ka11config.h"
 #include "configdata/kdf11/kdf11_a/kdf11_aconfig/kdf11_aconfig.h"
 #include "configdata/kdf11/kdf11_b/kdf11_bconfig/kdf11_bconfig.h"
 #include "configdata/kdf11/kdf11_u/kdf11_uconfig/kdf11_uconfig.h"
@@ -109,6 +110,8 @@ void PDP_11::configureQbusSystem (SystemConfig const & systemConfig,
             { throw logic_error ("Should not happen"); },
         [this] (BA11_LConfig ba11lConfig)
             { throw logic_error ("Should not happen"); },
+        [this] (KA11Config ka11Config)
+            { throw logic_error ("Should not happen"); },
         [this] (KDF11_UConfig kdf11_uConfig)
             { throw logic_error ("Should not happen"); }
     };
@@ -157,6 +160,8 @@ void PDP_11::configureUnibusSystem (SystemConfig const & systemConfig,
             { throw logic_error ("Should not happen"); },
         [this, window] (BA11_NConfig ba11_nConfig)
             { throw logic_error ("Should not happen"); },
+        [this] (KA11Config ka11Config)
+            { throw logic_error ("To be implemented"); },
         [this] (KDF11_UConfig kdf11_uConfig)
             {processor_ = new KDF11_U (bus_, kdf11_uConfig); },
         [this] (MS11PConfig ms11pConfig)

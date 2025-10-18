@@ -5,6 +5,7 @@
 #include "configdata/ba11/ba11l/ba11lconfig/ba11lconfig.h"
 #include "configdata/ba11/ba11n/ba11nconfig/ba11nconfig.h"
 #include "configdata/bdv11config/bdv11config.h"
+#include "configdata/ka11/ka11config/ka11config.h"
 #include "configdata/kd11_naconfig/kd11_naconfig.h"
 #include "configdata/kdf11/kdf11_a/kdf11_aconfig/kdf11_aconfig.h"
 #include "configdata/kdf11/kdf11_b/kdf11_bconfig/kdf11_bconfig.h"
@@ -41,6 +42,7 @@ using DeviceConfig = variant<
     BA11_LConfig,
     BA11_NConfig,
     MS11PConfig,
-    KDF11_UConfig>;
+    KDF11_UConfig,
+    KA11Config>;
 
 #endif // _DEVICECONFIGVARIANT_H_
