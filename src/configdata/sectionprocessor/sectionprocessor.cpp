@@ -19,9 +19,6 @@ size_t SectionProcessor::unitNumberFromUnitKey (iniparser::Section* subSection,
 	// Get the unit number from the unit key in this subsection.
 	iniparser::Value unitValue = subSection->getValue ("unit", 0);
 
-	// Remove the unit key from the subsection (if present)
-	subSection->removeValue ("unit");
-
 	try
 	{
 		unitNumber = unitValue.asInt ();

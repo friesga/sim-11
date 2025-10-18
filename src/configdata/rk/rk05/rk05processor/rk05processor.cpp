@@ -8,9 +8,8 @@ using std::make_unique;
 using std::move;
 using std::invalid_argument;
 
-RK05Processor::RK05Processor (size_t unitNumber)
+RK05Processor::RK05Processor ()
 {
-	rk05Config.unitNumber = unitNumber;
 }
 
 void RK05Processor::processValue (iniparser::Section::ValueIterator valueIterator)
@@ -18,6 +17,19 @@ void RK05Processor::processValue (iniparser::Section::ValueIterator valueIterato
 	// Throw exception for non-existing key?
 	Process processFunction = valueProcessors[valueIterator->first];
 	(this->*processFunction)(valueIterator->second);
+}
+
+void RK05Processor::processUnitNumber (iniparser::Value value)
+{
+	rk05Config.unitNumber = value.asInt ();
+	try
+	{
+		rk05Config.unitNumber = value.asInt ();
+	}
+	catch (std::invalid_argument const&)
+	{
+		throw std::invalid_argument {"Invalid unit number: " + value.asString ()};
+	}
 }
 
 #ifdef _WIN32

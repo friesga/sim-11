@@ -8,9 +8,8 @@ using std::make_unique;
 using std::move;
 using std::invalid_argument;
 
-RLUnitProcessor::RLUnitProcessor (size_t unitNumber)
+RLUnitProcessor::RLUnitProcessor ()
 {
-	rlUnitConfig.unitNumber = unitNumber;
 }
 
 void RLUnitProcessor::processValue (iniparser::Section::ValueIterator valueIterator)
@@ -31,6 +30,19 @@ void RLUnitProcessor::processType (iniparser::Value value)
 	else
 		throw std::invalid_argument {"Incorrect RL unit type: " + 
 			value.asString()};
+}
+
+void RLUnitProcessor::processUnitNumber (iniparser::Value value)
+{
+	rlUnitConfig.unitNumber = value.asInt();
+	try
+	{
+		rlUnitConfig.unitNumber = value.asInt ();
+	}
+	catch (std::invalid_argument const&)
+	{
+		throw std::invalid_argument {"Invalid unit number: " + value.asString ()};
+	}
 }
 
 #ifdef _WIN32

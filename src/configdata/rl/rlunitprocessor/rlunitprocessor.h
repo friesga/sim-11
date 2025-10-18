@@ -16,11 +16,11 @@ class RLUnitProcessor : public UnitConfigProcessor
 
     // Define process as a pointer to a BDV11Processor member function
 	// with a iniparser::Value argument and returning void.
-
 	typedef void (RLUnitProcessor::*Process)(iniparser::Value);
 	
 	map<string, Process> valueProcessors =
 	{
+		{"unit", &RLUnitProcessor::processUnitNumber},
 		{"type", &RLUnitProcessor::processType},
 		{"filename", &RLUnitProcessor::processFileName},
 		{"newfile", &RLUnitProcessor::processNewFile},
@@ -33,6 +33,7 @@ class RLUnitProcessor : public UnitConfigProcessor
     void processValue (iniparser::Section::ValueIterator valueIterator);
 	void checkConsistency ();
 	void processSubsection (iniparser::Section *subSection);
+	void processUnitNumber (iniparser::Value value);
 	void processType (iniparser::Value value);
 	void processFileName (iniparser::Value value);
 	void processNewFile (iniparser::Value value);
@@ -42,7 +43,7 @@ class RLUnitProcessor : public UnitConfigProcessor
 	void processSpinUpTime (iniparser::Value value);
 
 public:
-	RLUnitProcessor (size_t unitNumber);
+	RLUnitProcessor ();
 	RLUnitConfig getConfig ();
 };
 

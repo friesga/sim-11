@@ -18,12 +18,9 @@ class RK05Processor : public UnitConfigProcessor
 	// with a iniparser::Value argument and returning void.
 	typedef void (RK05Processor::* Process)(iniparser::Value);
 
-    // A mandatory key in an RK05 section is "unit". This key is
-    // processed in RK11DProcessor::processSubsection() to get the unit number
-    // and then is removed from the section to avoid being processed again
-    // here.
 	map<string, Process> valueProcessors =
 	{
+		{"unit", &RK05Processor::processUnitNumber},
 		{"filename", &RK05Processor::processFileName},
 		{"newfile", &RK05Processor::processNewFile},
 		{"write-protect", &RK05Processor::processWriteProtect},
@@ -35,6 +32,7 @@ class RK05Processor : public UnitConfigProcessor
 	void processValue (iniparser::Section::ValueIterator valueIterator);
 	void checkConsistency ();
 	void processSubsection (iniparser::Section* subSection);
+	void processUnitNumber (iniparser::Value value);
 	void processFileName (iniparser::Value value);
 	void processNewFile (iniparser::Value value);
 	void processWriteProtect (iniparser::Value value);
@@ -43,7 +41,7 @@ class RK05Processor : public UnitConfigProcessor
 	void processSpinUpTime (iniparser::Value value);
 
 public:
-	RK05Processor (size_t unitNumber);
+	RK05Processor ();
 	RK05Config getConfig ();
 };
 

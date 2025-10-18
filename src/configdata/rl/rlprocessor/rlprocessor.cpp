@@ -77,9 +77,7 @@ void RLProcessor::processUnits (iniparser::Value value)
 }
 
 // A RL section can have zero to four subsections, one for each unit.
-// The unit number is specified by the optional unit key. After use in this
-// function, the unit number is removed from the section to avoid it being
-// processed again by the SectionProcessor base class.
+// The unit number is specified by the optional unit key.
 //
 void RLProcessor::processSubsection (iniparser::Section* subSection)
 {
@@ -91,7 +89,7 @@ void RLProcessor::processSubsection (iniparser::Section* subSection)
 		throw std::invalid_argument {"Double specification for RL subsection: " +
 			subSection->name()};
 
-	RLUnitProcessor rlUnitProcessor {unitNumber};
+	RLUnitProcessor rlUnitProcessor {};
 	rlUnitProcessor.processSection (subSection);
 
 	// Add the unit configuration to the RL device configuration

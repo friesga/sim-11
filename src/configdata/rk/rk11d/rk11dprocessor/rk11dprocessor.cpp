@@ -93,9 +93,7 @@ void RK11DProcessor::processUnits (iniparser::Value value)
 }
 
 // A RK11-D section can have zero to four subsections, one for each unit.
-// The unit number is specified by the optional unit key. After use in this
-// function, the unit number is removed from the section to avoid it being
-// processed again by the SectionProcessor base class.
+// The unit number is specified by the optional unit key.
 //
 void RK11DProcessor::processSubsection (iniparser::Section* subSection)
 {
@@ -107,7 +105,7 @@ void RK11DProcessor::processSubsection (iniparser::Section* subSection)
 		throw std::invalid_argument {"Double specification for RK11-D subsection: " +
 			subSection->name ()};
 
-	RK05Processor rk05Processor {unitNumber};
+	RK05Processor rk05Processor {};
 	rk05Processor.processSection (subSection);
 
 	// Add the unit configuration to the RL device configuration
