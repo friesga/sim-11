@@ -18,9 +18,8 @@ public:
 
 protected:
     string sectionName () const;
-    size_t unitNumberFromSectionName (string name, size_t maxUnits);
     size_t unitNumberFromUnitKey (iniparser::Section* subSection,
-        size_t maxUnits);
+        size_t maxUnits) const;
 
 private:
     iniparser::Section* currentSection_ {nullptr};
