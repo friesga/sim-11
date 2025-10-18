@@ -7,6 +7,12 @@
 class KA11Processor : public DeviceConfigProcessor
 {
 public:
+    // Functions required by the SectionProcessor base class
+	void processValue (iniparser::Section::ValueIterator valueIterator);
+	void checkConsistency ();
+	void processSubsection (iniparser::Section* subSection);
+
+    // Function required by the DeviceConfigProcessor interface
 	DeviceConfig getConfig () override;
 
 private:

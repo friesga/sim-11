@@ -17,6 +17,7 @@
 #include "../bdv11processor/bdv11processor.h"
 #include "configdata/serialconfig/dlv11processor/dlv11processor.h"
 #include "../msv11processor/msv11processor.h"
+#include "configdata/ka11/ka11processor/ka11processor.h"
 #include "../kd11_naprocessor/kd11_naprocessor.h"
 #include "../kdf11/kdf11_a/kdf11_aprocessor/kdf11_aprocessor.h"
 #include "../kdf11/kdf11_b/kdf11_bprocessor/kdf11_bprocessor.h"
@@ -82,6 +83,7 @@ private:
 		{"RLV11",   &IniProcessor::create<RLV11Processor>},
 		{"RLV12",   &IniProcessor::create<RLV12Processor>},
 		{"RXV21",   &IniProcessor::create<RXV21Processor>},
+		{"KA11",    &IniProcessor::create<KA11Processor>},
 		{"KD11-NA", &IniProcessor::create<KD11_NAProcessor>},
 		{"KDF11-A", &IniProcessor::create<KDF11_AProcessor>},
 		{"KDF11-B", &IniProcessor::create<KDF11_BProcessor>},
