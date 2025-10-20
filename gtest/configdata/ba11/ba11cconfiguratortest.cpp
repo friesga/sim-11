@@ -76,7 +76,7 @@ TEST (BA11_CConfiguratorTest, incorrectCabinetPositionThrows)
 	}
 	catch (std::invalid_argument const& except)
 	{
-		EXPECT_STREQ (except.what (), "Invalid BA11 cabinet position");
+		EXPECT_STREQ (except.what (), "Invalid BA11-C cabinet specified");
 	}
 	catch (...)
 	{
@@ -101,7 +101,7 @@ TEST (BA11_CConfiguratorTest, missingCabinetHeightThrows)
 	}
 	catch (std::invalid_argument const& except)
 	{
-		EXPECT_STREQ (except.what (), "Invalid BA11 cabinet position");
+		EXPECT_STREQ (except.what (), "Invalid BA11-C cabinet specified");
 	}
 	catch (...)
 	{

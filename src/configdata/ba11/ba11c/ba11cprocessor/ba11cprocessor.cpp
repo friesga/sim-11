@@ -39,8 +39,15 @@ DeviceConfig BA11_CProcessor::getConfig ()
 
 void BA11_CProcessor::processCabinet (iniparser::Value value)
 {
-    ba11_cConfig.cabinetPosition =
-        CabinetProcessor::processCabinetKey (value);
+    try
+    {
+        ba11_cConfig.cabinetPosition =
+            CabinetProcessor::processCabinetKey (value);
+    }
+    catch (invalid_argument& e)
+    {
+        throw invalid_argument {"Invalid BA11-C cabinet specified"};
+    }
 }
 
 void BA11_CProcessor::processOperatorConsole (iniparser::Value value)

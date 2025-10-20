@@ -17,7 +17,7 @@ Cabinet::Position processCabinetKey (iniparser::Value value)
     char slash;
 
     if (!(ss >> cabinetNr >> slash >> height) || slash != '/' || !ss.eof ())
-        throw std::invalid_argument ("Invalid BA11 cabinet position");
+        throw std::invalid_argument ("Invalid cabinet position");
 
     result.cabinetNr = cabinetNr;
     result.height = height;

@@ -47,6 +47,13 @@ void BA11_NProcessor::processLogo (iniparser::Value value)
 
 void BA11_NProcessor::processCabinet (iniparser::Value value)
 {
-    ba11_nConfig.cabinetPosition = 
-        CabinetProcessor::processCabinetKey (value);
+    try
+    {
+        ba11_nConfig.cabinetPosition =
+            CabinetProcessor::processCabinetKey (value);
+    }
+    catch (std::invalid_argument &e)
+    {
+        throw std::invalid_argument {"Invalid BA11-N cabinet position specified"};
+    }
 }

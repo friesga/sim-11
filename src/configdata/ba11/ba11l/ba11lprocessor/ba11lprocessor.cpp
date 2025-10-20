@@ -36,6 +36,13 @@ DeviceConfig BA11_LProcessor::getConfig ()
 
 void BA11_LProcessor::processCabinet (iniparser::Value value)
 {
-    ba11_lConfig.cabinetPosition =
-        CabinetProcessor::processCabinetKey (value);
+    try
+    {
+        ba11_lConfig.cabinetPosition =
+            CabinetProcessor::processCabinetKey (value);
+    }
+    catch (std::invalid_argument& exception)
+    {
+        throw invalid_argument {"Invalid BA11-L cabinet position specified"};
+    }
 }
