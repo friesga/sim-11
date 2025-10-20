@@ -30,8 +30,15 @@ void KY11_AProcessor::processValue (iniparser::Section::ValueIterator valueItera
 
 void KY11_AProcessor::processCabinet (iniparser::Value value)
 {
-    ky11_aConfig_.cabinetPosition =
-        CabinetProcessor::processCabinetKey (value);
+    try
+    {
+        ky11_aConfig_.cabinetPosition =
+            CabinetProcessor::processCabinetKey (value);
+    }
+    catch (std::invalid_argument const& except)
+    {
+        throw std::invalid_argument ("Invalid cabinet position in KY11-A section");
+    }
 }
 
 void KY11_AProcessor::checkConsistency ()

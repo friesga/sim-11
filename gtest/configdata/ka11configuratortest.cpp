@@ -144,7 +144,7 @@ TEST (KA11ConfiguratorTest, missingSlashInCabinetPositionThrows)
 	}
 	catch (std::invalid_argument const& except)
 	{
-		EXPECT_STREQ (except.what (), "Invalid BA11 cabinet position");
+		EXPECT_STREQ (except.what (), "Invalid cabinet position in KY11-A section");
 	}
 	catch (...)
 	{
@@ -169,7 +169,7 @@ TEST (KA11ConfiguratorTest, KY11_AIncorrectCabinetPositionThrows)
 	}
 	catch (std::invalid_argument const& except)
 	{
-		EXPECT_STREQ (except.what (), "Invalid BA11 cabinet position");
+		EXPECT_STREQ (except.what (), "Invalid cabinet position in KY11-A section");
 	}
 	catch (...)
 	{
