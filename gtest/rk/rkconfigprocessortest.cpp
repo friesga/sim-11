@@ -54,6 +54,7 @@ TEST (RKConfigProcessorTest, configProcessed)
 	EXPECT_EQ (rk11dConfig.rk05Config[0]->writeProtect, false);
 }
 
+
 TEST (RKConfigProcessorTest, unknownKeyInRK11_DSectionThrows)
 {
 	iniparser::File ft;
@@ -91,6 +92,31 @@ static const std::string expectedFileNameUnit1 {"/mnt/g/sim-11/linuxFileName"};
 static const std::string expectedFileNameUnit2 {"linuxFileName"};
 static const std::string expectedFileNameUnit3 {"unqualifiedName"};
 #endif
+
+TEST (RKConfigProcessorTest, unknownRK11_DSectionThrows)
+{
+	iniparser::File ft;
+	std::stringstream stream;
+	stream << "[RK11-D]\n"
+		"[RK11-D.unknown]";
+
+	stream >> ft;
+
+	IniProcessor iniProcessor;
+	try
+	{
+		iniProcessor.process (ft);
+		FAIL ();
+	}
+	catch (std::invalid_argument const& except)
+	{
+		EXPECT_STREQ (except.what (), "Invalid device type for RK11-D: unknown");
+	}
+	catch (...)
+	{
+		FAIL ();
+	}
+}
 
 TEST (RKConfigProcessorTest, unknownKeyInRK05SectionThrows)
 {

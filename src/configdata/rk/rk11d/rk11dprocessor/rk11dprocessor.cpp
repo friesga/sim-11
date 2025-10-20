@@ -105,7 +105,7 @@ void RK11DProcessor::processSubsection (iniparser::Section* subSection)
 		throw std::invalid_argument {"Double specification for RK11-D subsection: " +
 			subSection->name ()};
 
-	RK05Processor rk05Processor {};
+	RK05Processor rk05Processor {subSection};
 	rk05Processor.processSection (subSection);
 
 	// Add the unit configuration to the RL device configuration

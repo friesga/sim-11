@@ -8,6 +8,17 @@ using std::make_unique;
 using std::move;
 using std::invalid_argument;
 
+RK05Processor::RK05Processor (iniparser::Section* subSection)
+{
+	processType (subSection->name ());
+}
+
+void RK05Processor::processType (iniparser::Value value)
+{
+	if (value.asString () != "RK05")
+        throw std::invalid_argument {"Invalid device type for RK11-D: " + value.asString ()};
+}
+
 void RK05Processor::processValue (iniparser::Section::ValueIterator valueIterator)
 {
 	Process processFunction = valueProcessors[valueIterator->first];

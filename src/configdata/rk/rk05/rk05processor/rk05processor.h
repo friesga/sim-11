@@ -32,6 +32,7 @@ class RK05Processor : public UnitConfigProcessor
 	void processValue (iniparser::Section::ValueIterator valueIterator);
 	void checkConsistency ();
 	void processSubsection (iniparser::Section* subSection);
+	void processType(iniparser::Value value);
 	void processUnitNumber (iniparser::Value value);
 	void processFileName (iniparser::Value value);
 	void processNewFile (iniparser::Value value);
@@ -41,6 +42,7 @@ class RK05Processor : public UnitConfigProcessor
 	void processSpinUpTime (iniparser::Value value);
 
 public:
+	RK05Processor (iniparser::Section* subSection);
 	RK05Config getConfig ();
 };
 
