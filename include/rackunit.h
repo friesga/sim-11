@@ -10,6 +10,7 @@
 class RackUnit
 {
 public:
+    RackUnit (size_t value);
     operator int () const;
 
     // Overload operators
@@ -20,13 +21,6 @@ public:
     RackUnit operator-- (int);
 
 private:
-    // The constructor is defined private so it can't be called from outside
-    // the class. The literal operator _ru is declared as friend and therefore
-    // is able to access the constructor.
-    explicit RackUnit (size_t value);
-
-    friend RackUnit operator"" _ru (unsigned long long value);
-
     size_t value_;
 };
 
