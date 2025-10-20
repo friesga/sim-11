@@ -10,8 +10,13 @@ using std::invalid_argument;
 
 void RK05Processor::processValue (iniparser::Section::ValueIterator valueIterator)
 {
-	// Throw exception for non-existing key?
 	Process processFunction = valueProcessors[valueIterator->first];
+
+	if (processFunction == nullptr)
+		// This exception will be catched and processed in 
+		// SectionProcessor::processSection().
+		throw std::out_of_range ("Unknown key in RK05 section");
+
 	(this->*processFunction)(valueIterator->second);
 }
 

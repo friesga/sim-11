@@ -54,7 +54,7 @@ TEST (RKConfigProcessorTest, configProcessed)
 	EXPECT_EQ (rk11dConfig.rk05Config[0]->writeProtect, false);
 }
 
-TEST (RKConfigProcessorTest, configProcessorThrows)
+TEST (RKConfigProcessorTest, unknownKeyInRK11_DSectionThrows)
 {
 	iniparser::File ft;
 	std::stringstream stream;
@@ -91,6 +91,33 @@ static const std::string expectedFileNameUnit1 {"/mnt/g/sim-11/linuxFileName"};
 static const std::string expectedFileNameUnit2 {"linuxFileName"};
 static const std::string expectedFileNameUnit3 {"unqualifiedName"};
 #endif
+
+TEST (RKConfigProcessorTest, unknownKeyInRK05SectionThrows)
+{
+	iniparser::File ft;
+	std::stringstream stream;
+	stream << "[RK11-D]\n"
+		"units = 1\n"
+		"[RK11-D.RK05]\n"
+		"unknown_key = XXX\n";
+
+	stream >> ft;
+
+	IniProcessor iniProcessor;
+	try
+	{
+		iniProcessor.process (ft);
+		FAIL ();
+	}
+	catch (std::invalid_argument const& except)
+	{
+		EXPECT_STREQ (except.what (), "Unknown key in section RK05: unknown_key");
+	}
+	catch (...)
+	{
+		FAIL ();
+	}
+}
 
 TEST (RKConfigProcessorTest, fileName)
 {
