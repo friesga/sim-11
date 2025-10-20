@@ -2,9 +2,12 @@
 #include "configdata/ba11/ba11l/ba11lconfig/ba11lconfig.h"
 #include "configdata/cabinetprocessor/cabinetprocessor.h"
 
+#include <optional>
+
 using std::make_unique;
 using std::move;
 using std::invalid_argument;
+using std::optional;
 
 void BA11_LProcessor::processValue (iniparser::Section::ValueIterator valueIterator)
 {
@@ -36,13 +39,11 @@ DeviceConfig BA11_LProcessor::getConfig ()
 
 void BA11_LProcessor::processCabinet (iniparser::Value value)
 {
-    try
-    {
-        ba11_lConfig.cabinetPosition =
-            CabinetProcessor::processCabinetKey (value);
-    }
-    catch (std::invalid_argument& exception)
-    {
+    optional <Cabinet::Position> cabinetPosition = 
+        CabinetProcessor::processCabinetKey (value);
+    
+    if (!cabinetPosition.has_value ())
         throw invalid_argument {"Invalid BA11-L cabinet position specified"};
-    }
+
+    ba11_lConfig.cabinetPosition = cabinetPosition;
 }

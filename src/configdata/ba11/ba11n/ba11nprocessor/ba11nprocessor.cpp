@@ -2,9 +2,12 @@
 #include "configdata/ba11/ba11n/ba11nconfig/ba11nconfig.h"
 #include "configdata/cabinetprocessor/cabinetprocessor.h"
 
+#include <optional>
+
 using std::make_unique;
 using std::move;
 using std::invalid_argument;
+using std::optional;
 
 void BA11_NProcessor::processValue (iniparser::Section::ValueIterator valueIterator)
 {
@@ -47,13 +50,11 @@ void BA11_NProcessor::processLogo (iniparser::Value value)
 
 void BA11_NProcessor::processCabinet (iniparser::Value value)
 {
-    try
-    {
-        ba11_nConfig.cabinetPosition =
-            CabinetProcessor::processCabinetKey (value);
-    }
-    catch (std::invalid_argument &e)
-    {
-        throw std::invalid_argument {"Invalid BA11-N cabinet position specified"};
-    }
+    optional <Cabinet::Position> cabinetPosition =
+        CabinetProcessor::processCabinetKey (value);
+
+    if (!cabinetPosition.has_value ())
+        throw invalid_argument {"Invalid BA11-N cabinet position specified"};
+
+    ba11_nConfig.cabinetPosition = cabinetPosition;
 }

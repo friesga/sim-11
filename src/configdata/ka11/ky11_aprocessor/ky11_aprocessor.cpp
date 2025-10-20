@@ -1,6 +1,10 @@
 #include "configdata/ka11/ky11_aprocessor/ky11_aprocessor.h"
 #include "configdata/cabinetprocessor/cabinetprocessor.h"
 
+#include <optional>
+
+using std::optional;
+
 // A KY11_AProcessor will be created for evenry subsection of a KA11-A
 // section. The only subsection allowed is the KY11-A subsection, so check
 // that here.
@@ -30,15 +34,13 @@ void KY11_AProcessor::processValue (iniparser::Section::ValueIterator valueItera
 
 void KY11_AProcessor::processCabinet (iniparser::Value value)
 {
-    try
-    {
-        ky11_aConfig_.cabinetPosition =
-            CabinetProcessor::processCabinetKey (value);
-    }
-    catch (std::invalid_argument const& except)
-    {
-        throw std::invalid_argument ("Invalid cabinet position in KY11-A section");
-    }
+    optional <Cabinet::Position> cabinetPosition =
+        CabinetProcessor::processCabinetKey (value);
+
+    if (!cabinetPosition.has_value ())
+        throw std::invalid_argument {"Invalid cabinet position in KY11-A section"};
+
+    ky11_aConfig_.cabinetPosition = cabinetPosition;
 }
 
 void KY11_AProcessor::checkConsistency ()

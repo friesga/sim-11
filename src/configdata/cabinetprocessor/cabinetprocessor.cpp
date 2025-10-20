@@ -1,28 +1,27 @@
 #include "cabinetprocessor.h"
 
-#include <stdexcept>
+#include <optional>
 
-using std::invalid_argument;
+using std::optional;
+using std::nullopt;
 
 namespace CabinetProcessor
 {
+    optional<Cabinet::Position> processCabinetKey (iniparser::Value value)
+    {
+        vector<size_t> items;
+        Cabinet::Position result {0, 0_ru};
 
-Cabinet::Position processCabinetKey (iniparser::Value value)
-{
-    vector<size_t> items;
-    Cabinet::Position result {0, 0_ru};
+        std::stringstream ss (value.asString ());
+        size_t cabinetNr, height;
+        char slash;
 
-    std::stringstream ss (value.asString ());
-    size_t cabinetNr, height;
-    char slash;
+        if (!(ss >> cabinetNr >> slash >> height) || slash != '/' || !ss.eof ())
+            return {nullopt};
 
-    if (!(ss >> cabinetNr >> slash >> height) || slash != '/' || !ss.eof ())
-        throw std::invalid_argument ("Invalid cabinet position");
-
-    result.cabinetNr = cabinetNr;
-    result.height = height;
+        result.cabinetNr = cabinetNr;
+        result.height = height;
     
-    return result;
+        return result;
+    }
 }
-
-} // namespace CabinetProcessor
