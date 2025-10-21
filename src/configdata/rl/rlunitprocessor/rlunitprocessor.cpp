@@ -26,7 +26,7 @@ void RLUnitProcessor::processType (iniparser::Value value)
 		rlUnitConfig.rlUnitType = RLUnitConfig::RLUnitType::RL01;
 	else if (value.asString() == "RL02")
 		rlUnitConfig.rlUnitType = RLUnitConfig::RLUnitType::RL02;
-	else if (value.asString() == "Auto")
+	else if (value.asString() == "RL01/RL02")
 		rlUnitConfig.rlUnitType = RLUnitConfig::RLUnitType::Auto;
 	else
 		throw std::invalid_argument {"Incorrect RL unit type: " + 
