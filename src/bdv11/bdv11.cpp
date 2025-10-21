@@ -252,11 +252,22 @@ void BDV11::writeLKS (u16 value)
 	ltc = value & LKS_IE;
 }
 
-// As the BDV11 will only be accessed by means of unmapped (16-bit) addresses
-// the given bus address can be compared directly with the BDV11's device
-// addresses.
+// A block of 256 LSI-11 bus addresses is reserved for use in addressing
+// ROM locations on the BDV11 module. This block resides in the upper 4K
+// address bank (28K-32K), which is normally used for peripheral-device
+// addressing, and consists of byte addresses 173000-173776 (512 byte
+// addresses correspond to 256 word addresses in the LSI-11 addressing
+// scheme). (EK-BDV-TM001, 
+//
+// This means that all access to the BDV11 contents is via the registers
+// in the I/O page. If an address is outside of the I/O page the BDV11
+// can't be responsible for it.
+//
 bool BDV11::responsible (BusAddress busAddress)
 {
+	if (!busAddress.isInIOpage ())
+        return false;
+
 	// The BDV11 registers are word or byte addressable
 	switch (busAddress.registerAddress () & 0177776)
 	{
