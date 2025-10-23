@@ -12,7 +12,7 @@ void KA11Processor::processSubsection (iniparser::Section* subSection)
 	KY11_AProcessor ky11_aprocessor {subSection};
 	ky11_aprocessor.processSection (subSection);
 
-	ka11Config_.ky11_aConfig_ = ky11_aprocessor.getConfig ();
+	ka11Config_.ky11_aConfig_ =  ky11_aprocessor.getConfig ();
 }
 
 DeviceConfig KA11Processor::getConfig ()

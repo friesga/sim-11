@@ -24,9 +24,6 @@ void ConsistencyChecker::checkOneBA11 ()
         count_if (systemConfig_, &ConsistencyChecker::findDevice<BA11_LConfig>) +
         count_if (systemConfig_, &ConsistencyChecker::findDevice<BA11_CConfig>);
 
-    if (numBA11s == 0)
-        throw invalid_argument {"No BA11 specified, specify a BA11-C, BA11-N or BA11-L"};
-
     if (numBA11s > 1)
         throw invalid_argument {"Multiple BA11 specification, specify just one BA11"};
 }

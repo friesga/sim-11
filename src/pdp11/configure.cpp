@@ -160,8 +160,8 @@ void PDP_11::configureUnibusSystem (SystemConfig const & systemConfig,
             { throw logic_error ("Should not happen"); },
         [this, window] (BA11_NConfig ba11_nConfig)
             { throw logic_error ("Should not happen"); },
-        [this] (KA11Config ka11Config)
-            { throw logic_error ("To be implemented"); },
+        [this, window] (KA11Config ka11Config)
+            { processor_ = new KA11 (bus_, window, ka11Config); },
         [this] (KDF11_UConfig kdf11_uConfig)
             {processor_ = new KDF11_U (bus_, kdf11_uConfig); },
         [this] (MS11PConfig ms11pConfig)
@@ -169,7 +169,7 @@ void PDP_11::configureUnibusSystem (SystemConfig const & systemConfig,
         [this, window] (BA11_LConfig ba11_lConfig)
             {ba11_l_ = std::make_unique<BA11_L> (bus_, window, ba11_lConfig); },
         [this, window] (BA11_CConfig ba11_cConfig)
-            {ba11_c_ = std::make_unique<BA11_C> (bus_, window, ba11_cConfig); },
+            {throw logic_error ("To be removed"); },
 
     };
 

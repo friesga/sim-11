@@ -40,14 +40,13 @@ TEST (BA11ConsistencyTest, bothBA11_LAndBA11_NCannotBeConfigured)
 	}
 }
 
-// Verify that not both a BA11-C and a BA11-L can be configured
+// Verify that not both a BA11-N and a BA11-L can be configured
 TEST (BA11ConsistencyTest, bothBA11_CAndBA11_LCannotBeConfigured)
 {
 	iniparser::File ft;
 	std::stringstream stream;
-	stream << "[BA11-C]\n"
+	stream << "[BA11-N]\n"
 		"cabinet = 0/19\n"
-		"console = KY11-A\n"
 		"[BA11-L]\n"
 		"cabinet = 0/16\n";
 	stream >> ft;
@@ -66,35 +65,6 @@ TEST (BA11ConsistencyTest, bothBA11_CAndBA11_LCannotBeConfigured)
 	{
 		EXPECT_STREQ (except.what (),
 			"Multiple BA11 specification, specify just one BA11");
-	}
-	catch (...)
-	{
-		FAIL ();
-	}
-}
-
-// Verify that either at least one BA11 is configured
-TEST (BA11ConsistencyTest, atLeastOneBA11isConfigured)
-{
-	iniparser::File ft;
-	std::stringstream stream;
-	stream << "";
-	stream >> ft;
-
-	IniProcessor iniProcessor;
-	EXPECT_NO_THROW (iniProcessor.process (ft));
-
-	SystemConfig systemConfig = iniProcessor.getSystemConfig ();
-	ConsistencyChecker consistencyChecker {systemConfig};
-	try
-	{
-		consistencyChecker.checkBA11Consistency ();
-		FAIL ();
-	}
-	catch (std::invalid_argument const& except)
-	{
-		EXPECT_STREQ (except.what (),
-			"No BA11 specified, specify a BA11-C, BA11-N or BA11-L");
 	}
 	catch (...)
 	{
@@ -140,38 +110,6 @@ TEST (BA11ConsistencyTest, noQbusDevicesOnUnibusbus)
 	std::stringstream stream;
 	stream << "[BA11-L]\n"
 		"cabinet = 0/19\n"
-		"[MSV11]";
-	stream >> ft;
-
-	IniProcessor iniProcessor;
-	EXPECT_NO_THROW (iniProcessor.process (ft));
-
-	SystemConfig systemConfig = iniProcessor.getSystemConfig ();
-	ConsistencyChecker consistencyChecker {systemConfig};
-	try
-	{
-		consistencyChecker.checkBA11Consistency ();
-		FAIL ();
-	}
-	catch (std::invalid_argument const& except)
-	{
-		EXPECT_STREQ (except.what (),
-			"A Unibus system cannot contain Qbus devices");
-	}
-	catch (...)
-	{
-		FAIL ();
-	}
-}
-
-// Verify that a BA11-C is a Unibus machine and contains no Qbus devices
-TEST (BA11ConsistencyTest, aBA11_CIsAUnibusMachine)
-{
-	iniparser::File ft;
-	std::stringstream stream;
-	stream << "[BA11-C]\n"
-		"cabinet = 0/19\n"
-		"console = KY11-A\n"
 		"[MSV11]";
 	stream >> ft;
 
