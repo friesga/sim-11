@@ -38,10 +38,22 @@ void KY11_A::createBezel (Window* window, const KY11_AConfig& ky11_aConfig)
     runLight_ = panelBuilder->createIndicator ("run_off", "run_on",
         Indicator::State::On);
 
+    // Create Switch Register buttons
+    sr0Button_ = panelBuilder->createMultiPositionSwitch (
+        {"sr00_down", "sr00_up"},
+        Button::TwoPositionsState::Down,
+        bind (&KY11_A::sr0ButtonClicked, this, _1));
+
 
     window->addPanel (panelBuilder->getPanel ());
 }
 
 void KY11_A::powerSwitchClicked (Button::State state)
 {
+}
+
+void KY11_A::sr0ButtonClicked (Button::State state)
+{
+    switchRegister_._0 = 
+        (get<Button::TwoPositionsState> (state) == Button::TwoPositionsState::Up) ? 1 : 0;
 }
