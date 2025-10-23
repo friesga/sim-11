@@ -8,6 +8,7 @@
 
 using std::bind;
 using std::placeholders::_1;
+using std::placeholders::_2;
 
 using std::make_unique;
 
@@ -38,22 +39,26 @@ void KY11_A::createBezel (Window* window, const KY11_AConfig& ky11_aConfig)
     runLight_ = panelBuilder->createIndicator ("run_off", "run_on",
         Indicator::State::On);
 
-    // Create Switch Register buttons
-    sr0Button_ = panelBuilder->createMultiPositionSwitch (
-        {"sr00_down", "sr00_up"},
-        Button::TwoPositionsState::Down,
-        bind (&KY11_A::sr0ButtonClicked, this, _1));
+    createSwitchRegisterButtons (panelBuilder);
 
 
     window->addPanel (panelBuilder->getPanel ());
 }
 
-void KY11_A::powerSwitchClicked (Button::State state)
+void KY11_A::createSwitchRegisterButtons (unique_ptr<PanelBuilder>& panelBuilder)
 {
+    // Create a compile-time loop to create the 16 switch register buttons
+    // using a an Immediately Invoked Function Expression (IIFE) and a fold
+    // expression. See e.g. 
+    // https://www.fluentcpp.com/2021/03/05/stdindex_sequence-and-its-improvement-in-c20
+    //
+    [&] <size_t... I> (std::index_sequence<I...>)
+    {
+        (createSwitchRegisterButton<I> (panelBuilder), ...); 
+    }
+    (std::make_index_sequence<16> {});
 }
 
-void KY11_A::sr0ButtonClicked (Button::State state)
+void KY11_A::powerSwitchClicked (Button::State state)
 {
-    switchRegister_._0 = 
-        (get<Button::TwoPositionsState> (state) == Button::TwoPositionsState::Up) ? 1 : 0;
 }

@@ -6,6 +6,17 @@
 #include "bitfield.h"
 #include "types.h"
 
+#include <utility>
+#include <string>
+#include <array>
+#include <functional>
+
+using std::pair;
+using std::string;
+using std::array;
+using std::bind;
+using std::placeholders::_1;
+
 class KY11_A
 {
 public:
@@ -40,14 +51,59 @@ private:
     }
     switchRegister_ {0};
 
+    using ButtonNames = pair<string, string>;
+    array<ButtonNames, 16> buttonNames_ =
+    {{
+        {"sr00_down", "sr00_up"},
+        {"sr01_down", "sr01_up"},
+        {"sr02_down", "sr02_up"},
+        {"sr03_down", "sr03_up"},
+        {"sr04_down", "sr04_up"},
+        {"sr05_down", "sr05_up"},
+        {"sr06_down", "sr06_up"},
+        {"sr07_down", "sr07_up"},
+        {"sr08_down", "sr08_up"},
+        {"sr09_down", "sr09_up"},
+        {"sr10_down", "sr10_up"},
+        {"sr11_down", "sr11_up"},
+        {"sr12_down", "sr12_up"},
+        {"sr13_down", "sr13_up"},
+        {"sr14_down", "sr14_up"},
+        {"sr15_down", "sr15_up"}
+    }};
+
     Button* powerSwitch_;
     Button* sr0Button_;
+    array<Button*, 16> srButtons_;
 
     Indicator* runLight_;
 
     void createBezel (Window* window, const KY11_AConfig& ky11_aConfig);
     void powerSwitchClicked (Button::State state);
-    void sr0ButtonClicked (Button::State state);
+    void createSwitchRegisterButtons (unique_ptr<PanelBuilder>& panelBuilder);
+
+    template <size_t buttonIndex>
+    void srButtonClicked (Button::State state);
+
+    template <size_t buttonIndex>
+    void createSwitchRegisterButton (unique_ptr<PanelBuilder>& panelBuilder);
 };
+
+template <size_t buttonIndex>
+void KY11_A::createSwitchRegisterButton (unique_ptr<PanelBuilder>& panelBuilder)
+{
+    srButtons_[buttonIndex] = panelBuilder->createMultiPositionSwitch (
+        {buttonNames_[buttonIndex].first, buttonNames_[buttonIndex].second},
+        Button::TwoPositionsState::Down,
+        bind (&KY11_A::srButtonClicked<buttonIndex>, this, _1));
+}
+
+template <size_t buttonIndex>
+void KY11_A::srButtonClicked (Button::State state)
+{
+    switchRegister_.value = (switchRegister_.value & ~(1 << buttonIndex)) |
+        ((get<Button::TwoPositionsState> (state) == Button::TwoPositionsState::Up) ?
+        (1 << buttonIndex) : 0);
+}
 
 #endif // _KY11_A_H_
