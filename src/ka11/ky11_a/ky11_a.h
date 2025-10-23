@@ -51,8 +51,10 @@ private:
     }
     switchRegister_ {0};
 
+    static const size_t numberOfSwitches = 18;
+
     using ButtonNames = pair<string, string>;
-    array<ButtonNames, 16> buttonNames_ =
+    array<ButtonNames, numberOfSwitches> buttonNames_ =
     {{
         {"sr00_down", "sr00_up"},
         {"sr01_down", "sr01_up"},
@@ -69,12 +71,14 @@ private:
         {"sr12_down", "sr12_up"},
         {"sr13_down", "sr13_up"},
         {"sr14_down", "sr14_up"},
-        {"sr15_down", "sr15_up"}
+        {"sr15_down", "sr15_up"},
+        {"sr16_down", "sr16_up"},
+        {"sr17_down", "sr17_up"}
     }};
 
     Button* powerSwitch_;
     Button* sr0Button_;
-    array<Button*, 16> srButtons_;
+    array<Button*, numberOfSwitches> srButtons_;
 
     Indicator* runLight_;
 
@@ -105,5 +109,14 @@ void KY11_A::srButtonClicked (Button::State state)
         ((get<Button::TwoPositionsState> (state) == Button::TwoPositionsState::Up) ?
         (1 << buttonIndex) : 0);
 }
+
+// Switch register buttons 16 and 17 were not implemented on the KY11-A panel.
+template <>
+inline void KY11_A::srButtonClicked<16> (Button::State state)
+{}
+
+template <>
+inline void KY11_A::srButtonClicked<17> (Button::State state)
+{}
 
 #endif // _KY11_A_H_
