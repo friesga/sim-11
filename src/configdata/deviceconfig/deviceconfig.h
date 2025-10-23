@@ -1,7 +1,6 @@
 #ifndef _DEVICECONFIGVARIANT_H_
 #define _DEVICECONFIGVARIANT_H_
 
-#include "configdata/ba11/ba11c/ba11cconfig/ba11cconfig.h"
 #include "configdata/ba11/ba11l/ba11lconfig/ba11lconfig.h"
 #include "configdata/ba11/ba11n/ba11nconfig/ba11nconfig.h"
 #include "configdata/bdv11config/bdv11config.h"
@@ -38,7 +37,6 @@ using DeviceConfig = variant<
     RL11Config,
     RLV11Config,
     RLV12Config,
-    BA11_CConfig,
     BA11_LConfig,
     BA11_NConfig,
     MS11PConfig,

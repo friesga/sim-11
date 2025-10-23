@@ -28,7 +28,6 @@ set (GTEST_SRCS
     configdata/rxconfiguratortest.cpp
     configdata/systemconfigtest.cpp
     configdata/ba11/ba11_nconfiguratortest.cpp
-    configdata/ba11/ba11cconfiguratortest.cpp
     configdata/ba11/ba11lconfiguratortest.cpp
     configdata/ba11/ba11consistencytest.cpp
     configdata/unibusconsistencytest.cpp

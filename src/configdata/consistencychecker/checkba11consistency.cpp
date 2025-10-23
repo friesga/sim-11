@@ -19,10 +19,10 @@ void ConsistencyChecker::checkBA11Consistency ()
 // Check that just one BA11, i.e. a BA11-C, a BA11-L or a BA11-N is specified.
 void ConsistencyChecker::checkOneBA11 ()
 {
-    size_t numBA11s = 
+    size_t numBA11s =
         count_if (systemConfig_, &ConsistencyChecker::findDevice<BA11_NConfig>) +
-        count_if (systemConfig_, &ConsistencyChecker::findDevice<BA11_LConfig>) +
-        count_if (systemConfig_, &ConsistencyChecker::findDevice<BA11_CConfig>);
+        count_if (systemConfig_, &ConsistencyChecker::findDevice<BA11_LConfig>);
+
 
     if (numBA11s > 1)
         throw invalid_argument {"Multiple BA11 specification, specify just one BA11"};

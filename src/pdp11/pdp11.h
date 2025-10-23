@@ -5,7 +5,6 @@
 #include "configdata/deviceconfig/deviceconfig.h"
 #include "configdata/systemconfig/systemconfig.h"
 #include "memorydevice.h"
-#include "ba11/ba11_c/ba11_c.h"
 #include "ba11/ba11_n/ba11_n.h"
 #include "ba11/ba11_l/ba11_l.h"
 #include "rxv21/rxv21.h"
@@ -52,7 +51,6 @@ class PDP_11
 	vector<BusDevice*> busDevices_;
 	BusDevice* kt24_ {nullptr};
 	BusDevice* m9312_ {nullptr};
-	unique_ptr<BA11_C> ba11_c_;
 	unique_ptr<BA11_N> ba11_n_;
 	unique_ptr<BA11_L> ba11_l_;
 	CmdLineOptions const &cmdLineOptions_;
