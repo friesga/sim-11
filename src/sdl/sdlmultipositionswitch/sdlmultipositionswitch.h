@@ -52,7 +52,7 @@ private:
     TPositions previousPosition (TPositions position);
     TPositions togglePosition (TPositions position);
 
-    const float centerMargin_ {0.5f};
+    const float centerMargin_ {0.25f};
 };
 
 
