@@ -132,6 +132,12 @@ Button* FilePanelBuilder::createMultiPositionSwitch (vector<string> positionImag
                 initialState, switchClicked));
         },
 
+        [&] (Button::MomentaryDownTwoPositionsState initialState)
+        {
+            buttons_.push_back (make_unique<SDLMultiPositionSwitch<Button::MomentaryDownTwoPositionsState>> (move (positionTiles),
+                initialState, switchClicked));
+        },
+
         [&] (Button::CenteredTwoPositionsState initialState)
         {
             buttons_.push_back (make_unique<SDLMultiPositionSwitch<Button::CenteredTwoPositionsState>> (move (positionTiles),

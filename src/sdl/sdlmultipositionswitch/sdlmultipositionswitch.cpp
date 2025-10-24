@@ -149,6 +149,7 @@ bool SDLMultiPositionSwitch<TPositions>::switchedDown (InputEvent const* event) 
 // a separate .cpp file.
 template class SDLMultiPositionSwitch<Button::TwoPositionsState>;
 template class SDLMultiPositionSwitch<Button::MomentaryUpTwoPositionsState>;
+template class SDLMultiPositionSwitch<Button::MomentaryDownTwoPositionsState>;
 template class SDLMultiPositionSwitch<Button::CenteredTwoPositionsState>;
 template class SDLMultiPositionSwitch<Button::ThreePositionsState>;
 template class SDLMultiPositionSwitch<Button::MomentaryThreePositionsState>;

@@ -108,6 +108,12 @@ public:
         Up = 1
     };
 
+    enum class MomentaryDownTwoPositionsState : size_t
+    {
+        Up = 0,
+        Down = 1
+    };
+
     enum class CenteredTwoPositionsState : size_t
     {
         Down = 0,
@@ -146,9 +152,11 @@ public:
         string buttonDownIndicatorOn;
     };
 
-    using State = variant<TwoPositionsState, MomentaryUpTwoPositionsState,
-        CenteredTwoPositionsState, ThreePositionsState,
-        MomentaryThreePositionsState, FourPositionsState>;
+    using State = variant<TwoPositionsState,
+        MomentaryUpTwoPositionsState, MomentaryDownTwoPositionsState,
+        CenteredTwoPositionsState,
+        ThreePositionsState, MomentaryThreePositionsState,
+        FourPositionsState>;
 
     using EventCallback = function<void(State)>;
     virtual void setState (State newState) = 0;
@@ -201,6 +209,17 @@ struct ButtonTrait<Button::MomentaryUpTwoPositionsState>
         Button::MomentaryUpTwoPositionsState::Down;
     static constexpr Button::MomentaryUpTwoPositionsState last =
         Button::MomentaryUpTwoPositionsState::Up;
+    static const bool isLatching = false;
+    static const Orientation orientation = Orientation::Vertical;
+};
+
+template <>
+struct ButtonTrait<Button::MomentaryDownTwoPositionsState>
+{
+    static constexpr Button::MomentaryDownTwoPositionsState first =
+        Button::MomentaryDownTwoPositionsState::Up;
+    static constexpr Button::MomentaryDownTwoPositionsState last =
+        Button::MomentaryDownTwoPositionsState::Down;
     static const bool isLatching = false;
     static const Orientation orientation = Orientation::Vertical;
 };
