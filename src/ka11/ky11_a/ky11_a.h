@@ -99,13 +99,14 @@ private:
     unique_ptr<StateMachine> stateMachine_;
 
     Button* powerSwitch_;
-    Button* sr0Button_;
+    Button* loadAddressSwitch_;
     array<Button*, numberOfSwitches> srButtons_;
 
     Indicator* runLight_;
 
     void createBezel (Window* window, const KY11_AConfig& ky11_aConfig);
     void powerSwitchClicked (Button::State state);
+    void loadAddressClicked (Button::State state);
     void createSwitchRegisterButtons (unique_ptr<PanelBuilder>& panelBuilder);
 
     template <size_t buttonIndex>

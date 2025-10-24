@@ -28,6 +28,9 @@ void KY11_A::createBezel (Window* window, const KY11_AConfig& ky11_aConfig)
 
     panelBuilder->createFront ("panel");
 
+    runLight_ = panelBuilder->createIndicator ("run_off", "run_on",
+        Indicator::State::On);
+
     powerSwitch_ = panelBuilder->createMultiPositionSwitch (
         {"keyswitch off",
         "keyswitch power",
@@ -36,11 +39,12 @@ void KY11_A::createBezel (Window* window, const KY11_AConfig& ky11_aConfig)
         Button::ThreePositionsState::Left,
         bind (&KY11_A::powerSwitchClicked, this, _1));
 
-    runLight_ = panelBuilder->createIndicator ("run_off", "run_on",
-        Indicator::State::On);
-
     createSwitchRegisterButtons (panelBuilder);
 
+    loadAddressSwitch_ = panelBuilder->createMultiPositionSwitch (
+        {"load_addr_down", "load_addr_up"},
+        Button::MomentaryTwoPositionsState::Up,
+        bind (&KY11_A::loadAddressClicked, this, _1));
 
     window->addPanel (panelBuilder->getPanel ());
 }
@@ -60,5 +64,9 @@ void KY11_A::createSwitchRegisterButtons (unique_ptr<PanelBuilder>& panelBuilder
 }
 
 void KY11_A::powerSwitchClicked (Button::State state)
+{
+}
+
+void KY11_A::loadAddressClicked (Button::State state)
 {
 }
