@@ -31,6 +31,8 @@ void KY11_A::createBezel (Window* window, const KY11_AConfig& ky11_aConfig)
     runLight_ = panelBuilder->createIndicator ("run_off", "run_on",
         Indicator::State::On);
 
+    createAddressRegisterIndicators (panelBuilder);
+
     powerSwitch_ = panelBuilder->createMultiPositionSwitch (
         {"keyswitch off",
         "keyswitch power",
@@ -63,10 +65,24 @@ void KY11_A::createSwitchRegisterButtons (unique_ptr<PanelBuilder>& panelBuilder
     (std::make_index_sequence<numberOfSwitches> {});
 }
 
+void KY11_A::createAddressRegisterIndicators (unique_ptr<PanelBuilder>& panelBuilder)
+{
+    [&] <size_t... I> (std::index_sequence<I...>)
+    {
+        (createAddressRegisterIndicator<I> (panelBuilder), ...);
+    }
+    (std::make_index_sequence<numberOfSwitches> {});
+}
+
 void KY11_A::powerSwitchClicked (Button::State state)
 {
 }
 
+// The LOAD ADDR switch transfers the switch register contents to the Bus
+// Address Register (BAR) [...]. This bus address, displayed in the ADDRESS
+// REGISTER, provides an address for the console functions of EXAM, DEP and
+// START. (DEC-11-HR1B-D Table 3-2)
+//
 void KY11_A::loadAddressClicked (Button::State state)
 {
 }
