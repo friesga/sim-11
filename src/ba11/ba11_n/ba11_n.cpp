@@ -79,7 +79,7 @@ void BA11_N::createBezel (Cabinet::Position cabinetPosition)
 
     restartSwitch_ = panelBuilder->createMultiPositionSwitch ({"resources/switch down.png",
         "resources/switch up.png"},
-        Button::MomentaryTwoPositionsState::Down, bind (&BA11_N::restartSwitchClicked, this, _1), 
+        Button::MomentaryUpTwoPositionsState::Down, bind (&BA11_N::restartSwitchClicked, this, _1), 
         restartSwitchFrame);
 
     haltSwitch_ = panelBuilder->createMultiPositionSwitch ({"resources/switch down.png",
@@ -114,8 +114,8 @@ string BA11_N::frontImage (BA11_NConfig::Logo logo)
 
 void BA11_N::restartSwitchClicked (Button::State state)
 {
-    if (get<Button::MomentaryTwoPositionsState> (state) == 
-            Button::MomentaryTwoPositionsState::Up)
+    if (get<Button::MomentaryUpTwoPositionsState> (state) == 
+            Button::MomentaryUpTwoPositionsState::Up)
         bus_->RESET ().cycle ();
 }
 

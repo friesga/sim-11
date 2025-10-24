@@ -43,7 +43,7 @@ void KY11_A::createBezel (Window* window, const KY11_AConfig& ky11_aConfig)
 
     loadAddressSwitch_ = panelBuilder->createMultiPositionSwitch (
         {"load_addr_down", "load_addr_up"},
-        Button::MomentaryTwoPositionsState::Up,
+        Button::MomentaryUpTwoPositionsState::Up,
         bind (&KY11_A::loadAddressClicked, this, _1));
 
     window->addPanel (panelBuilder->getPanel ());

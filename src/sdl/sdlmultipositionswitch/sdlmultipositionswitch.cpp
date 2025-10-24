@@ -148,7 +148,7 @@ bool SDLMultiPositionSwitch<TPositions>::switchedDown (InputEvent const* event) 
 // Explicit template instantiation to be able to define the methods in
 // a separate .cpp file.
 template class SDLMultiPositionSwitch<Button::TwoPositionsState>;
-template class SDLMultiPositionSwitch<Button::MomentaryTwoPositionsState>;
+template class SDLMultiPositionSwitch<Button::MomentaryUpTwoPositionsState>;
 template class SDLMultiPositionSwitch<Button::CenteredTwoPositionsState>;
 template class SDLMultiPositionSwitch<Button::ThreePositionsState>;
 template class SDLMultiPositionSwitch<Button::MomentaryThreePositionsState>;

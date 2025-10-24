@@ -138,8 +138,8 @@ void RK05::sendTrigger (Event event)
 //
 void RK05::wtprotSwitchClicked (Button::State state)
 {
-    if (get<Button::MomentaryTwoPositionsState> (state) == 
-        Button::MomentaryTwoPositionsState::Up)
+    if (get<Button::MomentaryUpTwoPositionsState> (state) == 
+        Button::MomentaryUpTwoPositionsState::Up)
     {
         if (driveStatus_.writeProtectStatus == 0)
         {

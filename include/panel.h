@@ -102,7 +102,7 @@ public:
         Up = 1
     };
 
-    enum class MomentaryTwoPositionsState : size_t
+    enum class MomentaryUpTwoPositionsState : size_t
     {
         Down = 0,
         Up = 1
@@ -146,7 +146,7 @@ public:
         string buttonDownIndicatorOn;
     };
 
-    using State = variant<TwoPositionsState, MomentaryTwoPositionsState,
+    using State = variant<TwoPositionsState, MomentaryUpTwoPositionsState,
         CenteredTwoPositionsState, ThreePositionsState,
         MomentaryThreePositionsState, FourPositionsState>;
 
@@ -195,12 +195,12 @@ struct ButtonTrait<Button::TwoPositionsState>
 };
 
 template <>
-struct ButtonTrait<Button::MomentaryTwoPositionsState>
+struct ButtonTrait<Button::MomentaryUpTwoPositionsState>
 {
-    static constexpr Button::MomentaryTwoPositionsState first =
-        Button::MomentaryTwoPositionsState::Down;
-    static constexpr Button::MomentaryTwoPositionsState last =
-        Button::MomentaryTwoPositionsState::Up;
+    static constexpr Button::MomentaryUpTwoPositionsState first =
+        Button::MomentaryUpTwoPositionsState::Down;
+    static constexpr Button::MomentaryUpTwoPositionsState last =
+        Button::MomentaryUpTwoPositionsState::Up;
     static const bool isLatching = false;
     static const Orientation orientation = Orientation::Vertical;
 };

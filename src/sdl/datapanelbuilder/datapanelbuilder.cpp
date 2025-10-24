@@ -172,9 +172,9 @@ unique_ptr<Button> DataPanelBuilder::createButton (vector<unique_ptr<SDLTile>> p
                 initialState, switchClicked);
         },
 
-        [&] (Button::MomentaryTwoPositionsState initialState) -> unique_ptr<Button>
+        [&] (Button::MomentaryUpTwoPositionsState initialState) -> unique_ptr<Button>
         {
-            return make_unique<SDLMultiPositionSwitch<Button::MomentaryTwoPositionsState>> (move (positionTiles),
+            return make_unique<SDLMultiPositionSwitch<Button::MomentaryUpTwoPositionsState>> (move (positionTiles),
                 initialState, switchClicked);
         },
 
