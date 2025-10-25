@@ -26,8 +26,6 @@ KY11_A::KY11_A (Window* window, const KY11_AConfig& ky11_aConfig)
     addressRegister_ = make_unique<AddressRegister> (panelBuilder);
 
     window->addPanel (panelBuilder->getPanel ());
-
-    *addressRegister_ = 0177777;
 }
 
 void KY11_A::createBezel (Window* window, const KY11_AConfig& ky11_aConfig,
@@ -64,15 +62,6 @@ void KY11_A::createSwitchRegisterButtons (unique_ptr<PanelBuilder>& panelBuilder
     [&] <size_t... I> (std::index_sequence<I...>)
     {
         (createSwitchRegisterButton<I> (panelBuilder), ...); 
-    }
-    (std::make_index_sequence<numberOfSwitches> {});
-}
-
-void KY11_A::createAddressRegisterIndicators (unique_ptr<PanelBuilder>& panelBuilder)
-{
-    [&] <size_t... I> (std::index_sequence<I...>)
-    {
-        (createAddressRegisterIndicator<I> (panelBuilder), ...);
     }
     (std::make_index_sequence<numberOfSwitches> {});
 }

@@ -54,6 +54,7 @@ private:
         BitField<u16, 15> _15;
     }
     switchRegister_ {0};
+    unique_ptr<AddressRegister> addressRegister_ {};
 
     static const size_t numberOfSwitches = 18;
 
@@ -80,30 +81,6 @@ private:
         {"sr17_down", "sr17_up"}
     }};
 
-    array<ImageNames, numberOfSwitches> indicatorNames_ =
-    {{
-        {"address_00_off", "address_00_on"},
-        {"address_01_off", "address_01_on"},
-        {"address_02_off", "address_02_on"},
-        {"address_03_off", "address_03_on"},
-        {"address_04_off", "address_04_on"},
-        {"address_05_off", "address_05_on"},
-        {"address_06_off", "address_06_on"},
-        {"address_07_off", "address_07_on"},
-        {"address_08_off", "address_08_on"},
-        {"address_09_off", "address_09_on"},
-        {"address_10_off", "address_10_on"},
-        {"address_11_off", "address_11_on"},
-        {"address_12_off", "address_12_on"},
-        {"address_13_off", "address_13_on"},
-        {"address_14_off", "address_14_on"},
-        {"address_15_off", "address_15_on"},
-        {"address_16_off", "address_16_on"},
-        {"address_17_off", "address_17_on"}
-    }};
-
-    unique_ptr<AddressRegister> addressRegister_ {};
-
     // Definition of the KY11-A states
     struct AddressLoaded {};
     struct ExamineSequence {};
@@ -128,23 +105,18 @@ private:
     array<Button*, numberOfSwitches> srButtons_;
 
     Indicator* runLight_;
-    array<Indicator*, numberOfSwitches> arIndicators_;
 
     void createBezel (Window* window, const KY11_AConfig& ky11_aConfig,
         unique_ptr<PanelBuilder>& panelBuilder);
     void powerSwitchClicked (Button::State state);
     void loadAddressClicked (Button::State state);
     void createSwitchRegisterButtons (unique_ptr<PanelBuilder>& panelBuilder);
-    void createAddressRegisterIndicators (unique_ptr<PanelBuilder>& panelBuilder);
 
     template <size_t buttonIndex>
     void srButtonClicked (Button::State state);
 
     template <size_t buttonIndex>
     void createSwitchRegisterButton (unique_ptr<PanelBuilder>& panelBuilder);
-
-    template <size_t indicatorIndex>
-    void createAddressRegisterIndicator (unique_ptr<PanelBuilder>& panelBuilder);
 };
 
 template <size_t buttonIndex>
@@ -154,15 +126,6 @@ void KY11_A::createSwitchRegisterButton (unique_ptr<PanelBuilder>& panelBuilder)
         {buttonNames_[buttonIndex].first, buttonNames_[buttonIndex].second},
         Button::TwoPositionsState::Down,
         bind (&KY11_A::srButtonClicked<buttonIndex>, this, _1));
-}
-
-template <size_t indicatorIndex>
-void KY11_A::createAddressRegisterIndicator (unique_ptr<PanelBuilder>& panelBuilder)
-{
-    arIndicators_[indicatorIndex] = panelBuilder->createIndicator (
-        indicatorNames_[indicatorIndex].first,
-        indicatorNames_[indicatorIndex].second,
-        Indicator::State::Off);
 }
 
 template <size_t buttonIndex>
