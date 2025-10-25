@@ -4,6 +4,7 @@
 #include "configdata/ka11/ky11_aconfig/ky11_aconfig.h"
 #include "switchregister/switchregister.h"
 #include "addressregister/addressregister.h"
+#include "dataregister/dataregister.h"
 #include "panel.h"
 #include "bitfield.h"
 #include "types.h"
@@ -44,6 +45,7 @@ public:
 private:
     unique_ptr<SwitchRegister> switchRegister_ {};
     unique_ptr<AddressRegister> addressRegister_ {};
+    unique_ptr<DataRegister> dataRegister_ {};
 
     // Use the PIMPL idiom to be able to define the StateMachine outside
     // of the KY11_A class

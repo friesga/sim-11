@@ -27,6 +27,7 @@ KY11_A::KY11_A (Window* window, const KY11_AConfig& ky11_aConfig)
 
     switchRegister_ = make_unique<SwitchRegister> (panelBuilder);
     addressRegister_ = make_unique<AddressRegister> (panelBuilder);
+    dataRegister_ = make_unique<DataRegister> (panelBuilder);
 
     window->addPanel (panelBuilder->getPanel ());
 }
