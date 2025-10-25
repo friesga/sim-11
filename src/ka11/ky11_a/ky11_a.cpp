@@ -53,17 +53,17 @@ void KY11_A::createBezel (Window* window, const KY11_AConfig& ky11_aConfig,
     loadAddressSwitch_ = panelBuilder->createMultiPositionSwitch (
         {"load_addr_up", "load_addr_down"},
         Button::MomentaryDownTwoPositionsState::Up,
-        bind (&KY11_A::loadAddressClicked, this, _1));
+        bind (&KY11_A::loadAddressSwitchClicked, this, _1));
 
     examineSwitch_ = panelBuilder->createMultiPositionSwitch (
         {"exam_up", "exam_down"},
         Button::MomentaryDownTwoPositionsState::Up,
-        bind (&KY11_A::examClicked, this, _1));
+        bind (&KY11_A::examSwitchClicked, this, _1));
 
     depositSwitch_ = panelBuilder->createMultiPositionSwitch (
         {"deposit_down", "deposit_up"},
         Button::MomentaryUpTwoPositionsState::Down,
-        bind (&KY11_A::depClicked, this, _1));
+        bind (&KY11_A::depSwitchClicked, this, _1));
 }
 
 
@@ -76,7 +76,7 @@ void KY11_A::powerSwitchClicked (Button::State state)
 // REGISTER, provides an address for the console functions of EXAM, DEP and
 // START. (DEC-11-HR1B-D Table 3-2)
 //
-void KY11_A::loadAddressClicked (Button::State state)
+void KY11_A::loadAddressSwitchClicked (Button::State state)
 {
     stateMachine_->dispatch (LOAD_ADDR_Pressed {});
 }
@@ -100,7 +100,7 @@ void KY11_A::loadAddressClicked (Button::State state)
 //
 // Source: DEC-11-HR1B-D, Table 3-2.
 //
-void KY11_A::examClicked (Button::State state)
+void KY11_A::examSwitchClicked (Button::State state)
 {
     stateMachine_->dispatch (EXAM_Pressed {});
 }
@@ -120,7 +120,7 @@ void KY11_A::examClicked (Button::State state)
 // 
 // Source: DEC-11-HR1B-D, Table 3-2.
 //
-void KY11_A::depClicked (Button::State state)
+void KY11_A::depSwitchClicked (Button::State state)
 {
     stateMachine_->dispatch (DEP_Pressed {});
 }

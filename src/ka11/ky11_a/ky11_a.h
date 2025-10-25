@@ -64,9 +64,9 @@ private:
     void createBezel (Window* window, const KY11_AConfig& ky11_aConfig,
         unique_ptr<PanelBuilder>& panelBuilder);
     void powerSwitchClicked (Button::State state);
-    void loadAddressClicked (Button::State state);
-    void examClicked (Button::State state);
-    void depClicked (Button::State state);
+    void loadAddressSwitchClicked (Button::State state);
+    void examSwitchClicked (Button::State state);
+    void depSwitchClicked (Button::State state);
 };
 
 // Definition of the state machine for the KY11-A. The class has to be defined
