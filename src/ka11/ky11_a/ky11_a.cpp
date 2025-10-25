@@ -23,6 +23,7 @@ KY11_A::KY11_A (Window* window, const KY11_AConfig& ky11_aConfig)
 
     createBezel (window, ky11_aConfig, panelBuilder);
 
+    switchRegister_ = make_unique<SwitchRegister> (panelBuilder);
     addressRegister_ = make_unique<AddressRegister> (panelBuilder);
 
     window->addPanel (panelBuilder->getPanel ());
@@ -44,27 +45,12 @@ void KY11_A::createBezel (Window* window, const KY11_AConfig& ky11_aConfig,
         Button::ThreePositionsState::Left,
         bind (&KY11_A::powerSwitchClicked, this, _1));
 
-    createSwitchRegisterButtons (panelBuilder);
-
     loadAddressSwitch_ = panelBuilder->createMultiPositionSwitch (
         {"load_addr_up", "load_addr_down"},
         Button::MomentaryDownTwoPositionsState::Up,
         bind (&KY11_A::loadAddressClicked, this, _1));
 }
 
-void KY11_A::createSwitchRegisterButtons (unique_ptr<PanelBuilder>& panelBuilder)
-{
-    // Create a compile-time loop to create the 18 switch register buttons
-    // using a an Immediately Invoked Function Expression (IIFE) and a fold
-    // expression. See e.g. 
-    // https://www.fluentcpp.com/2021/03/05/stdindex_sequence-and-its-improvement-in-c20
-    //
-    [&] <size_t... I> (std::index_sequence<I...>)
-    {
-        (createSwitchRegisterButton<I> (panelBuilder), ...); 
-    }
-    (std::make_index_sequence<numberOfSwitches> {});
-}
 
 void KY11_A::powerSwitchClicked (Button::State state)
 {
