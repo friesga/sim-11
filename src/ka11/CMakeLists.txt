@@ -1,6 +1,7 @@
 set (KA11_SRCS
     ka11.cpp
     ky11_a/ky11_a.cpp
+    ky11_a/statemachine.cpp
     ky11_a/addressregister/addressregister.cpp
     ky11_a/switchregister/switchregister.cpp)
 

@@ -14,6 +14,8 @@ using std::make_unique;
 
 KY11_A::KY11_A (Window* window, const KY11_AConfig& ky11_aConfig)
 {
+    stateMachine_ = make_unique<StateMachine> (this);
+
     unique_ptr<ImageContainer> imageContainer =
         make_unique<OpenRasterFile> ("resources/pdp-11_20 front.ora");
 
@@ -63,4 +65,5 @@ void KY11_A::powerSwitchClicked (Button::State state)
 //
 void KY11_A::loadAddressClicked (Button::State state)
 {
+    stateMachine_->dispatch (LOAD_ADDR_Pressed {});
 }

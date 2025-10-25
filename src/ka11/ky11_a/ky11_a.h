@@ -27,10 +27,6 @@ class KY11_A
 public:
     KY11_A (Window* window, const KY11_AConfig& ky11_aConfig);
 
-private:
-    unique_ptr<SwitchRegister> switchRegister_ {};
-    unique_ptr<AddressRegister> addressRegister_ {};
-
     // Definition of the KY11-A states
     struct AddressLoaded {};
     struct ExamineSequence {};
@@ -44,6 +40,10 @@ private:
     struct LOAD_ADDR_Pressed {};
 
     using Event = variant <EXAM_Pressed, DEP_Pressed, LOAD_ADDR_Pressed>;
+
+private:
+    unique_ptr<SwitchRegister> switchRegister_ {};
+    unique_ptr<AddressRegister> addressRegister_ {};
 
     // Use the PIMPL idiom to be able to define the StateMachine outside
     // of the KY11_A class

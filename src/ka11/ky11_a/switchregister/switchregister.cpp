@@ -18,3 +18,8 @@ void SwitchRegister::createSwitchRegisterButtons (unique_ptr<PanelBuilder>& pane
     }
     (std::make_index_sequence<numberOfSwitches> {});
 }
+
+SwitchRegister::operator u16 () const
+{
+    return registerValue_.as_u16;
+}

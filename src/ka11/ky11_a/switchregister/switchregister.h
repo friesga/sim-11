@@ -24,6 +24,7 @@ class SwitchRegister
 {
 public:
     SwitchRegister(unique_ptr<PanelBuilder>& panelBuilder);
+    operator u16 () const;
 
 private:
     union RegisterValue
