@@ -14,24 +14,29 @@ using std::make_unique;
 
 KY11_A::KY11_A (Window* window, const KY11_AConfig& ky11_aConfig)
 {
-    createBezel (window, ky11_aConfig);
-}
-
-void KY11_A::createBezel (Window* window, const KY11_AConfig& ky11_aConfig)
-{
     unique_ptr<ImageContainer> imageContainer =
         make_unique<OpenRasterFile> ("resources/pdp-11_20 front.ora");
 
     unique_ptr<PanelBuilder> panelBuilder =
         window->createDataPanelBuilder (*imageContainer,
-            *ky11_aConfig.cabinetPosition, ky11_aConfig.unitHeight);    
+            *ky11_aConfig.cabinetPosition, ky11_aConfig.unitHeight);
 
+    createBezel (window, ky11_aConfig, panelBuilder);
+
+    addressRegister_ = make_unique<AddressRegister> (panelBuilder);
+
+    window->addPanel (panelBuilder->getPanel ());
+
+    *addressRegister_ = 0177777;
+}
+
+void KY11_A::createBezel (Window* window, const KY11_AConfig& ky11_aConfig,
+    unique_ptr<PanelBuilder>& panelBuilder)
+{
     panelBuilder->createFront ("panel");
 
     runLight_ = panelBuilder->createIndicator ("run_off", "run_on",
         Indicator::State::On);
-
-    createAddressRegisterIndicators (panelBuilder);
 
     powerSwitch_ = panelBuilder->createMultiPositionSwitch (
         {"keyswitch off",
@@ -47,8 +52,6 @@ void KY11_A::createBezel (Window* window, const KY11_AConfig& ky11_aConfig)
         {"load_addr_up", "load_addr_down"},
         Button::MomentaryDownTwoPositionsState::Up,
         bind (&KY11_A::loadAddressClicked, this, _1));
-
-    window->addPanel (panelBuilder->getPanel ());
 }
 
 void KY11_A::createSwitchRegisterButtons (unique_ptr<PanelBuilder>& panelBuilder)

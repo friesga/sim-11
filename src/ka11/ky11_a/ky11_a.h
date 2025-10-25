@@ -2,6 +2,7 @@
 #define _KY11_A_H_
 
 #include "configdata/ka11/ky11_aconfig/ky11_aconfig.h"
+#include "addressregister/addressregister.h"
 #include "panel.h"
 #include "bitfield.h"
 #include "types.h"
@@ -101,6 +102,8 @@ private:
         {"address_17_off", "address_17_on"}
     }};
 
+    unique_ptr<AddressRegister> addressRegister_ {};
+
     // Definition of the KY11-A states
     struct AddressLoaded {};
     struct ExamineSequence {};
@@ -127,7 +130,8 @@ private:
     Indicator* runLight_;
     array<Indicator*, numberOfSwitches> arIndicators_;
 
-    void createBezel (Window* window, const KY11_AConfig& ky11_aConfig);
+    void createBezel (Window* window, const KY11_AConfig& ky11_aConfig,
+        unique_ptr<PanelBuilder>& panelBuilder);
     void powerSwitchClicked (Button::State state);
     void loadAddressClicked (Button::State state);
     void createSwitchRegisterButtons (unique_ptr<PanelBuilder>& panelBuilder);

@@ -1,0 +1,79 @@
+#ifndef _ADDRESSREGISTER_H_
+#define _ADDRESSREGISTER_H_
+
+#include "register.h"
+#include "panel.h"
+
+#include <utility>
+#include <string>
+
+using std::pair;
+using std::string;
+
+// [The address register] displays the address in the bus address register
+// (BAR) of the processor. This is the address last used by the procerssor
+// on the bus.
+// 
+// The BAR is 18 bits, allowing for future expansion. At present the two most
+// significant bits (A17, A16) are ordered according to the lower 16 bits;
+// they are only set when bits A15, A14 and A13 are set. Addresses between
+// 160000 and 177777, therefore are translated to addresses between 760000
+// and 777777, respectively. (DEC-11-HR1B-D, Table 3-1)
+//
+class AddressRegister : public Register
+{
+public:
+    AddressRegister(unique_ptr<PanelBuilder>& panelBuilder);
+
+    // Functions required by the Register interface
+    void operator= (u16 const value);
+    operator u16 () const;
+
+private:
+    static const size_t numberOfIndicators = 18;
+
+    array<Indicator*, numberOfIndicators> arIndicators_ {};
+
+    using ImageNames = pair<string, string>;
+
+    array<ImageNames, numberOfIndicators> indicatorNames_ =
+    {{
+        {"address_00_off", "address_00_on"},
+        {"address_01_off", "address_01_on"},
+        {"address_02_off", "address_02_on"},
+        {"address_03_off", "address_03_on"},
+        {"address_04_off", "address_04_on"},
+        {"address_05_off", "address_05_on"},
+        {"address_06_off", "address_06_on"},
+        {"address_07_off", "address_07_on"},
+        {"address_08_off", "address_08_on"},
+        {"address_09_off", "address_09_on"},
+        {"address_10_off", "address_10_on"},
+        {"address_11_off", "address_11_on"},
+        {"address_12_off", "address_12_on"},
+        {"address_13_off", "address_13_on"},
+        {"address_14_off", "address_14_on"},
+        {"address_15_off", "address_15_on"},
+        {"address_16_off", "address_16_on"},
+        {"address_17_off", "address_17_on"}
+    }};
+
+    u16 value_;
+
+    void createAddressRegisterIndicators (unique_ptr<PanelBuilder>& panelBuilder);
+    void setIndicators (u16 value);
+
+    template <size_t indicatorIndex>
+    void createAddressRegisterIndicator (unique_ptr<PanelBuilder>& panelBuilder);
+};
+
+template <size_t indicatorIndex>
+void AddressRegister::createAddressRegisterIndicator (unique_ptr<PanelBuilder>& panelBuilder)
+{
+    arIndicators_[indicatorIndex] = panelBuilder->createIndicator (
+        indicatorNames_[indicatorIndex].first,
+        indicatorNames_[indicatorIndex].second,
+        Indicator::State::Off);
+}
+
+#endif _ADDRESSREGISTER_H_
