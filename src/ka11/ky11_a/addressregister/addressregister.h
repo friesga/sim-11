@@ -3,6 +3,7 @@
 
 #include "register.h"
 #include "panel.h"
+#include "bitfield.h"
 
 #include <utility>
 #include <string>
@@ -58,7 +59,27 @@ private:
         {"address_17_off", "address_17_on"}
     }};
 
-    u16 value_;
+    union RegisterValue
+    {
+        u16 as_u16;
+        BitField<u16, 0> _0;
+        BitField<u16, 1> _1;
+        BitField<u16, 2> _2;
+        BitField<u16, 3> _3;
+        BitField<u16, 4> _4;
+        BitField<u16, 5> _5;
+        BitField<u16, 6> _6;
+        BitField<u16, 7> _7;
+        BitField<u16, 8> _8;
+        BitField<u16, 9> _9;
+        BitField<u16, 10> _10;
+        BitField<u16, 11> _11;
+        BitField<u16, 12> _12;
+        BitField<u16, 13> _13;
+        BitField<u16, 14> _14;
+        BitField<u16, 15> _15;
+    }
+    registerValue_ {0};
 
     void createAddressRegisterIndicators (unique_ptr<PanelBuilder>& panelBuilder);
     void setIndicators (u16 value);

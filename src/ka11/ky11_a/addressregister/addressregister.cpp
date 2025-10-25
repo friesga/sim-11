@@ -6,22 +6,20 @@
 using std::numeric_limits;
 
 AddressRegister::AddressRegister(unique_ptr<PanelBuilder>& panelBuilder)
-    :
-    value_ {0}
 {
     createAddressRegisterIndicators (panelBuilder);
 }
 
 void AddressRegister::operator= (u16 const value)
 {
-    value_ = value;
+    registerValue_.as_u16 = value;
 
     setIndicators (value);
 }
 
 AddressRegister::operator u16 () const
 {
-    return value_;
+    return registerValue_.as_u16;
 }
 
 void AddressRegister::createAddressRegisterIndicators (unique_ptr<PanelBuilder>& panelBuilder)
@@ -33,6 +31,7 @@ void AddressRegister::createAddressRegisterIndicators (unique_ptr<PanelBuilder>&
     (std::make_index_sequence<numberOfIndicators> {});
 }
 
+// Bits 16 and 17 are set according to bits 13, 14, and 15.
 void AddressRegister::setIndicators (u16 value)
 {
     for (size_t bitNr = 0; bitNr < numeric_limits<u16>::digits; ++bitNr)
@@ -41,5 +40,16 @@ void AddressRegister::setIndicators (u16 value)
             arIndicators_[bitNr]->show (Indicator::State::On);
         else
             arIndicators_[bitNr]->show (Indicator::State::Off);
+    }
+
+    if (registerValue_._13 && registerValue_._14 && registerValue_._15)
+    {
+        arIndicators_[16]->show (Indicator::State::On);
+        arIndicators_[17]->show (Indicator::State::On);
+    }
+    else
+    {
+        arIndicators_[16]->show (Indicator::State::Off);
+        arIndicators_[17]->show (Indicator::State::Off);
     }
 }
