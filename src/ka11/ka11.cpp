@@ -8,7 +8,7 @@ KA11::KA11 (Bus* bus, Window* window, const KA11Config& ka11Config)
     :
     bus_ {bus}
 {
-    ky11_a_ = make_unique<KY11_A> (window, *ka11Config.ky11_aConfig_);
+    ky11_a_ = make_unique<KY11_A> (bus, window, *ka11Config.ky11_aConfig_);
 }
 
 void KA11::start (u16 startAddress)

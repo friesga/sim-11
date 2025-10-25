@@ -1,6 +1,7 @@
 #ifndef _KY11_A_H_
 #define _KY11_A_H_
 
+#include "bus/include/bus.h"
 #include "configdata/ka11/ky11_aconfig/ky11_aconfig.h"
 #include "switchregister/switchregister.h"
 #include "addressregister/addressregister.h"
@@ -26,7 +27,7 @@ using std::variant;
 class KY11_A
 {
 public:
-    KY11_A (Window* window, const KY11_AConfig& ky11_aConfig);
+    KY11_A (Bus* bus, Window* window, const KY11_AConfig& ky11_aConfig);
 
     // Definition of the KY11-A states
     struct AddressLoaded {};
@@ -43,6 +44,7 @@ public:
     using Event = variant <EXAM_Pressed, DEP_Pressed, LOAD_ADDR_Pressed>;
 
 private:
+    Bus* bus_;
     unique_ptr<SwitchRegister> switchRegister_ {};
     unique_ptr<AddressRegister> addressRegister_ {};
     unique_ptr<DataRegister> dataRegister_ {};
@@ -61,6 +63,7 @@ private:
         unique_ptr<PanelBuilder>& panelBuilder);
     void powerSwitchClicked (Button::State state);
     void loadAddressClicked (Button::State state);
+    void examClicked (Button::State state);
 };
 
 // Definition of the state machine for the KY11-A. The class has to be defined

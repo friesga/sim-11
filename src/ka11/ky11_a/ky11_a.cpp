@@ -12,7 +12,9 @@ using std::placeholders::_2;
 
 using std::make_unique;
 
-KY11_A::KY11_A (Window* window, const KY11_AConfig& ky11_aConfig)
+KY11_A::KY11_A (Bus* bus, Window* window, const KY11_AConfig& ky11_aConfig)
+    :
+    bus_ {bus}
 {
     stateMachine_ = make_unique<StateMachine> (this);
 
@@ -52,6 +54,11 @@ void KY11_A::createBezel (Window* window, const KY11_AConfig& ky11_aConfig,
         {"load_addr_up", "load_addr_down"},
         Button::MomentaryDownTwoPositionsState::Up,
         bind (&KY11_A::loadAddressClicked, this, _1));
+
+    loadAddressSwitch_ = panelBuilder->createMultiPositionSwitch (
+        {"exam_up", "exam_down"},
+        Button::MomentaryDownTwoPositionsState::Up,
+        bind (&KY11_A::loadAddressClicked, this, _1));
 }
 
 
@@ -67,4 +74,28 @@ void KY11_A::powerSwitchClicked (Button::State state)
 void KY11_A::loadAddressClicked (Button::State state)
 {
     stateMachine_->dispatch (LOAD_ADDR_Pressed {});
+}
+
+// The EXAM switch transfers the contents of the bus address (which is
+// specified by the Bus Address Register) for DATA display. After use, the
+// data appear on the DATA display and the address of the data is in the
+// ADDRESS REGISTER.
+// 
+// A LOAD ADDR operation pre-establishes the initial address; sequential
+// addresses occur automatically.
+// 
+// If the EXAM switch is depressed twice in
+// succession, the contents of the next sequential bus address are displayed
+// in DATA. This action is repeated each time EXAM is depressed provided no
+// other switch is used between these steps.
+//
+// Whenever LOAD ADDR or DEP switch is used, it destroys the incrementing
+// sequence.The next time EXAM is used, it displays the current Bus Address
+// Register address rather than the next sequential address.
+//
+// Source: DEC-11-HR1B-D, Table 3-2.
+//
+void KY11_A::examClicked (Button::State state)
+{
+    stateMachine_->dispatch (EXAM_Pressed {});
 }
