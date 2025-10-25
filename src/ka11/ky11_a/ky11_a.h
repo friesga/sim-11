@@ -56,6 +56,8 @@ private:
 
     Button* powerSwitch_;
     Button* loadAddressSwitch_;
+    Button* examineSwitch_;
+    Button* depositSwitch_;
 
     Indicator* runLight_;
 
@@ -64,6 +66,7 @@ private:
     void powerSwitchClicked (Button::State state);
     void loadAddressClicked (Button::State state);
     void examClicked (Button::State state);
+    void depClicked (Button::State state);
 };
 
 // Definition of the state machine for the KY11-A. The class has to be defined

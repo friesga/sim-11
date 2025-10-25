@@ -55,10 +55,15 @@ void KY11_A::createBezel (Window* window, const KY11_AConfig& ky11_aConfig,
         Button::MomentaryDownTwoPositionsState::Up,
         bind (&KY11_A::loadAddressClicked, this, _1));
 
-    loadAddressSwitch_ = panelBuilder->createMultiPositionSwitch (
+    examineSwitch_ = panelBuilder->createMultiPositionSwitch (
         {"exam_up", "exam_down"},
         Button::MomentaryDownTwoPositionsState::Up,
-        bind (&KY11_A::loadAddressClicked, this, _1));
+        bind (&KY11_A::examClicked, this, _1));
+
+    depositSwitch_ = panelBuilder->createMultiPositionSwitch (
+        {"deposit_down", "deposit_up"},
+        Button::MomentaryUpTwoPositionsState::Down,
+        bind (&KY11_A::depClicked, this, _1));
 }
 
 
@@ -98,4 +103,24 @@ void KY11_A::loadAddressClicked (Button::State state)
 void KY11_A::examClicked (Button::State state)
 {
     stateMachine_->dispatch (EXAM_Pressed {});
+}
+
+// The DEP switch transfers the contents of the console SWITCH REGISTER to
+// the bus address (specified by Bus Adddress Register). After use, the data
+// appear on the DATA display and the address is in the ADDRESS REGISTER.
+// A LOAD ADDR operation pre-establishes the initial address; sequential
+// addresses occur automatically.
+// 
+// If the DEP switch is raised twice in succession, the contents of the SWITCH
+// REGISTER is deposited in the next sequential bus address location. The
+// action is repeated each time DEP is raised provided no other switch is used
+// between these steps. Whenever the LOAD ADDR or EXAM switch is depressed, the
+// incrementing sequence is destroyed. The next time DEP is used, it deposits
+// the current address rather than the next sequential address.
+// 
+// Source: DEC-11-HR1B-D, Table 3-2.
+//
+void KY11_A::depClicked (Button::State state)
+{
+    stateMachine_->dispatch (DEP_Pressed {});
 }

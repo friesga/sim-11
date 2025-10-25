@@ -22,6 +22,9 @@ KY11_A::State KY11_A::StateMachine::transition (AddressLoaded&&, EXAM_Pressed)
 
 KY11_A::State KY11_A::StateMachine::transition (AddressLoaded&&, DEP_Pressed)
 {
+    context_->bus_->writeWord (BusAddress (*context_->addressRegister_,
+        BusAddress::Width::_16Bit), *context_->switchRegister_);
+    *context_->dataRegister_ = *context_->switchRegister_;
     return DepositSequence {};
 }
 
