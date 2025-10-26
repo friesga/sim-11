@@ -78,7 +78,11 @@ void KY11_A::powerSwitchClicked (Button::State state)
 //
 void KY11_A::loadAddressSwitchClicked (Button::State state)
 {
-    stateMachine_->dispatch (LOAD_ADDR_Pressed {});
+    if (get<Button::MomentaryDownTwoPositionsState> (state) ==
+        Button::MomentaryDownTwoPositionsState::Down)
+    {
+        stateMachine_->dispatch (LOAD_ADDR_Pressed {});
+    }
 }
 
 // The EXAM switch transfers the contents of the bus address (which is
@@ -102,7 +106,11 @@ void KY11_A::loadAddressSwitchClicked (Button::State state)
 //
 void KY11_A::examSwitchClicked (Button::State state)
 {
-    stateMachine_->dispatch (EXAM_Pressed {});
+    if (get<Button::MomentaryDownTwoPositionsState> (state) ==
+        Button::MomentaryDownTwoPositionsState::Down)
+    {
+        stateMachine_->dispatch (EXAM_Pressed {});
+    }
 }
 
 // The DEP switch transfers the contents of the console SWITCH REGISTER to

@@ -22,6 +22,23 @@ AddressRegister::operator u16 () const
     return registerValue_.as_u16;
 }
 
+AddressRegister& AddressRegister::operator+= (u16 const value)
+{
+    registerValue_.as_u16 += value;
+    setIndicators (registerValue_.as_u16);
+    return *this;
+}
+
+// Definition of the binary plus operator for AddressRegister as a free
+// function. It is befriended by the AddressRegister class to allow access
+// to its private members.
+//
+AddressRegister operator+ (AddressRegister& lhs, u16 const rhs)
+{
+    lhs += rhs;
+    return lhs;
+}
+
 void AddressRegister::createAddressRegisterIndicators (unique_ptr<PanelBuilder>& panelBuilder)
 {
     [&] <size_t... I> (std::index_sequence<I...>)

@@ -23,12 +23,16 @@ using std::string;
 //
 class AddressRegister : public Register
 {
+    friend AddressRegister operator+ (AddressRegister const& lhs, u16 const rhs);
+
 public:
     AddressRegister(unique_ptr<PanelBuilder>& panelBuilder);
 
     // Functions required by the Register interface
     void operator= (u16 const value);
     operator u16 () const;
+
+    AddressRegister& operator+= (u16 const value);
 
 private:
     static const size_t numberOfIndicators = 18;

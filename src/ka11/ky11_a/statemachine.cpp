@@ -30,6 +30,10 @@ KY11_A::State KY11_A::StateMachine::transition (AddressLoaded&&, DEP_Pressed)
 
 KY11_A::State KY11_A::StateMachine::transition (ExamineSequence&&, EXAM_Pressed)
 {
+    *context_->addressRegister_+= 2;
+    *context_->dataRegister_ =
+        context_->bus_->read (BusAddress (*context_->addressRegister_,
+            BusAddress::Width::_16Bit));
     return ExamineSequence {};
 }
 
