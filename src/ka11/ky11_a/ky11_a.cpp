@@ -130,5 +130,9 @@ void KY11_A::examSwitchClicked (Button::State state)
 //
 void KY11_A::depSwitchClicked (Button::State state)
 {
-    stateMachine_->dispatch (DEP_Pressed {});
+    if (get<Button::MomentaryUpTwoPositionsState> (state) ==
+        Button::MomentaryUpTwoPositionsState::Down)
+    {
+        stateMachine_->dispatch (DEP_Pressed {});
+    }
 }

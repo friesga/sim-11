@@ -39,24 +39,36 @@ KY11_A::State KY11_A::StateMachine::transition (ExamineSequence&&, EXAM_Pressed)
 
 KY11_A::State KY11_A::StateMachine::transition (ExamineSequence&&, LOAD_ADDR_Pressed)
 {
+    *context_->addressRegister_ = *context_->switchRegister_;
     return AddressLoaded {};
 }
 
 KY11_A::State KY11_A::StateMachine::transition (ExamineSequence&&, DEP_Pressed)
 {
+    context_->bus_->writeWord (BusAddress (*context_->addressRegister_,
+        BusAddress::Width::_16Bit), *context_->switchRegister_);
+    *context_->dataRegister_ = *context_->switchRegister_;
     return DepositSequence {};
 }
 
 KY11_A::State KY11_A::StateMachine::transition (DepositSequence&&, DEP_Pressed)
 {
+    *context_->addressRegister_+= 2;
+    context_->bus_->writeWord (BusAddress (*context_->addressRegister_,
+        BusAddress::Width::_16Bit), *context_->switchRegister_);
+    *context_->dataRegister_ = *context_->switchRegister_;
     return DepositSequence {};
 }
 
 KY11_A::State KY11_A::StateMachine::transition (DepositSequence&&, LOAD_ADDR_Pressed)
 {
+    *context_->addressRegister_ = *context_->switchRegister_;
     return AddressLoaded {};
 }
 KY11_A::State KY11_A::StateMachine::transition (DepositSequence&&, EXAM_Pressed)
 {
+    *context_->dataRegister_ =
+        context_->bus_->read (BusAddress (*context_->addressRegister_,
+            BusAddress::Width::_16Bit));
     return ExamineSequence {};
 }
