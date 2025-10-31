@@ -1,4 +1,4 @@
-#include "kd/kdf11/cpudata/kdf11_psw.h"
+#include "proc/kd/kdf11/cpudata/kdf11_psw.h"
 
 #include <gtest/gtest.h>
 

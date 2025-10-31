@@ -1,7 +1,7 @@
 #ifndef _DUMMYCPUCONTROL_H_
 #define _DUMMYCPUCONTROL_H_
 
-#include "kd/include/cpucontrol.h"
+#include "proc/kd/include/cpucontrol.h"
 
 class DummyCpuControl : public CpuControl
 {

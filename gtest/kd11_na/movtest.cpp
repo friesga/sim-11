@@ -1,5 +1,5 @@
-#include "kd/common/instructiondecoder/instructiondecoder.h"
-#include "kd/kd11_na/executor/executor.h"
+#include "proc/kd/common/instructiondecoder/instructiondecoder.h"
+#include "proc/kd/kd11_na/executor/executor.h"
 #include "../dummycpu/dummycpu.h"
 
 using std::visit;

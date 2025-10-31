@@ -2,7 +2,7 @@
 #define _KA11_H_
 
 #include "bus/include/bus.h"
-#include "kd/include/pdp11processor.h"
+#include "proc/kd/include/pdp11processor.h"
 #include "configdata/ka11/ka11config/ka11config.h"
 #include "ka11/ky11_a/ky11_a.h"
 #include "panel.h"
