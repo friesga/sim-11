@@ -1,6 +1,6 @@
 #include "pdp11/pdp11.h"
-#include "kd/kdf11/cpudata/kdf11cpudata.h"
-#include "kd/kdf11/ktf11_a/ktf11_a.h"
+#include "proc/kd/kdf11/cpudata/kdf11cpudata.h"
+#include "proc/kd/kdf11/ktf11_a/ktf11_a.h"
 
 #include <gtest/gtest.h>
 #include <functional>

@@ -3,8 +3,8 @@
 
 #include "bus/qbus/qbus.h"
 #include "abstractbusdevice/abstractbusdevice.h"
-#include "kd/common/controllogic/controllogic.h"
-#include "kd/kdf11/odt/kdf11_odt.h"
+#include "proc/kd/common/controllogic/controllogic.h"
+#include "proc/kd/kdf11/odt/kdf11_odt.h"
 
 #include <vector>
 #include <memory>

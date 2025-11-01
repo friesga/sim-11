@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "kd/common/odt/location/location.h"
+#include "proc/kd/common/odt/location/location.h"
 
 TEST (LocationTest, AddressLocationCanBeSetAndExamined)
 {

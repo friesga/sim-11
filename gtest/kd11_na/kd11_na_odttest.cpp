@@ -1,8 +1,8 @@
 #include "dl11/dlv11j/dlv11j.h"
 #include "msv11d/msv11d.h"
-#include "kd/kd11_na/odt/kd11_na_odt.h"
-#include "kd/kd11_na/cpudata/kd11_nacpudata.h"
-#include "kd/kd11_na/pseudommu/pseudommu.h"
+#include "proc/kd/kd11_na/odt/kd11_na_odt.h"
+#include "proc/kd/kd11_na/cpudata/kd11_nacpudata.h"
+#include "proc/kd/kd11_na/pseudommu/pseudommu.h"
 #include "../testconsoleaccess.h"
 
 #include <gtest/gtest.h>

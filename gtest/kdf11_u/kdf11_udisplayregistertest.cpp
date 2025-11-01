@@ -1,5 +1,5 @@
 #include "pdp11/pdp11.h"
-#include "kd/kdf11/kdf11_u/kdf11_u.h"
+#include "proc/kd/kdf11/kdf11_u/kdf11_u.h"
 #include "configdata/m9312/m9312config/m9312config.h"
 #include "busaddress/busaddress.h"
 

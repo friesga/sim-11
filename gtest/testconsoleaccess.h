@@ -1,7 +1,7 @@
 #ifndef _TESTCONSOLEACCESS_H
 #define _TESTCONSOLEACCESS_H_
 
-#include "kd/include/consoleaccess.h"
+#include "proc/kd/include/consoleaccess.h"
 
 #include <string>
 #include <queue>
