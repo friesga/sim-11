@@ -51,7 +51,7 @@ public:
     unsigned char busOrder() const;
     unsigned char vector() const;
     void requestGrant ();
-    unsigned int intrptReqId () const;
+    unsigned int id () const;
 
 private:
     TrapPriority priority_;
@@ -61,8 +61,10 @@ private:
     function<void ()> requestGrant_;
 
     // The intrptReqId_ is used to uniquely identify interrupt requests in
-    // trace log. It is incremented atomically for each created interrupt
-    // request. An unsigned int is used as id to avoid unreadable long id's.
+    // the trace log. It is incremented atomically for each created interrupt
+    // request. As an unsigned int, the id will overflow to zer when it
+    // reaches its maximum value. An unsigned int is used to avoid unreadable
+    // long id's.
     static atomic_uint intrptReqId_;
 
     long intrptPriority (TrapPriority trapPriority, unsigned char busOrder,

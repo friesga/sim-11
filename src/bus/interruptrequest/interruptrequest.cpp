@@ -10,7 +10,9 @@ InterruptRequest::InterruptRequest()
     functionOrder_ {0},
     vector_ {0},
     requestGrant_ {nullptr}
-{}
+{
+    ++intrptReqId_;
+}
 
 InterruptRequest::InterruptRequest (TrapPriority priority,
         unsigned char busOrder, u8 functionOrder, u16 vector,
@@ -21,7 +23,9 @@ InterruptRequest::InterruptRequest (TrapPriority priority,
     functionOrder_ {functionOrder},
     vector_ {vector},
     requestGrant_ {requestGrant}
-{}
+{
+    ++intrptReqId_;
+}
 
 
 // Operator less than, used to determine the priority of the interrupt request.
@@ -74,7 +78,7 @@ void InterruptRequest::requestGrant ()
         requestGrant_ ();
 }
 
-unsigned int InterruptRequest::intrptReqId () const
+unsigned int InterruptRequest::id () const
 {
     return intrptReqId_;
 }

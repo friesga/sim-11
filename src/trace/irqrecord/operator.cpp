@@ -12,15 +12,15 @@ std::ostream& operator<< (std::ostream& os, TraceRecord<IrqRecord> record)
     switch (record.type_)
     {
         case IrqRecordType::IRQ_REQUEST:
-            // fprintf (DST, "[Qbus] interrupt request %o\n", n);
-            os << "[Qbus] interrupt request " << oct << 
-                setw(4) << setfill('0') << record.vector_ << '\n';
+            os << "[IRQ ] Interrupt request [id=" << record.intrpReqId_ <<
+                " vector=" << oct << setw(4) << setfill('0') << 
+                record.vector_ << "]\n";
             break;
 
         case IrqRecordType::IRQ_GRANT:
-            // fprintf (DST, "[Qbus] signaling irq %o\n", n);
-            os << "[Qbus] getIntrptReq " << oct <<
-                setw (4) << setfill ('0') << record.vector_ << '\n';
+            os << "[IRQ ] Interrupt grant [id=" << record.intrpReqId_ << 
+                " vector=" << oct << setw (4) << setfill ('0') <<
+                record.vector_ << "]\n";
             break;
     }
 

@@ -4,6 +4,7 @@
 #include "types.h"
 #include "../tracerecord.h"
 #include "../recordheader.h"
+#include "bus/interruptrequest/interruptrequest.h"
 
 #include <fstream>
 
@@ -26,10 +27,11 @@ class TraceRecord<IrqRecord>
 
 	IrqRecordType type_;
 	u16	vector_;
+	unsigned int intrpReqId_;
 
 public:
 	TraceRecord ();
-	TraceRecord (IrqRecordType type, u16 vector);
+	TraceRecord (IrqRecordType type, const InterruptRequest& interruptRequest);
     Magic magic () {return Magic::IRQ0;}
 };
 
@@ -37,13 +39,16 @@ public:
 inline TraceRecord<IrqRecord>::TraceRecord ()
 	:
 	type_ {IrqRecordType::IRQ_REQUEST},
-	vector_ {0}
+	vector_ {0},
+	intrpReqId_ {0}
 {}
 
-inline TraceRecord<IrqRecord>::TraceRecord (IrqRecordType type, u16 vector)
+inline TraceRecord<IrqRecord>::TraceRecord (IrqRecordType type,
+	const InterruptRequest& interruptRequest)
 	:
 	type_ {type},
-	vector_ {vector}
+	vector_ {interruptRequest.vector ()},
+	intrpReqId_ {interruptRequest.id ()}
 {}
 
 
