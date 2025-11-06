@@ -33,7 +33,7 @@ enum class TrapPriority
 //   interrupt.
 //
 // The vector range is 0 to 0376 and the maximum number of vectors therefore
-// is 256. This number is therefore also the maximum number of devices in a
+// is 128. This number is therefore also the maximum number of devices in a
 // PDP-11.
 class InterruptRequest
 {
