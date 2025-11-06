@@ -17,12 +17,6 @@ std::ostream& operator<< (std::ostream& os, TraceRecord<IrqRecord> record)
                 setw(4) << setfill('0') << record.vector_ << '\n';
             break;
 
-        case IrqRecordType::IRQ_FAIL:
-            // fprintf (DST, "[Qbus] interrupt request %o denied\n", n);
-            os << "[Qbus] interrupt request " << oct << 
-                setw(4) << setfill('0') << record.vector_ << "denied\n";
-            break;
-
         case IrqRecordType::IRQ_SIG:
             // fprintf (DST, "[Qbus] signaling irq %o\n", n);
             os << "[Qbus] getIntrptReq " << oct <<

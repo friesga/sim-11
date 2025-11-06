@@ -14,7 +14,6 @@ struct IrqRecord {};
 enum class IrqRecordType
 {
     IRQ_OK,
-    IRQ_FAIL,
     IRQ_SIG
 };
 
