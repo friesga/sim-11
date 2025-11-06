@@ -1,11 +1,14 @@
 #include "interruptrequest.h"
 
+atomic_uint InterruptRequest::intrptReqId_ = 0;
+
 // Constructors
 InterruptRequest::InterruptRequest()
     :
     priority_ {TrapPriority::None},
     busOrder_ {0},
     functionOrder_ {0},
+    vector_ {0},
     requestGrant_ {nullptr}
 {}
 
@@ -69,4 +72,9 @@ void InterruptRequest::requestGrant ()
 {
     if (requestGrant_!= nullptr)
         requestGrant_ ();
+}
+
+unsigned int InterruptRequest::intrptReqId () const
+{
+    return intrptReqId_;
 }

@@ -4,8 +4,10 @@
 #include "types.h"
 
 #include <functional>
+#include <atomic>
 
 using std::function;
+using std::atomic_uint;
 
 // Definition of trap priorities. The BR4-BR7 priorities concur with
 // the CPU priority as indicated in the PSW (bits 5-7).
@@ -49,6 +51,7 @@ public:
     unsigned char busOrder() const;
     unsigned char vector() const;
     void requestGrant ();
+    unsigned int intrptReqId () const;
 
 private:
     TrapPriority priority_;
@@ -56,6 +59,11 @@ private:
     u8 functionOrder_;
     u16 vector_;
     function<void ()> requestGrant_;
+
+    // The intrptReqId_ is used to uniquely identify interrupt requests in
+    // trace log. It is incremented atomically for each created interrupt
+    // request. An unsigned int is used as id to avoid unreadable long id's.
+    static atomic_uint intrptReqId_;
 
     long intrptPriority (TrapPriority trapPriority, unsigned char busOrder,
         u8 functionOrder) const;
