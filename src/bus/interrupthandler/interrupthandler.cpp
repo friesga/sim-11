@@ -18,7 +18,7 @@ void InterruptHandler::setInterrupt (TrapPriority priority,
 void InterruptHandler::pushInterruptRequest (InterruptRequest intrptReq)
 {
 	intrptReqQueue_.push (intrptReq);
-	trace.irq (IrqRecordType::IRQ_OK, intrptReq.vector ());
+	trace.irq (IrqRecordType::IRQ_REQUEST, intrptReq.vector ());
 }
 
 bool InterruptHandler::containsInterrupt (TrapPriority priority, unsigned char busOrder,

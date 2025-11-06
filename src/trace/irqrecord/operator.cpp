@@ -11,7 +11,7 @@ std::ostream& operator<< (std::ostream& os, TraceRecord<IrqRecord> record)
 {
     switch (record.type_)
     {
-        case IrqRecordType::IRQ_OK:
+        case IrqRecordType::IRQ_REQUEST:
             // fprintf (DST, "[Qbus] interrupt request %o\n", n);
             os << "[Qbus] interrupt request " << oct << 
                 setw(4) << setfill('0') << record.vector_ << '\n';

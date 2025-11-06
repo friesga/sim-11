@@ -13,7 +13,7 @@ struct IrqRecord {};
 
 enum class IrqRecordType
 {
-    IRQ_OK,
+    IRQ_REQUEST,
     IRQ_SIG
 };
 
@@ -36,7 +36,7 @@ public:
 // Constructors for the TraceRecord<IrqRecord> type
 inline TraceRecord<IrqRecord>::TraceRecord ()
 	:
-	type_ {IrqRecordType::IRQ_OK},
+	type_ {IrqRecordType::IRQ_REQUEST},
 	vector_ {0}
 {}
 
