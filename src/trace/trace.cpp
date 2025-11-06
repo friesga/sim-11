@@ -64,11 +64,14 @@ void Trace::memoryDump (u8* ptr, u16 address, u16 length)
         tracefileOut_ << TraceRecord<MemoryDumpRecord> (ptr, address, length);
 }
 
-void Trace::irq (IrqRecordType type, int vector) 
+void Trace::irq (IrqRecordType type, const InterruptRequest& interruptRequest)
 {
-    if (traceEnabled && (flags_ & Trace::Category::Irq) && 
-            !(flags_ & Trace::Category::IgnoreBus))
-        tracefileOut_ << TraceRecord<IrqRecord> (type, vector);
+    if (traceEnabled && (flags_ & Trace::Category::Irq) &&
+        !(flags_ & Trace::Category::IgnoreBus))
+    {
+        tracefileOut_ << TraceRecord<IrqRecord> (type,
+            interruptRequest.vector ());
+    }
 }
 
 void Trace::trap (TrapRecordType cause, int vector) 

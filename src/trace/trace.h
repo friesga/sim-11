@@ -28,6 +28,7 @@
 #include "debugrecord/debugrecord.h"
 #include "ms11precord/ms11precord.h"
 #include "chrono/simulatorclock/simulatorclock.h"
+#include "bus/interruptrequest/interruptrequest.h"
 
 #include "tracefileoutstream/tracefileoutstream.h"
 #include "tracefileinstream/tracefileinstream.h"
@@ -81,7 +82,7 @@ public:
     void cpuEvent (CpuEventRecordType type, u16 value);
     void bus (BusRecordType type, u32 address, CondData<u16> value);
     void memoryDump (u8* ptr, u16 address, u16 length);
-    void irq (IrqRecordType type, int vector);
+    void irq (IrqRecordType type, const InterruptRequest& interruptRequest);
     void trap (TrapRecordType cause, int vector);
     void dlv11 (DLV11RecordType type, int channel, u16 value);
     void rxv21Command (int command, u16 rx2cs);
