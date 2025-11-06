@@ -62,7 +62,7 @@ bool InterruptHandler::getIntrptReq (InterruptRequest& intrptReq)
 	{
 		bool result = intrptReqQueue_.fetchTop (intrptReq);
 		intrptReq.requestGrant ();
-		trace.irq (IrqRecordType::IRQ_SIG, intrptReq.vector ());
+		trace.irq (IrqRecordType::IRQ_GRANT, intrptReq.vector ());
 		return result;
 	}
 	else

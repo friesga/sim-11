@@ -14,7 +14,7 @@ struct IrqRecord {};
 enum class IrqRecordType
 {
     IRQ_REQUEST,
-    IRQ_SIG
+    IRQ_GRANT
 };
 
 // Specialization of the TraceRecord for the TraceIrq record
