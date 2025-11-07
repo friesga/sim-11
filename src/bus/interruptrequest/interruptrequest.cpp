@@ -1,6 +1,6 @@
 #include "interruptrequest.h"
 
-atomic_uint InterruptRequest::intrptReqId_ = 0;
+atomic_uint InterruptRequest::intrptSeqNr_ = 0;
 
 // Constructors
 InterruptRequest::InterruptRequest()
@@ -11,7 +11,7 @@ InterruptRequest::InterruptRequest()
     vector_ {0},
     requestGrant_ {nullptr}
 {
-    ++intrptReqId_;
+    intrptReqId_ = intrptSeqNr_++;
 }
 
 InterruptRequest::InterruptRequest (TrapPriority priority,
@@ -24,9 +24,8 @@ InterruptRequest::InterruptRequest (TrapPriority priority,
     vector_ {vector},
     requestGrant_ {requestGrant}
 {
-    ++intrptReqId_;
+    intrptReqId_ = intrptSeqNr_++;
 }
-
 
 // Operator less than, used to determine the priority of the interrupt request.
 // The priority is based on first the trap priority and if these are equal by

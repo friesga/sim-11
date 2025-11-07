@@ -40,9 +40,11 @@ enum class TrapPriority
 class InterruptRequest
 {
 public:
+    // Constructors
     InterruptRequest ();
     InterruptRequest (TrapPriority priority, unsigned char busOrder,
         u8 functionOrder, u16 vector, function<void ()> requestGrant = 0);
+
     bool operator< (InterruptRequest const &ir) const;
     bool operator== (InterruptRequest const &ir) const;
 
@@ -59,16 +61,18 @@ private:
     u8 functionOrder_;
     u16 vector_;
     function<void ()> requestGrant_;
+    unsigned int intrptReqId_;
 
-    // The intrptReqId_ is used to uniquely identify interrupt requests in
+    // The intrptSeqNr_ is used to uniquely identify interrupt requests in
     // the trace log. It is incremented atomically for each created interrupt
-    // request. As an unsigned int, the id will overflow to zer when it
+    // request. As an unsigned int, the id will overflow to zero when it
     // reaches its maximum value. An unsigned int is used to avoid unreadable
     // long id's.
-    static atomic_uint intrptReqId_;
+    static atomic_uint intrptSeqNr_;
 
     long intrptPriority (TrapPriority trapPriority, unsigned char busOrder,
         u8 functionOrder) const;
+    void copyMembers (const InterruptRequest& other);
 };
 
 #endif // !_INTERRUPTREQUEST_H_
