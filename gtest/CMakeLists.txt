@@ -11,8 +11,9 @@ set (GTEST_SRCS
     cmdlineoptionstest.cpp
     threadsafeprioqueuetest.cpp
     threadsafecontainertest.cpp
-    interrupthandlertest.cpp
-    interruptrequesttest.cpp
+    bus/interrupthandlertest.cpp
+    bus/interruptrequesttest.cpp
+    bus/unibustest.cpp
     bitmasktest.cpp
     busaddresstest.cpp
     characterbuffertest.cpp
@@ -94,7 +95,6 @@ set (GTEST_SRCS
     signaltest.cpp
     simulatorclocktest.cpp
     tracetest.cpp
-    unibustest.cpp
     unit/unittest.cpp
     serial/uartmaintmodetest.cpp
     variantfsmtest.cpp)

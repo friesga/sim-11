@@ -154,3 +154,20 @@ TEST (InterruptHandlerTest, intrptsRetrievedInFunctionOrder)
 
     EXPECT_FALSE (interruptHandler.intrptReqAvailable ());
 }
+
+TEST (InterruptHandlerTest, intrptCanBeFound)
+{
+    InterruptHandler interruptHandler {};
+    interruptHandler.setInterrupt (TrapPriority::BusError, 0, 0, 004);
+    interruptHandler.setInterrupt (TrapPriority::BR4, 0, 0, 004);
+    interruptHandler.setInterrupt (TrapPriority::BR5, 0, 0, 004);
+    interruptHandler.setInterrupt (TrapPriority::BR6, 0, 0, 004);
+    interruptHandler.setInterrupt (TrapPriority::BR7, 0, 0, 004);
+    interruptHandler.setInterrupt (TrapPriority::InstructionTrap, 0, 0, 004);
+    interruptHandler.setInterrupt (TrapPriority::PowerFail, 0, 0, 004);
+
+    const InterruptRequest& foundIntrptReq =
+        interruptHandler.findInterrrupt (TrapPriority::BR5, 0, 0);
+
+    EXPECT_EQ (foundIntrptReq, InterruptRequest (TrapPriority::BR5, 0, 0, 004));
+}
