@@ -34,7 +34,13 @@ bool InterruptHandler::containsInterrupt (TrapPriority priority, unsigned char b
 void InterruptHandler::clearInterrupt (TrapPriority priority, unsigned char busOrder,
 	u8 functionOrder)
 {
-	intrptReqQueue_.erase (InterruptRequest {priority, busOrder, functionOrder, 0});
+	IntrptReqQueue::ConstIterator it = intrptReqQueue_.find (
+        InterruptRequest {priority, busOrder, functionOrder, 0});
+
+    // Log the interrupt being cleared
+
+	if (it != intrptReqQueue_.cend ())
+		intrptReqQueue_.erase (it);
 }
 
 // Clear all pending interrupts

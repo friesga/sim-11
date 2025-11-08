@@ -171,3 +171,11 @@ TEST (InterruptHandlerTest, intrptCanBeFound)
 
     EXPECT_EQ (foundIntrptReq, InterruptRequest (TrapPriority::BR5, 0, 0, 004));
 }
+
+TEST (InterruptHandlerTest, intrptNotFound)
+{
+    InterruptHandler interruptHandler {};
+
+    const InterruptRequest& foundIntrptReq =
+        interruptHandler.findInterrrupt (TrapPriority::BR5, 0, 0);
+}
