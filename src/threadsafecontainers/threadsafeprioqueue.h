@@ -40,6 +40,7 @@ public:
     void push (T const &ir);
     size_t size();
     T const &top() const;
+    C::const_iterator find (T const &elem) const;
 
     // Define a forward iterator over the elements in the queue. This is
     // in effect a constant iterator as objects in a set are const objects
@@ -187,6 +188,13 @@ T const &ThreadSafePrioQueue<T, C>::top() const
     return *front ();
 }
 
+template <typename T, typename C>
+    requires (std::same_as<C, set<T>> || std::same_as<C, std::multiset<T>>)
+C::const_iterator ThreadSafePrioQueue<T, C>::find (T const& elem) const
+{
+    lock_guard<mutex> lock (guard);
+    return queue_.find (elem);
+}
 
 // Private functions
 // Return an iterator to the element at the front of the queue, i.e. the last

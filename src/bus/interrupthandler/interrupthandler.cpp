@@ -68,3 +68,10 @@ bool InterruptHandler::getIntrptReq (InterruptRequest& intrptReq)
 	else
 		return false;
 }
+
+const InterruptRequest& InterruptHandler::findInterrrupt (TrapPriority priority,
+	unsigned char busOrder, u8 functionOrder) const
+{
+	return *intrptReqQueue_.find (InterruptRequest {priority,
+        busOrder, functionOrder, 0});
+}
