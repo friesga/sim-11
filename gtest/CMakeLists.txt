@@ -11,6 +11,7 @@ set (GTEST_SRCS
     cmdlineoptionstest.cpp
     threadsafeprioqueuetest.cpp
     threadsafecontainertest.cpp
+    interrupthandlertest.cpp
     interruptrequesttest.cpp
     bitmasktest.cpp
     busaddresstest.cpp
