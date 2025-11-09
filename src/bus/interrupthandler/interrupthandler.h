@@ -21,8 +21,6 @@ public:
 	bool intrptReqAvailable ();
 	u8 intrptPriority ();
 	bool getIntrptReq (InterruptRequest& ir);
-	const InterruptRequest& findInterrrupt (TrapPriority priority, unsigned char busOrder,
-		u8 functionOrder) const;
 
 private:
 	// The IntrptReqQueue_ keeps track of all interrupt requests, ordered in
