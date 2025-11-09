@@ -37,10 +37,11 @@ void InterruptHandler::clearInterrupt (TrapPriority priority, unsigned char busO
 	IntrptReqQueue::ConstIterator it = intrptReqQueue_.find (
         InterruptRequest {priority, busOrder, functionOrder, 0});
 
-    // Log the interrupt being cleared
-
 	if (it != intrptReqQueue_.cend ())
+	{
+		trace.irq (IrqRecordType::IRQ_CLEAR, *it);
 		intrptReqQueue_.erase (it);
+	}
 }
 
 // Clear all pending interrupts

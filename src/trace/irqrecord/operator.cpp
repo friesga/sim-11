@@ -22,6 +22,12 @@ std::ostream& operator<< (std::ostream& os, TraceRecord<IrqRecord> record)
                 " vector=" << oct << setw (4) << setfill ('0') <<
                 record.vector_ << "]\n";
             break;
+
+        case IrqRecordType::IRQ_CLEAR:
+            os << "[IRQ ] Clear interrupt [id=" << record.intrpReqId_ <<
+                " vector=" << oct << setw (4) << setfill ('0') <<
+                record.vector_ << "]\n";
+            break;
     }
 
     return os;
