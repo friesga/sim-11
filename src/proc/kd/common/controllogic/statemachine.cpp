@@ -109,11 +109,12 @@ void ControlLogic::StateMachine::entry (Waiting)
     while (!context_->signalAvailable () && !context_->bus_->intrptReqAvailable ())
         SimulatorClock::forwardClock (microseconds (50));
 
-    context_->cpuControl_->proceed ();
+    context_->signalEventQueue_.push (Start {});
 }
 
 ControlLogic::State ControlLogic::StateMachine::transition (Waiting&&, Start)
 {
+    context_->cpuControl_->proceed ();
     return Running {};			
 };
 
