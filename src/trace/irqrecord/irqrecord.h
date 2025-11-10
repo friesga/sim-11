@@ -16,7 +16,8 @@ enum class IrqRecordType
 {
     IRQ_REQUEST,
     IRQ_GRANT,
-	IRQ_CLEAR
+	IRQ_CLEAR,
+	IRQ_CLEAR_ALL
 };
 
 // Specialization of the TraceRecord for the TraceIrq record

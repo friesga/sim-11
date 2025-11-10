@@ -47,6 +47,7 @@ void InterruptHandler::clearInterrupt (TrapPriority priority, unsigned char busO
 // Clear all pending interrupts
 void InterruptHandler::clearInterrupts ()
 {
+	trace.irq (IrqRecordType::IRQ_CLEAR_ALL, InterruptRequest {});
 	intrptReqQueue_.clear ();
 }
 

@@ -28,6 +28,10 @@ std::ostream& operator<< (std::ostream& os, TraceRecord<IrqRecord> record)
                 " vector=" << oct << setw (4) << setfill ('0') <<
                 record.vector_ << "]\n";
             break;
+
+        case IrqRecordType::IRQ_CLEAR_ALL:
+            os << "[IRQ ] Clear all interrupts\n";
+            break;
     }
 
     return os;
