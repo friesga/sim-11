@@ -92,12 +92,6 @@ void KDF11_CpuControl::execInstr ()
     Instruction instr = 
         decoder.decode (instructionWord);
 
-    // If the trace flag is set, the next instruction has to result in a trace
-    // trap, unless the instruction resulted in another trap.
-    if (traceFlag_)
-        cpuData_->setTrap (CpuData::TrapCondition::BreakpointTrap);
-
-
     // The instruction time is defined in microseconds with an accuracy of
     // nanoseconds. Convert the time in microseconds to the 64-bits integer
     // number of nanoseconds.
@@ -112,6 +106,11 @@ void KDF11_CpuControl::execInstr ()
     // condition. In that case a trap has been set. Note however that trap
     // instructions set a trap and return true. 
     visit (executor, instr);
+
+    // If the trace flag is set, the next instruction has to result in a trace
+    // trap, unless the instruction resulted in another trap.
+    if (traceFlag_)
+        cpuData_->setTrap (CpuData::TrapCondition::BreakpointTrap);
 
     // Trace Trap is enabled by bit 4 of the PSW and causes processor traps at
     // the end of instruction execution. The instruction-that is executed
