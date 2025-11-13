@@ -53,8 +53,12 @@ CpuControl::CpuRunState KDF11_CpuControl::execute ()
     // zero and BR4.) Note that the numerical value of the TrapPriority enum
     // is used as bus request level. Traps in HALT mode are ignored.
     if (cpuData_->trap () != CpuData::TrapCondition::None)
+    {
         serviceTrap ();
-    else if (bus_->intrptReqAvailable () && bus_->intrptPriority () > cpuPriority ())
+        traceFlag_ =  (cpuData_->psw ().traceBitSet ()) ? true : false;
+    }
+    
+    if (bus_->intrptReqAvailable () && bus_->intrptPriority () > cpuPriority ())
         serviceInterrupt ();
 
     if(trace.isActive ())
@@ -109,7 +113,7 @@ void KDF11_CpuControl::execInstr ()
 
     // If the trace flag is set, the next instruction has to result in a trace
     // trap, unless the instruction resulted in another trap.
-    if (traceFlag_)
+    if (traceFlag_ && cpuData_->trap () == CpuData::TrapCondition::None)
         cpuData_->setTrap (CpuData::TrapCondition::BreakpointTrap);
 
     // Trace Trap is enabled by bit 4 of the PSW and causes processor traps at
