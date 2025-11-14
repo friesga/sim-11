@@ -26,64 +26,32 @@ using std::logic_error;
 // std::multiset, the difference being that a std::set (and therefor the
 // queue) will contain only unique elements while a std::multiset can contain
 // duplicate elements.
+//
+// Iterating over the elements in the queue is not thread safe. The caller
+// must take measures to safely use the iterator.
+//
 template <typename T, typename C = set<T>>
     requires (std::same_as<C, set<T>> || std::same_as<C, std::multiset<T>>)
 class ThreadSafePrioQueue
 {
 public:
-    // Define a forward iterator over the elements in the queue. This is
-    // in effect a constant iterator as objects in a set are const objects
-    // to keep the ordering of the object in the set correct.
-    struct ConstIterator
-    {
-        using iterator_category = std::forward_iterator_tag;
-        using difference_type   = std::ptrdiff_t;
-        using value_type        = T;
-        using pointer           = value_type const*;
-        using reference         = value_type const&;
-
-        ConstIterator (typename C::const_iterator iter) :
-            ptr_ {iter}
-        {};
-
-        reference operator*() { return *ptr_; }
-        pointer operator->() { return &*ptr_; }
-
-        // Prefix increment
-        ConstIterator& operator++() { ptr_++; return *this; }
-
-        // Postfix increment
-        ConstIterator operator++(int) { ConstIterator tmp = *this; ++(*this); return tmp; }
-
-        friend bool operator== (const ConstIterator& a, const ConstIterator& b)
-        {
-            return a.ptr_ == b.ptr_;
-        };
-        friend bool operator!= (const ConstIterator& a, const ConstIterator& b)
-        {
-            return a.ptr_ != b.ptr_;
-        };
-
-    private:
-        // Pointer to the element the iterator is pointing at
-        // pointer ptr_;
-        typename C::const_iterator ptr_;
-    };
+    using iterator = typename C::iterator;
+    using const_iterator = typename C::const_iterator;
 
     void clear();
     bool empty();
     bool contains (T const &elem);
     void erase (T const &elem);
-    void erase (ConstIterator elem);
+    void erase (const_iterator elem);
     bool fetchTop(T &dest);
     void waitAndFetchTop(T &dest);
     void push (T const &ir);
     size_t size();
     T const &top() const;
-    C::const_iterator find (T const &elem) const;
+    const_iterator find (T const &elem) const;
 
-    ConstIterator cbegin() { return ConstIterator (queue_.cbegin()); }
-    ConstIterator cend()   { return ConstIterator (queue_.cend()); }
+    auto cbegin () const { return queue_.cbegin (); }
+    auto cend ()   const { return queue_.cend (); }
 
 private:
     C queue_;
@@ -133,10 +101,12 @@ template <typename T, typename C>
  // Erase the element referred to by the iterator from the queue 
 template <typename T, typename C>
     requires (std::same_as<C, set<T>> || std::same_as<C, std::multiset<T>>)
- void ThreadSafePrioQueue<T, C>::erase (ConstIterator elem)
+ void ThreadSafePrioQueue<T, C>::erase (const_iterator elem)
  {
      lock_guard<mutex> lock (guard);
-     queue_.erase (*elem);
+
+     if (elem != queue_.cend ())
+        queue_.erase (elem);
  }
 
 // To prevent an exception on the return of a T object, the top element is

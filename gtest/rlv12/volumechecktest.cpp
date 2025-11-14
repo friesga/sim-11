@@ -156,7 +156,7 @@ TEST_F (RLV12VolumeCheck, readDataWithVolumeCheckReportsDriveError)
 
     // Verify the controller reports a drive error
     u16 csr = rlv12Device->read (RLCSR);
-    ASSERT_EQ (csr & (CSR_ControllerReady | CSR_DriveReady | 
+    EXPECT_EQ (csr & (CSR_ControllerReady | CSR_DriveReady | 
         CSR_DriveError | CSR_CompositeError),
         CSR_ControllerReady | CSR_DriveReady |
         CSR_DriveError | CSR_CompositeError);

@@ -34,7 +34,7 @@ bool InterruptHandler::containsInterrupt (TrapPriority priority, unsigned char b
 void InterruptHandler::clearInterrupt (TrapPriority priority, unsigned char busOrder,
 	u8 functionOrder)
 {
-	IntrptReqQueue::ConstIterator it = intrptReqQueue_.find (
+	IntrptReqQueue::const_iterator it = intrptReqQueue_.find (
         InterruptRequest {priority, busOrder, functionOrder, 0});
 
 	if (it != intrptReqQueue_.cend ())
