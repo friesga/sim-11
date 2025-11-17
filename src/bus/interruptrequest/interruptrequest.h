@@ -72,7 +72,6 @@ private:
 
     long intrptPriority (TrapPriority trapPriority, unsigned char busOrder,
         u8 functionOrder) const;
-    void copyMembers (const InterruptRequest& other);
 };
 
 #endif // !_INTERRUPTREQUEST_H_
