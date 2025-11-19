@@ -16,8 +16,7 @@ enum class InterruptPriority
     BR7 = 7,
     BR6 = 6,
     BR5 = 5,
-    BR4 = 4,
-    None = 0
+    BR4 = 4
 };
 
 // This class comprises all information for an interrupt request:

@@ -5,7 +5,7 @@ atomic_uint InterruptRequest::intrptSeqNr_ = 0;
 // Constructors
 InterruptRequest::InterruptRequest()
     :
-    priority_ {InterruptPriority::None},
+    priority_ {InterruptPriority::BR4},
     busOrder_ {0},
     functionOrder_ {0},
     vector_ {0},
