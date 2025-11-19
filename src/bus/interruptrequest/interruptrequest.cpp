@@ -59,7 +59,7 @@ unsigned char InterruptRequest::busOrder() const
 
 // To retrieve the vector for this interrupt, the request granted callback
 // is called which should return the vector to use.
-unsigned char InterruptRequest::vector() const
+u16 InterruptRequest::vector() const
 {
     return vector_;
 }

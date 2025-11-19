@@ -43,9 +43,9 @@ public:
     bool operator== (InterruptRequest const &ir) const;
 
     // Accessors
-    InterruptPriority priority() const;
-    unsigned char busOrder() const;
-    unsigned char vector() const;
+    InterruptPriority priority () const;
+    unsigned char busOrder () const;
+    u16 vector () const;
     void requestGrant ();
     unsigned int id () const;
 
