@@ -7,9 +7,11 @@
 
 #include <functional>
 #include <map>
+#include <optional>
 
 using std::map;
 using std::make_pair;
+using std::optional;
 
 //
 // The class KDCpuData is a base class for the KD11_NACpuData and
@@ -36,19 +38,63 @@ protected:
 	PSWTYPE psw_ {0};
 	REGISTERTYPE registers_ {psw_};
 
+private:
 	// A trap is a special kind of interrupt, internal to the CPU. There
-	// can be only one trap serviced at the time.
-	CpuData::TrapType trap_;
+	// can be only one trap serviced at the time. Trap piorities are based
+	// on the LSI-11 PDP-11/03 processor handbook p. 4-70:
+    // - Bus Error Trap
+    // - Memory Refresh
+    // - Instruction Traps
+    // - Trace Trap
+    // - Halt Line
+    // - Power Fail Trap
+    // - Event Line Interrupt
+    // - Device (Bus) Interrupt Request
+    //
+    // Device (Bus) interrupt requests always have a lower priority than any
+    // trap and are modelled in a separate InterruptRequest class.
+	// 
+	// Note the difference between reserved and illegal instructions. Reserved
+	// instructions always trap to vector address 010 (LSI-11/PDP-11/03
+	// Processor Handbook page 4-69). Illegal instructions trap to either
+	// vector address 004 or 010. On the KD11-NA and KDF11-A processors
+	// illegal instructions trap to 004 but on some other processors these
+	// instructions trap to vector address 010. (See PDP-11 Architecture
+	// Handbook, appendix B, item 5).
+	//
+	// Definition of the trap vectors and priorities belonging for the trap
+	// types.
+	//
+	struct TrapData
+	{
+		TrapType type;        // which trap occurred
+		u16 vector;           // trap vector
+		u8 priority;          // usually fixed per trap
+	};
 
-	static map<CpuData::TrapType, u16> trapVector_;
+	optional<TrapType> pendingTrap_ {};
+
+	static inline constexpr TrapData cpuTrapTable_[]
+	{
+		TrapData {TrapType::StackOverflow, 004, 7},
+		TrapData {TrapType::MemoryManagement, 004, 7},
+		TrapData {TrapType::BusError, 004, 6},
+		TrapData {TrapType::IllegalInstruction, 004, 5},
+		TrapData {TrapType::ReservedInstruction, 010, 5},
+		TrapData {TrapType::ParityError, 004, 5},
+		TrapData {TrapType::Breakpoint, 014, 4},
+		TrapData {TrapType::InputOutput, 020, 3},
+		TrapData {TrapType::Emulator, 030, 3},
+		TrapData {TrapType::TrapInstruction, 034, 3},
+		TrapData {TrapType::PowerFail, 024, 1},
+	};
 };
 
 // Constructor
 template <typename REGISTERTYPE, typename PSWTYPE>
 KDCpuData<REGISTERTYPE, PSWTYPE>::KDCpuData ()
     :
-    psw_ {0},
-    trap_ {CpuData::TrapType::None}
+    psw_ {0}
 {}
 
 // constexpr functions are implicitly inline and therefore need to be defined
@@ -83,57 +129,31 @@ template <typename REGISTERTYPE, typename PSWTYPE>
 void KDCpuData<REGISTERTYPE, PSWTYPE>::setTrap (CpuData::TrapType trap, TrapRecordType cause)
 {
     trace.trap (cause, trapVector (trap));
-    trap_ = trap;
+    pendingTrap_ = trap;
 }
 
 template <typename REGISTERTYPE, typename PSWTYPE>
 constexpr void KDCpuData<REGISTERTYPE, PSWTYPE>::clearTrap ()
 {
-	trap_ = TrapType::None;
+	pendingTrap_ = {};
 }
 
 template <typename REGISTERTYPE, typename PSWTYPE>
 constexpr CpuData::TrapType KDCpuData<REGISTERTYPE, PSWTYPE>::trap ()
 {
-	return trap_;
+	return cpuTrapTable_[static_cast<size_t> (pendingTrap_.value ())].type;
 }
 
 template <typename REGISTERTYPE, typename PSWTYPE>
 u16 KDCpuData<REGISTERTYPE, PSWTYPE>::trapVector ()
 {
-	return trapVector_[trap_];
+	return cpuTrapTable_[static_cast<size_t> (pendingTrap_.value ())].vector;
 }
 
 template <typename REGISTERTYPE, typename PSWTYPE>
-u16 KDCpuData<REGISTERTYPE, PSWTYPE>::trapVector (TrapType trap)
+u16 KDCpuData<REGISTERTYPE, PSWTYPE>::trapVector (TrapType trapType)
 {
-	return trapVector_[trap];
+	return cpuTrapTable_[static_cast<size_t> (trapType)].vector;
 }
-
-// Definition of the trap vector belonging to the trap condition.
-// 
-// Note the difference between reserved and illegal instructions. Reserved
-// instructions always trap to vector address 010 (LSI-11/PDP-11/03 Processor
-// Handbook page 4-69). Illegal instructions trap to either vector address
-// 004 or 010. On the KD11-NA and KDF11-A processors illegal instructions trap
-// to 004 but on some other processors these instructions trap to vector
-// address 010. (See PDP-11 Architecture Handbook, appendix B, item 5).
-template <typename REGISTERTYPE, typename PSWTYPE>
-map<CpuData::TrapType, u16> KDCpuData<REGISTERTYPE, PSWTYPE>::trapVector_ 
-{
-    make_pair (CpuData::TrapType::None, 0),						// Reserved
-	make_pair (CpuData::TrapType::BusError, 004),					// Time out and other errors
-	make_pair (CpuData::TrapType::IllegalInstruction, 004),	// Illegal instructions
-	make_pair (CpuData::TrapType::ReservedInstruction, 010),	// Reserved instructions
-	make_pair (CpuData::TrapType::Breakpoint, 014),			// BPT instruction
-	make_pair (CpuData::TrapType::InputOutput, 020),			// IOT instruction
-	make_pair (CpuData::TrapType::PowerFail, 024),					// Power fail
-	make_pair (CpuData::TrapType::Emulator, 030),				// EMT instruction
-	make_pair (CpuData::TrapType::TrapInstruction, 034),			// TRAP instruction
-	make_pair (CpuData::TrapType::FIS, 0244),						// Floating point
-	make_pair (CpuData::TrapType::StackOverflow, 004),				// Stack overflow
-	make_pair (CpuData::TrapType::ParityError, 0114),				// Memory parity error
-	make_pair (CpuData::TrapType::MemoryManagement, 0250),		// Memory Management abort
-};
 
 #endif // _KDCPUDATA_H_
