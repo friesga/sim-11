@@ -114,7 +114,7 @@ void KDF11_CpuControl::execInstr ()
     // If the trace flag is set, the next instruction has to result in a trace
     // trap, unless the instruction resulted in another trap.
     if (traceFlag_ && cpuData_->trap () == CpuData::TrapType::None)
-        cpuData_->setTrap (CpuData::TrapType::BreakpointTrap);
+        cpuData_->setTrap (CpuData::TrapType::Breakpoint);
 
     // Trace Trap is enabled by bit 4 of the PSW and causes processor traps at
     // the end of instruction execution. The instruction-that is executed

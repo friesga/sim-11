@@ -931,7 +931,7 @@ bool Common::Executor::execute (JSR& instr)
     if (!destination.isA<MemoryOperandLocation> ())
     {
         // Illegal instruction
-        cpuData_->setTrap (CpuData::TrapType::IllegalInstructionTrap);
+        cpuData_->setTrap (CpuData::TrapType::IllegalInstruction);
         return true;
     }
 
@@ -1323,7 +1323,7 @@ bool Common::Executor::execute (BLOS& instr)
 
 bool Common::Executor::execute (EMT& instr)
 {
-    cpuData_->setTrap (CpuData::TrapType::EmulatorTrap);
+    cpuData_->setTrap (CpuData::TrapType::Emulator);
     return true;
 }
 
@@ -1359,20 +1359,20 @@ bool Common::Executor::execute (RTI& instr)
 
     cpuData_->psw ().set (PSW::ProtectionMode::RTI, tmp);
     if (cpuData_->psw ().traceBitSet ())
-        cpuData_->setTrap (CpuData::TrapType::BreakpointTrap);
+        cpuData_->setTrap (CpuData::TrapType::Breakpoint);
 
     return true;
 }
 
 bool Common::Executor::execute (BPT& instr)
 {
-    cpuData_->setTrap (CpuData::TrapType::BreakpointTrap);
+    cpuData_->setTrap (CpuData::TrapType::Breakpoint);
     return true;
 }
 
 bool Common::Executor::execute (IOT& instr)
 {
-    cpuData_->setTrap (CpuData::TrapType::InputOutputTrap);
+    cpuData_->setTrap (CpuData::TrapType::InputOutput);
     return true;
 }
 
@@ -1414,6 +1414,6 @@ bool Common::Executor::execute (SCC& instr)
 
 bool Common::Executor::execute (Unused& instr)
 {
-    cpuData_->setTrap (CpuData::TrapType::ReservedInstructionTrap);
+    cpuData_->setTrap (CpuData::TrapType::ReservedInstruction);
     return true;
 }

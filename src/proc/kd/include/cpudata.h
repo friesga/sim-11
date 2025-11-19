@@ -32,17 +32,17 @@ public:
 	{
 		None,						// Reserved
 		BusError,					// Time out and other errors
-		ReservedInstructionTrap,	// Reserved instruction
-		IllegalInstructionTrap,		// Illegal and reserved instructions
-		BreakpointTrap,				// BPT instruction
-		InputOutputTrap,			// IOT instruction
+		ReservedInstruction,		// Reserved instruction
+		IllegalInstruction,			// Illegal and reserved instructions
+		Breakpoint,					// BPT instruction
+		InputOutput,				// IOT instruction
 		PowerFail,					// Power fail
-		EmulatorTrap,				// EMT instruction
+		Emulator,					// EMT instruction
 		TrapInstruction,			// TRAP instruction
 		FIS,						// Floating point
 		StackOverflow,				// Stack overflow
 		ParityError,				// Memory parity error
-		MemoryManagementTrap		// Memory management abort
+		MemoryManagement			// Memory management abort
 	};
 
 	// Definition of the KD11 execution state

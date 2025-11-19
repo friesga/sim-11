@@ -75,14 +75,14 @@ inline bool Executor::operator()<FDIV> (FDIV& instr)
 template <>
 inline bool Executor::operator()<MFPD> (MFPD& instr)
 {
-    cpuData_->setTrap (CpuData::TrapType::ReservedInstructionTrap);
+    cpuData_->setTrap (CpuData::TrapType::ReservedInstruction);
     return true;
 }
 
 template <>
 inline bool Executor::operator()<MTPD> (MTPD& instr)
 {
-    cpuData_->setTrap (CpuData::TrapType::ReservedInstructionTrap);
+    cpuData_->setTrap (CpuData::TrapType::ReservedInstruction);
     return true;
 }
 
@@ -92,21 +92,21 @@ inline bool Executor::operator()<MTPD> (MTPD& instr)
 template <>
 inline bool Executor::operator()<MFPI> (MFPI& instr)
 {
-    cpuData_->setTrap (CpuData::TrapType::ReservedInstructionTrap);
+    cpuData_->setTrap (CpuData::TrapType::ReservedInstruction);
     return true;
 }
 
 template <>
 inline bool Executor::operator()<MTPI> (MTPI& instr)
 {
-    cpuData_->setTrap (CpuData::TrapType::ReservedInstructionTrap);
+    cpuData_->setTrap (CpuData::TrapType::ReservedInstruction);
     return true;
 }
 
 template <>
 inline bool Executor::operator()<MFPT> (MFPT& instr)
 {
-    cpuData_->setTrap (CpuData::TrapType::ReservedInstructionTrap);
+    cpuData_->setTrap (CpuData::TrapType::ReservedInstruction);
     return true;
 }
  

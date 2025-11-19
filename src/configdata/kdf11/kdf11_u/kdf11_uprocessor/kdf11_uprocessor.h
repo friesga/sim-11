@@ -33,7 +33,7 @@ private:
 	map<string, KDF11_UConfig::KernelHaltMode> validKernelHaltModes =
 	{
 		{"allow_halt", KDF11_UConfig::KernelHaltMode::AllowHalt},
-		{"illegal_instruction", KDF11_UConfig::KernelHaltMode::IllegalInstructionTrap}
+		{"illegal_instruction", KDF11_UConfig::KernelHaltMode::IllegalInstruction}
 	};
 
 	void processValue (iniparser::Section::ValueIterator valueIterator) override;

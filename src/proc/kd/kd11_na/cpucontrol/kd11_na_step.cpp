@@ -98,7 +98,7 @@ void KD11_NA_CpuControl::execInstr ()
     // If the trace flag is set, the next instruction has to result in a trace
     // trap, unless the instruction resulted in another trap.
     if (traceFlag_)
-        cpuData_->setTrap (CpuData::TrapType::BreakpointTrap);
+        cpuData_->setTrap (CpuData::TrapType::Breakpoint);
 
     // The instruction time is defined in microseconds with an accuracy of
     // nanoseconds. Convert the time in microseconds to the 64-bits integer

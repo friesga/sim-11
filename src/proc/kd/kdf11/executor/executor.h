@@ -896,7 +896,7 @@ inline bool Executor::operator() (HALT& instr)
 {
     if (cpuData_->psw ().currentMode () == PSW::Mode::User)
     {
-        cpuData_->setTrap (CpuData::TrapType::ReservedInstructionTrap);
+        cpuData_->setTrap (CpuData::TrapType::ReservedInstruction);
         return false;
     }
     cpuControl_->halt ();
@@ -997,28 +997,28 @@ inline bool Executor::operator() (MFPT& instr)
 template <>
 inline bool Executor::operator() (FADD& instr)
 {
-    cpuData_->setTrap (CpuData::TrapType::ReservedInstructionTrap);
+    cpuData_->setTrap (CpuData::TrapType::ReservedInstruction);
 	return false;
 }
 
 template <>
 inline bool Executor::operator() (FSUB& instr)
 {
-    cpuData_->setTrap (CpuData::TrapType::ReservedInstructionTrap);
+    cpuData_->setTrap (CpuData::TrapType::ReservedInstruction);
 	return false;
 }
 
 template <>
 inline bool Executor::operator() (FMUL& instr)
 {
-    cpuData_->setTrap (CpuData::TrapType::ReservedInstructionTrap);
+    cpuData_->setTrap (CpuData::TrapType::ReservedInstruction);
 	return false;
 }
 
 template <>
 inline bool Executor::operator() (FDIV& instr)
 {
-    cpuData_->setTrap (CpuData::TrapType::ReservedInstructionTrap);
+    cpuData_->setTrap (CpuData::TrapType::ReservedInstruction);
 	return false;
 }
 

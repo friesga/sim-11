@@ -123,17 +123,17 @@ map<CpuData::TrapType, u16> KDCpuData<REGISTERTYPE, PSWTYPE>::trapVector_
 {
     make_pair (CpuData::TrapType::None, 0),						// Reserved
 	make_pair (CpuData::TrapType::BusError, 004),					// Time out and other errors
-	make_pair (CpuData::TrapType::IllegalInstructionTrap, 004),	// Illegal instructions
-	make_pair (CpuData::TrapType::ReservedInstructionTrap, 010),	// Reserved instructions
-	make_pair (CpuData::TrapType::BreakpointTrap, 014),			// BPT instruction
-	make_pair (CpuData::TrapType::InputOutputTrap, 020),			// IOT instruction
+	make_pair (CpuData::TrapType::IllegalInstruction, 004),	// Illegal instructions
+	make_pair (CpuData::TrapType::ReservedInstruction, 010),	// Reserved instructions
+	make_pair (CpuData::TrapType::Breakpoint, 014),			// BPT instruction
+	make_pair (CpuData::TrapType::InputOutput, 020),			// IOT instruction
 	make_pair (CpuData::TrapType::PowerFail, 024),					// Power fail
-	make_pair (CpuData::TrapType::EmulatorTrap, 030),				// EMT instruction
+	make_pair (CpuData::TrapType::Emulator, 030),				// EMT instruction
 	make_pair (CpuData::TrapType::TrapInstruction, 034),			// TRAP instruction
 	make_pair (CpuData::TrapType::FIS, 0244),						// Floating point
 	make_pair (CpuData::TrapType::StackOverflow, 004),				// Stack overflow
 	make_pair (CpuData::TrapType::ParityError, 0114),				// Memory parity error
-	make_pair (CpuData::TrapType::MemoryManagementTrap, 0250),		// Memory Management abort
+	make_pair (CpuData::TrapType::MemoryManagement, 0250),		// Memory Management abort
 };
 
 #endif // _KDCPUDATA_H_

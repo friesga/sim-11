@@ -336,7 +336,7 @@ bool KTF11_A::abortAccess (SR0::AbortReason reason, u16 address)
     sr0_.setAbortCondition (reason, 
         static_cast<u16> (cpuData_->psw ().currentMode ()),
         activePageField (address));
-    cpuData_->setTrap (CpuData::TrapType::MemoryManagementTrap);
+    cpuData_->setTrap (CpuData::TrapType::MemoryManagement);
     return false;
 }
 
