@@ -9,15 +9,10 @@
 using std::function;
 using std::atomic_uint;
 
-// Definition of trap priorities. The BR4-BR7 priorities concur with
+// Definition of interrupt priorities. The BR4-BR7 priorities concur with
 // the CPU priority as indicated in the PSW (bits 5-7).
 enum class InterruptPriority
 {
-    BusError = 12,
-    InstructionTrap = 11,
-    TraceTrap = 10,
-    PowerFail = 9,
-    Event = 8,
     BR7 = 7,
     BR6 = 6,
     BR5 = 5,

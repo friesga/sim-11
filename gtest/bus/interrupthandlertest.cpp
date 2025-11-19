@@ -11,99 +11,79 @@ TEST (InterruptHandlerTest, intrpReqQueueisEmpty)
 TEST (InterruptHandlerTest, intrptCanBeSet)
 {
     InterruptHandler interruptHandler {};
-    interruptHandler.setInterrupt (InterruptPriority::BusError, 0, 0, 004);
-    EXPECT_TRUE (interruptHandler.containsInterrupt (InterruptPriority::BusError, 0, 0));
+    interruptHandler.setInterrupt (InterruptPriority::BR7, 0, 0, 004);
+    EXPECT_TRUE (interruptHandler.containsInterrupt (InterruptPriority::BR7, 0, 0));
 }
 
 TEST (InterruptHandlerTest, intrptCanBeCleared)
 {
     InterruptHandler interruptHandler {};
-    interruptHandler.setInterrupt (InterruptPriority::BusError, 0, 0, 004);
-    EXPECT_TRUE (interruptHandler.containsInterrupt (InterruptPriority::BusError, 0, 0));
+    interruptHandler.setInterrupt (InterruptPriority::BR7, 0, 0, 004);
+    EXPECT_TRUE (interruptHandler.containsInterrupt (InterruptPriority::BR7, 0, 0));
 
-    interruptHandler.clearInterrupt (InterruptPriority::BusError, 0, 0);
-    EXPECT_FALSE (interruptHandler.containsInterrupt (InterruptPriority::BusError, 0, 0));
+    interruptHandler.clearInterrupt (InterruptPriority::BR7, 0, 0);
+    EXPECT_FALSE (interruptHandler.containsInterrupt (InterruptPriority::BR7, 0, 0));
 }
 
 TEST (InterruptHandlerTest, nonExistentIntrptCanBeCleared)
 {
     InterruptHandler interruptHandler {};
 
-    interruptHandler.clearInterrupt (InterruptPriority::BusError, 0, 0);
+    interruptHandler.clearInterrupt (InterruptPriority::BR7, 0, 0);
 }
 
 TEST (InterruptHandlerTest, allIntrptsCanBeCleared)
 {
     InterruptHandler interruptHandler {};
-    interruptHandler.setInterrupt (InterruptPriority::BusError, 0, 0, 004);
+    interruptHandler.setInterrupt (InterruptPriority::BR7, 0, 0, 004);
     interruptHandler.setInterrupt (InterruptPriority::BR4, 0, 0, 004);
-    EXPECT_TRUE (interruptHandler.containsInterrupt (InterruptPriority::BusError, 0, 0));
+    EXPECT_TRUE (interruptHandler.containsInterrupt (InterruptPriority::BR7, 0, 0));
     EXPECT_TRUE (interruptHandler.containsInterrupt (InterruptPriority::BR4, 0, 0));
 
     interruptHandler.clearInterrupts ();
-    EXPECT_FALSE (interruptHandler.containsInterrupt (InterruptPriority::BusError, 0, 0));
+    EXPECT_FALSE (interruptHandler.containsInterrupt (InterruptPriority::BR7, 0, 0));
     EXPECT_FALSE (interruptHandler.containsInterrupt (InterruptPriority::BR4, 0, 0));
 }
 
 TEST (InterruptHandlerTest, intrptsArePriorityOrdered)
 {
     InterruptHandler interruptHandler {};
-    interruptHandler.setInterrupt (InterruptPriority::BusError, 0, 0, 004);
+    interruptHandler.setInterrupt (InterruptPriority::BR7, 0, 0, 004);
     interruptHandler.setInterrupt (InterruptPriority::BR4, 0, 0, 004);
     interruptHandler.setInterrupt (InterruptPriority::BR5, 0, 0, 004);
     interruptHandler.setInterrupt (InterruptPriority::BR6, 0, 0, 004);
-    interruptHandler.setInterrupt (InterruptPriority::BR7, 0, 0, 004);
-    interruptHandler.setInterrupt (InterruptPriority::InstructionTrap, 0, 0, 004);
-    interruptHandler.setInterrupt (InterruptPriority::PowerFail, 0, 0, 004);
 
     EXPECT_EQ (interruptHandler.intrptPriority (),
-        static_cast<u8> (InterruptPriority::BusError));
+        static_cast<u8> (InterruptPriority::BR7));
 
-    interruptHandler.clearInterrupt (InterruptPriority::BusError, 0, 0);
+    interruptHandler.clearInterrupt (InterruptPriority::BR7, 0, 0);
     EXPECT_EQ (interruptHandler.intrptPriority (),
-        static_cast<u8> (InterruptPriority::InstructionTrap));
+        static_cast<u8> (InterruptPriority::BR6));
 }
 
 TEST (InterruptHandlerTest, correctIntrptFound)
 {
     InterruptHandler interruptHandler {};
-    interruptHandler.setInterrupt (InterruptPriority::BusError, 0, 0, 004);
+    interruptHandler.setInterrupt (InterruptPriority::BR7, 0, 0, 004);
 
-    EXPECT_TRUE (interruptHandler.containsInterrupt (InterruptPriority::BusError, 0, 0));
+    EXPECT_TRUE (interruptHandler.containsInterrupt (InterruptPriority::BR7, 0, 0));
     EXPECT_FALSE (interruptHandler.containsInterrupt (InterruptPriority::BR4, 0, 0));
     EXPECT_FALSE (interruptHandler.containsInterrupt (InterruptPriority::BR5, 0, 0));
     EXPECT_FALSE (interruptHandler.containsInterrupt (InterruptPriority::BR6, 0, 0));
-    EXPECT_FALSE (interruptHandler.containsInterrupt (InterruptPriority::BR7, 0, 0));
-    EXPECT_FALSE (interruptHandler.containsInterrupt (InterruptPriority::InstructionTrap, 0, 0));
-    EXPECT_FALSE (interruptHandler.containsInterrupt (InterruptPriority::PowerFail, 0, 0));
-    EXPECT_FALSE (interruptHandler.containsInterrupt (InterruptPriority::TraceTrap, 0, 0));
-    EXPECT_FALSE (interruptHandler.containsInterrupt (InterruptPriority::Event, 0, 0));
 
-    EXPECT_FALSE (interruptHandler.containsInterrupt (InterruptPriority::BusError, 1, 0));
-    EXPECT_FALSE (interruptHandler.containsInterrupt (InterruptPriority::BusError, 0, 1));
+    EXPECT_FALSE (interruptHandler.containsInterrupt (InterruptPriority::BR7, 1, 0));
+    EXPECT_FALSE (interruptHandler.containsInterrupt (InterruptPriority::BR7, 0, 1));
 }
 
 TEST (InterruptHandlerTest, intrptsRetrievedInPriorityOrder)
 {
     InterruptHandler interruptHandler {};
-    interruptHandler.setInterrupt (InterruptPriority::BusError, 0, 0, 004);
     interruptHandler.setInterrupt (InterruptPriority::BR4, 0, 0, 004);
     interruptHandler.setInterrupt (InterruptPriority::BR5, 0, 0, 004);
     interruptHandler.setInterrupt (InterruptPriority::BR6, 0, 0, 004);
     interruptHandler.setInterrupt (InterruptPriority::BR7, 0, 0, 004);
-    interruptHandler.setInterrupt (InterruptPriority::InstructionTrap, 0, 0, 004);
-    interruptHandler.setInterrupt (InterruptPriority::PowerFail, 0, 0, 004);
 
     InterruptRequest retrievedIntrpt {};
-
-    EXPECT_TRUE (interruptHandler.getIntrptReq (retrievedIntrpt));
-    EXPECT_EQ (retrievedIntrpt, InterruptRequest (InterruptPriority::BusError, 0, 0, 004));
-
-    EXPECT_TRUE (interruptHandler.getIntrptReq (retrievedIntrpt));
-    EXPECT_EQ (retrievedIntrpt, InterruptRequest (InterruptPriority::InstructionTrap, 0, 0, 004));
-
-    EXPECT_TRUE (interruptHandler.getIntrptReq (retrievedIntrpt));
-    EXPECT_EQ (retrievedIntrpt, InterruptRequest (InterruptPriority::PowerFail, 0, 0, 004));
 
     EXPECT_TRUE (interruptHandler.getIntrptReq (retrievedIntrpt));
     EXPECT_EQ (retrievedIntrpt, InterruptRequest (InterruptPriority::BR7, 0, 0, 004));

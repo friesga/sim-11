@@ -6,18 +6,18 @@
 // Verify InterruptRequests have strict weak ordering
 TEST (InterruptRequest, isOrdered)
 {
-    InterruptRequest const prio12_0 {InterruptPriority::BusError, 0, 0, 004};
-    InterruptRequest const prio12_1 {InterruptPriority::BusError, 1, 0, 004};
-    InterruptRequest const prio12_x {InterruptPriority::BusError, 0, 0, 0};
+    InterruptRequest const prio7_0 {InterruptPriority::BR7, 0, 0, 004};
+    InterruptRequest const prio7_1 {InterruptPriority::BR7, 1, 0, 004};
+    InterruptRequest const prio7_x {InterruptPriority::BR7, 0, 0, 0};
 
-    InterruptRequest const prio10_0 {InterruptPriority::TraceTrap, 0, 0, 014};
-    InterruptRequest const prio10_1 {InterruptPriority::TraceTrap, 1, 0, 014};
+    InterruptRequest const prio6_0 {InterruptPriority::BR6, 0, 0, 014};
+    InterruptRequest const prio6_1 {InterruptPriority::BR6, 1, 0, 014};
 
-    EXPECT_TRUE (prio10_0 < prio12_0);
-    EXPECT_TRUE (prio10_0 < prio10_1);
+    EXPECT_TRUE (prio6_0 < prio7_0);
+    EXPECT_TRUE (prio6_0 < prio6_1);
 
-    EXPECT_TRUE (prio12_0 == prio12_0);
-    EXPECT_TRUE (prio12_0 == prio12_x);
+    EXPECT_TRUE (prio6_0 == prio6_0);
+    EXPECT_TRUE (prio7_0 == prio7_x);
 }
 
 // Verify an InterruptRequest can be pushed and erased from 
@@ -25,8 +25,8 @@ TEST (InterruptRequest, isOrdered)
 // their InterruptPriority and bus order are equal.
 TEST (InterruptRequest, canBePushedAndCleared)
 {
-    InterruptRequest const intrptReqA {InterruptPriority::BusError, 0, 0, 004};
-    InterruptRequest const intrptReqB {InterruptPriority::BusError, 0, 0, 000};
+    InterruptRequest const intrptReqA {InterruptPriority::BR7, 0, 0, 004};
+    InterruptRequest const intrptReqB {InterruptPriority::BR7, 0, 0, 000};
     ThreadSafePrioQueue<InterruptRequest> queue;
 
     queue.push (intrptReqA);
@@ -38,8 +38,8 @@ TEST (InterruptRequest, canBePushedAndCleared)
 
 TEST (InterruptRequest, functionOrderisOrdered)
 {
-    InterruptRequest const order0 {InterruptPriority::BusError, 0, 0, 004};
-    InterruptRequest const order1 {InterruptPriority::BusError, 0, 1, 004};
-    
+    InterruptRequest const order0 {InterruptPriority::BR7, 0, 0, 004};
+    InterruptRequest const order1 {InterruptPriority::BR7, 0, 1, 004};
+
     EXPECT_TRUE (order0 < order1);
 }
