@@ -2,21 +2,21 @@
 
 using std::function;
 
-void Unibus::requestInterrupt (TrapPriority priority, unsigned char busOrder,
+void Unibus::requestInterrupt (InterruptPriority priority, unsigned char busOrder,
 	u8 functionOrder, u16 vector, function<void ()> requestGrant)
 {
 	return interruptHandler_.setInterrupt (priority, busOrder, functionOrder,
 		vector, requestGrant);
 }
 
-bool Unibus::containsInterrupt (TrapPriority priority, unsigned char busOrder,
+bool Unibus::containsInterrupt (InterruptPriority priority, unsigned char busOrder,
 	u8 functionOrder)
 {
 	return interruptHandler_.containsInterrupt (priority, busOrder,
 		functionOrder);
 }
 
-void Unibus::clearInterrupt (TrapPriority priority, unsigned char busOrder,
+void Unibus::clearInterrupt (InterruptPriority priority, unsigned char busOrder,
 	u8 functionOrder)
 {
 	return interruptHandler_.clearInterrupt (priority, busOrder, functionOrder);

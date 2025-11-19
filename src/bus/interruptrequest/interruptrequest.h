@@ -11,7 +11,7 @@ using std::atomic_uint;
 
 // Definition of trap priorities. The BR4-BR7 priorities concur with
 // the CPU priority as indicated in the PSW (bits 5-7).
-enum class TrapPriority
+enum class InterruptPriority
 {
     BusError = 12,
     InstructionTrap = 11,
@@ -42,21 +42,21 @@ class InterruptRequest
 public:
     // Constructors
     InterruptRequest ();
-    InterruptRequest (TrapPriority priority, unsigned char busOrder,
+    InterruptRequest (InterruptPriority priority, unsigned char busOrder,
         u8 functionOrder, u16 vector, function<void ()> requestGrant = 0);
 
     bool operator< (InterruptRequest const &ir) const;
     bool operator== (InterruptRequest const &ir) const;
 
     // Accessors
-    TrapPriority priority() const;
+    InterruptPriority priority() const;
     unsigned char busOrder() const;
     unsigned char vector() const;
     void requestGrant ();
     unsigned int id () const;
 
 private:
-    TrapPriority priority_;
+    InterruptPriority priority_;
     unsigned char busOrder_;
     u8 functionOrder_;
     u16 vector_;
@@ -70,7 +70,7 @@ private:
     // long id's.
     static atomic_uint intrptSeqNr_;
 
-    long intrptPriority (TrapPriority trapPriority, unsigned char busOrder,
+    long intrptPriority (InterruptPriority trapPriority, unsigned char busOrder,
         u8 functionOrder) const;
 };
 

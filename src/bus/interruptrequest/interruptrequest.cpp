@@ -5,7 +5,7 @@ atomic_uint InterruptRequest::intrptSeqNr_ = 0;
 // Constructors
 InterruptRequest::InterruptRequest()
     :
-    priority_ {TrapPriority::None},
+    priority_ {InterruptPriority::None},
     busOrder_ {0},
     functionOrder_ {0},
     vector_ {0},
@@ -14,7 +14,7 @@ InterruptRequest::InterruptRequest()
     intrptReqId_ = intrptSeqNr_++;
 }
 
-InterruptRequest::InterruptRequest (TrapPriority priority,
+InterruptRequest::InterruptRequest (InterruptPriority priority,
         unsigned char busOrder, u8 functionOrder, u16 vector,
         function<void ()> requestGrant)
     :
@@ -45,7 +45,7 @@ bool InterruptRequest::operator== (InterruptRequest const &ir) const
 // Calculate the interrupt priority, based on first the trap priority and if
 // these are equal by the order on the bus. The higher the number, the greater
 // the priority.
-long InterruptRequest::intrptPriority (TrapPriority trapPriority, 
+long InterruptRequest::intrptPriority (InterruptPriority trapPriority, 
     unsigned char busOrder, u8 functionOrder) const
 {
     return static_cast<long> (trapPriority) * 256 + 
@@ -64,7 +64,7 @@ unsigned char InterruptRequest::vector() const
     return vector_;
 }
 
-TrapPriority InterruptRequest::priority() const
+InterruptPriority InterruptRequest::priority() const
 {
     return priority_;
 }

@@ -4,7 +4,7 @@
 // Set an interrupt request. To allow synchronization between multiple
 // interrupt request from the same device an interrupt request can be
 // acknowledged, indicating to the device the interrupt
-void InterruptHandler::setInterrupt (TrapPriority priority,
+void InterruptHandler::setInterrupt (InterruptPriority priority,
 	unsigned char busOrder, u8 functionOrder, u16 vector, 
 	function<void ()> requestGrant)
 {
@@ -21,7 +21,7 @@ void InterruptHandler::pushInterruptRequest (InterruptRequest intrptReq)
 	trace.irq (IrqRecordType::IRQ_REQUEST, intrptReq);
 }
 
-bool InterruptHandler::containsInterrupt (TrapPriority priority, unsigned char busOrder,
+bool InterruptHandler::containsInterrupt (InterruptPriority priority, unsigned char busOrder,
 	u8 functionOrder)
 {
 	return intrptReqQueue_.contains (InterruptRequest {priority,
@@ -31,7 +31,7 @@ bool InterruptHandler::containsInterrupt (TrapPriority priority, unsigned char b
 // Clear the specified interrupt request. The InterruptRequQueue will delete
 // the interrupt request equal to specified request. Equality is based on
 // priority and busorder (see InterruptRequest::operator==).
-void InterruptHandler::clearInterrupt (TrapPriority priority, unsigned char busOrder,
+void InterruptHandler::clearInterrupt (InterruptPriority priority, unsigned char busOrder,
 	u8 functionOrder)
 {
 	IntrptReqQueue::const_iterator it = intrptReqQueue_.find (

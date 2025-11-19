@@ -17,11 +17,11 @@ using std::function;
 class BusInterrupts
 {
 public:
-	virtual void requestInterrupt (TrapPriority priority, unsigned char busOrder,
+	virtual void requestInterrupt (InterruptPriority priority, unsigned char busOrder,
 		u8 functionOrder, u16 vector, function<void ()> requestGrant = 0) = 0;
-	virtual bool containsInterrupt (TrapPriority priority, unsigned char busOrder,
+	virtual bool containsInterrupt (InterruptPriority priority, unsigned char busOrder,
 		u8 functionOrder) = 0;
-	virtual void clearInterrupt (TrapPriority priority, unsigned char busOrder,
+	virtual void clearInterrupt (InterruptPriority priority, unsigned char busOrder,
 		u8 functionOrder) = 0;
 	virtual void clearInterrupts () = 0;
 	virtual bool intrptReqAvailable () = 0;

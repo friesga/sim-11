@@ -122,7 +122,7 @@ RK11D::State RK11D::StateMachine::transition (Polling&&,
         // of the semaphore (in completeSeek()) has been executed.
         context_->interruptRequestGranted_.acquire ();
 
-        context_->bus_->requestInterrupt (TrapPriority::BR5, 5, 0, context_->vector_,
+        context_->bus_->requestInterrupt (InterruptPriority::BR5, 5, 0, context_->vector_,
             bind (&RK11D::StateMachine::completeSeek, this, report));
     }
     else

@@ -189,7 +189,7 @@ TEST_F (RK11DSeekTest, seekGeneratesInterrupts)
     // The acceptance of the Seek function should generate an interrupt request
     waitForControllerReady (rk11dDevice);
     EXPECT_TRUE (bus.intrptReqAvailable ());
-    EXPECT_TRUE (bus.containsInterrupt (TrapPriority::BR5, 5, 0));
+    EXPECT_TRUE (bus.containsInterrupt (InterruptPriority::BR5, 5, 0));
     InterruptRequest ir;
     EXPECT_TRUE (bus.getIntrptReq (ir));
 
@@ -219,7 +219,7 @@ TEST_F (RK11DSeekTest, overlappedSeeks)
     // The acceptance of the Seek function should generate an interrupt request
     waitForControllerReady (rk11dDevice);
     EXPECT_TRUE (bus.intrptReqAvailable ());
-    EXPECT_TRUE (bus.containsInterrupt (TrapPriority::BR5, 5, 0));
+    EXPECT_TRUE (bus.containsInterrupt (InterruptPriority::BR5, 5, 0));
     InterruptRequest ir;
     EXPECT_TRUE (bus.getIntrptReq (ir));
 
@@ -233,7 +233,7 @@ TEST_F (RK11DSeekTest, overlappedSeeks)
     // The acceptance of the Seek function should generate an interrupt request.
     waitForControllerReady (rk11dDevice);
     EXPECT_TRUE (bus.intrptReqAvailable ());
-    EXPECT_TRUE (bus.containsInterrupt (TrapPriority::BR5, 5, 0));
+    EXPECT_TRUE (bus.containsInterrupt (InterruptPriority::BR5, 5, 0));
     EXPECT_TRUE (bus.getIntrptReq (ir));
 
     // After completion of the first seek an interrupt should be available.

@@ -323,7 +323,7 @@ void BDV11::reset ()
 	ltc = 0;
 
 	// Clear possibly pending interrupts
-	bus_->clearInterrupt (TrapPriority::BR6, 9, 0);
+	bus_->clearInterrupt (InterruptPriority::BR6, 9, 0);
 
 	memoryDump (pcr, 0);
 	memoryDump (pcr, 1);
@@ -349,10 +349,10 @@ void BDV11::tick()
 	{
 		// Check the line time clock (LTC) is enabled
 		if (ltc & LKS_IE)
-			bus_->requestInterrupt (TrapPriority::BR6, 9, 0, 0100);
+			bus_->requestInterrupt (InterruptPriority::BR6, 9, 0, 0100);
 		else
 			// Clear possibly pending interrupts
-			bus_->clearInterrupt (TrapPriority::BR6, 9, 0);
+			bus_->clearInterrupt (InterruptPriority::BR6, 9, 0);
 	
 		nextWakeup += cycleTime;
 		alarmClock.sleepUntil (nextWakeup);

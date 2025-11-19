@@ -50,7 +50,7 @@ CpuControl::CpuRunState KDF11_CpuControl::execute ()
     // that interrupt first, else execute the next instruction
     // Interrupts are only processed if their priority is higher than the
     // current CPU priority. (The LSI-11 has just two priority levels,
-    // zero and BR4.) Note that the numerical value of the TrapPriority enum
+    // zero and BR4.) Note that the numerical value of the InterruptPriority enum
     // is used as bus request level. Traps in HALT mode are ignored.
     if (cpuData_->trap () != CpuData::TrapCondition::None)
     {
