@@ -87,7 +87,7 @@ void KD11_NA_CpuControl::execInstr ()
     if (!instructionWord.hasValue())
     {
         trace.bus (BusRecordType::ReadFail, cpuData_->registers ()[7], 0);
-        cpuData_->setTrap (CpuData::TrapCondition::BusError);
+        cpuData_->setTrap (CpuData::TrapType::BusError);
         return;
     }
     cpuData_->registers ()[7] += 2;
@@ -98,7 +98,7 @@ void KD11_NA_CpuControl::execInstr ()
     // If the trace flag is set, the next instruction has to result in a trace
     // trap, unless the instruction resulted in another trap.
     if (traceFlag_)
-        cpuData_->setTrap (CpuData::TrapCondition::BreakpointTrap);
+        cpuData_->setTrap (CpuData::TrapType::BreakpointTrap);
 
     // The instruction time is defined in microseconds with an accuracy of
     // nanoseconds. Convert the time in microseconds to the 64-bits integer
@@ -115,7 +115,7 @@ void KD11_NA_CpuControl::execInstr ()
     // instructions set a trap and return true. 
     visit (executor, instr);
 
-    if (cpuData_->trap () != CpuData::TrapCondition::None)
+    if (cpuData_->trap () != CpuData::TrapType::None)
         serviceTrap ();
 
     // Trace Trap is enabled by bit 4 of the PSW and causes processor traps at

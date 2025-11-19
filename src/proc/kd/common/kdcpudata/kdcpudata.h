@@ -26,11 +26,11 @@ public:
 	constexpr PSW& psw () override;
 	void setCC (ConditionCodes conditionCodes) override;
 
-	constexpr TrapCondition trap () override;
-	void setTrap (CpuData::TrapCondition trap, TrapRecordType cause = TrapRecordType::TRAP) override;
+	constexpr TrapType trap () override;
+	void setTrap (CpuData::TrapType trap, TrapRecordType cause = TrapRecordType::TRAP) override;
 	constexpr void clearTrap () override;
 	u16 trapVector () override;
-	u16 trapVector (TrapCondition trap) override;
+	u16 trapVector (TrapType trap) override;
 
 protected:
 	PSWTYPE psw_ {0};
@@ -38,9 +38,9 @@ protected:
 
 	// A trap is a special kind of interrupt, internal to the CPU. There
 	// can be only one trap serviced at the time.
-	CpuData::TrapCondition trap_;
+	CpuData::TrapType trap_;
 
-	static map<CpuData::TrapCondition, u16> trapVector_;
+	static map<CpuData::TrapType, u16> trapVector_;
 };
 
 // Constructor
@@ -48,7 +48,7 @@ template <typename REGISTERTYPE, typename PSWTYPE>
 KDCpuData<REGISTERTYPE, PSWTYPE>::KDCpuData ()
     :
     psw_ {0},
-    trap_ {CpuData::TrapCondition::None}
+    trap_ {CpuData::TrapType::None}
 {}
 
 // constexpr functions are implicitly inline and therefore need to be defined
@@ -80,7 +80,7 @@ constexpr GeneralRegisters& KDCpuData<REGISTERTYPE, PSWTYPE>::registers ()
 
 // Generate the given trap using the interrupt request mechanism
 template <typename REGISTERTYPE, typename PSWTYPE>
-void KDCpuData<REGISTERTYPE, PSWTYPE>::setTrap (CpuData::TrapCondition trap, TrapRecordType cause)
+void KDCpuData<REGISTERTYPE, PSWTYPE>::setTrap (CpuData::TrapType trap, TrapRecordType cause)
 {
     trace.trap (cause, trapVector (trap));
     trap_ = trap;
@@ -89,11 +89,11 @@ void KDCpuData<REGISTERTYPE, PSWTYPE>::setTrap (CpuData::TrapCondition trap, Tra
 template <typename REGISTERTYPE, typename PSWTYPE>
 constexpr void KDCpuData<REGISTERTYPE, PSWTYPE>::clearTrap ()
 {
-	trap_ = TrapCondition::None;
+	trap_ = TrapType::None;
 }
 
 template <typename REGISTERTYPE, typename PSWTYPE>
-constexpr CpuData::TrapCondition KDCpuData<REGISTERTYPE, PSWTYPE>::trap ()
+constexpr CpuData::TrapType KDCpuData<REGISTERTYPE, PSWTYPE>::trap ()
 {
 	return trap_;
 }
@@ -105,7 +105,7 @@ u16 KDCpuData<REGISTERTYPE, PSWTYPE>::trapVector ()
 }
 
 template <typename REGISTERTYPE, typename PSWTYPE>
-u16 KDCpuData<REGISTERTYPE, PSWTYPE>::trapVector (TrapCondition trap)
+u16 KDCpuData<REGISTERTYPE, PSWTYPE>::trapVector (TrapType trap)
 {
 	return trapVector_[trap];
 }
@@ -119,21 +119,21 @@ u16 KDCpuData<REGISTERTYPE, PSWTYPE>::trapVector (TrapCondition trap)
 // to 004 but on some other processors these instructions trap to vector
 // address 010. (See PDP-11 Architecture Handbook, appendix B, item 5).
 template <typename REGISTERTYPE, typename PSWTYPE>
-map<CpuData::TrapCondition, u16> KDCpuData<REGISTERTYPE, PSWTYPE>::trapVector_ 
+map<CpuData::TrapType, u16> KDCpuData<REGISTERTYPE, PSWTYPE>::trapVector_ 
 {
-    make_pair (CpuData::TrapCondition::None, 0),						// Reserved
-	make_pair (CpuData::TrapCondition::BusError, 004),					// Time out and other errors
-	make_pair (CpuData::TrapCondition::IllegalInstructionTrap, 004),	// Illegal instructions
-	make_pair (CpuData::TrapCondition::ReservedInstructionTrap, 010),	// Reserved instructions
-	make_pair (CpuData::TrapCondition::BreakpointTrap, 014),			// BPT instruction
-	make_pair (CpuData::TrapCondition::InputOutputTrap, 020),			// IOT instruction
-	make_pair (CpuData::TrapCondition::PowerFail, 024),					// Power fail
-	make_pair (CpuData::TrapCondition::EmulatorTrap, 030),				// EMT instruction
-	make_pair (CpuData::TrapCondition::TrapInstruction, 034),			// TRAP instruction
-	make_pair (CpuData::TrapCondition::FIS, 0244),						// Floating point
-	make_pair (CpuData::TrapCondition::StackOverflow, 004),				// Stack overflow
-	make_pair (CpuData::TrapCondition::ParityError, 0114),				// Memory parity error
-	make_pair (CpuData::TrapCondition::MemoryManagementTrap, 0250),		// Memory Management abort
+    make_pair (CpuData::TrapType::None, 0),						// Reserved
+	make_pair (CpuData::TrapType::BusError, 004),					// Time out and other errors
+	make_pair (CpuData::TrapType::IllegalInstructionTrap, 004),	// Illegal instructions
+	make_pair (CpuData::TrapType::ReservedInstructionTrap, 010),	// Reserved instructions
+	make_pair (CpuData::TrapType::BreakpointTrap, 014),			// BPT instruction
+	make_pair (CpuData::TrapType::InputOutputTrap, 020),			// IOT instruction
+	make_pair (CpuData::TrapType::PowerFail, 024),					// Power fail
+	make_pair (CpuData::TrapType::EmulatorTrap, 030),				// EMT instruction
+	make_pair (CpuData::TrapType::TrapInstruction, 034),			// TRAP instruction
+	make_pair (CpuData::TrapType::FIS, 0244),						// Floating point
+	make_pair (CpuData::TrapType::StackOverflow, 004),				// Stack overflow
+	make_pair (CpuData::TrapType::ParityError, 0114),				// Memory parity error
+	make_pair (CpuData::TrapType::MemoryManagementTrap, 0250),		// Memory Management abort
 };
 
 #endif // _KDCPUDATA_H_

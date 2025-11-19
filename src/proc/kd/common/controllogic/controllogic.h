@@ -117,7 +117,7 @@ private:
     State powerUpRoutine ();
     State powerDownRoutine ();
     State bootRoutine ();
-    void loadTrapVector (CpuData::TrapCondition trap);
+    void loadTrapVector (CpuData::TrapType trap);
     void subscribeToSignals ();
     void runODT ();
     bool signalAvailable ();

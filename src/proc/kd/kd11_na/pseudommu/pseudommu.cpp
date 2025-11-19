@@ -17,7 +17,7 @@ CondData<u16> PseudoMMU::fetchWord (VirtualAddress address, PSW::Mode mode)
     if (!value.hasValue ())
     {
         trace.bus (BusRecordType::ReadFail, address, 0);
-        cpuData_->setTrap (CpuData::TrapCondition::BusError);
+        cpuData_->setTrap (CpuData::TrapType::BusError);
         return {};
     }
     return value;
@@ -53,7 +53,7 @@ bool PseudoMMU::putWord (VirtualAddress address, u16 value, PSW::Mode memMgmtMod
     if (!bus_->writeWord (address, value))
     {
         trace.bus (BusRecordType::WriteFail, address, value);
-        cpuData_->setTrap (CpuData::TrapCondition::BusError);
+        cpuData_->setTrap (CpuData::TrapType::BusError);
         return false;
     }
     return true;
@@ -65,7 +65,7 @@ bool PseudoMMU::putByte (VirtualAddress address, u8 value, PSW::Mode memMgmtMode
     if (!bus_->writeByte (address, value))
     {
         trace.bus (BusRecordType::WriteFail, address, value);
-        cpuData_->setTrap (CpuData::TrapCondition::BusError);
+        cpuData_->setTrap (CpuData::TrapType::BusError);
         return false;
     }
     return true;

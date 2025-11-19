@@ -28,7 +28,7 @@ ControlLogic::State ControlLogic::powerUpRoutine ()
     switch (powerUpMode_)
     {
         case KD11Config::PowerUpMode::Vector:
-            loadTrapVector (CpuData::TrapCondition::PowerFail);
+            loadTrapVector (CpuData::TrapType::PowerFail);
             cpuControl_->proceed ();
 
             // If BHALT is set immediately transition to the Halted state,
