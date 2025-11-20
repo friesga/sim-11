@@ -32,7 +32,7 @@ bool KD11_NA::Executor::returnFISresult (Float result, u16 registerNumber)
             .V = true,
             .C = false});
 
-        cpuData_->setTrap (CpuData::TrapType::FIS);
+        cpuData_->setTrap (CpuData::TrapCondition::FIS);
         return true;
     }
     
@@ -42,7 +42,7 @@ bool KD11_NA::Executor::returnFISresult (Float result, u16 registerNumber)
         .V = true,
         .C = false});
 
-    cpuData_->setTrap (CpuData::TrapType::FIS);
+    cpuData_->setTrap (CpuData::TrapCondition::FIS);
     return true;
 }
 
@@ -71,7 +71,7 @@ bool KD11_NA::Executor::executeFISinstruction (u16 stackPointer,
     if (!f1High.hasValue () || !f1Low.hasValue () ||
         !f2High.hasValue () || !f2Low.hasValue ())
     {
-        cpuData_->setTrap (CpuData::TrapType::BusError);
+        cpuData_->setTrap (CpuData::TrapCondition::BusError);
         return true;
     }
      
@@ -91,6 +91,6 @@ bool KD11_NA::Executor::executeFISinstruction (u16 stackPointer,
         .V = true,
         .C = true});
 
-    cpuData_->setTrap (CpuData::TrapType::FIS);
+    cpuData_->setTrap (CpuData::TrapCondition::FIS);
     return true;
 }

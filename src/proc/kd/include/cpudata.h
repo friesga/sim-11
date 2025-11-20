@@ -24,25 +24,23 @@
 class CpuData
 {
 public:
-	// Definition of the trap types. The vectors and priorities corresponding
-    // to these types are defined in the processor-specific classes, such as
-	// KD11CpuData.
-	//
-	enum class TrapType
+	// Definition of the trap conditions. The vectors corresponding to these
+	// conditions are defined in a map.
+	enum class TrapCondition
 	{
 		None,						// Reserved
 		BusError,					// Time out and other errors
-		ReservedInstruction,		// Reserved instruction
-		IllegalInstruction,			// Illegal and reserved instructions
-		Breakpoint,					// BPT instruction
-		InputOutput,				// IOT instruction
+		ReservedInstructionTrap,	// Reserved instruction
+		IllegalInstructionTrap,		// Illegal and reserved instructions
+		BreakpointTrap,				// BPT instruction
+		InputOutputTrap,			// IOT instruction
 		PowerFail,					// Power fail
-		Emulator,					// EMT instruction
+		EmulatorTrap,				// EMT instruction
 		TrapInstruction,			// TRAP instruction
 		FIS,						// Floating point
 		StackOverflow,				// Stack overflow
 		ParityError,				// Memory parity error
-		MemoryManagement			// Memory management abort
+		MemoryManagementTrap		// Memory management abort
 	};
 
 	// Definition of the KD11 execution state
@@ -53,11 +51,11 @@ public:
 
 	// The memory access functions must be able to generate a bus error trap
 	// when accessing non-existing memory.
-	virtual TrapType trap () = 0;
-    virtual void setTrap (TrapType trap, TrapRecordType cause = TrapRecordType::TRAP) = 0;
+	virtual TrapCondition trap () = 0;
+    virtual void setTrap (TrapCondition trap, TrapRecordType cause = TrapRecordType::TRAP) = 0;
 	virtual void clearTrap () = 0;
 	virtual u16 trapVector () = 0;
-	virtual u16 trapVector (TrapType trap) = 0;
+	virtual u16 trapVector (TrapCondition trap) = 0;
 };
 
 #endif // _CPUDATA_H_

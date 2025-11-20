@@ -181,12 +181,12 @@ CondData<u16> KTF11_A::readPhysical (BusAddress busAddress)
 
         case StatusCode::ParityError:
             trace.bus (BusRecordType::ParityError, busAddress, value);
-            cpuData_->setTrap (CpuData::TrapType::ParityError);
+            cpuData_->setTrap (CpuData::TrapCondition::ParityError);
             break;
 
         default:
             trace.bus (BusRecordType::ReadFail, busAddress, 0);
-            cpuData_->setTrap (CpuData::TrapType::BusError);
+            cpuData_->setTrap (CpuData::TrapCondition::BusError);
             break;
     }
 
@@ -200,7 +200,7 @@ bool KTF11_A::writePhysicalWord (BusAddress busAddress, u16 value)
     if (!bus_->writeWord (busAddress, value))
     {
         trace.bus (BusRecordType::WriteFail, busAddress, value);
-        cpuData_->setTrap (CpuData::TrapType::BusError);
+        cpuData_->setTrap (CpuData::TrapCondition::BusError);
         return false;
     }
 
@@ -212,7 +212,7 @@ bool KTF11_A::writePhysicalByte (BusAddress busAddress, u16 value)
     if (!bus_->writeByte (busAddress, value))
     {
         trace.bus (BusRecordType::WriteFail, busAddress, value);
-        cpuData_->setTrap (CpuData::TrapType::BusError);
+        cpuData_->setTrap (CpuData::TrapCondition::BusError);
         return false;
     }
 
@@ -336,7 +336,7 @@ bool KTF11_A::abortAccess (SR0::AbortReason reason, u16 address)
     sr0_.setAbortCondition (reason, 
         static_cast<u16> (cpuData_->psw ().currentMode ()),
         activePageField (address));
-    cpuData_->setTrap (CpuData::TrapType::MemoryManagement);
+    cpuData_->setTrap (CpuData::TrapCondition::MemoryManagementTrap);
     return false;
 }
 

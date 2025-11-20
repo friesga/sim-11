@@ -24,13 +24,13 @@ struct KDF11_UConfig : public DeviceType<BusType::Unibus>
     // AllowHalt - In kernel mode allows HALT instruction to be executed. In
     //             all other modes, a HALT instruction traps to location 010.
     // 
-    // IllegalInstruction - In all modes, a HALT instruction traps to
+    // IllegalInstructionTrap - In all modes, a HALT instruction traps to
     //                          location 010 (except during powerfail).
     //
     enum class KernelHaltMode
     {
         AllowHalt,
-        IllegalInstruction
+        IllegalInstructionTrap
     };
 
     KernelHaltMode kernelHaltMode {KernelHaltMode::AllowHalt};

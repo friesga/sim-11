@@ -62,7 +62,7 @@ bool ControlLogic::signalAvailable ()
 }
 
 // Load PC and PSW from the given vector
-void ControlLogic::loadTrapVector (CpuData::TrapType trap)
+void ControlLogic::loadTrapVector (CpuData::TrapCondition trap)
 {
     cpuData_->registers ()[7] = mmu_->fetchWord (cpuData_->trapVector (trap)).valueOr (0);
     cpuData_->psw ().set (PSW::ProtectionMode::Trap,
