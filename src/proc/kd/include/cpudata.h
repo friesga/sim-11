@@ -24,9 +24,9 @@
 class CpuData
 {
 public:
-	// Definition of the trap conditions. The vectors corresponding to these
+	// Definition of the trap types. The vectors corresponding to these
 	// conditions are defined in a map.
-	enum class TrapCondition
+	enum class TrapType
 	{
 		BusError,					// Time out and other errors
 		ReservedInstructionTrap,	// Reserved instruction
@@ -51,11 +51,11 @@ public:
 	// The memory access functions must be able to generate a bus error trap
 	// when accessing non-existing memory.
 	virtual bool trapPending () const = 0;
-	virtual bool trapPending (TrapCondition trap) const = 0;
-    virtual void setTrap (TrapCondition trap, TrapRecordType cause = TrapRecordType::TRAP) = 0;
+	virtual bool trapPending (TrapType trap) const = 0;
+    virtual void setTrap (TrapType trap, TrapRecordType cause = TrapRecordType::TRAP) = 0;
 	virtual void clearTrap () = 0;
 	virtual u16 trapVector () = 0;
-	virtual u16 trapVector (TrapCondition trap) = 0;
+	virtual u16 trapVector (TrapType trap) = 0;
 };
 
 #endif // _CPUDATA_H_

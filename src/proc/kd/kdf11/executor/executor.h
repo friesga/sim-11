@@ -896,7 +896,7 @@ inline bool Executor::operator() (HALT& instr)
 {
     if (cpuData_->psw ().currentMode () == PSW::Mode::User)
     {
-        cpuData_->setTrap (CpuData::TrapCondition::ReservedInstructionTrap);
+        cpuData_->setTrap (CpuData::TrapType::ReservedInstructionTrap);
         return false;
     }
     cpuControl_->halt ();
@@ -942,7 +942,7 @@ inline bool Executor::operator() (MFPD& instr)
         return false;
 
     if (cpuData_->stackOverflow ())
-        cpuData_->setTrap (CpuData::TrapCondition::StackOverflow);
+        cpuData_->setTrap (CpuData::TrapType::StackOverflow);
 
     commonExecutor.setPSW (ConditionCodes {.N = (bool) (source & 0100000),
         .Z = source == 0,
@@ -997,28 +997,28 @@ inline bool Executor::operator() (MFPT& instr)
 template <>
 inline bool Executor::operator() (FADD& instr)
 {
-    cpuData_->setTrap (CpuData::TrapCondition::ReservedInstructionTrap);
+    cpuData_->setTrap (CpuData::TrapType::ReservedInstructionTrap);
 	return false;
 }
 
 template <>
 inline bool Executor::operator() (FSUB& instr)
 {
-    cpuData_->setTrap (CpuData::TrapCondition::ReservedInstructionTrap);
+    cpuData_->setTrap (CpuData::TrapType::ReservedInstructionTrap);
 	return false;
 }
 
 template <>
 inline bool Executor::operator() (FMUL& instr)
 {
-    cpuData_->setTrap (CpuData::TrapCondition::ReservedInstructionTrap);
+    cpuData_->setTrap (CpuData::TrapType::ReservedInstructionTrap);
 	return false;
 }
 
 template <>
 inline bool Executor::operator() (FDIV& instr)
 {
-    cpuData_->setTrap (CpuData::TrapCondition::ReservedInstructionTrap);
+    cpuData_->setTrap (CpuData::TrapType::ReservedInstructionTrap);
 	return false;
 }
 

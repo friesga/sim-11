@@ -83,7 +83,7 @@ void KDF11_CpuControl::execInstr ()
     if (!instructionWord.hasValue())
     {
         trace.bus (BusRecordType::ReadFail, cpuData_->registers ()[7], 0);
-        cpuData_->setTrap (CpuData::TrapCondition::BusError);
+        cpuData_->setTrap (CpuData::TrapType::BusError);
         return;
     }
 
@@ -114,7 +114,7 @@ void KDF11_CpuControl::execInstr ()
     // If the trace flag is set, the next instruction has to result in a trace
     // trap, unless the instruction resulted in another trap.
     if (traceFlag_ && !cpuData_->trapPending ())
-        cpuData_->setTrap (CpuData::TrapCondition::BreakpointTrap);
+        cpuData_->setTrap (CpuData::TrapType::BreakpointTrap);
 
     // Trace Trap is enabled by bit 4 of the PSW and causes processor traps at
     // the end of instruction execution. The instruction-that is executed
@@ -136,8 +136,8 @@ void KDF11_CpuControl::serviceTrap ()
     // original trap was caused by a stack overflow in the executed
     // instruction.
     if (cpuData_->stackOverflow () && 
-            !cpuData_->trapPending (CpuData::TrapCondition::StackOverflow))
-        swapPcPSW (cpuData_->trapVector (CpuData::TrapCondition::StackOverflow));
+            !cpuData_->trapPending (CpuData::TrapType::StackOverflow))
+        swapPcPSW (cpuData_->trapVector (CpuData::TrapType::StackOverflow));
 
     cpuData_->clearTrap ();
 }
@@ -155,7 +155,7 @@ void KDF11_CpuControl::serviceInterrupt ()
         // Check if a stack overflow occurred as a result of the interrupt.
         // In that case a stack overflow trap has to be processed first.
         if (cpuData_->stackOverflow ())
-            swapPcPSW (cpuData_->trapVector (CpuData::TrapCondition::StackOverflow));
+            swapPcPSW (cpuData_->trapVector (CpuData::TrapType::StackOverflow));
     }
 }
 

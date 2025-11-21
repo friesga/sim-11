@@ -13,7 +13,7 @@ TEST (TrapTest, trapCanBeSet)
 {
     KDF11CpuData cpuData;
 
-    cpuData.setTrap (CpuData::TrapCondition::BusError);
+    cpuData.setTrap (CpuData::TrapType::BusError);
     EXPECT_TRUE (cpuData.trapPending ());
 }
 
@@ -21,7 +21,7 @@ TEST (TrapTest, trapCanBeCleared)
 {
     KDF11CpuData cpuData;
 
-    cpuData.setTrap (CpuData::TrapCondition::BusError);
+    cpuData.setTrap (CpuData::TrapType::BusError);
     cpuData.clearTrap ();
     EXPECT_FALSE (cpuData.trapPending ());
 }
@@ -30,7 +30,7 @@ TEST (TrapTest, trapVectorCanBeRetrieved)
 {
     KDF11CpuData cpuData;
 
-    cpuData.setTrap (CpuData::TrapCondition::BusError);
+    cpuData.setTrap (CpuData::TrapType::BusError);
     EXPECT_EQ (cpuData.trapVector (), 004);
 }
 
@@ -38,7 +38,7 @@ TEST (TrapTest, vectorForTrapTypeCanBeRetrieved)
 {
     KDF11CpuData cpuData;
 
-    EXPECT_EQ (cpuData.trapVector (CpuData::TrapCondition::BusError), 004);
+    EXPECT_EQ (cpuData.trapVector (CpuData::TrapType::BusError), 004);
 }
 
 TEST (TrapTest, getVectorForClearTrapThrows)
@@ -53,11 +53,11 @@ TEST (TrapTest, pendingTrapReported)
     KDF11CpuData cpuData;
 
     EXPECT_FALSE (cpuData.trapPending ());
-    EXPECT_FALSE (cpuData.trapPending (CpuData::TrapCondition::BusError));
+    EXPECT_FALSE (cpuData.trapPending (CpuData::TrapType::BusError));
 
-    cpuData.setTrap (CpuData::TrapCondition::BusError);
+    cpuData.setTrap (CpuData::TrapType::BusError);
 
     EXPECT_TRUE (cpuData.trapPending ());
-    EXPECT_TRUE (cpuData.trapPending (CpuData::TrapCondition::BusError));
-    EXPECT_FALSE (cpuData.trapPending (CpuData::TrapCondition::IllegalInstructionTrap));
+    EXPECT_TRUE (cpuData.trapPending (CpuData::TrapType::BusError));
+    EXPECT_FALSE (cpuData.trapPending (CpuData::TrapType::IllegalInstructionTrap));
 }

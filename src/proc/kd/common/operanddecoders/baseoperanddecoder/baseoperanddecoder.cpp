@@ -87,7 +87,7 @@ OperandLocation BaseOperandDecoder::decodeOperand (u16 opCode, Operand operand,
 			address = reg[operand.registerNr_];
 
 			if (operand.registerNr_ == 6 && cpuData_->stackOverflow ())
-				cpuData_->setTrap (CpuData::TrapCondition::StackOverflow);  
+				cpuData_->setTrap (CpuData::TrapType::StackOverflow);  
 
 			return OperandLocation (MemoryOperandLocation {cpuData_, mmu_,
 				CondData<u16> (address)});
@@ -101,7 +101,7 @@ OperandLocation BaseOperandDecoder::decodeOperand (u16 opCode, Operand operand,
 			address = reg[operand.registerNr_];
 
 			if (operand.registerNr_ == 6 && cpuData_->stackOverflow ())
-				cpuData_->setTrap (CpuData::TrapCondition::StackOverflow);  
+				cpuData_->setTrap (CpuData::TrapType::StackOverflow);  
 
 			return OperandLocation (MemoryOperandLocation {cpuData_, mmu_,
 				CondData<u16> (mmu_->fetchWord (static_cast<BusAddress> (address)))});
