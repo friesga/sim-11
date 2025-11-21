@@ -95,6 +95,7 @@ set (GTEST_SRCS
     signaltest.cpp
     simulatorclocktest.cpp
     tracetest.cpp
+    traptest.cpp
     unit/unittest.cpp
     serial/uartmaintmodetest.cpp
     variantfsmtest.cpp)
