@@ -39,11 +39,44 @@ protected:
 	PSWTYPE psw_ {0};
 	REGISTERTYPE registers_ {psw_};
 
+private:
+	// A trap is a special kind of interrupt, internal to the CPU. There
+	// can be only one trap serviced at the time. Trap piorities are based
+	// on the LSI-11 PDP-11/03 processor handbook p. 4-70:
+	// - Bus Error Trap
+	// - Memory Refresh
+	// - Instruction Traps
+	// - Trace Trap
+	// - Halt Line
+	// - Power Fail Trap
+	// - Event Line Interrupt
+	// - Device (Bus) Interrupt Request
+	//
+	// Device (Bus) interrupt requests always have a lower priority than any
+	// trap and are modelled in a separate InterruptRequest class.
+	// 
+	// Note the difference between reserved and illegal instructions. Reserved
+	// instructions always trap to vector address 010 (LSI-11/PDP-11/03
+	// Processor Handbook page 4-69). Illegal instructions trap to either
+	// vector address 004 or 010. On the KD11-NA and KDF11-A processors
+	// illegal instructions trap to 004 but on some other processors these
+	// instructions trap to vector address 010. (See PDP-11 Architecture
+	// Handbook, appendix B, item 5).
+	//
+	// Definition of the trap vectors and priorities belonging for the trap
+	// types.
+	//
+	struct TrapData
+	{
+		u16 vectorAddress;
+		u16 priority;
+	};
+
 	// A trap is a special kind of interrupt, internal to the CPU. There
 	// can be only one trap serviced at the time.
 	optional<CpuData::TrapType> trap_;
 
-	static map<CpuData::TrapType, u16> trapVector_;
+	static map<CpuData::TrapType, TrapData> trapData_;
 };
 
 // Constructor
@@ -113,13 +146,13 @@ bool KDCpuData<REGISTERTYPE, PSWTYPE>::trapPending (TrapType trap) const
 template <typename REGISTERTYPE, typename PSWTYPE>
 u16 KDCpuData<REGISTERTYPE, PSWTYPE>::trapVector ()
 {
-	return trapVector_[trap_.value ()];
+	return trapData_[trap_.value ()].vectorAddress;
 }
 
 template <typename REGISTERTYPE, typename PSWTYPE>
 u16 KDCpuData<REGISTERTYPE, PSWTYPE>::trapVector (TrapType trap)
 {
-	return trapVector_[trap];
+	return trapData_[trap].vectorAddress;
 }
 
 // Definition of the trap vector belonging to the trap condition.
@@ -131,20 +164,22 @@ u16 KDCpuData<REGISTERTYPE, PSWTYPE>::trapVector (TrapType trap)
 // to 004 but on some other processors these instructions trap to vector
 // address 010. (See PDP-11 Architecture Handbook, appendix B, item 5).
 template <typename REGISTERTYPE, typename PSWTYPE>
-map<CpuData::TrapType, u16> KDCpuData<REGISTERTYPE, PSWTYPE>::trapVector_ 
+map<CpuData::TrapType, 
+	typename KDCpuData<REGISTERTYPE, PSWTYPE>::TrapData>
+KDCpuData<REGISTERTYPE, PSWTYPE>::trapData_
 {
-	make_pair (CpuData::TrapType::BusError, 004),					// Time out and other errors
-	make_pair (CpuData::TrapType::IllegalInstructionTrap, 004),		// Illegal instructions
-	make_pair (CpuData::TrapType::ReservedInstructionTrap, 010),	// Reserved instructions
-	make_pair (CpuData::TrapType::BreakpointTrap, 014),				// BPT instruction
-	make_pair (CpuData::TrapType::InputOutputTrap, 020),			// IOT instruction
-	make_pair (CpuData::TrapType::PowerFail, 024),					// Power fail
-	make_pair (CpuData::TrapType::EmulatorTrap, 030),				// EMT instruction
-	make_pair (CpuData::TrapType::TrapInstruction, 034),			// TRAP instruction
-	make_pair (CpuData::TrapType::FIS, 0244),						// Floating point
-	make_pair (CpuData::TrapType::StackOverflow, 004),				// Stack overflow
-	make_pair (CpuData::TrapType::ParityError, 0114),				// Memory parity error
-	make_pair (CpuData::TrapType::MemoryManagementTrap, 0250),		// Memory Management abort
+	make_pair (CpuData::TrapType::StackOverflow, TrapData {004, 7}),			// Stack overflow
+	make_pair (CpuData::TrapType::MemoryManagementTrap, TrapData {0250, 7}),	// Memory Management abort
+	make_pair (CpuData::TrapType::BusError, TrapData {004, 6}),					// Time out and other errors
+	make_pair (CpuData::TrapType::IllegalInstructionTrap, TrapData {004, 5}),	// Illegal instructions
+	make_pair (CpuData::TrapType::ReservedInstructionTrap, TrapData {010, 5}),	// Reserved instructions
+	make_pair (CpuData::TrapType::ParityError, TrapData {0114, 5}),				// Memory parity error
+	make_pair (CpuData::TrapType::InputOutputTrap, TrapData {020, 4}),			// IOT instruction
+	make_pair (CpuData::TrapType::EmulatorTrap, TrapData {030, 4}),				// EMT instruction
+	make_pair (CpuData::TrapType::TrapInstruction, TrapData {034, 4}),			// TRAP instruction
+	make_pair (CpuData::TrapType::BreakpointTrap, TrapData {014, 3}),			// BPT instruction
+	make_pair (CpuData::TrapType::FIS, TrapData {0244, 3}),						// Floating point
+	make_pair (CpuData::TrapType::PowerFail, TrapData {024, 1}),				// Power fail
 };
 
 #endif // _KDCPUDATA_H_
