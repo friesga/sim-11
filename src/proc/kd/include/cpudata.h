@@ -28,7 +28,6 @@ public:
 	// conditions are defined in a map.
 	enum class TrapCondition
 	{
-		None,						// Reserved
 		BusError,					// Time out and other errors
 		ReservedInstructionTrap,	// Reserved instruction
 		IllegalInstructionTrap,		// Illegal and reserved instructions

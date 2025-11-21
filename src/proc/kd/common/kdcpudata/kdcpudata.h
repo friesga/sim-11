@@ -133,7 +133,6 @@ u16 KDCpuData<REGISTERTYPE, PSWTYPE>::trapVector (TrapCondition trap)
 template <typename REGISTERTYPE, typename PSWTYPE>
 map<CpuData::TrapCondition, u16> KDCpuData<REGISTERTYPE, PSWTYPE>::trapVector_ 
 {
-    make_pair (CpuData::TrapCondition::None, 0),						// Reserved
 	make_pair (CpuData::TrapCondition::BusError, 004),					// Time out and other errors
 	make_pair (CpuData::TrapCondition::IllegalInstructionTrap, 004),	// Illegal instructions
 	make_pair (CpuData::TrapCondition::ReservedInstructionTrap, 010),	// Reserved instructions
