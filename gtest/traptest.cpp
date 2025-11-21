@@ -7,6 +7,7 @@ TEST (TrapTest, trapInitiallyNull)
     KDF11CpuData cpuData {};
 
     EXPECT_EQ (cpuData.trap (), CpuData::TrapCondition::None);
+    EXPECT_FALSE (cpuData.trapPending ());
 }
 
 TEST (TrapTest, trapCanBeSet)
@@ -15,6 +16,7 @@ TEST (TrapTest, trapCanBeSet)
 
     cpuData.setTrap (CpuData::TrapCondition::BusError);
     EXPECT_EQ (cpuData.trap (), CpuData::TrapCondition::BusError);
+    EXPECT_TRUE (cpuData.trapPending ());
 }
 
 TEST (TrapTest, trapCanBeCleared)
@@ -24,6 +26,7 @@ TEST (TrapTest, trapCanBeCleared)
     cpuData.setTrap (CpuData::TrapCondition::BusError);
     cpuData.clearTrap ();
     EXPECT_EQ (cpuData.trap (), CpuData::TrapCondition::None);
+    EXPECT_FALSE (cpuData.trapPending ());
 }
 
 TEST (TrapTest, trapVectorCanBeRetrieved)

@@ -27,6 +27,7 @@ public:
 	void setCC (ConditionCodes conditionCodes) override;
 
 	constexpr TrapCondition trap () override;
+	bool trapPending () const override;
 	void setTrap (CpuData::TrapCondition trap, TrapRecordType cause = TrapRecordType::TRAP) override;
 	constexpr void clearTrap () override;
 	u16 trapVector () override;
@@ -96,6 +97,12 @@ template <typename REGISTERTYPE, typename PSWTYPE>
 constexpr CpuData::TrapCondition KDCpuData<REGISTERTYPE, PSWTYPE>::trap ()
 {
 	return trap_;
+}
+
+template <typename REGISTERTYPE, typename PSWTYPE>
+bool KDCpuData<REGISTERTYPE, PSWTYPE>::trapPending () const
+{
+	return trap_ != TrapCondition::None;
 }
 
 template <typename REGISTERTYPE, typename PSWTYPE>
