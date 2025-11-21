@@ -53,6 +53,7 @@ public:
 	// when accessing non-existing memory.
 	virtual TrapCondition trap () = 0;
 	virtual bool trapPending () const = 0;
+	virtual bool trapPending (TrapCondition trap) const = 0;
     virtual void setTrap (TrapCondition trap, TrapRecordType cause = TrapRecordType::TRAP) = 0;
 	virtual void clearTrap () = 0;
 	virtual u16 trapVector () = 0;
