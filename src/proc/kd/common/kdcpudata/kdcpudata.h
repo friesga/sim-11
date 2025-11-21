@@ -7,9 +7,11 @@
 
 #include <functional>
 #include <map>
+#include <optional>
 
 using std::map;
 using std::make_pair;
+using std::optional;
 
 //
 // The class KDCpuData is a base class for the KD11_NACpuData and
@@ -39,7 +41,7 @@ protected:
 
 	// A trap is a special kind of interrupt, internal to the CPU. There
 	// can be only one trap serviced at the time.
-	CpuData::TrapCondition trap_;
+	optional<CpuData::TrapCondition> trap_;
 
 	static map<CpuData::TrapCondition, u16> trapVector_;
 };
@@ -49,7 +51,7 @@ template <typename REGISTERTYPE, typename PSWTYPE>
 KDCpuData<REGISTERTYPE, PSWTYPE>::KDCpuData ()
     :
     psw_ {0},
-    trap_ {CpuData::TrapCondition::None}
+    trap_ {}
 {}
 
 // constexpr functions are implicitly inline and therefore need to be defined
@@ -90,25 +92,28 @@ void KDCpuData<REGISTERTYPE, PSWTYPE>::setTrap (CpuData::TrapCondition trap, Tra
 template <typename REGISTERTYPE, typename PSWTYPE>
 constexpr void KDCpuData<REGISTERTYPE, PSWTYPE>::clearTrap ()
 {
-	trap_ = TrapCondition::None;
+	trap_ = {};
 }
 
 template <typename REGISTERTYPE, typename PSWTYPE>
 bool KDCpuData<REGISTERTYPE, PSWTYPE>::trapPending () const
 {
-	return trap_ != TrapCondition::None;
+	return trap_.has_value ();
 }
 
+// This function throws a bad_optional_access exception when no trap is
+// pending. The caller must ensure that a trap is pending before calling
+// this function.
 template <typename REGISTERTYPE, typename PSWTYPE>
 bool KDCpuData<REGISTERTYPE, PSWTYPE>::trapPending (TrapCondition trap) const
 {
-	return trap == trap_;
+	return trap_.has_value () && trap_.value () == trap;
 }
 
 template <typename REGISTERTYPE, typename PSWTYPE>
 u16 KDCpuData<REGISTERTYPE, PSWTYPE>::trapVector ()
 {
-	return trapVector_[trap_];
+	return trapVector_[trap_.value ()];
 }
 
 template <typename REGISTERTYPE, typename PSWTYPE>
