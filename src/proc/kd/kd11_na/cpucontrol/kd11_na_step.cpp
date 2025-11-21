@@ -115,7 +115,7 @@ void KD11_NA_CpuControl::execInstr ()
     // instructions set a trap and return true. 
     visit (executor, instr);
 
-    if (cpuData_->trap () != CpuData::TrapCondition::None)
+    if (cpuData_->trapPending ())
         serviceTrap ();
 
     // Trace Trap is enabled by bit 4 of the PSW and causes processor traps at

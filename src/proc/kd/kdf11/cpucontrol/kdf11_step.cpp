@@ -52,7 +52,7 @@ CpuControl::CpuRunState KDF11_CpuControl::execute ()
     // current CPU priority. (The LSI-11 has just two priority levels,
     // zero and BR4.) Note that the numerical value of the InterruptPriority enum
     // is used as bus request level. Traps in HALT mode are ignored.
-    if (cpuData_->trap () != CpuData::TrapCondition::None)
+    if (cpuData_->trapPending ())
     {
         serviceTrap ();
         traceFlag_ =  (cpuData_->psw ().traceBitSet ()) ? true : false;
@@ -113,7 +113,7 @@ void KDF11_CpuControl::execInstr ()
 
     // If the trace flag is set, the next instruction has to result in a trace
     // trap, unless the instruction resulted in another trap.
-    if (traceFlag_ && cpuData_->trap () == CpuData::TrapCondition::None)
+    if (traceFlag_ && !cpuData_->trapPending ())
         cpuData_->setTrap (CpuData::TrapCondition::BreakpointTrap);
 
     // Trace Trap is enabled by bit 4 of the PSW and causes processor traps at
@@ -135,7 +135,8 @@ void KDF11_CpuControl::serviceTrap ()
     // case a stack overflow trap has to be processed first unless the
     // original trap was caused by a stack overflow in the executed
     // instruction.
-    if (cpuData_->stackOverflow () && cpuData_->trap () != CpuData::TrapCondition::StackOverflow)
+    if (cpuData_->stackOverflow () && 
+            !cpuData_->trapPending (CpuData::TrapCondition::StackOverflow))
         swapPcPSW (cpuData_->trapVector (CpuData::TrapCondition::StackOverflow));
 
     cpuData_->clearTrap ();
