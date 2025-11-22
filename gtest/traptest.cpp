@@ -61,3 +61,18 @@ TEST (TrapTest, pendingTrapReported)
     EXPECT_TRUE (cpuData.trapPending (CpuData::TrapType::BusError));
     EXPECT_FALSE (cpuData.trapPending (CpuData::TrapType::IllegalInstructionTrap));
 }
+
+TEST (TrapTest, trapArePrioritized)
+{
+    KDF11CpuData cpuData;
+
+    cpuData.setTrap (CpuData::TrapType::BusError);
+
+    // Try to override with a lower priority trap
+    cpuData.setTrap (CpuData::TrapType::IllegalInstructionTrap);
+    EXPECT_TRUE (cpuData.trapPending (CpuData::TrapType::BusError));
+
+    // Override with a higher priority trap
+    cpuData.setTrap (CpuData::TrapType::StackOverflow);
+    EXPECT_TRUE (cpuData.trapPending (CpuData::TrapType::StackOverflow));
+}

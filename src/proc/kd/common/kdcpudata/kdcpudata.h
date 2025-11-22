@@ -74,7 +74,7 @@ private:
 
 	// A trap is a special kind of interrupt, internal to the CPU. There
 	// can be only one trap serviced at the time.
-	optional<CpuData::TrapType> trap_;
+	optional<CpuData::TrapType> pendingTrap_;
 
 	static map<CpuData::TrapType, TrapData> trapData_;
 };
@@ -84,7 +84,7 @@ template <typename REGISTERTYPE, typename PSWTYPE>
 KDCpuData<REGISTERTYPE, PSWTYPE>::KDCpuData ()
     :
     psw_ {0},
-    trap_ {}
+    pendingTrap_ {}
 {}
 
 // constexpr functions are implicitly inline and therefore need to be defined
@@ -114,24 +114,29 @@ constexpr GeneralRegisters& KDCpuData<REGISTERTYPE, PSWTYPE>::registers ()
 	return registers_;
 }
 
-// Generate the given trap using the interrupt request mechanism
+// Traps are prioritized and the given trap can only be set when it has
+// a higher priority than the pending trap.
 template <typename REGISTERTYPE, typename PSWTYPE>
 void KDCpuData<REGISTERTYPE, PSWTYPE>::setTrap (CpuData::TrapType trap, TrapRecordType cause)
 {
-    trace.trap (cause, trapVector (trap));
-    trap_ = trap;
+	if (!pendingTrap_.has_value () ||
+		trapData_[trap].priority > trapData_[pendingTrap_.value ()].priority)
+	{
+		trace.trap (cause, trapVector (trap));
+		pendingTrap_ = trap;
+	}
 }
 
 template <typename REGISTERTYPE, typename PSWTYPE>
 constexpr void KDCpuData<REGISTERTYPE, PSWTYPE>::clearTrap ()
 {
-	trap_ = {};
+	pendingTrap_ = {};
 }
 
 template <typename REGISTERTYPE, typename PSWTYPE>
 bool KDCpuData<REGISTERTYPE, PSWTYPE>::trapPending () const
 {
-	return trap_.has_value ();
+	return pendingTrap_.has_value ();
 }
 
 // This function throws a bad_optional_access exception when no trap is
@@ -140,13 +145,13 @@ bool KDCpuData<REGISTERTYPE, PSWTYPE>::trapPending () const
 template <typename REGISTERTYPE, typename PSWTYPE>
 bool KDCpuData<REGISTERTYPE, PSWTYPE>::trapPending (TrapType trap) const
 {
-	return trap_.has_value () && trap_.value () == trap;
+	return pendingTrap_.has_value () && pendingTrap_.value () == trap;
 }
 
 template <typename REGISTERTYPE, typename PSWTYPE>
 u16 KDCpuData<REGISTERTYPE, PSWTYPE>::trapVector ()
 {
-	return trapData_[trap_.value ()].vectorAddress;
+	return trapData_[pendingTrap_.value ()].vectorAddress;
 }
 
 template <typename REGISTERTYPE, typename PSWTYPE>
