@@ -20,7 +20,7 @@ using std::cout;
 using namespace std::chrono;
 
 // Execute an instruction. This mainly comprises three actions:
-// 1. Execution of an instruction,
+// 1. Execution of the instruction,
 // 2. Handle the trace bit,
 // 3. Handling of traps and interrupts that might have arisen during execution
 //    of the instruction, either a trap as a result of an instruction, or an
@@ -105,7 +105,7 @@ void KDF11_CpuControl::execInstr ()
         SimulatorClock::duration (static_cast<uint64_t> (instrTime * 1000))
     );
 
-    // Execute the next instructsion. The function returns true if the
+    // Execute the next instruction. The function returns true if the
     // instruction was completed and false if it was aborted due to an error
     // condition. In that case a trap has been set. Note however that trap
     // instructions set a trap and return true. 

@@ -29,8 +29,8 @@ KD11_NA_CpuControl::KD11_NA_CpuControl (Bus* bus, CpuData* cpuData, MMU* mmu)
     bus_->SRUN().set (false);
 }
 
-// Perform a CPU step. The step mainly comprises three actions:
-// 1. Execution of an instruction,
+// Execute an instruction. This mainly comprises three actions:
+// 1. Execution of the instruction,
 // 2. Handle the trace bit,
 // 3. Handling of traps and interrupts that might have arisen during execution
 //    of the instruction, either a trap as a result of an instruction, or an
@@ -62,6 +62,12 @@ CpuControl::CpuRunState KD11_NA_CpuControl::execute ()
     // current CPU priority. (The LSI-11 has just two priority levels,
     // zero and BR4.) Note that the numerical value of the InterruptPriority enum
     // is used as bus request level. Traps in HALT mode are ignored.
+    if (cpuData_->trapPending ())
+    {
+        serviceTrap ();
+        traceFlag_ =  (cpuData_->psw ().traceBitSet ()) ? true : false;
+    }
+
     if (bus_->intrptReqAvailable () && bus_->intrptPriority () > cpuPriority ())
         serviceInterrupt ();
 
@@ -95,11 +101,6 @@ void KD11_NA_CpuControl::execInstr ()
     Instruction instr = 
         decoder.decode (instructionWord);
 
-    // If the trace flag is set, the next instruction has to result in a trace
-    // trap, unless the instruction resulted in another trap.
-    if (traceFlag_)
-        cpuData_->setTrap (CpuData::TrapType::BreakpointTrap);
-
     // The instruction time is defined in microseconds with an accuracy of
     // nanoseconds. Convert the time in microseconds to the 64-bits integer
     // number of nanoseconds.
@@ -115,15 +116,18 @@ void KD11_NA_CpuControl::execInstr ()
     // instructions set a trap and return true. 
     visit (executor, instr);
 
-    if (cpuData_->trapPending ())
-        serviceTrap ();
+    // If the trace flag is set, the next instruction has to result in a trace
+    // trap, unless the instruction resulted in another trap, depending on
+    // the trap priorities.
+    if (traceFlag_)
+        cpuData_->setTrap (CpuData::TrapType::BreakpointTrap);
 
     // Trace Trap is enabled by bit 4 of the PSW and causes processor traps at
     // the end of instruction execution. The instruction-that is executed
     // after the instruction that set the T-bit will proceed to completion and
     // then trap through the trap vector at address 14.
     // LSI-11/PDP-11/03 Processor Handbook pag. 114.
-    traceFlag_ =  (cpuData_->psw().traceBitSet ()) ? true : false;
+    traceFlag_ =  (cpuData_->psw ().traceBitSet ()) ? true : false;
 } 
 
 void KD11_NA_CpuControl::serviceTrap ()
