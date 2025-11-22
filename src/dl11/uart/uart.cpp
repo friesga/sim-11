@@ -72,7 +72,11 @@ void UART::reset ()
 	rcsr &= ~(RCSR_RCVR_IE | RCSR_RCVR_DONE | RCSR_READER_ENABLE);
 	rbuf &= ~RBUF_ERROR_MASK;
 	xcsr = XCSR_TRANSMIT_READY;
-	loopback_ = false;
+
+    // In case Maintenance Mode is supported enabling and disabling of the
+    // loopback mode is determined by the XCSR MAINT bit.
+	if (maintenanceModeSupported_)
+		loopback_ = false;
 
 	bus_->clearInterrupt (InterruptPriority::BR4, 6, 
 		interruptPriority (Function::Receive, channelNr_));
@@ -338,7 +342,7 @@ void UART::transmitter ()
 		if (!channelRunning_)
 			break;
 
-		if (console_ && !loopback_)
+		if (console_)
 			console_->print ((unsigned char) xbuf);
 
 		xcsr |= XCSR_TRANSMIT_READY;
@@ -354,7 +358,7 @@ void UART::transmitter ()
 
 		// If loopback is enabled send the character to the receiver of this
 		// channel.
-		if (loopback_)
+		if (loopback_ && !console_)
 			receiveMutExcluded (Character {lowByte (xbuf), 
 					(xcsr & XCSR_TRANSMIT_BREAK) == XCSR_TRANSMIT_BREAK});
 
