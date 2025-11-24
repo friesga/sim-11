@@ -338,8 +338,15 @@ void BDV11::reset ()
 // that in the next clock tick pending interrupts are to be cleared. This
 // behaviour isn't documented but can be deduced from diagnostics JKDBD0
 // test 626 and JKDIB0 test 50.
+// 
+// This behaviour also depends on the fact that the interrupt request queue
+// can contain just one request with the same priority, bus order and function
+// order. If multiple requests with the same parameters are allowed (by using
+// std::multiset in the InterruptRequestQueue implementation) this function
+// must check that no interrupt is already pending before requesting a new
+// interrupt.
 //
-void BDV11::tick()
+void BDV11::tick ()
 {
 	AlarmClock alarmClock {};
 	SimulatorClock::time_point nextWakeup {SimulatorClock::now()};
