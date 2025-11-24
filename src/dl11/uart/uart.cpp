@@ -417,7 +417,7 @@ void UART::receiveMutExcluded (Character c)
 {
 	if (bus_->BPOK ())
 	{
-		if (console_ && c == breakKey_ && !loopback_)
+		if (console_ && c == breakKey_)
 		{
 			// Process the BREAK, not queueing it as a received character
 			processBreak ();
