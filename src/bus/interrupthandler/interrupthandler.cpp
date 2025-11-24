@@ -30,7 +30,10 @@ bool InterruptHandler::containsInterrupt (InterruptPriority priority, unsigned c
 
 // Clear the specified interrupt request. The InterruptRequQueue will delete
 // the interrupt request equal to specified request. Equality is based on
-// priority and busorder (see InterruptRequest::operator==).
+// priority, busorder and function order (see InterruptRequest::operator==).
+// As the IntrptReqQueue uses std::set as underlying container, only one such
+// request can be in the queue and one iteration through the queue is
+// sufficient.
 void InterruptHandler::clearInterrupt (InterruptPriority priority, unsigned char busOrder,
 	u8 functionOrder)
 {

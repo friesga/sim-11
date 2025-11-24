@@ -28,7 +28,7 @@ private:
 	// as the queue must be able to contain multiple interrupt requests coming
 	// from the same device and thus having the same contents.
 	using IntrptReqQueue = ThreadSafePrioQueue<InterruptRequest,
-		std::multiset<InterruptRequest>>;
+		std::set<InterruptRequest>>;
 	IntrptReqQueue intrptReqQueue_;
 
 	void pushInterruptRequest (InterruptRequest interruptReq);
