@@ -36,10 +36,10 @@ template <typename TPositions>
 void SDLMultiPositionSwitch<TPositions>::handleEvent (InputEvent const* event)
 {
     if (event->type () == InputEvent::Type::MouseButtonDown &&
-        event->button () == InputEvent::Button::Left &&
-        isWithinBounds (event->mousePosition (), centerMargin_))
+        event->button () == InputEvent::Button::Left)
     {
-        if (ButtonTrait<TPositions>::orientation == Orientation::Centered)
+        if (ButtonTrait<TPositions>::orientation == Orientation::Centered &&
+            isWithinBounds (event->mousePosition (), centerMargin_))
         {
             switchPosition_ = togglePosition (switchPosition_);
             switchClicked_ (switchPosition_);

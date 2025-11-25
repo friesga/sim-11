@@ -24,10 +24,10 @@ public:
 
     void render ();
     bool isWithinBounds (Position position, float margin = 0.0) const;
-    bool isRightOfCenter (Position position, float margin = 0.0) const;
-    bool isLeftOfCenter (Position position, float margin = 0.0) const;
-    bool isAboveCenter (Position position, float margin = 0.0) const;
-    bool isBelowCenter (Position position, float margin = 0.0) const;
+    bool isRightOfCenter (Position position, float xMargin = 0.0) const;
+    bool isLeftOfCenter (Position position, float xMargin = 0.0) const;
+    bool isAboveCenter (Position position, float xMargin = 0.0) const;
+    bool isBelowCenter (Position position, float xMargin = 0.0) const;
 
 private:
     // The actual hardware texture

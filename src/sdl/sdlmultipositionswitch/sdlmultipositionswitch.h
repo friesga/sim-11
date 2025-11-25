@@ -53,6 +53,8 @@ private:
     TPositions togglePosition (TPositions position);
 
     const float centerMargin_ {0.25f};
+    const float alongOrientationMargin_ {0.5f};
+    const float acrossOrientationMargin_ {0.25f};
 };
 
 
