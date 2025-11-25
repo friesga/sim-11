@@ -44,6 +44,9 @@ private:
     int y_;
     int width_;
     int height_;
+
+    constexpr int centreY () const { return y_ + height_ / 2; }
+    constexpr int centreX () const { return x_ + width_ / 2; }
 };
 
 #endif // _SDLTILE_H_

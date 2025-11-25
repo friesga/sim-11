@@ -82,41 +82,29 @@ bool SDLTile::isWithinBounds (Position position, float margin) const
     return true;
 }
 
-bool SDLTile::isRightOfCenter (Position position, float xMargin) const
+bool SDLTile::isRightOfCenter (Position position, float margin) const
 {
-    float marginX = xMargin * width_;
-    float marginY = xMargin * width_ / 2;
+    float marginX = margin * width_;
 
-#if 1
-    return position.x > x_ + width_ / 2 &&
-        position.x <= x_ + width_ / 2 + marginX;
-#else
-    return position.x > x_ && position.x <= x_ + marginX &&
-        (position.y < y_ && position.y >= y_ - marginY ||
-            position.y > y_ && position.y <= y_ + marginY);
-#endif
+    return position.x > centreX () &&
+        position.x <= x_ + width_ + marginX &&
+        position.y >= y_ && position.y <= y_ + height_;
 }
 
-bool SDLTile::isLeftOfCenter (Position position, float xMargin) const
+bool SDLTile::isLeftOfCenter (Position position, float margin) const
 {
-    float marginX = xMargin * width_;
-    float marginY = xMargin * width_ / 2;
+    float marginX = margin * width_;
 
-#if 1
-    return position.x < x_ + width_ / 2 &&
-        position.x >= x_ + width_ / 2 - marginX;
-#else
-    return position.x < x_ && position.x >= x_ - marginX &&
-        (position.y < y_ && position.y >= y_ - marginY ||
-            position.y > y_ && position.y <= y_ + marginY);
-#endif
+    return position.x < centreX () &&
+        position.x >= x_ - marginX &&
+        position.y >= y_ && position.y <= y_ + height_;
 }
 
 bool SDLTile::isAboveCenter (Position position, float margin) const
 {
     float marginY = margin * height_;
 
-    return position.y < y_ + height_ / 2 &&
+    return position.y < centreY () &&
         position.y >= y_ - marginY &&
         position.x >= x_ && position.x <= x_ + width_;
 }
@@ -125,7 +113,7 @@ bool SDLTile::isBelowCenter (Position position, float margin) const
 {
     float marginY = margin * height_;
 
-    return position.y > y_ + height_ / 2 &&
+    return position.y > centreY () &&
         position.y <= y_ + height_ + marginY &&
         position.x >= x_ && position.x <= x_ + width_;
 }
