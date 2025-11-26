@@ -1,4 +1,4 @@
-#include "proc/kd/kd11_na/cpudata/kd11_naregisters/kd11_naregisters.h"
+#include "proc/common/cpudata/singularregisterset/singularregisterset.h"
 
 #include <gtest/gtest.h>
 #include <string>
@@ -6,10 +6,10 @@
 using std::string;
 
 // Verify all registers are initialized to zero
-TEST (KD11_NARegistersTest, RegistersInitializedToZero)
+TEST (SingularRegisterSetTest, RegistersInitializedToZero)
 {
     u16 psw;
-    KD11_NARegisters registers {psw};
+    SingularRegisterSet registers {psw};
     EXPECT_EQ (registers [0], 0);
     EXPECT_EQ (registers [1], 0);
     EXPECT_EQ (registers [2], 0);
@@ -20,27 +20,27 @@ TEST (KD11_NARegistersTest, RegistersInitializedToZero)
     EXPECT_EQ (registers [7], 0);
 }
 
-TEST (KD11_NARegistersTest, RegistersCanBeAssignedTo)
+TEST (SingularRegisterSetTest, RegistersCanBeAssignedTo)
 {
     u16 psw;
-    KD11_NARegisters registers {psw};
+    SingularRegisterSet registers {psw};
 
     registers [0] = 10;
     EXPECT_EQ (registers [0], 10);
 }
 
-TEST (KD11_NARegistersTest, ExceptionOnIllegalRegisterNr)
+TEST (SingularRegisterSetTest, ExceptionOnIllegalRegisterNr)
 {
     u16 psw;
-    KD11_NARegisters registers {psw};
+    SingularRegisterSet registers {psw};
 
     EXPECT_THROW (registers [8], std::exception);
 }
 
-TEST (KD11_NARegistersTest, RegistersCanBeConvertedToArray)
+TEST (SingularRegisterSetTest, RegistersCanBeConvertedToArray)
 {
     u16 psw;
-    KD11_NARegisters registers {psw};
+    SingularRegisterSet registers {psw};
     registers [0] = 10;
     registers [1] = 11;
     registers [2] = 12;

@@ -39,7 +39,7 @@ set (GTEST_SRCS
     instructiondecodertest.cpp
     kd11_na/inctest.cpp
     kd11_na/movtest.cpp
-    kd11_na/kd11_naregisterstest.cpp
+    kd11_na/singularregisterstest.cpp
     kd11_na/kd11_na_odttest.cpp
     kd11_na/kd11_na_instr_timingtest.cpp
     kdf11_a/pswtest.cpp

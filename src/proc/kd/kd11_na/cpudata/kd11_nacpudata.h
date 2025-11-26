@@ -2,7 +2,7 @@
 #define _KD11NACPUDATA_H_
 
 #include "proc/kd/common/kdcpudata/kdcpudata.h"
-#include "kd11_naregisters/kd11_naregisters.h"
+#include "proc/common/cpudata/singularregisterset/singularregisterset.h"
 #include "kd11_na_psw.h"
 #include "types.h"
 #include "trace/trace.h"
@@ -10,7 +10,7 @@
 //
 // The class KD11_NACpuData implements the CpuData interface for the KD11-NA.
 //
-class KD11_NACpuData : public KDCpuData<KD11_NARegisters, KD11_NA_PSW>
+class KD11_NACpuData : public KDCpuData<SingularRegisterSet, KD11_NA_PSW>
 {
 public:
 	// Functions required by the CpuData interface and not implemented by

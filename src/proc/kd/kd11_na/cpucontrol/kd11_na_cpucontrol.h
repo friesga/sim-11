@@ -7,7 +7,6 @@
 #include "float/float.h"
 #include "types.h"
 #include "proc/kd/common/instructiondecoder/instructiondecoder.h"
-#include "proc/kd/kd11_na/cpudata/kd11_naregisters/kd11_naregisters.h"
 #include "proc/kd/include/mmu.h"
 
 #include <functional>

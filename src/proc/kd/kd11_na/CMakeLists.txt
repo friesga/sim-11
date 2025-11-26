@@ -3,7 +3,6 @@ set (KD11_NA_CPU_SRCS
     cpucontrol/kd11_na_step.cpp
     cpucontrol/kd11_na_cpucontrol.cpp
     cpucontrol/kd11_na_haltmode.cpp
-    cpudata/kd11_naregisters/kd11_naregisters.cpp
     pseudommu/pseudommu.cpp
     executor/executor.cpp
     calculate/calculate.cpp)
