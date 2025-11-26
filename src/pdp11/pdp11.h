@@ -14,7 +14,7 @@
 #include "dl11/dlv11j/dlv11j.h"
 #include "msv11d/msv11d.h"
 #include "ms11p/ms11p.h"
-#include "ka11/ka11.h"
+#include "proc/ka11/ka11.h"
 #include "proc/kd/kd11_na/kd11_na.h"
 #include "proc/kd/kdf11/kdf11_a/kdf11_a.h"
 #include "proc/kd/kdf11/kdf11_b/kdf11_b.h"

@@ -4,7 +4,7 @@
 #include "bus/include/bus.h"
 #include "proc/kd/include/pdp11processor.h"
 #include "configdata/ka11/ka11config/ka11config.h"
-#include "ka11/ky11_a/ky11_a.h"
+#include "proc/ka11/ky11_a/ky11_a.h"
 #include "panel.h"
 
 #include <memory>
