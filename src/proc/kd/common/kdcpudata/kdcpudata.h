@@ -14,14 +14,14 @@ using std::make_pair;
 using std::optional;
 
 //
-// The class KDCpuData is a base class for the KD11_NACpuData and
-// KDF11_ACpuData classes to prevent code duplication.
+// The class BaseCpuData is a base implementation for the processor-specific
+// CpuData classes. This class is defined to prevent code duplication.
 //
 template <typename REGISTERTYPE, typename PSWTYPE>
-class KDCpuData : public CpuData
+class BaseCpuData : public CpuData
 {
 public:
-	KDCpuData ();
+	BaseCpuData ();
 
 	// Functions required by the CpuData interface
 	constexpr GeneralRegisters& registers () override;
@@ -81,7 +81,7 @@ private:
 
 // Constructor
 template <typename REGISTERTYPE, typename PSWTYPE>
-KDCpuData<REGISTERTYPE, PSWTYPE>::KDCpuData ()
+BaseCpuData<REGISTERTYPE, PSWTYPE>::BaseCpuData ()
     :
     psw_ {0},
     pendingTrap_ {}
@@ -93,7 +93,7 @@ KDCpuData<REGISTERTYPE, PSWTYPE>::KDCpuData ()
 // The function psw() is required by the CpuData interface.
 //
 template <typename REGISTERTYPE, typename PSWTYPE>
-constexpr PSW& KDCpuData<REGISTERTYPE, PSWTYPE>::psw ()
+constexpr PSW& BaseCpuData<REGISTERTYPE, PSWTYPE>::psw ()
 {
 	return psw_;
 }
@@ -102,14 +102,14 @@ constexpr PSW& KDCpuData<REGISTERTYPE, PSWTYPE>::psw ()
 // the condition codes resulting from execution of an instruction and
 // assign these to the condition codes in the PSW.
 template <typename REGISTERTYPE, typename PSWTYPE>
-void KDCpuData<REGISTERTYPE, PSWTYPE>::setCC (ConditionCodes conditionCodes)
+void BaseCpuData<REGISTERTYPE, PSWTYPE>::setCC (ConditionCodes conditionCodes)
 {
     psw_ = (psw_ & ~(PSW_C | PSW_V | PSW_Z | PSW_N)) | 
         conditionCodes.updatedConditionCodes (psw_);
 }
 
 template <typename REGISTERTYPE, typename PSWTYPE>
-constexpr GeneralRegisters& KDCpuData<REGISTERTYPE, PSWTYPE>::registers ()
+constexpr GeneralRegisters& BaseCpuData<REGISTERTYPE, PSWTYPE>::registers ()
 {
 	return registers_;
 }
@@ -117,7 +117,7 @@ constexpr GeneralRegisters& KDCpuData<REGISTERTYPE, PSWTYPE>::registers ()
 // Traps are prioritized and the given trap can only be set when it has
 // a higher priority than the pending trap.
 template <typename REGISTERTYPE, typename PSWTYPE>
-void KDCpuData<REGISTERTYPE, PSWTYPE>::setTrap (CpuData::TrapType trap, TrapRecordType cause)
+void BaseCpuData<REGISTERTYPE, PSWTYPE>::setTrap (CpuData::TrapType trap, TrapRecordType cause)
 {
 	if (!pendingTrap_.has_value () ||
 		trapData_[trap].priority > trapData_[pendingTrap_.value ()].priority)
@@ -128,13 +128,13 @@ void KDCpuData<REGISTERTYPE, PSWTYPE>::setTrap (CpuData::TrapType trap, TrapReco
 }
 
 template <typename REGISTERTYPE, typename PSWTYPE>
-constexpr void KDCpuData<REGISTERTYPE, PSWTYPE>::clearTrap ()
+constexpr void BaseCpuData<REGISTERTYPE, PSWTYPE>::clearTrap ()
 {
 	pendingTrap_ = {};
 }
 
 template <typename REGISTERTYPE, typename PSWTYPE>
-bool KDCpuData<REGISTERTYPE, PSWTYPE>::trapPending () const
+bool BaseCpuData<REGISTERTYPE, PSWTYPE>::trapPending () const
 {
 	return pendingTrap_.has_value ();
 }
@@ -143,19 +143,19 @@ bool KDCpuData<REGISTERTYPE, PSWTYPE>::trapPending () const
 // pending. The caller must ensure that a trap is pending before calling
 // this function.
 template <typename REGISTERTYPE, typename PSWTYPE>
-bool KDCpuData<REGISTERTYPE, PSWTYPE>::trapPending (TrapType trap) const
+bool BaseCpuData<REGISTERTYPE, PSWTYPE>::trapPending (TrapType trap) const
 {
 	return pendingTrap_.has_value () && pendingTrap_.value () == trap;
 }
 
 template <typename REGISTERTYPE, typename PSWTYPE>
-u16 KDCpuData<REGISTERTYPE, PSWTYPE>::trapVector ()
+u16 BaseCpuData<REGISTERTYPE, PSWTYPE>::trapVector ()
 {
 	return trapData_[pendingTrap_.value ()].vectorAddress;
 }
 
 template <typename REGISTERTYPE, typename PSWTYPE>
-u16 KDCpuData<REGISTERTYPE, PSWTYPE>::trapVector (TrapType trap)
+u16 BaseCpuData<REGISTERTYPE, PSWTYPE>::trapVector (TrapType trap)
 {
 	return trapData_[trap].vectorAddress;
 }
@@ -170,8 +170,8 @@ u16 KDCpuData<REGISTERTYPE, PSWTYPE>::trapVector (TrapType trap)
 // address 010. (See PDP-11 Architecture Handbook, appendix B, item 5).
 template <typename REGISTERTYPE, typename PSWTYPE>
 map<CpuData::TrapType, 
-	typename KDCpuData<REGISTERTYPE, PSWTYPE>::TrapData>
-KDCpuData<REGISTERTYPE, PSWTYPE>::trapData_
+	typename BaseCpuData<REGISTERTYPE, PSWTYPE>::TrapData>
+BaseCpuData<REGISTERTYPE, PSWTYPE>::trapData_
 {
 	make_pair (CpuData::TrapType::StackOverflow, TrapData {004, 7}),			// Stack overflow
 	make_pair (CpuData::TrapType::MemoryManagementTrap, TrapData {0250, 7}),	// Memory Management abort

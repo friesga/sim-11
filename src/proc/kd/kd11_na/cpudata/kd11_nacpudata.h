@@ -10,11 +10,11 @@
 //
 // The class KD11_NACpuData implements the CpuData interface for the KD11-NA.
 //
-class KD11_NACpuData : public KDCpuData<SingularRegisterSet, KD11_NA_PSW>
+class KD11_NACpuData : public BaseCpuData<SingularRegisterSet, KD11_NA_PSW>
 {
 public:
 	// Functions required by the CpuData interface and not implemented by
-	// KDCpuData.
+	// BaseCpuData.
 	constexpr bool stackOverflow () override;
 };
 

@@ -10,12 +10,12 @@
 // The class KDF11CpuData implements the CpuData interface for the KDF11-A
 // plus the BusDevice interface for bus access to the PSW.
 //
-class KDF11CpuData : public KDCpuData<KDF11Registers, KDF11_PSW>,
+class KDF11CpuData : public BaseCpuData<KDF11Registers, KDF11_PSW>,
 	public AbstractBusDevice
 {
 public:
 	// Functions required by the CpuData interface and not implemented by
-	// KDCpuData
+	// BaseCpuData
 	bool stackOverflow () override;
 
 	// Functions required by the BusDevice interface and not implemented by
