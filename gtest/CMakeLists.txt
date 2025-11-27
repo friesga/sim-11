@@ -37,24 +37,24 @@ set (GTEST_SRCS
     fistest.cpp
     geometrytest.cpp
     instructiondecodertest.cpp
-    kd11_na/inctest.cpp
-    kd11_na/movtest.cpp
-    kd11_na/singularregisterstest.cpp
-    kd11_na/kd11_na_odttest.cpp
-    kd11_na/kd11_na_instr_timingtest.cpp
-    kdf11_a/pswtest.cpp
-    kdf11_a/kdf11_aconfiguratortest.cpp
-    kdf11_a/kdf11_a_pswregistertest.cpp
-    kdf11_a/kdf11_aregisterstest.cpp
-    kdf11_a/kdf11_abusdevicetest.cpp
-    kdf11_a/kdf11_a_odttest.cpp
-    kdf11_a/kdf11_instr_timingtest.cpp
-    kdf11_b/kdf11_bconfiguratortest.cpp
-    kdf11_b/sluconfiguratortest.cpp
-    kdf11_b/kdf11b_bdv11configuratortest.cpp
-    kdf11_u/kdf11_uconfiguratortest.cpp
-    kdf11_u/kdf11_udisplayregistertest.cpp
-    ktf11_a/ktf11_atest.cpp
+    proc/kd11_na/inctest.cpp
+    proc/kd11_na/movtest.cpp
+    proc/kd11_na/singularregisterstest.cpp
+    proc/kd11_na/kd11_na_odttest.cpp
+    proc/kd11_na/kd11_na_instr_timingtest.cpp
+    proc/kdf11_a/pswtest.cpp
+    proc/kdf11_a/kdf11_aconfiguratortest.cpp
+    proc/kdf11_a/kdf11_a_pswregistertest.cpp
+    proc/kdf11_a/kdf11_aregisterstest.cpp
+    proc/kdf11_a/kdf11_abusdevicetest.cpp
+    proc/kdf11_a/kdf11_a_odttest.cpp
+    proc/kdf11_a/kdf11_instr_timingtest.cpp
+    proc/kdf11_b/kdf11_bconfiguratortest.cpp
+    proc/kdf11_b/sluconfiguratortest.cpp
+    proc/kdf11_b/kdf11b_bdv11configuratortest.cpp
+    proc/kdf11_u/kdf11_uconfiguratortest.cpp
+    proc/kdf11_u/kdf11_udisplayregistertest.cpp
+    proc/ktf11_a/ktf11_atest.cpp
     locationtest.cpp
     kt24/kt24configuratortest.cpp
     kt24/kt24test.cpp

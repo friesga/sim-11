@@ -1,9 +1,9 @@
 #include "dl11/dlv11j/dlv11j.h"
 #include "msv11d/msv11d.h"
-#include "proc/kd/kd11_na/odt/kd11_na_odt.h"
-#include "proc/kd/kd11_na/cpudata/kd11_nacpudata.h"
-#include "proc/kd/kd11_na/pseudommu/pseudommu.h"
-#include "../testconsoleaccess.h"
+#include "proc/kd/kdf11/odt/kdf11_odt.h"
+#include "proc/kd/kdf11/cpudata/kdf11cpudata.h"
+#include "proc/kd/kdf11/ktf11_a/ktf11_a.h"
+#include "../../testconsoleaccess.h"
 
 #include <gtest/gtest.h>
 #include <memory>
@@ -25,7 +25,7 @@ using std::vector;
             " expected: " << c << " got: " << got << '\n'; \
     }
 
-class KD11_NA_ODTTest : public ::testing::Test
+class KDF11_A_ODTTest : public ::testing::Test
 {
 protected:
     struct TestSequence
@@ -46,14 +46,15 @@ protected:
         TestConsoleAccess *testConsole = static_cast<TestConsoleAccess*> (console.get ());
 
         Qbus bus;
-        KD11_NACpuData cpuData;
-        PseudoMMU mmu {&bus, &cpuData};
+        KDF11CpuData cpuData;
+        KTF11_A mmu {&bus, &cpuData};
         KD11_NA_CpuControl kd11cpu (&bus, &cpuData, &mmu);
         MSV11D msv11d (&bus);
+
         bus.installModule (&msv11d);
 
         // Create a KD11ODT instance and let it process a character sequence
-        KD11_NA_ODT kd11odt {&bus, &cpuData, &kd11cpu, &mmu, move (console)};
+        KDF11_ODT kd11odt {&bus, &cpuData, &kd11cpu, &mmu, move (console), false};
 
         // Read the characters from the input sequence and feed them to ODT.
         // The characters could be retrieved from the input sequence directly,
@@ -81,7 +82,7 @@ protected:
 // Note that the default value of R7. i.e. the PC will be the boot address
 // 0000000.
 //
-TEST_F (KD11_NA_ODTTest, KDF11PlusKD11_FCommands)
+TEST_F (KDF11_A_ODTTest, KDF11PlusKD11_FCommands)
 {
     vector<TestSequence> testSequences =
     {
@@ -113,6 +114,10 @@ TEST_F (KD11_NA_ODTTest, KDF11PlusKD11_FCommands)
             "$ starts register entry"},
         {"RS/\rP",             "\n000000\n@RS/000000 \r\n@",
             "RS starts PSW entry"},
+        {"R077/\rP",             "\n000000\n@R077/000000 \r\n@",
+            "R077 starts PSW entry"},
+        {"R477/\rP",             "\n000000\n@R477/000000 \r\n@",
+            "R477 starts PSW entry"},
         {"R0/10\rR0/\rP",      "\n000000\n@R0/000000 10\r\n@R0/000010 \r\n@",
             "New register value can be entered"},
         {"RS/10\rRS/\rP",      "\n000000\n@RS/000000 10\r\n@RS/000010 \r\n@",
@@ -121,10 +126,8 @@ TEST_F (KD11_NA_ODTTest, KDF11PlusKD11_FCommands)
             "PSW T-bit cannot be changed"},
         {"R0/19P",             "\n000000\n@R0/000000 19?\n@",
             "Error on invalid char at new register value"},
-        {"2/2\rR200002/\rP", "\n000000\n@2/000000 2\r\n@R200002/000002 \r\n@",
-            "More than one register digit opens address"},
-        {"R01/23\rR1/\r0/\rP", "\n000000\n@R01/000000 23\r\n@R1/000000 \r\n@0/000023 \r\n@",
-            "More than one register digit opens byte address"},
+        {"R0/10\rR20/\rP", "\n000000\n@R0/000000 10\r\n@R20/000010 \r\n@",
+            "Last register digit used"},
         {"R9\rP",              "\n000000\n@R9?\n@",
             "Error on invalid char at register entry"},
         {"R019\rP",            "\n000000\n@R019?\n@",
@@ -163,26 +166,26 @@ TEST_F (KD11_NA_ODTTest, KDF11PlusKD11_FCommands)
             "Go command with default address accepted"},
         {"200G",             "\n000000\n@200G",
             "Go command with address accepted"},
-        {"177774/P",         "\n000000\n@177774/?\n@",
+        {"777774/P",         "\n000000\n@777774/?\n@",
             "Error on opening invalid address"},
-        {"0/\r177774//\rP", "\n000000\n@0/000000 \r\n@177774/?\n@/?\n@",
+        {"0/\r777774//\rP", "\n000000\n@0/000000 \r\n@777774/?\n@/?\n@",
             "Last opened location set on opening invalid address"},
-        {"157776/\nP",       "\n000000\n@157776/000000 \n160000/?\n@",
-            "Error on next opened invalid address"},
+        {"177776/\n\rP",           "\n000000\n@177776/000000 \n000000/000000 \r\n@",
+             "Address 177776 wraps around to 000000"},
         {"11/2\r10/\rP",       "\n000000\n@11/000000 2\r\n@10/000002 \r\n@",
             "Byte address value can be opened and value can be set"},
         {"11/\n\rP",           "\n000000\n@11/000000 \n000013/000000 \r\n@",
             "<LF> on byte location opens next byte location"},
         {"10;/2;\r10/\rP",     "\n000000\n@10;/000000 2;\r\n@10/000002 \r\n@",
             "Semicolon character is ignored"},
-        {"0/2/\rP",            "\n000000\n@0/000000 2/000000 \r\n@",
-            "Address can be opened on entering address value"},
-        {"R0/2/\rP",           "\n000000\n@R0/000000 2/000000 \r\n@",
-            "Address can be opened on entering register value"},
-        {"R0/R1/\rP",          "\n000000\n@R0/000000 R1/000000 \r\n@",
-            "Register can be opened on entering register value"},
-        {"0/R1/\rP",           "\n000000\n@0/000000 R1/000000 \r\n@",
-            "Register can be opened on entering address value"}
+        {"0/2/\rP",            "\n000000\n@0/000000 2/?\n@",
+            "Address can not be opened on entering address value"},
+        {"R0/2/\rP",           "\n000000\n@R0/000000 2/?\n@",
+            "Address can not be opened on entering register value"},
+        {"R0/R\rP",          "\n000000\n@R0/000000 R?\n@",
+            "Register can not be opened on entering register value"},
+        {"0/R\rP",           "\n000000\n@0/000000 R?\n@",
+            "Register can not be opened on entering address value"}
     };
 
     for (TestSequence testSequence : testSequences)
@@ -190,7 +193,7 @@ TEST_F (KD11_NA_ODTTest, KDF11PlusKD11_FCommands)
 }
 
 
-TEST_F (KD11_NA_ODTTest, BinaryDumpReturnsBytes)
+TEST_F (KDF11_A_ODTTest, BinaryDumpReturnsBytes)
 {
     // Fill the memory locations 0402-0412 with ASCII characters to be able
     // to check the correct result of the binary dump, followed by a Binary
@@ -209,92 +212,47 @@ TEST_F (KD11_NA_ODTTest, BinaryDumpReturnsBytes)
     executeSequence (testSequence);
 }
 
-// This test comprises the commands implemented in just the KD11-F (LSI-11)
-// processors
-TEST_F (KD11_NA_ODTTest, KD11FOnlyCommands)
+// This test comprises the commands implemented in just the KD11-NA (LSI-11)
+// processors. On the KDF11-A these commands will return an error.
+TEST_F (KDF11_A_ODTTest, KD11FOnlyCommands)
 {
     vector<TestSequence> testSequences =
     {
-        {"10/^\rP",                 "\n000000\n@10/000000 ^\n000006/000000 \r\n@",
-            "Up arrow (^) opens previous location"},
-        {"11/^\rP",                 "\n000000\n@11/000000 ^\n000007/000000 \r\n@",
-            "Up arrow (^) on byte address opens previous byte address"},
-        {"10/10^\r10/\rP",          "\n000000\n@10/000000 10^\n000006/000000 \r\n@10/000010 \r\n@",
-            "New address value can be entered with up arrow"},
-        {"11/10^\r10/\rP",          "\n000000\n@11/000000 10^\n000007/000000 \r\n@10/000010 \r\n@",
-            "New byte address value can be entered with up arrow"},
-        {"R0/^\rP",                 "\n000000\n@R0/000000 ^\nR7/000000 \r\n@",
-            "up arrow opens next register and rolls over to R7"},
-        {"RS/^\rP",                 "\n000000\n@RS/000000 ^\n@",
-            "up arrow on opened PSW closes location"},
-        {"R1/10^\rR1/\rP",          "\n000000\n@R1/000000 10^\nR0/000000 \r\n@R1/000010 \r\n@",
-            "New register value can be entered with up arrow"},
-        {"RS/10^RS/\rP",            "\n000000\n@RS/000000 10^\n@RS/000010 \r\n@",
-            "New PSW value can be entered with uparrow"},
-        {"10/@\rP",                 "\n000000\n@10/000000 @\n000000/000000 \r\n@",
-            "At sign opens indirect address"},
-        {"10/11\r10/@\rP",          "\n000000\n@10/000000 11\r\n@10/000011 @\n000011/000011 \r\n@",
-            "At sign opens indirect byte address"},
-        {"10/200@\r10/\rP",         "\n000000\n@10/000000 200@\n000200/000000 \r\n@10/000200 \r\n@",
-            "New address value can be entered with at sign"},
-        {"R0/@\rP",                 "\n000000\n@R0/000000 @\n000000/000000 \r\n@",
-            "At sign on register opens indirect address"},
-        {"R0/1\rR0/@\rP",           "\n000000\n@R0/000000 1\r\n@R0/000001 @\n000001/000000 \r\n@",
-            "At sign on register opens indirect byte address"},
-        {"R0/200@\rR0/\rP",         "\n000000\n@R0/000000 200@\n000200/000000 \r\n@R0/000200 \r\n@",
-            "New register value can be entered with at sign"},
-        {"RS/@\rP",                 "\n000000\n@RS/000000 @\n000000/000000 \r\n@",
-            "At sign on PSW opens indirect address"},
-        {"200/\rRS/4@\rRS/\rP",     "\n000000\n@200/000000 \r\n@RS/000000 4@\n000200/000000 \r\n@RS/000004 \r\n@",
-            "New PSW value can be entered with at sign and opens last address location"},
-        {"R0/\rRS/4@\rRS/\rP",      "\n000000\n@R0/000000 \r\n@RS/000000 4@\n000000/000000 \r\n@RS/000004 \r\n@",
-            "New PSW value can be entered with at sign and opens last register contents location"},
-        {"RS/4@RS/\rP",             "\n000000\n@RS/000000 4@\n@/?\n@RS/000004 \r\n@",
-            "New PSW value can be entered with at sign and returns error in case no location is open"},
-        {"100/100\r200/100@\r/\rP", "\n000000\n@100/000000 100\r\n@200/000000 100@\n000100/000100 \r\n@/000100 \r\n@",
-            "New address value can be entered with at sign and sets last address location"},
-        {"100/100\rR0/100@\r/\rP",  "\n000000\n@100/000000 100\r\n@R0/000000 100@\n000100/000100 \r\n@/000100 \r\n@",
-            "New register value can be entered with at sign and sets last address location"},
-        {"100/100\rRS/4@\r/\rP",    "\n000000\n@100/000000 100\r\n@RS/000000 4@\n000100/000100 \r\n@/000100 \r\n@",
-            "New register value can be entered with at sign and keeps last address location"},
-        {"1000/_\rP",               "\n000000\n@1000/000000 _\n001002/000000 \r\n@",
-            "New address can be opened with back arrow"},
-         {"1001/_\rP",               "\n000000\n@1001/000000 _\n001002/000000 \r\n@",
-            "Word address used as base for address opened with back arrow"},
-        {"1000/200_\rP",            "\n000000\n@1000/000000 200_\n001202/000000 \r\n@",
-            "New address value can be entered with back arrow"},
-        {"R0/_P",                   "\n000000\n@R0/000000 _\n@",
-            "Register can be closed with back arrow"},
-        {"R0/200_R0/\rP",           "\n000000\n@R0/000000 200_\n@R0/000200 \r\n@",
-            "Register value can be entered with back arrow"},
-        {"4/4\r2\0104/\rP",         "\n000000\n@4/000000 4\r\n@2\\4/000004 \r\n@",
-            "Address digit can be rubbed out"},
-        {"0/10\r2\010\010/\rP",           "\n000000\n@0/000000 10\r\n@2\\\\/000010 \r\n@",
-            "Default address is 000000 if more address digits rubbed out then available"},
-        {"0/177777\r0/123\010\r0/\rP", "\n000000\n@0/000000 177777\r\n@0/177777 123\\\r\n@0/000012 \r\n@",
-            "Address value digit can be rubbed out"},
-        {"0/177777\r0/123\010\010\010\r0/\rP", "\n000000\n@0/000000 177777\r\n@0/177777 123\\\\\\\r\n@0/000000 \r\n@",
-            "New address value is zero if all digits erased"},
-        {"0/177777\r0/\010\r0/\rP", "\n000000\n@0/000000 177777\r\n@0/177777 \\\r\n@0/000000 \r\n@",
-            "New value is zero if no digit available"},
-        {"0/177777\r0/123\010\010\010\010\r0/\rP", "\n000000\n@0/000000 177777\r\n@0/177777 123\\\\\\\\\r\n@0/000000 \r\n@",
-            "New address value is zero if more digits erased than available"},
-        {"R2\0104/177777\r4/\rP",   "\n000000\n@R2\\4/000000 177777\r\n@4/177777 \r\n@",
-            "Rubout of register number enters address mode"},
-        {"R12\0104/177777\r14/\rP",  "\n000000\n@R12\\4/000000 177777\r\n@14/177777 \r\n@",
-            "Switch to entering address on second register digit"},
-        {"R0/177777\rR0/123\010\rR0/\rP", "\n000000\n@R0/000000 177777\r\n@R0/177777 123\\\r\n@R0/000012 \r\n@",
-            "Register value digit can be rubbed out"},
-        {"R0/177777\rR0/123\010\010\010\rR0/\rP", "\n000000\n@R0/000000 177777\r\n@R0/177777 123\\\\\\\r\n@R0/000000 \r\n@",
-            "New register value is zero if all digits erased"},
-        {"R0/177777\rR0/\010\rR0/\rP", "\n000000\n@R0/000000 177777\r\n@R0/177777 \\\r\n@R0/000000 \r\n@",
-            "New register value is zero if no digit available"},
-        {"R0/177777\rR0/123\010\010\010\010\rR0/\rP", "\n000000\n@R0/000000 177777\r\n@R0/177777 123\\\\\\\\\r\n@R0/000000 \r\n@",
-            "New register value is zero if more digits erased than available"},
-        {"2/177777\r0/2/\rP",       "\n000000\n@2/000000 177777\r\n@0/000000 2/177777 \r\n@", 
+        {"10/^\rP",                 "\n000000\n@10/000000 ^?\n@",
+            "Up arrow (^) on open location returns error"},
+        {"10/10^P",          "\n000000\n@10/000000 10^?\n@",
+            "Error on Up arrow when entering new address value"},
+        {"R0/^\rP",                 "\n000000\n@R0/000000 ^?\n@",
+            "Up arrow on open register returns error"},
+        {"RS/^\rP",                 "\n000000\n@RS/000000 ^?\n@",
+            "Up arrow on opened PSW returns error"},
+        {"R1/10^\rR1/\rP",          "\n000000\n@R1/000000 10^?\n@",
+            "Error on Up arrow when entering new register value"},
+        {"RS/10^RS/\rP",            "\n000000\n@RS/000000 10^?\n@",
+            "Error on Up arrow when entering new PSW value"},
+        {"10/@\rP",                 "\n000000\n@10/000000 @?\n@",
+            "At sign returns error"},
+        {"10/200@\rP",         "\n000000\n@10/000000 200@?\n@",
+            "Error at at sign when entering new address value"},
+        {"R0/@\rP",                 "\n000000\n@R0/000000 @?\n@",
+            "At sign on register returns error"},
+        {"RS/@\rP",                 "\n000000\n@RS/000000 @?\n@",
+            "At sign on PSW return error"},
+        {"1000/_\rP",               "\n000000\n@1000/000000 _?\n@",
+            "Error at opening new address with back arrow"},
+        {"1000/200_\rP",            "\n000000\n@1000/000000 200_?\n@",
+            "Entering new address value with back arrow returns error"},
+        {"R0/_P",                   "\n000000\n@R0/000000 _?\n@",
+            "Error at closing register with back arrow"},
+        {"4/4\010\rP",         "\n000000\n@4/000000 4?\n@",
+            "Error on rub out of address digit can be rubbed out"},
+        {"R0/123\010\rP", "\n000000\n@R0/000000 123?\n@",
+            "Error on rub out of register value digit"},
+
+        {"0/2/\rP",       "\n000000\n@0/000000 2/?\n@", 
             "Address location can be opened without closing first location"},
-        {"MP",                          "\n000000\n@M000010\n@",
-            "Maintenance command accepted"}
+        {"MP",                          "\n000000\n@M?\n@",
+            "Maintenance command returns error"}
     };
 
     for (TestSequence testSequence : testSequences)
