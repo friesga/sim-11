@@ -1,7 +1,7 @@
 #ifndef _KD11NACPUDATA_H_
 #define _KD11NACPUDATA_H_
 
-#include "proc/kd/common/kdcpudata/kdcpudata.h"
+#include "proc/common/cpudata/basecpudata/basecpudata.h"
 #include "proc/common/cpudata/singularregisterset/singularregisterset.h"
 #include "kd11_na_psw.h"
 #include "types.h"

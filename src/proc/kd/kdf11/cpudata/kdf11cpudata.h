@@ -1,7 +1,7 @@
 #ifndef _KDF11ACPUDATA_H_
 #define _KDF11ACPUDATA_H_
 
-#include "proc/kd/common/kdcpudata/kdcpudata.h"
+#include "proc/common/cpudata/basecpudata/basecpudata.h"
 #include "kdf11registers/kdf11registers.h"
 #include "kdf11_psw.h"
 #include "abstractbusdevice/abstractbusdevice.h"
