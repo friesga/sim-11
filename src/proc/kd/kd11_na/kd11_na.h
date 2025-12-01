@@ -6,7 +6,7 @@
 #include "cpucontrol/kd11_na_cpucontrol.h"
 #include "odt/kd11_na_odt.h"
 #include "proc/kd/kd11_na/cpudata/kd11_nacpudata.h"
-#include "proc/kd/kd11_na/pseudommu/pseudommu.h"
+#include "proc/common/pseudommu/pseudommu.h"
 #include "configdata/kd11_naconfig/kd11_naconfig.h"
 #include "proc/kd/common/controllogic/controllogic.h"
 
