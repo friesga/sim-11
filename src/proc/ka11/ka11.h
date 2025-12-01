@@ -5,6 +5,8 @@
 #include "proc/kd/include/pdp11processor.h"
 #include "configdata/ka11/ka11config/ka11config.h"
 #include "proc/ka11/ky11_a/ky11_a.h"
+#include "proc/ka11/ka11machinestate/ka11machinestate.h"
+#include "proc/ka11/ka11cpudata/ka11cpudata.h"
 #include "panel.h"
 
 #include <memory>
@@ -32,7 +34,11 @@ public:
 private:
     Bus* bus_;
 
+    // Definition of the KA11 components.
+    KA11CpuData cpuData_ {};
+    // ToDo: KDF11_CpuControl cpuControl_ {bus_, &cpuData_, &mmu_};
     unique_ptr<KY11_A> ky11_a_;
+    unique_ptr<KA11MachineState> ka11MachineState_;
 };
 
 #endif _KA11_H_

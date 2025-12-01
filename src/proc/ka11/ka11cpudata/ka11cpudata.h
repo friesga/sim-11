@@ -1,5 +1,5 @@
-#ifndef _KD11NACPUDATA_H_
-#define _KD11NACPUDATA_H_
+#ifndef _KA11CPUDATA_H_
+#define _KA11CPUDATA_H_
 
 #include "proc/common/cpudata/basecpudata/basecpudata.h"
 #include "proc/common/cpudata/singularregisterset/singularregisterset.h"
@@ -24,4 +24,4 @@ constexpr bool KA11CpuData::stackOverflow ()
     return false;
 }
 
-#endif // _KD11NACPUDATA_H_
+#endif // _KA11CPUDATA_H_
