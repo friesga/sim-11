@@ -7,6 +7,7 @@
 #include "proc/ka11/ky11_a/ky11_a.h"
 #include "proc/ka11/ka11machinestate/ka11machinestate.h"
 #include "proc/ka11/ka11cpudata/ka11cpudata.h"
+#include "proc/common/pseudoMMU/pseudommu.h"
 #include "panel.h"
 
 #include <memory>
@@ -36,9 +37,10 @@ private:
 
     // Definition of the KA11 components.
     KA11CpuData cpuData_ {};
+    PseudoMMU pseudoMMU_ {bus_, &cpuData_};
     // ToDo: KDF11_CpuControl cpuControl_ {bus_, &cpuData_, &mmu_};
     unique_ptr<KY11_A> ky11_a_;
-    unique_ptr<KA11MachineState> ka11MachineState_;
+    unique_ptr<KA11MachineState> machineState_;
 };
 
 #endif _KA11_H_
