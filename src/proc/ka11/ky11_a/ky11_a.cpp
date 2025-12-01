@@ -69,6 +69,22 @@ void KY11_A::createBezel (Window* window, const KY11_AConfig& ky11_aConfig,
 
 void KY11_A::powerSwitchClicked (Button::State state)
 {
+    switch (get<Button::ThreePositionsState> (state))
+    {
+        case Button::ThreePositionsState::Left:
+            // Power off
+            bus_->BPOK ().set (false);
+            break;
+
+        case Button::ThreePositionsState::Center:
+            // Power on
+            bus_->BPOK ().set (true);
+            break;
+
+        case Button::ThreePositionsState::Right:
+            // Panel locked
+            break;
+    }
 }
 
 // The LOAD ADDR switch transfers the switch register contents to the Bus
