@@ -30,10 +30,10 @@ KDF11_B::KDF11_B (Bus *bus, const KDF11_BConfig& kdf11_bConfig)
     registerHandler_ = make_unique<RegisterHandler> (devices);
 
     // Besides a pointer to the bus, a reference to our cpu, the start address
-    // and the power-up mode, the ControlLogic also gets passed a
+    // and the power-up mode, the MachineState also gets passed a
     // std::function to the function to create ODT objects.  The last parameter
     // to that function indicates if the ODT HALT command is supported.
-    controlLogic_ = make_unique<ControlLogic> (bus_,
+    machineState_ = make_unique<KDMachineState> (bus_,
         &cpuData_,
         &cpuControl_,
         &mmu_,
@@ -44,16 +44,16 @@ KDF11_B::KDF11_B (Bus *bus, const KDF11_BConfig& kdf11_bConfig)
 
 KDF11_B::~KDF11_B ()
 {
-    controlLogic_->exit ();
+    machineState_->exit ();
     kd11Thread_.join ();
 }
 
 void KDF11_B::start ()
 {
-    kd11Thread_ = thread ([&, this] {controlLogic_->run ();});
+    kd11Thread_ = thread ([&, this] {machineState_->run ();});
 }
 
-// Start the ControlLogic state machine, starting the CPU at the given address. This
+// Start the MachineState state machine, starting the CPU at the given address. This
 // address supersedes the standard boot address.
 void KDF11_B::start (u16 startAddress)
 {

@@ -1,10 +1,10 @@
-#include "controllogic.h"
+#include "kdmachinestate.h"
 
 // This function is called in the transitions from PowerFail when either
 // the DC voltage is low or the systems halts. The new state will be either
 // PowerOff or Standby, depending on the state of the battery power (if
 // present).
-ControlLogic::State ControlLogic::powerDownRoutine ()
+KDMachineState::State KDMachineState::powerDownRoutine ()
 {
     bus_->SRUN ().set (false);
 

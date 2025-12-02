@@ -5,7 +5,7 @@
 #include "proc/kd/kdf11/cpucontrol/kdf11_cpucontrol.h"
 #include "proc/kd/kdf11/odt/kdf11_odt.h"
 #include "configdata/kdf11/kdf11_b/kdf11_bconfig/kdf11_bconfig.h"
-#include "proc/kd/common/controllogic/controllogic.h"
+#include "proc/kd/common/kdmachinestate/kdmachinestate.h"
 #include "proc/kd/kdf11/cpudata/kdf11cpudata.h"
 #include "devicecommon/registerhandler/registerhandler.h"
 #include "proc/kd/kdf11/serial_line_units/serial_line_units.h"
@@ -63,7 +63,7 @@ private:
     KDF11CpuData cpuData_ {};
     KTF11_A mmu_ {bus_, &cpuData_};
     KDF11_CpuControl cpuControl_ {bus_, &cpuData_, &mmu_};
-    unique_ptr<ControlLogic> controlLogic_;
+    unique_ptr<KDMachineState> machineState_;
     unique_ptr<SerialLineUnits> serialLineUnits;
     unique_ptr<BDV11> bdv11;
 

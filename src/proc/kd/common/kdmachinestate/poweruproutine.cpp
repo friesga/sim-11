@@ -1,4 +1,4 @@
-#include "controllogic.h"
+#include "kdmachinestate.h"
 
 using std::invalid_argument;
 
@@ -20,7 +20,7 @@ using std::invalid_argument;
 //
 // The function will return the state to transition to.
 //
-ControlLogic::State ControlLogic::powerUpRoutine ()
+KDMachineState::State KDMachineState::powerUpRoutine ()
 {
     cpuControl_->cpuReset ();
     bus_->BINIT().cycle ();

@@ -23,14 +23,12 @@ set (KD11COMMON_SRCS
     executor/executor.cpp
     odt/operatorconsoleaccess/operatorconsoleaccess.cpp)
 
-set (KD11CONTROLLOGIC_SRCS
-    controllogic/controllogic.cpp
-    controllogic/poweruproutine.cpp
-    controllogic/powerdownroutine.cpp
-    controllogic/bootroutine.cpp
-    controllogic/runodt.cpp
-    controllogic/signalreceivers.cpp
-    controllogic/statemachine.cpp)
+set (KDMACHINESTATE_SRCS
+    kdmachinestate/kdmachinestate.cpp
+    kdmachinestate/poweruproutine.cpp
+    kdmachinestate/powerdownroutine.cpp
+    kdmachinestate/bootroutine.cpp
+    kdmachinestate/runodt.cpp)
 
-target_sources (${TARGET} PRIVATE ${KD11COMMON_SRCS} ${KD11CONTROLLOGIC_SRCS})
-target_sources (sim-11-test PRIVATE ${KD11COMMON_SRCS} ${KD11CONTROLLOGIC_SRCS})
+target_sources (${TARGET} PRIVATE ${KD11COMMON_SRCS} ${KDMACHINESTATE_SRCS})
+target_sources (sim-11-test PRIVATE ${KD11COMMON_SRCS} ${KDMACHINESTATE_SRCS})

@@ -26,13 +26,13 @@ using namespace std::chrono;
 //    of the instruction, either a trap as a result of an instruction, or an
 //    interrupt requested by a bus device.
 // 
-// When the CPU is in the ControlLogic Running state, the CPU always is in of
+// When the CPU is in the MachineState Running state, the CPU always is in of
 // the following sub states:
 // - HALT: the CPU is halted and cannot execute the step,
 // - RUN: the CPU will execute the next instruction,
 // - WAIT: the CPU is running but is still waiting for an interrupt,
 // 
-// The HALT and WAIT state will cause a transition in the ControlLogic state
+// The HALT and WAIT state will cause a transition in the Machine state
 // machine.
 // 
 // As the power-up mode can be set to trap to the vector at address 024, the

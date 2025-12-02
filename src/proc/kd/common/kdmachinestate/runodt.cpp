@@ -1,4 +1,4 @@
-#include "controllogic.h"
+#include "kdmachinestate.h"
 #include "proc/kd/kd11_na/kd11_na.h"
 #include "chrono/simulatorclock/simulatorclock.h"
 
@@ -21,13 +21,13 @@ using std::chrono::microseconds;
 //
 // processCharacter() will return false when it cannot process characters
 // anymore because either a Proceed or Go command was entered.
-void ControlLogic::runODT ()
+void KDMachineState::runODT ()
 {
     OperatorConsoleAccess console_ {bus_};
     Event haltEvent {};
 
     // Create a fresh ODT object. The function to create the object is passed
-    // to the ControlLogic when it is constructed. Not that the last parameter
+    // to the MachineState when it is constructed. Not that the last parameter
     // is bound to function pointer at creation time (in the KDF11_A, KDF11_B
     // or KDF11_U constructor) and the value passed at this call is ignored.
     odt_ = odtCreator_ (bus_, cpuData_, cpuControl_, mmu_,

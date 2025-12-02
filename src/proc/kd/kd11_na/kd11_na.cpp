@@ -22,9 +22,9 @@ KD11_NA::KD11_NA (Bus* bus)
     startAddress_ {stdBootAddress}
 {
     // Besides a pointer to the bus, a reference to our cpu, the start address
-    // and the power-up mode, the ControlLogic also gets passed a
+    // and the power-up mode, the MachineState also gets passed a
     // std::function to the function to create ODT objects.
-    controlLogic_ = make_unique<ControlLogic> (bus_, &cpuData_, &cpuControl_, &pseudoMMU_, powerUpMode_,
+    machineState_ = make_unique<KDMachineState> (bus_, &cpuData_, &cpuControl_, &pseudoMMU_, powerUpMode_,
         startAddress_, bind (&KD11_NA_ODT::createODT, _1, _2, _3, _4, _5));
 }
 
@@ -34,22 +34,22 @@ KD11_NA::KD11_NA (Bus *bus, const KD11_NAConfig& kd11_naConfig)
     powerUpMode_ {kd11_naConfig.powerUpMode},
     startAddress_ {stdBootAddress}
 {
-    controlLogic_ = make_unique<ControlLogic> (bus_, &cpuData_, &cpuControl_, &pseudoMMU_, powerUpMode_,
+    machineState_ = make_unique<KDMachineState> (bus_, &cpuData_, &cpuControl_, &pseudoMMU_, powerUpMode_,
         startAddress_, bind (&KD11_NA_ODT::createODT, _1, _2, _3, _4, _5));
 }
 
 KD11_NA::~KD11_NA ()
 {
-    controlLogic_->exit ();
+    machineState_->exit ();
     kd11Thread_.join ();
 }
 
 void KD11_NA::start ()
 {
-    kd11Thread_ = thread ([&, this] {controlLogic_->run ();});
+    kd11Thread_ = thread ([&, this] {machineState_->run ();});
 }
 
-// Start the ControlLogic state machine, starting the CPU at the given address. This
+// Start the MachineState state machine, starting the CPU at the given address. This
 // address supersedes the standard boot address.
 void KD11_NA::start (u16 startAddress)
 {

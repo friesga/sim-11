@@ -105,6 +105,10 @@ protected:
     // Definition of a queue for the processing of bus signal events
     ThreadSafeQueue<Event> signalEventQueue_ {};
 
+    bool signalAvailable ();
+    template <typename T> bool signalIsOfType ();
+    void loadTrapVector (CpuData::TrapType trap);
+
 private:
     // Functions to be defined by processor-specific derived classes.
     virtual State powerUpRoutine () = 0;
@@ -112,10 +116,9 @@ private:
     virtual State bootRoutine () = 0;
     virtual void runODT () = 0;
     
-    void loadTrapVector (CpuData::TrapType trap);
+
     void subscribeToSignals ();
-    bool signalAvailable ();
-    template <typename T> bool signalIsOfType ();
+    
 };
 
 // This function returns true if the first element in the signal queue is

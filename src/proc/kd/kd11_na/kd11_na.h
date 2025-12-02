@@ -8,7 +8,7 @@
 #include "proc/kd/kd11_na/cpudata/kd11_nacpudata.h"
 #include "proc/common/pseudommu/pseudommu.h"
 #include "configdata/kd11_naconfig/kd11_naconfig.h"
-#include "proc/kd/common/controllogic/controllogic.h"
+#include "proc/kd/common/kdmachinestate/kdmachinestate.h"
 
 #include <memory>
 
@@ -53,7 +53,7 @@ private:
     unique_ptr<KD11_NA_ODT>	odt_ {};
     KD11Config::PowerUpMode powerUpMode_;
     u16 startAddress_;
-    unique_ptr<ControlLogic> controlLogic_;
+    unique_ptr<KDMachineState> machineState_;
 
     // The KD11_NA is started in its own thread
     std::thread kd11Thread_;

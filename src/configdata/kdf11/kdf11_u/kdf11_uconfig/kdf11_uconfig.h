@@ -15,7 +15,7 @@ struct KDF11_UConfig : public DeviceType<BusType::Unibus>
     //          unit is installed and functioning
     //
     // The KD11Config::PowerUpMode is used in all KD11 processors as it is
-    // passed to the processor's ControlLogic component.
+    // passed to the processor's MachineState component.
     //
     KD11Config::PowerUpMode powerUpMode {KD11Config::PowerUpMode::Bootstrap};
 

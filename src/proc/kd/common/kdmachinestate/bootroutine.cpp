@@ -1,7 +1,7 @@
-#include "controllogic.h"
+#include "kdmachinestate.h"
 
 // (Re)boot the system
-ControlLogic::State ControlLogic::bootRoutine ()
+KDMachineState::State KDMachineState::bootRoutine ()
 {
     cpuControl_->cpuReset ();
     bus_->BINIT ().cycle ();
