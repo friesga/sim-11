@@ -1,6 +1,20 @@
 #include "kd11_na_cpucontrol.h"
 #include "trace/trace.h"
 
+// Constructor
+KD11_NA_CpuControl::KD11_NA_CpuControl (Bus* bus, CpuData* cpuData, MMU* mmu)
+    :
+    bus_ {bus},
+    mmu_ {mmu},
+    cpuData_ {cpuData},
+    runState {CpuRunState::HALT},
+    decoder {},
+    haltReason_ {HaltReason::HaltInstruction},
+    traceFlag_ {false}
+{
+    bus_->SRUN ().set (false);
+}
+
 // Reset the processor
 // 
 // Clear the registers and the PSW

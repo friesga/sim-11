@@ -15,20 +15,6 @@ using std::visit;
 using std::chrono::microseconds;
 using std::runtime_error;
 
-// Constructor
-KD11_NA_CpuControl::KD11_NA_CpuControl (Bus* bus, CpuData* cpuData, MMU* mmu)
-    :
-    bus_ {bus},
-    mmu_ {mmu},
-    cpuData_ {cpuData},
-    runState {CpuRunState::HALT},
-    decoder {},
-    haltReason_ {HaltReason::HaltInstruction},
-    traceFlag_ {false}
-{
-    bus_->SRUN().set (false);
-}
-
 // Execute an instruction. This mainly comprises three actions:
 // 1. Execution of the instruction,
 // 2. Handle the trace bit,
