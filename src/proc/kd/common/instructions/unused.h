@@ -4,7 +4,7 @@
 
 #include "proc/kd/common/instructionformats/nooperandinstruction/nooperandinstruction.h"
 #include "proc/kd/include/cpudata.h"
-#include "proc/kd/include/cpucontrol.h"
+#include "proc/include/cpucontrol.h"
 #include "proc/kd/common/operandlocation/operandlocation.h"
 #include "trace/trace.h"
 

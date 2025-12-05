@@ -4,7 +4,7 @@
 #include "proc/kd/common/operanddecoders/baseoperanddecoder/baseoperanddecoder.h"
 #include "proc/kd/common/instructionformats/branchinstruction/branchinstruction.h"
 #include "proc/kd/include/cpudata.h"
-#include "proc/kd/include/cpucontrol.h"
+#include "proc/include/cpucontrol.h"
 #include "proc/kd/include/mmu.h"
 
 class BranchDecoder : public BaseOperandDecoder

@@ -2,7 +2,7 @@
 #define _OPERANDDECODERFACTORY_
 
 #include "proc/kd/include/cpudata.h"
-#include "proc/kd/include/cpucontrol.h"
+#include "proc/include/cpucontrol.h"
 #include "proc/kd/include/mmu.h"
 #include "proc/kd/common/operanddecoders/singleoperanddecoder/singleoperanddecoder.h"
 #include "proc/kd/common/operanddecoders/branchdecoder/branchdecoder.h"

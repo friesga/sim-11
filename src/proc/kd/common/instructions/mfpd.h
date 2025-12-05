@@ -3,7 +3,7 @@
 
 #include "proc/kd/common/instructionformats/singleoperandinstruction/singleoperandinstruction.h"
 #include "proc/kd/include/cpudata.h"
-#include "proc/kd/include/cpucontrol.h"
+#include "proc/include/cpucontrol.h"
 #include "proc/kd/common/operandlocation/operandlocation.h"
 
 

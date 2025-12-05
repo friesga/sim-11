@@ -4,7 +4,7 @@
 #include "proc/kd/common/operanddecoders/baseoperanddecoder/baseoperanddecoder.h"
 #include "proc/kd/common/instructionformats/eisinstruction/eisinstruction.h"
 #include "proc/kd/include/cpudata.h"
-#include "proc/kd/include/cpucontrol.h"
+#include "proc/include/cpucontrol.h"
 #include "proc/kd/include/mmu.h"
 
 // The EIS instruction format is used by the EIS instructions MUL, DIV, ASH

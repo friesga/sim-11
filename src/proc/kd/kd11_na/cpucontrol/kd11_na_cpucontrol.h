@@ -3,7 +3,7 @@
 
 #include "bus/include/bus.h"
 #include "proc/kd/include/cpudata.h"
-#include "proc/kd/include/cpucontrol.h"
+#include "proc/include/cpucontrol.h"
 #include "float/float.h"
 #include "types.h"
 #include "proc/kd/common/instructiondecoder/instructiondecoder.h"
