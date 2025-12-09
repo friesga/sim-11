@@ -9,9 +9,7 @@
 
 using std::array;
 
-namespace KD11_NA {
-
-class Calculate
+class KD11_NA_Calculate
 {
 public:
 	// Single operand instructions
@@ -139,7 +137,5 @@ private:
 		{6.65, 7.00}	// Mode 7
 	};
 };
-
-} // namespace KD11_NA
 
 #endif // !_KD11_NA_CALCULATE_H_

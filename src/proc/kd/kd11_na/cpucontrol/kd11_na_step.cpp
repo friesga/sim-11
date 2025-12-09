@@ -71,7 +71,7 @@ CpuControl::CpuRunState KD11_NA_CpuControl::execute ()
 void KD11_NA_CpuControl::execInstr ()
 {
     // Create an Calculate and Executor to time and execute the instructions
-    KD11_NA::Calculate calculator {};
+    KD11_NA_Calculate calculator {};
     KD11_NA_Executor executor (cpuData_, this, mmu_);
 
     // Get next instruction to execute and move PC forward
