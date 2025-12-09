@@ -3,15 +3,13 @@
 
 #include "proc/kd/common/executor/executor.h"
 
-namespace KD11_NA {
-
 // This class contains the KD11-NA specific execution of some instructions.
 // For most instructions the execution is forwarded to the Common::Executor.
 //
-class Executor
+class KD11_NA_Executor
 {
 public:
-    Executor (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu);
+    KD11_NA_Executor (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu);
 
 	// The operator() function is specialized for the instructions specific
     // for the KD11-NA. The definition of these specializations is rather
@@ -33,14 +31,14 @@ private:
 };
 
 template <typename T>
-bool Executor::operator() (T& instr)
+bool KD11_NA_Executor::operator() (T& instr)
 {
 	return commonExecutor.execute (instr);
 }
 
 // Definition of the instructions specific for the KD11-nA.
 template <>
-inline bool Executor::operator()<FADD> (FADD& instr)
+inline bool KD11_NA_Executor::operator()<FADD> (FADD& instr)
 {
     return executeFISinstruction (instr.getRegister (),
         [](Float f1, Float f2) { return true; },
@@ -48,7 +46,7 @@ inline bool Executor::operator()<FADD> (FADD& instr)
 }
 
 template <>
-inline bool Executor::operator()<FSUB> (FSUB& instr)
+inline bool KD11_NA_Executor::operator()<FSUB> (FSUB& instr)
 {
     return executeFISinstruction (instr.getRegister (),
         [](Float f1, Float f2) { return true; },
@@ -56,7 +54,7 @@ inline bool Executor::operator()<FSUB> (FSUB& instr)
 }
 
 template <>
-inline bool Executor::operator()<FMUL> (FMUL& instr)
+inline bool KD11_NA_Executor::operator()<FMUL> (FMUL& instr)
 {
     return executeFISinstruction (instr.getRegister (),
         [](Float f1, Float f2) { return true; },
@@ -64,7 +62,7 @@ inline bool Executor::operator()<FMUL> (FMUL& instr)
 }
 
 template <>
-inline bool Executor::operator()<FDIV> (FDIV& instr)
+inline bool KD11_NA_Executor::operator()<FDIV> (FDIV& instr)
 {
     return executeFISinstruction (instr.getRegister (),
         [](Float f1, Float f2) { return f2.value () != 0; },
@@ -73,14 +71,14 @@ inline bool Executor::operator()<FDIV> (FDIV& instr)
 
 // Instructions not implemented on the KD11-NA.
 template <>
-inline bool Executor::operator()<MFPD> (MFPD& instr)
+inline bool KD11_NA_Executor::operator()<MFPD> (MFPD& instr)
 {
     cpuData_->setTrap (CpuData::TrapType::ReservedInstructionTrap);
     return true;
 }
 
 template <>
-inline bool Executor::operator()<MTPD> (MTPD& instr)
+inline bool KD11_NA_Executor::operator()<MTPD> (MTPD& instr)
 {
     cpuData_->setTrap (CpuData::TrapType::ReservedInstructionTrap);
     return true;
@@ -90,26 +88,24 @@ inline bool Executor::operator()<MTPD> (MTPD& instr)
 // MFPD and MTPD on this processor equals to that of the MFPI and MTPI
 // instructions.
 template <>
-inline bool Executor::operator()<MFPI> (MFPI& instr)
+inline bool KD11_NA_Executor::operator()<MFPI> (MFPI& instr)
 {
     cpuData_->setTrap (CpuData::TrapType::ReservedInstructionTrap);
     return true;
 }
 
 template <>
-inline bool Executor::operator()<MTPI> (MTPI& instr)
+inline bool KD11_NA_Executor::operator()<MTPI> (MTPI& instr)
 {
     cpuData_->setTrap (CpuData::TrapType::ReservedInstructionTrap);
     return true;
 }
 
 template <>
-inline bool Executor::operator()<MFPT> (MFPT& instr)
+inline bool KD11_NA_Executor::operator()<MFPT> (MFPT& instr)
 {
     cpuData_->setTrap (CpuData::TrapType::ReservedInstructionTrap);
     return true;
 }
  
-} // namespace KD11_NA
-
 #endif // _KD11_NA_EXECUTOR_H_

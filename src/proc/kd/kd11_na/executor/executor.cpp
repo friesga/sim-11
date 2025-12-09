@@ -1,6 +1,6 @@
 #include "executor.h"
 
-KD11_NA::Executor::Executor (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu)
+KD11_NA_Executor::KD11_NA_Executor (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu)
     :
     commonExecutor (cpuData, cpuControl, mmu),
     cpuData_ {cpuData},
@@ -8,7 +8,7 @@ KD11_NA::Executor::Executor (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu)
 {}
 
 // Return the result of a floating point calculation
-bool KD11_NA::Executor::returnFISresult (Float result, u16 registerNumber)
+bool KD11_NA_Executor::returnFISresult (Float result, u16 registerNumber)
 {
     u16 high, low;
     Float::Result conversionResult = result.pdp11Dword (&high, &low);
@@ -47,7 +47,7 @@ bool KD11_NA::Executor::returnFISresult (Float result, u16 registerNumber)
 }
 
 // Execute a FADD, FSUB, FMUL or FDIV instruction.
-bool KD11_NA::Executor::executeFISinstruction (u16 stackPointer,
+bool KD11_NA_Executor::executeFISinstruction (u16 stackPointer,
     std::function<bool(Float, Float)> argumentsValid,
     std::function<Float(Float, Float)> instruction)
 {

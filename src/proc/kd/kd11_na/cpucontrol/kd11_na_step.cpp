@@ -72,7 +72,7 @@ void KD11_NA_CpuControl::execInstr ()
 {
     // Create an Calculate and Executor to time and execute the instructions
     KD11_NA::Calculate calculator {};
-    KD11_NA::Executor executor (cpuData_, this, mmu_);
+    KD11_NA_Executor executor (cpuData_, this, mmu_);
 
     // Get next instruction to execute and move PC forward
     CondData<u16> instructionWord = mmu_->fetchWord (cpuData_->registers ()[7]);
