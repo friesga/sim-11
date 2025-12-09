@@ -8,6 +8,8 @@
 #include "types.h"
 #include "proc/kd/common/instructiondecoder/instructiondecoder.h"
 #include "proc/kd/include/mmu.h"
+#include "proc/kd/kd11_na/executor/executor.h"
+#include "proc/kd/kd11_na/calculate/calculate.h"
 
 #include <functional>
 
@@ -51,6 +53,9 @@ private:
 	InstructionDecoder decoder;
 	HaltReason haltReason_;
 	bool traceFlag_;
+
+	KD11_NA_Executor executor_ {cpuData_, this, mmu_};
+	KD11_NA_Calculate calculator_ {};
 
 	void execInstr ();
 	void serviceTrap ();
