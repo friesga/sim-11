@@ -24,7 +24,7 @@ using std::function;
 // This class simulates a KD11-NA, i.e. a KD11-H base version including EIS
 // and FIS support.
 //
-template <typename TExecutor>
+template <typename TExecutor, typename TCalculator>
 class KD11_NA_CpuControl : public CpuControl
 {
 public:
@@ -56,7 +56,7 @@ private:
 	bool traceFlag_;
 
 	TExecutor executor_ {cpuData_, this, mmu_};
-	KD11_NA_Calculate calculator_ {};
+	TCalculator calculator_ {};
 
 	void execInstr ();
 	void serviceTrap ();
@@ -68,8 +68,8 @@ private:
 	void traceStep ();
 };
 
-template <typename TExecutor>
- constexpr CpuControl::HaltReason KD11_NA_CpuControl<TExecutor>::haltReason ()
+template <typename TExecutor, typename Calculator>
+ constexpr CpuControl::HaltReason KD11_NA_CpuControl<TExecutor, Calculator>::haltReason ()
  {
 	 return haltReason_;
  }

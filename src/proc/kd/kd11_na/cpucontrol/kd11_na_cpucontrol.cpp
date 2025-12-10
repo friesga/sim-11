@@ -11,8 +11,8 @@ using std::chrono::microseconds;
 using std::runtime_error;
 
 // Constructor
-template <typename TExecutor>
-KD11_NA_CpuControl<TExecutor>::KD11_NA_CpuControl (Bus* bus, CpuData* cpuData, MMU* mmu)
+template <typename TExecutor, typename TCalculator>
+KD11_NA_CpuControl<TExecutor, TCalculator>::KD11_NA_CpuControl (Bus* bus, CpuData* cpuData, MMU* mmu)
     :
     bus_ {bus},
     mmu_ {mmu},
@@ -28,8 +28,8 @@ KD11_NA_CpuControl<TExecutor>::KD11_NA_CpuControl (Bus* bus, CpuData* cpuData, M
 // Reset the processor
 // 
 // Clear the registers and the PSW
-template <typename TExecutor>
-void KD11_NA_CpuControl<TExecutor>::cpuReset ()
+template <typename TExecutor, typename TCalculator>
+void KD11_NA_CpuControl<TExecutor, TCalculator>::cpuReset ()
 {
     // Initialize the registers except for the PC
     for (u16 regNr = 0; regNr <= 6; ++regNr)
@@ -39,15 +39,15 @@ void KD11_NA_CpuControl<TExecutor>::cpuReset ()
 }
 
 // Reset (the devices on) the bus by setting the INIT signal
-template <typename TExecutor>
-void KD11_NA_CpuControl<TExecutor>::busReset ()
+template <typename TExecutor, typename TCalculator>
+void KD11_NA_CpuControl<TExecutor, TCalculator>::busReset ()
 {
     bus_->BINIT().cycle ();
 }
 
 // Halt the processor
-template <typename TExecutor>
-void KD11_NA_CpuControl<TExecutor>::halt ()
+template <typename TExecutor, typename TCalculator>
+void KD11_NA_CpuControl<TExecutor, TCalculator>::halt ()
 {
     runState = CpuRunState::HALT;
     haltReason_ = HaltReason::HaltInstruction;
@@ -56,16 +56,16 @@ void KD11_NA_CpuControl<TExecutor>::halt ()
 }
 
 // Wait for an interrupt
-template <typename TExecutor>
-void KD11_NA_CpuControl<TExecutor>::wait ()
+template <typename TExecutor, typename TCalculator>
+void KD11_NA_CpuControl<TExecutor, TCalculator>::wait ()
 {
     trace.cpuEvent (CpuEventRecordType::CPU_WAIT, cpuData_->registers ()[7]);
     runState = CpuRunState::WAIT;
 }
 
 // Start the processor at the given address
-template <typename TExecutor>
-void KD11_NA_CpuControl<TExecutor>::start (u16 address)
+template <typename TExecutor, typename TCalculator>
+void KD11_NA_CpuControl<TExecutor, TCalculator>::start (u16 address)
 {
     cpuData_->registers ()[7] = address;
     runState = CpuRunState::RUN;
@@ -74,8 +74,8 @@ void KD11_NA_CpuControl<TExecutor>::start (u16 address)
 }
 
 // Continue execution at the current PC
-template <typename TExecutor>
-void KD11_NA_CpuControl<TExecutor>::proceed ()
+template <typename TExecutor, typename TCalculator>
+void KD11_NA_CpuControl<TExecutor, TCalculator>::proceed ()
 {
     runState = CpuRunState::RUN;
     bus_->SRUN().set (true);
@@ -85,19 +85,19 @@ void KD11_NA_CpuControl<TExecutor>::proceed ()
 // The HaltMode is not implemented in the KD11-NA. inHaltMode() returns
 // false to prevent the CPU being halted by an unsupported feature.
 // 
-template <typename TExecutor>
-void KD11_NA_CpuControl<TExecutor>::setHaltMode (bool haltMode)
+template <typename TExecutor, typename TCalculator>
+void KD11_NA_CpuControl<TExecutor, TCalculator>::setHaltMode (bool haltMode)
 {
 }
 
-template <typename TExecutor>
-bool KD11_NA_CpuControl<TExecutor>::inHaltMode ()
+template <typename TExecutor, typename TCalculator>
+bool KD11_NA_CpuControl<TExecutor, TCalculator>::inHaltMode ()
 {
     return false;
 }
 
-template <typename TExecutor>
-CpuControl::CpuRunState KD11_NA_CpuControl<TExecutor>::execute ()
+template <typename TExecutor, typename TCalculator>
+CpuControl::CpuRunState KD11_NA_CpuControl<TExecutor, TCalculator>::execute ()
 {
     // If there is a pending bus interrupt that can be executed, process
     // that interrupt first, else execute the next instruction
@@ -125,8 +125,8 @@ CpuControl::CpuRunState KD11_NA_CpuControl<TExecutor>::execute ()
 }
 
 // Execute one instruction
-template <typename TExecutor>
-void KD11_NA_CpuControl<TExecutor>::execInstr ()
+template <typename TExecutor, typename TCalculator>
+void KD11_NA_CpuControl<TExecutor, TCalculator>::execInstr ()
 {
     // Get next instruction to execute and move PC forward
     CondData<u16> instructionWord = mmu_->fetchWord (cpuData_->registers ()[7]);
@@ -170,8 +170,8 @@ void KD11_NA_CpuControl<TExecutor>::execInstr ()
     traceFlag_ =  (cpuData_->psw ().traceBitSet ()) ? true : false;
 }
 
-template <typename TExecutor>
-void KD11_NA_CpuControl<TExecutor>::serviceTrap ()
+template <typename TExecutor, typename TCalculator>
+void KD11_NA_CpuControl<TExecutor, TCalculator>::serviceTrap ()
 {
     // The enum trap_ is converted to the u16 vector address
     // Swap the PC and PSW with new values from the trap vector to process.
@@ -180,8 +180,8 @@ void KD11_NA_CpuControl<TExecutor>::serviceTrap ()
     cpuData_->clearTrap ();
 }
 
-template <typename TExecutor>
-void KD11_NA_CpuControl<TExecutor>::serviceInterrupt ()
+template <typename TExecutor, typename TCalculator>
+void KD11_NA_CpuControl<TExecutor, TCalculator>::serviceInterrupt ()
 {
     InterruptRequest intrptReq;
 
@@ -191,24 +191,24 @@ void KD11_NA_CpuControl<TExecutor>::serviceInterrupt ()
         swapPcPSW (intrptReq.vector ());
 }
 
-template <typename TExecutor>
-u8 KD11_NA_CpuControl<TExecutor>::cpuPriority ()
+template <typename TExecutor, typename TCalculator>
+u8 KD11_NA_CpuControl<TExecutor, TCalculator>::cpuPriority ()
 {
     return cpuData_->psw ().priorityLevel ();
 }
 
 // Fetch PC and PSW from the given vector address. If this fails the
 // processor will halt anyway.
-template <typename TExecutor>
-bool KD11_NA_CpuControl<TExecutor>::fetchFromVector (u16 address, u16* dest)
+template <typename TExecutor, typename TCalculator>
+bool KD11_NA_CpuControl<TExecutor, TCalculator>::fetchFromVector (u16 address, u16* dest)
 {
     CondData<u16> tmpValue = mmu_->fetchWord (address);
     *dest = tmpValue.valueOr (0);
     return tmpValue.hasValue ();
 }
 
-template <typename TExecutor>
-bool KD11_NA_CpuControl<TExecutor>::fetchFromVector (u16 address, function<void (u16)> lambda)
+template <typename TExecutor, typename TCalculator>
+bool KD11_NA_CpuControl<TExecutor, TCalculator>::fetchFromVector (u16 address, function<void (u16)> lambda)
 {
     CondData<u16> tmpValue = mmu_->fetchWord (address);
     lambda (tmpValue.valueOr (0));
@@ -216,8 +216,8 @@ bool KD11_NA_CpuControl<TExecutor>::fetchFromVector (u16 address, function<void 
 }
 
 // Swap the PC and PSW with new values from the given vector
-template <typename TExecutor>
-void KD11_NA_CpuControl<TExecutor>::swapPcPSW (u16 vectorAddress)
+template <typename TExecutor, typename TCalculator>
+void KD11_NA_CpuControl<TExecutor, TCalculator>::swapPcPSW (u16 vectorAddress)
 {
     trace.cpuEvent (CpuEventRecordType::CPU_TRAP, vectorAddress);
 
@@ -249,8 +249,8 @@ void KD11_NA_CpuControl<TExecutor>::swapPcPSW (u16 vectorAddress)
     }
 }
 
-template <typename TExecutor>
-void KD11_NA_CpuControl<TExecutor>::traceStep ()
+template <typename TExecutor, typename TCalculator>
+void KD11_NA_CpuControl<TExecutor, TCalculator>::traceStep ()
 {
     trace.setIgnoreBus ();
     u16 code[3];
@@ -267,4 +267,4 @@ void KD11_NA_CpuControl<TExecutor>::traceStep ()
 
 // Explicit template instantation requests as the class function members are
 // defined outside of the class header file.
-template class KD11_NA_CpuControl<KD11_NA_Executor>;
+template class KD11_NA_CpuControl<KD11_NA_Executor, KD11_NA_Calculate>;

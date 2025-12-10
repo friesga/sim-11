@@ -48,7 +48,7 @@ protected:
         Qbus bus;
         KDF11CpuData cpuData;
         KTF11_A mmu {&bus, &cpuData};
-        KD11_NA_CpuControl<KD11_NA_Executor> kd11cpu (&bus, &cpuData, &mmu);
+        KD11_NA_CpuControl<KD11_NA_Executor, KD11_NA_Calculate> kd11cpu (&bus, &cpuData, &mmu);
         MSV11D msv11d (&bus);
 
         bus.installModule (&msv11d);
