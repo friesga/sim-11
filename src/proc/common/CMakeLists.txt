@@ -3,7 +3,8 @@ set (PROC_COMMON_SRCS
     basemachinestate/basemachinestate.cpp
     basemachinestate/signalreceivers.cpp
     basemachinestate/statemachine.cpp
-    pseudommu/pseudommu.cpp)
+    pseudommu/pseudommu.cpp
+    cpucontrol/pseudo_haltmode/pseudo_haltmode.cpp)
 
 target_sources (${TARGET} PRIVATE ${PROC_COMMON_SRCS})
 target_sources (sim-11-test PRIVATE ${PROC_COMMON_SRCS})
