@@ -9,6 +9,7 @@
 #include "proc/common/pseudommu/pseudommu.h"
 #include "configdata/kd11_naconfig/kd11_naconfig.h"
 #include "proc/kd/common/kdmachinestate/kdmachinestate.h"
+#include "proc/kd/kd11_na/executor/executor.h"
 
 #include <memory>
 
@@ -48,7 +49,7 @@ private:
 
     Bus* bus_;
     KD11_NACpuData cpuData_;
-    KD11_NA_CpuControl cpuControl_ {bus_, &cpuData_, &pseudoMMU_};
+    KD11_NA_CpuControl<KD11_NA_Executor> cpuControl_ {bus_, &cpuData_, &pseudoMMU_};
     PseudoMMU pseudoMMU_ {bus_, &cpuData_};
     unique_ptr<KD11_NA_ODT>	odt_ {};
     KD11Config::PowerUpMode powerUpMode_;

@@ -1,8 +1,6 @@
 set (KD11_NA_CPU_SRCS
     kd11_na.cpp
-    cpucontrol/kd11_na_step.cpp
     cpucontrol/kd11_na_cpucontrol.cpp
-    cpucontrol/kd11_na_haltmode.cpp
     executor/executor.cpp
     calculate/calculate.cpp)
 
