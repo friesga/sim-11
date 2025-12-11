@@ -10,6 +10,7 @@
 #include "proc/kd/include/mmu.h"
 #include "proc/kd/kd11_na/executor/executor.h"
 #include "proc/kd/kd11_na/calculate/calculate.h"
+#include "proc/common/cpucontrol/pseudo_haltmode/pseudo_haltmode.h"
 
 #include <functional>
 
@@ -24,7 +25,7 @@ using std::function;
 // This class simulates a KD11-NA, i.e. a KD11-H base version including EIS
 // and FIS support.
 //
-template <typename TExecutor, typename TCalculator>
+template <typename TExecutor, typename TCalculator, typename THaltMode>
 class KD11_NA_CpuControl : public CpuControl
 {
 public:
@@ -57,6 +58,7 @@ private:
 
 	TExecutor executor_ {cpuData_, this, mmu_};
 	TCalculator calculator_ {};
+	THaltMode haltMode_ {};
 
 	void execInstr ();
 	void serviceTrap ();
@@ -68,10 +70,5 @@ private:
 	void traceStep ();
 };
 
-template <typename TExecutor, typename Calculator>
- constexpr CpuControl::HaltReason KD11_NA_CpuControl<TExecutor, Calculator>::haltReason ()
- {
-	 return haltReason_;
- }
 
 #endif // _KD11_NA_CPU_H_

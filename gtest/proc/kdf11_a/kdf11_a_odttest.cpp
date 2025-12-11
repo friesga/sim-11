@@ -4,6 +4,7 @@
 #include "proc/kd/kdf11/cpudata/kdf11cpudata.h"
 #include "proc/kd/kdf11/ktf11_a/ktf11_a.h"
 #include "../../testconsoleaccess.h"
+#include "proc/common/cpucontrol/pseudo_haltmode/pseudo_haltmode.h"
 
 #include <gtest/gtest.h>
 #include <memory>
@@ -48,7 +49,8 @@ protected:
         Qbus bus;
         KDF11CpuData cpuData;
         KTF11_A mmu {&bus, &cpuData};
-        KD11_NA_CpuControl<KD11_NA_Executor, KD11_NA_Calculate> kd11cpu (&bus, &cpuData, &mmu);
+        KD11_NA_CpuControl<KD11_NA_Executor, KD11_NA_Calculate, PseudoHaltMode>
+            kd11cpu (&bus, &cpuData, &mmu);
         MSV11D msv11d (&bus);
 
         bus.installModule (&msv11d);
