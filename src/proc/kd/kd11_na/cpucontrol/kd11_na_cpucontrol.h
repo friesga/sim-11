@@ -37,16 +37,26 @@ public:
 	// Definition of functions required by the CpuControl interface.
 	//
 	// The HaltMode is not implemented in the KD11-NA.
-	void cpuReset () override;
-	void busReset () override;
-	void halt () override;
-	void setHaltMode (bool haltMode) override;
-	bool inHaltMode () override;
-	void wait () override;
-    void start (u16 address) override;
-	void proceed () override;
-	HaltReason haltReason ();
-	CpuControl::CpuRunState execute () override;
+	void cpuReset () override
+		{ engine_.cpuReset (); }
+	void busReset () override
+		{engine_.busReset ();}
+	void halt () override
+		{engine_.halt ();}
+	void setHaltMode (bool haltMode) override
+		{ haltMode_.setHaltMode (haltMode); }
+	bool inHaltMode () override
+		{ return haltMode_.inHaltMode (); }
+	void wait () override
+		{ engine_.wait (); }
+    void start (u16 address) override
+		{ engine_.start (address); }
+	void proceed () override
+		{ engine_.proceed (); }
+	HaltReason haltReason ()
+		{ return engine_.haltReason (); }
+	CpuControl::CpuRunState execute () override
+		{ return engine_.execute (); }
 
 private:
 	Bus* bus_;
@@ -60,5 +70,12 @@ private:
 		&executor_, &calculator_};
 };
 
+template <typename TExecutor, typename TCalculator, typename THaltMode>
+KD11_NA_CpuControl<TExecutor, TCalculator, THaltMode>::KD11_NA_CpuControl (Bus* bus, CpuData* cpuData, MMU* mmu)
+	:
+	bus_ {bus},
+	mmu_ {mmu},
+	cpuData_ {cpuData}
+{}
 
 #endif // _KD11_NA_CPU_H_

@@ -1,6 +1,5 @@
 set (KD11_NA_CPU_SRCS
     kd11_na.cpp
-    cpucontrol/kd11_na_cpucontrol.cpp
     executor/executor.cpp
     calculate/calculate.cpp
     execution_engine/execution_engine.cpp)
