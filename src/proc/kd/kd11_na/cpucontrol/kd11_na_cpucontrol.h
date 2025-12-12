@@ -11,6 +11,7 @@
 #include "proc/kd/kd11_na/executor/executor.h"
 #include "proc/kd/kd11_na/calculate/calculate.h"
 #include "proc/common/cpucontrol/pseudo_haltmode/pseudo_haltmode.h"
+#include "proc/kd/kd11_na/execution_engine/execution_engine.h"
 
 #include <functional>
 
@@ -44,30 +45,19 @@ public:
 	void wait () override;
     void start (u16 address) override;
 	void proceed () override;
-	constexpr HaltReason haltReason ();
+	HaltReason haltReason ();
 	CpuControl::CpuRunState execute () override;
 
 private:
 	Bus* bus_;
 	MMU* mmu_;
 	CpuData* cpuData_;
-	CpuRunState runState;
-	InstructionDecoder decoder;
-	HaltReason haltReason_;
-	bool traceFlag_;
 
 	TExecutor executor_ {cpuData_, this, mmu_};
 	TCalculator calculator_ {};
 	THaltMode haltMode_ {};
-
-	void execInstr ();
-	void serviceTrap ();
-	void serviceInterrupt ();
-	u8 cpuPriority ();
-	void swapPcPSW (u16 vectorAddress);
-	bool fetchFromVector (u16 address, u16* dest);
-	bool fetchFromVector (u16 address, function<void (u16)> lambda);
-	void traceStep ();
+	KD11_NA_ExecutionEngine engine_ {bus_, cpuData_, mmu_,
+		&executor_, &calculator_};
 };
 
 
