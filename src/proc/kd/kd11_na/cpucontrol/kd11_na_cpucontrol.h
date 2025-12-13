@@ -39,7 +39,8 @@ concept isHaltMode = requires(T t, bool b)
 // This class simulates a KD11-NA, i.e. a KD11-H base version including EIS
 // and FIS support.
 //
-template <isExecutor TExecutor, typename TCalculator, isHaltMode THaltMode>
+template <isExecutor TExecutor, typename TCalculator, isHaltMode THaltMode,
+	typename TExecutionEngine>
 class KD11_NA_CpuControl : public CpuControl
 {
 public:
@@ -79,12 +80,13 @@ private:
 	TExecutor executor_ {cpuData_, this, mmu_};
 	TCalculator calculator_ {};
 	THaltMode haltMode_ {};
-	KD11_NA_ExecutionEngine engine_ {bus_, cpuData_, mmu_,
+	TExecutionEngine engine_ {bus_, cpuData_, mmu_,
 		&executor_, &calculator_};
 };
 
-template <isExecutor TExecutor, typename TCalculator, isHaltMode THaltMode>
-KD11_NA_CpuControl<TExecutor, TCalculator, THaltMode>::KD11_NA_CpuControl (Bus* bus, CpuData* cpuData, MMU* mmu)
+template <isExecutor TExecutor, typename TCalculator, isHaltMode THaltMode,
+	typename TExecutionEngine>
+KD11_NA_CpuControl<TExecutor, TCalculator, THaltMode, TExecutionEngine>::KD11_NA_CpuControl (Bus* bus, CpuData* cpuData, MMU* mmu)
 	:
 	bus_ {bus},
 	mmu_ {mmu},
