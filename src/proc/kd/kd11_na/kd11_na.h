@@ -3,7 +3,7 @@
 
 #include "bus/include/bus.h"
 #include "proc/kd/include/pdp11processor.h"
-#include "cpucontrol/kd11_na_cpucontrol.h"
+#include "proc/common/composite_cpucontroller/composite_cpucontroller.h"
 #include "odt/kd11_na_odt.h"
 #include "proc/kd/kd11_na/cpudata/kd11_nacpudata.h"
 #include "proc/common/pseudommu/pseudommu.h"
@@ -17,8 +17,18 @@
 
 using std::unique_ptr;
 
-// The class KD11_NA starta the control logic which on its turn has to run
-// the KD11_NA's cpu and start the KD11_NA's ODT.
+// Two different LSI-models exist, the LSI-11 and the LSI-11/2. The LSI-11
+// comprises the M7264 module in one of its variations. The LSI-11/2
+// consists of a M7270 module with a KD11-HA or KD11-NA processor. These
+// processors differ in the availability of the EIS and FIS options.
+// See http://web.frainresearch.org:8080/projects/pdp-11/lsi-11.php for
+// an overview of the different variations. 
+// This class simulates a KD11-NA, i.e. a KD11-H base version including EIS
+// and FIS support.
+//
+// The class KD11_NA starts CPU controller which on its turn has to run
+// the KD11_NA's CPU and start the KD11_NA's ODT.
+//
 class KD11_NA : public PDP11Processor
 {
 public:
@@ -51,7 +61,7 @@ private:
 
     Bus* bus_;
     KD11_NACpuData cpuData_;
-    KD11_NA_CpuControl<KD11_NA_Executor, KD11_NA_Calculate,
+    CompositeCpuController<KD11_NA_Executor, KD11_NA_Calculate,
         PseudoHaltMode, KD11_NA_ExecutionEngine> cpuControl_ {bus_, &cpuData_, &pseudoMMU_};
     PseudoMMU pseudoMMU_ {bus_, &cpuData_};
     unique_ptr<KD11_NA_ODT>	odt_ {};

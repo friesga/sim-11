@@ -6,6 +6,7 @@
 #include "../../testconsoleaccess.h"
 #include "proc/common/pseudo_haltmode/pseudo_haltmode.h"
 #include "proc/kd/kd11_na/execution_engine/execution_engine.h"
+#include "proc/common/composite_cpucontroller/composite_cpucontroller.h"
 
 #include <gtest/gtest.h>
 #include <memory>
@@ -50,7 +51,7 @@ protected:
         Qbus bus;
         KDF11CpuData cpuData;
         KTF11_A mmu {&bus, &cpuData};
-        KD11_NA_CpuControl<KD11_NA_Executor, KD11_NA_Calculate, PseudoHaltMode,
+        CompositeCpuController<KD11_NA_Executor, KD11_NA_Calculate, PseudoHaltMode,
             KD11_NA_ExecutionEngine> kd11cpu (&bus, &cpuData, &mmu);
         MSV11D msv11d (&bus);
 
