@@ -4,7 +4,7 @@
 #include "proc/kd/kdf11/cpudata/kdf11cpudata.h"
 #include "proc/kd/kdf11/ktf11_a/ktf11_a.h"
 #include "../../testconsoleaccess.h"
-#include "proc/common/cpucontrol/pseudo_haltmode/pseudo_haltmode.h"
+#include "proc/common/pseudo_haltmode/pseudo_haltmode.h"
 #include "proc/kd/kd11_na/execution_engine/execution_engine.h"
 
 #include <gtest/gtest.h>

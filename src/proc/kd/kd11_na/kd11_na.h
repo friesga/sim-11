@@ -10,7 +10,7 @@
 #include "configdata/kd11_naconfig/kd11_naconfig.h"
 #include "proc/kd/common/kdmachinestate/kdmachinestate.h"
 #include "proc/kd/kd11_na/executor/executor.h"
-#include "proc/common/cpucontrol/pseudo_haltmode/pseudo_haltmode.h"
+#include "proc/common/pseudo_haltmode/pseudo_haltmode.h"
 #include "proc/kd/kd11_na/execution_engine/execution_engine.h"
 
 #include <memory>
