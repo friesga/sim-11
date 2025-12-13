@@ -30,6 +30,19 @@ concept isHaltMode = requires(T t, bool b)
 	{ t.inHaltMode () } ->std::convertible_to<bool>;
 };
 
+template <typename T>
+concept isExecutionEngine = requires(T t, u16 i)
+{
+	{ t.cpuReset () };
+	{ t.busReset () };
+	{ t.halt () };
+	{ t.wait () };
+	{ t.start (i) };
+	{ t.proceed () };
+	{ t.haltReason () } -> std::same_as<CpuControl::HaltReason>;
+	{ t.execute () } -> std::same_as<CpuControl::CpuRunState>;
+};
+
 // Two different LSI-models exist, the LSI-11 and the LSI-11/2. The LSI-11
 // comprises the M7264 module in one of its variations. The LSI-11/2
 // consists of a M7270 module with a KD11-HA or KD11-NA processor. These
@@ -40,7 +53,7 @@ concept isHaltMode = requires(T t, bool b)
 // and FIS support.
 //
 template <isExecutor TExecutor, typename TCalculator, isHaltMode THaltMode,
-	typename TExecutionEngine>
+	isExecutionEngine TExecutionEngine>
 class KD11_NA_CpuControl : public CpuControl
 {
 public:
@@ -85,7 +98,7 @@ private:
 };
 
 template <isExecutor TExecutor, typename TCalculator, isHaltMode THaltMode,
-	typename TExecutionEngine>
+	isExecutionEngine TExecutionEngine>
 KD11_NA_CpuControl<TExecutor, TCalculator, THaltMode, TExecutionEngine>::KD11_NA_CpuControl (Bus* bus, CpuData* cpuData, MMU* mmu)
 	:
 	bus_ {bus},
