@@ -1,5 +1,5 @@
-#ifndef _KD11_NA_CPU_H_
-#define _KD11_NA_CPU_H_
+#ifndef _KD11_NA_CPUCONTROL_H_
+#define _KD11_NA_CPUCONTROL_H_
 
 #include "bus/include/bus.h"
 #include "proc/kd/include/cpudata.h"
@@ -17,6 +17,19 @@
 
 using std::function;
 
+template <typename T>
+concept isExecutor = requires(T t)
+{
+	{ t.operator() (t) } ->std::convertible_to<bool>;
+};
+
+template <typename T>
+concept isHaltMode = requires(T t, bool b)
+{
+	{ t.setHaltMode (b) };
+	{ t.inHaltMode () } ->std::convertible_to<bool>;
+};
+
 // Two different LSI-models exist, the LSI-11 and the LSI-11/2. The LSI-11
 // comprises the M7264 module in one of its variations. The LSI-11/2
 // consists of a M7270 module with a KD11-HA or KD11-NA processor. These
@@ -26,7 +39,7 @@ using std::function;
 // This class simulates a KD11-NA, i.e. a KD11-H base version including EIS
 // and FIS support.
 //
-template <typename TExecutor, typename TCalculator, typename THaltMode>
+template <isExecutor TExecutor, typename TCalculator, isHaltMode THaltMode>
 class KD11_NA_CpuControl : public CpuControl
 {
 public:
@@ -70,7 +83,7 @@ private:
 		&executor_, &calculator_};
 };
 
-template <typename TExecutor, typename TCalculator, typename THaltMode>
+template <isExecutor TExecutor, typename TCalculator, isHaltMode THaltMode>
 KD11_NA_CpuControl<TExecutor, TCalculator, THaltMode>::KD11_NA_CpuControl (Bus* bus, CpuData* cpuData, MMU* mmu)
 	:
 	bus_ {bus},
@@ -78,4 +91,4 @@ KD11_NA_CpuControl<TExecutor, TCalculator, THaltMode>::KD11_NA_CpuControl (Bus* 
 	cpuData_ {cpuData}
 {}
 
-#endif // _KD11_NA_CPU_H_
+#endif // _KD11_NA_CPUCONTROL_H_
