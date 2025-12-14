@@ -76,7 +76,7 @@ void KDF11_CpuControl::execInstr ()
 {
     // Create an Calculate and Executor to time and execute the instructions
     KDF11::Calculate calculator {};
-    KDF11::Executor executor (cpuData_, this, mmu_);
+    KDF11_Executor executor (cpuData_, this, mmu_);
 
     // Get next instruction to execute and move PC forward
     CondData<u16> instructionWord = mmu_->fetchWord (cpuData_->registers ()[7]);

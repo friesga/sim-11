@@ -54,7 +54,7 @@ TEST_F (KDF11_A_PSWTEST, MOVDoesNotSetCC)
     kdf11a->mmu ()->putWord (4, 0177776);
     Instruction instruction {instrDecoder.decode (0012737)};
     
-    EXPECT_TRUE (visit (KDF11::Executor {kdf11a->cpuData (), kdf11a->cpuControl (), kdf11a->mmu ()},
+    EXPECT_TRUE (visit (KDF11_Executor {kdf11a->cpuData (), kdf11a->cpuControl (), kdf11a->mmu ()},
         instruction));
     
     CondData<u16> psw = kdf11a->read (PswAddress);
@@ -77,7 +77,7 @@ TEST_F (KDF11_A_PSWTEST, MOVBDoesNotSetCC)
     kdf11a->mmu ()->putWord (4, 0177776);
     Instruction instruction {instrDecoder.decode (0112737)};
 
-    EXPECT_TRUE (visit (KDF11::Executor {kdf11a->cpuData (), kdf11a->cpuControl (), kdf11a->mmu ()},
+    EXPECT_TRUE (visit (KDF11_Executor {kdf11a->cpuData (), kdf11a->cpuControl (), kdf11a->mmu ()},
         instruction));
     
     CondData<u16> psw = kdf11a->read (PswAddress);
@@ -98,7 +98,7 @@ TEST_F (KDF11_A_PSWTEST, CLRDoesNotSetCC)
     kdf11a->mmu ()->putWord (2, 0177776);
     Instruction instruction {instrDecoder.decode (0005037)};
 
-    EXPECT_TRUE (visit (KDF11::Executor {kdf11a->cpuData (), kdf11a->cpuControl (), kdf11a->mmu ()},
+    EXPECT_TRUE (visit (KDF11_Executor {kdf11a->cpuData (), kdf11a->cpuControl (), kdf11a->mmu ()},
         instruction));
     
     CondData<u16> psw = kdf11a->read (PswAddress);
@@ -119,7 +119,7 @@ TEST_F (KDF11_A_PSWTEST, CLRBDoesNotSetCC)
     kdf11a->mmu ()->putWord (2, 0177776);
     Instruction instruction {instrDecoder.decode (0105037)};
 
-    EXPECT_TRUE (visit (KDF11::Executor {kdf11a->cpuData (), kdf11a->cpuControl (), kdf11a->mmu ()},
+    EXPECT_TRUE (visit (KDF11_Executor {kdf11a->cpuData (), kdf11a->cpuControl (), kdf11a->mmu ()},
         instruction));    
     CondData<u16> psw = kdf11a->read (PswAddress);
     EXPECT_EQ (psw, 0177400);

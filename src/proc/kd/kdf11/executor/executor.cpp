@@ -1,6 +1,6 @@
 #include "executor.h"
 
-KDF11::Executor::Executor::Executor (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu)
+KDF11_Executor::KDF11_Executor (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu)
     :
     commonExecutor (cpuData, cpuControl, mmu),
     cpuData_ {cpuData},

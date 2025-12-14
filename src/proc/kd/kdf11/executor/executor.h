@@ -1,17 +1,15 @@
-#ifndef _KDF11_A_EXECUTOR_H_
-#define _KDF11_A_EXECUTOR_H_
+#ifndef _KDF11_EXECUTOR_H_
+#define _KDF11_EXECUTOR_H_
 
 #include "proc/kd/common/executor/executor.h"
-
-namespace KDF11 {
 
 // This class contains the KDF11-A specific execution of some instructions.
 // For most instructions the execution is forwarded to the Common::Executor.
 //
-class Executor
+class KDF11_Executor
 {
 public:
-    Executor (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu);
+    KDF11_Executor (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu);
 
 	template <typename T>
 	bool operator() (T& instr);
@@ -26,14 +24,14 @@ private:
 };
 
 template <typename T>
-bool Executor::operator() (T& instr)
+bool KDF11_Executor::operator() (T& instr)
 {
 	return commonExecutor.execute (instr);
 }
 
 // Single operand instructions
 template <>
-inline bool Executor::operator() (CLR& instr)
+inline bool KDF11_Executor::operator() (CLR& instr)
 {
     auto singleOperandDecoder = 
          operandDecoderFactory_.create<SingleOperandDecoder> (&instr);
@@ -47,7 +45,7 @@ inline bool Executor::operator() (CLR& instr)
 }
 
 template <>
-inline bool Executor::operator() (CLRB& instr)
+inline bool KDF11_Executor::operator() (CLRB& instr)
 {
     auto singleOperandDecoder = 
          operandDecoderFactory_.create<SingleOperandDecoder> (&instr);
@@ -61,7 +59,7 @@ inline bool Executor::operator() (CLRB& instr)
 }
 
 template <>
-inline bool Executor::operator() (COM& instr)
+inline bool KDF11_Executor::operator() (COM& instr)
 {
     auto singleOperandDecoder = 
          operandDecoderFactory_.create<SingleOperandDecoder> (&instr);
@@ -83,7 +81,7 @@ inline bool Executor::operator() (COM& instr)
 }
 
 template <>
-inline bool Executor::operator() (COMB& instr)
+inline bool KDF11_Executor::operator() (COMB& instr)
 {
     auto singleOperandDecoder = 
          operandDecoderFactory_.create<SingleOperandDecoder> (&instr);
@@ -105,7 +103,7 @@ inline bool Executor::operator() (COMB& instr)
 }
 
 template <>
-inline bool Executor::operator() (INC& instr)
+inline bool KDF11_Executor::operator() (INC& instr)
 {
     auto singleOperandDecoder = 
          operandDecoderFactory_.create<SingleOperandDecoder> (&instr);
@@ -125,7 +123,7 @@ inline bool Executor::operator() (INC& instr)
 }
 
 template <>
-inline bool Executor::operator() (INCB& instr)
+inline bool KDF11_Executor::operator() (INCB& instr)
 {
     auto singleOperandDecoder = 
          operandDecoderFactory_.create<SingleOperandDecoder> (&instr);
@@ -144,7 +142,7 @@ inline bool Executor::operator() (INCB& instr)
 }
 
 template <>
-inline bool Executor::operator() (DEC& instr)
+inline bool KDF11_Executor::operator() (DEC& instr)
 {
     auto singleOperandDecoder = 
          operandDecoderFactory_.create<SingleOperandDecoder> (&instr);
@@ -164,7 +162,7 @@ inline bool Executor::operator() (DEC& instr)
 }
 
 template <>
-inline bool Executor::operator() (DECB& instr)
+inline bool KDF11_Executor::operator() (DECB& instr)
 {
     auto singleOperandDecoder = 
          operandDecoderFactory_.create<SingleOperandDecoder> (&instr);
@@ -183,7 +181,7 @@ inline bool Executor::operator() (DECB& instr)
 }
 
 template <>
-inline bool Executor::operator() (NEG& instr)
+inline bool KDF11_Executor::operator() (NEG& instr)
 {
     auto singleOperandDecoder = 
          operandDecoderFactory_.create<SingleOperandDecoder> (&instr);
@@ -206,7 +204,7 @@ inline bool Executor::operator() (NEG& instr)
 }
 
 template <>
-inline bool Executor::operator() (NEGB& instr)
+inline bool KDF11_Executor::operator() (NEGB& instr)
 {
     auto singleOperandDecoder = 
          operandDecoderFactory_.create<SingleOperandDecoder> (&instr);
@@ -228,7 +226,7 @@ inline bool Executor::operator() (NEGB& instr)
 
 
 template <>
-inline bool Executor::operator() (ASR& instr)
+inline bool KDF11_Executor::operator() (ASR& instr)
 {
     auto singleOperandDecoder = 
          operandDecoderFactory_.create<SingleOperandDecoder> (&instr);
@@ -255,7 +253,7 @@ inline bool Executor::operator() (ASR& instr)
 }
 
 template <>
-inline bool Executor::operator() (ASRB& instr)
+inline bool KDF11_Executor::operator() (ASRB& instr)
 {
     auto singleOperandDecoder = 
          operandDecoderFactory_.create<SingleOperandDecoder> (&instr);
@@ -282,7 +280,7 @@ inline bool Executor::operator() (ASRB& instr)
 }
 
 template <>
-inline bool Executor::operator() (ASL& instr)
+inline bool KDF11_Executor::operator() (ASL& instr)
 {
     auto singleOperandDecoder = 
          operandDecoderFactory_.create<SingleOperandDecoder> (&instr);
@@ -302,7 +300,7 @@ inline bool Executor::operator() (ASL& instr)
 }
 
 template <>
-inline bool Executor::operator() (ASLB& instr)
+inline bool KDF11_Executor::operator() (ASLB& instr)
 {
     auto singleOperandDecoder = 
          operandDecoderFactory_.create<SingleOperandDecoder> (&instr);
@@ -322,7 +320,7 @@ inline bool Executor::operator() (ASLB& instr)
 }
 
 template <>
-inline bool Executor::operator() (ROR& instr)
+inline bool KDF11_Executor::operator() (ROR& instr)
 {
     auto singleOperandDecoder = 
          operandDecoderFactory_.create<SingleOperandDecoder> (&instr);
@@ -344,7 +342,7 @@ inline bool Executor::operator() (ROR& instr)
 }
 
 template <>
-inline bool Executor::operator() (RORB& instr)
+inline bool KDF11_Executor::operator() (RORB& instr)
 {
     auto singleOperandDecoder = 
          operandDecoderFactory_.create<SingleOperandDecoder> (&instr);
@@ -366,7 +364,7 @@ inline bool Executor::operator() (RORB& instr)
 }
 
 template <>
-inline bool Executor::operator() (ROL& instr)
+inline bool KDF11_Executor::operator() (ROL& instr)
 {
     auto singleOperandDecoder = 
          operandDecoderFactory_.create<SingleOperandDecoder> (&instr);
@@ -390,7 +388,7 @@ inline bool Executor::operator() (ROL& instr)
 }
 
 template <>
-inline bool Executor::operator() (ROLB& instr)
+inline bool KDF11_Executor::operator() (ROLB& instr)
 {
     auto singleOperandDecoder = 
          operandDecoderFactory_.create<SingleOperandDecoder> (&instr);
@@ -412,7 +410,7 @@ inline bool Executor::operator() (ROLB& instr)
 }
 
 template <>
-inline bool Executor::operator() (SWAB& instr)
+inline bool KDF11_Executor::operator() (SWAB& instr)
 {
     auto singleOperandDecoder = 
          operandDecoderFactory_.create<SingleOperandDecoder> (&instr);
@@ -433,7 +431,7 @@ inline bool Executor::operator() (SWAB& instr)
 }
 
 template <>
-inline bool Executor::operator() (ADC& instr)
+inline bool KDF11_Executor::operator() (ADC& instr)
 {
     auto singleOperandDecoder = 
          operandDecoderFactory_.create<SingleOperandDecoder> (&instr);
@@ -454,7 +452,7 @@ inline bool Executor::operator() (ADC& instr)
 }
 
 template <>
-inline bool Executor::operator() (ADCB& instr)
+inline bool KDF11_Executor::operator() (ADCB& instr)
 {
     auto singleOperandDecoder = 
          operandDecoderFactory_.create<SingleOperandDecoder> (&instr);
@@ -475,7 +473,7 @@ inline bool Executor::operator() (ADCB& instr)
 }
 
 template <>
-inline bool Executor::operator() (SBC& instr)
+inline bool KDF11_Executor::operator() (SBC& instr)
 {
     auto singleOperandDecoder = 
          operandDecoderFactory_.create<SingleOperandDecoder> (&instr);
@@ -496,7 +494,7 @@ inline bool Executor::operator() (SBC& instr)
 }
 
 template <>
-inline bool Executor::operator() (SBCB& instr)
+inline bool KDF11_Executor::operator() (SBCB& instr)
 {
     auto singleOperandDecoder = 
          operandDecoderFactory_.create<SingleOperandDecoder> (&instr);
@@ -517,7 +515,7 @@ inline bool Executor::operator() (SBCB& instr)
 }
 
 template <>
-inline bool Executor::operator() (SXT& instr)
+inline bool KDF11_Executor::operator() (SXT& instr)
 {
     auto singleOperandDecoder = 
          operandDecoderFactory_.create<SingleOperandDecoder> (&instr);
@@ -531,7 +529,7 @@ inline bool Executor::operator() (SXT& instr)
 }
 
 template <>
-inline bool Executor::operator() (MFPS& instr)
+inline bool KDF11_Executor::operator() (MFPS& instr)
 {
     auto singleOperandDecoder = 
          operandDecoderFactory_.create<SingleOperandDecoder> (&instr);
@@ -562,7 +560,7 @@ inline bool Executor::operator() (MFPS& instr)
 
 // Double operand instructions
 template <>
-inline bool Executor::operator() (MOV& instr)
+inline bool KDF11_Executor::operator() (MOV& instr)
 {
     auto doubleOperandDecoder = 
          operandDecoderFactory_.create<DoubleOperandDecoder> (&instr);
@@ -584,7 +582,7 @@ inline bool Executor::operator() (MOV& instr)
 }
 
 template <>
-inline bool Executor::operator() (MOVB& instr)
+inline bool KDF11_Executor::operator() (MOVB& instr)
 {
     auto doubleOperandDecoder = 
          operandDecoderFactory_.create<DoubleOperandDecoder> (&instr);
@@ -610,7 +608,7 @@ inline bool Executor::operator() (MOVB& instr)
 }
 
 template <>
-inline bool Executor::operator() (CMP& instr)
+inline bool KDF11_Executor::operator() (CMP& instr)
 {
     auto doubleOperandDecoder = 
          operandDecoderFactory_.create<DoubleOperandDecoder> (&instr);
@@ -636,7 +634,7 @@ inline bool Executor::operator() (CMP& instr)
 }
 
 template <>
-inline bool Executor::operator() (CMPB& instr)
+inline bool KDF11_Executor::operator() (CMPB& instr)
 {
     auto doubleOperandDecoder = 
          operandDecoderFactory_.create<DoubleOperandDecoder> (&instr);
@@ -662,7 +660,7 @@ inline bool Executor::operator() (CMPB& instr)
 }
 
 template <>
-inline bool Executor::operator() (ADD& instr)
+inline bool KDF11_Executor::operator() (ADD& instr)
 {
     auto doubleOperandDecoder = 
          operandDecoderFactory_.create<DoubleOperandDecoder> (&instr);
@@ -689,7 +687,7 @@ inline bool Executor::operator() (ADD& instr)
 }
 
 template <>
-inline bool Executor::operator() (SUB& instr)
+inline bool KDF11_Executor::operator() (SUB& instr)
 {
     auto doubleOperandDecoder = 
          operandDecoderFactory_.create<DoubleOperandDecoder> (&instr);
@@ -716,7 +714,7 @@ inline bool Executor::operator() (SUB& instr)
 }
 
 template <>
-inline bool Executor::operator() (BIT& instr)
+inline bool KDF11_Executor::operator() (BIT& instr)
 {
     auto doubleOperandDecoder = 
          operandDecoderFactory_.create<DoubleOperandDecoder> (&instr);
@@ -741,7 +739,7 @@ inline bool Executor::operator() (BIT& instr)
 }
 
 template <>
-inline bool Executor::operator() (BITB& instr)
+inline bool KDF11_Executor::operator() (BITB& instr)
 {
     auto doubleOperandDecoder = 
          operandDecoderFactory_.create<DoubleOperandDecoder> (&instr);
@@ -766,7 +764,7 @@ inline bool Executor::operator() (BITB& instr)
 }
 
 template <>
-inline bool Executor::operator() (BIC& instr)
+inline bool KDF11_Executor::operator() (BIC& instr)
 {
     auto doubleOperandDecoder = 
          operandDecoderFactory_.create<DoubleOperandDecoder> (&instr);
@@ -791,7 +789,7 @@ inline bool Executor::operator() (BIC& instr)
 }
 
 template <>
-inline bool Executor::operator() (BICB& instr)
+inline bool KDF11_Executor::operator() (BICB& instr)
 {
     auto doubleOperandDecoder = 
          operandDecoderFactory_.create<DoubleOperandDecoder> (&instr);
@@ -816,7 +814,7 @@ inline bool Executor::operator() (BICB& instr)
 }
 
 template <>
-inline bool Executor::operator() (BIS& instr)
+inline bool KDF11_Executor::operator() (BIS& instr)
 {
     auto doubleOperandDecoder = 
          operandDecoderFactory_.create<DoubleOperandDecoder> (&instr);
@@ -841,7 +839,7 @@ inline bool Executor::operator() (BIS& instr)
 }
 
 template <>
-inline bool Executor::operator() (BISB& instr)
+inline bool KDF11_Executor::operator() (BISB& instr)
 {
     auto doubleOperandDecoder = 
          operandDecoderFactory_.create<DoubleOperandDecoder> (&instr);
@@ -867,7 +865,7 @@ inline bool Executor::operator() (BISB& instr)
 
 // EIS instructions, including JSR and XOR
 template <>
-inline bool Executor::operator() (XOR& instr)
+inline bool KDF11_Executor::operator() (XOR& instr)
 {
     auto eisDecoder = 
          operandDecoderFactory_.create<EisDecoder> (&instr);
@@ -892,7 +890,7 @@ inline bool Executor::operator() (XOR& instr)
 
 // No-operand instructions
 template <>
-inline bool Executor::operator() (HALT& instr)
+inline bool KDF11_Executor::operator() (HALT& instr)
 {
     if (cpuData_->psw ().currentMode () == PSW::Mode::User)
     {
@@ -905,7 +903,7 @@ inline bool Executor::operator() (HALT& instr)
 }
 
 template <>
-inline bool Executor::operator() (WAIT& instr)
+inline bool KDF11_Executor::operator() (WAIT& instr)
 {
     if (!cpuData_->psw ().traceBitSet ())
         cpuControl_->wait ();
@@ -914,7 +912,7 @@ inline bool Executor::operator() (WAIT& instr)
 }
 
 template <>
-inline bool Executor::operator() (RESET& instr)
+inline bool KDF11_Executor::operator() (RESET& instr)
 {
     if (cpuData_->psw ().currentMode () != PSW::Mode::User)
         cpuControl_->busReset ();
@@ -923,7 +921,7 @@ inline bool Executor::operator() (RESET& instr)
 }
 
 template <>
-inline bool Executor::operator() (MFPD& instr)
+inline bool KDF11_Executor::operator() (MFPD& instr)
 {
     auto singleOperandDecoder = 
          operandDecoderFactory_.create<SingleOperandDecoder> (&instr);
@@ -952,7 +950,7 @@ inline bool Executor::operator() (MFPD& instr)
 }
 
 template <>
-inline bool Executor::operator() (MTPD& instr)
+inline bool KDF11_Executor::operator() (MTPD& instr)
 {
     auto singleOperandDecoder = 
          operandDecoderFactory_.create<SingleOperandDecoder> (&instr);
@@ -975,19 +973,19 @@ inline bool Executor::operator() (MTPD& instr)
 }
 
 template <>
-inline bool Executor::operator() (MFPI& instr)
+inline bool KDF11_Executor::operator() (MFPI& instr)
 {
     return this->operator() (reinterpret_cast<MFPD&> (instr));
 }
 
 template <>
-inline bool Executor::operator() (MTPI& instr)
+inline bool KDF11_Executor::operator() (MTPI& instr)
 {
     return this->operator() (reinterpret_cast<MTPD&> (instr));
 }
 
 template <>
-inline bool Executor::operator() (MFPT& instr)
+inline bool KDF11_Executor::operator() (MFPT& instr)
 {
     cpuData_->registers ()[0] = 3;
     return true;
@@ -995,33 +993,31 @@ inline bool Executor::operator() (MFPT& instr)
 
 // Unsupported instructions
 template <>
-inline bool Executor::operator() (FADD& instr)
+inline bool KDF11_Executor::operator() (FADD& instr)
 {
     cpuData_->setTrap (CpuData::TrapType::ReservedInstructionTrap);
 	return false;
 }
 
 template <>
-inline bool Executor::operator() (FSUB& instr)
+inline bool KDF11_Executor::operator() (FSUB& instr)
 {
     cpuData_->setTrap (CpuData::TrapType::ReservedInstructionTrap);
 	return false;
 }
 
 template <>
-inline bool Executor::operator() (FMUL& instr)
+inline bool KDF11_Executor::operator() (FMUL& instr)
 {
     cpuData_->setTrap (CpuData::TrapType::ReservedInstructionTrap);
 	return false;
 }
 
 template <>
-inline bool Executor::operator() (FDIV& instr)
+inline bool KDF11_Executor::operator() (FDIV& instr)
 {
     cpuData_->setTrap (CpuData::TrapType::ReservedInstructionTrap);
 	return false;
 }
 
-} // namespace KDF11
-
-#endif // _KDF11_A_EXECUTOR_H_
+#endif // _KDF11_EXECUTOR_H_
