@@ -8,6 +8,11 @@
 #include "configdata/kdf11/kdf11_a/kdf11_aconfig/kdf11_aconfig.h"
 #include "proc/kd/common/kdmachinestate/kdmachinestate.h"
 #include "devicecommon/registerhandler/registerhandler.h"
+#include "proc/common/composite_cpucontroller/composite_cpucontroller.h"
+#include "proc/kd/kdf11/executor/executor.h"
+#include "proc/kd/kdf11/calculate/calculate.h"
+#include "proc/kd/kdf11/haltmode/haltmode.h"
+#include "proc/kd/kdf11/kdf11_executionengine/kdf11_executionengine.h"
 
 #include <memory>
 #include <vector>
@@ -57,7 +62,8 @@ private:
     // Definition of the KDF11-A components. The KTF11-A (MMU) is optional.
     KDF11CpuData cpuData_ {};
     KTF11_A mmu_ {bus_, &cpuData_};
-    KDF11_CpuControl cpuControl_ {bus_, &cpuData_, &mmu_};
+    CompositeCpuController<KDF11_Executor, KDF11_Calculate,
+        KDF11_HaltMode, KDF11_ExecutionEngine> cpuControl_ {bus_, &cpuData_, &mmu_};
     unique_ptr<KDMachineState> machineState_;
 
     // RegisterHandler performs the functions required by the BusDevice
