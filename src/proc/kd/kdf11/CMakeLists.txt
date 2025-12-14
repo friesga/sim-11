@@ -8,7 +8,7 @@ set (KDF11_SRCS
     serial_line_units/serial_line_units.cpp
     cpucontrol/kdf11_step.cpp
     cpucontrol/kdf11_cpucontrol.cpp
-    cpucontrol/kdf11_haltmode.cpp
+    haltmode/haltmode.cpp
     cpudata/kdf11registers/kdf11registers.cpp
     cpudata/kdf11busdevice.cpp
     ktf11_a/ktf11_a.cpp

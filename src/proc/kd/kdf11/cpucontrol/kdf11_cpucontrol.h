@@ -9,6 +9,9 @@
 #include "types.h"
 #include "proc/kd/kdf11/cpudata/kdf11registers/kdf11registers.h"
 #include "proc/kd/kdf11/ktf11_a/ktf11_a.h"
+#include "proc/kd/kdf11/executor/executor.h"
+#include "proc/kd/kdf11/calculate/calculate.h"
+#include "proc/kd/kdf11/haltmode/haltmode.h"
 
 #include <functional>
 #include <chrono>
@@ -46,7 +49,10 @@ private:
 	InstructionDecoder decoder;
 	HaltReason haltReason_;
 	bool traceFlag_;
-	bool haltMode_ {false};
+
+	KDF11_Calculate calculator_ {};
+	KDF11_Executor executor_ {cpuData_, this, mmu_};
+	KDF11_HaltMode haltMode_ {};
 
 	void execInstr ();
 	void serviceTrap ();

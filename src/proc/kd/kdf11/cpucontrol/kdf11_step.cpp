@@ -1,6 +1,4 @@
 #include "kdf11_cpucontrol.h"
-#include "proc/kd/kdf11/executor/executor.h"
-#include "proc/kd/kdf11/calculate/calculate.h"
 #include "chrono/simulatorclock/simulatorclock.h"
 #include "float/float.h"
 #include "trace/trace.h"
@@ -74,10 +72,6 @@ CpuControl::CpuRunState KDF11_CpuControl::execute ()
 // Execute one instruction
 void KDF11_CpuControl::execInstr ()
 {
-    // Create an Calculate and Executor to time and execute the instructions
-    KDF11_Calculate calculator {};
-    KDF11_Executor executor (cpuData_, this, mmu_);
-
     // Get next instruction to execute and move PC forward
     CondData<u16> instructionWord = mmu_->fetchWord (cpuData_->registers ()[7]);
     if (!instructionWord.hasValue())
@@ -99,7 +93,7 @@ void KDF11_CpuControl::execInstr ()
     // The instruction time is defined in microseconds with an accuracy of
     // nanoseconds. Convert the time in microseconds to the 64-bits integer
     // number of nanoseconds.
-    double instrTime = visit (calculator, instr);
+    double instrTime = visit (calculator_, instr);
     SimulatorClock::forwardClock
     (
         SimulatorClock::duration (static_cast<uint64_t> (instrTime * 1000))
@@ -109,7 +103,7 @@ void KDF11_CpuControl::execInstr ()
     // instruction was completed and false if it was aborted due to an error
     // condition. In that case a trap has been set. Note however that trap
     // instructions set a trap and return true. 
-    visit (executor, instr);
+    visit (executor_, instr);
 
     // If the trace flag is set, the next instruction has to result in a trace
     // trap, unless the instruction resulted in another trap, depending on

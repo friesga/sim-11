@@ -67,4 +67,12 @@ void KDF11_CpuControl::proceed ()
     trace.cpuEvent (CpuEventRecordType::CPU_ODT_P, cpuData_->registers ()[7]);
 }
 
+void KDF11_CpuControl::setHaltMode (bool haltMode)
+{
+    haltMode_.setHaltMode (haltMode);
+}
 
+bool KDF11_CpuControl::inHaltMode ()
+{
+    return haltMode_.inHaltMode ();
+}
