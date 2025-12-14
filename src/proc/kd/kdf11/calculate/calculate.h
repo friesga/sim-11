@@ -9,9 +9,7 @@
 
 using std::array;
 
-namespace KDF11 {
-
-class Calculate
+class KDF11_Calculate
 {
 public:
 	// Single operand instructions
@@ -227,6 +225,5 @@ private:
     AddressingModeTimes<KDF11_AddressingModeTime> const basicRESETTimes {{5.0, 4.750}};
 };
 
-} // namespace KDF11
 
 #endif // !_KDF11_CALCULATE_H_

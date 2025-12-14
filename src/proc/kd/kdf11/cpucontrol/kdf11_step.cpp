@@ -75,7 +75,7 @@ CpuControl::CpuRunState KDF11_CpuControl::execute ()
 void KDF11_CpuControl::execInstr ()
 {
     // Create an Calculate and Executor to time and execute the instructions
-    KDF11::Calculate calculator {};
+    KDF11_Calculate calculator {};
     KDF11_Executor executor (cpuData_, this, mmu_);
 
     // Get next instruction to execute and move PC forward
