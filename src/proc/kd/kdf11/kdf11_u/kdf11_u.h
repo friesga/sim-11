@@ -10,6 +10,11 @@
 #include "devicecommon/registerhandler/registerhandler.h"
 #include "proc/kd/kdf11/serial_line_units/serial_line_units.h"
 #include "proc/kd/kdf11/kdf11_u/displayregister/displayregister.h"
+#include "proc/common/composite_cpucontroller/composite_cpucontroller.h"
+#include "proc/kd/kdf11/executor/executor.h"
+#include "proc/kd/kdf11/calculate/calculate.h"
+#include "proc/kd/kdf11/haltmode/haltmode.h"
+#include "proc/kd/kdf11/kdf11_executionengine/kdf11_executionengine.h"
 
 #include <memory>
 #include <vector>
@@ -59,7 +64,8 @@ private:
     // Definition of the KDF11-U components
     KDF11CpuData cpuData_ {};
     KTF11_A mmu_ {bus_, &cpuData_};
-    KDF11_CpuControl cpuControl_ {bus_, &cpuData_, &mmu_};
+    CompositeCpuController<KDF11_Executor, KDF11_Calculate,
+        KDF11_HaltMode, KDF11_ExecutionEngine> cpuControl_ {bus_, &cpuData_, &mmu_};
     unique_ptr<KDMachineState> machineState_;
     unique_ptr<SerialLineUnits> serialLineUnits;
     DisplayRegister displayRegister_;
