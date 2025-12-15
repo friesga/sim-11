@@ -37,8 +37,6 @@ template <isExecutor TExecutor, typename TCalculator, isHaltMode THaltMode,
 class CompositeCpuController : public CpuControl
 {
 public:
-	friend class PDP_11;
-	
 	CompositeCpuController (Bus *bus, CpuData* cpuData, MMU* mmu);
 
 	// Definition of functions required by the CpuControl interface.
