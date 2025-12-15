@@ -6,6 +6,11 @@
 #include "proc/include/cpucontrol.h"
 #include "proc/kd/include/mmu.h"
 
+#include <memory>
+
+using std::unique_ptr;
+using std::make_unique;
+
 template <typename T>
 concept isExecutor = requires(T t)
 {
@@ -43,45 +48,42 @@ public:
 	//
 	// The HaltMode is not implemented in the KD11-NA.
 	void cpuReset () override
-		{ engine_.cpuReset (); }
+		{ engine_->cpuReset (); }
 	void busReset () override
-		{engine_.busReset ();}
+		{engine_->busReset ();}
 	void halt () override
-		{engine_.halt ();}
+		{engine_->halt ();}
 	void setHaltMode (bool haltMode) override
-		{ haltMode_.setHaltMode (haltMode); }
+		{ haltMode_->setHaltMode (haltMode); }
 	bool inHaltMode () override
-		{ return haltMode_.inHaltMode (); }
+		{ return haltMode_->inHaltMode (); }
 	void wait () override
-		{ engine_.wait (); }
+		{ engine_->wait (); }
     void start (u16 address) override
-		{ engine_.start (address); }
+		{ engine_->start (address); }
 	void proceed () override
-		{ engine_.proceed (); }
+		{ engine_->proceed (); }
 	HaltReason haltReason ()
-		{ return engine_.haltReason (); }
+		{ return engine_->haltReason (); }
 	CpuControl::CpuRunState execute () override
-		{ return engine_.execute (); }
+		{ return engine_->execute (); }
 
 private:
-	Bus* bus_;
-	MMU* mmu_;
-	CpuData* cpuData_;
-
-	TExecutor executor_ {cpuData_, this, mmu_};
-	TCalculator calculator_ {};
-	THaltMode haltMode_ {};
-	TExecutionEngine engine_ {bus_, cpuData_, mmu_,
-		&executor_, &calculator_};
+	unique_ptr<TExecutor> executor_;
+	unique_ptr<TCalculator> calculator_;
+	unique_ptr<THaltMode> haltMode_;
+	unique_ptr<TExecutionEngine> engine_;
 };
 
 template <isExecutor TExecutor, typename TCalculator, isHaltMode THaltMode,
 	isExecutionEngine TExecutionEngine>
 CompositeCpuController<TExecutor, TCalculator, THaltMode, TExecutionEngine>::CompositeCpuController (Bus* bus, CpuData* cpuData, MMU* mmu)
-	:
-	bus_ {bus},
-	mmu_ {mmu},
-	cpuData_ {cpuData}
-{}
+{
+	executor_ = make_unique<TExecutor> (cpuData, this, mmu);
+	calculator_ = make_unique<TCalculator> ();
+	haltMode_ = make_unique<THaltMode> ();
+	engine_ = make_unique<TExecutionEngine> (bus, cpuData, mmu,
+		executor_.get (), calculator_.get ());
+}
 
 #endif // _COMPOSITE_CPUCONTROLLER_H_
