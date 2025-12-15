@@ -2,7 +2,6 @@
 #define _KDF11_U_H_
 
 #include "proc/kd/include/pdp11processor.h"
-#include "proc/kd/kdf11/cpucontrol/kdf11_cpucontrol.h"
 #include "proc/kd/kdf11/odt/kdf11_odt.h"
 #include "configdata/kdf11/kdf11_u/kdf11_uconfig/kdf11_uconfig.h"
 #include "proc/kd/common/kdmachinestate/kdmachinestate.h"

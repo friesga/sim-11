@@ -2,7 +2,6 @@
 #define _KDF11_A_H_
 
 #include "proc/kd/include/pdp11processor.h"
-#include "proc/kd/kdf11/cpucontrol/kdf11_cpucontrol.h"
 #include "proc/kd/kdf11/cpudata/kdf11cpudata.h"
 #include "proc/kd/kdf11/odt/kdf11_odt.h"
 #include "configdata/kdf11/kdf11_a/kdf11_aconfig/kdf11_aconfig.h"
