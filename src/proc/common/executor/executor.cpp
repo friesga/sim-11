@@ -7,28 +7,30 @@ Common::Executor::Executor (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu)
     mmu_ {mmu}
 {}
 
- void Common::Executor::setPSW (ConditionCodes conditionCodes)
+void Common::Executor::setPSW (ConditionCodes conditionCodes)
 {
 	cpuData_->setCC (conditionCodes);
 }
 
- // Single operand instructions
- bool Common::Executor::execute (CLR& instr)
- {
-     auto singleOperandDecoder = 
-         operandDecoderFactory_.create<SingleOperandDecoder> (&instr);
+// Single operand instructions
+template <WriteOperandOrder order>
+bool Common::Executor::execute (CLR& instr)
+{
+    auto singleOperandDecoder = 
+        operandDecoderFactory_.create<SingleOperandDecoder> (&instr);
 
-     if (!singleOperandDecoder->writeOperand ((u16) 0))
-         return false;
+    if (!singleOperandDecoder->writeOperand ((u16) 0))
+        return false;
 
-     setPSW (ConditionCodes {.N = false,
-         .Z = true,
-         .V = false,
-         .C = false});
+    setPSW (ConditionCodes {.N = false,
+        .Z = true,
+        .V = false,
+        .C = false});
 
-     return true;
- }
+    return true;
+}
 
+template <WriteOperandOrder order>
 bool Common::Executor::execute (CLRB& instr)
 {
     auto singleOperandDecoder = 
@@ -45,6 +47,7 @@ bool Common::Executor::execute (CLRB& instr)
     return true;
 }
 
+template <WriteOperandOrder order>
 bool Common::Executor::execute (COM& instr)
 {
     auto singleOperandDecoder = 
@@ -67,6 +70,7 @@ bool Common::Executor::execute (COM& instr)
     return true;
 }
 
+template <WriteOperandOrder order>
 bool Common::Executor::execute (COMB& instr)
 {
     auto singleOperandDecoder = 
@@ -89,6 +93,7 @@ bool Common::Executor::execute (COMB& instr)
     return true;
 }
 
+template <WriteOperandOrder order>
 bool Common::Executor::execute (INC& instr)
 {
     auto singleOperandDecoder = 
@@ -110,6 +115,7 @@ bool Common::Executor::execute (INC& instr)
     return true;
 }
 
+template <WriteOperandOrder order>
 bool Common::Executor::execute (INCB& instr)
 {
     auto singleOperandDecoder = 
@@ -131,6 +137,7 @@ bool Common::Executor::execute (INCB& instr)
     return true;
 }
 
+template <WriteOperandOrder order>
 bool Common::Executor::execute (DEC& instr)
 {
     auto singleOperandDecoder = 
@@ -152,6 +159,7 @@ bool Common::Executor::execute (DEC& instr)
     return true;
 }
 
+template <WriteOperandOrder order>
 bool Common::Executor::execute (DECB& instr)
 {
     auto singleOperandDecoder = 
@@ -173,6 +181,7 @@ bool Common::Executor::execute (DECB& instr)
     return true;
 }
 
+template <WriteOperandOrder order>
 bool Common::Executor::execute (NEG& instr)
 {
     auto singleOperandDecoder = 
@@ -196,6 +205,8 @@ bool Common::Executor::execute (NEG& instr)
 
     return true;
 }
+
+template <WriteOperandOrder order>
 bool Common::Executor::execute (NEGB& instr)
 {
     auto singleOperandDecoder = 
@@ -253,6 +264,7 @@ bool Common::Executor::execute (TSTB& instr)
     return true;
 }
 
+template <WriteOperandOrder order>
 bool Common::Executor::execute (ASR& instr)
 {
     auto singleOperandDecoder = 
@@ -282,6 +294,7 @@ bool Common::Executor::execute (ASR& instr)
     return true;
 }
 
+template <WriteOperandOrder order>
 bool Common::Executor::execute (ASRB& instr)
 {
     auto singleOperandDecoder = 
@@ -311,6 +324,7 @@ bool Common::Executor::execute (ASRB& instr)
     return true;
 }
 
+template <WriteOperandOrder order>
 bool Common::Executor::execute (ASL& instr)
 {
     auto singleOperandDecoder = 
@@ -333,6 +347,7 @@ bool Common::Executor::execute (ASL& instr)
     return true;
 }
 
+template <WriteOperandOrder order>
 bool Common::Executor::execute (ASLB& instr)
 {
     auto singleOperandDecoder = 
@@ -355,6 +370,7 @@ bool Common::Executor::execute (ASLB& instr)
     return true;
 }
 
+template <WriteOperandOrder order>
 bool Common::Executor::execute (ROR& instr)
 {
     auto singleOperandDecoder = 
@@ -379,6 +395,7 @@ bool Common::Executor::execute (ROR& instr)
     return true;
 }
 
+template <WriteOperandOrder order>
 bool Common::Executor::execute (RORB& instr)
 {
     auto singleOperandDecoder = 
@@ -403,6 +420,7 @@ bool Common::Executor::execute (RORB& instr)
     return true;
 }
 
+template <WriteOperandOrder order>
 bool Common::Executor::execute (ROL& instr)
 {
     auto singleOperandDecoder = 
@@ -428,6 +446,7 @@ bool Common::Executor::execute (ROL& instr)
     return true;
 }
 
+template <WriteOperandOrder order>
 bool Common::Executor::execute (ROLB& instr)
 {
     auto singleOperandDecoder = 
@@ -452,6 +471,7 @@ bool Common::Executor::execute (ROLB& instr)
     return true;
 }
 
+template <WriteOperandOrder order>
 bool Common::Executor::execute (SWAB& instr)
 {
     auto singleOperandDecoder = 
@@ -475,6 +495,7 @@ bool Common::Executor::execute (SWAB& instr)
     return true;
 }
 
+template <WriteOperandOrder order>
 bool Common::Executor::execute (ADC& instr)
 {
     auto singleOperandDecoder = 
@@ -498,6 +519,7 @@ bool Common::Executor::execute (ADC& instr)
     return true;
 }
 
+template <WriteOperandOrder order>
 bool Common::Executor::execute (ADCB& instr)
 {
     auto singleOperandDecoder = 
@@ -521,6 +543,7 @@ bool Common::Executor::execute (ADCB& instr)
     return true;
 }
 
+template <WriteOperandOrder order>
 bool Common::Executor::execute (SBC& instr)
 {
     auto singleOperandDecoder = 
@@ -544,6 +567,7 @@ bool Common::Executor::execute (SBC& instr)
     return true;
 }
 
+template <WriteOperandOrder order>
 bool Common::Executor::execute (SBCB& instr)
 {
     auto singleOperandDecoder = 
@@ -567,6 +591,7 @@ bool Common::Executor::execute (SBCB& instr)
     return true;
 }
 
+template <WriteOperandOrder order>
 bool Common::Executor::execute (SXT& instr)
 {
     auto singleOperandDecoder = 
@@ -582,6 +607,7 @@ bool Common::Executor::execute (SXT& instr)
     return true;
 }
 
+template <WriteOperandOrder order>
 bool Common::Executor::execute (MFPS& instr)
 {
     auto singleOperandDecoder = 
@@ -658,6 +684,7 @@ bool Common::Executor::execute (MARK& instr)
 }
 
 	// Double operand instructions
+template <WriteOperandOrder order>
 bool Common::Executor::execute (MOV& instr)
 {
     auto doubleOperandDecoder = 
@@ -676,6 +703,7 @@ bool Common::Executor::execute (MOV& instr)
     return true;
 }
 
+template <WriteOperandOrder order>
 bool Common::Executor::execute (MOVB& instr)
 {
     auto doubleOperandDecoder = 
@@ -706,6 +734,7 @@ bool Common::Executor::execute (MOVB& instr)
     return true;
 }
 
+template <WriteOperandOrder order>
 bool Common::Executor::execute (CMP& instr)
 {
     auto doubleOperandDecoder = 
@@ -726,6 +755,7 @@ bool Common::Executor::execute (CMP& instr)
     return true;
 }
 
+template <WriteOperandOrder order>
 bool Common::Executor::execute (CMPB& instr)
 {
     auto doubleOperandDecoder = 
@@ -746,6 +776,7 @@ bool Common::Executor::execute (CMPB& instr)
     return true;
 }
 
+template <WriteOperandOrder order>
 bool Common::Executor::execute (ADD& instr)
 {
     auto doubleOperandDecoder = 
@@ -769,6 +800,7 @@ bool Common::Executor::execute (ADD& instr)
     return true;
 }
 
+template <WriteOperandOrder order>
 bool Common::Executor::execute (SUB& instr)
 {
     auto doubleOperandDecoder = 
@@ -793,6 +825,7 @@ bool Common::Executor::execute (SUB& instr)
     return true;
 }
 
+template <WriteOperandOrder order>
 bool Common::Executor::execute (BIT& instr)
 {
     auto doubleOperandDecoder = 
@@ -812,6 +845,7 @@ bool Common::Executor::execute (BIT& instr)
     return true;
 }
 
+template <WriteOperandOrder order>
 bool Common::Executor::execute (BITB& instr)
 {
     auto doubleOperandDecoder = 
@@ -831,6 +865,7 @@ bool Common::Executor::execute (BITB& instr)
     return true;
 }
 
+template <WriteOperandOrder order>
 bool Common::Executor::execute (BIC& instr)
 {
     auto doubleOperandDecoder = 
@@ -853,6 +888,7 @@ bool Common::Executor::execute (BIC& instr)
     return true;
 }
 
+template <WriteOperandOrder order>
 bool Common::Executor::execute (BICB& instr)
 {
     auto doubleOperandDecoder = 
@@ -875,6 +911,7 @@ bool Common::Executor::execute (BICB& instr)
     return true;
 }
 
+template <WriteOperandOrder order>
 bool Common::Executor::execute (BIS& instr)
 {
     auto doubleOperandDecoder = 
@@ -897,6 +934,7 @@ bool Common::Executor::execute (BIS& instr)
     return true;
 }
 
+template <WriteOperandOrder order>
 bool Common::Executor::execute (BISB& instr)
 {
     auto doubleOperandDecoder = 
@@ -1417,3 +1455,103 @@ bool Common::Executor::execute (Unused& instr)
     cpuData_->setTrap (CpuData::TrapType::ReservedInstructionTrap);
     return true;
 }
+
+// Explicit template instantiation to be able to define the methods in
+// a separate .cpp file.
+template bool Common::Executor::execute<WriteOperandOrder::WriteOperandBeforeCC> (CLR&);
+template bool Common::Executor::execute<WriteOperandOrder::WriteOperandAfterCC>  (CLR&);
+template bool Common::Executor::execute<WriteOperandOrder::WriteOperandBeforeCC> (CLRB&);
+template bool Common::Executor::execute<WriteOperandOrder::WriteOperandAfterCC>  (CLRB&);
+
+template bool Common::Executor::execute<WriteOperandOrder::WriteOperandBeforeCC> (COM&);
+template bool Common::Executor::execute<WriteOperandOrder::WriteOperandAfterCC>  (COM&);
+template bool Common::Executor::execute<WriteOperandOrder::WriteOperandBeforeCC> (COMB&);
+template bool Common::Executor::execute<WriteOperandOrder::WriteOperandAfterCC>  (COMB&);
+
+template bool Common::Executor::execute<WriteOperandOrder::WriteOperandBeforeCC> (INC&);
+template bool Common::Executor::execute<WriteOperandOrder::WriteOperandAfterCC>  (INC&);
+template bool Common::Executor::execute<WriteOperandOrder::WriteOperandBeforeCC> (INCB&);
+template bool Common::Executor::execute<WriteOperandOrder::WriteOperandAfterCC>  (INCB&);
+
+template bool Common::Executor::execute<WriteOperandOrder::WriteOperandBeforeCC> (DEC&);
+template bool Common::Executor::execute<WriteOperandOrder::WriteOperandAfterCC>  (DEC&);
+template bool Common::Executor::execute<WriteOperandOrder::WriteOperandBeforeCC> (DECB&);
+template bool Common::Executor::execute<WriteOperandOrder::WriteOperandAfterCC>  (DECB&);
+
+template bool Common::Executor::execute<WriteOperandOrder::WriteOperandBeforeCC> (NEG&);
+template bool Common::Executor::execute<WriteOperandOrder::WriteOperandAfterCC>  (NEG&);
+template bool Common::Executor::execute<WriteOperandOrder::WriteOperandBeforeCC> (NEGB&);
+template bool Common::Executor::execute<WriteOperandOrder::WriteOperandAfterCC>  (NEGB&);
+
+template bool Common::Executor::execute<WriteOperandOrder::WriteOperandBeforeCC> (ASR&);
+template bool Common::Executor::execute<WriteOperandOrder::WriteOperandAfterCC>  (ASR&);
+template bool Common::Executor::execute<WriteOperandOrder::WriteOperandBeforeCC> (ASRB&);
+template bool Common::Executor::execute<WriteOperandOrder::WriteOperandAfterCC>  (ASRB&);
+
+template bool Common::Executor::execute<WriteOperandOrder::WriteOperandBeforeCC> (ASL&);
+template bool Common::Executor::execute<WriteOperandOrder::WriteOperandAfterCC>  (ASL&);
+template bool Common::Executor::execute<WriteOperandOrder::WriteOperandBeforeCC> (ASLB&);
+template bool Common::Executor::execute<WriteOperandOrder::WriteOperandAfterCC>  (ASLB&);
+
+template bool Common::Executor::execute<WriteOperandOrder::WriteOperandBeforeCC> (ROR&);
+template bool Common::Executor::execute<WriteOperandOrder::WriteOperandAfterCC>  (ROR&);
+template bool Common::Executor::execute<WriteOperandOrder::WriteOperandBeforeCC> (RORB&);
+template bool Common::Executor::execute<WriteOperandOrder::WriteOperandAfterCC>  (RORB&);
+
+template bool Common::Executor::execute<WriteOperandOrder::WriteOperandBeforeCC> (ROL&);
+template bool Common::Executor::execute<WriteOperandOrder::WriteOperandAfterCC>  (ROL&);
+template bool Common::Executor::execute<WriteOperandOrder::WriteOperandBeforeCC> (ROLB&);
+template bool Common::Executor::execute<WriteOperandOrder::WriteOperandAfterCC>  (ROLB&);
+
+template bool Common::Executor::execute<WriteOperandOrder::WriteOperandBeforeCC> (SWAB&);
+template bool Common::Executor::execute<WriteOperandOrder::WriteOperandAfterCC>  (SWAB&);
+
+template bool Common::Executor::execute<WriteOperandOrder::WriteOperandBeforeCC> (ADC&);
+template bool Common::Executor::execute<WriteOperandOrder::WriteOperandAfterCC>  (ADC&);
+template bool Common::Executor::execute<WriteOperandOrder::WriteOperandBeforeCC> (ADCB&);
+template bool Common::Executor::execute<WriteOperandOrder::WriteOperandAfterCC>  (ADCB&);
+
+template bool Common::Executor::execute<WriteOperandOrder::WriteOperandBeforeCC> (SBC&);
+template bool Common::Executor::execute<WriteOperandOrder::WriteOperandAfterCC>  (SBC&);
+template bool Common::Executor::execute<WriteOperandOrder::WriteOperandBeforeCC> (SBCB&);
+template bool Common::Executor::execute<WriteOperandOrder::WriteOperandAfterCC>  (SBCB&);
+
+template bool Common::Executor::execute<WriteOperandOrder::WriteOperandBeforeCC> (SXT&);
+template bool Common::Executor::execute<WriteOperandOrder::WriteOperandAfterCC>  (SXT&);
+
+template bool Common::Executor::execute<WriteOperandOrder::WriteOperandBeforeCC> (MFPS&);
+template bool Common::Executor::execute<WriteOperandOrder::WriteOperandAfterCC>  (MFPS&);
+
+template bool Common::Executor::execute<WriteOperandOrder::WriteOperandBeforeCC> (MOV&);
+template bool Common::Executor::execute<WriteOperandOrder::WriteOperandAfterCC>  (MOV&);
+template bool Common::Executor::execute<WriteOperandOrder::WriteOperandBeforeCC> (MOVB&);
+template bool Common::Executor::execute<WriteOperandOrder::WriteOperandAfterCC>  (MOVB&);
+
+template bool Common::Executor::execute<WriteOperandOrder::WriteOperandBeforeCC> (CMP&);
+template bool Common::Executor::execute<WriteOperandOrder::WriteOperandAfterCC>  (CMP&);
+template bool Common::Executor::execute<WriteOperandOrder::WriteOperandBeforeCC> (CMPB&);
+template bool Common::Executor::execute<WriteOperandOrder::WriteOperandAfterCC>  (CMPB&);
+
+template bool Common::Executor::execute<WriteOperandOrder::WriteOperandBeforeCC> (ADD&);
+template bool Common::Executor::execute<WriteOperandOrder::WriteOperandAfterCC>  (ADD&);
+
+template bool Common::Executor::execute<WriteOperandOrder::WriteOperandBeforeCC> (SUB&);
+template bool Common::Executor::execute<WriteOperandOrder::WriteOperandAfterCC>  (SUB&);
+
+template bool Common::Executor::execute<WriteOperandOrder::WriteOperandBeforeCC> (BIT&);
+template bool Common::Executor::execute<WriteOperandOrder::WriteOperandAfterCC>  (BIT&);
+template bool Common::Executor::execute<WriteOperandOrder::WriteOperandBeforeCC> (BITB&);
+template bool Common::Executor::execute<WriteOperandOrder::WriteOperandAfterCC>  (BITB&);
+
+template bool Common::Executor::execute<WriteOperandOrder::WriteOperandBeforeCC> (BIC&);
+template bool Common::Executor::execute<WriteOperandOrder::WriteOperandAfterCC>  (BIC&);
+template bool Common::Executor::execute<WriteOperandOrder::WriteOperandBeforeCC> (BICB&);
+template bool Common::Executor::execute<WriteOperandOrder::WriteOperandAfterCC>  (BICB&);
+
+template bool Common::Executor::execute<WriteOperandOrder::WriteOperandBeforeCC> (BIS&);
+template bool Common::Executor::execute<WriteOperandOrder::WriteOperandAfterCC>  (BIS&);
+template bool Common::Executor::execute<WriteOperandOrder::WriteOperandBeforeCC> (BISB&);
+template bool Common::Executor::execute<WriteOperandOrder::WriteOperandAfterCC>  (BISB&);
+
+
+

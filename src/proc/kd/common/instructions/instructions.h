@@ -185,4 +185,10 @@ using Instruction = variant<
     MFPT,
     Unused>;
 
+enum class WriteOperandOrder
+{
+    WriteOperandBeforeCC,
+    WriteOperandAfterCC
+};
+
 #endif // _INSTRUCTIONS_H_
