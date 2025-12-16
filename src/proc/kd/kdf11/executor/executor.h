@@ -1,7 +1,7 @@
 #ifndef _KDF11_EXECUTOR_H_
 #define _KDF11_EXECUTOR_H_
 
-#include "proc/kd/common/executor/executor.h"
+#include "proc/common/executor/executor.h"
 
 // This class contains the KDF11-A specific execution of some instructions.
 // For most instructions the execution is forwarded to the Common::Executor.
