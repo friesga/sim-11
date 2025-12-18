@@ -2,7 +2,7 @@
 
 KD11_NA_Executor::KD11_NA_Executor (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu)
     :
-    commonExecutor (cpuData, cpuControl, mmu),
+    commonExecutor_ (cpuData, cpuControl, mmu),
     cpuData_ {cpuData},
     mmu_ {mmu}
 {}
@@ -18,7 +18,7 @@ bool KD11_NA_Executor::returnFISresult (Float result, u16 registerNumber)
         mmu_->putWord (cpuData_->registers ()[registerNumber] + 6, low);
         cpuData_->registers ()[registerNumber] += 4;
 
-        commonExecutor.setPSW (ConditionCodes {.N = result.value () < 0,
+        commonExecutor_.setPSW (ConditionCodes {.N = result.value () < 0,
             .Z = result.value () == 0,
             .V = false,
             .C = false});
@@ -27,7 +27,7 @@ bool KD11_NA_Executor::returnFISresult (Float result, u16 registerNumber)
 
     if (conversionResult == Float::Result::Underflow)
     {
-        commonExecutor.setPSW (ConditionCodes {.N = true,
+        commonExecutor_.setPSW (ConditionCodes {.N = true,
             .Z = false,
             .V = true,
             .C = false});
@@ -37,7 +37,7 @@ bool KD11_NA_Executor::returnFISresult (Float result, u16 registerNumber)
     }
     
     // Overflow or Nan
-    commonExecutor.setPSW (ConditionCodes {.N = false,
+    commonExecutor_.setPSW (ConditionCodes {.N = false,
         .Z = false,
         .V = true,
         .C = false});
@@ -86,7 +86,7 @@ bool KD11_NA_Executor::executeFISinstruction (u16 stackPointer,
 
     // The arguments are invalid. This is notably a division
     // by zero
-    commonExecutor.setPSW (ConditionCodes {.N = true,
+    commonExecutor_.setPSW (ConditionCodes {.N = true,
         .Z = false,
         .V = true,
         .C = true});
