@@ -134,6 +134,8 @@ public:
 	bool execute (DIV& instr);
 	bool execute (ASH& instr);
 	bool execute (ASHC& instr);
+
+	template <WriteOperandOrder order = WriteOperandOrder::WriteOperandBeforeCC>
 	bool execute (XOR& instr);
 	bool execute (SOB& instr);
 
@@ -180,6 +182,9 @@ private:
     MMU* mmu_;
 
 	OperandDecoderFactory operandDecoderFactory_ {cpuData_, cpuControl_, mmu_};
+	
+	template <WriteOperandOrder order>
+	bool finishExecution (auto&& writeOperands, auto&& setCC);
 };
 
 constexpr bool Common::Executor::isSet (u16 x)
@@ -188,5 +193,6 @@ constexpr bool Common::Executor::isSet (u16 x)
 }
 
 } // namespace Common
+
 
 #endif // _COMMON_EXECUTOR_H_
