@@ -738,7 +738,6 @@ bool Common::Executor::execute (MOVB& instr)
         });
 }
 
-template <WriteOperandOrder order>
 bool Common::Executor::execute (CMP& instr)
 {
     auto doubleOperandDecoder =
@@ -760,7 +759,6 @@ bool Common::Executor::execute (CMP& instr)
     return true;
 }
 
-template <WriteOperandOrder order>
 bool Common::Executor::execute (CMPB& instr)
 {
     auto doubleOperandDecoder =
@@ -1520,11 +1518,6 @@ template bool Common::Executor::execute<WriteOperandOrder::WriteOperandAfterCC> 
 template bool Common::Executor::execute<WriteOperandOrder::WriteOperandBeforeCC> (MOVB&);
 template bool Common::Executor::execute<WriteOperandOrder::WriteOperandAfterCC> (MOVB&);
 
-template bool Common::Executor::execute<WriteOperandOrder::WriteOperandBeforeCC> (CMP&);
-template bool Common::Executor::execute<WriteOperandOrder::WriteOperandAfterCC> (CMP&);
-template bool Common::Executor::execute<WriteOperandOrder::WriteOperandBeforeCC> (CMPB&);
-template bool Common::Executor::execute<WriteOperandOrder::WriteOperandAfterCC> (CMPB&);
-
 template bool Common::Executor::execute<WriteOperandOrder::WriteOperandBeforeCC> (ADD&);
 template bool Common::Executor::execute<WriteOperandOrder::WriteOperandAfterCC> (ADD&);
 
@@ -1548,6 +1541,3 @@ template bool Common::Executor::execute<WriteOperandOrder::WriteOperandBeforeCC>
 template bool Common::Executor::execute<WriteOperandOrder::WriteOperandAfterCC> (BIS&);
 template bool Common::Executor::execute<WriteOperandOrder::WriteOperandBeforeCC> (BISB&);
 template bool Common::Executor::execute<WriteOperandOrder::WriteOperandAfterCC> (BISB&);
-
-
-
