@@ -820,7 +820,7 @@ bool Common::Executor::execute (SUB& instr)
         [&] { setPSW (ConditionCodes ({
             .N = (bool) (result & 0x8000),
             .Z = result == 0,
-            .V = ((source & 0x8000) != (destination & 0x8000)) && ((destination & 0x8000) == (result & 0x8000)),
+            .V = ((source & 0x8000) != (destination & 0x8000)) && ((source & 0x8000) == (result & 0x8000)),
             .C = (bool) (((u32) destination - (u32) source) & 0x10000)})); });
 }
 
