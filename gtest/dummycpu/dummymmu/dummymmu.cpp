@@ -50,12 +50,14 @@ bool DummyMMU::putWord (VirtualAddress address, u16 value, PSW::Mode memMgmtMode
 bool DummyMMU::putByte (VirtualAddress address, u8 value, PSW::Mode memMgmtMode)
 {
 	CondData<u16> tmp = fetchWord (address);
+
+    if (!tmp.hasValue ())
+        return false;
+
 	if(address & 1)
 		tmp = (tmp & 0x00FF) | (value << 8);
 	else
 		tmp = (tmp & 0xFF00) | value;
 
 	return putWord (address, tmp);
-
-	return false;
 }
