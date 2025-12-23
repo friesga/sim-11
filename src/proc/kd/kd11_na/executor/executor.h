@@ -3,14 +3,6 @@
 
 #include "proc/common/executor/executor.h"
 
-// Compile-time check if Exec has a templated execute method that
-// can be called with Instr as parameter.
-template <typename Exec, typename Instr>
-concept requiresTemplatedExecute = requires(Exec exec, const Instr & instr)
-{
-    exec.template execute<WriteOperandOrder::WriteOperandBeforeCC > (instr);
-};
-
 // This class contains the KD11-NA specific execution of some instructions.
 // For most instructions the execution is forwarded to the Common::Executor.
 //
@@ -41,7 +33,7 @@ private:
 template <typename T>
 bool KD11_NA_Executor::operator() (T& instr)
 {
-    if constexpr (requiresTemplatedExecute<Common::Executor, T>)
+    if constexpr (requires {commonExecutor_.template execute<WriteOperandOrder::WriteOperandBeforeCC> (instr); })
         return commonExecutor_.template execute<WriteOperandOrder::WriteOperandBeforeCC> (instr);
     else
         return commonExecutor_.execute (instr);

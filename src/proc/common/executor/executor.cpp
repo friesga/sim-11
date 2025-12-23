@@ -621,7 +621,7 @@ bool Common::Executor::execute (MFPS& instr)
                 // If destination is mode 0 (Register), the regular operand processing
                 // is bypassed and PS bit 7 is sign extended through the upper byte of
                 // the register.
-                cpuData_->registers ()[operandLocation_] = (s8) cpuData_->psw ();
+                cpuData_->registers ()[operandLocation_] = (s8) contents;
                 return true;
             }
             else
