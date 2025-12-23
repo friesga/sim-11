@@ -42,12 +42,12 @@ bool InterruptHandler::containsInterrupt (InterruptPriority priority, unsigned c
 void InterruptHandler::clearInterrupt (InterruptPriority priority, unsigned char busOrder,
 	u8 functionOrder)
 {
-	if (!intrptReqQueue_.empty ())
-	{
-		IntrptReqQueue::const_iterator it = intrptReqQueue_.find (
-			InterruptRequest {priority, busOrder, functionOrder, 0});
+	InterruptRequest interruptRequest {priority, busOrder, functionOrder, 0};
+	IntrptReqQueue::const_iterator it {};
 
-		trace.irq (IrqRecordType::IRQ_CLEAR, *it);
+	if (it = intrptReqQueue_.find (interruptRequest); it != intrptReqQueue_.cend ())
+	{
+		trace.irq (IrqRecordType::IRQ_CLEAR, interruptRequest);
 		intrptReqQueue_.erase (it);
 	}
 }
