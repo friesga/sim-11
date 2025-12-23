@@ -46,7 +46,7 @@ TEST_F (KDF11_A_PSWTEST, MOVDoesNotSetCC)
 {
     kdf11a->writeWord (PswAddress, 0177777);
 
-    // MOVB #0, @#PS
+    // MOV #0, @#PS
     // Assume the MOV instruction is at address 0, so the second and third
     // word of the instruction are at address 2 and 4.
     kdf11a->cpuData ()->registers () [7] = 2;
