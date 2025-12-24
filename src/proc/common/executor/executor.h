@@ -10,7 +10,29 @@ namespace Common {
 // for these processor types share their functionality but some instructions
 // show minor differences in their execution, see e.g. Appendix C in the
 // KDF11-BA Cpu Module User's Guide.
+// 
+// Roughly two differences exist between the processors:
+// 1. The order in which the condition codes and the operands are written
+//    back to memory after execution of an instruction.
+// 2. The use of the source operand register in certain instructions using the
+//    autoincrement or autodecrement addressing mode. For certain processors,
+//    such as the KD11-NA (LSI-11), the initial contents of the register are
+//    used as the source operand while for other processors, such as the
+//    KDF11, the contents of the register are incremented (or decremented)
+//    by 2 before being used as the source operand. This results in a
+//    different result in the execution of instructions like OPR R,(R)+ and
+//    OPR R,-(R) using the same register as both source and destination.
+//    This applies to the MOV(B), CMP(B), ADD, SUB, BIT(B), BIC(B) and BIS(B)
+//    instructions.
 //
+// The first difference is implemented in this Executor class by using a
+// template parameter WriteOperandOrder which determines the order of writing
+// the operands and setting the condition codes. The second difference is
+// covered by the same template parameter as these differences probably
+// discriminate two types of processor implemenations. If this assumption
+// turns out to be incorrect, an additional template parameter needs to be
+// added.
+// 
 // Instructions with identical functionality for the different processors
 // are defined in this class. Processors with a different execution for a
 // specific instruction are defined in their own Executor class. The link
