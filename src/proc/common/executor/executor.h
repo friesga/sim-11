@@ -103,7 +103,10 @@ public:
 	template <WriteOperandOrder order = WriteOperandOrder::WriteOperandBeforeCC>
 	bool execute (MOVB& instr);
 
+	template <WriteOperandOrder order = WriteOperandOrder::WriteOperandBeforeCC>
 	bool execute (CMP& instr);
+
+	template <WriteOperandOrder order = WriteOperandOrder::WriteOperandBeforeCC>
 	bool execute (CMPB& instr);
 
 	template <WriteOperandOrder order = WriteOperandOrder::WriteOperandBeforeCC>

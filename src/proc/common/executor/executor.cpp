@@ -54,7 +54,7 @@ bool Common::Executor::execute (CLR& instr)
         operandDecoderFactory_.create<SingleOperandDecoder> (&instr);
 
     return finishExecution<order> (
-        [&] { return singleOperandDecoder->writeOperand ((u16) 0); },
+        [&] { return singleOperandDecoder->writeOperand ((u16)0); },
         [&] { setPSW (ConditionCodes {
             .N = false,
             .Z = true,
@@ -69,7 +69,7 @@ bool Common::Executor::execute (CLRB& instr)
         operandDecoderFactory_.create<SingleOperandDecoder> (&instr);
 
     return finishExecution<order> (
-        [&] { return singleOperandDecoder->writeOperand ((u8) 0); },
+        [&] { return singleOperandDecoder->writeOperand ((u8)0); },
         [&] { setPSW (ConditionCodes {
             .N = false,
             .Z = true,
@@ -193,12 +193,12 @@ bool Common::Executor::execute (DECB& instr)
     if (!singleOperandDecoder->readOperand (&source))
         return false;
 
-    u8 result = (u8) (source - 1);
+    u8 result = (u8)(source - 1);
 
     return finishExecution<order> (
         [&] { return singleOperandDecoder->writeOperand (result); },
         [&] { setPSW (ConditionCodes {
-            .N = (bool) (result & 0x80),
+            .N = (bool)(result & 0x80),
             .Z = result == 0,
             .V = source == 0000200}); });
 
@@ -222,7 +222,7 @@ bool Common::Executor::execute (NEG& instr)
     return finishExecution<order> (
         [&] { return singleOperandDecoder->writeOperand (operand.value ()); },
         [&] { setPSW (ConditionCodes {
-            .N = (bool) (operand & 0100000),
+            .N = (bool)(operand & 0100000),
             .Z = operand == 0,
             .V = operand == 0100000,
             .C = operand != 0}); });
@@ -262,7 +262,7 @@ bool Common::Executor::execute (TST& instr)
         return false;
 
     setPSW (ConditionCodes {
-        .N = (bool) (contents & 0100000),
+        .N = (bool)(contents & 0100000),
         .Z = contents == 0,
         .V = false,
         .C = false});
@@ -280,7 +280,7 @@ bool Common::Executor::execute (TSTB& instr)
         return false;
 
     setPSW (ConditionCodes {
-        .N = (bool) (source & 0x80),
+        .N = (bool)(source & 0x80),
         .Z = source == 0,
         .V = false,
         .C = false});
@@ -310,10 +310,10 @@ bool Common::Executor::execute (ASR& instr)
     return finishExecution<order> (
         [&] { return singleOperandDecoder->writeOperand (result); },
         [&] { setPSW (ConditionCodes {
-            .N = (bool) (result & 0100000),
+            .N = (bool)(result & 0100000),
             .Z = result == 0,
-            .V = (bool) (result & 0100000) != (bool)(contents & 1),
-            .C = (bool) (contents & 1)}); });
+            .V = (bool)(result & 0100000) != (bool)(contents & 1),
+            .C = (bool)(contents & 1)}); });
 }
 
 template <WriteOperandOrder order>
@@ -338,10 +338,10 @@ bool Common::Executor::execute (ASRB& instr)
     return finishExecution<order> (
         [&] { return singleOperandDecoder->writeOperand (result); },
         [&] { setPSW (ConditionCodes {
-            .N = (bool) (result & 0x80),
+            .N = (bool)(result & 0x80),
             .Z = result == 0,
-            .V = (bool) (result & 0x80) != (bool)(source & 1),
-            .C = (bool) (source & 1)}); });
+            .V = (bool)(result & 0x80) != (bool)(source & 1),
+            .C = (bool)(source & 1)}); });
 }
 
 template <WriteOperandOrder order>
@@ -359,10 +359,10 @@ bool Common::Executor::execute (ASL& instr)
     return finishExecution<order> (
         [&] { return singleOperandDecoder->writeOperand (result); },
         [&] { setPSW (ConditionCodes {
-            .N = (bool) (result & 0100000),
+            .N = (bool)(result & 0100000),
             .Z = result == 0,
-            .V = (bool) ((result & 0100000) ^ (contents & 0100000)),
-            .C = (bool) (contents & 0100000)}); });
+            .V = (bool)((result & 0100000) ^ (contents & 0100000)),
+            .C = (bool)(contents & 0100000)}); });
 }
 
 template <WriteOperandOrder order>
@@ -380,10 +380,10 @@ bool Common::Executor::execute (ASLB& instr)
     return finishExecution<order> (
         [&] { return singleOperandDecoder->writeOperand (result); },
         [&] { setPSW (ConditionCodes {
-            .N = (bool) (result & 0x80),
+            .N = (bool)(result & 0x80),
             .Z = result == 0,
-            .V = (bool) ((result & 0x80) ^ (source & 0x80)),
-            .C = (bool) (source & 0x80)}); });
+            .V = (bool)((result & 0x80) ^ (source & 0x80)),
+            .C = (bool)(source & 0x80)}); });
 }
 
 template <WriteOperandOrder order>
@@ -403,10 +403,10 @@ bool Common::Executor::execute (ROR& instr)
     return finishExecution<order> (
         [&] { return singleOperandDecoder->writeOperand (result); },
         [&] { setPSW (ConditionCodes {
-            .N = (bool) (result & 0100000),
+            .N = (bool)(result & 0100000),
             .Z = result == 0,
-            .V = (bool) (result & 0100000) != (bool)(contents & 0000001),
-            .C = (bool) (contents & 0000001)}); });
+            .V = (bool)(result & 0100000) != (bool)(contents & 0000001),
+            .C = (bool)(contents & 0000001)}); });
 }
 
 template <WriteOperandOrder order>
@@ -426,10 +426,10 @@ bool Common::Executor::execute (RORB& instr)
     return finishExecution<order> (
         [&] { return singleOperandDecoder->writeOperand (result); },
         [&] { setPSW (ConditionCodes {
-            .N = (bool) (result & 0x80),
+            .N = (bool)(result & 0x80),
             .Z = result == 0,
-            .V = (bool) (result & 0x80) != (bool)(source & 0x01),
-            .C = (bool) (source & 0x01)}); });
+            .V = (bool)(result & 0x80) != (bool)(source & 0x01),
+            .C = (bool)(source & 0x01)}); });
 }
 
 template <WriteOperandOrder order>
@@ -450,10 +450,10 @@ bool Common::Executor::execute (ROL& instr)
     return finishExecution<order> (
         [&] { return singleOperandDecoder->writeOperand (result); },
         [&] { setPSW (ConditionCodes {
-            .N = (bool) (result & 0100000),
+            .N = (bool)(result & 0100000),
             .Z = result == 0,
-            .V = (bool) (result & 0100000) != (bool)(contents & 0100000),
-            .C = (bool) (contents & 0100000)}); });
+            .V = (bool)(result & 0100000) != (bool)(contents & 0100000),
+            .C = (bool)(contents & 0100000)}); });
 }
 
 template <WriteOperandOrder order>
@@ -466,17 +466,17 @@ bool Common::Executor::execute (ROLB& instr)
     if (!singleOperandDecoder->readOperand (&source))
         return false;
 
-    u8 result = (u8) (source << 1);
+    u8 result = (u8)(source << 1);
     if (isSet (PSW_C))
         result |= 0x01;
 
     return finishExecution<order> (
         [&] { return singleOperandDecoder->writeOperand (result); },
         [&] { setPSW (ConditionCodes {
-            .N = (bool) (result & 0x80),
+            .N = (bool)(result & 0x80),
             .Z = result == 0,
-            .V = (bool) (result & 0x80) != (bool) (source & 0x80),
-            .C = (bool) (source & 0x80)}); });
+            .V = (bool)(result & 0x80) != (bool)(source & 0x80),
+            .C = (bool)(source & 0x80)}); });
 }
 
 template <WriteOperandOrder order>
@@ -495,8 +495,8 @@ bool Common::Executor::execute (SWAB& instr)
     return finishExecution<order> (
         [&] { return singleOperandDecoder->writeOperand (operand.value ()); },
         [&] { setPSW (ConditionCodes {
-            .N = (bool) (operand & 0x80),
-            .Z = (u8) operand == 0,
+            .N = (bool)(operand & 0x80),
+            .Z = (u8)operand == 0,
             .V = false,
             .C = false}); });
 }
@@ -517,7 +517,7 @@ bool Common::Executor::execute (ADC& instr)
     return finishExecution<order> (
         [&] { return singleOperandDecoder->writeOperand (result); },
         [&] { setPSW (ConditionCodes ({
-            .N = (bool) (result & 0x8000),
+            .N = (bool)(result & 0x8000),
             .Z = result == 0,
             .V = contents == 0077777 && isSet (PSW_C),
             .C = contents == 0177777 && isSet (PSW_C)})); });
@@ -539,7 +539,7 @@ bool Common::Executor::execute (ADCB& instr)
     return finishExecution<order> (
         [&] { return singleOperandDecoder->writeOperand (destination); },
         [&] { setPSW (ConditionCodes ({
-            .N = (bool) (destination & 0x80),
+            .N = (bool)(destination & 0x80),
             .Z = destination == 0,
             .V = source == 0177 && isSet (PSW_C),
             .C = source == 0377 && isSet (PSW_C)})); });
@@ -561,7 +561,7 @@ bool Common::Executor::execute (SBC& instr)
     return finishExecution<order> (
         [&] { return singleOperandDecoder->writeOperand (result); },
         [&] { setPSW (ConditionCodes {
-            .N = (bool) (result & 0x8000),
+            .N = (bool)(result & 0x8000),
             .Z = result == 0,
             .V = contents == 0100000,
             .C = contents == 0 && cBit}); });
@@ -583,7 +583,7 @@ bool Common::Executor::execute (SBCB& instr)
     return finishExecution<order> (
         [&] { return singleOperandDecoder->writeOperand (destination); },
         [&] { setPSW (ConditionCodes {
-            .N = (bool) (destination & 0x80),
+            .N = (bool)(destination & 0x80),
             .Z = destination == 0,
             .V = source == 0200,
             .C = source == 0 && cBit}); });
@@ -609,7 +609,7 @@ bool Common::Executor::execute (MFPS& instr)
 {
     auto singleOperandDecoder =
         operandDecoderFactory_.create<SingleOperandDecoder> (&instr);
-    u8 contents = (u8) cpuData_->psw ();
+    u8 contents = (u8)cpuData_->psw ();
 
     OperandLocation operandLocation_ =
         singleOperandDecoder->getOperandLocation (cpuData_->registers ());
@@ -621,7 +621,7 @@ bool Common::Executor::execute (MFPS& instr)
                 // If destination is mode 0 (Register), the regular operand processing
                 // is bypassed and PS bit 7 is sign extended through the upper byte of
                 // the register.
-                cpuData_->registers ()[operandLocation_] = (s8) contents;
+                cpuData_->registers ()[operandLocation_] = (s8)contents;
                 return true;
             }
             else
@@ -691,13 +691,19 @@ bool Common::Executor::execute (MOV& instr)
         operandDecoderFactory_.create<DoubleOperandDecoder> (&instr);
     CondData<u16> source, destination;
 
+    // OPR%R, (R)+ or OPR%R, and -(R) using the same register as both
+    // source and destination: contents of R are incremented (or decremented)
+    // by 2 before being used as the source operand.
+    if constexpr (order == WriteOperandOrder::WriteOperandAfterCC)
+        doubleOperandDecoder->getOperandLocations (cpuData_->registers ());
+
     if (!doubleOperandDecoder->readSourceOperand (&source))
         return false;
 
     return finishExecution<order> (
         [&] { return doubleOperandDecoder->writeDestinationOperand (source.value ()); },
         [&] { setPSW (ConditionCodes ({
-                .N = (bool) (source & 0100000),
+                .N = (bool)(source & 0100000),
                 .Z = source == 0,
                 .V = false})); });
 }
@@ -709,10 +715,16 @@ bool Common::Executor::execute (MOVB& instr)
         operandDecoderFactory_.create<DoubleOperandDecoder> (&instr);
     CondData<u8> source;
 
+    // OPR%R, (R)+ or OPR%R, and -(R) using the same register as both
+    // source and destination: contents of R are incremented (or decremented)
+    // by 2 before being used as the source operand.
+    if constexpr (order == WriteOperandOrder::WriteOperandAfterCC)
+        doubleOperandDecoder->getOperandLocations (cpuData_->registers ());
+
     if (!doubleOperandDecoder->readSourceOperand (&source))
         return false;
 
-    s8 tmp = (s8) source;
+    s8 tmp = (s8)source;
 
     // If the destination mode is 0 (Register) the regular operand processing
     // is bypassed and the signed eight bit value u8 is directly written into
@@ -732,17 +744,24 @@ bool Common::Executor::execute (MOVB& instr)
         },
         [&] {
             setPSW (ConditionCodes ({
-                .N = (bool) (tmp & 0x80),
+                .N = (bool)(tmp & 0x80),
                 .Z = tmp == 0,
                 .V = false}));
         });
 }
 
+template <WriteOperandOrder order>
 bool Common::Executor::execute (CMP& instr)
 {
     auto doubleOperandDecoder =
         operandDecoderFactory_.create<DoubleOperandDecoder> (&instr);
     CondData<u16> source, destination;
+
+    // OPR%R, (R)+ or OPR%R, and -(R) using the same register as both
+    // source and destination: contents of R are incremented (or decremented)
+    // by 2 before being used as the source operand.
+    if constexpr (order == WriteOperandOrder::WriteOperandAfterCC)
+        doubleOperandDecoder->getOperandLocations (cpuData_->registers ());
 
     if (!doubleOperandDecoder->readSourceOperand (&source) ||
         !doubleOperandDecoder->readDestinationOperand (&destination))
@@ -751,31 +770,38 @@ bool Common::Executor::execute (CMP& instr)
     u16 tmp = source - destination;
 
     setPSW (ConditionCodes {
-        .N = (bool) (tmp & 0x8000),
+        .N = (bool)(tmp & 0x8000),
         .Z = tmp == 0,
         .V = ((source & 0x8000) != (destination & 0x8000)) && ((destination & 0x8000) == (tmp & 0x8000)),
-        .C = (bool) (((u32) source - (u32) destination) & 0x10000)});
+        .C = (bool)(((u32)source - (u32)destination) & 0x10000)});
 
     return true;
 }
 
+template <WriteOperandOrder order>
 bool Common::Executor::execute (CMPB& instr)
 {
     auto doubleOperandDecoder =
         operandDecoderFactory_.create<DoubleOperandDecoder> (&instr);
     CondData<u8> source, destination;
 
+    // OPR%R, (R)+ or OPR%R, and -(R) using the same register as both
+    // source and destination: contents of R are incremented (or decremented)
+    // by 2 before being used as the source operand.
+    if constexpr (order == WriteOperandOrder::WriteOperandAfterCC)
+        doubleOperandDecoder->getOperandLocations (cpuData_->registers ());
+
     if (!doubleOperandDecoder->readSourceOperand (&source) ||
         !doubleOperandDecoder->readDestinationOperand (&destination))
         return false;
 
-    u16 tmp = (u8) (source - destination);
+    u16 tmp = (u8)(source - destination);
 
     setPSW (ConditionCodes {
-        .N = (bool) (tmp & 0x80),
+        .N = (bool)(tmp & 0x80),
         .Z = tmp == 0,
         .V = ((source & 0x80) != (destination & 0x80)) && ((destination & 0x80) == (tmp & 0x80)),
-        .C = (bool) ((source - destination) & 0x100)});
+        .C = (bool)((source - destination) & 0x100)});
 
     return true;
 }
@@ -787,6 +813,12 @@ bool Common::Executor::execute (ADD& instr)
         operandDecoderFactory_.create<DoubleOperandDecoder> (&instr);
     CondData<u16> source, destination;
 
+    // OPR%R, (R)+ or OPR%R, and -(R) using the same register as both
+    // source and destination: contents of R are incremented (or decremented)
+    // by 2 before being used as the source operand.
+    if constexpr (order == WriteOperandOrder::WriteOperandAfterCC)
+        doubleOperandDecoder->getOperandLocations (cpuData_->registers ());
+
     if (!doubleOperandDecoder->readSourceOperand (&source) ||
         !doubleOperandDecoder->readDestinationOperand (&destination))
         return false;
@@ -796,10 +828,10 @@ bool Common::Executor::execute (ADD& instr)
     return finishExecution<order> (
         [&] { return doubleOperandDecoder->writeDestinationOperand (result); },
         [&] { setPSW (ConditionCodes ({
-            .N = (bool) (result & 0x8000),
+            .N = (bool)(result & 0x8000),
             .Z = result == 0,
             .V = ((source & 0x8000) == (destination & 0x8000)) && ((destination & 0x8000) != (result & 0x8000)),
-            .C = (bool) (((u32) source + (u32) destination) & 0x10000)})); });
+            .C = (bool)(((u32)source + (u32)destination) & 0x10000)})); });
 }
 
 template <WriteOperandOrder order>
@@ -808,6 +840,12 @@ bool Common::Executor::execute (SUB& instr)
     auto doubleOperandDecoder =
         operandDecoderFactory_.create<DoubleOperandDecoder> (&instr);
     CondData<u16> source, destination;
+
+    // OPR%R, (R)+ or OPR%R, and -(R) using the same register as both
+    // source and destination: contents of R are incremented (or decremented)
+    // by 2 before being used as the source operand.
+    if constexpr (order == WriteOperandOrder::WriteOperandAfterCC)
+        doubleOperandDecoder->getOperandLocations (cpuData_->registers ());
 
     if (!doubleOperandDecoder->readSourceOperand (&source) ||
         !doubleOperandDecoder->readDestinationOperand (&destination))
@@ -818,10 +856,10 @@ bool Common::Executor::execute (SUB& instr)
     return finishExecution<order> (
         [&] { return doubleOperandDecoder->writeDestinationOperand (result); },
         [&] { setPSW (ConditionCodes ({
-            .N = (bool) (result & 0x8000),
+            .N = (bool)(result & 0x8000),
             .Z = result == 0,
             .V = ((source & 0x8000) != (destination & 0x8000)) && ((source & 0x8000) == (result & 0x8000)),
-            .C = (bool) (((u32) destination - (u32) source) & 0x10000)})); });
+            .C = (bool)(((u32)destination - (u32)source) & 0x10000)})); });
 }
 
 template <WriteOperandOrder order>
@@ -831,6 +869,12 @@ bool Common::Executor::execute (BIT& instr)
         operandDecoderFactory_.create<DoubleOperandDecoder> (&instr);
     CondData<u16> source, destination;
 
+    // OPR%R, (R)+ or OPR%R, and -(R) using the same register as both
+    // source and destination: contents of R are incremented (or decremented)
+    // by 2 before being used as the source operand.
+    if constexpr (order == WriteOperandOrder::WriteOperandAfterCC)
+        doubleOperandDecoder->getOperandLocations (cpuData_->registers ());
+
     if (!doubleOperandDecoder->readSourceOperand (&source) ||
         !doubleOperandDecoder->readDestinationOperand (&destination))
         return false;
@@ -838,7 +882,7 @@ bool Common::Executor::execute (BIT& instr)
     u16 tmp = source & destination;
 
     setPSW (ConditionCodes {
-        .N = (bool) (tmp & 0x8000),
+        .N = (bool)(tmp & 0x8000),
         .Z = tmp == 0,
         .V = false});
 
@@ -852,6 +896,12 @@ bool Common::Executor::execute (BITB& instr)
         operandDecoderFactory_.create<DoubleOperandDecoder> (&instr);
     CondData<u8> source, destination;
 
+    // OPR%R, (R)+ or OPR%R, and -(R) using the same register as both
+    // source and destination: contents of R are incremented (or decremented)
+    // by 2 before being used as the source operand.
+    if constexpr (order == WriteOperandOrder::WriteOperandAfterCC)
+        doubleOperandDecoder->getOperandLocations (cpuData_->registers ());
+
     if (!doubleOperandDecoder->readSourceOperand (&source) ||
         !doubleOperandDecoder->readDestinationOperand (&destination))
         return false;
@@ -859,7 +909,7 @@ bool Common::Executor::execute (BITB& instr)
     u16 tmp = source & destination;
 
     setPSW (ConditionCodes {
-        .N = (bool) (tmp & 0x80),
+        .N = (bool)(tmp & 0x80),
         .Z = tmp == 0,
         .V = false});
 
@@ -873,6 +923,12 @@ bool Common::Executor::execute (BIC& instr)
         operandDecoderFactory_.create<DoubleOperandDecoder> (&instr);
     CondData<u16> source, destination;
 
+    // OPR%R, (R)+ or OPR%R, and -(R) using the same register as both
+    // source and destination: contents of R are incremented (or decremented)
+    // by 2 before being used as the source operand.
+    if constexpr (order == WriteOperandOrder::WriteOperandAfterCC)
+        doubleOperandDecoder->getOperandLocations (cpuData_->registers ());
+
     if (!doubleOperandDecoder->readSourceOperand (&source) ||
         !doubleOperandDecoder->readDestinationOperand (&destination))
         return false;
@@ -882,7 +938,7 @@ bool Common::Executor::execute (BIC& instr)
     return finishExecution<order> (
         [&] { return doubleOperandDecoder->writeDestinationOperand (result); },
         [&] { setPSW (ConditionCodes ({
-            .N = (bool) (result & 0x8000),
+            .N = (bool)(result & 0x8000),
             .Z = result == 0,
             .V = false})); });
 }
@@ -894,6 +950,12 @@ bool Common::Executor::execute (BICB& instr)
         operandDecoderFactory_.create<DoubleOperandDecoder> (&instr);
     CondData<u8> source, destination;
 
+    // OPR%R, (R)+ or OPR%R, and -(R) using the same register as both
+    // source and destination: contents of R are incremented (or decremented)
+    // by 2 before being used as the source operand.
+    if constexpr (order == WriteOperandOrder::WriteOperandAfterCC)
+        doubleOperandDecoder->getOperandLocations (cpuData_->registers ());
+
     if (!doubleOperandDecoder->readSourceOperand (&source) ||
         !doubleOperandDecoder->readDestinationOperand (&destination))
         return false;
@@ -903,7 +965,7 @@ bool Common::Executor::execute (BICB& instr)
     return finishExecution<order> (
         [&] { return doubleOperandDecoder->writeDestinationOperand (tmp); },
         [&] { setPSW (ConditionCodes ({
-            .N = (bool) (tmp & 0x80),
+            .N = (bool)(tmp & 0x80),
             .Z = tmp == 0,
             .V = false})); });
 }
@@ -915,6 +977,12 @@ bool Common::Executor::execute (BIS& instr)
         operandDecoderFactory_.create<DoubleOperandDecoder> (&instr);
     CondData<u16> source, destination;
 
+    // OPR%R, (R)+ or OPR%R, and -(R) using the same register as both
+    // source and destination: contents of R are incremented (or decremented)
+    // by 2 before being used as the source operand.
+    if constexpr (order == WriteOperandOrder::WriteOperandAfterCC)
+        doubleOperandDecoder->getOperandLocations (cpuData_->registers ());
+
     if (!doubleOperandDecoder->readSourceOperand (&source) ||
         !doubleOperandDecoder->readDestinationOperand (&destination))
         return false;
@@ -924,7 +992,7 @@ bool Common::Executor::execute (BIS& instr)
     return finishExecution<order> (
         [&] { return doubleOperandDecoder->writeDestinationOperand (tmp); },
         [&] { setPSW (ConditionCodes ({
-            .N = (bool) (tmp & 0x8000),
+            .N = (bool)(tmp & 0x8000),
             .Z = tmp == 0,
             .V = false})); });
 }
@@ -936,6 +1004,12 @@ bool Common::Executor::execute (BISB& instr)
         operandDecoderFactory_.create<DoubleOperandDecoder> (&instr);
     CondData<u8> source, destination;
 
+    // OPR%R, (R)+ or OPR%R, and -(R) using the same register as both
+    // source and destination: contents of R are incremented (or decremented)
+    // by 2 before being used as the source operand.
+    if constexpr (order == WriteOperandOrder::WriteOperandAfterCC)
+        doubleOperandDecoder->getOperandLocations (cpuData_->registers ());
+
     if (!doubleOperandDecoder->readSourceOperand (&source) ||
         !doubleOperandDecoder->readDestinationOperand (&destination))
         return false;
@@ -945,7 +1019,7 @@ bool Common::Executor::execute (BISB& instr)
     return finishExecution<order> (
         [&] { return doubleOperandDecoder->writeDestinationOperand (tmp); },
         [&] { setPSW (ConditionCodes ({
-            .N = (bool) (tmp & 0x80),
+            .N = (bool)(tmp & 0x80),
             .Z = tmp == 0,
             .V = false})); });
 }
@@ -1069,7 +1143,7 @@ bool Common::Executor::execute (ASH& instr)
         stmp2 = stmp >> (source - 1);
         stmp >>= source;
         tmp = (u16)stmp;
-        setPSW (ConditionCodes {.V = false, .C = (bool) (stmp2 & 1)});
+        setPSW (ConditionCodes {.V = false, .C = (bool)(stmp2 & 1)});
     }
     else if ((source & 0x1F) == 0)
     {
@@ -1096,14 +1170,14 @@ bool Common::Executor::execute (ASH& instr)
         {
             setPSW (ConditionCodes {.V = false});
         }
-        setPSW (ConditionCodes {.C = (bool) ((destination << (source - 1)) & 0x8000)});
+        setPSW (ConditionCodes {.C = (bool)((destination << (source - 1)) & 0x8000)});
         if ((destination & 0x8000) != (tmp & 0x8000))
         {
             setPSW (ConditionCodes {.V = true});
         }
     }
     registers[regNr] = tmp;
-    setPSW (ConditionCodes {.N = (bool) (tmp & 0x8000), .Z = tmp == 0});
+    setPSW (ConditionCodes {.N = (bool)(tmp & 0x8000), .Z = tmp == 0});
 
     return true;
 }
@@ -1126,7 +1200,7 @@ bool Common::Executor::execute (ASHC& instr)
     if ((source & 0x3F) == 0x20)
     {
         // Negative; 32 right
-        setPSW (ConditionCodes {.V = false, .C = (bool) (tmps32 & 0x80000000)});
+        setPSW (ConditionCodes {.V = false, .C = (bool)(tmps32 & 0x80000000)});
         if (isSet (PSW_C))
             tmps32 = 0xFFFFFFFF;
         else
@@ -1139,7 +1213,7 @@ bool Common::Executor::execute (ASHC& instr)
         source = (~source & 0x1F) + 1;
         stmp2 = tmps32 >> (source - 1);
         tmps32 >>= source;
-        setPSW (ConditionCodes {.C = (bool) (stmp2 & 1)});
+        setPSW (ConditionCodes {.C = (bool)(stmp2 & 1)});
     }
     else if ((source & 0x1F) == 0)
     {
@@ -1154,11 +1228,11 @@ bool Common::Executor::execute (ASHC& instr)
         stmp2 = tmps32 << (source - 1);
         tmps32 <<= source;
         setPSW (ConditionCodes {.V = !!(dst & 0x8000) != !!(tmps32 & 0x80000000),
-            .C =(bool) (stmp2 & 0x80000000)});
+            .C =(bool)(stmp2 & 0x80000000)});
     }
     registers[regNr] = (u16)(tmps32 >> 16);
     registers[regNr | 1] = (u16)tmps32;
-    setPSW (ConditionCodes {.N = (bool) (tmps32 & 0x80000000),
+    setPSW (ConditionCodes {.N = (bool)(tmps32 & 0x80000000),
         .Z = tmps32 == 0});
 
     return true;
@@ -1184,7 +1258,7 @@ bool Common::Executor::execute (XOR& instr)
     return finishExecution<order> (
         [&] { return eisDecoder->writeOperand (result); },
         [&] { setPSW (ConditionCodes {
-            .N = (bool) (result & 0x8000),
+            .N = (bool)(result & 0x8000),
             .Z = result == 0,
             .V = false}); });
 }
@@ -1517,6 +1591,11 @@ template bool Common::Executor::execute<WriteOperandOrder::WriteOperandBeforeCC>
 template bool Common::Executor::execute<WriteOperandOrder::WriteOperandAfterCC> (MOV&);
 template bool Common::Executor::execute<WriteOperandOrder::WriteOperandBeforeCC> (MOVB&);
 template bool Common::Executor::execute<WriteOperandOrder::WriteOperandAfterCC> (MOVB&);
+
+template bool Common::Executor::execute<WriteOperandOrder::WriteOperandBeforeCC> (CMP&);
+template bool Common::Executor::execute<WriteOperandOrder::WriteOperandAfterCC> (CMP&);
+template bool Common::Executor::execute<WriteOperandOrder::WriteOperandBeforeCC> (CMPB&);
+template bool Common::Executor::execute<WriteOperandOrder::WriteOperandAfterCC> (CMPB&);
 
 template bool Common::Executor::execute<WriteOperandOrder::WriteOperandBeforeCC> (ADD&);
 template bool Common::Executor::execute<WriteOperandOrder::WriteOperandAfterCC> (ADD&);
