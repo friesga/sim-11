@@ -47,71 +47,71 @@ public:
     Executor (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu);
 
     // Single operand instructions
-	template <WriteOperandOrder order = WriteOperandOrder::WriteOperandBeforeCC>
+	template <WriteOperandOrder order>
     bool execute (CLR& instr);
-	template <WriteOperandOrder order = WriteOperandOrder::WriteOperandBeforeCC>
+	template <WriteOperandOrder order>
 	bool execute (CLRB& instr);
 
-	template <WriteOperandOrder order = WriteOperandOrder::WriteOperandBeforeCC>
+	template <WriteOperandOrder order>
 	bool execute (COM& instr);
-	template <WriteOperandOrder order = WriteOperandOrder::WriteOperandBeforeCC>
+	template <WriteOperandOrder order>
 	bool execute (COMB& instr);
 
-	template <WriteOperandOrder order = WriteOperandOrder::WriteOperandBeforeCC>
+	template <WriteOperandOrder order>
 	bool execute (INC& instr);
-	template <WriteOperandOrder order = WriteOperandOrder::WriteOperandBeforeCC>
+	template <WriteOperandOrder order>
 	bool execute (INCB& instr);
 
-	template <WriteOperandOrder order = WriteOperandOrder::WriteOperandBeforeCC>
+	template <WriteOperandOrder order>
 	bool execute (DEC& instr);
-	template <WriteOperandOrder order = WriteOperandOrder::WriteOperandBeforeCC>
+	template <WriteOperandOrder order>
 	bool execute (DECB& instr);
 
-	template <WriteOperandOrder order = WriteOperandOrder::WriteOperandBeforeCC>
+	template <WriteOperandOrder order>
 	bool execute (NEG& instr);
-	template <WriteOperandOrder order = WriteOperandOrder::WriteOperandBeforeCC>
+	template <WriteOperandOrder order>
 	bool execute (NEGB& instr);
 
 	bool execute (TST& instr);
 	bool execute (TSTB& instr);
 
-	template <WriteOperandOrder order = WriteOperandOrder::WriteOperandBeforeCC>
+	template <WriteOperandOrder order>
 	bool execute (ASR& instr);
-	template <WriteOperandOrder order = WriteOperandOrder::WriteOperandBeforeCC>
+	template <WriteOperandOrder order>
 	bool execute (ASRB& instr);
 
-	template <WriteOperandOrder order = WriteOperandOrder::WriteOperandBeforeCC>
+	template <WriteOperandOrder order>
 	bool execute (ASL& instr);
-	template <WriteOperandOrder order = WriteOperandOrder::WriteOperandBeforeCC>
+	template <WriteOperandOrder order>
 	bool execute (ASLB& instr);
 
-	template <WriteOperandOrder order = WriteOperandOrder::WriteOperandBeforeCC>
+	template <WriteOperandOrder order>
 	bool execute (ROR& instr);
-	template <WriteOperandOrder order = WriteOperandOrder::WriteOperandBeforeCC>
+	template <WriteOperandOrder order>
 	bool execute (RORB& instr);
 
-	template <WriteOperandOrder order = WriteOperandOrder::WriteOperandBeforeCC>
+	template <WriteOperandOrder order>
 	bool execute (ROL& instr);
-	template <WriteOperandOrder order = WriteOperandOrder::WriteOperandBeforeCC>
+	template <WriteOperandOrder order>
 	bool execute (ROLB& instr);
 
-	template <WriteOperandOrder order = WriteOperandOrder::WriteOperandBeforeCC>
+	template <WriteOperandOrder order>
 	bool execute (SWAB& instr);
 
-	template <WriteOperandOrder order = WriteOperandOrder::WriteOperandBeforeCC>
+	template <WriteOperandOrder order>
 	bool execute (ADC& instr);
-	template <WriteOperandOrder order = WriteOperandOrder::WriteOperandBeforeCC>
+	template <WriteOperandOrder order>
 	bool execute (ADCB& instr);
 
-	template <WriteOperandOrder order = WriteOperandOrder::WriteOperandBeforeCC>
+	template <WriteOperandOrder order>
 	bool execute (SBC& instr);
-	template <WriteOperandOrder order = WriteOperandOrder::WriteOperandBeforeCC>
+	template <WriteOperandOrder order>
 	bool execute (SBCB& instr);
 
-	template <WriteOperandOrder order = WriteOperandOrder::WriteOperandBeforeCC>
+	template <WriteOperandOrder order>
 	bool execute (SXT& instr);
 
-	template <WriteOperandOrder order = WriteOperandOrder::WriteOperandBeforeCC>
+	template <WriteOperandOrder order>
 	bool execute (MFPS& instr);
 
 	bool execute (MTPS& instr);
@@ -119,37 +119,37 @@ public:
 	bool execute (MARK& instr);
 
 	// Double operand instructions
-	template <WriteOperandOrder order = WriteOperandOrder::WriteOperandBeforeCC>
+	template <WriteOperandOrder order>
 	bool execute (MOV& instr);
 
-	template <WriteOperandOrder order = WriteOperandOrder::WriteOperandBeforeCC>
+	template <WriteOperandOrder order>
 	bool execute (MOVB& instr);
 
-	template <WriteOperandOrder order = WriteOperandOrder::WriteOperandBeforeCC>
+	template <WriteOperandOrder order>
 	bool execute (CMP& instr);
 
-	template <WriteOperandOrder order = WriteOperandOrder::WriteOperandBeforeCC>
+	template <WriteOperandOrder order>
 	bool execute (CMPB& instr);
 
-	template <WriteOperandOrder order = WriteOperandOrder::WriteOperandBeforeCC>
+	template <WriteOperandOrder order>
 	bool execute (ADD& instr);
 
-	template <WriteOperandOrder order = WriteOperandOrder::WriteOperandBeforeCC>
+	template <WriteOperandOrder order>
 	bool execute (SUB& instr);
 
-	template <WriteOperandOrder order = WriteOperandOrder::WriteOperandBeforeCC>
+	template <WriteOperandOrder order>
 	bool execute (BIT& instr);
-	template <WriteOperandOrder order = WriteOperandOrder::WriteOperandBeforeCC>
+	template <WriteOperandOrder order>
 	bool execute (BITB& instr);
 
-	template <WriteOperandOrder order = WriteOperandOrder::WriteOperandBeforeCC>
+	template <WriteOperandOrder order>
 	bool execute (BIC& instr);
-	template <WriteOperandOrder order = WriteOperandOrder::WriteOperandBeforeCC>
+	template <WriteOperandOrder order>
 	bool execute (BICB& instr);
 
-	template <WriteOperandOrder order = WriteOperandOrder::WriteOperandBeforeCC>
+	template <WriteOperandOrder order>
 	bool execute (BIS& instr);
-	template <WriteOperandOrder order = WriteOperandOrder::WriteOperandBeforeCC>
+	template <WriteOperandOrder order>
 	bool execute (BISB& instr);
 
 	// EIS instructions, including JSR and XOR
@@ -159,7 +159,7 @@ public:
 	bool execute (ASH& instr);
 	bool execute (ASHC& instr);
 
-	template <WriteOperandOrder order = WriteOperandOrder::WriteOperandBeforeCC>
+	template <WriteOperandOrder order>
 	bool execute (XOR& instr);
 	bool execute (SOB& instr);
 
