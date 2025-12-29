@@ -49,5 +49,36 @@ public:
     virtual CpuRunState execute () = 0;
 };
 
+template <typename T>
+concept isExecutor = requires(T t)
+{
+    { t.operator() (t) } ->std::convertible_to<bool>;
+};
+
+template <typename T>
+concept isCalculator = requires(T t)
+{
+    { t.operator() (t) } ->std::convertible_to<double>;
+};
+
+template <typename T>
+concept isHaltMode = requires(T t, bool b)
+{
+    { t.setHaltMode (b) };
+    { t.inHaltMode () } ->std::convertible_to<bool>;
+};
+
+template <typename T>
+concept isExecutionEngine = requires(T t, u16 i)
+{
+    { t.cpuReset () };
+    { t.busReset () };
+    { t.halt () };
+    { t.wait () };
+    { t.start (i) };
+    { t.proceed () };
+    { t.haltReason () } -> std::same_as<CpuControl::HaltReason>;
+    { t.execute () } -> std::same_as<CpuControl::CpuRunState>;
+};
 
 #endif // _CPUCONTROL_H_

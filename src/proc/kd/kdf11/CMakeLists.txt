@@ -7,6 +7,7 @@ set (KDF11_SRCS
     kdf11_u/displayregister/displayregister.cpp
     serial_line_units/serial_line_units.cpp
     kdf11_executionengine/kdf11_executionengine.cpp
+    kdf11processorexception/kdf11processorexception.cpp
     haltmode/haltmode.cpp
     cpudata/kdf11registers/kdf11registers.cpp
     cpudata/kdf11busdevice.cpp

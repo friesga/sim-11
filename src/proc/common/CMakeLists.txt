@@ -3,6 +3,8 @@ set (PROC_COMMON_SRCS
     basemachinestate/basemachinestate.cpp
     basemachinestate/signalreceivers.cpp
     basemachinestate/statemachine.cpp
+    execution_engine/execution_engine.cpp
+    basicprocessorexception/basicprocessorexception.cpp
     executor/executor.cpp
     pseudommu/pseudommu.cpp
     pseudo_haltmode/pseudo_haltmode.cpp)
