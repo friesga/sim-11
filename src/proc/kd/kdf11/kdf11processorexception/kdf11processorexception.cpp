@@ -1,9 +1,7 @@
 #include "kdf11processorexception.h"
 
-// Function to service a trap for processors implementing stack overflow
-// detection and handling.
-//
-KDF11ProcessorException::KDF11ProcessorException (Bus* bus, CpuData* cpuData, MMU* mmu)
+KDF11ProcessorException::KDF11ProcessorException (Bus* bus, CpuData* cpuData,
+    MMU* mmu, Interface::ExecutionEngine& executionEngine)
     :
     bus_ {bus},
     cpuData_ (cpuData),

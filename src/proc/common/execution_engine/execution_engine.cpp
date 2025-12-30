@@ -6,6 +6,9 @@
 #include "proc/kd/kd11_na/executor/executor.h"
 #include "proc/kd/kd11_na/calculate/calculate.h"
 #include "proc/common/basicprocessorexception/basicprocessorexception.h"
+#include "proc/kd/kdf11/executor/executor.h"
+#include "proc/kd/kdf11/calculate/calculate.h"
+#include "proc/kd/kdf11/kdf11processorexception/kdf11processorexception.h"
 
 #include <functional>
 #include <chrono>
@@ -243,3 +246,4 @@ void ExecutionEngine<TExecutor, TCalculator, TProcessorException>::traceStep ()
 // Explicit template instantiation to be able to define the methods in
 // a separate .cpp file.
 template class ExecutionEngine<KD11_NA_Executor, KD11_NA_Calculate, BasicProcessorException>;
+template class ExecutionEngine<KDF11_Executor, KDF11_Calculate, KDF11ProcessorException>;

@@ -65,7 +65,7 @@ private:
     KDF11CpuData cpuData_ {};
     KTF11_A mmu_ {bus_, &cpuData_};
     CompositeCpuController<KDF11_Executor, KDF11_Calculate,
-        KDF11_HaltMode, KDF11_ExecutionEngine,
+        KDF11_HaltMode, ExecutionEngine<KDF11_Executor, KDF11_Calculate, KDF11ProcessorException>,
         KDF11ProcessorException> cpuControl_ {bus_, &cpuData_, &mmu_};
     unique_ptr<KDMachineState> machineState_;
     unique_ptr<SerialLineUnits> serialLineUnits;
