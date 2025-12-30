@@ -3,6 +3,9 @@
 #include "chrono/simulatorclock/simulatorclock.h"
 #include "float/float.h"
 #include "bitmask.h"
+#include "proc/kd/kd11_na/executor/executor.h"
+#include "proc/kd/kd11_na/calculate/calculate.h"
+#include "proc/common/basicprocessorexception/basicprocessorexception.h"
 
 #include <functional>
 #include <chrono>
@@ -18,7 +21,7 @@ using std::cout;
 using namespace std::chrono;
 
 // Constructor
-template <isExecutor TExecutor, isCalculator TCalculator,
+template <isExecutor TExecutor, typename TCalculator,
     isProcessorException TProcessorException>
 ExecutionEngine<TExecutor, TCalculator, TProcessorException>::ExecutionEngine (Bus* bus, CpuData* cpuData, MMU* mmu,
     TExecutor* kdf11_executor, TCalculator* kdf11_calculator)
@@ -39,7 +42,7 @@ ExecutionEngine<TExecutor, TCalculator, TProcessorException>::ExecutionEngine (B
 // Reset the processor
 // 
 // Clear the registers and the PSW
-template <isExecutor TExecutor, isCalculator TCalculator,
+template <isExecutor TExecutor, typename TCalculator,
     isProcessorException TProcessorException>
 void ExecutionEngine<TExecutor, TCalculator, TProcessorException>::cpuReset ()
 {
@@ -52,7 +55,7 @@ void ExecutionEngine<TExecutor, TCalculator, TProcessorException>::cpuReset ()
 
 // Reset (the devices on) the bus by setting the INIT signal and reset
 // the KTF11-A.
-template <isExecutor TExecutor, isCalculator TCalculator,
+template <isExecutor TExecutor, typename TCalculator,
     isProcessorException TProcessorException>
 void ExecutionEngine<TExecutor, TCalculator, TProcessorException>::busReset ()
 {
@@ -61,7 +64,7 @@ void ExecutionEngine<TExecutor, TCalculator, TProcessorException>::busReset ()
 }
 
 // Halt the processor
-template <isExecutor TExecutor, isCalculator TCalculator,
+template <isExecutor TExecutor, typename TCalculator,
     isProcessorException TProcessorException>
 void ExecutionEngine<TExecutor, TCalculator, TProcessorException>::halt (CpuControl::HaltReason reason)
 {
@@ -71,7 +74,7 @@ void ExecutionEngine<TExecutor, TCalculator, TProcessorException>::halt (CpuCont
     trace.cpuEvent (CpuEventRecordType::CPU_HALT, cpuData_->registers ()[7]);
 }
 
-template <isExecutor TExecutor, isCalculator TCalculator,
+template <isExecutor TExecutor, typename TCalculator,
     isProcessorException TProcessorException>
 void ExecutionEngine<TExecutor, TCalculator, TProcessorException>::wait ()
 {
@@ -80,7 +83,7 @@ void ExecutionEngine<TExecutor, TCalculator, TProcessorException>::wait ()
 }
 
 // Start the processor at the given address
-template <isExecutor TExecutor, isCalculator TCalculator,
+template <isExecutor TExecutor, typename TCalculator,
     isProcessorException TProcessorException>
 void ExecutionEngine<TExecutor, TCalculator, TProcessorException>::start (u16 address)
 {
@@ -91,7 +94,7 @@ void ExecutionEngine<TExecutor, TCalculator, TProcessorException>::start (u16 ad
 }
 
 // Continue execution at the current PC
-template <isExecutor TExecutor, isCalculator TCalculator,
+template <isExecutor TExecutor, typename TCalculator,
     isProcessorException TProcessorException>
 void ExecutionEngine<TExecutor, TCalculator, TProcessorException>::proceed ()
 {
@@ -100,7 +103,7 @@ void ExecutionEngine<TExecutor, TCalculator, TProcessorException>::proceed ()
     trace.cpuEvent (CpuEventRecordType::CPU_ODT_P, cpuData_->registers ()[7]);
 }
 
-template <isExecutor TExecutor, isCalculator TCalculator,
+template <isExecutor TExecutor, typename TCalculator,
     isProcessorException TProcessorException>
 constexpr CpuControl::HaltReason ExecutionEngine<TExecutor, TCalculator, TProcessorException>::haltReason ()
 {
@@ -132,7 +135,7 @@ constexpr CpuControl::HaltReason ExecutionEngine<TExecutor, TCalculator, TProces
 //
 // This function returns the new CPU state.
 //
-template <isExecutor TExecutor, isCalculator TCalculator,
+template <isExecutor TExecutor, typename TCalculator,
     isProcessorException TProcessorException>
 CpuControl::CpuRunState ExecutionEngine<TExecutor, TCalculator, TProcessorException>::execute ()
 {
@@ -144,12 +147,12 @@ CpuControl::CpuRunState ExecutionEngine<TExecutor, TCalculator, TProcessorExcept
     // is used as bus request level. Traps in HALT mode are ignored.
     if (cpuData_->trapPending ())
     {
-        serviceTrap ();
+        processorException_.serviceTrap ();
         traceFlag_ =  (cpuData_->psw ().traceBitSet ()) ? true : false;
     }
 
     if (bus_->intrptReqAvailable () && bus_->intrptPriority () > cpuPriority ())
-        serviceInterrupt ();
+        processorException_.serviceInterrupt ();
 
     if (trace.isActive ())
         traceStep ();
@@ -162,7 +165,7 @@ CpuControl::CpuRunState ExecutionEngine<TExecutor, TCalculator, TProcessorExcept
 }
 
 // Execute one instruction
-template <isExecutor TExecutor, isCalculator TCalculator,
+template <isExecutor TExecutor, typename TCalculator,
     isProcessorException TProcessorException>
 void ExecutionEngine<TExecutor, TCalculator, TProcessorException>::execInstr ()
 {
@@ -213,47 +216,14 @@ void ExecutionEngine<TExecutor, TCalculator, TProcessorException>::execInstr ()
     traceFlag_ =  (cpuData_->psw ().traceBitSet ()) ? true : false;
 }
 
-template <isExecutor TExecutor, isCalculator TCalculator,
-    isProcessorException TProcessorException>
-void ExecutionEngine<TExecutor, TCalculator, TProcessorException>::serviceTrap ()
-{
-    processorExecption_.serviceTrap ();
-}
-
-template <isExecutor TExecutor, isCalculator TCalculator,
-    isProcessorException TProcessorException>
-void ExecutionEngine<TExecutor, TCalculator, TProcessorException>::serviceInterrupt ()
-{
-
-}
-
-template <isExecutor TExecutor, isCalculator TCalculator,
+template <isExecutor TExecutor, typename TCalculator,
     isProcessorException TProcessorException>
 u8 ExecutionEngine<TExecutor, TCalculator, TProcessorException>::cpuPriority ()
 {
     return cpuData_->psw ().priorityLevel ();
 }
 
-// Fetch PC and PSW from the given vector address. If this fails the
-// processor will halt anyway.
-template <isExecutor TExecutor, isCalculator TCalculator,
-    isProcessorException TProcessorException>
-bool ExecutionEngine<TExecutor, TCalculator, TProcessorException>::fetchFromVector (u16 address, u16* dest)
-{
-    CondData<u16> tmpValue = mmu_->fetchWord (address, PSW::Mode::Kernel);
-    *dest = tmpValue.valueOr (0);
-    return tmpValue.hasValue ();
-}
-
-// Swap the PC and PSW with new values from the given vector
-template <isExecutor TExecutor, isCalculator TCalculator,
-    isProcessorException TProcessorException>
-void ExecutionEngine<TExecutor, TCalculator, TProcessorException>::swapPcPSW (u16 vectorAddress)
-{
-
-}
-
-template <isExecutor TExecutor, isCalculator TCalculator,
+template <isExecutor TExecutor, typename TCalculator,
     isProcessorException TProcessorException>
 void ExecutionEngine<TExecutor, TCalculator, TProcessorException>::traceStep ()
 {
@@ -269,3 +239,7 @@ void ExecutionEngine<TExecutor, TCalculator, TProcessorException>::traceStep ()
     trace.cpuStep (cpuData_->registers (), cpuData_->psw (), code);
     trace.clearIgnoreBus ();
 }
+
+// Explicit template instantiation to be able to define the methods in
+// a separate .cpp file.
+template class ExecutionEngine<KD11_NA_Executor, KD11_NA_Calculate, BasicProcessorException>;

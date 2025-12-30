@@ -15,6 +15,7 @@ namespace Interface
         virtual void start (u16) = 0;
         virtual void proceed () = 0;
         virtual CpuControl::HaltReason haltReason () = 0;
+        virtual CpuControl::CpuRunState execute () = 0;
     };
 }
 

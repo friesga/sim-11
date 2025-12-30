@@ -20,7 +20,7 @@
 // 
 // This class contains the base CPU execution engine
 //
-template <isExecutor TExecutor, isCalculator TCalculator,
+template <isExecutor TExecutor, typename TCalculator,
 	isProcessorException TProcessorException>
 class ExecutionEngine : public Interface::ExecutionEngine
 {
@@ -50,14 +50,10 @@ private:
 	bool traceFlag_;
 	TExecutor* executor_;
 	TCalculator* calculator_;
-	TProcessorException processorExecption_ {bus_, cpuData_, mmu_, *this};
+	TProcessorException processorException_ {bus_, cpuData_, mmu_, *this};
 
 	void execInstr ();
-	void serviceTrap ();
-	void serviceInterrupt ();
 	u8 cpuPriority ();
-	void swapPcPSW (u16 vectorAddress);
-	bool fetchFromVector (u16 address, u16* dest);
 	void traceStep ();
 };
 
