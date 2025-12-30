@@ -14,6 +14,7 @@
 #include "proc/kd/kdf11/calculate/calculate.h"
 #include "proc/kd/kdf11/haltmode/haltmode.h"
 #include "proc/kd/kdf11/kdf11_executionengine/kdf11_executionengine.h"
+#include "proc/kd/kdf11/kdf11processorexception/kdf11processorexception.h"
 
 #include <memory>
 #include <vector>
@@ -64,7 +65,8 @@ private:
     KDF11CpuData cpuData_ {};
     KTF11_A mmu_ {bus_, &cpuData_};
     CompositeCpuController<KDF11_Executor, KDF11_Calculate,
-        KDF11_HaltMode, KDF11_ExecutionEngine> cpuControl_ {bus_, &cpuData_, &mmu_};
+        KDF11_HaltMode, KDF11_ExecutionEngine,
+        KDF11ProcessorException> cpuControl_ {bus_, &cpuData_, &mmu_};
     unique_ptr<KDMachineState> machineState_;
     unique_ptr<SerialLineUnits> serialLineUnits;
     DisplayRegister displayRegister_;

@@ -12,7 +12,7 @@ using std::unique_ptr;
 using std::make_unique;
 
 template <isExecutor TExecutor, typename TCalculator, isHaltMode THaltMode,
-	isExecutionEngine TExecutionEngine>
+	isExecutionEngine TExecutionEngine, isProcessorException TProcessorException>
 class CompositeCpuController : public CpuControl
 {
 public:
@@ -50,8 +50,9 @@ private:
 };
 
 template <isExecutor TExecutor, typename TCalculator, isHaltMode THaltMode,
-	isExecutionEngine TExecutionEngine>
-CompositeCpuController<TExecutor, TCalculator, THaltMode, TExecutionEngine>::CompositeCpuController (Bus* bus, CpuData* cpuData, MMU* mmu)
+	isExecutionEngine TExecutionEngine, isProcessorException TProcessorException>
+CompositeCpuController<TExecutor, TCalculator, THaltMode, TExecutionEngine,
+	TProcessorException>::CompositeCpuController (Bus* bus, CpuData* cpuData, MMU* mmu)
 {
 	executor_ = make_unique<TExecutor> (cpuData, this, mmu);
 	calculator_ = make_unique<TCalculator> ();
