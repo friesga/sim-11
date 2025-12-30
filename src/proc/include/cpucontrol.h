@@ -81,4 +81,11 @@ concept isExecutionEngine = requires(T t, u16 i)
     { t.execute () } -> std::same_as<CpuControl::CpuRunState>;
 };
 
+template <typename T>
+concept isProcessorException = requires(T t)
+{
+    { t.serviceTrap() } -> std::same_as<void>;
+    { t.serviceInterrupt() } -> std::same_as<void>;
+};
+
 #endif // _CPUCONTROL_H_

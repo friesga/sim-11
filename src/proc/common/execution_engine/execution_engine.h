@@ -21,7 +21,7 @@
 // This class contains the base CPU execution engine
 //
 template <isExecutor TExecutor, isCalculator TCalculator,
-	typename TProcessorException>
+	isProcessorException TProcessorException>
 class ExecutionEngine : public Interface::ExecutionEngine
 {
 public:
