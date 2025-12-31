@@ -5,8 +5,9 @@
 #include "proc/kd/kdf11/ktf11_a/ktf11_a.h"
 #include "../../testconsoleaccess.h"
 #include "proc/common/pseudo_haltmode/pseudo_haltmode.h"
-#include "proc/kd/kd11_na/execution_engine/execution_engine.h"
 #include "proc/common/composite_cpucontroller/composite_cpucontroller.h"
+#include "proc/kd/kd11_na/executor/executor.h"
+#include "proc/kd/kd11_na/calculate/calculate.h"
 #include "proc/common/basicprocessorexception/basicprocessorexception.h"
 
 #include <gtest/gtest.h>
