@@ -1,6 +1,6 @@
-#include "kdf11processorexception.h"
+#include "kdf11processorexceptionhandler.h"
 
-KDF11ProcessorException::KDF11ProcessorException (Bus* bus, CpuData* cpuData,
+KDF11ProcessorExceptionHandler::KDF11ProcessorExceptionHandler (Bus* bus, CpuData* cpuData,
     CpuControl* cpuControl, MMU* mmu)
     :
     bus_ {bus},
@@ -8,7 +8,7 @@ KDF11ProcessorException::KDF11ProcessorException (Bus* bus, CpuData* cpuData,
     mmu_ {mmu}
 { }
 
-void KDF11ProcessorException::serviceTrap ()
+void KDF11ProcessorExceptionHandler::serviceTrap ()
 {
     // The enum trap_ is converted to the u16 vector address
     // Swap the PC and PSW with new values from the trap vector to process.
@@ -26,7 +26,7 @@ void KDF11ProcessorException::serviceTrap ()
     cpuData_->clearTrap ();
 }
 
-void KDF11ProcessorException::serviceInterrupt ()
+void KDF11ProcessorExceptionHandler::serviceInterrupt ()
 {
     InterruptRequest intrptReq;
 
@@ -44,7 +44,7 @@ void KDF11ProcessorException::serviceInterrupt ()
 }
 
 // Swap the PC and PSW with new values from the given vector
-void KDF11ProcessorException::swapPcPSW (u16 vectorAddress)
+void KDF11ProcessorExceptionHandler::swapPcPSW (u16 vectorAddress)
 {
     // Save PC and PSW on the stack. 
     // Unlike the KD11-F and KD11-HA, the KDF11-AA does not enter console
@@ -91,7 +91,7 @@ void KDF11ProcessorException::swapPcPSW (u16 vectorAddress)
 
 // Fetch PC and PSW from the given vector address. If this fails the
 // processor will halt anyway.
-bool KDF11ProcessorException::fetchFromVector (u16 address, u16* dest)
+bool KDF11ProcessorExceptionHandler::fetchFromVector (u16 address, u16* dest)
 {
     CondData<u16> tmpValue = mmu_->fetchWord (address, PSW::Mode::Kernel);
     *dest = tmpValue.valueOr (0);

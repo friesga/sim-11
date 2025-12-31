@@ -1,5 +1,5 @@
-#ifndef _KDF11PROCESSOREXCEPTION_H_
-#define _KDF11PROCESSOREXCEPTION_H_
+#ifndef _KDF11PROCESSOREXCEPTIONHANDLER_H_
+#define _KDF11PROCESSOREXCEPTIONHANDLER_H_
 
 #include "bus/include/bus.h"
 #include "proc/kd/include/cpudata.h"
@@ -11,10 +11,10 @@
 //
 // The interface to the ExecutionEngine isn't used in this class.
 //
-class KDF11ProcessorException
+class KDF11ProcessorExceptionHandler
 {
 public:
-    KDF11ProcessorException (Bus* bus, CpuData* cpuData,
+    KDF11ProcessorExceptionHandler (Bus* bus, CpuData* cpuData,
         CpuControl* cpuControl, MMU* mmu);
     void serviceTrap ();
     void serviceInterrupt ();
@@ -28,4 +28,4 @@ private:
     bool fetchFromVector (u16 address, u16* dest);
 };
 
-#endif // _KDF11PROCESSOREXCEPTION_H_
+#endif // _KDF11PROCESSOREXCEPTIONHANDLER_H_
