@@ -6,7 +6,7 @@
 #include "proc/kd/kd11_na/executor/executor.h"
 #include "proc/kd/kd11_na/calculate/calculate.h"
 #include "proc/common/pseudo_haltmode/pseudo_haltmode.h"
-#include "proc/common/basicprocessorexception/basicprocessorexception.h"
+#include "proc/common/basicprocessorexceptionhandler/basicprocessorexceptionhandler.h"
 #include "proc/kd/kdf11/executor/executor.h"
 #include "proc/kd/kdf11/calculate/calculate.h"
 #include "proc/kd/kdf11/haltmode/haltmode.h"
@@ -276,6 +276,6 @@ void CompositeCpuController<TExecutor, TCalculator, THaltMode,
 // Explicit template instantiation to be able to define the methods in
 // a separate .cpp file.
 template class CompositeCpuController<KD11_NA_Executor, KD11_NA_Calculate,
-    PseudoHaltMode, BasicProcessorException>;
+    PseudoHaltMode, BasicProcessorExceptionHandler>;
 template class CompositeCpuController<KDF11_Executor, KDF11_Calculate,
     KDF11_HaltMode, KDF11ProcessorException>;

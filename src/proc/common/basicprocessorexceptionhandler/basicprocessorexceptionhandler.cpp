@@ -1,6 +1,6 @@
-#include "basicprocessorexception.h"
+#include "basicprocessorexceptionhandler.h"
 
-BasicProcessorException::BasicProcessorException (Bus* bus, CpuData* cpuData,
+BasicProcessorExceptionHandler::BasicProcessorExceptionHandler (Bus* bus, CpuData* cpuData,
     CpuControl* cpuControl, MMU* mmu)
     :
     bus_ {bus},
@@ -9,7 +9,7 @@ BasicProcessorException::BasicProcessorException (Bus* bus, CpuData* cpuData,
     mmu_ {mmu}
 {}
 
-void BasicProcessorException::serviceTrap ()
+void BasicProcessorExceptionHandler::serviceTrap ()
 {
     // The enum trap_ is converted to the u16 vector address
     // Swap the PC and PSW with new values from the trap vector to process.
@@ -18,7 +18,7 @@ void BasicProcessorException::serviceTrap ()
     cpuData_->clearTrap ();
 }
 
-void BasicProcessorException::serviceInterrupt ()
+void BasicProcessorExceptionHandler::serviceInterrupt ()
 {
     InterruptRequest intrptReq;
 
@@ -29,7 +29,7 @@ void BasicProcessorException::serviceInterrupt ()
 }
 
 // Swap the PC and PSW with new values from the given vector
-void BasicProcessorException::swapPcPSW (u16 vectorAddress)
+void BasicProcessorExceptionHandler::swapPcPSW (u16 vectorAddress)
 {
     trace.cpuEvent (CpuEventRecordType::CPU_TRAP, vectorAddress);
 
@@ -59,14 +59,14 @@ void BasicProcessorException::swapPcPSW (u16 vectorAddress)
 
 // Fetch PC and PSW from the given vector address. If this fails the
 // processor will halt anyway.
-bool BasicProcessorException::fetchFromVector (u16 address, u16* dest)
+bool BasicProcessorExceptionHandler::fetchFromVector (u16 address, u16* dest)
 {
     CondData<u16> tmpValue = mmu_->fetchWord (address, PSW::Mode::Kernel);
     *dest = tmpValue.valueOr (0);
     return tmpValue.hasValue ();
 }
 
-bool BasicProcessorException::fetchFromVector (u16 address, function<void (u16)> lambda)
+bool BasicProcessorExceptionHandler::fetchFromVector (u16 address, function<void (u16)> lambda)
 {
     CondData<u16> tmpValue = mmu_->fetchWord (address);
     lambda (tmpValue.valueOr (0));

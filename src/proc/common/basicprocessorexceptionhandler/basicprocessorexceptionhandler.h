@@ -1,5 +1,5 @@
-#ifndef _BASICPROCESSOREXCEPTION_H_
-#define _BASICPROCESSOREXCEPTION_H_
+#ifndef _BASICPROCESSOREXCEPTIONHANDLER_H_
+#define _BASICPROCESSOREXCEPTIONHANDLER_H_
 
 #include "bus/include/bus.h"
 #include "proc/kd/include/cpudata.h"
@@ -9,10 +9,10 @@
 // This class implements basic processor exception handling without stack
 // overflow detection and handling.
 //
-class BasicProcessorException
+class BasicProcessorExceptionHandler
 {
 public:
-    BasicProcessorException (Bus* bus, CpuData* cpuData,
+    BasicProcessorExceptionHandler (Bus* bus, CpuData* cpuData,
         CpuControl* cpuControl, MMU* mmu);
     void serviceTrap ();
     void serviceInterrupt ();
@@ -28,4 +28,4 @@ private:
     bool fetchFromVector (u16 address, function<void (u16)> lambda);
 };
 
-#endif // _BASICPROCESSOREXCEPTION_H_
+#endif // _BASICPROCESSOREXCEPTIONHANDLER_H_
