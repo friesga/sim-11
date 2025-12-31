@@ -1,7 +1,7 @@
 #include "kdf11processorexception.h"
 
 KDF11ProcessorException::KDF11ProcessorException (Bus* bus, CpuData* cpuData,
-    MMU* mmu, Interface::ExecutionEngine& executionEngine)
+    CpuControl* cpuControl, MMU* mmu)
     :
     bus_ {bus},
     cpuData_ (cpuData),

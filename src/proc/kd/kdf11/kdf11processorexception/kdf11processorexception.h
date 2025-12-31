@@ -1,7 +1,9 @@
 #ifndef _KDF11PROCESSOREXCEPTION_H_
 #define _KDF11PROCESSOREXCEPTION_H_
 
-#include "proc/common/execution_engine/execution_engine.h"
+#include "bus/include/bus.h"
+#include "proc/kd/include/cpudata.h"
+#include "proc/kd/include/mmu.h"
 #include "proc/include/cpucontrol.h"
 
 // Functions to service a trap for processors implementing stack overflow
@@ -12,8 +14,8 @@
 class KDF11ProcessorException
 {
 public:
-    KDF11ProcessorException (Bus* bus, CpuData* cpuData, MMU* mmu,
-        Interface::ExecutionEngine& executionEngine);
+    KDF11ProcessorException (Bus* bus, CpuData* cpuData,
+        CpuControl* cpuControl, MMU* mmu);
     void serviceTrap ();
     void serviceInterrupt ();
 

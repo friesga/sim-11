@@ -9,7 +9,7 @@ public:
     // Definitions required for the CpuControl interface
     void cpuReset () {};
     void busReset () {};
-    void halt () {};
+    void halt (CpuControl::HaltReason reason) {};
     void setHaltMode (bool haltMode) {};
     bool inHaltMode () { return false; };
     void wait () {};

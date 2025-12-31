@@ -1,12 +1,12 @@
 #include "basicprocessorexception.h"
 
-BasicProcessorException::BasicProcessorException (Bus* bus, CpuData* cpuData, MMU* mmu,
-    Interface::ExecutionEngine& executionEngine)
+BasicProcessorException::BasicProcessorException (Bus* bus, CpuData* cpuData,
+    CpuControl* cpuControl, MMU* mmu)
     :
     bus_ {bus},
     cpuData_ (cpuData),
-    mmu_ {mmu},
-    executionEngine_ {executionEngine}
+    cpuControl_ {cpuControl},
+    mmu_ {mmu}
 {}
 
 void BasicProcessorException::serviceTrap ()
@@ -40,7 +40,7 @@ void BasicProcessorException::swapPcPSW (u16 vectorAddress)
         trace.cpuEvent (CpuEventRecordType::CPU_DBLBUS, cpuData_->registers ()[6]);
         // ToDo: All interrupts should be cleared?
         cpuData_->clearTrap ();
-        executionEngine_.halt (CpuControl::HaltReason::DoubleBusError);
+        cpuControl_->halt (CpuControl::HaltReason::DoubleBusError);
         return;
     }
 
@@ -52,7 +52,7 @@ void BasicProcessorException::swapPcPSW (u16 vectorAddress)
     {
         trace.cpuEvent (CpuEventRecordType::CPU_DBLBUS, vectorAddress);
         cpuData_->clearTrap ();
-        executionEngine_.halt (CpuControl::HaltReason::BusErrorOnIntrptVector);
+        cpuControl_->halt (CpuControl::HaltReason::BusErrorOnIntrptVector);
         return;
     }
 }

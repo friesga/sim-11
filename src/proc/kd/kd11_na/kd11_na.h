@@ -12,7 +12,6 @@
 #include "proc/kd/kd11_na/executor/executor.h"
 #include "proc/kd/kd11_na/calculate/calculate.h"
 #include "proc/common/pseudo_haltmode/pseudo_haltmode.h"
-#include "proc/common/execution_engine/execution_engine.h"
 #include "proc/common/basicprocessorexception/basicprocessorexception.h"
 
 #include <memory>
@@ -64,8 +63,7 @@ private:
     Bus* bus_;
     KD11_NACpuData cpuData_;
     CompositeCpuController<KD11_NA_Executor, KD11_NA_Calculate,
-        PseudoHaltMode, ExecutionEngine<KD11_NA_Executor, KD11_NA_Calculate, BasicProcessorException>,
-        BasicProcessorException> cpuControl_ {bus_, &cpuData_, &pseudoMMU_};
+        PseudoHaltMode, BasicProcessorException> cpuControl_ {bus_, &cpuData_, &pseudoMMU_};
     PseudoMMU pseudoMMU_ {bus_, &cpuData_};
     unique_ptr<KD11_NA_ODT>	odt_ {};
     KD11Config::PowerUpMode powerUpMode_;

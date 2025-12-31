@@ -54,8 +54,7 @@ protected:
         KDF11CpuData cpuData;
         KTF11_A mmu {&bus, &cpuData};
         CompositeCpuController<KD11_NA_Executor, KD11_NA_Calculate,
-        PseudoHaltMode, ExecutionEngine<KD11_NA_Executor, KD11_NA_Calculate, BasicProcessorException>,
-        BasicProcessorException> kd11cpu (&bus, &cpuData, &mmu);
+        PseudoHaltMode, BasicProcessorException> kd11cpu (&bus, &cpuData, &mmu);
         MSV11D msv11d (&bus);
 
         bus.installModule (&msv11d);

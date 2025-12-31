@@ -1,13 +1,15 @@
-#include "execution_engine.h"
+#include "composite_cpucontroller.h"
 #include "trace/trace.h"
 #include "chrono/simulatorclock/simulatorclock.h"
 #include "float/float.h"
 #include "bitmask.h"
 #include "proc/kd/kd11_na/executor/executor.h"
 #include "proc/kd/kd11_na/calculate/calculate.h"
+#include "proc/common/pseudo_haltmode/pseudo_haltmode.h"
 #include "proc/common/basicprocessorexception/basicprocessorexception.h"
 #include "proc/kd/kdf11/executor/executor.h"
 #include "proc/kd/kdf11/calculate/calculate.h"
+#include "proc/kd/kdf11/haltmode/haltmode.h"
 #include "proc/kd/kdf11/kdf11processorexception/kdf11processorexception.h"
 
 #include <functional>
@@ -24,30 +26,32 @@ using std::cout;
 using namespace std::chrono;
 
 // Constructor
-template <isExecutor TExecutor, typename TCalculator,
+template <isExecutor TExecutor, typename TCalculator, isHaltMode THaltMode,
     isProcessorException TProcessorException>
-ExecutionEngine<TExecutor, TCalculator, TProcessorException>::ExecutionEngine (Bus* bus, CpuData* cpuData, MMU* mmu,
-    TExecutor* kdf11_executor, TCalculator* kdf11_calculator)
+CompositeCpuController<TExecutor, TCalculator, THaltMode,
+    TProcessorException>::CompositeCpuController (Bus* bus, CpuData* cpuData, MMU* mmu)
     :
     bus_ {bus},
     mmu_ {mmu},
     cpuData_ {cpuData},
-    executor_ {kdf11_executor},
-    calculator_ {kdf11_calculator},
-    runState {CpuControl::CpuRunState::HALT},
-    decoder {},
+    runState_ {CpuControl::CpuRunState::HALT},
     haltReason_ {CpuControl::HaltReason::HaltInstruction},
     traceFlag_ {false}
 {
-    bus_->SRUN().set (false);
+    executor_ = make_unique<TExecutor> (cpuData, this, mmu);
+    calculator_ = make_unique<TCalculator> ();
+    haltMode_ = make_unique<THaltMode> ();
+
+    bus_->SRUN ().set (false);
 }
 
 // Reset the processor
 // 
 // Clear the registers and the PSW
-template <isExecutor TExecutor, typename TCalculator,
+template <isExecutor TExecutor, typename TCalculator, isHaltMode THaltMode,
     isProcessorException TProcessorException>
-void ExecutionEngine<TExecutor, TCalculator, TProcessorException>::cpuReset ()
+void CompositeCpuController<TExecutor, TCalculator, THaltMode,
+    TProcessorException>::cpuReset ()
 {
     // Initialize the registers except for the PC
     for (u16 regNr = 0; regNr <= 6; ++regNr)
@@ -58,57 +62,79 @@ void ExecutionEngine<TExecutor, TCalculator, TProcessorException>::cpuReset ()
 
 // Reset (the devices on) the bus by setting the INIT signal and reset
 // the KTF11-A.
-template <isExecutor TExecutor, typename TCalculator,
+template <isExecutor TExecutor, typename TCalculator, isHaltMode THaltMode,
     isProcessorException TProcessorException>
-void ExecutionEngine<TExecutor, TCalculator, TProcessorException>::busReset ()
+void CompositeCpuController<TExecutor, TCalculator, THaltMode,
+    TProcessorException>::busReset ()
 {
-    bus_->BINIT().cycle ();
+    bus_->BINIT ().cycle ();
     mmu_->reset ();
 }
 
 // Halt the processor
-template <isExecutor TExecutor, typename TCalculator,
+template <isExecutor TExecutor, typename TCalculator, isHaltMode THaltMode,
     isProcessorException TProcessorException>
-void ExecutionEngine<TExecutor, TCalculator, TProcessorException>::halt (CpuControl::HaltReason reason)
+void CompositeCpuController<TExecutor, TCalculator, THaltMode,
+    TProcessorException>::halt (CpuControl::HaltReason reason)
 {
-    runState = CpuControl::CpuRunState::HALT;
+    runState_ = CpuControl::CpuRunState::HALT;
     haltReason_ = reason;
-    bus_->SRUN().set (false);
+    bus_->SRUN ().set (false);
     trace.cpuEvent (CpuEventRecordType::CPU_HALT, cpuData_->registers ()[7]);
 }
 
-template <isExecutor TExecutor, typename TCalculator,
+template <isExecutor TExecutor, typename TCalculator, isHaltMode THaltMode,
     isProcessorException TProcessorException>
-void ExecutionEngine<TExecutor, TCalculator, TProcessorException>::wait ()
+void CompositeCpuController<TExecutor, TCalculator, THaltMode,
+    TProcessorException>::wait ()
 {
     trace.cpuEvent (CpuEventRecordType::CPU_WAIT, cpuData_->registers ()[7]);
-    runState = CpuControl::CpuRunState::WAIT;
+    runState_ = CpuControl::CpuRunState::WAIT;
 }
 
 // Start the processor at the given address
-template <isExecutor TExecutor, typename TCalculator,
+template <isExecutor TExecutor, typename TCalculator, isHaltMode THaltMode,
     isProcessorException TProcessorException>
-void ExecutionEngine<TExecutor, TCalculator, TProcessorException>::start (u16 address)
+void CompositeCpuController<TExecutor, TCalculator, THaltMode,
+    TProcessorException>::start (u16 address)
 {
     cpuData_->registers ()[7] = address;
-    runState = CpuControl::CpuRunState::RUN;
-    bus_->SRUN().set (true);
+    runState_ = CpuControl::CpuRunState::RUN;
+    bus_->SRUN ().set (true);
     trace.cpuEvent (CpuEventRecordType::CPU_ODT_G, address);
 }
 
 // Continue execution at the current PC
-template <isExecutor TExecutor, typename TCalculator,
+template <isExecutor TExecutor, typename TCalculator, isHaltMode THaltMode,
     isProcessorException TProcessorException>
-void ExecutionEngine<TExecutor, TCalculator, TProcessorException>::proceed ()
+void CompositeCpuController<TExecutor, TCalculator, THaltMode,
+    TProcessorException>::proceed ()
 {
-    runState = CpuControl::CpuRunState::RUN;
-    bus_->SRUN().set (true);
+    runState_ = CpuControl::CpuRunState::RUN;
+    bus_->SRUN ().set (true);
     trace.cpuEvent (CpuEventRecordType::CPU_ODT_P, cpuData_->registers ()[7]);
 }
 
-template <isExecutor TExecutor, typename TCalculator,
+template <isExecutor TExecutor, typename TCalculator, isHaltMode THaltMode,
     isProcessorException TProcessorException>
-constexpr CpuControl::HaltReason ExecutionEngine<TExecutor, TCalculator, TProcessorException>::haltReason ()
+void CompositeCpuController<TExecutor, TCalculator, THaltMode,
+    TProcessorException>::setHaltMode (bool haltMode)
+{
+    haltMode_->setHaltMode (haltMode);
+}
+
+template <isExecutor TExecutor, typename TCalculator, isHaltMode THaltMode,
+    isProcessorException TProcessorException>
+bool CompositeCpuController<TExecutor, TCalculator, THaltMode,
+    TProcessorException>::inHaltMode ()
+{
+    return haltMode_->inHaltMode ();
+}
+
+template <isExecutor TExecutor, typename TCalculator, isHaltMode THaltMode,
+    isProcessorException TProcessorException>
+constexpr CpuControl::HaltReason CompositeCpuController<TExecutor, TCalculator, THaltMode,
+    TProcessorException>::haltReason ()
 {
     return haltReason_;
 }
@@ -138,9 +164,10 @@ constexpr CpuControl::HaltReason ExecutionEngine<TExecutor, TCalculator, TProces
 //
 // This function returns the new CPU state.
 //
-template <isExecutor TExecutor, typename TCalculator,
+template <isExecutor TExecutor, typename TCalculator, isHaltMode THaltMode,
     isProcessorException TProcessorException>
-CpuControl::CpuRunState ExecutionEngine<TExecutor, TCalculator, TProcessorException>::execute ()
+CpuControl::CpuRunState CompositeCpuController<TExecutor, TCalculator, THaltMode,
+    TProcessorException>::execute ()
 {
     // If there is a pending bus interrupt that can be executed, process
     // that interrupt first, else execute the next instruction
@@ -164,13 +191,14 @@ CpuControl::CpuRunState ExecutionEngine<TExecutor, TCalculator, TProcessorExcept
 
     // Instructions leave the run state unchanged except for the WAIT and HALT
     // instruction which sets the state to respectively WAIT and HALT.
-    return runState;
+    return runState_;
 }
 
 // Execute one instruction
-template <isExecutor TExecutor, typename TCalculator,
+template <isExecutor TExecutor, typename TCalculator, isHaltMode THaltMode,
     isProcessorException TProcessorException>
-void ExecutionEngine<TExecutor, TCalculator, TProcessorException>::execInstr ()
+void CompositeCpuController<TExecutor, TCalculator, THaltMode,
+    TProcessorException>::execInstr ()
 {
     // Get next instruction to execute and move PC forward
     CondData<u16> instructionWord = mmu_->fetchWord (cpuData_->registers ()[7]);
@@ -188,7 +216,7 @@ void ExecutionEngine<TExecutor, TCalculator, TProcessorException>::execInstr ()
     cpuData_->registers ()[7] += 2;
 
     Instruction instr =
-        decoder.decode (instructionWord);
+        decoder_.decode (instructionWord);
 
     // The instruction time is defined in microseconds with an accuracy of
     // nanoseconds. Convert the time in microseconds to the 64-bits integer
@@ -219,16 +247,18 @@ void ExecutionEngine<TExecutor, TCalculator, TProcessorException>::execInstr ()
     traceFlag_ =  (cpuData_->psw ().traceBitSet ()) ? true : false;
 }
 
-template <isExecutor TExecutor, typename TCalculator,
+template <isExecutor TExecutor, typename TCalculator, isHaltMode THaltMode,
     isProcessorException TProcessorException>
-u8 ExecutionEngine<TExecutor, TCalculator, TProcessorException>::cpuPriority ()
+u8 CompositeCpuController<TExecutor, TCalculator, THaltMode,
+    TProcessorException>::cpuPriority ()
 {
     return cpuData_->psw ().priorityLevel ();
 }
 
-template <isExecutor TExecutor, typename TCalculator,
+template <isExecutor TExecutor, typename TCalculator, isHaltMode THaltMode,
     isProcessorException TProcessorException>
-void ExecutionEngine<TExecutor, TCalculator, TProcessorException>::traceStep ()
+void CompositeCpuController<TExecutor, TCalculator, THaltMode,
+    TProcessorException>::traceStep ()
 {
     trace.setIgnoreBus ();
     u16 code[3];
@@ -245,5 +275,7 @@ void ExecutionEngine<TExecutor, TCalculator, TProcessorException>::traceStep ()
 
 // Explicit template instantiation to be able to define the methods in
 // a separate .cpp file.
-template class ExecutionEngine<KD11_NA_Executor, KD11_NA_Calculate, BasicProcessorException>;
-template class ExecutionEngine<KDF11_Executor, KDF11_Calculate, KDF11ProcessorException>;
+template class CompositeCpuController<KD11_NA_Executor, KD11_NA_Calculate,
+    PseudoHaltMode, BasicProcessorException>;
+template class CompositeCpuController<KDF11_Executor, KDF11_Calculate,
+    KDF11_HaltMode, KDF11ProcessorException>;

@@ -31,7 +31,7 @@ public:
 
     virtual void cpuReset () = 0;
     virtual void busReset () = 0;
-    virtual void halt () = 0;
+    virtual void halt (HaltReason reason = HaltReason::HaltInstruction) = 0;
 
     // The HaltMode is used by the KDF11-U. The ODT in this CPU entails a 
     // "Toggle Halt" command which toggles a halt flip-flop located in the CPU.

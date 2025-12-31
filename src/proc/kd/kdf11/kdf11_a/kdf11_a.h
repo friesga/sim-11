@@ -4,6 +4,7 @@
 #include "proc/kd/include/pdp11processor.h"
 #include "proc/kd/kdf11/cpudata/kdf11cpudata.h"
 #include "proc/kd/kdf11/odt/kdf11_odt.h"
+#include "proc/kd/kdf11/ktf11_a/ktf11_a.h"
 #include "configdata/kdf11/kdf11_a/kdf11_aconfig/kdf11_aconfig.h"
 #include "proc/kd/common/kdmachinestate/kdmachinestate.h"
 #include "devicecommon/registerhandler/registerhandler.h"
@@ -62,8 +63,7 @@ private:
     KDF11CpuData cpuData_ {};
     KTF11_A mmu_ {bus_, &cpuData_};
     CompositeCpuController<KDF11_Executor, KDF11_Calculate,
-        KDF11_HaltMode, ExecutionEngine<KDF11_Executor, KDF11_Calculate, KDF11ProcessorException>,
-        KDF11ProcessorException> cpuControl_ {bus_, &cpuData_, &mmu_};
+        KDF11_HaltMode, KDF11ProcessorException> cpuControl_ {bus_, &cpuData_, &mmu_};
     unique_ptr<KDMachineState> machineState_;
 
     // RegisterHandler performs the functions required by the BusDevice

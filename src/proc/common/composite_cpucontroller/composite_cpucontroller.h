@@ -5,6 +5,7 @@
 #include "proc/kd/include/cpudata.h"
 #include "proc/include/cpucontrol.h"
 #include "proc/kd/include/mmu.h"
+#include "proc/kd/common/instructiondecoder/instructiondecoder.h"
 
 #include <memory>
 
@@ -12,7 +13,7 @@ using std::unique_ptr;
 using std::make_unique;
 
 template <isExecutor TExecutor, typename TCalculator, isHaltMode THaltMode,
-	isExecutionEngine TExecutionEngine, isProcessorException TProcessorException>
+	isProcessorException TProcessorException>
 class CompositeCpuController : public CpuControl
 {
 public:
@@ -21,44 +22,36 @@ public:
 	// Definition of functions required by the CpuControl interface.
 	//
 	// The HaltMode is not implemented in the KD11-NA.
-	void cpuReset () override
-		{ engine_->cpuReset (); }
-	void busReset () override
-		{engine_->busReset ();}
-	void halt () override
-		{engine_->halt ();}
-	void setHaltMode (bool haltMode) override
-		{ haltMode_->setHaltMode (haltMode); }
-	bool inHaltMode () override
-		{ return haltMode_->inHaltMode (); }
-	void wait () override
-		{ engine_->wait (); }
-    void start (u16 address) override
-		{ engine_->start (address); }
-	void proceed () override
-		{ engine_->proceed (); }
-	HaltReason haltReason ()
-		{ return engine_->haltReason (); }
-	CpuControl::CpuRunState execute () override
-		{ return engine_->execute (); }
+	void cpuReset () override;
+	void busReset () override;
+	void halt (CpuControl::HaltReason reason = CpuControl::HaltReason::HaltInstruction) override;
+	void setHaltMode (bool haltMode) override;
+	bool inHaltMode () override;
+	void wait () override;
+	void start (u16 address) override;
+	void proceed () override;
+	constexpr CpuControl::HaltReason haltReason ();
+	CpuControl::CpuRunState execute () override;
 
 private:
+	Bus* bus_;
+	MMU* mmu_;
+	CpuData* cpuData_;
+
 	unique_ptr<TExecutor> executor_;
 	unique_ptr<TCalculator> calculator_;
 	unique_ptr<THaltMode> haltMode_;
-	unique_ptr<TExecutionEngine> engine_;
+	TProcessorException processorException_ {bus_, cpuData_, this, mmu_};
+
+	InstructionDecoder decoder_ {};
+	CpuControl::HaltReason haltReason_;
+	CpuControl::CpuRunState runState_;
+	bool traceFlag_;
+
+	void execInstr ();
+	u8 cpuPriority ();
+	void traceStep ();
 };
 
-template <isExecutor TExecutor, typename TCalculator, isHaltMode THaltMode,
-	isExecutionEngine TExecutionEngine, isProcessorException TProcessorException>
-CompositeCpuController<TExecutor, TCalculator, THaltMode, TExecutionEngine,
-	TProcessorException>::CompositeCpuController (Bus* bus, CpuData* cpuData, MMU* mmu)
-{
-	executor_ = make_unique<TExecutor> (cpuData, this, mmu);
-	calculator_ = make_unique<TCalculator> ();
-	haltMode_ = make_unique<THaltMode> ();
-	engine_ = make_unique<TExecutionEngine> (bus, cpuData, mmu,
-		executor_.get (), calculator_.get ());
-}
 
 #endif // _COMPOSITE_CPUCONTROLLER_H_

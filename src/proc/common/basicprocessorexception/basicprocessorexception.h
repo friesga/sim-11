@@ -1,7 +1,9 @@
 #ifndef _BASICPROCESSOREXCEPTION_H_
 #define _BASICPROCESSOREXCEPTION_H_
 
-#include "proc/common/execution_engine/execution_engine.h"
+#include "bus/include/bus.h"
+#include "proc/kd/include/cpudata.h"
+#include "proc/kd/include/mmu.h"
 #include "proc/include/cpucontrol.h"
 
 // This class implements basic processor exception handling without stack
@@ -10,16 +12,16 @@
 class BasicProcessorException
 {
 public:
-    BasicProcessorException (Bus* bus, CpuData* cpuData, MMU* mmu,
-        Interface::ExecutionEngine& executionEngine);
+    BasicProcessorException (Bus* bus, CpuData* cpuData,
+        CpuControl* cpuControl, MMU* mmu);
     void serviceTrap ();
     void serviceInterrupt ();
 
 private:
     Bus* bus_;
     CpuData* cpuData_;
+    CpuControl* cpuControl_;
     MMU* mmu_;
-    Interface::ExecutionEngine& executionEngine_;
 
     void swapPcPSW (u16 vectorAddress);
     bool fetchFromVector (u16 address, u16* dest);
