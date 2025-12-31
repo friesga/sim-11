@@ -177,12 +177,12 @@ CpuControl::CpuRunState CompositeCpuController<TExecutor, TCalculator, THaltMode
     // is used as bus request level. Traps in HALT mode are ignored.
     if (cpuData_->trapPending ())
     {
-        processorException_.serviceTrap ();
+        processorExceptionHandler_.serviceTrap ();
         traceFlag_ =  (cpuData_->psw ().traceBitSet ()) ? true : false;
     }
 
     if (bus_->intrptReqAvailable () && bus_->intrptPriority () > cpuPriority ())
-        processorException_.serviceInterrupt ();
+        processorExceptionHandler_.serviceInterrupt ();
 
     if (trace.isActive ())
         traceStep ();

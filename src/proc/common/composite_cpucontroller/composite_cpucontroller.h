@@ -41,7 +41,7 @@ private:
 	unique_ptr<TExecutor> executor_;
 	unique_ptr<TCalculator> calculator_;
 	unique_ptr<THaltMode> haltMode_;
-	TProcessorExceptionHandler processorException_ {bus_, cpuData_, this, mmu_};
+	TProcessorExceptionHandler processorExceptionHandler_ {bus_, cpuData_, this, mmu_};
 
 	InstructionDecoder decoder_ {};
 	CpuControl::HaltReason haltReason_;
