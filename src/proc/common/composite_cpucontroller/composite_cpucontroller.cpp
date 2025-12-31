@@ -27,7 +27,7 @@ using namespace std::chrono;
 
 // Constructor
 template <isExecutor TExecutor, typename TCalculator, isHaltMode THaltMode,
-    isProcessorException TProcessorException>
+    isProcessorExceptionHandler TProcessorException>
 CompositeCpuController<TExecutor, TCalculator, THaltMode,
     TProcessorException>::CompositeCpuController (Bus* bus, CpuData* cpuData, MMU* mmu)
     :
@@ -49,7 +49,7 @@ CompositeCpuController<TExecutor, TCalculator, THaltMode,
 // 
 // Clear the registers and the PSW
 template <isExecutor TExecutor, typename TCalculator, isHaltMode THaltMode,
-    isProcessorException TProcessorException>
+    isProcessorExceptionHandler TProcessorException>
 void CompositeCpuController<TExecutor, TCalculator, THaltMode,
     TProcessorException>::cpuReset ()
 {
@@ -63,7 +63,7 @@ void CompositeCpuController<TExecutor, TCalculator, THaltMode,
 // Reset (the devices on) the bus by setting the INIT signal and reset
 // the KTF11-A.
 template <isExecutor TExecutor, typename TCalculator, isHaltMode THaltMode,
-    isProcessorException TProcessorException>
+    isProcessorExceptionHandler TProcessorException>
 void CompositeCpuController<TExecutor, TCalculator, THaltMode,
     TProcessorException>::busReset ()
 {
@@ -73,7 +73,7 @@ void CompositeCpuController<TExecutor, TCalculator, THaltMode,
 
 // Halt the processor
 template <isExecutor TExecutor, typename TCalculator, isHaltMode THaltMode,
-    isProcessorException TProcessorException>
+    isProcessorExceptionHandler TProcessorException>
 void CompositeCpuController<TExecutor, TCalculator, THaltMode,
     TProcessorException>::halt (CpuControl::HaltReason reason)
 {
@@ -84,7 +84,7 @@ void CompositeCpuController<TExecutor, TCalculator, THaltMode,
 }
 
 template <isExecutor TExecutor, typename TCalculator, isHaltMode THaltMode,
-    isProcessorException TProcessorException>
+    isProcessorExceptionHandler TProcessorException>
 void CompositeCpuController<TExecutor, TCalculator, THaltMode,
     TProcessorException>::wait ()
 {
@@ -94,7 +94,7 @@ void CompositeCpuController<TExecutor, TCalculator, THaltMode,
 
 // Start the processor at the given address
 template <isExecutor TExecutor, typename TCalculator, isHaltMode THaltMode,
-    isProcessorException TProcessorException>
+    isProcessorExceptionHandler TProcessorException>
 void CompositeCpuController<TExecutor, TCalculator, THaltMode,
     TProcessorException>::start (u16 address)
 {
@@ -106,7 +106,7 @@ void CompositeCpuController<TExecutor, TCalculator, THaltMode,
 
 // Continue execution at the current PC
 template <isExecutor TExecutor, typename TCalculator, isHaltMode THaltMode,
-    isProcessorException TProcessorException>
+    isProcessorExceptionHandler TProcessorException>
 void CompositeCpuController<TExecutor, TCalculator, THaltMode,
     TProcessorException>::proceed ()
 {
@@ -116,7 +116,7 @@ void CompositeCpuController<TExecutor, TCalculator, THaltMode,
 }
 
 template <isExecutor TExecutor, typename TCalculator, isHaltMode THaltMode,
-    isProcessorException TProcessorException>
+    isProcessorExceptionHandler TProcessorException>
 void CompositeCpuController<TExecutor, TCalculator, THaltMode,
     TProcessorException>::setHaltMode (bool haltMode)
 {
@@ -124,7 +124,7 @@ void CompositeCpuController<TExecutor, TCalculator, THaltMode,
 }
 
 template <isExecutor TExecutor, typename TCalculator, isHaltMode THaltMode,
-    isProcessorException TProcessorException>
+    isProcessorExceptionHandler TProcessorException>
 bool CompositeCpuController<TExecutor, TCalculator, THaltMode,
     TProcessorException>::inHaltMode ()
 {
@@ -132,7 +132,7 @@ bool CompositeCpuController<TExecutor, TCalculator, THaltMode,
 }
 
 template <isExecutor TExecutor, typename TCalculator, isHaltMode THaltMode,
-    isProcessorException TProcessorException>
+    isProcessorExceptionHandler TProcessorException>
 constexpr CpuControl::HaltReason CompositeCpuController<TExecutor, TCalculator, THaltMode,
     TProcessorException>::haltReason ()
 {
@@ -165,7 +165,7 @@ constexpr CpuControl::HaltReason CompositeCpuController<TExecutor, TCalculator, 
 // This function returns the new CPU state.
 //
 template <isExecutor TExecutor, typename TCalculator, isHaltMode THaltMode,
-    isProcessorException TProcessorException>
+    isProcessorExceptionHandler TProcessorException>
 CpuControl::CpuRunState CompositeCpuController<TExecutor, TCalculator, THaltMode,
     TProcessorException>::execute ()
 {
@@ -196,7 +196,7 @@ CpuControl::CpuRunState CompositeCpuController<TExecutor, TCalculator, THaltMode
 
 // Execute one instruction
 template <isExecutor TExecutor, typename TCalculator, isHaltMode THaltMode,
-    isProcessorException TProcessorException>
+    isProcessorExceptionHandler TProcessorException>
 void CompositeCpuController<TExecutor, TCalculator, THaltMode,
     TProcessorException>::execInstr ()
 {
@@ -248,7 +248,7 @@ void CompositeCpuController<TExecutor, TCalculator, THaltMode,
 }
 
 template <isExecutor TExecutor, typename TCalculator, isHaltMode THaltMode,
-    isProcessorException TProcessorException>
+    isProcessorExceptionHandler TProcessorException>
 u8 CompositeCpuController<TExecutor, TCalculator, THaltMode,
     TProcessorException>::cpuPriority ()
 {
@@ -256,7 +256,7 @@ u8 CompositeCpuController<TExecutor, TCalculator, THaltMode,
 }
 
 template <isExecutor TExecutor, typename TCalculator, isHaltMode THaltMode,
-    isProcessorException TProcessorException>
+    isProcessorExceptionHandler TProcessorException>
 void CompositeCpuController<TExecutor, TCalculator, THaltMode,
     TProcessorException>::traceStep ()
 {

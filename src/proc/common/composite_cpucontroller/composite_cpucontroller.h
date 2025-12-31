@@ -13,7 +13,7 @@ using std::unique_ptr;
 using std::make_unique;
 
 template <isExecutor TExecutor, typename TCalculator, isHaltMode THaltMode,
-	isProcessorException TProcessorException>
+	isProcessorExceptionHandler TProcessorException>
 class CompositeCpuController : public CpuControl
 {
 public:
