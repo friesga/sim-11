@@ -1,7 +1,7 @@
 #ifndef _NOOPERANDINSTRUCTION_H_
 #define _NOOPERANDINSTRUCTION_H_
 
-#include "proc/kd/common/instructionformats/pdp111instruction/pdp11instruction.h"
+#include "proc/kd/common/instructionformats/pdp11instruction/pdp11instruction.h"
 #include "proc/kd/common/operandlocation/operandlocation.h"
 
 class NoOperandInstruction : public PDP11Instruction

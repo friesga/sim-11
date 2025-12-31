@@ -1,7 +1,7 @@
 #ifndef _DOUBLEINSTRUCTIONFORMAT_H_
 #define _DOUBLEINSTRUCTIONFORMAT_H_
 
-#include "proc/kd/common/instructionformats/pdp111instruction/pdp11instruction.h"
+#include "proc/kd/common/instructionformats/pdp11instruction/pdp11instruction.h"
 
 class DoubleOperandInstruction : public PDP11Instruction
 {

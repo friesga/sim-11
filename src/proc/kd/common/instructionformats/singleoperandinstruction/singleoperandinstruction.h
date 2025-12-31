@@ -1,7 +1,7 @@
 #ifndef _SINGLEOPERANDINSTRUCTION_H_
 #define _SINGLEOPERANDINSTRUCTION_H_
 
-#include "proc/kd/common/instructionformats/pdp111instruction/pdp11instruction.h"
+#include "proc/kd/common/instructionformats/pdp11instruction/pdp11instruction.h"
 
 class SingleOperandInstruction : public PDP11Instruction
 {

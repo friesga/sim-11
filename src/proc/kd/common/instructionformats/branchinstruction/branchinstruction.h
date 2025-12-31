@@ -1,7 +1,7 @@
 #ifndef _BRANCHINSTRUCTION_H_
 #define _BRANCHINSTRUCTION_H_
 
-#include "proc/kd/common/instructionformats/pdp111instruction/pdp11instruction.h"
+#include "proc/kd/common/instructionformats/pdp11instruction/pdp11instruction.h"
 #include "proc/kd/include/cpudata.h"
 
 class BranchInstruction : public PDP11Instruction
