@@ -13,7 +13,7 @@ using std::unique_ptr;
 using std::make_unique;
 
 template <isExecutor TExecutor, typename TCalculator, isHaltMode THaltMode,
-	isProcessorExceptionHandler TProcessorException>
+	isProcessorExceptionHandler TProcessorExceptionHandler>
 class CompositeCpuController : public CpuControl
 {
 public:
@@ -41,7 +41,7 @@ private:
 	unique_ptr<TExecutor> executor_;
 	unique_ptr<TCalculator> calculator_;
 	unique_ptr<THaltMode> haltMode_;
-	TProcessorException processorException_ {bus_, cpuData_, this, mmu_};
+	TProcessorExceptionHandler processorException_ {bus_, cpuData_, this, mmu_};
 
 	InstructionDecoder decoder_ {};
 	CpuControl::HaltReason haltReason_;
