@@ -1,7 +1,7 @@
 #include "basicprocessorexceptionhandler.h"
 
 BasicProcessorExceptionHandler::BasicProcessorExceptionHandler (Bus* bus, CpuData* cpuData,
-    CpuControl* cpuControl, MMU* mmu)
+    Interfaces::CpuController* cpuControl, MMU* mmu)
     :
     bus_ {bus},
     cpuData_ (cpuData),
@@ -40,7 +40,7 @@ void BasicProcessorExceptionHandler::swapPcPSW (u16 vectorAddress)
         trace.cpuEvent (CpuEventRecordType::CPU_DBLBUS, cpuData_->registers ()[6]);
         // ToDo: All interrupts should be cleared?
         cpuData_->clearTrap ();
-        cpuControl_->halt (CpuControl::HaltReason::DoubleBusError);
+        cpuControl_->halt (Interfaces::CpuController::HaltReason::DoubleBusError);
         return;
     }
 
@@ -52,7 +52,7 @@ void BasicProcessorExceptionHandler::swapPcPSW (u16 vectorAddress)
     {
         trace.cpuEvent (CpuEventRecordType::CPU_DBLBUS, vectorAddress);
         cpuData_->clearTrap ();
-        cpuControl_->halt (CpuControl::HaltReason::BusErrorOnIntrptVector);
+        cpuControl_->halt (Interfaces::CpuController::HaltReason::BusErrorOnIntrptVector);
         return;
     }
 }

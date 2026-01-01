@@ -14,7 +14,7 @@ using std::make_unique;
 
 template <isExecutor TExecutor, typename TCalculator, isHaltMode THaltMode,
 	isProcessorExceptionHandler TProcessorExceptionHandler>
-class CompositeCpuController : public CpuControl
+class CompositeCpuController : public Interfaces::CpuController
 {
 public:
 	CompositeCpuController (Bus *bus, CpuData* cpuData, MMU* mmu);
@@ -24,14 +24,14 @@ public:
 	// The HaltMode is not implemented in the KD11-NA.
 	void cpuReset () override;
 	void busReset () override;
-	void halt (CpuControl::HaltReason reason = CpuControl::HaltReason::HaltInstruction) override;
+	void halt (Interfaces::CpuController::HaltReason reason = Interfaces::CpuController::HaltReason::HaltInstruction) override;
 	void setHaltMode (bool haltMode) override;
 	bool inHaltMode () override;
 	void wait () override;
 	void start (u16 address) override;
 	void proceed () override;
-	constexpr CpuControl::HaltReason haltReason ();
-	CpuControl::CpuRunState execute () override;
+	constexpr Interfaces::CpuController::HaltReason haltReason ();
+	Interfaces::CpuController::CpuRunState execute () override;
 
 private:
 	Bus* bus_;
@@ -44,8 +44,8 @@ private:
 	TProcessorExceptionHandler processorExceptionHandler_ {bus_, cpuData_, this, mmu_};
 
 	InstructionDecoder decoder_ {};
-	CpuControl::HaltReason haltReason_;
-	CpuControl::CpuRunState runState_;
+	Interfaces::CpuController::HaltReason haltReason_;
+	Interfaces::CpuController::CpuRunState runState_;
 	bool traceFlag_;
 
 	void execInstr ();

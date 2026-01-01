@@ -6,7 +6,7 @@
 class KDMachineState : public BaseMachineState
 {
 public:
-    KDMachineState (Bus* bus, CpuData* cpuData, CpuControl* cpuControl,
+    KDMachineState (Bus* bus, CpuData* cpuData, Interfaces::CpuController* cpuControl,
         MMU* mmu, KD11Config::PowerUpMode powerUpMode, u16 startAddress,
         KD11ODT::Creator odtCreator);
 

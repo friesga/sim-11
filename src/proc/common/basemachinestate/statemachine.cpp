@@ -32,15 +32,15 @@ void BaseMachineState::StateMachine::entry (Running)
 {
     while (!context_->signalAvailable ())
     {
-        CpuControl::CpuRunState nextState = context_->cpuControl_->execute ();
+        Interfaces::CpuController::CpuRunState nextState = context_->cpuControl_->execute ();
 
-        if (nextState == CpuControl::CpuRunState::HALT ||
+        if (nextState == Interfaces::CpuController::CpuRunState::HALT ||
             context_->bus_->BHALT () || context_->cpuControl_->inHaltMode ())
         {
             context_->signalEventQueue_.push (Halt {});
             context_->bus_->SRUN ().set (false);
         }
-        else if (nextState == CpuControl::CpuRunState::WAIT)
+        else if (nextState == Interfaces::CpuController::CpuRunState::WAIT)
             context_->signalEventQueue_.push (Wait {});
     }
 }
@@ -152,7 +152,7 @@ void BaseMachineState::StateMachine::entry (PowerFail)
 
     while (!context_->signalAvailable () && --maxInstructions > 0)
     {
-        if (context_->cpuControl_->execute () != CpuControl::CpuRunState::RUN)
+        if (context_->cpuControl_->execute () != Interfaces::CpuController::CpuRunState::RUN)
         {
             context_->signalEventQueue_.push (Halt {});
             return;

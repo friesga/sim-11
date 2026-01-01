@@ -40,7 +40,7 @@ using std::placeholders::_3;
 class BaseMachineState
 {
 public:
-    BaseMachineState (Bus* bus, CpuData* cpuData, CpuControl* cpuControl, MMU* mmu);
+    BaseMachineState (Bus* bus, CpuData* cpuData, Interfaces::CpuController* cpuControl, MMU* mmu);
     void run ();
     void exit ();
 
@@ -98,7 +98,7 @@ protected:
 
     Bus* bus_;
     CpuData* cpuData_;
-    CpuControl* cpuControl_;
+    Interfaces::CpuController* cpuControl_;
     MMU* mmu_;
     bool running_;
 

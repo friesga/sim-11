@@ -34,8 +34,8 @@ CompositeCpuController<TExecutor, TCalculator, THaltMode,
     bus_ {bus},
     mmu_ {mmu},
     cpuData_ {cpuData},
-    runState_ {CpuControl::CpuRunState::HALT},
-    haltReason_ {CpuControl::HaltReason::HaltInstruction},
+    runState_ {Interfaces::CpuController::CpuRunState::HALT},
+    haltReason_ {Interfaces::CpuController::HaltReason::HaltInstruction},
     traceFlag_ {false}
 {
     executor_ = make_unique<TExecutor> (cpuData, this, mmu);
@@ -75,9 +75,9 @@ void CompositeCpuController<TExecutor, TCalculator, THaltMode,
 template <isExecutor TExecutor, typename TCalculator, isHaltMode THaltMode,
     isProcessorExceptionHandler TProcessorExceptionHandler>
 void CompositeCpuController<TExecutor, TCalculator, THaltMode,
-    TProcessorExceptionHandler>::halt (CpuControl::HaltReason reason)
+    TProcessorExceptionHandler>::halt (Interfaces::CpuController::HaltReason reason)
 {
-    runState_ = CpuControl::CpuRunState::HALT;
+    runState_ = Interfaces::CpuController::CpuRunState::HALT;
     haltReason_ = reason;
     bus_->SRUN ().set (false);
     trace.cpuEvent (CpuEventRecordType::CPU_HALT, cpuData_->registers ()[7]);
@@ -89,7 +89,7 @@ void CompositeCpuController<TExecutor, TCalculator, THaltMode,
     TProcessorExceptionHandler>::wait ()
 {
     trace.cpuEvent (CpuEventRecordType::CPU_WAIT, cpuData_->registers ()[7]);
-    runState_ = CpuControl::CpuRunState::WAIT;
+    runState_ = Interfaces::CpuController::CpuRunState::WAIT;
 }
 
 // Start the processor at the given address
@@ -99,7 +99,7 @@ void CompositeCpuController<TExecutor, TCalculator, THaltMode,
     TProcessorExceptionHandler>::start (u16 address)
 {
     cpuData_->registers ()[7] = address;
-    runState_ = CpuControl::CpuRunState::RUN;
+    runState_ = Interfaces::CpuController::CpuRunState::RUN;
     bus_->SRUN ().set (true);
     trace.cpuEvent (CpuEventRecordType::CPU_ODT_G, address);
 }
@@ -110,7 +110,7 @@ template <isExecutor TExecutor, typename TCalculator, isHaltMode THaltMode,
 void CompositeCpuController<TExecutor, TCalculator, THaltMode,
     TProcessorExceptionHandler>::proceed ()
 {
-    runState_ = CpuControl::CpuRunState::RUN;
+    runState_ = Interfaces::CpuController::CpuRunState::RUN;
     bus_->SRUN ().set (true);
     trace.cpuEvent (CpuEventRecordType::CPU_ODT_P, cpuData_->registers ()[7]);
 }
@@ -133,7 +133,7 @@ bool CompositeCpuController<TExecutor, TCalculator, THaltMode,
 
 template <isExecutor TExecutor, typename TCalculator, isHaltMode THaltMode,
     isProcessorExceptionHandler TProcessorExceptionHandler>
-constexpr CpuControl::HaltReason CompositeCpuController<TExecutor, TCalculator, THaltMode,
+constexpr Interfaces::CpuController::HaltReason CompositeCpuController<TExecutor, TCalculator, THaltMode,
     TProcessorExceptionHandler>::haltReason ()
 {
     return haltReason_;
@@ -166,7 +166,7 @@ constexpr CpuControl::HaltReason CompositeCpuController<TExecutor, TCalculator, 
 //
 template <isExecutor TExecutor, typename TCalculator, isHaltMode THaltMode,
     isProcessorExceptionHandler TProcessorExceptionHandler>
-CpuControl::CpuRunState CompositeCpuController<TExecutor, TCalculator, THaltMode,
+Interfaces::CpuController::CpuRunState CompositeCpuController<TExecutor, TCalculator, THaltMode,
     TProcessorExceptionHandler>::execute ()
 {
     // If there is a pending bus interrupt that can be executed, process

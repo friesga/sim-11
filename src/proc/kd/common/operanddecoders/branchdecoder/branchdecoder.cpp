@@ -1,6 +1,6 @@
 #include "branchdecoder.h"
 
-BranchDecoder::BranchDecoder (CpuData* cpuData, CpuControl* cpuControl,
+BranchDecoder::BranchDecoder (CpuData* cpuData, Interfaces::CpuController* cpuControl,
         MMU* mmu, BranchInstruction* instruction)
     :
     BaseOperandDecoder (cpuData, cpuControl, mmu),

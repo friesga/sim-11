@@ -9,7 +9,7 @@
 class KDF11_Executor
 {
 public:
-    KDF11_Executor (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu);
+    KDF11_Executor (CpuData* cpuData, Interfaces::CpuController* cpuControl, MMU* mmu);
 
 	template <typename T>
 	bool operator() (T& instr);
@@ -17,7 +17,7 @@ public:
 private:
 	Common::Executor commonExecutor_;
 	CpuData* cpuData_;
-    CpuControl* cpuControl_;
+    Interfaces::CpuController* cpuControl_;
     MMU* mmu_;
 
     OperandDecoderFactory operandDecoderFactory_ {cpuData_, cpuControl_, mmu_};

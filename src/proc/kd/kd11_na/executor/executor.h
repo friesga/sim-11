@@ -9,7 +9,7 @@
 class KD11_NA_Executor
 {
 public:
-    KD11_NA_Executor (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu);
+    KD11_NA_Executor (CpuData* cpuData, Interfaces::CpuController* cpuControl, MMU* mmu);
 
 	// The operator() function is specialized for the instructions specific
     // for the KD11-NA. The definition of these specializations is rather

@@ -20,14 +20,14 @@ using std::monostate;
 class KDF11_ODT : public KD11ODT
 {
 public:
-    KDF11_ODT (Bus* bus, CpuData* cpuData, CpuControl* cpuControl,
+    KDF11_ODT (Bus* bus, CpuData* cpuData, Interfaces::CpuController* cpuControl,
         MMU* mmu, unique_ptr<ConsoleAccess> consoleAccess, bool haltCmdSupported);
 
     // Definition of the function required by the KD11ODT interface
     bool processCharacter (u8 character) override;
 
     static unique_ptr<KDF11_ODT> createODT (Bus *bus, CpuData* cpuData,
-        CpuControl* cpuControl, MMU* mmu,
+        Interfaces::CpuController* cpuControl, MMU* mmu,
         unique_ptr<ConsoleAccess> consoleAccess, bool haltCmdSupported);
 
 private:
@@ -121,7 +121,7 @@ private:
 
     Bus* bus_;
     CpuData* cpuData_;
-    CpuControl* cpuControl_;
+    Interfaces::CpuController* cpuControl_;
     MMU* mmu_;
     unique_ptr<ConsoleAccess> console_;
     bool haltCmdSupported_;

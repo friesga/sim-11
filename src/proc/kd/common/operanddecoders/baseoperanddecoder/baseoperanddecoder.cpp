@@ -3,7 +3,7 @@
 using std::runtime_error;
 
 BaseOperandDecoder::BaseOperandDecoder (CpuData* cpuData,
-    CpuControl* cpuControl, MMU* mmu)
+    Interfaces::CpuController* cpuControl, MMU* mmu)
     :
     cpuData_ {cpuData},
     cpuControl_ {cpuControl},

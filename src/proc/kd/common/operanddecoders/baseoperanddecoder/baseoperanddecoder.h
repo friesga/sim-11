@@ -10,11 +10,11 @@
 class BaseOperandDecoder
 {
 public:
-    BaseOperandDecoder (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu);
+    BaseOperandDecoder (CpuData* cpuData, Interfaces::CpuController* cpuControl, MMU* mmu);
     
 protected:
     CpuData* cpuData_;
-    CpuControl* cpuControl_;
+    Interfaces::CpuController* cpuControl_;
     MMU* mmu_;
 
     OperandLocation decodeOperand (u16 opCode, Operand operand,

@@ -1,6 +1,6 @@
 #include "executor.h"
 
-Common::Executor::Executor (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu)
+Common::Executor::Executor (CpuData* cpuData, Interfaces::CpuController* cpuControl, MMU* mmu)
     :
     cpuData_ {cpuData},
     cpuControl_ {cpuControl},

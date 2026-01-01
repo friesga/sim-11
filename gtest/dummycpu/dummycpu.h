@@ -10,7 +10,7 @@ class DummyCpu
 {
 public:
     // Give unit tests access to the CPU, CpuData and the MMU.
-    constexpr CpuControl* cpuControl () { return &cpuControl_; };
+    constexpr Interfaces::CpuController* cpuControl () { return &cpuControl_; };
     constexpr CpuData* cpuData () { return &cpuData_; };
     constexpr MMU* mmu () { return &dummyMMU_; };
 

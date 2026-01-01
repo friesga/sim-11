@@ -3,13 +3,13 @@
 
 #include "proc/include/cpucontrol.h"
 
-class DummyCpuControl : public CpuControl
+class DummyCpuControl : public Interfaces::CpuController
 {
 public:
     // Definitions required for the CpuControl interface
     void cpuReset () {};
     void busReset () {};
-    void halt (CpuControl::HaltReason reason) {};
+    void halt (Interfaces::CpuController::HaltReason reason) {};
     void setHaltMode (bool haltMode) {};
     bool inHaltMode () { return false; };
     void wait () {};

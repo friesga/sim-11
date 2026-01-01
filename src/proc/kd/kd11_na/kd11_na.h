@@ -40,7 +40,7 @@ public:
     void start ();
 
     // Give unit tests access to the CPU, CpuData and the MMU.
-    constexpr CpuControl* cpuControl ();
+    constexpr Interfaces::CpuController* cpuControl ();
     constexpr CpuData* cpuData ();
     constexpr MMU* mmu ();
 
@@ -74,7 +74,7 @@ private:
     std::thread kd11Thread_;
 };
 
-constexpr CpuControl* KD11_NA::cpuControl ()
+constexpr Interfaces::CpuController* KD11_NA::cpuControl ()
 {
     return &cpuControl_;
 }

@@ -10,7 +10,7 @@
 class SingleOperandDecoder : BaseOperandDecoder
 {
 public:
-    SingleOperandDecoder (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu,
+    SingleOperandDecoder (CpuData* cpuData, Interfaces::CpuController* cpuControl, MMU* mmu,
 		SingleOperandInstruction* instr);
 
 	OperandLocation getOperandLocation (GeneralRegisters &reg);

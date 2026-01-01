@@ -10,7 +10,7 @@
 class BranchDecoder : public BaseOperandDecoder
 {
 public:
-	BranchDecoder (CpuData* cpuData, CpuControl* cpuControl, MMU* mmu,
+	BranchDecoder (CpuData* cpuData, Interfaces::CpuController* cpuControl, MMU* mmu,
 		BranchInstruction* instruction);
 
 	constexpr void executeBranchIf (bool condition);

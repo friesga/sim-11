@@ -16,7 +16,7 @@ using std::unique_ptr;
 class KD11ODT
 {
 public:
-    using Creator = function<unique_ptr<KD11ODT>(Bus*, CpuData*, CpuControl*,
+    using Creator = function<unique_ptr<KD11ODT>(Bus*, CpuData*, Interfaces::CpuController*,
         MMU*, unique_ptr<ConsoleAccess>, bool)>;
 
     virtual bool processCharacter (u8 character) = 0;

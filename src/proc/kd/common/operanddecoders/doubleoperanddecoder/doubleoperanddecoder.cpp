@@ -6,7 +6,7 @@
 // we need a return value for the retrieval.
 // 
 // Initialize the instr struct with the first member
-DoubleOperandDecoder::DoubleOperandDecoder (CpuData* cpuData, CpuControl* cpuControl,
+DoubleOperandDecoder::DoubleOperandDecoder (CpuData* cpuData, Interfaces::CpuController* cpuControl,
 		MMU* mmu, DoubleOperandInstruction* instruction)
 	:
 	BaseOperandDecoder (cpuData, cpuControl, mmu),

@@ -8,7 +8,7 @@
 #include "proc/common/composite_cpucontroller/composite_cpucontroller.h"
 #include "proc/kd/kd11_na/executor/executor.h"
 #include "proc/kd/kd11_na/calculate/calculate.h"
-#include "proc/common/basicprocessorexception/basicprocessorexception.h"
+#include "proc/common/basicprocessorexceptionhandler/basicprocessorexceptionhandler.h"
 
 #include <gtest/gtest.h>
 #include <memory>
