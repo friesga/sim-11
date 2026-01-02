@@ -5,7 +5,7 @@
 #include "proc/include/cpucontrol.h"
 #include "proc/kd/include/mmu.h"
 #include "proc/kd/common/operandlocation/operandlocation.h"
-#include "proc/kd/common/operand/operand.h"
+#include "proc/common/operand/operand.h"
 
 class BaseOperandDecoder
 {

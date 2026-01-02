@@ -1,5 +1,5 @@
 #include "singleoperandinstruction.h"
-#include "proc/kd/common/operand/operand.h"
+#include "proc/common/operand/operand.h"
 
 // Initialize the instr struct with the first member
 SingleOperandInstruction::SingleOperandInstruction (u16 instruction)

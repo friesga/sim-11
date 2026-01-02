@@ -1,5 +1,5 @@
 #include "eisinstruction.h"
-#include "proc/kd/common/operand/operand.h"
+#include "proc/common/operand/operand.h"
 
 EisInstruction::EisInstruction (u16 instruction)
     :
