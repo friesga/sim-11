@@ -4,7 +4,7 @@
 #include "types.h"
 #include "conddata/conddata.h"
 #include "bus/interruptrequest/interruptrequest.h"
-#include "proc/kd/include/generalregisters.h"
+#include "proc/include/generalregisters.h"
 #include "proc/kd/include/psw.h"
 #include "proc/common/conditioncodes/conditioncodes.h"
 #include "trace/trace.h"

@@ -1,7 +1,7 @@
 #ifndef _KDF11_AREGISTERS_H_
 #define _KDF11_AREGISTERS_H_
 
-#include "proc/kd/include/generalregisters.h"
+#include "proc/include/generalregisters.h"
 #include "proc/kd/include/psw.h"
 
 // This class implements the general register set for the KDF11_A/B. This

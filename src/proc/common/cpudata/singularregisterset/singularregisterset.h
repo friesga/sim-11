@@ -1,7 +1,7 @@
 #ifndef _SINGULARREGISTERSET_H_
 #define _SINGULARREGISTERSET_H_
 
-#include "proc/kd/include/generalregisters.h"
+#include "proc/include/generalregisters.h"
 
 // This class implements a singular register set, i.e. it contains just a 
 // single copy of R0-R7. This set is used by the KD11-NA and KA11 processors.
