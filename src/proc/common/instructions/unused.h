@@ -3,7 +3,7 @@
 
 
 #include "proc/common/instructionformats/nooperandinstruction/nooperandinstruction.h"
-#include "proc/kd/include/cpudata.h"
+#include "proc/include/cpudata.h"
 #include "proc/include/cpucontrol.h"
 #include "proc/common/operandlocation/operandlocation.h"
 #include "trace/trace.h"

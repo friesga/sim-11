@@ -3,7 +3,7 @@
 
 #include "types.h"
 #include "bus/include/bus.h"
-#include "proc/kd/include/cpudata.h"
+#include "proc/include/cpudata.h"
 #include "proc/include/cpucontrol.h"
 #include "proc/kd/include/mmu.h"
 #include "proc/kd/common/odt/operatorconsoleaccess/operatorconsoleaccess.h"

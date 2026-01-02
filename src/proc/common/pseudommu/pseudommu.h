@@ -4,7 +4,7 @@
 #include "proc/kd/include/mmu.h"
 #include "bus/include/bus.h"
 #include "conddata/conddata.h"
-#include "proc/kd/include/cpudata.h"
+#include "proc/include/cpudata.h"
 
 //
 // Pseudo: being apparently rather than actually as stated 

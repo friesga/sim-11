@@ -1,7 +1,7 @@
 #ifndef _KDCPUDATA_H_
 #define _KDCPUDATA_H_
 
-#include "proc/kd/include/cpudata.h"
+#include "proc/include/cpudata.h"
 #include "types.h"
 #include "trace/trace.h"
 

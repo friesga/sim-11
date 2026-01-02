@@ -1,7 +1,7 @@
 #ifndef _REGISTEROPERANDLOCATION_H_
 #define _REGISTEROPERANDLOCATION_H_
 
-#include "proc/kd/include/cpudata.h"
+#include "proc/include/cpudata.h"
 #include "conddata/conddata.h"
 
 #include <type_traits>

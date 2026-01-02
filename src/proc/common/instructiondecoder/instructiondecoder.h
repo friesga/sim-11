@@ -2,7 +2,7 @@
 #define _INSTRUCTIONDECODER_H_
 
 #include "proc/common/instructionformats/pdp11instruction/pdp11instruction.h"
-#include "proc/kd/include/cpudata.h"
+#include "proc/include/cpudata.h"
 #include "proc/common/instructions/instructions.h"
 
 // This class decodes and executes the PDP-11 instructions. To this

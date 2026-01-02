@@ -2,7 +2,7 @@
 #define _KDF11PROCESSOREXCEPTIONHANDLER_H_
 
 #include "bus/include/bus.h"
-#include "proc/kd/include/cpudata.h"
+#include "proc/include/cpudata.h"
 #include "proc/kd/include/mmu.h"
 #include "proc/include/cpucontrol.h"
 

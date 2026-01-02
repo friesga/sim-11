@@ -6,7 +6,7 @@
 #include "memoryoperandlocation/memoryoperandlocation.h"
 
 #include "types.h"
-#include "proc/kd/include/cpudata.h"
+#include "proc/include/cpudata.h"
 #include "conddata/conddata.h"
 
 #include <variant>

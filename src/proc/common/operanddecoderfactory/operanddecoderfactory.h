@@ -1,7 +1,7 @@
 #ifndef _OPERANDDECODERFACTORY_
 #define _OPERANDDECODERFACTORY_
 
-#include "proc/kd/include/cpudata.h"
+#include "proc/include/cpudata.h"
 #include "proc/include/cpucontrol.h"
 #include "proc/kd/include/mmu.h"
 #include "proc/common/operanddecoders/singleoperanddecoder/singleoperanddecoder.h"

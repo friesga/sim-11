@@ -1,7 +1,7 @@
 #ifndef _MEMORYOPERANDLOCATION_H_
 #define _MEMORYOPERANDLOCATION_H_
 
-#include "proc/kd/include/cpudata.h"
+#include "proc/include/cpudata.h"
 #include "proc/kd/include/mmu.h"
 #include "conddata/conddata.h"
 

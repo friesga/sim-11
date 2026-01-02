@@ -1,7 +1,7 @@
 #ifndef _BASEOPERANDDECODER_H_
 #define _BASEOPERANDDECODER_H_
 
-#include "proc/kd/include/cpudata.h"
+#include "proc/include/cpudata.h"
 #include "proc/include/cpucontrol.h"
 #include "proc/kd/include/mmu.h"
 #include "proc/common/operandlocation/operandlocation.h"

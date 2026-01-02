@@ -3,7 +3,7 @@
 
 
 #include "proc/common/instructionformats/eisinstruction/eisinstruction.h"
-#include "proc/kd/include/cpudata.h"
+#include "proc/include/cpudata.h"
 #include "proc/common/operandlocation/operandlocation.h"
 
 

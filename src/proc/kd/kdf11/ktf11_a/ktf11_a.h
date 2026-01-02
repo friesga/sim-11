@@ -2,7 +2,7 @@
 #define _KTF11A_H_
 
 #include "bus/qbus/qbus.h"
-#include "proc/kd/include/cpudata.h"
+#include "proc/include/cpudata.h"
 #include "proc/kd/include/mmu.h"
 #include "abstractbusdevice/abstractbusdevice.h"
 #include "ktf11_a_activepageregisterset.h"

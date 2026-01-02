@@ -2,7 +2,7 @@
 #define _MFPD_H_
 
 #include "proc/common/instructionformats/singleoperandinstruction/singleoperandinstruction.h"
-#include "proc/kd/include/cpudata.h"
+#include "proc/include/cpudata.h"
 #include "proc/include/cpucontrol.h"
 #include "proc/common/operandlocation/operandlocation.h"
 
