@@ -1,4 +1,4 @@
-#include "proc/kd/common/conditioncodes/conditioncodes.h"
+#include "proc/common/conditioncodes/conditioncodes.h"
 
 #include <gtest/gtest.h>
 

@@ -6,7 +6,7 @@
 #include "bus/interruptrequest/interruptrequest.h"
 #include "proc/kd/include/generalregisters.h"
 #include "proc/kd/include/psw.h"
-#include "proc/kd/common/conditioncodes/conditioncodes.h"
+#include "proc/common/conditioncodes/conditioncodes.h"
 #include "trace/trace.h"
 
 // This interface provides access to the CPU data the instruction classes
