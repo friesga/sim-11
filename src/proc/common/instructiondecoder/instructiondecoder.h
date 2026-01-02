@@ -5,7 +5,7 @@
 #include "proc/kd/include/cpudata.h"
 #include "proc/kd/common/instructions/instructions.h"
 
-// This class decodes and executes the KD11_NA the instructions. To this
+// This class decodes and executes the PDP-11 instructions. To this
 // purpose we use an operation code table with function pointers as that
 // allows to have different versions of an instruction for the different
 // CPU types.

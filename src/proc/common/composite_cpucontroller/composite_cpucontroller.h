@@ -5,7 +5,7 @@
 #include "proc/kd/include/cpudata.h"
 #include "proc/include/cpucontrol.h"
 #include "proc/kd/include/mmu.h"
-#include "proc/kd/common/instructiondecoder/instructiondecoder.h"
+#include "proc/common/instructiondecoder/instructiondecoder.h"
 
 #include <memory>
 

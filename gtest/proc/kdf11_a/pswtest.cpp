@@ -1,4 +1,4 @@
-#include "proc/kd/common/instructiondecoder/instructiondecoder.h"
+#include "proc/common/instructiondecoder/instructiondecoder.h"
 #include "proc/kd/kdf11/executor/executor.h"
 
 #include "bus/qbus/qbus.h"

@@ -18,8 +18,6 @@ set (KD11COMMON_SRCS
     operanddecoders/branchdecoder/branchdecoder.cpp
     operanddecoders/doubleoperanddecoder/doubleoperanddecoder.cpp
     operanddecoders/eisdecoder/eisdecoder.cpp
-    instructiondecoder/instructiondecoder.cpp
-    instructiondecoder/opcodetables.cpp
     odt/operatorconsoleaccess/operatorconsoleaccess.cpp)
 
 set (KDMACHINESTATE_SRCS
