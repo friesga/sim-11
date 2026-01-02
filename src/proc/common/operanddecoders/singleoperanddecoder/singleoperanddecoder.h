@@ -1,7 +1,7 @@
 #ifndef _SINGLEOPERANDDECODER_H_
 #define _SINGLEOPERANDDECODER_H_
 
-#include "proc/kd/common/operanddecoders/baseoperanddecoder/baseoperanddecoder.h"
+#include "proc/common/operanddecoders/baseoperanddecoder/baseoperanddecoder.h"
 #include "proc/common/instructionformats/singleoperandinstruction/singleoperandinstruction.h"
 #include "proc/kd/include/cpudata.h"
 #include "proc/include/cpucontrol.h"

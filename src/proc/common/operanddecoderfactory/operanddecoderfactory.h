@@ -4,11 +4,11 @@
 #include "proc/kd/include/cpudata.h"
 #include "proc/include/cpucontrol.h"
 #include "proc/kd/include/mmu.h"
-#include "proc/kd/common/operanddecoders/singleoperanddecoder/singleoperanddecoder.h"
-#include "proc/kd/common/operanddecoders/branchdecoder/branchdecoder.h"
-#include "proc/kd/common/operanddecoders/doubleoperanddecoder/doubleoperanddecoder.h"
-#include "proc/kd/common/operanddecoders/eisdecoder/eisdecoder.h"
-#include "proc/kd/common/operanddecoders/singleoperanddecoder/singleoperanddecoder.h"
+#include "proc/common/operanddecoders/singleoperanddecoder/singleoperanddecoder.h"
+#include "proc/common/operanddecoders/branchdecoder/branchdecoder.h"
+#include "proc/common/operanddecoders/doubleoperanddecoder/doubleoperanddecoder.h"
+#include "proc/common/operanddecoders/eisdecoder/eisdecoder.h"
+#include "proc/common/operanddecoders/singleoperanddecoder/singleoperanddecoder.h"
 
 #include <memory>
 

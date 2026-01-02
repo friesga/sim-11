@@ -3,11 +3,6 @@ set (KD11COMMON_SRCS
     operandlocation/emptyoperandlocation/emptyoperandlocation.cpp
     operandlocation/registeroperandlocation/registeroperandlocation.cpp
     operandlocation/memoryoperandlocation/memoryoperandlocation.cpp
-    operanddecoders/baseoperanddecoder/baseoperanddecoder.cpp
-    operanddecoders/singleoperanddecoder/singleoperanddecoder.cpp
-    operanddecoders/branchdecoder/branchdecoder.cpp
-    operanddecoders/doubleoperanddecoder/doubleoperanddecoder.cpp
-    operanddecoders/eisdecoder/eisdecoder.cpp
     odt/operatorconsoleaccess/operatorconsoleaccess.cpp)
 
 set (KDMACHINESTATE_SRCS

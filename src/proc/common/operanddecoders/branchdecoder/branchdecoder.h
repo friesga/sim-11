@@ -1,7 +1,7 @@
 #ifndef _BRANCHDECODER_H_
 #define _BRANCHDECODER_H_
 
-#include "proc/kd/common/operanddecoders/baseoperanddecoder/baseoperanddecoder.h"
+#include "proc/common/operanddecoders/baseoperanddecoder/baseoperanddecoder.h"
 #include "proc/common/instructionformats/branchinstruction/branchinstruction.h"
 #include "proc/kd/include/cpudata.h"
 #include "proc/include/cpucontrol.h"
