@@ -4,7 +4,7 @@
 
 #include "proc/common/instructionformats/eisinstruction/eisinstruction.h"
 #include "proc/kd/include/cpudata.h"
-#include "proc/kd/common/operandlocation/operandlocation.h"
+#include "proc/common/operandlocation/operandlocation.h"
 
 
 // JSR - jump to subroutine

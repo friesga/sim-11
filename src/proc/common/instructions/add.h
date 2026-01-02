@@ -4,7 +4,7 @@
 
 #include "proc/common/instructionformats/doubleoperandinstruction/doubleoperandinstruction.h"
 #include "proc/kd/include/cpudata.h"
-#include "proc/kd/common/operandlocation/operandlocation.h"
+#include "proc/common/operandlocation/operandlocation.h"
 
 
 // ADD - add source to destination

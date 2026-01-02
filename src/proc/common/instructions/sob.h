@@ -4,7 +4,7 @@
 
 #include "proc/common/instructionformats/sobinstruction/sobinstruction.h"
 #include "proc/kd/include/cpudata.h"
-#include "proc/kd/common/operandlocation/operandlocation.h"
+#include "proc/common/operandlocation/operandlocation.h"
 
 
 // SOB - subtract one and branch (if != 0)

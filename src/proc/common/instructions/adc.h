@@ -3,7 +3,7 @@
 
 #include "proc/common/instructionformats/singleoperandinstruction/singleoperandinstruction.h"
 #include "proc/kd/include/cpudata.h"
-#include "proc/kd/common/operandlocation/operandlocation.h"
+#include "proc/common/operandlocation/operandlocation.h"
 
 
 // ADC - add carry

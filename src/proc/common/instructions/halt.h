@@ -5,7 +5,7 @@
 #include "proc/common/instructionformats/nooperandinstruction/nooperandinstruction.h"
 #include "proc/kd/include/cpudata.h"
 #include "proc/include/cpucontrol.h"
-#include "proc/kd/common/operandlocation/operandlocation.h"
+#include "proc/common/operandlocation/operandlocation.h"
 
 
 // HALT - halt

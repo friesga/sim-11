@@ -4,7 +4,7 @@
 
 #include "proc/common/instructionformats/fisinstruction/fisinstruction.h"
 #include "proc/kd/include/cpudata.h"
-#include "proc/kd/common/operandlocation/operandlocation.h"
+#include "proc/common/operandlocation/operandlocation.h"
 
 
 // FDIV - floating divide

@@ -2,7 +2,7 @@
 #define _MARKINSTRUCTION_H_
 
 #include "proc/common/instructionformats/pdp11instruction/pdp11instruction.h"
-#include "proc/kd/common/operandlocation/operandlocation.h"
+#include "proc/common/operandlocation/operandlocation.h"
 
 class MarkInstruction : public PDP11Instruction
 {

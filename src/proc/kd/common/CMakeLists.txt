@@ -1,8 +1,4 @@
 set (KD11COMMON_SRCS
-    operandlocation/operandlocation.cpp
-    operandlocation/emptyoperandlocation/emptyoperandlocation.cpp
-    operandlocation/registeroperandlocation/registeroperandlocation.cpp
-    operandlocation/memoryoperandlocation/memoryoperandlocation.cpp
     odt/operatorconsoleaccess/operatorconsoleaccess.cpp)
 
 set (KDMACHINESTATE_SRCS

@@ -4,7 +4,7 @@
 
 #include "proc/common/instructionformats/branchinstruction/branchinstruction.h"
 #include "proc/kd/include/cpudata.h"
-#include "proc/kd/common/operandlocation/operandlocation.h"
+#include "proc/common/operandlocation/operandlocation.h"
 
 
 // BLT - branch if less than (zero)

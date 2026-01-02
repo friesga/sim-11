@@ -14,6 +14,10 @@ set (PROC_COMMON_SRCS
     operanddecoders/branchdecoder/branchdecoder.cpp
     operanddecoders/doubleoperanddecoder/doubleoperanddecoder.cpp
     operanddecoders/eisdecoder/eisdecoder.cpp
+    operandlocation/operandlocation.cpp
+    operandlocation/emptyoperandlocation/emptyoperandlocation.cpp
+    operandlocation/registeroperandlocation/registeroperandlocation.cpp
+    operandlocation/memoryoperandlocation/memoryoperandlocation.cpp
     instructiondecoder/instructiondecoder.cpp
     instructiondecoder/opcodetables.cpp
     instructionformats/nooperandinstruction/nooperandinstruction.cpp
