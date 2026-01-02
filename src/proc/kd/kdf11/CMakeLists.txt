@@ -1,7 +1,7 @@
 set (KDF11_SRCS
     kdf11_a/kdf11_a.cpp
     executor/executor.cpp
-    calculate/calculate.cpp
+    calculator/calculator.cpp
     kdf11_b/kdf11_b.cpp
     kdf11_u/kdf11_u.cpp
     kdf11_u/displayregister/displayregister.cpp

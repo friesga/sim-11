@@ -8,7 +8,7 @@
 #include "proc/common/pseudo_haltmode/pseudo_haltmode.h"
 #include "proc/common/basicprocessorexceptionhandler/basicprocessorexceptionhandler.h"
 #include "proc/kd/kdf11/executor/executor.h"
-#include "proc/kd/kdf11/calculate/calculate.h"
+#include "proc/kd/kdf11/calculator/calculator.h"
 #include "proc/kd/kdf11/haltmode/haltmode.h"
 #include "proc/kd/kdf11/kdf11processorexceptionhandler/kdf11processorexceptionhandler.h"
 
@@ -277,5 +277,5 @@ void CompositeCpuController<TExecutor, TCalculator, THaltMode,
 // a separate .cpp file.
 template class CompositeCpuController<KD11_NA_Executor, KD11_NA_Calculator,
     PseudoHaltMode, BasicProcessorExceptionHandler>;
-template class CompositeCpuController<KDF11_Executor, KDF11_Calculate,
+template class CompositeCpuController<KDF11_Executor, KDF11_Calculator,
     KDF11_HaltMode, KDF11ProcessorExceptionHandler>;

@@ -10,7 +10,7 @@
 #include "devicecommon/registerhandler/registerhandler.h"
 #include "proc/common/composite_cpucontroller/composite_cpucontroller.h"
 #include "proc/kd/kdf11/executor/executor.h"
-#include "proc/kd/kdf11/calculate/calculate.h"
+#include "proc/kd/kdf11/calculator/calculator.h"
 #include "proc/kd/kdf11/haltmode/haltmode.h"
 #include "proc/kd/kdf11/kdf11processorexceptionhandler/kdf11processorexceptionhandler.h"
 
@@ -62,7 +62,7 @@ private:
     // Definition of the KDF11-A components. The KTF11-A (MMU) is optional.
     KDF11CpuData cpuData_ {};
     KTF11_A mmu_ {bus_, &cpuData_};
-    CompositeCpuController<KDF11_Executor, KDF11_Calculate,
+    CompositeCpuController<KDF11_Executor, KDF11_Calculator,
         KDF11_HaltMode, KDF11ProcessorExceptionHandler> cpuControl_ {bus_, &cpuData_, &mmu_};
     unique_ptr<KDMachineState> machineState_;
 

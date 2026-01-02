@@ -1,15 +1,15 @@
-#ifndef _KDF11_CALCULATE_H_
-#define _KDF11_CALCULATE_H_
+#ifndef _KDF11_CALCULATOR_H_
+#define _KDF11_CALCULATOR_H_
 
 #include "proc/common/addressingmodetimes/addressingmodetimes.h"
-#include "proc/kd/kdf11/calculate/kdf11_addressingmodetime.h"
+#include "proc/kd/kdf11/calculator/kdf11_addressingmodetime.h"
 #include "proc/common/instructions/instructions.h"
 
 #include <array>
 
 using std::array;
 
-class KDF11_Calculate
+class KDF11_Calculator
 {
 public:
 	// Single operand instructions
@@ -226,4 +226,4 @@ private:
 };
 
 
-#endif // !_KDF11_CALCULATE_H_
+#endif // !_KDF11_CALCULATOR_H_
