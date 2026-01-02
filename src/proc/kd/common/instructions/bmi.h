@@ -2,7 +2,7 @@
 #define _BMI_H_
 
 
-#include "proc/kd/common/instructionformats/branchinstruction/branchinstruction.h"
+#include "proc/common/instructionformats/branchinstruction/branchinstruction.h"
 #include "proc/kd/include/cpudata.h"
 #include "proc/kd/common/operandlocation/operandlocation.h"
 

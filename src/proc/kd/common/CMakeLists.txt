@@ -3,15 +3,6 @@ set (KD11COMMON_SRCS
     operandlocation/emptyoperandlocation/emptyoperandlocation.cpp
     operandlocation/registeroperandlocation/registeroperandlocation.cpp
     operandlocation/memoryoperandlocation/memoryoperandlocation.cpp
-    instructionformats/nooperandinstruction/nooperandinstruction.cpp
-    instructionformats/singleoperandinstruction/singleoperandinstruction.cpp
-    instructionformats/doubleoperandinstruction/doubleoperandinstruction.cpp
-    instructionformats/fisinstruction/fisinstruction.cpp
-    instructionformats/ccinstruction/ccinstruction.cpp
-    instructionformats/branchinstruction/branchinstruction.cpp
-    instructionformats/eisinstruction/eisinstruction.cpp
-    instructionformats/markinstruction/markinstruction.cpp
-    instructionformats/sobinstruction/sobinstruction.cpp
     operanddecoderfactory/operanddecoderfactory.cpp
     operanddecoders/baseoperanddecoder/baseoperanddecoder.cpp
     operanddecoders/singleoperanddecoder/singleoperanddecoder.cpp

@@ -2,7 +2,7 @@
 #define _FMUL_H_
 
 
-#include "proc/kd/common/instructionformats/fisinstruction/fisinstruction.h"
+#include "proc/common/instructionformats/fisinstruction/fisinstruction.h"
 #include "proc/kd/include/cpudata.h"
 #include "proc/kd/common/operandlocation/operandlocation.h"
 

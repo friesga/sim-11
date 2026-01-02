@@ -2,7 +2,7 @@
 #define _SCC_H_
 
 
-#include "proc/kd/common/instructionformats/ccinstruction/ccinstruction.h"
+#include "proc/common/instructionformats/ccinstruction/ccinstruction.h"
 #include "proc/kd/include/cpudata.h"
 #include "proc/kd/common/operandlocation/operandlocation.h"
 

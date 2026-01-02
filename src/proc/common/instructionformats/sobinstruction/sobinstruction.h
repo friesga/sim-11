@@ -1,7 +1,7 @@
 #ifndef _SOBINSTRUCTION_H_
 #define _SOBINSTRUCTION_H_
 
-#include "proc/kd/common/instructionformats/pdp11instruction/pdp11instruction.h"
+#include "proc/common/instructionformats/pdp11instruction/pdp11instruction.h"
 
 class SobInstruction : public PDP11Instruction
 {

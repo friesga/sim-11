@@ -2,7 +2,7 @@
 #define _XOR_H_
 
 
-#include "proc/kd/common/instructionformats/eisinstruction/eisinstruction.h"
+#include "proc/common/instructionformats/eisinstruction/eisinstruction.h"
 #include "proc/kd/include/cpudata.h"
 #include "proc/kd/common/operandlocation/operandlocation.h"
 

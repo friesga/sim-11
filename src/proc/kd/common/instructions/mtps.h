@@ -2,7 +2,7 @@
 #define _MTPS_H_
 
 
-#include "proc/kd/common/instructionformats/singleoperandinstruction/singleoperandinstruction.h"
+#include "proc/common/instructionformats/singleoperandinstruction/singleoperandinstruction.h"
 #include "proc/kd/include/cpudata.h"
 #include "proc/kd/common/operandlocation/operandlocation.h"
 

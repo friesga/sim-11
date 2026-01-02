@@ -2,7 +2,7 @@
 #define _CMPB_H_
 
 
-#include "proc/kd/common/instructionformats/doubleoperandinstruction/doubleoperandinstruction.h"
+#include "proc/common/instructionformats/doubleoperandinstruction/doubleoperandinstruction.h"
 #include "proc/kd/include/cpudata.h"
 #include "proc/kd/common/operandlocation/operandlocation.h"
 

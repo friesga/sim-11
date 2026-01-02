@@ -9,7 +9,16 @@ set (PROC_COMMON_SRCS
     pseudommu/pseudommu.cpp
     pseudo_haltmode/pseudo_haltmode.cpp
     instructiondecoder/instructiondecoder.cpp
-    instructiondecoder/opcodetables.cpp)
+    instructiondecoder/opcodetables.cpp
+    instructionformats/nooperandinstruction/nooperandinstruction.cpp
+    instructionformats/singleoperandinstruction/singleoperandinstruction.cpp
+    instructionformats/doubleoperandinstruction/doubleoperandinstruction.cpp
+    instructionformats/fisinstruction/fisinstruction.cpp
+    instructionformats/ccinstruction/ccinstruction.cpp
+    instructionformats/branchinstruction/branchinstruction.cpp
+    instructionformats/eisinstruction/eisinstruction.cpp
+    instructionformats/markinstruction/markinstruction.cpp
+    instructionformats/sobinstruction/sobinstruction.cpp)
 
 target_sources (${TARGET} PRIVATE ${PROC_COMMON_SRCS})
 target_sources (sim-11-test PRIVATE ${PROC_COMMON_SRCS})

@@ -1,7 +1,7 @@
 #ifndef _FISINSTRUCTION_H_
 #define _FISINSTRUCTION_H_
 
-#include "proc/kd/common/instructionformats/pdp11instruction/pdp11instruction.h"
+#include "proc/common/instructionformats/pdp11instruction/pdp11instruction.h"
 #include "float/float.h"
 
 #include <functional>

@@ -1,7 +1,7 @@
 #ifndef _CCINSTRUCTION_H_
 #define _CCINSTRUCTION_H_
 
-#include "proc/kd/common/instructionformats/pdp11instruction/pdp11instruction.h"
+#include "proc/common/instructionformats/pdp11instruction/pdp11instruction.h"
 
 class CcInstruction : public PDP11Instruction
 {
