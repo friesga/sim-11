@@ -1,7 +1,7 @@
 #ifndef _DUMMYMMU_H_
 #define _DUMMYMMU_H_
 
-#include "proc/kd/include/mmu.h"
+#include "proc/include/mmu.h"
 #include "types.h"
 
 #include <memory>

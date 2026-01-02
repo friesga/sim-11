@@ -1,7 +1,7 @@
 #ifndef _PSEUDOMMU_H_
 #define _PSEUDOMMU_H_
 
-#include "proc/kd/include/mmu.h"
+#include "proc/include/mmu.h"
 #include "bus/include/bus.h"
 #include "conddata/conddata.h"
 #include "proc/include/cpudata.h"

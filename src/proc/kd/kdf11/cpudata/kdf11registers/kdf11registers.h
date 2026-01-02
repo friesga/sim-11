@@ -2,7 +2,7 @@
 #define _KDF11_AREGISTERS_H_
 
 #include "proc/include/generalregisters.h"
-#include "proc/kd/include/psw.h"
+#include "proc/include/psw.h"
 
 // This class implements the general register set for the KDF11_A/B. This
 // processor has R0-R5, two stack pointers (R6) and R7. The stack pointer

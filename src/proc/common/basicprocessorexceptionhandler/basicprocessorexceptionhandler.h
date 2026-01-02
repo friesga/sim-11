@@ -3,7 +3,7 @@
 
 #include "bus/include/bus.h"
 #include "proc/include/cpudata.h"
-#include "proc/kd/include/mmu.h"
+#include "proc/include/mmu.h"
 #include "proc/include/cpucontrol.h"
 
 // This class implements basic processor exception handling without stack

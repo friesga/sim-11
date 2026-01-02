@@ -3,7 +3,7 @@
 
 #include "bus/include/bus.h"
 #include "proc/include/cpudata.h"
-#include "proc/kd/include/mmu.h"
+#include "proc/include/mmu.h"
 #include "proc/include/cpucontrol.h"
 
 // Functions to service a trap for processors implementing stack overflow

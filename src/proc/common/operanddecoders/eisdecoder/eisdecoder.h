@@ -5,7 +5,7 @@
 #include "proc/common/instructionformats/eisinstruction/eisinstruction.h"
 #include "proc/include/cpudata.h"
 #include "proc/include/cpucontrol.h"
-#include "proc/kd/include/mmu.h"
+#include "proc/include/mmu.h"
 
 // The EIS instruction format is used by the EIS instructions MUL, DIV, ASH
 // and ASHC instruction and additionally by the JSR and XOR instructions.

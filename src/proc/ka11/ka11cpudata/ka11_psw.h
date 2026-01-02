@@ -1,7 +1,7 @@
 #ifndef _KA11_PSW_H_
 #define _KA11_PSW_H_
 
-#include "proc/kd/include/psw.h"
+#include "proc/include/psw.h"
 #include "basicregister/basicregister.h"
 
 #include <array>

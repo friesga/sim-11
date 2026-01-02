@@ -1,5 +1,5 @@
 #include "ktf11_a.h"
-#include "proc/kd/include/psw.h"
+#include "proc/include/psw.h"
 
 KTF11_A::KTF11_A (Bus* bus, CpuData* cpuData)
     :

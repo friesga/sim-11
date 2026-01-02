@@ -2,7 +2,7 @@
 #define _MEMORYOPERANDLOCATION_H_
 
 #include "proc/include/cpudata.h"
-#include "proc/kd/include/mmu.h"
+#include "proc/include/mmu.h"
 #include "conddata/conddata.h"
 
 class MemoryOperandLocation

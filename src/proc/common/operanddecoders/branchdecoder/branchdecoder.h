@@ -5,7 +5,7 @@
 #include "proc/common/instructionformats/branchinstruction/branchinstruction.h"
 #include "proc/include/cpudata.h"
 #include "proc/include/cpucontrol.h"
-#include "proc/kd/include/mmu.h"
+#include "proc/include/mmu.h"
 
 class BranchDecoder : public BaseOperandDecoder
 {

@@ -2,7 +2,7 @@
 #define _KTF11AREGISTERS_H_
 
 #include "ktf11_a.h"
-#include "proc/kd/include/psw.h"
+#include "proc/include/psw.h"
 #include "basicregister/readonlyregister.h"
 #include "trace/trace.h"
 

@@ -3,7 +3,7 @@
 
 #include "bus/qbus/qbus.h"
 #include "proc/include/cpudata.h"
-#include "proc/kd/include/mmu.h"
+#include "proc/include/mmu.h"
 #include "abstractbusdevice/abstractbusdevice.h"
 #include "ktf11_a_activepageregisterset.h"
 #include "ktf11_asr0.h"

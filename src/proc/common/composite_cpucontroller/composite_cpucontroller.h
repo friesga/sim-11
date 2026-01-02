@@ -4,7 +4,7 @@
 #include "bus/include/bus.h"
 #include "proc/include/cpudata.h"
 #include "proc/include/cpucontrol.h"
-#include "proc/kd/include/mmu.h"
+#include "proc/include/mmu.h"
 #include "proc/common/instructiondecoder/instructiondecoder.h"
 
 #include <memory>
