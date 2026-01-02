@@ -8,6 +8,7 @@ set (PROC_COMMON_SRCS
     executor/executor.cpp
     pseudommu/pseudommu.cpp
     pseudo_haltmode/pseudo_haltmode.cpp
+    operanddecoderfactory/operanddecoderfactory.cpp
     instructiondecoder/instructiondecoder.cpp
     instructiondecoder/opcodetables.cpp
     instructionformats/nooperandinstruction/nooperandinstruction.cpp

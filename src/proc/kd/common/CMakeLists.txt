@@ -3,7 +3,6 @@ set (KD11COMMON_SRCS
     operandlocation/emptyoperandlocation/emptyoperandlocation.cpp
     operandlocation/registeroperandlocation/registeroperandlocation.cpp
     operandlocation/memoryoperandlocation/memoryoperandlocation.cpp
-    operanddecoderfactory/operanddecoderfactory.cpp
     operanddecoders/baseoperanddecoder/baseoperanddecoder.cpp
     operanddecoders/singleoperanddecoder/singleoperanddecoder.cpp
     operanddecoders/branchdecoder/branchdecoder.cpp
