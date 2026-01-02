@@ -1,7 +1,7 @@
 #ifndef _KA11_CALCULATOR_H_
 #define _KA11_CALCULATOR_H_
 
-#include "proc/kd/common/addressingmodetimes/addressingmodetimes.h"
+#include "proc/common/addressingmodetimes/addressingmodetimes.h"
 #include "proc/kd/common/instructions/instructions.h"
 
 // This class calculates the execution time of instructions for the

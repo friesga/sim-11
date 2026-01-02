@@ -1,7 +1,7 @@
 #ifndef _KD11_NA_CALCULATE_H_
 #define _KD11_NA_CALCULATE_H_
 
-#include "proc/kd/common/addressingmodetimes/addressingmodetimes.h"
+#include "proc/common/addressingmodetimes/addressingmodetimes.h"
 #include "../calculate/kd11_na_addressingmodetime.h"
 #include "proc/kd/common/instructions/instructions.h"
 
