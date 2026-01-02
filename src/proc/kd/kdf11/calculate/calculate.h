@@ -3,7 +3,7 @@
 
 #include "proc/common/addressingmodetimes/addressingmodetimes.h"
 #include "proc/kd/kdf11/calculate/kdf11_addressingmodetime.h"
-#include "proc/kd/common/instructions/instructions.h"
+#include "proc/common/instructions/instructions.h"
 
 #include <array>
 

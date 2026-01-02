@@ -2,7 +2,7 @@
 #define _KA11_CALCULATOR_H_
 
 #include "proc/common/addressingmodetimes/addressingmodetimes.h"
-#include "proc/kd/common/instructions/instructions.h"
+#include "proc/common/instructions/instructions.h"
 
 // This class calculates the execution time of instructions for the
 // KA11. The instruction consits of a basic time per instruction plus

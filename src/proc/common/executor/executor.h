@@ -1,7 +1,7 @@
 #ifndef _COMMON_EXECUTOR_H_
 #define _COMMON_EXECUTOR_H_
 
-#include "proc/kd/common/instructions/instructions.h"
+#include "proc/common/instructions/instructions.h"
 #include "proc/kd/common/operanddecoderfactory/operanddecoderfactory.h"
 
 namespace Common {

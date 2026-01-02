@@ -1,4 +1,4 @@
-#include "proc/kd/common/instructions/instructions.h"
+#include "proc/common/instructions/instructions.h"
 #include "proc/common/executor/executor.h"
 #include "../../dummycpu/dummycpu.h"
 

@@ -1,6 +1,6 @@
 #include "proc/common/instructiondecoder/instructiondecoder.h"
 #include "proc/kd/kdf11/calculate/calculate.h"
-#include "proc/kd/common/instructions/instructions.h"
+#include "proc/common/instructions/instructions.h"
 
 #include <gtest/gtest.h>
 #include <variant>

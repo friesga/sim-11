@@ -1,5 +1,5 @@
 #include "instructiondecoder.h"
-#include "proc/kd/common/instructions/unused.h"
+#include "proc/common/instructions/unused.h"
 
 Instruction InstructionDecoder::decode (u16 instruction)
 {

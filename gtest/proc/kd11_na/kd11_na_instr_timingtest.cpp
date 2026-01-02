@@ -1,5 +1,5 @@
 #include "proc/kd/kd11_na/calculate/calculate.h"
-#include "proc/kd/common/instructions/instructions.h"
+#include "proc/common/instructions/instructions.h"
 
 #include <gtest/gtest.h>
 
