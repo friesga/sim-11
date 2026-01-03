@@ -63,7 +63,7 @@ private:
     Bus* bus_;
     KD11_NACpuData cpuData_;
     CompositeCpuController<KD11_NA_Executor, KD11_NA_Calculator,
-        PseudoHaltMode, BasicProcessorExceptionHandler> cpuControl_ {bus_, &cpuData_, &pseudoMMU_};
+        PseudoHaltMode, BasicProcessorExceptionHandler> cpuController_ {bus_, &cpuData_, &pseudoMMU_};
     PseudoMMU pseudoMMU_ {bus_, &cpuData_};
     unique_ptr<KD11_NA_ODT>	odt_ {};
     KD11Config::PowerUpMode powerUpMode_;
@@ -76,7 +76,7 @@ private:
 
 constexpr Interfaces::CpuController* KD11_NA::cpuControl ()
 {
-    return &cpuControl_;
+    return &cpuController_;
 }
 
 constexpr CpuData* KD11_NA::cpuData ()

@@ -12,7 +12,7 @@
 class EisDecoder : public BaseOperandDecoder
 {
 public:
-	EisDecoder (CpuData* cpuData, Interfaces::CpuController* cpuControl, MMU* mmu,
+	EisDecoder (CpuData* cpuData, Interfaces::CpuController* cpuController, MMU* mmu,
 		EisInstruction* instruction);
 
 	OperandLocation getOperandLocation (GeneralRegisters &reg);

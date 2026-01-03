@@ -18,13 +18,14 @@ using std::make_unique;
 class OperandDecoderFactory
 {
 public:
-    OperandDecoderFactory (CpuData* cpuData, Interfaces::CpuController* cpuControl, MMU* mmu);
+    OperandDecoderFactory (CpuData* cpuData,
+        Interfaces::CpuController* cpuController, MMU* mmu);
     template <typename T, typename I>
     unique_ptr<T> create (I* instr);
 
 private:
     CpuData* cpuData_;
-    Interfaces::CpuController* cpuControl_;
+    Interfaces::CpuController* cpuController_;
     MMU* mmu_;
 };
 
@@ -32,7 +33,7 @@ private:
 template <typename T, typename I>
 unique_ptr<T> OperandDecoderFactory::create (I* instr)
 {
-    return make_unique<T> (cpuData_, cpuControl_, mmu_, instr);
+    return make_unique<T> (cpuData_, cpuController_, mmu_, instr);
 }
 
 #endif //_OPERANDDECODERFACTORY_

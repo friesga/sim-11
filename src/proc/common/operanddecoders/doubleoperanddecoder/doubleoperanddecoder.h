@@ -10,7 +10,7 @@
 class DoubleOperandDecoder : public BaseOperandDecoder
 {
 public:
-	DoubleOperandDecoder (CpuData* cpuData, Interfaces::CpuController* cpuControl, MMU* mmu,
+	DoubleOperandDecoder (CpuData* cpuData, Interfaces::CpuController* cpuController, MMU* mmu,
 		DoubleOperandInstruction* instruction);
 
 	OperandLocation getSourceOperandLocation (GeneralRegisters &reg);

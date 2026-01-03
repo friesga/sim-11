@@ -7,7 +7,7 @@ class KA11MachineState : public BaseMachineState
 {
 public:
     KA11MachineState (Bus* bus, CpuData* cpuData,
-        Interfaces::CpuController* cpuControl, MMU* mmu);
+        Interfaces::CpuController* cpuController, MMU* mmu);
 
     // Functions required by BaseMachineState
     State powerUpRoutine () override;

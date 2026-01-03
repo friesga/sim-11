@@ -9,7 +9,8 @@
 class KDF11_Executor
 {
 public:
-    KDF11_Executor (CpuData* cpuData, Interfaces::CpuController* cpuControl, MMU* mmu);
+    KDF11_Executor (CpuData* cpuData,
+        Interfaces::CpuController* cpuController, MMU* mmu);
 
 	template <typename T>
 	bool operator() (T& instr);
@@ -17,10 +18,10 @@ public:
 private:
 	Common::Executor commonExecutor_;
 	CpuData* cpuData_;
-    Interfaces::CpuController* cpuControl_;
+    Interfaces::CpuController* cpuController_;
     MMU* mmu_;
 
-    OperandDecoderFactory operandDecoderFactory_ {cpuData_, cpuControl_, mmu_};
+    OperandDecoderFactory operandDecoderFactory_ {cpuData_, cpuController_, mmu_};
 };
 
 template <typename T>
@@ -41,7 +42,7 @@ inline bool KDF11_Executor::operator() (HALT& instr)
         cpuData_->setTrap (CpuData::TrapType::ReservedInstructionTrap);
         return false;
     }
-    cpuControl_->halt ();
+    cpuController_->halt ();
 
     return true;
 }
@@ -50,7 +51,7 @@ template <>
 inline bool KDF11_Executor::operator() (WAIT& instr)
 {
     if (!cpuData_->psw ().traceBitSet ())
-        cpuControl_->wait ();
+        cpuController_->wait ();
 
     return true;
 }
@@ -59,7 +60,7 @@ template <>
 inline bool KDF11_Executor::operator() (RESET& instr)
 {
     if (cpuData_->psw ().currentMode () != PSW::Mode::User)
-        cpuControl_->busReset ();
+        cpuController_->busReset ();
 
     return true;
 }

@@ -12,12 +12,12 @@ using std::to_string;
 using std::make_unique;
 using std::move;
 
-KD11_NA_ODT::KD11_NA_ODT (Bus *bus, CpuData* cpuData, Interfaces::CpuController* cpuControl,
+KD11_NA_ODT::KD11_NA_ODT (Bus *bus, CpuData* cpuData, Interfaces::CpuController* cpuController,
         MMU* mmu, unique_ptr<ConsoleAccess> consoleAccess)
     : 
     bus_ {bus},
     cpuData_ {cpuData},
-    cpuControl_ {cpuControl},
+    cpuController_ {cpuController},
     mmu_ {mmu},
     console_ {move (consoleAccess)},
     odtRunning_ {true},
@@ -32,9 +32,9 @@ KD11_NA_ODT::KD11_NA_ODT (Bus *bus, CpuData* cpuData, Interfaces::CpuController*
 }
 
 unique_ptr<KD11_NA_ODT> KD11_NA_ODT::createODT (Bus *bus, CpuData* cpuData,
-    Interfaces::CpuController* cpuControl, MMU* mmu, unique_ptr<ConsoleAccess> consoleAccess)
+    Interfaces::CpuController* cpuController, MMU* mmu, unique_ptr<ConsoleAccess> consoleAccess)
 {
-    return make_unique<KD11_NA_ODT> (bus, cpuData, cpuControl, mmu,
+    return make_unique<KD11_NA_ODT> (bus, cpuData, cpuController, mmu,
         make_unique<OperatorConsoleAccess> (bus));
 }
 
@@ -244,7 +244,7 @@ void KD11_NA_ODT::setRegisterValue ()
 void KD11_NA_ODT::startCPU (u16 address)
 {
     bus_->BINIT().cycle ();
-    cpuControl_->start (address);
+    cpuController_->start (address);
     trace.cpuEvent (CpuEventRecordType::CPU_ODT_P, address);
 }
 

@@ -1,9 +1,10 @@
 #include "executor.h"
 
-KDF11_Executor::KDF11_Executor (CpuData* cpuData, Interfaces::CpuController* cpuControl, MMU* mmu)
+KDF11_Executor::KDF11_Executor (CpuData* cpuData,
+    Interfaces::CpuController* cpuController, MMU* mmu)
     :
-    commonExecutor_ (cpuData, cpuControl, mmu),
+    commonExecutor_ (cpuData, cpuController, mmu),
     cpuData_ {cpuData},
-    cpuControl_ {cpuControl},
+    cpuController_ {cpuController},
     mmu_ {mmu}
 {}

@@ -36,7 +36,7 @@ std::same_as<T, MFPT>;
 class KA11_Executor
 {
 public:
-    KA11_Executor (CpuData* cpuData, Interfaces::CpuController* cpuControl, MMU* mmu);
+    KA11_Executor (CpuData* cpuData, Interfaces::CpuController* cpuController, MMU* mmu);
 
 	// The operator() function is specialized for the instructions specific
     // for the KA11. The definition of these specializations is rather

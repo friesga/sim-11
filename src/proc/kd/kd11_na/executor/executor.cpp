@@ -1,8 +1,9 @@
 #include "executor.h"
 
-KD11_NA_Executor::KD11_NA_Executor (CpuData* cpuData, Interfaces::CpuController* cpuControl, MMU* mmu)
+KD11_NA_Executor::KD11_NA_Executor (CpuData* cpuData,
+    Interfaces::CpuController* cpuController, MMU* mmu)
     :
-    commonExecutor_ (cpuData, cpuControl, mmu),
+    commonExecutor_ (cpuData, cpuController, mmu),
     cpuData_ {cpuData},
     mmu_ {mmu}
 {}

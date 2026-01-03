@@ -1,9 +1,9 @@
 #include "ka11machinestate.h"
 
 KA11MachineState::KA11MachineState (Bus* bus, CpuData* cpuData,
-    Interfaces::CpuController* cpuControl, MMU* mmu)
+    Interfaces::CpuController* cpuController, MMU* mmu)
     :
-    BaseMachineState (bus, cpuData, cpuControl, mmu)
+    BaseMachineState (bus, cpuData, cpuController, mmu)
 {}
 
 BaseMachineState::State KA11MachineState::powerUpRoutine ()

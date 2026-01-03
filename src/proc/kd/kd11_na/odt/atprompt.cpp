@@ -67,7 +67,7 @@ KD11_NA_ODT::State KD11_NA_ODT::StateMachine::transition (AtPrompt_1 && currentS
 // On a Proceed command set the CPU into the running state and exit ODT
 KD11_NA_ODT::State KD11_NA_ODT::StateMachine::transition (AtPrompt_1 &&, ProceedCmdEntered)
 {
-    context_->cpuControl_->proceed ();
+    context_->cpuController_->proceed ();
     trace.cpuEvent (CpuEventRecordType::CPU_ODT_P, context_->cpuData_->registers ()[7]);
     return ExitPoint {};
 }
@@ -85,6 +85,6 @@ KD11_NA_ODT::State KD11_NA_ODT::StateMachine::transition (AtPrompt_1 &&, GoCmdEn
 // The value is or'ed with 010 as a real LSI-11/2 prints that value.
 KD11_NA_ODT::State KD11_NA_ODT::StateMachine::transition (AtPrompt_1&&, MaintenanceCmdEntered)
 {
-    context_->writeString (context_->octalNumberToString (static_cast<u16> (context_->cpuControl_->haltReason ()) | 010) + '\n');
+    context_->writeString (context_->octalNumberToString (static_cast<u16> (context_->cpuController_->haltReason ()) | 010) + '\n');
     return AtPrompt_1 {};
 }

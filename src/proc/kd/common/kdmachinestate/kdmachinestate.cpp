@@ -15,11 +15,11 @@ using std::cerr;
 // 24 and 26), but we'll set it to Bootstrap as that's more convenient for
 // the user.
 KDMachineState::KDMachineState (Bus* bus, CpuData* cpuData,
-    Interfaces::CpuController* cpuControl, MMU* mmu,
+    Interfaces::CpuController* cpuController, MMU* mmu,
     KD11Config::PowerUpMode powerUpMode, u16 startAddress,
     KD11ODT::Creator odtCreator)
     :
-    BaseMachineState (bus, cpuData, cpuControl, mmu),
+    BaseMachineState (bus, cpuData, cpuController, mmu),
     powerUpMode_ {powerUpMode},
     startAddress_ {startAddress},
     odtCreator_ {odtCreator}

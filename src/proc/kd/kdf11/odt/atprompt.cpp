@@ -67,7 +67,7 @@ KDF11_ODT::State KDF11_ODT::StateMachine::transition (AtPrompt_1 && currentState
 // On a Proceed command set the CPU into the running state and exit ODT
 KDF11_ODT::State KDF11_ODT::StateMachine::transition (AtPrompt_1 &&, ProceedCmdEntered)
 {
-    context_->cpuControl_->proceed ();
+    context_->cpuController_->proceed ();
     trace.cpuEvent (CpuEventRecordType::CPU_ODT_P, context_->cpuData_->registers ()[7]);
     return ExitPoint {};
 }
@@ -100,7 +100,7 @@ KDF11_ODT::State KDF11_ODT::StateMachine::transition (AtPrompt_1 &&, GoCmdEntere
 KDF11_ODT::State KDF11_ODT::StateMachine::transition (AtPrompt_1&&, HaltCmdEntered)
 {
     if (context_->haltCmdSupported_)
-        context_->cpuControl_->setHaltMode (context_->cpuControl_->inHaltMode () ? false : true);
+        context_->cpuController_->setHaltMode (context_->cpuController_->inHaltMode () ? false : true);
     context_->writeString ("\n");
     return AtPrompt_1 {};
 }

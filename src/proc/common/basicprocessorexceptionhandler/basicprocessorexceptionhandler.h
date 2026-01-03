@@ -13,14 +13,14 @@ class BasicProcessorExceptionHandler
 {
 public:
     BasicProcessorExceptionHandler (Bus* bus, CpuData* cpuData,
-        Interfaces::CpuController* cpuControl, MMU* mmu);
+        Interfaces::CpuController* cpuController, MMU* mmu);
     void serviceTrap ();
     void serviceInterrupt ();
 
 private:
     Bus* bus_;
     CpuData* cpuData_;
-    Interfaces::CpuController* cpuControl_;
+    Interfaces::CpuController* cpuController_;
     MMU* mmu_;
 
     void swapPcPSW (u16 vectorAddress);

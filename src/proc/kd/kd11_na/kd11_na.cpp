@@ -24,7 +24,7 @@ KD11_NA::KD11_NA (Bus* bus)
     // Besides a pointer to the bus, a reference to our cpu, the start address
     // and the power-up mode, the MachineState also gets passed a
     // std::function to the function to create ODT objects.
-    machineState_ = make_unique<KDMachineState> (bus_, &cpuData_, &cpuControl_, &pseudoMMU_, powerUpMode_,
+    machineState_ = make_unique<KDMachineState> (bus_, &cpuData_, &cpuController_, &pseudoMMU_, powerUpMode_,
         startAddress_, bind (&KD11_NA_ODT::createODT, _1, _2, _3, _4, _5));
 }
 
@@ -34,7 +34,7 @@ KD11_NA::KD11_NA (Bus *bus, const KD11_NAConfig& kd11_naConfig)
     powerUpMode_ {kd11_naConfig.powerUpMode},
     startAddress_ {stdBootAddress}
 {
-    machineState_ = make_unique<KDMachineState> (bus_, &cpuData_, &cpuControl_, &pseudoMMU_, powerUpMode_,
+    machineState_ = make_unique<KDMachineState> (bus_, &cpuData_, &cpuController_, &pseudoMMU_, powerUpMode_,
         startAddress_, bind (&KD11_NA_ODT::createODT, _1, _2, _3, _4, _5));
 }
 

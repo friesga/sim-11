@@ -1,9 +1,10 @@
 #include "executor.h"
 
-Common::Executor::Executor (CpuData* cpuData, Interfaces::CpuController* cpuControl, MMU* mmu)
+Common::Executor::Executor (CpuData* cpuData,
+    Interfaces::CpuController* cpuController, MMU* mmu)
     :
     cpuData_ {cpuData},
-    cpuControl_ {cpuControl},
+    cpuController_ {cpuController},
     mmu_ {mmu}
 {
 }
@@ -1439,13 +1440,13 @@ bool Common::Executor::execute (TRAP& instr)
 // No-operand instructions
 bool Common::Executor::execute (HALT& instr)
 {
-    cpuControl_->halt ();
+    cpuController_->halt ();
     return true;
 }
 
 bool Common::Executor::execute (WAIT& instr)
 {
-    cpuControl_->wait ();
+    cpuController_->wait ();
     return true;
 }
 
@@ -1481,7 +1482,7 @@ bool Common::Executor::execute (IOT& instr)
 
 bool Common::Executor::execute (RESET& instr)
 {
-    cpuControl_->busReset ();
+    cpuController_->busReset ();
     return true;
 }
 

@@ -12,12 +12,12 @@ using std::to_string;
 using std::make_unique;
 using std::move;
 
-KDF11_ODT::KDF11_ODT (Bus *bus, CpuData* cpuData, Interfaces::CpuController* cpuControl,
+KDF11_ODT::KDF11_ODT (Bus *bus, CpuData* cpuData, Interfaces::CpuController* cpuController,
         MMU* mmu, unique_ptr<ConsoleAccess> consoleAccess, bool haltCmdSupported)
     : 
     bus_ {bus},
     cpuData_ {cpuData},
-    cpuControl_ {cpuControl},
+    cpuController_ {cpuController},
     mmu_ {mmu},
     console_ {move (consoleAccess)},
     haltCmdSupported_ {haltCmdSupported},
@@ -33,10 +33,10 @@ KDF11_ODT::KDF11_ODT (Bus *bus, CpuData* cpuData, Interfaces::CpuController* cpu
 }
 
 unique_ptr<KDF11_ODT> KDF11_ODT::createODT (Bus *bus, CpuData* cpuData,
-    Interfaces::CpuController* cpuControl, MMU* mmu, unique_ptr<ConsoleAccess> consoleAccess,
+    Interfaces::CpuController* cpuController, MMU* mmu, unique_ptr<ConsoleAccess> consoleAccess,
     bool haltCmdSupported)
 {
-    return make_unique<KDF11_ODT> (bus, cpuData, cpuControl, mmu,
+    return make_unique<KDF11_ODT> (bus, cpuData, cpuController, mmu,
         make_unique<OperatorConsoleAccess> (bus), haltCmdSupported);
 }
 
@@ -262,7 +262,7 @@ void KDF11_ODT::startCPU (u16 address)
 {
     bus_->BINIT().cycle ();
     mmu_->reset ();
-    cpuControl_->start (address);
+    cpuController_->start (address);
     trace.cpuEvent (CpuEventRecordType::CPU_ODT_P, address);
 }
 

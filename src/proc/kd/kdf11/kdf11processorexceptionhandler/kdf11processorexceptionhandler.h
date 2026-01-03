@@ -15,7 +15,7 @@ class KDF11ProcessorExceptionHandler
 {
 public:
     KDF11ProcessorExceptionHandler (Bus* bus, CpuData* cpuData,
-        Interfaces::CpuController* cpuControl, MMU* mmu);
+        Interfaces::CpuController* cpuController, MMU* mmu);
     void serviceTrap ();
     void serviceInterrupt ();
 

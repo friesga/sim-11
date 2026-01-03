@@ -6,10 +6,11 @@
 // we need a return value for the retrieval.
 // 
 // Initialize the instr struct with the first member
-DoubleOperandDecoder::DoubleOperandDecoder (CpuData* cpuData, Interfaces::CpuController* cpuControl,
-		MMU* mmu, DoubleOperandInstruction* instruction)
+DoubleOperandDecoder::DoubleOperandDecoder (CpuData* cpuData,
+	Interfaces::CpuController* cpuController, MMU* mmu,
+	DoubleOperandInstruction* instruction)
 	:
-	BaseOperandDecoder (cpuData, cpuControl, mmu),
+	BaseOperandDecoder (cpuData, cpuController, mmu),
 	instr_ {instruction}
 {}
 

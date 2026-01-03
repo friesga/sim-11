@@ -15,11 +15,11 @@ using std::cerr;
 // 24 and 26), but we'll set it to Bootstrap as that's more convenient for
 // the user.
 BaseMachineState::BaseMachineState (Bus* bus, CpuData* cpuData,
-    Interfaces::CpuController* cpuControl, MMU* mmu)
+    Interfaces::CpuController* cpuController, MMU* mmu)
     :
     bus_ (bus),
     cpuData_ {cpuData},
-    cpuControl_ {cpuControl},
+    cpuController_ {cpuController},
     mmu_ {mmu},
     running_ {true}
 {

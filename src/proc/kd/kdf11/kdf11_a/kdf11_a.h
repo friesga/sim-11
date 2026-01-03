@@ -63,7 +63,7 @@ private:
     KDF11CpuData cpuData_ {};
     KTF11_A mmu_ {bus_, &cpuData_};
     CompositeCpuController<KDF11_Executor, KDF11_Calculator,
-        KDF11_HaltMode, KDF11ProcessorExceptionHandler> cpuControl_ {bus_, &cpuData_, &mmu_};
+        KDF11_HaltMode, KDF11ProcessorExceptionHandler> cpuController_ {bus_, &cpuData_, &mmu_};
     unique_ptr<KDMachineState> machineState_;
 
     // RegisterHandler performs the functions required by the BusDevice
@@ -80,7 +80,7 @@ private:
 // constexpr functions are by definition inline
 constexpr Interfaces::CpuController* KDF11_A::cpuControl ()
 {
-    return &cpuControl_;
+    return &cpuController_;
 }
 
 constexpr CpuData* KDF11_A::cpuData ()

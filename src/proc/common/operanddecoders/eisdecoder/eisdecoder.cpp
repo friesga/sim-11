@@ -1,9 +1,9 @@
 #include "eisdecoder.h"
 
-EisDecoder::EisDecoder (CpuData* cpuData, Interfaces::CpuController* cpuControl,
+EisDecoder::EisDecoder (CpuData* cpuData, Interfaces::CpuController* cpuController,
 		MMU* mmu,EisInstruction* instruction)
     :
-	BaseOperandDecoder (cpuData, cpuControl, mmu),
+	BaseOperandDecoder (cpuData, cpuController, mmu),
     instr_ {instruction}
 {}
 
