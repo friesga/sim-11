@@ -52,7 +52,7 @@ public:
     void start ();
 
     // Functions to give unit tests access to the CPU's components.
-    constexpr Interfaces::CpuController* cpuControl ();
+    constexpr Interfaces::CpuController* cpuController ();
     constexpr CpuData* cpuData ();
     constexpr MMU* mmu ();
 
@@ -78,7 +78,7 @@ private:
 };
 
 // constexpr functions are by definition inline
-constexpr Interfaces::CpuController* KDF11_A::cpuControl ()
+constexpr Interfaces::CpuController* KDF11_A::cpuController ()
 {
     return &cpuController_;
 }
