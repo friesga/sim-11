@@ -7,26 +7,28 @@
 //
 template <typename T>
 concept UnsupportedInstruction =
-std::same_as<T, SXT> ||
+std::same_as<T, SXT>  ||
 std::same_as<T, MFPS> ||
 std::same_as<T, MTPS> ||
 std::same_as<T, MARK> ||
-std::same_as<T, MUL> ||
-std::same_as<T, DIV> ||
-std::same_as<T, ASH> ||
+std::same_as<T, MUL>  ||
+std::same_as<T, DIV>  ||
+std::same_as<T, ASH>  ||
 std::same_as<T, ASHC> ||
-std::same_as<T, XOR> ||
-std::same_as<T, SOB> ||
+std::same_as<T, XOR>  ||
+std::same_as<T, SOB>  ||
 std::same_as<T, FADD> ||
 std::same_as<T, FSUB> ||
 std::same_as<T, FMUL> ||
 std::same_as<T, FDIV> ||
-std::same_as<T, BPT> ||
-std::same_as<T, RTT> ||
-std::same_as<T, CCC> ||
-std::same_as<T, SCC> ||
+std::same_as<T, BPT>  ||
+std::same_as<T, RTT>  ||
+std::same_as<T, CCC>  ||
+std::same_as<T, SCC>  ||
 std::same_as<T, MFPD> ||
 std::same_as<T, MTPD> ||
+std::same_as<T, MFPI> ||
+std::same_as<T, MTPI> ||
 std::same_as<T, MFPT>;
 
 

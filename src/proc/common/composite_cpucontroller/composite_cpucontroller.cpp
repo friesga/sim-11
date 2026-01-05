@@ -11,6 +11,8 @@
 #include "proc/kd/kdf11/calculator/calculator.h"
 #include "proc/kd/kdf11/haltmode/haltmode.h"
 #include "proc/kd/kdf11/kdf11processorexceptionhandler/kdf11processorexceptionhandler.h"
+#include "proc/ka11/executor/executor.h"
+#include "proc/ka11/calculator/calculator.h"
 
 #include <functional>
 #include <chrono>
@@ -279,3 +281,5 @@ template class CompositeCpuController<KD11_NA_Executor, KD11_NA_Calculator,
     PseudoHaltMode, BasicProcessorExceptionHandler>;
 template class CompositeCpuController<KDF11_Executor, KDF11_Calculator,
     KDF11_HaltMode, KDF11ProcessorExceptionHandler>;
+template class CompositeCpuController<KA11_Executor, KA11Calculator,
+    PseudoHaltMode, BasicProcessorExceptionHandler>;

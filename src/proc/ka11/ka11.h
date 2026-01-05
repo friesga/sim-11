@@ -8,6 +8,11 @@
 #include "proc/ka11/ka11machinestate/ka11machinestate.h"
 #include "proc/ka11/ka11cpudata/ka11cpudata.h"
 #include "proc/common/pseudoMMU/pseudommu.h"
+#include "proc/common/composite_cpucontroller/composite_cpucontroller.h"
+#include "proc/ka11/executor/executor.h"
+#include "proc/ka11/calculator/calculator.h"
+#include "proc/common/pseudo_haltmode/pseudo_haltmode.h"
+#include "proc/common/basicprocessorexceptionhandler/basicprocessorexceptionhandler.h"
 #include "panel.h"
 
 #include <memory>
@@ -37,8 +42,9 @@ private:
 
     // Definition of the KA11 components.
     KA11CpuData cpuData_ {};
-    PseudoMMU pseudoMMU_ {bus_, &cpuData_};
-    // ToDo: KDF11_CpuControl cpuControl_ {bus_, &cpuData_, &mmu_};
+    PseudoMMU mmu_ {bus_, &cpuData_};
+    CompositeCpuController<KA11_Executor, KA11Calculator,
+        PseudoHaltMode, BasicProcessorExceptionHandler> cpuController_ {bus_, &cpuData_, &mmu_};
     unique_ptr<KY11_A> ky11_a_;
     unique_ptr<KA11MachineState> machineState_;
 };
