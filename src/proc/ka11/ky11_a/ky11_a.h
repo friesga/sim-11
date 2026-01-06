@@ -2,6 +2,7 @@
 #define _KY11_A_H_
 
 #include "bus/include/bus.h"
+#include "proc/ka11/ka11machinestate/ka11machinestate.h"
 #include "configdata/ka11/ky11_aconfig/ky11_aconfig.h"
 #include "switchregister/switchregister.h"
 #include "addressregister/addressregister.h"
@@ -27,7 +28,8 @@ using std::variant;
 class KY11_A
 {
 public:
-    KY11_A (Bus* bus, Window* window, const KY11_AConfig& ky11_aConfig);
+    KY11_A (Bus* bus, unique_ptr<KA11MachineState>& ka11MachineState, 
+        Window* window, const KY11_AConfig& ky11_aConfig);
 
     // Definition of the KY11-A states
     struct AddressLoaded {};
@@ -45,6 +47,7 @@ public:
 
 private:
     Bus* bus_;
+    unique_ptr<KA11MachineState>& ka11MachineState_;
     unique_ptr<SwitchRegister> switchRegister_ {};
     unique_ptr<AddressRegister> addressRegister_ {};
     unique_ptr<DataRegister> dataRegister_ {};
@@ -58,6 +61,8 @@ private:
     Button* loadAddressSwitch_;
     Button* examineSwitch_;
     Button* depositSwitch_;
+    Button* enableHaltSwitch_;
+    Button* startSwitch_;
 
     Indicator* runLight_;
 
@@ -67,6 +72,8 @@ private:
     void loadAddressSwitchClicked (Button::State state);
     void examSwitchClicked (Button::State state);
     void depSwitchClicked (Button::State state);
+    void enableHaltSwitchClicked (Button::State state);
+    void startSwitchClicked (Button::State state);
 };
 
 // Definition of the state machine for the KY11-A. The class has to be defined

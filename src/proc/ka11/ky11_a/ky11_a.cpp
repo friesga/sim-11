@@ -12,9 +12,11 @@ using std::placeholders::_2;
 
 using std::make_unique;
 
-KY11_A::KY11_A (Bus* bus, Window* window, const KY11_AConfig& ky11_aConfig)
+KY11_A::KY11_A (Bus* bus, unique_ptr<KA11MachineState>& ka11MachineState,
+    Window* window, const KY11_AConfig& ky11_aConfig)
     :
-    bus_ {bus}
+    bus_ {bus},
+    ka11MachineState_ {ka11MachineState}
 {
     stateMachine_ = make_unique<StateMachine> (this);
 
@@ -64,8 +66,17 @@ void KY11_A::createBezel (Window* window, const KY11_AConfig& ky11_aConfig,
         {"deposit_down", "deposit_up"},
         Button::MomentaryUpTwoPositionsState::Down,
         bind (&KY11_A::depSwitchClicked, this, _1));
-}
 
+    enableHaltSwitch_ = panelBuilder->createMultiPositionSwitch (
+        {"enable_halt_down", "enable_halt_up"},
+        Button::TwoPositionsState::Up,
+        bind (&KY11_A::enableHaltSwitchClicked, this, _1));
+
+    startSwitch_ = panelBuilder->createMultiPositionSwitch (
+        {"start_up", "start_down"},
+        Button::MomentaryDownTwoPositionsState::Up,
+        bind (&KY11_A::startSwitchClicked, this, _1));
+}
 
 void KY11_A::powerSwitchClicked (Button::State state)
 {
@@ -150,5 +161,56 @@ void KY11_A::depSwitchClicked (Button::State state)
         Button::MomentaryUpTwoPositionsState::Down)
     {
         stateMachine_->dispatch (DEP_Pressed {});
+    }
+}
+
+// The ENABLE/HALT switch allows either the program or the console to control
+// processor operation.
+// 
+// ENABLE position - permits the system to run in a normal manner. No console
+// control requests (type dependent upon SINST/S - CYCLE switch) are made.
+// Without console control, all switches except ENABLE/HALT and the SWITCH
+// REGISTER are disabled.
+//
+// HALT position - halts the processor and passes control to the console; with
+// the SINST/S-CYCLE switch in the S-CYCLE mode, console switches (except
+// SWITCH REGISTER, CONT, and ENABLE/HALT) are disabled unless the machine is
+// stepped to the end of an instruction. In the SINST mode, the processor stops
+// at the end of an instruction and all console switches are enabled.
+// 
+// The HALT mode is used with the CONT switch to step the machine through
+// programs and facilitate intermediate observations.
+// 
+// When the START switch is activated in the HALT mode, a system clear is
+// effected.
+//
+void KY11_A::enableHaltSwitchClicked (Button::State state)
+{
+    if (get<Button::MomentaryUpTwoPositionsState> (state) ==
+        Button::MomentaryUpTwoPositionsState::Down)
+            bus_->BHALT ().set (true);
+    else
+            bus_->BHALT ().set (false);
+}
+
+
+// When ENABLE/HALT is set to ENABLE, depressing START provides a system clear
+// operation and then begins processor operation. A LOAD ADDR operation
+// preestablishes the starting address.
+//
+// When ENABLE/HALT is set to HALT, depressing START provides a system clear
+// (initialize) only. The processor does not start; the Bus Address Register
+// is loaded from a temporary processor register (TEMP) which is usually
+// pre-loaded by LOAD ADDR.
+// 
+// This provides the only method of reading TEMP when it does not contain the
+// LOAD ADDR value.
+//
+void KY11_A::startSwitchClicked (Button::State state)
+{
+    if (get<Button::MomentaryUpTwoPositionsState> (state) ==
+        Button::MomentaryUpTwoPositionsState::Down)
+    {
+        // ka11MachineState_->dispatch (Start {});
     }
 }
