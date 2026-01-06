@@ -35,15 +35,19 @@ public:
     struct AddressLoaded {};
     struct ExamineSequence {};
     struct DepositSequence {};
+    struct Running {};
 
-    using State = variant <AddressLoaded, ExamineSequence, DepositSequence>;
+    using State = variant <AddressLoaded, ExamineSequence,
+        DepositSequence, Running, monostate>;
 
     // Definition of the KY11-A events
     struct EXAM_Pressed {};
     struct DEP_Pressed {};
     struct LOAD_ADDR_Pressed {};
+    struct START_Pressed {};
 
-    using Event = variant <EXAM_Pressed, DEP_Pressed, LOAD_ADDR_Pressed>;
+    using Event = variant <EXAM_Pressed, DEP_Pressed,
+        LOAD_ADDR_Pressed, START_Pressed>;
 
 private:
     Bus* bus_;
@@ -87,12 +91,23 @@ public:
     State transition (AddressLoaded&&, LOAD_ADDR_Pressed);      // -> AddressLoaded
     State transition (AddressLoaded&&, EXAM_Pressed);           // -> ExamineSequence
     State transition (AddressLoaded&&, DEP_Pressed);            // -> DepositSequence
-    State transition (ExamineSequence&&, EXAM_Pressed);         // -> ExamineSequence
+    State transition (AddressLoaded&&, START_Pressed);          // -> Running
     State transition (ExamineSequence&&, LOAD_ADDR_Pressed);    // -> AddressLoaded
-    State transition (ExamineSequence&&, DEP_Pressed);          // -> DepositSequence
-    State transition (DepositSequence&&, DEP_Pressed);          // -> DepositSequence
+    State transition (ExamineSequence&&, EXAM_Pressed);         // -> ExamineSequence
+    State transition (ExamineSequence&&, DEP_Pressed);          // -> ExamineSequence
+    State transition (ExamineSequence&&, START_Pressed);        // -> Running
     State transition (DepositSequence&&, LOAD_ADDR_Pressed);    // -> AddressLoaded
     State transition (DepositSequence&&, EXAM_Pressed);         // -> ExamineSequence
+    State transition (DepositSequence&&, DEP_Pressed);          // -> DepositSequence
+    State transition (DepositSequence&&, START_Pressed);        // -> Running
+
+    // Define the default transition for transitions not explicitly
+    // defined above. The default transition implies the event is ignored.
+    template <typename S, typename E>
+    State transition (S&& state, E)
+    {
+        return monostate {};
+    }
     
 private:
     KY11_A* context_ {};

@@ -3,7 +3,17 @@
 
 #include "signal/signal.h"
 
-// This interface declares the functions related to the bus signals.
+// This interface declares the functions related to the bus signals. These
+// signals have the following functions:
+// - SRUN - Indicates that the processor is running,
+// - BPOK - Indicates power is applied to the system,
+// - RESET - Indicates the system has to be reset,
+// - BHALT - Indicates the processor has to halt,
+// - BINIT - Reset the bus and all devices on the bus,
+// - BOOT - Initiate the boot sequence,
+// - BatteryPower - Indicates if battery power is available to the system,
+// - IOMapEnable - Indicates if the IO map is enabled
+//
 class BusSignals
 {
 public:

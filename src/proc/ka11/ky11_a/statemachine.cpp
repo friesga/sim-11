@@ -28,6 +28,11 @@ KY11_A::State KY11_A::StateMachine::transition (AddressLoaded&&, DEP_Pressed)
     return DepositSequence {};
 }
 
+KY11_A::State KY11_A::StateMachine::transition (AddressLoaded&&, START_Pressed)
+{
+    return Running {};
+} 
+
 KY11_A::State KY11_A::StateMachine::transition (ExamineSequence&&, EXAM_Pressed)
 {
     *context_->addressRegister_+= 2;
@@ -51,6 +56,11 @@ KY11_A::State KY11_A::StateMachine::transition (ExamineSequence&&, DEP_Pressed)
     return DepositSequence {};
 }
 
+KY11_A::State KY11_A::StateMachine::transition (ExamineSequence&&, START_Pressed)
+{
+    return Running {};
+}
+
 KY11_A::State KY11_A::StateMachine::transition (DepositSequence&&, DEP_Pressed)
 {
     *context_->addressRegister_+= 2;
@@ -71,4 +81,9 @@ KY11_A::State KY11_A::StateMachine::transition (DepositSequence&&, EXAM_Pressed)
         context_->bus_->read (BusAddress (*context_->addressRegister_,
             BusAddress::Width::_16Bit));
     return ExamineSequence {};
+}
+
+KY11_A::State KY11_A::StateMachine::transition (DepositSequence&&, START_Pressed)
+{
+    return Running {};
 }
