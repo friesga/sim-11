@@ -2,6 +2,7 @@
 #define _KY11_A_H_
 
 #include "bus/include/bus.h"
+#include "proc/include/cpucontrol.h"
 #include "proc/ka11/ka11machinestate/ka11machinestate.h"
 #include "configdata/ka11/ky11_aconfig/ky11_aconfig.h"
 #include "switchregister/switchregister.h"
@@ -28,7 +29,7 @@ using std::variant;
 class KY11_A
 {
 public:
-    KY11_A (Bus* bus, unique_ptr<KA11MachineState>& ka11MachineState, 
+    KY11_A (Bus* bus, Interfaces::CpuController* cpuController,
         Window* window, const KY11_AConfig& ky11_aConfig);
 
     // Definition of the KY11-A states
@@ -51,7 +52,7 @@ public:
 
 private:
     Bus* bus_;
-    unique_ptr<KA11MachineState>& ka11MachineState_;
+    Interfaces::CpuController* cpuController_;
     unique_ptr<SwitchRegister> switchRegister_ {};
     unique_ptr<AddressRegister> addressRegister_ {};
     unique_ptr<DataRegister> dataRegister_ {};

@@ -12,11 +12,11 @@ using std::placeholders::_2;
 
 using std::make_unique;
 
-KY11_A::KY11_A (Bus* bus, unique_ptr<KA11MachineState>& ka11MachineState,
+KY11_A::KY11_A (Bus* bus, Interfaces::CpuController* cpuController,
     Window* window, const KY11_AConfig& ky11_aConfig)
     :
     bus_ {bus},
-    ka11MachineState_ {ka11MachineState}
+    cpuController_ {cpuController}
 {
     stateMachine_ = make_unique<StateMachine> (this);
 
@@ -42,7 +42,7 @@ void KY11_A::createBezel (Window* window, const KY11_AConfig& ky11_aConfig,
     panelBuilder->createFront ("panel");
 
     runLight_ = panelBuilder->createIndicator ("run_off", "run_on",
-        Indicator::State::On);
+        Indicator::State::Off);
 
     powerSwitch_ = panelBuilder->createMultiPositionSwitch (
         {"keyswitch off",
@@ -211,6 +211,8 @@ void KY11_A::startSwitchClicked (Button::State state)
     if (get<Button::MomentaryUpTwoPositionsState> (state) ==
         Button::MomentaryUpTwoPositionsState::Down)
     {
-        // ka11MachineState_->dispatch (Start {});
+        bus_->BINIT ().cycle ();
+        cpuController_->start (*addressRegister_);
+        trace.cpuEvent (CpuEventRecordType::CPU_ODT_P, *addressRegister_);
     }
 }

@@ -11,8 +11,8 @@ KA11::KA11 (Bus* bus, Window* window, const KA11Config& ka11Config)
     machineState_ = make_unique<KA11MachineState> (bus_, &cpuData_,
         &cpuController_, &mmu_);
 
-    ky11_a_ = make_unique<KY11_A> (bus, machineState_,
-        window, *ka11Config.ky11_aConfig_);
+    ky11_a_ = make_unique<KY11_A> (bus, &cpuController_, window,
+        *ka11Config.ky11_aConfig_);
 }
 
 void KA11::start (u16 startAddress)
