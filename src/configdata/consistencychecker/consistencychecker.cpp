@@ -56,7 +56,8 @@ void ConsistencyChecker::checkQbusConsistency ()
     size_t numberOFProcessors = 
         count_if (presentDevices, &ConsistencyChecker::findDevice<KD11_NAConfig>) +
         count_if (presentDevices, &ConsistencyChecker::findDevice<KDF11_AConfig>) +
-        count_if (presentDevices, &ConsistencyChecker::findDevice<KDF11_BConfig>);
+        count_if (presentDevices, &ConsistencyChecker::findDevice<KDF11_BConfig>) +
+        count_if (presentDevices, &ConsistencyChecker::findDevice<KA11Config>);
 
     if (numberOFProcessors == 0)
         throw invalid_argument ("No processor configured, this system cannot run.");
@@ -91,7 +92,8 @@ void ConsistencyChecker::checkQbusConsistency ()
 void ConsistencyChecker::checkUnibusConsistency ()
 {
     size_t numberOFProcessors =
-        count_if (systemConfig_, &ConsistencyChecker::findDevice<KDF11_UConfig>);
+        count_if (systemConfig_, &ConsistencyChecker::findDevice<KDF11_UConfig>) +
+        count_if (systemConfig_, &ConsistencyChecker::findDevice<KA11Config>);
 
     if (numberOFProcessors == 0)
         throw invalid_argument ("No processor configured, this system cannot run.");
