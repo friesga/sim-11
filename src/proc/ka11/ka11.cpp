@@ -15,11 +15,22 @@ KA11::KA11 (Bus* bus, Window* window, const KA11Config& ka11Config)
         *ka11Config.ky11_aConfig_);
 }
 
+KA11::~KA11 ()
+{
+    machineState_->exit ();
+    ka11Thread_.join ();
+}
+
 void KA11::start (u16 startAddress)
-{ }
+{
+    startAddress_ = startAddress;
+    start ();
+}
 
 void KA11::start ()
-{ }
+{
+    ka11Thread_ = thread ([&, this] {machineState_->run (); });
+}
 
 CondData<u16> KA11::read (BusAddress address)
 {

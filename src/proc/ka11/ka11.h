@@ -25,6 +25,7 @@ class KA11 : public PDP11Processor
 {
 public:
     KA11 (Bus* bus, Window* window, const KA11Config& ka11Config);
+    ~KA11 ();
 
     // Functions required by the BusDevice interface
     CondData<u16> read (BusAddress address);
@@ -47,6 +48,10 @@ private:
         PseudoHaltMode, BasicProcessorExceptionHandler> cpuController_ {bus_, &cpuData_, &mmu_};
     unique_ptr<KY11_A> ky11_a_;
     unique_ptr<KA11MachineState> machineState_;
+    u16 startAddress_;
+
+    // The KA11 is started in its own thread
+    std::thread ka11Thread_;
 };
 
 #endif _KA11_H_
