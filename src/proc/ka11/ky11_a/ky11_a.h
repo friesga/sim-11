@@ -12,12 +12,14 @@
 #include "bitfield.h"
 #include "types.h"
 #include "variantfsm/fsm.h"
+#include "proc/include/ky11console.h"
 
 #include <utility>
 #include <string>
 #include <array>
 #include <functional>
 #include <variant>
+#include <vector>
 
 using std::pair;
 using std::string;
@@ -25,12 +27,17 @@ using std::array;
 using std::bind;
 using std::placeholders::_1;
 using std::variant;
+using std::vector;
 
-class KY11_A
+class KY11_A : public KY11Console
 {
 public:
     KY11_A (Bus* bus, Interfaces::CpuController* cpuController,
         Window* window, const KY11_AConfig& ky11_aConfig);
+
+    // Functions required by the KY11Console interface
+    void subscribe (Subscriber subscriber) override;
+    HaltEnablePosition haltEnablePosition () const override;
 
     // Definition of the KY11-A states
     struct AddressLoaded {};
@@ -68,8 +75,16 @@ private:
     Button* depositSwitch_;
     Button* enableHaltSwitch_;
     Button* startSwitch_;
+    Button* continueSwitch_;
+    Button* singleInstructionCycleSwitch_;
 
     Indicator* runLight_;
+
+    // The initial position of the ENABLE/HALT switch must correspond with
+    // the initial state of enableHaltSwitch_ as defined in createBezel().
+    HaltEnablePosition currentHaltEnablePosition_ {HaltEnablePosition::Enable};
+
+    vector<Subscriber> subscribers_ {};
 
     void createBezel (Window* window, const KY11_AConfig& ky11_aConfig,
         unique_ptr<PanelBuilder>& panelBuilder);
@@ -79,6 +94,8 @@ private:
     void depSwitchClicked (Button::State state);
     void enableHaltSwitchClicked (Button::State state);
     void startSwitchClicked (Button::State state);
+    void continueSwitchClicked (Button::State state);
+    void singleInstructionCycleSwitchClicked (Button::State state);
 };
 
 // Definition of the state machine for the KY11-A. The class has to be defined

@@ -76,6 +76,16 @@ void KY11_A::createBezel (Window* window, const KY11_AConfig& ky11_aConfig,
         {"start_up", "start_down"},
         Button::MomentaryDownTwoPositionsState::Up,
         bind (&KY11_A::startSwitchClicked, this, _1));
+
+    continueSwitch_ = panelBuilder->createMultiPositionSwitch (
+        {"cont_up", "cont_down"},
+        Button::MomentaryDownTwoPositionsState::Up,
+        bind (&KY11_A::continueSwitchClicked, this, _1));
+
+    singleInstructionCycleSwitch_ = panelBuilder->createMultiPositionSwitch (
+        {"sinst_scycle_up", "sinst_scycle_down"},
+        Button::MomentaryDownTwoPositionsState::Up,
+        bind (&KY11_A::singleInstructionCycleSwitchClicked, this, _1));
 }
 
 void KY11_A::powerSwitchClicked (Button::State state)
@@ -188,11 +198,17 @@ void KY11_A::enableHaltSwitchClicked (Button::State state)
 {
     if (get<Button::MomentaryUpTwoPositionsState> (state) ==
         Button::MomentaryUpTwoPositionsState::Down)
-            bus_->BHALT ().set (true);
-    else
-            bus_->BHALT ().set (false);
-}
+    {
+        currentHaltEnablePosition_ = KY11Console::HaltEnablePosition::Halt;
 
+        for (const Subscriber& subscriber : subscribers_)
+        {
+            subscriber (KY11Console::HaltPressed {});
+        }
+    }
+    else
+        currentHaltEnablePosition_ = KY11Console::HaltEnablePosition::Enable;
+}
 
 // When ENABLE/HALT is set to ENABLE, depressing START provides a system clear
 // operation and then begins processor operation. A LOAD ADDR operation
@@ -208,11 +224,66 @@ void KY11_A::enableHaltSwitchClicked (Button::State state)
 //
 void KY11_A::startSwitchClicked (Button::State state)
 {
+    if (get<Button::MomentaryDownTwoPositionsState> (state) ==
+        Button::MomentaryDownTwoPositionsState::Down)
+    {
+        for (const Subscriber& subscriber : subscribers_)
+        {
+            subscriber (KY11Console::StartPressed {});
+        }
+    }
+}
+
+
+// Pressint the CONT switch causes the processor to continue operation from
+// the previous point at which it had stopped.
+//
+// If the ENABLE/HALT switch is in the ENABLE mode, CONT returns bus control
+// from the console to the processor and continues program operation.
+//
+// If the ENABLE/HALT switch is set to HALT, depressing the CONT key causes
+// the processor to perform either a single instruction or a single bus cycle
+// (dependent on position of the S-INST/S-CYCLE switch) and then stop. Bus
+// control has been returned to the console and the CONT switch must be used
+// to continue.
+//
+void KY11_A::continueSwitchClicked (Button::State state)
+{
     if (get<Button::MomentaryUpTwoPositionsState> (state) ==
         Button::MomentaryUpTwoPositionsState::Down)
     {
-        bus_->BINIT ().cycle ();
-        cpuController_->start (*addressRegister_);
-        trace.cpuEvent (CpuEventRecordType::CPU_ODT_P, *addressRegister_);
+        for (const Subscriber& subscriber : subscribers_)
+        {
+            subscriber (KY11Console::ContinuePressed {});
+        }
     }
+}
+
+// The SINST/S-CYCLE switch allows the processor to step through program
+// operation either one instruction or one bus cycle at a time. The user may
+// note processor operation and contents of registers during major states or
+// bus cycles of individual instructions.
+//
+// S-INST position - the processor halts after an instruction. This process is
+// repeated each time the CONT key is depressed. Console switches (LOAD ADDR,
+// EXAM, DEP) can be used when the processor halts.
+//
+// S-CYCLE position - The processor halts after a bus cycle. The process is
+// repeated each time CONT is depressed. Console switches are inoperative
+// unless the machine is stepped to the S-INST halt position. (Changing mode
+// to S-INST and using CONT switch effects this.)
+//
+// ToDo: SINST/S-CYCLE switch to be implemented
+//
+void KY11_A::singleInstructionCycleSwitchClicked (Button::State state)
+{ }
+
+void KY11_A::subscribe (Subscriber subscriber)
+{
+    subscribers_.push_back (subscriber);
+}
+
+KY11Console::HaltEnablePosition KY11_A::haltEnablePosition () const
+{
+    return currentHaltEnablePosition_;
 }

@@ -49,7 +49,7 @@ private:
     unique_ptr<KY11_A> ky11_a_;
     unique_ptr<KA11MachineState> machineState_;
     u16 startAddress_;
-
+    
     // The KA11 is started in its own thread
     std::thread ka11Thread_;
 };
