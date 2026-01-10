@@ -25,7 +25,7 @@ KY11_A::State KY11_A::StateMachine::transition (Initial&&, HALT_Pressed)
 
 KY11_A::State KY11_A::StateMachine::transition (Initial&&, START_Pressed)
 {
-    return Running {};
+    return ProgramOperation {};
 }
 
 KY11_A::State KY11_A::StateMachine::transition (AddressLoaded&&, LOAD_ADDR_Pressed)
@@ -52,7 +52,7 @@ KY11_A::State KY11_A::StateMachine::transition (AddressLoaded&&, DEP_Pressed)
 
 KY11_A::State KY11_A::StateMachine::transition (AddressLoaded&&, START_Pressed)
 {
-    return Running {};
+    return ProgramOperation {};
 } 
 
 KY11_A::State KY11_A::StateMachine::transition (ExamineSequence&&, EXAM_Pressed)
@@ -80,7 +80,7 @@ KY11_A::State KY11_A::StateMachine::transition (ExamineSequence&&, DEP_Pressed)
 
 KY11_A::State KY11_A::StateMachine::transition (ExamineSequence&&, START_Pressed)
 {
-    return Running {};
+    return ProgramOperation {};
 }
 
 KY11_A::State KY11_A::StateMachine::transition (DepositSequence&&, DEP_Pressed)
@@ -107,5 +107,5 @@ KY11_A::State KY11_A::StateMachine::transition (DepositSequence&&, EXAM_Pressed)
 
 KY11_A::State KY11_A::StateMachine::transition (DepositSequence&&, START_Pressed)
 {
-    return Running {};
+    return ProgramOperation {};
 }

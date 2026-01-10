@@ -44,10 +44,10 @@ public:
     struct AddressLoaded {};
     struct ExamineSequence {};
     struct DepositSequence {};
-    struct Running {};
+    struct ProgramOperation {};
 
     using State = variant <Initial, AddressLoaded, ExamineSequence,
-        DepositSequence, Running, monostate>;
+        DepositSequence, ProgramOperation, monostate>;
 
     // Definition of the KY11-A events
     struct EXAM_Pressed {};
