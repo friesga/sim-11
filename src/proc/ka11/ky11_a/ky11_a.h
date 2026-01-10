@@ -40,13 +40,13 @@ public:
     HaltEnablePosition haltEnablePosition () const override;
 
     // Definition of the KY11-A states
-    struct Initial {};
+    struct Off {};
     struct AddressLoaded {};
     struct ExamineSequence {};
     struct DepositSequence {};
     struct ProgramOperation {};
 
-    using State = variant <Initial, AddressLoaded, ExamineSequence,
+    using State = variant <Off, AddressLoaded, ExamineSequence,
         DepositSequence, ProgramOperation, monostate>;
 
     // Definition of the KY11-A events
@@ -108,8 +108,8 @@ class KY11_A::StateMachine : public variantFsm::Fsm<StateMachine, Event, State>
 public:
     StateMachine (KY11_A* context);
 
-    State transition (Initial&&, HALT_Pressed);                 // -> AddressLoaded
-    State transition (Initial&&, START_Pressed);                // -> Running
+    State transition (Off&&, HALT_Pressed);                     // -> AddressLoaded
+    State transition (Off&&, START_Pressed);                    // -> Running
     State transition (AddressLoaded&&, LOAD_ADDR_Pressed);      // -> AddressLoaded
     State transition (AddressLoaded&&, EXAM_Pressed);           // -> ExamineSequence
     State transition (AddressLoaded&&, DEP_Pressed);            // -> DepositSequence

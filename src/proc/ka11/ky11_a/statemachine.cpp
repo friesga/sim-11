@@ -18,12 +18,12 @@ void KY11_A::StateMachine::initialTransition ()
         dispatch (START_Pressed {});
 }
 
-KY11_A::State KY11_A::StateMachine::transition (Initial&&, HALT_Pressed)
+KY11_A::State KY11_A::StateMachine::transition (Off&&, HALT_Pressed)
 {
     return AddressLoaded {};
 }
 
-KY11_A::State KY11_A::StateMachine::transition (Initial&&, START_Pressed)
+KY11_A::State KY11_A::StateMachine::transition (Off&&, START_Pressed)
 {
     return ProgramOperation {};
 }
