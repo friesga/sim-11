@@ -3,8 +3,30 @@
 KY11_A::StateMachine::StateMachine (KY11_A* context)
     :
     context_ {context}
-{ }
+{
+    initialTransition ();
+}
 
+// The transition from the initial state depends on the position of the
+// ENABLE/HALT switch.
+//
+void KY11_A::StateMachine::initialTransition ()
+{
+    if (context_->haltEnablePosition () == KY11Console::HaltEnablePosition::Halt)
+        dispatch (HALT_Pressed {});
+    else
+        dispatch (START_Pressed {});
+}
+
+KY11_A::State KY11_A::StateMachine::transition (Initial&&, HALT_Pressed)
+{
+    return AddressLoaded {};
+}
+
+KY11_A::State KY11_A::StateMachine::transition (Initial&&, START_Pressed)
+{
+    return Running {};
+}
 
 KY11_A::State KY11_A::StateMachine::transition (AddressLoaded&&, LOAD_ADDR_Pressed)
 {

@@ -196,8 +196,8 @@ void KY11_A::depSwitchClicked (Button::State state)
 //
 void KY11_A::enableHaltSwitchClicked (Button::State state)
 {
-    if (get<Button::MomentaryUpTwoPositionsState> (state) ==
-        Button::MomentaryUpTwoPositionsState::Down)
+    if (get<Button::TwoPositionsState> (state) ==
+        Button::TwoPositionsState::Down)
     {
         currentHaltEnablePosition_ = KY11Console::HaltEnablePosition::Halt;
 
@@ -227,9 +227,11 @@ void KY11_A::startSwitchClicked (Button::State state)
     if (get<Button::MomentaryDownTwoPositionsState> (state) ==
         Button::MomentaryDownTwoPositionsState::Down)
     {
+        stateMachine_->dispatch (START_Pressed {});
+        
         for (const Subscriber& subscriber : subscribers_)
         {
-            subscriber (KY11Console::StartPressed {});
+            subscriber (KY11Console::StartPressed {*addressRegister_});
         }
     }
 }
@@ -249,8 +251,8 @@ void KY11_A::startSwitchClicked (Button::State state)
 //
 void KY11_A::continueSwitchClicked (Button::State state)
 {
-    if (get<Button::MomentaryUpTwoPositionsState> (state) ==
-        Button::MomentaryUpTwoPositionsState::Down)
+    if (get<Button::MomentaryDownTwoPositionsState> (state) ==
+        Button::MomentaryDownTwoPositionsState::Down)
     {
         for (const Subscriber& subscriber : subscribers_)
         {
