@@ -20,6 +20,11 @@ Signal& Unibus::BHALT ()
     return signalHandler_.BHALT ();
 }
 
+Signal& Unibus::START ()
+{
+    return signalHandler_.START ();
+}
+
 Signal& Unibus::BINIT ()
 {
     return signalHandler_.BINIT ();

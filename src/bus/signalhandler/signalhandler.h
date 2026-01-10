@@ -39,6 +39,7 @@ public:
 	Signal& BPOK ();
 	Signal& RESET ();
 	Signal& BHALT ();
+	Signal& START ();
 	Signal& BINIT ();
 	Signal& BOOT ();
 	Signal& BatteryPower ();
@@ -54,6 +55,7 @@ private:
 	Signal BPOK_;
 	Signal RESET_;
 	Signal BHALT_;
+	Signal START_;
 	Signal BINIT_;
 	Signal BOOT_;
 	Signal BatteryPower_;

@@ -35,6 +35,7 @@ public:
 	Signal& BPOK ();
 	Signal& RESET ();
 	Signal& BHALT ();
+	Signal& START ();
 	Signal& BINIT ();
 	Signal& BOOT ();
 	Signal& BatteryPower ();

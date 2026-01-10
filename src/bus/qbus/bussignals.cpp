@@ -20,6 +20,11 @@ Signal& Qbus::BHALT ()
     return signalHandler_.BHALT ();
 }
 
+Signal& Qbus::START ()
+{
+    return signalHandler_.START ();
+}
+
 Signal& Qbus::BINIT ()
 {
     return signalHandler_.BINIT ();
