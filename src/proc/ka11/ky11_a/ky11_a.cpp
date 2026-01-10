@@ -34,6 +34,8 @@ KY11_A::KY11_A (Bus* bus, Interfaces::CpuController* cpuController,
     dataRegister_ = make_unique<DataRegister> (panelBuilder);
 
     window->addPanel (panelBuilder->getPanel ());
+
+    bus_->BPOK ().subscribe (bind (&KY11_A::BPOKReceiver, this, _1));
 }
 
 void KY11_A::createBezel (Window* window, const KY11_AConfig& ky11_aConfig,
@@ -288,4 +290,12 @@ void KY11_A::subscribe (Subscriber subscriber)
 KY11Console::HaltEnablePosition KY11_A::haltEnablePosition () const
 {
     return currentHaltEnablePosition_;
+}
+
+void KY11_A::BPOKReceiver (bool signalValue)
+{
+    if (signalValue)
+        stateMachine_->dispatch (BPOK_High {});
+    // else
+    //    stateMachine_.push (BPOK_Low {});
 }

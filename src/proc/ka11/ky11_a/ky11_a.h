@@ -50,13 +50,14 @@ public:
         DepositSequence, ProgramOperation, monostate>;
 
     // Definition of the KY11-A events
+    struct BPOK_High {};
     struct EXAM_Pressed {};
     struct DEP_Pressed {};
     struct LOAD_ADDR_Pressed {};
     struct START_Pressed {};
     struct HALT_Pressed {};
 
-    using Event = variant <EXAM_Pressed, DEP_Pressed,
+    using Event = variant <BPOK_High, EXAM_Pressed, DEP_Pressed,
         LOAD_ADDR_Pressed, START_Pressed, HALT_Pressed>;
 
 private:
@@ -98,6 +99,7 @@ private:
     void startSwitchClicked (Button::State state);
     void continueSwitchClicked (Button::State state);
     void singleInstructionCycleSwitchClicked (Button::State state);
+    void BPOKReceiver (bool signalValue);
 };
 
 // Definition of the state machine for the KY11-A. The class has to be defined
@@ -108,20 +110,19 @@ class KY11_A::StateMachine : public variantFsm::Fsm<StateMachine, Event, State>
 public:
     StateMachine (KY11_A* context);
 
-    State transition (Off&&, HALT_Pressed);                     // -> AddressLoaded
-    State transition (Off&&, START_Pressed);                    // -> Running
+    State transition (Off&&, BPOK_High);                        // -> AddressLoaded/ProgramOperation
     State transition (AddressLoaded&&, LOAD_ADDR_Pressed);      // -> AddressLoaded
     State transition (AddressLoaded&&, EXAM_Pressed);           // -> ExamineSequence
     State transition (AddressLoaded&&, DEP_Pressed);            // -> DepositSequence
-    State transition (AddressLoaded&&, START_Pressed);          // -> Running
+    State transition (AddressLoaded&&, START_Pressed);          // -> ProgramOperation
     State transition (ExamineSequence&&, LOAD_ADDR_Pressed);    // -> AddressLoaded
     State transition (ExamineSequence&&, EXAM_Pressed);         // -> ExamineSequence
     State transition (ExamineSequence&&, DEP_Pressed);          // -> ExamineSequence
-    State transition (ExamineSequence&&, START_Pressed);        // -> Running
+    State transition (ExamineSequence&&, START_Pressed);        // -> ProgramOperation
     State transition (DepositSequence&&, LOAD_ADDR_Pressed);    // -> AddressLoaded
     State transition (DepositSequence&&, EXAM_Pressed);         // -> ExamineSequence
     State transition (DepositSequence&&, DEP_Pressed);          // -> DepositSequence
-    State transition (DepositSequence&&, START_Pressed);        // -> Running
+    State transition (DepositSequence&&, START_Pressed);        // -> ProgramOperation
 
     // Define the default transition for transitions not explicitly
     // defined above. The default transition implies the event is ignored.
@@ -133,8 +134,6 @@ public:
     
 private:
     KY11_A* context_ {};
-
-    void initialTransition ();
 };
 
 #endif // _KY11_A_H_
