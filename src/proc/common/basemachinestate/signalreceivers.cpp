@@ -7,6 +7,7 @@ using std::placeholders::_1;
 void BaseMachineState::subscribeToSignals ()
 {
     bus_->BHALT().subscribe (bind (&BaseMachineState::BHALTReceiver, this, _1));
+    bus_->START ().subscribe (bind (&BaseMachineState::STARTReceiver, this, _1));
     bus_->BPOK().subscribe (bind (&BaseMachineState::BPOKReceiver, this, _1));
     bus_->RESET().subscribe (bind (&BaseMachineState::ResetReceiver, this, _1));
     bus_->BOOT ().subscribe (bind (&BaseMachineState::BootReceiver, this, _1));
@@ -17,6 +18,12 @@ void BaseMachineState::BHALTReceiver (bool signalValue)
 {
     if (signalValue)
         signalEventQueue_.push (Halt {});
+}
+
+void BaseMachineState::STARTReceiver (bool signalValue)
+{
+    if (signalValue)
+        signalEventQueue_.push (Start {});
 }
 
 // The BPOK signal triggers the procesor power-up routine

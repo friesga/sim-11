@@ -46,6 +46,7 @@ public:
 
     // Declare the signal receivers
     void BHALTReceiver (bool signalValue);
+    void STARTReceiver (bool signalValue);
     void BPOKReceiver (bool signalValue);
     void ExitReceiver (bool signalValue);
     void ResetReceiver (bool signalValue);

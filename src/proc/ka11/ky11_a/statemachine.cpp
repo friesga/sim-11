@@ -39,6 +39,9 @@ KY11_A::State KY11_A::StateMachine::transition (AddressLoaded&&, DEP_Pressed)
 
 KY11_A::State KY11_A::StateMachine::transition (AddressLoaded&&, START_Pressed)
 {
+    context_->bus_->BINIT ().cycle ();
+    context_->cpuController_->start (*context_->addressRegister_);
+    context_->bus_->START ().cycle ();
     return ProgramOperation {};
 } 
 
