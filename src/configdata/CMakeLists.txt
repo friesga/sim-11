@@ -12,6 +12,7 @@ set (CONFIGURATOR_SRCS
     bdv11processor/bdv11processor.cpp
     serialconfig/dlv11jconfig/dlv11jconfig.cpp 
     serialconfig/uartconfig/uartconfig.cpp
+    serialconfig/dl11processor/dl11processor.cpp
     serialconfig/dlv11processor/dlv11processor.cpp
     msv11processor/msv11processor.cpp
     rk/rk11d/rk11dprocessor/rk11dprocessor.cpp

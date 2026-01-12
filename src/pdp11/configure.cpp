@@ -111,6 +111,8 @@ void PDP_11::configureQbusSystem (SystemConfig const & systemConfig,
         [this] (KA11Config ka11Config)
             { throw logic_error ("Should not happen"); },
         [this] (KDF11_UConfig kdf11_uConfig)
+            { throw logic_error ("Should not happen"); },
+        [this] (DL11Config dl11Config)
             { throw logic_error ("Should not happen"); }
     };
 
@@ -165,7 +167,9 @@ void PDP_11::configureUnibusSystem (SystemConfig const & systemConfig,
         [this] (MS11PConfig ms11pConfig)
             {memoryDevices_.push_back (new MS11P (bus_, ms11pConfig)); },
         [this, window] (BA11_LConfig ba11_lConfig)
-            {ba11_l_ = std::make_unique<BA11_L> (bus_, window, ba11_lConfig); }
+            {ba11_l_ = std::make_unique<BA11_L> (bus_, window, ba11_lConfig); },
+        [this] (DL11Config dl11Config)
+            { throw logic_error ("To be implemented"); }
     };
 
     for (DeviceConfig deviceConfigVariant : systemConfig)

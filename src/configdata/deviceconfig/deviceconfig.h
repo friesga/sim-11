@@ -16,6 +16,7 @@
 #include "configdata/rk/rk11d/rk11dconfig/rk11dconfig.h"
 #include "configdata/rl/rlconfig/rlconfig.h"
 #include "configdata/rxv21/rxv21config/rxv21config.h"
+#include "configdata/serialconfig/dl11config/dl11config.h"
 #include "configdata/serialconfig/dlv11jconfig/dlv11jconfig.h"
 #include "configdata/kdf11/slu/sluconfig/sluconfig.h"
 
@@ -30,6 +31,7 @@ using DeviceConfig = variant<
     KT24Config,
     M9312Config,
     MSV11Config,
+    DL11Config,
     DLV11JConfig,
     BDV11Config,
     RXV21Config,
