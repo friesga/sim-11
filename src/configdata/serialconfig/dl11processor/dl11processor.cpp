@@ -26,6 +26,12 @@ void DL11Processor::processAddress (iniparser::Value value)
 		throw invalid_argument {"Incorrect address in DL11 section specified: " +
 			value.asString ()};
 	}
+
+	if (dl11Config.baseAddress < 0174000)
+			throw invalid_argument {"DL11 base address must be in range 0174000 - 0177776"};
+
+	if (dl11Config.baseAddress & 07)
+		throw std::invalid_argument {"DL11 bus address must be on a eight byte boundary"};
 }
 
 void DL11Processor::processVector (iniparser::Value value)
@@ -36,9 +42,12 @@ void DL11Processor::processVector (iniparser::Value value)
 	}
 	catch (invalid_argument const&)
 	{
-		throw invalid_argument {"Incorrect vector in DL11 section specified: " +
+		throw invalid_argument {"Incorrect vector address in DL11 section specified: " +
 			value.asString ()};
 	}
+
+	if (dl11Config.baseVector > 0376)
+        throw invalid_argument {"DL11 vector address must be in range 0000 - 0376"};
 }
 
 void DL11Processor::checkConsistency ()
