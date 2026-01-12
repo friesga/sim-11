@@ -31,6 +31,11 @@ private:
 
 	void processAddress (iniparser::Value value);
 	void processVector (iniparser::Value value);
+
+    // Private functions required by the SectionProcessor interface
+	void processValue (iniparser::Section::ValueIterator valueIterator) override;
+	void checkConsistency () override;
+	void processSubsection (iniparser::Section* subSection) override;
 };
 
 #endif // _DL11PROCESSOR_H_

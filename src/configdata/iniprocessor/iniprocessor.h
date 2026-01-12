@@ -15,6 +15,7 @@
 #include "configdata/rl/rlv12processor/rlv12processor.h"
 #include "configdata/rxv21/rxv21processor/rxv21processor.h"
 #include "../bdv11processor/bdv11processor.h"
+#include "configdata/serialconfig/dl11processor/dl11processor.h"
 #include "configdata/serialconfig/dlv11processor/dlv11processor.h"
 #include "../msv11processor/msv11processor.h"
 #include "configdata/ka11/ka11processor/ka11processor.h"
@@ -72,6 +73,7 @@ private:
 		{"BA11-L",  &IniProcessor::create<BA11_LProcessor>},
 		{"BA11-N",  &IniProcessor::create<BA11_NProcessor>},
 		{"BDV11",   &IniProcessor::create<BDV11Processor>},
+		{"DL11",    &IniProcessor::create<DL11Processor>},
 		{"DLV11-J", &IniProcessor::create<DLV11Processor>},
 		{"KT24",    &IniProcessor::create<KT24Processor>},
 		{"M9312",   &IniProcessor::create<M9312Processor>},

@@ -23,6 +23,7 @@ set (GTEST_SRCS
     configdata/consoleconsistencytest.cpp
     configdata/cabinetconsistencytest.cpp
     configdata/bdv11configuratortest.cpp
+    configdata/dl11configuratortest.cpp
     configdata/dlv11configuratortest.cpp
     configdata/ka11configuratortest.cpp
     configdata/kd11_naconfiguratortest.cpp

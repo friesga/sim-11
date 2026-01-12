@@ -3,6 +3,18 @@
 
 using std::invalid_argument;
 
+void DL11Processor::processValue (iniparser::Section::ValueIterator valueIterator)
+{
+	Process processFunction = valueProcessors[valueIterator->first];
+
+	if (processFunction == nullptr)
+		// This exception will be catched and processed in 
+		// SectionProcessor::processSection().
+		throw std::out_of_range ("Unknown key in DL11 section");
+
+	(this->*processFunction)(valueIterator->second);
+}
+
 void DL11Processor::processAddress (iniparser::Value value)
 {
 	try
@@ -27,6 +39,14 @@ void DL11Processor::processVector (iniparser::Value value)
 		throw invalid_argument {"Incorrect vector in DL11 section specified: " +
 			value.asString ()};
 	}
+}
+
+void DL11Processor::checkConsistency ()
+{
+}
+
+void DL11Processor::processSubsection (iniparser::Section* subSection)
+{
 }
 
 DeviceConfig DL11Processor::getConfig ()
