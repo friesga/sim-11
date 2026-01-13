@@ -169,7 +169,7 @@ void PDP_11::configureUnibusSystem (SystemConfig const & systemConfig,
         [this, window] (BA11_LConfig ba11_lConfig)
             {ba11_l_ = std::make_unique<BA11_L> (bus_, window, ba11_lConfig); },
         [this] (DL11Config dl11Config)
-            { throw logic_error ("To be implemented"); }
+            { busDevices_.emplace_back (new DL11 (bus_, dl11Config)); }
     };
 
     for (DeviceConfig deviceConfigVariant : systemConfig)

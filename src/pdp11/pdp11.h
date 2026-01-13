@@ -11,6 +11,7 @@
 #include "rk/rk11d/rk11d.h"
 #include "rlv12/rlv12.h"
 #include "bdv11/bdv11.h"
+#include "dl11/dl11/dl11.h"
 #include "dl11/dlv11j/dlv11j.h"
 #include "msv11d/msv11d.h"
 #include "ms11p/ms11p.h"
