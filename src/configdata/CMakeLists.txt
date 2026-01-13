@@ -32,6 +32,7 @@ set (CONFIGURATOR_SRCS
     kdf11/kdf11_u/kdf11_uprocessor/kdf11_uprocessor.cpp
     kdf11/slu/sluprocessor/sluprocessor.cpp
     kt24/kt24processor/kt24processor.cpp
+    m792/m792processor/m792processor.cpp
     m9312/m9312processor/m9312processor.cpp
     ms11pprocessor/ms11pprocessor.cpp
     consistencychecker/consistencychecker.cpp

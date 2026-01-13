@@ -10,6 +10,7 @@
 #include "configdata/kdf11/kdf11_b/kdf11_bconfig/kdf11_bconfig.h"
 #include "configdata/kdf11/kdf11_u/kdf11_uconfig/kdf11_uconfig.h"
 #include "configdata/kt24/kt24config/kt24config.h"
+#include "configdata/m792/m792config/m792config.h"
 #include "configdata/m9312/m9312config/m9312config.h"
 #include "configdata/msv11config/msv11config.h"
 #include "configdata/ms11pconfig/ms11pconfig.h"
@@ -29,6 +30,7 @@ using DeviceConfig = variant<
     KDF11_AConfig,
     KDF11_BConfig,
     KT24Config,
+    M792Config,
     M9312Config,
     MSV11Config,
     DL11Config,

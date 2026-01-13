@@ -10,6 +10,7 @@
 #include "configdata/kdf11/kdf11_b/kdf11_bconfig/kdf11_bconfig.h"
 #include "configdata/kdf11/kdf11_u/kdf11_uconfig/kdf11_uconfig.h"
 #include "configdata/kt24/kt24config/kt24config.h"
+#include "configdata/m792/m792config/m792config.h"
 #include "configdata/m9312/m9312config/m9312config.h"
 #include "configdata/consistencychecker/consistencychecker.h"
 #include "console/operatorconsole/operatorconsolefactory.h"
@@ -113,6 +114,8 @@ void PDP_11::configureQbusSystem (SystemConfig const & systemConfig,
         [this] (KDF11_UConfig kdf11_uConfig)
             { throw logic_error ("Should not happen"); },
         [this] (DL11Config dl11Config)
+            { throw logic_error ("Should not happen"); },
+         [this] (M792Config m792Config)
             { throw logic_error ("Should not happen"); }
     };
 
@@ -169,7 +172,9 @@ void PDP_11::configureUnibusSystem (SystemConfig const & systemConfig,
         [this, window] (BA11_LConfig ba11_lConfig)
             {ba11_l_ = std::make_unique<BA11_L> (bus_, window, ba11_lConfig); },
         [this] (DL11Config dl11Config)
-            { busDevices_.emplace_back (new DL11 (bus_, dl11Config)); }
+            { busDevices_.emplace_back (new DL11 (bus_, dl11Config)); },
+        [this] (M792Config m792Config)
+            { throw "To be implemented"; }
     };
 
     for (DeviceConfig deviceConfigVariant : systemConfig)

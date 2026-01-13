@@ -8,6 +8,7 @@
 #include "configdata/msv11config/msv11config.h"
 #include "configdata/ba11/ba11n/ba11nprocessor/ba11nprocessor.h"
 #include "configdata/kt24/kt24processor/kt24processor.h"
+#include "configdata/m792/m792processor/m792processor.h"
 #include "configdata/m9312/m9312processor/m9312processor.h"
 #include "configdata/rk/rk11d/rk11dprocessor/rk11dprocessor.h"
 #include "configdata/rl/rl11processor/rl11processor.h"
@@ -76,6 +77,7 @@ private:
 		{"DL11",    &IniProcessor::create<DL11Processor>},
 		{"DLV11-J", &IniProcessor::create<DLV11Processor>},
 		{"KT24",    &IniProcessor::create<KT24Processor>},
+		{"M792",    &IniProcessor::create<M792Processor>},
 		{"M9312",   &IniProcessor::create<M9312Processor>},
 		{"MSV11",   &IniProcessor::create<MSV11Processor>},
 		{"RK11-D",  &IniProcessor::create<RK11DProcessor>},
