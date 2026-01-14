@@ -21,6 +21,7 @@
 #include "proc/kd/kdf11/kdf11_b/kdf11_b.h"
 #include "proc/kd/kdf11/kdf11_u/kdf11_u.h"
 #include "kt24/kt24.h"
+#include "m792/m792.h"
 #include "m9312/m9312.h"
 #include "bus/include/bus.h"
 #include "console/console.h"

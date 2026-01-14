@@ -174,7 +174,7 @@ void PDP_11::configureUnibusSystem (SystemConfig const & systemConfig,
         [this] (DL11Config dl11Config)
             { busDevices_.emplace_back (new DL11 (bus_, dl11Config)); },
         [this] (M792Config m792Config)
-            { throw "To be implemented"; }
+            {  busDevices_.emplace_back (new M792 (bus_, m792Config)); }
     };
 
     for (DeviceConfig deviceConfigVariant : systemConfig)
