@@ -61,6 +61,7 @@ set (GTEST_SRCS
     locationtest.cpp
     kt24/kt24configuratortest.cpp
     kt24/kt24test.cpp
+    m792test.cpp
     m9312/m9312configuratortest.cpp
     m9312/m9312consistencytest.cpp
     m9312/m9312test.cpp
