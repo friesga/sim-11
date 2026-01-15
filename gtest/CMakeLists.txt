@@ -40,6 +40,7 @@ set (GTEST_SRCS
     geometrytest.cpp
     instructiondecodertest.cpp
     proc/common_executor/common_executortest.cpp
+    proc/ka11/ka11registertest.cpp
     proc/kd11_na/inctest.cpp
     proc/kd11_na/movtest.cpp
     proc/kd11_na/singularregisterstest.cpp

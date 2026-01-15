@@ -4,30 +4,27 @@
 #include "proc/common/cpudata/basecpudata/basecpudata.h"
 #include "kdf11registers/kdf11registers.h"
 #include "kdf11_psw.h"
-#include "abstractbusdevice/abstractbusdevice.h"
+#include "proc/common/cpudata/pswbusdevice/pswbusdevice.h"
 
 //
-// The class KDF11CpuData implements the CpuData interface for the KDF11-A
-// plus the BusDevice interface for bus access to the PSW.
+// The class KDF11CpuData provides the KDF11-spcific version of the CpuData,
+// the BusDevice interface for bus access to the PSW and implements the
+// stack overflow functions required by the CpuData interface.
 //
 class KDF11CpuData : public BaseCpuData<KDF11Registers, KDF11_PSW>,
-	public AbstractBusDevice
+    public PSWBusDevice<KDF11CpuData>
 {
 public:
 	// Functions required by the CpuData interface and not implemented by
 	// BaseCpuData
 	bool stackOverflow () override;
 
-	// Functions required by the BusDevice interface and not implemented by
-	// AbstractBusDevice.
-	CondData<u16> read (BusAddress address) override;
-	StatusCode writeWord (BusAddress address, u16 value) override;
-	bool responsible (BusAddress address) override;
-	void reset () override;
+    // Functions used by the PSWBusDevice class
+	BaseCpuData& cpuData () noexcept { return *this; }
+	BaseCpuData const& cpuData () const noexcept { return *this; }
 
 private:
 	enum {stackLimit = 0400};
-	enum { PSWAddress = 0177776 };
 
 	constexpr bool inKernelMode ();
 };

@@ -9,7 +9,6 @@ set (KDF11_SRCS
     kdf11processorexceptionhandler/kdf11processorexceptionhandler.cpp
     haltmode/haltmode.cpp
     cpudata/kdf11registers/kdf11registers.cpp
-    cpudata/kdf11busdevice.cpp
     ktf11_a/ktf11_a.cpp
     ktf11_a/ktf11_abusdevice.cpp)
 
