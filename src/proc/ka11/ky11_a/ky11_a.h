@@ -13,6 +13,8 @@
 #include "types.h"
 #include "variantfsm/fsm.h"
 #include "proc/include/ky11console.h"
+#include "abstractbusdevice/abstractbusdevice.h"
+#include "devicecommon/registerhandler/registerhandler.h"
 
 #include <utility>
 #include <string>
@@ -29,7 +31,7 @@ using std::placeholders::_1;
 using std::variant;
 using std::vector;
 
-class KY11_A : public KY11Console
+class KY11_A : public KY11Console, public AbstractBusDevice
 {
 public:
     KY11_A (Bus* bus, Interfaces::CpuController* cpuController,
@@ -38,6 +40,12 @@ public:
     // Functions required by the KY11Console interface
     void subscribe (Subscriber subscriber) override;
     HaltEnablePosition haltEnablePosition () const override;
+
+    // Functions required by the AbstractBusDevice class
+    CondData<u16> read (BusAddress address);
+    StatusCode writeWord (BusAddress address, u16 value);
+    bool responsible (BusAddress address);
+    void reset ();
 
     // Definition of the KY11-A states
     struct Off {};
@@ -61,6 +69,8 @@ public:
         LOAD_ADDR_Pressed, START_Pressed, HALT_Pressed>;
 
 private:
+    static constexpr u16 switchRegisterAddress {0177570};
+
     Bus* bus_;
     Interfaces::CpuController* cpuController_;
     unique_ptr<SwitchRegister> switchRegister_ {};

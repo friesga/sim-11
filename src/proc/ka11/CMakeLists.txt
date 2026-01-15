@@ -6,6 +6,7 @@ set (KA11_SRCS
     ky11_a/addressregister/addressregister.cpp
     ky11_a/switchregister/switchregister.cpp
     ky11_a/dataregister/dataregister.cpp
+    ky11_a/ky11_abusdevice.cpp
     executor/executor.cpp)
 
 target_sources (${TARGET} PRIVATE ${KA11_SRCS})
