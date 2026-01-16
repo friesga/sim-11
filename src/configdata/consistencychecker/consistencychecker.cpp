@@ -99,7 +99,7 @@ void ConsistencyChecker::checkUnibusConsistency ()
         throw invalid_argument ("No processor configured, this system cannot run.");
 
     checkMS11Consistency<MS11PConfig, 1024 * 1024> ();
-    checkM9312Consistency ();
+    checkROMDeviceConsistency ();
 }
 
 // A system with undefined behaviour is created when it is configured

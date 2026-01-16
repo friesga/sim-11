@@ -8,7 +8,7 @@
 #include <gtest/gtest.h>
 
 // Verify that not both a M9312 and KT24 are configured
-TEST (M9312ConsistencyTest, justOneROMDeviceConfigured)
+TEST (ROMDeviceConsistencyTest, justOneROMDeviceConfigured)
 {
 	iniparser::File ft;
 	std::stringstream stream;
@@ -23,7 +23,7 @@ TEST (M9312ConsistencyTest, justOneROMDeviceConfigured)
 	ConsistencyChecker consistencyChecker {systemConfig};
 	try
 	{
-		consistencyChecker.checkM9312Consistency ();
+		consistencyChecker.checkROMDeviceConsistency ();
 		FAIL ();
 	}
 	catch (std::invalid_argument const& except)
@@ -38,7 +38,7 @@ TEST (M9312ConsistencyTest, justOneROMDeviceConfigured)
 }
 
 // Verify that either a M9312 or a KT24 is configured
-TEST (M9312ConsistencyTest, eitherM9312OrKT24Configured)
+TEST (ROMDeviceConsistencyTest, eitherM9312OrKT24Configured)
 {
 	iniparser::File ft;
 	std::stringstream stream;
@@ -52,7 +52,7 @@ TEST (M9312ConsistencyTest, eitherM9312OrKT24Configured)
 	ConsistencyChecker consistencyChecker {systemConfig};
 	try
 	{
-		consistencyChecker.checkM9312Consistency ();
+		consistencyChecker.checkROMDeviceConsistency ();
 		FAIL ();
 	}
 	catch (std::invalid_argument const& except)

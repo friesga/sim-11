@@ -40,7 +40,7 @@ set (CONFIGURATOR_SRCS
     consistencychecker/checkms11consistency.cpp
     consistencychecker/checkkdf11bconsistency.cpp
     consistencychecker/checkcabinetconsistency.cpp
-    consistencychecker/checkm9312consistency.cpp
+    consistencychecker/checkromdeviceconsistency.cpp
     cabinetprocessor/cabinetprocessor.cpp)
 
 target_sources (${TARGET} PRIVATE ${CONFIGURATOR_SRCS})
