@@ -11,6 +11,9 @@ KA11::KA11 (Bus* bus, Window* window, const KA11Config& ka11Config)
     ky11_a_ = make_unique<KY11_A> (bus, &cpuController_, window,
         *ka11Config.ky11_aConfig_);
 
+    vector<BusDevice*> devices {&cpuData_, ky11_a_.get ()};
+    registerHandler_ = make_unique<RegisterHandler> (devices);
+
     machineState_ = make_unique<KA11MachineState> (bus_, &cpuData_,
         &cpuController_, &mmu_, *ky11_a_);
 }
@@ -34,23 +37,20 @@ void KA11::start ()
 
 CondData<u16> KA11::read (BusAddress address)
 {
-    return {};
+    return registerHandler_->read (address);
 }
 
 StatusCode KA11::writeWord (BusAddress address, u16 value)
 {
-    return StatusCode::FunctionNotImplemented;
-}
-
-StatusCode KA11::writeByte (BusAddress address, u8 value)
-{
-    return StatusCode::FunctionNotImplemented;
+    return registerHandler_->writeWord (address, value);
 }
 
 bool KA11::responsible (BusAddress address)
 {
-    return false;
+    return registerHandler_->responsible (address);
 }
 
 void KA11::reset ()
-{}
+{
+    return registerHandler_->reset ();
+}

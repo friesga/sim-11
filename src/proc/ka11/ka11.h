@@ -4,6 +4,7 @@
 #include "bus/include/bus.h"
 #include "proc/kd/include/pdp11processor.h"
 #include "configdata/ka11/ka11config/ka11config.h"
+#include "devicecommon/registerhandler/registerhandler.h"
 #include "proc/ka11/ky11_a/ky11_a.h"
 #include "proc/ka11/ka11machinestate/ka11machinestate.h"
 #include "proc/ka11/ka11cpudata/ka11cpudata.h"
@@ -30,7 +31,6 @@ public:
     // Functions required by the BusDevice interface
     CondData<u16> read (BusAddress address);
     StatusCode writeWord (BusAddress address, u16 value);
-    StatusCode writeByte (BusAddress address, u8 value);
     bool responsible (BusAddress address);
     void reset ();
 
@@ -49,7 +49,12 @@ private:
     unique_ptr<KY11_A> ky11_a_;
     unique_ptr<KA11MachineState> machineState_;
     u16 startAddress_;
-    
+
+    // RegisterHandler performs the functions required by the BusDevice
+    // interface. These functions are put in a separate class as they are
+    // also used by the KDF11_A and KDF11_B classes.
+    unique_ptr<RegisterHandler> registerHandler_;
+
     // The KA11 is started in its own thread
     std::thread ka11Thread_;
 };
