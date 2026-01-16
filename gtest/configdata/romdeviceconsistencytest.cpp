@@ -7,8 +7,8 @@
 #include <fstream>	
 #include <gtest/gtest.h>
 
-// Verify that not both a M9312 and KT24 are configured
-TEST (ROMDeviceConsistencyTest, justOneROMDeviceConfigured)
+// Verify that not both a M9312 and KT24 can be configured
+TEST (ROMDeviceConsistencyTest, eitherM9312OrKT24Configured)
 {
 	iniparser::File ft;
 	std::stringstream stream;
@@ -29,7 +29,7 @@ TEST (ROMDeviceConsistencyTest, justOneROMDeviceConfigured)
 	catch (std::invalid_argument const& except)
 	{
 		EXPECT_STREQ (except.what (),
-			"Double diagnostic/boot ROM device specified, specify either M9312 or KT24");
+			"Multiple diagnostic/boot ROM devices specified, specify one of M9312, KT24 or M792");
 	}
 	catch (...)
 	{
@@ -37,8 +37,39 @@ TEST (ROMDeviceConsistencyTest, justOneROMDeviceConfigured)
 	}
 }
 
-// Verify that either a M9312 or a KT24 is configured
-TEST (ROMDeviceConsistencyTest, eitherM9312OrKT24Configured)
+// Verify that not both a M9312 and M792 can be configured
+TEST (ROMDeviceConsistencyTest, eitherM9312OrM792Configured)
+{
+	iniparser::File ft;
+	std::stringstream stream;
+	stream << "[M9312]\n"
+		"[M792]\n"
+		"option = M792-YB\n";
+	stream >> ft;
+
+	IniProcessor iniProcessor;
+	EXPECT_NO_THROW (iniProcessor.process (ft));
+
+	SystemConfig systemConfig = iniProcessor.getSystemConfig ();
+	ConsistencyChecker consistencyChecker {systemConfig};
+	try
+	{
+		consistencyChecker.checkROMDeviceConsistency ();
+		FAIL ();
+	}
+	catch (std::invalid_argument const& except)
+	{
+		EXPECT_STREQ (except.what (),
+			"Multiple diagnostic/boot ROM devices specified, specify one of M9312, KT24 or M792");
+	}
+	catch (...)
+	{
+		FAIL ();
+	}
+}
+
+// Verify that at least one ROM device is configured
+TEST (ROMDeviceConsistencyTest, atLeastOneROMDeviceConfigured)
 {
 	iniparser::File ft;
 	std::stringstream stream;
@@ -58,7 +89,7 @@ TEST (ROMDeviceConsistencyTest, eitherM9312OrKT24Configured)
 	catch (std::invalid_argument const& except)
 	{
 		EXPECT_STREQ (except.what (),
-			"No diagnostic/boot ROM specified, specify M9312 or KT24");
+			"No diagnostic/boot ROM specified, specify M9312, KT24 or M792");
 	}
 	catch (...)
 	{

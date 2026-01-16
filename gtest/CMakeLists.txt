@@ -35,6 +35,7 @@ set (GTEST_SRCS
     configdata/ba11/ba11lconfiguratortest.cpp
     configdata/ba11/ba11consistencytest.cpp
     configdata/unibusconsistencytest.cpp
+    configdata/romdeviceconsistencytest.cpp
     fiotest.cpp
     fistest.cpp
     geometrytest.cpp
@@ -64,7 +65,6 @@ set (GTEST_SRCS
     kt24/kt24test.cpp
     m792test.cpp
     m9312/m9312configuratortest.cpp
-    m9312/romdeviceconsistencytest.cpp
     m9312/m9312test.cpp
     m9312/m9312powerfailvectortest.cpp
     memorysizetest.cpp
