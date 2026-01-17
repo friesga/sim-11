@@ -23,8 +23,6 @@ std::same_as<T, FMUL> ||
 std::same_as<T, FDIV> ||
 std::same_as<T, BPT>  ||
 std::same_as<T, RTT>  ||
-std::same_as<T, CCC>  ||
-std::same_as<T, SCC>  ||
 std::same_as<T, MFPD> ||
 std::same_as<T, MTPD> ||
 std::same_as<T, MFPI> ||
