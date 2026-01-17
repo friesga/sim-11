@@ -38,8 +38,8 @@ public:
 	void reset ();
 
 private:
-	const u16 addressLow {0173000};
-	const u16 addressHigh {0173077};
+	const u16 addressLow {0173100};
+	const u16 addressHigh {0173177};
 
 	static constexpr std::size_t m792ROMSize = 32;
 	using m792ROMImage = array<u16, m792ROMSize> const;
