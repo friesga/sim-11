@@ -198,11 +198,17 @@ void KY11_A::depSwitchClicked (Button::State state)
 //
 void KY11_A::enableHaltSwitchClicked (Button::State state)
 {
-    if (get<Button::TwoPositionsState> (state) == 
-            Button::TwoPositionsState::Down)
+    if (get<Button::TwoPositionsState> (state) ==
+        Button::TwoPositionsState::Down)
+    {
+        bus_->BHALT ().set (true);
         currentHaltEnablePosition_ = KY11Console::HaltEnablePosition::Halt;
+    }
     else
+    {
+        bus_->BHALT ().set (false);
         currentHaltEnablePosition_ = KY11Console::HaltEnablePosition::Enable;
+    }
 }
 
 // When ENABLE/HALT is set to ENABLE, depressing START provides a system clear
