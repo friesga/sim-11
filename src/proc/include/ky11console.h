@@ -23,7 +23,6 @@ public:
     {};
 
     using ConsoleEvent = variant<StartPressed, ContinuePressed, HaltPressed>;
-    using Subscriber = function<void (ConsoleEvent)>;
 
     enum class HaltEnablePosition
     {
@@ -31,7 +30,6 @@ public:
         Enable
     };
 
-    virtual void subscribe (Subscriber subscriber) = 0;
     virtual HaltEnablePosition haltEnablePosition () const = 0;
 };
 

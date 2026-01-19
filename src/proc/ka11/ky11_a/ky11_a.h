@@ -38,7 +38,6 @@ public:
         Window* window, const KY11_AConfig& ky11_aConfig);
 
     // Functions required by the KY11Console interface
-    void subscribe (Subscriber subscriber) override;
     HaltEnablePosition haltEnablePosition () const override;
 
     // Functions required by the AbstractBusDevice class
@@ -96,8 +95,6 @@ private:
     // The initial position of the ENABLE/HALT switch must correspond with
     // the initial state of enableHaltSwitch_ as defined in createBezel().
     HaltEnablePosition currentHaltEnablePosition_ {HaltEnablePosition::Enable};
-
-    vector<Subscriber> subscribers_ {};
 
     void createBezel (Window* window, const KY11_AConfig& ky11_aConfig,
         unique_ptr<PanelBuilder>& panelBuilder);

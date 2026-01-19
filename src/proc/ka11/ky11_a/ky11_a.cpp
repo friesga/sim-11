@@ -198,16 +198,9 @@ void KY11_A::depSwitchClicked (Button::State state)
 //
 void KY11_A::enableHaltSwitchClicked (Button::State state)
 {
-    if (get<Button::TwoPositionsState> (state) ==
-        Button::TwoPositionsState::Down)
-    {
+    if (get<Button::TwoPositionsState> (state) == 
+            Button::TwoPositionsState::Down)
         currentHaltEnablePosition_ = KY11Console::HaltEnablePosition::Halt;
-
-        for (const Subscriber& subscriber : subscribers_)
-        {
-            subscriber (KY11Console::HaltPressed {});
-        }
-    }
     else
         currentHaltEnablePosition_ = KY11Console::HaltEnablePosition::Enable;
 }
@@ -227,15 +220,8 @@ void KY11_A::enableHaltSwitchClicked (Button::State state)
 void KY11_A::startSwitchClicked (Button::State state)
 {
     if (get<Button::MomentaryDownTwoPositionsState> (state) ==
-        Button::MomentaryDownTwoPositionsState::Down)
-    {
+            Button::MomentaryDownTwoPositionsState::Down)
         stateMachine_->dispatch (START_Pressed {});
-        
-        for (const Subscriber& subscriber : subscribers_)
-        {
-            subscriber (KY11Console::StartPressed {*addressRegister_});
-        }
-    }
 }
 
 
@@ -254,13 +240,8 @@ void KY11_A::startSwitchClicked (Button::State state)
 void KY11_A::continueSwitchClicked (Button::State state)
 {
     if (get<Button::MomentaryDownTwoPositionsState> (state) ==
-        Button::MomentaryDownTwoPositionsState::Down)
-    {
-        for (const Subscriber& subscriber : subscribers_)
-        {
-            subscriber (KY11Console::ContinuePressed {});
-        }
-    }
+            Button::MomentaryDownTwoPositionsState::Down)
+        stateMachine_->dispatch (START_Pressed {});
 }
 
 // The SINST/S-CYCLE switch allows the processor to step through program
@@ -280,11 +261,7 @@ void KY11_A::continueSwitchClicked (Button::State state)
 // ToDo: SINST/S-CYCLE switch to be implemented
 //
 void KY11_A::singleInstructionCycleSwitchClicked (Button::State state)
-{ }
-
-void KY11_A::subscribe (Subscriber subscriber)
 {
-    subscribers_.push_back (subscriber);
 }
 
 KY11Console::HaltEnablePosition KY11_A::haltEnablePosition () const
