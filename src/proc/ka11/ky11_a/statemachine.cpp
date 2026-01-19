@@ -99,3 +99,8 @@ KY11_A::State KY11_A::StateMachine::transition (DepositSequence&&, START_Pressed
 {
     return ProgramOperation {};
 }
+
+KY11_A::State KY11_A::StateMachine::transition (ProgramOperation&&, HALT_Pressed)
+{
+    return AddressLoaded {};
+}

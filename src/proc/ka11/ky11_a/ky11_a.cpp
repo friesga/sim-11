@@ -203,6 +203,7 @@ void KY11_A::enableHaltSwitchClicked (Button::State state)
         Button::TwoPositionsState::Down)
     {
         bus_->BHALT ().set (true);
+        stateMachine_->dispatch (HALT_Pressed {});
         currentHaltEnablePosition_ = KY11Console::HaltEnablePosition::Halt;
     }
     else

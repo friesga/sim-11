@@ -131,6 +131,7 @@ public:
     State transition (DepositSequence&&, EXAM_Pressed);         // -> ExamineSequence
     State transition (DepositSequence&&, DEP_Pressed);          // -> DepositSequence
     State transition (DepositSequence&&, START_Pressed);        // -> ProgramOperation
+    State transition (ProgramOperation&&, HALT_Pressed);        // -> AddressLoaded
 
     // Define the default transition for transitions not explicitly
     // defined above. The default transition implies the event is ignored.
