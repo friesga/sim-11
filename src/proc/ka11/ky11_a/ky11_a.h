@@ -107,6 +107,7 @@ private:
     void continueSwitchClicked (Button::State state);
     void singleInstructionCycleSwitchClicked (Button::State state);
     void BPOKReceiver (bool signalValue);
+    void SRUNReceiver (bool signalValue);
 };
 
 // Definition of the state machine for the KY11-A. The class has to be defined

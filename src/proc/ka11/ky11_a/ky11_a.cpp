@@ -36,6 +36,7 @@ KY11_A::KY11_A (Bus* bus, Interfaces::CpuController* cpuController,
     window->addPanel (panelBuilder->getPanel ());
 
     bus_->BPOK ().subscribe (bind (&KY11_A::BPOKReceiver, this, _1));
+    bus_->SRUN ().subscribe (bind (&KY11_A::SRUNReceiver, this, _1));
 }
 
 void KY11_A::createBezel (Window* window, const KY11_AConfig& ky11_aConfig,
@@ -281,4 +282,12 @@ void KY11_A::BPOKReceiver (bool signalValue)
         stateMachine_->dispatch (BPOK_High {});
     // else
     //    stateMachine_.push (BPOK_Low {});
+}
+
+void KY11_A::SRUNReceiver (bool signalValue)
+{
+    if (signalValue)
+        runLight_->show (Indicator::State::On);
+    else
+        runLight_->show (Indicator::State::Off);
 }
