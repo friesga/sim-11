@@ -148,6 +148,7 @@ public:
 private:
     KY11_A* context_ {};
 
+    State startPressed (State currentState);
     State contPressed (State currentState);
 };
 

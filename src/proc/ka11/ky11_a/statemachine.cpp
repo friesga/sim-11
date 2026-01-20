@@ -40,19 +40,7 @@ KY11_A::State KY11_A::StateMachine::transition (AddressLoaded&&, DEP_Pressed)
 KY11_A::State KY11_A::StateMachine::transition (AddressLoaded&& currentState,
     START_Pressed)
 {
-    // When ENABLE/HALT is set to HALT, depressing START provides a system
-    // clear (initialize) only.
-    context_->bus_->BINIT ().cycle ();
-
-    if (context_->currentHaltEnablePosition_ ==
-        KY11Console::HaltEnablePosition::Enable)
-    {
-        context_->cpuController_->start (*context_->addressRegister_);
-        context_->bus_->START ().cycle ();
-        return ProgramOperation {};
-    }
-    else
-        return move (currentState);
+    return startPressed (currentState);
 } 
 
 KY11_A::State KY11_A::StateMachine::transition (AddressLoaded&& currentState,
@@ -84,9 +72,10 @@ KY11_A::State KY11_A::StateMachine::transition (ExamineSequence&&, DEP_Pressed)
     return DepositSequence {};
 }
 
-KY11_A::State KY11_A::StateMachine::transition (ExamineSequence&&, START_Pressed)
+KY11_A::State KY11_A::StateMachine::transition (ExamineSequence&& currentState,
+    START_Pressed)
 {
-    return ProgramOperation {};
+    return startPressed (currentState);
 }
 
 KY11_A::State KY11_A::StateMachine::transition (ExamineSequence&& currentState,
@@ -117,9 +106,9 @@ KY11_A::State KY11_A::StateMachine::transition (DepositSequence&&, EXAM_Pressed)
     return ExamineSequence {};
 }
 
-KY11_A::State KY11_A::StateMachine::transition (DepositSequence&&, START_Pressed)
+KY11_A::State KY11_A::StateMachine::transition (DepositSequence&& currentState, START_Pressed)
 {
-    return ProgramOperation {};
+    return startPressed (currentState);
 }
 
 KY11_A::State KY11_A::StateMachine::transition (DepositSequence&& currentState,
@@ -131,6 +120,23 @@ KY11_A::State KY11_A::StateMachine::transition (DepositSequence&& currentState,
 KY11_A::State KY11_A::StateMachine::transition (ProgramOperation&&, HALT_Pressed)
 {
     return AddressLoaded {};
+}
+
+KY11_A::State KY11_A::StateMachine::startPressed (KY11_A::State currentState)
+{
+    // When ENABLE/HALT is set to HALT, depressing START provides a system
+    // clear (initialize) only.
+    context_->bus_->BINIT ().cycle ();
+
+    if (context_->currentHaltEnablePosition_ ==
+        KY11Console::HaltEnablePosition::Enable)
+    {
+        context_->cpuController_->start (*context_->addressRegister_);
+        context_->bus_->START ().cycle ();
+        return ProgramOperation {};
+    }
+    else
+        return move (currentState);
 }
 
 KY11_A::State KY11_A::StateMachine::contPressed (KY11_A::State currentState)
