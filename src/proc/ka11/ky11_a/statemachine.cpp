@@ -37,12 +37,22 @@ KY11_A::State KY11_A::StateMachine::transition (AddressLoaded&&, DEP_Pressed)
     return DepositSequence {};
 }
 
-KY11_A::State KY11_A::StateMachine::transition (AddressLoaded&&, START_Pressed)
+KY11_A::State KY11_A::StateMachine::transition (AddressLoaded&& currentState,
+    START_Pressed)
 {
+    // When ENABLE/HALT is set to HALT, depressing START provides a system
+    // clear (initialize) only.
     context_->bus_->BINIT ().cycle ();
-    context_->cpuController_->start (*context_->addressRegister_);
-    context_->bus_->START ().cycle ();
-    return ProgramOperation {};
+
+    if (context_->currentHaltEnablePosition_ ==
+        KY11Console::HaltEnablePosition::Enable)
+    {
+        context_->cpuController_->start (*context_->addressRegister_);
+        context_->bus_->START ().cycle ();
+        return ProgramOperation {};
+    }
+    else
+        return move (currentState);
 } 
 
 KY11_A::State KY11_A::StateMachine::transition (ExamineSequence&&, EXAM_Pressed)
