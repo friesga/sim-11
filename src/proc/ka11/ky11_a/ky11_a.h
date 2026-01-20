@@ -62,10 +62,11 @@ public:
     struct DEP_Pressed {};
     struct LOAD_ADDR_Pressed {};
     struct START_Pressed {};
+    struct CONT_Pressed {};
     struct HALT_Pressed {};
 
     using Event = variant <BPOK_High, EXAM_Pressed, DEP_Pressed,
-        LOAD_ADDR_Pressed, START_Pressed, HALT_Pressed>;
+        LOAD_ADDR_Pressed, START_Pressed, CONT_Pressed, HALT_Pressed>;
 
 private:
     static constexpr u16 switchRegisterAddress {0177570};
@@ -123,14 +124,17 @@ public:
     State transition (AddressLoaded&&, EXAM_Pressed);           // -> ExamineSequence
     State transition (AddressLoaded&&, DEP_Pressed);            // -> DepositSequence
     State transition (AddressLoaded&&, START_Pressed);          // -> ProgramOperation
+    State transition (AddressLoaded&&, CONT_Pressed);           // -> ProgramOperation
     State transition (ExamineSequence&&, LOAD_ADDR_Pressed);    // -> AddressLoaded
     State transition (ExamineSequence&&, EXAM_Pressed);         // -> ExamineSequence
     State transition (ExamineSequence&&, DEP_Pressed);          // -> ExamineSequence
     State transition (ExamineSequence&&, START_Pressed);        // -> ProgramOperation
+    State transition (ExamineSequence&&, CONT_Pressed);         // -> ProgramOperation
     State transition (DepositSequence&&, LOAD_ADDR_Pressed);    // -> AddressLoaded
     State transition (DepositSequence&&, EXAM_Pressed);         // -> ExamineSequence
     State transition (DepositSequence&&, DEP_Pressed);          // -> DepositSequence
     State transition (DepositSequence&&, START_Pressed);        // -> ProgramOperation
+    State transition (DepositSequence&&, CONT_Pressed);         // -> ProgramOperation
     State transition (ProgramOperation&&, HALT_Pressed);        // -> AddressLoaded
 
     // Define the default transition for transitions not explicitly
@@ -143,6 +147,8 @@ public:
     
 private:
     KY11_A* context_ {};
+
+    State contPressed (State currentState);
 };
 
 #endif // _KY11_A_H_

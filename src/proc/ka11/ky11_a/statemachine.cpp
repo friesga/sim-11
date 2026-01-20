@@ -55,6 +55,12 @@ KY11_A::State KY11_A::StateMachine::transition (AddressLoaded&& currentState,
         return move (currentState);
 } 
 
+KY11_A::State KY11_A::StateMachine::transition (AddressLoaded&& currentState,
+    CONT_Pressed)
+{
+    return contPressed (currentState);
+}
+
 KY11_A::State KY11_A::StateMachine::transition (ExamineSequence&&, EXAM_Pressed)
 {
     *context_->addressRegister_+= 2;
@@ -81,6 +87,12 @@ KY11_A::State KY11_A::StateMachine::transition (ExamineSequence&&, DEP_Pressed)
 KY11_A::State KY11_A::StateMachine::transition (ExamineSequence&&, START_Pressed)
 {
     return ProgramOperation {};
+}
+
+KY11_A::State KY11_A::StateMachine::transition (ExamineSequence&& currentState,
+    CONT_Pressed)
+{
+    return contPressed (currentState);
 }
 
 KY11_A::State KY11_A::StateMachine::transition (DepositSequence&&, DEP_Pressed)
@@ -110,7 +122,26 @@ KY11_A::State KY11_A::StateMachine::transition (DepositSequence&&, START_Pressed
     return ProgramOperation {};
 }
 
+KY11_A::State KY11_A::StateMachine::transition (DepositSequence&& currentState,
+    CONT_Pressed)
+{
+    return contPressed (currentState);
+}
+
 KY11_A::State KY11_A::StateMachine::transition (ProgramOperation&&, HALT_Pressed)
 {
     return AddressLoaded {};
+}
+
+KY11_A::State KY11_A::StateMachine::contPressed (KY11_A::State currentState)
+{
+    if (context_->currentHaltEnablePosition_ ==
+        KY11Console::HaltEnablePosition::Enable)
+    {
+        context_->cpuController_->proceed ();
+        context_->bus_->START ().cycle ();
+        return ProgramOperation {};
+    }
+    else
+        return move (currentState);
 }

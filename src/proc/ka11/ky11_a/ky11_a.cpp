@@ -249,7 +249,7 @@ void KY11_A::continueSwitchClicked (Button::State state)
 {
     if (get<Button::MomentaryDownTwoPositionsState> (state) ==
             Button::MomentaryDownTwoPositionsState::Down)
-        stateMachine_->dispatch (START_Pressed {});
+        stateMachine_->dispatch (CONT_Pressed {});
 }
 
 // The SINST/S-CYCLE switch allows the processor to step through program
