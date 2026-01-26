@@ -39,6 +39,7 @@ set (GTEST_SRCS
     fakesdl/fakebutton/fakebutton.cpp
     fakesdl/fakedatapanelbuilder/fakedatapanelbuilder.cpp
     fakesdl/fakeindicator/fakeindicator.cpp
+    fakesdl/fakepanel/fakepanel.cpp
     fakesdl/fakewindow/fakewindow.cpp
     fiotest.cpp
     fistest.cpp
