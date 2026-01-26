@@ -30,6 +30,7 @@ public:
 
 private:
     vector<unique_ptr<Indicator>> indicators_;
+    vector<unique_ptr<Button>> buttons_;
 };
 
 #endif // _MOCKDATAPANELBUILDER_H_

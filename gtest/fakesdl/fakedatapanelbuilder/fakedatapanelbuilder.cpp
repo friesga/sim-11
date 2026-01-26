@@ -1,5 +1,6 @@
 #include "fakedatapanelbuilder.h"
 #include "../fakeindicator/fakeindicator.h"
+#include "../fakebutton/fakebutton.h"
 
 using std::make_unique;
 
@@ -29,7 +30,8 @@ Button* FakeDataPanelBuilder::createMultiPositionSwitch (vector<string> position
     Button::EventCallback switchClicked,
     Frame<float> frame)
 {
-    return nullptr;
+    buttons_.push_back (make_unique<FakeButton> ());
+    return buttons_.back ().get ();
 }
 
 unique_ptr<Panel> FakeDataPanelBuilder::getPanel ()
