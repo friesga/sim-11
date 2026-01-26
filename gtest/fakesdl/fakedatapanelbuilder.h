@@ -3,7 +3,7 @@
 
 #include "panel.h"
 
-class MockDataPanelBuilder : public PanelBuilder
+class FakeDataPanelBuilder : public PanelBuilder
 {
 public:
     // Functions required by the PanelBuilder interface

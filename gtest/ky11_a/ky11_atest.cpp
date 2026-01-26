@@ -7,7 +7,7 @@
 #include "proc/ka11/calculator/calculator.h"
 #include "proc/common/pseudo_haltmode/pseudo_haltmode.h"
 #include "proc/common/basicprocessorexceptionhandler/basicprocessorexceptionhandler.h"
-#include "../mocksdl/mockwindow.h"
+#include "../fakesdl/fakewindow.h"
 
 #include <gtest/gtest.h>
 
@@ -18,7 +18,7 @@ TEST(KY11_A, ky11_a)
     PseudoMMU mmu {&bus, &cpuData};
     CompositeCpuController<KA11_Executor, KA11Calculator,
         PseudoHaltMode, BasicProcessorExceptionHandler> cpuController {&bus, &cpuData, &mmu};
-    MockWindow window {};
+    FakeWindow window {};
 
     KY11_A ky11a {&bus, &cpuController, &window, KY11_AConfig {Cabinet::Position {0,0}}};
 } 

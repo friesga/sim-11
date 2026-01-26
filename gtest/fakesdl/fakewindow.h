@@ -1,14 +1,14 @@
-#ifndef _MOCKWINDOW_H_
-#define _MOCKWINDOW_H_
+#ifndef _FAKEWINDOW_H_
+#define _FAKEWINDOW_H_
 
 #include "panel.h"
-#include "mockdatapanelbuilder.h"
+#include "fakedatapanelbuilder.h"
 
 #include <memory>
 
 using std::make_unique;
 
-class MockWindow : public Window
+class FakeWindow : public Window
 {
 public:
     // Functions required by the Window interface
@@ -30,7 +30,7 @@ public:
     unique_ptr<PanelBuilder> createDataPanelBuilder (ImageContainer& imageContainer,
         Cabinet::Position cabinetPosition, RackUnit unitHeight) override
     {
-        return make_unique<MockDataPanelBuilder> ();
+        return make_unique<FakeDataPanelBuilder> ();
     }
 
     void addPanel (unique_ptr<Panel> panel) override
@@ -45,4 +45,4 @@ public:
     }
 };
 
-#endif // _MOCKWINDOW_H_
+#endif // _FAKEWINDOW_H_
