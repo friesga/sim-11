@@ -2,7 +2,7 @@
 #define _FAKEWINDOW_H_
 
 #include "panel.h"
-#include "../fakedatapanelbuilder.h"
+#include "../fakedatapanelbuilder/fakedatapanelbuilder.h"
 
 #include <memory>
 
