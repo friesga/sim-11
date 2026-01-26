@@ -23,3 +23,9 @@ SwitchRegister::operator u16 () const
 {
     return registerValue_.as_u16;
 }
+
+SwitchRegister& SwitchRegister::operator= (u16 value)
+{
+    registerValue_.as_u16 = value;
+    return *this;
+}

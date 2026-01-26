@@ -292,3 +292,8 @@ void KY11_A::SRUNReceiver (bool signalValue)
     else
         runLight_->show (Indicator::State::Off);
 }
+
+void KY11_A::setSwitchRegister (u16 value)
+{
+    *switchRegister_ = value;
+}

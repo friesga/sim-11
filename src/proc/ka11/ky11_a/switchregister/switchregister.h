@@ -26,6 +26,10 @@ public:
     SwitchRegister(unique_ptr<PanelBuilder>& panelBuilder);
     operator u16 () const;
 
+    // Definition of an assignment operator to set the switch register to
+    // a specific value. This is useful for unit tests.
+    SwitchRegister& operator= (u16 value);
+
 private:
     union RegisterValue
     {
