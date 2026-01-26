@@ -7,7 +7,7 @@
 #include "proc/ka11/calculator/calculator.h"
 #include "proc/common/pseudo_haltmode/pseudo_haltmode.h"
 #include "proc/common/basicprocessorexceptionhandler/basicprocessorexceptionhandler.h"
-#include "../fakesdl/fakewindow.h"
+#include "../fakesdl/fakewindow/fakewindow.h"
 
 #include <gtest/gtest.h>
 

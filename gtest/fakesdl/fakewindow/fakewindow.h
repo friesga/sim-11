@@ -1,0 +1,27 @@
+#ifndef _FAKEWINDOW_H_
+#define _FAKEWINDOW_H_
+
+#include "panel.h"
+#include "../fakedatapanelbuilder.h"
+
+#include <memory>
+
+using std::make_unique;
+
+class FakeWindow : public Window
+{
+public:
+    // Functions required by the Window interface
+    void show () override;
+    Panel* createPanel (Cabinet::Position cabinetPosition,
+        RackUnit unitHeight) override;
+    unique_ptr<PanelBuilder> createFilePanelBuilder (Cabinet::Position cabinetPosition,
+        RackUnit unitHeight) override;
+    unique_ptr<PanelBuilder> createDataPanelBuilder (ImageContainer& imageContainer,
+        Cabinet::Position cabinetPosition, RackUnit unitHeight) override;
+    void addPanel (unique_ptr<Panel> panel) override;
+    void render () override;
+    bool handleEvents () override;
+};
+
+#endif // _FAKEWINDOW_H_

@@ -36,6 +36,7 @@ set (GTEST_SRCS
     configdata/ba11/ba11consistencytest.cpp
     configdata/unibusconsistencytest.cpp
     configdata/romdeviceconsistencytest.cpp
+    fakesdl/fakewindow/fakewindow.cpp
     fiotest.cpp
     fistest.cpp
     geometrytest.cpp
