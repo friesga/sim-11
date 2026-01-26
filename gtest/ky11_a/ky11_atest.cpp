@@ -1,0 +1,24 @@
+#include "proc/ka11/ky11_a/ky11_a.h"
+#include "bus/unibus/unibus.h"
+#include "proc/ka11/ka11cpudata/ka11cpudata.h"
+#include "proc/common/pseudoMMU/pseudommu.h"
+#include "proc/common/composite_cpucontroller/composite_cpucontroller.h"
+#include "proc/ka11/executor/executor.h"
+#include "proc/ka11/calculator/calculator.h"
+#include "proc/common/pseudo_haltmode/pseudo_haltmode.h"
+#include "proc/common/basicprocessorexceptionhandler/basicprocessorexceptionhandler.h"
+#include "../mocksdl/mockwindow.h"
+
+#include <gtest/gtest.h>
+
+TEST(KY11_A, ky11_a)
+{
+    Unibus bus;
+    KA11CpuData cpuData {};
+    PseudoMMU mmu {&bus, &cpuData};
+    CompositeCpuController<KA11_Executor, KA11Calculator,
+        PseudoHaltMode, BasicProcessorExceptionHandler> cpuController {&bus, &cpuData, &mmu};
+    MockWindow window {};
+
+    KY11_A ky11a {&bus, &cpuController, &window, KY11_AConfig {Cabinet::Position {0,0}}};
+} 
