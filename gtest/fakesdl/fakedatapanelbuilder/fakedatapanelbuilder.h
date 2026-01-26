@@ -3,6 +3,12 @@
 
 #include "panel.h"
 
+#include <vector>
+#include <memory>
+
+using std::vector;
+using std::unique_ptr;
+
 class FakeDataPanelBuilder : public PanelBuilder
 {
 public:
@@ -21,6 +27,9 @@ public:
         Button::EventCallback switchClicked,
         Frame<float> frame = Frame<float> (0, 0, 0, 0)) override;
     unique_ptr<Panel> getPanel () override;
+
+private:
+    vector<unique_ptr<Indicator>> indicators_;
 };
 
 #endif // _MOCKDATAPANELBUILDER_H_

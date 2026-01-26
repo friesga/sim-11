@@ -1,4 +1,7 @@
 #include "fakedatapanelbuilder.h"
+#include "../fakeindicator/fakeindicator.h"
+
+using std::make_unique;
 
 void FakeDataPanelBuilder::createFront (string imageFile,
     Frame<float> frame)
@@ -9,7 +12,8 @@ Indicator* FakeDataPanelBuilder::createIndicator (string indicatorOffImage,
     string indicatorOnImage, Indicator::State showFigure,
     Frame<float> frame)
 {
-    return nullptr;
+    indicators_.push_back (make_unique<FakeIndicator> ());
+    return indicators_.back ().get ();
 }
 
 IndicatorButton* FakeDataPanelBuilder::createIndicatorLatchingButton (Button::ImageNames const& imageNames,

@@ -37,6 +37,7 @@ set (GTEST_SRCS
     configdata/unibusconsistencytest.cpp
     configdata/romdeviceconsistencytest.cpp
     fakesdl/fakedatapanelbuilder/fakedatapanelbuilder.cpp
+    fakesdl/fakeindicator/fakeindicator.cpp
     fakesdl/fakewindow/fakewindow.cpp
     fiotest.cpp
     fistest.cpp
