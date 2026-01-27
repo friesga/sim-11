@@ -11,6 +11,12 @@
 
 #include <gtest/gtest.h>
 
+// Test sequence:
+// ENABLE/HALT -> HALT
+// POWER -> POWER
+// Set SWITCH REGISTER to 0173100
+// LOAD ADDR pushed
+//
 TEST (KY11_ATest, addressCanBeLoaded)
 {
     Unibus bus;
@@ -24,9 +30,8 @@ TEST (KY11_ATest, addressCanBeLoaded)
 
     ky11a.enableHaltSwitchClicked (Button::State {Button::TwoPositionsState::Down});
     ky11a.powerSwitchClicked (Button::State {Button::ThreePositionsState::Center});
-    ky11a.setSwitchRegister (0173100);
+    *ky11a.switchRegister_ = 0173100;
     ky11a.loadAddressSwitchClicked (Button::State {Button::MomentaryDownTwoPositionsState::Down});
 
-    KY11_A::KY11_AStatus status = ky11a.getKY11_AStatus ();
-    EXPECT_EQ (status.addressIndicatorsValues, 0173100);
+    EXPECT_EQ (*ky11a.addressRegister_, 0173100);
 } 

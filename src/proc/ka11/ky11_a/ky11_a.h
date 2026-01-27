@@ -34,6 +34,8 @@ using std::vector;
 class KY11_A : public KY11Console, public AbstractBusDevice
 {
 public:
+    friend class KY11_ATest_addressCanBeLoaded_Test;
+
     KY11_A (Bus* bus, Interfaces::CpuController* cpuController,
         Window* window, const KY11_AConfig& ky11_aConfig);
 
@@ -45,27 +47,6 @@ public:
     StatusCode writeWord (BusAddress address, u16 value);
     bool responsible (BusAddress address);
     void reset ();
-
-    // Functions to operate the KY11-A console switches. These functions
-    // can be defined private but are made public to be accessible by the
-    // unit tests. The function setSwitchRegister is defined to set the
-    // switch register to a specific value for unit testing purposes.
-    //
-    struct KY11_AStatus
-    {
-        u16 addressIndicatorsValues {};
-    };
-
-    void powerSwitchClicked (Button::State state);
-    void loadAddressSwitchClicked (Button::State state);
-    void examSwitchClicked (Button::State state);
-    void depSwitchClicked (Button::State state);
-    void enableHaltSwitchClicked (Button::State state);
-    void startSwitchClicked (Button::State state);
-    void continueSwitchClicked (Button::State state);
-    void singleInstructionCycleSwitchClicked (Button::State state);
-    void setSwitchRegister (u16 value);
-    KY11_AStatus getKY11_AStatus () const;
     
     // Definition of the KY11-A states
     struct Off {};
@@ -123,6 +104,16 @@ private:
 
     void BPOKReceiver (bool signalValue);
     void SRUNReceiver (bool signalValue);
+
+    // Functions to operate the KY11-A console switches
+    void powerSwitchClicked (Button::State state);
+    void loadAddressSwitchClicked (Button::State state);
+    void examSwitchClicked (Button::State state);
+    void depSwitchClicked (Button::State state);
+    void enableHaltSwitchClicked (Button::State state);
+    void startSwitchClicked (Button::State state);
+    void continueSwitchClicked (Button::State state);
+    void singleInstructionCycleSwitchClicked (Button::State state);
 };
 
 // Definition of the state machine for the KY11-A. The class has to be defined
