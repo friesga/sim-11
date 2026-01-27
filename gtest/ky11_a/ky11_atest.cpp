@@ -11,15 +11,10 @@
 
 #include <gtest/gtest.h>
 
-// Test sequence:
-// ENABLE/HALT -> HALT
-// POWER -> POWER
-//
-// Expected result:
-// ADDRESS REGISTER contains 0
-// DATA REGISTER contains 0
-TEST (KY11_ATest, initialState)
+// Definition of a test fixture
+class KY11_ATest : public testing::Test
 {
+protected:
     Unibus bus;
     KA11CpuData cpuData {};
     PseudoMMU mmu {&bus, &cpuData};
@@ -29,7 +24,21 @@ TEST (KY11_ATest, initialState)
 
     KY11_A ky11a {&bus, &cpuController, &window, KY11_AConfig {Cabinet::Position {0,0}}};
 
-    ky11a.enableHaltSwitchClicked (Button::State {Button::TwoPositionsState::Down});
+    KY11_ATest ()
+    {
+        ky11a.enableHaltSwitchClicked (Button::State {Button::TwoPositionsState::Down});
+    }
+};
+
+// Test sequence:
+// ENABLE/HALT -> HALT
+// POWER -> POWER
+//
+// Expected result:
+// ADDRESS REGISTER contains 0
+// DATA REGISTER contains 0
+TEST_F (KY11_ATest, initialState)
+{
     ky11a.powerSwitchClicked (Button::State {Button::ThreePositionsState::Center});
 
     EXPECT_EQ (*ky11a.addressRegister_, 0);
@@ -45,18 +54,8 @@ TEST (KY11_ATest, initialState)
 // Expected result:
 // ADDRESS REGISTER contains 0173100
 //
-TEST (KY11_ATest, addressCanBeLoaded)
+TEST_F (KY11_ATest, addressCanBeLoaded)
 {
-    Unibus bus;
-    KA11CpuData cpuData {};
-    PseudoMMU mmu {&bus, &cpuData};
-    CompositeCpuController<KA11_Executor, KA11Calculator,
-        PseudoHaltMode, BasicProcessorExceptionHandler> cpuController {&bus, &cpuData, &mmu};
-    FakeWindow window {};
-
-    KY11_A ky11a {&bus, &cpuController, &window, KY11_AConfig {Cabinet::Position {0,0}}};
-
-    ky11a.enableHaltSwitchClicked (Button::State {Button::TwoPositionsState::Down});
     ky11a.powerSwitchClicked (Button::State {Button::ThreePositionsState::Center});
     *ky11a.switchRegister_ = 0173100;
     ky11a.loadAddressSwitchClicked (Button::State {Button::MomentaryDownTwoPositionsState::Down});

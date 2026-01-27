@@ -34,6 +34,7 @@ using std::vector;
 class KY11_A : public KY11Console, public AbstractBusDevice
 {
 public:
+    friend class KY11_ATest;
     friend class KY11_ATest_initialState_Test;
     friend class KY11_ATest_addressCanBeLoaded_Test;
 
