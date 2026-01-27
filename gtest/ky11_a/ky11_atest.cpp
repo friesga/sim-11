@@ -14,8 +14,36 @@
 // Test sequence:
 // ENABLE/HALT -> HALT
 // POWER -> POWER
+//
+// Expected result:
+// ADDRESS REGISTER contains 0
+// DATA REGISTER contains 0
+TEST (KY11_ATest, initialState)
+{
+    Unibus bus;
+    KA11CpuData cpuData {};
+    PseudoMMU mmu {&bus, &cpuData};
+    CompositeCpuController<KA11_Executor, KA11Calculator,
+        PseudoHaltMode, BasicProcessorExceptionHandler> cpuController {&bus, &cpuData, &mmu};
+    FakeWindow window {};
+
+    KY11_A ky11a {&bus, &cpuController, &window, KY11_AConfig {Cabinet::Position {0,0}}};
+
+    ky11a.enableHaltSwitchClicked (Button::State {Button::TwoPositionsState::Down});
+    ky11a.powerSwitchClicked (Button::State {Button::ThreePositionsState::Center});
+
+    EXPECT_EQ (*ky11a.addressRegister_, 0);
+    EXPECT_EQ (*ky11a.dataRegister_, 0);
+}
+
+// Test sequence:
+// ENABLE/HALT -> HALT
+// POWER -> POWER
 // Set SWITCH REGISTER to 0173100
 // LOAD ADDR pushed
+// 
+// Expected result:
+// ADDRESS REGISTER contains 0173100
 //
 TEST (KY11_ATest, addressCanBeLoaded)
 {
@@ -34,4 +62,4 @@ TEST (KY11_ATest, addressCanBeLoaded)
     ky11a.loadAddressSwitchClicked (Button::State {Button::MomentaryDownTwoPositionsState::Down});
 
     EXPECT_EQ (*ky11a.addressRegister_, 0173100);
-} 
+}
