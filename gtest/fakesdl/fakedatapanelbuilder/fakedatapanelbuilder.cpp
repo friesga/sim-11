@@ -7,8 +7,7 @@ using std::make_unique;
 
 void FakeDataPanelBuilder::createFront (string imageFile,
     Frame<float> frame)
-{
-}
+{}
 
 Indicator* FakeDataPanelBuilder::createIndicator (string indicatorOffImage,
     string indicatorOnImage, Indicator::State showFigure,
@@ -37,5 +36,5 @@ Button* FakeDataPanelBuilder::createMultiPositionSwitch (vector<string> position
 
 unique_ptr<Panel> FakeDataPanelBuilder::getPanel ()
 {
-    return make_unique<FakePanel> ();
+    return make_unique<FakePanel> (move (indicators_), move (buttons_));
 }

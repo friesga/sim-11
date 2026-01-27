@@ -11,7 +11,7 @@
 
 #include <gtest/gtest.h>
 
-TEST(KY11_A, ky11_a)
+TEST (KY11_ATest, addressCanBeLoaded)
 {
     Unibus bus;
     KA11CpuData cpuData {};
@@ -22,7 +22,6 @@ TEST(KY11_A, ky11_a)
 
     KY11_A ky11a {&bus, &cpuController, &window, KY11_AConfig {Cabinet::Position {0,0}}};
 
-    // Switch power on
     ky11a.enableHaltSwitchClicked (Button::State {Button::TwoPositionsState::Down});
     ky11a.powerSwitchClicked (Button::State {Button::ThreePositionsState::Center});
     ky11a.setSwitchRegister (0173100);
