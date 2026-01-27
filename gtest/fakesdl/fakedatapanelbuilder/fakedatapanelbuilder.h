@@ -1,5 +1,5 @@
-#ifndef _MOCKDATAPANELBUILDER_H_
-#define _MOCKDATAPANELBUILDER_H_
+#ifndef _FAKEDATAPANELBUILDER_H_
+#define _FAKEDATAPANELBUILDER_H_
 
 #include "panel.h"
 
@@ -33,4 +33,4 @@ private:
     vector<unique_ptr<Button>> buttons_;
 };
 
-#endif // _MOCKDATAPANELBUILDER_H_
+#endif // _FAKEDATAPANELBUILDER_H_
