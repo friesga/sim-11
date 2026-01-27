@@ -297,3 +297,8 @@ void KY11_A::setSwitchRegister (u16 value)
 {
     *switchRegister_ = value;
 }
+
+KY11_A::KY11_AStatus KY11_A::getKY11_AStatus () const
+{
+    return KY11_AStatus {*addressRegister_};
+}

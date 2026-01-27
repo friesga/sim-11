@@ -51,6 +51,11 @@ public:
     // unit tests. The function setSwitchRegister is defined to set the
     // switch register to a specific value for unit testing purposes.
     //
+    struct KY11_AStatus
+    {
+        u16 addressIndicatorsValues {};
+    };
+
     void powerSwitchClicked (Button::State state);
     void loadAddressSwitchClicked (Button::State state);
     void examSwitchClicked (Button::State state);
@@ -60,6 +65,7 @@ public:
     void continueSwitchClicked (Button::State state);
     void singleInstructionCycleSwitchClicked (Button::State state);
     void setSwitchRegister (u16 value);
+    KY11_AStatus getKY11_AStatus () const;
     
     // Definition of the KY11-A states
     struct Off {};

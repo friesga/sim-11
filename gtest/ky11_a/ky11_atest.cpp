@@ -23,6 +23,11 @@ TEST(KY11_A, ky11_a)
     KY11_A ky11a {&bus, &cpuController, &window, KY11_AConfig {Cabinet::Position {0,0}}};
 
     // Switch power on
+    ky11a.enableHaltSwitchClicked (Button::State {Button::TwoPositionsState::Down});
     ky11a.powerSwitchClicked (Button::State {Button::ThreePositionsState::Center});
-    ky11a.setSwitchRegister (0);
+    ky11a.setSwitchRegister (0173100);
+    ky11a.loadAddressSwitchClicked (Button::State {Button::MomentaryDownTwoPositionsState::Down});
+
+    KY11_A::KY11_AStatus status = ky11a.getKY11_AStatus ();
+    EXPECT_EQ (status.addressIndicatorsValues, 0173100);
 } 
