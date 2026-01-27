@@ -37,6 +37,7 @@ public:
     friend class KY11_ATest;
     friend class KY11_ATest_initialState_Test;
     friend class KY11_ATest_addressCanBeLoaded_Test;
+    friend class KY11_ATest_addressCanBeExamined_Test;
 
     KY11_A (Bus* bus, Interfaces::CpuController* cpuController,
         Window* window, const KY11_AConfig& ky11_aConfig);

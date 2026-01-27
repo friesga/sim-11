@@ -8,6 +8,7 @@
 #include "proc/common/pseudo_haltmode/pseudo_haltmode.h"
 #include "proc/common/basicprocessorexceptionhandler/basicprocessorexceptionhandler.h"
 #include "../fakesdl/fakewindow/fakewindow.h"
+#include "ms11p/ms11p.h"
 
 #include <gtest/gtest.h>
 
@@ -16,6 +17,7 @@ class KY11_ATest : public testing::Test
 {
 protected:
     Unibus bus;
+    MS11P ms11p {&bus};
     KA11CpuData cpuData {};
     PseudoMMU mmu {&bus, &cpuData};
     CompositeCpuController<KA11_Executor, KA11Calculator,
@@ -26,6 +28,12 @@ protected:
 
     KY11_ATest ()
     {
+        bus.installModule (&ms11p);
+
+        for (size_t address = 0; address < 100; address += 2)
+            ms11p.writeWord (BusAddress (address, BusAddress::Width::_16Bit), 
+                01000 + address);
+
         ky11a.enableHaltSwitchClicked (Button::State {Button::TwoPositionsState::Down});
     }
 };
@@ -47,7 +55,7 @@ TEST_F (KY11_ATest, initialState)
 
 // Test sequence:
 // ENABLE/HALT -> HALT
-// POWER -> POWER
+// POWER on
 // Set SWITCH REGISTER to 0173100
 // LOAD ADDR pushed
 // 
@@ -61,4 +69,15 @@ TEST_F (KY11_ATest, addressCanBeLoaded)
     ky11a.loadAddressSwitchClicked (Button::State {Button::MomentaryDownTwoPositionsState::Down});
 
     EXPECT_EQ (*ky11a.addressRegister_, 0173100);
+}
+
+TEST_F (KY11_ATest, addressCanBeExamined)
+{
+    ky11a.powerSwitchClicked (Button::State {Button::ThreePositionsState::Center});
+    *ky11a.switchRegister_ = 0;
+    ky11a.loadAddressSwitchClicked (Button::State {Button::MomentaryDownTwoPositionsState::Down});
+    ky11a.examSwitchClicked (Button::State {Button::MomentaryDownTwoPositionsState::Down});
+
+    EXPECT_EQ (*ky11a.addressRegister_, 0);
+    EXPECT_EQ (*ky11a.dataRegister_, 01000);
 }
