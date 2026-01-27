@@ -23,8 +23,15 @@ void DataRegister::operator= (u16 const value)
     setIndicators (value);
 }
 
+DataRegister::operator u16 () const
+{
+    return registerValue_;
+}
+
 void DataRegister::setIndicators (u16 value)
 {
+    registerValue_ = value;
+
     for (size_t bitNr = 0; bitNr < numeric_limits<u16>::digits; ++bitNr)
     {
         if (value & (1 << bitNr))

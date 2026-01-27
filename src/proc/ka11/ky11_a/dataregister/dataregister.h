@@ -52,10 +52,12 @@ class DataRegister
 public:
     DataRegister(unique_ptr<PanelBuilder>& panelBuilder);
     void operator= (u16 const value);
+    operator u16 () const;
 
 private:
     static const size_t numberOfIndicators = 16;
 
+    u16 registerValue_ {0};
     array<Indicator*, numberOfIndicators> dataIndicators_ {};
 
     using ImageNames = pair<string, string>;
