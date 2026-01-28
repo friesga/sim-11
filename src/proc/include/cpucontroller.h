@@ -1,5 +1,5 @@
-#ifndef _CPUCONTROL_H_
-#define _CPUCONTROL_H_
+#ifndef _CPUCONTROLLER_H_
+#define _CPUCONTROLLER_H_
 
 #include "bus/interruptrequest/interruptrequest.h"
 #include "types.h"
@@ -90,4 +90,4 @@ concept isProcessorExceptionHandler = requires(T t)
     { t.serviceInterrupt() } -> std::same_as<void>;
 };
 
-#endif // _CPUCONTROL_H_
+#endif // _CPUCONTROLLER_H_

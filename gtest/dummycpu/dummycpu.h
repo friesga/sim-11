@@ -1,7 +1,7 @@
 #ifndef _DUMMYCPU_H_
 #define _DUMMYCPU_H_
 
-#include "dummycpucontrol.h"
+#include "dummycpucontroller.h"
 #include "dummycpudata.h"
 #include "dummymmu/dummymmu.h"
 

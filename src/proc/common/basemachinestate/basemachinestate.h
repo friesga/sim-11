@@ -3,7 +3,7 @@
 
 #include "bus/include/bus.h"
 #include "proc/kd/include/kd11odt.h"
-#include "proc/include/cpucontrol.h"
+#include "proc/include/cpucontroller.h"
 #include "proc/include/mmu.h"
 #include "proc/kd/common/odt/operatorconsoleaccess/operatorconsoleaccess.h"
 #include "configdata/kd11_naconfig/kd11_naconfig.h"

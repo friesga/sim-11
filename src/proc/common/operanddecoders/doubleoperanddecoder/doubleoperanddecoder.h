@@ -4,7 +4,7 @@
 #include "proc/common/operanddecoders/baseoperanddecoder/baseoperanddecoder.h"
 #include "proc/common/instructionformats/doubleoperandinstruction/doubleoperandinstruction.h"
 #include "proc/include/cpudata.h"
-#include "proc/include/cpucontrol.h"
+#include "proc/include/cpucontroller.h"
 #include "proc/include/mmu.h"
 
 class DoubleOperandDecoder : public BaseOperandDecoder

@@ -2,7 +2,7 @@
 #define _KY11_A_H_
 
 #include "bus/include/bus.h"
-#include "proc/include/cpucontrol.h"
+#include "proc/include/cpucontroller.h"
 #include "proc/ka11/ka11machinestate/ka11machinestate.h"
 #include "configdata/ka11/ky11_aconfig/ky11_aconfig.h"
 #include "switchregister/switchregister.h"

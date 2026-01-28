@@ -1,7 +1,7 @@
-#ifndef _DUMMYCPUCONTROL_H_
-#define _DUMMYCPUCONTROL_H_
+#ifndef _DUMMYCPUCONTROLLER_H_
+#define _DUMMYCPUCONTROLLER_H_
 
-#include "proc/include/cpucontrol.h"
+#include "proc/include/cpucontroller.h"
 
 class DummyCpuControl : public Interfaces::CpuController
 {
@@ -19,4 +19,4 @@ public:
     CpuRunState execute () { return CpuRunState::RUN; };
 };
 
-#endif // _DUMMYCPUCONTROL_H_
+#endif // _DUMMYCPUCONTROLLER_H_

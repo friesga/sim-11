@@ -4,7 +4,7 @@
 
 #include "proc/common/instructionformats/nooperandinstruction/nooperandinstruction.h"
 #include "proc/include/cpudata.h"
-#include "proc/include/cpucontrol.h"
+#include "proc/include/cpucontroller.h"
 #include "proc/common/operandlocation/operandlocation.h"
 
 

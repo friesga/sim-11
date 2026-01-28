@@ -3,7 +3,7 @@
 
 #include "proc/common/instructionformats/singleoperandinstruction/singleoperandinstruction.h"
 #include "proc/include/cpudata.h"
-#include "proc/include/cpucontrol.h"
+#include "proc/include/cpucontroller.h"
 #include "proc/common/operandlocation/operandlocation.h"
 
 // MTPI - Move to previous instruction space

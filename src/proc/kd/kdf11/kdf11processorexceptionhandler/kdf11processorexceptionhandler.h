@@ -4,7 +4,7 @@
 #include "bus/include/bus.h"
 #include "proc/include/cpudata.h"
 #include "proc/include/mmu.h"
-#include "proc/include/cpucontrol.h"
+#include "proc/include/cpucontroller.h"
 
 // Functions to service a trap for processors implementing stack overflow
 // detection and handling.

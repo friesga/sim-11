@@ -2,7 +2,7 @@
 #define _BASEOPERANDDECODER_H_
 
 #include "proc/include/cpudata.h"
-#include "proc/include/cpucontrol.h"
+#include "proc/include/cpucontroller.h"
 #include "proc/include/mmu.h"
 #include "proc/common/operandlocation/operandlocation.h"
 #include "proc/common/operand/operand.h"

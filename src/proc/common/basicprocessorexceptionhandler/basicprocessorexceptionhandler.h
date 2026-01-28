@@ -4,7 +4,7 @@
 #include "bus/include/bus.h"
 #include "proc/include/cpudata.h"
 #include "proc/include/mmu.h"
-#include "proc/include/cpucontrol.h"
+#include "proc/include/cpucontroller.h"
 
 // This class implements basic processor exception handling without stack
 // overflow detection and handling.
