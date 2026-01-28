@@ -45,6 +45,10 @@ public:
     friend class KY11_ATest_loadAddressResetsDepositSequence_Test;
     friend class KY11_ATest_examResetsDepositSequence_Test;
     friend class KY11_ATest_depResetsExamineSequence_Test;
+    friend class KY11_ATest_startWhileEnabled_Test;
+    friend class KY11_ATest_startResetsExamineSequence_Test;
+    friend class KY11_ATest_startResetsDepositSequence_Test;
+    friend class KY11_ATest_haltHaltsProgramOperation_Test;
 
     KY11_A (Bus* bus, Interfaces::CpuController* cpuController,
         Window* window, const KY11_AConfig& ky11_aConfig);

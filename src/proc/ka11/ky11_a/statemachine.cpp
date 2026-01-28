@@ -72,10 +72,9 @@ KY11_A::State KY11_A::StateMachine::transition (ExamineSequence&&, DEP_Pressed)
     return DepositSequence {};
 }
 
-KY11_A::State KY11_A::StateMachine::transition (ExamineSequence&& currentState,
-    START_Pressed)
+KY11_A::State KY11_A::StateMachine::transition (ExamineSequence&&, START_Pressed)
 {
-    return startPressed (currentState);
+    return startPressed (AddressLoaded {});
 }
 
 KY11_A::State KY11_A::StateMachine::transition (ExamineSequence&& currentState,
@@ -106,9 +105,9 @@ KY11_A::State KY11_A::StateMachine::transition (DepositSequence&&, EXAM_Pressed)
     return ExamineSequence {};
 }
 
-KY11_A::State KY11_A::StateMachine::transition (DepositSequence&& currentState, START_Pressed)
+KY11_A::State KY11_A::StateMachine::transition (DepositSequence&&, START_Pressed)
 {
-    return startPressed (currentState);
+    return startPressed (AddressLoaded {});
 }
 
 KY11_A::State KY11_A::StateMachine::transition (DepositSequence&& currentState,
@@ -119,6 +118,7 @@ KY11_A::State KY11_A::StateMachine::transition (DepositSequence&& currentState,
 
 KY11_A::State KY11_A::StateMachine::transition (ProgramOperation&&, HALT_Pressed)
 {
+    context_->cpuController_->halt (Interfaces::CpuController::HaltReason::HaltInstruction);
     return AddressLoaded {};
 }
 

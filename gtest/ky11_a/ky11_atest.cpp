@@ -25,6 +25,7 @@ protected:
     FakeWindow window {};
 
     KY11_A ky11a {&bus, &cpuController, &window, KY11_AConfig {Cabinet::Position {0,0}}};
+    KA11MachineState machineState {&bus, &cpuData, &cpuController, &mmu, ky11a};
 
     KY11_ATest ()
     {
@@ -195,4 +196,72 @@ TEST_F (KY11_ATest, depResetsExamineSequence)
 
     EXPECT_EQ (*ky11a.addressRegister_, 4);
     EXPECT_EQ (*ky11a.dataRegister_, 01004);
+}
+
+TEST_F (KY11_ATest, startWhileEnabled)
+{
+    ky11a.powerSwitchClicked (Button::State {Button::ThreePositionsState::Center});
+    *ky11a.switchRegister_ = 0;
+    ky11a.loadAddressSwitchClicked (Button::State {Button::MomentaryDownTwoPositionsState::Down});
+    ky11a.enableHaltSwitchClicked (Button::State {Button::TwoPositionsState::Up});
+
+    EXPECT_EQ (ky11a.runLight_->indicatorState (), Indicator::State::Off);
+    ky11a.startSwitchClicked (Button::State {Button::MomentaryDownTwoPositionsState::Down});
+
+    EXPECT_EQ (ky11a.runLight_->indicatorState (), Indicator::State::On);
+}
+
+TEST_F (KY11_ATest, startResetsExamineSequence)
+{
+    ky11a.powerSwitchClicked (Button::State {Button::ThreePositionsState::Center});
+    *ky11a.switchRegister_ = 0;
+    ky11a.loadAddressSwitchClicked (Button::State {Button::MomentaryDownTwoPositionsState::Down});
+    ky11a.examSwitchClicked (Button::State {Button::MomentaryDownTwoPositionsState::Down});
+    ky11a.examSwitchClicked (Button::State {Button::MomentaryDownTwoPositionsState::Down});
+    ky11a.startSwitchClicked (Button::State {Button::MomentaryDownTwoPositionsState::Down});
+
+    EXPECT_EQ (*ky11a.addressRegister_, 2);
+    ky11a.startSwitchClicked (Button::State {Button::MomentaryDownTwoPositionsState::Down});
+    EXPECT_EQ (*ky11a.addressRegister_, 2);
+
+    // Verify we're actually in the AddressLoaded state, so the first EXAM opens the 
+    // current address again
+    ky11a.examSwitchClicked (Button::State {Button::MomentaryDownTwoPositionsState::Down});
+    EXPECT_EQ (*ky11a.addressRegister_, 2);
+    EXPECT_EQ (*ky11a.dataRegister_, 01002);
+}
+
+TEST_F (KY11_ATest, startResetsDepositSequence)
+{
+    ky11a.powerSwitchClicked (Button::State {Button::ThreePositionsState::Center});
+    *ky11a.switchRegister_ = 0;
+    ky11a.loadAddressSwitchClicked (Button::State {Button::MomentaryDownTwoPositionsState::Down});
+    *ky11a.switchRegister_ = 01000;
+    ky11a.depSwitchClicked (Button::State {Button::MomentaryUpTwoPositionsState::Down});
+    *ky11a.switchRegister_ = 01002;
+    ky11a.depSwitchClicked (Button::State {Button::MomentaryUpTwoPositionsState::Down});
+
+    ky11a.startSwitchClicked (Button::State {Button::MomentaryDownTwoPositionsState::Down});
+
+    // Verify we're actually in the AddressLoaded state, so the first EXAM opens the 
+    // current address again
+    ky11a.examSwitchClicked (Button::State {Button::MomentaryDownTwoPositionsState::Down});
+    EXPECT_EQ (*ky11a.addressRegister_, 2);
+    EXPECT_EQ (*ky11a.dataRegister_, 01002);
+}
+
+TEST_F (KY11_ATest, haltHaltsProgramOperation)
+{
+    ky11a.powerSwitchClicked (Button::State {Button::ThreePositionsState::Center});
+    *ky11a.switchRegister_ = 0;
+    ky11a.loadAddressSwitchClicked (Button::State {Button::MomentaryDownTwoPositionsState::Down});
+    ky11a.enableHaltSwitchClicked (Button::State {Button::TwoPositionsState::Up});
+
+    EXPECT_EQ (ky11a.runLight_->indicatorState (), Indicator::State::Off);
+    ky11a.startSwitchClicked (Button::State {Button::MomentaryDownTwoPositionsState::Down});
+
+    EXPECT_EQ (ky11a.runLight_->indicatorState (), Indicator::State::On);
+
+    ky11a.enableHaltSwitchClicked (Button::State {Button::TwoPositionsState::Down});
+    EXPECT_EQ (ky11a.runLight_->indicatorState (), Indicator::State::Off);
 }
