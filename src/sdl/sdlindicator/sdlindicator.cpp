@@ -16,6 +16,11 @@ SDLIndicator::SDLIndicator (unique_ptr<SDLTile> indicatorOffTile,
 SDLIndicator::~SDLIndicator ()
 {}
 
+Indicator::State SDLIndicator::indicatorState () const
+{
+    return showIndicator_;
+}
+
 void SDLIndicator::render ()
 {
     if (showIndicator_ == Indicator::State::On)

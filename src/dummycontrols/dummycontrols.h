@@ -8,30 +8,32 @@
 class DummyIndicator : public Indicator
 {
 public:
-    void show (State showFigure) {};
-    void render () {};
-    bool isWithinBounds (Position position, float margin) const { return true; };
+    Indicator::State indicatorState () const { return Indicator::State::Off; }
+    void show (Indicator::State showFigure) {}
+    void render () {}
+    bool isWithinBounds (Position position, float margin) const { return true; }
 };
 
 class DummyButton : public Button
 {
 public:
-    void setState (State newState) {};
-    State currentState () const { return TwoPositionsState::Up; };
-    void render () {};
-    void handleEvent (InputEvent const* event) {};
-    bool isWithinBounds (Position position, float margin) const { return true; };
+    void setState (State newState) {}
+    State currentState () const { return TwoPositionsState::Up; }
+    void render () {}
+    void handleEvent (InputEvent const* event) {}
+    bool isWithinBounds (Position position, float margin) const { return true; }
 };
 
 class DummyIndicatorButton : public IndicatorButton
 {
 public:
-    void render () {};
-    void setState (Button::State newState) {};
-    Button::State currentState () const { return TwoPositionsState::Up; };
-    void handleEvent (InputEvent const* event) {};
-    bool isWithinBounds (Position position, float margin) const { return true; };
-    void show (Indicator::State showFigure) {};
+    void render () {}
+    void setState (Button::State newState) {}
+    Button::State currentState () const { return TwoPositionsState::Up; }
+    void handleEvent (InputEvent const* event) {}
+    bool isWithinBounds (Position position, float margin) const { return true; }
+    void show (Indicator::State showFigure) {}
+    Indicator::State indicatorState () const { return Indicator::State::Off; }
 };
 
 #endif // _DUMMYCONTROLS_H_

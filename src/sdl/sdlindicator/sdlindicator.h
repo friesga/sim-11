@@ -18,6 +18,7 @@ public:
     ~SDLIndicator ();
 
     // Definition of functions required for the Indicator interface
+    Indicator::State indicatorState () const override;
     void show (Indicator::State showIndicator) override;
     void render () override;
 

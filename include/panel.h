@@ -88,6 +88,7 @@ public:
         On = 1
     };
 
+    virtual State indicatorState () const = 0;
     virtual void show (State showFigure) = 0;
     virtual void render () = 0;
     virtual bool isWithinBounds (Position position, float margin) const = 0;
@@ -282,6 +283,7 @@ public:
     virtual bool isWithinBounds (Position position, float margin) const = 0;
 
     // Additional functions defined in the Indicator interface
+    virtual Indicator::State indicatorState () const = 0;
     virtual void show (Indicator::State showFigure) = 0;
 };
 
