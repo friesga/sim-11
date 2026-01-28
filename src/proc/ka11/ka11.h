@@ -48,7 +48,7 @@ private:
         PseudoHaltMode, BasicProcessorExceptionHandler> cpuController_ {bus_, &cpuData_, &mmu_};
     unique_ptr<KY11_A> ky11_a_;
     unique_ptr<KA11MachineState> machineState_;
-    u16 startAddress_;
+    u16 startAddress_ {0};
 
     // RegisterHandler performs the functions required by the BusDevice
     // interface. These functions are put in a separate class as they are
