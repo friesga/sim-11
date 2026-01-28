@@ -31,7 +31,7 @@ protected:
         bus.installModule (&ms11p);
 
         for (size_t address = 0; address < 100; address += 2)
-            ms11p.writeWord (BusAddress (address, BusAddress::Width::_16Bit), 
+            ms11p.writeWord (BusAddress (address, BusAddress::Width::_16Bit),
                 01000 + address);
 
         ky11a.enableHaltSwitchClicked (Button::State {Button::TwoPositionsState::Down});
@@ -80,4 +80,119 @@ TEST_F (KY11_ATest, addressCanBeExamined)
 
     EXPECT_EQ (*ky11a.addressRegister_, 0);
     EXPECT_EQ (*ky11a.dataRegister_, 01000);
+}
+
+TEST_F (KY11_ATest, addressSequenceCanBeExamined)
+{
+    ky11a.powerSwitchClicked (Button::State {Button::ThreePositionsState::Center});
+    *ky11a.switchRegister_ = 0;
+    ky11a.loadAddressSwitchClicked (Button::State {Button::MomentaryDownTwoPositionsState::Down});
+    ky11a.examSwitchClicked (Button::State {Button::MomentaryDownTwoPositionsState::Down});
+
+    // Start Examine sequence
+    ky11a.examSwitchClicked (Button::State {Button::MomentaryDownTwoPositionsState::Down});
+
+    EXPECT_EQ (*ky11a.addressRegister_, 2);
+    EXPECT_EQ (*ky11a.dataRegister_, 01002);
+}
+
+TEST_F (KY11_ATest, loadAddressResetsExamineSequence)
+{
+    ky11a.powerSwitchClicked (Button::State {Button::ThreePositionsState::Center});
+    *ky11a.switchRegister_ = 0;
+    ky11a.loadAddressSwitchClicked (Button::State {Button::MomentaryDownTwoPositionsState::Down});
+    ky11a.examSwitchClicked (Button::State {Button::MomentaryDownTwoPositionsState::Down});
+    ky11a.examSwitchClicked (Button::State {Button::MomentaryDownTwoPositionsState::Down});
+    ky11a.loadAddressSwitchClicked (Button::State {Button::MomentaryDownTwoPositionsState::Down});
+
+    EXPECT_EQ (*ky11a.addressRegister_, 0);
+}
+
+TEST_F (KY11_ATest, dataCanBeDeposited)
+{
+    ky11a.powerSwitchClicked (Button::State {Button::ThreePositionsState::Center});
+    *ky11a.switchRegister_ = 0;
+    ky11a.loadAddressSwitchClicked (Button::State {Button::MomentaryDownTwoPositionsState::Down});
+
+    *ky11a.switchRegister_ = 01000;
+    ky11a.depSwitchClicked (Button::State {Button::MomentaryUpTwoPositionsState::Down});
+
+    EXPECT_EQ (*ky11a.addressRegister_, 0);
+    EXPECT_EQ (*ky11a.dataRegister_, 01000);
+}
+
+TEST_F (KY11_ATest, dataSequenceCanBeDeposited)
+{
+    ky11a.powerSwitchClicked (Button::State {Button::ThreePositionsState::Center});
+    *ky11a.switchRegister_ = 0;
+    ky11a.loadAddressSwitchClicked (Button::State {Button::MomentaryDownTwoPositionsState::Down});
+
+    *ky11a.switchRegister_ = 01000;
+    ky11a.depSwitchClicked (Button::State {Button::MomentaryUpTwoPositionsState::Down});
+    *ky11a.switchRegister_ = 01002;
+    ky11a.depSwitchClicked (Button::State {Button::MomentaryUpTwoPositionsState::Down});
+
+    EXPECT_EQ (*ky11a.addressRegister_, 2);
+    EXPECT_EQ (*ky11a.dataRegister_, 01002);
+}
+
+TEST_F (KY11_ATest, loadAddressResetsDepositSequence)
+{
+    ky11a.powerSwitchClicked (Button::State {Button::ThreePositionsState::Center});
+    *ky11a.switchRegister_ = 0;
+    ky11a.loadAddressSwitchClicked (Button::State {Button::MomentaryDownTwoPositionsState::Down});
+    *ky11a.switchRegister_ = 01000;
+    ky11a.depSwitchClicked (Button::State {Button::MomentaryUpTwoPositionsState::Down});
+    *ky11a.switchRegister_ = 01002;
+    ky11a.depSwitchClicked (Button::State {Button::MomentaryUpTwoPositionsState::Down});
+
+    *ky11a.switchRegister_ = 0;
+    ky11a.loadAddressSwitchClicked (Button::State {Button::MomentaryDownTwoPositionsState::Down});
+
+    EXPECT_EQ (*ky11a.addressRegister_, 0);
+    EXPECT_EQ (*ky11a.dataRegister_, 01002);
+}
+
+TEST_F (KY11_ATest, examResetsDepositSequence)
+{
+    ky11a.powerSwitchClicked (Button::State {Button::ThreePositionsState::Center});
+    *ky11a.switchRegister_ = 0;
+    ky11a.loadAddressSwitchClicked (Button::State {Button::MomentaryDownTwoPositionsState::Down});
+    *ky11a.switchRegister_ = 01000;
+    ky11a.depSwitchClicked (Button::State {Button::MomentaryUpTwoPositionsState::Down});
+    *ky11a.switchRegister_ = 01002;
+    ky11a.depSwitchClicked (Button::State {Button::MomentaryUpTwoPositionsState::Down});
+
+    ky11a.examSwitchClicked (Button::State {Button::MomentaryDownTwoPositionsState::Down});
+
+    EXPECT_EQ (*ky11a.addressRegister_, 2);
+    EXPECT_EQ (*ky11a.dataRegister_, 01002);
+
+    // Verify we're actually in the ExamineSequence state by examining another word
+    ky11a.examSwitchClicked (Button::State {Button::MomentaryDownTwoPositionsState::Down});
+
+    EXPECT_EQ (*ky11a.addressRegister_, 4);
+    EXPECT_EQ (*ky11a.dataRegister_, 01004);
+}
+
+TEST_F (KY11_ATest, depResetsExamineSequence)
+{
+    ky11a.powerSwitchClicked (Button::State {Button::ThreePositionsState::Center});
+    *ky11a.switchRegister_ = 0;
+    ky11a.loadAddressSwitchClicked (Button::State {Button::MomentaryDownTwoPositionsState::Down});
+    ky11a.examSwitchClicked (Button::State {Button::MomentaryDownTwoPositionsState::Down});
+    ky11a.examSwitchClicked (Button::State {Button::MomentaryDownTwoPositionsState::Down});
+
+    *ky11a.switchRegister_ = 01002;
+    ky11a.depSwitchClicked (Button::State {Button::MomentaryUpTwoPositionsState::Down});
+
+    EXPECT_EQ (*ky11a.addressRegister_, 2);
+    EXPECT_EQ (*ky11a.dataRegister_, 01002);
+
+    // Verify we're actually in the DepositSequence state by depositing another word
+    *ky11a.switchRegister_ = 01004;
+    ky11a.depSwitchClicked (Button::State {Button::MomentaryUpTwoPositionsState::Down});
+
+    EXPECT_EQ (*ky11a.addressRegister_, 4);
+    EXPECT_EQ (*ky11a.dataRegister_, 01004);
 }
