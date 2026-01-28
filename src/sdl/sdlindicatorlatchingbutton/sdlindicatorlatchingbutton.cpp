@@ -58,6 +58,11 @@ bool SDLIndicatorLatchingButton::isWithinBounds (Position position,
 }
 
 // Definition of functions required for the Indicator interface
+Indicator::State SDLIndicatorLatchingButton::indicatorState () const
+{
+    return indicatorState_;
+}
+
 void SDLIndicatorLatchingButton::show (Indicator::State indicatorState)
 {
     indicatorState_ = indicatorState;
