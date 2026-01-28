@@ -265,3 +265,21 @@ TEST_F (KY11_ATest, haltHaltsProgramOperation)
     ky11a.enableHaltSwitchClicked (Button::State {Button::TwoPositionsState::Down});
     EXPECT_EQ (ky11a.runLight_->indicatorState (), Indicator::State::Off);
 }
+
+TEST_F (KY11_ATest, resetLoadsTempRegister)
+{
+    ky11a.powerSwitchClicked (Button::State {Button::ThreePositionsState::Center});
+
+    // Load BAR and TEMP registers
+    *ky11a.switchRegister_ = 01000;
+    ky11a.loadAddressSwitchClicked (Button::State {Button::MomentaryDownTwoPositionsState::Down});
+
+    // Force the contents of the Address Register to 0 to be able to verify its
+    // contents are modified by the reset operation.
+    *ky11a.addressRegister_ = 0;
+    ky11a.startSwitchClicked (Button::State {Button::MomentaryDownTwoPositionsState::Down});
+
+    // The Address Register now should contain the contents of the TEMP register, i.e. the
+    // result of the previous LOAD ADDR operation.
+    EXPECT_EQ (*ky11a.addressRegister_, 01000);
+}

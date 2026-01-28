@@ -17,7 +17,8 @@ KY11_A::State KY11_A::StateMachine::transition (Off&&, BPOK_High)
 
 KY11_A::State KY11_A::StateMachine::transition (AddressLoaded&&, LOAD_ADDR_Pressed)
 {
-    *context_->addressRegister_ = *context_->switchRegister_;
+    *context_->addressRegister_ = context_->tempRegister_ =
+        *context_->switchRegister_;
     return AddressLoaded {};
 }
 
@@ -51,7 +52,8 @@ KY11_A::State KY11_A::StateMachine::transition (AddressLoaded&& currentState,
 
 KY11_A::State KY11_A::StateMachine::transition (ExamineSequence&&, EXAM_Pressed)
 {
-    *context_->addressRegister_+= 2;
+    context_->tempRegister_+= 2;
+    *context_->addressRegister_ = context_->tempRegister_;
     *context_->dataRegister_ =
         context_->bus_->read (BusAddress (*context_->addressRegister_,
             BusAddress::Width::_16Bit));
@@ -60,7 +62,8 @@ KY11_A::State KY11_A::StateMachine::transition (ExamineSequence&&, EXAM_Pressed)
 
 KY11_A::State KY11_A::StateMachine::transition (ExamineSequence&&, LOAD_ADDR_Pressed)
 {
-    *context_->addressRegister_ = *context_->switchRegister_;
+    *context_->addressRegister_ = context_->tempRegister_ = 
+        *context_->switchRegister_;
     return AddressLoaded {};
 }
 
@@ -85,7 +88,8 @@ KY11_A::State KY11_A::StateMachine::transition (ExamineSequence&& currentState,
 
 KY11_A::State KY11_A::StateMachine::transition (DepositSequence&&, DEP_Pressed)
 {
-    *context_->addressRegister_+= 2;
+    context_->tempRegister_+= 2;
+    *context_->addressRegister_ = context_->tempRegister_;
     context_->bus_->writeWord (BusAddress (*context_->addressRegister_,
         BusAddress::Width::_16Bit), *context_->switchRegister_);
     *context_->dataRegister_ = *context_->switchRegister_;
@@ -94,7 +98,8 @@ KY11_A::State KY11_A::StateMachine::transition (DepositSequence&&, DEP_Pressed)
 
 KY11_A::State KY11_A::StateMachine::transition (DepositSequence&&, LOAD_ADDR_Pressed)
 {
-    *context_->addressRegister_ = *context_->switchRegister_;
+    *context_->addressRegister_ = context_->tempRegister_ =
+        *context_->switchRegister_;
     return AddressLoaded {};
 }
 KY11_A::State KY11_A::StateMachine::transition (DepositSequence&&, EXAM_Pressed)
@@ -122,10 +127,12 @@ KY11_A::State KY11_A::StateMachine::transition (ProgramOperation&&, HALT_Pressed
     return AddressLoaded {};
 }
 
-KY11_A::State KY11_A::StateMachine::startPressed (KY11_A::State currentState)
+// When ENABLE/HALT is set to HALT, depressing START provides a system clear
+// (initialize) only. The processor does not start; the Bus Address Register is
+// loaded from a temporary processor register (TEMP) which is usually pre-loaded
+// by LOAD ADDR.
+KY11_A::State KY11_A::StateMachine::startPressed (KY11_A::State newState)
 {
-    // When ENABLE/HALT is set to HALT, depressing START provides a system
-    // clear (initialize) only.
     context_->bus_->BINIT ().cycle ();
 
     if (context_->currentHaltEnablePosition_ ==
@@ -136,10 +143,13 @@ KY11_A::State KY11_A::StateMachine::startPressed (KY11_A::State currentState)
         return ProgramOperation {};
     }
     else
-        return move (currentState);
+    {
+        *context_->addressRegister_ = context_->tempRegister_;
+        return move (newState);
+    }
 }
 
-KY11_A::State KY11_A::StateMachine::contPressed (KY11_A::State currentState)
+KY11_A::State KY11_A::StateMachine::contPressed (KY11_A::State newState)
 {
     if (context_->currentHaltEnablePosition_ ==
         KY11Console::HaltEnablePosition::Enable)
@@ -149,5 +159,5 @@ KY11_A::State KY11_A::StateMachine::contPressed (KY11_A::State currentState)
         return ProgramOperation {};
     }
     else
-        return move (currentState);
+        return move (newState);
 }

@@ -49,6 +49,7 @@ public:
     friend class KY11_ATest_startResetsExamineSequence_Test;
     friend class KY11_ATest_startResetsDepositSequence_Test;
     friend class KY11_ATest_haltHaltsProgramOperation_Test;
+    friend class KY11_ATest_resetLoadsTempRegister_Test;
 
     KY11_A (Bus* bus, Interfaces::CpuController* cpuController,
         Window* window, const KY11_AConfig& ky11_aConfig);
@@ -92,6 +93,7 @@ private:
     unique_ptr<SwitchRegister> switchRegister_ {};
     unique_ptr<AddressRegister> addressRegister_ {};
     unique_ptr<DataRegister> dataRegister_ {};
+    u16 tempRegister_ {0};
 
     // Use the PIMPL idiom to be able to define the StateMachine outside
     // of the KY11_A class
