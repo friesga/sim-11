@@ -33,6 +33,8 @@ KY11_A::KY11_A (Bus* bus, Interfaces::CpuController* cpuController,
     addressRegister_ = make_unique<AddressRegister> (panelBuilder);
     dataRegister_ = make_unique<DataRegister> (panelBuilder);
 
+    *switchRegister_ = ky11_aConfig.switchRegister;
+
     window->addPanel (panelBuilder->getPanel ());
 
     bus_->BPOK ().subscribe (bind (&KY11_A::BPOKReceiver, this, _1));

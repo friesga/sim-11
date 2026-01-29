@@ -81,6 +81,7 @@ private:
     array<Button*, numberOfSwitches> srButtons_;
 
     void createSwitchRegisterButtons (unique_ptr<PanelBuilder>& panelBuilder);
+    void setSwitchesToPosition (u16 value);
 
     template <size_t buttonIndex>
     void srButtonClicked (Button::State state);

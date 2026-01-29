@@ -200,3 +200,57 @@ TEST (KA11ConfiguratorTest, missingKY11_ACabinetPositionThrows)
 		FAIL ();
 	}
 }
+
+TEST (KA11ConfiguratorTest, KY11_ASwitchRegisterAccepted)
+{
+	iniparser::File ft;
+	std::stringstream stream;
+	stream << "[KA11]\n"
+		"[KA11.KY11-A]\n"
+		"cabinet = 0/0\n"
+		"switch_register = 0173100\n";
+	stream >> ft;
+
+	IniProcessor iniProcessor;
+	EXPECT_NO_THROW (iniProcessor.process (ft));
+
+	SystemConfig systemConfig =
+		iniProcessor.getSystemConfig ();
+
+	// The only device type in this testset is the KA11.
+	ASSERT_TRUE (holds_alternative<KA11Config> (systemConfig[0]));
+
+	// The device's type is KA11 so the configuration is a KA11Config object
+	auto ka11Config = get<KA11Config> (systemConfig[0]);
+
+	// The KA11 configuration should contain a KY11-A configuration
+	EXPECT_TRUE (ka11Config.ky11_aConfig_);
+
+	EXPECT_EQ (ka11Config.ky11_aConfig_->switchRegister, 0173100);
+}
+
+TEST (KA11ConfiguratorTest, invalidKY11_ASwitchRegisterThrows)
+{
+	iniparser::File ft;
+	std::stringstream stream;
+	stream << "[KA11]\n"
+		"[KA11.KY11-A]\n"
+		"cabinet = 0/0\n"
+		"switch_register = 65536\n";
+	stream >> ft;
+
+	IniProcessor iniProcessor;
+	try
+	{
+		iniProcessor.process (ft);
+		FAIL ();
+	}
+	catch (std::invalid_argument const& except)
+	{
+		EXPECT_STREQ (except.what (), "Invalid switch register value in KY11-A section");
+	}
+	catch (...)
+	{
+		FAIL ();
+	}
+}

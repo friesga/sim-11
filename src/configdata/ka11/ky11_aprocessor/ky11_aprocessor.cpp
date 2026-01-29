@@ -1,5 +1,6 @@
 #include "configdata/ka11/ky11_aprocessor/ky11_aprocessor.h"
 #include "configdata/cabinetprocessor/cabinetprocessor.h"
+#include "touint.h"
 
 #include <optional>
 
@@ -41,6 +42,18 @@ void KY11_AProcessor::processCabinet (iniparser::Value value)
         throw std::invalid_argument {"Invalid cabinet position in KY11-A section"};
 
     ky11_aConfig_.cabinetPosition = cabinetPosition;
+}
+
+void KY11_AProcessor::processSwitchRegister (iniparser::Value value)
+{
+    try
+    {
+        ky11_aConfig_.switchRegister = touint<u16> (value.asString ());
+    }
+    catch (const std::invalid_argument& e)
+    {
+        throw std::invalid_argument {"Invalid switch register value in KY11-A section"};
+    }
 }
 
 void KY11_AProcessor::checkConsistency ()

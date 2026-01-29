@@ -27,5 +27,15 @@ SwitchRegister::operator u16 () const
 SwitchRegister& SwitchRegister::operator= (u16 value)
 {
     registerValue_.as_u16 = value;
+    setSwitchesToPosition (value);
     return *this;
+}
+
+void SwitchRegister::setSwitchesToPosition (u16 value)
+{
+    for (size_t switchNr = 0; switchNr < std::numeric_limits<u16>::digits; ++switchNr)
+    {
+        srButtons_[switchNr]->setState (value & (1 << switchNr) ?
+            Button::TwoPositionsState::Up : Button::TwoPositionsState::Down);
+    }
 }
