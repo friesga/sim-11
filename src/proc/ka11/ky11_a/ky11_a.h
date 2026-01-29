@@ -113,7 +113,7 @@ private:
 
     // The initial position of the ENABLE/HALT switch must correspond with
     // the initial state of enableHaltSwitch_ as defined in createBezel().
-    HaltEnablePosition currentHaltEnablePosition_ {HaltEnablePosition::Enable};
+    HaltEnablePosition currentHaltEnablePosition_ {HaltEnablePosition::Halt};
 
     void createBezel (Window* window, const KY11_AConfig& ky11_aConfig,
         unique_ptr<PanelBuilder>& panelBuilder);

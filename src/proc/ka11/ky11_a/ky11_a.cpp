@@ -74,7 +74,7 @@ void KY11_A::createBezel (Window* window, const KY11_AConfig& ky11_aConfig,
 
     enableHaltSwitch_ = panelBuilder->createMultiPositionSwitch (
         {"enable_halt_down", "enable_halt_up"},
-        Button::TwoPositionsState::Up,
+        Button::TwoPositionsState::Down,
         bind (&KY11_A::enableHaltSwitchClicked, this, _1));
 
     startSwitch_ = panelBuilder->createMultiPositionSwitch (
