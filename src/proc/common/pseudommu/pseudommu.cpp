@@ -90,21 +90,6 @@ bool PseudoMMU::pushWord (u16 value)
     return putWord (cpuData_->registers ()[6], value);
 }
 
-CondData<u16> PseudoMMU::mappedRead (u16 address)
-{
-    return bus_->read (address);
-}
-
-bool PseudoMMU::mappedWriteWord (u16 address, u16 value)
-{
-    return bus_->writeWord (address, value);
-}
-
-bool PseudoMMU::mappedWriteByte (u16 address, u8 value)
-{
-    return bus_->writeByte (address, value);
-}
-
 CondData<u16> PseudoMMU::readWithoutTrap (u16 address)
 {
     return bus_->read (address);

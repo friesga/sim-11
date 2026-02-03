@@ -34,10 +34,6 @@ public:
 private:
 	Bus* bus_;
 	CpuData* cpuData_;
-
-	CondData<u16> mappedRead (u16 address);
-	bool mappedWriteWord (u16 address, u16 value);
-	bool mappedWriteByte (u16 address, u8 value);
 };
 
 #endif // _PSEUDOMMU_H_
