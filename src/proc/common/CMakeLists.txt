@@ -4,6 +4,7 @@ set (PROC_COMMON_SRCS
     basemachinestate/signalreceivers.cpp
     basemachinestate/statemachine.cpp
     composite_cpucontroller/composite_cpucontroller.cpp
+    datapaths/datapaths.cpp
     basicprocessorexceptionhandler/basicprocessorexceptionhandler.cpp
     executor/executor.cpp
     pseudommu/pseudommu.cpp
