@@ -5,15 +5,15 @@
 #include "proc/common/instructionformats/eisinstruction/eisinstruction.h"
 #include "proc/include/cpudata.h"
 #include "proc/include/cpucontroller.h"
-#include "proc/include/mmu.h"
+#include "proc/common/datapaths/datapaths.h"
 
 // The EIS instruction format is used by the EIS instructions MUL, DIV, ASH
 // and ASHC instruction and additionally by the JSR and XOR instructions.
 class EisDecoder : public BaseOperandDecoder
 {
 public:
-	EisDecoder (CpuData* cpuData, Interfaces::CpuController* cpuController, MMU* mmu,
-		EisInstruction* instruction);
+	EisDecoder (CpuData* cpuData, Interfaces::CpuController* cpuController,
+		DataPaths* datapaths, EisInstruction* instruction);
 
 	OperandLocation getOperandLocation (GeneralRegisters &reg);
 	bool readOperand (CondData<u16> *source);

@@ -2,6 +2,7 @@
 #define _DATAPATHS_H_   
 
 #include "bus/include/bus.h"
+#include "abstractbusdevice/abstractbusdevice.h"
 #include "proc/include/mmu.h"
 
 // The class DataPaths is the providing interface for the CPU to the MMU

@@ -5,7 +5,7 @@
 #include "bus/include/bus.h"
 #include "proc/include/cpudata.h"
 #include "proc/include/cpucontroller.h"
-#include "proc/include/mmu.h"
+#include "proc/common/datapaths/datapaths.h"
 #include "proc/kd/common/odt/operatorconsoleaccess/operatorconsoleaccess.h"
 
 #include <memory>
@@ -17,7 +17,7 @@ class KD11ODT
 {
 public:
     using Creator = function<unique_ptr<KD11ODT>(Bus*, CpuData*, Interfaces::CpuController*,
-        MMU*, unique_ptr<ConsoleAccess>, bool)>;
+        DataPaths*, unique_ptr<ConsoleAccess>, bool)>;
 
     virtual bool processCharacter (u8 character) = 0;
 };

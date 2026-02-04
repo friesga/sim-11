@@ -1,9 +1,10 @@
 #include "ka11machinestate.h"
 
 KA11MachineState::KA11MachineState (Bus* bus, CpuData* cpuData,
-    Interfaces::CpuController* cpuController, MMU* mmu, KY11Console& ky11Console)
+    Interfaces::CpuController* cpuController, DataPaths* dataPaths,
+    KY11Console& ky11Console)
     :
-    BaseMachineState (bus, cpuData, cpuController, mmu),
+    BaseMachineState (bus, cpuData, cpuController, dataPaths),
     ky11Console_ {ky11Console}
 {}
 

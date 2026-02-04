@@ -1,10 +1,10 @@
 #include "executor.h"
 
 KDF11_Executor::KDF11_Executor (CpuData* cpuData,
-    Interfaces::CpuController* cpuController, MMU* mmu)
+    Interfaces::CpuController* cpuController, DataPaths* dataPaths)
     :
-    commonExecutor_ (cpuData, cpuController, mmu),
+    commonExecutor_ (cpuData, cpuController, dataPaths),
     cpuData_ {cpuData},
     cpuController_ {cpuController},
-    mmu_ {mmu}
+    dataPaths_ {dataPaths}
 {}

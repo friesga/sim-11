@@ -36,7 +36,7 @@ KDF11_B::KDF11_B (Bus *bus, const KDF11_BConfig& kdf11_bConfig)
     machineState_ = make_unique<KDMachineState> (bus_,
         &cpuData_,
         &cpuController_,
-        &mmu_,
+        &dataPaths_,
         kdf11_bConfig.powerUpMode,
         startAddress_,
         bind (&KDF11_ODT::createODT, _1, _2, _3, _4, _5, false));

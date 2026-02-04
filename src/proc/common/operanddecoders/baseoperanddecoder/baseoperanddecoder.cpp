@@ -3,11 +3,11 @@
 using std::runtime_error;
 
 BaseOperandDecoder::BaseOperandDecoder (CpuData* cpuData,
-    Interfaces::CpuController* cpuController, MMU* mmu)
+    Interfaces::CpuController* cpuController, DataPaths* dataPaths)
     :
     cpuData_ {cpuData},
     cpuController_ {cpuController},
-    mmu_ {mmu}
+    dataPaths_ {dataPaths}
 {}
 
 // Determine if the given opCode is for a byte instruction. Two ranges of byte
@@ -51,7 +51,7 @@ OperandLocation BaseOperandDecoder::decodeOperand (u16 opCode, Operand operand,
 		case 1:
 			// Register deferred (indirect) mode. The register contains
 			// the address of the operand.
-			return OperandLocation (MemoryOperandLocation {cpuData_, mmu_,
+			return OperandLocation (MemoryOperandLocation {cpuData_, dataPaths_,
 				CondData<u16> (reg[operand.registerNr_])});
 
 		case 2:
@@ -64,7 +64,7 @@ OperandLocation BaseOperandDecoder::decodeOperand (u16 opCode, Operand operand,
 			else
 				reg[operand.registerNr_] += 2;
 
-			return OperandLocation (MemoryOperandLocation {cpuData_, mmu_,
+			return OperandLocation (MemoryOperandLocation {cpuData_, dataPaths_,
 				CondData<u16> (address)});
 
 		case 3: 
@@ -73,8 +73,8 @@ OperandLocation BaseOperandDecoder::decodeOperand (u16 opCode, Operand operand,
 			// incremented (always by 2; even for byte instructions).
 			address = reg[operand.registerNr_];
 			reg[operand.registerNr_] += 2;
-			return OperandLocation (MemoryOperandLocation {cpuData_, mmu_,
-				CondData<u16> (mmu_->fetchWord (static_cast<BusAddress> (address)))});
+			return OperandLocation (MemoryOperandLocation {cpuData_, dataPaths_,
+				CondData<u16> (dataPaths_->fetchWord (static_cast<BusAddress> (address)))});
 
 		case 4:
 			// Auto-decrement mode. Register is decremented and then used as a
@@ -89,7 +89,7 @@ OperandLocation BaseOperandDecoder::decodeOperand (u16 opCode, Operand operand,
 			if (operand.registerNr_ == 6 && cpuData_->stackOverflow ())
 				cpuData_->setTrap (CpuData::TrapType::StackOverflow);  
 
-			return OperandLocation (MemoryOperandLocation {cpuData_, mmu_,
+			return OperandLocation (MemoryOperandLocation {cpuData_, dataPaths_,
 				CondData<u16> (address)});
 
 		case 5:
@@ -103,8 +103,8 @@ OperandLocation BaseOperandDecoder::decodeOperand (u16 opCode, Operand operand,
 			if (operand.registerNr_ == 6 && cpuData_->stackOverflow ())
 				cpuData_->setTrap (CpuData::TrapType::StackOverflow);  
 
-			return OperandLocation (MemoryOperandLocation {cpuData_, mmu_,
-				CondData<u16> (mmu_->fetchWord (static_cast<BusAddress> (address)))});
+			return OperandLocation (MemoryOperandLocation {cpuData_, dataPaths_,
+				CondData<u16> (dataPaths_->fetchWord (static_cast<BusAddress> (address)))});
 
 		case 6:
 			// Index mode. The contents of the in the instruction specified
@@ -114,9 +114,9 @@ OperandLocation BaseOperandDecoder::decodeOperand (u16 opCode, Operand operand,
 			// word. After fetching the index it has to be incremented again
 			// to point to the next instruction. This can be regarded as an
 			// undesirable side effect of this function.
-			index = mmu_->fetchWord (reg[7]);
+			index = dataPaths_->fetchWord (reg[7]);
 			reg[7] += 2;
-			return OperandLocation (MemoryOperandLocation {cpuData_, mmu_,
+			return OperandLocation (MemoryOperandLocation {cpuData_, dataPaths_,
 				CondData<u16> (reg[operand.registerNr_] + index)});
 			
 		case 7: 
@@ -125,11 +125,11 @@ OperandLocation BaseOperandDecoder::decodeOperand (u16 opCode, Operand operand,
 			// the specified register are added and the sum is used as a pointer
 			// to a word containing the address of the operand.
 			// See the comment at mode 6.
-			index = mmu_->fetchWord (reg[7]);
+			index = dataPaths_->fetchWord (reg[7]);
 			reg[7] += 2;
 			address = reg[operand.registerNr_] + index;
-			return OperandLocation (MemoryOperandLocation {cpuData_, mmu_,
-				CondData<u16> (mmu_->fetchWord (static_cast<BusAddress> (address)))});
+			return OperandLocation (MemoryOperandLocation {cpuData_, dataPaths_,
+				CondData<u16> (dataPaths_->fetchWord (static_cast<BusAddress> (address)))});
 
 		default:
 			// Satisfy the compiler. This cannot happen as the mode bit field

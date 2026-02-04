@@ -6,8 +6,9 @@
 class KDMachineState : public BaseMachineState
 {
 public:
-    KDMachineState (Bus* bus, CpuData* cpuData, Interfaces::CpuController* cpuController,
-        MMU* mmu, KD11Config::PowerUpMode powerUpMode, u16 startAddress,
+    KDMachineState (Bus* bus, CpuData* cpuData,
+       Interfaces::CpuController* cpuController, DataPaths* dataPaths,
+        KD11Config::PowerUpMode powerUpMode, u16 startAddress,
         KD11ODT::Creator odtCreator);
 
     // Functions required by BaseMachineState

@@ -13,12 +13,12 @@ using std::make_unique;
 using std::move;
 
 KD11_NA_ODT::KD11_NA_ODT (Bus *bus, CpuData* cpuData, Interfaces::CpuController* cpuController,
-        MMU* mmu, unique_ptr<ConsoleAccess> consoleAccess)
+        DataPaths* dataPaths, unique_ptr<ConsoleAccess> consoleAccess)
     : 
     bus_ {bus},
     cpuData_ {cpuData},
     cpuController_ {cpuController},
-    mmu_ {mmu},
+    dataPaths_ {dataPaths},
     console_ {move (consoleAccess)},
     odtRunning_ {true},
     newValue_ {0},
@@ -32,9 +32,10 @@ KD11_NA_ODT::KD11_NA_ODT (Bus *bus, CpuData* cpuData, Interfaces::CpuController*
 }
 
 unique_ptr<KD11_NA_ODT> KD11_NA_ODT::createODT (Bus *bus, CpuData* cpuData,
-    Interfaces::CpuController* cpuController, MMU* mmu, unique_ptr<ConsoleAccess> consoleAccess)
+    Interfaces::CpuController* cpuController, DataPaths* dataPaths,
+    unique_ptr<ConsoleAccess> consoleAccess)
 {
-    return make_unique<KD11_NA_ODT> (bus, cpuData, cpuController, mmu,
+    return make_unique<KD11_NA_ODT> (bus, cpuData, cpuController, dataPaths,
         make_unique<OperatorConsoleAccess> (bus));
 }
 

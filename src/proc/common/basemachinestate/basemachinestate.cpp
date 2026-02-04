@@ -15,12 +15,12 @@ using std::cerr;
 // 24 and 26), but we'll set it to Bootstrap as that's more convenient for
 // the user.
 BaseMachineState::BaseMachineState (Bus* bus, CpuData* cpuData,
-    Interfaces::CpuController* cpuController, MMU* mmu)
+    Interfaces::CpuController* cpuController, DataPaths* dataPaths)
     :
     bus_ (bus),
     cpuData_ {cpuData},
     cpuController_ {cpuController},
-    mmu_ {mmu},
+    dataPaths_ {dataPaths},
     running_ {true}
 {
     stateMachine_ = make_unique<StateMachine> (this);
@@ -59,7 +59,7 @@ bool BaseMachineState::signalAvailable ()
 // Load PC and PSW from the given vector
 void BaseMachineState::loadTrapVector (CpuData::TrapType trap)
 {
-    cpuData_->registers ()[7] = mmu_->fetchWord (cpuData_->trapVector (trap)).valueOr (0);
+    cpuData_->registers ()[7] = dataPaths_->fetchWord (cpuData_->trapVector (trap)).valueOr (0);
     cpuData_->psw ().set (PSW::ProtectionMode::Trap,
-        mmu_->fetchWord (cpuData_->trapVector (trap) + 2).valueOr (0));
+        dataPaths_->fetchWord (cpuData_->trapVector (trap) + 2).valueOr (0));
 }

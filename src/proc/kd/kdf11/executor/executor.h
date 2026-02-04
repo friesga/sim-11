@@ -10,7 +10,7 @@ class KDF11_Executor
 {
 public:
     KDF11_Executor (CpuData* cpuData,
-        Interfaces::CpuController* cpuController, MMU* mmu);
+        Interfaces::CpuController* cpuController, DataPaths* dataPaths);
 
 	template <typename T>
 	bool operator() (T& instr);
@@ -19,9 +19,9 @@ private:
 	Common::Executor commonExecutor_;
 	CpuData* cpuData_;
     Interfaces::CpuController* cpuController_;
-    MMU* mmu_;
+    DataPaths* dataPaths_;
 
-    OperandDecoderFactory operandDecoderFactory_ {cpuData_, cpuController_, mmu_};
+    OperandDecoderFactory operandDecoderFactory_ {cpuData_, cpuController_, dataPaths_};
 };
 
 template <typename T>
@@ -81,7 +81,7 @@ inline bool KDF11_Executor::operator() (MFPD& instr)
     if (!source.hasValue ())
         return false;
 
-    if (!mmu_->pushWord (source))
+    if (!dataPaths_->pushWord (source))
         return false;
 
     if (cpuData_->stackOverflow ())
@@ -107,7 +107,7 @@ inline bool KDF11_Executor::operator() (MTPD& instr)
     OperandLocation operandLocation =  
         singleOperandDecoder->getOperandLocation (cpuData_->registers ());
 
-    if (!mmu_->popWord (&tmp) || !operandLocation.writePrevMode (tmp))
+    if (!dataPaths_->popWord (&tmp) || !operandLocation.writePrevMode (tmp))
         return false;
         
     commonExecutor_.setPSW (ConditionCodes {.N = (bool) (tmp & 0100000),

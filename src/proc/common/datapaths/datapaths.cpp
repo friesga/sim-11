@@ -1,19 +1,24 @@
 #include "datapaths.h"
 
-
 DataPaths::DataPaths (Bus* bus, MMU* mmu)
-	: 
+    :
     bus_ {bus},
     mmu_ {mmu}
-{}
+{
+}
 
 void DataPaths::reset ()
-{}
+{
+    if (mmu_ != nullptr)
+        mmu_->reset ();
+
+    bus_->reset ();
+}
 
 CondData<u16> DataPaths::fetchWord (VirtualAddress address,
-	PSW::Mode memMgmtMode)
+    PSW::Mode memMgmtMode)
 {
-	if (mmu_ != nullptr)
+    if (mmu_ != nullptr)
         return mmu_->fetchWord (address, memMgmtMode);
     else
         return bus_->read (address);
@@ -40,7 +45,7 @@ CondData<u8> DataPaths::fetchByte (VirtualAddress address,
 }
 
 bool DataPaths::putWord (VirtualAddress address, u16 value,
-	PSW::Mode memMgmtMode)
+    PSW::Mode memMgmtMode)
 {
     if (mmu_ != nullptr)
         return mmu_->putWord (address, value, memMgmtMode);
@@ -49,7 +54,7 @@ bool DataPaths::putWord (VirtualAddress address, u16 value,
 }
 
 bool DataPaths::putByte (VirtualAddress address, u8 value,
-	PSW::Mode memMgmtMode)
+    PSW::Mode memMgmtMode)
 {
     if (mmu_ != nullptr)
         return mmu_->putByte (address, value, memMgmtMode);
@@ -59,24 +64,20 @@ bool DataPaths::putByte (VirtualAddress address, u8 value,
 
 bool DataPaths::pushWord (u16 value)
 {
-    if (mmu_ != nullptr)
-        return mmu_->pushWord (value);
+    return mmu_->pushWord (value);
 }
 
 bool DataPaths::popWord (u16* destination)
 {
-    if (mmu_ != nullptr)
-        return mmu_->popWord (destination);
+    return mmu_->popWord (destination);
 }
 
 void DataPaths::setVirtualPC (u16 value)
 {
-    if (mmu_ != nullptr)
-        mmu_->setVirtualPC (value);
+    mmu_->setVirtualPC (value);
 }
 
 CondData<u16> DataPaths::readWithoutTrap (u16 address)
 {
-    if (mmu_ != nullptr)
-        return mmu_->readWithoutTrap (address);
+    return mmu_->readWithoutTrap (address);
 }

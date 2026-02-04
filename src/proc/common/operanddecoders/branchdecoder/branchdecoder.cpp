@@ -1,9 +1,9 @@
 #include "branchdecoder.h"
 
 BranchDecoder::BranchDecoder (CpuData* cpuData, Interfaces::CpuController* cpuController,
-        MMU* mmu, BranchInstruction* instruction)
+        DataPaths* dataPaths, BranchInstruction* instruction)
     :
-    BaseOperandDecoder (cpuData, cpuController, mmu),
+    BaseOperandDecoder (cpuData, cpuController, dataPaths),
     instr_ {instruction}
 {}
 

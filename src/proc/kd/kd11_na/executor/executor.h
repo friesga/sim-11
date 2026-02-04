@@ -10,7 +10,7 @@ class KD11_NA_Executor
 {
 public:
     KD11_NA_Executor (CpuData* cpuData,
-        Interfaces::CpuController* cpuController, MMU* mmu);
+        Interfaces::CpuController* cpuController, DataPaths* dataPaths);
 
 	// The operator() function is specialized for the instructions specific
     // for the KD11-NA. The definition of these specializations is rather
@@ -23,7 +23,7 @@ public:
 private:
 	Common::Executor commonExecutor_;
 	CpuData* cpuData_;
-    MMU* mmu_;
+    DataPaths* dataPaths_;
 
     bool returnFISresult (Float result, u16 registerNumber);
     bool executeFISinstruction (u16 stackPointer,

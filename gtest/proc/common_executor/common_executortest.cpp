@@ -7,7 +7,7 @@
 TEST (CommonExecutorTest, clrWriteOperandOrder)
 {
     DummyCpu cpu;
-    Common::Executor executor {cpu.cpuData (), cpu.cpuControl (), cpu.mmu ()};
+    Common::Executor executor {cpu.cpuData (), cpu.cpuControl (), cpu.dataPaths ()};
 
     // CLR (R0)
     CLR instr {0005010};
@@ -37,7 +37,7 @@ TEST (CommonExecutorTest, clrWriteOperandOrder)
 TEST (CommonExecutorTest, clrSuceeds)
 {
     DummyCpu cpu;
-    Common::Executor executor {cpu.cpuData (), cpu.cpuControl (), cpu.mmu ()};
+    Common::Executor executor {cpu.cpuData (), cpu.cpuControl (), cpu.dataPaths ()};
 
     // CLR R0
     CLR instr {0005000};
@@ -61,7 +61,7 @@ TEST (CommonExecutorTest, clrSuceeds)
 TEST (CommonExecutorTest, mfpsSucceeds)
 {
     DummyCpu cpu;
-    Common::Executor executor {cpu.cpuData (), cpu.cpuControl (), cpu.mmu ()};
+    Common::Executor executor {cpu.cpuData (), cpu.cpuControl (), cpu.dataPaths ()};
 
     // MFPS R0
     MFPS instr {0106700};
@@ -78,7 +78,7 @@ TEST (CommonExecutorTest, mfpsSucceeds)
 TEST (CommonExecutorTest, mfpsWriteOperandOrder)
 {
     DummyCpu cpu;
-    Common::Executor executor {cpu.cpuData (), cpu.cpuControl (), cpu.mmu ()};
+    Common::Executor executor {cpu.cpuData (), cpu.cpuControl (), cpu.dataPaths ()};
 
     // MFPS (R0)
     MFPS instr {0106710};

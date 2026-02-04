@@ -15,6 +15,7 @@
 #include "proc/kd/kdf11/calculator/calculator.h"
 #include "proc/kd/kdf11/haltmode/haltmode.h"
 #include "proc/kd/kdf11/kdf11processorexceptionhandler/kdf11processorexceptionhandler.h"
+#include "proc/common/datapaths/datapaths.h"
 
 #include <memory>
 #include <vector>
@@ -67,8 +68,10 @@ private:
     // component.
     KDF11CpuData cpuData_ {};
     KTF11_A mmu_ {bus_, &cpuData_};
+    DataPaths dataPaths_ {bus_, &mmu_};
     CompositeCpuController<KDF11_Executor, KDF11_Calculator,
-        KDF11_HaltMode, KDF11ProcessorExceptionHandler> cpuController_ {bus_, &cpuData_, &mmu_};
+        KDF11_HaltMode, KDF11ProcessorExceptionHandler> cpuController_ {bus_,
+        &cpuData_, &dataPaths_};
     unique_ptr<KDMachineState> machineState_;
     unique_ptr<SerialLineUnits> serialLineUnits;
     unique_ptr<BDV11> bdv11;

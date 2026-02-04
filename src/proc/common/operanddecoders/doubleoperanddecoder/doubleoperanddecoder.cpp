@@ -7,10 +7,10 @@
 // 
 // Initialize the instr struct with the first member
 DoubleOperandDecoder::DoubleOperandDecoder (CpuData* cpuData,
-	Interfaces::CpuController* cpuController, MMU* mmu,
+	Interfaces::CpuController* cpuController, DataPaths* dataPaths,
 	DoubleOperandInstruction* instruction)
 	:
-	BaseOperandDecoder (cpuData, cpuController, mmu),
+	BaseOperandDecoder (cpuData, cpuController, dataPaths),
 	instr_ {instruction}
 {}
 

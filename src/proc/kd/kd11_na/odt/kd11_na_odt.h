@@ -10,6 +10,7 @@
 #include "proc/kd/include/consoleaccess.h"
 #include "proc/kd/common/odt/operatorconsoleaccess/operatorconsoleaccess.h"
 #include "proc/include/cpudata.h"
+#include "proc/common/datapaths/datapaths.h"
 
 #include <string>
 
@@ -21,13 +22,14 @@ class KD11_NA_ODT : public KD11ODT
 {
 public:
     KD11_NA_ODT (Bus* bus, CpuData* cpuData, Interfaces::CpuController* cpuController,
-        MMU* mmu, unique_ptr<ConsoleAccess> consoleAccess);
+        DataPaths* dataPaths, unique_ptr<ConsoleAccess> consoleAccess);
 
     // Definition of the function required by the KD11ODT interface
     bool processCharacter (u8 character) override;
 
     static unique_ptr<KD11_NA_ODT> createODT (Bus *bus, CpuData* cpuData,
-        Interfaces::CpuController* cpuController, MMU* mmu, unique_ptr<ConsoleAccess> consoleAccess);
+        Interfaces::CpuController* cpuController, DataPaths* dataPaths,
+        unique_ptr<ConsoleAccess> consoleAccess);
 
 private:
     enum { BASE8 = 8 };
@@ -132,7 +134,7 @@ private:
     Bus* bus_;
     CpuData* cpuData_;
     Interfaces::CpuController* cpuController_;
-    MMU* mmu_;
+    DataPaths* dataPaths_;
     unique_ptr<ConsoleAccess> console_;
     bool odtRunning_;
     string digitSeries_;

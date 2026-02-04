@@ -13,6 +13,7 @@
 #include "proc/kd/kdf11/calculator/calculator.h"
 #include "proc/kd/kdf11/haltmode/haltmode.h"
 #include "proc/kd/kdf11/kdf11processorexceptionhandler/kdf11processorexceptionhandler.h"
+#include "proc/common/datapaths/datapaths.h"
 
 #include <memory>
 #include <vector>
@@ -54,7 +55,7 @@ public:
     // Functions to give unit tests access to the CPU's components.
     constexpr Interfaces::CpuController* cpuController ();
     constexpr CpuData* cpuData ();
-    constexpr MMU* mmu ();
+    constexpr DataPaths* dataPaths ();
 
 private:
     Bus* bus_;
@@ -62,8 +63,9 @@ private:
     // Definition of the KDF11-A components. The KTF11-A (MMU) is optional.
     KDF11CpuData cpuData_ {};
     KTF11_A mmu_ {bus_, &cpuData_};
+    DataPaths dataPaths_ {bus_, &mmu_};
     CompositeCpuController<KDF11_Executor, KDF11_Calculator,
-        KDF11_HaltMode, KDF11ProcessorExceptionHandler> cpuController_ {bus_, &cpuData_, &mmu_};
+        KDF11_HaltMode, KDF11ProcessorExceptionHandler> cpuController_ {bus_, &cpuData_, &dataPaths_};
     unique_ptr<KDMachineState> machineState_;
 
     // RegisterHandler performs the functions required by the BusDevice
@@ -88,9 +90,9 @@ constexpr CpuData* KDF11_A::cpuData ()
     return &cpuData_;
 }
 
-constexpr MMU* KDF11_A::mmu ()
+constexpr DataPaths* KDF11_A::dataPaths ()
 {
-    return &mmu_;
+    return &dataPaths_;
 }
 
 #endif // !_KDF11_A_H_

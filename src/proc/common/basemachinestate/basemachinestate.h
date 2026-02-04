@@ -4,7 +4,7 @@
 #include "bus/include/bus.h"
 #include "proc/kd/include/kd11odt.h"
 #include "proc/include/cpucontroller.h"
-#include "proc/include/mmu.h"
+#include "proc/common/datapaths/datapaths.h"
 #include "proc/kd/common/odt/operatorconsoleaccess/operatorconsoleaccess.h"
 #include "configdata/kd11_naconfig/kd11_naconfig.h"
 #include "variantfsm/fsm.h"
@@ -40,7 +40,8 @@ using std::placeholders::_3;
 class BaseMachineState
 {
 public:
-    BaseMachineState (Bus* bus, CpuData* cpuData, Interfaces::CpuController* cpuController, MMU* mmu);
+    BaseMachineState (Bus* bus, CpuData* cpuData,
+        Interfaces::CpuController* cpuController, DataPaths* dataPaths);
     void run ();
     void exit ();
 
@@ -100,7 +101,7 @@ protected:
     Bus* bus_;
     CpuData* cpuData_;
     Interfaces::CpuController* cpuController_;
-    MMU* mmu_;
+    DataPaths* dataPaths_;
     bool running_;
 
     // Definition of a queue for the processing of bus signal events

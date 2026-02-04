@@ -23,10 +23,10 @@ TEST (KD11_NAMOVTEST, MovMode0Mode2Functions)
     Instruction instruction {instrDecoder.decode (0010020)};
 
     cpu.cpuData ()->registers () [0] = 10;
-    cpu.mmu ()->putWord (10, 0);
+    cpu.dataPaths ()->putWord (10, 0);
     
-    EXPECT_TRUE (visit (KD11_NA_Executor {cpu.cpuData (), cpu.cpuControl (), cpu.mmu ()},
-        instruction));
-    EXPECT_EQ (cpu.mmu ()->fetchWord (10), 10);
+    EXPECT_TRUE (visit (KD11_NA_Executor {cpu.cpuData (),
+        cpu.cpuControl (), cpu.dataPaths ()}, instruction));
+    EXPECT_EQ (cpu.dataPaths ()->fetchWord (10), 10);
     EXPECT_EQ (cpu.cpuData ()->registers () [0], 12);
 }

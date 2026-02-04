@@ -5,13 +5,13 @@
 #include "proc/common/instructionformats/doubleoperandinstruction/doubleoperandinstruction.h"
 #include "proc/include/cpudata.h"
 #include "proc/include/cpucontroller.h"
-#include "proc/include/mmu.h"
+#include "proc/common/datapaths/datapaths.h"
 
 class DoubleOperandDecoder : public BaseOperandDecoder
 {
 public:
-	DoubleOperandDecoder (CpuData* cpuData, Interfaces::CpuController* cpuController, MMU* mmu,
-		DoubleOperandInstruction* instruction);
+	DoubleOperandDecoder (CpuData* cpuData, Interfaces::CpuController* cpuController,
+		DataPaths* dataPaths, DoubleOperandInstruction* instruction);
 
 	OperandLocation getSourceOperandLocation (GeneralRegisters &reg);
 	OperandLocation getDestinationOperandLocation (GeneralRegisters &reg);

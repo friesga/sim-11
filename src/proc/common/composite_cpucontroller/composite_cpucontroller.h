@@ -4,7 +4,7 @@
 #include "bus/include/bus.h"
 #include "proc/include/cpudata.h"
 #include "proc/include/cpucontroller.h"
-#include "proc/include/mmu.h"
+#include "proc/common/datapaths/datapaths.h"
 #include "proc/common/instructiondecoder/instructiondecoder.h"
 
 #include <memory>
@@ -17,7 +17,7 @@ template <isExecutor TExecutor, typename TCalculator, isHaltMode THaltMode,
 class CompositeCpuController : public Interfaces::CpuController
 {
 public:
-	CompositeCpuController (Bus *bus, CpuData* cpuData, MMU* mmu);
+	CompositeCpuController (Bus *bus, CpuData* cpuData, DataPaths* datapaths);
 
 	// Definition of functions required by the CpuControl interface.
 	//
@@ -35,13 +35,14 @@ public:
 
 private:
 	Bus* bus_;
-	MMU* mmu_;
+	DataPaths* dataPaths_;
 	CpuData* cpuData_;
 
 	unique_ptr<TExecutor> executor_;
 	unique_ptr<TCalculator> calculator_;
 	unique_ptr<THaltMode> haltMode_;
-	TProcessorExceptionHandler processorExceptionHandler_ {bus_, cpuData_, this, mmu_};
+	TProcessorExceptionHandler processorExceptionHandler_ {bus_, cpuData_,
+		this, dataPaths_};
 
 	InstructionDecoder decoder_ {};
 	Interfaces::CpuController::HaltReason haltReason_;

@@ -3,7 +3,7 @@
 
 #include "bus/include/bus.h"
 #include "proc/include/cpudata.h"
-#include "proc/include/mmu.h"
+#include "proc/common/datapaths/datapaths.h"
 #include "proc/include/cpucontroller.h"
 
 // This class implements basic processor exception handling without stack
@@ -13,7 +13,7 @@ class BasicProcessorExceptionHandler
 {
 public:
     BasicProcessorExceptionHandler (Bus* bus, CpuData* cpuData,
-        Interfaces::CpuController* cpuController, MMU* mmu);
+        Interfaces::CpuController* cpuController, DataPaths* dataPaths);
     void serviceTrap ();
     void serviceInterrupt ();
 
@@ -21,7 +21,7 @@ private:
     Bus* bus_;
     CpuData* cpuData_;
     Interfaces::CpuController* cpuController_;
-    MMU* mmu_;
+    DataPaths* dataPaths_;
 
     void swapPcPSW (u16 vectorAddress);
     bool fetchFromVector (u16 address, u16* dest);

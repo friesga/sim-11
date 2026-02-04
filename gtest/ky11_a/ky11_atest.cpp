@@ -9,6 +9,7 @@
 #include "proc/common/basicprocessorexceptionhandler/basicprocessorexceptionhandler.h"
 #include "../fakesdl/fakewindow/fakewindow.h"
 #include "ms11p/ms11p.h"
+#include "proc/common/datapaths/datapaths.h"
 
 #include <gtest/gtest.h>
 
@@ -20,12 +21,13 @@ protected:
     MS11P ms11p {&bus};
     KA11CpuData cpuData {};
     PseudoMMU mmu {&bus, &cpuData};
+    DataPaths dataPaths_ {&bus, &mmu};
     CompositeCpuController<KA11_Executor, KA11Calculator,
-        PseudoHaltMode, BasicProcessorExceptionHandler> cpuController {&bus, &cpuData, &mmu};
+        PseudoHaltMode, BasicProcessorExceptionHandler> cpuController {&bus, &cpuData, &dataPaths_};
     FakeWindow window {};
 
     KY11_A ky11a {&bus, &cpuController, &window, KY11_AConfig {Cabinet::Position {0,0}}};
-    KA11MachineState machineState {&bus, &cpuData, &cpuController, &mmu, ky11a};
+    KA11MachineState machineState {&bus, &cpuData, &cpuController, &dataPaths_, ky11a};
 
     KY11_ATest ()
     {

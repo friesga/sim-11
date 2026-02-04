@@ -13,6 +13,7 @@
 #include "proc/kd/kd11_na/calculator/calculator.h"
 #include "proc/common/pseudo_haltmode/pseudo_haltmode.h"
 #include "proc/common/basicprocessorexceptionhandler/basicprocessorexceptionhandler.h"
+#include "proc/common/datapaths/datapaths.h"
 
 #include <memory>
 
@@ -62,9 +63,10 @@ private:
 
     Bus* bus_;
     KD11_NACpuData cpuData_;
-    CompositeCpuController<KD11_NA_Executor, KD11_NA_Calculator,
-        PseudoHaltMode, BasicProcessorExceptionHandler> cpuController_ {bus_, &cpuData_, &pseudoMMU_};
     PseudoMMU pseudoMMU_ {bus_, &cpuData_};
+    DataPaths dataPaths_ {bus_, &pseudoMMU_};
+    CompositeCpuController<KD11_NA_Executor, KD11_NA_Calculator,
+        PseudoHaltMode, BasicProcessorExceptionHandler> cpuController_ {bus_, &cpuData_, &dataPaths_};
     unique_ptr<KD11_NA_ODT>	odt_ {};
     KD11Config::PowerUpMode powerUpMode_;
     u16 startAddress_;

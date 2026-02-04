@@ -50,11 +50,11 @@ TEST_F (KDF11_A_PSWTEST, MOVDoesNotSetCC)
     // Assume the MOV instruction is at address 0, so the second and third
     // word of the instruction are at address 2 and 4.
     kdf11a->cpuData ()->registers () [7] = 2;
-    kdf11a->mmu ()->putWord (2, 0);
-    kdf11a->mmu ()->putWord (4, 0177776);
+    kdf11a->dataPaths ()->putWord (2, 0);
+    kdf11a->dataPaths ()->putWord (4, 0177776);
     Instruction instruction {instrDecoder.decode (0012737)};
     
-    EXPECT_TRUE (visit (KDF11_Executor {kdf11a->cpuData (), kdf11a->cpuController (), kdf11a->mmu ()},
+    EXPECT_TRUE (visit (KDF11_Executor {kdf11a->cpuData (), kdf11a->cpuController (), kdf11a->dataPaths ()},
         instruction));
     
     CondData<u16> psw = kdf11a->read (PswAddress);
@@ -73,11 +73,11 @@ TEST_F (KDF11_A_PSWTEST, MOVBDoesNotSetCC)
     // Assume the MOV instruction is at address 0, so the second and third
     // word of the instruction are at address 2 and 4.
     kdf11a->cpuData ()->registers () [7] = 2;
-    kdf11a->mmu ()->putWord (2, 0);
-    kdf11a->mmu ()->putWord (4, 0177776);
+    kdf11a->dataPaths ()->putWord (2, 0);
+    kdf11a->dataPaths ()->putWord (4, 0177776);
     Instruction instruction {instrDecoder.decode (0112737)};
 
-    EXPECT_TRUE (visit (KDF11_Executor {kdf11a->cpuData (), kdf11a->cpuController (), kdf11a->mmu ()},
+    EXPECT_TRUE (visit (KDF11_Executor {kdf11a->cpuData (), kdf11a->cpuController (), kdf11a->dataPaths ()},
         instruction));
     
     CondData<u16> psw = kdf11a->read (PswAddress);
@@ -95,10 +95,10 @@ TEST_F (KDF11_A_PSWTEST, CLRDoesNotSetCC)
     // Assume the CLR instruction is at address 0, so the second word of the
     // instruction is at address 2.
     kdf11a->cpuData ()->registers () [7] = 2;
-    kdf11a->mmu ()->putWord (2, 0177776);
+    kdf11a->dataPaths ()->putWord (2, 0177776);
     Instruction instruction {instrDecoder.decode (0005037)};
 
-    EXPECT_TRUE (visit (KDF11_Executor {kdf11a->cpuData (), kdf11a->cpuController (), kdf11a->mmu ()},
+    EXPECT_TRUE (visit (KDF11_Executor {kdf11a->cpuData (), kdf11a->cpuController (), kdf11a->dataPaths ()},
         instruction));
     
     CondData<u16> psw = kdf11a->read (PswAddress);
@@ -116,10 +116,10 @@ TEST_F (KDF11_A_PSWTEST, CLRBDoesNotSetCC)
     // Assume the CLR instruction is at address 0, so the second word of the
     // instruction is at address 2.
     kdf11a->cpuData ()->registers () [7] = 2;
-    kdf11a->mmu ()->putWord (2, 0177776);
+    kdf11a->dataPaths ()->putWord (2, 0177776);
     Instruction instruction {instrDecoder.decode (0105037)};
 
-    EXPECT_TRUE (visit (KDF11_Executor {kdf11a->cpuData (), kdf11a->cpuController (), kdf11a->mmu ()},
+    EXPECT_TRUE (visit (KDF11_Executor {kdf11a->cpuData (), kdf11a->cpuController (), kdf11a->dataPaths ()},
         instruction));    
     CondData<u16> psw = kdf11a->read (PswAddress);
     EXPECT_EQ (psw, 0177400);

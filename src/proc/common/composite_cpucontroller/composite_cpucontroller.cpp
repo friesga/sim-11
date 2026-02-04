@@ -31,16 +31,17 @@ using namespace std::chrono;
 template <isExecutor TExecutor, typename TCalculator, isHaltMode THaltMode,
     isProcessorExceptionHandler TProcessorExceptionHandler>
 CompositeCpuController<TExecutor, TCalculator, THaltMode,
-    TProcessorExceptionHandler>::CompositeCpuController (Bus* bus, CpuData* cpuData, MMU* mmu)
+    TProcessorExceptionHandler>::CompositeCpuController (Bus* bus,
+        CpuData* cpuData, DataPaths* dataPaths)
     :
     bus_ {bus},
-    mmu_ {mmu},
+    dataPaths_ {dataPaths},
     cpuData_ {cpuData},
     runState_ {Interfaces::CpuController::CpuRunState::HALT},
     haltReason_ {Interfaces::CpuController::HaltReason::HaltInstruction},
     traceFlag_ {false}
 {
-    executor_ = make_unique<TExecutor> (cpuData, this, mmu);
+    executor_ = make_unique<TExecutor> (cpuData, this, dataPaths);
     calculator_ = make_unique<TCalculator> ();
     haltMode_ = make_unique<THaltMode> ();
 
@@ -70,7 +71,7 @@ void CompositeCpuController<TExecutor, TCalculator, THaltMode,
     TProcessorExceptionHandler>::busReset ()
 {
     bus_->BINIT ().cycle ();
-    mmu_->reset ();
+    dataPaths_->reset ();
 }
 
 // Halt the processor
@@ -203,7 +204,7 @@ void CompositeCpuController<TExecutor, TCalculator, THaltMode,
     TProcessorExceptionHandler>::execInstr ()
 {
     // Get next instruction to execute and move PC forward
-    CondData<u16> instructionWord = mmu_->fetchWord (cpuData_->registers ()[7]);
+    CondData<u16> instructionWord = dataPaths_->fetchWord (cpuData_->registers ()[7]);
     if (!instructionWord.hasValue ())
     {
         trace.bus (BusRecordType::ReadFail, cpuData_->registers ()[7], 0);
@@ -213,7 +214,7 @@ void CompositeCpuController<TExecutor, TCalculator, THaltMode,
 
     // During each instruction fetch SR2 is loaded with the 16-bit virtual
     // address (VA) but is not updated if the instruction fetch fails.
-    mmu_->setVirtualPC (cpuData_->registers ()[7]);
+    dataPaths_->setVirtualPC (cpuData_->registers ()[7]);
 
     cpuData_->registers ()[7] += 2;
 
@@ -268,9 +269,9 @@ void CompositeCpuController<TExecutor, TCalculator, THaltMode,
     // the instruction isn't decoded at this point. Therefore use the bus
     // read function instead of fetchWord(). The latter will generate a
     // bus error trap on access of an invalid address.
-    code[0] = mmu_->readWithoutTrap (cpuData_->registers ()[7] + 0).valueOr (0);
-    code[1] = mmu_->readWithoutTrap (cpuData_->registers ()[7] + 2).valueOr (0);
-    code[2] = mmu_->readWithoutTrap (cpuData_->registers ()[7] + 4).valueOr (0);
+    code[0] = dataPaths_->readWithoutTrap (cpuData_->registers ()[7] + 0).valueOr (0);
+    code[1] = dataPaths_->readWithoutTrap (cpuData_->registers ()[7] + 2).valueOr (0);
+    code[2] = dataPaths_->readWithoutTrap (cpuData_->registers ()[7] + 4).valueOr (0);
     trace.cpuStep (cpuData_->registers (), cpuData_->psw (), code);
     trace.clearIgnoreBus ();
 }

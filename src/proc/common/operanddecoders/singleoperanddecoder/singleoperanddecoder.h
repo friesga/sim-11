@@ -5,12 +5,13 @@
 #include "proc/common/instructionformats/singleoperandinstruction/singleoperandinstruction.h"
 #include "proc/include/cpudata.h"
 #include "proc/include/cpucontroller.h"
-#include "proc/include/mmu.h"
+#include "proc/common/datapaths/datapaths.h"
 
 class SingleOperandDecoder : BaseOperandDecoder
 {
 public:
-    SingleOperandDecoder (CpuData* cpuData, Interfaces::CpuController* cpuController, MMU* mmu,
+    SingleOperandDecoder (CpuData* cpuData,
+		Interfaces::CpuController* cpuController, DataPaths* dataPaths,
 		SingleOperandInstruction* instr);
 
 	OperandLocation getOperandLocation (GeneralRegisters &reg);

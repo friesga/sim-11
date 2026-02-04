@@ -8,7 +8,7 @@ class KA11MachineState : public BaseMachineState
 {
 public:
     KA11MachineState (Bus* bus, CpuData* cpuData,
-        Interfaces::CpuController* cpuController, MMU* mmu,
+        Interfaces::CpuController* cpuController, DataPaths* dataPaths,
         KY11Console& ky11Console);
 
     // Functions required by BaseMachineState

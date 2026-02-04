@@ -2,13 +2,14 @@
 #define _MEMORYOPERANDLOCATION_H_
 
 #include "proc/include/cpudata.h"
-#include "proc/include/mmu.h"
+#include "proc/common/datapaths/datapaths.h"
 #include "conddata/conddata.h"
 
 class MemoryOperandLocation
 {
 public:
-    MemoryOperandLocation (CpuData* cpuData, MMU* mmu, CondData<u16> memoryAddress);
+    MemoryOperandLocation (CpuData* cpuData, DataPaths* dataPaths,
+        CondData<u16> memoryAddress);
     bool isValid ();
     operator u16 ();
     template <typename T> requires std::same_as<T, CondData<u16>> T contents ();
@@ -23,21 +24,21 @@ public:
 private:
     CondData <u16> location_;
     CpuData* cpuData_;
-    MMU* mmu_;
+    DataPaths* dataPaths_;
 };
 
 template <typename T>
 requires std::same_as<T, CondData<u16>>
 T MemoryOperandLocation::contents ()
 {
-    return mmu_->fetchWord (static_cast<BusAddress> (location_));
+    return dataPaths_->fetchWord (static_cast<BusAddress> (location_));
 }
 
 template <typename T>
 requires std::same_as<T, CondData<u8>>
 T MemoryOperandLocation::contents ()
 {
-    return mmu_->fetchByte (static_cast<BusAddress> (location_));
+    return dataPaths_->fetchByte (static_cast<BusAddress> (location_));
 }
 
 // Return the contents of the operand location in the previous memory
@@ -46,7 +47,7 @@ template <typename T>
 requires std::same_as<T, CondData<u16>>
 T MemoryOperandLocation::prevModeContents ()
 {
-    return mmu_->fetchWord (static_cast<BusAddress> (location_),
+    return dataPaths_->fetchWord (static_cast<BusAddress> (location_),
         PSW::Mode::Previous);
 }
 
@@ -54,7 +55,7 @@ template <typename T>
 requires std::same_as<T, CondData<u8>>
 T MemoryOperandLocation::prevModeContents ()
 {
-    return mmu_->fetchByte (static_cast<BusAddress> (location_),
+    return dataPaths_->fetchByte (static_cast<BusAddress> (location_),
         PSW::Mode::Previous);
 }
 
@@ -62,14 +63,14 @@ template <typename T>
 requires std::same_as<T, u16>
 bool MemoryOperandLocation::write (T contents)
 {
-    return mmu_->putWord (static_cast<BusAddress> (location_), contents);
+    return dataPaths_->putWord (static_cast<BusAddress> (location_), contents);
 }
 
 template <typename T>
 requires std::same_as<T, u8>
 bool MemoryOperandLocation::write (T contents)
 {
-    return mmu_->putByte (static_cast<BusAddress> (location_), contents);
+    return dataPaths_->putByte (static_cast<BusAddress> (location_), contents);
 }
 
 // Write the contents to the memory location using the previous memory
@@ -78,7 +79,7 @@ template <typename T>
 requires std::same_as<T, u16>
 bool MemoryOperandLocation::writePrevMode (T contents)
 {
-    return mmu_->putWord (static_cast<BusAddress> (location_), contents,
+    return dataPaths_->putWord (static_cast<BusAddress> (location_), contents,
         PSW::Mode::Previous);
 }
 
@@ -86,7 +87,7 @@ template <typename T>
 requires std::same_as<T, u8>
 bool MemoryOperandLocation::writePrevMode (T contents)
 {
-    return mmu_->putByte (static_cast<BusAddress> (location_), contents,
+    return dataPaths_->putByte (static_cast<BusAddress> (location_), contents,
         PSW::Mode::Previous);
 }
 #endif // _MEMORYOPERANDLOCATION_H_

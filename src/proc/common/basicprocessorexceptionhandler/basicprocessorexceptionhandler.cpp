@@ -1,12 +1,13 @@
 #include "basicprocessorexceptionhandler.h"
 
-BasicProcessorExceptionHandler::BasicProcessorExceptionHandler (Bus* bus, CpuData* cpuData,
-    Interfaces::CpuController* cpuController, MMU* mmu)
+BasicProcessorExceptionHandler::BasicProcessorExceptionHandler (Bus* bus,
+    CpuData* cpuData, Interfaces::CpuController* cpuController,
+    DataPaths* dataPaths)
     :
     bus_ {bus},
     cpuData_ (cpuData),
     cpuController_ {cpuController},
-    mmu_ {mmu}
+    dataPaths_ {dataPaths}
 {}
 
 void BasicProcessorExceptionHandler::serviceTrap ()
@@ -35,7 +36,8 @@ void BasicProcessorExceptionHandler::swapPcPSW (u16 vectorAddress)
 
     // Save PC and PSW on the stack. Adressing the stack could result in a
     // bus time out. In that case the CPU is halted.
-    if (!mmu_->pushWord (cpuData_->psw ()) || !mmu_->pushWord (cpuData_->registers ()[7]))
+    if (!dataPaths_->pushWord (cpuData_->psw ()) || 
+        !dataPaths_->pushWord (cpuData_->registers ()[7]))
     {
         trace.cpuEvent (CpuEventRecordType::CPU_DBLBUS, cpuData_->registers ()[6]);
         // ToDo: All interrupts should be cleared?
@@ -61,14 +63,15 @@ void BasicProcessorExceptionHandler::swapPcPSW (u16 vectorAddress)
 // processor will halt anyway.
 bool BasicProcessorExceptionHandler::fetchFromVector (u16 address, u16* dest)
 {
-    CondData<u16> tmpValue = mmu_->fetchWord (address, PSW::Mode::Kernel);
+    CondData<u16> tmpValue = dataPaths_->fetchWord (address, PSW::Mode::Kernel);
     *dest = tmpValue.valueOr (0);
     return tmpValue.hasValue ();
 }
 
-bool BasicProcessorExceptionHandler::fetchFromVector (u16 address, function<void (u16)> lambda)
+bool BasicProcessorExceptionHandler::fetchFromVector (u16 address,
+    function<void (u16)> lambda)
 {
-    CondData<u16> tmpValue = mmu_->fetchWord (address);
+    CondData<u16> tmpValue = dataPaths_->fetchWord (address);
     lambda (tmpValue.valueOr (0));
     return tmpValue.hasValue ();
 }

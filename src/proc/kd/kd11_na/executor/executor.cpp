@@ -1,11 +1,11 @@
 #include "executor.h"
 
 KD11_NA_Executor::KD11_NA_Executor (CpuData* cpuData,
-    Interfaces::CpuController* cpuController, MMU* mmu)
+    Interfaces::CpuController* cpuController, DataPaths* dataPaths)
     :
-    commonExecutor_ (cpuData, cpuController, mmu),
+    commonExecutor_ (cpuData, cpuController, dataPaths),
     cpuData_ {cpuData},
-    mmu_ {mmu}
+    dataPaths_ {dataPaths}
 {}
 
 // Return the result of a floating point calculation
@@ -15,8 +15,8 @@ bool KD11_NA_Executor::returnFISresult (Float result, u16 registerNumber)
     Float::Result conversionResult = result.pdp11Dword (&high, &low);
     if (conversionResult == Float::Result::OK)
     {
-        mmu_->putWord (cpuData_->registers ()[registerNumber] + 4, high);
-        mmu_->putWord (cpuData_->registers ()[registerNumber] + 6, low);
+        dataPaths_->putWord (cpuData_->registers ()[registerNumber] + 4, high);
+        dataPaths_->putWord (cpuData_->registers ()[registerNumber] + 6, low);
         cpuData_->registers ()[registerNumber] += 4;
 
         commonExecutor_.setPSW (ConditionCodes {.N = result.value () < 0,
@@ -61,13 +61,13 @@ bool KD11_NA_Executor::executeFISinstruction (u16 stackPointer,
         cpuData_->psw () & ~(_BV(5) | _BV(6)));
 
     CondData<u16> f1High = 
-        mmu_->fetchWord (cpuData_->registers ()[stackPointer] + 4);
+        dataPaths_->fetchWord (cpuData_->registers ()[stackPointer] + 4);
     CondData<u16> f1Low = 
-        mmu_->fetchWord (cpuData_->registers ()[stackPointer] + 6);
+        dataPaths_->fetchWord (cpuData_->registers ()[stackPointer] + 6);
     CondData<u16> f2High = 
-        mmu_->fetchWord (cpuData_->registers ()[stackPointer]);
+        dataPaths_->fetchWord (cpuData_->registers ()[stackPointer]);
     CondData<u16> f2Low = 
-        mmu_->fetchWord (cpuData_->registers ()[stackPointer] + 2);
+        dataPaths_->fetchWord (cpuData_->registers ()[stackPointer] + 2);
 
     if (!f1High.hasValue () || !f1Low.hasValue () ||
         !f2High.hasValue () || !f2Low.hasValue ())

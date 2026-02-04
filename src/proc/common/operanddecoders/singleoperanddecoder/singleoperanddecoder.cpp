@@ -1,9 +1,10 @@
 #include "singleoperanddecoder.h"
 
 SingleOperandDecoder::SingleOperandDecoder (CpuData* cpuData,
-    Interfaces::CpuController* cpuController, MMU* mmu, SingleOperandInstruction* instr)
+    Interfaces::CpuController* cpuController, DataPaths* dataPaths,
+    SingleOperandInstruction* instr)
     :
-    BaseOperandDecoder (cpuData, cpuController, mmu),
+    BaseOperandDecoder (cpuData, cpuController, dataPaths),
     instr_ {instr}
 {}
 

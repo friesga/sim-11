@@ -9,6 +9,7 @@
 #include "proc/kd/kd11_na/executor/executor.h"
 #include "proc/kd/kd11_na/calculator/calculator.h"
 #include "proc/common/basicprocessorexceptionhandler/basicprocessorexceptionhandler.h"
+#include "proc/common/datapaths/datapaths.h"
 
 #include <gtest/gtest.h>
 #include <memory>
@@ -53,14 +54,15 @@ protected:
         Qbus bus;
         KDF11CpuData cpuData;
         KTF11_A mmu {&bus, &cpuData};
+        DataPaths dataPaths_ {&bus, &mmu};
         CompositeCpuController<KD11_NA_Executor, KD11_NA_Calculator,
-        PseudoHaltMode, BasicProcessorExceptionHandler> kd11cpu (&bus, &cpuData, &mmu);
+        PseudoHaltMode, BasicProcessorExceptionHandler> kd11cpu (&bus, &cpuData, &dataPaths_);
         MSV11D msv11d (&bus);
 
         bus.installModule (&msv11d);
 
         // Create a KD11ODT instance and let it process a character sequence
-        KDF11_ODT kd11odt {&bus, &cpuData, &kd11cpu, &mmu, move (console), false};
+        KDF11_ODT kd11odt {&bus, &cpuData, &kd11cpu, &dataPaths_, move (console), false};
 
         // Read the characters from the input sequence and feed them to ODT.
         // The characters could be retrieved from the input sequence directly,

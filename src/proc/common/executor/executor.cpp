@@ -1,11 +1,11 @@
 #include "executor.h"
 
 Common::Executor::Executor (CpuData* cpuData,
-    Interfaces::CpuController* cpuController, MMU* mmu)
+    Interfaces::CpuController* cpuController, DataPaths* dataPaths)
     :
     cpuData_ {cpuData},
     cpuController_ {cpuController},
-    mmu_ {mmu}
+    dataPaths_ {dataPaths}
 {
 }
 
@@ -678,7 +678,7 @@ bool Common::Executor::execute (MARK& instr)
 
     registers[6] = registers[7] + 2 * instr.numberOfParameters ();
     registers[7] = registers[5];
-    registers[5] = mmu_->fetchWord (registers[6]);
+    registers[5] = dataPaths_->fetchWord (registers[6]);
     registers[6] += 2;
 
     return true;
@@ -1044,7 +1044,7 @@ bool Common::Executor::execute (JSR& instr)
     GeneralRegisters& registers = cpuData_->registers ();
     u16 specifiedRegisterContents = registers[instr.getRegisterNr ()];
 
-    if (!mmu_->pushWord (specifiedRegisterContents))
+    if (!dataPaths_->pushWord (specifiedRegisterContents))
         return false;
 
     if (cpuData_->stackOverflow ())
@@ -1284,7 +1284,7 @@ bool Common::Executor::execute (RTS& instr)
     u16 regNr = instr.getRegister ();
 
     cpuData_->registers ()[7] = cpuData_->registers ()[regNr];
-    mmu_->popWord (&cpuData_->registers ()[regNr]);
+    dataPaths_->popWord (&cpuData_->registers ()[regNr]);
 
     return true;
 }
@@ -1458,7 +1458,8 @@ bool Common::Executor::execute (RTI& instr)
 {
     u16 tmp;
 
-    if (!mmu_->popWord (&cpuData_->registers ()[7]) || !mmu_->popWord (&tmp))
+    if (!dataPaths_->popWord (&cpuData_->registers ()[7]) ||
+        !dataPaths_->popWord (&tmp))
         return false;
 
     cpuData_->psw ().set (PSW::ProtectionMode::RTI, tmp);
@@ -1493,7 +1494,8 @@ bool Common::Executor::execute (RTT& instr)
 {
     u16 tmp;
 
-    if (!mmu_->popWord (&cpuData_->registers ()[7]) || !mmu_->popWord (&tmp))
+    if (!dataPaths_->popWord (&cpuData_->registers ()[7]) ||
+        !dataPaths_->popWord (&tmp))
         return false;
 
     cpuData_->psw ().set (PSW::ProtectionMode::RTI, tmp);

@@ -10,6 +10,7 @@
 #include "proc/kd/include/consoleaccess.h"
 #include "proc/kd/common/odt/operatorconsoleaccess/operatorconsoleaccess.h"
 #include "proc/include/cpudata.h"
+#include "proc/common/datapaths/datapaths.h"
 
 #include <string>
 
@@ -20,14 +21,15 @@ using std::monostate;
 class KDF11_ODT : public KD11ODT
 {
 public:
-    KDF11_ODT (Bus* bus, CpuData* cpuData, Interfaces::CpuController* cpuController,
-        MMU* mmu, unique_ptr<ConsoleAccess> consoleAccess, bool haltCmdSupported);
+    KDF11_ODT (Bus* bus, CpuData* cpuData,
+        Interfaces::CpuController* cpuController, DataPaths* dataPaths,
+        unique_ptr<ConsoleAccess> consoleAccess, bool haltCmdSupported);
 
     // Definition of the function required by the KD11ODT interface
     bool processCharacter (u8 character) override;
 
-    static unique_ptr<KDF11_ODT> createODT (Bus *bus, CpuData* cpuData,
-        Interfaces::CpuController* cpuController, MMU* mmu,
+    static unique_ptr<KDF11_ODT> createODT (Bus* bus, CpuData* cpuData,
+        Interfaces::CpuController* cpuController, DataPaths* dataPaths,
         unique_ptr<ConsoleAccess> consoleAccess, bool haltCmdSupported);
 
 private:
@@ -122,7 +124,7 @@ private:
     Bus* bus_;
     CpuData* cpuData_;
     Interfaces::CpuController* cpuController_;
-    MMU* mmu_;
+    DataPaths* dataPaths_;
     unique_ptr<ConsoleAccess> console_;
     bool haltCmdSupported_;
     bool odtRunning_;
@@ -147,7 +149,7 @@ private:
     bool registerSeriesEndsWith (string);
     void setRegisterValue ();
     void startCPU (u16 address);
-    bool endsWith (string const &completeString, string const &endString);
+    bool endsWith (string const& completeString, string const& endString);
 };
 
 class KDF11_ODT::StateMachine : public variantFsm::Fsm<StateMachine, Event, State>
@@ -240,6 +242,7 @@ private:
 inline KDF11_ODT::StateMachine::StateMachine (KDF11_ODT* context)
     :
     context_ {context}
-{}
+{
+}
 
 #endif // _KDF11_ODT_H_

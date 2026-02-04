@@ -5,13 +5,13 @@
 #include "proc/common/instructionformats/branchinstruction/branchinstruction.h"
 #include "proc/include/cpudata.h"
 #include "proc/include/cpucontroller.h"
-#include "proc/include/mmu.h"
+#include "proc/common/datapaths/datapaths.h"
 
 class BranchDecoder : public BaseOperandDecoder
 {
 public:
-	BranchDecoder (CpuData* cpuData, Interfaces::CpuController* cpuController, MMU* mmu,
-		BranchInstruction* instruction);
+	BranchDecoder (CpuData* cpuData, Interfaces::CpuController* cpuController,
+		DataPaths* dataPaths, BranchInstruction* instruction);
 
 	constexpr void executeBranchIf (bool condition);
 	void executeBranch ();

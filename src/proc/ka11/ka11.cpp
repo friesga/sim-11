@@ -15,7 +15,7 @@ KA11::KA11 (Bus* bus, Window* window, const KA11Config& ka11Config)
     registerHandler_ = make_unique<RegisterHandler> (devices);
 
     machineState_ = make_unique<KA11MachineState> (bus_, &cpuData_,
-        &cpuController_, &mmu_, *ky11_a_);
+        &cpuController_, &dataPaths_, *ky11_a_);
 }
 
 KA11::~KA11 ()

@@ -3,7 +3,7 @@
 
 #include "proc/include/cpudata.h"
 #include "proc/include/cpucontroller.h"
-#include "proc/include/mmu.h"
+#include "proc/common/datapaths/datapaths.h"
 #include "proc/common/operandlocation/operandlocation.h"
 #include "proc/common/operand/operand.h"
 
@@ -11,12 +11,12 @@ class BaseOperandDecoder
 {
 public:
     BaseOperandDecoder (CpuData* cpuData,
-        Interfaces::CpuController* cpuController, MMU* mmu);
+        Interfaces::CpuController* cpuController, DataPaths* dataPaths);
     
 protected:
     CpuData* cpuData_;
     Interfaces::CpuController* cpuController_;
-    MMU* mmu_;
+    DataPaths* dataPaths_;
 
     OperandLocation decodeOperand (u16 opCode, Operand operand,
         GeneralRegisters &reg);

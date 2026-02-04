@@ -24,7 +24,7 @@ TEST (OperandLocationTest, InitialMemoryOperandLocationIsValid)
 {
     DummyCpu dummyCpu;
     OperandLocation operandLocation {MemoryOperandLocation {dummyCpu.cpuData (),
-        dummyCpu.mmu (), 100}};
+        dummyCpu.dataPaths (), 100}};
     EXPECT_TRUE (operandLocation.isValid ());
 }
 
@@ -32,7 +32,7 @@ TEST (OperandLocationTest, InitialMemoryOperandLocationIsInValid)
 {
     DummyCpu dummyCpu;
     OperandLocation operandLocation {MemoryOperandLocation {dummyCpu.cpuData (),
-        dummyCpu.mmu (), CondData<u16> {}}};
+        dummyCpu.dataPaths (), CondData<u16> {}}};
     EXPECT_FALSE (operandLocation.isValid ());
 }
 
@@ -53,12 +53,12 @@ TEST (OperandLocationTest, MemoryOperandLocationCanBeAssignedToOperandLocation)
     DummyCpu dummyCpu;
     
     MemoryOperandLocation memoryOperandLocation {dummyCpu.cpuData (),
-        dummyCpu.mmu (), 100};
+        dummyCpu.dataPaths (), 100};
     OperandLocation operandLocation;
     operandLocation = memoryOperandLocation;
     EXPECT_TRUE (operandLocation.write<u16> (0177777));
 
-    EXPECT_EQ (dummyCpu.mmu ()->fetchWord (100), 0177777);
+    EXPECT_EQ (dummyCpu.dataPaths ()->fetchWord (100), 0177777);
 }
 
 // Verify that a write to a register operand location results in writing
@@ -87,11 +87,11 @@ TEST (OperandLocationTest, MemoryLocationWordCanBeWritten)
 {
     DummyCpu dummyCpu;
     OperandLocation operandLocation {MemoryOperandLocation {dummyCpu.cpuData (),
-        dummyCpu.mmu (), CondData<u16> {100}}};
+        dummyCpu.dataPaths (), CondData<u16> {100}}};
     EXPECT_TRUE (operandLocation.write<u16> (1000));
 
     EXPECT_EQ (operandLocation.contents<CondData<u16>> ().value (), 1000);
-    EXPECT_EQ (dummyCpu.mmu ()->fetchWord (100), 1000);
+    EXPECT_EQ (dummyCpu.dataPaths ()->fetchWord (100), 1000);
 }
 
 TEST (OperandLocationTest, RegisterLocationByteCanBeWritten)
@@ -117,18 +117,18 @@ TEST (OperandLocationTest, MemoryLocationByteCanBeWrittenAndRead)
 {
     DummyCpu dummyCpu;
     OperandLocation operandLocation {MemoryOperandLocation {dummyCpu.cpuData (),
-        dummyCpu.mmu (), CondData<u16> {100}}};
+        dummyCpu.dataPaths (), CondData<u16> {100}}};
     EXPECT_TRUE (operandLocation.write<u8> (255));
 
     EXPECT_EQ (operandLocation.contents<CondData<u8>> ().value (), 255);
-    EXPECT_EQ (dummyCpu.mmu ()->fetchWord (100), 255);
+    EXPECT_EQ (dummyCpu.dataPaths ()->fetchWord (100), 255);
 }
 
 TEST (OperandLocationTest, WriteToInvalidMemoryOperationLocationFails)
 {
     DummyCpu dummyCpu;
     OperandLocation operandLocation {MemoryOperandLocation {dummyCpu.cpuData (),
-        dummyCpu.mmu (), CondData<u16> {65534}}};
+        dummyCpu.dataPaths (), CondData<u16> {65534}}};
     EXPECT_FALSE (operandLocation.write<u16> (255));
 }
 
@@ -157,7 +157,7 @@ TEST (OperandLocationTest, MemoryLocationCanBeConvertedTou16)
 {
     DummyCpu dummyCpu;
     OperandLocation operandLocation {MemoryOperandLocation {dummyCpu.cpuData (),
-        dummyCpu.mmu (), CondData<u16> {100}}};
+        dummyCpu.dataPaths (), CondData<u16> {100}}};
     
     u16 memoryAddress = operandLocation;
     EXPECT_EQ (memoryAddress, 100);
@@ -167,7 +167,7 @@ TEST (OperandLocationTest, TypeOfMemoryLocationCanBeDetermined)
 {
     DummyCpu dummyCpu;
     OperandLocation operandLocation {MemoryOperandLocation {dummyCpu.cpuData (),
-        dummyCpu.mmu (), CondData<u16> {100}}};
+        dummyCpu.dataPaths (), CondData<u16> {100}}};
 
     EXPECT_TRUE (operandLocation.isA<MemoryOperandLocation> ());
     EXPECT_FALSE (operandLocation.isA<RegisterOperandLocation> ());

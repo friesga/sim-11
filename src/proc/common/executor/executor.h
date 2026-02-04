@@ -44,7 +44,8 @@ namespace Common {
 class Executor
 {
 public:
-    Executor (CpuData* cpuData, Interfaces::CpuController* cpuController, MMU* mmu);
+    Executor (CpuData* cpuData, Interfaces::CpuController* cpuController,
+		DataPaths* dataPaths);
 
     // Single operand instructions
 	template <WriteOperandOrder order>
@@ -203,11 +204,12 @@ public:
 private:
     CpuData* cpuData_;
     Interfaces::CpuController* cpuController_;
-    MMU* mmu_;
+    DataPaths* dataPaths_;
 
-	OperandDecoderFactory operandDecoderFactory_ {cpuData_, cpuController_, mmu_};
+	OperandDecoderFactory operandDecoderFactory_ {cpuData_, cpuController_,
+		dataPaths_};
 	
-	template <WriteOperandOrder order>
+	template <WriteOperandOrder Order>
 	bool finishExecution (auto&& writeOperands, auto&& setCC);
 };
 
