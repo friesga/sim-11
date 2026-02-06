@@ -7,26 +7,26 @@
 
 // The class DataPaths is the providing interface for the CPU to the MMU
 // or the bus. The class conforms to the MMU interface as a the MMU must be
-// accesable through the DataPaths.
+// accessable through the DataPaths.
 //
-class DataPaths : public MMU
+class DataPaths 
 {
 public:
 	DataPaths (Bus* bus, MMU* mmu);
-	void reset () override;
+	void reset ();
 	CondData<u16> fetchWord (VirtualAddress address,
-		PSW::Mode memMgmtMode = PSW::Mode::Default) override;
+		PSW::Mode memMgmtMode = PSW::Mode::Default);
 	CondData<u8> fetchByte (VirtualAddress address,
-		PSW::Mode memMgmtMode = PSW::Mode::Default) override;
+		PSW::Mode memMgmtMode = PSW::Mode::Default);
 	bool putWord (VirtualAddress address, u16 value,
-		PSW::Mode memMgmtMode = PSW::Mode::Default) override;
+		PSW::Mode memMgmtMode = PSW::Mode::Default);
 	bool putByte (VirtualAddress address, u8 value,
-		PSW::Mode memMgmtMode = PSW::Mode::Default) override;
-	bool pushWord (u16 value) override;
-	bool popWord (u16* destination) override;
+		PSW::Mode memMgmtMode = PSW::Mode::Default);
+	bool pushWord (u16 value);
+	bool popWord (u16* destination);
 
-	void setVirtualPC (u16 value) override;
-	CondData<u16> readWithoutTrap (u16 address) override;
+	void setVirtualPC (u16 value);
+	CondData<u16> readWithoutTrap (u16 address);
 
 private:
     Bus* bus_;

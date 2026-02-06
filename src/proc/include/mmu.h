@@ -17,8 +17,6 @@ public:
 	virtual void reset () = 0;
     virtual CondData<u16> fetchWord (VirtualAddress address, 
 		PSW::Mode memMgmtMode = PSW::Mode::Default) = 0;
-	virtual CondData<u8> fetchByte (VirtualAddress address, 
-		PSW::Mode memMgmtMode = PSW::Mode::Default) = 0;
 	virtual bool putWord (VirtualAddress address, u16 value, 
 		PSW::Mode memMgmtMode = PSW::Mode::Default) = 0;
 	virtual bool putByte (VirtualAddress address, u8 value,

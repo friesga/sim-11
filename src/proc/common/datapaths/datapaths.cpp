@@ -24,19 +24,23 @@ CondData<u16> DataPaths::fetchWord (VirtualAddress address,
         return bus_->read (address);
 }
 
+// Fetch the byte at the given word or byte address
+//
+// The validity of the fetched word has to be checked before the shift-
+// and and-operators can be applied to the word!
 CondData<u8> DataPaths::fetchByte (VirtualAddress address,
     PSW::Mode memMgmtMode)
 {
     CondData<u16> retValue {};
     if (address & 1)
     {
-        retValue = fetchWord (address & 0xFFFE);
+        retValue = fetchWord (address & 0xFFFE, memMgmtMode);
         if (retValue.hasValue ())
             return CondData<u8> (retValue >> 8);
     }
     else
     {
-        retValue = fetchWord (address);
+        retValue = fetchWord (address, memMgmtMode);
         if (retValue.hasValue ())
             return CondData<u8> (retValue & 0377);
     }

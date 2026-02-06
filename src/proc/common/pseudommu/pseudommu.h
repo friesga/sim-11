@@ -19,9 +19,7 @@ public:
 	void reset ();
 	PseudoMMU (Bus* bus, CpuData* cpuData);
     CondData<u16> fetchWord (VirtualAddress address, 
-		PSW::Mode mode = PSW::Mode::Default) override;
-	CondData<u8> fetchByte (VirtualAddress address, 
-		PSW::Mode memMgmtMode = PSW::Mode::Default) override;
+		PSW::Mode mode = PSW::Mode::Default) override;;
 	bool putWord (VirtualAddress address, u16 value, 
 		PSW::Mode memMgmtMode = PSW::Mode::Default) override;
 	bool putByte (VirtualAddress address, u8 value, 

@@ -23,29 +23,6 @@ CondData<u16> PseudoMMU::fetchWord (VirtualAddress address, PSW::Mode mode)
     return value;
 }
 
-// Fetch the byte at the given word or byte address. The PSW::Mode is a
-// default parameter which is not used in the PseudoMMU.
-// 
-// The validity of the fetched word has to be checked before the shift-
-// and and-operators can be applied to the word!
-CondData<u8> PseudoMMU::fetchByte (VirtualAddress address, PSW::Mode memMgmtMode)
-{
-    CondData<u16> retValue {};
-    if (address & 1)
-    {
-         retValue = fetchWord (address & 0xFFFE);
-         if (retValue.hasValue ())
-             return CondData<u8> (retValue >> 8);
-    }
-    else
-    {
-        retValue = fetchWord (address);
-        if (retValue.hasValue ())
-            return CondData<u8> (retValue & 0377);
-    }
-
-    return CondData<u8> {};
-}
 
 // The PSW::Mode is a default parameter which is not used in the PseudoMMU.
 bool PseudoMMU::putWord (VirtualAddress address, u16 value, PSW::Mode memMgmtMode)
