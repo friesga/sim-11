@@ -21,8 +21,6 @@ public:
 		PSW::Mode memMgmtMode = PSW::Mode::Default) = 0;
 	virtual bool putByte (VirtualAddress address, u8 value,
 		PSW::Mode memMgmtMode = PSW::Mode::Default) = 0;
-	virtual bool pushWord (u16 value) = 0;
-	virtual bool popWord (u16 *destination) = 0;
 
 	virtual void setVirtualPC (u16 value) = 0;
 	virtual CondData<u16> readWithoutTrap (u16 address) = 0;

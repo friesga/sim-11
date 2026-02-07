@@ -24,8 +24,6 @@ public:
 		PSW::Mode memMgmtMode = PSW::Mode::Default) override;
 	bool putByte (VirtualAddress address, u8 value, 
 		PSW::Mode memMgmtMode = PSW::Mode::Default) override;
-	bool pushWord (u16 value) override;
-	bool popWord (u16 *destination) override;
 	CondData<u16> readWithoutTrap (u16 address) override;
 	void setVirtualPC (u16 value) override;
 
