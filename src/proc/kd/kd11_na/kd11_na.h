@@ -14,6 +14,8 @@
 #include "proc/common/pseudo_haltmode/pseudo_haltmode.h"
 #include "proc/common/basicprocessorexceptionhandler/basicprocessorexceptionhandler.h"
 #include "proc/common/datapaths/datapaths.h"
+#include "proc/common/stack/stack.h"
+#include "proc/common/stack/nostackoverflowpolicy.h"
 
 #include <memory>
 
@@ -67,6 +69,7 @@ private:
     DataPaths dataPaths_ {bus_, &pseudoMMU_};
     CompositeCpuController<KD11_NA_Executor, KD11_NA_Calculator,
         PseudoHaltMode, BasicProcessorExceptionHandler> cpuController_ {bus_, &cpuData_, &dataPaths_};
+    Stack<NoStackOverflowPolicy> stack_ {&cpuData_, &dataPaths_};
     unique_ptr<KD11_NA_ODT>	odt_ {};
     KD11Config::PowerUpMode powerUpMode_;
     u16 startAddress_;
