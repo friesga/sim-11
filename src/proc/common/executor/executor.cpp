@@ -1044,7 +1044,7 @@ bool Common::Executor::execute (JSR& instr)
     GeneralRegisters& registers = cpuData_->registers ();
     u16 specifiedRegisterContents = registers[instr.getRegisterNr ()];
 
-    if (!dataPaths_->pushWord (specifiedRegisterContents))
+    if (!cpuController_->pushWord (specifiedRegisterContents))
         return false;
 
     if (cpuData_->stackOverflow ())
@@ -1284,7 +1284,7 @@ bool Common::Executor::execute (RTS& instr)
     u16 regNr = instr.getRegister ();
 
     cpuData_->registers ()[7] = cpuData_->registers ()[regNr];
-    dataPaths_->popWord (&cpuData_->registers ()[regNr]);
+    cpuController_->popWord (&cpuData_->registers ()[regNr]);
 
     return true;
 }
@@ -1458,8 +1458,8 @@ bool Common::Executor::execute (RTI& instr)
 {
     u16 tmp;
 
-    if (!dataPaths_->popWord (&cpuData_->registers ()[7]) ||
-        !dataPaths_->popWord (&tmp))
+    if (!cpuController_->popWord (&cpuData_->registers ()[7]) ||
+        !cpuController_->popWord (&tmp))
         return false;
 
     cpuData_->psw ().set (PSW::ProtectionMode::RTI, tmp);
@@ -1494,8 +1494,8 @@ bool Common::Executor::execute (RTT& instr)
 {
     u16 tmp;
 
-    if (!dataPaths_->popWord (&cpuData_->registers ()[7]) ||
-        !dataPaths_->popWord (&tmp))
+    if (!cpuController_->popWord (&cpuData_->registers ()[7]) ||
+        !cpuController_->popWord (&tmp))
         return false;
 
     cpuData_->psw ().set (PSW::ProtectionMode::RTI, tmp);

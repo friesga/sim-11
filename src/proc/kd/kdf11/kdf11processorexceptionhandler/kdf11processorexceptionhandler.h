@@ -22,6 +22,7 @@ public:
 private:
     Bus* bus_;
     CpuData* cpuData_;
+    Interfaces::CpuController* cpuController_;
     DataPaths* dataPaths_;
 
     void swapPcPSW (u16 vectorAddress);

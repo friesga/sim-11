@@ -36,8 +36,8 @@ void BasicProcessorExceptionHandler::swapPcPSW (u16 vectorAddress)
 
     // Save PC and PSW on the stack. Adressing the stack could result in a
     // bus time out. In that case the CPU is halted.
-    if (!dataPaths_->pushWord (cpuData_->psw ()) || 
-        !dataPaths_->pushWord (cpuData_->registers ()[7]))
+    if (!cpuController_->pushWord (cpuData_->psw ()) || 
+        !cpuController_->pushWord (cpuData_->registers ()[7]))
     {
         trace.cpuEvent (CpuEventRecordType::CPU_DBLBUS, cpuData_->registers ()[6]);
         // ToDo: All interrupts should be cleared?
