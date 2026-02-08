@@ -17,6 +17,8 @@ public:
     void proceed () {};
     HaltReason haltReason () { return HaltReason::HaltInstruction; };
     CpuRunState execute () { return CpuRunState::RUN; };
+    bool pushWord (u16 value) { return false; };
+    bool popWord (u16* destination) { return false; };
 };
 
 #endif // _DUMMYCPUCONTROLLER_H_
