@@ -14,14 +14,17 @@
 //   not 1; this to ensure that it always contains a word address, should an
 //   unexpected interrupt or trap require it to be used to save the old PS
 //   and PC.
+// 
 // - On CPU models intended for use in time-sharing systems, which support
 //   User and Kernel modes, there are separate R6's for the two modes, so that
 //   the operating system can use the latter one for interrupt and trap
 //   handling, and thereby guarantee that the user cannot derange R6's
 //   contents before it needs to be used.
+// 
 // - Almost all models have some form of stack address limitation, which
 //   causes a trap when the stack overflows (or tries to). The details vary
 //   from model to model; see below for details.
+// 
 // - When an interrupt or trap occurs, if R6 does contain either an odd
 //   (i.e.non-word) address, or an address which does not point to functional
 //   main memory, on many models R6 is then bashed to contain 4, after which
@@ -39,6 +42,8 @@
 template <typename TStackOverflowPolicy>
 class Stack : public TStackOverflowPolicy
 {
+    friend class BasicStackOverflowPolicy;
+
 public:
     Stack (CpuData* cpuData, DataPaths* dataPaths);
     bool pushWord (u16 value);
