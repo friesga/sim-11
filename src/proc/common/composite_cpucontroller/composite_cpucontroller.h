@@ -32,6 +32,8 @@ public:
 	void proceed () override;
 	constexpr Interfaces::CpuController::HaltReason haltReason ();
 	Interfaces::CpuController::CpuRunState execute () override;
+	bool pushWord (u16 value);
+	bool popWord (u16* destination);
 
 private:
 	Bus* bus_;
