@@ -66,16 +66,6 @@ bool DataPaths::putByte (VirtualAddress address, u8 value,
         return bus_->writeByte (address, value);
 }
 
-bool DataPaths::pushWord (u16 value)
-{
-    return mmu_->pushWord (value);
-}
-
-bool DataPaths::popWord (u16* destination)
-{
-    return mmu_->popWord (destination);
-}
-
 void DataPaths::setVirtualPC (u16 value)
 {
     mmu_->setVirtualPC (value);
