@@ -56,7 +56,7 @@ public:
 
     // Functions required by the KY11Console interface
     HaltEnablePosition haltEnablePosition () const override;
-    void display (BusAddress address, u16 data) override;
+    void display (u16 address, u16 data) override;
 
     // Functions required by the AbstractBusDevice class
     CondData<u16> read (BusAddress address);
