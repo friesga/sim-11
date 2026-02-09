@@ -1,10 +1,11 @@
 #include "datapaths.h"
 
-DataPaths::DataPaths (Bus* bus, MMU* mmu)
+DataPaths::DataPaths (Bus* bus, optional<MMU*> mmu)
     :
-    bus_ {bus},
-    mmu_ {mmu}
+    bus_ {bus}
 {
+    if (mmu.has_value ())
+        mmu_ = mmu.value ();
 }
 
 void DataPaths::reset ()
