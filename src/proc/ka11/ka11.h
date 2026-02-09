@@ -45,9 +45,8 @@ private:
     KA11CpuData cpuData_ {};
     PseudoMMU mmu_ {bus_, &cpuData_};
     DataPaths dataPaths_ {bus_, &mmu_};
-    CompositeCpuController<KA11_Executor, KA11Calculator,
-        PseudoHaltMode, BasicProcessorExceptionHandler> cpuController_ {bus_,
-            &cpuData_, &dataPaths_};
+    unique_ptr<CompositeCpuController<KA11_Executor, KA11Calculator,
+        PseudoHaltMode, BasicProcessorExceptionHandler>> cpuController_;
     unique_ptr<KY11_A> ky11_a_;
     unique_ptr<KA11MachineState> machineState_;
     u16 startAddress_ {0};

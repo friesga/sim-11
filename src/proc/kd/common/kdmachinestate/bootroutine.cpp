@@ -3,8 +3,8 @@
 // (Re)boot the system
 KDMachineState::State KDMachineState::bootRoutine ()
 {
-    cpuController_->cpuReset ();
+    cpuController_.cpuReset ();
     bus_->BINIT ().cycle ();
-    cpuController_->start (startAddress_);
+    cpuController_.start (startAddress_);
     return Running {};
 }

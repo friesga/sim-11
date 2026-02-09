@@ -22,14 +22,14 @@ using std::invalid_argument;
 //
 KDMachineState::State KDMachineState::powerUpRoutine ()
 {
-    cpuController_->cpuReset ();
+    cpuController_.cpuReset ();
     bus_->BINIT().cycle ();
 
     switch (powerUpMode_)
     {
         case KD11Config::PowerUpMode::Vector:
             loadTrapVector (CpuData::TrapType::PowerFail);
-            cpuController_->proceed ();
+            cpuController_.proceed ();
 
             // If BHALT is set immediately transition to the Halted state,
             // before even one instruction is executed cf Table 11-4.
@@ -43,20 +43,20 @@ KDMachineState::State KDMachineState::powerUpRoutine ()
             // place the processor in ODT mode on the next execution of
             // KD11_NA::step(). If the processor already is in ODT mode the
             // signal is ignored and this is a no-operation.
-            cpuController_->halt ();
+            cpuController_.halt ();
             return Halted {};
 
         case KD11Config::PowerUpMode::Bootstrap:
             // Start the processor at the start address. This address is
             // either the standard boot address or an address determined by
             // a loaded file in absolute loader format.
-            cpuController_->start (startAddress_);
+            cpuController_.start (startAddress_);
 
             // If BHALT is set immediately transition to the Halted state,
             // before even one instruction is executed cf Table 11-4.
             if (bus_->BHALT ())
             {
-                cpuController_->halt ();
+                cpuController_.halt ();
                 return Halted {};
             }
 

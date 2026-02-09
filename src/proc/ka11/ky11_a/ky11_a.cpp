@@ -12,7 +12,7 @@ using std::placeholders::_2;
 
 using std::make_unique;
 
-KY11_A::KY11_A (Bus* bus, Interfaces::CpuController* cpuController,
+KY11_A::KY11_A (Bus* bus, Interfaces::CpuController& cpuController,
     Window* window, const KY11_AConfig& ky11_aConfig)
     :
     bus_ {bus},

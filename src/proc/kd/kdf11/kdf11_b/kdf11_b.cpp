@@ -35,7 +35,7 @@ KDF11_B::KDF11_B (Bus *bus, const KDF11_BConfig& kdf11_bConfig)
     // to that function indicates if the ODT HALT command is supported.
     machineState_ = make_unique<KDMachineState> (bus_,
         &cpuData_,
-        &cpuController_,
+        cpuController_,
         &dataPaths_,
         kdf11_bConfig.powerUpMode,
         startAddress_,

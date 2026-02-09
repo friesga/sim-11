@@ -8,14 +8,18 @@ KA11::KA11 (Bus* bus, Window* window, const KA11Config& ka11Config)
     :
     bus_ {bus}
 {
-    ky11_a_ = make_unique<KY11_A> (bus, &cpuController_, window,
+    cpuController_ = make_unique<CompositeCpuController<KA11_Executor,
+        KA11Calculator, PseudoHaltMode, BasicProcessorExceptionHandler>>
+        (bus_, &cpuData_, &dataPaths_);
+
+    ky11_a_ = make_unique<KY11_A> (bus, *cpuController_, window,
         *ka11Config.ky11_aConfig_);
 
     vector<BusDevice*> devices {&cpuData_, ky11_a_.get ()};
     registerHandler_ = make_unique<RegisterHandler> (devices);
 
     machineState_ = make_unique<KA11MachineState> (bus_, &cpuData_,
-        &cpuController_, &dataPaths_, *ky11_a_);
+        *cpuController_, &dataPaths_, *ky11_a_);
 }
 
 KA11::~KA11 ()

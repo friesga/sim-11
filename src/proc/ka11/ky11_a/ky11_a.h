@@ -51,7 +51,7 @@ public:
     friend class KY11_ATest_haltHaltsProgramOperation_Test;
     friend class KY11_ATest_resetLoadsTempRegister_Test;
 
-    KY11_A (Bus* bus, Interfaces::CpuController* cpuController,
+    KY11_A (Bus* bus, Interfaces::CpuController& cpuController,
         Window* window, const KY11_AConfig& ky11_aConfig);
 
     // Functions required by the KY11Console interface
@@ -90,7 +90,7 @@ private:
     static constexpr u16 switchRegisterAddress {0177570};
 
     Bus* bus_;
-    Interfaces::CpuController* cpuController_;
+    Interfaces::CpuController& cpuController_;
     unique_ptr<SwitchRegister> switchRegister_ {};
     unique_ptr<AddressRegister> addressRegister_ {};
     unique_ptr<DataRegister> dataRegister_ {};

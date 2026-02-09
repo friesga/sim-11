@@ -123,7 +123,7 @@ KY11_A::State KY11_A::StateMachine::transition (DepositSequence&& currentState,
 
 KY11_A::State KY11_A::StateMachine::transition (ProgramOperation&&, HALT_Pressed)
 {
-    context_->cpuController_->halt (Interfaces::CpuController::HaltReason::HaltInstruction);
+    context_->cpuController_.halt (Interfaces::CpuController::HaltReason::HaltInstruction);
     return AddressLoaded {};
 }
 
@@ -138,7 +138,7 @@ KY11_A::State KY11_A::StateMachine::startPressed (KY11_A::State newState)
     if (context_->currentHaltEnablePosition_ ==
         KY11Console::HaltEnablePosition::Enable)
     {
-        context_->cpuController_->start (*context_->addressRegister_);
+        context_->cpuController_.start (*context_->addressRegister_);
         context_->bus_->START ().cycle ();
         return ProgramOperation {};
     }
@@ -154,7 +154,7 @@ KY11_A::State KY11_A::StateMachine::contPressed (KY11_A::State newState)
     if (context_->currentHaltEnablePosition_ ==
         KY11Console::HaltEnablePosition::Enable)
     {
-        context_->cpuController_->proceed ();
+        context_->cpuController_.proceed ();
         context_->bus_->START ().cycle ();
         return ProgramOperation {};
     }

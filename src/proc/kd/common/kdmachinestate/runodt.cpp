@@ -30,7 +30,7 @@ void KDMachineState::runODT ()
     // to the MachineState when it is constructed. Not that the last parameter
     // is bound to function pointer at creation time (in the KDF11_A, KDF11_B
     // or KDF11_U constructor) and the value passed at this call is ignored.
-    odt_ = odtCreator_ (bus_, cpuData_, cpuController_, dataPaths_,
+    odt_ = odtCreator_ (bus_, cpuData_, &cpuController_, dataPaths_,
         make_unique<OperatorConsoleAccess> (bus_), false);
 
     while (true)

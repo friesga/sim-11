@@ -41,7 +41,7 @@ class BaseMachineState
 {
 public:
     BaseMachineState (Bus* bus, CpuData* cpuData,
-        Interfaces::CpuController* cpuController, DataPaths* dataPaths);
+        Interfaces::CpuController& cpuController, DataPaths* dataPaths);
     void run ();
     void exit ();
 
@@ -100,7 +100,7 @@ protected:
 
     Bus* bus_;
     CpuData* cpuData_;
-    Interfaces::CpuController* cpuController_;
+    Interfaces::CpuController& cpuController_;
     DataPaths* dataPaths_;
     bool running_;
 
