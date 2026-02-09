@@ -295,4 +295,8 @@ void KY11_A::SRUNReceiver (bool signalValue)
         runLight_->show (Indicator::State::Off);
 }
 
-
+void KY11_A::display (BusAddress address, u16 data)
+{
+    *addressRegister_ = address;
+    *dataRegister_ = data;
+}

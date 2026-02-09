@@ -1,6 +1,8 @@
 #ifndef _KY11CONSOLE_H_
 #define _KY11CONSOLE_H_
 
+#include "busaddress/busaddress.h"
+
 #include <variant>
 #include <functional>
 
@@ -31,6 +33,7 @@ public:
     };
 
     virtual HaltEnablePosition haltEnablePosition () const = 0;
+    virtual void display (BusAddress address, u16 data) = 0;
 };
 
 #endif // _KY11CONSOLE_H_
