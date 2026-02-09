@@ -1,11 +1,15 @@
 #include "datapaths.h"
 
-DataPaths::DataPaths (Bus* bus, optional<MMU*> mmu)
+DataPaths::DataPaths (Bus* bus, optional<MMU*> mmu,
+    optional <KY11Console*> console)
     :
     bus_ {bus}
 {
     if (mmu.has_value ())
         mmu_ = mmu.value ();
+
+    if (console.has_value ())
+        console_ = console.value ();
 }
 
 void DataPaths::reset ()
@@ -19,10 +23,17 @@ void DataPaths::reset ()
 CondData<u16> DataPaths::fetchWord (VirtualAddress address,
     PSW::Mode memMgmtMode)
 {
+    CondData<u16> data;
+
     if (mmu_ != nullptr)
-        return mmu_->fetchWord (address, memMgmtMode);
+        data = mmu_->fetchWord (address, memMgmtMode);
     else
-        return bus_->read (address);
+        data = bus_->read (address);
+
+    if (console_ != nullptr)
+        console_->display (address, data);
+
+    return data;
 }
 
 // Fetch the byte at the given word or byte address
@@ -52,6 +63,9 @@ CondData<u8> DataPaths::fetchByte (VirtualAddress address,
 bool DataPaths::putWord (VirtualAddress address, u16 value,
     PSW::Mode memMgmtMode)
 {
+    if (console_ != nullptr)
+        console_->display (address, value);
+
     if (mmu_ != nullptr)
         return mmu_->putWord (address, value, memMgmtMode);
     else

@@ -4,6 +4,7 @@
 #include "bus/include/bus.h"
 #include "abstractbusdevice/abstractbusdevice.h"
 #include "proc/include/mmu.h"
+#include "proc/include/ky11console.h"
 
 #include <optional>
 
@@ -17,7 +18,8 @@ using std::nullopt;
 class DataPaths 
 {
 public:
-	DataPaths (Bus* bus, optional<MMU*> mmu = nullopt);
+	DataPaths (Bus* bus, optional<MMU*> mmu = nullopt,
+		optional <KY11Console*> console = nullopt);
 	void reset ();
 	CondData<u16> fetchWord (VirtualAddress address,
 		PSW::Mode memMgmtMode = PSW::Mode::Default);
@@ -34,6 +36,7 @@ public:
 private:
 	Bus* bus_ {nullptr};
 	MMU* mmu_ {nullptr};
+	KY11Console* console_ {nullptr};
 };
 
 
