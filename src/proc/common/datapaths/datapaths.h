@@ -33,6 +33,8 @@ public:
 	void setVirtualPC (u16 value);
 	CondData<u16> readWithoutTrap (u16 address);
 
+	void ResetReceiver (bool signalValue);
+
 private:
 	Bus* bus_ {nullptr};
 	MMU* mmu_ {nullptr};

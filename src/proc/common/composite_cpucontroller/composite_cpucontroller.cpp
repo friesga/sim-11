@@ -71,7 +71,6 @@ void CompositeCpuController<TExecutor, TCalculator, THaltMode,
     TProcessorExceptionHandler>::busReset ()
 {
     bus_->BINIT ().cycle ();
-    dataPaths_->reset ();
 }
 
 // Halt the processor

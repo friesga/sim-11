@@ -1,5 +1,10 @@
 #include "datapaths.h"
 
+#include <utility>
+
+using std::bind;
+using std::placeholders::_1;
+
 DataPaths::DataPaths (Bus* bus, optional<MMU*> mmu,
     optional <KY11Console*> console)
     :
@@ -10,14 +15,14 @@ DataPaths::DataPaths (Bus* bus, optional<MMU*> mmu,
 
     if (console.has_value ())
         console_ = console.value ();
+
+    bus_->RESET ().subscribe (bind (&DataPaths::ResetReceiver, this, _1));
 }
 
 void DataPaths::reset ()
 {
     if (mmu_ != nullptr)
         mmu_->reset ();
-
-    bus_->reset ();
 }
 
 CondData<u16> DataPaths::fetchWord (VirtualAddress address,
@@ -89,4 +94,11 @@ void DataPaths::setVirtualPC (u16 value)
 CondData<u16> DataPaths::readWithoutTrap (u16 address)
 {
     return mmu_->readWithoutTrap (address);
+}
+
+
+void DataPaths::ResetReceiver (bool signalValue)
+{
+    if (signalValue)
+        reset ();
 }
