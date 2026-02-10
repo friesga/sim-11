@@ -26,8 +26,8 @@ protected:
         PseudoHaltMode, BasicProcessorExceptionHandler> cpuController {&bus, &cpuData, &dataPaths_};
     FakeWindow window {};
 
-    KY11_A ky11a {&bus, &cpuController, &window, KY11_AConfig {Cabinet::Position {0,0}}};
-    KA11MachineState machineState {&bus, &cpuData, &cpuController, &dataPaths_, ky11a};
+    KY11_A ky11a {&bus, cpuController, &window, KY11_AConfig {Cabinet::Position {0,0}}};
+    KA11MachineState machineState {&bus, &cpuData, cpuController, &dataPaths_, ky11a};
 
     KY11_ATest ()
     {
