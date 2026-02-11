@@ -5,17 +5,11 @@
 using std::bind;
 using std::placeholders::_1;
 
-DataPaths::DataPaths (Bus* bus, optional<MMU*> mmu,
-    optional <KY11Console*> console)
+DataPaths::DataPaths (Bus* bus, MMU* mmu)
     :
+    mmu_ {mmu},
     bus_ {bus}
 {
-    if (mmu.has_value ())
-        mmu_ = mmu.value ();
-
-    if (console.has_value ())
-        console_ = console.value ();
-
     bus_->RESET ().subscribe (bind (&DataPaths::ResetReceiver, this, _1));
 }
 

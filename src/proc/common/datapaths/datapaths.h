@@ -6,11 +6,6 @@
 #include "proc/include/mmu.h"
 #include "proc/include/ky11console.h"
 
-#include <optional>
-
-using std::optional;
-using std::nullopt;
-
 // The class DataPaths is the providing interface for the CPU to the MMU
 // or the bus. The class conforms to the MMU interface as a the MMU must be
 // accessable through the DataPaths.
@@ -18,8 +13,7 @@ using std::nullopt;
 class DataPaths 
 {
 public:
-	DataPaths (Bus* bus, optional<MMU*> mmu = nullopt,
-		optional <KY11Console*> console = nullopt);
+	DataPaths (Bus* bus, MMU* mmu = nullptr);
 	void reset ();
 	CondData<u16> fetchWord (VirtualAddress address,
 		PSW::Mode memMgmtMode = PSW::Mode::Default);
