@@ -21,7 +21,7 @@ private:
     DummyCpuControl cpuControl_;
     DummyCpuData cpuData_;
     DummyMMU dummyMMU_;
-    DataPaths dataPaths_ {&bus_, &dummyMMU_};
+    DataPaths dataPaths_ {&bus_, &cpuData_, &dummyMMU_};
 };
 
 #endif // _DUMMYCPU_H_

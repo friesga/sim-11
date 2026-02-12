@@ -54,7 +54,7 @@ protected:
         Qbus bus;
         KDF11CpuData cpuData;
         KTF11_A mmu {&bus, &cpuData};
-        DataPaths dataPaths_ {&bus, &mmu};
+        DataPaths dataPaths_ {&bus, &cpuData, &mmu};
         CompositeCpuController<KD11_NA_Executor, KD11_NA_Calculator,
         PseudoHaltMode, BasicProcessorExceptionHandler> kd11cpu (&bus, &cpuData, &dataPaths_);
         MSV11D msv11d (&bus);

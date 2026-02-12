@@ -7,7 +7,6 @@ set (PROC_COMMON_SRCS
     datapaths/datapaths.cpp
     basicprocessorexceptionhandler/basicprocessorexceptionhandler.cpp
     executor/executor.cpp
-    pseudommu/pseudommu.cpp
     pseudo_haltmode/pseudo_haltmode.cpp
     operanddecoderfactory/operanddecoderfactory.cpp
     operanddecoders/baseoperanddecoder/baseoperanddecoder.cpp

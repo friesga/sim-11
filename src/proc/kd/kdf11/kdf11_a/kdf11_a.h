@@ -63,7 +63,7 @@ private:
     // Definition of the KDF11-A components. The KTF11-A (MMU) is optional.
     KDF11CpuData cpuData_ {};
     KTF11_A mmu_ {bus_, &cpuData_};
-    DataPaths dataPaths_ {bus_, &mmu_};
+    DataPaths dataPaths_ {bus_, &cpuData_, &mmu_};
     CompositeCpuController<KDF11_Executor, KDF11_Calculator,
         KDF11_HaltMode, KDF11ProcessorExceptionHandler> cpuController_ {bus_, &cpuData_, &dataPaths_};
     unique_ptr<KDMachineState> machineState_;

@@ -5,10 +5,11 @@
 using std::bind;
 using std::placeholders::_1;
 
-DataPaths::DataPaths (Bus* bus, MMU* mmu)
+DataPaths::DataPaths (Bus* bus, CpuData* cpuData, MMU* mmu)
     :
-    mmu_ {mmu},
-    bus_ {bus}
+    bus_ {bus},
+    cpuData_ {cpuData},
+    mmu_ {mmu}
 {
     bus_->RESET ().subscribe (bind (&DataPaths::ResetReceiver, this, _1));
 }
@@ -27,7 +28,7 @@ CondData<u16> DataPaths::fetchWord (VirtualAddress address,
     if (mmu_ != nullptr)
         data = mmu_->fetchWord (address, memMgmtMode);
     else
-        data = bus_->read (address);
+        data = busRead (address);
 
     if (console_ != nullptr)
         console_->display (address, data);
@@ -68,7 +69,7 @@ bool DataPaths::putWord (VirtualAddress address, u16 value,
     if (mmu_ != nullptr)
         return mmu_->putWord (address, value, memMgmtMode);
     else
-        return bus_->writeWord (address, value);
+        return busWrite (address, value);
 }
 
 bool DataPaths::putByte (VirtualAddress address, u8 value,
@@ -77,22 +78,56 @@ bool DataPaths::putByte (VirtualAddress address, u8 value,
     if (mmu_ != nullptr)
         return mmu_->putByte (address, value, memMgmtMode);
     else
-        return bus_->writeByte (address, value);
+        return busWriteByte (address, value);
 }
 
 void DataPaths::setVirtualPC (u16 value)
 {
-    mmu_->setVirtualPC (value);
+    if (mmu_ != nullptr)
+        mmu_->setVirtualPC (value);
 }
 
 CondData<u16> DataPaths::readWithoutTrap (u16 address)
 {
-    return mmu_->readWithoutTrap (address);
+    return bus_->read (address);
 }
-
 
 void DataPaths::ResetReceiver (bool signalValue)
 {
     if (signalValue)
         reset ();
+}
+
+CondData<u16> DataPaths::busRead (VirtualAddress address)
+{
+    CondData<u16> value = bus_->read (address);
+    if (!value.hasValue ())
+    {
+        trace.bus (BusRecordType::ReadFail, address, 0);
+        cpuData_->setTrap (CpuData::TrapType::BusError);
+        return {};
+    }
+    return value;
+}
+
+bool DataPaths::busWrite (VirtualAddress address, u16 value)
+{
+    if (!bus_->writeWord (address, value))
+    {
+        trace.bus (BusRecordType::WriteFail, address, value);
+        cpuData_->setTrap (CpuData::TrapType::BusError);
+        return false;
+    }
+    return true;
+}
+
+bool DataPaths::busWriteByte (VirtualAddress address, u16 value)
+{
+    if (!bus_->writeByte (address, value))
+    {
+        trace.bus (BusRecordType::WriteFail, address, value);
+        cpuData_->setTrap (CpuData::TrapType::BusError);
+        return false;
+    }
+    return true;
 }

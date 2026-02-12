@@ -68,7 +68,7 @@ private:
     // component.
     KDF11CpuData cpuData_ {};
     KTF11_A mmu_ {bus_, &cpuData_};
-    DataPaths dataPaths_ {bus_, &mmu_};
+    DataPaths dataPaths_ {bus_, &cpuData_, &mmu_};
     CompositeCpuController<KDF11_Executor, KDF11_Calculator,
         KDF11_HaltMode, KDF11ProcessorExceptionHandler> cpuController_ {bus_,
         &cpuData_, &dataPaths_};

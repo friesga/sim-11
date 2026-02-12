@@ -3,6 +3,7 @@
 
 #include "bus/include/bus.h"
 #include "abstractbusdevice/abstractbusdevice.h"
+#include "proc/include/cpudata.h"
 #include "proc/include/mmu.h"
 #include "proc/include/ky11console.h"
 
@@ -13,7 +14,7 @@
 class DataPaths 
 {
 public:
-	DataPaths (Bus* bus, MMU* mmu = nullptr);
+	DataPaths (Bus* bus, CpuData* cpuData, MMU* mmu = nullptr);
 	void reset ();
 	CondData<u16> fetchWord (VirtualAddress address,
 		PSW::Mode memMgmtMode = PSW::Mode::Default);
@@ -31,8 +32,13 @@ public:
 
 private:
 	Bus* bus_ {nullptr};
+	CpuData* cpuData_ {nullptr};
 	MMU* mmu_ {nullptr};
 	KY11Console* console_ {nullptr};
+
+	CondData<u16> busRead (VirtualAddress address);
+	bool busWrite (VirtualAddress address, u16 value);
+	bool busWriteByte (VirtualAddress address, u16 value);
 };
 
 

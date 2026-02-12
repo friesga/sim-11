@@ -6,7 +6,6 @@
 #include "proc/common/composite_cpucontroller/composite_cpucontroller.h"
 #include "odt/kd11_na_odt.h"
 #include "proc/kd/kd11_na/cpudata/kd11_nacpudata.h"
-#include "proc/common/pseudommu/pseudommu.h"
 #include "configdata/kd11_naconfig/kd11_naconfig.h"
 #include "proc/kd/common/kdmachinestate/kdmachinestate.h"
 #include "proc/kd/kd11_na/executor/executor.h"
@@ -43,7 +42,6 @@ public:
     // Give unit tests access to the CPU, CpuData and the MMU.
     constexpr Interfaces::CpuController* cpuController ();
     constexpr CpuData* cpuData ();
-    constexpr MMU* mmu ();
 
     // The KD11_NA is a peripheral without registers so the read and write 
     // register functions are dummies. The reset function is called on a
@@ -63,8 +61,7 @@ private:
 
     Bus* bus_;
     KD11_NACpuData cpuData_;
-    PseudoMMU pseudoMMU_ {bus_, &cpuData_};
-    DataPaths dataPaths_ {bus_, &pseudoMMU_};
+    DataPaths dataPaths_ {bus_, &cpuData_};
     CompositeCpuController<KD11_NA_Executor, KD11_NA_Calculator,
         PseudoHaltMode, BasicProcessorExceptionHandler> cpuController_ {bus_, &cpuData_, &dataPaths_};
     unique_ptr<KD11_NA_ODT>	odt_ {};
@@ -84,11 +81,6 @@ constexpr Interfaces::CpuController* KD11_NA::cpuController ()
 constexpr CpuData* KD11_NA::cpuData ()
 {
     return &cpuData_;
-}
-
-constexpr MMU* KD11_NA::mmu ()
-{
-    return &pseudoMMU_;
 }
 
 

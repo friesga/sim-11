@@ -2,7 +2,6 @@
 #include "msv11d/msv11d.h"
 #include "proc/kd/kd11_na/odt/kd11_na_odt.h"
 #include "proc/kd/kd11_na/cpudata/kd11_nacpudata.h"
-#include "proc/common/pseudommu/pseudommu.h"
 #include "../../testconsoleaccess.h"
 #include "proc/common/pseudo_haltmode/pseudo_haltmode.h"
 #include "proc/common/composite_cpucontroller/composite_cpucontroller.h"
@@ -53,8 +52,7 @@ protected:
 
         Qbus bus;
         KD11_NACpuData cpuData;
-        PseudoMMU mmu {&bus, &cpuData};
-        DataPaths datapaths {&bus, &mmu};
+        DataPaths datapaths {&bus, &cpuData};
         CompositeCpuController<KD11_NA_Executor, KD11_NA_Calculator,
             PseudoHaltMode, BasicProcessorExceptionHandler> kd11cpu (&bus, &cpuData, &datapaths);
         MSV11D msv11d (&bus);
