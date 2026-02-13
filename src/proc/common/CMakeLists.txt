@@ -3,6 +3,7 @@ set (PROC_COMMON_SRCS
     basemachinestate/basemachinestate.cpp
     basemachinestate/signalreceivers.cpp
     basemachinestate/statemachine.cpp
+    businterface/businterface.cpp
     composite_cpucontroller/composite_cpucontroller.cpp
     basicprocessorexceptionhandler/basicprocessorexceptionhandler.cpp
     executor/executor.cpp
