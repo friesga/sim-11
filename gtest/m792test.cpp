@@ -11,9 +11,9 @@ TEST (M792Test, romImageCanBeRead)
     Unibus bus;
     M792 m792 {&bus, M792Config {}};
 
-    CondData<u16> data = m792.read (BusAddress (0173000));
+    CondData<u16> data = m792.read (BusAddress (0173100));
     ASSERT_TRUE (data.hasValue ());
 
     EXPECT_EQ (data, 0013701);
-    EXPECT_EQ (m792.read (BusAddress (0173002)), 0177570);
+    EXPECT_EQ (m792.read (BusAddress (0173102)), 0177570);
 }
