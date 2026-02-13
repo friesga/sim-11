@@ -25,8 +25,9 @@ public:
 TEST_F (KTF11_ATest, ioMapCanBeEnabled)
 {
     Qbus bus;
+    BusInterface busInterface {&bus};
     KDF11CpuData cpuData;
-    KTF11_A ktf11_a (&bus, &cpuData);
+    KTF11_A ktf11_a {&bus, &busInterface, &cpuData};
 
     bus.IOMapEnable ().subscribe (bind (&KTF11_ATest::ioMapEnableReceiver, this, _1));
 

@@ -14,6 +14,7 @@
 #include "proc/ka11/calculator/calculator.h"
 #include "proc/common/pseudo_haltmode/pseudo_haltmode.h"
 #include "proc/common/basicprocessorexceptionhandler/basicprocessorexceptionhandler.h"
+#include "proc/common/businterface/businterface.h"
 #include "panel.h"
 
 #include <memory>
@@ -43,7 +44,8 @@ private:
 
     // Definition of the KA11 components.
     KA11CpuData cpuData_ {};
-    PseudoMMU mmu_ {bus_, &cpuData_};
+    BusInterface busInterface_ {bus_};
+    PseudoMMU mmu_ {&busInterface_, &cpuData_};
     CompositeCpuController<KA11_Executor, KA11Calculator,
         PseudoHaltMode, BasicProcessorExceptionHandler> cpuController_ {bus_, &cpuData_, &mmu_};
     unique_ptr<KY11_A> ky11_a_;

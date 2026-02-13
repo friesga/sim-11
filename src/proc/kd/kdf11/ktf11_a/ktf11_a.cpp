@@ -1,9 +1,11 @@
 #include "ktf11_a.h"
 #include "proc/include/psw.h"
 
-KTF11_A::KTF11_A (Bus* bus, CpuData* cpuData)
+KTF11_A::KTF11_A (BusSignals* busSignals, BusInterface* busInterface,
+    CpuData* cpuData)
     :
-    bus_ {bus},
+    busSignals_ {busSignals},
+    busInterface_ {busInterface},
     cpuData_ {cpuData}
 {}
 
@@ -164,15 +166,15 @@ bool KTF11_A::mappedWriteByte (VirtualAddress address, u8 value, u16 mode)
 CondData<u16> KTF11_A::readWithoutTrap (u16 address)
 {
     return (sr0_.managementEnabled ()) ? 
-        bus_->read (physicalAddress (address)) :
-        bus_->read (address);
+        busInterface_->read (physicalAddress (address)) :
+        busInterface_->read (address);
 }
 
 // Return the word at the given physical address, generating a bus error trap
 // in case the read fails.
 CondData<u16> KTF11_A::readPhysical (BusAddress busAddress)
 {
-    CondData<u16> value = bus_->read (busAddress);
+    CondData<u16> value = busInterface_->read (busAddress);
 
     switch (value.statusCode ())
     {
@@ -197,7 +199,7 @@ CondData<u16> KTF11_A::readPhysical (BusAddress busAddress)
 // error trap in case the write fails.
 bool KTF11_A::writePhysicalWord (BusAddress busAddress, u16 value)
 {
-    if (!bus_->writeWord (busAddress, value))
+    if (!busInterface_->writeWord (busAddress, value))
     {
         trace.bus (BusRecordType::WriteFail, busAddress, value);
         cpuData_->setTrap (CpuData::TrapType::BusError);
@@ -209,7 +211,7 @@ bool KTF11_A::writePhysicalWord (BusAddress busAddress, u16 value)
 
 bool KTF11_A::writePhysicalByte (BusAddress busAddress, u16 value)
 {
-    if (!bus_->writeByte (busAddress, value))
+    if (!busInterface_->writeByte (busAddress, value))
     {
         trace.bus (BusRecordType::WriteFail, busAddress, value);
         cpuData_->setTrap (CpuData::TrapType::BusError);

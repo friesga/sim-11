@@ -1,5 +1,6 @@
 #include "proc/ka11/ky11_a/ky11_a.h"
 #include "bus/unibus/unibus.h"
+#include "proc/common/businterface/businterface.h"
 #include "proc/ka11/ka11cpudata/ka11cpudata.h"
 #include "proc/common/pseudoMMU/pseudommu.h"
 #include "proc/common/composite_cpucontroller/composite_cpucontroller.h"
@@ -17,9 +18,10 @@ class KY11_ATest : public testing::Test
 {
 protected:
     Unibus bus;
+    BusInterface busInterface {&bus};
     MS11P ms11p {&bus};
     KA11CpuData cpuData {};
-    PseudoMMU mmu {&bus, &cpuData};
+    PseudoMMU mmu {&busInterface, &cpuData};
     CompositeCpuController<KA11_Executor, KA11Calculator,
         PseudoHaltMode, BasicProcessorExceptionHandler> cpuController {&bus, &cpuData, &mmu};
     FakeWindow window {};

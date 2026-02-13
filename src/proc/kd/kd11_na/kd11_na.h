@@ -61,10 +61,11 @@ private:
     enum { stdBootAddress = 0173000 };
 
     Bus* bus_;
+    BusInterface busInterface_ {bus_};
     KD11_NACpuData cpuData_;
     CompositeCpuController<KD11_NA_Executor, KD11_NA_Calculator,
         PseudoHaltMode, BasicProcessorExceptionHandler> cpuController_ {bus_, &cpuData_, &pseudoMMU_};
-    PseudoMMU pseudoMMU_ {bus_, &cpuData_};
+    PseudoMMU pseudoMMU_ {&busInterface_, &cpuData_};
     unique_ptr<KD11_NA_ODT>	odt_ {};
     KD11Config::PowerUpMode powerUpMode_;
     u16 startAddress_;

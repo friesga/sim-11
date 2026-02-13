@@ -9,6 +9,7 @@
 #include "proc/kd/kd11_na/executor/executor.h"
 #include "proc/kd/kd11_na/calculator/calculator.h"
 #include "proc/common/basicprocessorexceptionhandler/basicprocessorexceptionhandler.h"
+#include "proc/common/businterface/businterface.h"
 
 #include <gtest/gtest.h>
 #include <memory>
@@ -51,8 +52,9 @@ protected:
         TestConsoleAccess *testConsole = static_cast<TestConsoleAccess*> (console.get ());
 
         Qbus bus;
+        BusInterface busInterface {&bus};
         KD11_NACpuData cpuData;
-        PseudoMMU mmu {&bus, &cpuData};
+        PseudoMMU mmu {&busInterface, &cpuData};
         CompositeCpuController<KD11_NA_Executor, KD11_NA_Calculator,
             PseudoHaltMode, BasicProcessorExceptionHandler> kd11cpu (&bus, &cpuData, &mmu);
         MSV11D msv11d (&bus);

@@ -1,7 +1,8 @@
 #ifndef _KTF11A_H_
 #define _KTF11A_H_
 
-#include "bus/qbus/qbus.h"
+#include "bus/include/bussignals.h"
+#include "proc/common/businterface/businterface.h"
 #include "proc/include/cpudata.h"
 #include "proc/include/mmu.h"
 #include "abstractbusdevice/abstractbusdevice.h"
@@ -29,9 +30,10 @@
 class KTF11_A : public MMU, public AbstractBusDevice
 {
 public:
-	KTF11_A (Bus* bus, CpuData* cpuData);
+	KTF11_A (BusSignals* busSignals, BusInterface* busInterface,
+		CpuData* cpuData);
 
-	// Functions reuiqred by the MMU interface
+	// Functions required by the MMU interface
 	CondData<u16> fetchWord (VirtualAddress address, 
 		PSW::Mode memMgmtMode = PSW::Mode::Default) override;
 	CondData<u8> fetchByte (VirtualAddress address, 
@@ -42,7 +44,6 @@ public:
 		PSW::Mode memMgmtMode = PSW::Mode::Default) override;
 	bool pushWord (u16 value) override;
 	bool popWord (u16 *destination) override;
-
 
 	void setVirtualPC (u16 value) override;
 
@@ -77,7 +78,8 @@ private:
 	static const u16 statusRegister2 = 0177576;
 	static const u16 statusRegister3 = 0172516;
 
-	Bus* bus_;
+	BusSignals* busSignals_;
+	BusInterface* busInterface_;
 	CpuData* cpuData_;
 
 	// Definition of status registers
@@ -100,7 +102,7 @@ private:
 	SR0 sr0_ {0};
 	BasicRegister const sr1_ {0};
 	BasicRegister sr2_ {0};
-	SR3 sr3_ {bus_, 0};
+	SR3 sr3_ {busSignals_, 0};
 
 	// The ReadonlyRegisters form a kind of facade or decorator which
 	// removes the possibility to write to a register from the specified

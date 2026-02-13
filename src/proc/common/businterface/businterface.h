@@ -1,6 +1,11 @@
 #ifndef _BUSINTERFACE_H_
 #define _BUSINTERFACE_H_
 
+#include "bus/include/bus.h"
+#include "busaddress/busaddress.h"
+#include "conddata/conddata.h"
+#include "types.h"
+
 // This class provides an interface from the MMU to the bus. It is used by
 // the MMU to read and write data on the bus, using physical addresses.
 //

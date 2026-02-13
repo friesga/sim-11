@@ -9,6 +9,7 @@
 #include "proc/kd/kd11_na/executor/executor.h"
 #include "proc/kd/kd11_na/calculator/calculator.h"
 #include "proc/common/basicprocessorexceptionhandler/basicprocessorexceptionhandler.h"
+#include "proc/common/businterface/businterface.h"
 
 #include <gtest/gtest.h>
 #include <memory>
@@ -52,7 +53,8 @@ protected:
 
         Qbus bus;
         KDF11CpuData cpuData;
-        KTF11_A mmu {&bus, &cpuData};
+        BusInterface busInterface {&bus};
+        KTF11_A mmu {&bus, &busInterface, &cpuData};
         CompositeCpuController<KD11_NA_Executor, KD11_NA_Calculator,
         PseudoHaltMode, BasicProcessorExceptionHandler> kd11cpu (&bus, &cpuData, &mmu);
         MSV11D msv11d (&bus);

@@ -5,6 +5,7 @@
 #include "bus/include/bus.h"
 #include "conddata/conddata.h"
 #include "proc/include/cpudata.h"
+#include "proc/common/businterface/businterface.h"
 
 //
 // Pseudo: being apparently rather than actually as stated 
@@ -16,8 +17,7 @@
 class PseudoMMU : public MMU
 {
 public:
-	void reset ();
-	PseudoMMU (Bus* bus, CpuData* cpuData);
+	PseudoMMU (BusInterface* busInterface, CpuData* cpuData);
     CondData<u16> fetchWord (VirtualAddress address, 
 		PSW::Mode mode = PSW::Mode::Default) override;
 	CondData<u8> fetchByte (VirtualAddress address, 
@@ -30,9 +30,10 @@ public:
 	bool popWord (u16 *destination) override;
 	CondData<u16> readWithoutTrap (u16 address) override;
 	void setVirtualPC (u16 value) override;
+	void reset () override;
 
 private:
-	Bus* bus_;
+	BusInterface* busInterface_;
 	CpuData* cpuData_;
 };
 
