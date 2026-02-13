@@ -81,7 +81,7 @@ inline bool KDF11_Executor::operator() (MFPD& instr)
     if (!source.hasValue ())
         return false;
 
-    if (!mmu_->pushWord (source))
+    if (!cpuController_->pushWord (source))
         return false;
 
     if (cpuData_->stackOverflow ())
@@ -107,7 +107,7 @@ inline bool KDF11_Executor::operator() (MTPD& instr)
     OperandLocation operandLocation =  
         singleOperandDecoder->getOperandLocation (cpuData_->registers ());
 
-    if (!mmu_->popWord (&tmp) || !operandLocation.writePrevMode (tmp))
+    if (!cpuController_->popWord (&tmp) || !operandLocation.writePrevMode (tmp))
         return false;
         
     commonExecutor_.setPSW (ConditionCodes {.N = (bool) (tmp & 0100000),
