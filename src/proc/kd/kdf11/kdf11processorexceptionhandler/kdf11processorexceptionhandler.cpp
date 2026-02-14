@@ -4,8 +4,7 @@ KDF11ProcessorExceptionHandler::KDF11ProcessorExceptionHandler (Bus* bus, CpuDat
     Interfaces::CpuController* cpuController, MMU* mmu)
     :
     bus_ {bus},
-    cpuData_ {cpuData},
-    cpuController_ {cpuController},
+    cpuData_ (cpuData),
     mmu_ {mmu}
 { }
 
@@ -75,8 +74,7 @@ void KDF11ProcessorExceptionHandler::swapPcPSW (u16 vectorAddress)
     u16 oldPSW = cpuData_->psw ();
     cpuData_->psw ().set (PSW::ProtectionMode::Trap, newPSW);
 
-    if (!cpuController_->pushWord (oldPSW) ||
-        !cpuController_->pushWord (cpuData_->registers ()[7]))
+    if (!mmu_->pushWord (oldPSW) || !mmu_->pushWord (cpuData_->registers ()[7]))
     {
         // Set up new stack at location 2 and trap to address 4. The stack
         // pointer is set at location 4 as it will be decremented before the
@@ -84,8 +82,8 @@ void KDF11ProcessorExceptionHandler::swapPcPSW (u16 vectorAddress)
         trace.cpuEvent (CpuEventRecordType::CPU_DBLBUS, cpuData_->registers ()[6]);
         fetchFromVector (4, &newPC);
         cpuData_->registers ()[6] = 4;
-        cpuController_->pushWord (cpuData_->psw ());
-        cpuController_->pushWord (cpuData_->registers ()[7]);
+        mmu_->pushWord (cpuData_->psw ());
+        mmu_->pushWord (cpuData_->registers ()[7]);
     }
 
     cpuData_->registers ()[7] = newPC;

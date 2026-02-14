@@ -275,31 +275,6 @@ void CompositeCpuController<TExecutor, TCalculator, THaltMode,
     trace.clearIgnoreBus ();
 }
 
-// Push the given value on the processor stack
-template <isExecutor TExecutor, typename TCalculator, isHaltMode THaltMode,
-    isProcessorExceptionHandler TProcessorExceptionHandler>
-bool CompositeCpuController<TExecutor, TCalculator, THaltMode,
-    TProcessorExceptionHandler>::pushWord (u16 value)
-{
-    cpuData_->registers ()[6] -= 2;
-    return mmu_->putWord (cpuData_->registers ()[6], value);
-}
-
-// Pop a word from the processor stack returning true if this succeeds
-// or false when a bus error occurs.
-template <isExecutor TExecutor, typename TCalculator, isHaltMode THaltMode,
-    isProcessorExceptionHandler TProcessorExceptionHandler>
-bool CompositeCpuController<TExecutor, TCalculator, THaltMode,
-    TProcessorExceptionHandler>::popWord (u16* destination)
-{
-    CondData<u16> tmpValue = mmu_->fetchWord (cpuData_->registers ()[6]);
-    *destination = tmpValue.valueOr (0);
-    cpuData_->registers ()[6] += 2;
-    if (!tmpValue.hasValue ())
-        return false;
-    return true;
-}
-
 // Explicit template instantiation to be able to define the methods in
 // a separate .cpp file.
 template class CompositeCpuController<KD11_NA_Executor, KD11_NA_Calculator,

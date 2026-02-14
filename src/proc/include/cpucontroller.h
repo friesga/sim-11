@@ -49,10 +49,6 @@ namespace Interfaces
 
         // The execute function returns the new CpuRunState
         virtual CpuRunState execute () = 0;
-
-        // PDP-11 stack functions
-        virtual bool pushWord (u16 value) = 0;
-        virtual bool popWord (u16* destination) = 0;
     };
 };
 template <typename T>

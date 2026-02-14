@@ -58,6 +58,25 @@ bool KTF11_A::putByte (VirtualAddress address, u8 value, PSW::Mode memMgmtMode)
         writePhysicalByte (address, value);
 }
 
+// Pop a word from the processor stack returning true if this succeeds
+// or false when a bus error occurs.
+bool KTF11_A::popWord (u16 *destination)
+{
+    CondData<u16> tmpValue = fetchWord (cpuData_->registers ()[6]);
+    *destination = tmpValue.valueOr (0);
+    cpuData_->registers ()[6] += 2;
+    if (!tmpValue.hasValue ())
+        return false;
+    return true;
+}
+
+// Push the given value on the processor stack
+bool KTF11_A::pushWord (u16 value)
+{
+    cpuData_->registers ()[6] -= 2;
+    return putWord (cpuData_->registers ()[6], value);
+}
+
 // Return the given PSW::Mode to a number as defined in the PSW.
 u16 KTF11_A::modeNumber (PSW::Mode memMgmtMode)
 {
