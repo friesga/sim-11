@@ -230,7 +230,7 @@ void KY11_A::enableHaltSwitchClicked (Button::State state)
 void KY11_A::startSwitchClicked (Button::State state)
 {
     if (get<Button::MomentaryDownTwoPositionsState> (state) ==
-            Button::MomentaryDownTwoPositionsState::Down)
+        Button::MomentaryDownTwoPositionsState::Down)
         stateMachine_->dispatch (START_Pressed {});
 }
 
@@ -250,7 +250,7 @@ void KY11_A::startSwitchClicked (Button::State state)
 void KY11_A::continueSwitchClicked (Button::State state)
 {
     if (get<Button::MomentaryDownTwoPositionsState> (state) ==
-            Button::MomentaryDownTwoPositionsState::Down)
+        Button::MomentaryDownTwoPositionsState::Down)
         stateMachine_->dispatch (CONT_Pressed {});
 }
 
@@ -296,3 +296,10 @@ void KY11_A::SRUNReceiver (bool signalValue)
 }
 
 
+void KY11_A::display (BusAddress address, CondData<u16> data)
+{
+    *addressRegister_ = address;
+
+    if (data.hasValue ())
+        *dataRegister_ = data.value ();
+}

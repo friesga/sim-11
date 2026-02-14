@@ -11,6 +11,8 @@ KA11::KA11 (Bus* bus, Window* window, const KA11Config& ka11Config)
     ky11_a_ = make_unique<KY11_A> (bus, &cpuController_, window,
         *ka11Config.ky11_aConfig_);
 
+    busInterface_.attachConsole (ky11_a_.get ());
+
     vector<BusDevice*> devices {&cpuData_, ky11_a_.get ()};
     registerHandler_ = make_unique<RegisterHandler> (devices);
 
