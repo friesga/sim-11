@@ -151,13 +151,12 @@ KY11_A::State KY11_A::StateMachine::startPressed (KY11_A::State newState)
 
 KY11_A::State KY11_A::StateMachine::contPressed (KY11_A::State newState)
 {
-    if (context_->currentHaltEnablePosition_ ==
-        KY11Console::HaltEnablePosition::Enable)
-    {
-        context_->cpuController_->proceed ();
-        context_->bus_->START ().cycle ();
+    context_->cpuController_->proceed ();
+    context_->bus_->START ().cycle ();
+
+    if (context_->currentHaltEnablePosition_ == 
+            KY11Console::HaltEnablePosition::Enable)
         return ProgramOperation {};
-    }
     else
-        return move (newState);
+        return AddressLoaded {};
 }
