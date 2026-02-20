@@ -93,6 +93,20 @@ void KY11_A::createBezel (Window* window, const KY11_AConfig& ky11_aConfig,
         bind (&KY11_A::singleInstructionCycleSwitchClicked, this, _1));
 }
 
+// The OFF/POWER/PANEL LOCK switch provides power control to console and
+// lock-out of console controls as follows:
+// 
+// - OFF position removes all power from the processor.
+// - POWER position - applies primary power to the processor. All console
+//   controls are fully operational when switch is in this position.
+// - PANEL LOCK position disables all console (panel) controls except the
+//   switch register key switches. This prevents inadvertant switch operation
+//   from disturbing a running program.
+//
+// The data entered in the SWITCH REGISTER are still available to the
+// processor whenever the program explicitly addresses the switch register
+// (address 777570)
+//
 void KY11_A::powerSwitchClicked (Button::State state)
 {
     switch (get<Button::ThreePositionsState> (state))
@@ -104,11 +118,12 @@ void KY11_A::powerSwitchClicked (Button::State state)
 
         case Button::ThreePositionsState::Center:
             // Power on
+            unlockPanel ();
             bus_->BPOK ().set (true);
             break;
 
         case Button::ThreePositionsState::Right:
-            // Panel locked
+            lockPanel ();
             break;
     }
 }
@@ -201,6 +216,8 @@ void KY11_A::depSwitchClicked (Button::State state)
 //
 void KY11_A::enableHaltSwitchClicked (Button::State state)
 {
+    enableHaltSwitchState_ = state;
+
     if (get<Button::TwoPositionsState> (state) ==
         Button::TwoPositionsState::Down)
     {
@@ -302,4 +319,37 @@ void KY11_A::display (BusAddress address, CondData<u16> data)
 
     if (data.hasValue ())
         *dataRegister_ = data.value ();
+}
+
+// The PANEL LOCK position disables all console (panel) controls. All control
+// switches - except the ENABLE/HALT switch - are momentary switches for which
+// key presses can be ignored.
+// 
+// We assume that when the panel is unlocked while the ENABLE/HALT switch is
+// in the HALT position, the processor is halted immediately. This means the
+// position of the ENABLE/HALT switch must be remembered and applied to the 
+// system when the panel is unlocked.
+//
+void KY11_A::lockPanel ()
+{
+    loadAddressSwitch_->setSwitchClickedCallback ([] (Button::State) {});
+    examineSwitch_->setSwitchClickedCallback ([] (Button::State) {});
+    depositSwitch_->setSwitchClickedCallback ([] (Button::State) {});
+    enableHaltSwitch_->setSwitchClickedCallback ([&] (Button::State state)
+        {enableHaltSwitchState_ = state; });
+    startSwitch_->setSwitchClickedCallback ([] (Button::State) {});
+    continueSwitch_->setSwitchClickedCallback ([] (Button::State) {});
+    singleInstructionCycleSwitch_->setSwitchClickedCallback ([] (Button::State) {});
+}
+
+void KY11_A::unlockPanel ()
+{
+    loadAddressSwitch_->setSwitchClickedCallback (bind (&KY11_A::loadAddressSwitchClicked, this, _1));
+    examineSwitch_->setSwitchClickedCallback (bind (&KY11_A::examSwitchClicked, this, _1));
+    depositSwitch_->setSwitchClickedCallback (bind (&KY11_A::depSwitchClicked, this, _1));
+    enableHaltSwitch_->setSwitchClickedCallback (bind (&KY11_A::enableHaltSwitchClicked, this, _1));
+    enableHaltSwitchClicked (enableHaltSwitchState_);
+    startSwitch_->setSwitchClickedCallback (bind (&KY11_A::startSwitchClicked, this, _1));
+    continueSwitch_->setSwitchClickedCallback (bind (&KY11_A::continueSwitchClicked, this, _1));
+    singleInstructionCycleSwitch_->setSwitchClickedCallback (bind (&KY11_A::singleInstructionCycleSwitchClicked, this, _1));
 }

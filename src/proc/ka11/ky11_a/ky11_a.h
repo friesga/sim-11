@@ -114,6 +114,7 @@ private:
 
     // The initial position of the ENABLE/HALT switch must correspond with
     // the initial state of enableHaltSwitch_ as defined in createBezel().
+    Button::State enableHaltSwitchState_ {Button::TwoPositionsState::Down};
     HaltEnablePosition currentHaltEnablePosition_ {HaltEnablePosition::Halt};
 
     void createBezel (Window* window, const KY11_AConfig& ky11_aConfig,
@@ -131,6 +132,8 @@ private:
     void startSwitchClicked (Button::State state);
     void continueSwitchClicked (Button::State state);
     void singleInstructionCycleSwitchClicked (Button::State state);
+    void lockPanel ();
+    void unlockPanel ();
 };
 
 // Definition of the state machine for the KY11-A. The class has to be defined
