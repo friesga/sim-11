@@ -57,6 +57,11 @@ bool SDLIndicatorLatchingButton::isWithinBounds (Position position,
         Indicator::State::Off)->isWithinBounds (position, margin);
 }
 
+void SDLIndicatorLatchingButton::setSwitchClickedCallback (EventCallback callback)
+{
+    buttonClicked_ = callback;
+}
+
 // Definition of functions required for the Indicator interface
 Indicator::State SDLIndicatorLatchingButton::indicatorState () const
 {

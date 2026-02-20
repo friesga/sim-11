@@ -36,6 +36,7 @@ public:
     void render () override;
     void handleEvent (InputEvent const* event) override;
     bool isWithinBounds (Position position, float margin) const override;
+    void setSwitchClickedCallback (EventCallback callback) override;
 
 private:
     EventCallback switchClicked_;

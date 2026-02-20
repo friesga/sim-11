@@ -20,3 +20,6 @@ bool FakeButton::isWithinBounds (Position position, float margin) const
 {
     return false;
 }
+
+void FakeButton::setSwitchClickedCallback (EventCallback callback)
+{ }

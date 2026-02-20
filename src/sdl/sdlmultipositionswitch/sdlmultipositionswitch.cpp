@@ -145,6 +145,12 @@ bool SDLMultiPositionSwitch<TPositions>::switchedDown (InputEvent const* event) 
             isBelowCenter (event->mousePosition (), centerMargin_));
 }
 
+template <typename TPositions>
+void SDLMultiPositionSwitch<TPositions>::setSwitchClickedCallback (EventCallback callback)
+{
+    switchClicked_ = callback;
+}
+
 // Explicit template instantiation to be able to define the methods in
 // a separate .cpp file.
 template class SDLMultiPositionSwitch<Button::TwoPositionsState>;

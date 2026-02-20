@@ -165,6 +165,7 @@ public:
     virtual void render () = 0;
     virtual void handleEvent (InputEvent const* event) = 0;
     virtual bool isWithinBounds (Position position, float margin) const = 0;
+    virtual void setSwitchClickedCallback (EventCallback callback) = 0;
 };
 
 // Definition of type traits for the different types of switches. For every
@@ -281,6 +282,7 @@ public:
     virtual void setState (Button::State newState) = 0;
     virtual void handleEvent (InputEvent const* event) = 0;
     virtual bool isWithinBounds (Position position, float margin) const = 0;
+    virtual void setSwitchClickedCallback (EventCallback callback) = 0;
 
     // Additional functions defined in the Indicator interface
     virtual Indicator::State indicatorState () const = 0;

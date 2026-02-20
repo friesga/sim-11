@@ -22,6 +22,7 @@ public:
     void render () {}
     void handleEvent (InputEvent const* event) {}
     bool isWithinBounds (Position position, float margin) const { return true; }
+    void setSwitchClickedCallback (EventCallback callback) {}
 };
 
 class DummyIndicatorButton : public IndicatorButton
@@ -32,6 +33,8 @@ public:
     Button::State currentState () const { return TwoPositionsState::Up; }
     void handleEvent (InputEvent const* event) {}
     bool isWithinBounds (Position position, float margin) const { return true; }
+    void setSwitchClickedCallback (EventCallback callback) {}
+    void setSwitchClicked (EventCallback callback) {}
     void show (Indicator::State showFigure) {}
     Indicator::State indicatorState () const { return Indicator::State::Off; }
 };

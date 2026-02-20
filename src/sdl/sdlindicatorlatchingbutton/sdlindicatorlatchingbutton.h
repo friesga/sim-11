@@ -35,6 +35,7 @@ public:
     Button::State currentState () const override;
     void render () override;
     bool isWithinBounds (Position position, float margin = 0.0) const;
+    void setSwitchClickedCallback (EventCallback callback) override;
 
     // Definition of functions required for the Indicator interface
     Indicator::State indicatorState () const override;
