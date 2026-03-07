@@ -20,12 +20,20 @@ public:
     // Functions required by the CpuData interface and not implemented by
     // BaseCpuData.
     constexpr bool stackOverflow () override;
+
+private:
+    enum { stackLimit = 0400 };
 };
 
-// The KA11 does not support a stack limit so stack overflow cannot occur.
+// A Stack Overflow Trap is caused by referencing addresses below 400,
+// through the processor stack pointer R6 (SP) in autodecrement or
+// autodecrement deferred addressing. The instruction causing the overflow
+// is completed before the trap is made.
+// Source: PDP-11 Processor Handbook (1969) p. 43.
+//
 constexpr bool KA11CpuData::stackOverflow ()
 {
-    return false;
+    return registers_[6] < stackLimit;
 }
 
 #endif // _KA11CPUDATA_H_
