@@ -8,18 +8,6 @@
 
 #include <memory>
 
-OperatorConsole::OperatorConsole ()
-{
-    // Create a thread running the event handler and rendering
-    senderThread_ = std::thread (&OperatorConsole::sender, this);
-}
-
-OperatorConsole::~OperatorConsole ()
-{
-    consoleRunning_ = false;
-    senderThread_.join ();
-}
-
 void OperatorConsole::setReceiver (std::function<void(char)> receiver)
 {
     receiver_ = receiver;

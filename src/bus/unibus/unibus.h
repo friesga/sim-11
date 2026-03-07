@@ -8,6 +8,10 @@
 #include "bus/iterator/iterator.h"
 #include "unibusmap.h"
 
+#include <functional>
+
+using std::function;
+
 // This class implements both the Unibus and the Extended Unibus (EUB).
 // 
 // Addresses on the Unibus are 18-bits wide while addresses on the EUB are
@@ -87,17 +91,18 @@ public:
 	Signal& BPOK ();
 	Signal& RESET ();
 	Signal& BHALT ();
+	Signal& START ();
 	Signal& BINIT ();
 	Signal& BOOT ();
 	Signal& BatteryPower ();
 	Signal& IOMapEnable ();
 
 	// Functions required for the BusInterrupts interface
-	void setInterrupt (TrapPriority priority, unsigned char busOrder,
-		u8 functionOrder, unsigned char vector);
-	bool containsInterrupt (TrapPriority priority, unsigned char busOrder,
+	void requestInterrupt (InterruptPriority priority, unsigned char busOrder,
+		u8 functionOrder, u16 vector, function<void ()> requestGrant = 0);
+	bool containsInterrupt (InterruptPriority priority, unsigned char busOrder,
 		u8 functionOrder);
-	void clearInterrupt (TrapPriority priority, unsigned char busOrder,
+	void clearInterrupt (InterruptPriority priority, unsigned char busOrder,
 		u8 functionOrder);
 	void clearInterrupts ();
 	bool intrptReqAvailable ();
@@ -130,7 +135,7 @@ private:
 	void BINITReceiver (bool signalValue);
 
 	// A Unibus optionally contains a Unibus Map
-	UnibusMap* unibusMap_;
+	UnibusMap* unibusMap_ {nullptr};
 
 	bool addressMustBeMapped (BusAddress address);
 	CondData<u16> mappedRead (BusAddress address);

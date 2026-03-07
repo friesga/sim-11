@@ -2,111 +2,83 @@
 
 #include <SDL_image.h>
 #include <stdexcept>
+#include <string>
 
-using std::make_pair;
-using std::tie;
 using std::runtime_error;
+using std::string;
+using std::pair;
+using std::make_pair;
 
-SDLTexture::SDLTexture (string imageFile, SDL_Renderer *renderer, 
-    SDL_Texture* targetTexture, Frame<int> frame)
-    :
-    sdlRenderer_ {renderer},
-    targetTexture_ {targetTexture},
-    x_ {frame.x},
-    y_ {frame.y},
-    width_ {frame.width},
-    height_ {frame.height}
+// The default constructor creates an empty texture with the given dimensions
+SDLTexture::SDLTexture (SDL_Renderer* renderer, int textureWidth, int textureHeight)
+{
+    sdl2_Texture_ = SDL_CreateTexture (renderer,
+        SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_TARGET,
+        textureWidth, textureHeight);
+
+    if (sdl2_Texture_ == NULL)
+        throw runtime_error ("Target texture could not be created. SDL error: " +
+            string (SDL_GetError ()));
+}
+
+SDLTexture::SDLTexture (SDL_Renderer* renderer, string imageFile)
 {
     // Load image at specified path
-    SDL_Surface* loadedSurface = IMG_Load (imageFile.c_str ());
-    if (loadedSurface == NULL)
-        throw runtime_error ("Unable to load image " + imageFile +
-            " SDL_image error: " + IMG_GetError ());
+    sdl2_Texture_ = IMG_LoadTexture (renderer, imageFile.c_str ());
 
-    // Create texture from surface pixels
-    sdlTtexture_ = SDL_CreateTextureFromSurface (renderer, loadedSurface);
-    if (sdlTtexture_ == NULL)
+    if (sdl2_Texture_ == NULL)
         throw runtime_error ("Unable to create texture from " + imageFile +
-            "SDL error: " + SDL_GetError ());
+            " SDL error: " + SDL_GetError ());
+}
 
-    // Get rid of old loaded surface
-    SDL_FreeSurface (loadedSurface);
+SDLTexture::SDLTexture (SDL_Renderer* renderer, Image& image)
+{
+    SDL_RWops* rw = SDL_RWFromConstMem (image.data ().data (),
+        image.data ().size ());
+    sdl2_Texture_ = IMG_LoadTexture_RW (renderer, rw, 1);
 }
 
 SDLTexture::~SDLTexture ()
 {
     // Deallocate texture if allocated
-    if (sdlTtexture_ != NULL)
+    if (sdl2_Texture_ != NULL)
     {
-        SDL_DestroyTexture (sdlTtexture_);
-        sdlTtexture_ = NULL;
-        width_ = 0;
-        height_ = 0;
+        SDL_DestroyTexture (sdl2_Texture_);
+        sdl2_Texture_ = NULL;
     }
 }
 
-// Render this texture to the target texture
-void SDLTexture::render ()
+SDLTexture::SDLTexture (SDLTexture&& other) noexcept
+    : 
+    sdl2_Texture_ (other.sdl2_Texture_)
 {
-    if (SDL_SetRenderTarget (sdlRenderer_, targetTexture_) != 0)
-        throw runtime_error ("Unable to set render target: " +
-            string (SDL_GetError ()));
-
-    // Set rendering space and render texture
-    SDL_Rect renderQuad {x_, y_, width_, height_};
-    SDL_RenderCopy (sdlRenderer_, sdlTtexture_, NULL, &renderQuad);
+    other.sdl2_Texture_ = nullptr;
 }
 
-// Determine if the given position is within the bounds of the texture within
-// an optional margin. The margin is expressed as a floating point number
-// relative to the dimensions of the texture. A margin of 0.0 expresses
-// no margin, a margin of 1.0 indicates the margin equals the width and height
-// of the texture.
-bool SDLTexture::isWithinBounds (Position position, float margin) const
+SDLTexture& SDLTexture::operator= (SDLTexture&& other) noexcept
 {
-    float marginX = margin * width_;
-    float marginY = margin * height_;
+    if (this != &other)
+    {
+        if (sdl2_Texture_)
+            SDL_DestroyTexture (sdl2_Texture_);
 
-    if (position.x < x_ - marginX)
-    {
-        // Too far left
-        return false;
+        sdl2_Texture_ = other.sdl2_Texture_;
+        other.sdl2_Texture_ = nullptr;
     }
-
-    if (position.x > x_ + width_ + marginX)
-    {
-        // Too far right
-        return false;
-    }
-    
-    if (position.y < y_ - marginY)
-    {
-        // Too high
-        return false;
-    }
-    
-    if (position.y > y_ + height_ + marginY)
-    {
-        // Too low
-        return false;
-    }
-
-    // Inside rectangle
-    return true;
+    return *this;
 }
 
-bool SDLTexture::isRightOfCenter (Position position, float margin) const
+void SDLTexture::setColorModulation (uint8_t red, uint8_t green, uint8_t blue)
 {
-    float marginX = margin * width_;
-
-    return position.x > x_ + width_ / 2 &&
-        position.x <= x_ + width_ / 2 + marginX;
+    SDL_SetTextureColorMod (sdl2_Texture_, red, green, blue);
 }
 
-bool SDLTexture::isLeftOfCenter (Position position, float margin) const
+pair<int, int> SDLTexture::dimensions () const
 {
-    float marginX = margin * width_;
+    Uint32 format;
+    int access;
+    int width, height;
 
-    return position.x < x_ + width_ / 2 &&
-        position.x >= x_ + width_ / 2 - marginX;
+    SDL_QueryTexture (sdl2_Texture_, &format, &access, &width, &height);
+    return make_pair (width, height);
 }

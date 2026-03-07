@@ -1,0 +1,38 @@
+#ifndef _ROL_H_
+#define _ROL_H_
+
+
+#include "proc/common/instructionformats/singleoperandinstruction/singleoperandinstruction.h"
+#include "proc/include/cpudata.h"
+#include "proc/common/operandlocation/operandlocation.h"
+
+
+// ROL - rotate left
+// 
+// Operation:
+//  (dst) <- (dst) rotated left one place
+//
+// Condition Codes:
+//  N: set if the high-order bit of the result word is set (result < 0);
+//     cleared otherwise
+//  Z: set if all bits of the result word = O; cleared otherwise
+//  V: loaded with the Exclusive OR of the N-bit and C-bit (as set by the
+//     completion of the rotate operation)
+//  C: loaded with the high-order bit of the destination
+//
+// Rotate all bits of the destination left one place. Bit 15 is loaded into
+// the C-bit of the status word and the previous contents of the C-bit are
+// loaded into Bit 0 of the destination.
+//
+class ROL : public SingleOperandInstruction
+{
+public:
+    ROL (u16 instruction);
+};
+
+inline ROL::ROL (u16 instruction)
+    :
+    SingleOperandInstruction (instruction)
+{}
+
+#endif // _ROL_H_

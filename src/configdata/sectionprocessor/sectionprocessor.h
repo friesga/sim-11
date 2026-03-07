@@ -4,12 +4,10 @@
 #include "../iniprocessor/iniparser.h"
 #include "configdata/deviceconfig/deviceconfig.h"
 
-#include <memory>
 #include <limits>
 #include <string>
 
 using std::string;
-using std::shared_ptr;
 
 class SectionProcessor
 {
@@ -20,7 +18,8 @@ public:
 
 protected:
     string sectionName () const;
-    size_t unitNumberFromSectionName (string name, size_t maxUnits);
+    size_t unitNumberFromUnitKey (iniparser::Section* subSection,
+        size_t maxUnits) const;
 
 private:
     iniparser::Section* currentSection_ {nullptr};

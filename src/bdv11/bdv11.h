@@ -2,16 +2,14 @@
 #define _BDV11_H_
 
 #include "bus/include/bus.h"
-#include "pdp11peripheral/pdp11peripheral.h"
+#include "abstractbusdevice/abstractbusdevice.h"
 #include "configdata/bdv11config/bdv11config.h"
 #include "chrono/alarmclock/alarmclock.h"
 
-#include <memory>
 #include <array>
 #include <map>
 #include <string>
 
-using std::shared_ptr;
 using std::array;
 using std::map;
 using std::string;
@@ -63,11 +61,11 @@ consteval u16 B (size_t x)
 {
     return 1 << (x + 7);
 }
-class BDV11 : public PDP11Peripheral
+class BDV11 : public AbstractBusDevice
 {
 public:
 	BDV11 (Bus *bus);
-	BDV11 (Bus *bus, shared_ptr<BDV11Config> bdv11Config);
+	BDV11 (Bus *bus, const BDV11Config& bdv11Config);
 	~BDV11 ();
 	CondData<u16> read (BusAddress address) override;
 	StatusCode writeWord (BusAddress address, u16 value) override;
@@ -109,9 +107,9 @@ private:
 
 	using ROMimage = const array<u16, 2048>;
 
-	ROMimage* romToUse (shared_ptr<BDV11Config> bdv11Config);
-	u16 switchRegisterProgramSelection (shared_ptr<BDV11Config> bdv11Config);
-	u16 switchRegisterBootDevice (shared_ptr<BDV11Config> bdv11Config);
+	ROMimage* romToUse (const BDV11Config& bdv11Config);
+	u16 switchRegisterProgramSelection (const BDV11Config& bdv11Config);
+	u16 switchRegisterBootDevice (const BDV11Config& bdv11Config);
 	u16 getWordLow (u16 word);
 	u16 getWordHigh (u16 word);
 	void memoryDump (u16 pcr, int hi);
@@ -141,6 +139,7 @@ private:
 		{BDV11Config::BootDevice::BDV11ROM, BDV11_ROM}
 	};
 
+	Bus* bus_;
 	u16	pcr;
 	u16	scratch;
 	u16	option;

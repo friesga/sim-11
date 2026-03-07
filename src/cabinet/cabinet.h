@@ -5,11 +5,9 @@
 
 #include <string>
 #include <vector>
-#include <memory>
 
 using std::string;
 using std::vector;
-using std::shared_ptr;
 
 // The height of the cabinet is expressed in "rack units"(U).
 // See https://en.wikipedia.org/wiki/19-inch_rack and 
@@ -31,9 +29,9 @@ public:
 
     Cabinet (string typeId, RackUnit cabinetHeight);
     RackUnit height () const;
-    bool addUnit (shared_ptr<Cabinet::Position> position, RackUnit unitHeight);
-    bool sectionOutOfRange (shared_ptr<Cabinet::Position> position, RackUnit unitHeight) const;
-    bool sectionOccupied (shared_ptr<Cabinet::Position> position, RackUnit unitHeight) const;
+    bool addUnit (Cabinet::Position position, RackUnit unitHeight);
+    bool sectionOutOfRange (Cabinet::Position position, RackUnit unitHeight) const;
+    bool sectionOccupied (Cabinet::Position position, RackUnit unitHeight) const;
 
 private:
     string typeId_;

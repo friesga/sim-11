@@ -1,47 +1,55 @@
 #include "rl01_02.h"
 #include "rlv12/rlv12const.h"
+#include "imagedata/openrasterfile/openrasterfile.h"
 
 #include <functional>
+#include <memory>
 
 using std::bind;
 using std::placeholders::_1;
 using std::to_string;
+using std::unique_ptr;
+using std::make_unique;
 
 void RL01_02::createBezel (Window* window,
-    shared_ptr<RLUnitConfig> rlUnitConfig)
+    const RLUnitConfig& rlUnitConfig)
 {
-    Panel* panel = window->createPanel (rlUnitConfig->cabinetPosition,
-        RLUnitConfig::unitHeight);
-    panel->createFront ("resources/RL02-front.png", {0, 0, 1.0, 1.0});
+    unique_ptr<ImageContainer> imageContainer =
+        make_unique<OpenRasterFile> ("resources/rl01_02.ora");
+
+    unique_ptr<PanelBuilder> panelBuilder =
+        window->createDataPanelBuilder (*imageContainer,
+            rlUnitConfig.cabinetPosition.value (), RLUnitConfig::unitHeight);
+
+    panelBuilder->createFront ("rl02-front");
 
     // LOAD IndicatorButton
-    loadButton_ = panel->createSDLIndicatorLatchingButton ({
-        "resources/Load_up_off.png",
-        "resources/Load_up_on.png",
-        "resources/Load_down_off.png",
-        "resources/Load_down_on.png"},
+    loadButton_ = panelBuilder->createIndicatorLatchingButton ({
+        "load_up_off", "load_up_on",
+        "load_down_off", "load_down_on"},
         Button::TwoPositionsState::Up, bind (&RL01_02::loadButtonClicked, this, _1),
         Indicator::State::On, loadButtonFrame);
 
     // READY indicator, default off
-    readyIndicator_ = panel->createIndicator (
-        "resources/ready_" + to_string (rlUnitConfig->unitNumber) + "_off.png",
-        "resources/ready_" + to_string (rlUnitConfig->unitNumber) + "_on.png",
+    readyIndicator_ = panelBuilder->createIndicator (
+        "ready" + to_string (rlUnitConfig.unitNumber) + "_off",
+        "ready" + to_string (rlUnitConfig.unitNumber) + "_on",
         Indicator::State::Off, readyIndicatorFrame);
 
     // FAULT indicator, default off
-    faultIndicator_ = panel->createIndicator (
-        "resources/fault_off.png",
-        "resources/fault_on.png",
+    faultIndicator_ = panelBuilder->createIndicator ("fault_off", "fault_on",
         Indicator::State::Off, faultIndicatorFrame);
 
     // WRITE PROTECT switch, initial state depends on unit configuration
-    writeProtectButton_ = panel->createLatchingButton (
-        "resources/write_protect_on.png",
-        "resources/write_protect_off.png",
-        rlUnitConfig->writeProtect ? Button::TwoPositionsState::Down : Button::TwoPositionsState::Up,
+    writeProtectButton_ = panelBuilder->createMultiPositionSwitch (
+        {"write_prot_on", "write_prot_off"},
+        rlUnitConfig.writeProtect ? 
+            Button::CenteredTwoPositionsState::Down : 
+            Button::CenteredTwoPositionsState::Up,
         bind (&RL01_02::writeProtectButtonClicked, this, _1),
         writeProtectButtonFrame);
+
+    window->addPanel (panelBuilder->getPanel ());
 }
 
 void RL01_02::loadButtonClicked (Button::State state)
@@ -54,14 +62,15 @@ void RL01_02::loadButtonClicked (Button::State state)
 
 void RL01_02::writeProtectButtonClicked (Button::State state)
 {
-    if (get<Button::TwoPositionsState> (state) == Button::TwoPositionsState::Down)
+    if (get<Button::CenteredTwoPositionsState> (state) == 
+        Button::CenteredTwoPositionsState::Down)
     {
-        unitStatus_ |= Bitmask (Status::WRITE_PROTECT);
+        setWriteProtected (true);
         driveStatus_ |= RLV12const::MPR_GS_WriteLock;
     }
     else
     {
-        unitStatus_ &= ~Bitmask (Status::WRITE_PROTECT);
+        setWriteProtected (false);
         driveStatus_ &= ~RLV12const::MPR_GS_WriteLock;
     }
 }

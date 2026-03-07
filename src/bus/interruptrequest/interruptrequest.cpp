@@ -1,0 +1,83 @@
+#include "interruptrequest.h"
+
+atomic_uint InterruptRequest::intrptSeqNr_ = 0;
+
+// Constructors
+InterruptRequest::InterruptRequest()
+    :
+    priority_ {InterruptPriority::BR4},
+    busOrder_ {0},
+    functionOrder_ {0},
+    vector_ {0},
+    requestGrant_ {nullptr}
+{
+    intrptReqId_ = intrptSeqNr_++;
+}
+
+InterruptRequest::InterruptRequest (InterruptPriority priority,
+        unsigned char busOrder, u8 functionOrder, u16 vector,
+        function<void ()> requestGrant)
+    :
+    priority_ {priority},
+    busOrder_ {busOrder},
+    functionOrder_ {functionOrder},
+    vector_ {vector},
+    requestGrant_ {requestGrant}
+{
+    intrptReqId_ = intrptSeqNr_++;
+}
+
+// Operator less than, used to determine the priority of the interrupt request.
+// The priority is based on first the trap priority and if these are equal by
+// the order on the bus. The higher the number, the greater the priority.
+bool InterruptRequest::operator< (InterruptRequest const &ir) const
+{
+    return intrptPriority (priority_, busOrder_, functionOrder_) <
+        intrptPriority (ir.priority_, ir.busOrder_, ir.functionOrder_);
+}
+
+bool InterruptRequest::operator== (InterruptRequest const &ir) const
+{
+    return intrptPriority (priority_, busOrder_, functionOrder_) ==
+        intrptPriority (ir.priority_, ir.busOrder_, functionOrder_);
+}
+
+// Calculate the interrupt priority, based on first the trap priority and if
+// these are equal by the order on the bus. The higher the number, the greater
+// the priority.
+long InterruptRequest::intrptPriority (InterruptPriority trapPriority, 
+    unsigned char busOrder, u8 functionOrder) const
+{
+    return static_cast<long> (trapPriority) * 256 + 
+        busOrder * 256 + functionOrder;
+}
+
+unsigned char InterruptRequest::busOrder() const
+{
+    return busOrder_;
+}
+
+// To retrieve the vector for this interrupt, the request granted callback
+// is called which should return the vector to use.
+u16 InterruptRequest::vector() const
+{
+    return vector_;
+}
+
+InterruptPriority InterruptRequest::priority() const
+{
+    return priority_;
+}
+
+// Call the request grant function if a function to that purpose has
+// been provided.
+void InterruptRequest::requestGrant ()
+{
+    if (requestGrant_!= nullptr)
+        requestGrant_ ();
+}
+
+unsigned int InterruptRequest::id () const
+{
+    return intrptReqId_;
+}

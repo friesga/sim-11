@@ -3,31 +3,38 @@
 #include <SDL_image.h>
 
 using std::make_unique;
+using std::move;
 
-SDLIndicator::SDLIndicator (string indicatorOffImage, string indicatorOnImage,
-    unique_ptr<SDLRenderer> &sdlRenderer, State showIndicator, 
-    SDL_Texture* targetTexture, Frame<int> frame)
-        :
-    showIndicator_ {showIndicator}
-{
-    indicatorOffTexture_ = make_unique<SDLTexture> (indicatorOffImage,
-        sdlRenderer->getSDL_Renderer (), targetTexture, frame);
-    indicatorOnTexture_ = make_unique<SDLTexture> (indicatorOnImage, 
-        sdlRenderer->getSDL_Renderer (), targetTexture, frame);
-}
+SDLIndicator::SDLIndicator (unique_ptr<SDLTile> indicatorOffTile,
+    unique_ptr<SDLTile> indicatorOnTile, State showIndicator)
+    :
+    showIndicator_ {showIndicator},
+    indicatorOffTile_ {move (indicatorOffTile)},
+    indicatorOnTile_ {move (indicatorOnTile)}
+{}
 
 SDLIndicator::~SDLIndicator ()
 {}
 
+Indicator::State SDLIndicator::indicatorState () const
+{
+    return showIndicator_;
+}
+
 void SDLIndicator::render ()
 {
     if (showIndicator_ == Indicator::State::On)
-        indicatorOnTexture_->render ();
+        indicatorOnTile_->render ();
     else
-        indicatorOffTexture_->render ();
+        indicatorOffTile_->render ();
 }
 
 void SDLIndicator::show (Indicator::State showIndicator)
 {
     showIndicator_ = showIndicator;
+}
+
+bool SDLIndicator::isWithinBounds (Position position, float margin) const
+{
+    return indicatorOnTile_->isWithinBounds (position, margin);
 }

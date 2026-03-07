@@ -12,7 +12,6 @@
 #include <memory>
 
 using std::array;
-using std::shared_ptr;
 
 // The KT24 in principle contains two devices, the Unibus Map logic and a
 // M9312 compatible device. This class implements the Unibus Map logic.
@@ -21,7 +20,7 @@ class UnibusMapLogic : public UnibusMap
 {
 public:
 	UnibusMapLogic (Bus* bus);
-	UnibusMapLogic (Bus* bus, shared_ptr<KT24Config> kt24Config);
+	UnibusMapLogic (Bus* bus, const KT24Config& kt24Config);
 
     // Functions required for the BusDevice interface
 	CondData<u16> read (BusAddress address);

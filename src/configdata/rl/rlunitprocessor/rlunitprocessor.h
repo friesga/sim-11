@@ -4,27 +4,23 @@
 #include "configdata/sectionprocessor/unitconfigprocessor.h"
 #include "configdata/rl/rlunitconfig/rlunitconfig.h"
 
-#include <memory>
 #include <map>
 #include <string>
 
-using std::unique_ptr;
-using std::shared_ptr;
 using std::map;
 using std::string;
 
 class RLUnitProcessor : public UnitConfigProcessor
 {
-	unique_ptr<RLUnitConfig> rlUnitConfigPtr {nullptr};
+	RLUnitConfig rlUnitConfig {};
 
     // Define process as a pointer to a BDV11Processor member function
 	// with a iniparser::Value argument and returning void.
-
 	typedef void (RLUnitProcessor::*Process)(iniparser::Value);
 	
 	map<string, Process> valueProcessors =
 	{
-		{"type", &RLUnitProcessor::processType},
+		{"unit", &RLUnitProcessor::processUnitNumber},
 		{"filename", &RLUnitProcessor::processFileName},
 		{"newfile", &RLUnitProcessor::processNewFile},
 		{"write-protect", &RLUnitProcessor::processWriteProtect},
@@ -36,6 +32,7 @@ class RLUnitProcessor : public UnitConfigProcessor
     void processValue (iniparser::Section::ValueIterator valueIterator);
 	void checkConsistency ();
 	void processSubsection (iniparser::Section *subSection);
+	void processUnitNumber (iniparser::Value value);
 	void processType (iniparser::Value value);
 	void processFileName (iniparser::Value value);
 	void processNewFile (iniparser::Value value);
@@ -45,8 +42,8 @@ class RLUnitProcessor : public UnitConfigProcessor
 	void processSpinUpTime (iniparser::Value value);
 
 public:
-	RLUnitProcessor (size_t unitNumber);
-	shared_ptr<RLUnitConfig> getConfig ();
+	RLUnitProcessor (iniparser::Section* subSection);
+	RLUnitConfig getConfig ();
 };
 
 

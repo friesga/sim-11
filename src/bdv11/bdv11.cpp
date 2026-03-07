@@ -11,11 +11,10 @@ using namespace std;
 using namespace std::chrono;
 using std::bind;
 using std::placeholders::_1;
-using std::shared_ptr;
 
 BDV11::BDV11 (Bus *bus)
 	:
-	PDP11Peripheral (bus),
+	bus_ {bus},
 	pcr {0},
 	scratch {0},
 	option {0},
@@ -31,7 +30,7 @@ BDV11::BDV11 (Bus *bus)
 }
 
 
-BDV11::BDV11 (Bus *bus, shared_ptr<BDV11Config> bdv11Config)
+BDV11::BDV11 (Bus *bus, const BDV11Config& bdv11Config)
 	:
 	BDV11 (bus)
 {
@@ -47,30 +46,30 @@ BDV11::~BDV11 ()
 	ltcThread_.join();
 }
 
-u16 BDV11::switchRegisterProgramSelection (shared_ptr<BDV11Config> bdv11Config)
+u16 BDV11::switchRegisterProgramSelection (const BDV11Config& bdv11Config)
 {
 	u16 switchRegister {0};
 
-	if (bdv11Config->cpuTests)
+	if (bdv11Config.cpuTests)
 		switchRegister |= BDV11_CPU_TEST;
-	if (bdv11Config->memoryTests)
+	if (bdv11Config.memoryTests)
 		switchRegister |= BDV11_MEM_TEST;
-	if (bdv11Config->decnetBoot)
+	if (bdv11Config.decnetBoot)
 		switchRegister |= BDV11_DECNET;
-	if (bdv11Config->consoleDialog)
+	if (bdv11Config.consoleDialog)
 		switchRegister |= BDV11_DIALOG;
 
 	return switchRegister;
 }
 
-u16 BDV11::switchRegisterBootDevice (shared_ptr<BDV11Config> bdv11Config)
+u16 BDV11::switchRegisterBootDevice (const BDV11Config& bdv11Config)
 {
-	return bootDevices.find (bdv11Config->bootDevice)->second;
+	return bootDevices.find (bdv11Config.bootDevice)->second;
 }
 
-BDV11::ROMimage* BDV11::romToUse (shared_ptr<BDV11Config> bdv11Config)
+BDV11::ROMimage* BDV11::romToUse (const BDV11Config& bdv11Config)
 {
-	return &availableROMs.find (bdv11Config->bootROM)->second;
+	return &availableROMs.find (bdv11Config.bootROM)->second;
 }
 
 // A block of 256 LSI-11 bus addresses is reserved for use in addressing ROM
@@ -253,11 +252,22 @@ void BDV11::writeLKS (u16 value)
 	ltc = value & LKS_IE;
 }
 
-// As the BDV11 will only be accessed by means of unmapped (16-bit) addresses
-// the given bus address can be compared directly with the BDV11's device
-// addresses.
+// A block of 256 LSI-11 bus addresses is reserved for use in addressing
+// ROM locations on the BDV11 module. This block resides in the upper 4K
+// address bank (28K-32K), which is normally used for peripheral-device
+// addressing, and consists of byte addresses 173000-173776 (512 byte
+// addresses correspond to 256 word addresses in the LSI-11 addressing
+// scheme). (EK-BDV-TM001, 
+//
+// This means that all access to the BDV11 contents is via the registers
+// in the I/O page. If an address is outside of the I/O page the BDV11
+// can't be responsible for it.
+//
 bool BDV11::responsible (BusAddress busAddress)
 {
+	if (!busAddress.isInIOpage ())
+        return false;
+
 	// The BDV11 registers are word or byte addressable
 	switch (busAddress.registerAddress () & 0177776)
 	{
@@ -313,7 +323,7 @@ void BDV11::reset ()
 	ltc = 0;
 
 	// Clear possibly pending interrupts
-	bus_->clearInterrupt (TrapPriority::BR6, 9, 0);
+	bus_->clearInterrupt (InterruptPriority::BR6, 9, 0);
 
 	memoryDump (pcr, 0);
 	memoryDump (pcr, 1);
@@ -328,8 +338,15 @@ void BDV11::reset ()
 // that in the next clock tick pending interrupts are to be cleared. This
 // behaviour isn't documented but can be deduced from diagnostics JKDBD0
 // test 626 and JKDIB0 test 50.
+// 
+// This behaviour also depends on the fact that the interrupt request queue
+// can contain just one request with the same priority, bus order and function
+// order. If multiple requests with the same parameters are allowed (by using
+// std::multiset in the InterruptRequestQueue implementation) this function
+// must check that no interrupt is already pending before requesting a new
+// interrupt.
 //
-void BDV11::tick()
+void BDV11::tick ()
 {
 	AlarmClock alarmClock {};
 	SimulatorClock::time_point nextWakeup {SimulatorClock::now()};
@@ -339,10 +356,10 @@ void BDV11::tick()
 	{
 		// Check the line time clock (LTC) is enabled
 		if (ltc & LKS_IE)
-			bus_->setInterrupt (TrapPriority::BR6, 9, 0, 0100);
+			bus_->requestInterrupt (InterruptPriority::BR6, 9, 0, 0100);
 		else
 			// Clear possibly pending interrupts
-			bus_->clearInterrupt (TrapPriority::BR6, 9, 0);
+			bus_->clearInterrupt (InterruptPriority::BR6, 9, 0);
 	
 		nextWakeup += cycleTime;
 		alarmClock.sleepUntil (nextWakeup);

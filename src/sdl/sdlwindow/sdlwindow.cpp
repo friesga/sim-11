@@ -1,6 +1,8 @@
 #include "sdlwindow.h"
-#include "../sdlpanel/sdlpanel.h"
-#include "../sdlevent/sdlevent.h"
+#include "sdl/sdlpanel/sdlpanel.h"
+#include "sdl/filepanelbuilder/filepanelbuilder.h"
+#include "sdl/datapanelbuilder/datapanelbuilder.h"
+#include "sdl/sdlevent/sdlevent.h"
 #include "rackunit.h"
 
 #include <SDL_image.h>
@@ -41,9 +43,7 @@ SDLWindow::SDLWindow (char const *title, Frame<int> frame,
     sdlRenderer_->setDrawColor (0, 0, 0, 0);
 
     // ToDo: Make target texture large enough to be able to zoom into it
-    targetTexture_ = SDL_CreateTexture (sdlRenderer_->getSDL_Renderer (),
-        SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_TARGET,
-        textureWidth_, textureHeight_);
+    targetTexture_ = sdlRenderer_->createTexture (textureWidth_, textureHeight_);
 
     if (targetTexture_ == NULL)
         throw runtime_error ("Target texture could not be created. SDL error: " +
@@ -60,7 +60,7 @@ void SDLWindow::show ()
     SDL_ShowWindow (sdlWindow_);
 }
 
-Panel *SDLWindow::createPanel (shared_ptr<Cabinet::Position> cabinetPosition,
+Panel *SDLWindow::createPanel (Cabinet::Position cabinetPosition,
     RackUnit unitHeight)
 {
     // (Try to) add the panel to the cabinet to keep track of the occupied
@@ -68,9 +68,38 @@ Panel *SDLWindow::createPanel (shared_ptr<Cabinet::Position> cabinetPosition,
     if (!h9642Cabinet.addUnit (cabinetPosition, unitHeight))
         throw invalid_argument ("Unit position already occupied. Can't add panel to cabinet");
 
-    panels_.push_back (make_unique<SDLPanel> (sdlRenderer_, targetTexture_,
+    panels_.push_back (make_unique<SDLPanel> (sdlRenderer_, *targetTexture_,
         cabinetPosition, unitHeight));
     return panels_.back ().get ();
+}
+
+unique_ptr<PanelBuilder> SDLWindow::createFilePanelBuilder (Cabinet::Position cabinetPosition,
+    RackUnit unitHeight)
+{
+    // (Try to) add the panel to the cabinet to keep track of the occupied
+    // panel positions.
+    if (!h9642Cabinet.addUnit (cabinetPosition, unitHeight))
+        throw invalid_argument ("Unit position already occupied. Can't add panel to cabinet");
+
+    return make_unique<FilePanelBuilder> (sdlRenderer_, *targetTexture_,
+        cabinetPosition, unitHeight);
+}
+
+unique_ptr<PanelBuilder> SDLWindow::createDataPanelBuilder (ImageContainer& imageContainer,
+    Cabinet::Position cabinetPosition, RackUnit unitHeight)
+{
+    // (Try to) add the panel to the cabinet to keep track of the occupied
+    // panel positions.
+    if (!h9642Cabinet.addUnit (cabinetPosition, unitHeight))
+        throw invalid_argument ("Unit position already occupied. Can't add panel to cabinet");
+
+    return make_unique<DataPanelBuilder> (imageContainer, sdlRenderer_,
+        *targetTexture_, cabinetPosition, unitHeight);
+}
+
+void SDLWindow::addPanel (unique_ptr<Panel> panel)
+{
+    panels_.push_back (move (panel));
 }
 
 void SDLWindow::render ()
@@ -80,12 +109,12 @@ void SDLWindow::render ()
         sdlPanel->render ();
 
     // Copy the target texture to the window frame buffer
-    sdlRenderer_->copy (targetTexture_);
+    sdlRenderer_->copy (*targetTexture_);
 
     if (showLoupe_)
         drawLoupe ();
     else
-        SDL_SetTextureColorMod (targetTexture_, 255, 255, 255);
+        targetTexture_->setColorModulation (255, 255, 255);
 
     sdlRenderer_->update ();
 }
@@ -96,15 +125,13 @@ void SDLWindow::drawLoupe ()
     // The source rectangle is related to a position in the texture
     // while the destination rectangle is related to a postion in
     // the window.
-    RenderCopyCircle (sdlRenderer_->getSDL_Renderer (), targetTexture_,
+    sdlRenderer_->copyCircle (*targetTexture_,
         texturePosition_, loupeRadius_ / 2,
         windowPosition_, loupeRadius_);
 
     // Draw loupe outline
-    SDL_SetRenderDrawColor (sdlRenderer_->getSDL_Renderer (),
-        255, 0, 0, 255);
-    RenderDrawCircle (sdlRenderer_->getSDL_Renderer (), windowPosition_,
-        loupeRadius_);
+    sdlRenderer_->setDrawColor (255, 0, 0, 255);
+    sdlRenderer_->drawCircle (windowPosition_, loupeRadius_);
 }
 
 bool SDLWindow::handleEvents ()
@@ -134,7 +161,7 @@ bool SDLWindow::handleEvents ()
                 break;
 
             case InputEvent::Type::MouseMotion:
-                showLoupe_ = any_of (panels_, [&] (unique_ptr<SDLPanel>& p)
+                showLoupe_ = any_of (panels_, [&] (unique_ptr<Panel>& p)
                     { return p->isOverButton (texturePosition_); });
                 break;
 

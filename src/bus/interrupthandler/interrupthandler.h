@@ -4,14 +4,18 @@
 #include "bus/include/businterrupts.h"
 #include "threadsafecontainers/threadsafeprioqueue.h"
 
+#include <functional>
+
+using std::function;
+
 class InterruptHandler
 {
 public:
-	void setInterrupt (TrapPriority priority, unsigned char busOrder,
-		u8 functionOrder, unsigned char vector);
-	bool containsInterrupt (TrapPriority priority, unsigned char busOrder,
+	void setInterrupt (InterruptPriority priority, unsigned char busOrder,
+		u8 functionOrder, u16 vector, function<void ()> requestGrant = 0);
+	bool containsInterrupt (InterruptPriority priority, unsigned char busOrder,
 		u8 functionOrder);
-	void clearInterrupt (TrapPriority priority, unsigned char busOrder,
+	void clearInterrupt (InterruptPriority priority, unsigned char busOrder,
 		u8 functionOrder);
 	void clearInterrupts ();
 	bool intrptReqAvailable ();
@@ -19,8 +23,12 @@ public:
 	bool getIntrptReq (InterruptRequest& ir);
 
 private:
-	// This queue keeps all interrupt requests, ordered in interrupt priority
-	using IntrptReqQueue = ThreadSafePrioQueue<InterruptRequest>;
+	// The IntrptReqQueue_ keeps track of all interrupt requests, ordered in
+	// interrupt priority. The queue needs a multiset as the underlying type
+	// as the queue must be able to contain multiple interrupt requests coming
+	// from the same device and thus having the same contents.
+	using IntrptReqQueue = ThreadSafePrioQueue<InterruptRequest,
+		std::set<InterruptRequest>>;
 	IntrptReqQueue intrptReqQueue_;
 
 	void pushInterruptRequest (InterruptRequest interruptReq);

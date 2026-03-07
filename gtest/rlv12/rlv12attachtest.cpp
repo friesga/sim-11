@@ -1,12 +1,9 @@
 #include "pdp11/pdp11.h"
 #include "rlv12/rlv12.h"
 #include "cmdlineoptions/cmdlineoptions.h"
-#include "unit/attachflags.h"
+#include "diskdrive/attachflags.h"
 
 #include <gtest/gtest.h>
-#include <memory>
-
-using std::make_shared;
 
 // Attach file to unit tests.
 // 
@@ -45,7 +42,7 @@ TEST_F (RLV12AttachTest, attachReturnsOpenError)
         .readOnly = false
     });
  
-    ASSERT_EQ (rlv12Device->unit (0)->init (make_shared<RLUnitConfig> (rlUnitConfig)), 
+    ASSERT_EQ (rlv12Device->unit (0)->init (RLUnitConfig {rlUnitConfig}),
         StatusCode::OpenError);
 }
 
@@ -63,7 +60,7 @@ TEST_F (RLV12AttachTest, attachCreatesNewFile)
     remove (fileName);
 
     // This creates a file in the default directory (out\build\<config>)
-    ASSERT_EQ (rlv12Device->unit (0)->init (make_shared<RLUnitConfig> (attachCreatesNewFileConfig)),
+    ASSERT_EQ (rlv12Device->unit (0)->init (RLUnitConfig {attachCreatesNewFileConfig}),
         StatusCode::Success);
 }
 
@@ -77,7 +74,7 @@ TEST_F (RLV12AttachTest, attachOpensReadOnly)
         .readOnly = true
     });
 
-    ASSERT_EQ (rlv12Device->unit (0)->init (make_shared<RLUnitConfig> (attachOpensReadOnlyConfig)), 
+    ASSERT_EQ (rlv12Device->unit (0)->init (RLUnitConfig {attachOpensReadOnlyConfig}),
         StatusCode::Success);
 }
 
@@ -92,7 +89,7 @@ TEST_F (RLV12AttachTest, existingFileIsNotOverwritten)
         .newFile = true
     });
 
-    ASSERT_EQ (rlv12Device->unit (0)->init (make_shared<RLUnitConfig> (existingFileIsNotOverwrittenConfig)), 
+    ASSERT_EQ (rlv12Device->unit (0)->init (RLUnitConfig {existingFileIsNotOverwrittenConfig}),
         StatusCode::ArgumentError);
 }
 
@@ -105,6 +102,6 @@ TEST_F (RLV12AttachTest, existingFileIsOverwritten)
         .overwrite = true
     });
 
-    ASSERT_EQ (rlv12Device->unit (0)->init (make_shared<RLUnitConfig> (existingFileIsOverwrittenConfig)),
+    ASSERT_EQ (rlv12Device->unit (0)->init (RLUnitConfig {existingFileIsOverwrittenConfig}),
         StatusCode::Success);
 }

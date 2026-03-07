@@ -3,10 +3,6 @@
 #include "configdata/m9312/m9312config/m9312config.h"
 
 #include <gtest/gtest.h>
-#include <memory>
-
-using std::shared_ptr;
-using std::make_shared;
 
 // Verify the M9312 is responsible for the powerfail vector when battery
 // backup is not available and the first read's after power-up are for
@@ -23,10 +19,8 @@ TEST (M9312PowerfailVectorTest, noBatteryBackup)
         true
     };
 
-    shared_ptr<M9312Config> m9312ConfigPtr = make_shared<M9312Config> (config);
-
     Qbus bus;
-    M9312 m9312 (&bus, m9312ConfigPtr);
+    M9312 m9312 (&bus, M9312Config {config});
 
     bus.BatteryPower ().set (false);
 
@@ -47,10 +41,8 @@ TEST (M9312PowerfailVectorTest, batteryBackup)
         true
     };
 
-    shared_ptr<M9312Config> m9312ConfigPtr = make_shared<M9312Config> (config);
-
     Qbus bus;
-    M9312 m9312 (&bus, m9312ConfigPtr);
+    M9312 m9312 (&bus, M9312Config {config});
 
     bus.BatteryPower ().set (true);
 
@@ -72,10 +64,8 @@ TEST (M9312PowerfailVectorTest, notFirstRead)
         true
     };
 
-    shared_ptr<M9312Config> m9312ConfigPtr = make_shared<M9312Config> (config);
-
     Qbus bus;
-    M9312 m9312 (&bus, m9312ConfigPtr);
+    M9312 m9312 (&bus, M9312Config {config});
 
     bus.BatteryPower ().set (false);
 
@@ -96,10 +86,8 @@ TEST (M9312PowerfailVectorTest, afterPowerUp)
         true
     };
 
-    shared_ptr<M9312Config> m9312ConfigPtr = make_shared<M9312Config> (config);
-
     Qbus bus;
-    M9312 m9312 (&bus, m9312ConfigPtr);
+    M9312 m9312 (&bus, M9312Config {config});
 
     bus.BatteryPower ().set (false);
 
@@ -131,10 +119,8 @@ TEST (M9312PowerfailVectorTest, powerUpBootEnableFalse)
         false
     };
 
-    shared_ptr<M9312Config> m9312ConfigPtr = make_shared<M9312Config> (config);
-
     Qbus bus;
-    M9312 m9312 (&bus, m9312ConfigPtr);
+    M9312 m9312 (&bus, M9312Config {config});
 
     bus.BatteryPower ().set (true);
 

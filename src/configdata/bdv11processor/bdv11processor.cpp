@@ -7,11 +7,6 @@ using std::move;
 using std::invalid_argument;
 using std::out_of_range;
 
-BDV11Processor::BDV11Processor ()
-{
-	bdv11ConfigPtr = make_unique<BDV11Config> ();
-}
-
 void BDV11Processor::processValue (iniparser::Section::ValueIterator valueIterator)
 {
     // Throw exception for non-existing key?
@@ -23,7 +18,7 @@ void BDV11Processor::processBootROM (iniparser::Value value)
 {
 	try
 	{
-		bdv11ConfigPtr->bootROM = bootROMSpec.at (value.asString ());
+		bdv11Config.bootROM = bootROMSpec.at (value.asString ());
 	}
 	catch (out_of_range const &)
 	{
@@ -34,29 +29,29 @@ void BDV11Processor::processBootROM (iniparser::Value value)
 
 void BDV11Processor::processCpuTests (iniparser::Value value)
 {
-	bdv11ConfigPtr->cpuTests = value.asBool();
+	bdv11Config.cpuTests = value.asBool();
 }
 
 void BDV11Processor::processMemoryTests (iniparser::Value value)
 {
-	bdv11ConfigPtr->memoryTests = value.asBool();
+	bdv11Config.memoryTests = value.asBool();
 }
 
 void BDV11Processor::processDecnetBoot (iniparser::Value value)
 {
-	bdv11ConfigPtr->decnetBoot = value.asBool();
+	bdv11Config.decnetBoot = value.asBool();
 }
 
 void BDV11Processor::processConsoleDialog (iniparser::Value value)
 {
-	bdv11ConfigPtr->consoleDialog = value.asBool();
+	bdv11Config.consoleDialog = value.asBool();
 }
 
 void BDV11Processor::processBootDevice (iniparser::Value value)
 {
 	try
 	{
-		bdv11ConfigPtr->bootDevice = bootDeviceSpec.at (value.asString ());
+		bdv11Config.bootDevice = bootDeviceSpec.at (value.asString ());
 	}
 	catch (out_of_range const &)
 	{
@@ -69,8 +64,8 @@ void BDV11Processor::processBootDevice (iniparser::Value value)
 // this is a void.
 void BDV11Processor::checkConsistency ()
 {
-	if (bdv11ConfigPtr->bootDevice == BDV11Config::BootDevice::TU58 &&
-		bdv11ConfigPtr->bootROM == BDV11Config::BootROM::BDV11)
+	if (bdv11Config.bootDevice == BDV11Config::BootDevice::TU58 &&
+		bdv11Config.bootROM == BDV11Config::BootROM::BDV11)
 		throw invalid_argument  {"TU58 as boot device is not supported in BDV11 ROMs"};
 }
 
@@ -79,5 +74,5 @@ void BDV11Processor::processSubsection (iniparser::Section *subSection)
 
 DeviceConfig BDV11Processor::getConfig ()
 {
-	return move (bdv11ConfigPtr);
+	return bdv11Config;
 }

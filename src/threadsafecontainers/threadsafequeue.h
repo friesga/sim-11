@@ -10,6 +10,7 @@ class ThreadSafeQueue : public ThreadSafeContainer<T, std::queue>
 {
 public:
     T const &first();
+    bool empty () const;
 };
 
 // References to base class members is via the this pointer to make
@@ -19,6 +20,12 @@ T const &ThreadSafeQueue<T>::first()
 {
     T const &elem = this->queue_.front();
     return elem;
+}
+
+template <typename T>
+bool ThreadSafeQueue<T>::empty () const
+{
+    return this->queue_.empty ();
 }
 
 #endif // !_THREADSAFEQUEUE_H_

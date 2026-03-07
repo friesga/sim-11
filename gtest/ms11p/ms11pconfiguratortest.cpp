@@ -47,13 +47,12 @@ TEST (MS11PConfiguratorTest, startingAddressAccepted)
 
 	// The only device type in this testset is the MS11-P so if that's
 	// not correct the following tests will fail too.
-	ASSERT_TRUE (holds_alternative<shared_ptr<MS11PConfig>> (systemConfig[0]));
+	ASSERT_TRUE (holds_alternative<MS11PConfig> (systemConfig[0]));
 
 	// The device's type is MS11-P so the configuration is a MS11PConfig object
-	auto ms11pConfig =
-		get<shared_ptr<MS11PConfig>> (systemConfig[0]);
+	auto ms11pConfig = get<MS11PConfig> (systemConfig[0]);
 
-	EXPECT_EQ (ms11pConfig->startingAddress, 040000);
+	EXPECT_EQ (ms11pConfig.startingAddress, 040000);
 }
 
 // The maximum value of 32-bit unsigned integer is 4294967295.
@@ -156,19 +155,17 @@ TEST (MS11PConfiguratorTest, multipleMS11PSectionsAccepted)
 	ASSERT_EQ (systemConfig.size (), 4);
 
 	// The only device types in this testset should be the MS11-P's
-	ASSERT_TRUE (holds_alternative<shared_ptr<MS11PConfig>> (systemConfig[0]));
-	ASSERT_TRUE (holds_alternative<shared_ptr<MS11PConfig>> (systemConfig[1]));
+	ASSERT_TRUE (holds_alternative<MS11PConfig> (systemConfig[0]));
+	ASSERT_TRUE (holds_alternative<MS11PConfig> (systemConfig[1]));
 
-	auto ms11pConfig0 =
-		get<shared_ptr<MS11PConfig>> (systemConfig[0]);
-	auto ms11pConfig1 =
-		get<shared_ptr<MS11PConfig>> (systemConfig[1]);
+	auto ms11pConfig0 = get<MS11PConfig> (systemConfig[0]);
+	auto ms11pConfig1 = get<MS11PConfig> (systemConfig[1]);
 
 	// The first section should have starting address 0
-	EXPECT_EQ (ms11pConfig0->startingAddress, 0);
+	EXPECT_EQ (ms11pConfig0.startingAddress, 0);
 
 	// And the second section should have starting address 04000000
-	EXPECT_EQ (ms11pConfig1->startingAddress, 04000000);
+	EXPECT_EQ (ms11pConfig1.startingAddress, 04000000);
 }
 
 

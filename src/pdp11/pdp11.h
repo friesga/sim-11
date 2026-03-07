@@ -1,23 +1,27 @@
 #ifndef _PDP11_H_
 #define _PDP11_H_
 
-#include "kd/include/pdp11processor.h"
+#include "proc/kd/include/pdp11processor.h"
 #include "configdata/deviceconfig/deviceconfig.h"
 #include "configdata/systemconfig/systemconfig.h"
 #include "memorydevice.h"
-#include "ba11_n/ba11_n.h"
-#include "ba11_l/ba11_l.h"
+#include "ba11/ba11_n/ba11_n.h"
+#include "ba11/ba11_l/ba11_l.h"
 #include "rxv21/rxv21.h"
+#include "rk/rk11d/rk11d.h"
 #include "rlv12/rlv12.h"
 #include "bdv11/bdv11.h"
+#include "dl11/dl11/dl11.h"
 #include "dl11/dlv11j/dlv11j.h"
 #include "msv11d/msv11d.h"
 #include "ms11p/ms11p.h"
-#include "kd/kd11_na/kd11_na.h"
-#include "kd/kdf11/kdf11_a/kdf11_a.h"
-#include "kd/kdf11/kdf11_b/kdf11_b.h"
-#include "kd/kdf11/kdf11_u/kdf11_u.h"
+#include "proc/ka11/ka11.h"
+#include "proc/kd/kd11_na/kd11_na.h"
+#include "proc/kd/kdf11/kdf11_a/kdf11_a.h"
+#include "proc/kd/kdf11/kdf11_b/kdf11_b.h"
+#include "proc/kd/kdf11/kdf11_u/kdf11_u.h"
 #include "kt24/kt24.h"
+#include "m792/m792.h"
 #include "m9312/m9312.h"
 #include "bus/include/bus.h"
 #include "console/console.h"
@@ -27,7 +31,6 @@
 #include <memory>
 #include <vector>
 
-using std::shared_ptr;
 using std::unique_ptr;
 using std::vector;
 

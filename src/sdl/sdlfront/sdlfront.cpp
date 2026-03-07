@@ -4,20 +4,16 @@
 
 using std::make_unique;
 
-SDLFront::SDLFront (string imageFile, unique_ptr<SDLRenderer> &sdlRenderer,
-    SDL_Texture* targetTexture, Frame<int> frame)
+SDLFront::SDLFront (unique_ptr<SDLTile> frontTile)
     : 
-    sdlRenderer_ {sdlRenderer}
-{
-    sdlTtexture_ = make_unique<SDLTexture> (imageFile,
-        sdlRenderer->getSDL_Renderer (), targetTexture, frame);
-}
+    frontTile_ (move (frontTile))
+{}
 
 SDLFront::~SDLFront ()
 {}
 
 void SDLFront::render ()
 {
-    sdlTtexture_->render ();
+    frontTile_->render ();
 }
 

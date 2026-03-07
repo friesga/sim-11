@@ -46,7 +46,7 @@ void KDF11_BProcessor::processSubsection (iniparser::Section *subSection)
 void KDF11_BProcessor::processPowerUpMode (iniparser::Value value)
 {
 	KD11Processor kd11Procesor;
-	kdf11_bConfigPtr->powerUpMode = 
+	kdf11_bConfig.powerUpMode = 
 		kd11Procesor.processPowerUpMode (value);
 }
 
@@ -56,7 +56,7 @@ void KDF11_BProcessor::processSLUSubsection (iniparser::Section *subSection)
 	sluProcessor.processSection (subSection);
 
 	// Add the configuration to the KDF11-B configuration
-	kdf11_bConfigPtr->sluConfig = sluProcessor.getConfig ();
+	kdf11_bConfig.sluConfig = sluProcessor.getConfig ();
 }
 
 void KDF11_BProcessor::processBDV11Subsection (iniparser::Section *subSection)
@@ -64,12 +64,11 @@ void KDF11_BProcessor::processBDV11Subsection (iniparser::Section *subSection)
 	BDV11Processor bdv11Processor {};
 	bdv11Processor.processSection (subSection);
 
-	// Add the unit configuration to the Rl device configuration
-	kdf11_bConfigPtr->bdv11Config = 
-		get<shared_ptr<BDV11Config>> (bdv11Processor.getConfig ());
+	// Add the unit configuration to the KDF11-B device configuration
+	kdf11_bConfig.bdv11Config = get<BDV11Config> (bdv11Processor.getConfig ());
 }
 
 DeviceConfig KDF11_BProcessor::getConfig ()
 {
-	return move (kdf11_bConfigPtr);
+	return kdf11_bConfig;
 }

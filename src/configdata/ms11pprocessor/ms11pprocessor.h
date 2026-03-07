@@ -4,18 +4,15 @@
 #include "../sectionprocessor/deviceconfigprocessor.h"
 #include "../ms11pconfig/ms11pconfig.h"
 
-#include <memory>
 #include <map>
 #include <string>
 
-using std::unique_ptr;
-using std::shared_ptr;
 using std::map;
 using std::string;
 
 class MS11PProcessor : public DeviceConfigProcessor
 {
-	unique_ptr<MS11PConfig> ms11pConfigPtr {nullptr};
+	MS11PConfig ms11pConfig {};
 
 	typedef void (MS11PProcessor::* Process)(iniparser::Value);
 
@@ -40,7 +37,6 @@ class MS11PProcessor : public DeviceConfigProcessor
 	void processCsrAddress (iniparser::Value value);
 
 public:
-	MS11PProcessor ();
 	DeviceConfig getConfig ();
 };
 

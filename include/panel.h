@@ -3,6 +3,7 @@
 
 #include "cabinet/cabinet.h"
 #include "rackunit.h"
+#include "imagedata/include/imagecontainer.h"
 
 #include <string>
 #include <memory>
@@ -87,8 +88,10 @@ public:
         On = 1
     };
 
+    virtual State indicatorState () const = 0;
     virtual void show (State showFigure) = 0;
     virtual void render () = 0;
+    virtual bool isWithinBounds (Position position, float margin) const = 0;
 };
 
 class Button
@@ -100,7 +103,34 @@ public:
         Up = 1
     };
 
+    enum class MomentaryUpTwoPositionsState : size_t
+    {
+        Down = 0,
+        Up = 1
+    };
+
+    enum class MomentaryDownTwoPositionsState : size_t
+    {
+        Up = 0,
+        Down = 1
+    };
+
+    enum class CenteredTwoPositionsState : size_t
+    {
+        Down = 0,
+        Up = 1
+    };
+
     enum class ThreePositionsState : size_t
+    {
+        Left = 0,
+        Center = 1,
+        Right = 2
+    };
+
+    // Definition of a three position switch the last position of which
+    // is  momentary.
+    enum class MomentaryThreePositionsState : size_t
     {
         Left = 0,
         Center = 1,
@@ -123,13 +153,122 @@ public:
         string buttonDownIndicatorOn;
     };
 
-    using State = variant<TwoPositionsState, ThreePositionsState, FourPositionsState>;
+    using State = variant<TwoPositionsState,
+        MomentaryUpTwoPositionsState, MomentaryDownTwoPositionsState,
+        CenteredTwoPositionsState,
+        ThreePositionsState, MomentaryThreePositionsState,
+        FourPositionsState>;
+
     using EventCallback = function<void(State)>;
     virtual void setState (State newState) = 0;
     virtual State currentState () const = 0;
     virtual void render () = 0;
     virtual void handleEvent (InputEvent const* event) = 0;
     virtual bool isWithinBounds (Position position, float margin) const = 0;
+    virtual void setSwitchClickedCallback (EventCallback callback) = 0;
+};
+
+// Definition of type traits for the different types of switches. For every
+// Button enum type to be handled by SDLMultiPositionSwitch, these type traits
+// have to be defined. They configure the behaviour of the switch. 
+// 
+// The first and last enum values are used to switch the Button to the
+// correct position.
+// 
+// The isLatching trait indicates whether the the last position of the switch
+// is latching or momentary.
+//
+// The orientation trait indicates whether the switch is oriented horizontally,
+// vertically or is centered. This is used to determine whether a click on the
+// left or right side (horizontal), the upper or lower side (vertical) or the
+// center of the switch updates the switch position.
+//
+enum class Orientation
+{
+    Horizontal,
+    Vertical,
+    Centered
+};
+
+template <typename T>
+struct ButtonTrait;
+
+template <>
+struct ButtonTrait<Button::TwoPositionsState>
+{
+    static constexpr Button::TwoPositionsState first =
+        Button::TwoPositionsState::Down;
+    static constexpr Button::TwoPositionsState last =
+        Button::TwoPositionsState::Up;
+    static const bool isLatching = true;
+    static const Orientation orientation = Orientation::Vertical;
+};
+
+template <>
+struct ButtonTrait<Button::MomentaryUpTwoPositionsState>
+{
+    static constexpr Button::MomentaryUpTwoPositionsState first =
+        Button::MomentaryUpTwoPositionsState::Down;
+    static constexpr Button::MomentaryUpTwoPositionsState last =
+        Button::MomentaryUpTwoPositionsState::Up;
+    static const bool isLatching = false;
+    static const Orientation orientation = Orientation::Vertical;
+};
+
+template <>
+struct ButtonTrait<Button::MomentaryDownTwoPositionsState>
+{
+    static constexpr Button::MomentaryDownTwoPositionsState first =
+        Button::MomentaryDownTwoPositionsState::Up;
+    static constexpr Button::MomentaryDownTwoPositionsState last =
+        Button::MomentaryDownTwoPositionsState::Down;
+    static const bool isLatching = false;
+    static const Orientation orientation = Orientation::Vertical;
+};
+
+template <>
+struct ButtonTrait<Button::CenteredTwoPositionsState>
+{
+    static constexpr Button::CenteredTwoPositionsState first =
+        Button::CenteredTwoPositionsState::Down;
+    static constexpr Button::CenteredTwoPositionsState last =
+        Button::CenteredTwoPositionsState::Up;
+    static const bool isLatching = true;
+    static const Orientation orientation = Orientation::Centered;
+};
+
+template <>
+struct ButtonTrait<Button::ThreePositionsState>
+{
+    static constexpr Button::ThreePositionsState first =
+        Button::ThreePositionsState::Left;
+    static constexpr Button::ThreePositionsState last =
+        Button::ThreePositionsState::Right;
+    static const bool isLatching = true;
+    static const Orientation orientation = Orientation::Horizontal;
+};
+
+template <>
+struct ButtonTrait<Button::MomentaryThreePositionsState>
+{
+    static constexpr Button::MomentaryThreePositionsState first =
+        Button::MomentaryThreePositionsState::Left;
+    static constexpr Button::MomentaryThreePositionsState last =
+        Button::MomentaryThreePositionsState::Right;
+    static const bool isLatching = false;
+    static const Orientation orientation = Orientation::Horizontal;
+};
+
+template <>
+struct ButtonTrait<Button::FourPositionsState>
+{
+    static constexpr Button::FourPositionsState first =
+        Button::FourPositionsState::P0;
+    static constexpr Button::FourPositionsState last =
+        Button::FourPositionsState::P3;
+    static const bool isLatching = true;
+    static const Orientation orientation = Orientation::Horizontal;
+
 };
 
 // An IndicatorButton is the combination of a button and an indicator. i.e.
@@ -143,42 +282,55 @@ public:
     virtual void setState (Button::State newState) = 0;
     virtual void handleEvent (InputEvent const* event) = 0;
     virtual bool isWithinBounds (Position position, float margin) const = 0;
+    virtual void setSwitchClickedCallback (EventCallback callback) = 0;
 
     // Additional functions defined in the Indicator interface
+    virtual Indicator::State indicatorState () const = 0;
     virtual void show (Indicator::State showFigure) = 0;
+};
+
+struct PanelComposition
+{
+    vector<unique_ptr<Front>> fronts_;
+    vector<unique_ptr<Indicator>> indicators_;
+    vector<unique_ptr<Button>> buttons_;
+    vector<unique_ptr<IndicatorButton>> indicatorButtons_;
 };
 
 class Panel
 {
 public:
+    virtual void render () = 0;
+    virtual void handleEvent (InputEvent const* event) = 0;
+    virtual bool isOverButton (Position position) = 0;
+};
+
+class PanelBuilder
+{
+public:
+    // The frame parameter is optional as it is not required for use with
+    // the DataPanelBuilder where the frame is determined from the image
+    // metadata in the image container.
+    //
     // A default value (0) may be specified for the width and height of
     // images. This indicates that the width and height of the image
     // will be used.
-    virtual void createFront (string imageFile, 
-        Frame<float> frame) = 0;
-    virtual Indicator *createIndicator (string indicatorOffImage,
+    //
+    virtual void createFront (string imageFile,
+        Frame<float> frame = Frame<float> (0, 0, 0, 0)) = 0;
+    virtual Indicator* createIndicator (string indicatorOffImage,
         string indicatorOnImage, Indicator::State showFigure,
-        Frame<float> frame) = 0;
-    virtual Button* createLatchingButton (string buttonDownImage, string buttonUpImage,
-        Button::TwoPositionsState initialState, Button::EventCallback buttonClicked,
-        Frame<float> frame) = 0;
-    virtual Button* createMomentaryButton (string buttonDownImage, string buttonUpImage,
-        Button::TwoPositionsState initialState, Button::EventCallback buttonClicked,
-        Frame<float> frame) = 0;
-    virtual IndicatorButton* createSDLIndicatorLatchingButton (Button::ImageNames const& imageNames,
+        Frame<float> frame = Frame<float> (0, 0, 0, 0)) = 0;
+    virtual IndicatorButton* createIndicatorLatchingButton (Button::ImageNames const& imageNames,
         Button::TwoPositionsState initialState,
         Button::EventCallback buttonClicked, Indicator::State showIndicator,
         Frame<float> frame) = 0;
-    virtual Button* createFourPositionSwitch (array<string, 4> positionImages,
-        Button::FourPositionsState initialState,
+    virtual Button* createMultiPositionSwitch (vector<string> positionImages,
+        Button::State initialState,
         Button::EventCallback switchClicked,
-        Frame<float> frame) = 0;
-    virtual Button* createThreePositionSwitch (array<string, 3> positionImages,
-        Button::ThreePositionsState initialState,
-        Button::EventCallback switchClicked,
-        Frame<float> frame) = 0;
-    virtual void render () = 0;
-    virtual void handleEvent (InputEvent const* event) = 0;
+        Frame<float> frame = Frame<float> (0, 0, 0, 0)) = 0;
+    virtual unique_ptr<Panel> getPanel () = 0;
+    virtual ~PanelBuilder () = default;
 };
 
 class Window
@@ -191,8 +343,13 @@ public:
     };
     
     virtual void show () = 0;
-    virtual Panel *createPanel (shared_ptr<Cabinet::Position> cabinetPosition,
+    virtual Panel *createPanel (Cabinet::Position cabinetPosition,
         RackUnit unitHeight) = 0;
+    virtual unique_ptr<PanelBuilder> createFilePanelBuilder (Cabinet::Position cabinetPosition,
+        RackUnit unitHeight) = 0;
+    virtual unique_ptr<PanelBuilder> createDataPanelBuilder (ImageContainer& imageContainer,
+        Cabinet::Position cabinetPosition, RackUnit unitHeight) = 0;
+    virtual void addPanel (unique_ptr<Panel> panel) = 0;
     virtual void render () = 0;
     virtual bool handleEvents () = 0;
 };

@@ -30,6 +30,145 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
+ * 
+ * File level functions:
+ * 
+ * - int load (std::istream& stream, bool unload_prev = false, 
+ *        const std::string& rpath = std::string())
+ *   Loads file from the given input stream, which must be properly opened and
+ *   prepared for reading. Set unload_prev to true for unloading any stuff
+ *   currently in memory before loading.
+ *   Set rpath to be used as relative path when searching for inclusions in files.
+ *   The function returns 1 if load succeeds, 0 if not. In case the load
+ *   was not succesful you can access extended information by calling
+ *   ParseResult().
+ * 
+ * - int load (const std::string& fname, bool unload_prev = true)
+ *   Load ini from file in system.
+ *   Set unload_prev to false for not unloading any stuff currently in memory
+ *   before loading.
+ * 
+ * - void save (std::ostream& stream)
+ *   Save ini-file to stream.
+ * 
+ * - int save (const std::string& fname)
+ *   Save ini-file to file.
+ * 
+ * - void save (std::ostream& stream, const Section* sect)
+ *   Save only one section to specifed stream.
+ * 
+ * - size_t sectionsSize ()
+ *   Returns number of sections in the file.
+ *
+ * - SectionIterator sectionsBegin ()
+ *    Returns iterator to the first section.
+ *
+ * - SectionIterator sectionsEnd ()
+ *    Returns iterator to the last section.
+ *
+ * - Value getValue (const std::string& name, const Value& def_val = Value())
+ *   Gets value with specified name from the file. 
+ * 
+ * - void setValue (const std::string& name, const Value& value, const std::string& comment)
+ *   Sets value with specified name in the file.
+ * 
+ * - void setArrayValue (const std::string& key, size_t pos, const Value& val)
+ *   Sets array Value to array.
+ * 
+ * - Section* getSection (const std::string& name)
+ *   Returns pointer to section with specified name. If section does not
+ *   exist creates it.
+ * 
+ * - Section* findSection (const std::string& name)
+ *   Finds an existing section by name. Returns NULL if section does not exist.
+ *       
+ * - void deleteSection (const std::string& name)
+ *   Deletes section with specified name.
+ * 
+ * - Section* findSubSection (const Section* sect, const std::string& name)
+ *   Finds the subsection of specified section with specified name. Returns NULL
+ *   if the subsection does not exist.
+ * 
+ * - Section* getSubSection (Section* sect, const std::string& name)
+ *   Gets the subsection of specified section with specified name. Creates the
+ *   section if it does not exist.
+ * 
+ * - Section* findParentSection (const Section* sect)
+ *   Finds the parent section of the specified section, Returns NULL if the
+ *   section has no parent.
+ * 
+ * - Section* getParentSection (const Section* sect)
+ *   Gets the parent section of the specified section. Creates the section if
+ *   needed.
+ * 
+ * - SectionVector findSubSections (const Section* sect)
+ *   Find subsections of the specified section.
+ * 
+ * - SectionVector getTopLevelSections ()
+ *   Gets the top-level sections (i.e. the sections that are not a child of
+ *    any other section).
+ *
+ * Section functions:
+ * 
+ * - std::string& fullName ()
+ *   Returns full section name (subsection name will contain '.',
+ *   separating subsection part.
+ * 
+ * - std::string name ()
+ *   Returns section name.
+ * 
+ * - std::string comment ()
+ *   Returns the comment associated with this section (written before the
+ *   line with the section, or after it.
+ * 
+ * - ValueIterator valuesBegin ()
+ *   Returns iterator to the first Value (key/value pair) in this section.
+ * 
+ * - ValueIterator valuesEnd ()
+ *   Returns iterator to the last Value (key/value pair) in this section.
+ * 
+ * - size_t valuesSize ()
+ *   Returns the number of values (key/value pairs) in this section.
+ * 
+ * - std::vector<std::string> getSectionKeys ()
+ *   Returns all keys in this section.
+ * 
+ * - Value getValue (const std::string& key, const Value& def_value = Value())
+ *   Returns value with specified key in this section.
+ * 
+ * - void setValue (const std::string& key, const Value& val, 
+ *       const std::string& comment = std::string())
+ *   Sets value for the specified key in this section.
+ * 
+ * - void setArrayValue (const std::string& key, size_t pos, const Value& val)
+ *   Set the value for the specified key to the given array.
+ * 
+ * - void removeValue (const std::string& key)
+ *   Remove value for the specified key.
+ * 
+ * - std::string getComment (const std::string& key)
+ *   Returns the comment associated with provided key.
+ * 
+ * - void setComment (const std::string& key, const std::string& comment)
+ *   Set comment for the specified key.
+ * 
+ * - void save (std::ostream& stream)
+ *   Save the section's contents to specified stream.
+ *
+ * Miscellaneous functions:
+ * 
+ * - void addCommentToStream (std::ostream& stream, const std::string& str)
+ *   Adds comment line to provided stream. For it to be not associated with 
+ *   anything you should add a newline after it.
+ * 
+ * - void addIncludeToStream (std::ostream& stream, const std::string& path)
+ *   Adds inclusion line to stream.
+ * 
+ * - void unload ()
+ *   Unloads all data currently in memory.
+ * 
+ * - PResult& lastResult ()
+ *   Returns the result of the last operation.
  */
 
 #ifndef _INIPARSER_H
@@ -148,6 +287,16 @@ namespace iniparser
         T out;
         ss << v;
         ss >> out;
+
+        // Check for conversion errors
+        if (ss.fail () || ss.bad ())
+            throw std::invalid_argument ("Invalid conversion of " + v);
+
+        // Check there are no additional characters after the value
+        std::string rest;
+        if (ss >> rest)
+            throw std::invalid_argument ("Additional characters after value " + v);
+
         return out;
     }
 
@@ -431,6 +580,8 @@ namespace iniparser
                 return false;
             return (_val.Data() < rgh._val.Data());
         }
+
+        bool isValid () const { return _val.isValid (); }
 
         // Template function to convert value to any type
         template<class T> T get() const { return string_to_t<T>(_val.DataObj());}
@@ -956,7 +1107,7 @@ namespace iniparser
             _entries.erase(it);
         }
 
-        // Get comment, associated with provided value
+        // Get comment, associated with provided key
         std::string getComment(const std::string& key) const
         {
             CommentMap::const_iterator it = _comments.find(key);

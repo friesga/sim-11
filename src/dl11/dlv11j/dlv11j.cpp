@@ -13,11 +13,11 @@ using std::make_unique;
 using std::ranges::any_of;
 
 // Construct a DLV11-J object with the given configuration
-DLV11J::DLV11J (Bus *bus, shared_ptr<DLV11JConfig> dlConfig)
+DLV11J::DLV11J (Bus *bus, const DLV11JConfig& dlConfig)
 	:
-	PDP11Peripheral (bus),
-	baseAddress_ {dlConfig->baseAddress},
-	baseVector_ {dlConfig->baseVector},
+	bus_ {bus},
+	baseAddress_ {dlConfig.baseAddress},
+	baseVector_ {dlConfig.baseVector},
 	dlConfig_ {dlConfig}
 {
 	initialize ();
@@ -44,7 +44,7 @@ void DLV11J::initialize ()
 	{
 		channel_[channelNr] = make_unique<UART> (bus_,
 			UARTTypeConfig {.maintenanceModeSupported = false},
-			dlConfig_->uarts[channelNr], channelNr, dlConfig_->consoleConfig);
+			dlConfig_.uarts[channelNr], channelNr, dlConfig_.consoleConfig);
 	}
 
 	bus_->BINIT().subscribe (bind (&DLV11J::BINITReceiver, this, _1));

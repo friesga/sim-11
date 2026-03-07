@@ -2,26 +2,24 @@
 #define _SDLFRONT_H_
 
 #include "panel.h"
-#include "../sdltexture/sdltexture.h"
+#include "../sdltile/sdltile.h"
 #include "../sdlrenderer/sdlrenderer.h"
 
 #include <SDL.h>
+#include <memory>
 
-using std::string;
 using std::unique_ptr;
 
 class SDLFront : public Front
 {
 public:
-    SDLFront (string imageFile, unique_ptr<SDLRenderer> &sdlRenderer,
-        SDL_Texture* targetTexture, Frame<int> frame);
+    SDLFront (unique_ptr<SDLTile> frontTile);
     ~SDLFront ();
-    void render ();
+    void render () override;
 
 private:
-    // The texture and renderer to use for this front
-    unique_ptr<SDLTexture> sdlTtexture_;
-    unique_ptr<SDLRenderer>& sdlRenderer_;
+    // The tile to use for this front
+    unique_ptr<SDLTile> frontTile_;
 };
 
 #endif // _SDLFRONT_H_

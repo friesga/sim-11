@@ -1,42 +1,41 @@
 #ifndef _SDLTEXTURE_H_
 #define _SDLTEXTURE_H_
 
-#include "panel.h"
+#include "imagedata/include/image.h"
 
 #include <SDL.h>
-#include <string>
 #include <utility>
+#include <string>
 
-using std::string;
 using std::pair;
+using std::string;
 
 class SDLTexture
 {
+    // Just SDLRenderer can create textures and SDLRenderer also needs access
+    // to the texture for rendering the texture.
+    friend class SDLRenderer;
+
 public:
-    SDLTexture (string imageFile, SDL_Renderer *renderer, 
-        SDL_Texture* targetTexture, Frame<int> frame);
     ~SDLTexture ();
-    void render ();
-    bool isWithinBounds (Position position, float margin = 0.0) const;
-    bool isRightOfCenter (Position position, float margin = 0.0) const;
-    bool isLeftOfCenter (Position position, float margin = 0.0) const;
+
+    // SDLTextures are non-copyable, only movable
+    SDLTexture (const SDLTexture&) = delete;
+    SDLTexture& operator= (const SDLTexture&) = delete;
+    
+    SDLTexture (SDLTexture&& other) noexcept;
+    SDLTexture& operator= (SDLTexture&& other) noexcept;
+
+    void setColorModulation (uint8_t red, uint8_t green, uint8_t blue);
+    pair<int, int> dimensions () const;
 
 private:
-    // The actual hardware texture
-    SDL_Texture* sdlTtexture_;
+    // Textures can only be created by the SDLRenderer
+    SDLTexture (SDL_Renderer* renderer, int textureWidth, int textureHeight);
+    SDLTexture (SDL_Renderer* renderer, string imageFile);
+    SDLTexture (SDL_Renderer* renderer, Image& image);
 
-    // The SDL renderer to use
-    SDL_Renderer *sdlRenderer_;
-
-    // Reference to the target texture to render this texture on
-    SDL_Texture* targetTexture_;
-
-protected:
-    // Image positon and dimensions
-    int x_;
-    int y_;
-    int width_;
-    int height_;
+    SDL_Texture* sdl2_Texture_;
 };
 
-#endif // _SDLTEXTURUE_H_
+#endif // _SDLTEXTURE_H_

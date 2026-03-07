@@ -11,58 +11,84 @@ set (GTEST_SRCS
     cmdlineoptionstest.cpp
     threadsafeprioqueuetest.cpp
     threadsafecontainertest.cpp
-    interruptrequesttest.cpp
+    bus/interrupthandlertest.cpp
+    bus/interruptrequesttest.cpp
+    bus/unibustest.cpp
     bitmasktest.cpp
     busaddresstest.cpp
     characterbuffertest.cpp
     conddatatest.cpp
     conditioncodestest.cpp
-    configprocessortest.cpp
-    consoleconsistencytest.cpp
-    cabinetconsistencytest.cpp
-    ba11_nconfiguratortest.cpp
-    ba11lconfiguratortest.cpp
-    ba11consistencytest.cpp
-    unibusconsistencytest.cpp
-    bdv11configuratortest.cpp
-    dlv11configuratortest.cpp
+    configdata/configprocessortest.cpp
+    configdata/consoleconsistencytest.cpp
+    configdata/cabinetconsistencytest.cpp
+    configdata/bdv11configuratortest.cpp
+    configdata/dl11configuratortest.cpp
+    configdata/dlv11configuratortest.cpp
+    configdata/ka11configuratortest.cpp
+    configdata/kd11_naconfiguratortest.cpp
+    configdata/m792configprocessortest.cpp
+    configdata/msv11configuratortest.cpp
+    configdata/rxconfiguratortest.cpp
+    configdata/systemconfigtest.cpp
+    configdata/ba11/ba11_nconfiguratortest.cpp
+    configdata/ba11/ba11lconfiguratortest.cpp
+    configdata/ba11/ba11consistencytest.cpp
+    configdata/unibusconsistencytest.cpp
+    configdata/romdeviceconsistencytest.cpp
+    fakesdl/fakebutton/fakebutton.cpp
+    fakesdl/fakedatapanelbuilder/fakedatapanelbuilder.cpp
+    fakesdl/fakeindicator/fakeindicator.cpp
+    fakesdl/fakepanel/fakepanel.cpp
+    fakesdl/fakewindow/fakewindow.cpp
     fiotest.cpp
     fistest.cpp
-    kd11_naconfiguratortest.cpp
+    geometrytest.cpp
     instructiondecodertest.cpp
-    kd11_na/inctest.cpp
-    kd11_na/movtest.cpp
-    kd11_na/kd11_naregisterstest.cpp
-    kd11_na/kd11_na_odttest.cpp
-    kd11_na/kd11_na_instr_timingtest.cpp
-    kdf11_a/pswtest.cpp
-    kdf11_a/kdf11_aconfiguratortest.cpp
-    kdf11_a/kdf11_a_pswregistertest.cpp
-    kdf11_a/kdf11_aregisterstest.cpp
-    kdf11_a/kdf11_abusdevicetest.cpp
-    kdf11_a/kdf11_a_odttest.cpp
-    kdf11_a/kdf11_instr_timingtest.cpp
-    kdf11_b/kdf11_bconfiguratortest.cpp
-    kdf11_b/sluconfiguratortest.cpp
-    kdf11_b/kdf11b_bdv11configuratortest.cpp
-    kdf11_u/kdf11_uconfiguratortest.cpp
-    kdf11_u/kdf11_udisplayregistertest.cpp
-    ktf11_a/ktf11_atest.cpp
+    proc/common_executor/common_executortest.cpp
+    proc/ka11/ka11registertest.cpp
+    proc/kd11_na/inctest.cpp
+    proc/kd11_na/movtest.cpp
+    proc/kd11_na/singularregisterstest.cpp
+    proc/kd11_na/kd11_na_odttest.cpp
+    proc/kd11_na/kd11_na_instr_timingtest.cpp
+    proc/kdf11_a/pswtest.cpp
+    proc/kdf11_a/kdf11_aconfiguratortest.cpp
+    proc/kdf11_a/kdf11_a_pswregistertest.cpp
+    proc/kdf11_a/kdf11_aregisterstest.cpp
+    proc/kdf11_a/kdf11_abusdevicetest.cpp
+    proc/kdf11_a/kdf11_a_odttest.cpp
+    proc/kdf11_a/kdf11_instr_timingtest.cpp
+    proc/kdf11_b/kdf11_bconfiguratortest.cpp
+    proc/kdf11_b/sluconfiguratortest.cpp
+    proc/kdf11_b/kdf11b_bdv11configuratortest.cpp
+    proc/kdf11_u/kdf11_uconfiguratortest.cpp
+    proc/kdf11_u/kdf11_udisplayregistertest.cpp
+    proc/ktf11_a/ktf11_atest.cpp
     locationtest.cpp
     kt24/kt24configuratortest.cpp
     kt24/kt24test.cpp
+    ky11_a/ky11_atest.cpp
+    m792test.cpp
     m9312/m9312configuratortest.cpp
-    m9312/m9312consistencytest.cpp
     m9312/m9312test.cpp
     m9312/m9312powerfailvectortest.cpp
     memorysizetest.cpp
-    msv11configuratortest.cpp
     ms11p/ms11pconfiguratortest.cpp
     ms11p/ms11ptest.cpp
+    openrastertest.cpp
     operandlocationtest.cpp
     qbusinstalltest.cpp
     dummycpu/dummymmu/dummymmu.cpp
     registers/twowordregistertest.cpp
+    rk/rkconfigprocessortest.cpp
+    rk/rkdriveresettest.cpp
+    rk/rkreadtest.cpp
+    rk/rkreadheadertest.cpp
+    rk/rk11dregisterstest.cpp
+    rk/rkseektest.cpp
+    rk/rkwritetest.cpp
+    rk/rkwritechecktest.cpp
     rlv12/rl11configprocessortest.cpp
     rlv12/rlv11configprocessortest.cpp
     rlv12/rlv12configprocessortest.cpp
@@ -77,12 +103,11 @@ set (GTEST_SRCS
     rlv12/rlv12writedatatest.cpp
     rlv12/volumechecktest.cpp
     rlv12/drivereadytest.cpp
-    rxconfiguratortest.cpp
     signaltest.cpp
     simulatorclocktest.cpp
-    systemconfigtest.cpp
     tracetest.cpp
-    unibustest.cpp
+    traptest.cpp
+    unit/unittest.cpp
     serial/uartmaintmodetest.cpp
     variantfsmtest.cpp)
     

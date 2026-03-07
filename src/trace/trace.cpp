@@ -64,11 +64,11 @@ void Trace::memoryDump (u8* ptr, u16 address, u16 length)
         tracefileOut_ << TraceRecord<MemoryDumpRecord> (ptr, address, length);
 }
 
-void Trace::irq (IrqRecordType type, int vector) 
+void Trace::irq (IrqRecordType type, const InterruptRequest& interruptRequest)
 {
-    if (traceEnabled && (flags_ & Trace::Category::Irq) && 
+    if (traceEnabled && (flags_ & Trace::Category::Irq) &&
             !(flags_ & Trace::Category::IgnoreBus))
-        tracefileOut_ << TraceRecord<IrqRecord> (type, vector);
+        tracefileOut_ << TraceRecord<IrqRecord> (type, interruptRequest);
 }
 
 void Trace::trap (TrapRecordType cause, int vector) 
@@ -81,6 +81,27 @@ void Trace::dlv11 (DLV11RecordType type, int channel, u16 value)
 {
     if (traceEnabled && (flags_ & Trace::Category::DLV11))
         tracefileOut_ << TraceRecord<DLV11Record> (type, channel, value);
+}
+
+void Trace::rk11Function (RKTypes::Function function)
+{
+    if (traceEnabled && (flags_ & Trace::Category::RK11))
+        tracefileOut_ << TraceRecord<RK11FunctionRecord> (function);
+}
+
+void Trace::rk11Event (RK11D::State state, RK11D::Event event)
+{
+    if (traceEnabled && (flags_ & Trace::Category::RK11))
+        tracefileOut_ << TraceRecord<RK11EventRecord> (state, event);
+}
+
+void Trace::rk11Registers (BusAddress busAddress, RKTypes::RKER rker,
+    RKTypes::RKDS rkds, RKTypes::RKCS rkcs, u16 rkwc, u16 rkba,
+    RKTypes::RKDA rkda, u16 rkdb)
+{
+    if (traceEnabled && (flags_ & Trace::Category::RK11))
+        tracefileOut_ << TraceRecord<RK11RegistersRecord> (busAddress, rker,
+            rkds, rkcs, rkwc, rkba, rkda, rkdb);
 }
 
 // This function takes a value take from the RX2CS register and casts it

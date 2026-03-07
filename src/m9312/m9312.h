@@ -2,15 +2,13 @@
 #define _M9312_H_
 
 #include "bus/include/bus.h"
-#include "pdp11peripheral/pdp11peripheral.h"
+#include "abstractbusdevice/abstractbusdevice.h"
 #include "configdata/m9312/m9312config/m9312config.h"
 #include "statuscodes.h"
 #include "unary_operator_plus.h"
 
-#include <memory>
 #include <array>
 
-using std::shared_ptr;
 using std::array;
 
 // The M9312 Bootstrap/Terminator Module contains a complete set of Unibus
@@ -34,10 +32,10 @@ using std::array;
 // - Four Bootstrap ROMs. Each ROM contains 64 words, i.e. in total also
 //   256 words, occupying addresses 0773000 upto and including 0773776.
 //
-class M9312 : public PDP11Peripheral
+class M9312 : public AbstractBusDevice
 {
 public:
-    M9312 (Bus* bus, shared_ptr<M9312Config> m9312Config);
+    M9312 (Bus* bus, const M9312Config& m9312Config);
 
     // Functions required by the BusDevice interface
     void reset () override;
@@ -137,6 +135,7 @@ private:
     u16 startingAddress_ {0};
     bool powerUpBootEnable_ {false};
     bool powerUpViaVector_ {true};
+    Bus* bus_;
 
     bool addressInDiagnosticROM (BusAddress address);
     bool addressInBootRom (BusAddress address);

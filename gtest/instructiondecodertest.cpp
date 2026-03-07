@@ -1,5 +1,5 @@
-#include "kd/common/instructiondecoder/instructiondecoder.h"
-#include "kd/common/instructions/instructions.h"
+#include "proc/common/instructiondecoder/instructiondecoder.h"
+#include "proc/common/instructions/instructions.h"
 
 #include <gtest/gtest.h>
 

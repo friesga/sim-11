@@ -7,6 +7,8 @@
 class LinuxConsole : public OperatorConsole
 {
 public:
+    LinuxConsole ();
+    ~LinuxConsole ();
     void sender () override;
 };
 

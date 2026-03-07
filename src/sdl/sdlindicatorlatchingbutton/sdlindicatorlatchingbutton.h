@@ -2,9 +2,8 @@
 #define _SDLINDICATORLATCHINGBUTTON_H_
 
 #include "panel.h"
-#include "../sdlcommonbutton/sdlcommonbutton.h"
 #include "../sdlrenderer/sdlrenderer.h"
-#include "../sdltexture/sdltexture.h"
+#include "../sdltile/sdltile.h"
 #include "../sdlevent/sdlevent.h"
 
 #include <SDL.h>
@@ -20,10 +19,14 @@ using std::array;
 class SDLIndicatorLatchingButton : public IndicatorButton
 {
 public:
-    SDLIndicatorLatchingButton (Button::ImageNames const& imageNames,
-        Button::TwoPositionsState initialState, unique_ptr<SDLRenderer>& sdlRenderer,
-        EventCallback buttonClicked, Indicator::State showIndicator,
-        SDL_Texture* targetTexture, Frame<int> frame);
+    // The TileGrid is indexed first by the button state and then by
+    // the indicator state. So TileGrid[0][0] is the tile for the
+    // button in the on state and the indicator in the off state.
+    using TileGrid = array<array<unique_ptr<SDLTile>, 2>, 2>;
+
+    SDLIndicatorLatchingButton (TileGrid tiles,
+        Button::TwoPositionsState initialState, EventCallback buttonClicked,
+        Indicator::State showIndicator);
     ~SDLIndicatorLatchingButton ();
 
     // Definition of functions required for the Button interface
@@ -32,17 +35,19 @@ public:
     Button::State currentState () const override;
     void render () override;
     bool isWithinBounds (Position position, float margin = 0.0) const;
+    void setSwitchClickedCallback (EventCallback callback) override;
 
     // Definition of functions required for the Indicator interface
+    Indicator::State indicatorState () const override;
     void show (Indicator::State indicatorState) override;
 
 
 private:
-    SDLTexture* getTexture (Button::TwoPositionsState buttonState,
+    SDLTile* getTile (Button::TwoPositionsState buttonState,
         Indicator::State indicatorState) const;
 
     EventCallback buttonClicked_;
-    array<array<unique_ptr<SDLTexture>, 2>, 2> textures_;
+    TileGrid tiles_;
     Button::TwoPositionsState buttonState_;
     Indicator::State indicatorState_;
 

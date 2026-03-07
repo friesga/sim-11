@@ -1,5 +1,5 @@
-#ifndef _DLCONFIG_H_
-#define _DLCONFIG_H_
+#ifndef _DLV11JCONFIG_H_
+#define _DLV11JCONFIG_H_
 
 #include "types.h"
 #include "devicetype.h"
@@ -32,4 +32,4 @@ struct DLV11JConfig : public DeviceType<BusType::QBus>
     void createDLV11J_UARTsConfig ();
 };
 
-#endif // _DLCONFIG_H_
+#endif // _DLV11JCONFIG_H_

@@ -26,9 +26,17 @@ public:
     SDLWindow (char const *title, Frame<int> frame,
         set<Window::Flag> flags = {});
     ~SDLWindow ();
+
+    // Functions required by the Window interface
     void show () override;
-    Panel *createPanel (shared_ptr<Cabinet::Position> cabinetPosition,
+    Panel *createPanel (Cabinet::Position cabinetPosition,
         RackUnit unitHeight) override;
+    unique_ptr<PanelBuilder> createFilePanelBuilder (Cabinet::Position cabinetPosition,
+        RackUnit unitHeight) override;
+    unique_ptr<PanelBuilder> createDataPanelBuilder (ImageContainer& imageContainer,
+        Cabinet::Position cabinetPosition, RackUnit unitHeight) override;
+    void addPanel (unique_ptr<Panel> panel) override;
+
     void handler ();
 
 private:
@@ -48,24 +56,20 @@ private:
     // The Renderer to use in rendering in the given window
     unique_ptr<SDLRenderer> sdlRenderer_; 
 
-    vector<unique_ptr<SDLPanel>> panels_;
+    vector<unique_ptr<Panel>> panels_;
 
     // The target texture the panels have to render to
-    SDL_Texture* targetTexture_;
+    unique_ptr<SDLTexture> targetTexture_;
 
     // Definition of a cabinet to keep track of occupied positions in
     // the cabinet. 
     Cabinet h9642Cabinet {"h9642", 20_ru};
 
+    // Functions required by the Window interface
     void render () override;
     bool handleEvents () override;
 
     Position windowToTexturePosition (Position windowPosition);
-    void RenderCopyCircle (SDL_Renderer* renderer, SDL_Texture* texture,
-        Position sourceCenter, int sourceRadius,
-        Position destCenter, int destRadius);
-    int RenderDrawCircle (SDL_Renderer* renderer, Position position,
-        int radius);
     void drawLoupe ();
 };
 

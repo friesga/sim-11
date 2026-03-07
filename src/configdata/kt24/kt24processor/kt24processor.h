@@ -14,12 +14,11 @@ using std::unique_ptr;
 class KT24Processor : public DeviceConfigProcessor
 {
 public:
-	KT24Processor ();
 	DeviceConfig getConfig () override;
 	void processSection (iniparser::Section* section) override;
 
 private:
-	unique_ptr<KT24Config> kt24ConfigPtr {nullptr};
+	KT24Config kt24Config {};
 	M9312Processor m9312Processor {};
 
 	void processValue (iniparser::Section::ValueIterator valueIterator);

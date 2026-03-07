@@ -4,6 +4,7 @@
 #include "types.h"
 #include "../tracerecord.h"
 #include "../recordheader.h"
+#include "bus/interruptrequest/interruptrequest.h"
 
 #include <fstream>
 
@@ -13,9 +14,10 @@ struct IrqRecord {};
 
 enum class IrqRecordType
 {
-    IRQ_OK,
-    IRQ_FAIL,
-    IRQ_SIG
+    IRQ_REQUEST,
+    IRQ_GRANT,
+	IRQ_CLEAR,
+	IRQ_CLEAR_ALL
 };
 
 // Specialization of the TraceRecord for the TraceIrq record
@@ -27,24 +29,28 @@ class TraceRecord<IrqRecord>
 
 	IrqRecordType type_;
 	u16	vector_;
+	unsigned int intrpReqId_;
 
 public:
 	TraceRecord ();
-	TraceRecord (IrqRecordType type, u16 vector);
+	TraceRecord (IrqRecordType type, const InterruptRequest& interruptRequest);
     Magic magic () {return Magic::IRQ0;}
 };
 
 // Constructors for the TraceRecord<IrqRecord> type
 inline TraceRecord<IrqRecord>::TraceRecord ()
 	:
-	type_ {IrqRecordType::IRQ_OK},
-	vector_ {0}
+	type_ {IrqRecordType::IRQ_REQUEST},
+	vector_ {0},
+	intrpReqId_ {0}
 {}
 
-inline TraceRecord<IrqRecord>::TraceRecord (IrqRecordType type, u16 vector)
+inline TraceRecord<IrqRecord>::TraceRecord (IrqRecordType type,
+	const InterruptRequest& interruptRequest)
 	:
 	type_ {type},
-	vector_ {vector}
+	vector_ {interruptRequest.vector ()},
+	intrpReqId_ {interruptRequest.id ()}
 {}
 
 

@@ -13,21 +13,22 @@ namespace RLV12const
         RLV12
     };
 
-    // RL01 Recording Capacity definitions
-    // An RL02 drive has 512 cylinders per cartridge
+    // RL01/02 Recording Capacity definitions
     static constexpr int32_t wordsPerSector = 128;
     static constexpr int32_t sectorsPerSurface = 40;
     static constexpr int32_t surfacesPerCylinder = 2;
-    static constexpr int32_t cylindersPerCartridge = 256;
+    static constexpr int32_t RL01cylindersPerCartridge = 256;
+    static constexpr int32_t RL02cylindersPerCartridge = 512;
 
     static constexpr int32_t maxDrivesPerController = 4;
     static constexpr int32_t maxTransfer = sectorsPerSurface * wordsPerSector;
 
     static constexpr int32_t RL01_WordsPerCartridge =
-        cylindersPerCartridge * surfacesPerCylinder * sectorsPerSurface *
+        RL01cylindersPerCartridge * surfacesPerCylinder * sectorsPerSurface *
         wordsPerSector;
     static constexpr int32_t RL02_WordsPerCartridge =
-        RL01_WordsPerCartridge * 2;
+        RL02cylindersPerCartridge * surfacesPerCylinder * sectorsPerSurface *
+        wordsPerSector;
 
     // Define the base address of the registers in the I/O page as
     // a 16-bit address.
@@ -106,6 +107,11 @@ namespace RLV12const
     static constexpr u16 DAR_Track =
         DAR_TrackMask << DAR_TrackPosition;
 
+    static constexpr u16 DAR_HeadPosition = 6;
+    static constexpr u16 DAR_HeadMask = 01;
+    static constexpr u16 DAR_Head =
+        DAR_HeadMask << DAR_HeadPosition;
+
     static constexpr u16 DAR_Head0 = 0 << DAR_TrackPosition;
     static constexpr u16 DAR_Head1 = 1u << DAR_TrackPosition;
 
@@ -114,18 +120,22 @@ namespace RLV12const
     static constexpr u16 DAR_Cylinder =
         DAR_CylinderMask << DAR_CylinderPosition;
 
+    static constexpr u16 getHead (int32_t diskAddress)
+    {
+        return (diskAddress >> DAR_HeadPosition) & DAR_HeadMask;
+    }
 
-    static constexpr int32_t getCylinder (int32_t diskAddress)
+    static constexpr u16 getCylinder (int32_t diskAddress)
     {
         return (diskAddress >> DAR_CylinderPosition) & DAR_CylinderMask;
     }
 
-    static constexpr int32_t getTrack (int32_t diskAddress)
+    static constexpr u16 getTrack (int32_t diskAddress)
     {
         return (diskAddress >> DAR_TrackPosition) & DAR_TrackMask;
     }
 
-    static constexpr int32_t getSector (int32_t diskAddress)
+    static constexpr u16 getSector (int32_t diskAddress)
     {
         return (diskAddress >> DAR_SectorPosition) & DAR_SectorMask;
     }
@@ -151,7 +161,11 @@ namespace RLV12const
     static constexpr u16 MPR_GS_LockOn = 5;
     static constexpr u16 MPR_GS_UnloadHeads = 6;
     static constexpr u16 MPR_GS_SpinDown = 7;
+    
     // Definition of MPR bits 3:15
+    // The Drive Type bit is only defined for the RL11 and RLV12. A zero
+    // indicates an RL01, a one, an RL02. For the RLV11 the bit is reserved
+    // and must have the value zero.
     static constexpr u16 MPR_GS_BrushHome = 0000010;
     static constexpr u16 MPR_GS_HeadsOut = 0000020;
     static constexpr u16 MPR_GS_CoverOpen = 0000040;

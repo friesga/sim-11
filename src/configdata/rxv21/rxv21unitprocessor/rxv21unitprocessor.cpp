@@ -2,14 +2,10 @@
 #include "configdata/rxv21/rxv21unitconfig/rxv21unitconfig.h"
 
 #include <utility>
+#include <memory>
 
-using std::make_unique;
+using std::make_shared;
 using std::move;
-
-RXV21UnitProcessor::RXV21UnitProcessor ()
-{
-	rxv21UnitConfigPtr = make_unique<RXV21UnitConfig> ();
-}
 
 void RXV21UnitProcessor::processValue (iniparser::Section::ValueIterator valueIterator)
 {
@@ -34,24 +30,24 @@ void RXV21UnitProcessor::processFileName (iniparser::Value value)
 
 	// If no system-specific filename is found in the given value map,
     // the unqualified name is returned
-	rxv21UnitConfigPtr->fileName = 
+	rxv21UnitConfig.fileName = 
 		aMap.getValue (iniparser::Value(systemType),
         aMap.getValue (iniparser::Value(""))).asString();
 }
 
 void RXV21UnitProcessor::processNewFile (iniparser::Value value)
 {
-	rxv21UnitConfigPtr->newFile = value.asBool();
+	rxv21UnitConfig.newFile = value.asBool();
 }
 
 void RXV21UnitProcessor::processReadOnly (iniparser::Value value)
 {
-	rxv21UnitConfigPtr->readOnly = value.asBool();
+	rxv21UnitConfig.readOnly = value.asBool();
 }
 
 void RXV21UnitProcessor::processOverwrite (iniparser::Value value)
 {
-	rxv21UnitConfigPtr->overwrite = value.asBool();
+	rxv21UnitConfig.overwrite = value.asBool();
 }
 
 // Check the consistency of the configuration of a RL unit. Currently
@@ -63,7 +59,7 @@ void RXV21UnitProcessor::checkConsistency ()
 void RXV21UnitProcessor::processSubsection (iniparser::Section *subSection)
 {}
 
-shared_ptr<RXV21UnitConfig> RXV21UnitProcessor::getConfig ()
+RXV21UnitConfig RXV21UnitProcessor::getConfig ()
 {
-	return move (rxv21UnitConfigPtr);
+	return rxv21UnitConfig;
 }

@@ -1,20 +1,21 @@
 #include "rl01_02.h"
 #include "../rlv12.h"
+#include "concepts/diskaddress/diskaddress.h"
 
 #include <chrono>
 
 using std::chrono::seconds;
 using std::make_unique;
 using namespace std::chrono_literals;
+using std::filesystem::path;
+using std::filesystem::file_size;
 
 // Constructor
 // By default the unit is off-line. It is set on-line when a file is
 // attached.
-RL01_02::RL01_02 (PDP11Peripheral *owningDevice)
+RL01_02::RL01_02 (AbstractBusDevice* owningDevice)
     :
-    Unit (owningDevice),
     currentDiskAddress_ {0},
-    rlStatus_ {},
     seekTime_ {}
 {}
 
@@ -33,7 +34,7 @@ RL01_02::~RL01_02 ()
     }
 }
 
-StatusCode RL01_02::init (shared_ptr<RLUnitConfig> rlUnitConfig,
+StatusCode RL01_02::init (const RLUnitConfig& rlUnitConfig,
     Window* window)
 {
     createBezel (window, rlUnitConfig);
@@ -43,7 +44,7 @@ StatusCode RL01_02::init (shared_ptr<RLUnitConfig> rlUnitConfig,
 
 // This version of the init function doesn't create a bezel and is meant
 // to be called by the unit tests.
-StatusCode RL01_02::init (shared_ptr<RLUnitConfig> rlUnitConfig)
+StatusCode RL01_02::init (const RLUnitConfig& rlUnitConfig)
 {
     if (StatusCode status = configure (rlUnitConfig); status != StatusCode::Success)
         return status;
@@ -51,11 +52,11 @@ StatusCode RL01_02::init (shared_ptr<RLUnitConfig> rlUnitConfig)
     running_ = true;
     driveThread_ = std::thread (&RL01_02::driveThread, this);
     stateMachine_ = make_unique<StateMachine> (this, 
-        seconds (rlUnitConfig->spinUpTime));
+        seconds (rlUnitConfig.spinUpTime));
 
     // Immediataely lock the drive on cylinder 0 if the spin up time is
     // zero.
-    if (rlUnitConfig->spinUpTime == 0)
+    if (rlUnitConfig.spinUpTime == 0)
         stateMachine_->dispatch (SpunUp {});
     else
         stateMachine_->dispatch (SpunDown {});
@@ -92,13 +93,6 @@ u16 RL01_02::driveStatus ()
     return driveStatus_ | (currentDiskAddress_ & RLV12const::MPR_GS_HeadSelect);
 }
 
-bool RL01_02::unitAttached ()
-{
-    // Disclaimer: "return unitStatus_ & Bitmask (Status::UNIT_ATT)" should
-    // suffice.
-    return (unitStatus_ & Status::UNIT_ATT) == Bitmask (Status::UNIT_ATT);
-}
-
 bool RL01_02::volumeCheck () const
 {
     return driveStatus_ & RLV12const::MPR_GS_VolumeCheck;
@@ -113,13 +107,16 @@ void RL01_02::sendTrigger (Event event)
     startCommand_.notify_one ();
 }
 
-// Calculate the position of a sector as an offset in the file from
-// the specified diskAddress
-int32_t RL01_02::filePosition (int32_t diskAddress) const
+// Convert the disk address as given in the Disk Address Register to
+// a DiskAddress the DiskDrive class needs.
+DiskAddress RL01_02::darToDiskAddress (int32_t diskAddress) const
 {
-    return (RLV12const::getTrack (diskAddress) * RLV12const::sectorsPerSurface +
-        RLV12const::getSector (diskAddress)) * RLV12const::wordsPerSector *
-        sizeof (int16_t);
+    return DiskAddress
+    {
+        RLV12const::getSector (diskAddress),
+        RLV12const::getHead (diskAddress),
+        RLV12const::getCylinder (diskAddress)
+    };
 }
 
 // The variable seeksInProgress_ can have three values:
@@ -198,4 +195,19 @@ void RL01_02::waitForSeekComplete ()
         driveReadyCondition_.wait (lock, [this] { return seeksInProgress_ == 0; });
 
     lock.unlock ();
+}
+
+// Get the size of the given file in bytes. The size will be the actual file
+// size of an existing file and also zero if the file doesn't exist. That's
+// not very clean but suffices for now.
+size_t RL01_02::fileSize (string filePath) const
+{
+    try
+    {
+        return file_size (path (filePath));
+    }
+    catch (const std::filesystem::filesystem_error& e)
+    {
+        return 0;
+    }
 }

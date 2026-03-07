@@ -9,22 +9,30 @@ string SectionProcessor::sectionName () const
 	return currentSection_->name ();
 }
 
-size_t SectionProcessor::unitNumberFromSectionName (string name, size_t maxUnits)
+// After use in this function, the unit number is removed from the section
+// to avoid it being processed again by the SectionProcessor base class.
+size_t SectionProcessor::unitNumberFromUnitKey (iniparser::Section* subSection,
+	size_t maxUnits) const
 {
 	size_t unitNumber;
 
+	// Get the unit number from the unit key in this subsection.
+	iniparser::Value unitValue = subSection->getValue ("unit", 0);
+
 	try
 	{
-		unitNumber = stol (name.substr(4, 1));
+		unitNumber = unitValue.asInt ();
 	}
-	catch (std::invalid_argument const &)
+	catch (std::invalid_argument const&)
 	{
-		throw std::invalid_argument {"Invalid unit number: " + name};
+		throw std::invalid_argument {"Invalid unit number in section " +
+			subSection->fullName ()};
 	}
-	
+
+	// Check validity of the unit number
 	if (unitNumber >= maxUnits)
 		throw std::invalid_argument {"Unit number out of range 0-" +
-			to_string (maxUnits - 1)};
+			to_string (maxUnits - 1) + " in section " + subSection->fullName ()};
 
 	return unitNumber;
 }

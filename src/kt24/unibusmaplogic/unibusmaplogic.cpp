@@ -15,7 +15,7 @@ UnibusMapLogic::UnibusMapLogic (Bus* bus)
     bus_->IOMapEnable ().subscribe (bind (&UnibusMapLogic::ioMapEnableReceiver, this, _1));
 }
 
-UnibusMapLogic::UnibusMapLogic (Bus* bus, shared_ptr<KT24Config> kt24Config)
+UnibusMapLogic::UnibusMapLogic (Bus* bus, const KT24Config& kt24Config)
     :
     UnibusMapLogic (bus)
 {}

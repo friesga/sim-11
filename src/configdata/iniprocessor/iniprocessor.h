@@ -6,31 +6,32 @@
 #include "configdata/systemconfig/systemconfig.h"
 #include "../sectionprocessor/deviceconfigprocessor.h"
 #include "configdata/msv11config/msv11config.h"
-#include "../ba11nprocessor/ba11nprocessor.h"
+#include "configdata/ba11/ba11n/ba11nprocessor/ba11nprocessor.h"
 #include "configdata/kt24/kt24processor/kt24processor.h"
+#include "configdata/m792/m792processor/m792processor.h"
 #include "configdata/m9312/m9312processor/m9312processor.h"
+#include "configdata/rk/rk11d/rk11dprocessor/rk11dprocessor.h"
 #include "configdata/rl/rl11processor/rl11processor.h"
 #include "configdata/rl/rlv11processor/rlv11processor.h"
 #include "configdata/rl/rlv12processor/rlv12processor.h"
 #include "configdata/rxv21/rxv21processor/rxv21processor.h"
 #include "../bdv11processor/bdv11processor.h"
+#include "configdata/serialconfig/dl11processor/dl11processor.h"
 #include "configdata/serialconfig/dlv11processor/dlv11processor.h"
 #include "../msv11processor/msv11processor.h"
+#include "configdata/ka11/ka11processor/ka11processor.h"
 #include "../kd11_naprocessor/kd11_naprocessor.h"
 #include "../kdf11/kdf11_a/kdf11_aprocessor/kdf11_aprocessor.h"
 #include "../kdf11/kdf11_b/kdf11_bprocessor/kdf11_bprocessor.h"
 #include "../kdf11/kdf11_u/kdf11_uprocessor/kdf11_uprocessor.h"
 #include "../ms11pprocessor/ms11pprocessor.h"
-#include "../ba11lprocessor/ba11lprocessor.h"
+#include "configdata/ba11/ba11l/ba11lprocessor/ba11lprocessor.h"
 
 #include <map>
-#include <memory>
 #include <string>
 #include <vector>
 
 using std::map;
-using std::shared_ptr;
-using std::unique_ptr;
 using std::string;
 using std::vector;
 
@@ -70,22 +71,26 @@ private:
 
     map<string, DeviceConfigProcessorFactory> deviceConfigProcessorFactories =
 	{
+		{"BA11-L",  &IniProcessor::create<BA11_LProcessor>},
 		{"BA11-N",  &IniProcessor::create<BA11_NProcessor>},
 		{"BDV11",   &IniProcessor::create<BDV11Processor>},
+		{"DL11",    &IniProcessor::create<DL11Processor>},
 		{"DLV11-J", &IniProcessor::create<DLV11Processor>},
 		{"KT24",    &IniProcessor::create<KT24Processor>},
+		{"M792",    &IniProcessor::create<M792Processor>},
 		{"M9312",   &IniProcessor::create<M9312Processor>},
 		{"MSV11",   &IniProcessor::create<MSV11Processor>},
+		{"RK11-D",  &IniProcessor::create<RK11DProcessor>},
 		{"RL11",    &IniProcessor::create<RL11Processor>},
 		{"RLV11",   &IniProcessor::create<RLV11Processor>},
 		{"RLV12",   &IniProcessor::create<RLV12Processor>},
 		{"RXV21",   &IniProcessor::create<RXV21Processor>},
+		{"KA11",    &IniProcessor::create<KA11Processor>},
 		{"KD11-NA", &IniProcessor::create<KD11_NAProcessor>},
 		{"KDF11-A", &IniProcessor::create<KDF11_AProcessor>},
 		{"KDF11-B", &IniProcessor::create<KDF11_BProcessor>},
 		{"KDF11-U", &IniProcessor::create<KDF11_UProcessor>},
 		{"MS11-P",  &IniProcessor::create<MS11PProcessor>},
-		{"BA11-L",  &IniProcessor::create<BA11_LProcessor>}
 	};
 
     void processSection (iniparser::Section* section);

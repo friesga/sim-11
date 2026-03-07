@@ -5,18 +5,15 @@
 #include "configdata/rl/rlconfig/rlconfig.h"
 #include "configdata/rl/rlprocessor/rlprocessor.h"
 
-#include <memory>
 #include <map>
 #include <string>
 
-using std::unique_ptr;
-using std::shared_ptr;
 using std::map;
 using std::string;
 
 class RLV11Processor : public DeviceConfigProcessor
 {
-	unique_ptr<RLV11Config> rlv11ConfigPtr {nullptr};
+	RLV11Config rlv11Config;
 	RLProcessor rlProcessor_;
 
 	// Define process as a pointer to a RlProcessor member function
@@ -35,7 +32,6 @@ class RLV11Processor : public DeviceConfigProcessor
 	void processSubsection (iniparser::Section* subSection);
 
 public:
-	RLV11Processor ();
 	DeviceConfig getConfig ();
 };
 

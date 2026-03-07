@@ -1,13 +1,15 @@
 #include "interrupthandler.h"
 #include "trace/trace.h"
 
-// Set an interrupt request. The only reason this could fail is when
-// a device already has set an interrupt. That would be an error on the
-// part of the device and wouldn't harm.
-void InterruptHandler::setInterrupt (TrapPriority priority,
-	unsigned char busOrder, u8 functionOrder, unsigned char vector)
+// Set an interrupt request. To allow synchronization between multiple
+// interrupt request from the same device an interrupt request can be
+// acknowledged, indicating to the device the interrupt
+void InterruptHandler::setInterrupt (InterruptPriority priority,
+	unsigned char busOrder, u8 functionOrder, u16 vector, 
+	function<void ()> requestGrant)
 {
-	InterruptRequest intrptReq {priority, busOrder, functionOrder, vector};
+	InterruptRequest intrptReq {priority, busOrder, functionOrder,
+		vector, requestGrant};
 	pushInterruptRequest (intrptReq);
 }
 
@@ -16,10 +18,10 @@ void InterruptHandler::setInterrupt (TrapPriority priority,
 void InterruptHandler::pushInterruptRequest (InterruptRequest intrptReq)
 {
 	intrptReqQueue_.push (intrptReq);
-	trace.irq (IrqRecordType::IRQ_OK, intrptReq.vector ());
+	trace.irq (IrqRecordType::IRQ_REQUEST, intrptReq);
 }
 
-bool InterruptHandler::containsInterrupt (TrapPriority priority, unsigned char busOrder,
+bool InterruptHandler::containsInterrupt (InterruptPriority priority, unsigned char busOrder,
 	u8 functionOrder)
 {
 	return intrptReqQueue_.contains (InterruptRequest {priority,
@@ -28,16 +30,32 @@ bool InterruptHandler::containsInterrupt (TrapPriority priority, unsigned char b
 
 // Clear the specified interrupt request. The InterruptRequQueue will delete
 // the interrupt request equal to specified request. Equality is based on
-// priority and busorder (see InterruptRequest::operator==).
-void InterruptHandler::clearInterrupt (TrapPriority priority, unsigned char busOrder,
+// priority, busorder and function order (see InterruptRequest::operator==).
+// As the IntrptReqQueue uses std::set as underlying container, only one such
+// request can be in the queue and one iteration through the queue is
+// sufficient.
+//
+// Checking that the queue contains an interrupt cannot be accomplished by
+// comparing the iterator returned by the find() call with cend() as that
+// results in a "map/set iterators incompatible" exception. 
+//
+void InterruptHandler::clearInterrupt (InterruptPriority priority, unsigned char busOrder,
 	u8 functionOrder)
 {
-	intrptReqQueue_.erase (InterruptRequest {priority, busOrder, functionOrder, 0});
+	InterruptRequest interruptRequest {priority, busOrder, functionOrder, 0};
+	IntrptReqQueue::const_iterator it {};
+
+	if (it = intrptReqQueue_.find (interruptRequest); it != intrptReqQueue_.cend ())
+	{
+		trace.irq (IrqRecordType::IRQ_CLEAR, interruptRequest);
+		intrptReqQueue_.erase (it);
+	}
 }
 
 // Clear all pending interrupts
 void InterruptHandler::clearInterrupts ()
 {
+	trace.irq (IrqRecordType::IRQ_CLEAR_ALL, InterruptRequest {});
 	intrptReqQueue_.clear ();
 }
 
@@ -53,14 +71,17 @@ u8 InterruptHandler::intrptPriority ()
 }
 
 // Get the interrupt request with the highest priority if one is available
+// and grant the request.
 bool InterruptHandler::getIntrptReq (InterruptRequest& intrptReq)
 {
 	if (intrptReqAvailable ())
 	{
 		bool result = intrptReqQueue_.fetchTop (intrptReq);
-		trace.irq (IrqRecordType::IRQ_SIG, intrptReq.vector ());
+		intrptReq.requestGrant ();
+		trace.irq (IrqRecordType::IRQ_GRANT, intrptReq);
 		return result;
 	}
 	else
 		return false;
 }
+

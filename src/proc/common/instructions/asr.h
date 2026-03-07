@@ -1,0 +1,38 @@
+#ifndef _ASR_H_
+#define _ASR_H_
+
+
+#include "proc/common/instructionformats/singleoperandinstruction/singleoperandinstruction.h"
+#include "proc/include/cpudata.h"
+#include "proc/common/operandlocation/operandlocation.h"
+
+
+// ASR - arithmetic shift right
+// 
+// Operation:
+//  (dst) <- (dst) shifted one place to the right
+//
+// Condition Codes:
+//  N: set if the high-order bit of the result is set (result < 0);
+//     cleared otherwise
+//  Z: set if the result - O; cleared otherwise
+//  V: loaded from the Exclusive OR of the N-bit and C-.bit (as set by the
+//     completion of the shift operation)
+//  C: loaded from low-order bit of the destination
+//
+// Shifts all bits of the destination right one place. Bit 15 is reproduced.
+// The C-bit is loaded from bit 0 of the destination. ASR performs signed
+// division of the destination by two.
+//
+class ASR : public SingleOperandInstruction
+{
+public:
+    ASR (u16 instruction);
+};
+
+inline ASR::ASR (u16 instruction)
+    :
+    SingleOperandInstruction (instruction)
+{}
+
+#endif // _ASR_H_

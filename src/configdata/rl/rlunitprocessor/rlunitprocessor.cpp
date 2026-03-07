@@ -8,10 +8,9 @@ using std::make_unique;
 using std::move;
 using std::invalid_argument;
 
-RLUnitProcessor::RLUnitProcessor (size_t unitNumber)
+RLUnitProcessor::RLUnitProcessor (iniparser::Section* subSection)
 {
-	rlUnitConfigPtr = make_unique<RLUnitConfig> ();
-	rlUnitConfigPtr->unitNumber = unitNumber;
+    processType (subSection->name ());
 }
 
 void RLUnitProcessor::processValue (iniparser::Section::ValueIterator valueIterator)
@@ -24,14 +23,27 @@ void RLUnitProcessor::processValue (iniparser::Section::ValueIterator valueItera
 void RLUnitProcessor::processType (iniparser::Value value)
 {
 	if (value.asString() == "RL01")
-		rlUnitConfigPtr->rlUnitType = RLUnitConfig::RLUnitType::RL01;
+		rlUnitConfig.rlUnitType = RLUnitConfig::RLUnitType::RL01;
 	else if (value.asString() == "RL02")
-		rlUnitConfigPtr->rlUnitType = RLUnitConfig::RLUnitType::RL02;
-	else if (value.asString() == "Auto")
-		rlUnitConfigPtr->rlUnitType = RLUnitConfig::RLUnitType::Auto;
+		rlUnitConfig.rlUnitType = RLUnitConfig::RLUnitType::RL02;
+	else if (value.asString() == "RL01/RL02")
+		rlUnitConfig.rlUnitType = RLUnitConfig::RLUnitType::Auto;
 	else
 		throw std::invalid_argument {"Incorrect RL unit type: " + 
 			value.asString()};
+}
+
+void RLUnitProcessor::processUnitNumber (iniparser::Value value)
+{
+	rlUnitConfig.unitNumber = value.asInt();
+	try
+	{
+		rlUnitConfig.unitNumber = value.asInt ();
+	}
+	catch (std::invalid_argument const&)
+	{
+		throw std::invalid_argument {"Invalid unit number: " + value.asString ()};
+	}
 }
 
 #ifdef _WIN32
@@ -49,49 +61,49 @@ void RLUnitProcessor::processFileName (iniparser::Value value)
 
 	// If no system-specific filename is found in the given value map,
     // the unqualified name is returned
-	rlUnitConfigPtr->fileName = 
+	rlUnitConfig.fileName = 
 		aMap.getValue (iniparser::Value(systemType),
         aMap.getValue (iniparser::Value(""))).asString();
 }
 
 void RLUnitProcessor::processNewFile (iniparser::Value value)
 {
-	rlUnitConfigPtr->newFile = value.asBool();
+	rlUnitConfig.newFile = value.asBool();
 }
 
 void RLUnitProcessor::processWriteProtect (iniparser::Value value)
 {
-	rlUnitConfigPtr->writeProtect = value.asBool();
+	rlUnitConfig.writeProtect = value.asBool();
 }
 
 void RLUnitProcessor::processOverwrite (iniparser::Value value)
 {
-	rlUnitConfigPtr->overwrite = value.asBool();
+	rlUnitConfig.overwrite = value.asBool();
 }
 
 void RLUnitProcessor::processCabinet (iniparser::Value value)
 {
-	rlUnitConfigPtr->cabinetPosition =
+	rlUnitConfig.cabinetPosition =
 		CabinetProcessor::processCabinetKey (value);
 }
 
 void RLUnitProcessor::processSpinUpTime (iniparser::Value value)
 {
-	rlUnitConfigPtr->spinUpTime = value.asInt();
+	rlUnitConfig.spinUpTime = value.asInt();
 }
 
 // Check the consistency of the configuration of a RL unit.  A valid cabinet
 // position has to be specified.
 void RLUnitProcessor::checkConsistency ()
 {
-	if (rlUnitConfigPtr->cabinetPosition == nullptr)
+	if (!rlUnitConfig.cabinetPosition.has_value ())
 		throw invalid_argument {"Cabinet position not specified in RL unit section"};
 }
 
 void RLUnitProcessor::processSubsection (iniparser::Section *subSection)
 {}
 
-shared_ptr<RLUnitConfig> RLUnitProcessor::getConfig ()
+RLUnitConfig RLUnitProcessor::getConfig ()
 {
-	return move (rlUnitConfigPtr);
+	return rlUnitConfig;
 }

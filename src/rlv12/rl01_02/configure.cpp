@@ -2,97 +2,99 @@
 #include "fio/fio.h"
 
 #include <variant>
+#include <stdexcept>
 
-using std::shared_ptr;
 using std::get;
+using std::invalid_argument;
 
-StatusCode RL01_02::configure (shared_ptr<RLUnitConfig> rlUnitConfig)
+StatusCode RL01_02::configure (const RLUnitConfig& rlUnitConfig)
 {
-    // Set unit type and size from the given configuration. Note that if
-    // the unit type is Auto the unit's capacity is determined after
-    // attaching the file to the unit. The capacity is also needed for
-    // creation of the bad block table, but the combination of the newFile
-    // option and Auto unit type is excluded in the configuration data.
-    // ToDo: RL01_02::configure() needs a rewrite.
-    if (rlUnitConfig->rlUnitType == RLUnitConfig::RLUnitType::RL01)
-    {
-        capacity_ = RLV12const::RL01_WordsPerCartridge;
-        rlStatus_ &= ~Bitmask(RlStatus::UNIT_RL02);
-    }
-    else if (rlUnitConfig->rlUnitType == RLUnitConfig::RLUnitType::RL02)
-    {
-        capacity_ = RLV12const::RL02_WordsPerCartridge;
-        rlStatus_ |= Bitmask(RlStatus::UNIT_RL02);
-        driveStatus_ |= RLV12const::MPR_GS_DriveType;
-    }
-    else if (rlUnitConfig->rlUnitType == RLUnitConfig::RLUnitType::Auto)
-    {
-        rlStatus_ |= Bitmask(RlStatus::UNIT_AUTO);
-    }
-
-    if (rlUnitConfig->fileName.empty()) 
+    if (rlUnitConfig.fileName.empty ())
         return StatusCode::ArgumentError;
-	
-    Bitmask<AttachFlags> attachFlags {AttachFlags::Default};
 
-	if (rlUnitConfig->writeProtect)
-		attachFlags |= AttachFlags::ReadOnly;
-	if (rlUnitConfig->newFile) 
-		attachFlags |= AttachFlags::NewFile;
-	if (rlUnitConfig->overwrite)
-		attachFlags |= AttachFlags::Overwrite;
+    // Now determine the actual drive type as soon as possible, to get
+    // rid of the RLUnitType Auto and be able to determine the drive geometry.
+    driveType_ = determineDriveType (rlUnitConfig);
+    geometry_ = driveGeometry (driveType_);
 
     // Try to attach the specified file to this unit
-    StatusCode result;
-    if ((result = attach_unit (rlUnitConfig->fileName, attachFlags)) !=
-        StatusCode::Success)
-            return result;
+    if (StatusCode result = attachFile (rlUnitConfig.fileName, geometry_,
+            getAttachMode (rlUnitConfig));
+        result != StatusCode::Success)
+        return result;
+
+    // Set the drive type in the MPR
+    if (driveType_ == DriveType::RL02)
+        driveStatus_ |= RLV12const::MPR_GS_DriveType;
 
     // Set the drive default write-protected if that is specified in
     // the configuration.
-    if (rlUnitConfig->writeProtect)
+    if (rlUnitConfig.writeProtect)
     {
-        unitStatus_ |= Bitmask (Status::WRITE_PROTECT);
+        setWriteProtected (true);
         driveStatus_ |= RLV12const::MPR_GS_WriteLock;
     }
 
-    // Set the drive state as if the load procedure had already executed.
-
-    // Position at cylinder 0
-    currentDiskAddress_ = 0;
-
-    spinUpTime_ = std::chrono::seconds {rlUnitConfig->spinUpTime};
+    spinUpTime_ = std::chrono::seconds {rlUnitConfig.spinUpTime};
     
     // Create a bad block table on a new disk image (if the 
     // image is not read-only)
-    t_offset fileSize;
-    if ((fileSize = fio::fsize (filePtr_)) == 0)
-    {   
-        // If read-only we're done
-        if (unitStatus_ & Status::WRITE_PROTECT)
-            return StatusCode::Success;
+    if (attachedFileSize () == 0 && !isWriteProtected ())
+        return createBadBlockTable ();
 
-        // Create a bad block table on the last track of the device.
-        // The position of the last track is also based on the unit's
-        // capacity!
-        return createBadBlockTable (RLV12const::sectorsPerSurface, 
-            RLV12const::wordsPerSector);
-    }
-
-    // If auto-sizing is set, determine drive type on the file size
-    if (rlStatus_ & RlStatus::UNIT_AUTO)
-    {
-        if (fileSize > (RLV12const::RL01_WordsPerCartridge * sizeof (u16)))
-        {
-            rlStatus_ |= RlStatus::UNIT_RL02;
-            capacity_ = RLV12const::RL02_WordsPerCartridge;
-            driveStatus_ |= RLV12const::MPR_GS_DriveType;
-        }
-        else
-        {
-            rlStatus_ &= ~Bitmask(RlStatus::UNIT_RL02);
-            capacity_ = RLV12const::RL01_WordsPerCartridge;
-        }
-    }
     return StatusCode::Success;
+}
+
+Bitmask<AttachFlags> RL01_02::getAttachMode (
+    const RLUnitConfig& rlUnitConfig)
+{
+    Bitmask<AttachFlags> attachMode {AttachFlags::Default};
+
+    if (rlUnitConfig.writeProtect)
+        attachMode |= AttachFlags::ReadOnly;
+    if (rlUnitConfig.newFile)
+        attachMode |= AttachFlags::NewFile;
+    if (rlUnitConfig.overwrite)
+        attachMode |= AttachFlags::Overwrite;
+
+    return attachMode;
+}
+
+// Get unit geometry from the given drive type
+Geometry RL01_02::driveGeometry (DriveType driveType)
+{
+    Geometry rl01Geometry {
+        RLV12const::sectorsPerSurface,
+        RLV12const::surfacesPerCylinder,
+        RLV12const::RL01cylindersPerCartridge,
+        RLV12const::wordsPerSector};
+
+    Geometry rl02Geometry {
+        RLV12const::sectorsPerSurface,
+        RLV12const::surfacesPerCylinder,
+        RLV12const::RL02cylindersPerCartridge,
+        RLV12const::wordsPerSector};
+
+    return (driveType == DriveType::RL01) ? rl01Geometry : rl02Geometry;
+}
+
+RL01_02::DriveType RL01_02::determineDriveType (const RLUnitConfig& rlUnitConfig)
+{
+    switch (rlUnitConfig.rlUnitType)
+    {
+        case RLUnitConfig::RLUnitType::RL01:
+            return DriveType::RL01;
+
+        case RLUnitConfig::RLUnitType::RL02:
+            return DriveType::RL02;
+
+        case RLUnitConfig::RLUnitType::Auto:
+            return (fileSize (rlUnitConfig.fileName) >
+                    RLV12const::RL01_WordsPerCartridge * sizeof (u16)) ?
+                DriveType::RL02 : DriveType::RL01;
+
+        default:
+           // Should not happen
+            throw invalid_argument ("Unknown RLunitType");
+    }
 }

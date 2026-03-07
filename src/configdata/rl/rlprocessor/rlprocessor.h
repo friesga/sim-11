@@ -4,12 +4,9 @@
 #include "configdata/sectionprocessor/deviceconfigprocessor.h"
 #include "configdata/rl/rlconfig/rlconfig.h"
 
-#include <memory>
 #include <map>
 #include <string>
 
-using std::unique_ptr;
-using std::shared_ptr;
 using std::map;
 using std::string;
 
@@ -17,7 +14,7 @@ using std::string;
 // RLV11 and RLV12.
 class RLProcessor : public SectionProcessor
 {
-	unique_ptr<RLConfig> rlConfigPtr {nullptr};
+	RLConfig rlConfig {};
 
 	// Define process as a pointer to a RLProcessor member function
 	// with a iniparser::Value argument and returning void.
@@ -36,7 +33,6 @@ class RLProcessor : public SectionProcessor
 	void processUnits (iniparser::Value value);
 
 public:
-	RLProcessor ();
 	void processSection (iniparser::Section* section);
 	void processSubsection (iniparser::Section* subSection);
 	void checkConsistency ();

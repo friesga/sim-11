@@ -1,14 +1,15 @@
 #ifndef _RL01_02_H_
 #define _RL01_02_H_
 
-#include "unit/unit.h"
+#include "diskdrive/diskdrive.h"
+#include "concepts/geometry/geometry.h"
 #include "types.h"
 #include "statuscodes.h"
 #include "chrono/alarmclock/alarmclock.h"
 #include "variantfsm/fsm.h"
 #include "rlv12/rlv12command/rlv12command.h"
 #include "panel.h"
-#include "dummycontrols.h"
+#include "dummycontrols/dummycontrols.h"
 #include "asynctimer/asynctimer.h"
 
 #include <mutex>
@@ -17,34 +18,29 @@
 #include <utility>
 #include <queue>
 #include <memory>
+#include <filesystem>
 
 using std::thread;
 using std::mutex;
 using std::condition_variable;
 using std::queue;
 using std::unique_ptr;
-using std::shared_ptr;
 using std::pair;
 using std::chrono::duration;
 
-// RL01/02 unit status flags. These flags are used in the definition of 
-// Bitmask<RlStatus> and provide a compile-time type safety for the use
-// of these flags.
-// The flags are used for configuration and/or run-time status. This cannot
-// be separated easily as some configuration flags (e.g. UNIT_RL02) are
-// updated run-time to reflect the actual situation.
+// RL01/RL02 disk drive
 //
-enum class RlStatus
-{
-    UNIT_RL02,          // RL01 vs RL02 
-    UNIT_AUTO,          // autosize enable
-    _                   // Required for Bitmask
-};
-
-// RLO1/RL02 unit
-class RL01_02 : public Unit
+// This class is derived from the class DiskDrive as a RL01/02 *is* a disk
+// drive and does not *contain* a disk drive. If desired, changing the
+// relation to a containment relation should be trivial as the DiskDrive class
+// only provides public functions.
+//
+class RL01_02 : public DiskDrive
 {
 public:
+    // All RLV12Commands need access to the file pointer and unit status
+    friend class CmdProcessor;
+
     // Definition for the procedures to calculate the new head position
     enum class HeadPositionProcedure
     {
@@ -54,12 +50,11 @@ public:
     };
 
     // Constructor and destructor
-    RL01_02 (PDP11Peripheral* owningDevice);
+    RL01_02 (AbstractBusDevice* owningDevice);
     ~RL01_02 ();
 
     bool available ();
     u16 driveStatus ();
-    bool unitAttached ();
     bool volumeCheck () const;
     pair<bool, size_t> readData (RLV12Command& rlv12Command, u16* buffer,
         HeadPositionProcedure procedure, u16 diskAddressRegister);
@@ -76,10 +71,8 @@ public:
     void setSeekIncomplete ();
     void waitForSeekComplete ();
     void resetDriveError ();
-
-    StatusCode init (shared_ptr<RLUnitConfig> rlUnitConfig,
-        Window* window);
-    StatusCode init (shared_ptr<RLUnitConfig> rlUnitConfig);
+    StatusCode init (const RLUnitConfig& rlUnitConfig, Window* window);
+    StatusCode init (const RLUnitConfig& rlUnitConfig);
 
 private:
     // Definition of the drive states
@@ -103,17 +96,19 @@ private:
 
     using Event = std::variant <SpinUp, SpinDown, SpunUp, SpunDown,
         SeekCommand, TimeElapsed>;
-
-    // All RLV12Commands need access to the file pointer and unit status
-    friend class CmdProcessor;
     
     // Use the PIMPL idiom to be able to define the StateMachine outside
     // of the RlDrive class
     class StateMachine;
     unique_ptr<StateMachine> stateMachine_;
 
-    int32_t currentDiskAddress_;
-    Bitmask<RlStatus> rlStatus_;
+    // Definition of drive type. The type will be determined in configure(),
+    // called from the constructor.
+    enum class DriveType { RL01, RL02 };
+    DriveType driveType_;
+
+    Geometry geometry_;
+    int32_t currentDiskAddress_ {0};
 
     // The driveState_ keeps track of bits 0-5 of the MPR for a Get Status
     // command. The driveState_ is only set in the drive thread and is only
@@ -170,14 +165,18 @@ private:
     Frame<float> faultIndicatorFrame     {0.783, 0.538, 0.030, 0.060};
     Frame<float> writeProtectButtonFrame {0.823, 0.538, 0.030, 0.060};
 
-    StatusCode configure (shared_ptr<RLUnitConfig> rlUnitConfig);
-    void createBezel (Window* window, shared_ptr<RLUnitConfig> rlUnitConfig);
-    int32_t filePosition (int32_t diskAddress) const;
+    StatusCode configure (const RLUnitConfig& rlUnitConfig);
+    void createBezel (Window* window, const RLUnitConfig& rlUnitConfig);
+    DiskAddress darToDiskAddress (int32_t diskAddress) const;
     void updateHeadPosition (HeadPositionProcedure procedure,
         s32 wordCount, u16 diskAddressRegister);
 
     void loadButtonClicked (Button::State state);
     void writeProtectButtonClicked (Button::State state);
+    Bitmask<AttachFlags> getAttachMode (const RLUnitConfig& rlUnitConfig);
+    Geometry driveGeometry (DriveType driveType);
+    DriveType determineDriveType (const RLUnitConfig& rlUnitConfig);
+    size_t fileSize (string filePath) const;
 };
 
 // Definition of the state machine for the drive. The class has to be defined

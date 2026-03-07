@@ -6,7 +6,7 @@
 #include "rl01_02/rl01_02.h"
 #include "bus/include/bus.h"
 #include "busaddress/busaddress.h"
-#include "pdp11peripheral/pdp11peripheral.h"
+#include "abstractbusdevice/abstractbusdevice.h"
 #include "threadsafecontainers/threadsafequeue.h"
 #include "statuscodes.h"
 #include "rlv12command/rlv12command.h"
@@ -24,7 +24,7 @@
 class CmdProcessor;
 
 // Implementation of the RL11, RLV11 and RLV12 controllers.
-class RLV12 : public PDP11Peripheral
+class RLV12 : public AbstractBusDevice
 {
     friend class CmdProcessor;
 
@@ -38,6 +38,9 @@ class RLV12 : public PDP11Peripheral
         BAE = 010
     };
 
+    // Pointer to the bus we are connected to
+    Bus* bus_;
+
     // Define controller registers
     // The MPR is not a single physical entity like the other registers. It
     // consists of two separate registers, the word counter and the FIFO output
@@ -46,6 +49,10 @@ class RLV12 : public PDP11Peripheral
     u16 bar_;       // Bus Address register
     u16 dar_;       // Disk address register
     u16 bae_;       // Bus Address Extension register
+
+    // Definition of the controller's base address and vector
+    u16 baseAddress_ {0};
+    u16 vector_ {0};
 
     // Define transfer buffer
     u16* dataBuffer_;
@@ -100,10 +107,10 @@ class RLV12 : public PDP11Peripheral
 public:
     // Constructors/destructor
     RLV12 (Bus* bus);
-    RLV12 (Bus* bus, Window* window, RLConfig& rlConfig);
-    RLV12 (Bus* bus, Window* window, shared_ptr<RL11Config> rl11Config);
-    RLV12 (Bus* bus, Window* window, shared_ptr<RLV11Config> rlv11Config);
-    RLV12 (Bus* bus, Window* window, shared_ptr<RLV12Config> rlv12Config);
+    RLV12 (Bus* bus, Window* window, const RLConfig& rlConfig);
+    RLV12 (Bus* bus, Window* window, const RL11Config& rl11Config);
+    RLV12 (Bus* bus, Window* window, const RLV11Config& rlv11Config);
+    RLV12 (Bus* bus, Window* window, const RLV12Config& rlv12Config);
     ~RLV12 ();
 
     // Required functions

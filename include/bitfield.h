@@ -1,8 +1,6 @@
 #ifndef _BITFIELD_H_
 #define _BITFIELD_H_
 
-#include "types.h"
-
 // This class implements portable bit fields for a specific underlying
 // type. When combined with a union the individual bits and fields as well
 // as the value as the underlying type can be set and read. This can be
@@ -26,6 +24,8 @@ private:
     };
 
 public:
+    BitField (T value) { value_ = (value & Mask) << Index; }
+
     BitField& operator= (T value)
     {
         value_ = (value_ & ~(Mask << Index)) | ((value & Mask) << Index);
@@ -38,18 +38,24 @@ public:
     // operator T().
     explicit operator bool () const { return value_ & (Mask << Index); }
 
+    // Definition of the unary plus operator for Bitfields. This allows 
+    // statements such as 'u16 bits = +BitField<u16, 8, 8> {0377};' 
+    // returning the bit value of bits instead of the integer value.
+    T operator+ () const { return value_; }
+
     BitField& operator++() { return *this = *this + 1; }
     T operator++(int) { T r = *this; ++*this; return r; }
     BitField& operator--() { return *this = *this - 1; }
     T operator--(int) { T r = *this; --*this; return r; }
 
 private:
-    T value_;
+    T value_ {0};
 };
 
 template <typename T, size_t Index>
 class BitField<T, Index, 1>
 {
+
 private:
     enum
     {
@@ -58,16 +64,24 @@ private:
     };
 
 public:
+    BitField (T value) { value_ = (value & Mask) << Index; }
+
     BitField& operator=(bool value)
     {
         value_ = (value_ & ~(Mask << Index)) | (value << Index);
         return *this;
     }
 
+    // Definition of the unary plus operator for Bitfields. This allows 
+    // statements such as 'u16 bits = +BitField<u16, 8, 8> {0377};' 
+    // returning the bit value of bits instead of the integer value.
+    T operator+ () const { return value_; }
+
     operator bool () const { return value_ & (Mask << Index); }
 
 private:
     T value_;
 };
+
 
 #endif // _BITFIELD_H_

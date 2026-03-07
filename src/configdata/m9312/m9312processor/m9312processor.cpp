@@ -5,15 +5,11 @@
 #include <vector>
 
 using std::make_unique;
+using std::make_shared;
 using std::move;
 using std::invalid_argument;
 using std::out_of_range;
 using std::vector;
-
-M9312Processor::M9312Processor ()
-{
-    m9312ConfigPtr = make_unique<M9312Config> ();
-}
 
 void M9312Processor::processValue (iniparser::Section::ValueIterator valueIterator)
 {
@@ -35,14 +31,14 @@ void M9312Processor::processSubsection (iniparser::Section* subSection)
 
 DeviceConfig M9312Processor::getConfig ()
 {
-    return move (m9312ConfigPtr);
+    return m9312Config;
 }
 
 void M9312Processor::processDiagnosticROM (iniparser::Value value)
 {
     try
     {
-        m9312ConfigPtr->diagnosticROM = diagROMSpec.at (value.asString ());
+        m9312Config.diagnosticROM = diagROMSpec.at (value.asString ());
     }
     catch (out_of_range const&)
     {
@@ -62,7 +58,7 @@ void M9312Processor::processBootROMs (iniparser::Value value)
     {
         try
         {
-            m9312ConfigPtr->bootROM[slotNr] = 
+            m9312Config.bootROM[slotNr] = 
                 bootROMSpec.at (specifiedROMs[slotNr]);
         }
         catch (out_of_range const&)
@@ -95,7 +91,7 @@ void M9312Processor::processStartingAddress (iniparser::Value value)
     if (startingAddress & 1)
         throw invalid_argument {sectionName () + " starting address must be even"};
 
-    m9312ConfigPtr->startingAddress = startingAddress;
+    m9312Config.startingAddress = startingAddress;
 }
 
 bool M9312Processor::addressInRange (u16 address)
@@ -110,9 +106,9 @@ bool M9312Processor::addressInRange (u16 address)
 void M9312Processor::processPowerUpBootEnable (iniparser::Value value)
 {
     if (value.asString () == "true")
-        m9312ConfigPtr->powerUpBootEnable = true;
+        m9312Config.powerUpBootEnable = true;
     else if (value.asString () == "false")
-        m9312ConfigPtr->powerUpBootEnable = false;
+        m9312Config.powerUpBootEnable = false;
     else
         throw std::invalid_argument {sectionName () +
             " power-up-boot-enable must be either true or false"};

@@ -1,0 +1,182 @@
+#include "basemachinestate.h"
+#include "chrono/simulatorclock/simulatorclock.h"
+
+using std::make_unique;
+using std::monostate;
+
+using namespace std::chrono;
+
+BaseMachineState::State BaseMachineState::StateMachine::transition (PowerOff&&, BPOK_high)
+{
+    return context_->powerUpRoutine ();
+}
+
+BaseMachineState::State BaseMachineState::StateMachine::transition (Standby&&, BPOK_high)
+{
+    return context_->powerUpRoutine ();
+}
+
+// The CPU is run by calling the CPU's step() function to execute intructions.
+// Every instruction execution returns the next state for the state machine.
+// 
+// If the CPU is halted or BHALT is true ODT must be started. In the
+// latter case one instruction is executed and thus the CPU is single
+// stepped.
+//
+// If the CPU executes a WAIT instruction the state machine transitions to the
+// Waiting state. This actually is a sub state of the Running state but as the
+// variantfsm state machine doesn't support sub states the Waiting state is
+// implemented as a separate state.
+//
+void BaseMachineState::StateMachine::entry (Running)
+{
+    while (!context_->signalAvailable ())
+    {
+        Interfaces::CpuController::CpuRunState nextState = context_->cpuController_->execute ();
+
+        if (nextState == Interfaces::CpuController::CpuRunState::HALT ||
+            context_->bus_->BHALT () || context_->cpuController_->inHaltMode ())
+        {
+            context_->signalEventQueue_.push (Halt {});
+            context_->bus_->SRUN ().set (false);
+        }
+        else if (nextState == Interfaces::CpuController::CpuRunState::WAIT)
+            context_->signalEventQueue_.push (Wait {});
+    }
+}
+
+BaseMachineState::State BaseMachineState::StateMachine::transition (Running&&, Reset)
+{
+    return context_->powerUpRoutine ();
+}
+
+BaseMachineState::State BaseMachineState::StateMachine::transition (Running&&, Boot)
+{
+    return context_->bootRoutine ();
+}
+
+BaseMachineState::State BaseMachineState::StateMachine::transition (Running&&, Halt)
+{
+    return Halted {};
+}
+
+BaseMachineState::State BaseMachineState::StateMachine::transition (Running&&, Wait)
+{
+    return Waiting {};
+}
+
+BaseMachineState::State BaseMachineState::StateMachine::transition (Running&&, BPOK_low)
+{
+    return PowerFail {};
+}
+
+// On every entry to ODT a new KD11_NA_ODT object is created to make
+// sure it is initialized properly. The Microcomputer and Memories
+// Handbook states: "A / issued immediately after the processor
+// enters ODT mode causes a ?<CR><LF> to be printed because a
+// location has not yet been opened.
+void BaseMachineState::StateMachine::entry (Halted)
+{
+    context_->runODT ();
+}
+
+BaseMachineState::State BaseMachineState::StateMachine::transition (Halted&&, Start)
+{
+    return Running {};
+}
+
+BaseMachineState::State BaseMachineState::StateMachine::transition (Halted&&, Reset)
+{
+    return context_->powerUpRoutine ();
+}
+
+BaseMachineState::State BaseMachineState::StateMachine::transition (Halted&&, Boot)
+{
+    return context_->bootRoutine ();
+}
+ 
+BaseMachineState::State BaseMachineState::StateMachine::transition (Halted&&, BPOK_low)
+{
+    return PowerOff {};
+}
+
+// This function is called on the execution of a WAIT instruction. It waits
+// for a signal or interrupt request finishing the WAIT instruction.
+// If no signal or an interrupt request is present advance time so devices
+// are awakened at the specified time.
+void BaseMachineState::StateMachine::entry (Waiting)
+{
+    while (!context_->signalAvailable () && !context_->bus_->intrptReqAvailable ())
+        SimulatorClock::forwardClock (microseconds (50));
+
+    context_->signalEventQueue_.push (Start {});
+}
+
+BaseMachineState::State BaseMachineState::StateMachine::transition (Waiting&&, Start)
+{
+    context_->cpuController_->proceed ();
+    return Running {};			
+};
+
+BaseMachineState::State BaseMachineState::StateMachine::transition (Waiting&&, Boot)
+{
+    return context_->bootRoutine ();
+};
+
+BaseMachineState::State BaseMachineState::StateMachine::transition (Waiting&&, Reset)
+{
+    return context_->powerUpRoutine ();
+};
+
+BaseMachineState::State BaseMachineState::StateMachine::transition (Waiting&&, BPOK_low)
+{
+    return PowerFail {};
+}
+
+BaseMachineState::State BaseMachineState::StateMachine::transition (Waiting&&, Halt)
+{
+    return Halted {};
+}
+
+// Execute the powerfail routine until either a HALT is executed
+// or the DC runs out. The latter is simulated by executing a maximum of
+// 1000 instructions (presuming an avering instruction exeution time of
+// 4 microseconds and 4 milliseconds DC power available). The powerfail
+// routine cannot be single stepped.
+void BaseMachineState::StateMachine::entry (PowerFail)
+{
+    size_t maxInstructions {1000};
+
+    // On a powerfail trap to the vector at address 24/26
+    context_->cpuData_->setTrap (CpuData::TrapType::PowerFail);
+
+    while (!context_->signalAvailable () && --maxInstructions > 0)
+    {
+        if (context_->cpuController_->execute () != Interfaces::CpuController::CpuRunState::RUN)
+        {
+            context_->signalEventQueue_.push (Halt {});
+            return;
+        }
+    }
+
+    if (maxInstructions == 0)
+    {
+        context_->signalEventQueue_.push (BDCOK_low {});
+        return;
+    }
+}
+
+BaseMachineState::State BaseMachineState::StateMachine::transition (PowerFail&&, BDCOK_low)
+{
+    return context_->powerDownRoutine ();
+}
+
+BaseMachineState::State BaseMachineState::StateMachine::transition (PowerFail&&, Halt)
+{
+    return context_->powerDownRoutine ();
+}
+
+void BaseMachineState::StateMachine::entry (ExitPoint)
+{
+    context_->running_ = false;
+}

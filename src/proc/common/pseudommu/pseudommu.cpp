@@ -1,0 +1,80 @@
+#include "pseudommu.h"
+#include "trace/trace.h"
+
+PseudoMMU::PseudoMMU (BusInterface* busInterface, CpuData* cpuData)
+    :
+    busInterface_ {busInterface},
+    cpuData_ {cpuData}
+{}
+
+void PseudoMMU::reset ()
+{}
+
+// The PSW::Mode is a default parameter which is not used in the PseudoMMU.
+CondData<u16> PseudoMMU::fetchWord (VirtualAddress address, PSW::Mode mode)
+{
+    CondData<u16> value = busInterface_->read (address);
+    if (!value.hasValue ())
+    {
+        trace.bus (BusRecordType::ReadFail, address, 0);
+        cpuData_->setTrap (CpuData::TrapType::BusError);
+        return {};
+    }
+    return value;
+}
+
+// Fetch the byte at the given word or byte address. The PSW::Mode is a
+// default parameter which is not used in the PseudoMMU.
+// 
+// The validity of the fetched word has to be checked before the shift-
+// and and-operators can be applied to the word!
+CondData<u8> PseudoMMU::fetchByte (VirtualAddress address, PSW::Mode memMgmtMode)
+{
+    CondData<u16> retValue {};
+    if (address & 1)
+    {
+         retValue = fetchWord (address & 0xFFFE);
+         if (retValue.hasValue ())
+             return CondData<u8> (retValue >> 8);
+    }
+    else
+    {
+        retValue = fetchWord (address);
+        if (retValue.hasValue ())
+            return CondData<u8> (retValue & 0377);
+    }
+
+    return CondData<u8> {};
+}
+
+// The PSW::Mode is a default parameter which is not used in the PseudoMMU.
+bool PseudoMMU::putWord (VirtualAddress address, u16 value, PSW::Mode memMgmtMode)
+{
+    if (!busInterface_->writeWord (address, value))
+    {
+        trace.bus (BusRecordType::WriteFail, address, value);
+        cpuData_->setTrap (CpuData::TrapType::BusError);
+        return false;
+    }
+    return true;
+}
+
+// The PSW::Mode is a default parameter which is not used in the PseudoMMU.
+bool PseudoMMU::putByte (VirtualAddress address, u8 value, PSW::Mode memMgmtMode)
+{
+    if (!busInterface_->writeByte (address, value))
+    {
+        trace.bus (BusRecordType::WriteFail, address, value);
+        cpuData_->setTrap (CpuData::TrapType::BusError);
+        return false;
+    }
+    return true;
+}
+
+CondData<u16> PseudoMMU::readWithoutTrap (u16 address)
+{
+    return busInterface_->read (address);
+}
+
+void PseudoMMU::setVirtualPC (u16 value)
+{}

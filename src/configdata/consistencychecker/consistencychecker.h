@@ -28,27 +28,24 @@ public:
     template<typename TConfig, size_t capacity> void checkMS11Consistency ();
     void checkKDF11_BConsistency ();
     void checkCabinetConsistency ();
-    void checkM9312Consistency ();
+    void checkROMDeviceConsistency ();
 
 private:
     SystemConfig const& systemConfig_;
 
-    void checkEitherBA11_NOrBA11_L ();
     void checkOneBA11 ();
     void checkBusConsistency ();
-    void checkNotBothM9312AndKT24 ();
-    void checkM9312OrKT24 ();
 
     template<typename T> static bool findDevice (DeviceConfig device);
-    template<typename TConfig> bool conflictsWith (shared_ptr<TConfig> msv11Card1,
-		shared_ptr<TConfig> msv11Card2, size_t capacity);
+    template<typename TConfig> bool conflictsWith (TConfig msv11Card1,
+		TConfig msv11Card2, size_t capacity);
 	bool isWithin (u32 address, u32 begin, u32 end);
 };
 
 template<typename T>
 bool ConsistencyChecker::findDevice (DeviceConfig device)
 {
-    return var_type (device) == typeid (shared_ptr<T> {});
+    return var_type (device) == typeid (T {});
 }
 
 #endif // _CONSISTENCYCHECKER_H_

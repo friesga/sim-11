@@ -96,7 +96,7 @@ inline bool SystemConfig::isQbusSystem () const
 {
     auto isBA11_N = [] (DeviceConfig device)
         {
-            return holds_alternative<shared_ptr<BA11_NConfig>> (device);
+            return holds_alternative<BA11_NConfig> (device);
         };
 
     return find_if (devices_, isBA11_N) != devices_.end ();

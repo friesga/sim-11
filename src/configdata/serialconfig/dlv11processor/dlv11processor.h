@@ -5,13 +5,10 @@
 #include "configdata/serialconfig/dlv11jconfig/dlv11jconfig.h"
 #include "configdata/serialconfig/uartconfig/uartconfig.h"
 
-#include <memory>
 #include <map>
 #include <string>
 #include <vector>
 
-using std::unique_ptr;
-using std::shared_ptr;
 using std::map;
 using std::string;
 using std::vector;
@@ -19,7 +16,6 @@ using std::vector;
 class DLV11Processor : public DeviceConfigProcessor
 {
 public:
-	DLV11Processor ();
 	DeviceConfig getConfig ();
 
 private:
@@ -27,7 +23,7 @@ private:
 	enum {defaultCh3Address_ = 0177560};
 	enum {defaultCh3Vector_ = 060};
 
-	unique_ptr<DLV11JConfig> dlConfigPtr {nullptr};
+	DLV11JConfig dlConfig {};
 
     // Define process as a pointer to a DLV11Processor member function
 	// with a iniparser::Value argument and returning void.

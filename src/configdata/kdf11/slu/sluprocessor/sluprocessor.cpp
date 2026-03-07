@@ -15,11 +15,6 @@ using std::ranges::find_if;
 using std::vector;
 using std::pair;
 
-SLUProcessor::SLUProcessor ()
-{
-	sluConfigPtr = make_unique<SLUConfig> ();
-}
-
 void SLUProcessor::processValue (iniparser::Section::ValueIterator valueIterator)
 {
     // Throw exception for non-existing key?
@@ -47,7 +42,7 @@ void SLUProcessor::processSLUxEnabled (size_t unitNr, string id, iniparser::Valu
 {
     try
 	{
-		sluConfigPtr->uartConfig[unitNr].enabled_ = value.asBool ();
+		sluConfig.uartConfig[unitNr].enabled_ = value.asBool ();
 	}
 	catch (invalid_argument const &)
 	{
@@ -62,7 +57,7 @@ void SLUProcessor::processSLU2Address (iniparser::Value value)
 	try
 	{
 		u16 address = touint<u16> (value.asString());
-		it = find_if (sluConfigPtr->validSlu2AddressVector,
+		it = find_if (sluConfig.validSlu2AddressVector,
 			[&address] (pair<u16, u16> element) {return element.first == address;});
 	}
 	catch (std::invalid_argument const &)
@@ -71,11 +66,11 @@ void SLUProcessor::processSLU2Address (iniparser::Value value)
 			value.asString()};
 	}
 
-	if (it == sluConfigPtr->validSlu2AddressVector.end ())
+	if (it == sluConfig.validSlu2AddressVector.end ())
 		throw invalid_argument {"KDF11-B SLU2 address must be either 0176500 or 0176540"}; 
 		
-	sluConfigPtr->uartConfig[1].baseAddress_ = it->first;
-	sluConfigPtr->uartConfig[1].baseVector_ = it->second;
+	sluConfig.uartConfig[1].baseAddress_ = it->first;
+	sluConfig.uartConfig[1].baseVector_ = it->second;
 }
 
 void SLUProcessor::processBreakResponse (iniparser::Value value)
@@ -84,7 +79,7 @@ void SLUProcessor::processBreakResponse (iniparser::Value value)
 
     if ((iter = validBreakResponses.find (value.asString ())) != 
             validBreakResponses.end ())
-        sluConfigPtr->consoleConfig.breakResponse = iter->second;
+        sluConfig.consoleConfig.breakResponse = iter->second;
     else
         throw invalid_argument {"Incorrect KDF11-B SLU break_response value"};
 }
@@ -92,10 +87,10 @@ void SLUProcessor::processBreakResponse (iniparser::Value value)
 void SLUProcessor::processBreakKey (iniparser::Value value)
 {
 	if (value.asString () == "esc")
-        sluConfigPtr->consoleConfig.breakKey = 27;
+        sluConfig.consoleConfig.breakKey = 27;
     else if (value.asString().starts_with ('^') &&
             value.asString ().size () == 2)
-        sluConfigPtr->consoleConfig.breakKey = value.asString ().at (1) & ~11100000;
+        sluConfig.consoleConfig.breakKey = value.asString ().at (1) & ~11100000;
     else
             throw invalid_argument {"Incorrect break key specification"};
 }
@@ -113,11 +108,11 @@ void SLUProcessor::processLoopback (iniparser::Value value)
 		throw invalid_argument {"Value of KDF11-B SLU loopback must be \'true\' or \'false\'"};
 	}
 
-	sluConfigPtr->uartConfig[0].loopback_ = loopback;
-	sluConfigPtr->uartConfig[1].loopback_ = loopback;
+	sluConfig.uartConfig[0].loopback_ = loopback;
+	sluConfig.uartConfig[1].loopback_ = loopback;
 }
 
-shared_ptr<SLUConfig> SLUProcessor::getConfig ()
+SLUConfig SLUProcessor::getConfig ()
 {
-	return move (sluConfigPtr);
+	return sluConfig;
 }

@@ -20,6 +20,11 @@ Signal& SignalHandler::BHALT ()
     return BHALT_;
 }
 
+Signal& SignalHandler::START ()
+{
+    return START_;
+}
+
 Signal& SignalHandler::BINIT ()
 {
     return BINIT_;

@@ -8,11 +8,6 @@
 using std::make_unique;
 using std::move;
 
-RLProcessor::RLProcessor ()
-{
-	rlConfigPtr = make_unique<RLConfig> ();
-}
-
 // This is an overridden version of SectionProcessor::processSection() with
 // the following differences:
 // - Unknown keys are ignored,
@@ -54,7 +49,7 @@ void RLProcessor::processAddress (iniparser::Value value)
 {
 	try
 	{
-		rlConfigPtr->address = touint<u16> (value.asString ());
+		rlConfig.address = touint<u16> (value.asString ());
 	}
 	catch (std::invalid_argument const&)
 	{
@@ -67,7 +62,7 @@ void RLProcessor::processVector (iniparser::Value value)
 {
 	try
 	{
-		rlConfigPtr->vector = touint<u16> (value.asString ());
+		rlConfig.vector = touint<u16> (value.asString ());
 	}
 	catch (std::invalid_argument const&)
 	{
@@ -78,34 +73,27 @@ void RLProcessor::processVector (iniparser::Value value)
 
 void RLProcessor::processUnits (iniparser::Value value)
 {
-	rlConfigPtr->numUnits = value.asInt ();
+	rlConfig.numUnits = value.asInt ();
 }
 
-// A RL Section can have zero to four subsections, one for each unit.
+// A RL section can have zero to four subsections, one for each unit.
+// The unit number is specified by the optional unit key.
+//
 void RLProcessor::processSubsection (iniparser::Section* subSection)
 {
-	if (subSection->name().substr(0, 4) != "unit")
-		throw std::invalid_argument {"Unknown RL subsection: " +
-			subSection->name()};
-
-	// Get the unit number from the subsection name. This will throw an
-	// exception if an incorrect unit number is specified. The unit number
-	// is stored in the RlUnitConfig struct so it is clear to which unit
-	// the configuration applies.
-	size_t unitNumber = unitNumberFromSectionName (subSection->name(),
-		rlConfigPtr->maxRlUnits);
+	size_t unitNumber = unitNumberFromUnitKey (subSection, rlConfig.maxRlUnits);
 
 	// Check that the configuration for this unit has not already been
 	// specified.
-	if (rlConfigPtr->rlUnitConfig[unitNumber] != nullptr)
+	if (rlConfig.rlUnitConfig[unitNumber].has_value ())
 		throw std::invalid_argument {"Double specification for RL subsection: " +
 			subSection->name()};
 
-	RLUnitProcessor rlUnitProcessor {unitNumber};
+	RLUnitProcessor rlUnitProcessor {subSection};
 	rlUnitProcessor.processSection (subSection);
 
 	// Add the unit configuration to the RL device configuration
-	rlConfigPtr->rlUnitConfig[unitNumber] = rlUnitProcessor.getConfig ();
+	rlConfig.rlUnitConfig[unitNumber] = rlUnitProcessor.getConfig ();
 }
 
 void RLProcessor::checkConsistency ()
@@ -113,5 +101,5 @@ void RLProcessor::checkConsistency ()
 
 RLConfig RLProcessor::getConfig ()
 {
-	return *rlConfigPtr;
+	return rlConfig;
 }

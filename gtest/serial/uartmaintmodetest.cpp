@@ -19,8 +19,11 @@ using namespace std::chrono_literals;
 class UARTMaintModeTest : public ::testing::Test
 {
 protected:
-    // Use our own set of definitions to avoid common cause issues
-    static constexpr u16 UARTBASE = 0177560;
+    // Use our own set of definitions to avoid common cause issues.
+    // 
+    // Avoid the use of the 0177560 base address as that address is used for
+    // the console and loopback on the console is always disabled.
+    static constexpr u16 UARTBASE = 0177500;
     static constexpr u16 RCSR = UARTBASE;
     static constexpr u16 RBUF = UARTBASE + 02;
     static constexpr u16 XCSR = UARTBASE + 04;
@@ -47,7 +50,7 @@ protected:
 
 TEST_F (UARTMaintModeTest, maintenanceModeCanBeSet)
 {
-    UARTConfig uartConfig {0177560, 060, false};
+    UARTConfig uartConfig {0177500, 060, false};
     ConsoleConfig consoleConfig {};
     Qbus bus;
     CondData<u16> data;

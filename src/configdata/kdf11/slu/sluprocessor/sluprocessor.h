@@ -4,18 +4,15 @@
 #include "configdata/sectionprocessor/unitconfigprocessor.h"
 #include "configdata/kdf11/slu/sluconfig/sluconfig.h"
 
-#include <memory>
 #include <map>
 #include <string>
 
-using std::unique_ptr;
-using std::shared_ptr;
 using std::map;
 using std::string;
 
 class SLUProcessor : public UnitConfigProcessor
 {
-	unique_ptr<SLUConfig> sluConfigPtr {nullptr};
+	SLUConfig sluConfig;
 
 	typedef void (SLUProcessor::*Process)(iniparser::Value);
 	
@@ -48,8 +45,7 @@ class SLUProcessor : public UnitConfigProcessor
 	void processLoopback (iniparser::Value value);
 
 public:
-	SLUProcessor ();
-	shared_ptr<SLUConfig> getConfig ();
+	SLUConfig getConfig ();
 };
 
 

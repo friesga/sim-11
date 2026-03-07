@@ -90,3 +90,25 @@ TEST (SimulatorClock, twoWakeUps)
     EXPECT_EQ (spyWakeUpCall1.calledAt (), 300'000'000);
     EXPECT_EQ (spyWakeUpCall2.calledAt (), 500'000'000);
 }
+
+TEST (SimulatorClock, timePointsCanBeCalculatedWith)
+{
+    // Reset the clock to start at time point 0 so we can use the
+    // correct start time.
+    SimulatorClock::reset ();
+
+    // Define revolution times for a RK05 disk
+    SimulatorClock::duration indexPulseTime {40ms};
+    SimulatorClock::duration sectorRevolutionTime {indexPulseTime / 12};
+
+    SimulatorClock::forwardClock (50ms);
+
+    SimulatorClock::duration d1 = SimulatorClock::now ().time_since_epoch ();
+
+    auto const elapsedTimeSinceLastIndexPulse =  d1 % indexPulseTime;
+    
+    auto const sectorNumber = 
+        elapsedTimeSinceLastIndexPulse / sectorRevolutionTime;
+
+    EXPECT_EQ (sectorNumber, 3);
+}

@@ -12,7 +12,7 @@ using std::vector;
 void traceOption (string value)
 {
     trace.activate (value.c_str (),
-        Trace::Category::RLV12 |
+        Trace::Category::RK11 |
         Trace::Category::Debug);
 }
 
@@ -23,6 +23,10 @@ vector<CmdLineParser::CmdLineOption> options =
 
 // A custom main() function for GoogleTest in which we can perform custom
 // actions, such as enabling the tracing facility.
+//
+// Tracing can be enabled by specifying the "--trace=<file>" command line
+// option. The tracing category can be set in the traceOption() function
+// above.
 //
 int main (int argc, char** argv)
 {

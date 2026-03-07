@@ -12,34 +12,20 @@ using std::visit;
 
 void ConsistencyChecker::checkBA11Consistency ()
 {
-    checkEitherBA11_NOrBA11_L ();
     checkOneBA11 ();
     checkBusConsistency ();
 }
 
-// Check that either a BA11-L or a BA11-N and not both are specified
-void ConsistencyChecker::checkEitherBA11_NOrBA11_L ()
-{
-    auto isBA11_N = [] (DeviceConfig device)
-        {
-            return holds_alternative<shared_ptr<BA11_NConfig>> (device);
-        };
-    auto isBA11_L = [] (DeviceConfig device)
-        {
-            return holds_alternative<shared_ptr<BA11_LConfig>> (device);
-        };
-
-    if (find_if (systemConfig_, isBA11_N) != systemConfig_.end () &&
-        find_if (systemConfig_, isBA11_L) != systemConfig_.end ())
-        throw invalid_argument {"Double BA11 specification, specify either BA11-N or BA11-L"};
-}
-
-// Check that a BA11-L or a BA11-N is specified
+// Check that just one BA11, i.e. a BA11-C, a BA11-L or a BA11-N is specified.
 void ConsistencyChecker::checkOneBA11 ()
 {
-    if (count_if (systemConfig_, &ConsistencyChecker::findDevice<BA11_NConfig>) == 0 &&
-        count_if (systemConfig_, &ConsistencyChecker::findDevice<BA11_LConfig>) == 0)
-        throw invalid_argument {"No BA11 specified, specify either BA11-N or BA11-L"};
+    size_t numBA11s =
+        count_if (systemConfig_, &ConsistencyChecker::findDevice<BA11_NConfig>) +
+        count_if (systemConfig_, &ConsistencyChecker::findDevice<BA11_LConfig>);
+
+
+    if (numBA11s > 1)
+        throw invalid_argument {"Multiple BA11 specification, specify just one BA11"};
 }
 
 // Check that a Qbus system does not contain a Unibus device and vice versa
@@ -47,7 +33,7 @@ void ConsistencyChecker::checkBusConsistency ()
 {
     auto isUnibusDevice = [] (const auto& device)
         {
-            return device->isUnibusDevice ();
+            return device.isUnibusDevice ();
         };
 
     auto unibusDevice = [isUnibusDevice] (DeviceConfig device)
@@ -57,7 +43,7 @@ void ConsistencyChecker::checkBusConsistency ()
 
     auto isQbusDevice = [] (const auto& device)
         {
-            return device->isQbusDevice ();
+            return device.isQbusDevice ();
         };
 
     auto qbusDevice = [isQbusDevice] (DeviceConfig device)

@@ -5,16 +5,17 @@
 #include "types.h"
 #include "configdata/rxv21/rxv21unitconfig/rxv21unitconfig.h"
 
-#include <memory>
+#include <optional>
 
-using std::shared_ptr;
+using std::optional;
 
 struct RXV21Config : public DeviceType<BusType::QBus>
 {
     static constexpr size_t numRxUnits = 2;
 	u16 address {0};
 	u16 vector {0};
-	shared_ptr<RXV21UnitConfig> rxv21UnitConfig[numRxUnits] = {};
+
+	optional<RXV21UnitConfig> rxv21UnitConfig[numRxUnits] = {};
 };
 
 #endif // _RXCONFIG_H_

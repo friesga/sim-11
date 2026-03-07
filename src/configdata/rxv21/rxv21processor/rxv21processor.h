@@ -6,7 +6,7 @@
 
 class RXV21Processor : public DeviceConfigProcessor
 {
-    std::unique_ptr<RXV21Config> rxConfigPtr {nullptr};
+    RXV21Config rxConfig {};
 
 	// Define process as a pointer to a RlProcessor member function
 	// with a iniparser::Value argument and returning void.
@@ -26,7 +26,6 @@ class RXV21Processor : public DeviceConfigProcessor
 
 
 public:
-	RXV21Processor ();
 	DeviceConfig getConfig ();
 };
 

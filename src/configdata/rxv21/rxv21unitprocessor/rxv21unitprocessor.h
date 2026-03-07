@@ -16,7 +16,7 @@ using std::string;
 
 class RXV21UnitProcessor : public UnitConfigProcessor
 {
-	unique_ptr<RXV21UnitConfig> rxv21UnitConfigPtr {nullptr};
+	RXV21UnitConfig rxv21UnitConfig {};
 
     // Define process as a pointer to a BDV11Processor member function
 	// with a iniparser::Value argument and returning void.
@@ -39,9 +39,7 @@ class RXV21UnitProcessor : public UnitConfigProcessor
 	void processOverwrite (iniparser::Value value);
 
 public:
-	RXV21UnitProcessor ();
-	shared_ptr<RXV21UnitConfig> getConfig ();
+	RXV21UnitConfig getConfig ();
 };
-
 
 #endif // _RXV21UNITPROCESSOR_H_

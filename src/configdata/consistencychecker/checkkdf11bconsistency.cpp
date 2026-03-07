@@ -11,9 +11,10 @@ using std::invalid_argument;
 void ConsistencyChecker::checkKDF11_BConsistency ()
 {
     auto isKDF11_B = [] (DeviceConfig device)
-        {return holds_alternative<shared_ptr<KDF11_BConfig>> (device);};
+        {return holds_alternative<KDF11_BConfig> (device);};
+
     auto isBDV11 = [] (DeviceConfig device)
-        {return holds_alternative<shared_ptr<BDV11Config>> (device);};
+        {return holds_alternative<BDV11Config> (device);};
 
     if (find_if (systemConfig_, isKDF11_B) != systemConfig_.end () &&
         find_if (systemConfig_, isBDV11)   != systemConfig_.end ())

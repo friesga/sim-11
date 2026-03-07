@@ -10,6 +10,10 @@
 #include "cpusteprecord/cpusteprecord.h"
 #include "traprecord/traprecord.h"
 #include "irqrecord/irqrecord.h"
+#include "rk/include/rktypes.h"
+#include "rk11eventrecord/rk11eventrecord.h"
+#include "rk11functionrecord/rk11functionrecord.h"
+#include "rk11registersrecord/rk11registersrecord.h"
 #include "rxv21diskrecord/rxv21diskrecord.h"
 #include "rxv21commandrecord/rxv21commandrecord.h"
 #include "rxv21dmarecord/rxv21dmarecord.h"
@@ -24,6 +28,7 @@
 #include "debugrecord/debugrecord.h"
 #include "ms11precord/ms11precord.h"
 #include "chrono/simulatorclock/simulatorclock.h"
+#include "bus/interruptrequest/interruptrequest.h"
 
 #include "tracefileoutstream/tracefileoutstream.h"
 #include "tracefileinstream/tracefileinstream.h"
@@ -61,7 +66,8 @@ public:
         MMUAddress = (1 << 15),     // MMU mapped address
         UnibusMap  = (1 << 16),     // UnibusMapRecord
         Debug	   = (1 << 17),     // DebugRecord
-        MS11_P     = (1 << 18)      // MS11_PRecord
+        MS11_P     = (1 << 18),     // MS11_PRecord
+        RK11       = (1 << 19),     // RK11Function- and RK11RegistersRecord
     };
 
     Trace ();
@@ -76,13 +82,18 @@ public:
     void cpuEvent (CpuEventRecordType type, u16 value);
     void bus (BusRecordType type, u32 address, CondData<u16> value);
     void memoryDump (u8* ptr, u16 address, u16 length);
-    void irq (IrqRecordType type, int vector);
+    void irq (IrqRecordType type, const InterruptRequest& interruptRequest);
     void trap (TrapRecordType cause, int vector);
     void dlv11 (DLV11RecordType type, int channel, u16 value);
     void rxv21Command (int command, u16 rx2cs);
     void rxv21Dma (RXV21DiskCmd type, u16 rx2wc, u16 rx2ba);
     void rxv21Disk (RXV21DiskCmd type, int drive, int density, u16 rx2sa, u16 rx2ta);
     void rxv21Error (RXV21ErrorRecordType type, u16 info);
+    void rk11Function (RKTypes::Function function);
+    void rk11Event (RK11D::State state, RK11D::Event event);
+    void rk11Registers (BusAddress busAddress, RKTypes::RKER rker,
+        RKTypes::RKDS rkds, RKTypes::RKCS rkcs, u16 rkwc, u16 rkba,
+        RKTypes::RKDA rkda, u16 rkdb);
     void rlv12Registers (string msg, u16 rlcs, u16 rlba, u16 rlda, u16 rlmpr, u16 rlbae);
     void rlv12Command (u16 command);
     void unibusMap (u32 inputAddress, BusAddress::Width width,

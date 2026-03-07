@@ -18,8 +18,8 @@ class DeviceType
 {
 public:
     DeviceType () { type_ = type; }
-    bool isQbusDevice () { return type_ == BusType::QBus; }
-    bool isUnibusDevice () { return type_ == BusType::Unibus; }
+    bool isQbusDevice () const { return type_ == BusType::QBus; }
+    bool isUnibusDevice () const { return type_ == BusType::Unibus; }
 
 private:
     BusType type_;

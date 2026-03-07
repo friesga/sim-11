@@ -12,7 +12,6 @@
 #include <array>
 
 using std::unique_ptr;
-using std::shared_ptr;
 using std::make_unique;
 using std::array;
 
@@ -41,7 +40,7 @@ class MS11P : public MemoryDevice
 {
 public:
     MS11P (Bus* bus);
-    MS11P (Bus* bus, shared_ptr<MS11PConfig> ms11pConfig);
+    MS11P (Bus* bus, const MS11PConfig& ms11pConfig);
     ~MS11P ();
 
     // Functions required for the BusDevice interface

@@ -13,18 +13,17 @@
 #include "character/character.h"
 
 #include <functional>
-#include <memory>
 #include <thread>
 #include <mutex>
 #include <condition_variable>
 #include <chrono>
+#include <memory>
 
 using std::function;
-using std::unique_ptr;
-using std::shared_ptr;
 using std::thread;
 using std::mutex;
 using std::condition_variable;
+using std::unique_ptr;
 
 // This class defines the behaviour of a Universal Asynchronous Receiver/
 // Transmitter as used for a DLV11-J channel.
@@ -38,8 +37,9 @@ using std::condition_variable;
 class UART : public AbstractBusDevice
 {
 public:
-	UART (Bus* bus, UARTTypeConfig const & uartTypeConfig,
-		UARTConfig& uartConfig, u16 channelNr, ConsoleConfig consoleConfig);
+	UART (Bus* bus, const UARTTypeConfig& uartTypeConfig,
+		const UARTConfig& uartConfig, u16 channelNr,
+		const ConsoleConfig& consoleConfig);
 	~UART ();
 	CondData<u16> read (BusAddress busAddress);
 	StatusCode writeWord (BusAddress busAddress, u16 value);

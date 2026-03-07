@@ -5,10 +5,6 @@
 #include "configdata/kd11config/kd11config.h"
 #include "configdata/kdf11/slu/sluconfig/sluconfig.h"
 
-#include <memory>
-
-using std::shared_ptr;
-
 struct KDF11_UConfig : public DeviceType<BusType::Unibus>
 {
     // Jumper W2 controls the powerfail power-up action:
@@ -19,7 +15,7 @@ struct KDF11_UConfig : public DeviceType<BusType::Unibus>
     //          unit is installed and functioning
     //
     // The KD11Config::PowerUpMode is used in all KD11 processors as it is
-    // passed to the processor's ControlLogic component.
+    // passed to the processor's MachineState component.
     //
     KD11Config::PowerUpMode powerUpMode {KD11Config::PowerUpMode::Bootstrap};
 
@@ -44,10 +40,8 @@ struct KDF11_UConfig : public DeviceType<BusType::Unibus>
     u16 bootAddress {0165000};
 
     // The serial line units in the KDF11-U are fixed at their default addresses
-    // and therefor cannot be configured
-    shared_ptr<SLUConfig> sluConfig;
-
-    KDF11_UConfig ();
+    // and therefore cannot be configured
+    SLUConfig sluConfig;
 };
 
 #endif // _KDF11_UCONFIG_H_

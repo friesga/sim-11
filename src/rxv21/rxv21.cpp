@@ -15,15 +15,13 @@ using namespace rxv21;
 // Constructor for a default RXV21 device without attached files
 RXV21::RXV21 (Bus *bus)
 	:
-	PDP11Peripheral (bus),
+	bus_ {bus},
 
 	// Factory configuration
 	base {0177170},
 	vector {0264},
 	data {nullptr}
 {
-	name_ = "RX";
-
 	data = (u8*) malloc(77 * 26 * 256);
 	if (!data) 
 		throw runtime_error ("Error: cannot allocate memory for rxv21");
@@ -31,12 +29,10 @@ RXV21::RXV21 (Bus *bus)
 	bus_->BINIT().subscribe (bind (&RXV21::BINITReceiver, this, _1));
 }
 
-RXV21::RXV21 (Bus *bus, shared_ptr<RXV21Config> rxConfig)
+RXV21::RXV21 (Bus *bus, const RXV21Config& rxConfig)
 	:
-	PDP11Peripheral (bus)
+	bus_ {bus}
 {
-	name_ = "RX";
-
 	// Factory configuration
 	base = 0177170;
 	vector = 0264;
@@ -57,16 +53,16 @@ RXV21::RXV21 (Bus *bus, shared_ptr<RXV21Config> rxConfig)
 	// if (rxConfig->rxv21UnitConfig[0] != nullptr &&
 	//	!static_pointer_cast<RXV21UnitConfig> 
 	// 		(rxConfig->rxv21UnitConfig[0])->fileName.empty ())
-	if (rxConfig->rxv21UnitConfig[0] != nullptr &&
-		!rxConfig->rxv21UnitConfig[0]->fileName.empty ())
+	if (rxConfig.rxv21UnitConfig[0].has_value () &&
+		!rxConfig.rxv21UnitConfig[0]->fileName.empty ())
 	{
 		FILE* floppy_file = 
-			fopen (rxConfig->rxv21UnitConfig[0]->fileName.c_str(), "rb");
+			fopen (rxConfig.rxv21UnitConfig[0]->fileName.c_str(), "rb");
 		if (!floppy_file) 
 		{
 			free(data);
 			throw invalid_argument ("Error: cannot open file " +
-				static_pointer_cast<RXV21UnitConfig> (rxConfig->rxv21UnitConfig[0])->fileName);
+				rxConfig.rxv21UnitConfig[0]->fileName);
 		}
 		(void) !fread (data, 77 * 26 * 256, 1, floppy_file);
 		fclose (floppy_file);
@@ -102,7 +98,7 @@ void RXV21::done ()
 	// being processed, the request is held and on the next step the request
 	// is tried again.
 	if (rx2cs & RX_INTR_ENB) 
-		bus_->setInterrupt (TrapPriority::BR4, 5, 0, vector);
+		bus_->requestInterrupt (InterruptPriority::BR4, 5, 0, vector);
 }
 
 // Read operation on either the RX2CS or RX2DB
@@ -150,7 +146,7 @@ StatusCode RXV21::writeWord (BusAddress busAddress, u16 value)
 		// if interrupts were not enabled and Interrupt Enable is set in this
 		// register write action.
 		if (!intr && (value & RX_INTR_ENB) && (rx2cs & RX_DONE)) 
-			bus_->setInterrupt (TrapPriority::BR4, 5, 0, vector);
+			bus_->requestInterrupt (InterruptPriority::BR4, 5, 0, vector);
 	} 
 	else if (busAddress.registerAddress () == base + 2) 
 	{ 

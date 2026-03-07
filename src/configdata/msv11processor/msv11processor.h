@@ -4,18 +4,15 @@
 #include "../sectionprocessor/deviceconfigprocessor.h"
 #include "../msv11config/msv11config.h"
 
-#include <memory>
 #include <map>
 #include <string>
 
-using std::unique_ptr;
-using std::shared_ptr;
 using std::map;
 using std::string;
 
 class MSV11Processor : public DeviceConfigProcessor
 {
-	unique_ptr<MSV11Config> msv11ConfigPtr {nullptr};
+	MSV11Config msv11Config {};
 
     // Define process as a pointer to a BDV11Processor member function
 	// with a iniparser::Value argument and returning void.
@@ -43,9 +40,7 @@ class MSV11Processor : public DeviceConfigProcessor
 	void processBank7Lower2kW (iniparser::Value value);
 
 public:
-	MSV11Processor ();
 	DeviceConfig getConfig ();
 };
-
 
 #endif // _MSV11PROCESSOR_H_

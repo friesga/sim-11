@@ -5,10 +5,8 @@
 #include "chrono/simulatorclock/simulatorclock.h"
 
 #include <gtest/gtest.h>
-#include <memory>
 #include <chrono>
 
-using std::make_shared;
 using namespace std::chrono_literals;
 
 // Write to unit tests.
@@ -95,7 +93,7 @@ TEST_F (RLV12VolumeCheck, volumeCheckReported)
         });
 
     // Attach a new disk to unit 0
-    ASSERT_EQ (rlv12Device->unit (0)->init (make_shared<RLUnitConfig> (rlUnitConfig)),
+    ASSERT_EQ (rlv12Device->unit (0)->init (RLUnitConfig {rlUnitConfig}),
         StatusCode::Success);
 
     // Verify the controller is ready to perform an operation (the drive
@@ -132,7 +130,7 @@ TEST_F (RLV12VolumeCheck, readDataWithVolumeCheckReportsDriveError)
         });
 
     // Attach a new disk to unit 0
-    ASSERT_EQ (rlv12Device->unit (0)->init (make_shared<RLUnitConfig> (rlUnitConfig)),
+    ASSERT_EQ (rlv12Device->unit (0)->init (RLUnitConfig {rlUnitConfig}),
         StatusCode::Success);
 
     // Verify the controller is ready to perform an operation (the drive
@@ -158,7 +156,7 @@ TEST_F (RLV12VolumeCheck, readDataWithVolumeCheckReportsDriveError)
 
     // Verify the controller reports a drive error
     u16 csr = rlv12Device->read (RLCSR);
-    ASSERT_EQ (csr & (CSR_ControllerReady | CSR_DriveReady | 
+    EXPECT_EQ (csr & (CSR_ControllerReady | CSR_DriveReady | 
         CSR_DriveError | CSR_CompositeError),
         CSR_ControllerReady | CSR_DriveReady |
         CSR_DriveError | CSR_CompositeError);
@@ -178,7 +176,7 @@ TEST_F (RLV12VolumeCheck, volumeCheckIsReset)
         });
 
     // Attach a new disk to unit 0
-    ASSERT_EQ (rlv12Device->unit (0)->init (make_shared<RLUnitConfig> (rlUnitConfig)),
+    ASSERT_EQ (rlv12Device->unit (0)->init (RLUnitConfig {rlUnitConfig}),
         StatusCode::Success);
 
     // Verify the controller is ready to perform an operation (the drive
@@ -216,7 +214,7 @@ TEST_F (RLV12VolumeCheck, noDataReadOnVolumeCheck)
         });
 
     // Attach a new disk to unit 0
-    ASSERT_EQ (rlv12Device->unit (0)->init (make_shared<RLUnitConfig> (rlUnitConfig)),
+    ASSERT_EQ (rlv12Device->unit (0)->init (RLUnitConfig {rlUnitConfig}),
         StatusCode::Success);
 
     // Fill 512 bytes of memory with the value 0xff and write a mark at

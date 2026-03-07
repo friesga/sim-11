@@ -22,18 +22,20 @@ set_target_properties (sim-11-test PROPERTIES EXCLUDE_FROM_ALL true)
 
 # Define the source subdirectories
 add_subdirectory (src/ms11p)
+add_subdirectory (src/concepts)
 add_subdirectory (src/cmdlineoptions)
 add_subdirectory (src/devicecommon)
 add_subdirectory (src/fio)
-add_subdirectory (src/unit)
+add_subdirectory (src/diskdrive)
 add_subdirectory (src/float)
 add_subdirectory (src/bdv11)
+add_subdirectory (src/m792)
 add_subdirectory (src/m9312)
 add_subdirectory (src/kt24)
 add_subdirectory (src/chrono)
-add_subdirectory (src/ba11_l)
-add_subdirectory (src/ba11_n)
-add_subdirectory (src/kd)
+add_subdirectory (src/ba11)
+add_subdirectory (src/proc)
+add_subdirectory (src/rk)
 add_subdirectory (src/rlv12)
 add_subdirectory (src/bus)
 add_subdirectory (src/configdata)
@@ -51,9 +53,8 @@ add_subdirectory (src/absoluteloader)
 add_subdirectory (src/abstractbusdevice)
 add_subdirectory (src/main)
 add_subdirectory (src/msv11d)
-add_subdirectory (src/pdp11peripheral)
-add_subdirectory (src/interruptrequest)
 add_subdirectory (src/signal)
+add_subdirectory (src/imagedata)
 add_subdirectory (gtest)
  
 
@@ -104,9 +105,14 @@ target_link_libraries (${TARGET}
 # Definition of include directories, compiler options and libraries for
 # the sim-11-test target. This executable is only built for Windows.
 #
+
+# Create a statically linked sim-11-test executable
+set_property (TARGET sim-11-test
+    PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+
 set (GTEST_INCLUDE_DIRS 
     # D:/src/gtest-1.10.0/googletest/include/
-    C:/Tools/gtest-1.10.0/include)
+    C:/Tools/gtest-1.16.0/include)
 
 set (SDL_INCLUDE_DIRS
     C:/Libraries/SDL2-2.24.2/include
@@ -122,7 +128,7 @@ target_compile_options (sim-11-test PRIVATE /std:c++20)
 
 set (GTESTUNIT_LIBS
     # "D:/src/gtest-1.10.0/build/x64-Release/lib/gtest.lib"
-    C:/Tools/gtest-1.10.0/lib/gtest.lib)
+    C:/Tools/gtest-1.16.0/lib/gtest.lib)
     
 target_link_libraries(sim-11-test ${GTESTUNIT_LIBS})
 

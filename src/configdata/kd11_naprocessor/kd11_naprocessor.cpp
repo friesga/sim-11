@@ -4,9 +4,6 @@
 using std::move;
 using std::invalid_argument;
 
-KD11_NAProcessor::KD11_NAProcessor ()
-{}
-
 void KD11_NAProcessor::processValue (iniparser::Section::ValueIterator valueIterator)
 {
     Process processFunction = valueProcessors[valueIterator->first];
@@ -28,11 +25,11 @@ void KD11_NAProcessor::processSubsection (iniparser::Section *subSection)
 void KD11_NAProcessor::processPowerUpMode (iniparser::Value value)
 {
 	KD11Processor kd11Procesor;
-	kd11_naConfigPtr->powerUpMode = 
+	kd11_naConfig.powerUpMode = 
 		kd11Procesor.processPowerUpMode (value);
 }
 
 DeviceConfig KD11_NAProcessor::getConfig ()
 {
-	return move (kd11_naConfigPtr);
+	return kd11_naConfig;
 }

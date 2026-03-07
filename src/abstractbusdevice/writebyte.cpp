@@ -1,6 +1,6 @@
 #include "abstractbusdevice.h"
 
-// The default implementation of writeByte() for PDP11Peripheral's and
+// The default implementation of writeByte() for peripherals and
 // PDP11Processor's. 
 StatusCode AbstractBusDevice::writeByte (BusAddress address, u8 value)
 {

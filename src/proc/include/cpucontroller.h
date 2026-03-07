@@ -1,0 +1,97 @@
+#ifndef _CPUCONTROLLER_H_
+#define _CPUCONTROLLER_H_
+
+#include "bus/interruptrequest/interruptrequest.h"
+#include "types.h"
+
+namespace Interfaces
+{
+    // This interface defines the function a cpu has to implement to be able to
+    // control it from the console.
+    class CpuController
+    {
+    public:
+        // Definition of CPU run states
+        enum class CpuRunState
+        {
+            HALT,
+            RUN,
+            WAIT
+        };
+
+        // This enum holds the reason for halting the system. This data is printed
+        // by the ODT Maintenance command.
+        // (LSI11 PDP11/03 Processor Handbook)
+        enum class HaltReason
+        {
+            HaltInstruction			= 0,	// Halt instruction or B Halt line
+            BusErrorOnIntrptVector  = 1,	// Bus Error occurred while getting device interrupt vector
+            BusErrorOnMemoryRefresh = 2,	// Not used
+            DoubleBusError			= 3,	// Double Bus Error occurred (stack was non-existent value)
+            NonExistentMicroAddress = 4		// Not used
+        };
+
+        virtual void cpuReset () = 0;
+        virtual void busReset () = 0;
+        virtual void halt (HaltReason reason = HaltReason::HaltInstruction) = 0;
+
+        // The HaltMode is used by the KDF11-U. The ODT in this CPU entails a 
+        // "Toggle Halt" command which toggles a halt flip-flop located in the CPU.
+        // CPU's not supporting this command should implement a dummy version of
+        // setHaltMode and return false on inHaltMode().
+        virtual void setHaltMode (bool haltMode) = 0;
+        virtual bool inHaltMode () = 0;
+
+        virtual void wait () = 0;
+        virtual void start (u16 address) = 0;
+        virtual void proceed () = 0;
+        virtual HaltReason haltReason () = 0;
+
+        // The execute function returns the new CpuRunState
+        virtual CpuRunState execute () = 0;
+
+        // PDP-11 stack functions
+        virtual bool pushWord (u16 value) = 0;
+        virtual bool popWord (u16* destination) = 0;
+    };
+};
+template <typename T>
+concept isExecutor = requires(T t)
+{
+    { t.operator() (t) } ->std::convertible_to<bool>;
+};
+
+template <typename T>
+concept isCalculator = requires(T t)
+{
+    { t.operator() (t) } ->std::convertible_to<double>;
+};
+
+template <typename T>
+concept isHaltMode = requires(T t, bool b)
+{
+    { t.setHaltMode (b) };
+    { t.inHaltMode () } ->std::convertible_to<bool>;
+};
+
+template <typename T>
+concept isExecutionEngine = requires(T t, u16 i)
+{
+    { t.cpuReset () };
+    { t.busReset () };
+    { t.halt () };
+    { t.wait () };
+    { t.start (i) };
+    { t.proceed () };
+    { t.haltReason () } -> std::same_as<Interfaces::CpuController::HaltReason>;
+    { t.execute () } -> std::same_as<Interfaces::CpuController::CpuRunState>;
+};
+
+template <typename T>
+concept isProcessorExceptionHandler = requires(T t)
+{
+    { t.serviceTrap() } -> std::same_as<void>;
+    { t.serviceInterrupt() } -> std::same_as<void>;
+};
+
+#endif // _CPUCONTROLLER_H_

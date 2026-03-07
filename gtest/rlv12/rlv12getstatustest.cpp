@@ -4,9 +4,6 @@
 #include "cmdlineoptions/cmdlineoptions.h"
 
 #include <gtest/gtest.h>
-#include <memory>
-
-using std::make_shared;
 
 // Write to unit tests.
 
@@ -121,7 +118,7 @@ TEST_F (RLV12GetStatusTest, resetSucceeds)
     });
 
     // Attach a new disk to unit 0
-    ASSERT_EQ (rlv12Device->unit (0)->init (make_shared<RLUnitConfig> (rlUnitConfig)), 
+    ASSERT_EQ (rlv12Device->unit (0)->init (RLUnitConfig {rlUnitConfig}),
         StatusCode::Success);
 
     // Verify the controller is ready to perform an operation (the drive
@@ -165,7 +162,7 @@ TEST_F (RLV12GetStatusTest, drive3CanBeSelected)
     });
 
     // Attach a new disk to unit 3
-    ASSERT_EQ (rlv12Device->unit (3)->init (make_shared<RLUnitConfig> (rlUnitConfig)), 
+    ASSERT_EQ (rlv12Device->unit (3)->init (RLUnitConfig {rlUnitConfig}),
         StatusCode::Success);
 
     // Verify the controller is ready to perform an operation (the drive
@@ -210,7 +207,7 @@ TEST_F (RLV12GetStatusTest, rl01CorrectlyIndicated)
         });
 
     // Attach a new disk to unit 0
-    ASSERT_EQ (rlv12Device->unit (0)->init (make_shared<RLUnitConfig> (rlUnitConfig)),
+    ASSERT_EQ (rlv12Device->unit (0)->init (RLUnitConfig {rlUnitConfig}),
         StatusCode::Success);
 
     // Verify the controller is ready to perform an operation (the drive
@@ -248,7 +245,7 @@ TEST_F (RLV12GetStatusTest, rl02CorrectlyIndicated)
         });
 
     // Attach a new disk to unit 0
-    ASSERT_EQ (rlv12Device->unit (0)->init (make_shared<RLUnitConfig> (rlUnitConfig)),
+    ASSERT_EQ (rlv12Device->unit (0)->init (RLUnitConfig {rlUnitConfig}),
         StatusCode::Success);
 
     // Verify the controller is ready to perform an operation (the drive
@@ -287,7 +284,7 @@ TEST_F (RLV12GetStatusTest, writeProtectOffCorrectlyIndicated)
         });
 
     // Attach a new disk to unit 0
-    ASSERT_EQ (rlv12Device->unit (0)->init (make_shared<RLUnitConfig> (rlUnitConfig)),
+    ASSERT_EQ (rlv12Device->unit (0)->init (RLUnitConfig {rlUnitConfig}),
         StatusCode::Success);
 
     // Verify the controller is ready to perform an operation (the drive

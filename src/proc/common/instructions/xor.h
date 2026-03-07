@@ -1,0 +1,35 @@
+#ifndef _XOR_H_
+#define _XOR_H_
+
+
+#include "proc/common/instructionformats/eisinstruction/eisinstruction.h"
+#include "proc/include/cpudata.h"
+#include "proc/common/operandlocation/operandlocation.h"
+
+
+// XOR - exclusive OR
+//
+// Operation:
+//  (dst) <- R v (dst)
+//
+// Condition Codes:
+//  N: set if the result <0: cleared otherwise
+//  Z: set if result = O: cleared otherwise
+//  V: cleared
+//  C: unaffected
+//
+// The exclusive OR of the register and destination operand is stored in the
+// destination address. Contents of register are unaffected.
+//
+class XOR : public EisInstruction
+{
+public:
+    XOR (u16 instruction);
+};
+
+inline XOR::XOR (u16 instruction)
+    :
+    EisInstruction (instruction)
+{}
+
+#endif // _XOR_H_

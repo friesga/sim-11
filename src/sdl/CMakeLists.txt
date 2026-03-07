@@ -1,18 +1,17 @@
 set (SDL_SRCS
     sdlinit/sdlinit.cpp
+    datapanelbuilder/datapanelbuilder.cpp
+    filepanelbuilder/filepanelbuilder.cpp
     sdlpanel/sdlpanel.cpp
     sdlwindow/sdlwindow.cpp
-    sdlwindow/circle.cpp
     sdlindicator/sdlindicator.cpp
     sdlfront/sdlfront.cpp
-    sdlcommonbutton/sdlcommonbutton.cpp
     sdlrenderer/sdlrenderer.cpp
+    sdlrenderer/circle.cpp
     sdltexture/sdltexture.cpp
-    sdlmomentarybutton/sdlmomentarybutton.cpp
-    sdllatchingbutton/sdllatchingbutton.cpp
+    sdltile/sdltile.cpp
     sdlindicatorlatchingbutton/sdlindicatorlatchingbutton.cpp
-    sdlthreepositionswitch/sdlthreepositionswitch.cpp
-    sdlfourpositionswitch/sdlfourpositionswitch.cpp
+    sdlmultipositionswitch/sdlmultipositionswitch.cpp
     sdlevent/sdlevent.cpp)
 
 target_sources (${TARGET} PRIVATE ${SDL_SRCS})

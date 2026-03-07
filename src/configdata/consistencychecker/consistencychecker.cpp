@@ -8,7 +8,6 @@
 #include <exception>
 
 using std::vector;
-using std::shared_ptr;
 using std::set;
 using std::cout;
 using std::string;
@@ -57,7 +56,8 @@ void ConsistencyChecker::checkQbusConsistency ()
     size_t numberOFProcessors = 
         count_if (presentDevices, &ConsistencyChecker::findDevice<KD11_NAConfig>) +
         count_if (presentDevices, &ConsistencyChecker::findDevice<KDF11_AConfig>) +
-        count_if (presentDevices, &ConsistencyChecker::findDevice<KDF11_BConfig>);
+        count_if (presentDevices, &ConsistencyChecker::findDevice<KDF11_BConfig>) +
+        count_if (presentDevices, &ConsistencyChecker::findDevice<KA11Config>);
 
     if (numberOFProcessors == 0)
         throw invalid_argument ("No processor configured, this system cannot run.");
@@ -92,13 +92,14 @@ void ConsistencyChecker::checkQbusConsistency ()
 void ConsistencyChecker::checkUnibusConsistency ()
 {
     size_t numberOFProcessors =
-        count_if (systemConfig_, &ConsistencyChecker::findDevice<KDF11_UConfig>);
+        count_if (systemConfig_, &ConsistencyChecker::findDevice<KDF11_UConfig>) +
+        count_if (systemConfig_, &ConsistencyChecker::findDevice<KA11Config>);
 
     if (numberOFProcessors == 0)
         throw invalid_argument ("No processor configured, this system cannot run.");
 
     checkMS11Consistency<MS11PConfig, 1024 * 1024> ();
-    checkM9312Consistency ();
+    checkROMDeviceConsistency ();
 }
 
 // A system with undefined behaviour is created when it is configured
@@ -108,22 +109,22 @@ void ConsistencyChecker::checkConsoleConsistency ()
 {
     auto hasKDF11BConsole = [] (DeviceConfig device)
     {
-        if (holds_alternative<shared_ptr<KDF11_BConfig>> (device))
+        if (holds_alternative<KDF11_BConfig> (device))
         {
-            shared_ptr<KDF11_BConfig> kdf11bConfig = 
-                get<shared_ptr<KDF11_BConfig>> (device);
-            return kdf11bConfig->sluConfig->uartConfig[0].enabled_;
+            KDF11_BConfig kdf11bConfig = 
+                get<KDF11_BConfig> (device);
+            return kdf11bConfig.sluConfig.uartConfig[0].enabled_;
         }
         return false;
     };
 
     auto hasDLV11JConsole = [] (DeviceConfig device)
     {
-        if (holds_alternative<shared_ptr<DLV11JConfig>> (device))
+        if (holds_alternative<DLV11JConfig> (device))
         {
-            shared_ptr<DLV11JConfig> dlv11jConfig = 
-                get<shared_ptr<DLV11JConfig>> (device);
-            return dlv11jConfig->ch3ConsoleEnabled;
+            DLV11JConfig dlv11jConfig = 
+                get<DLV11JConfig> (device);
+            return dlv11jConfig.ch3ConsoleEnabled;
         }
         return false;
     };

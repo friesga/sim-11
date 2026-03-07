@@ -1,0 +1,32 @@
+#ifndef _BMI_H_
+#define _BMI_H_
+
+
+#include "proc/common/instructionformats/branchinstruction/branchinstruction.h"
+#include "proc/include/cpudata.h"
+#include "proc/common/operandlocation/operandlocation.h"
+
+
+// BMI - branch if minus
+//
+// Operation:
+//  PC <- PC + (2 * offset) if N = 1
+//
+// Condition Codes: Unaffected
+//
+// Tests the state of the N-bit and causes a branch if N is set. It is used
+// to test the sign (most significant bit) of the result of the previous
+// operation), branching if negative. BMI is the complementary function of BPL.
+//
+class BMI : public BranchInstruction
+{
+public:
+    BMI (u16 instruction);
+};
+
+inline BMI::BMI (u16 instruction)
+    :
+    BranchInstruction (instruction)
+{}
+
+#endif // _BMI_H_

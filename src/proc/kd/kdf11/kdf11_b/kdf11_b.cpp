@@ -1,0 +1,85 @@
+#include "kdf11_b.h"
+#include "bus/qbus/qbus.h"
+#include "configdata/serialconfig/uarttypeconfig/uarttypeconfig.h"
+
+#include <memory>
+#include <thread>
+
+using std::make_unique;
+using std::static_pointer_cast;
+using std::thread;
+using std::placeholders::_1;
+using std::placeholders::_2;
+using std::placeholders::_3;
+using std::placeholders::_4;
+using std::placeholders::_5;
+
+KDF11_B::KDF11_B (Bus *bus, const KDF11_BConfig& kdf11_bConfig)
+    :
+    bus_ {bus},
+    startAddress_ {stdBootAddress}
+{
+    // The KDF11-B comes with the KTF11-A MMU, two serial lines and a BDV-11.
+    serialLineUnits = make_unique<SerialLineUnits> (bus,
+        UARTTypeConfig {.maintenanceModeSupported = false},
+        kdf11_bConfig.sluConfig);
+
+    bdv11 = make_unique<BDV11> (bus, kdf11_bConfig.bdv11Config);
+
+    vector<BusDevice*> devices {&cpuData_, &mmu_, serialLineUnits.get (), bdv11.get ()};
+    registerHandler_ = make_unique<RegisterHandler> (devices);
+
+    // Besides a pointer to the bus, a reference to our cpu, the start address
+    // and the power-up mode, the MachineState also gets passed a
+    // std::function to the function to create ODT objects.  The last parameter
+    // to that function indicates if the ODT HALT command is supported.
+    machineState_ = make_unique<KDMachineState> (bus_,
+        &cpuData_,
+        &cpuController_,
+        &mmu_,
+        kdf11_bConfig.powerUpMode,
+        startAddress_,
+        bind (&KDF11_ODT::createODT, _1, _2, _3, _4, _5, false));
+}
+
+KDF11_B::~KDF11_B ()
+{
+    machineState_->exit ();
+    kd11Thread_.join ();
+}
+
+void KDF11_B::start ()
+{
+    kd11Thread_ = thread ([&, this] {machineState_->run ();});
+}
+
+// Start the MachineState state machine, starting the CPU at the given address. This
+// address supersedes the standard boot address.
+void KDF11_B::start (u16 startAddress)
+{
+    startAddress_ = startAddress;
+    start ();
+}
+
+// Registers accesses are forwarded to the register handler.
+//
+CondData<u16> KDF11_B::read (BusAddress address)
+{
+    return registerHandler_->read (address);
+}
+
+StatusCode KDF11_B::writeWord (BusAddress address, u16 value)
+{
+    return registerHandler_->writeWord (address, value);
+}
+
+bool KDF11_B::responsible (BusAddress address)
+{
+    return registerHandler_->responsible (address);
+}
+
+void KDF11_B::reset ()
+{
+    return registerHandler_->reset ();
+}
+
