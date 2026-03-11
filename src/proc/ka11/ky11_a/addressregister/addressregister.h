@@ -101,4 +101,4 @@ void AddressRegister::createAddressRegisterIndicator (unique_ptr<PanelBuilder>& 
         Indicator::State::Off);
 }
 
-#endif _ADDRESSREGISTER_H_
+#endif // _ADDRESSREGISTER_H_

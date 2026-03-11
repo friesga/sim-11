@@ -7,9 +7,9 @@ SDLMultiPositionSwitch<TPositions>::SDLMultiPositionSwitch (PositionTiles positi
     TPositions initialState,
     EventCallback switchClicked)
     :
-    positionTiles_ {move (positionTiles)},
     switchClicked_ {switchClicked},
-    switchPosition_ {initialState}
+    switchPosition_ {initialState},
+    positionTiles_ {move (positionTiles)}
 {
 }
 
@@ -139,8 +139,8 @@ bool SDLMultiPositionSwitch<TPositions>::switchedUp (InputEvent const* event) co
 template <typename TPositions>
 bool SDLMultiPositionSwitch<TPositions>::switchedDown (InputEvent const* event) const
 {
-    return ButtonTrait<TPositions>::orientation == Orientation::Horizontal &&
-        isLeftOfCenter (event->mousePosition (), centerMargin_) ||
+    return (ButtonTrait<TPositions>::orientation == Orientation::Horizontal &&
+        isLeftOfCenter (event->mousePosition (), centerMargin_)) ||
         (ButtonTrait<TPositions>::orientation == Orientation::Vertical &&
             isBelowCenter (event->mousePosition (), centerMargin_));
 }

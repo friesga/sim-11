@@ -8,7 +8,7 @@
 #include "proc/ka11/ky11_a/ky11_a.h"
 #include "proc/ka11/ka11machinestate/ka11machinestate.h"
 #include "proc/ka11/ka11cpudata/ka11cpudata.h"
-#include "proc/common/pseudoMMU/pseudommu.h"
+#include "proc/common/pseudommu/pseudommu.h"
 #include "proc/common/composite_cpucontroller/composite_cpucontroller.h"
 #include "proc/ka11/executor/executor.h"
 #include "proc/ka11/calculator/calculator.h"
@@ -61,4 +61,4 @@ private:
     std::thread ka11Thread_;
 };
 
-#endif _KA11_H_
+#endif // _KA11_H_

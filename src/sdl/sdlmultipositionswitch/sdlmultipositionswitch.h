@@ -26,7 +26,7 @@ class SDLMultiPositionSwitch : public Button
 public:
     using PositionTiles = vector<unique_ptr<SDLTile>>;
 
-    SDLMultiPositionSwitch<TPositions> (PositionTiles positionTiles,
+    SDLMultiPositionSwitch (PositionTiles positionTiles,
         TPositions initialState,
         EventCallback switchClicked);
 

@@ -1,4 +1,7 @@
 #include "switchregister.h"
+#include "types.h"
+
+#include <limits>
 
 SwitchRegister::SwitchRegister (unique_ptr<PanelBuilder>& panelBuilder)
 {

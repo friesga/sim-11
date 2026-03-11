@@ -13,4 +13,4 @@ struct KA11Config : public DeviceType<BusType::Unibus>
     optional<KY11_AConfig> ky11_aConfig_ {};
 };
 
-#endif _KA11CONFIG_H_
+#endif // _KA11CONFIG_H_
