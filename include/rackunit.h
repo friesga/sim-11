@@ -34,7 +34,7 @@ inline RackUnit::operator int () const
     return static_cast<int> (value_);
 }
 
-inline RackUnit operator"" _ru (unsigned long long value)
+inline RackUnit operator""_ru (unsigned long long value)
 {
     return RackUnit (value);
 }

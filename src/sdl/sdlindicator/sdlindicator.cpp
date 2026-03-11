@@ -1,6 +1,7 @@
 #include "sdlindicator.h"
 
 #include <SDL_image.h>
+#include <utility>
 
 using std::make_unique;
 using std::move;
@@ -9,8 +10,8 @@ SDLIndicator::SDLIndicator (unique_ptr<SDLTile> indicatorOffTile,
     unique_ptr<SDLTile> indicatorOnTile, State showIndicator)
     :
     showIndicator_ {showIndicator},
-    indicatorOffTile_ {move (indicatorOffTile)},
-    indicatorOnTile_ {move (indicatorOnTile)}
+    indicatorOffTile_ {std::move (indicatorOffTile)},
+    indicatorOnTile_ {std::move (indicatorOnTile)}
 {}
 
 SDLIndicator::~SDLIndicator ()

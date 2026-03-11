@@ -1,6 +1,9 @@
 #include "sdlindicatorlatchingbutton.h"
 
+#include <utility>
+
 using std::get;
+using std::move;
 
 SDLIndicatorLatchingButton::SDLIndicatorLatchingButton (TileGrid tiles,
     Button::TwoPositionsState initialState, EventCallback buttonClicked,

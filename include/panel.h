@@ -68,6 +68,7 @@ public:
     virtual Type type () const = 0;
     virtual Button button () const = 0;
     virtual Position mousePosition () const = 0;
+    virtual ~InputEvent () = default;
 };
 
 // A Front is the image to be rendered on the panel
@@ -75,6 +76,7 @@ class Front
 {
 public:
     virtual void render () = 0;
+    virtual ~Front () = default;
 };
 
 // The State enum constants are given values to be able to use them as
@@ -92,6 +94,7 @@ public:
     virtual void show (State showFigure) = 0;
     virtual void render () = 0;
     virtual bool isWithinBounds (Position position, float margin) const = 0;
+    virtual ~Indicator () = default;
 };
 
 class Button
@@ -166,6 +169,7 @@ public:
     virtual void handleEvent (InputEvent const* event) = 0;
     virtual bool isWithinBounds (Position position, float margin) const = 0;
     virtual void setSwitchClickedCallback (EventCallback callback) = 0;
+    virtual ~Button () = default;
 };
 
 // Definition of type traits for the different types of switches. For every
@@ -287,6 +291,7 @@ public:
     // Additional functions defined in the Indicator interface
     virtual Indicator::State indicatorState () const = 0;
     virtual void show (Indicator::State showFigure) = 0;
+    virtual ~IndicatorButton () = default;
 };
 
 struct PanelComposition
@@ -303,6 +308,7 @@ public:
     virtual void render () = 0;
     virtual void handleEvent (InputEvent const* event) = 0;
     virtual bool isOverButton (Position position) = 0;
+    virtual ~Panel () = default;
 };
 
 class PanelBuilder
@@ -317,10 +323,10 @@ public:
     // will be used.
     //
     virtual void createFront (string imageFile,
-        Frame<float> frame = Frame<float> (0, 0, 0, 0)) = 0;
+        Frame<float> frame = Frame<float> {0, 0, 0, 0}) = 0;
     virtual Indicator* createIndicator (string indicatorOffImage,
         string indicatorOnImage, Indicator::State showFigure,
-        Frame<float> frame = Frame<float> (0, 0, 0, 0)) = 0;
+        Frame<float> frame = Frame<float> {0, 0, 0, 0}) = 0;
     virtual IndicatorButton* createIndicatorLatchingButton (Button::ImageNames const& imageNames,
         Button::TwoPositionsState initialState,
         Button::EventCallback buttonClicked, Indicator::State showIndicator,
@@ -328,7 +334,7 @@ public:
     virtual Button* createMultiPositionSwitch (vector<string> positionImages,
         Button::State initialState,
         Button::EventCallback switchClicked,
-        Frame<float> frame = Frame<float> (0, 0, 0, 0)) = 0;
+        Frame<float> frame = Frame<float> {0, 0, 0, 0}) = 0;
     virtual unique_ptr<Panel> getPanel () = 0;
     virtual ~PanelBuilder () = default;
 };
@@ -352,6 +358,7 @@ public:
     virtual void addPanel (unique_ptr<Panel> panel) = 0;
     virtual void render () = 0;
     virtual bool handleEvents () = 0;
+    virtual ~Window () = default;
 };
 
 #endif // !_PANEL_H_
