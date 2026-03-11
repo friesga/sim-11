@@ -1,0 +1,179 @@
+{
+    "version": 5,
+    "cmakeMinimumRequired": {
+        "major": 3,
+        "minor": 21,
+        "patch": 0
+    },
+
+    "configurePresets": [
+        {
+            "name": "base",
+            "hidden": true,
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/out/build/${presetName}",
+            "cacheVariables": {
+                "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
+                "CMAKE_VERBOSE_MAKEFILE": "OFF"
+            }
+        },
+
+        // -----------------------
+        // Windows (MSVC) presets
+        // -----------------------
+        {
+            "name": "win-x64-debug",
+            "displayName": "Windows x64 Debug (MSVC)",
+            "inherits": "base",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug",
+                "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/install/${presetName}",
+
+                "CMAKE_C_FLAGS": "/DWIN32 /D_WINDOWS /W3 /nologo",
+                "CMAKE_CXX_FLAGS": "/DWIN32 /D_WINDOWS /GR /EHsc /nologo",
+
+                "CMAKE_VERBOSE_MAKEFILE": "False"
+            },
+            "architecture": {
+                "value": "x64",
+                "strategy": "external"
+            },
+            "vendor": {
+                "microsoft.com/VisualStudioSettings/CMake/1.0": {
+                    "hostOS": [ "Windows" ],
+                    "intelliSenseMode": "windows-msvc-x64"
+                }
+            }
+        },
+        {
+            "name": "win-x64-release",
+            "displayName": "Windows x64 RelWithDebInfo (MSVC)",
+            "inherits": "base",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "RelWithDebInfo",
+                "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/install/${presetName}"
+            },
+            "architecture": {
+                "value": "x64",
+                "strategy": "external"
+            },
+            "vendor": {
+                "microsoft.com/VisualStudioSettings/CMake/1.0": {
+                    "hostOS": [ "Windows" ],
+                    "intelliSenseMode": "windows-msvc-x64"
+                }
+            }
+        },
+
+        // -----------------------
+        // WSL (Linux GCC) presets
+        // -----------------------
+        {
+            "name": "wsl-gcc-debug",
+            "displayName": "WSL GCC Debug",
+            "inherits": "base",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug",
+                "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/install/${presetName}",
+
+                "CMAKE_VERBOSE_MAKEFILE": "False",
+                "BUILD_WITH_ASAN": "False"
+            },
+            "vendor": {
+                "microsoft.com/VisualStudioSettings/CMake/1.0": {
+                    "hostOS": [ "Linux" ],
+                    "intelliSenseMode": "linux-gcc-x64"
+                },
+                "microsoft.com/VisualStudioRemoteSettings/CMake/1.0": {
+                    "sourceDir": "$env{HOME}/.vs/$ms{projectDirName}"
+                }
+            }
+        },
+        {
+            "name": "wsl-gcc-release",
+            "displayName": "WSL GCC RelWithDebInfo",
+            "inherits": "base",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "RelWithDebInfo",
+                "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/install/${presetName}"
+            },
+            "vendor": {
+                "microsoft.com/VisualStudioSettings/CMake/1.0": {
+                    "hostOS": [ "Linux" ],
+                    "intelliSenseMode": "linux-gcc-x64"
+                },
+                "microsoft.com/VisualStudioRemoteSettings/CMake/1.0": {
+                    "sourceDir": "$env{HOME}/.vs/$ms{projectDirName}"
+                }
+            }
+        },
+
+        // -----------------------
+        // Emscripten / WASM presets
+        // -----------------------
+        {
+            "name": "wasm-debug",
+            "displayName": "Emscripten (WASM) Debug",
+            "inherits": "base",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug",
+                "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/install/${presetName}",
+
+                "CMAKE_TOOLCHAIN_FILE": "$env{EMSDK}/upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake",
+                "CMAKE_CROSSCOMPILING_EMULATOR": "node"
+            },
+            "vendor": {
+                "microsoft.com/VisualStudioSettings/CMake/1.0": {
+                    "hostOS": [ "Windows" ],
+                    "intelliSenseMode": "windows-clang-x64"
+                }
+            }
+        },
+        {
+            "name": "wasm-release",
+            "displayName": "Emscripten (WASM) Release",
+            "inherits": "base",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release",
+                "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/install/${presetName}",
+
+                "CMAKE_TOOLCHAIN_FILE": "$env{EMSDK}/upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake",
+                "CMAKE_CROSSCOMPILING_EMULATOR": "node"
+            },
+            "vendor": {
+                "microsoft.com/VisualStudioSettings/CMake/1.0": {
+                    "hostOS": [ "Windows" ]
+                }
+            }
+        }
+    ],
+
+    "buildPresets": [
+        {
+            "name": "win-x64-debug",
+            "configurePreset": "win-x64-debug"
+        },
+        {
+            "name": "win-x64-release",
+            "configurePreset": "win-x64-release"
+        },
+
+        {
+            "name": "wsl-gcc-debug",
+            "configurePreset": "wsl-gcc-debug"
+        },
+        {
+            "name": "wsl-gcc-release",
+            "configurePreset": "wsl-gcc-release"
+        },
+
+        {
+            "name": "wasm-debug",
+            "configurePreset": "wasm-debug"
+        },
+        {
+            "name": "wasm-release",
+            "configurePreset": "wasm-release"
+        }
+    ]
+}
