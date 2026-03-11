@@ -39,6 +39,9 @@ public:
 
     void handler ();
 
+    // WASM added function to be used from emscripten_set_main_arg
+    void renderWrapper () { render (); }
+
 private:
     // Loupe circle radius
     static const int loupeRadius_ = 50;
@@ -54,7 +57,7 @@ private:
     SDL_Window* sdlWindow_;
 
     // The Renderer to use in rendering in the given window
-    unique_ptr<SDLRenderer> sdlRenderer_; 
+    unique_ptr<SDLRenderer> sdlRenderer_ {nullptr};
 
     vector<unique_ptr<Panel>> panels_;
 
@@ -71,6 +74,7 @@ private:
 
     Position windowToTexturePosition (Position windowPosition);
     void drawLoupe ();
+    void createRenderer ();
 };
 
 #endif // _SDLWINDOW_H_

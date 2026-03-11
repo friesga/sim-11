@@ -5,6 +5,7 @@
 #include "sdl/sdlevent/sdlevent.h"
 #include "rackunit.h"
 
+#include <SDL.h>
 #include <SDL_image.h>
 #include <string>
 #include <thread>
@@ -103,7 +104,13 @@ void SDLWindow::addPanel (unique_ptr<Panel> panel)
 }
 
 void SDLWindow::render ()
-{    
+{   
+    // emscripten requires that the renderer is created after the main loop
+    // has started (by set_main_loop) so we create the renderer here when we
+    // first need it for rendering.
+    if (sdlRenderer_ == nullptr)
+        createRenderer ();
+
     // Render all Panels to the target texture
     for (auto& sdlPanel : panels_)
         sdlPanel->render ();
@@ -117,6 +124,20 @@ void SDLWindow::render ()
         targetTexture_->setColorModulation (255, 255, 255);
 
     sdlRenderer_->update ();
+}
+
+void SDLWindow::createRenderer ()
+{
+    // Create renderer for the given window and set background colour
+    sdlRenderer_ = make_unique<SDLRenderer> (sdlWindow_);
+    sdlRenderer_->setDrawColor (0, 0, 0, 0);
+
+    // ToDo: Make target texture large enough to be able to zoom into it
+    targetTexture_ = sdlRenderer_->createTexture (textureWidth_, textureHeight_);
+
+    if (targetTexture_ == NULL)
+        throw runtime_error ("Target texture could not be created. SDL error: " +
+            string (SDL_GetError ()));
 }
 
 void SDLWindow::drawLoupe ()

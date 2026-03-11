@@ -22,7 +22,12 @@ class SDLRenderer
 public:
     SDLRenderer (SDL_Window *sdlWindow, 
         int index = -1, 
-        unsigned long flags = SDL_RENDERER_ACCELERATED);
+
+        // WASM The renderer has to be created with the
+        // SDL_RENDERER_PRESENTVSYNC flag to avoid SDL2 setting the frame
+        // rate.
+        // See: https://github.com/emscripten-core/emscripten/issues/11788
+        unsigned long flags = SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
     ~SDLRenderer ();
 
     // The renderer also is factory for textures. In SDL the relationship
