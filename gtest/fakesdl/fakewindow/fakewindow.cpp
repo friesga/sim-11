@@ -1,5 +1,7 @@
 #include "fakewindow.h"
 
+using std::make_unique;
+
 void FakeWindow::show () 
 {
 }
@@ -24,7 +26,9 @@ unique_ptr<PanelBuilder> FakeWindow::createDataPanelBuilder (ImageContainer& ima
 
 void FakeWindow::addPanel (unique_ptr<Panel> panel) 
 {
+    panels_.push_back (move (panel));
 }
+
 void FakeWindow::render () 
 {
 }

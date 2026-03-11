@@ -5,8 +5,10 @@
 #include "../fakedatapanelbuilder/fakedatapanelbuilder.h"
 
 #include <memory>
+#include <vector>
 
-using std::make_unique;
+using std::unique_ptr;
+using std::vector;
 
 class FakeWindow : public Window
 {
@@ -22,6 +24,9 @@ public:
     void addPanel (unique_ptr<Panel> panel) override;
     void render () override;
     bool handleEvents () override;
+
+private:
+    vector<unique_ptr<Panel>> panels_;
 };
 
 #endif // _FAKEWINDOW_H_
