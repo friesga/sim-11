@@ -1,3 +1,4 @@
+#if 1   
 #include "sdl/sdlwindow/sdlwindow.h"
 #include "cabinet/cabinet.h"
 
@@ -26,13 +27,6 @@ int main ()
     sdlWindow  = new SDLWindow {"SDL Window test", {100, 100, windowWidth,
         static_cast<int> (windowWidth / h9642AspectRatio)},
         {Window::Flag::WindowHidden}};
-    /*
-    sdlWindow = new SDLWindow {"SDL Window test", {SDL_WINDOWPOS_CENTERED,
-        SDL_WINDOWPOS_CENTERED,
-        800,
-        600},
-        {Window::Flag::WindowShown}};
-    */
 
     unique_ptr<PanelBuilder> panelBuilder =
         sdlWindow->createFilePanelBuilder (Cabinet::Position {0, 10_ru}, unitHeight);
@@ -50,3 +44,50 @@ int main ()
     // become unresponsive.
     emscripten_set_main_loop (renderLoop, 0, 1);
 }
+#else
+#include <SDL.h>
+#include <SDL_image.h>
+#include <emscripten.h>
+
+SDL_Window* window = nullptr;
+SDL_Renderer* renderer = nullptr;
+SDL_Texture* texture = nullptr;
+
+void frame ()
+{
+    SDL_RenderClear (renderer);
+    SDL_RenderCopy (renderer, texture, nullptr, nullptr);
+    SDL_RenderPresent (renderer);
+}
+
+int main ()
+{
+    SDL_Init (SDL_INIT_VIDEO);
+    IMG_Init (IMG_INIT_PNG);
+
+    window = SDL_CreateWindow (
+        "SDL Emscripten",
+        SDL_WINDOWPOS_CENTERED,
+        SDL_WINDOWPOS_CENTERED,
+        800,
+        600,
+        SDL_WINDOW_SHOWN
+    );
+
+    // Renderer moet v  r emscripten main loop gemaakt worden
+    renderer = SDL_CreateRenderer (
+        window,
+        -1,
+        SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC
+    );
+
+    // SDL_Surface* surface = IMG_Load ("/resources/11_03 front.png");
+    // texture = SDL_CreateTextureFromSurface (renderer, surface);
+    // SDL_FreeSurface (surface);
+    texture = IMG_LoadTexture (renderer, "/resources/11_03 front.png");
+
+    emscripten_set_main_loop (frame, 0, 1);
+}
+
+
+#endif
