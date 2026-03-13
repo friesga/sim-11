@@ -1,10 +1,11 @@
-#if 1   
+#if 1
 #include "sdl/sdlwindow/sdlwindow.h"
 #include "cabinet/cabinet.h"
 
 #include <SDL.h>
 #include <SDL_image.h>
 #include <emscripten.h>
+#include <html5.h>
 #include <iostream>
 
 static const double h9642AspectRatio = 19.0 / 35.0;
@@ -23,6 +24,9 @@ int main ()
 {
     SDL_Init (SDL_INIT_VIDEO);
     IMG_Init (IMG_INIT_PNG);
+
+    emscripten_set_canvas_element_size ("#canvas", 800, 600);
+    emscripten_set_element_css_size ("#canvas", 800, 600);
 
     sdlWindow  = new SDLWindow {"SDL Window test", {100, 100, windowWidth,
         static_cast<int> (windowWidth / h9642AspectRatio)},
@@ -48,6 +52,7 @@ int main ()
 #include <SDL.h>
 #include <SDL_image.h>
 #include <emscripten.h>
+#include <html5.h>
 
 SDL_Window* window = nullptr;
 SDL_Renderer* renderer = nullptr;
@@ -56,7 +61,8 @@ SDL_Texture* texture = nullptr;
 void frame ()
 {
     SDL_RenderClear (renderer);
-    SDL_RenderCopy (renderer, texture, nullptr, nullptr);
+    SDL_Rect destinationRectangle {50, 50, 200, 100};
+    SDL_RenderCopy (renderer, texture, nullptr, &destinationRectangle);
     SDL_RenderPresent (renderer);
 }
 
@@ -65,8 +71,11 @@ int main ()
     SDL_Init (SDL_INIT_VIDEO);
     IMG_Init (IMG_INIT_PNG);
 
+    emscripten_set_canvas_element_size ("#canvas", 800, 600);
+    emscripten_set_element_css_size ("#canvas", 800, 600);
+
     window = SDL_CreateWindow (
-        "SDL Emscripten",
+        "SDL Emscripten test",
         SDL_WINDOWPOS_CENTERED,
         SDL_WINDOWPOS_CENTERED,
         800,
@@ -74,7 +83,6 @@ int main ()
         SDL_WINDOW_SHOWN
     );
 
-    // Renderer moet v  r emscripten main loop gemaakt worden
     renderer = SDL_CreateRenderer (
         window,
         -1,
@@ -88,6 +96,5 @@ int main ()
 
     emscripten_set_main_loop (frame, 0, 1);
 }
-
 
 #endif
