@@ -21,5 +21,6 @@ set (BUS_SRCS
     interrupthandler/interrupthandler.cpp)
 
 target_sources (${TARGET} PRIVATE ${BUS_SRCS})
+target_sources (sim-11-wasm PRIVATE ${BUS_SRCS})
 target_sources (sim-11-test PRIVATE ${BUS_SRCS})
 target_sources (tracereader PRIVATE ${BUS_SRCS})

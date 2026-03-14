@@ -44,6 +44,7 @@ set (CONFIGURATOR_SRCS
     cabinetprocessor/cabinetprocessor.cpp)
 
 target_sources (${TARGET} PRIVATE ${CONFIGURATOR_SRCS})
+target_sources (sim-11-wasm PRIVATE ${CONFIGURATOR_SRCS})
 target_sources (sim-11-test PRIVATE ${CONFIGURATOR_SRCS})
 
 add_subdirectory (ba11)

@@ -8,6 +8,7 @@ set (RLV12_SRCS
     getstatuscmd.cpp)
 
 target_sources (${TARGET} PRIVATE ${RLV12_SRCS})
+target_sources (sim-11-wasm PRIVATE ${RLV12_SRCS})
 target_sources (sim-11-test PRIVATE ${RLV12_SRCS})
 
 add_subdirectory (rlv12command)

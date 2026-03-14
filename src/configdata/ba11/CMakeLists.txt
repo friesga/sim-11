@@ -5,4 +5,5 @@ set (BA11_SRCS
     ba11n/ba11nprocessor/ba11nprocessor.cpp)
 
 target_sources (${TARGET} PRIVATE ${BA11_SRCS})
+target_sources (sim-11-wasm PRIVATE ${BA11_SRCS})
 target_sources (sim-11-test PRIVATE ${BA11_SRCS})

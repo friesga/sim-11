@@ -6,3 +6,4 @@ set (PDP11_SRCS
 
 target_sources (${TARGET} PRIVATE ${PDP11_SRCS})
 target_sources (sim-11-test PRIVATE ${PDP11_SRCS})
+target_sources (sim-11-wasm PRIVATE ${PDP11_SRCS})

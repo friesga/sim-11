@@ -4,4 +4,5 @@ set (BDV11_SRCS
     kdf11b_rom.cpp)
 
 target_sources (${TARGET} PRIVATE ${BDV11_SRCS})
+target_sources (sim-11-wasm PRIVATE ${BDV11_SRCS})
 target_sources (sim-11-test PRIVATE ${BDV11_SRCS})

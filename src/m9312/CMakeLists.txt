@@ -3,4 +3,5 @@ set (M9312_SRCS
     romimages.cpp)
 
 target_sources (${TARGET} PRIVATE ${M9312_SRCS})
+target_sources (sim-11-wasm PRIVATE ${M9312_SRCS})
 target_sources (sim-11-test PRIVATE ${M9312_SRCS})

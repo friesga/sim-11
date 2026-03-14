@@ -10,4 +10,5 @@ set (KA11_SRCS
     executor/executor.cpp)
 
 target_sources (${TARGET} PRIVATE ${KA11_SRCS})
+target_sources (sim-11-wasm PRIVATE ${KA11_SRCS})
 target_sources (sim-11-test PRIVATE ${KA11_SRCS})

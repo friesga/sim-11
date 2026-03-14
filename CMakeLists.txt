@@ -15,6 +15,7 @@ option (BUILD_WITH_ASAN "Build with Address Sanitizer" OFF)
 set (TARGET sim-11)
 add_executable (${TARGET})
 add_executable (sim-11-test)
+add_executable (sim-11-wasm)
 add_executable (tracereader)
 
 # Prevent sim-11-test being build on distributed releases
@@ -142,26 +143,8 @@ target_compile_options (tracereader PRIVATE
     $<$<CXX_COMPILER_ID:GNU>: -Wall --std=c++20>)
 
 # Build a WebAssembly version of sim-11
-add_executable (sdlwindow 
-    src/wasm/main.cpp
-    src/cabinet/cabinet.cpp
-    src/sdl/sdlinit/sdlinit.cpp
-    src/sdl/sdlrenderer/sdlrenderer.cpp
-    src/sdl/sdlrenderer/circle.cpp
-    src/sdl/sdlpanel/sdlpanel.cpp
-    src/sdl/sdltexture/sdltexture.cpp
-    src/sdl/filepanelbuilder/filepanelbuilder.cpp
-    src/sdl/datapanelbuilder/datapanelbuilder.cpp
-    src/sdl/sdlfront/sdlfront.cpp
-    src/sdl/sdltile/sdltile.cpp
-    src/sdl/sdlmultipositionswitch/sdlmultipositionswitch.cpp
-    src/sdl/sdlrenderer/sdlrenderer.cpp
-    src/sdl/sdlevent/sdlevent.cpp
-    src/sdl/sdlwindow/sdlwindow.cpp
-    src/sdl/sdlindicator/sdlindicator.cpp
-    src/sdl/sdlindicatorlatchingbutton/sdlindicatorlatchingbutton.cpp)
 
-target_include_directories (sdlwindow PRIVATE
+target_include_directories (sim-11-wasm PRIVATE
     ${CMAKE_SOURCE_DIR}/src
     include
     C:/Tools/emsdk-5.0.1/upstream/emscripten/cache/sysroot/include/emscripten
@@ -170,9 +153,9 @@ target_include_directories (sdlwindow PRIVATE
 
     # Warnings about unqualified std::move calls are suppressed as Clang
     # detects these incorrectly. See https://reviews.llvm.org/D119670?id=408276
-target_compile_options (sdlwindow PRIVATE -std=c++20 -fexceptions -g -Wno-unqualified-std-cast-call)
+target_compile_options (sim-11-wasm PRIVATE -std=c++20 -fexceptions -g -Wno-unqualified-std-cast-call)
 
-target_link_options (sdlwindow PRIVATE
+target_link_options (sim-11-wasm PRIVATE
     -o sdlwindow.html
     -sUSE_SDL=2
     -sUSE_SDL_IMAGE=2
@@ -185,7 +168,7 @@ target_link_options (sdlwindow PRIVATE
     -g)
 
 # Zorg dat de output file "a.out.js" heet (en dus ook "a.out.wasm" oplevert)
-set_target_properties (sdlwindow PROPERTIES
+set_target_properties (sim-11-wasm PROPERTIES
   OUTPUT_NAME "sdlwindow"
   SUFFIX ".html")
 

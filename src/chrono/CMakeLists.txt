@@ -4,4 +4,5 @@ set (CHRONO_SRCS
     wakeupcall/alarmwakeupcall/alarmwakeupcall.cpp)
 
 target_sources (${TARGET} PRIVATE ${CHRONO_SRCS})
+target_sources (sim-11-wasm PRIVATE ${CHRONO_SRCS})
 target_sources (sim-11-test PRIVATE ${CHRONO_SRCS})

@@ -12,4 +12,5 @@ set (RL0102_SRCS
     createbezel.cpp)
 
 target_sources (${TARGET} PRIVATE ${RL0102_SRCS})
+target_sources (sim-11-wasm PRIVATE ${RL0102_SRCS})
 target_sources (sim-11-test PRIVATE ${RL0102_SRCS})

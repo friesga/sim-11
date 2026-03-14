@@ -8,5 +8,6 @@ set (TRACE_SRCS
     debugrecord/tracefileinsertoperator.cpp)
 
 target_sources (${TARGET} PRIVATE ${TRACE_SRCS})
+target_sources (sim-11-wasm PRIVATE ${TRACE_SRCS})
 target_sources (sim-11-test PRIVATE ${TRACE_SRCS})
 target_sources (tracereader PRIVATE ${TRACE_SRCS})

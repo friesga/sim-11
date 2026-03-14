@@ -10,4 +10,5 @@ set (UNIT_SRCS
     writeprotect.cpp)
 
 target_sources (${TARGET} PRIVATE ${UNIT_SRCS})
+target_sources (sim-11-wasm PRIVATE ${UNIT_SRCS})
 target_sources (sim-11-test PRIVATE ${UNIT_SRCS})

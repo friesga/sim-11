@@ -3,4 +3,5 @@ set (KT24_SRCS
     unibusmaplogic/unibusmaplogic.cpp)
 
 target_sources (${TARGET} PRIVATE ${KT24_SRCS})
+target_sources (sim-11-wasm PRIVATE ${KT24_SRCS})
 target_sources (sim-11-test PRIVATE ${KT24_SRCS})

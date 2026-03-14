@@ -20,4 +20,5 @@ set (RK11D_SRCS
     rk05/statemachine.cpp)
 
 target_sources (${TARGET} PRIVATE ${RK11D_SRCS})
+target_sources (sim-11-wasm PRIVATE ${RK11D_SRCS})
 target_sources (sim-11-test PRIVATE ${RK11D_SRCS})

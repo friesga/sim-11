@@ -13,6 +13,7 @@ set (KDF11_SRCS
     ktf11_a/ktf11_abusdevice.cpp)
 
 target_sources (${TARGET} PRIVATE ${KDF11_SRCS})
+target_sources (sim-11-wasm PRIVATE ${KDF11_SRCS})
 target_sources (sim-11-test PRIVATE ${KDF11_SRCS})
 
 add_subdirectory (odt)

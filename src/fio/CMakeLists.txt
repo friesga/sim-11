@@ -7,4 +7,5 @@ set (FIO_SRCS
     fwrite.cpp)
 
 target_sources (${TARGET} PRIVATE ${FIO_SRCS})
+target_sources (sim-11-wasm PRIVATE ${FIO_SRCS})
 target_sources (sim-11-test PRIVATE ${FIO_SRCS})

@@ -5,5 +5,6 @@ set (KD11_NA_CPU_SRCS
 
 target_sources (${TARGET} PRIVATE ${KD11_NA_CPU_SRCS})
 target_sources (sim-11-test PRIVATE ${KD11_NA_CPU_SRCS})
+target_sources (sim-11-wasm PRIVATE ${KD11_NA_CPU_SRCS})
 
 add_subdirectory (odt)

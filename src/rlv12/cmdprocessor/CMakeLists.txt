@@ -14,4 +14,5 @@ set (CMDPROCESSOR_SRCS
     writedatacmd.cpp)
 
 target_sources (${TARGET} PRIVATE ${CMDPROCESSOR_SRCS})
+target_sources (sim-11-wasm PRIVATE ${CMDPROCESSOR_SRCS})
 target_sources (sim-11-test PRIVATE ${CMDPROCESSOR_SRCS})

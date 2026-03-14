@@ -32,4 +32,5 @@ set (PROC_COMMON_SRCS
     instructionformats/sobinstruction/sobinstruction.cpp)
 
 target_sources (${TARGET} PRIVATE ${PROC_COMMON_SRCS})
+target_sources (sim-11-wasm PRIVATE ${PROC_COMMON_SRCS})
 target_sources (sim-11-test PRIVATE ${PROC_COMMON_SRCS})

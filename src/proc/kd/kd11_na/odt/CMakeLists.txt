@@ -14,4 +14,5 @@ set (KD11_NA_ODT_SRCS
     startingregister.cpp)
 
 target_sources (${TARGET} PRIVATE ${KD11_NA_ODT_SRCS})
+target_sources (sim-11-wasm PRIVATE ${KD11_NA_ODT_SRCS})
 target_sources (sim-11-test PRIVATE ${KD11_NA_ODT_SRCS})

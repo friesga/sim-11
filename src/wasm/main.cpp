@@ -1,6 +1,8 @@
 #if 1
 #include "sdl/sdlwindow/sdlwindow.h"
 #include "cabinet/cabinet.h"
+#include "ba11/ba11_n/ba11_n.h"
+#include "bus/qbus/qbus.h"
 
 #include <SDL.h>
 #include <SDL_image.h>
@@ -28,10 +30,15 @@ int main ()
     emscripten_set_canvas_element_size ("#canvas", 800, 600);
     emscripten_set_element_css_size ("#canvas", 800, 600);
 
+    Qbus bus {};
+
     sdlWindow  = new SDLWindow {"SDL Window test", {100, 100, windowWidth,
         static_cast<int> (windowWidth / h9642AspectRatio)},
         {Window::Flag::WindowHidden}};
 
+    BA11_N ba11_n {&bus, sdlWindow, BA11_NConfig {Cabinet::Position {0, 10_ru}}};
+
+/*
     unique_ptr<PanelBuilder> panelBuilder =
         sdlWindow->createFilePanelBuilder (Cabinet::Position {0, 10_ru}, unitHeight);
 
@@ -40,6 +47,8 @@ int main ()
     sdlWindow->addPanel (panelBuilder->getPanel ());
 
     sdlWindow->show ();
+*/
+
 
     // Argument 3 (set_infinite_loop) is set to true to prevent the browser
     // from timing out the main loop after a certain amount of time. This is
@@ -56,13 +65,21 @@ int main ()
 
 SDL_Window* window = nullptr;
 SDL_Renderer* renderer = nullptr;
-SDL_Texture* texture = nullptr;
+SDL_Texture* imageTexture = nullptr;
+SDL_Texture* windowTexture = nullptr;
+SDL_Texture* targetTexture = nullptr;
 
 void frame ()
 {
     SDL_RenderClear (renderer);
     SDL_Rect destinationRectangle {50, 50, 200, 100};
-    SDL_RenderCopy (renderer, texture, nullptr, &destinationRectangle);
+    SDL_SetRenderTarget (renderer, targetTexture);
+    SDL_RenderCopy (renderer, imageTexture, nullptr, &destinationRectangle);
+
+    // Copy the target texture to browser window
+    SDL_SetRenderTarget (renderer, windowTexture);
+    SDL_RenderCopy (renderer, targetTexture, nullptr, nullptr);
+
     SDL_RenderPresent (renderer);
 }
 
@@ -92,7 +109,12 @@ int main ()
     // SDL_Surface* surface = IMG_Load ("/resources/11_03 front.png");
     // texture = SDL_CreateTextureFromSurface (renderer, surface);
     // SDL_FreeSurface (surface);
-    texture = IMG_LoadTexture (renderer, "/resources/11_03 front.png");
+    imageTexture = IMG_LoadTexture (renderer, "/resources/11_03 front.png");
+
+    // Create a target texture twice the canvas size
+    targetTexture = SDL_CreateTexture (renderer,
+        SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_TARGET,
+        1600, 1200);
 
     emscripten_set_main_loop (frame, 0, 1);
 }

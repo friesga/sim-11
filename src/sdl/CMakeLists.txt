@@ -15,3 +15,4 @@ set (SDL_SRCS
     sdlevent/sdlevent.cpp)
 
 target_sources (${TARGET} PRIVATE ${SDL_SRCS})
+target_sources (sim-11-wasm PRIVATE ${SDL_SRCS})

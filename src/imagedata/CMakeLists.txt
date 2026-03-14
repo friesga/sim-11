@@ -5,4 +5,5 @@ set (IMAGEDATA_SRCS
     pngimage/pngimage.cpp)
 
 target_sources (${TARGET} PRIVATE ${IMAGEDATA_SRCS})
+target_sources (sim-11-wasm PRIVATE ${IMAGEDATA_SRCS})
 target_sources (sim-11-test PRIVATE ${IMAGEDATA_SRCS})
