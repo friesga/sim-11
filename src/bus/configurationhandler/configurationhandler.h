@@ -6,16 +6,16 @@
 class ConfigurationHandler : public BusConfiguration
 {
 public:
-	bool installModuleAtPosition (BusDevice* module, size_t position);
-	bool installModule (BusDevice* module);
-	BusDevice* responsibleModule (BusAddress address);
+	bool installModuleAtPosition (BusDevice* module, size_t position) override;
+	bool installModule (BusDevice* module) override;
+	BusDevice* responsibleModule (BusAddress address) override;
 
-	Iterator begin ();
-	Iterator end ();
-	size_t capacity ();
-	Iterator operator[] (int index);
+	Iterator begin () override;
+	Iterator end () override;
+	size_t capacity () override;
+	Iterator operator[] (int index) override;
 
-	void reset ();
+	void reset () override;
 
 private:
 	// A BA11-N backplane has nine slots, named ROW 1 to ROW 9. ROW 1 corresponds

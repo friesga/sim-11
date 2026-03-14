@@ -31,42 +31,42 @@ public:
 	Qbus ();
 
 	// Functions required for the BusSignals interface
-	Signal& SRUN ();
-	Signal& BPOK ();
-	Signal& RESET ();
-	Signal& BHALT ();
-	Signal& START ();
-	Signal& BINIT ();
-	Signal& BOOT ();
-	Signal& BatteryPower ();
-	Signal& IOMapEnable ();
+	Signal& SRUN () override;
+	Signal& BPOK () override;
+	Signal& RESET () override;
+	Signal& BHALT () override;
+	Signal& START () override;
+	Signal& BINIT () override;
+	Signal& BOOT () override;
+	Signal& BatteryPower () override;
+	Signal& IOMapEnable () override;
 
 	// Functions required for the BusInterrupts interface
 	void requestInterrupt (InterruptPriority priority, unsigned char busOrder,
-		u8 functionOrder, u16 vector, function<void ()> requestGrant = 0);
+		u8 functionOrder, u16 vector, function<void ()> requestGrant = 0) override;
 	bool containsInterrupt (InterruptPriority priority, unsigned char busOrder,
-		u8 functionOrder);
+		u8 functionOrder) override;
 	void clearInterrupt (InterruptPriority priority, unsigned char busOrder,
-		u8 functionOrder);
-	void clearInterrupts ();
-	bool intrptReqAvailable ();
-	u8 intrptPriority ();
-	bool getIntrptReq (InterruptRequest& ir);
+		u8 functionOrder) override;
+	void clearInterrupts () override;
+	bool intrptReqAvailable () override;
+	u8 intrptPriority () override;
+	bool getIntrptReq (InterruptRequest& ir) override;
 
 	// Functions required for the BusConfiguration interface
-	bool installModuleAtPosition (BusDevice* module, size_t position);
-	bool installModule (BusDevice* module);
-	BusDevice* responsibleModule (BusAddress address);
-	Iterator begin ();
-	Iterator end ();
-	size_t capacity ();
-	Iterator operator[] (int index);
-	void reset ();
+	bool installModuleAtPosition (BusDevice* module, size_t position) override;
+	bool installModule (BusDevice* module) override;
+	BusDevice* responsibleModule (BusAddress address) override;
+	Iterator begin () override;
+	Iterator end () override;
+	size_t capacity () override;
+	Iterator operator[] (int index) override;
+	void reset () override;
 
 	// Functions required for the BusDataTransfer interface
-	CondData<u16> read (BusAddress address);
-	bool writeWord (BusAddress address, u16 value);
-	bool writeByte (BusAddress address, u8 val);
+	CondData<u16> read (BusAddress address) override;
+	bool writeWord (BusAddress address, u16 value) override;
+	bool writeByte (BusAddress address, u8 val) override;
 
 private:
 	// Definition of the handlers

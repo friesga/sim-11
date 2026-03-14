@@ -24,6 +24,8 @@ public:
 	virtual Iterator operator[] (int index) = 0;
 
 	virtual void reset () = 0;
+
+    virtual ~BusConfiguration () {}
 };
 
 #endif // _BUSCONFIGURATION_H_
