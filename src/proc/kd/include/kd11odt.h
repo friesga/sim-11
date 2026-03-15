@@ -20,6 +20,7 @@ public:
         MMU*, unique_ptr<ConsoleAccess>, bool)>;
 
     virtual bool processCharacter (u8 character) = 0;
+    virtual ~KD11ODT () = default;
 };
 
 

@@ -50,7 +50,7 @@ public:
     void reset () override;
 
     // Function required for the MemoryDevice interface
-    u16 loadFile (const char* fileName);
+    u16 loadFile (const char* fileName) override;
 
     void BPOKReceiver (bool signalValue);
 

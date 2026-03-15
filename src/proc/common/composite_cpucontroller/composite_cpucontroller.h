@@ -30,7 +30,7 @@ public:
 	void wait () override;
 	void start (u16 address) override;
 	void proceed () override;
-	constexpr Interfaces::CpuController::HaltReason haltReason ();
+	constexpr Interfaces::CpuController::HaltReason haltReason () override;
 	Interfaces::CpuController::CpuRunState execute () override;
 	bool pushWord (u16 value) override;
 	bool popWord (u16* destination) override;

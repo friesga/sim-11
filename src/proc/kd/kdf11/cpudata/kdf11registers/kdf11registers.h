@@ -30,7 +30,7 @@ public:
     KDF11Registers (PSW const &psw);
     u16& operator[] (u16 registerNr) override;
     u16& prevModeContents (u16 registerNr) override;
-    u16& contents (u16 registerNr, u16 mode);
+    u16& contents (u16 registerNr, u16 mode) override;
     void writePrevMode (u16 registerNr, u16 contents) override;
     operator registerArray() override;
 

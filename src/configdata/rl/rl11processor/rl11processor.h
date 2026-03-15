@@ -26,13 +26,13 @@ class RL11Processor : public DeviceConfigProcessor
 	{};
 
 	void processSection (iniparser::Section* section) override;
-	void processValue (iniparser::Section::ValueIterator valueIterator);
+	void processValue (iniparser::Section::ValueIterator valueIterator) override;
 
-	void checkConsistency ();
-	void processSubsection (iniparser::Section* subSection);
+	void checkConsistency () override;
+	void processSubsection (iniparser::Section* subSection) override;
 
 public:
-	DeviceConfig getConfig ();
+	DeviceConfig getConfig () override;
 };
 
 #endif // !_RL11PROCESSOR_H_

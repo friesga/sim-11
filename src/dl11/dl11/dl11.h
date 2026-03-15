@@ -15,7 +15,7 @@ public:
 	CondData<u16> read (BusAddress busAddress) override;
 	StatusCode writeWord (BusAddress busAddress, u16 value) override;
 	bool responsible (BusAddress address) override;
-	void reset ();
+	void reset () override;
 
 	// Declare the signal receivers
 	void BINITReceiver (bool signalValue);

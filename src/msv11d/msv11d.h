@@ -16,10 +16,10 @@ public:
 	CondData<u16> read (BusAddress address) override;
 	StatusCode writeWord (BusAddress address, u16 value) override;
 	bool responsible (BusAddress address) override;
-	void reset ();
+	void reset () override;
 	
 	// Function required for the MemoryDevice interface
-	u16 loadFile (const char* fileName);
+	u16 loadFile (const char* fileName) override;
 
 	// Declare the signal receivers
 	void BPOKReceiver (bool signalValue);

@@ -49,8 +49,8 @@ public:
     void reset () override;
 
     // Functions required by the PDP11Processor interface.
-    void start (u16 startAddress);
-    void start ();
+    void start (u16 startAddress) override;
+    void start () override;
 
     // Functions to give unit tests access to the CPU's components.
     constexpr Interfaces::CpuController* cpuController ();

@@ -59,10 +59,10 @@ public:
     void display (BusAddress address, CondData<u16> data) override;
 
     // Functions required by the AbstractBusDevice class
-    CondData<u16> read (BusAddress address);
-    StatusCode writeWord (BusAddress address, u16 value);
-    bool responsible (BusAddress address);
-    void reset ();
+    CondData<u16> read (BusAddress address) override;
+    StatusCode writeWord (BusAddress address, u16 value) override;
+    bool responsible (BusAddress address) override;
+    void reset () override;
     
     // Definition of the KY11-A states
     struct Off {};

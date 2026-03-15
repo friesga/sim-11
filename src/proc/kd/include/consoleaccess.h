@@ -11,6 +11,7 @@ public:
     virtual bool available () = 0;
 	virtual CondData<u8> read () = 0;
     virtual void write (u8 c) = 0;
+    virtual ~ConsoleAccess () = default;
 };
 
 #endif // _CONSOLEACCESS_H_

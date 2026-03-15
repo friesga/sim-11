@@ -15,6 +15,7 @@ public:
     // processSection() is defined virtual to allow configuration processors
     // to override this function for special purposes.
     virtual void processSection (iniparser::Section* section);
+    virtual ~SectionProcessor () = default;
 
 protected:
     string sectionName () const;

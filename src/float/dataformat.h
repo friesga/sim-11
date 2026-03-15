@@ -1,5 +1,5 @@
 #ifndef _DATA_FORMAT_H_
-#define _DATA_FORMAT_H
+#define _DATA_FORMAT_H_
 
 // PDP-11 floating point data format
 // See Digital Microcomputer Processors 1978-1979 pg. 11-6.
@@ -29,4 +29,4 @@
 // Floating point data format invariants
 #define SIGN_BIT             0x80000000
 
-#endif // _DATA_FORMAT_H
+#endif // _DATA_FORMAT_H_

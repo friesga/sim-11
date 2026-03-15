@@ -21,9 +21,9 @@ private:
 	KT24Config kt24Config {};
 	M9312Processor m9312Processor {};
 
-	void processValue (iniparser::Section::ValueIterator valueIterator);
-	void checkConsistency ();
-	void processSubsection (iniparser::Section* subSection);
+	void processValue (iniparser::Section::ValueIterator valueIterator) override;
+	void checkConsistency () override;
+	void processSubsection (iniparser::Section* subSection) override;
 };
 
 

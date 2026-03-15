@@ -1,5 +1,5 @@
 #ifndef _LINUX_CONSOLE_H_
-#define _LINUX_CONSOLE_H
+#define _LINUX_CONSOLE_H_
 
 #include "../operatorconsole.h"
 

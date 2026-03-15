@@ -23,9 +23,9 @@ class BA11_LProcessor : public DeviceConfigProcessor
 		{"cabinet", &BA11_LProcessor::processCabinet},
 	};
 
-	void processValue (iniparser::Section::ValueIterator valueIterator);
-	void checkConsistency ();
-	void processSubsection (iniparser::Section* subSection);
+	void processValue (iniparser::Section::ValueIterator valueIterator) override;
+	void checkConsistency () override;
+	void processSubsection (iniparser::Section* subSection) override;
 	void processCabinet (iniparser::Value value);
 
 public:

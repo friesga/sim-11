@@ -38,14 +38,14 @@ private:
     const Bytes numBytes_;
 };
 
-constexpr MemorySize operator"" _KiB (unsigned long long num)
+constexpr MemorySize operator""_KiB (unsigned long long num)
 {
-    return Bytes {num * 1024};
+    return Bytes {static_cast<size_t> (num * 1024)};
 }
 
-constexpr MemorySize operator"" _KiW (unsigned long long num)
+constexpr MemorySize operator""_KiW (unsigned long long num)
 {
-    return Bytes {num * 1024 * 2};
+    return Bytes {static_cast<size_t> (num * 1024 * 2)};
 }
 
 #endif // _MEMORYSIZE_H_

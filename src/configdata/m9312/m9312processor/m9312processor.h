@@ -58,9 +58,9 @@ class M9312Processor : public DeviceConfigProcessor
 		{"23-E39A9", M9312Config::BootROMType::_23_E39A9}
 	};
 
-	void processValue (iniparser::Section::ValueIterator valueIterator);
-	void checkConsistency ();
-	void processSubsection (iniparser::Section* subSection);
+	void processValue (iniparser::Section::ValueIterator valueIterator) override;
+	void checkConsistency () override;
+	void processSubsection (iniparser::Section* subSection) override;
 	void processDiagnosticROM (iniparser::Value value);
 	void processBootROMs (iniparser::Value value);
     void processStartingAddress (iniparser::Value value);

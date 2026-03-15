@@ -151,9 +151,15 @@ target_include_directories (sim-11-wasm PRIVATE
     C:/Libraries/SDL2-2.24.2/include
     C:/Libraries/SDL2_image-2.6.2/include)
 
-    # Warnings about unqualified std::move calls are suppressed as Clang
-    # detects these incorrectly. See https://reviews.llvm.org/D119670?id=408276
-target_compile_options (sim-11-wasm PRIVATE -std=c++20 -fexceptions -g -Wno-unqualified-std-cast-call)
+# Warnings about unqualified std::move calls are suppressed as Clang
+# detects these incorrectly. See https://reviews.llvm.org/D119670?id=408276
+# The same holds for warnings about self-assigning fields.
+target_compile_options (sim-11-wasm PRIVATE
+    -std=c++20
+    -fexceptions
+    -g
+    -Wno-unqualified-std-cast-call
+    -Wno-self-assign-field)
 
 target_link_options (sim-11-wasm PRIVATE
     -o sdlwindow.html

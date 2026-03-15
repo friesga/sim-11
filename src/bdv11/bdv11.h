@@ -9,10 +9,12 @@
 #include <array>
 #include <map>
 #include <string>
+#include <thread>
 
 using std::array;
 using std::map;
 using std::string;
+using std::thread;
 
 /* LTC rate */
 // The default RT-11 line clock frequency is 60 Hz
@@ -70,7 +72,7 @@ public:
 	CondData<u16> read (BusAddress address) override;
 	StatusCode writeWord (BusAddress address, u16 value) override;
 	bool responsible (BusAddress address) override;
-	void reset ();
+	void reset () override;
 
 	// Declare the signal receivers
 	void BINITReceiver (bool signalValue);
@@ -147,7 +149,7 @@ private:
 	u16	ltc;
 	u16 switchRegister_;
 	float	time;
-	std::thread ltcThread_;
+	thread ltcThread_;
 	bool running_;
 	ROMimage* romUsed_ {&ROM_045E2_046E2};
 };

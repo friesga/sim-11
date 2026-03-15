@@ -26,13 +26,13 @@ class RLV12Processor : public DeviceConfigProcessor
 	};
 
 	void processSection (iniparser::Section* section) override;
-    void processValue (iniparser::Section::ValueIterator valueIterator);
+    void processValue (iniparser::Section::ValueIterator valueIterator) override;
 	void process22Bit (iniparser::Value value);
-	void checkConsistency ();
-	void processSubsection (iniparser::Section *subSection);
+	void checkConsistency () override;
+	void processSubsection (iniparser::Section *subSection) override;
 
 public:
-	DeviceConfig getConfig ();
+	DeviceConfig getConfig () override;
 };
 
 

@@ -31,9 +31,9 @@ class BA11_NProcessor : public DeviceConfigProcessor
 		{"PDP-11/23+",     BA11_NConfig::Logo::PDP_1123_PLUS}
 	};
 
-	void processValue (iniparser::Section::ValueIterator valueIterator);
-	void checkConsistency ();
-	void processSubsection (iniparser::Section *subSection);
+	void processValue (iniparser::Section::ValueIterator valueIterator) override;
+	void checkConsistency () override;
+	void processSubsection (iniparser::Section *subSection) override;
 	void processLogo (iniparser::Value value);
 	void processCabinet (iniparser::Value value);
 

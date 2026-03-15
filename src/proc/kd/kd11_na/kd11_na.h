@@ -36,8 +36,8 @@ public:
     KD11_NA (Bus* bus);
     KD11_NA (Bus* bus, const KD11_NAConfig& kd11_naConfig);
     ~KD11_NA ();
-    void start (u16 startAddress);
-    void start ();
+    void start (u16 startAddress) override;
+    void start () override;
 
     // Give unit tests access to the CPU, CpuData and the MMU.
     constexpr Interfaces::CpuController* cpuController ();

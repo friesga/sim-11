@@ -83,7 +83,7 @@ public:
     void reset () override;
 
     // Functions required by the DriveInterface interface
-    void reportSeekComplete (RKTypes::SeekCompleteReport report);
+    void reportSeekComplete (RKTypes::SeekCompleteReport report) override;
 
     // The function processor states and events are defined public to be
     // able to use them in the trace functions.

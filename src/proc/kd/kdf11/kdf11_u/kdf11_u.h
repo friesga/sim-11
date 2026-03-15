@@ -54,8 +54,8 @@ public:
     void reset () override;
 
     // Functions required by the PDP11Processor interface.
-    void start (u16 startAddress);
-    void start ();
+    void start (u16 startAddress) override;
+    void start () override;
 
 private:
     enum { stdBootAddress = 0173000 };
