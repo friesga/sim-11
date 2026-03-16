@@ -27,8 +27,8 @@ int main ()
     SDL_Init (SDL_INIT_VIDEO);
     IMG_Init (IMG_INIT_PNG);
 
-    emscripten_set_canvas_element_size ("#canvas", 800, 600);
-    emscripten_set_element_css_size ("#canvas", 800, 600);
+    emscripten_set_canvas_element_size ("#canvas", 500, 1000);
+    emscripten_set_element_css_size ("#canvas", 500, 1000);
 
     Qbus bus {};
 
@@ -37,18 +37,6 @@ int main ()
         {Window::Flag::WindowHidden}};
 
     BA11_N ba11_n {&bus, sdlWindow, BA11_NConfig {Cabinet::Position {0, 10_ru}}};
-
-/*
-    unique_ptr<PanelBuilder> panelBuilder =
-        sdlWindow->createFilePanelBuilder (Cabinet::Position {0, 10_ru}, unitHeight);
-
-    panelBuilder->createFront ("/resources/11_03 front.png", ba11_nFrontFrame);
-
-    sdlWindow->addPanel (panelBuilder->getPanel ());
-
-    sdlWindow->show ();
-*/
-
 
     // Argument 3 (set_infinite_loop) is set to true to prevent the browser
     // from timing out the main loop after a certain amount of time. This is

@@ -15,7 +15,7 @@ option (BUILD_WITH_ASAN "Build with Address Sanitizer" OFF)
 set (TARGET sim-11)
 add_executable (${TARGET})
 add_executable (sim-11-test)
-add_executable (sim-11-wasm)
+add_executable (sim-11-wasm  src/wasm/main.cpp)
 add_executable (tracereader)
 
 # Prevent sim-11-test being build on distributed releases
@@ -169,7 +169,7 @@ target_link_options (sim-11-wasm PRIVATE
     -sASSERTIONS=2
     "-sSDL2_IMAGE_FORMATS=[\"png\"]"
     --shell-file ${CMAKE_SOURCE_DIR}/src/sdlwindow.html
-    --preload-file ${CMAKE_SOURCE_DIR}/resources/11_03\ front.png@/resources/11_03\ front.png
+    --preload-file ${CMAKE_SOURCE_DIR}/resources@/resources
     -fexceptions
     -g)
 
