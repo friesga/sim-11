@@ -39,8 +39,8 @@ public:
 
     void handler ();
 
-    // WASM added function to be used from emscripten_set_main_arg
-    void renderWrapper () { render (); }
+    // WASM function to be used from emscripten_set_main_loop
+    void wasmLoop ();
 
 private:
     // Loupe circle radius

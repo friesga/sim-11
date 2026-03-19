@@ -19,7 +19,7 @@ SDLWindow* sdlWindow;
 
 static void renderLoop ()
 {
-    sdlWindow->renderWrapper ();
+    sdlWindow->wasmLoop ();
 }
 
 int main ()

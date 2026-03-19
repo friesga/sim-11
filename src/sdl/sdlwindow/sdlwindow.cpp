@@ -207,6 +207,12 @@ void SDLWindow::handler ()
     while (!handleEvents ());
 }
 
+void SDLWindow::wasmLoop ()
+{
+    render ();
+    handleEvents ();
+}
+
 // This function transforms a position in this window (as specified in
 // e.g. a mouse button event) to a position in the target texture.
 Position SDLWindow::windowToTexturePosition (Position windowPosition)
