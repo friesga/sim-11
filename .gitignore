@@ -9,4 +9,7 @@ lsi-11
 /build
 /systems
 /resources
-/externals
+/third-party
+/externals/SDL2.dll
+/externals/SDL2d.dll
+/externals/SDL2_image.dll
