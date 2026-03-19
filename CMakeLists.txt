@@ -162,20 +162,20 @@ target_compile_options (sim-11-wasm PRIVATE
     -Wno-self-assign-field)
 
 target_link_options (sim-11-wasm PRIVATE
-    -o sdlwindow.html
+    -o sim-11.html
     -sUSE_SDL=2
     -sUSE_SDL_IMAGE=2
     -s ALLOW_MEMORY_GROWTH=1
     -sASSERTIONS=2
     "-sSDL2_IMAGE_FORMATS=[\"png\"]"
-    --shell-file ${CMAKE_SOURCE_DIR}/src/sdlwindow.html
+    --shell-file ${CMAKE_SOURCE_DIR}/src/sim-11.html
     --preload-file ${CMAKE_SOURCE_DIR}/resources@/resources
     -fexceptions
     -g)
 
 # Zorg dat de output file "a.out.js" heet (en dus ook "a.out.wasm" oplevert)
 set_target_properties (sim-11-wasm PROPERTIES
-  OUTPUT_NAME "sdlwindow"
+  OUTPUT_NAME "sim-11"
   SUFFIX ".html")
 
 # Installation of the sim-11 target
