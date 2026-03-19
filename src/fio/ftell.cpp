@@ -19,3 +19,12 @@ t_offset fio::ftell (FILE* st)
 }
 
 #endif
+
+#if (__EMSCRIPTEN__)
+
+t_offset fio::ftell (FILE* st)
+{
+    return std::ftell (st);
+}
+
+#endif // 

@@ -20,3 +20,12 @@ int fio::fseek (FILE* st, t_offset xpos, int origin)
 }
 
 #endif
+
+#if defined (__EMSCRIPTEN__)
+
+int fio::fseek (FILE* st, t_offset xpos, int origin)
+{
+    return std::fseek (st, (off64_t)xpos, origin);
+}
+
+#endif
