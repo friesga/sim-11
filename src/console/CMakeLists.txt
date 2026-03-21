@@ -16,6 +16,12 @@ set (CONSOLE_SRCS
     operatorconsole/linuxconsole/sender.cpp)
 endif ()
 
+if (EMSCRIPTEN)
+set (CONSOLE_SRCS
+    operatorconsole/operatorconsole.cpp
+    operatorconsole/wasmconsole/wasmconsole.cpp)
+endif ()
+
 target_sources (${TARGET} PRIVATE ${CONSOLE_SRCS})
 target_sources (sim-11-wasm PRIVATE ${CONSOLE_SRCS})
 target_sources (sim-11-test PRIVATE ${CONSOLE_SRCS})
