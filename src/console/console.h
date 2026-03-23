@@ -13,6 +13,7 @@ public:
     virtual void send (char) = 0;
     virtual void print (char const c) = 0;
     virtual bool isActive() = 0;
+    virtual void onChar (int ch) = 0;
     virtual ~Console () {};
 };
 

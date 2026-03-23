@@ -8,11 +8,11 @@
 #include <functional>
 
 // // A class handling the operator's console. As this requires unbuffered
-// input the class is highly system dependent. Therefore a Windows and a
-// Linux variant of this class have to be defined. All system dependent code
-// is in WindowsConsole and LinuxConsole; the common code is in this Console
-// class. Both console implementations provide the same interface, as defined
-// in the OperatorConsole class. 
+// input the class is highly system dependent. Therefore a Windows, a Linux
+// and a WASM variant of this class are implemented. All system dependent code
+// is in WindowsConsole, LinuxConsole and WASMConsole; the common code is in
+// this OperatorConsole class. All console implementations provide the same
+// interface, as defined in the OperatorConsole class. 
 class OperatorConsole : public Console
 {
 public:
@@ -25,7 +25,6 @@ public:
     bool isActive() override;
     
     void sendString (const char* s);
-;
 
 protected:
     std::thread senderThread_;

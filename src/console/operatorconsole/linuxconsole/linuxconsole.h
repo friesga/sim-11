@@ -10,6 +10,7 @@ public:
     LinuxConsole ();
     ~LinuxConsole ();
     void sender () override;
+    void onChar (int ch) override;
 };
 
 #endif // !_LINUX_CONSOLE_H_

@@ -22,6 +22,7 @@ public:
     ~WindowsConsole ();
     void print (char const c) override;
     void sender () override;
+    void onChar (int ch) override;
 };
 
 #endif // _WINDOWS_CONSOLE_H_

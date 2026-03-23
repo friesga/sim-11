@@ -1,16 +1,17 @@
 #ifndef _WASM_CONSOLE_H_
 #define _WASM_CONSOLE_H_
 
-#include "../operatorconsole.h"
+#include "console/operatorconsole/operatorconsole.h"
+#include "console/wasmconsoleinputrouter/wasmconsoleinputrouter.h"
 
 // Implementation of the Console reader function for WASM.
 class WASMConsole : public OperatorConsole
 {
 public:
+    WASMConsole ();
+    ~WASMConsole ();
     void sender () override;
-
-    void onChar (int ch);
+    void onChar (int ch) override;
 };
-
 
 #endif // _WASM_CONSOLE_H_

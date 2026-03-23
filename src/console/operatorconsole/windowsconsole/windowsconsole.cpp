@@ -40,3 +40,9 @@ WindowsConsole::~WindowsConsole ()
     consoleRunning_ = false;
     senderThread_.join ();
 }
+
+// The onChar() function is only used by the WASM console,
+// as the Linux console reads characters directly in the sender() function. 
+void WindowsConsole::onChar (int ch)
+{
+}

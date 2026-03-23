@@ -19,7 +19,8 @@ endif ()
 if (EMSCRIPTEN)
 set (CONSOLE_SRCS
     operatorconsole/operatorconsole.cpp
-    operatorconsole/wasmconsole/wasmconsole.cpp)
+    operatorconsole/wasmconsole/wasmconsole.cpp
+    wasmconsoleinputrouter/wasmconsoleinputrouter.cpp)
 endif ()
 
 target_sources (${TARGET} PRIVATE ${CONSOLE_SRCS})
