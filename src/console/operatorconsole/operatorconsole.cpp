@@ -31,12 +31,3 @@ void OperatorConsole::sendString (const char* s)
 	}
 }
 
-// Print the given character on the operator's console
-void OperatorConsole::print (char const c)
-{
-	// Just print 7-bit ASCII characters. The XXDP diagnostic VKABB0 e.g.
-	// prints characters 0377 at the end of a string which stops WSL from
-	// outputting further characters.
-	printf ("%c", c & 0177);
-	fflush (stdout);
-}

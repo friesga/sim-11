@@ -11,6 +11,7 @@ public:
     WASMConsole ();
     ~WASMConsole ();
     void sender () override;
+    void print (char const c) override;
     void onChar (int ch) override;
 };
 

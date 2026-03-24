@@ -18,10 +18,11 @@ class OperatorConsole : public Console
 public:
     virtual void sender () = 0;
 
-    // Console functions to implement
+    // Console functions to implement. The print() function is implemented in
+    // the system dependent classes, as the way to print a character on the
+    // console is system dependent.
     void setReceiver (std::function<void(char)> receiver) override;
     void send (const char c) override;
-    void print (char const c) override;
     bool isActive() override;
     
     void sendString (const char* s);
