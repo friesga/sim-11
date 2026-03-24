@@ -12,6 +12,7 @@
 #include <utility>
 #include <algorithm>
 #include <stdexcept>
+#include <iostream>
 
 using std::string;
 using std::make_unique;
@@ -105,12 +106,6 @@ void SDLWindow::addPanel (unique_ptr<Panel> panel)
 
 void SDLWindow::render ()
 {   
-    // emscripten requires that the renderer is created after the main loop
-    // has started (by set_main_loop) so we create the renderer here when we
-    // first need it for rendering.
-    if (sdlRenderer_ == nullptr)
-        createRenderer ();
-
     // Render all Panels to the target texture
     for (auto& sdlPanel : panels_)
         sdlPanel->render ();
