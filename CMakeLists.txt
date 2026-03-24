@@ -15,7 +15,7 @@ option (BUILD_WITH_ASAN "Build with Address Sanitizer" OFF)
 set (TARGET sim-11)
 add_executable (${TARGET})
 add_executable (sim-11-test)
-add_executable (sim-11-wasm  src/wasm/main.cpp)
+add_executable (sim-11-wasm)
 add_executable (tracereader)
 
 # Prevent sim-11-test being build on distributed releases
@@ -56,6 +56,7 @@ add_subdirectory (src/main)
 add_subdirectory (src/msv11d)
 add_subdirectory (src/signal)
 add_subdirectory (src/imagedata)
+add_subdirectory (src/wasm)
 add_subdirectory (gtest)
  
 
@@ -153,13 +154,17 @@ target_include_directories (sim-11-wasm PRIVATE
 
 # Warnings about unqualified std::move calls are suppressed as Clang
 # detects these incorrectly. See https://reviews.llvm.org/D119670?id=408276
-# The same holds for warnings about self-assigning fields.
+# The same holds for warnings about self-assigning fields, warnings about
+# undefined inline functions and warnings about braced scalar initializers.
 target_compile_options (sim-11-wasm PRIVATE
     -std=c++20
     -fexceptions
     -g
+    -pthread
     -Wno-unqualified-std-cast-call
-    -Wno-self-assign-field)
+    -Wno-self-assign-field
+    -Wno-undefined-inline
+    -Wno-braced-scalar-init)
 
 target_link_options (sim-11-wasm PRIVATE
     -o sim-11.html
@@ -170,8 +175,14 @@ target_link_options (sim-11-wasm PRIVATE
     "-sSDL2_IMAGE_FORMATS=[\"png\"]"
     --shell-file ${CMAKE_SOURCE_DIR}/src/sim-11.html
     --preload-file ${CMAKE_SOURCE_DIR}/resources@/resources
+    -sEXPORTED_FUNCTIONS=_main,_on_xterm_char
+    -pthread
+    -sPTHREAD_POOL_SIZE_STRICT=0
+    # -sPROXY_TO_PTHREAD
+    # -sPTHREAD_POOL_SIZE=2
+    # -sOFFSCREENCANVAS_SUPPORT=1
     -fexceptions
-    -g)
+    -g -gsource-map)
 
 # Zorg dat de output file "a.out.js" heet (en dus ook "a.out.wasm" oplevert)
 set_target_properties (sim-11-wasm PROPERTIES
