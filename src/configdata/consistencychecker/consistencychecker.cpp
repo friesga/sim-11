@@ -76,7 +76,8 @@ void ConsistencyChecker::checkQbusConsistency ()
             throw invalid_argument ("No BDV11 configured, this system cannot run.");
     }
 
-    if (count_if (presentDevices, &ConsistencyChecker::findDevice<RXV21Config>) == 0 && 
+    if (count_if (presentDevices, &ConsistencyChecker::findDevice<RXV21Config>) == 0 &&
+        count_if (presentDevices, &ConsistencyChecker::findDevice<RLV11Config>) == 0 &&
         count_if (presentDevices, &ConsistencyChecker::findDevice<RLV12Config>) == 0)
         cout << "Warning: No removable media configured. This system cannot boot.\n";
 

@@ -65,3 +65,97 @@ TEST (BootDeviceConsistencyTest, noBootableDeviceConfigured)
 	EXPECT_STREQ (captureStdout.getOutput ().c_str (),
 		"Warning: No removable media configured. This system cannot boot.\n");
 }
+
+TEST (BootDeviceConsistencyTest, rxv21CountsAsBootableDevice)
+{
+	iniparser::File ft;
+	std::stringstream stream;
+	stream << "[KD11-NA]\n"
+		"[MSV11]\n"
+		"[DLV11-J]\n"
+		"[BDV11]\n"
+		"[BA11-N]\n"
+		"cabinet = 0/19\n"
+		"[RXV21]\n";
+	stream >> ft;
+
+	IniProcessor iniProcessor;
+	EXPECT_NO_THROW (iniProcessor.process (ft));
+
+	SystemConfig systemConfig = iniProcessor.getSystemConfig ();
+	ConsistencyChecker consistencyChecker {systemConfig};
+
+	CaptureStdout captureStdout;
+	try
+	{
+		consistencyChecker.checkQbusConsistency ();
+	}
+	catch (...)
+	{
+		FAIL ();
+	}
+	EXPECT_STREQ (captureStdout.getOutput ().c_str (), "");
+}
+
+
+TEST (BootDeviceConsistencyTest, rlv11CountsAsBootableDevice)
+{
+	iniparser::File ft;
+	std::stringstream stream;
+	stream << "[KD11-NA]\n"
+		"[MSV11]\n"
+		"[DLV11-J]\n"
+		"[BDV11]\n"
+		"[BA11-N]\n"
+		"cabinet = 0/19\n"
+		"[RLV11]\n";
+	stream >> ft;
+
+	IniProcessor iniProcessor;
+	EXPECT_NO_THROW (iniProcessor.process (ft));
+
+	SystemConfig systemConfig = iniProcessor.getSystemConfig ();
+	ConsistencyChecker consistencyChecker {systemConfig};
+
+	CaptureStdout captureStdout;
+	try
+	{
+		consistencyChecker.checkQbusConsistency ();
+	}
+	catch (...)
+	{
+		FAIL ();
+	}
+	EXPECT_STREQ (captureStdout.getOutput ().c_str (), "");
+}
+
+TEST (BootDeviceConsistencyTest, rlv12CountsAsBootableDevice)
+{
+	iniparser::File ft;
+	std::stringstream stream;
+	stream << "[KD11-NA]\n"
+		"[MSV11]\n"
+		"[DLV11-J]\n"
+		"[BDV11]\n"
+		"[BA11-N]\n"
+		"cabinet = 0/19\n"
+		"[RLV12]\n";
+	stream >> ft;
+
+	IniProcessor iniProcessor;
+	EXPECT_NO_THROW (iniProcessor.process (ft));
+
+	SystemConfig systemConfig = iniProcessor.getSystemConfig ();
+	ConsistencyChecker consistencyChecker {systemConfig};
+
+	CaptureStdout captureStdout;
+	try
+	{
+		consistencyChecker.checkQbusConsistency ();
+	}
+	catch (...)
+	{
+		FAIL ();
+	}
+	EXPECT_STREQ (captureStdout.getOutput ().c_str (), "");
+}
