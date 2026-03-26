@@ -19,6 +19,7 @@ set (GTEST_SRCS
     characterbuffertest.cpp
     conddatatest.cpp
     conditioncodestest.cpp
+    configdata/bootdeviceconsistencytest.cpp
     configdata/configprocessortest.cpp
     configdata/consoleconsistencytest.cpp
     configdata/cabinetconsistencytest.cpp
