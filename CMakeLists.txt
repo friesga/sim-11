@@ -176,7 +176,7 @@ target_link_options (sim-11-wasm PRIVATE
     -s ALLOW_MEMORY_GROWTH=1
     -O2
     "-sSDL2_IMAGE_FORMATS=[\"png\"]"
-    --shell-file ${CMAKE_SOURCE_DIR}/src/sim-11.html
+    --shell-file ${CMAKE_SOURCE_DIR}/src/sim-11-shell.html
     "SHELL:--preload-file ${CMAKE_BINARY_DIR}/resources@/resources"
     "SHELL:--preload-file ${CMAKE_BINARY_DIR}/config@/config"
     "SHELL:--preload-file ${CMAKE_BINARY_DIR}/systems@/systems"
@@ -185,12 +185,8 @@ target_link_options (sim-11-wasm PRIVATE
     -sPTHREAD_POOL_SIZE_STRICT=0
     -fexceptions)
 
-add_custom_target (copy_resources
-    COMMAND ${CMAKE_COMMAND} -E copy_directory 
-    ${CMAKE_CURRENT_LIST_DIR}/resources
-    ${CMAKE_CURRENT_BINARY_DIR}/resources)
-
-add_dependencies (sim-11-wasm copy_resources)
+set_property (TARGET sim-11-wasm APPEND PROPERTY
+    LINK_DEPENDS ${CMAKE_SOURCE_DIR}/src/sim-11-shell.html)
 
 # Zorg dat de output file "a.out.js" heet (en dus ook "a.out.wasm" oplevert)
 set_target_properties (sim-11-wasm PROPERTIES
