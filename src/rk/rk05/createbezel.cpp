@@ -80,7 +80,7 @@ void RK05::createBezel (Window* window, const RK05Config& rk05Config)
         bind (&RK05::wtprotSwitchClicked, this, _1),
         wtprotSwitchFrame);
 
-    panelBuilder->createFront ("resources/RK05 drive " +
+    panelBuilder->createFront ("resources/rk05 drive " +
         to_string (rk05Config.unitNumber) + ".png", numberLabelFrame);
 
     window->addPanel (panelBuilder->getPanel ());
