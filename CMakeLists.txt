@@ -188,6 +188,12 @@ target_link_options (sim-11-wasm PRIVATE
 set_property (TARGET sim-11-wasm APPEND PROPERTY
     LINK_DEPENDS ${CMAKE_SOURCE_DIR}/src/sim-11-shell.html)
 
+set_property (TARGET sim-11-wasm APPEND PROPERTY
+    LINK_DEPENDS ${CMAKE_BINARY_DIR}/config/pdp-11_03.ini)
+
+set_property (TARGET sim-11-wasm APPEND PROPERTY
+    LINK_DEPENDS ${CMAKE_BINARY_DIR}/config/pdp-11_20.ini)
+
 # Zorg dat de output file "a.out.js" heet (en dus ook "a.out.wasm" oplevert)
 set_target_properties (sim-11-wasm PROPERTIES
   OUTPUT_NAME "sim-11"
