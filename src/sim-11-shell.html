@@ -1,32 +1,155 @@
 <!doctype html>
 <html lang="nl">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>SDL + xterm</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>WinBox + SDL canvas + xterm</title>
 
-    <link rel="stylesheet" href="./xterm/xterm.css" />
+    <link rel="stylesheet" href="https://unpkg.com/winbox/dist/css/winbox.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/xterm/css/xterm.css">
+
+    <script src="https://unpkg.com/winbox/dist/js/winbox.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xterm/lib/xterm.js"></script>
 
     <style>
+        :root {
+            --bg-page: #1e1e1e;
+            --bg-window: #252526;
+            --bg-title: #2d2d30;
+            --bg-tabbar: #2d2d30;
+            --bg-tab: #2d2d30;
+            --bg-tab-active: #1e1e1e;
+            --bg-tab-hover: #37373d;
+            --border: #3c3c3c;
+            --text: #d4d4d4;
+            --text-dim: #cccccc;
+            --accent: #007acc;
+        }
+
         html, body {
             margin: 0;
             width: 100%;
             height: 100%;
-            background: #111;
-            color: #ddd;
+            background: var(--bg-page);
+            color: var(--text);
+            font-family: "Segoe UI", Arial, sans-serif;
             overflow: hidden;
-            font-family: sans-serif;
         }
 
-        #layout {
-            display: flex;
+        .winbox {
+            background: var(--border);
+            border-radius: 0;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+        }
+
+            .winbox.focus {
+                box-shadow: 0 0 0 1px var(--accent), 0 8px 24px rgba(0, 0, 0, 0.55);
+            }
+
+        .wb-header {
+            background: var(--bg-title);
+            color: var(--text);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .wb-title {
+            font-size: 13px;
+        }
+
+        .wb-body {
+            background: var(--bg-window);
+            color: var(--text);
+            overflow: hidden;
+        }
+
+        .app,
+        .tab-app {
             width: 100%;
             height: 100%;
-            gap: 12px;
             box-sizing: border-box;
-            padding: 12px;
+            background: transparent;
+            color: var(--text);
         }
 
+        .app {
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+            min-height: 0;
+        }
+
+        .tab-app {
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            min-width: 0;
+            min-height: 0;
+        }
+
+        .tab-bar {
+            display: flex;
+            flex: 0 0 auto;
+            background: var(--bg-tabbar);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .tab-button {
+            appearance: none;
+            border: none;
+            border-right: 1px solid var(--border);
+            background: var(--bg-tab);
+            color: var(--text-dim);
+            padding: 10px 16px;
+            cursor: pointer;
+            font: inherit;
+            font-size: 13px;
+        }
+
+            .tab-button:hover {
+                background: var(--bg-tab-hover);
+                color: var(--text);
+            }
+
+            .tab-button.active {
+                background: var(--bg-tab-active);
+                color: var(--text);
+                position: relative;
+            }
+
+                .tab-button.active::before {
+                    content: "";
+                    position: absolute;
+                    left: 0;
+                    top: 0;
+                    width: 100%;
+                    height: 2px;
+                    background: var(--accent);
+                }
+
+        .tab-content {
+            position: relative;
+            flex: 1 1 auto;
+            min-height: 0;
+            min-width: 0;
+            background: var(--bg-tab-active);
+        }
+
+        .tab-pane {
+            position: absolute;
+            inset: 0;
+            display: none;
+            box-sizing: border-box;
+            overflow: hidden;
+            min-width: 0;
+            min-height: 0;
+        }
+
+            .tab-pane.active {
+                display: block;
+            }
+
+        /* Explorer inhoud: canvas */
         #canvas-pane {
             flex: 1 1 auto;
             min-width: 0;
@@ -35,7 +158,7 @@
             align-items: stretch;
             justify-content: stretch;
             background: #222;
-            border: 1px solid #444;
+            border: none;
         }
 
         #canvas {
@@ -45,14 +168,18 @@
             background: black;
         }
 
+        /* Workspace terminal */
+        #terminal-tab {
+            padding: 8px;
+            background: #111;
+        }
+
         #terminal-pane {
-            flex: 0 0 auto;
+            width: 100%;
+            height: 100%;
             background: #111;
             border: 1px solid #444;
-            padding: 8px;
             box-sizing: border-box;
-            width: 760px;
-            height: 470px;
             overflow: hidden;
         }
 
@@ -60,23 +187,69 @@
             width: 100%;
             height: 100%;
         }
+
+        /* Extra info-tab */
+        #info-tab {
+            padding: 14px;
+            overflow: auto;
+        }
+
+        h2 {
+            margin-top: 0;
+            font-size: 18px;
+            font-weight: 600;
+            color: #ffffff;
+        }
+
+        p {
+            line-height: 1.45;
+            margin: 0 0 10px 0;
+        }
+
+        code {
+            background: #1b1b1c;
+            border: 1px solid var(--border);
+            padding: 2px 5px;
+            border-radius: 3px;
+            color: #ce9178;
+        }
     </style>
 </head>
 <body>
-    <div id="layout">
+
+    <!-- Explorer window -->
+    <div id="app1" class="app">
         <div id="canvas-pane">
             <canvas id="canvas"></canvas>
         </div>
+    </div>
 
-        <div id="terminal-pane">
-            <div id="terminal"></div>
+    <!-- Workspace window -->
+    <div id="app2" class="tab-app">
+        <div class="tab-bar">
+            <button class="tab-button active" data-tab="terminal-tab">Terminal</button>
+            <button class="tab-button" data-tab="info-tab">Info</button>
+        </div>
+
+        <div class="tab-content">
+            <div id="terminal-tab" class="tab-pane active">
+                <div id="terminal-pane">
+                    <div id="terminal"></div>
+                </div>
+            </div>
+
+            <div id="info-tab" class="tab-pane">
+                <h2>Workspace</h2>
+                <p>De terminal staat in de tab <code>Terminal</code>.</p>
+                <p>Het Emscripten-canvas staat in het aparte <code>Explorer</code>-window.</p>
+            </div>
         </div>
     </div>
 
     <script>
-        window.Module = {
+    window.Module = {
             canvas: (function () {
-                return document.getElementById('canvas');
+                return document.getElementById("canvas");
             })(),
 
             print: function (text) {
@@ -103,14 +276,51 @@
             },
 
             arguments: ['-c', '/config/pdp-11_20.ini']
-        };
-    </script>
-
-    <!-- <script src="./sim-11.js"></script> -->
-    <script src="./xterm/xterm.js"></script>
+        };</script>
 
     <script>
-        const term = new Terminal({
+    const app1 = document.getElementById("app1");
+        const app2 = document.getElementById("app2");
+
+        new WinBox("Explorer", {
+            width: 700,
+            height: 500,
+            x: 40,
+            y: 40,
+            mount: app1
+        });
+
+        new WinBox("Workspace", {
+            width: 760,
+            height: 420,
+            x: 780,
+            y: 80,
+            mount: app2
+        });
+
+        const tabButtons = app2.querySelectorAll(".tab-button");
+        const tabPanes = app2.querySelectorAll(".tab-pane");
+
+        tabButtons.forEach(button => {
+            button.addEventListener("click", () => {
+                const targetId = button.dataset.tab;
+
+                tabButtons.forEach(btn => btn.classList.remove("active"));
+                tabPanes.forEach(pane => pane.classList.remove("active"));
+
+                button.classList.add("active");
+                app2.querySelector("#" + targetId).classList.add("active");
+
+                if (targetId === "terminal-tab" && window.term) {
+                    setTimeout(() => {
+                        try { window.term.focus(); } catch (e) { }
+                    }, 0);
+                }
+            });
+        });</script>
+
+    <script>
+    const term = new Terminal({
             cols: 80,
             rows: 24,
             cursorBlink: true,
@@ -140,8 +350,8 @@
 
         if (window.runtimeReady) {
             window.attachXtermInput();
-        }
-    </script>
+        }</script>
+
     {{{ SCRIPT }}}
 </body>
 </html>
