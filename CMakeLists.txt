@@ -209,14 +209,13 @@ set_target_properties (sim-11-wasm PROPERTIES
 # CMAKE_SOURCE_DIR\out\install\<Configuration Name>\sim-11; on Linux the
 # destination directory is /usr/local/sim-11.
 #
-install (TARGETS ${TARGET} DESTINATION ./sim-11)
-install (DIRECTORY config DESTINATION ./sim-11)
-install (DIRECTORY resources DESTINATION ./sim-11)
-
-if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
-install (FILES 
-    externals/SDL2.dll
-    externals/SDL2_image.dll
-    externals/SDL2d.dll
-    DESTINATION ./sim-11)
-endif ()
+# The install command in CMake is useless as it doesn't support installation
+# of different targets and then really mixes things up. We therefor use a 
+# custom target instead of the install command.
+#
+add_custom_target (winx64-release-install
+    COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_INSTALL_PREFIX}
+    COMMAND ${CMAKE_COMMAND} -E copy sim-11.exe ${CMAKE_INSTALL_PREFIX}
+    COMMAND ${CMAKE_COMMAND} -E copy_directory ${PROJECT_SOURCE_DIR}/config ${CMAKE_INSTALL_PREFIX}/config
+    COMMAND ${CMAKE_COMMAND} -E copy_directory ${PROJECT_SOURCE_DIR}/resources ${CMAKE_INSTALL_PREFIX}/resources
+    COMMAND ${CMAKE_COMMAND} -E copy_directory ${PROJECT_SOURCE_DIR}/third-party/SDL2 ${CMAKE_INSTALL_PREFIX})
