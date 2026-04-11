@@ -210,7 +210,7 @@ set_target_properties (sim-11-wasm PROPERTIES
 # destination directory is /usr/local/sim-11.
 #
 # The install command in CMake is useless as it doesn't support installation
-# of different targets and then really mixes things up. We therefor use a 
+# of different targets and then really mixes things up. We therefore use a 
 # custom target instead of the install command.
 #
 add_custom_target (winx64-release-install
@@ -219,3 +219,10 @@ add_custom_target (winx64-release-install
     COMMAND ${CMAKE_COMMAND} -E copy_directory ${PROJECT_SOURCE_DIR}/config ${CMAKE_INSTALL_PREFIX}/config
     COMMAND ${CMAKE_COMMAND} -E copy_directory ${PROJECT_SOURCE_DIR}/resources ${CMAKE_INSTALL_PREFIX}/resources
     COMMAND ${CMAKE_COMMAND} -E copy_directory ${PROJECT_SOURCE_DIR}/third-party/SDL2 ${CMAKE_INSTALL_PREFIX})
+
+add_custom_target (wasm-release-deploy
+    COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_INSTALL_PREFIX}
+    COMMAND ${CMAKE_COMMAND} -E copy sim-11.data ${CMAKE_INSTALL_PREFIX}
+    COMMAND ${CMAKE_COMMAND} -E copy sim-11.html ${CMAKE_INSTALL_PREFIX}
+    COMMAND ${CMAKE_COMMAND} -E copy sim-11.js ${CMAKE_INSTALL_PREFIX}
+    COMMAND ${CMAKE_COMMAND} -E copy sim-11.wasm ${CMAKE_INSTALL_PREFIX})
