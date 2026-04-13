@@ -194,10 +194,18 @@ set_property (TARGET sim-11-wasm APPEND PROPERTY
 set_property (TARGET sim-11-wasm APPEND PROPERTY
     LINK_DEPENDS ${CMAKE_BINARY_DIR}/config/pdp-11_20.ini)
 
-# Zorg dat de output file "a.out.js" heet (en dus ook "a.out.wasm" oplevert)
 set_target_properties (sim-11-wasm PROPERTIES
   OUTPUT_NAME "sim-11"
   SUFFIX ".html")
+
+# Copy the result of the build to the installation directory for use in 
+# the website.
+add_custom_command (TARGET sim-11-wasm POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_INSTALL_PREFIX}
+    COMMAND ${CMAKE_COMMAND} -E copy sim-11.data ${CMAKE_INSTALL_PREFIX}
+    COMMAND ${CMAKE_COMMAND} -E copy sim-11.html ${CMAKE_INSTALL_PREFIX}
+    COMMAND ${CMAKE_COMMAND} -E copy sim-11.js ${CMAKE_INSTALL_PREFIX}
+    COMMAND ${CMAKE_COMMAND} -E copy sim-11.wasm ${CMAKE_INSTALL_PREFIX})
 
 # Installation of the sim-11 target
 #
