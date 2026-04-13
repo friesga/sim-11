@@ -178,11 +178,6 @@
         {
             "name": "wasm-release",
             "configurePreset": "wasm-release"
-        },
-        {
-            "name": "wasm-release-deploy",
-            "configurePreset": "wasm-release",
-            "targets": [ "wasm-release-deploy" ]
         }
     ]
 }
