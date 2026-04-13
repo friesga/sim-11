@@ -233,9 +233,8 @@
 
         <div class="tab-content">
             <div id="terminal-tab" class="tab-pane active">
-                <div id="terminal-pane">
-                    <div id="terminal"></div>
-                </div>
+                <h2>Instruction</h2>
+                <p>Tabblad met instructies.</p>
             </div>
 
             <div id="info-tab" class="tab-pane">
@@ -246,8 +245,15 @@
         </div>
     </div>
 
+    <!-- Terminal window -->
+    <div id="app3" class="app">
+        <div id="xterm-terminal">
+            <div id="terminal"></div>
+        </div>
+    </div>
+
     <script>
-    window.Module = {
+        window.Module = {
             canvas: (function () {
                 return document.getElementById("canvas");
             })(),
@@ -279,8 +285,9 @@
         };</script>
 
     <script>
-    const app1 = document.getElementById("app1");
+        const app1 = document.getElementById("app1");
         const app2 = document.getElementById("app2");
+        const app3 = document.getElementById("app3");
 
         new WinBox("Explorer", {
             width: 700,
@@ -296,6 +303,14 @@
             x: 780,
             y: 80,
             mount: app2
+        });
+
+        new WinBox("Terminal", {
+            width: 760,
+            height: 420,
+            x: 780,
+            y: 600,
+            mount: app3
         });
 
         const tabButtons = app2.querySelectorAll(".tab-button");
@@ -320,7 +335,7 @@
         });</script>
 
     <script>
-    const term = new Terminal({
+        const term = new Terminal({
             cols: 80,
             rows: 24,
             cursorBlink: true,
