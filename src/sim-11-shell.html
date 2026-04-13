@@ -169,7 +169,7 @@
         }
 
         /* Workspace terminal */
-        #terminal-tab {
+        #starting-tab {
             padding: 8px;
             background: #111;
         }
@@ -217,30 +217,29 @@
 </head>
 <body>
 
-    <!-- Explorer window -->
+    <!-- PDP-11 Fronts window -->
     <div id="app1" class="app">
         <div id="canvas-pane">
             <canvas id="canvas"></canvas>
         </div>
     </div>
 
-    <!-- Workspace window -->
+    <!-- Description window -->
     <div id="app2" class="tab-app">
         <div class="tab-bar">
-            <button class="tab-button active" data-tab="terminal-tab">Terminal</button>
-            <button class="tab-button" data-tab="info-tab">Info</button>
+            <button class="tab-button active" data-tab="starting-tab">Starting</button>
+            <button class="tab-button" data-tab="info-tab">Manuals</button>
         </div>
 
         <div class="tab-content">
-            <div id="terminal-tab" class="tab-pane active">
-                <h2>Instruction</h2>
-                <p>Tabblad met instructies.</p>
+            <div id="starting-tab" class="tab-pane active">
+                <h2>Starting the system</h2>
+                <p>Follow these instructions to start the system:</p>
             </div>
 
             <div id="info-tab" class="tab-pane">
-                <h2>Workspace</h2>
-                <p>De terminal staat in de tab <code>Terminal</code>.</p>
-                <p>Het Emscripten-canvas staat in het aparte <code>Explorer</code>-window.</p>
+                <h2>Manuals</h2>
+                <p>For more information consult the following instructions:</p>
             </div>
         </div>
     </div>
@@ -289,15 +288,15 @@
         const app2 = document.getElementById("app2");
         const app3 = document.getElementById("app3");
 
-        new WinBox("Explorer", {
-            width: 700,
-            height: 500,
+        new WinBox("PDP-11", {
+            width: 500,
+            height: 1000,
             x: 40,
             y: 40,
             mount: app1
         });
 
-        new WinBox("Workspace", {
+        new WinBox("Description", {
             width: 760,
             height: 420,
             x: 780,
@@ -326,7 +325,7 @@
                 button.classList.add("active");
                 app2.querySelector("#" + targetId).classList.add("active");
 
-                if (targetId === "terminal-tab" && window.term) {
+                if (targetId === "starting-tab" && window.term) {
                     setTimeout(() => {
                         try { window.term.focus(); } catch (e) { }
                     }, 0);
