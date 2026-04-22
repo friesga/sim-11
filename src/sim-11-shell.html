@@ -228,6 +228,7 @@
     <div id="app2" class="tab-app">
         <div class="tab-bar">
             <button class="tab-button active" data-tab="starting-tab">Starting</button>
+            <button class="tab-button active" data-tab="configuration-tab">Configuration</button>
             <button class="tab-button" data-tab="info-tab">Manuals</button>
         </div>
 
@@ -235,6 +236,18 @@
             <div id="starting-tab" class="tab-pane active">
                 <h2>Starting the system</h2>
                 <p>Follow these instructions to start the system:</p>
+                <ol>
+                    <li>Start RK05 drive 0 (push LOAD switch to RUN position)</li>
+                    <li>Switch PDP-11/20 power on (click right of power switch)</li>
+                    <li>Load Address from switch register (click LOAD ADDR)</li>
+                    <li>Enable processor operation (click ENABLE/HALT)</li>
+                    <li>Start processor operation (click START)</li>
+                </ol>
+            </div>
+
+            <div id="configuration-tab" class="tab-pane">
+                <h2>Configuration</h2>
+                <p>This system is equipped with the following devices:</p>
             </div>
 
             <div id="info-tab" class="tab-pane">
