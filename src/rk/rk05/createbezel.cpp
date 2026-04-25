@@ -58,8 +58,8 @@ void RK05::createBezel (Window* window, const RK05Config& rk05Config)
 
     // FAULT indicator, default off
     faultIndicator_ = panelBuilder->createIndicator (
-        "resources/FAULT off.png",
-        "resources/FAULT on.png",
+        "resources/fault_off.png",
+        "resources/fault_on.png",
         Indicator::State::Off, faultIndicatorFrame);
 
     // RUN/LOAD switch, initial state up. The RUN/LOAD switch is a rocker
