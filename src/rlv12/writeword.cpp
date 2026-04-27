@@ -86,7 +86,8 @@ StatusCode RLV12::writeWord (BusAddress busAddress, u16 data)
             // setting of the other error bits.
             csr_ &= ~RLV12const::CSR_AnyError;
 
-            trace.rlv12Command (RLV12const::getFunction (csr_));
+            trace.rlv12Command (RLV12const::getFunction (csr_),
+                RLV12const::getDrive (csr_));
 
             // Diagnostic ZRLJC0 requires a response from the Get Status
             // command within 10 microseconds. As a context switch to the

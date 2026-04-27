@@ -138,10 +138,10 @@ void Trace::rlv12Registers (string msg, u16 rlcs, u16 rlba, u16 rlda,
         tracefileOut_ << TraceRecord<RLV12RegistersRecord> (msg, rlcs, rlba, rlda, rlmpr, rlbae);
 }
 
-void Trace::rlv12Command (u16 command)
+void Trace::rlv12Command (u16 command, u16 driveNumber)
 {
     if (traceEnabled && (flags_ & Trace::Category::RLV12))
-        tracefileOut_ << TraceRecord<RLV12CommandRecord> (command);
+        tracefileOut_ << TraceRecord<RLV12CommandRecord> (command, driveNumber);
 }
 
 void Trace::unibusMap (u32 inputAddress, BusAddress::Width width,

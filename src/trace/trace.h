@@ -95,7 +95,7 @@ public:
         RKTypes::RKDS rkds, RKTypes::RKCS rkcs, u16 rkwc, u16 rkba,
         RKTypes::RKDA rkda, u16 rkdb);
     void rlv12Registers (string msg, u16 rlcs, u16 rlba, u16 rlda, u16 rlmpr, u16 rlbae);
-    void rlv12Command (u16 command);
+    void rlv12Command (u16 command, u16 driveNumber);
     void unibusMap (u32 inputAddress, BusAddress::Width width,
         u16 registerIndex, u16 low, u16 high, u32 physicalAddress);
     void clock (string msg, SimulatorClock::duration duration);

@@ -21,10 +21,11 @@ class TraceRecord<RLV12CommandRecord>
         TraceRecord<RLV12CommandRecord> record);
 
 	u16 command_;
+	u16 driveNumber_;
 
 public:
 	TraceRecord ();
-	TraceRecord (u16 command);
+	TraceRecord (u16 command, u16 driveNumber);
     Magic magic () {return Magic::RL2C;}
 
 	const char* getCommandName ();
@@ -33,12 +34,14 @@ public:
 
 inline TraceRecord<RLV12CommandRecord>::TraceRecord ()
 	:
-	command_ {0}
+	command_ {0},
+	driveNumber_ {0}
 {}
 
-inline TraceRecord<RLV12CommandRecord>::TraceRecord (u16 command)
+inline TraceRecord<RLV12CommandRecord>::TraceRecord (u16 command, u16 driveNumber)
 	:
-	command_ {command}
+	command_ {command},
+    driveNumber_ {driveNumber}
 {}
 
 
