@@ -69,7 +69,8 @@ RL01_02::State RL01_02::StateMachine::transition (SpinningUp&&, TimeElapsed)
 {
     context_->readyIndicator_->show (Indicator::State::On);
     context_->driveStatus_ |= RLV12const::MPR_GS_VolumeCheck |
-        RLV12const::MPR_GS_BrushHome | RLV12const::MPR_GS_HeadsOut;
+        RLV12const::MPR_GS_BrushHome | RLV12const::MPR_GS_HeadsOut |
+        RLV12const::MPR_GS_LockOn;
     context_->setDriveReady ();
     return LockedOn {};
 }
