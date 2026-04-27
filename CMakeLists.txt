@@ -174,12 +174,13 @@ target_link_options (sim-11-wasm PRIVATE
     -sUSE_SDL=2
     -sUSE_SDL_IMAGE=2
     -s ALLOW_MEMORY_GROWTH=1
+    -sFORCE_FILESYSTEM
     -O2
     "-sSDL2_IMAGE_FORMATS=[\"png\"]"
     --shell-file ${CMAKE_SOURCE_DIR}/src/sim-11-shell.html
-    "SHELL:--preload-file ${CMAKE_BINARY_DIR}/resources@/resources"
-    "SHELL:--preload-file ${CMAKE_BINARY_DIR}/config@/config"
-    "SHELL:--preload-file ${CMAKE_BINARY_DIR}/systems@/systems"
+    # "SHELL:--preload-file ${CMAKE_BINARY_DIR}/resources@/resources"
+    # "SHELL:--preload-file ${CMAKE_BINARY_DIR}/config@/config"
+    # "SHELL:--preload-file ${CMAKE_BINARY_DIR}/systems@/systems"
     -sEXPORTED_FUNCTIONS=_main,_on_xterm_char
     -pthread
     -sPTHREAD_POOL_SIZE_STRICT=0
