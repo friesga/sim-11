@@ -178,7 +178,7 @@ target_link_options (sim-11-wasm PRIVATE
     -O2
     "-sSDL2_IMAGE_FORMATS=[\"png\"]"
     --shell-file ${CMAKE_SOURCE_DIR}/src/sim-11-shell.html
-    # "SHELL:--preload-file ${CMAKE_BINARY_DIR}/resources@/resources"
+    "SHELL:--preload-file ${CMAKE_BINARY_DIR}/resources@/resources"
     # "SHELL:--preload-file ${CMAKE_BINARY_DIR}/config@/config"
     # "SHELL:--preload-file ${CMAKE_BINARY_DIR}/systems@/systems"
     -sEXPORTED_FUNCTIONS=_main,_on_xterm_char
