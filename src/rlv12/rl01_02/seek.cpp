@@ -40,7 +40,7 @@ void RL01_02::seek (u16 diskAddressRegister)
         // Outwards
         newCylinder = currentCylinder + offset;
         maxCylinder = geometry_.cylindersPerDisk () - 1;
-        if (newCylinder >= maxCylinder)
+        if (newCylinder > maxCylinder)
             newCylinder = maxCylinder - 2;
     }
     else
