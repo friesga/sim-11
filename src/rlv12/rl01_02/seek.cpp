@@ -35,13 +35,18 @@ void RL01_02::seek (u16 diskAddressRegister)
     // If the difference word is large enough that the heads attempt to move
     // past the innermost or outermost limits, the head will stop at the
     // guard band and retreat to the first even-numbered data track.
+    // 
+    // A RL02 has 512 cylinders, so maxCylinder is 511 and the first
+    // even-numbered data track is 510. A RL01 has 256 cylinders, so
+    // maxCylinder is 255 and the first even-numbered data track is 254.
+    //
     if (diskAddressRegister & RLV12const::DAR_Direction)
     {
         // Outwards
         newCylinder = currentCylinder + offset;
         maxCylinder = geometry_.cylindersPerDisk () - 1;
         if (newCylinder > maxCylinder)
-            newCylinder = maxCylinder - 2;
+            newCylinder = maxCylinder - 1;
     }
     else
     {
