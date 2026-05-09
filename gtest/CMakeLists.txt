@@ -30,6 +30,7 @@ set (GTEST_SRCS
     configdata/kd11_naconfiguratortest.cpp
     configdata/m792configprocessortest.cpp
     configdata/msv11configuratortest.cpp
+    configdata/mm11_econfiguratortest.cpp
     configdata/rxconfiguratortest.cpp
     configdata/systemconfigtest.cpp
     configdata/ba11/ba11_nconfiguratortest.cpp

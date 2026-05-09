@@ -5,6 +5,7 @@
 #include "configdata/deviceconfig/deviceconfig.h"
 #include "configdata/systemconfig/systemconfig.h"
 #include "../sectionprocessor/deviceconfigprocessor.h"
+#include "configdata/mm11_econfig/mm11_econfig.h"
 #include "configdata/msv11config/msv11config.h"
 #include "configdata/ba11/ba11n/ba11nprocessor/ba11nprocessor.h"
 #include "configdata/kt24/kt24processor/kt24processor.h"
@@ -19,6 +20,7 @@
 #include "configdata/serialconfig/dl11processor/dl11processor.h"
 #include "configdata/serialconfig/dlv11processor/dlv11processor.h"
 #include "../msv11processor/msv11processor.h"
+#include "../mm11_eprocessor/mm11_eprocessor.h"
 #include "configdata/ka11/ka11processor/ka11processor.h"
 #include "../kd11_naprocessor/kd11_naprocessor.h"
 #include "../kdf11/kdf11_a/kdf11_aprocessor/kdf11_aprocessor.h"
@@ -79,6 +81,7 @@ private:
 		{"KT24",    &IniProcessor::create<KT24Processor>},
 		{"M792",    &IniProcessor::create<M792Processor>},
 		{"M9312",   &IniProcessor::create<M9312Processor>},
+		{"MM11-E",  &IniProcessor::create<MM11EProcessor>},
 		{"MSV11",   &IniProcessor::create<MSV11Processor>},
 		{"RK11-D",  &IniProcessor::create<RK11DProcessor>},
 		{"RL11",    &IniProcessor::create<RL11Processor>},

@@ -85,6 +85,8 @@ void PDP_11::configureQbusSystem (SystemConfig const & systemConfig,
             {processor_ = new KDF11_B (bus_, kdf11_bConfig); },
         [this] (MSV11Config msv11Config)
             {memoryDevices_.push_back (new MSV11D (bus_, msv11Config)); },
+        [this] (MM11EConfig mm11eConfig)
+            {throw logic_error ("Should not happen"); },
         [this] (DLV11JConfig dlv11jConfig)
             {busDevices_.emplace_back (new DLV11J (bus_, dlv11jConfig)); },
         [this] (BDV11Config bdv11Config)
@@ -143,6 +145,8 @@ void PDP_11::configureUnibusSystem (SystemConfig const & systemConfig,
             { throw logic_error ("Should not happen"); },
         [this] (MSV11Config msv11Config)
             { throw logic_error ("Should not happen"); },
+        [this] (MM11EConfig mm11eConfig)
+            {throw logic_error ("Should not happen"); },
         [this] (DLV11JConfig dlv11jConfig)
             { throw logic_error ("Should not happen"); },
         [this] (BDV11Config bdv11Config)

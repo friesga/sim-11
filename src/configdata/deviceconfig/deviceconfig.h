@@ -13,6 +13,7 @@
 #include "configdata/m792/m792config/m792config.h"
 #include "configdata/m9312/m9312config/m9312config.h"
 #include "configdata/msv11config/msv11config.h"
+#include "configdata/mm11_econfig/mm11_econfig.h"
 #include "configdata/ms11pconfig/ms11pconfig.h"
 #include "configdata/rk/rk11d/rk11dconfig/rk11dconfig.h"
 #include "configdata/rl/rlconfig/rlconfig.h"
@@ -33,6 +34,7 @@ using DeviceConfig = variant<
     M792Config,
     M9312Config,
     MSV11Config,
+    MM11EConfig,
     DL11Config,
     DLV11JConfig,
     BDV11Config,
