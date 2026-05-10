@@ -9,7 +9,7 @@
 #include "proc/common/pseudo_haltmode/pseudo_haltmode.h"
 #include "proc/common/basicprocessorexceptionhandler/basicprocessorexceptionhandler.h"
 #include "../fakesdl/fakewindow/fakewindow.h"
-#include "ms11p/ms11p.h"
+#include "mem/ms11p/ms11p.h"
 
 #include <gtest/gtest.h>
 

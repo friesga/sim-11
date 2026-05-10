@@ -1,5 +1,5 @@
 #include "rk/rk11d/rk11d.h"
-#include "ms11p/ms11p.h"
+#include "mem/ms11p/ms11p.h"
 #include "bus/unibus/unibus.h"
 #include "kt24/kt24.h"
 #include "statuscodes.h"

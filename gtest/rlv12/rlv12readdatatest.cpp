@@ -1,5 +1,5 @@
 #include "pdp11/pdp11.h"
-#include "msv11d/msv11d.h"
+#include "mem/msv11d/msv11d.h"
 #include "rlv12/rlv12.h"
 #include "cmdlineoptions/cmdlineoptions.h"
 #include "chrono/simulatorclock/simulatorclock.h"

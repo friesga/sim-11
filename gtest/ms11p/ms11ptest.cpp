@@ -1,5 +1,5 @@
 #include "pdp11/pdp11.h"
-#include "ms11p/ms11p.h"
+#include "mem/ms11p/ms11p.h"
 
 #include <gtest/gtest.h>
 

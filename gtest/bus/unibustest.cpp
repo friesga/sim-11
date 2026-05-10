@@ -1,5 +1,5 @@
 #include "bus/unibus/unibus.h"
-#include "ms11p/ms11p.h"
+#include "mem/ms11p/ms11p.h"
 #include "kt24/kt24.h"
 
 #include <gtest/gtest.h>

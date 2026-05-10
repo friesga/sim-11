@@ -1,9 +1,8 @@
 #include "proc/common/instructiondecoder/instructiondecoder.h"
 #include "proc/kd/kdf11/executor/executor.h"
-
 #include "bus/qbus/qbus.h"
 #include "proc/kd/kdf11/kdf11_a/kdf11_a.h"
-#include "msv11d/msv11d.h"
+#include "mem/msv11d/msv11d.h"
 #include "configdata/kdf11/kdf11_a/kdf11_aconfig/kdf11_aconfig.h"
 
 #include <gtest/gtest.h>
