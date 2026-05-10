@@ -4,6 +4,7 @@
 #include "configdata/iniprocessor/iniprocessor.h"
 #include "configdata/rxv21/rxv21config/rxv21config.h"
 #include "configdata/msv11config/msv11config.h"
+#include "configdata/mm11_econfig/mm11_econfig.h"
 #include "configdata/bdv11config/bdv11config.h"
 #include "configdata/ka11/ka11config/ka11config.h"
 #include "configdata/kdf11/kdf11_a/kdf11_aconfig/kdf11_aconfig.h"
@@ -146,7 +147,7 @@ void PDP_11::configureUnibusSystem (SystemConfig const & systemConfig,
         [this] (MSV11Config msv11Config)
             { throw logic_error ("Should not happen"); },
         [this] (MM11EConfig mm11eConfig)
-            {throw logic_error ("Should not happen"); },
+            {memoryDevices_.push_back (new MM11E (bus_, mm11eConfig)); },
         [this] (DLV11JConfig dlv11jConfig)
             { throw logic_error ("Should not happen"); },
         [this] (BDV11Config bdv11Config)
