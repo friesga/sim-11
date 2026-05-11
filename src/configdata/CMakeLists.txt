@@ -38,7 +38,7 @@ set (CONFIGURATOR_SRCS
     ms11pprocessor/ms11pprocessor.cpp
     consistencychecker/consistencychecker.cpp
     consistencychecker/checkba11consistency.cpp
-    consistencychecker/checkms11consistency.cpp
+    consistencychecker/checkmemoryconsistency.cpp
     consistencychecker/checkkdf11bconsistency.cpp
     consistencychecker/checkcabinetconsistency.cpp
     consistencychecker/checkromdeviceconsistency.cpp
