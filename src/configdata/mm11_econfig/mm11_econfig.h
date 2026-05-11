@@ -14,7 +14,7 @@ struct MM11EConfig : public DeviceType<BusType::Unibus>
     // address configured is the starting address for the contiguous portion
     // of memory (4KW or 8KW) contained on the module.
     u32 startingAddress {0};
-    u16 memorySizeKB {8192}; 
+    u16 memorySizeInBytes {8192}; 
 };
 
 #endif // _MM11ECONFIG_H_

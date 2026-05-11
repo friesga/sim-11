@@ -8,22 +8,23 @@
 using std::bind;
 using std::placeholders::_1;
 
-// The MM11-E is a 16-bit, 4096 word (8KB) core memory module.
+// The MM11-E is a 16-bit, 4096 word (8KB) core memory module. The MM11-EX
+// is an extended version of the MM11-E with 8192 words (16KB) of memory. 
 //
 MM11E::MM11E (Bus* bus)
 	:
 	bus_ {bus},
 	startingAddress_ {0},
-	memorySizeKB_ {8192},
-	data {new u8[memorySizeKB_] {}}
+	memorySizeInBytes_ {8192},
+	data {new u8[memorySizeInBytes_] {}}
 { }
 
 MM11E::MM11E (Bus* bus, const MM11EConfig& mm11eConfig)
 	:
 	bus_ {bus},
 	startingAddress_ {mm11eConfig.startingAddress},
-	memorySizeKB_ {mm11eConfig.memorySizeKB},
-	data {new u8[memorySizeKB_] {}}
+	memorySizeInBytes_ {mm11eConfig.memorySizeInBytes},
+	data {new u8[memorySizeInBytes_] {}}
 { }
 
 MM11E::~MM11E ()
@@ -50,7 +51,7 @@ StatusCode MM11E::writeWord (BusAddress address, u16 value)
 bool MM11E::responsible (BusAddress busAddress)
 {
 	return !busAddress.isInIOpage () && busAddress >= startingAddress_ &&
-		busAddress < (startingAddress_ + memorySizeKB_);
+		busAddress < (startingAddress_ + memorySizeInBytes_);
 }
 
 void MM11E::reset ()
