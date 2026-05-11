@@ -23,11 +23,11 @@ public:
 
 private:
 	// Memory size is 8KB
-	static const size_t MM11E_SIZE {8192};
 	u8* data;
 
 	Bus* bus_;
 	u32 startingAddress_;
+    u16 memorySizeKB_;
 };
 
 #endif // _MM11E_H_

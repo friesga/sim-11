@@ -13,18 +13,18 @@ using std::placeholders::_1;
 MM11E::MM11E (Bus* bus)
 	:
 	bus_ {bus},
-	startingAddress_ {0}
-{
-	// Allocate and initialize the memory
-	data = new u8[MM11E_SIZE] ();
-}
+	startingAddress_ {0},
+	memorySizeKB_ {8192},
+	data {new u8[memorySizeKB_] {}}
+{ }
 
 MM11E::MM11E (Bus* bus, const MM11EConfig& mm11eConfig)
 	:
-	MM11E (bus)
-{
-	startingAddress_ = mm11eConfig.startingAddress;
-}
+	bus_ {bus},
+	startingAddress_ {mm11eConfig.startingAddress},
+	memorySizeKB_ {mm11eConfig.memorySizeKB},
+	data {new u8[memorySizeKB_] {}}
+{ }
 
 MM11E::~MM11E ()
 {
@@ -50,7 +50,7 @@ StatusCode MM11E::writeWord (BusAddress address, u16 value)
 bool MM11E::responsible (BusAddress busAddress)
 {
 	return !busAddress.isInIOpage () && busAddress >= startingAddress_ &&
-		busAddress < (startingAddress_ + MM11E_SIZE);
+		busAddress < (startingAddress_ + memorySizeKB_);
 }
 
 void MM11E::reset ()

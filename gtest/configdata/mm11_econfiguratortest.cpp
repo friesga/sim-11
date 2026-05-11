@@ -49,10 +49,35 @@ TEST (MM11EConfiguratorTest, startingAddressAccepted)
 	// not correct the following tests will fail too.
 	ASSERT_TRUE (holds_alternative<MM11EConfig> (systemConfig[0]));
 
-	// The device's type is MS11-P so the configuration is a MS11PConfig object
+	// The device's type is MM11-E so the configuration is a MM11-E object
 	auto mm11eConfig = get<MM11EConfig> (systemConfig[0]);
 
 	EXPECT_EQ (mm11eConfig.startingAddress, 040000);
+}
+
+TEST (MM11EConfiguratorTest, memoryExtensionAccepted)
+{
+	iniparser::File ft;
+	std::stringstream stream;
+	stream << "[MM11-E]\n"
+		"memory_extension = true\n";
+	stream >> ft;
+
+	IniProcessor iniProcessor;
+	EXPECT_NO_THROW (iniProcessor.process (ft));
+
+	SystemConfig systemConfig =
+		iniProcessor.getSystemConfig ();
+
+	// The only device type in this testset is the MM11-E so if that's
+	// not correct the following tests will fail too.
+	ASSERT_TRUE (holds_alternative<MM11EConfig> (systemConfig[0]));
+
+	// The device's type is MM11-E so the configuration is a MM11-E object
+	auto mm11eConfig = get<MM11EConfig> (systemConfig[0]);
+
+	EXPECT_EQ (mm11eConfig.startingAddress, 0);
+	EXPECT_EQ (mm11eConfig.memorySizeKB, 16384);
 }
 
 TEST (MM11EConfiguratorTest, defaultStartingAddressIsZero)
@@ -189,4 +214,35 @@ TEST (MM11EConfiguratorTest, multipleMM11ESectionsAccepted)
 
 	// And the second section should have starting address 020000
 	EXPECT_EQ (mm11eConfig1.startingAddress, 020000);
+}
+
+TEST (MM11EConfiguratorTest, conflictingAddressesThrows)
+{
+	iniparser::File ft;
+	std::stringstream stream;
+	stream << "[MM11-E]\n"
+		"starting_address = 0\n"
+        "memory_extension = true\n"
+		"[MM11-E]\n"
+		"starting_address = 020000\n";
+	stream >> ft;
+
+	IniProcessor iniProcessor;
+	EXPECT_NO_THROW (iniProcessor.process (ft));
+
+	SystemConfig systemConfig = iniProcessor.getSystemConfig ();
+	ConsistencyChecker consistencyChecker {systemConfig};
+	try
+	{
+		consistencyChecker.checkMM11EConsistency ();
+		FAIL ();
+	}
+	catch (std::invalid_argument const& except)
+	{
+		EXPECT_STREQ (except.what (), "MM11-E starting address conflict");
+	}
+	catch (...)
+	{
+		FAIL ();
+	}
 }

@@ -30,6 +30,18 @@ void MM11EProcessor::processStartingAddress (iniparser::Value value)
 	}
 }
 
+void MM11EProcessor::processMemoryExtension (iniparser::Value value)
+{
+	try
+	{
+		mm11eConfig.memorySizeKB = value.asBool () ? 16384 : 8192;
+	}
+	catch (invalid_argument const&)
+	{
+		throw invalid_argument {"Value of memory_extension must be \'true\' or \'false\'"};
+	}
+}
+
 // Check the consistency of the configuration of the MSV11 memory.
 void MM11EProcessor::checkConsistency ()
 {

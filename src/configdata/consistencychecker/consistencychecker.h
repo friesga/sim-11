@@ -26,6 +26,7 @@ public:
     void checkUnibusConsistency ();
     void checkConsoleConsistency ();
     template<typename TConfig, size_t capacity> void checkMS11Consistency ();
+    void checkMM11EConsistency ();
     void checkKDF11_BConsistency ();
     void checkCabinetConsistency ();
     void checkROMDeviceConsistency ();
@@ -38,7 +39,7 @@ private:
 
     template<typename T> static bool findDevice (DeviceConfig device);
     template<typename TConfig> bool conflictsWith (TConfig msv11Card1,
-		TConfig msv11Card2, size_t capacity);
+        size_t capacity1, TConfig msv11Card2, size_t capacity2);
 	bool isWithin (u32 address, u32 begin, u32 end);
 };
 

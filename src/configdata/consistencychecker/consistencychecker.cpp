@@ -85,6 +85,7 @@ void ConsistencyChecker::checkQbusConsistency ()
         throw invalid_argument ("No BA11-N Mounting box configured, this system cannot run.");
 
     checkMS11Consistency<MSV11Config, 64 * 1024> ();
+    checkMM11EConsistency ();
 
     checkKDF11_BConsistency ();
     checkConsoleConsistency ();

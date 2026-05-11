@@ -1,4 +1,5 @@
 #include "consistencychecker.h"
+#include "configdata/mm11_econfig/mm11_econfig.h"
 
 #include <stdexcept>
 
@@ -32,8 +33,29 @@ void ConsistencyChecker::checkMS11Consistency ()
         // Check the address range of this card with the other cards
         for (auto iter2 = iter1 + 1; iter2 != end (ms11Cards); ++iter2)
         {
-            if (conflictsWith (*iter1, *iter2, capacity))
+            if (conflictsWith (*iter1, capacity, *iter2, capacity))
                     throw invalid_argument {"MSV11/MS11-P starting address conflict"};
+        }
+    }
+}
+
+void ConsistencyChecker::checkMM11EConsistency ()
+{
+    vector<MM11EConfig> mm11eCards {};
+
+    for (auto device : systemConfig_)
+        if (holds_alternative<MM11EConfig> (device))
+            mm11eCards.push_back (get<MM11EConfig> (device));
+
+    // Check the adress ranges of the memories don't overlap
+    for (auto iter1 = begin (mm11eCards); iter1 != end (mm11eCards); ++iter1)
+    {
+        // Check the address range of this card with the other cards
+        for (auto iter2 = iter1 + 1; iter2 != end (mm11eCards); ++iter2)
+        {
+            if (conflictsWith (*iter1, iter1->memorySizeKB,
+                    *iter2, iter2->memorySizeKB))
+                throw invalid_argument {"MM11-E starting address conflict"};
         }
     }
 }
@@ -41,13 +63,13 @@ void ConsistencyChecker::checkMS11Consistency ()
 // Two cards have conflicting address if the starting address of card1 is
 // within the address range of card2 or vice versa.
 template<typename TConfig>
-bool ConsistencyChecker::conflictsWith (TConfig ms11Card1, TConfig ms11Card2,
-    size_t capacity)
+bool ConsistencyChecker::conflictsWith (TConfig memCard1, size_t capacity1,
+    TConfig memCard2, size_t capacity2)
 {
-    return isWithin (ms11Card1.startingAddress, ms11Card2.startingAddress,
-            ms11Card2.startingAddress + capacity - 1) ||
-        isWithin (ms11Card2.startingAddress, ms11Card1.startingAddress,
-            ms11Card1.startingAddress + capacity - 1);
+    return isWithin (memCard1.startingAddress, memCard2.startingAddress,
+            memCard2.startingAddress + capacity2 - 1) ||
+        isWithin (memCard2.startingAddress, memCard1.startingAddress,
+            memCard1.startingAddress + capacity1 - 1);
 }
 
 bool ConsistencyChecker::isWithin (u32 address, u32 begin, u32 end)

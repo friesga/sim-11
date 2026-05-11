@@ -20,13 +20,15 @@ class MM11EProcessor : public DeviceConfigProcessor
 
 	map<string, Process> valueProcessors =
 	{
-		{"starting_address", &MM11EProcessor::processStartingAddress}
+		{"starting_address", &MM11EProcessor::processStartingAddress},
+		{"memory_extension", &MM11EProcessor::processMemoryExtension}
 	};
 
 	void processValue (iniparser::Section::ValueIterator valueIterator);
 	void checkConsistency ();
 	void processSubsection (iniparser::Section* subSection);
 	void processStartingAddress (iniparser::Value value);
+	void processMemoryExtension (iniparser::Value value);
 
 public:
 	DeviceConfig getConfig ();
