@@ -154,7 +154,8 @@ target_include_directories (sim-11-wasm PRIVATE
 # Warnings about unqualified std::move calls are suppressed as Clang
 # detects these incorrectly. See https://reviews.llvm.org/D119670?id=408276
 # The same holds for warnings about self-assigning fields, warnings about
-# undefined inline functions and warnings about braced scalar initializers.
+# undefined inline functions, warnings about braced scalar initializers
+# and so on...
 target_compile_options (sim-11-wasm PRIVATE
     -std=c++20
     -fexceptions
@@ -163,7 +164,8 @@ target_compile_options (sim-11-wasm PRIVATE
     -Wno-unqualified-std-cast-call
     -Wno-self-assign-field
     -Wno-undefined-inline
-    -Wno-braced-scalar-init)
+    -Wno-braced-scalar-init
+    -Wno-uninitialized)
 
 # The SHELL: prefix is necessary to prevent CMake from combining the
 # --preload-file options into a single option with a comma-separated list of
