@@ -1,5 +1,5 @@
 #ifndef _MM11E_H_
-#define _MMM11_H_
+#define _MM11E_H_
 
 #include "bus/include/bus.h"
 #include "memorydevice.h"
