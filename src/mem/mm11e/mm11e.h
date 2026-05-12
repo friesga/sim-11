@@ -5,6 +5,10 @@
 #include "memorydevice.h"
 #include "configdata/mm11_econfig/mm11_econfig.h"
 
+#include <memory>
+
+using std::unique_ptr;
+
 class MM11E : public MemoryDevice
 {
 public:
@@ -22,8 +26,7 @@ public:
 	u16 loadFile (const char* fileName) override;
 
 private:
-	// Memory size is 8KB
-	u8* data;
+	unique_ptr<u16[]> memory_;
 
 	Bus* bus_;
 	u32 startingAddress_;
