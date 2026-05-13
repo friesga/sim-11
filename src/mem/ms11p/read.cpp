@@ -14,8 +14,8 @@ CondData<u16> MS11P::readMemory (BusAddress address)
 	// Get the contents of the memory location converting the byte address
 	// to an index into the word array (which is allowed as all addresses
 	// are even word addresses).
-	u16 data = memory_[(address >> 1) - startingAddress_];
-	u8 storedCheckBits = checkBits_[(address >> 1) - startingAddress_];
+	u16 data = memory_[(address - startingAddress_) >> 1];
+	u8 storedCheckBits = checkBits_[(address - startingAddress_) >> 1];
 	u8 generatedCheckBits = generateCheckBits (data);
 
 	// trace.ms11_p (MS11_PRecordType::ReadMemory, csr_.value, address, data,

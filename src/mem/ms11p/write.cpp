@@ -17,8 +17,8 @@ StatusCode MS11P::writeWord (BusAddress address, u16 value)
 
 void MS11P::writeMemory (BusAddress address, u16 value)
 {
-	memory_[(address >> 1) - startingAddress_] = value;
-	checkBits_[(address >> 1) - startingAddress_] =
+	memory_[(address - startingAddress_) >> 1] = value;
+	checkBits_[(address - startingAddress_) >> 1] =
 		newCheckBits (address, value);
 
 	// trace.ms11_p (MS11_PRecordType::WriteMemory, csr_.value, address, value,
