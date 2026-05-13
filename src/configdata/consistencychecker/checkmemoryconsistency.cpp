@@ -53,8 +53,8 @@ void ConsistencyChecker::checkMM11EConsistency ()
         // Check the address range of this card with the other cards
         for (auto iter2 = iter1 + 1; iter2 != end (mm11eCards); ++iter2)
         {
-            if (conflictsWith (*iter1, iter1->memorySizeInBytes,
-                    *iter2, iter2->memorySizeInBytes))
+            if (conflictsWith (*iter1, iter1->memorySize.byteCapacity (),
+                    *iter2, iter2->memorySize.byteCapacity ()))
                 throw invalid_argument {"MM11-E starting address conflict"};
         }
     }

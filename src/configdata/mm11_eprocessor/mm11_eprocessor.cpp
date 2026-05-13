@@ -34,7 +34,7 @@ void MM11EProcessor::processMemoryExtension (iniparser::Value value)
 {
 	try
 	{
-		mm11eConfig.memorySizeInBytes = value.asBool () ? 16384 : 8192;
+		mm11eConfig.memorySize = value.asBool () ? 8_KiW : 4_KiW;
 	}
 	catch (invalid_argument const&)
 	{

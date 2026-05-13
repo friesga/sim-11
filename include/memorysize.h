@@ -7,7 +7,7 @@
 struct Bytes
 {
     constexpr Bytes (size_t value) : value_ (value) {}
-    const size_t value_;
+    size_t value_;
 };
 
 // Definition of the memory capacity in number of bytes
@@ -34,8 +34,13 @@ public:
         return numBytes_.value_ / 2;
     }
 
+    void operator= (const MemorySize& other)
+    {
+        numBytes_ = other.numBytes_;
+    }
+
 private:
-    const Bytes numBytes_;
+    Bytes numBytes_;
 };
 
 constexpr MemorySize operator""_KiB (unsigned long long num)

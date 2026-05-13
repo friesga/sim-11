@@ -14,18 +14,18 @@ MM11E::MM11E (Bus* bus)
 	:
 	bus_ {bus},
 	startingAddress_ {0},
-	memorySizeInBytes_ {8192}
+	memorySize_ {4_KiW}
 {
-	memory_ = make_unique<u16[]> (memorySizeInBytes_ / 2);
+	memory_ = make_unique<u16[]> (memorySize_.wordCapacity ());
 }
 
 MM11E::MM11E (Bus* bus, const MM11EConfig& mm11eConfig)
 	:
 	bus_ {bus},
 	startingAddress_ {mm11eConfig.startingAddress},
-	memorySizeInBytes_ {mm11eConfig.memorySizeInBytes}
+	memorySize_ {mm11eConfig.memorySize}
 {
-	memory_ = make_unique<u16[]> (memorySizeInBytes_ / 2);
+	memory_ = make_unique<u16[]> (memorySize_.wordCapacity ());
 }
 
 MM11E::~MM11E ()
@@ -47,7 +47,7 @@ bool MM11E::responsible (BusAddress busAddress)
 {
 	return !busAddress.isInIOpage () && 
 			busAddress >= startingAddress_ &&
-			busAddress < startingAddress_ + memorySizeInBytes_;
+			busAddress < startingAddress_ + memorySize_.byteCapacity ();
 }
 
 void MM11E::reset ()

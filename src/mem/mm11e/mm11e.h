@@ -30,7 +30,7 @@ private:
 
 	Bus* bus_;
 	u32 startingAddress_;
-    u16 memorySizeInBytes_;
+    MemorySize memorySize_;
 };
 
 #endif // _MM11E_H_

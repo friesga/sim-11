@@ -77,7 +77,7 @@ TEST (MM11EConfiguratorTest, memoryExtensionAccepted)
 	auto mm11eConfig = get<MM11EConfig> (systemConfig[0]);
 
 	EXPECT_EQ (mm11eConfig.startingAddress, 0);
-	EXPECT_EQ (mm11eConfig.memorySizeInBytes, 16384);
+	EXPECT_EQ (mm11eConfig.memorySize.byteCapacity (), 16384);
 }
 
 TEST (MM11EConfiguratorTest, defaultStartingAddressIsZero)
