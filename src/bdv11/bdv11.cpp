@@ -11,6 +11,7 @@ using namespace std;
 using namespace std::chrono;
 using std::bind;
 using std::placeholders::_1;
+using std::chrono::system_clock;
 
 BDV11::BDV11 (Bus *bus)
 	:
@@ -346,8 +347,19 @@ void BDV11::reset ()
 // must check that no interrupt is already pending before requesting a new
 // interrupt.
 //
+// There are two ways to calculate the cycle time, using the internal
+// SimulatorClock or using the system clock. These two deviate significantly
+// from each other, depending on the host performance, compiler options
+// used and the load on the host. The SimulatorClock should be used if
+// diagnostic software uses the line time clock for timing purposes; in
+// all other cases use of the system clock is recommended as that provides
+// a more accurate operating system time.
+//
+#define USE_SIMULATOR_CLOCK 0
+
 void BDV11::tick ()
 {
+#if USE_SIMULATOR_CLOCK
 	AlarmClock alarmClock {};
 	SimulatorClock::time_point nextWakeup {SimulatorClock::now()};
 	constexpr SimulatorClock::duration cycleTime {nanoseconds (1000000000 / LTC_RATE)};
@@ -364,4 +376,22 @@ void BDV11::tick ()
 		nextWakeup += cycleTime;
 		alarmClock.sleepUntil (nextWakeup);
 	}
+#else
+	system_clock::time_point nextWakeup = system_clock::now();
+	system_clock::duration const cycleTime {
+		std::chrono::microseconds {1'000'000 / LTC_RATE}};
+
+	while (running_)
+	{
+		// Check the line time clock (LTC) is enabled
+		if (ltc & LKS_IE)
+			bus_->requestInterrupt (InterruptPriority::BR6, 9, 0, 0100);
+		else
+			// Clear possibly pending interrupts
+			bus_->clearInterrupt (InterruptPriority::BR6, 9, 0);
+
+		nextWakeup += cycleTime;
+		std::this_thread::sleep_until (nextWakeup);
+	}
+#endif
 }
