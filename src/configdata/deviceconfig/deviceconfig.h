@@ -21,6 +21,7 @@
 #include "configdata/serialconfig/dl11config/dl11config.h"
 #include "configdata/serialconfig/dlv11jconfig/dlv11jconfig.h"
 #include "configdata/kdf11/slu/sluconfig/sluconfig.h"
+#include "configdata/kw11l/kw11lconfig/kw11lconfig.h"
 
 #include <variant>
 
@@ -47,6 +48,7 @@ using DeviceConfig = variant<
     BA11_NConfig,
     MS11PConfig,
     KDF11_UConfig,
-    KA11Config>;
+    KA11Config,
+    KW11LConfig>;
 
 #endif // _DEVICECONFIGVARIANT_H_

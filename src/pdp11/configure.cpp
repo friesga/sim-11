@@ -118,7 +118,9 @@ void PDP_11::configureQbusSystem (SystemConfig const & systemConfig,
             { throw logic_error ("Should not happen"); },
         [this] (DL11Config dl11Config)
             { throw logic_error ("Should not happen"); },
-         [this] (M792Config m792Config)
+        [this] (M792Config m792Config)
+            { throw logic_error ("Should not happen"); },
+        [this] (KW11LConfig kw11lConfig)
             { throw logic_error ("Should not happen"); }
     };
 
@@ -179,7 +181,9 @@ void PDP_11::configureUnibusSystem (SystemConfig const & systemConfig,
         [this] (DL11Config dl11Config)
             { busDevices_.emplace_back (new DL11 (bus_, dl11Config)); },
         [this] (M792Config m792Config)
-            {  busDevices_.emplace_back (new M792 (bus_, m792Config)); }
+            {  busDevices_.emplace_back (new M792 (bus_, m792Config)); },
+        [this] (KW11LConfig kw11lConfig)
+            { throw logic_error ("Should not happen"); }
     };
 
     for (DeviceConfig deviceConfigVariant : systemConfig)

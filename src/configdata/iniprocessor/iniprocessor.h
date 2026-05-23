@@ -28,6 +28,7 @@
 #include "../kdf11/kdf11_u/kdf11_uprocessor/kdf11_uprocessor.h"
 #include "../ms11pprocessor/ms11pprocessor.h"
 #include "configdata/ba11/ba11l/ba11lprocessor/ba11lprocessor.h"
+#include "configdata/kw11l/kw11lprocessor/kw11lprocessor.h"
 
 #include <map>
 #include <string>
@@ -94,6 +95,7 @@ private:
 		{"KDF11-B", &IniProcessor::create<KDF11_BProcessor>},
 		{"KDF11-U", &IniProcessor::create<KDF11_UProcessor>},
 		{"MS11-P",  &IniProcessor::create<MS11PProcessor>},
+		{"KW11-L",  &IniProcessor::create<KW11LProcessor>},
 	};
 
     void processSection (iniparser::Section* section);
