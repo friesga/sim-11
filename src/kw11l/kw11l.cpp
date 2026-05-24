@@ -35,6 +35,9 @@ CondData<u16> KW11L::read (BusAddress address)
 //
 StatusCode KW11L::writeWord (BusAddress address, u16 value)
 {
+	// Guard against simultaneous register updates
+	std::unique_lock<std::mutex> guard {kw11lMutex_};
+
     STATUSREGISTER newRegisterValue {value};
     statusRegister_.interruptEnable = newRegisterValue.interruptEnable;
     
@@ -53,6 +56,9 @@ bool KW11L::responsible (BusAddress address)
 // Bit 7 is set by a processor INIT (EK-KW11L-TM-002, p 2-2.)
 void KW11L::reset ()
 {
+	// Guard against simultaneous register updates
+	std::unique_lock<std::mutex> guard {kw11lMutex_};
+
     statusRegister_.value = 0;
     statusRegister_.interruptMonitor = 1;
 }
@@ -67,6 +73,9 @@ void KW11L::tick ()
 
 	while (running_)
 	{
+		// Guard against simultaneous register updates
+		std::unique_lock<std::mutex> guard {kw11lMutex_};
+
 		// Set monitor bit this cycle
 		statusRegister_.interruptMonitor = 1;
 
