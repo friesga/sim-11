@@ -50,7 +50,8 @@ try
 	if (cmdLineOptions.trace_file)
 		trace.activate (cmdLineOptions.trace_file,
 			Trace::Category::Debug |
-			Trace::Category::RLV12 |
+            Trace::Category::RLV12 |
+			Trace::Category::Clock |
 			Trace::Category::CpuStep);
 
 	// A H9642 cabinet is 19" wide and has an internal height of 35".

@@ -28,7 +28,6 @@ set (GTEST_SRCS
     configdata/dlv11configuratortest.cpp
     configdata/ka11configuratortest.cpp
     configdata/kd11_naconfiguratortest.cpp
-    configdata/kw11lconfiguratortest.cpp
     configdata/m792configprocessortest.cpp
     configdata/msv11configuratortest.cpp
     configdata/rxconfiguratortest.cpp
@@ -70,6 +69,8 @@ set (GTEST_SRCS
     locationtest.cpp
     kt24/kt24configuratortest.cpp
     kt24/kt24test.cpp
+    kw11l/kw11lconfiguratortest.cpp
+    kw11l/kw11ltest.cpp
     ky11_a/ky11_atest.cpp
     m792test.cpp
     m9312/m9312configuratortest.cpp
