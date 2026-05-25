@@ -30,9 +30,9 @@ CondData<u16> KW11L::read (BusAddress address)
 // (EK-KW11L-TM-002 p 2-2.) This implies bit 7 is cleared regardless of the
 // given new value. Page 3-3 of that same manual however states: "DATO and
 // ADDRESS clear D07 when BUS D07 is true". This would imply that bit 7 can
-// only be cleared by writing a zero to it. The KW11-L engineering drawings
-// show that BUS D07 isn't used as input so the first statement probably
-// is the correct one.
+// only be cleared by writing a zero to it. Diagnostic ZKWAG0 test 23 and
+// 27 indicate that the second statement is the correct one, trying to
+// set the bit should not affect it.
 //
 StatusCode KW11L::writeWord (BusAddress address, u16 value)
 {
@@ -41,7 +41,9 @@ StatusCode KW11L::writeWord (BusAddress address, u16 value)
 
     STATUSREGISTER newRegisterValue {value};
     statusRegister_.interruptEnable = newRegisterValue.interruptEnable;
-    statusRegister_.interruptMonitor = 0;
+
+	if (newRegisterValue.interruptMonitor == 0)
+		statusRegister_.interruptMonitor = 0;
 
 	if (!statusRegister_.interruptEnable)
 		// Clear possibly pending interrupts
