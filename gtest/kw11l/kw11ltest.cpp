@@ -53,3 +53,22 @@ TEST_F (KW11LTest, nonInterruptMode)
     }
     EXPECT_TRUE (statusRegister == SR_INTERRUPT_MONITOR);
 }
+
+TEST_F (KW11LTest, interruptMode)
+{
+    u16 statusRegister = kw11l.read (kw11lAddress);
+    EXPECT_TRUE (statusRegister == SR_INTERRUPT_MONITOR);
+
+    // Clear monitor bit and enable interrupts
+    kw11l.writeWord (kw11lAddress, SR_INTERRUPT_ENABLE);
+
+    // Wait till an interrupt has been generated
+    while (!bus.intrptReqAvailable ());
+    
+    statusRegister = kw11l.read (kw11lAddress);
+    EXPECT_TRUE (statusRegister == (SR_INTERRUPT_MONITOR | SR_INTERRUPT_ENABLE));
+
+    InterruptRequest ir;
+    EXPECT_TRUE (bus.getIntrptReq (ir));
+    EXPECT_EQ (ir.vector (), 0100);
+}
