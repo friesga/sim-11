@@ -65,6 +65,12 @@ void KW11L::reset ()
 
 // The KW11-L's priority level is hardwired to BR6 ((EK-KW11L-TM-002, p 2-2).
 // It's vesctor address is hardwired to address 0100.
+//
+// Note that the tick frequency is based on the system's clock (instead of the
+// simulator clock). This ensures the program running on the simulator can
+// maintain a realistic real time. If diagnostic software uses the KW11-L for
+// timing purposes, the simulator clock has to be used.
+//
 void KW11L::tick ()
 {
 	system_clock::time_point nextWakeup = system_clock::now ();
