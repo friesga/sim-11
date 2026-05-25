@@ -42,6 +42,10 @@ StatusCode KW11L::writeWord (BusAddress address, u16 value)
     STATUSREGISTER newRegisterValue {value};
     statusRegister_.interruptEnable = newRegisterValue.interruptEnable;
     statusRegister_.interruptMonitor = 0;
+
+	if (!statusRegister_.interruptEnable)
+		// Clear possibly pending interrupts
+        bus_->clearInterrupt (InterruptPriority::BR6, 9, 0);
     
 	return StatusCode::Success;
 }
@@ -60,6 +64,9 @@ void KW11L::reset ()
 
     statusRegister_.value = 0;
     statusRegister_.interruptMonitor = 1;
+
+	// Clear possibly pending interrupts
+	bus_->clearInterrupt (InterruptPriority::BR6, 9, 0);
 }
 
 // The KW11-L's priority level is hardwired to BR6 ((EK-KW11L-TM-002, p 2-2).
@@ -84,12 +91,8 @@ void KW11L::tick ()
 		// Set monitor bit this cycle
 		statusRegister_.interruptMonitor = 1;
 
-		// Check the line time clock (LTC) is enabled
 		if (statusRegister_.interruptEnable)
 			bus_->requestInterrupt (InterruptPriority::BR6, 9, 0, vectorAddress);
-		else
-			// Clear possibly pending interrupts
-			bus_->clearInterrupt (InterruptPriority::BR6, 9, 0);
 
         guard.unlock ();
 		nextWakeup += cycleTime;
