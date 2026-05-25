@@ -30,19 +30,18 @@ CondData<u16> KW11L::read (BusAddress address)
 // (EK-KW11L-TM-002 p 2-2.) This implies bit 7 is cleared regardless of the
 // given new value. Page 3-3 of that same manual however states: "DATO and
 // ADDRESS clear D07 when BUS D07 is true". This would imply that bit 7 can
-// only be cleared by writing a zero to it. As that is used in the example
-// code in chapter 4 we presume that is the actual behaviour of the device.
+// only be cleared by writing a zero to it. The KW11-L engineering drawings
+// show that BUS D07 isn't used as input so the first statement probably
+// is the correct one.
 //
 StatusCode KW11L::writeWord (BusAddress address, u16 value)
 {
 	// Guard against simultaneous register updates
-	std::unique_lock<std::mutex> guard {kw11lMutex_};
+	std::lock_guard<std::mutex> guard {kw11lMutex_};
 
     STATUSREGISTER newRegisterValue {value};
     statusRegister_.interruptEnable = newRegisterValue.interruptEnable;
-    
-	if (newRegisterValue.interruptMonitor == 0)
-		statusRegister_.interruptMonitor = 0;
+    statusRegister_.interruptMonitor = 0;
     
 	return StatusCode::Success;
 }
@@ -57,7 +56,7 @@ bool KW11L::responsible (BusAddress address)
 void KW11L::reset ()
 {
 	// Guard against simultaneous register updates
-	std::unique_lock<std::mutex> guard {kw11lMutex_};
+	std::lock_guard<std::mutex> guard {kw11lMutex_};
 
     statusRegister_.value = 0;
     statusRegister_.interruptMonitor = 1;
@@ -92,6 +91,7 @@ void KW11L::tick ()
 			// Clear possibly pending interrupts
 			bus_->clearInterrupt (InterruptPriority::BR6, 9, 0);
 
+        guard.unlock ();
 		nextWakeup += cycleTime;
 		std::this_thread::sleep_until (nextWakeup);
 	}

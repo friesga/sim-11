@@ -36,6 +36,16 @@ TEST_F (KW11LTest, monitorBitCanBeCleared)
     EXPECT_TRUE (statusRegister == 0);
 }
 
+TEST_F (KW11LTest, monitorBitClearedByAnyWrite)
+{
+    u16 statusRegister = kw11l.read (kw11lAddress);
+    EXPECT_TRUE (statusRegister == SR_INTERRUPT_MONITOR);
+
+    kw11l.writeWord (kw11lAddress, SR_INTERRUPT_MONITOR);
+    statusRegister = kw11l.read (kw11lAddress);
+    EXPECT_TRUE (statusRegister == 0);
+}
+
 TEST_F (KW11LTest, nonInterruptMode)
 {
     u16 statusRegister = kw11l.read (kw11lAddress);
