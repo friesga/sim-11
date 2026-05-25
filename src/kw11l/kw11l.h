@@ -47,7 +47,7 @@ private:
 
 	static const u16 statusRegisterAddress {0177546};
     static const u16 vectorAddress {0100};
-    static const u16 LTC_RATE {60};
+    static const u16 TICK_RATE {60};
 
 
     Bus* bus_;

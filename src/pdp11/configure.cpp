@@ -183,7 +183,7 @@ void PDP_11::configureUnibusSystem (SystemConfig const & systemConfig,
         [this] (M792Config m792Config)
             {  busDevices_.emplace_back (new M792 (bus_, m792Config)); },
         [this] (KW11LConfig kw11lConfig)
-            { throw logic_error ("Should not happen"); }
+            { busDevices_.emplace_back (new KW11L (bus_, kw11lConfig)); }
     };
 
     for (DeviceConfig deviceConfigVariant : systemConfig)

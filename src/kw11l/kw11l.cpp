@@ -81,7 +81,7 @@ void KW11L::tick ()
 {
 	system_clock::time_point nextWakeup = system_clock::now ();
 	system_clock::duration const cycleTime {
-		std::chrono::microseconds {1'000'000 / LTC_RATE}};
+		std::chrono::microseconds {1'000'000 / TICK_RATE}};
 
 	while (running_)
 	{
