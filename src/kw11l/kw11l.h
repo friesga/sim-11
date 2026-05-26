@@ -49,8 +49,8 @@ private:
     static const u16 vectorAddress {0100};
     static const u16 TICK_RATE {60};
 
-
     Bus* bus_;
+    KW11LConfig::ClockSource clockSource_;
     thread ltcThread_;
     mutex kw11lMutex_;
     bool running_;

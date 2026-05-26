@@ -1,14 +1,16 @@
 #include "kw11l.h"
+#include "chrono/simulatorclock/simulatorclock.h"
+#include "chrono/alarmclock/alarmclock.h"
 
 #include <chrono>
 
 using std::chrono::system_clock;
+using namespace std::chrono;
 
-// The KW11-L has no options so the reference to KW11LConfig is included just
-// for the form's sake.
 KW11L::KW11L (Bus* bus, const KW11LConfig& kw11lConfig)
     :
 	bus_ {bus},
+    clockSource_ {kw11lConfig.clockSource},
     ltcThread_ {thread (&KW11L::tick, this)},
 	running_ {true}
 {
@@ -72,32 +74,63 @@ void KW11L::reset ()
 }
 
 // The KW11-L's priority level is hardwired to BR6 ((EK-KW11L-TM-002, p 2-2).
-// It's vesctor address is hardwired to address 0100.
+// It's vector address is hardwired to address 0100.
 //
-// Note that the tick frequency is based on the system's clock (instead of the
-// simulator clock). This ensures the program running on the simulator can
-// maintain a realistic real time. If diagnostic software uses the KW11-L for
-// timing purposes, the simulator clock has to be used.
+// There are two ways to calculate the cycle time, using the internal
+// SimulatorClock or using the system clock. These two deviate significantly
+// from each other, depending on the host performance, compiler options
+// used and the load on the host. The SimulatorClock should be used if
+// diagnostic software uses the line time clock for timing purposes; in
+// all other cases use of the system clock is recommended as that provides
+// a more accurate operating system time.
 //
 void KW11L::tick ()
 {
-	system_clock::time_point nextWakeup = system_clock::now ();
-	system_clock::duration const cycleTime {
-		std::chrono::microseconds {1'000'000 / TICK_RATE}};
 
-	while (running_)
+	if (clockSource_ == KW11LConfig::ClockSource::SimulatorClock)
 	{
-		// Guard against simultaneous register updates
-		std::unique_lock<std::mutex> guard {kw11lMutex_};
+		AlarmClock alarmClock {};
+		SimulatorClock::time_point nextWakeup {SimulatorClock::now ()};
+		constexpr SimulatorClock::duration cycleTime
+		{std::chrono::microseconds {1'000'000 / TICK_RATE}};
 
-		// Set monitor bit this cycle
-		statusRegister_.interruptMonitor = 1;
+		while (running_)
+		{
+			// Guard against simultaneous register updates
+			std::unique_lock<std::mutex> guard {kw11lMutex_};
 
-		if (statusRegister_.interruptEnable)
-			bus_->requestInterrupt (InterruptPriority::BR6, 9, 0, vectorAddress);
+			// Set monitor bit this cycle
+			statusRegister_.interruptMonitor = 1;
 
-        guard.unlock ();
-		nextWakeup += cycleTime;
-		std::this_thread::sleep_until (nextWakeup);
+			// Check the line time clock (LTC) is enabled
+			if (statusRegister_.interruptEnable)
+				bus_->requestInterrupt (InterruptPriority::BR6, 9, 0, vectorAddress);
+
+			guard.unlock ();
+			nextWakeup += cycleTime;
+			alarmClock.sleepUntil (nextWakeup);
+		}
+	}
+	else
+	{
+		system_clock::time_point nextWakeup = system_clock::now ();
+		system_clock::duration const cycleTime {
+			std::chrono::microseconds {1'000'000 / TICK_RATE}};
+
+		while (running_)
+		{
+			// Guard against simultaneous register updates
+			std::unique_lock<std::mutex> guard {kw11lMutex_};
+
+			// Set monitor bit this cycle
+			statusRegister_.interruptMonitor = 1;
+
+			if (statusRegister_.interruptEnable)
+				bus_->requestInterrupt (InterruptPriority::BR6, 9, 0, vectorAddress);
+
+			guard.unlock ();
+			nextWakeup += cycleTime;
+			std::this_thread::sleep_until (nextWakeup);
+		}
 	}
 }
