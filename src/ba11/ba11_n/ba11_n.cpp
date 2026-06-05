@@ -1,4 +1,5 @@
 #include "ba11_n.h"
+#include "imagedata/openrasterfile/openrasterfile.h"
 
 //
 // Support for the BA11-N Mounting Box
@@ -10,6 +11,7 @@ using std::bind;
 using std::placeholders::_1;
 using std::map;
 using std::get;
+using std::make_unique;
 
 // Constructor
 // Create a window showing the BA11-N and devices and then start a thread
@@ -66,31 +68,33 @@ void BA11_N::createBezel (Cabinet::Position cabinetPosition)
     // At least for Windows, event handling has to be performed in the same
     // thread as in which the window has been created.
     //
+    unique_ptr<ImageContainer> imageContainer =
+        make_unique<OpenRasterFile> ("resources/BA11-N.ora");
+
     unique_ptr<PanelBuilder> panelBuilder =
-        frontWindow_->createFilePanelBuilder (cabinetPosition, BA11_NConfig::unitHeight);
+        frontWindow_->createDataPanelBuilder (*imageContainer,
+            cabinetPosition, BA11_NConfig::unitHeight);
 
-    panelBuilder->createFront(frontImage(logo_), ba11_nFrontFrame);
+    panelBuilder->createFront("BA11-N front", ba11_nFrontFrame);
 
-    pwrOkLed_ = panelBuilder->createIndicator ("resources/red led off.png",
-        "resources/red led on.png", Indicator::State::Off, pwrOkLedFrame);
+    pwrOkLed_ = panelBuilder->createIndicator ("led DC OFF",
+        "led DC ON", Indicator::State::Off);
 
-    runLed_ = panelBuilder->createIndicator ("resources/red led off.png", 
-        "resources/red led on.png", Indicator::State::Off, runLedFrame);
+    runLed_ = panelBuilder->createIndicator ("led RUN OFF", 
+        "led RUN ON", Indicator::State::Off);
 
-    restartSwitch_ = panelBuilder->createMultiPositionSwitch ({"resources/switch down.png",
-        "resources/switch up.png"},
-        Button::MomentaryUpTwoPositionsState::Down, bind (&BA11_N::restartSwitchClicked, this, _1), 
-        restartSwitchFrame);
+    restartSwitch_ = panelBuilder->createMultiPositionSwitch (
+        {"switch RESTART OFF", "switch RESTART ON"},
+        Button::MomentaryUpTwoPositionsState::Down,
+        bind (&BA11_N::restartSwitchClicked, this, _1));
 
-    haltSwitch_ = panelBuilder->createMultiPositionSwitch ({"resources/switch down.png",
-        "resources/switch up.png"},
-        Button::TwoPositionsState::Down, bind (&BA11_N::haltSwitchToggled, this, _1),
-        haltSwitchFrame);
+    haltSwitch_ = panelBuilder->createMultiPositionSwitch ({"switch HALT ON",
+        "switch HALT OFF"},
+        Button::TwoPositionsState::Up, bind (&BA11_N::haltSwitchToggled, this, _1));
 
-    auxOnOffSwitch_ = panelBuilder->createMultiPositionSwitch ({"resources/switch down.png",
-        "resources/switch up.png"},
-        Button::TwoPositionsState::Down, bind (&BA11_N::auxOnOffSwitchToggled, this, _1),
-        auxOnOffSwitchFrame);
+    auxOnOffSwitch_ = panelBuilder->createMultiPositionSwitch ({"switch AUX OFF",
+        "switch AUX ON"},
+        Button::TwoPositionsState::Down, bind (&BA11_N::auxOnOffSwitchToggled, this, _1));
 
     frontWindow_->addPanel (panelBuilder->getPanel ());
 
@@ -99,17 +103,23 @@ void BA11_N::createBezel (Cabinet::Position cabinetPosition)
     bus_->SRUN().subscribe (bind (&BA11_N::SRUNReceiver, this, _1));
 }
 
-// Get the front image for the given logo
-string BA11_N::frontImage (BA11_NConfig::Logo logo)
+void BA11_N::createLabel (unique_ptr<PanelBuilder>& panelBuilder,
+    BA11_NConfig::Logo logo)
 {
-    map <BA11_NConfig::Logo, string> frontImages =
+    switch (logo)
     {
-        {BA11_NConfig::Logo::PDP_1103L,       "resources/11_03 front.png"},
-        {BA11_NConfig::Logo::PDP_1123,        "resources/11_23 front.png"},
-        {BA11_NConfig::Logo::PDP_1123_PLUS,   "resources/11_23+ front.png"}
-    };
+        case BA11_NConfig::Logo::PDP_1103L:
+            panelBuilder->createFront ("label PDP-11/03");
+            break;
 
-    return frontImages[logo];
+        case BA11_NConfig::Logo::PDP_1123:
+            panelBuilder->createFront ("label PDP-11/23");
+            break;
+
+        case BA11_NConfig::Logo::PDP_1123_PLUS:
+            panelBuilder->createFront ("label PDP-11/23+");
+            break;
+    }
 }
 
 void BA11_N::restartSwitchClicked (Button::State state)

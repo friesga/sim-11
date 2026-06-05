@@ -37,7 +37,8 @@ private:
     BA11_NConfig::Logo logo_;
 
     void createBezel (Cabinet::Position cabinetPosition);
-    string frontImage (BA11_NConfig::Logo logo);
+    void createLabel (unique_ptr<PanelBuilder>& panelBuilder,
+        BA11_NConfig::Logo logo);
 };
 
 #endif // _BA11_N_H_
