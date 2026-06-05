@@ -134,11 +134,11 @@ void BA11_N::haltSwitchToggled (Button::State state)
     switch (get<Button::TwoPositionsState> (state))
     {
         case Button::TwoPositionsState::Down:
-            bus_->BHALT().set (false);
+            bus_->BHALT().set (true);
             break;
 
         case Button::TwoPositionsState::Up:
-            bus_->BHALT().set (true);
+            bus_->BHALT().set (false);
             break;
     }
 }
