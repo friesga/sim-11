@@ -76,9 +76,10 @@ void BA11_N::createBezel (Cabinet::Position cabinetPosition)
             cabinetPosition, BA11_NConfig::unitHeight);
 
     panelBuilder->createFront("BA11-N front", ba11_nFrontFrame);
+    createLabel (panelBuilder, logo_);
 
-    pwrOkLed_ = panelBuilder->createIndicator ("led DC OFF",
-        "led DC ON", Indicator::State::Off);
+    pwrOkLed_ = panelBuilder->createIndicator ("led PWR OFF",
+        "led PWR ON", Indicator::State::Off);
 
     runLed_ = panelBuilder->createIndicator ("led RUN OFF", 
         "led RUN ON", Indicator::State::Off);
