@@ -19,13 +19,8 @@ public:
     void SRUNReceiver (bool signalValue);
 
 private:
-    // Definition of the front, indicators and buttons on the BA11_N panel
+    // Definition of position and dimensions of the BA11_N panel
     Frame<float> ba11_nFrontFrame    {0, 0, 1.0, 1.0};
-    Frame<float> pwrOkLedFrame       {0.687, 0.573, 0.016, 0.060};
-    Frame<float> runLedFrame         {0.712, 0.573, 0.016, 0.060};
-    Frame<float> restartSwitchFrame  {0.800, 0.558, 0.027, 0.101};
-    Frame<float> haltSwitchFrame     {0.833, 0.558, 0.027, 0.101};
-    Frame<float> auxOnOffSwitchFrame {0.867, 0.558, 0.027, 0.101};
 
     Bus *bus_;
     Window *frontWindow_;
