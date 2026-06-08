@@ -118,7 +118,7 @@ void BA11_N::createLabel (unique_ptr<PanelBuilder>& panelBuilder,
             break;
 
         case BA11_NConfig::Logo::PDP_1123_PLUS:
-            panelBuilder->createFront ("label PDP-11/23+");
+            panelBuilder->createFront ("label PDP-11/23 PLUS");
             break;
     }
 }
