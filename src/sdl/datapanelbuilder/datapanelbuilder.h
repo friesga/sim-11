@@ -44,6 +44,7 @@ public:
     unique_ptr<Panel> getPanel () override;
 
 private:
+    int textureWidth (SDLTexture& texture) const;
     int textureHeight (SDLTexture& texture) const;
     int pixelsPerRackUnit () const;
     Frame<int> placeFrameInTexture (Frame<float> frame);

@@ -230,20 +230,30 @@ Frame<float> DataPanelBuilder::getFrameFromImage (string layerName)
         static_cast<float> (metadata.dimensions.height) / imageDimensions.height};
 }
 
+int DataPanelBuilder::textureWidth (SDLTexture& texture) const
+{
+    auto [textureWidth, textureHeight] = targetTexture_.dimensions ();
+    return textureWidth;
+}
+
 int DataPanelBuilder::textureHeight (SDLTexture& texture) const
 {
     auto [textureWidth, textureHeight] = targetTexture_.dimensions ();
     return textureHeight;
 }
 
-// For now Panels are placed in a H9642 cabinet which has a height of 20RU.
-// From this the height in pixels of one RU can be calculated and with
-// that value the height of the panel in pixels.
+// The height of a texture is determined by the number of pixels per rack
+// unit. As the width of the devices, and thus the width of the textures is
+// fixed (19"), the number of pixels per rack unit has to be calculated keeping
+// the aspect ratio of the original image intact. As one rack unit is 1.75"
+// and the width of the device is 19", the height of a rack unit in pixels can
+// be calculated as (1.75/19) times the width of the texture in pixels.
+// This calculation ensures that the devices are rendered with the correct
+// proportions on the panel.
 //
 int DataPanelBuilder::pixelsPerRackUnit () const
 {
-    static const RackUnit h9642Height {20_ru};
-    return textureHeight (targetTexture_) / h9642Height;
+    return textureWidth (targetTexture_) * (1.75 / 19);
 }
 
 // Place the given frame, whith positions and dimensions relative to the
