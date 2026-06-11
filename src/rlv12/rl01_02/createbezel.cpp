@@ -49,6 +49,9 @@ void RL01_02::createBezel (Window* window,
         bind (&RL01_02::writeProtectButtonClicked, this, _1),
         writeProtectButtonFrame);
 
+    if (driveType_ == DriveType::RL02)
+        panelBuilder->createFront ("RL02_label");
+
     window->addPanel (panelBuilder->getPanel ());
 }
 

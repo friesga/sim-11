@@ -37,9 +37,13 @@ RL01_02::~RL01_02 ()
 StatusCode RL01_02::init (const RLUnitConfig& rlUnitConfig,
     Window* window)
 {
-    createBezel (window, rlUnitConfig);
+    // Initialize the drive before creating the bezel to be able to use the
+    // drive type in createBezel()
+    if (StatusCode status = init (rlUnitConfig); status != StatusCode::Success)
+        return status;
 
-    return init (rlUnitConfig);
+    createBezel (window, rlUnitConfig);
+    return StatusCode::Success;
 }
 
 // This version of the init function doesn't create a bezel and is meant
