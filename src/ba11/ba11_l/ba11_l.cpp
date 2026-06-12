@@ -1,14 +1,18 @@
 #include "ba11_l.h"
+#include "imagedata/openrasterfile/openrasterfile.h"
 
 //
 // Support for the BA11-L Mounting Box with the PDP-11/24 front panel
 //
 #include <functional>
 #include <map>
+#include <memory>
 
 using std::bind;
 using std::placeholders::_1;
 using std::map;
+using std::make_unique;
+using std::unique_ptr;
 
 // Constructor
 // Create a window showing the BA11-L start a thread handling the events
@@ -58,34 +62,38 @@ BA11_L::BA11_L (Bus* bus, Window* window, const BA11_LConfig& ba11lConfig)
 // 
 void BA11_L::createBezel (Cabinet::Position cabinetPosition)
 {
-    unique_ptr<PanelBuilder> panelBuilder =
-        frontWindow_->createFilePanelBuilder (cabinetPosition, BA11_LConfig::unitHeight);
+    unique_ptr<ImageContainer> imageContainer =
+        make_unique<OpenRasterFile> ("resources/PDP-11_24.ora");
 
-    panelBuilder->createFront ("resources/11_24 front.png", ba11_nFrontFrame);
+    unique_ptr<PanelBuilder> panelBuilder =
+        frontWindow_->createDataPanelBuilder (*imageContainer,
+            cabinetPosition, BA11_LConfig::unitHeight);
+
+    panelBuilder->createFront ("PDP-11/24 front", ba11_nFrontFrame);
 
     powerSwitch_ = panelBuilder->createMultiPositionSwitch (
-        {"resources/power_p0.png",
-         "resources/power_p1.png",
-         "resources/power_p2.png",
-         "resources/power_p3.png"},
+        {"DC OFF",
+         "LOCAL",
+         "LOC DSBL",
+         "STD BY"},
         Button::FourPositionsState::P0,
         bind (&BA11_L::powerSwitchClicked, this, _1),
         powerSwitchFrame);
 
     hcbSwitch_ = panelBuilder->createMultiPositionSwitch (
-        {"resources/hcb_halt.png",
-         "resources/hcb_cont.png",
-         "resources/hcb_boot.png"},
+        {"HALT",
+         "CONT",
+         "BOOT"},
         Button::MomentaryThreePositionsState::Center,
         bind (&BA11_L::hcbSwitchClicked, this, _1),
         hcbSwitchFrame);
 
-    runLed_ = panelBuilder->createIndicator ("resources/red led off.png",
-        "resources/red led on.png", Indicator::State::Off, runLedFrame);
-    dcOnLed_ = panelBuilder->createIndicator ("resources/red led off.png",
-        "resources/red led on.png", Indicator::State::Off, dcOnLedFrame);
-    batteryLed_ = panelBuilder->createIndicator ("resources/red led off.png",
-        "resources/red led on.png", Indicator::State::Off, batteryLedFrame);
+    runLed_ = panelBuilder->createIndicator ("RUN off",
+        "RUN on", Indicator::State::Off, runLedFrame);
+    dcOnLed_ = panelBuilder->createIndicator ("DC ON off",
+        "DC ON on", Indicator::State::Off, dcOnLedFrame);
+    batteryLed_ = panelBuilder->createIndicator ("BATT off",
+        "BATT on", Indicator::State::Off, batteryLedFrame);
 
     frontWindow_->addPanel (panelBuilder->getPanel ());
 
