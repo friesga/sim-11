@@ -69,7 +69,7 @@ void BA11_L::createBezel (Cabinet::Position cabinetPosition)
         frontWindow_->createDataPanelBuilder (*imageContainer,
             cabinetPosition, BA11_LConfig::unitHeight);
 
-    panelBuilder->createFront ("PDP-11/24 front", ba11_nFrontFrame);
+    panelBuilder->createFront ("PDP-11/24 front");
 
     powerSwitch_ = panelBuilder->createMultiPositionSwitch (
         {"DC OFF",
@@ -77,23 +77,21 @@ void BA11_L::createBezel (Cabinet::Position cabinetPosition)
          "LOC DSBL",
          "STD BY"},
         Button::FourPositionsState::P0,
-        bind (&BA11_L::powerSwitchClicked, this, _1),
-        powerSwitchFrame);
+        bind (&BA11_L::powerSwitchClicked, this, _1));
 
     hcbSwitch_ = panelBuilder->createMultiPositionSwitch (
         {"HALT",
          "CONT",
          "BOOT"},
         Button::MomentaryThreePositionsState::Center,
-        bind (&BA11_L::hcbSwitchClicked, this, _1),
-        hcbSwitchFrame);
+        bind (&BA11_L::hcbSwitchClicked, this, _1));
 
     runLed_ = panelBuilder->createIndicator ("RUN off",
-        "RUN on", Indicator::State::Off, runLedFrame);
+        "RUN on", Indicator::State::Off);
     dcOnLed_ = panelBuilder->createIndicator ("DC ON off",
-        "DC ON on", Indicator::State::Off, dcOnLedFrame);
+        "DC ON on", Indicator::State::Off);
     batteryLed_ = panelBuilder->createIndicator ("BATT off",
-        "BATT on", Indicator::State::Off, batteryLedFrame);
+        "BATT on", Indicator::State::Off);
 
     frontWindow_->addPanel (panelBuilder->getPanel ());
 
