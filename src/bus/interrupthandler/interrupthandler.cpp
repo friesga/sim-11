@@ -32,24 +32,15 @@ bool InterruptHandler::containsInterrupt (InterruptPriority priority, unsigned c
 // the interrupt request equal to specified request. Equality is based on
 // priority, busorder and function order (see InterruptRequest::operator==).
 // As the IntrptReqQueue uses std::set as underlying container, only one such
-// request can be in the queue and one iteration through the queue is
-// sufficient.
-//
-// Checking that the queue contains an interrupt cannot be accomplished by
-// comparing the iterator returned by the find() call with cend() as that
-// results in a "map/set iterators incompatible" exception. 
+// request can be in the queue and one erase call is sufficient.
 //
 void InterruptHandler::clearInterrupt (InterruptPriority priority, unsigned char busOrder,
 	u8 functionOrder)
 {
 	InterruptRequest interruptRequest {priority, busOrder, functionOrder, 0};
-	IntrptReqQueue::const_iterator it {};
 
-	if (it = intrptReqQueue_.find (interruptRequest); it != intrptReqQueue_.cend ())
-	{
+	if (intrptReqQueue_.erase (interruptRequest))
 		trace.irq (IrqRecordType::IRQ_CLEAR, interruptRequest);
-		intrptReqQueue_.erase (it);
-	}
 }
 
 // Clear all pending interrupts

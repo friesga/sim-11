@@ -41,17 +41,14 @@ public:
     void clear();
     bool empty();
     bool contains (T const &elem);
-    void erase (T const &elem);
-    void erase (const_iterator elem);
+    bool erase (T const &elem);
+    T const& top () const;
     bool fetchTop(T &dest);
     void waitAndFetchTop(T &dest);
     void push (T const &ir);
     size_t size();
-    T const &top() const;
-    const_iterator find (T const &elem) const;
-
-    auto cbegin () const { return queue_.cbegin (); }
-    auto cend ()   const { return queue_.cend (); }
+    const_iterator cbegin () const;
+    const_iterator cend () const;
 
 private:
     C queue_;
@@ -59,6 +56,8 @@ private:
     condition_variable signal;
 
     typename C::iterator front () const; 
+    const_iterator find (T const& elem) const;
+
 };
 
 // Clear the contents of the priority queue
@@ -89,25 +88,16 @@ bool ThreadSafePrioQueue<T, C>::contains (T const &elem)
     return queue_.contains (elem);
 }
 
-// Erase the element with the specified value from the queue 
+// Erase the element with the specified value from the queue. The return value
+// indicates whether the element was erased. 
+//
 template <typename T, typename C>
     requires (std::same_as<C, set<T>> || std::same_as<C, std::multiset<T>>)
- void ThreadSafePrioQueue<T, C>::erase (T const &elem)
+ bool ThreadSafePrioQueue<T, C>::erase (T const &elem)
 {
     lock_guard<mutex> lock (guard);
-    queue_.erase (elem);
+    return (queue_.erase (elem) > 0) ? true : false;
 }
-
- // Erase the element referred to by the iterator from the queue 
-template <typename T, typename C>
-    requires (std::same_as<C, set<T>> || std::same_as<C, std::multiset<T>>)
- void ThreadSafePrioQueue<T, C>::erase (const_iterator elem)
- {
-     lock_guard<mutex> lock (guard);
-
-     if (elem != queue_.cend ())
-        queue_.erase (elem);
- }
 
 // To prevent an exception on the return of a T object, the top element is
 // moved to the destination and is then removed. This prevents the loss of
@@ -161,6 +151,12 @@ size_t ThreadSafePrioQueue<T, C>::size()
     return queue_.size();
 }
 
+// Return a reference to the element with the highest priority. This function
+// is not thread safe across calls to other functions in this class. The caller
+// must ensure the queue is not empty when this function is called. The
+// caller must also ensure that the reference returned is not used to 
+// erase the element.
+//
 template <typename T, typename C>
     requires (std::same_as<C, set<T>> || std::same_as<C, std::multiset<T>>)
 T const &ThreadSafePrioQueue<T, C>::top() const
@@ -173,12 +169,26 @@ T const &ThreadSafePrioQueue<T, C>::top() const
     return *front ();
 }
 
+// Return a const_iterator to the beginning of the queue. The caller must ensure
+// that the queue is not modified using the iterator returned by this function. 
+//
 template <typename T, typename C>
     requires (std::same_as<C, set<T>> || std::same_as<C, std::multiset<T>>)
-C::const_iterator ThreadSafePrioQueue<T, C>::find (T const& elem) const
+C::const_iterator ThreadSafePrioQueue<T, C>::cbegin () const
 {
-    lock_guard<mutex> lock (guard);
-    return queue_.find (elem);
+    return queue_.cbegin ();
+}
+
+// This function returns an iterator to the element following the last element
+// of the queue. This element acts as a placeholder; attempting to access it
+// results in undefined behavior. This function is not thread safe across
+// calls to other functions in this class.
+//
+template <typename T, typename C>
+    requires (std::same_as<C, set<T>> || std::same_as<C, std::multiset<T>>)
+C::const_iterator ThreadSafePrioQueue<T, C>::cend () const
+{
+    return queue_.cend ();
 }
 
 // Private functions
@@ -190,6 +200,19 @@ template <typename T, typename C>
 typename C::iterator ThreadSafePrioQueue<T, C>::front () const
 {
     return --queue_.end ();
+}
+
+// Return an iterator to the element with the specified value. If the element
+// is not found, the iterator returned is equal to cend(). This function is
+// private as it relies on the lock of the calling functions to keep the
+// queue thread safe.
+//
+template <typename T, typename C>
+    requires (std::same_as<C, set<T>> || std::same_as<C, std::multiset<T>>)
+C::const_iterator ThreadSafePrioQueue<T, C>::find (T const& elem) const
+{
+    lock_guard<mutex> lock (guard);
+    return queue_.find (elem);
 }
 
 #endif // !_THREADSAFEPRIOQUEUE_H_
