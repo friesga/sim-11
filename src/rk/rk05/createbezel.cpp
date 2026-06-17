@@ -1,87 +1,81 @@
 #include "rk05.h"
+#include "imagedata/openrasterfile/openrasterfile.h"
 
 #include <functional>
+#include <memory>
 
 using std::bind;
 using std::placeholders::_1;
 using std::to_string;
+using std::unique_ptr;
+using std::make_unique;
 
 void RK05::createBezel (Window* window, const RK05Config& rk05Config)
 {
-    unique_ptr<PanelBuilder> panelBuilder =
-        window->createFilePanelBuilder (rk05Config.cabinetPosition.value (),
-            RK05Config::unitHeight);
+    unique_ptr<ImageContainer> imageContainer =
+        make_unique<OpenRasterFile> ("resources/rk05.ora");
 
-    panelBuilder->createFront ("resources/RK05-front.png", {0, 0, 1.0, 1.0});
+    unique_ptr<PanelBuilder> panelBuilder =
+        window->createDataPanelBuilder (*imageContainer,
+            rk05Config.cabinetPosition.value (), RK05Config::unitHeight);
+
+    panelBuilder->createFront ("RK05 front");
 
     // PWR indicator, default on
     pwrIndicator_ = panelBuilder->createIndicator (
-        "resources/white led off.png",
-        "resources/white led on.png",
-        Indicator::State::On, pwrIndicatorFrame);
+        "PWR off", "PWR on",
+        Indicator::State::On);
 
     // RDY indicator, default off
     rdyIndicator_ = panelBuilder->createIndicator (
-        "resources/white led off.png",
-        "resources/white led on.png",
-        Indicator::State::Off, readyIndicatorFrame);
+        "RDY off", "RDY on",
+        Indicator::State::Off);
 
     // ONCYL indicator, default off
     oncylIndicator_ = panelBuilder->createIndicator (
-        "resources/white led off.png",
-        "resources/white led on.png",
-        Indicator::State::Off, oncylIndicatorFrame);
+        "ONCYL off", "ONCYL on",
+        Indicator::State::Off);
 
     // WTPROT indicator, default off
     wtprotIndicator_ = panelBuilder->createIndicator (
-        "resources/white led off.png",
-        "resources/white led on.png",
-        Indicator::State::Off, wtprotIndicatorFrame);
+        "WTPROT off", "WTPROT on",
+        Indicator::State::Off);
 
     // LOAD indicator, default on
     loadIndicator_ = panelBuilder->createIndicator (
-        "resources/white led off.png",
-        "resources/white led on.png",
-        Indicator::State::On, loadIndicatorFrame);
+        "LOAD off", "LOAD on",
+        Indicator::State::On);
 
     // WT indicator, default off
     wtIndicator_ = panelBuilder->createIndicator (
-        "resources/white led off.png",
-        "resources/white led on.png",
-        Indicator::State::Off, wtIndicatorFrame);
+        "WT off", "WT on",
+        Indicator::State::Off);
 
     // RD indicator, default off
     rdIndicator_ = panelBuilder->createIndicator (
-        "resources/white led off.png",
-        "resources/white led on.png",
-        Indicator::State::Off, rdIndicatorFrame);
+        "RD off", "RD on",
+        Indicator::State::Off);
 
     // FAULT indicator, default off
     faultIndicator_ = panelBuilder->createIndicator (
-        "resources/fault_off.png",
-        "resources/fault_on.png",
-        Indicator::State::Off, faultIndicatorFrame);
+        "FAULT off", "FAULT on",
+        Indicator::State::Off);
 
     // RUN/LOAD switch, initial state up. The RUN/LOAD switch is a rocker
     // switch with two latched positions.
     runLoadSwitch_ = panelBuilder->createMultiPositionSwitch (
-        {"resources/rocker switch down.png",
-        "resources/rocker switch up.png"},
+        {"switch LOAD", "switch RUN"},
         Button::TwoPositionsState::Down,
-        bind (&RK05::runLoadSwitchClicked, this, _1),
-        runLoadSwitchFrame);
+        bind (&RK05::runLoadSwitchClicked, this, _1));
 
     // WTPROT switch, initial state up. The WTPROT switch is a rocker switch,
     // spring loaded in the off position.
     wtprotSwitch_ = panelBuilder->createMultiPositionSwitch (
-        {"resources/rocker switch down.png",
-        "resources/rocker switch up.png"},
+        {"switch WTPROT off", "switch WTPROT on"},
         Button::MomentaryUpTwoPositionsState::Down,
-        bind (&RK05::wtprotSwitchClicked, this, _1),
-        wtprotSwitchFrame);
+        bind (&RK05::wtprotSwitchClicked, this, _1));
 
-    panelBuilder->createFront ("resources/rk05 drive " +
-        to_string (rk05Config.unitNumber) + ".png", numberLabelFrame);
+    panelBuilder->createFront ("drive " + to_string (rk05Config.unitNumber));
 
     window->addPanel (panelBuilder->getPanel ());
 }

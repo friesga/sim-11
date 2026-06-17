@@ -79,20 +79,6 @@ private:
     Button* runLoadSwitch_ {&dummyButton_};
     Button* wtprotSwitch_ {&dummyButton_};
 
-    // Button and indicators positions and dimensions
-    // Frame<float> pwrIndicatorFrame {0.674, 0.605, 0.024, 0.048};
-    Frame<float> pwrIndicatorFrame {0.681, 0.611, 0.024, 0.048};
-    Frame<float> readyIndicatorFrame {0.710, 0.611, 0.024, 0.048};
-    Frame<float> oncylIndicatorFrame {0.739, 0.611, 0.024, 0.048};
-    Frame<float> faultIndicatorFrame {0.768, 0.611, 0.024, 0.048};
-    Frame<float> wtprotIndicatorFrame {0.681, 0.703, 0.024, 0.048};
-    Frame<float> loadIndicatorFrame {0.710, 0.703, 0.024, 0.048};
-    Frame<float> wtIndicatorFrame {0.739, 0.703, 0.024, 0.048};
-    Frame<float> rdIndicatorFrame {0.768, 0.703, 0.024, 0.048};
-    Frame<float> runLoadSwitchFrame {0.592, 0.611, 0.029, 0.137};
-    Frame<float> wtprotSwitchFrame {0.620, 0.611, 0.029, 0.137};
-    Frame<float> numberLabelFrame {0.825, 0.611, 0.057, 0.100};
-
     // Definition of the drive states
     //
     // To both the SeekCommand and the Seeking state a function pointer
