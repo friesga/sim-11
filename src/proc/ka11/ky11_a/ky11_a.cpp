@@ -21,7 +21,7 @@ KY11_A::KY11_A (Bus* bus, Interfaces::CpuController* cpuController,
     stateMachine_ = make_unique<StateMachine> (this);
 
     unique_ptr<ImageContainer> imageContainer =
-        make_unique<OpenRasterFile> ("resources/pdp-11_20 front.ora");
+        make_unique<OpenRasterFile> ("resources/pdp-11_20.ora");
 
     unique_ptr<PanelBuilder> panelBuilder =
         window->createDataPanelBuilder (*imageContainer,
