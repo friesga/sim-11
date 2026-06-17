@@ -15,7 +15,7 @@ void RL01_02::createBezel (Window* window,
     const RLUnitConfig& rlUnitConfig)
 {
     unique_ptr<ImageContainer> imageContainer =
-        make_unique<OpenRasterFile> ("resources/rl01_02.ora");
+        make_unique<OpenRasterFile> ("resources/RL01_02.ora");
 
     unique_ptr<PanelBuilder> panelBuilder =
         window->createDataPanelBuilder (*imageContainer,
