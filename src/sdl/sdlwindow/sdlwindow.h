@@ -44,7 +44,7 @@ public:
 
 private:
     // Loupe circle radius
-    static const int loupeRadius_ = 50;
+    static const int loupeRadius_ = 70;
 
     int windowWidth_;
     int windowHeight_;
