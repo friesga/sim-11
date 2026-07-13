@@ -1,8 +1,8 @@
 #include "sdlwindow.h"
-#include "sdl/sdlpanel/sdlpanel.h"
-#include "sdl/filepanelbuilder/filepanelbuilder.h"
-#include "sdl/datapanelbuilder/datapanelbuilder.h"
-#include "sdl/sdlevent/sdlevent.h"
+#include "sdl/video/sdlpanel/sdlpanel.h"
+#include "sdl/video/filepanelbuilder/filepanelbuilder.h"
+#include "sdl/video/datapanelbuilder/datapanelbuilder.h"
+#include "sdl/video/sdlevent/sdlevent.h"
 #include "rackunit.h"
 
 #include <SDL.h>

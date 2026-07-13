@@ -1,18 +1,17 @@
 set (SDL_SRCS
     sdlinit/sdlinit.cpp
-    datapanelbuilder/datapanelbuilder.cpp
-    filepanelbuilder/filepanelbuilder.cpp
-    sdlpanel/sdlpanel.cpp
-    sdlwindow/sdlwindow.cpp
-    sdlindicator/sdlindicator.cpp
-    sdlfront/sdlfront.cpp
-    sdlrenderer/sdlrenderer.cpp
-    sdlrenderer/circle.cpp
-    sdltexture/sdltexture.cpp
-    sdltile/sdltile.cpp
-    sdlindicatorlatchingbutton/sdlindicatorlatchingbutton.cpp
-    sdlmultipositionswitch/sdlmultipositionswitch.cpp
-    sdlevent/sdlevent.cpp)
-
+    video/datapanelbuilder/datapanelbuilder.cpp
+    video/filepanelbuilder/filepanelbuilder.cpp
+    video/sdlpanel/sdlpanel.cpp
+    video/sdlwindow/sdlwindow.cpp
+    video/sdlindicator/sdlindicator.cpp
+    video/sdlfront/sdlfront.cpp
+    video/sdlrenderer/sdlrenderer.cpp
+    video/sdlrenderer/circle.cpp
+    video/sdltexture/sdltexture.cpp
+    video/sdltile/sdltile.cpp
+    video/sdlindicatorlatchingbutton/sdlindicatorlatchingbutton.cpp
+    video/sdlmultipositionswitch/sdlmultipositionswitch.cpp
+    video/sdlevent/sdlevent.cpp)
 target_sources (${TARGET} PRIVATE ${SDL_SRCS})
 target_sources (sim-11-wasm PRIVATE ${SDL_SRCS})

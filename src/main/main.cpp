@@ -5,7 +5,7 @@
 #include "cmdlineoptions/cmdlineoptions.h"
 #include "logger/logger.h"
 #include "configdata/iniprocessor/iniprocessor.h"
-#include "sdl/sdlwindow/sdlwindow.h"
+#include "sdl/video/sdlwindow/sdlwindow.h"
 #include "chrono/simulatorclock/simulatorclock.h"
 
 #include <iostream>

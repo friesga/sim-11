@@ -1,12 +1,13 @@
-#ifndef _FILEPANELBUILDER_H_
-#define _FILEPANELBUILDER_H_
+#ifndef _DATAPANELBUILDER_H_
+#define _DATAPANELBUILDER_H_
 
 #include "panel.h"
-#include "sdl/sdlfront/sdlfront.h"
-#include "sdl/sdlindicator/sdlindicator.h"
-#include "sdl/sdlindicatorlatchingbutton/sdlindicatorlatchingbutton.h"
-#include "sdl/sdlrenderer/sdlrenderer.h"
-#include "sdl/sdlevent/sdlevent.h"
+#include "sdl/video/sdlfront/sdlfront.h"
+#include "sdl/video/sdlindicator/sdlindicator.h"
+#include "sdl/video/sdlindicatorlatchingbutton/sdlindicatorlatchingbutton.h"
+#include "sdl/video/sdlrenderer/sdlrenderer.h"
+#include "sdl/video/sdlevent/sdlevent.h"
+#include "imagedata/include/imagecontainer.h"
 
 #include <memory>
 #include <vector>
@@ -16,22 +17,26 @@ using std::unique_ptr;
 using std::vector;
 using std::array;
 
-class FilePanelBuilder : public PanelBuilder
+// The DataPanelBuilder provides the functions to create a panel from
+// image data stored in an ImageContainer (such as an OpenRaster file).
+//
+class DataPanelBuilder : public PanelBuilder
 {
 public:
-    FilePanelBuilder (unique_ptr<SDLRenderer>& sdlRenderer,
-        SDLTexture& texture, Cabinet::Position cabinetPosition, RackUnit unitHeight);
+    DataPanelBuilder (ImageContainer& imageContainer,
+        unique_ptr<SDLRenderer>& sdlRenderer, SDLTexture& texture,
+        Cabinet::Position cabinetPosition, RackUnit unitHeight);
 
     // Definition of functions required by the PanelBuilder interface
     void createFront (string imageFile,
-        Frame<float> frame) override;
+        Frame<float> frame = Frame<float> {0, 0, 0, 0}) override;
     Indicator* createIndicator (string indicatorOffImage,
         string indicatorOnImage, Indicator::State showFigure,
-        Frame<float> frame) override;
+        Frame<float> frame = Frame<float> {0, 0, 0, 0}) override;
     Button* createMultiPositionSwitch (vector<string> positionImages,
         Button::State initialState,
         Button::EventCallback switchClicked,
-        Frame<float> frame) override;
+        Frame<float> frame = Frame<float> {0, 0, 0, 0}) override;
     IndicatorButton* createIndicatorLatchingButton (Button::ImageNames const& imageNames,
         Button::TwoPositionsState initialState,
         Button::EventCallback buttonClicked, Indicator::State showIndicator,
@@ -39,9 +44,18 @@ public:
     unique_ptr<Panel> getPanel () override;
 
 private:
+    int textureWidth (SDLTexture& texture) const;
     int textureHeight (SDLTexture& texture) const;
     int pixelsPerRackUnit () const;
     Frame<int> placeFrameInTexture (Frame<float> frame);
+    Frame<float> getFrameFromImage (string layerName);
+    vector<unique_ptr<SDLTile>> createTiles (vector<string> imageNames);
+    unique_ptr<SDLTile> createTile (string imageName);
+    unique_ptr<Button> createButton (vector<unique_ptr<SDLTile>>,
+        Button::State initialState, Button::EventCallback switchClicked);
+
+    // Reference to the image container to use for loading images
+    ImageContainer& imageContainer_;
 
     // Reference to the renderer to use for fronts, indicators and buttons
     unique_ptr<SDLRenderer>& sdlRenderer_;
@@ -67,4 +81,4 @@ private:
     RackUnit unitHeight_;
 };
 
-#endif // _FILEPANELBUILDER_H_
+#endif // _SDLFILEPANELBUILDER_H_

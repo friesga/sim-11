@@ -2,7 +2,7 @@
 #define _SDLTILE_H_
 
 #include "panel.h"
-#include "sdl/sdlrenderer/sdlrenderer.h"
+#include "sdl/video/sdlrenderer/sdlrenderer.h"
 #include "imagedata/include/image.h"
 
 #include <SDL.h>

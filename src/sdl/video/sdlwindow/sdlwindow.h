@@ -4,7 +4,7 @@
 #include "panel.h"
 #include "../sdlpanel/sdlpanel.h"
 #include "../sdlrenderer/sdlrenderer.h"
-#include "../sdlinit/sdlinit.h"
+#include "../../sdlinit/sdlinit.h"
 #include "cabinet/cabinet.h"
 
 #include <vector>

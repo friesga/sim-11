@@ -1,6 +1,6 @@
 #include "filepanelbuilder.h"
-#include "sdl/sdlpanel/sdlpanel.h"
-#include "sdl/sdlmultipositionswitch/sdlmultipositionswitch.h"
+#include "sdl/video/sdlpanel/sdlpanel.h"
+#include "sdl/video/sdlmultipositionswitch/sdlmultipositionswitch.h"
 #include "cabinet/cabinet.h"
 #include "overloaded.h"
 

@@ -1,6 +1,6 @@
 #include "datapanelbuilder.h"
-#include "sdl/sdlpanel/sdlpanel.h"
-#include "sdl/sdlmultipositionswitch/sdlmultipositionswitch.h"
+#include "sdl/video/sdlpanel/sdlpanel.h"
+#include "sdl/video/sdlmultipositionswitch/sdlmultipositionswitch.h"
 #include "overloaded.h"
 
 DataPanelBuilder::DataPanelBuilder (ImageContainer& imageContainer,
