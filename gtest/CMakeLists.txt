@@ -19,6 +19,8 @@ set (GTEST_SRCS
     characterbuffertest.cpp
     conddatatest.cpp
     conditioncodestest.cpp
+    audio/sdlaudiotest.cpp
+    audio/playlisttest.cpp
     configdata/bootdeviceconsistencytest.cpp
     configdata/configprocessortest.cpp
     configdata/consoleconsistencytest.cpp
