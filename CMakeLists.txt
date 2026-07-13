@@ -130,7 +130,7 @@ target_compile_options (sim-11-test PRIVATE /std:c++20)
 
 set (GTESTUNIT_LIBS
     C:/Tools/gtest-1.16.0/lib/gtest.lib
-    G:/src/contrib/SDL2-2.26.0/out/build/x64-Debug/SDL2d.lib
+    C:/Libraries/SDL2-2.26.0/SDL2d.lib
     C:/Libraries/SDL2_image-2.6.2/lib/x64/SDL2_image.lib)
     
 target_link_libraries(sim-11-test ${GTESTUNIT_LIBS})
