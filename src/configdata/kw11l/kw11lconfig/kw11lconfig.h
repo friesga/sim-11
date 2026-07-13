@@ -24,7 +24,11 @@ struct KW11LConfig : public DeviceType<BusType::Unibus>
         SystemClock
     };
 
-    ClockSource clockSource = ClockSource::SimulatorClock;
+    explicit KW11LConfig (ClockSource source = ClockSource::SimulatorClock)
+        : clockSource {source}
+    {}
+
+    ClockSource clockSource;
 };
 
 #endif // _KW11LCONFIG_H_

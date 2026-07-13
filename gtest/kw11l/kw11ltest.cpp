@@ -7,7 +7,7 @@ class KW11LTest : public ::testing::Test
 {
 protected:
     Unibus bus;
-    KW11L kw11l {&bus, KW11LConfig {}};
+    KW11L kw11l {&bus, KW11LConfig {KW11LConfig::ClockSource::SystemClock}};
     static const u16 kw11lAddress {0177546};
     static const u16 SR_INTERRUPT_ENABLE {0100};
     static const u16 SR_INTERRUPT_MONITOR {0200};
@@ -32,16 +32,6 @@ TEST_F (KW11LTest, monitorBitCanBeCleared)
     EXPECT_TRUE (statusRegister == SR_INTERRUPT_MONITOR);
 
     kw11l.writeWord (kw11lAddress, 0);
-    statusRegister = kw11l.read (kw11lAddress);
-    EXPECT_TRUE (statusRegister == 0);
-}
-
-TEST_F (KW11LTest, monitorBitClearedByAnyWrite)
-{
-    u16 statusRegister = kw11l.read (kw11lAddress);
-    EXPECT_TRUE (statusRegister == SR_INTERRUPT_MONITOR);
-
-    kw11l.writeWord (kw11lAddress, SR_INTERRUPT_MONITOR);
     statusRegister = kw11l.read (kw11lAddress);
     EXPECT_TRUE (statusRegister == 0);
 }

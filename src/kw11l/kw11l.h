@@ -8,9 +8,11 @@
 
 #include <thread>
 #include <mutex>
+#include <atomic>
 
 using std::thread;
 using std::mutex;
+using std::atomic;
 
 // The KW11-L Line Time Clock is a Unibus device which provides a line time
 // clock, producing interrupts at a rate of 50 or 60 Hz. The programming
@@ -51,9 +53,10 @@ private:
 
     Bus* bus_;
     KW11LConfig::ClockSource clockSource_;
+    atomic<bool> running_;
     thread ltcThread_;
     mutex kw11lMutex_;
-    bool running_;
+
 
     void tick ();
 };

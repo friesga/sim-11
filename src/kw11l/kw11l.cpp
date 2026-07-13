@@ -11,10 +11,10 @@ KW11L::KW11L (Bus* bus, const KW11LConfig& kw11lConfig)
     :
 	bus_ {bus},
     clockSource_ {kw11lConfig.clockSource},
-    ltcThread_ {thread (&KW11L::tick, this)},
 	running_ {true}
 {
 	reset ();
+	ltcThread_ = thread (&KW11L::tick, this);
 }
 
 KW11L::~KW11L ()
