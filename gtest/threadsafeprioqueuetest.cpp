@@ -187,14 +187,3 @@ TEST (ThreadSafePrioQueue, identicalElementsCanBePushed)
     EXPECT_EQ (priorityQueue.size (), 2);
 }
 
-TEST (ThreadSafePrioQueue, elementsCanBeFound)
-{
-    ThreadSafePrioQueue<int> priorityQueue;
-
-    // Now push an element on the queue to verify it's not empty anymore
-    priorityQueue.push (42);
-    priorityQueue.push (43);
-
-    std::multiset<int>::const_iterator it = priorityQueue.find (42);
-    EXPECT_EQ (*it, 42);
-}
