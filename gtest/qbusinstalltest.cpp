@@ -66,27 +66,14 @@ TEST (QbusInstallTest, devicesCanBeInstalled)
 
 TEST (QbusInstallTest, cannotInstallMoreThanNumberOfSlots)
 {
-	vector<DummyBusDevice> devices =
-	{
-		DummyBusDevice (0),
-		DummyBusDevice (1),
-		DummyBusDevice (2),
-		DummyBusDevice (3),
-		DummyBusDevice (4),
-		DummyBusDevice (5),
-		DummyBusDevice (6),
-		DummyBusDevice (7),
-		DummyBusDevice (8)
-	};
+	vector<DummyBusDevice> devices {};
 	Qbus testBus;
 
-
 	// Install a device in every slot
-	u16 slotNumber {0};
-	for (BusDevice& device : devices)
+	for (u16 slotNumber = 0; slotNumber < testBus.capacity (); ++slotNumber)
 	{
+		devices.push_back (DummyBusDevice (slotNumber));
 		EXPECT_TRUE (testBus.installModule (&devices[slotNumber]));
-		slotNumber++;
 	}
 
 	// Verify no more devices can be installed
