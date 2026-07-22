@@ -1,7 +1,8 @@
 #include <gtest/gtest.h>
 
 #include "sdl/audio/sdlaudiostream/sdlaudiostream.h"
-#include "sdl/audio/sdlaudiomixer/sdlaudiomixer.h"
+#include "sdl/audio/sdlaudiosystem/sdlaudiosystem.h"
+#include "sdl/audio/sdlaudioplayer/sdlaudioplayer.h"  
 
 #include <vector>
 #include <cmath>
@@ -27,6 +28,36 @@ bool floatEquals (float f1, float f2)
     return fabs (f1 - f2) < numeric_limits<float>::epsilon ();
 }
 
+TEST_F (SDLAudioTest, audioStreamCanBePlayed)
+{
+    vector<AudioFrame> channelSamples
+    {
+        {0.00, 0.00},
+        {0.10, -0.10},
+        {0.20, -0.20}
+    };
+
+    SDLAudioStream audioStream {channelSamples};
+
+    SDLAudioSystem audioSystem;
+    AudioPlayer* audioPlayer = audioSystem.createPlayer ();
+
+    audioPlayer->play (&audioStream);
+
+    AudioFrame* receivedFrames = new AudioFrame[channelSamples.size ()];
+    audioSystem.audioCallback (nullptr, receivedFrames, channelSamples.size ());
+    EXPECT_TRUE (floatEquals (receivedFrames[0].left (), 0.00));
+    EXPECT_TRUE (floatEquals (receivedFrames[0].right (), 0.00));
+
+    EXPECT_TRUE (floatEquals (receivedFrames[1].left (), 0.10));
+    EXPECT_TRUE (floatEquals (receivedFrames[1].right (), -0.10));
+
+    EXPECT_TRUE (floatEquals (receivedFrames[2].left (), 0.20));
+    EXPECT_TRUE (floatEquals (receivedFrames[2].right (), -0.20));
+
+    delete[] receivedFrames;
+}
+
 TEST_F (SDLAudioTest, audioCanBeMixed)
 {
     vector<AudioFrame> channelSamples
@@ -38,17 +69,15 @@ TEST_F (SDLAudioTest, audioCanBeMixed)
 
     SDLAudioStream audioStream {channelSamples};
 
-    AudioFormat audioFormat {48000, 2, AudioSampleFormat::Float32};
-    SDLAudioMixer audioMixer {audioFormat};
-    EXPECT_EQ (audioMixer.createChannel (""), 0);
-    EXPECT_EQ (audioMixer.createChannel (""), 1);
+    SDLAudioSystem audioSystem;
+    AudioPlayer* audioPlayer0 = audioSystem.createPlayer ();
+    AudioPlayer* audioPlayer1 = audioSystem.createPlayer ();
 
-    audioMixer.channel (0).play (&audioStream);
-    audioMixer.channel (1).play (&audioStream);
+    audioPlayer0->play (&audioStream);
+    audioPlayer1->play (&audioStream);
 
-    audioMixer.start ();
     AudioFrame* receivedFrames = new AudioFrame[channelSamples.size ()];
-    audioMixer.audioCallback (nullptr, receivedFrames, channelSamples.size ());
+    audioSystem.audioCallback (nullptr, receivedFrames, channelSamples.size ());
     EXPECT_TRUE (floatEquals (receivedFrames[0].left  (), 0.00));
     EXPECT_TRUE (floatEquals (receivedFrames[0].right (), 0.00));
 
@@ -62,7 +91,7 @@ TEST_F (SDLAudioTest, audioCanBeMixed)
 }
 
 
-// This test verifies that channels with different number of samples
+// This test verifies that streams with different number of samples
 // can be played continously.
 TEST_F (SDLAudioTest, differentChanelsCanBeMixed)
 {
@@ -89,18 +118,15 @@ TEST_F (SDLAudioTest, differentChanelsCanBeMixed)
     SDLAudioStream audioStream0 {channel0Samples};
     SDLAudioStream audioStream1 {channel1Samples};
 
-    AudioFormat audioFormat {48000, 2, AudioSampleFormat::Float32};
+    SDLAudioSystem audioSystem;
+    AudioPlayer* audioPlayer0 = audioSystem.createPlayer ();
+    AudioPlayer* audioPlayer1 = audioSystem.createPlayer ();
 
-    SDLAudioMixer audioMixer {audioFormat};
-    EXPECT_EQ (audioMixer.createChannel (""), 0);
-    EXPECT_EQ (audioMixer.createChannel (""), 1);
+    audioPlayer0->play (&audioStream0);
+    audioPlayer1->play (&audioStream1);
 
-    audioMixer.channel (0).play (&audioStream0);
-    audioMixer.channel (1).play (&audioStream1);
-
-    audioMixer.start ();
     AudioFrame* receivedFrames = new AudioFrame[samplesSize];
-    audioMixer.audioCallback (nullptr, receivedFrames, samplesSize);
+    audioSystem.audioCallback (nullptr, receivedFrames, samplesSize);
 
     EXPECT_TRUE (floatEquals (receivedFrames[0].left  (), 0.00));
     EXPECT_TRUE (floatEquals (receivedFrames[0].right (), 0.00));
@@ -131,13 +157,13 @@ TEST_F (SDLAudioTest, streamIsClamped)
 
     SDLAudioStream audioStream {samples};
 
-    AudioFormat audioFormat {48000, 2, AudioSampleFormat::Float32};
-    SDLAudioMixer audioMixer {audioFormat};
+    SDLAudioSystem audioSystem;
+    AudioPlayer* audioPlayer = audioSystem.createPlayer ();
 
-    audioMixer.createChannel ("test");
-    audioMixer.channel (0).play (&audioStream);
+    audioPlayer->play (&audioStream);
+
     AudioFrame* receivedFrames = new AudioFrame[samples.size ()];
-    audioMixer.audioCallback (nullptr, receivedFrames, samples.size ());
+    audioSystem.audioCallback (nullptr, receivedFrames, samples.size ());
 
     EXPECT_TRUE (floatEquals (receivedFrames[0].left  (),  0.90));
     EXPECT_TRUE (floatEquals (receivedFrames[0].right (), -0.90));
@@ -160,19 +186,17 @@ TEST_F (SDLAudioTest, audioMixerStreamIsClamped)
         {0.60, -0.60},
     };
 
-    SDLAudioStream audioStream0 {samples};
+    SDLAudioStream audioStream {samples};
 
-    AudioFormat audioFormat {48000, 2, AudioSampleFormat::Float32};
-    SDLAudioMixer audioMixer {audioFormat};
-    EXPECT_EQ (audioMixer.createChannel (""), 0);
-    EXPECT_EQ (audioMixer.createChannel (""), 1);
+    SDLAudioSystem audioSystem;
+    AudioPlayer* audioPlayer0 = audioSystem.createPlayer ();
+    AudioPlayer* audioPlayer1 = audioSystem.createPlayer ();
 
-    audioMixer.channel (0).play (&audioStream0);
-    audioMixer.channel (1).play (&audioStream0);
+    audioPlayer0->play (&audioStream);
+    audioPlayer1->play (&audioStream);
 
-    audioMixer.start ();
     AudioFrame* receivedFrames = new AudioFrame[samples.size ()];
-    audioMixer.audioCallback (nullptr, receivedFrames, samples.size ());
+    audioSystem.audioCallback (nullptr, receivedFrames, samples.size ());
 
     EXPECT_TRUE (floatEquals (receivedFrames[0].left  (),  0.80));
     EXPECT_TRUE (floatEquals (receivedFrames[0].right (), -0.80));
@@ -186,7 +210,6 @@ TEST_F (SDLAudioTest, audioMixerStreamIsClamped)
     delete[] receivedFrames;
 }
 
-
 TEST_F (SDLAudioTest, audioPlayerVolumeCanBeSet)
 {
     vector<AudioFrame> samples
@@ -197,14 +220,15 @@ TEST_F (SDLAudioTest, audioPlayerVolumeCanBeSet)
     };
 
     SDLAudioStream audioStream {samples};
-    AudioFormat audioFormat {48000, 2, AudioSampleFormat::Float32};
-    SDLAudioMixer audioMixer {audioFormat};
-    audioMixer.createChannel ("test");
-    audioMixer.channel (0).play (&audioStream);
-    audioMixer.setVolume (2.0f);
+
+    SDLAudioSystem audioSystem;
+    AudioPlayer* audioPlayer = audioSystem.createPlayer ();
+
+    audioPlayer->play (&audioStream);
+    audioPlayer->setVolume (2.0f);
 
     AudioFrame* receivedFrames = new AudioFrame[samples.size ()];
-    audioMixer.audioCallback (nullptr, receivedFrames, samples.size ());
+    audioSystem.audioCallback (nullptr, receivedFrames, samples.size ());
 
     EXPECT_TRUE (floatEquals (receivedFrames[0].left  (), 0.00));
     EXPECT_TRUE (floatEquals (receivedFrames[0].right (), 0.00));
@@ -213,42 +237,6 @@ TEST_F (SDLAudioTest, audioPlayerVolumeCanBeSet)
     EXPECT_TRUE (floatEquals (receivedFrames[1].right (), -0.20));
 
     EXPECT_TRUE (floatEquals (receivedFrames[2].left  (),  1.00));
-    EXPECT_TRUE (floatEquals (receivedFrames[2].right (), -1.00));
-
-    delete[] receivedFrames;
-}
-
-TEST_F (SDLAudioTest, channelVolumeCanBeSet)
-{
-    vector<AudioFrame> samples
-    {
-        {0.0,   0.0},
-        {0.10, -0.10},
-        {0.60, -0.60},
-    };
-
-    SDLAudioStream audioStream0 {samples};
-
-    AudioFormat audioFormat {48000, 2, AudioSampleFormat::Float32};
-    SDLAudioMixer audioMixer {audioFormat};
-    EXPECT_EQ (audioMixer.createChannel (""), 0);
-    EXPECT_EQ (audioMixer.createChannel (""), 1);
-
-    audioMixer.channel (0).play (&audioStream0);
-    audioMixer.channel (1).play (&audioStream0);
-    audioMixer.channel (0).setVolume (2.0f);
-
-    audioMixer.start ();
-    AudioFrame* receivedFrames = new AudioFrame[samples.size ()];
-    audioMixer.audioCallback (nullptr, receivedFrames, samples.size ());
-
-    EXPECT_TRUE (floatEquals (receivedFrames[0].left  (), 0.00));
-    EXPECT_TRUE (floatEquals (receivedFrames[0].right (), 0.00));
-
-    EXPECT_TRUE (floatEquals (receivedFrames[1].left (),   0.30));
-    EXPECT_TRUE (floatEquals (receivedFrames[1].right (), -0.30));
-
-    EXPECT_TRUE (floatEquals (receivedFrames[2].left (),   1.00));
     EXPECT_TRUE (floatEquals (receivedFrames[2].right (), -1.00));
 
     delete[] receivedFrames;
@@ -267,13 +255,10 @@ TEST_F (SDLAudioTest, audioCanBePlayedInOneShotMode)
 
     SDLAudioStream audioStream {channelSamples};
 
-    AudioFormat audioFormat {48000, 2, AudioSampleFormat::Float32};
-    SDLAudioMixer audioMixer {audioFormat};
-    EXPECT_EQ (audioMixer.createChannel (""), 0);
+    SDLAudioSystem audioSystem;
+    AudioPlayer* audioPlayer = audioSystem.createPlayer ();
 
-    audioMixer.channel (0).play (Track {&audioStream, PlaybackMode::OneShot});
-
-    audioMixer.start ();
+    audioPlayer->play (&audioStream, PlaybackMode::OneShot);
 
     const size_t receivedFramesSize = 10;
     AudioFrame* receivedFrames = new AudioFrame[10];
@@ -281,7 +266,7 @@ TEST_F (SDLAudioTest, audioCanBePlayedInOneShotMode)
     for (size_t i = 0; i < receivedFramesSize; ++i)
         receivedFrames[i] = AudioFrame {0.0f, 0.0f};
 
-    audioMixer.audioCallback (nullptr, receivedFrames, channelSamples.size ());
+    audioSystem.audioCallback (nullptr, receivedFrames, channelSamples.size ());
 
     EXPECT_TRUE (floatEquals (receivedFrames[0].left (), 0.00));
     EXPECT_TRUE (floatEquals (receivedFrames[0].right (), 0.00));
@@ -306,13 +291,10 @@ TEST_F (SDLAudioTest, oneShotModeCanBeRepeated)
 
     SDLAudioStream audioStream {channelSamples};
 
-    AudioFormat audioFormat {48000, 2, AudioSampleFormat::Float32};
-    SDLAudioMixer audioMixer {audioFormat};
-    EXPECT_EQ (audioMixer.createChannel (""), 0);
+    SDLAudioSystem audioSystem;
+    AudioPlayer* audioPlayer = audioSystem.createPlayer ();
 
-    audioMixer.channel (0).play (Track {&audioStream, PlaybackMode::OneShot});
-
-    audioMixer.start ();
+    audioPlayer->play (&audioStream, PlaybackMode::OneShot);
 
     const size_t receivedFramesSize = 10;
     AudioFrame* receivedFrames = new AudioFrame[10];
@@ -320,7 +302,7 @@ TEST_F (SDLAudioTest, oneShotModeCanBeRepeated)
     for (size_t i = 0; i < receivedFramesSize; ++i)
         receivedFrames[i] = AudioFrame {0.0f, 0.0f};
 
-    audioMixer.audioCallback (nullptr, receivedFrames, channelSamples.size ());
+    audioSystem.audioCallback (nullptr, receivedFrames, channelSamples.size ());
 
     EXPECT_TRUE (floatEquals (receivedFrames[0].left (), 0.00));
     EXPECT_TRUE (floatEquals (receivedFrames[0].right (), 0.00));
@@ -335,9 +317,9 @@ TEST_F (SDLAudioTest, oneShotModeCanBeRepeated)
     for (size_t i = 0; i < receivedFramesSize; ++i)
         receivedFrames[i] = AudioFrame {0.0f, 0.0f};
 
-    audioMixer.channel (0).play (Track {&audioStream, PlaybackMode::OneShot});
+    audioPlayer->play (&audioStream, PlaybackMode::OneShot);
 
-    audioMixer.audioCallback (nullptr, receivedFrames, channelSamples.size ());
+    audioSystem.audioCallback (nullptr, receivedFrames, channelSamples.size ());
 
     EXPECT_TRUE (floatEquals (receivedFrames[0].left (), 0.00));
     EXPECT_TRUE (floatEquals (receivedFrames[0].right (), 0.00));
@@ -370,11 +352,10 @@ TEST_F (SDLAudioTest, listOfTracksCanBePlayed)
     SDLAudioStream audioStream0 {channelSamples0};
     SDLAudioStream audioStream1 {channelSamples1};
 
-    AudioFormat audioFormat {48000, 2, AudioSampleFormat::Float32};
-    SDLAudioMixer audioMixer {audioFormat};
-    EXPECT_EQ (audioMixer.createChannel (""), 0);
+    SDLAudioSystem audioSystem;
+    AudioPlayer* audioPlayer = audioSystem.createPlayer ();
 
-    audioMixer.channel (0).play ({
+    audioPlayer->play ({
         {&audioStream0, PlaybackMode::OneShot},
         {&audioStream1, PlaybackMode::OneShot}});
 
@@ -384,7 +365,7 @@ TEST_F (SDLAudioTest, listOfTracksCanBePlayed)
     for (size_t i = 0; i < receivedFramesSize; ++i)
         receivedFrames[i] = AudioFrame {0.0f, 0.0f};
 
-    audioMixer.audioCallback (nullptr, receivedFrames, receivedFramesSize);
+    audioSystem.audioCallback (nullptr, receivedFrames, receivedFramesSize);
 
     EXPECT_TRUE (floatEquals (receivedFrames[0].left  (),  0.10));
     EXPECT_TRUE (floatEquals (receivedFrames[0].right (), -0.10));
@@ -410,6 +391,7 @@ TEST_F (SDLAudioTest, listOfTracksCanBePlayed)
     delete[] receivedFrames;
 }
 
+
 TEST_F (SDLAudioTest, oneShotFollowedByContinuousMode)
 {
     vector<AudioFrame> channelSamples0
@@ -429,14 +411,12 @@ TEST_F (SDLAudioTest, oneShotFollowedByContinuousMode)
     SDLAudioStream audioStream0 {channelSamples0};
     SDLAudioStream audioStream1 {channelSamples1};
 
-    AudioFormat audioFormat {48000, 2, AudioSampleFormat::Float32};
-    SDLAudioMixer audioMixer {audioFormat};
-    EXPECT_EQ (audioMixer.createChannel (""), 0);
+    SDLAudioSystem audioSystem;
+    AudioPlayer* audioPlayer = audioSystem.createPlayer ();
 
-    audioMixer.channel (0).play ({
+    audioPlayer->play ({
         {&audioStream0, PlaybackMode::OneShot},
         {&audioStream1, PlaybackMode::Continuous}});
-
 
     const size_t receivedFramesSize = 10;
     AudioFrame* receivedFrames = new AudioFrame[10];
@@ -444,7 +424,7 @@ TEST_F (SDLAudioTest, oneShotFollowedByContinuousMode)
     for (size_t i = 0; i < receivedFramesSize; ++i)
         receivedFrames[i] = AudioFrame {0.0f, 0.0f};
 
-    audioMixer.audioCallback (nullptr, receivedFrames, receivedFramesSize);
+    audioSystem.audioCallback (nullptr, receivedFrames, receivedFramesSize);
 
     EXPECT_TRUE (floatEquals (receivedFrames[0].left  (),  0.10));
     EXPECT_TRUE (floatEquals (receivedFrames[0].right (), -0.10));

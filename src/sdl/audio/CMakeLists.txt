@@ -5,8 +5,10 @@ set (SDL_AUDIO_SRCS
     sdlaudiospec/sdlaudiospec.cpp
     sdlaudiostream/sdlaudiostream.cpp
     sdlaudiomixer/sdlaudiomixer.cpp
-    sdlaudiomixer/sdlchannel.cpp
-    sdlaudiomixer/playlist.cpp)
+    sdlaudiosystem/sdlaudiosystem.cpp
+    sdlaudioplayer/sdlaudioplayer.cpp
+    playlist/playlist.cpp)
+
 target_sources (${TARGET} PRIVATE ${SDL_AUDIO_SRCS})
 target_sources (sim-11-test PRIVATE ${SDL_AUDIO_SRCS})
 target_sources (sim-11-wasm PRIVATE ${SDL_AUDIO_SRCS})

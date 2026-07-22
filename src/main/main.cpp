@@ -6,6 +6,7 @@
 #include "logger/logger.h"
 #include "configdata/iniprocessor/iniprocessor.h"
 #include "sdl/video/sdlwindow/sdlwindow.h"
+#include "sdl/audio/sdlaudiosystem/sdlaudiosystem.h"
 #include "chrono/simulatorclock/simulatorclock.h"
 
 #include <iostream>
@@ -66,6 +67,11 @@ try
 	SDLWindow sdlWindow {"PDP-11 Console", {100, 100, windowWidth,
 		static_cast<int> (windowWidth / h9642AspectRatio)},
 		{Window::Flag::WindowHidden}};
+
+    // Create the audio system to be used by the devices that generate sound
+	// Note: the initialization of the sdl audio system takes place in the
+	// SDLWindow constructor.
+	SDLAudioSystem sdlAudioSystem;
 
 	// Create a pdp-11 with configured (or default) devices.
 	// The devices are created after creation of the window to make sure the

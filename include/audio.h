@@ -1,14 +1,18 @@
 #ifndef _AUDIO_H_
 #define _AUDIO_H_
 
-#include "../audioframe/audioframe.h"
+#include "sdl/audio/audioframe/audioframe.h"
+#include "sdl/audio/playlist/playlist.h"
 
 #include <cstdint>
 #include <string>
 #include <initializer_list>
+#include <optional>
 
 using std::string;
 using std::initializer_list;
+using std::optional;
+using std::nullopt;
 
 enum class AudioSampleFormat
 {
@@ -25,12 +29,6 @@ struct AudioFormat
     AudioSampleFormat sampleFormat {}; // E.g. UInt8, Int16, Int32, Float32
 };
 
-enum class PlaybackMode
-{
-    Continuous,
-    OneShot
-};
-
 // This class represents an audiostream, originating from a WAV file.
 class AudioStream
 {
@@ -41,53 +39,51 @@ public:
     virtual size_t fill (AudioFrame* stream, size_t numberOfFrames) = 0;
 };
 
+enum class PlaybackMode
+{
+    Continuous,
+    OneShot
+};
+
 struct Track
 {
     AudioStream* audioStream {nullptr};
     PlaybackMode playbackMode {PlaybackMode::Continuous};
 };
 
-class Playlist
+struct FileTrack
 {
-public:
-    virtual ~Playlist () = default;
-    virtual void assignTrack (Track track) = 0;
-    virtual void addTrack (Track track) = 0;
-    virtual const Track* currentTrack () = 0;
-    virtual const Track* nextTrack () = 0;
-    virtual void clear () = 0;
+    string filename {};
+    PlaybackMode playbackMode {PlaybackMode::Continuous};
 };
 
-class AudioMixer
+class AudioControl
 {
 public:
-    class Channel;
-
-    virtual ~AudioMixer () = default;
     virtual void start () = 0;
     virtual void stop () = 0;
     virtual bool isPlaying () = 0;
-    virtual size_t createChannel (string label) = 0;
-    virtual Channel& channel (size_t id) = 0;
     virtual void setVolume (float volume) = 0;
     virtual float volume () = 0;
 };
 
-class AudioMixer::Channel
+class AudioPlayer : public AudioControl
 {
 public:
-    virtual ~Channel () = default;
-
-    virtual void play (AudioStream* stream) = 0;
-    virtual void play (Track track) = 0;
-    virtual void play (initializer_list<Track> tracks) = 0;
-    virtual AudioStream* source () = 0;
-    virtual void stop () = 0;
-    virtual bool isPlaying () = 0;
-    virtual void setVolume (float volume) = 0;
-    virtual float volume () = 0;
+    virtual void play (AudioStream* stream,
+        PlaybackMode playbackMode = PlaybackMode::Continuous) = 0;
+    virtual void play (Playlist<Track> playlist) = 0;
+    virtual void play (string filename,
+        PlaybackMode playbackMode = PlaybackMode::Continuous) = 0;
+    virtual void play (Playlist<FileTrack>) = 0;
     virtual size_t fill (AudioFrame* stream, size_t numberOfFrames) = 0;
 };
 
+class AudioSystem : public AudioControl
+{
+public:
+    virtual AudioPlayer* createPlayer (optional<string> filename =  nullopt) = 0;
+    virtual AudioFormat audioFormat () const = 0;
+};
 
 #endif // _AUDIO_H_

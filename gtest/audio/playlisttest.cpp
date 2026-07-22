@@ -1,5 +1,6 @@
-#include "sdl/audio/sdlaudiomixer/sdlaudiomixer.h"
+#include "audio.h"
 #include "sdl/audio/sdlaudiostream/sdlaudiostream.h"
+#include "sdl/audio/playlist/playlist.h"
 
 #include <gtest/gtest.h>
 
@@ -16,7 +17,7 @@ public:
 TEST_F (PlaylistTest, trackCanBeAssignedTo)
 {
     SDLAudioStream audioStream0 {{}};
-    SDLAudioMixer::Playlist playlist {};
+    Playlist<Track> playlist {};
 
     playlist.assignTrack ({&audioStream0, PlaybackMode::Continuous});
 
@@ -28,7 +29,7 @@ TEST_F (PlaylistTest, assignTrackInitializesPlaylist)
     SDLAudioStream audioStream0 {{}};
     SDLAudioStream audioStream1 {{}};
 
-    SDLAudioMixer::Playlist playlist {};
+    Playlist<Track> playlist {};
 
     playlist.addTrack ({&audioStream0, PlaybackMode::Continuous});
     playlist.assignTrack ({&audioStream1, PlaybackMode::Continuous});
@@ -41,7 +42,7 @@ TEST_F (PlaylistTest, currentTrackIsFirstInPlaylist)
     SDLAudioStream audioStream0 {{}};
     SDLAudioStream audioStream1 {{}};
 
-    SDLAudioMixer::Playlist playlist {};
+    Playlist<Track> playlist {};
 
     playlist.addTrack ({&audioStream0, PlaybackMode::Continuous});
     playlist.addTrack ({&audioStream1, PlaybackMode::Continuous});
@@ -54,7 +55,7 @@ TEST_F (PlaylistTest, nextTrackSelectsSecondTrackInPlaylist)
     SDLAudioStream audioStream0 {{}};
     SDLAudioStream audioStream1 {{}};
 
-    SDLAudioMixer::Playlist playlist {};
+    Playlist<Track> playlist {};
 
     playlist.addTrack ({&audioStream0, PlaybackMode::Continuous});
     playlist.addTrack ({&audioStream1, PlaybackMode::Continuous});
@@ -68,7 +69,7 @@ TEST_F (PlaylistTest, nextTrackRemovesTrackFromPlsylist)
     SDLAudioStream audioStream0 {{}};
     SDLAudioStream audioStream1 {{}};
 
-    SDLAudioMixer::Playlist playlist {};
+    Playlist<Track> playlist {};
 
     playlist.addTrack ({&audioStream0, PlaybackMode::Continuous});
     playlist.addTrack ({&audioStream1, PlaybackMode::Continuous});
@@ -83,11 +84,29 @@ TEST_F (PlaylistTest, playlistCanBeCleared)
     SDLAudioStream audioStream0 {{}};
     SDLAudioStream audioStream1 {{}};
 
-    SDLAudioMixer::Playlist playlist {};
+    Playlist<Track> playlist {};
 
     playlist.addTrack ({&audioStream0, PlaybackMode::Continuous});
     playlist.addTrack ({&audioStream1, PlaybackMode::Continuous});
     playlist.clear ();
 
     EXPECT_EQ (playlist.currentTrack (), nullptr);
+}
+
+TEST_F (PlaylistTest, playlistCanBeIteratedOver)
+{
+    SDLAudioStream audioStream0 {{}};
+    SDLAudioStream audioStream1 {{}};
+
+    Playlist<Track> playlist {};
+
+    playlist.addTrack ({&audioStream0, PlaybackMode::Continuous});
+    playlist.addTrack ({&audioStream1, PlaybackMode::Continuous});
+    playlist.nextTrack ();
+
+    for (const Track& track : playlist.tracks ())
+    {
+        EXPECT_TRUE (track.audioStream == &audioStream0 ||
+            track.audioStream == &audioStream1);
+    }
 }

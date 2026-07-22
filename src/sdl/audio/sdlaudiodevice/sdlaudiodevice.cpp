@@ -3,10 +3,12 @@
 
 #include <stdexcept>
 
+// The audio device is started by default
 SDLAudioDevice::SDLAudioDevice (const AudioFormat& format,
     SDL_AudioCallback callback, void* userdata)
 {
     init (format, callback, userdata);
+    start ();
 }
 
 SDLAudioDevice::~SDLAudioDevice ()

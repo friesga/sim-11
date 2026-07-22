@@ -9,17 +9,47 @@
 
 using std::memcpy;
 
+// Construct an AudioStream from the given WAV file, convert it to the
+// given format and store it in the samples_ vector.
+//
 SDLAudioStream::SDLAudioStream (const char* filename,
     const AudioFormat& targetSpec)
 {
     loadWAVFile (filename, targetSpec);
 }
 
+// Construct an AudioStream from the given vector of AudioFrames.
+//
 // This constructor is added for testing purposes
+//
 SDLAudioStream::SDLAudioStream (vector<AudioFrame> frames)
     :
     samples_ {frames}
 {}
+
+// Construct an AudioStream from the given data, convert it to the given
+// format and store it in the samples_ vector.
+//
+SDLAudioStream::SDLAudioStream (vector<uint8_t>& wavData,
+    const AudioFormat& audioFormat)
+{
+    SDL_RWops* rw = SDL_RWFromConstMem (wavData.data (),
+        static_cast<int>(wavData.size ()));
+
+    if (rw == nullptr)
+        throw std::runtime_error (SDL_GetError ());
+
+    SDL_AudioSpec wavSpec {};
+    Uint8* wavBuffer = nullptr;
+    Uint32 wavLength = 0;
+
+    if (SDL_LoadWAV_RW (rw, 1, &wavSpec, &wavBuffer, &wavLength) == nullptr)
+        throw std::runtime_error (SDL_GetError ());
+
+    WAVBufferPtr wavBufferPtr {wavBuffer, SDL_FreeWAV};
+
+    convertWAVdata (wavBufferPtr, wavLength, wavSpec, SDLAudioSpec {audioFormat});
+}
 
 // This funcion loads the specified WAV file and converts it to the target
 // audio format specified by targetSpec
@@ -43,20 +73,60 @@ void SDLAudioStream::loadWAVFile (const char* filename,
 
     // Create a unique_ptr to the WAV data from the raw buffer memory,
     // ensuring the buffer is freed when no longer needed.
-    using WAVBufferPtr = std::unique_ptr<Uint8, decltype (&SDL_FreeWAV)>;
     WAVBufferPtr wavBuffer {rawWavBuffer, SDL_FreeWAV};
 
+    convertWAVdata (wavBuffer, wavLength, wavSpec, targetSpec);
+}
+
+bool SDLAudioStream::eos ()
+{
+    return samples_.empty () || playPosition_ == samples_.size ();
+}
+
+void SDLAudioStream::reset ()
+{
+    playPosition_ = 0;
+}
+
+// This function fills the given stream buffer with the given number
+// of AudioFrames till the end of the samples_ buffer has been reached
+size_t SDLAudioStream::fill (AudioFrame* stream, size_t numberOfFrames)
+{
+    if (samples_.empty ())
+        return 0;
+
+    size_t framesWritten = 0;
+
+    while (framesWritten < numberOfFrames &&
+        playPosition_ < samples_.size ())
+    {
+        stream[framesWritten] = samples_[playPosition_];
+
+        ++playPosition_;
+        ++framesWritten;
+    }
+
+    return framesWritten;
+}
+
+// This functions converts the WAV data in the given buffer with the given
+// length and in the given format, to data in the samples_ vector with
+// the given target format.
+//
+void SDLAudioStream::convertWAVdata (WAVBufferPtr& wavBuffer, Uint32 bufferSize,
+    SDL_AudioSpec fromSpec, SDL_AudioSpec targetSpec)
+{
     // Build an SDL_AudioCVT structure that describes how to convert the audio data
-    // from the WAV file format (wavSpec) to the target audio format (targetSpec).
+    // from the WAV file format (fromSpec) to the target audio format (targetSpec).
     SDL_AudioCVT cvt {};
 
     if (SDL_BuildAudioCVT (&cvt,
-        wavSpec.format, wavSpec.channels, wavSpec.freq,
+        fromSpec.format, fromSpec.channels, fromSpec.freq,
         targetSpec.format, targetSpec.channels, targetSpec.freq) < 0)
     {
         throw std::runtime_error ("SDL_BuildAudioCVT failed");
     }
-    
+
     // Set the length of the audio data to be converted from the length
     // of the WAV data loaded by SDL_LoadWAV.
     // len_mult is the length multiplier for determining the size of the
@@ -64,7 +134,7 @@ void SDLAudioStream::loadWAVFile (const char* filename,
     // the original data or the converted data. The allocated size of buf
     // should be len * len_mult.
     //
-    cvt.len = static_cast<int> (wavLength);
+    cvt.len = static_cast<int> (bufferSize);
 
     const auto requiredSizeInBytes =
         static_cast<size_t> (cvt.len) *
@@ -99,35 +169,4 @@ void SDLAudioStream::loadWAVFile (const char* filename,
         static_cast<std::size_t>(cvt.len_cvt) / sizeof (AudioFrame);
 
     samples_.resize (actualFrameCount);
-}
-
-bool SDLAudioStream::eos ()
-{
-    return samples_.empty () || playPosition_ == samples_.size ();
-}
-
-void SDLAudioStream::reset ()
-{
-    playPosition_ = 0;
-}
-
-// This function fills the given stream buffer with the given number
-// of AudioFrames till the end of the samples_ buffer has been reached
-size_t SDLAudioStream::fill (AudioFrame* stream, size_t numberOfFrames)
-{
-    if (samples_.empty ())
-        return 0;
-
-    size_t framesWritten = 0;
-
-    while (framesWritten < numberOfFrames &&
-        playPosition_ < samples_.size ())
-    {
-        stream[framesWritten] = samples_[playPosition_];
-
-        ++playPosition_;
-        ++framesWritten;
-    }
-
-    return framesWritten;
 }
