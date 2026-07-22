@@ -1,5 +1,4 @@
 set (SDL_AUDIO_SRCS
-    audioframe/audioframe.cpp
     sdlaudiodevice/sdlaudiodevice.cpp
     sdlaudiodevicelock/sdlaudiodevicelock.cpp
     sdlaudiospec/sdlaudiospec.cpp

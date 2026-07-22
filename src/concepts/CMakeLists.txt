@@ -1,4 +1,5 @@
-set (CONCEPTS_SRCS     
+set (CONCEPTS_SRCS
+    audioframe/audioframe.cpp
     geometry/geometry.cpp
     geometry/lbn.cpp
     geometry/lbntodiskaddress.cpp)
