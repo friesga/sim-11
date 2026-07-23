@@ -4,7 +4,7 @@
 #include "../include/audio.h"
 #include "../sdlaudiodevice/sdlaudiodevice.h"
 #include "../sdlaudioplayer/sdlaudioplayer.h"
-#include "../playlist/playlist.h"
+#include "concepts//playlist/playlist.h"
 
 #include <memory>
 #include <string>

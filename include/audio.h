@@ -2,7 +2,7 @@
 #define _AUDIO_H_
 
 #include "concepts/audioframe/audioframe.h"
-#include "sdl/audio/playlist/playlist.h"
+#include "concepts/playlist/playlist.h"
 
 #include <cstdint>
 #include <string>

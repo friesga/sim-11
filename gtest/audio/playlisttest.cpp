@@ -1,6 +1,6 @@
 #include "audio.h"
 #include "sdl/audio/sdlaudiostream/sdlaudiostream.h"
-#include "sdl/audio/playlist/playlist.h"
+#include "concepts/playlist/playlist.h"
 
 #include <gtest/gtest.h>
 

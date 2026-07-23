@@ -1,7 +1,7 @@
 #include "audio.h"
 #include "sdlaudioplayer.h"
 #include "imagedata/zipfilereader/zipfile_reader.h"
-#include "../playlist/playlist.h"
+#include "concepts/playlist/playlist.h"
 
 #include <vector>
 #include <iostream>
