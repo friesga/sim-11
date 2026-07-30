@@ -175,6 +175,7 @@ public:
     State transition (PoweredOff&&, PowerOn);       // -> Unloaded
     void entry (Unloaded);
     State transition (Unloaded&&, SpinUp);          // -> SpinningUp
+    State transition (Unloaded&&, PowerOff);        // -> PoweredOff
     void entry (SpinningUp);
     State transition (SpinningUp&&, TimeElapsed);   // -> LockedOn
     State transition (SpinningUp&&, SpinDown);      // -> SpinningDown

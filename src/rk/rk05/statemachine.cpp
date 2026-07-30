@@ -72,6 +72,11 @@ void RK05::StateMachine::entry (Unloaded)
         context_->wtprotIndicator_->show (Indicator::State::Off);
 }
 
+RK05::State RK05::StateMachine::transition (Unloaded&&, PowerOff)
+{
+    return PoweredOff {};
+}
+
 // If the RUN/LOAD button is pressed, the state machine transitions to the
 // SpinningUp state. The LOAD indicator extinguishes and a spin up
 // timer is started.
