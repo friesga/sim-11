@@ -89,16 +89,17 @@ private:
     // then forward it to the Seeking state. On a transition from the
     // Seeking state to the LockedOn state the function will then be called.
     //
-    struct Initial {};      // State machine initial state
-    struct PoweredOff {};   // No power applied
-    struct Unloaded {};     // No cartridge loaded
-    struct SpinningUp {};   // The drive is spinning up
-    struct LockedOn {};     // The drive is locked on a cylinder
+    struct Initial {};              // State machine initial state
+    struct PoweredOff {};           // No power applied
+    struct Unloaded {};             // No cartridge loaded
+    struct SpinningUp {};           // The drive is spinning up
+    struct LockedOn {};             // The drive is locked on a cylinder
     struct Seeking { function<void ()> seekCompleted {nullptr}; };  // The drive is seeking
-    struct SpinningDown {}; // The drive is spinning down
+    struct SpinningDown {};         // The drive is spinning down
+    struct EmergencyShutdown {};    // The drive is powered off
 
     using State = std::variant <Initial, PoweredOff, Unloaded, SpinningUp,
-        LockedOn, Seeking, SpinningDown>;
+        LockedOn, Seeking, SpinningDown, EmergencyShutdown>;
 
     // Definition of the drive events. This includes the RKCommand defined
     // in rktypes.h.
@@ -172,7 +173,7 @@ public:
     State transition (Initial&&, SpunUp);           // -> LockedOn
     State transition (Initial&&, SpunDown);         // -> Powered off
     void entry (PoweredOff);
-    State transition (PoweredOff&&, PowerOn);       // -> Unloaded
+    State transition (PoweredOff&&, PowerOn);       // -> Unloaded/SpinningUp
     void entry (Unloaded);
     State transition (Unloaded&&, SpinUp);          // -> SpinningUp
     State transition (Unloaded&&, PowerOff);        // -> PoweredOff
@@ -182,6 +183,7 @@ public:
     void entry (LockedOn);
     State transition (LockedOn&&, SeekCommand);     // -> Seeking
     State transition (LockedOn&&, SpinDown);        // -> SpinningDown
+    State transition (LockedOn&&, PowerOff);        // -> EmergencyShutdown
     void exit (variantFsm::TagType<LockedOn>);
     void entry (Seeking);
     State transition (Seeking&&, TimeElapsed);      // -> LockedOn
@@ -189,6 +191,9 @@ public:
     void entry (SpinningDown);
     State transition (SpinningDown&&, TimeElapsed); // -> Unloaded
     State transition (SpinningDown&&, SpinUp);      // -> SpinningUp
+    void entry (EmergencyShutdown);
+    State transition (EmergencyShutdown&&, TimeElapsed); // -> PoweredOff
+    State transition (EmergencyShutdown&&, PowerOn);     // -> Unloaded/SpinningUp
 
     // Define the default transition for transitions on the receipt
     // of a RKCommand not explicitly defined above. In these cases
