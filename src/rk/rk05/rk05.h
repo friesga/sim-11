@@ -90,14 +90,15 @@ private:
     // Seeking state to the LockedOn state the function will then be called.
     //
     struct Initial {};      // State machine initial state
+    struct PoweredOff {};   // No power applied
     struct Unloaded {};     // No cartridge loaded
     struct SpinningUp {};   // The drive is spinning up
     struct LockedOn {};     // The drive is locked on a cylinder
     struct Seeking { function<void ()> seekCompleted {nullptr}; };  // The drive is seeking
     struct SpinningDown {}; // The drive is spinning down
 
-    using State = std::variant <Initial, Unloaded, SpinningUp, LockedOn,
-        Seeking, SpinningDown>;
+    using State = std::variant <Initial, PoweredOff, Unloaded, SpinningUp,
+        LockedOn, Seeking, SpinningDown>;
 
     // Definition of the drive events. This includes the RKCommand defined
     // in rktypes.h.
@@ -169,7 +170,9 @@ public:
         duration<int, std::ratio<1, 1>> spinUpTime);
 
     State transition (Initial&&, SpunUp);           // -> LockedOn
-    State transition (Initial&&, SpunDown);         // -> Unloaded
+    State transition (Initial&&, SpunDown);         // -> Powered off
+    void entry (PoweredOff);
+    State transition (PoweredOff&&, PowerOn);       // -> Unloaded
     void entry (Unloaded);
     State transition (Unloaded&&, SpinUp);          // -> SpinningUp
     void entry (SpinningUp);

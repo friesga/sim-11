@@ -7,6 +7,7 @@
 #include <cstdlib>
 #include <functional>
 #include <cmath>
+#include <thread>
 
 using std::make_unique;
 using std::chrono::seconds;
@@ -15,6 +16,8 @@ using std::chrono::duration;
 using std::bind;
 using std::sqrt;
 using std::invalid_argument;
+using std::bind;
+using std::placeholders::_1;
 
 using namespace RKTypes;
 
@@ -64,10 +67,9 @@ RK05::RK05 (Bus* bus, DriveInterface* controller, Window* window,
 
     // Set the Write Protect status according to the configuration option
     if (rk05Config.writeProtect)
-    {
         driveStatus_.writeProtectStatus = 1;
-        wtprotIndicator_->show (Indicator::State::On);
-    }
+
+    bus_->BPOK ().subscribe (bind (&RK05::BPOKReceiver, this, _1));
 }
 
 // Finish the drive thread

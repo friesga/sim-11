@@ -34,15 +34,35 @@ RK05::State RK05::StateMachine::transition (Initial&&, SpunUp)
 
 RK05::State RK05::StateMachine::transition (Initial&&, SpunDown)
 {
+    return PoweredOff {};
+}
+
+void RK05::StateMachine::entry (PoweredOff)
+{
+    context_->pwrIndicator_->show (Indicator::State::Off);
+    context_->loadIndicator_->show (Indicator::State::Off);
+    context_->rdyIndicator_->show (Indicator::State::Off);
+    context_->oncylIndicator_->show (Indicator::State::Off);
+    context_->wtprotIndicator_->show (Indicator::State::Off);
+}
+
+RK05::State RK05::StateMachine::transition (PoweredOff&&, PowerOn)
+{
     return Unloaded {};
 }
 
 void RK05::StateMachine::entry (Unloaded)
 {
+    context_->pwrIndicator_->show (Indicator::State::On);
     context_->loadIndicator_->show (Indicator::State::On);
     context_->rdyIndicator_->show (Indicator::State::Off);
     context_->oncylIndicator_->show (Indicator::State::Off);
     context_->driveStatus_.readWriteSeekReady = 0;
+
+    if (context_->driveStatus_.writeProtectStatus == 1)
+        context_->wtprotIndicator_->show (Indicator::State::On);
+    else
+        context_->wtprotIndicator_->show (Indicator::State::Off);
 }
 
 // If the RUN/LOAD button is pressed, the state machine transitions to the

@@ -24,7 +24,7 @@ void RK05::createBezel (Window* window, const RK05Config& rk05Config)
     // PWR indicator, default on
     pwrIndicator_ = panelBuilder->createIndicator (
         "PWR off", "PWR on",
-        Indicator::State::On);
+        Indicator::State::Off);
 
     // RDY indicator, default off
     rdyIndicator_ = panelBuilder->createIndicator (
@@ -44,7 +44,7 @@ void RK05::createBezel (Window* window, const RK05Config& rk05Config)
     // LOAD indicator, default on
     loadIndicator_ = panelBuilder->createIndicator (
         "LOAD off", "LOAD on",
-        Indicator::State::On);
+        Indicator::State::Off);
 
     // WT indicator, default off
     wtIndicator_ = panelBuilder->createIndicator (
