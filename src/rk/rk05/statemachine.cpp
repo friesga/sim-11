@@ -1,7 +1,10 @@
 #include "rk05.h"
 
+#include <variant>
+
 using std::chrono::duration;
 using std::bind;
+using std::get;
 
 //
 // The state machine uses two different clocks for its timing:
@@ -48,7 +51,11 @@ void RK05::StateMachine::entry (PoweredOff)
 
 RK05::State RK05::StateMachine::transition (PoweredOff&&, PowerOn)
 {
-    return Unloaded {};
+    if (get<Button::TwoPositionsState> (context_->runLoadSwitch_->currentState ()) ==
+            Button::TwoPositionsState::Up)
+        return SpinningUp {};
+    else
+        return Unloaded {};
 }
 
 void RK05::StateMachine::entry (Unloaded)
@@ -71,15 +78,21 @@ void RK05::StateMachine::entry (Unloaded)
 RK05::State RK05::StateMachine::transition (Unloaded&&, SpinUp)
 {
     context_->loadIndicator_->show (Indicator::State::Off);
-
-    spinUpDownTimer_.start (bind (&RK05::StateMachine::spinUpDownTimerExpired,
-        this), spinUpTime_, &timerId_);
-
     return SpinningUp {};
 }
 
+// This state can be entered from PoweredOff and from Unloaded
 void RK05::StateMachine::entry (SpinningUp)
 {
+    context_->pwrIndicator_->show (Indicator::State::On);
+
+    if (context_->driveStatus_.writeProtectStatus == 1)
+        context_->wtprotIndicator_->show (Indicator::State::On);
+    else
+        context_->wtprotIndicator_->show (Indicator::State::Off);
+
+    spinUpDownTimer_.start (bind (&RK05::StateMachine::spinUpDownTimerExpired,
+        this), spinUpTime_, &timerId_);
 }
 
 // The spin up timer fires and the drive is spun up and locked on cylinder 0.
