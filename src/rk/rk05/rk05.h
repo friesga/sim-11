@@ -101,6 +101,8 @@ private:
 
     // Definition of the drive events. This includes the RKCommand defined
     // in rktypes.h.
+    struct PowerOn {};      // BPOK true
+    struct PowerOff {};     // BPOK false
     struct SpinUp {};       // LOAD button pressed down
     struct SpinDown {};     // LOAD button released
     struct SpunUp {};       // Spin up is complete
@@ -109,8 +111,8 @@ private:
                             function<void ()> seekCompleted {nullptr}; };
     struct TimeElapsed {};
 
-    using Event = std::variant <SpinUp, SpinDown, SpunUp, SpunDown,
-        SeekCommand, TimeElapsed>;
+    using Event = std::variant <PowerOn, PowerOff, SpinUp, SpinDown,
+        SpunUp, SpunDown, SeekCommand, TimeElapsed>;
 
     // Use the PIMPL idiom to be able to define the StateMachine outside
     // of the RK05 class
@@ -152,6 +154,7 @@ private:
         u16 numWords);
     void clearBufferToEndOfSector (u16* buffer, u16 numWords);
     u16 cylinderFromLBN (u32 lbn);
+    void BPOKReceiver (bool signalValue);
 };
 
 

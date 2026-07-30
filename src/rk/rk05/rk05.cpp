@@ -197,3 +197,8 @@ Bitmask<AttachFlags> RK05::getAttachMode (const RK05Config& rk05Config)
 
     return attachMode;
 }
+
+void RK05::BPOKReceiver (bool signalValue)
+{
+    sendTrigger (signalValue ? Event {PowerOn {}} : Event {PowerOff {}});
+}
