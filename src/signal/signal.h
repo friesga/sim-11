@@ -25,6 +25,7 @@ public:
     operator bool ();
     void cycle (SubscriberKey sender = 0);
     SubscriberKey subscribe (Subscriber);
+    void unsubscribe (SubscriberKey subscriberKey);
 
 private:
     bool value_;

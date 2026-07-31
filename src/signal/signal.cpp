@@ -70,6 +70,20 @@ Signal::SubscriberKey Signal::subscribe (Subscriber subscriber)
     return subscribers_.end () - subscribers_.begin ();
 }
 
+void Signal::unsubscribe (SubscriberKey subscriberKey)
+{
+    for (auto iter = subscribers_.begin (); iter < subscribers_.end (); ++iter)
+    {
+        SubscriberKey thisKey = iter - subscribers_.begin () + 1;
+
+        if (thisKey == subscriberKey)
+        {
+            subscribers_.erase (iter);
+            return;
+        }
+    }
+}
+
 // Notify the subscribers to the signal except for the sender if one is
 // specified
 void Signal::notifyObservers (SubscriberKey sender)
