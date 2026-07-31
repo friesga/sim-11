@@ -22,6 +22,12 @@ RK05::StateMachine::StateMachine (RK05* context,
 {
 }
 
+RK05::StateMachine::~StateMachine ()
+{
+    // Cancel a possibly running spin up/down timer
+    spinUpDownTimer_.cancel (&timerId_);
+}
+
 // From the Initial state the state machine either transitions to the SpunUp
 // state if a spin up time of 0 seconds is specified or to the SpinningUp state
 // if a spin up time greater than zero is given.

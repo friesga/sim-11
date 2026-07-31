@@ -171,6 +171,7 @@ class RK05::StateMachine :
 public:
     StateMachine (RK05* context,
         duration<int, std::ratio<1, 1>> spinUpTime);
+    ~StateMachine ();
 
     State transition (Initial&&, SpunUp);           // -> LockedOn
     State transition (Initial&&, SpunDown);         // -> Powered off
