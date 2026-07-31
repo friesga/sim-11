@@ -118,15 +118,6 @@ private:
     using Event = std::variant <PowerOn, PowerOff, SpinUp, SpinDown,
         SpunUp, SpunDown, SeekCommand, TimeElapsed>;
 
-    // Use the PIMPL idiom to be able to define the StateMachine outside
-    // of the RK05 class
-    class StateMachine;
-    unique_ptr<StateMachine> stateMachine_;
-
-    // Thread simulating drive timing
-    atomic<bool> running_ {false};
-    thread driveThread_;
-
     // The queue by which commands and timeElapsed events are sent to
     // the drive thread.
     queue<Event> eventQueue_;
@@ -136,6 +127,15 @@ private:
 
     // Condition variable to wake up the drive thread when a command is issued
     condition_variable startCommand_;
+
+    // Thread simulating drive timing
+    atomic<bool> running_ {false};
+    thread driveThread_;
+
+    // Use the PIMPL idiom to be able to define the StateMachine outside
+    // of the RK05 class
+    class StateMachine;
+    unique_ptr<StateMachine> stateMachine_;
 
     // RK05 state definitions. The drive keeps track of its own copies
     // of the drive status and error register the controller can use to
