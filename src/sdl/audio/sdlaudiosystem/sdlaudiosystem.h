@@ -69,9 +69,14 @@ public:
 
 private:
     AudioFormat const audioFormat_ {48000, 2, AudioSampleFormat::Float32};
-    SDLAudioDevice audioDevice_;
     unique_ptr<SDLAudioMixer> audioMixer_;
     vector<unique_ptr<AudioPlayer>> audioPlayers_ {};
+
+    // Make sure the audio device is closed before the players and mixer are
+    // removed by defining the audio device as the last data member.
+    // (Destruction of data members is in reversed order of definition.)
+    // This prevents inexplicable crashes when the application is restarted.
+    SDLAudioDevice audioDevice_;
 };
 
 #endif // _SDLAUDIOSYSTEM_H_
