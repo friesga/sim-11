@@ -119,6 +119,11 @@ RK05::State RK05::StateMachine::transition (SpinningUp&&, SpinDown)
     return SpinningDown {};
 }
 
+RK05::State RK05::StateMachine::transition (SpinningUp&&, PowerOff)
+{
+    return EmergencyShutdown {};
+}
+
 // The ONCYL light indicates the drive is locked on a cylinder
 void RK05::StateMachine::entry (LockedOn)
 {
@@ -187,6 +192,14 @@ RK05::State RK05::StateMachine::transition (Seeking&&, SpinDown)
     return SpinningDown {};
 }
 
+// EmergencyShutdown will start a spin down timer and extinguish all
+// indicators.
+//
+RK05::State RK05::StateMachine::transition (Seeking&&, PowerOff)
+{
+    return EmergencyShutdown {};
+}
+
 void RK05::StateMachine::entry (SpinningDown)
 {
 }
@@ -203,6 +216,11 @@ RK05::State RK05::StateMachine::transition (SpinningDown&&, SpinUp)
     spinUpDownTimer_.start (bind (&RK05::StateMachine::spinUpDownTimerExpired,
         this), spinUpTime_ / 2, &timerId_);
     return SpinningUp {};
+}
+
+RK05::State RK05::StateMachine::transition (SpinningDown&&, PowerOff)
+{
+    return EmergencyShutdown {};
 }
 
 // When AC Low occurs, the drive finishes reading/writing the current sector,

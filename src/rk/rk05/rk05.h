@@ -180,6 +180,7 @@ public:
     void entry (SpinningUp);
     State transition (SpinningUp&&, TimeElapsed);   // -> LockedOn
     State transition (SpinningUp&&, SpinDown);      // -> SpinningDown
+    State transition (SpinningUp&&, PowerOff);      // -> EmergencyShutdown
     void entry (LockedOn);
     State transition (LockedOn&&, SeekCommand);     // -> Seeking
     State transition (LockedOn&&, SpinDown);        // -> SpinningDown
@@ -188,9 +189,11 @@ public:
     void entry (Seeking);
     State transition (Seeking&&, TimeElapsed);      // -> LockedOn
     State transition (Seeking&&, SpinDown);         // -> SpinningDown
+    State transition (Seeking&&, PowerOff);         // -> EmergencyShutdown
     void entry (SpinningDown);
     State transition (SpinningDown&&, TimeElapsed); // -> Unloaded
     State transition (SpinningDown&&, SpinUp);      // -> SpinningUp
+    State transition (SpinningDown&&, PowerOff);    // -> EmergencyShutdown
     void entry (EmergencyShutdown);
     State transition (EmergencyShutdown&&, TimeElapsed); // -> PoweredOff
     State transition (EmergencyShutdown&&, PowerOn);     // -> Unloaded/SpinningUp
