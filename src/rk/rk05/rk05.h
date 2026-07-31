@@ -118,6 +118,8 @@ private:
     using Event = std::variant <PowerOn, PowerOff, SpinUp, SpinDown,
         SpunUp, SpunDown, SeekCommand, TimeElapsed>;
 
+    Signal::SubscriberKey bpokSubscriberKey_ {};
+
     // The queue by which commands and timeElapsed events are sent to
     // the drive thread.
     queue<Event> eventQueue_;

@@ -69,12 +69,16 @@ RK05::RK05 (Bus* bus, DriveInterface* controller, Window* window,
     if (rk05Config.writeProtect)
         driveStatus_.writeProtectStatus = 1;
 
-    bus_->BPOK ().subscribe (bind (&RK05::BPOKReceiver, this, _1));
+    bpokSubscriberKey_ = 
+        bus_->BPOK ().subscribe (bind (&RK05::BPOKReceiver, this, _1));
 }
 
 // Finish the drive thread
 RK05::~RK05 ()
 {
+    // Prevent the callback from being called after destruction of this object
+    bus_->BPOK ().unsubscribe (bpokSubscriberKey_);
+
     // Stop a potentionally running drive thread
     if (running_)
     {
