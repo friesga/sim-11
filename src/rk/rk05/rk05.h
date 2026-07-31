@@ -18,11 +18,13 @@
 #include <memory>
 #include <functional>
 #include <chrono>
+#include <atomic>
 
 using std::unique_ptr;
 using std::thread;
 using std::queue;
 using std::function;
+using std::atomic;
 
 using namespace std::chrono_literals;
 
@@ -122,7 +124,7 @@ private:
     unique_ptr<StateMachine> stateMachine_;
 
     // Thread simulating drive timing
-    bool running_ {false};
+    atomic<bool> running_ {false};
     thread driveThread_;
 
     // The queue by which commands and timeElapsed events are sent to
