@@ -106,6 +106,10 @@ TEST_F (RK11DReadTest, readSectorSucceeds)
     bus.installModule (&ms11p);
     bus.installModule (rk11dDevice);
 
+    // Power on the RK05 drive. The drive will spin up immediately as the
+    // default spin up time is zero.
+    bus.BPOK ().set (true);
+
     // Fill the memory's first 512 words with a value to verify that the
     // written sector is read back
     for (u16 address = 0; address < 512; address += 2)
@@ -177,6 +181,10 @@ TEST_F (RK11DReadTest, readOnNonReadyDriveReportsError)
     Unibus bus;
     RK11D* rk11dDevice = new RK11D (&bus, nullptr, rk11dConfig);
 
+    // Power on the RK05 drive. The drive will spin up immediately as the
+    // default spin up time is zero.
+    bus.BPOK ().set (true);
+
     EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKCS},
         RKCS_OPERATION (Read) | RKCS_GO), StatusCode::Success);
 
@@ -202,6 +210,10 @@ TEST_F (RK11DReadTest, readFromNonExistentSectorFails)
 
     Unibus bus;
     RK11D* rk11dDevice = new RK11D (&bus, nullptr, rk11dConfig);
+
+    // Power on the RK05 drive. The drive will spin up immediately as the
+    // default spin up time is zero.
+    bus.BPOK ().set (true);
 
     EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKWC}, 0177400),
         StatusCode::Success);
@@ -236,6 +248,10 @@ TEST_F (RK11DReadTest, readFromNonExistentCylinderFails)
     Unibus bus;
     RK11D* rk11dDevice = new RK11D (&bus, nullptr, rk11dConfig);
 
+    // Power on the RK05 drive. The drive will spin up immediately as the
+    // default spin up time is zero.
+    bus.BPOK ().set (true);
+
     EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKWC}, 0177400),
         StatusCode::Success);
     EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKBA}, 0),
@@ -269,6 +285,10 @@ TEST_F (RK11DReadTest, readFromNonExistentDriveFails)
     Unibus bus;
     RK11D* rk11dDevice = new RK11D (&bus, nullptr, rk11dConfig);
 
+    // Power on the RK05 drive. The drive will spin up immediately as the
+    // default spin up time is zero.
+    bus.BPOK ().set (true);
+
     EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKWC}, 0177400),
         StatusCode::Success);
     EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKBA}, 0),
@@ -301,6 +321,10 @@ TEST_F (RK11DReadTest, readPastEndOfDiskFails)
 
     Unibus bus;
     RK11D* rk11dDevice = new RK11D (&bus, nullptr, rk11dConfig);
+
+    // Power on the RK05 drive. The drive will spin up immediately as the
+    // default spin up time is zero.
+    bus.BPOK ().set (true);
 
     EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKWC}, 0177000),
         StatusCode::Success);
@@ -340,6 +364,10 @@ TEST_F (RK11DReadTest, readWithIBASetSucceeds)
     // and the RK11-D/RK05 to be tested.
     bus.installModule (&ms11p);
     bus.installModule (rk11dDevice);
+
+    // Power on the RK05 drive. The drive will spin up immediately as the
+    // default spin up time is zero.
+    bus.BPOK ().set (true);
 
     // Set just the last word of the sector to be written to the pattern
     // to be read back. The rest of the memory is initialized to the value 0.
@@ -417,6 +445,10 @@ TEST_F (RK11DReadTest, memoryExtensionBitsAreUsed)
     bus.installModule (&ms11p);
     bus.installModule (rk11dDevice);
 
+    // Power on the RK05 drive. The drive will spin up immediately as the
+    // default spin up time is zero.
+    bus.BPOK ().set (true);
+
     static const u32 memoryAddress {01401000};
 
     // Fill the memory's first 512 words with a value to verify that the
@@ -487,6 +519,10 @@ TEST_F (RK11DReadTest, memoryExtensionBitsAreIncremented)
     // and the RK11-D/RK05 to be tested.
     bus.installModule (&ms11p);
     bus.installModule (rk11dDevice);
+
+    // Power on the RK05 drive. The drive will spin up immediately as the
+    // default spin up time is zero.
+    bus.BPOK ().set (true);
 
     static u32 memoryAddress {0177000};
 

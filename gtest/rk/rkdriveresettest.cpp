@@ -94,6 +94,10 @@ protected:
         // and the RK11-D/RK05 to be tested.
         bus.installModule (&ms11p);
         bus.installModule (rk11dDevice);
+
+        // Power on the RK05 drive. The drive will spin up immediately as the
+        // default spin up time is zero.
+        bus.BPOK ().set (true);
     }
 
     void waitForControllerReady (RK11D* controller)

@@ -96,6 +96,10 @@ TEST_F (RK11DWriteTest, writeOnNonReadyDriveReportsError)
     Unibus bus;
     RK11D* rk11dDevice = new RK11D (&bus, nullptr, rk11dConfig);
 
+    // Power on the RK05 drive. The drive will spin up immediately as the
+    // default spin up time is zero.
+    bus.BPOK ().set (true);
+
     EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKCS},
         RKCS_OPERATION (Write) | RKCS_GO), StatusCode::Success);
 
@@ -121,6 +125,10 @@ TEST_F (RK11DWriteTest, writeToNonExistentSectorFails)
 
     Unibus bus;
     RK11D* rk11dDevice = new RK11D (&bus, nullptr, rk11dConfig);
+
+    // Power on the RK05 drive. The drive will spin up immediately as the
+    // default spin up time is zero.
+    bus.BPOK ().set (true);
 
     EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKWC}, 0177400),
         StatusCode::Success);
@@ -155,6 +163,10 @@ TEST_F (RK11DWriteTest, writeToNonExistentCylinderFails)
     Unibus bus;
     RK11D* rk11dDevice = new RK11D (&bus, nullptr, rk11dConfig);
 
+    // Power on the RK05 drive. The drive will spin up immediately as the
+    // default spin up time is zero.
+    bus.BPOK ().set (true);
+
     EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKWC}, 0177400),
         StatusCode::Success);
     EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKBA}, 0),
@@ -188,6 +200,10 @@ TEST_F (RK11DWriteTest, writeToNonExistentDriveFails)
     Unibus bus;
     RK11D* rk11dDevice = new RK11D (&bus, nullptr, rk11dConfig);
 
+    // Power on the RK05 drive. The drive will spin up immediately as the
+    // default spin up time is zero.
+    bus.BPOK ().set (true);
+
     EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKWC}, 0177400),
         StatusCode::Success);
     EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKBA}, 0),
@@ -220,6 +236,10 @@ TEST_F (RK11DWriteTest, writePastEndOfDiskFails)
 
     Unibus bus;
     RK11D* rk11dDevice = new RK11D (&bus, nullptr, rk11dConfig);
+
+    // Power on the RK05 drive. The drive will spin up immediately as the
+    // default spin up time is zero.
+    bus.BPOK ().set (true);
 
     EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKWC}, 0177000),
         StatusCode::Success);
@@ -259,6 +279,10 @@ TEST_F (RK11DWriteTest, writeWithIBASetSucceeds)
     // and the RK11-D/RK05 to be tested.
     bus.installModule (&ms11p);
     bus.installModule (rk11dDevice);
+
+    // Power on the RK05 drive. The drive will spin up immediately as the
+    // default spin up time is zero.
+    bus.BPOK ().set (true);
 
     // Set the pattern to use at address 0. The rest of the memory will
     // be cleared as a result of the initialization.
@@ -332,6 +356,10 @@ TEST_F (RK11DWriteTest, writeSectorSucceeds)
     // and the RK11-D/RK05 to be tested.
     bus.installModule (&ms11p);
     bus.installModule (rk11dDevice);
+
+    // Power on the RK05 drive. The drive will spin up immediately as the
+    // default spin up time is zero.
+    bus.BPOK ().set (true);
 
     // Fill the memory's first 512 words with a value to verify that the
     // written sector is read back
@@ -407,6 +435,10 @@ TEST_F (RK11DWriteTest, writeUnequalSectorSizeSucceeds)
     // and the RK11-D/RK05 to be tested.
     bus.installModule (&ms11p);
     bus.installModule (rk11dDevice);
+
+    // Power on the RK05 drive. The drive will spin up immediately as the
+    // default spin up time is zero.
+    bus.BPOK ().set (true);
 
     // First write a sector with a random value, so buffers are dirty and
     // we chan check that the sector is correctly overwritten.
@@ -509,6 +541,10 @@ TEST_F (RK11DWriteTest, writeToWriteProtectedDiskFails)
     Unibus bus;
     RK11D* rk11dDevice = new RK11D (&bus, nullptr, rk11dConfig);
 
+    // Power on the RK05 drive. The drive will spin up immediately as the
+    // default spin up time is zero.
+    bus.BPOK ().set (true);
+
     EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKWC}, 0177400),
         StatusCode::Success);
     EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKBA}, 0),
@@ -546,6 +582,10 @@ TEST_F (RK11DWriteTest, diskCanBeWriteLocked)
     // and the RK11-D/RK05 to be tested.
     bus.installModule (&ms11p);
     bus.installModule (rk11dDevice);
+
+    // Power on the RK05 drive. The drive will spin up immediately as the
+    // default spin up time is zero.
+    bus.BPOK ().set (true);
 
     // Write 256 words. Load the word count register with the 2's complement
     // value of 256.
