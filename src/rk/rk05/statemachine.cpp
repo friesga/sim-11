@@ -48,35 +48,12 @@ void RK05::StateMachine::entry (PoweredOff)
 // is in the lower position the drive will be in the Unloaded state.
 RK05::State RK05::StateMachine::transition (PoweredOff&&, PowerOn)
 {
-    context_->pwrIndicator_->show (Indicator::State::On);
-
-    if (get<Button::TwoPositionsState> (context_->runLoadSwitch_->currentState ()) ==
-        Button::TwoPositionsState::Up)
-    {
-        if (spinUpTime_ == std::chrono::seconds::zero ())
-        {
-            context_->driveStatus_.driveReady = 1;
-            return LockedOn {};
-        }
-        else
-            return SpinningUp {};
-    }
-    else
-        return Unloaded {};
+    return poweringOn ();
 }
 
 void RK05::StateMachine::entry (Unloaded)
 {
-    context_->pwrIndicator_->show (Indicator::State::On);
     context_->loadIndicator_->show (Indicator::State::On);
-    context_->rdyIndicator_->show (Indicator::State::Off);
-    context_->oncylIndicator_->show (Indicator::State::Off);
-    context_->driveStatus_.readWriteSeekReady = 0;
-
-    if (context_->driveStatus_.writeProtectStatus == 1)
-        context_->wtprotIndicator_->show (Indicator::State::On);
-    else
-        context_->wtprotIndicator_->show (Indicator::State::Off);
 }
 
 RK05::State RK05::StateMachine::transition (Unloaded&&, PowerOff)
@@ -97,13 +74,6 @@ RK05::State RK05::StateMachine::transition (Unloaded&&, SpinUp)
 // Unloaded.
 void RK05::StateMachine::entry (SpinningUp)
 {
-    context_->pwrIndicator_->show (Indicator::State::On);
-
-    if (context_->driveStatus_.writeProtectStatus == 1)
-        context_->wtprotIndicator_->show (Indicator::State::On);
-    else
-        context_->wtprotIndicator_->show (Indicator::State::Off);
-
     spinUpDownTimer_.start (bind (&RK05::StateMachine::spinUpDownTimerExpired,
         this), spinUpTime_, &timerId_);
 }
@@ -178,8 +148,6 @@ RK05::State RK05::StateMachine::transition (Seeking&& currentState, TimeElapsed)
 // it takes half the time of the spin up time.
 RK05::State RK05::StateMachine::transition (LockedOn&&, SpinDown)
 {
-    context_->driveStatus_.driveReady = 0;
-    context_->rdyIndicator_->show (Indicator::State::Off);
     spinUpDownTimer_.start (bind (&RK05::StateMachine::spinUpDownTimerExpired,
         this), spinUpTime_, &timerId_);
     return SpinningDown {};
@@ -192,8 +160,6 @@ RK05::State RK05::StateMachine::transition (LockedOn&&, PowerOff)
 
 RK05::State RK05::StateMachine::transition (Seeking&&, SpinDown)
 {
-    context_->driveStatus_.driveReady = 0;
-    context_->rdyIndicator_->show (Indicator::State::Off);
     spinUpDownTimer_.start (bind (&RK05::StateMachine::spinUpDownTimerExpired,
         this), spinUpTime_ / 2, &timerId_);
     return SpinningDown {};
@@ -209,6 +175,8 @@ RK05::State RK05::StateMachine::transition (Seeking&&, PowerOff)
 
 void RK05::StateMachine::entry (SpinningDown)
 {
+    context_->driveStatus_.driveReady = 0;
+    context_->rdyIndicator_->show (Indicator::State::Off);
 }
 
 RK05::State RK05::StateMachine::transition (SpinningDown&&, TimeElapsed)
@@ -260,11 +228,7 @@ RK05::State RK05::StateMachine::transition (EmergencyShutdown&&, TimeElapsed)
 
 RK05::State RK05::StateMachine::transition (EmergencyShutdown&&, PowerOn)
 {
-    if (get<Button::TwoPositionsState> (context_->runLoadSwitch_->currentState ()) ==
-        Button::TwoPositionsState::Up)
-        return SpinningUp {};
-    else
-        return Unloaded {};
+    return poweringOn ();
 }
 
 // This or the following function is executed when a started timer elapses.
@@ -281,4 +245,34 @@ void RK05::StateMachine::spinUpDownTimerExpired ()
 void RK05::StateMachine::ring (uint64_t currentTime)
 {
     spinUpDownTimerExpired ();
+}
+
+// This function is called from transitions from PoweredOff and
+// EmergencyShutdown on a PowerOn event
+RK05::State RK05::StateMachine::poweringOn ()
+{
+    // Cancel a possibly running spin down timer started by EmergencyShutdown
+    spinUpDownTimer_.cancel (&timerId_);
+
+    context_->pwrIndicator_->show (Indicator::State::On);
+
+    if (context_->driveStatus_.writeProtectStatus == 1)
+        context_->wtprotIndicator_->show (Indicator::State::On);
+    else
+        context_->wtprotIndicator_->show (Indicator::State::Off);
+
+    if (get<Button::TwoPositionsState> (context_->runLoadSwitch_->currentState ()) ==
+        Button::TwoPositionsState::Up)
+    {
+        if (spinUpTime_ == std::chrono::seconds::zero ())
+        {
+            context_->driveStatus_.driveReady = 1;
+            context_->rdyIndicator_->show (Indicator::State::On);
+            return LockedOn {};
+        }
+        else
+            return SpinningUp {};
+    }
+    else
+        return Unloaded {};
 }
