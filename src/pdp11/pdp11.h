@@ -1,6 +1,7 @@
 #ifndef _PDP11_H_
 #define _PDP11_H_
 
+#include "audio.h"
 #include "proc/kd/include/pdp11processor.h"
 #include "configdata/deviceconfig/deviceconfig.h"
 #include "configdata/systemconfig/systemconfig.h"
@@ -59,16 +60,18 @@ class PDP_11
 	unique_ptr<BA11_L> ba11_l_;
 	CmdLineOptions const &cmdLineOptions_;
 
-	void configureQbusSystem (SystemConfig const & systemConfig, Window* window);
-	void configureUnibusSystem (SystemConfig const & systemConfig, Window* window);
+	void configureQbusSystem (SystemConfig const & systemConfig,
+		Window* window, AudioSystem* audioSystem);
+	void configureUnibusSystem (SystemConfig const & systemConfig,
+		Window* window, AudioSystem* audioSystem);
 	void installModules ();
 
 public:
 	PDP_11 (CmdLineOptions const &cmdLineOptions);
 	~PDP_11 ();
-	void configureDevices (Window *window);
+	void configureDevices (Window *window, AudioSystem* audioSystem);
 	void configureDevices (SystemConfig const & systemConfig,
-		Window *window);
+		Window *window, AudioSystem* audioSystem);
 	void run ();
 	void reset ();
 };

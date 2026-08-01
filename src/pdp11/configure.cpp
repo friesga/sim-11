@@ -26,7 +26,7 @@ using std::get;
 // Configure the system with a default configuration. Create a bare system
 // without any files attached.
 //
-void PDP_11::configureDevices (Window *window)
+void PDP_11::configureDevices (Window *window, AudioSystem* audioSystem)
 {
     // Create the Qbus to be used in this system
     bus_ = new Qbus ();
@@ -53,23 +53,23 @@ void PDP_11::configureDevices (Window *window)
 // Accessing a non-configured device will result in a bus time-out
 // and the BDV11 boot will halt at address 000010.
 void PDP_11::configureDevices (SystemConfig const & systemConfig,
-    Window *window)
+    Window *window, AudioSystem* audioSystem)
 {
     // Check for presence of necessary devices
     ConsistencyChecker consistencyChecker {systemConfig};
     consistencyChecker.checkAll ();
 
     if (systemConfig.isQbusSystem ())
-        configureQbusSystem (systemConfig, window);
+        configureQbusSystem (systemConfig, window, audioSystem);
     else
-        configureUnibusSystem (systemConfig, window);
+        configureUnibusSystem (systemConfig, window, audioSystem);
 
     installModules ();
     reset ();
 }
 
 void PDP_11::configureQbusSystem (SystemConfig const & systemConfig,
-    Window* window)
+    Window* window, AudioSystem* audioSystem)
 { 
     // Create the Qbus to be used in this system
     bus_ = new Qbus ();
@@ -131,7 +131,7 @@ void PDP_11::configureQbusSystem (SystemConfig const & systemConfig,
 }
 
 void PDP_11::configureUnibusSystem (SystemConfig const & systemConfig,
-    Window* window)
+    Window* window, AudioSystem* audioSystem)
 {
     // Create the Unibus to be used in this system
     bus_ = new Unibus ();

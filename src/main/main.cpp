@@ -87,10 +87,10 @@ try
 	if (cmdLineOptions.config_file)
 	{
 		SystemConfig systemConfig = createSystemConfig (cmdLineOptions.config_file);
-		pdp11.configureDevices (systemConfig, &sdlWindow);
+		pdp11.configureDevices (systemConfig, &sdlWindow, &sdlAudioSystem);
 	}
 	else
-		pdp11.configureDevices (&sdlWindow);
+		pdp11.configureDevices (&sdlWindow, &sdlAudioSystem);
 
 	// Configuration succeeded and required size of the window is known so it
 	// can be shown now.
