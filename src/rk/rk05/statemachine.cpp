@@ -28,20 +28,7 @@ RK05::StateMachine::~StateMachine ()
     spinUpDownTimer_.cancel (&timerId_);
 }
 
-// From the Initial state the state machine either transitions to the SpunUp
-// state if a spin up time of 0 seconds is specified or to the SpinningUp state
-// if a spin up time greater than zero is given.
-RK05::State RK05::StateMachine::transition (Initial&&, SpunUp)
-{
-    context_->driveStatus_.driveReady = 1;
-
-    context_->loadIndicator_->show (Indicator::State::Off);
-    context_->rdyIndicator_->show (Indicator::State::On);
-
-    return LockedOn {};
-}
-
-RK05::State RK05::StateMachine::transition (Initial&&, SpunDown)
+RK05::State RK05::StateMachine::transition (Initial&&, Start)
 {
     return PoweredOff {};
 }
@@ -55,11 +42,25 @@ void RK05::StateMachine::entry (PoweredOff)
     context_->wtprotIndicator_->show (Indicator::State::Off);
 }
 
+// When the RUN switch is in the upper position the drive has to
+// spin up. If the spin up time is zero the drive is immediately locked
+// on cylinder 0, else the drive spin up is started. In case the RUN switch
+// is in the lower position the drive will be in the Unloaded state.
 RK05::State RK05::StateMachine::transition (PoweredOff&&, PowerOn)
 {
+    context_->pwrIndicator_->show (Indicator::State::On);
+
     if (get<Button::TwoPositionsState> (context_->runLoadSwitch_->currentState ()) ==
-            Button::TwoPositionsState::Up)
-        return SpinningUp {};
+        Button::TwoPositionsState::Up)
+    {
+        if (spinUpTime_ == std::chrono::seconds::zero ())
+        {
+            context_->driveStatus_.driveReady = 1;
+            return LockedOn {};
+        }
+        else
+            return SpinningUp {};
+    }
     else
         return Unloaded {};
 }

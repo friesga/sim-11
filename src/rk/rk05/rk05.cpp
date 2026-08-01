@@ -58,12 +58,7 @@ RK05::RK05 (Bus* bus, DriveInterface* controller, Window* window,
     running_ = true;
     driveThread_ = thread (&RK05::driveThread, this);
 
-    // Immediately lock the drive on cylinder 0 if the spin up time is
-    // zero.
-    if (rk05Config.spinUpTime == 0)
-        stateMachine_->dispatch (SpunUp {});
-    else
-        stateMachine_->dispatch (SpunDown {});
+    stateMachine_->dispatch (Start {});
 
     // Set the Write Protect status according to the configuration option
     if (rk05Config.writeProtect)

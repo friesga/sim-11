@@ -105,6 +105,7 @@ private:
 
     // Definition of the drive events. This includes the RKCommand defined
     // in rktypes.h.
+    struct Start {};        // Start state machine
     struct PowerOn {};      // BPOK true
     struct PowerOff {};     // BPOK false
     struct SpinUp {};       // LOAD button pressed down
@@ -115,7 +116,7 @@ private:
                             function<void ()> seekCompleted {nullptr}; };
     struct TimeElapsed {};
 
-    using Event = std::variant <PowerOn, PowerOff, SpinUp, SpinDown,
+    using Event = std::variant <Start, PowerOn, PowerOff, SpinUp, SpinDown,
         SpunUp, SpunDown, SeekCommand, TimeElapsed>;
 
     Signal::SubscriberKey bpokSubscriberKey_ {};
@@ -175,8 +176,7 @@ public:
         duration<int, std::ratio<1, 1>> spinUpTime);
     ~StateMachine ();
 
-    State transition (Initial&&, SpunUp);           // -> LockedOn
-    State transition (Initial&&, SpunDown);         // -> Powered off
+    State transition (Initial&&, Start);            // -> PoweredOff
     void entry (PoweredOff);
     State transition (PoweredOff&&, PowerOn);       // -> Unloaded/SpinningUp
     void entry (Unloaded);
