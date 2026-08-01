@@ -1,6 +1,7 @@
 #ifndef _RK11D_H_
 #define _RK11D_H_
 
+#include "audio.h"
 #include "bus/include/bus.h"
 #include "configdata/rk/rk11d/rk11dconfig/rk11dconfig.h"
 #include "rk/rk05/rk05.h"
@@ -73,7 +74,8 @@ private:
 
 public:
     // Constructor
-    RK11D (Bus* bus, Window* window, const RK11DConfig& rk11dConfig);
+    RK11D (Bus* bus, Window* window, AudioSystem* audioSystem,
+        const RK11DConfig& rk11dConfig);
     ~RK11D ();
 
     // Functions required by the BusDevice interface

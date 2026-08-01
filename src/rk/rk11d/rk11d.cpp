@@ -17,7 +17,8 @@ using std::numeric_limits;
 // the unit tests. In the latter case the window is not available and is a
 // nullptr.
 //
-RK11D::RK11D (Bus* bus, Window* window, const RK11DConfig& rk11dConfig)
+RK11D::RK11D (Bus* bus, Window* window, AudioSystem* audioSystem,
+    const RK11DConfig& rk11dConfig)
     :
     bus_ {bus}
 {
@@ -27,7 +28,8 @@ RK11D::RK11D (Bus* bus, Window* window, const RK11DConfig& rk11dConfig)
     for (auto rk05Config : rk11dConfig.rk05Config)
     {
         if (rk05Config.has_value ())
-            rk05Drives_.push_back (make_unique<RK05> (bus, this, window, rk05Config.value ()));
+            rk05Drives_.push_back (make_unique<RK05> (bus, this, window,
+                audioSystem, rk05Config.value ()));
     }
 
     // Allocate a buffer for the data to be transferred to/from the RK05 drive

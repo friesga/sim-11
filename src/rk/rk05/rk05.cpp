@@ -22,7 +22,7 @@ using std::placeholders::_1;
 using namespace RKTypes;
 
 RK05::RK05 (Bus* bus, DriveInterface* controller, Window* window,
-    const RK05Config& rk05Config)
+    AudioSystem* audioSystem, const RK05Config& rk05Config)
     : 
     bus_ {bus},
     controller_ {controller},
@@ -66,6 +66,8 @@ RK05::RK05 (Bus* bus, DriveInterface* controller, Window* window,
 
     bpokSubscriberKey_ = 
         bus_->BPOK ().subscribe (bind (&RK05::BPOKReceiver, this, _1));
+
+    audioPlayer_ = audioSystem->createPlayer ("resources/pdp-11_20 audio.zip");
 }
 
 // Finish the drive thread

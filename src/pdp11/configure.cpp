@@ -156,8 +156,8 @@ void PDP_11::configureUnibusSystem (SystemConfig const & systemConfig,
             { throw logic_error ("Should not happen"); },
         [this] (RXV21Config rxv21Config)
             { throw logic_error ("Should not happen"); },
-        [this, window] (RK11DConfig rk11dConfig)
-            { busDevices_.emplace_back (new RK11D (bus_, window, rk11dConfig)); },
+        [this, window, audioSystem] (RK11DConfig rk11dConfig)
+            { busDevices_.emplace_back (new RK11D (bus_, window, audioSystem, rk11dConfig)); },
         [this, window] (RL11Config rl11Config)
             { busDevices_.emplace_back (new RLV12 (bus_, window, rl11Config)); },
         [this, window] (KT24Config kt24Config)

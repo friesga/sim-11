@@ -1,6 +1,7 @@
 #ifndef _RK05_H_
 #define _RK05_H_
 
+#include "audio.h"
 #include "diskdrive/diskdrive.h"
 #include "bus/include/bus.h"
 #include "configdata/rk/rk05/rk05config/rk05config.h"
@@ -32,7 +33,7 @@ class RK05
 {
 public:
     RK05 (Bus* bus, DriveInterface* controller, Window* window,
-        const RK05Config& rk05Config);
+        AudioSystem* audioSystem, const RK05Config& rk05Config);
     ~RK05 ();
 
     // Functions getting the state of the drive
@@ -139,6 +140,8 @@ private:
     // of the RK05 class
     class StateMachine;
     unique_ptr<StateMachine> stateMachine_;
+
+    AudioPlayer* audioPlayer_ {nullptr};
 
     // RK05 state definitions. The drive keeps track of its own copies
     // of the drive status and error register the controller can use to
