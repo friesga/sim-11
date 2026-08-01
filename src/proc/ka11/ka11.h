@@ -1,6 +1,7 @@
 #ifndef _KA11_H_
 #define _KA11_H_
 
+#include "audio.h"
 #include "bus/include/bus.h"
 #include "proc/kd/include/pdp11processor.h"
 #include "configdata/ka11/ka11config/ka11config.h"
@@ -26,7 +27,8 @@ using std::unique_ptr;
 class KA11 : public PDP11Processor
 {
 public:
-    KA11 (Bus* bus, Window* window, const KA11Config& ka11Config);
+    KA11 (Bus* bus, Window* window, AudioSystem* audioSystem,
+        const KA11Config& ka11Config);
     ~KA11 ();
 
     // Functions required by the BusDevice interface

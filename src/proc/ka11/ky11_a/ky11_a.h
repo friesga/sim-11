@@ -1,6 +1,7 @@
 #ifndef _KY11_A_H_
 #define _KY11_A_H_
 
+#include "audio.h"
 #include "bus/include/bus.h"
 #include "proc/include/cpucontroller.h"
 #include "proc/ka11/ka11machinestate/ka11machinestate.h"
@@ -51,8 +52,8 @@ public:
     friend class KY11_ATest_haltHaltsProgramOperation_Test;
     friend class KY11_ATest_resetLoadsTempRegister_Test;
 
-    KY11_A (Bus* bus, Interfaces::CpuController* cpuController,
-        Window* window, const KY11_AConfig& ky11_aConfig);
+    KY11_A (Bus* bus, Interfaces::CpuController* cpuController, Window* window,
+        AudioSystem* audioSystem, const KY11_AConfig& ky11_aConfig);
 
     // Functions required by the KY11Console interface
     HaltEnablePosition haltEnablePosition () const override;
@@ -111,6 +112,8 @@ private:
     Button* singleInstructionCycleSwitch_;
 
     Indicator* runLight_;
+
+    AudioPlayer* audioPlayer_ {nullptr};
 
     // The initial position of the ENABLE/HALT switch must correspond with
     // the initial state of enableHaltSwitch_ as defined in createBezel().

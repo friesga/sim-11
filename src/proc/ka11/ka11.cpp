@@ -4,11 +4,12 @@
 
 using std::make_unique;
 
-KA11::KA11 (Bus* bus, Window* window, const KA11Config& ka11Config)
+KA11::KA11 (Bus* bus, Window* window, AudioSystem* audioSystem,
+    const KA11Config& ka11Config)
     :
     bus_ {bus}
 {
-    ky11_a_ = make_unique<KY11_A> (bus, &cpuController_, window,
+    ky11_a_ = make_unique<KY11_A> (bus, &cpuController_, window, audioSystem,
         *ka11Config.ky11_aConfig_);
 
     busInterface_.attachConsole (ky11_a_.get ());

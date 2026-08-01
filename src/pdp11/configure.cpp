@@ -170,8 +170,8 @@ void PDP_11::configureUnibusSystem (SystemConfig const & systemConfig,
             { throw logic_error ("Should not happen"); },
         [this, window] (BA11_NConfig ba11_nConfig)
             { throw logic_error ("Should not happen"); },
-        [this, window] (KA11Config ka11Config)
-            { processor_ = new KA11 (bus_, window, ka11Config); },
+        [this, window, audioSystem] (KA11Config ka11Config)
+            { processor_ = new KA11 (bus_, window, audioSystem, ka11Config); },
         [this] (KDF11_UConfig kdf11_uConfig)
             {processor_ = new KDF11_U (bus_, kdf11_uConfig); },
         [this] (MS11PConfig ms11pConfig)

@@ -261,10 +261,6 @@ RK05::State RK05::StateMachine::poweringOn ()
     else
         context_->wtprotIndicator_->show (Indicator::State::Off);
 
-    context_->audioPlayer_->play ({
-        {"start.wav", PlaybackMode::OneShot},
-        {"fans2.wav", PlaybackMode::Continuous}});
-
     if (get<Button::TwoPositionsState> (context_->runLoadSwitch_->currentState ()) ==
         Button::TwoPositionsState::Up)
     {

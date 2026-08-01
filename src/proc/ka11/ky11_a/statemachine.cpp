@@ -8,6 +8,10 @@ KY11_A::StateMachine::StateMachine (KY11_A* context)
 
 KY11_A::State KY11_A::StateMachine::transition (Off&&, BPOK_High)
 {
+    context_->audioPlayer_->play ({
+        {"start.wav", PlaybackMode::OneShot},
+        {"fans.wav", PlaybackMode::Continuous}});
+
     if (context_->currentHaltEnablePosition_ ==
             KY11Console::HaltEnablePosition::Enable)
         return ProgramOperation {};

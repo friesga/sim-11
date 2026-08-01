@@ -13,7 +13,7 @@ using std::placeholders::_2;
 using std::make_unique;
 
 KY11_A::KY11_A (Bus* bus, Interfaces::CpuController* cpuController,
-    Window* window, const KY11_AConfig& ky11_aConfig)
+    Window* window, AudioSystem* audioSystem, const KY11_AConfig& ky11_aConfig)
     :
     bus_ {bus},
     cpuController_ {cpuController}
@@ -39,6 +39,8 @@ KY11_A::KY11_A (Bus* bus, Interfaces::CpuController* cpuController,
 
     bus_->BPOK ().subscribe (bind (&KY11_A::BPOKReceiver, this, _1));
     bus_->SRUN ().subscribe (bind (&KY11_A::SRUNReceiver, this, _1));
+
+    audioPlayer_ = audioSystem->createPlayer ("resources/pdp-11_20 audio.zip");
 }
 
 void KY11_A::createBezel (Window* window, const KY11_AConfig& ky11_aConfig,
