@@ -15,7 +15,7 @@ using std::get;
 // corresponds with the specified spin up time.
 //
 RK05::StateMachine::StateMachine (RK05* context,
-    duration<int, std::ratio<1, 1>> spinUpTime)
+    std::chrono::seconds spinUpTime)
     :
     context_ {context},
     spinUpTime_ {spinUpTime}

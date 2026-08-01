@@ -173,7 +173,7 @@ class RK05::StateMachine :
 {
 public:
     StateMachine (RK05* context,
-        duration<int, std::ratio<1, 1>> spinUpTime);
+        std::chrono::seconds spinUpTime);
     ~StateMachine ();
 
     State transition (Initial&&, Start);            // -> PoweredOff
