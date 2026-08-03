@@ -66,6 +66,7 @@ RK05::State RK05::StateMachine::transition (Unloaded&&, PowerOff)
 // timer is started.
 RK05::State RK05::StateMachine::transition (Unloaded&&, SpinUp)
 {
+    context_->audioPlayer_->play ({{"RUN on.wav", PlaybackMode::OneShot}});
     context_->loadIndicator_->show (Indicator::State::Off);
     return SpinningUp {};
 }

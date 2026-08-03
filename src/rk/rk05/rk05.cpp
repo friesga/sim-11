@@ -66,6 +66,8 @@ RK05::RK05 (Bus* bus, DriveInterface* controller, Window* window,
 
     bpokSubscriberKey_ = 
         bus_->BPOK ().subscribe (bind (&RK05::BPOKReceiver, this, _1));
+
+    audioPlayer_ = audioSystem->createPlayer ("resources/RK05 audio.zip");
 }
 
 // Finish the drive thread
