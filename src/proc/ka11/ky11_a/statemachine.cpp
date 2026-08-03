@@ -54,6 +54,13 @@ KY11_A::State KY11_A::StateMachine::transition (AddressLoaded&& currentState,
     return contPressed (currentState);
 }
 
+KY11_A::State KY11_A::StateMachine::transition (AddressLoaded&& currentState,
+    BPOK_Low)
+{
+    context_->audioPlayer_->play ({{"switch off.wav", PlaybackMode::OneShot}});
+    return Off {};
+}
+
 KY11_A::State KY11_A::StateMachine::transition (ExamineSequence&&, EXAM_Pressed)
 {
     context_->tempRegister_+= 2;
@@ -90,6 +97,14 @@ KY11_A::State KY11_A::StateMachine::transition (ExamineSequence&& currentState,
     return contPressed (currentState);
 }
 
+KY11_A::State KY11_A::StateMachine::transition (ExamineSequence&& currentState,
+    BPOK_Low)
+{
+    context_->audioPlayer_->play ({{"switch off.wav", PlaybackMode::OneShot}});
+    return Off {};
+}
+
+
 KY11_A::State KY11_A::StateMachine::transition (DepositSequence&&, DEP_Pressed)
 {
     context_->tempRegister_+= 2;
@@ -125,10 +140,24 @@ KY11_A::State KY11_A::StateMachine::transition (DepositSequence&& currentState,
     return contPressed (currentState);
 }
 
+KY11_A::State KY11_A::StateMachine::transition (DepositSequence&& currentState,
+    BPOK_Low)
+{
+    context_->audioPlayer_->play ({{"switch off.wav", PlaybackMode::OneShot}});
+    return Off {};
+}
+
 KY11_A::State KY11_A::StateMachine::transition (ProgramOperation&&, HALT_Pressed)
 {
     context_->cpuController_->halt (Interfaces::CpuController::HaltReason::HaltInstruction);
     return AddressLoaded {};
+}
+
+KY11_A::State KY11_A::StateMachine::transition (ProgramOperation&&, BPOK_Low)
+{
+    context_->cpuController_->halt (Interfaces::CpuController::HaltReason::HaltInstruction);
+    context_->audioPlayer_->play ({{"switch off.wav", PlaybackMode::OneShot}});
+    return Off {};
 }
 
 // When ENABLE/HALT is set to HALT, depressing START provides a system clear

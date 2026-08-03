@@ -302,8 +302,8 @@ void KY11_A::BPOKReceiver (bool signalValue)
 {
     if (signalValue)
         stateMachine_->dispatch (BPOK_High {});
-    // else
-    //    stateMachine_.push (BPOK_Low {});
+    else
+        stateMachine_->dispatch (BPOK_Low {});
 }
 
 void KY11_A::SRUNReceiver (bool signalValue)

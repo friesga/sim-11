@@ -77,6 +77,7 @@ public:
 
     // Definition of the KY11-A events
     struct BPOK_High {};
+    struct BPOK_Low {};
     struct EXAM_Pressed {};
     struct DEP_Pressed {};
     struct LOAD_ADDR_Pressed {};
@@ -84,7 +85,7 @@ public:
     struct CONT_Pressed {};
     struct HALT_Pressed {};
 
-    using Event = variant <BPOK_High, EXAM_Pressed, DEP_Pressed,
+    using Event = variant <BPOK_High, BPOK_Low, EXAM_Pressed, DEP_Pressed,
         LOAD_ADDR_Pressed, START_Pressed, CONT_Pressed, HALT_Pressed>;
 
 private:
@@ -153,17 +154,21 @@ public:
     State transition (AddressLoaded&&, DEP_Pressed);            // -> DepositSequence
     State transition (AddressLoaded&&, START_Pressed);          // -> ProgramOperation
     State transition (AddressLoaded&&, CONT_Pressed);           // -> ProgramOperation
+    State transition (AddressLoaded&&, BPOK_Low);               // -> Off
     State transition (ExamineSequence&&, LOAD_ADDR_Pressed);    // -> AddressLoaded
     State transition (ExamineSequence&&, EXAM_Pressed);         // -> ExamineSequence
     State transition (ExamineSequence&&, DEP_Pressed);          // -> ExamineSequence
     State transition (ExamineSequence&&, START_Pressed);        // -> ProgramOperation
     State transition (ExamineSequence&&, CONT_Pressed);         // -> ProgramOperation
+    State transition (ExamineSequence&&, BPOK_Low);             // -> Off
     State transition (DepositSequence&&, LOAD_ADDR_Pressed);    // -> AddressLoaded
     State transition (DepositSequence&&, EXAM_Pressed);         // -> ExamineSequence
     State transition (DepositSequence&&, DEP_Pressed);          // -> DepositSequence
     State transition (DepositSequence&&, START_Pressed);        // -> ProgramOperation
     State transition (DepositSequence&&, CONT_Pressed);         // -> ProgramOperation
+    State transition (DepositSequence&&, BPOK_Low);             // -> Off
     State transition (ProgramOperation&&, HALT_Pressed);        // -> AddressLoaded
+    State transition (ProgramOperation&&, BPOK_Low);            // -> Off
 
     // Define the default transition for transitions not explicitly
     // defined above. The default transition implies the event is ignored.
