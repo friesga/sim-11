@@ -91,6 +91,7 @@ RK05::State RK05::StateMachine::transition (SpinningUp&&, TimeElapsed)
 
 RK05::State RK05::StateMachine::transition (SpinningUp&&, SpinDown)
 {
+    context_->audioPlayer_->play ({{"RUN off.wav", PlaybackMode::OneShot}});
     spinUpDownTimer_.cancel (&timerId_);
     spinUpDownTimer_.start (bind (&RK05::StateMachine::spinUpDownTimerExpired,
         this), spinUpTime_ / 2, &timerId_);
@@ -149,6 +150,7 @@ RK05::State RK05::StateMachine::transition (Seeking&& currentState, TimeElapsed)
 // it takes half the time of the spin up time.
 RK05::State RK05::StateMachine::transition (LockedOn&&, SpinDown)
 {
+    context_->audioPlayer_->play ({{"RUN off.wav", PlaybackMode::OneShot}});
     spinUpDownTimer_.start (bind (&RK05::StateMachine::spinUpDownTimerExpired,
         this), spinUpTime_, &timerId_);
     return SpinningDown {};
@@ -161,6 +163,7 @@ RK05::State RK05::StateMachine::transition (LockedOn&&, PowerOff)
 
 RK05::State RK05::StateMachine::transition (Seeking&&, SpinDown)
 {
+    context_->audioPlayer_->play ({{"RUN off.wav", PlaybackMode::OneShot}});
     spinUpDownTimer_.start (bind (&RK05::StateMachine::spinUpDownTimerExpired,
         this), spinUpTime_ / 2, &timerId_);
     return SpinningDown {};
@@ -182,12 +185,14 @@ void RK05::StateMachine::entry (SpinningDown)
 
 RK05::State RK05::StateMachine::transition (SpinningDown&&, TimeElapsed)
 {
+    context_->audioPlayer_->play ({{"unloaded.wav", PlaybackMode::OneShot}});
     context_->loadIndicator_->show (Indicator::State::On);
     return Unloaded {};
 }
 
 RK05::State RK05::StateMachine::transition (SpinningDown&&, SpinUp)
 {
+    context_->audioPlayer_->play ({{"RUN on.wav", PlaybackMode::OneShot}});
     spinUpDownTimer_.cancel (&timerId_);
     spinUpDownTimer_.start (bind (&RK05::StateMachine::spinUpDownTimerExpired,
         this), spinUpTime_ / 2, &timerId_);
