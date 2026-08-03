@@ -45,7 +45,7 @@ namespace Interfaces
         virtual void wait () = 0;
         virtual void start (u16 address) = 0;
         virtual void proceed () = 0;
-        virtual HaltReason haltReason () = 0;
+        virtual const HaltReason haltReason () = 0;
 
         // The execute function returns the new CpuRunState
         virtual CpuRunState execute () = 0;

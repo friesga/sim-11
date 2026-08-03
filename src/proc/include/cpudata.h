@@ -46,7 +46,7 @@ public:
     virtual GeneralRegisters& registers () = 0;
     virtual PSW& psw () = 0;
 	virtual void setCC (ConditionCodes conditionCodes) = 0;
-	virtual bool stackOverflow () = 0;
+	virtual const bool stackOverflow () = 0;
 
 	// The memory access functions must be able to generate a bus error trap
 	// when accessing non-existing memory.

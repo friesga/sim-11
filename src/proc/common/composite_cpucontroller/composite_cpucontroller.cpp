@@ -135,7 +135,7 @@ bool CompositeCpuController<TExecutor, TCalculator, THaltMode,
 
 template <isExecutor TExecutor, typename TCalculator, isHaltMode THaltMode,
     isProcessorExceptionHandler TProcessorExceptionHandler>
-constexpr Interfaces::CpuController::HaltReason CompositeCpuController<TExecutor, TCalculator, THaltMode,
+const Interfaces::CpuController::HaltReason CompositeCpuController<TExecutor, TCalculator, THaltMode,
     TProcessorExceptionHandler>::haltReason ()
 {
     return haltReason_;

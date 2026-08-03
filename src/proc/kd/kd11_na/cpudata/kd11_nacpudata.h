@@ -15,11 +15,11 @@ class KD11_NACpuData : public BaseCpuData<SingularRegisterSet, KD11_NA_PSW>
 public:
 	// Functions required by the CpuData interface and not implemented by
 	// BaseCpuData.
-	constexpr bool stackOverflow () override;
+	const bool stackOverflow () override;
 };
 
 // The KD11-NA does not support a stack limit so stack overflow cannot occur.
-constexpr bool KD11_NACpuData::stackOverflow ()
+inline const bool KD11_NACpuData::stackOverflow ()
 {
     return false;
 }

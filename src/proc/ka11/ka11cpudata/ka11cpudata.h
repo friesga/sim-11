@@ -19,7 +19,7 @@ class KA11CpuData : public BaseCpuData<SingularRegisterSet, KA11_PSW>,
 public:
     // Functions required by the CpuData interface and not implemented by
     // BaseCpuData.
-    constexpr bool stackOverflow () override;
+    const bool stackOverflow () override;
 
 private:
     enum { stackLimit = 0400 };
@@ -31,7 +31,7 @@ private:
 // is completed before the trap is made.
 // Source: PDP-11 Processor Handbook (1969) p. 43.
 //
-constexpr bool KA11CpuData::stackOverflow ()
+inline const bool KA11CpuData::stackOverflow ()
 {
     return registers_[6] < stackLimit;
 }

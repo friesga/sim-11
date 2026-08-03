@@ -30,7 +30,7 @@ public:
 	void wait () override;
 	void start (u16 address) override;
 	void proceed () override;
-	constexpr Interfaces::CpuController::HaltReason haltReason () override;
+	const Interfaces::CpuController::HaltReason haltReason () override;
 	Interfaces::CpuController::CpuRunState execute () override;
 	bool pushWord (u16 value) override;
 	bool popWord (u16* destination) override;
@@ -40,15 +40,16 @@ private:
 	MMU* mmu_;
 	CpuData* cpuData_;
 
+	Interfaces::CpuController::CpuRunState runState_;
+	Interfaces::CpuController::HaltReason haltReason_;
+	bool traceFlag_;
+	
 	unique_ptr<TExecutor> executor_;
 	unique_ptr<TCalculator> calculator_;
 	unique_ptr<THaltMode> haltMode_;
 	TProcessorExceptionHandler processorExceptionHandler_ {bus_, cpuData_, this, mmu_};
 
 	InstructionDecoder decoder_ {};
-	Interfaces::CpuController::HaltReason haltReason_;
-	Interfaces::CpuController::CpuRunState runState_;
-	bool traceFlag_;
 
 	void execInstr ();
 	u8 cpuPriority ();

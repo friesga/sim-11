@@ -17,7 +17,7 @@ class KDF11CpuData : public BaseCpuData<KDF11Registers, KDF11_PSW>,
 public:
 	// Functions required by the CpuData interface and not implemented by
 	// BaseCpuData
-	bool stackOverflow () override;
+	const bool stackOverflow () override;
 
     // Functions used by the PSWBusDevice class
 	BaseCpuData& cpuData () noexcept { return *this; }
@@ -33,7 +33,7 @@ private:
 // been decremented below the stack limit.
 // On a double bus error a new stack will be set up at locations 2 and 0. This
 // should not result in a stack overflow trap.
-inline bool KDF11CpuData::stackOverflow ()
+inline const bool KDF11CpuData::stackOverflow ()
 {
     return inKernelMode () && 
         registers_ [6] > 0 && registers_ [6] < stackLimit;
