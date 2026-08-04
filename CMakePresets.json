@@ -2,7 +2,7 @@
     "version": 5,
     "cmakeMinimumRequired": {
         "major": 3,
-        "minor": 21,
+        "minor": 23,
         "patch": 0
     },
 
@@ -14,13 +14,10 @@
             "binaryDir": "${sourceDir}/out/build/${presetName}",
             "cacheVariables": {
                 "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
-                "CMAKE_VERBOSE_MAKEFILE": "OFF"
+                "CMAKE_VERBOSE_MAKEFILE": "ON"
             }
         },
 
-        // -----------------------
-        // Windows (MSVC) presets
-        // -----------------------
         {
             "name": "win-x64-debug",
             "displayName": "Windows x64 Debug (MSVC)",
@@ -45,6 +42,7 @@
                 }
             }
         },
+
         {
             "name": "win-x64-release",
             "displayName": "Windows x64 RelWithDebInfo (MSVC)",
@@ -65,9 +63,6 @@
             }
         },
 
-        // -----------------------
-        // WSL (Linux GCC) presets
-        // -----------------------
         {
             "name": "wsl-gcc-debug",
             "displayName": "WSL GCC Debug",
@@ -85,10 +80,12 @@
                     "intelliSenseMode": "linux-gcc-x64"
                 },
                 "microsoft.com/VisualStudioRemoteSettings/CMake/1.0": {
-                    "sourceDir": "$env{HOME}/.vs/$ms{projectDirName}"
+                    "copySources": false,
+                    "sourceDir": "/mnt/g/src/$ms{projectDirName}"
                 }
             }
         },
+
         {
             "name": "wsl-gcc-release",
             "displayName": "WSL GCC RelWithDebInfo",
@@ -103,14 +100,12 @@
                     "intelliSenseMode": "linux-gcc-x64"
                 },
                 "microsoft.com/VisualStudioRemoteSettings/CMake/1.0": {
-                    "sourceDir": "$env{HOME}/.vs/$ms{projectDirName}"
+                    "copySources": false,
+                    "sourceDir": "/mnt/g/src/$ms{projectDirName}"
                 }
             }
         },
 
-        // -----------------------
-        // Emscripten / WASM presets
-        // -----------------------
         {
             "name": "wasm-debug",
             "displayName": "Emscripten (WASM) Debug",
@@ -124,11 +119,11 @@
             },
             "vendor": {
                 "microsoft.com/VisualStudioSettings/CMake/1.0": {
-                    "hostOS": [ "Windows" ],
-                    "intelliSenseMode": "windows-clang-x64"
+                    "hostOS": [ "Windows" ]
                 }
             }
         },
+
         {
             "name": "wasm-release",
             "displayName": "Emscripten (WASM) Release",
@@ -157,7 +152,6 @@
             "name": "win-x64-release",
             "configurePreset": "win-x64-release"
         },
-
         {
             "name": "wsl-gcc-debug",
             "configurePreset": "wsl-gcc-debug"
@@ -166,7 +160,6 @@
             "name": "wsl-gcc-release",
             "configurePreset": "wsl-gcc-release"
         },
-
         {
             "name": "wasm-debug",
             "configurePreset": "wasm-debug"
