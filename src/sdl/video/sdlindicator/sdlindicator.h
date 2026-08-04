@@ -25,12 +25,12 @@ public:
     bool isWithinBounds (Position position, float margin) const override;
 
 private:
-    // The tiles to use for this indicator
-    unique_ptr<SDLTile> indicatorOnTile_;
-    unique_ptr<SDLTile> indicatorOffTile_;
-
     // Indication whether or not the indicator has to be shown
     Indicator::State showIndicator_;
+
+    // The tiles to use for this indicator
+    unique_ptr<SDLTile> indicatorOffTile_;
+    unique_ptr<SDLTile> indicatorOnTile_;
 };
 
 #endif // _SDLINDICATOR_H_

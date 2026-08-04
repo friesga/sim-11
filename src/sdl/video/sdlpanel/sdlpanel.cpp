@@ -16,8 +16,8 @@ SDLPanel::SDLPanel (unique_ptr<SDLRenderer> &sdlRenderer,
     SDLTexture& texture, Cabinet::Position cabinetPosition, RackUnit unitHeight)
     :
     sdlRenderer_ {sdlRenderer},
-    targetTexture_ {texture},
-    cabinetPosition_ {cabinetPosition}
+    cabinetPosition_ {cabinetPosition},
+    targetTexture_ {texture}
 {
     static const RackUnit h9642Height {20_ru};
     auto [textureWidth, textureHeight] = targetTexture_.dimensions ();
@@ -31,8 +31,8 @@ SDLPanel::SDLPanel (unique_ptr<SDLRenderer>& sdlRenderer,
     RackUnit unitHeight, PanelComposition panelComposition)
     :
     sdlRenderer_ {sdlRenderer},
-    targetTexture_ {texture},
     cabinetPosition_ {cabinetPosition},
+    targetTexture_ {texture},
     fronts_ {move (panelComposition.fronts_)},
     indicators_ {move (panelComposition.indicators_)},
     buttons_ {move (panelComposition.buttons_)},

@@ -43,14 +43,14 @@ public:
 
 
 private:
-    SDLTile* getTile (Button::TwoPositionsState buttonState,
-        Indicator::State indicatorState) const;
-
-    EventCallback buttonClicked_;
     TileGrid tiles_;
+    EventCallback buttonClicked_;
+
     Button::TwoPositionsState buttonState_;
     Indicator::State indicatorState_;
 
+    SDLTile* getTile (Button::TwoPositionsState buttonState,
+        Indicator::State indicatorState) const;
 };
 
 // This function transforms an enum class to the underlying type (such as

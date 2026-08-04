@@ -38,6 +38,14 @@ private:
     // Reference to the renderer to use for fronts, indicators and buttons
     unique_ptr<SDLRenderer> &sdlRenderer_;
 
+    // The height of the unit in pixels
+    float panelHeight_ {0.0f};
+    int pixelsPerRackUnit_ {0};
+    Cabinet::Position cabinetPosition_;
+
+    // Reference to the panel to draw the panel on
+    SDLTexture& targetTexture_;
+
     // Storage for all fronts, indicators and buttons to be rendered
     // on this window
     vector<unique_ptr<Front>> fronts_;
@@ -45,16 +53,8 @@ private:
     vector<unique_ptr<Button>> buttons_;
     vector<unique_ptr<IndicatorButton>> indicatorButtons_;
 
-    // Reference to the panel to draw the panel on
-    SDLTexture& targetTexture_;
-
     // Position of the panel in the target texture
     Position panelPosition_ {0, 0};
-
-    // The height of the unit in pixels
-    float panelHeight_ {0.0f};
-    int pixelsPerRackUnit_ {0};
-    Cabinet::Position cabinetPosition_;
 };
 
 #endif // _SDLPANEL_H_
