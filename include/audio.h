@@ -70,6 +70,7 @@ public:
 class AudioPlayer : public AudioControl
 {
 public:
+    virtual ~AudioPlayer () = default;
     virtual void play (AudioStream* stream,
         PlaybackMode playbackMode = PlaybackMode::Continuous) = 0;
     virtual void play (Playlist<Track> playlist) = 0;
