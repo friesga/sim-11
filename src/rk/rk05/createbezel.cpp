@@ -13,7 +13,7 @@ using std::make_unique;
 void RK05::createBezel (Window* window, const RK05Config& rk05Config)
 {
     unique_ptr<ImageContainer> imageContainer =
-        make_unique<OpenRasterFile> ("resources/rk05.ora");
+        make_unique<OpenRasterFile> ("resources/RK05.ora");
 
     unique_ptr<PanelBuilder> panelBuilder =
         window->createDataPanelBuilder (*imageContainer,
