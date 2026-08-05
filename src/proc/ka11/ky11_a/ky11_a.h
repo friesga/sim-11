@@ -183,6 +183,7 @@ private:
 
     State startPressed (State currentState);
     State contPressed (State currentState);
+    void switchOffConsole ();
 };
 
 #endif // _KY11_A_H_
