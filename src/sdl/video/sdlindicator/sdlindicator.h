@@ -26,6 +26,10 @@ public:
 
 private:
     // Indication whether or not the indicator has to be shown
+    // Inicidators are set from other threads than the SDL rendering thread,
+    // so the showIndicator_ really should be atomic. As long as this doesn't
+    // cause any visable problems, we will leave it as is for now.
+    //
     Indicator::State showIndicator_;
 
     // The tiles to use for this indicator
