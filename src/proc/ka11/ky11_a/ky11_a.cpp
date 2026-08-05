@@ -314,9 +314,18 @@ void KY11_A::SRUNReceiver (bool signalValue)
         runLight_->show (Indicator::State::Off);
 }
 
-
+// Wehen the power is switched off the KY11-A statemachine will clear the
+// adress and data registers. The processor however is running in another
+// thread and while processing the power off still accesses the address and
+// data register. To prevent the registers from showing other values again by
+// display() calls from the processor thread, we check the BPOK signal before
+// updating the registers.
+//
 void KY11_A::display (BusAddress address, CondData<u16> data)
 {
+    if (!bus_->BPOK ())
+        return; 
+
     *addressRegister_ = address;
 
     if (data.hasValue ())
