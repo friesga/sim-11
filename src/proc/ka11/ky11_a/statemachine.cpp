@@ -57,6 +57,10 @@ KY11_A::State KY11_A::StateMachine::transition (AddressLoaded&& currentState,
 KY11_A::State KY11_A::StateMachine::transition (AddressLoaded&& currentState,
     BPOK_Low)
 {
+    *context_->addressRegister_ = 0;
+    *context_->dataRegister_ = 0;
+    context_->runLight_->show (Indicator::State::Off);
+
     context_->audioPlayer_->play ({{"switch off.wav", PlaybackMode::OneShot}});
     return Off {};
 }
@@ -100,6 +104,10 @@ KY11_A::State KY11_A::StateMachine::transition (ExamineSequence&& currentState,
 KY11_A::State KY11_A::StateMachine::transition (ExamineSequence&& currentState,
     BPOK_Low)
 {
+    *context_->addressRegister_ = 0;
+    *context_->dataRegister_ = 0;
+    context_->runLight_->show (Indicator::State::Off);
+
     context_->audioPlayer_->play ({{"switch off.wav", PlaybackMode::OneShot}});
     return Off {};
 }
@@ -143,6 +151,10 @@ KY11_A::State KY11_A::StateMachine::transition (DepositSequence&& currentState,
 KY11_A::State KY11_A::StateMachine::transition (DepositSequence&& currentState,
     BPOK_Low)
 {
+    *context_->addressRegister_ = 0;
+    *context_->dataRegister_ = 0;
+    context_->runLight_->show (Indicator::State::Off);
+
     context_->audioPlayer_->play ({{"switch off.wav", PlaybackMode::OneShot}});
     return Off {};
 }
@@ -155,6 +167,10 @@ KY11_A::State KY11_A::StateMachine::transition (ProgramOperation&&, HALT_Pressed
 
 KY11_A::State KY11_A::StateMachine::transition (ProgramOperation&&, BPOK_Low)
 {
+    *context_->addressRegister_ = 0;
+    *context_->dataRegister_ = 0;
+    context_->runLight_->show (Indicator::State::Off);
+
     context_->cpuController_->halt (Interfaces::CpuController::HaltReason::HaltInstruction);
     context_->audioPlayer_->play ({{"switch off.wav", PlaybackMode::OneShot}});
     return Off {};
