@@ -144,7 +144,10 @@ target_compile_options (tracereader PRIVATE
     $<$<CXX_COMPILER_ID:MSVC>: /std:c++20>
     $<$<CXX_COMPILER_ID:GNU>: -Wall --std=c++20>)
 
+#
 # Build a WebAssembly version of sim-11
+#
+set(SIM11_OUTPUT_NAME "sim-11-07be37664a")
 
 target_include_directories (sim-11-wasm PRIVATE
     ${CMAKE_SOURCE_DIR}/src
@@ -185,8 +188,8 @@ target_link_options (sim-11-wasm PRIVATE
     # The config and systems directories must not be included in the preloaded
     # filesystem for the sim-11.net WebAssembly build as the website  will
     # include a machine-specific filesystem.
-    # "SHELL:--preload-file ${CMAKE_BINARY_DIR}/config@/config"
-    # "SHELL:--preload-file ${CMAKE_BINARY_DIR}/systems@/systems"
+    "SHELL:--preload-file ${CMAKE_BINARY_DIR}/config@/config"
+    "SHELL:--preload-file ${CMAKE_BINARY_DIR}/systems@/systems"
     -sEXPORTED_FUNCTIONS=_main,_on_xterm_char
     -pthread
     -sPTHREAD_POOL_SIZE_STRICT=0
@@ -202,17 +205,22 @@ set_property (TARGET sim-11-wasm APPEND PROPERTY
     LINK_DEPENDS ${CMAKE_BINARY_DIR}/config/pdp-11_20.ini)
 
 set_target_properties (sim-11-wasm PROPERTIES
-  OUTPUT_NAME "sim-11"
+  OUTPUT_NAME "${SIM11_OUTPUT_NAME}"
   SUFFIX ".html")
 
 # Copy the result of the build to the installation directory for use in 
-# the website.
+# the website and copy the generated sim-11.html file to a stable name for
+# testing purposes.
 add_custom_command (TARGET sim-11-wasm POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_INSTALL_PREFIX}
-    COMMAND ${CMAKE_COMMAND} -E copy sim-11.data ${CMAKE_INSTALL_PREFIX}
-    COMMAND ${CMAKE_COMMAND} -E copy sim-11.html ${CMAKE_INSTALL_PREFIX}
-    COMMAND ${CMAKE_COMMAND} -E copy sim-11.js ${CMAKE_INSTALL_PREFIX}
-    COMMAND ${CMAKE_COMMAND} -E copy sim-11.wasm ${CMAKE_INSTALL_PREFIX})
+    COMMAND "${CMAKE_COMMAND}" -E copy_if_different
+        "$<TARGET_FILE_DIR:sim-11-wasm>/${SIM11_OUTPUT_NAME}.js"
+        "$<TARGET_FILE_DIR:sim-11-wasm>/${SIM11_OUTPUT_NAME}.wasm"
+        "$<TARGET_FILE_DIR:sim-11-wasm>/${SIM11_OUTPUT_NAME}.data"
+        "${CMAKE_INSTALL_PREFIX}"
+
+    COMMAND "${CMAKE_COMMAND}" -E copy_if_different
+        "$<TARGET_FILE:sim-11-wasm>"
+        "$<TARGET_FILE_DIR:sim-11-wasm>/sim-11.html")
 
 # Installation of the sim-11 target
 #
