@@ -39,11 +39,11 @@ set (GTEST_SRCS
     configdata/ba11/ba11consistencytest.cpp
     configdata/unibusconsistencytest.cpp
     configdata/romdeviceconsistencytest.cpp
-    fakesdl/fakebutton/fakebutton.cpp
-    fakesdl/fakedatapanelbuilder/fakedatapanelbuilder.cpp
-    fakesdl/fakeindicator/fakeindicator.cpp
-    fakesdl/fakepanel/fakepanel.cpp
-    fakesdl/fakewindow/fakewindow.cpp
+    fakesdl/video/fakebutton/fakebutton.cpp
+    fakesdl/video/fakedatapanelbuilder/fakedatapanelbuilder.cpp
+    fakesdl/video/fakeindicator/fakeindicator.cpp
+    fakesdl/video/fakepanel/fakepanel.cpp
+    fakesdl/video/fakewindow/fakewindow.cpp
     fiotest.cpp
     fistest.cpp
     geometrytest.cpp
