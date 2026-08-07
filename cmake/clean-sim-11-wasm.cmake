@@ -1,0 +1,9 @@
+if(NOT DEFINED BUILD_DIRECTORY)
+    message(FATAL_ERROR "BUILD_DIRECTORY is not defined")
+endif()
+
+file(GLOB SIM11_BUILD_PRODUCTS
+    "${BUILD_DIRECTORY}/sim-11*"
+)
+
+file(REMOVE ${SIM11_BUILD_PRODUCTS})

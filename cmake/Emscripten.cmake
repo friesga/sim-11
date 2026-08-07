@@ -81,3 +81,16 @@ add_custom_command(TARGET ${SIM11_WASM_TARGET} POST_BUILD
         "$<TARGET_FILE:${SIM11_WASM_TARGET}>"
         "$<TARGET_FILE_DIR:${SIM11_WASM_TARGET}>/sim-11.html"
 )
+
+# This target is used to clean up the sim-11 WebAssembly build products.
+# The clean actions are performed in a seperate script so the files are
+# searched and removed in the execution phase rather than in the
+# configuration phase.
+add_custom_target(clean-sim11
+    COMMAND "${CMAKE_COMMAND}"
+        "-DBUILD_DIRECTORY=$<TARGET_FILE_DIR:sim-11-wasm>"
+        -P "${CMAKE_SOURCE_DIR}/cmake/clean-sim-11-wasm.cmake"
+
+    COMMENT "Removing all sim-11 WebAssembly build products"
+    VERBATIM
+)
