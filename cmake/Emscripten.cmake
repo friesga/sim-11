@@ -1,5 +1,24 @@
+execute_process(
+    COMMAND git rev-parse --short=8 HEAD
+    WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
+    OUTPUT_VARIABLE COMMIT_ID
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+    ERROR_QUIET
+)
+
+# This variable defines the base name of the generated WebAssembly files. The
+# commit ID is appended to the base name to ensure that the generated files
+# are unique for each commit. This is important because the generated files are
+# cached by the browser and we want to ensure that the browser always loads
+# the latest version of the files.
+#
+# If desired, the base name can be overridden by setting the SIM11_OUTPUT_NAME
+# variable in the CMake cache. This can be done by running CMake with the
+# -DSIM11_OUTPUT_NAME=<name> option. For example:
+# cmake -DSIM11_OUTPUT_NAME=sim-11-custom-name ..
+#
 set(SIM11_OUTPUT_NAME
-    "sim-11-07be37664a"
+    "sim-11-${COMMIT_ID}"
     CACHE STRING
     "Base name of the generated WebAssembly files"
 )
