@@ -15,7 +15,7 @@ public:
     void wait () {};
     void start (u16 address) {};
     void proceed () {};
-    HaltReason haltReason () { return HaltReason::HaltInstruction; };
+    HaltReason const haltReason () { return HaltReason::HaltInstruction; };
     CpuRunState execute () { return CpuRunState::RUN; };
     bool pushWord (u16 value) { return false; }
     bool popWord (u16* destination) { return false; }

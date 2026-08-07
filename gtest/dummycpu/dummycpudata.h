@@ -8,7 +8,7 @@
 class DummyCpuData : public BaseCpuData<SingularRegisterSet, KD11_NA_PSW>
 {
 public:
-    bool stackOverflow () { return false; };
+    bool const stackOverflow () { return false; };
 };
 
 

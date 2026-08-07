@@ -8,7 +8,8 @@
 #include "proc/ka11/calculator/calculator.h"
 #include "proc/common/pseudo_haltmode/pseudo_haltmode.h"
 #include "proc/common/basicprocessorexceptionhandler/basicprocessorexceptionhandler.h"
-#include "../fakesdl/fakewindow/fakewindow.h"
+#include "../fakesdl/video/fakewindow/fakewindow.h"
+#include "../fakesdl/audio/fakeaudiosystem/fakeaudiosystem.h"
 #include "mem/ms11p/ms11p.h"
 
 #include <gtest/gtest.h>
@@ -25,8 +26,10 @@ protected:
     CompositeCpuController<KA11_Executor, KA11Calculator,
         PseudoHaltMode, BasicProcessorExceptionHandler> cpuController {&bus, &cpuData, &mmu};
     FakeWindow window {};
+    FakeAudioSystem audioSystem {};
 
-    KY11_A ky11a {&bus, &cpuController, &window, KY11_AConfig {Cabinet::Position {0,0}}};
+    KY11_A ky11a {&bus, &cpuController, &window, &audioSystem,
+        KY11_AConfig {Cabinet::Position {0,0}}};
     KA11MachineState machineState {&bus, &cpuData, &cpuController, &mmu, ky11a};
 
     KY11_ATest ()

@@ -4,6 +4,7 @@
 #include "kt24/kt24.h"
 #include "statuscodes.h"
 #include "chrono/simulatorclock/simulatorclock.h"
+#include "../fakesdl/audio/fakeaudiosystem/fakeaudiosystem.h"
 
 #include <gtest/gtest.h>
 #include <chrono>
@@ -99,7 +100,8 @@ TEST_F (RK11DReadTest, readSectorSucceeds)
 
     Unibus bus;
     MS11P ms11p {&bus};
-    RK11D* rk11dDevice = new RK11D (&bus, nullptr, rk11dConfig);
+    FakeAudioSystem fakeAudioSystem {};
+    RK11D* rk11dDevice = new RK11D (&bus, nullptr, &fakeAudioSystem, rk11dConfig);
 
     // Create a minimal system, consisting of just the bus, memory
     // and the RK11-D/RK05 to be tested.
@@ -179,7 +181,8 @@ TEST_F (RK11DReadTest, readOnNonReadyDriveReportsError)
         }));
 
     Unibus bus;
-    RK11D* rk11dDevice = new RK11D (&bus, nullptr, rk11dConfig);
+    FakeAudioSystem fakeAudioSystem {};
+    RK11D* rk11dDevice = new RK11D (&bus, nullptr, &fakeAudioSystem, rk11dConfig);
 
     // Power on the RK05 drive. The drive will spin up immediately as the
     // default spin up time is zero.
@@ -209,7 +212,8 @@ TEST_F (RK11DReadTest, readFromNonExistentSectorFails)
         }));
 
     Unibus bus;
-    RK11D* rk11dDevice = new RK11D (&bus, nullptr, rk11dConfig);
+    FakeAudioSystem fakeAudioSystem {};
+    RK11D* rk11dDevice = new RK11D (&bus, nullptr, &fakeAudioSystem, rk11dConfig);
 
     // Power on the RK05 drive. The drive will spin up immediately as the
     // default spin up time is zero.
@@ -246,7 +250,8 @@ TEST_F (RK11DReadTest, readFromNonExistentCylinderFails)
         }));
 
     Unibus bus;
-    RK11D* rk11dDevice = new RK11D (&bus, nullptr, rk11dConfig);
+    FakeAudioSystem fakeAudioSystem {};
+    RK11D* rk11dDevice = new RK11D (&bus, nullptr, &fakeAudioSystem, rk11dConfig);
 
     // Power on the RK05 drive. The drive will spin up immediately as the
     // default spin up time is zero.
@@ -283,7 +288,8 @@ TEST_F (RK11DReadTest, readFromNonExistentDriveFails)
         }));
 
     Unibus bus;
-    RK11D* rk11dDevice = new RK11D (&bus, nullptr, rk11dConfig);
+    FakeAudioSystem fakeAudioSystem {};
+    RK11D* rk11dDevice = new RK11D (&bus, nullptr, &fakeAudioSystem, rk11dConfig);
 
     // Power on the RK05 drive. The drive will spin up immediately as the
     // default spin up time is zero.
@@ -320,7 +326,8 @@ TEST_F (RK11DReadTest, readPastEndOfDiskFails)
         }));
 
     Unibus bus;
-    RK11D* rk11dDevice = new RK11D (&bus, nullptr, rk11dConfig);
+    FakeAudioSystem fakeAudioSystem {};
+    RK11D* rk11dDevice = new RK11D (&bus, nullptr, &fakeAudioSystem, rk11dConfig);
 
     // Power on the RK05 drive. The drive will spin up immediately as the
     // default spin up time is zero.
@@ -358,7 +365,8 @@ TEST_F (RK11DReadTest, readWithIBASetSucceeds)
 
     Unibus bus;
     MS11P ms11p {&bus};
-    RK11D* rk11dDevice = new RK11D (&bus, nullptr, rk11dConfig);
+    FakeAudioSystem fakeAudioSystem {};
+    RK11D* rk11dDevice = new RK11D (&bus, nullptr, &fakeAudioSystem, rk11dConfig);
 
     // Create a minimal system, consisting of just the bus, memory
     // and the RK11-D/RK05 to be tested.
@@ -438,7 +446,8 @@ TEST_F (RK11DReadTest, memoryExtensionBitsAreUsed)
 
     Unibus bus;
     MS11P ms11p {&bus};
-    RK11D* rk11dDevice = new RK11D (&bus, nullptr, rk11dConfig);
+    FakeAudioSystem fakeAudioSystem {};
+    RK11D* rk11dDevice = new RK11D (&bus, nullptr, &fakeAudioSystem, rk11dConfig);
 
     // Create a minimal system, consisting of just the bus, memory
     // and the RK11-D/RK05 to be tested.
@@ -513,7 +522,8 @@ TEST_F (RK11DReadTest, memoryExtensionBitsAreIncremented)
 
     Unibus bus;
     MS11P ms11p {&bus};
-    RK11D* rk11dDevice = new RK11D (&bus, nullptr, rk11dConfig);
+    FakeAudioSystem fakeAudioSystem {};
+    RK11D* rk11dDevice = new RK11D (&bus, nullptr, &fakeAudioSystem, rk11dConfig);
 
     // Create a minimal system, consisting of just the bus, memory
     // and the RK11-D/RK05 to be tested.

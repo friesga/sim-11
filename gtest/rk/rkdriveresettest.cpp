@@ -4,6 +4,7 @@
 #include "statuscodes.h"
 #include "chrono/simulatorclock/simulatorclock.h"
 #include "bus/interruptrequest/interruptrequest.h"
+#include "../fakesdl/audio/fakeaudiosystem/fakeaudiosystem.h"
 
 #include <gtest/gtest.h>
 #include <chrono>
@@ -64,6 +65,7 @@ protected:
     Unibus bus;
     MS11P ms11p {&bus};
     RK11D* rk11dDevice;
+    FakeAudioSystem audioSystem {};
 
     void SetUp () override
     {
@@ -88,7 +90,7 @@ protected:
 
         rk11dConfig.numUnits = 2;
 
-        rk11dDevice = new RK11D (&bus, nullptr, rk11dConfig);
+        rk11dDevice = new RK11D (&bus, nullptr, &audioSystem, rk11dConfig);
 
         // Create a minimal system, consisting of just the bus, memory
         // and the RK11-D/RK05 to be tested.
