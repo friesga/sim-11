@@ -1,6 +1,6 @@
 #include "sdltile.h"
 
-#include <SDL_image.h>
+#include <SDL3_image/SDL_image.h>
 #include <stdexcept>
 
 using std::make_pair;

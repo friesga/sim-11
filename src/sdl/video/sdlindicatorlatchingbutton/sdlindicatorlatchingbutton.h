@@ -6,7 +6,7 @@
 #include "../sdltile/sdltile.h"
 #include "../sdlevent/sdlevent.h"
 
-#include <SDL.h>
+#include <SDL3/SDL.h>
 #include <string>
 #include <array>
 

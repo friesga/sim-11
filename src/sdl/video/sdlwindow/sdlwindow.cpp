@@ -3,16 +3,18 @@
 #include "sdl/video/filepanelbuilder/filepanelbuilder.h"
 #include "sdl/video/datapanelbuilder/datapanelbuilder.h"
 #include "sdl/video/sdlevent/sdlevent.h"
+#include "sdl/video/sdlproperties/sdlproperties.h"
 #include "rackunit.h"
 
-#include <SDL.h>
-#include <SDL_image.h>
+#include <SDL3/SDL.h>
+#include <SDL3_image/SDL_image.h>
 #include <string>
 #include <thread>
 #include <utility>
 #include <algorithm>
 #include <stdexcept>
 #include <iostream>
+#include <math.h>
 
 using std::string;
 using std::make_unique;
@@ -22,6 +24,7 @@ using std::make_pair;
 using std::ranges::any_of;
 using std::runtime_error;
 using std::invalid_argument;
+using std::round;
 
 SDLWindow::SDLWindow (char const *title, Frame<int> frame,
     set<Window::Flag> flags)
@@ -33,8 +36,14 @@ SDLWindow::SDLWindow (char const *title, Frame<int> frame,
     textureHeight_ {frame.height * 2}
 {
     // Create window
-    sdlWindow_ = SDL_CreateWindow (title, frame.x, frame.y, frame.width, frame.height,
-        flags.contains (Window::Flag::WindowHidden) ? SDL_WINDOW_HIDDEN : SDL_WINDOW_SHOWN);
+    sdlWindow_ = SDL_CreateWindowWithProperties (
+        SDLProperties
+        {
+            title, frame.x, frame.y, frame.width, frame.height,
+            flags.contains (Window::Flag::WindowHidden) ?
+                SDLProperties::Window::Hidden :
+                SDLProperties::Window::Shown
+        });
 
     if (sdlWindow_ == NULL)
         throw runtime_error ("Window could not be created. SDL error: " +
@@ -155,7 +164,8 @@ bool SDLWindow::handleEvents ()
     SDL_Event event;
 	if (SDL_PollEvent (&event))
 	{
-        windowPosition_ = {event.button.x, event.button.y};
+        windowPosition_ = {static_cast<int> (round (event.button.x)),
+            static_cast<int> (round (event.button.y))};
         texturePosition_ = windowToTexturePosition (windowPosition_);
         
         SDLEvent inputEvent (&event, texturePosition_);

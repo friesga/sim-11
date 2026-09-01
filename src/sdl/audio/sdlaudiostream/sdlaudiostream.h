@@ -3,7 +3,7 @@
 
 #include "../include/audio.h"
 
-#include <SDL.h>
+#include <SDL3/SDL.h>
 #include <vector>
 #include <memory>
 
@@ -23,7 +23,7 @@ public:
     size_t fill (AudioFrame* stream, size_t numberOfFrames) override;
 
 private:
-    using WAVBufferPtr = std::unique_ptr<Uint8, decltype (&SDL_FreeWAV)>;
+    using WAVBufferPtr = std::unique_ptr<Uint8, decltype (&SDL_free)>;
 
     vector<AudioFrame> samples_;
     size_t playPosition_ {0};

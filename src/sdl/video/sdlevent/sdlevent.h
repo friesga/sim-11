@@ -3,7 +3,7 @@
 
 #include <panel.h>
 
-#include <SDL_events.h>
+#include <SDL3/SDL.h>
 
 // This structure wraps an SDL_Event an adds additional data to it
 class SDLEvent : public InputEvent

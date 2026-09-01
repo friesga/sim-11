@@ -1,6 +1,6 @@
 #include "sdlfront.h"
 
-#include <SDL_image.h>
+#include <SDL3_image/SDL_image.h>
 
 using std::make_unique;
 

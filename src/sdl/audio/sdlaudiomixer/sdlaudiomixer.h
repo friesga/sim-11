@@ -4,7 +4,7 @@
 #include "../include/audio.h"
 #include "../sdlaudiodevice/sdlaudiodevice.h"
 #include "../sdlaudioplayer/sdlaudioplayer.h"
-#include "concepts//playlist/playlist.h"
+#include "concepts/playlist/playlist.h"
 
 #include <memory>
 #include <string>
@@ -26,11 +26,12 @@ public:
     void createChannel (AudioPlayer* audioPlayer);
 
     // fill is defined public to make it accessible to unit tests
-    void fill (AudioFrame* stream, size_t numberOfFrames);
+    void fill (SDL_AudioStream* audioStream, size_t numberOfFrames);
 
 private:
     vector<AudioPlayer*> audioPlayers_ {};
-    vector<AudioFrame> channelBuffer_;
+    vector<AudioFrame> channelBuffer_ {};
+    vector<AudioFrame> streamBuffer_ {};
     float volume_ {1.0};
 
     size_t mixChannels (AudioFrame* stream, size_t numberOfFrames);

@@ -10,16 +10,16 @@ InputEvent::Type SDLEvent::type () const
 {
     switch (event_->type)
     {
-        case SDL_QUIT:
+        case SDL_EVENT_QUIT:
             return InputEvent::Type::Quit;
 
-        case SDL_MOUSEBUTTONDOWN:
+        case SDL_EVENT_MOUSE_BUTTON_DOWN:
             return InputEvent::Type::MouseButtonDown;
 
-        case SDL_MOUSEBUTTONUP:
+        case SDL_EVENT_MOUSE_BUTTON_UP:
             return InputEvent::Type::MouseButtonUp;
 
-        case SDL_MOUSEMOTION:
+        case SDL_EVENT_MOUSE_MOTION:
             return InputEvent::Type::MouseMotion;
 
         default:

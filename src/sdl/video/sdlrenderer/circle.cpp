@@ -16,10 +16,10 @@ void SDLRenderer::copyCircle (SDLTexture& texture,
                 int sourceX = sourceCenter.x + (x - destCenter.x);
                 int sourceY = sourceCenter.y + (y - destCenter.y);
 
-                SDL_Rect sourcePixel = {sourceX, sourceY, 1, 1};
-                SDL_Rect destPixel = {x, y, 1, 1};
+                SDL_FRect sourcePixel = {sourceX, sourceY, 1, 1};
+                SDL_FRect destPixel = {x, y, 1, 1};
 
-                SDL_RenderCopy (sdl2_Renderer_, texture.sdl2_Texture_, &sourcePixel, &destPixel);
+                SDL_RenderTexture (sdl2_Renderer_, texture.sdl2_Texture_, &sourcePixel, &destPixel);
             }
         }
     }
@@ -40,21 +40,21 @@ int SDLRenderer::drawCircle (Position position, int radius)
 
     while (offsety >= offsetx)
     {
-        status += SDL_RenderDrawPoint (sdl2_Renderer_, position.x + offsetx,
+        status += SDL_RenderPoint (sdl2_Renderer_, position.x + offsetx,
             position.y + offsety);
-        status += SDL_RenderDrawPoint (sdl2_Renderer_, position.x + offsety,
+        status += SDL_RenderPoint (sdl2_Renderer_, position.x + offsety,
             position.y + offsetx);
-        status += SDL_RenderDrawPoint (sdl2_Renderer_, position.x - offsetx,
+        status += SDL_RenderPoint (sdl2_Renderer_, position.x - offsetx,
             position.y + offsety);
-        status += SDL_RenderDrawPoint (sdl2_Renderer_, position.x - offsety,
+        status += SDL_RenderPoint (sdl2_Renderer_, position.x - offsety,
             position.y + offsetx);
-        status += SDL_RenderDrawPoint (sdl2_Renderer_, position.x + offsetx,
+        status += SDL_RenderPoint (sdl2_Renderer_, position.x + offsetx,
             position.y - offsety);
-        status += SDL_RenderDrawPoint (sdl2_Renderer_, position.x + offsety,
+        status += SDL_RenderPoint (sdl2_Renderer_, position.x + offsety,
             position.y - offsetx);
-        status += SDL_RenderDrawPoint (sdl2_Renderer_, position.x - offsetx,
+        status += SDL_RenderPoint (sdl2_Renderer_, position.x - offsetx,
             position.y - offsety);
-        status += SDL_RenderDrawPoint (sdl2_Renderer_, position.x - offsety,
+        status += SDL_RenderPoint (sdl2_Renderer_, position.x - offsety,
             position.y - offsetx);
 
         if (status < 0)

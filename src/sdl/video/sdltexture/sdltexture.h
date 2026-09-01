@@ -3,7 +3,7 @@
 
 #include "imagedata/include/image.h"
 
-#include <SDL.h>
+#include <SDL3/SDL.h>
 #include <utility>
 #include <string>
 

@@ -5,7 +5,7 @@
 #include "../sdltile/sdltile.h"
 #include "../sdlrenderer/sdlrenderer.h"
 
-#include <SDL.h>
+#include <SDL3/SDL.h>
 
 using std::string;
 using std::unique_ptr;

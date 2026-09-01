@@ -29,7 +29,7 @@ using std::vector;
 // functionality. The system uses the SDL2 audio functions to provide the
 // functionality. It consists of the following classes:
 //
-// - SDLAudioStream. An audio streams consists of AudioFragments in a specific
+// - SDLAudioStream. An audio stream consists of AudioFragments in a specific
 //   AudioFormat.
 // 
 // - SDLAudioSystem. The audio system creates all objects to provide the
@@ -46,6 +46,14 @@ using std::vector;
 //
 // - SDLAudioPlayer. The audio player reads WAV data from different sources
 //   and delivers that data in an audio stream.
+//
+// The SDLAudioSystem was developed for SDL2 and has been migrated to use
+// SDL3. For several reasons the audiosystem still uses the callback mechanism
+// (now via SDL_AudioStreamCallback) and provides our own mixer class:
+// - The callback mechanism is much better suited for the playback of
+//   continuous sounds,
+// - The mixer implements playback lists,
+// - The mixer might be needed to implement cross fading.
 //
 class SDLAudioSystem : public AudioSystem
 {
@@ -64,19 +72,14 @@ public:
     AudioFormat audioFormat () const override;
 
     // audioCallback is defined public to make it accessible to unit tests
-    void audioCallback (void* userdata, AudioFrame* stream,
+    void audioCallback (void* userdata, SDL_AudioStream* audioStream,
         size_t numberOfFrames);
 
 private:
     AudioFormat const audioFormat_ {48000, 2, AudioSampleFormat::Float32};
+    SDLAudioDevice audioDevice_;
     unique_ptr<SDLAudioMixer> audioMixer_;
     vector<unique_ptr<AudioPlayer>> audioPlayers_ {};
-
-    // Make sure the audio device is closed before the players and mixer are
-    // removed by defining the audio device as the last data member.
-    // (Destruction of data members is in reversed order of definition.)
-    // This prevents inexplicable crashes when the application is restarted.
-    SDLAudioDevice audioDevice_;
 };
 
 #endif // _SDLAUDIOSYSTEM_H_

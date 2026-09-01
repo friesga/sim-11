@@ -9,16 +9,24 @@ using std::max;
 // These actions require locking of the audio device. This has to accomplished
 // by the caller.
 //
-void SDLAudioMixer::fill (AudioFrame* stream,
+void SDLAudioMixer::fill (SDL_AudioStream* audioStream,
     size_t numberOfFrames)
 {
-    // First fill the stream with silence so the channel audio can be added
-    // to the AudioFrames in the stream
-    std::fill (stream, stream + numberOfFrames, AudioFrame {0.0f, 0.0f});
+    // Make sure the stream buffer has enough capacity to accomodate the
+    // requested number of frames.
+    streamBuffer_.resize (numberOfFrames);
 
-    size_t framesFilled = mixChannels (stream, numberOfFrames);
+    // First fill the stream buffer with silence so the channel audio can be
+    // added to the AudioFrames in the stream
+    std::fill (streamBuffer_.begin (), streamBuffer_.end (), AudioFrame {0.0f, 0.0f});
 
-    adjustVolume (stream, framesFilled);
+    size_t framesFilled = mixChannels (streamBuffer_.data (), numberOfFrames);
+
+    adjustVolume (streamBuffer_.data (), framesFilled);
+
+    // Now the filled stream buffer can be written to the audio device
+    SDL_PutAudioStreamData (audioStream, streamBuffer_.data (),
+        framesFilled * sizeof (AudioFrame));
 }
 
 size_t SDLAudioMixer::mixChannels (AudioFrame* stream, size_t numberOfFrames)

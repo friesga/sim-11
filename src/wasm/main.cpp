@@ -11,8 +11,8 @@
 #include "configdata/ba11/ba11n/ba11nconfig/ba11nconfig.h"
 #include "sdl/audio/sdlaudiosystem/sdlaudiosystem.h"
 
-#include <SDL.h>
-#include <SDL_image.h>
+#include <SDL3/SDL.h>
+#include <SDL3_image/SDL_image.h>
 #include <emscripten.h>
 #include <html5.h>
 #include <iostream>

@@ -5,7 +5,7 @@
 #include "sdl/video/sdltexture/sdltexture.h"
 #include "imagedata/include/image.h"
 
-#include <SDL.h>
+#include <SDL3/SDL.h>
 #include <memory>
 #include <string>
 
@@ -20,14 +20,7 @@ class SDLRenderer
     SDL_Renderer* sdl2_Renderer_;
 
 public:
-    SDLRenderer (SDL_Window *sdlWindow, 
-        int index = -1, 
-
-        // WASM The renderer has to be created with the
-        // SDL_RENDERER_PRESENTVSYNC flag to avoid SDL2 setting the frame
-        // rate.
-        // See: https://github.com/emscripten-core/emscripten/issues/11788
-        unsigned long flags = SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+    SDLRenderer (SDL_Window* sdlWindow);
     ~SDLRenderer ();
 
     // The renderer also is factory for textures. In SDL the relationship

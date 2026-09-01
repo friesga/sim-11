@@ -3,8 +3,8 @@ target_compile_definitions(${TARGET} PRIVATE
 )
 
 target_include_directories(${TARGET} PRIVATE
-    C:/Libraries/SDL2-2.24.2/include
-    C:/Libraries/SDL2_image-2.6.2/include
+    C:/Libraries/SDL3-3.4.14/include
+    C:/Libraries/SDL3_image-3.4.4/include
 
     "${CMAKE_SOURCE_DIR}/contrib/termio/include"
     "${CMAKE_SOURCE_DIR}/contrib/clock_gettime/include"
@@ -13,8 +13,8 @@ target_include_directories(${TARGET} PRIVATE
 )
 
 target_link_libraries(${TARGET} PRIVATE
-    C:/Libraries/SDL2-2.24.2/lib/x64/SDL2.lib
-    C:/Libraries/SDL2_image-2.6.2/lib/x64/SDL2_image.lib
+    C:/Libraries/SDL3-3.4.14/lib/SDL3.lib
+    C:/Libraries/SDL3_image-3.4.4/lib/SDL3_image.lib
 )
 
 # Unit-test target
@@ -27,14 +27,14 @@ target_include_directories(${SIM11_TEST_TARGET} PUBLIC
     "${CMAKE_SOURCE_DIR}/include"
     "${CMAKE_SOURCE_DIR}/src"
     C:/Tools/gtest-1.16.0/include
-    C:/Libraries/SDL2-2.24.2/include
-    C:/Libraries/SDL2_image-2.6.2/include
+    C:/Libraries/SDL3-3.4.14/include
+    C:/Libraries/SDL3_image-3.4.4/include
 )
 
 target_link_libraries(${SIM11_TEST_TARGET} PRIVATE
     C:/Tools/gtest-1.16.0/lib/gtest.lib
-    C:/Libraries/SDL2-2.26.0/SDL2d.lib
-    C:/Libraries/SDL2_image-2.6.2/lib/x64/SDL2_image.lib
+    C:/Libraries/SDL3-3.4.14/lib/SDL3.lib
+    C:/Libraries/SDL3_image-3.4.4/lib/SDL3_image.lib
 )
 
 enable_testing()

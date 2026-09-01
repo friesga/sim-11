@@ -9,10 +9,11 @@ using std::make_unique;
 SDLAudioSystem::SDLAudioSystem ()
     :
     audioMixer_ {make_unique<SDLAudioMixer> ()},
-    audioDevice_ (audioFormat_, [] (void* userdata, Uint8* stream, int length) {
-    static_cast<SDLAudioSystem*>(userdata)->audioCallback (userdata,
-        reinterpret_cast<AudioFrame*> (stream),
-        length / static_cast<int>(sizeof (AudioFrame)));
+    audioDevice_ (audioFormat_, [] (void* userdata, SDL_AudioStream* audioStream,
+        int additional_amount, int total_amount)
+        {
+            static_cast<SDLAudioSystem*>(userdata)->audioCallback (userdata,
+                audioStream, total_amount / static_cast<int>(sizeof (AudioFrame)));
         }, this)
 { }
 
@@ -63,11 +64,11 @@ AudioPlayer* SDLAudioSystem::createPlayer (optional<string> filename)
     return audioPlayers_.back ().get ();
 }
 
-void SDLAudioSystem::audioCallback (void* userdata, AudioFrame* stream,
+void SDLAudioSystem::audioCallback (void* userdata, SDL_AudioStream* audioStream,
     size_t numberOfFrames)
 {
     SDLAudioDeviceLock lock {audioDevice_};
 
-    audioMixer_->fill (stream, numberOfFrames);
+    audioMixer_->fill (audioStream, numberOfFrames);
 
 }

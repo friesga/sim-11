@@ -10,19 +10,19 @@ SDLAudioSpec::SDLAudioSpec (const AudioFormat & format)
     switch (format.sampleFormat)
     {
         case AudioSampleFormat::UInt8:
-            sdl_AudioSpec_.format = AUDIO_U8;
+            sdl_AudioSpec_.format = SDL_AUDIO_U8;
             break;
 
         case AudioSampleFormat::Int16:
-            sdl_AudioSpec_.format = AUDIO_S16SYS;
+            sdl_AudioSpec_.format = SDL_AUDIO_S16;
             break;
 
         case AudioSampleFormat::Int32:
-            sdl_AudioSpec_.format = AUDIO_S32SYS;
+            sdl_AudioSpec_.format = SDL_AUDIO_S32;
             break;
 
         case AudioSampleFormat::Float32:
-            sdl_AudioSpec_.format = AUDIO_F32SYS;
+            sdl_AudioSpec_.format = SDL_AUDIO_F32;
             break;
 
         default:
@@ -49,19 +49,19 @@ SDLAudioSpec::operator AudioFormat () const
 
     switch (sdl_AudioSpec_.format)
     {
-        case AUDIO_U8:
+        case SDL_AUDIO_U8:
             format.sampleFormat = AudioSampleFormat::UInt8;
             break;
 
-        case AUDIO_S16SYS:
+        case SDL_AUDIO_S16:
             format.sampleFormat = AudioSampleFormat::Int16;
             break;
 
-        case AUDIO_S32SYS:
+        case SDL_AUDIO_S32:
             format.sampleFormat = AudioSampleFormat::Int32;
             break;
 
-        case AUDIO_F32SYS:
+        case SDL_AUDIO_F32:
             format.sampleFormat = AudioSampleFormat::Float32;
             break;
 

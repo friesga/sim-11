@@ -33,20 +33,20 @@ SDLAudioStream::SDLAudioStream (vector<AudioFrame> frames)
 SDLAudioStream::SDLAudioStream (vector<uint8_t>& wavData,
     const AudioFormat& audioFormat)
 {
-    SDL_RWops* rw = SDL_RWFromConstMem (wavData.data (),
+    SDL_IOStream* ioStream = SDL_IOFromConstMem (wavData.data (),
         static_cast<int>(wavData.size ()));
 
-    if (rw == nullptr)
+    if (ioStream == nullptr)
         throw std::runtime_error (SDL_GetError ());
 
     SDL_AudioSpec wavSpec {};
     Uint8* wavBuffer = nullptr;
     Uint32 wavLength = 0;
 
-    if (SDL_LoadWAV_RW (rw, 1, &wavSpec, &wavBuffer, &wavLength) == nullptr)
+    if (!SDL_LoadWAV_IO (ioStream, 1, &wavSpec, &wavBuffer, &wavLength))
         throw std::runtime_error (SDL_GetError ());
 
-    WAVBufferPtr wavBufferPtr {wavBuffer, SDL_FreeWAV};
+    WAVBufferPtr wavBufferPtr {wavBuffer, SDL_free};
 
     convertWAVdata (wavBufferPtr, wavLength, wavSpec, SDLAudioSpec {audioFormat});
 }
@@ -68,12 +68,12 @@ void SDLAudioStream::loadWAVFile (const char* filename,
     // the length of the audio data in bytes. SDL_LoadWAV will allocate memory
     // for the raw data buffer, which must be freed with SDL_FreeWAV when no
     // longer needed.
-    if (SDL_LoadWAV (filename, &wavSpec, &rawWavBuffer, &wavLength) == nullptr)
+    if (!SDL_LoadWAV (filename, &wavSpec, &rawWavBuffer, &wavLength))
         throw std::runtime_error ("WAV file " + string (filename) + " could not be loaded");
 
     // Create a unique_ptr to the WAV data from the raw buffer memory,
     // ensuring the buffer is freed when no longer needed.
-    WAVBufferPtr wavBuffer {rawWavBuffer, SDL_FreeWAV};
+    WAVBufferPtr wavBuffer {rawWavBuffer, SDL_free};
 
     convertWAVdata (wavBuffer, wavLength, wavSpec, targetSpec);
 }
@@ -109,64 +109,32 @@ size_t SDLAudioStream::fill (AudioFrame* stream, size_t numberOfFrames)
     return framesWritten;
 }
 
-// This functions converts the WAV data in the given buffer with the given
+// This function converts the WAV data in the given buffer with the given
 // length and in the given format, to data in the samples_ vector with
 // the given target format.
 //
 void SDLAudioStream::convertWAVdata (WAVBufferPtr& wavBuffer, Uint32 bufferSize,
     SDL_AudioSpec fromSpec, SDL_AudioSpec targetSpec)
 {
-    // Build an SDL_AudioCVT structure that describes how to convert the audio data
-    // from the WAV file format (fromSpec) to the target audio format (targetSpec).
-    SDL_AudioCVT cvt {};
+    Uint8* convertedData = nullptr;
+    int convertedDataLength = 0;
 
-    if (SDL_BuildAudioCVT (&cvt,
-        fromSpec.format, fromSpec.channels, fromSpec.freq,
-        targetSpec.format, targetSpec.channels, targetSpec.freq) < 0)
+    Uint8* sourceData = wavBuffer.get ();
+    const int sourceDataLength = static_cast<int> (bufferSize);
+
+    if (!SDL_ConvertAudioSamples (&fromSpec, sourceData, sourceDataLength, &targetSpec,
+        &convertedData, &convertedDataLength))
     {
-        throw std::runtime_error ("SDL_BuildAudioCVT failed");
+        throw std::runtime_error (SDL_GetError ());
     }
 
-    // Set the length of the audio data to be converted from the length
-    // of the WAV data loaded by SDL_LoadWAV.
-    // len_mult is the length multiplier for determining the size of the
-    // converted data. The audio buffer may need to be larger than either
-    // the original data or the converted data. The allocated size of buf
-    // should be len * len_mult.
-    //
-    cvt.len = static_cast<int> (bufferSize);
-
-    const auto requiredSizeInBytes =
-        static_cast<size_t> (cvt.len) *
-        static_cast<size_t> (cvt.len_mult);
-
-    // Round up the required size in bytes to the nearest multiple of the size
-    // of an SDLAudioFrame, and then convert to the required size in frames.
-    const std::size_t requiredSizeInFrames =
-        (requiredSizeInBytes + sizeof (AudioFrame) - 1) / sizeof (AudioFrame);
-
-    // Resize the samples_ vector to accommodate the converted audio data
-    // and set cvt buffer pointer to the raw samples_ data. The cvt buffer
-    // pointer has to be set after the resize, because the samples_ raw data
-    // pointer will be zero if no data has been allocated yet.
-    samples_.resize (requiredSizeInFrames);
-
-    // Use the raw samples_ data pointer as the destination buffer for the
-    // audio. The conversion buffer cannot be defined as a vector or stream
-    // of AudioFrames as the audio format is not known until after the
-    // conversion.
-    auto* conversionBuffer =
-        reinterpret_cast<Uint8*> (samples_.data ());
-
-    memcpy (conversionBuffer, wavBuffer.get (), cvt.len);
-
-    cvt.buf = conversionBuffer;
-
-    if (SDL_ConvertAudio (&cvt) != 0)
-        throw std::runtime_error (SDL_GetError ());
-
     const std::size_t actualFrameCount =
-        static_cast<std::size_t>(cvt.len_cvt) / sizeof (AudioFrame);
+        static_cast<std::size_t>(convertedDataLength) / sizeof (AudioFrame);
 
-    samples_.resize (actualFrameCount);
+    const auto* frames =
+        reinterpret_cast<const AudioFrame*>(convertedData);
+
+    samples_.insert (samples_.end (), frames, frames + actualFrameCount);
+
+    SDL_free (convertedData);
 }

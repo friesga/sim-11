@@ -13,9 +13,6 @@
 
 using std::cerr;
 
-// Get rid of SDL's main function
-#undef main
-
 SystemConfig createSystemConfig (const char* const &configFile)
 {
     IniProcessor configProcessor;

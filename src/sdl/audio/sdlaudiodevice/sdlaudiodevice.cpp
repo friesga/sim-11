@@ -5,7 +5,7 @@
 
 // The audio device is started by default
 SDLAudioDevice::SDLAudioDevice (const AudioFormat& format,
-    SDL_AudioCallback callback, void* userdata)
+    SDL_AudioStreamCallback callback, void* userdata)
 {
     init (format, callback, userdata);
     start ();
@@ -13,65 +13,57 @@ SDLAudioDevice::SDLAudioDevice (const AudioFormat& format,
 
 SDLAudioDevice::~SDLAudioDevice ()
 {
-    SDL_CloseAudioDevice (audioDevice_);
+    // As the stream was created with SDL_OpenAudioDeviceStream, the audio
+    // device to which this stream was bound will be closed too.
+    SDL_DestroyAudioStream (audioStream_);
 }
 
 void SDLAudioDevice::start ()
 {
-    SDL_PauseAudioDevice (audioDevice_, 0);
+    SDL_ResumeAudioStreamDevice (audioStream_);
 }
 
 void SDLAudioDevice::pause ()
 {
-    SDL_PauseAudioDevice (audioDevice_, 1);
+    SDL_PauseAudioStreamDevice (audioStream_);
 }
 
 bool SDLAudioDevice::isPlaying () const
 {
-    return SDL_GetAudioDeviceStatus (audioDevice_) ==
-        SDL_AudioStatus::SDL_AUDIO_PLAYING;
+    return !SDL_AudioStreamDevicePaused (audioStream_);
 }
 
 void SDLAudioDevice::lock ()
 {
-    SDL_LockAudioDevice (audioDevice_);
+    SDL_LockAudioStream (audioStream_);
 }
 
 void SDLAudioDevice::unlock ()
 {
-    SDL_UnlockAudioDevice (audioDevice_);
+    SDL_UnlockAudioStream (audioStream_);
 }
 
 AudioFormat SDLAudioDevice::audioFormat () const
 {
-    return SDLAudioSpec {obtainedAudioSpec_};
+    SDL_AudioSpec sourceAudioSpec_ {};
+    SDL_AudioSpec destinationAudioSpec_ {};
+
+    SDL_GetAudioStreamFormat (audioStream_, &sourceAudioSpec_, &destinationAudioSpec_);
+    return SDLAudioSpec {destinationAudioSpec_};
 }
 
 void SDLAudioDevice::init (const AudioFormat& desiredAudioFormat,
-    SDL_AudioCallback callback, void* userdata)
+    SDL_AudioStreamCallback callback, void* userdata)
 {
     SDL_AudioSpec desiredAudioSpec = SDLAudioSpec {desiredAudioFormat};
 
-    desiredAudioSpec.samples = 1024;
-    desiredAudioSpec.callback = callback;
-    desiredAudioSpec.userdata = userdata;
-
-    audioDevice_ = SDL_OpenAudioDevice (
-        nullptr,
-        0,
+    audioStream_ = SDL_OpenAudioDeviceStream (
+        SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK,
         &desiredAudioSpec,
-        &obtainedAudioSpec_,
-        SDL_AUDIO_ALLOW_FREQUENCY_CHANGE
+        callback,
+        userdata
     );
 
-    if (audioDevice_ == 0)
+    if (audioStream_ == NULL)
         throw std::runtime_error ("SDL_OpenAudioDevice failed: " + string (SDL_GetError ()));
-
-    if (obtainedAudioSpec_.format != desiredAudioSpec.format ||
-        obtainedAudioSpec_.channels != desiredAudioSpec.channels)
-    {
-        SDL_CloseAudioDevice (audioDevice_);
-        audioDevice_ = 0;
-        throw std::runtime_error ("Unexpected audio format from SDL_OpenAudioDevice");
-    }
 }

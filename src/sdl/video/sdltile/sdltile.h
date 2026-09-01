@@ -5,7 +5,7 @@
 #include "sdl/video/sdlrenderer/sdlrenderer.h"
 #include "imagedata/include/image.h"
 
-#include <SDL.h>
+#include <SDL3/SDL.h>
 #include <string>
 #include <utility>
 #include <memory>

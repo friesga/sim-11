@@ -3,7 +3,7 @@
 
 #include "../include/audio.h"
 
-#include <SDL.h>
+#include <SDL3/SDL.h>
 
 // This class is a wrapper around SDL_AudioSpec and converts a AudioFormat
 // to an SDL_AudioSpec and vice versa.

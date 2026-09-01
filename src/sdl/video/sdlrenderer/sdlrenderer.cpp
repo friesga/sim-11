@@ -8,14 +8,24 @@ using std::runtime_error;
 using std::string;
 using std::unique_ptr;
 
-SDLRenderer::SDLRenderer (SDL_Window *sdlWindow, int index, unsigned long flags)
+SDLRenderer::SDLRenderer (SDL_Window *sdlWindow)
 {
     // Create renderer for the given window
-    sdl2_Renderer_ = SDL_CreateRenderer (sdlWindow, index, flags);
+    sdl2_Renderer_ = SDL_CreateRenderer (sdlWindow, NULL);
 
     if (sdl2_Renderer_ == NULL)
         throw runtime_error ("Renderer could not be created. SDL error: " +
             string (SDL_GetError ()));
+
+    // WASM The renderer has to be created with the
+    // SDL_RENDERER_PRESENTVSYNC flag to avoid SDL2 setting the frame
+    // rate.
+    // See: https://github.com/emscripten-core/emscripten/issues/11788
+    // 
+    // In SDL3 the SDL_RENDERER_PRESENTVSYNC flag is replaced by the
+    // SDL_SetRenderVSync function.
+    //
+    SDL_SetRenderVSync (sdl2_Renderer_, SDL_RENDERER_VSYNC_ADAPTIVE);
 }
 
 SDLRenderer::~SDLRenderer ()
@@ -70,15 +80,24 @@ void SDLRenderer::clear ()
 void SDLRenderer::copy (SDLTexture& texture)
 {
     SDL_SetRenderTarget (sdl2_Renderer_, nullptr);
-    SDL_RenderCopy (sdl2_Renderer_, texture.sdl2_Texture_, NULL, NULL);
+    SDL_RenderTexture (sdl2_Renderer_, texture.sdl2_Texture_, NULL, NULL);
 }
 
 void SDLRenderer::copy (SDLTexture& texture, Frame<int> renderFrame)
 {
     // Set rendering space and render texture
-    SDL_Rect renderQuad {renderFrame.x, renderFrame.y, renderFrame.width,
-        renderFrame.height};
-    SDL_RenderCopy (sdl2_Renderer_, texture.sdl2_Texture_, NULL, &renderQuad);
+    // Note: In an initializer_list an implicit conversion from int to float
+    // is not allowed, hence the explicit conversion to float.
+    //
+    SDL_FRect renderQuad
+    {
+        static_cast<float> (renderFrame.x),
+        static_cast<float> (renderFrame.y),
+        static_cast<float> (renderFrame.width),
+        static_cast<float> (renderFrame.height)
+    };
+
+    SDL_RenderTexture (sdl2_Renderer_, texture.sdl2_Texture_, NULL, &renderQuad);
 }
 
 void SDLRenderer::update ()

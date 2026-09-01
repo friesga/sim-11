@@ -3,13 +3,13 @@
 
 #include "../include/audio.h"
 
-#include <SDL.h>
+#include <SDL3/SDL.h>
 
 class SDLAudioDevice
 {
 public:
     explicit SDLAudioDevice (const AudioFormat& format,
-        SDL_AudioCallback callback, void *userdata);
+        SDL_AudioStreamCallback callback, void *userdata);
     ~SDLAudioDevice ();
 
     SDLAudioDevice (const SDLAudioDevice&) = delete;
@@ -23,11 +23,10 @@ public:
     AudioFormat audioFormat () const;
 
 private:
-    SDL_AudioDeviceID audioDevice_ {0};
-    SDL_AudioSpec obtainedAudioSpec_ {};
+    SDL_AudioStream* audioStream_ {NULL};
 
     void init (const AudioFormat& desiredAudioFormat,
-        SDL_AudioCallback callback, void *userdata);
+        SDL_AudioStreamCallback callback, void *userdata);
 };
 
 

@@ -1,13 +1,15 @@
 #include "sdltexture.h"
 
-#include <SDL_image.h>
+#include <SDL3_image/SDL_image.h>
 #include <stdexcept>
 #include <string>
+#include <cmath>   
 
 using std::runtime_error;
 using std::string;
 using std::pair;
 using std::make_pair;
+using std::round;
 
 // The default constructor creates an empty texture with the given dimensions
 SDLTexture::SDLTexture (SDL_Renderer* renderer, int textureWidth, int textureHeight)
@@ -33,9 +35,9 @@ SDLTexture::SDLTexture (SDL_Renderer* renderer, string imageFile)
 
 SDLTexture::SDLTexture (SDL_Renderer* renderer, Image& image)
 {
-    SDL_RWops* rw = SDL_RWFromConstMem (image.data ().data (),
+    SDL_IOStream* rw = SDL_IOFromConstMem (image.data ().data (),
         image.data ().size ());
-    sdl2_Texture_ = IMG_LoadTexture_RW (renderer, rw, 1);
+    sdl2_Texture_ = IMG_LoadTexture_IO (renderer, rw, true);
 }
 
 SDLTexture::~SDLTexture ()
@@ -75,10 +77,8 @@ void SDLTexture::setColorModulation (uint8_t red, uint8_t green, uint8_t blue)
 
 pair<int, int> SDLTexture::dimensions () const
 {
-    Uint32 format;
-    int access;
-    int width, height;
+    float width, height;
 
-    SDL_QueryTexture (sdl2_Texture_, &format, &access, &width, &height);
-    return make_pair (width, height);
+    SDL_GetTextureSize (sdl2_Texture_, &width, &height);
+    return make_pair (round (width), round (height));
 }
