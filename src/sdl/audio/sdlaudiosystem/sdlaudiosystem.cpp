@@ -13,7 +13,7 @@ SDLAudioSystem::SDLAudioSystem ()
         int additional_amount, int total_amount)
         {
             static_cast<SDLAudioSystem*>(userdata)->audioCallback (userdata,
-                audioStream, total_amount / static_cast<int>(sizeof (AudioFrame)));
+                audioStream, additional_amount / static_cast<int>(sizeof (AudioFrame)));
         }, this)
 { }
 
