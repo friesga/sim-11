@@ -10,10 +10,9 @@ SDLProperties::SDLProperties (const char* title, int x, int y,
     SDL_SetNumberProperty (properties_, SDL_PROP_WINDOW_CREATE_Y_NUMBER, y);
     SDL_SetNumberProperty (properties_, SDL_PROP_WINDOW_CREATE_WIDTH_NUMBER, width);
     SDL_SetNumberProperty (properties_, SDL_PROP_WINDOW_CREATE_HEIGHT_NUMBER, height);
-    
+
     if (flag == Window::Hidden)
-        SDL_SetBooleanProperty (properties_, SDL_PROP_WINDOW_CREATE_FLAGS_NUMBER,
-            SDL_PROP_WINDOW_CREATE_HIDDEN_BOOLEAN);
+        SDL_SetBooleanProperty (properties_, SDL_PROP_WINDOW_CREATE_HIDDEN_BOOLEAN, true);
 }
 
 SDLProperties::~SDLProperties ()

@@ -19,6 +19,11 @@ public:
 
     SDLProperties (const char* title, int x, int y,
         int width, int height, Window flag);
+
+    // Disallow copy and assignment to avoid double use and free of
+    // SDL_PropertiesID.
+    SDLProperties (const SDLProperties&) = delete;
+    SDLProperties& operator=(const SDLProperties&) = delete;
     ~SDLProperties ();
     operator SDL_PropertiesID () const;
 
