@@ -10,11 +10,13 @@
 #include <string>
 #include <vector>
 #include <queue>
+#include <mutex>
 
 using std::unique_ptr;
 using std::string;
 using std::vector;
 using std::queue;
+using std::mutex;
 
 class SDLAudioMixer 
 {
@@ -29,6 +31,7 @@ public:
     void fill (SDL_AudioStream* audioStream, size_t numberOfFrames);
 
 private:
+    mutex audioPlayersMutex_;
     vector<AudioPlayer*> audioPlayers_ {};
     vector<AudioFrame> channelBuffer_ {};
     vector<AudioFrame> streamBuffer_ {};

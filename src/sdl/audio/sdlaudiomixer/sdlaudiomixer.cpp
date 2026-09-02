@@ -5,6 +5,7 @@
 
 using std::make_unique;
 using std::max;
+using std::lock_guard;
 
 // These actions require locking of the audio device. This has to accomplished
 // by the caller.
@@ -38,6 +39,9 @@ size_t SDLAudioMixer::mixChannels (AudioFrame* stream, size_t numberOfFrames)
     // For every available channel read the contents of that channel into
     // a buffer and add that channel into the mix in the output stream.
     // Keep track of the maximum number of AudioFrames put into the stream.
+    //
+    lock_guard<mutex> lock (audioPlayersMutex_);
+
     for (AudioPlayer* audioPlayer : audioPlayers_)
     {
         // At this point possibly the channelBuffer should be cleared, but
@@ -67,6 +71,7 @@ void SDLAudioMixer::adjustVolume (AudioFrame* stream, size_t numberOfFrames)
 
 void SDLAudioMixer::createChannel (AudioPlayer* audioPlayer)
 {
+    lock_guard<mutex> lock (audioPlayersMutex_);
     audioPlayers_.push_back (audioPlayer);
 }
 
