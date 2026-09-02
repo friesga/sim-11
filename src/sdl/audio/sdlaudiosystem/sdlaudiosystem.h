@@ -76,10 +76,15 @@ public:
         size_t numberOfFrames);
 
 private:
+    // Note that the initialization sequence of the members is determined by
+    // the order of their declaration. The audioMixer_ and audioPlayers_ have
+    // to be created before the audioDevice_ as the audioDevice_ callback uses
+    // the audioMixer_ pointer and that callback can be called immediately after
+    // the audioDevice_ is created.
     AudioFormat const audioFormat_ {48000, 2, AudioSampleFormat::Float32};
-    SDLAudioDevice audioDevice_;
     unique_ptr<SDLAudioMixer> audioMixer_;
     vector<unique_ptr<AudioPlayer>> audioPlayers_ {};
+    SDLAudioDevice audioDevice_;
 };
 
 #endif // _SDLAUDIOSYSTEM_H_
