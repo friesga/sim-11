@@ -3,7 +3,7 @@ target_compile_definitions(${TARGET} PRIVATE
 )
 
 target_include_directories(${TARGET} PRIVATE
-    /usr/include/SDL2
+    /usr/local/include
 
     "${CMAKE_SOURCE_DIR}/contrib/termio/include"
     "${CMAKE_SOURCE_DIR}/contrib/clock_gettime/include"
@@ -16,8 +16,8 @@ target_link_options (${TARGET} PRIVATE
 )
 
 target_link_libraries(${TARGET} PRIVATE
-    SDL2
-    SDL2_image
+    SDL3
+    SDL3_image
 )
 
 # Unit-test target
@@ -29,19 +29,12 @@ set_property(TARGET ${SIM11_TEST_TARGET}
 target_include_directories(${SIM11_TEST_TARGET} PUBLIC
     "${CMAKE_SOURCE_DIR}/include"
     "${CMAKE_SOURCE_DIR}/src"
-    /usr/include/SDL2
+    /usr/local/include
 )
 
 target_link_libraries(${SIM11_TEST_TARGET} PRIVATE
-    SDL2
-    SDL2_image
+    SDL3
+    SDL3_image
 )
 
 enable_testing()
-
-install(FILES
-    "${CMAKE_SOURCE_DIR}/externals/SDL2.dll"
-    "${CMAKE_SOURCE_DIR}/externals/SDL2_image.dll"
-    "${CMAKE_SOURCE_DIR}/externals/SDL2d.dll"
-    DESTINATION sim-11
-)
