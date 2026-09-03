@@ -58,7 +58,6 @@ int main (int argc, char const** argv)
     CmdLineOptions cmdLineOptions (argc, argv);
 
     SDL_Init (SDL_INIT_VIDEO);
-    IMG_Init (IMG_INIT_PNG);
 
     emscripten_set_canvas_element_size ("#canvas", 500, 1000);
     emscripten_set_element_css_size ("#canvas", 500, 1000);

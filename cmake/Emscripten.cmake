@@ -27,8 +27,8 @@ target_include_directories(${SIM11_WASM_TARGET} PRIVATE
     "${CMAKE_SOURCE_DIR}/src"
     "${CMAKE_SOURCE_DIR}/include"
     C:/Tools/emsdk-5.0.1/upstream/emscripten/cache/sysroot/include/emscripten
-    C:/Libraries/SDL2-2.24.2/include
-    C:/Libraries/SDL2_image-2.6.2/include
+    C:/Libraries/SDL3-3.4.14/include
+    C:/Libraries/SDL3_image-3.4.4/include
 )
 
 # Warnings about unqualified std::move calls are suppressed as Clang
@@ -47,6 +47,11 @@ target_compile_options(${SIM11_WASM_TARGET} PRIVATE
     -Wno-uninitialized
 )
 
+target_link_libraries(${SIM11_WASM_TARGET} PRIVATE
+    C:/Libraries/SDL3-3.4.14/emscripten/libSDL3.a
+    C:/Libraries/SDL3_image-3.4.4/emscripten/libSDL3_image.a
+)
+
 # The SHELL: prefix is necessary to prevent CMake from combining the
 # --preload-file options into a single option with a comma-separated list of
 # files.
@@ -54,12 +59,8 @@ target_link_options(${SIM11_WASM_TARGET} PRIVATE
     -O2
     -fexceptions
     -pthread
-
-    -sUSE_SDL=2
-    -sUSE_SDL_IMAGE=2
     -sALLOW_MEMORY_GROWTH=1
     -sFORCE_FILESYSTEM
-    "-sSDL2_IMAGE_FORMATS=[\"png\"]"
     -sEXPORTED_FUNCTIONS=_main,_on_xterm_char
     -sPTHREAD_POOL_SIZE_STRICT=0
 
