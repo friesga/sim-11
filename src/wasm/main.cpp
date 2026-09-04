@@ -59,11 +59,13 @@ int main (int argc, char const** argv)
 
     SDL_Init (SDL_INIT_VIDEO);
 
-    emscripten_set_canvas_element_size ("#canvas", 500, 1000);
-    emscripten_set_element_css_size ("#canvas", 500, 1000);
+    int windowHeight = static_cast<int> (windowWidth / h9642AspectRatio);
 
-    sdlWindow = std::make_unique<SDLWindow> ("sim-11", Frame {100, 100, windowWidth,
-        static_cast<int> (windowWidth / h9642AspectRatio)},
+    emscripten_set_canvas_element_size ("#canvas", windowWidth, windowHeight);
+    emscripten_set_element_css_size ("#canvas", windowWidth, windowHeight);
+
+    sdlWindow = std::make_unique<SDLWindow> ("sim-11",
+        Frame {100, 100, windowWidth, windowHeight},
         std::set<Window::Flag> {Window::Flag::WindowHidden});
 
     Qbus* bus = new Qbus ();

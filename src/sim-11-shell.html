@@ -301,9 +301,11 @@
         const app2 = document.getElementById("app2");
         const app3 = document.getElementById("app3");
 
+        // The dimensions of the WinBox must be equal to the dimensions of
+        // the canvas, as defined in main.cpp.
         new WinBox("PDP-11", {
             width: 500,
-            height: 1000,
+            height: 921,
             x: 40,
             y: 40,
             mount: app1
