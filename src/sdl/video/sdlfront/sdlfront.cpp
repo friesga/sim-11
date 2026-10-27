@@ -4,9 +4,11 @@
 
 using std::make_unique;
 
-SDLFront::SDLFront (unique_ptr<SDLTile> frontTile)
+SDLFront::SDLFront (unique_ptr<SDLTile> frontTile,
+    EventHandler eventHandler)
     : 
-    frontTile_ (move (frontTile))
+    frontTile_ {move (frontTile)},
+    eventHandler_ {eventHandler}
 {}
 
 SDLFront::~SDLFront ()
@@ -18,5 +20,8 @@ void SDLFront::render ()
 }
 
 void SDLFront::handleEvent (InputEvent const* event)
-{ }
+{
+    if (eventHandler_)
+        eventHandler_ (event);
+}
 
