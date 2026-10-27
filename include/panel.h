@@ -76,6 +76,7 @@ class Front
 {
 public:
     virtual void render () = 0;
+    virtual void handleEvent (InputEvent const* event) = 0;
     virtual ~Front () = default;
 };
 

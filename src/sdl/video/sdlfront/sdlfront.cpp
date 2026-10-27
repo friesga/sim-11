@@ -17,3 +17,6 @@ void SDLFront::render ()
     frontTile_->render ();
 }
 
+void SDLFront::handleEvent (InputEvent const* event)
+{ }
+

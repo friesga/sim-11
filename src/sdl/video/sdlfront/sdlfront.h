@@ -8,18 +8,17 @@
 #include <SDL3/SDL.h>
 #include <memory>
 
-using std::unique_ptr;
-
 class SDLFront : public Front
 {
 public:
     SDLFront (unique_ptr<SDLTile> frontTile);
     ~SDLFront ();
     void render () override;
+    void handleEvent (InputEvent const* event);
 
 private:
     // The tile to use for this front
-    unique_ptr<SDLTile> frontTile_;
+    std::unique_ptr<SDLTile> frontTile_;
 };
 
 #endif // _SDLFRONT_H_
