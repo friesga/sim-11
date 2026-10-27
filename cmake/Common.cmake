@@ -47,6 +47,7 @@ add_subdirectory(src/main)
 add_subdirectory(src/mem)
 add_subdirectory(src/signal)
 add_subdirectory(src/imagedata)
+add_subdirectory(src/operator_dialog)
 add_subdirectory(src/wasm)
 add_subdirectory(gtest)
 

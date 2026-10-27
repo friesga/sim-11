@@ -12,6 +12,7 @@
 #include "rlv12command/rlv12command.h"
 #include "configdata/rl/rlconfig/rlconfig.h"
 #include "cmdprocessor/cmdprocessor.h"
+#include "operator_dialog/include/cartridge_handler.h"
 
 #include <array>
 #include <memory>               // for std::unique_ptr<>
@@ -26,8 +27,44 @@ class CmdProcessor;
 // Implementation of the RL11, RLV11 and RLV12 controllers.
 class RLV12 : public AbstractBusDevice
 {
+public:
     friend class CmdProcessor;
 
+    // Constructors/destructor
+    RLV12 (Bus* bus);
+    RLV12 (Bus* bus, Window* window, CartridgeHandler* cartridgeHandler,
+        const RLConfig& rlConfig);
+    RLV12 (Bus* bus, Window* window, CartridgeHandler* cartridgeHandler,
+        const RL11Config& rl11Config);
+    RLV12 (Bus* bus, Window* window, CartridgeHandler* cartridgeHandler,
+        const RLV11Config& rlv11Config);
+    RLV12 (Bus* bus, Window* window, CartridgeHandler* cartridgeHandler,
+        const RLV12Config& rlv12Config);
+    ~RLV12 ();
+
+    // Required functions
+    void reset () override;
+    bool responsible (BusAddress addr) override;
+    CondData<u16> read (BusAddress busAddress) override;
+    StatusCode writeByte (BusAddress busAddress, u8 data) override;
+    StatusCode writeWord (BusAddress busAddress, u16 data) override;
+
+    // Declare the signal receivers
+    void BINITReceiver (bool signalValue);
+
+    // RLV1[12] specific function
+    inline size_t numUnits ();
+    inline RL01_02* unit (size_t unitNumber);
+
+    // Functions to set and get memory adresses consistently for
+    // 16-, 18- and 22-bit systems
+    void memAddrToRegs (u32 memoryAddress);
+    BusAddress memAddrFromRegs ();
+    void updateBAE ();
+    u16 rlcsPlusDriveStatus (RL01_02& unit);
+    constexpr u16 getBA16BA17 (u16 csr_);
+
+private:
     // Define RLV12 registers as offsets from the controllers base address
     enum
     {
@@ -104,36 +141,7 @@ class RLV12 : public AbstractBusDevice
     void setDone (RL01_02& unit, u16 status);
     u16 getStatusCmd (RL01_02* unit);
 
-public:
-    // Constructors/destructor
-    RLV12 (Bus* bus);
-    RLV12 (Bus* bus, Window* window, const RLConfig& rlConfig);
-    RLV12 (Bus* bus, Window* window, const RL11Config& rl11Config);
-    RLV12 (Bus* bus, Window* window, const RLV11Config& rlv11Config);
-    RLV12 (Bus* bus, Window* window, const RLV12Config& rlv12Config);
-    ~RLV12 ();
 
-    // Required functions
-    void reset () override;
-    bool responsible (BusAddress addr) override;
-    CondData<u16> read (BusAddress busAddress) override;
-    StatusCode writeByte (BusAddress busAddress, u8 data) override;
-    StatusCode writeWord (BusAddress busAddress, u16 data) override;
-
-    // Declare the signal receivers
-    void BINITReceiver (bool signalValue);
-
-    // RLV1[12] specific function
-    inline size_t numUnits ();
-    inline RL01_02* unit (size_t unitNumber);
-
-    // Functions to set and get memory adresses consistently for
-    // 16-, 18- and 22-bit systems
-    void memAddrToRegs (u32 memoryAddress);
-    BusAddress memAddrFromRegs ();
-    void updateBAE ();
-    u16 rlcsPlusDriveStatus (RL01_02& unit);
-    constexpr u16 getBA16BA17 (u16 csr_);
 };
 
 

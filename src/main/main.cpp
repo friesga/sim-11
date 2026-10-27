@@ -8,6 +8,7 @@
 #include "sdl/video/sdlwindow/sdlwindow.h"
 #include "sdl/audio/sdlaudiosystem/sdlaudiosystem.h"
 #include "chrono/simulatorclock/simulatorclock.h"
+#include "operator_dialog/SDL/sdlcartridge_handler/sdlcartridge_handler.h"
 
 #include <iostream>
 
@@ -70,6 +71,11 @@ try
 	// SDLWindow constructor.
 	SDLAudioSystem sdlAudioSystem;
 
+	// Create the CartridgeHandler to be used by the disk drives. The handler
+	// varies depending on the platforms. For Windows and Linux the
+	// SDLCartridgeHandler is used.
+	SDLCartridgeHandler sdlCartridgeHandler {};
+
 	// Create a pdp-11 with configured (or default) devices.
 	// The devices are created after creation of the window to make sure the
 	// devices are destructed befor destruction of the SDLWindow. This prevents
@@ -83,11 +89,14 @@ try
 	// configuration.
 	if (cmdLineOptions.config_file)
 	{
-		SystemConfig systemConfig = createSystemConfig (cmdLineOptions.config_file);
-		pdp11.configureDevices (systemConfig, &sdlWindow, &sdlAudioSystem);
+		SystemConfig systemConfig = 
+			createSystemConfig (cmdLineOptions.config_file);
+		pdp11.configureDevices (systemConfig, &sdlWindow,
+			&sdlCartridgeHandler, &sdlAudioSystem);
 	}
 	else
-		pdp11.configureDevices (&sdlWindow, &sdlAudioSystem);
+		pdp11.configureDevices (&sdlWindow, &sdlCartridgeHandler,
+			&sdlAudioSystem);
 
 	// Configuration succeeded and required size of the window is known so it
 	// can be shown now.

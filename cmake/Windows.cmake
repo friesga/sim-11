@@ -5,7 +5,7 @@ target_compile_definitions(${TARGET} PRIVATE
 target_include_directories(${TARGET} PRIVATE
     C:/Libraries/SDL3-3.4.14/include
     C:/Libraries/SDL3_image-3.4.4/include
-
+    C:/Libraries/SDL3_ttf-3.2.2/include
     "${CMAKE_SOURCE_DIR}/contrib/termio/include"
     "${CMAKE_SOURCE_DIR}/contrib/clock_gettime/include"
     "${CMAKE_SOURCE_DIR}/contrib/sys_time_h"
@@ -15,6 +15,7 @@ target_include_directories(${TARGET} PRIVATE
 target_link_libraries(${TARGET} PRIVATE
     C:/Libraries/SDL3-3.4.14/lib/SDL3.lib
     C:/Libraries/SDL3_image-3.4.4/lib/SDL3_image.lib
+    C:/Libraries/SDL3_ttf-3.2.2/lib/SDL3_ttf.lib
 )
 
 # Unit-test target
@@ -29,12 +30,14 @@ target_include_directories(${SIM11_TEST_TARGET} PUBLIC
     C:/Tools/gtest-1.16.0/include
     C:/Libraries/SDL3-3.4.14/include
     C:/Libraries/SDL3_image-3.4.4/include
+    C:/Libraries/SDL3_ttf-3.2.2/include
 )
 
 target_link_libraries(${SIM11_TEST_TARGET} PRIVATE
     C:/Tools/gtest-1.16.0/lib/gtest.lib
     C:/Libraries/SDL3-3.4.14/lib/SDL3.lib
     C:/Libraries/SDL3_image-3.4.4/lib/SDL3_image.lib
+    C:/Libraries/SDL3_ttf-3.2.2/SDL3_ttf.lib
 )
 
 enable_testing()
