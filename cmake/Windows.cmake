@@ -37,7 +37,7 @@ target_link_libraries(${SIM11_TEST_TARGET} PRIVATE
     C:/Tools/gtest-1.16.0/lib/gtest.lib
     C:/Libraries/SDL3-3.4.14/lib/SDL3.lib
     C:/Libraries/SDL3_image-3.4.4/lib/SDL3_image.lib
-    C:/Libraries/SDL3_ttf-3.2.2/SDL3_ttf.lib
+    C:/Libraries/SDL3_ttf-3.2.2/lib/SDL3_ttf.lib
 )
 
 enable_testing()
