@@ -2,7 +2,7 @@
 
 #include "sdl/audio/sdlaudiostream/sdlaudiostream.h"
 #include "sdl/audio/sdlaudiosystem/sdlaudiosystem.h"
-#include "sdl/audio/sdlaudioplayer/sdlaudioplayer.h"  
+#include "sdl/audio/sdlaudioplayer/sdlaudioplayer.h" 
 
 #include <vector>
 #include <cmath>
@@ -21,6 +21,17 @@ public:
     {
         SDL_Init (SDL_INIT_AUDIO);
     }
+
+protected:
+    SDL_AudioSpec spec
+    {
+        .format = SDL_AUDIO_F32,
+        .channels = 2,
+        .freq = 44100
+    };
+
+    SDL_AudioStream* sdlStream =
+        SDL_CreateAudioStream (&spec, &spec);
 };
 
 bool floatEquals (float f1, float f2)
@@ -44,8 +55,15 @@ TEST_F (SDLAudioTest, audioStreamCanBePlayed)
 
     audioPlayer->play (&audioStream);
 
-    AudioFrame* receivedFrames = new AudioFrame[channelSamples.size ()];
-    audioSystem.audioCallback (nullptr, receivedFrames, channelSamples.size ());
+    audioSystem.audioCallback (nullptr, sdlStream, channelSamples.size ());
+
+    // Get the AudioFrames from the AudioStream
+    vector<AudioFrame> receivedFrames (channelSamples.size ());
+    const int receivedBytes = SDL_GetAudioStreamData (
+            sdlStream,
+            receivedFrames.data (),
+            channelSamples.size () * sizeof (AudioFrame));
+
     EXPECT_TRUE (floatEquals (receivedFrames[0].left (), 0.00));
     EXPECT_TRUE (floatEquals (receivedFrames[0].right (), 0.00));
 
@@ -54,9 +72,8 @@ TEST_F (SDLAudioTest, audioStreamCanBePlayed)
 
     EXPECT_TRUE (floatEquals (receivedFrames[2].left (), 0.20));
     EXPECT_TRUE (floatEquals (receivedFrames[2].right (), -0.20));
-
-    delete[] receivedFrames;
 }
+
 
 TEST_F (SDLAudioTest, audioCanBeMixed)
 {
@@ -76,8 +93,15 @@ TEST_F (SDLAudioTest, audioCanBeMixed)
     audioPlayer0->play (&audioStream);
     audioPlayer1->play (&audioStream);
 
-    AudioFrame* receivedFrames = new AudioFrame[channelSamples.size ()];
-    audioSystem.audioCallback (nullptr, receivedFrames, channelSamples.size ());
+    audioSystem.audioCallback (nullptr, sdlStream, channelSamples.size ());
+
+    // Get the AudioFrames from the AudioStream
+    vector<AudioFrame> receivedFrames (channelSamples.size ());
+    const int receivedBytes = SDL_GetAudioStreamData (
+        sdlStream,
+        receivedFrames.data (),
+        channelSamples.size () * sizeof (AudioFrame));
+
     EXPECT_TRUE (floatEquals (receivedFrames[0].left  (), 0.00));
     EXPECT_TRUE (floatEquals (receivedFrames[0].right (), 0.00));
 
@@ -86,8 +110,6 @@ TEST_F (SDLAudioTest, audioCanBeMixed)
 
     EXPECT_TRUE (floatEquals (receivedFrames[2].left  (),  0.40));
     EXPECT_TRUE (floatEquals (receivedFrames[2].right (), -0.40));
-
-    delete[] receivedFrames;
 }
 
 
@@ -125,8 +147,14 @@ TEST_F (SDLAudioTest, differentChanelsCanBeMixed)
     audioPlayer0->play (&audioStream0);
     audioPlayer1->play (&audioStream1);
 
-    AudioFrame* receivedFrames = new AudioFrame[samplesSize];
-    audioSystem.audioCallback (nullptr, receivedFrames, samplesSize);
+    audioSystem.audioCallback (nullptr, sdlStream, samplesSize);
+
+    // Get the AudioFrames from the AudioStream
+    vector<AudioFrame> receivedFrames (samplesSize);
+    const int receivedBytes = SDL_GetAudioStreamData (
+        sdlStream,
+        receivedFrames.data (),
+        samplesSize * sizeof (AudioFrame));
 
     EXPECT_TRUE (floatEquals (receivedFrames[0].left  (), 0.00));
     EXPECT_TRUE (floatEquals (receivedFrames[0].right (), 0.00));
@@ -142,9 +170,8 @@ TEST_F (SDLAudioTest, differentChanelsCanBeMixed)
 
     EXPECT_TRUE (floatEquals (receivedFrames[4].left (), 0.50));
     EXPECT_TRUE (floatEquals (receivedFrames[4].right (), -0.50));
-
-    delete[] receivedFrames;
 }
+
 
 TEST_F (SDLAudioTest, streamIsClamped)
 {
@@ -162,8 +189,14 @@ TEST_F (SDLAudioTest, streamIsClamped)
 
     audioPlayer->play (&audioStream);
 
-    AudioFrame* receivedFrames = new AudioFrame[samples.size ()];
-    audioSystem.audioCallback (nullptr, receivedFrames, samples.size ());
+    audioSystem.audioCallback (nullptr, sdlStream, samples.size ());
+
+    // Get the AudioFrames from the AudioStream
+    vector<AudioFrame> receivedFrames (samples.size ());
+    const int receivedBytes = SDL_GetAudioStreamData (
+        sdlStream,
+        receivedFrames.data (),
+        samples.size () * sizeof (AudioFrame));
 
     EXPECT_TRUE (floatEquals (receivedFrames[0].left  (),  0.90));
     EXPECT_TRUE (floatEquals (receivedFrames[0].right (), -0.90));
@@ -173,9 +206,8 @@ TEST_F (SDLAudioTest, streamIsClamped)
 
     EXPECT_TRUE (floatEquals (receivedFrames[2].left  (),  1.00));
     EXPECT_TRUE (floatEquals (receivedFrames[2].right (), -1.00));
-
-    delete[] receivedFrames;
 }
+
 
 TEST_F (SDLAudioTest, audioMixerStreamIsClamped)
 {
@@ -195,8 +227,14 @@ TEST_F (SDLAudioTest, audioMixerStreamIsClamped)
     audioPlayer0->play (&audioStream);
     audioPlayer1->play (&audioStream);
 
-    AudioFrame* receivedFrames = new AudioFrame[samples.size ()];
-    audioSystem.audioCallback (nullptr, receivedFrames, samples.size ());
+    audioSystem.audioCallback (nullptr, sdlStream, samples.size ());
+
+    // Get the AudioFrames from the AudioStream
+    vector<AudioFrame> receivedFrames (samples.size ());
+    const int receivedBytes = SDL_GetAudioStreamData (
+        sdlStream,
+        receivedFrames.data (),
+        samples.size () * sizeof (AudioFrame));
 
     EXPECT_TRUE (floatEquals (receivedFrames[0].left  (),  0.80));
     EXPECT_TRUE (floatEquals (receivedFrames[0].right (), -0.80));
@@ -206,9 +244,8 @@ TEST_F (SDLAudioTest, audioMixerStreamIsClamped)
 
     EXPECT_TRUE (floatEquals (receivedFrames[2].left  (),   1.00));
     EXPECT_TRUE (floatEquals (receivedFrames[2].right (),  -1.00));
-
-    delete[] receivedFrames;
 }
+
 
 TEST_F (SDLAudioTest, audioPlayerVolumeCanBeSet)
 {
@@ -227,8 +264,14 @@ TEST_F (SDLAudioTest, audioPlayerVolumeCanBeSet)
     audioPlayer->play (&audioStream);
     audioPlayer->setVolume (2.0f);
 
-    AudioFrame* receivedFrames = new AudioFrame[samples.size ()];
-    audioSystem.audioCallback (nullptr, receivedFrames, samples.size ());
+    audioSystem.audioCallback (nullptr, sdlStream, samples.size ());
+
+    // Get the AudioFrames from the AudioStream
+    vector<AudioFrame> receivedFrames (samples.size ());
+    const int receivedBytes = SDL_GetAudioStreamData (
+        sdlStream,
+        receivedFrames.data (),
+        samples.size () * sizeof (AudioFrame));
 
     EXPECT_TRUE (floatEquals (receivedFrames[0].left  (), 0.00));
     EXPECT_TRUE (floatEquals (receivedFrames[0].right (), 0.00));
@@ -238,9 +281,8 @@ TEST_F (SDLAudioTest, audioPlayerVolumeCanBeSet)
 
     EXPECT_TRUE (floatEquals (receivedFrames[2].left  (),  1.00));
     EXPECT_TRUE (floatEquals (receivedFrames[2].right (), -1.00));
-
-    delete[] receivedFrames;
 }
+
 
 // Verify the audio is played once when the channel is set to
 // one-shot mode, and that the audio is not repeated.
@@ -260,13 +302,19 @@ TEST_F (SDLAudioTest, audioCanBePlayedInOneShotMode)
 
     audioPlayer->play (&audioStream, PlaybackMode::OneShot);
 
-    const size_t receivedFramesSize = 10;
-    AudioFrame* receivedFrames = new AudioFrame[10];
+    audioSystem.audioCallback (nullptr, sdlStream, channelSamples.size ());
 
-    for (size_t i = 0; i < receivedFramesSize; ++i)
-        receivedFrames[i] = AudioFrame {0.0f, 0.0f};
+    // Get the AudioFrames from the AudioStream
+    // The test verifies that the frames after the provided samples are zero
+    // and therefore the receivedFrames buffer must be larger than the
+    // channelSamples.size ().
+    vector<AudioFrame> receivedFrames (channelSamples.size () + 1,
+        AudioFrame {0.0f, 0.0f});
 
-    audioSystem.audioCallback (nullptr, receivedFrames, channelSamples.size ());
+    const int receivedBytes = SDL_GetAudioStreamData (
+        sdlStream,
+        static_cast<void*> (receivedFrames.data ()),
+        channelSamples.size () * sizeof (AudioFrame));
 
     EXPECT_TRUE (floatEquals (receivedFrames[0].left (), 0.00));
     EXPECT_TRUE (floatEquals (receivedFrames[0].right (), 0.00));
@@ -276,9 +324,8 @@ TEST_F (SDLAudioTest, audioCanBePlayedInOneShotMode)
 
     EXPECT_TRUE (floatEquals (receivedFrames[3].left (), 0.00));
     EXPECT_TRUE (floatEquals (receivedFrames[3].right (), -0.00));
-
-    delete[] receivedFrames;
 }
+
 
 TEST_F (SDLAudioTest, oneShotModeCanBeRepeated)
 {
@@ -296,13 +343,18 @@ TEST_F (SDLAudioTest, oneShotModeCanBeRepeated)
 
     audioPlayer->play (&audioStream, PlaybackMode::OneShot);
 
-    const size_t receivedFramesSize = 10;
-    AudioFrame* receivedFrames = new AudioFrame[10];
+    audioSystem.audioCallback (nullptr, sdlStream, channelSamples.size ());
 
-    for (size_t i = 0; i < receivedFramesSize; ++i)
-        receivedFrames[i] = AudioFrame {0.0f, 0.0f};
+    // Get the AudioFrames from the AudioStream
+    // The test verifies that the frames after the provided samples are zero
+    // and therefore the receivedFrames buffer must be larger than the
+    // channelSamples.size ().
+    vector<AudioFrame> receivedFrames (10, AudioFrame {0.0f, 0.0f});
 
-    audioSystem.audioCallback (nullptr, receivedFrames, channelSamples.size ());
+    int receivedBytes = SDL_GetAudioStreamData (
+        sdlStream,
+        static_cast<void*> (receivedFrames.data ()),
+        channelSamples.size () * sizeof (AudioFrame));
 
     EXPECT_TRUE (floatEquals (receivedFrames[0].left (), 0.00));
     EXPECT_TRUE (floatEquals (receivedFrames[0].right (), 0.00));
@@ -314,12 +366,17 @@ TEST_F (SDLAudioTest, oneShotModeCanBeRepeated)
     EXPECT_TRUE (floatEquals (receivedFrames[3].right (), -0.00));
 
     // Repeat the one-shot playback
-    for (size_t i = 0; i < receivedFramesSize; ++i)
-        receivedFrames[i] = AudioFrame {0.0f, 0.0f};
-
     audioPlayer->play (&audioStream, PlaybackMode::OneShot);
 
-    audioSystem.audioCallback (nullptr, receivedFrames, channelSamples.size ());
+    audioSystem.audioCallback (nullptr, sdlStream, channelSamples.size ());
+
+    for (AudioFrame audioFrame : channelSamples)
+        audioFrame = AudioFrame {0.0f, 0.0f};
+
+    receivedBytes = SDL_GetAudioStreamData (
+        sdlStream,
+        static_cast<void*> (receivedFrames.data ()),
+        channelSamples.size () * sizeof (AudioFrame));
 
     EXPECT_TRUE (floatEquals (receivedFrames[0].left (), 0.00));
     EXPECT_TRUE (floatEquals (receivedFrames[0].right (), 0.00));
@@ -329,9 +386,8 @@ TEST_F (SDLAudioTest, oneShotModeCanBeRepeated)
 
     EXPECT_TRUE (floatEquals (receivedFrames[3].left (), 0.00));
     EXPECT_TRUE (floatEquals (receivedFrames[3].right (), -0.00));
-
-    delete[] receivedFrames;
 }
+
 
 TEST_F (SDLAudioTest, listOfTracksCanBePlayed)
 {
@@ -360,12 +416,15 @@ TEST_F (SDLAudioTest, listOfTracksCanBePlayed)
         {&audioStream1, PlaybackMode::OneShot}});
 
     const size_t receivedFramesSize = 10;
-    AudioFrame* receivedFrames = new AudioFrame[10];
 
-    for (size_t i = 0; i < receivedFramesSize; ++i)
-        receivedFrames[i] = AudioFrame {0.0f, 0.0f};
+    audioSystem.audioCallback (nullptr, sdlStream, receivedFramesSize);
 
-    audioSystem.audioCallback (nullptr, receivedFrames, receivedFramesSize);
+    vector<AudioFrame> receivedFrames (receivedFramesSize, AudioFrame {0.0f, 0.0f});
+
+    int receivedBytes = SDL_GetAudioStreamData (
+        sdlStream,
+        static_cast<void*> (receivedFrames.data ()),
+        receivedFramesSize * sizeof AudioFrame);
 
     EXPECT_TRUE (floatEquals (receivedFrames[0].left  (),  0.10));
     EXPECT_TRUE (floatEquals (receivedFrames[0].right (), -0.10));
@@ -387,8 +446,6 @@ TEST_F (SDLAudioTest, listOfTracksCanBePlayed)
 
     EXPECT_TRUE (floatEquals (receivedFrames[6].left  (),  0.00));
     EXPECT_TRUE (floatEquals (receivedFrames[6].right (),  0.00));
-
-    delete[] receivedFrames;
 }
 
 
@@ -419,12 +476,15 @@ TEST_F (SDLAudioTest, oneShotFollowedByContinuousMode)
         {&audioStream1, PlaybackMode::Continuous}});
 
     const size_t receivedFramesSize = 10;
-    AudioFrame* receivedFrames = new AudioFrame[10];
 
-    for (size_t i = 0; i < receivedFramesSize; ++i)
-        receivedFrames[i] = AudioFrame {0.0f, 0.0f};
+    audioSystem.audioCallback (nullptr, sdlStream, receivedFramesSize);
 
-    audioSystem.audioCallback (nullptr, receivedFrames, receivedFramesSize);
+    vector<AudioFrame> receivedFrames (receivedFramesSize, AudioFrame {0.0f, 0.0f});
+
+    int receivedBytes = SDL_GetAudioStreamData (
+        sdlStream,
+        static_cast<void*> (receivedFrames.data ()),
+        receivedFramesSize * sizeof AudioFrame);
 
     EXPECT_TRUE (floatEquals (receivedFrames[0].left  (),  0.10));
     EXPECT_TRUE (floatEquals (receivedFrames[0].right (), -0.10));
@@ -452,6 +512,4 @@ TEST_F (SDLAudioTest, oneShotFollowedByContinuousMode)
 
     EXPECT_TRUE (floatEquals (receivedFrames[8].left  (),  0.60));
     EXPECT_TRUE (floatEquals (receivedFrames[8].right (), -0.60));
-
-    delete[] receivedFrames;
 }
