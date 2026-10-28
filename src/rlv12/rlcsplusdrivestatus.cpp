@@ -22,20 +22,20 @@
 //
 // The Drive Ready (and Drive Error) bits are taken over from the
 // currently selected drive.
-u16 RLV12::rlcsPlusDriveStatus (RL01_02 &unit)
+u16 RLV12::rlcsPlusDriveStatus (RL01_02* unit)
 {
     u16 rlcsCombined {csr_};
 
-    if (unit.driveStatus () & RLV12const::MPR_GS_AnyError)
+    if (unit->driveStatus () & RLV12const::MPR_GS_AnyError)
         rlcsCombined |= RLV12const::CSR_DriveError;
     else
         rlcsCombined &= ~RLV12const::CSR_DriveError;
 
     // The drive is ready if it is not disconnected, no error is
     // reported by the drive and the heads are locked on a cylinder.
-    if (unit.isAttached () &&
-            !(unit.driveStatus () & RLV12const::DriveReadyNegate) &&
-            unit.driveReady ())
+    if (unit->isAttached () &&
+            !(unit->driveStatus () & RLV12const::DriveReadyNegate) &&
+            unit->driveReady ())
         rlcsCombined |= RLV12const::CSR_DriveReady;
     else
         rlcsCombined &= ~RLV12const::CSR_DriveReady;

@@ -20,7 +20,7 @@ CondData<u16> RLV12::read (BusAddress busAddress)
             // Add the Drive Ready and Drive Error bits to the CSR be 
             // returned. This avoids having to change the actual CSR and
             // having to lock the controller mutex.
-            u16 data = rlcsPlusDriveStatus (units_[RLV12const::getDrive (csr_)]);
+            u16 data = rlcsPlusDriveStatus (unit (RLV12const::getDrive (csr_)));
             trace.rlv12Registers ("read CSR", data, bar_, dar_,
                 dataBuffer_[0], bae_);
             return {data};

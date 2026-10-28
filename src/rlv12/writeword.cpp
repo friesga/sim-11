@@ -22,7 +22,7 @@ StatusCode RLV12::writeByte (BusAddress busAddress, u8 data)
 StatusCode RLV12::writeWord (BusAddress busAddress, u16 data)
 {
     // Get reference to drive
-    RL01_02& unit = units_[RLV12const::getDrive (data)];
+    RL01_02* unit = (units_[RLV12const::getDrive (data)]).get ();
 
     // Guard against controller register access from the command processor
     std::unique_lock<std::mutex> lock {controllerMutex_};
@@ -56,7 +56,7 @@ StatusCode RLV12::writeWord (BusAddress busAddress, u16 data)
             // Drive Ready has to be cleared only on execution of the command.
             if (RLV12const::getFunction (csr_) == RLV12const::CSR_Seek &&
                 (data & RLV12const::CSR_ControllerReady) == 0)
-                unit.clearDriveReady ();
+                unit->clearDriveReady ();
 
             // Load Bus Address Extension Bits (BA16 and BA17) into bits
             // 00 and 01 in the BAE register
@@ -96,7 +96,7 @@ StatusCode RLV12::writeWord (BusAddress busAddress, u16 data)
             // context.
             if (RLV12const::getFunction (csr_) == RLV12const::CSR_GetStatus)
             {
-                setDone (unit, getStatusCmd (&units_[RLV12const::getDrive (csr_)]));
+                setDone (unit, getStatusCmd (unit));
                 break;
             }
 

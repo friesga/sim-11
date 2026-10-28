@@ -31,11 +31,11 @@ try
             RLV12Command rlv12Command =  controller_->commandQueue_.front ();
 
             // Get a  reference to the unit for which the command is destined.
-            RL01_02& unit = controller_->units_[rlv12Command.unit_];
+            RL01_02* unit = (controller_->units_[rlv12Command.unit_]).get ();
 
             // Execute the command
             u16 rlcsValue = (this->*commands_[rlv12Command.function_])
-                (&unit, rlv12Command);
+                (unit, rlv12Command);
 
             // The event has been processed
             controller_->commandQueue_.pop ();

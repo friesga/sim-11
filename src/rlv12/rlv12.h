@@ -61,7 +61,7 @@ public:
     void memAddrToRegs (u32 memoryAddress);
     BusAddress memAddrFromRegs ();
     void updateBAE ();
-    u16 rlcsPlusDriveStatus (RL01_02& unit);
+    u16 rlcsPlusDriveStatus (RL01_02* unit);
     constexpr u16 getBA16BA17 (u16 csr_);
 
 private:
@@ -102,13 +102,8 @@ private:
     // A RLV12 can have a maximum of four units. RL01_02 objects for
     // which no unit is connected to the controller will have the status
     // off-line.
-    std::array<RL01_02, RLV12const::maxDrivesPerController> units_
-    {
-        RL01_02 (this),
-        RL01_02 (this),
-        RL01_02 (this),
-        RL01_02 (this)
-    };
+    std::array<std::unique_ptr<RL01_02>,
+        RLV12const::maxDrivesPerController> units_;
 
     // Definition of the pointer to the command processor
     std::unique_ptr<CmdProcessor> cmdProcessor_;
@@ -138,12 +133,9 @@ private:
 
     // Private functions
     u16 calcCRC (int const wc, u16 const* data);
-    void setDone (RL01_02& unit, u16 status);
+    void setDone (RL01_02* unit, u16 status);
     u16 getStatusCmd (RL01_02* unit);
-
-
 };
-
 
 inline size_t RLV12::numUnits ()
 {
@@ -152,7 +144,7 @@ inline size_t RLV12::numUnits ()
 
 inline RL01_02* RLV12::unit (size_t unitNumber)
 {
-    return &units_[unitNumber];
+    return (units_[unitNumber]).get ();
 }
 
 #endif // _RLV12_H_

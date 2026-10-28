@@ -10,6 +10,7 @@ using std::mutex;
 using std::lock_guard;
 using std::bind;
 using std::placeholders::_1;
+using std::make_unique;
 using std::make_shared;
 using std::runtime_error;
 
@@ -34,6 +35,10 @@ RLV12::RLV12 (Bus* bus)
 {
     baseAddress_ = RLV12const::RLV_BaseAddress;
     vector_ = RLV12const::RLV_Vector;
+
+    // Create four, not yet initialised units
+    for (size_t unitNumber = 0; unitNumber < 4; ++unitNumber)
+     units_[unitNumber] = make_unique<RL01_02> (this);
 
     // Allocate the transfer buffer, initializing to zero
     dataBuffer_ = new (std::nothrow) u16[RLV12const::maxTransfer]();
@@ -72,7 +77,8 @@ RLV12::RLV12 (Bus* bus, Window* window, CartridgeHandler* cartridgeHandler,
     if (dataBuffer_ == nullptr)
         throw runtime_error ("Allocating memory for transfer buffer failed");
 
-    // Attach files to the RL units and create panels for the units
+    // Create the in the configuration specified number of RL01/02 units
+    // and initialize them.
 	for (size_t unitNumber = 0; 
 		unitNumber < rlConfig.numUnits; ++unitNumber)
 	{
@@ -80,6 +86,8 @@ RLV12::RLV12 (Bus* bus, Window* window, CartridgeHandler* cartridgeHandler,
 
         if (!rlUnitConfig.has_value ())
             continue;
+
+        units_[unitNumber] = make_unique<RL01_02> (this);
 
 		if (unit (unitNumber)->init (rlUnitConfig.value (), window) != StatusCode::Success)
 			throw runtime_error ("Error attaching " + rlUnitConfig->fileName);
