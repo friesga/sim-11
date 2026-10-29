@@ -42,8 +42,8 @@ const MenuOption* SDLPopupMenu::getOption (int x, int y)
         throw runtime_error (
             "SDLPopupMenu::getOption requires an SDL window with mouse focus");
 
-    // Position mousePosition = getMousePosition ();
-    Position mousePosition {static_cast<size_t> (x), static_cast<size_t> (y)};
+    Position mousePosition = getMousePosition ();
+    // Position mousePosition {static_cast<size_t> (x), static_cast<size_t> (y)};
 
     SDLPopUpMenuSession session {parentWindow, mousePosition, rowDimensions_,
         windowDimensions_, options_};

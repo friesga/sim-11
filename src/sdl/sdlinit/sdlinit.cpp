@@ -2,6 +2,8 @@
 
 #include <SDL3/SDL.h>
 #include <SDL3_image/SDL_image.h>
+#include <SDL3_ttf/SDL_ttf.h>
+
 #include <string>
 #include <stdexcept>
 
@@ -17,6 +19,12 @@ SDLInit::SDLInit ()
 
     // Set texture filtering to linear
     // In SDL3 the default texture scale mode is SDL_SCALEMODE_LINEAR.
+
+    if (!TTF_Init ())
+    {
+       throw runtime_error ("TTF could not be initialized SDL error: " +
+            string (SDL_GetError ()));
+    }
 }
 
 

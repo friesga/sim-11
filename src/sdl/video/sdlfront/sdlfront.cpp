@@ -21,7 +21,13 @@ void SDLFront::render ()
 
 void SDLFront::handleEvent (InputEvent const* event)
 {
-    if (eventHandler_)
+    if (eventHandler_ && isWithinBounds (event->mousePosition (), 0.0f))
         eventHandler_ (event);
+}
+
+bool SDLFront::isWithinBounds (Position position, float margin) const
+{
+    // Any of the tiles can be used to check the dimensions
+    return frontTile_->isWithinBounds (position, margin);
 }
 

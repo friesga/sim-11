@@ -21,7 +21,8 @@ void RL01_02::createBezel (Window* window,
         window->createDataPanelBuilder (*imageContainer,
             rlUnitConfig.cabinetPosition.value (), RLUnitConfig::unitHeight);
 
-    panelBuilder->createFront ("RL01_front");
+    panelBuilder->createFront ("RL01_front",
+        bind (&RL01_02::handleOperatorRequest, this, _1));
 
     // LOAD IndicatorButton
     loadButton_ = panelBuilder->createIndicatorLatchingButton ({

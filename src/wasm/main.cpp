@@ -13,6 +13,8 @@
 
 #include <SDL3/SDL.h>
 #include <SDL3_image/SDL_image.h>
+#include <SDL3_ttf/SDL_ttf.h>
+
 #include <emscripten.h>
 #include <html5.h>
 #include <iostream>
@@ -57,7 +59,17 @@ int main (int argc, char const** argv)
     // Get command line options
     CmdLineOptions cmdLineOptions (argc, argv);
 
-    SDL_Init (SDL_INIT_VIDEO);
+    if (!SDL_Init (SDL_INIT_VIDEO))
+    {
+       throw runtime_error ("SDL could not be initialized SDL error: " +
+            string (SDL_GetError ()));
+    }
+
+    if (!TTF_Init ())
+    {
+       throw runtime_error ("TTF could not be initialized SDL error: " +
+            string (SDL_GetError ()));
+    }
 
     int windowHeight = static_cast<int> (windowWidth / h9642AspectRatio);
 

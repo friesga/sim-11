@@ -21,6 +21,8 @@ private:
     // The tile to use for this front
     std::unique_ptr<SDLTile> frontTile_;
     EventHandler eventHandler_;
+
+    bool isWithinBounds (Position position, float margin) const;
 };
 
 #endif // _SDLFRONT_H_

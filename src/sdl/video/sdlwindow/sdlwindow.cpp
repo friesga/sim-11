@@ -179,11 +179,8 @@ bool SDLWindow::handleEvents ()
                 [[fallthrough]];
 
             case InputEvent::Type::MouseButtonUp:
-                if (inputEvent.button () == InputEvent::Button::Left)
-                {
-                    for (auto& sdlPanel : panels_)
-                        sdlPanel->handleEvent (&inputEvent);
-                }
+                for (auto& sdlPanel : panels_)
+                    sdlPanel->handleEvent (&inputEvent);
                 break;
 
             case InputEvent::Type::MouseMotion:

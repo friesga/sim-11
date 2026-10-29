@@ -41,7 +41,7 @@ void FilePanelBuilder::createFront (string imageFile,
         make_unique<SDLTile> (imageFile, *sdlRenderer_,
             targetTexture_, placeFrameInTexture (frame));
 
-    fronts_.push_back (make_unique<SDLFront> (move (frontTile)));
+    fronts_.push_back (make_unique<SDLFront> (move (frontTile), eventHandler));
 
     // frontTile no longer is a valid pointer to the SDLTile but
     // that's ok since it's moved and SDLFront now has ownership of the

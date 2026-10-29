@@ -180,6 +180,7 @@ private:
     Geometry driveGeometry (DriveType driveType);
     DriveType determineDriveType (const RLUnitConfig& rlUnitConfig);
     size_t fileSize (string filePath) const;
+    void handleOperatorRequest (InputEvent const* inputEvent);
 };
 
 // Definition of the state machine for the drive. The class has to be defined
