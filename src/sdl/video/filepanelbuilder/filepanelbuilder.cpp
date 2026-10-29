@@ -35,7 +35,7 @@ FilePanelBuilder::FilePanelBuilder (unique_ptr<SDLRenderer>& sdlRenderer,
 }
 
 void FilePanelBuilder::createFront (string imageFile,
-    Frame<float> frame)
+    Front::EventHandler eventHandler, Frame<float> frame)
 {
     unique_ptr<SDLTile> frontTile =
         make_unique<SDLTile> (imageFile, *sdlRenderer_,

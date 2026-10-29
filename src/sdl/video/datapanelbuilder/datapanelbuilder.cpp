@@ -28,7 +28,7 @@ DataPanelBuilder::DataPanelBuilder (ImageContainer& imageContainer,
 // is determined from the image metadata in the image container.
 //
 void DataPanelBuilder::createFront (string imageFile,
-    Frame<float> frame)
+    Front::EventHandler eventHandler, Frame<float> frame)
 {
     unique_ptr<Image> pngImage =
         imageContainer_.getImage (imageContainer_.getFileName (imageFile));

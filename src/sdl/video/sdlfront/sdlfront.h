@@ -12,8 +12,6 @@
 class SDLFront : public Front
 {
 public:
-    using EventHandler = std::function<void (InputEvent const* event)>;
-
     SDLFront (unique_ptr<SDLTile> frontTile, EventHandler eventHandler = nullptr);
     ~SDLFront ();
     void render () override;

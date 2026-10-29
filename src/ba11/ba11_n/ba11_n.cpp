@@ -75,7 +75,7 @@ void BA11_N::createBezel (Cabinet::Position cabinetPosition)
         frontWindow_->createDataPanelBuilder (*imageContainer,
             cabinetPosition, BA11_NConfig::unitHeight);
 
-    panelBuilder->createFront("BA11-N front", ba11_nFrontFrame);
+    panelBuilder->createFront("BA11-N front", nullptr, ba11_nFrontFrame);
     createLabel (panelBuilder, logo_);
 
     pwrOkLed_ = panelBuilder->createIndicator ("led PWR OFF",

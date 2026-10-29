@@ -75,6 +75,8 @@ public:
 class Front
 {
 public:
+    using EventHandler = std::function<void (InputEvent const* event)>;
+
     virtual void render () = 0;
     virtual void handleEvent (InputEvent const* event) = 0;
     virtual ~Front () = default;
@@ -324,6 +326,7 @@ public:
     // will be used.
     //
     virtual void createFront (string imageFile,
+        Front::EventHandler eventHandler = nullptr,
         Frame<float> frame = Frame<float> {0, 0, 0, 0}) = 0;
     virtual Indicator* createIndicator (string indicatorOffImage,
         string indicatorOnImage, Indicator::State showFigure,

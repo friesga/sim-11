@@ -23,6 +23,7 @@ public:
 
     // Definition of functions required by the PanelBuilder interface
     void createFront (string imageFile,
+        Front::EventHandler eventHandler,
         Frame<float> frame) override;
     Indicator* createIndicator (string indicatorOffImage,
         string indicatorOnImage, Indicator::State showFigure,

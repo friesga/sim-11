@@ -28,7 +28,7 @@ public:
         Cabinet::Position cabinetPosition, RackUnit unitHeight);
 
     // Definition of functions required by the PanelBuilder interface
-    void createFront (string imageFile,
+    void createFront (string imageFile, Front::EventHandler eventHandler,
         Frame<float> frame = Frame<float> {0, 0, 0, 0}) override;
     Indicator* createIndicator (string indicatorOffImage,
         string indicatorOnImage, Indicator::State showFigure,
