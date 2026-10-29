@@ -222,7 +222,8 @@ size_t RL01_02::fileSize (string filePath) const
 void RL01_02::handleOperatorRequest (InputEvent const* event)
 {
     if (event->type () == InputEvent::Type::MouseButtonDown &&
-        event->button () == InputEvent::Button::Right)
+        event->button () == InputEvent::Button::Right &&
+        cartridgeHandler_ != nullptr)
     {
         cartridgeHandler_->operatorActionRequested (event->mousePosition ().x,
             event->mousePosition ().y);
