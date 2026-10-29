@@ -11,6 +11,7 @@
 #include "panel.h"
 #include "dummycontrols/dummycontrols.h"
 #include "asynctimer/asynctimer.h"
+#include "operator_dialog/include/cartridge_handler.h"
 
 #include <mutex>
 #include <thread>
@@ -50,7 +51,8 @@ public:
     };
 
     // Constructor and destructor
-    RL01_02 (AbstractBusDevice* owningDevice);
+    RL01_02 (AbstractBusDevice* owningDevice,
+        CartridgeHandler* cartridgeHandler);
     ~RL01_02 ();
 
     bool available ();
@@ -105,7 +107,7 @@ private:
     // Definition of drive type. The type will be determined in configure(),
     // called from the constructor.
     enum class DriveType { RL01, RL02 };
-    DriveType driveType_;
+    DriveType driveType_ {DriveType::RL01};
 
     Geometry geometry_;
     int32_t currentDiskAddress_ {0};
@@ -121,6 +123,7 @@ private:
     bool running_ {false};
     AlarmClock alarmClock_;
     SimulatorClock::duration spinUpTime_ {0};
+    CartridgeHandler* cartridgeHandler_ {};
 
     // Calculated seek time
     SimulatorClock::duration seekTime_;

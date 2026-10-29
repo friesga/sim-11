@@ -36,9 +36,9 @@ RLV12::RLV12 (Bus* bus)
     baseAddress_ = RLV12const::RLV_BaseAddress;
     vector_ = RLV12const::RLV_Vector;
 
-    // Create four, not yet initialised units
+    // Create four units, not yet initialised and without a CartridgeHandler
     for (size_t unitNumber = 0; unitNumber < 4; ++unitNumber)
-     units_[unitNumber] = make_unique<RL01_02> (this);
+     units_[unitNumber] = make_unique<RL01_02> (this, nullptr);
 
     // Allocate the transfer buffer, initializing to zero
     dataBuffer_ = new (std::nothrow) u16[RLV12const::maxTransfer]();
@@ -87,7 +87,7 @@ RLV12::RLV12 (Bus* bus, Window* window, CartridgeHandler* cartridgeHandler,
         if (!rlUnitConfig.has_value ())
             continue;
 
-        units_[unitNumber] = make_unique<RL01_02> (this);
+        units_[unitNumber] = make_unique<RL01_02> (this, cartridgeHandler);
 
 		if (unit (unitNumber)->init (rlUnitConfig.value (), window) != StatusCode::Success)
 			throw runtime_error ("Error attaching " + rlUnitConfig->fileName);

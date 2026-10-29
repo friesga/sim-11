@@ -13,9 +13,11 @@ using std::filesystem::file_size;
 // Constructor
 // By default the unit is off-line. It is set on-line when a file is
 // attached.
-RL01_02::RL01_02 (AbstractBusDevice* owningDevice)
+RL01_02::RL01_02 (AbstractBusDevice* owningDevice,
+    CartridgeHandler* cartridgeHandler)
     :
     currentDiskAddress_ {0},
+    cartridgeHandler_ {cartridgeHandler},
     seekTime_ {}
 {}
 
