@@ -8,6 +8,11 @@
 using std::string;
 using std::runtime_error;
 
+// At least for Windows the message box will be shown at the center of the
+// screen. Theoretically the message box can be show relative to the current
+// window by passing SDL_ShowSimpleMessageBox() a SDL_Window pointer but this
+// doesn't affect the message box's position.
+//
 void SDLMessageBox::show (string message)
 {
     const Uint32 NO_DIALOG_TYPE {0};
