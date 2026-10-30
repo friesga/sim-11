@@ -1,11 +1,11 @@
-#include "diskdrive.h"
+#include "cartridge.h"
 #include "cmdlineoptions/cmdlineoptions.h"
 #include "logger/logger.h"
 #include "fio/fio.h"
 
 #include <sys/stat.h>   // Required for stat
 
-StatusCode DiskDrive::createFile (std::string fileName, Bitmask<AttachFlags> attachMode)
+StatusCode Cartridge::createFile (std::string fileName, Bitmask<AttachFlags> attachMode)
 {
     struct stat info;
 

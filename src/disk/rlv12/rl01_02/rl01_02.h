@@ -1,7 +1,7 @@
 #ifndef _RL01_02_H_
 #define _RL01_02_H_
 
-#include "disk/diskdrive/diskdrive.h"
+#include "disk/cartridge/cartridge.h"
 #include "concepts/geometry/geometry.h"
 #include "types.h"
 #include "statuscodes.h"
@@ -31,12 +31,12 @@ using std::chrono::duration;
 
 // RL01/RL02 disk drive
 //
-// This class is derived from the class DiskDrive as a RL01/02 *is* a disk
+// This class is derived from the class Cartridge as a RL01/02 *is* a disk
 // drive and does not *contain* a disk drive. If desired, changing the
-// relation to a containment relation should be trivial as the DiskDrive class
+// relation to a containment relation should be trivial as the Cartridge class
 // only provides public functions.
 //
-class RL01_02 : public DiskDrive
+class RL01_02 : public Cartridge
 {
 public:
     // All RLV12Commands need access to the file pointer and unit status

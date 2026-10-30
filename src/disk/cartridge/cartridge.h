@@ -1,5 +1,5 @@
-#ifndef _DISKDRIVE_H_
-#define _DISKDRIVE_H_
+#ifndef _CARTRIDGE_H_
+#define _CARTRIDGE_H_
 
 #include "abstractbusdevice/abstractbusdevice.h"
 #include "statuscodes.h"
@@ -14,21 +14,20 @@
 #include <cstdio>
 #include <string>
 
-// Definition of the functions common to all disk drives. The class offers
-// common functions for the support of disk drives:
+// Definition of the functions for a cartridge:
 // 
-// - Attaching a file to the disk drive,
-// - Reading/write a sector to the disk, thereby translating the disk address
+// - Attaching a file to the cartridge,
+// - Reading/write a sector to the cartridge, thereby translating the disk address
 //   to a position in the attached file,
 // - Keeping track of write protect status
-// - Creation of a bad block table on the drive.
+// - Creation of a bad block table on the catridge.
 //
 // Disk images are represented in the simh file format, i.e. as unstructured
 // binary files consisting of 16 bit data items. Sectors are numbered from
 // sector 0 of surface 0 of cylinder 0 to the last sector on the disk. This
 // allows easy transcription of real disks to files useable by a simulator.
 //
-class DiskDrive
+class Cartridge
 {
 public:
     StatusCode attachFile (std::string fileName, Geometry geometry,
@@ -57,4 +56,4 @@ private:
     u32 byteOffset (DiskAddress diskAddress) const;
 };
 
-#endif // !_DISKDRIVE_H_
+#endif // !_CARTRIDGE_H_

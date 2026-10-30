@@ -1,5 +1,5 @@
 add_subdirectory (rk)
 add_subdirectory (rlv12)
 add_subdirectory (rxv21)
-add_subdirectory (diskdrive)
+add_subdirectory (cartridge)
 add_subdirectory (operator_dialog)

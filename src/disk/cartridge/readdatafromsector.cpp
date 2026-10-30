@@ -1,13 +1,13 @@
-#include "diskdrive.h"
+#include "cartridge.h"
 #include "logger/logger.h"
 
-size_t DiskDrive::readDataFromSector (DiskAddress diskAddress, u16* buffer,
+size_t Cartridge::readDataFromSector (DiskAddress diskAddress, u16* buffer,
     u32 wordCount)
 {
     // Set position in file to the block to be read
     if (fseek (diskFileStream, byteOffset (diskAddress), SEEK_SET) != 0)
     {
-        Logger::instance () << "fseek error in DiskDrive::readDataFromSector";
+        Logger::instance () << "fseek error in Cartridge::readDataFromSector";
         return 0;
     }
 
@@ -18,7 +18,7 @@ size_t DiskDrive::readDataFromSector (DiskAddress diskAddress, u16* buffer,
 
     if (ferror (diskFileStream))
     {
-        Logger::instance () << "fread error in DiskDrive::readDataFromSector";
+        Logger::instance () << "fread error in Cartridge::readDataFromSector";
         return 0;
     }
 

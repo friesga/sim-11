@@ -115,7 +115,7 @@ void RL01_02::sendTrigger (Event event)
 }
 
 // Convert the disk address as given in the Disk Address Register to
-// a DiskAddress the DiskDrive class needs.
+// a DiskAddress the Cartridge class needs.
 DiskAddress RL01_02::darToDiskAddress (int32_t diskAddress) const
 {
     return DiskAddress

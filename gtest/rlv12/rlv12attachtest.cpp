@@ -1,7 +1,7 @@
 #include "pdp11/pdp11.h"
 #include "disk/rlv12/rlv12.h"
 #include "cmdlineoptions/cmdlineoptions.h"
-#include "disk/diskdrive/attachflags.h"
+#include "disk/cartridge/attachflags.h"
 
 #include <gtest/gtest.h>
 

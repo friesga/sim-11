@@ -1,4 +1,4 @@
-#include "disk/diskdrive/diskdrive.h"
+#include "disk/cartridge/cartridge.h"
 #include "concepts/geometry/geometry.h"
 
 #include <gtest/gtest.h>
@@ -8,7 +8,7 @@ using std::array;
 
 TEST (UnitTest, fileCanBeCreated)
 {
-    DiskDrive unit {};
+    Cartridge unit {};
     EXPECT_EQ (unit.attachFile ("test.dsk", Geometry {},
         Bitmask<AttachFlags> {AttachFlags::NewFile | AttachFlags::Overwrite}),
         StatusCode::Success);
@@ -18,7 +18,7 @@ TEST (UnitTest, fileCanBeCreated)
 
 TEST (UnitTest, fileCanBeWrittenAndReadBack)
 {
-    DiskDrive unit {};
+    Cartridge unit {};
     Geometry geometry {40, 2, 256, 128};
     DiskAddress diskAdress {0, 0, 0};
 
@@ -47,7 +47,7 @@ TEST (UnitTest, fileCanBeWrittenAndReadBack)
 // geometry of a RL01 disk.
 TEST (UnitTest, badBlockTableWritten)
 {
-    DiskDrive unit {};
+    Cartridge unit {};
 
     static constexpr int32_t wordsPerSector = 128;
     static constexpr int32_t sectorsPerSurface = 40;

@@ -2,7 +2,7 @@
 #define _RK05_H_
 
 #include "audio.h"
-#include "disk/diskdrive/diskdrive.h"
+#include "disk/cartridge/cartridge.h"
 #include "bus/include/bus.h"
 #include "configdata/rk/rk05/rk05config/rk05config.h"
 #include "disk/rk/include/rktypes.h"
@@ -63,7 +63,7 @@ private:
     DriveInterface* controller_ {nullptr};
     u16 driveId_;
 
-    DiskDrive diskDrive_ {};
+    Cartridge diskDrive_ {};
     unique_ptr<u16[]> buffer_ {};
 
     // Buttons and indicators. The initial value points to a dummy to

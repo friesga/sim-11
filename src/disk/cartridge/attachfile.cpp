@@ -1,7 +1,7 @@
-#include "diskdrive.h"
+#include "cartridge.h"
 #include "cmdlineoptions/cmdlineoptions.h"
 
-StatusCode DiskDrive::attachFile (std::string fileName, Geometry geometry,
+StatusCode Cartridge::attachFile (std::string fileName, Geometry geometry,
     Bitmask<AttachFlags> attachMode)
 {
     StatusCode statusCode;
@@ -26,13 +26,13 @@ StatusCode DiskDrive::attachFile (std::string fileName, Geometry geometry,
     return statusCode;
 }
 
-bool DiskDrive::isAttached () const
+bool Cartridge::isAttached () const
 {
     return (diskFileStream != nullptr);
 }
 
 // Return the size of the attached file in bytes
-t_offset DiskDrive::attachedFileSize () const
+t_offset Cartridge::attachedFileSize () const
 {
     return fio::fsize (diskFileStream);
 }

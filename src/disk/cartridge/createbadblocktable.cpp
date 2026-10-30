@@ -27,7 +27,7 @@
 // sector in the format specified above and the second sector comprising all
 // ones.
 
-#include "diskdrive.h"
+#include "cartridge.h"
 #include "statuscodes.h"
 #include "fio/fio.h"
 
@@ -35,7 +35,7 @@
 
 using std::logic_error;
 
-StatusCode DiskDrive::createBadBlockTable ()
+StatusCode Cartridge::createBadBlockTable ()
 {
     u32 da;
     u16 *badSectorInfo;

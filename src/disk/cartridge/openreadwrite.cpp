@@ -1,9 +1,9 @@
-#include "diskdrive.h"
+#include "cartridge.h"
 #include "cmdlineoptions/cmdlineoptions.h"
 #include "logger/logger.h"
 #include "fio/fio.h"
 
-StatusCode DiskDrive::openReadWrite (std::string fileName)
+StatusCode Cartridge::openReadWrite (std::string fileName)
 {
     diskFileStream = fio::fopen(fileName.c_str(), "rb+");
     if (diskFileStream == NULL)
