@@ -4,7 +4,7 @@
 #include "types.h"
 #include "../tracerecord.h"
 #include "../recordheader.h"
-#include "rk/include/rktypes.h"
+#include "disk/rk/include/rktypes.h"
 
 #include <fstream>
 #include <string>

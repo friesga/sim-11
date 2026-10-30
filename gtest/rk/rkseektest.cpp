@@ -1,4 +1,4 @@
-#include "rk/rk11d/rk11d.h"
+#include "disk/rk/rk11d/rk11d.h"
 #include "mem/ms11p/ms11p.h"
 #include "bus/unibus/unibus.h"
 #include "statuscodes.h"

@@ -10,7 +10,7 @@
 #include "cpusteprecord/cpusteprecord.h"
 #include "traprecord/traprecord.h"
 #include "irqrecord/irqrecord.h"
-#include "rk/include/rktypes.h"
+#include "disk/rk/include/rktypes.h"
 #include "rk11eventrecord/rk11eventrecord.h"
 #include "rk11functionrecord/rk11functionrecord.h"
 #include "rk11registersrecord/rk11registersrecord.h"

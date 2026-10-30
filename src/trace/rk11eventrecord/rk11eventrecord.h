@@ -4,8 +4,8 @@
 #include "types.h"
 #include "../tracerecord.h"
 #include "../recordheader.h"
-#include "rk/include/rktypes.h"
-#include "rk/rk11d/rk11d.h"
+#include "disk/rk/include/rktypes.h"
+#include "disk/rk/rk11d/rk11d.h"
 
 #include <fstream>
 #include <string>

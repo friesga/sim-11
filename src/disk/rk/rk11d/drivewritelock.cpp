@@ -1,5 +1,5 @@
 #include "rk11d.h"
-#include "rk/include/rktypes.h"
+#include "disk/rk/include/rktypes.h"
 
 void RK11D::driveWriteLock (RKTypes::Function const& function)
 {
