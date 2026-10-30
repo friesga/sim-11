@@ -1,7 +1,7 @@
 #ifndef _WASM_CARTRIDGE_HANDLER_H_
 #define _WASM_CARTRIDGE_HANDLER_H_
 
-#include "operator_dialog/include/cartridge_handler.h"
+#include "disk/operator_dialog/include/cartridge_handler.h"
 #include "../../popupmenu/menuoptionlist/menuoptionlistimpl.h"
 #include "../../popupmenu/menuoption/menuoptionimpl.h"
 #include "../wasmpopupmenu/wasmpopupmenu.h"

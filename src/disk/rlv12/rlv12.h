@@ -12,7 +12,7 @@
 #include "rlv12command/rlv12command.h"
 #include "configdata/rl/rlconfig/rlconfig.h"
 #include "cmdprocessor/cmdprocessor.h"
-#include "operator_dialog/include/cartridge_handler.h"
+#include "disk/operator_dialog/include/cartridge_handler.h"
 
 #include <array>
 #include <memory>               // for std::unique_ptr<>

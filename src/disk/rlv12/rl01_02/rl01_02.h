@@ -11,7 +11,7 @@
 #include "panel.h"
 #include "dummycontrols/dummycontrols.h"
 #include "asynctimer/asynctimer.h"
-#include "operator_dialog/include/cartridge_handler.h"
+#include "disk/operator_dialog/include/cartridge_handler.h"
 
 #include <mutex>
 #include <thread>

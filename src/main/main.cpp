@@ -8,7 +8,7 @@
 #include "sdl/video/sdlwindow/sdlwindow.h"
 #include "sdl/audio/sdlaudiosystem/sdlaudiosystem.h"
 #include "chrono/simulatorclock/simulatorclock.h"
-#include "operator_dialog/SDL/sdlcartridge_handler/sdlcartridge_handler.h"
+#include "disk/operator_dialog/SDL/sdlcartridge_handler/sdlcartridge_handler.h"
 
 #include <iostream>
 

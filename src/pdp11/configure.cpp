@@ -15,7 +15,7 @@
 #include "configdata/m9312/m9312config/m9312config.h"
 #include "configdata/consistencychecker/consistencychecker.h"
 #include "console/operatorconsole/operatorconsolefactory.h"
-#include "operator_dialog/include/cartridge_handler.h"
+#include "disk/operator_dialog/include/cartridge_handler.h"
 #include "cabinet/cabinet.h"
 #include "overloaded.h"
 
