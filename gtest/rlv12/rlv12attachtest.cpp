@@ -1,5 +1,5 @@
 #include "pdp11/pdp11.h"
-#include "rlv12/rlv12.h"
+#include "disk/rlv12/rlv12.h"
 #include "cmdlineoptions/cmdlineoptions.h"
 #include "diskdrive/attachflags.h"
 

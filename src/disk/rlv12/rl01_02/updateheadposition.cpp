@@ -1,5 +1,5 @@
 #include "rl01_02.h"
-#include "rlv12/rlv12.h"
+#include "disk/rlv12/rlv12.h"
 
 // Calculate and update the new head position from the current disk
 // address and possibly the word count.

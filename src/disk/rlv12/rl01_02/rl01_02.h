@@ -7,7 +7,7 @@
 #include "statuscodes.h"
 #include "chrono/alarmclock/alarmclock.h"
 #include "variantfsm/fsm.h"
-#include "rlv12/rlv12command/rlv12command.h"
+#include "disk/rlv12/rlv12command/rlv12command.h"
 #include "panel.h"
 #include "dummycontrols/dummycontrols.h"
 #include "asynctimer/asynctimer.h"
