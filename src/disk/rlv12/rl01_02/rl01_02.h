@@ -1,7 +1,7 @@
 #ifndef _RL01_02_H_
 #define _RL01_02_H_
 
-#include "diskdrive/diskdrive.h"
+#include "disk/diskdrive/diskdrive.h"
 #include "concepts/geometry/geometry.h"
 #include "types.h"
 #include "statuscodes.h"
