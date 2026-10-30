@@ -6,7 +6,7 @@
 using std::make_unique;
 
 void FakeDataPanelBuilder::createFront (string imageFile,
-    Frame<float> frame)
+    Front::EventHandler eventHandler, Frame<float> frame)
 {}
 
 Indicator* FakeDataPanelBuilder::createIndicator (string indicatorOffImage,
