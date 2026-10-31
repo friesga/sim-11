@@ -31,12 +31,7 @@ using std::chrono::duration;
 
 // RL01/RL02 disk drive
 //
-// This class is derived from the class Cartridge as a RL01/02 *is* a disk
-// drive and does not *contain* a disk drive. If desired, changing the
-// relation to a containment relation should be trivial as the Cartridge class
-// only provides public functions.
-//
-class RL01_02 : public Cartridge
+class RL01_02
 {
 public:
     // All RLV12Commands need access to the file pointer and unit status
@@ -75,6 +70,7 @@ public:
     void resetDriveError ();
     StatusCode init (const RLUnitConfig& rlUnitConfig, Window* window);
     StatusCode init (const RLUnitConfig& rlUnitConfig);
+    bool isAttached ();
 
 private:
     // Definition of the drive states
@@ -109,6 +105,7 @@ private:
     enum class DriveType { RL01, RL02 };
     DriveType driveType_ {DriveType::RL01};
 
+    Cartridge cartridge_;
     Geometry geometry_;
     int32_t currentDiskAddress_ {0};
 
