@@ -2,6 +2,7 @@ set (RL0102_SRCS
     configure.cpp
     rl01_02.cpp
     available.cpp
+    cartridge_handling.cpp
     readdata.cpp
     writedata.cpp
     readheader.cpp

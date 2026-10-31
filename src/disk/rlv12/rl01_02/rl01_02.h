@@ -11,6 +11,7 @@
 #include "panel.h"
 #include "dummycontrols/dummycontrols.h"
 #include "asynctimer/asynctimer.h"
+#include "diskdrive.h"
 #include "disk/operator_dialog/include/cartridge_handler.h"
 
 #include <mutex>
@@ -31,7 +32,7 @@ using std::chrono::duration;
 
 // RL01/RL02 disk drive
 //
-class RL01_02
+class RL01_02 : public Diskdrive
 {
 public:
     // All RLV12Commands need access to the file pointer and unit status
@@ -49,6 +50,12 @@ public:
     RL01_02 (AbstractBusDevice* owningDevice,
         CartridgeHandler* cartridgeHandler);
     ~RL01_02 ();
+
+    // Functions required by the Diskdrive interface
+    void unloadCartridge () override;
+    void loadCartridge (Cartridge) override;
+    bool cartridgeIsLoaded () override;
+    bool cartridgeCanBeLoaded () override;
 
     bool available ();
     u16 driveStatus ();
