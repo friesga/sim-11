@@ -7,9 +7,9 @@
 StatusCode Cartridge::openReadOnly(std::string fileName)
 {
     // Open file read-only
-    diskFileStream = fio::fopen (fileName.c_str(), "rb");
+    diskFileStream_ = fio::fopen (fileName.c_str(), "rb");
 
-    if (diskFileStream == NULL)
+    if (diskFileStream_ == NULL)
         return StatusCode::OpenError;
 
     // Set unit read-only

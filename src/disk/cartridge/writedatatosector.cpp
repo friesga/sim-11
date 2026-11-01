@@ -12,7 +12,7 @@ size_t Cartridge::writeDataToSector (DiskAddress diskAddress, u16* buffer,
         return 0;
 
     // Set position in file to the block to be written
-    if (fseek (diskFileStream, byteOffset (diskAddress), SEEK_SET) != 0)
+    if (fseek (diskFileStream_, byteOffset (diskAddress), SEEK_SET) != 0)
     {
         Logger::instance () << "fseek error in Cartridge::writeDataToSector";
         return 0;
@@ -22,9 +22,9 @@ size_t Cartridge::writeDataToSector (DiskAddress diskAddress, u16* buffer,
     // returned is the number of objects (i.e. words) written.
     size_t wordsWritten = fwrite (buffer, sizeof (int16_t),
         min (geometry_.wordCapacity () - wordOffset (diskAddress), numWords),
-        diskFileStream);
+        diskFileStream_);
 
-    if (ferror (diskFileStream))
+    if (ferror (diskFileStream_))
         Logger::instance () << "fwrite error in Cartridge::writeDataToSector";
 
     return wordsWritten;

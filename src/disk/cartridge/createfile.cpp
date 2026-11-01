@@ -7,13 +7,13 @@
 
 StatusCode Cartridge::createFile (std::string fileName)
 {
-    diskFileStream = fio::fopen (fileName.c_str(), "wb+");
-    if (diskFileStream == NULL)
+    diskFileStream_ = fio::fopen (fileName.c_str(), "wb+");
+    if (diskFileStream_ == NULL)
         return StatusCode::OpenError;
 
     // Extend the file to the drive's capacity
-    fseek (diskFileStream, geometry_.wordCapacity () * sizeof (u16), SEEK_SET);
-    fputc ('\0', diskFileStream);
+    fseek (diskFileStream_, geometry_.wordCapacity () * sizeof (u16), SEEK_SET);
+    fputc ('\0', diskFileStream_);
 
     return StatusCode::Success;
 }

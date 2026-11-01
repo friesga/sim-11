@@ -61,7 +61,7 @@ StatusCode Cartridge::createBadBlockTable ()
     da = (geometry_.wordCapacity () - (geometry_.sectorsPerSurface () *
         geometry_.wordsPerSector ())) * sizeof (u16);
 
-    if (fio::fseek (diskFileStream, da, SEEK_SET))
+    if (fio::fseek (diskFileStream_, da, SEEK_SET))
         return StatusCode::IOError;
 
     // Allocate a buffer of physWordsPerSector u16's
@@ -84,12 +84,12 @@ StatusCode Cartridge::createBadBlockTable ()
         ++blockNr)
     {
         fio::fwrite (badSectorInfo, sizeof (u16),
-            badSectorFileBlockSize, diskFileStream);
+            badSectorFileBlockSize, diskFileStream_);
     }
 
     // Clean up.
     delete[] badSectorInfo;
-    if (ferror (diskFileStream))
+    if (ferror (diskFileStream_))
         return StatusCode::IOError;
 
     return StatusCode::Success;

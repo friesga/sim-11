@@ -58,7 +58,7 @@ public:
 private:
     Geometry geometry_ {};
     bool writeProtected_ {false};
-    FILE* diskFileStream {nullptr};
+    FILE* diskFileStream_ {nullptr};
 
     StatusCode createFile (std::string fileName);
     StatusCode openReadOnly (std::string fileName);

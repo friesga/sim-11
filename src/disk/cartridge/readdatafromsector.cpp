@@ -5,7 +5,7 @@ size_t Cartridge::readDataFromSector (DiskAddress diskAddress, u16* buffer,
     u32 wordCount)
 {
     // Set position in file to the block to be read
-    if (fseek (diskFileStream, byteOffset (diskAddress), SEEK_SET) != 0)
+    if (fseek (diskFileStream_, byteOffset (diskAddress), SEEK_SET) != 0)
     {
         Logger::instance () << "fseek error in Cartridge::readDataFromSector";
         return 0;
@@ -14,9 +14,9 @@ size_t Cartridge::readDataFromSector (DiskAddress diskAddress, u16* buffer,
     // Read wordCount * 2 bytes; returned is the number of objects
     // (i.e. words) read. A read beyond the disk's capacity is prevented by
     // the file's size.
-    size_t wordsRead = fread (buffer, sizeof (int16_t), wordCount, diskFileStream);
+    size_t wordsRead = fread (buffer, sizeof (int16_t), wordCount, diskFileStream_);
 
-    if (ferror (diskFileStream))
+    if (ferror (diskFileStream_))
     {
         Logger::instance () << "fread error in Cartridge::readDataFromSector";
         return 0;
