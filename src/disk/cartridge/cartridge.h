@@ -34,7 +34,7 @@ public:
     // write to it is not useful.The NewFile mode will create a new file and
     // open it read/write.
     //
-    enum class AttachFlags
+    enum class OpenMode
     {
         ReadWrite,                  // Open existing file read/write
         ReadOnly,                   // Attach read-only
@@ -43,7 +43,7 @@ public:
     };
 
     StatusCode attachFile (std::string fileName, Geometry geometry,
-        AttachFlags attachMode);
+        OpenMode attachMode);
     bool isAttached () const;
     t_offset attachedFileSize () const;
     size_t readDataFromSector (DiskAddress diskAddress, u16* buffer,

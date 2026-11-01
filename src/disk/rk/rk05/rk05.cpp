@@ -187,14 +187,14 @@ SimulatorClock::duration RK05::seekTime (u16 currentCylinderAddress,
 }
 
 // ToDo: This function is a double with RL01_02::getAttachMode()
-Cartridge::AttachFlags RK05::getAttachMode (const RK05Config& rk05Config)
+Cartridge::OpenMode RK05::getAttachMode (const RK05Config& rk05Config)
 {
-    Cartridge::AttachFlags attachMode {Cartridge::AttachFlags::ReadWrite};
+    Cartridge::OpenMode attachMode {Cartridge::OpenMode::ReadWrite};
 
     if (rk05Config.writeProtect)
-        attachMode = Cartridge::AttachFlags::ReadOnly;
+        attachMode = Cartridge::OpenMode::ReadOnly;
     if (rk05Config.newFile)
-        attachMode = Cartridge::AttachFlags::NewFile;
+        attachMode = Cartridge::OpenMode::NewFile;
     return attachMode;
 }
 

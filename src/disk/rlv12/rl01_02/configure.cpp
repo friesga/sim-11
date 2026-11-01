@@ -47,15 +47,15 @@ StatusCode RL01_02::configure (const RLUnitConfig& rlUnitConfig)
     return StatusCode::Success;
 }
 
-Cartridge::AttachFlags RL01_02::getAttachMode (
+Cartridge::OpenMode RL01_02::getAttachMode (
     const RLUnitConfig& rlUnitConfig)
 {
-    Cartridge::AttachFlags attachMode {Cartridge::AttachFlags::ReadWrite};
+    Cartridge::OpenMode attachMode {Cartridge::OpenMode::ReadWrite};
 
     if (rlUnitConfig.writeProtect)
-        attachMode = Cartridge::AttachFlags::ReadOnly;
+        attachMode = Cartridge::OpenMode::ReadOnly;
     if (rlUnitConfig.newFile)
-        attachMode = Cartridge::AttachFlags::NewFile;
+        attachMode = Cartridge::OpenMode::NewFile;
 
     return attachMode;
 }
