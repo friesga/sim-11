@@ -32,7 +32,7 @@ public:
     // Attach options, used in Bitmask<AttachFlags>
     enum class AttachFlags
     {
-        Default,                    // Open existing file read/write
+        ReadWrite,                  // Open existing file read/write
         ReadOnly,                   // Attach read-only
         NewFile,                    // Create new file on attach
         _                           // Required for Bitmask

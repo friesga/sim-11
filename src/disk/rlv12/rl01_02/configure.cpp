@@ -50,7 +50,7 @@ StatusCode RL01_02::configure (const RLUnitConfig& rlUnitConfig)
 Bitmask<Cartridge::AttachFlags> RL01_02::getAttachMode (
     const RLUnitConfig& rlUnitConfig)
 {
-    Bitmask<Cartridge::AttachFlags> attachMode {Cartridge::AttachFlags::Default};
+    Bitmask<Cartridge::AttachFlags> attachMode {Cartridge::AttachFlags::ReadWrite};
 
     if (rlUnitConfig.writeProtect)
         attachMode |= Cartridge::AttachFlags::ReadOnly;
