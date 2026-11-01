@@ -38,7 +38,7 @@ TEST_F (RLV12AttachTest, attachReturnsOpenError)
     ({
         .fileName = "non-existingfile",
         .newFile = false,
-        .readOnly = false
+        .writeProtect = false
     });
  
     ASSERT_EQ (rlv12Device->unit (0)->init (RLUnitConfig {rlUnitConfig}),
@@ -70,7 +70,7 @@ TEST_F (RLV12AttachTest, attachOpensReadOnly)
     RLUnitConfig attachOpensReadOnlyConfig
     ({
         .fileName = "rl02.dsk",
-        .readOnly = true
+        .writeProtect = true
     });
 
     ASSERT_EQ (rlv12Device->unit (0)->init (RLUnitConfig {attachOpensReadOnlyConfig}),

@@ -46,7 +46,6 @@ struct RLUnitConfigParams
 {
 	string fileName {};
 	bool newFile {false};
-	bool readOnly {false};
 	bool writeProtect {false};
 	RLUnitConfig::RLUnitType unitType {RLUnitConfig::RLUnitType::RL01};
 };
