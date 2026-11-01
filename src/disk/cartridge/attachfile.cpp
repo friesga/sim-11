@@ -2,7 +2,7 @@
 #include "cmdlineoptions/cmdlineoptions.h"
 
 StatusCode Cartridge::attachFile (std::string fileName, Geometry geometry,
-    Bitmask<AttachFlags> attachMode)
+    AttachFlags attachMode)
 {
     StatusCode statusCode;
 
@@ -11,8 +11,8 @@ StatusCode Cartridge::attachFile (std::string fileName, Geometry geometry,
     geometry_ = geometry;
 
     // Create a new file if specified
-    if (attachMode & AttachFlags::NewFile)
-        statusCode = createFile (fileName, attachMode);
+    if (attachMode == AttachFlags::NewFile)
+        statusCode = createFile (fileName);
     else
     {
         // Open existing file read/write 

@@ -5,7 +5,7 @@
 
 #include <sys/stat.h>   // Required for stat
 
-StatusCode Cartridge::createFile (std::string fileName, Bitmask<AttachFlags> attachMode)
+StatusCode Cartridge::createFile (std::string fileName)
 {
     diskFileStream = fio::fopen (fileName.c_str(), "wb+");
     if (diskFileStream == NULL)

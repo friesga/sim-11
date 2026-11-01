@@ -155,7 +155,7 @@ private:
     void wtprotSwitchClicked (Button::State state);
     void driveThread ();
     void sendTrigger (Event event);
-    Bitmask<Cartridge::AttachFlags> getAttachMode (const RK05Config& rk05Config);
+    Cartridge::AttachFlags getAttachMode (const RK05Config& rk05Config);
     SimulatorClock::duration seekTime (u16 currentCylinderAddress,
         u16 newCylinderAddress);
     size_t readDataFromDrive (DiskAddress diskAddress, u16* buffer,

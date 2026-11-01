@@ -4,7 +4,6 @@
 #include "abstractbusdevice/abstractbusdevice.h"
 #include "statuscodes.h"
 #include "types.h"
-#include "bitmask.h"
 #include "configdata/deviceconfig/deviceconfig.h"
 #include "fio/fio.h"
 #include "concepts/geometry/geometry.h"
@@ -29,7 +28,12 @@
 class Cartridge
 {
 public:
-    // Attach options, used in Bitmask<AttachFlags>
+    // The Cartridge supports three modes to open a file: read/write, read-only
+    // and create a new file. Combinations of NewFile with ReadWrite or
+    // ReadOnly are not supported. Creating a new file and not being able to
+    // write to it is not useful.The NewFile mode will create a new file and
+    // open it read/write.
+    //
     enum class AttachFlags
     {
         ReadWrite,                  // Open existing file read/write
@@ -39,7 +43,7 @@ public:
     };
 
     StatusCode attachFile (std::string fileName, Geometry geometry,
-        Bitmask<AttachFlags> attachMode);
+        AttachFlags attachMode);
     bool isAttached () const;
     t_offset attachedFileSize () const;
     size_t readDataFromSector (DiskAddress diskAddress, u16* buffer,
@@ -56,7 +60,7 @@ private:
     bool writeProtected_ {false};
     FILE* diskFileStream {nullptr};
 
-    StatusCode createFile (std::string fileName, Bitmask<AttachFlags> attachMode);
+    StatusCode createFile (std::string fileName);
     StatusCode openReadOnly (std::string fileName);
     StatusCode openReadWrite (std::string fileName);
     
