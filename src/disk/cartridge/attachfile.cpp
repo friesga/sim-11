@@ -10,17 +10,22 @@ StatusCode Cartridge::attachFile (std::string fileName, Geometry geometry,
     // calculate file positions.
     geometry_ = geometry;
 
-    // Create a new file if specified
-    if (attachMode == OpenMode::NewFile)
-        statusCode = createFile (fileName);
-    else
+    switch (attachMode)
     {
-        // Open existing file read/write 
-        statusCode = openReadWrite (fileName);
+        case OpenMode::ReadWrite:
+            statusCode = openReadWrite (fileName);
+            break;
 
-        // If that doesn't succeed open the file read-only
-        if (statusCode != StatusCode::Success)
+        case OpenMode::ReadOnly:
             statusCode = openReadOnly (fileName);
+            break;
+
+        case OpenMode::NewFile:
+            statusCode = createFile (fileName);
+            break;
+
+        default:
+            return StatusCode::ArgumentError;
     }
 
     return statusCode;
