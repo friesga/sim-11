@@ -5,7 +5,6 @@
 #include "statuscodes.h"
 #include "types.h"
 #include "bitmask.h"
-#include "attachflags.h"
 #include "configdata/deviceconfig/deviceconfig.h"
 #include "fio/fio.h"
 #include "concepts/geometry/geometry.h"
@@ -30,6 +29,16 @@
 class Cartridge
 {
 public:
+    // Attach options, used in Bitmask<AttachFlags>
+    enum class AttachFlags
+    {
+        Default,                    // Open existing file read/write
+        ReadOnly,                   // Attach read-only
+        NewFile,                    // Create new file on attach
+        Overwrite,                  // Overwrite possibly existing file
+        _                           // Required for Bitmask
+    };
+
     StatusCode attachFile (std::string fileName, Geometry geometry,
         Bitmask<AttachFlags> attachMode);
     bool isAttached () const;

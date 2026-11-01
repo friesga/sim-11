@@ -47,17 +47,17 @@ StatusCode RL01_02::configure (const RLUnitConfig& rlUnitConfig)
     return StatusCode::Success;
 }
 
-Bitmask<AttachFlags> RL01_02::getAttachMode (
+Bitmask<Cartridge::AttachFlags> RL01_02::getAttachMode (
     const RLUnitConfig& rlUnitConfig)
 {
-    Bitmask<AttachFlags> attachMode {AttachFlags::Default};
+    Bitmask<Cartridge::AttachFlags> attachMode {Cartridge::AttachFlags::Default};
 
     if (rlUnitConfig.writeProtect)
-        attachMode |= AttachFlags::ReadOnly;
+        attachMode |= Cartridge::AttachFlags::ReadOnly;
     if (rlUnitConfig.newFile)
-        attachMode |= AttachFlags::NewFile;
+        attachMode |= Cartridge::AttachFlags::NewFile;
     if (rlUnitConfig.overwrite)
-        attachMode |= AttachFlags::Overwrite;
+        attachMode |= Cartridge::AttachFlags::Overwrite;
 
     return attachMode;
 }
