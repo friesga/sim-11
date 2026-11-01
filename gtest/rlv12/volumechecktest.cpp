@@ -87,7 +87,6 @@ TEST_F (RLV12VolumeCheck, volumeCheckReported)
     ({
         .fileName = "rl01.dsk",
         .newFile = true,
-        .overwrite = true,
         .writeProtect = true,
         .unitType = RLUnitConfig::RLUnitType::RL01
         });
@@ -124,7 +123,6 @@ TEST_F (RLV12VolumeCheck, readDataWithVolumeCheckReportsDriveError)
     ({
         .fileName = "rl01.dsk",
         .newFile = true,
-        .overwrite = true,
         .writeProtect = true,
         .unitType = RLUnitConfig::RLUnitType::RL01
         });
@@ -170,7 +168,6 @@ TEST_F (RLV12VolumeCheck, volumeCheckIsReset)
     ({
         .fileName = "rl01.dsk",
         .newFile = true,
-        .overwrite = true,
         .writeProtect = true,
         .unitType = RLUnitConfig::RLUnitType::RL01
         });
@@ -208,7 +205,6 @@ TEST_F (RLV12VolumeCheck, noDataReadOnVolumeCheck)
     ({
         .fileName = "rl01.dsk",
         .newFile = true,
-        .overwrite = true,
         .writeProtect = true,
         .unitType = RLUnitConfig::RLUnitType::RL01
         });

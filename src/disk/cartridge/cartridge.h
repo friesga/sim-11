@@ -35,7 +35,6 @@ public:
         Default,                    // Open existing file read/write
         ReadOnly,                   // Attach read-only
         NewFile,                    // Create new file on attach
-        Overwrite,                  // Overwrite possibly existing file
         _                           // Required for Bitmask
     };
 

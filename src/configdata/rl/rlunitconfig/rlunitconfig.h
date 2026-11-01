@@ -28,7 +28,6 @@ struct RLUnitConfig
 	string fileName {};
 	bool newFile {false};
 	bool writeProtect {false};
-	bool overwrite {false};
 	size_t spinUpTime {0};
 
     RLUnitConfig ();
@@ -48,7 +47,6 @@ struct RLUnitConfigParams
 	string fileName {};
 	bool newFile {false};
 	bool readOnly {false};
-	bool overwrite {false};
 	bool writeProtect {false};
 	RLUnitConfig::RLUnitType unitType {RLUnitConfig::RLUnitType::RL01};
 };

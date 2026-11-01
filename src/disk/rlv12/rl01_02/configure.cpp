@@ -56,8 +56,6 @@ Bitmask<Cartridge::AttachFlags> RL01_02::getAttachMode (
         attachMode |= Cartridge::AttachFlags::ReadOnly;
     if (rlUnitConfig.newFile)
         attachMode |= Cartridge::AttachFlags::NewFile;
-    if (rlUnitConfig.overwrite)
-        attachMode |= Cartridge::AttachFlags::Overwrite;
 
     return attachMode;
 }

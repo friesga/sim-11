@@ -90,8 +90,7 @@ protected:
         RLUnitConfig rlUnitConfig
         ({
             .fileName = "rl01.dsk",
-            .newFile = true,
-            .overwrite = true
+            .newFile = true
             });
 
         // Make sure the controller has started

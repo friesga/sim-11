@@ -100,8 +100,7 @@ TEST_F (RLV12SeekTest, seekSucceeds)
     RLUnitConfig seekSucceedsConfig
     ({
         .fileName = "rl01.dsk",
-        .newFile = true,
-        .overwrite = true
+        .newFile = true
     });
 
     // Attach a new disk to unit 0
@@ -166,15 +165,13 @@ TEST_F (RLV12SeekTest, parallelSeeksSucceed)
     RLUnitConfig parallelSeeksSucceedConfig0
     ({
         .fileName = "rl01_0.dsk",
-        .newFile = true,
-        .overwrite = true
+        .newFile = true
     });
 
     RLUnitConfig parallelSeeksSucceedConfig1
     ({
         .fileName = "rl01_1.dsk",
-        .newFile = true,
-        .overwrite = true
+        .newFile = true
     });
 
     // Attach a new disk to unit 0 and unit 1
@@ -258,8 +255,7 @@ TEST_F (RLV12SeekTest, seekOnBusyDriveAccepted)
     RLUnitConfig seekOnBusyDriveAcceptedConfig
     ({
         .fileName = "rl01.dsk",
-        .newFile = true,
-        .overwrite = true
+        .newFile = true
     });
 
     // Attach a new disk to unit 0
@@ -328,8 +324,7 @@ TEST_F (RLV12SeekTest, readHeaderAfterSeekSucceeds)
     RLUnitConfig rlUnitConfig
     ({
         .fileName = "rl01.dsk",
-        .newFile = true,
-        .overwrite = true
+        .newFile = true
     });
 
     // Attach a new disk to unit 0

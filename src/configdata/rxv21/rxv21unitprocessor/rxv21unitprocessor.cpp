@@ -45,11 +45,6 @@ void RXV21UnitProcessor::processReadOnly (iniparser::Value value)
 	rxv21UnitConfig.readOnly = value.asBool();
 }
 
-void RXV21UnitProcessor::processOverwrite (iniparser::Value value)
-{
-	rxv21UnitConfig.overwrite = value.asBool();
-}
-
 // Check the consistency of the configuration of a RL unit. Currently
 // this is a void.
 void RXV21UnitProcessor::checkConsistency ()

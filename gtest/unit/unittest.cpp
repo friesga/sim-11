@@ -10,7 +10,7 @@ TEST (UnitTest, fileCanBeCreated)
 {
     Cartridge unit {};
     EXPECT_EQ (unit.attachFile ("test.dsk", Geometry {},
-        Bitmask<Cartridge::AttachFlags> {Cartridge::AttachFlags::NewFile | Cartridge::AttachFlags::Overwrite}),
+        Bitmask<Cartridge::AttachFlags> {Cartridge::AttachFlags::NewFile}),
         StatusCode::Success);
 
     EXPECT_TRUE (unit.isAttached ());
@@ -23,7 +23,7 @@ TEST (UnitTest, fileCanBeWrittenAndReadBack)
     DiskAddress diskAdress {0, 0, 0};
 
     EXPECT_EQ (unit.attachFile ("test.dsk", geometry,
-        Bitmask<Cartridge::AttachFlags> {Cartridge::AttachFlags::NewFile | Cartridge::AttachFlags::Overwrite}),
+        Bitmask<Cartridge::AttachFlags> {Cartridge::AttachFlags::NewFile}),
         StatusCode::Success);
 
     array<uint16_t, 512> buffer {};
@@ -61,7 +61,7 @@ TEST (UnitTest, badBlockTableWritten)
         RL01cylindersPerCartridge, wordsPerSector};
 
     EXPECT_EQ (unit.attachFile ("test.dsk", rl01Geometry,
-        Bitmask<Cartridge::AttachFlags> {Cartridge::AttachFlags::NewFile | Cartridge::AttachFlags::Overwrite}),
+        Bitmask<Cartridge::AttachFlags> {Cartridge::AttachFlags::NewFile}),
         StatusCode::Success);
 
     EXPECT_EQ (unit.createBadBlockTable (), StatusCode::Success);

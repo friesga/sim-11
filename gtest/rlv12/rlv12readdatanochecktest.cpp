@@ -95,8 +95,7 @@ TEST_F (RLV12ReadDataWithoutHeaderCheckTest, readDataWithoutHeaderCheckSucceeds)
     RLUnitConfig rlUnitConfig
     ({
         .fileName = "rl01.dsk",
-        .newFile = true,
-        .overwrite = true
+        .newFile = true
     });
 
     // Attach a new disk to unit 0

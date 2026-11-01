@@ -76,11 +76,6 @@ void RLUnitProcessor::processWriteProtect (iniparser::Value value)
 	rlUnitConfig.writeProtect = value.asBool();
 }
 
-void RLUnitProcessor::processOverwrite (iniparser::Value value)
-{
-	rlUnitConfig.overwrite = value.asBool();
-}
-
 void RLUnitProcessor::processCabinet (iniparser::Value value)
 {
 	rlUnitConfig.cabinetPosition =

@@ -90,7 +90,6 @@ TEST_F (RK11DWriteTest, writeOnNonReadyDriveReportsError)
         ({
             .fileName = "rk05.dsk",
             .newFile = true,
-            .overwrite = true,
             .spinUpTime = 100
         }));
 
@@ -122,8 +121,7 @@ TEST_F (RK11DWriteTest, writeToNonExistentSectorFails)
         RK05Config (RK05Config
         ({
             .fileName = "rk05.dsk",
-            .newFile = true,
-            .overwrite = true
+            .newFile = true
         }));
 
     Unibus bus;
@@ -161,8 +159,7 @@ TEST_F (RK11DWriteTest, writeToNonExistentCylinderFails)
         RK05Config (RK05Config
         ({
             .fileName = "rk05.dsk",
-            .newFile = true,
-            .overwrite = true
+            .newFile = true
         }));
 
     Unibus bus;
@@ -199,8 +196,7 @@ TEST_F (RK11DWriteTest, writeToNonExistentDriveFails)
         RK05Config (RK05Config
         ({
             .fileName = "rk05.dsk",
-            .newFile = true,
-            .overwrite = true
+            .newFile = true
         }));
 
     Unibus bus;
@@ -237,8 +233,7 @@ TEST_F (RK11DWriteTest, writePastEndOfDiskFails)
         RK05Config (RK05Config
         ({
             .fileName = "rk05.dsk",
-            .newFile = true,
-            .overwrite = true
+            .newFile = true
         }));
 
     Unibus bus;
@@ -275,8 +270,7 @@ TEST_F (RK11DWriteTest, writeWithIBASetSucceeds)
         RK05Config (RK05Config
         ({
             .fileName = "rk05.dsk",
-            .newFile = true,
-            .overwrite = true
+            .newFile = true
         }));
 
     Unibus bus;
@@ -353,8 +347,7 @@ TEST_F (RK11DWriteTest, writeSectorSucceeds)
         RK05Config (RK05Config
         ({
             .fileName = "rk05.dsk",
-            .newFile = true,
-            .overwrite = true
+            .newFile = true
         }));
 
     Unibus bus;
@@ -433,8 +426,7 @@ TEST_F (RK11DWriteTest, writeUnequalSectorSizeSucceeds)
         RK05Config (RK05Config
         ({
             .fileName = "rk05.dsk",
-            .newFile = true,
-            .overwrite = true
+            .newFile = true
         }));
 
     Unibus bus;
@@ -545,7 +537,6 @@ TEST_F (RK11DWriteTest, writeToWriteProtectedDiskFails)
         ({
             .fileName = "rk05.dsk",
             .newFile = true,
-            .overwrite = true,
             .writeProtect = true
         }));
 
@@ -582,8 +573,7 @@ TEST_F (RK11DWriteTest, diskCanBeWriteLocked)
         RK05Config (RK05Config
         ({
             .fileName = "rk05.dsk",
-            .newFile = true,
-            .overwrite = true
+            .newFile = true
         }));
 
     Unibus bus;

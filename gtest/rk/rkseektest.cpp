@@ -75,8 +75,7 @@ protected:
             ({
                 .unitNumber = 0,
                 .fileName = "rk05.dsk",
-                .newFile = true,
-                .overwrite = true
+                .newFile = true
             }));
 
         rk11dConfig.rk05Config[1] =
@@ -84,8 +83,7 @@ protected:
             ({
                 .unitNumber = 1,
                 .fileName = "rk05-1.dsk",
-                .newFile = true,
-                .overwrite = true
+                .newFile = true
             }));
 
         rk11dConfig.numUnits = 2;

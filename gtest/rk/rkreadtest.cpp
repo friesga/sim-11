@@ -94,8 +94,7 @@ TEST_F (RK11DReadTest, readSectorSucceeds)
         RK05Config (RK05Config
             ({
                 .fileName = "rk05.dsk",
-                .newFile = true,
-                .overwrite = true
+                .newFile = true
             }));
 
     Unibus bus;
@@ -176,7 +175,6 @@ TEST_F (RK11DReadTest, readOnNonReadyDriveReportsError)
         ({
             .fileName = "rk05.dsk",
             .newFile = true,
-            .overwrite = true,
             .spinUpTime = 100
         }));
 
@@ -207,8 +205,7 @@ TEST_F (RK11DReadTest, readFromNonExistentSectorFails)
         RK05Config (RK05Config
         ({
             .fileName = "rk05.dsk",
-            .newFile = true,
-            .overwrite = true
+            .newFile = true
         }));
 
     Unibus bus;
@@ -245,8 +242,7 @@ TEST_F (RK11DReadTest, readFromNonExistentCylinderFails)
         RK05Config (RK05Config
         ({
             .fileName = "rk05.dsk",
-            .newFile = true,
-            .overwrite = true
+            .newFile = true
         }));
 
     Unibus bus;
@@ -283,8 +279,7 @@ TEST_F (RK11DReadTest, readFromNonExistentDriveFails)
         RK05Config (RK05Config
         ({
             .fileName = "rk05.dsk",
-            .newFile = true,
-            .overwrite = true
+            .newFile = true
         }));
 
     Unibus bus;
@@ -321,8 +316,7 @@ TEST_F (RK11DReadTest, readPastEndOfDiskFails)
         RK05Config (RK05Config
         ({
             .fileName = "rk05.dsk",
-            .newFile = true,
-            .overwrite = true
+            .newFile = true
         }));
 
     Unibus bus;
@@ -359,8 +353,7 @@ TEST_F (RK11DReadTest, readWithIBASetSucceeds)
         RK05Config (RK05Config
         ({
             .fileName = "rk05.dsk",
-            .newFile = true,
-            .overwrite = true
+            .newFile = true
         }));
 
     Unibus bus;
@@ -440,8 +433,7 @@ TEST_F (RK11DReadTest, memoryExtensionBitsAreUsed)
         RK05Config (RK05Config
         ({
             .fileName = "rk05.dsk",
-            .newFile = true,
-            .overwrite = true
+            .newFile = true
         }));
 
     Unibus bus;
@@ -516,8 +508,7 @@ TEST_F (RK11DReadTest, memoryExtensionBitsAreIncremented)
         RK05Config (RK05Config
         ({
             .fileName = "rk05.dsk",
-            .newFile = true,
-            .overwrite = true
+            .newFile = true
         }));
 
     Unibus bus;

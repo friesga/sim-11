@@ -74,11 +74,6 @@ void RK05Processor::processWriteProtect (iniparser::Value value)
 	rk05Config.writeProtect = value.asBool ();
 }
 
-void RK05Processor::processOverwrite (iniparser::Value value)
-{
-	rk05Config.overwrite = value.asBool ();
-}
-
 void RK05Processor::processCabinet (iniparser::Value value)
 {
 	rk05Config.cabinetPosition =

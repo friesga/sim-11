@@ -72,8 +72,7 @@ protected:
             ({
                 .unitNumber = 0,
                 .fileName = "rk05.dsk",
-                .newFile = true,
-                .overwrite = true
+                .newFile = true
             }));
 
         rk11dConfig.numUnits = 1;

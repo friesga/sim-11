@@ -77,28 +77,12 @@ TEST_F (RLV12AttachTest, attachOpensReadOnly)
         StatusCode::Success);
 }
 
-
-// Verify an existing file is not overwritten without specification of
-// the override option
-TEST_F (RLV12AttachTest, existingFileIsNotOverwritten)
-{
-    RLUnitConfig existingFileIsNotOverwrittenConfig
-    ({
-        .fileName = "rl02.dsk",
-        .newFile = true
-    });
-
-    ASSERT_EQ (rlv12Device->unit (0)->init (RLUnitConfig {existingFileIsNotOverwrittenConfig}),
-        StatusCode::ArgumentError);
-}
-
-// Verify an existing file is overwritten when the override option is sety
+// Verify an existing file is overwritten
 TEST_F (RLV12AttachTest, existingFileIsOverwritten)
 {
     RLUnitConfig existingFileIsOverwrittenConfig
     ({
-        .fileName = "rl02.dsk",
-        .overwrite = true
+        .fileName = "rl02.dsk"
     });
 
     ASSERT_EQ (rlv12Device->unit (0)->init (RLUnitConfig {existingFileIsOverwrittenConfig}),

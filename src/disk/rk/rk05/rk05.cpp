@@ -195,8 +195,6 @@ Bitmask<Cartridge::AttachFlags> RK05::getAttachMode (const RK05Config& rk05Confi
         attachMode |= Cartridge::AttachFlags::ReadOnly;
     if (rk05Config.newFile)
         attachMode |= Cartridge::AttachFlags::NewFile;
-    if (rk05Config.overwrite)
-        attachMode |= Cartridge::AttachFlags::Overwrite;
     return attachMode;
 }
 

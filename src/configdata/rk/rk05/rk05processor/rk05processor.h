@@ -24,7 +24,6 @@ class RK05Processor : public UnitConfigProcessor
 		{"filename", &RK05Processor::processFileName},
 		{"newfile", &RK05Processor::processNewFile},
 		{"write-protect", &RK05Processor::processWriteProtect},
-		{"overwrite", &RK05Processor::processOverwrite},
 		{"cabinet", &RK05Processor::processCabinet},
 		{"spin-up-time", &RK05Processor::processSpinUpTime}
 	};
@@ -37,7 +36,6 @@ class RK05Processor : public UnitConfigProcessor
 	void processFileName (iniparser::Value value);
 	void processNewFile (iniparser::Value value);
 	void processWriteProtect (iniparser::Value value);
-	void processOverwrite (iniparser::Value value);
 	void processCabinet (iniparser::Value value);
 	void processSpinUpTime (iniparser::Value value);
 

@@ -95,8 +95,7 @@ TEST_F (RLV12WriteDataTest, writeDataSucceeds)
     RLUnitConfig writeDataSucceedsConfig
     ({
         .fileName = "rl01.dsk",
-        .newFile = true,
-        .overwrite = true
+        .newFile = true
     });
 
     // Attach a new disk to unit 0
@@ -183,8 +182,7 @@ TEST_F (RLV12WriteDataTest, partialWriteDataSucceeds)
     RLUnitConfig partialWriteDataSucceedsConfig
     ({
         .fileName = "rl01.dsk",
-        .newFile = true, 
-        .overwrite = true
+        .newFile = true
     });
 
     // Attach a new disk to unit 0
@@ -265,7 +263,6 @@ TEST_F (RLV12WriteDataTest, writeDataOnWriteProtectedDriveFails)
     ({
         .fileName = "rl01.dsk",
         .newFile = true,
-        .overwrite = true,
         .writeProtect = true
         });
 

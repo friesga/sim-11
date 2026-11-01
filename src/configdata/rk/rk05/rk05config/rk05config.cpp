@@ -13,6 +13,5 @@ RK05Config::RK05Config (RK05ConfigParams const& rk05ConfigParams)
 	fileName {rk05ConfigParams.fileName},
 	newFile {rk05ConfigParams.newFile},
 	writeProtect {rk05ConfigParams.writeProtect},
-	overwrite {rk05ConfigParams.overwrite},
 	spinUpTime {rk05ConfigParams.spinUpTime}
 {}

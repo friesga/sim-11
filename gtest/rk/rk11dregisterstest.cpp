@@ -293,8 +293,7 @@ TEST_F (RK11DRegistersTest, sectorCounterIsIncremented)
         RK05Config (RK05Config
         ({
             .fileName = "rk05.dsk",
-            .newFile = true,
-            .overwrite = true
+            .newFile = true
         }));
 
     Unibus bus;

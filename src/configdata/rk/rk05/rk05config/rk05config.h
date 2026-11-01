@@ -19,7 +19,6 @@ struct RK05Config
 	string fileName {};
 	bool newFile {false};
 	bool writeProtect {false};
-	bool overwrite {false};
 	size_t spinUpTime {0};
 
 	RK05Config ();
@@ -40,7 +39,6 @@ struct RK05ConfigParams
 	string fileName {};
 	bool newFile {false};
 	bool readOnly {false};
-	bool overwrite {false};
 	bool writeProtect {false};
 	size_t spinUpTime {0};
 };

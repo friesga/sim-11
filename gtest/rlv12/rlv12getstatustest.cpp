@@ -113,8 +113,7 @@ TEST_F (RLV12GetStatusTest, resetSucceeds)
     RLUnitConfig rlUnitConfig
     ({
         .fileName = "rl01.dsk",
-        .newFile = true,
-        .overwrite = true
+        .newFile = true
     });
 
     // Attach a new disk to unit 0
@@ -157,8 +156,7 @@ TEST_F (RLV12GetStatusTest, drive3CanBeSelected)
     RLUnitConfig rlUnitConfig
     ({
         .fileName = "rl01.dsk",
-        .newFile = true,
-        .overwrite = true
+        .newFile = true
     });
 
     // Attach a new disk to unit 3
@@ -201,7 +199,6 @@ TEST_F (RLV12GetStatusTest, rl01CorrectlyIndicated)
     ({
         .fileName = "rl01.dsk",
         .newFile = true,
-        .overwrite = true,
         .writeProtect = true,
         .unitType = RLUnitConfig::RLUnitType::RL01
         });
@@ -239,7 +236,6 @@ TEST_F (RLV12GetStatusTest, rl02CorrectlyIndicated)
     ({
         .fileName = "rl01.dsk",
         .newFile = true,
-        .overwrite = true,
         .writeProtect = true,
         .unitType = RLUnitConfig::RLUnitType::RL02
         });
@@ -278,7 +274,6 @@ TEST_F (RLV12GetStatusTest, writeProtectOffCorrectlyIndicated)
     ({
         .fileName = "rl01.dsk",
         .newFile = true,
-        .overwrite = true,
         .writeProtect = false,
         .unitType = RLUnitConfig::RLUnitType::RL02
         });

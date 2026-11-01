@@ -26,8 +26,7 @@ class RXV21UnitProcessor : public UnitConfigProcessor
 	{
 		{"filename", &RXV21UnitProcessor::processFileName},
 		{"newfile", &RXV21UnitProcessor::processNewFile},
-		{"read-only", &RXV21UnitProcessor::processReadOnly},
-		{"overwrite", &RXV21UnitProcessor::processOverwrite}
+		{"read-only", &RXV21UnitProcessor::processReadOnly}
 	};
 
     void processValue (iniparser::Section::ValueIterator valueIterator);
@@ -36,7 +35,6 @@ class RXV21UnitProcessor : public UnitConfigProcessor
 	void processFileName (iniparser::Value value);
 	void processNewFile (iniparser::Value value);
 	void processReadOnly (iniparser::Value value);
-	void processOverwrite (iniparser::Value value);
 
 public:
 	RXV21UnitConfig getConfig ();
