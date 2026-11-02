@@ -35,7 +35,7 @@ size_t RK05::writeDataToDrive (DiskAddress diskAddress, u16* buffer, u16 numWord
 
     clearBufferToEndOfSector (buffer, numWords);
 
-    u16 wordsWritten = cartridge_.writeDataToSector (diskAddress, buffer,
+    u16 wordsWritten = cartridge_->writeDataToSector (diskAddress, buffer,
         RKTypes::wordCountForEntireSectors (numWords));
 
     wtIndicator_->show (Indicator::State::Off);
@@ -64,7 +64,7 @@ size_t RK05::readDataFromDrive (DiskAddress diskAddress, u16* buffer,
     u32 wordCount)
 {
     rdIndicator_->show (Indicator::State::On);
-    size_t wordsRead = cartridge_.readDataFromSector (diskAddress, buffer,
+    size_t wordsRead = cartridge_->readDataFromSector (diskAddress, buffer,
         wordCount);
     rdIndicator_->show (Indicator::State::Off);
     return wordsRead;

@@ -3,38 +3,38 @@
 
 #include <gtest/gtest.h>
 #include <array>
+#include <memory>
 
 using std::array;
+using std::unique_ptr;
 
 TEST (UnitTest, fileCanBeCreated)
 {
-    Cartridge unit {};
-    EXPECT_EQ (unit.attachFile ("test.dsk", Geometry {},
-        Cartridge::OpenMode {Cartridge::OpenMode::NewFile}),
-        StatusCode::Success);
+    unique_ptr<Cartridge> cartridge = Cartridge::create ("test.dsk", Geometry {},
+        Cartridge::OpenMode {Cartridge::OpenMode::NewFile});
 
-    EXPECT_TRUE (unit.isAttached ());
+    EXPECT_TRUE (cartridge);
+    EXPECT_TRUE (cartridge->isAttached ());
 }
 
 TEST (UnitTest, fileCanBeWrittenAndReadBack)
 {
-    Cartridge unit {};
     Geometry geometry {40, 2, 256, 128};
     DiskAddress diskAdress {0, 0, 0};
 
-    EXPECT_EQ (unit.attachFile ("test.dsk", geometry,
-        Cartridge::OpenMode {Cartridge::OpenMode::NewFile}),
-        StatusCode::Success);
+    unique_ptr<Cartridge> cartridge = Cartridge::create ("test.dsk", Geometry {},
+        Cartridge::OpenMode {Cartridge::OpenMode::NewFile});
+    EXPECT_TRUE (cartridge);
 
     array<uint16_t, 512> buffer {};
     buffer.fill (0177777);
 
-    EXPECT_EQ (unit.writeDataToSector (diskAdress, buffer.data (), buffer.size ()),
+    EXPECT_EQ (cartridge->writeDataToSector (diskAdress, buffer.data (), buffer.size ()),
         buffer.size ());
 
     // Verify the written data can be read back
     buffer.fill (0);
-    EXPECT_EQ (unit.readDataFromSector (diskAdress, buffer.data (), buffer.size ()),
+    EXPECT_EQ (cartridge->readDataFromSector (diskAdress, buffer.data (), buffer.size ()),
         buffer.size ());
 
     for (int i = 0; i < buffer.size (); ++i)
@@ -47,8 +47,6 @@ TEST (UnitTest, fileCanBeWrittenAndReadBack)
 // geometry of a RL01 disk.
 TEST (UnitTest, badBlockTableWritten)
 {
-    Cartridge unit {};
-
     static constexpr int32_t wordsPerSector = 128;
     static constexpr int32_t sectorsPerSurface = 40;
     static constexpr int32_t surfacesPerCylinder = 2;
@@ -60,16 +58,16 @@ TEST (UnitTest, badBlockTableWritten)
     Geometry rl01Geometry {sectorsPerSurface, surfacesPerCylinder,
         RL01cylindersPerCartridge, wordsPerSector};
 
-    EXPECT_EQ (unit.attachFile ("test.dsk", rl01Geometry,
-        Cartridge::OpenMode {Cartridge::OpenMode::NewFile}),
-        StatusCode::Success);
+    unique_ptr<Cartridge> cartridge = Cartridge::create ("test.dsk", Geometry {},
+        Cartridge::OpenMode {Cartridge::OpenMode::NewFile});
+    EXPECT_TRUE (cartridge);
 
-    EXPECT_EQ (unit.createBadBlockTable (), StatusCode::Success);
+    EXPECT_EQ (cartridge->createBadBlockTable (), StatusCode::Success);
 
     DiskAddress firstSectorOfLastTrack {0, 1, RL01cylindersPerCartridge - 1};
 
     array<uint16_t, 128> buffer {};
-    EXPECT_EQ (unit.readDataFromSector (firstSectorOfLastTrack,
+    EXPECT_EQ (cartridge->readDataFromSector (firstSectorOfLastTrack,
         buffer.data (), buffer.size ()), buffer.size ());
 
     EXPECT_EQ (buffer[0], 067000);

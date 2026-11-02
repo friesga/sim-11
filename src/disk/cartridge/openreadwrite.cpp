@@ -6,8 +6,7 @@
 StatusCode Cartridge::openReadWrite (std::string fileName)
 {
     diskFileStream_ = fio::fopen(fileName.c_str(), "rb+");
-    if (diskFileStream_ == NULL)
-        return StatusCode::OpenError;
 
-    return StatusCode::Success;
+    return (diskFileStream_ != NULL) ? StatusCode::Success :
+        StatusCode::OpenError;
 }

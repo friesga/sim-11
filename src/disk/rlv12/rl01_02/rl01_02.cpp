@@ -221,7 +221,7 @@ size_t RL01_02::fileSize (string filePath) const
 
 bool RL01_02::isAttached ()
 {
-    return cartridge_.isAttached ();
+    return cartridge_ != nullptr && cartridge_->isAttached ();
 }
 
 void RL01_02::handleOperatorRequest (InputEvent const* event)

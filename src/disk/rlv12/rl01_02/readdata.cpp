@@ -15,7 +15,7 @@ pair<bool, size_t> RL01_02::readData (RLV12Command& rlv12Command, u16* buffer,
     waitForDriveReady ();
 
     size_t numBytes = 
-        cartridge_.readDataFromSector (darToDiskAddress (rlv12Command.diskAddress_),
+        cartridge_->readDataFromSector (darToDiskAddress (rlv12Command.diskAddress_),
         buffer, rlv12Command.wordCount_);
 
     if (numBytes != 0)

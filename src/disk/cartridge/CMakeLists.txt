@@ -1,5 +1,6 @@
 set (UNIT_SRCS     
     attachfile.cpp
+    cartridge.cpp
     createfile.cpp
     openreadonly.cpp
     openreadwrite.cpp

@@ -112,7 +112,7 @@ private:
     enum class DriveType { RL01, RL02 };
     DriveType driveType_ {DriveType::RL01};
 
-    Cartridge cartridge_;
+    std::unique_ptr<Cartridge> cartridge_;
     Geometry geometry_;
     int32_t currentDiskAddress_ {0};
 

@@ -11,6 +11,7 @@
 
 #include <cstdio>
 #include <string>
+#include <memory>
 
 // Definition of the functions for a cartridge:
 // 
@@ -42,8 +43,12 @@ public:
         _                           // Required for Bitmask
     };
 
-    StatusCode attachFile (std::string fileName, Geometry geometry,
-        OpenMode attachMode);
+    // Factory function to create a new Cartridge object. The function returns a
+    // unique_ptr to the newly created object. The function returns a nullptr if
+    // the file could not be opened or created.
+    static std::unique_ptr<Cartridge> create (std::string fileName,
+        Geometry geometry, OpenMode openMode);
+
     bool isAttached () const;
     t_offset attachedFileSize () const;
     size_t readDataFromSector (DiskAddress diskAddress, u16* buffer,
@@ -56,6 +61,11 @@ public:
     u32 LBN (DiskAddress diskAddress) const;
 
 private:
+    // The constructor is defined private to force the use of the create()
+    // function to create a new Cartridge object.
+    Cartridge (std::string fileName, Geometry geometry,
+        OpenMode openMode);
+
     Geometry geometry_ {};
     bool writeProtected_ {false};
     FILE* diskFileStream_ {nullptr};

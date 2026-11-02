@@ -17,12 +17,10 @@ StatusCode RL01_02::configure (const RLUnitConfig& rlUnitConfig)
     driveType_ = determineDriveType (rlUnitConfig);
     geometry_ = driveGeometry (driveType_);
 
-    // Try to attach the specified file to this unit
-    if (StatusCode result = cartridge_.attachFile (rlUnitConfig.fileName,
-            geometry_, getAttachMode (rlUnitConfig));
-        result != StatusCode::Success)
+    if (cartridge_ = Cartridge::create (rlUnitConfig.fileName, geometry_,
+        getAttachMode (rlUnitConfig)); cartridge_ == nullptr)
     {
-        return result;
+        return StatusCode::OpenError;
     }
 
     // Set the drive type in the MPR
@@ -33,7 +31,7 @@ StatusCode RL01_02::configure (const RLUnitConfig& rlUnitConfig)
     // the configuration.
     if (rlUnitConfig.writeProtect)
     {
-        cartridge_.setWriteProtected (true);
+        cartridge_->setWriteProtected (true);
         driveStatus_ |= RLV12const::MPR_GS_WriteLock;
     }
 
@@ -41,8 +39,8 @@ StatusCode RL01_02::configure (const RLUnitConfig& rlUnitConfig)
     
     // Create a bad block table on a new disk image (if the 
     // image is not read-only)
-    if (cartridge_.attachedFileSize () == 0 && !cartridge_.isWriteProtected ())
-        return cartridge_.createBadBlockTable ();
+    if (cartridge_->attachedFileSize () == 0 && !cartridge_->isWriteProtected ())
+        return cartridge_->createBadBlockTable ();
 
     return StatusCode::Success;
 }

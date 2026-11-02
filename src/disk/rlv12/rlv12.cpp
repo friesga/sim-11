@@ -38,7 +38,7 @@ RLV12::RLV12 (Bus* bus)
 
     // Create four units, not yet initialised and without a CartridgeHandler
     for (size_t unitNumber = 0; unitNumber < 4; ++unitNumber)
-     units_[unitNumber] = make_unique<RL01_02> (this, nullptr);
+        units_[unitNumber] = make_unique<RL01_02> (this, nullptr);
 
     // Allocate the transfer buffer, initializing to zero
     dataBuffer_ = new (std::nothrow) u16[RLV12const::maxTransfer]();

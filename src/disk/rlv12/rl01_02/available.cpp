@@ -12,7 +12,7 @@
 //
 bool RL01_02::available ()
 {
-    if (cartridge_.isAttached () && 
+    if (cartridge_->isAttached () && 
             (stateMachine_->inState (LockedOn {}) ||
              stateMachine_->inState (Seeking {})))
         return true;

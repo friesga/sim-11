@@ -63,7 +63,7 @@ private:
     DriveInterface* controller_ {nullptr};
     u16 driveId_;
 
-    Cartridge cartridge_ {};
+    std::unique_ptr<Cartridge> cartridge_ {};
     unique_ptr<u16[]> buffer_ {};
 
     // Buttons and indicators. The initial value points to a dummy to
