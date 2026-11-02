@@ -82,22 +82,22 @@ private:
     // The MPR is not a single physical entity like the other registers. It
     // consists of two separate registers, the word counter and the FIFO output
     // buffer, both bearing the same base address. (EK-RLV12-TD-001 pg. 3-4)
-    u16 csr_;       // Control/status register
-    u16 bar_;       // Bus Address register
-    u16 dar_;       // Disk address register
-    u16 bae_;       // Bus Address Extension register
+    u16 csr_ {0};       // Control/status register
+    u16 bar_ {0};       // Bus Address register
+    u16 dar_ {0};       // Disk address register
+    u16 bae_ {0};       // Bus Address Extension register
 
     // Definition of the controller's base address and vector
     u16 baseAddress_ {0};
     u16 vector_ {0};
 
     // Define transfer buffer
-    u16* dataBuffer_;
+    u16* dataBuffer_ {nullptr};
 
     // Definition of the controller type and the presence of the 22-bit option
     // when configured as a RLV12 controller.
     RLV12const::RLType rlType_;
-    bool _22bit_;
+    bool _22bit_ {false};
 
     // A RLV12 can have a maximum of four units. RL01_02 objects for
     // which no unit is connected to the controller will have the status
@@ -126,10 +126,10 @@ private:
     // FIFO output buffer. (EK-RLV-12-TD-001, pg. 4-3)
 
     // Word counter
-    u16 wordCounter_;
+    u16 wordCounter_ {0};
 
     // Index into the FIFO buffer for reading the FIFO via the MPR
-    size_t fifoIndex_;
+    size_t fifoIndex_ {0};
 
     // Private functions
     u16 calcCRC (int const wc, u16 const* data);

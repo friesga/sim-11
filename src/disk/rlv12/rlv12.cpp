@@ -23,15 +23,7 @@ using std::runtime_error;
 RLV12::RLV12 (Bus* bus)
     :
     bus_ {bus},
-    csr_ {0},
-    bar_ {0},
-    dar_ {0},
-    bae_ {0},
-    dataBuffer_ {nullptr},
-    rlType_ {RLV12const::RLType::RLV12},
-    _22bit_ {false},
-    wordCounter_ {0},
-    fifoIndex_ {0}
+    rlType_ {RLV12const::RLType::RLV12}
 {
     baseAddress_ = RLV12const::RLV_BaseAddress;
     vector_ = RLV12const::RLV_Vector;
@@ -56,15 +48,7 @@ RLV12::RLV12 (Bus* bus, Window* window, CartridgeHandler* cartridgeHandler,
     const RLConfig& rlConfig)
     :
     bus_ {bus},
-    csr_ {0},
-    bar_ {0},
-    dar_ {0},
-    bae_ {0},
-    dataBuffer_ {nullptr},
-    rlType_ {},
-    _22bit_ {false},
-    wordCounter_ {0},
-    fifoIndex_ {0}
+    rlType_ {}
 {
     baseAddress_ = (rlConfig.address > 0) ? 
         rlConfig.address : RLV12const::RLV_BaseAddress;
