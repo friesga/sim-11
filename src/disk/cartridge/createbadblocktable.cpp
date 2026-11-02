@@ -48,9 +48,6 @@ StatusCode Cartridge::createBadBlockTable ()
     if (geometry_.sectorsPerSurface () < 2 || geometry_.wordsPerSector () < 16)
         return StatusCode::ArgumentError;
 
-    if (!isAttached ())
-        return StatusCode::UnAttached;
-
     if (writeProtected_)
         return StatusCode::ReadOnly;
 

@@ -14,7 +14,6 @@ TEST (UnitTest, fileCanBeCreated)
         Cartridge::OpenMode {Cartridge::OpenMode::NewFile});
 
     EXPECT_TRUE (cartridge);
-    EXPECT_TRUE (cartridge->isAttached ());
 }
 
 TEST (UnitTest, fileCanBeWrittenAndReadBack)

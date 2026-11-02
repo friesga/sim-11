@@ -50,7 +50,6 @@ public:
         Geometry geometry, OpenMode openMode);
 
     ~Cartridge ();
-    bool isAttached () const;
     t_offset attachedFileSize () const;
     size_t readDataFromSector (DiskAddress diskAddress, u16* buffer,
         u32 wordCount);

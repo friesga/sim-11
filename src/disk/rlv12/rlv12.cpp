@@ -86,7 +86,7 @@ void RLV12::init (Bus* bus, Window* window, CartridgeHandler* cartridgeHandler,
 
 void RLV12::createUnits (size_t numUnits, CartridgeHandler* cartridgeHandler)
 {
-	for (size_t unitNumber = 0; numUnits; ++unitNumber)
+	for (size_t unitNumber = 0; unitNumber < numUnits; ++unitNumber)
 	{
         units_[unitNumber] = make_unique<RL01_02> (this, cartridgeHandler);
 	}
