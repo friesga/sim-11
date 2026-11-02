@@ -53,6 +53,12 @@ std::unique_ptr<Cartridge> Cartridge::create (std::string fileName,
     }
 }
 
+Cartridge::~Cartridge ()
+{
+    if (diskFileStream_ != nullptr)
+        fclose (diskFileStream_);
+}
+
 bool Cartridge::isAttached () const
 {
     return (diskFileStream_ != nullptr);

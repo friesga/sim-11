@@ -49,6 +49,7 @@ public:
     static std::unique_ptr<Cartridge> create (std::string fileName,
         Geometry geometry, OpenMode openMode);
 
+    ~Cartridge ();
     bool isAttached () const;
     t_offset attachedFileSize () const;
     size_t readDataFromSector (DiskAddress diskAddress, u16* buffer,
