@@ -36,10 +36,10 @@ RL01_02::State RL01_02::StateMachine::transition (Initial&&, SpunUp)
 
 RL01_02::State RL01_02::StateMachine::transition (Initial&&, SpunDown)
 {
-    return Unloaded {};
+    return SpindleStopped {};
 }
 
-void RL01_02::StateMachine::entry (Unloaded)
+void RL01_02::StateMachine::entry (SpindleStopped)
 {
     context_->driveState_ = RLV12const::MPR_GS_LoadCartridge;
 }
@@ -47,7 +47,7 @@ void RL01_02::StateMachine::entry (Unloaded)
 // If the LOAD button is pressed, the state machine transitions to the
 // SpinningUp state. The LOAD indicator extinguishes and a spin up
 // timer is started.
-RL01_02::State RL01_02::StateMachine::transition (Unloaded &&, SpinUp)
+RL01_02::State RL01_02::StateMachine::transition (SpindleStopped &&, SpinUp)
 {
     context_->loadButton_->show (Indicator::State::Off);
     
@@ -155,7 +155,7 @@ void RL01_02::StateMachine::entry (SpinningDown)
 RL01_02::State RL01_02::StateMachine::transition (SpinningDown&&, TimeElapsed)
 {
     context_->loadButton_->show (Indicator::State::On);
-    return Unloaded {};
+    return SpindleStopped {};
 }
 
 RL01_02::State RL01_02::StateMachine::transition (SpinningDown&&, SpinUp)

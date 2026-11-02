@@ -81,14 +81,14 @@ public:
 
 private:
     // Definition of the drive states
-    struct Initial {};      // State machine initial state
-    struct Unloaded {};     // No cartridge loaded
-    struct SpinningUp {};   // The drive is spinning up
-    struct LockedOn {};     // The drive is locked on a cylinder
-    struct Seeking {};      // The drive is seeking
-    struct SpinningDown {}; // The drive is spinning down
+    struct Initial {};          // State machine initial state
+    struct SpindleStopped {};   // No cartridge loaded
+    struct SpinningUp {};       // The drive is spinning up
+    struct LockedOn {};         // The drive is locked on a cylinder
+    struct Seeking {};          // The drive is seeking
+    struct SpinningDown {};     // The drive is spinning down
 
-    using State = std::variant <Initial, Unloaded, SpinningUp, LockedOn,
+    using State = std::variant <Initial, SpindleStopped, SpinningUp, LockedOn,
         Seeking, SpinningDown>;
 
     // Definition of the drive events
@@ -198,9 +198,9 @@ public:
         duration<int, std::ratio<1, 1>> spinUpTime);
 
     State transition (Initial&&, SpunUp);           // -> LockedOn
-    State transition (Initial&&, SpunDown);         // -> Unloaded
-    void entry (Unloaded);
-    State transition (Unloaded&&, SpinUp);          // -> SpinningUp
+    State transition (Initial&&, SpunDown);         // -> SpindleStopped
+    void entry (SpindleStopped);
+    State transition (SpindleStopped&&, SpinUp);          // -> SpinningUp
     void entry (SpinningUp);
     State transition (SpinningUp&&, TimeElapsed);   // -> LockedOn
     State transition (SpinningUp&&, SpinDown);      // -> SpinningDown
@@ -212,7 +212,7 @@ public:
     State transition (LockedOn&&, SpinDown);        // -> SpinningDown
     State transition (Seeking&&, SpinDown);         // -> SpinningDown
     void entry (SpinningDown);
-    State transition (SpinningDown&&, TimeElapsed); // -> Unloaded
+    State transition (SpinningDown&&, TimeElapsed); // -> SpindleStopped
     State transition (SpinningDown&&, SpinUp);      // -> SpinningUp
 
     // Define the default transition for transitions not explicitly

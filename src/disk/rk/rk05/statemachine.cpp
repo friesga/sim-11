@@ -45,7 +45,7 @@ void RK05::StateMachine::entry (PoweredOff)
 // When the RUN switch is in the upper position the drive has to
 // spin up. If the spin up time is zero the drive is immediately locked
 // on cylinder 0, else the drive spin up is started. In case the RUN switch
-// is in the lower position the drive will be in the Unloaded state.
+// is in the lower position the drive will be in the SpindleStopped state.
 RK05::State RK05::StateMachine::transition (PoweredOff&&, PowerOn)
 {
     return poweringOn ();
@@ -72,7 +72,7 @@ RK05::State RK05::StateMachine::transition (Unloaded&&, SpinUp)
 }
 
 // This state can be entered from PoweredOff, EmergencyShutdown and from
-// Unloaded.
+// SpindleStopped.
 void RK05::StateMachine::entry (SpinningUp)
 {
     spinUpDownTimer_.start (bind (&RK05::StateMachine::spinUpDownTimerExpired,

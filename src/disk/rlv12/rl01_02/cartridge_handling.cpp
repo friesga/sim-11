@@ -17,5 +17,5 @@ bool RL01_02::cartridgeIsLoaded ()
 
 bool RL01_02::cartridgeCanBeLoaded ()
 {
-    return stateMachine_->inState (Unloaded {});
+    return stateMachine_->inState (SpindleStopped {});
 }
