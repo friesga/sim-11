@@ -219,7 +219,7 @@ size_t RL01_02::fileSize (string filePath) const
     }
 }
 
-bool RL01_02::isAttached ()
+bool RL01_02::cartridgeLoaded ()
 {
     return cartridge_ != nullptr && cartridge_->isAttached ();
 }

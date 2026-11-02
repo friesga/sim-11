@@ -31,9 +31,9 @@ u16 RLV12::rlcsPlusDriveStatus (RL01_02* unit)
     else
         rlcsCombined &= ~RLV12const::CSR_DriveError;
 
-    // The drive is ready if it is not disconnected, no error is
+    // The drive is ready if it a cartridge is loaded, no error is
     // reported by the drive and the heads are locked on a cylinder.
-    if (unit->isAttached () &&
+    if (unit->cartridgeLoaded () &&
             !(unit->driveStatus () & RLV12const::DriveReadyNegate) &&
             unit->driveReady ())
         rlcsCombined |= RLV12const::CSR_DriveReady;

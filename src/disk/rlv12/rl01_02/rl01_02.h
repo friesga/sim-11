@@ -77,7 +77,7 @@ public:
     void resetDriveError ();
     StatusCode init (const RLUnitConfig& rlUnitConfig, Window* window);
     StatusCode init (const RLUnitConfig& rlUnitConfig);
-    bool isAttached ();
+    bool cartridgeLoaded ();
 
 private:
     // Definition of the drive states
