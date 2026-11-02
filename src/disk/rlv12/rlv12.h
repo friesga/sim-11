@@ -134,6 +134,7 @@ private:
     // Private functions
     void init (Bus* bus, Window* window, CartridgeHandler* cartridgeHandler,
         const RLConfig& rlConfig);
+    void createUnits (size_t numUnits, CartridgeHandler* cartridgeHandler);
     void configureUnits (Window* window, const RLConfig& rlConfig);
     u16 calcCRC (int const wc, u16 const* data);
     void setDone (RL01_02* unit, u16 status);

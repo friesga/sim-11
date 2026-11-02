@@ -76,15 +76,20 @@ void RLV12::init (Bus* bus, Window* window, CartridgeHandler* cartridgeHandler,
         throw runtime_error ("Allocating memory for transfer buffer failed");
 
     // Create the in the configuration specified number of RL01/02 units
-	for (size_t unitNumber = 0; unitNumber < rlConfig.numUnits; ++unitNumber)
-	{
-        units_[unitNumber] = make_unique<RL01_02> (this, cartridgeHandler);
-	}
+    createUnits (rlConfig.numUnits, cartridgeHandler);
 
     bus_->BINIT().subscribe (bind (&RLV12::BINITReceiver, this, _1));
 
     // Start the command processor
     cmdProcessor_ = std::make_unique<CmdProcessor> (this);
+}
+
+void RLV12::createUnits (size_t numUnits, CartridgeHandler* cartridgeHandler)
+{
+	for (size_t unitNumber = 0; numUnits; ++unitNumber)
+	{
+        units_[unitNumber] = make_unique<RL01_02> (this, cartridgeHandler);
+	}
 }
 
 void RLV12::configureUnits (Window* window, const RLConfig& rlConfig)
