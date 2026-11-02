@@ -19,10 +19,10 @@ TEST (UnitTest, fileCanBeCreated)
 
 TEST (UnitTest, fileCanBeWrittenAndReadBack)
 {
-    Geometry geometry {40, 2, 256, 128};
     DiskAddress diskAdress {0, 0, 0};
 
-    unique_ptr<Cartridge> cartridge = Cartridge::create ("test.dsk", Geometry {},
+    unique_ptr<Cartridge> cartridge = Cartridge::create ("test.dsk",
+        Geometry {40, 2, 256, 128},
         Cartridge::OpenMode {Cartridge::OpenMode::NewFile});
     EXPECT_TRUE (cartridge);
 
@@ -58,7 +58,8 @@ TEST (UnitTest, badBlockTableWritten)
     Geometry rl01Geometry {sectorsPerSurface, surfacesPerCylinder,
         RL01cylindersPerCartridge, wordsPerSector};
 
-    unique_ptr<Cartridge> cartridge = Cartridge::create ("test.dsk", Geometry {},
+    unique_ptr<Cartridge> cartridge = Cartridge::create ("test.dsk",
+        Geometry {40, 2, 256, 128},
         Cartridge::OpenMode {Cartridge::OpenMode::NewFile});
     EXPECT_TRUE (cartridge);
 
