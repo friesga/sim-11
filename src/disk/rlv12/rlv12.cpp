@@ -14,42 +14,56 @@ using std::make_unique;
 using std::make_shared;
 using std::runtime_error;
 
-// RLV12 constructor
-// Set name and default base address and vector. Set the controller
-// ready to accept a command.
-// The base class protected data members cannot be accessed in an
-// initializer list
-// ToDo: Remove default RLV12 constructor
+// This constructor is used by the unit tests. It creates a RLV12 controller
+// with four unloaded RL01/02 units and default base address and vector. 
 RLV12::RLV12 (Bus* bus)
-    :
-    bus_ {bus},
-    rlType_ {RLV12const::RLType::RLV12}
 {
     baseAddress_ = RLV12const::RLV_BaseAddress;
     vector_ = RLV12const::RLV_Vector;
 
-    // Create four units, not yet initialised and without a CartridgeHandler
-    for (size_t unitNumber = 0; unitNumber < 4; ++unitNumber)
-        units_[unitNumber] = make_unique<RL01_02> (this, nullptr);
+    RLConfig rlConfig {RLV12const::RLV_BaseAddress,
+        RLV12const::RLV_Vector, 4, {}};
 
-    // Allocate the transfer buffer, initializing to zero
-    dataBuffer_ = new (std::nothrow) u16[RLV12const::maxTransfer]();
-
-    if (dataBuffer_ == nullptr)
-        throw runtime_error ("Allocating memory for transfer buffer failed");
-
-    bus_->BINIT().subscribe (bind (&RLV12::BINITReceiver, this, _1));
-
-    // Start the command processor
-    cmdProcessor_ = std::make_unique<CmdProcessor> (this);
+    init (bus, nullptr, nullptr, rlConfig);
 }
 
 RLV12::RLV12 (Bus* bus, Window* window, CartridgeHandler* cartridgeHandler,
     const RLConfig& rlConfig)
-    :
-    bus_ {bus},
-    rlType_ {}
 {
+    init (bus, window, cartridgeHandler, rlConfig);
+}
+
+RLV12::RLV12 (Bus* bus, Window* window, CartridgeHandler* cartridgeHandler,
+    const RL11Config& rl11Config)
+{
+    rlType_ = RLV12const::RLType::RL11;
+    init (bus, window, cartridgeHandler, rl11Config.common);
+    configureUnits (window, rl11Config.common);
+}
+
+RLV12::RLV12 (Bus* bus, Window* window, CartridgeHandler* cartridgeHandler,
+    const RLV11Config& rlv11Config)
+{
+    rlType_ = RLV12const::RLType::RLV11;
+    init (bus, window, cartridgeHandler, rlv11Config.common);
+    configureUnits (window, rlv11Config.common);
+}
+
+RLV12::RLV12 (Bus* bus, Window* window, CartridgeHandler* cartridgeHandler,
+    const RLV12Config& rlv12Config)
+{
+    _22bit_  = rlv12Config._22bit;
+    rlType_ = RLV12const::RLType::RLV12;
+
+    init (bus, window, cartridgeHandler, rlv12Config.common);
+    configureUnits (window, rlv12Config.common);
+}
+
+void RLV12::init (Bus* bus, Window* window, CartridgeHandler* cartridgeHandler,
+    const RLConfig& rlConfig)
+{
+    bus_ = bus;
+    
     baseAddress_ = (rlConfig.address > 0) ? 
         rlConfig.address : RLV12const::RLV_BaseAddress;
     vector_ = (rlConfig.vector > 0) ?
@@ -62,19 +76,9 @@ RLV12::RLV12 (Bus* bus, Window* window, CartridgeHandler* cartridgeHandler,
         throw runtime_error ("Allocating memory for transfer buffer failed");
 
     // Create the in the configuration specified number of RL01/02 units
-    // and initialize them.
-	for (size_t unitNumber = 0; 
-		unitNumber < rlConfig.numUnits; ++unitNumber)
+	for (size_t unitNumber = 0; unitNumber < rlConfig.numUnits; ++unitNumber)
 	{
-        optional<RLUnitConfig> rlUnitConfig = rlConfig.rlUnitConfig[unitNumber];
-
-        if (!rlUnitConfig.has_value ())
-            continue;
-
         units_[unitNumber] = make_unique<RL01_02> (this, cartridgeHandler);
-
-		if (unit (unitNumber)->init (rlUnitConfig.value (), window) != StatusCode::Success)
-			throw runtime_error ("Error attaching " + rlUnitConfig->fileName);
 	}
 
     bus_->BINIT().subscribe (bind (&RLV12::BINITReceiver, this, _1));
@@ -83,29 +87,19 @@ RLV12::RLV12 (Bus* bus, Window* window, CartridgeHandler* cartridgeHandler,
     cmdProcessor_ = std::make_unique<CmdProcessor> (this);
 }
 
-RLV12::RLV12 (Bus* bus, Window* window, CartridgeHandler* cartridgeHandler,
-    const RL11Config& rl11Config)
-    :
-    RLV12 (bus, window, cartridgeHandler, rl11Config.common)
+void RLV12::configureUnits (Window* window, const RLConfig& rlConfig)
 {
-    rlType_ = RLV12const::RLType::RL11;
-}
+	for (size_t unitNumber = 0; 
+		unitNumber < rlConfig.numUnits; ++unitNumber)
+	{
+        optional<RLUnitConfig> rlUnitConfig = rlConfig.rlUnitConfig[unitNumber];
 
-RLV12::RLV12 (Bus* bus, Window* window, CartridgeHandler* cartridgeHandler,
-    const RLV11Config& rlv11Config)
-    :
-    RLV12 (bus, window, cartridgeHandler, rlv11Config.common)
-{
-    rlType_ = RLV12const::RLType::RLV11;
-}
+        if (!rlUnitConfig.has_value ())
+            continue;
 
-RLV12::RLV12 (Bus* bus, Window* window, CartridgeHandler* cartridgeHandler,
-    const RLV12Config& rlv12Config)
-    :
-    RLV12 (bus, window, cartridgeHandler, rlv12Config.common)
-{
-    _22bit_  = rlv12Config._22bit;
-    rlType_ = RLV12const::RLType::RLV12;
+		if (unit (unitNumber)->init (rlUnitConfig.value (), window) != StatusCode::Success)
+			throw runtime_error ("Error attaching " + rlUnitConfig->fileName);
+	}
 }
 
 // Destructor to deallocate transfer buffer

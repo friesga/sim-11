@@ -132,6 +132,9 @@ private:
     size_t fifoIndex_ {0};
 
     // Private functions
+    void init (Bus* bus, Window* window, CartridgeHandler* cartridgeHandler,
+        const RLConfig& rlConfig);
+    void configureUnits (Window* window, const RLConfig& rlConfig);
     u16 calcCRC (int const wc, u16 const* data);
     void setDone (RL01_02* unit, u16 status);
     u16 getStatusCmd (RL01_02* unit);
