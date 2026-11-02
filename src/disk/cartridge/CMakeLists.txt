@@ -1,5 +1,4 @@
-set (UNIT_SRCS     
-    attachfile.cpp
+set (CARTRIDGE_SRCS     
     cartridge.cpp
     createfile.cpp
     openreadonly.cpp
@@ -10,6 +9,6 @@ set (UNIT_SRCS
     writedatatosector.cpp
     writeprotect.cpp)
 
-target_sources (${TARGET} PRIVATE ${UNIT_SRCS})
-target_sources (sim-11-wasm PRIVATE ${UNIT_SRCS})
-target_sources (sim-11-test PRIVATE ${UNIT_SRCS})
+target_sources (${TARGET} PRIVATE ${CARTRIDGE_SRCS})
+target_sources (sim-11-wasm PRIVATE ${CARTRIDGE_SRCS})
+target_sources (sim-11-test PRIVATE ${CARTRIDGE_SRCS})
