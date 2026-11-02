@@ -39,8 +39,7 @@ public:
     {
         ReadWrite,                  // Open existing file read/write
         ReadOnly,                   // Attach read-only
-        NewFile,                    // Create new file on attach
-        _                           // Required for Bitmask
+        NewFile                     // Create new file
     };
 
     // Factory function to create a new Cartridge object. The function returns a
