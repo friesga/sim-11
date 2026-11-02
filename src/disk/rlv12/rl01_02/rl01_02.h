@@ -180,7 +180,7 @@ private:
 
     void loadButtonClicked (Button::State state);
     void writeProtectButtonClicked (Button::State state);
-    Cartridge::OpenMode getAttachMode (const RLUnitConfig& rlUnitConfig);
+    Cartridge::OpenMode openMode (const RLUnitConfig& rlUnitConfig);
     Geometry driveGeometry (DriveType driveType);
     DriveType determineDriveType (const RLUnitConfig& rlUnitConfig);
     size_t fileSize (string filePath) const;

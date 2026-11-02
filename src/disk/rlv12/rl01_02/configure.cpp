@@ -18,7 +18,7 @@ StatusCode RL01_02::configure (const RLUnitConfig& rlUnitConfig)
     geometry_ = driveGeometry (driveType_);
 
     if (cartridge_ = Cartridge::create (rlUnitConfig.fileName, geometry_,
-        getAttachMode (rlUnitConfig)); cartridge_ == nullptr)
+        openMode (rlUnitConfig)); cartridge_ == nullptr)
     {
         return StatusCode::OpenError;
     }
@@ -45,17 +45,17 @@ StatusCode RL01_02::configure (const RLUnitConfig& rlUnitConfig)
     return StatusCode::Success;
 }
 
-Cartridge::OpenMode RL01_02::getAttachMode (
+Cartridge::OpenMode RL01_02::openMode (
     const RLUnitConfig& rlUnitConfig)
 {
-    Cartridge::OpenMode attachMode {Cartridge::OpenMode::ReadWrite};
+    Cartridge::OpenMode openMode {Cartridge::OpenMode::ReadWrite};
 
     if (rlUnitConfig.writeProtect)
-        attachMode = Cartridge::OpenMode::ReadOnly;
+        openMode = Cartridge::OpenMode::ReadOnly;
     if (rlUnitConfig.newFile)
-        attachMode = Cartridge::OpenMode::NewFile;
+        openMode = Cartridge::OpenMode::NewFile;
 
-    return attachMode;
+    return openMode;
 }
 
 // Get unit geometry from the given drive type

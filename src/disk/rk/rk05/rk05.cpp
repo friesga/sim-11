@@ -38,7 +38,7 @@ RK05::RK05 (Bus* bus, DriveInterface* controller, Window* window,
     buffer_ = make_unique<u16[]> (1 << 16);
 
     if (cartridge_ = Cartridge::create (rk05Config.fileName, rk05Geometry_,
-        getAttachMode (rk05Config)); cartridge_ == nullptr)
+        openMode (rk05Config)); cartridge_ == nullptr)
     {
         throw invalid_argument ("Cannot create cartridge " + rk05Config.fileName);
     }
@@ -186,16 +186,16 @@ SimulatorClock::duration RK05::seekTime (u16 currentCylinderAddress,
         (3 + 6.25 * sqrt (numCylinders)));
 }
 
-// ToDo: This function is a double with RL01_02::getAttachMode()
-Cartridge::OpenMode RK05::getAttachMode (const RK05Config& rk05Config)
+// ToDo: This function is a double with RL01_02::openMode()
+Cartridge::OpenMode RK05::openMode (const RK05Config& rk05Config)
 {
-    Cartridge::OpenMode attachMode {Cartridge::OpenMode::ReadWrite};
+    Cartridge::OpenMode openMode {Cartridge::OpenMode::ReadWrite};
 
     if (rk05Config.writeProtect)
-        attachMode = Cartridge::OpenMode::ReadOnly;
+        openMode = Cartridge::OpenMode::ReadOnly;
     if (rk05Config.newFile)
-        attachMode = Cartridge::OpenMode::NewFile;
-    return attachMode;
+        openMode = Cartridge::OpenMode::NewFile;
+    return openMode;
 }
 
 void RK05::BPOKReceiver (bool signalValue)
