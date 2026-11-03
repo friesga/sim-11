@@ -32,7 +32,7 @@ using std::chrono::duration;
 
 // RL01/RL02 disk drive
 //
-class RL01_02 : public Diskdrive
+class RL01_02 : public DiskDrive
 {
 public:
     // All RLV12Commands need access to the file pointer and unit status
@@ -48,7 +48,7 @@ public:
 
     // Constructor and destructor
     RL01_02 (AbstractBusDevice* owningDevice,
-        CartridgeHandler* cartridgeHandler);
+        const CartridgeHandlerFactory cartridgeHandlerFactory);
     ~RL01_02 ();
 
     // Functions required by the Diskdrive interface
@@ -127,7 +127,7 @@ private:
     bool running_ {false};
     AlarmClock alarmClock_;
     SimulatorClock::duration spinUpTime_ {0};
-    CartridgeHandler* cartridgeHandler_ {};
+    std::unique_ptr<CartridgeHandler> cartridgeHandler_ {};
 
     // Calculated seek time
     SimulatorClock::duration seekTime_;

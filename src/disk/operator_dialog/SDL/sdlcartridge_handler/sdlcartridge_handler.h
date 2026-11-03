@@ -7,6 +7,7 @@
 #include "../sdlpopupmenu/sdlpopupmenu.h"
 #include "../sdlmessagebox/sdlmessagebox.h"
 #include "../sdlfiledialog/sdlfiledialog.h"
+#include "diskdrive.h"
 
 // As its name suggests the class CartridgeHandler is responsible for handling
 // the cartridge operations in the emulator. It provides methods to load and
@@ -19,6 +20,7 @@
 class SDLCartridgeHandler : public CartridgeHandler
 {
 public:
+    explicit SDLCartridgeHandler (DiskDrive* diskDrive);
     ~SDLCartridgeHandler () = default;
     void operatorActionRequested (int x, int y) override;
 

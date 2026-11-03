@@ -14,6 +14,11 @@ using std::make_unique;
 using std::make_shared;
 using std::runtime_error;
 
+CartridgeHandlerFactory dummyFactory = [] (DiskDrive* drive)
+{
+		return nullptr;
+};
+
 // This constructor is used by the unit tests. It creates a RLV12 controller
 // with four unloaded RL01/02 units and default base address and vector. 
 RLV12::RLV12 (Bus* bus)
@@ -24,42 +29,47 @@ RLV12::RLV12 (Bus* bus)
     RLConfig rlConfig {RLV12const::RLV_BaseAddress,
         RLV12const::RLV_Vector, 4, {}};
 
-    init (bus, nullptr, nullptr, rlConfig);
+    init (bus, nullptr, dummyFactory, rlConfig);
 }
 
-RLV12::RLV12 (Bus* bus, Window* window, CartridgeHandler* cartridgeHandler,
+RLV12::RLV12 (Bus* bus, Window* window,
+    const CartridgeHandlerFactory cartridgeHandlerFactory,
     const RLConfig& rlConfig)
 {
-    init (bus, window, cartridgeHandler, rlConfig);
+    init (bus, window, cartridgeHandlerFactory, rlConfig);
 }
 
-RLV12::RLV12 (Bus* bus, Window* window, CartridgeHandler* cartridgeHandler,
+RLV12::RLV12 (Bus* bus, Window* window,
+    const CartridgeHandlerFactory cartridgeHandlerFactory,
     const RL11Config& rl11Config)
 {
     rlType_ = RLV12const::RLType::RL11;
-    init (bus, window, cartridgeHandler, rl11Config.common);
+    init (bus, window, cartridgeHandlerFactory, rl11Config.common);
     configureUnits (window, rl11Config.common);
 }
 
-RLV12::RLV12 (Bus* bus, Window* window, CartridgeHandler* cartridgeHandler,
+RLV12::RLV12 (Bus* bus, Window* window,
+    const CartridgeHandlerFactory cartridgeHandlerFactory,
     const RLV11Config& rlv11Config)
 {
     rlType_ = RLV12const::RLType::RLV11;
-    init (bus, window, cartridgeHandler, rlv11Config.common);
+    init (bus, window, cartridgeHandlerFactory, rlv11Config.common);
     configureUnits (window, rlv11Config.common);
 }
 
-RLV12::RLV12 (Bus* bus, Window* window, CartridgeHandler* cartridgeHandler,
+RLV12::RLV12 (Bus* bus, Window* window, 
+    const CartridgeHandlerFactory cartridgeHandlerFactory,
     const RLV12Config& rlv12Config)
 {
     _22bit_  = rlv12Config._22bit;
     rlType_ = RLV12const::RLType::RLV12;
 
-    init (bus, window, cartridgeHandler, rlv12Config.common);
+    init (bus, window, cartridgeHandlerFactory, rlv12Config.common);
     configureUnits (window, rlv12Config.common);
 }
 
-void RLV12::init (Bus* bus, Window* window, CartridgeHandler* cartridgeHandler,
+void RLV12::init (Bus* bus, Window* window, 
+    const CartridgeHandlerFactory cartridgeHandlerFactory,
     const RLConfig& rlConfig)
 {
     bus_ = bus;
@@ -76,7 +86,7 @@ void RLV12::init (Bus* bus, Window* window, CartridgeHandler* cartridgeHandler,
         throw runtime_error ("Allocating memory for transfer buffer failed");
 
     // Create the in the configuration specified number of RL01/02 units
-    createUnits (rlConfig.numUnits, cartridgeHandler);
+    createUnits (rlConfig.numUnits, cartridgeHandlerFactory);
 
     bus_->BINIT().subscribe (bind (&RLV12::BINITReceiver, this, _1));
 
@@ -84,11 +94,12 @@ void RLV12::init (Bus* bus, Window* window, CartridgeHandler* cartridgeHandler,
     cmdProcessor_ = std::make_unique<CmdProcessor> (this);
 }
 
-void RLV12::createUnits (size_t numUnits, CartridgeHandler* cartridgeHandler)
+void RLV12::createUnits (size_t numUnits,
+    const CartridgeHandlerFactory cartridgeHandlerFactory)
 {
 	for (size_t unitNumber = 0; unitNumber < numUnits; ++unitNumber)
 	{
-        units_[unitNumber] = make_unique<RL01_02> (this, cartridgeHandler);
+        units_[unitNumber] = make_unique<RL01_02> (this, cartridgeHandlerFactory);
 	}
 }
 

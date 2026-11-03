@@ -61,10 +61,10 @@ class PDP_11
 	CmdLineOptions const &cmdLineOptions_;
 
 	void configureQbusSystem (SystemConfig const & systemConfig,
-		Window* window, CartridgeHandler* cartridgeHandler,
+		Window* window, CartridgeHandlerFactory& cartridgeHandlerFactory,
 		AudioSystem* audioSystem);
 	void configureUnibusSystem (SystemConfig const & systemConfig,
-		Window* window, CartridgeHandler* cartridgeHandler,
+		Window* window, CartridgeHandlerFactory& cartridgeHandlerFactory,
 		AudioSystem* audioSystem);
 	void installModules ();
 
@@ -72,9 +72,10 @@ public:
 	PDP_11 (CmdLineOptions const &cmdLineOptions);
 	~PDP_11 ();
 	void configureDevices (Window *window,
-		CartridgeHandler* cartridgeHandler, AudioSystem* audioSystem);
+		CartridgeHandlerFactory& cartridgeHandlerFactory,
+		AudioSystem* audioSystem);
 	void configureDevices (SystemConfig const & systemConfig,
-		Window *window, CartridgeHandler* cartridgeHandler,
+		Window *window, CartridgeHandlerFactory& cartridgeHandlerFactory,
 		AudioSystem* audioSystem);
 	void run ();
 	void reset ();

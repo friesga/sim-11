@@ -28,7 +28,8 @@ using std::get;
 // without any files attached.
 //
 void PDP_11::configureDevices (Window *window,
-    CartridgeHandler* cartridgeHandler, AudioSystem* audioSystem)
+    CartridgeHandlerFactory& cartridgeHandlerFactory,
+    AudioSystem* audioSystem)
 {
     // Create the Qbus to be used in this system
     bus_ = new Qbus ();
@@ -55,7 +56,7 @@ void PDP_11::configureDevices (Window *window,
 // Accessing a non-configured device will result in a bus time-out
 // and the BDV11 boot will halt at address 000010.
 void PDP_11::configureDevices (SystemConfig const & systemConfig,
-    Window *window, CartridgeHandler* cartridgeHandler,
+    Window *window, CartridgeHandlerFactory& cartridgeHandlerFactory,
     AudioSystem* audioSystem)
 {
     // Check for presence of necessary devices
@@ -63,10 +64,10 @@ void PDP_11::configureDevices (SystemConfig const & systemConfig,
     consistencyChecker.checkAll ();
 
     if (systemConfig.isQbusSystem ())
-        configureQbusSystem (systemConfig, window, cartridgeHandler,
+        configureQbusSystem (systemConfig, window, cartridgeHandlerFactory,
             audioSystem);
     else
-        configureUnibusSystem (systemConfig, window, cartridgeHandler,
+        configureUnibusSystem (systemConfig, window, cartridgeHandlerFactory,
             audioSystem);
 
     installModules ();
@@ -74,7 +75,7 @@ void PDP_11::configureDevices (SystemConfig const & systemConfig,
 }
 
 void PDP_11::configureQbusSystem (SystemConfig const & systemConfig,
-    Window* window, CartridgeHandler* cartridgeHandler,
+    Window* window, CartridgeHandlerFactory& cartridgeHandlerFactory,
     AudioSystem* audioSystem)
 { 
     // Create the Qbus to be used in this system
@@ -104,12 +105,12 @@ void PDP_11::configureQbusSystem (SystemConfig const & systemConfig,
             {throw logic_error ("Should not happen"); },
         [this, window] (RL11Config rl11Config)
             {throw logic_error ("Should not happen"); },
-        [this, window, cartridgeHandler] (RLV11Config rlv11Config)
+        [this, window, cartridgeHandlerFactory] (RLV11Config rlv11Config)
             {busDevices_.emplace_back (new RLV12 (bus_, window,
-                cartridgeHandler, rlv11Config)); },
-        [this, window, cartridgeHandler] (RLV12Config rlv12Config)
+                cartridgeHandlerFactory, rlv11Config)); },
+        [this, window, cartridgeHandlerFactory] (RLV12Config rlv12Config)
             {busDevices_.emplace_back (new RLV12 (bus_, window,
-                cartridgeHandler, rlv12Config)); },
+                cartridgeHandlerFactory, rlv12Config)); },
         [this, window] (BA11_NConfig ba11_nConfig)
             {ba11_n_ = std::make_unique<BA11_N> (bus_, window, ba11_nConfig); },
         [this] (KT24Config kt24Config)
@@ -139,7 +140,7 @@ void PDP_11::configureQbusSystem (SystemConfig const & systemConfig,
 }
 
 void PDP_11::configureUnibusSystem (SystemConfig const & systemConfig,
-    Window* window, CartridgeHandler* cartridgeHandler,
+    Window* window, CartridgeHandlerFactory& cartridgeHandlerFactory,
     AudioSystem* audioSystem)
 {
     // Create the Unibus to be used in this system
@@ -167,9 +168,9 @@ void PDP_11::configureUnibusSystem (SystemConfig const & systemConfig,
             { throw logic_error ("Should not happen"); },
         [this, window, audioSystem] (RK11DConfig rk11dConfig)
             { busDevices_.emplace_back (new RK11D (bus_, window, audioSystem, rk11dConfig)); },
-        [this, window, cartridgeHandler] (RL11Config rl11Config)
+        [this, window, cartridgeHandlerFactory] (RL11Config rl11Config)
             { busDevices_.emplace_back (new RLV12 (bus_, window,
-                cartridgeHandler, rl11Config)); },
+                cartridgeHandlerFactory, rl11Config)); },
         [this, window] (KT24Config kt24Config)
             { kt24_ = new KT24 (bus_, kt24Config); },
         [this, window] (M9312Config m9312Config)

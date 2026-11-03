@@ -32,13 +32,17 @@ public:
 
     // Constructors/destructor
     RLV12 (Bus* bus);
-    RLV12 (Bus* bus, Window* window, CartridgeHandler* cartridgeHandler,
+    RLV12 (Bus* bus, Window* window,
+        const CartridgeHandlerFactory cartridgeHandlerFactory,
         const RLConfig& rlConfig);
-    RLV12 (Bus* bus, Window* window, CartridgeHandler* cartridgeHandler,
+    RLV12 (Bus* bus, Window* window,
+        const CartridgeHandlerFactory cartridgeHandlerFactory,
         const RL11Config& rl11Config);
-    RLV12 (Bus* bus, Window* window, CartridgeHandler* cartridgeHandler,
+    RLV12 (Bus* bus, Window* window,
+        const CartridgeHandlerFactory cartridgeHandlerFactory,
         const RLV11Config& rlv11Config);
-    RLV12 (Bus* bus, Window* window, CartridgeHandler* cartridgeHandler,
+    RLV12 (Bus* bus, Window* window,
+        const CartridgeHandlerFactory cartridgeHandlerFactory,
         const RLV12Config& rlv12Config);
     ~RLV12 ();
 
@@ -132,9 +136,11 @@ private:
     size_t fifoIndex_ {0};
 
     // Private functions
-    void init (Bus* bus, Window* window, CartridgeHandler* cartridgeHandler,
+    void init (Bus* bus, Window* window,
+        const CartridgeHandlerFactory cartridgeHandlerFactory,
         const RLConfig& rlConfig);
-    void createUnits (size_t numUnits, CartridgeHandler* cartridgeHandler);
+    void createUnits (size_t numUnits,
+        const CartridgeHandlerFactory cartridgeHandlerFactory);
     void configureUnits (Window* window, const RLConfig& rlConfig);
     u16 calcCRC (int const wc, u16 const* data);
     void setDone (RL01_02* unit, u16 status);

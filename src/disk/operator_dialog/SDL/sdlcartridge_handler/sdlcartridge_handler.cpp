@@ -2,6 +2,11 @@
 
 #include <iostream>
 
+SDLCartridgeHandler::SDLCartridgeHandler (DiskDrive* diskDrive)
+{
+
+}
+
 void SDLCartridgeHandler::operatorActionRequested (int x, int y)
 {
      OperatorAction action = getOperatorAction (x, y);

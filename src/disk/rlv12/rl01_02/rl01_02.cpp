@@ -15,10 +15,10 @@ using std::filesystem::file_size;
 // By default the unit is off-line. It is set on-line when a file is
 // attached.
 RL01_02::RL01_02 (AbstractBusDevice* owningDevice,
-    CartridgeHandler* cartridgeHandler)
+    const CartridgeHandlerFactory cartridgeHandlerFactory)
     :
     currentDiskAddress_ {0},
-    cartridgeHandler_ {cartridgeHandler},
+    cartridgeHandler_ {cartridgeHandlerFactory (this)},
     seekTime_ {}
 {}
 

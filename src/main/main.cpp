@@ -71,10 +71,11 @@ try
 	// SDLWindow constructor.
 	SDLAudioSystem sdlAudioSystem;
 
-	// Create the CartridgeHandler to be used by the disk drives. The handler
-	// varies depending on the platforms. For Windows and Linux the
-	// SDLCartridgeHandler is used.
-	SDLCartridgeHandler sdlCartridgeHandler {};
+	// Define a CartridgeHandlerFactory to create an SDLCartridgeHandler
+	CartridgeHandlerFactory factory = [] (DiskDrive* drive)
+	{
+		return std::make_unique<SDLCartridgeHandler> (drive);
+	};
 
 	// Create a pdp-11 with configured (or default) devices.
 	// The devices are created after creation of the window to make sure the
@@ -92,10 +93,10 @@ try
 		SystemConfig systemConfig = 
 			createSystemConfig (cmdLineOptions.config_file);
 		pdp11.configureDevices (systemConfig, &sdlWindow,
-			&sdlCartridgeHandler, &sdlAudioSystem);
+			factory, &sdlAudioSystem);
 	}
 	else
-		pdp11.configureDevices (&sdlWindow, &sdlCartridgeHandler,
+		pdp11.configureDevices (&sdlWindow, factory,
 			&sdlAudioSystem);
 
 	// Configuration succeeded and required size of the window is known so it
