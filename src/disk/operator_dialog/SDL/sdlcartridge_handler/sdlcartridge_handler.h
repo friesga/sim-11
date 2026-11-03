@@ -36,6 +36,7 @@ private:
      SDLPopupMenu popupMenu_ {operatorActionMenu};
      SDLMessageBox messageBox_;
      SDLFileDialog fileDialog_;
+     DiskDrive* diskDrive_;
 
     const OperatorAction getOperatorAction (int x, int y);
     void unloadCartridge ();

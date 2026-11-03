@@ -3,9 +3,9 @@
 #include <iostream>
 
 SDLCartridgeHandler::SDLCartridgeHandler (DiskDrive* diskDrive)
-{
-
-}
+    :
+    diskDrive_ {diskDrive}
+{}
 
 void SDLCartridgeHandler::operatorActionRequested (int x, int y)
 {
@@ -46,7 +46,10 @@ const CartridgeHandler::OperatorAction SDLCartridgeHandler::getOperatorAction (i
 
 void SDLCartridgeHandler::unloadCartridge ()
 {
-    messageBox_.show ("Cartridge unloaded");
+    if (diskDrive_->cartridgeIsLoaded ())
+        diskDrive_->unloadCartridge ();
+    else
+        messageBox_.show ("No cartridge loaded");
 }
 
 void SDLCartridgeHandler::loadCartridge ()
