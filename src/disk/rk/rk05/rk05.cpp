@@ -191,8 +191,6 @@ Cartridge::OpenMode RK05::openMode (const RK05Config& rk05Config)
 {
     Cartridge::OpenMode openMode {Cartridge::OpenMode::ReadWrite};
 
-    if (rk05Config.writeProtect)
-        openMode = Cartridge::OpenMode::ReadOnly;
     if (rk05Config.newFile)
         openMode = Cartridge::OpenMode::NewFile;
     return openMode;

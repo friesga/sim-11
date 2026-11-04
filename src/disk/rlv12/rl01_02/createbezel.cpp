@@ -69,12 +69,12 @@ void RL01_02::writeProtectButtonClicked (Button::State state)
     if (get<Button::CenteredTwoPositionsState> (state) == 
         Button::CenteredTwoPositionsState::Down)
     {
-        cartridge_->setWriteProtected (true);
+        writeProtected_ = true;
         driveStatus_ |= RLV12const::MPR_GS_WriteLock;
     }
     else
     {
-        cartridge_->setWriteProtected (false);
+        writeProtected_ = false;
         driveStatus_ &= ~RLV12const::MPR_GS_WriteLock;
     }
 }

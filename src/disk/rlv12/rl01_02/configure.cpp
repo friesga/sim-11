@@ -31,7 +31,7 @@ StatusCode RL01_02::configure (const RLUnitConfig& rlUnitConfig)
     // the configuration.
     if (rlUnitConfig.writeProtect)
     {
-        cartridge_->setWriteProtected (true);
+        writeProtected_ = true;
         driveStatus_ |= RLV12const::MPR_GS_WriteLock;
     }
 
@@ -39,7 +39,7 @@ StatusCode RL01_02::configure (const RLUnitConfig& rlUnitConfig)
     
     // Create a bad block table on a new disk image (if the 
     // image is not read-only)
-    if (cartridge_->attachedFileSize () == 0 && !cartridge_->isWriteProtected ())
+    if (cartridge_->attachedFileSize () == 0 && !writeProtected_)
         return cartridge_->createBadBlockTable ();
 
     return StatusCode::Success;
@@ -50,8 +50,6 @@ Cartridge::OpenMode RL01_02::openMode (
 {
     Cartridge::OpenMode openMode {Cartridge::OpenMode::ReadWrite};
 
-    if (rlUnitConfig.writeProtect)
-        openMode = Cartridge::OpenMode::ReadOnly;
     if (rlUnitConfig.newFile)
         openMode = Cartridge::OpenMode::NewFile;
 

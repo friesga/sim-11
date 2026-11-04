@@ -48,9 +48,6 @@ StatusCode Cartridge::createBadBlockTable ()
     if (geometry_.sectorsPerSurface () < 2 || geometry_.wordsPerSector () < 16)
         return StatusCode::ArgumentError;
 
-    if (writeProtected_)
-        return StatusCode::ReadOnly;
-
     // Don't ask for approval to overwrite the last track as this function
     // will only be executed for newly created files.
 

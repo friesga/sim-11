@@ -8,9 +8,6 @@ using std::min;
 size_t Cartridge::writeDataToSector (DiskAddress diskAddress, u16* buffer,
     u32 numWords)
 {
-    if (writeProtected_)
-        return 0;
-
     // Set position in file to the block to be written
     if (fseek (diskFileStream_, byteOffset (diskAddress), SEEK_SET) != 0)
     {

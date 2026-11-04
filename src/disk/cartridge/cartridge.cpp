@@ -19,10 +19,6 @@ Cartridge::Cartridge (std::string fileName, Geometry geometry,
             statusCode = openReadWrite (fileName);
             break;
 
-        case OpenMode::ReadOnly:
-            statusCode = openReadOnly (fileName);
-            break;
-
         case OpenMode::NewFile:
             statusCode = createFile (fileName);
             break;

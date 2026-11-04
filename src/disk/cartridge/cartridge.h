@@ -18,7 +18,6 @@
 // - Attaching a file to the cartridge,
 // - Reading/write a sector to the cartridge, thereby translating the disk address
 //   to a position in the attached file,
-// - Keeping track of write protect status
 // - Creation of a bad block table on the catridge.
 //
 // Disk images are represented in the simh file format, i.e. as unstructured
@@ -29,16 +28,15 @@
 class Cartridge
 {
 public:
-    // The Cartridge supports three modes to open a file: read/write, read-only
-    // and create a new file. Combinations of NewFile with ReadWrite or
-    // ReadOnly are not supported. Creating a new file and not being able to
-    // write to it is not useful.The NewFile mode will create a new file and
-    // open it read/write.
+    // The Cartridge supports just two modes to open a file: opening an
+    // existing file read/write and the creation of a new file. The write
+    // protection of the cartridge has to be provided by the unit as a user
+    // can set the write protect status of a unit while no cartridge is
+    // loaded.
     //
     enum class OpenMode
     {
         ReadWrite,                  // Open existing file read/write
-        ReadOnly,                   // Attach read-only
         NewFile                     // Create new file
     };
 
@@ -54,8 +52,6 @@ public:
         u32 wordCount);
     size_t writeDataToSector (DiskAddress diskAddress, u16* buffer,
         u32 numWords);
-    void setWriteProtected (bool writeProtected);
-    bool isWriteProtected () const;
     StatusCode createBadBlockTable ();
     u32 LBN (DiskAddress diskAddress) const;
 
@@ -66,7 +62,6 @@ private:
         OpenMode openMode);
 
     Geometry geometry_ {};
-    bool writeProtected_ {false};
     FILE* diskFileStream_ {nullptr};
 
     StatusCode createFile (std::string fileName);

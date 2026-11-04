@@ -11,7 +11,7 @@ pair<bool, size_t> RL01_02::writeData (RLV12Command& rlv12Command, u16* buffer,
     size_t numWords, HeadPositionProcedure procedure, u16 diskAddressRegister)
 {
     // Check the unit is not write-protected
-    if (cartridge_->isWriteProtected ())
+    if (writeProtected_)
     {
         driveStatus_ |= RLV12const::MPR_GS_WriteGateError;
         faultIndicator_->show (Indicator::State::On);

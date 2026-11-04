@@ -125,6 +125,7 @@ private:
     u16 driveStatus_ {0};
 
     bool running_ {false};
+    bool writeProtected_ {false};
     AlarmClock alarmClock_;
     SimulatorClock::duration spinUpTime_ {0};
     std::unique_ptr<CartridgeHandler> cartridgeHandler_ {};
