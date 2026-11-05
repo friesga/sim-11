@@ -10,6 +10,16 @@ using std::make_pair;
 pair<bool, size_t> RL01_02::writeData (RLV12Command& rlv12Command, u16* buffer,
     size_t numWords, HeadPositionProcedure procedure, u16 diskAddressRegister)
 {
+    // To avoid nullpointer references, we check if the cartridge is loaded
+    // and if not, we return an error. This should not happen however as the
+    // RLV12 command processor checks for this condition by a call to available()
+    // before calling this function.
+    if (cartridge_ == nullptr)
+    {
+        Logger::instance() << "Error in writeData: cartridge not loaded";
+        return make_pair (false, 0);
+    }
+
     // Check the unit is not write-protected
     if (writeProtected_)
     {

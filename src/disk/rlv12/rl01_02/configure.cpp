@@ -9,19 +9,10 @@ using std::invalid_argument;
 
 StatusCode RL01_02::configure (const RLUnitConfig& rlUnitConfig)
 {
-    if (rlUnitConfig.fileName.empty ())
-        return StatusCode::ArgumentError;
-
     // Now determine the actual drive type as soon as possible, to get
     // rid of the RLUnitType Auto and be able to determine the drive geometry.
     driveType_ = determineDriveType (rlUnitConfig);
     geometry_ = driveGeometry (driveType_);
-
-    if (cartridge_ = Cartridge::create (rlUnitConfig.fileName, geometry_,
-        openMode (rlUnitConfig)); cartridge_ == nullptr)
-    {
-        return StatusCode::OpenError;
-    }
 
     // Set the drive type in the MPR
     if (driveType_ == DriveType::RL02)
@@ -37,10 +28,19 @@ StatusCode RL01_02::configure (const RLUnitConfig& rlUnitConfig)
 
     spinUpTime_ = std::chrono::seconds {rlUnitConfig.spinUpTime};
     
-    // Create a bad block table on a new disk image (if the 
-    // image is not read-only)
-    if (cartridge_->attachedFileSize () == 0 && !writeProtected_)
-        return cartridge_->createBadBlockTable ();
+    if (!rlUnitConfig.fileName.empty ())
+    {
+        cartridge_ = Cartridge::create (rlUnitConfig.fileName, geometry_,
+            openMode (rlUnitConfig));
+
+        if (cartridge_ == nullptr)
+            return StatusCode::OpenError;
+
+        // Create a bad block table on a new disk image (if the 
+        // image is not read-only)
+        if (rlUnitConfig.newFile && !writeProtected_)
+            return cartridge_->createBadBlockTable ();
+    }
 
     return StatusCode::Success;
 }
