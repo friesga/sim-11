@@ -97,7 +97,10 @@ void RL01_02::resetDriveError ()
 //
 u16 RL01_02::driveStatus ()
 {
-    return driveStatus_ | (currentDiskAddress_ & RLV12const::MPR_GS_HeadSelect);
+    return driveStatus_ | 
+        (currentDiskAddress_ & RLV12const::MPR_GS_HeadSelect) |
+        (writeProtected_ ? RLV12const::MPR_GS_WriteLock : 0) |
+        (driveType_ == DriveType::RL02 ? RLV12const::MPR_GS_DriveType : 0);
 }
 
 bool RL01_02::volumeCheck () const

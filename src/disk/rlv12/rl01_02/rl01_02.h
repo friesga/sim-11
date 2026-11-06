@@ -116,12 +116,9 @@ private:
     Geometry geometry_;
     int32_t currentDiskAddress_ {0};
 
-    // The driveState_ keeps track of bits 0-5 of the MPR for a Get Status
-    // command. The driveState_ is only set in the drive thread and is only
-    // read by the command processor thread.
-    // 
     // The driveStatus_ is the complete MPR for the Get Status command.
-    u16 driveState_ {0};
+    // It is only set in the drive thread and is only read
+    // by the command processor thread.
     u16 driveStatus_ {0};
 
     bool running_ {false};
