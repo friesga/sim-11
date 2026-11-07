@@ -84,6 +84,9 @@ TEST_F (RLV12CartridgeTest, driveReportsCoverOpen)
     ASSERT_EQ (rlv12Device->unit (0)->init (RLUnitConfig {rlUnitConfig}),
         StatusCode::Success);
 
+    // Verify the drive reports no cartridge loaded
+    EXPECT_TRUE (rlv12Device->unit (0)->noCartridgeLoaded ());
+
     // Verify the controller is ready to perform an operation but the drive
     // is not ready.
     waitForControllerReady ();

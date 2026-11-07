@@ -46,10 +46,12 @@ const CartridgeHandler::OperatorAction SDLCartridgeHandler::getOperatorAction (i
 
 void SDLCartridgeHandler::unloadCartridge ()
 {
-    if (diskDrive_->cartridgeIsLoaded ())
+    if (diskDrive_->spindleStopped ())
         diskDrive_->unloadCartridge ();
-    else
+    else if (diskDrive_->noCartridgeLoaded ())
         messageBox_.show ("No cartridge loaded");
+    else
+        messageBox_.show ("Cartridge cannot be unloaded");
 }
 
 void SDLCartridgeHandler::loadCartridge ()

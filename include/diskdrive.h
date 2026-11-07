@@ -11,8 +11,8 @@ class DiskDrive
 public:
     virtual void unloadCartridge () = 0;
     virtual void loadCartridge (Cartridge) = 0;
-    virtual bool cartridgeIsLoaded () = 0;
-    virtual bool cartridgeCanBeLoaded () = 0;
+    virtual bool spindleStopped () = 0;
+    virtual bool noCartridgeLoaded () = 0;
     virtual ~DiskDrive () = default;
 };
 

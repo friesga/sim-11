@@ -10,12 +10,12 @@ void RL01_02::unloadCartridge ()
 void RL01_02::loadCartridge (Cartridge)
 { }
 
-bool RL01_02::cartridgeIsLoaded ()
-{
-    return false;
-}
-
-bool RL01_02::cartridgeCanBeLoaded ()
+bool RL01_02::spindleStopped ()
 {
     return stateMachine_->inState (SpindleStopped {});
+}
+
+bool RL01_02::noCartridgeLoaded ()
+{
+    return stateMachine_->inState (CartridgeUnloaded {});
 }

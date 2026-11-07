@@ -54,8 +54,8 @@ public:
     // Functions required by the Diskdrive interface
     void unloadCartridge () override;
     void loadCartridge (Cartridge) override;
-    bool cartridgeIsLoaded () override;
-    bool cartridgeCanBeLoaded () override;
+    bool spindleStopped () override;
+    bool noCartridgeLoaded () override;
 
     bool available ();
     u16 driveStatus ();
