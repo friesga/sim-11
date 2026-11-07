@@ -2,11 +2,16 @@
 #include "disk/rlv12/rlv12.h"
 #include "cmdlineoptions/cmdlineoptions.h"
 #include "chrono/simulatorclock/simulatorclock.h"
+#include "disk/cartridge/cartridge.h"
 
 #include <gtest/gtest.h>
+#include <stdio.h>
 #include <chrono>
+#include <memory>
+
 
 using namespace std::chrono_literals;
+using std::unique_ptr;
 
 // Definition of the test fixture
 class RLV12CartridgeTest : public ::testing::Test
@@ -107,4 +112,28 @@ TEST_F (RLV12CartridgeTest, driveReportsCoverOpen)
     // Drive Type RL01.
     u16 mpr = rlv12Device->read (RLMPR);
     ASSERT_EQ (mpr, MPR_BrushHome | MPR_CoverOpen);
+}
+
+TEST_F (RLV12CartridgeTest, cartridgeCanBeLoaded)
+{
+    RLUnitConfig rlUnitConfig
+    ({
+        .unitType = RLUnitConfig::RLUnitType::RL01
+    });
+
+    // Attach a new disk to unit 0
+    ASSERT_EQ (rlv12Device->unit (0)->init (RLUnitConfig {rlUnitConfig}),
+        StatusCode::Success);
+
+    // Verify the drive reports no cartridge loaded
+    EXPECT_TRUE (rlv12Device->unit (0)->noCartridgeLoaded ());
+
+    // Create a new disk image file to be used as a cartridge
+    FILE* file = std::fopen ("scratch.img", "wb+");
+    EXPECT_TRUE (file != nullptr);
+
+    EXPECT_TRUE (rlv12Device->unit (0)->loadCartridge ("scratch.img"));
+
+     // Verify the drive reports a cartridge loaded
+    EXPECT_TRUE (rlv12Device->unit (0)->spindleStopped ());
 }

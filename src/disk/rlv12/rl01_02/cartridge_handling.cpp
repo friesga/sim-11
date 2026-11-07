@@ -1,5 +1,7 @@
 #include "rl01_02.h"
 
+using std::string;
+
 // This file contains the functions required by the diskdrive interface
 // to facilitate the handling (i.e. the loading and unloading) of cartridges
 // for the diskdrive.
@@ -7,8 +9,21 @@
 void RL01_02::unloadCartridge ()
 { }
 
-void RL01_02::loadCartridge (Cartridge)
-{ }
+bool RL01_02::loadCartridge (string fileName)
+{
+    if (fileName.empty ())
+        return false;
+
+    cartridge_ = Cartridge::create (fileName, geometry_,
+        Cartridge::OpenMode::ReadWrite);
+
+    if (cartridge_ == nullptr)
+        return false;
+    
+    stateMachine_->dispatch (LoadedCartridge {});
+
+    return true;
+}
 
 bool RL01_02::spindleStopped ()
 {

@@ -21,6 +21,7 @@
 #include <queue>
 #include <memory>
 #include <filesystem>
+#include <string>
 
 using std::thread;
 using std::mutex;
@@ -53,7 +54,7 @@ public:
 
     // Functions required by the Diskdrive interface
     void unloadCartridge () override;
-    void loadCartridge (Cartridge) override;
+    bool loadCartridge (std::string fileName) override;
     bool spindleStopped () override;
     bool noCartridgeLoaded () override;
 
@@ -198,24 +199,25 @@ public:
     StateMachine (RL01_02* context, 
         duration<int, std::ratio<1, 1>> spinUpTime);
 
-    State transition (Initial&&, UnloadedCartridge);    // -> CartridgeUnloaded
-    State transition (Initial&&, SpunUp);               // -> LockedOn
-    State transition (Initial&&, SpunDown);             // -> SpindleStopped
+    State transition (Initial&&, UnloadedCartridge);            // -> CartridgeUnloaded
+    State transition (Initial&&, SpunUp);                       // -> LockedOn
+    State transition (Initial&&, SpunDown);                     // -> SpindleStopped
+    State transition (CartridgeUnloaded&&, LoadedCartridge);    // -> SpindleStopped
     void entry (SpindleStopped);
-    State transition (SpindleStopped&&, SpinUp);        // -> SpinningUp
+    State transition (SpindleStopped&&, SpinUp);                // -> SpinningUp
     void entry (SpinningUp);
-    State transition (SpinningUp&&, TimeElapsed);       // -> LockedOn
-    State transition (SpinningUp&&, SpinDown);          // -> SpinningDown
+    State transition (SpinningUp&&, TimeElapsed);               // -> LockedOn
+    State transition (SpinningUp&&, SpinDown);                  // -> SpinningDown
     void entry (LockedOn);
-    State transition (LockedOn&&, SeekCommand);         // -> Seeking
+    State transition (LockedOn&&, SeekCommand);                 // -> Seeking
     void exit (variantFsm::TagType<LockedOn>);
     void entry (Seeking);
-    State transition (Seeking&&, TimeElapsed);          // -> LockedOn
-    State transition (LockedOn&&, SpinDown);            // -> SpinningDown
-    State transition (Seeking&&, SpinDown);             // -> SpinningDown
+    State transition (Seeking&&, TimeElapsed);                  // -> LockedOn
+    State transition (LockedOn&&, SpinDown);                    // -> SpinningDown
+    State transition (Seeking&&, SpinDown);                     // -> SpinningDown
     void entry (SpinningDown);
-    State transition (SpinningDown&&, TimeElapsed);     // -> SpindleStopped
-    State transition (SpinningDown&&, SpinUp);          // -> SpinningUp
+    State transition (SpinningDown&&, TimeElapsed);             // -> SpindleStopped
+    State transition (SpinningDown&&, SpinUp);                  // -> SpinningUp
 
     // Define the default transition for transitions not explicitly
     // defined above. In these case the event is ignored.
