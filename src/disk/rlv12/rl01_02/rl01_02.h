@@ -53,7 +53,7 @@ public:
     ~RL01_02 ();
 
     // Functions required by the Diskdrive interface
-    void unloadCartridge () override;
+    bool unloadCartridge () override;
     bool loadCartridge (std::string fileName) override;
     bool spindleStopped () override;
     bool noCartridgeLoaded () override;
@@ -204,7 +204,9 @@ public:
     State transition (Initial&&, SpunDown);                     // -> SpindleStopped
     State transition (CartridgeUnloaded&&, LoadedCartridge);    // -> SpindleStopped
     void entry (SpindleStopped);
+    State transition (SpindleStopped&&, UnloadedCartridge);     // -> CartridgeUnloaded
     State transition (SpindleStopped&&, SpinUp);                // -> SpinningUp
+
     void entry (SpinningUp);
     State transition (SpinningUp&&, TimeElapsed);               // -> LockedOn
     State transition (SpinningUp&&, SpinDown);                  // -> SpinningDown

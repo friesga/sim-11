@@ -6,12 +6,21 @@ using std::string;
 // to facilitate the handling (i.e. the loading and unloading) of cartridges
 // for the diskdrive.
 
-void RL01_02::unloadCartridge ()
-{ }
+bool RL01_02::unloadCartridge ()
+{
+    if (!stateMachine_->inState (SpindleStopped {}))
+        return false;
+
+    cartridge_ = nullptr;
+    stateMachine_->dispatch (UnloadedCartridge {});
+    return true;
+}
 
 bool RL01_02::loadCartridge (string fileName)
 {
-    if (fileName.empty ())
+    if (fileName.empty () 
+            || !(stateMachine_->inState (CartridgeUnloaded {})
+            || stateMachine_->inState (SpindleStopped {})))
         return false;
 
     cartridge_ = Cartridge::create (fileName, geometry_,

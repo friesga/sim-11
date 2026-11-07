@@ -61,6 +61,11 @@ void RL01_02::StateMachine::entry (SpindleStopped)
     context_->driveStatus_ = RLV12const::MPR_GS_LoadCartridge;
 }
 
+RL01_02::State RL01_02::StateMachine::transition (SpindleStopped&&, UnloadedCartridge)
+{
+    return CartridgeUnloaded {};
+}
+
 // If the LOAD button is pressed, the state machine transitions to the
 // SpinningUp state. The LOAD indicator extinguishes and a spin up
 // timer is started.

@@ -9,7 +9,7 @@
 class DiskDrive
 {
 public:
-    virtual void unloadCartridge () = 0;
+    virtual bool unloadCartridge () = 0;
     virtual bool loadCartridge (std::string fileName) = 0;
     virtual bool spindleStopped () = 0;
     virtual bool noCartridgeLoaded () = 0;

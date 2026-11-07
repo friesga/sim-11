@@ -137,3 +137,79 @@ TEST_F (RLV12CartridgeTest, cartridgeCanBeLoaded)
      // Verify the drive reports a cartridge loaded
     EXPECT_TRUE (rlv12Device->unit (0)->spindleStopped ());
 }
+
+TEST_F (RLV12CartridgeTest, loadCartridgeFails)
+{
+    // This unit configuration specifies a zero spin up time so the unit
+    // has spun up
+    RLUnitConfig rlUnitConfig
+    ({
+        .fileName = "scratch.img",
+        .newFile = true
+    });
+
+    // Attach a new disk to unit 0
+    ASSERT_EQ (rlv12Device->unit (0)->init (RLUnitConfig {rlUnitConfig}),
+        StatusCode::Success);
+
+    // Verify the drive reports a cartridge is loaded
+    EXPECT_FALSE (rlv12Device->unit (0)->noCartridgeLoaded ());
+
+    // Make sure a disk image is available to load as a cartridge. (This test
+    // should not depend on a previous test.)
+    FILE* file = std::fopen ("scratch.img", "wb+");
+    EXPECT_TRUE (file != nullptr);
+
+    // Try to load another cartridge while the drive is spun up. This
+    // should fail.
+    EXPECT_FALSE (rlv12Device->unit (0)->loadCartridge ("scratch.img"));
+}
+
+TEST_F (RLV12CartridgeTest, cartridgeCanBeUnLoaded)
+{
+    // This unit configuration specifies a spin up time so the unit intitializes
+    // in the SpindleStopped state and the cartridge can be unloaded.
+    RLUnitConfig rlUnitConfig
+    ({
+        .fileName = "scratch.img",
+        .newFile = true
+    });
+    rlUnitConfig.spinUpTime = 10;
+
+    // Attach a new disk to unit 0
+    ASSERT_EQ (rlv12Device->unit (0)->init (RLUnitConfig {rlUnitConfig}),
+        StatusCode::Success);
+
+    // Verify the drive reports a cartridge is loaded
+    EXPECT_TRUE (rlv12Device->unit (0)->spindleStopped ());
+
+    // Now unload the cartridge
+    EXPECT_TRUE (rlv12Device->unit (0)->unloadCartridge ());
+
+    // And verify the drive reports no cartridge loaded
+    EXPECT_TRUE (rlv12Device->unit (0)->noCartridgeLoaded ());
+}
+
+TEST_F (RLV12CartridgeTest, unloadCartridgeFails)
+{
+    // This unit configuration specifies a zero spin up time so the unit has
+    // spun up and the cartridge cannot be unloaded.
+    RLUnitConfig rlUnitConfig
+    ({
+        .fileName = "scratch.img",
+        .newFile = true
+    });
+
+    // Attach a new disk to unit 0
+    ASSERT_EQ (rlv12Device->unit (0)->init (RLUnitConfig {rlUnitConfig}),
+        StatusCode::Success);
+
+    // Verify the drive reports a cartridge is loaded
+    EXPECT_FALSE (rlv12Device->unit (0)->spindleStopped ());
+
+    // Now try to unload the cartridge
+    EXPECT_FALSE (rlv12Device->unit (0)->unloadCartridge ());
+
+    // And verify the drive the cartridge is still loaded
+    EXPECT_FALSE (rlv12Device->unit (0)->noCartridgeLoaded ());
+}
