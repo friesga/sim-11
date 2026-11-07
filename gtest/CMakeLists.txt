@@ -110,6 +110,7 @@ set (GTEST_SRCS
     rlv12/rlv12writedatatest.cpp
     rlv12/volumechecktest.cpp
     rlv12/drivereadytest.cpp
+    rlv12/rlv12cartridgetest.cpp
     signaltest.cpp
     simulatorclocktest.cpp
     tracetest.cpp

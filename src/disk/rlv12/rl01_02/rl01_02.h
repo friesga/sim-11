@@ -81,26 +81,29 @@ public:
 
 private:
     // Definition of the drive states
-    struct Initial {};          // State machine initial state
-    struct SpindleStopped {};   // No cartridge loaded
-    struct SpinningUp {};       // The drive is spinning up
-    struct LockedOn {};         // The drive is locked on a cylinder
-    struct Seeking {};          // The drive is seeking
-    struct SpinningDown {};     // The drive is spinning down
+    struct Initial {};              // State machine initial state
+    struct CartridgeUnloaded {};    // No cartridge loaded
+    struct SpindleStopped {};       // Cartridge loaded but spindle stopped
+    struct SpinningUp {};           // The drive is spinning up
+    struct LockedOn {};             // The drive is locked on a cylinder
+    struct Seeking {};              // The drive is seeking
+    struct SpinningDown {};         // The drive is spinning down
 
-    using State = std::variant <Initial, SpindleStopped, SpinningUp, LockedOn,
-        Seeking, SpinningDown>;
+    using State = std::variant <Initial, CartridgeUnloaded, SpindleStopped,
+        SpinningUp, LockedOn, Seeking, SpinningDown>;
 
     // Definition of the drive events
-    struct SpinUp {};       // LOAD button pressed down
-    struct SpinDown {};     // LOAD button released
-    struct SpunUp {};       // Spin up is complete
-    struct SpunDown {};     // Spin down is complete
+    struct LoadedCartridge {};      // A Cartridge has been loaded
+    struct UnloadedCartridge {};    // A Cartridge has been unloaded
+    struct SpinUp {};               // LOAD button pressed down
+    struct SpinDown {};             // LOAD button released
+    struct SpunUp {};               // Spin up is complete
+    struct SpunDown {};             // Spin down is complete
     struct SeekCommand { SimulatorClock::duration seekTime; };
     struct TimeElapsed {};
 
-    using Event = std::variant <SpinUp, SpinDown, SpunUp, SpunDown,
-        SeekCommand, TimeElapsed>;
+    using Event = std::variant <LoadedCartridge, UnloadedCartridge, SpinUp,
+        SpinDown, SpunUp, SpunDown, SeekCommand, TimeElapsed>;
     
     // Use the PIMPL idiom to be able to define the StateMachine outside
     // of the RlDrive class
@@ -195,23 +198,24 @@ public:
     StateMachine (RL01_02* context, 
         duration<int, std::ratio<1, 1>> spinUpTime);
 
-    State transition (Initial&&, SpunUp);           // -> LockedOn
-    State transition (Initial&&, SpunDown);         // -> SpindleStopped
+    State transition (Initial&&, UnloadedCartridge);    // -> CartridgeUnloaded
+    State transition (Initial&&, SpunUp);               // -> LockedOn
+    State transition (Initial&&, SpunDown);             // -> SpindleStopped
     void entry (SpindleStopped);
-    State transition (SpindleStopped&&, SpinUp);          // -> SpinningUp
+    State transition (SpindleStopped&&, SpinUp);        // -> SpinningUp
     void entry (SpinningUp);
-    State transition (SpinningUp&&, TimeElapsed);   // -> LockedOn
-    State transition (SpinningUp&&, SpinDown);      // -> SpinningDown
+    State transition (SpinningUp&&, TimeElapsed);       // -> LockedOn
+    State transition (SpinningUp&&, SpinDown);          // -> SpinningDown
     void entry (LockedOn);
-    State transition (LockedOn&&, SeekCommand);     // -> Seeking
+    State transition (LockedOn&&, SeekCommand);         // -> Seeking
     void exit (variantFsm::TagType<LockedOn>);
     void entry (Seeking);
-    State transition (Seeking&&, TimeElapsed);      // -> LockedOn
-    State transition (LockedOn&&, SpinDown);        // -> SpinningDown
-    State transition (Seeking&&, SpinDown);         // -> SpinningDown
+    State transition (Seeking&&, TimeElapsed);          // -> LockedOn
+    State transition (LockedOn&&, SpinDown);            // -> SpinningDown
+    State transition (Seeking&&, SpinDown);             // -> SpinningDown
     void entry (SpinningDown);
-    State transition (SpinningDown&&, TimeElapsed); // -> SpindleStopped
-    State transition (SpinningDown&&, SpinUp);      // -> SpinningUp
+    State transition (SpinningDown&&, TimeElapsed);     // -> SpindleStopped
+    State transition (SpinningDown&&, SpinUp);          // -> SpinningUp
 
     // Define the default transition for transitions not explicitly
     // defined above. In these case the event is ignored.

@@ -19,9 +19,21 @@ RL01_02::StateMachine::StateMachine (RL01_02* context,
     spinUpTime_ {spinUpTime}
 {}
 
-// From the Initial state the state machine either transitions to the SpunUp
-// state if a spin up time of 0 seconds is specified or to the SpinningUp state
-// if a spin up time greater than zero is given.
+// From the Initial state the state machine can transition to the following
+// states:
+// - CatridgeUnloaded, if the unit configuration doesn't specify a filename,
+// - LockedOn, if a file name has been specified in the unit configuration
+//   and a spin up time of 0 seconds is specified,
+// - SpindleStopped, if a file name has been specified and a spin up time
+//   greater than zero is given.
+
+RL01_02::State RL01_02::StateMachine::transition (Initial&&, UnloadedCartridge)
+{
+    context_->driveStatus_ = 
+        RLV12const::MPR_GS_CoverOpen | RLV12const::MPR_GS_BrushHome;
+    return CartridgeUnloaded {};
+}
+
 RL01_02::State RL01_02::StateMachine::transition (Initial&&, SpunUp)
 {
     context_->loadButton_->show (Indicator::State::Off);

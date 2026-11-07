@@ -61,9 +61,14 @@ StatusCode RL01_02::init (const RLUnitConfig& rlUnitConfig)
     stateMachine_ = make_unique<StateMachine> (this, 
         seconds (rlUnitConfig.spinUpTime));
 
-    // Immediataely lock the drive on cylinder 0 if the spin up time is
-    // zero.
-    if (rlUnitConfig.spinUpTime == 0)
+    // If no file name is specified transition to the CartridgeUnloaded
+    // state, else transition to the LockedOn state if the spin up
+    // time is zero or to the SpindleStopped state if the spin up time is
+    // greater than zero.
+    //
+    if (rlUnitConfig.fileName.empty ())
+        stateMachine_->dispatch (UnloadedCartridge {});
+    else if (rlUnitConfig.spinUpTime == 0)
         stateMachine_->dispatch (SpunUp {});
     else
         stateMachine_->dispatch (SpunDown {});
