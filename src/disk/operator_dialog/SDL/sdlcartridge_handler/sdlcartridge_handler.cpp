@@ -47,7 +47,10 @@ const CartridgeHandler::OperatorAction SDLCartridgeHandler::getOperatorAction (i
 void SDLCartridgeHandler::unloadCartridge ()
 {
     if (diskDrive_->spindleStopped ())
+    {
         diskDrive_->unloadCartridge ();
+        messageBox_.show ("Cartridge has been unloaded");
+    }
     else if (diskDrive_->noCartridgeLoaded ())
         messageBox_.show ("No cartridge loaded");
     else
@@ -56,9 +59,19 @@ void SDLCartridgeHandler::unloadCartridge ()
 
 void SDLCartridgeHandler::loadCartridge ()
 {
-    SDLFileDialog::DialogResult dialogResult = fileDialog_.loadFileDialog ();
-    if (dialogResult)
-        std::cerr << "Selected file: " << dialogResult.value () << '\n';
+    if (diskDrive_->spindleStopped () || diskDrive_->noCartridgeLoaded ())
+    {
+        SDLFileDialog::DialogResult dialogResult =
+            fileDialog_.loadFileDialog ();
+
+        if (dialogResult)
+        {
+            diskDrive_->loadCartridge (dialogResult.value ());
+            messageBox_.show ("Cartridge has been loaded");
+        }
+        else
+            messageBox_.show ("Cartridge could not be loaded");
+    }
     else
-        std::cerr << "No file selected\n";
+        messageBox_.show ("Spin down disk before loading a cartridge ");
 }
