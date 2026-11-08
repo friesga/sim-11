@@ -54,7 +54,7 @@ void SDLCartridgeHandler::unloadCartridge ()
     else if (diskDrive_->noCartridgeLoaded ())
         messageBox_.show ("No cartridge loaded");
     else
-        messageBox_.show ("Cartridge cannot be unloaded");
+        messageBox_.show ("Spin down disk before unloading the cartridge");
 }
 
 void SDLCartridgeHandler::loadCartridge ()

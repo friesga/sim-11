@@ -37,24 +37,18 @@ RL01_02::~RL01_02 ()
     }
 }
 
-StatusCode RL01_02::init (const RLUnitConfig& rlUnitConfig,
-    Window* window)
-{
-    // Initialize the drive before creating the bezel to be able to use the
-    // drive type in createBezel()
-    if (StatusCode status = init (rlUnitConfig); status != StatusCode::Success)
-        return status;
-
-    createBezel (window, rlUnitConfig);
-    return StatusCode::Success;
-}
-
-// This version of the init function doesn't create a bezel and is meant
-// to be called by the unit tests.
-StatusCode RL01_02::init (const RLUnitConfig& rlUnitConfig)
+// This function can be called from both the simulator and the unit tests.
+// In the latter case the window pointer is nullptr and no bezel is created.
+//
+StatusCode RL01_02::init (const RLUnitConfig& rlUnitConfig, Window* window)
 {
     if (StatusCode status = configure (rlUnitConfig); status != StatusCode::Success)
         return status;
+
+    // The bezel has to be created before the state machine is started as it will
+    // set the states of buttons and indicators in the bezel.
+    if (window != nullptr)
+        createBezel (window, rlUnitConfig);
 
     running_ = true;
     driveThread_ = std::thread (&RL01_02::driveThread, this);

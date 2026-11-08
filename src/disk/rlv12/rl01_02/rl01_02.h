@@ -76,8 +76,7 @@ public:
     void setSeekIncomplete ();
     void waitForSeekComplete ();
     void resetDriveError ();
-    StatusCode init (const RLUnitConfig& rlUnitConfig, Window* window);
-    StatusCode init (const RLUnitConfig& rlUnitConfig);
+    StatusCode init (const RLUnitConfig& rlUnitConfig, Window* window = nullptr);
     bool cartridgeLoaded ();
 
 private:
