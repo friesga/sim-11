@@ -37,14 +37,7 @@ RL01_02::State RL01_02::StateMachine::transition (Initial&&, UnloadedCartridge)
 
 RL01_02::State RL01_02::StateMachine::transition (Initial&&, SpunUp)
 {
-    context_->loadButton_->show (Indicator::State::Off);
-    context_->loadButton_->setState (Button::TwoPositionsState::Down);
-    context_->readyIndicator_->show (Indicator::State::On);
-    context_->driveStatus_ |= RLV12const::MPR_GS_VolumeCheck |
-        RLV12const::MPR_GS_BrushHome | RLV12const::MPR_GS_HeadsOut |
-        RLV12const::MPR_GS_LockOn;
-    context_->setDriveReady ();
-    return LockedOn {};
+    return driveSpunUp ();
 }
 
 RL01_02::State RL01_02::StateMachine::transition (Initial&&, SpunDown)
@@ -54,7 +47,13 @@ RL01_02::State RL01_02::StateMachine::transition (Initial&&, SpunDown)
 
 // The operator has loaded a new cartridge. The next state depends on the
 // position of the LOAD button and the spin up time specified in the unit
-// configuration.
+// configuration:
+// - SpindleStopped, if the LOAD button is up,
+// - SpinningUp, if the LOAD button is down and a spin up time greater than
+//   zero is specified,
+// - LockedOn, if the LOAD button is down and a spin up time of 0 seconds is
+//   specified.
+//
 RL01_02::State RL01_02::StateMachine::transition (CartridgeUnloaded&&, LoadedCartridge)
 {
     if (get<Button::TwoPositionsState> (context_->loadButton_->currentState ()) ==
@@ -71,17 +70,20 @@ RL01_02::State RL01_02::StateMachine::transition (CartridgeUnloaded&&, LoadedCar
             return SpinningUp {};
         }
         else
-        {
-            context_->loadButton_->show (Indicator::State::Off);
-            context_->loadButton_->setState (Button::TwoPositionsState::Down);
-            context_->readyIndicator_->show (Indicator::State::On);
-            context_->driveStatus_ |= RLV12const::MPR_GS_VolumeCheck |
-                RLV12const::MPR_GS_BrushHome | RLV12const::MPR_GS_HeadsOut |
-                RLV12const::MPR_GS_LockOn;
-            context_->setDriveReady ();
-            return LockedOn {};
-        }
+            return driveSpunUp ();
     }   
+}
+
+RL01_02::State RL01_02::StateMachine::driveSpunUp ()
+{
+    context_->loadButton_->show (Indicator::State::Off);
+    context_->loadButton_->setState (Button::TwoPositionsState::Down);
+    context_->readyIndicator_->show (Indicator::State::On);
+    context_->driveStatus_ |= RLV12const::MPR_GS_VolumeCheck |
+        RLV12const::MPR_GS_BrushHome | RLV12const::MPR_GS_HeadsOut |
+        RLV12const::MPR_GS_LockOn;
+    context_->setDriveReady ();
+    return LockedOn {};
 }
 
 void RL01_02::StateMachine::entry (SpindleStopped)

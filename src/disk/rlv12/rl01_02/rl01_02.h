@@ -246,6 +246,8 @@ public:
 private:
     RL01_02* context_ {nullptr};
     duration<int, std::ratio<1, 1>> spinUpTime_;
+
+    State driveSpunUp ();
 };
 
 #endif // _RL01_02_H_
