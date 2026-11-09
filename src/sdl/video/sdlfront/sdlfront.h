@@ -15,7 +15,7 @@ public:
     SDLFront (unique_ptr<SDLTile> frontTile, EventHandler eventHandler = nullptr);
     ~SDLFront ();
     void render () override;
-    void handleEvent (InputEvent const* event);
+    void handleEvent (InputEvent const* event) override;
 
 private:
     // The tile to use for this front
