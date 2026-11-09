@@ -15,8 +15,13 @@ RLUnitProcessor::RLUnitProcessor (iniparser::Section* subSection)
 
 void RLUnitProcessor::processValue (iniparser::Section::ValueIterator valueIterator)
 {
-    // Throw exception for non-existing key?
     Process processFunction = valueProcessors[valueIterator->first];
+
+	if (processFunction == nullptr)
+        // This exception will be catched and processed in 
+        // SectionProcessor::processSection().
+        throw std::out_of_range ("Unknown key in RL unit section");
+
     (this->*processFunction)(valueIterator->second);
 }
 
@@ -93,6 +98,9 @@ void RLUnitProcessor::checkConsistency ()
 {
 	if (!rlUnitConfig.cabinetPosition.has_value ())
 		throw invalid_argument {"Cabinet position not specified in RL unit section"};
+
+	if (rlUnitConfig.fileName.empty () && rlUnitConfig.newFile)
+        throw invalid_argument {"File name must be specified for a new file"};
 }
 
 void RLUnitProcessor::processSubsection (iniparser::Section *subSection)

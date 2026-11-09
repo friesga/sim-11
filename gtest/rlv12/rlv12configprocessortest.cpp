@@ -303,3 +303,32 @@ TEST (RLV12ConfigProcessorTest, unitNumberCorrectlySet)
 	EXPECT_EQ (rlConfig.common.rlUnitConfig[2]->unitNumber, 2);
 	EXPECT_EQ (rlConfig.common.rlUnitConfig[3]->unitNumber, 3);
 }
+
+TEST (RLV12ConfigProcessorTest, newFileWithoutFilenameThrows)
+{
+    iniparser::File ft;
+	std::stringstream stream;
+	stream << "[RLV12]\n"
+		"units = 1\n"
+		"[RLV12.RL01]\n"
+		"unit = 0\n"
+		"newfile = true\n"
+		"cabinet = 0/0\n";
+		
+	stream >> ft;
+
+	IniProcessor iniProcessor;
+	try
+	{
+		iniProcessor.process (ft);
+		FAIL();
+	}
+	catch (std::invalid_argument const &except)
+	{
+		EXPECT_STREQ (except.what(), "File name must be specified for a new file");
+	}
+	catch (...)
+	{
+		FAIL();
+	}
+}
