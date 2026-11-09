@@ -22,6 +22,7 @@
 #include <memory>
 #include <filesystem>
 #include <string>
+#include <atomic>
 
 using std::thread;
 using std::mutex;
@@ -119,10 +120,11 @@ private:
     Geometry geometry_;
     int32_t currentDiskAddress_ {0};
 
-    // The driveStatus_ is the complete MPR for the Get Status command.
-    // It is only set in the drive thread and is only read
-    // by the command processor thread.
-    u16 driveStatus_ {0};
+    // The driveStatus_ is the complete MPR for the Get Status command. 
+    // The status is read and set in the drive thread and is read by the
+    // main and command processor threads. This requires synchronization on
+    // the retrieval of the variable.
+    std::atomic<u16> driveStatus_ {0};
 
     bool running_ {false};
     bool writeProtected_ {false};
