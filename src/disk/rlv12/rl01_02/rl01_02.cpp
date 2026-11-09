@@ -77,8 +77,8 @@ void RL01_02::resetDriveError ()
 {
     faultIndicator_->show (Indicator::State::Off);
 
-    driveStatus_ &= ~(RLV12const::MPR_GS_AnyError |
-        RLV12const::MPR_GS_VolumeCheck);
+    driveStatus_ &= static_cast<u16> (~(RLV12const::MPR_GS_AnyError |
+        RLV12const::MPR_GS_VolumeCheck));
 }
 
 // This function returns the drive status as expected in the MPR on a
