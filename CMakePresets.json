@@ -115,7 +115,8 @@
                 "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/install/${presetName}",
 
                 "CMAKE_TOOLCHAIN_FILE": "$env{EMSDK}/upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake",
-                "CMAKE_CROSSCOMPILING_EMULATOR": "node"
+                "CMAKE_CROSSCOMPILING_EMULATOR": "node",
+                "CMAKE_VERBOSE_MAKEFILE": "False"
             },
             "vendor": {
                 "microsoft.com/VisualStudioSettings/CMake/1.0": {
@@ -133,7 +134,8 @@
                 "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/install/${presetName}",
 
                 "CMAKE_TOOLCHAIN_FILE": "$env{EMSDK}/upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake",
-                "CMAKE_CROSSCOMPILING_EMULATOR": "node"
+                "CMAKE_CROSSCOMPILING_EMULATOR": "node",
+                "CMAKE_VERBOSE_MAKEFILE": "False"
             },
             "vendor": {
                 "microsoft.com/VisualStudioSettings/CMake/1.0": {

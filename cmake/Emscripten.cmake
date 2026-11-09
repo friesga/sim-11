@@ -29,6 +29,7 @@ target_include_directories(${SIM11_WASM_TARGET} PRIVATE
     C:/Tools/emsdk-5.0.1/upstream/emscripten/cache/sysroot/include/emscripten
     C:/Libraries/SDL3-3.4.14/include
     C:/Libraries/SDL3_image-3.4.4/include
+    C:/Libraries/SDL3_ttf-3.2.2/include
 )
 
 # Warnings about unqualified std::move calls are suppressed as Clang
@@ -59,6 +60,7 @@ target_link_options(${SIM11_WASM_TARGET} PRIVATE
     -O2
     -fexceptions
     -pthread
+    -lembind
     -sALLOW_MEMORY_GROWTH=1
     -sFORCE_FILESYSTEM
     -sEXPORTED_FUNCTIONS=_main,_on_xterm_char
@@ -71,8 +73,8 @@ target_link_options(${SIM11_WASM_TARGET} PRIVATE
     # filesystem for the sim-11.net WebAssembly build as the website  will
     # include a machine-specific filesystem.
     "SHELL:--preload-file ${CMAKE_BINARY_DIR}/resources@/resources"
-    # "SHELL:--preload-file ${CMAKE_BINARY_DIR}/config@/config"
-    # "SHELL:--preload-file ${CMAKE_BINARY_DIR}/systems@/systems"
+    "SHELL:--preload-file ${CMAKE_BINARY_DIR}/config@/config"
+    "SHELL:--preload-file ${CMAKE_BINARY_DIR}/systems@/systems"
 )
 
 set_property(TARGET ${SIM11_WASM_TARGET} APPEND PROPERTY

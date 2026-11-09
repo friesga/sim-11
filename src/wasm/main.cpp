@@ -10,6 +10,7 @@
 #include "ba11/ba11_n/ba11_n.h"
 #include "configdata/ba11/ba11n/ba11nconfig/ba11nconfig.h"
 #include "sdl/audio/sdlaudiosystem/sdlaudiosystem.h"
+#include "disk/operator_dialog/wasm/wasmcartridge_handler/wasmcartridge_handler.h"
 
 #include <SDL3/SDL.h>
 #include <SDL3_image/SDL_image.h>
@@ -94,6 +95,12 @@ int main (int argc, char const** argv)
     // SDLWindow constructor.
     SDLAudioSystem sdlAudioSystem;
 
+    // Define a CartridgeHandlerFactory to create a WASMCartridgeHandler
+	CartridgeHandlerFactory factory = [] (DiskDrive* drive)
+	{
+		return std::make_unique<WASMCartridgeHandler> ();
+	};
+
     // If a configuration file is specified create the system configuration from
     // that file and configure the pdp-11 with the devices and parameters as
     // specified in that file. If no file is specified use the default
@@ -101,10 +108,11 @@ int main (int argc, char const** argv)
     if (cmdLineOptions.config_file)
     {
         SystemConfig systemConfig = createSystemConfig (cmdLineOptions.config_file);
-        pdp11.configureDevices (systemConfig, sdlWindow.get (), &sdlAudioSystem);
+        pdp11.configureDevices (systemConfig, sdlWindow.get (),
+            factory, &sdlAudioSystem);
     }
     else
-        pdp11.configureDevices (sdlWindow.get (), &sdlAudioSystem);
+        pdp11.configureDevices (sdlWindow.get (), factory, &sdlAudioSystem);
 
     // Configuration succeeded and required size of the window is known so it
     // can be shown now.
