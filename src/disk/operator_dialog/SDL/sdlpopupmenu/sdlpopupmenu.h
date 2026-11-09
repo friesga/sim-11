@@ -20,7 +20,7 @@ public:
     // Shows a modal popup at the given mouse position. SDL's video
     // subsystem must be initialized and the calling thread must be the main
     // thread. Returns the clicked option, or nullopt when dismissed.
-    [[nodiscard]] virtual const MenuOption* getOption (int x, int y);
+    [[nodiscard]] const MenuOption* getOption (int x, int y);
 
 private:
     struct WindowDeleter
