@@ -65,8 +65,11 @@ target_link_options(${SIM11_WASM_TARGET} PRIVATE
     -sALLOW_MEMORY_GROWTH=1
     -sFORCE_FILESYSTEM
     -sEXPORTED_FUNCTIONS=_main,_on_xterm_char
+    -sEXPORTED_RUNTIME_METHODS=FS
     -sPTHREAD_POOL_SIZE_STRICT=0
-
+    --pre-js=${CMAKE_CURRENT_SOURCE_DIR}/src/disk/operator_dialog/wasm/wasmpopupmenu/wasmpopupmenu.js
+    --pre-js=${CMAKE_CURRENT_SOURCE_DIR}/src/disk/operator_dialog/wasm/wasmmessagebox/wasmmessagebox.js
+    --pre-js=${CMAKE_CURRENT_SOURCE_DIR}/src/disk/operator_dialog/wasm/wasmfiledialog/wasmfiledialog.js
     --shell-file
     "${CMAKE_SOURCE_DIR}/src/sim-11-shell.html"
 
