@@ -45,6 +45,14 @@ public:
     void selected (const MenuOption* option);
 
 private:
+    struct Position
+    {
+        size_t x;
+        size_t y;
+    };
+
+    Position getMousePosition () const;
+
     // Called from JavaScript (wasmpopupmenu.js) as
     // Module.WASMPopUpMenu_onResult(key, index) when the popup is closed
     // by the user; key is the value returned by jsKey().
