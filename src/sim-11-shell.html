@@ -293,7 +293,7 @@
                 console.error("Emscripten abort:", what);
             },
 
-            arguments: ['-c', '/config/pdp-11_20.ini']
+            arguments: ['-c', '/config/pdp-11_03.ini']
         };</script>
 
     <script>
@@ -379,7 +379,14 @@
 
         if (window.runtimeReady) {
             window.attachXtermInput();
-        }</script>
+        }
+
+        document.addEventListener("contextmenu", event =>
+        {
+            event.preventDefault();
+        });
+
+    </script>
 
     {{{ SCRIPT }}}
 </body>
