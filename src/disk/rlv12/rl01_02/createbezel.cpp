@@ -23,6 +23,9 @@ void RL01_02::createBezel (Window* window,
 
     panelBuilder->createFront ("RL01_front",
         bind (&RL01_02::handleOperatorRequest, this, _1));
+    
+    if (driveType_ == DriveType::RL02)
+        panelBuilder->createFront ("RL02_label");
 
     // LOAD IndicatorButton
     loadButton_ = panelBuilder->createIndicatorLatchingButton ({
@@ -49,9 +52,6 @@ void RL01_02::createBezel (Window* window,
             Button::CenteredTwoPositionsState::Up,
         bind (&RL01_02::writeProtectButtonClicked, this, _1),
         writeProtectButtonFrame);
-
-    if (driveType_ == DriveType::RL02)
-        panelBuilder->createFront ("RL02_label");
 
     window->addPanel (panelBuilder->getPanel ());
 }
