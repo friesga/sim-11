@@ -51,6 +51,7 @@ target_compile_options(${SIM11_WASM_TARGET} PRIVATE
 target_link_libraries(${SIM11_WASM_TARGET} PRIVATE
     C:/Libraries/SDL3-3.4.14/emscripten/libSDL3.a
     C:/Libraries/SDL3_image-3.4.4/emscripten/libSDL3_image.a
+    C:/Libraries/SDL3_ttf-3.2.2/emscripten/libSDL3_ttf.a
 )
 
 # The SHELL: prefix is necessary to prevent CMake from combining the
