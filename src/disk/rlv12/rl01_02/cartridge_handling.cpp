@@ -43,3 +43,8 @@ bool RL01_02::noCartridgeLoaded ()
 {
     return stateMachine_->inState (CartridgeUnloaded {});
 }
+
+string RL01_02::cartridgeFileName () const
+{
+    return (cartridge_ != nullptr) ? cartridge_->attachedFileName () : "";
+}

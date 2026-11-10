@@ -47,6 +47,7 @@ public:
         Geometry geometry, OpenMode openMode);
 
     ~Cartridge ();
+    std::string attachedFileName () const;
     t_offset attachedFileSize () const;
     size_t readDataFromSector (DiskAddress diskAddress, u16* buffer,
         u32 wordCount);
@@ -61,6 +62,7 @@ private:
     Cartridge (std::string fileName, Geometry geometry,
         OpenMode openMode);
 
+    std::string fileName_;
     Geometry geometry_ {};
     FILE* diskFileStream_ {nullptr};
 

@@ -58,6 +58,7 @@ public:
     bool loadCartridge (std::string fileName) override;
     bool spindleStopped () override;
     bool noCartridgeLoaded () override;
+    string cartridgeFileName () const override;
 
     bool available ();
     u16 driveStatus ();

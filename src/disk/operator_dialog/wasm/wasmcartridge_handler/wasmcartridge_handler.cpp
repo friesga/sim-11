@@ -7,6 +7,8 @@
 
 #include <stdio.h>  // For fopen and fread
 
+using std::string;
+
 WASMCartridgeHandler::WASMCartridgeHandler (DiskDrive* diskDrive)
     :
     diskDrive_ (diskDrive)
@@ -88,14 +90,20 @@ void WASMCartridgeHandler::unloadCartridge ()
 
 void WASMCartridgeHandler::downloadCartridge ()
 {
-    if (!fileExists ("/uploaded.img"))
+    if (diskDrive_->spindleStopped ())
     {
-        messageBox_.open ("No cartridge to download");
-        return;
-    }
+        const string cartridgeFileName = diskDrive_->cartridgeFileName ();
 
-    dialog_.downloadFileDialog ("/uploaded.img",
-        [this] (WASMFileDialog::DownloadResult result) {this->downloadCompleted (result); });
+        if (!cartridgeFileName.empty () && fileExists (cartridgeFileName))
+        {
+            dialog_.downloadFileDialog (cartridgeFileName,
+                [this] (WASMFileDialog::DownloadResult result) {this->downloadCompleted (result); });     
+        }
+        else
+            messageBox_.open ("No cartridge loaded");
+    }
+    else
+        messageBox_.open ("Spin down disk before downloading the cartridge");
 }
 
 void WASMCartridgeHandler::downloadCompleted (WASMFileDialog::DownloadResult result)

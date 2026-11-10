@@ -4,14 +4,15 @@ using std::unique_ptr;
 using std::make_unique;
 using std::move;
 
+// Save the given geometry for this drive so it can be used to
+// calculate file positions.
 Cartridge::Cartridge (std::string fileName, Geometry geometry,
     OpenMode openMode)
+    :
+    fileName_ {fileName},
+    geometry_ {geometry}
 {
     StatusCode statusCode;
-
-    // Save the given geometry for this drive so it can be used to
-    // calculate file positions.
-    geometry_ = geometry;
 
     switch (openMode)
     {
@@ -53,6 +54,11 @@ Cartridge::~Cartridge ()
 {
     if (diskFileStream_ != nullptr)
         fclose (diskFileStream_);
+}
+
+std::string Cartridge::attachedFileName () const
+{
+    return fileName_;
 }
 
 // Return the size of the attached file in bytes
