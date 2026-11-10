@@ -7,6 +7,7 @@
 #include "../wasmpopupmenu/wasmpopupmenu.h"
 #include "../wasmmessagebox/wasmmessagebox.h"
 #include "../wasmfiledialog/wasmfiledialog.h"
+#include "diskdrive.h"
 
 // As its name suggests the class CartridgeHandler is responsible for handling
 // the cartridge operations in the emulator. It provides methods to load and
@@ -19,6 +20,7 @@
 class WASMCartridgeHandler : public CartridgeHandler
 {
 public:
+    WASMCartridgeHandler (DiskDrive* diskDrive);
     ~WASMCartridgeHandler () = default;
     void operatorActionRequested (int x, int y) override;
     void menuItemSelected (const MenuOption* menuOption);
@@ -38,6 +40,7 @@ private:
         [this] (const MenuOption* menuOption) {this->menuItemSelected (menuOption); }};
     WASMMessageBox messageBox_ {[this] {return; }};
     WASMFileDialog dialog_;
+    DiskDrive* diskDrive_;
 
     void loadCartridge ();
     void unloadCartridge ();

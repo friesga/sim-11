@@ -98,7 +98,7 @@ int main (int argc, char const** argv)
     // Define a CartridgeHandlerFactory to create a WASMCartridgeHandler
 	CartridgeHandlerFactory factory = [] (DiskDrive* drive)
 	{
-		return std::make_unique<WASMCartridgeHandler> ();
+		return std::make_unique<WASMCartridgeHandler> (drive);
 	};
 
     // If a configuration file is specified create the system configuration from

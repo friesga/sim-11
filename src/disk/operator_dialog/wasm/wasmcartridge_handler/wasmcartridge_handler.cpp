@@ -7,6 +7,12 @@
 
 #include <stdio.h>  // For fopen and fread
 
+WASMCartridgeHandler::WASMCartridgeHandler (DiskDrive* diskDrive)
+    :
+    diskDrive_ (diskDrive)
+{
+    std::cerr << "WASMCartridgeHandler created\n";
+}
 
 // The function operationActionRequested is called when the user requests
 // an operation on the cartridge, such as loading or unloading it.
