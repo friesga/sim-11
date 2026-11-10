@@ -72,7 +72,15 @@ void WASMCartridgeHandler::uploadCompleted (bool success)
 
 void WASMCartridgeHandler::unloadCartridge ()
 {
-    messageBox_.open ("The cartridge is unloaded");
+    if (diskDrive_->spindleStopped ())
+    {
+        diskDrive_->unloadCartridge ();
+        messageBox_.open ("Cartridge has been unloaded");
+    }
+    else if (diskDrive_->noCartridgeLoaded ())
+        messageBox_.open ("No cartridge loaded");
+    else
+        messageBox_.open ("Spin down disk before unloading the cartridge");
 }
 
 void WASMCartridgeHandler::downloadCartridge ()
