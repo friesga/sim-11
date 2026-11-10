@@ -47,25 +47,28 @@ void WASMCartridgeHandler::menuItemSelected (const MenuOption* menuOption)
 
 void WASMCartridgeHandler::loadCartridge ()
 {
-    dialog_.uploadFileDialog ([this] (WASMFileDialog::File* file)
-        {this->fileSelected (file); });
+    if (diskDrive_->spindleStopped () || diskDrive_->noCartridgeLoaded ())
+    {
+        dialog_.uploadFileDialog ([this] (WASMFileDialog::File* file)
+            {this->fileSelected (file); });
+    }
+    else
+        messageBox_.open ("Spin down disk before loading a cartridge");
 }
 
 void WASMCartridgeHandler::fileSelected (WASMFileDialog::File* selectedFile)
 {
-    std::cerr << "User selected " << selectedFile->name () << '\n';
+    uploadedFileName_ = "/"+ selectedFile->name ();
 
-    dialog_.copyToMemfs (selectedFile, "/uploaded.img",
+    dialog_.copyToMemfs (selectedFile, uploadedFileName_,
         [this] (bool success) {this->uploadCompleted (success); });
 }
 
 void WASMCartridgeHandler::uploadCompleted (bool success)
 {
-    if (success && fileExists ("/uploaded.img"))
-    {
-        messageBox_.open ("Upload succeeded");
-        printFile ("/uploaded.img");
-    }
+    if (success && fileExists (uploadedFileName_) &&
+        diskDrive_->loadCartridge (uploadedFileName_))
+            messageBox_.open ("Upload succeeded");
     else
         messageBox_.open ("Upload failed");
 }
@@ -104,9 +107,9 @@ void WASMCartridgeHandler::downloadCompleted (WASMFileDialog::DownloadResult res
         std::cerr << "File could not be downloaded\n"; 
 }
 
-bool WASMCartridgeHandler::fileExists (const char* fileName)
+bool WASMCartridgeHandler::fileExists (const std::string& fileName)
 {
-    FILE* pFile = fopen (fileName, "r");
+    FILE* pFile = fopen (fileName.c_str (), "r");
     if (pFile == NULL)
         return false;
 
@@ -114,32 +117,3 @@ bool WASMCartridgeHandler::fileExists (const char* fileName)
     return true;
 }
 
-void WASMCartridgeHandler::printFile (const char* fileName)
-{
-    FILE* pFile;
-    pFile = fopen (fileName, "r");
-    if (pFile == NULL)
-    {
-        std::cerr << "Open failed\n";
-        return;
-    }
- 
-    const size_t bufferSize {80};
-    char buffer[bufferSize];
-
-    size_t result = fread (buffer, 1, bufferSize, pFile);
-    if (result != bufferSize)
-    {
-        std::cerr << "Read failed\n";
-        return;
-    }
-   
-    std::cerr << "Contents: " << std::oct <<
-        static_cast<unsigned int> (buffer[0]) << " " <<
-        static_cast<unsigned int> (buffer[1]) << " " <<
-        static_cast<unsigned int> (buffer[2]) << " " <<
-        static_cast<unsigned int> (buffer[3]) << " " <<
-        std::dec << '\n';
-        
-    fclose (pFile);
-}

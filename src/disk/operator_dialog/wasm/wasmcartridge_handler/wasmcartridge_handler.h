@@ -41,6 +41,7 @@ private:
     WASMMessageBox messageBox_ {[this] {return; }};
     WASMFileDialog dialog_;
     DiskDrive* diskDrive_;
+    std::string uploadedFileName_;
 
     void loadCartridge ();
     void unloadCartridge ();
@@ -48,8 +49,7 @@ private:
     void fileSelected (WASMFileDialog::File* selectedFile);
     void uploadCompleted (bool success);
     void downloadCompleted (WASMFileDialog::DownloadResult result);
-    bool fileExists (const char* fileName);
-    void printFile (const char* fileName);
+    bool fileExists (const std::string& fileName);
 };
 
 #endif // _WASM_CARTRIDGE_HANDLER_H_
