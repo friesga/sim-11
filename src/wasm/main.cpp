@@ -77,6 +77,12 @@ int main (int argc, char const** argv)
     emscripten_set_canvas_element_size ("#canvas", windowWidth, windowHeight);
     emscripten_set_element_css_size ("#canvas", windowWidth, windowHeight);
 
+    // Limit SDL3 keyboard handling to the canvas so it will not conflict with
+    // the keyboard handling by xterm.js. The effect if this call is omitted
+    // is that keypress events will not be passed on to the browser which is
+    // caused by a emscripten_set_keypress_callback() call in the SDL3 code.
+    SDL_SetHint (SDL_HINT_EMSCRIPTEN_KEYBOARD_ELEMENT, "#canvas");
+
     sdlWindow = std::make_unique<SDLWindow> ("sim-11",
         Frame {100, 100, windowWidth, windowHeight},
         std::set<Window::Flag> {Window::Flag::WindowHidden});
