@@ -51,6 +51,16 @@ RK05::State RK05::StateMachine::transition (PoweredOff&&, PowerOn)
     return poweringOn ();
 }
 
+RK05::State RK05::StateMachine::transition (CartridgeUnloaded&&, PowerOff)
+{
+    return PoweredOff {};
+}
+
+RK05::State RK05::StateMachine::transition (CartridgeUnloaded&&, LoadedCartridge)
+{
+    return SpindleStopped {};
+}
+
 void RK05::StateMachine::entry (SpindleStopped)
 {
     context_->loadIndicator_->show (Indicator::State::On);
@@ -69,6 +79,11 @@ RK05::State RK05::StateMachine::transition (SpindleStopped&&, SpinUp)
     context_->audioPlayer_->play ({{"RUN on.wav", PlaybackMode::OneShot}});
     context_->loadIndicator_->show (Indicator::State::Off);
     return SpinningUp {};
+}
+
+RK05::State RK05::StateMachine::transition (SpindleStopped&&, UnloadedCartridge)
+{
+    return CartridgeUnloaded {};
 }
 
 // This state can be entered from PoweredOff, EmergencyShutdown and from
@@ -266,6 +281,9 @@ RK05::State RK05::StateMachine::poweringOn ()
         context_->wtprotIndicator_->show (Indicator::State::On);
     else
         context_->wtprotIndicator_->show (Indicator::State::Off);
+
+    if (context_->cartridge_ == nullptr)
+        return CartridgeUnloaded {};
 
     if (get<Button::TwoPositionsState> (context_->runLoadSwitch_->currentState ()) ==
         Button::TwoPositionsState::Up)

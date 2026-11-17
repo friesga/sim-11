@@ -101,6 +101,7 @@ private:
     //
     struct Initial {};              // State machine initial state
     struct PoweredOff {};           // No power applied
+    struct CartridgeUnloaded {};    // No cartridge loaded
     struct SpindleStopped {};       // Cartridge loaded, spindle stopped
     struct SpinningUp {};           // The drive is spinning up
     struct LockedOn {};             // The drive is locked on a cylinder
@@ -108,24 +109,28 @@ private:
     struct SpinningDown {};         // The drive is spinning down
     struct EmergencyShutdown {};    // The drive is powered off
 
-    using State = std::variant <Initial, PoweredOff, SpindleStopped, SpinningUp,
-        LockedOn, Seeking, SpinningDown, EmergencyShutdown>;
+    using State = std::variant <Initial, PoweredOff, CartridgeUnloaded,
+        SpindleStopped, SpinningUp, LockedOn, Seeking, SpinningDown,
+        EmergencyShutdown>;
 
     // Definition of the drive events. This includes the RKCommand defined
     // in rktypes.h.
-    struct Start {};        // Start state machine
-    struct PowerOn {};      // BPOK true
-    struct PowerOff {};     // BPOK false
-    struct SpinUp {};       // LOAD button pressed down
-    struct SpinDown {};     // LOAD button released
-    struct SpunUp {};       // Spin up is complete
-    struct SpunDown {};     // Spin down is complete
+    struct Start {};                // Start state machine
+    struct PowerOn {};              // BPOK true
+    struct PowerOff {};             // BPOK false
+    struct LoadedCartridge {};      // A Cartridge has been loaded
+    struct UnloadedCartridge {};    // A Cartridge has been unloaded
+    struct SpinUp {};               // LOAD button pressed down
+    struct SpinDown {};             // LOAD button released
+    struct SpunUp {};               // Spin up is complete
+    struct SpunDown {};             // Spin down is complete
     struct SeekCommand { SimulatorClock::duration seekTime;
                             function<void ()> seekCompleted {nullptr}; };
     struct TimeElapsed {};
 
-    using Event = std::variant <Start, PowerOn, PowerOff, SpinUp, SpinDown,
-        SpunUp, SpunDown, SeekCommand, TimeElapsed>;
+    using Event = std::variant <Start, PowerOn, PowerOff, LoadedCartridge,
+        UnloadedCartridge, SpinUp, SpinDown, SpunUp, SpunDown, SeekCommand,
+        TimeElapsed>;
 
     Signal::SubscriberKey bpokSubscriberKey_ {};
 
@@ -186,32 +191,35 @@ public:
         std::chrono::seconds spinUpTime);
     ~StateMachine ();
 
-    State transition (Initial&&, Start);            // -> PoweredOff
+    State transition (Initial&&, Start);                    // -> PoweredOff
     void entry (PoweredOff);
-    State transition (PoweredOff&&, PowerOn);       // -> SpindleStopped/SpinningUp
+    State transition (PoweredOff&&, PowerOn);               // -> SpindleStopped/SpinningUp
+    State transition (CartridgeUnloaded&&, PowerOff);       // -> PoweredOff
+    State transition (CartridgeUnloaded&&, LoadedCartridge); // -> SpindleStopped
     void entry (SpindleStopped);
-    State transition (SpindleStopped&&, SpinUp);          // -> SpinningUp
-    State transition (SpindleStopped&&, PowerOff);        // -> PoweredOff
+    State transition (SpindleStopped&&, SpinUp);            // -> SpinningUp
+    State transition (SpindleStopped&&, PowerOff);          // -> PoweredOff
+    State transition (SpindleStopped&&, UnloadedCartridge); // -> CartridgeUnloaded
     void entry (SpinningUp);
-    State transition (SpinningUp&&, TimeElapsed);   // -> LockedOn
-    State transition (SpinningUp&&, SpinDown);      // -> SpinningDown
-    State transition (SpinningUp&&, PowerOff);      // -> EmergencyShutdown
+    State transition (SpinningUp&&, TimeElapsed);           // -> LockedOn
+    State transition (SpinningUp&&, SpinDown);              // -> SpinningDown
+    State transition (SpinningUp&&, PowerOff);              // -> EmergencyShutdown
     void entry (LockedOn);
-    State transition (LockedOn&&, SeekCommand);     // -> Seeking
-    State transition (LockedOn&&, SpinDown);        // -> SpinningDown
-    State transition (LockedOn&&, PowerOff);        // -> EmergencyShutdown
+    State transition (LockedOn&&, SeekCommand);             // -> Seeking
+    State transition (LockedOn&&, SpinDown);                // -> SpinningDown
+    State transition (LockedOn&&, PowerOff);                // -> EmergencyShutdown
     void exit (variantFsm::TagType<LockedOn>);
     void entry (Seeking);
-    State transition (Seeking&&, TimeElapsed);      // -> LockedOn
-    State transition (Seeking&&, SpinDown);         // -> SpinningDown
-    State transition (Seeking&&, PowerOff);         // -> EmergencyShutdown
+    State transition (Seeking&&, TimeElapsed);              // -> LockedOn
+    State transition (Seeking&&, SpinDown);                 // -> SpinningDown
+    State transition (Seeking&&, PowerOff);                 // -> EmergencyShutdown
     void entry (SpinningDown);
-    State transition (SpinningDown&&, TimeElapsed); // -> SpindleStopped
-    State transition (SpinningDown&&, SpinUp);      // -> SpinningUp
-    State transition (SpinningDown&&, PowerOff);    // -> EmergencyShutdown
+    State transition (SpinningDown&&, TimeElapsed);         // -> SpindleStopped
+    State transition (SpinningDown&&, SpinUp);              // -> SpinningUp
+    State transition (SpinningDown&&, PowerOff);            // -> EmergencyShutdown
     void entry (EmergencyShutdown);
-    State transition (EmergencyShutdown&&, TimeElapsed); // -> PoweredOff
-    State transition (EmergencyShutdown&&, PowerOn);     // -> SpindleStopped/SpinningUp
+    State transition (EmergencyShutdown&&, TimeElapsed);    // -> PoweredOff
+    State transition (EmergencyShutdown&&, PowerOn);        // -> SpindleStopped/SpinningUp
 
     // Define the default transition for transitions on the receipt
     // of a RKCommand not explicitly defined above. In these cases
