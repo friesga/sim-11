@@ -22,11 +22,14 @@ using std::placeholders::_1;
 using namespace RKTypes;
 
 RK05::RK05 (Bus* bus, DriveInterface* controller, Window* window,
-    AudioSystem* audioSystem, const RK05Config& rk05Config)
+    AudioSystem* audioSystem,
+    const CartridgeHandlerFactory cartridgeHandlerFactory,
+    const RK05Config& rk05Config)
     : 
     bus_ {bus},
     controller_ {controller},
-    driveId_ {rk05Config.unitNumber}
+    driveId_ {rk05Config.unitNumber},
+    cartridgeHandler_ {cartridgeHandlerFactory (this)}
 {
     // In case the constructor is called in the unit tests, the window is
     // not available.
@@ -199,4 +202,15 @@ Cartridge::OpenMode RK05::openMode (const RK05Config& rk05Config)
 void RK05::BPOKReceiver (bool signalValue)
 {
     sendTrigger (signalValue ? Event {PowerOn {}} : Event {PowerOff {}});
+}
+
+void RK05::handleOperatorRequest (InputEvent const* event)
+{
+    if (event->type () == InputEvent::Type::MouseButtonDown &&
+        event->button () == InputEvent::Button::Right &&
+        cartridgeHandler_ != nullptr)
+    {
+        cartridgeHandler_->operatorActionRequested (event->mousePosition ().x,
+            event->mousePosition ().y);
+    }
 }

@@ -18,6 +18,7 @@ using std::numeric_limits;
 // nullptr.
 //
 RK11D::RK11D (Bus* bus, Window* window, AudioSystem* audioSystem,
+    const CartridgeHandlerFactory cartridgeHandlerFactory,
     const RK11DConfig& rk11dConfig)
     :
     bus_ {bus}
@@ -29,7 +30,7 @@ RK11D::RK11D (Bus* bus, Window* window, AudioSystem* audioSystem,
     {
         if (rk05Config.has_value ())
             rk05Drives_.push_back (make_unique<RK05> (bus, this, window,
-                audioSystem, rk05Config.value ()));
+                audioSystem, cartridgeHandlerFactory, rk05Config.value ()));
     }
 
     // Allocate a buffer for the data to be transferred to/from the RK05 drive

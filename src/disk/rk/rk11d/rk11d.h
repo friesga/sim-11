@@ -75,6 +75,7 @@ private:
 public:
     // Constructor
     RK11D (Bus* bus, Window* window, AudioSystem* audioSystem,
+        const CartridgeHandlerFactory cartridgeHandlerFactory,
         const RK11DConfig& rk11dConfig);
     ~RK11D ();
 

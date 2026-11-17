@@ -8,49 +8,42 @@ using std::string;
 
 bool RK05::unloadCartridge ()
 {
-/*
     if (!stateMachine_->inState (SpindleStopped {}))
         return false;
 
     cartridge_ = nullptr;
     stateMachine_->dispatch (UnloadedCartridge {});
-*/
     return true;
 }
 
 bool RK05::loadCartridge (string fileName)
 {
-/*
     if (fileName.empty () 
             || !(stateMachine_->inState (CartridgeUnloaded {})
             || stateMachine_->inState (SpindleStopped {})))
         return false;
 
-    cartridge_ = Cartridge::create (fileName, geometry_,
+    cartridge_ = Cartridge::create (fileName, RKTypes::rk05Geometry_,
         Cartridge::OpenMode::ReadWrite);
 
     if (cartridge_ == nullptr)
         return false;
     
     stateMachine_->dispatch (LoadedCartridge {});
-*/
     return true;
 }
 
 bool RK05::spindleStopped ()
 {
-    // return stateMachine_->inState (SpindleStopped {});
-    return false;
+    return stateMachine_->inState (SpindleStopped {});
 }
 
 bool RK05::noCartridgeLoaded ()
 {
-    // return stateMachine_->inState (CartridgeUnloaded {});
-    return false;
+    return stateMachine_->inState (CartridgeUnloaded {});
 }
 
 string RK05::cartridgeFileName () const
 {
-    // return (cartridge_ != nullptr) ? cartridge_->attachedFileName () : "";
-    return "";
+    return (cartridge_ != nullptr) ? cartridge_->attachedFileName () : "";
 }

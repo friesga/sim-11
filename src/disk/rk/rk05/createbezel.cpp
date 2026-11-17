@@ -19,7 +19,8 @@ void RK05::createBezel (Window* window, const RK05Config& rk05Config)
         window->createDataPanelBuilder (*imageContainer,
             rk05Config.cabinetPosition.value (), RK05Config::unitHeight);
 
-    panelBuilder->createFront ("RK05 front");
+    panelBuilder->createFront ("RK05 front",
+        bind (&RK05::handleOperatorRequest, this, _1));
 
     // PWR indicator, default on
     pwrIndicator_ = panelBuilder->createIndicator (

@@ -13,6 +13,7 @@
 #include "chrono/simulatorclock/simulatorclock.h"
 #include "dummycontrols/dummycontrols.h"
 #include "diskdrive.h"
+#include "disk/operator_dialog/include/cartridge_handler.h"
 
 #include <thread>
 #include <queue>
@@ -33,7 +34,9 @@ class RK05 : public DiskDrive
 {
 public:
     RK05 (Bus* bus, DriveInterface* controller, Window* window,
-        AudioSystem* audioSystem, const RK05Config& rk05Config);
+        AudioSystem* audioSystem,
+        const CartridgeHandlerFactory cartridgeHandlerFactory,
+        const RK05Config& rk05Config);
     ~RK05 ();
 
     // Functions getting the state of the drive
@@ -71,6 +74,7 @@ private:
     u16 driveId_;
 
     std::unique_ptr<Cartridge> cartridge_ {};
+    std::unique_ptr<CartridgeHandler> cartridgeHandler_ {};
     unique_ptr<u16[]> buffer_ {};
 
     // Buttons and indicators. The initial value points to a dummy to
@@ -177,6 +181,7 @@ private:
     void clearBufferToEndOfSector (u16* buffer, u16 numWords);
     u16 cylinderFromLBN (u32 lbn);
     void BPOKReceiver (bool signalValue);
+    void handleOperatorRequest (InputEvent const* event);
 };
 
 
