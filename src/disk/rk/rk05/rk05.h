@@ -12,7 +12,7 @@
 #include "variantfsm/fsm.h"
 #include "chrono/simulatorclock/simulatorclock.h"
 #include "dummycontrols/dummycontrols.h"
-#include "chrono/simulatorclock/simulatorclock.h"
+#include "diskdrive.h"
 
 #include <thread>
 #include <queue>
@@ -29,7 +29,7 @@ using std::atomic;
 
 using namespace std::chrono_literals;
 
-class RK05
+class RK05 : public DiskDrive
 {
 public:
     RK05 (Bus* bus, DriveInterface* controller, Window* window,
@@ -51,6 +51,13 @@ public:
         u16 wordCount, u16* data);
     void clearDriveReady ();
     void writeLock ();
+
+    // Functions required by the Diskdrive interface
+    bool unloadCartridge () override;
+    bool loadCartridge (std::string fileName) override;
+    bool spindleStopped () override;
+    bool noCartridgeLoaded () override;
+    string cartridgeFileName () const override;
 
 private:
     class WriteCompletion;

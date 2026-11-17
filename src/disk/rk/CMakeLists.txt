@@ -17,7 +17,8 @@ set (RK11D_SRCS
     rk05/rk05.cpp
     rk05/createbezel.cpp
     rk05/drivethread.cpp
-    rk05/statemachine.cpp)
+    rk05/statemachine.cpp
+    rk05/cartridge_handling.cpp)
 
 target_sources (${TARGET} PRIVATE ${RK11D_SRCS})
 target_sources (sim-11-wasm PRIVATE ${RK11D_SRCS})
