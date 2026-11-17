@@ -51,12 +51,12 @@ RK05::State RK05::StateMachine::transition (PoweredOff&&, PowerOn)
     return poweringOn ();
 }
 
-void RK05::StateMachine::entry (Unloaded)
+void RK05::StateMachine::entry (SpindleStopped)
 {
     context_->loadIndicator_->show (Indicator::State::On);
 }
 
-RK05::State RK05::StateMachine::transition (Unloaded&&, PowerOff)
+RK05::State RK05::StateMachine::transition (SpindleStopped&&, PowerOff)
 {
     return PoweredOff {};
 }
@@ -64,7 +64,7 @@ RK05::State RK05::StateMachine::transition (Unloaded&&, PowerOff)
 // If the RUN/LOAD button is pressed, the state machine transitions to the
 // SpinningUp state. The LOAD indicator extinguishes and a spin up
 // timer is started.
-RK05::State RK05::StateMachine::transition (Unloaded&&, SpinUp)
+RK05::State RK05::StateMachine::transition (SpindleStopped&&, SpinUp)
 {
     context_->audioPlayer_->play ({{"RUN on.wav", PlaybackMode::OneShot}});
     context_->loadIndicator_->show (Indicator::State::Off);
@@ -187,7 +187,7 @@ RK05::State RK05::StateMachine::transition (SpinningDown&&, TimeElapsed)
 {
     context_->audioPlayer_->play ({{"unloaded.wav", PlaybackMode::OneShot}});
     context_->loadIndicator_->show (Indicator::State::On);
-    return Unloaded {};
+    return SpindleStopped {};
 }
 
 RK05::State RK05::StateMachine::transition (SpinningDown&&, SpinUp)
@@ -280,5 +280,5 @@ RK05::State RK05::StateMachine::poweringOn ()
             return SpinningUp {};
     }
     else
-        return Unloaded {};
+        return SpindleStopped {};
 }
