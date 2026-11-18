@@ -4,6 +4,7 @@
 #include "statuscodes.h"
 #include "chrono/simulatorclock/simulatorclock.h"
 #include "../fakesdl/audio/fakeaudiosystem/fakeaudiosystem.h"
+#include "fakecartridgehandler.h"
 
 #include <gtest/gtest.h>
 #include <chrono>
@@ -64,6 +65,12 @@ protected:
     RK11D* rk11dDevice;
     FakeAudioSystem fakeAudioSystem {};
 
+    // Define a CartridgeHandlerFactory to create a FakeCartridgeHandler
+	CartridgeHandlerFactory factory = [] (DiskDrive* drive)
+	{
+		return std::make_unique<FakeCartridgeHandler> (drive);
+	};
+
     void SetUp () override
     {
         RK11DConfig rk11dConfig {};
@@ -77,7 +84,8 @@ protected:
 
         rk11dConfig.numUnits = 1;
 
-        rk11dDevice = new RK11D (&bus, nullptr, &fakeAudioSystem, rk11dConfig);
+        rk11dDevice = new RK11D (&bus, nullptr, &fakeAudioSystem, factory,
+            rk11dConfig);
 
         // Create a minimal system, consisting of just the bus, memory
         // and the RK11-D/RK05 to be tested.

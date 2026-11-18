@@ -3,6 +3,7 @@
 #include "statuscodes.h"
 #include "chrono/simulatorclock/simulatorclock.h"
 #include "../fakesdl/audio/fakeaudiosystem/fakeaudiosystem.h"
+#include "fakecartridgehandler.h"
 
 #include <gtest/gtest.h>
 #include <chrono>
@@ -83,7 +84,15 @@ TEST_F (RK11DRegistersTest, controllerIsResponsibleForDefaultAddress)
 
     Unibus bus;
     FakeAudioSystem fakeAudioSystem {};
-    RK11D* rk11dDevice = new RK11D (&bus, nullptr, &fakeAudioSystem, rk11dConfig);
+
+    // Define a CartridgeHandlerFactory to create a FakeCartridgeHandler
+	CartridgeHandlerFactory factory = [] (DiskDrive* drive)
+	{
+		return std::make_unique<FakeCartridgeHandler> (drive);
+	};
+
+    RK11D* rk11dDevice = new RK11D (&bus, nullptr, &fakeAudioSystem, factory,
+        rk11dConfig);
 
     // Check that the controller is responsible for its base address
     BusAddress busAddress {RKDS};
@@ -104,7 +113,15 @@ TEST_F (RK11DRegistersTest, registersInitialised)
 
     Unibus bus;
     FakeAudioSystem fakeAudioSystem {};
-    RK11D* rk11dDevice = new RK11D (&bus, nullptr, &fakeAudioSystem, rk11dConfig);
+
+    // Define a CartridgeHandlerFactory to create a FakeCartridgeHandler
+	CartridgeHandlerFactory factory = [] (DiskDrive* drive)
+	{
+		return std::make_unique<FakeCartridgeHandler> (drive);
+	};
+
+    RK11D* rk11dDevice = new RK11D (&bus, nullptr, &fakeAudioSystem, factory,
+        rk11dConfig);
 
     EXPECT_EQ (rk11dDevice->read (BusAddress {RKER}), 0);
     EXPECT_EQ (rk11dDevice->read (BusAddress {RKCS}), RKCS_RDY);
@@ -120,7 +137,15 @@ TEST_F (RK11DRegistersTest, rdyRemainsSet)
 
     Unibus bus;
     FakeAudioSystem fakeAudioSystem {};
-    RK11D* rk11dDevice = new RK11D (&bus, nullptr, &fakeAudioSystem, rk11dConfig);
+
+    // Define a CartridgeHandlerFactory to create a FakeCartridgeHandler
+	CartridgeHandlerFactory factory = [] (DiskDrive* drive)
+	{
+		return std::make_unique<FakeCartridgeHandler> (drive);
+	};
+
+    RK11D* rk11dDevice = new RK11D (&bus, nullptr, &fakeAudioSystem, factory,
+        rk11dConfig);
 
     EXPECT_EQ (rk11dDevice->read (BusAddress {RKCS}), RKCS_RDY);
 
@@ -137,7 +162,15 @@ TEST_F (RK11DRegistersTest, exbBitIsReadWrite)
 
     Unibus bus;
     FakeAudioSystem fakeAudioSystem {};
-    RK11D* rk11dDevice = new RK11D (&bus, nullptr, &fakeAudioSystem, rk11dConfig);
+
+    // Define a CartridgeHandlerFactory to create a FakeCartridgeHandler
+	CartridgeHandlerFactory factory = [] (DiskDrive* drive)
+	{
+		return std::make_unique<FakeCartridgeHandler> (drive);
+	};
+
+    RK11D* rk11dDevice = new RK11D (&bus, nullptr, &fakeAudioSystem, factory,
+        rk11dConfig);
 
     EXPECT_EQ (rk11dDevice->read (BusAddress {RKCS}), RKCS_RDY);
 
@@ -154,7 +187,15 @@ TEST_F (RK11DRegistersTest, rkmrReadsAsZero)
 
     Unibus bus;
     FakeAudioSystem fakeAudioSystem {};
-    RK11D* rk11dDevice = new RK11D (&bus, nullptr, &fakeAudioSystem, rk11dConfig);
+
+    // Define a CartridgeHandlerFactory to create a FakeCartridgeHandler
+	CartridgeHandlerFactory factory = [] (DiskDrive* drive)
+	{
+		return std::make_unique<FakeCartridgeHandler> (drive);
+	};
+
+    RK11D* rk11dDevice = new RK11D (&bus, nullptr, &fakeAudioSystem, factory,
+        rk11dConfig);
 
     EXPECT_EQ (rk11dDevice->read (BusAddress {RKMR}), 0);
 }
@@ -166,7 +207,15 @@ TEST_F (RK11DRegistersTest, rkmrCanBeWritten)
 
     Unibus bus;
     FakeAudioSystem fakeAudioSystem {};
-    RK11D* rk11dDevice = new RK11D (&bus, nullptr, &fakeAudioSystem, rk11dConfig);
+
+    // Define a CartridgeHandlerFactory to create a FakeCartridgeHandler
+	CartridgeHandlerFactory factory = [] (DiskDrive* drive)
+	{
+		return std::make_unique<FakeCartridgeHandler> (drive);
+	};
+
+    RK11D* rk11dDevice = new RK11D (&bus, nullptr, &fakeAudioSystem, factory,
+        rk11dConfig);
 
     EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKMR}, 0177777),
         StatusCode::Success);
@@ -182,7 +231,15 @@ TEST_F (RK11DRegistersTest, controlResetFunction)
 
     Unibus bus;
     FakeAudioSystem fakeAudioSystem {};
-    RK11D* rk11dDevice = new RK11D (&bus, nullptr, &fakeAudioSystem, rk11dConfig);
+
+    // Define a CartridgeHandlerFactory to create a FakeCartridgeHandler
+	CartridgeHandlerFactory factory = [] (DiskDrive* drive)
+	{
+		return std::make_unique<FakeCartridgeHandler> (drive);
+	};
+
+    RK11D* rk11dDevice = new RK11D (&bus, nullptr, &fakeAudioSystem, factory,
+        rk11dConfig);
 
     EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKWC}, 0177777),
         StatusCode::Success);
@@ -212,7 +269,15 @@ TEST_F (RK11DRegistersTest, nonExistingDriveReturnsError)
     RK11DConfig rk11dConfig {};
     Unibus bus;
     FakeAudioSystem fakeAudioSystem {};
-    RK11D* rk11dDevice = new RK11D (&bus, nullptr, &fakeAudioSystem, rk11dConfig);
+
+    // Define a CartridgeHandlerFactory to create a FakeCartridgeHandler
+	CartridgeHandlerFactory factory = [] (DiskDrive* drive)
+	{
+		return std::make_unique<FakeCartridgeHandler> (drive);
+	};
+
+    RK11D* rk11dDevice = new RK11D (&bus, nullptr, &fakeAudioSystem, factory,
+        rk11dConfig);
 
     EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKCS}, RKCS_OPERATION (DriveReset) | RKCS_GO),
         StatusCode::Success);
@@ -232,7 +297,6 @@ TEST_F (RK11DRegistersTest, rkdaCenBeAssignedTo)
 
     rkda = DiskAddress {0, 1, 0};
     EXPECT_EQ (rkda.value, 020020);
-
 
     rkda = DiskAddress {0, 0, 1};
     EXPECT_EQ (rkda.value, 020040);
@@ -298,7 +362,15 @@ TEST_F (RK11DRegistersTest, sectorCounterIsIncremented)
 
     Unibus bus;
     FakeAudioSystem fakeAudioSystem {};
-    RK11D* rk11dDevice = new RK11D (&bus, nullptr, &fakeAudioSystem, rk11dConfig);
+
+    // Define a CartridgeHandlerFactory to create a FakeCartridgeHandler
+	CartridgeHandlerFactory factory = [] (DiskDrive* drive)
+	{
+		return std::make_unique<FakeCartridgeHandler> (drive);
+	};
+
+    RK11D* rk11dDevice = new RK11D (&bus, nullptr, &fakeAudioSystem, factory,
+        rk11dConfig);
 
     // Start at time point 0
     SimulatorClock::reset ();
