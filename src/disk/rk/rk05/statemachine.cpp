@@ -301,5 +301,17 @@ RK05::State RK05::StateMachine::spinUp ()
 {
     context_->audioPlayer_->play ({{"RUN on.wav", PlaybackMode::OneShot}});
     context_->loadIndicator_->show (Indicator::State::Off);
-    return SpinningUp {};
+
+    // The immediate transition to the LockedOn for a spin up time of zero
+    // seconds is required for the unit tests. For the simulator itself a
+    // transition to the SpinningUp state would suffice as the timer would
+    // elapse immediately but this leads to failing units tests.
+    if (spinUpTime_ == std::chrono::seconds::zero ())
+    {
+        context_->driveStatus_.driveReady = 1;
+        context_->rdyIndicator_->show (Indicator::State::On);
+        return LockedOn {};
+    }
+    else
+        return SpinningUp {};
 }
