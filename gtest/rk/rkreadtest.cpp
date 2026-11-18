@@ -120,6 +120,8 @@ TEST_F (RK11DReadTest, readSectorSucceeds)
     // default spin up time is zero.
     bus.BPOK ().set (true);
 
+    waitForDriveReady (rk11dDevice, 0);
+
     // Fill the memory's first 512 words with a value to verify that the
     // written sector is read back
     for (u16 address = 0; address < 512; address += 2)
@@ -241,6 +243,8 @@ TEST_F (RK11DReadTest, readFromNonExistentSectorFails)
     // default spin up time is zero.
     bus.BPOK ().set (true);
 
+    waitForDriveReady (rk11dDevice, 0);
+
     EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKWC}, 0177400),
         StatusCode::Success);
     EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKBA}, 0),
@@ -284,6 +288,8 @@ TEST_F (RK11DReadTest, readFromNonExistentCylinderFails)
     // Power on the RK05 drive. The drive will spin up immediately as the
     // default spin up time is zero.
     bus.BPOK ().set (true);
+
+    waitForDriveReady (rk11dDevice, 0);
 
     EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKWC}, 0177400),
         StatusCode::Success);
@@ -329,6 +335,8 @@ TEST_F (RK11DReadTest, readFromNonExistentDriveFails)
     // default spin up time is zero.
     bus.BPOK ().set (true);
 
+    waitForDriveReady (rk11dDevice, 0);
+
     EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKWC}, 0177400),
         StatusCode::Success);
     EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKBA}, 0),
@@ -373,6 +381,8 @@ TEST_F (RK11DReadTest, readPastEndOfDiskFails)
     // Power on the RK05 drive. The drive will spin up immediately as the
     // default spin up time is zero.
     bus.BPOK ().set (true);
+
+    waitForDriveReady (rk11dDevice, 0);
 
     EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKWC}, 0177000),
         StatusCode::Success);
@@ -424,6 +434,8 @@ TEST_F (RK11DReadTest, readWithIBASetSucceeds)
     // Power on the RK05 drive. The drive will spin up immediately as the
     // default spin up time is zero.
     bus.BPOK ().set (true);
+
+    waitForDriveReady (rk11dDevice, 0);
 
     // Set just the last word of the sector to be written to the pattern
     // to be read back. The rest of the memory is initialized to the value 0.
@@ -513,6 +525,8 @@ TEST_F (RK11DReadTest, memoryExtensionBitsAreUsed)
     // default spin up time is zero.
     bus.BPOK ().set (true);
 
+    waitForDriveReady (rk11dDevice, 0);
+
     static const u32 memoryAddress {01401000};
 
     // Fill the memory's first 512 words with a value to verify that the
@@ -595,6 +609,8 @@ TEST_F (RK11DReadTest, memoryExtensionBitsAreIncremented)
     // Power on the RK05 drive. The drive will spin up immediately as the
     // default spin up time is zero.
     bus.BPOK ().set (true);
+
+    waitForDriveReady (rk11dDevice, 0);
 
     static u32 memoryAddress {0177000};
 

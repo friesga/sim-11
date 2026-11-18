@@ -95,6 +95,8 @@ protected:
         // Power on the RK05 drive. The drive will spin up immediately as the
         // default spin up time is zero.
         bus.BPOK ().set (true);
+
+        waitForDriveReady (rk11dDevice, 0);
     }
 
     void waitForControllerReady (RK11D* controller)
