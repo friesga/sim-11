@@ -268,6 +268,8 @@ private:
     RK05* context_ {nullptr};
     duration<int, std::ratio<1, 1>> spinUpTime_;
     State poweringOn ();
+    State handleLoadedCartridge ();
+    State spinUp ();
 };
 
 #endif // _RK05_H_

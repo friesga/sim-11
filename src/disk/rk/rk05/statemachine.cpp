@@ -58,7 +58,7 @@ RK05::State RK05::StateMachine::transition (CartridgeUnloaded&&, PowerOff)
 
 RK05::State RK05::StateMachine::transition (CartridgeUnloaded&&, LoadedCartridge)
 {
-    return SpindleStopped {};
+    return handleLoadedCartridge ();
 }
 
 void RK05::StateMachine::entry (SpindleStopped)
@@ -76,9 +76,7 @@ RK05::State RK05::StateMachine::transition (SpindleStopped&&, PowerOff)
 // timer is started.
 RK05::State RK05::StateMachine::transition (SpindleStopped&&, SpinUp)
 {
-    context_->audioPlayer_->play ({{"RUN on.wav", PlaybackMode::OneShot}});
-    context_->loadIndicator_->show (Indicator::State::Off);
-    return SpinningUp {};
+    return spinUp ();
 }
 
 RK05::State RK05::StateMachine::transition (SpindleStopped&&, UnloadedCartridge)
@@ -285,18 +283,23 @@ RK05::State RK05::StateMachine::poweringOn ()
     if (context_->cartridge_ == nullptr)
         return CartridgeUnloaded {};
 
+    return handleLoadedCartridge ();
+}
+
+RK05::State RK05::StateMachine::handleLoadedCartridge ()
+{
     if (get<Button::TwoPositionsState> (context_->runLoadSwitch_->currentState ()) ==
         Button::TwoPositionsState::Up)
     {
-        if (spinUpTime_ == std::chrono::seconds::zero ())
-        {
-            context_->driveStatus_.driveReady = 1;
-            context_->rdyIndicator_->show (Indicator::State::On);
-            return LockedOn {};
-        }
-        else
-            return SpinningUp {};
+        return spinUp ();
     }
     else
         return SpindleStopped {};
+}
+
+RK05::State RK05::StateMachine::spinUp ()
+{
+    context_->audioPlayer_->play ({{"RUN on.wav", PlaybackMode::OneShot}});
+    context_->loadIndicator_->show (Indicator::State::Off);
+    return SpinningUp {};
 }
