@@ -76,13 +76,12 @@ protected:
 
     void waitForDriveReady (RK11D* controller, u16 driveId)
     {
-        u16 result;
+        controller->writeWord (BusAddress {RKDA}, 0);u16 result;
         do
         {
             SimulatorClock::forwardClock (10ms);
             result = controller->read (RKDS);
         } while (!((result & RKDS_DRY) && getRKDSdriveId (result) == driveId));
-
     }
 };
 
@@ -176,6 +175,8 @@ TEST_F (RK11DReadTest, readSectorSucceeds)
         contents = bus.read (address);
         ASSERT_EQ (contents, 0177777);
     }
+
+    delete rk11dDevice;
 }
 
 TEST_F (RK11DReadTest, readOnNonReadyDriveReportsError)
@@ -214,6 +215,8 @@ TEST_F (RK11DReadTest, readOnNonReadyDriveReportsError)
     EXPECT_EQ (rk11dDevice->read (BusAddress {RKDS}) & RKDS_DRY, 0);
     EXPECT_EQ (rk11dDevice->read (BusAddress {RKCS}) & (RKCS_ERR | RKCS_HE),
         RKCS_ERR | RKCS_HE);
+
+    delete rk11dDevice;
 }
 
 // Attempt to read from sector 12
@@ -260,6 +263,8 @@ TEST_F (RK11DReadTest, readFromNonExistentSectorFails)
     EXPECT_EQ (rk11dDevice->read (BusAddress {RKER}) & RKER_NXS, RKER_NXS);
     EXPECT_EQ (rk11dDevice->read (BusAddress {RKCS}) & (RKCS_ERR | RKCS_HE),
         RKCS_ERR | RKCS_HE);
+
+    delete rk11dDevice;
 }
 
 // Attempt to read from cylinder 203
@@ -306,6 +311,8 @@ TEST_F (RK11DReadTest, readFromNonExistentCylinderFails)
     EXPECT_EQ (rk11dDevice->read (BusAddress {RKER}) & RKER_NXC, RKER_NXC);
     EXPECT_EQ (rk11dDevice->read (BusAddress {RKCS}) & (RKCS_ERR | RKCS_HE),
         RKCS_ERR | RKCS_HE);
+
+    delete rk11dDevice;
 }
 
 // Attempt to read from drive 4
@@ -352,6 +359,8 @@ TEST_F (RK11DReadTest, readFromNonExistentDriveFails)
     EXPECT_EQ (rk11dDevice->read (BusAddress {RKER}) & RKER_NXD, RKER_NXD);
     EXPECT_EQ (rk11dDevice->read (BusAddress {RKCS}) & (RKCS_ERR | RKCS_HE),
         RKCS_ERR | RKCS_HE);
+
+    delete rk11dDevice;
 }
 
 // Try to read 512 word starting from the last sector (cylinder 202,
@@ -399,6 +408,8 @@ TEST_F (RK11DReadTest, readPastEndOfDiskFails)
     EXPECT_EQ (rk11dDevice->read (BusAddress {RKER}) & RKER_OVR, RKER_OVR);
     EXPECT_EQ (rk11dDevice->read (BusAddress {RKCS}) & (RKCS_ERR | RKCS_HE),
         RKCS_ERR | RKCS_HE);
+
+    delete rk11dDevice;
 }
 
 // Setting the RKCS IBA bit inhbits the RKBA from incrementing during a normal
@@ -486,6 +497,8 @@ TEST_F (RK11DReadTest, readWithIBASetSucceeds)
 
     // Address zero now should contain the last word of the sector
     ASSERT_EQ (bus.read (0), 0177777);
+
+    delete rk11dDevice;
 }
 
 // This test verifies that the RKCS Memory Extension bits are used to
@@ -576,6 +589,8 @@ TEST_F (RK11DReadTest, memoryExtensionBitsAreUsed)
 
     EXPECT_EQ (bus.read (BusAddress {memoryAddress, BusAddress::Width::_18Bit}), 0177777);
     EXPECT_EQ (bus.read (BusAddress {memoryAddress + 510, BusAddress::Width::_18Bit}), 0177777);
+
+    delete rk11dDevice;
 }
 
 TEST_F (RK11DReadTest, memoryExtensionBitsAreIncremented)
@@ -636,4 +651,6 @@ TEST_F (RK11DReadTest, memoryExtensionBitsAreIncremented)
         RKBA_BITS (memoryAddress));
     EXPECT_EQ (getMexBits (rk11dDevice->read (BusAddress {RKCS})),
         RKCS_MEX_BITS (memoryAddress));
+
+    delete rk11dDevice;
 }
