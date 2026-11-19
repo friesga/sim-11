@@ -105,11 +105,14 @@ size_t ThreadSafeContainer<T, Cont>::size()
     return queue_.size();
 }
 
-template <typename T,
-          template <typename Elem> class Cont>
+template <typename T, template <typename Elem> class Cont>
 void ThreadSafeContainer<T, Cont>::close()
 {
-    closed_ = true;
+    {
+        std::lock_guard<std::mutex> lock(guard);
+        closed_ = true;
+    }
+
     signal.notify_all();
 }
 
