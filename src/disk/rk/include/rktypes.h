@@ -47,7 +47,7 @@ namespace RKTypes
         using DriveUnsafe = BitField<u16, 10>;
         using Rk05DiskOnLine = BitField<u16, 11>;
         using DrivePowerLow = BitField<u16, 12>;
-        using DriveId = BitField<u16, 13, 15>;
+        using DriveId = BitField<u16, 13, 3>;
 
         u16 value;
         SectorCounter sectorCounter;
