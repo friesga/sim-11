@@ -9,15 +9,15 @@ StatusCode RK11D::writeWord (BusAddress busAddress, u16 value)
     // Decode registerAddress<3:1>
     switch (busAddress.registerAddress () & 016)
     {
-        case RKDS:
+        case Offset::RKDS:
             // Drive Status register
             break;
 
-        case RKER:
+        case Offset::RKER:
             // Error register
             break;
 
-        case RKCS:
+        case Offset::RKCS:
             // Control Status register
             rkcs_.value = (rkcs_.value & ~rkcsWritableBits) |
                 (value & rkcsWritableBits);
@@ -35,17 +35,17 @@ StatusCode RK11D::writeWord (BusAddress busAddress, u16 value)
             }
             break;
 
-        case RKWC:
+        case Offset::RKWC:
             // Word Count register
             rkwc_ = value;
             break;
 
-        case RKBA:
+        case Offset::RKBA:
             // Current Bus Address register
             rkba_ = value;
             break;
 
-        case RKDA:
+        case Offset::RKDA:
             // Disk Address register
             // The drive selection logic selects one of eight possible disk drives
             // on DR BUS from either the programmable RKDA 13—15 or the hardware
@@ -54,11 +54,11 @@ StatusCode RK11D::writeWord (BusAddress busAddress, u16 value)
             selectedDrive_ = rkda_.driveSelect;
             break;
 
-        case RKMR:
+        case Offset::RKMR:
             // Maintenance register. Write's to it are ignored
             break;
 
-        case RKDB:
+        case Offset::RKDB:
             // Data Buffer register
             break;
 

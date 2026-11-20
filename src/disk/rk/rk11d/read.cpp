@@ -9,35 +9,35 @@ CondData<u16> RK11D::read (BusAddress busAddress)
     // Decode registerAddress<3:1>
     switch (busAddress.registerAddress () & 016)
     {
-        case RKDS:
+        case Offset::RKDS:
             // Drive Status register
             return getDriveStatus (selectedDrive_).value;
 
-        case RKER:
+        case Offset::RKER:
             // Error register
             return rker_.value;
 
-        case RKCS:
+        case Offset::RKCS:
             // Control Status register
             return rkcs_.value;
 
-        case RKWC:
+        case Offset::RKWC:
             // Word Count register
             return rkwc_;
             
-        case RKBA:
+        case Offset::RKBA:
             // Current Bus Address register
             return rkba_;
 
-        case RKDA:
+        case Offset::RKDA:
             // Disk Address register
             return rkda_.value;
 
-        case RKMR:
+        case Offset::RKMR:
             // Maintenance register
             return 0;
 
-        case RKDB:
+        case Offset::RKDB:
             // Data Buffer register
             return rkdb_;
 

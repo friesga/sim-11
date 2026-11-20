@@ -41,7 +41,7 @@ private:
     // on the RK11-D. The registers reads as 0, and writes to it are discarded.
     // (https://gunkies.org/wiki/RK11_disk_controller#777414:_Maintenance_Register_.28RKMR.29)
     //
-    enum
+    enum Offset
     {
         RKDS = 00,      // Drive Status register
         RKER = 02,      // Error register
