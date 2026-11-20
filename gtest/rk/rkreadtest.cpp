@@ -76,7 +76,7 @@ protected:
 
     void waitForDriveReady (RK11D* controller, u16 driveId)
     {
-        controller->writeWord (BusAddress {RKDA}, 0);u16 result;
+        u16 result;
         do
         {
             SimulatorClock::forwardClock (10ms);
