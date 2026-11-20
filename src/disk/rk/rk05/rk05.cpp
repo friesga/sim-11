@@ -105,13 +105,11 @@ void RK05::writeLock ()
 // The RKDS contains a four-bit sector counter. This counter indicates the
 // current sector passing the head.
 RKTypes::RKDS RK05::driveStatus ()
-{ 
-    SimulatorClock::duration d1 = SimulatorClock::now ().time_since_epoch ();
-
+{
     SimulatorClock::duration elapsedTimeSinceLastIndexPulse =
         SimulatorClock::now ().time_since_epoch () % indexPulseTime;
 
-    driveStatus_.sectorCounter = 
+    driveStatus_.sectorCounter =
         elapsedTimeSinceLastIndexPulse / sectorRevolutionTime;
 
     return driveStatus_;
