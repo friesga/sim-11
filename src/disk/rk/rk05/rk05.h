@@ -7,6 +7,7 @@
 #include "configdata/rk/rk05/rk05config/rk05config.h"
 #include "disk/rk/include/rktypes.h"
 #include "disk/rk/include/driveinterface.h"
+#include "basicregister/guarded.h"
 #include "panel.h"
 #include "asynctimer/asynctimer.h"
 #include "variantfsm/fsm.h"
@@ -163,7 +164,11 @@ private:
     // of the drive status and error register the controller can use to
     // assign to the actual register.
     u16 currentCylinderAddress_ {0};
-    RKTypes::RKDS driveStatus_ {0};
+
+    // The drive status must be protected from simultaneous access by both
+    // the main and the drive thread.
+    Guarded<RKTypes::RKDS> driveStatus_ {0};
+
     RKTypes::RKER driveError_ {0};
 
     void createBezel (Window* window, const RK05Config& rk05Config);

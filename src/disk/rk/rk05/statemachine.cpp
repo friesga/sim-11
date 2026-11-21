@@ -95,7 +95,7 @@ void RK05::StateMachine::entry (SpinningUp)
 // The spin up timer fires and the drive is spun up and locked on cylinder 0.
 RK05::State RK05::StateMachine::transition (SpinningUp&&, TimeElapsed)
 {
-    context_->driveStatus_.driveReady = 1;
+    context_->driveStatus_->driveReady = 1;
 
     context_->rdyIndicator_->show (Indicator::State::On);
 
@@ -120,13 +120,13 @@ RK05::State RK05::StateMachine::transition (SpinningUp&&, PowerOff)
 void RK05::StateMachine::entry (LockedOn)
 {
     context_->oncylIndicator_->show (Indicator::State::On);
-    context_->driveStatus_.readWriteSeekReady = 1;
+    context_->driveStatus_->readWriteSeekReady = 1;
 }
 
 void RK05::StateMachine::exit (variantFsm::TagType<LockedOn>)
 {
     context_->oncylIndicator_->show (Indicator::State::Off);
-    context_->driveStatus_.readWriteSeekReady = 0;
+    context_->driveStatus_->readWriteSeekReady = 0;
 }
 
 void RK05::StateMachine::entry (Seeking)
@@ -152,7 +152,7 @@ RK05::State RK05::StateMachine::transition (Seeking&& currentState, TimeElapsed)
     if (currentState.seekCompleted != nullptr)
         currentState.seekCompleted ();
 
-    context_->driveStatus_.readWriteSeekReady = 1;
+    context_->driveStatus_->readWriteSeekReady = 1;
     context_->oncylIndicator_->show (Indicator::State::On);
 
     return LockedOn {};
@@ -192,7 +192,7 @@ RK05::State RK05::StateMachine::transition (Seeking&&, PowerOff)
 
 void RK05::StateMachine::entry (SpinningDown)
 {
-    context_->driveStatus_.driveReady = 0;
+    context_->driveStatus_->driveReady = 0;
     context_->rdyIndicator_->show (Indicator::State::Off);
 }
 
@@ -275,7 +275,7 @@ RK05::State RK05::StateMachine::poweringOn ()
 
     context_->pwrIndicator_->show (Indicator::State::On);
 
-    if (context_->driveStatus_.writeProtectStatus == 1)
+    if (context_->driveStatus_->writeProtectStatus == 1)
         context_->wtprotIndicator_->show (Indicator::State::On);
     else
         context_->wtprotIndicator_->show (Indicator::State::Off);
@@ -308,7 +308,7 @@ RK05::State RK05::StateMachine::spinUp ()
     // elapse immediately but this leads to failing units tests.
     if (spinUpTime_ == std::chrono::seconds::zero ())
     {
-        context_->driveStatus_.driveReady = 1;
+        context_->driveStatus_->driveReady = 1;
         context_->rdyIndicator_->show (Indicator::State::On);
         return LockedOn {};
     }

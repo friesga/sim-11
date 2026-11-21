@@ -49,11 +49,11 @@ RK05::RK05 (Bus* bus, DriveInterface* controller, Window* window,
     // Initialize the drive status before an event is dispatched to the
     // state machine as the drive status is changed by the state machine
     // and the initialization would overwrite those changes.
-    driveStatus_ = +RKDS::SectorCounterEqualsSectorAddress {1} |
+    driveStatus_.store (+RKDS::SectorCounterEqualsSectorAddress {1} |
         +RKDS::ReadWriteSeekReady {1} |
         +RKDS::SectorCounterOK {1} |
         +RKDS::Rk05DiskOnLine {1} |
-        +RKDS::DriveId {rk05Config.unitNumber};
+        +RKDS::DriveId {rk05Config.unitNumber});
 
     stateMachine_ = make_unique<StateMachine> (this,
         seconds (rk05Config.spinUpTime));
@@ -65,7 +65,7 @@ RK05::RK05 (Bus* bus, DriveInterface* controller, Window* window,
 
     // Set the Write Protect status according to the configuration option
     if (rk05Config.writeProtect)
-        driveStatus_.writeProtectStatus = 1;
+        driveStatus_->writeProtectStatus = 1;
 
     bpokSubscriberKey_ = 
         bus_->BPOK ().subscribe (bind (&RK05::BPOKReceiver, this, _1));
@@ -93,26 +93,29 @@ RK05::~RK05 ()
 
 void RK05::clearDriveReady ()
 {
-    driveStatus_.readWriteSeekReady = 0;
+    driveStatus_->readWriteSeekReady = 0;
 }
 
 void RK05::writeLock ()
 {
-    driveStatus_.writeProtectStatus = 1;
+    driveStatus_->writeProtectStatus = 1;
     wtprotIndicator_->show (Indicator::State::On);
 }
 
 // The RKDS contains a four-bit sector counter. This counter indicates the
-// current sector passing the head.
+// current sector passing the head. The counter is calculated on a copy
+// of the drive status, so this function does not modify driveStatus_.
 RKTypes::RKDS RK05::driveStatus ()
 {
     SimulatorClock::duration elapsedTimeSinceLastIndexPulse =
         SimulatorClock::now ().time_since_epoch () % indexPulseTime;
 
-    driveStatus_.sectorCounter =
+    RKTypes::RKDS status = driveStatus_.load ();
+
+    status.sectorCounter =
         elapsedTimeSinceLastIndexPulse / sectorRevolutionTime;
 
-    return driveStatus_;
+    return status;
 }
 
 void RK05::runLoadSwitchClicked (Button::State state)
@@ -142,19 +145,19 @@ void RK05::sendTrigger (Event event)
 //
 void RK05::wtprotSwitchClicked (Button::State state)
 {
-    if (get<Button::MomentaryUpTwoPositionsState> (state) == 
+    if (get<Button::MomentaryUpTwoPositionsState> (state) ==
         Button::MomentaryUpTwoPositionsState::Up)
     {
-        if (driveStatus_.writeProtectStatus == 0)
+        bool writeProtected;
         {
-            driveStatus_.writeProtectStatus = 1;
-            wtprotIndicator_->show (Indicator::State::On);
+            auto ds = driveStatus_.lock ();
+            ds->writeProtectStatus = !ds->writeProtectStatus;
+            writeProtected = ds->writeProtectStatus;
         }
-        else
-        {
-            driveStatus_.writeProtectStatus = 0;
-            wtprotIndicator_->show (Indicator::State::Off);
-        }
+
+        // Update the indicator outside the lock
+        wtprotIndicator_->show (writeProtected ?
+            Indicator::State::On : Indicator::State::Off);
     }
 }
 
@@ -167,7 +170,7 @@ bool RK05::isReady ()
 
 bool RK05::isWriteProtected ()
 {
-    return driveStatus_.writeProtectStatus == 1;
+    return driveStatus_->writeProtectStatus == 1;
 }
 
 // Head positioning performance specifcations:
