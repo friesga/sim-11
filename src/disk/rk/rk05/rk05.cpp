@@ -148,15 +148,13 @@ void RK05::wtprotSwitchClicked (Button::State state)
     if (get<Button::MomentaryUpTwoPositionsState> (state) ==
         Button::MomentaryUpTwoPositionsState::Up)
     {
-        bool writeProtected;
         {
-            auto ds = driveStatus_.lock ();
+            Guarded<RKTypes::RKDS>::Proxy ds = driveStatus_.lock ();
             ds->writeProtectStatus = !ds->writeProtectStatus;
-            writeProtected = ds->writeProtectStatus;
         }
 
         // Update the indicator outside the lock
-        wtprotIndicator_->show (writeProtected ?
+        wtprotIndicator_->show (driveStatus_->writeProtectStatus ?
             Indicator::State::On : Indicator::State::Off);
     }
 }
