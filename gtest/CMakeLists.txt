@@ -88,6 +88,7 @@ set (GTEST_SRCS
     qbusinstalltest.cpp
     dummycpu/dummymmu/dummymmu.cpp
     registers/twowordregistertest.cpp
+    registers/registerfieldtest.cpp
     rk/rkconfigprocessortest.cpp
     rk/rkdriveresettest.cpp
     rk/rkreadtest.cpp
