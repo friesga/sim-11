@@ -2,6 +2,8 @@
 #define _RKTYPES_H_
 
 #include "bitfield.h"
+#include "basicregister/basicregister.h"
+#include "basicregister/registerfield.h"
 #include "busaddress/busaddress.h"
 #include "concepts/geometry/geometry.h"
 #include "statuscodes.h"
@@ -35,8 +37,9 @@ namespace RKTypes
     // Drive Status register. This is a read-only register and contains the
     // status of the selected drive and current sector address.
     //
-    union RKDS
+    class RKDS : public BasicRegister
     {
+    public:
         using SectorCounter = BitField<u16, 0, 4>;
         using SectorCounterEqualsSectorAddress = BitField<u16, 4>;
         using WriteProtectStatus = BitField<u16, 5>;
@@ -49,18 +52,37 @@ namespace RKTypes
         using DrivePowerLow = BitField<u16, 12>;
         using DriveId = BitField<u16, 13, 3>;
 
-        u16 value;
-        SectorCounter sectorCounter;
-        SectorCounterEqualsSectorAddress sectorCounterEqualsSectorAddress;
-        WriteProtectStatus writeProtectStatus;
-        ReadWriteSeekReady readWriteSeekReady;
-        DriveReady driveReady;
-        SectorCounterOK sectorCounterOK;
-        SeekIncomplete seekIncomplete;
-        DriveUnsafe driveUnsafe;
-        Rk05DiskOnLine rk05DiskOnLine;
-        DrivePowerLow drivePowerLow;
-        DriveId driveId;
+        RKDS (u16 value = 0) : BasicRegister {value} {}
+
+        // Copying a register copies its value; the fields of the copy refer
+        // to the value of the copy.
+        RKDS (RKDS const& other) : BasicRegister {other.value_} {}
+        RKDS& operator= (RKDS const& other)
+        {
+            value_ = other.value_;
+            return *this;
+        }
+
+        // Make the BasicRegister::operator= (u16) function visible to users
+        // of this class. The copy assignment operator above hides
+        // BasicRegister::operator= (u16). Without this using declaration
+        // an assignment of a u16 value would still compile, but via the
+        // converting constructor and the copy assignment instead of via
+        // the Register interface.
+        using BasicRegister::operator=;
+
+        // The fields refer to (and do not copy) the register value
+        RegisterField<SectorCounter> sectorCounter {value_};
+        RegisterField<SectorCounterEqualsSectorAddress> sectorCounterEqualsSectorAddress {value_};
+        RegisterField<WriteProtectStatus> writeProtectStatus {value_};
+        RegisterField<ReadWriteSeekReady> readWriteSeekReady {value_};
+        RegisterField<DriveReady> driveReady {value_};
+        RegisterField<SectorCounterOK> sectorCounterOK {value_};
+        RegisterField<SeekIncomplete> seekIncomplete {value_};
+        RegisterField<DriveUnsafe> driveUnsafe {value_};
+        RegisterField<Rk05DiskOnLine> rk05DiskOnLine {value_};
+        RegisterField<DrivePowerLow> drivePowerLow {value_};
+        RegisterField<DriveId> driveId {value_};
     };
 
     // Error register. This is a read-only register.

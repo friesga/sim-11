@@ -11,7 +11,7 @@ CondData<u16> RK11D::read (BusAddress busAddress)
     {
         case Offset::RKDS:
             // Drive Status register
-            return getDriveStatus (selectedDrive_).value;
+            return static_cast<u16> (getDriveStatus (selectedDrive_));
 
         case Offset::RKER:
             // Error register

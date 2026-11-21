@@ -49,7 +49,7 @@ RK05::RK05 (Bus* bus, DriveInterface* controller, Window* window,
     // Initialize the drive status before an event is dispatched to the
     // state machine as the drive status is changed by the state machine
     // and the initialization would overwrite those changes.
-    driveStatus_.value = +RKDS::SectorCounterEqualsSectorAddress {1} |
+    driveStatus_ = +RKDS::SectorCounterEqualsSectorAddress {1} |
         +RKDS::ReadWriteSeekReady {1} |
         +RKDS::SectorCounterOK {1} |
         +RKDS::Rk05DiskOnLine {1} |

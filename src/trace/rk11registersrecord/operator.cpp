@@ -12,7 +12,7 @@ std::ostream& operator<< (std::ostream& os,
     TraceRecord<RK11RegistersRecord> record)
 {
     os << "[RK11] BA=" << setw (7) << setfill ('0') << oct << record.busAddress_ <<
-        " [RKDS=" << setw (7) << setfill ('0') << oct << record.rkds_.value <<
+        " [RKDS=" << setw (7) << setfill ('0') << oct << record.rkds_ <<
         " RKER="  << setw (7) << setfill ('0') << oct << record.rker_.value <<
         " RKCS="  << setw (7) << setfill ('0') << oct  << record.rkcs_.value <<
         " RKWC="  << dec << record.rkwc_ << 
