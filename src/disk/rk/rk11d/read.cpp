@@ -31,7 +31,7 @@ CondData<u16> RK11D::read (BusAddress busAddress)
 
         case Offset::RKDA:
             // Disk Address register
-            return rkda_.value;
+            return static_cast<u16> (rkda_);
 
         case Offset::RKMR:
             // Maintenance register

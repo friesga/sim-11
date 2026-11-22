@@ -15,7 +15,7 @@ std::ostream& operator<< (std::ostream& os,
 {
     os << "[RK11] Function: " << getFunctionName (record.function_) <<
         " (" << record.function_.rkcs.operation << ')' <<
-          " DA: " << setw (7) << oct << record.function_.diskAddress.value;
+          " DA: " << setw (7) << oct << record.function_.diskAddress;
     os << " WC: " << record.function_.wordCount <<
           " BA: " << setw (7) << oct << record.function_.busAddress << '\n';
     return os;

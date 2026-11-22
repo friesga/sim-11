@@ -293,13 +293,13 @@ TEST_F (RK11DRegistersTest, rkdaCenBeAssignedTo)
     EXPECT_EQ (rkda.driveSelect, 1);
 
     rkda = DiskAddress {1, 0, 0};
-    EXPECT_EQ (rkda.value, 020001);
+    EXPECT_EQ (rkda, 020001);
 
     rkda = DiskAddress {0, 1, 0};
-    EXPECT_EQ (rkda.value, 020020);
+    EXPECT_EQ (rkda, 020020);
 
     rkda = DiskAddress {0, 0, 1};
-    EXPECT_EQ (rkda.value, 020040);
+    EXPECT_EQ (rkda, 020040);
 }
 
 TEST_F (RK11DRegistersTest, rkdaCanBeAdded)
@@ -311,13 +311,13 @@ TEST_F (RK11DRegistersTest, rkdaCanBeAdded)
     EXPECT_EQ (rkda.driveSelect, 7);
     EXPECT_EQ (rkda.sectorAddress, 1);
 
-    rkda.value = 0160000;
+    rkda = 0160000;
     rkda = rkda + 12;
     EXPECT_EQ (rkda.driveSelect, 7);
     EXPECT_EQ (rkda.sectorAddress, 0);
     EXPECT_EQ (rkda.surface, 1);
 
-    rkda.value = 0160000;
+    rkda = 0160000;
     rkda = rkda + 24;
     EXPECT_EQ (rkda.driveSelect, 7);
     EXPECT_EQ (rkda.sectorAddress, 0);
@@ -334,13 +334,13 @@ TEST_F (RK11DRegistersTest, rkdaCanBeAddedTo)
     EXPECT_EQ (rkda.driveSelect, 7);
     EXPECT_EQ (rkda.sectorAddress, 1);
 
-    rkda.value = 0160000;
+    rkda = 0160000;
     rkda += 12;
     EXPECT_EQ (rkda.driveSelect, 7);
     EXPECT_EQ (rkda.sectorAddress, 0);
     EXPECT_EQ (rkda.surface, 1);
 
-    rkda.value = 0160000;
+    rkda = 0160000;
     rkda += 24;
     EXPECT_EQ (rkda.driveSelect, 7);
     EXPECT_EQ (rkda.sectorAddress, 0);

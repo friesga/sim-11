@@ -106,7 +106,7 @@ RKTypes::FunctionResult RK05::readHeader (DiskAddress diskAddress,
         ++wordsRead, ++lbn)
     {
         rkda.cylinderAddress = cylinderFromLBN (lbn);
-        data[wordsRead] = rkda.value;
+        data[wordsRead] = rkda;
     }
 
     // One word per sector is read, so the number of sectors equals the

@@ -50,7 +50,7 @@ StatusCode RK11D::writeWord (BusAddress busAddress, u16 value)
             // The drive selection logic selects one of eight possible disk drives
             // on DR BUS from either the programmable RKDA 13—15 or the hardware
             // poll logic. (EK-RK11D-MM-002, par. 4.3.4)
-            rkda_.value = value;
+            rkda_ = value;
             selectedDrive_ = rkda_.driveSelect;
             break;
 
@@ -102,7 +102,7 @@ void RK11D::startFunction ()
     // ToDo: Add Memory Extension bits to bus address
     functionQueue_.push (RKTypes::Function
         {
-            rkcs_, rkda_.value, absValueFromTwosComplement (rkwc_),
+            rkcs_, rkda_, absValueFromTwosComplement (rkwc_),
             busAddressFromRegs (),
         });
 

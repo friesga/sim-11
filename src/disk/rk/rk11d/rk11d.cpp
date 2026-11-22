@@ -82,7 +82,7 @@ void RK11D::reset ()
     rkcs_.controlReady = 1;
     rkwc_ = 0;
     rkba_ = 0;
-    rkda_.value = 0;
+    rkda_ = 0;
     rkdb_ = 0;
 }
 

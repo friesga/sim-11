@@ -33,7 +33,7 @@ std::ostream& operator<< (std::ostream& os,
         os << "Function [" << getFunctionName (function) <<
             " (" << function.rkcs.operation << ')' <<
             " RKCS=" << setw (7) << oct << function.rkcs <<
-            " RKDA=" << setw (7) << oct << function.diskAddress.value <<
+            " RKDA=" << setw (7) << oct << function.diskAddress <<
             " RKWC=" << function.wordCount <<
             " RKBA=" << setw (7) << oct << function.busAddress << "]\n";
     }

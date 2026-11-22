@@ -198,41 +198,72 @@ namespace RKTypes
     // (EK-RK11D-MM-002, p. 3-8). To this end the register is equipped with
     // the assignment and addition operators.
     //
-    union RKDA
+    // Disk Address register. This is a read/write register.
+    //
+    // The RKDA is incremented automatically at the end of each disk sector
+    // (EK-RK11D-MM-002, p. 3-8). To this end the register is equipped with
+    // the assignment and addition operators.
+    //
+    class RKDA : public BasicRegister
     {
-        u16 value;
-        BitField<u16, 0, 4> sectorAddress;
-        BitField<u16, 4> surface;
-        BitField<u16, 5, 8> cylinderAddress;
-        BitField<u16, 13, 3> driveSelect;
+    public:
+        using SectorAddress = BitField<u16, 0, 4>;
+        using Surface = BitField<u16, 4>;
+        using CylinderAddress = BitField<u16, 5, 8>;
+        using DriveSelect = BitField<u16, 13, 3>;
 
-        RKDA& operator= (DiskAddress const& da)
+        RKDA (u16 value = 0) : BasicRegister {value} {}
+
+        // Copying a register copies its value; the fields of the copy refer
+        // to the value of the copy.
+        RKDA (RKDA const& other) : BasicRegister {other.value_} {}
+        RKDA& operator= (RKDA const& other)
         {
-            sectorAddress = da.sector;
-            surface = da.head;
-            cylinderAddress = da.cylinder;
-            this->driveSelect = driveSelect;
+            value_ = other.value_;
             return *this;
         }
 
-        RKDA operator+ (u16 numSectors)
+        // The copy assignment operator above hides BasicRegister::operator= (u16).
+        // Without this using declaration an assignment of a u16 value would
+        // still compile, but via the converting constructor and the copy
+        // assignment instead of via the Register interface.
+        using BasicRegister::operator=;
+
+        // Set the disk address, leaving the drive select unchanged
+        RKDA& operator= (DiskAddress const& diskAddress)
         {
-            u32 lbn = rk05Geometry_.LBN (DiskAddress {sectorAddress, surface,
-                cylinderAddress});
-            *this = rk05Geometry_.lbnTodiskAddress (lbn + numSectors);
+            sectorAddress = diskAddress.sector;
+            surface = diskAddress.head;
+            cylinderAddress = diskAddress.cylinder;
             return *this;
         }
 
-        RKDA& operator+= (u16 numSectors)
+        // Return the disk address numSectors further on; the drive select
+        // is copied unchanged. The parameter is an int to avoid ambiguity
+        // with the built-in operator+ via the conversion to u16.
+        RKDA operator+ (int numSectors) const
         {
-            *this = *this + numSectors;
-            return *this;
+            RKDA result {*this};
+            result = rk05Geometry_.lbnTodiskAddress (
+                rk05Geometry_.LBN (*this) + numSectors);
+            return result;
+        }
+
+        RKDA& operator+= (int numSectors)
+        {
+            return *this = *this + numSectors;
         }
 
         operator DiskAddress () const
         {
             return DiskAddress {sectorAddress, surface, cylinderAddress};
         }
+
+        // The fields refer to (and do not copy) the register value
+        RegisterField<SectorAddress> sectorAddress {value_};
+        RegisterField<Surface> surface {value_};
+        RegisterField<CylinderAddress> cylinderAddress {value_};
+        RegisterField<DriveSelect> driveSelect {value_};
     };
 
     // Definition of the RK11-D Operations

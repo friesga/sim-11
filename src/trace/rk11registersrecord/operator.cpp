@@ -17,7 +17,7 @@ std::ostream& operator<< (std::ostream& os,
         " RKCS="  << setw (7) << setfill ('0') << oct  << record.rkcs_ <<
         " RKWC="  << dec << record.rkwc_ << 
         " RKBA=" << setw (7) << setfill ('0') << oct << record.rkba_ <<
-        " RKDA=" << setw (7) << setfill ('0') << oct << record.rkda_.value <<
+        " RKDA=" << setw (7) << setfill ('0') << oct << record.rkda_ <<
         " RKDB=" << setw (7) << setfill ('0') << oct << record.rkdb_ << "]\n";
 
     return os;
