@@ -49,11 +49,11 @@ RK05::RK05 (Bus* bus, DriveInterface* controller, Window* window,
     // Initialize the drive status before an event is dispatched to the
     // state machine as the drive status is changed by the state machine
     // and the initialization would overwrite those changes.
-    driveStatus_.store (+RKDS::SectorCounterEqualsSectorAddress {1} |
+    driveStatus_ = +RKDS::SectorCounterEqualsSectorAddress {1} |
         +RKDS::ReadWriteSeekReady {1} |
         +RKDS::SectorCounterOK {1} |
         +RKDS::Rk05DiskOnLine {1} |
-        +RKDS::DriveId {rk05Config.unitNumber});
+        +RKDS::DriveId {rk05Config.unitNumber};
 
     stateMachine_ = make_unique<StateMachine> (this,
         seconds (rk05Config.spinUpTime));

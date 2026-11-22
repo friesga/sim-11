@@ -53,10 +53,11 @@ public:
         return object_;
     }
 
-    void store (T const& object)
+    Guarded& operator= (T const& object)
     {
         std::lock_guard<std::mutex> lock {mutex_};
         object_ = object;
+        return *this;
     }
 
 private:
