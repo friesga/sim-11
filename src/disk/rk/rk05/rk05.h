@@ -169,7 +169,7 @@ private:
     // the main and the drive thread.
     Guarded<RKTypes::RKDS> driveStatus_ {0};
 
-    // The RKER is only accessed from the main thread.
+    // The main thread keeps its own copy of the RKER
     RKTypes::RKER driveError_ {0};
 
     void createBezel (Window* window, const RK05Config& rk05Config);

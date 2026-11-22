@@ -19,7 +19,7 @@ StatusCode RK11D::writeWord (BusAddress busAddress, u16 value)
 
         case Offset::RKCS:
             // Control Status register
-            rkcs_.value = (rkcs_.value & ~rkcsWritableBits) |
+            rkcs_ = (rkcs_ & ~rkcsWritableBits) |
                 (value & rkcsWritableBits);
 
             if (rkcs_.go)

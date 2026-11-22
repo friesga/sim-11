@@ -141,23 +141,55 @@ namespace RKTypes
         RegisterField<DriveError> driveError {value_};
     };
 
-    // Constrol Status register.
-    union RKCS
+    // Control Status register.
+    class RKCS : public BasicRegister
     {
-        u16 value;
-        BitField<u16, 0> go;                        // Write Only
-        BitField<u16, 1, 3> operation;              // Read/Write
-        BitField<u16, 4, 2> memoryExtension;        // Read/Write
-        BitField<u16, 6> interruptOnDoneEnable;     // Read/Write
-        BitField<u16, 7> controlReady;              // Read Only
-        BitField<u16, 8> stopOnSoftError;           // Read/Write
-        BitField<u16, 9> extraBit;                  // Unused for RK11-D/E
-        BitField<u16, 10> format;                   // Read/Write
-        BitField<u16, 11> inhibitIncrementingRKBA;  // Read/Write
-        BitField<u16, 12> unused;
-        BitField<u16, 13> searchComplete;           // Read Only
-        BitField<u16, 14> hardError;                // Read Only
-        BitField<u16, 15> error;                    // Read Only
+    public:
+        using Go = BitField<u16, 0>;                        // Write Only
+        using Operation = BitField<u16, 1, 3>;              // Read/Write
+        using MemoryExtension = BitField<u16, 4, 2>;        // Read/Write
+        using InterruptOnDoneEnable = BitField<u16, 6>;     // Read/Write
+        using ControlReady = BitField<u16, 7>;              // Read Only
+        using StopOnSoftError = BitField<u16, 8>;           // Read/Write
+        using ExtraBit = BitField<u16, 9>;                  // Unused for RK11-D/E
+        using Format = BitField<u16, 10>;                   // Read/Write
+        using InhibitIncrementingRKBA = BitField<u16, 11>;  // Read/Write
+        using Unused = BitField<u16, 12>;
+        using SearchComplete = BitField<u16, 13>;           // Read Only
+        using HardError = BitField<u16, 14>;                // Read Only
+        using Error = BitField<u16, 15>;                    // Read Only
+
+        RKCS (u16 value = 0) : BasicRegister {value} {}
+
+        // Copying a register copies its value; the fields of the copy refer
+        // to the value of the copy.
+        RKCS (RKCS const& other) : BasicRegister {other.value_} {}
+        RKCS& operator= (RKCS const& other)
+        {
+            value_ = other.value_;
+            return *this;
+        }
+
+        // The copy assignment operator above hides BasicRegister::operator= (u16).
+        // Without this using declaration an assignment of a u16 value would
+        // still compile, but via the converting constructor and the copy
+        // assignment instead of via the Register interface.
+        using BasicRegister::operator=;
+
+        // The fields refer to (and do not copy) the register value
+        RegisterField<Go> go {value_};
+        RegisterField<Operation> operation {value_};
+        RegisterField<MemoryExtension> memoryExtension {value_};
+        RegisterField<InterruptOnDoneEnable> interruptOnDoneEnable {value_};
+        RegisterField<ControlReady> controlReady {value_};
+        RegisterField<StopOnSoftError> stopOnSoftError {value_};
+        RegisterField<ExtraBit> extraBit {value_};
+        RegisterField<Format> format {value_};
+        RegisterField<InhibitIncrementingRKBA> inhibitIncrementingRKBA {value_};
+        RegisterField<Unused> unused {value_};
+        RegisterField<SearchComplete> searchComplete {value_};
+        RegisterField<HardError> hardError {value_};
+        RegisterField<Error> error {value_};
     };
 
     // Disk Address register. This is a read/write register.

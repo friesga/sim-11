@@ -78,7 +78,7 @@ void RK11D::reset ()
 {
     selectedDrive_ = 0;
     rker_ = 0;
-    rkcs_.value = 0;
+    rkcs_ = 0;
     rkcs_.controlReady = 1;
     rkwc_ = 0;
     rkba_ = 0;

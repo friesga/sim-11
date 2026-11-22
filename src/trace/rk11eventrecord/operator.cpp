@@ -32,7 +32,7 @@ std::ostream& operator<< (std::ostream& os,
             std::get<RKTypes::Function>(record.event_);
         os << "Function [" << getFunctionName (function) <<
             " (" << function.rkcs.operation << ')' <<
-            " RKCS=" << setw (7) << oct << function.rkcs.value <<
+            " RKCS=" << setw (7) << oct << function.rkcs <<
             " RKDA=" << setw (7) << oct << function.diskAddress.value <<
             " RKWC=" << function.wordCount <<
             " RKBA=" << setw (7) << oct << function.busAddress << "]\n";

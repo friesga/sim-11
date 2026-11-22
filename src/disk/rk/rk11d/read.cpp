@@ -19,7 +19,7 @@ CondData<u16> RK11D::read (BusAddress busAddress)
 
         case Offset::RKCS:
             // Control Status register
-            return rkcs_.value;
+            return static_cast<u16> (rkcs_);
 
         case Offset::RKWC:
             // Word Count register
