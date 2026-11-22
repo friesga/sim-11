@@ -98,7 +98,7 @@ namespace RKTypes
         using NonexistentCylinder = BitField<u16, 6>;
         using NonExistentDisk = BitField<u16, 7>;
         using TimingError = BitField<u16, 8>;
-        using DateLate = BitField<u16, 9>;
+        using DataLate = BitField<u16, 9>;
         using NonexistentMemory = BitField<u16, 10>;
         using ProgrammingError = BitField<u16, 11>;
         using SeekError = BitField<u16, 12>;
@@ -132,7 +132,7 @@ namespace RKTypes
         RegisterField<NonexistentCylinder> nonexistentCylinder {value_};
         RegisterField<NonExistentDisk> nonExistentDisk {value_};
         RegisterField<TimingError> timingError {value_};
-        RegisterField<DateLate> dateLate {value_};
+        RegisterField<DataLate> dataLate {value_};
         RegisterField<NonexistentMemory> nonexistentMemory {value_};
         RegisterField<ProgrammingError> programmingError {value_};
         RegisterField<SeekError> seekError {value_};
