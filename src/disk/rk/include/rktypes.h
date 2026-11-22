@@ -86,24 +86,59 @@ namespace RKTypes
     };
 
     // Error register. This is a read-only register.
-    union RKER
+    // Error register. This is a read-only register.
+    class RKER : public BasicRegister
     {
-        u16 value;
-        BitField<u16, 0> writeCheckError;
-        BitField<u16, 1> checksumError;
-        BitField<u16, 2, 3> unused;
-        BitField<u16, 5> nonexistentSector;
-        BitField<u16, 5, 11> hardError;
-        BitField<u16, 6> nonexistentCylinder;
-        BitField<u16, 7> nonExistentDisk;
-        BitField<u16, 8> timingError;
-        BitField<u16, 9> dateLate;
-        BitField<u16, 10> nonexistentMemory;
-        BitField<u16, 11> programmingError;
-        BitField<u16, 12> seekError;
-        BitField<u16, 13> writeLockoutViolation;
-        BitField<u16, 14> overrun;
-        BitField<u16, 15> driveError;
+    public:
+        using WriteCheckError = BitField<u16, 0>;
+        using ChecksumError = BitField<u16, 1>;
+        using Unused = BitField<u16, 2, 3>;
+        using NonexistentSector = BitField<u16, 5>;
+        using HardError = BitField<u16, 5, 11>;
+        using NonexistentCylinder = BitField<u16, 6>;
+        using NonExistentDisk = BitField<u16, 7>;
+        using TimingError = BitField<u16, 8>;
+        using DateLate = BitField<u16, 9>;
+        using NonexistentMemory = BitField<u16, 10>;
+        using ProgrammingError = BitField<u16, 11>;
+        using SeekError = BitField<u16, 12>;
+        using WriteLockoutViolation = BitField<u16, 13>;
+        using Overrun = BitField<u16, 14>;
+        using DriveError = BitField<u16, 15>;
+
+        RKER (u16 value = 0) : BasicRegister {value} {}
+
+        // Copying a register copies its value; the fields of the copy refer
+        // to the value of the copy.
+        RKER (RKER const& other) : BasicRegister {other.value_} {}
+        RKER& operator= (RKER const& other)
+        {
+            value_ = other.value_;
+            return *this;
+        }
+
+        // The copy assignment operator above hides BasicRegister::operator= (u16).
+        // Without this using declaration an assignment of a u16 value would
+        // still compile, but via the converting constructor and the copy
+        // assignment instead of via the Register interface.
+        using BasicRegister::operator=;
+
+        // The fields refer to (and do not copy) the register value
+        RegisterField<WriteCheckError> writeCheckError {value_};
+        RegisterField<ChecksumError> checksumError {value_};
+        RegisterField<Unused> unused {value_};
+        RegisterField<NonexistentSector> nonexistentSector {value_};
+        RegisterField<HardError> hardError {value_};
+        RegisterField<NonexistentCylinder> nonexistentCylinder {value_};
+        RegisterField<NonExistentDisk> nonExistentDisk {value_};
+        RegisterField<TimingError> timingError {value_};
+        RegisterField<DateLate> dateLate {value_};
+        RegisterField<NonexistentMemory> nonexistentMemory {value_};
+        RegisterField<ProgrammingError> programmingError {value_};
+        RegisterField<SeekError> seekError {value_};
+        RegisterField<WriteLockoutViolation> writeLockoutViolation {value_};
+        RegisterField<Overrun> overrun {value_};
+        RegisterField<DriveError> driveError {value_};
     };
 
     // Constrol Status register.

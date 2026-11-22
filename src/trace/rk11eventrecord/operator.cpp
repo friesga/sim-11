@@ -24,7 +24,7 @@ std::ostream& operator<< (std::ostream& os,
         RKTypes::SeekCompleteReport report = 
             std::get<RKTypes::SeekCompleteReport>(record.event_);
         os << "SeekComplete [driveId=" << report.driveId << ", " <<
-            "RKER=" << setw (7) << oct << report.rker.value << "]\n";
+            "RKER=" << setw (7) << oct << report.rker << "]\n";
     }
     else if (holds_alternative<RKTypes::Function> (record.event_))
     {

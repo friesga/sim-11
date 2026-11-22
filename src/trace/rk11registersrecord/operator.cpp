@@ -13,7 +13,7 @@ std::ostream& operator<< (std::ostream& os,
 {
     os << "[RK11] BA=" << setw (7) << setfill ('0') << oct << record.busAddress_ <<
         " [RKDS=" << setw (7) << setfill ('0') << oct << record.rkds_ <<
-        " RKER="  << setw (7) << setfill ('0') << oct << record.rker_.value <<
+        " RKER="  << setw (7) << setfill ('0') << oct << record.rker_ <<
         " RKCS="  << setw (7) << setfill ('0') << oct  << record.rkcs_.value <<
         " RKWC="  << dec << record.rkwc_ << 
         " RKBA=" << setw (7) << setfill ('0') << oct << record.rkba_ <<

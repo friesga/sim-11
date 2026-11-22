@@ -77,7 +77,7 @@ bool RK11D::responsible (BusAddress busAddress)
 void RK11D::reset ()
 {
     selectedDrive_ = 0;
-    rker_.value = 0;
+    rker_ = 0;
     rkcs_.value = 0;
     rkcs_.controlReady = 1;
     rkwc_ = 0;

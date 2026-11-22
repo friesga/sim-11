@@ -147,7 +147,7 @@ RK11D::State RK11D::StateMachine::transition (Polling&&,
 void RK11D::StateMachine::completeSeek (RKTypes::SeekCompleteReport report)
 {
     context_->selectedDrive_ = report.driveId;
-    context_->rker_.value |= report.rker.value;
+    context_->rker_ = context_->rker_ | report.rker;
 
     context_->interruptRequestGranted_.release ();
 }

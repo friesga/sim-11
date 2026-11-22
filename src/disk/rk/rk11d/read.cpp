@@ -15,7 +15,7 @@ CondData<u16> RK11D::read (BusAddress busAddress)
 
         case Offset::RKER:
             // Error register
-            return rker_.value;
+            return static_cast<u16> (rker_);
 
         case Offset::RKCS:
             // Control Status register
