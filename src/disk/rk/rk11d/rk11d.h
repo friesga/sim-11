@@ -117,10 +117,6 @@ private:
     // Safe guard against controller access from multiple threads
     mutex controllerMutex_;
 
-    // Condition variable to wake up the function processor when a function has
-    // been queued.
-    condition_variable functionAvailable_;
-
     binary_semaphore interruptRequestGranted_ {1};
 
     // Use the PIMPL idiom to be able to define the StateMachine outside

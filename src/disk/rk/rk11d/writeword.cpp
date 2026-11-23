@@ -105,8 +105,6 @@ void RK11D::startFunction ()
             rkcs_, rkda_, absValueFromTwosComplement (rkwc_),
             busAddressFromRegs (),
         });
-
-    functionAvailable_.notify_one ();
 }
 
 BusAddress RK11D::busAddressFromRegs ()

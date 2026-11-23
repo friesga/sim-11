@@ -6,5 +6,4 @@
 void RK11D::reportSeekComplete (RKTypes::SeekCompleteReport report)
 {
     functionQueue_.push (report);
-    functionAvailable_.notify_one ();
 }

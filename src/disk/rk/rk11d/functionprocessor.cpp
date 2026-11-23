@@ -157,7 +157,4 @@ void RK11D::finish ()
     functionQueue_.close ();
 
     interruptRequestGranted_.release ();
-
-    // Wake up the function processor
-    functionAvailable_.notify_one ();
 }
