@@ -86,7 +86,6 @@ namespace RKTypes
     };
 
     // Error register. This is a read-only register.
-    // Error register. This is a read-only register.
     class RKER : public BasicRegister
     {
     public:
