@@ -85,14 +85,16 @@ template <typename T,
     template <typename Elem> class Cont>
 bool ThreadSafeContainer<T, Cont>::push(T const& elem)
 {
-    // No elements can be pushed onto a closed queue
-    if (closed_)
-        return false;
-
     {
-        std::lock_guard<std::mutex> lock(guard);
-        queue_.push(elem);
+        std::lock_guard<std::mutex> lock (guard);
+
+        // No elements can be pushed onto a closed queue
+        if (closed_)
+            return false;
+
+        queue_.push (elem);
     }
+
     signal.notify_one();
     return true;
 }
