@@ -97,3 +97,8 @@ void RK11D::BINITReceiver (bool signalValue)
         reset ();
     }
 }
+
+RK05* RK11D::unit (size_t unitNumber)
+{
+    return rk05Drives_[unitNumber].get ();
+}

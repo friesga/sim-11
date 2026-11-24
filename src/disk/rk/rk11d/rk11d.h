@@ -85,6 +85,9 @@ public:
     bool responsible (BusAddress busAddress) override;
     void reset () override;
 
+    // Functions to allow unit tests access to the RK05 drives
+    RK05* unit (size_t unitNumber);
+
     // Functions required by the DriveInterface interface
     void reportSeekComplete (RKTypes::SeekCompleteReport report) override;
 
