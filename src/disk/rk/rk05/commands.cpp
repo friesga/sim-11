@@ -31,6 +31,8 @@ RKTypes::FunctionResult RK05::write (DiskAddress diskAddress,
 //
 size_t RK05::writeDataToDrive (DiskAddress diskAddress, u16* buffer, u16 numWords)
 {
+    assert (cartridge_ != nullptr);
+
     wtIndicator_->show (Indicator::State::On);
 
     clearBufferToEndOfSector (buffer, numWords);
@@ -63,6 +65,8 @@ RKTypes::FunctionResult RK05::read (DiskAddress diskAddress,
 size_t RK05::readDataFromDrive (DiskAddress diskAddress, u16* buffer,
     u32 wordCount)
 {
+    assert (cartridge_ != nullptr);
+
     rdIndicator_->show (Indicator::State::On);
     size_t wordsRead = cartridge_->readDataFromSector (diskAddress, buffer,
         wordCount);
