@@ -202,8 +202,8 @@ TEST_F (RK11DReadTest, readOnNonReadyDriveReportsError)
     RK11D* rk11dDevice = new RK11D (&bus, nullptr, &fakeAudioSystem, factory,
         rk11dConfig);
 
-    // Power on the RK05 drive. The drive will spin up immediately as the
-    // default spin up time is zero.
+    // Power on the RK05 drive. The drive will not be ready as the spin up
+    // time is set to 100 seconds.
     bus.BPOK ().set (true);
 
     EXPECT_EQ (rk11dDevice->writeWord (BusAddress {RKCS},
