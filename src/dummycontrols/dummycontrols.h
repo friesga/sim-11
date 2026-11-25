@@ -17,12 +17,18 @@ public:
 class DummyButton : public Button
 {
 public:
-    void setState (State newState) {}
-    State currentState () const { return TwoPositionsState::Up; }
+    DummyButton (State initialState) : state_ {initialState} {}
+
+    // Functions required by the Button interface
+    void setState (State newState) { state_ = newState;  }
+    State currentState () const { return state_; }
     void render () {}
     void handleEvent (InputEvent const* event) {}
     bool isWithinBounds (Position position, float margin) const { return true; }
     void setSwitchClickedCallback (EventCallback callback) {}
+
+private:
+    State state_;
 };
 
 class DummyIndicatorButton : public IndicatorButton

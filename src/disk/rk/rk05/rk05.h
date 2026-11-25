@@ -34,6 +34,8 @@ using namespace std::chrono_literals;
 class RK05 : public DiskDrive
 {
 public:
+    friend class RK11DCartridgeTest;
+
     RK05 (Bus* bus, DriveInterface* controller, Window* window,
         AudioSystem* audioSystem,
         const CartridgeHandlerFactory cartridgeHandlerFactory,
@@ -81,7 +83,7 @@ private:
     // Buttons and indicators. The initial value points to a dummy to
     // avoid null pointer references in the unit tests.
     DummyIndicator dummyIndicator_ {};
-    DummyButton dummyButton_ {};
+    DummyButton dummyButton_ {Button::TwoPositionsState::Down};
 
     Indicator* pwrIndicator_ {&dummyIndicator_};
     Indicator* rdyIndicator_ {&dummyIndicator_};

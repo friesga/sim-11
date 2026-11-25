@@ -97,6 +97,7 @@ set (GTEST_SRCS
     rk/rkseektest.cpp
     rk/rkwritetest.cpp
     rk/rkwritechecktest.cpp
+    rk/rkcartridgetest.cpp
     rlv12/rl11configprocessortest.cpp
     rlv12/rlv11configprocessortest.cpp
     rlv12/rlv12configprocessortest.cpp
