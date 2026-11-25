@@ -41,8 +41,13 @@ RK05::RK05 (Bus* bus, DriveInterface* controller, Window* window,
     buffer_ = make_unique<u16[]> (1 << 16);
     
     if (!rk05Config.fileName.empty ())
+    {
         cartridge_ = Cartridge::create (rk05Config.fileName, rk05Geometry_,
             openMode (rk05Config));
+        
+        if (cartridge_ == nullptr)
+                throw invalid_argument ("Cannot create cartridge " + rk05Config.fileName);
+    }       
 
     // Initialize the drive status before an event is dispatched to the
     // state machine as the drive status is changed by the state machine
