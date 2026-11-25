@@ -83,7 +83,7 @@ private:
     // Buttons and indicators. The initial value points to a dummy to
     // avoid null pointer references in the unit tests.
     DummyIndicator dummyIndicator_ {};
-    DummyButton dummyButton_ {Button::TwoPositionsState::Down};
+    DummyButton dummyButton_ {Button::TwoPositionsState::Up};
 
     Indicator* pwrIndicator_ {&dummyIndicator_};
     Indicator* rdyIndicator_ {&dummyIndicator_};
