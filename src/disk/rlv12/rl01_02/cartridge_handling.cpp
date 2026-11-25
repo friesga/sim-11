@@ -19,8 +19,7 @@ bool RL01_02::unloadCartridge ()
 bool RL01_02::loadCartridge (string fileName)
 {
     if (fileName.empty () 
-            || !(stateMachine_->inState (CartridgeUnloaded {})
-            || stateMachine_->inState (SpindleStopped {})))
+            || !(stateMachine_->inState (CartridgeUnloaded {})))
         return false;
 
     cartridge_ = Cartridge::create (fileName, geometry_,
