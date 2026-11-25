@@ -92,6 +92,34 @@ protected:
     }
 };
 
+TEST_F (RK11DCartridgeTest, cartridgeIsLoaded)
+{
+    RK11DConfig rk11dConfig {};
+    rk11dConfig.rk05Config[0] = RK05Config (RK05Config {});
+    rk11dConfig.rk05Config[0]->fileName = "scratch.img";
+
+    Unibus bus;
+    FakeAudioSystem fakeAudioSystem {};
+
+    // Define a CartridgeHandlerFactory to create a FakeCartridgeHandler
+	CartridgeHandlerFactory factory = [] (DiskDrive* drive)
+	{
+		return std::make_unique<FakeCartridgeHandler> (drive);
+	};
+
+    // Create a new disk image file to be used as a cartridge
+    FILE* file = std::fopen ("scratch.img", "wb+");
+    EXPECT_TRUE (file != nullptr);
+
+    RK11D* rk11dDevice = new RK11D (&bus, nullptr, &fakeAudioSystem, factory,
+        rk11dConfig);
+
+    powerOn (rk11dDevice->unit (0));
+
+    // Verify the drive reports a cartridge loaded
+    EXPECT_FALSE (rk11dDevice->unit (0)->noCartridgeLoaded ());
+}
+
 TEST_F (RK11DCartridgeTest, cartridgeCanBeLoaded)
 {
     RK11DConfig rk11dConfig {};
@@ -121,107 +149,123 @@ TEST_F (RK11DCartridgeTest, cartridgeCanBeLoaded)
     EXPECT_TRUE (rk11dDevice->unit (0)->loadCartridge ("scratch.img"));
 
      // Verify the drive reports a cartridge loaded
-    EXPECT_TRUE (rk11dDevice->unit (0)->spindleStopped ());
+    EXPECT_FALSE (rk11dDevice->unit (0)->noCartridgeLoaded ());
 }
 
-/*
-TEST_F (RLV12CartridgeTest, cartridgeCanBeLoaded)
+TEST_F (RK11DCartridgeTest, nonExistingFileThrows)
 {
-    RLUnitConfig rlUnitConfig
-    ({
-        .unitType = RLUnitConfig::RLUnitType::RL01
-    });
+    RK11DConfig rk11dConfig {};
+    rk11dConfig.rk05Config[0] = RK05Config (RK05Config {});
+    rk11dConfig.rk05Config[0]->spinUpTime = 100;
+    rk11dConfig.rk05Config[0]->fileName = "non-existing-file.img";
 
-    // Attach a new disk to unit 0
-    ASSERT_EQ (rlv12Device->unit (0)->init (RLUnitConfig {rlUnitConfig}),
-        StatusCode::Success);
+    Unibus bus;
+    FakeAudioSystem fakeAudioSystem {};
 
-    // Verify the drive reports no cartridge loaded
-    EXPECT_TRUE (rlv12Device->unit (0)->noCartridgeLoaded ());
+    // Define a CartridgeHandlerFactory to create a FakeCartridgeHandler
+	CartridgeHandlerFactory factory = [] (DiskDrive* drive)
+	{
+		return std::make_unique<FakeCartridgeHandler> (drive);
+	};
+
+    try
+    {
+        RK11D* rk11dDevice = new RK11D (&bus, nullptr, &fakeAudioSystem, factory,
+            rk11dConfig);
+        FAIL ();
+    }
+    catch (std::invalid_argument const& except)
+    {
+        EXPECT_STREQ (except.what (), "Cannot create cartridge non-existing-file.img");
+    }
+    catch (...)
+    {
+        FAIL ();
+    }
+}
+
+TEST_F (RK11DCartridgeTest, cartridgeCannotBeLoaded)
+{
+    RK11DConfig rk11dConfig {};
+    rk11dConfig.rk05Config[0] = RK05Config (RK05Config {});
+    rk11dConfig.rk05Config[0]->spinUpTime = 100;
+
+    Unibus bus;
+    FakeAudioSystem fakeAudioSystem {};
+
+    // Define a CartridgeHandlerFactory to create a FakeCartridgeHandler
+	CartridgeHandlerFactory factory = [] (DiskDrive* drive)
+	{
+		return std::make_unique<FakeCartridgeHandler> (drive);
+	};
+
+    RK11D* rk11dDevice = new RK11D (&bus, nullptr, &fakeAudioSystem, factory,
+        rk11dConfig);
+
+    powerOn (rk11dDevice->unit (0));
+
+    EXPECT_FALSE (rk11dDevice->unit (0)->loadCartridge ("non-existing-file.img"));
+}
+
+TEST_F (RK11DCartridgeTest, loadCartridgeFails)
+{
+    RK11DConfig rk11dConfig {};
+    rk11dConfig.rk05Config[0] = RK05Config (RK05Config {});
+    rk11dConfig.rk05Config[0]->fileName = "scratch.img";
+
+    Unibus bus;
+    FakeAudioSystem fakeAudioSystem {};
+
+    // Define a CartridgeHandlerFactory to create a FakeCartridgeHandler
+	CartridgeHandlerFactory factory = [] (DiskDrive* drive)
+	{
+		return std::make_unique<FakeCartridgeHandler> (drive);
+	};
 
     // Create a new disk image file to be used as a cartridge
     FILE* file = std::fopen ("scratch.img", "wb+");
     EXPECT_TRUE (file != nullptr);
 
-    EXPECT_TRUE (rlv12Device->unit (0)->loadCartridge ("scratch.img"));
+    RK11D* rk11dDevice = new RK11D (&bus, nullptr, &fakeAudioSystem, factory,
+        rk11dConfig);
 
-     // Verify the drive reports a cartridge loaded
-    EXPECT_TRUE (rlv12Device->unit (0)->spindleStopped ());
+    powerOn (rk11dDevice->unit (0));
+
+    // Verify the drive reports a cartridge loaded
+    EXPECT_FALSE (rk11dDevice->unit (0)->noCartridgeLoaded ());
+
+    // Loading a cartridge while a cartridge is loaded should fail
+    EXPECT_FALSE (rk11dDevice->unit (0)->loadCartridge ("scratch.img"));
 }
 
-TEST_F (RLV12CartridgeTest, loadCartridgeFails)
+TEST_F (RK11DCartridgeTest, cartridgeCanNotBeUnloaded)
 {
-    // This unit configuration specifies a zero spin up time so the unit
-    // has spun up
-    RLUnitConfig rlUnitConfig
-    ({
-        .fileName = "scratch.img",
-        .newFile = true
-    });
+    RK11DConfig rk11dConfig {};
+    rk11dConfig.rk05Config[0] = RK05Config (RK05Config {});
+    rk11dConfig.rk05Config[0]->fileName = "scratch.img";
 
-    // Attach a new disk to unit 0
-    ASSERT_EQ (rlv12Device->unit (0)->init (RLUnitConfig {rlUnitConfig}),
-        StatusCode::Success);
+    Unibus bus;
+    FakeAudioSystem fakeAudioSystem {};
 
-    // Verify the drive reports a cartridge is loaded
-    EXPECT_FALSE (rlv12Device->unit (0)->noCartridgeLoaded ());
+    // Define a CartridgeHandlerFactory to create a FakeCartridgeHandler
+	CartridgeHandlerFactory factory = [] (DiskDrive* drive)
+	{
+		return std::make_unique<FakeCartridgeHandler> (drive);
+	};
 
-    // Make sure a disk image is available to load as a cartridge. (This test
-    // should not depend on a previous test.)
+    // Create a new disk image file to be used as a cartridge
     FILE* file = std::fopen ("scratch.img", "wb+");
     EXPECT_TRUE (file != nullptr);
 
-    // Try to load another cartridge while the drive is spun up. This
-    // should fail.
-    EXPECT_FALSE (rlv12Device->unit (0)->loadCartridge ("scratch.img"));
+    RK11D* rk11dDevice = new RK11D (&bus, nullptr, &fakeAudioSystem, factory,
+        rk11dConfig);
+
+    powerOn (rk11dDevice->unit (0));
+
+    // Verify the drive reports a cartridge loaded
+    EXPECT_FALSE (rk11dDevice->unit (0)->noCartridgeLoaded ());
+
+    // Try to unload the cartridge. This should fail as the drive is spun up
+    // because the LOAD/RUN switch is in the upper (RUN) position.
+    EXPECT_FALSE (rk11dDevice->unit (0)->unloadCartridge ());
 }
-
-TEST_F (RLV12CartridgeTest, cartridgeCanBeUnLoaded)
-{
-    // This unit configuration specifies a spin up time so the unit intitializes
-    // in the SpindleStopped state and the cartridge can be unloaded.
-    RLUnitConfig rlUnitConfig
-    ({
-        .fileName = "scratch.img",
-        .newFile = true
-    });
-    rlUnitConfig.spinUpTime = 10;
-
-    // Attach a new disk to unit 0
-    ASSERT_EQ (rlv12Device->unit (0)->init (RLUnitConfig {rlUnitConfig}),
-        StatusCode::Success);
-
-    // Verify the drive reports a cartridge is loaded
-    EXPECT_TRUE (rlv12Device->unit (0)->spindleStopped ());
-
-    // Now unload the cartridge
-    EXPECT_TRUE (rlv12Device->unit (0)->unloadCartridge ());
-
-    // And verify the drive reports no cartridge loaded
-    EXPECT_TRUE (rlv12Device->unit (0)->noCartridgeLoaded ());
-}
-
-TEST_F (RLV12CartridgeTest, unloadCartridgeFails)
-{
-    // This unit configuration specifies a zero spin up time so the unit has
-    // spun up and the cartridge cannot be unloaded.
-    RLUnitConfig rlUnitConfig
-    ({
-        .fileName = "scratch.img",
-        .newFile = true
-    });
-
-    // Attach a new disk to unit 0
-    ASSERT_EQ (rlv12Device->unit (0)->init (RLUnitConfig {rlUnitConfig}),
-        StatusCode::Success);
-
-    // Verify the drive reports a cartridge is loaded
-    EXPECT_FALSE (rlv12Device->unit (0)->spindleStopped ());
-
-    // Now try to unload the cartridge
-    EXPECT_FALSE (rlv12Device->unit (0)->unloadCartridge ());
-
-    // And verify the drive the cartridge is still loaded
-    EXPECT_FALSE (rlv12Device->unit (0)->noCartridgeLoaded ());
-}
-*/
