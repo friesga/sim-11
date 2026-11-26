@@ -34,7 +34,7 @@ FilePanelBuilder::FilePanelBuilder (unique_ptr<SDLRenderer>& sdlRenderer,
         ((cabinetPosition_.height + 1) * pixelsPerRackUnit ()));
 }
 
-void FilePanelBuilder::createFront (string imageFile,
+Front* FilePanelBuilder::createFront (string imageFile,
     Front::EventHandler eventHandler, Frame<float> frame)
 {
     unique_ptr<SDLTile> frontTile =
@@ -46,6 +46,8 @@ void FilePanelBuilder::createFront (string imageFile,
     // frontTile no longer is a valid pointer to the SDLTile but
     // that's ok since it's moved and SDLFront now has ownership of the
     // SDLTile.
+
+    return fronts_.back ().get ();
 }
 
 Indicator* FilePanelBuilder::createIndicator (string indicatorOffImage,

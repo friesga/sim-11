@@ -2,12 +2,16 @@
 #include "../fakeindicator/fakeindicator.h"
 #include "../fakebutton/fakebutton.h"
 #include "../fakepanel/fakepanel.h"
+#include "../fakefront/fakefront.h"
 
 using std::make_unique;
 
-void FakeDataPanelBuilder::createFront (string imageFile,
+Front* FakeDataPanelBuilder::createFront (string imageFile,
     Front::EventHandler eventHandler, Frame<float> frame)
-{}
+{
+    fronts_.push_back (make_unique<FakeFront> ());
+    return fronts_.back ().get ();
+}
 
 Indicator* FakeDataPanelBuilder::createIndicator (string indicatorOffImage,
     string indicatorOnImage, Indicator::State showFigure,

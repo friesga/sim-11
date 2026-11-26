@@ -27,7 +27,7 @@ DataPanelBuilder::DataPanelBuilder (ImageContainer& imageContainer,
 // For a DataPanelBuilder the frame parameter is ignored and the frame
 // is determined from the image metadata in the image container.
 //
-void DataPanelBuilder::createFront (string imageFile,
+Front* DataPanelBuilder::createFront (string imageFile,
     Front::EventHandler eventHandler, Frame<float> frame)
 {
     unique_ptr<Image> pngImage =
@@ -42,6 +42,7 @@ void DataPanelBuilder::createFront (string imageFile,
     // frontTile no longer is a valid pointer to the SDLTile but
     // that's ok since it's moved and SDLFront now has ownership of the
     // SDLTile.
+    return fronts_.back ().get ();
 }
 
 Indicator* DataPanelBuilder::createIndicator (string indicatorOffImage,

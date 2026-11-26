@@ -22,7 +22,7 @@ public:
         SDLTexture& texture, Cabinet::Position cabinetPosition, RackUnit unitHeight);
 
     // Definition of functions required by the PanelBuilder interface
-    void createFront (string imageFile,
+    Front* createFront (string imageFile,
         Front::EventHandler eventHandler,
         Frame<float> frame) override;
     Indicator* createIndicator (string indicatorOffImage,

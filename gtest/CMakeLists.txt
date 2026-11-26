@@ -44,6 +44,7 @@ set (GTEST_SRCS
     fakesdl/video/fakeindicator/fakeindicator.cpp
     fakesdl/video/fakepanel/fakepanel.cpp
     fakesdl/video/fakewindow/fakewindow.cpp
+    fakesdl/video/fakefront/fakefront.cpp
     fiotest.cpp
     fistest.cpp
     geometrytest.cpp

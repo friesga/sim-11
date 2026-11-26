@@ -13,7 +13,7 @@ class FakeDataPanelBuilder : public PanelBuilder
 {
 public:
     // Functions required by the PanelBuilder interface
-    void createFront (string imageFile, Front::EventHandler eventHandler,
+    Front* createFront (string imageFile, Front::EventHandler eventHandler,
         Frame<float> frame = Frame<float> (0, 0, 0, 0)) override;
     Indicator* createIndicator (string indicatorOffImage,
         string indicatorOnImage, Indicator::State showFigure,
@@ -29,6 +29,7 @@ public:
     unique_ptr<Panel> getPanel () override;
 
 private:
+    vector<unique_ptr<Front>> fronts_;
     vector<unique_ptr<Indicator>> indicators_;
     vector<unique_ptr<Button>> buttons_;
 };
