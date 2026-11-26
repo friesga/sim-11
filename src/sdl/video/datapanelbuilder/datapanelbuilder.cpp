@@ -30,14 +30,7 @@ DataPanelBuilder::DataPanelBuilder (ImageContainer& imageContainer,
 Front* DataPanelBuilder::createFront (string imageFile,
     Front::EventHandler eventHandler, Frame<float> frame)
 {
-    unique_ptr<Image> pngImage =
-        imageContainer_.getImage (imageContainer_.getFileName (imageFile));
-
-    unique_ptr<SDLTile> frontTile =
-        make_unique<SDLTile> (*pngImage, *sdlRenderer_, targetTexture_, 
-            placeFrameInTexture (getFrameFromImage (imageFile)));
-
-    fronts_.push_back (make_unique<SDLFront> (move (frontTile), eventHandler));
+    fronts_.push_back (make_unique<SDLFront> (move (createTile (imageFile)), eventHandler));
 
     // frontTile no longer is a valid pointer to the SDLTile but
     // that's ok since it's moved and SDLFront now has ownership of the
@@ -48,22 +41,9 @@ Front* DataPanelBuilder::createFront (string imageFile,
 Indicator* DataPanelBuilder::createIndicator (string indicatorOffImage,
     string indicatorOnImage, Indicator::State showFigure, Frame<float> frame)
 {
-    unique_ptr<Image> pngImage =
-        imageContainer_.getImage (imageContainer_.getFileName (indicatorOffImage));
-
-    unique_ptr<SDLTile> indicatorOffTile =
-        make_unique<SDLTile> (*pngImage, *sdlRenderer_, targetTexture_,
-            placeFrameInTexture (getFrameFromImage (indicatorOffImage)));
-
-    pngImage =
-        imageContainer_.getImage (imageContainer_.getFileName (indicatorOnImage));
-
-    unique_ptr<SDLTile> indicatorOnTile =
-        make_unique<SDLTile> (*pngImage, *sdlRenderer_, targetTexture_,
-            placeFrameInTexture (getFrameFromImage (indicatorOnImage)));
-
-    indicators_.push_back (make_unique<SDLIndicator> (move (indicatorOffTile),
-        move (indicatorOnTile), showFigure));
+    indicators_.push_back (make_unique<SDLIndicator> (
+        move (createTile (indicatorOffImage)),
+        move (createTile (indicatorOnImage)), showFigure));
 
     // indicatorOffTile and indicatorOnTile are no longer valid pointers
     // to the SDLTile's but that's ok since they are moved and SDLIndicator
