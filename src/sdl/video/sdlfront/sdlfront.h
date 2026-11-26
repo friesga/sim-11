@@ -7,19 +7,27 @@
 
 #include <SDL3/SDL.h>
 #include <memory>
-#include <functional>
+#include <array>
 
 class SDLFront : public Front
 {
 public:
-    SDLFront (unique_ptr<SDLTile> frontTile, EventHandler eventHandler = nullptr);
+    SDLFront (unique_ptr<SDLTile> primaryTile,
+        EventHandler eventHandler = nullptr);
+    SDLFront (unique_ptr<SDLTile> primaryTile,
+        unique_ptr<SDLTile> secondaryTile,
+        State initialState,
+        EventHandler eventHandler);
     ~SDLFront ();
+    void show (State image) override;
     void render () override;
     void handleEvent (InputEvent const* event) override;
 
 private:
-    // The tile to use for this front
-    std::unique_ptr<SDLTile> frontTile_;
+    // The tiles to be used for this front
+    std::array<unique_ptr<SDLTile>, 2> frontTiles_;
+
+    State state_ {State::Primary};
     EventHandler eventHandler_;
 
     bool isWithinBounds (Position position, float margin) const;

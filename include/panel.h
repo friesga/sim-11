@@ -71,12 +71,21 @@ public:
     virtual ~InputEvent () = default;
 };
 
-// A Front is the image to be rendered on the panel
+// A Front is the image to be rendered on the panel. A Front has a primary
+// image and an optional Secondary image. If a secondary image is provided
+// the image to be shown can be selected by calling the show() function.
 class Front
 {
 public:
+    enum class State : size_t
+    {
+        Primary = 0,
+        Secondary = 1
+    };
+
     using EventHandler = std::function<void (InputEvent const* event)>;
 
+    virtual void show (State image) = 0;
     virtual void render () = 0;
     virtual void handleEvent (InputEvent const* event) = 0;
     virtual ~Front () = default;
