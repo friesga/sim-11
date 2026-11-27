@@ -50,7 +50,10 @@ void SDLCartridgeHandler::unloadCartridge ()
     {
         case DiskDrive::State::CartridgeLoaded_SpindleStopped:
             if (diskDrive_->unloadCartridge ())
-                messageBox_.show ("Cartridge has been unloaded");
+            {
+                if (diskDrive_->requiresConfirmation ())
+                    messageBox_.show ("Cartridge has been unloaded");
+            }
             else
                 messageBox_.show ("Cartridge could not be unloaded");
             break;
@@ -85,7 +88,9 @@ void SDLCartridgeHandler::loadCartridge ()
             if (dialogResult)
             {
                 diskDrive_->loadCartridge (dialogResult.value ());
-                messageBox_.show ("Cartridge has been loaded");
+
+                if (diskDrive_->requiresConfirmation ())
+                    messageBox_.show ("Cartridge has been loaded");
             }
             else
                 messageBox_.show ("Cartridge could not be loaded");

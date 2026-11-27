@@ -36,6 +36,13 @@ DiskDrive::State RL01_02::driveState ()
     return driveStateMapping_[static_cast<size_t> (stateMachine_->currentState ().index ())];
 }
 
+// A RL01 requires confirmation of the result of loading and unloading a
+// cartridge as the resukl is not visible on the front.
+bool RL01_02::requiresConfirmation ()
+{
+    return true;
+}
+
 bool RL01_02::spindleStopped ()
 {
     return stateMachine_->inState (SpindleStopped {});

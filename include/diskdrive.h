@@ -20,6 +20,7 @@ public:
     virtual bool unloadCartridge () = 0;
     virtual bool loadCartridge (std::string fileName) = 0;
     virtual State driveState () = 0;
+    virtual bool requiresConfirmation () = 0;
     virtual bool spindleStopped () = 0;
     virtual bool noCartridgeLoaded () = 0;
     virtual std::string cartridgeFileName () const = 0;

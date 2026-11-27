@@ -35,6 +35,13 @@ DiskDrive::State RK05::driveState ()
     return driveStateMapping_[static_cast<size_t> (stateMachine_->currentState ().index ())];
 }
 
+// For a RK05 no confirmation of the result of loading and unloading a
+// cartridge is required.
+bool RK05::requiresConfirmation ()
+{
+    return false;
+}
+
 bool RK05::spindleStopped ()
 {
     return stateMachine_->inState (SpindleStopped {});
