@@ -22,6 +22,7 @@
 #include <functional>
 #include <chrono>
 #include <atomic>
+#include <array>
 
 using std::unique_ptr;
 using std::thread;
@@ -61,6 +62,7 @@ public:
     // Functions required by the Diskdrive interface
     bool unloadCartridge () override;
     bool loadCartridge (std::string fileName) override;
+    DiskDrive::State driveState () override;
     bool spindleStopped () override;
     bool noCartridgeLoaded () override;
     string cartridgeFileName () const override;
@@ -175,6 +177,20 @@ private:
 
     // The main thread keeps its own copy of the RKER
     RKTypes::RKER driveError_ {0};
+
+    // Definition of a mapping from the RK05 to the drive states
+    static constexpr std::array driveStateMapping_
+    {
+        DiskDrive::State::NoPower,    // Initial
+        DiskDrive::State::NoPower,    // PoweredOff
+        DiskDrive::State::NoCartridgeLoaded,  // CartridgeUnloaded
+        DiskDrive::State::CartridgeLoaded_SpindleStopped,    // SpindleStopped
+        DiskDrive::State::CartridgeLoaded_DriveSpunUp,        //  SpinningUp {}
+        DiskDrive::State::CartridgeLoaded_DriveSpunUp,        // LockedOn {};
+        DiskDrive::State::CartridgeLoaded_DriveSpunUp,        // Seeking
+        DiskDrive::State::CartridgeLoaded_DriveSpunUp,        // SpinningDown {}
+        DiskDrive::State::NoPower                             // EmergencyShutdown
+    };
 
     void createBezel (Window* window, const RK05Config& rk05Config);
     void runLoadSwitchClicked (Button::State state);

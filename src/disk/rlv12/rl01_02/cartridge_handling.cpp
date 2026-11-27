@@ -8,7 +8,7 @@ using std::string;
 
 bool RL01_02::unloadCartridge ()
 {
-    if (!stateMachine_->inState (SpindleStopped {}))
+    if (driveState () != DiskDrive::State::CartridgeLoaded_SpindleStopped)
         return false;
 
     cartridge_ = nullptr;
@@ -18,8 +18,7 @@ bool RL01_02::unloadCartridge ()
 
 bool RL01_02::loadCartridge (string fileName)
 {
-    if (fileName.empty () 
-            || !(stateMachine_->inState (CartridgeUnloaded {})))
+    if (driveState () != DiskDrive::State::NoCartridgeLoaded)
         return false;
 
     cartridge_ = Cartridge::create (fileName, geometry_,
@@ -29,8 +28,12 @@ bool RL01_02::loadCartridge (string fileName)
         return false;
     
     stateMachine_->dispatch (LoadedCartridge {});
-
     return true;
+}
+
+DiskDrive::State RL01_02::driveState ()
+{
+    return driveStateMapping_[static_cast<size_t> (stateMachine_->currentState ().index ())];
 }
 
 bool RL01_02::spindleStopped ()

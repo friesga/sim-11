@@ -46,32 +46,66 @@ const CartridgeHandler::OperatorAction SDLCartridgeHandler::getOperatorAction (i
 
 void SDLCartridgeHandler::unloadCartridge ()
 {
-    if (diskDrive_->spindleStopped ())
+    switch (diskDrive_->driveState ())
     {
-        diskDrive_->unloadCartridge ();
-        messageBox_.show ("Cartridge has been unloaded");
+        case DiskDrive::State::CartridgeLoaded_SpindleStopped:
+            if (diskDrive_->unloadCartridge ())
+                messageBox_.show ("Cartridge has been unloaded");
+            else
+                messageBox_.show ("Cartridge could not be unloaded");
+            break;
+
+        case DiskDrive::State::NoPower:
+             messageBox_.show ("Apply power before the cartridge can be unloaded");
+             break;
+
+        case DiskDrive::State::NoCartridgeLoaded:
+             messageBox_.show ("No cartridge to be unloaded");
+             break;
+
+        case DiskDrive::State::CartridgeLoaded_DriveSpunUp:
+             messageBox_.show ("Spin down disk before unloading the cartridge");
+             break;
+
+        default:
+            messageBox_.show ("Unknown error on unloading of cartridge");
+            break;
     }
-    else if (diskDrive_->noCartridgeLoaded ())
-        messageBox_.show ("No cartridge loaded");
-    else
-        messageBox_.show ("Spin down disk before unloading the cartridge");
 }
 
 void SDLCartridgeHandler::loadCartridge ()
 {
-    if (diskDrive_->spindleStopped () || diskDrive_->noCartridgeLoaded ())
+    switch (diskDrive_->driveState ())
     {
-        SDLFileDialog::DialogResult dialogResult =
-            fileDialog_.loadFileDialog ();
-
-        if (dialogResult)
+        case DiskDrive::State::NoCartridgeLoaded:
         {
-            diskDrive_->loadCartridge (dialogResult.value ());
-            messageBox_.show ("Cartridge has been loaded");
+            SDLFileDialog::DialogResult dialogResult =
+                fileDialog_.loadFileDialog ();
+
+            if (dialogResult)
+            {
+                diskDrive_->loadCartridge (dialogResult.value ());
+                messageBox_.show ("Cartridge has been loaded");
+            }
+            else
+                messageBox_.show ("Cartridge could not be loaded");
+            break;
         }
-        else
-            messageBox_.show ("Cartridge could not be loaded");
+
+        case DiskDrive::State::NoPower:
+             messageBox_.show ("Apply power before the cartridge can be loaded");
+             break;
+
+        case DiskDrive::State::CartridgeLoaded_SpindleStopped:
+             messageBox_.show ("Unload cartridge before loading another cartridge");
+             break;
+
+        case DiskDrive::State::CartridgeLoaded_DriveSpunUp:
+             messageBox_.show ("Spin down and unload cartridge before loading another cartridge");
+             break;
+
+        default:
+            messageBox_.show ("Unknown error on loading of cartridge");
+            break;
     }
-    else
-        messageBox_.show ("Spin down disk before loading a cartridge ");
 }

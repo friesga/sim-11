@@ -1,6 +1,9 @@
 #include "rk05.h"
 
+#include <array>
+
 using std::string;
+using std::array;
 
 // This file contains the functions required by the diskdrive interface
 // to facilitate the handling (i.e. the loading and unloading) of cartridges
@@ -8,7 +11,7 @@ using std::string;
 
 bool RK05::unloadCartridge ()
 {
-    if (!stateMachine_->inState (SpindleStopped {}))
+    if (driveState () != DiskDrive::State::CartridgeLoaded_SpindleStopped)
         return false;
 
     cartridge_ = nullptr;
@@ -19,19 +22,17 @@ bool RK05::unloadCartridge ()
 
 bool RK05::loadCartridge (string fileName)
 {
-    if (fileName.empty () 
-            || !(stateMachine_->inState (CartridgeUnloaded {})))
-        return false;
-
-    cartridge_ = Cartridge::create (fileName, RKTypes::rk05Geometry_,
-        Cartridge::OpenMode::ReadWrite);
-
-    if (cartridge_ == nullptr)
+    if (driveState () != DiskDrive::State::NoCartridgeLoaded)
         return false;
     
     driveSystem_->show (Front::State::Secondary);
     stateMachine_->dispatch (LoadedCartridge {});
     return true;
+}
+
+DiskDrive::State RK05::driveState ()
+{
+    return driveStateMapping_[static_cast<size_t> (stateMachine_->currentState ().index ())];
 }
 
 bool RK05::spindleStopped ()

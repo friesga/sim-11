@@ -56,6 +56,7 @@ public:
     // Functions required by the Diskdrive interface
     bool unloadCartridge () override;
     bool loadCartridge (std::string fileName) override;
+    DiskDrive::State driveState () override;
     bool spindleStopped () override;
     bool noCartridgeLoaded () override;
     string cartridgeFileName () const override;
@@ -156,6 +157,18 @@ private:
 
     // The drive thread for this unit
     void driveThread ();
+
+     // Definition of a mapping from the RK05 to the drive states
+    static constexpr std::array driveStateMapping_
+    {
+        DiskDrive::State::NoPower,    // Initial
+        DiskDrive::State::NoCartridgeLoaded,  // CartridgeUnloaded
+        DiskDrive::State::CartridgeLoaded_SpindleStopped,    // SpindleStopped
+        DiskDrive::State::CartridgeLoaded_DriveSpunUp,        //  SpinningUp {}
+        DiskDrive::State::CartridgeLoaded_DriveSpunUp,        // LockedOn {};
+        DiskDrive::State::CartridgeLoaded_DriveSpunUp,        // Seeking
+        DiskDrive::State::CartridgeLoaded_DriveSpunUp,        // SpinningDown {}
+    };
 
     void sendTrigger (Event event);
 
