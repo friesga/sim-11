@@ -64,8 +64,6 @@ public:
     bool loadCartridge (std::string fileName) override;
     DiskDrive::State driveState () override;
     bool requiresConfirmation () override;
-    bool spindleStopped () override;
-    bool noCartridgeLoaded () override;
     string cartridgeFileName () const override;
 
 private:

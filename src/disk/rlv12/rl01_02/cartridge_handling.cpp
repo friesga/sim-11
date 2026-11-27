@@ -43,16 +43,6 @@ bool RL01_02::requiresConfirmation ()
     return true;
 }
 
-bool RL01_02::spindleStopped ()
-{
-    return stateMachine_->inState (SpindleStopped {});
-}
-
-bool RL01_02::noCartridgeLoaded ()
-{
-    return stateMachine_->inState (CartridgeUnloaded {});
-}
-
 string RL01_02::cartridgeFileName () const
 {
     return (cartridge_ != nullptr) ? cartridge_->attachedFileName () : "";

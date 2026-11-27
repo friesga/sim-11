@@ -42,16 +42,6 @@ bool RK05::requiresConfirmation ()
     return false;
 }
 
-bool RK05::spindleStopped ()
-{
-    return stateMachine_->inState (SpindleStopped {});
-}
-
-bool RK05::noCartridgeLoaded ()
-{
-    return stateMachine_->inState (CartridgeUnloaded {});
-}
-
 string RK05::cartridgeFileName () const
 {
     return (cartridge_ != nullptr) ? cartridge_->attachedFileName () : "";
