@@ -337,6 +337,11 @@ public:
     virtual Front* createFront (string imageFile,
         Front::EventHandler eventHandler = nullptr,
         Frame<float> frame = Frame<float> {0, 0, 0, 0}) = 0;
+    virtual Front* createFront (string primaryImageFile,
+        string secondaryImageFile,
+        Front::State initialState = Front::State::Primary,
+        Front::EventHandler eventHandler = nullptr,
+        Frame<float> frame = Frame<float> {0, 0, 0, 0}) = 0;
     virtual Indicator* createIndicator (string indicatorOffImage,
         string indicatorOnImage, Indicator::State showFigure,
         Frame<float> frame = Frame<float> {0, 0, 0, 0}) = 0;

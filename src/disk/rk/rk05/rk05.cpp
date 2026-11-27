@@ -31,11 +31,6 @@ RK05::RK05 (Bus* bus, DriveInterface* controller, Window* window,
     driveId_ {rk05Config.unitNumber},
     cartridgeHandler_ {cartridgeHandlerFactory (this)}
 {
-    // In case the constructor is called in the unit tests, the window is
-    // not available.
-    if (window != nullptr)
-        createBezel (window, rk05Config);
-
     // The maximum number of words that can be transferred in one read
     // or write command is 2^16
     buffer_ = make_unique<u16[]> (1 << 16);
@@ -47,7 +42,14 @@ RK05::RK05 (Bus* bus, DriveInterface* controller, Window* window,
         
         if (cartridge_ == nullptr)
                 throw invalid_argument ("Cannot create cartridge " + rk05Config.fileName);
-    }       
+    }
+
+    // In case the constructor is called in the unit tests, the window is
+    // not available. The beze has to be created after the creation of the
+    // cartridge, as the state of the cartridge pointer is used in
+    // createBezel().
+    if (window != nullptr)
+        createBezel (window, rk05Config);
 
     // Initialize the drive status before an event is dispatched to the
     // state machine as the drive status is changed by the state machine

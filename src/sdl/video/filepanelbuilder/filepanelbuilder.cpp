@@ -50,6 +50,26 @@ Front* FilePanelBuilder::createFront (string imageFile,
     return fronts_.back ().get ();
 }
 
+Front* FilePanelBuilder::createFront (string primaryImageFile,
+    string secondaryImageFile,
+    Front::State initialState,
+    Front::EventHandler eventHandler,
+    Frame<float> frame)
+{
+    unique_ptr<SDLTile> primaryTile =
+        make_unique<SDLTile> (primaryImageFile, *sdlRenderer_,
+            targetTexture_, placeFrameInTexture (frame));
+
+    unique_ptr<SDLTile> secondaryTile =
+        make_unique<SDLTile> (secondaryImageFile, *sdlRenderer_,
+            targetTexture_, placeFrameInTexture (frame));
+
+    fronts_.push_back (make_unique<SDLFront> (move (primaryTile),
+        move (secondaryTile), initialState, eventHandler));
+
+    return fronts_.back ().get ();
+}
+
 Indicator* FilePanelBuilder::createIndicator (string indicatorOffImage,
     string indicatorOnImage, Indicator::State showFigure, Frame<float> frame)
 {

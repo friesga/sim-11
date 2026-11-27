@@ -29,10 +29,12 @@ public:
 
     // Definition of functions required by the PanelBuilder interface
     Front* createFront (string imageFile, Front::EventHandler eventHandler,
-        Frame<float> frame = Frame<float> {0, 0, 0, 0}) override;
-    Indicator* createIndicator (string indicatorOffImage,
-        string indicatorOnImage, Indicator::State showFigure,
-        Frame<float> frame = Frame<float> {0, 0, 0, 0}) override;
+        Frame<float> frame) override;
+    Front* createFront (string primaryImageFile, string secondaryImageFile,
+        Front::State initialState, Front::EventHandler eventHandler,
+        Frame<float> frame) override;
+    Indicator* createIndicator (string indicatorOffImage, string indicatorOnImage,
+        Indicator::State showFigure, Frame<float> frame) override;
     Button* createMultiPositionSwitch (vector<string> positionImages,
         Button::State initialState,
         Button::EventCallback switchClicked,

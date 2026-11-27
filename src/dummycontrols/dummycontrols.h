@@ -3,6 +3,13 @@
 
 #include "panel.h"
 
+class DummyFront : public Front
+{
+    void show (State image) override {}
+    void render () override {}
+    void handleEvent (InputEvent const* event) override {}
+};
+
 // This file contains dummy panel elements to be used to avoid
 // null pointer references.
 class DummyIndicator : public Indicator

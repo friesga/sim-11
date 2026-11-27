@@ -12,6 +12,7 @@ bool RK05::unloadCartridge ()
         return false;
 
     cartridge_ = nullptr;
+    driveSystem_->show (Front::State::Primary);
     stateMachine_->dispatch (UnloadedCartridge {});
     return true;
 }
@@ -28,6 +29,7 @@ bool RK05::loadCartridge (string fileName)
     if (cartridge_ == nullptr)
         return false;
     
+    driveSystem_->show (Front::State::Secondary);
     stateMachine_->dispatch (LoadedCartridge {});
     return true;
 }

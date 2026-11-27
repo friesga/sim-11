@@ -12,12 +12,11 @@
 class SDLFront : public Front
 {
 public:
-    SDLFront (unique_ptr<SDLTile> primaryTile,
+    SDLFront (unique_ptr<SDLTile> primaryTile, 
         EventHandler eventHandler = nullptr);
     SDLFront (unique_ptr<SDLTile> primaryTile,
         unique_ptr<SDLTile> secondaryTile,
-        State initialState,
-        EventHandler eventHandler);
+        State initialState, EventHandler eventHandler);
     ~SDLFront ();
     void show (State image) override;
     void render () override;

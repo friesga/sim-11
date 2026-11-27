@@ -78,5 +78,10 @@ void RK05::createBezel (Window* window, const RK05Config& rk05Config)
 
     panelBuilder->createFront ("drive " + to_string (rk05Config.unitNumber));
 
+    // This (part of the) front doesn't need an eventhandler. Right-clicks on
+    // this front are handle by the RK05 front event handler.
+    driveSystem_ = panelBuilder->createFront ("Drive unloaded", "Drive loaded",
+        (cartridge_ == nullptr) ? Front::State::Primary : Front::State::Secondary);
+
     window->addPanel (panelBuilder->getPanel ());
 }

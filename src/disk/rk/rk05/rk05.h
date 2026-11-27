@@ -84,6 +84,7 @@ private:
     // avoid null pointer references in the unit tests.
     DummyIndicator dummyIndicator_ {};
     DummyButton dummyButton_ {Button::TwoPositionsState::Up};
+    DummyFront dummyFront_ {};
 
     Indicator* pwrIndicator_ {&dummyIndicator_};
     Indicator* rdyIndicator_ {&dummyIndicator_};
@@ -95,6 +96,7 @@ private:
     Indicator* rdIndicator_ {&dummyIndicator_};
     Button* runLoadSwitch_ {&dummyButton_};
     Button* wtprotSwitch_ {&dummyButton_};
+    Front* driveSystem_ {&dummyFront_};
 
     // Definition of the drive states
     //

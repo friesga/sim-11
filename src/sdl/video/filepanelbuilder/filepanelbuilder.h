@@ -25,6 +25,9 @@ public:
     Front* createFront (string imageFile,
         Front::EventHandler eventHandler,
         Frame<float> frame) override;
+    Front* createFront (string primaryImageFile, string secondaryImageFile,
+        Front::State initialState, Front::EventHandler eventHandler,
+        Frame<float> frame) override;
     Indicator* createIndicator (string indicatorOffImage,
         string indicatorOnImage, Indicator::State showFigure,
         Frame<float> frame) override;

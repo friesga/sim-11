@@ -38,6 +38,19 @@ Front* DataPanelBuilder::createFront (string imageFile,
     return fronts_.back ().get ();
 }
 
+Front* DataPanelBuilder::createFront (string primaryImageFile,
+    string secondaryImageFile,
+    Front::State initialState,
+    Front::EventHandler eventHandler,
+    Frame<float> frame)
+{
+    fronts_.push_back (make_unique<SDLFront> (
+        move (createTile (primaryImageFile)),
+        move (createTile (secondaryImageFile)), initialState, eventHandler));
+
+    return fronts_.back ().get ();
+}
+
 Indicator* DataPanelBuilder::createIndicator (string indicatorOffImage,
     string indicatorOnImage, Indicator::State showFigure, Frame<float> frame)
 {
