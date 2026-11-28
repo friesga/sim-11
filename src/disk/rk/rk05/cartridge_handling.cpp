@@ -24,6 +24,12 @@ bool RK05::loadCartridge (string fileName)
 {
     if (driveState () != DiskDrive::State::NoCartridgeLoaded)
         return false;
+
+    cartridge_ = Cartridge::create (fileName, RKTypes::rk05Geometry_,
+        Cartridge::OpenMode::ReadWrite);
+
+    if (cartridge_ == nullptr)
+        return false;
     
     driveSystem_->show (Front::State::Secondary);
     stateMachine_->dispatch (LoadedCartridge {});
